@@ -795,7 +795,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 				{
 					if (!GroupHasInTransitDeadOrPOWMercs(g) &&
 							(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
-							(!g.fVehicle || DoesVehicleGroupHaveAnyPassengers(&g)))
+							(!g.fVehicle || DoesVehicleGroupHaveAnyPassengers(g)))
 					{
 						//Now, a player group is in this sector.  Determine if the group contains any mercs that can fight.
 						//Vehicles, EPCs and the robot doesn't count.  Mercs below OKLIFE do.

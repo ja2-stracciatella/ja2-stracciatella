@@ -150,7 +150,7 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* pSoldier, INT8 bSquadNumb
 
 SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier );
 
-BOOLEAN DoesVehicleGroupHaveAnyPassengers(const GROUP*);
+bool DoesVehicleGroupHaveAnyPassengers(GROUP const&);
 
 void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE*);
 

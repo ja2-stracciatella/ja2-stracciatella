@@ -1526,7 +1526,7 @@ void RetreatAllInvolvedPlayerGroups( void )
 		GROUP& g = *i;
 		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
 		// Don't retreat empty vehicle groups!
-		if (g.fVehicle && !DoesVehicleGroupHaveAnyPassengers(&g)) continue;
+		if (g.fVehicle && !DoesVehicleGroupHaveAnyPassengers(g)) continue;
 		ClearMercPathsAndWaypointsForAllInGroup(g);
 		RetreatGroupToPreviousSector(g);
 	}

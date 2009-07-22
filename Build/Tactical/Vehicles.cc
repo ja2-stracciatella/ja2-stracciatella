@@ -1098,9 +1098,9 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN DoesVehicleGroupHaveAnyPassengers(GROUP const* const g)
+bool DoesVehicleGroupHaveAnyPassengers(GROUP const& g)
 {
-	return GetNumberInVehicle(GetVehicleFromMvtGroup(*g)) != 0;
+	return GetNumberInVehicle(GetVehicleFromMvtGroup(g)) != 0;
 }
 
 
