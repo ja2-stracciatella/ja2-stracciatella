@@ -1174,7 +1174,7 @@ static void TestIncoming4SidesCallback(GUI_BUTTON* btn, INT32 reason)
 			pGroup->ubNextY = (UINT8)gsSelSectorY;
 			pGroup->uiTraverseTime = 10;
 			pGroup->pEnemyGroup->ubIntention = ASSAULT;
-			SetGroupArrivalTime( pGroup, uiWorldMin + 10 );
+			SetGroupArrivalTime(*pGroup, uiWorldMin + 10);
 			pGroup->ubMoveType = ONE_WAY;
 			pGroup->fDebugGroup = TRUE;
 			AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );
@@ -1186,7 +1186,7 @@ static void TestIncoming4SidesCallback(GUI_BUTTON* btn, INT32 reason)
 			pGroup->ubNextY = (UINT8)gsSelSectorY;
 			pGroup->uiTraverseTime = 12;
 			pGroup->pEnemyGroup->ubIntention = ASSAULT;
-			SetGroupArrivalTime( pGroup, uiWorldMin + 12 );
+			SetGroupArrivalTime(*pGroup, uiWorldMin + 12);
 			pGroup->ubMoveType = ONE_WAY;
 			pGroup->fDebugGroup = TRUE;
 			AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );
@@ -1198,7 +1198,7 @@ static void TestIncoming4SidesCallback(GUI_BUTTON* btn, INT32 reason)
 			pGroup->ubNextY = (UINT8)gsSelSectorY;
 			pGroup->uiTraverseTime = 11;
 			pGroup->pEnemyGroup->ubIntention = ASSAULT;
-			SetGroupArrivalTime( pGroup, uiWorldMin + 11 );
+			SetGroupArrivalTime(*pGroup, uiWorldMin + 11);
 			pGroup->ubMoveType = ONE_WAY;
 			pGroup->fDebugGroup = TRUE;
 			AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );
@@ -1210,7 +1210,7 @@ static void TestIncoming4SidesCallback(GUI_BUTTON* btn, INT32 reason)
 			pGroup->ubNextY = (UINT8)gsSelSectorY;
 			pGroup->uiTraverseTime = 13;
 			pGroup->pEnemyGroup->ubIntention = ASSAULT;
-			SetGroupArrivalTime( pGroup, uiWorldMin + 13 );
+			SetGroupArrivalTime(*pGroup, uiWorldMin + 13);
 			pGroup->ubMoveType = ONE_WAY;
 			pGroup->fDebugGroup = TRUE;
 			AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );

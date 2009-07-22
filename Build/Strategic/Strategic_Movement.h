@@ -263,7 +263,7 @@ void RandomizePatrolGroupLocation( GROUP *pGroup );
 
 void PlaceGroupInSector(GROUP*, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 sNextY, INT8 bZ, BOOLEAN fCheckForBattle);
 
-void SetGroupArrivalTime( GROUP *pGroup, UINT32 uiArrivalTime );
+void SetGroupArrivalTime(GROUP&, UINT32 arrival_time);
 
 void PlayerGroupArrivedSafelyInSector(GROUP&, BOOLEAN fCheckForNPCs);
 

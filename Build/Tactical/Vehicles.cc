@@ -931,7 +931,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	}
 
 	// make it arrive immediately, not eventually (it's driverless)
-	SetGroupArrivalTime( pGroup, GetWorldTotalMin() );
+	SetGroupArrivalTime(*pGroup, GetWorldTotalMin());
 
 	// change where it is and where it's going, then make it arrive there.  Don't check for battle
 	PlaceGroupInSector(pGroup, sPrevX, sPrevY, sNextX, sNextY, 0, FALSE);

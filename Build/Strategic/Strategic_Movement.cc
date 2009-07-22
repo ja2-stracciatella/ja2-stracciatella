@@ -284,7 +284,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, 
 	// which direction you're going in!  This becomes critical in case the player reverse directions again before moving!
 
 	// The time it takes to arrive there will be exactly the amount of time we have been moving away from it.
-	SetGroupArrivalTime( pGroup, pGroup->uiTraverseTime - pGroup->uiArrivalTime + GetWorldTotalMin() * 2 );
+	SetGroupArrivalTime(*pGroup, pGroup->uiTraverseTime - pGroup->uiArrivalTime + GetWorldTotalMin() * 2);
 
 	// if they're not already there
 	if( pGroup->uiArrivalTime > GetWorldTotalMin() )
@@ -1266,7 +1266,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 	}
 
 	pGroup->uiTraverseTime = 0;
-	SetGroupArrivalTime( pGroup, 0 );
+	SetGroupArrivalTime(*pGroup, 0);
 	pGroup->fBetweenSectors = FALSE;
 
 	fMapPanelDirty = TRUE;
@@ -1654,7 +1654,7 @@ static void PrepareGroupsForSimultaneousArrival()
 		/* NOTE: This can cause the arrival time to be > GetWorldTotalMin() +
 		 * TraverseTime, so keep that in mind if you have any code that uses these 3
 		 * values to figure out how far along its route a group is! */
-		SetGroupArrivalTime(&g, latest_arrival_time);
+		SetGroupArrivalTime(g, latest_arrival_time);
 		AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID);
 
 		if (g.fPlayer && g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
@@ -1673,7 +1673,7 @@ static void PrepareGroupsForSimultaneousArrival()
 	first_group.ubNextY         = first_group.ubSectorY;
 	first_group.ubSectorX       = first_group.ubPrevX;
 	first_group.ubSectorY       = first_group.ubPrevY;
-	SetGroupArrivalTime(&first_group, latest_arrival_time);
+	SetGroupArrivalTime(first_group, latest_arrival_time);
 	first_group.fBetweenSectors = TRUE;
 
 	if (first_group.fVehicle)
@@ -1789,7 +1789,7 @@ static void DelayEnemyGroupsIfPathsCross(GROUP& player_group)
 		/* NOTE: This can cause the arrival time to be > GetWorldTotalMin() +
 		 * TraverseTime, so keep that in mind if you have any code that uses these 3
 		 * values to figure out how far along its route a group is! */
-		SetGroupArrivalTime(&g, player_group.uiArrivalTime + 1 + Random(10));
+		SetGroupArrivalTime(g, player_group.uiArrivalTime + 1 + Random(10));
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
 			AssertMsg(0, "Failed to add movement event.");
 	}
@@ -1908,7 +1908,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		// put group between sectors
 		pGroup->fBetweenSectors	= TRUE;
 		// and set it's arrival time
-		SetGroupArrivalTime( pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime );
+		SetGroupArrivalTime(*pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime);
 	}
 	// NOTE: if the group is already between sectors, DON'T MESS WITH ITS ARRIVAL TIME!  THAT'S NOT OUR JOB HERE!!!
 
@@ -1918,7 +1918,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	{ //We're initializing the patrol group, so randomize the enemy groups to have extremely quick and varying
 		//arrival times so that their initial positions aren't easily determined.
 		pGroup->uiTraverseTime = 1 + Random( pGroup->uiTraverseTime - 1 );
-		SetGroupArrivalTime( pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime );
+		SetGroupArrivalTime(*pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime);
 	}
 
 
@@ -2932,7 +2932,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	// Because we are in the strategic layer, don't make the arrival instantaneous (towns)
 	if (g.uiTraverseTime == 0) g.uiTraverseTime = 5;
 
-	SetGroupArrivalTime(&g, GetWorldTotalMin() + g.uiTraverseTime);
+	SetGroupArrivalTime(g, GetWorldTotalMin() + g.uiTraverseTime);
 	g.fBetweenSectors = TRUE;
 	g.uiFlags        |= GROUPFLAG_JUST_RETREATED_FROM_BATTLE;
 
@@ -3098,7 +3098,7 @@ static void ResetMovementForEnemyGroup(GROUP* pGroup)
 		//arbitrarily.  Doesn't really matter if this isn't accurate.
 		pGroup->uiTraverseTime = 90;
 	}
-	SetGroupArrivalTime( pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime );
+	SetGroupArrivalTime(*pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime);
 
 	//Add a new event
 	AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );
@@ -3574,32 +3574,37 @@ void PlaceGroupInSector(GROUP* const g, INT16 const sPrevX, INT16 const sPrevY, 
 }
 
 
-
-// ARM: centralized it so we can do a comprehensive Assert on it.  Causing problems with helicopter group!
-void SetGroupArrivalTime( GROUP *pGroup, UINT32 uiArrivalTime )
+/* ARM: centralized it so we can do a comprehensive Assert on it. Causing
+ * problems with helicopter group! */
+void SetGroupArrivalTime(GROUP& g, UINT32 arrival_time)
 {
-	// PLEASE CENTRALIZE ALL CHANGES TO THE ARRIVAL TIMES OF GROUPS THROUGH HERE, ESPECIALLY THE HELICOPTER GROUP!!!
+	/* Please centralize all changes to the arrival times of groups through here,
+	 * especially the helicopter group! */
 
-	// if this group is the helicopter group, we have to make sure that its arrival time is never greater than the sum
-	// of the current time and its traverse time, 'cause those 3 values are used to plot its map position!  Because of this
-	// the chopper groups must NEVER be delayed for any reason - it gets excluded from simultaneous arrival logic
+	/* If this group is the helicopter group, we have to make sure that its
+	 * arrival time is never greater than the sum of the current time and its
+	 * traverse time, because those 3 values are used to plot its map position!
+	 * Because of this the chopper groups must NEVER be delayed for any reason -
+	 * it gets excluded from simultaneous arrival logic */
 
-	// Also note that non-chopper groups can currently be delayed such that this assetion would fail - enemy groups by
-	// DelayEnemyGroupsIfPathsCross(), and player groups via PrepareGroupsForSimultaneousArrival().  So we skip the assert.
+	/* Also note that non-chopper groups can currently be delayed such that this
+	 * assetion would fail - enemy groups by DelayEnemyGroupsIfPathsCross(), and
+	 * player groups via PrepareGroupsForSimultaneousArrival().  So we skip the
+	 * assert. */
 
-	if (IsGroupTheHelicopterGroup(*pGroup))
+	if (IsGroupTheHelicopterGroup(g))
 	{
-		// make sure it's valid (NOTE: the correct traverse time must be set first!)
-		if ( uiArrivalTime > ( GetWorldTotalMin() + pGroup->uiTraverseTime ) )
+		// Make sure it's valid (NOTE: the correct traverse time must be set first!)
+		UINT32 const now = GetWorldTotalMin();
+		if (arrival_time > now + g.uiTraverseTime)
 		{
-			AssertMsg( FALSE, String( "SetGroupArrivalTime: Setting invalid arrival time %d for group %d, WorldTime = %d, TraverseTime = %d", uiArrivalTime, pGroup->ubGroupID, GetWorldTotalMin(), pGroup->uiTraverseTime ) );
-
-			// fix it if assertions are disabled
-			uiArrivalTime = GetWorldTotalMin() + pGroup->uiTraverseTime;
+			AssertMsg(FALSE, String( "SetGroupArrivalTime: Setting invalid arrival time %d for group %d, WorldTime = %d, TraverseTime = %d", arrival_time, g.ubGroupID, now, g.uiTraverseTime));
+			// Fix it if assertions are disabled
+			arrival_time = now + g.uiTraverseTime;
 		}
 	}
 
-	pGroup->uiArrivalTime = uiArrivalTime;
+	g.uiArrivalTime = arrival_time;
 }
 
 
@@ -3624,7 +3629,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP* pGroup)
 	RemoveGroupWaypoints(pGroup);
 
 	pGroup->uiTraverseTime = 0;
-	SetGroupArrivalTime( pGroup, 0 );
+	SetGroupArrivalTime(*pGroup, 0);
 	pGroup->fBetweenSectors = FALSE;
 
 	pGroup->ubPrevX = 0;
