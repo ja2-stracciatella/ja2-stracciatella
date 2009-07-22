@@ -6704,12 +6704,11 @@ static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const* const g)
+BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const& g)
 {
-	Assert(g);
 	BOOLEAN group_must_stop = FALSE;
 	UINT16  quote           = QUOTE_NEED_SLEEP;
-	CFOR_ALL_PLAYERS_IN_GROUP(p, g)
+	CFOR_ALL_PLAYERS_IN_GROUP(p, &g)
 	{
 		SOLDIERTYPE* const s = p->pSoldier;
 		if (!s) continue;

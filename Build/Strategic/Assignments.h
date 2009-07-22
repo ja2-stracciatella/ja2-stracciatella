@@ -183,7 +183,7 @@ BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier );
 void SetTimeOfAssignmentChangeForMerc( SOLDIERTYPE *pSoldier );
 
 // check if any merc in group is too tired to keep moving
-BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const*);
+BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const&);
 
 // handle selected group of mercs being put to sleep
 BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarning );

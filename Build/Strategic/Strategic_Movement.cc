@@ -3674,7 +3674,7 @@ void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 		// and we're not at the end of our road
 		if (!GroupAtFinalDestination(&g))
 		{
-			if (AnyMercInGroupCantContinueMoving(&g))
+			if (AnyMercInGroupCantContinueMoving(g))
 			{
 				// stop: clear their strategic movement (mercpaths and waypoints)
 				ClearMercPathsAndWaypointsForAllInGroup(&g);
