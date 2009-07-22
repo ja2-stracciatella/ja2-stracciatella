@@ -4240,7 +4240,7 @@ MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE* const pSoldier)
 	// now check anybody who would be travelling with him
 
 	// does character have group?
-	GROUP const* const g = GetSoldierGroup(pSoldier);
+	GROUP const* const g = GetSoldierGroup(*pSoldier);
 
 	// even if group is 0 (not that that should happen, should it?) still loop through for other mercs selected to move
 
@@ -4256,7 +4256,7 @@ MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE* const pSoldier)
 		}
 
 		// if he is in the same movement group (i.e. squad), or he is still selected to go with us (legal?)
-		if (GetSoldierGroup(pCurrentSoldier) == g || c->selected)
+		if (GetSoldierGroup(*pCurrentSoldier) == g || c->selected)
 		{
 			// can this character also move strategically?
 			const MoveError ret = CanCharacterMoveInStrategic(pCurrentSoldier);
