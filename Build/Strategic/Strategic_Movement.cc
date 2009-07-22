@@ -1070,7 +1070,7 @@ static void AwardExperienceForTravelling(GROUP& g)
 			/* Amount was originally based on getting 100 - bLifeMax points for 12
 			 * hours of travel (720), but changed to flat rate since StatChange makes
 			 * roll vs 100-lifemax as well */
-			UINT32 const points = traverse_time / (450 / 100 - s.bLifeMax);
+			UINT32 const points = traverse_time / (450 / (100 - s.bLifeMax));
 			if (points > 0) StatChange(s, HEALTHAMT, (UINT8)points, FROM_SUCCESS);
 		}
 
