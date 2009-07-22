@@ -3830,36 +3830,27 @@ static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, 
 }
 
 
-static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageBoxReturnValue const ubExitValue)
+static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageBoxReturnValue const exit_value)
 {
-	Assert( gpGroupPrompting );
-
-	if ( (ubExitValue == MSG_BOX_RETURN_YES) ||
-			 (ubExitValue == MSG_BOX_RETURN_OK) )
+	Assert(gpGroupPrompting);
+	GROUP& g = *gpGroupPrompting;
+	gpGroupPrompting = 0;
+	switch (exit_value)
 	{
-		// NPCs now checked, continue moving if appropriate
-		PlayerGroupArrivedSafelyInSector(*gpGroupPrompting, FALSE);
+		case MSG_BOX_RETURN_YES:
+		case MSG_BOX_RETURN_OK:
+			// NPCs now checked, continue moving if appropriate
+			PlayerGroupArrivedSafelyInSector(g, FALSE);
+			break;
+
+		case MSG_BOX_RETURN_NO:
+			// Stop here
+			ClearMercPathsAndWaypointsForAllInGroup(&g);
+			ChangeSelectedMapSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
+			StopTimeCompression();
+			break;
 	}
-	else if( ubExitValue == MSG_BOX_RETURN_NO )
-	{
-		// stop here
-
-		// clear their strategic movement (mercpaths and waypoints)
-		ClearMercPathsAndWaypointsForAllInGroup( gpGroupPrompting );
-
-//		// if currently selected sector has nobody in it
-//		if ( PlayerMercsInSector( ( UINT8 ) sSelMapX, ( UINT8 ) sSelMapY, ( UINT8 ) iCurrentMapSectorZ ) == 0 )
-		// New: ALWAYS make this sector strategically selected, even if there were mercs in the previously selected one
-		{
-			ChangeSelectedMapSector( gpGroupPrompting->ubSectorX, gpGroupPrompting->ubSectorY, gpGroupPrompting->ubSectorZ );
-		}
-
-		StopTimeCompression();
-	}
-
-	gpGroupPrompting = NULL;
-
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty        = TRUE;
 	fMapScreenBottomDirty = TRUE;
 }
 
