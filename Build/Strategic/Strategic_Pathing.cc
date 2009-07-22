@@ -1085,19 +1085,18 @@ PathSt* GetSoldierMercPathPtr(SOLDIERTYPE const* const s)
 }
 
 
-PathSt* GetGroupMercPathPtr(GROUP const* const g)
+PathSt* GetGroupMercPathPtr(GROUP const& g)
 {
-	Assert(g);
-	Assert(g->fPlayer);
+	Assert(g.fPlayer);
 
-	if (g->fVehicle)
+	if (g.fVehicle)
 	{
-		return GetVehicleFromMvtGroup(g).pMercPath;
+		return GetVehicleFromMvtGroup(&g).pMercPath;
 	}
 
-	if (g->pPlayerList && g->pPlayerList->pSoldier) // XXX pSoldier test necessary?
+	if (g.pPlayerList && g.pPlayerList->pSoldier) // XXX pSoldier test necessary?
 	{
-		return g->pPlayerList->pSoldier->pMercPath;
+		return g.pPlayerList->pSoldier->pMercPath;
 	}
 
 	return 0;

@@ -69,7 +69,7 @@ INT32 GetLengthOfPath(PathSt* pHeadPath);
 INT32 GetLengthOfMercPath(const SOLDIERTYPE* pSoldier);
 
 PathSt* GetSoldierMercPathPtr(SOLDIERTYPE const*);
-PathSt* GetGroupMercPathPtr(GROUP const*);
+PathSt* GetGroupMercPathPtr(GROUP const&);
 
 GROUP* GetSoldierGroup(SOLDIERTYPE const&);
 
