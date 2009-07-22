@@ -4888,7 +4888,7 @@ static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMove
 			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(*pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
 			break;
 		case EVASIVE:
-			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(*pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
+			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(**pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
 			break;
 		case DIRECT:
 		default:
