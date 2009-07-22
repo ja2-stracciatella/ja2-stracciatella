@@ -739,7 +739,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 }
 
 
-static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ);
+static void HandleOtherGroupsArrivingSimultaneously(UINT8 x, UINT8 y, UINT8 z);
 static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY);
 static BOOLEAN TestForBloodcatAmbush(GROUP const*);
 static void TriggerPrebattleInterface(MessageBoxReturnValue);
@@ -1580,39 +1580,29 @@ static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLE
 }
 
 
-
-//Because a battle is about to start, we need to go through the event list and look for other
-//groups that may arrive at the same time -- enemies or players, and blindly add them to the sector
-//without checking for battle conditions, as it has already determined that a new battle is about to
-//start.
-static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ)
+/* Because a battle is about to start, we need to go through the event list and
+ * look for other groups that may arrive at the same time -- enemies or players,
+ * and blindly add them to the sector without checking for battle conditions, as
+ * it has already determined that a new battle is about to start. */
+static void HandleOtherGroupsArrivingSimultaneously(UINT8 const x, UINT8 const y, UINT8 const z)
 {
-	STRATEGICEVENT *pEvent;
-	UINT32 uiCurrTimeStamp;
-	GROUP *pGroup;
-	uiCurrTimeStamp = GetWorldTotalSeconds();
-	pEvent = gpEventList;
+	UINT32 const now = GetWorldTotalSeconds();
 	gubNumGroupsArrivedSimultaneously = 0;
-	while( pEvent && pEvent->uiTimeStamp <= uiCurrTimeStamp )
+restart:
+	for (STRATEGICEVENT* i = gpEventList; i && i->uiTimeStamp <= now; i = i->next)
 	{
-		if( pEvent->ubCallbackID == EVENT_GROUP_ARRIVAL && !(pEvent->ubFlags & SEF_DELETION_PENDING) )
-		{
-			pGroup = GetGroup( (UINT8)pEvent->uiParam );
-			Assert( pGroup );
-			if( pGroup->ubNextX == ubSectorX && pGroup->ubNextY == ubSectorY && pGroup->ubSectorZ == ubSectorZ )
-			{
-				if( pGroup->fBetweenSectors )
-				{
-					GroupArrivedAtSector(pGroup, FALSE, FALSE );
-					pGroup->uiFlags |= GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY;
-					gubNumGroupsArrivedSimultaneously++;
-					DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
-					pEvent = gpEventList;
-					continue;
-				}
-			}
-		}
-		pEvent = pEvent->next;
+		if (i->ubCallbackID != EVENT_GROUP_ARRIVAL) continue;
+		if (i->ubFlags & SEF_DELETION_PENDING)      continue;
+
+		GROUP& g = *GetGroup((UINT8)i->uiParam);
+		if (g.ubNextX != x || g.ubNextY != y || g.ubSectorZ != z) continue;
+		if (!g.fBetweenSectors) continue;
+
+		GroupArrivedAtSector(&g, FALSE, FALSE);
+		g.uiFlags |= GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY;
+		++gubNumGroupsArrivedSimultaneously;
+		DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
+		goto restart;
 	}
 }
 
