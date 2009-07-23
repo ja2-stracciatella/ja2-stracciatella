@@ -3444,35 +3444,24 @@ UINT16 DefaultMagazine( UINT16 usItem )
 }
 
 
-static UINT16 FindReplacementMagazine(AmmoKind const ubCalibre, UINT8 const ubMagSize, UINT8 const ubAmmoType)
+static UINT16 FindReplacementMagazine(AmmoKind const calibre, UINT8 const mag_size, UINT8 const ammo_type)
 {
-	UINT8 ubLoop;
-	UINT16 usDefault;
-
-	ubLoop = 0;
-	usDefault = NOTHING;
-
-	while ( Magazine[ubLoop].ubCalibre != NOAMMO )
+	UINT16 default_mag = NOTHING;
+	for (UINT8 i = 0;; i++)
 	{
-		if (Magazine[ubLoop].ubCalibre == ubCalibre &&
-				Magazine[ubLoop].ubMagSize == ubMagSize )
-		{
-			if ( Magazine[ubLoop].ubAmmoType == ubAmmoType )
-			{
-				return( MagazineClassIndexToItemType( ubLoop ) );
-			}
-			else if ( usDefault == NOTHING )
-			{
-				// store this one to use if all else fails
-				usDefault = MagazineClassIndexToItemType( ubLoop );
-			}
+		MAGTYPE const& mag = Magazine[i];
+		if (mag.ubCalibre == NOAMMO)   break;
+		if (mag.ubCalibre != calibre)  continue;
+		if (mag.ubMagSize == mag_size) continue;
 
+		if (mag.ubAmmoType == ammo_type) return MagazineClassIndexToItemType(i);
+
+		if (default_mag == NOTHING)
+		{ // Store this one to use if all else fails
+			default_mag = MagazineClassIndexToItemType(i);
 		}
-
-		ubLoop++;
 	}
-
-	return( usDefault );
+	return default_mag;
 }
 
 
