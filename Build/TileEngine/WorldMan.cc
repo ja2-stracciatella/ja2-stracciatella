@@ -1202,7 +1202,7 @@ BOOLEAN UpdateMercStructureInfo(SOLDIERTYPE *pSoldier)
 }
 
 
-void RemoveMerc(UINT32 const map_idx, SOLDIERTYPE* const s, bool const placeholder)
+void RemoveMerc(UINT32 const map_idx, SOLDIERTYPE& s, bool const placeholder)
 {
 	if (map_idx == NOWHERE) return; // XXX exception?
 
@@ -1211,14 +1211,14 @@ void RemoveMerc(UINT32 const map_idx, SOLDIERTYPE* const s, bool const placehold
 		LEVELNODE* const merc = *anchor;
 		if (!merc) break;
 
-		if (merc->pSoldier != s) continue;
+		if (merc->pSoldier != &s) continue;
 		if (placeholder ^ ((merc->uiFlags & LEVELNODE_MERCPLACEHOLDER) != 0)) continue;
 
 		*anchor = merc->pNext;
 
 		if (!placeholder)
 		{
-			s->pLevelNode = 0;
+			s.pLevelNode = 0;
 			DeleteStructureFromWorld(merc->pStructureData);
 		}
 

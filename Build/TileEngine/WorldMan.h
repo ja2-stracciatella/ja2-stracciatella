@@ -102,7 +102,7 @@ BOOLEAN RemoveShadowFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 // #################################################################
 
 LEVELNODE* AddMercToHead(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fAddStructInfo);
-void         RemoveMerc(UINT32 map_idx, SOLDIERTYPE*, bool placeholder);
+void         RemoveMerc(UINT32 map_idx, SOLDIERTYPE&, bool placeholder);
 SOLDIERTYPE* WhoIsThere2(INT16 sGridNo, INT8 bLevel);
 BOOLEAN AddMercStructureInfoFromAnimSurface( INT16 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState );
 BOOLEAN UpdateMercStructureInfo( SOLDIERTYPE *pSoldier );
