@@ -2,7 +2,7 @@
 #define __GAME_INIT_H
 
 
-BOOLEAN InitNewGame(  BOOLEAN fReset );
+void InitNewGame(BOOLEAN fReset);
 BOOLEAN AnyMercsHired(void);
 
 void InitStrategicLayer(void);

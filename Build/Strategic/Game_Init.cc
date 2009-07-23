@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font_Control.h"
 #include "JAScreens.h"
 #include "Laptop.h"
@@ -335,14 +337,15 @@ void ShutdownStrategicLayer()
 	KillStrategicAI();
 }
 
-BOOLEAN InitNewGame( BOOLEAN fReset )
+
+void InitNewGame(BOOLEAN const fReset)
 {
 //	static fScreenCount = 0;
 
 	if( fReset )
 	{
 		gubScreenCount = 0;
-		return( TRUE );
+		return;
 	}
 
 	// reset meanwhile flags
@@ -353,8 +356,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 	if( gubScreenCount == 0 )
 	{
-		try         { LoadMercProfiles(); }
-		catch (...) { return FALSE; }
+		LoadMercProfiles();
 	}
 
 	//Initialize the Arms Dealers and Bobby Rays inventory
@@ -435,9 +437,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 				iStartingCash	= 30000;
 				break;
 
-			default:
-				Assert(0);
-				return( FALSE );
+			default: throw std::logic_error("invalid difficulty level");
 		}
 
 		// Setup initial money
@@ -457,14 +457,13 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 		//Set the fact the game is in progress
 		gTacticalStatus.fHasAGameBeenStarted = TRUE;
-
-		return( TRUE );
+		return;
 	}
 
 	if ( gubScreenCount == 1 )
 	{
 		gubScreenCount = 2;
-		return( TRUE );
+		return;
 	}
 
 /*
@@ -486,14 +485,11 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		{
 
 		}
-
-		return( TRUE );
+		return;
 	}
 
 	*/
 #endif
-
-	return( TRUE );
 }
 
 
