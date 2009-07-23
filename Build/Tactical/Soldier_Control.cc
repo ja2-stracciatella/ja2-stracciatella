@@ -1968,7 +1968,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* const s, GridNo new_grid_no, BOOLEAN c
 	// Add merc at new pos
 	if (!in_vehicle)
 	{
-		LEVELNODE* const n = AddMercToHead(new_grid_no, s, TRUE);
+		LEVELNODE* const n = AddMercToHead(new_grid_no, *s, TRUE);
 
 		// If we are in the middle of climbing the roof!
 		if (s->usAnimState == CLIMBUPROOF)
@@ -6555,7 +6555,7 @@ static void HandleAnimationProfile(SOLDIERTYPE& s, UINT16 const usAnimState, BOO
 		}
 		else
 		{ // Place into world
-			LEVELNODE* const n = AddMercToHead(grid_no, &s, FALSE);
+			LEVELNODE* const n = AddMercToHead(grid_no, s, FALSE);
 			n->uiFlags                |= LEVELNODE_MERCPLACEHOLDER;
 			n->uiAnimHitLocationFlags  = profile_tile.usTileFlags;
 		}

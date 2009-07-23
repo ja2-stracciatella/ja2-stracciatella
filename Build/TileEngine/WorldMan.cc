@@ -1090,21 +1090,21 @@ BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier);
 
 
-LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, const BOOLEAN fAddStructInfo)
+LEVELNODE* AddMercToHead(UINT32 const iMapIndex, SOLDIERTYPE& s, BOOLEAN const fAddStructInfo)
 {
 	LEVELNODE* pMerc = gpWorldLevelData[iMapIndex].pMercHead;
 
 	LEVELNODE* pNextMerc = CreateLevelNode();
 	pNextMerc->pNext = pMerc;
-	pNextMerc->pSoldier = pSoldier;
+	pNextMerc->pSoldier = &s;
 	pNextMerc->uiFlags |= LEVELNODE_SOLDIER;
 
 	// Add structure info if we want
 	if (fAddStructInfo)
 	{
 		// Set soldier's levelnode
-		pSoldier->pLevelNode = pNextMerc;
-		AddMercStructureInfo(iMapIndex, pSoldier);
+		s.pLevelNode = pNextMerc;
+		AddMercStructureInfo(iMapIndex, &s);
 	}
 
 	gpWorldLevelData[iMapIndex].pMercHead = pNextMerc;
