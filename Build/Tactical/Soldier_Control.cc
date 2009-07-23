@@ -1768,36 +1768,36 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 }
 
 
-static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* const s, BOOLEAN const force)
+static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE& s, BOOLEAN const force)
 {
-	if (s->sGridNo == NOWHERE) return;
+	if (s.sGridNo == NOWHERE) return;
 
-	if (!s->bInSector && !force) return;
+	if (!s.bInSector && !force) return;
 
 	// Remove from world (old pos)
-	RemoveMerc(s->sGridNo, s, false);
-	HandleAnimationProfile(s, s->usAnimState, TRUE);
+	RemoveMerc(s.sGridNo, &s, false);
+	HandleAnimationProfile(&s, s.usAnimState, TRUE);
 
 	// Remove records of this guy being adjacent
 	for (INT8 dir = 0; dir < NUM_WORLD_DIRECTIONS; ++dir)
 	{
-		INT32 const grid_no = s->sGridNo + DirIncrementer[dir];
+		INT32 const grid_no = s.sGridNo + DirIncrementer[dir];
 		if (grid_no < 0 || WORLD_MAX <= grid_no) continue;
 
 		--gpWorldLevelData[grid_no].ubAdjacentSoldierCnt;
 	}
 
-	HandlePlacingRoofMarker(s, s->sGridNo, FALSE, FALSE);
+	HandlePlacingRoofMarker(&s, s.sGridNo, FALSE, FALSE);
 
-	UnMarkMovementReserved(s);
-	HandleCrowShadowRemoveGridNo(s);
-	s->sGridNo = NOWHERE;
+	UnMarkMovementReserved(&s);
+	HandleCrowShadowRemoveGridNo(&s);
+	s.sGridNo = NOWHERE;
 }
 
 
 void RemoveSoldierFromGridNo(SOLDIERTYPE& s)
 {
-  InternalRemoveSoldierFromGridNo(&s, FALSE);
+  InternalRemoveSoldierFromGridNo(s, FALSE);
 }
 
 
@@ -1912,7 +1912,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* const s, GridNo new_grid_no, BOOLEAN c
 	bool const in_vehicle = s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER);
 	if (!in_vehicle)
 	{
-		InternalRemoveSoldierFromGridNo(s, fForceRemove);
+		InternalRemoveSoldierFromGridNo(*s, fForceRemove);
 	}
 
 	s->sGridNo = new_grid_no;
