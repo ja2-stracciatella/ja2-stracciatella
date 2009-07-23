@@ -3413,26 +3413,21 @@ static UINT16 MagazineClassIndexToItemType(UINT16 const mag_idx)
 }
 
 
-UINT16 DefaultMagazine( UINT16 usItem )
+UINT16 DefaultMagazine(UINT16 const gun)
 {
-	UINT16				usLoop;
-
-	if (!(Item[usItem].usItemClass & IC_GUN))
+	if (!(Item[gun].usItemClass & IC_GUN))
 	{
 		throw std::logic_error("Tried to get default ammo for item which is not a gun");
 	}
 
-	WEAPONTYPE const* const pWeapon = &Weapon[usItem];
-	usLoop = 0;
-	while ( Magazine[usLoop].ubCalibre != NOAMMO )
+	WEAPONTYPE const& w = Weapon[gun];
+	for (UINT16 i = 0;; ++i)
 	{
-		if (Magazine[usLoop].ubCalibre == pWeapon->ubCalibre &&
-				Magazine[usLoop].ubMagSize == pWeapon->ubMagSize)
-		{
-			return(MagazineClassIndexToItemType(usLoop));
-		}
-
-		usLoop++;
+		MAGTYPE const& mag = Magazine[i];
+		if (mag.ubCalibre == NOAMMO)      break;
+		if (mag.ubCalibre != w.ubCalibre) continue;
+		if (mag.ubMagSize != w.ubMagSize) continue;
+		return MagazineClassIndexToItemType(i);
 	}
 
 	throw std::logic_error("Found no default ammo for gun");

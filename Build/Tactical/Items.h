@@ -48,7 +48,7 @@ extern BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo );
 void CreateItem(UINT16 usItem, INT8 bStatus, OBJECTTYPE*);
 void CreateItems(UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE*);
 void CreateMoney(UINT32 uiMoney, OBJECTTYPE*);
-extern UINT16 DefaultMagazine( UINT16 usItem );
+UINT16 DefaultMagazine(UINT16 gun);
 UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard );
 extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );
 
