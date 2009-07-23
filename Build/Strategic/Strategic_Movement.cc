@@ -218,7 +218,7 @@ void RemovePlayerFromPGroup(GROUP& g, SOLDIERTYPE& s)
 		{
 			if (!g.fPersistant)
 			{
-				RemovePGroup(g);
+				RemoveGroup(g);
 			}
 			else
 			{
@@ -1511,7 +1511,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		}
 		else
 		{
-			RemovePGroup(g);
+			RemoveGroup(g);
 		}
 	}
 
@@ -1925,7 +1925,7 @@ static void SetGroupPrevSectors(GROUP& g, UINT8 const x, UINT8 const y)
 static BOOLEAN gfRemovingAllGroups = FALSE;
 
 
-void RemovePGroup(GROUP& g)
+void RemoveGroup(GROUP& g)
 {
 	if (g.fPersistant && !gfRemovingAllGroups)
 	{
@@ -1964,7 +1964,7 @@ void RemoveAllGroups()
 	gfRemovingAllGroups = TRUE;
 	while( gpGroupList )
 	{
-		RemovePGroup(*gpGroupList);
+		RemoveGroup(*gpGroupList);
 	}
 	gfRemovingAllGroups = FALSE;
 }
@@ -3075,7 +3075,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 		FOR_ALL_GROUPS_SAFE(i)
 		{
 			GROUP& g = *i;
-			if (g.ubGroupSize == 0 && !g.fPersistant) RemovePGroup(g);
+			if (g.ubGroupSize == 0 && !g.fPersistant) RemoveGroup(g);
 		}
 	}
 }

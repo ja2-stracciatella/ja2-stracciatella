@@ -1058,7 +1058,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 	}
 
 	// must always remove that temporary group!
-	RemovePGroup(g);
+	RemoveGroup(g);
 
 	for( bTownId = FIRST_TOWN; bTownId < NUM_TOWNS; bTownId++ )
 	{

@@ -153,7 +153,7 @@ GROUP* GetGroup( UINT8 ubGroupID );
  * the members of the group. Calling this function doesn't position them in a
  * sector. It is up to you to do that. The event system will automatically
  * handle their updating as they arrive in sectors. */
-void RemovePGroup(GROUP&);
+void RemoveGroup(GROUP&);
 
 /* Clear a group's waypoints. This is necessary when sending new orders such as
  * different routes. */

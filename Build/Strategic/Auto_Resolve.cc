@@ -387,7 +387,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 			if (g.ubSectorY != ubSectorY) continue;
 			ClearPreviousAIGroupAssignment(&g);
 			if (gpBattleGroup == &g) gpBattleGroup = 0;
-			RemovePGroup(g);
+			RemoveGroup(g);
 		}
 		if( gpBattleGroup )
 		{

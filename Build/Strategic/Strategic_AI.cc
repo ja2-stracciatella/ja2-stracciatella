@@ -636,7 +636,7 @@ static void ValidateGroup(GROUP* pGroup)
 			}
 			#endif
 			ClearPreviousAIGroupAssignment( pGroup );
-			RemovePGroup(*pGroup);
+			RemoveGroup(*pGroup);
 			return;
 		}
 	}
@@ -1759,7 +1759,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 				}
 
 				SetThisSectorAsEnemyControlled(pGroup->ubSectorX, pGroup->ubSectorY, 0);
-				RemovePGroup(*pGroup);
+				RemoveGroup(*pGroup);
 				RecalculateGarrisonWeight( i );
 
 				return TRUE;
@@ -1821,7 +1821,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 										pPatrolGroup->pEnemyGroup->ubNumTroops +
 										pPatrolGroup->pEnemyGroup->ubNumElites == MAX_STRATEGIC_TEAM_SIZE );
 					}
-					RemovePGroup(*pGroup);
+					RemoveGroup(*pGroup);
 					RecalculatePatrolWeight( i );
 					ValidateLargeGroup( pPatrolGroup );
 				}
@@ -3357,7 +3357,7 @@ void LoadStrategicAI(HWFILE const hFile)
 				if (g.ubPrevX   !=  0) continue;
 				if (g.ubPrevY   !=  0) continue;
 				ClearPreviousAIGroupAssignment(&g);
-				RemovePGroup(g);
+				RemoveGroup(g);
 			}
 		}
 	}
@@ -4502,7 +4502,7 @@ INT16 FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
 static void TransferGroupToPool(GROUP** pGroup)
 {
 	giReinforcementPool += (*pGroup)->ubGroupSize;
-	RemovePGroup(**pGroup);
+	RemoveGroup(**pGroup);
 	*pGroup = NULL;
 }
 
