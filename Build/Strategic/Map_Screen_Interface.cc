@@ -1447,39 +1447,32 @@ void UpdateMapScreenAssignmentPositions( void )
 }
 
 
-
-void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
+void RandomMercInGroupSaysQuote(GROUP const& g, UINT16 const quote_num)
 {
-	SOLDIERTYPE *pSoldier;
-	UINT8				ubNumMercs = 0;
-
-	// if traversing tactically, don't do this, unless time compression was required for some reason (don't go to sector)
-	if ( ( gfTacticalTraversal || ( pGroup->ubSectorZ > 0 ) ) && !IsTimeBeingCompressed() )
+	/* If traversing tactically, don't do this, unless time compression was
+	 * required for some reason (don't go to sector) */
+	if ((gfTacticalTraversal || g.ubSectorZ > 0) && !IsTimeBeingCompressed())
 	{
 		return;
 	}
 
-	// Let's choose somebody in group.....
+	// Choose somebody in group
 	SOLDIERTYPE* mercs_in_group[20];
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	UINT8        n_mercs = 0;
+	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 	{
-		pSoldier = pPlayer->pSoldier;
-		Assert( pSoldier );
-
-		if (pSoldier->bLife >= OKLIFE &&
-				!IsMechanical(*pSoldier)  &&
-				!AM_AN_EPC(pSoldier)      &&
-				!pSoldier->fMercAsleep)
-		{
-			mercs_in_group[ubNumMercs++] = pSoldier;
-		}
+		SOLDIERTYPE& s = *i->pSoldier;
+		if (s.bLife < OKLIFE) continue;
+		if (IsMechanical(s))  continue;
+		if (AM_AN_EPC(&s))    continue;
+		if (s.fMercAsleep)    continue;
+		mercs_in_group[n_mercs++] = &s;
 	}
 
-	// At least say quote....
-	if ( ubNumMercs > 0 )
+	if (n_mercs > 0)
 	{
-		SOLDIERTYPE* const chosen = mercs_in_group[Random(ubNumMercs)];
-		TacticalCharacterDialogue(chosen, usQuoteNum);
+		SOLDIERTYPE& chosen = *mercs_in_group[Random(n_mercs)];
+		TacticalCharacterDialogue(&chosen, quote_num);
 	}
 }
 

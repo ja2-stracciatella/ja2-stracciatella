@@ -1493,7 +1493,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 				// If traversing tactically, or we never left (just canceling), don't do this
 				if (!gfTacticalTraversal && !never_left)
 				{
-					RandomMercInGroupSaysQuote(&g, QUOTE_MERC_REACHED_DESTINATION);
+					RandomMercInGroupSaysQuote(g, QUOTE_MERC_REACHED_DESTINATION);
 				}
 			}
 		}
