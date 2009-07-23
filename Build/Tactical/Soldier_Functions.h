@@ -19,7 +19,6 @@ void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo
 
 void MercStealFromMerc(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pTarget);
 
-void HandleCrowShadowVisibility( SOLDIERTYPE *pSoldier );
-
+void HandleCrowShadowVisibility(SOLDIERTYPE&);
 
 #endif

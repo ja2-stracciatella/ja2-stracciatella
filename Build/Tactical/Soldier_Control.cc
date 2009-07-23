@@ -246,10 +246,10 @@ static bool IsCrowWithShadow(SOLDIERTYPE const& s)
 }
 
 
-void HandleCrowShadowVisibility(SOLDIERTYPE* const s)
+void HandleCrowShadowVisibility(SOLDIERTYPE& s)
 {
-	if (!IsCrowWithShadow(*s)) return;
-	HideAniTile(s->pAniTile, s->bLastRenderVisibleValue == -1);
+	if (!IsCrowWithShadow(s)) return;
+	HideAniTile(s.pAniTile, s.bLastRenderVisibleValue == -1);
 }
 
 
@@ -280,7 +280,7 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE& s)
 	a.v.user.uiData3 = s.bDirection;
 	s.pAniTile = CreateAnimationTile(&a);
 
-	HandleCrowShadowVisibility(&s);
+	HandleCrowShadowVisibility(s);
 }
 
 

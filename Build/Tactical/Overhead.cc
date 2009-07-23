@@ -721,7 +721,7 @@ void ExecuteOverhead(void)
 				// Check if we have a new visiblity and shade accordingly down
 				if (pSoldier->bLastRenderVisibleValue != pSoldier->bVisible)
 				{
-					HandleCrowShadowVisibility(pSoldier);
+					HandleCrowShadowVisibility(*pSoldier);
 
 					// Check for fade out....
 					if (pSoldier->bVisible == -1 && pSoldier->bLastRenderVisibleValue >= 0)
