@@ -552,7 +552,7 @@ void PrepareEnemyForSectorBattle()
 			// No one in the group any more continue loop
 			if (!g->pPlayerList) continue;
 
-			RemoveGroupWaypoints(g);
+			RemoveGroupWaypoints(*g);
 		}
 	}
 

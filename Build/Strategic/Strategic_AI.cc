@@ -1830,7 +1830,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					gPatrolGroup[ i ].ubGroupID = pGroup->ubGroupID;
 					pGroup->pEnemyGroup->ubIntention = PATROL;
 					pGroup->ubMoveType = ENDTOEND_FORWARDS;
-					RemoveGroupWaypoints(pGroup);
+					RemoveGroupWaypoints(*pGroup);
 					AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 0 ] );
 					AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 1 ] );
 					if( gPatrolGroup[ i ].ubSectorID[ 2 ] )

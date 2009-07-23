@@ -1896,21 +1896,21 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 }
 
 
-void RemoveGroupWaypoints(GROUP* const pGroup)
+void RemoveGroupWaypoints(GROUP& g)
 {
-	WAYPOINT* wp;
-	//if there aren't any waypoints to delete, then return.
-	if( !pGroup->pWaypoints )
-		return;
-	//remove all of the waypoints.
-	while( pGroup->pWaypoints )
+	// If there aren't any waypoints to delete, then return
+	if (!g.pWaypoints) return;
+
+	// Remove all of the waypoints
+	for (WAYPOINT* i = g.pWaypoints; i;)
 	{
-		wp = pGroup->pWaypoints;
-		pGroup->pWaypoints = pGroup->pWaypoints->next;
-		MemFree( wp );
+		WAYPOINT* const del = i;
+		i = i->next;
+		MemFree(del);
 	}
-	pGroup->ubNextWaypointID = 0;
-	pGroup->pWaypoints = NULL;
+
+	g.ubNextWaypointID = 0;
+	g.pWaypoints       = 0;
 }
 
 
@@ -1944,7 +1944,7 @@ void RemovePGroup(GROUP* const g)
 		DoScreenIndependantMessageBox(L"Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL);
 	}
 
-	RemoveGroupWaypoints(g);
+	RemoveGroupWaypoints(*g);
 
 	// Remove the arrival event if applicable.
 	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g->ubGroupID);
@@ -1982,7 +1982,7 @@ void RemoveAllGroups()
 
 void SetGroupSectorValue(INT16 const x, INT16 const y, INT16 const z, GROUP& g)
 {
-	RemoveGroupWaypoints(&g);
+	RemoveGroupWaypoints(g);
 
 	// Set sector x and y to passed values
 	g.ubSectorX       = x;
@@ -2016,7 +2016,7 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 	Assert( pGroup );
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
-	if (!gfRandomizingPatrolGroup) RemoveGroupWaypoints(pGroup);
+	if (!gfRandomizingPatrolGroup) RemoveGroupWaypoints(*pGroup);
 
 	// set sector x and y to passed values
 	pGroup->ubSectorX = pGroup->ubNextX = (UINT8)SECTORX( ubSectorID );
@@ -2029,7 +2029,7 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 // Set groups next sector x,y value, used ONLY for teleporting groups
 static void SetGroupNextSectorValue(INT16 const x, INT16 const y, GROUP& g)
 {
-	RemoveGroupWaypoints(&g);
+	RemoveGroupWaypoints(g);
 	// Set sector x and y to passed values
 	g.ubNextX         = x;
 	g.ubNextY         = y;
@@ -3554,7 +3554,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP* pGroup)
 	// prevent it from arriving empty
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
-	RemoveGroupWaypoints(pGroup);
+	RemoveGroupWaypoints(*pGroup);
 
 	pGroup->uiTraverseTime = 0;
 	SetGroupArrivalTime(*pGroup, 0);

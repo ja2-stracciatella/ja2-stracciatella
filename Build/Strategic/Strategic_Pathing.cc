@@ -544,9 +544,7 @@ PathSt* ClearStrategicPathList(PathSt* const pHeadOfPath, const INT16 sMvtGroup)
 
 	if (sMvtGroup != -1 && sMvtGroup != 0)
 	{
-		GROUP* const g = GetGroup(sMvtGroup);
-		Assert(g);
-		RemoveGroupWaypoints(g);
+		RemoveGroupWaypoints(*GetGroup(sMvtGroup));
 	}
 	return NULL;
 }
@@ -837,7 +835,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	//       group would add new arrival events without removing the existing one(s).
 	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
-	RemoveGroupWaypoints(&g);
+	RemoveGroupWaypoints(g);
 
 	if (g.fPlayer)
 	{
@@ -1143,7 +1141,7 @@ void ClearMercPathsAndWaypointsForAllInGroup(GROUP& g)
 	}
 
 	// clear the waypoints for this group too - no mercpath = no waypoints!
-	RemoveGroupWaypoints(&g);
+	RemoveGroupWaypoints(g);
 }
 
 
