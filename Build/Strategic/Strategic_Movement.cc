@@ -199,30 +199,30 @@ void AddPlayerToGroup(GROUP& g, SOLDIERTYPE& s)
 static void CancelEmptyPersistentGroupMovement(GROUP&);
 
 
-void RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
+void RemovePlayerFromPGroup(GROUP& g, SOLDIERTYPE& s)
 {
-	AssertMsg(g->fPlayer, "Attempting RemovePlayerFromGroup() on an ENEMY group!");
+	AssertMsg(g.fPlayer, "Attempting RemovePlayerFromGroup() on an ENEMY group!");
 
-	for (PLAYERGROUP** i = &g->pPlayerList; *i != NULL; i = &(*i)->next)
+	for (PLAYERGROUP** i = &g.pPlayerList; *i; i = &(*i)->next)
 	{
 		PLAYERGROUP* const p = *i;
-		if (p->pSoldier != s) continue;
+		if (p->pSoldier != &s) continue;
 
 		*i = p->next;
 		MemFree(p);
 
-		s->ubPrevSectorID = SECTOR(g->ubPrevX, g->ubPrevY);
-		s->ubGroupID      = 0;
+		s.ubPrevSectorID = SECTOR(g.ubPrevX, g.ubPrevY);
+		s.ubGroupID      = 0;
 
-		if (--g->ubGroupSize == 0)
+		if (--g.ubGroupSize == 0)
 		{
-			if (!g->fPersistant)
+			if (!g.fPersistant)
 			{
-				RemovePGroup(*g);
+				RemovePGroup(g);
 			}
 			else
 			{
-				CancelEmptyPersistentGroupMovement(*g);
+				CancelEmptyPersistentGroupMovement(g);
 			}
 		}
 		break;
@@ -242,7 +242,7 @@ void RemovePlayerFromGroup(SOLDIERTYPE* const s)
 
 	AssertMsg(pGroup, String("Attempting to RemovePlayerFromGroup( %d, %d ) from non-existant group", s->ubGroupID, s->ubProfile));
 
-	RemovePlayerFromPGroup(pGroup, s);
+	RemovePlayerFromPGroup(*pGroup, *s);
 }
 
 

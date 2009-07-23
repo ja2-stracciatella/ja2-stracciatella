@@ -169,7 +169,7 @@ GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY)
 void AddPlayerToGroup(GROUP&, SOLDIERTYPE&);
 
 void RemovePlayerFromGroup(SOLDIERTYPE*);
-void RemovePlayerFromPGroup(GROUP*, SOLDIERTYPE*);
+void RemovePlayerFromPGroup(GROUP&, SOLDIERTYPE&);
 
 // create a vehicle group, it is by itself,
 GROUP* CreateNewVehicleGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY);

@@ -686,16 +686,17 @@ static void ValidateLargeGroup(GROUP* pGroup)
 #ifdef JA2BETAVERSION
 static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* const s)
 {
-	FOR_ALL_GROUPS_SAFE(g)
+	FOR_ALL_GROUPS_SAFE(i)
 	{
-		if (!g->fPlayer) continue;
-		if (s->ubGroupID == g->ubGroupID) continue;
+		GROUP& g = *i;
+		if (!g.fPlayer) continue;
+		if (s->ubGroupID == g.ubGroupID) continue;
 
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, g)
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
 		{
 			if (pPlayer->pSoldier != s) continue;
 
-			RemovePlayerFromPGroup(g, s);
+			RemovePlayerFromPGroup(g, *s);
 			break;
 		}
 	}
