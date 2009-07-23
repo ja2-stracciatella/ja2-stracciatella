@@ -1914,11 +1914,11 @@ void RemoveGroupWaypoints(GROUP* const pGroup)
 }
 
 
-// set this groups previous sector values
-static void SetGroupPrevSectors(GROUP* const g, UINT8 const ubX, UINT8 const ubY)
+// Set this groups previous sector values
+static void SetGroupPrevSectors(GROUP& g, UINT8 const x, UINT8 const y)
 {
-	g->ubPrevX = ubX;
-	g->ubPrevY = ubY;
+	g.ubPrevX = x;
+	g.ubPrevY = y;
 }
 
 
@@ -3493,7 +3493,7 @@ void PlaceGroupInSector(GROUP& g, INT16 const prev_x, INT16 const prev_y, INT16 
 {
 	ClearMercPathsAndWaypointsForAllInGroup(g);
 	// Change where they are and where they're going
-	SetGroupPrevSectors(&g, prev_x, prev_y);
+	SetGroupPrevSectors(g, prev_x, prev_y);
 	SetGroupSectorValue(prev_x, prev_y, z, &g);
 	SetGroupNextSectorValue(next_x, next_y, &g);
 	// Call arrive event
