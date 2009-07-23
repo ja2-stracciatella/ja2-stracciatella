@@ -4335,15 +4335,15 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 }
 
 
-void WaterDamage( SOLDIERTYPE *pSoldier )
+void WaterDamage(SOLDIERTYPE& s)
 {
 	// damage guy's equipment and camouflage due to water
 	INT8		bDamage, bDieSize;
 	UINT32	uiRoll;
 
-	if ( pSoldier->bOverTerrainType == DEEP_WATER )
+	if (s.bOverTerrainType == DEEP_WATER)
 	{
-		FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+		FOR_ALL_SOLDIER_INV_SLOTS(i, s)
 		{
 			// if there's an item here that can get water damaged...
 			if (i->usItem && Item[i->usItem].fFlags & ITEM_WATER_DAMAGES)
@@ -4367,31 +4367,28 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 			}
 		}
 	}
-	if (pSoldier->bCamo > 0 && !HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED ) )
+	if (s.bCamo > 0 && !HAS_SKILL_TRAIT(&s, CAMOUFLAGED))
 	{
 		// reduce camouflage by 2% per tile of deep water
 		// and 1% for medium water
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if (s.bOverTerrainType == DEEP_WATER )
 		{
-			pSoldier->bCamo = __max( 0, pSoldier->bCamo - 2 );
+			s.bCamo = __max(0, s.bCamo - 2);
 		}
 		else
 		{
-			pSoldier->bCamo = __max( 0, pSoldier->bCamo - 1 );
+			s.bCamo = __max(0, s.bCamo - 1);
 		}
-		if (pSoldier->bCamo == 0)
+		if (s.bCamo == 0)
 		{
 			// Reload palettes....
-			if ( pSoldier->bInSector )
-			{
-				CreateSoldierPalettes( pSoldier );
-			}
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WASHED_OFF], pSoldier->name);
+			if (s.bInSector) CreateSoldierPalettes(&s);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WASHED_OFF], s.name);
 		}
 	}
-	if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bMonsterSmell > 0 )
+	if (s.bTeam == gbPlayerNum && s.bMonsterSmell > 0)
 	{
-		if ( pSoldier->bOverTerrainType == DEEP_WATER )
+		if (s.bOverTerrainType == DEEP_WATER)
 		{
 			bDieSize = 10;
 		}
@@ -4401,11 +4398,11 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 		}
 		if ( Random( bDieSize ) == 0 )
 		{
-			pSoldier->bMonsterSmell--;
+			--s.bMonsterSmell;
 		}
 	}
 
-	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+	DirtyMercPanelInterface(&s, DIRTYLEVEL2);
 }
 
 

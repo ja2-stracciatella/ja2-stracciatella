@@ -131,7 +131,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier );
 INT8 FindAttachmentByClass(OBJECTTYPE const*, UINT32 uiItemClass);
 void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove );
 
-void WaterDamage( SOLDIERTYPE *pSoldier );
+void WaterDamage(SOLDIERTYPE&);
 
 INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUpper );
 

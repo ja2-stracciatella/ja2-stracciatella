@@ -2044,7 +2044,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 		// Damage water if in deep water
 		if (s.bOverTerrainType == MED_WATER || s.bOverTerrainType == DEEP_WATER)
 		{
-			WaterDamage(&s);
+			WaterDamage(s);
 		}
 
 		// OK, If we were in deep water but we are NOT now, handle mid animations!
