@@ -3473,22 +3473,19 @@ static UINT16 FindReplacementMagazine(AmmoKind const ubCalibre, UINT8 const ubMa
 	}
 
 	return( usDefault );
-
 }
 
-UINT16 FindReplacementMagazineIfNecessary( UINT16 usOldGun, UINT16 usOldAmmo, UINT16 usNewGun )
+
+UINT16 FindReplacementMagazineIfNecessary(UINT16 const old_gun_id, UINT16 const old_ammo_id, UINT16 const new_gun_id)
 {
-	UINT16 usNewAmmo = NOTHING;
-
-	if ( (Magazine[ Item[ usOldAmmo ].ubClassIndex ].ubCalibre == Weapon[ usOldGun ].ubCalibre) &&
-			 (Magazine[ Item[ usOldAmmo ].ubClassIndex ].ubMagSize == Weapon[ usOldGun ].ubMagSize) )
-	{
-		// must replace this!
-		usNewAmmo = FindReplacementMagazine( Weapon[ usNewGun ].ubCalibre, Weapon[ usNewGun ].ubMagSize, Magazine[ Item[ usOldAmmo ].ubClassIndex ].ubAmmoType );
-	}
-
-	return( usNewAmmo );
+	WEAPONTYPE const& old_gun = Weapon[old_gun_id];
+	MAGTYPE    const& old_mag = Magazine[Item[old_ammo_id].ubClassIndex];
+	if (old_mag.ubCalibre != old_gun.ubCalibre) return NOTHING;
+	if (old_mag.ubMagSize != old_gun.ubMagSize) return NOTHING;
+	WEAPONTYPE const& new_gun = Weapon[new_gun_id];
+	return FindReplacementMagazine(new_gun.ubCalibre, new_gun.ubMagSize, old_mag.ubAmmoType);
 }
+
 
 // increase this if any gun can have more types that this
 #define MAX_AMMO_TYPES_PER_GUN		3

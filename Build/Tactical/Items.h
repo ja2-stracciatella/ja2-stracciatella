@@ -140,7 +140,7 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN* pfGoodAPs);
 BOOLEAN ItemIsLegal( UINT16 usItemIndex );
 BOOLEAN ExtendedGunListGun( UINT16 usGun );
 UINT16 StandardGunListReplacement( UINT16 usGun );
-UINT16 FindReplacementMagazineIfNecessary( UINT16 usOldGun, UINT16 usOldAmmo, UINT16 usNewGun );
+UINT16 FindReplacementMagazineIfNecessary(UINT16 old_gun_id, UINT16 old_ammo_id, UINT16 new_gun_id);
 
 BOOLEAN DamageItemOnGround(OBJECTTYPE* pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, SOLDIERTYPE* owner);
 
