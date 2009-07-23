@@ -253,34 +253,34 @@ void HandleCrowShadowVisibility(SOLDIERTYPE* const s)
 }
 
 
-static void HandleCrowShadowNewGridNo(SOLDIERTYPE* const s)
+static void HandleCrowShadowNewGridNo(SOLDIERTYPE& s)
 {
-	if (s->ubBodyType != CROW) return;
+	if (s.ubBodyType != CROW) return;
 
-	if (s->pAniTile)
+	if (s.pAniTile)
 	{
-		DeleteAniTile(s->pAniTile);
-		s->pAniTile = 0;
+		DeleteAniTile(s.pAniTile);
+		s.pAniTile = 0;
 	}
 
-	if (s->sGridNo     == NOWHERE)  return;
-	if (s->usAnimState != CROW_FLY) return;
+	if (s.sGridNo     == NOWHERE)  return;
+	if (s.usAnimState != CROW_FLY) return;
 
 	ANITILE_PARAMS a;
 	memset(&a, 0, sizeof(a));
-	a.sGridNo        = s->sGridNo;
+	a.sGridNo        = s.sGridNo;
 	a.ubLevelID      = ANI_SHADOW_LEVEL;
-	a.sDelay         = s->sAniDelay;
+	a.sDelay         = s.sAniDelay;
 	a.sStartFrame    = 0;
 	a.uiFlags        = ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
-	a.sX             = s->sX;
-	a.sY             = s->sY;
+	a.sX             = s.sX;
+	a.sY             = s.sY;
 	a.sZ             = 0;
 	a.zCachedFile    = "TILECACHE/fly_shdw.sti";
-	a.v.user.uiData3 = s->bDirection;
-	s->pAniTile = CreateAnimationTile(&a);
+	a.v.user.uiData3 = s.bDirection;
+	s.pAniTile = CreateAnimationTile(&a);
 
-	HandleCrowShadowVisibility(s);
+	HandleCrowShadowVisibility(&s);
 }
 
 
@@ -1529,9 +1529,8 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 			break;
 
 		case CROW_FLY:
-
 			// Ate: startup a shadow ( if gridno is set )
-			HandleCrowShadowNewGridNo( pSoldier );
+			HandleCrowShadowNewGridNo(*pSoldier);
 			break;
 
 		case CROW_EAT:
@@ -1992,7 +1991,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 		}
 
 		HandleAnimationProfile(s, s.usAnimState, FALSE);
-		HandleCrowShadowNewGridNo(&s);
+		HandleCrowShadowNewGridNo(s);
 	}
 
 	INT8 const old_over_terrain_type = s.bOverTerrainType;
