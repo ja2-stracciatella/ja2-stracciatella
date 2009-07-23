@@ -225,7 +225,7 @@ ScreenID InitScreenHandle(void)
 	if ( ubCurrentScreen == 4 )
 	{
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-		InitNewGame( FALSE );
+		InitNewGame(false);
 	}
 	return( INIT_SCREEN );
 }

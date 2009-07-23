@@ -338,157 +338,85 @@ void ShutdownStrategicLayer()
 }
 
 
-void InitNewGame(BOOLEAN const fReset)
+void InitNewGame(bool const reset)
 {
-//	static fScreenCount = 0;
-
-	if( fReset )
+	if (reset)
 	{
 		gubScreenCount = 0;
 		return;
 	}
 
-	// reset meanwhile flags
 	uiMeanWhileFlags = 0;
+	SetSelectedMan(0);
 
-	// Reset the selected soldier
-	SetSelectedMan(NULL);
-
-	if( gubScreenCount == 0 )
+	if (gubScreenCount == 0)
 	{
 		LoadMercProfiles();
-	}
-
-	//Initialize the Arms Dealers and Bobby Rays inventory
-	if( gubScreenCount == 0 )
-	{
-		//Init all the arms dealers inventory
 		InitAllArmsDealers();
 		InitBobbyRayInventory();
 	}
 
-	// clear tactical
-	ClearTacticalMessageQueue( );
-
-	// clear mapscreen messages
-	FreeGlobalMessageList();
+	ClearTacticalMessageQueue();
+	FreeGlobalMessageList(); // Clear mapscreen messages
 
 #ifdef JA2DEMO
-
-	// IF our first time, go into laptop!
 	InitStrategicLayer();
-
-	// Hire demo mercs....
-#if defined ( JA2TESTVERSION ) || defined ( JA2DEMO )
-	DemoHiringOfMercs( );
-#endif
+	DemoHiringOfMercs();
 
 	// Setup initial money
- 	AddTransactionToPlayersBook( ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 20500 );
-	#ifdef GERMAN
-	  //The different mercs are slightly more expensive.  This adds that difference.
-		AddTransactionToPlayersBook( ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 1075 );
-	#endif
+	AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 20500);
+#	ifdef GERMAN
+	// The different mercs are slightly more expensive. This adds that difference
+	AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 1075);
+#	endif
 
 	SetCurrentWorldSector(1, 16, 0);
-
-	SetLaptopExitScreen( MAP_SCREEN );
-	FadeInGameScreen( );
-	EnterTacticalScreen( );
-
+	SetLaptopExitScreen(MAP_SCREEN);
+	FadeInGameScreen();
+	EnterTacticalScreen();
 #else
-
-	// IF our first time, go into laptop!
-	if ( gubScreenCount == 0 )
-	{
+	if (gubScreenCount == 0)
+	{ // Our first time, go into laptop
 		InitLaptopAndLaptopScreens();
 		InitStrategicLayer();
+		SetLaptopNewGameFlag();
 
-		// Set new game flag
-		SetLaptopNewGameFlag( );
+		// This is for the "mercs climbing down from a rope" animation, NOT Skyrider
+		ResetHeliSeats();
 
-		// this is for the "mercs climbing down from a rope" animation, NOT Skyrider!!
-		ResetHeliSeats( );
+		UINT32 const now = GetWorldTotalMin();
+		AddPreReadEmail(OLD_ENRICO_1, OLD_ENRICO_1_LENGTH, MAIL_ENRICO, now);
+		AddPreReadEmail(OLD_ENRICO_2, OLD_ENRICO_2_LENGTH, MAIL_ENRICO, now);
+		AddPreReadEmail(RIS_REPORT,   RIS_REPORT_LENGTH,   RIS_EMAIL,   now);
+		AddPreReadEmail(OLD_ENRICO_3, OLD_ENRICO_3_LENGTH, MAIL_ENRICO, now);
+		AddEmail(IMP_EMAIL_INTRO, IMP_EMAIL_INTRO_LENGTH, CHAR_PROFILE_SITE, now);
 
-		// Setup two new messages!
-		AddPreReadEmail(OLD_ENRICO_1,OLD_ENRICO_1_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddPreReadEmail(OLD_ENRICO_2,OLD_ENRICO_2_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddPreReadEmail(RIS_REPORT,RIS_REPORT_LENGTH,RIS_EMAIL,  GetWorldTotalMin() );
-		AddPreReadEmail(OLD_ENRICO_3,OLD_ENRICO_3_LENGTH,MAIL_ENRICO,  GetWorldTotalMin() );
-		AddEmail(IMP_EMAIL_INTRO,IMP_EMAIL_INTRO_LENGTH,CHAR_PROFILE_SITE,  GetWorldTotalMin() );
-		//AddEmail(ENRICO_CONGRATS,ENRICO_CONGRATS_LENGTH,MAIL_ENRICO, GetWorldTotalMin() );
-
-		// ATE: Set starting cash....
-		INT32 iStartingCash;
-		switch( gGameOptions.ubDifficultyLevel )
+		// ATE: Set starting cash
+		INT32 starting_cash;
+		switch (gGameOptions.ubDifficultyLevel)
 		{
-			case DIF_LEVEL_EASY:
-
-				iStartingCash	= 45000;
-				break;
-
-			case DIF_LEVEL_MEDIUM:
-
-				iStartingCash	= 35000;
-				break;
-
-			case DIF_LEVEL_HARD:
-
-				iStartingCash	= 30000;
-				break;
-
+			case DIF_LEVEL_EASY:   starting_cash = 45000; break;
+			case DIF_LEVEL_MEDIUM: starting_cash = 35000; break;
+			case DIF_LEVEL_HARD:   starting_cash = 30000; break;
 			default: throw std::logic_error("invalid difficulty level");
 		}
+		AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, now, starting_cash);
 
-		// Setup initial money
- 		AddTransactionToPlayersBook( ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), iStartingCash );
+		// Schedule email for message from Speck at 7am 1 to 2 days in the future
+		UINT32 const days_time_merc_site_available = Random(2) + 1;
+		AddFutureDayStrategicEvent(EVENT_DAY3_ADD_EMAIL_FROM_SPECK, 60 * 7, 0, days_time_merc_site_available);
 
-
-		{
-			UINT32	uiDaysTimeMercSiteAvailable = Random( 2 ) + 1;
-
-			// schedule email for message from spec at 7am 3 days in the future
-			AddFutureDayStrategicEvent( EVENT_DAY3_ADD_EMAIL_FROM_SPECK, 60*7, 0, uiDaysTimeMercSiteAvailable );
-		}
-
-		SetLaptopExitScreen( INIT_SCREEN );
+		SetLaptopExitScreen(INIT_SCREEN);
 		SetPendingNewScreen(LAPTOP_SCREEN);
 		gubScreenCount = 1;
 
-		//Set the fact the game is in progress
+		// Set the fact the game is in progress
 		gTacticalStatus.fHasAGameBeenStarted = TRUE;
-		return;
 	}
-
-	if ( gubScreenCount == 1 )
+	else if (gubScreenCount == 1)
 	{
 		gubScreenCount = 2;
-		return;
 	}
-
-/*
-	if ( gubScreenCount == 2 )
-	{
-		SetCurrentWorldSector(9, 1, 0);
-
-		SetLaptopExitScreen( MAP_SCREEN );
-
-		FadeInGameScreen( );
-
-		EnterTacticalScreen( );
-
-		if (gfAtLeastOneMercWasHired)
-		{
-			gubScreenCount = 3;
-		}
-		else
-		{
-
-		}
-		return;
-	}
-
-	*/
 #endif
 }
 
@@ -674,7 +602,7 @@ void ReStartingGame()
 	SoundStopAll( );
 
 	//we are going to restart a game so initialize the variable so we can initialize a new game
-	InitNewGame( TRUE );
+	InitNewGame(true);
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( TRUE );
