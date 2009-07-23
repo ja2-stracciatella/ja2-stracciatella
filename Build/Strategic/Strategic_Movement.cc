@@ -3489,17 +3489,15 @@ static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
 }
 
 
-void PlaceGroupInSector(GROUP* const g, INT16 const sPrevX, INT16 const sPrevY, INT16 const sNextX, INT16 const sNextY, INT8 const bZ, BOOLEAN const fCheckForBattle)
+void PlaceGroupInSector(GROUP& g, INT16 const prev_x, INT16 const prev_y, INT16 const next_x, INT16 const next_y, INT8 const z, bool const check_for_battle)
 {
-	ClearMercPathsAndWaypointsForAllInGroup(*g);
-
-	// change where they are and where they're going
-	SetGroupPrevSectors(g, sPrevX, sPrevY);
-	SetGroupSectorValue(sPrevX, sPrevY, bZ, g);
-	SetGroupNextSectorValue(sNextX, sNextY, g);
-
-	// call arrive event
-	GroupArrivedAtSector(*g, fCheckForBattle, FALSE);
+	ClearMercPathsAndWaypointsForAllInGroup(g);
+	// Change where they are and where they're going
+	SetGroupPrevSectors(&g, prev_x, prev_y);
+	SetGroupSectorValue(prev_x, prev_y, z, &g);
+	SetGroupNextSectorValue(next_x, next_y, &g);
+	// Call arrive event
+	GroupArrivedAtSector(g, check_for_battle, FALSE);
 }
 
 
