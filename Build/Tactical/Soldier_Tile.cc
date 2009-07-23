@@ -139,7 +139,7 @@ static void MarkMovementReserved(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	// Check if we have one reserrved already, and free it first!
 	if ( pSoldier->sReservedMovementGridNo != NOWHERE )
 	{
-		UnMarkMovementReserved( pSoldier );
+		UnMarkMovementReserved(*pSoldier);
 	}
 
 	// For single-tiled mercs, set this gridno
@@ -151,25 +151,25 @@ static void MarkMovementReserved(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	pSoldier->sReservedMovementGridNo = sGridNo;
 }
 
-void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
+
+void UnMarkMovementReserved(SOLDIERTYPE& s)
 {
 	INT16 sNewGridNo;
 
-	sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS(pSoldier->dYPos, pSoldier->dXPos );
+	sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS(s.dYPos, s.dXPos);
 
 	// OK, if NOT in fence anim....
-	if ( pSoldier->usAnimState == HOPFENCE && pSoldier->sReservedMovementGridNo != sNewGridNo )
+	if (s.usAnimState == HOPFENCE && s.sReservedMovementGridNo != sNewGridNo)
 	{
 		return;
 	}
 
 	// For single-tiled mercs, unset this gridno
 	// See if we have one reserved!
-	if ( pSoldier->sReservedMovementGridNo != NOWHERE )
+	if (s.sReservedMovementGridNo != NOWHERE)
 	{
-		gpWorldLevelData[ pSoldier->sReservedMovementGridNo ].uiFlags &= (~MAPELEMENT_MOVEMENT_RESERVED);
-
-		pSoldier->sReservedMovementGridNo = NOWHERE;
+		gpWorldLevelData[s.sReservedMovementGridNo].uiFlags &= ~MAPELEMENT_MOVEMENT_RESERVED;
+		s.sReservedMovementGridNo = NOWHERE;
 	}
 }
 

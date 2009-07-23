@@ -703,7 +703,7 @@ void DeleteSoldier(SOLDIERTYPE& s)
 	DeleteAnimationCache(s.ubID, &s.AnimCache);
 
 	DeleteSoldierLight(&s);
-	UnMarkMovementReserved(&s);
+	UnMarkMovementReserved(s);
 	if (!RemoveMercSlot(&s)) RemoveAwaySlot(&s);
 
 	s.bActive = FALSE;
@@ -1786,7 +1786,7 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE& s, BOOLEAN const force)
 
 	HandlePlacingRoofMarker(&s, s.sGridNo, FALSE, FALSE);
 
-	UnMarkMovementReserved(&s);
+	UnMarkMovementReserved(s);
 	HandleCrowShadowRemoveGridNo(s);
 	s.sGridNo = NOWHERE;
 }
@@ -1938,7 +1938,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 	s.usStrategicInsertionData = new_grid_no;
 
 	// Remove this gridno as a reserved place!
-	if (!in_vehicle) UnMarkMovementReserved(&s);
+	if (!in_vehicle) UnMarkMovementReserved(s);
 
 	if (s.sInitialGridNo == 0)
 	{
@@ -7413,7 +7413,7 @@ void EVENT_StopMerc(SOLDIERTYPE* const s, GridNo const grid_no, INT8 const direc
 	}
 
 	UnSetUIBusy(s);
-	UnMarkMovementReserved(s);
+	UnMarkMovementReserved(*s);
 }
 
 

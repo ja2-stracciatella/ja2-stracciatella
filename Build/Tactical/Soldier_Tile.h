@@ -9,7 +9,7 @@
 #define			MOVE_TILE_STATIONARY_BLOCKED		 -2
 
 
-void UnMarkMovementReserved( SOLDIERTYPE *pSoldier );
+void UnMarkMovementReserved(SOLDIERTYPE&);
 
 BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, INT16 sFinalDestTile );
 

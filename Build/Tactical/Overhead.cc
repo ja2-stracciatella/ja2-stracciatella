@@ -1356,7 +1356,7 @@ static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE* pSoldier)
 	pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 	pSoldier->ubPendingAction    = NO_PENDING_ACTION;
 
-	UnMarkMovementReserved( pSoldier );
+	UnMarkMovementReserved(*pSoldier);
 
 	// Display message if our merc...
 	if (pSoldier->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT)
