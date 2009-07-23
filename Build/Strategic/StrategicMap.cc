@@ -2053,7 +2053,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 		if( pSoldier->ubGroupID != 0 )
 		{
 			// remove from group
-			RemovePlayerFromGroup(pSoldier);
+			RemovePlayerFromGroup(*pSoldier);
 			pSoldier->ubGroupID = 0;
 		}
 	}

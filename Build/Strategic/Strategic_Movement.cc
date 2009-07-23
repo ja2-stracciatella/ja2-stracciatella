@@ -230,9 +230,9 @@ void RemovePlayerFromPGroup(GROUP& g, SOLDIERTYPE& s)
 }
 
 
-void RemovePlayerFromGroup(SOLDIERTYPE* const s)
+void RemovePlayerFromGroup(SOLDIERTYPE& s)
 {
-	GROUP* const pGroup = GetGroup(s->ubGroupID);
+	GROUP* const pGroup = GetGroup(s.ubGroupID);
 
 	//KM : August 6, 1999 Patch fix
 	//     Because the release build has no assertions, it was still possible for the group to be null,
@@ -240,9 +240,9 @@ void RemovePlayerFromGroup(SOLDIERTYPE* const s)
 	if (!pGroup) return;
 	//end
 
-	AssertMsg(pGroup, String("Attempting to RemovePlayerFromGroup( %d, %d ) from non-existant group", s->ubGroupID, s->ubProfile));
+	AssertMsg(pGroup, String("Attempting to RemovePlayerFromGroup( %d, %d ) from non-existant group", s.ubGroupID, s.ubProfile));
 
-	RemovePlayerFromPGroup(*pGroup, *s);
+	RemovePlayerFromPGroup(*pGroup, s);
 }
 
 

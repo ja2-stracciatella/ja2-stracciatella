@@ -7154,7 +7154,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 								s->bAssignment >= ON_DUTY &&
 								s->ubGroupID != 0)
 						{
-							RemovePlayerFromGroup(s);
+							RemovePlayerFromGroup(*s);
 						}
 
 						// able to add, do it

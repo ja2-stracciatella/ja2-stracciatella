@@ -205,7 +205,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 
 			// ATE: OK funcky stuff here!
 			// We have now a guy on a squad group, remove him!
-			RemovePlayerFromGroup(vs);
+			RemovePlayerFromGroup(*vs);
 
 			// I really have vehicles.
 			// ONLY add to vehicle group once!
@@ -346,7 +346,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		break;
 	}
 
-	RemovePlayerFromGroup(&s);
+	RemovePlayerFromGroup(s);
 
 	s.ubGroupID      = 0;
 	s.sSectorY       = v.sSectorY;

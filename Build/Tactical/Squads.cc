@@ -136,7 +136,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		if (s->ubGroupID != 0)
 		{
 			// in valid group, remove from that group
-			RemovePlayerFromGroup(s);
+			RemovePlayerFromGroup(*s);
 
 			// character not on a reserved group
 			if (s->bAssignment >= ON_DUTY && s->bAssignment != VEHICLE)
@@ -298,7 +298,7 @@ BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 			 * group is no reason to cancel movement for the rest of the group. */
 			s->pMercPath = ClearStrategicPathList(s->pMercPath, -1);
 
-			RemovePlayerFromGroup(s);
+			RemovePlayerFromGroup(*s);
 			s->ubGroupID = 0;
 
 			if (s->fBetweenSectors && s->uiStatusFlags & SOLDIER_VEHICLE)
