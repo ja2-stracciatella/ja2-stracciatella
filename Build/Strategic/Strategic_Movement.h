@@ -194,8 +194,8 @@ void GroupArrivedAtSector(GROUP&, BOOLEAN check_for_battle, BOOLEAN never_left);
 void CalculateNextMoveIntention( GROUP *pGroup );
 
 
-// set current sector of the group..used for player controlled mercs
-void SetGroupSectorValue(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, GROUP*);
+// Set current sector of the group, used for player controlled mercs
+void SetGroupSectorValue(INT16 x, INT16 y, INT16 z, GROUP&);
 
 void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID );
 

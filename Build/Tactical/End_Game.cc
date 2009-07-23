@@ -224,7 +224,7 @@ static void DoneFadeOutKilledQueen(void)
 		if (s->bLife >= OKLIFE && s->bInSector && s->bAssignment == CurrentSquad())
 		{
 			gfTacticalTraversal = TRUE;
-			SetGroupSectorValue(3, MAP_ROW_P, 0, GetGroup(s->ubGroupID));
+			SetGroupSectorValue(3, MAP_ROW_P, 0, *GetGroup(s->ubGroupID));
 
 			// Set next sectore
 			s->sSectorX = 3;

@@ -151,7 +151,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		if (s->bAssignment != VEHICLE || s->iVehicleId == -1)
 		{
 			AddPlayerToGroup(g, *s);
-			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, &g);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
 		}
 		else if (InHelicopter(*s))
 		{
@@ -161,7 +161,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			RemoveSoldierFromHelicopter(s);
 
 			AddPlayerToGroup(g, *s);
-			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, &g);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
 
 			// if we've just started a new squad
 			if (fNewSquad)
@@ -184,7 +184,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			fExitingVehicleToSquad = FALSE;
 
 			AddPlayerToGroup(g, *s);
-			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, &g);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
 		}
 
 		*i = s;

@@ -1980,27 +1980,30 @@ void RemoveAllGroups()
 }
 
 
-void SetGroupSectorValue(INT16 const sSectorX, INT16 const sSectorY, INT16 const sSectorZ, GROUP* const g)
+void SetGroupSectorValue(INT16 const x, INT16 const y, INT16 const z, GROUP& g)
 {
-	RemoveGroupWaypoints(g);
+	RemoveGroupWaypoints(&g);
 
-	// set sector x and y to passed values
-	g->ubSectorX = g->ubNextX = sSectorX;
-	g->ubSectorY = g->ubNextY = sSectorY;
-	g->ubSectorZ =              sSectorZ;
-	g->fBetweenSectors = FALSE;
+	// Set sector x and y to passed values
+	g.ubSectorX       = x;
+	g.ubSectorY       = y;
+	g.ubNextX         = x;
+	g.ubNextY         = y;
+	g.ubSectorZ       = z;
+	g.fBetweenSectors = FALSE;
 
-	// set next sectors same as current
-	g->ubOriginalSector = SECTOR(g->ubSectorX, g->ubSectorY);
-	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g->ubGroupID);
+	// Set next sectors same as current
+	g.ubOriginalSector = SECTOR(x, y);
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
-	// set all of the mercs in the group so that they are in the new sector too.
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, g)
+	// Set all of the mercs in the group so that they are in the new sector, too.
+	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 	{
-		pPlayer->pSoldier->sSectorX = sSectorX;
-		pPlayer->pSoldier->sSectorY = sSectorY;
-		pPlayer->pSoldier->bSectorZ = (UINT8)sSectorZ;
-		pPlayer->pSoldier->fBetweenSectors = FALSE;
+		SOLDIERTYPE& s = *i->pSoldier;
+		s.sSectorX        = x;
+		s.sSectorY        = y;
+		s.bSectorZ        = z;
+		s.fBetweenSectors = FALSE;
 	}
 
 	CheckAndHandleUnloadingOfCurrentWorld();
@@ -3492,7 +3495,7 @@ void PlaceGroupInSector(GROUP& g, INT16 const prev_x, INT16 const prev_y, INT16 
 	ClearMercPathsAndWaypointsForAllInGroup(g);
 	// Change where they are and where they're going
 	SetGroupPrevSectors(g, prev_x, prev_y);
-	SetGroupSectorValue(prev_x, prev_y, z, &g);
+	SetGroupSectorValue(prev_x, prev_y, z, g);
 	SetGroupNextSectorValue(next_x, next_y, g);
 	// Call arrive event
 	GroupArrivedAtSector(g, check_for_battle, FALSE);

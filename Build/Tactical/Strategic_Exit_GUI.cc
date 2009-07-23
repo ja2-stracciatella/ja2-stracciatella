@@ -372,7 +372,7 @@ static void DoneFadeOutWarpCallback(void)
 		if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
 		{
 			gfTacticalTraversal = TRUE;
-			SetGroupSectorValue(gsWarpWorldX, gsWarpWorldY, gbWarpWorldZ, GetGroup(pSoldier->ubGroupID));
+			SetGroupSectorValue(gsWarpWorldX, gsWarpWorldY, gbWarpWorldZ, *GetGroup(pSoldier->ubGroupID));
 
 			// Set next sectore
 			pSoldier->sSectorX = gsWarpWorldX;
