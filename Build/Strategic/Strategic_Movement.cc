@@ -1861,7 +1861,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			vs.fBetweenSectors = TRUE;
-			RemoveSoldierFromTacticalSector(&vs);
+			RemoveSoldierFromTacticalSector(vs);
 		}
 	}
 
@@ -1879,10 +1879,9 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 
 		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 		{
-			curr->pSoldier->fBetweenSectors = TRUE;
-
-			// OK, Remove the guy from tactical engine!
-			RemoveSoldierFromTacticalSector(curr->pSoldier);
+			SOLDIERTYPE& s = *curr->pSoldier;
+			s.fBetweenSectors = TRUE;
+			RemoveSoldierFromTacticalSector(s);
 		}
 		CheckAndHandleUnloadingOfCurrentWorld();
 
@@ -2877,7 +2876,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		{
 			SOLDIERTYPE& s = *i->pSoldier;
 			s.fBetweenSectors = TRUE;
-			RemoveSoldierFromTacticalSector(&s);
+			RemoveSoldierFromTacticalSector(s);
 		}
 	}
 }

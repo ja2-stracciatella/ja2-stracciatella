@@ -152,14 +152,13 @@ static void SurrenderMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 		BeginCaptureSquence();
 
     // Do capture....
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_ALL_IN_TEAM(i, gbPlayerNum)
 		{
-			// Are we in sector.....
-			if (s->bInSector && s->bLife != 0)
-			{
-				EnemyCapturesPlayerSoldier(s);
-				RemoveSoldierFromTacticalSector(s);
-			}
+			SOLDIERTYPE& s = *i;
+			if (!s.bInSector) continue;
+			if (s.bLife == 0) continue;
+			EnemyCapturesPlayerSoldier(&s);
+			RemoveSoldierFromTacticalSector(s);
     }
 
 		EndCaptureSequence( );

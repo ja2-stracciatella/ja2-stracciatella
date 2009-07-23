@@ -918,7 +918,7 @@ void ExecuteOverhead(void)
 											// If we are at an exit-grid, make disappear.....
 											if (gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO)
 											{
-												RemoveSoldierFromTacticalSector(pSoldier);
+												RemoveSoldierFromTacticalSector(*pSoldier);
 											}
 										}
 									}
@@ -5184,30 +5184,30 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 			gfKillingGuysForLosingBattle = TRUE;
 
 			// Kill them now...
-			FOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
+			FOR_ALL_IN_TEAM(i, gbPlayerNum)
 			{
+				SOLDIERTYPE& s = *i;
 				// Are we in sector.....
-				if (pTeamSoldier->bInSector)
+				if (s.bInSector)
 				{
-					if ( pTeamSoldier->bLife != 0 && pTeamSoldier->bLife < OKLIFE || AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) )
+					if (s.bLife != 0 && s.bLife < OKLIFE || AM_AN_EPC(&s) || AM_A_ROBOT(&s))
 					{
 						// Captured EPCs or ROBOTS will be kiiled in capture routine....
 						if ( !fDoCapture )
 						{
 							// Kill!
-							pTeamSoldier->bLife = 0;
+							s.bLife = 0;
 
-							HandleSoldierDeath( pTeamSoldier, &fMadeCorpse );
+							HandleSoldierDeath(&s, &fMadeCorpse);
 						}
 					}
 
 					// ATE: if we are told to do capture....
-					if (pTeamSoldier->bLife != 0 && fDoCapture)
+					if (s.bLife != 0 && fDoCapture)
 					{
-						EnemyCapturesPlayerSoldier( pTeamSoldier );
-						RemoveSoldierFromTacticalSector(pTeamSoldier);
+						EnemyCapturesPlayerSoldier(&s);
+						RemoveSoldierFromTacticalSector(s);
 					}
-
 				}
 			}
 
@@ -6061,33 +6061,33 @@ void RemoveManFromTeam(const INT8 bTeam)
 }
 
 
-void RemoveSoldierFromTacticalSector(SOLDIERTYPE* const pSoldier)
+void RemoveSoldierFromTacticalSector(SOLDIERTYPE& s)
 {
 	// reset merc's opplist
-	InitSoldierOppList(pSoldier);
+	InitSoldierOppList(&s);
 
 	// Remove!
-	RemoveSoldierFromGridNo(pSoldier);
+	RemoveSoldierFromGridNo(&s);
 
-	RemoveMercSlot(pSoldier);
+	RemoveMercSlot(&s);
 
-	pSoldier->bInSector = FALSE;
+	s.bInSector = FALSE;
 
 	// Select next avialiable guy....
 	if (guiCurrentScreen == GAME_SCREEN)
 	{
-		if (GetSelectedMan() == pSoldier)
+		if (GetSelectedMan() == &s)
 		{
-			SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
-			if (next != pSoldier)
+			SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(&s, FALSE, FALSE);
+			if (next != &s)
 			{
 				SelectSoldier(next, SELSOLDIER_NONE);
 			}
 			else
 			{
 				// OK - let's look for another squad...
-				SOLDIERTYPE* const pNewSoldier = FindNextActiveSquad(pSoldier);
-				if (pNewSoldier != pSoldier)
+				SOLDIERTYPE* const pNewSoldier = FindNextActiveSquad(&s);
+				if (pNewSoldier != &s)
 				{
 					// Good squad found!
 					SelectSoldier(pNewSoldier, SELSOLDIER_NONE);

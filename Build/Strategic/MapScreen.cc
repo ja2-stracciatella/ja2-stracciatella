@@ -3409,7 +3409,7 @@ static void HandleModAlt(UINT32 const key)
 			if (SOLDIERTYPE* const s = GetSelectedInfoChar())
 			{ // Make the selected character a POW
 				EnemyCapturesPlayerSoldier(s);
-				if (s->bInSector) RemoveSoldierFromTacticalSector(s);
+				if (s->bInSector) RemoveSoldierFromTacticalSector(*s);
 				fTeamPanelDirty          = TRUE;
 				fCharacterInfoPanelDirty = TRUE;
 				fMapPanelDirty           = TRUE;

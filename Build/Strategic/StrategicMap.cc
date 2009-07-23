@@ -2095,9 +2095,9 @@ void AllMercsWalkedToExitGrid()
 		Assert( gpAdjacentGroup );
 		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
-			SetInsertionDataFromAdjacentMoveDirection( pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData );
-
-			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
+			SOLDIERTYPE& s = *pPlayer->pSoldier;
+			SetInsertionDataFromAdjacentMoveDirection(&s, gubTacticalDirection, gsAdditionalData);
+			RemoveSoldierFromTacticalSector(s);
 		}
 
 		SetGroupSectorValue(gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, *gpAdjacentGroup);
@@ -2255,7 +2255,7 @@ void AllMercsHaveWalkedOffSector( )
 		//         there are other mercs in sector while a battle is in progress.
 		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
-			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
+			RemoveSoldierFromTacticalSector(*pPlayer->pSoldier);
 		}
 		SetDefaultSquadOnSectorEntry( TRUE );
 	}

@@ -244,7 +244,7 @@ void HandleFallIntoPitFromAnimation(SOLDIERTYPE* const pSoldier)
 	pSoldier->bSectorZ = ExitGrid.ubGotoSectorZ;
 
 	// Remove from world......
-	RemoveSoldierFromTacticalSector(pSoldier);
+	RemoveSoldierFromTacticalSector(*pSoldier);
 
 	HandleSoldierLeavingSectorByThemSelf( pSoldier );
 
