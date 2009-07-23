@@ -3399,22 +3399,17 @@ UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
 }
 
 
-static UINT16 MagazineClassIndexToItemType(UINT16 usMagIndex)
+static UINT16 MagazineClassIndexToItemType(UINT16 const mag_idx)
 {
-	UINT16				usLoop;
-
-	// Note: if any ammo items in the item table are separated from the main group,
-	// this function will have to be rewritten to scan the item table for an item
-	// with item class ammo, which has class index usMagIndex
-	for (usLoop = FIRST_AMMO; usLoop < MAXITEMS; usLoop++)
+	/* Note: if any ammo items in the item table are separated from the main
+	 * group, this function will have to be rewritten to scan the item table for
+	 * an item with item class ammo, which has class index mag_idx */
+	for (UINT16 i = FIRST_AMMO; i != MAXITEMS; ++i)
 	{
-		if (Item[usLoop].ubClassIndex == usMagIndex)
-		{
-			return( usLoop );
-		}
+		if (Item[i].ubClassIndex != mag_idx) continue;
+		return i;
 	}
-
-	return(NONE);
+	return NOTHING;
 }
 
 
