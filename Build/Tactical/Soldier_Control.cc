@@ -900,7 +900,7 @@ static bool IsRifle(UINT16 const item_id)
 }
 
 
-static void HandleAnimationProfile(SOLDIERTYPE*, UINT16 usAnimState, BOOLEAN fRemove);
+static void HandleAnimationProfile(SOLDIERTYPE&, UINT16 usAnimState, BOOLEAN fRemove);
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
 
@@ -1655,8 +1655,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 	}
 
 	// Remove old animation profile
-	HandleAnimationProfile( pSoldier, pSoldier->usAnimState, TRUE );
-
+	HandleAnimationProfile(*pSoldier, pSoldier->usAnimState, TRUE);
 
 	// From animation control, set surface
 	if (!SetSoldierAnimationSurface(pSoldier, usNewState))
@@ -1702,7 +1701,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 	}
 
 	// Set new animation profile
-	HandleAnimationProfile( pSoldier, usNewState, FALSE );
+	HandleAnimationProfile(*pSoldier, usNewState, FALSE);
 
 	// Reset some animation values
 	pSoldier->fForceShade = FALSE;
@@ -1776,7 +1775,7 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE& s, BOOLEAN const force)
 
 	// Remove from world (old pos)
 	RemoveMerc(s.sGridNo, s, false);
-	HandleAnimationProfile(&s, s.usAnimState, TRUE);
+	HandleAnimationProfile(s, s.usAnimState, TRUE);
 
 	// Remove records of this guy being adjacent
 	for (INT8 dir = 0; dir < NUM_WORLD_DIRECTIONS; ++dir)
@@ -1992,7 +1991,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* const s, GridNo new_grid_no, BOOLEAN c
 			n->ubNaturalShadeLevel = other.ubNaturalShadeLevel;
 		}
 
-		HandleAnimationProfile(s, s->usAnimState, FALSE);
+		HandleAnimationProfile(*s, s->usAnimState, FALSE);
 		HandleCrowShadowNewGridNo(s);
 	}
 
@@ -3950,7 +3949,7 @@ static void AdjustForFastTurnAnimation(SOLDIERTYPE* pSoldier);
 void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 {
 	 // Remove old location data
-	 HandleAnimationProfile( pSoldier, pSoldier->usAnimState, TRUE );
+	 HandleAnimationProfile(*pSoldier, pSoldier->usAnimState, TRUE);
 
 	 pSoldier->bDirection = (INT8)usNewDirection;
 
@@ -3958,7 +3957,7 @@ void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 	pSoldier->ubHiResDirection = Dir2ExtDir(pSoldier->bDirection);
 
 	 // Add new stuff
-	 HandleAnimationProfile( pSoldier, pSoldier->usAnimState, FALSE );
+	 HandleAnimationProfile(*pSoldier, pSoldier->usAnimState, FALSE);
 
 	 // If we are turning, we have chaanged our aim!
 	 if ( !pSoldier->fDontUnsetLastTargetFromTurn )
@@ -3975,7 +3974,7 @@ void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 	 }
 
 	 // Handle Profile data for hit locations
-	 HandleAnimationProfile( pSoldier, pSoldier->usAnimState, TRUE );
+	 HandleAnimationProfile(*pSoldier, pSoldier->usAnimState, TRUE);
 
 	 HandleCrowShadowNewDirection( pSoldier );
 
@@ -6530,33 +6529,33 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier )
 }
 
 
-static void HandleAnimationProfile(SOLDIERTYPE* const s, UINT16 const usAnimState, BOOLEAN const fRemove)
+static void HandleAnimationProfile(SOLDIERTYPE& s, UINT16 const usAnimState, BOOLEAN const fRemove)
 {
-	UINT16 const anim_surface = DetermineSoldierAnimationSurface(s, usAnimState);
+	UINT16 const anim_surface = DetermineSoldierAnimationSurface(&s, usAnimState);
 	CHECKV(anim_surface != INVALID_ANIMATION_SURFACE);
 
 	INT8 const profile_id = gAnimSurfaceDatabase[anim_surface].bProfile;
 	if (profile_id == -1) return;
 
 	ANIM_PROF     const& profile     = gpAnimProfiles[profile_id];
-	ANIM_PROF_DIR const& profile_dir = profile.Dirs[s->bDirection];
+	ANIM_PROF_DIR const& profile_dir = profile.Dirs[s.bDirection];
 
 	// Loop tiles and set accordingly into world
 	for (UINT32 tile_count = 0; tile_count != profile_dir.ubNumTiles; ++tile_count)
 	{
 		ANIM_PROF_TILE const& profile_tile = profile_dir.pTiles[tile_count];
-		GridNo         const  grid_no      = s->sGridNo + WORLD_COLS * profile_tile.bTileY + profile_tile.bTileX;
+		GridNo         const  grid_no      = s.sGridNo + WORLD_COLS * profile_tile.bTileY + profile_tile.bTileX;
 
 		// Check if in bounds
-		if (OutOfBounds(s->sGridNo, grid_no)) continue;
+		if (OutOfBounds(s.sGridNo, grid_no)) continue;
 
 		if (fRemove)
 		{ // Remove from world
-			RemoveMerc(grid_no, *s, true);
+			RemoveMerc(grid_no, s, true);
 		}
 		else
 		{ // Place into world
-			LEVELNODE* const n = AddMercToHead(grid_no, s, FALSE);
+			LEVELNODE* const n = AddMercToHead(grid_no, &s, FALSE);
 			n->uiFlags                |= LEVELNODE_MERCPLACEHOLDER;
 			n->uiAnimHitLocationFlags  = profile_tile.usTileFlags;
 		}
