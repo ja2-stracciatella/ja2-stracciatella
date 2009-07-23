@@ -134,21 +134,21 @@ static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 }
 
 
-static void MarkMovementReserved(SOLDIERTYPE* pSoldier, INT16 sGridNo)
+static void MarkMovementReserved(SOLDIERTYPE& s, INT16 const sGridNo)
 {
 	// Check if we have one reserrved already, and free it first!
-	if ( pSoldier->sReservedMovementGridNo != NOWHERE )
+	if (s.sReservedMovementGridNo != NOWHERE)
 	{
-		UnMarkMovementReserved(*pSoldier);
+		UnMarkMovementReserved(s);
 	}
 
 	// For single-tiled mercs, set this gridno
 	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_MOVEMENT_RESERVED;
 
 	// Save soldier's reserved ID #
-	gpWorldLevelData[ sGridNo ].ubReservedSoldierID = pSoldier->ubID;
+	gpWorldLevelData[sGridNo].ubReservedSoldierID = s.ubID;
 
-	pSoldier->sReservedMovementGridNo = sGridNo;
+	s.sReservedMovementGridNo = sGridNo;
 }
 
 
@@ -419,7 +419,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 			// Mark this tile as reserverd ( until we get there! )
 			if ( !( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) ) )
 			{
-				MarkMovementReserved( pSoldier, sGridNo );
+				MarkMovementReserved(*pSoldier, sGridNo);
 			}
 
 			bOverTerrainType = GetTerrainType( sGridNo );
