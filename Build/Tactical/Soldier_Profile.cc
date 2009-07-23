@@ -181,13 +181,9 @@ static void DecideActiveTerrorists(void);
 static void StartSomeMercsOnAssignment(void);
 
 
-BOOLEAN LoadMercProfiles(void)
+void LoadMercProfiles()
 {
-	const char* const pFileName = "BINARYDATA/Prof.dat";
-
-	try
-	{
-		AutoSGPFile fptr(FileOpen(pFileName, FILE_ACCESS_READ));
+	{ AutoSGPFile fptr(FileOpen("BINARYDATA/Prof.dat", FILE_ACCESS_READ));
 		for (UINT32 uiLoop = 0; uiLoop < NUM_PROFILES; ++uiLoop)
 		{
 #ifdef JA2DEMO
@@ -269,11 +265,6 @@ BOOLEAN LoadMercProfiles(void)
 			p.bLearnToLikeCount = p.bLearnToLikeTime;
 		}
 	}
-	catch (...)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to load merc profiles from file %s", pFileName));
-		return FALSE;
-	}
 
 #ifndef JA2DEMO
 	DecideActiveTerrorists();
@@ -290,8 +281,6 @@ BOOLEAN LoadMercProfiles(void)
 	InitalizeStaticExternalNPCFaces();
 
 	LoadCarPortraitValues();
-
-	return TRUE;
 }
 
 

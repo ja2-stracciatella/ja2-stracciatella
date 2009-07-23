@@ -353,8 +353,8 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 	if( gubScreenCount == 0 )
 	{
-		if( !LoadMercProfiles() )
-			return(FALSE);
+		try         { LoadMercProfiles(); }
+		catch (...) { return FALSE; }
 	}
 
 	//Initialize the Arms Dealers and Bobby Rays inventory
