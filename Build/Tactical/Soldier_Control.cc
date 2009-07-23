@@ -284,11 +284,11 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE& s)
 }
 
 
-static void HandleCrowShadowRemoveGridNo(SOLDIERTYPE* const s)
+static void HandleCrowShadowRemoveGridNo(SOLDIERTYPE& s)
 {
-	if (!IsCrowWithShadow(*s)) return;
-	DeleteAniTile(s->pAniTile);
-	s->pAniTile = 0;
+	if (!IsCrowWithShadow(s)) return;
+	DeleteAniTile(s.pAniTile);
+	s.pAniTile = 0;
 }
 
 
@@ -1534,10 +1534,9 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 			break;
 
 		case CROW_EAT:
-
 			// ATE: Make sure height level is 0....
 			SetSoldierHeight( pSoldier, (FLOAT)(0) );
-			HandleCrowShadowRemoveGridNo( pSoldier );
+			HandleCrowShadowRemoveGridNo(*pSoldier);
 			break;
 
 		case USE_REMOTE:
@@ -1788,7 +1787,7 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE& s, BOOLEAN const force)
 	HandlePlacingRoofMarker(&s, s.sGridNo, FALSE, FALSE);
 
 	UnMarkMovementReserved(&s);
-	HandleCrowShadowRemoveGridNo(&s);
+	HandleCrowShadowRemoveGridNo(s);
 	s.sGridNo = NOWHERE;
 }
 
