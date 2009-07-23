@@ -577,7 +577,7 @@ try
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// Set initial values for opplist!
-		InitSoldierOppList(&s);
+		InitSoldierOppList(s);
 		HandleSight(s, SIGHT_LOOK);
 
 		// Set some quote flags

@@ -3888,7 +3888,7 @@ try
 				if (s.sSectorY != gWorldSectorY)  continue;
 				if (s.bSectorZ != gbWorldSectorZ) continue;
 				RemoveSoldierFromGridNo(s);
-				InitSoldierOppList(&s);
+				InitSoldierOppList(s);
 			}
 		}
 	}

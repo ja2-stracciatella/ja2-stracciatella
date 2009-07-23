@@ -93,7 +93,7 @@ void RecalculateOppCntsDueToNoLongerNeutral( SOLDIERTYPE * pSoldier );
 
 
 void InitOpponentKnowledgeSystem(void);
-void InitSoldierOppList(SOLDIERTYPE *pSoldier);
+void InitSoldierOppList(SOLDIERTYPE&);
 void BetweenTurnsVisibilityAdjustments();
 void RemoveManAsTarget(SOLDIERTYPE *pSoldier);
 void RadioSightings(SOLDIERTYPE* pSoldier, SOLDIERTYPE* about, UINT8 ubTeamToRadioTo);

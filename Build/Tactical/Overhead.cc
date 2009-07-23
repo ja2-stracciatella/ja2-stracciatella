@@ -6064,7 +6064,7 @@ void RemoveManFromTeam(const INT8 bTeam)
 void RemoveSoldierFromTacticalSector(SOLDIERTYPE& s)
 {
 	// reset merc's opplist
-	InitSoldierOppList(&s);
+	InitSoldierOppList(s);
 
 	// Remove!
 	RemoveSoldierFromGridNo(s);

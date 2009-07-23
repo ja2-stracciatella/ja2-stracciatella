@@ -2336,12 +2336,12 @@ void InitOpponentKnowledgeSystem(void)
 
 
 
-void InitSoldierOppList(SOLDIERTYPE *pSoldier)
+void InitSoldierOppList(SOLDIERTYPE& s)
 {
-	memset(pSoldier->bOppList,NOT_HEARD_OR_SEEN,sizeof(pSoldier->bOppList));
-	pSoldier->bOppCnt = 0;
-	ResetLastKnownLocs(pSoldier);
-	memset(gbSeenOpponents[pSoldier->ubID],0,MAXMERCS);
+	memset(s.bOppList, NOT_HEARD_OR_SEEN, sizeof(s.bOppList));
+	s.bOppCnt = 0;
+	ResetLastKnownLocs(&s);
+	memset(gbSeenOpponents[s.ubID], 0, MAXMERCS);
 }
 
 
