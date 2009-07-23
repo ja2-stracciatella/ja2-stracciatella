@@ -1922,16 +1922,6 @@ static void SetGroupPrevSectors(GROUP& g, UINT8 const x, UINT8 const y)
 }
 
 
-void RemoveGroup( UINT8 ubGroupID )
-{
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
-
-	Assert( pGroup );
-	RemovePGroup(*pGroup);
-}
-
-
 static BOOLEAN gfRemovingAllGroups = FALSE;
 
 

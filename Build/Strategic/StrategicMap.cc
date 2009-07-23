@@ -2063,7 +2063,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 		if( pSoldier->ubGroupID && pSoldier->bAssignment != VEHICLE )
 		{ //Can only remove groups if they aren't persistant (not in a squad or vehicle)
 			// delete group
-			RemoveGroup( pSoldier->ubGroupID );
+			RemovePGroup(*GetGroup(pSoldier->ubGroupID));
 			pSoldier->ubGroupID = 0;
 		}
 	}

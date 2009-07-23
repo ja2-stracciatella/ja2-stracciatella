@@ -653,7 +653,7 @@ void StrategicRemoveMerc(SOLDIERTYPE& s)
 	{ // He/she is in a mvt group, remove and destroy the group
 		if (s.bAssignment != VEHICLE)
 		{ //Can only remove groups if they aren't persistant (not in a squad or vehicle)
-			RemoveGroup(s.ubGroupID);
+			RemovePGroup(*GetGroup(s.ubGroupID));
 		}
 		else
 		{

@@ -262,7 +262,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 		else if (s.ubGroupID != 0)
 		{
 			// destroy group and set to zero
-			RemoveGroup(s.ubGroupID);
+			RemovePGroup(*GetGroup(s.ubGroupID));
 			s.ubGroupID = 0;
 		}
 

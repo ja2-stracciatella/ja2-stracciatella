@@ -149,10 +149,10 @@ extern GROUP *gpGroupList;
 void RemoveAllGroups(void);
 GROUP* GetGroup( UINT8 ubGroupID );
 
-//Remove a group from the list.  This removes all of the waypoints as well as the members of the group.
-//Calling this function doesn't position them in a sector.  It is up to you to do that.  The event system
-//will automatically handle their updating as they arrive in sectors.
-void RemoveGroup( UINT8 ubGroupID );//takes a groupID
+/* Remove a group from the list. This removes all of the waypoints as well as
+ * the members of the group. Calling this function doesn't position them in a
+ * sector. It is up to you to do that. The event system will automatically
+ * handle their updating as they arrive in sectors. */
 void RemovePGroup(GROUP&);
 
 /* Clear a group's waypoints. This is necessary when sending new orders such as
