@@ -338,14 +338,8 @@ void ShutdownStrategicLayer()
 }
 
 
-void InitNewGame(bool const reset)
+void InitNewGame()
 {
-	if (reset)
-	{
-		gubScreenCount = 0;
-		return;
-	}
-
 	uiMeanWhileFlags = 0;
 	SetSelectedMan(0);
 
@@ -602,7 +596,7 @@ void ReStartingGame()
 	SoundStopAll( );
 
 	//we are going to restart a game so initialize the variable so we can initialize a new game
-	InitNewGame(true);
+	gubScreenCount = 0;
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( TRUE );
