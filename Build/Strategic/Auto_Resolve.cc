@@ -379,14 +379,15 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 		pSector->ubNumAdmins = 0;
 		pSector->ubNumCreatures = 0;
 		//Remove the mobile forces here, but only if battle is over.
-		FOR_ALL_GROUPS_SAFE(pGroup)
+		FOR_ALL_GROUPS_SAFE(i)
 		{
-			if( !pGroup->fPlayer && pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY )
-			{
-				ClearPreviousAIGroupAssignment( pGroup );
-				if (gpBattleGroup == pGroup) gpBattleGroup = NULL;
-				RemovePGroup(pGroup);
-			}
+			GROUP& g = *i;
+			if (g.fPlayer)                continue;
+			if (g.ubSectorX != ubSectorX) continue;
+			if (g.ubSectorY != ubSectorY) continue;
+			ClearPreviousAIGroupAssignment(&g);
+			if (gpBattleGroup == &g) gpBattleGroup = 0;
+			RemovePGroup(g);
 		}
 		if( gpBattleGroup )
 		{

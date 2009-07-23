@@ -1034,7 +1034,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 	sEventSector = sSectorX + ( MAP_WORLD_X * sSectorY );
 
 	// need a temporary group create to use for laying down distance paths
-	GROUP* const g = CreateNewPlayerGroupDepartingFromSector(sSectorX, sSectorY);
+	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(sSectorX, sSectorY);
 
 	// calc distance to the event sector from EACH SECTOR of each town, keeping only the shortest one for every town
 	uiIndex = 0;
@@ -1046,7 +1046,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 		if (iShortestDistance[ bTownId ] > 0 )
 		{
 			// calculate across how many sectors the fastest travel path from event to this town sector
-			iThisDistance = FindStratPath(sEventSector, pTownLocationsList[uiIndex], *g, FALSE);
+			iThisDistance = FindStratPath(sEventSector, pTownLocationsList[uiIndex], g, FALSE);
 
 			if (iThisDistance < iShortestDistance[ bTownId ])
 			{
@@ -1059,7 +1059,6 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 
 	// must always remove that temporary group!
 	RemovePGroup(g);
-
 
 	for( bTownId = FIRST_TOWN; bTownId < NUM_TOWNS; bTownId++ )
 	{

@@ -636,7 +636,7 @@ static void ValidateGroup(GROUP* pGroup)
 			}
 			#endif
 			ClearPreviousAIGroupAssignment( pGroup );
-			RemovePGroup( pGroup );
+			RemovePGroup(*pGroup);
 			return;
 		}
 	}
@@ -1759,7 +1759,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 				}
 
 				SetThisSectorAsEnemyControlled(pGroup->ubSectorX, pGroup->ubSectorY, 0);
-				RemovePGroup( pGroup );
+				RemovePGroup(*pGroup);
 				RecalculateGarrisonWeight( i );
 
 				return TRUE;
@@ -1821,7 +1821,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 										pPatrolGroup->pEnemyGroup->ubNumTroops +
 										pPatrolGroup->pEnemyGroup->ubNumElites == MAX_STRATEGIC_TEAM_SIZE );
 					}
-					RemovePGroup( pGroup );
+					RemovePGroup(*pGroup);
 					RecalculatePatrolWeight( i );
 					ValidateLargeGroup( pPatrolGroup );
 				}
@@ -3348,16 +3348,16 @@ void LoadStrategicAI(HWFILE const hFile)
 		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( 3, 16 ) ].fEnemyControlled )
 		{ //Eliminate all enemy groups in this sector, because the player owns the sector, and it is not
 			//possible for them to spawn there!
-			FOR_ALL_GROUPS_SAFE(pGroup)
+			FOR_ALL_GROUPS_SAFE(i)
 			{
-				if( !pGroup->fPlayer )
-				{
-					if( pGroup->ubSectorX == 3 && pGroup->ubSectorY == 16 && !pGroup->ubPrevX && !pGroup->ubPrevY )
-					{
-						ClearPreviousAIGroupAssignment( pGroup );
-						RemovePGroup( pGroup );
-					}
-				}
+				GROUP& g = *i;
+				if (g.fPlayer)         continue;
+				if (g.ubSectorX !=  3) continue;
+				if (g.ubSectorY != 16) continue;
+				if (g.ubPrevX   !=  0) continue;
+				if (g.ubPrevY   !=  0) continue;
+				ClearPreviousAIGroupAssignment(&g);
+				RemovePGroup(g);
 			}
 		}
 	}
@@ -4502,7 +4502,7 @@ INT16 FindGarrisonIndexForGroupIDPending( UINT8 ubGroupID )
 static void TransferGroupToPool(GROUP** pGroup)
 {
 	giReinforcementPool += (*pGroup)->ubGroupSize;
-	RemovePGroup( *pGroup );
+	RemovePGroup(**pGroup);
 	*pGroup = NULL;
 }
 

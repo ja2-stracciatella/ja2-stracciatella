@@ -218,7 +218,7 @@ void RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
 		{
 			if (!g->fPersistant)
 			{
-				RemovePGroup(g);
+				RemovePGroup(*g);
 			}
 			else
 			{
@@ -1511,7 +1511,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		}
 		else
 		{
-			RemovePGroup(&g);
+			RemovePGroup(g);
 		}
 	}
 
@@ -1928,44 +1928,44 @@ void RemoveGroup( UINT8 ubGroupID )
 	pGroup = GetGroup( ubGroupID );
 
 	Assert( pGroup );
-	RemovePGroup( pGroup );
+	RemovePGroup(*pGroup);
 }
 
 
 static BOOLEAN gfRemovingAllGroups = FALSE;
 
 
-void RemovePGroup(GROUP* const g)
+void RemovePGroup(GROUP& g)
 {
-	if (g->fPersistant && !gfRemovingAllGroups)
+	if (g.fPersistant && !gfRemovingAllGroups)
 	{
-		CancelEmptyPersistentGroupMovement(g);
+		CancelEmptyPersistentGroupMovement(&g);
 		return;
 		DoScreenIndependantMessageBox(L"Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL);
 	}
 
-	RemoveGroupWaypoints(*g);
+	RemoveGroupWaypoints(g);
 
 	// Remove the arrival event if applicable.
-	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g->ubGroupID);
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
 	// Determine what type of group we have (because it requires different methods)
-	if (g->fPlayer)
+	if (g.fPlayer)
 	{
-		while (g->pPlayerList)
+		while (g.pPlayerList)
 		{
-			PLAYERGROUP* const pPlayer = g->pPlayerList;
-			g->pPlayerList = g->pPlayerList->next;
+			PLAYERGROUP* const pPlayer = g.pPlayerList;
+			g.pPlayerList = g.pPlayerList->next;
 			MemFree(pPlayer);
 		}
 	}
 	else
 	{
-		RemoveGroupFromStrategicAILists(g->ubGroupID);
-		MemFree(g->pEnemyGroup);
+		RemoveGroupFromStrategicAILists(g.ubGroupID);
+		MemFree(g.pEnemyGroup);
 	}
 
-	RemoveGroupFromList(g);
+	RemoveGroupFromList(&g);
 }
 
 
@@ -1974,7 +1974,7 @@ void RemoveAllGroups()
 	gfRemovingAllGroups = TRUE;
 	while( gpGroupList )
 	{
-		RemovePGroup( gpGroupList );
+		RemovePGroup(*gpGroupList);
 	}
 	gfRemovingAllGroups = FALSE;
 }
@@ -3082,9 +3082,10 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 	if ( fDoChange )
 	{
 		//Remove all empty groups
-		FOR_ALL_GROUPS_SAFE(g)
+		FOR_ALL_GROUPS_SAFE(i)
 		{
-			if (g->ubGroupSize == 0 && !g->fPersistant) RemovePGroup(g);
+			GROUP& g = *i;
+			if (g.ubGroupSize == 0 && !g.fPersistant) RemovePGroup(g);
 		}
 	}
 }
