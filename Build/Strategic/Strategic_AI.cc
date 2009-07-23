@@ -684,19 +684,18 @@ static void ValidateLargeGroup(GROUP* pGroup)
 
 
 #ifdef JA2BETAVERSION
-static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* const s)
+static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE& s)
 {
 	FOR_ALL_GROUPS_SAFE(i)
 	{
 		GROUP& g = *i;
 		if (!g.fPlayer) continue;
-		if (s->ubGroupID == g.ubGroupID) continue;
+		if (s.ubGroupID == g.ubGroupID) continue;
 
 		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
 		{
-			if (pPlayer->pSoldier != s) continue;
-
-			RemovePlayerFromPGroup(g, *s);
+			if (pPlayer->pSoldier != &s) continue;
+			RemovePlayerFromPGroup(g, s);
 			break;
 		}
 	}
@@ -844,14 +843,14 @@ void ValidatePlayersAreInOneGroupOnly(void)
 			if( iGroups == 1 && iMismatches == 1 )
 			{ //We have a very serious problem, as we have no way to know which group this merc is supposed to be in.
 				//This problem cannot be corrected (so we will assign the merc to his own unique squad).
-				RemovePlayersFromAllMismatchGroups( pSoldier );
+				RemovePlayersFromAllMismatchGroups(*pSoldier);
 				AddCharacterToUniqueSquad( pSoldier );
 			}
 			else if( iGroups > 1 && iMismatches == iGroups - 1 )
 			{ //This is the error that is being targetted.  This means that the merc exists in multiple groups though the merc
 				//knows what group he is supposed to be in.  This error can be corrected, by manually removing the merc from all
 				//mismatch groups.  This is indicative of a merc being reassigned to another group without removing him first.
-				RemovePlayersFromAllMismatchGroups( pSoldier );
+				RemovePlayersFromAllMismatchGroups(*pSoldier);
 				pSoldier->ubGroupID = ubGroupID;
 			}
 			else if( !iGroups )
