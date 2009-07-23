@@ -2023,18 +2023,16 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 }
 
 
-// set groups next sector x,y value..used ONLY for teleporting groups
-static void SetGroupNextSectorValue(INT16 const sSectorX, INT16 const sSectorY, GROUP* const g)
+// Set groups next sector x,y value, used ONLY for teleporting groups
+static void SetGroupNextSectorValue(INT16 const x, INT16 const y, GROUP& g)
 {
-	RemoveGroupWaypoints(g);
-
-	// set sector x and y to passed values
-	g->ubNextX         = sSectorX;
-	g->ubNextY         = sSectorY;
-	g->fBetweenSectors = FALSE;
-
-	// set next sectors same as current
-	g->ubOriginalSector = SECTOR(g->ubSectorX, g->ubSectorY);
+	RemoveGroupWaypoints(&g);
+	// Set sector x and y to passed values
+	g.ubNextX         = x;
+	g.ubNextY         = y;
+	g.fBetweenSectors = FALSE;
+	// Set next sectors same as current
+	g.ubOriginalSector = SECTOR(g.ubSectorX, g.ubSectorY);
 }
 
 
@@ -3495,7 +3493,7 @@ void PlaceGroupInSector(GROUP& g, INT16 const prev_x, INT16 const prev_y, INT16 
 	// Change where they are and where they're going
 	SetGroupPrevSectors(g, prev_x, prev_y);
 	SetGroupSectorValue(prev_x, prev_y, z, &g);
-	SetGroupNextSectorValue(next_x, next_y, &g);
+	SetGroupNextSectorValue(next_x, next_y, g);
 	// Call arrive event
 	GroupArrivedAtSector(g, check_for_battle, FALSE);
 }
