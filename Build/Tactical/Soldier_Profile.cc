@@ -183,55 +183,51 @@ static void StartSomeMercsOnAssignment(void);
 
 void LoadMercProfiles()
 {
-	{ AutoSGPFile fptr(FileOpen("BINARYDATA/Prof.dat", FILE_ACCESS_READ));
-		for (UINT32 uiLoop = 0; uiLoop < NUM_PROFILES; ++uiLoop)
+	{ AutoSGPFile f(FileOpen("BINARYDATA/Prof.dat", FILE_ACCESS_READ));
+		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
 #ifdef JA2DEMO
 			BYTE data[696];
-			FileRead(fptr, data, sizeof(data));
+			FileRead(f, data, sizeof(data));
 #else
 			BYTE data[716];
-			JA2EncryptedFileRead(fptr, data, sizeof(data));
+			JA2EncryptedFileRead(f, data, sizeof(data));
 #endif
-
-			MERCPROFILESTRUCT& p = GetProfile(uiLoop);
+			MERCPROFILESTRUCT& p = GetProfile(i);
 			ExtractMercProfileUTF16(data, p);
 
 			// If the dialogue exists for the merc, allow the merc to be hired
-			p.bMercStatus = (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE);
+			p.bMercStatus = FileExists(GetDialogueDataFilename(i, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE;
 
-			p.sMedicalDepositAmount = (p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0);
+			p.sMedicalDepositAmount = p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0;
 
-			// ATE: New, face display independent of ID num now
-			// Setup face index value
-			// Default is the ubCharNum
-			p.ubFaceIndex = (UINT8)uiLoop;
+			/* ATE: New, face display independent of ID num now, default is the
+			 * profile ID */
+			p.ubFaceIndex = i;
 
 #ifndef JA2DEMO
 			if (!gGameOptions.fGunNut)
 			{
 				// CJC: replace guns in profile if they aren't available
-				for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
+				for (UINT16* k = p.inv; k != endof(p.inv); ++k)
 				{
-					const UINT16 usItem = p.inv[uiLoop2];
-					if (!(Item[usItem].usItemClass & IC_GUN) || !ExtendedGunListGun(usItem)) continue;
+					UINT16 const item = *k;
+					if (!(Item[item].usItemClass & IC_GUN) || !ExtendedGunListGun(item)) continue;
 
-					const UINT16 usNewGun = StandardGunListReplacement(usItem);
-					if (usNewGun == NOTHING) continue;
+					UINT16 const new_gun = StandardGunListReplacement(item);
+					if (new_gun == NOTHING) continue;
 
-					p.inv[uiLoop2] = usNewGun;
+					*k = new_gun;
 
-					// must search through inventory and replace ammo accordingly
-					for (UINT32 uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; ++uiLoop3)
+					// Search through inventory and replace ammo accordingly
+					for (UINT16* l = p.inv; l != endof(p.inv); ++l)
 					{
-						const UINT16 usAmmo = p.inv[uiLoop3];
-						if (!(Item[usAmmo].usItemClass & IC_AMMO)) continue;
-
-						const UINT16 usNewAmmo = FindReplacementMagazineIfNecessary(usItem, usAmmo, usNewGun);
-						if (usNewAmmo == NOTHING) continue;
-
-						// found a new magazine, replace...
-						p.inv[uiLoop3] = usNewAmmo;
+						UINT16 const ammo = *l;
+						if (!(Item[ammo].usItemClass & IC_AMMO)) continue;
+						UINT16 const new_ammo = FindReplacementMagazineIfNecessary(item, ammo, new_gun);
+						if (new_ammo == NOTHING) continue;
+						// Found a new magazine, replace
+						*l = new_ammo;
 					}
 				}
 			}
@@ -242,23 +238,24 @@ void LoadMercProfiles()
 			p.bMainGunAttractiveness = -1;
 			p.bArmourAttractiveness  = -1;
 			p.usOptionalGearCost     =  0;
-			for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
+			for (UINT16 const* k = p.inv; k != endof(p.inv); ++k)
 			{
-				const UINT16 usItem = p.inv[uiLoop2];
-				if (usItem == NOTHING) continue;
-				const INVTYPE* const item = &Item[usItem];
+				UINT16 const item_id = *k;
+				if (item_id == NOTHING) continue;
+				INVTYPE const& item = Item[item_id];
 
-				if (item->usItemClass & IC_GUN)    p.bMainGunAttractiveness = Weapon[usItem].ubDeadliness;
-				if (item->usItemClass & IC_ARMOUR) p.bArmourAttractiveness  = Armour[item->ubClassIndex].ubProtection;
+				if (item.usItemClass & IC_GUN)    p.bMainGunAttractiveness = Weapon[item_id].ubDeadliness;
+				if (item.usItemClass & IC_ARMOUR) p.bArmourAttractiveness  = Armour[item.ubClassIndex].ubProtection;
 
-				p.usOptionalGearCost += item->usPrice;
+				p.usOptionalGearCost += item.usPrice;
 			}
 
-			//These variables to get loaded in
+			// These variables to get loaded in
 			p.fUseProfileInsertionInfo = FALSE;
 			p.sGridNo                  = 0;
 
-			// ARM: this is also being done inside the profile editor, but put it here too, so this project's code makes sense
+			/* ARM: this is also being done inside the profile editor, but put it here
+			 * too, so this project's code makes sense */
 			p.bHatedCount[0]    = p.bHatedTime[0];
 			p.bHatedCount[1]    = p.bHatedTime[1];
 			p.bLearnToHateCount = p.bLearnToHateTime;
@@ -270,7 +267,7 @@ void LoadMercProfiles()
 	DecideActiveTerrorists();
 #endif
 
-	// initialize mercs' status
+	// Initialize mercs' status
 	StartSomeMercsOnAssignment();
 
 #ifdef JA2EDITOR
