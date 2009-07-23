@@ -2229,7 +2229,7 @@ no_cry:
 					break;
 
 				case 754:
-					HandleFallIntoPitFromAnimation(pSoldier);
+					HandleFallIntoPitFromAnimation(*pSoldier);
 					break;
 
 				case 755 :

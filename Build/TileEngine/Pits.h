@@ -16,6 +16,6 @@ void RemoveAllPits(void);
 
 extern BOOLEAN gfShowPits;
 
-void HandleFallIntoPitFromAnimation(SOLDIERTYPE* s);
+void HandleFallIntoPitFromAnimation(SOLDIERTYPE&);
 
 #endif

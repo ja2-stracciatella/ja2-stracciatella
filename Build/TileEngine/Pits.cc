@@ -225,29 +225,18 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 }
 
 
-void HandleFallIntoPitFromAnimation(SOLDIERTYPE* const pSoldier)
+void HandleFallIntoPitFromAnimation(SOLDIERTYPE& s)
 {
-	EXITGRID ExitGrid;
-	INT16 sPitGridNo;
-	// OK, get exit grid...
-
-	sPitGridNo = (INT16)pSoldier->uiPendingActionData4;
-
-	GetExitGrid( sPitGridNo, &ExitGrid );
-
-	// Given exit grid, make buddy move to next sector....
-	pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-	pSoldier->usStrategicInsertionData = ExitGrid.usGridNo;
-
-	pSoldier->sSectorX = ExitGrid.ubGotoSectorX;
-	pSoldier->sSectorY = ExitGrid.ubGotoSectorY;
-	pSoldier->bSectorZ = ExitGrid.ubGotoSectorZ;
-
-	// Remove from world......
-	RemoveSoldierFromTacticalSector(*pSoldier);
-
-	HandleSoldierLeavingSectorByThemSelf( pSoldier );
-
-	SetSoldierHeight( pSoldier, 0 );
-
+	GridNo const pit_pos = (GridNo)s.uiPendingActionData4;
+	EXITGRID     exit_grid;
+	GetExitGrid(pit_pos, &exit_grid);
+	// Given exit grid, move buddy to next sector
+	s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+	s.usStrategicInsertionData = exit_grid.usGridNo;
+	s.sSectorX                 = exit_grid.ubGotoSectorX;
+	s.sSectorY                 = exit_grid.ubGotoSectorY;
+	s.bSectorZ                 = exit_grid.ubGotoSectorZ;
+	RemoveSoldierFromTacticalSector(s);
+	HandleSoldierLeavingSectorByThemSelf(&s);
+	SetSoldierHeight(&s, 0);
 }
