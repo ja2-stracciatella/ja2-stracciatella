@@ -196,7 +196,7 @@ void AddPlayerToGroup(GROUP& g, SOLDIERTYPE& s)
 }
 
 
-static void CancelEmptyPersistentGroupMovement(GROUP* pGroup);
+static void CancelEmptyPersistentGroupMovement(GROUP&);
 
 
 void RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
@@ -222,7 +222,7 @@ void RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
 			}
 			else
 			{
-				CancelEmptyPersistentGroupMovement(g);
+				CancelEmptyPersistentGroupMovement(*g);
 			}
 		}
 		break;
@@ -1939,7 +1939,7 @@ void RemovePGroup(GROUP& g)
 {
 	if (g.fPersistant && !gfRemovingAllGroups)
 	{
-		CancelEmptyPersistentGroupMovement(&g);
+		CancelEmptyPersistentGroupMovement(g);
 		return;
 		DoScreenIndependantMessageBox(L"Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL);
 	}
@@ -3537,36 +3537,29 @@ void SetGroupArrivalTime(GROUP& g, UINT32 arrival_time)
 }
 
 
-// non-persistent groups should be simply removed instead!
-static void CancelEmptyPersistentGroupMovement(GROUP* pGroup)
+// Non-persistent groups should be simply removed instead
+static void CancelEmptyPersistentGroupMovement(GROUP& g)
 {
-	Assert( pGroup );
-	Assert( pGroup->ubGroupSize == 0 );
-	Assert( pGroup->fPersistant );
+	Assert(g.ubGroupSize == 0);
+	Assert(g.fPersistant);
 
+	/* Don't do this for vehicle groups - the chopper can keep flying empty, while
+	 * other vehicles still exist and teleport to nearest sector instead */
+	if (g.fVehicle) return;
 
-	// don't do this for vehicle groups - the chopper can keep flying empty,
-	// while other vehicles still exist and teleport to nearest sector instead
-	if ( pGroup->fVehicle )
-	{
-		return;
-	}
+	// Prevent it from arriving empty
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
-	// prevent it from arriving empty
-	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
-
-	RemoveGroupWaypoints(*pGroup);
-
-	pGroup->uiTraverseTime = 0;
-	SetGroupArrivalTime(*pGroup, 0);
-	pGroup->fBetweenSectors = FALSE;
-
-	pGroup->ubPrevX = 0;
-	pGroup->ubPrevY = 0;
-	pGroup->ubSectorX = 0;
-	pGroup->ubSectorY = 0;
-	pGroup->ubNextX = 0;
-	pGroup->ubNextY = 0;
+	RemoveGroupWaypoints(g);
+	g.uiTraverseTime  = 0;
+	SetGroupArrivalTime(g, 0);
+	g.fBetweenSectors = FALSE;
+	g.ubPrevX         = 0;
+	g.ubPrevY         = 0;
+	g.ubSectorX       = 0;
+	g.ubSectorY       = 0;
+	g.ubNextX         = 0;
+	g.ubNextY         = 0;
 }
 
 
