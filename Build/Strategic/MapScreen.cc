@@ -8075,7 +8075,7 @@ static BOOLEAN AnyMovableCharsInOrBetweenThisSector(INT16 sSectorX, INT16 sSecto
 }
 
 
-static UINT8 PlayerMercsInHelicopterSector(void);
+static UINT8 PlayerMercsInHelicopterSector();
 
 
 static BOOLEAN RequestGiveSkyriderNewDestination(void)
@@ -8157,16 +8157,11 @@ static void ExplainWhySkyriderCantFly(void)
 }
 
 
-static UINT8 PlayerMercsInHelicopterSector(void)
+static UINT8 PlayerMercsInHelicopterSector()
 {
-	GROUP* const pGroup = GetGroup(GetHelicopter().ubMovementGroup);
-
-	if ( pGroup->fBetweenSectors )
-	{
-		return( 0 );
-	}
-
-	return( PlayerMercsInSector( pGroup->ubSectorX, pGroup->ubSectorY, 0 ) );
+	GROUP& g = *GetGroup(GetHelicopter().ubMovementGroup);
+	if (g.fBetweenSectors) return 0;
+	return PlayerMercsInSector(g.ubSectorX, g.ubSectorY, 0);
 }
 
 
