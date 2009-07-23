@@ -3202,7 +3202,7 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 	else
 	{
 		// Make sure we are NOT in this world!
-		RemoveSoldierFromGridNo(s);
+		RemoveSoldierFromGridNo(*s);
 		RemoveMercSlot(s);
 	}
 }

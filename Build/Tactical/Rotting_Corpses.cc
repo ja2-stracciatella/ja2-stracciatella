@@ -745,7 +745,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	}
 	else
 	{
-		RemoveSoldierFromGridNo(&s);
+		RemoveSoldierFromGridNo(s);
 	}
 
 	if (ubType == NO_CORPSE)

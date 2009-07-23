@@ -968,7 +968,7 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 	{
 		RemoveCharacterFromSquads(&s);
 		RemovePlayerFromTeamSlot(&s);
-		RemoveSoldierFromGridNo(&s);
+		RemoveSoldierFromGridNo(s);
 
 		// Delete shadow of crow....
 		if (s.pAniTile)

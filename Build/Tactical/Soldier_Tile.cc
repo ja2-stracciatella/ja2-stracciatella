@@ -737,8 +737,8 @@ void SwapMercPositions( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2 )
 	sGridNo2 = pSoldier2->sGridNo;
 
 	// OK, remove each.....
-	RemoveSoldierFromGridNo( pSoldier1 );
-	RemoveSoldierFromGridNo( pSoldier2 );
+	RemoveSoldierFromGridNo(*pSoldier1);
+	RemoveSoldierFromGridNo(*pSoldier2);
 
 	// OK, test OK destination for each.......
 	if ( NewOKDestination( pSoldier1, sGridNo2, TRUE, 0 ) && NewOKDestination( pSoldier2, sGridNo1, TRUE, 0 ) )

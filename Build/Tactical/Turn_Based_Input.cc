@@ -3291,12 +3291,12 @@ static void TestCapture()
 
 	// Loop through sodliers and pick 3 lucky ones
 	UINT32 n = 3;
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{
-		if (s->bLife < OKLIFE) continue;
-		if (!s->bInSector)     continue;
-
-		EnemyCapturesPlayerSoldier(s);
+		SOLDIERTYPE& s = *i;
+		if (s.bLife < OKLIFE) continue;
+		if (!s.bInSector)     continue;
+		EnemyCapturesPlayerSoldier(&s);
 		RemoveSoldierFromGridNo(s);
 		if (--n == 0) break;
 	}

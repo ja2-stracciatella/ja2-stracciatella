@@ -992,7 +992,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier );
 
 BOOLEAN InternalSoldierReadyWeapon( SOLDIERTYPE *pSoldier, UINT8 sFacingDir, BOOLEAN fEndReady );
 
-void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier );
+void RemoveSoldierFromGridNo(SOLDIERTYPE&);
 
 void PositionSoldierLight( SOLDIERTYPE *pSoldier );
 

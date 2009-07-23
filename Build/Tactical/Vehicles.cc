@@ -285,7 +285,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 		s.uiStatusFlags |= GetNumberInVehicle(v) == 1 ?
 			SOLDIER_DRIVER : SOLDIER_PASSENGER;
 
-		RemoveSoldierFromGridNo(&s);
+		RemoveSoldierFromGridNo(s);
 
 		if (vs)
 		{

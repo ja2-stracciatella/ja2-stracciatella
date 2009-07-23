@@ -891,9 +891,9 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 void RemoveMercsInSector( )
 {
 	// ATE: only for OUR guys.. the rest is taken care of in TrashWorld() when a new sector is added...
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{
-		RemoveSoldierFromGridNo(s);
+		RemoveSoldierFromGridNo(*i);
 	}
 }
 
@@ -3877,19 +3877,18 @@ try
 	{ //The user has decided to let the game autoresolve the current battle.
 		if( gWorldSectorX == sBattleSectorX && gWorldSectorY == sBattleSectorY && gbWorldSectorZ == sBattleSectorZ )
 		{
-			FOR_ALL_IN_TEAM(s, OUR_TEAM)
+			FOR_ALL_IN_TEAM(i, OUR_TEAM)
 			{ //If we have a live and valid soldier
-				if (s->bLife != 0 &&
-						!s->fBetweenSectors &&
-						!IsMechanical(*s) &&
-						!AM_AN_EPC(s) &&
-						s->sSectorX == gWorldSectorX &&
-						s->sSectorY == gWorldSectorY &&
-						s->bSectorZ == gbWorldSectorZ)
-				{
-					RemoveSoldierFromGridNo(s);
-					InitSoldierOppList(s);
-				}
+				SOLDIERTYPE& s = *i;
+				if (s.bLife == 0)                 continue;
+				if (s.fBetweenSectors)            continue;
+				if (IsMechanical(s))              continue;
+				if (AM_AN_EPC(&s))                continue;
+				if (s.sSectorX != gWorldSectorX)  continue;
+				if (s.sSectorY != gWorldSectorY)  continue;
+				if (s.bSectorZ != gbWorldSectorZ) continue;
+				RemoveSoldierFromGridNo(s);
+				InitSoldierOppList(&s);
 			}
 		}
 	}

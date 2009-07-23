@@ -1065,7 +1065,7 @@ static void PutDownMercPiece(INT32 iPlacement)
 
 static void PickUpMercPiece(INT32 iPlacement)
 {
-	RemoveSoldierFromGridNo( gMercPlacement[ iPlacement ].pSoldier );
+	RemoveSoldierFromGridNo(*gMercPlacement[iPlacement].pSoldier);
 	gMercPlacement[ iPlacement ].fPlaced = FALSE;
 	gMercPlacement[ iPlacement ].pSoldier->bInSector = FALSE;
 }

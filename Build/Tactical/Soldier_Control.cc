@@ -1795,9 +1795,9 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* const s, BOOLEAN const 
 }
 
 
-void RemoveSoldierFromGridNo(SOLDIERTYPE* const s)
+void RemoveSoldierFromGridNo(SOLDIERTYPE& s)
 {
-  InternalRemoveSoldierFromGridNo(s, FALSE);
+  InternalRemoveSoldierFromGridNo(&s, FALSE);
 }
 
 

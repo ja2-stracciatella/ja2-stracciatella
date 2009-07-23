@@ -6067,7 +6067,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE& s)
 	InitSoldierOppList(&s);
 
 	// Remove!
-	RemoveSoldierFromGridNo(&s);
+	RemoveSoldierFromGridNo(s);
 
 	RemoveMercSlot(&s);
 
