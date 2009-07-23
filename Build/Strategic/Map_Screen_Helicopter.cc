@@ -1449,21 +1449,15 @@ static void AddHelicopterToMaps(bool const add, RefuelSite const& r)
 }
 
 
-BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY )
+bool IsSkyriderIsFlyingInSector(INT16 const x, INT16 const y)
 {
 	// up and about?
-	if (iHelicopterVehicleId != -1 && CanHelicopterFly() && fHelicopterIsAirBorne)
-	{
-		GROUP const* const pGroup = GetGroup(GetHelicopter().ubMovementGroup);
-
-		// the right sector?
-		if ( ( sSectorX == pGroup->ubSectorX ) && ( sSectorY == pGroup->ubSectorY ) )
-		{
-			return(TRUE);
-		}
-	}
-
-	return( FALSE );
+	if (iHelicopterVehicleId == -1) return false;
+	if (!CanHelicopterFly())        return false;
+	if (!fHelicopterIsAirBorne)     return false;
+	GROUP const& g = *GetGroup(GetHelicopter().ubMovementGroup);
+	// the right sector?
+	return x == g.ubSectorX && y == g.ubSectorY;
 }
 
 
