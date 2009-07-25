@@ -5032,7 +5032,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier);
+static bool DisplayVehicleMenu(SOLDIERTYPE const&);
 
 
 static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -5107,7 +5107,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				case( EPC_MENU_VEHICLE ):
 					if ( CanCharacterVehicle( pSoldier ) )
 					{
-						if( DisplayVehicleMenu( pSoldier ) )
+						if (DisplayVehicleMenu(*pSoldier))
 						{
 							fShowVehicleMenu = TRUE;
 							ShowBox( ghVehicleBox );
@@ -5229,7 +5229,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				case( ASSIGN_MENU_VEHICLE ):
 					if ( CanCharacterVehicle( pSoldier ) )
 					{
-						if( DisplayVehicleMenu( pSoldier ) )
+						if (DisplayVehicleMenu(*pSoldier))
 						{
 							fShowVehicleMenu = TRUE;
 							ShowBox( ghVehicleBox );
@@ -5406,32 +5406,30 @@ static void HandleShadingOfLinesForSquadMenu(void)
 static PopUpBox* CreateVehicleBox(void);
 
 
-static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
+static bool DisplayVehicleMenu(SOLDIERTYPE const& s)
 {
-	BOOLEAN fVehiclePresent=FALSE;
-
-	// first, clear pop up box
+	// First, clear pop up box
 	RemoveBox(ghVehicleBox);
 	ghVehicleBox = NO_POPUP_BOX;
 
 	PopUpBox* const box = CreateVehicleBox();
 
-	// run through list of vehicles in sector and add them to pop up box
+	// Run through list of vehicles in sector and add them to pop up box
+	bool vehicle_present = false;
 	CFOR_ALL_VEHICLES(i)
 	{
 		VEHICLETYPE const& v = *i;
-		if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
+		if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
 		AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
-		fVehiclePresent = TRUE;
+		vehicle_present = true;
 	}
 
-	// cancel string (borrow the one in the squad menu)
+	// Cancel string (borrow the one in the squad menu)
 	AddMonoString(box, pSquadMenuStrings[SQUAD_MENU_CANCEL]);
 
-	SetBoxTextAttrs(ghVehicleBox);
+	SetBoxTextAttrs(box);
 	ResizeBoxToText(box);
-
-	return fVehiclePresent;
+	return vehicle_present;
 }
 
 
@@ -7056,7 +7054,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 						sel->fFixingSAMSite              ? CanSoldierRepairSAM(&s, SAM_SITE_REPAIR_DIVISOR)                     :
 #endif
 						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, GetVehicle(sel->bVehicleUnderRepairID)) :
-						s.fFixingRobot                  ? CanCharacterRepairRobot(&s)                                           : // XXX s in condition seems wrong, should probably be sel
+						s.fFixingRobot                   ? CanCharacterRepairRobot(&s)                                          : // XXX s in condition seems wrong, should probably be sel
 						                                   TRUE;
 					if (fCanFixSpecificTarget)
 					{
