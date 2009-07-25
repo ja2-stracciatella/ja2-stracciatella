@@ -1998,24 +1998,15 @@ static void SelectSoldierForMovement(SOLDIERTYPE* pSoldier)
 }
 
 
-static void DeselectSoldierForMovement(SOLDIERTYPE* pSoldier)
+static void DeselectSoldierForMovement(SOLDIERTYPE const& s)
 {
-	INT32 iCounter = 0;
-
-	if( pSoldier == NULL )
-	{
-		return;
-	}
-
 	// run through the list and turn this soldier's value on
-	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
+	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
-		if( pSoldierMovingList[ iCounter ] == pSoldier )
-		{
-			// turn the selected soldier off
-			fSoldierIsMoving[ iCounter ] = FALSE;
-			break;
-		}
+		if (pSoldierMovingList[i] != &s) continue;
+		// turn the selected soldier off
+		fSoldierIsMoving[i] = FALSE;
+		break;
 	}
 }
 
@@ -2070,7 +2061,7 @@ static void DeselectSquadForMovement(INT32 const squad_no)
 		{
 			SOLDIERTYPE& s = **k;
 			if (!s.bActive) continue;
-			DeselectSoldierForMovement(&s);
+			DeselectSoldierForMovement(s);
 		}
 		break;
 	}
@@ -2145,7 +2136,7 @@ static void DeselectVehicleForMovement(INT32 const vehicle_id)
 		CFOR_ALL_PASSENGERS(v, i)
 		{
 			SOLDIERTYPE& s = **i;
-			if (s.bActive) DeselectSoldierForMovement(&s);
+			if (s.bActive) DeselectSoldierForMovement(s);
 		}
 		break;
 	}
@@ -2846,7 +2837,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						else
 						{
 							// soldier is staying behind
-							DeselectSoldierForMovement( pSoldier );
+							DeselectSoldierForMovement(*pSoldier);
 						}
 					}
 					else if( pSoldier->bAssignment < ON_DUTY )
@@ -2860,13 +2851,13 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						else
 						{
 							// soldier is staying behind
-							DeselectSoldierForMovement( pSoldier );
+							DeselectSoldierForMovement(*pSoldier);
 						}
 					}
 					else
 					{
 						// soldier is staying behind
-						DeselectSoldierForMovement( pSoldier );
+						DeselectSoldierForMovement(*pSoldier);
 					}
 				}
 				else	// currently NOT moving
