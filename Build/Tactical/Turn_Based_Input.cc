@@ -2705,13 +2705,13 @@ static void TeleportSelectedSoldier(void)
 	if (gsInterfaceLevel == 0)
 	{
 		SetSoldierHeight(sel, 0);
-		TeleportSoldier(sel, usMapPos, FALSE);
+		TeleportSoldier(*sel, usMapPos, false);
 		EVENT_StopMerc(sel);
 	}
 	else if (FindStructure(usMapPos, STRUCTURE_ROOF) != NULL) // Is there a roof?
 	{
 		SetSoldierHeight(sel, 50.0);
-		TeleportSoldier(sel, usMapPos, TRUE);
+		TeleportSoldier(*sel, usMapPos, true);
 		EVENT_StopMerc(sel);
 	}
 }

@@ -3248,14 +3248,14 @@ void LoadStrategicAI(HWFILE const hFile)
 		}
 		else
 		{ //We are in the basement sector, relocate queen to proper position.
-			FOR_ALL_IN_TEAM(s, CIV_TEAM)
+			FOR_ALL_IN_TEAM(i, CIV_TEAM)
 			{
-				if (s->ubProfile == QUEEN)
-				{ //Found queen, relocate her to 16866
-					BumpAnyExistingMerc( 16866 );
-					TeleportSoldier(s, 16866, TRUE);
-					break;
-				}
+				SOLDIERTYPE& s = *i;
+				if (s.ubProfile != QUEEN) continue;
+				// Found queen, relocate her to 16866
+				BumpAnyExistingMerc(16866);
+				TeleportSoldier(s, 16866, true);
+				break;
 			}
 		}
 	}

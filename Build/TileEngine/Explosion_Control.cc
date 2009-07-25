@@ -2171,7 +2171,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 									// move the merc outside of the room again
 									sTeleportSpot = FindGridNoFromSweetSpotWithStructData(tgt, STANDING, sTeleportSpot, 2, &ubDirection, FALSE);
 									ChangeSoldierState(tgt, STANDING, 0, TRUE);
-									TeleportSoldier(tgt, sTeleportSpot, FALSE);
+									TeleportSoldier(*tgt, sTeleportSpot, false);
 
 									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 									FatigueCharacter(tgt);

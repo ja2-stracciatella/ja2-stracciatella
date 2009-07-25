@@ -15,7 +15,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 
 void HandleNextTileWaiting(SOLDIERTYPE* pSoldier);
 
-BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce );
+bool TeleportSoldier(SOLDIERTYPE&, GridNo, bool force);
 
 void SwapMercPositions(SOLDIERTYPE& s1, SOLDIERTYPE& s2);
 

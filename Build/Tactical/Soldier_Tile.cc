@@ -697,34 +697,18 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
+bool TeleportSoldier(SOLDIERTYPE& s, GridNo const gridno, bool const force)
 {
-	// Check dest...
-	if ( NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) || fForce )
-	{
-		// TELEPORT TO THIS LOCATION!
-		EVENT_SetSoldierPosition(pSoldier, sGridNo, SSP_NONE);
+	if (!NewOKDestination(&s, gridno, TRUE, 0) && !force) return false;
 
-		pSoldier->sFinalDestination = sGridNo;
-
-		// Make call to FOV to update items...
-		RevealRoofsAndItems(pSoldier, TRUE);
-
-		// Handle sight!
-		HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO);
-
-		// Cancel services...
-		GivingSoldierCancelServices( pSoldier );
-
-		// Change light....
-		if (pSoldier->light != NULL)
-		{
-			LightSpriteRoofStatus(pSoldier->light, pSoldier->bLevel != 0);
-		}
-		return( TRUE );
-	}
-
-	return( FALSE );
+	// Teleport to this location
+	EVENT_SetSoldierPosition(&s, gridno, SSP_NONE);
+	s.sFinalDestination = gridno;
+	RevealRoofsAndItems(&s, TRUE);
+	HandleSight(s, SIGHT_LOOK | SIGHT_RADIO);
+	GivingSoldierCancelServices(&s);
+	if (s.light) LightSpriteRoofStatus(s.light, s.bLevel != 0);
+	return true;
 }
 
 
@@ -742,13 +726,13 @@ void SwapMercPositions(SOLDIERTYPE& s1, SOLDIERTYPE& s2)
 	// Test OK destination for each
 	if (NewOKDestination(&s1, gridno2, TRUE, 0) && NewOKDestination(&s2, gridno1, TRUE, 0))
 	{ // Call teleport function for each
-		TeleportSoldier(&s1, gridno2, FALSE);
-		TeleportSoldier(&s2, gridno1, FALSE);
+		TeleportSoldier(s1, gridno2, false);
+		TeleportSoldier(s2, gridno1, false);
 	}
 	else
 	{ // Place back
-		TeleportSoldier(&s1, gridno1, TRUE);
-		TeleportSoldier(&s2, gridno2, TRUE);
+		TeleportSoldier(s1, gridno1, true);
+		TeleportSoldier(s2, gridno2, true);
 	}
 }
 

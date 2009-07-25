@@ -1885,7 +1885,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						if (pQuotePtr->sActionData == NPC_ACTION_TELEPORT_NPC)
 						{
 							BumpAnyExistingMerc( pQuotePtr->usGoToGridno );
-							TeleportSoldier( pSoldier, pQuotePtr->usGoToGridno, FALSE );
+							TeleportSoldier(*pSoldier, pQuotePtr->usGoToGridno, false);
 							// search for quotes to trigger immediately!
 							NPCReachedDestination( pSoldier, FALSE );
 						}
