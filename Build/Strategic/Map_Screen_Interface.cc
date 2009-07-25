@@ -127,16 +127,16 @@ static FASTHELPREGION pFastHelpMapScreenList[MAX_MAPSCREEN_FAST_HELP];
 // the move menu region
 static MOUSE_REGION gMoveMenuRegion[MAX_POPUP_BOX_STRING_COUNT];
 
-MOUSE_REGION gMapScreenHelpTextMask;
+static MOUSE_REGION gMapScreenHelpTextMask;
 
-BOOLEAN fScreenMaskForMoveCreated = FALSE;
+static BOOLEAN fScreenMaskForMoveCreated = FALSE;
 
-CHAR16 gsCustomErrorString[ 128 ];
+static wchar_t gsCustomErrorString[128];
 
 BOOLEAN fShowUpdateBox = FALSE;
-BOOLEAN fInterfaceFastHelpTextActive = FALSE;
+static BOOLEAN fInterfaceFastHelpTextActive = FALSE;
 BOOLEAN fReBuildCharacterList = FALSE;
-INT32 giSizeOfInterfaceFastHelpTextList = 0;
+static INT32 giSizeOfInterfaceFastHelpTextList = 0;
 
 //Animated sector locator icon variables.
 INT16 gsSectorLocatorX;
@@ -149,31 +149,31 @@ static SGPVObject* guiSectorLocatorGraphicID;
 
 
 // number of mercs in sector capable of moving
-INT32 giNumberOfSoldiersInSectorMoving = 0;
+static INT32 giNumberOfSoldiersInSectorMoving = 0;
 
 // number of squads capable of moving
-INT32 giNumberOfSquadsInSectorMoving = 0;
+static INT32 giNumberOfSquadsInSectorMoving = 0;
 
 // number of vehicles in sector moving
-INT32 giNumberOfVehiclesInSectorMoving = 0;
+static INT32 giNumberOfVehiclesInSectorMoving = 0;
 
 // the list of soldiers that are moving
-SOLDIERTYPE * pSoldierMovingList[ MAX_CHARACTER_COUNT ];
-BOOLEAN fSoldierIsMoving[ MAX_CHARACTER_COUNT ];
+static SOLDIERTYPE* pSoldierMovingList[MAX_CHARACTER_COUNT];
+static BOOLEAN      fSoldierIsMoving[MAX_CHARACTER_COUNT];
 
 static SOLDIERTYPE* pUpdateSoldierBox[SIZE_OF_UPDATE_BOX];
 
 static SGPVObject* giUpdateSoldierFaces[SIZE_OF_UPDATE_BOX];
 
 // the squads thata re moving
-INT32 iSquadMovingList[ NUMBER_OF_SQUADS ];
-INT32 fSquadIsMoving[ NUMBER_OF_SQUADS ];
+static INT32 iSquadMovingList[NUMBER_OF_SQUADS];
+static INT32 fSquadIsMoving[NUMBER_OF_SQUADS];
 
 // the vehicles thata re moving
-INT32 iVehicleMovingList[ NUMBER_OF_SQUADS ];
-INT32 fVehicleIsMoving[ NUMBER_OF_SQUADS ];
+static INT32 iVehicleMovingList[NUMBER_OF_SQUADS];
+static INT32 fVehicleIsMoving[NUMBER_OF_SQUADS];
 
-MOUSE_REGION gMoveBoxScreenMask;
+static MOUSE_REGION gMoveBoxScreenMask;
 
 
 BOOLEAN fShowMapScreenMovementList = FALSE;
@@ -183,7 +183,7 @@ MapScreenCharacterSt gCharactersList[ MAX_CHARACTER_COUNT+1];
 
 MOUSE_REGION	gMapStatusBarsRegion;
 
-SGPPoint MovePosition={450, 100 };
+static SGPPoint const MovePosition = { 450, 100 };
 
 static UpdateBoxReason iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
@@ -192,14 +192,14 @@ static UpdateBoxReason iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 BOOLEAN   fDisableDueToBattleRoster = FALSE;
 
 // track old contract times
-INT32 iOldContractTimes[ MAX_CHARACTER_COUNT ];
+static INT32 iOldContractTimes[MAX_CHARACTER_COUNT];
 
 // position of pop up box
 INT32 giBoxY = 0;
 
-MOUSE_REGION gContractIconRegion;
-MOUSE_REGION gInsuranceIconRegion;
-MOUSE_REGION gDepositIconRegion;
+static MOUSE_REGION gContractIconRegion;
+static MOUSE_REGION gInsuranceIconRegion;
+static MOUSE_REGION gDepositIconRegion;
 
 // general line..current and old
 INT32 giHighLine=-1;
@@ -223,7 +223,7 @@ SGPVObject* guiPOPUPBORDERS;
 // the currently selected character arrow
 static SGPVObject* guiSelectedCharArrow;
 
-GUIButtonRef guiUpdatePanelButtons[2];
+static GUIButtonRef guiUpdatePanelButtons[2];
 
 // the update panel
 SGPVObject* guiUpdatePanelTactical;
@@ -238,13 +238,13 @@ struct MERC_LEAVE_ITEM
 static MERC_LEAVE_ITEM* gpLeaveListHead[NUM_LEAVE_LIST_SLOTS];
 
 // holds ids of mercs who left stuff behind
-UINT32 guiLeaveListOwnerProfileId[ NUM_LEAVE_LIST_SLOTS ];
+static UINT32 guiLeaveListOwnerProfileId[NUM_LEAVE_LIST_SLOTS];
 
 // flag to reset contract region glow
 BOOLEAN fResetContractGlow = FALSE;
 
 // timers for double click
-INT32 giDblClickTimersForMoveBoxMouseRegions[ MAX_POPUP_BOX_STRING_COUNT ];
+static INT32 giDblClickTimersForMoveBoxMouseRegions[MAX_POPUP_BOX_STRING_COUNT];
 
 UINT32 guiSectorLocatorBaseTime = 0;
 
@@ -256,7 +256,7 @@ BOOLEAN fShowAttributeMenu = FALSE;
 BOOLEAN fShowSquadMenu = FALSE;
 BOOLEAN fShowContractMenu = FALSE;
 
-BOOLEAN fRebuildMoveBox = FALSE;
+static BOOLEAN fRebuildMoveBox = FALSE;
 
 // positions for all the pop up boxes
 SGPPoint ContractPosition={120,50};
