@@ -1448,7 +1448,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 					(s2->bNeutral || s2->bSide == gbPlayerNum)                                  && // Exclude enemies
 					CanExchangePlaces(s1, s2, TRUE))
 			{
-				SwapMercPositions(s1, s2);
+				SwapMercPositions(*s1, *s2);
 				DeductPoints(s1, AP_EXCHANGE_PLACES, 0);
 				DeductPoints(s2, AP_EXCHANGE_PLACES, 0);
 			}
@@ -3033,7 +3033,7 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 		if (ValidQuickExchangePosition() &&
 				CanExchangePlaces(sel, tgt, TRUE))
 		{
-			SwapMercPositions(sel, tgt);
+			SwapMercPositions(*sel, *tgt);
 		}
 		return -3;
 	}

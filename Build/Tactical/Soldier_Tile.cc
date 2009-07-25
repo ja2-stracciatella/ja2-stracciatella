@@ -245,7 +245,7 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 									tgt->sFinalDestination = sTempDestGridNo;
 
 									// Swap merc positions.....
-									SwapMercPositions(pSoldier, tgt);
+									SwapMercPositions(*pSoldier, *tgt);
 
 									// With these two guys swapped, they should try and continue on their way....
 									// Start them both again along their way...
@@ -640,7 +640,7 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 							//tgt->sFinalDestination = sTempDestGridNo;
 
 							// Swap merc positions.....
-							SwapMercPositions(pSoldier, tgt);
+							SwapMercPositions(*pSoldier, *tgt);
 
 							// With these two guys swapped, we should try to continue on our way....
 							pSoldier->fDelayedMovement = FALSE;
@@ -727,31 +727,28 @@ BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 	return( FALSE );
 }
 
-// Swaps 2 soldier positions...
-void SwapMercPositions( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2 )
+
+// Swap 2 soldier positions
+void SwapMercPositions(SOLDIERTYPE& s1, SOLDIERTYPE& s2)
 {
-	INT16 sGridNo1, sGridNo2;
+	// Save positions
+	GridNo const gridno1 = s1.sGridNo;
+	GridNo const gridno2 = s2.sGridNo;
 
-	// OK, save positions...
-	sGridNo1 = pSoldier1->sGridNo;
-	sGridNo2 = pSoldier2->sGridNo;
+	// Remove each
+	RemoveSoldierFromGridNo(s1);
+	RemoveSoldierFromGridNo(s2);
 
-	// OK, remove each.....
-	RemoveSoldierFromGridNo(*pSoldier1);
-	RemoveSoldierFromGridNo(*pSoldier2);
-
-	// OK, test OK destination for each.......
-	if ( NewOKDestination( pSoldier1, sGridNo2, TRUE, 0 ) && NewOKDestination( pSoldier2, sGridNo1, TRUE, 0 ) )
-	{
-		// OK, call teleport function for each.......
-		TeleportSoldier( pSoldier1, sGridNo2, FALSE );
-		TeleportSoldier( pSoldier2, sGridNo1, FALSE );
+	// Test OK destination for each
+	if (NewOKDestination(&s1, gridno2, TRUE, 0) && NewOKDestination(&s2, gridno1, TRUE, 0))
+	{ // Call teleport function for each
+		TeleportSoldier(&s1, gridno2, FALSE);
+		TeleportSoldier(&s2, gridno1, FALSE);
 	}
 	else
-	{
-		// Place back...
-		TeleportSoldier( pSoldier1, sGridNo1, TRUE );
-		TeleportSoldier( pSoldier2, sGridNo2, TRUE );
+	{ // Place back
+		TeleportSoldier(&s1, gridno1, TRUE);
+		TeleportSoldier(&s2, gridno2, TRUE);
 	}
 }
 
