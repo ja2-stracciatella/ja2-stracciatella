@@ -203,7 +203,7 @@ void MakeClosestEnemyChosenOne(void);
 void NewDest(SOLDIERTYPE *pSoldier, UINT16 sGridno);
 
 INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove);
-void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier);
+void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE&);
 
 INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier);
 INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier);

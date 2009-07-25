@@ -754,28 +754,25 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	 }
 }
 
-void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
+
+void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE& s)
 {
-	// If a special move, ignore this!
-	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
+	// if a special move, ignore this
+	if (gAnimControl[s.usAnimState].uiFlags & ANIM_SPECIALMOVE) return;
+
+	// Record that this merc can no longer animate and why
+	AdjustNoAPToFinishMove(&s, TRUE);
+
+	// We'll keep his action intact though
+	DebugAI(String("NO AP TO FINISH MOVE for %d (%d APs left)", s.ubID, s.bActionPoints));
+
+	// If this dude is under AI right now, then pass the baton to someone else
+	if (s.uiStatusFlags & SOLDIER_UNDERAICONTROL)
 	{
-		return;
-	}
-
-	// record that this merc can no longer animate and why...
-	AdjustNoAPToFinishMove( pSoldier, TRUE );
-
-	// We'll keep his action intact though...
-	DebugAI( String("NO AP TO FINISH MOVE for %d (%d APs left)",pSoldier->ubID, pSoldier->bActionPoints) );
-
-	// if this dude is under AI right now, then pass the baton to someone else
-	if (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL)
-	{
-		#ifdef TESTAICONTROL
-			DebugAI( String("Ending turn for %d because out of APs for movement", pSoldier->ubID ) );
-		#endif
-
-		EndAIGuysTurn(pSoldier);
+#ifdef TESTAICONTROL
+		DebugAI(String("Ending turn for %d because out of APs for movement", s.ubID));
+#endif
+		EndAIGuysTurn(&s);
 	}
 }
 

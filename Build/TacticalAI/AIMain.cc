@@ -1410,7 +1410,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 			#ifdef DEBUGDECISIONS
 				AINumMessage("HandleManAI - Not enough APs, skipping guy#",pSoldier->ubID);
 			#endif
-			HaltMoveForSoldierOutOfPoints( pSoldier);
+			HaltMoveForSoldierOutOfPoints(*pSoldier);
 			return;
 		}
 	}

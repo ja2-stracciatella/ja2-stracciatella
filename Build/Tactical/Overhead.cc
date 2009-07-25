@@ -1067,7 +1067,7 @@ void ExecuteOverhead(void)
 										if (fNoAPsForPendingAction)
 										{
 											// Change status of guy to waiting
-											HaltMoveForSoldierOutOfPoints(pSoldier);
+											HaltMoveForSoldierOutOfPoints(*pSoldier);
 											fKeepMoving = FALSE;
 											pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 											pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
@@ -1351,7 +1351,7 @@ void ExecuteOverhead(void)
 
 static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE& s)
 {
-	HaltMoveForSoldierOutOfPoints(&s);
+	HaltMoveForSoldierOutOfPoints(s);
 	s.usPendingAnimation = NO_PENDING_ANIMATION;
 	s.ubPendingDirection = NO_PENDING_DIRECTION;
 	s.ubPendingAction    = NO_PENDING_ACTION;
