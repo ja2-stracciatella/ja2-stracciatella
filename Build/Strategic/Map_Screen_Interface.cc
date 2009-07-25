@@ -2090,56 +2090,43 @@ static bool AllSoldiersInSquadSelected(INT32 const squad_no)
 }
 
 
-static void SelectVehicleForMovement(INT32 iVehicleId, BOOLEAN fAndAllOnBoard)
+static void SelectVehicleForMovement(INT32 const vehicle_id, BOOLEAN const and_all_on_board)
 {
-	BOOLEAN fHasDriver = FALSE;
-	BOOLEAN fFirstFailure;
-
-	// run through vehicle list and set them on
-	for (INT32 iCounter = 0; iCounter < giNumberOfVehiclesInSectorMoving; ++iCounter)
+	// Run through vehicle list and set them on
+	for (INT32 i = 0; i != giNumberOfVehiclesInSectorMoving; ++i)
 	{
-		if( iVehicleMovingList[ iCounter ] == iVehicleId )
+		if (iVehicleMovingList[i] != vehicle_id) continue;
+
+		bool               first_failure = true;
+		bool               has_driver    = false;
+		VEHICLETYPE const& v             = pVehicleList[vehicle_id];
+		CFOR_ALL_PASSENGERS(v, k)
 		{
-			// found it
+			SOLDIERTYPE& s = **k;
 
-			fFirstFailure = TRUE;
-
-			VEHICLETYPE const& v = pVehicleList[iVehicleId];
-			CFOR_ALL_PASSENGERS(v, i)
-			{
-				SOLDIERTYPE* const pPassenger = *i;
-
-				if ( fAndAllOnBoard )
+			if (and_all_on_board)
+			{ // Try to select everyone in vehicle
+				if (s.bActive)
 				{
-					// try to select everyone in vehicle
-					if (pPassenger->bActive)
+					// Is he able and allowed to move?
+					if (CanMoveBoxSoldierMoveStrategically(&s, first_failure))
 					{
-						// is he able & allowed to move?
-						if ( CanMoveBoxSoldierMoveStrategically( pPassenger, fFirstFailure ) )
-						{
-							SelectSoldierForMovement( pPassenger );
-						}
-						else
-						{
-							fFirstFailure = FALSE;
-						}
+						SelectSoldierForMovement(&s);
+					}
+					else
+					{
+						first_failure = false;
 					}
 				}
-
-				if (IsSoldierSelectedForMovement(*pPassenger))
-				{
-					fHasDriver = TRUE;
-				}
 			}
 
-			// vehicle itself can only move if at least one passenger can move and is moving!
-			if ( fHasDriver )
-			{
-				fVehicleIsMoving[ iCounter ] = TRUE;
-			}
-
-			break;
+			if (IsSoldierSelectedForMovement(s)) has_driver = true;
 		}
+
+		/* Vehicle itself can only move if at least one passenger can move and is
+		 * moving */
+		if (has_driver) fVehicleIsMoving[i] = TRUE;
+		break;
 	}
 }
 
