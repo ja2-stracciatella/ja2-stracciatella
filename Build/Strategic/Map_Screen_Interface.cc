@@ -2211,42 +2211,32 @@ static void AddVehicleToMovingLists(INT32 const vehicle_id)
 }
 
 
-// the alternate mapscreen movement system
-static void InitializeMovingLists(void)
+// The alternate mapscreen movement system
+static void InitializeMovingLists()
 {
-	INT32 iCounter = 0;
-
-
 	giNumberOfSoldiersInSectorMoving = 0;
 	giNumberOfSquadsInSectorMoving   = 0;
 	giNumberOfVehiclesInSectorMoving = 0;
 
-	// init the soldiers
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	// Init the soldiers
+	for (INT32 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		// soldier is NOT moving
-		pSoldierMovingList[ iCounter ] = NULL;
-		// turn the selected soldier off
-		fSoldierIsMoving[ iCounter ] = FALSE;
+		pSoldierMovingList[i] = 0;
+		fSoldierIsMoving[i]   = FALSE;
 	}
 
-
-	// init the squads
-	for( iCounter = 0; iCounter < NUMBER_OF_SQUADS; iCounter++ )
+	// Init the squads
+	for (INT32 i = 0; i != NUMBER_OF_SQUADS; ++i)
 	{
-		// reset squad value
-		iSquadMovingList[ iCounter ] = -1;
-		// turn it off
-		fSquadIsMoving[ iCounter ] = FALSE;
+		iSquadMovingList[i] = -1;
+		fSquadIsMoving[i]   = FALSE;
 	}
 
-	// init the vehicles
-	for( iCounter = 0; iCounter < NUMBER_OF_SQUADS; iCounter++ )
+	// Init the vehicles
+	for (INT32 i = 0; i != NUMBER_OF_SQUADS; ++i)
 	{
-		// reset squad value
-		iVehicleMovingList[ iCounter ] = -1;
-		// turn it off
-		fVehicleIsMoving[ iCounter ] = FALSE;
+		iVehicleMovingList[i] = -1;
+		fVehicleIsMoving[i]   = FALSE;
 	}
 }
 
