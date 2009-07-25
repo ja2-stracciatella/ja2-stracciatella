@@ -2351,58 +2351,44 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 }
 
 
-
-void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+void SetUpMovingListsForSector(INT16 const x, INT16 const y, INT16 const z)
 {
-	// not allowed for underground movement!
-	Assert( sSectorZ == 0 );
+	// Not allowed for underground movement
+	Assert(z == 0);
 
-
-	// clear the lists
 	InitializeMovingLists();
 
-
-	// note that Skyrider can't be moved using the move box, and won't appear because the helicoprer is not in the char list
-
-	CFOR_ALL_IN_CHAR_LIST(c)
+	/* Note that Skyrider can't be moved using the move box, and won't appear
+	 * because the helicoprer is not in the char list */
+	CFOR_ALL_IN_CHAR_LIST(i)
 	{
-		SOLDIERTYPE* const pSoldier = c->merc;
-		if (pSoldier->bAssignment != IN_TRANSIT     &&
-				pSoldier->bAssignment != ASSIGNMENT_POW &&
-				( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == sSectorZ ) )
-		{
-			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-			{
-				VEHICLETYPE const& v = GetVehicle(pSoldier->bVehicleID);
-				// vehicle
-				// if it can move (can't be empty)
-				if (GetNumberInVehicle(v) > 0)
-				{
-					// add vehicle
-					AddVehicleToMovingLists( pSoldier->bVehicleID );
-				}
-			}
-			else // soldier
-			{
-				// alive, not aboard Skyrider (airborne or not!)
-				if (pSoldier->bLife >= OKLIFE && !InHelicopter(*pSoldier))
-				{
-					// add soldier
-					AddSoldierToMovingLists(*pSoldier);
+		SOLDIERTYPE& s = *i->merc;
+		if (s.bAssignment == IN_TRANSIT)     continue;
+		if (s.bAssignment == ASSIGNMENT_POW) continue;
+		if (s.sSectorX != x || s.sSectorY != y || s.bSectorZ != z) continue;
 
-					// if on a squad,
-					if ( pSoldier->bAssignment < ON_DUTY )
-					{
-						// add squad (duplicates ok, they're ignored inside the function)
-						AddSquadToMovingLists( pSoldier->bAssignment );
-					}
-				}
+		if (s.uiStatusFlags & SOLDIER_VEHICLE)
+		{
+			VEHICLETYPE const& v = GetVehicle(s.bVehicleID);
+			// If it can move (can't be empty)
+			if (GetNumberInVehicle(v) == 0) continue;
+			AddVehicleToMovingLists(s.bVehicleID);
+		}
+		else
+		{
+			// Alive, not aboard Skyrider (airborne or not!)
+			if (s.bLife < OKLIFE) continue;
+			if (InHelicopter(s))  continue;
+			AddSoldierToMovingLists(s);
+			if (s.bAssignment < ON_DUTY) // If on a squad
+			{ // Add squad (duplicates ok, they're ignored inside the function)
+				AddSquadToMovingLists(s.bAssignment);
 			}
 		}
 	}
 
 	fShowMapScreenMovementList = TRUE;
-	CreateDestroyMovementBox( sSectorX, sSectorY, sSectorZ );
+	CreateDestroyMovementBox(x, y, z);
 }
 
 
