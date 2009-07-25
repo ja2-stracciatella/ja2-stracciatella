@@ -1781,7 +1781,7 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE& s, BOOLEAN const force)
 		--gpWorldLevelData[grid_no].ubAdjacentSoldierCnt;
 	}
 
-	HandlePlacingRoofMarker(&s, s.sGridNo, FALSE, FALSE);
+	HandlePlacingRoofMarker(&s, FALSE, FALSE);
 
 	UnMarkMovementReserved(s);
 	HandleCrowShadowRemoveGridNo(s);
@@ -8043,7 +8043,7 @@ static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier)
 }
 
 
-void HandlePlacingRoofMarker( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fSet, BOOLEAN fForce )
+void HandlePlacingRoofMarker(SOLDIERTYPE* const pSoldier, BOOLEAN const fSet, BOOLEAN const fForce)
 {
 	LEVELNODE *pRoofNode;
 	LEVELNODE *pNode;
@@ -8061,6 +8061,7 @@ void HandlePlacingRoofMarker( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fSet
 	// If we are on the roof, add roof UI peice!
 	if ( pSoldier->bLevel == SECOND_LEVEL )
 	{
+		GridNo const sGridNo = pSoldier->sGridNo;
 		// Get roof node
 		pRoofNode = gpWorldLevelData[ sGridNo ].pRoofHead;
 

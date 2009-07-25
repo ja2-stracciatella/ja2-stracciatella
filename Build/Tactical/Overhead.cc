@@ -734,7 +734,7 @@ void ExecuteOverhead(void)
 						pSoldier->sLocationOfFadeStart = pSoldier->sGridNo;
 
 						// OK, re-evaluate guy's roof marker
-						HandlePlacingRoofMarker(pSoldier, pSoldier->sGridNo, FALSE, FALSE);
+						HandlePlacingRoofMarker(pSoldier, FALSE, FALSE);
 
 						pSoldier->bVisible = -2;
 					}
@@ -747,7 +747,7 @@ void ExecuteOverhead(void)
 						pSoldier->sLocationOfFadeStart = pSoldier->sGridNo;
 
 						// OK, re-evaluate guy's roof marker
-						HandlePlacingRoofMarker(pSoldier, pSoldier->sGridNo, TRUE, FALSE);
+						HandlePlacingRoofMarker(pSoldier, TRUE, FALSE);
 					}
 
 				}
@@ -763,7 +763,7 @@ void ExecuteOverhead(void)
 					{
 						pSoldier->fSoldierWasMoving = FALSE;
 
-						HandlePlacingRoofMarker(pSoldier, pSoldier->sGridNo, TRUE, FALSE);
+						HandlePlacingRoofMarker(pSoldier, TRUE, FALSE);
 
 						if (!gGameSettings.fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP])
 						{
@@ -779,7 +779,7 @@ void ExecuteOverhead(void)
 					if (!pSoldier->fSoldierWasMoving)
 					{
 						pSoldier->fSoldierWasMoving = TRUE;
-						HandlePlacingRoofMarker(pSoldier, pSoldier->sGridNo, FALSE, FALSE);
+						HandlePlacingRoofMarker(pSoldier, FALSE, FALSE);
 					}
 				}
 

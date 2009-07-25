@@ -253,7 +253,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						{
 							// in autobandage, handle as AI, but add roof marker too
 							FreeUpNPCFromRoofClimb( pSoldier );
-							HandlePlacingRoofMarker( pSoldier, pSoldier->sGridNo, TRUE, TRUE );
 						}
 						else
 						{
@@ -264,8 +263,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							{
 								ChangeInterfaceLevel( 1 );
 							}
-							HandlePlacingRoofMarker( pSoldier, pSoldier->sGridNo, TRUE, TRUE );
 						}
+						HandlePlacingRoofMarker(pSoldier, TRUE, TRUE);
 					}
 					else
 					{
