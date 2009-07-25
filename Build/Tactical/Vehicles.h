@@ -73,7 +73,7 @@ void RemoveVehicleFromList(VEHICLETYPE&);
 // clear out the vehicle list
 void ClearOutVehicleList( void );
 
-BOOLEAN AnyAccessibleVehiclesInSoldiersSector(const SOLDIERTYPE*);
+bool AnyAccessibleVehiclesInSoldiersSector(SOLDIERTYPE const&);
 
 // is this vehicle in the same sector (not between sectors), and accesible
 bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const*, VEHICLETYPE const&);

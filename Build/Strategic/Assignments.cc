@@ -884,7 +884,7 @@ static bool CanCharacterVehicle(SOLDIERTYPE const& s)
 #else
 	return
 		fInMapMode && // Strictly for visual reasons - we don't want them just vanishing if in tactical
-		AnyAccessibleVehiclesInSoldiersSector(&s) &&
+		AnyAccessibleVehiclesInSoldiersSector(s) &&
 		( // If we're in battle in the current sector, disallow
 			!gTacticalStatus.fEnemyInSector ||
 			s.sSectorX != gWorldSectorX     ||
