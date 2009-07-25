@@ -2156,27 +2156,19 @@ static INT32 HowManyMovingSoldiersInSquad(INT32 const squad_no)
 }
 
 
-// try to add this soldier to the moving lists
-static void AddSoldierToMovingLists(SOLDIERTYPE* pSoldier)
+static void AddSoldierToMovingLists(SOLDIERTYPE& s)
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	for (INT32 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		if( pSoldierMovingList[ iCounter ] == pSoldier )
-		{
-			// found
-			return;
-		}
-		else if( pSoldierMovingList[ iCounter ] == NULL )
-		{
-			// found a free slot
-			pSoldierMovingList[ iCounter ] = pSoldier;
-			fSoldierIsMoving[ iCounter ] = FALSE;
+		SOLDIERTYPE*& slot = pSoldierMovingList[i];
+		if (slot == &s) return;
 
-			giNumberOfSoldiersInSectorMoving++;
-			return;
-		}
+		if (slot) continue;
+		// Found a free slot
+		slot                = &s;
+		fSoldierIsMoving[i] = FALSE;
+		++giNumberOfSoldiersInSectorMoving;
+		return;
 	}
 }
 
@@ -2396,7 +2388,7 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 				if (pSoldier->bLife >= OKLIFE && !InHelicopter(*pSoldier))
 				{
 					// add soldier
-					AddSoldierToMovingLists( pSoldier );
+					AddSoldierToMovingLists(*pSoldier);
 
 					// if on a squad,
 					if ( pSoldier->bAssignment < ON_DUTY )
