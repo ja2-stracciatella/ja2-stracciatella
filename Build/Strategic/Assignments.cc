@@ -367,36 +367,30 @@ static bool CanCharacterRepairVehicle(SOLDIERTYPE const*, VEHICLETYPE const&);
 static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const*, INT8 bHighestPass);
 
 
-static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const* const pSoldier)
+static bool IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const& s)
 {
-	// items?
-	if ( DoesCharacterHaveAnyItemsToRepair( pSoldier, FINAL_REPAIR_PASS ) )
-	{
-		return( TRUE );
-	}
+	// Items?
+	if (DoesCharacterHaveAnyItemsToRepair(&s, FINAL_REPAIR_PASS)) return true;
 
-	// robot?
-	if ( CanCharacterRepairRobot( pSoldier ) )
-	{
-		return( TRUE );
-	}
+	// Robot?
+	if (CanCharacterRepairRobot(&s)) return true;
 
-	// vehicles?
-	if ( pSoldier->bSectorZ == 0 )
+	// Vehicles?
+	if (s.bSectorZ == 0)
 	{
 		CFOR_ALL_VEHICLES(i)
 		{
 			VEHICLETYPE const& v = *i;
-			// the helicopter, is NEVER repairable...
-			if (IsHelicopter(v))                                continue;
-			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
-			if (!CanCharacterRepairVehicle(pSoldier, v))        continue;
-			// there is a repairable vehicle here
-			return TRUE;
+			// The helicopter, is NEVER repairable
+			if (IsHelicopter(v))                          continue;
+			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+			if (!CanCharacterRepairVehicle(&s, v))        continue;
+			// There is a repairable vehicle here
+			return true;
 		}
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
@@ -555,7 +549,7 @@ static BOOLEAN CanCharacterRepair(SOLDIERTYPE const* const pSoldier)
 	}
 
 	// anything around to fix?
-	if ( !IsAnythingAroundForSoldierToRepair( pSoldier ) )
+	if (!IsAnythingAroundForSoldierToRepair(*pSoldier))
 	{
 		return( FALSE );
 	}
