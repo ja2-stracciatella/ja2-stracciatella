@@ -877,18 +877,21 @@ static BOOLEAN CanCharacterBeAwakened(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhy
 
 
 // put character in vehicle?
-static BOOLEAN CanCharacterVehicle(const SOLDIERTYPE* const s)
-{
-	// can character enter/leave vehicle?
+static bool CanCharacterVehicle(SOLDIERTYPE const& s)
+{ // Can character enter/leave vehicle?
 #ifdef JA2DEMO
-	// this assignment is no go in the demo
-	return FALSE;
+	return false; // This assignment is no go in the demo
 #else
 	return
-		fInMapMode && // strictly for visual reasons - we don't want them just vanishing if in tactical
-		AnyAccessibleVehiclesInSoldiersSector(s) &&
-		(!gTacticalStatus.fEnemyInSector || s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ) && // if we're in BATTLE in the current sector, disallow
-		AreAssignmentConditionsMet(*s, AC_EPC | AC_MECHANICAL);
+		fInMapMode && // Strictly for visual reasons - we don't want them just vanishing if in tactical
+		AnyAccessibleVehiclesInSoldiersSector(&s) &&
+		( // If we're in battle in the current sector, disallow
+			!gTacticalStatus.fEnemyInSector ||
+			s.sSectorX != gWorldSectorX     ||
+			s.sSectorY != gWorldSectorY     ||
+			s.bSectorZ != gbWorldSectorZ
+		) &&
+		AreAssignmentConditionsMet(s, AC_EPC | AC_MECHANICAL);
 #endif
 }
 
@@ -3675,7 +3678,7 @@ void HandleShadingOfLinesForAssignmentMenus()
 			PopUpBox* const box = ghEpcBox;
 			ShadeStringInBox(box, EPC_MENU_PATIENT, !CanCharacterPatient(s));
 			ShadeStringInBox(box, EPC_MENU_ON_DUTY, !CanCharacterOnDuty(s));
-			ShadeStringInBox(box, EPC_MENU_VEHICLE, !CanCharacterVehicle(s));
+			ShadeStringInBox(box, EPC_MENU_VEHICLE, !CanCharacterVehicle(*s));
 		}
 		else
 		{
@@ -3700,7 +3703,7 @@ void HandleShadingOfLinesForAssignmentMenus()
 			ShadeStringInBox(box, ASSIGN_MENU_PATIENT, !CanCharacterPatient(s));
 			ShadeStringInBox(box, ASSIGN_MENU_ON_DUTY, !CanCharacterOnDuty(s));
 			ShadeStringInBox(box, ASSIGN_MENU_TRAIN,   !CanCharacterPractise(s));
-			ShadeStringInBox(box, ASSIGN_MENU_VEHICLE, !CanCharacterVehicle(s));
+			ShadeStringInBox(box, ASSIGN_MENU_VEHICLE, !CanCharacterVehicle(*s));
 		}
 	}
 
@@ -5105,7 +5108,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				break;
 
 				case( EPC_MENU_VEHICLE ):
-					if ( CanCharacterVehicle( pSoldier ) )
+					if (CanCharacterVehicle(*pSoldier))
 					{
 						if (DisplayVehicleMenu(*pSoldier))
 						{
@@ -5227,7 +5230,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				break;
 
 				case( ASSIGN_MENU_VEHICLE ):
-					if ( CanCharacterVehicle( pSoldier ) )
+					if (CanCharacterVehicle(*pSoldier))
 					{
 						if (DisplayVehicleMenu(*pSoldier))
 						{
@@ -7032,7 +7035,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				break;
 
 			case VEHICLE:
-				if (CanCharacterVehicle(&s))
+				if (CanCharacterVehicle(s))
 				{
 					VEHICLETYPE& v = GetVehicle(bParam);
 					if (IsThisVehicleAccessibleToSoldier(&s, v))
