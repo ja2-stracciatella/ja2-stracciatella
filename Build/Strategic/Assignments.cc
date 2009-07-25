@@ -363,7 +363,7 @@ static BOOLEAN CanCharacterDoctor(SOLDIERTYPE const* const pSoldier)
 
 
 static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE const*);
-static bool CanCharacterRepairVehicle(SOLDIERTYPE const*, VEHICLETYPE const&);
+static bool CanCharacterRepairVehicle(SOLDIERTYPE const&, VEHICLETYPE const&);
 static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const*, INT8 bHighestPass);
 
 
@@ -384,7 +384,7 @@ static bool IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const& s)
 			// The helicopter, is NEVER repairable
 			if (IsHelicopter(v))                          continue;
 			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
-			if (!CanCharacterRepairVehicle(&s, v))        continue;
+			if (!CanCharacterRepairVehicle(s, v))         continue;
 			// There is a repairable vehicle here
 			return true;
 		}
@@ -404,7 +404,7 @@ static BOOLEAN HasCharacterFinishedRepairing(SOLDIERTYPE* pSoldier)
 	// check if we are repairing a vehicle
 	if ( pSoldier->bVehicleUnderRepairID != -1 )
 	{
-		fCanStillRepair = CanCharacterRepairVehicle(pSoldier, GetVehicle(pSoldier->bVehicleUnderRepairID));
+		fCanStillRepair = CanCharacterRepairVehicle(*pSoldier, GetVehicle(pSoldier->bVehicleUnderRepairID));
 	}
 	// check if we are repairing a robot
 	else if( pSoldier -> fFixingRobot )
@@ -1929,7 +1929,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE& s)
 	if (s.bVehicleUnderRepairID != -1)
 	{
 		VEHICLETYPE const& v = GetVehicle(s.bVehicleUnderRepairID);
-		if (CanCharacterRepairVehicle(&s, v))
+		if (CanCharacterRepairVehicle(s, v))
 		{ // Attempt to fix vehicle
 			repair_pts_left -= RepairVehicle(v, repair_pts_left, &nothing_left_to_repair);
 		}
@@ -3317,7 +3317,7 @@ static void HandleShadingOfLinesForRepairMenu()
 			// don't even list the helicopter, because it's NEVER repairable...
 			if (IsHelicopter(v))                          continue;
 			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
-			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(&s, v));
+			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
 		}
 	}
 
@@ -6004,30 +6004,30 @@ static void HandleRestFatigueAndSleepStatus(void)
 }
 
 
-// can the character repair this vehicle?
-static bool CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, VEHICLETYPE const& v)
+// Can the character repair this vehicle?
+static bool CanCharacterRepairVehicle(SOLDIERTYPE const& s, VEHICLETYPE const& v)
 {
 	// is vehicle destroyed?
-	if (v.fDestroyed) return FALSE;
+	if (v.fDestroyed) return false;
 
 	// is it damaged at all?
-	if (!DoesVehicleNeedAnyRepairs(v)) return FALSE;
+	if (!DoesVehicleNeedAnyRepairs(v)) return false;
 
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
-	if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) return FALSE;
+	if (!IsThisVehicleAccessibleToSoldier(&s, v)) return false;
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
-	// if currently loaded sector, are we close enough?
-	if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) && ( pSoldier->bSectorZ == gbWorldSectorZ ) )
+#if 0 // Assignment distance limits removed.  Sep/11/98.  ARM
+	// If currently loaded sector, are we close enough?
+	if (s.sSectorX == gWorldSectorX  &&
+			s.sSectorY == gWorldSectorY  &&
+			s.bSectorZ == gbWorldSectorZ &&
+			PythSpacesAway(s.sGridNo, v.sGridNo) > MAX_DISTANCE_FOR_REPAIR)
 	{
-		if (PythSpacesAway(pSoldier->sGridNo, v.sGridNo) > MAX_DISTANCE_FOR_REPAIR)
-		{
-			return FALSE;
-		}
+		return false;
 	}
-*/
+#endif
 
-	return( TRUE );
+	return true;
 }
 
 
@@ -7011,36 +7011,36 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 	BOOLEAN fNotifiedOfFailure = FALSE;
 	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const s = c->merc;
-		if (s == sel || s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+		SOLDIERTYPE& s = *c->merc;
+		if (&s == sel || s.uiStatusFlags & SOLDIER_VEHICLE) continue;
 
 		BOOLEAN fItWorked = FALSE; // assume it's NOT gonna work
 		switch (bAssignment)
 		{
 			case DOCTOR:
-				if (CanCharacterDoctor(s))
+				if (CanCharacterDoctor(&s))
 				{
-					SetSoldierAssignmentDoctor(s);
+					SetSoldierAssignmentDoctor(&s);
 					fItWorked = TRUE;
 				}
 				break;
 
 			case PATIENT:
-				if (CanCharacterPatient(s))
+				if (CanCharacterPatient(&s))
 				{
-					SetSoldierAssignmentPatient(s);
+					SetSoldierAssignmentPatient(&s);
 					fItWorked = TRUE;
 				}
 				break;
 
 			case VEHICLE:
-				if (CanCharacterVehicle(s))
+				if (CanCharacterVehicle(&s))
 				{
 					VEHICLETYPE& v = GetVehicle(bParam);
-					if (IsThisVehicleAccessibleToSoldier(s, v))
+					if (IsThisVehicleAccessibleToSoldier(&s, v))
 					{
 						// if the vehicle is FULL, then this will return FALSE!
-						fItWorked = PutSoldierInVehicle(s, v);
+						fItWorked = PutSoldierInVehicle(&s, v);
 						// failure produces its own error popup
 						fNotifiedOfFailure = TRUE;
 					}
@@ -7048,52 +7048,52 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				break;
 
 			case REPAIR:
-				if (CanCharacterRepair(s))
+				if (CanCharacterRepair(&s))
 				{
 					// make sure he can repair the SPECIFIC thing being repaired too (must be in its sector, for example)
 					BOOLEAN const fCanFixSpecificTarget =
 #if 0
-						sel->fFixingSAMSite              ? CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR)                      :
+						sel->fFixingSAMSite              ? CanSoldierRepairSAM(&s, SAM_SITE_REPAIR_DIVISOR)                     :
 #endif
 						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, GetVehicle(sel->bVehicleUnderRepairID)) :
-						s->fFixingRobot                  ? CanCharacterRepairRobot(s)                                           : // XXX s in condition seems wrong, should probably be sel
+						s.fFixingRobot                  ? CanCharacterRepairRobot(&s)                                           : // XXX s in condition seems wrong, should probably be sel
 						                                   TRUE;
 					if (fCanFixSpecificTarget)
 					{
-						SetSoldierAssignmentRepair(s, sel->fFixingSAMSite, sel->fFixingRobot, sel->bVehicleUnderRepairID);
+						SetSoldierAssignmentRepair(&s, sel->fFixingSAMSite, sel->fFixingRobot, sel->bVehicleUnderRepairID);
 						fItWorked = TRUE;
 					}
 				}
 				break;
 
 			case TRAIN_SELF:
-				if (CanCharacterTrainStat(s, bParam, TRUE, FALSE))
+				if (CanCharacterTrainStat(&s, bParam, TRUE, FALSE))
 				{
-					SetSoldierAssignmentTrainSelf(s, bParam);
+					SetSoldierAssignmentTrainSelf(&s, bParam);
 					fItWorked = TRUE;
 				}
 				break;
 
 			case TRAIN_TOWN:
-				if (CanCharacterTrainMilitia(s))
+				if (CanCharacterTrainMilitia(&s))
 				{
-					SetSoldierAssignmentTrainTown(s);
+					SetSoldierAssignmentTrainTown(&s);
 					fItWorked = TRUE;
 				}
 				break;
 
 			case TRAIN_TEAMMATE:
-				if (CanCharacterTrainStat(s, bParam, FALSE, TRUE))
+				if (CanCharacterTrainStat(&s, bParam, FALSE, TRUE))
 				{
-					SetSoldierAssignmentTrainTeammate(s, bParam);
+					SetSoldierAssignmentTrainTeammate(&s, bParam);
 					fItWorked = TRUE;
 				}
 				break;
 
 			case TRAIN_BY_OTHER:
-				if (CanCharacterTrainStat(s, bParam, TRUE, FALSE))
+				if (CanCharacterTrainStat(&s, bParam, TRUE, FALSE))
 				{
-					SetSoldierAssignmentTrainByOther(s, bParam);
+					SetSoldierAssignmentTrainByOther(&s, bParam);
 					fItWorked = TRUE;
 				}
 				break;
@@ -7118,24 +7118,24 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case SQUAD_18:
 			case SQUAD_19:
 			case SQUAD_20:
-				switch (CanCharacterSquad(s, (INT8)bAssignment))
+				switch (CanCharacterSquad(&s, (INT8)bAssignment))
 				{
 					case CHARACTER_CAN_JOIN_SQUAD:
 					{
-						PreChangeAssignment(s);
+						PreChangeAssignment(&s);
 
 						// if the squad is, between sectors, remove from old mvt group
 						const SOLDIERTYPE* const t = Squad[bAssignment][0];
-						if (t != NULL                 &&
-								t->fBetweenSectors        &&
-								s->bAssignment >= ON_DUTY &&
-								s->ubGroupID != 0)
+						if (t                        &&
+								t->fBetweenSectors       &&
+								s.bAssignment >= ON_DUTY &&
+								s.ubGroupID != 0)
 						{
-							RemovePlayerFromGroup(*s);
+							RemovePlayerFromGroup(s);
 						}
 
 						// able to add, do it
-						AddCharacterToSquad(s, bAssignment);
+						AddCharacterToSquad(&s, bAssignment);
 						/* FALLTHROUGH */
 					}
 
@@ -7150,8 +7150,8 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 
 			default:
 				// remove from current vehicle/squad, if any
-				if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
-				AddCharacterToAnySquad(s);
+				if (s.bAssignment == VEHICLE) TakeSoldierOutOfVehicle(&s);
+				AddCharacterToAnySquad(&s);
 				fItWorked = TRUE;
 				break;
 		}
@@ -7159,7 +7159,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 		if (fItWorked)
 		{
 			// remove him from his old squad if he was on one
-			MakeSoldiersTacticalAnimationReflectAssignment(s);
+			MakeSoldiersTacticalAnimationReflectAssignment(&s);
 		}
 		else
 		{
