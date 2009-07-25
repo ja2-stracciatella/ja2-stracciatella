@@ -2085,23 +2085,16 @@ static void DeselectSquadForMovement(INT32 const squad_no)
 }
 
 
-static BOOLEAN AllSoldiersInSquadSelected(INT32 iSquadNumber)
+static bool AllSoldiersInSquadSelected(INT32 const squad_no)
 {
-	INT32 iCounter = 0;
-
-	// is everyone on this squad moving?
-	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
+	// Is everyone on this squad moving?
+	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
-		if( pSoldierMovingList[ iCounter ]->bAssignment == ( INT8 )iSquadNumber )
-		{
-			if (!fSoldierIsMoving[iCounter])
-			{
-				return( FALSE );
-			}
-		}
+		if (pSoldierMovingList[i]->bAssignment != squad_no) continue;
+		if (fSoldierIsMoving[i]) continue;
+		return false;
 	}
-
-	return( TRUE );
+	return true;
 }
 
 
