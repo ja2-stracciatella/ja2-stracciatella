@@ -258,7 +258,8 @@ void DecayBloodAndSmells( UINT32 uiTime )
 	}
 }
 
-void DropSmell( SOLDIERTYPE * pSoldier )
+
+void DropSmell(SOLDIERTYPE& s)
 {
 	MAP_ELEMENT *		pMapElement;
 	UINT8						ubOldSmell;
@@ -271,23 +272,23 @@ void DropSmell( SOLDIERTYPE * pSoldier )
 	 *  the tile, it overrides dropping smells of any type
 	 */
 
-	if (pSoldier->bLevel == 0)
+	if (s.bLevel == 0)
 	{
-		pMapElement = &(gpWorldLevelData[pSoldier->sGridNo]);
+		pMapElement = &(gpWorldLevelData[s.sGridNo]);
 		if (pMapElement->ubBloodInfo)
 		{
 			// blood here, don't drop any smell
 			return;
 		}
 
-		if (pSoldier->bNormalSmell > pSoldier->bMonsterSmell)
+		if (s.bNormalSmell > s.bMonsterSmell)
 		{
-			ubStrength = pSoldier->bNormalSmell - pSoldier->bMonsterSmell;
+			ubStrength = s.bNormalSmell - s.bMonsterSmell;
 			ubSmell = HUMAN;
 		}
 		else
 		{
-			ubStrength = pSoldier->bMonsterSmell - pSoldier->bNormalSmell;
+			ubStrength = s.bMonsterSmell - s.bNormalSmell;
 			if (ubStrength == 0)
 			{
 				// don't drop any smell

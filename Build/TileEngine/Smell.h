@@ -18,7 +18,7 @@
 
 void DecaySmells( void );
 void DecayBloodAndSmells( UINT32 uiTime );
-void DropSmell( SOLDIERTYPE * pSoldier );
+void DropSmell(SOLDIERTYPE&);
 void DropBlood(const SOLDIERTYPE* pSoldier, UINT8 ubStrength, INT8 bVisible);
 void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel );
 void RemoveBlood( INT16 sGridNo, INT8 bLevel );

@@ -31,6 +31,7 @@ DoneFadeInWarp(): empty
 DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
+DropSmell(): ubOldSmell == ubSmell case has no effect
 ET_ENDENEMYS_TURN: unused
 EVENT_SoldierGotHit(): arguments for parameter ubHitLocation inconsistent
 EnoughTimeOnAssignment(): complicated

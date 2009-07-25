@@ -1952,7 +1952,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 		++gpWorldLevelData[new_grid_no + DirIncrementer[dir]].ubAdjacentSoldierCnt;
 	}
 
-	if (!in_vehicle) DropSmell(&s);
+	if (!in_vehicle) DropSmell(s);
 
 	// Handle any special rendering situations
 	s.sZLevelOverride = -1;
