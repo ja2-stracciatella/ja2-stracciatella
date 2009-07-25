@@ -1576,7 +1576,7 @@ static void PrepareGroupsForSimultaneousArrival()
 	FOR_ALL_GROUPS(i)
 	{
 		GROUP& g = *i;
-		if ((!g.uiFlags & GROUPFLAG_MARKER)) continue;
+		if (!(g.uiFlags & GROUPFLAG_MARKER)) continue;
 
 		DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
