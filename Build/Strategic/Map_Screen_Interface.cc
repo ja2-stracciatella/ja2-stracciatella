@@ -1935,19 +1935,16 @@ static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 
 }
 
 
-static BOOLEAN IsSoldierSelectedForMovement(const SOLDIERTYPE* const pSoldier)
+static bool IsSoldierSelectedForMovement(SOLDIERTYPE const& s)
 {
-	INT32 iCounter = 0;
-
 	// run through the list and turn this soldiers value on
-	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
+	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
-		if( ( pSoldierMovingList[ iCounter ] == pSoldier ) && ( fSoldierIsMoving[ iCounter ] ) )
-		{
-			return ( TRUE );
-		}
+		if (pSoldierMovingList[i] != &s) continue;
+		if (!fSoldierIsMoving[i])        continue; // break?
+		return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -2129,7 +2126,7 @@ static void SelectVehicleForMovement(INT32 iVehicleId, BOOLEAN fAndAllOnBoard)
 					}
 				}
 
-				if( IsSoldierSelectedForMovement( pPassenger ) )
+				if (IsSoldierSelectedForMovement(*pPassenger))
 				{
 					fHasDriver = TRUE;
 				}
@@ -2548,7 +2545,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 			if( pSoldierMovingList[ iCountB ] -> bAssignment == iSquadMovingList[ iCount ] )
 			{
 				// add mercs in squads
-				if (IsSoldierSelectedForMovement(pSoldierMovingList[iCountB]))
+				if (IsSoldierSelectedForMovement(*pSoldierMovingList[iCountB]))
 				{
 					swprintf( sString, lengthof(sString), L"   *%ls*", pSoldierMovingList[ iCountB ]->name );
 				}
@@ -2575,7 +2572,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 			if( ( pSoldierMovingList[ iCountB ] -> bAssignment == VEHICLE ) &&( pSoldierMovingList[ iCountB ] -> iVehicleId == iVehicleMovingList[ iCount ] ) )
 			{
 				// add mercs in vehicles
-				if (IsSoldierSelectedForMovement(pSoldierMovingList[iCountB]))
+				if (IsSoldierSelectedForMovement(*pSoldierMovingList[iCountB]))
 				{
 					swprintf( sString, lengthof(sString), L"   *%ls*", pSoldierMovingList[ iCountB ]->name );
 				}
@@ -2607,7 +2604,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 			}
 
 			// add OTHER soldiers (not on duty nor in a vehicle)
-			swprintf(sString, lengthof(sString), IsSoldierSelectedForMovement(pSoldierMovingList[iCount]) ? L"  *%ls ( %ls )*" : L"  %ls ( %ls )", pSoldierMovingList[iCount]->name, pAssignmentStrings[pSoldierMovingList[iCount]->bAssignment]);
+			swprintf(sString, lengthof(sString), IsSoldierSelectedForMovement(*pSoldierMovingList[iCount]) ? L"  *%ls ( %ls )*" : L"  %ls ( %ls )", pSoldierMovingList[iCount]->name, pAssignmentStrings[pSoldierMovingList[iCount]->bAssignment]);
 			AddMonoString(box, sString);
 		}
 	}
@@ -2850,7 +2847,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 
 				// if soldier is currently selected to move
-				if( IsSoldierSelectedForMovement( pSoldier ) )
+				if (IsSoldierSelectedForMovement(*pSoldier))
 				{
 					// change him to NOT move instead
 
@@ -3115,7 +3112,7 @@ static void HandleSettingTheSelectedListOfMercs(void)
 		}
 		else
 		{
-			fSelected = IsSoldierSelectedForMovement( pSoldier );
+			fSelected = IsSoldierSelectedForMovement(*pSoldier);
 		}
 
 		// is he/she selected for movement?
@@ -3211,7 +3208,7 @@ static INT8 FindSquadThatSoldierCanJoin(SOLDIERTYPE* pSoldier)
 			if (!IsThisSquadFull(bCounter))
 			{
 				// is it doing the same thing as the soldier is (staying or going) ?
-				if( IsSquadSelectedForMovement( bCounter ) == IsSoldierSelectedForMovement( pSoldier ) )
+				if (IsSquadSelectedForMovement(bCounter) == IsSoldierSelectedForMovement(*pSoldier))
 				{
 					// go ourselves a match, then
 					return( bCounter );
