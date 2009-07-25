@@ -2128,25 +2128,18 @@ static void DeselectVehicleForMovement(INT32 const vehicle_id)
 }
 
 
-static INT32 HowManyMovingSoldiersInVehicle(INT32 iVehicleId)
+static INT32 HowManyMovingSoldiersInVehicle(INT32 const vehicle_id)
 {
-	INT32 iNumber = 0, iCounter = 0;
-
-	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
+	INT32 n = 0;
+	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
-		// is he in the right vehicle
-		if( ( pSoldierMovingList[ iCounter ] ->bAssignment == VEHICLE )&&( pSoldierMovingList[ iCounter ] ->iVehicleId == iVehicleId ) )
-		{
-			// if he moving?
-			if ( fSoldierIsMoving[ iCounter ] )
-			{
-				// ok, another one in the vehicle that is going to move
-				iNumber++;
-			}
-		}
+		SOLDIERTYPE const& s = *pSoldierMovingList[i];
+		if (s.bAssignment != VEHICLE)    continue;
+		if (s.iVehicleId  != vehicle_id) continue;
+		if (!fSoldierIsMoving[i])        continue;
+		++n;
 	}
-
-	return( iNumber );
+	return n;
 }
 
 
