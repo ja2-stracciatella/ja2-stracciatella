@@ -2131,26 +2131,23 @@ static void SelectVehicleForMovement(INT32 const vehicle_id, BOOLEAN const and_a
 }
 
 
-static void DeselectVehicleForMovement(INT32 iVehicleId)
+static void DeselectVehicleForMovement(INT32 const vehicle_id)
 {
 	// run through vehicle list and set them off
-	for (INT32 iCounter = 0; iCounter < giNumberOfVehiclesInSectorMoving; ++iCounter)
+	for (INT32 i = 0; i != giNumberOfVehiclesInSectorMoving; ++i)
 	{
-		if( iVehicleMovingList[ iCounter ] == iVehicleId )
+		if (iVehicleMovingList[i] != vehicle_id) continue;
+
+		fVehicleIsMoving[i] = FALSE;
+
+		// Now deselect everyone in vehicle
+		VEHICLETYPE const& v = pVehicleList[vehicle_id];
+		CFOR_ALL_PASSENGERS(v, i)
 		{
-			// found it
-			fVehicleIsMoving[ iCounter ] = FALSE;
-
-			// now deselect everyone in vehicle
-			VEHICLETYPE const& v = pVehicleList[iVehicleId];
-			CFOR_ALL_PASSENGERS(v, i)
-			{
-				SOLDIERTYPE* const s = *i;
-				if (s->bActive) DeselectSoldierForMovement(s);
-			}
-
-			break;
+			SOLDIERTYPE& s = **i;
+			if (s.bActive) DeselectSoldierForMovement(&s);
 		}
+		break;
 	}
 }
 
