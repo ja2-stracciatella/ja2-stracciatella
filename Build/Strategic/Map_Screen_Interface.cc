@@ -2192,33 +2192,21 @@ static void AddSquadToMovingLists(INT32 const squad_no)
 }
 
 
-// try to add this soldier to the moving lists
-static void AddVehicleToMovingLists(INT32 iVehicleId)
+static void AddVehicleToMovingLists(INT32 const vehicle_id)
 {
-	INT32 iCounter = 0;
+	if (vehicle_id == -1) return;
 
-	if( iVehicleId == -1 )
+	for (INT32 i = 0; i != NUMBER_OF_SQUADS; ++i)
 	{
-		// invalid squad
+		INT32& slot = iVehicleMovingList[i];
+		if (slot == vehicle_id) return;
+
+		if (slot != -1) continue;
+		// Found a free slot
+		slot                = vehicle_id;
+		fVehicleIsMoving[i] = FALSE;
+		++giNumberOfVehiclesInSectorMoving;
 		return;
-	}
-
-	for( iCounter = 0; iCounter < NUMBER_OF_SQUADS; iCounter++ )
-	{
-		if( iVehicleMovingList[ iCounter ] == iVehicleId )
-		{
-			// found
-			return;
-		}
-		if( iVehicleMovingList[ iCounter ] == -1 )
-		{
-			// found a free slot
-			iVehicleMovingList[ iCounter ] = iVehicleId;
-			fVehicleIsMoving[ iCounter ] = FALSE;
-
-			giNumberOfVehiclesInSectorMoving++;
-			return;
-		}
 	}
 }
 
