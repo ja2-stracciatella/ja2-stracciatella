@@ -2064,26 +2064,23 @@ static void SelectSquadForMovement(INT32 const squad_no)
 }
 
 
-static void DeselectSquadForMovement(INT32 iSquadNumber)
+static void DeselectSquadForMovement(INT32 const squad_no)
 {
-	// run through squad list and set them off
-	for (INT32 iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; ++iCounter)
+	// Run through squad list and set them off
+	for (INT32 i = 0; i != giNumberOfSquadsInSectorMoving; ++i)
 	{
-		if( iSquadMovingList[ iCounter ] == iSquadNumber )
+		if (iSquadMovingList[i] != squad_no) continue;
+
+		fSquadIsMoving[i] = FALSE;
+
+		// Now deselect everyone in squad
+		FOR_ALL_IN_SQUAD(k, squad_no)
 		{
-			// found it
-			fSquadIsMoving[ iCounter ] = FALSE;
-
-			// now deselect everyone in squad
-			FOR_ALL_IN_SQUAD(i, iSquadNumber)
-			{
-				SOLDIERTYPE* const pSoldier = *i;
-				if (!pSoldier->bActive) continue;
-				DeselectSoldierForMovement(pSoldier);
-			}
-
-			break;
+			SOLDIERTYPE& s = **k;
+			if (!s.bActive) continue;
+			DeselectSoldierForMovement(&s);
 		}
+		break;
 	}
 }
 
