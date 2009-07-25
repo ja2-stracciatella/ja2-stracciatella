@@ -5154,7 +5154,7 @@ static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iRe
 }
 
 
-static BOOLEAN CanChangeDestinationForChar(SOLDIERTYPE*);
+static bool CanChangeDestinationForChar(SOLDIERTYPE&);
 static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE*);
 
 
@@ -5191,7 +5191,7 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 
 			// Find out if this guy and everyone travelling with him is allowed to move strategically
 			// NOTE: errors are reported within...
-			if (CanChangeDestinationForChar(s))
+			if (CanChangeDestinationForChar(*s))
 			{
 				// turn off sector inventory, turn on show teams filter, etc.
 				MakeMapModesSuitableForDestPlotting(s);
@@ -7582,13 +7582,13 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-static BOOLEAN CanChangeDestinationForChar(SOLDIERTYPE* const s)
+static bool CanChangeDestinationForChar(SOLDIERTYPE& s)
 {
-	const MoveError ret = CanEntireMovementGroupMercIsInMove(s);
-	if (ret == ME_OK) return TRUE;
+	MoveError const ret = CanEntireMovementGroupMercIsInMove(&s);
+	if (ret == ME_OK) return true;
 
 	ReportMapScreenMovementError(ret);
-	return FALSE;
+	return false;
 }
 
 
