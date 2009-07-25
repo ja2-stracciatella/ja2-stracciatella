@@ -2416,21 +2416,9 @@ void LoadAnimationStateInstructions()
 }
 
 
-BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
+bool IsAnimationValidForBodyType(SOLDIERTYPE const& s, UINT16 const new_state)
 {
-	UINT16		usAnimSurface;
-
-	// From animation control, get surface
-
-	// First Save value
-	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usNewState );
-
-	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return DetermineSoldierAnimationSurface(&s, new_state) != INVALID_ANIMATION_SURFACE;
 }
 
 

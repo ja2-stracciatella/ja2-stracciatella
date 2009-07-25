@@ -1128,10 +1128,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 		usNewState = SubstituteBodyTypeAnimation(pSoldier, usNewState);
 
 		// CHECK IF WE CAN DO THIS ANIMATION!
-		if (!IsAnimationValidForBodyType(pSoldier, usNewState))
-		{
-			return;
-		}
+		if (!IsAnimationValidForBodyType(*pSoldier, usNewState)) return;
 
 		// OK, make guy transition if a big merc...
 		if ( pSoldier->uiAnimSubFlags & SUB_ANIM_BIGGUYTHREATENSTANCE )

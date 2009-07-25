@@ -537,7 +537,7 @@ extern UINT16 gubAnimSurfaceCorpseID[][NUMANIMATIONSTATES];
 
 void LoadAnimationStateInstructions(void);
 void InitAnimationSurfacesPerBodytype(void);
-BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState );
+bool IsAnimationValidForBodyType(SOLDIERTYPE const&, UINT16 new_state);
 UINT16 SubstituteBodyTypeAnimation(const SOLDIERTYPE* s, UINT16 anim_state);
 char const* GetBodyTypePaletteSubstitution(SOLDIERTYPE const*, UINT8 ubBodyType);
 
