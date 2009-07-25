@@ -13,7 +13,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier );
 
 BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 
-void HandlePlacingRoofMarker(SOLDIERTYPE*, BOOLEAN fSet, BOOLEAN fForce);
+void HandlePlacingRoofMarker(SOLDIERTYPE&, bool set, bool force);
 
 void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 

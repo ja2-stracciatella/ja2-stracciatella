@@ -264,7 +264,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								ChangeInterfaceLevel( 1 );
 							}
 						}
-						HandlePlacingRoofMarker(pSoldier, TRUE, TRUE);
+						HandlePlacingRoofMarker(*pSoldier, true, true);
 					}
 					else
 					{

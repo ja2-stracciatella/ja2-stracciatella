@@ -1781,7 +1781,7 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE& s, BOOLEAN const force)
 		--gpWorldLevelData[grid_no].ubAdjacentSoldierCnt;
 	}
 
-	HandlePlacingRoofMarker(&s, FALSE, FALSE);
+	HandlePlacingRoofMarker(s, false, false);
 
 	UnMarkMovementReserved(s);
 	HandleCrowShadowRemoveGridNo(s);
@@ -8043,53 +8043,31 @@ static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier)
 }
 
 
-void HandlePlacingRoofMarker(SOLDIERTYPE* const pSoldier, BOOLEAN const fSet, BOOLEAN const fForce)
+void HandlePlacingRoofMarker(SOLDIERTYPE& s, bool const set, bool const force)
 {
-	LEVELNODE *pRoofNode;
-	LEVELNODE *pNode;
+	if (set && s.bVisible == -1) return;
 
-	if ( pSoldier->bVisible == -1 && fSet )
+	if (s.bLevel != SECOND_LEVEL) return;
+	// We are on the roof, add roof UI piece
+
+	// Return if we are still climbing roof
+	if (!force && s.usAnimState == CLIMBUPROOF) return;
+
+	GridNo const gridno = s.sGridNo;
+	if (!gpWorldLevelData[gridno].pRoofHead) return;
+
+	if (!set)
 	{
-		return;
+		RemoveRoof(gridno, FIRSTPOINTERS11);
 	}
-
-	if ( pSoldier->bTeam != gbPlayerNum )
-	{
-		//return;
-	}
-
-	// If we are on the roof, add roof UI peice!
-	if ( pSoldier->bLevel == SECOND_LEVEL )
-	{
-		GridNo const sGridNo = pSoldier->sGridNo;
-		// Get roof node
-		pRoofNode = gpWorldLevelData[ sGridNo ].pRoofHead;
-
-		// Return if we are still climbing roof....
-		if ( pSoldier->usAnimState == CLIMBUPROOF && !fForce )
-		{
-			return;
-		}
-
-		if ( pRoofNode != NULL )
-		{
-			if ( fSet )
-			{
-				// If it does not exist already....
-				if ( !IndexExistsInRoofLayer( sGridNo, FIRSTPOINTERS11 ) )
-				{
-					pNode = AddRoofToTail( sGridNo, FIRSTPOINTERS11 );
-					pNode->ubShadeLevel				=DEFAULT_SHADE_LEVEL;
-					pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-				}
-			}
-			else
-			{
-				RemoveRoof( sGridNo, FIRSTPOINTERS11 );
-			}
-		}
+	else if (!IndexExistsInRoofLayer(gridno, FIRSTPOINTERS11))
+	{ // It does not exist already
+		LEVELNODE* const l = AddRoofToTail(gridno, FIRSTPOINTERS11);
+		l->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+		l->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 }
+
 
 void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 {
