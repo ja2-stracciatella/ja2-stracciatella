@@ -1349,25 +1349,24 @@ void ExecuteOverhead(void)
 }
 
 
-static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE* pSoldier)
+static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE& s)
 {
-	HaltMoveForSoldierOutOfPoints(pSoldier);
-	pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-	pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
-	pSoldier->ubPendingAction    = NO_PENDING_ACTION;
+	HaltMoveForSoldierOutOfPoints(&s);
+	s.usPendingAnimation = NO_PENDING_ANIMATION;
+	s.ubPendingDirection = NO_PENDING_DIRECTION;
+	s.ubPendingAction    = NO_PENDING_ACTION;
 
-	UnMarkMovementReserved(*pSoldier);
+	UnMarkMovementReserved(s);
 
-	// Display message if our merc...
-	if (pSoldier->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT)
+	// Display message if our merc
+	if (s.bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[GUY_HAS_RUN_OUT_OF_APS_STR], pSoldier->name);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[GUY_HAS_RUN_OUT_OF_APS_STR], s.name);
 	}
 
-	UnSetUIBusy(pSoldier);
-
-	// OK, Unset engaged in CONV, something changed...
-	UnSetEngagedInConvFromPCAction(pSoldier);
+	UnSetUIBusy(&s);
+	// Unset engaged in CONV, something changed
+	UnSetEngagedInConvFromPCAction(&s);
 }
 
 
@@ -1529,7 +1528,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		}
 		else
 		{
-			HaltGuyFromNewGridNoBecauseOfNoAPs(pSoldier);
+			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 			*pfKeepMoving = FALSE;
 		}
 
@@ -1563,7 +1562,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 #endif
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: Open door - invalid approach direction");
 
-			HaltGuyFromNewGridNoBecauseOfNoAPs( pSoldier );
+			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 			pSoldier->bEndDoorOpenCode = FALSE;
 			(*pfKeepMoving ) = FALSE;
 			return( FALSE );
@@ -1577,7 +1576,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"ERROR: Told to open door that does not exist at %d.", sDoorGridNo );
 #endif
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: Door does not exist");
-			HaltGuyFromNewGridNoBecauseOfNoAPs(pSoldier);
+			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 			pSoldier->bEndDoorOpenCode = FALSE;
 			*pfKeepMoving = FALSE;
 			return FALSE;
@@ -1849,7 +1848,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	{
 		// HALT GUY HERE
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("HandleGotoNewGridNo() Failed: No APs %d %d", sAPCost, pSoldier->bActionPoints));
-		HaltGuyFromNewGridNoBecauseOfNoAPs(pSoldier);
+		HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 		pSoldier->bEndDoorOpenCode = FALSE;
 		*pfKeepMoving = FALSE;
 	}
