@@ -2144,7 +2144,7 @@ static void RemoveOneOpponent(SOLDIERTYPE* pSoldier)
 
 
 static void UpdatePublic(UINT8 ubTeam, SOLDIERTYPE* s, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel);
-static void ResetLastKnownLocs(const SOLDIERTYPE* pSoldier);
+static void ResetLastKnownLocs(SOLDIERTYPE const&);
 
 
 void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
@@ -2179,7 +2179,7 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
 		}
 	}
 
- ResetLastKnownLocs(pSoldier);
+ ResetLastKnownLocs(*pSoldier);
 
 	TacticalTeamType* const tt = &gTacticalStatus.Team[pSoldier->bTeam];
 	if (tt->last_merc_to_radio == pSoldier) tt->last_merc_to_radio = NULL;
@@ -2259,14 +2259,14 @@ static void UpdatePersonal(SOLDIERTYPE* pSoldier, UINT8 ubID, INT8 bNewOpplist, 
 }
 
 
-static void ResetLastKnownLocs(const SOLDIERTYPE* pSoldier)
+static void ResetLastKnownLocs(SOLDIERTYPE const& s)
 {
 	FOR_ALL_MERCS(i)
 	{
 		const SoldierID tgt_id = (*i)->ubID;
-		gsLastKnownOppLoc[pSoldier->ubID][tgt_id] = NOWHERE;
+		gsLastKnownOppLoc[s.ubID][tgt_id] = NOWHERE;
 		// IAN added this June 14/97
-		gsPublicLastKnownOppLoc[pSoldier->bTeam][tgt_id] = NOWHERE;
+		gsPublicLastKnownOppLoc[s.bTeam][tgt_id] = NOWHERE;
 	}
 }
 
@@ -2340,7 +2340,7 @@ void InitSoldierOppList(SOLDIERTYPE& s)
 {
 	memset(s.bOppList, NOT_HEARD_OR_SEEN, sizeof(s.bOppList));
 	s.bOppCnt = 0;
-	ResetLastKnownLocs(&s);
+	ResetLastKnownLocs(s);
 	memset(gbSeenOpponents[s.ubID], 0, MAXMERCS);
 }
 
