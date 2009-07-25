@@ -4620,7 +4620,7 @@ void CreateSoldierPalettes(SOLDIERTYPE* const s)
 	if (!substitution)
 	{
 		// ATE: here we want to use the breath cycle for the palette.....
-		const UINT16 palette_anim_surface = LoadSoldierAnimationSurface(s, STANDING);
+		UINT16 const palette_anim_surface = LoadSoldierAnimationSurface(*s, STANDING);
 		if (palette_anim_surface != INVALID_ANIMATION_SURFACE)
 		{
 			// Use palette from HVOBJECT, then use substitution for pants, etc

@@ -2548,8 +2548,6 @@ char const* GetBodyTypePaletteSubstitution(SOLDIERTYPE const* const s, UINT8 con
 
 BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
-	UINT16 usAnimSurface;
-
 		// Delete any structure info!
 	if ( pSoldier->pLevelNode != NULL )
 	{
@@ -2558,7 +2556,7 @@ BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	}
 
 
-	usAnimSurface = LoadSoldierAnimationSurface( pSoldier, usAnimState );
+	UINT16 const usAnimSurface = LoadSoldierAnimationSurface(*pSoldier, usAnimState);
 
 	// Add structure info!
 	if ( pSoldier->pLevelNode != NULL && !( pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE ) )
@@ -2578,24 +2576,19 @@ BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 }
 
 
-UINT16 LoadSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
+UINT16 LoadSoldierAnimationSurface(SOLDIERTYPE& s, UINT16 const anim_state)
 {
-	UINT16 usAnimSurface;
-
-	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
-
-	if ( usAnimSurface != INVALID_ANIMATION_SURFACE )
+	UINT16 const anim_surface = DetermineSoldierAnimationSurface(&s, anim_state);
+	if (anim_surface == INVALID_ANIMATION_SURFACE) return anim_surface;
 	try
-	{
-		// Ensure that it's been loaded!
-		GetCachedAnimationSurface(pSoldier->ubID, &pSoldier->AnimCache, usAnimSurface, pSoldier->usAnimState);
+	{ // Ensure that it's been loaded
+		GetCachedAnimationSurface(s.ubID, &s.AnimCache, anim_surface, s.usAnimState);
+		return anim_surface;
 	}
 	catch (...)
 	{
-		usAnimSurface = INVALID_ANIMATION_SURFACE;
+		return INVALID_ANIMATION_SURFACE;
 	}
-
-	return( usAnimSurface );
 }
 
 

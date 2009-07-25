@@ -543,7 +543,7 @@ char const* GetBodyTypePaletteSubstitution(SOLDIERTYPE const*, UINT8 ubBodyType)
 
 BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState);
-UINT16 LoadSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
+UINT16 LoadSoldierAnimationSurface(SOLDIERTYPE&, UINT16 anim_state);
 
 // This function could be wrapped in a debug marco, since it only returns pSoldier->ubAnimSurface but
 // Also does some debug checking
