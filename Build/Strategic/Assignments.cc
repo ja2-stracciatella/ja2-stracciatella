@@ -3250,64 +3250,48 @@ static PopUpBox* CreateRepairBox(void);
 static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
-static void DisplayRepairMenu(SOLDIERTYPE* pSoldier)
+static void DisplayRepairMenu(SOLDIERTYPE const& s)
 {
-	// run through list of vehicles in sector and add them to pop up box
-	// first, clear pop up box
 	RemoveBox(ghRepairBox);
 	ghRepairBox = NO_POPUP_BOX;
 
+	/* PLEASE NOTE: make sure any changes you do here are reflected in all 3
+	 * routines which must remain in synch:
+	 * CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and
+	 * HandleShadingOfLinesForRepairMenu(). */
 	PopUpBox* const box = CreateRepairBox();
 
-	// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
-	// CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and HandleShadingOfLinesForRepairMenu().
-
-	if( pSoldier->bSectorZ == 0 )
-	{
-		// run through list of vehicles and see if any in sector
+	if (s.bSectorZ == 0)
+	{ // Run through list of vehicles in sector and add them to pop up box
 		CFOR_ALL_VEHICLES(i)
 		{
 			VEHICLETYPE const& v = *i;
-			// don't even list the helicopter, because it's NEVER repairable...
-			if (IsHelicopter(v))                                continue;
-			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
+			// Don't even list the helicopter, because it's never repairable
+			if (IsHelicopter(v))                          continue;
+			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
 			AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
 		}
 	}
 
-
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-	// is there a SAM SITE Here?
-	if (IsThisSectorASAMSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ) &&
-			IsTheSAMSiteInSectorRepairable(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
+#if 0 // No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+	if (IsThisSectorASAMSector(s.sSectorX, s.sSectorY, s.bSectorZ) &&
+			IsTheSAMSiteInSectorRepairable(s.sSectorX, s.sSectorY, s.bSectorZ))
 	{
-		// SAM site
 		AddMonoString(box, pRepairStrings[1]);
 	}
-*/
+#endif
 
-
-	// is the ROBOT here?
-	if( IsRobotInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) )
-	{
-		// robot
+	if (IsRobotInThisSector(s.sSectorX, s.sSectorY, s.bSectorZ))
+	{ // Robot
 		AddMonoString(box, pRepairStrings[3]);
 	}
 
+	AddMonoString(box, pRepairStrings[0]); // Items
+	AddMonoString(box, pRepairStrings[2]); // Cancel
 
-	// items
-	AddMonoString(box, pRepairStrings[0]);
-
-
-	// cancel
-	AddMonoString(box, pRepairStrings[2]);
-
-	SetBoxTextAttrs(ghRepairBox);
-
-	// resize box to text
-	ResizeBoxToText( ghRepairBox );
-
-	CheckAndUpdateTacticalAssignmentPopUpPositions( );
+	SetBoxTextAttrs(box);
+	ResizeBoxToText(box);
+	CheckAndUpdateTacticalAssignmentPopUpPositions();
 }
 
 
@@ -5269,9 +5253,8 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						if( pSoldier -> bSectorZ ==0 )
 						{
 							fShowRepairMenu = TRUE;
-							DisplayRepairMenu(pSoldier);
+							DisplayRepairMenu(*pSoldier);
 						}
-
 					}
 					else if( CanCharacterRepairButDoesntHaveARepairkit( pSoldier ) )
 					{
