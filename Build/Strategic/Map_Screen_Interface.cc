@@ -1941,7 +1941,7 @@ static bool IsSoldierSelectedForMovement(SOLDIERTYPE const& s)
 	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
 		if (pSoldierMovingList[i] != &s) continue;
-		if (!fSoldierIsMoving[i])        continue; // break?
+		if (!fSoldierIsMoving[i])        continue; // XXX break?
 		return true;
 	}
 	return false;
@@ -1953,7 +1953,7 @@ static bool IsSquadSelectedForMovement(INT32 const squad_no)
 	for (INT32 i = 0; i != giNumberOfSquadsInSectorMoving; ++i)
 	{
 		if (iSquadMovingList[i] != squad_no) continue;
-		if (!fSquadIsMoving[i])              continue; // break?
+		if (!fSquadIsMoving[i])              continue; // XXX break?
 		return true;
 	}
 	return false;
@@ -1965,42 +1965,31 @@ static bool IsVehicleSelectedForMovement(INT32 const vehicle_id)
 	for (INT32 i = 0; i != giNumberOfVehiclesInSectorMoving; ++i)
 	{
 		if (iVehicleMovingList[i] != vehicle_id) continue;
-		if (!fVehicleIsMoving[i])                continue; // break?
+		if (!fVehicleIsMoving[i])                continue; // XXX break?
 		return true;
 	}
 	return false;
 }
 
 
-static void SelectSoldierForMovement(SOLDIERTYPE* pSoldier)
+static void SelectSoldierForMovement(SOLDIERTYPE const& s)
 {
-	INT32 iCounter = 0;
-
-	if( pSoldier == NULL )
+	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
-		return;
-	}
-
-	// run through the list and turn this soldiers value on
-	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
-	{
-		if( pSoldierMovingList[ iCounter ] == pSoldier )
-		{
-			// turn the selected soldier ON
-			fSoldierIsMoving[ iCounter ] = TRUE;
-			break;
-		}
+		if (pSoldierMovingList[i] != &s) continue;
+		// Turn the selected soldier on
+		fSoldierIsMoving[i] = TRUE;
+		break;
 	}
 }
 
 
 static void DeselectSoldierForMovement(SOLDIERTYPE const& s)
 {
-	// run through the list and turn this soldier's value on
 	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
 		if (pSoldierMovingList[i] != &s) continue;
-		// turn the selected soldier off
+		// Turn the selected soldier off
 		fSoldierIsMoving[i] = FALSE;
 		break;
 	}
@@ -2028,7 +2017,7 @@ static void SelectSquadForMovement(INT32 const squad_no)
 			 * failure encountered */
 			if (CanMoveBoxSoldierMoveStrategically(&s, first_failure))
 			{
-				SelectSoldierForMovement(&s);
+				SelectSoldierForMovement(s);
 			}
 			else
 			{
@@ -2098,7 +2087,7 @@ static void SelectVehicleForMovement(INT32 const vehicle_id, BOOLEAN const and_a
 					// Is he able and allowed to move?
 					if (CanMoveBoxSoldierMoveStrategically(&s, first_failure))
 					{
-						SelectSoldierForMovement(&s);
+						SelectSoldierForMovement(s);
 					}
 					else
 					{
@@ -2862,7 +2851,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					if ( CanMoveBoxSoldierMoveStrategically( pSoldier, TRUE ) )
 					{
 						// change him to move instead
-						SelectSoldierForMovement( pSoldier );
+						SelectSoldierForMovement(*pSoldier);
 
 						if( pSoldier->bAssignment < ON_DUTY )
 						{
