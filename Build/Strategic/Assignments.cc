@@ -3046,13 +3046,13 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
-		const SOLDIERTYPE* const  s    = GetSelectedAssignSoldier(FALSE);
-		const PopUpBox*    const  box  = s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
-		SGPBox             const& area = GetBoxArea(box);
-		UINT16             const  x    = area.x;
-		UINT16                    y    = area.y + GetTopMarginSize(ghAssignmentBox);
-		UINT16             const  w    = area.w;
-		UINT16             const  dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		SOLDIERTYPE     const& s    = *GetSelectedAssignSoldier(FALSE);
+		PopUpBox const* const  box  = s.ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
+		SGPBox          const& area = GetBoxArea(box);
+		UINT16          const  x    = area.x;
+		UINT16                 y    = area.y + GetTopMarginSize(ghAssignmentBox);
+		UINT16          const  w    = area.w;
+		UINT16          const  dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
 		// Add mouse region for each line of text and set user data
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghAssignmentBox); ++i)
@@ -3107,17 +3107,17 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 
 	if (!fCreated && fShowVehicleMenu)
 	{
-		SGPBox             const& area = GetBoxArea(box);
-		UINT16             const  x    = area.x;
+		SGPBox      const& area = GetBoxArea(box);
+		UINT16      const  x    = area.x;
 		UINT16                    y    = area.y + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
-		UINT16             const  w    = area.w;
-		UINT16             const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
-		MOUSE_REGION*             r    = gVehicleMenuRegion;
-		SOLDIERTYPE const* const  s    = GetSelectedAssignSoldier(FALSE);
+		UINT16      const  w    = area.w;
+		UINT16      const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		MOUSE_REGION*      r    = gVehicleMenuRegion;
+		SOLDIERTYPE const& s    = *GetSelectedAssignSoldier(FALSE);
 		FOR_ALL_VEHICLES(i)
 		{
 			VEHICLETYPE& v = *i;
-			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
+			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
 
 			// add mouse region for each accessible vehicle
 			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
@@ -3162,13 +3162,13 @@ static void HandleShadingOfLinesForVehicleMenu()
 	PopUpBox* const box = ghVehicleBox;
 	if (box == NO_POPUP_BOX) return;
 
-	SOLDIERTYPE const* const s    = GetSelectedAssignSoldier(FALSE);
-	UINT32                   line = 0;
+	SOLDIERTYPE const& s    = *GetSelectedAssignSoldier(FALSE);
+	UINT32             line = 0;
 	CFOR_ALL_VEHICLES(i)
 	{
 		VEHICLETYPE const& v = *i;
 		// inaccessible vehicles aren't listed at all!
-		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
+		if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
 
 		PopUpShade const shade = IsEnoughSpaceInVehicle(v) ?
 			POPUP_SHADE_NONE : POPUP_SHADE_SECONDARY;
@@ -3182,15 +3182,15 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// btn callback handler for assignment region
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
-		VEHICLETYPE&       v = *pRegion->GetUserPtr<VEHICLETYPE>();
+		SOLDIERTYPE& s = *GetSelectedAssignSoldier(FALSE);
+		VEHICLETYPE& v = *pRegion->GetUserPtr<VEHICLETYPE>();
 
 		// inaccessible vehicles shouldn't be listed in the menu!
-		Assert(IsThisVehicleAccessibleToSoldier(s, v));
+		Assert(IsThisVehicleAccessibleToSoldier(&s, v));
 
 		if (IsEnoughSpaceInVehicle(v))
 		{
-			PutSoldierInVehicle(s, v);
+			PutSoldierInVehicle(&s, v);
 		}
 		else
 		{
@@ -3328,37 +3328,37 @@ static void HandleShadingOfLinesForRepairMenu()
 	 * routines, which must remain in synch:
 	 * CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu() and
 	 * HandleShadingOfLinesForRepairMenu(). */
-	SOLDIERTYPE const* const s    = GetSelectedAssignSoldier(FALSE);
-	INT32                    line = 0;
+	SOLDIERTYPE const& s    = *GetSelectedAssignSoldier(FALSE);
+	INT32              line = 0;
 
-	if (s->bSectorZ == 0)
+	if (s.bSectorZ == 0)
 	{
 		CFOR_ALL_VEHICLES(i)
 		{
 			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (IsHelicopter(v))                         continue;
-			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
-			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
+			if (IsHelicopter(v))                          continue;
+			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(&s, v));
 		}
 	}
 
 #if 0 // No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-	if (IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ) &&
-			IsTheSAMSiteInSectorRepairable(s->sSectorX, s->sSectorY, s->bSectorZ))
+	if (IsThisSectorASAMSector(s.sSectorX, s.sSectorY, s.bSectorZ) &&
+			IsTheSAMSiteInSectorRepairable(s.sSectorX, s.sSectorY, s.bSectorZ))
 	{
 		// handle enable disable of repair sam option
-		ShadeStringInBox(box, line++, !CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR));
+		ShadeStringInBox(box, line++, !CanSoldierRepairSAM(&s, SAM_SITE_REPAIR_DIVISOR));
 	}
 #endif
 
-	if (IsRobotInThisSector(s->sSectorX, s->sSectorY, s->bSectorZ))
+	if (IsRobotInThisSector(s.sSectorX, s.sSectorY, s.bSectorZ))
 	{
 		// handle shading of repair robot option
-		ShadeStringInBox(box, line++, !CanCharacterRepairRobot(s));
+		ShadeStringInBox(box, line++, !CanCharacterRepairRobot(&s));
 	}
 
-	ShadeStringInBox(box, line++, !DoesCharacterHaveAnyItemsToRepair(s, FINAL_REPAIR_PASS));
+	ShadeStringInBox(box, line++, !DoesCharacterHaveAnyItemsToRepair(&s, FINAL_REPAIR_PASS));
 }
 
 
@@ -3383,7 +3383,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 	{
 		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
-		const SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
+		SOLDIERTYPE const& s = *GetSelectedAssignSoldier(FALSE);
 
 		PopUpBox* const  box  = ghRepairBox;
 		SGPBox    const& area = GetBoxArea(box);
@@ -3396,7 +3396,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 		// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
 		// CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and HandleShadingOfLinesForRepairMenu().
 
-		if (s->bSectorZ == 0)
+		if (s.bSectorZ == 0)
 		{
 			// vehicles
 			CFOR_ALL_VEHICLES(i)
@@ -3406,7 +3406,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 				if (IsHelicopter(v)) continue;
 
 				// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
-				if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
+				if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
 
 				// add mouse region for each line of text..and set user data
 				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(v));
@@ -3416,8 +3416,8 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
 		// SAM site
-		if (IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ) &&
-				IsTheSAMSiteInSectorRepairable(s->sSectorX, s->sSectorY, s->bSectorZ))
+		if (IsThisSectorASAMSector(s.sSectorX, s.sSectorY, s.bSectorZ) &&
+				IsTheSAMSiteInSectorRepairable(s.sSectorX, s.sSectorY, s.bSectorZ))
 		{
 			MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_SAM_SITE);
 			y += h;
@@ -3425,7 +3425,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 */
 
 		// robot
-		if (IsRobotInThisSector(s->sSectorX, s->sSectorY, s->bSectorZ))
+		if (IsRobotInThisSector(s.sSectorX, s.sSectorY, s.bSectorZ))
 		{
 			MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_ROBOT);
 			y += h;
@@ -3767,8 +3767,8 @@ static void ShowAssignmentBox(void)
 		}
 	}
 
-	const SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
-	if (s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
+	SOLDIERTYPE const& s = *GetSelectedAssignSoldier(FALSE);
+	if (s.ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 	{
 		ShowBox(ghEpcBox);
 	}
@@ -4763,16 +4763,16 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 
 		/* Can the character join this squad?  If already in it, accept that as a
 		 * legal choice and exit menu */
-		SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
-		switch (CanCharacterSquad(s, value))
+		SOLDIERTYPE& s = *GetSelectedAssignSoldier(FALSE);
+		switch (CanCharacterSquad(&s, value))
 		{
 			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
 			{
-				bool const exiting_helicopter = InHelicopter(*s);
-				PreChangeAssignment(s);
-				AddCharacterToSquad(s, value);
-				if (exiting_helicopter) SetSoldierExitHelicopterInsertionData(s); // XXX TODO001D
-				MakeSoldiersTacticalAnimationReflectAssignment(s);
+				bool const exiting_helicopter = InHelicopter(s);
+				PreChangeAssignment(&s);
+				AddCharacterToSquad(&s, value);
+				if (exiting_helicopter) SetSoldierExitHelicopterInsertionData(&s); // XXX TODO001D
+				MakeSoldiersTacticalAnimationReflectAssignment(&s);
 				/* FALLTHROUGH */
 			}
 			case CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT:
@@ -4787,19 +4787,19 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 
 				wchar_t buf[128];
 			case CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING:
-				swprintf(buf, lengthof(buf), pMapErrorString[36], s->name, pLongAssignmentStrings[value]);
+				swprintf(buf, lengthof(buf), pMapErrorString[36], s.name, pLongAssignmentStrings[value]);
 				goto show_error;
 			case CHARACTER_CANT_JOIN_SQUAD_VEHICLE:
-				swprintf(buf, lengthof(buf), pMapErrorString[37], s->name);
+				swprintf(buf, lengthof(buf), pMapErrorString[37], s.name);
 				goto show_error;
 			case CHARACTER_CANT_JOIN_SQUAD_TOO_FAR:
-				swprintf(buf, lengthof(buf), pMapErrorString[20], s->name, pLongAssignmentStrings[value]);
+				swprintf(buf, lengthof(buf), pMapErrorString[20], s.name, pLongAssignmentStrings[value]);
 				goto show_error;
 			case CHARACTER_CANT_JOIN_SQUAD_FULL:
-				swprintf(buf, lengthof(buf), pMapErrorString[19], s->name, pLongAssignmentStrings[value]);
+				swprintf(buf, lengthof(buf), pMapErrorString[19], s.name, pLongAssignmentStrings[value]);
 				goto show_error;
 			default: // generic "you can't join this squad" msg
-				swprintf(buf, lengthof(buf), pMapErrorString[38], s->name, pLongAssignmentStrings[value]);
+				swprintf(buf, lengthof(buf), pMapErrorString[38], s.name, pLongAssignmentStrings[value]);
 show_error:
 				DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, NULL);
 				break;
@@ -5411,11 +5411,11 @@ static void HandleShadingOfLinesForSquadMenu(void)
 	PopUpBox* const box = ghSquadBox;
 	if (box == NO_POPUP_BOX) return;
 
-	SOLDIERTYPE const* const s         = GetSelectedAssignSoldier(FALSE);
-	UINT32             const max_squad = GetLastSquadListedInSquadMenu();
+	SOLDIERTYPE const& s         = *GetSelectedAssignSoldier(FALSE);
+	UINT32      const  max_squad = GetLastSquadListedInSquadMenu();
 	for (UINT32 i = 0; i <= max_squad; ++i)
 	{
-		JoinSquadResult const bResult = CanCharacterSquad(s, (INT8)i);
+		JoinSquadResult const bResult = CanCharacterSquad(&s, (INT8)i);
 		PopUpShade const shade =
 			// Shade, if the reason doesn't have a good explanatory message
 			bResult == CHARACTER_CANT_JOIN_SQUAD ? POPUP_SHADE      :
@@ -5707,10 +5707,10 @@ void DetermineBoxPositions()
 
 void SetTacticalPopUpAssignmentBoxXY()
 {
-	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(FALSE);
+	SOLDIERTYPE const& s = *GetSelectedAssignSoldier(FALSE);
 	INT16 sX;
 	INT16 sY;
-	GetSoldierScreenPos(s, &sX, &sY);
+	GetSoldierScreenPos(&s, &sX, &sY);
 
 	if (sX < 0) sX = 0;
 	if (sY < 0) sY = 0;
@@ -5777,9 +5777,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	if (!fShowAssignmentMenu) return;
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
 
-	SOLDIERTYPE const* const  s               = GetSelectedAssignSoldier(FALSE);
-	PopUpBox*          const  assignment_box  = s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
-	SGPBox             const& assignment_area = GetBoxArea(assignment_box);
+	SOLDIERTYPE const& s               = *GetSelectedAssignSoldier(FALSE);
+	PopUpBox*   const  assignment_box  = s.ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
+	SGPBox      const& assignment_area = GetBoxArea(assignment_box);
 
 	if (fShowRepairMenu)
 	{
@@ -6497,16 +6497,16 @@ static void HandleShadingOfLinesForTrainingMenu(void)
 	PopUpBox* const box = ghTrainingBox;
 	if (box == NO_POPUP_BOX) return;
 
-	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(FALSE);
+	SOLDIERTYPE const& s = *GetSelectedAssignSoldier(FALSE);
 
-	ShadeStringInBox(box, TRAIN_MENU_SELF,           !CanCharacterPractise(s));
+	ShadeStringInBox(box, TRAIN_MENU_SELF,           !CanCharacterPractise(&s));
 	PopUpShade const shade =
-		!BasicCanCharacterTrainMilitia(s) ? POPUP_SHADE           :
-		!CanCharacterTrainMilitia(s)      ? POPUP_SHADE_SECONDARY :
-		                                    POPUP_SHADE_NONE;
+		!BasicCanCharacterTrainMilitia(&s) ? POPUP_SHADE           :
+		!CanCharacterTrainMilitia(&s)      ? POPUP_SHADE_SECONDARY :
+		POPUP_SHADE_NONE;
 	ShadeStringInBox(box, TRAIN_MENU_TOWN,           shade);
-	ShadeStringInBox(box, TRAIN_MENU_TEAMMATES,      !CanCharacterTrainTeammates(s));
-	ShadeStringInBox(box, TRAIN_MENU_TRAIN_BY_OTHER, !CanCharacterBeTrainedByOther(s));
+	ShadeStringInBox(box, TRAIN_MENU_TEAMMATES,      !CanCharacterTrainTeammates(&s));
+	ShadeStringInBox(box, TRAIN_MENU_TRAIN_BY_OTHER, !CanCharacterBeTrainedByOther(&s));
 }
 
 
@@ -6518,24 +6518,24 @@ static void HandleShadingOfLinesForAttributeMenus(void)
 	PopUpBox* const box = ghAttributeBox;
 	if (box == NO_POPUP_BOX) return;
 
-	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(FALSE);
+	SOLDIERTYPE const& s = *GetSelectedAssignSoldier(FALSE);
 	for (INT8 stat = 0; stat < ATTRIB_MENU_CANCEL; ++stat)
 	{
 		BOOLEAN stat_trainable;
 		switch (gbTrainingMode)
 		{
 			case TRAIN_SELF:
-				stat_trainable = CanCharacterTrainStat(s, stat, TRUE, FALSE);
+				stat_trainable = CanCharacterTrainStat(&s, stat, TRUE, FALSE);
 				break;
 
 			case TRAIN_TEAMMATE:
 				// DO allow trainers to be assigned without any partners (students)
-				stat_trainable = CanCharacterTrainStat(s, stat, FALSE, TRUE);
+				stat_trainable = CanCharacterTrainStat(&s, stat, FALSE, TRUE);
 				break;
 
 			case TRAIN_BY_OTHER:
 				// DO allow students to be assigned without any partners (trainers)
-				stat_trainable = CanCharacterTrainStat(s, stat, TRUE, FALSE);
+				stat_trainable = CanCharacterTrainStat(&s, stat, TRUE, FALSE);
 				break;
 
 			default:
