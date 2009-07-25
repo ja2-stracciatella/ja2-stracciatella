@@ -7584,7 +7584,7 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 static bool CanChangeDestinationForChar(SOLDIERTYPE& s)
 {
-	MoveError const ret = CanEntireMovementGroupMercIsInMove(&s);
+	MoveError const ret = CanEntireMovementGroupMercIsInMove(s);
 	if (ret == ME_OK) return true;
 
 	ReportMapScreenMovementError(ret);

@@ -458,7 +458,7 @@ enum MoveError
 };
 
 // can this group move it out
-MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE*);
+MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE&);
 void ReportMapScreenMovementError( INT8 bErrorNumber );
 
 void HandleRebuildingOfMapScreenCharacterList( void );

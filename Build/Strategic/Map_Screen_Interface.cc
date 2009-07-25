@@ -4224,41 +4224,35 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 }
 
 
-MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE* const pSoldier)
+MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE& s)
 {
-	// first check the requested character himself
-	const MoveError ret = CanCharacterMoveInStrategic(pSoldier);
-	if (ret != ME_OK) return ret; // failed no point checking anyone else
+	// First check the requested character himself
+	MoveError const ret = CanCharacterMoveInStrategic(&s);
+	if (ret != ME_OK) return ret; // Failed no point checking anyone else
 
-	// now check anybody who would be travelling with him
+	// Now check anybody who would be traveling with him
 
-	// does character have group?
-	GROUP const* const g = GetSoldierGroup(*pSoldier);
+	/* Even if group is 0 (not that that should happen, should it?) still loop
+	 * through for other mercs selected to move */
+	GROUP const* const g = GetSoldierGroup(s);
 
-	// even if group is 0 (not that that should happen, should it?) still loop through for other mercs selected to move
-
-	// if anyone in the merc's group or also selected cannot move for whatever reason return false
+	/* If anyone in the merc's group or also selected cannot move for whatever
+	 * reason return an error */
 	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const pCurrentSoldier = c->merc;
+		SOLDIERTYPE& other = *c->merc;
+		if (&other == &s) continue; // Skip the same guy we did already
 
-		// skip the same guy we did already
-		if ( pCurrentSoldier == pSoldier )
-		{
-			continue;
-		}
+		/* Is he in the same movement group (i.e. squad), or is he still selected to
+		 * go with us (legal?) */
+		if (GetSoldierGroup(other) != g && !c->selected) continue;
 
-		// if he is in the same movement group (i.e. squad), or he is still selected to go with us (legal?)
-		if (GetSoldierGroup(*pCurrentSoldier) == g || c->selected)
-		{
-			// can this character also move strategically?
-			const MoveError ret = CanCharacterMoveInStrategic(pCurrentSoldier);
-			// cannot move, fail, and don't bother checking anyone else, either
-			if (ret != ME_OK) return ret;
-		}
+		MoveError const ret = CanCharacterMoveInStrategic(&other);
+		// Cannot move, fail, and don't bother checking anyone else, either
+		if (ret != ME_OK) return ret;
 	}
 
-	// everybody can move...  Yey!  :-)
+	// Everybody can move
 	return ME_OK;
 }
 
