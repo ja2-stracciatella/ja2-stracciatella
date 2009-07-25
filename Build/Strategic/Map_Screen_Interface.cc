@@ -2031,44 +2031,35 @@ static void DeselectSoldierForMovement(SOLDIERTYPE* pSoldier)
 static BOOLEAN CanMoveBoxSoldierMoveStrategically(SOLDIERTYPE* pSoldier, BOOLEAN fShowErrorMessage);
 
 
-static void SelectSquadForMovement(INT32 iSquadNumber)
+static void SelectSquadForMovement(INT32 const squad_no)
 {
-	BOOLEAN fSomeCantMove = FALSE;
-	BOOLEAN fFirstFailure;
-
-	// run through squad list and set them on
-	for (INT32 iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; ++iCounter)
+	// Run through squad list and set them on
+	for (INT32 i = 0; i != giNumberOfSquadsInSectorMoving; ++i)
 	{
-		if( iSquadMovingList[ iCounter ] == iSquadNumber )
+		if (iSquadMovingList[i] != squad_no) continue;
+
+		// Try to select everyone in squad
+		bool some_cant_move = false;
+		bool first_failure  = true;
+		FOR_ALL_IN_SQUAD(k, squad_no)
 		{
-			// found it
-
-			fFirstFailure = TRUE;
-
-			// try to select everyone in squad
-			FOR_ALL_IN_SQUAD(i, iSquadNumber)
+			SOLDIERTYPE& s = **k;
+			if (!s.bActive) continue;
+			/* Is he able and allowed to move? Report only the first reason for
+			 * failure encountered */
+			if (CanMoveBoxSoldierMoveStrategically(&s, first_failure))
 			{
-				SOLDIERTYPE* const pSoldier = *i;
-				if (!pSoldier->bActive) continue;
-				// is he able & allowed to move?  (Report only the first reason for failure encountered)
-				if ( CanMoveBoxSoldierMoveStrategically( pSoldier, fFirstFailure ) )
-				{
-					SelectSoldierForMovement( pSoldier );
-				}
-				else
-				{
-					fSomeCantMove = TRUE;
-					fFirstFailure = FALSE;
-				}
+				SelectSoldierForMovement(&s);
 			}
-
-			if ( !fSomeCantMove )
+			else
 			{
-				fSquadIsMoving[ iCounter ] = TRUE;
+				some_cant_move = true;
+				first_failure  = false;
 			}
-
-			break;
 		}
+
+		if (!some_cant_move) fSquadIsMoving[i] = TRUE;
+		break;
 	}
 }
 
