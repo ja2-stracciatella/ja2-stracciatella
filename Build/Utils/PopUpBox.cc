@@ -159,9 +159,9 @@ void SetBoxY(PopUpBox* const box, const INT16 y)
 }
 
 
-const SGPBox* GetBoxArea(const PopUpBox* const box)
+SGPBox const& GetBoxArea(PopUpBox const* const box)
 {
-	return &box->pos;
+	return box->pos;
 }
 
 

@@ -3046,13 +3046,13 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
-		const SOLDIERTYPE* const s    = GetSelectedAssignSoldier(FALSE);
-		const PopUpBox*    const box  = (s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
-		const SGPBox*      const area = GetBoxArea(box);
-		UINT16             const x    = area->x;
-		UINT16                   y    = area->y + GetTopMarginSize(ghAssignmentBox);
-		UINT16             const w    = area->w;
-		UINT16             const dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		const SOLDIERTYPE* const  s    = GetSelectedAssignSoldier(FALSE);
+		const PopUpBox*    const  box  = s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
+		SGPBox             const& area = GetBoxArea(box);
+		UINT16             const  x    = area.x;
+		UINT16                    y    = area.y + GetTopMarginSize(ghAssignmentBox);
+		UINT16             const  w    = area.w;
+		UINT16             const  dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
 		// Add mouse region for each line of text and set user data
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghAssignmentBox); ++i)
@@ -3100,20 +3100,20 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 
 	if (fShowVehicleMenu)
 	{
-		SGPBox const* const area = GetBoxArea(ghAssignmentBox);
-		VehiclePosition.iX = area->x + area->w;
+		SGPBox const& area = GetBoxArea(ghAssignmentBox);
+		VehiclePosition.iX = area.x + area.w;
 		SetBoxXY(box, VehiclePosition.iX, VehiclePosition.iY);
 	}
 
 	if (!fCreated && fShowVehicleMenu)
 	{
-		SGPBox      const* const area = GetBoxArea(box);
-		UINT16             const x    = area->x;
-		UINT16                   y    = area->y + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
-		UINT16             const w    = area->w;
-		UINT16             const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
-		MOUSE_REGION*            r    = gVehicleMenuRegion;
-		SOLDIERTYPE const* const s    = GetSelectedAssignSoldier(FALSE);
+		SGPBox             const& area = GetBoxArea(box);
+		UINT16             const  x    = area.x;
+		UINT16                    y    = area.y + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
+		UINT16             const  w    = area.w;
+		UINT16             const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		MOUSE_REGION*             r    = gVehicleMenuRegion;
+		SOLDIERTYPE const* const  s    = GetSelectedAssignSoldier(FALSE);
 		FOR_ALL_VEHICLES(i)
 		{
 			VEHICLETYPE& v = *i;
@@ -3385,13 +3385,13 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 
 		const SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
 
-		PopUpBox*     const box  = ghRepairBox;
-		const SGPBox* const area = GetBoxArea(box);
-		UINT16        const x    = area->x;
-		UINT16              y    = area->y + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
-		UINT16        const w    = area->w;
-		UINT16        const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
-		INT32               idx  = 0;
+		PopUpBox* const  box  = ghRepairBox;
+		SGPBox    const& area = GetBoxArea(box);
+		UINT16    const  x    = area.x;
+		UINT16           y    = area.y + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
+		UINT16    const  w    = area.w;
+		UINT16    const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		INT32            idx  = 0;
 
 		// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
 		// CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and HandleShadingOfLinesForRepairMenu().
@@ -4026,11 +4026,11 @@ void CreateDestroyMouseRegionsForContractMenu(void)
 
 		SetBoxXY(box, ContractPosition.iX, ContractPosition.iY);
 
-		const SGPBox* const area = GetBoxArea(box);
-		UINT16        const x    = area->x;
-		UINT16              y    = area->y + GetTopMarginSize(box);
-		UINT16        const w    = area->w;
-		UINT16        const dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		SGPBox const& area = GetBoxArea(box);
+		UINT16 const  x    = area.x;
+		UINT16        y    = area.y + GetTopMarginSize(box);
+		UINT16 const  w    = area.w;
+		UINT16 const  dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
 		// Add mouse region for each line of text and set user data
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
@@ -4084,11 +4084,11 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 		HandleShadingOfLinesForTrainingMenu();
 		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
-		SGPBox const* const area = GetBoxArea(box);
-		UINT16        const x    = area->x;
-		UINT16              y    = area->y + GetTopMarginSize(box);
-		UINT16        const w    = area->w;
-		UINT16        const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		SGPBox const& area = GetBoxArea(box);
+		UINT16 const  x    = area.x;
+		UINT16        y    = area.y + GetTopMarginSize(box);
+		UINT16 const  w    = area.w;
+		UINT16 const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
 		// define regions
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
@@ -4149,11 +4149,11 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
 		// grab height of font
-		SGPBox const* const area = GetBoxArea(box);
-		UINT16        const x    = area->x;
-		UINT16              y    = area->y + GetTopMarginSize(box);
-		UINT16        const w    = area->w;
-		UINT16        const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		SGPBox const& area = GetBoxArea(box);
+		UINT16 const  x    = area.x;
+		UINT16        y    = area.y + GetTopMarginSize(box);
+		UINT16 const  w    = area.w;
+		UINT16 const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
 		// define regions
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
@@ -4220,11 +4220,11 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 
 		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
-		const SGPBox* const area = GetBoxArea(ghRemoveMercAssignBox);
-		INT32         const x    = area->x;
-		INT32               y    = area->y + GetTopMarginSize(ghAttributeBox);
-		INT32         const w    = area->w;
-		INT32         const h    = GetLineSpace(ghRemoveMercAssignBox) + GetFontHeight(GetBoxFont(ghRemoveMercAssignBox));
+		SGPBox const& area = GetBoxArea(ghRemoveMercAssignBox);
+		INT32  const  x    = area.x;
+		INT32         y    = area.y + GetTopMarginSize(ghAttributeBox);
+		INT32  const  w    = area.w;
+		INT32  const  h    = GetLineSpace(ghRemoveMercAssignBox) + GetFontHeight(GetBoxFont(ghRemoveMercAssignBox));
 
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghRemoveMercAssignBox); ++i)
 		{
@@ -4275,11 +4275,11 @@ static void CreateDestroyMouseRegionsForSquadMenu()
 		CreateSquadBox();
 		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
-		const SGPBox* const area = GetBoxArea(ghSquadBox);
-		INT32         const x    = area->x;
-		INT32               y    = area->y + GetTopMarginSize(ghSquadBox);
-		INT32         const w    = area->w;
-		INT32         const h    = GetLineSpace(ghSquadBox) + GetFontHeight(GetBoxFont(ghSquadBox));
+		SGPBox const& area = GetBoxArea(ghSquadBox);
+		INT32  const  x    = area.x;
+		INT32         y    = area.y + GetTopMarginSize(ghSquadBox);
+		INT32  const  w    = area.w;
+		INT32  const  h    = GetLineSpace(ghSquadBox) + GetFontHeight(GetBoxFont(ghSquadBox));
 
 		UINT32 i;
 		for (i = 0; i < GetNumberOfLinesOfTextInBox(ghSquadBox) - 1; ++i)
@@ -5370,8 +5370,8 @@ static void CreateSquadBox(void)
 	ResizeBoxToText(box);
 	DetermineBoxPositions();
 
-	const SGPBox* const area  = GetBoxArea(box);
-	INT16         const max_y = SCREEN_HEIGHT - area->h;
+	SGPBox const& area  = GetBoxArea(box);
+	INT16  const  max_y = SCREEN_HEIGHT - area.h;
 	if (giBoxY > max_y)
 	{
 		SquadPosition.iY = max_y;
@@ -5394,8 +5394,8 @@ static void CreateEPCBox(void)
 	SetBoxTextAttrs(box);
 	ResizeBoxToText(box);
 
-	SGPBox const* const area  = GetBoxArea(box);
-	INT16         const max_y = SCREEN_HEIGHT - area->h;
+	SGPBox const& area  = GetBoxArea(box);
+	INT16  const  max_y = SCREEN_HEIGHT - area.h;
 	if (giBoxY > max_y)
 	{
 		AssignmentPosition.iY = max_y;
@@ -5662,9 +5662,9 @@ void DetermineBoxPositions()
 
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
-		const SGPBox* const area = GetBoxArea(ghAssignmentBox);
-		gsAssignmentBoxesX = area->x;
-		gsAssignmentBoxesY = area->y;
+		SGPBox const& area = GetBoxArea(ghAssignmentBox);
+		gsAssignmentBoxesX = area.x;
+		gsAssignmentBoxesY = area.y;
 	}
 
 	INT16 x = gsAssignmentBoxesX;
@@ -5674,7 +5674,7 @@ void DetermineBoxPositions()
 	SetBoxXY(box, x, y);
 
 	// hang it right beside the assignment/EPC box menu
-	x += GetBoxArea(box)->w;
+	x += GetBoxArea(box).w;
 
 	if (fShowSquadMenu && ghSquadBox != NO_POPUP_BOX)
 	{
@@ -5698,8 +5698,8 @@ void DetermineBoxPositions()
 		if (fShowAttributeMenu && ghAttributeBox != NO_POPUP_BOX)
 		{
 			// hang it right beside the training box menu
-			const SGPBox* const area = GetBoxArea(ghTrainingBox);
-			SetBoxXY(ghAttributeBox, area->x + area->w, area->y);
+			SGPBox const& area = GetBoxArea(ghTrainingBox);
+			SetBoxXY(ghAttributeBox, area.x + area.w, area.y);
 		}
 	}
 }
@@ -5745,11 +5745,11 @@ static void RepositionMouseRegions(void)
 }
 
 
-static void AdjustBoxPos(SGPBox const* const assignment_area, PopUpBox* const other_box, INT32 const offset_line)
+static void AdjustBoxPos(SGPBox const& assignment_area, PopUpBox* const other_box, INT32 const offset_line)
 {
-	SGPBox const* const other_area = GetBoxArea(other_box);
+	SGPBox const& other_area = GetBoxArea(other_box);
 
-	INT16 const max_x = SCREEN_WIDTH - assignment_area->w - other_area->w;
+	INT16 const max_x = SCREEN_WIDTH - assignment_area.w - other_area.w;
 	if (gsAssignmentBoxesX > max_x)
 	{
 		gsAssignmentBoxesX = max_x;
@@ -5757,8 +5757,8 @@ static void AdjustBoxPos(SGPBox const* const assignment_area, PopUpBox* const ot
 	}
 
 	INT16 const dy    = (GetFontHeight(MAP_SCREEN_FONT) + 2) * offset_line;
-	INT16 const ah    = assignment_area->h;
-	INT16 const oh    = other_area->h + dy;
+	INT16 const ah    = assignment_area.h;
+	INT16 const oh    = other_area.h + dy;
 	INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - (ah > oh ? ah : oh);
 	if (gsAssignmentBoxesY > max_y)
 	{
@@ -5766,7 +5766,7 @@ static void AdjustBoxPos(SGPBox const* const assignment_area, PopUpBox* const ot
 		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 
-	INT16 const x = gsAssignmentBoxesX + assignment_area->w;
+	INT16 const x = gsAssignmentBoxesX + assignment_area.w;
 	INT16 const y = gsAssignmentBoxesY + dy;
 	SetBoxXY(other_box, x, y);
 }
@@ -5777,9 +5777,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	if (!fShowAssignmentMenu) return;
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
 
-	SOLDIERTYPE const* const s               = GetSelectedAssignSoldier(FALSE);
-	PopUpBox*          const assignment_box  = s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
-	SGPBox      const* const assignment_area = GetBoxArea(assignment_box);
+	SOLDIERTYPE const* const  s               = GetSelectedAssignSoldier(FALSE);
+	PopUpBox*          const  assignment_box  = s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
+	SGPBox             const& assignment_area = GetBoxArea(assignment_box);
 
 	if (fShowRepairMenu)
 	{
@@ -5791,10 +5791,10 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	}
 	else if (fShowAttributeMenu)
 	{
-		SGPBox const* const train_area = GetBoxArea(ghTrainingBox);
-		SGPBox const* const attr_area  = GetBoxArea(ghAttributeBox);
+		SGPBox const& train_area = GetBoxArea(ghTrainingBox);
+		SGPBox const& attr_area  = GetBoxArea(ghAttributeBox);
 
-		INT16 const max_x = SCREEN_WIDTH - assignment_area->w - train_area->w - attr_area->w;
+		INT16 const max_x = SCREEN_WIDTH - assignment_area.w - train_area.w - attr_area.w;
 		if (gsAssignmentBoxesX > max_x)
 		{
 			gsAssignmentBoxesX = max_x;
@@ -5802,16 +5802,16 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 		}
 
 		INT16 const dy    = (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
-		INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - attr_area->h - dy;
+		INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - attr_area.h - dy;
 		if (gsAssignmentBoxesY > max_y)
 		{
 			gsAssignmentBoxesY = max_y;
 			SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
-		INT16 const x = gsAssignmentBoxesX + assignment_area->w;
+		INT16 const x = gsAssignmentBoxesX + assignment_area.w;
 		INT16 const y = gsAssignmentBoxesY + dy;
-		SetBoxXY(ghAttributeBox, x + train_area->w, y);
+		SetBoxXY(ghAttributeBox, x + train_area.w, y);
 		SetBoxXY(ghTrainingBox,  x,                 y);
 	}
 	else if (fShowTrainingMenu)
@@ -5821,14 +5821,14 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	else
 	{
 		// just the assignment box
-		INT16 const max_x = SCREEN_WIDTH - assignment_area->w;
+		INT16 const max_x = SCREEN_WIDTH - assignment_area.w;
 		if (gsAssignmentBoxesX > max_x)
 		{
 			gsAssignmentBoxesX = max_x;
 			SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
-		INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - assignment_area->h;
+		INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - assignment_area.h;
 		if (gsAssignmentBoxesY > max_y)
 		{
 			gsAssignmentBoxesY = max_y;
@@ -5847,10 +5847,10 @@ static void PositionCursorForTacticalAssignmentBox(void)
 	// position cursor over y of on duty in tactical assignments
 	if (gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE]) return;
 
-	PopUpBox const* const box  = ghAssignmentBox;
-	INT32           const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
-	SGPBox   const* const area = GetBoxArea(box);
-	SimulateMouseMovement(area->x + area->w - 6, area->y + h / 2 + 2);
+	PopUpBox const* const  box  = ghAssignmentBox;
+	INT32           const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+	SGPBox          const& area = GetBoxArea(box);
+	SimulateMouseMovement(area.x + area.w - 6, area.y + h / 2 + 2);
 }
 
 

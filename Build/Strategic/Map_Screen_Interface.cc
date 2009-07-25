@@ -2376,14 +2376,14 @@ static void CreatePopUpBoxForMovementBox(void)
 	ResizeBoxToText(box);
 
 	// adjust position to try to keep it in the map area as good as possible
-	const SGPBox* const area = GetBoxArea(box);
-	if (area->x + area->w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
+	SGPBox const& area = GetBoxArea(box);
+	if (area.x + area.w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
 	{
-		SetBoxX(box, MAX(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w));
+		SetBoxX(box, MAX(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area.w));
 	}
-	if (area->y + area->h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
+	if (area.y + area.h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
 	{
-		SetBoxY(box, MAX(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h));
+		SetBoxY(box, MAX(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area.h));
 	}
 }
 
@@ -2530,12 +2530,12 @@ static void MakeRegion(const INT32 i, const UINT16 x, const UINT16 y, const UINT
 
 static void BuildMouseRegionsForMoveBox(void)
 {
-	const SGPBox* const area = GetBoxArea(ghMoveBox);
-	INT32         const x    = area->x;
-	INT32         const y    = area->y + GetTopMarginSize(ghMoveBox) - 2; // -2 to improve highlighting accuracy between lines
-	INT32         const w    = area->w;
-	INT32         const h    = GetLineSpace(ghMoveBox) + GetFontHeight(GetBoxFont(ghMoveBox));
-	INT32               i    = 0; // Region index
+	SGPBox const& area = GetBoxArea(ghMoveBox);
+	INT32  const  x    = area.x;
+	INT32  const  y    = area.y + GetTopMarginSize(ghMoveBox) - 2; // -2 to improve highlighting accuracy between lines
+	INT32  const  w    = area.w;
+	INT32  const  h    = GetLineSpace(ghMoveBox) + GetFontHeight(GetBoxFont(ghMoveBox));
+	INT32         i    = 0; // Region index
 
 	MakeRegionBlank(i++, x, y, w, h); // Box heading
 	MakeRegionBlank(i++, x, y, w, h); // Blank line

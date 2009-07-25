@@ -19,7 +19,7 @@ void SetBoxXY(PopUpBox*, INT16 x, INT16 y);
 void SetBoxX(PopUpBox*, INT16 x);
 void SetBoxY(PopUpBox*, INT16 y);
 UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox*);
-const SGPBox* GetBoxArea(const PopUpBox*);
+SGPBox const& GetBoxArea(PopUpBox const*);
 void AddMonoString(PopUpBox*, const wchar_t* pString);
 void SetBoxFont(PopUpBox*, Font);
 Font GetBoxFont(const PopUpBox*);
