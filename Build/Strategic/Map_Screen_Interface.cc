@@ -1951,20 +1951,15 @@ static BOOLEAN IsSoldierSelectedForMovement(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static BOOLEAN IsSquadSelectedForMovement(INT32 iSquadNumber)
+static bool IsSquadSelectedForMovement(INT32 const squad_no)
 {
-	INT32 iCounter = 0;
-
-	// run through squad list and set them on
-	for( iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; iCounter++ )
+	for (INT32 iCounter = 0; iCounter != giNumberOfSquadsInSectorMoving; ++iCounter)
 	{
-		if( ( iSquadMovingList[ iCounter ] == iSquadNumber ) && ( fSquadIsMoving[ iCounter ] ) )
-		{
-			return( TRUE );
-		}
+		if (iSquadMovingList[iCounter] != squad_no) continue;
+		if (!fSquadIsMoving[iCounter])              continue;
+		return true;
 	}
-
-	return( FALSE );
+	return false;
 }
 
 
