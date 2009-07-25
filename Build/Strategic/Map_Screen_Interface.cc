@@ -1953,26 +1953,22 @@ static bool IsSquadSelectedForMovement(INT32 const squad_no)
 	for (INT32 i = 0; i != giNumberOfSquadsInSectorMoving; ++i)
 	{
 		if (iSquadMovingList[i] != squad_no) continue;
-		if (!fSquadIsMoving[i])              continue;
+		if (!fSquadIsMoving[i])              continue; // break?
 		return true;
 	}
 	return false;
 }
 
 
-static BOOLEAN IsVehicleSelectedForMovement(INT32 iVehicleId)
+static bool IsVehicleSelectedForMovement(INT32 const vehicle_id)
 {
-	INT32 iCounter = 0;
-
-	// run through squad list and set them on
-	for( iCounter = 0; iCounter < giNumberOfVehiclesInSectorMoving; iCounter++ )
+	for (INT32 i = 0; i != giNumberOfVehiclesInSectorMoving; ++i)
 	{
-		if( ( iVehicleMovingList[ iCounter ] == iVehicleId ) && ( fVehicleIsMoving[ iCounter ] ) )
-		{
-			return( TRUE );
-		}
+		if (iVehicleMovingList[i] != vehicle_id) continue;
+		if (!fVehicleIsMoving[i])                continue; // break?
+		return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 
