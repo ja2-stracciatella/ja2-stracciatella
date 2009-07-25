@@ -2143,25 +2143,16 @@ static INT32 HowManyMovingSoldiersInVehicle(INT32 const vehicle_id)
 }
 
 
-static INT32 HowManyMovingSoldiersInSquad(INT32 iSquadNumber)
+static INT32 HowManyMovingSoldiersInSquad(INT32 const squad_no)
 {
-	INT32 iNumber = 0, iCounter = 0;
-
-	for( iCounter = 0; iCounter < giNumberOfSoldiersInSectorMoving; iCounter++ )
+	INT32 n = 0;
+	for (INT32 i = 0; i != giNumberOfSoldiersInSectorMoving; ++i)
 	{
-		// is he in the right squad
-		if( pSoldierMovingList[ iCounter ] ->bAssignment == iSquadNumber )
-		{
-			// if he moving?
-			if ( fSoldierIsMoving[ iCounter ] )
-			{
-				// ok, another one in the squad that is going to move
-				iNumber++;
-			}
-		}
+		if (pSoldierMovingList[i]->bAssignment != squad_no) continue;
+		if (!fSoldierIsMoving[i])                           continue;
+		++n;
 	}
-
-	return( iNumber );
+	return n;
 }
 
 
