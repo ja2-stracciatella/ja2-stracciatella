@@ -2241,40 +2241,30 @@ static void InitializeMovingLists()
 }
 
 
-static BOOLEAN IsAnythingSelectedForMoving(void)
+static bool IsAnythingSelectedForMoving()
 {
-	INT32 iCounter = 0;
-
-
-	// check soldiers
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	for (INT32 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		if ( ( pSoldierMovingList[ iCounter ] != NULL ) && fSoldierIsMoving[ iCounter ] )
-		{
-			return( TRUE );
-		}
+		if (!pSoldierMovingList[i]) continue;
+		if (!fSoldierIsMoving[i])   continue;
+		return true;
 	}
 
-
-	// init the squads
-	for( iCounter = 0; iCounter < NUMBER_OF_SQUADS; iCounter++ )
+	for (INT32 i = 0; i != NUMBER_OF_SQUADS; ++i)
 	{
-		if ( ( iSquadMovingList[ iCounter ] != -1 ) && fSquadIsMoving[ iCounter ] )
-		{
-			return( TRUE );
-		}
+		if (iSquadMovingList[i] == -1) continue;
+		if (!fSquadIsMoving[i])        continue;
+		return true;
 	}
 
-	// init the vehicles
-	for( iCounter = 0; iCounter < NUMBER_OF_SQUADS; iCounter++ )
+	for (INT32 i = 0; i != NUMBER_OF_SQUADS; ++i)
 	{
-		if ( ( iVehicleMovingList[ iCounter ] != -1 ) && fVehicleIsMoving[ iCounter ] )
-		{
-			return( TRUE );
-		}
+		if (iVehicleMovingList[i] == -1) continue;
+		if (!fVehicleIsMoving[i])        continue;
+		return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 
