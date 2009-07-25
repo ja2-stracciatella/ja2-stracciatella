@@ -2968,7 +2968,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE*);
+static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE&);
 
 
 static BOOLEAN CanMoveBoxSoldierMoveStrategically(SOLDIERTYPE* pSoldier, BOOLEAN fShowErrorMessage)
@@ -2977,7 +2977,7 @@ static BOOLEAN CanMoveBoxSoldierMoveStrategically(SOLDIERTYPE* pSoldier, BOOLEAN
 	Assert( pSoldier );
 	Assert( pSoldier->bActive );
 
-	const MoveError ret = CanCharacterMoveInStrategic(pSoldier);
+	MoveError const ret = CanCharacterMoveInStrategic(*pSoldier);
 	if (ret == ME_OK) return TRUE;
 
 	if (fShowErrorMessage) ReportMapScreenMovementError(ret);
@@ -4054,95 +4054,80 @@ void NotifyPlayerOfInvasionByEnemyForces(INT16 const x, INT16 const y, INT8 cons
 }
 
 
-static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
+static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 {
-	INT16 sSector = 0;
-	BOOLEAN fProblemExists = FALSE;
+	Assert(s.bActive);
 
+	/* NOTE: Check for the most permanent conditions first, and the most easily
+	 * remedied ones last. In case several cases apply, only the reason found
+	 * first will be given, so make it a good one. */
 
-	// valid soldier?
-	Assert( pSoldier );
-	Assert( pSoldier->bActive);
+	// Still in transit?
+	if (IsCharacterInTransit(&s)) return ME_TRANSIT;
+	// A POW?
+	if (s.bAssignment == ASSIGNMENT_POW) return ME_POW;
+	// Underground? (can't move strategically, must use tactical traversal)
+	if (s.bSectorZ != 0) return ME_UNDERGROUND;
 
-
-	// NOTE: Check for the most permanent conditions first, and the most easily remedied ones last!
-	// In case several cases apply, only the reason found first will be given, so make it a good one!
-
-
-	// still in transit?
-	if (IsCharacterInTransit(pSoldier)) return ME_TRANSIT;
-
-	// a POW?
-	if (pSoldier->bAssignment == ASSIGNMENT_POW) return ME_POW;
-
-	// underground? (can't move strategically, must use tactical traversal )
-	if (pSoldier->bSectorZ != 0) return ME_UNDERGROUND;
-
-	// vehicle checks
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	// Vehicle checks
+	if (s.uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		VEHICLETYPE const& v = GetVehicle(pSoldier->bVehicleID);
-		// empty (needs a driver!)?
+		VEHICLETYPE const& v = GetVehicle(s.bVehicleID);
+		// Empty (needs a driver!)?
 		if (GetNumberInVehicle(v) == 0) return ME_VEHICLE_EMPTY;
-
-		// too damaged?
-		if (pSoldier->bLife < OKLIFE) return ME_VEHICLE_DAMAGED;
-
-		// out of fuel?
-		if (!VehicleHasFuel(pSoldier)) return ME_VEHICLE_NO_GAS;
+		// Too damaged?
+		if (s.bLife < OKLIFE) return ME_VEHICLE_DAMAGED;
+		// Out of fuel?
+		if (!VehicleHasFuel(&s)) return ME_VEHICLE_NO_GAS;
 	}
-	else	// non-vehicle
+	else // Non-vehicle
 	{
-		// dead?
-		if ( pSoldier->bLife <= 0 )
+		// Dead?
+		if (s.bLife <= 0)
 		{
-			swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 35 ], pSoldier->name );
-			return ME_CUSTOM; // customized error message!
+			swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[35], s.name);
+			return ME_CUSTOM;
 		}
 
-		// too injured?
-		if ( pSoldier->bLife < OKLIFE )
+		// Too injured?
+		if (s.bLife < OKLIFE)
 		{
-			swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 33 ], pSoldier->name );
-			return ME_CUSTOM; // customized error message!
+			swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[33], s.name);
+			return ME_CUSTOM;
 		}
 	}
 
-
-	// if merc is in a particular sector, not somewhere in between
-	if (!pSoldier->fBetweenSectors)
+	// If merc is in a particular sector, not somewhere in between, and he's NOT flying above it all in a working helicopter
+	if (!s.fBetweenSectors)
+	if (!SoldierAboardAirborneHeli(&s))
 	{
-		// and he's NOT flying above it all in a working helicopter
-		if( !SoldierAboardAirborneHeli( pSoldier ) )
+		// And that sector is loaded
+		if (s.sSectorX == gWorldSectorX &&
+				s.sSectorY == gWorldSectorY &&
+				s.bSectorZ == gbWorldSectorZ)
 		{
-			// and that sector is loaded...
-			if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) &&
-					( pSoldier->bSectorZ == gbWorldSectorZ ) )
-			{
-				// in combat?
-				if (gTacticalStatus.uiFlags & INCOMBAT) return ME_COMBAT;
+			// In combat?
+			if (gTacticalStatus.uiFlags & INCOMBAT) return ME_COMBAT;
+			// Hostile sector?
+			if (gTacticalStatus.fEnemyInSector) return ME_ENEMY;
+			// Air raid in loaded sector where character is?
+			if (InAirRaid()) return ME_AIR_RAID;
+		}
 
-				// hostile sector?
-				if (gTacticalStatus.fEnemyInSector) return ME_ENEMY;
-
-				// air raid in loaded sector where character is?
-				if (InAirRaid()) return ME_AIR_RAID;
-			}
-
-			// not necessarily loaded - if there are any hostiles there
-			if( NumHostilesInSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) > 0 )
-			{
-				return ME_ENEMY;
-			}
+		// not necessarily loaded - if there are any hostiles there
+		if (NumHostilesInSector(s.sSectorX, s.sSectorY, s.bSectorZ ) > 0)
+		{
+			return ME_ENEMY;
 		}
 	}
 
-
-	// if in L12 museum, and the museum alarm went off, and Eldin still around?
-	if ( ( pSoldier->sSectorX == 12 ) && ( pSoldier->sSectorY == MAP_ROW_L ) && ( pSoldier->bSectorZ == 0 ) &&
-			 ( !pSoldier->fBetweenSectors ) && gMercProfiles[ ELDIN ].bMercStatus != MERC_IS_DEAD )
+	// If in L12 museum, and the museum alarm went off, and Eldin still around
+	if (s.sSectorX == 12        &&
+			s.sSectorY == MAP_ROW_L &&
+			s.bSectorZ == 0         &&
+			!s.fBetweenSectors && GetProfile(ELDIN).bMercStatus != MERC_IS_DEAD)
 	{
-		UINT8	const room = GetRoom(pSoldier->sGridNo);
+		UINT8	const room = GetRoom(s.sGridNo);
 		if (22 <= room && room <= 41)
 		{
 			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
@@ -4152,74 +4137,55 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 		}
 	}
 
+	// On assignment, other than just in a VEHICLE?
+	if (s.bAssignment >= ON_DUTY && s.bAssignment != VEHICLE) return ME_BUSY;
 
-	// on assignment, other than just in a VEHICLE?
-	if( ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) )
+	/* If he's walking/driving, and so tired that he would just stop the group
+	 * anyway in the next sector, or already asleep and can't be awakened */
+	if (PlayerSoldierTooTiredToTravel(&s))
 	{
-		return ME_BUSY;
+		swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[43], s.name);
+		return ME_CUSTOM;
 	}
 
-	// if he's walking/driving, and so tired that he would just stop the group anyway in the next sector,
-	// or already asleep and can't be awakened
-	if ( PlayerSoldierTooTiredToTravel( pSoldier ) )
-	{
-		// too tired
-		swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 43 ], pSoldier->name );
-		return ME_CUSTOM; // customized error message!
-	}
-
-
-	// a robot?
-	if ( AM_A_ROBOT( pSoldier ) )
-	{
-		// going alone?
-		if ( ( ( pSoldier->bAssignment == VEHICLE ) && ( !IsRobotControllerInVehicle( pSoldier->iVehicleId ) ) ) ||
-				 ( ( pSoldier->bAssignment  < ON_DUTY ) && ( !IsRobotControllerInSquad( pSoldier->bAssignment ) ) ) )
+	if (AM_A_ROBOT(&s))
+	{ // Going alone?
+		if ((s.bAssignment == VEHICLE && !IsRobotControllerInVehicle(s.iVehicleId)) ||
+				(s.bAssignment  < ON_DUTY && !IsRobotControllerInSquad(s.bAssignment)))
 		{
 			return ME_ROBOT_ALONE;
 		}
 	}
-	// an Escorted NPC?
-	else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	else if (s.ubWhatKindOfMercAmI == MERC_TYPE__EPC) // an Escorted NPC?
 	{
 		// going alone?
-		if ( ( ( pSoldier->bAssignment == VEHICLE ) && ( GetNumberOfNonEPCsInVehicle( pSoldier->iVehicleId ) == 0 ) ) ||
-				 ( ( pSoldier->bAssignment  < ON_DUTY ) && ( NumberOfNonEPCsInSquad( pSoldier->bAssignment ) == 0 ) ) )
+		if ((s.bAssignment == VEHICLE && GetNumberOfNonEPCsInVehicle(s.iVehicleId) == 0) ||
+				(s.bAssignment  < ON_DUTY && NumberOfNonEPCsInSquad(s.bAssignment) == 0))
 		{
-			// are they male or female
-			MERCPROFILESTRUCT const&       p    = GetProfile(pSoldier->ubProfile);
+			MERCPROFILESTRUCT const&       p    = GetProfile(s.ubProfile);
 			wchar_t           const* const text = p.bSex == MALE ? pMapErrorString[6] : pMapErrorString[7];
-			swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), text, pSoldier->name);
-			return ME_CUSTOM; // customized error message!
+			swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), text, s.name);
+			return ME_CUSTOM;
 		}
 	}
 
-
-	// assume there's no problem
-	fProblemExists = FALSE;
-
-	// find out if this particular character can't move for some reason
-	switch( pSoldier->ubProfile )
+	// Find out if this particular character can't move for some reason
+	bool problem_exists = false;
+	switch (s.ubProfile)
 	{
-		case( MARIA ):
+		case MARIA:
 			// Maria can't move if she's in sector C5
-			sSector = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
-			if( sSector == SEC_C5 )
-			{
-				// can't move at this time
-				fProblemExists = TRUE;
-			}
+			if (SECTOR(s.sSectorX, s.sSectorY) == SEC_C5) problem_exists = true;
 			break;
 	}
 
-	if ( fProblemExists )
-	{
-		// inform user this specific merc cannot be moved out of the sector
-		swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 29 ], pSoldier->name );
-		return ME_CUSTOM; // customized error message!
+	if (problem_exists)
+	{ // Inform user this specific merc cannot be moved out of the sector
+		swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[29], s.name);
+		return ME_CUSTOM;
 	}
 
-	// passed all checks - this character may move strategically!
+	// Passed all checks - this character may move strategically!
 	return ME_OK;
 }
 
@@ -4227,7 +4193,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE& s)
 {
 	// First check the requested character himself
-	MoveError const ret = CanCharacterMoveInStrategic(&s);
+	MoveError const ret = CanCharacterMoveInStrategic(s);
 	if (ret != ME_OK) return ret; // Failed no point checking anyone else
 
 	// Now check anybody who would be traveling with him
@@ -4247,7 +4213,7 @@ MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE& s)
 		 * go with us (legal?) */
 		if (GetSoldierGroup(other) != g && !c->selected) continue;
 
-		MoveError const ret = CanCharacterMoveInStrategic(&other);
+		MoveError const ret = CanCharacterMoveInStrategic(other);
 		// Cannot move, fail, and don't bother checking anyone else, either
 		if (ret != ME_OK) return ret;
 	}
