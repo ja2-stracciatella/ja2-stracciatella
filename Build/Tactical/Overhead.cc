@@ -1049,7 +1049,7 @@ void ExecuteOverhead(void)
 										}
 										else if (pSoldier->ubPendingAction == MERC_ENTER_VEHICLE)
 										{
-											EVENT_SoldierEnterVehicle(pSoldier, pSoldier->sPendingActionData2);
+											EVENT_SoldierEnterVehicle(*pSoldier, pSoldier->sPendingActionData2);
 											pSoldier->ubPendingAction = NO_PENDING_ACTION;
 											continue;
 										}

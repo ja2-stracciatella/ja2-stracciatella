@@ -1003,7 +1003,7 @@ void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection );
 void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_SoldierBeginUseDetonator( SOLDIERTYPE *pSoldier );
 void EVENT_SoldierBeginDropBomb( SOLDIERTYPE *pSoldier );
-void EVENT_SoldierEnterVehicle(SOLDIERTYPE* pSoldier, INT16 sGridNo);
+void EVENT_SoldierEnterVehicle(SOLDIERTYPE&, GridNo);
 
 
 void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn );
