@@ -2893,7 +2893,7 @@ static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE& s, BOOLE
 	}
 	else
 	{
-		PutSoldierInVehicle(&s, v);
+		PutSoldierInVehicle(s, v);
 	}
 	return true;
 }

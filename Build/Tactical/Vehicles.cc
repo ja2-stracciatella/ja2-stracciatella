@@ -562,14 +562,14 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 }
 
 
-bool PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
+bool PutSoldierInVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 {
-	if (!AddSoldierToVehicle(*s, v)) return false;
+	if (!AddSoldierToVehicle(s, v)) return false;
 
-	if (s->sSectorX   == gWorldSectorX        &&
-			s->sSectorY   == gWorldSectorY        &&
-			s->bSectorZ   == 0                    &&
-			!IsHelicopter(v)                      &&
+	if (s.sSectorX == gWorldSectorX          &&
+			s.sSectorY == gWorldSectorY          &&
+			s.bSectorZ == 0                      &&
+			!IsHelicopter(v)                     &&
 			!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
 		SetCurrentInterfacePanel(TEAM_PANEL);

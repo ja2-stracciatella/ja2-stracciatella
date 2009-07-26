@@ -3187,7 +3187,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		if (IsEnoughSpaceInVehicle(v))
 		{
-			PutSoldierInVehicle(&s, v);
+			PutSoldierInVehicle(s, v);
 		}
 		else
 		{
@@ -7041,7 +7041,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 					if (IsThisVehicleAccessibleToSoldier(s, v))
 					{
 						// if the vehicle is FULL, then this will return FALSE!
-						fItWorked = PutSoldierInVehicle(&s, v);
+						fItWorked = PutSoldierInVehicle(s, v);
 						// failure produces its own error popup
 						fNotifiedOfFailure = TRUE;
 					}
