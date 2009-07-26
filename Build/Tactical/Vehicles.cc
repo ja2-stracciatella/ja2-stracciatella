@@ -1001,7 +1001,20 @@ static BOOLEAN CanSoldierDriveVehicle(const SOLDIERTYPE* const pSoldier, const I
 }
 
 
-static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* pThisSoldier, INT32 iVehicleId);
+static bool OnlyThisSoldierCanDriveVehicle(SOLDIERTYPE const& s, INT32 const vehicle_id)
+{
+	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
+	{
+		SOLDIERTYPE const& other = *i;
+		// Skip checking this soldier, we want to know about everyone else
+		if (&other == &s) continue;
+		// Don't count mercs who are asleep here
+		if (!CanSoldierDriveVehicle(&other, vehicle_id, FALSE)) continue;
+		// This guy can drive it, too
+		return false;
+	}
+	return true;
+}
 
 
 bool SoldierMustDriveVehicle(SOLDIERTYPE const& s, bool const trying_to_travel)
@@ -1017,32 +1030,9 @@ bool SoldierMustDriveVehicle(SOLDIERTYPE const& s, bool const trying_to_travel)
 	/* Can he drive it (don't care if he is currently asleep) and is he the only
 	 * one aboard who can do so? If there are multiple possible drivers, than the
 	 * assumption is that this guy isn't driving, so he can sleep. */
-	if (!CanSoldierDriveVehicle(&s, vehicle_id, true))   return false;
-	if (!OnlyThisSoldierCanDriveVehicle(&s, vehicle_id)) return false;
+	if (!CanSoldierDriveVehicle(&s, vehicle_id, true))  return false;
+	if (!OnlyThisSoldierCanDriveVehicle(s, vehicle_id)) return false;
 	return true;
-}
-
-
-static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* const pThisSoldier, const INT32 iVehicleId)
-{
-	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
-	{
-		// skip checking THIS soldier, we wanna know about everyone else
-		if ( pSoldier == pThisSoldier )
-		{
-			continue;
-		}
-
-		// don't count mercs who are asleep here
-		if (CanSoldierDriveVehicle(pSoldier, iVehicleId, FALSE))
-		{
-			// this guy can drive it, too
-			return FALSE;
-		}
-	}
-
-	// you're da man!
-	return( TRUE );
 }
 
 
