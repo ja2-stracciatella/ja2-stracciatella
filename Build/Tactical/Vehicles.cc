@@ -1004,11 +1004,12 @@ static BOOLEAN CanSoldierDriveVehicle(const SOLDIERTYPE* const pSoldier, const I
 static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* pThisSoldier, INT32 iVehicleId);
 
 
-BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 iVehicleId, const BOOLEAN fTryingToTravel)
+BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const BOOLEAN fTryingToTravel)
 {
 	Assert( pSoldier );
 
-	VEHICLETYPE const& v = GetVehicle(iVehicleId);
+	INT32       const  iVehicleId = pSoldier->iVehicleId;
+	VEHICLETYPE const& v          = GetVehicle(iVehicleId);
 
 	// if vehicle is not going anywhere, then nobody has to be driving it!
 	// need the path length check in case we're doing a test while actually in a sector even though we're moving!

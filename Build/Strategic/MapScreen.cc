@@ -8447,7 +8447,7 @@ static void WakeUpAnySleepingSelectedMercsOnFootOrDriving(void)
 		{
 			// and on foot or driving
 			if ( ( pSoldier->bAssignment < ON_DUTY ) ||
-					 ( ( pSoldier->bAssignment == VEHICLE ) && SoldierMustDriveVehicle( pSoldier, pSoldier->iVehicleId, FALSE ) ) )
+					(pSoldier->bAssignment == VEHICLE && SoldierMustDriveVehicle(pSoldier, FALSE)))
 			{
 				// we should be guaranteed that he CAN wake up to get this far, so report errors, but don't force it
 				fSuccess = SetMercAwake( pSoldier, TRUE, FALSE );
