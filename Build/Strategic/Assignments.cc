@@ -755,7 +755,7 @@ static BOOLEAN CanCharacterBeTrainedByOther(SOLDIERTYPE const* const pSoldier)
 
 
 // can character sleep right now?
-static BOOLEAN CanCharacterSleep(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhyNot)
+static BOOLEAN CanCharacterSleep(SOLDIERTYPE const* pSoldier, BOOLEAN fExplainWhyNot)
 {
 	CHAR16 sString[ 128 ];
 
@@ -5811,7 +5811,7 @@ static void PositionCursorForTacticalAssignmentBox(void)
 }
 
 
-static BOOLEAN CharacterIsTakingItEasy(SOLDIERTYPE* pSoldier);
+static bool CharacterIsTakingItEasy(SOLDIERTYPE const&);
 
 
 static void HandleRestFatigueAndSleepStatus()
@@ -5831,7 +5831,7 @@ static void HandleRestFatigueAndSleepStatus()
 			/* If character can sleep, he doesn't actually have to be put asleep to
 			 * get some rest, many other assignments and conditions allow for
 			 * automatic recovering from fatigue. */
-			if (CharacterIsTakingItEasy(&s))
+			if (CharacterIsTakingItEasy(s))
 			{ // Let them rest some
 				RestCharacter(&s);
 			}
@@ -7241,37 +7241,26 @@ void UnEscortEPC(SOLDIERTYPE* const s)
 }
 
 
-static BOOLEAN CharacterIsTakingItEasy(SOLDIERTYPE* pSoldier)
+static bool CharacterIsTakingItEasy(SOLDIERTYPE const& s)
 {
-	// actually asleep?
-	if (pSoldier->fMercAsleep) return TRUE;
+	if (s.fMercAsleep) return true;
 
-	// if able to sleep
-	if ( CanCharacterSleep( pSoldier, FALSE ) )
-	{
-		// on duty, but able to catch naps (either not traveling, or not the driver of the vehicle)
-		// The actual checks for this are in the "can he sleep" check above
-		if ( ( pSoldier -> bAssignment < ON_DUTY ) || ( pSoldier -> bAssignment == VEHICLE ) )
-		{
-			return( TRUE );
-		}
+	if (!CanCharacterSleep(&s, FALSE)) return false;
 
-		// and healing up?
-		if ( ( pSoldier -> bAssignment == PATIENT ) || ( pSoldier -> bAssignment == ASSIGNMENT_HOSPITAL ) )
-		{
-			return( TRUE );
-		}
+	/* On duty, but able to catch naps (either not traveling, or not the driver of
+	 * the vehicle). The actual checks for this are in the "can he sleep" check
+	 * above */
+	if (s.bAssignment < ON_DUTY || s.bAssignment == VEHICLE) return true;
 
-		// on a real assignment, but done with it?
-		if ( pSoldier -> fDoneAssignmentAndNothingToDoFlag )
-		{
-			return( TRUE );
-		}
-	}
+	// Healing up?
+	if (s.bAssignment == PATIENT)             return true;
+	if (s.bAssignment == ASSIGNMENT_HOSPITAL) return true;
 
+	// On a real assignment, but done with it?
+	if (s.fDoneAssignmentAndNothingToDoFlag) return true;
 
-	// on assignment, or walking/driving & unable to sleep
-	return( FALSE );
+	// On assignment
+	return false;
 }
 
 
