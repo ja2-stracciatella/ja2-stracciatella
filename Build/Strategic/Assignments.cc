@@ -2094,71 +2094,50 @@ static void RestCharacter(SOLDIERTYPE* pSoldier)
 }
 
 
-static void FatigueCharacter(SOLDIERTYPE* pSoldier)
+static void FatigueCharacter(SOLDIERTYPE& s)
 {
-	// fatigue character
-	INT32 iPercentEncumbrance;
-	INT32 iBreathLoss;
-	INT8 bMaxBreathLoss = 0, bDivisor = 1;
+	if (IsMechanical(s))                 return;
+	if (IsCharacterInTransit(&s))        return;
+	if (s.bAssignment == ASSIGNMENT_POW) return;
 
+	INT8 const divisor         = 24 - CalcSoldierNeedForSleep(s);
+	INT8       max_breath_loss = 50 / divisor;
+	if (max_breath_loss < 2) max_breath_loss = 2;
 
-	// vehicle or robot?
-	if (IsMechanical(*pSoldier)) return;
-
-	// check if in transit, do not wear out
-	if (IsCharacterInTransit(pSoldier)) return;
-
-	// POW?
-	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
-	{
-		return;
-	}
-
-
-	bDivisor = 24 - CalcSoldierNeedForSleep(*pSoldier);
-	bMaxBreathLoss = 50 / bDivisor;
-
-	if( bMaxBreathLoss < 2 )
-	{
-		bMaxBreathLoss = 2;
-	}
-
-	//KM: Added encumbrance calculation to soldiers moving on foot.  Anything above 100% will increase
-	//    rate of fatigue.  200% encumbrance will cause soldiers to tire twice as quickly.
-	if( pSoldier->fBetweenSectors && pSoldier->bAssignment != VEHICLE )
-	{ //Soldier is on foot and travelling.  Factor encumbrance into fatigue rate.
-		iPercentEncumbrance = CalculateCarriedWeight( pSoldier );
-		if( iPercentEncumbrance > 100 )
+	/* KM: Added encumbrance calculation to soldiers moving on foot. Anything
+	 * above 100% will increase rate of fatigue. 200% encumbrance will cause
+	 * soldiers to tire twice as quickly. */
+	if (s.fBetweenSectors && s.bAssignment != VEHICLE)
+	{ // Soldier is on foot and traveling. Factor encumbrance into fatigue rate.
+		INT32 const percent_encumbrance = CalculateCarriedWeight(&s);
+		if (percent_encumbrance > 100)
 		{
-			iBreathLoss = (bMaxBreathLoss * iPercentEncumbrance / 100);
-			bMaxBreathLoss = (INT8)MIN( 127, iBreathLoss );
+			INT32 const breath_loss = max_breath_loss * percent_encumbrance / 100;
+			max_breath_loss = MIN(breath_loss, 127);
 		}
 	}
 
-	// if breath max is below the "really tired" threshold
-	if( pSoldier -> bBreathMax < BREATHMAX_PRETTY_TIRED )
-	{
-		// real tired, fatigue rate is 50% higher
-		bMaxBreathLoss = ( bMaxBreathLoss * 3 / 2 );
+	INT8 breath_max = s.bBreathMax;
+
+	if (breath_max < BREATHMAX_PRETTY_TIRED)
+	{ // Real tired, fatigue rate is 50% higher
+		max_breath_loss = max_breath_loss * 3 / 2;
 	}
 
+	breath_max -= max_breath_loss;
 
-	pSoldier -> bBreathMax -= bMaxBreathLoss;
-
-	if( pSoldier -> bBreathMax > 100 )
+	if (breath_max > 100)
 	{
-		pSoldier -> bBreathMax = 100;
+		breath_max = 100;
 	}
-	else if( pSoldier -> bBreathMax < BREATHMAX_ABSOLUTE_MINIMUM )
+	else if (breath_max < BREATHMAX_ABSOLUTE_MINIMUM)
 	{
-		pSoldier -> bBreathMax = BREATHMAX_ABSOLUTE_MINIMUM;
+		breath_max = BREATHMAX_ABSOLUTE_MINIMUM;
 	}
 
-	// current breath can't exceed maximum
-	if( pSoldier -> bBreath > pSoldier -> bBreathMax )
-	{
-		pSoldier -> bBreath = pSoldier -> bBreathMax;
-	}
+	s.bBreathMax = breath_max;
+	// Current breath can't exceed maximum
+	if (s.bBreath > breath_max) s.bBreath = breath_max;
 }
 
 
@@ -5861,7 +5840,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 		else
 		{
 			// wear them down
-			FatigueCharacter(pSoldier);
+			FatigueCharacter(*pSoldier);
 		}
 
 		// CHECK FOR MERCS GOING TO SLEEP
