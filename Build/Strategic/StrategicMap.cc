@@ -2781,34 +2781,34 @@ INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 }
 
 
-BOOLEAN CanGoToTacticalInSector( INT16 sX, INT16 sY, UINT8 ubZ )
+bool CanGoToTacticalInSector(INT16 const x, INT16 const y, UINT8 const z)
 {
-	// if not a valid sector
-	if( ( sX < 1 ) || ( sX > 16 ) || ( sY < 1 ) || ( sY > 16 ) || ( ubZ > 3 ) )
+	// If not a valid sector
+	if (x < 1 || 16 < x) return false;
+	if (y < 1 || 16 < x) return false;
+	if (          3 < z) return false;
+
+  /* Look for all living, fighting mercs on player's team. Robot and EPCs
+   * qualify! */
+	CFOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{
-		return( FALSE );
+		SOLDIERTYPE const& s = *i;
+		/* ARM: Now allows loading of sector with all mercs below OKLIFE as long as
+		 * they're alive */
+		if (s.bLife == 0)                      continue;
+		if (s.uiStatusFlags & SOLDIER_VEHICLE) continue;
+		if (s.bAssignment == IN_TRANSIT)       continue;
+		if (s.bAssignment == ASSIGNMENT_POW)   continue;
+		if (s.bAssignment == ASSIGNMENT_DEAD)  continue;
+		if (SoldierAboardAirborneHeli(&s))     continue;
+		if (s.fBetweenSectors)                 continue;
+		if (s.sSectorX != x)                   continue;
+		if (s.sSectorY != y)                   continue;
+		if (s.bSectorZ != z)                   continue;
+		return true;
 	}
 
-  // look for all living, fighting mercs on player's team.  Robot and EPCs qualify!
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
-	{
-		// ARM: now allows loading of sector with all mercs below OKLIFE as long as they're alive
-		if (s->bLife != 0 &&
-				!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
-				s->bAssignment != IN_TRANSIT &&
-				s->bAssignment != ASSIGNMENT_POW &&
-				s->bAssignment != ASSIGNMENT_DEAD &&
-				!SoldierAboardAirborneHeli(s) &&
-				!s->fBetweenSectors &&
-				s->sSectorX == sX &&
-				s->sSectorY == sY &&
-				s->bSectorZ == ubZ)
-		{
-			return TRUE;
-		}
-	}
-
-	return( FALSE );
+	return false;
 }
 
 

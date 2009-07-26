@@ -94,8 +94,7 @@ void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_m
 void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );
 
 
-
-BOOLEAN CanGoToTacticalInSector( INT16 sX, INT16 sY, UINT8 ubZ );
+bool CanGoToTacticalInSector(INT16 x, INT16 y, UINT8 z);
 
 void UpdateAirspaceControl( void );
 
