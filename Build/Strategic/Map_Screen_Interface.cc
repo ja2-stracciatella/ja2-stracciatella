@@ -3914,7 +3914,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 	 * first will be given, so make it a good one. */
 
 	// Still in transit?
-	if (IsCharacterInTransit(&s)) return ME_TRANSIT;
+	if (IsCharacterInTransit(s)) return ME_TRANSIT;
 	// A POW?
 	if (s.bAssignment == ASSIGNMENT_POW) return ME_POW;
 	// Underground? (can't move strategically, must use tactical traversal)

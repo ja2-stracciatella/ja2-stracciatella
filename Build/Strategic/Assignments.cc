@@ -323,7 +323,7 @@ static bool AreAssignmentConditionsMet(SOLDIERTYPE const& s, AssignmentCondition
 		(c & AC_MECHANICAL  || !IsMechanical(s))                                       &&
 		(c & AC_MOVING      || !s.fBetweenSectors)                                     &&
 		(c & AC_UNDERGROUND || s.bSectorZ == 0)                                        &&
-		!IsCharacterInTransit(&s)                                                      &&
+		!IsCharacterInTransit(s)                                                       &&
 		s.bAssignment != ASSIGNMENT_POW;
 }
 
@@ -925,7 +925,7 @@ static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const& s, INT8 const squad_
 	{
 		return CHARACTER_CANT_JOIN_SQUAD;
 	}
-	else if (IsCharacterInTransit(&s))
+	else if (IsCharacterInTransit(s))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD;
 	}
@@ -957,9 +957,9 @@ static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const& s, INT8 const squad_
 }
 
 
-BOOLEAN IsCharacterInTransit(const SOLDIERTYPE* const s)
+bool IsCharacterInTransit(SOLDIERTYPE const& s)
 {
-	return s->bAssignment == IN_TRANSIT;
+	return s.bAssignment == IN_TRANSIT;
 }
 
 
@@ -2097,7 +2097,7 @@ static void RestCharacter(SOLDIERTYPE* pSoldier)
 static void FatigueCharacter(SOLDIERTYPE& s)
 {
 	if (IsMechanical(s))                 return;
-	if (IsCharacterInTransit(&s))        return;
+	if (IsCharacterInTransit(s))         return;
 	if (s.bAssignment == ASSIGNMENT_POW) return;
 
 	INT8 const divisor         = 24 - CalcSoldierNeedForSleep(s);

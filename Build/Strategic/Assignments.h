@@ -96,7 +96,7 @@ BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* s);
 BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE* s);
 
 // is the character in transit?
-BOOLEAN IsCharacterInTransit(const SOLDIERTYPE* s);
+bool IsCharacterInTransit(SOLDIERTYPE const&);
 
 // handler for assignments -- called once per hour via event
 void UpdateAssignments(void);
