@@ -1004,32 +1004,22 @@ static BOOLEAN CanSoldierDriveVehicle(const SOLDIERTYPE* const pSoldier, const I
 static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* pThisSoldier, INT32 iVehicleId);
 
 
-BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const BOOLEAN fTryingToTravel)
+bool SoldierMustDriveVehicle(SOLDIERTYPE const& s, bool const trying_to_travel)
 {
-	Assert( pSoldier );
+	INT32       const  vehicle_id = s.iVehicleId;
+	VEHICLETYPE const& v          = GetVehicle(vehicle_id);
 
-	INT32       const  iVehicleId = pSoldier->iVehicleId;
-	VEHICLETYPE const& v          = GetVehicle(iVehicleId);
+	/* If vehicle is not going anywhere, then nobody has to be driving it. Need
+	 * the path length check in case we're doing a test while actually in a sector
+	 * even though we're moving. */
+	if (!trying_to_travel && !v.fBetweenSectors && GetLengthOfPath(v.pMercPath) == 0) return false;
 
-	// if vehicle is not going anywhere, then nobody has to be driving it!
-	// need the path length check in case we're doing a test while actually in a sector even though we're moving!
-	if (!fTryingToTravel && !v.fBetweenSectors && GetLengthOfPath(v.pMercPath) == 0)
-	{
-		return( FALSE );
-	}
-
-	// if he CAN drive it (don't care if he is currently asleep)
-	if ( CanSoldierDriveVehicle( pSoldier, iVehicleId, TRUE ) )
-	{
-		// and he's the ONLY one aboard who can do so
-		if ( OnlyThisSoldierCanDriveVehicle( pSoldier, iVehicleId ) )
-		{
-			return( TRUE );
-		}
-		// (if there are multiple possible drivers, than the assumption is that this guy ISN'T driving, so he CAN sleep)
-	}
-
-	return( FALSE );
+	/* Can he drive it (don't care if he is currently asleep) and is he the only
+	 * one aboard who can do so? If there are multiple possible drivers, than the
+	 * assumption is that this guy isn't driving, so he can sleep. */
+	if (!CanSoldierDriveVehicle(&s, vehicle_id, true))   return false;
+	if (!OnlyThisSoldierCanDriveVehicle(&s, vehicle_id)) return false;
+	return true;
 }
 
 

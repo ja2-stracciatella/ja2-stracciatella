@@ -8443,7 +8443,7 @@ static void WakeUpAnySleepingSelectedMercsOnFootOrDriving()
 		if (!s.fMercAsleep) continue;
 
 		// On foot or driving?
-		if (s.bAssignment >= ON_DUTY && (s.bAssignment != VEHICLE || !SoldierMustDriveVehicle(&s, FALSE))) continue;
+		if (s.bAssignment >= ON_DUTY && (s.bAssignment != VEHICLE || !SoldierMustDriveVehicle(s, false))) continue;
 
 		/* We should be guaranteed that he CAN wake up to get this far, so report
 		 * errors, but don't force it */

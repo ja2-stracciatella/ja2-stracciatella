@@ -773,7 +773,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 		else // in a vehicle
 		{
 			// If this guy has to drive (because nobody else can)
-			if (SoldierMustDriveVehicle(&s, FALSE))
+			if (SoldierMustDriveVehicle(s, false))
 			{ // Can't sleep while driving a vehicle
 				why = zMarksMapScreenText[7];
 				goto cannot_sleep;
@@ -6614,7 +6614,7 @@ bool PlayerSoldierTooTiredToTravel(SOLDIERTYPE& s)
 	// If this guy ever needs sleep at all
 	if (!CanChangeSleepStatusForSoldier(&s)) return false;
 
-	if (s.bAssignment == VEHICLE && !SoldierMustDriveVehicle(&s, TRUE)) return false;
+	if (s.bAssignment == VEHICLE && !SoldierMustDriveVehicle(s, true)) return false;
 
 	if (s.fMercAsleep)
 	{ // Asleep, and can't be awakened?
