@@ -6590,7 +6590,7 @@ BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const& g)
 		if (!i->pSoldier) continue;
 		SOLDIERTYPE& s = *i->pSoldier;
 
-		if (!PlayerSoldierTooTiredToTravel(&s)) continue;
+		if (!PlayerSoldierTooTiredToTravel(s)) continue;
 
 		/* NOTE: we only complain about it if it's gonna force the group to stop
 		 * moving! */
@@ -6609,31 +6609,23 @@ BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const& g)
 }
 
 
-BOOLEAN PlayerSoldierTooTiredToTravel(SOLDIERTYPE* pSoldier)
+bool PlayerSoldierTooTiredToTravel(SOLDIERTYPE& s)
 {
-	Assert( pSoldier );
+	// If this guy ever needs sleep at all
+	if (!CanChangeSleepStatusForSoldier(&s)) return false;
 
-	// if this guy ever needs sleep at all
-	if ( CanChangeSleepStatusForSoldier( pSoldier ) )
-	{
-		// if walking, or only remaining possible driver for a vehicle group
-		if ( ( pSoldier->bAssignment != VEHICLE ) || SoldierMustDriveVehicle( pSoldier, pSoldier->iVehicleId, TRUE ) )
-		{
-			// if awake, but so tired they can't move/drive anymore
-			if ( ( !pSoldier->fMercAsleep ) && ( pSoldier->bBreathMax < BREATHMAX_GOTTA_STOP_MOVING ) )
-			{
-				return( TRUE );
-			}
+	if (s.bAssignment == VEHICLE && !SoldierMustDriveVehicle(&s, s.iVehicleId, TRUE)) return false;
 
-			// asleep, and can't be awakened?
-			if ( ( pSoldier->fMercAsleep ) && !CanCharacterBeAwakened( pSoldier, FALSE ) )
-			{
-				return( TRUE );
-			}
-		}
+	if (s.fMercAsleep)
+	{ // Asleep, and can't be awakened?
+		if (!CanCharacterBeAwakened(&s, FALSE)) return true;
+	}
+	else
+	{ // If awake, but so tired they can't move/drive anymore
+		if (s.bBreathMax < BREATHMAX_GOTTA_STOP_MOVING) return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 

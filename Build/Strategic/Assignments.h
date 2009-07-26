@@ -208,9 +208,9 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier );
 
 SOLDIERTYPE *AnyDoctorWhoCanHealThisPatient( SOLDIERTYPE *pPatient, BOOLEAN fThisHour );
 
-void    DetermineWhichAssignmentMenusCanBeShown(void);
-void    ResumeOldAssignment(SOLDIERTYPE* pSoldier);
-BOOLEAN PlayerSoldierTooTiredToTravel(SOLDIERTYPE* pSoldier);
+void DetermineWhichAssignmentMenusCanBeShown(void);
+void ResumeOldAssignment(SOLDIERTYPE* pSoldier);
+bool PlayerSoldierTooTiredToTravel(SOLDIERTYPE&);
 
 void CreateContractBox(const SOLDIERTYPE* s);
 

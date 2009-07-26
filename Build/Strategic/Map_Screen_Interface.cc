@@ -3993,7 +3993,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 
 	/* If he's walking/driving, and so tired that he would just stop the group
 	 * anyway in the next sector, or already asleep and can't be awakened */
-	if (PlayerSoldierTooTiredToTravel(&s))
+	if (PlayerSoldierTooTiredToTravel(s))
 	{
 		swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[43], s.name);
 		return ME_CUSTOM;
