@@ -2859,7 +2859,7 @@ static void CreatePlayerControlledMonster(void)
 }
 
 
-static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* const s, UINT16 const usMapPos, BOOLEAN const fMovementMode)
+static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE& s, UINT16 const usMapPos, BOOLEAN const fMovementMode)
 {
 	SOLDIERTYPE const* const tgt = gUIFullTarget;
 	if (!tgt)                          return false;
@@ -2871,29 +2871,29 @@ static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* const s,
 	if (GetNumberInVehicle(v) != 0 && fMovementMode) return false;
 
 	// Find a gridno closest to sweetspot
-	GridNo const action_pos = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 0, tgt);
+	GridNo const action_pos = FindGridNoFromSweetSpotWithStructDataFromSoldier(&s, s.usUIMovementMode, 5, 0, tgt);
 	if (action_pos == NOWHERE) return false;
 
 	// Calculate AP costs
-	INT16 const ap_cost = PlotPath(s, action_pos, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
-	if (!EnoughPoints(s, ap_cost, 0, TRUE)) return false;
+	INT16 const ap_cost = PlotPath(&s, action_pos, NO_COPYROUTE, FALSE, s.usUIMovementMode, s.bActionPoints);
+	if (!EnoughPoints(&s, ap_cost, 0, TRUE)) return false;
 
-	DoMercBattleSound(s, BATTLE_SOUND_OK1);
+	DoMercBattleSound(&s, BATTLE_SOUND_OK1);
 
 	// Check if we are at this gridno now
-	if (s->sGridNo != action_pos)
+	if (s.sGridNo != action_pos)
 	{
 		// Send pending action
-		s->ubPendingAction          = MERC_ENTER_VEHICLE;
-		s->sPendingActionData2      = tgt->sGridNo;
-		s->ubPendingActionAnimCount = 0;
+		s.ubPendingAction          = MERC_ENTER_VEHICLE;
+		s.sPendingActionData2      = tgt->sGridNo;
+		s.ubPendingActionAnimCount = 0;
 		// Walk up to dest first
-		EVENT_InternalGetNewSoldierPath(s, action_pos, s->usUIMovementMode, 3, s->fNoAPToFinishMove);
-		SetUIBusy(s);
+		EVENT_InternalGetNewSoldierPath(&s, action_pos, s.usUIMovementMode, 3, s.fNoAPToFinishMove);
+		SetUIBusy(&s);
 	}
 	else
 	{
-		PutSoldierInVehicle(s, v);
+		PutSoldierInVehicle(&s, v);
 	}
 	return true;
 }
@@ -2907,7 +2907,7 @@ void HandleHandCursorClick(UINT16 const map_pos, UIEventKind* const new_event)
 	// If we are out of breath, no cursor
 	if (s->bBreath < OKBREATH && s->bCollapsed) return;
 
-	if (CheckForAndHandleHandleVehicleInteractiveClick(s, map_pos, FALSE)) return;
+	if (CheckForAndHandleHandleVehicleInteractiveClick(*s, map_pos, FALSE)) return;
 
 	// Check if we are on a merc... if so.. steal!
 	SOLDIERTYPE const* const tgt = gUIFullTarget;
@@ -3021,7 +3021,7 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 	}
 
 	// See if we are over a vehicle, and walk up to it and enter
-	if (CheckForAndHandleHandleVehicleInteractiveClick(sel, usMapPos, TRUE))
+	if (CheckForAndHandleHandleVehicleInteractiveClick(*sel, usMapPos, TRUE))
 	{
 		return -1;
 	}
