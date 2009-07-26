@@ -951,53 +951,17 @@ void AddVehicleFuelToSave( )
 }
 
 
-static BOOLEAN CanSoldierDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 iVehicleId, const BOOLEAN fIgnoreAsleep)
+static bool CanSoldierDriveVehicle(SOLDIERTYPE const& s, INT32 const vehicle_id, bool const ignore_asleep)
 {
-	Assert( pSoldier );
-
-	if ( pSoldier->bAssignment != VEHICLE )
-	{
-		// not in a vehicle!
-		return( FALSE );
-	}
-
-	if ( pSoldier->iVehicleId != iVehicleId )
-	{
-		// not in THIS vehicle!
-		return( FALSE );
-	}
-
-	if ( iVehicleId == iHelicopterVehicleId )
-	{
-		// only Skyrider can pilot the helicopter
-		return( FALSE );
-	}
-
-	if (!fIgnoreAsleep && pSoldier->fMercAsleep)
-	{
-		// asleep!
-		return( FALSE );
-	}
-
-	// Vehicles, robot, and EPCs can't drive!
-	if (IsMechanical(*pSoldier)) return FALSE;
-	if (AM_AN_EPC(pSoldier))     return FALSE;
-
-	// too wounded to drive
-	if( pSoldier->bLife < OKLIFE )
-	{
-		return (FALSE);
-	}
-
-	// too tired to drive
-	if( pSoldier->bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM )
-	{
-		return (FALSE);
-	}
-
-
-	// yup, he could drive this vehicle
-	return( TRUE );
+	return
+		s.bAssignment == VEHICLE           && // In a vehicle?
+		vehicle_id == s.iVehicleId         && // In this vehicle?
+		vehicle_id != iHelicopterVehicleId && // Only Skyrider can pilot the helicopter
+		(ignore_asleep || !s.fMercAsleep)  &&
+		!IsMechanical(s)                   && // Vehicles, robot, and EPCs can't drive
+		!AM_AN_EPC(&s)                     &&
+		s.bLife >= OKLIFE                  && // Too wounded to drive?
+		s.bBreathMax > BREATHMAX_ABSOLUTE_MINIMUM; // Too tired to drive?
 }
 
 
@@ -1009,7 +973,7 @@ static bool OnlyThisSoldierCanDriveVehicle(SOLDIERTYPE const& s, INT32 const veh
 		// Skip checking this soldier, we want to know about everyone else
 		if (&other == &s) continue;
 		// Don't count mercs who are asleep here
-		if (!CanSoldierDriveVehicle(&other, vehicle_id, FALSE)) continue;
+		if (!CanSoldierDriveVehicle(other, vehicle_id, false)) continue;
 		// This guy can drive it, too
 		return false;
 	}
@@ -1030,7 +994,7 @@ bool SoldierMustDriveVehicle(SOLDIERTYPE const& s, bool const trying_to_travel)
 	/* Can he drive it (don't care if he is currently asleep) and is he the only
 	 * one aboard who can do so? If there are multiple possible drivers, than the
 	 * assumption is that this guy isn't driving, so he can sleep. */
-	if (!CanSoldierDriveVehicle(&s, vehicle_id, true))  return false;
+	if (!CanSoldierDriveVehicle(s, vehicle_id, true))   return false;
 	if (!OnlyThisSoldierCanDriveVehicle(s, vehicle_id)) return false;
 	return true;
 }
