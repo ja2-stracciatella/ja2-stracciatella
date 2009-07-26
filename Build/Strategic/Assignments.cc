@@ -5852,7 +5852,7 @@ static void HandleRestFatigueAndSleepStatus()
 
 				/* He goes to sleep, provided it's at all possible (it still won't happen
 				 * in a hostile sector, etc.) */
-				if (!SetMercAsleep(&s, FALSE)) continue;
+				if (!SetMercAsleep(s, false)) continue;
 
 				if (s.bAssignment < ON_DUTY || s.bAssignment == VEHICLE)
 				{ // On a squad/vehicle, complain, then drop
@@ -5869,7 +5869,7 @@ static void HandleRestFatigueAndSleepStatus()
 				if (s.bAssignment >= ON_DUTY && s.bAssignment != VEHICLE)
 				{ // Not on squad/in vehicle
 					// Try to go to sleep on your own
-					if (!SetMercAsleep(&s, FALSE)) continue;
+					if (!SetMercAsleep(s, false)) continue;
 
 					if (!gGameSettings.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]) continue;
 
@@ -6496,23 +6496,12 @@ static void ReportTrainersTraineesWithoutPartners(void)
 }
 
 
-BOOLEAN SetMercAsleep( SOLDIERTYPE *pSoldier, BOOLEAN fGiveWarning )
+bool SetMercAsleep(SOLDIERTYPE& s, bool const give_warning)
 {
-	if( CanCharacterSleep( pSoldier, fGiveWarning ) )
-	{
-		// put him to sleep
-		PutMercInAsleepState( pSoldier );
-
-		// successful
-		return( TRUE );
-	}
-	else
-	{
-		// can't sleep for some other reason
-		return( FALSE );
-	}
+	if (!CanCharacterSleep(&s, give_warning)) return false;
+	PutMercInAsleepState(&s);
+	return true;
 }
-
 
 
 BOOLEAN PutMercInAsleepState( SOLDIERTYPE *pSoldier )
@@ -6741,19 +6730,19 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep(BOOLEAN const wake_up, BOOLEAN const d
 	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
 		// if the current character in the list is valid...then grab soldier pointer for the character
-		SOLDIERTYPE* const s = c->merc;
-		if (s == sel) continue;
+		SOLDIERTYPE& s = *c->merc;
+		if (&s == sel) continue;
 
 		// don't try to put vehicles, robots, to sleep if they're also selected
-		if (!CanChangeSleepStatusForSoldier(s)) continue;
+		if (!CanChangeSleepStatusForSoldier(&s)) continue;
 
 		if (wake_up)
 		{
-			if (!SetMercAwake(s, FALSE, FALSE)) success = FALSE;
+			if (!SetMercAwake(&s, FALSE, FALSE)) success = FALSE;
 		}
 		else
 		{
-			if (!SetMercAsleep(s, FALSE)) success = FALSE;
+			if (!SetMercAsleep(s, false)) success = FALSE;
 		}
 	}
 

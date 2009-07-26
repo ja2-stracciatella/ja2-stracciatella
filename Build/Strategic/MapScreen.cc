@@ -5348,7 +5348,7 @@ static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 				else	// awake
 				{
 					// try to put him to sleep
-					if( SetMercAsleep( pSoldier, TRUE ) )
+					if (SetMercAsleep(*pSoldier, true))
 					{
 						// propagate
 						HandleSelectedMercsBeingPutAsleep( FALSE, TRUE );

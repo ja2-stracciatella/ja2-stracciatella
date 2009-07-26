@@ -175,7 +175,7 @@ void SetSoldierAssignmentRepair(SOLDIERTYPE*, BOOLEAN sam, BOOLEAN robot, INT8 v
 // set merc asleep and awake under the new sleep system implemented June 29, 1998
 // if give warning is false, the function can be used as an internal function
 BOOLEAN SetMercAwake( SOLDIERTYPE *pSoldier, BOOLEAN fGiveWarning, BOOLEAN fForceHim );
-BOOLEAN SetMercAsleep( SOLDIERTYPE *pSoldier, BOOLEAN fGiveWarning );
+bool SetMercAsleep(SOLDIERTYPE&, bool give_warning);
 BOOLEAN PutMercInAsleepState( SOLDIERTYPE *pSoldier );
 BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier );
 
