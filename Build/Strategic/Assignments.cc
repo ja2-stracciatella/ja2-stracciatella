@@ -3400,10 +3400,10 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 }
 
 
-static void PreChangeAssignment(SOLDIERTYPE* const s)
+static void PreChangeAssignment(SOLDIERTYPE& s)
 {
-	if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
-	RemoveCharacterFromSquads(s);
+	if (s.bAssignment == VEHICLE) TakeSoldierOutOfVehicle(&s);
+	RemoveCharacterFromSquads(&s);
 }
 
 
@@ -3435,7 +3435,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if( ( iRepairWhat >= REPAIR_MENU_VEHICLE1 ) && ( iRepairWhat <= REPAIR_MENU_VEHICLE3 ) )
 		{
 			// repair VEHICLE
-			PreChangeAssignment(pSoldier);
+			PreChangeAssignment(*pSoldier);
 
 			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot ) || ( pSoldier -> fFixingSAMSite ) )
 			{
@@ -3488,7 +3488,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		else if( iRepairWhat == REPAIR_MENU_ROBOT )
 		{
 			// repair ROBOT
-			PreChangeAssignment(pSoldier);
+			PreChangeAssignment(*pSoldier);
 			MakeSureToolKitIsInHand( pSoldier );
 
 			if (pSoldier->bAssignment != REPAIR || !pSoldier->fFixingRobot)
@@ -4702,7 +4702,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
 			{
 				bool const exiting_helicopter = InHelicopter(s);
-				PreChangeAssignment(&s);
+				PreChangeAssignment(s);
 				AddCharacterToSquad(&s, value);
 				if (exiting_helicopter) SetSoldierExitHelicopterInsertionData(&s); // XXX TODO001D
 				MakeSoldiersTacticalAnimationReflectAssignment(&s);
@@ -4840,7 +4840,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 					// PASSED ALL THE TESTS - ALLOW SOLDIER TO TRAIN MILITIA HERE
-					PreChangeAssignment(pSoldier);
+					PreChangeAssignment(*pSoldier);
 
 					if( ( pSoldier->bAssignment != TRAIN_TOWN ) )
 					{
@@ -4952,7 +4952,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		else if( CanCharacterTrainStat( pSoldier, ( INT8 )( iValue ), ( BOOLEAN )( ( gbTrainingMode == TRAIN_SELF ) || ( gbTrainingMode == TRAIN_BY_OTHER ) ), ( BOOLEAN )( gbTrainingMode == TRAIN_TEAMMATE ) ) )
 		{
-			PreChangeAssignment(pSoldier);
+			PreChangeAssignment(*pSoldier);
 
 			if( ( pSoldier->bAssignment != gbTrainingMode ) )
 			{
@@ -5034,7 +5034,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						// can character doctor?
 					if( CanCharacterPatient( pSoldier ) )
 					{
-						PreChangeAssignment(pSoldier);
+						PreChangeAssignment(*pSoldier);
 
 						if( ( pSoldier->bAssignment != PATIENT ) )
 						{
@@ -5117,7 +5117,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						fShowAssignmentMenu = FALSE;
 						giAssignHighLine = -1;
 
-						PreChangeAssignment(pSoldier);
+						PreChangeAssignment(*pSoldier);
 
 						if( ( pSoldier->bAssignment != DOCTOR ) )
 						{
@@ -5154,7 +5154,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					// can character patient?
 					if( CanCharacterPatient( pSoldier ) )
 					{
-						PreChangeAssignment(pSoldier);
+						PreChangeAssignment(*pSoldier);
 
 						if( ( pSoldier->bAssignment != PATIENT ) )
 						{
@@ -6071,7 +6071,7 @@ static UINT8 RepairRobot(SOLDIERTYPE* pRobot, UINT8 ubRepairPts, BOOLEAN* pfNoth
 
 static void PreSetAssignment(SOLDIERTYPE* const s, const INT8 assignment)
 {
-	PreChangeAssignment(s);
+	PreChangeAssignment(*s);
 	fTeamPanelDirty       = TRUE;
 	fMapScreenBottomDirty = TRUE;
 	gfRenderPBInterface   = TRUE;
@@ -7014,7 +7014,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				{
 					case CHARACTER_CAN_JOIN_SQUAD:
 					{
-						PreChangeAssignment(&s);
+						PreChangeAssignment(s);
 
 						// if the squad is, between sectors, remove from old mvt group
 						const SOLDIERTYPE* const t = Squad[bAssignment][0];
