@@ -6069,9 +6069,9 @@ static UINT8 RepairRobot(SOLDIERTYPE* pRobot, UINT8 ubRepairPts, BOOLEAN* pfNoth
 }
 
 
-static void PreSetAssignment(SOLDIERTYPE* const s, const INT8 assignment)
+static void PreSetAssignment(SOLDIERTYPE& s, INT8 const assignment)
 {
-	PreChangeAssignment(*s);
+	PreChangeAssignment(s);
 	fTeamPanelDirty       = TRUE;
 	fMapScreenBottomDirty = TRUE;
 	gfRenderPBInterface   = TRUE;
@@ -6088,7 +6088,7 @@ static void PostSetAssignment(SOLDIERTYPE* const s, const INT8 assignment)
 void SetSoldierAssignmentHospital(SOLDIERTYPE* const s)
 {
 	if (!CanCharacterPatient(s)) return;
-	PreSetAssignment(s, ASSIGNMENT_HOSPITAL);
+	PreSetAssignment(*s, ASSIGNMENT_HOSPITAL);
 	s->bBleeding = 0;
 	if (s->bAssignment != ASSIGNMENT_HOSPITAL) SetTimeOfAssignmentChangeForMerc(s);
 	RebuildCurrentSquad();
@@ -6099,7 +6099,7 @@ void SetSoldierAssignmentHospital(SOLDIERTYPE* const s)
 static void SetSoldierAssignmentPatient(SOLDIERTYPE* const s)
 {
 	if (!CanCharacterPatient(s)) return;
-	PreSetAssignment(s, PATIENT);
+	PreSetAssignment(*s, PATIENT);
 	if (s->bAssignment != PATIENT) SetTimeOfAssignmentChangeForMerc(s);
 	PostSetAssignment(s, PATIENT);
 }
@@ -6108,7 +6108,7 @@ static void SetSoldierAssignmentPatient(SOLDIERTYPE* const s)
 static void SetSoldierAssignmentDoctor(SOLDIERTYPE* const s)
 {
 	if (!CanCharacterDoctor(s)) return;
-	PreSetAssignment(s, DOCTOR);
+	PreSetAssignment(*s, DOCTOR);
 	if (s->bAssignment != DOCTOR) SetTimeOfAssignmentChangeForMerc(s);
 	MakeSureMedKitIsInHand(s);
 	PostSetAssignment(s, DOCTOR);
@@ -6118,7 +6118,7 @@ static void SetSoldierAssignmentDoctor(SOLDIERTYPE* const s)
 static void SetSoldierAssignmentTrainTown(SOLDIERTYPE* const s)
 {
 	if (!CanCharacterTrainMilitia(s)) return;
-	PreSetAssignment(s, TRAIN_TOWN);
+	PreSetAssignment(*s, TRAIN_TOWN);
 	if (s->bAssignment != TRAIN_TOWN) SetTimeOfAssignmentChangeForMerc(s);
 	if (pMilitiaTrainerSoldier == NULL &&
 			!SectorInfo[SECTOR(s->sSectorX, s->sSectorY)].fMilitiaTrainingPaid)
@@ -6133,7 +6133,7 @@ static void SetSoldierAssignmentTrainTown(SOLDIERTYPE* const s)
 static void SetSoldierAssignmentTrainSelf(SOLDIERTYPE* const s, INT8 const stat)
 {
 	if (!CanCharacterTrainStat(s, stat, TRUE, FALSE)) return;
-	PreSetAssignment(s, TRAIN_SELF);
+	PreSetAssignment(*s, TRAIN_SELF);
 	if (s->bAssignment != TRAIN_SELF) SetTimeOfAssignmentChangeForMerc(s);
 	// set stat to train
 	s->bTrainStat = stat;
@@ -6144,7 +6144,7 @@ static void SetSoldierAssignmentTrainSelf(SOLDIERTYPE* const s, INT8 const stat)
 static void SetSoldierAssignmentTrainTeammate(SOLDIERTYPE* const s, INT8 const stat)
 {
 	if (!CanCharacterTrainStat(s, stat, FALSE, TRUE)) return;
-	PreSetAssignment(s, TRAIN_TEAMMATE);
+	PreSetAssignment(*s, TRAIN_TEAMMATE);
 	if (s->bAssignment != TRAIN_TEAMMATE) SetTimeOfAssignmentChangeForMerc(s);
 	// set stat to train
 	s->bTrainStat = stat;
@@ -6155,7 +6155,7 @@ static void SetSoldierAssignmentTrainTeammate(SOLDIERTYPE* const s, INT8 const s
 static void SetSoldierAssignmentTrainByOther(SOLDIERTYPE* const s, INT8 const stat)
 {
 	if (!CanCharacterTrainStat(s, stat, TRUE, FALSE)) return;
-	PreSetAssignment(s, TRAIN_BY_OTHER);
+	PreSetAssignment(*s, TRAIN_BY_OTHER);
 	if (s->bAssignment != TRAIN_BY_OTHER) SetTimeOfAssignmentChangeForMerc(s);
 	// set stat to train
 	s->bTrainStat = stat;
@@ -6166,7 +6166,7 @@ static void SetSoldierAssignmentTrainByOther(SOLDIERTYPE* const s, INT8 const st
 void SetSoldierAssignmentRepair(SOLDIERTYPE* const s, BOOLEAN const sam, BOOLEAN const robot, INT8 const vehicle_id)
 {
 	if (!CanCharacterRepair(s)) return;
-	PreSetAssignment(s, REPAIR);
+	PreSetAssignment(*s, REPAIR);
 	if (s->bAssignment != REPAIR || s->fFixingSAMSite != sam || s->fFixingRobot != robot || s->bVehicleUnderRepairID != vehicle_id)
 	{
 		SetTimeOfAssignmentChangeForMerc(s);
