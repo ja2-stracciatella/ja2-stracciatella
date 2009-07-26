@@ -79,7 +79,7 @@ extern UINT8 gubPBSectorZ;
 extern BOOLEAN gfCantRetreatInPBI;
 //SAVE END
 
-void WakeUpAllMercsInSectorUnderAttack( void );
+void WakeUpAllMercsInSectorUnderAttack();
 
 void RetreatAllInvolvedPlayerGroups( void );
 

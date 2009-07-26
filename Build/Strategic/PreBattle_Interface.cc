@@ -1485,20 +1485,17 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 }
 
 
-void WakeUpAllMercsInSectorUnderAttack( void )
+void WakeUpAllMercsInSectorUnderAttack()
 {
-	// any mercs not on duty should be added to the first avail squad
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		if (pSoldier->bLife && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
-		{
-			// if involved, but asleep
-			if (PlayerMercInvolvedInThisCombat(pSoldier) && pSoldier->fMercAsleep)
-			{
-				// FORCE him wake him up
-				SetMercAwake( pSoldier, FALSE, TRUE );
-			}
-		}
+		SOLDIERTYPE& s = *i;
+		if (s.bLife == 0)                        continue;
+		if (s.uiStatusFlags & SOLDIER_VEHICLE)   continue;
+		if (!s.fMercAsleep)                      continue;
+		if (!PlayerMercInvolvedInThisCombat(&s)) continue;
+		// Involved, but asleep, force him wake him up
+		SetMercAwake(&s, FALSE, TRUE);
 	}
 }
 
