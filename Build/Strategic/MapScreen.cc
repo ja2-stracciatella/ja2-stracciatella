@@ -8166,7 +8166,7 @@ static UINT8 PlayerMercsInHelicopterSector()
 
 
 static void RandomAwakeSelectedMercConfirmsStrategicMove(void);
-static void WakeUpAnySleepingSelectedMercsOnFootOrDriving(void);
+static void WakeUpAnySleepingSelectedMercsOnFootOrDriving();
 
 
 static void HandleNewDestConfirmation(INT16 sMapX, INT16 sMapY)
@@ -8434,26 +8434,22 @@ static void BullsEyeOrChopperSelectionPopupCallback(MessageBoxReturnValue const 
 }
 
 
-// wake up anybody who needs to be awake to travel
-static void WakeUpAnySleepingSelectedMercsOnFootOrDriving(void)
+// Wake up anybody who needs to be awake to travel
+static void WakeUpAnySleepingSelectedMercsOnFootOrDriving()
 {
-	BOOLEAN fSuccess = FALSE;
-
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(i)
 	{
-		SOLDIERTYPE* const pSoldier = c->merc;
-		// if asleep
-		if ( pSoldier->fMercAsleep )
-		{
-			// and on foot or driving
-			if ( ( pSoldier->bAssignment < ON_DUTY ) ||
-					(pSoldier->bAssignment == VEHICLE && SoldierMustDriveVehicle(pSoldier, FALSE)))
-			{
-				// we should be guaranteed that he CAN wake up to get this far, so report errors, but don't force it
-				fSuccess = SetMercAwake( pSoldier, TRUE, FALSE );
-				Assert( fSuccess );
-			}
-		}
+		SOLDIERTYPE& s = *i->merc;
+		if (!s.fMercAsleep) continue;
+
+		// On foot or driving?
+		if (s.bAssignment >= ON_DUTY && (s.bAssignment != VEHICLE || !SoldierMustDriveVehicle(&s, FALSE))) continue;
+
+		/* We should be guaranteed that he CAN wake up to get this far, so report
+		 * errors, but don't force it */
+		bool const success = SetMercAwake(&s, TRUE, FALSE);
+		(void)success;
+		Assert(success);
 	}
 }
 
