@@ -2859,7 +2859,7 @@ static void CreatePlayerControlledMonster(void)
 }
 
 
-static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE& s, UINT16 const usMapPos, BOOLEAN const fMovementMode)
+static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE& s, BOOLEAN const fMovementMode)
 {
 	SOLDIERTYPE const* const tgt = gUIFullTarget;
 	if (!tgt)                          return false;
@@ -2907,7 +2907,7 @@ void HandleHandCursorClick(UINT16 const map_pos, UIEventKind* const new_event)
 	// If we are out of breath, no cursor
 	if (s->bBreath < OKBREATH && s->bCollapsed) return;
 
-	if (CheckForAndHandleHandleVehicleInteractiveClick(*s, map_pos, FALSE)) return;
+	if (CheckForAndHandleHandleVehicleInteractiveClick(*s, FALSE)) return;
 
 	// Check if we are on a merc... if so.. steal!
 	SOLDIERTYPE const* const tgt = gUIFullTarget;
@@ -3021,7 +3021,7 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 	}
 
 	// See if we are over a vehicle, and walk up to it and enter
-	if (CheckForAndHandleHandleVehicleInteractiveClick(*sel, usMapPos, TRUE))
+	if (CheckForAndHandleHandleVehicleInteractiveClick(*sel, TRUE))
 	{
 		return -1;
 	}
