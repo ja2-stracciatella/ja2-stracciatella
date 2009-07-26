@@ -382,9 +382,9 @@ static bool IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const& s)
 		{
 			VEHICLETYPE const& v = *i;
 			// The helicopter, is NEVER repairable
-			if (IsHelicopter(v))                          continue;
-			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
-			if (!CanCharacterRepairVehicle(s, v))         continue;
+			if (IsHelicopter(v))                         continue;
+			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
+			if (!CanCharacterRepairVehicle(s, v))        continue;
 			// There is a repairable vehicle here
 			return true;
 		}
@@ -3114,7 +3114,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		FOR_ALL_VEHICLES(i)
 		{
 			VEHICLETYPE& v = *i;
-			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 			// add mouse region for each accessible vehicle
 			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
@@ -3165,7 +3165,7 @@ static void HandleShadingOfLinesForVehicleMenu()
 	{
 		VEHICLETYPE const& v = *i;
 		// inaccessible vehicles aren't listed at all!
-		if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 		PopUpShade const shade = IsEnoughSpaceInVehicle(v) ?
 			POPUP_SHADE_NONE : POPUP_SHADE_SECONDARY;
@@ -3183,7 +3183,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		VEHICLETYPE& v = *pRegion->GetUserPtr<VEHICLETYPE>();
 
 		// inaccessible vehicles shouldn't be listed in the menu!
-		Assert(IsThisVehicleAccessibleToSoldier(&s, v));
+		Assert(IsThisVehicleAccessibleToSoldier(s, v));
 
 		if (IsEnoughSpaceInVehicle(v))
 		{
@@ -3270,8 +3270,8 @@ static void DisplayRepairMenu(SOLDIERTYPE const& s)
 		{
 			VEHICLETYPE const& v = *i;
 			// Don't even list the helicopter, because it's never repairable
-			if (IsHelicopter(v))                          continue;
-			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+			if (IsHelicopter(v))                         continue;
+			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 			AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
 		}
 	}
@@ -3318,8 +3318,8 @@ static void HandleShadingOfLinesForRepairMenu()
 		{
 			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (IsHelicopter(v))                          continue;
-			if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+			if (IsHelicopter(v))                         continue;
+			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
 		}
 	}
@@ -3387,7 +3387,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 				if (IsHelicopter(v)) continue;
 
 				// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
-				if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+				if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 				// add mouse region for each line of text..and set user data
 				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(v));
@@ -5422,7 +5422,7 @@ static bool DisplayVehicleMenu(SOLDIERTYPE const& s)
 	CFOR_ALL_VEHICLES(i)
 	{
 		VEHICLETYPE const& v = *i;
-		if (!IsThisVehicleAccessibleToSoldier(&s, v)) continue;
+		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 		AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
 		vehicle_present = true;
 	}
@@ -6015,7 +6015,7 @@ static bool CanCharacterRepairVehicle(SOLDIERTYPE const& s, VEHICLETYPE const& v
 	if (!DoesVehicleNeedAnyRepairs(v)) return false;
 
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
-	if (!IsThisVehicleAccessibleToSoldier(&s, v)) return false;
+	if (!IsThisVehicleAccessibleToSoldier(s, v)) return false;
 
 #if 0 // Assignment distance limits removed.  Sep/11/98.  ARM
 	// If currently loaded sector, are we close enough?
@@ -7038,7 +7038,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				if (CanCharacterVehicle(s))
 				{
 					VEHICLETYPE& v = GetVehicle(bParam);
-					if (IsThisVehicleAccessibleToSoldier(&s, v))
+					if (IsThisVehicleAccessibleToSoldier(s, v))
 					{
 						// if the vehicle is FULL, then this will return FALSE!
 						fItWorked = PutSoldierInVehicle(&s, v);
