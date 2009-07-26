@@ -753,98 +753,71 @@ static BOOLEAN CanCharacterBeTrainedByOther(SOLDIERTYPE const* const pSoldier)
 }
 
 
-
-// can character sleep right now?
-static BOOLEAN CanCharacterSleep(SOLDIERTYPE const* pSoldier, BOOLEAN fExplainWhyNot)
+// Can character sleep right now?
+static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 {
-	CHAR16 sString[ 128 ];
+#ifdef JA2DEMO // This assignment is no go in the demo
+	return false;
+#else
 
+	if (!AreAssignmentConditionsMet(s, AC_IMPASSABLE | AC_COMBAT | AC_EPC | AC_IN_HELI_IN_HOSTILE_SECTOR | AC_MOVING | AC_UNDERGROUND)) return false;
 
-	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return(FALSE );
-	#endif
-
-	if (!AreAssignmentConditionsMet(*pSoldier, AC_IMPASSABLE | AC_COMBAT | AC_EPC | AC_IN_HELI_IN_HOSTILE_SECTOR | AC_MOVING | AC_UNDERGROUND)) return FALSE;
-
-	// traveling?
-	if ( pSoldier->fBetweenSectors )
+	wchar_t const* why;
+	if (s.fBetweenSectors) // Traveling?
 	{
-		// if walking
-		if ( pSoldier->bAssignment != VEHICLE )
-		{
-			// can't sleep while walking or driving a vehicle
-			if( fExplainWhyNot )
-			{
-				// on the move, can't sleep
-				swprintf( sString, lengthof(sString), zMarksMapScreenText[ 5 ], pSoldier->name );
-				DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
-			}
-
-			return( FALSE );
+		if (s.bAssignment != VEHICLE)
+		{ // Can't sleep while walking
+			why = zMarksMapScreenText[5];
+			goto cannot_sleep;
 		}
-		else	// in a vehicle
+		else // in a vehicle
 		{
-			// if this guy has to drive ('cause nobody else can)
-			if ( SoldierMustDriveVehicle( pSoldier, pSoldier->iVehicleId, FALSE ) )
-			{
-				// can't sleep while walking or driving a vehicle
-				if( fExplainWhyNot )
-				{
-					// is driving, can't sleep
-					swprintf( sString, lengthof(sString), zMarksMapScreenText[ 7 ], pSoldier->name );
-					DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
-				}
-
-				return( FALSE );
+			// If this guy has to drive (because nobody else can)
+			if (SoldierMustDriveVehicle(&s, s.iVehicleId, FALSE))
+			{ // Can't sleep while driving a vehicle
+				why = zMarksMapScreenText[7];
+				goto cannot_sleep;
 			}
 		}
 	}
-	else	// in a sector
+	else // In a sector
 	{
-		// if not above it all...
-		if ( !SoldierAboardAirborneHeli( pSoldier ) )
+		// If not above it all
+		if (!SoldierAboardAirborneHeli(&s))
 		{
-			// if he's in the loaded sector, and it's hostile or in combat
-			if( pSoldier->bInSector && ( ( gTacticalStatus.uiFlags & INCOMBAT ) || gTacticalStatus.fEnemyInSector ) )
+			// If he's in the loaded sector, and it's hostile or in combat
+			if (s.bInSector && (gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector))
 			{
-				if( fExplainWhyNot )
-				{
-					DoScreenIndependantMessageBox( Message[ STR_SECTOR_NOT_CLEARED ], MSG_BOX_FLAG_OK, NULL );
-				}
-
-				return( FALSE );
+				why = Message[STR_SECTOR_NOT_CLEARED];
+				goto cannot_sleep;
 			}
 
 			// on surface, and enemies are in the sector
-			if( ( pSoldier->bSectorZ == 0 ) && ( NumEnemiesInAnySector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) > 0 ) )
+			if (s.bSectorZ == 0 && NumEnemiesInAnySector(s.sSectorX, s.sSectorY, s.bSectorZ) > 0)
 			{
-				if( fExplainWhyNot )
-				{
-					DoScreenIndependantMessageBox( Message[ STR_SECTOR_NOT_CLEARED ], MSG_BOX_FLAG_OK, NULL );
-				}
-
-				return( FALSE );
+				why = Message[STR_SECTOR_NOT_CLEARED];
+				goto cannot_sleep;
 			}
 		}
 	}
 
-
-	// not tired?
-	if( pSoldier->bBreathMax >= BREATHMAX_FULLY_RESTED )
+	if (s.bBreathMax >= BREATHMAX_FULLY_RESTED) // Not tired?
 	{
-		if( fExplainWhyNot )
-		{
-			swprintf( sString, lengthof(sString), zMarksMapScreenText[ 4 ], pSoldier->name );
-			DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
-		}
-
-		return( FALSE );
+		why = zMarksMapScreenText[4];
+		goto cannot_sleep;
 	}
 
+	return true;
 
-	// can sleep
-	return( TRUE );
+cannot_sleep:
+	if (explain_why_not)
+	{
+		wchar_t buf[128];
+		swprintf(buf, lengthof(buf), why, s.name);
+		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, 0);
+	}
+	return false;
+#endif
 }
 
 
@@ -6498,7 +6471,7 @@ static void ReportTrainersTraineesWithoutPartners(void)
 
 bool SetMercAsleep(SOLDIERTYPE& s, bool const give_warning)
 {
-	if (!CanCharacterSleep(&s, give_warning)) return false;
+	if (!CanCharacterSleep(s, give_warning)) return false;
 	PutMercInAsleepState(&s);
 	return true;
 }
@@ -7234,7 +7207,7 @@ static bool CharacterIsTakingItEasy(SOLDIERTYPE const& s)
 {
 	if (s.fMercAsleep) return true;
 
-	if (!CanCharacterSleep(&s, FALSE)) return false;
+	if (!CanCharacterSleep(s, false)) return false;
 
 	/* On duty, but able to catch naps (either not traveling, or not the driver of
 	 * the vehicle). The actual checks for this are in the "can he sleep" check
