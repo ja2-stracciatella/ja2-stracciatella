@@ -910,43 +910,43 @@ enum JoinSquadResult
 
 
 // can character be added to squad
-static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const* const s, INT8 const bSquadValue)
+static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const& s, INT8 const squad_no)
 {
-	Assert(bSquadValue < ON_DUTY);
+	Assert(squad_no < ON_DUTY);
 
-	INT16 sX;
-	INT16 sY;
-	INT8  sZ;
-	if (s->bAssignment == bSquadValue)
+	INT16 x;
+	INT16 y;
+	INT8  z;
+	if (s.bAssignment == squad_no)
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT;
 	}
-	else if (s->bLife < OKLIFE)
+	else if (s.bLife < OKLIFE)
 	{
 		return CHARACTER_CANT_JOIN_SQUAD;
 	}
-	else if (IsCharacterInTransit(s))
+	else if (IsCharacterInTransit(&s))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD;
 	}
-	else if (s->bAssignment == ASSIGNMENT_POW)
+	else if (s.bAssignment == ASSIGNMENT_POW)
 	{
 		return CHARACTER_CANT_JOIN_SQUAD;
 	}
-	else if (SectorSquadIsIn(bSquadValue, &sX, &sY, &sZ) &&
-			(sX != s->sSectorX || sY != s->sSectorY || sZ != s->bSectorZ))
+	else if (SectorSquadIsIn(squad_no, &x, &y, &z) &&
+			(x != s.sSectorX || y != s.sSectorY || z != s.bSectorZ))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_TOO_FAR;
 	}
-	else if (IsThisSquadOnTheMove(bSquadValue))
+	else if (IsThisSquadOnTheMove(squad_no))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING;
 	}
-	else if (DoesVehicleExistInSquad(bSquadValue))
+	else if (DoesVehicleExistInSquad(squad_no))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_VEHICLE;
 	}
-	else if (NumberOfPeopleInSquad(bSquadValue) >= NUMBER_OF_SOLDIERS_PER_SQUAD)
+	else if (NumberOfPeopleInSquad(squad_no) >= NUMBER_OF_SOLDIERS_PER_SQUAD)
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_FULL;
 	}
@@ -4745,7 +4745,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 		/* Can the character join this squad?  If already in it, accept that as a
 		 * legal choice and exit menu */
 		SOLDIERTYPE& s = *GetSelectedAssignSoldier(FALSE);
-		switch (CanCharacterSquad(&s, value))
+		switch (CanCharacterSquad(s, value))
 		{
 			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
 			{
@@ -5395,7 +5395,7 @@ static void HandleShadingOfLinesForSquadMenu(void)
 	UINT32      const  max_squad = GetLastSquadListedInSquadMenu();
 	for (UINT32 i = 0; i <= max_squad; ++i)
 	{
-		JoinSquadResult const bResult = CanCharacterSquad(&s, (INT8)i);
+		JoinSquadResult const bResult = CanCharacterSquad(s, (INT8)i);
 		PopUpShade const shade =
 			// Shade, if the reason doesn't have a good explanatory message
 			bResult == CHARACTER_CANT_JOIN_SQUAD ? POPUP_SHADE      :
@@ -7119,7 +7119,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case SQUAD_18:
 			case SQUAD_19:
 			case SQUAD_20:
-				switch (CanCharacterSquad(&s, (INT8)bAssignment))
+				switch (CanCharacterSquad(s, (INT8)bAssignment))
 				{
 					case CHARACTER_CAN_JOIN_SQUAD:
 					{
