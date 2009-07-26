@@ -1420,7 +1420,7 @@ static void RenderAutoResolve(void)
 						SOLDIERTYPE& s = *i;
 						if (s.bLife != 0 && !IsMechanical(s))
 						{ //Merc is alive and not a vehicle or robot
-							if (PlayerMercInvolvedInThisCombat(&s))
+							if (PlayerMercInvolvedInThisCombat(s))
 							{
 								// This morale event is PER INDIVIDUAL SOLDIER
 								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, gpAR->ubSectorX, gpAR->ubSectorY, 0);
@@ -2260,20 +2260,21 @@ static void CalculateAutoResolveInfo(void)
 
 		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
 		{
+			SOLDIERTYPE& s = *pPlayer->pSoldier;
 			// NOTE: Must check each merc individually, e.g. Robot without controller is an uninvolved merc on an involved group!
-			if ( PlayerMercInvolvedInThisCombat( pPlayer->pSoldier ) )
+			if (PlayerMercInvolvedInThisCombat(s))
 			{
-				gpMercs[ gpAR->ubMercs ].pSoldier = pPlayer->pSoldier;
+				gpMercs[gpAR->ubMercs].pSoldier = &s;
 
 				//!!! CLEAR OPPCOUNT HERE.  All of these soldiers are guaranteed to not be in tactical anymore.
-				//ClearOppCount( pPlayer->pSoldier );
+				//ClearOppCount(&s);
 
 				gpAR->ubMercs++;
-				if( AM_AN_EPC( pPlayer->pSoldier ) )
+				if (AM_AN_EPC(&s))
 				{
 					gpAR->fCaptureNotPermittedDueToEPCs = TRUE;
 				}
-				if( AM_A_ROBOT( pPlayer->pSoldier ) )
+				if (AM_A_ROBOT(&s))
 				{
 					gpAR->pRobotCell = &gpMercs[ gpAR->ubMercs - 1 ];
 					UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );

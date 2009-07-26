@@ -407,9 +407,10 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	//Count the number of players involved or not involved in this battle
 	guiNumUninvolved = 0;
 	guiNumInvolved = 0;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+		SOLDIERTYPE const& s = *i;
+		if (s.bLife != 0 && !(s.uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			if (PlayerMercInvolvedInThisCombat(s))
 			{
@@ -419,11 +420,11 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 					//can detect it by comparing the first value with future values.  If we do, then
 					//we set a flag which determines whether to use the singular help text or plural version
 					//for the retreat button.
-					ubGroupID = s->ubGroupID;
+					ubGroupID = s.ubGroupID;
 					if( !gpBattleGroup )
 						gpBattleGroup = GetGroup( ubGroupID );
-					if (bBestExpLevel > s->bExpLevel) bBestExpLevel = s->bExpLevel;
-					if (s->ubPrevSectorID == 255)
+					if (bBestExpLevel > s.bExpLevel) bBestExpLevel = s.bExpLevel;
+					if (s.ubPrevSectorID == 255)
 					{ //Not able to retreat (calculate it for group)
 						GROUP *pTempGroup;
 						pTempGroup = GetGroup( ubGroupID );
@@ -431,7 +432,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 						CalculateGroupRetreatSector( pTempGroup );
 					}
 				}
-				else if (ubGroupID != s->ubGroupID)
+				else if (ubGroupID != s.ubGroupID)
 				{
 					fUsePluralVersion = TRUE;
 				}
@@ -1032,9 +1033,9 @@ void RenderPreBattleInterface()
 		CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 		{
 			SOLDIERTYPE const& s = *i;
-			if (s.bLife == 0)                        continue;
-			if (s.uiStatusFlags & SOLDIER_VEHICLE)   continue;
-			if (!PlayerMercInvolvedInThisCombat(&s)) continue;
+			if (s.bLife == 0)                       continue;
+			if (s.uiStatusFlags & SOLDIER_VEHICLE)  continue;
+			if (!PlayerMercInvolvedInThisCombat(s)) continue;
 
 			// Name
 			wchar_t const* const name = s.name;
@@ -1072,34 +1073,35 @@ void RenderPreBattleInterface()
 		else
 		{
 			y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
-			CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+			CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 			{
-				if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+				SOLDIERTYPE const& s = *i;
+				if (s.bLife != 0 && !(s.uiStatusFlags & SOLDIER_VEHICLE))
 				{
 					if (!PlayerMercInvolvedInThisCombat(s))
 					{
 						// uninvolved
 						//NAME
-						const wchar_t* const Name = s->name;
+						wchar_t const* const Name = s.name;
 						x = 17 + (52 - StringPixLength(Name, BLOCKFONT2)) / 2;
 						MPrint(x , y, Name);
 						//ASSIGN
-						const wchar_t* const Assignment = GetMapscreenMercAssignmentString(s);
+						wchar_t const* const Assignment = GetMapscreenMercAssignmentString(&s);
 						x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
 						MPrint(x, y, Assignment);
 						//LOC
-						GetMapscreenMercLocationString(s, str, lengthof(str));
+						GetMapscreenMercLocationString(&s, str, lengthof(str));
 						x = 128 + (33-StringPixLength( str, BLOCKFONT2)) / 2;
 						MPrint(x, y, str);
 						//DEST
-						GetMapscreenMercDestinationString(s, str, lengthof(str));
+						GetMapscreenMercDestinationString(&s, str, lengthof(str));
 						if( wcslen( str ) > 0 )
 						{
 							x = 164 + (41-StringPixLength( str, BLOCKFONT2)) / 2;
 							MPrint(x, y, str);
 						}
 						//DEP
-						GetMapscreenMercDepartureString(s, str, lengthof(str), &ubJunk);
+						GetMapscreenMercDepartureString(&s, str, lengthof(str), &ubJunk);
 						x = 208 + (34-StringPixLength( str, BLOCKFONT2)) / 2;
 						MPrint(x, y, str);
 						y += ROW_HEIGHT;
@@ -1445,30 +1447,30 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 	PLAYERGROUP* next;
 	for (PLAYERGROUP* p = pGroup->pPlayerList; p; p = next)
 	{
-		SOLDIERTYPE* const s = p->pSoldier;
-		Assert(s);
+		Assert(p->pSoldier);
+		SOLDIERTYPE& s = *p->pSoldier;
 
 		// store ptr to next soldier in group, once removed from group, his info will get memfree'd!
 		next = p->next;
 
-		if (!s->bActive || s->bLife == 0 || s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+		if (!s.bActive || s.bLife == 0 || s.uiStatusFlags & SOLDIER_VEHICLE) continue;
 
-		if (!PlayerMercInvolvedInThisCombat(s) || s->bAssignment < ON_DUTY) continue;
+		if (!PlayerMercInvolvedInThisCombat(s) || s.bAssignment < ON_DUTY) continue;
 		// if involved, but off-duty (includes mercs inside vehicles!)
 
 		// if in a vehicle, pull him out
-		if (s->bAssignment == VEHICLE)
+		if (s.bAssignment == VEHICLE)
 		{
 			if (fExitVehicles)
 			{
-				TakeSoldierOutOfVehicle(s);
+				TakeSoldierOutOfVehicle(&s);
 
 				/* put them on the unique squad assigned to people leaving this vehicle.
 				 * Can't add them to existing squads, because if this is a simultaneous
 				 * group attack, the mercs could be coming from different sides, and the
 				 * placement screen can't handle mercs on the same squad arriving from
 				 * different edges! */
-				const BOOLEAN fSuccess = AddCharacterToSquad(s, bUniqueVehicleSquad);
+				BOOLEAN const fSuccess = AddCharacterToSquad(&s, bUniqueVehicleSquad);
 				(void)fSuccess;
 				Assert(fSuccess);
 			}
@@ -1476,11 +1478,11 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 		else
 		{
 			// add him to ANY on duty foot squad
-			AddCharacterToAnySquad(s);
+			AddCharacterToAnySquad(&s);
 		}
 
 		// stand him up
-		MakeSoldiersTacticalAnimationReflectAssignment(s);
+		MakeSoldiersTacticalAnimationReflectAssignment(&s);
 	}
 }
 
@@ -1490,10 +1492,10 @@ void WakeUpAllMercsInSectorUnderAttack()
 	FOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
-		if (s.bLife == 0)                        continue;
-		if (s.uiStatusFlags & SOLDIER_VEHICLE)   continue;
-		if (!s.fMercAsleep)                      continue;
-		if (!PlayerMercInvolvedInThisCombat(&s)) continue;
+		if (s.bLife == 0)                       continue;
+		if (s.uiStatusFlags & SOLDIER_VEHICLE)  continue;
+		if (!s.fMercAsleep)                     continue;
+		if (!PlayerMercInvolvedInThisCombat(s)) continue;
 		// Involved, but asleep, force him wake him up
 		SetMercAwake(&s, FALSE, TRUE);
 	}
@@ -1533,29 +1535,19 @@ void RetreatAllInvolvedPlayerGroups( void )
 static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ);
 
 
-BOOLEAN PlayerMercInvolvedInThisCombat(const SOLDIERTYPE* s)
+bool PlayerMercInvolvedInThisCombat(SOLDIERTYPE const& s)
 {
-	Assert(s);
-	Assert(s->bActive);
-
-	if (!s->fBetweenSectors &&
-			s->bAssignment != IN_TRANSIT &&
-			s->bAssignment != ASSIGNMENT_POW &&
-			s->bAssignment != ASSIGNMENT_DEAD &&
-			!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
-			// Robot is involved if it has a valid controller with it, uninvolved otherwise
-			(!AM_A_ROBOT(s) || s->robot_remote_holder != NULL) &&
-			!SoldierAboardAirborneHeli(s))
-	{
-		if (CurrentBattleSectorIs(s->sSectorX, s->sSectorY, s->bSectorZ))
-		{
-			// involved
-			return( TRUE );
-		}
-	}
-
-	// not involved
-	return( FALSE );
+	Assert(s.bActive);
+	return
+		!s.fBetweenSectors                         &&
+		s.bAssignment != IN_TRANSIT                &&
+		s.bAssignment != ASSIGNMENT_POW            &&
+		s.bAssignment != ASSIGNMENT_DEAD           &&
+		!(s.uiStatusFlags & SOLDIER_VEHICLE)       &&
+		// Robot is involved iff it has a valid controller with it
+		(!AM_A_ROBOT(&s) || s.robot_remote_holder) &&
+		!SoldierAboardAirborneHeli(&s)             &&
+		CurrentBattleSectorIs(s.sSectorX, s.sSectorY, s.bSectorZ);
 }
 
 
