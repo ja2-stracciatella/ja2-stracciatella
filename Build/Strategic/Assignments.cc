@@ -967,7 +967,7 @@ static void CheckForAndHandleHospitalPatients(void);
 static void HandleDoctorsInSector(INT16 sX, INT16 sY, INT8 bZ);
 static void HandleNaturalHealing(void);
 static void HandleRepairmenInSector(INT16 sX, INT16 sY, INT8 bZ);
-static void HandleRestFatigueAndSleepStatus(void);
+static void HandleRestFatigueAndSleepStatus();
 static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ);
 static void ReportTrainersTraineesWithoutPartners(void);
 static void UpdatePatientsWhoAreDoneHealing(void);
@@ -5814,172 +5814,134 @@ static void PositionCursorForTacticalAssignmentBox(void)
 static BOOLEAN CharacterIsTakingItEasy(SOLDIERTYPE* pSoldier);
 
 
-static void HandleRestFatigueAndSleepStatus(void)
+static void HandleRestFatigueAndSleepStatus()
 {
-	BOOLEAN fReasonAdded = FALSE;
-	BOOLEAN fBoxSetUp = FALSE;
-	BOOLEAN fMeToo = FALSE;
-
-	// run through all player characters and handle their rest, fatigue, and going to sleep
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
-	{
-		if (IsMechanical(*pSoldier)) continue;
-
-		if (pSoldier->bAssignment == ASSIGNMENT_POW || pSoldier->bAssignment == IN_TRANSIT)
+	{ /* Run through all player characters and handle their rest, fatigue, and
+		 * going to sleep */
+		bool   reason_added = false;
+		bool   box_set_up   = false;
+		UINT16 sleep_quote  = QUOTE_NEED_SLEEP;
+		FOR_ALL_IN_TEAM(i, OUR_TEAM)
 		{
-			continue;
-		}
+			SOLDIERTYPE& s = *i;
+			if (IsMechanical(s))                 continue;
+			if (s.bAssignment == ASSIGNMENT_POW) continue;
+			if (s.bAssignment == IN_TRANSIT)     continue;
 
-		// if character CAN sleep, he doesn't actually have to be put asleep to get some rest,
-		// many other assignments and conditions allow for automatic recovering from fatigue.
-		if (CharacterIsTakingItEasy(pSoldier))
-		{
-			// let them rest some
-			RestCharacter(pSoldier);
-		}
-		else
-		{
-			// wear them down
-			FatigueCharacter(*pSoldier);
-		}
-
-		// CHECK FOR MERCS GOING TO SLEEP
-
-		// if awake
-		if (!pSoldier->fMercAsleep)
-		{
-			// if dead tired
-			if (pSoldier->bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM)
-			{
-				// if between sectors, don't put tired mercs to sleep...  will be handled when they arrive at the next sector
-				if (pSoldier->fBetweenSectors)
-				{
-					continue;
-				}
-
-				// he goes to sleep, provided it's at all possible (it still won't happen in a hostile sector, etc.)
-				if (SetMercAsleep(pSoldier, FALSE))
-				{
-					if (pSoldier->bAssignment < ON_DUTY || pSoldier->bAssignment == VEHICLE)
-					{
-						// on a squad/vehicle, complain, then drop
-						TacticalCharacterDialogue(pSoldier, QUOTE_NEED_SLEEP);
-						MakeCharacterDialogueEventSleep(*pSoldier, true);
-						fMeToo = TRUE;
-					}
-
-					// guy collapses
-					pSoldier->fMercCollapsedFlag = TRUE;
-				}
+			/* If character can sleep, he doesn't actually have to be put asleep to
+			 * get some rest, many other assignments and conditions allow for
+			 * automatic recovering from fatigue. */
+			if (CharacterIsTakingItEasy(&s))
+			{ // Let them rest some
+				RestCharacter(&s);
 			}
-			// if pretty tired, and not forced to stay awake
-			else if (pSoldier->bBreathMax < BREATHMAX_PRETTY_TIRED && !pSoldier->fForcedToStayAwake)
+			else
+			{ // Wear them down
+				FatigueCharacter(s);
+			}
+
+			// Check for mercs going to sleep
+			if (s.fMercAsleep) continue;
+
+			// If dead tired
+			if (s.bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM)
 			{
-				// if not on squad/ in vehicle
-				if (pSoldier->bAssignment >= ON_DUTY && pSoldier->bAssignment != VEHICLE)
-				{
-					// try to go to sleep on your own
-					if (SetMercAsleep(pSoldier, FALSE))
-					{
-						if (gGameSettings.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION])
-						{
-							// if the first one
-							if (!fReasonAdded)
-							{
-								// tell player about it
-								AddReasonToWaitingListQueue(ASLEEP_GOING_AUTO_FOR_UPDATE);
-								fReasonAdded = TRUE;
-							}
+				/* If between sectors, don't put tired mercs to sleep, will be handled
+				 * when they arrive at the next sector */
+				if (s.fBetweenSectors) continue;
 
-							AddSoldierToWaitingListQueue(*pSoldier);
-							fBoxSetUp = TRUE;
-						}
-					}
+				/* He goes to sleep, provided it's at all possible (it still won't happen
+				 * in a hostile sector, etc.) */
+				if (!SetMercAsleep(&s, FALSE)) continue;
+
+				if (s.bAssignment < ON_DUTY || s.bAssignment == VEHICLE)
+				{ // On a squad/vehicle, complain, then drop
+					TacticalCharacterDialogue(&s, QUOTE_NEED_SLEEP);
+					MakeCharacterDialogueEventSleep(s, true);
+					sleep_quote = QUOTE_ME_TOO;
 				}
-				else	// tired, in a squad / vehicle
-				{
-					// if he hasn't complained yet
-					if (!pSoldier->fComplainedThatTired)
-					{
-						// say quote
-						if (!fMeToo)
-						{
-							TacticalCharacterDialogue(pSoldier, QUOTE_NEED_SLEEP);
-							fMeToo = TRUE;
-						}
-						else
-						{
-							TacticalCharacterDialogue(pSoldier, QUOTE_ME_TOO);
-						}
 
-						pSoldier->fComplainedThatTired = TRUE;
+				// Guy collapses
+				s.fMercCollapsedFlag = TRUE;
+			}
+			else if (s.bBreathMax < BREATHMAX_PRETTY_TIRED && !s.fForcedToStayAwake)
+			{ // Pretty tired, and not forced to stay awake
+				if (s.bAssignment >= ON_DUTY && s.bAssignment != VEHICLE)
+				{ // Not on squad/in vehicle
+					// Try to go to sleep on your own
+					if (!SetMercAsleep(&s, FALSE)) continue;
+
+					if (!gGameSettings.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]) continue;
+
+					// If the first one
+					if (!reason_added)
+					{ // Tell player about it
+						AddReasonToWaitingListQueue(ASLEEP_GOING_AUTO_FOR_UPDATE);
+						reason_added = true;
 					}
+
+					AddSoldierToWaitingListQueue(s);
+					box_set_up = true;
+				}
+				else
+				{ // Tired, in a squad / vehicle
+					if (s.fComplainedThatTired) continue;
+					// He hasn't complained yet
+
+					TacticalCharacterDialogue(&s, sleep_quote);
+					sleep_quote            = QUOTE_ME_TOO;
+					s.fComplainedThatTired = TRUE;
 				}
 			}
 		}
+
+		if (box_set_up) AddDisplayBoxToWaitingQueue();
 	}
 
-	if( fBoxSetUp )
-	{
-		AddDisplayBoxToWaitingQueue( );
-		fBoxSetUp = FALSE;
-	}
-
-	fReasonAdded = FALSE;
-
-	// now handle waking (needs seperate list queue, that's why it has its own loop)
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
-	{
-		if (IsMechanical(*pSoldier)) continue;
-
-		if (pSoldier->bAssignment == ASSIGNMENT_POW || pSoldier->bAssignment == IN_TRANSIT)
+	{ /* Now handle waking. Needs seperate list queue, that's why it has its own
+		 * loop */
+		bool box_set_up   = false;
+		bool reason_added = false;
+		FOR_ALL_IN_TEAM(i, OUR_TEAM)
 		{
-			continue;
-		}
+			SOLDIERTYPE& s = *i;
+			if (IsMechanical(s))                 continue;
+			if (s.bAssignment == ASSIGNMENT_POW) continue;
+			if (s.bAssignment == IN_TRANSIT)     continue;
+			// Guys between sectors CAN wake up while between sectors (sleeping in vehicle)
 
-		// guys between sectors CAN wake up while between sectors (sleeping in vehicle)...
-
-		// CHECK FOR MERCS WAKING UP
-
-		if (pSoldier->bBreathMax >= BREATHMAX_CANCEL_COLLAPSE)
-		{
-			// reset the collapsed flag well before reaching the wakeup state
-			pSoldier->fMercCollapsedFlag = FALSE;
-		}
-
-		// if asleep
-		if (pSoldier->fMercAsleep)
-		{
-			// but has had enough rest?
-			if (pSoldier->bBreathMax >= BREATHMAX_FULLY_RESTED)
-			{
-				// try to wake merc up
-				if (SetMercAwake(pSoldier, FALSE, FALSE))
-				{
-					// if not on squad/ in vehicle, tell player about it
-					if (pSoldier->bAssignment >= ON_DUTY && pSoldier->bAssignment != VEHICLE)
-					{
-						if (gGameSettings.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION])
-						{
-							if (!fReasonAdded)
-							{
-								AddReasonToWaitingListQueue(ASSIGNMENT_RETURNING_FOR_UPDATE);
-								fReasonAdded = TRUE;
-							}
-
-							AddSoldierToWaitingListQueue(*pSoldier);
-							fBoxSetUp = TRUE;
-						}
-					}
-				}
+			if (s.bBreathMax >= BREATHMAX_CANCEL_COLLAPSE)
+			{ // Reset the collapsed flag well before reaching the wakeup state
+				s.fMercCollapsedFlag = FALSE;
 			}
-		}
-	}
 
-	if( fBoxSetUp )
-	{
-		AddDisplayBoxToWaitingQueue( );
-		fBoxSetUp = FALSE;
+			if (!s.fMercAsleep) continue;
+
+			// Had enough rest?
+			if (s.bBreathMax < BREATHMAX_FULLY_RESTED) continue;
+
+			// Try to wake merc up
+			if (!SetMercAwake(&s, FALSE, FALSE)) continue;
+
+			// If not on squad/in vehicle, tell player about it
+			if (s.bAssignment < ON_DUTY || s.bAssignment == VEHICLE) continue;
+
+			if (!gGameSettings.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]) continue;
+
+			if (!reason_added)
+			{
+				AddReasonToWaitingListQueue(ASSIGNMENT_RETURNING_FOR_UPDATE);
+				reason_added = true;
+			}
+
+			AddSoldierToWaitingListQueue(s);
+			box_set_up = true;
+		}
+
+		if (box_set_up)
+		{
+			AddDisplayBoxToWaitingQueue();
+		}
 	}
 }
 
