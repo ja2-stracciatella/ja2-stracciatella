@@ -176,7 +176,7 @@ void SetSoldierAssignmentRepair(SOLDIERTYPE*, BOOLEAN sam, BOOLEAN robot, INT8 v
 // if give warning is false, the function can be used as an internal function
 BOOLEAN SetMercAwake( SOLDIERTYPE *pSoldier, BOOLEAN fGiveWarning, BOOLEAN fForceHim );
 bool SetMercAsleep(SOLDIERTYPE&, bool give_warning);
-BOOLEAN PutMercInAsleepState( SOLDIERTYPE *pSoldier );
+void PutMercInAsleepState(SOLDIERTYPE&);
 BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier );
 
 // set what time this merc undertook this assignment

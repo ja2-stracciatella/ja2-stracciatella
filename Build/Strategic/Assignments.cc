@@ -6472,30 +6472,26 @@ static void ReportTrainersTraineesWithoutPartners(void)
 bool SetMercAsleep(SOLDIERTYPE& s, bool const give_warning)
 {
 	if (!CanCharacterSleep(s, give_warning)) return false;
-	PutMercInAsleepState(&s);
+	PutMercInAsleepState(s);
 	return true;
 }
 
 
-BOOLEAN PutMercInAsleepState( SOLDIERTYPE *pSoldier )
+void PutMercInAsleepState(SOLDIERTYPE& s)
 {
-	if (!pSoldier->fMercAsleep)
+	if (s.fMercAsleep) return;
+
+	if (gfWorldLoaded && s.bInSector)
 	{
-		if( ( gfWorldLoaded ) && ( pSoldier->bInSector ) )
-		{
-			const UINT16 state = (guiCurrentScreen == GAME_SCREEN ? GOTO_SLEEP : SLEEPING);
-			ChangeSoldierState(pSoldier, state, 1, TRUE);
-		}
-
-		// set merc asleep
-		pSoldier -> fMercAsleep = TRUE;
-
-		// refresh panels
-		fCharacterInfoPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
+		UINT16 const state = guiCurrentScreen == GAME_SCREEN ? GOTO_SLEEP : SLEEPING;
+		ChangeSoldierState(&s, state, 1, TRUE);
 	}
 
-	return( TRUE );
+	// Set merc asleep
+	s.fMercAsleep            = TRUE;
+	// Refresh panels
+	fCharacterInfoPanelDirty = TRUE;
+	fTeamPanelDirty          = TRUE;
 }
 
 
@@ -6589,24 +6585,24 @@ BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const& g)
 {
 	BOOLEAN group_must_stop = FALSE;
 	UINT16  quote           = QUOTE_NEED_SLEEP;
-	CFOR_ALL_PLAYERS_IN_GROUP(p, &g)
+	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 	{
-		SOLDIERTYPE* const s = p->pSoldier;
-		if (!s) continue;
+		if (!i->pSoldier) continue;
+		SOLDIERTYPE& s = *i->pSoldier;
 
-		if (!PlayerSoldierTooTiredToTravel(s)) continue;
+		if (!PlayerSoldierTooTiredToTravel(&s)) continue;
 
 		/* NOTE: we only complain about it if it's gonna force the group to stop
 		 * moving! */
 		group_must_stop = TRUE;
 
-		HandleImportantMercQuote(s, quote);
+		HandleImportantMercQuote(&s, quote);
 		quote = QUOTE_ME_TOO;
 
 		PutMercInAsleepState(s);
 
 		// player can't wake him up right away
-		s->fMercCollapsedFlag = TRUE;
+		s.fMercCollapsedFlag = TRUE;
 	}
 
 	return group_must_stop;

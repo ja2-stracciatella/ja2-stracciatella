@@ -3296,7 +3296,7 @@ static void HandleModAlt(UINT32 const key)
 		case SDLK_F10:
 		{ // Force selected character asleep (ignores breathmax)
 			SOLDIERTYPE* const s = GetSelectedInfoChar();
-			if (s) PutMercInAsleepState(s);
+			if (s) PutMercInAsleepState(*s);
 			break;
 		}
 
