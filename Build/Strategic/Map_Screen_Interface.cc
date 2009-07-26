@@ -3950,7 +3950,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 
 	// If merc is in a particular sector, not somewhere in between, and he's NOT flying above it all in a working helicopter
 	if (!s.fBetweenSectors)
-	if (!SoldierAboardAirborneHeli(&s))
+	if (!SoldierAboardAirborneHeli(s))
 	{
 		// And that sector is loaded
 		if (s.sSectorX == gWorldSectorX &&

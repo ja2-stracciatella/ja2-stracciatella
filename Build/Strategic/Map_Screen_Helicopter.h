@@ -203,7 +203,7 @@ INT16 GetNumSafeSectorsInPath();
 
 INT16 GetNumUnSafeSectorsInPath( void );
 
-BOOLEAN SoldierAboardAirborneHeli(const SOLDIERTYPE* s);
+bool SoldierAboardAirborneHeli(SOLDIERTYPE const&);
 
 void MoveAllInHelicopterToFootMovementGroup(void);
 

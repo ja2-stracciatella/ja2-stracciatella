@@ -2800,7 +2800,7 @@ bool CanGoToTacticalInSector(INT16 const x, INT16 const y, UINT8 const z)
 		if (s.bAssignment == IN_TRANSIT)       continue;
 		if (s.bAssignment == ASSIGNMENT_POW)   continue;
 		if (s.bAssignment == ASSIGNMENT_DEAD)  continue;
-		if (SoldierAboardAirborneHeli(&s))     continue;
+		if (SoldierAboardAirborneHeli(s))      continue;
 		if (s.fBetweenSectors)                 continue;
 		if (s.sSectorX != x)                   continue;
 		if (s.sSectorY != y)                   continue;

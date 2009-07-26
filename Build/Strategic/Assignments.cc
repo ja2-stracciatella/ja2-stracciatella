@@ -783,7 +783,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 	else // In a sector
 	{
 		// If not above it all
-		if (!SoldierAboardAirborneHeli(&s))
+		if (!SoldierAboardAirborneHeli(s))
 		{
 			// If he's in the loaded sector, and it's hostile or in combat
 			if (s.bInSector && (gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector))

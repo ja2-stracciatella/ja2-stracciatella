@@ -1702,19 +1702,7 @@ static void MakeHeliReturnToBase(void)
 }
 
 
-BOOLEAN SoldierAboardAirborneHeli(const SOLDIERTYPE* s)
+bool SoldierAboardAirborneHeli(SOLDIERTYPE const& s)
 {
-	Assert(s);
-
-	if (!InHelicopter(*s)) return FALSE;
-
-	// he's in the heli - is it airborne?
-	if ( !fHelicopterIsAirBorne )
-	{
-		// nope, it's currently on the ground
-		return( FALSE );
-	}
-
-	// yes, airborne
-	return( TRUE );
+	return InHelicopter(s) && fHelicopterIsAirBorne;
 }
