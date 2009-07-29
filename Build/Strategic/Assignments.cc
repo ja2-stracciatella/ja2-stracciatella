@@ -943,7 +943,7 @@ static void HandleRepairmenInSector(INT16 sX, INT16 sY, INT8 bZ);
 static void HandleRestFatigueAndSleepStatus();
 static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ);
 static void ReportTrainersTraineesWithoutPartners(void);
-static void UpdatePatientsWhoAreDoneHealing(void);
+static void UpdatePatientsWhoAreDoneHealing();
 
 
 void UpdateAssignments()
@@ -1265,16 +1265,16 @@ static void HandleDoctorsInSector(INT16 const x, INT16 const y, INT8 const z)
 }
 
 
-// update characters who might done healing but are still patients
-static void UpdatePatientsWhoAreDoneHealing(void)
+// Update characters who might done healing but are still patients
+static void UpdatePatientsWhoAreDoneHealing()
 {
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		// patient who doesn't need healing
-		if (s->bAssignment == PATIENT && s->bLife == s->bLifeMax)
-		{
-			AssignmentDone(s, TRUE, TRUE);
-		}
+		SOLDIERTYPE& s = *i;
+		if (s.bAssignment != PATIENT) continue;
+		if (s.bLife != s.bLifeMax)    continue;
+		// Patient who doesn't need healing
+		AssignmentDone(&s, TRUE, TRUE);
 	}
 }
 
