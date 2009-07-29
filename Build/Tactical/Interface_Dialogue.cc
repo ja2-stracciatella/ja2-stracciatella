@@ -3330,19 +3330,20 @@ action_punch_pc:
 				if ( pSoldier2 )
 				{
 					//HOSPITAL_PATIENT_DISTANCE
-					FOR_ALL_IN_TEAM(s, gbPlayerNum)
+					FOR_ALL_IN_TEAM(i, gbPlayerNum)
 					{
+						SOLDIERTYPE& s = *i;
 						// Are we in this sector, On the current squad?
-						if (s->bInSector &&
-								0 < s->bLife && s->bLife < s->bLifeMax &&
-								s->bAssignment != ASSIGNMENT_HOSPITAL &&
-								PythSpacesAway(s->sGridNo, pSoldier2->sGridNo) < HOSPITAL_PATIENT_DISTANCE)
+						if (s.bInSector &&
+								0 < s.bLife && s.bLife < s.bLifeMax &&
+								s.bAssignment != ASSIGNMENT_HOSPITAL &&
+								PythSpacesAway(s.sGridNo, pSoldier2->sGridNo) < HOSPITAL_PATIENT_DISTANCE)
 						{
 							SetSoldierAssignmentHospital(s);
-							TriggerNPCRecord(s->ubProfile, 2);
-							s->bHospitalPriceModifier = gbHospitalPriceModifier;
+							TriggerNPCRecord(s.ubProfile, 2);
+							s.bHospitalPriceModifier = gbHospitalPriceModifier;
 							// make sure this person doesn't have an absolute dest any more
-							s->sAbsoluteFinalDestination = NOWHERE;
+							s.sAbsoluteFinalDestination = NOWHERE;
 						}
 					}
 

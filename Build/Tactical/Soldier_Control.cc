@@ -8288,11 +8288,11 @@ void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 		// Are we a SAM site? ( 3 == SAM )
 		if ( bRepairItem == 3 )
 		{
-			SetSoldierAssignmentRepair(pSoldier, TRUE, FALSE, -1);
+			SetSoldierAssignmentRepair(*pSoldier, TRUE, FALSE, -1);
 		}
 		else if ( bRepairItem == 2 ) // ( 2 == VEHICLE )
 		{
-			SetSoldierAssignmentRepair(pSoldier, FALSE, FALSE, tgt->ubID);
+			SetSoldierAssignmentRepair(*pSoldier, FALSE, FALSE, tgt->ubID);
 		}
 	}
 }
