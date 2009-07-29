@@ -6078,10 +6078,10 @@ static void PreSetAssignment(SOLDIERTYPE& s, INT8 const assignment)
 }
 
 
-static void PostSetAssignment(SOLDIERTYPE* const s, const INT8 assignment)
+static void PostSetAssignment(SOLDIERTYPE& s, INT8 const assignment)
 {
-	ChangeSoldiersAssignment(s, assignment);
-	AssignMercToAMovementGroup(s);
+	ChangeSoldiersAssignment(&s, assignment);
+	AssignMercToAMovementGroup(&s);
 }
 
 
@@ -6092,7 +6092,7 @@ void SetSoldierAssignmentHospital(SOLDIERTYPE& s)
 	s.bBleeding = 0;
 	if (s.bAssignment != ASSIGNMENT_HOSPITAL) SetTimeOfAssignmentChangeForMerc(&s);
 	RebuildCurrentSquad();
-	PostSetAssignment(&s, ASSIGNMENT_HOSPITAL);
+	PostSetAssignment(s, ASSIGNMENT_HOSPITAL);
 }
 
 
@@ -6101,7 +6101,7 @@ static void SetSoldierAssignmentPatient(SOLDIERTYPE& s)
 	if (!CanCharacterPatient(&s)) return;
 	PreSetAssignment(s, PATIENT);
 	if (s.bAssignment != PATIENT) SetTimeOfAssignmentChangeForMerc(&s);
-	PostSetAssignment(&s, PATIENT);
+	PostSetAssignment(s, PATIENT);
 }
 
 
@@ -6111,7 +6111,7 @@ static void SetSoldierAssignmentDoctor(SOLDIERTYPE& s)
 	PreSetAssignment(s, DOCTOR);
 	if (s.bAssignment != DOCTOR) SetTimeOfAssignmentChangeForMerc(&s);
 	MakeSureMedKitIsInHand(&s);
-	PostSetAssignment(&s, DOCTOR);
+	PostSetAssignment(s, DOCTOR);
 }
 
 
@@ -6126,7 +6126,7 @@ static void SetSoldierAssignmentTrainTown(SOLDIERTYPE& s)
 		// show a message to confirm player wants to charge cost
 		HandleInterfaceMessageForCostOfTrainingMilitia(&s);
 	}
-	PostSetAssignment(&s, TRAIN_TOWN);
+	PostSetAssignment(s, TRAIN_TOWN);
 }
 
 
@@ -6137,7 +6137,7 @@ static void SetSoldierAssignmentTrainSelf(SOLDIERTYPE& s, INT8 const stat)
 	if (s.bAssignment != TRAIN_SELF) SetTimeOfAssignmentChangeForMerc(&s);
 	// set stat to train
 	s.bTrainStat = stat;
-	PostSetAssignment(&s, TRAIN_SELF);
+	PostSetAssignment(s, TRAIN_SELF);
 }
 
 
@@ -6148,7 +6148,7 @@ static void SetSoldierAssignmentTrainTeammate(SOLDIERTYPE& s, INT8 const stat)
 	if (s.bAssignment != TRAIN_TEAMMATE) SetTimeOfAssignmentChangeForMerc(&s);
 	// set stat to train
 	s.bTrainStat = stat;
-	PostSetAssignment(&s, TRAIN_TEAMMATE);
+	PostSetAssignment(s, TRAIN_TEAMMATE);
 }
 
 
@@ -6159,7 +6159,7 @@ static void SetSoldierAssignmentTrainByOther(SOLDIERTYPE& s, INT8 const stat)
 	if (s.bAssignment != TRAIN_BY_OTHER) SetTimeOfAssignmentChangeForMerc(&s);
 	// set stat to train
 	s.bTrainStat = stat;
-	PostSetAssignment(&s, TRAIN_BY_OTHER);
+	PostSetAssignment(s, TRAIN_BY_OTHER);
 }
 
 
@@ -6175,7 +6175,7 @@ void SetSoldierAssignmentRepair(SOLDIERTYPE& s, BOOLEAN const sam, BOOLEAN const
 	s.fFixingSAMSite        = sam;
 	s.fFixingRobot          = robot;
 	s.bVehicleUnderRepairID = vehicle_id;
-	PostSetAssignment(&s, REPAIR);
+	PostSetAssignment(s, REPAIR);
 }
 
 
