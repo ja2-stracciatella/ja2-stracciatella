@@ -3407,7 +3407,7 @@ static void PreChangeAssignment(SOLDIERTYPE& s)
 }
 
 
-static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier);
+static bool AssignMercToAMovementGroup(SOLDIERTYPE&);
 
 
 static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -3451,7 +3451,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			MakeSureToolKitIsInHand( pSoldier );
 
 			// assign to a movement group
-			AssignMercToAMovementGroup( pSoldier );
+			AssignMercToAMovementGroup(*pSoldier);
 
 			// set assignment for group
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
@@ -3482,7 +3482,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			MakeSureToolKitIsInHand( pSoldier );
 
 			// assign to a movement group
-			AssignMercToAMovementGroup( pSoldier );
+			AssignMercToAMovementGroup(*pSoldier);
 		}
 */
 		else if( iRepairWhat == REPAIR_MENU_ROBOT )
@@ -3506,7 +3506,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			MakeSureToolKitIsInHand( pSoldier );
 
 			// assign to a movement group
-			AssignMercToAMovementGroup( pSoldier );
+			AssignMercToAMovementGroup(*pSoldier);
 		}
 		else if( iRepairWhat == REPAIR_MENU_ITEMS )
 		{
@@ -4856,7 +4856,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					ChangeSoldiersAssignment( pSoldier, TRAIN_TOWN );
 
 					// assign to a movement group
-					AssignMercToAMovementGroup( pSoldier );
+					AssignMercToAMovementGroup(*pSoldier);
 					if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
 					{
 						// show a message to confirm player wants to charge cost
@@ -4972,7 +4972,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			ChangeSoldiersAssignment( pSoldier, gbTrainingMode );
 
 			// assign to a movement group
-			AssignMercToAMovementGroup( pSoldier );
+			AssignMercToAMovementGroup(*pSoldier);
 
 			// set assignment for group
 			SetAssignmentForList( gbTrainingMode, ( INT8 )iValue );
@@ -5052,7 +5052,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						fMapScreenBottomDirty = TRUE;
 
 						ChangeSoldiersAssignment( pSoldier, PATIENT );
-						AssignMercToAMovementGroup( pSoldier );
+						AssignMercToAMovementGroup(*pSoldier);
 
 						// set assignment for group
 						SetAssignmentForList( ( INT8 ) PATIENT, 0 );
@@ -5127,7 +5127,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						ChangeSoldiersAssignment( pSoldier, DOCTOR );
 
 						MakeSureMedKitIsInHand( pSoldier );
-						AssignMercToAMovementGroup( pSoldier );
+						AssignMercToAMovementGroup(*pSoldier);
 
 						MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 
@@ -5173,7 +5173,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 						ChangeSoldiersAssignment( pSoldier, PATIENT );
 
-						AssignMercToAMovementGroup( pSoldier );
+						AssignMercToAMovementGroup(*pSoldier);
 
 						// set assignment for group
 						SetAssignmentForList( ( INT8 ) PATIENT, 0 );
@@ -6081,7 +6081,7 @@ static void PreSetAssignment(SOLDIERTYPE& s, INT8 const assignment)
 static void PostSetAssignment(SOLDIERTYPE& s, INT8 const assignment)
 {
 	ChangeSoldiersAssignment(&s, assignment);
-	AssignMercToAMovementGroup(&s);
+	AssignMercToAMovementGroup(s);
 }
 
 
@@ -6629,37 +6629,17 @@ bool PlayerSoldierTooTiredToTravel(SOLDIERTYPE& s)
 }
 
 
-static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier)
+static bool AssignMercToAMovementGroup(SOLDIERTYPE& s)
 {
-	// if merc doesn't have a group or is in a vehicle or on a squad assign to group
+	// If merc doesn't have a group or is in a vehicle or on a squad assign to group
+	if (s.bAssignment < ON_DUTY)     return false; // On a squad
+	if (s.bAssignment == VEHICLE)    return false; // In a vehicle
+	if (s.bAssignment == IN_TRANSIT) return false; // In transit
+	if (s.ubGroupID != 0)            return false; // In a movement group
 
-	// on a squad?
-	if( pSoldier->bAssignment < ON_DUTY )
-	{
-		return( FALSE );
-	}
-
-	// in a vehicle?
-	if( pSoldier->bAssignment == VEHICLE )
-	{
-		return( FALSE );
-	}
-
-	// in transit
-	if( pSoldier->bAssignment == IN_TRANSIT )
-	{
-		return( FALSE );
-	}
-
-	// in a movement group?
-	if( pSoldier->ubGroupID != 0 )
-	{
-		return( FALSE );
-	}
-
-	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
-	AddPlayerToGroup(g, *pSoldier);
-	return( TRUE );
+	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s.sSectorX, s.sSectorY);
+	AddPlayerToGroup(g, s);
+	return true;
 }
 
 
