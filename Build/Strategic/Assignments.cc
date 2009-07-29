@@ -1238,7 +1238,13 @@ static UINT16 TotalMedicalKitPoints(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* pSoldier);
+// Have we spent enough time on assignment for it to count?
+static bool EnoughTimeOnAssignment(SOLDIERTYPE const& s)
+{
+	return GetWorldTotalMin() - s.uiLastAssignmentChangeMin >= MINUTES_FOR_ASSIGNMENT_TO_COUNT;
+}
+
+
 static void HealCharacters(SOLDIERTYPE* pDoctor);
 
 
@@ -1258,8 +1264,8 @@ static void HandleDoctorsInSector(INT16 const x, INT16 const y, INT8 const z)
 		if (s.fMercAsleep)           continue;
 		MakeSureMedKitIsInHand(&s);
 		// Character is in sector, check if can doctor, if so, heal people
-		if (!CanCharacterDoctor(&s))     continue;
-		if (!EnoughTimeOnAssignment(&s)) continue;
+		if (!CanCharacterDoctor(&s))    continue;
+		if (!EnoughTimeOnAssignment(s)) continue;
 		HealCharacters(&s);
 	}
 }
@@ -1422,7 +1428,7 @@ static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE const* const patient, SOLD
 	if (patient->bAssignment != PATIENT && patient->bAssignment != DOCTOR)        return FALSE;
 	if (patient->bLife == 0)                                                      return FALSE;
 	if (patient->bLife == patient->bLifeMax)                                      return FALSE;
-	if (fThisHour && !EnoughTimeOnAssignment(patient))                            return FALSE;
+	if (fThisHour && !EnoughTimeOnAssignment(*patient))                           return FALSE;
 	if (patient->sSectorX != doctor->sSectorX)                                    return FALSE;
 	if (patient->sSectorY != doctor->sSectorY)                                    return FALSE;
 	if (patient->bSectorZ != doctor->bSectorZ)                                    return FALSE;
@@ -1664,8 +1670,8 @@ static void HandleRepairmenInSector(INT16 const x, INT16 const y, INT8 const z)
 		MakeSureToolKitIsInHand(&s);
 
 		// character is in sector, check if can repair
-		if (!CanCharacterRepair(&s))     continue;
-		if (!EnoughTimeOnAssignment(&s)) continue;
+		if (!CanCharacterRepair(&s))    continue;
+		if (!EnoughTimeOnAssignment(s)) continue;
 
 		HandleRepairBySoldier(s);
 	}
@@ -2171,7 +2177,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 				// if he's training teammates in this stat
 				if (pTrainer->bAssignment == TRAIN_TEAMMATE &&
 						pTrainer->bTrainStat  == ubStat         &&
-						EnoughTimeOnAssignment(pTrainer)        &&
+						EnoughTimeOnAssignment(*pTrainer)       &&
 						!pTrainer->fMercAsleep)
 				{
 					sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, NULL, ubStat, fAtGunRange, &usMaxPts );
@@ -2198,7 +2204,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 			// if he's training himself (alone, or by others), then he's a student
 			if ( ( pStudent -> bAssignment == TRAIN_SELF ) || ( pStudent -> bAssignment == TRAIN_BY_OTHER ) )
 			{
-				if (EnoughTimeOnAssignment(pStudent) && !pStudent->fMercAsleep)
+				if (EnoughTimeOnAssignment(*pStudent) && !pStudent->fMercAsleep)
 				{
 					// figure out how much the grunt can learn in one training period
 					sTotalTrainingPts = GetSoldierTrainingPts( pStudent, pStudent -> bTrainStat, fAtGunRange, &usMaxPts );
@@ -2216,10 +2222,10 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 							// if this sector either ISN'T currently loaded, or it is but the trainer is close enough to the student
 							if ( ( sMapX != gWorldSectorX ) || ( sMapY != gWorldSectorY ) || ( pStudent -> bSectorZ != gbWorldSectorZ ) ||
 									PythSpacesAway(pStudent->sGridNo, pTrainer->sGridNo) < MAX_DISTANCE_FOR_TRAINING &&
-									EnoughTimeOnAssignment(pTrainer))
+									EnoughTimeOnAssignment(*pTrainer))
 */
 							// NB this EnoughTimeOnAssignment() call is redundent since it is called up above
-							//if ( EnoughTimeOnAssignment( pTrainer ) )
+							//if (EnoughTimeOnAssignment(*pTrainer))
 							{
 								// valid trainer is available, this gives the student a large training bonus!
 								sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, pStudent, pStudent -> bTrainStat, fAtGunRange, &usMaxPts );
@@ -2250,7 +2256,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 			if (pTrainer->sSectorX == sMapX && pTrainer->sSectorY == sMapY && pTrainer->bSectorZ == bZ)
 			{
 				if (pTrainer->bAssignment == TRAIN_TOWN &&
-						EnoughTimeOnAssignment(pTrainer)    &&
+						EnoughTimeOnAssignment(*pTrainer)   &&
 						!pTrainer->fMercAsleep)
 				{
 					sTownTrainingPts = GetTownTrainPtsForCharacter( pTrainer, &usMaxPts );
@@ -6562,18 +6568,6 @@ void SetTimeOfAssignmentChangeForMerc( SOLDIERTYPE *pSoldier )
 	// assigning new PATIENTs gives a DOCTOR something to do, etc., so set flag to recheck them all.
 	// CAN'T DO IT RIGHT AWAY IN HERE 'CAUSE WE TYPICALLY GET CALLED *BEFORE* bAssignment GETS SET TO NEW VALUE!!
 	gfReEvaluateEveryonesNothingToDo = TRUE;
-}
-
-
-// have we spent enough time on assignment for it to count?
-static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* const pSoldier)
-{
-	if( GetWorldTotalMin() - pSoldier->uiLastAssignmentChangeMin >= MINUTES_FOR_ASSIGNMENT_TO_COUNT )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
 }
 
 
