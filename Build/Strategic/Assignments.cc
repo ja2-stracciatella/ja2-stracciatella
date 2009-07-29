@@ -937,7 +937,7 @@ bool IsCharacterInTransit(SOLDIERTYPE const& s)
 
 
 static void CheckForAndHandleHospitalPatients(void);
-static void HandleDoctorsInSector(INT16 sX, INT16 sY, INT8 bZ);
+static void HandleDoctorsInSector(INT16 x, INT16 y, INT8 z);
 static void HandleNaturalHealing(void);
 static void HandleRepairmenInSector(INT16 sX, INT16 sY, INT8 bZ);
 static void HandleRestFatigueAndSleepStatus();
@@ -1243,29 +1243,25 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ);
 
 
 // handle doctor in this sector
-static void HandleDoctorsInSector(INT16 sX, INT16 sY, INT8 bZ)
+static void HandleDoctorsInSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	// will handle doctor/patient relationship in sector
 
 	// go through list of characters, find all doctors in sector
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		if (s->sSectorX == sX &&
-				s->sSectorY == sY &&
-				s->bSectorZ == bZ &&
-				s->bAssignment == DOCTOR &&
-				!s->fMercAsleep)
-		{
-			MakeSureMedKitIsInHand(s);
-			// character is in sector, check if can doctor, if so...heal people
-			if (CanCharacterDoctor(s) && EnoughTimeOnAssignment(s))
-			{
-				HealCharacters(s, sX, sY, bZ);
-			}
-		}
+		SOLDIERTYPE& s = *i;
+		if (s.sSectorX != x)         continue;
+		if (s.sSectorY != y)         continue;
+		if (s.bSectorZ != z)         continue;
+		if (s.bAssignment != DOCTOR) continue;
+		if (s.fMercAsleep)           continue;
+		MakeSureMedKitIsInHand(&s);
+		// Character is in sector, check if can doctor, if so, heal people
+		if (!CanCharacterDoctor(&s))     continue;
+		if (!EnoughTimeOnAssignment(&s)) continue;
+		HealCharacters(&s, x, y, z);
 	}
-
-	// total healing pts for this sector, now heal people
 }
 
 
