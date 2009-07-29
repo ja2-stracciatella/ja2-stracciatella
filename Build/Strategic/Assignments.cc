@@ -1239,7 +1239,7 @@ static UINT16 TotalMedicalKitPoints(SOLDIERTYPE* pSoldier)
 
 
 static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* pSoldier);
-static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ);
+static void HealCharacters(SOLDIERTYPE* pDoctor);
 
 
 // handle doctor in this sector
@@ -1260,7 +1260,7 @@ static void HandleDoctorsInSector(INT16 const x, INT16 const y, INT8 const z)
 		// Character is in sector, check if can doctor, if so, heal people
 		if (!CanCharacterDoctor(&s))     continue;
 		if (!EnoughTimeOnAssignment(&s)) continue;
-		HealCharacters(&s, x, y, z);
+		HealCharacters(&s);
 	}
 }
 
@@ -1284,7 +1284,7 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 
 
 // heal characters in this sector with this doctor
-static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
+static void HealCharacters(SOLDIERTYPE* const pDoctor)
 {
 	// heal all patients in this sector
 	UINT16 usAvailableHealingPts = 0;
