@@ -8262,40 +8262,24 @@ void EVENT_SoldierBeginCutFence( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 }
 
 
-void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
+void EVENT_SoldierBeginRepair(SOLDIERTYPE& s, GridNo const gridno, UINT8 const direction)
 {
-	INT8 bRepairItem;
-
-	// Make sure we have a structure here....
 	SOLDIERTYPE* tgt;
-	bRepairItem = IsRepairableStructAtGridNo(sGridNo, &tgt);
+	INT8 const repair_item = IsRepairableStructAtGridNo(gridno, &tgt);
+	if (repair_item == 0) return;
 
-	if ( bRepairItem )
+	// Change direction and goto animation now
+	EVENT_SetSoldierDesiredDirection(&s, direction);
+	EVENT_SetSoldierDirection(&s, direction);
+	EVENT_InitNewSoldierAnim(&s, GOTO_REPAIRMAN, 0, FALSE);
+
+	switch (repair_item) // Set mercs's assignment to repair
 	{
-		// CHANGE DIRECTION AND GOTO ANIMATION NOW
-		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
-		EVENT_SetSoldierDirection( pSoldier, ubDirection );
-
-		//BOOLEAN CutWireFence( INT16 sGridNo )
-
-		// SET TARGET GRIDNO
-		//pSoldier->sTargetGridNo = sGridNo;
-
-		// CHANGE TO ANIMATION
-		EVENT_InitNewSoldierAnim( pSoldier, GOTO_REPAIRMAN, 0 , FALSE );
-		// SET BUDDY'S ASSIGNMENT TO REPAIR...
-
-		// Are we a SAM site? ( 3 == SAM )
-		if ( bRepairItem == 3 )
-		{
-			SetSoldierAssignmentRepair(*pSoldier, TRUE, FALSE, -1);
-		}
-		else if ( bRepairItem == 2 ) // ( 2 == VEHICLE )
-		{
-			SetSoldierAssignmentRepair(*pSoldier, FALSE, FALSE, tgt->ubID);
-		}
+		case 2: /* Vehicle */ SetSoldierAssignmentRepair(s, FALSE, FALSE, tgt->ubID); break;
+		case 3: /* SAM     */ SetSoldierAssignmentRepair(s, TRUE,  FALSE, -1);        break;
 	}
 }
+
 
 void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {

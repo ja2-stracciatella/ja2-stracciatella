@@ -910,7 +910,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 void EVENT_StopMerc(SOLDIERTYPE*);
 void EVENT_StopMerc(SOLDIERTYPE*, GridNo, INT8 direction);
 void EVENT_SoldierBeginCutFence( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
-void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
+void EVENT_SoldierBeginRepair(SOLDIERTYPE&, GridNo, UINT8 direction);
 void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 
 

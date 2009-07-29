@@ -640,7 +640,7 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 		}
 		else
 		{
-			EVENT_SoldierBeginRepair(s, sAdjustedGridNo, ubDirection);
+			EVENT_SoldierBeginRepair(*s, sAdjustedGridNo, ubDirection);
 		}
 
 		SetUIBusy(s);

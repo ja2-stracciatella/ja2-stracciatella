@@ -1024,7 +1024,7 @@ void ExecuteOverhead(void)
 										}
 										else if (pSoldier->ubPendingAction == MERC_REPAIR)
 										{
-											EVENT_SoldierBeginRepair(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
+											EVENT_SoldierBeginRepair(*pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
 											pSoldier->ubPendingAction = NO_PENDING_ACTION;
 										}
 										else if (pSoldier->ubPendingAction == MERC_FUEL_VEHICLE)
