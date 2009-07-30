@@ -778,18 +778,20 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 {
 	if (s.bAssignment != ASSIGNMENT_POW)
 	{
-		wchar_t buf[9];
+		INT8 const life     = s.bLife;
+		INT8 const life_max = s.bLifeMax;
+		wchar_t    buf[9];
 
 		/* Find starting X coordinate by centering all 3 substrings together, then
 		 * print them separately (different colors) */
-		swprintf(buf, lengthof(buf), L"%d/%d", s.bLife, s.bLifeMax);
+		swprintf(buf, lengthof(buf), L"%d/%d", life, life_max);
 		INT16 x;
 		INT16 y;
 		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, buf, CHAR_FONT, &x, &y);
 
 		// How is character's life?
-		UINT32 const health_percent = s.bLifeMax > 0 ? 100 * s.bLife / s.bLifeMax : 0;
-		UINT8  const cur_colour      =
+		UINT32 const health_percent = life_max > 0 ? 100 * life / life_max : 0;
+		UINT8  const cur_colour     =
 			health_percent ==  0 ? FONT_METALGRAY : // Dead
 			health_percent <  25 ? FONT_RED       : // Very bad
 			health_percent <  50 ? FONT_YELLOW    : // Not good
@@ -797,7 +799,7 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 		SetFontForeground(cur_colour);
 
 		// Current life
-		swprintf(buf, lengthof(buf), L"%d", s.bLife);
+		swprintf(buf, lengthof(buf), L"%d", life);
 		DrawString(buf, x, CHAR_HP_Y, CHAR_FONT);
 		x += StringPixLength(buf, CHAR_FONT);
 
@@ -817,7 +819,7 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 		SetFontForeground(max_colour);
 
 		// Maximum life
-		swprintf(buf, lengthof(buf), L"%d", s.bLifeMax);
+		swprintf(buf, lengthof(buf), L"%d", life_max);
 		DrawString(buf, x, CHAR_HP_Y, CHAR_FONT);
 	}
 	else
