@@ -1500,7 +1500,7 @@ static BOOLEAN ValidSelectableCharForNextOrPrev(const SOLDIERTYPE* const s)
 	if ( fShowInventoryFlag || fHoldingItem )
 	{
 		// the new guy must have accessible inventory
-		if (!MapCharacterHasAccessibleInventory(s))
+		if (!MapCharacterHasAccessibleInventory(*s))
 		{
 			return( FALSE );
 		}

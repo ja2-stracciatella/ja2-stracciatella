@@ -72,7 +72,7 @@ void AbortMovementPlottingMode( void );
 
 BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* s);
 
-BOOLEAN MapCharacterHasAccessibleInventory(const SOLDIERTYPE*);
+bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const&);
 
 const wchar_t* GetMapscreenMercAssignmentString(const SOLDIERTYPE* pSoldier);
 void GetMapscreenMercLocationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length);

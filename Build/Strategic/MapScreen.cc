@@ -4073,7 +4073,7 @@ static void BltCharInvPanel(void)
 	CHAR16 sString[ 32 ];
 
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
-	Assert(MapCharacterHasAccessibleInventory(pSoldier));
+	Assert(MapCharacterHasAccessibleInventory(*pSoldier));
 
 	BltVideoObject(guiSAVEBUFFER, guiMAPINV, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 
@@ -4181,7 +4181,7 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	UINT32 uiHandPos;
 
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
-	Assert(MapCharacterHasAccessibleInventory(pSoldier));
+	Assert(MapCharacterHasAccessibleInventory(*pSoldier));
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -4229,7 +4229,7 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	static BOOLEAN	fRightDown = FALSE;
 
 	SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
-	Assert(MapCharacterHasAccessibleInventory(pSoldier));
+	Assert(MapCharacterHasAccessibleInventory(*pSoldier));
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -7445,7 +7445,7 @@ static bool CanToggleSelectedCharInventory()
 	if (pSoldier == NULL) return FALSE;
 
 	// does the selected guy have inventory and can we get at it?
-	if (!MapCharacterHasAccessibleInventory(pSoldier)) return FALSE;
+	if (!MapCharacterHasAccessibleInventory(*pSoldier)) return FALSE;
 
 	// if not in inventory, and holding an item from sector inventory
 	if( !fShowInventoryFlag &&
@@ -7468,14 +7468,14 @@ static bool CanToggleSelectedCharInventory()
 }
 
 
-BOOLEAN MapCharacterHasAccessibleInventory(const SOLDIERTYPE* const s)
+bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const& s)
 {
 	return
-		s->bAssignment         != IN_TRANSIT     &&
-		s->bAssignment         != ASSIGNMENT_POW &&
-		!IsMechanical(*s)                        &&
-		s->ubWhatKindOfMercAmI != MERC_TYPE__EPC &&
-		s->bLife               >= OKLIFE;
+		s.bAssignment         != IN_TRANSIT     &&
+		s.bAssignment         != ASSIGNMENT_POW &&
+		!IsMechanical(s)                        &&
+		s.ubWhatKindOfMercAmI != MERC_TYPE__EPC &&
+		s.bLife               >= OKLIFE;
 }
 
 
@@ -7819,7 +7819,7 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 		if ( fShowInventoryFlag )
 		{
 			// and we're changing to nobody or a guy whose inventory can't be accessed
-			if (s == NULL || !MapCharacterHasAccessibleInventory(s))
+			if (!s || !MapCharacterHasAccessibleInventory(*s))
 			{
 				// then get out of inventory mode
 				fShowInventoryFlag = FALSE;
