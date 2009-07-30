@@ -833,25 +833,24 @@ static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, wchar_t* sSt
 
 
 // "character" refers to hired people AND vehicles
-static void DrawCharacterInfo(const SOLDIERTYPE* const s)
+static void DrawCharacterInfo(SOLDIERTYPE const& s)
 {
-	wchar_t sString[80];
+	wchar_t buf[80];
 
-	const ProfileID pid = s->ubProfile;
+	ProfileID const pid = s.ubProfile;
 	if (pid == NO_PROFILE) return;
 	MERCPROFILESTRUCT const& p = GetProfile(pid);
 
-	// draw particular info about a character that are neither attributes nor skills
-
+	// Draw particular info about a character that are neither attributes nor skills
 	SetFontAttributes(CHAR_FONT, CHAR_TEXT_FONT_COLOR);
 
-	const wchar_t* nickname; // Nickname (beneath Picture)
-	const wchar_t* name;     // Full name (Top Box)
-	if (s->uiStatusFlags & SOLDIER_VEHICLE)
+	wchar_t const* nickname; // Nickname (beneath picture)
+	wchar_t const* name;     // Full name (top box)
+	if (s.uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		const VEHICLETYPE* const v = &pVehicleList[s->bVehicleID];
-		nickname = pShortVehicleStrings[v->ubVehicleType];
-		name     = pVehicleStrings[     v->ubVehicleType];
+		VEHICLETYPE const& v = GetVehicle(s.bVehicleID);
+		nickname = pShortVehicleStrings[v.ubVehicleType];
+		name     = pVehicleStrings[     v.ubVehicleType];
 	}
 	else
 	{
@@ -861,179 +860,139 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 	DrawStringCentered(nickname, PIC_NAME_X,  PIC_NAME_Y,  PIC_NAME_WID,  PIC_NAME_HEI,  CHAR_FONT);
 	DrawStringCentered(name,     CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, CHAR_FONT);
 
-	const wchar_t* assignment;
-	if (s->bAssignment == VEHICLE)
-	{
-		// show vehicle type
-		assignment = pShortVehicleStrings[pVehicleList[s->iVehicleId].ubVehicleType];
-	}
-	else
-	{
-		assignment = pAssignmentStrings[s->bAssignment];
-	}
+	wchar_t const* const assignment =
+		s.bAssignment == VEHICLE ? pShortVehicleStrings[GetVehicle(s.iVehicleId).ubVehicleType] : // Show vehicle type
+		pAssignmentStrings[s.bAssignment];
 	DrawStringCentered(assignment, CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 
-	// second assignment line
-	switch (s->bAssignment)
+	// Second assignment line
+	wchar_t const* assignment2;
+	switch (s.bAssignment)
 	{
 		case TRAIN_SELF:
 		case TRAIN_TEAMMATE:
 		case TRAIN_BY_OTHER:
-			wcscpy(sString, pAttributeMenuStrings[s->bTrainStat]);
+			assignment2 = pAttributeMenuStrings[s.bTrainStat];
 			break;
 
 		case TRAIN_TOWN:
-			wcscpy(sString, pTownNames[GetTownIdForSector(s->sSectorX, s->sSectorY)]);
+			assignment2 = pTownNames[GetTownIdForSector(s.sSectorX, s.sSectorY)];
 			break;
 
 		case REPAIR:
-			if (s->fFixingRobot)
-			{
-				wcscpy(sString, pRepairStrings[3]); // robot
-			}
+			assignment2 =
+				s.fFixingRobot                ? pRepairStrings[3] : // Robot
 #if 0 /* XXX was commented out */
-			else if (s->fFixingSAMSite)
-			{
-				wcscpy(sString, pRepairStrings[1]); // SAM site
-			}
+				s.fFixingSAMSite              ? pRepairStrings[1] : // SAM site
 #endif
-			else if (s->bVehicleUnderRepairID != -1)
-			{
-				wcscpy(sString, pShortVehicleStrings[pVehicleList[s->bVehicleUnderRepairID].ubVehicleType]); // vehicle
-			}
-			else
-			{
-				wcscpy(sString, pRepairStrings[0]); // items
-			}
+				s.bVehicleUnderRepairID != -1 ? pShortVehicleStrings[GetVehicle(s.bVehicleUnderRepairID).ubVehicleType] : // Vehicle
+				pRepairStrings[0]; // Items
 			break;
 
 		case IN_TRANSIT:
-			// show ETA
-			ConvertMinTimeToETADayHourMinString(s->uiTimeSoldierWillArrive, sString, lengthof(sString));
+			// Show ETA
+			ConvertMinTimeToETADayHourMinString(s.uiTimeSoldierWillArrive, buf, lengthof(buf));
+			assignment2 = buf;
 			break;
 
 		default:
 		{
-			GROUP const* const g = GetSoldierGroup(*s);
+			GROUP const* const g = GetSoldierGroup(s);
 			if (g && PlayerGroupInMotion(g))
-			{
-				// show ETA
-				UINT32 const uiArrivalTime = GetWorldTotalMin() + CalculateTravelTimeOfGroup(g);
-				ConvertMinTimeToETADayHourMinString(uiArrivalTime, sString, lengthof(sString));
+			{ // Show ETA
+				UINT32 const arrival_time = GetWorldTotalMin() + CalculateTravelTimeOfGroup(g);
+				ConvertMinTimeToETADayHourMinString(arrival_time, buf, lengthof(buf));
 			}
 			else
-			{
-				// show location
-				GetMapscreenMercLocationString(s, sString, lengthof(sString));
+			{ // Show location
+				GetMapscreenMercLocationString(&s, buf, lengthof(buf));
 			}
+			assignment2 = buf;
 			break;
 		}
 	}
-	DrawStringCentered(sString, CHAR_ASSIGN_X, CHAR_ASSIGN2_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
+	DrawStringCentered(assignment2, CHAR_ASSIGN_X, CHAR_ASSIGN2_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 
-	DrawCharHealth(s);
+	DrawCharHealth(&s);
 
-	// if a vehicle or robot, we're done - the remainder applies only to people
-	if (IsMechanical(*s)) return;
+	// If a vehicle or robot, we're done - the remainder applies only to people
+	if (IsMechanical(s)) return;
 
-	DrawCharStats(s);
+	DrawCharStats(&s);
 
-	// remaining contract length
-
-	// dead?
-	if (s->bLife <= 0)
+	// Remaining contract length
+	wchar_t const* contract = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
+	if (s.bLife > 0)
 	{
-		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-	}
-	// what kind of merc
-	else if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || s->ubProfile == SLAY)
-	{
-		// amount of time left on contract
-		INT32 iTimeRemaining = s->iEndofContractTime-GetWorldTotalMin();
+		if (s.ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || s.ubProfile == SLAY)
+		{
+			// Amount of time left on contract
+			INT32 time_remaining = s.iEndofContractTime - GetWorldTotalMin();
 
-		/* if the merc is in transit and if the time left on the contract is greater
-		 * then the contract time */
-		if (s->bAssignment == IN_TRANSIT &&
-				iTimeRemaining > (INT32)(s->iTotalContractLength * NUM_MIN_IN_DAY))
-		{
-			iTimeRemaining = s->iTotalContractLength * NUM_MIN_IN_DAY;
-		}
+			if (s.bAssignment == IN_TRANSIT &&
+					time_remaining > (INT32)(s.iTotalContractLength * NUM_MIN_IN_DAY))
+			{ /* If the merc is in transit and if the time left on the contract is
+				 * greater than the contract time */
+				time_remaining = s.iTotalContractLength * NUM_MIN_IN_DAY;
+			}
 
-		if (iTimeRemaining >= 24 * 60)
-		{
-			//calculate the exact time left on the contract (ex 1.8 days)
-			const float dTimeLeft = iTimeRemaining / (60 * 24.0);
-			// more than a day, display in green
-			swprintf(sString, lengthof(sString), L"%.1f%ls/%d%ls", dTimeLeft, gpStrategicString[STR_PB_DAYS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
-		}
-		else
-		{
-			// less than a day, display hours left in red
-			if (iTimeRemaining > 5)
-			{
-				const BOOLEAN fNeedToIncrement = (iTimeRemaining % 60 != 0);
-				iTimeRemaining /= 60;
-				if (fNeedToIncrement) ++iTimeRemaining;
+			if (time_remaining >= 24 * 60)
+			{ // More than a day, display in green
+				// Calculate the exact time left on the contract (e.g. 1.8 days)
+				float          const time_left = time_remaining / (60 * 24.0);
+				wchar_t const* const days      = gpStrategicString[STR_PB_DAYS_ABBREVIATION];
+				swprintf(buf, lengthof(buf), L"%.1f%ls/%d%ls", time_left, days, s.iTotalContractLength, days);
 			}
 			else
-			{
-				iTimeRemaining /= 60;
+			{ // Less than a day, display hours left in red
+				if (time_remaining > 5) time_remaining += 59;
+				time_remaining /= 60;
+				wchar_t const* const hours = gpStrategicString[STR_PB_HOURS_ABBREVIATION];
+				wchar_t const* const days  = gpStrategicString[STR_PB_DAYS_ABBREVIATION];
+				swprintf(buf, lengthof(buf), L"%d%ls/%d%ls", time_remaining, hours, s.iTotalContractLength, days);
 			}
-			swprintf(sString, lengthof(sString), L"%d%ls/%d%ls", iTimeRemaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+			contract = buf;
 		}
-	}
-	else if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-	{
-		const INT32 iBeenHiredFor = GetWorldTotalMin() / NUM_MIN_IN_DAY - s->iStartContractTime;
-		swprintf(sString, lengthof(sString), L"%d%ls/%d%ls", p.iMercMercContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION], iBeenHiredFor, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
-	}
-	else
-	{
-		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
+		else if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+		{
+			INT32          const been_hired_for = GetWorldTotalMin() / NUM_MIN_IN_DAY - s.iStartContractTime;
+			wchar_t const* const days           = gpStrategicString[STR_PB_DAYS_ABBREVIATION];
+			swprintf(buf, lengthof(buf), L"%d%ls/%d%ls", p.iMercMercContractLength, days, been_hired_for, days);
+			contract = buf;
+		}
 	}
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	SetFontBackground(FONT_BLACK);
-	DrawStringCentered(sString, CHAR_TIME_REMAINING_X, CHAR_TIME_REMAINING_Y, CHAR_TIME_REMAINING_WID, CHAR_TIME_REMAINING_HEI, CHAR_FONT);
+	DrawStringCentered(contract, CHAR_TIME_REMAINING_X, CHAR_TIME_REMAINING_Y, CHAR_TIME_REMAINING_WID, CHAR_TIME_REMAINING_HEI, CHAR_FONT);
 
-	// salary
-	INT32 iDailyCost;
-	if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-	{
-		// daily rate
-		switch (s->bTypeOfLastContract)
+	// Salary
+	INT32 daily_cost;
+	if (s.ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+	{ // Daily rate
+		switch (s.bTypeOfLastContract)
 		{
-			case CONTRACT_EXTEND_2_WEEK: iDailyCost = p.uiBiWeeklySalary / 14; break;
-			case CONTRACT_EXTEND_1_WEEK: iDailyCost = p.uiWeeklySalary   /  7; break;
-			default:                     iDailyCost = p.sSalary;               break;
+			case CONTRACT_EXTEND_2_WEEK: daily_cost = p.uiBiWeeklySalary / 14; break;
+			case CONTRACT_EXTEND_1_WEEK: daily_cost = p.uiWeeklySalary   /  7; break;
+			default:                     daily_cost = p.sSalary;               break;
 		}
 	}
 	else
 	{
-		iDailyCost = p.sSalary;
+		daily_cost = p.sSalary;
 	}
-	SPrintMoney(sString, iDailyCost);
-	DrawStringRight(sString, CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, CHAR_FONT);
+	SPrintMoney(buf, daily_cost);
+	DrawStringRight(buf, CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, CHAR_FONT);
 
-	// medical deposit
+	// Medical deposit
 	if (p.sMedicalDepositAmount > 0)
 	{
-		SPrintMoney(sString, p.sMedicalDepositAmount);
-		DrawStringRight(sString, CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, CHAR_FONT);
+		SPrintMoney(buf, p.sMedicalDepositAmount);
+		DrawStringRight(buf, CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, CHAR_FONT);
 	}
 
-	const wchar_t* morale;
-	if (s->bAssignment == ASSIGNMENT_POW)
-	{
-		morale = pPOWStrings[1]; // POW - morale unknown
-	}
-	else if (s->bLife == 0)
-	{
-		morale = L"";
-	}
-	else
-	{
-		morale = GetMoraleString(*s);
-	}
+	wchar_t const* const morale =
+		s.bAssignment == ASSIGNMENT_POW ? pPOWStrings[1] : // POW - morale unknown
+		s.bLife == 0                    ? L""            :
+		GetMoraleString(s);
 	DrawStringCentered(morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
 }
 
@@ -1053,7 +1012,7 @@ static void DisplayCharacterInfo(void)
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// draw character info and face
-	DrawCharacterInfo(s);
+	DrawCharacterInfo(*s);
 
 	RenderHandPosItem();
 
