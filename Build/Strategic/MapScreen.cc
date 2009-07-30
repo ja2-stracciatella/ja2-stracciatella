@@ -738,12 +738,13 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font);
 
 
-static void PrintStat(const UINT32 change_time, const UINT16 stat_gone_up_bit, const INT8 stat_val, const INT16 x, const INT16 y)
+static void PrintStat(UINT32 const change_time, UINT16 const stat_gone_up_bit, INT8 const stat_val, INT16 const x, INT16 const y)
 {
-	const UINT8 colour =
-		change_time == 0 || GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? CHAR_TEXT_FONT_COLOR :
-		stat_gone_up_bit != 0                                                            ? FONT_LTGREEN         :
-		                                                                                   FONT_RED;
+	UINT8 const colour =
+		change_time == 0 ||
+		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? CHAR_TEXT_FONT_COLOR :
+		stat_gone_up_bit != 0                                        ? FONT_LTGREEN         :
+		FONT_RED;
 	SetFontForeground(colour);
 	wchar_t str[16];
 	swprintf(str, lengthof(str), L"%d", stat_val);
@@ -752,21 +753,20 @@ static void PrintStat(const UINT32 change_time, const UINT16 stat_gone_up_bit, c
 
 
 // Draw attributes & skills for given soldier
-static void DrawCharStats(const SOLDIERTYPE* const s)
+static void DrawCharStats(SOLDIERTYPE const& s)
 {
 	SetFontAttributes(CHAR_FONT, CHAR_TEXT_FONT_COLOR);
-
-	const UINT16 vgu = s->usValueGoneUp;
-	PrintStat(s->uiChangeAgilityTime,      vgu & AGIL_INCREASE,     s->bAgility,      AGL_X, AGL_Y); // agility
-	PrintStat(s->uiChangeDexterityTime,    vgu & DEX_INCREASE,      s->bDexterity,    DEX_X, DEX_Y); // dexterity
-	PrintStat(s->uiChangeStrengthTime,     vgu & STRENGTH_INCREASE, s->bStrength,     STR_X, STR_Y); // strength
-	PrintStat(s->uiChangeLeadershipTime,   vgu & LDR_INCREASE,      s->bLeadership,   LDR_X, LDR_Y); // leadership
-	PrintStat(s->uiChangeWisdomTime,       vgu & WIS_INCREASE,      s->bWisdom,       WIS_X, WIS_Y); // wisdom
-	PrintStat(s->uiChangeLevelTime,        vgu & LVL_INCREASE,      s->bExpLevel,     LVL_X, LVL_Y); // experience level
-	PrintStat(s->uiChangeMarksmanshipTime, vgu & MRK_INCREASE,      s->bMarksmanship, MRK_X, MRK_Y); // marksmanship
-	PrintStat(s->uiChangeExplosivesTime,   vgu & EXP_INCREASE,      s->bExplosive,    EXP_X, EXP_Y); // explosives
-	PrintStat(s->uiChangeMechanicalTime,   vgu & MECH_INCREASE,     s->bMechanical,   MEC_X, MEC_Y); // mechanical
-	PrintStat(s->uiChangeMedicalTime,      vgu & MED_INCREASE,      s->bMedical,      MED_X, MED_Y); // medical
+	UINT16 const up = s.usValueGoneUp;
+	PrintStat(s.uiChangeAgilityTime,      up & AGIL_INCREASE,     s.bAgility,      AGL_X, AGL_Y);
+	PrintStat(s.uiChangeDexterityTime,    up & DEX_INCREASE,      s.bDexterity,    DEX_X, DEX_Y);
+	PrintStat(s.uiChangeStrengthTime,     up & STRENGTH_INCREASE, s.bStrength,     STR_X, STR_Y);
+	PrintStat(s.uiChangeLeadershipTime,   up & LDR_INCREASE,      s.bLeadership,   LDR_X, LDR_Y);
+	PrintStat(s.uiChangeWisdomTime,       up & WIS_INCREASE,      s.bWisdom,       WIS_X, WIS_Y);
+	PrintStat(s.uiChangeLevelTime,        up & LVL_INCREASE,      s.bExpLevel,     LVL_X, LVL_Y);
+	PrintStat(s.uiChangeMarksmanshipTime, up & MRK_INCREASE,      s.bMarksmanship, MRK_X, MRK_Y);
+	PrintStat(s.uiChangeExplosivesTime,   up & EXP_INCREASE,      s.bExplosive,    EXP_X, EXP_Y);
+	PrintStat(s.uiChangeMechanicalTime,   up & MECH_INCREASE,     s.bMechanical,   MEC_X, MEC_Y);
+	PrintStat(s.uiChangeMedicalTime,      up & MED_INCREASE,      s.bMedical,      MED_X, MED_Y);
 }
 
 
@@ -919,7 +919,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 	// If a vehicle or robot, we're done - the remainder applies only to people
 	if (IsMechanical(s)) return;
 
-	DrawCharStats(&s);
+	DrawCharStats(s);
 
 	// Remaining contract length
 	wchar_t const* contract = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
