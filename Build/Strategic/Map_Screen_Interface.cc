@@ -1486,28 +1486,14 @@ INT32 GetNumberOfPeopleInCharacterList( void )
 }
 
 
-static BOOLEAN ValidSelectableCharForNextOrPrev(const SOLDIERTYPE* const s)
+static bool ValidSelectableCharForNextOrPrev(SOLDIERTYPE const& s)
 {
-	BOOLEAN fHoldingItem = FALSE;
-
-	// if holding an item
-	if (gpItemPointer || fMapInventoryItem)
-	{
-		fHoldingItem = TRUE;
-	}
-
-	// if showing merc inventory, or holding an item
-	if ( fShowInventoryFlag || fHoldingItem )
-	{
-		// the new guy must have accessible inventory
-		if (!MapCharacterHasAccessibleInventory(*s))
-		{
-			return( FALSE );
-		}
-	}
-
-	if (fHoldingItem) return MapscreenCanPassItemToChar(s);
-	return TRUE;
+	bool const holding_item = gpItemPointer || fMapInventoryItem;
+	return
+		/* If showing merc inventory or holding an item, then the new guy must have
+		 * accessible inventory */
+		((!holding_item && !fShowInventoryFlag) || MapCharacterHasAccessibleInventory(s)) &&
+		(!holding_item || MapscreenCanPassItemToChar(&s));
 }
 
 
@@ -1628,7 +1614,7 @@ void GoToNextCharacterInList( void )
 		const SOLDIERTYPE* const s = gCharactersList[iCount].merc;
 		if (s != NULL &&
 				iCount < MAX_CHARACTER_COUNT &&
-				ValidSelectableCharForNextOrPrev(s))
+				ValidSelectableCharForNextOrPrev(*s))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
 			break;
@@ -1673,7 +1659,7 @@ void GoToPrevCharacterInList( void )
 		const SOLDIERTYPE* const s = gCharactersList[iCount].merc;
 		if (s != NULL &&
 				iCount < MAX_CHARACTER_COUNT &&
-				ValidSelectableCharForNextOrPrev(s))
+				ValidSelectableCharForNextOrPrev(*s))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
 			break;
