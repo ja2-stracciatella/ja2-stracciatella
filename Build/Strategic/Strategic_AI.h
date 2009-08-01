@@ -30,7 +30,7 @@ extern BOOLEAN gfUseAlternateQueenPosition;
 BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup );
 void RemoveGroupFromStrategicAILists( UINT8 ubGroupID );
 void RecalculateSectorWeight( UINT8 ubSectorID );
-void RecalculateGroupWeight( GROUP *pGroup );
+void RecalculateGroupWeight(GROUP const&);
 
 BOOLEAN OkayForEnemyToMoveThroughSector( UINT8 ubSectorID );
 

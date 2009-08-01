@@ -787,7 +787,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		}
 		if( pGroup->ubGroupSize )
 			pGroup->ubGroupSize--;
-		RecalculateGroupWeight( pGroup );
+		RecalculateGroupWeight(*pGroup);
 		if( !pGroup->ubGroupSize )
 		{
 			RemoveGroup(*pGroup);

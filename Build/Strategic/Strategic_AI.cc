@@ -2096,7 +2096,7 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 							pGroup->pEnemyGroup->ubNumTroops += ubNum;
 							pGroup->ubGroupSize += ubNum;
 							pGroup->pEnemyGroup->ubPendingReinforcements -= ubNum;
-							RecalculateGroupWeight( pGroup );
+							RecalculateGroupWeight(*pGroup);
 							ValidateLargeGroup( pGroup );
 						}
 						else
@@ -2324,26 +2324,23 @@ void RecalculateSectorWeight( UINT8 ubSectorID )
 }
 
 
-static void TagSAIGroupWithGracePeriod(GROUP* pGroup);
+static void TagSAIGroupWithGracePeriod(GROUP const*);
 
 
-void RecalculateGroupWeight( GROUP *pGroup )
+void RecalculateGroupWeight(GROUP const& g)
 {
-	INT32 i;
-	for( i = 0; i < giPatrolArraySize; i++ )
+	for (INT32 i = 0; i != giPatrolArraySize; ++i)
 	{
-		if( gPatrolGroup[ i ].ubGroupID == pGroup->ubGroupID )
+		PATROL_GROUP& p = gPatrolGroup[i];
+		if (p.ubGroupID != g.ubGroupID) continue;
+		if (g.ubGroupSize == 0)
 		{
-			if( !pGroup->ubGroupSize )
-			{
-				TagSAIGroupWithGracePeriod( pGroup );
-				gPatrolGroup[ i ].ubGroupID = 0;
-			}
-			RecalculatePatrolWeight( i );
-			return;
+			TagSAIGroupWithGracePeriod(&g);
+			p.ubGroupID = 0;
 		}
+		RecalculatePatrolWeight(i);
+		return;
 	}
-
 }
 
 
@@ -4654,7 +4651,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 
 //When an enemy AI group is eliminated by the player, apply a grace period in which the
 //group isn't allowed to be filled for several days.
-static void TagSAIGroupWithGracePeriod(GROUP* pGroup)
+static void TagSAIGroupWithGracePeriod(GROUP const* const pGroup)
 {
 	INT32 iPatrolID;
 	if( pGroup )
