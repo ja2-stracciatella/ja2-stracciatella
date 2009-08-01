@@ -74,8 +74,8 @@ BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* s);
 
 bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const&);
 
-const wchar_t* GetMapscreenMercAssignmentString(const SOLDIERTYPE* pSoldier);
-void GetMapscreenMercLocationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length);
+wchar_t const* GetMapscreenMercAssignmentString(SOLDIERTYPE const&);
+void GetMapscreenMercLocationString(SOLDIERTYPE const&, wchar_t* buf, size_t n);
 void GetMapscreenMercDestinationString(SOLDIERTYPE const&, wchar_t* buf, size_t n);
 void GetMapscreenMercDepartureString(SOLDIERTYPE const&, wchar_t* buf, size_t n, UINT8* text_colour);
 

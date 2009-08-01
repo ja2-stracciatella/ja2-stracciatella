@@ -906,7 +906,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 			}
 			else
 			{ // Show location
-				GetMapscreenMercLocationString(&s, buf, lengthof(buf));
+				GetMapscreenMercLocationString(s, buf, lengthof(buf));
 			}
 			assignment2 = buf;
 			break;
@@ -2209,7 +2209,7 @@ static void DrawCharInfo(INT16 const row, UINT8 text_color)
 	DrawStringCentered(s.name, NAME_X + 1, y, NAME_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Location
-	GetMapscreenMercLocationString(&s, str, lengthof(str));
+	GetMapscreenMercLocationString(s, str, lengthof(str));
 	DrawStringCentered(str, LOC_X + 1, y, LOC_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Destination
@@ -2224,7 +2224,7 @@ static void DrawCharInfo(INT16 const row, UINT8 text_color)
 	{
 		SetFontForeground(FONT_RED);
 	}
-	wchar_t const* const assignment = GetMapscreenMercAssignmentString(&s);
+	wchar_t const* const assignment = GetMapscreenMercAssignmentString(s);
 	DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Remaining contract time
@@ -8453,39 +8453,27 @@ static void HandlePostAutoresolveMessages(void)
 }
 
 
-const wchar_t* GetMapscreenMercAssignmentString(const SOLDIERTYPE* pSoldier)
+wchar_t const* GetMapscreenMercAssignmentString(SOLDIERTYPE const& s)
 {
-	if (pSoldier->bAssignment == VEHICLE)
-	{
-		return pShortVehicleStrings[pVehicleList[pSoldier->iVehicleId].ubVehicleType];
-	}
-	else
-	{
-		return pAssignmentStrings[pSoldier->bAssignment];
-	}
+	return
+		s.bAssignment == VEHICLE ? pShortVehicleStrings[GetVehicle(s.iVehicleId).ubVehicleType] :
+		pAssignmentStrings[s.bAssignment];
 }
 
 
-void GetMapscreenMercLocationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length)
+void GetMapscreenMercLocationString(SOLDIERTYPE const& s, wchar_t* const buf, size_t const n)
 {
-	if( pSoldier->bAssignment == IN_TRANSIT )
-	{
-		// show blank
-		wcscpy( sString, L"--" );
+	if (s.bAssignment == IN_TRANSIT)
+	{ // Show blank
+		wcslcpy(buf, L"--", n);
+	}
+	else if (s.bAssignment == ASSIGNMENT_POW)
+	{ // POW - location unknown
+		wcslcpy(buf, pPOWStrings[1], n);
 	}
 	else
-	{
-		if( pSoldier->bAssignment == ASSIGNMENT_POW )
-		{
-			// POW - location unknown
-			wcslcpy(sString, pPOWStrings[1], Length);
-		}
-		else
-		{
-			// put brackets around it when he's between sectors!
-			swprintf(sString, Length, pSoldier->fBetweenSectors ? L"(%ls%ls%ls)" : L"%ls%ls%ls",
-						pMapVertIndex[ pSoldier->sSectorY ], pMapHortIndex[ pSoldier->sSectorX ], pMapDepthIndex[ pSoldier->bSectorZ ] );
-		}
+	{ // Put parentheses around it when he's between sectors
+		swprintf(buf, n, s.fBetweenSectors ? L"(%ls%ls%ls)" : L"%ls%ls%ls", pMapVertIndex[s.sSectorY], pMapHortIndex[s.sSectorX], pMapDepthIndex[s.bSectorZ]);
 	}
 }
 

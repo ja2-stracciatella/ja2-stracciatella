@@ -1018,7 +1018,7 @@ void RenderPreBattleInterface()
 				// Name
 				MPrintCentered( 17, y, 52, s.name);
 				// Assignment
-				MPrintCentered( 72, y, 45, GetMapscreenMercAssignmentString(&s));
+				MPrintCentered( 72, y, 45, GetMapscreenMercAssignmentString(s));
 				// Condition
 				MPrintCentered(129, y, 58, GetSoldierConditionInfo(s));
 				// HP
@@ -1051,9 +1051,9 @@ void RenderPreBattleInterface()
 				// Name
 				MPrintCentered( 17, y, 52, s.name);
 				// Assignment
-				MPrintCentered( 72, y, 54, GetMapscreenMercAssignmentString(&s));
+				MPrintCentered( 72, y, 54, GetMapscreenMercAssignmentString(s));
 				// Location
-				GetMapscreenMercLocationString(&s, str, lengthof(str));
+				GetMapscreenMercLocationString(s, str, lengthof(str));
 				MPrintCentered(128, y, 33, str);
 				// Destination
 				GetMapscreenMercDestinationString(s, str, lengthof(str));
