@@ -2197,40 +2197,38 @@ static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UI
 }
 
 
-static void DrawCharInfo(INT16 row, UINT8 text_color)
+static void DrawCharInfo(INT16 const row, UINT8 text_color)
 {
 	UINT16 y = Y_START + row * (Y_SIZE + Y_OFFSET) + 1;
 	if (row >= FIRST_VEHICLE) y += 6;
 
-	const SOLDIERTYPE* const s = gCharactersList[row].merc;
+	SOLDIERTYPE const& s = *gCharactersList[row].merc;
+	wchar_t            str[32];
 
 	// Name
-	const wchar_t* const name = s->name;
-	DrawStringCentered(name, NAME_X + 1, y, NAME_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
-
-	wchar_t str[32];
+	DrawStringCentered(s.name, NAME_X + 1, y, NAME_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Location
-	GetMapscreenMercLocationString(s, str, lengthof(str));
+	GetMapscreenMercLocationString(&s, str, lengthof(str));
 	DrawStringCentered(str, LOC_X + 1, y, LOC_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Destination
-	GetMapscreenMercDestinationString(*s, str, lengthof(str));
+	GetMapscreenMercDestinationString(s, str, lengthof(str));
 	if (str[0] != '\0')
 	{
 		DrawStringCentered(str, DEST_ETA_X + 1, y, DEST_ETA_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 	}
 
 	// Assignment
-	if (fFlashAssignDone && s->fDoneAssignmentAndNothingToDoFlag)
+	if (fFlashAssignDone && s.fDoneAssignmentAndNothingToDoFlag)
 	{
 		SetFontForeground(FONT_RED);
 	}
-	const wchar_t* const assignment = GetMapscreenMercAssignmentString(s);
+	wchar_t const* const assignment = GetMapscreenMercAssignmentString(&s);
 	DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Remaining contract time
-	GetMapscreenMercDepartureString(s, str, lengthof(str), &text_color);
+	GetMapscreenMercDepartureString(&s, str, lengthof(str), &text_color);
 	if (row == giHighLine) text_color = FONT_WHITE;
 	SetFontForeground(text_color);
 	DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
