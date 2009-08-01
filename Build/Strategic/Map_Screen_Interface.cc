@@ -3934,9 +3934,9 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 		}
 	}
 
-	// If merc is in a particular sector, not somewhere in between, and he's NOT flying above it all in a working helicopter
-	if (!s.fBetweenSectors)
-	if (!SoldierAboardAirborneHeli(s))
+	/* If merc is in a particular sector, not somewhere in between, and he's NOT
+	 * flying above it all in a working helicopter */
+	if (!s.fBetweenSectors && !SoldierAboardAirborneHeli(s))
 	{
 		// And that sector is loaded
 		if (s.sSectorX == gWorldSectorX &&
@@ -3951,11 +3951,8 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 			if (InAirRaid()) return ME_AIR_RAID;
 		}
 
-		// not necessarily loaded - if there are any hostiles there
-		if (NumHostilesInSector(s.sSectorX, s.sSectorY, s.bSectorZ ) > 0)
-		{
-			return ME_ENEMY;
-		}
+		// Not necessarily loaded - if there are any hostiles there
+		if (NumHostilesInSector(s.sSectorX, s.sSectorY, s.bSectorZ) > 0) return ME_ENEMY;
 	}
 
 	// If in L12 museum, and the museum alarm went off, and Eldin still around
@@ -3995,7 +3992,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 	}
 	else if (s.ubWhatKindOfMercAmI == MERC_TYPE__EPC) // an Escorted NPC?
 	{
-		// going alone?
+		// Going alone?
 		if ((s.bAssignment == VEHICLE && GetNumberOfNonEPCsInVehicle(s.iVehicleId) == 0) ||
 				(s.bAssignment  < ON_DUTY && NumberOfNonEPCsInSquad(s.bAssignment) == 0))
 		{
