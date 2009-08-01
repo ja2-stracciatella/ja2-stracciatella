@@ -1669,7 +1669,7 @@ static BOOLEAN ReinforcementsApproved(INT32 iGarrisonID, UINT16* pusDefencePoint
 
 static void EliminateSurplusTroopsForGarrison(GROUP* pGroup, SECTORINFO* pSector);
 static void RecalculateGarrisonWeight(INT32 iGarrisonID);
-static void RecalculatePatrolWeight(INT32 iPatrolID);
+static void RecalculatePatrolWeight(PATROL_GROUP&);
 
 
 //if the group has arrived in a sector, and doesn't have any particular orders, then
@@ -1822,7 +1822,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 										pPatrolGroup->pEnemyGroup->ubNumElites == MAX_STRATEGIC_TEAM_SIZE );
 					}
 					RemoveGroup(*pGroup);
-					RecalculatePatrolWeight( i );
+					RecalculatePatrolWeight(gPatrolGroup[i]);
 					ValidateLargeGroup( pPatrolGroup );
 				}
 				else
@@ -1845,7 +1845,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
 							pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
 					#endif
-					RecalculatePatrolWeight( i );
+					RecalculatePatrolWeight(gPatrolGroup[i]);
 				}
 				return TRUE;
 			}
@@ -2202,7 +2202,7 @@ void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
 		if( gPatrolGroup[ i ].ubGroupID == ubGroupID )
 		{ //Patrol group was destroyed.
 			gPatrolGroup[ i ].ubGroupID = 0;
-			RecalculatePatrolWeight( i );
+			RecalculatePatrolWeight(gPatrolGroup[i]);
 			return;
 		}
 		if( gPatrolGroup[ i ].ubPendingGroupID == ubGroupID )
@@ -2222,43 +2222,39 @@ void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
 }
 
 
-//Recalculates a group's weight based on any changes.
-//@@@Alex, this is possibly missing in some areas.  It is hard to ensure it is
-//everywhere with all the changes I've made.  I'm sure you could probably find some missing calls.
-static void RecalculatePatrolWeight(INT32 iPatrolID)
+/* Recalculates a group's weight based on any changes.
+ * @@@Alex, this is possibly missing in some areas. It is hard to ensure it is
+ * everywhere with all the changes I've made. I'm sure you could probably find
+ * some missing calls. */
+static void RecalculatePatrolWeight(PATROL_GROUP& p)
 {
-	GROUP *pGroup;
-	INT32 iWeight, iPrevWeight;
-	INT32 iNeedPopulation;
+	ValidateWeights(4);
 
-	ValidateWeights( 4 );
+	// First, remove the previous weight from the applicable field
+	INT32 const prev_weight = p.bWeight;
+	if (prev_weight > 0) giRequestPoints -= prev_weight;
 
-	//First, remove the previous weight from the applicable field.
-	iPrevWeight = gPatrolGroup[ iPatrolID ].bWeight;
-	if( iPrevWeight > 0 )
-		giRequestPoints -= iPrevWeight;
-
-	if( gPatrolGroup[ iPatrolID ].ubGroupID )
+	INT32 need_population;
+	if (p.ubGroupID != 0)
 	{
-		pGroup = GetGroup( gPatrolGroup[ iPatrolID ].ubGroupID );
-		iNeedPopulation = gPatrolGroup[ iPatrolID ].bSize - pGroup->ubGroupSize;
-		if( iNeedPopulation < 0 )
+		need_population = p.bSize - GetGroup(p.ubGroupID)->ubGroupSize;
+		if (need_population < 0)
 		{
-			gPatrolGroup[ iPatrolID ].bWeight = 0;
-			ValidateWeights( 27 );
+			p.bWeight = 0;
+			ValidateWeights(27);
 			return;
 		}
 	}
 	else
 	{
-		iNeedPopulation = gPatrolGroup[ iPatrolID ].bSize;
+		need_population = p.bSize;
 	}
-	iWeight = iNeedPopulation * 3 * gPatrolGroup[ iPatrolID ].bPriority / 96;
-	iWeight = MIN( 2, iWeight );
-	gPatrolGroup[ iPatrolID ].bWeight = (INT8)iWeight;
-	giRequestPoints += iWeight;
+	INT32 weight = need_population * 3 * p.bPriority / 96;
+	weight = MIN(weight, 2);
+	p.bWeight        = weight;
+	giRequestPoints += weight;
 
-	ValidateWeights( 5 );
+	ValidateWeights(5);
 }
 
 
@@ -2338,7 +2334,7 @@ void RecalculateGroupWeight(GROUP const& g)
 			TagSAIGroupWithGracePeriod(g);
 			p.ubGroupID = 0;
 		}
-		RecalculatePatrolWeight(i);
+		RecalculatePatrolWeight(p);
 		return;
 	}
 }
@@ -2892,7 +2888,7 @@ void EvaluateQueenSituation()
 	//go through the patrol groups
 	for( i = 0; i < giPatrolArraySize; i++ )
 	{
-		RecalculatePatrolWeight( i );
+		RecalculatePatrolWeight(gPatrolGroup[i]);
 		iWeight = gPatrolGroup[ i ].bWeight;
 		if( iWeight > 0 )
 		{
@@ -4013,7 +4009,7 @@ static void RequestHighPriorityGarrisonReinforcements(INT32 iGarrisonID, UINT8 u
 			}
 			pNewGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 			gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pNewGroup->ubGroupID;
-			RecalculatePatrolWeight( iBestIndex );
+			RecalculatePatrolWeight(gPatrolGroup[iBestIndex]);
 
 			MoveSAIGroupToSector( &pNewGroup, gGarrisonGroup[ iGarrisonID ].ubSectorID, EVASIVE, REINFORCEMENTS );
 		}
@@ -4022,7 +4018,7 @@ static void RequestHighPriorityGarrisonReinforcements(INT32 iGarrisonID, UINT8 u
 			gPatrolGroup[ iBestIndex ].ubGroupID = 0;
 			gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 			pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
-			RecalculatePatrolWeight( iBestIndex );
+			RecalculatePatrolWeight(gPatrolGroup[iBestIndex]);
 			//The ONLY case where the group is told to move somewhere else when they could be BETWEEN sectors.  The movegroup functions
 			//don't work if this is the case.  Teleporting them to their previous sector is the best and easiest way to deal with this.
 			SetEnemyGroupSector( pGroup, (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) );
@@ -4606,7 +4602,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 		//go through the patrol groups
 		for( i = 0; i < giPatrolArraySize; i++ )
 		{
-			RecalculatePatrolWeight( i );
+			RecalculatePatrolWeight(gPatrolGroup[i]);
 			iWeight = gPatrolGroup[ i ].bWeight;
 			if( iWeight > 0 )
 			{
@@ -4634,7 +4630,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 
 	for( i = 0; i <= iReloopLastIndex; i++ )
 	{
-		RecalculatePatrolWeight( i );
+		RecalculatePatrolWeight(gPatrolGroup[i]);
 		iWeight = gPatrolGroup[ i ].bWeight;
 		if( iWeight > 0 )
 		{
@@ -4690,7 +4686,7 @@ void RepollSAIGroup( GROUP *pGroup )
 	{
 		if( gPatrolGroup[ i ].ubGroupID == pGroup->ubGroupID )
 		{
-			RecalculatePatrolWeight( i ); //in case there are any dead enemies
+			RecalculatePatrolWeight(gPatrolGroup[i]); //in case there are any dead enemies
 			CalculateNextMoveIntention( pGroup );
 			return;
 		}
@@ -4717,7 +4713,7 @@ void ClearPreviousAIGroupAssignment( GROUP *pGroup )
 		if( gPatrolGroup[ i ].ubGroupID == pGroup->ubGroupID )
 		{
 			gPatrolGroup[ i ].ubGroupID = 0;
-			RecalculatePatrolWeight( i );
+			RecalculatePatrolWeight(gPatrolGroup[i]);
 			return;
 		}
 		if( gPatrolGroup[ i ].ubPendingGroupID == pGroup->ubGroupID )
