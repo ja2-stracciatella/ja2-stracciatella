@@ -396,9 +396,6 @@ static void LogStrategicMsg(const char* str, ...); //doesn't use the time stamp
 #endif
 
 
-void ClearPreviousAIGroupAssignment( GROUP *pGroup );
-
-
 extern INT16 sWorldSectorLocationOfFirstBattle;
 
 
@@ -635,7 +632,7 @@ static void ValidateGroup(GROUP* pGroup)
 				SAIReportError( str );
 			}
 			#endif
-			ClearPreviousAIGroupAssignment( pGroup );
+			RemoveGroupFromStrategicAILists(*pGroup);
 			RemoveGroup(*pGroup);
 			return;
 		}
@@ -650,7 +647,7 @@ static void ValidateGroup(GROUP* pGroup)
 			#endif
 			if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 			{
-				ClearPreviousAIGroupAssignment( pGroup );
+				RemoveGroupFromStrategicAILists(*pGroup);
 				ReassignAIGroup( &pGroup );
 				return;
 			}
@@ -1572,7 +1569,7 @@ static BOOLEAN HandleEmptySectorNoticedByPatrolGroup(GROUP* pGroup, UINT8 ubEmpt
 	}
 
 	//Clear the patrol group's previous orders.
-	ClearPreviousAIGroupAssignment( pGroup );
+	RemoveGroupFromStrategicAILists(*pGroup);
 
 	gGarrisonGroup[ ubGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 	MoveSAIGroupToSector( &pGroup, (UINT8)SECTOR( ubSectorX, ubSectorY ), DIRECT, REINFORCEMENTS );
@@ -3351,7 +3348,7 @@ void LoadStrategicAI(HWFILE const hFile)
 				if (g.ubSectorY != 16) continue;
 				if (g.ubPrevX   !=  0) continue;
 				if (g.ubPrevY   !=  0) continue;
-				ClearPreviousAIGroupAssignment(&g);
+				RemoveGroupFromStrategicAILists(g);
 				RemoveGroup(g);
 			}
 		}
@@ -3735,7 +3732,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			{	//Clear the pending group's assignment.
 				pPendingGroup = GetGroup( gGarrisonGroup[ SectorInfo[ ubSectorID ].ubGarrisonID ].ubPendingGroupID );
 				Assert( pPendingGroup );
-				ClearPreviousAIGroupAssignment( pPendingGroup );
+				RemoveGroupFromStrategicAILists(*pPendingGroup);
 			}
 			//Assign the elite squad to attack the SAM site
 			pGroup->pEnemyGroup->ubIntention = REINFORCEMENTS;
@@ -4529,7 +4526,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 
 	(*pGroup)->ubSectorIDOfLastReassignment = ubSectorID;
 
-	ClearPreviousAIGroupAssignment( *pGroup );
+	RemoveGroupFromStrategicAILists(**pGroup);
 
 	//First thing to do, is teleport the group to be AT the sector he is currently moving from.  Otherwise, the
 	//strategic pathing can break if the group is between sectors upon reassignment.
@@ -4705,11 +4702,6 @@ void RepollSAIGroup( GROUP *pGroup )
 			return;
 		}
 	}
-}
-
-void ClearPreviousAIGroupAssignment(GROUP* const g)
-{
-	RemoveGroupFromStrategicAILists(*g);
 }
 
 

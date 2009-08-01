@@ -292,9 +292,6 @@ static void PlayAutoResolveSample(SoundID const usNum, UINT32 const ubVolume, UI
 }
 
 
-extern void ClearPreviousAIGroupAssignment( GROUP *pGroup );
-
-
 static void EliminateAllMercs(void)
 {
 	SOLDIERCELL *pAttacker = NULL;
@@ -385,7 +382,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 			if (g.fPlayer)                continue;
 			if (g.ubSectorX != ubSectorX) continue;
 			if (g.ubSectorY != ubSectorY) continue;
-			ClearPreviousAIGroupAssignment(&g);
+			RemoveGroupFromStrategicAILists(g);
 			if (gpBattleGroup == &g) gpBattleGroup = 0;
 			RemoveGroup(g);
 		}
