@@ -307,51 +307,55 @@ static BOOLEAN IsAnyOfTeamOKInSector(const INT8 team)
 
 void EndTacticalBattleForEnemy()
 {
-	//Clear enemies in battle for all stationary groups in the sector.
-	if( gbWorldSectorZ > 0 )
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
+	// Clear enemies in battle for all stationary groups in the sector
+	else if (z == 0)
 	{
-		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-		pSector->ubAdminsInBattle = 0;
-		pSector->ubTroopsInBattle = 0;
-		pSector->ubElitesInBattle = 0;
+		SECTORINFO& sector = SectorInfo[SECTOR(x, y)];
+		sector.ubAdminsInBattle    = 0;
+		sector.ubTroopsInBattle    = 0;
+		sector.ubElitesInBattle    = 0;
+		sector.ubNumCreatures      = 0;
+		sector.ubCreaturesInBattle = 0;
 	}
-	else if( !gbWorldSectorZ )
+	if (z > 0)
 	{
-		SECTORINFO *pSector;
-		pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-		//grab the number of each type in the stationary sector
-		pSector->ubAdminsInBattle = 0;
-		pSector->ubTroopsInBattle = 0;
-		pSector->ubElitesInBattle = 0;
-		pSector->ubNumCreatures = 0;
-		pSector->ubCreaturesInBattle = 0;
+		UNDERGROUND_SECTORINFO& sector = *FindUnderGroundSector(x, y, z);
+		sector.ubAdminsInBattle = 0;
+		sector.ubTroopsInBattle = 0;
+		sector.ubElitesInBattle = 0;
 	}
-	else	// negative
-		return;
+	else
+	{ // Negative
+		return; // XXX exception?
+	}
 
-	//Clear this value so that profiled enemies can be added into battles in the future.
+	/* Clear this value so that profiled enemies can be added into battles in the
+	 * future */
 	gfProfiledEnemyAdded = FALSE;
 
-	//Clear enemies in battle for all mobile groups in the sector.
-	CFOR_ALL_ENEMY_GROUPS(pGroup)
+	// Clear enemies in battle for all mobile groups in the sector
+	CFOR_ALL_ENEMY_GROUPS(i)
 	{
-		if (!pGroup->fVehicle                  &&
-				pGroup->ubSectorX == gWorldSectorX &&
-				pGroup->ubSectorY == gWorldSectorY)
-		{
-			pGroup->pEnemyGroup->ubTroopsInBattle = 0;
-			pGroup->pEnemyGroup->ubElitesInBattle = 0;
-			pGroup->pEnemyGroup->ubAdminsInBattle = 0;
-		}
+		GROUP& g = *i;
+		if (g.fVehicle)       continue;
+		if (g.ubSectorX != x) continue;
+		if (g.ubSectorY != y) continue;
+		// XXX test for z missing?
+		ENEMYGROUP& eg = *g.pEnemyGroup;
+		eg.ubTroopsInBattle = 0;
+		eg.ubElitesInBattle = 0;
+		eg.ubAdminsInBattle = 0;
 	}
 
 	/* Check to see if any of our mercs have abandoned the militia during a
-	 * battle.  This is cause for a rather severe loyalty blow. */
+	 * battle. This is cause for a rather severe loyalty blow. */
 	if (IsAnyOfTeamOKInSector(MILITIA_TEAM) &&
 			(IsAnyOfTeamOKInSector(ENEMY_TEAM) || IsAnyOfTeamOKInSector(CREATURE_TEAM)))
 	{
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSectorX, gWorldSectorY, 0);
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, x, y, 0);
 	}
 }
 
