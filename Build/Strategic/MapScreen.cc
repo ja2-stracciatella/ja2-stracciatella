@@ -2228,7 +2228,7 @@ static void DrawCharInfo(INT16 const row, UINT8 text_color)
 	DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Remaining contract time
-	GetMapscreenMercDepartureString(&s, str, lengthof(str), &text_color);
+	GetMapscreenMercDepartureString(s, str, lengthof(str), &text_color);
 	if (row == giHighLine) text_color = FONT_WHITE;
 	SetFontForeground(text_color);
 	DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
@@ -8532,19 +8532,19 @@ no_destination:
 }
 
 
-void GetMapscreenMercDepartureString(SOLDIERTYPE const* const s, wchar_t* const str, size_t const length, UINT8* const text_colour)
+void GetMapscreenMercDepartureString(SOLDIERTYPE const& s, wchar_t* const buf, size_t const n, UINT8* const text_colour)
 {
-	if ((s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && s->ubProfile != SLAY) ||
-			s->bLife == 0)
+	if ((s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && s.ubProfile != SLAY) ||
+			s.bLife == 0)
 	{
-		wcslcpy(str, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], length);
+		wcslcpy(buf, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], n);
 		return;
 	}
 
-	INT32 mins_remaining = s->iEndofContractTime - GetWorldTotalMin();
-	if (s->bAssignment == IN_TRANSIT)
+	INT32 mins_remaining = s.iEndofContractTime - GetWorldTotalMin();
+	if (s.bAssignment == IN_TRANSIT)
 	{
-		INT32 const contract_length = s->iTotalContractLength * NUM_MIN_IN_DAY;
+		INT32 const contract_length = s.iTotalContractLength * NUM_MIN_IN_DAY;
 		if (mins_remaining > contract_length)
 		{
 			mins_remaining = contract_length;
@@ -8554,14 +8554,14 @@ void GetMapscreenMercDepartureString(SOLDIERTYPE const* const s, wchar_t* const 
 	if (mins_remaining >= MAP_TIME_UNDER_THIS_DISPLAY_AS_HOURS)
 	{ // 3 or more days remain
 		INT32 const days_remaining = mins_remaining / (24*60);
-		swprintf(str, length, L"%d%ls", days_remaining, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+		swprintf(buf, n, L"%d%ls", days_remaining, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 		*text_colour = FONT_LTGREEN;
 		return;
 	}
 
 	// less than 3 days
 	INT32 const hours_remaining = mins_remaining > 5 ?  (mins_remaining + 59) / 60 : 0;
-	swprintf(str, length, L"%d%ls", hours_remaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION]);
+	swprintf(buf, n, L"%d%ls", hours_remaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION]);
 
 	// last 3 days is Red, last 4 hours start flashing red/white!
 	*text_colour = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
