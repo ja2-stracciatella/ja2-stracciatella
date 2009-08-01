@@ -2324,7 +2324,7 @@ void RecalculateSectorWeight( UINT8 ubSectorID )
 }
 
 
-static void TagSAIGroupWithGracePeriod(GROUP const*);
+static void TagSAIGroupWithGracePeriod(GROUP const&);
 
 
 void RecalculateGroupWeight(GROUP const& g)
@@ -2335,7 +2335,7 @@ void RecalculateGroupWeight(GROUP const& g)
 		if (p.ubGroupID != g.ubGroupID) continue;
 		if (g.ubGroupSize == 0)
 		{
-			TagSAIGroupWithGracePeriod(&g);
+			TagSAIGroupWithGracePeriod(g);
 			p.ubGroupID = 0;
 		}
 		RecalculatePatrolWeight(i);
@@ -4649,30 +4649,22 @@ static void ReassignAIGroup(GROUP** pGroup)
 }
 
 
-//When an enemy AI group is eliminated by the player, apply a grace period in which the
-//group isn't allowed to be filled for several days.
-static void TagSAIGroupWithGracePeriod(GROUP const* const pGroup)
+/* When an enemy AI group is eliminated by the player, apply a grace period in
+ * which the group isn't allowed to be filled for several days. */
+static void TagSAIGroupWithGracePeriod(GROUP const& g)
 {
-	INT32 iPatrolID;
-	if( pGroup )
+	INT32 const patrol_id = FindPatrolGroupIndexForGroupID(g.ubGroupID);
+	if (patrol_id == -1) return;
+
+	UINT32 grace_period;
+	switch (gGameOptions.ubDifficultyLevel)
 	{
-		iPatrolID = FindPatrolGroupIndexForGroupID( pGroup->ubGroupID );
-		if( iPatrolID != -1 )
-		{
-			switch( gGameOptions.ubDifficultyLevel )
-			{
-				case DIF_LEVEL_EASY:
-					gPatrolGroup[ iPatrolID ].bFillPermittedAfterDayMod100 = (UINT8)((GetWorldDay() + EASY_PATROL_GRACE_PERIOD_IN_DAYS) % 100);
-					break;
-				case DIF_LEVEL_MEDIUM:
-					gPatrolGroup[ iPatrolID ].bFillPermittedAfterDayMod100 = (UINT8)((GetWorldDay() + NORMAL_PATROL_GRACE_PERIOD_IN_DAYS) % 100);
-					break;
-				case DIF_LEVEL_HARD:
-					gPatrolGroup[ iPatrolID ].bFillPermittedAfterDayMod100 = (UINT8)((GetWorldDay() + HARD_PATROL_GRACE_PERIOD_IN_DAYS) % 100);
-					break;
-			}
-		}
+		case DIF_LEVEL_EASY:   grace_period = EASY_PATROL_GRACE_PERIOD_IN_DAYS;   break;
+		case DIF_LEVEL_MEDIUM: grace_period = NORMAL_PATROL_GRACE_PERIOD_IN_DAYS; break;
+		case DIF_LEVEL_HARD:   grace_period = HARD_PATROL_GRACE_PERIOD_IN_DAYS;   break;
+		default:               return;
 	}
+	gPatrolGroup[patrol_id].bFillPermittedAfterDayMod100 = (GetWorldDay() + grace_period) % 100;
 }
 
 
