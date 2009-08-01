@@ -2215,7 +2215,7 @@ static void DrawCharInfo(INT16 row, UINT8 text_color)
 	DrawStringCentered(str, LOC_X + 1, y, LOC_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Destination
-	GetMapscreenMercDestinationString(s, str, lengthof(str));
+	GetMapscreenMercDestinationString(*s, str, lengthof(str));
 	if (str[0] != '\0')
 	{
 		DrawStringCentered(str, DEST_ETA_X + 1, y, DEST_ETA_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
@@ -8492,58 +8492,45 @@ void GetMapscreenMercLocationString(const SOLDIERTYPE* pSoldier, wchar_t sString
 }
 
 
-void GetMapscreenMercDestinationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length)
+void GetMapscreenMercDestinationString(SOLDIERTYPE const& s, wchar_t* const buf, size_t n)
 {
-	INT32 iSectorX, iSectorY;
-	INT16 sSector=0;
-
-	// by default, show nothing
-	wcscpy( sString, L"" );
-
-	// if dead or POW - has no destination (no longer part of a group, for that matter)
-	if( ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
-			( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			( pSoldier->bLife == 0 ) )
+	/* If dead or POW - has no destination (no longer part of a group, for that
+	 * matter) */
+	if (s.bAssignment != ASSIGNMENT_DEAD &&
+			s.bAssignment != ASSIGNMENT_POW  &&
+			s.bLife != 0)
 	{
-		return;
-	}
-
-	if( pSoldier->bAssignment == IN_TRANSIT )
-	{
-		// show the sector he'll be arriving in
-		iSectorX = gsMercArriveSectorX;
-		iSectorY = gsMercArriveSectorY;
+		INT32 x;
+		INT32 y;
+		if (s.bAssignment == IN_TRANSIT)
+		{ // Show the sector he'll be arriving in
+			x = gsMercArriveSectorX;
+			y = gsMercArriveSectorY;
+		}
+		else if (GetLengthOfMercPath(&s) > 0)
+		{ // He's going somewhere
+			INT16 const sector = GetLastSectorIdInCharactersPath(&s);
+			x = sector % MAP_WORLD_X;
+			y = sector / MAP_WORLD_Y;
+		}
+		else // no movement path is set
+		{
+			if (!s.fBetweenSectors) goto no_destination;
+			/* He must be returning to his previous (reversed so as to be the next)
+			 * sector, so show that as his destination individual soldiers don't
+			 * store previous/next sector coordinates, must go to his group for that
+			 */
+			GROUP const& g = *GetSoldierGroup(s);
+			x = g.ubNextX;
+			y = g.ubNextY;
+		}
+		swprintf(buf, n, L"%ls%ls", pMapVertIndex[y], pMapHortIndex[x]);
 	}
 	else
 	{
-		// if he's going somewhere
-		if ( GetLengthOfMercPath( pSoldier ) > 0 )
-		{
-			sSector = GetLastSectorIdInCharactersPath( pSoldier );
-			// convert
-			iSectorX = sSector % MAP_WORLD_X;
-			iSectorY = sSector / MAP_WORLD_Y;
-		}
-		else // no movement path is set...
-		{
-			if ( pSoldier->fBetweenSectors )
-			{
-				// he must be returning to his previous (reversed so as to be the next) sector, so show that as his destination
-				// individual soldiers don't store previous/next sector coordinates, must go to his group for that
-				GROUP* const pGroup = GetSoldierGroup(*pSoldier);
-				iSectorX = pGroup->ubNextX;
-				iSectorY = pGroup->ubNextY;
-			}
-			else
-			{
-				// show nothing
-				return;
-			}
-		}
+no_destination:
+		wcscpy(buf, L"");
 	}
-
-
-	swprintf( sString, Length, L"%ls%ls", pMapVertIndex[ iSectorY ], pMapHortIndex[ iSectorX ] );
 }
 
 

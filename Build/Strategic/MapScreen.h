@@ -76,7 +76,7 @@ bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const&);
 
 const wchar_t* GetMapscreenMercAssignmentString(const SOLDIERTYPE* pSoldier);
 void GetMapscreenMercLocationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length);
-void GetMapscreenMercDestinationString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length);
+void GetMapscreenMercDestinationString(SOLDIERTYPE const&, wchar_t* buf, size_t n);
 void GetMapscreenMercDepartureString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length, UINT8* pubFontColor);
 
 // mapscreen wrapper to init the item description box

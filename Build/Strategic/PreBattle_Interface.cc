@@ -1056,7 +1056,7 @@ void RenderPreBattleInterface()
 				GetMapscreenMercLocationString(&s, str, lengthof(str));
 				MPrintCentered(128, y, 33, str);
 				// Destination
-				GetMapscreenMercDestinationString(&s, str, lengthof(str));
+				GetMapscreenMercDestinationString(s, str, lengthof(str));
 				if (str[0] != L'\0') MPrintCentered(164, y, 41, str);
 				// Departure
 				UINT8 junk;
