@@ -857,281 +857,233 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 }
 
 
+static void PrintConfined(INT32 const x, INT32 const y, INT32 const max_w, wchar_t const* const str)
+{
+	Font  font  = BLOCKFONT;
+	INT32 w     = StringPixLength(str, font);
+	if (w >= max_w)
+	{
+		font = BLOCKFONTNARROW;
+		w    = StringPixLength(str, font);
+	}
+	SetFont(font);
+	MPrint(x - w, y, str);
+}
+
+
+static void MPrintCentered(INT32 x, INT32 const y, INT32 const w, wchar_t const* const str)
+{
+	x += (w - StringPixLength(str, FontDefault)) / 2;
+	MPrint(x, y, str);
+}
+
+
 static wchar_t const* GetSoldierConditionInfo(SOLDIERTYPE const&);
 
 
 void RenderPreBattleInterface()
 {
-	INT32 x;
-	INT32 y;
-	INT32 width;
 	wchar_t str[100];
-	wchar_t pSectorName[ 128 ];
-	UINT8 ubJunk;
-	//PLAYERGROUP *pPlayer;
 
-	//This code determines if the cursor is inside the rectangle consisting of the
-	//retreat button.  If it is inside, then we set up the variables so that the retreat
-	//arrows get drawn in the mapscreen.
-	GUIButtonRef const retreat = iPBButton[2];
-	if (retreat->uiFlags & BUTTON_ENABLED)
+	/* If the cursor is inside the rectangle consisting of the rectangle button,
+	 * then we set up the variables so that the retreat arrows get drawn in the
+	 * mapscreen. */
+	GUI_BUTTON const& retreat = *iPBButton[2];
+	if (retreat.uiFlags & BUTTON_ENABLED)
 	{
-		BOOLEAN const fMouseInRetreatButtonArea =
-			retreat->X() <= gusMouseXPos && gusMouseXPos <= retreat->BottomRightX() &&
-			retreat->Y() <= gusMouseYPos && gusMouseYPos <= retreat->BottomRightY();
-		if( fMouseInRetreatButtonArea != gfDisplayPotentialRetreatPaths )
+		bool const mouse_in_reatread_button_area =
+			retreat.X() <= gusMouseXPos && gusMouseXPos <= retreat.BottomRightX() &&
+			retreat.Y() <= gusMouseYPos && gusMouseYPos <= retreat.BottomRightY();
+		if (gfDisplayPotentialRetreatPaths != mouse_in_reatread_button_area)
 		{
-			gfDisplayPotentialRetreatPaths = fMouseInRetreatButtonArea;
-			fMapPanelDirty = TRUE;
+			gfDisplayPotentialRetreatPaths = mouse_in_reatread_button_area;
+			fMapPanelDirty                 = TRUE;
 		}
 	}
 
-	if( gfRenderPBInterface )
+	INT32 x;
+	INT32 width;
+	if (gfRenderPBInterface)
 	{
-		// set font destinanation buffer to the save buffer
-		SetFontDestBuffer(guiSAVEBUFFER);
+		gfRenderPBInterface = FALSE;
 
-		if( gfPBButtonsHidden )
+		SGPVSurface* const dst = guiSAVEBUFFER;
+		SetFontDestBuffer(dst);
+
+		if (gfPBButtonsHidden)
 		{
-			ShowButton( iPBButton[0] );
-			ShowButton( iPBButton[1] );
-			ShowButton( iPBButton[2] );
 			gfPBButtonsHidden = FALSE;
+			ShowButton(iPBButton[0]);
+			ShowButton(iPBButton[1]);
+			ShowButton(iPBButton[2]);
 		}
 		else
 		{
-			MarkAButtonDirty( iPBButton[ 0 ] );
-			MarkAButtonDirty( iPBButton[ 1 ] );
-			MarkAButtonDirty( iPBButton[ 2 ] );
+			MarkAButtonDirty(iPBButton[0]);
+			MarkAButtonDirty(iPBButton[1]);
+			MarkAButtonDirty(iPBButton[2]);
 		}
 
-		gfRenderPBInterface = FALSE;
-		const SGPVObject* const hVObject = uiInterfaceImages;
-		//main panel
-		BltVideoObject( guiSAVEBUFFER, hVObject, MAINPANEL, 0, 0);
-		//main title
-
-		RenderPBHeader( &x, &width );
-		//now draw the title bars up to the text.
+		SGPVObject const* const vo = uiInterfaceImages;
+		// Main panel
+		BltVideoObject(dst, vo, MAINPANEL, 0, 0);
+		// Main title
+		RenderPBHeader(&x, &width);
+		// Draw the title bars up to the text
 		for (INT32 i = x - 12; i > 20; i -= 10)
 		{
-			BltVideoObject( guiSAVEBUFFER, hVObject, TITLE_BAR_PIECE, i, 6);
+			BltVideoObject(dst, vo, TITLE_BAR_PIECE, i, 6);
 		}
 		for (INT32 i = x + width + 2; i < 231; i += 10)
 		{
-			BltVideoObject( guiSAVEBUFFER, hVObject, TITLE_BAR_PIECE, i, 6);
+			BltVideoObject(dst, vo, TITLE_BAR_PIECE, i, 6);
 		}
 
-		y = BOTTOM_Y - ACTUAL_HEIGHT - ROW_HEIGHT * MAX( guiNumUninvolved, 1 );
-		BltVideoObject( guiSAVEBUFFER, hVObject, UNINVOLVED_HEADER, 8, y);
+		{ INT32 const y = BOTTOM_Y - ACTUAL_HEIGHT - ROW_HEIGHT * MAX(guiNumUninvolved, 1);
+			BltVideoObject(dst, vo, UNINVOLVED_HEADER, 8, y);
+		}
 
-		SetFont( BLOCKFONT );
-		SetFontForeground( FONT_BEIGE );
-		const wchar_t* Location = gpStrategicString[STR_PB_LOCATION];
-		width = StringPixLength(Location, BLOCKFONT);
-		if( width > 64 )
-		{
-			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength(Location, BLOCKFONTNARROW);
-		}
-		MPrint(65 - width, 17, Location);
+		SetFontForeground(FONT_BEIGE);
+		PrintConfined(65, 17, 64, gpStrategicString[STR_PB_LOCATION]);
 
-		SetFont( BLOCKFONT );
-		const wchar_t* Encounter;
-		if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
-		{
-			Encounter = gpStrategicString[STR_PB_ENEMIES];
-		}
-		else if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE || gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
-		{
-			Encounter = gpStrategicString[STR_PB_BLOODCATS];
-		}
-		else
-		{
-			Encounter = gpStrategicString[STR_PB_CREATURES];
-		}
-		width = StringPixLength(Encounter, BLOCKFONT);
-		if( width > 52 )
-		{
-			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength(Encounter, BLOCKFONTNARROW);
-		}
-		MPrint(54 - width, 38, Encounter);
+		wchar_t const* const encounter =
+			gubEnemyEncounterCode != CREATURE_ATTACK_CODE        ? gpStrategicString[STR_PB_ENEMIES] :
+			gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE || // XXX case is unreachable, because of != above
+			gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ? gpStrategicString[STR_PB_BLOODCATS] :
+			gpStrategicString[STR_PB_CREATURES];
+		PrintConfined( 54, 38, 52, encounter);
+		PrintConfined(139, 38, 52, gpStrategicString[STR_PB_MERCS]);
+		PrintConfined(224, 38, 52, gpStrategicString[STR_PB_MILITIA]);
 
-		SetFont( BLOCKFONT );
-		const wchar_t* Mercs = gpStrategicString[STR_PB_MERCS];
-		width = StringPixLength(Mercs, BLOCKFONT);
-		if( width > 52 )
-		{
-			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength(Mercs, BLOCKFONTNARROW);
-		}
-		MPrint(139 - width, 38, Mercs);
-
-		SetFont( BLOCKFONT );
-		const wchar_t* Milita = gpStrategicString[STR_PB_MILITIA];
-		width = StringPixLength(Milita, BLOCKFONT);
-		if( width > 52 )
-		{
-			SetFont( BLOCKFONTNARROW );
-			width = StringPixLength(Milita, BLOCKFONTNARROW);
-		}
-		MPrint(224 - width, 38, Milita);
-
-		//Draw the bottom columns
+		// Draw the bottom columns
 		for (INT32 i = 0; i < (INT32)MAX(guiNumUninvolved, 1); ++i)
 		{
-			y = BOTTOM_Y - ROW_HEIGHT * (i+1) + 1;
-			BltVideoObject( guiSAVEBUFFER, hVObject, BOTTOM_COLUMN, 161, y);
+			INT32 const y = BOTTOM_Y - ROW_HEIGHT * (i + 1) + 1;
+			BltVideoObject(dst, vo, BOTTOM_COLUMN, 161, y);
 		}
 
-		for (INT32 i = 0; i < (INT32)(21 - MAX( guiNumUninvolved, 1 )); ++i)
+		for (INT32 i = 0; i < (INT32)(21 - MAX(guiNumUninvolved, 1)); ++i)
 		{
-			y = TOP_Y + ROW_HEIGHT * i;
-			BltVideoObject( guiSAVEBUFFER, hVObject, TOP_COLUMN, 186, y);
+			INT32 const y = TOP_Y + ROW_HEIGHT * i;
+			BltVideoObject(dst, vo, TOP_COLUMN, 186, y);
 		}
 
-		//location
+		UINT8 const sec_x = gubPBSectorX;
+		UINT8 const sec_y = gubPBSectorY;
+		UINT8 const sec_z = gubPBSectorZ;
+
+		// Location
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, pSectorName, lengthof(pSectorName), TRUE );
-		mprintf( 70, 17, L"%ls %ls", gpStrategicString[ STR_PB_SECTOR ], pSectorName );
+		wchar_t sector_name[128];
+		GetSectorIDString(sec_x, sec_y, sec_z, sector_name, lengthof(sector_name), TRUE);
+		mprintf(70, 17, L"%ls %ls", gpStrategicString[STR_PB_SECTOR], sector_name);
 
-		//enemy
-		SetFont( FONT14ARIAL );
-		if( gubEnemyEncounterCode == CREATURE_ATTACK_CODE ||
-			  gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
+		SetFont(FONT14ARIAL);
+		// Enemy
+		wchar_t const* enemies;
+		if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE        ||
+			  gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE        ||
 				gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
-				WhatPlayerKnowsAboutEnemiesInSector( gubPBSectorX, gubPBSectorY ) != KNOWS_HOW_MANY )
-		{
-			// don't know how many
-			swprintf( str, lengthof(str), L"?" );
+				WhatPlayerKnowsAboutEnemiesInSector(sec_x, sec_y) != KNOWS_HOW_MANY)
+		{ // Don't know how many
+			enemies = L"?";
 		}
 		else
-		{
-			// know exactly how many
-			const INT32 i = NumEnemiesInSector(gubPBSectorX, gubPBSectorY);
-			swprintf( str, lengthof(str), L"%d", i );
+		{ // Know exactly how many
+			INT32 const n = NumEnemiesInSector(sec_x, sec_y);
+			swprintf(str, lengthof(str), L"%d", n);
+			enemies = str;
 		}
-		x = 57 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
-		y = 36;
-		MPrint(x, y, str);
-		//player
-		swprintf( str, lengthof(str), L"%d", guiNumInvolved );
-		x = 142 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
-		MPrint(x, y, str);
-		//militia
-		swprintf( str, lengthof(str), L"%d", CountAllMilitiaInSector( gubPBSectorX, gubPBSectorY ) );
-		x = 227 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
-		MPrint(x, y, str);
-		SetFontShadow( FONT_NEARBLACK );
+		MPrintCentered(57, 36, 27, enemies);
+		// Player
+		swprintf(str, lengthof(str), L"%d", guiNumInvolved);
+		MPrintCentered(142, 36, 27, str);
+		// Militia
+		swprintf(str, lengthof(str), L"%d", CountAllMilitiaInSector(sec_x, sec_y));
+		MPrintCentered(227, 36, 27, str);
+		SetFontShadow(FONT_NEARBLACK);
 
-		SetFont( BLOCKFONT2 );
+		SetFont(BLOCKFONT2);
 
-		//print out the participants of the battle.
+		// Print the participants of the battle
 		// |  NAME  | ASSIGN |  COND  |   HP   |   BP   |
-		y = TOP_Y + 1;
-		CFOR_ALL_IN_TEAM(i, OUR_TEAM)
-		{
-			SOLDIERTYPE const& s = *i;
-			if (s.bLife == 0)                       continue;
-			if (s.uiStatusFlags & SOLDIER_VEHICLE)  continue;
-			if (!PlayerMercInvolvedInThisCombat(s)) continue;
-
-			// Name
-			wchar_t const* const name = s.name;
-			x = 17 + (52-StringPixLength(name, BLOCKFONT2)) / 2;
-			MPrint(x, y, name);
-			// Assignment
-			wchar_t const* const assignment = GetMapscreenMercAssignmentString(&s);
-			x = 72 + (54 - StringPixLength(assignment, BLOCKFONT2)) / 2;
-			MPrint(x, y, assignment);
-			// Condition
-			wchar_t const* const condition = GetSoldierConditionInfo(s);
-			x = 129 + (58 - StringPixLength(condition, BLOCKFONT2)) / 2;
-			MPrint(x, y, condition);
-			// HP
-			swprintf(str, lengthof(str), L"%d%%", s.bLife * 100 / s.bLifeMax);
-			x = 189 + (25 - StringPixLength(str, BLOCKFONT2)) / 2;
-			MPrint(x, y, str);
-			// BP
-			swprintf(str, lengthof(str), L"%d%%", s.bBreath);
-			x = 217 + (25 - StringPixLength(str, BLOCKFONT2)) / 2;
-			MPrint(x, y, str);
-
-			y += ROW_HEIGHT;
-		}
-
-		//print out the uninvolved members of the battle
-		// |  NAME  | ASSIGN |  LOC   |  DEST  |  DEP   |
-		if( !guiNumUninvolved )
-		{
-			const wchar_t* None = gpStrategicString[STR_PB_NONE];
-			x = 17 + (52 - StringPixLength(None, BLOCKFONT2)) / 2;
-			y = BOTTOM_Y - ROW_HEIGHT + 2;
-			MPrint(x, y, None);
-		}
-		else
-		{
-			y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
+		{ INT32 y = TOP_Y + 1;
 			CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE const& s = *i;
-				if (s.bLife != 0 && !(s.uiStatusFlags & SOLDIER_VEHICLE))
-				{
-					if (!PlayerMercInvolvedInThisCombat(s))
-					{
-						// uninvolved
-						//NAME
-						wchar_t const* const Name = s.name;
-						x = 17 + (52 - StringPixLength(Name, BLOCKFONT2)) / 2;
-						MPrint(x , y, Name);
-						//ASSIGN
-						wchar_t const* const Assignment = GetMapscreenMercAssignmentString(&s);
-						x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
-						MPrint(x, y, Assignment);
-						//LOC
-						GetMapscreenMercLocationString(&s, str, lengthof(str));
-						x = 128 + (33-StringPixLength( str, BLOCKFONT2)) / 2;
-						MPrint(x, y, str);
-						//DEST
-						GetMapscreenMercDestinationString(&s, str, lengthof(str));
-						if( wcslen( str ) > 0 )
-						{
-							x = 164 + (41-StringPixLength( str, BLOCKFONT2)) / 2;
-							MPrint(x, y, str);
-						}
-						//DEP
-						GetMapscreenMercDepartureString(&s, str, lengthof(str), &ubJunk);
-						x = 208 + (34-StringPixLength( str, BLOCKFONT2)) / 2;
-						MPrint(x, y, str);
-						y += ROW_HEIGHT;
-					}
-				}
+				if (s.bLife == 0)                       continue;
+				if (s.uiStatusFlags & SOLDIER_VEHICLE)  continue;
+				if (!PlayerMercInvolvedInThisCombat(s)) continue;
+
+				// Name
+				MPrintCentered( 17, y, 52, s.name);
+				// Assignment
+				MPrintCentered( 72, y, 45, GetMapscreenMercAssignmentString(&s));
+				// Condition
+				MPrintCentered(129, y, 58, GetSoldierConditionInfo(s));
+				// HP
+				swprintf(str, lengthof(str), L"%d%%", s.bLife * 100 / s.bLifeMax);
+				MPrintCentered(189, y, 25, str);
+				// BP
+				swprintf(str, lengthof(str), L"%d%%", s.bBreath);
+				MPrintCentered(217, y, 25, str);
+
+				y += ROW_HEIGHT;
 			}
 		}
 
-		// mark any and ALL pop up boxes as altered
-		MarkAllBoxesAsAltered( );
-		RestoreExternBackgroundRect( 0, 0, 261, 359 );
+		// Print the uninvolved members of the battle
+		// |  NAME  | ASSIGN |  LOC   |  DEST  |  DEP   |
+		if (guiNumUninvolved == 0)
+		{
+			MPrintCentered(17, BOTTOM_Y - ROW_HEIGHT + 2, 52, gpStrategicString[STR_PB_NONE]);
+		}
+		else
+		{
+			INT32 y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
+			CFOR_ALL_IN_TEAM(i, OUR_TEAM)
+			{
+				SOLDIERTYPE const& s = *i;
+				if (s.bLife == 0)                      continue;
+				if (s.uiStatusFlags & SOLDIER_VEHICLE) continue;
+				if (PlayerMercInvolvedInThisCombat(s)) continue;
 
-		// restore font destinanation buffer to the frame buffer
+				// Name
+				MPrintCentered( 17, y, 52, s.name);
+				// Assignment
+				MPrintCentered( 72, y, 54, GetMapscreenMercAssignmentString(&s));
+				// Location
+				GetMapscreenMercLocationString(&s, str, lengthof(str));
+				MPrintCentered(128, y, 33, str);
+				// Destination
+				GetMapscreenMercDestinationString(&s, str, lengthof(str));
+				if (str[0] != L'\0') MPrintCentered(164, y, 41, str);
+				// Departure
+				UINT8 junk;
+				GetMapscreenMercDepartureString(&s, str, lengthof(str), &junk);
+				MPrintCentered(208, y, 34, str);
+				y += ROW_HEIGHT;
+			}
+		}
+
+		MarkAllBoxesAsAltered();
+		RestoreExternBackgroundRect(0, 0, 261, 359);
+
+		// Restore font destinanation buffer to the frame buffer
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
-	else if( gfBlinkHeader )
+	else if (gfBlinkHeader)
 	{
-		RenderPBHeader( &x, &width ); //the text is important enough to blink.
+		RenderPBHeader(&x, &width); // The text is important enough to blink
 	}
 
-  //InvalidateRegion( 0, 0, 261, 359 );
-	if( gfEnterAutoResolveMode )
+	if (gfEnterAutoResolveMode)
 	{
 		gfEnterAutoResolveMode = FALSE;
-		EnterAutoResolveMode( gubPBSectorX, gubPBSectorY );
-		//return;
+		EnterAutoResolveMode(gubPBSectorX, gubPBSectorY);
 	}
 
 	gfIgnoreAllInput = FALSE;
-
 }
 
 
