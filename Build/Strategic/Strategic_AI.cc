@@ -2194,28 +2194,29 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 }
 
 
-void RemoveGroupFromStrategicAILists( UINT8 ubGroupID )
+void RemoveGroupFromStrategicAILists(UINT8 const group_id)
 {
-	INT32 i;
-	for( i = 0; i < giPatrolArraySize; i++ )
+	for (INT32 i = 0; i < giPatrolArraySize; ++i)
 	{
-		if( gPatrolGroup[ i ].ubGroupID == ubGroupID )
-		{ //Patrol group was destroyed.
-			gPatrolGroup[ i ].ubGroupID = 0;
-			RecalculatePatrolWeight(gPatrolGroup[i]);
+		PATROL_GROUP& pg = gPatrolGroup[i];
+		if (pg.ubGroupID == group_id)
+		{ // Patrol group was destroyed
+			pg.ubGroupID = 0;
+			RecalculatePatrolWeight(pg);
 			return;
 		}
-		if( gPatrolGroup[ i ].ubPendingGroupID == ubGroupID )
-		{ //Group never arrived to reinforce.
-			gPatrolGroup[ i ].ubPendingGroupID = 0;
+		if (pg.ubPendingGroupID == group_id)
+		{ // Group never arrived to reinforce
+			pg.ubPendingGroupID = 0;
 			return;
 		}
 	}
-	for( i = 0; i < giGarrisonArraySize; i++ )
+	for (INT32 i = 0; i < giGarrisonArraySize; ++i)
 	{
-		if( gGarrisonGroup[ i ].ubPendingGroupID == ubGroupID )
-		{ //Group never arrived to reinforce.
-			gGarrisonGroup[ i ].ubPendingGroupID = 0;
+		GARRISON_GROUP& gg = gGarrisonGroup[i];
+		if (gg.ubPendingGroupID == group_id)
+		{ // Group never arrived to reinforce
+			gg.ubPendingGroupID = 0;
 			return;
 		}
 	}
