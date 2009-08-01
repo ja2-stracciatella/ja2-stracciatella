@@ -295,13 +295,14 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 }
 
 
-static BOOLEAN IsAnyOfTeamOKInSector(const INT8 team)
+static bool IsAnyOfTeamOKInSector(INT8 const team)
 {
-	CFOR_ALL_IN_TEAM(s, team)
+	CFOR_ALL_IN_TEAM(i, team)
 	{
-		if (s->bInSector && s->bLife >= OKLIFE) return TRUE;
+		SOLDIERTYPE const& s = *i;
+		if (s.bInSector && s.bLife >= OKLIFE) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -311,7 +312,7 @@ void EndTacticalBattleForEnemy()
 	INT16 const y = gWorldSectorY;
 	INT8  const z = gbWorldSectorZ;
 	// Clear enemies in battle for all stationary groups in the sector
-	else if (z == 0)
+	if (z == 0)
 	{
 		SECTORINFO& sector = SectorInfo[SECTOR(x, y)];
 		sector.ubAdminsInBattle    = 0;
@@ -320,7 +321,7 @@ void EndTacticalBattleForEnemy()
 		sector.ubNumCreatures      = 0;
 		sector.ubCreaturesInBattle = 0;
 	}
-	if (z > 0)
+	else if (z > 0)
 	{
 		UNDERGROUND_SECTORINFO& sector = *FindUnderGroundSector(x, y, z);
 		sector.ubAdminsInBattle = 0;
@@ -339,7 +340,7 @@ void EndTacticalBattleForEnemy()
 	// Clear enemies in battle for all mobile groups in the sector
 	CFOR_ALL_ENEMY_GROUPS(i)
 	{
-		GROUP& g = *i;
+		GROUP const& g = *i;
 		if (g.fVehicle)       continue;
 		if (g.ubSectorX != x) continue;
 		if (g.ubSectorY != y) continue;
