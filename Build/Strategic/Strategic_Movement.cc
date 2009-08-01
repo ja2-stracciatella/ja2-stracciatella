@@ -1950,7 +1950,7 @@ void RemoveGroup(GROUP& g)
 	}
 	else
 	{
-		RemoveGroupFromStrategicAILists(g.ubGroupID);
+		RemoveGroupFromStrategicAILists(g);
 		MemFree(g.pEnemyGroup);
 	}
 

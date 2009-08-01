@@ -28,7 +28,7 @@ extern BOOLEAN gfUseAlternateQueenPosition;
 
 //returns TRUE if the group was deleted.
 BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup );
-void RemoveGroupFromStrategicAILists(UINT8 group_id);
+void RemoveGroupFromStrategicAILists(GROUP const&);
 void RecalculateSectorWeight( UINT8 ubSectorID );
 void RecalculateGroupWeight(GROUP const&);
 

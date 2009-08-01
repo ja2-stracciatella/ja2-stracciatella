@@ -2194,8 +2194,9 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 }
 
 
-void RemoveGroupFromStrategicAILists(UINT8 const group_id)
+void RemoveGroupFromStrategicAILists(GROUP const& g)
 {
+	UINT8 const group_id = g.ubGroupID;
 	for (INT32 i = 0; i < giPatrolArraySize; ++i)
 	{
 		PATROL_GROUP& pg = gPatrolGroup[i];
@@ -4708,7 +4709,7 @@ void RepollSAIGroup( GROUP *pGroup )
 
 void ClearPreviousAIGroupAssignment(GROUP* const g)
 {
-	RemoveGroupFromStrategicAILists(g->ubGroupID);
+	RemoveGroupFromStrategicAILists(*g);
 }
 
 
