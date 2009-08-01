@@ -4706,32 +4706,9 @@ void RepollSAIGroup( GROUP *pGroup )
 	}
 }
 
-void ClearPreviousAIGroupAssignment( GROUP *pGroup )
+void ClearPreviousAIGroupAssignment(GROUP* const g)
 {
-	INT32 i;
-	for( i = 0; i < giPatrolArraySize; i++ )
-	{
-		if( gPatrolGroup[ i ].ubGroupID == pGroup->ubGroupID )
-		{
-			gPatrolGroup[ i ].ubGroupID = 0;
-			RecalculatePatrolWeight(gPatrolGroup[i]);
-			return;
-		}
-		if( gPatrolGroup[ i ].ubPendingGroupID == pGroup->ubGroupID )
-		{
-			gPatrolGroup[ i ].ubPendingGroupID = 0;
-			return;
-		}
-	}
-	//Also check if this group was a garrison's pending group
-	for( i = 0; i < giGarrisonArraySize; i++ )
-	{
-		if( gGarrisonGroup[ i ].ubPendingGroupID == pGroup->ubGroupID )
-		{
-			gGarrisonGroup[ i ].ubPendingGroupID = 0;
-			return;
-		}
-	}
+	RemoveGroupFromStrategicAILists(g->ubGroupID);
 }
 
 
