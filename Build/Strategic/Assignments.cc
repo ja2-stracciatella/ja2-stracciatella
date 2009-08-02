@@ -70,7 +70,8 @@
 
 
 // various reason an assignment can be aborted before completion
-enum{
+enum AssignmentAbortReason
+{
 	NO_MORE_MED_KITS = 40,
 	INSUF_DOCTOR_SKILL,
 	NO_MORE_TOOL_KITS,
@@ -1285,7 +1286,7 @@ static void UpdatePatientsWhoAreDoneHealing()
 }
 
 
-static void AssignmentAborted(SOLDIERTYPE* pSoldier, UINT8 ubReason);
+static void AssignmentAborted(SOLDIERTYPE const&, AssignmentAbortReason);
 static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 usHundredthsHealed);
 
 
@@ -1389,13 +1390,13 @@ static void HealCharacters(SOLDIERTYPE* const pDoctor)
 		if( GetNumberThatCanBeDoctored( pDoctor, HEALABLE_EVER, TRUE, FALSE ) > 0 )
 		{
 			// he could doctor somebody, but can't because he doesn't have a med kit!
-			AssignmentAborted( pDoctor, NO_MORE_MED_KITS );
+			AssignmentAborted(*pDoctor, NO_MORE_MED_KITS);
 		}
 		// try again, but skip the skill check!
 		else if( GetNumberThatCanBeDoctored( pDoctor, HEALABLE_EVER, FALSE, TRUE ) > 0 )
 		{
 			// he could doctor somebody, but can't because he doesn't have enough skill!
-			AssignmentAborted( pDoctor, INSUF_DOCTOR_SKILL );
+			AssignmentAborted(*pDoctor, INSUF_DOCTOR_SKILL);
 		}
 		else
 		{
@@ -2010,12 +2011,12 @@ static void HandleRepairBySoldier(SOLDIERTYPE& s)
 			if (FindObj(&s, TOOLKIT) == NO_SLOT)
 			{
 				// he could (maybe) repair something, but can't because he doesn't have a tool kit!
-				AssignmentAborted(&s, NO_MORE_TOOL_KITS);
+				AssignmentAborted(s, NO_MORE_TOOL_KITS);
 			}
 			else
 			{
 				// he can't repair anything because he doesn't have enough skill!
-				AssignmentAborted(&s, INSUF_REPAIR_SKILL);
+				AssignmentAborted(s, INSUF_REPAIR_SKILL);
 			}
 		}
 	}
@@ -2731,20 +2732,15 @@ void MakeSoldiersTacticalAnimationReflectAssignment(SOLDIERTYPE* const s)
 }
 
 
-static void AssignmentAborted(SOLDIERTYPE* pSoldier, UINT8 ubReason)
+static void AssignmentAborted(SOLDIERTYPE const& s, AssignmentAbortReason const reason)
 {
-	Assert( ubReason < NUM_ASSIGN_ABORT_REASONS );
-
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ ubReason ], pSoldier->name );
-
+	Assert(reason < NUM_ASSIGN_ABORT_REASONS);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[reason], s.name);
 	StopTimeCompression();
-
-	// update mapscreen
 	fCharacterInfoPanelDirty = TRUE;
-	fTeamPanelDirty = TRUE;
-	fMapScreenBottomDirty = TRUE;
+	fTeamPanelDirty          = TRUE;
+	fMapScreenBottomDirty    = TRUE;
 }
-
 
 
 void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
