@@ -3496,8 +3496,6 @@ const wchar_t* zGioDifConfirmText[]=
 
 const wchar_t* gzLateLocalizedString[] =
 {
-	L"Données de l'écran de chargement de %ls introuvables...",
-
 	//1-5
 	L"Le robot ne peut quitter ce secteur par lui-même.",
 

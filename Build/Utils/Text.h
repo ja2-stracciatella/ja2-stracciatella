@@ -146,7 +146,6 @@ extern const wchar_t *gzLateLocalizedString[];
 
 enum
 {
-	STR_LATE_00,
 	STR_LATE_01,
 	STR_LATE_02,
 	STR_LATE_03,

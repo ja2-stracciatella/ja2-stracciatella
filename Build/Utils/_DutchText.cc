@@ -3511,8 +3511,6 @@ const wchar_t* zGioDifConfirmText[]=
 
 const wchar_t* gzLateLocalizedString[] =
 {
-	L"%ls laadscherm-data niet gevonden...",
-
 	//1-5
 	L"De robot kan de sector niet verlaten als niemand de besturing gebruikt.",
 

@@ -3497,8 +3497,6 @@ const wchar_t *zGioDifConfirmText[]=
 
 const wchar_t *gzLateLocalizedString[] =
 {
-	L"%ls loadscreen data file not found...",
-
 	//1-5
 	L"The robot cannot leave this sector when nobody is using the controller.",
 

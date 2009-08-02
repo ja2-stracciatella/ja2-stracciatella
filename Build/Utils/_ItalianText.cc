@@ -3502,8 +3502,6 @@ const wchar_t* zGioDifConfirmText[]=
 
 const wchar_t* gzLateLocalizedString[] =
 {
-	L"%ls file di dati della schermata di caricamento non trovato...",
-
 	//1-5
 	L"Il robot non può lasciare questo settore, se nessuno sta usando il controller.",
 

@@ -3515,8 +3515,6 @@ const wchar_t* zGioDifConfirmText[]=
 
 const wchar_t* gzLateLocalizedString[] =
 {
-	L"%ls файл для загрузки экрана не найден...",
-
 	//1-5
 	L"Робот не может покинуть сектор, если им никто не управляет.",
 

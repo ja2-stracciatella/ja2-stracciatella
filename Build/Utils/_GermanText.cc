@@ -3322,8 +3322,6 @@ const wchar_t *zGioDifConfirmText[]=
 
 const wchar_t *gzLateLocalizedString[] =
 {
-	L"%ls Loadscreen-Daten nicht gefunden...",
-
 	//1-5
 	L"Der Roboter kann diesen Sektor nicht verlassen, wenn niemand die Fernbedienung benutzt.",
 

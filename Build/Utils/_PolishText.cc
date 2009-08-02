@@ -3498,8 +3498,6 @@ const wchar_t* zGioDifConfirmText[]=
 
 const wchar_t* gzLateLocalizedString[] =
 {
-	L"%ls - nie odnaleziono pliku...",
-
 	//1-5
 	L"Robot nie może opuścić sektora bez operatora.",
 
