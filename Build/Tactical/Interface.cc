@@ -1064,7 +1064,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 				s.bAssignment != CurrentSquad() &&
 				!(s.uiStatusFlags & SOLDIER_MULTI_SELECTED))
 		{
-			swprintf(buf, lengthof(buf), gzLateLocalizedString[34], s.bAssignment + 1);
+			swprintf(buf, lengthof(buf), gzLateLocalizedString[STR_LATE_34], s.bAssignment + 1);
 			action = buf;
 		}
 
@@ -1136,7 +1136,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 	else if (s.bLevel != 0)
 	{
 		SetFontForeground(FONT_YELLOW);
-		PrintAboveGuy(sXPos, sYPos + 10, gzLateLocalizedString[15]);
+		PrintAboveGuy(sXPos, sYPos + 10, gzLateLocalizedString[STR_LATE_15]);
 	}
 
 	SetFontForeground(FONT_MCOLOR_DKRED);

@@ -113,7 +113,7 @@ void BeginAutoBandage( )
 	}
 	else if ( !fFoundAMedKit )
 	{
-		DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[9], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_09], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 	}
 	else
 	{

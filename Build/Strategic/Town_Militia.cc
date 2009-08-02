@@ -1098,9 +1098,9 @@ void BuildMilitiaPromotionsString(wchar_t* const str, size_t const length)
 	if (gbMilitiaPromotions == 0) return;
 
 	size_t n = 0;
-	n = PromoteMilitia(str, length, n, gbGreenToElitePromotions, gzLateLocalizedString[29], gzLateLocalizedString[22]);
-	n = PromoteMilitia(str, length, n, gbGreenToRegPromotions,   gzLateLocalizedString[30], gzLateLocalizedString[23]);
-	n = PromoteMilitia(str, length, n, gbRegToElitePromotions,   gzLateLocalizedString[31], gzLateLocalizedString[24]);
+	n = PromoteMilitia(str, length, n, gbGreenToElitePromotions, gzLateLocalizedString[STR_LATE_29], gzLateLocalizedString[STR_LATE_22]);
+	n = PromoteMilitia(str, length, n, gbGreenToRegPromotions,   gzLateLocalizedString[STR_LATE_30], gzLateLocalizedString[STR_LATE_23]);
+	n = PromoteMilitia(str, length, n, gbRegToElitePromotions,   gzLateLocalizedString[STR_LATE_31], gzLateLocalizedString[STR_LATE_24]);
 
 	// Clear the fields
 	gbGreenToElitePromotions = 0;

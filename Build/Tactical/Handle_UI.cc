@@ -2711,7 +2711,7 @@ void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance)
 	{
     if (s->bCollapsed && s->bBreath < OKBREATH)
     {
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[4], s->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_04], s->name);
     }
     else
     {
@@ -3433,7 +3433,7 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 
     if (tgt->bBleeding == 0 && tgt->bLife != tgt->bLifeMax)
     {
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[19], tgt->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_19], tgt->name);
 			return false;
     }
 
@@ -4518,7 +4518,7 @@ BOOLEAN HandleTalkInit(  )
             }
             else
             {
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[45], sel->name);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_45], sel->name);
             }
 					  return( FALSE );
 				  }
@@ -4526,7 +4526,7 @@ BOOLEAN HandleTalkInit(  )
 
 	      if ( pTSoldier->bCollapsed )
 	      {
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 21 ], pTSoldier->name );
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_21], pTSoldier->name);
 		      return( FALSE );
 	      }
 
@@ -4541,7 +4541,7 @@ BOOLEAN HandleTalkInit(  )
 				{
           if ( pTSoldier->ubProfile == DIMITRI )
           {
-      			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 32 ], pTSoldier->name );
+      			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_32], pTSoldier->name);
             return( FALSE );
           }
 

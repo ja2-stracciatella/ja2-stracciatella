@@ -1148,7 +1148,7 @@ static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 		}
 		else if (s.uiStatusFlags & SOLDIER_ROBOT)
 		{
-			swprintf(text, lengthof(text), gzLateLocalizedString[16], s.bLife, s.bLifeMax);
+			swprintf(text, lengthof(text), gzLateLocalizedString[STR_LATE_16], s.bLife, s.bLifeMax);
 		}
 		else
 		{

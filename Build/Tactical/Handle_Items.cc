@@ -391,7 +391,7 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 				DoMercBattleSound(s, BATTLE_SOUND_LAUGH1);
 				s->bDoBurst    = TRUE;
 				s->bWeaponMode = WM_BURST;
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[26], s->name);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_26], s->name);
 			}
 		}
 
@@ -3060,7 +3060,7 @@ static void SwitchMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
     // Message that switch is activated...
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[58]);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_58]);
 		SetOffBombsByFrequency(gpTempSoldier, bTempFrequency);
 	}
 }

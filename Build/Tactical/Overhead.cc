@@ -1731,7 +1731,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[37], pSoldier->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_37], pSoldier->name);
 					SoldierCollapse(pSoldier);
 					if (pSoldier->bActionPoints > 0)
 					{
@@ -1745,7 +1745,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[37], pSoldier->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_37], pSoldier->name);
 					SoldierCollapse(pSoldier);
 					if (pSoldier->bActionPoints > 0)
 					{

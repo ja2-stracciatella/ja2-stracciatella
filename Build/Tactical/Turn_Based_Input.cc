@@ -2445,7 +2445,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else if( gfRobotWithoutControllerAttemptingTraversal )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 1 ] );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_01]);
 			gfRobotWithoutControllerAttemptingTraversal = FALSE;
 		}
 		else if( gfLoneEPCAttemptingTraversal )

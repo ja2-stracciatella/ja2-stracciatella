@@ -1248,7 +1248,7 @@ static void AutoBandageMercs(void)
 			parallel_points_used += points_used;
 		}
 	}
-	wchar_t const* const msg = complete ? gzLateLocalizedString[13] : gzLateLocalizedString[10];
+	wchar_t const* const msg = complete ? gzLateLocalizedString[STR_LATE_13] : gzLateLocalizedString[STR_LATE_10];
 	DoScreenIndependantMessageBox(msg, MSG_BOX_FLAG_OK, AutoBandageFinishedCallback);
 
 	gpAR->uiTotalElapsedBattleTimeInMilliseconds += parallel_points_used * 200;
@@ -1350,7 +1350,7 @@ static void RenderAutoResolve(void)
 	//Display the remaining forces
 	ubGood = (UINT8)(gpAR->ubAliveMercs + gpAR->ubAliveCivs);
 	ubBad = gpAR->ubAliveEnemies;
-	swprintf( str, lengthof(str), gzLateLocalizedString[ 17 ], ubGood, ubBad );
+	swprintf(str, lengthof(str), gzLateLocalizedString[STR_LATE_17], ubGood, ubBad);
 
 	SetFont( FONT14ARIAL );
 	if( ubGood * 3 <= ubBad * 2 )
@@ -2086,19 +2086,19 @@ static void DetermineBandageButtonState(void)
 	bool           enable = false;
 	if (!IsAnybodyWounded()) // Does anyone need bandaging?
 	{
-		help = gzLateLocalizedString[11];
+		help = gzLateLocalizedString[STR_LATE_11];
 	}
 	else if (!CanAnybodyBandage()) // Do we have any doctors?
 	{	// No doctors
-		help = gzLateLocalizedString[8];
+		help = gzLateLocalizedString[STR_LATE_08];
 	}
 	else if (!FindMedicalKit()) // Do have a kit?
 	{ // No kits
-		help = gzLateLocalizedString[9];
+		help = gzLateLocalizedString[STR_LATE_09];
 	}
 	else
 	{ // Allow bandaging
-		help   = gzLateLocalizedString[12];
+		help   = gzLateLocalizedString[STR_LATE_12];
 		enable = true;
 	}
 	GUI_BUTTON* const b = gpAR->iButton[BANDAGE_BUTTON];

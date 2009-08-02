@@ -3248,7 +3248,7 @@ static void ReportVehicleOutOfGas(VEHICLETYPE const& v, UINT8 const x, UINT8 con
 {
 	// Report that the vehicle that just arrived is out of gas
 	wchar_t str[255];
-	swprintf(str, lengthof(str), gzLateLocalizedString[5], pVehicleStrings[v.ubVehicleType], y + 'A' - 1, x);
+	swprintf(str, lengthof(str), gzLateLocalizedString[STR_LATE_05], pVehicleStrings[v.ubVehicleType], y + 'A' - 1, x);
 	DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, 0);
 }
 

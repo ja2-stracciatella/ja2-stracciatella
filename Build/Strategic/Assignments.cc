@@ -72,10 +72,10 @@
 // various reason an assignment can be aborted before completion
 enum AssignmentAbortReason
 {
-	NO_MORE_MED_KITS = 40,
-	INSUF_DOCTOR_SKILL,
-	NO_MORE_TOOL_KITS,
-	INSUF_REPAIR_SKILL,
+	NO_MORE_MED_KITS   = STR_LATE_40,
+	INSUF_DOCTOR_SKILL = STR_LATE_41,
+	NO_MORE_TOOL_KITS  = STR_LATE_42,
+	INSUF_REPAIR_SKILL = STR_LATE_43,
 
 	NUM_ASSIGN_ABORT_REASONS
 };
@@ -1848,7 +1848,7 @@ static bool DoRepair(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner
 		}
 		else
 		{ // NOTE: may need to be changed for localized versions
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[35], repairer->name, owner->name, ItemNames[item]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_35], repairer->name, owner->name, ItemNames[item]);
 		}
 	}
 	return true;
@@ -3141,7 +3141,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		else
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[18], zVehicleName[v.ubVehicleType]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_18], zVehicleName[v.ubVehicleType]);
 		}
 
 		fShowAssignmentMenu = FALSE;
@@ -4595,7 +4595,7 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else
 				{
-					DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[48], MAP_SCREEN, MSG_BOX_FLAG_YESNO, MercDismissConfirmCallBack);
+					DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_48], MAP_SCREEN, MSG_BOX_FLAG_YESNO, MercDismissConfirmCallBack);
 				}
 
 				fOkToClose = TRUE;
@@ -4831,7 +4831,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 					if ( CountMilitiaTrainersInSoldiersSector( pSoldier ) >= MAX_MILITIA_TRAINERS_PER_SECTOR )
 					{
-						swprintf( sString, lengthof(sString), gzLateLocalizedString[ 47 ], MAX_MILITIA_TRAINERS_PER_SECTOR );
+						swprintf(sString, lengthof(sString), gzLateLocalizedString[STR_LATE_47], MAX_MILITIA_TRAINERS_PER_SECTOR);
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 						break;
 					}
@@ -7416,12 +7416,12 @@ static BOOLEAN UnjamGunsOnSoldier(SOLDIERTYPE* pOwnerSoldier, SOLDIERTYPE* pRepa
 				// report it as unjammed
 				if ( pRepairSoldier == pOwnerSoldier )
 				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 53 ], pRepairSoldier->name, ItemNames[ pOwnerSoldier->inv[ bPocket ].usItem ] );
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_53], pRepairSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]);
 				}
 				else
 				{
 					// NOTE: may need to be changed for localized versions
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 54 ], pRepairSoldier->name, pOwnerSoldier->name, ItemNames[ pOwnerSoldier->inv[ bPocket ].usItem ] );
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_54], pRepairSoldier->name, pOwnerSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]);
 				}
 
 				fAnyGunsWereUnjammed = TRUE;

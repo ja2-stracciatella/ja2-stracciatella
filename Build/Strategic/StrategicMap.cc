@@ -3841,7 +3841,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 					}
 					else
 					{
-						//DoScreenIndependantMessageBox( gzLateLocalizedString[ 39 ], MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
+						//DoScreenIndependantMessageBox(gzLateLocalizedString[STR_LATE_39], MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 					}
 
 					return( TRUE );

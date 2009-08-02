@@ -6521,7 +6521,7 @@ static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVE
 				 ( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS ) )
 		{
 			BuildRepairTimeString( zRepairTime, lengthof(zRepairTime), CalculateObjectItemRepairTime( gbSelectedArmsDealerID, &( pInv->ItemObject ) ) );
-			swprintf( sString, Length, L"%ls\n(%ls: %ls)", zHelpText, gzLateLocalizedString[ 44 ], zRepairTime );
+			swprintf(sString, Length, L"%ls\n(%ls: %ls)", zHelpText, gzLateLocalizedString[STR_LATE_44], zRepairTime);
 		}
 		else
 		{

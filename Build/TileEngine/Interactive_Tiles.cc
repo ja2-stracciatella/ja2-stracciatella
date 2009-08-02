@@ -219,7 +219,7 @@ UICursorID GetInteractiveTileCursor(UICursorID const old_cursor, BOOLEAN const c
 	}
 	else if (structure->fFlags & STRUCTURE_SWITCH)
 	{
-		SetIntTileLocationText(gzLateLocalizedString[25]);
+		SetIntTileLocationText(gzLateLocalizedString[STR_LATE_25]);
 	}
 	return confirm ? OKHANDCURSOR_UICURSOR : NORMALHANDCURSOR_UICURSOR;
 }

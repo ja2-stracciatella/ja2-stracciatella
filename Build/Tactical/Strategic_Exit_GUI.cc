@@ -427,7 +427,7 @@ void InitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
     if ( GetWarpOutOfMineCodes( &gsWarpWorldX, &gsWarpWorldY, &gbWarpWorldZ, &gsWarpGridNo ) )
     {
       // ATE: Check if we are in a creature lair and bring up box if so....
-      DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[33], GAME_SCREEN, MSG_BOX_FLAG_YESNO, WarpToSurfaceCallback, NULL);
+      DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_33], GAME_SCREEN, MSG_BOX_FLAG_YESNO, WarpToSurfaceCallback, NULL);
       return;
     }
   }
@@ -562,7 +562,7 @@ static void UpdateSectorExitMenu(void)
 			DisableButton(gExitDialog.uiAllMoveButton);
 			gExitDialog.AllRegion.Disable();
 			help = gExitDialog.fUncontrolledRobotInSquad ?
-				gzLateLocalizedString[1] :
+				gzLateLocalizedString[STR_LATE_01] :
 				pExitingSectorHelpText[EXIT_GUI_ALL_MERCS_MUST_BE_TOGETHER_TO_ALLOW_HELPTEXT];
 		}
 		else

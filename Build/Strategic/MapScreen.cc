@@ -6990,7 +6990,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 	else if ( ActiveTimedBombExists() )
 	{
 		// can't time compress when a bomb is about to go off!
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 2 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_02], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 	}
 	else if ( gfContractRenewalSquenceOn )
 	{
@@ -7018,7 +7018,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 	}
 	else if( fShowMapInventoryPool )
 	{
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 55 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_55], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 	}
 	// ARM: THIS TEST SHOULD BE THE LAST ONE, BECAUSE IT ACTUALLY RESULTS IN SOMETHING HAPPENING NOW.
 	// KM:  Except if we are in a creature lair and haven't loaded the sector yet (no battle yet)
@@ -7029,7 +7029,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 			wchar_t str[ 256 ];
 			wchar_t pSectorString[ 128 ];
 			GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, pSectorString, lengthof(pSectorString), TRUE );
-			swprintf( str, lengthof(str), gzLateLocalizedString[ 27 ], pSectorString );
+			swprintf(str, lengthof(str), gzLateLocalizedString[STR_LATE_27], pSectorString);
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, str, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 		}
 		else
@@ -7040,7 +7040,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 	}
 	else if( PlayerGroupIsInACreatureInfestedMine() )
 	{
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 28 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_28], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 	}
 }
 

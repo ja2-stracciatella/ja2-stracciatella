@@ -886,7 +886,7 @@ maybe_nightops:
 
 		case CREATURE_TEAM:
 			name =
-				s.ubBodyType == BLOODCAT ? gzLateLocalizedString[36] :
+				s.ubBodyType == BLOODCAT ? gzLateLocalizedString[STR_LATE_36] :
 				TacticalStr[CREATURE_TEAM_MERC_NAME];
 			break;
 
