@@ -198,7 +198,6 @@
 #define		SKI_SMALL_FACE_WIDTH									16
 #define		SKI_SMALL_FACE_HEIGHT									14
 #define		SKI_SMALL_FACE_OFFSET_X								52
-#define		SKI_SMALL_FACE_OFFSET_Y								17
 
 #define		SKI_ATTACHMENT_SYMBOL_X_OFFSET				56
 #define		SKI_ATTACHMENT_SYMBOL_Y_OFFSET				14
@@ -1912,7 +1911,7 @@ static void CalculateFirstItemIndexOnPage(void)
 }
 
 
-static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, const OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea);
+static UINT32 DisplayInvSlot(UINT8 slot_num, UINT16 usItemIndex, UINT16 x, UINT16 y, OBJECTTYPE const& pItemObject, bool hatched_out, UINT8 ubItemArea);
 static void HatchOutInvSlot(UINT16 usPosX, UINT16 usPosY);
 static void SetSkiFaceRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
 static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
@@ -1987,13 +1986,9 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 					}
 				}
 
-
 				// Display the inventory slot
-				DisplayInvSlot( (UINT8)usCnt, gpTempDealersInventory[ usCnt ].sItemIndex, usPosX, usPosY,
-												&gpTempDealersInventory[ usCnt ].ItemObject,
-												fDisplayHatchOnItem,
-												ARMS_DEALER_INVENTORY );
-
+				INVENTORY_IN_SLOT const& inv = gpTempDealersInventory[usCnt];
+				DisplayInvSlot(usCnt, inv.sItemIndex, usPosX, usPosY, inv.ItemObject, fDisplayHatchOnItem, ARMS_DEALER_INVENTORY);
 
 				if( gubSkiDirtyLevel == SKI_DIRTY_LEVEL2 )
 				{
@@ -2061,16 +2056,12 @@ static INT8 GetSlotNumberForMerc(UINT8 ubProfile);
 static BOOLEAN IsGunOrAmmoOfSameTypeSelected(const OBJECTTYPE* pItemObject);
 
 
-static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, const OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea)
+static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16 const x, UINT16 const y, OBJECTTYPE const& item_o, bool const hatched_out, UINT8 const item_area)
 {
-	CHAR16			zTemp[64];
-	BOOLEAN			fDisplayMercFace=FALSE;
-	UINT8				ubMercID=0;
-	UINT32			uiItemCost=0;
-	BOOLEAN			fPrintRepaired = FALSE;
+	wchar_t buf[64];
 
 	UINT16 outline;
-	if (IsGunOrAmmoOfSameTypeSelected(pItemObject))
+	if (IsGunOrAmmoOfSameTypeSelected(&item_o))
 	{
 		outline = Get16BPPColor(FROMRGB(255, 255, 255));
 	}
@@ -2079,166 +2070,124 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 		outline = TRANSPARENT;
 	}
 	else
-	{
-		// if the item is not highlighted, and we are not rerendering the screen
+	{ // The item is not highlighted and we are not rerendering the screen
 		return 0;
 	}
 
-	//Display the item graphic, and price
-	INVTYPE     const& item      = Item[usItemIndex];
-	SGPVObject  const& ItemVOIdx = GetInterfaceGraphicForItem(item);
-	ETRLEObject const& pTrav     = ItemVOIdx.SubregionProperties(item.ubGraphicNum);
-	UINT32      const  usHeight  = pTrav.usHeight;
-	UINT32      const  usWidth   = pTrav.usWidth;
-	INT16              sCenX     = usPosX + 7 + abs(SKI_INV_WIDTH - 3 - usWidth)  / 2 - pTrav.sOffsetX;
-	INT16              sCenY     = usPosY +     abs(SKI_INV_HEIGHT    - usHeight) / 2 - pTrav.sOffsetY;
+	// Restore the background region
+	RestoreExternBackgroundRect(x, y, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT);
 
-
-	//Restore the background region
-	RestoreExternBackgroundRect( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT );
-
-	BltVideoObjectOutlineShadow(FRAME_BUFFER, &ItemVOIdx, item.ubGraphicNum, sCenX - 2, sCenY + 2);
-	BltVideoObjectOutline(      FRAME_BUFFER, &ItemVOIdx, item.ubGraphicNum, sCenX,     sCenY, outline);
-
-	//Display the status of the item
-	DrawItemUIBarEx(*pItemObject, 0, usPosX + 2, usPosY + 21, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), FRAME_BUFFER);
-
-	//Display the Items Cost
-	if( ubItemArea == PLAYERS_OFFER_AREA )
-	{
-		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubSlotNum];
-		//if the item has value
-		if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
-		{
-			uiItemCost = o->uiItemPrice;
-		}
-
-		//if the item belongs to a merc
-		if (o->ubIdOfMercWhoOwnsTheItem != NO_PROFILE)
-		{
-			//Display the face of the merc
-			fDisplayMercFace = TRUE;
-			ubMercID = o->ubIdOfMercWhoOwnsTheItem;
-		}
-
-		// if the item has just been repaired
-		if (o->uiFlags & ARMS_INV_ITEM_REPAIRED)
-		{
-			fPrintRepaired = TRUE;
-		}
+	{ // Display the item graphic
+		INVTYPE     const& item    = Item[item_idx];
+		SGPVObject  const& item_vo = GetInterfaceGraphicForItem(item);
+		ETRLEObject const& e       = item_vo.SubregionProperties(item.ubGraphicNum);
+		INT16              cen_x   = x + 7 + abs(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16              cen_y   = y +     abs(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, cen_x - 2, cen_y + 2);
+		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, cen_x,     cen_y, outline);
 	}
-	else if( ubItemArea == ARMS_DEALER_INVENTORY )
-	{
-		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS )
-		{
-			if( fHatchedOut && pItemObject->ubNumberOfObjects == 0 )
-			{
-				uiItemCost = 0;
-			}
-			else
-			{
-				// show the UNIT price, not the total value of all if stacked
-				uiItemCost = CalcShopKeeperItemPrice(DEALER_SELLING, TRUE, usItemIndex, ArmsDealerInfo[gbSelectedArmsDealerID].u.price.sell, pItemObject);
-			}
-		}
-		else // UNDER REPAIR
-		{
-			UINT8		ubElement;
 
-			//display the length of time needed to repair the item
-			uiItemCost = 0;
-
-			//Get the length of time needed to fix the item
-			Assert( gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement != -1);
-			ubElement = (UINT8) gpTempDealersInventory[ ubSlotNum ].sSpecialItemElement;
-
-			BuildDoneWhenTimeString( zTemp, lengthof(zTemp), gbSelectedArmsDealerID, usItemIndex, ubElement );
-			DrawTextToScreen(zTemp, usPosX + SKI_INV_PRICE_OFFSET_X, usPosY + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-			//if the item belongs to a merc
-			if( gpTempDealersInventory[ ubSlotNum ].ubIdOfMercWhoOwnsTheItem != NO_PROFILE )
-			{
-				//Display the face of the merc
-				fDisplayMercFace = TRUE;
-				ubMercID = gpTempDealersInventory[ ubSlotNum ].ubIdOfMercWhoOwnsTheItem;
-			}
-		}
+	{ // Display the status of the item
+		UINT16 const colour = Get16BPPColor(FROMRGB(140, 136, 119));
+		DrawItemUIBarEx(item_o, 0, x + 2, y + 21, 20, colour, colour, FRAME_BUFFER);
 	}
-	else		// DEALER'S OFFER AREA
-	{
-		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-		{
-			//if the dealer repairs, there is an item here, therefore display the items owner's face
-			fDisplayMercFace = TRUE;
-			ubMercID = ArmsDealerOfferArea[ ubSlotNum ].ubIdOfMercWhoOwnsTheItem;
 
-			uiItemCost = CalculateObjectItemRepairCost( gbSelectedArmsDealerID, pItemObject );
+	// Display the item's cost
+	bool      print_repaired = FALSE;
+	UINT32    item_cost      = 0;
+	ProfileID owner          = NO_PROFILE;
+	if (item_area == PLAYERS_OFFER_AREA)
+	{
+		INVENTORY_IN_SLOT const& o = PlayersOfferArea[slot_num];
+		if (o.uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE) item_cost = o.uiItemPrice;
+		owner          = o.ubIdOfMercWhoOwnsTheItem;
+		print_repaired = o.uiFlags & ARMS_INV_ITEM_REPAIRED;
+	}
+	else if (item_area == ARMS_DEALER_INVENTORY)
+	{
+		ARMS_DEALER_INFO const& dealer_info = ArmsDealerInfo[gbSelectedArmsDealerID];
+		if (dealer_info.ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS)
+		{
+			if (!hatched_out || item_o.ubNumberOfObjects != 0)
+			{ // Show the unit price, not the total value of all if stacked
+				item_cost = CalcShopKeeperItemPrice(DEALER_SELLING, TRUE, item_idx, dealer_info.u.price.sell, &item_o);
+			}
 		}
 		else
-			uiItemCost = CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, usItemIndex, ArmsDealerInfo[gbSelectedArmsDealerID].u.price.sell, pItemObject);
-
+		{ // Display the length of time needed to repair the item
+			INVENTORY_IN_SLOT const& inv = gpTempDealersInventory[slot_num];
+			Assert(inv.sSpecialItemElement != -1);
+			BuildDoneWhenTimeString(buf, lengthof(buf), gbSelectedArmsDealerID, item_idx, inv.sSpecialItemElement);
+			DrawTextToScreen(buf, x + SKI_INV_PRICE_OFFSET_X, y + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			owner = inv.ubIdOfMercWhoOwnsTheItem;
+		}
 	}
-
-	//if the item has a price, display it
-	if( uiItemCost != 0 )
+	else // Dealer's offer area
 	{
-		SPrintMoney(zTemp, uiItemCost);
-		DrawTextToScreen(zTemp, usPosX + SKI_INV_PRICE_OFFSET_X, usPosY + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	}
-
-
-	//if the there is more then 1 or if the item is stackable and some of it has been bought and only 1 remains
-//	if( pItemObject->ubNumberOfObjects > 1 || Item[ usItemIndex ].usItemClass == IC_AMMO )
-//	if( pItemObject->ubNumberOfObjects > 1 || Item[ usItemIndex ].ubPerPocket > 1 )
-	if( ( pItemObject->ubNumberOfObjects > 1 ) ||
-			( ( pItemObject->ubNumberOfObjects == 1 ) && DealerItemIsSafeToStack( usItemIndex ) &&
-				( ubItemArea == ARMS_DEALER_INVENTORY ) && ( gpTempDealersInventory[ ubSlotNum ].uiFlags & ARMS_INV_ITEM_SELECTED ) ) )
-	{
-		swprintf( zTemp, lengthof(zTemp), L"x%d", pItemObject->ubNumberOfObjects );
-		DrawTextToScreen(zTemp, usPosX + SKI_ITEM_NUMBER_TEXT_OFFSET_X, usPosY + SKI_ITEM_NUMBER_TEXT_OFFSET_Y, SKI_ITEM_NUMBER_TEXT_WIDTH, SKIT_NUMBER_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-	}
-
-	//if we are to display the face
-	if( fDisplayMercFace )
-	{
-		INT8 iFaceSlot = GetSlotNumberForMerc( ubMercID );
-
-		// if still in player's employ
-		if ( iFaceSlot != -1 )
+		ARMS_DEALER_INFO const& dealer_info = ArmsDealerInfo[gbSelectedArmsDealerID];
+		if (dealer_info.ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS)
+		{ // The dealer repairs, there is an item here, therefore display the item's owner's face
+			owner     = ArmsDealerOfferArea[slot_num].ubIdOfMercWhoOwnsTheItem;
+			item_cost = CalculateObjectItemRepairCost(gbSelectedArmsDealerID, &item_o);
+		}
+		else
 		{
-			BltVideoObject(FRAME_BUFFER, guiSmallSoldiersFace[iFaceSlot], 0, usPosX + SKI_SMALL_FACE_OFFSET_X, usPosY);//SKI_SMALL_FACE_OFFSET_Y
+			item_cost = CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, item_idx, dealer_info.u.price.sell, &item_o);
 		}
 	}
 
-	//if the item has attachments
-	if (ItemHasAttachments(*pItemObject))
-	{
-		//Display the '*' in the bottom right corner of the square
-		DrawTextToScreen(L"*", usPosX + SKI_ATTACHMENT_SYMBOL_X_OFFSET, usPosY + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	if (item_cost != 0)
+	{ // Display the item's price
+		SPrintMoney(buf, item_cost);
+		DrawTextToScreen(buf, x + SKI_INV_PRICE_OFFSET_X, y + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	// Display 'JAMMED' if it's jammed
-	if ( pItemObject->bGunAmmoStatus < 0 )
+	// If the there is more then 1 or if the item is stackable and some of it has been bought and only 1 remains
+	if (item_o.ubNumberOfObjects > 1 ||
+			(
+				item_o.ubNumberOfObjects == 1      &&
+				DealerItemIsSafeToStack(item_idx)  &&
+				item_area == ARMS_DEALER_INVENTORY &&
+				gpTempDealersInventory[slot_num].uiFlags & ARMS_INV_ITEM_SELECTED
+			))
 	{
-		const wchar_t* Jammed = TacticalStr[JAMMED_ITEM_STR];
-		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, Jammed, TINYFONT1, &sCenX, &sCenY);
-		DrawTextToScreen(Jammed, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	}
-	else if ( fPrintRepaired )
-	{
-		const wchar_t* Repaired = SKI_Text[SKI_TEXT_REPAIRED];
-		FindFontCenterCoordinates(usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, Repaired, TINYFONT1, &sCenX, &sCenY);
-		DrawTextToScreen(Repaired, sCenX, sCenY, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	}
-
-	if( fHatchedOut )
-	{
-		HatchOutInvSlot( usPosX, usPosY );
+		swprintf(buf, lengthof(buf), L"x%d", item_o.ubNumberOfObjects);
+		DrawTextToScreen(buf, x + SKI_ITEM_NUMBER_TEXT_OFFSET_X, y + SKI_ITEM_NUMBER_TEXT_OFFSET_Y, SKI_ITEM_NUMBER_TEXT_WIDTH, SKIT_NUMBER_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	}
 
-	InvalidateRegion( usPosX, usPosY, usPosX+SKI_INV_SLOT_WIDTH, usPosY+SKI_INV_SLOT_HEIGHT );
+	if (owner != NO_PROFILE)
+	{ // Display the face
+		INT8 const face_slot = GetSlotNumberForMerc(owner);
+		if (face_slot != -1)
+		{ // Still in player's employ
+			BltVideoObject(FRAME_BUFFER, guiSmallSoldiersFace[face_slot], 0, x + SKI_SMALL_FACE_OFFSET_X, y);
+		}
+	}
 
-	return( uiItemCost );
+	if (ItemHasAttachments(item_o))
+	{ // Display the '*' in the bottom right corner of the square
+		DrawTextToScreen(L"*", x + SKI_ATTACHMENT_SYMBOL_X_OFFSET, y + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	}
+
+	{ // Display 'JAMMED' or 'REPAIRED', if appropriate
+		wchar_t const* const overlay_text =
+			item_o.bGunAmmoStatus < 0 ? TacticalStr[JAMMED_ITEM_STR] :
+			print_repaired            ? SKI_Text[SKI_TEXT_REPAIRED]  :
+			0;
+		if (overlay_text)
+		{
+			INT16 cen_x;
+			INT16 cen_y;
+			FindFontCenterCoordinates(x, y, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT, overlay_text, TINYFONT1, &cen_x, &cen_y);
+			DrawTextToScreen(overlay_text, cen_x, cen_y, SKI_INV_SLOT_WIDTH, TINYFONT1, FONT_RED, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		}
+	}
+
+	if (hatched_out) HatchOutInvSlot(x, y);
+
+	InvalidateRegion(x, y, x + SKI_INV_SLOT_WIDTH, y + SKI_INV_SLOT_HEIGHT);
+
+	return item_cost;
 }
 
 
@@ -2764,7 +2713,7 @@ static void DisplayArmsDealerOfferArea(void)
 				fDisplayHatchOnItem = FALSE;
 
 			// Display the inventory slot
-			uiTotalCost += DisplayInvSlot(sCnt, a->sItemIndex, usPosX, usPosY, &a->ItemObject, fDisplayHatchOnItem, ARMS_DEALER_OFFER_AREA);
+			uiTotalCost += DisplayInvSlot(sCnt, a->sItemIndex, usPosX, usPosY, a->ItemObject, fDisplayHatchOnItem, ARMS_DEALER_OFFER_AREA);
 		}
 		else	// empty
 		{
@@ -3059,7 +3008,7 @@ static void DisplayPlayersOfferArea(void)
 //			fDisplayHatchOnItem = (o->uiFlags & (ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED | ARMS_INV_JUST_PURCHASED)) == 0;
 
 			// Display the inventory slot
-			DisplayInvSlot(sCnt, o->sItemIndex, usPosX, usPosY, &o->ItemObject, fDisplayHatchOnItem, PLAYERS_OFFER_AREA);
+			DisplayInvSlot(sCnt, o->sItemIndex, usPosX, usPosY, o->ItemObject, fDisplayHatchOnItem, PLAYERS_OFFER_AREA);
 
 			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 			{
