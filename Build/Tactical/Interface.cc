@@ -945,81 +945,83 @@ void GetSoldierAboveGuyPositions(SOLDIERTYPE const* const s, INT16* const psX, I
 }
 
 
+static void PrintAboveGuy(INT16 const x, INT16 const y, wchar_t const* const text)
+{
+	INT16 cx;
+	INT16 cy;
+	FindFontCenterCoordinates(x, y, 80, 1, text, TINYFONT1, &cx, &cy);
+	GDirtyPrint(cx, cy, text);
+}
+
+
 static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight);
 
 
-void DrawSelectedUIAboveGuy(SOLDIERTYPE* const s)
+void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 {
-	if (s->bVisible == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
-	{
-		return;
-	}
+	if (s.bVisible == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) return;
 
-  if (s->sGridNo == NOWHERE) return;
+	if (s.sGridNo == NOWHERE) return;
 
-	if (s->fFlashLocator)
+	if (s.fFlashLocator)
 	{
-		if (s->bVisible == -1)
+		if (s.bVisible == -1)
 		{
-			s->fFlashLocator = FALSE;
+			s.fFlashLocator = FALSE;
 		}
 		else
 		{
-			if (TIMECOUNTERDONE(s->BlinkSelCounter, 80))
+			if (TIMECOUNTERDONE(s.BlinkSelCounter, 80))
 			{
-				RESETTIMECOUNTER(s->BlinkSelCounter, 80);
+				RESETTIMECOUNTER(s.BlinkSelCounter, 80);
 
-				s->fShowLocator = TRUE;
-				if (++s->sLocatorFrame == 5)
-				{
-					// Update time we do this
-					s->fFlashLocator++;
-					s->sLocatorFrame = 0;
+				s.fShowLocator = TRUE;
+				if (++s.sLocatorFrame == 5)
+				{ // Update time we do this
+					++s.fFlashLocator;
+					s.sLocatorFrame = 0;
 				}
 			}
 
-			if (s->fFlashLocator == s->ubNumLocateCycles)
+			if (s.fFlashLocator == s.ubNumLocateCycles)
 			{
-				s->fFlashLocator = FALSE;
-				s->fShowLocator  = FALSE;
+				s.fFlashLocator = FALSE;
+				s.fShowLocator  = FALSE;
 			}
 
 			// Render the beastie
 			INT16 sXPos;
 			INT16 sYPos;
-			GetSoldierAboveGuyPositions(s, &sXPos, &sYPos, TRUE);
+			GetSoldierAboveGuyPositions(&s, &sXPos, &sYPos, TRUE);
 
-			// Adjust for bars!
+			// Adjust for bars
 			sXPos += 25;
 			sYPos += 25;
 
 			// Add bars
 			RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
-			SGPVObject const* const gfx = s->bNeutral || s->bSide == gbPlayerNum ?
+			SGPVObject const* const gfx = s.bNeutral || s.bSide == gbPlayerNum ?
 				guiRADIO : guiRADIO2;
-			BltVideoObject(FRAME_BUFFER, gfx, s->sLocatorFrame, sXPos, sYPos);
+			BltVideoObject(FRAME_BUFFER, gfx, s.sLocatorFrame, sXPos, sYPos);
 		}
 	}
 
-	// If he is in the middle of a certain animation, ignore!
-	if (gAnimControl[s->usAnimState].uiFlags & ANIM_NOSHOW_MARKER)
-	{
-		return;
-	}
+	// If he is in the middle of a certain animation, ignore
+	if (gAnimControl[s.usAnimState].uiFlags & ANIM_NOSHOW_MARKER) return;
 
-	// Donot show if we are dead
-	if (s->uiStatusFlags & SOLDIER_DEAD) return;
+	// Do not show if we are dead
+	if (s.uiStatusFlags & SOLDIER_DEAD) return;
 
 	UINT16                   usGraphicToUse;
 	SOLDIERTYPE const* const sel = GetSelectedMan();
-	if (s == sel && !gRubberBandActive)
+	if (&s == sel && !gRubberBandActive)
 	{
 		usGraphicToUse = THIRDPOINTERS2;
 	}
-	else if (s->fShowLocator                      ||
-			s->uiStatusFlags & SOLDIER_MULTI_SELECTED ||
-			(s == gSelectedGuy && !gfIgnoreOnSelectedGuy))
+	else if (s.fShowLocator                      ||
+			s.uiStatusFlags & SOLDIER_MULTI_SELECTED ||
+			(&s == gSelectedGuy && !gfIgnoreOnSelectedGuy))
 	{
 		usGraphicToUse = THIRDPOINTERS1;
 	}
@@ -1030,83 +1032,71 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const s)
 
 	INT16 sXPos;
 	INT16 sYPos;
-	GetSoldierAboveGuyPositions(s, &sXPos, &sYPos, FALSE);
+	GetSoldierAboveGuyPositions(&s, &sXPos, &sYPos, FALSE);
 
 	// Display name
 	SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
 
-	INT16 sX;
-	INT16 sY;
-
-	if (s->ubProfile != NO_PROFILE || s->uiStatusFlags & SOLDIER_VEHICLE)
+	if (s.ubProfile != NO_PROFILE || s.uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		BOOLEAN fRaiseName = FALSE;
-		if (gfUIMouseOnValidCatcher == 1 && s == gUIValidCatcher)
+		wchar_t const* action = 0;
+		wchar_t        buf[50];
+		if (&s == gUIValidCatcher && gfUIMouseOnValidCatcher == 1)
 		{
-			wchar_t const* const catch_ = TacticalStr[CATCH_STR];
-			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, catch_, TINYFONT1, &sX, &sY);
-			GDirtyPrint(sX, sY, catch_);
-      fRaiseName = TRUE;
+			action = TacticalStr[CATCH_STR];
 		}
-		else if (gfUIMouseOnValidCatcher == 3 && s == gUIValidCatcher)
+		else if (&s == gUIValidCatcher && gfUIMouseOnValidCatcher == 3)
 		{
-			wchar_t const* const reload = TacticalStr[RELOAD_STR];
-			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, reload, TINYFONT1, &sX, &sY);
-			GDirtyPrint(sX, sY, reload);
-      fRaiseName = TRUE;
+			action = TacticalStr[RELOAD_STR];
 		}
-		else if (gfUIMouseOnValidCatcher == 4 && s == gUIValidCatcher)
+		else if (&s == gUIValidCatcher && gfUIMouseOnValidCatcher == 4)
 		{
-			wchar_t const* const pass = pMessageStrings[MSG_PASS];
-			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, pass, TINYFONT1, &sX, &sY);
-			GDirtyPrint(sX, sY, pass);
-      fRaiseName = TRUE;
+			action = pMessageStrings[MSG_PASS];
 		}
-    else if (s->bAssignment >= ON_DUTY)
-    {
+		else if (s.bAssignment >= ON_DUTY)
+		{
 			SetFontForeground(FONT_YELLOW);
-			wchar_t assignment[50];
-			swprintf(assignment, lengthof(assignment), L"(%ls)", pAssignmentStrings[s->bAssignment]);
-			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, assignment, TINYFONT1, &sX, &sY);
-			GDirtyPrint(sX, sY, assignment);
-      fRaiseName = TRUE;
-    }
-    else if (s->bTeam == gbPlayerNum     &&
-    		s->bAssignment < ON_DUTY         &&
-    		s->bAssignment != CurrentSquad() &&
-    		!(s->uiStatusFlags & SOLDIER_MULTI_SELECTED))
-    {
-			wchar_t assignment[50];
-			swprintf(assignment, lengthof(assignment), gzLateLocalizedString[34], s->bAssignment + 1);
-			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, assignment, TINYFONT1, &sX, &sY);
-			GDirtyPrint(sX, sY, assignment);
-      fRaiseName = TRUE;
-    }
-
-		// If not in a squad....
-		if (s->uiStatusFlags & SOLDIER_VEHICLE)
+			swprintf(buf, lengthof(buf), L"(%ls)", pAssignmentStrings[s.bAssignment]);
+			action = buf;
+		}
+		else if (s.bTeam == gbPlayerNum     &&
+				s.bAssignment < ON_DUTY         &&
+				s.bAssignment != CurrentSquad() &&
+				!(s.uiStatusFlags & SOLDIER_MULTI_SELECTED))
 		{
-			if (GetNumberInVehicle(GetVehicle(s->bVehicleID)) == 0)
+			swprintf(buf, lengthof(buf), gzLateLocalizedString[34], s.bAssignment + 1);
+			action = buf;
+		}
+
+		bool raise_name = false;
+		if (action)
+		{
+			PrintAboveGuy(sXPos, sYPos, action);
+			raise_name = true;
+		}
+
+		// If not in a squad
+		if (s.uiStatusFlags & SOLDIER_VEHICLE)
+		{
+			if (GetNumberInVehicle(GetVehicle(s.bVehicleID)) == 0)
 			{
 				SetFontForeground(FONT_GRAY4);
 			}
 		}
-		else if (s->bAssignment >= ON_DUTY)
+		else if (s.bAssignment >= ON_DUTY)
 		{
 			SetFontForeground(FONT_YELLOW);
 		}
 
-		wchar_t const* const name = s->name;
-		FindFontCenterCoordinates(sXPos, fRaiseName ? sYPos - 10 : sYPos, 80, 1, name, TINYFONT1, &sX, &sY);
-		GDirtyPrint(sX, sY, name);
+		PrintAboveGuy(sXPos, raise_name ? sYPos - 10 : sYPos, s.name);
 
-		if (s->ubProfile < FIRST_RPC ||
-				RPC_RECRUITED(s)         ||
-				AM_AN_EPC(s)             ||
-				s->uiStatusFlags & SOLDIER_VEHICLE)
+		if (s.ubProfile < FIRST_RPC ||
+				RPC_RECRUITED(&s)       ||
+				AM_AN_EPC(&s)           ||
+				s.uiStatusFlags & SOLDIER_VEHICLE)
 		{
 			// Adjust for bars!
-			if (s == sel)
+			if (&s == sel)
 			{
 				sXPos += 28;
 				sYPos += 5;
@@ -1123,40 +1113,34 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const s)
 			BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, sXPos, sYPos);
 
 			// Draw life, breath
-			if (s == sel)
+			if (&s == sel)
 			{
 				sXPos += 1;
 				sYPos += 2;
 			}
-			DrawBarsInUIBox(s, sXPos, sYPos, 16, 1);
+			DrawBarsInUIBox(&s, sXPos, sYPos, 16, 1);
 			return;
 		}
 		else
 		{
 			sYPos += 10;
 
-			if (gfUIMouseOnValidCatcher == 2 && s == gUIValidCatcher)
+			if (gfUIMouseOnValidCatcher == 2 && &s == gUIValidCatcher)
 			{
 				SetFontForeground(FONT_MCOLOR_WHITE);
-				wchar_t const* const give = TacticalStr[GIVE_STR];
-				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, give, TINYFONT1, &sX, &sY);
-				GDirtyPrint(sX, sY, give);
+				PrintAboveGuy(sXPos, sYPos, TacticalStr[GIVE_STR]);
 				return;
 			}
 		}
 	}
-	else if (s->bLevel != 0)
+	else if (s.bLevel != 0)
 	{
 		SetFontForeground(FONT_YELLOW);
-		wchar_t const* const roof = gzLateLocalizedString[15];
-		FindFontCenterCoordinates(sXPos, sYPos + 10, 80, 1, roof, TINYFONT1, &sX, &sY);
-		GDirtyPrint(sX, sY, roof);
+		PrintAboveGuy(sXPos, sYPos + 10, gzLateLocalizedString[15]);
 	}
 
 	SetFontForeground(FONT_MCOLOR_DKRED);
-	wchar_t const* const pStr = GetSoldierHealthString(s);
-	FindFontCenterCoordinates(sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY);
-	GDirtyPrint(sX, sY, pStr);
+	PrintAboveGuy(sXPos, sYPos, GetSoldierHealthString(&s));
 }
 
 

@@ -446,20 +446,20 @@ void RenderTopmostTacticalInterface()
 
 	FOR_ALL_MERCS(i)
 	{
-		SOLDIERTYPE* const s = *i;
+		SOLDIERTYPE& s = **i;
 		DrawSelectedUIAboveGuy(s);
 
-		if (!s->fDisplayDamage)    continue;
-		if (s->sGridNo == NOWHERE) continue;
-		if (s->bVisible == -1)     continue;
+		if (!s.fDisplayDamage)    continue;
+		if (s.sGridNo == NOWHERE) continue;
+		if (s.bVisible == -1)     continue;
 
 		INT16 sMercScreenX;
 		INT16 sMercScreenY;
-		GetSoldierTRUEScreenPos(s, &sMercScreenX, &sMercScreenY);
+		GetSoldierTRUEScreenPos(&s, &sMercScreenX, &sMercScreenY);
 
-		INT16 x = sMercScreenX + s->sDamageX;
-		INT16 y = sMercScreenY + s->sDamageY;
-		if (s->ubBodyType == QUEENMONSTER)
+		INT16 x = sMercScreenX + s.sDamageX;
+		INT16 y = sMercScreenY + s.sDamageY;
+		if (s.ubBodyType == QUEENMONSTER)
 		{
 			x += 25;
 			y += 10;
@@ -471,12 +471,12 @@ void RenderTopmostTacticalInterface()
 
 			if (y < gsVIEWPORT_WINDOW_START_Y)
 			{
-				y = sMercScreenY - s->sBoundingBoxOffsetY;
+				y = sMercScreenY - s.sBoundingBoxOffsetY;
 			}
 		}
 
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		GDirtyPrintF(x, y, L"-%d", s->sDamage);
+		GDirtyPrintF(x, y, L"-%d", s.sDamage);
 	}
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN

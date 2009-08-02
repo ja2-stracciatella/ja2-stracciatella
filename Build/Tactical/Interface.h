@@ -128,7 +128,7 @@ void CancelOpenDoorMenu(void);
 void HandleInterfaceBackgrounds(void);
 
 
-void DrawSelectedUIAboveGuy(SOLDIERTYPE* s);
+void DrawSelectedUIAboveGuy(SOLDIERTYPE&);
 
 void CreateCurrentTacticalPanelButtons(void);
 void RemoveCurrentTacticalPanelButtons(void);
