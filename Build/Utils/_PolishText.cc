@@ -397,48 +397,6 @@ const wchar_t* pEpcMenuStrings[] =
 
 // look at pAssignmentString above for comments
 
-const wchar_t* pPersonnelAssignmentStrings[] =
-{
-	L"Oddz. 1",
-	L"Oddz. 2",
-	L"Oddz. 3",
-	L"Oddz. 4",
-	L"Oddz. 5",
-	L"Oddz. 6",
-	L"Oddz. 7",
-	L"Oddz. 8",
-	L"Oddz. 9",
-	L"Oddz. 10",
-	L"Oddz. 11",
-	L"Oddz. 12",
-	L"Oddz. 13",
-	L"Oddz. 14",
-	L"Oddz. 15",
-	L"Oddz. 16",
-	L"Oddz. 17",
-	L"Oddz. 18",
-	L"Oddz. 19",
-	L"Oddz. 20",
-	L"Służba",
-	L"Lekarz",
-	L"Pacjent",
-	L"Pojazd",
-	L"Podróż",
-	L"Naprawa",
-	L"Praktyka",
-	L"Trenuje samoobronę",
-	L"Instruktor",
-	L"Uczeń",
-	L"Nie żyje",
-	L"Obezwładniony",
-	L"Jeniec",
-	L"Szpital",
-	L"Pusty",	// Vehicle is empty
-};
-
-
-// refer to above for comments
-
 const wchar_t* pLongAssignmentStrings[] =
 {
 	L"Oddział 1",

@@ -398,48 +398,6 @@ const wchar_t *pEpcMenuStrings[] =
 
 // look at pAssignmentString above for comments
 
-const wchar_t *pPersonnelAssignmentStrings[] =
-{
-	L"Squad 1",
-	L"Squad 2",
-	L"Squad 3",
-	L"Squad 4",
-	L"Squad 5",
-	L"Squad 6",
-	L"Squad 7",
-	L"Squad 8",
-	L"Squad 9",
-	L"Squad 10",
-	L"Squad 11",
-	L"Squad 12",
-	L"Squad 13",
-	L"Squad 14",
-	L"Squad 15",
-	L"Squad 16",
-	L"Squad 17",
-	L"Squad 18",
-	L"Squad 19",
-	L"Squad 20",
-	L"On Duty",
-	L"Doctor",
-	L"Patient",
-	L"Vehicle",
-	L"In Transit",
-	L"Repair",
-	L"Practice",
-  L"Training Militia",
-	L"Trainer",
-	L"Student",
-	L"Dead",
-	L"Incap.",
-	L"POW",
-	L"Hospital",
-	L"Empty",	// Vehicle is empty
-};
-
-
-// refer to above for comments
-
 const wchar_t *pLongAssignmentStrings[] =
 {
 	L"Squad 1",

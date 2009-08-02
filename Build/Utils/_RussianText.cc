@@ -397,7 +397,7 @@ const wchar_t* pEpcMenuStrings[] =
 
 // look at pAssignmentString above for comments
 
-const wchar_t* pPersonnelAssignmentStrings[] =
+const wchar_t* pLongAssignmentStrings[] =
 {
 	L"Отряд 1",
 	L"Отряд 2",
@@ -432,48 +432,6 @@ const wchar_t* pPersonnelAssignmentStrings[] =
 	L"Труп",
 	L"Без сознания",
 	L"В плену",
-	L"Госпиталь",
-	L"Пуст",	// Vehicle is empty
-};
-
-
-// refer to above for comments
-
-const wchar_t* pLongAssignmentStrings[] =
-{
-	L"Отряд 1",
-	L"Отряд 2",
-	L"Отряд 3",
-	L"Отряд 4",
-	L"Отряд 5",
-	L"Отряд 6",
-	L"Отряд 7",
-	L"Отряд 8",
-	L"Отряд 9",
-	L"Отряд 10",
-	L"Отряд 11",
-	L"Отряд 12",
-	L"Отряд 13",
-	L"Отряд 14",
-	L"Отряд 15",
-	L"Отряд 16",
-	L"Отряд 17",
-	L"Отряд 18",
-	L"Отряд 19",
-	L"Отряд 20",
-	L"На службе",
-	L"Доктор",
-	L"Пациент",
-	L"Транспорт",
-	L"В пути",
-	L"Ремонт",
-	L"Практика",
-	L"Ополчение",
-	L"Тренер",
-	L"Ученик",
-	L"Труп",
-	L"Беспом.",
-	L"Без созн.",
 	L"Госпиталь", // patient in a hospital
 	L"Пуст",	// Vehicle is empty
 };

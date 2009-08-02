@@ -31,7 +31,6 @@ extern const wchar_t *pSquadMenuStrings[];
 extern const wchar_t *pDoorTrapStrings[];
 extern const wchar_t *pLongAssignmentStrings[];
 extern const wchar_t *pMapScreenMouseRegionHelpText[];
-extern const wchar_t *pPersonnelAssignmentStrings[];
 extern const wchar_t *pNoiseVolStr[];
 extern const wchar_t *pNoiseTypeStr[];
 extern const wchar_t *pDirectionStr[];

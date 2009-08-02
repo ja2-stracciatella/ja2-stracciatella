@@ -398,48 +398,6 @@ const wchar_t* pEpcMenuStrings[] =
 
 // look at pAssignmentString above for comments
 
-const wchar_t* pPersonnelAssignmentStrings[] =
-{
-	L"Esc. 1",
-	L"Esc. 2",
-	L"Esc. 3",
-	L"Esc. 4",
-	L"Esc. 5",
-	L"Esc. 6",
-	L"Esc. 7",
-	L"Esc. 8",
-	L"Esc. 9",
-	L"Esc. 10",
-	L"Esc. 11",
-	L"Esc. 12",
-	L"Esc. 13",
-	L"Esc. 14",
-	L"Esc. 15",
-	L"Esc. 16",
-	L"Esc. 17",
-	L"Esc. 18",
-	L"Esc. 19",
-	L"Esc. 20",
-	L"Service",
-	L"Docteur",
-	L"Patient",
-	L"Transport",
-	L"Transit",
-	L"Réparation",
-	L"Formation",
-  L"Milice",
-	L"Entraîneur",
-	L"Elève",
-	L"Mort",
-	L"Incap.",
-	L"Capturé",
-	L"Hôpital",
-	L"Vide",	// Vehicle is empty
-};
-
-
-// refer to above for comments
-
 const wchar_t* pLongAssignmentStrings[] =
 {
 	L"Esc. 1",

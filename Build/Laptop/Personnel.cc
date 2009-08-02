@@ -657,7 +657,7 @@ static void DisplayCharName(SOLDIERTYPE const& s)
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, sString, CHAR_NAME_FONT, &sX, &sY);
 	MPrint(sX, CHAR_NAME_Y, sString);
 
-	const wchar_t* Assignment = pPersonnelAssignmentStrings[s.bAssignment];
+	wchar_t const* const Assignment = pLongAssignmentStrings[s.bAssignment];
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
 	MPrint(sX, CHAR_LOC_Y, Assignment);
 }

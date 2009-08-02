@@ -397,48 +397,6 @@ const wchar_t* pEpcMenuStrings[] =
 
 // look at pAssignmentString above for comments
 
-const wchar_t* pPersonnelAssignmentStrings[] =
-{
-	L"Squadra 1",
-	L"Squadra 2",
-	L"Squadra 3",
-	L"Squadra 4",
-	L"Squadra 5",
-	L"Squadra 6",
-	L"Squadra 7",
-	L"Squadra 8",
-	L"Squadra 9",
-	L"Squadra 10",
-	L"Squadra 11",
-	L"Squadra 12",
-	L"Squadra 13",
-	L"Squadra 14",
-	L"Squadra 15",
-	L"Squadra 16",
-	L"Squadra 17",
-	L"Squadra 18",
-	L"Squadra 19",
-	L"Squadra 20",
-	L"In servizio",
-	L"Dottore",
-	L"Paziente",
-	L"veicolo",
-	L"In transito",
-	L"Riparare",
-	L"Esercitarsi",
-  L"Allenamento Esercito",
-	L"Allenatore",
-	L"Studente",
-	L"Morto",
-	L"Incap.",
-	L"PDG",
-	L"Ospedale",
-	L"Vuoto",	// Vehicle is empty
-};
-
-
-// refer to above for comments
-
 const wchar_t* pLongAssignmentStrings[] =
 {
 	L"Squadra 1",
@@ -466,7 +424,7 @@ const wchar_t* pLongAssignmentStrings[] =
 	L"Paziente",
 	L"Veicolo",
 	L"In transito",
-	L"Ripara",
+	L"Riparare",
 	L"Esercitarsi",
   L"Allenatore esercito",
 	L"Allena squadra",

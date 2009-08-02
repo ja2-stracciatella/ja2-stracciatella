@@ -386,46 +386,6 @@ const wchar_t *pEpcMenuStrings[] =
 };
 
 // look at pAssignmentString above for comments
-const wchar_t *pPersonnelAssignmentStrings[] =
-{
-	L"Trupp 1",
-	L"Trupp 2",
-	L"Trupp 3",
-	L"Trupp 4",
-	L"Trupp 5",
-	L"Trupp 6",
-	L"Trupp 7",
-	L"Trupp 8",
-	L"Trupp 9",
-	L"Trupp 10",
-	L"Trupp 11",
-	L"Trupp 12",
-	L"Trupp 13",
-	L"Trupp 14",
-	L"Trupp 15",
-	L"Trupp 16",
-	L"Trupp 17",
-	L"Trupp 18",
-	L"Trupp 19",
-	L"Trupp 20",
-	L"Dienst",
-	L"Doktor",
-	L"Patient",
-	L"Fahrzeug",
-	L"Transit",
-	L"Repar.",
-	L"Üben",
-	L"Miliz",
-	L"Trainer",
-	L"Rekrut",
-	L"Tot",
-	L"Unfähig",
-	L"Gefangen",
-	L"Hospital",
-	L"Leer",	// Vehicle is empty
-};
-
-// refer to above for comments
 const wchar_t *pLongAssignmentStrings[] =
 {
 	L"Trupp 1",

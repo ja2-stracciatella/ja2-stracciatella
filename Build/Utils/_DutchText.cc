@@ -397,48 +397,6 @@ const wchar_t* pEpcMenuStrings[] =
 
 // look at pAssignmentString above for comments
 
-const wchar_t* pPersonnelAssignmentStrings[] =
-{
-	L"Team 1",
-	L"Team 2",
-	L"Team 3",
-	L"Team 4",
-	L"Team 5",
-	L"Team 6",
-	L"Team 7",
-	L"Team 8",
-	L"Team 9",
-	L"Team 10",
-	L"Team 11",
-	L"Team 12",
-	L"Team 13",
-	L"Team 14",
-	L"Team 15",
-	L"Team 16",
-	L"Team 17",
-	L"Team 18",
-	L"Team 19",
-	L"Team 20",
-	L"Dienst", // on active duty
-	L"Dokter", // administering medical aid
-	L"Patiënt", // getting medical aid
-	L"Voertuig", // in a vehicle
-	L"Onderweg", // in transit - abbreviated form
-	L"Repareer", // repairing
-	L"Oefenen", // training themselves
-	L"Militie", // training a town to revolt
-	L"Trainer", // training a teammate
-	L"Student", // being trained by someone else
-	L"Dood", // dead
-	L"Uitgesc.", // abbreviation for incapacitated
-	L"POW", // Prisoner of war - captured
-	L"Kliniek", // patient in a hospital
-	L"Leeg",	// Vehicle is empty
-};
-
-
-// refer to above for comments
-
 const wchar_t* pLongAssignmentStrings[] =
 {
 	L"Team 1",
