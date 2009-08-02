@@ -2161,24 +2161,23 @@ void AllMercsWalkedToExitGrid()
 
 static void SetupTacticalTraversalInformation(void)
 {
-	SOLDIERTYPE *pSoldier;
 	INT16 sScreenX, sScreenY;
 
 	Assert( gpAdjacentGroup );
 	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 	{
-		pSoldier = pPlayer->pSoldier;
+		SOLDIERTYPE& s = *pPlayer->pSoldier;
 
-		SetInsertionDataFromAdjacentMoveDirection( pSoldier, gubTacticalDirection, gsAdditionalData );
+		SetInsertionDataFromAdjacentMoveDirection(&s, gubTacticalDirection, gsAdditionalData );
 
 		// pass flag that this is a tactical traversal, the path built MUST go in the traversed direction even if longer!
-		PlotPathForCharacter( pSoldier, gsAdjacentSectorX, gsAdjacentSectorY, TRUE );
+		PlotPathForCharacter(s, gsAdjacentSectorX, gsAdjacentSectorY, true);
 
 		if( guiAdjacentTraverseTime <= 5 )
 		{
 			// Determine 'mirror' gridno...
 			// Convert to absolute xy
-			GetAbsoluteScreenXYFromMapPos(GETWORLDINDEXFROMWORLDCOORDS(pSoldier->sY, pSoldier->sX), &sScreenX, &sScreenY);
+			GetAbsoluteScreenXYFromMapPos(GETWORLDINDEXFROMWORLDCOORDS(s.sY, s.sX), &sScreenX, &sScreenY);
 
 			// Get 'mirror', depending on what direction...
 			switch( gubTacticalDirection )
@@ -2193,12 +2192,12 @@ static void SetupTacticalTraversalInformation(void)
 			const GridNo sNewGridNo = GetMapPosFromAbsoluteScreenXY(sScreenX, sScreenY);
 
 			// Save this gridNo....
-			pSoldier->sPendingActionData2				= sNewGridNo;
+			s.sPendingActionData2      = sNewGridNo;
 			// Copy CODe computed earlier into data
-			pSoldier->usStrategicInsertionData  = pSoldier->ubStrategicInsertionCode;
+			s.usStrategicInsertionData = s.ubStrategicInsertionCode;
 			// Now use NEW code....
 
-			pSoldier->ubStrategicInsertionCode = CalcMapEdgepointClassInsertionCode( pSoldier->sPreTraversalGridNo );
+			s.ubStrategicInsertionCode = CalcMapEdgepointClassInsertionCode(s.sPreTraversalGridNo);
 
 			if( gubAdjacentJumpCode == JUMP_SINGLE_LOAD_NEW || gubAdjacentJumpCode == JUMP_ALL_LOAD_NEW )
 			{

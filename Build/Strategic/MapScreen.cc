@@ -2456,7 +2456,7 @@ static UINT32 HandleMapUI(void)
 								// Can we get go there?  (NULL temp character path)
 								if ( GetLengthOfPath( pTempCharacterPath ) > 0 )
 								{
-									PlotPathForCharacter(s, sMapX, sMapY, FALSE);
+									PlotPathForCharacter(*s, sMapX, sMapY, false);
 
 									// copy the path to every other selected character
 									CopyPathToAllSelectedCharacters(GetSoldierMercPathPtr(s));

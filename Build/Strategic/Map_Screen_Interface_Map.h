@@ -25,7 +25,7 @@ void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY );
 void DisplayPathArrows(UINT16 usCharNum, HVOBJECT hMapHandle);
 
 // build path for character
-void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN fTacticalTraversal );
+void PlotPathForCharacter(SOLDIERTYPE&, INT16 x, INT16 y, bool tactical_traversal);
 
 // build temp path for character
 void PlotATemporaryPathForCharacter(const SOLDIERTYPE* s, INT16 sX, INT16 sY);

@@ -1145,55 +1145,40 @@ void ShutDownPalettesForMap(void)
 static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter);
 
 
-void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN fTacticalTraversal )
+void PlotPathForCharacter(SOLDIERTYPE& s, INT16 const x, INT16 const y, bool const tactical_traversal)
 {
-	// will plot a path for this character
+	// Don't build path, if cursor isn't allowed here
+	if (!IsTheCursorAllowedToHighLightThisSector(x, y)) return;
+	// Leave if the character is in transit
+	if (s.bAssignment == IN_TRANSIT) return;
 
-	// is cursor allowed here?..if not..don't build path
-	if( !IsTheCursorAllowedToHighLightThisSector( sX, sY ) )
-	{
+	if (s.bSectorZ != 0)
+	{ /* Not on the surface, character won't move until they reach surface, inform
+		 * player of this fact */
+		wchar_t const* const who =
+			s.bAssignment >= ON_DUTY ? s.name :
+			pLongAssignmentStrings[s.bAssignment];
+		MapScreenMessage(FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%ls %ls", who, gsUndergroundString);
 		return;
 	}
 
-	// is the character in transit?..then leave
-	if( pCharacter->bAssignment == IN_TRANSIT )
+	bool const vehicle = s.bAssignment == VEHICLE || s.uiStatusFlags & SOLDIER_VEHICLE;
+	if (vehicle) SetUpMvtGroupForVehicle(&s);
+
+	/* Plot a path from current position to x, y: Get last sector in characters
+	 * list, build new path, remove tail section, and append onto old list */
+	INT16   const start = GetLastSectorIdInCharactersPath(&s);
+	INT16   const end   = x + y * MAP_WORLD_X;
+	PathSt* const path  = BuildAStrategicPath(start, end, *GetSoldierGroup(s), tactical_traversal);
+	s.pMercPath = AppendStrategicPath(path, s.pMercPath);
+
+	if (vehicle)
 	{
-		// leave
-		return;
-	}
-
-
-	if( pCharacter->bSectorZ != 0 )
-	{
-		if( pCharacter->bAssignment >= ON_DUTY )
-		{
-			// not on the surface, character won't move until they reach surface..info player of this fact
-			MapScreenMessage(FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%ls %ls", pCharacter->name, gsUndergroundString);
-		}
-		else	// squad
-		{
-			MapScreenMessage(FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%ls %ls", pLongAssignmentStrings[pCharacter->bAssignment], gsUndergroundString);
-		}
-		return;
-	}
-
-	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
-	{
-		SetUpMvtGroupForVehicle( pCharacter );
-	}
-
-	// will plot a path from current position to sX, sY
-	// get last sector in characters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	pCharacter->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), *GetSoldierGroup(*pCharacter), fTacticalTraversal), pCharacter->pMercPath);
-
-	// check if in vehicle, if so, copy path to vehicle
-	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
-	{
-		MoveCharactersPathToVehicle( pCharacter );
+		MoveCharactersPathToVehicle(&s);
 	}
 	else
 	{
-		CopyPathToCharactersSquadIfInOne( pCharacter );
+		CopyPathToCharactersSquadIfInOne(&s);
 	}
 }
 
