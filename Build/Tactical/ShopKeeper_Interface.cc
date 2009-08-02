@@ -2053,7 +2053,7 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, ArmsDealerID, UINT16 usItemIndex, UINT8 ubElement);
 static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject);
 static INT8 GetSlotNumberForMerc(UINT8 ubProfile);
-static BOOLEAN IsGunOrAmmoOfSameTypeSelected(const OBJECTTYPE* pItemObject);
+static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const&);
 
 
 static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16 const x, UINT16 const y, OBJECTTYPE const& item_o, bool const hatched_out, UINT8 const item_area)
@@ -2061,7 +2061,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	wchar_t buf[64];
 
 	UINT16 outline;
-	if (IsGunOrAmmoOfSameTypeSelected(&item_o))
+	if (IsGunOrAmmoOfSameTypeSelected(item_o))
 	{
 		outline = Get16BPPColor(FROMRGB(255, 255, 255));
 	}
@@ -4153,55 +4153,42 @@ static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 }
 
 
-static BOOLEAN IsGunOrAmmoOfSameTypeSelected(const OBJECTTYPE* pItemObject)
+static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const& o)
 {
-	//if there is no item selected, return
-	if( gpHighLightedItemObject == NULL )
-		return( FALSE );
+	if (!gpHighLightedItemObject) return false; // No item selected
+	OBJECTTYPE const& highlighted_o    = *gpHighLightedItemObject;
+	INVTYPE    const& highlighted_item = Item[highlighted_o.usItem];
+	INVTYPE    const& o_item           = Item[o.usItem];
 
-	//if the item is ammo
-	if( Item[ gpHighLightedItemObject->usItem ].usItemClass == IC_AMMO )
+	// Is one ammo for the other?
+	if (highlighted_item.usItemClass == IC_AMMO)
 	{
-		//if there is a gun
-		if( Item[ pItemObject->usItem ].usItemClass == IC_GUN )
+		if (o_item.usItemClass == IC_GUN &&
+				Weapon[o.usItem].ubCalibre == Magazine[highlighted_item.ubClassIndex].ubCalibre)
 		{
-			//of the same caliber
-			if( Weapon[ pItemObject->usItem ].ubCalibre == Magazine[ Item[ gpHighLightedItemObject->usItem ].ubClassIndex ].ubCalibre )
-			{
-				return( TRUE );
-			}
+			return true;
+		}
+	}
+	else if (highlighted_item.usItemClass == IC_GUN)
+	{
+		if (o_item.usItemClass == IC_AMMO &&
+				Weapon[highlighted_o.usItem].ubCalibre == Magazine[o_item.ubClassIndex].ubCalibre)
+		{
+			return true;
 		}
 	}
 
-	//else if the item is a gun
-	else if( Item[ gpHighLightedItemObject->usItem ].usItemClass == IC_GUN )
+	// Is one an attachment for the other?
+	if (o_item.fFlags & ITEM_ATTACHMENT)
 	{
-		//if there is a gun
-		if( Item[ pItemObject->usItem ].usItemClass == IC_AMMO )
-		{
-			//of the same caliber
-			if( Weapon[ gpHighLightedItemObject->usItem ].ubCalibre == Magazine[ Item[ pItemObject->usItem ].ubClassIndex ].ubCalibre )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
-
-	//if the highlighted object is an attachment
-	if( Item[ pItemObject->usItem ].fFlags & ITEM_ATTACHMENT )
-	{
-		if( ValidAttachment( pItemObject->usItem, gpHighLightedItemObject->usItem ) )
-			return( TRUE );
+		if (ValidAttachment(o.usItem, highlighted_o.usItem)) return true;
 	}
 	else
 	{
-		if( ValidAttachment( gpHighLightedItemObject->usItem, pItemObject->usItem ) )
-			return( TRUE );
+		if (ValidAttachment(highlighted_o.usItem, o.usItem)) return true;
 	}
 
-
-	return( FALSE );
+	return false;
 }
 
 
