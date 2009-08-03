@@ -413,7 +413,7 @@ const wchar_t *pLongAssignmentStrings[] =
 	L"Patient",
 	L"Fahrzeug",
 	L"Transit",
-	L"Repar.",
+	L"Reparieren",
 	L"Üben",
 	L"Miliz",
 	L"Trainer",
