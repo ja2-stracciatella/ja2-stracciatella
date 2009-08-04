@@ -766,7 +766,7 @@ void MercsTogglePlayers( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gfShowPlayers = btn->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
+		gfShowPlayers = btn->Clicked();
 		SetMercTeamVisibility( OUR_TEAM, gfShowCivilians );
 	}
 }
@@ -775,7 +775,7 @@ void MercsToggleEnemies( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gfShowEnemies = btn->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
+		gfShowEnemies = btn->Clicked();
 		SetMercTeamVisibility( ENEMY_TEAM, gfShowEnemies );
 	}
 }
@@ -784,7 +784,7 @@ void MercsToggleCreatures( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gfShowCreatures = btn->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
+		gfShowCreatures = btn->Clicked();
 		SetMercTeamVisibility( CREATURE_TEAM, gfShowCreatures );
 	}
 }
@@ -793,7 +793,7 @@ void MercsToggleRebels( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gfShowRebels = btn->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
+		gfShowRebels = btn->Clicked();
 		SetMercTeamVisibility( MILITIA_TEAM, gfShowRebels );
 	}
 }
@@ -802,7 +802,7 @@ void MercsToggleCivilians( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gfShowCivilians = btn->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
+		gfShowCivilians = btn->Clicked();
 		SetMercTeamVisibility( CIV_TEAM, gfShowCivilians );
 	}
 }
@@ -915,10 +915,7 @@ void MercsInventorySlotCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		INT32 const uiSlot = btn->GetUserData();
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
-			SetEnemyDroppableStatus( uiSlot, TRUE );
-		else
-			SetEnemyDroppableStatus( uiSlot, FALSE );
+		SetEnemyDroppableStatus(uiSlot, btn->Clicked());
 	}
 }
 
@@ -980,7 +977,7 @@ void MercsScheduleToggleVariance1Callback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (btn->Clicked())
 			gCurrSchedule.usFlags |= SCHEDULE_FLAGS_VARIANCE1;
 		else
 			gCurrSchedule.usFlags &= ~SCHEDULE_FLAGS_VARIANCE1;
@@ -991,7 +988,7 @@ void MercsScheduleToggleVariance2Callback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (btn->Clicked())
 			gCurrSchedule.usFlags |= SCHEDULE_FLAGS_VARIANCE2;
 		else
 			gCurrSchedule.usFlags &= ~SCHEDULE_FLAGS_VARIANCE2;
@@ -1002,7 +999,7 @@ void MercsScheduleToggleVariance3Callback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (btn->Clicked())
 			gCurrSchedule.usFlags |= SCHEDULE_FLAGS_VARIANCE3;
 		else
 			gCurrSchedule.usFlags &= ~SCHEDULE_FLAGS_VARIANCE3;
@@ -1013,7 +1010,7 @@ void MercsScheduleToggleVariance4Callback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (btn->Clicked())
 			gCurrSchedule.usFlags |= SCHEDULE_FLAGS_VARIANCE4;
 		else
 			gCurrSchedule.usFlags &= ~SCHEDULE_FLAGS_VARIANCE4;
@@ -1146,7 +1143,7 @@ void MercsDetailedPlacementCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON ) //button is checked
+		if (btn->Clicked())
 		{
 			InitDetailedPlacementForMerc();
 			SetMercEditingMode( MERC_GENERALMODE );
@@ -1165,7 +1162,7 @@ void MercsPriorityExistanceCallback( GUI_BUTTON *btn, INT32 reason )
 	{
 		if( gpSelected )
 		{
-			if( btn->uiFlags & BUTTON_CLICKED_ON ) //button is checked
+			if (btn->Clicked())
 			{
 				gpSelected->pBasicPlacement->fPriorityExistance = TRUE;
 			}
@@ -1183,7 +1180,7 @@ void MercsHasKeysCallback( GUI_BUTTON *btn, INT32 reason )
 	{
 		if( gpSelected )
 		{
-			if( btn->uiFlags & BUTTON_CLICKED_ON ) //button is checked
+			if (btn->Clicked())
 			{
 				gpSelected->pBasicPlacement->fHasKeys = TRUE;
 			}
@@ -1309,7 +1306,7 @@ void BtnEraseCallback(GUI_BUTTON *btn,INT32 reason)
 			btn->uiFlags &= (~BUTTON_CLICKED_ON);
 		else
 			btn->uiFlags |= BUTTON_CLICKED_ON;
-		iEditorToolbarState = (btn->uiFlags & BUTTON_CLICKED_ON) ? (TBAR_MODE_ERASE) : (TBAR_MODE_ERASE_OFF);
+		iEditorToolbarState = btn->Clicked() ? TBAR_MODE_ERASE : TBAR_MODE_ERASE_OFF;
 	}
 }
 
@@ -1318,10 +1315,7 @@ void ItemStatsToggleHideCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
-			ExecuteItemStatsCmd( ITEMSTATS_HIDE );
-		else
-			ExecuteItemStatsCmd( ITEMSTATS_SHOW );
+		ExecuteItemStatsCmd(btn->Clicked() ? ITEMSTATS_HIDE : ITEMSTATS_SHOW);
 	}
 }
 

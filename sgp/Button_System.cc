@@ -809,7 +809,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		return;
 	}
 
-	BOOLEAN StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) != 0;
+	bool    StateBefore = b->Clicked();
 	BOOLEAN StateAfter  = TRUE; // XXX HACK000E
 
 	if (b->uiFlags & BUTTON_NEWTOGGLE)
@@ -863,7 +863,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 			/* Trick the before state of the button to be different so the sound will
 			 * play properly as checkbox buttons are processed differently.
 			 */
-			StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
+			StateBefore = !b->Clicked();
 			StateAfter  = !StateBefore;
 		}
 		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -872,7 +872,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 			/* Trick the before state of the button to be different so the sound will
 			 * play properly as checkbox buttons are processed differently.
 			 */
-			StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
+			StateBefore = !b->Clicked();
 			StateAfter  = !StateBefore;
 		}
 	}
@@ -902,7 +902,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 
 	if (b->uiFlags & BUTTON_CHECKBOX)
 	{
-		StateAfter = (b->uiFlags & BUTTON_CLICKED_ON) != 0;
+		StateAfter = b->Clicked();
 	}
 
 	// Play sounds for this enabled button (disabled sounds have already been done)
@@ -1073,7 +1073,7 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 	INT32 UseImage = 0;
 	if (b->uiFlags & BUTTON_ENABLED)
 	{
-		if (b->uiFlags & BUTTON_CLICKED_ON)
+		if (b->Clicked())
 		{
 			// Is the mouse over this area, and we have a hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
@@ -1166,7 +1166,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 	INT32 UseImage = 0;
 	if (b->uiFlags & BUTTON_ENABLED)
 	{
-		if (b->uiFlags & BUTTON_CLICKED_ON)
+		if (b->Clicked())
 		{
 			// Is the mouse over this area, and we have a hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
@@ -1204,7 +1204,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 	}
 	else //use the disabled style
 	{
-		if (b->uiFlags & BUTTON_CLICKED_ON)
+		if (b->Clicked())
 		{
 			UseImage = pics->OnHilite;
 		}
@@ -1308,7 +1308,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	/* Was the button clicked on? if so, move the image slightly for the illusion
 	 * that the image moved into the screen.
 	 */
-	if (b->uiFlags & BUTTON_CLICKED_ON && b->fShiftImage)
+	if (b->Clicked() && b->fShiftImage)
 	{
 		xp++;
 		yp++;
@@ -1411,7 +1411,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	{
 		sForeColor = b->sForeColorHilited;
 	}
-	else if (b->uiFlags & BUTTON_CLICKED_ON && b->sForeColorDown != -1)
+	else if (b->Clicked() && b->sForeColorDown != -1)
 	{
 		sForeColor = b->sForeColorDown;
 	}
@@ -1425,7 +1425,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	{
 		shadow = b->sShadowColorHilited;
 	}
-	else if (b->uiFlags & BUTTON_CLICKED_ON && b->sShadowColorDown != -1)
+	else if (b->Clicked() && b->sShadowColorDown != -1)
 	{
 		shadow = b->sShadowColorDown;
 	}
@@ -1440,7 +1440,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 
 	SetFontAttributes(b->usFont, sForeColor, shadow);
 
-	if (b->uiFlags & BUTTON_CLICKED_ON && b->fShiftText)
+	if (b->Clicked() && b->fShiftText)
 	{
 		/* Was the button clicked on? if so, move the text slightly for the illusion
 		 * that the text moved into the screen. */
@@ -1474,7 +1474,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 			{
 				case GUI_BUTTON::TEXT_RIGHT:
 					xp = b->BottomRightX() - 3 - b->sWrappedWidth;
-					if (b->fShiftText && b->uiFlags & BUTTON_CLICKED_ON)
+					if (b->fShiftText && b->Clicked())
 					{
 						xp++;
 						yp++;
@@ -1483,7 +1483,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 
 				case GUI_BUTTON::TEXT_CENTER:
 					xp = b->X() + 3 + b->sWrappedWidth / 2;
-					if (b->fShiftText && b->uiFlags & BUTTON_CLICKED_ON)
+					if (b->fShiftText && b->Clicked())
 					{
 						xp++;
 						yp++;
@@ -1532,7 +1532,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 				break;
 		}
 	}
-	else if (b->uiFlags & BUTTON_CLICKED_ON)
+	else if (b->Clicked())
 	{
 		if  (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOnHilite != NULL && gfRenderHilights)
 		{

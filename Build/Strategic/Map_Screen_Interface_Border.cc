@@ -498,7 +498,7 @@ void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 		CommonBtnCallbackBtnDownChecks();
 
 		btn->uiFlags ^= BUTTON_CLICKED_ON;
-		fZoomFlag = (btn->uiFlags & BUTTON_CLICKED_ON) != 0;
+		fZoomFlag = btn->Clicked();
 		if (fZoomFlag)
 		{
 		 if( sSelMapX > 14 )

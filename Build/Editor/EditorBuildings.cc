@@ -572,14 +572,7 @@ void ExtractAndUpdateDoorInfo()
 	if( num )
 		fCursor = TRUE;
 
-	if (iDoorButton[DOOR_LOCKED]->uiFlags & BUTTON_CLICKED_ON)
-	{
-		door.fLocked = TRUE;
-	}
-	else
-	{
-		door.fLocked = FALSE;
-	}
+	door.fLocked = iDoorButton[DOOR_LOCKED]->Clicked();
 
 	//Find out if we have a rotating key cursor (we will either add one or remove one)
 	pNode = gpWorldLevelData[ iDoorMapIndex ].pTopmostHead;

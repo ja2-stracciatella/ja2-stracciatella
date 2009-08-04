@@ -477,7 +477,7 @@ static void CreateFileDialog(const wchar_t* zTitle)
 static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		gfUpdateSummaryInfo = b->uiFlags & BUTTON_CLICKED_ON;
+		gfUpdateSummaryInfo = b->Clicked();
 }
 
 

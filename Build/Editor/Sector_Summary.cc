@@ -1564,8 +1564,8 @@ static void SummaryToggleGridCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gfRenderGrid = (btn->uiFlags & BUTTON_CLICKED_ON) != 0;
-		gfRenderMap = TRUE;
+		gfRenderGrid = btn->Clicked();
+		gfRenderMap  = TRUE;
 	}
 }
 
@@ -1574,7 +1574,7 @@ static void SummaryToggleAlternateCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (btn->Clicked())
 		{
 			giCurrentViewLevel <<= 4;
 			gfAlternateMaps = TRUE;
@@ -1638,8 +1638,8 @@ static void SummaryToggleProgressCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gfRenderProgress = (btn->uiFlags & BUTTON_CLICKED_ON) != 0;
-		gfRenderMap = TRUE;
+		gfRenderProgress = btn->Clicked();
+		gfRenderMap      = TRUE;
 	}
 }
 

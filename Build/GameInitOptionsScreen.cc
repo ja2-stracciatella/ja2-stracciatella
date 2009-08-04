@@ -692,10 +692,7 @@ static UINT8 GetCurrentDifficultyButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
 	{
-		if (guiDifficultySettingsToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
-		{
-			return cnt;
-		}
+		if (guiDifficultySettingsToggles[cnt]->Clicked()) return cnt;
 	}
 	return 0;
 }
@@ -707,10 +704,7 @@ static UINT8 GetCurrentGameStyleButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
 	{
-		if (guiGameStyleToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
-		{
-			return cnt;
-		}
+		if (guiGameStyleToggles[cnt]->Clicked()) return cnt;
 	}
 	return 0;
 }
@@ -722,10 +716,7 @@ static UINT8 GetCurrentGunButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
 	{
-		if (guiGunOptionToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
-		{
-			return cnt;
-		}
+		if (guiGunOptionToggles[cnt]->Clicked()) return cnt;
 	}
 	return 0;
 }
@@ -738,10 +729,7 @@ static UINT8 GetCurrentTimedTurnsButtonSetting(void)
 
 	for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 	{
-		if (guiTimedTurnToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
-		{
-			return cnt;
-		}
+		if (guiTimedTurnToggles[cnt]->Clicked()) return cnt;
 	}
 	return 0;
 }
@@ -754,10 +742,7 @@ static UINT8 GetCurrentGameSaveButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
 	{
-		if (guiGameSaveToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
-		{
-			return cnt;
-		}
+		if (guiGameSaveToggles[cnt]->Clicked()) return cnt;
 	}
 	return 0;
 }

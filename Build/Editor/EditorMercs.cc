@@ -591,7 +591,7 @@ void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON ) //button is checked
+		if (btn->Clicked())
 		{
 			EnableEditorButtons( FIRST_MERCS_COLOR_BUTTON, LAST_MERCS_COLOR_BUTTON );
 			gpSelected->pDetailedPlacement->fVisible = TRUE;

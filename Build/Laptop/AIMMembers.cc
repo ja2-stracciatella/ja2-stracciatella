@@ -1359,7 +1359,7 @@ static void DrawButtonSelection(GUI_BUTTON const* const btn, bool const selected
 {
 	INT32 x = btn->X();
 	INT32 y = btn->Y();
-	if (btn->uiFlags & BUTTON_CLICKED_ON)
+	if (btn->Clicked())
 	{
 		x += AIM_SELECT_LIGHT_ON_X;
 		y += AIM_SELECT_LIGHT_ON_Y;

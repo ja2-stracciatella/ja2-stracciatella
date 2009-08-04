@@ -682,7 +682,7 @@ static void ExitHelpScreen(void)
 	if( !gHelpScreen.fForceHelpScreenToComeUp )
 	{
 		//Get the current value of the checkbox
-		if (gHelpScreenDontShowHelpAgainToggle->uiFlags & BUTTON_CLICKED_ON)
+		if (gHelpScreenDontShowHelpAgainToggle->Clicked())
 		{
 			gGameSettings.fHideHelpInAllScreens = TRUE;
 			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0;

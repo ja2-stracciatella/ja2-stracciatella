@@ -45,6 +45,8 @@ struct GUI_BUTTON
 	GUI_BUTTON(UINT32 flags, INT16 left, INT16 top, INT16 width, INT16 height, INT8 priority, GUI_CALLBACK click, GUI_CALLBACK move);
 	~GUI_BUTTON();
 
+	bool Clicked() const { return uiFlags & BUTTON_CLICKED_ON; }
+
 	// Set the text that will be displayed as the FastHelp
 	void SetFastHelpText(wchar_t const* text);
 

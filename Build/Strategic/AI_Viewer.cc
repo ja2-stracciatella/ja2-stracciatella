@@ -1371,7 +1371,7 @@ static void ToggleQueenAwake(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (btn->Clicked())
 		{
 			WakeUpQueen();
 		}

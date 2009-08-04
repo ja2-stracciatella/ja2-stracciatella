@@ -2798,7 +2798,7 @@ void PrintBalance(void)
 
 	INT32 x = 47;
 	INT32 y = 257 + 15;
-	if (gLaptopButton[5]->uiFlags & BUTTON_CLICKED_ON)
+	if (gLaptopButton[5]->Clicked())
 	{
 		++x;
 		++y;
@@ -2817,7 +2817,7 @@ void PrintNumberOnTeam(void)
 
 	UINT16 usPosX = 47;
 	UINT16 usPosY = 194 + 30;
-	if (gLaptopButton[3]->uiFlags & BUTTON_CLICKED_ON)
+	if (gLaptopButton[3]->Clicked())
 	{
 		++usPosX;
 		++usPosY;

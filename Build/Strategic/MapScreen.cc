@@ -7400,7 +7400,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 	{
 		if( GetJA2Clock() % 1000 < 667 )
 		{
-			if (guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->uiFlags & BUTTON_CLICKED_ON)
+			if (guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->Clicked())
 			{ //button is down, so offset the icon
 				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 1, 465, 418);
 				InvalidateRegion( 465, 418, 480, 428 );

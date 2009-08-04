@@ -1098,7 +1098,7 @@ static void AlarmTriggerCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
+		if (btn->Clicked())
 			gpItem->fFlags |= OBJECT_ALARM_TRIGGER;
 		else
 			gpItem->fFlags &= ~OBJECT_ALARM_TRIGGER;
@@ -1439,7 +1439,7 @@ static void ReEvaluateAttachmentStatii(void)
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
 		GUIButtonRef const b = guiAttachmentButton[i];
-		if (b && !(b->uiFlags & BUTTON_CLICKED_ON))
+		if (b && !b->Clicked())
 		{ //if button exists and button isn't clicked
 			UINT16 usAttachment; // XXX HACK000E
 			switch( i )

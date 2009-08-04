@@ -659,8 +659,8 @@ static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		return;
 	}
-	const BOOLEAN clicked  = (btn->uiFlags & BUTTON_CLICKED_ON) != 0;
-	const UINT8   ubButton = btn->GetUserData();
+	bool  const clicked  = btn->Clicked();
+	UINT8 const ubButton = btn->GetUserData();
 	HandleOptionToggle(ubButton, clicked, down, FALSE);
 }
 
@@ -679,8 +679,8 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 	 * Make sure that at least one of the toggles is still enabled. */
 	if (!fState &&
 			(ubButton == TOPTION_SPEECH || ubButton == TOPTION_SUBTITLES) &&
-			!(guiOptionsToggles[TOPTION_SPEECH]->uiFlags    & BUTTON_CLICKED_ON) &&
-			!(guiOptionsToggles[TOPTION_SUBTITLES]->uiFlags & BUTTON_CLICKED_ON))
+			!(guiOptionsToggles[TOPTION_SPEECH]->Clicked()) &&
+			!(guiOptionsToggles[TOPTION_SUBTITLES]->Clicked()))
 	{
 		gGameSettings.fOptions[ubButton] = TRUE;
 		b->uiFlags |= BUTTON_CLICKED_ON;
@@ -776,10 +776,7 @@ static void GetOptionsScreenToggleBoxes(void)
 
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
 	{
-		if (guiOptionsToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
-			gGameSettings.fOptions[ cnt ] = TRUE;
-		else
-			gGameSettings.fOptions[ cnt ] = FALSE;
+		gGameSettings.fOptions[cnt] = guiOptionsToggles[cnt]->Clicked();
 	}
 }
 
