@@ -7408,7 +7408,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 			else
 			{ //button is up, so draw the icon normally
 				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0, 464, 417);
-				if (!(guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->uiFlags & BUTTON_ENABLED))
+				if (!guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->Enabled())
 				{
 					SGPRect area = { 463, 417, 477, 425 };
 

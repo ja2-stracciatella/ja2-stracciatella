@@ -551,7 +551,7 @@ static void GetOptionsScreenUserInput(void)
 				//Enter the save game screen
 				case SDLK_s:
 					//if the save game button isnt disabled
-					if (guiOptGotoSaveGameBtn->uiFlags & BUTTON_ENABLED)
+					if (guiOptGotoSaveGameBtn->Enabled())
 					{
 						SetOptionsExitScreen( SAVE_LOAD_SCREEN );
 						gfSaveGame = TRUE;

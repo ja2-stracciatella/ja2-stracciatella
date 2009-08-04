@@ -513,7 +513,7 @@ static void EnsureDoneButtonStatus(void)
 	{
 		if( !gMercPlacement[ i ].fPlaced )
 		{
-			if (iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
+			if (iTPButtons[DONE_BUTTON]->Enabled())
 			{
 				DisableButton( iTPButtons[ DONE_BUTTON ] );
 				iTPButtons[DONE_BUTTON]->SetFastHelpText(gpStrategicString[STR_TP_DISABLED_DONEHELP]);
@@ -521,7 +521,7 @@ static void EnsureDoneButtonStatus(void)
 			return;
 		}
 	}
-	if (!(iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED))
+	if (!iTPButtons[DONE_BUTTON]->Enabled())
 	{ //only enable it when it is disabled, otherwise the button will stay down!
 		EnableButton( iTPButtons[ DONE_BUTTON ] );
 		iTPButtons[DONE_BUTTON]->SetFastHelpText(gpStrategicString[STR_TP_DONEHELP]);
@@ -558,7 +558,7 @@ void TacticalPlacementHandle()
 #endif
 
 				case SDLK_RETURN:
-					if (iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
+					if (iTPButtons[DONE_BUTTON]->Enabled())
 					{
 						KillTacticalPlacementGUI();
 					}

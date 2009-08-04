@@ -778,7 +778,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 		b->ubToggleButtonActivated = FALSE;
 	}
 
-	if (!(b->uiFlags & BUTTON_ENABLED)) return;
+	if (!b->Enabled()) return;
 
 	if (reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE))
 	{
@@ -798,7 +798,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
 
 	// ATE: New stuff for toggle buttons that work with new Win95 paradigm
-	if (!(b->uiFlags & BUTTON_ENABLED))
+	if (!b->Enabled())
 	{
 		// Should we play a sound if clicked on while disabled?
 		if (b->ubSoundSchemeID &&
@@ -906,7 +906,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	}
 
 	// Play sounds for this enabled button (disabled sounds have already been done)
-	if (b->ubSoundSchemeID && b->uiFlags & BUTTON_ENABLED)
+	if (b->ubSoundSchemeID && b->Enabled())
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
@@ -1071,7 +1071,7 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 	const BUTTON_PICS* const pics = b->image;
 
 	INT32 UseImage = 0;
-	if (b->uiFlags & BUTTON_ENABLED)
+	if (b->Enabled())
 	{
 		if (b->Clicked())
 		{
@@ -1164,7 +1164,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 	const BUTTON_PICS* const pics = b->image;
 
 	INT32 UseImage = 0;
-	if (b->uiFlags & BUTTON_ENABLED)
+	if (b->Enabled())
 	{
 		if (b->Clicked())
 		{
@@ -1407,7 +1407,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 
 	//Override the colors if necessary.
 	INT16 sForeColor;
-	if (b->uiFlags & BUTTON_ENABLED && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sForeColorHilited != -1)
+	if (b->Enabled() && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sForeColorHilited != -1)
 	{
 		sForeColor = b->sForeColorHilited;
 	}
@@ -1421,7 +1421,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	}
 
 	UINT8 shadow;
-	if (b->uiFlags & BUTTON_ENABLED && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sShadowColorHilited != -1)
+	if (b->Enabled() && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sShadowColorHilited != -1)
 	{
 		shadow = b->sShadowColorHilited;
 	}
@@ -1515,7 +1515,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 {
 	// Select the graphics to use depending on the current state of the button
 	HVOBJECT BPic;
-	if (!(b->uiFlags & BUTTON_ENABLED))
+	if (!b->Enabled())
 	{
 		BPic = GenericButtonOffNormal;
 		switch (b->bDisabledStyle)

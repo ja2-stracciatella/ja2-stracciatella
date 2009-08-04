@@ -47,6 +47,8 @@ struct GUI_BUTTON
 
 	bool Clicked() const { return uiFlags & BUTTON_CLICKED_ON; }
 
+	bool Enabled() const { return uiFlags & BUTTON_ENABLED; }
+
 	// Set the text that will be displayed as the FastHelp
 	void SetFastHelpText(wchar_t const* text);
 

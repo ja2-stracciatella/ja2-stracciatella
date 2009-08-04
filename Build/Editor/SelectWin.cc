@@ -740,9 +740,7 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
 	BOOLEAN fDone;
 	INT16 iClickX,iClickY, iYInc, iXInc;
 
-
-	if (!(button->uiFlags & BUTTON_ENABLED))
-		return;
+	if (!button->Enabled()) return;
 
 	iClickX = button->MouseX();
 	iClickY = button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y;

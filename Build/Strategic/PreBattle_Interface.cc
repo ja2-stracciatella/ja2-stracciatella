@@ -889,7 +889,7 @@ void RenderPreBattleInterface()
 	 * then we set up the variables so that the retreat arrows get drawn in the
 	 * mapscreen. */
 	GUI_BUTTON const& retreat = *iPBButton[2];
-	if (retreat.uiFlags & BUTTON_ENABLED)
+	if (retreat.Enabled())
 	{
 		bool const mouse_in_reatread_button_area =
 			retreat.X() <= gusMouseXPos && gusMouseXPos <= retreat.BottomRightX() &&
@@ -1270,7 +1270,7 @@ static wchar_t const* GetSoldierConditionInfo(SOLDIERTYPE const& s)
 
 void ActivatePreBattleAutoresolveAction()
 {
-	if (iPBButton[0]->uiFlags & BUTTON_ENABLED)
+	if (iPBButton[0]->Enabled())
 	{ //Feign call the autoresolve button using the callback
 		AutoResolveBattleCallback(iPBButton[0], MSYS_CALLBACK_REASON_LBUTTON_UP);
 	}
@@ -1278,7 +1278,7 @@ void ActivatePreBattleAutoresolveAction()
 
 void ActivatePreBattleEnterSectorAction()
 {
-	if (iPBButton[1]->uiFlags & BUTTON_ENABLED)
+	if (iPBButton[1]->Enabled())
 	{ //Feign call the enter sector button using the callback
 		GoToSectorCallback(iPBButton[1], MSYS_CALLBACK_REASON_LBUTTON_UP);
 	}
@@ -1286,7 +1286,7 @@ void ActivatePreBattleEnterSectorAction()
 
 void ActivatePreBattleRetreatAction()
 {
-	if (iPBButton[2]->uiFlags & BUTTON_ENABLED)
+	if (iPBButton[2]->Enabled())
 	{ //Feign call the retreat button using the callback
 		RetreatMercsCallback(iPBButton[2], MSYS_CALLBACK_REASON_LBUTTON_UP);
 	}
