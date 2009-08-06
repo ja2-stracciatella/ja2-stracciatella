@@ -586,17 +586,30 @@ static void GetGIOScreenUserInput(void)
 }
 
 
+static void SelectCheckbox(GUIButtonRef* i, GUIButtonRef* const end, GUI_BUTTON const& sel)
+{
+	for (; i != end; ++i)
+	{
+		GUI_BUTTON& b = **i;
+		if (&b == &sel)
+			b.uiFlags |= BUTTON_CLICKED_ON;
+		else
+			b.uiFlags &= ~BUTTON_CLICKED_ON;
+	}
+}
+
+
+template<typename T> static inline void SelectCheckbox(T& array, GUI_BUTTON const& sel)
+{
+	SelectCheckbox(array, endof(array), sel);
+}
+
+
 static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	cnt;
-
-		for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
-		{
-			guiDifficultySettingsToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
-		}
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		SelectCheckbox(guiDifficultySettingsToggles, *btn);
 	}
 }
 
@@ -605,13 +618,7 @@ static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	cnt;
-
-		for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
-		{
-			guiGameStyleToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
-		}
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		SelectCheckbox(guiGameStyleToggles, *btn);
 	}
 }
 
@@ -620,13 +627,7 @@ static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	cnt;
-
-		for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
-		{
-			guiGameSaveToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
-		}
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		SelectCheckbox(guiGameSaveToggles, *btn);
 	}
 }
 
@@ -635,13 +636,7 @@ static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	cnt;
-
-		for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
-		{
-			guiGunOptionToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
-		}
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		SelectCheckbox(guiGunOptionToggles, *btn);
 	}
 }
 
@@ -651,13 +646,7 @@ static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	cnt;
-
-		for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
-		{
-			guiTimedTurnToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
-		}
-		btn->uiFlags |= BUTTON_CLICKED_ON;
+		SelectCheckbox(guiTimedTurnToggles, *btn);
 	}
 }
 #endif
@@ -886,7 +875,6 @@ static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue const bExi
 	}
 	else
 	{
-		guiGameSaveToggles[GIO_IRON_MAN]->uiFlags &= ~BUTTON_CLICKED_ON;
-		guiGameSaveToggles[GIO_CAN_SAVE]->uiFlags |= BUTTON_CLICKED_ON;
+		SelectCheckbox(guiGameSaveToggles, *guiGameSaveToggles[GIO_CAN_SAVE]);
 	}
 }
