@@ -641,19 +641,19 @@ static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound);
+static void HandleOptionToggle(UINT8 button_id, bool state, bool down, bool play_sound);
 
 
 static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	BOOLEAN down;
+	bool down;
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		down = FALSE;
+		down = false;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		down = TRUE;
+		down = true;
 	}
 	else
 	{
@@ -661,38 +661,37 @@ static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 	bool  const clicked  = btn->Clicked();
 	UINT8 const ubButton = btn->GetUserData();
-	HandleOptionToggle(ubButton, clicked, down, FALSE);
+	HandleOptionToggle(ubButton, clicked, down, false);
 }
 
 
-static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound)
+static void HandleOptionToggle(UINT8 const button_id, bool const state, bool const down, bool const play_sound)
 {
-	gGameSettings.fOptions[ubButton] = fState;
+	gGameSettings.fOptions[button_id] = state;
 
-	GUIButtonRef const b = guiOptionsToggles[ubButton];
-	b->uiFlags &= ~BUTTON_CLICKED_ON;
-	b->uiFlags |= (fState ? BUTTON_CLICKED_ON : 0);
+	GUI_BUTTON& b = *guiOptionsToggles[button_id];
+	b.uiFlags &= ~BUTTON_CLICKED_ON;
+	b.uiFlags |= state ? BUTTON_CLICKED_ON : 0;
 
-	if (fDown) b->DrawCheckBoxOnOff(fState);
+	if (down) b.DrawCheckBoxOnOff(state);
 
 	/* Check if the user is unselecting either the spech or subtitles toggle.
 	 * Make sure that at least one of the toggles is still enabled. */
-	if (!fState &&
-			(ubButton == TOPTION_SPEECH || ubButton == TOPTION_SUBTITLES) &&
-			!(guiOptionsToggles[TOPTION_SPEECH]->Clicked()) &&
-			!(guiOptionsToggles[TOPTION_SUBTITLES]->Clicked()))
+	if (!state &&
+			(
+				(button_id == TOPTION_SPEECH && !guiOptionsToggles[TOPTION_SUBTITLES]->Clicked()) ||
+				(button_id == TOPTION_SUBTITLES && !guiOptionsToggles[TOPTION_SPEECH]->Clicked())
+			))
 	{
-		gGameSettings.fOptions[ubButton] = TRUE;
-		b->uiFlags |= BUTTON_CLICKED_ON;
-
-		//Confirm the Exit to the main menu screen
-		DoOptionsMessageBox(zOptionsText[OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON], OPTIONS_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		gGameSettings.fOptions[button_id] = TRUE;
+		b.uiFlags |= BUTTON_CLICKED_ON;
+		DoOptionsMessageBox(zOptionsText[OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON], OPTIONS_SCREEN, MSG_BOX_FLAG_OK, 0);
 		gfExitOptionsDueToMessageBox = FALSE;
 	}
 
-	if (fPlaySound)
+	if (play_sound)
 	{
-		SoundID const sound = fDown ? BIG_SWITCH3_IN : BIG_SWITCH3_OUT;
+		SoundID const sound = down ? BIG_SWITCH3_IN : BIG_SWITCH3_OUT;
 		PlayJA2Sample(sound, BTNVOLUME, 1, MIDDLEPAN);
 	}
 }
@@ -821,12 +820,12 @@ static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		HandleOptionToggle(ubButton, !gGameSettings.fOptions[ubButton], FALSE, TRUE);
+		HandleOptionToggle(ubButton, !gGameSettings.fOptions[ubButton], FALSE, true);
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		HandleOptionToggle(ubButton, gGameSettings.fOptions[ubButton], TRUE, TRUE);
+		HandleOptionToggle(ubButton, gGameSettings.fOptions[ubButton], TRUE, true);
 	}
 }
 
