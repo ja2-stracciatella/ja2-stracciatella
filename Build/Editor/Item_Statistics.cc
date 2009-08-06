@@ -621,13 +621,13 @@ static GUIButtonRef MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attac
 }
 
 
-static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason);
+static void ToggleWeaponAttachment(GUI_BUTTON* btn, INT32 reason);
 
 
 static bool MakeWeaponAttachmentButton(const UINT btn_idx, const UINT16 attachment, const INT16 y, const wchar_t* const label)
 {
 	gfAttachment[btn_idx] = FALSE;
-	GUIButtonRef const btn = MakeAttachmentButton(attachment, gfAttachment[btn_idx], 570, y, 60, label, ToggleAttachment);
+	GUIButtonRef const btn = MakeAttachmentButton(attachment, gfAttachment[btn_idx], 570, y, 60, label, ToggleWeaponAttachment);
 	guiAttachmentButton[btn_idx] = btn;
 	return btn;
 }
@@ -1162,13 +1162,32 @@ static void RemoveTriggersGUI(void)
 }
 
 
-static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason)
+static void ToggleAttachment(UINT16 const attachment, GUI_BUTTON& b, BOOLEAN& has_attachment)
+{
+	OBJECTTYPE& o = *gpItem;
+	OBJECTTYPE  temp;
+	has_attachment = !has_attachment;
+	if (has_attachment)
+	{
+		b.uiFlags |= BUTTON_CLICKED_ON;
+		CreateItem(attachment, o.bStatus[0], &temp);
+		AttachObject(0, &o, &temp);
+	}
+	else
+	{
+		b.uiFlags &= ~BUTTON_CLICKED_ON;
+		INT16 const slot = FindAttachment(&o, attachment);
+		if (slot != -1) RemoveAttachment(&o, slot, &temp);
+	}
+}
+
+
+static void ToggleWeaponAttachment(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		INT32 i;
 		UINT16 usAttachment; // HACK000E
-		OBJECTTYPE temp;
 		for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 		{	//Loop through and find the button that was just modified
 			switch( i )
@@ -1184,22 +1203,7 @@ static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason)
 			}
 			if (btn == guiAttachmentButton[i])
 			{	//Found it, now check the state of the button.
-				if( !gfAttachment[ i ] )
-				{
-					gfAttachment[ i ] = TRUE;
-					btn->uiFlags |= BUTTON_CLICKED_ON;
-					CreateItem( usAttachment, gpItem->bGunStatus, &temp );
-					AttachObject( NULL, gpItem, &temp );
-				}
-				else
-				{ //Button is out, so remove the attachment
-					INT8 slot;
-					gfAttachment[ i ] = FALSE;
-					btn->uiFlags &= ~BUTTON_CLICKED_ON;
-					slot = FindAttachment( gpItem, usAttachment );
-					if( slot != -1 )
-						RemoveAttachment( gpItem, slot, &temp );
-				}
+				ToggleAttachment(usAttachment, *btn, gfAttachment[i]);
 			}
 		}
 		ReEvaluateAttachmentStatii();
@@ -1211,22 +1215,7 @@ static void ToggleCeramicPlates(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		OBJECTTYPE temp;
-		gfCeramicPlates ^= TRUE;
-		if( gfCeramicPlates )
-		{
-			btn->uiFlags |= BUTTON_CLICKED_ON;
-			CreateItem( CERAMIC_PLATES, gpItem->bStatus[0], &temp );
-			AttachObject( NULL, gpItem, &temp );
-		}
-		else
-		{
-			INT8 slot;
-			btn->uiFlags &= ~BUTTON_CLICKED_ON;
-			slot = FindAttachment( gpItem, CERAMIC_PLATES );
-			if( slot != -1 )
-				RemoveAttachment( gpItem, slot, &temp );
-		}
+		ToggleAttachment(CERAMIC_PLATES, *btn, gfCeramicPlates);
 	}
 }
 
@@ -1235,23 +1224,7 @@ static void ToggleDetonator(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		OBJECTTYPE temp;
-		if( !gfDetonator )
-		{
-			gfDetonator = TRUE;
-			btn->uiFlags |= BUTTON_CLICKED_ON;
-			CreateItem( DETONATOR, gpItem->bStatus[0], &temp );
-			AttachObject( NULL, gpItem, &temp );
-		}
-		else
-		{ //Button is out, so remove the attachment
-			INT8 slot;
-			gfDetonator = FALSE;
-			btn->uiFlags &= ~BUTTON_CLICKED_ON;
-			slot = FindAttachment( gpItem, DETONATOR );
-			if( slot != -1 )
-				RemoveAttachment( gpItem, slot, &temp );
-		}
+		ToggleAttachment(DETONATOR, *btn, gfDetonator);
 	}
 }
 
