@@ -110,9 +110,8 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* pObj, UINT16 usAttachment, BOOLEAN
 //Determines if it is possible to equip this weapon with this ammo.
 BOOLEAN ValidAmmoType( UINT16 usItem, UINT16 usAmmoType );
 
-//Existing functions without header def's, added them here, just incase I'll need to call
-//them from the editor.
-BOOLEAN ValidAttachment( UINT16 usAttachment, UINT16 usItem );
+// Determine if it is possible to add this attachment to the item
+bool ValidAttachment(UINT16 attachment, UINT16 item);
 
 BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem );
 UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable );

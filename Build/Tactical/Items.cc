@@ -484,7 +484,7 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{ NONE,                     0,          0,                                            0 }
 };
 
-UINT16 Attachment[][2] =
+static UINT16 const g_attachments[][2] =
 {
 	{SILENCER, GLOCK_17},
 	{SILENCER, GLOCK_18},
@@ -1361,40 +1361,22 @@ static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 	return NULL;
 }
 
-//Determine if it is possible to add this attachment to the item.
-BOOLEAN ValidAttachment( UINT16 usAttachment, UINT16 usItem )
-{
-	INT32 iLoop = 0;
 
-	// look for the section of the array pertaining to this attachment...
-	while( 1 )
+bool ValidAttachment(UINT16 const attachment, UINT16 const item)
+{
+	UINT16 const (*i)[2] = g_attachments;
+	for (;; ++i)
 	{
-		if (Attachment[iLoop][0] == usAttachment)
-		{
-			break;
-		}
-		iLoop++;
-		if (Attachment[iLoop][0] == 0)
-		{
-			// the proposed item cannot be attached to anything!
-			return( FALSE );
-		}
+		UINT16 const (&a)[2] = *i;
+		if (a[0] == NOTHING)    return false; // Cannot be attached to anything
+		if (a[0] == attachment) break;
 	}
-	// now look through this section for the item in question
-	while( 1 )
+	for (;; ++i)
 	{
-		if (Attachment[iLoop][1] == usItem)
-		{
-			break;
-		}
-		iLoop++;
-		if (Attachment[iLoop][0] != usAttachment)
-		{
-			// the proposed item cannot be attached to the item in question
-			return( FALSE );
-		}
+		UINT16 const (&a)[2] = *i;
+		if (a[0] != attachment) return false; // Cannot be attached to item
+		if (a[1] == item)       return true;
 	}
-	return( TRUE );
 }
 
 
