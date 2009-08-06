@@ -504,41 +504,33 @@ static void DoorOkayCallback(GUI_BUTTON* btn, INT32 reason);
 static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-void InitDoorEditing( INT32 iMapIndex )
+void InitDoorEditing(INT32 const map_idx)
 {
-	DOOR *pDoor;
-	if( !DoorAtGridNo( iMapIndex ) && !OpenableAtGridNo( iMapIndex ) )
-		return;
+	if (!DoorAtGridNo(map_idx) && !OpenableAtGridNo(map_idx)) return;
+
 	gfEditingDoor = TRUE;
-	iDoorMapIndex = iMapIndex;
+	iDoorMapIndex = map_idx;
 	DisableEditorTaskbar();
 	MSYS_DefineRegion(&DoorRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 2, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	iDoorButton[DOOR_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 200, 130, 240, 100, MSYS_PRIORITY_HIGH - 1);
-	iDoorButton[DOOR_OKAY]   = CreateTextButton(L"Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 330, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorOkayCallback);
-	iDoorButton[DOOR_CANCEL] = CreateTextButton(L"Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 385, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorCancelCallback);
-	InitTextInputModeWithScheme( DEFAULT_SCHEME );
-	AddTextInputField( 210, 155, 25, 16, MSYS_PRIORITY_HIGH, L"0", 3, INPUTTYPE_NUMERICSTRICT );
-	AddTextInputField( 210, 175, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT );
-	AddTextInputField( 210, 195, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT );
-	iDoorButton[ DOOR_LOCKED ] =
-		CreateCheckBoxButton(	210, 215, "EDITOR/SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback );
+	iDoorButton[DOOR_BACKGROUND] = CreateLabel(0, 0, 0, 0, 200, 130, 240, 100, MSYS_PRIORITY_HIGH - 1);
+	iDoorButton[DOOR_OKAY]       = CreateTextButton(L"Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 330, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorOkayCallback);
+	iDoorButton[DOOR_CANCEL]     = CreateTextButton(L"Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 385, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorCancelCallback);
+	InitTextInputModeWithScheme(DEFAULT_SCHEME);
+	AddTextInputField(210, 155, 25, 16, MSYS_PRIORITY_HIGH, L"0", 3, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(210, 175, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(210, 195, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT);
+	iDoorButton[DOOR_LOCKED] = CreateCheckBoxButton(210, 215, "EDITOR/SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback);
 
-	pDoor = FindDoorInfoAtGridNo( iDoorMapIndex );
-	if( pDoor )
+	if (DOOR const* const door = FindDoorInfoAtGridNo(map_idx))
 	{
-		if( pDoor->fLocked )
-		{
-			iDoorButton[DOOR_LOCKED]->uiFlags |= BUTTON_CLICKED_ON;
-		}
-		SetInputFieldStringWithNumericStrictValue( 0, pDoor->ubLockID );
-		SetInputFieldStringWithNumericStrictValue( 1, pDoor->ubTrapID );
-		SetInputFieldStringWithNumericStrictValue( 2, pDoor->ubTrapLevel );
+		SetInputFieldStringWithNumericStrictValue(0, door->ubLockID);
+		SetInputFieldStringWithNumericStrictValue(1, door->ubTrapID);
+		SetInputFieldStringWithNumericStrictValue(2, door->ubTrapLevel);
+		if (!door->fLocked) return;
 	}
-	else
-	{
-		iDoorButton[DOOR_LOCKED]->uiFlags |= BUTTON_CLICKED_ON;
-	}
+	iDoorButton[DOOR_LOCKED]->uiFlags |= BUTTON_CLICKED_ON;
 }
+
 
 void ExtractAndUpdateDoorInfo()
 {
