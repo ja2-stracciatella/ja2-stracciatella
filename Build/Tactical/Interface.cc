@@ -407,7 +407,7 @@ static void MakeButtonMove(UINT const idx, UINT const gfx, INT16 const x, INT16 
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnMovementCallback);
 	iActionIcons[idx] = btn;
-	btn->User.Ptr = event;
+	btn->SetUserPtr(event);
 	btn->SetFastHelpText(help);
 	if (disabled) DisableButton(btn);
 }
@@ -589,7 +589,7 @@ static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
-		UI_EVENT* pUIEvent = (UI_EVENT*)btn->User.Ptr;
+		UI_EVENT* const pUIEvent = btn->GetUserPtr<UI_EVENT>();
 
 		if (btn == iActionIcons[WALK_ICON])
 		{

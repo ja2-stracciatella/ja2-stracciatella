@@ -113,6 +113,9 @@ struct GUI_BUTTON
 	INT32 GetUserData() const { return User.Data; }
 	void  SetUserData(INT32 const data) { User.Data = data; }
 
+	template<typename T> T* GetUserPtr() const { return static_cast<T*>(User.Ptr); }
+	void SetUserPtr(void* const p) { User.Ptr = p; }
+
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
 	MouseRegion  Area;          // Mouse System's mouse region to use for this button
