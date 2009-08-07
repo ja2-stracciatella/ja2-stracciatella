@@ -120,18 +120,24 @@ wchar_t const* GetActionItemName(OBJECTTYPE const* const pItem)
 	}
 }
 
-enum
+struct WeaponAttachment
 {
-	SILENCER_ATTACHMENT_BUTTON,
-	SNIPERSCOPE_ATTACHMENT_BUTTON,
-	LASERSCOPE_ATTACHMENT_BUTTON,
-	BIPOD_ATTACHMENT_BUTTON,
-	DUCKBILL_ATTACHMENT_BUTTON,
-	GLAUNCHER_ATTACHMENT_BUTTON,
-	NUM_ATTACHMENT_BUTTONS
+	UINT16         attachment;
+	wchar_t const* label;
 };
-GUIButtonRef guiAttachmentButton[NUM_ATTACHMENT_BUTTONS];
-BOOLEAN gfAttachment[ NUM_ATTACHMENT_BUTTONS ];
+
+static WeaponAttachment const g_weapon_attachment[] =
+{
+	{ SILENCER,        L"SILENCER"    },
+	{ SNIPERSCOPE,     L"SNIPERSCOPE" },
+	{ LASERSCOPE,      L"LASERSCOPE"  },
+	{ BIPOD,           L"BIPOD"       },
+	{ DUCKBILL,        L"DUCKBILL"    },
+	{ UNDER_GLAUNCHER, L"G-LAUNCHER"  }
+};
+
+static GUIButtonRef guiAttachmentButton[lengthof(g_weapon_attachment)];
+static BOOLEAN      gfAttachment[lengthof(g_weapon_attachment)];
 
 GUIButtonRef guiCeramicPlatesButton;
 BOOLEAN gfCeramicPlates;
@@ -299,7 +305,7 @@ static void SetupArmourGUI(void);
 static void SetupEquipGUI(void);
 static void SetupExplosivesGUI(void);
 static void SetupGameTypeFlags(void);
-static void SetupGunGUI(void);
+static void SetupGunGUI();
 static void SetupKeysGUI(void);
 static void SetupMoneyGUI(void);
 static void SetupOwnershipGUI(void);
@@ -621,44 +627,39 @@ static GUIButtonRef MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attac
 }
 
 
+static void ReEvaluateAttachmentStatii(void);
 static void ToggleWeaponAttachment(GUI_BUTTON* btn, INT32 reason);
 
 
-static bool MakeWeaponAttachmentButton(const UINT btn_idx, const UINT16 attachment, const INT16 y, const wchar_t* const label)
-{
-	gfAttachment[btn_idx] = FALSE;
-	GUIButtonRef const btn = MakeAttachmentButton(attachment, gfAttachment[btn_idx], 570, y, 60, label, ToggleWeaponAttachment);
-	guiAttachmentButton[btn_idx] = btn;
-	return btn;
-}
-
-
-static void ReEvaluateAttachmentStatii(void);
-
-
-static void SetupGunGUI(void)
+static void SetupGunGUI()
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->bGunStatus);
-	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField(485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
 	swprintf(str, lengthof(str), L"%d", gpItem->ubGunShotsLeft);
-	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField(485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField( 485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
-	if( gpEditingItemPool )
+	AddTextInputField(485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT);
+	if (gpEditingItemPool)
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField(485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
 	}
-	//Attachments are a dynamic part of guns.  None, some, or all attachments could be available
-	//for a particular weapon.  Show only the ones that we can apply to this gun.
-	INT16 yp = 383;
-	if (MakeWeaponAttachmentButton(SILENCER_ATTACHMENT_BUTTON,    SILENCER,        yp, L"SILENCER"))    yp += 14;
-	if (MakeWeaponAttachmentButton(SNIPERSCOPE_ATTACHMENT_BUTTON, SNIPERSCOPE,     yp, L"SNIPERSCOPE")) yp += 14;
-	if (MakeWeaponAttachmentButton(LASERSCOPE_ATTACHMENT_BUTTON,  LASERSCOPE,      yp, L"LASERSCOPE"))  yp += 14;
-	if (MakeWeaponAttachmentButton(BIPOD_ATTACHMENT_BUTTON,       BIPOD,           yp, L"BIPOD"))       yp += 14;
-	if (MakeWeaponAttachmentButton(DUCKBILL_ATTACHMENT_BUTTON,    DUCKBILL,        yp, L"DUCKBILL"))    yp += 14;
-	if (MakeWeaponAttachmentButton(GLAUNCHER_ATTACHMENT_BUTTON,   UNDER_GLAUNCHER, yp, L"G-LAUNCHER"))  yp += 14;
+
+	/* Attachments are a dynamic part of guns. None, some, or all attachments
+	 * could be available for a particular weapon. Show only the ones that we can
+	 * apply to this gun. */
+	INT16 y = 383;
+	for (size_t i = 0; i != lengthof(g_weapon_attachment); ++i)
+	{
+		gfAttachment[i] = FALSE;
+		WeaponAttachment const& wa  = g_weapon_attachment[i];
+		GUIButtonRef     const  btn = MakeAttachmentButton(wa.attachment, gfAttachment[i], 570, y, 60, wa.label, ToggleWeaponAttachment);
+		guiAttachmentButton[i] = btn;
+		if (!btn) continue;
+		btn->SetUserData(i);
+		y += 14;
+	}
 
 	ReEvaluateAttachmentStatii();
 }
@@ -666,10 +667,10 @@ static void SetupGunGUI(void)
 
 static void RemoveGunGUI(void)
 {
-	INT32 i;
-	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
+	for (GUIButtonRef* i = guiAttachmentButton; i != endof(guiAttachmentButton); ++i)
 	{
-		if (guiAttachmentButton[i]) RemoveButton(guiAttachmentButton[i]);
+		GUIButtonRef& b = *i;
+		if (b) RemoveButton(b);
 	}
 }
 
@@ -1182,30 +1183,12 @@ static void ToggleAttachment(UINT16 const attachment, GUI_BUTTON& b, BOOLEAN& ha
 }
 
 
-static void ToggleWeaponAttachment(GUI_BUTTON* btn, INT32 reason)
+static void ToggleWeaponAttachment(GUI_BUTTON* const btn, INT32 const reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		INT32 i;
-		UINT16 usAttachment; // HACK000E
-		for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
-		{	//Loop through and find the button that was just modified
-			switch( i )
-			{
-				case 0: usAttachment = SILENCER;				break;
-				case 1: usAttachment = SNIPERSCOPE;			break;
-				case 2: usAttachment = LASERSCOPE;			break;
-				case 3:	usAttachment = BIPOD;						break;
-				case 4: usAttachment = DUCKBILL;				break;
-				case 5: usAttachment = UNDER_GLAUNCHER;	break;
-
-				default: abort(); // HACK000E
-			}
-			if (btn == guiAttachmentButton[i])
-			{	//Found it, now check the state of the button.
-				ToggleAttachment(usAttachment, *btn, gfAttachment[i]);
-			}
-		}
+		UINT16 const idx = btn->GetUserData();
+		ToggleAttachment(g_weapon_attachment[idx].attachment, *btn, gfAttachment[idx]);
 		ReEvaluateAttachmentStatii();
 	}
 }
@@ -1408,31 +1391,15 @@ void UpdateActionItem( INT8 bActionItemIndex )
 
 static void ReEvaluateAttachmentStatii(void)
 {
-	INT32 i;
-	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
+	for (size_t i = 0; i != lengthof(g_weapon_attachment); ++i)
 	{
 		GUIButtonRef const b = guiAttachmentButton[i];
-		if (b && !b->Clicked())
-		{ //if button exists and button isn't clicked
-			UINT16 usAttachment; // XXX HACK000E
-			switch( i )
-			{
-				case 0: usAttachment = SILENCER;				break;
-				case 1: usAttachment = SNIPERSCOPE;			break;
-				case 2: usAttachment = LASERSCOPE;			break;
-				case 3:	usAttachment = BIPOD;						break;
-				case 4: usAttachment = DUCKBILL;				break;
-				case 5: usAttachment = UNDER_GLAUNCHER;	break;
-
-				default: abort(); // HACK000E
-			}
-			if( ValidItemAttachment( gpItem, usAttachment, TRUE ) )
-				EnableButton(b);
-			else
-				DisableButton(b);
-		}
+		if (!b || b->Clicked()) continue;
+		if (ValidItemAttachment(gpItem, g_weapon_attachment[i].attachment, TRUE))
+			EnableButton(b);
+		else
+			DisableButton(b);
 	}
 }
-
 
 #endif
