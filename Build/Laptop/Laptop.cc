@@ -302,7 +302,7 @@ static const SGPRect LaptopScreenRect = { LAPTOP_UL_X, LAPTOP_UL_Y - 5, LAPTOP_S
 
 
 // the sub pages vistsed or not status within the web browser
-static bool gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_FUNERAL - LAPTOP_MODE_WWW];
+static bool gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_END - (LAPTOP_MODE_WWW + 1)];
 
 // mouse regions
 static MOUSE_REGION gLapTopScreenRegion;

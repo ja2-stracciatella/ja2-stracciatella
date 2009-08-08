@@ -77,6 +77,7 @@ enum LaptopMode
 	LAPTOP_MODE_FUNERAL,
 	LAPTOP_MODE_BROKEN_LINK,
 	LAPTOP_MODE_BOBBYR_SHIPMENTS,
+	LAPTOP_MODE_END
 };
 
 extern LaptopMode  guiCurrentLaptopMode;

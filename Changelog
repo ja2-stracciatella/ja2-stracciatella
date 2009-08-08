@@ -1,3 +1,4 @@
+(r6601) Fix a vanilla out of bounds array access, which happened when entering Bobby Ray's shipment page.
 (r6418) Fix a vanilla bug: Mercs should train health a bit by travelling by foot, but due to an error in the calculation this did not work.
 (r6404) Fix a vanilla bug: All soldiers had an additional need for sleep as if seriously wounded, even when at perfect health.
 (r6298) Improve the vanilla behaviour of the scroll bar in the help screen: Now moving the mouse slowly does not cause it to hang anymore and the relative position of the mouse cursor to the bar is fixed.
