@@ -581,6 +581,14 @@ static void PrevPersonnelFace(void)
 }
 
 
+static GUIButtonRef MakeButton(char const* const gfx, INT32 const off_normal, INT32 const on_normal, INT16 const x, INT16 const y, GUI_CALLBACK const click)
+{
+	GUIButtonRef const b = QuickCreateButtonImg(gfx, -1, off_normal, -1, on_normal, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	b->SetCursor(CURSOR_LAPTOP_SCREEN);
+	return b;
+}
+
+
 static void LeftButtonCallBack(GUI_BUTTON* btn, INT32 reason);
 static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason);
 
@@ -588,11 +596,8 @@ static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason);
 static void CreatePersonnelButtons(void)
 {
 	// left/right buttons
-	g_personnel.prev = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 0, -1, 1, -1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, LeftButtonCallBack);
-	g_personnel.next = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 2, -1, 3, -1, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, RightButtonCallBack);
-
-	g_personnel.prev->SetCursor(CURSOR_LAPTOP_SCREEN);
-	g_personnel.next->SetCursor(CURSOR_LAPTOP_SCREEN);
+	g_personnel.prev = MakeButton("LAPTOP/personnelbuttons.sti", 0, 1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, LeftButtonCallBack);
+	g_personnel.next = MakeButton("LAPTOP/personnelbuttons.sti", 2, 3, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, RightButtonCallBack);
 }
 
 
@@ -1332,13 +1337,8 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 
 	if (gubPersonnelInfoState == PRSNL_INV && !fCreated)
 	{
-		// create buttons
-		giPersonnelInventoryButtons[0] = QuickCreateButtonImg("LAPTOP/personnel_inventory.sti", -1, 1, -1, 2, -1, 176 + 397, 2 +   200, MSYS_PRIORITY_HIGHEST - 1, InventoryUpButtonCallback);
-		giPersonnelInventoryButtons[1] = QuickCreateButtonImg("LAPTOP/personnel_inventory.sti", -1, 3, -1, 4, -1, 176 + 397, 200 + 223, MSYS_PRIORITY_HIGHEST - 1, InventoryDownButtonCallback);
-
-		// set up cursors for these buttons
-		giPersonnelInventoryButtons[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
-		giPersonnelInventoryButtons[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
+		giPersonnelInventoryButtons[0] = MakeButton("LAPTOP/personnel_inventory.sti", 1, 2, 176 + 397, 2 +   200, InventoryUpButtonCallback);
+		giPersonnelInventoryButtons[1] = MakeButton("LAPTOP/personnel_inventory.sti", 3, 4, 176 + 397, 200 + 223, InventoryDownButtonCallback);
 
 		MSYS_DefineRegion(&gMouseScrollPersonnelINV, X_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION, X_OF_PERSONNEL_SCROLL_REGION + X_SIZE_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION + Y_SIZE_OF_PERSONNEL_SCROLL_REGION, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleSliderBarClickCallback);
 
@@ -1765,12 +1765,8 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 	{
 		if (fCreated) return;
 		// not created. create
-		g_personnel.depart_up = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 0, -1, 2, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   MSYS_PRIORITY_HIGHEST - 1, DepartedUpCallBack);
-		g_personnel.depart_dn = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, MSYS_PRIORITY_HIGHEST - 1, DepartedDownCallBack);
-
-		// set up cursors for these buttons
-		g_personnel.depart_up->SetCursor(CURSOR_LAPTOP_SCREEN);
-		g_personnel.depart_dn->SetCursor(CURSOR_LAPTOP_SCREEN);
+		g_personnel.depart_up = MakeButton("LAPTOP/departuresbuttons.sti", 0, 2, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   DepartedUpCallBack);
+		g_personnel.depart_dn = MakeButton("LAPTOP/departuresbuttons.sti", 1, 3, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, DepartedDownCallBack);
 	}
 	else
 	{
