@@ -144,16 +144,17 @@ static SGPVObject* guiWoodBackground;
 static SGPVObject* guiUnderConstructionImage;
 
 
-UINT32	guiLastBobbyRayPage;
+LaptopMode guiLastBobbyRayPage;
 
 
-
-UINT8		gubBobbyRPages[]={
-						LAPTOP_MODE_BOBBY_R_USED,
-						LAPTOP_MODE_BOBBY_R_MISC,
-						LAPTOP_MODE_BOBBY_R_GUNS,
-						LAPTOP_MODE_BOBBY_R_AMMO,
-						LAPTOP_MODE_BOBBY_R_ARMOR};
+static LaptopMode const gubBobbyRPages[] =
+{
+	LAPTOP_MODE_BOBBY_R_USED,
+	LAPTOP_MODE_BOBBY_R_MISC,
+	LAPTOP_MODE_BOBBY_R_GUNS,
+	LAPTOP_MODE_BOBBY_R_AMMO,
+	LAPTOP_MODE_BOBBY_R_ARMOR
+};
 
 
 //Bobby's Sign menu mouse regions
@@ -375,10 +376,7 @@ static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubNewPage = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
-		guiCurrentLaptopMode = ubNewPage;
-//		FindLastItemIndex(ubNewPage);
-
+		guiCurrentLaptopMode = static_cast<LaptopMode>(MSYS_GetRegionUserData(pRegion, 0));
 	}
 }
 

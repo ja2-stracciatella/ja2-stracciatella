@@ -30,25 +30,8 @@ void ClearOutTempLaptopFiles(void);
 
 void HaventMadeImpMercEmailCallBack(void);
 
-extern UINT32  guiCurrentLaptopMode;
-extern UINT32  guiPreviousLaptopMode;
-extern INT32   giCurrentSubPage;
-extern BOOLEAN fReDrawScreenFlag;
-extern BOOLEAN fPausedReDrawScreenFlag;
-extern BOOLEAN fLoadPendingFlag;
-extern BOOLEAN fReDrawPostButtonRender;
-extern BOOLEAN fCurrentlyInLaptop;
-extern SGPVObject* guiLaptopBACKGROUND;
-extern SGPVObject* guiTITLEBARICONS;
-extern BOOLEAN fDoneLoadPending;
-extern BOOLEAN fConnectingToSubPage;
-extern BOOLEAN fFastLoadFlag;
-extern BOOLEAN gfShowBookmarks;
-extern BOOLEAN fShowBookmarkInfo;
-extern BOOLEAN fReDrawBookMarkInfo;
 
-
-enum
+enum LaptopMode
 {
 	LAPTOP_MODE_NONE = 0,
 	LAPTOP_MODE_FINANCES,
@@ -95,6 +78,23 @@ enum
 	LAPTOP_MODE_BROKEN_LINK,
 	LAPTOP_MODE_BOBBYR_SHIPMENTS,
 };
+
+extern LaptopMode  guiCurrentLaptopMode;
+extern LaptopMode  guiPreviousLaptopMode;
+extern INT32       giCurrentSubPage;
+extern BOOLEAN     fReDrawScreenFlag;
+extern BOOLEAN     fPausedReDrawScreenFlag;
+extern BOOLEAN     fLoadPendingFlag;
+extern BOOLEAN     fReDrawPostButtonRender;
+extern BOOLEAN     fCurrentlyInLaptop;
+extern SGPVObject* guiLaptopBACKGROUND;
+extern SGPVObject* guiTITLEBARICONS;
+extern BOOLEAN     fDoneLoadPending;
+extern BOOLEAN     fConnectingToSubPage;
+extern BOOLEAN     fFastLoadFlag;
+extern BOOLEAN     gfShowBookmarks;
+extern BOOLEAN     fShowBookmarkInfo;
+extern BOOLEAN     fReDrawBookMarkInfo;
 
 // bookamrks for WWW bookmark list
 

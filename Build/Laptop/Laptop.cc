@@ -175,9 +175,9 @@ static BOOLEAN gfTitleBarSurfaceAlreadyActive = FALSE;
 
 
 // Mode values
-UINT32 guiCurrentLaptopMode;
-UINT32 guiPreviousLaptopMode;
-static UINT32 guiCurrentWWWMode = LAPTOP_MODE_NONE;
+LaptopMode        guiCurrentLaptopMode;
+LaptopMode        guiPreviousLaptopMode;
+static LaptopMode guiCurrentWWWMode = LAPTOP_MODE_NONE;
 INT32  giCurrentSubPage;
 
 
@@ -683,7 +683,7 @@ static void RenderLaptop(void)
 		return;
 	}
 
-	UINT32 uiTempMode = 0;
+	LaptopMode uiTempMode = LAPTOP_MODE_NONE;
 	if (fLoadPendingFlag || fExitDuringLoad)
 	{
 		uiTempMode           = guiCurrentLaptopMode;

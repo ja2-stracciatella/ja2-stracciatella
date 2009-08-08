@@ -19,7 +19,7 @@
 
 UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
 
-static const UINT8 gCurrentAimPage[NUM_AIM_SCREENS] =
+static LaptopMode const gCurrentAimPage[NUM_AIM_SCREENS] =
 {
 	LAPTOP_MODE_AIM,
 	LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES,
@@ -516,7 +516,7 @@ static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		ResetAimButtons(guiBottomButtons, NUM_AIM_BOTTOMBUTTONS);
-		guiCurrentLaptopMode = btn->GetUserData();
+		guiCurrentLaptopMode = static_cast<LaptopMode>(btn->GetUserData());
 	}
 	DisableAimButton();
 }

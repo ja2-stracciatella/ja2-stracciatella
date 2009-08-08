@@ -2,6 +2,7 @@
 #define __BOBBYR_H
 
 #include "Item_Types.h"
+#include "Laptop.h"
 #include "Store_Inventory.h"
 
 
@@ -20,7 +21,7 @@ void RenderBobbyR(void);
 #define		BOBBYR_GRIDLOC_Y		LAPTOP_SCREEN_WEB_UL_Y + 45
 
 
-extern	UINT32	guiLastBobbyRayPage;
+extern LaptopMode guiLastBobbyRayPage;
 
 
 void DrawBobbyRWoodBackground(void);

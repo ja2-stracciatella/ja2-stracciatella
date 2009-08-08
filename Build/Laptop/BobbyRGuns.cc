@@ -141,7 +141,7 @@ static SGPVObject* guiBrTitle;
 
 UINT16		gusCurWeaponIndex;
 static UINT8 gubCurPage;
-static UINT8 const ubCatalogueButtonValues[] =
+static LaptopMode const ubCatalogueButtonValues[] =
 {
 	LAPTOP_MODE_BOBBY_R_GUNS,
 	LAPTOP_MODE_BOBBY_R_AMMO,
@@ -391,7 +391,7 @@ static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UpdateButtonText(guiCurrentLaptopMode);
-		guiCurrentLaptopMode = btn->GetUserData();
+		guiCurrentLaptopMode = static_cast<LaptopMode>(btn->GetUserData());
 	}
 }
 
