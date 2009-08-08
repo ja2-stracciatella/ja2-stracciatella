@@ -302,7 +302,7 @@ static const SGPRect LaptopScreenRect = { LAPTOP_UL_X, LAPTOP_UL_Y - 5, LAPTOP_S
 
 
 // the sub pages vistsed or not status within the web browser
-static BOOLEAN gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_FUNERAL - LAPTOP_MODE_WWW];
+static bool gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_FUNERAL - LAPTOP_MODE_WWW];
 
 // mouse regions
 static MOUSE_REGION gLapTopScreenRegion;
@@ -3241,13 +3241,9 @@ static void HandleWWWSubSites(void)
 	fConnectingToSubPage = TRUE;
 
 	// fast or slow load?
-	if (gfWWWaitSubSitesVisitedFlags[guiCurrentLaptopMode - (LAPTOP_MODE_WWW + 1)])
-	{
-		fFastLoadFlag = TRUE;
-	}
-
-	// set fact we were here
-	gfWWWaitSubSitesVisitedFlags[guiCurrentLaptopMode - (LAPTOP_MODE_WWW + 1)] = TRUE;
+	bool& visited = gfWWWaitSubSitesVisitedFlags[guiCurrentLaptopMode - (LAPTOP_MODE_WWW + 1)];
+	if (visited) fFastLoadFlag = TRUE;
+	visited = true; // Set fact we were here
 
 	//Dont show the dlownload screen when switching between these pages
 	if (guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS              && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX ||
@@ -3257,8 +3253,8 @@ static void HandleWWWSubSites(void)
 		fLoadPendingFlag = FALSE;
 
 		// set fact we were here
-		gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX - (LAPTOP_MODE_WWW + 1)] = TRUE;
-		gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_AIM_MEMBERS              - (LAPTOP_MODE_WWW + 1)] = TRUE;
+		gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX - (LAPTOP_MODE_WWW + 1)] = true;
+		gfWWWaitSubSitesVisitedFlags[LAPTOP_MODE_AIM_MEMBERS              - (LAPTOP_MODE_WWW + 1)] = true;
 	}
 }
 
@@ -3276,9 +3272,9 @@ static void UpdateStatusOfDisplayingBookMarks(void)
 static void InitalizeSubSitesList(void)
 {
 	// init all subsites list to not visited
-	for (INT32 i = LAPTOP_MODE_WWW + 1; i <= LAPTOP_MODE_FUNERAL; ++i)
+	for (bool* i = gfWWWaitSubSitesVisitedFlags; i != endof(gfWWWaitSubSitesVisitedFlags); ++i)
 	{
-		gfWWWaitSubSitesVisitedFlags[i - (LAPTOP_MODE_WWW + 1)] = FALSE;
+		*i = false;
 	}
 }
 
@@ -3289,7 +3285,7 @@ static void SetSubSiteAsVisted(void)
 	// not at a web page yet?
 	if (guiCurrentLaptopMode <= LAPTOP_MODE_WWW) return;
 
-	gfWWWaitSubSitesVisitedFlags[guiCurrentLaptopMode - (LAPTOP_MODE_WWW + 1)] = TRUE;
+	gfWWWaitSubSitesVisitedFlags[guiCurrentLaptopMode - (LAPTOP_MODE_WWW + 1)] = true;
 }
 
 
