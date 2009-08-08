@@ -273,7 +273,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 static GUIButtonRef MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", off, on, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	btn->SetFastHelpText(help);
 	btn->SetCursor(MSYS_NO_CURSOR);
 	return btn;

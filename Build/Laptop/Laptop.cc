@@ -1357,7 +1357,7 @@ static void ExitLaptopMode(UINT32 uiMode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const wchar_t* text, const wchar_t* help_text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/buttonsforlaptop.sti", -1, idx, -1, idx + 8, -1, 29, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/buttonsforlaptop.sti", idx, idx + 8, 29, y, MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
 	btn->SetFastHelpText(help_text);
 	btn->SpecifyTextOffsets(off_x, 11, TRUE);
@@ -2612,7 +2612,7 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void CreateMinimizeButtonForCurrentMode(void)
 {
 	// create minimize button
-	gLaptopMinButton = QuickCreateButtonImg("LAPTOP/x.sti", -1, 0, -1, 1, -1, 590, 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
+	gLaptopMinButton = QuickCreateButtonImg("LAPTOP/x.sti", 0, 1, 590, 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
 	gLaptopMinButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 

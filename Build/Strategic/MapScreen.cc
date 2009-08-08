@@ -1592,7 +1592,7 @@ try
 		// init the timer menus
 		InitTimersForMoveMenuMouseRegions( );
 
-		giMapContractButton = QuickCreateButtonImg("INTERFACE/contractbutton.sti", -1, 0, -1, 1, -1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
+		giMapContractButton = QuickCreateButtonImg("INTERFACE/contractbutton.sti", 0, 1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		giMapContractButton->SpecifyGeneralTextAttributes(pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
 		giMapContractButton->SetFastHelpText(pMapScreenMouseRegionHelpText[3]);
 
@@ -6619,7 +6619,7 @@ static void CreateDestroyTrashCanRegion(void)
 							 MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
 
 		// done inventory button define
-    giMapInvDoneButton = QuickCreateButtonImg("INTERFACE/done_button2.sti", -1, 0, -1, 1, -1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
+		giMapInvDoneButton = QuickCreateButtonImg("INTERFACE/done_button2.sti", 0, 1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
 		giMapInvDoneButton->SetFastHelpText(pMiscMapScreenMouseRegionHelpText[2]);
 
 		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
@@ -7076,7 +7076,7 @@ static void AddTeamPanelSortButtonsForMapScreen(void)
 
 	for (INT32 i = 0; i < MAX_SORT_METHODS; ++i)
 	{
-		giMapSortButton[i] = QuickCreateButtonImg(filename, -1, iImageIndex[i], -1, iImageIndex[i] + 6, -1, gMapSortButtons[i].iX, gMapSortButtons[i].iY, MSYS_PRIORITY_HIGHEST - 5, MapSortBtnCallback);
+		giMapSortButton[i] = QuickCreateButtonImg(filename, iImageIndex[i], iImageIndex[i] + 6, gMapSortButtons[i].iX, gMapSortButtons[i].iY, MSYS_PRIORITY_HIGHEST - 5, MapSortBtnCallback);
 		giMapSortButton[i]->SetUserData(i);
 		giMapSortButton[i]->SetFastHelpText(wMapScreenSortButtonHelpText[i]);
 	}

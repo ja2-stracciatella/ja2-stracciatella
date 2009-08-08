@@ -762,7 +762,7 @@ static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, const wchar_t* text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/group_confirm_tactical.sti", -1, 7, -1, 8, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, StopAutoBandageButtonCallback);
+	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/group_confirm_tactical.sti", 7, 8, x, y, MSYS_PRIORITY_HIGHEST - 1, StopAutoBandageButtonCallback);
 	iEndAutoBandageButton[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, MAP_SCREEN_FONT, FONT_MCOLOR_BLACK, FONT_BLACK);
 }

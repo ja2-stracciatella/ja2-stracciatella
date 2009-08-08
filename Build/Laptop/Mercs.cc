@@ -1013,7 +1013,7 @@ static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 	//if we are asked to create the buttons and the button isnt already created
 	if( fCreate && !fButtonCreated )
 	{
-		guiXToCloseMercVideoButton = QuickCreateButtonImg("LAPTOP/CloseButton.sti", -1, 0, -1, 1, -1, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y, MSYS_PRIORITY_HIGH, BtnXToCloseMercVideoButtonCallback);
+		guiXToCloseMercVideoButton = QuickCreateButtonImg("LAPTOP/CloseButton.sti", 0, 1, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y, MSYS_PRIORITY_HIGH, BtnXToCloseMercVideoButtonCallback);
 		guiXToCloseMercVideoButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		fButtonCreated = TRUE;

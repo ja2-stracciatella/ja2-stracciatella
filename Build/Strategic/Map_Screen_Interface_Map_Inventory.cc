@@ -1139,7 +1139,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 static void CreateMapInventoryPoolDoneButton(void)
 {
 	// create done button
-	guiMapInvenButton[2] = QuickCreateButtonImg("INTERFACE/done_button.sti", -1, 0, -1, 1, -1, 587, 333, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
+	guiMapInvenButton[2] = QuickCreateButtonImg("INTERFACE/done_button.sti", 0, 1, 587, 333, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
 }
 
 

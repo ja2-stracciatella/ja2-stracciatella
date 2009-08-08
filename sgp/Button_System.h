@@ -248,6 +248,7 @@ GUIButtonRef QuickCreateButtonNoMove(BUTTON_PICS* image, INT16 x, INT16 y, INT16
 GUIButtonRef QuickCreateButtonToggle(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
 GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 off_normal, INT32 on_normal, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
 GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback);
 

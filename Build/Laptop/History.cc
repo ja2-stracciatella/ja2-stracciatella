@@ -274,8 +274,8 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason);
 static void CreateHistoryButtons(void)
 {
 	// the prev/next page buttons
-	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", -1, 0, -1, 1, -1, PREV_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayPrevPageCallBack);
-	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", -1, 6, -1, 7, -1, NEXT_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayNextPageCallBack);
+	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", 0, 1, PREV_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayPrevPageCallBack);
+	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", 6, 7, NEXT_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayNextPageCallBack);
 
 	// set buttons
 	giHistoryButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);

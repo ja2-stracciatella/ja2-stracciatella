@@ -4004,7 +4004,7 @@ void CreateDestroyMilitiaSectorButtons()
 		INT16       y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT + 2;
 		for (INT32 i = 0; i != 3; y += MILITIA_BTN_HEIGHT, ++i)
 		{
-			GUIButtonRef b = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 3, -1, 4, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
+			GUIButtonRef b = QuickCreateButtonImg("INTERFACE/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
 			b->SpecifyGeneralTextAttributes(0, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
@@ -4340,7 +4340,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 
 static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 1, -1, 2, -1, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/militia.sti", 1, 2, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giMapMilitiaButton[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, FONT_BLACK, FONT_BLACK);
 }

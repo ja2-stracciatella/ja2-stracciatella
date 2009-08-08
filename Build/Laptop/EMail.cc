@@ -1057,7 +1057,7 @@ static void BtnNewOkback(GUI_BUTTON *btn, INT32 reason)
 
 static GUIButtonRef MakeButtonNewMail(INT32 image, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, image, -1, image + 3, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", image, image + 3, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -1110,7 +1110,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		fOldDisplayMessageFlag=TRUE;
 
 		// add X button
-		giMessageButton = QuickCreateButtonImg("LAPTOP/X.sti", -1, 0, -1, 1, -1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
+		giMessageButton = QuickCreateButtonImg("LAPTOP/X.sti", 0, 1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
 	  giMessageButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		if( giNumberOfPagesToCurrentEmail > 2 )
@@ -1157,7 +1157,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 
 static GUIButtonRef MakeButtonYesNo(INT32 image, INT16 x, GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", -1, image, -1, image + 1, -1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", image, image + 1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -1501,7 +1501,7 @@ static void DestroyMailScreenButtons(void)
 
 static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/mailbuttons.sti", -1, idx, -1, idx + 4, -1, x, FROM_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/mailbuttons.sti", idx, idx + 4, x, FROM_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giSortButton[idx] = btn;
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	if (text)

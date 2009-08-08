@@ -640,6 +640,12 @@ GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_norma
 }
 
 
+GUIButtonRef QuickCreateButtonImg(char const* const gfx, INT32 const off_normal, INT32 const on_normal, INT16 const x, INT16 const y, INT16 const priority, GUI_CALLBACK const click)
+{
+	return QuickCreateButtonImg(gfx, -1, off_normal, -1, on_normal, -1, x, y, priority, click);
+}
+
+
 GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, Font const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
 {
 	GUIButtonRef const b = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);

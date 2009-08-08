@@ -583,7 +583,7 @@ static void PrevPersonnelFace(void)
 
 static GUIButtonRef MakeButton(char const* const gfx, INT32 const off_normal, INT32 const on_normal, INT16 const x, INT16 const y, GUI_CALLBACK const click)
 {
-	GUIButtonRef const b = QuickCreateButtonImg(gfx, -1, off_normal, -1, on_normal, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const b = QuickCreateButtonImg(gfx, off_normal, on_normal, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	b->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return b;
 }
