@@ -202,6 +202,12 @@ BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal
 }
 
 
+BUTTON_PICS* LoadButtonImage(char const* const filename, INT32 const off_normal, INT32 const on_normal)
+{
+	return LoadButtonImage(filename, -1, off_normal, -1, on_normal, -1);
+}
+
+
 BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Grayed, const INT32 OffNormal, const INT32 OffHilite, const INT32 OnNormal, const INT32 OnHilite)
 {
 	if (Grayed    == BUTTON_NO_IMAGE &&
@@ -223,6 +229,12 @@ BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Gray
 	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
 	InitButtonImage(UseSlot, vobj, GUI_BTN_DUPLICATE_VOBJ, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
 	return UseSlot;
+}
+
+
+BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const img, INT32 const off_normal, INT32 const on_normal)
+{
+	return UseLoadedButtonImage(img, -1, off_normal, -1, on_normal, -1);
 }
 
 

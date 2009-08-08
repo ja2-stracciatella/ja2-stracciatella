@@ -99,10 +99,10 @@ void EnterBobbyRShipments()
 	// load the Order Grid graphic and add it
 	guiBobbyRShipmentGrid = AddVideoObjectFromFile("LAPTOP/BobbyRay_OnOrder.sti");
 
-	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
+	guiBobbyRShipmentBackImage = LoadButtonImage("LAPTOP/CatalogueButton.sti", 0, 1);
 	guiBobbyRShipmetBack = MakeButton(guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_SHIPMENT_BACK_BUTTON_X, BtnBobbyRShipmentBackCallback);
 
-	giBobbyRShipmentHomeImage =  UseLoadedButtonImage( guiBobbyRShipmentBackImage, -1,0,-1,1,-1 );
+	giBobbyRShipmentHomeImage = UseLoadedButtonImage(guiBobbyRShipmentBackImage, 0, 1);
 	guiBobbyRShipmentHome = MakeButton(giBobbyRShipmentHomeImage, BobbyROrderFormText[BOBBYR_HOME], BOBBYR_SHIPMENT_HOME_BUTTON_X, BtnBobbyRShipmentHomeCallback);
 
 	CreateBobbyRayOrderTitle();

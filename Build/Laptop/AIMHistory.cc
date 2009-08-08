@@ -225,7 +225,7 @@ static void InitAimHistoryMenuBar(void)
 {
 	UINT16					i, usPosX;
 
-	guiHistoryMenuButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiHistoryMenuButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
 	usPosX = AIM_HISTORY_MENU_X;
 	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
 	{

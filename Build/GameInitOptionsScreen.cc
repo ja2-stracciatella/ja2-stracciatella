@@ -274,12 +274,12 @@ static void EnterGIOScreen(void)
 	guiGIOMainBackGroundImage = AddVideoObjectFromFile("InterFace/OptionsScreenBackGround.sti");
 
 	//Ok button
-	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", -1,0,-1,2,-1 );
+	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", 0, 2);
 	guiGIODoneButton = MakeButton(giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], GIO_BTN_OK_X, BtnGIODoneCallback);
 	guiGIODoneButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 
 	//Cancel button
-	giGIOCancelBtnImage = UseLoadedButtonImage( giGIODoneBtnImage, -1,1,-1,3,-1 );
+	giGIOCancelBtnImage = UseLoadedButtonImage(giGIODoneBtnImage, 1, 3);
 	guiGIOCancelButton = MakeButton(giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], GIO_CANCEL_X, BtnGIOCancelCallback);
 
 	//Check box to toggle Difficulty settings

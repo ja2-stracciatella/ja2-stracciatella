@@ -385,7 +385,7 @@ void EnterBobbyRMailOrder()
 	//
 
 	// Clear Order button
-	guiBobbyRClearOrderImage = LoadButtonImage("LAPTOP/EraseOrderButton.sti", -1,0,-1,1,-1 );
+	guiBobbyRClearOrderImage = LoadButtonImage("LAPTOP/EraseOrderButton.sti", 0, 1);
 	guiBobbyRClearOrder = MakeButton(guiBobbyRClearOrderImage, BobbyROrderFormText[BOBBYR_CLEAR_ORDER], BOBBYR_CLEAR_ORDER_X, BOBBYR_CLEAR_ORDER_Y + 4, BtnBobbyRClearOrderCallback);
 	guiBobbyRClearOrder->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 	guiBobbyRClearOrder->SpecifyTextOffsets(39, 10, TRUE);
@@ -407,13 +407,13 @@ void EnterBobbyRMailOrder()
 	}
 
 
-	guiBobbyRBackImage =  LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
+	guiBobbyRBackImage = LoadButtonImage("LAPTOP/CatalogueButton.sti", 0, 1);
 	guiBobbyRBack = MakeButton(guiBobbyRBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_BACK_BUTTON_X, BOBBYR_BACK_BUTTON_Y, BtnBobbyRBackCallback);
 
-	guiBobbyRHomeImage =  UseLoadedButtonImage( guiBobbyRBackImage, -1,0,-1,1,-1 );
+	guiBobbyRHomeImage = UseLoadedButtonImage(guiBobbyRBackImage, 0, 1);
 	guiBobbyRHome = MakeButton(guiBobbyRHomeImage, BobbyROrderFormText[BOBBYR_HOME], BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BtnBobbyRHomeCallback);
 
-	giBobbyRGotoShipmentPageImage =  UseLoadedButtonImage( guiBobbyRBackImage, -1,0,-1,1,-1 );
+	giBobbyRGotoShipmentPageImage = UseLoadedButtonImage(guiBobbyRBackImage, 0, 1);
 	guiBobbyRGotoShipmentPage = MakeButton(giBobbyRGotoShipmentPageImage, BobbyROrderFormText[BOBBYR_GOTOSHIPMENT_PAGE], BOBBYR_SHIPMENT_BUTTON_X, BOBBYR_SHIPMENT_BUTTON_Y, BtnBobbyRGotoShipmentPageCallback);
 
 	for(i=0; i<3; i++)

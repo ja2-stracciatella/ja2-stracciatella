@@ -60,7 +60,7 @@ static void CreateIMPPersonalityEntranceButtons(void)
   // this function will create the buttons needed for the IMP personality Page
 
 	// ths begin button
-  giIMPPersonalityEntranceButtonImage[0]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
+	giIMPPersonalityEntranceButtonImage[0] = LoadButtonImage("LAPTOP/button_2.sti", 0, 1);
 		giIMPPersonalityEntranceButton[0] = CreateIconAndTextButton( giIMPPersonalityEntranceButtonImage[0], pImpButtonText[ 1 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

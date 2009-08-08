@@ -286,7 +286,7 @@ void EnterFloristOrderForm()
 
 	guiDropDownBorder = AddVideoObjectFromFile("INTERFACE/TactPopUp.sti");
 
-	guiFlowerOrderButtonImage	  = LoadButtonImage("LAPTOP/FloristButtons.sti", -1, 0, -1, 1, -1);
+	guiFlowerOrderButtonImage	  = LoadButtonImage("LAPTOP/FloristButtons.sti", 0, 1);
 	guiFlowerOrderBackButton    = MakeButton(sOrderFormText[FLORIST_ORDER_BACK],    FLOWER_ORDER_BACK_BUTTON_X,    FLOWER_ORDER_BACK_BUTTON_Y,    BtnFlowerOrderBackButtonCallback);
 	guiFlowerOrderSendButton    = MakeButton(sOrderFormText[FLORIST_ORDER_SEND],    FLOWER_ORDER_SEND_BUTTON_X,    FLOWER_ORDER_SEND_BUTTON_Y,    BtnFlowerOrderSendButtonCallback);
 	guiFlowerOrderClearButton   = MakeButton(sOrderFormText[FLORIST_ORDER_CLEAR],   FLOWER_ORDER_CLEAR_BUTTON_X,   FLOWER_ORDER_CLEAR_BUTTON_Y,   BtnFlowerOrderClearButtonCallback);

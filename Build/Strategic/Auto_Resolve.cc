@@ -1590,18 +1590,18 @@ static void CreateAutoResolveInterface(void)
 	ar->iPanelImages = AddVideoObjectFromFile("Interface/AutoResolve.sti");
 
 	// Load the button images file, and assign it to the first button.
-	BUTTON_PICS* const btn_pics = LoadButtonImage("Interface/AutoBtns.sti", -1, 0, -1, 7, -1);
+	BUTTON_PICS* const btn_pics = LoadButtonImage("Interface/AutoBtns.sti", 0, 7);
 	ar->iButtonImage[PAUSE_BUTTON]    = btn_pics;
 	// Have the other buttons hook into the first button containing the images.
-	ar->iButtonImage[PLAY_BUTTON]     = UseLoadedButtonImage(btn_pics, -1,  1, -1,  8, -1);
-	ar->iButtonImage[FAST_BUTTON]     = UseLoadedButtonImage(btn_pics, -1,  2, -1,  9, -1);
-	ar->iButtonImage[FINISH_BUTTON]   = UseLoadedButtonImage(btn_pics, -1,  3, -1, 10, -1);
-	ar->iButtonImage[YES_BUTTON]      = UseLoadedButtonImage(btn_pics, -1,  4, -1, 11, -1);
-	ar->iButtonImage[NO_BUTTON]       = UseLoadedButtonImage(btn_pics, -1,  5, -1, 12, -1);
-	ar->iButtonImage[BANDAGE_BUTTON]  = UseLoadedButtonImage(btn_pics, -1,  6, -1, 13, -1);
-	ar->iButtonImage[RETREAT_BUTTON]  = UseLoadedButtonImage(btn_pics, -1, 14, -1, 15, -1);
-	ar->iButtonImage[DONEWIN_BUTTON]  = UseLoadedButtonImage(btn_pics, -1, 14, -1, 15, -1);
-	ar->iButtonImage[DONELOSE_BUTTON] = UseLoadedButtonImage(btn_pics, -1, 16, -1, 17, -1);
+	ar->iButtonImage[PLAY_BUTTON]     = UseLoadedButtonImage(btn_pics,  1,  8);
+	ar->iButtonImage[FAST_BUTTON]     = UseLoadedButtonImage(btn_pics,  2,  9);
+	ar->iButtonImage[FINISH_BUTTON]   = UseLoadedButtonImage(btn_pics,  3, 10);
+	ar->iButtonImage[YES_BUTTON]      = UseLoadedButtonImage(btn_pics,  4, 11);
+	ar->iButtonImage[NO_BUTTON]       = UseLoadedButtonImage(btn_pics,  5, 12);
+	ar->iButtonImage[BANDAGE_BUTTON]  = UseLoadedButtonImage(btn_pics,  6, 13);
+	ar->iButtonImage[RETREAT_BUTTON]  = UseLoadedButtonImage(btn_pics, 14, 15);
+	ar->iButtonImage[DONEWIN_BUTTON]  = UseLoadedButtonImage(btn_pics, 14, 15);
+	ar->iButtonImage[DONELOSE_BUTTON] = UseLoadedButtonImage(btn_pics, 16, 17);
 
 	// Load the generic faces for civs and enemies
 	SGPVObject* const faces = AddVideoObjectFromFile("Interface/SmFaces.sti");

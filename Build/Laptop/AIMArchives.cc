@@ -151,7 +151,7 @@ void EnterAimArchives()
 
 	InitAlumniFaceRegions();
 
-	guiAlumniPageButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", -1, 0, -1, 1, -1);
+	guiAlumniPageButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
 
 	INT16 x       = AIM_ALUMNI_PAGE1_X;
 	INT16 const y = AIM_ALUMNI_PAGE1_Y;

@@ -98,7 +98,7 @@ BOOLEAN EnterFloristGallery()
 	InitFloristDefaults();
 
 	//the next previous buttons
-	guiFloralGalleryButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
+	guiFloralGalleryButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", 0, 1);
 	guiFloralGalleryButton[0] = MakeButton(sFloristGalleryText[FLORIST_GALLERY_PREV], FLOR_GALLERY_BACK_BUTTON_X, BtnFloralGalleryBackButtonCallback);
 	guiFloralGalleryButton[1] = MakeButton(sFloristGalleryText[FLORIST_GALLERY_NEXT], FLOR_GALLERY_NEXT_BUTTON_X, BtnFloralGalleryNextButtonCallback);
 
@@ -237,7 +237,7 @@ static void InitFlowerButtons(void)
 	usPosY = FLOR_GALLERY_FLOWER_BUTTON_Y;
 //	usPosX = FLOR_GALLERY_FLOWER_BUTTON_X;
 	count = gubCurFlowerIndex;
-	guiGalleryButtonImage	= LoadButtonImage("LAPTOP/GalleryButtons.sti", -1,0,-1,1,-1 );
+	guiGalleryButtonImage	= LoadButtonImage("LAPTOP/GalleryButtons.sti", 0, 1);
 	for(j=0; j<gubCurNumberOfFlowers; j++)
 	{
 		guiGalleryButton[j] = QuickCreateButton(guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY, MSYS_PRIORITY_HIGH, BtnGalleryFlowerButtonCallback);

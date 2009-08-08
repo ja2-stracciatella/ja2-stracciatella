@@ -71,7 +71,7 @@ static void CreateIMPAboutUsButtons(void)
 
   // this function will create the buttons needed for th IMP about us page
   // the back button button
-  giIMPAboutUsButtonImage[0]=  LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
+	giIMPAboutUsButtonImage[0] = LoadButtonImage("LAPTOP/button_3.sti", 0, 1);
    giIMPAboutUsButton[0] = CreateIconAndTextButton( giIMPAboutUsButtonImage[0], pImpButtonText[6], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

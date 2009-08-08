@@ -382,7 +382,7 @@ static void EnterSaveLoadScreen()
 	guiSlgBackGroundImage = AddVideoObjectFromFile("INTERFACE/LoadScreen.sti");
 	guiBackGroundAddOns   = AddVideoObjectFromFile(GetMLGFilename(MLG_LOADSAVEHEADER));
 
-	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", -1, 6, -1, 9, -1);
+	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", 6, 9);
 	guiSlgCancelBtn   = MakeButton(guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], SLG_LOAD_CANCEL_POS_X, BtnSlgCancelCallback);
 
 	// Either the save or load button
@@ -398,7 +398,7 @@ static void EnterSaveLoadScreen()
 		gfx  = 4;
 		text = zSaveLoadText[SLG_LOAD_GAME];
 	}
-	guiSaveLoadImage  = UseLoadedButtonImage(guiSlgButtonImage, -1, gfx, -1, gfx + 3, -1);
+	guiSaveLoadImage  = UseLoadedButtonImage(guiSlgButtonImage, gfx, gfx + 3);
 	guiSlgSaveLoadBtn = MakeButton(guiSaveLoadImage, text, SLG_SAVE_LOAD_BTN_POS_X, BtnSlgSaveLoadCallback);
 	guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 

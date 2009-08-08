@@ -560,7 +560,7 @@ static void PositionTownMineInfoBox(PopUpBox* const box)
 
 static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	BUTTON_PICS* const img = LoadButtonImage("INTERFACE/mapinvbtns.sti", -1, idx, -1, idx + 2, -1);
+	BUTTON_PICS* const img = LoadButtonImage("INTERFACE/mapinvbtns.sti", idx, idx + 2);
 	guiMapButtonInventoryImage[idx] = img;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, BLOCKFONT2, FONT_WHITE, FONT_BLACK, FONT_WHITE, FONT_BLACK, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	guiMapButtonInventory[idx] = btn;

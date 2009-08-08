@@ -64,7 +64,7 @@ void HandleIMPAttributeFinish( void )
 
 static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK click)
 {
-	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/button_2.sti", -1, 0, -1, 1, -1);
+	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/button_2.sti", 0, 1);
 	giIMPAttributeFinishButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;

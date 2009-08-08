@@ -284,7 +284,7 @@ static void EnterOptionsScreen(void)
 	const char* const ImageFile = GetMLGFilename(MLG_OPTIONHEADER);
 	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
 
-	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", -1, 2, -1, 3, -1);
+	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", 2, 3);
 
 	//Save game button
 	guiOptGotoSaveGameBtn = MakeButton(OPT_SAVE_BTN_X, BtnOptGotoSaveGameCallback, zOptionsText[OPT_SAVE_GAME]);

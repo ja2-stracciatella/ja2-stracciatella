@@ -146,7 +146,7 @@ void EnterMercsFiles()
 	// load the bio box graphic and add it
 	guiBioBox = AddVideoObjectFromFile("LAPTOP/BioBox.sti");
 
-	guiButtonImage  = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
+	guiButtonImage    = LoadButtonImage("LAPTOP/BigButtons.sti", 0, 1);
 	guiPrevButton     = MakeButton(MercInfo[MERC_FILES_PREVIOUS], MERC_FILES_PREV_BUTTON_X, BtnMercPrevButtonCallback);
 	guiNextButton     = MakeButton(MercInfo[MERC_FILES_NEXT],     MERC_FILES_NEXT_BUTTON_X, BtnMercNextButtonCallback);
 	guiHireButton     = MakeButton(MercInfo[MERC_FILES_HIRE],     MERC_FILES_HIRE_BUTTON_X, BtnMercHireButtonCallback);

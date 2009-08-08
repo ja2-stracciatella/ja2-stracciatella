@@ -102,7 +102,7 @@ void EnterMercsAccount()
 	// load the Arrow graphic and add it
 	guiAccountNumberGrid = AddVideoObjectFromFile("LAPTOP/AccountNumber.sti");
 
-	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
+	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", 0, 1);
 	guiMercAuthorizeBoxButton   = MakeButton(MercAccountText[MERC_ACCOUNT_AUTHORIZE], MERC_AC_AUTHORIZE_BUTTON_X, BtnMercAuthorizeButtonCallback);
 	guiMercAuthorizeBoxButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	guiMercBackBoxButton        = MakeButton(MercAccountText[MERC_ACCOUNT_HOME],      MERC_AC_CANCEL_BUTTON_X,    BtnMercBackButtonCallback);

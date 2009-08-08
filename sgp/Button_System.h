@@ -209,11 +209,13 @@ void UnloadGenericButtonIcon(INT16 GenImg);
 
 // Load images for use with QuickButtons.
 BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
+BUTTON_PICS* LoadButtonImage(char const* filename, INT32 off_normal, INT32 on_normal);
 
 /* Uses a previously loaded quick button image for use with QuickButtons.  The
  * function simply duplicates the vobj!
  */
 BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
+BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* img, INT32 off_normal, INT32 on_normal);
 
 // Removes a QuickButton image from the system.
 void UnloadButtonImage(BUTTON_PICS*);

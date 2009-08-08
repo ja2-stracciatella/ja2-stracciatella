@@ -385,9 +385,9 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	uiInterfaceImages = AddVideoObjectFromFile(ImageFile);
 
 	//Create the 3 buttons
-	iPBButtonImage[0] = LoadButtonImage( "INTERFACE/PreBattleButton.sti", -1, 0, -1, 1, -1 );
-	iPBButtonImage[1] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
-	iPBButtonImage[2] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
+	iPBButtonImage[0] = LoadButtonImage("INTERFACE/PreBattleButton.sti", 0, 1);
+	iPBButtonImage[1] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
+	iPBButtonImage[2] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
 
 	MakeButton(0,  27, gpStrategicString[STR_PB_AUTORESOLVE_BTN],  AutoResolveBattleCallback);
 	MakeButton(1,  98, gpStrategicString[STR_PB_GOTOSECTOR_BTN],   GoToSectorCallback);

@@ -790,11 +790,11 @@ static void MakeButton(size_t const idx, BUTTON_PICS* const img, INT16 const x, 
 
 static void CreateFinanceButtons(void)
 {
-	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/arrows.sti", -1, 0, -1, 1, -1);
-	MakeButton(PREV_PAGE_BUTTON,  img,                                          PREV_BTN_X,   BtnFinanceDisplayPrevPageCallBack);
-	MakeButton(NEXT_PAGE_BUTTON,  UseLoadedButtonImage(img, -1, 6, -1,  7, -1), NEXT_BTN_X,   BtnFinanceDisplayNextPageCallBack);
-	MakeButton(FIRST_PAGE_BUTTON, UseLoadedButtonImage(img, -1, 3, -1,  4, -1), FIRST_PAGE_X, BtnFinanceFirstPageCallBack);
-	MakeButton(LAST_PAGE_BUTTON,  UseLoadedButtonImage(img, -1, 9, -1, 10, -1), LAST_PAGE_X,  BtnFinanceLastPageCallBack);
+	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/arrows.sti", 0, 1);
+	MakeButton(PREV_PAGE_BUTTON,  img,                              PREV_BTN_X,   BtnFinanceDisplayPrevPageCallBack);
+	MakeButton(NEXT_PAGE_BUTTON,  UseLoadedButtonImage(img, 6,  7), NEXT_BTN_X,   BtnFinanceDisplayNextPageCallBack);
+	MakeButton(FIRST_PAGE_BUTTON, UseLoadedButtonImage(img, 3,  4), FIRST_PAGE_X, BtnFinanceFirstPageCallBack);
+	MakeButton(LAST_PAGE_BUTTON,  UseLoadedButtonImage(img, 9, 10), LAST_PAGE_X,  BtnFinanceLastPageCallBack);
 
 	UINT16 const x = TOP_X +  8;
 	UINT16 const y = TOP_Y + 53;

@@ -2146,7 +2146,7 @@ catch (...) { /* XXX ignore */ }
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text)
 {
-	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
+	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/AtmButtons.sti", 2, 3);
 	giPersonnelATMStartButtonImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;

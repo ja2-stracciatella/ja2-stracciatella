@@ -586,8 +586,8 @@ static void EnterShopKeeperInterface(void)
 	}
 
 	//Load the graphic for the arrow button
-	guiSKI_InvPageUpButtonImage = LoadButtonImage("INTERFACE/TradeScrollArrows.sti", -1,0,-1,1,-1 );
-	guiSKI_InvPageDownButtonImage = UseLoadedButtonImage( guiSKI_InvPageUpButtonImage, -1,2,-1,3,-1 );
+	guiSKI_InvPageUpButtonImage   = LoadButtonImage("INTERFACE/TradeScrollArrows.sti", 0, 1);
+	guiSKI_InvPageDownButtonImage = UseLoadedButtonImage(guiSKI_InvPageUpButtonImage,  2, 3);
 
 
 	//Page up button for the merchant inventory
@@ -599,8 +599,8 @@ static void EnterShopKeeperInterface(void)
 	guiSKI_InvPageDownButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 
-	guiSKI_TransactionButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti", -1,0,-1,1,-1 );
-	guiSKI_DoneButtonImage = UseLoadedButtonImage( guiSKI_TransactionButtonImage, -1,0,-1,1,-1 );
+	guiSKI_TransactionButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti",       0, 1);
+	guiSKI_DoneButtonImage        = UseLoadedButtonImage(guiSKI_TransactionButtonImage, 0, 1);
 
 	//Transaction button
 	//if the dealer repairs, use the repair fast help text for the transaction button

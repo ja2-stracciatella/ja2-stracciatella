@@ -491,10 +491,10 @@ void EnterAIMMembers()
 
 
 	//Button Regions
-	giXToCloseVideoConfButtonImage = LoadButtonImage("LAPTOP/x_button.sti", -1,0,-1,1,-1 );
+	giXToCloseVideoConfButtonImage = LoadButtonImage("LAPTOP/x_button.sti", 0, 1);
 
 
-	guiPreviousContactNextButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiPreviousContactNextButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
 
 	giPreviousButton = MakeButton(CharacterInfo[AIM_MEMBER_PREVIOUS], PREVIOUS_X, BtnPreviousButtonCallback);
 	giContactButton  = MakeButton(CharacterInfo[AIM_MEMBER_CONTACT],  CONTACT_X,  BtnContactButtonCallback);
@@ -1469,7 +1469,7 @@ static void CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* cons
 	BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
 
 	//Create the popup boxes button
-	guiPopUpImage = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+	guiPopUpImage = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
 	INT16 const colour = AIM_POPUP_BOX_COLOR;
 	INT16 const shadow = AIM_M_VIDEO_NAME_SHADOWCOLOR;
 	INT16 const x      = usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X;
@@ -2422,7 +2422,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Hang up button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 			for (UINT8 i = 0; i < 2; ++i)
 			{
@@ -2445,7 +2445,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// Contract Length button
-			BUTTON_PICS* const img0 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 0, -1, 1, -1);
+			BUTTON_PICS* const img0 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 0, 1);
 			guiVideoConferenceButtonImage[0] = img0;
 			{ UINT16 usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
 				for (UINT8 i = 0; i < 3; ++i)
@@ -2478,7 +2478,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Authorize button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img1 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			BUTTON_PICS* const img1 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[1] = img1;
 			for (UINT8 i = 0; i < 2; ++i)
 			{
@@ -2501,7 +2501,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Leave msg button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 
 			giAnsweringMachineButton[0] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
@@ -2533,7 +2533,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// The hangup button
-			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 			giHangUpButton = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HANG_UP], AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BtnHangUpButtonCallback);
 			giHangUpButton->SetUserData(1);

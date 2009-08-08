@@ -477,7 +477,7 @@ void InitAimMenuBar(void)
 	UINT8	i;
 	UINT16	usPosX;
 
-	guiBottomButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiBottomButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
 
 	usPosX = BOTTOM_BUTTON_START_X;
 	for(i=0; i<BOTTOM_BUTTON_AMOUNT; i++)

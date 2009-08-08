@@ -575,7 +575,7 @@ static void CreateIMPButtons(void)
 {
   // create all the buttons global to the IMP system
 
-  giIMPButtonImage[ 0 ] = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
+  giIMPButtonImage[0] = LoadButtonImage("LAPTOP/button_3.sti", 0, 1);
 
 
 	// cancel

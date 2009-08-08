@@ -61,7 +61,7 @@ void EnterMercsNoAccount()
 	guiNoAccountImage = AddVideoObjectFromFile("LAPTOP/NoAccountBox.sti");
 
 	// Open Accouint button
-	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
+	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", 0, 1);
 	guiOpenAccountBoxButton = MakeButton(MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT], MERC_OPEN_BUTTON_X,   BtnOpenAccountBoxButtonCallback);
 	guiCancelBoxButton      = MakeButton(MercNoAccountText[MERC_NO_ACC_CANCEL],       MERC_CANCEL_BUTTON_X, BtnCancelBoxButtonCallback);
 

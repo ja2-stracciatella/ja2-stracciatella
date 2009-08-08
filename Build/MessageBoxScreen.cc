@@ -194,7 +194,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	INT16       x = gMsgBox.sX;
 	const INT16 y = gMsgBox.sY + usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
 
-	gMsgBox.iButtonImages = LoadButtonImage(style.btn_image, -1, style.btn_off, -1, style.btn_on, -1);
+	gMsgBox.iButtonImages = LoadButtonImage(style.btn_image, style.btn_off, style.btn_on);
 
 	INT16 const dx            = MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP;
 	UINT8 const font_colour   = style.font_colour;

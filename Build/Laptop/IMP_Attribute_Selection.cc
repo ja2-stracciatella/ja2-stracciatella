@@ -372,7 +372,7 @@ static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, INT32 reason);
 static void CreateIMPAttributeSelectionButtons(void)
 {
 	// the finished button
-	giIMPAttributeSelectionButtonImage[0] = LoadButtonImage("LAPTOP/button_2.sti", -1, 0, -1, 1, -1);
+	giIMPAttributeSelectionButtonImage[0] = LoadButtonImage("LAPTOP/button_2.sti", 0, 1);
 	giIMPAttributeSelectionButton[0] = CreateIconAndTextButton
 	(
 		giIMPAttributeSelectionButtonImage[0], pImpButtonText[11], FONT12ARIAL,
@@ -445,8 +445,8 @@ static void CreateAttributeSliderButtons(void)
 {
 	// Create the buttons for the attribute slider
 	// the finished button
-	giIMPAttributeSelectionSliderButtonImage[0] = LoadButtonImage("LAPTOP/AttributeArrows.sti", -1, 0, -1, 1, -1);
-	giIMPAttributeSelectionSliderButtonImage[1] = LoadButtonImage("LAPTOP/AttributeArrows.sti", -1, 3, -1, 4, -1);
+	giIMPAttributeSelectionSliderButtonImage[0] = LoadButtonImage("LAPTOP/AttributeArrows.sti", 0, 1);
+	giIMPAttributeSelectionSliderButtonImage[1] = LoadButtonImage("LAPTOP/AttributeArrows.sti", 3, 4);
 
 	for (INT32 iCounter = 0; iCounter < 20; iCounter += 2)
 	{

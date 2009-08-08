@@ -640,7 +640,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		//place the 3 accept buttons for the different forms
 
 		//The accept button image
-		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage("LAPTOP/AcceptClearBox.sti", -1, 0, -1, 1, -1);
+		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage("LAPTOP/AcceptClearBox.sti", 0, 1);
 
 		const wchar_t* const text       = InsContractText[INS_CONTRACT_ACCEPT];
 		const INT16          text_col   = INS_FONT_BTN_COLOR;

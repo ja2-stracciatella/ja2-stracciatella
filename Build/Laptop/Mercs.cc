@@ -319,7 +319,7 @@ void EnterMercs()
 	guiMercVideoPopupBackground = AddVideoObjectFromFile("LAPTOP/SpeckComWindow.sti");
 
 	// Account Box button
-	guiAccountBoxButtonImage  = LoadButtonImage("LAPTOP/SmallButtons.sti", -1,0,-1,1,-1 );
+	guiAccountBoxButtonImage = LoadButtonImage("LAPTOP/SmallButtons.sti", 0, 1);
 
 	guiAccountBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_ACCOUNT_BUTTON_X, MERC_ACCOUNT_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnAccountBoxButtonCallback);
 	guiAccountBoxButton->SetCursor(CURSOR_LAPTOP_SCREEN);

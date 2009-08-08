@@ -460,7 +460,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
-	gTalkPanel.iButtonImages = LoadButtonImage("INTERFACE/talkbox2.sti", -1, 3, -1, 4, -1);
+	gTalkPanel.iButtonImages = LoadButtonImage("INTERFACE/talkbox2.sti", 3, 4);
 
 	gTalkPanel.uiCancelButton = CreateIconAndTextButton(gTalkPanel.iButtonImages, zDialogActions, MILITARYFONT1,
 														 33, DEFAULT_SHADOW,

@@ -371,7 +371,7 @@ static void InitAimPolicyMenuBar(void)
 	if (gfAimPolicyMenuBarLoaded) return;
 
 	//Load graphic for buttons
-	guiPoliciesMenuButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiPoliciesMenuButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
 
 	usPosX = AIM_POLICY_MENU_X;
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
@@ -530,7 +530,7 @@ static void InitAgreementRegion(void)
 	gfExitingPolicesAgreeButton = FALSE;
 
 	//Load graphic for buttons
-	guiPoliciesButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiPoliciesButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
 
 	usPosX = AIM_POLICY_AGREEMENT_X;
 	for(i=0; i < 2; i++)

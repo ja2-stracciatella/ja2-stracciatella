@@ -1969,7 +1969,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile("INTERFACE/info_bil.sti");
 
 		// Create buttons for the money
-		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", -1, 1, -1, 2, -1);
+		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", 1, 2);
 		const MoneyLoc* const loc = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
 		INT32 i;
 		for (i = 0; i < MAX_ATTACHMENTS - 1; i++)
@@ -1988,7 +1988,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		if (gRemoveMoney.uiTotalAmount <   10) DisableButton(guiMoneyButtonBtn[M_10]);
 
 		// Create the Done button
-		guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, -1, 3, -1, 4, -1);
+		guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, 3, 4);
 		guiMoneyButtonBtn[i] = CreateIconAndTextButton(
 			guiMoneyDoneButtonImage, gzMoneyAmounts[i], BLOCKFONT2,
 			5, DEFAULT_SHADOW,
@@ -4563,12 +4563,12 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	menu.fAllSelected = FALSE;
 
 	//Load images for buttons
-	BUTTON_PICS* const pics  = LoadButtonImage("INTERFACE/itembox.sti",   -1, 5, -1, 10, -1);
+	BUTTON_PICS* const pics  = LoadButtonImage("INTERFACE/itembox.sti", 5, 10);
 	menu.iUpButtonImages     = pics;
-	menu.iDownButtonImages   = UseLoadedButtonImage(pics, -1, 7, -1, 12, -1);
-	menu.iAllButtonImages    = UseLoadedButtonImage(pics, -1, 6, -1, 11, -1);
-	menu.iCancelButtonImages = UseLoadedButtonImage(pics, -1, 8, -1, 13, -1);
-	menu.iOKButtonImages     = UseLoadedButtonImage(pics, -1, 4, -1,  9, -1);
+	menu.iDownButtonImages   = UseLoadedButtonImage(pics, 7, 12);
+	menu.iAllButtonImages    = UseLoadedButtonImage(pics, 6, 11);
+	menu.iCancelButtonImages = UseLoadedButtonImage(pics, 8, 13);
+	menu.iOKButtonImages     = UseLoadedButtonImage(pics, 4,  9);
 
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion(&menu.BackRegion, 532, 367, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
