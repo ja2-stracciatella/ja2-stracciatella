@@ -22,36 +22,35 @@ static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason);
 static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason);
 
 
-void CreateMessageBox(const wchar_t* wzString)
+void CreateMessageBox(wchar_t const* const msg)
 {
-	INT16 sStartX, sStartY;
+	Font  const font   = gpLargeFontType1;
+	INT16       w      = StringPixLength(msg, font) + 10;
+	INT16 const h      = 96;
+	if (w > 600) w = 600;
 
-	INT16 sPixLen = StringPixLength(wzString, gpLargeFontType1) + 10;
-	if ( sPixLen > 600 )
-		sPixLen = 600;
+	INT16 const x = (SCREEN_WIDTH  - w) / 2;
+	INT16 const y = (SCREEN_HEIGHT - h) / 2;
 
-	sStartX = (SCREEN_WIDTH  - sPixLen) / 2;
-	sStartY = (SCREEN_HEIGHT - 96)      / 2;
+	// Fake button for background with text
+	iMsgBoxBgrnd = CreateLabel(msg, font, FONT_LTKHAKI, FONT_DKKHAKI, x, y, w, h, MSYS_PRIORITY_HIGHEST - 2);
 
-	gfMessageBoxResult = FALSE;
+	INT16 const bx = x + w / 2;
+	INT16 const by = y + 58;
+	iMsgBoxOk     = QuickCreateButtonImg("EDITOR/ok.sti",     0, 1, 2, 3, 4, bx - 35, by, MSYS_PRIORITY_HIGHEST - 1, MsgBoxOkClkCallback);
+	iMsgBoxCancel = QuickCreateButtonImg("EDITOR/cancel.sti", 0, 1, 2, 3, 4, bx +  5, by, MSYS_PRIORITY_HIGHEST - 1, MsgBoxCnclClkCallback);
 
-	// Fake button for background w/ text
-	iMsgBoxBgrnd = CreateLabel(wzString, gpLargeFontType1, FONT_LTKHAKI, FONT_DKKHAKI, sStartX, sStartY, sPixLen, 96, MSYS_PRIORITY_HIGHEST - 2);
+	SGPRect msg_box_rect;
+	msg_box_rect.iLeft   = x;
+	msg_box_rect.iTop    = y;
+	msg_box_rect.iRight  = x + w;
+	msg_box_rect.iBottom = y + h;
+	RestrictMouseCursor(&msg_box_rect);
 
-	iMsgBoxOk     = QuickCreateButtonImg("EDITOR/ok.sti",     0, 1, 2, 3, 4, sStartX + (sPixLen / 2) - 35, sStartY + 58, MSYS_PRIORITY_HIGHEST - 1, MsgBoxOkClkCallback);
-	iMsgBoxCancel = QuickCreateButtonImg("EDITOR/cancel.sti", 0, 1, 2, 3, 4, sStartX + (sPixLen / 2) +  5, sStartY + 58, MSYS_PRIORITY_HIGHEST - 1, MsgBoxCnclClkCallback);
-
-	SGPRect MsgBoxRect;
-	MsgBoxRect.iLeft = sStartX;
-	MsgBoxRect.iTop = sStartY;
-	MsgBoxRect.iRight = sStartX + sPixLen;
-	MsgBoxRect.iBottom = sStartY + 96;
-
-	RestrictMouseCursor( &MsgBoxRect );
-
+	gfMessageBoxResult  = FALSE;
 	gubMessageBoxStatus = MESSAGEBOX_WAIT;
-
 }
+
 
 BOOLEAN MessageBoxHandled()
 {

@@ -12,7 +12,7 @@ enum
 extern UINT8 gubMessageBoxStatus;
 extern BOOLEAN gfMessageBoxResult;
 
-void CreateMessageBox(const wchar_t* wzString);
+void CreateMessageBox(wchar_t const* msg);
 BOOLEAN MessageBoxHandled(void);
 void RemoveMessageBox(void);
 
