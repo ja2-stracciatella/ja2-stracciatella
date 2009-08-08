@@ -3155,10 +3155,7 @@ class DialogueEventShopkeeperLockTransactionButton : public DialogueEvent
 		{
 			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 			{
-				if (lock_)
-					DisableButton(guiSKI_TransactionButton);
-				else
-					EnableButton(guiSKI_TransactionButton);
+				EnableButton(guiSKI_TransactionButton, !lock_);
 			}
 			return false;
 		}
@@ -4381,25 +4378,10 @@ static INT8 GetSlotNumberForMerc(UINT8 ubProfile)
 static void EnableDisableDealersInventoryPageButtons(void)
 {
 	//if we are on the first page, disable the page up arrow
-	if( gSelectArmsDealerInfo.ubCurrentPage <= 1 )
-	{
-		DisableButton( guiSKI_InvPageUpButton );
-	}
-	else
-	{
-		EnableButton( guiSKI_InvPageUpButton );
-	}
-
+	EnableButton(guiSKI_InvPageUpButton, gSelectArmsDealerInfo.ubCurrentPage > 1);
 
 	//if we are on the last page, disable the page down button
-	if( gSelectArmsDealerInfo.ubCurrentPage == gSelectArmsDealerInfo.ubNumberOfPages )
-	{
-		DisableButton( guiSKI_InvPageDownButton );
-	}
-	else
-	{
-		EnableButton( guiSKI_InvPageDownButton );
-	}
+	EnableButton(guiSKI_InvPageDownButton, gSelectArmsDealerInfo.ubCurrentPage != gSelectArmsDealerInfo.ubNumberOfPages);
 }
 
 
@@ -4450,20 +4432,6 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 		}
 	}
 
-/*
-//Evaluate:
-	//if there is an item present
-	if( fItemsHere )
-	{
-		EnableButton( guiSKI_EvaluateButton );
-	}
-	else
-	{
-		DisableButton( guiSKI_EvaluateButton );
-	}
-*/
-
-
 	//if there are evaluated items here
 	if( fItemEvaluated )
 	{
@@ -4487,13 +4455,9 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 			DisableButton( guiSKI_TransactionButton );
 	}
 	//else if there is
-	else if( uiArmsDealerTotalCost != 0 )
-	{
-		EnableButton( guiSKI_TransactionButton );
-	}
 	else
 	{
-		DisableButton( guiSKI_TransactionButton );
+		EnableButton(guiSKI_TransactionButton, uiArmsDealerTotalCost != 0);
 	}
 
 
@@ -5300,8 +5264,6 @@ void DeleteShopKeeperItemDescBox()
 
 	EnableDisableDealersInventoryPageButtons();
 	EnableDisableEvaluateAndTransactionButtons();
-
-//	EnableButton( guiSKI_EvaluateButton );
 
 	EnableAllDealersInventorySlots();
 	EnableAllDealersOfferSlots();

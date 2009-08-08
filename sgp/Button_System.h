@@ -229,6 +229,8 @@ void EnableButton(GUIButtonRef);
  */
 void DisableButton(GUIButtonRef);
 
+void EnableButton(GUIButtonRef, bool enable);
+
 /* Removes a button from the system's list. All memory associated with the
  * button is released.
  */

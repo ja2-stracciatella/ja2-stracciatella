@@ -565,12 +565,6 @@ static void SetButtonState(UINT const idx, bool const clicked)
 }
 
 
-static void EnableDisableButton(GUIButtonRef const b, bool const enable)
-{
-	enable ? EnableButton(b) : DisableButton(b);
-}
-
-
 static void BtnStealthModeCallback(GUI_BUTTON* btn, INT32 reason);
 static void CheckForReEvaluateDisabledINVPanelButtons(void);
 
@@ -592,13 +586,13 @@ static void UpdateSMPanel()
 		case ANIM_STAND:
 			stance_gfx = 11;
 			DisableButton(iSMPanelButtons[STANCEUP_BUTTON]);
-			EnableDisableButton(iSMPanelButtons[STANCEDOWN_BUTTON], IsValidStance(&s, ANIM_CROUCH));
+			EnableButton(iSMPanelButtons[STANCEDOWN_BUTTON], IsValidStance(&s, ANIM_CROUCH));
 			break;
 
 		case ANIM_CROUCH:
 			stance_gfx = 5;
 			EnableButton(iSMPanelButtons[STANCEUP_BUTTON]);
-			EnableDisableButton(iSMPanelButtons[STANCEDOWN_BUTTON], IsValidStance(&s, ANIM_PRONE));
+			EnableButton(iSMPanelButtons[STANCEDOWN_BUTTON], IsValidStance(&s, ANIM_PRONE));
 			break;
 
 		case ANIM_PRONE:
@@ -653,16 +647,9 @@ static void UpdateSMPanel()
 		(FindLowerLevel(&s)  && EnoughPoints(&s, GetAPsToClimbRoof(&s, TRUE),  0, FALSE)) ||
 		(FindHigherLevel(&s) && EnoughPoints(&s, GetAPsToClimbRoof(&s, FALSE), 0, FALSE)) ||
 		FindFenceJumpDirection(&s);
-	EnableDisableButton(iSMPanelButtons[CLIMB_BUTTON], enable_climb);
+	EnableButton(iSMPanelButtons[CLIMB_BUTTON], enable_climb);
 
-	if (gTacticalStatus.ubCurrentTeam != gbPlayerNum || gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
-	{
-		DisableButton(iSMPanelButtons[SM_DONE_BUTTON]);
-	}
-	else if (!gfAllDisabled)
-	{
-		EnableButton(iSMPanelButtons[SM_DONE_BUTTON]);
-	}
+	EnableButton(iSMPanelButtons[SM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == gbPlayerNum && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
 
 	SetButtonState(UPDOWN_BUTTON, gsInterfaceLevel > 0);
 
@@ -688,7 +675,7 @@ static void UpdateSMPanel()
 	else
 	{
 		bool const enable_burst = IsGunBurstCapable(&s, HANDPOS) || FindAttachment(&s.inv[HANDPOS], UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
-		EnableDisableButton(iSMPanelButtons[BURSTMODE_BUTTON], enable_burst);
+		EnableButton(iSMPanelButtons[BURSTMODE_BUTTON], enable_burst);
 		EnableButton(iSMPanelButtons[LOOK_BUTTON]);
 		EnableButton(iSMPanelButtons[UPDOWN_BUTTON]);
 		EnableButton(iSMPanelButtons[HANDCURSOR_BUTTON]);
@@ -697,7 +684,7 @@ static void UpdateSMPanel()
 	}
 
 	// CJC Dec 4 2002: or if item pickup menu is up
-	EnableDisableButton(iSMPanelButtons[SM_MAP_SCREEN_BUTTON], !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV) && !gfInItemPickupMenu);
+	EnableButton(iSMPanelButtons[SM_MAP_SCREEN_BUTTON], !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV) && !gfInItemPickupMenu);
 }
 
 
@@ -812,19 +799,10 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 				EnableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
 				if (giSMStealthButton) EnableButton(giSMStealthButton);
 
-				if ( gfDisableTacticalPanelButtons )
-				{
-					DisableButton( iSMPanelButtons[ OPTIONS_BUTTON ] );
-					DisableButton( iSMPanelButtons[ SM_DONE_BUTTON ] );
-					DisableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
-				}
-				else
-				{
-					EnableButton( iSMPanelButtons[ OPTIONS_BUTTON ] );
-					EnableButton( iSMPanelButtons[ SM_DONE_BUTTON ] );
-					EnableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
-				}
-
+				bool const enable = !gfDisableTacticalPanelButtons;
+				EnableButton(iSMPanelButtons[OPTIONS_BUTTON],       enable);
+				EnableButton(iSMPanelButtons[SM_DONE_BUTTON],       enable);
+				EnableButton(iSMPanelButtons[SM_MAP_SCREEN_BUTTON], enable);
 
 				//enable the radar map region
 				gRadarRegion.Enable();
@@ -2551,26 +2529,9 @@ void SetTEAMPanelCurrentMerc(void)
 
 static void UpdateTEAMPanel(void)
 {
-	if (gTacticalStatus.ubCurrentTeam != gbPlayerNum ||
-			gTacticalStatus.uiFlags & REALTIME ||
-			!(gTacticalStatus.uiFlags & INCOMBAT))
-	{
-		DisableButton(iTEAMPanelButtons[TEAM_DONE_BUTTON]);
-	}
-	else
-	{
-		EnableButton(iTEAMPanelButtons[TEAM_DONE_BUTTON]);
-	}
+	EnableButton(iTEAMPanelButtons[TEAM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == gbPlayerNum && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
 
-	if (gTacticalStatus.uiFlags & ENGAGED_IN_CONV)
-	{
-		DisableButton(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]);
-	}
-	else
-	{
-		EnableButton(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]);
-	}
-
+	EnableButton(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON], !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV));
 
 	if (gfDisableTacticalPanelButtons)
 	{

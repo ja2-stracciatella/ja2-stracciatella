@@ -755,15 +755,7 @@ void RenderAIMMembers()
 //	DisplayAimPopUpBox();
 
 	//check to see if the merc is dead if so disable the contact button
-	if (IsMercDead(p))
-	{
-		DisableButton( giContactButton );
-	}
-	else
-	{
-		EnableButton( giContactButton );
-	}
-
+	EnableButton(giContactButton, !IsMercDead(p));
 
 	//if we are to renbder the 'click face' text
 	if(	gfAimMemberDisplayFaceHelpText )
@@ -2710,26 +2702,13 @@ static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN const fEnable)
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if (!fEnable)
-	{
-		if (!fCreated) return;
-		fCreated = FALSE;
+	if (fCreated == fEnable) return;
+	fCreated = fEnable;
 
-		//enable buttons behind the acknowlegde button
-		for (INT8 i = 0; i < 3; ++i) EnableButton(giContractLengthButton[i]);
-		for (INT8 i = 0; i < 2; ++i) EnableButton(giBuyEquipmentButton[i]);
-		for (INT8 i = 0; i < 2; ++i) EnableButton(giAuthorizeButton[i]);
-	}
-	else
-	{
-		if (fCreated) return;
-		fCreated = TRUE;
-
-		//disable buttons behind the acknowlegde button
-		for (INT8 i = 0; i < 3; ++i) DisableButton(giContractLengthButton[i]);
-		for (INT8 i = 0; i < 2; ++i) DisableButton(giBuyEquipmentButton[i]);
-		for (INT8 i = 0; i < 2; ++i) DisableButton(giAuthorizeButton[i]);
-	}
+	// Enable/disable buttons behind the acknowlegde button
+	for (INT8 i = 0; i != 3; ++i) EnableButton(giContractLengthButton[i], fEnable);
+	for (INT8 i = 0; i != 2; ++i) EnableButton(giBuyEquipmentButton[i],   fEnable);
+	for (INT8 i = 0; i != 2; ++i) EnableButton(giAuthorizeButton[i],      fEnable);
 }
 
 

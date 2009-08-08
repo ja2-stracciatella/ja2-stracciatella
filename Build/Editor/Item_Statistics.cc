@@ -1395,10 +1395,7 @@ static void ReEvaluateAttachmentStatii(void)
 	{
 		GUIButtonRef const b = guiAttachmentButton[i];
 		if (!b || b->Clicked()) continue;
-		if (ValidItemAttachment(gpItem, g_weapon_attachment[i].attachment, TRUE))
-			EnableButton(b);
-		else
-			DisableButton(b);
+		EnableButton(b, ValidItemAttachment(gpItem, g_weapon_attachment[i].attachment, TRUE));
 	}
 }
 

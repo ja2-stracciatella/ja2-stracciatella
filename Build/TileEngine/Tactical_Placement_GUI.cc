@@ -506,6 +506,7 @@ static void RenderTacticalPlacementGUI(void)
 
 static void EnsureDoneButtonStatus(void)
 {
+	bool enable = true;
 	INT32 i;
 	//static BOOLEAN fInside = FALSE;
 	//BOOLEAN fChanged = FALSE;
@@ -513,19 +514,15 @@ static void EnsureDoneButtonStatus(void)
 	{
 		if( !gMercPlacement[ i ].fPlaced )
 		{
-			if (iTPButtons[DONE_BUTTON]->Enabled())
-			{
-				DisableButton( iTPButtons[ DONE_BUTTON ] );
-				iTPButtons[DONE_BUTTON]->SetFastHelpText(gpStrategicString[STR_TP_DISABLED_DONEHELP]);
-			}
-			return;
+			enable = false;
+			break;
 		}
 	}
-	if (!iTPButtons[DONE_BUTTON]->Enabled())
-	{ //only enable it when it is disabled, otherwise the button will stay down!
-		EnableButton( iTPButtons[ DONE_BUTTON ] );
-		iTPButtons[DONE_BUTTON]->SetFastHelpText(gpStrategicString[STR_TP_DONEHELP]);
-	}
+	GUI_BUTTON& b = *iTPButtons[DONE_BUTTON];
+	// Only enable it when it is disabled, otherwise the button will stay down
+	if (b.Enabled() == enable) return;
+	EnableButton(&b, enable);
+	b.SetFastHelpText(enable ? gpStrategicString[STR_TP_DONEHELP] : gpStrategicString[STR_TP_DISABLED_DONEHELP]);
 }
 
 

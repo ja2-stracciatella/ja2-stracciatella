@@ -2844,69 +2844,24 @@ void NpcRecordLogging(Approach const ubApproach, char const* const pStringA, ...
 
 static void EnableQDSButtons(void)
 {
-	if( gNpcListBox.sCurSelectedItem != -1 )
-	{
-		EnableButton( guiQuestDebugAddNpcToLocationButton );
-		EnableButton( guiQuestDebugStartMercTalkingButtonButton );
-		EnableButton( guiQuestDebugNPCLogButtonButton );
-		EnableButton( guiQuestDebugNPCRefreshButtonButton );
-	}
-	else
-	{
-		DisableButton( guiQuestDebugStartMercTalkingButtonButton );
-		DisableButton( guiQuestDebugAddNpcToLocationButton );
-		DisableButton( guiQuestDebugNPCLogButtonButton );
-		DisableButton( guiQuestDebugNPCRefreshButtonButton );
+	{ bool const enable = gNpcListBox.sCurSelectedItem != -1;
+		EnableButton(guiQuestDebugAddNpcToLocationButton,       enable);
+		EnableButton(guiQuestDebugStartMercTalkingButtonButton, enable);
+		EnableButton(guiQuestDebugNPCLogButtonButton,           enable);
+		EnableButton(guiQuestDebugNPCRefreshButtonButton,       enable);
 	}
 
-	if( gItemListBox.sCurSelectedItem != -1 )
-		EnableButton( guiQuestDebugAddItemToLocationButton );
-	else
-		DisableButton( guiQuestDebugAddItemToLocationButton );
+	EnableButton(guiQuestDebugAddItemToLocationButton, gItemListBox.sCurSelectedItem != -1);
 
-
-	if( gItemListBox.sCurSelectedItem != -1 && gNpcListBox.sCurSelectedItem != 0 )
-	{
-		EnableButton( guiQuestDebugGiveItemToNPCButton );
-	}
-	else
-	{
-		DisableButton( guiQuestDebugGiveItemToNPCButton );
-	}
-
+	EnableButton(guiQuestDebugGiveItemToNPCButton, gItemListBox.sCurSelectedItem != -1 && gNpcListBox.sCurSelectedItem != 0);
 
 	if( gfUseLocalNPCs )
 	{
-		if( IsMercInTheSector( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ] ) != -1 )
-		{
-			EnableButton( guiQuestDebugViewNPCInvButton );
-			EnableButton( guiQuestDebugNPCRefreshButtonButton );
-			EnableButton( guiQuestDebugAddNpcToLocationButton );
-		}
-		else
-		{
-			DisableButton( guiQuestDebugAddNpcToLocationButton );
-			DisableButton( guiQuestDebugViewNPCInvButton );
-			DisableButton( guiQuestDebugNPCRefreshButtonButton );
-		}
+		bool const enable = IsMercInTheSector(gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem]) != -1;
+		EnableButton(guiQuestDebugViewNPCInvButton,       enable);
+		EnableButton(guiQuestDebugNPCRefreshButtonButton, enable);
+		EnableButton(guiQuestDebugAddNpcToLocationButton, enable);
 	}
-/*
-	else
-	{
-		if( IsMercInTheSector( gNpcListBox.sCurSelectedItem ) != -1 )
-		{
-			EnableButton( guiQuestDebugAddNpcToLocationButton );
-			EnableButton( guiQuestDebugViewNPCInvButton );
-			EnableButton( guiQuestDebugNPCRefreshButtonButton );
-		}
-		else
-		{
-//			DisableButton( guiQuestDebugAddNpcToLocationButton );
-//			DisableButton( guiQuestDebugViewNPCInvButton );
-//			DisableButton( guiQuestDebugNPCRefreshButtonButton );
-		}
-	}
-*/
 }
 
 

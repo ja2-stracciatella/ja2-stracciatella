@@ -864,23 +864,8 @@ static void HandleIMPQuizKeyBoard(void)
 
 static void CheckAndUpdateNextPreviousIMPQuestionButtonStates(void)
 {
-	if( giCurrentPersonalityQuizQuestion >= giMaxPersonalityQuizQuestion )
-	{
-		DisableButton( giNextQuestionButton );
-	}
-	else
-	{
-		EnableButton( giNextQuestionButton );
-	}
-
-	if( giCurrentPersonalityQuizQuestion == 0 )
-	{
-		DisableButton( giPreviousQuestionButton );
-	}
-	else
-	{
-		EnableButton( giPreviousQuestionButton );
-	}
+	EnableButton(giNextQuestionButton,     giCurrentPersonalityQuizQuestion < giMaxPersonalityQuizQuestion);
+	EnableButton(giPreviousQuestionButton, giCurrentPersonalityQuizQuestion != 0);
 }
 
 
@@ -899,20 +884,6 @@ static void MoveAheadAQuestion(void)
 	}
 
 	CheckAndUpdateNextPreviousIMPQuestionButtonStates( );
-
-/*
-	EnableButton( giPreviousQuestionButton );
-
-	if( giCurrentPersonalityQuizQuestion >= giMaxPersonalityQuizQuestion )
-	{
-		DisableButton( giNextQuestionButton );
-		iCurrentAnswer = -1;
-	}
-	else
-	{
-		EnableButton( giNextQuestionButton );
-	}
-*/
 }
 
 
@@ -931,16 +902,6 @@ static void MoveBackAQuestion(void)
 	EnableButton( giNextQuestionButton );
 
 	CheckAndUpdateNextPreviousIMPQuestionButtonStates( );
-/*
-	if( giCurrentPersonalityQuizQuestion == 0 )
-	{
-		DisableButton( giPreviousQuestionButton );
-	}
-	else
-	{
-		EnableButton( giPreviousQuestionButton );
-	}
-*/
 }
 
 

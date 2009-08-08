@@ -1203,24 +1203,8 @@ static void TurnOnItemFilterMode(void)
 /*
 void UpdateLevelButtonStates( void )
 {
-
-	if( iCurrentMapSectorZ == 0 )
-	{
-		DisableButton( guiMapBorderLandRaiseButtons[ MAP_BORDER_RAISE_LEVEL ] );
-	}
-	else
-	{
-		EnableButton( guiMapBorderLandRaiseButtons[ MAP_BORDER_RAISE_LEVEL ] );
-	}
-
-	if( iCurrentMapSectorZ == 3 )
-	{
-		DisableButton( guiMapBorderLandRaiseButtons[ MAP_BORDER_LOWER_LEVEL ] );
-	}
-	else
-	{
-		EnableButton( guiMapBorderLandRaiseButtons[ MAP_BORDER_LOWER_LEVEL ] );
-	}
+	EnableButton(guiMapBorderLandRaiseButtons[MAP_BORDER_RAISE_LEVEL], iCurrentMapSectorZ != 0);
+	EnableButton(guiMapBorderLandRaiseButtons[MAP_BORDER_LOWER_LEVEL], iCurrentMapSectorZ != 3);
 }
 */
 

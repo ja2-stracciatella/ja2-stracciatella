@@ -1914,16 +1914,9 @@ static void ChangeHelpScreenSubPage(void)
 	RenderCurrentHelpScreenTextToBuffer();
 
 	//enable or disable the help screen arrow buttons
-	if( gHelpScreen.usTotalNumberOfLinesInBuffer <= HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER )
-	{
-		DisableButton( giHelpScreenScrollArrows[0] );
-		DisableButton( giHelpScreenScrollArrows[1] );
-	}
-	else
-	{
-		EnableButton( giHelpScreenScrollArrows[0] );
-		EnableButton( giHelpScreenScrollArrows[1] );
-	}
+	bool const enable = gHelpScreen.usTotalNumberOfLinesInBuffer > HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER;
+	EnableButton(giHelpScreenScrollArrows[0], enable);
+	EnableButton(giHelpScreenScrollArrows[1], enable);
 }
 
 

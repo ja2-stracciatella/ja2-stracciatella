@@ -2017,10 +2017,7 @@ static void SummaryOverrideCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		gfOverride ^= TRUE;
 		gfRenderSummary = TRUE;
-		if( gfOverride )
-			EnableButton( iSummaryButton[ SUMMARY_SAVE ] );
-		else
-			DisableButton( iSummaryButton[ SUMMARY_SAVE ] );
+		EnableButton(iSummaryButton[SUMMARY_SAVE], gfOverride);
 	}
 }
 

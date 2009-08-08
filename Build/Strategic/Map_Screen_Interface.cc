@@ -1332,14 +1332,7 @@ void UpdateCharRegionHelpText(void)
 	gMapStatusBarsRegion.SetFastHelpText(status);
 
 	// update contract button help text
-	if (s && CanExtendContractForSoldier(s))
-	{
-		EnableButton(giMapContractButton);
-	}
-	else
-	{
-		DisableButton(giMapContractButton);
-	}
+	EnableButton(giMapContractButton, s && CanExtendContractForSoldier(s));
 }
 
 

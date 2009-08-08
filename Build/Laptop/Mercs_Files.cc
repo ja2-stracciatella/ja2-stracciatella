@@ -206,22 +206,14 @@ void RenderMercsFiles()
 	//Display the mercs statistic
 	DisplayMercsStats(p);
 
-	//check to see if the merc is dead if so disable the contact button
-	if (IsMercDead(p))
-	{
-		DisableButton(guiHireButton);
-	}
-	else if (LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_VALID &&
-			LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_SUSPENDED &&
-			LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_VALID_FIRST_WARNING)
-	{
-		//if the players account is suspended, disable the button
-		DisableButton(guiHireButton);
-	}
-	else
-	{
-		EnableButton(guiHireButton);
-	}
+	bool const enable =
+		!IsMercDead &&
+		(
+			LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_VALID     ||
+			LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_SUSPENDED ||
+			LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_VALID_FIRST_WARNING
+		);
+	EnableButton(guiHireButton, enable);
 
 	//Enable or disable the buttons
 	EnableDisableMercFilesNextPreviousButton();
@@ -505,13 +497,6 @@ static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void EnableDisableMercFilesNextPreviousButton(void)
 {
-	if( gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex-1 )
-		EnableButton( guiNextButton );
-	else
-		DisableButton( guiNextButton );
-
-	if( gubCurMercIndex > 0 )
-		EnableButton( guiPrevButton );
-	else
-		DisableButton( guiPrevButton );
+	EnableButton(guiNextButton, gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex - 1);
+	EnableButton(guiPrevButton, gubCurMercIndex > 0);
 }

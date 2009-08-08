@@ -785,14 +785,7 @@ static void EnableDisableBottomButtonsAndRegions(void)
 	// this enables and disables the buttons MAP_EXIT_TO_LAPTOP, MAP_EXIT_TO_TACTICAL, and MAP_EXIT_TO_OPTIONS
 	for (ExitToWhere iExitButtonIndex = MAP_EXIT_TO_LAPTOP; iExitButtonIndex <= MAP_EXIT_TO_OPTIONS; ++iExitButtonIndex)
 	{
-		if ( AllowedToExitFromMapscreenTo( iExitButtonIndex ) )
-		{
-			EnableButton( guiMapBottomExitButtons[ iExitButtonIndex ]);
-		}
-		else
-		{
-			DisableButton( guiMapBottomExitButtons[ iExitButtonIndex ]);
-		}
+		EnableButton(guiMapBottomExitButtons[iExitButtonIndex], AllowedToExitFromMapscreenTo(iExitButtonIndex));
 	}
 
 	// enable/disable time compress buttons and region masks
@@ -806,14 +799,7 @@ static void EnableDisableBottomButtonsAndRegions(void)
 	if( fShowInventoryFlag )
 	{
 		// and an item is in the cursor
-		if (fMapInventoryItem || InKeyRingPopup() || InItemStackPopup())
-		{
-			DisableButton( giMapInvDoneButton );
-		}
-		else
-		{
-			EnableButton( giMapInvDoneButton );
-		}
+		EnableButton(giMapInvDoneButton, !fMapInventoryItem && !InKeyRingPopup() && !InItemStackPopup());
 
 		if( fShowDescriptionFlag )
 		{
@@ -833,39 +819,18 @@ static void EnableDisableTimeCompressButtons(void)
 	else
 	{
 		// disable LESS if time compression is at minimum or OFF
-		if ( !IsTimeCompressionOn() || giTimeCompressMode == TIME_COMPRESS_X0 )
-		{
-			DisableButton( guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_LESS ] );
-		}
-		else
-		{
-			EnableButton( guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_LESS] );
-		}
+		EnableButton(guiMapBottomTimeButtons[MAP_TIME_COMPRESS_LESS], IsTimeCompressionOn() && giTimeCompressMode != TIME_COMPRESS_X0);
 
 		// disable MORE if we're not paused and time compression is at maximum
 		// only disable MORE if we're not paused and time compression is at maximum
-		if ( IsTimeCompressionOn() && ( giTimeCompressMode == TIME_COMPRESS_60MINS ) )
-		{
-			DisableButton( guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_MORE ] );
-		}
-		else
-		{
-			EnableButton( guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_MORE ] );
-		}
+		EnableButton(guiMapBottomTimeButtons[MAP_TIME_COMPRESS_MORE], !IsTimeCompressionOn() || giTimeCompressMode != TIME_COMPRESS_60MINS);
 	}
 }
 
 
 void EnableDisAbleMapScreenOptionsButton( BOOLEAN fEnable )
 {
-	if( fEnable )
-	{
-		EnableButton( guiMapBottomExitButtons[ MAP_EXIT_TO_OPTIONS ] );
-	}
-	else
-	{
-		DisableButton( guiMapBottomExitButtons[ MAP_EXIT_TO_OPTIONS ] );
-	}
+	EnableButton(guiMapBottomExitButtons[MAP_EXIT_TO_OPTIONS], fEnable);
 }
 
 

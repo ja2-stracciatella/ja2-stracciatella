@@ -289,6 +289,12 @@ void DisableButton(GUIButtonRef const b)
 }
 
 
+void EnableButton(GUIButtonRef const b, bool const enable)
+{
+	enable ? EnableButton(b) : DisableButton(b);
+}
+
+
 /* Initializes the button image sub-system. This function is called by
  * InitButtonSystem.
  */

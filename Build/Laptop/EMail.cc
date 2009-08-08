@@ -2181,26 +2181,10 @@ static void HandleEmailViewerButtonStates(void)
 		return;
 	}
 
-	// turn off previous page button
-	if( giMessagePage == 0 )
-	{
-		DisableButton( giMailMessageButtons[ 0 ] );
-	}
-	else
-	{
-		EnableButton( giMailMessageButtons[ 0 ] );
-	}
-
-
-	// turn off next page button
-	if( pEmailPageInfo[ giMessagePage + 1 ].pFirstRecord == NULL )
-	{
-		DisableButton( giMailMessageButtons[ 1 ] );
-	}
-	else
-	{
-		EnableButton( giMailMessageButtons[ 1 ] );
-	}
+	// Turn on/off previous page button
+	EnableButton(giMailMessageButtons[0], giMessagePage != 0);
+	// Turn on/off next page button
+	EnableButton(giMailMessageButtons[1], pEmailPageInfo[giMessagePage + 1].pFirstRecord);
 }
 
 
@@ -2214,21 +2198,9 @@ static void CreateNextPreviousEmailPageButtons(void)
 
 static void UpdateStatusOfNextPreviousButtons(void)
 {
-
 	// set the states of the page advance buttons
-
-	DisableButton( giMailPageButtons[ 0 ]);
-	DisableButton( giMailPageButtons[ 1 ]);
-
-	if( iCurrentPage > 0 )
-	{
-		EnableButton( giMailPageButtons[ 1 ]);
-	}
-
-	if( iCurrentPage < iLastPage )
-	{
-		EnableButton( giMailPageButtons[ 0 ] );
-	}
+	EnableButton(giMailPageButtons[0], iCurrentPage < iLastPage);
+	EnableButton(giMailPageButtons[1], iCurrentPage > 0);
 }
 
 

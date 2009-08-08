@@ -868,16 +868,9 @@ static void SetPersonnelButtonStates(void)
 	const INT32 merc_count = fCurrentTeamMode ?
 		GetNumberOfMercsDeadOrAliveOnPlayersTeam() :
 		GetNumberOfPastMercsOnPlayersTeam();
-	if (merc_count <= 1)
-	{
-		DisableButton(g_personnel.prev);
-		DisableButton(g_personnel.next);
-	}
-	else
-	{
-		EnableButton(g_personnel.prev);
-		EnableButton(g_personnel.next);
-	}
+	bool const enable = merc_count > 1;
+	EnableButton(g_personnel.prev, enable);
+	EnableButton(g_personnel.next, enable);
 }
 
 

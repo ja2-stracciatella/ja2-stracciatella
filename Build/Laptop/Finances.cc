@@ -1228,31 +1228,13 @@ static void SetFinanceButtonStates(void)
 {
 	// this function will look at what page we are viewing, enable and disable buttons as needed
 
-	if( iCurrentPage == 0 )
-	{
-		// first page, disable left buttons
-		DisableButton( 	giFinanceButton[PREV_PAGE_BUTTON] );
-		DisableButton( 	giFinanceButton[FIRST_PAGE_BUTTON] );
-	}
-	else
-	{
-		// enable buttons
-		EnableButton( giFinanceButton[PREV_PAGE_BUTTON] );
-		EnableButton( giFinanceButton[FIRST_PAGE_BUTTON] );
-	}
+	bool const has_prev = iCurrentPage != 0;
+	EnableButton(giFinanceButton[PREV_PAGE_BUTTON],  has_prev);
+	EnableButton(giFinanceButton[FIRST_PAGE_BUTTON], has_prev);
 
-	if (iCurrentPage <= guiLastPageInRecordsList)
-	{
-		// enable buttons
-		EnableButton( giFinanceButton[ NEXT_PAGE_BUTTON ] );
-		EnableButton( giFinanceButton[ LAST_PAGE_BUTTON ] );
-
-	}
-	else
-	{
-    DisableButton( 	giFinanceButton[ NEXT_PAGE_BUTTON ] );
-    DisableButton( 	giFinanceButton[ LAST_PAGE_BUTTON ] );
-	}
+	bool const has_next = iCurrentPage <= guiLastPageInRecordsList;
+	EnableButton(giFinanceButton[NEXT_PAGE_BUTTON], has_next);
+	EnableButton(giFinanceButton[LAST_PAGE_BUTTON], has_next);
 }
 
 

@@ -845,23 +845,10 @@ static void HandleFileViewerButtonStates(void)
 		return;
 	}
 
-	if (giFilesPage == 0)
-	{ // turn off previous page button
-		DisableButton(giFilesPageButtons[0]);
-	}
-	else
-	{
-		EnableButton(giFilesPageButtons[0]);
-	}
-
-	if (fOnLastFilesPageFlag)
-	{ // turn off next page button
-		DisableButton(giFilesPageButtons[1]);
-	}
-	else
-	{
-		EnableButton(giFilesPageButtons[1]);
-	}
+	// Turn on/off previous page button
+	EnableButton(giFilesPageButtons[0], giFilesPage != 0);
+	// Turn on/off next page button
+	EnableButton(giFilesPageButtons[1], !fOnLastFilesPageFlag);
 }
 
 

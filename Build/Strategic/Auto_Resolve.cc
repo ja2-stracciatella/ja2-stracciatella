@@ -2101,9 +2101,9 @@ static void DetermineBandageButtonState(void)
 		help   = gzLateLocalizedString[STR_LATE_12];
 		enable = true;
 	}
-	GUI_BUTTON* const b = gpAR->iButton[BANDAGE_BUTTON];
-	enable ? EnableButton(b) : DisableButton(b);
-	b->SetFastHelpText(help);
+	GUI_BUTTON& b = *gpAR->iButton[BANDAGE_BUTTON];
+	EnableButton(&b, enable);
+	b.SetFastHelpText(help);
 }
 
 

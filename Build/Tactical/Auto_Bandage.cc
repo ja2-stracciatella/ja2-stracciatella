@@ -741,16 +741,9 @@ static void DisplayAutoBandageUpdatePanel(void)
 	iTotalPixelsHigh+= 35;
 
 	// if autobandage is complete, set the fact by enabling the done button
-	if (!fAutoBandageComplete)
-	{
-		DisableButton( iEndAutoBandageButton[ 0 ]);
-		EnableButton( iEndAutoBandageButton[ 1 ] );
-	}
-	else
-	{
-		DisableButton( iEndAutoBandageButton[ 1 ]);
-		EnableButton( iEndAutoBandageButton[ 0 ] );
-	}
+	bool const complete = fAutoBandageComplete;
+	EnableButton(iEndAutoBandageButton[0],  complete);
+	EnableButton(iEndAutoBandageButton[1], !complete);
 
 	// now make sure it goes to the screen
 	InvalidateRegion( sXPosition - 4, sYPosition - 18, ( INT16 )( sXPosition + iTotalPixelsWide + 4), ( INT16 )( sYPosition + iTotalPixelsHigh  ) );

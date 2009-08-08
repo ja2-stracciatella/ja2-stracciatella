@@ -614,20 +614,9 @@ static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 static void DisableInsuranceContractNextPreviousbuttons(void)
 {
 	//disable the next button if there is no more mercs to display
-	if (gsCurrentInsuranceMercIndex + gubNumberofDisplayedInsuranceGrids < g_n_insurable_mercs)
-	{
-		EnableButton( guiInsContractNextBackButton );
-	}
-	else
-		DisableButton( guiInsContractNextBackButton );
-
+	EnableButton(guiInsContractNextBackButton, gsCurrentInsuranceMercIndex + gubNumberofDisplayedInsuranceGrids < g_n_insurable_mercs);
 	//if we are currently displaying the first set of mercs, disable the previous button
-	if( gsCurrentInsuranceMercIndex < 3 )
-	{
-		DisableButton( guiInsContractPrevBackButton );
-	}
-	else
-		EnableButton( guiInsContractPrevBackButton );
+	EnableButton(guiInsContractPrevBackButton, gsCurrentInsuranceMercIndex >= 3);
 }
 
 
@@ -1054,14 +1043,7 @@ static void EnableDisableInsuranceContractAcceptButtons(void)
 		const SOLDIERTYPE* const s = ins->soldier;
 		if (s == NULL) continue;
 
-		if (CanSoldierExtendInsuranceContract(s))
-		{
-			EnableButton(ins->button);
-		}
-		else
-		{
-			DisableButton(ins->button);
-		}
+		EnableButton(ins->button, CanSoldierExtendInsuranceContract(s));
 	}
 }
 

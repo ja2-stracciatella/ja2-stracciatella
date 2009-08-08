@@ -1220,34 +1220,11 @@ void HandleButtonStatesWhileMapInventoryActive( void )
 	if (!fShowMapInventoryPool) return;
 
 	// first page, can't go back any
-	if( iCurrentInventoryPoolPage == 0 )
-	{
-		DisableButton( guiMapInvenButton[ 1 ] );
-	}
-	else
-	{
-		EnableButton( guiMapInvenButton[ 1 ] );
-	}
-
+	EnableButton(guiMapInvenButton[1], iCurrentInventoryPoolPage != 0);
 	// last page, go no further
-	if( iCurrentInventoryPoolPage == iLastInventoryPoolPage )
-	{
-		DisableButton( guiMapInvenButton[ 0 ] );
-	}
-	else
-	{
-		EnableButton( guiMapInvenButton[ 0 ] );
-	}
-
+	EnableButton(guiMapInvenButton[0], iCurrentInventoryPoolPage != iLastInventoryPoolPage);
 	// item picked up ..disable button
-	if (fMapInventoryItem)
-	{
-		DisableButton( guiMapInvenButton[ 2 ] );
-	}
-	else
-	{
-		EnableButton( guiMapInvenButton[ 2 ] );
-	}
+	EnableButton(guiMapInvenButton[2], !fMapInventoryItem);
 }
 
 

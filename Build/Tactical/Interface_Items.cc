@@ -4702,24 +4702,9 @@ static void SetupPickupPage(INT8 bPage)
 	if ( gItemPickupMenu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )
 	{
 		// Setup enabled/disabled buttons
-		if (bPage > 0)
-		{
-			EnableButton( gItemPickupMenu.iUpButton );
-		}
-		else
-		{
-			DisableButton( gItemPickupMenu.iUpButton );
-		}
-
+		EnableButton(gItemPickupMenu.iUpButton, bPage > 0);
 		// Setup enabled/disabled buttons
-		if (iEnd < gItemPickupMenu.ubTotalItems)
-		{
-			EnableButton( gItemPickupMenu.iDownButton );
-		}
-		else
-		{
-			DisableButton( gItemPickupMenu.iDownButton );
-		}
+		EnableButton(gItemPickupMenu.iDownButton, iEnd < gItemPickupMenu.ubTotalItems);
 	}
 	SetItemPickupMenuDirty( DIRTYLEVEL2 );
 
@@ -4986,15 +4971,7 @@ static void ItemPickupAll(GUI_BUTTON* btn, INT32 reason)
 			gItemPickupMenu.pfSelectedArray[ cnt ] = gItemPickupMenu.fAllSelected;
 		}
 
-		if ( gItemPickupMenu.fAllSelected )
-		{
-			EnableButton( gItemPickupMenu.iOKButton );
-		}
-		else
-		{
-			DisableButton( gItemPickupMenu.iOKButton );
-		}
-
+		EnableButton(gItemPickupMenu.iOKButton, gItemPickupMenu.fAllSelected);
 	}
 }
 
@@ -5075,13 +5052,14 @@ static void ItemPickMenuMouseClickCallback(MOUSE_REGION* const pRegion, INT32 co
 		selected = !selected;
 
 		// Loop through all and set /unset OK
+		bool enable = false;
 		for (UINT8 i = 0; i < gItemPickupMenu.ubTotalItems; ++i)
 		{
 			if (!gItemPickupMenu.pfSelectedArray[i]) continue;
-			EnableButton(gItemPickupMenu.iOKButton);
-			return;
+			enable = true;
+			break;
 		}
-		DisableButton(gItemPickupMenu.iOKButton);
+		EnableButton(gItemPickupMenu.iOKButton, enable);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{

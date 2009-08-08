@@ -691,24 +691,8 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 // look at what page we are viewing, enable and disable buttons as needed
 static void SetHistoryButtonStates(void)
 {
-	if (iCurrentHistoryPage == 1)
-	{
-		// first page, disable left buttons
-		DisableButton(giHistoryButton[PREV_PAGE_BUTTON]);
-	}
-	else
-	{
-		EnableButton(giHistoryButton[PREV_PAGE_BUTTON]);
-	}
-
-	if (iCurrentHistoryPage < GetNumberOfHistoryPages())
-	{
-		EnableButton(giHistoryButton[NEXT_PAGE_BUTTON]);
-	}
-	else
-	{
-    DisableButton(giHistoryButton[NEXT_PAGE_BUTTON]);
-	}
+	EnableButton(giHistoryButton[PREV_PAGE_BUTTON], iCurrentHistoryPage != 1);
+	EnableButton(giHistoryButton[NEXT_PAGE_BUTTON], iCurrentHistoryPage < GetNumberOfHistoryPages());
 }
 
 

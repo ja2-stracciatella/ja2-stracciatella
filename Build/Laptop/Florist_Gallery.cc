@@ -256,10 +256,7 @@ static void InitFlowerButtons(void)
 	guiFloralGalleryButton[0]->SpecifyText(text);
 
 	//if it is the last page disable the next button
-	if( gubCurFlowerIndex == FLOR_GALLERY_NUMBER_FLORAL_IMAGES-1 )
-		DisableButton( guiFloralGalleryButton[1] );
-	else
-		EnableButton( guiFloralGalleryButton[1] );
+	EnableButton(guiFloralGalleryButton[1], gubCurFlowerIndex != FLOR_GALLERY_NUMBER_FLORAL_IMAGES - 1);
 }
 
 

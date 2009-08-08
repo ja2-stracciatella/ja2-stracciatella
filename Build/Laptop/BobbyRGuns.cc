@@ -1348,37 +1348,10 @@ static UINT32 CalculateTotalPurchasePrice(void)
 static void DisableBobbyRButtons(void)
 {
 	//if it is the last page, disable the next page button
-	if( gubNumPages == 0 )
-		DisableButton( guiBobbyRNextPage );
-	else
-	{
-		if( gubCurPage >= gubNumPages-1 )
-			DisableButton( guiBobbyRNextPage );
-		else
-			EnableButton( guiBobbyRNextPage );
-	}
-
+	EnableButton(guiBobbyRNextPage, gubNumPages != 0 && gubCurPage < gubNumPages - 1);
 
 	// if it is the first page, disable the prev page buitton
-	if( gubCurPage == 0 )
-		DisableButton( guiBobbyRPreviousPage );
-	else
-		EnableButton( guiBobbyRPreviousPage );
-
-/*
-	//if it is the last page, disable the next page button
-	if( !(gusCurWeaponIndex < (gusLastItemIndex - BOBBYR_NUM_WEAPONS_ON_PAGE) ) )
-		DisableButton( guiBobbyRNextPage );
-	else
-		EnableButton( guiBobbyRNextPage );
-
-
-	// if it is the first page, disable the prev page buitton
-	if( (gusCurWeaponIndex == gusFirstItemIndex ) )
-		DisableButton( guiBobbyRPreviousPage );
-	else
-		EnableButton( guiBobbyRPreviousPage );
-*/
+	EnableButton(guiBobbyRPreviousPage, gubCurPage != 0);
 }
 
 

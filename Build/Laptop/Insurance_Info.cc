@@ -397,15 +397,8 @@ static void DisplayCancelationPagePage(void)
 
 static void DisableArrowButtonsIfOnLastOrFirstPage(void)
 {
-	if( gubCurrentInsInfoSubPage == INS_INFO_INFO_TOC)
-		DisableButton( guiInsPrevBackButton);
-	else
-		EnableButton( guiInsPrevBackButton );
-
-	if( gubCurrentInsInfoSubPage == INS_INFO_LAST_PAGE - 1 )
-		DisableButton( guiInsNextBackButton);
-	else
-		EnableButton( guiInsNextBackButton );
+	EnableButton(guiInsPrevBackButton, gubCurrentInsInfoSubPage != INS_INFO_INFO_TOC);
+	EnableButton(guiInsNextBackButton, gubCurrentInsInfoSubPage != INS_INFO_LAST_PAGE - 1);
 }
 
 

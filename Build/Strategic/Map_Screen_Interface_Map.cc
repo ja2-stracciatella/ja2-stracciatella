@@ -4479,12 +4479,6 @@ static void DrawTownMilitiaForcesOnMap(void)
 }
 
 
-static void EnableDisableButton(GUIButtonRef const b, bool const enable)
-{
-	enable ? EnableButton(b) : DisableButton(b);
-}
-
-
 static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons()
 {
 	if (!fMilitiaMapButtonsCreated)
@@ -4499,10 +4493,10 @@ static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons()
 	INT32      const  n_green     = si.ubNumberOfCivsAtLevel[GREEN_MILITIA]   + sGreensOnCursor;
 	INT32      const  n_regular   = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA] + sRegularsOnCursor;
 	INT32      const  n_elite     = si.ubNumberOfCivsAtLevel[ELITE_MILITIA]   + sElitesOnCursor;
-	EnableDisableButton(giMapMilitiaButton[4], sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor == 0); // Done
-	EnableDisableButton(giMapMilitiaButton[0], n_green   != 0); // greens button
-	EnableDisableButton(giMapMilitiaButton[1], n_regular != 0); // regulars button
-	EnableDisableButton(giMapMilitiaButton[2], n_elite   != 0); // elites button
+	EnableButton(giMapMilitiaButton[4], sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor == 0); // Done
+	EnableButton(giMapMilitiaButton[0], n_green   != 0); // greens button
+	EnableButton(giMapMilitiaButton[1], n_regular != 0); // regulars button
+	EnableButton(giMapMilitiaButton[2], n_elite   != 0); // elites button
 }
 
 

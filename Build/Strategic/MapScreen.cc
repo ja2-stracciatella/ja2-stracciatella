@@ -6904,19 +6904,13 @@ static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void)
 	else
 	{
 		// standard checks
-		if (fShowDescriptionFlag                                               ||
-				GetNumberOfPeopleInCharacterList() < 2                             ||
-				CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(s) ||
-				CharacterIsInTransitAndHasItemPickedUp(s))
-		{
-			DisableButton(giCharInfoButton[0]);
-			DisableButton(giCharInfoButton[1]);
-		}
-		else
-		{
-			EnableButton(giCharInfoButton[0]);
-			EnableButton(giCharInfoButton[1]);
-		}
+		bool const enable =
+			!fShowDescriptionFlag                                               &&
+			GetNumberOfPeopleInCharacterList() >= 2                             &&
+			!CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(s) &&
+			!CharacterIsInTransitAndHasItemPickedUp(s);
+		EnableButton(giCharInfoButton[0], enable);
+		EnableButton(giCharInfoButton[1], enable);
 	}
 }
 

@@ -444,14 +444,7 @@ static void EnterSaveLoadScreen()
 		}
 	}
 
-	if (gbSelectedSaveLocation == -1)
-	{
-		DisableButton(guiSlgSaveLoadBtn);
-	}
-	else
-	{
-		EnableButton(guiSlgSaveLoadBtn);
-	}
+	EnableButton(guiSlgSaveLoadBtn, gbSelectedSaveLocation != -1);
 
 	RenderSaveLoadScreen();
 
