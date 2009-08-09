@@ -414,7 +414,7 @@ void HandleDialogue()
 		if (f.uiFlags & FACE_TRIGGER_PREBATTLE_INT)
 		{
 			UnLockPauseState();
-			InitPreBattleInterface(f.u.initiating_battle.group, TRUE);
+			InitPreBattleInterface(f.u.initiating_battle.group, true);
 			//Reset flag!
 			f.uiFlags &= ~FACE_TRIGGER_PREBATTLE_INT;
 		}

@@ -218,246 +218,230 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason);
 static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
+void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi)
 {
-	UINT8 ubGroupID = 0;
-	UINT8 ubNumStationaryEnemies = 0;
-	UINT8 ubNumMobileEnemies = 0;
-	UINT8 ubNumMercs;
-	BOOLEAN fUsePluralVersion = FALSE;
-	INT8	bBestExpLevel = 0;
-	BOOLEAN fRetreatAnOption = TRUE;
-	SECTORINFO *pSector;
-
-
 	// ARM: Feb01/98 - Cancel out of mapscreen movement plotting if PBI subscreen is coming up
 	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
-		AbortMovementPlottingMode( );
+		AbortMovementPlottingMode();
 	}
 
-	if( gfPreBattleInterfaceActive )
-		return;
+	if (gfPreBattleInterfaceActive) return;
 
-	gfPersistantPBI = fPersistantPBI;
-
-	if( gfPersistantPBI )
+	UINT8 x;
+	UINT8 y;
+	UINT8 z;
+	gfPersistantPBI = persistent_pbi;
+	if (persistent_pbi)
 	{
 		gfBlitBattleSectorLocator = TRUE;
 		gfBlinkHeader = FALSE;
 
-		#ifdef JA2BETAVERSION
-			if( pBattleGroup )
-			{
-				ValidateAndCorrectInBattleCounters( pBattleGroup );
-			}
-		#endif
+#ifdef JA2BETAVERSION
+		if (battle_group) ValidateAndCorrectInBattleCounters(battle_group);
+#endif
 
 		//	InitializeTacticalStatusAtBattleStart();
 		// CJC, Oct 5 98: this is all we should need from InitializeTacticalStatusAtBattleStart()
-		if( gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE && gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE )
+		if (gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE        &&
+				gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE &&
+				!CheckFact(FACT_FIRST_BATTLE_FOUGHT, 0))
 		{
-			if (!CheckFact(FACT_FIRST_BATTLE_FOUGHT, 0))
-			{
-				SetFactTrue( FACT_FIRST_BATTLE_BEING_FOUGHT );
-			}
+			SetFactTrue(FACT_FIRST_BATTLE_BEING_FOUGHT);
 		}
 
-		//If we are currently in the AI Viewer development utility, then remove it first.  It automatically
-		//returns to the mapscreen upon removal, which is where we want to go.
-		#ifdef JA2BETAVERSION
-			if( guiCurrentScreen == AIVIEWER_SCREEN )
-			{
-				gfExitViewer = TRUE;
-				gpBattleGroup = pBattleGroup;
-				gfEnteringMapScreen = TRUE;
-				gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
-				gfUsePersistantPBI = TRUE;
-				return;
-			}
-		#endif
-
-		// ATE: Added check for fPersistantPBI = TRUE if pBattleGroup == NULL
-		// Searched code and saw that this condition only happens for creatures
-			// fixing a bug
-		//if( guiCurrentScreen == GAME_SCREEN && pBattleGroup )
-		if( guiCurrentScreen == GAME_SCREEN && ( pBattleGroup || fPersistantPBI ) )
+#ifdef JA2BETAVERSION
+		/* If we are currently in the AI Viewer development utility, then remove it
+		 * first. It automatically returns to the mapscreen upon removal, which is
+		 * where we want to go. */
+		if (guiCurrentScreen == AIVIEWER_SCREEN)
 		{
-			gpBattleGroup = pBattleGroup;
-			gfEnteringMapScreen = TRUE;
+			gfExitViewer                                 = TRUE;
+			gpBattleGroup                                = battle_group;
+			gfEnteringMapScreen                          = TRUE;
 			gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
-			gfUsePersistantPBI = TRUE;
+			gfUsePersistantPBI                           = TRUE;
+			return;
+		}
+#endif
+
+		// ATE: Added check for persistent_pbi if !battle_group
+		// Searched code and saw that this condition only happens for creatures
+		if (guiCurrentScreen == GAME_SCREEN && (battle_group || persistent_pbi))
+		{
+			gpBattleGroup                                = battle_group;
+			gfEnteringMapScreen                          = TRUE;
+			gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
+			gfUsePersistantPBI                           = TRUE;
 			return;
 		}
 
-		if( gfTacticalTraversal && (pBattleGroup == gpTacticalTraversalGroup || gbWorldSectorZ > 0) )
+		if (gfTacticalTraversal && (battle_group == gpTacticalTraversalGroup || gbWorldSectorZ > 0))
 		{
 			return;
 		}
 
-		// reset the help text for mouse regions
+		// Reset the help text for mouse regions
 		gMapStatusBarsRegion.SetFastHelpText(L"");
 
 		gfDisplayPotentialRetreatPaths = FALSE;
 
-		gpBattleGroup = pBattleGroup;
+		gpBattleGroup = battle_group;
 
-		//calc sector values
-		if( gpBattleGroup )
+		// Calc sector values
+		if (battle_group)
 		{
-			gubPBSectorX = gpBattleGroup->ubSectorX;
-			gubPBSectorY = gpBattleGroup->ubSectorY;
-			gubPBSectorZ = gpBattleGroup->ubSectorZ;
-
+			x = battle_group->ubSectorX;
+			y = battle_group->ubSectorY;
+			z = battle_group->ubSectorZ;
 			fMapPanelDirty = TRUE;
 		}
 		else
 		{
-			gubPBSectorX = (UINT8)SECTORX( gubSectorIDOfCreatureAttack );
-			gubPBSectorY = (UINT8)SECTORY( gubSectorIDOfCreatureAttack );
-			gubPBSectorZ = 0;
+			x = SECTORX(gubSectorIDOfCreatureAttack);
+			y = SECTORY(gubSectorIDOfCreatureAttack);
+			z = 0;
 		}
+		gubPBSectorX = x;
+		gubPBSectorY = y;
+		gubPBSectorZ = z;
 	}
 	else
-	{ //calculate the non-persistant situation
+	{ // Calculate the non-persistent situation
 		gfBlinkHeader = TRUE;
+		x = gubPBSectorX;
+		y = gubPBSectorY;
+		z = gubPBSectorZ;
 
-		if( HostileCiviliansPresent() )
-		{ //There are hostile civilians, so no autoresolve allowed.
+		if (HostileCiviliansPresent())
+		{ // There are hostile civilians, so no autoresolve allowed.
 			gubExplicitEnemyEncounterCode = HOSTILE_CIVILIANS_CODE;
 		}
-		else if( HostileBloodcatsPresent() )
-		{ //There are bloodcats in the sector, so no autoresolve allowed
+		else if (HostileBloodcatsPresent())
+		{ // There are bloodcats in the sector, so no autoresolve allowed
 			gubExplicitEnemyEncounterCode = HOSTILE_BLOODCATS_CODE;
 		}
-		else if( gbWorldSectorZ )
-		{ //We are underground, so no autoresolve allowed
-			pSector = &SectorInfo[ SECTOR( gubPBSectorX, gubPBSectorY ) ];
-			if( pSector->ubCreaturesInBattle )
+		else if (gbWorldSectorZ != 0)
+		{ // We are underground, so no autoresolve allowed
+			SECTORINFO const& sector = SectorInfo[SECTOR(x, y)]; // XXX Why check surface info when underground?
+			if (sector.ubCreaturesInBattle != 0)
 			{
 				gubExplicitEnemyEncounterCode = FIGHTING_CREATURES_CODE;
 			}
-			else if( pSector->ubAdminsInBattle || pSector->ubTroopsInBattle || pSector->ubElitesInBattle )
+			else if (sector.ubAdminsInBattle != 0 || sector.ubTroopsInBattle != 0 || sector.ubElitesInBattle != 0)
 			{
 				gubExplicitEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
 			}
 		}
-		else if( gubEnemyEncounterCode == ENTERING_ENEMY_SECTOR_CODE ||
-						 gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE ||
-						 gubEnemyEncounterCode == ENEMY_AMBUSH_CODE ||
-						 gubEnemyEncounterCode == ENEMY_INVASION_CODE ||
-						 gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
-						 gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
-						 gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
-		{ //use same code
+		else if (gubEnemyEncounterCode == ENTERING_ENEMY_SECTOR_CODE ||
+				gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE            ||
+				gubEnemyEncounterCode == ENEMY_AMBUSH_CODE               ||
+				gubEnemyEncounterCode == ENEMY_INVASION_CODE             ||
+				gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE            ||
+				gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE     ||
+				gubEnemyEncounterCode == CREATURE_ATTACK_CODE)
+		{ // Use same code
 			gubExplicitEnemyEncounterCode = gubEnemyEncounterCode;
 		}
 		else
 		{
-			#ifdef JA2BETAVERSION
-				DoScreenIndependantMessageBox( L"Can't determine valid reason for battle indicator.  Please try to provide information as to when and why this indicator first appeared and send whatever files that may help.", MSG_BOX_FLAG_OK, NULL );
-			#endif
+#ifdef JA2BETAVERSION
+			DoScreenIndependantMessageBox(L"Can't determine valid reason for battle indicator. Please try to provide information as to when and why this indicator first appeared and send whatever files that may help.", MSG_BOX_FLAG_OK, 0);
+#endif
 			gfBlitBattleSectorLocator = FALSE;
 			return;
 		}
 	}
 
 	fMapScreenBottomDirty = TRUE;
-	ChangeSelectedMapSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
+	ChangeSelectedMapSector(x, y, z);
 	RenderMapScreenInterfaceBottom();
 
-	//If we are currently in tactical, then set the flag to automatically bring up the mapscreen.
-	if( guiCurrentScreen == GAME_SCREEN )
-	{
-		gfEnteringMapScreen = TRUE;
-	}
+	/* If we are currently in tactical, then set the flag to automatically bring
+	 * up the mapscreen. */
+	if (guiCurrentScreen == GAME_SCREEN) gfEnteringMapScreen = TRUE;
 
-	if( !fShowTeamFlag )
-	{
-		ToggleShowTeamsMode();
-	}
+	if (!fShowTeamFlag) ToggleShowTeamsMode();
 
-	//Define the blanket region to cover all of the other regions used underneath the panel.
-	MSYS_DefineRegion( &PBInterfaceBlanket, 0, 0, 261, 359, MSYS_PRIORITY_HIGHEST - 5, 0, 0, 0 );
+	/* Define the blanket region to cover all of the other regions used underneath
+	 * the panel. */
+	MSYS_DefineRegion(&PBInterfaceBlanket, 0, 0, 261, 359, MSYS_PRIORITY_HIGHEST - 5, 0, 0, 0);
 
-	//Create the panel
-	const char* const ImageFile = GetMLGFilename(MLG_PREBATTLEPANEL);
-	uiInterfaceImages = AddVideoObjectFromFile(ImageFile);
+	// Create the panel
+	char const* const panel_file = GetMLGFilename(MLG_PREBATTLEPANEL);
+	uiInterfaceImages = AddVideoObjectFromFile(panel_file);
 
-	//Create the 3 buttons
+	// Create the 3 buttons
 	iPBButtonImage[0] = LoadButtonImage("INTERFACE/PreBattleButton.sti", 0, 1);
 	iPBButtonImage[1] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
 	iPBButtonImage[2] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
-
 	MakeButton(0,  27, gpStrategicString[STR_PB_AUTORESOLVE_BTN],  AutoResolveBattleCallback);
 	MakeButton(1,  98, gpStrategicString[STR_PB_GOTOSECTOR_BTN],   GoToSectorCallback);
 	MakeButton(2, 169, gpStrategicString[STR_PB_RETREATMERCS_BTN], RetreatMercsCallback);
 
 	gfPBButtonsHidden = TRUE;
 
-	// ARM: this must now be set before any calls utilizing the GetCurrentBattleSectorXYZ() function
+	/* ARM: This must now be set before any calls utilizing the
+	 * GetCurrentBattleSectorXYZ() function */
 	gfPreBattleInterfaceActive = TRUE;
-
 
 	CheckForRobotAndIfItsControlled();
 
-	// wake everyone up
-	WakeUpAllMercsInSectorUnderAttack( );
+	WakeUpAllMercsInSectorUnderAttack();
 
-	//Count the number of players involved or not involved in this battle
+	// Count the number of players involved or not involved in this battle
 	guiNumUninvolved = 0;
-	guiNumInvolved = 0;
+	guiNumInvolved   = 0;
+	UINT8 group_id           = 0;
+	INT8  best_exp_level     = 0;
+	bool  use_plural_version = false;
 	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE const& s = *i;
-		if (s.bLife != 0 && !(s.uiStatusFlags & SOLDIER_VEHICLE))
+		if (s.bLife == 0 || s.uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+		if (PlayerMercInvolvedInThisCombat(s))
 		{
-			if (PlayerMercInvolvedInThisCombat(s))
-			{
-				// involved
-				if( !ubGroupID )
-				{ //Record the first groupID.  If there are more than one group in this battle, we
-					//can detect it by comparing the first value with future values.  If we do, then
-					//we set a flag which determines whether to use the singular help text or plural version
-					//for the retreat button.
-					ubGroupID = s.ubGroupID;
-					if( !gpBattleGroup )
-						gpBattleGroup = GetGroup( ubGroupID );
-					if (bBestExpLevel > s.bExpLevel) bBestExpLevel = s.bExpLevel;
-					if (s.ubPrevSectorID == 255)
-					{ //Not able to retreat (calculate it for group)
-						GROUP *pTempGroup;
-						pTempGroup = GetGroup( ubGroupID );
-						Assert( pTempGroup );
-						CalculateGroupRetreatSector( pTempGroup );
-					}
+			if (group_id == 0)
+			{ /* Record the first groupID. If there is more than one group in this
+				 * battle, we can detect it by comparing the first value with future
+				 * values. If we do, then we set a flag which determines whether to use
+				 * the singular help text or plural version for the retreat button. */
+				group_id = s.ubGroupID;
+				if (!gpBattleGroup) gpBattleGroup = GetGroup(group_id);
+				if (best_exp_level > s.bExpLevel) best_exp_level = s.bExpLevel; // XXX Determines minimum, not maximum, i.e. stays at 0
+				if (s.ubPrevSectorID == 255)
+				{ //Not able to retreat (calculate it for group)
+					GROUP* const g = GetGroup(group_id);
+					Assert(g);
+					CalculateGroupRetreatSector(g);
 				}
-				else if (ubGroupID != s.ubGroupID)
-				{
-					fUsePluralVersion = TRUE;
-				}
-				guiNumInvolved ++;
 			}
-			else
-				guiNumUninvolved++;
+			else if (group_id != s.ubGroupID)
+			{
+				use_plural_version = true;
+			}
+			++guiNumInvolved;
+		}
+		else
+		{
+			++guiNumUninvolved;
 		}
 	}
 
-	ubNumStationaryEnemies = NumStationaryEnemiesInSector( gubPBSectorX, gubPBSectorY );
-	ubNumMobileEnemies = NumMobileEnemiesInSector( gubPBSectorX, gubPBSectorY );
-	ubNumMercs = PlayerMercsInSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
-
-	if( gfPersistantPBI )
+	if (gfPersistantPBI)
 	{
-		if( !pBattleGroup )
-		{ //creature's attacking!
+		if (!battle_group)
+		{ // Creatures are attacking
 			gubEnemyEncounterCode = CREATURE_ATTACK_CODE;
 		}
-		else if( gpBattleGroup->fPlayer )
+		else if (gpBattleGroup->fPlayer)
 		{
-			if( gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE && gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE )
+			if (gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE &&
+					gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE)
 			{
-				if( ubNumStationaryEnemies )
+				UINT8 const n_stationary_enemies = NumStationaryEnemiesInSector(x, y);
+				if (n_stationary_enemies != 0)
 				{
 					gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
 				}
@@ -466,38 +450,34 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 					gubEnemyEncounterCode = ENEMY_ENCOUNTER_CODE;
 
 					//Don't consider ambushes until the player has reached 25% (normal) progress
-					if( gfHighPotentialForAmbush )
+					if (gfHighPotentialForAmbush)
 					{
-						if( Chance( 90 ) )
+						if (Chance(90)) gubEnemyEncounterCode = ENEMY_AMBUSH_CODE;
+					}
+					else
+					{
+						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(x, y);
+						UINT8 const n_mercs          = PlayerMercsInSector(     x, y, z);
+						if (gfAutoAmbush && n_mobile_enemies > n_mercs)
 						{
 							gubEnemyEncounterCode = ENEMY_AMBUSH_CODE;
 						}
-					}
-					else if( gfAutoAmbush && ubNumMobileEnemies > ubNumMercs )
-					{
-						gubEnemyEncounterCode = ENEMY_AMBUSH_CODE;
-					}
-					else if( WhatPlayerKnowsAboutEnemiesInSector( gubPBSectorX, gubPBSectorY ) == KNOWS_NOTHING &&
-									 CurrentPlayerProgressPercentage() >= 30 - gGameOptions.ubDifficultyLevel * 5 )
-					{ //if the enemy outnumbers the players, then there is a small chance of the enemies ambushing the group
-						if( ubNumMobileEnemies > ubNumMercs )
-						{
-							INT32 iChance;
-							pSector = &SectorInfo[ SECTOR( gubPBSectorX, gubPBSectorY ) ];
-							if( !(pSector->uiFlags & SF_ALREADY_VISITED) )
+						else if (WhatPlayerKnowsAboutEnemiesInSector(x, y) == KNOWS_NOTHING &&
+								CurrentPlayerProgressPercentage() >= 30 - gGameOptions.ubDifficultyLevel * 5)
+						{ /* If the enemy outnumbers the players, then there is a small chance
+							 * of the enemies ambushing the group */
+							if (n_mobile_enemies > n_mercs)
 							{
-								iChance = (UINT8)( 4 - bBestExpLevel + 2 * gGameOptions.ubDifficultyLevel + CurrentPlayerProgressPercentage() / 10 );
-								if( pSector->uiFlags & SF_ENEMY_AMBUSH_LOCATION )
+								SECTORINFO const& sector = SectorInfo[SECTOR(x, y)];
+								if (!(sector.uiFlags & SF_ALREADY_VISITED))
 								{
-									iChance += 20;
-								}
-								if( gfCantRetreatInPBI )
-								{
-									iChance += 20;
-								}
-								if( (INT32)PreRandom( 100 ) < iChance )
-								{
-									gubEnemyEncounterCode = ENEMY_AMBUSH_CODE;
+									INT32 chance = (UINT8)(4 - best_exp_level + 2 * gGameOptions.ubDifficultyLevel + CurrentPlayerProgressPercentage() / 10);
+									if (sector.uiFlags & SF_ENEMY_AMBUSH_LOCATION) chance += 20;
+									if (gfCantRetreatInPBI)                        chance += 20;
+									if ((INT32)PreRandom(100) < chance)
+									{
+										gubEnemyEncounterCode = ENEMY_AMBUSH_CODE;
+									}
 								}
 							}
 						}
@@ -506,21 +486,22 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 			}
 		}
 		else
-		{ //Are enemies invading a town, or just encountered the player.
-			if( GetTownIdForSector( gubPBSectorX, gubPBSectorY ) )
+		{ // Are enemies invading a town, or just encountered the player.
+			if (GetTownIdForSector(x, y))
 			{
 				gubEnemyEncounterCode = ENEMY_INVASION_CODE;
 			}
 			else
 			{
-				switch( SECTOR( gubPBSectorX, gubPBSectorY ) )
+				switch (SECTOR(x, y))
 				{
 					case SEC_D2:
 					case SEC_D15:
 					case SEC_G8:
-						//SAM sites not in towns will also be considered to be important
+						// SAM sites not in towns will also be considered to be important
 						gubEnemyEncounterCode = ENEMY_INVASION_CODE;
 						break;
+
 					default:
 						gubEnemyEncounterCode = ENEMY_ENCOUNTER_CODE;
 						break;
@@ -531,133 +512,118 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 	gfHighPotentialForAmbush = FALSE;
 
-	if( gfAutomaticallyStartAutoResolve )
+	if (gfAutomaticallyStartAutoResolve)
 	{
-		DisableButton( iPBButton[1] );
-		DisableButton( iPBButton[2] );
+		DisableButton(iPBButton[1]);
+		DisableButton(iPBButton[2]);
 	}
 
 	gfRenderPBInterface = TRUE;
-	MSYS_SetCurrentCursor( CURSOR_NORMAL );
+	MSYS_SetCurrentCursor(CURSOR_NORMAL);
 	StopTimeCompression();
 
-	// hide all visible boxes
-	HideAllBoxes( );
+	HideAllBoxes();
 	fShowAssignmentMenu = FALSE;
-	fShowContractMenu = FALSE;
+	fShowContractMenu   = FALSE;
 	DisableTeamInfoPanels();
 	if (giMapContractButton) giMapContractButton->Hide();
 	if (giCharInfoButton[0]) giCharInfoButton[0]->Hide();
 	if (giCharInfoButton[1]) giCharInfoButton[1]->Hide();
 
-	if( gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE )
-	{ //we know how many enemies are here, so until we leave the sector, we will continue to display the value.
-		//the flag will get cleared when time advances after the fEnemyInSector flag is clear.
-		pSector = &SectorInfo[ SECTOR( gubPBSectorX, gubPBSectorY ) ];
+	if (gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE)
+	{ /* We know how many enemies are here, so until we leave the sector, we will
+		 * continue to display the value. The flag will get cleared when time
+		 * advances after the fEnemyInSector flag is clear. */
+		SECTORINFO& sector = SectorInfo[SECTOR(x, y)];
 
-		// ALWAYS use these 2 statements together, without setting the boolean, the flag will never be cleaned up!
-		pSector->uiFlags |= SF_PLAYER_KNOWS_ENEMIES_ARE_HERE;
+		/* Always use these 2 statements together. Without setting the boolean, the
+		 * flag will never be cleaned up */
+		sector.uiFlags |= SF_PLAYER_KNOWS_ENEMIES_ARE_HERE;
 		gfResetAllPlayerKnowsEnemiesFlags = TRUE;
 	}
 
-	//Set up fast help for buttons depending on the state of the button, and disable buttons
-	//when necessary.
-	if( gfPersistantPBI )
+	/* Set up fast help for buttons depending on the state of the button, and
+	 * disable buttons when necessary. */
+	if (gfPersistantPBI)
 	{
 		wchar_t const* autoresolve_help;
-		if( gubEnemyEncounterCode == ENTERING_ENEMY_SECTOR_CODE ||
-				gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
-		{ //Don't allow autoresolve for player initiated invasion battle types
-			DisableButton( iPBButton[ 0 ] );
-			autoresolve_help = gpStrategicString[STR_PB_DISABLED_AUTORESOLVE_FASTHELP];
-		}
-		else if( gubEnemyEncounterCode == ENEMY_AMBUSH_CODE ||
-						 gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
-		{ //Don't allow autoresolve for ambushes
-			DisableButton( iPBButton[ 0 ] );
-			autoresolve_help = gzNonPersistantPBIText[3];
-		}
-		else
+		switch (gubEnemyEncounterCode)
 		{
-			autoresolve_help = gpStrategicString[STR_PB_AUTORESOLVE_FASTHELP];
+			case ENTERING_ENEMY_SECTOR_CODE:
+			case ENTERING_BLOODCAT_LAIR_CODE:
+				// Don't allow autoresolve for player initiated invasion battle types
+				DisableButton(iPBButton[0]);
+				autoresolve_help = gpStrategicString[STR_PB_DISABLED_AUTORESOLVE_FASTHELP];
+				break;
+
+			case ENEMY_AMBUSH_CODE:
+			case BLOODCAT_AMBUSH_CODE:
+				// Don't allow autoresolve for ambushes
+				DisableButton(iPBButton[0]);
+				autoresolve_help = gzNonPersistantPBIText[3];
+				break;
+
+			default:
+				autoresolve_help = gpStrategicString[STR_PB_AUTORESOLVE_FASTHELP];
+				break;
 		}
 		iPBButton[0]->SetFastHelpText(autoresolve_help);
 		iPBButton[1]->SetFastHelpText(gpStrategicString[STR_PB_GOTOSECTOR_FASTHELP]);
-		if( gfAutomaticallyStartAutoResolve )
-		{
-			DisableButton( iPBButton[ 1 ] );
-		}
-		if( gfCantRetreatInPBI )
-		{
-			gfCantRetreatInPBI = FALSE;
-			fRetreatAnOption = FALSE;
-		}
+		if (gfAutomaticallyStartAutoResolve) DisableButton(iPBButton[1]);
 
 		wchar_t const* retreat_help;
-		if( gfAutomaticallyStartAutoResolve || !fRetreatAnOption ||
-				gubEnemyEncounterCode == ENEMY_AMBUSH_CODE ||
+		if (gfAutomaticallyStartAutoResolve               ||
+				gfCantRetreatInPBI                            ||
+				gubEnemyEncounterCode == ENEMY_AMBUSH_CODE    ||
 				gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
-				gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
+				gubEnemyEncounterCode == CREATURE_ATTACK_CODE)
 		{
-			DisableButton( iPBButton[ 2 ] );
+			gfCantRetreatInPBI = FALSE;
+			DisableButton(iPBButton[2]);
 			retreat_help = gzNonPersistantPBIText[9];
 		}
 		else
 		{
-			if( !fUsePluralVersion )
-			{
-				retreat_help = gpStrategicString[STR_BP_RETREATSINGLE_FASTHELP];
-			}
-			else
-			{
-				retreat_help = gpStrategicString[STR_BP_RETREATPLURAL_FASTHELP];
-			}
+			retreat_help =
+				use_plural_version ? gpStrategicString[STR_BP_RETREATPLURAL_FASTHELP] :
+				gpStrategicString[STR_BP_RETREATSINGLE_FASTHELP];
 		}
 		iPBButton[2]->SetFastHelpText(retreat_help);
 	}
 	else
-	{ //use the explicit encounter code to determine what get's disable and the associated help text that is used.
+	{ /* Use the explicit encounter code to determine what gets disable and the
+		 * associated help text that is used. */
 
-		//First of all, the retreat button is always disabled seeing a battle is in progress.
-		DisableButton( iPBButton[ 2 ] );
+		/* First of all, the retreat button is always disabled seeing a battle is in
+		 * progress. */
+		DisableButton(iPBButton[2]);
 		iPBButton[2]->SetFastHelpText(gzNonPersistantPBIText[0]);
 		iPBButton[1]->SetFastHelpText(gzNonPersistantPBIText[1]);
-		switch( gubExplicitEnemyEncounterCode )
+		wchar_t const* help;
+		switch (gubExplicitEnemyEncounterCode)
 		{
 			case CREATURE_ATTACK_CODE:
 			case ENEMY_ENCOUNTER_CODE:
-			case ENEMY_INVASION_CODE:
-				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[2]);
-				break;
-			case ENTERING_ENEMY_SECTOR_CODE:
-				DisableButton( iPBButton[ 0 ] );
-				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[3]);
-				break;
-			case ENEMY_AMBUSH_CODE:
-				DisableButton( iPBButton[ 0 ] );
-				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[4]);
-				break;
-			case FIGHTING_CREATURES_CODE:
-				DisableButton( iPBButton[ 0 ] );
-				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[5]);
-				break;
-			case HOSTILE_CIVILIANS_CODE:
-				DisableButton( iPBButton[ 0 ] );
-				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[6]);
-				break;
+			case ENEMY_INVASION_CODE:         help = gzNonPersistantPBIText[2]; goto set_help;
+			case ENTERING_ENEMY_SECTOR_CODE:  help = gzNonPersistantPBIText[3]; goto disable_set_help;
+			case ENEMY_AMBUSH_CODE:           help = gzNonPersistantPBIText[4]; goto disable_set_help;
+			case FIGHTING_CREATURES_CODE:     help = gzNonPersistantPBIText[5]; goto disable_set_help;
+			case HOSTILE_CIVILIANS_CODE:      help = gzNonPersistantPBIText[6]; goto disable_set_help;
 			case HOSTILE_BLOODCATS_CODE:
 			case BLOODCAT_AMBUSH_CODE:
-			case ENTERING_BLOODCAT_LAIR_CODE:
-				DisableButton( iPBButton[ 0 ] );
-				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[7]);
-				break;
+			case ENTERING_BLOODCAT_LAIR_CODE: help = gzNonPersistantPBIText[7]; goto disable_set_help;
+
+disable_set_help:
+				DisableButton(iPBButton[0]);
+set_help:
+				iPBButton[0]->SetFastHelpText(help);
 		}
 	}
 
-	//Disable the options button when the auto resolve  screen comes up
-	EnableDisAbleMapScreenOptionsButton( FALSE );
+	// Disable the options button when the auto resolve screen comes up
+	EnableDisAbleMapScreenOptionsButton(FALSE);
 
-	SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
+	SetMusicMode(MUSIC_TACTICAL_ENEMYPRESENT);
 
 	DoTransitionFromMapscreenToPreBattleInterface();
 }
@@ -1607,12 +1573,12 @@ void HandlePreBattleInterfaceStates()
 		gfEnteringMapScreenToEnterPreBattleInterface = FALSE;
 		if( !gfUsePersistantPBI )
 		{
-			InitPreBattleInterface( NULL, FALSE );
+			InitPreBattleInterface(0, false);
 			gfUsePersistantPBI = TRUE;
 		}
 		else
 		{
-			InitPreBattleInterface( gpBattleGroup, TRUE );
+			InitPreBattleInterface(gpBattleGroup, true);
 		}
 	}
 	else if( gfDelayAutoResolveStart && gfPreBattleInterfaceActive )

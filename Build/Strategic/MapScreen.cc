@@ -2633,7 +2633,7 @@ static UINT32 HandleMapUI(void)
 						sMapX == gubPBSectorX && sMapY == gubPBSectorY && iCurrentMapSectorZ == gubPBSectorZ )
 				{ //Bring up a non-persistant version of mapscreen if the user clicks on the sector where a
 					//battle is taking place.
-					InitPreBattleInterface( NULL, FALSE );
+					InitPreBattleInterface(0, false);
 					return( MAP_SCREEN );
 				}
 
@@ -7029,7 +7029,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 		else
 		{
 			//The NEW non-persistant PBI is used instead of a dialog box explaining why we can't compress time.
-			InitPreBattleInterface( NULL, FALSE );
+			InitPreBattleInterface(0, false);
 		}
 	}
 	else if( PlayerGroupIsInACreatureInfestedMine() )

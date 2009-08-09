@@ -847,12 +847,11 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 	SectorInfo[ ubSectorID ].ubDayOfLastCreatureAttack = (UINT8)GetWorldDay();
 	switch( gubCreatureBattleCode )
 	{
-		case CREATURE_BATTLE_CODE_PREBATTLEINTERFACE:
-			InitPreBattleInterface( NULL, TRUE );
-			break;
 		case CREATURE_BATTLE_CODE_AUTORESOLVE:
 			gfAutomaticallyStartAutoResolve = TRUE;
-			InitPreBattleInterface( NULL, TRUE );
+			/* FALLTHROUGH */
+		case CREATURE_BATTLE_CODE_PREBATTLEINTERFACE:
+			InitPreBattleInterface(0, true);
 			break;
 		case CREATURE_BATTLE_CODE_TACTICALLYADD:
 			PrepareCreaturesForBattle();

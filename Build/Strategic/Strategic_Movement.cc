@@ -734,7 +734,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	{
 		// ATE: What if we have unconscious guys, etc....
 		// We MUST start combat, but donot play quote...
-		InitPreBattleInterface( pInitiatingBattleGroup, TRUE );
+		InitPreBattleInterface(pInitiatingBattleGroup, true);
 	}
 }
 
@@ -954,7 +954,7 @@ class DialogueEventTriggerPrebattleInterface : public DialogueEvent
 		bool Execute()
 		{
 			UnLockPauseState();
-			InitPreBattleInterface(init_prebattle_group_, TRUE);
+			InitPreBattleInterface(init_prebattle_group_, true);
 			return false;
 		}
 

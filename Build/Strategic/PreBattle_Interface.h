@@ -4,7 +4,7 @@
 #include "Types.h"
 #include "Strategic_Movement.h"
 
-void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI );
+void InitPreBattleInterface(GROUP* battle_group, bool persistent_pbi);
 void KillPreBattleInterface(void);
 void RenderPreBattleInterface(void);
 
