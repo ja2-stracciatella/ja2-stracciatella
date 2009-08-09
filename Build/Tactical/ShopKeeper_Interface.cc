@@ -90,10 +90,6 @@
 #define		SKI_PAGE_DOWN_ARROWS_X						SKI_PAGE_UP_ARROWS_X
 #define		SKI_PAGE_DOWN_ARROWS_Y						102
 
-//Evaluate:
-//#define		SKI_EVALUATE_BUTTON_X							15
-//#define		SKI_EVALUATE_BUTTON_Y							233
-
 #define SKI_TRANSACTION_BUTTON_X 147//214
 #define SKI_DONE_BUTTON_X        292//414
 #define SKI_BUTTON_Y             233
@@ -4480,8 +4476,6 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 	//if the player is currently moving an item, disable the transaction button
 	if( gMoveingItem.sItemIndex != 0 )
 	{
-//Evaluate:
-//		DisableButton( guiSKI_EvaluateButton );
 		DisableButton( guiSKI_TransactionButton );
 		DisableButton( guiSKI_DoneButton );
 	}
@@ -5224,7 +5218,6 @@ void StartSKIDescriptionBox(void)
 
 	DisableButton( guiSKI_InvPageUpButton );
 	DisableButton( guiSKI_InvPageDownButton );
-//	DisableButton( guiSKI_EvaluateButton );
 	DisableButton( guiSKI_TransactionButton );
 	DisableButton( guiSKI_DoneButton );
 
