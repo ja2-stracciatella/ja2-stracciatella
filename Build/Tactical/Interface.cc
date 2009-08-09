@@ -1380,7 +1380,6 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16 bp, BOOLEAN disable, const wchar_t* help)
-try
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnDoorMenuCallback);
 	iActionIcons[idx] = btn;
@@ -1399,11 +1398,6 @@ try
 	{
 		DisableButton(btn);
 	}
-}
-catch (...)
-{
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
-	throw;
 }
 
 
