@@ -121,30 +121,29 @@ wchar_t const* GetActionItemName(OBJECTTYPE const* const pItem)
 	}
 }
 
-struct WeaponAttachment
+struct AttachmentInfo
 {
-	UINT16         attachment;
-	wchar_t const* label;
+	AttachmentInfo(UINT16 const a, wchar_t const* const l) : attachment(a), label(l), attached(false) {}
+
+	UINT16         const attachment;
+	wchar_t const* const label;
+	GUIButtonRef         button;
+	bool                 attached;
 };
 
-static WeaponAttachment const g_weapon_attachment[] =
+static AttachmentInfo g_weapon_attachment[] =
 {
-	{ SILENCER,        L"SILENCER"    },
-	{ SNIPERSCOPE,     L"SNIPERSCOPE" },
-	{ LASERSCOPE,      L"LASERSCOPE"  },
-	{ BIPOD,           L"BIPOD"       },
-	{ DUCKBILL,        L"DUCKBILL"    },
-	{ UNDER_GLAUNCHER, L"G-LAUNCHER"  }
+	AttachmentInfo(SILENCER,        L"SILENCER"),
+	AttachmentInfo(SNIPERSCOPE,     L"SNIPERSCOPE"),
+	AttachmentInfo(LASERSCOPE,      L"LASERSCOPE"),
+	AttachmentInfo(BIPOD,           L"BIPOD"),
+	AttachmentInfo(DUCKBILL,        L"DUCKBILL"),
+	AttachmentInfo(UNDER_GLAUNCHER, L"G-LAUNCHER")
 };
 
-static GUIButtonRef guiAttachmentButton[lengthof(g_weapon_attachment)];
-static BOOLEAN      gfAttachment[lengthof(g_weapon_attachment)];
+static AttachmentInfo g_ceramic_attachment(CERAMIC_PLATES, L"CERAMIC PLATES");
 
-GUIButtonRef guiCeramicPlatesButton;
-BOOLEAN gfCeramicPlates;
-
-GUIButtonRef guiDetonatorButton;
-BOOLEAN gfDetonator;
+static AttachmentInfo g_detonator_attachment(DETONATOR, L"DETONATOR");
 
 GUIButtonRef guiActionItemButton;
 static void ActionItemCallback(GUI_BUTTON* btn, INT32 reason);
@@ -614,17 +613,16 @@ static void RemoveGameTypeFlags(void)
 }
 
 
-static GUIButtonRef MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attached, const INT16 x, const INT16 y, const INT16 w, const wchar_t* const label, const GUI_CALLBACK click)
+static bool MakeAttachmentButton(AttachmentInfo& a, INT16 const x, INT16 const y, INT16 const w, GUI_CALLBACK const click)
 {
-	if (!ValidAttachment(attachment, gpItem->usItem)) return GUIButtonRef();
+	if (!ValidAttachment(a.attachment, gpItem->usItem)) return false;
 
-	GUIButtonRef const btn = CreateTextButton(label, SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, click);
-	if (FindAttachment(gpItem, attachment) != -1)
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		attached = TRUE;
-	}
-	return btn;
+	GUIButtonRef const btn = CreateTextButton(a.label, SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, click);
+	btn->SetUserPtr(&a);
+	a.button   = btn;
+	a.attached = FindAttachment(gpItem, a.attachment) != -1;
+	if (a.attached) btn->uiFlags |= BUTTON_CLICKED_ON;
+	return true;
 }
 
 
@@ -651,15 +649,9 @@ static void SetupGunGUI()
 	 * could be available for a particular weapon. Show only the ones that we can
 	 * apply to this gun. */
 	INT16 y = 383;
-	for (size_t i = 0; i != lengthof(g_weapon_attachment); ++i)
+	for (AttachmentInfo* i = g_weapon_attachment; i != endof(g_weapon_attachment); ++i)
 	{
-		gfAttachment[i] = FALSE;
-		WeaponAttachment const& wa  = g_weapon_attachment[i];
-		GUIButtonRef     const  btn = MakeAttachmentButton(wa.attachment, gfAttachment[i], 570, y, 60, wa.label, ToggleWeaponAttachment);
-		guiAttachmentButton[i] = btn;
-		if (!btn) continue;
-		btn->SetUserData(i);
-		y += 14;
+		if (MakeAttachmentButton(*i, 570, y, 60, ToggleWeaponAttachment)) y += 14;
 	}
 
 	ReEvaluateAttachmentStatii();
@@ -668,9 +660,9 @@ static void SetupGunGUI()
 
 static void RemoveGunGUI(void)
 {
-	for (GUIButtonRef* i = guiAttachmentButton; i != endof(guiAttachmentButton); ++i)
+	for (AttachmentInfo* i = g_weapon_attachment; i != endof(g_weapon_attachment); ++i)
 	{
-		GUIButtonRef& b = *i;
+		GUIButtonRef& b = i->button;
 		if (b) RemoveButton(b);
 	}
 }
@@ -758,7 +750,33 @@ static void ExtractAndUpdateAmmoGUI(void)
 }
 
 
-static void ToggleCeramicPlates(GUI_BUTTON* btn, INT32 reason);
+static void ToggleAttachment(AttachmentInfo& a)
+{
+	OBJECTTYPE& o = *gpItem;
+	OBJECTTYPE  temp;
+	a.attached = !a.attached;
+	if (a.attached)
+	{
+		a.button->uiFlags |= BUTTON_CLICKED_ON;
+		CreateItem(a.attachment, o.bStatus[0], &temp);
+		AttachObject(0, &o, &temp);
+	}
+	else
+	{
+		a.button->uiFlags &= ~BUTTON_CLICKED_ON;
+		INT16 const slot = FindAttachment(&o, a.attachment);
+		if (slot != -1) RemoveAttachment(&o, slot, &temp);
+	}
+}
+
+
+static void ToggleItemAttachment(GUI_BUTTON* const btn, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		ToggleAttachment(*btn->GetUserPtr<AttachmentInfo>());
+	}
+}
 
 
 static void SetupArmourGUI(void)
@@ -774,13 +792,13 @@ static void SetupArmourGUI(void)
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
-	guiCeramicPlatesButton = MakeAttachmentButton(CERAMIC_PLATES, gfCeramicPlates, 558, 375, 72, L"CERAMIC PLATES", ToggleCeramicPlates);
+	MakeAttachmentButton(g_ceramic_attachment, 558, 375, 72, ToggleItemAttachment);
 }
 
 
 static void RemoveArmourGUI(void)
 {
-	if (guiCeramicPlatesButton) RemoveButton(guiCeramicPlatesButton);
+	if (g_ceramic_attachment.button) RemoveButton(g_ceramic_attachment.button);
 }
 
 
@@ -857,9 +875,6 @@ static void ExtractAndUpdateEquipGUI(void)
 }
 
 
-static void ToggleDetonator(GUI_BUTTON* btn, INT32 reason);
-
-
 static void SetupExplosivesGUI(void)
 {
 	wchar_t str[20];
@@ -879,14 +894,13 @@ static void SetupExplosivesGUI(void)
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
-	gfDetonator = FALSE;
-	guiDetonatorButton = MakeAttachmentButton(DETONATOR, gfDetonator, 570, 375, 60, L"DETONATOR", ToggleDetonator);
+	MakeAttachmentButton(g_detonator_attachment, 570, 375, 60, ToggleItemAttachment);
 }
 
 
 static void RemoveExplosivesGUI(void)
 {
-	if (guiDetonatorButton) RemoveButton(guiDetonatorButton);
+	if (g_detonator_attachment.button) RemoveButton(g_detonator_attachment.button);
 }
 
 
@@ -1164,51 +1178,12 @@ static void RemoveTriggersGUI(void)
 }
 
 
-static void ToggleAttachment(UINT16 const attachment, GUI_BUTTON& b, BOOLEAN& has_attachment)
-{
-	OBJECTTYPE& o = *gpItem;
-	OBJECTTYPE  temp;
-	has_attachment = !has_attachment;
-	if (has_attachment)
-	{
-		b.uiFlags |= BUTTON_CLICKED_ON;
-		CreateItem(attachment, o.bStatus[0], &temp);
-		AttachObject(0, &o, &temp);
-	}
-	else
-	{
-		b.uiFlags &= ~BUTTON_CLICKED_ON;
-		INT16 const slot = FindAttachment(&o, attachment);
-		if (slot != -1) RemoveAttachment(&o, slot, &temp);
-	}
-}
-
-
 static void ToggleWeaponAttachment(GUI_BUTTON* const btn, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT16 const idx = btn->GetUserData();
-		ToggleAttachment(g_weapon_attachment[idx].attachment, *btn, gfAttachment[idx]);
+		ToggleAttachment(*btn->GetUserPtr<AttachmentInfo>());
 		ReEvaluateAttachmentStatii();
-	}
-}
-
-
-static void ToggleCeramicPlates(GUI_BUTTON* btn, INT32 reason)
-{
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		ToggleAttachment(CERAMIC_PLATES, *btn, gfCeramicPlates);
-	}
-}
-
-
-static void ToggleDetonator(GUI_BUTTON* btn, INT32 reason)
-{
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		ToggleAttachment(DETONATOR, *btn, gfDetonator);
 	}
 }
 
@@ -1392,11 +1367,13 @@ void UpdateActionItem( INT8 bActionItemIndex )
 
 static void ReEvaluateAttachmentStatii(void)
 {
-	for (size_t i = 0; i != lengthof(g_weapon_attachment); ++i)
+	for (AttachmentInfo* i = g_weapon_attachment; i != endof(g_weapon_attachment); ++i)
 	{
-		GUIButtonRef const b = guiAttachmentButton[i];
-		if (!b || b->Clicked()) continue;
-		EnableButton(b, ValidItemAttachment(gpItem, g_weapon_attachment[i].attachment, TRUE));
+		AttachmentInfo const& a = *i;
+		if (!a.button) continue;
+		GUI_BUTTON& b = *a.button;
+		if (b.Clicked()) continue;
+		EnableButton(&b, ValidItemAttachment(gpItem, a.attachment, TRUE));
 	}
 }
 
