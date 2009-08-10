@@ -12,6 +12,4 @@ void AddSkillToSkillList( INT8 bSkill );
 void ResetSkillsAttributesAndPersonality( void );
 void HandleMercStatsForChangesInFace( void );
 
-
-extern const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ];
 #endif

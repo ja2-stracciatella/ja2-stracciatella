@@ -9,5 +9,6 @@ void HandleIMPMainPage( void );
 
 extern INT32 iCurrentProfileMode;
 
+SGPVObject* LoadIMPPortait();
 
 #endif

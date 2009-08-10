@@ -16,7 +16,6 @@
 #include "MouseSystem.h"
 #include "Merc_Hiring.h"
 #include "LaptopSave.h"
-#include "IMP_Compile_Character.h"
 #include "IMP_Portraits.h"
 #include "Button_System.h"
 #include "ScreenIDs.h"
@@ -471,12 +470,20 @@ static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iRe
 }
 
 
+SGPVObject* LoadIMPPortait()
+{
+	SGPFILENAME filename;
+	snprintf(filename, lengthof(filename), FACESDIR "/%d.sti", 200 + iPortraitNumber);
+	return AddVideoObjectFromFile(filename);
+}
+
+
 static void LoadCharacterPortraitForMainPage(void)
 {
   // this function will load the character's portrait, to be used on portrait button
 	if( iCurrentProfileMode >= 4 )
 	{
-		guiCHARACTERPORTRAITFORMAINPAGE = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
+		guiCHARACTERPORTRAITFORMAINPAGE = LoadIMPPortait();
 		giIMPMainPageButton[4]->SpecifyIcon(guiCHARACTERPORTRAITFORMAINPAGE, 0, 33, 23, FALSE);
 	}
 }

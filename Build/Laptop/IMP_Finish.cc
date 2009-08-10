@@ -284,7 +284,7 @@ static void LoadCharacterPortrait(void)
 {
   // this function will load the character's portrait, to be used on portrait button
 	// load it
-	guiCHARACTERPORTRAIT = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
+	guiCHARACTERPORTRAIT = LoadIMPPortait();
 }
 
 

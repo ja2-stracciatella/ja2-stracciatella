@@ -27,27 +27,6 @@ static INT32 iLastElementInPersonalityList = 0;
 extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
 
 
-const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
-{
-	FACESDIR "/200.sti",
-	FACESDIR "/201.sti",
-	FACESDIR "/202.sti",
-	FACESDIR "/203.sti",
-	FACESDIR "/204.sti",
-	FACESDIR "/205.sti",
-	FACESDIR "/206.sti",
-	FACESDIR "/207.sti",
-	FACESDIR "/208.sti",
-	FACESDIR "/209.sti",
-	FACESDIR "/210.sti",
-	FACESDIR "/211.sti",
-	FACESDIR "/212.sti",
-	FACESDIR "/213.sti",
-	FACESDIR "/214.sti",
-	FACESDIR "/215.sti",
-};
-
-
 static void SelectMercFace(void);
 
 
