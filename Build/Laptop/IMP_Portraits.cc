@@ -11,7 +11,6 @@
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Text_System.h"
-#include "IMP_Compile_Character.h"
 #include "Button_System.h"
 #include "VSurface.h"
 #include "Font_Control.h"
