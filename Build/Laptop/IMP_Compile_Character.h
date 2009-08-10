@@ -14,5 +14,4 @@ void HandleMercStatsForChangesInFace( void );
 
 
 extern const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ];
-extern const char *pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ];
 #endif

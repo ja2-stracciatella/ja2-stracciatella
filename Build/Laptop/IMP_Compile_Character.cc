@@ -47,26 +47,6 @@ const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 	FACESDIR "/215.sti",
 };
 
-const char *pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
-{
-	FACESDIR "/BigFaces/200.sti",
-	FACESDIR "/BigFaces/201.sti",
-	FACESDIR "/BigFaces/202.sti",
-	FACESDIR "/BigFaces/203.sti",
-	FACESDIR "/BigFaces/204.sti",
-	FACESDIR "/BigFaces/205.sti",
-	FACESDIR "/BigFaces/206.sti",
-	FACESDIR "/BigFaces/207.sti",
-	FACESDIR "/BigFaces/208.sti",
-	FACESDIR "/BigFaces/209.sti",
-	FACESDIR "/BigFaces/210.sti",
-	FACESDIR "/BigFaces/211.sti",
-	FACESDIR "/BigFaces/212.sti",
-	FACESDIR "/BigFaces/213.sti",
-	FACESDIR "/BigFaces/214.sti",
-	FACESDIR "/BigFaces/215.sti",
-};
-
 
 static void SelectMercFace(void);
 
