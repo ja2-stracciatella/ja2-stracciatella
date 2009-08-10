@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
@@ -81,7 +82,7 @@ void LoadRadarScreenBitmap(const char* const filename)
 
 	// Grab the Map image
 	SGPFILENAME image_filename;
-	ReplacePath(image_filename, lengthof(image_filename), "RADARMAPS/", filename, ".STI");
+	ReplacePath(image_filename, lengthof(image_filename), RADARMAPSDIR "/", filename, ".STI");
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
 	gusRadarImage = radar;
 
@@ -418,7 +419,7 @@ static void CreateDestroyMouseRegionsForSquadList(void)
 
 	if (!fRenderRadarScreen && !fCreated)
 	{
-		BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y);
+		BltVideoObjectOnce(guiSAVEBUFFER, INTERFACEDIR "/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y);
 		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, 102, 120);
 
 		// create regions

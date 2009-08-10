@@ -1,5 +1,6 @@
 #include "Assignments.h"
 #include "Auto_Resolve.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
@@ -5533,8 +5534,8 @@ void CreateDestroyAssignmentPopUpBoxes()
 
 	if (!fCreated && fShowAssignmentMenu)
 	{
-		guiPOPUPBORDERS = AddVideoObjectFromFile("INTERFACE/popup.sti");
-		guiPOPUPTEX     = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
+		guiPOPUPBORDERS = AddVideoObjectFromFile(INTERFACEDIR "/popup.sti");
+		guiPOPUPTEX     = AddVideoSurfaceFromFile(INTERFACEDIR "/popupbackground.pcx");
 
 		// these boxes are always created while in mapscreen...
 		CreateEPCBox();

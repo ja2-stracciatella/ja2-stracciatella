@@ -1,4 +1,5 @@
 #include "Button_System.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Interface.h"
 #include "Local.h"
@@ -321,7 +322,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 
 	MSYS_DefineRegion(&gExitDialog.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, SectorExitBackgroundCallback);
 
-	gExitDialog.iButtonImages = LoadButtonImage("INTERFACE/popupbuttons.sti", 0, 1);
+	gExitDialog.iButtonImages = LoadButtonImage(INTERFACEDIR "/popupbuttons.sti", 0, 1);
 
 
 	MSYS_DefineRegion( &gExitDialog.SingleRegion, (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 37), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 37 + 12), MSYS_PRIORITY_HIGHEST,
@@ -341,11 +342,11 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 																			CURSOR_NORMAL, LoadRegionMoveCallback, LoadRegionCallback );
 	gExitDialog.LoadRegion.AllowDisabledRegionFastHelp(TRUE);
 
-	gExitDialog.uiLoadCheckButton		= CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 155 ), (INT16)(gExitDialog.sY + 43 ), "INTERFACE/popupcheck.sti", MSYS_PRIORITY_HIGHEST, CheckLoadMapCallback );
+	gExitDialog.uiLoadCheckButton		= CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 155 ), (INT16)(gExitDialog.sY + 43 ), INTERFACEDIR "/popupcheck.sti", MSYS_PRIORITY_HIGHEST, CheckLoadMapCallback );
 
-	gExitDialog.uiSingleMoveButton	=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 35 ), "INTERFACE/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, SingleMoveCallback );
+	gExitDialog.uiSingleMoveButton	=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 35 ), INTERFACEDIR "/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, SingleMoveCallback );
 
-	gExitDialog.uiAllMoveButton			=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 55 ), "INTERFACE/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, AllMoveCallback );
+	gExitDialog.uiAllMoveButton			=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 55 ), INTERFACEDIR "/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, AllMoveCallback );
 
 	gExitDialog.uiOKButton     = MakeButton(TacticalStr[OK_BUTTON_TEXT_STR],      65, OKCallback);
 	gExitDialog.uiCancelButton = MakeButton(TacticalStr[CANCEL_BUTTON_TEXT_STR], 135, CancelCallback);

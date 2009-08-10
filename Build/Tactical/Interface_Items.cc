@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "FileMan.h"
 #include "Font.h"
 #include "Handle_Items.h"
@@ -663,21 +664,21 @@ void InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_RE
 	INT32 cnt;
 
 	// Load all four body type images
-	guiBodyInvVO[1][0] = AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male.sti");
-	guiBodyInvVO[1][1] = AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male_H.sti");
+	guiBodyInvVO[1][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male.sti");
+	guiBodyInvVO[1][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male_H.sti");
 
-	guiBodyInvVO[0][0] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
-	guiBodyInvVO[0][1] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male_H.sti");
+	guiBodyInvVO[0][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
+	guiBodyInvVO[0][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male_H.sti");
 
-	guiBodyInvVO[2][0] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
-	guiBodyInvVO[2][1] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
+	guiBodyInvVO[2][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
+	guiBodyInvVO[2][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
 
-	guiBodyInvVO[3][0] = AddVideoObjectFromFile("INTERFACE/inventory_figure_female.sti");
-	guiBodyInvVO[3][1] = AddVideoObjectFromFile("INTERFACE/inventory_figure_female_H.sti");
+	guiBodyInvVO[3][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female.sti");
+	guiBodyInvVO[3][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female_H.sti");
 
 #ifndef JA2DEMO
 	// add gold key graphic
-	guiGoldKeyVO = AddVideoObjectFromFile("INTERFACE/gold_key_button.sti");
+	guiGoldKeyVO = AddVideoObjectFromFile(INTERFACEDIR "/gold_key_button.sti");
 #endif
 
 	// Add camo region
@@ -1852,7 +1853,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	{
 		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback);
 
-		giMapInvDescButton = QuickCreateButtonImg("INTERFACE/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ItemDescDoneButtonCallback);
+		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ItemDescDoneButtonCallback);
 
 		fShowDescriptionFlag = TRUE;
 	}
@@ -1874,7 +1875,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			case AMMO_HP:       img = 9; break;
 			default:            img = 1; break;
 		}
-		BUTTON_PICS* const ammo_img = LoadButtonImage("INTERFACE/infobox.sti", img + 3, img, -1, img + 2, -1);
+		BUTTON_PICS* const ammo_img = LoadButtonImage(INTERFACEDIR "/infobox.sti", img + 3, img, -1, img + 2, -1);
 		giItemDescAmmoButtonImages = ammo_img;
 
 		const INT16         h  = GetDimensionsOfButtonPic(ammo_img)->h;
@@ -1939,9 +1940,9 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	}
 
 	// Load graphic
-	guiItemDescBox    = AddVideoObjectFromFile("INTERFACE/infobox.sti");
-	guiMapItemDescBox = AddVideoObjectFromFile("INTERFACE/iteminfoc.STI");
-	guiBullet         = AddVideoObjectFromFile("INTERFACE/bullet.STI");
+	guiItemDescBox    = AddVideoObjectFromFile(INTERFACEDIR "/infobox.sti");
+	guiMapItemDescBox = AddVideoObjectFromFile(INTERFACEDIR "/iteminfoc.STI");
+	guiBullet         = AddVideoObjectFromFile(INTERFACEDIR "/bullet.STI");
 
 	if (o->usItem != MONEY)
 	{
@@ -1966,10 +1967,10 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		gRemoveMoney.uiMoneyRemaining = o->uiMoneyAmount;
 		gRemoveMoney.uiMoneyRemoving  = 0;
 
-		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile("INTERFACE/info_bil.sti");
+		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile(INTERFACEDIR "/info_bil.sti");
 
 		// Create buttons for the money
-		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", 1, 2);
+		guiMoneyButtonImage = LoadButtonImage(INTERFACEDIR "/Info_bil.sti", 1, 2);
 		const MoneyLoc* const loc = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
 		INT32 i;
 		for (i = 0; i < MAX_ATTACHMENTS - 1; i++)
@@ -3815,7 +3816,7 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
   }
 
 	// Load graphics
-	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
+	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.STI");
 
 	// Get size
 	ETRLEObject const& pTrav        = guiItemPopupBoxes->SubregionProperties(0);
@@ -4004,7 +4005,7 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 	gpItemPopupSoldier = pSoldier;
 
 	// Load graphics
-	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
+	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.STI");
 
 	// Get size
 	ETRLEObject const& pTrav         = guiItemPopupBoxes->SubregionProperties(0);
@@ -4183,7 +4184,7 @@ SGPVObject* LoadTileGraphicForItem(const INVTYPE& item)
 
 	//Load item
 	SGPFILENAME ImageFile;
-	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, item.ubGraphicNum);
+	sprintf(ImageFile, BIGITEMSDIR "/%s%02d.sti", Prefix, item.ubGraphicNum);
 	return AddVideoObjectFromFile(ImageFile);
 }
 
@@ -4517,7 +4518,7 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	menu.bNumSlotsPerPage = menu.ubTotalItems < NUM_PICKUP_SLOTS ?
 		menu.ubTotalItems : NUM_PICKUP_SLOTS;
 
-	menu.uiPanelVo = AddVideoObjectFromFile("INTERFACE/itembox.sti");
+	menu.uiPanelVo = AddVideoObjectFromFile(INTERFACEDIR "/itembox.sti");
 
 	menu.pfSelectedArray = MALLOCNZ(BOOLEAN, menu.ubTotalItems);
 
@@ -4563,7 +4564,7 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	menu.fAllSelected = FALSE;
 
 	//Load images for buttons
-	BUTTON_PICS* const pics  = LoadButtonImage("INTERFACE/itembox.sti", 5, 10);
+	BUTTON_PICS* const pics  = LoadButtonImage(INTERFACEDIR "/itembox.sti", 5, 10);
 	menu.iUpButtonImages     = pics;
 	menu.iDownButtonImages   = UseLoadedButtonImage(pics, 7, 12);
 	menu.iAllButtonImages    = UseLoadedButtonImage(pics, 6, 11);
@@ -5416,9 +5417,9 @@ void SetItemPointer(OBJECTTYPE* const o, SOLDIERTYPE* const s)
 void LoadInterfaceItemsGraphics()
 {
 #ifndef JA2DEMO
-	guiMapInvSecondHandBlockout = AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti");
+	guiMapInvSecondHandBlockout = AddVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
 #endif
-	guiSecItemHiddenVO          = AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti");
+	guiSecItemHiddenVO          = AddVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
 }
 
 

@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Interface.h"
 #include "Local.h"
@@ -149,7 +150,7 @@ void HandleLoadOfMapBottomGraphics( void )
 {
 	// will load the graphics needed for the mapscreen interface bottom
 	// will create buttons for interface bottom
-	guiMAPBOTTOMPANEL = AddVideoObjectFromFile("INTERFACE/map_screen_bottom.sti");
+	guiMAPBOTTOMPANEL = AddVideoObjectFromFile(INTERFACEDIR "/map_screen_bottom.sti");
 
 	// load slider bar icon
 	LoadMessageSliderBar( );
@@ -273,7 +274,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 static GUIButtonRef MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", off, on, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/map_border_buttons.sti", off, on, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	btn->SetFastHelpText(help);
 	btn->SetCursor(MSYS_NO_CURSOR);
 	return btn;
@@ -282,7 +283,7 @@ static GUIButtonRef MakeExitButton(const INT32 off, const INT32 on, const INT16 
 
 static GUIButtonRef MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 2, click);
 	btn->SetFastHelpText(help);
 	btn->SetCursor(MSYS_NO_CURSOR);
 	return btn;
@@ -644,7 +645,7 @@ static void RemoveCompressModePause(void)
 static void LoadMessageSliderBar(void)
 {
   // this function will load the message slider bar
-	guiSliderBar = AddVideoObjectFromFile("INTERFACE/map_screen_bottom_arrows.sti");
+	guiSliderBar = AddVideoObjectFromFile(INTERFACEDIR "/map_screen_bottom_arrows.sti");
 }
 
 

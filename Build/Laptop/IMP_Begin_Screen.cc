@@ -1,4 +1,5 @@
 #include "CharProfile.h"
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "IMP_Begin_Screen.h"
@@ -257,7 +258,7 @@ static void CreateIMPBeginScreenButtons(void)
   // this procedure will create the buttons needed for the IMP BeginScreen
 
 	// ths done button
-	giIMPBeginScreenButtonImage[0] = LoadButtonImage("LAPTOP/button_2.sti", 0, 1);
+	giIMPBeginScreenButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_2.sti", 0, 1);
 	giIMPBeginScreenButton[0] = CreateIconAndTextButton( giIMPBeginScreenButtonImage[ 0 ], pImpButtonText[ 6 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

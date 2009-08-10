@@ -2,6 +2,7 @@
 
 #include "Button_System.h"
 #include "Cursor_Modes.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
@@ -519,7 +520,7 @@ void InitDoorEditing(INT32 const map_idx)
 	AddTextInputField(210, 155, 25, 16, MSYS_PRIORITY_HIGH, L"0", 3, INPUTTYPE_NUMERICSTRICT);
 	AddTextInputField(210, 175, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT);
 	AddTextInputField(210, 195, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT);
-	iDoorButton[DOOR_LOCKED] = CreateCheckBoxButton(210, 215, "EDITOR/SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback);
+	iDoorButton[DOOR_LOCKED] = CreateCheckBoxButton(210, 215, EDITORDIR "/SmCheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback);
 
 	if (DOOR const* const door = FindDoorInfoAtGridNo(map_idx))
 	{

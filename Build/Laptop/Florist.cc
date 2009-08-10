@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Laptop.h"
 #include "Florist.h"
 #include "Florist_Order_Form.h"
@@ -83,9 +84,9 @@ void EnterFlorist()
 	InitFloristDefaults();
 
 	// load the handbullet graphic and add it
-	guiHandBullet = AddVideoObjectFromFile("LAPTOP/HandBullet.sti");
+	guiHandBullet = AddVideoObjectFromFile(LAPTOPDIR "/HandBullet.sti");
 
-	guiGalleryButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", 0, 1);
+	guiGalleryButtonImage	= LoadButtonImage(LAPTOPDIR "/FloristButtons.sti", 0, 1);
 
 	guiGalleryButton = CreateIconAndTextButton( guiGalleryButtonImage, sFloristText[FLORIST_GALLERY], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
@@ -165,7 +166,7 @@ static void SelectFloristTitleHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT3
 void InitFloristDefaults()
 {
 	// load the Florist background graphic and add it
-	guiFloristBackground = AddVideoObjectFromFile("LAPTOP/leafback.sti");
+	guiFloristBackground = AddVideoObjectFromFile(LAPTOPDIR "/leafback.sti");
 
 	//if its the first page
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )

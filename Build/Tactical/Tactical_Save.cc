@@ -1,4 +1,5 @@
 #include "Buffer.h"
+#include "Directories.h"
 #include "Font_Control.h"
 #include "LoadSaveRottingCorpse.h"
 #include "MapScreen.h"
@@ -51,6 +52,9 @@
 #include "FileMan.h"
 
 
+#define MAPS_DIR TEMPDIR "/"
+
+
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
 
@@ -69,7 +73,7 @@ struct TempNPCQuoteInfoSave
 };
 
 
-#define		NPC_TEMP_QUOTE_FILE			"Temp/NpcQuote.tmp"
+#define NPC_TEMP_QUOTE_FILE TEMPDIR "/NpcQuote.tmp"
 
 
 static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFlags const type, INT16 const x, INT16 const y, INT8 const z)

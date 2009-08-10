@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Handle_UI.h"
 #include "Local.h"
 #include "SGP.h"
@@ -471,7 +472,7 @@ ScreenID SexScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		// Load face....
-		guiSMILY = AddVideoObjectFromFile("INTERFACE/luckysmile.sti");
+		guiSMILY = AddVideoObjectFromFile(INTERFACEDIR "/luckysmile.sti");
 
 		// Init screen
 		bCurFrame = 0;
@@ -490,7 +491,7 @@ ScreenID SexScreenHandle(void)
 	// if we are animation smile...
 	if ( ubCurrentScreen == 1 )
 	{
-		PlayJA2StreamingSampleFromFile("Sounds/Sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
+		PlayJA2StreamingSampleFromFile(SOUNDSDIR "/Sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 		if ( ( uiTime - uiTimeOfLastUpdate ) > SMILY_DELAY )
 		{
 			uiTimeOfLastUpdate = uiTime;
@@ -564,7 +565,7 @@ void DoDemoIntroduction(void)
 	SetCurrentCursorFromDatabase( 0 );
 
 	//Load the background image.
-	BltVideoObjectOnce(FRAME_BUFFER, "DemoAds/DemoScreen1.sti", 0, 0, 0);
+	BltVideoObjectOnce(FRAME_BUFFER, DEMOADSDIR "/DemoScreen1.sti", 0, 0, 0);
 	InvalidateScreen();
 
 	//print out the information
@@ -736,7 +737,7 @@ ScreenID DemoExitScreenHandle(void)
 		//bring up the collage screen
 		try
 		{
-			BltVideoSurfaceOnce(FRAME_BUFFER, "DemoAds/collage.sti", 0, 0);
+			BltVideoSurfaceOnce(FRAME_BUFFER, DEMOADSDIR "/collage.sti", 0, 0);
 		}
 		catch (...)
 		{
@@ -878,7 +879,7 @@ ScreenID DemoExitScreenHandle(void)
 			//bring up the collage screen
 			try
 			{
-				BltVideoObjectOnce(uiCollageID, "Interface/ja2logo.sti", 0, 0, 0);
+				BltVideoObjectOnce(uiCollageID, INTERFACEDIR "/ja2logo.sti", 0, 0, 0);
 			}
 			catch (...)
 			{
@@ -888,7 +889,7 @@ ScreenID DemoExitScreenHandle(void)
 			}
 			uiStartTime = uiTime;
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -950,7 +951,7 @@ ScreenID DemoExitScreenHandle(void)
 		if( iPercentage == 100 )
 		{
 			SetMusicMode( MUSIC_MAIN_MENU );
-			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			SetMusicFadeSpeed(50);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 4;
@@ -1045,7 +1046,7 @@ ScreenID DemoExitScreenHandle(void)
 			//bring up the collage screen
 			try
 			{
-				BltVideoObjectOnce(uiCollageID, "DemoAds/available.sti", 0, 0, 0);
+				BltVideoObjectOnce(uiCollageID, DEMOADSDIR "/available.sti", 0, 0, 0);
 			}
 			catch (...)
 			{
@@ -1055,7 +1056,7 @@ ScreenID DemoExitScreenHandle(void)
 			}
 			uiStartTime = uiTime;
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -1115,7 +1116,7 @@ ScreenID DemoExitScreenHandle(void)
 		}
 		if( iPercentage == 100 )
 		{
-			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 6;
 			DeleteVideoSurface(uiCollageID);

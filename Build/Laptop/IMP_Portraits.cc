@@ -1,4 +1,5 @@
 #include "CharProfile.h"
+#include "Directories.h"
 #include "Font.h"
 #include "IMP_Portraits.h"
 #include "IMP_MainPage.h"
@@ -149,9 +150,9 @@ static void CreateIMPPortraitButtons(void)
   // will create buttons need for the IMP portrait screen
   const INT16 dx = LAPTOP_SCREEN_UL_X;
   const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
-	MakeButton(0, "LAPTOP/voicearrows.sti", 1, 3, pImpButtonText[13], dx + 343, dy + 205, BtnIMPPortraitNextCallback);     // Next button
-	MakeButton(1, "LAPTOP/voicearrows.sti", 0, 2, pImpButtonText[12], dx +  93, dy + 205, BtnIMPPortraitPreviousCallback); // Previous button
-	MakeButton(2, "LAPTOP/button_5.sti",    0, 1, pImpButtonText[11], dx + 187, dy + 330, BtnIMPPortraitDoneCallback);     // Done button
+	MakeButton(0, LAPTOPDIR "/voicearrows.sti", 1, 3, pImpButtonText[13], dx + 343, dy + 205, BtnIMPPortraitNextCallback);     // Next button
+	MakeButton(1, LAPTOPDIR "/voicearrows.sti", 0, 2, pImpButtonText[12], dx +  93, dy + 205, BtnIMPPortraitPreviousCallback); // Previous button
+	MakeButton(2, LAPTOPDIR "/button_5.sti",    0, 1, pImpButtonText[11], dx + 187, dy + 330, BtnIMPPortraitDoneCallback);     // Done button
 }
 
 

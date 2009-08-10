@@ -2,6 +2,7 @@
 
 #include "Animation_Data.h"
 #include "Buffer.h"
+#include "Directories.h"
 #include "HImage.h"
 #include "LoadSaveData.h"
 #include "LoadSaveLightSprite.h"
@@ -227,7 +228,7 @@ try
 
 		// Adjust for tileset position
 		char adjusted_filename[128];
-		sprintf(adjusted_filename, "TILESETS/%d/%s", tileset_to_add, filename);
+		sprintf(adjusted_filename, TILESETSDIR "/%d/%s", tileset_to_add, filename);
 		AddTileSurface(adjusted_filename, i, tileset_to_add);
 	}
 }
@@ -1341,7 +1342,7 @@ BOOLEAN SaveWorld(char const* const filename)
 try
 {
 	char full_filename[255];
-	sprintf(full_filename, "MAPS/%s", filename);
+	sprintf(full_filename, MAPSDIR "/%s", filename);
 	AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
 	// Write JA2 Version ID
@@ -1704,7 +1705,7 @@ try
 	);
 
 	char szDirFilename[50];
-	sprintf(szDirFilename, "MAPS/%s", filename);
+	sprintf(szDirFilename, MAPSDIR "/%s", filename);
 
 	if (gfMajorUpdate)
 	{
@@ -2045,7 +2046,7 @@ try
 	gfCaves    = FALSE;
 
 	char full_filename[50];
-	sprintf(full_filename, "MAPS/%s", filename);
+	sprintf(full_filename, MAPSDIR "/%s", filename);
 	AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_READ));
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
@@ -2951,7 +2952,7 @@ void ReloadTileset(TileSetID const ubID)
 	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	// Delete file
-	sprintf( aFilename, "MAPS/%s", TEMP_FILE_FOR_TILESET_CHANGE );
+	sprintf(aFilename, MAPSDIR "/%s", TEMP_FILE_FOR_TILESET_CHANGE);
 
 	FileDelete( aFilename );
 }

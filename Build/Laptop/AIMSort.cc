@@ -1,4 +1,5 @@
 #include "Cursors.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "AIMSort.h"
@@ -146,7 +147,7 @@ void EnterAimSort()
 	InitAimDefaults();
 
 	// load the SortBy box graphic and add it
-	guiSortByBox = AddVideoObjectFromFile("LAPTOP/SortBy.sti");
+	guiSortByBox = AddVideoObjectFromFile(LAPTOPDIR "/SortBy.sti");
 
 	const char* ImageFile;
 
@@ -163,7 +164,7 @@ void EnterAimSort()
 	guiToStats = AddVideoObjectFromFile(ImageFile);
 
 	// load the SelectLight graphic and add it
-	guiSelectLight = AddVideoObjectFromFile("LAPTOP/SelectLight.sti");
+	guiSelectLight = AddVideoObjectFromFile(LAPTOPDIR "/SelectLight.sti");
 
 
 	//** Mouse Regions **

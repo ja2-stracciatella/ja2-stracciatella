@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "FileMan.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -493,22 +494,22 @@ static void EnterLaptop(void)
 	giCurrentSubPage = 0;
 
 	// load the laptop graphic and add it
-	guiLAPTOP = AddVideoObjectFromFile("LAPTOP/laptop3.sti");
+	guiLAPTOP = AddVideoObjectFromFile(LAPTOPDIR "/laptop3.sti");
 
 	// background for panel
-	guiLaptopBACKGROUND = AddVideoObjectFromFile("LAPTOP/taskbar.sti");
+	guiLaptopBACKGROUND = AddVideoObjectFromFile(LAPTOPDIR "/taskbar.sti");
 
 	// background for panel
-	guiTITLEBARLAPTOP = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	guiTITLEBARLAPTOP = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// lights for power and HD
-	guiLIGHTS = AddVideoObjectFromFile("LAPTOP/lights.sti");
+	guiLIGHTS = AddVideoObjectFromFile(LAPTOPDIR "/lights.sti");
 
 	// icons for title bars
-	guiTITLEBARICONS = AddVideoObjectFromFile("LAPTOP/ICONS.sti");
+	guiTITLEBARICONS = AddVideoObjectFromFile(LAPTOPDIR "/ICONS.sti");
 
 	// load, blt and delete graphics
-	guiEmailWarning = AddVideoObjectFromFile("LAPTOP/NewMailWarning.sti");
+	guiEmailWarning = AddVideoObjectFromFile(LAPTOPDIR "/NewMailWarning.sti");
 	// load background
 	LoadDesktopBackground();
 
@@ -1058,7 +1059,7 @@ ScreenID LaptopScreenHandle()
 		const UINT32 uiStartTime = GetClock();
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER,   0, 0, NULL);
 		BltVideoSurface(FRAME_BUFFER,  guiEXTRABUFFER, 0, 0, NULL);
-		PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while (iRealPercentage < 100)
 		{
 			const UINT32 uiCurrTime = GetClock();
@@ -1357,7 +1358,7 @@ static void ExitLaptopMode(UINT32 uiMode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const wchar_t* text, const wchar_t* help_text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/buttonsforlaptop.sti", idx, idx + 8, 29, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/buttonsforlaptop.sti", idx, idx + 8, 29, y, MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
 	btn->SetFastHelpText(help_text);
 	btn->SpecifyTextOffsets(off_x, 11, TRUE);
@@ -1454,7 +1455,7 @@ static void LeaveLapTopScreen(void)
 			INT32 iRealPercentage = 100;
 			const UINT32 uiStartTime = GetClock();
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-			PlayJA2SampleFromFile("SOUNDS/Laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 			while (iRealPercentage > 0)
 			{
 				BltVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, 0, 0, NULL);
@@ -1712,11 +1713,11 @@ void SetBookMark(INT32 iBookId)
 static void LoadBookmark(void)
 {
 	// grab download bars too
-	guiDOWNLOADTOP = AddVideoObjectFromFile("LAPTOP/downloadtop.sti");
-	guiDOWNLOADMID = AddVideoObjectFromFile("LAPTOP/downloadmid.sti");
-	guiDOWNLOADBOT = AddVideoObjectFromFile("LAPTOP/downloadbot.sti");
-	guiBOOKMARK    = AddVideoObjectFromFile("LAPTOP/webpages.sti");
-	guiBOOKHIGH    = AddVideoObjectFromFile("LAPTOP/hilite.sti");
+	guiDOWNLOADTOP = AddVideoObjectFromFile(LAPTOPDIR "/downloadtop.sti");
+	guiDOWNLOADMID = AddVideoObjectFromFile(LAPTOPDIR "/downloadmid.sti");
+	guiDOWNLOADBOT = AddVideoObjectFromFile(LAPTOPDIR "/downloadbot.sti");
+	guiBOOKMARK    = AddVideoObjectFromFile(LAPTOPDIR "/webpages.sti");
+	guiBOOKHIGH    = AddVideoObjectFromFile(LAPTOPDIR "/hilite.sti");
 }
 
 
@@ -1942,8 +1943,8 @@ static void LoadLoadPending(void)
 	// function will load the load pending graphics
 	// reuse bookmark
 	// load graph window and bar
-	guiGRAPHWINDOW = AddVideoObjectFromFile("LAPTOP/graphwindow.sti");
-	guiGRAPHBAR    = AddVideoObjectFromFile("LAPTOP/graphsegment.sti");
+	guiGRAPHWINDOW = AddVideoObjectFromFile(LAPTOPDIR "/graphwindow.sti");
+	guiGRAPHBAR    = AddVideoObjectFromFile(LAPTOPDIR "/graphsegment.sti");
 }
 
 
@@ -2612,7 +2613,7 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void CreateMinimizeButtonForCurrentMode(void)
 {
 	// create minimize button
-	gLaptopMinButton = QuickCreateButtonImg("LAPTOP/x.sti", 0, 1, 590, 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
+	gLaptopMinButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1, 590, 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
 	gLaptopMinButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
@@ -3040,7 +3041,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 void RenderWWWProgramTitleBar(void)
 {
 	// will render the title bar for the www program
-	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
+	BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now slapdown text
 	SetFontAttributes(FONT14ARIAL, FONT_WHITE);

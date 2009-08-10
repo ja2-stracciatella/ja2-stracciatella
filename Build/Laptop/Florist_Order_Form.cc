@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -273,20 +274,20 @@ void EnterFloristOrderForm()
 {
 	InitFloristDefaults();
 
-	guiDeliveryLocation               = AddVideoObjectFromFile("LAPTOP/DeliveryLocation.sti");
-	guiFlowerFrame                    = AddVideoObjectFromFile("LAPTOP/FlowerFrame.sti");
-	guiPersonalSentiments             = AddVideoObjectFromFile("LAPTOP/PersonalSentiments.sti");
-	guiNameBox                        = AddVideoObjectFromFile("LAPTOP/NameBox.sti");
-	guiFlowerOrderCheckBoxButtonImage = AddVideoObjectFromFile("LAPTOP/OrderCheckBox.sti");
+	guiDeliveryLocation               = AddVideoObjectFromFile(LAPTOPDIR "/DeliveryLocation.sti");
+	guiFlowerFrame                    = AddVideoObjectFromFile(LAPTOPDIR "/FlowerFrame.sti");
+	guiPersonalSentiments             = AddVideoObjectFromFile(LAPTOPDIR "/PersonalSentiments.sti");
+	guiNameBox                        = AddVideoObjectFromFile(LAPTOPDIR "/NameBox.sti");
+	guiFlowerOrderCheckBoxButtonImage = AddVideoObjectFromFile(LAPTOPDIR "/OrderCheckBox.sti");
 
 	// load the currently selected flower bouquet
 	char sTemp[40];
-	sprintf(sTemp, "LAPTOP/Flower_%d.sti", guiCurrentlySelectedFlower);
+	sprintf(sTemp, LAPTOPDIR "/Flower_%d.sti", guiCurrentlySelectedFlower);
 	guiCurrentlySelectedFlowerImage = AddVideoObjectFromFile(sTemp);
 
-	guiDropDownBorder = AddVideoObjectFromFile("INTERFACE/TactPopUp.sti");
+	guiDropDownBorder = AddVideoObjectFromFile(INTERFACEDIR "/TactPopUp.sti");
 
-	guiFlowerOrderButtonImage	  = LoadButtonImage("LAPTOP/FloristButtons.sti", 0, 1);
+	guiFlowerOrderButtonImage	  = LoadButtonImage(LAPTOPDIR "/FloristButtons.sti", 0, 1);
 	guiFlowerOrderBackButton    = MakeButton(sOrderFormText[FLORIST_ORDER_BACK],    FLOWER_ORDER_BACK_BUTTON_X,    FLOWER_ORDER_BACK_BUTTON_Y,    BtnFlowerOrderBackButtonCallback);
 	guiFlowerOrderSendButton    = MakeButton(sOrderFormText[FLORIST_ORDER_SEND],    FLOWER_ORDER_SEND_BUTTON_X,    FLOWER_ORDER_SEND_BUTTON_Y,    BtnFlowerOrderSendButtonCallback);
 	guiFlowerOrderClearButton   = MakeButton(sOrderFormText[FLORIST_ORDER_CLEAR],   FLOWER_ORDER_CLEAR_BUTTON_X,   FLOWER_ORDER_CLEAR_BUTTON_Y,   BtnFlowerOrderClearButtonCallback);

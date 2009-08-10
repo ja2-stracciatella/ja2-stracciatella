@@ -1,6 +1,7 @@
 #ifdef JA2EDITOR
 
 #include <stdarg.h>
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Handle_Items.h"
@@ -145,15 +146,15 @@ static void InitEditorRegions(void)
 static void LoadEditorImages(void)
 {
 	//Set up the merc inventory panel
-	guiMercInventoryPanel = AddVideoObjectFromFile("EDITOR/InvPanel.sti");
+	guiMercInventoryPanel = AddVideoObjectFromFile(EDITORDIR "/InvPanel.sti");
 	//Set up small omerta map
-	guiOmertaMap          = AddVideoObjectFromFile("EDITOR/omerta.sti");
+	guiOmertaMap          = AddVideoObjectFromFile(EDITORDIR "/omerta.sti");
 	//Set up the merc directional buttons.
-	giEditMercDirectionIcons[0] = LoadGenericButtonIcon("EDITOR/arrowsoff.sti");
-	giEditMercDirectionIcons[1] = LoadGenericButtonIcon("EDITOR/arrowson.sti");
+	giEditMercDirectionIcons[0] = LoadGenericButtonIcon(EDITORDIR "/arrowsoff.sti");
+	giEditMercDirectionIcons[1] = LoadGenericButtonIcon(EDITORDIR "/arrowson.sti");
 
-	guiExclamation = AddVideoObjectFromFile("EDITOR/Exclamation.sti");
-	guiKeyImage    = AddVideoObjectFromFile("EDITOR/KeyImage.sti");
+	guiExclamation = AddVideoObjectFromFile(EDITORDIR "/Exclamation.sti");
+	guiKeyImage    = AddVideoObjectFromFile(EDITORDIR "/KeyImage.sti");
 }
 
 

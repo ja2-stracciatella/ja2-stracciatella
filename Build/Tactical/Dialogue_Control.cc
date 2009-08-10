@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "GameLoop.h"
@@ -889,12 +890,12 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		if ( fWavFile )
 		{
 			// build name of wav file (characternum + quotenum)
-			sprintf(zFileName, "NPC_SPEECH/d_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+			sprintf(zFileName, NPC_SPEECHDIR "/d_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( zFileName,"NPCDATA/d_%03d.EDT", ubCharacterNum );
+			sprintf(zFileName, NPCDATADIR "/d_%03d.EDT", ubCharacterNum);
 		}
 	}
 	else if ( ubCharacterNum >= FIRST_RPC &&
@@ -920,12 +921,12 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 
 		if ( fWavFile )
 		{
-			sprintf( zFileName,"NPC_SPEECH/%03d_%03d.wav",ubFileNumID,usQuoteNum );
+			sprintf(zFileName, NPC_SPEECHDIR "/%03d_%03d.wav", ubFileNumID, usQuoteNum);
 		}
 		else
 		{
 		// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( zFileName,"NPCDATA/%03d.EDT", ubFileNumID );
+			sprintf(zFileName, NPCDATADIR "/%03d.EDT", ubFileNumID);
 		}
 	}
 	else
@@ -935,18 +936,18 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 #if defined RUSSIAN || defined RUSSIAN_GOLD
 			if (ubCharacterNum >= FIRST_RPC && gMercProfiles[ubCharacterNum].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
 			{
-				sprintf(zFileName, "SPEECH/r_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+				sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
 			}
 			else
 #endif
 			{	// build name of wav file (characternum + quotenum)
-				sprintf( zFileName,"SPEECH/%03d_%03d.wav",ubCharacterNum,usQuoteNum );
+				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", ubCharacterNum, usQuoteNum);
 			}
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf( zFileName,"MERCEDT/%03d.EDT", ubCharacterNum );
+			sprintf(zFileName, MERCEDTDIR "/%03d.EDT", ubCharacterNum);
 		}
 	}
 

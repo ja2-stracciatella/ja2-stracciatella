@@ -5,9 +5,6 @@
 #define INSURANCE_TEXT_SINGLE_LINE_SIZE 80
 #define INSURANCE_TEXT_MULTI_LINE_SIZE  80 * 5
 
-#define		INSURANCE_TEXT_SINGLE_FILE					"BINARYDATA/InsuranceSingle.edt"
-#define		INSURANCE_TEXT_MULTI_FILE						"BINARYDATA/InsuranceMulti.edt"
-
 #define		INSURANCE_TEXT_SINGLE								1
 #define		INSURANCE_TEXT_MULTI								2
 

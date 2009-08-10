@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Laptop.h"
 #include "BobbyRAmmo.h"
 #include "BobbyRGuns.h"
@@ -17,10 +18,10 @@ static SGPVObject* guiAmmoGrid;
 void EnterBobbyRAmmo()
 {
 	// load the background graphic and add it
-	guiAmmoBackground = AddVideoObjectFromFile("LAPTOP/ammobackground.sti");
+	guiAmmoBackground = AddVideoObjectFromFile(LAPTOPDIR "/ammobackground.sti");
 
 	// load the gunsgrid graphic and add it
-	guiAmmoGrid = AddVideoObjectFromFile("LAPTOP/ammogrid.sti");
+	guiAmmoGrid = AddVideoObjectFromFile(LAPTOPDIR "/ammogrid.sti");
 
 	InitBobbyBrTitle();
 

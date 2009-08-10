@@ -1,4 +1,5 @@
 #include "Cursors.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "AIM.h"
@@ -204,13 +205,13 @@ void EnterAIM()
 	InitAimDefaults();
 
 	// load the MemberShipcard graphic and add it
-	guiMemberCard = AddVideoObjectFromFile("LAPTOP/membercard.sti");
+	guiMemberCard = AddVideoObjectFromFile(LAPTOPDIR "/membercard.sti");
 
 	// load the Policies graphic and add it
-	guiPolicies = AddVideoObjectFromFile("LAPTOP/Policies.sti");
+	guiPolicies = AddVideoObjectFromFile(LAPTOPDIR "/Policies.sti");
 
 	// load the Links graphic and add it
-	guiLinks = AddVideoObjectFromFile("LAPTOP/Links.sti");
+	guiLinks = AddVideoObjectFromFile(LAPTOPDIR "/Links.sti");
 
 	const char* ImageFile;
 
@@ -223,7 +224,7 @@ void EnterAIM()
 	guiWarning = AddVideoObjectFromFile(ImageFile);
 
 	// load the flower advertisment and add it
-	guiFlowerAdvertisement = AddVideoObjectFromFile("LAPTOP/flowerad_16.sti");
+	guiFlowerAdvertisement = AddVideoObjectFromFile(LAPTOPDIR "/flowerad_16.sti");
 
 	// load the your ad advertisment and add it
 	ImageFile = GetMLGFilename(MLG_YOURAD13);
@@ -388,7 +389,7 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 void InitAimDefaults()
 {
 	// load the Rust bacground graphic and add it
-	guiRustBackGround = AddVideoObjectFromFile("LAPTOP/rustbackground.sti");
+	guiRustBackGround = AddVideoObjectFromFile(LAPTOPDIR "/rustbackground.sti");
 
 	// load the Aim Symbol graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_AIMSYMBOL);
@@ -477,7 +478,7 @@ void InitAimMenuBar(void)
 	UINT8	i;
 	UINT16	usPosX;
 
-	guiBottomButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
+	guiBottomButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
 
 	usPosX = BOTTOM_BUTTON_START_X;
 	for(i=0; i<BOTTOM_BUTTON_AMOUNT; i++)

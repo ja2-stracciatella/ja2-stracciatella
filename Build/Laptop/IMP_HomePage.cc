@@ -1,4 +1,5 @@
 #include "CharProfile.h"
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "IMP_HomePage.h"
@@ -355,7 +356,7 @@ static void CreateIMPHomePageButtons(void)
   // this procedure will create the buttons needed for the IMP homepage
 
 	// ths about us button
-	giIMPHomePageButtonImage[0] = LoadButtonImage("LAPTOP/button_1.sti", 0, 1);
+	giIMPHomePageButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_1.sti", 0, 1);
 	giIMPHomePageButton[0] = CreateIconAndTextButton( giIMPHomePageButtonImage[0], pImpButtonText[ 0 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

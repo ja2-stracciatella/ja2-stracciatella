@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Soldier_Profile.h"
@@ -140,7 +141,7 @@ void LoadLockTable(void)
 try
 {
 	UINT32	uiBytesToRead;
-	const char *pFileName = "BINARYDATA/Locks.bin";
+	const char *pFileName = BINARYDATADIR "/Locks.bin";
 
 	// Load the Lock Table
 
@@ -672,7 +673,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			AniParams.sX									= sX;
 			AniParams.sY									= sY;
 			AniParams.sZ									= sZ;
-			AniParams.zCachedFile = "TILECACHE/miniboom.sti";
+			AniParams.zCachedFile = TILECACHEDIR "/miniboom.sti";
 			CreateAnimationTile( &AniParams );
 
 			PlayLocationJA2Sample(sGridNo, SMALL_EXPLODE_1, HIGHVOLUME, 1);

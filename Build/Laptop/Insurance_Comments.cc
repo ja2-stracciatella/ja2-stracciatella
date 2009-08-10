@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "Insurance_Text.h"
@@ -50,7 +51,7 @@ void EnterInsuranceComments()
 	InitInsuranceDefaults();
 
 	// load the Insurance bullet graphic and add it
-	guiInsCmntBulletImage = AddVideoObjectFromFile("LAPTOP/bullet.sti");
+	guiInsCmntBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
 
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 	for( i=0; i<3; i++)

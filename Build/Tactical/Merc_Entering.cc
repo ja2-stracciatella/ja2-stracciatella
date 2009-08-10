@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font_Control.h"
 #include "Overhead.h"
 #include "Timer_Control.h"
@@ -684,7 +685,7 @@ void HandleHeliDrop( )
 					AniParams.sX									= gsHeliXPos;
 					AniParams.sY									= gsHeliYPos;
 					AniParams.sZ									= (INT16)gdHeliZPos;
-					AniParams.zCachedFile = "TILECACHE/heli_sh.sti";
+					AniParams.zCachedFile = TILECACHEDIR "/heli_sh.sti";
 					gpHeli = CreateAnimationTile( &AniParams );
 					break;
 

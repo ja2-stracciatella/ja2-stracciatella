@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
@@ -35,22 +36,22 @@
 // filenames for border popup .sti's
 static char const* const zMercBorderPopupFilenames[] =
 {
- "INTERFACE/TactPopUp.sti",
- "INTERFACE/TactRedPopUp.sti",
- "INTERFACE/TactBluePopUp.sti",
- "INTERFACE/TactPopUpMain.sti",
- "INTERFACE/LaptopPopup.sti"
+ INTERFACEDIR "/TactPopUp.sti",
+ INTERFACEDIR "/TactRedPopUp.sti",
+ INTERFACEDIR "/TactBluePopUp.sti",
+ INTERFACEDIR "/TactPopUpMain.sti",
+ INTERFACEDIR "/LaptopPopup.sti"
 };
 
 // filenames for background popup .pcx's
 static char const* const zMercBackgroundPopupFilenames[] =
 {
-  "INTERFACE/TactPopupBackground.pcx",
-  "INTERFACE/TactPopupWhiteBackground.pcx",
-  "INTERFACE/TactPopupGreyBackground.pcx",
-  "INTERFACE/TactPopupBackgroundMain.pcx",
-  "INTERFACE/LaptopPopupBackground.pcx",
-	"INTERFACE/imp_popup_background.pcx"
+  INTERFACEDIR "/TactPopupBackground.pcx",
+  INTERFACEDIR "/TactPopupWhiteBackground.pcx",
+  INTERFACEDIR "/TactPopupGreyBackground.pcx",
+  INTERFACEDIR "/TactPopupBackgroundMain.pcx",
+  INTERFACEDIR "/LaptopPopupBackground.pcx",
+	INTERFACEDIR "/imp_popup_background.pcx"
 };
 
 
@@ -71,8 +72,8 @@ static SGPVObject* guiSkullIcons;
 
 void InitMercPopupBox()
 {
-	guiBoxIcons   = AddVideoObjectFromFile("INTERFACE/msgboxicons.sti");     // stop icon
-	guiSkullIcons = AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti"); // skull icon
+	guiBoxIcons   = AddVideoObjectFromFile(INTERFACEDIR "/msgboxicons.sti");     // stop icon
+	guiSkullIcons = AddVideoObjectFromFile(INTERFACEDIR "/msgboxiconskull.sti"); // skull icon
 }
 
 

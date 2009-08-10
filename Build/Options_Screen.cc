@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "GameScreen.h"
 #include "Handle_Items.h"
@@ -278,13 +279,13 @@ static void EnterOptionsScreen(void)
 	gfExitOptionsDueToMessageBox = FALSE;
 
 	// load the options screen background graphic and add it
-	guiOptionBackGroundImage = AddVideoObjectFromFile("INTERFACE/OptionScreenBase.sti");
+	guiOptionBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/OptionScreenBase.sti");
 
 	// load button, title graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_OPTIONHEADER);
 	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
 
-	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", 2, 3);
+	giOptionsButtonImages = LoadButtonImage(INTERFACEDIR "/OptionScreenAddons.sti", 2, 3);
 
 	//Save game button
 	guiOptGotoSaveGameBtn = MakeButton(OPT_SAVE_BTN_X, BtnOptGotoSaveGameCallback, zOptionsText[OPT_SAVE_GAME]);
@@ -314,7 +315,7 @@ static void EnterOptionsScreen(void)
 		}
 
 		//Check box to toggle tracking mode
-		GUIButtonRef const check = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
+		GUIButtonRef const check = CreateCheckBoxButton(pos_x, pos_y, INTERFACEDIR "/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
 		guiOptionsToggles[cnt] = check;
 		check->SetUserData(cnt);
 
@@ -581,7 +582,7 @@ static void GetOptionsScreenUserInput(void)
 					{
 					static	UINT32	uiTest2 = NO_SAMPLE;
 					if( !SoundIsPlaying( uiTest2 ) )
-						uiTest2 = PlayJA2SampleFromFile("Sounds/RAID Dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
+						uiTest2 = PlayJA2SampleFromFile(SOUNDSDIR "/RAID Dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
 					}
 					break;
 #endif
@@ -796,7 +797,7 @@ static void HandleSliderBarMovementSounds(void)
 			HandleNewSectorAmbience( gTilesets[ giCurrentTilesetID ].ubAmbientID );
 
 		if( !SoundIsPlaying( uiLastPlayingSoundID ) )
-			uiLastPlayingSoundID = PlayJA2SampleFromFile("Sounds/Weapons/LMG Reload.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			uiLastPlayingSoundID = PlayJA2SampleFromFile(SOUNDSDIR "/Weapons/LMG Reload.wav", HIGHVOLUME, 1, MIDDLEPAN);
 	}
 	else
 		uiLastSoundFxTime = GetJA2Clock();
@@ -807,7 +808,7 @@ static void HandleSliderBarMovementSounds(void)
 		guiSpeechSliderMoving = 0xffffffff;
 
 		if( !SoundIsPlaying( uiLastPlayingSpeechID ) )
-			uiLastPlayingSpeechID = PlayJA2GapSample("BattleSnds/m_cool.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
+			uiLastPlayingSpeechID = PlayJA2GapSample(SOUNDSDIR "/m_cool.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 	}
 	else
 		uiLastSpeechTime = GetJA2Clock();

@@ -989,7 +989,6 @@ extern	const wchar_t *zMarksMapScreenText[];
 
 
 //Weapon Name and Description size
-#define ITEMSTRINGFILENAME   "BINARYDATA/ITEMDESC.EDT"
 #define SIZE_ITEM_NAME        80
 #define SIZE_SHORT_ITEM_NAME  80
 #define SIZE_ITEM_INFO       240

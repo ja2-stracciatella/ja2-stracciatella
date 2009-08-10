@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "LoadSaveSmokeEffect.h"
 #include "Overhead.h"
 #include "Debug.h"
@@ -237,10 +238,10 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 		{
 			switch (bType)
 			{
-				case NORMAL_SMOKE_EFFECT:     cached_file = "TILECACHE/smalsmke.sti"; break;
-				case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/smaltear.sti"; break;
-				case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/smalmust.sti"; break;
-				case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
+				case NORMAL_SMOKE_EFFECT:     cached_file = TILECACHEDIR "/smalsmke.sti"; break;
+				case TEARGAS_SMOKE_EFFECT:    cached_file = TILECACHEDIR "/smaltear.sti"; break;
+				case MUSTARDGAS_SMOKE_EFFECT: cached_file = TILECACHEDIR "/smalmust.sti"; break;
+				case CREATURE_SMOKE_EFFECT:   cached_file = TILECACHEDIR "/spit_gas.sti"; break;
 				default: throw std::logic_error("Invalid smoke effect type");
 			}
 		}
@@ -248,10 +249,10 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 		{
 			switch (bType)
 			{
-				case NORMAL_SMOKE_EFFECT:     cached_file = "TILECACHE/smoke.sti";    break;
-				case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/teargas.sti";  break;
-				case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/mustard2.sti"; break;
-				case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
+				case NORMAL_SMOKE_EFFECT:     cached_file = TILECACHEDIR "/smoke.sti";    break;
+				case TEARGAS_SMOKE_EFFECT:    cached_file = TILECACHEDIR "/teargas.sti";  break;
+				case MUSTARDGAS_SMOKE_EFFECT: cached_file = TILECACHEDIR "/mustard2.sti"; break;
+				case CREATURE_SMOKE_EFFECT:   cached_file = TILECACHEDIR "/spit_gas.sti"; break;
 				default: throw std::logic_error("Invalid smoke effect type");
 			}
 		}
@@ -262,10 +263,10 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 	{
 		switch (bType)
 		{
-			case NORMAL_SMOKE_EFFECT:     cached_file = "TILECACHE/smkechze.sti"; break;
-			case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/tearchze.sti"; break;
-			case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/mustchze.sti"; break;
-			case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
+			case NORMAL_SMOKE_EFFECT:     cached_file = TILECACHEDIR "/smkechze.sti"; break;
+			case TEARGAS_SMOKE_EFFECT:    cached_file = TILECACHEDIR "/tearchze.sti"; break;
+			case MUSTARDGAS_SMOKE_EFFECT: cached_file = TILECACHEDIR "/mustchze.sti"; break;
+			case CREATURE_SMOKE_EFFECT:   cached_file = TILECACHEDIR "/spit_gas.sti"; break;
 			default: throw std::logic_error("Invalid smoke effect type");
 		}
     start_frame  = 0;

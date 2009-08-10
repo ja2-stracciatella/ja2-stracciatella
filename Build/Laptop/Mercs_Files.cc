@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font_Control.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -30,7 +31,7 @@
 #include "Cheats.h"
 
 
-#define		MERCBIOFILE												"BINARYDATA/MercBios.edt"
+#define		MERCBIOFILE												BINARYDATADIR "/MercBios.edt"
 
 #define		MERC_BIO_FONT											FONT14ARIAL//FONT12ARIAL
 #define		MERC_BIO_COLOR										FONT_MCOLOR_WHITE
@@ -141,12 +142,12 @@ void EnterMercsFiles()
 	guiStatsBox = AddVideoObjectFromFile(ImageFile);
 
 	// load the Portrait box graphic and add it
-	guiPortraitBox = AddVideoObjectFromFile("LAPTOP/PortraitBox.sti");
+	guiPortraitBox = AddVideoObjectFromFile(LAPTOPDIR "/PortraitBox.sti");
 
 	// load the bio box graphic and add it
-	guiBioBox = AddVideoObjectFromFile("LAPTOP/BioBox.sti");
+	guiBioBox = AddVideoObjectFromFile(LAPTOPDIR "/BioBox.sti");
 
-	guiButtonImage    = LoadButtonImage("LAPTOP/BigButtons.sti", 0, 1);
+	guiButtonImage    = LoadButtonImage(LAPTOPDIR "/BigButtons.sti", 0, 1);
 	guiPrevButton     = MakeButton(MercInfo[MERC_FILES_PREVIOUS], MERC_FILES_PREV_BUTTON_X, BtnMercPrevButtonCallback);
 	guiNextButton     = MakeButton(MercInfo[MERC_FILES_NEXT],     MERC_FILES_NEXT_BUTTON_X, BtnMercNextButtonCallback);
 	guiHireButton     = MakeButton(MercInfo[MERC_FILES_HIRE],     MERC_FILES_HIRE_BUTTON_X, BtnMercHireButtonCallback);
@@ -290,7 +291,7 @@ try
 
 	// Load the face graphic
 	char sTemp[100];
-  sprintf(sTemp, "FACES/BIGFACES/%02d.sti", pid);
+  sprintf(sTemp, FACESDIR "/BIGFACES/%02d.sti", pid);
 	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
 
 	BOOLEAN        shaded;

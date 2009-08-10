@@ -1,6 +1,7 @@
 #include "Button_System.h"
 #include "Cursor_Control.h"
 #include "Cursors.h"
+#include "Directories.h"
 #include "English.h"
 #include "Font_Control.h"
 #include "GameSettings.h"
@@ -207,9 +208,9 @@ void InitMainMenu(void)
 	CreateDestroyMainMenuButtons(TRUE);
 
 #if defined JA2DEMO
-#	define GFX_DIR "INTERFACE"
+#	define GFX_DIR INTERFACEDIR
 #else
-#	define GFX_DIR "LOADSCREENS"
+#	define GFX_DIR LOADSCREENSDIR
 #endif
 	guiMainMenuBackGroundImage = AddVideoObjectFromFile(GFX_DIR "/MainMenuBackGround.sti");
 	guiJa2LogoImage            = AddVideoObjectFromFile(GFX_DIR "/Ja2Logo.sti");

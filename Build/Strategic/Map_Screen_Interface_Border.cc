@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font_Control.h"
 #include "Interface.h"
 #include "Types.h"
@@ -24,7 +25,7 @@
 
 
 #ifdef JA2DEMO
-#	define MAP_BORDER_FILE "INTERFACE/MAPBORDER0225.sti"
+#	define MAP_BORDER_FILE INTERFACEDIR "/MAPBORDER0225.sti"
 #	define BTN_TOWN_X      272
 #	define BTN_MINE_X      315
 #	define BTN_TEAMS_X     358
@@ -34,7 +35,7 @@
 
 #	define MAP_LEVEL_MARKER_X    485
 #else
-#	define MAP_BORDER_FILE "INTERFACE/MBS.sti"
+#	define MAP_BORDER_FILE INTERFACEDIR "/MBS.sti"
 #	define BTN_TOWN_X      299
 #	define BTN_MINE_X      342
 #	define BTN_TEAMS_X     385
@@ -119,13 +120,13 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 void LoadMapBorderGraphics(void)
 {
   // this procedure will load the graphics needed for the map border
-	guiLEVELMARKER       = AddVideoObjectFromFile("INTERFACE/GreenArr.sti");
+	guiLEVELMARKER       = AddVideoObjectFromFile(INTERFACEDIR "/GreenArr.sti");
 	guiMapBorder         = AddVideoObjectFromFile(MAP_BORDER_FILE);
-	guiMapBorderEtaPopUp = AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti");
+	guiMapBorderEtaPopUp = AddVideoObjectFromFile(INTERFACEDIR "/eta_pop_up.sti");
 
 /* corner was removed along with the Zoom feature
 	// will load map border corner
-	guiMapBorderCorner = AddVideoObjectFromFile("INTERFACE/map_screen_cutout.sti");
+	guiMapBorderCorner = AddVideoObjectFromFile(INTERFACEDIR "/map_screen_cutout.sti");
 
 	fCursorIsOnMapScrollButtons = FALSE;
 */
@@ -219,7 +220,7 @@ void RenderMapBorderEtaPopUp( void )
 
 static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wchar_t* help)
 {
-	BUTTON_PICS* const img = LoadButtonImage("INTERFACE/map_border_buttons.sti", gfx, gfx + 9);
+	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/map_border_buttons.sti", gfx, gfx + 9);
 	giMapBorderButtonsImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, 323, MSYS_PRIORITY_HIGH, click);
 	giMapBorderButtons[idx] = btn;
@@ -231,7 +232,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 #if 0
 static void MakeButtonScroll(UINT idx, INT32 gray, INT32 normal, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
 {
-	INT32 btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", gray, normal, -1, normal + 2, -1, x, y, MSYS_PRIORITY_HIGH, click);
+	INT32 btn = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", gray, normal, -1, normal + 2, -1, x, y, MSYS_PRIORITY_HIGH, click);
 	guiMapBorderScrollButtons[idx] = btn;
 	btn->SetFastHelpText(help);
 }
@@ -268,11 +269,11 @@ void CreateButtonsForMapBorder(void)
 
 	// raise
 	/*
-	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL] = LoadButtonImage("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1);
+	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL] = LoadButtonImage(INTERFACEDIR "/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1);
 	guiMapBorderLandRaiseButtons[MAP_BORDER_RAISE_LEVEL] = QuickCreateButtonNoMove(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_RAISE_LEVEL], MAP_BORDER_X + 264, 322, MSYS_PRIORITY_HIGH, BtnRaiseLevelBtnCallback);
 
 	// lower
-	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL] = LoadButtonImage("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1);
+	guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL] = LoadButtonImage(INTERFACEDIR "/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1);
 	guiMapBorderLandRaiseButtons[MAP_BORDER_LOWER_LEVEL] = QuickCreateButtonNoMove(guiMapBorderLandRaiseButtonsImage[MAP_BORDER_LOWER_LEVEL], MAP_BORDER_X + 264, 340, MSYS_PRIORITY_HIGH, BtnLowerLevelBtnCallback);
 
 */

@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Overhead_Types.h"
@@ -890,7 +891,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				if( FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT )
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( zBurstString, "SOUNDS/WEAPONS/SILENCER BURST %d.wav", pSoldier->bBulletsLeft );
+					sprintf( zBurstString, SOUNDSDIR "/WEAPONS/SILENCER BURST %d.wav", pSoldier->bBulletsLeft );
 
 					// Try playing sound...
 					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
@@ -898,7 +899,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				else
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( zBurstString, "SOUNDS/WEAPONS/%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
+					sprintf( zBurstString, SOUNDSDIR "/WEAPONS/%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
 
 					// Try playing sound...
 					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
@@ -1789,7 +1790,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 			AniParams.sX									= sXPos;
 			AniParams.sY									= sYPos;
 			AniParams.sZ									= sZPos;
-			AniParams.zCachedFile = "TILECACHE/miniboom.sti";
+			AniParams.zCachedFile = TILECACHEDIR "/miniboom.sti";
 			CreateAnimationTile( &AniParams );
 
 			if ( fFreeupAttacker )

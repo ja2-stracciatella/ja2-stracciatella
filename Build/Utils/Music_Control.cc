@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Types.h"
 #include "Music_Control.h"
 #include "Random.h"
@@ -38,29 +39,29 @@ static INT8 gbFadeSpeed = 1;
 
 const char* const szMusicList[]=
 {
-	"MUSIC/marimbad 2.wav",
-	"MUSIC/menumix1.wav",
-	"MUSIC/nothing A.wav",
-	"MUSIC/nothing B.wav",
+	MUSICDIR "/marimbad 2.wav",
+	MUSICDIR "/menumix1.wav",
+	MUSICDIR "/nothing A.wav",
+	MUSICDIR "/nothing B.wav",
 #ifdef JA2DEMO
-	"MUSIC/nothing A.wav",
-	"MUSIC/nothing B.wav",
-	"MUSIC/tensor B.wav",
-	"MUSIC/tensor B.wav",
-	"MUSIC/tensor B.wav",
+	MUSICDIR "/nothing A.wav",
+	MUSICDIR "/nothing B.wav",
+	MUSICDIR "/tensor B.wav",
+	MUSICDIR "/tensor B.wav",
+	MUSICDIR "/tensor B.wav",
 #else
-	"MUSIC/nothing C.wav",
-	"MUSIC/nothing D.wav",
-	"MUSIC/tensor A.wav",
-	"MUSIC/tensor B.wav",
-	"MUSIC/tensor C.wav",
+	MUSICDIR "/nothing C.wav",
+	MUSICDIR "/nothing D.wav",
+	MUSICDIR "/tensor A.wav",
+	MUSICDIR "/tensor B.wav",
+	MUSICDIR "/tensor C.wav",
 #endif
-	"MUSIC/triumph.wav",
-	"MUSIC/death.wav",
-	"MUSIC/battle A.wav",
-	"MUSIC/tensor B.wav",
-	"MUSIC/creepy.wav",
-	"MUSIC/creature battle.wav"
+	MUSICDIR "/triumph.wav",
+	MUSICDIR "/death.wav",
+	MUSICDIR "/battle A.wav",
+	MUSICDIR "/tensor B.wav",
+	MUSICDIR "/creepy.wav",
+	MUSICDIR "/creature battle.wav"
 };
 
 

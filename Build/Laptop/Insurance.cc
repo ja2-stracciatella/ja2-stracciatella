@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -16,6 +17,10 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+
+
+#define INSURANCE_TEXT_SINGLE_FILE BINARYDATADIR "/InsuranceSingle.edt"
+#define INSURANCE_TEXT_MULTI_FILE  BINARYDATADIR "/InsuranceMulti.edt"
 
 
 #define		INSURANCE_BACKGROUND_WIDTH					125
@@ -100,7 +105,7 @@ void EnterInsurance()
 	guiInsuranceTitleImage = AddVideoObjectFromFile(ImageFile);
 
 	// load the red bar on the side of the page and add it
-	guiInsuranceBulletImage = AddVideoObjectFromFile("LAPTOP/Bullet.sti");
+	guiInsuranceBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/Bullet.sti");
 
 	usPosX = INSURANCE_BOTTOM_LINK_RED_BAR_X;
 	for(i=0; i<3; i++)
@@ -211,13 +216,13 @@ static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 
 void InitInsuranceDefaults()
 {
 	// load the Flower Account Box graphic and add it
-	guiInsuranceBackGround = AddVideoObjectFromFile("LAPTOP/BackGroundTile.sti");
+	guiInsuranceBackGround = AddVideoObjectFromFile(LAPTOPDIR "/BackGroundTile.sti");
 
 	// load the red bar on the side of the page and add it
-	guiInsuranceRedBarImage = AddVideoObjectFromFile("LAPTOP/LeftTile.sti");
+	guiInsuranceRedBarImage = AddVideoObjectFromFile(LAPTOPDIR "/LeftTile.sti");
 
 	// load the red bar on the side of the page and add it
-	guiInsuranceBigRedLineImage = AddVideoObjectFromFile("LAPTOP/LargeBar.sti");
+	guiInsuranceBigRedLineImage = AddVideoObjectFromFile(LAPTOPDIR "/LargeBar.sti");
 
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )

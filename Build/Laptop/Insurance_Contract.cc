@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -179,10 +180,10 @@ void EnterInsuranceContract()
 
 
 	// load the Insurance title graphic and add it
-	guiInsOrderGridImage = AddVideoObjectFromFile("LAPTOP/InsOrderGrid.sti");
+	guiInsOrderGridImage = AddVideoObjectFromFile(LAPTOPDIR "/InsOrderGrid.sti");
 
 	// load the Insurance bullet graphic and add it
-	guiInsOrderBulletImage = AddVideoObjectFromFile("LAPTOP/bullet.sti");
+	guiInsOrderBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
 
 
 	usPosX = INS_CTRCT_BOTTOM_LINK_RED_BAR_X;
@@ -197,11 +198,11 @@ void EnterInsuranceContract()
 
 
 	//left arrow
-	guiInsContractPrevButtonImage	= LoadButtonImage("LAPTOP/InsLeftButton.sti", 2,0,-1,1,-1 );
+	guiInsContractPrevButtonImage	= LoadButtonImage(LAPTOPDIR "/InsLeftButton.sti", 2,0,-1,1,-1 );
 	guiInsContractPrevBackButton  = MakeButtonBig(guiInsContractPrevButtonImage, InsContractText[INS_CONTRACT_PREVIOUS], INS_INFO_LEFT_ARROW_BUTTON_X, BtnInsContractPrevButtonCallback, 17);
 
 	//Right arrow
-	guiInsContractNextButtonImage	= LoadButtonImage("LAPTOP/InsRightButton.sti", 2,0,-1,1,-1 );
+	guiInsContractNextButtonImage	= LoadButtonImage(LAPTOPDIR "/InsRightButton.sti", 2,0,-1,1,-1 );
 	guiInsContractNextBackButton  = MakeButtonBig(guiInsContractNextButtonImage, InsContractText[INS_CONTRACT_NEXT], INS_INFO_RIGHT_ARROW_BUTTON_X, BtnInsContractNextButtonCallBack, 18);
 
 	//create the new set of buttons
@@ -403,7 +404,7 @@ try
 	{
 		// load the mercs face graphic and add it
 		char sTemp[100];
-		sprintf(sTemp, "FACES/%02d.sti", pid);
+		sprintf(sTemp, FACESDIR "/%02d.sti", pid);
 		AutoSGPVObject uiInsMercFaceImage(AddVideoObjectFromFile(sTemp));
 
 		//if the merc is dead, shade the face red
@@ -629,7 +630,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		//place the 3 accept buttons for the different forms
 
 		//The accept button image
-		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage("LAPTOP/AcceptClearBox.sti", 0, 1);
+		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage(LAPTOPDIR "/AcceptClearBox.sti", 0, 1);
 
 		const wchar_t* const text       = InsContractText[INS_CONTRACT_ACCEPT];
 		const INT16          text_col   = INS_FONT_BTN_COLOR;

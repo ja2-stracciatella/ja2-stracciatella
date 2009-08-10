@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Isometric_Utils.h"
@@ -224,10 +225,10 @@ void InitTacticalPlacementGUI()
 	GoIntoOverheadMap();
 
 	//Load the images
-	giOverheadPanelImage = AddVideoObjectFromFile("Interface/OverheadInterface.sti");
-	giMercPanelImage     = AddVideoObjectFromFile("Interface/panels.sti");
+	giOverheadPanelImage = AddVideoObjectFromFile(INTERFACEDIR "/OverheadInterface.sti");
+	giMercPanelImage     = AddVideoObjectFromFile(INTERFACEDIR "/panels.sti");
 
-	BUTTON_PICS* const img = LoadButtonImage("Interface/OverheadUIButtons.sti", 0, 1);
+	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/OverheadUIButtons.sti", 0, 1);
 	giOverheadButtonImages[DONE_BUTTON]   = img;
 	giOverheadButtonImages[SPREAD_BUTTON] = UseLoadedButtonImage(img, 0, 1);
 	giOverheadButtonImages[GROUP_BUTTON]  = UseLoadedButtonImage(img, 0, 1);
@@ -312,14 +313,14 @@ void InitTacticalPlacementGUI()
 	{
 		//Load the faces
 		SGPFILENAME ImageFile;
-		sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex);
+		sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex);
 		try
 		{
 			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
 		}
 		catch (...)
 		{
-			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile("Faces/65Face/speck.sti");
+			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile(FACESDIR "/65Face/speck.sti");
 		}
 		const INT32 xp = 91 + i / 2 * 54;
 		const INT32 yp = (i % 2 ? 412 : 361);

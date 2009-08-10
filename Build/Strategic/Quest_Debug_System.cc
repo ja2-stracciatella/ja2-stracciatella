@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
@@ -719,7 +720,7 @@ static void EnterQuestDebugSystem(void)
 
 	//Check box to toggle between all and local npc's
 	guiQuestDebugAllOrSectorNPCToggle =
-		CreateCheckBoxButton(	QUEST_DBS_NPC_CHCKBOX_TGL_X, QUEST_DBS_NPC_CHCKBOX_TGL_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAllOrSectorNPCToggleCallback );
+		CreateCheckBoxButton(	QUEST_DBS_NPC_CHCKBOX_TGL_X, QUEST_DBS_NPC_CHCKBOX_TGL_Y, INTERFACEDIR "/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAllOrSectorNPCToggleCallback );
 
 	//Currently Selected NPC button
 	guiQuestDebugCurNPCButton = MakeButton(QuestDebugText[QUEST_DBS_SELECTED_NPC], QUEST_DBS_SELECTED_NPC_BUTN_X, QUEST_DBS_SELECTED_NPC_BUTN_Y, QUEST_DBS_LIST_BOX_WIDTH, QDS_BUTTON_HEIGHT, MSYS_PRIORITY_HIGH + 2, BtnQuestDebugCurNPCButtonCallback);
@@ -769,14 +770,14 @@ static void EnterQuestDebugSystem(void)
 
 	//checkbox for weather to add the merc to the players team
 	guiQuestDebugAddNpcToTeamToggle =
-		CreateCheckBoxButton(	QUEST_DBS_ADD_NPC_TO_TEAM_BTN_X, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAddNpcToTeamToggleCallback );
+		CreateCheckBoxButton(	QUEST_DBS_ADD_NPC_TO_TEAM_BTN_X, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y, INTERFACEDIR "/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAddNpcToTeamToggleCallback );
 	if( gfAddNpcToTeam )
 		guiQuestDebugAddNpcToTeamToggle->uiFlags |= BUTTON_CLICKED_ON;
 
 
 	//checkbox for weather have rpc say the sector description
 	guiQuestDebugRPCSaySectorDescToggle =
-		CreateCheckBoxButton(	QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_X, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugRPCSaySectorDescToggleCallback );
+		CreateCheckBoxButton(	QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_X, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, INTERFACEDIR "/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugRPCSaySectorDescToggleCallback );
 	if( gfRpcToSaySectorDesc )
 		guiQuestDebugRPCSaySectorDescToggle->uiFlags |= BUTTON_CLICKED_ON;
 
@@ -805,7 +806,7 @@ static void EnterQuestDebugSystem(void)
 	}
 
 	// load Scroll Horizontal Arrow graphic and add it
-	guiQdScrollArrowImage = AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti");
+	guiQdScrollArrowImage = AddVideoObjectFromFile(INTERFACEDIR "/Qd_ScrollArrows.sti");
 
 	gfRedrawQuestDebugSystem = TRUE;
 

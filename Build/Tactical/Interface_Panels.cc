@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
@@ -860,9 +861,9 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 
 void InitializeSMPanel(void)
 {
-	guiSMPanel    = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
-	guiSMObjects  = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
-	guiSMObjects2 = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");
+	guiSMPanel    = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.STI");
+	guiSMObjects  = AddVideoObjectFromFile(INTERFACEDIR "/inventory_gold_front.sti");
+	guiSMObjects2 = AddVideoObjectFromFile(INTERFACEDIR "/inv_frn.sti");
 
 	// INit viewport region
 	// Set global mouse regions
@@ -974,31 +975,31 @@ void CreateSMPanelButtons(void)
 	gfAllDisabled	= FALSE;
 
 	// Load button Graphics
-	iSMPanelImages[STANCEUP_IMAGES]   = LoadButtonImage("INTERFACE/inventory_buttons.sti",     0, 10);
-	iSMPanelImages[UPDOWN_IMAGES]     = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  9, 19);
-	iSMPanelImages[CLIMB_IMAGES]      = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  3, 13);
-	iSMPanelImages[STANCEDOWN_IMAGES] = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  8, 18);
-	iSMPanelImages[HANDCURSOR_IMAGES] = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  1, 11);
-	iSMPanelImages[PREVMERC_IMAGES]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], 20, 22);
-	iSMPanelImages[NEXTMERC_IMAGES]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], 21, 23);
+	iSMPanelImages[STANCEUP_IMAGES]   = LoadButtonImage(INTERFACEDIR "/inventory_buttons.sti",    0, 10);
+	iSMPanelImages[UPDOWN_IMAGES]     = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     9, 19);
+	iSMPanelImages[CLIMB_IMAGES]      = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     3, 13);
+	iSMPanelImages[STANCEDOWN_IMAGES] = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     8, 18);
+	iSMPanelImages[HANDCURSOR_IMAGES] = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     1, 11);
+	iSMPanelImages[PREVMERC_IMAGES]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],    20, 22);
+	iSMPanelImages[NEXTMERC_IMAGES]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],    21, 23);
 #if 0
-	iSMPanelImages[BURSTMODE_IMAGES]  = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  7, 17);
+	iSMPanelImages[BURSTMODE_IMAGES]  = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     7, 17);
 #endif
-	iSMPanelImages[LOOK_IMAGES]       = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  2, 12);
-	iSMPanelImages[TALK_IMAGES]       = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  6, 16);
-	iSMPanelImages[MUTE_IMAGES]       = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  5, 15);
-	iSMPanelImages[OPTIONS_IMAGES]    = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], 24, 25);
+	iSMPanelImages[LOOK_IMAGES]       = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     2, 12);
+	iSMPanelImages[TALK_IMAGES]       = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     6, 16);
+	iSMPanelImages[MUTE_IMAGES]       = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     5, 15);
+	iSMPanelImages[OPTIONS_IMAGES]    = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],    24, 25);
 
-	iBurstButtonImages[WM_NORMAL]     = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],  7,  7);
-	iBurstButtonImages[WM_BURST]      = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], 17, 17);
+	iBurstButtonImages[WM_NORMAL]     = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     7,  7);
+	iBurstButtonImages[WM_BURST]      = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],    17, 17);
 #ifndef JA2DEMO
-	iBurstButtonImages[WM_ATTACHED]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], 26, 26);
+	iBurstButtonImages[WM_ATTACHED]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],    26, 26);
 #endif
 
-	iSMPanelImages[STANCE_IMAGES]     = LoadButtonImage("INTERFACE/invadd-ons.sti", 0, 0, -1, 2, -1);
+	iSMPanelImages[STANCE_IMAGES]     = LoadButtonImage(INTERFACEDIR "/invadd-ons.sti", 0, 0, -1, 2, -1);
 
-	iSMPanelImages[DONE_IMAGES]       = LoadButtonImage("INTERFACE/inventory_buttons_2.sti",   1,  3);
-	iSMPanelImages[MAPSCREEN_IMAGES]  = UseLoadedButtonImage(iSMPanelImages[DONE_IMAGES],      0,  2);
+	iSMPanelImages[DONE_IMAGES]       = LoadButtonImage(INTERFACEDIR "/inventory_buttons_2.sti",  1,  3);
+	iSMPanelImages[MAPSCREEN_IMAGES]  = UseLoadedButtonImage(iSMPanelImages[DONE_IMAGES],         0,  2);
 
 
 	// Create buttons
@@ -2217,8 +2218,8 @@ void InitializeTEAMPanel(void)
 	// Define region for viewport
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	guiTEAMPanel   = AddVideoObjectFromFile("INTERFACE/bottom_bar.sti");
-	guiTEAMObjects = AddVideoObjectFromFile("INTERFACE/gold_front.sti");
+	guiTEAMPanel   = AddVideoObjectFromFile(INTERFACEDIR "/bottom_bar.sti");
+	guiTEAMObjects = AddVideoObjectFromFile(INTERFACEDIR "/gold_front.sti");
 
 	// Create buttons
 	CreateTEAMPanelButtons();
@@ -2471,9 +2472,9 @@ static void BtnSquadCallback(GUI_BUTTON* btn, INT32 reason);
 void CreateTEAMPanelButtons(void)
 {
 	// Load button Graphics
-	iTEAMPanelImages[ENDTURN_IMAGES]    = LoadButtonImage("INTERFACE/bottom_bar_buttons.sti",    0, 3);
-	iTEAMPanelImages[ROSTERMODE_IMAGES] = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES], 1, 4);
-	iTEAMPanelImages[DISK_IMAGES]       = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES], 2, 5);
+	iTEAMPanelImages[ENDTURN_IMAGES]    = LoadButtonImage(INTERFACEDIR "/bottom_bar_buttons.sti", 0, 3);
+	iTEAMPanelImages[ROSTERMODE_IMAGES] = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES],  1, 4);
+	iTEAMPanelImages[DISK_IMAGES]       = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES],  2, 5);
 
 	const INT32 dy = INTERFACE_START_Y;
 	MakeButtonTeam(TEAM_DONE_BUTTON,       iTEAMPanelImages[ENDTURN_IMAGES],    TM_ENDTURN_X,    dy + TM_ENDTURN_Y,    BtnEndTurnCallback,    TacticalStr[END_TURN_POPUPTEXT]);

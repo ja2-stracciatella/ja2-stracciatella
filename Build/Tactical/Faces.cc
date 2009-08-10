@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Interface_Control.h"
@@ -149,20 +150,20 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	// Check if we are a big-face....
 	if (uiInitFlags & FACE_BIGFACE)
 	{
-		face_file = "FACES/b%02d.sti";
+		face_file = FACESDIR "/b%02d.sti";
     // ATE: Check for profile - if elliot, use special face :)
 		if (id == ELLIOT && p.bNPCData > 3)
 		{
-			if      (p.bNPCData <   7) face_file = "FACES/b%02da.sti";
-			else if (p.bNPCData <  10) face_file = "FACES/b%02db.sti";
-			else if (p.bNPCData <  13) face_file = "FACES/b%02dc.sti";
-			else if (p.bNPCData <  16) face_file = "FACES/b%02dd.sti";
-			else if (p.bNPCData == 17) face_file = "FACES/b%02de.sti";
+			if      (p.bNPCData <   7) face_file = FACESDIR "/b%02da.sti";
+			else if (p.bNPCData <  10) face_file = FACESDIR "/b%02db.sti";
+			else if (p.bNPCData <  13) face_file = FACESDIR "/b%02dc.sti";
+			else if (p.bNPCData <  16) face_file = FACESDIR "/b%02dd.sti";
+			else if (p.bNPCData == 17) face_file = FACESDIR "/b%02de.sti";
 		}
 	}
 	else
 	{
-		face_file = "FACES/%02d.sti";
+		face_file = FACESDIR "/%02d.sti";
 	}
 
 	// HERVE, PETER, ALBERTO and CARLO all use HERVE's portrait
@@ -179,7 +180,7 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	{
 		// If we are a big face, use placeholder...
 		if (!(uiInitFlags & FACE_BIGFACE)) throw;
-		vo = AddVideoObjectFromFile("FACES/placeholder.sti");
+		vo = AddVideoObjectFromFile(FACESDIR "/placeholder.sti");
 	}
 
 	memset(&f, 0, sizeof(f));

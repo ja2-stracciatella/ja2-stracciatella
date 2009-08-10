@@ -1,4 +1,5 @@
 #include "Civ_Quotes.h"
+#include "Directories.h"
 #include "Font_Control.h"
 #include "Local.h"
 #include "MouseSystem.h"
@@ -125,17 +126,16 @@ try
 	{
     if ( gbWorldSectorZ > 0 )
     {
-		  //strcpy(zFileName, "NPCData/miners.edt");
-  		sprintf( zFileName,"NPCDATA/CIV%02d.edt", CIV_QUOTE_MINERS_NOT_FOR_PLAYER );
+			sprintf(zFileName, NPCDATADIR "/CIV%02d.edt", CIV_QUOTE_MINERS_NOT_FOR_PLAYER);
     }
     else
     {
-		  sprintf( zFileName, "NPCData/%c%d.edt", 'A' + (gWorldSectorY - 1) , gWorldSectorX );
+			sprintf(zFileName, NPCDATADIR "/%c%d.edt", 'A' + (gWorldSectorY - 1) , gWorldSectorX);
     }
 	}
 	else
 	{
-		sprintf( zFileName,"NPCDATA/CIV%02d.edt",ubCivQuoteID );
+		sprintf(zFileName, NPCDATADIR "/CIV%02d.edt", ubCivQuoteID);
 	}
 
 	LoadEncryptedDataFromFile(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);

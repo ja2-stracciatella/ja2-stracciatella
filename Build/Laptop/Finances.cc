@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "Finances.h"
@@ -333,19 +334,19 @@ static void LoadFinances(void)
   // load Finance video objects into memory
 
 	// title bar
-	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// top portion of the screen background
-	guiTOP = AddVideoObjectFromFile("LAPTOP/Financeswindow.sti");
+	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/Financeswindow.sti");
 
   // black divider line - long ( 480 length)
-	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
+	guiLONGLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline480.sti");
 
 	// the records columns
-	guiLISTCOLUMNS = AddVideoObjectFromFile("LAPTOP/recordcolumns.sti");
+	guiLISTCOLUMNS = AddVideoObjectFromFile(LAPTOPDIR "/recordcolumns.sti");
 
   // black divider line - long ( 480 length)
-	guiLINE = AddVideoObjectFromFile("LAPTOP/divisionline.sti");
+	guiLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline.sti");
 }
 
 
@@ -790,7 +791,7 @@ static void MakeButton(size_t const idx, BUTTON_PICS* const img, INT16 const x, 
 
 static void CreateFinanceButtons(void)
 {
-	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/arrows.sti", 0, 1);
+	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/arrows.sti", 0, 1);
 	MakeButton(PREV_PAGE_BUTTON,  img,                              PREV_BTN_X,   BtnFinanceDisplayPrevPageCallBack);
 	MakeButton(NEXT_PAGE_BUTTON,  UseLoadedButtonImage(img, 6,  7), NEXT_BTN_X,   BtnFinanceDisplayNextPageCallBack);
 	MakeButton(FIRST_PAGE_BUTTON, UseLoadedButtonImage(img, 3,  4), FIRST_PAGE_X, BtnFinanceFirstPageCallBack);

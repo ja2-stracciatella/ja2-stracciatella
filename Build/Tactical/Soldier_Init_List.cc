@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "LoadSaveSoldierCreate.h"
 #include "Types.h"
 #include "StrategicMap.h"
@@ -251,7 +252,7 @@ void LoadSoldiersFromMap(HWFILE const f)
 	if (cow_in_sector)
 	{
 		char str[40];
-		sprintf(str, "Sounds/cowmoo%d.wav", Random(3) + 1);
+		sprintf(str, SOUNDSDIR "/cowmoo%d.wav", Random(3) + 1);
 		PlayJA2SampleFromFile(str, MIDVOLUME, 1, MIDDLEPAN);
 	}
 }

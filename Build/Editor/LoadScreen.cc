@@ -3,6 +3,7 @@
 #include <cstdarg>
 
 #include "Button_System.h"
+#include "Directories.h"
 #include "FileMan.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -140,7 +141,7 @@ static void LoadSaveScreenEntry(void)
 	iTopFileShown = iTotalFiles = 0;
 	try
 	{
-		SGP::FindFiles find("MAPS/*.dat");
+		SGP::FindFiles find(MAPSDIR "/*.dat");
 		for (;;)
 		{
 			char const* const filename = find.Next();
@@ -350,7 +351,7 @@ ScreenID LoadSaveScreenHandle(void)
 
 		case DIALOG_DELETE:
 		{
-			sprintf( gszCurrFilename, "MAPS/%ls", gzFilename );
+			sprintf(gszCurrFilename, MAPSDIR "/%ls", gzFilename);
 			const UINT32 attr = FileGetAttributes(gszCurrFilename);
 			if (attr != FILE_ATTR_ERROR)
 			{
@@ -375,7 +376,7 @@ ScreenID LoadSaveScreenHandle(void)
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-			sprintf( gszCurrFilename, "MAPS/%ls", gzFilename );
+			sprintf(gszCurrFilename, MAPSDIR "/%ls", gzFilename);
 			if ( FileExists( gszCurrFilename ) )
 			{
 				gfFileExists = TRUE;
@@ -449,8 +450,8 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	iFileDlgButtons[1] = CreateTextButton(L"Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 406, 225, 50, 30, MSYS_PRIORITY_HIGH, FDlgCancelCallback);
 
 	//Scroll buttons
-	iFileDlgButtons[2] = MakeButtonArrow("EDITOR/uparrow.sti",    92, FDlgUpCallback);
-	iFileDlgButtons[3] = MakeButtonArrow("EDITOR/downarrow.sti", 182, FDlgDwnCallback);
+	iFileDlgButtons[2] = MakeButtonArrow(EDITORDIR "/uparrow.sti",    92, FDlgUpCallback);
+	iFileDlgButtons[3] = MakeButtonArrow(EDITORDIR "/downarrow.sti", 182, FDlgDwnCallback);
 
 	//File list window
 	iFileDlgButtons[4] = CreateHotSpot(179 + 4, 69 + 3, 179 + 4 + 240, 69 + 120 + 3, MSYS_PRIORITY_HIGH - 1, FDlgNamesCallback);
@@ -460,7 +461,7 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	if( iCurrentAction == ACTION_SAVE_MAP )
 	{	//checkboxes
 		//The update world info checkbox
-		iFileDlgButtons[6] = CreateCheckBoxButton( 183, 229, "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
+		iFileDlgButtons[6] = CreateCheckBoxButton( 183, 229, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
 		if( gfUpdateSummaryInfo )
 			iFileDlgButtons[6]->uiFlags |= BUTTON_CLICKED_ON;
 	}

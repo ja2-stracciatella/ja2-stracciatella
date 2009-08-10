@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font_Control.h"
 #include "MapScreen.h"
 #include "Map_Screen_Helicopter.h"
@@ -1349,7 +1350,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 
 			// everyone die die die
 			// play sound
-			if (PlayJA2StreamingSampleFromFile("stsounds/blah2.wav", HIGHVOLUME, 1, MIDDLEPAN, HeliCrashSoundStopCallback) == SOUND_ERROR)
+			if (PlayJA2StreamingSampleFromFile(STSOUNDSDIR "/blah2.wav", HIGHVOLUME, 1, MIDDLEPAN, HeliCrashSoundStopCallback) == SOUND_ERROR)
       {
         // Destroy here if we cannot play streamed sound sample....
   			SkyriderDestroyed( );

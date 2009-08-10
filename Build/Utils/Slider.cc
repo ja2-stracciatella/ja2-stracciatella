@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "Debug.h"
+#include "Directories.h"
 #include "HImage.h"
 #include "Input.h"
 #include "Line.h"
@@ -64,7 +65,7 @@ static SGPVObject* guiSliderBoxImage;
 void InitSlider(void)
 {
 	// load Slider Box Graphic graphic and add it
-	guiSliderBoxImage = AddVideoObjectFromFile("INTERFACE/SliderBox.sti");
+	guiSliderBoxImage = AddVideoObjectFromFile(INTERFACEDIR "/SliderBox.sti");
 }
 
 

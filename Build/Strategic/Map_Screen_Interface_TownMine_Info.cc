@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "HImage.h"
 #include "MapScreen.h"
 #include "Map_Screen_Interface_Bottom.h"
@@ -560,7 +561,7 @@ static void PositionTownMineInfoBox(PopUpBox* const box)
 
 static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	BUTTON_PICS* const img = LoadButtonImage("INTERFACE/mapinvbtns.sti", idx, idx + 2);
+	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/mapinvbtns.sti", idx, idx + 2);
 	guiMapButtonInventoryImage[idx] = img;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, BLOCKFONT2, FONT_WHITE, FONT_BLACK, FONT_WHITE, FONT_BLACK, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	guiMapButtonInventory[idx] = btn;
@@ -570,7 +571,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALL
 static void AddInventoryButtonForMapPopUpBox(const PopUpBox* const box)
 {
 	// load the button
-	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
+	AutoSGPVObject uiObject(AddVideoObjectFromFile(INTERFACEDIR "/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
 	ETRLEObject const& pTrav   = uiObject->SubregionProperties(0);
@@ -640,7 +641,7 @@ static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 // get the min width of the town mine info pop up box
 static void MinWidthOfTownMineInfoBox(void)
 {
-	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
+	AutoSGPVObject uiObject(AddVideoObjectFromFile(INTERFACEDIR "/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
 	INT16 const sWidthA = uiObject->SubregionProperties(0).usWidth;

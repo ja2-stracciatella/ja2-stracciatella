@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "Directories.h"
 #include "Local.h"
 #include "Video.h"
 #include "Font.h"
@@ -37,8 +38,8 @@ void CreateMessageBox(wchar_t const* const msg)
 
 	INT16 const bx = x + w / 2;
 	INT16 const by = y + 58;
-	iMsgBoxOk     = QuickCreateButtonImg("EDITOR/ok.sti",     0, 1, 2, 3, 4, bx - 35, by, MSYS_PRIORITY_HIGHEST - 1, MsgBoxOkClkCallback);
-	iMsgBoxCancel = QuickCreateButtonImg("EDITOR/cancel.sti", 0, 1, 2, 3, 4, bx +  5, by, MSYS_PRIORITY_HIGHEST - 1, MsgBoxCnclClkCallback);
+	iMsgBoxOk     = QuickCreateButtonImg(EDITORDIR "/ok.sti",     0, 1, 2, 3, 4, bx - 35, by, MSYS_PRIORITY_HIGHEST - 1, MsgBoxOkClkCallback);
+	iMsgBoxCancel = QuickCreateButtonImg(EDITORDIR "/cancel.sti", 0, 1, 2, 3, 4, bx +  5, by, MSYS_PRIORITY_HIGHEST - 1, MsgBoxCnclClkCallback);
 
 	SGPRect msg_box_rect;
 	msg_box_rect.iLeft   = x;

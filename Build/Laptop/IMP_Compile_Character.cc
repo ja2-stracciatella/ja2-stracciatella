@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Laptop.h"
 #include "CharProfile.h"
 #include "Debug.h"
@@ -28,42 +29,42 @@ extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
 
 const char *pPlayerSelectedFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 {
-	"Faces/200.sti",
-	"Faces/201.sti",
-	"Faces/202.sti",
-	"Faces/203.sti",
-	"Faces/204.sti",
-	"Faces/205.sti",
-	"Faces/206.sti",
-	"Faces/207.sti",
-	"Faces/208.sti",
-	"Faces/209.sti",
-	"Faces/210.sti",
-	"Faces/211.sti",
-	"Faces/212.sti",
-	"Faces/213.sti",
-	"Faces/214.sti",
-	"Faces/215.sti",
+	FACESDIR "/200.sti",
+	FACESDIR "/201.sti",
+	FACESDIR "/202.sti",
+	FACESDIR "/203.sti",
+	FACESDIR "/204.sti",
+	FACESDIR "/205.sti",
+	FACESDIR "/206.sti",
+	FACESDIR "/207.sti",
+	FACESDIR "/208.sti",
+	FACESDIR "/209.sti",
+	FACESDIR "/210.sti",
+	FACESDIR "/211.sti",
+	FACESDIR "/212.sti",
+	FACESDIR "/213.sti",
+	FACESDIR "/214.sti",
+	FACESDIR "/215.sti",
 };
 
 const char *pPlayerSelectedBigFaceFileNames[ NUMBER_OF_PLAYER_PORTRAITS ]=
 {
-	"Faces/BigFaces/200.sti",
-	"Faces/BigFaces/201.sti",
-	"Faces/BigFaces/202.sti",
-	"Faces/BigFaces/203.sti",
-	"Faces/BigFaces/204.sti",
-	"Faces/BigFaces/205.sti",
-	"Faces/BigFaces/206.sti",
-	"Faces/BigFaces/207.sti",
-	"Faces/BigFaces/208.sti",
-	"Faces/BigFaces/209.sti",
-	"Faces/BigFaces/210.sti",
-	"Faces/BigFaces/211.sti",
-	"Faces/BigFaces/212.sti",
-	"Faces/BigFaces/213.sti",
-	"Faces/BigFaces/214.sti",
-	"Faces/BigFaces/215.sti",
+	FACESDIR "/BigFaces/200.sti",
+	FACESDIR "/BigFaces/201.sti",
+	FACESDIR "/BigFaces/202.sti",
+	FACESDIR "/BigFaces/203.sti",
+	FACESDIR "/BigFaces/204.sti",
+	FACESDIR "/BigFaces/205.sti",
+	FACESDIR "/BigFaces/206.sti",
+	FACESDIR "/BigFaces/207.sti",
+	FACESDIR "/BigFaces/208.sti",
+	FACESDIR "/BigFaces/209.sti",
+	FACESDIR "/BigFaces/210.sti",
+	FACESDIR "/BigFaces/211.sti",
+	FACESDIR "/BigFaces/212.sti",
+	FACESDIR "/BigFaces/213.sti",
+	FACESDIR "/BigFaces/214.sti",
+	FACESDIR "/BigFaces/215.sti",
 };
 
 

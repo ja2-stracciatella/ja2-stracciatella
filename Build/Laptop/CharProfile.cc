@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "Cursors.h"
@@ -575,7 +576,7 @@ static void CreateIMPButtons(void)
 {
   // create all the buttons global to the IMP system
 
-  giIMPButtonImage[0] = LoadButtonImage("LAPTOP/button_3.sti", 0, 1);
+  giIMPButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
 
 
 	// cancel

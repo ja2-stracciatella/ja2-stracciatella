@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Interface_Control.h"
 #include "Interface_Panels.h"
 #include "LoadSaveMercProfile.h"
@@ -183,7 +184,7 @@ static void StartSomeMercsOnAssignment(void);
 
 void LoadMercProfiles()
 {
-	{ AutoSGPFile f(FileOpen("BINARYDATA/Prof.dat", FILE_ACCESS_READ));
+	{ AutoSGPFile f(FileOpen(BINARYDATADIR "/Prof.dat", FILE_ACCESS_READ));
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
 #ifdef JA2DEMO

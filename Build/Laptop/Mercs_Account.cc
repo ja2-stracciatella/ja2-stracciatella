@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "Merc_Hiring.h"
@@ -100,9 +101,9 @@ void EnterMercsAccount()
 	guiMercOrderGrid = AddVideoObjectFromFile(ImageFile);
 
 	// load the Arrow graphic and add it
-	guiAccountNumberGrid = AddVideoObjectFromFile("LAPTOP/AccountNumber.sti");
+	guiAccountNumberGrid = AddVideoObjectFromFile(LAPTOPDIR "/AccountNumber.sti");
 
-	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", 0, 1);
+	guiMercAuthorizeButtonImage = LoadButtonImage(LAPTOPDIR "/BigButtons.sti", 0, 1);
 	guiMercAuthorizeBoxButton   = MakeButton(MercAccountText[MERC_ACCOUNT_AUTHORIZE], MERC_AC_AUTHORIZE_BUTTON_X, BtnMercAuthorizeButtonCallback);
 	guiMercAuthorizeBoxButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	guiMercBackBoxButton        = MakeButton(MercAccountText[MERC_ACCOUNT_HOME],      MERC_AC_CANCEL_BUTTON_X,    BtnMercBackButtonCallback);

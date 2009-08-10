@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "GameLoop.h"
 #include "HImage.h"
@@ -556,10 +557,10 @@ static void EnterShopKeeperInterface(void)
 	SetSMPanelCurrentMerc(sel);
 
 	// load the Main trade screen backgroiund image
-	guiMainTradeScreenImage = AddVideoObjectFromFile("InterFace/TradeScreen.sti");
+	guiMainTradeScreenImage = AddVideoObjectFromFile(INTERFACEDIR "/TradeScreen.sti");
 
 	// load the Main trade screen background image
-	guiItemCrossOut = AddVideoObjectFromFile("InterFace/itemcrossout.sti");
+	guiItemCrossOut = AddVideoObjectFromFile(INTERFACEDIR "/itemcrossout.sti");
 
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
 	// This is to support showing of repair item owner's faces even when they're not in the sector, as long as they still work for player
@@ -572,7 +573,7 @@ static void EnterShopKeeperInterface(void)
 			gubArrayOfEmployedMercs[ gubNumberMercsInArray ] = pSoldier->ubProfile;
 
 			//Create the string for the face file name
-			sprintf( zTemp, "FACES/33FACE/%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
+			sprintf( zTemp, FACESDIR "/33FACE/%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
 
 			//While we are at it, add their small face
 			guiSmallSoldiersFace[gubNumberMercsInArray] = AddVideoObjectFromFile(zTemp);
@@ -582,8 +583,8 @@ static void EnterShopKeeperInterface(void)
 	}
 
 	//Load the graphic for the arrow button
-	guiSKI_InvPageUpButtonImage   = LoadButtonImage("INTERFACE/TradeScrollArrows.sti", 0, 1);
-	guiSKI_InvPageDownButtonImage = UseLoadedButtonImage(guiSKI_InvPageUpButtonImage,  2, 3);
+	guiSKI_InvPageUpButtonImage   = LoadButtonImage(INTERFACEDIR "/TradeScrollArrows.sti", 0, 1);
+	guiSKI_InvPageDownButtonImage = UseLoadedButtonImage(guiSKI_InvPageUpButtonImage,      2, 3);
 
 
 	//Page up button for the merchant inventory
@@ -595,7 +596,7 @@ static void EnterShopKeeperInterface(void)
 	guiSKI_InvPageDownButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 
-	guiSKI_TransactionButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti",       0, 1);
+	guiSKI_TransactionButtonImage = LoadButtonImage(INTERFACEDIR "/TradeButtons.sti",   0, 1);
 	guiSKI_DoneButtonImage        = UseLoadedButtonImage(guiSKI_TransactionButtonImage, 0, 1);
 
 	//Transaction button

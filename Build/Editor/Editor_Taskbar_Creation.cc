@@ -2,6 +2,7 @@
 
 //sgp
 #include "Button_System.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
 //editor
@@ -21,7 +22,7 @@ static void InitEditorItemStatsButtons(void)
 {
 	INT16 const y = TASKBAR_Y;
 	iEditorButton[ITEMSTATS_PANEL]      = CreateLabel(NULL, 0, 0, 0, 480, y + 1, 160, 99, MSYS_PRIORITY_NORMAL);
-	iEditorButton[ITEMSTATS_HIDDEN_BTN] = CreateCheckBoxButton(485, y + 5, "EDITOR/SmCheckbox.sti", MSYS_PRIORITY_NORMAL, ItemStatsToggleHideCallback);
+	iEditorButton[ITEMSTATS_HIDDEN_BTN] = CreateCheckBoxButton(485, y + 5, EDITORDIR "/SmCheckbox.sti", MSYS_PRIORITY_NORMAL, ItemStatsToggleHideCallback);
 	iEditorButton[ITEMSTATS_DELETE_BTN] = CreateTextButton(L"Delete", FONT10ARIAL, FONT_RED, FONT_BLACK, 600, y + 81, 36, 16, MSYS_PRIORITY_NORMAL + 1, ItemStatsDeleteCallback);
 }
 
@@ -45,7 +46,7 @@ static void MakeCheck(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char
 
 static GUIButtonRef MakeRadio(INT16 const x, INT16 const y, GUI_CALLBACK const click)
 {
-	return CreateCheckBoxButton(x, TASKBAR_Y + y, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, click);
+	return CreateCheckBoxButton(x, TASKBAR_Y + y, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, click);
 }
 
 
@@ -119,7 +120,7 @@ static void MakeButtonSchedule(UINT idx, INT16 x, INT16 y, INT16 w, INT16 h, GUI
 
 static void MakeButtonInventory(UINT idx, INT16 x, INT16 y, INT32 pos)
 {
-	GUIButtonRef const btn = CreateCheckBoxButton(x, y, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL + 1, MercsInventorySlotCallback);
+	GUIButtonRef const btn = CreateCheckBoxButton(x, y, EDITORDIR "/smCheckbox.sti", MSYS_PRIORITY_NORMAL + 1, MercsInventorySlotCallback);
 	iEditorButton[idx] = btn;
 	btn->SetUserData(pos);
 }
@@ -127,11 +128,11 @@ static void MakeButtonInventory(UINT idx, INT16 x, INT16 y, INT32 pos)
 
 static void InitEditorMercsToolbar(void)
 {
-	MakeCheck(MERCS_PLAYERTOGGLE,   4,  2, MercsTogglePlayers,   "EDITOR/SmCheckbox.sti", L"Toggle viewing of players");
-	MakeCheck(MERCS_ENEMYTOGGLE,    4, 22, MercsToggleEnemies,   "EDITOR/SmCheckbox.sti", L"Toggle viewing of enemies");
-	MakeCheck(MERCS_CREATURETOGGLE, 4, 42, MercsToggleCreatures, "EDITOR/SmCheckbox.sti", L"Toggle viewing of creatures");
-	MakeCheck(MERCS_REBELTOGGLE,    4, 62, MercsToggleRebels,    "EDITOR/SmCheckbox.sti", L"Toggle viewing of rebels");
-	MakeCheck(MERCS_CIVILIANTOGGLE, 4, 82, MercsToggleCivilians, "EDITOR/SmCheckbox.sti", L"Toggle viewing of civilians");
+	MakeCheck(MERCS_PLAYERTOGGLE,   4,  2, MercsTogglePlayers,   EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of players");
+	MakeCheck(MERCS_ENEMYTOGGLE,    4, 22, MercsToggleEnemies,   EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of enemies");
+	MakeCheck(MERCS_CREATURETOGGLE, 4, 42, MercsToggleCreatures, EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of creatures");
+	MakeCheck(MERCS_REBELTOGGLE,    4, 62, MercsToggleRebels,    EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of rebels");
+	MakeCheck(MERCS_CIVILIANTOGGLE, 4, 82, MercsToggleCivilians, EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of civilians");
 	if (gfShowPlayers)   ClickEditorButton(MERCS_PLAYERTOGGLE);
 	if (gfShowEnemies)   ClickEditorButton(MERCS_ENEMYTOGGLE);
 	if (gfShowCreatures) ClickEditorButton(MERCS_CREATURETOGGLE);
@@ -151,17 +152,17 @@ static void InitEditorMercsToolbar(void)
 	iEditorButton[MERCS_1] = CreateLabel(L"DETAILED PLACEMENT", SMALLCOMPFONT, FONT_ORANGE, 60, 100, y + 2, 68, 20, MSYS_PRIORITY_NORMAL);
 	iEditorButton[MERCS_1]->SpecifyTextOffsets(20, 4, FALSE);
 	iEditorButton[MERCS_1]->SpecifyTextWrappedWidth(46);
-	iEditorButton[MERCS_DETAILEDCHECKBOX] = CreateCheckBoxButton(103, y + 5, "EDITOR/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsDetailedPlacementCallback);
+	iEditorButton[MERCS_DETAILEDCHECKBOX] = CreateCheckBoxButton(103, y + 5, EDITORDIR "/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsDetailedPlacementCallback);
 
-	MakeButton(MERCS_GENERAL,      100, 22, MercsGeneralModeCallback,    "EDITOR/MercGeneral.sti",      L"General information mode");
-	MakeButton(MERCS_APPEARANCE,   134, 22, MercsAppearanceModeCallback, "EDITOR/MercAppearance.sti",   L"Physical appearance mode");
-	MakeButton(MERCS_ATTRIBUTES,   100, 48, MercsAttributesModeCallback, "EDITOR/MercAttributes.sti",   L"Attributes mode");
-	MakeButton(MERCS_INVENTORY,    134, 48, MercsInventoryModeCallback,  "EDITOR/MercInventory.sti",    L"Inventory mode");
-	MakeButton(MERCS_PROFILE,      100, 74, MercsProfileModeCallback,    "EDITOR/MercProfile.sti",      L"Profile ID mode");
-	MakeButton(MERCS_SCHEDULE,     134, 74, MercsScheduleModeCallback,   "EDITOR/MercSchedule.sti",     L"Schedule mode");
+	MakeButton(MERCS_GENERAL,      100, 22, MercsGeneralModeCallback,    EDITORDIR "/MercGeneral.sti",      L"General information mode");
+	MakeButton(MERCS_APPEARANCE,   134, 22, MercsAppearanceModeCallback, EDITORDIR "/MercAppearance.sti",   L"Physical appearance mode");
+	MakeButton(MERCS_ATTRIBUTES,   100, 48, MercsAttributesModeCallback, EDITORDIR "/MercAttributes.sti",   L"Attributes mode");
+	MakeButton(MERCS_INVENTORY,    134, 48, MercsInventoryModeCallback,  EDITORDIR "/MercInventory.sti",    L"Inventory mode");
+	MakeButton(MERCS_PROFILE,      100, 74, MercsProfileModeCallback,    EDITORDIR "/MercProfile.sti",      L"Profile ID mode");
+	MakeButton(MERCS_SCHEDULE,     134, 74, MercsScheduleModeCallback,   EDITORDIR "/MercSchedule.sti",     L"Schedule mode");
 	//Workaround for identical buttons.
 	iEditorButton[MERCS_SCHEDULE]->uiFlags |= BUTTON_NO_DUPLICATE;
-	MakeButton(MERCS_GLOWSCHEDULE, 134, 74, MercsScheduleModeCallback,   "EDITOR/MercGlowSchedule.sti", L"Schedule mode");
+	MakeButton(MERCS_GLOWSCHEDULE, 134, 74, MercsScheduleModeCallback,   EDITORDIR "/MercGlowSchedule.sti", L"Schedule mode");
 	HideEditorButton( MERCS_GLOWSCHEDULE );
 
 	iEditorButton[MERCS_DELETE] = MakeTextButton(L"DELETE", FONT_DKBLUE, 600,  2, 40, 20, MercsDeleteCallback);
@@ -170,10 +171,10 @@ static void InitEditorMercsToolbar(void)
 	iEditorButton[MERCS_NEXT]->SetFastHelpText(L"Find next merc (SPACE).");
 
 	//Priority Existance
-	MakeCheck(MERCS_PRIORITYEXISTANCE_CHECKBOX, 170,  5, MercsPriorityExistanceCallback, "EDITOR/checkbox.sti", L"Toggle priority existance");
+	MakeCheck(MERCS_PRIORITYEXISTANCE_CHECKBOX, 170,  5, MercsPriorityExistanceCallback, EDITORDIR "/checkbox.sti", L"Toggle priority existance");
 
 	//If merc has keys
-	MakeCheck(MERCS_HASKEYS_CHECKBOX,           170, 30, MercsHasKeysCallback,           "EDITOR/checkbox.sti", L"Toggle whether or not placement has/naccess to all doors.");
+	MakeCheck(MERCS_HASKEYS_CHECKBOX,           170, 30, MercsHasKeysCallback,           EDITORDIR "/checkbox.sti", L"Toggle whether or not placement has/naccess to all doors.");
 
 	//Orders
 	iEditorButton[MERCS_ORDERS_STATIONARY]  = MakeTextButton(L"STATIONARY",    FONT_GRAY2, 200,  8, 70, 12, MercsSetOrdersCallback);
@@ -231,24 +232,24 @@ static void InitEditorMercsToolbar(void)
 
 	iEditorButton[MERCS_CIVILIAN_GROUP] = MakeTextButton(gszCivGroupNames[0], FONT_YELLOW, 574, 50, 60, 25, MercsCivilianGroupCallback);
 
-	iEditorButton[MERCS_TOGGLECOLOR_BUTTON] = CreateCheckBoxButton(180, y + 4, "EDITOR/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsToggleColorModeCallback);
+	iEditorButton[MERCS_TOGGLECOLOR_BUTTON] = CreateCheckBoxButton(180, y + 4, EDITORDIR "/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsToggleColorModeCallback);
 	for (INT32 i = 0; i != 4; ++i)
 	{
 		UINT  const idx = FIRST_MERCS_COLOR_BUTTON +  2 * i;
 		INT16 const y   = 4                        + 24 * i;
-		MakeButton(idx,     200, y, MercsSetColorsCallback, "EDITOR/leftarrow.sti",  L"Previous color set");
-		MakeButton(idx + 1, 360, y, MercsSetColorsCallback, "EDITOR/rightarrow.sti", L"Next color set");
+		MakeButton(idx,     200, y, MercsSetColorsCallback, EDITORDIR "/leftarrow.sti",  L"Previous color set");
+		MakeButton(idx + 1, 360, y, MercsSetColorsCallback, EDITORDIR "/rightarrow.sti", L"Next color set");
 		DisableButton(iEditorButton[idx    ]);
 		DisableButton(iEditorButton[idx + 1]);
 	}
 
-	MakeButton(MERCS_BODYTYPE_DOWN, 460, 4, MercsSetBodyTypeCallback, "EDITOR/leftarrow.sti",  L"Previous body type");
-	MakeButton(MERCS_BODYTYPE_UP,   560, 4, MercsSetBodyTypeCallback, "EDITOR/rightarrow.sti", L"Next body type");
+	MakeButton(MERCS_BODYTYPE_DOWN, 460, 4, MercsSetBodyTypeCallback, EDITORDIR "/leftarrow.sti",  L"Previous body type");
+	MakeButton(MERCS_BODYTYPE_UP,   560, 4, MercsSetBodyTypeCallback, EDITORDIR "/rightarrow.sti", L"Next body type");
 
-	MakeCheck(MERCS_SCHEDULE_VARIANCE1, 309, 15, MercsScheduleToggleVariance1Callback, "EDITOR/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
-	MakeCheck(MERCS_SCHEDULE_VARIANCE2, 309, 36, MercsScheduleToggleVariance2Callback, "EDITOR/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
-	MakeCheck(MERCS_SCHEDULE_VARIANCE3, 309, 57, MercsScheduleToggleVariance3Callback, "EDITOR/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
-	MakeCheck(MERCS_SCHEDULE_VARIANCE4, 309, 78, MercsScheduleToggleVariance4Callback, "EDITOR/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE1, 309, 15, MercsScheduleToggleVariance1Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE2, 309, 36, MercsScheduleToggleVariance2Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE3, 309, 57, MercsScheduleToggleVariance3Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE4, 309, 78, MercsScheduleToggleVariance4Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
 
 	MakeButtonSchedule(MERCS_SCHEDULE_ACTION1, 186, 13, 77, 16, MercsScheduleAction1Callback, L"No action");
 	MakeButtonSchedule(MERCS_SCHEDULE_ACTION2, 186, 34, 77, 16, MercsScheduleAction2Callback, L"No action");
@@ -285,37 +286,37 @@ static void InitEditorBuildingsToolbar(void)
 	iEditorButton[BUILDING_TOGGLE_INFO_VIEW] = MakeTextButton(L"ROOM INFO", FONT_YELLOW, 110, 70, 50, 15, BuildingToggleInfoViewCallback);
 
 	//Selection method buttons
-	MakeButton(BUILDING_PLACE_WALLS,        180, 10, BuildingWallCallback,           "EDITOR/wall.sti",         L"Place walls using selection method");
-	MakeButton(BUILDING_PLACE_DOORS,        210, 10, BuildingDoorCallback,           "EDITOR/door.sti",         L"Place doors using selection method");
-	MakeButton(BUILDING_PLACE_ROOFS,        240, 10, BuildingRoofCallback,           "EDITOR/roof.sti",         L"Place roofs using selection method");
-	MakeButton(BUILDING_PLACE_WINDOWS,      180, 40, BuildingWindowCallback,         "EDITOR/window.sti",       L"Place windows using selection method");
-	MakeButton(BUILDING_PLACE_BROKEN_WALLS, 210, 40, BuildingCrackWallCallback,      "EDITOR/crackwall.sti",    L"Place damaged walls using selection method.");
-	MakeButton(BUILDING_PLACE_FURNITURE,    240, 40, BuildingFurnitureCallback,      "EDITOR/decor.sti",        L"Place furniture using selection method");
-	MakeButton(BUILDING_PLACE_DECALS,       180, 70, BuildingDecalCallback,          "EDITOR/decal.sti",        L"Place wall decals using selection method");
-	MakeButton(BUILDING_PLACE_FLOORS,       210, 70, BuildingFloorCallback,          "EDITOR/floor.sti",        L"Place floors using selection method");
-	MakeButton(BUILDING_PLACE_TOILETS,      240, 70, BuildingToiletCallback,         "EDITOR/toilet.sti",       L"Place generic furniture using selection method");
+	MakeButton(BUILDING_PLACE_WALLS,        180, 10, BuildingWallCallback,           EDITORDIR "/wall.sti",         L"Place walls using selection method");
+	MakeButton(BUILDING_PLACE_DOORS,        210, 10, BuildingDoorCallback,           EDITORDIR "/door.sti",         L"Place doors using selection method");
+	MakeButton(BUILDING_PLACE_ROOFS,        240, 10, BuildingRoofCallback,           EDITORDIR "/roof.sti",         L"Place roofs using selection method");
+	MakeButton(BUILDING_PLACE_WINDOWS,      180, 40, BuildingWindowCallback,         EDITORDIR "/window.sti",       L"Place windows using selection method");
+	MakeButton(BUILDING_PLACE_BROKEN_WALLS, 210, 40, BuildingCrackWallCallback,      EDITORDIR "/crackwall.sti",    L"Place damaged walls using selection method.");
+	MakeButton(BUILDING_PLACE_FURNITURE,    240, 40, BuildingFurnitureCallback,      EDITORDIR "/decor.sti",        L"Place furniture using selection method");
+	MakeButton(BUILDING_PLACE_DECALS,       180, 70, BuildingDecalCallback,          EDITORDIR "/decal.sti",        L"Place wall decals using selection method");
+	MakeButton(BUILDING_PLACE_FLOORS,       210, 70, BuildingFloorCallback,          EDITORDIR "/floor.sti",        L"Place floors using selection method");
+	MakeButton(BUILDING_PLACE_TOILETS,      240, 70, BuildingToiletCallback,         EDITORDIR "/toilet.sti",       L"Place generic furniture using selection method");
 
 	//Smart method buttons
-	MakeButton(BUILDING_SMART_WALLS,        290, 10, BuildingSmartWallCallback,      "EDITOR/wall.sti",         L"Place walls using smart method");
-	MakeButton(BUILDING_SMART_DOORS,        320, 10, BuildingSmartDoorCallback,      "EDITOR/door.sti",         L"Place doors using smart method");
-	MakeButton(BUILDING_SMART_WINDOWS,      290, 40, BuildingSmartWindowCallback,    "EDITOR/window.sti",       L"Place windows using smart method");
-	MakeButton(BUILDING_SMART_BROKEN_WALLS, 320, 40, BuildingSmartCrackWallCallback, "EDITOR/crackwall.sti",    L"Place damaged walls using smart method");
-	MakeButton(BUILDING_DOORKEY,            290, 70, BuildingDoorKeyCallback,        "EDITOR/key.sti",          L"Lock or trap existing doors" );
+	MakeButton(BUILDING_SMART_WALLS,        290, 10, BuildingSmartWallCallback,      EDITORDIR "/wall.sti",         L"Place walls using smart method");
+	MakeButton(BUILDING_SMART_DOORS,        320, 10, BuildingSmartDoorCallback,      EDITORDIR "/door.sti",         L"Place doors using smart method");
+	MakeButton(BUILDING_SMART_WINDOWS,      290, 40, BuildingSmartWindowCallback,    EDITORDIR "/window.sti",       L"Place windows using smart method");
+	MakeButton(BUILDING_SMART_BROKEN_WALLS, 320, 40, BuildingSmartCrackWallCallback, EDITORDIR "/crackwall.sti",    L"Place damaged walls using smart method");
+	MakeButton(BUILDING_DOORKEY,            290, 70, BuildingDoorKeyCallback,        EDITORDIR "/key.sti",          L"Lock or trap existing doors" );
 
-	MakeButton(BUILDING_NEW_ROOM,           370, 10, BuildingNewRoomCallback,        "EDITOR/newroom.sti",      L"Add a new room");
-	MakeButton(BUILDING_CAVE_DRAWING,       370, 10, BuildingCaveDrawingCallback,    "EDITOR/caves.sti",        L"Edit cave walls.");
-	MakeButton(BUILDING_SAW_ROOM,           370, 40, BuildingSawRoomCallback,        "EDITOR/sawroom.sti",      L"Remove an area from existing building.");
-	MakeButton(BUILDING_KILL_BUILDING,      370, 70, BuildingKillBuildingCallback,   "EDITOR/delroom.sti",      L"Remove a building");
-	MakeButton(BUILDING_NEW_ROOF,           400, 70, BuildingNewRoofCallback,        "EDITOR/newroof.sti",      L"Add/replace building's roof with new flat roof.");
-	MakeButton(BUILDING_COPY_BUILDING,      430, 70, BuildingCopyBuildingCallback,   "EDITOR/copyroom.sti",     L"Copy a building");
-	MakeButton(BUILDING_MOVE_BUILDING,      460, 70, BuildingMoveBuildingCallback,   "EDITOR/moveroom.sti",     L"Move a building");
-	MakeButton(BUILDING_DRAW_ROOMNUM,       410, 10, BuildingDrawRoomNumCallback,    "EDITOR/addTileRoom.sti",  L"Draw room number");
-	MakeButton(BUILDING_ERASE_ROOMNUM,      440, 10, BuildingEraseRoomNumCallback,   "EDITOR/killTileRoom.sti", L"Erase room numbers");
+	MakeButton(BUILDING_NEW_ROOM,           370, 10, BuildingNewRoomCallback,        EDITORDIR "/newroom.sti",      L"Add a new room");
+	MakeButton(BUILDING_CAVE_DRAWING,       370, 10, BuildingCaveDrawingCallback,    EDITORDIR "/caves.sti",        L"Edit cave walls.");
+	MakeButton(BUILDING_SAW_ROOM,           370, 40, BuildingSawRoomCallback,        EDITORDIR "/sawroom.sti",      L"Remove an area from existing building.");
+	MakeButton(BUILDING_KILL_BUILDING,      370, 70, BuildingKillBuildingCallback,   EDITORDIR "/delroom.sti",      L"Remove a building");
+	MakeButton(BUILDING_NEW_ROOF,           400, 70, BuildingNewRoofCallback,        EDITORDIR "/newroof.sti",      L"Add/replace building's roof with new flat roof.");
+	MakeButton(BUILDING_COPY_BUILDING,      430, 70, BuildingCopyBuildingCallback,   EDITORDIR "/copyroom.sti",     L"Copy a building");
+	MakeButton(BUILDING_MOVE_BUILDING,      460, 70, BuildingMoveBuildingCallback,   EDITORDIR "/moveroom.sti",     L"Move a building");
+	MakeButton(BUILDING_DRAW_ROOMNUM,       410, 10, BuildingDrawRoomNumCallback,    EDITORDIR "/addTileRoom.sti",  L"Draw room number");
+	MakeButton(BUILDING_ERASE_ROOMNUM,      440, 10, BuildingEraseRoomNumCallback,   EDITORDIR "/killTileRoom.sti", L"Erase room numbers");
 
-	MakeButton(BUILDING_TOGGLE_ERASEMODE,   500, 40, BtnEraseCallback,               "EDITOR/eraser.sti",       L"Toggle erase mode");
+	MakeButton(BUILDING_TOGGLE_ERASEMODE,   500, 40, BtnEraseCallback,               EDITORDIR "/eraser.sti",       L"Toggle erase mode");
 
-	MakeButton(BUILDING_UNDO,            530, 40, BtnUndoCallback,  "EDITOR/undo.sti",  L"Undo last change");
-	MakeButton(BUILDING_CYCLE_BRUSHSIZE, 500, 70, BtnBrushCallback, "EDITOR/paint.sti", L"Cycle brush size");
+	MakeButton(BUILDING_UNDO,            530, 40, BtnUndoCallback,  EDITORDIR "/undo.sti",  L"Undo last change");
+	MakeButton(BUILDING_CYCLE_BRUSHSIZE, 500, 70, BtnBrushCallback, EDITORDIR "/paint.sti", L"Cycle brush size");
 }
 
 
@@ -332,14 +333,14 @@ static void InitEditorItemsToolbar(void)
 	iEditorButton[ITEMS_TRIGGERS]   = CreateTextButton( L"Triggers",  BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, 383, y + 80, 59, 20, MSYS_PRIORITY_NORMAL, ItemsTriggersCallback);
 	iEditorButton[ITEMS_KEYS]       = CreateTextButton( L"Keys",      BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, 442, y + 80, 38, 20, MSYS_PRIORITY_NORMAL, ItemsKeysCallback);
 
-	MakeButton(ITEMS_LEFTSCROLL,   1, 1, ItemsLeftScrollCallback,  "EDITOR/leftscroll.sti",  NULL);
-	MakeButton(ITEMS_RIGHTSCROLL, 50, 1, ItemsRightScrollCallback, "EDITOR/rightscroll.sti", NULL);
+	MakeButton(ITEMS_LEFTSCROLL,   1, 1, ItemsLeftScrollCallback,  EDITORDIR "/leftscroll.sti",  NULL);
+	MakeButton(ITEMS_RIGHTSCROLL, 50, 1, ItemsRightScrollCallback, EDITORDIR "/rightscroll.sti", NULL);
 }
 
 
 static void InitEditorMapInfoToolbar(void)
 {
-	MakeButton(MAPINFO_ADD_LIGHT1_SOURCE, 10, 2, BtnDrawLightsCallback, "EDITOR/light.sti", L"Add ambient light source");
+	MakeButton(MAPINFO_ADD_LIGHT1_SOURCE, 10, 2, BtnDrawLightsCallback, EDITORDIR "/light.sti", L"Add ambient light source");
 
 	INT16 const y = TASKBAR_Y;
 	iEditorButton[MAPINFO_LIGHT_PANEL]     = CreateLabel(NULL, 0, 0, 0, 45, y + 2, 60, 50, MSYS_PRIORITY_NORMAL);
@@ -348,55 +349,55 @@ static void InitEditorMapInfoToolbar(void)
 	iEditorButton[MAPINFO_24HOUR_LIGHT]    = MakeRadio(48, 35, MapInfo24HourTimeRadioCallback);
 	ClickEditorButton( gbDefaultLightType + MAPINFO_PRIMETIME_LIGHT );
 
-	MakeButton(MAPINFO_TOGGLE_FAKE_LIGHTS, 120, 2, BtnFakeLightCallback, "EDITOR/fakelight.sti", L"Toggle fake ambient lights.");
+	MakeButton(MAPINFO_TOGGLE_FAKE_LIGHTS, 120, 2, BtnFakeLightCallback, EDITORDIR "/fakelight.sti", L"Toggle fake ambient lights.");
 
 	iEditorButton[MAPINFO_RADIO_PANEL]    = CreateLabel(NULL, 0, 0, 0, 207, y + 2, 70, 50, MSYS_PRIORITY_NORMAL);
 	iEditorButton[MAPINFO_RADIO_NORMAL]   = MakeRadio(210,  5, MapInfoNormalRadioCallback);
 	iEditorButton[MAPINFO_RADIO_BASEMENT] = MakeRadio(210, 20, MapInfoBasementRadioCallback);
 	iEditorButton[MAPINFO_RADIO_CAVES]    = MakeRadio(210, 35, MapInfoCavesRadioCallback);
 
-	MakeButton(MAPINFO_DRAW_EXITGRIDS,   305, 12, MapInfoDrawExitGridCallback, "EDITOR/exitgridbut.sti", L"Add exit grids (r-clk to query existing).");
-	MakeButton(MAPINFO_CYCLE_BRUSHSIZE,  420, 70, BtnBrushCallback,            "EDITOR/paint.sti",       L"Cycle brush size");
-	MakeButton(MAPINFO_UNDO,             510, 70, BtnUndoCallback,             "EDITOR/undo.sti",        L"Undo last change");
-	MakeButton(MAPINFO_TOGGLE_ERASEMODE, 540, 70, BtnEraseCallback,            "EDITOR/eraser.sti",      L"Toggle erase mode");
-	MakeButton(MAPINFO_NORTH_POINT,      540,  5, MapInfoEntryPointsCallback,  "EDITOR/north.sti",       L"Specify north point for validation purposes.");
-	MakeButton(MAPINFO_WEST_POINT,       525, 26, MapInfoEntryPointsCallback,  "EDITOR/west.sti",        L"Specify west point for validation purposes.");
-	MakeButton(MAPINFO_EAST_POINT,       555, 26, MapInfoEntryPointsCallback,  "EDITOR/east.sti",        L"Specify east point for validation purposes.");
-	MakeButton(MAPINFO_SOUTH_POINT,      540, 47, MapInfoEntryPointsCallback,  "EDITOR/south.sti",       L"Specify south point for validation purposes.");
-	MakeButton(MAPINFO_CENTER_POINT,     590, 15, MapInfoEntryPointsCallback,  "EDITOR/center.sti",      L"Specify center point for validation purposes.");
-	MakeButton(MAPINFO_ISOLATED_POINT,   590, 36, MapInfoEntryPointsCallback,  "EDITOR/isolated.sti",    L"Specify isolated point for validation purposes.");
+	MakeButton(MAPINFO_DRAW_EXITGRIDS,   305, 12, MapInfoDrawExitGridCallback, EDITORDIR "/exitgridbut.sti", L"Add exit grids (r-clk to query existing).");
+	MakeButton(MAPINFO_CYCLE_BRUSHSIZE,  420, 70, BtnBrushCallback,            EDITORDIR "/paint.sti",       L"Cycle brush size");
+	MakeButton(MAPINFO_UNDO,             510, 70, BtnUndoCallback,             EDITORDIR "/undo.sti",        L"Undo last change");
+	MakeButton(MAPINFO_TOGGLE_ERASEMODE, 540, 70, BtnEraseCallback,            EDITORDIR "/eraser.sti",      L"Toggle erase mode");
+	MakeButton(MAPINFO_NORTH_POINT,      540,  5, MapInfoEntryPointsCallback,  EDITORDIR "/north.sti",       L"Specify north point for validation purposes.");
+	MakeButton(MAPINFO_WEST_POINT,       525, 26, MapInfoEntryPointsCallback,  EDITORDIR "/west.sti",        L"Specify west point for validation purposes.");
+	MakeButton(MAPINFO_EAST_POINT,       555, 26, MapInfoEntryPointsCallback,  EDITORDIR "/east.sti",        L"Specify east point for validation purposes.");
+	MakeButton(MAPINFO_SOUTH_POINT,      540, 47, MapInfoEntryPointsCallback,  EDITORDIR "/south.sti",       L"Specify south point for validation purposes.");
+	MakeButton(MAPINFO_CENTER_POINT,     590, 15, MapInfoEntryPointsCallback,  EDITORDIR "/center.sti",      L"Specify center point for validation purposes.");
+	MakeButton(MAPINFO_ISOLATED_POINT,   590, 36, MapInfoEntryPointsCallback,  EDITORDIR "/isolated.sti",    L"Specify isolated point for validation purposes.");
 }
 
 
 static void InitEditorOptionsToolbar(void)
 {
-	MakeButton(OPTIONS_NEW_MAP,         71, 41, BtnNewMapCallback,        "EDITOR/new.sti",     L"New map");
-	MakeButton(OPTIONS_NEW_BASEMENT,   101, 41, BtnNewBasementCallback,   "EDITOR/new.sti",     L"New basement");
-	MakeButton(OPTIONS_NEW_CAVES,      131, 41, BtnNewCavesCallback,      "EDITOR/new.sti",     L"New cave level");
-	MakeButton(OPTIONS_SAVE_MAP,       161, 41, BtnSaveCallback,          "EDITOR/save.sti",    L"Save map");
-	MakeButton(OPTIONS_LOAD_MAP,       191, 41, BtnLoadCallback,          "EDITOR/load.sti",    L"Load map");
-	MakeButton(OPTIONS_CHANGE_TILESET, 221, 41, BtnChangeTilesetCallback, "EDITOR/tileset.sti", L"Select tileset");
-	MakeButton(OPTIONS_LEAVE_EDITOR,   251, 41, BtnCancelCallback,        "EDITOR/cancel.sti",  L"Leave Editor mode");
-	MakeButton(OPTIONS_QUIT_GAME,      281, 41, BtnQuitCallback,          "EDITOR/cancel.sti",  L"Exit game.");
+	MakeButton(OPTIONS_NEW_MAP,         71, 41, BtnNewMapCallback,        EDITORDIR "/new.sti",     L"New map");
+	MakeButton(OPTIONS_NEW_BASEMENT,   101, 41, BtnNewBasementCallback,   EDITORDIR "/new.sti",     L"New basement");
+	MakeButton(OPTIONS_NEW_CAVES,      131, 41, BtnNewCavesCallback,      EDITORDIR "/new.sti",     L"New cave level");
+	MakeButton(OPTIONS_SAVE_MAP,       161, 41, BtnSaveCallback,          EDITORDIR "/save.sti",    L"Save map");
+	MakeButton(OPTIONS_LOAD_MAP,       191, 41, BtnLoadCallback,          EDITORDIR "/load.sti",    L"Load map");
+	MakeButton(OPTIONS_CHANGE_TILESET, 221, 41, BtnChangeTilesetCallback, EDITORDIR "/tileset.sti", L"Select tileset");
+	MakeButton(OPTIONS_LEAVE_EDITOR,   251, 41, BtnCancelCallback,        EDITORDIR "/cancel.sti",  L"Leave Editor mode");
+	MakeButton(OPTIONS_QUIT_GAME,      281, 41, BtnQuitCallback,          EDITORDIR "/cancel.sti",  L"Exit game.");
 }
 
 
 static void InitEditorTerrainToolbar(void)
 {
-	MakeButton(TERRAIN_FGROUND_TEXTURES, 100, 40, BtnFgGrndCallback,          "EDITOR/downgrid.sti",  L"Draw ground textures");
-	MakeButton(TERRAIN_BGROUND_TEXTURES, 130, 40, BtnBkGrndCallback,          "EDITOR/upgrid.sti",    L"Set map ground textures");
-	MakeButton(TERRAIN_PLACE_CLIFFS,     160, 40, BtnBanksCallback,           "EDITOR/banks.sti",     L"Place banks and cliffs");
-	MakeButton(TERRAIN_PLACE_ROADS,      190, 40, BtnRoadsCallback,           "EDITOR/road.sti",      L"Draw roads");
-	MakeButton(TERRAIN_PLACE_DEBRIS,     220, 40, BtnDebrisCallback,          "EDITOR/debris.sti",    L"Draw debris");
-	MakeButton(TERRAIN_PLACE_TREES,      250, 40, BtnObjectCallback,          "EDITOR/tree.sti",      L"Place trees & bushes");
-	MakeButton(TERRAIN_PLACE_ROCKS,      280, 40, BtnObject1Callback,         "EDITOR/num1.sti",      L"Place rocks");
-	MakeButton(TERRAIN_PLACE_MISC,       310, 40, BtnObject2Callback,         "EDITOR/num2.sti",      L"Place barrels & other junk");
-	MakeButton(TERRAIN_FILL_AREA,        100, 70, BtnFillCallback,            "EDITOR/fill.sti",      L"Fill area");
-	MakeButton(TERRAIN_UNDO,             130, 70, BtnUndoCallback,            "EDITOR/undo.sti",      L"Undo last change");
-	MakeButton(TERRAIN_TOGGLE_ERASEMODE, 160, 70, BtnEraseCallback,           "EDITOR/eraser.sti",    L"Toggle erase mode");
-	MakeButton(TERRAIN_CYCLE_BRUSHSIZE,  190, 70, BtnBrushCallback,           "EDITOR/paint.sti",     L"Cycle brush size");
-	MakeButton(TERRAIN_RAISE_DENSITY,    280, 70, BtnIncBrushDensityCallback, "EDITOR/uparrow.sti",   L"Raise brush density");
-	MakeButton(TERRAIN_LOWER_DENSITY,    350, 70, BtnDecBrushDensityCallback, "EDITOR/downarrow.sti", L"Lower brush density");
+	MakeButton(TERRAIN_FGROUND_TEXTURES, 100, 40, BtnFgGrndCallback,          EDITORDIR "/downgrid.sti",  L"Draw ground textures");
+	MakeButton(TERRAIN_BGROUND_TEXTURES, 130, 40, BtnBkGrndCallback,          EDITORDIR "/upgrid.sti",    L"Set map ground textures");
+	MakeButton(TERRAIN_PLACE_CLIFFS,     160, 40, BtnBanksCallback,           EDITORDIR "/banks.sti",     L"Place banks and cliffs");
+	MakeButton(TERRAIN_PLACE_ROADS,      190, 40, BtnRoadsCallback,           EDITORDIR "/road.sti",      L"Draw roads");
+	MakeButton(TERRAIN_PLACE_DEBRIS,     220, 40, BtnDebrisCallback,          EDITORDIR "/debris.sti",    L"Draw debris");
+	MakeButton(TERRAIN_PLACE_TREES,      250, 40, BtnObjectCallback,          EDITORDIR "/tree.sti",      L"Place trees & bushes");
+	MakeButton(TERRAIN_PLACE_ROCKS,      280, 40, BtnObject1Callback,         EDITORDIR "/num1.sti",      L"Place rocks");
+	MakeButton(TERRAIN_PLACE_MISC,       310, 40, BtnObject2Callback,         EDITORDIR "/num2.sti",      L"Place barrels & other junk");
+	MakeButton(TERRAIN_FILL_AREA,        100, 70, BtnFillCallback,            EDITORDIR "/fill.sti",      L"Fill area");
+	MakeButton(TERRAIN_UNDO,             130, 70, BtnUndoCallback,            EDITORDIR "/undo.sti",      L"Undo last change");
+	MakeButton(TERRAIN_TOGGLE_ERASEMODE, 160, 70, BtnEraseCallback,           EDITORDIR "/eraser.sti",    L"Toggle erase mode");
+	MakeButton(TERRAIN_CYCLE_BRUSHSIZE,  190, 70, BtnBrushCallback,           EDITORDIR "/paint.sti",     L"Cycle brush size");
+	MakeButton(TERRAIN_RAISE_DENSITY,    280, 70, BtnIncBrushDensityCallback, EDITORDIR "/uparrow.sti",   L"Raise brush density");
+	MakeButton(TERRAIN_LOWER_DENSITY,    350, 70, BtnDecBrushDensityCallback, EDITORDIR "/downarrow.sti", L"Lower brush density");
 }
 
 

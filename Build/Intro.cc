@@ -1,5 +1,6 @@
 #include "Cinematics.h"
 #include "Cursor_Control.h"
+#include "Directories.h"
 #include "English.h"
 #include "FileMan.h"
 #include "Game_Init.h"
@@ -67,21 +68,21 @@ INT32	giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
 const char *gpzSmackerFileNames[] =
 {
 	//begining of the game
-	"INTRO/Rebel_cr.smk",
-	"INTRO/Omerta.smk",
-	"INTRO/Prague_cr.smk",
-	"INTRO/Prague.smk",
+	INTRODIR "/Rebel_cr.smk",
+	INTRODIR "/Omerta.smk",
+	INTRODIR "/Prague_cr.smk",
+	INTRODIR "/Prague.smk",
 
 
 	//endgame
-	"INTRO/Throne_Mig.smk",
-	"INTRO/Throne_NoMig.smk",
-	"INTRO/Heli_FlyBy.smk",
-	"INTRO/Heli_Sky.smk",
-	"INTRO/Heli_NoSky.smk",
+	INTRODIR "/Throne_Mig.smk",
+	INTRODIR "/Throne_NoMig.smk",
+	INTRODIR "/Heli_FlyBy.smk",
+	INTRODIR "/Heli_Sky.smk",
+	INTRODIR "/Heli_NoSky.smk",
 
-	"INTRO/SplashScreen.smk",
-	"INTRO/TalonSoftid_endhold.smk",
+	INTRODIR "/SplashScreen.smk",
+	INTRODIR "/TalonSoftid_endhold.smk",
 };
 
 
@@ -406,7 +407,7 @@ void SetIntroType( INT8 bIntroType )
 static void DisplaySirtechSplashScreen(void)
 {
 	FRAME_BUFFER->Fill(0);
-	BltVideoObjectOnce(FRAME_BUFFER, "INTERFACE/SirtechSplash.sti", 0, 0, 0);
+	BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/SirtechSplash.sti", 0, 0, 0);
 	InvalidateScreen();
 	RefreshScreen();
 }

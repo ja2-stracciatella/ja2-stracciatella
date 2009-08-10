@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font_Control.h"
 #include "LoadSaveExplosionType.h"
 #include "Overhead.h"
@@ -72,15 +73,15 @@ struct ExplosionInfo
 
 static const ExplosionInfo explosion_info[] =
 {
-	{ "",                       EXPLOSION_1,        0,  0,  0 },
-	{ "TILECACHE/zgrav_d.sti",  EXPLOSION_1,       80, 17,  3 },
-	{ "TILECACHE/zgrav_c.sti",  EXPLOSION_BLAST_2, 80, 28,  5 },
-	{ "TILECACHE/zgrav_b.sti",  EXPLOSION_BLAST_2, 80, 24,  5 },
-	{ "TILECACHE/shckwave.sti", EXPLOSION_1,       20,  1,  5 },
-	{ "TILECACHE/wat_exp.sti",  AIR_ESCAPING_1,    80,  1, 18 },
-	{ "TILECACHE/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
-	{ "TILECACHE/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
-	{ "TILECACHE/must_exp.sti", AIR_ESCAPING_1,    80,  1, 18 }
+	{ "",                           EXPLOSION_1,        0,  0,  0 },
+	{ TILECACHEDIR "/zgrav_d.sti",  EXPLOSION_1,       80, 17,  3 },
+	{ TILECACHEDIR "/zgrav_c.sti",  EXPLOSION_BLAST_2, 80, 28,  5 },
+	{ TILECACHEDIR "/zgrav_b.sti",  EXPLOSION_BLAST_2, 80, 24,  5 },
+	{ TILECACHEDIR "/shckwave.sti", EXPLOSION_1,       20,  1,  5 },
+	{ TILECACHEDIR "/wat_exp.sti",  AIR_ESCAPING_1,    80,  1, 18 },
+	{ TILECACHEDIR "/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
+	{ TILECACHEDIR "/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
+	{ TILECACHEDIR "/must_exp.sti", AIR_ESCAPING_1,    80,  1, 18 }
 };
 
 

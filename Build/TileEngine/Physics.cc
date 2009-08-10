@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "LoadSaveRealObject.h"
@@ -1116,7 +1117,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 					AniParams.sX									= (INT16)pObject->Position.x;
 					AniParams.sY									= (INT16)pObject->Position.y;
 					AniParams.sZ									= (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
-					AniParams.zCachedFile = "TILECACHE/msle_smk.sti";
+					AniParams.zCachedFile = TILECACHEDIR "/msle_smk.sti";
 					CreateAnimationTile( &AniParams );
 				}
 			}

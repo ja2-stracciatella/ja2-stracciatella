@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Laptop.h"
 #include "BobbyRMisc.h"
 #include "BobbyR.h"
@@ -16,10 +17,10 @@ static SGPVObject* guiMiscGrid;
 void EnterBobbyRMisc()
 {
 	// load the background graphic and add it
-	guiMiscBackground = AddVideoObjectFromFile("LAPTOP/miscbackground.sti");
+	guiMiscBackground = AddVideoObjectFromFile(LAPTOPDIR "/miscbackground.sti");
 
 	// load the gunsgrid graphic and add it
-	guiMiscGrid = AddVideoObjectFromFile("LAPTOP/miscgrid.sti");
+	guiMiscGrid = AddVideoObjectFromFile(LAPTOPDIR "/miscgrid.sti");
 
 	InitBobbyBrTitle();
 	//Draw menu bar

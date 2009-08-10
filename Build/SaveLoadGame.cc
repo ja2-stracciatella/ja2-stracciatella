@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "Buffer.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "GameLoop.h"

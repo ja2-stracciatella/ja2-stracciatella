@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Isometric_Utils.h"
@@ -450,7 +451,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	//hide the autoresolve
 	BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, x, y, w, h);
 
-	PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+	PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( iPercentage < 100  )
 	{
 		uiCurrTime = GetClock();
@@ -1587,10 +1588,10 @@ static void CreateAutoResolveInterface(void)
 	ar->fExitAutoResolve   = FALSE;
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
-	ar->iPanelImages = AddVideoObjectFromFile("Interface/AutoResolve.sti");
+	ar->iPanelImages = AddVideoObjectFromFile(INTERFACEDIR "/AutoResolve.sti");
 
 	// Load the button images file, and assign it to the first button.
-	BUTTON_PICS* const btn_pics = LoadButtonImage("Interface/AutoBtns.sti", 0, 7);
+	BUTTON_PICS* const btn_pics = LoadButtonImage(INTERFACEDIR "/AutoBtns.sti", 0, 7);
 	ar->iButtonImage[PAUSE_BUTTON]    = btn_pics;
 	// Have the other buttons hook into the first button containing the images.
 	ar->iButtonImage[PLAY_BUTTON]     = UseLoadedButtonImage(btn_pics,  1,  8);
@@ -1604,21 +1605,21 @@ static void CreateAutoResolveInterface(void)
 	ar->iButtonImage[DONELOSE_BUTTON] = UseLoadedButtonImage(btn_pics, 16, 17);
 
 	// Load the generic faces for civs and enemies
-	SGPVObject* const faces = AddVideoObjectFromFile("Interface/SmFaces.sti");
+	SGPVObject* const faces = AddVideoObjectFromFile(INTERFACEDIR "/SmFaces.sti");
 	ar->iFaces = faces;
 	SGPPaletteEntry const* const pal = faces->Palette();
 	faces->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 	faces->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 
 	// Add the battle over panels
-	ar->iIndent = AddVideoObjectFromFile("Interface/indent.sti");
+	ar->iIndent = AddVideoObjectFromFile(INTERFACEDIR "/indent.sti");
 
 	// Add all the faces now
 	FOR_ALL_AR_MERCS(cell)
 	{
 		//Load the face
 		SGPFILENAME ImageFile;
-		sprintf(ImageFile, "Faces/65Face/%02d.sti", GetProfile(cell->pSoldier->ubProfile).ubFaceIndex);
+		sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", GetProfile(cell->pSoldier->ubProfile).ubFaceIndex);
 		SGPVObject* face;
 		try
 		{
@@ -1626,7 +1627,7 @@ static void CreateAutoResolveInterface(void)
 		}
 		catch (...)
 		{
-			face = AddVideoObjectFromFile("Faces/65Face/speck.sti");
+			face = AddVideoObjectFromFile(FACESDIR "/65Face/speck.sti");
 		}
 		cell->uiVObjectID = face;
 		SGPPaletteEntry const* const pal = face->Palette();

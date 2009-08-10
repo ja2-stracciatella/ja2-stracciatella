@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "Laptop.h"
@@ -211,16 +212,16 @@ static void LoadHistory(void)
   // load History video objects into memory
 
 	// title bar
-	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// top portion of the screen background
-	guiTOP = AddVideoObjectFromFile("LAPTOP/historywindow.sti");
+	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/historywindow.sti");
 
   // shaded line
-	guiSHADELINE = AddVideoObjectFromFile("LAPTOP/historylines.sti");
+	guiSHADELINE = AddVideoObjectFromFile(LAPTOPDIR "/historylines.sti");
 
   // black divider line - long ( 480 length)
-	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
+	guiLONGLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline480.sti");
 }
 
 
@@ -274,8 +275,8 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason);
 static void CreateHistoryButtons(void)
 {
 	// the prev/next page buttons
-	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", 0, 1, PREV_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayPrevPageCallBack);
-	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", 6, 7, NEXT_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayNextPageCallBack);
+	giHistoryButton[PREV_PAGE_BUTTON] = QuickCreateButtonImg(LAPTOPDIR "/arrows.sti", 0, 1, PREV_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayPrevPageCallBack);
+	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButtonImg(LAPTOPDIR "/arrows.sti", 6, 7, NEXT_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayNextPageCallBack);
 
 	// set buttons
 	giHistoryButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
@@ -821,14 +822,14 @@ UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 static void GetQuestStartedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile("BINARYDATA/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
 }
 
 
 static void GetQuestEndedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile("BINARYDATA/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
 }
 
 

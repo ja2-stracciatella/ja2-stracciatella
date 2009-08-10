@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font_Control.h"
 #include "HImage.h"
 #include "Handle_Items.h"
@@ -91,7 +92,7 @@
 #endif
 
 
-#define		PALETTEFILENAME							"BINARYDATA/ja2pal.dat"
+#define		PALETTEFILENAME							BINARYDATADIR "/ja2pal.dat"
 
 #define		LOW_MORALE_BATTLE_SND_THREASHOLD	35
 
@@ -276,7 +277,7 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE& s)
 	a.sX             = s.sX;
 	a.sY             = s.sY;
 	a.sZ             = 0;
-	a.zCachedFile    = "TILECACHE/fly_shdw.sti";
+	a.zCachedFile    = TILECACHEDIR "/fly_shdw.sti";
 	a.v.user.uiData3 = s.bDirection;
 	s.pAniTile = CreateAnimationTile(&a);
 
@@ -541,17 +542,17 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		const char* filename;
 		if ( pSoldier->usAnimState == NINJA_SPINKICK )
 		{
-			filename = "BATTLESNDS/033_CHOP2.WAV";
+			filename = BATTLESNDSDIR "/033_CHOP2.WAV";
 		}
 		else
 		{
 			if ( Random( 2 ) == 0 )
 			{
-				filename = "BATTLESNDS/033_CHOP3.WAV";
+				filename = BATTLESNDSDIR "/033_CHOP3.WAV";
 			}
 			else
 			{
-				filename = "BATTLESNDS/033_CHOP1.WAV";
+				filename = BATTLESNDSDIR "/033_CHOP1.WAV";
 			}
 		}
 		const UINT32 uiSoundID = SoundPlay(filename, volume, pan, 1, NULL, NULL);
@@ -5959,14 +5960,14 @@ no_sub:
 	}
 
 	SGPFILENAME filename;
-	sprintf(filename, "BATTLESNDS/%s_%s.wav", basename, battle_snd->zName);
+	sprintf(filename, BATTLESNDSDIR "/%s_%s.wav", basename, battle_snd->zName);
 
 	if (!FileExists(filename))
 	{
 		if (battle_snd_id == BATTLE_SOUND_DIE1)
 		{
 			// The "die" sound filenames differs between profiles and languages
-			sprintf(filename, "BATTLESNDS/%s_dying.wav", basename);
+			sprintf(filename, BATTLESNDSDIR "/%s_dying.wav", basename);
 			if (FileExists(filename)) goto file_exists;
 		}
 
@@ -5974,7 +5975,7 @@ no_sub:
 
 		// Generic replacement voices
 		char const prefix = s->ubBodyType == REGFEMALE ? 'f' : 'm';
-		sprintf(filename, "BATTLESNDS/%c_%s.wav", prefix, battle_snd->zName);
+		sprintf(filename, BATTLESNDSDIR "/%c_%s.wav", prefix, battle_snd->zName);
 	}
 file_exists:;
 

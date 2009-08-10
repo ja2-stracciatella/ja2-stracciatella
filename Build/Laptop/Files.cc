@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -311,10 +312,10 @@ static void LoadFiles(void)
   // load files video objects into memory
 
 	// title bar
-	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// top portion of the screen background
-	guiTOP = AddVideoObjectFromFile("LAPTOP/fileviewer.sti");
+	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/fileviewer.sti");
 }
 
 
@@ -696,7 +697,7 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 static void HandleSpecialFiles(void)
 {
 	FileRecordWidth*  const width_list = CreateWidthRecordsForAruloIntelFile();
-	AutoStringList    const head(LoadStringsIntoFileList("BINARYDATA/RIS.EDT", 0, LENGTH_OF_ENRICO_FILE));
+	AutoStringList    const head(LoadStringsIntoFileList(BINARYDATADIR "/RIS.EDT", 0, LENGTH_OF_ENRICO_FILE));
 	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
@@ -745,9 +746,9 @@ static void HandleSpecialFiles(void)
 	// place pictures
 	switch (giFilesPage)
 	{
-		case 0: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/ArucoFilesMap.sti", 0, 300, 270); break; // Picture of country
-		case 4: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_Y.sti",      0, 260, 225); break; // Kid pic
-		case 5: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti",      0, 260,  85); break; // Wedding pic
+		case 0: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/ArucoFilesMap.sti", 0, 300, 270); break; // Picture of country
+		case 4: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/Enrico_Y.sti",      0, 260, 225); break; // Kid pic
+		case 5: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/Enrico_W.sti",      0, 260,  85); break; // Wedding pic
 	}
 }
 
@@ -796,8 +797,8 @@ static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason);
 static void CreateButtonsForFilesPage(void)
 {
 	// will create buttons for the files page
-	giFilesPageButtons[0] = QuickCreateButtonImg("LAPTOP/arrows.sti", 0, 1, PREVIOUS_FILE_PAGE_BUTTON_X, PREVIOUS_FILE_PAGE_BUTTON_Y, MSYS_PRIORITY_HIGHEST - 1, BtnPreviousFilePageCallback);
-	giFilesPageButtons[1] = QuickCreateButtonImg("LAPTOP/arrows.sti", 6, 7, NEXT_FILE_PAGE_BUTTON_X,     NEXT_FILE_PAGE_BUTTON_Y,     MSYS_PRIORITY_HIGHEST - 1, BtnNextFilePageCallback);
+	giFilesPageButtons[0] = QuickCreateButtonImg(LAPTOPDIR "/arrows.sti", 0, 1, PREVIOUS_FILE_PAGE_BUTTON_X, PREVIOUS_FILE_PAGE_BUTTON_Y, MSYS_PRIORITY_HIGHEST - 1, BtnPreviousFilePageCallback);
+	giFilesPageButtons[1] = QuickCreateButtonImg(LAPTOPDIR "/arrows.sti", 6, 7, NEXT_FILE_PAGE_BUTTON_X,     NEXT_FILE_PAGE_BUTTON_Y,     MSYS_PRIORITY_HIGHEST - 1, BtnNextFilePageCallback);
 
 	giFilesPageButtons[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
 	giFilesPageButtons[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
@@ -971,7 +972,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 
 	FileRecordWidth*  const width_list = CreateWidthRecordsForTerroristFile();
 	FileInfo   const&       info       = g_file_info[file_idx];
-	AutoStringList    const head(LoadStringsIntoFileList("BINARYDATA/files.EDT", info.file_offset, SLAY_LENGTH));
+	AutoStringList    const head(LoadStringsIntoFileList(BINARYDATADIR "/files.EDT", info.file_offset, SLAY_LENGTH));
 	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
@@ -990,9 +991,9 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		if (giFilesPage == 0 && clause == 4)
 		{
 			char filename[128];
-			sprintf(filename, "FACES/BIGFACES/%02d.sti", info.profile_id);
-			BltVideoObjectOnce(FRAME_BUFFER, filename,                     0, FILE_VIEWER_X + 30, y + 76);
-			BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, y + 71);
+			sprintf(filename, FACESDIR "/BIGFACES/%02d.sti", info.profile_id);
+			BltVideoObjectOnce(FRAME_BUFFER, filename,                         0, FILE_VIEWER_X + 30, y + 76);
+			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, y + 71);
 		}
 
 		Font const font = giFilesPage == 0 && clause == 0 ?

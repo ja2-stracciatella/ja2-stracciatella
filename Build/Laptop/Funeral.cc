@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "Funeral.h"
@@ -116,13 +117,13 @@ void EnterFuneral()
 	guiClosedSign = AddVideoObjectFromFile(ImageFile);
 
 	// load the Left column graphic and add it
-	guiLeftColumn = AddVideoObjectFromFile("LAPTOP/LeftColumn.sti");
+	guiLeftColumn = AddVideoObjectFromFile(LAPTOPDIR "/LeftColumn.sti");
 
 	// load the Link carving graphic and add it
-	guiLinkCarving = AddVideoObjectFromFile("LAPTOP/LinkCarving.sti");
+	guiLinkCarving = AddVideoObjectFromFile(LAPTOPDIR "/LinkCarving.sti");
 
 	// load the Marble graphic and add it
-	guiMarbleBackground = AddVideoObjectFromFile("LAPTOP/Marble.sti");
+	guiMarbleBackground = AddVideoObjectFromFile(LAPTOPDIR "/Marble.sti");
 
 	// load the McGillicuttys sign graphic and add it
 	ImageFile = GetMLGFilename(MLG_MCGILLICUTTYS);
@@ -133,7 +134,7 @@ void EnterFuneral()
 	guiMortuary = AddVideoObjectFromFile(ImageFile);
 
 	// load the right column graphic and add it
-	guiRightColumn = AddVideoObjectFromFile("LAPTOP/RightColumn.sti");
+	guiRightColumn = AddVideoObjectFromFile(LAPTOPDIR "/RightColumn.sti");
 
 
 	usPosX = FUNERAL_LINK_1_X;

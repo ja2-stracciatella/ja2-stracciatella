@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Laptop.h"
 #include "BobbyRArmour.h"
 #include "BobbyRGuns.h"
@@ -16,10 +17,10 @@ static SGPVObject* guiArmourGrid;
 void EnterBobbyRArmour()
 {
 	// load the background graphic and add it
-	guiArmourBackground = AddVideoObjectFromFile("LAPTOP/Armourbackground.sti");
+	guiArmourBackground = AddVideoObjectFromFile(LAPTOPDIR "/Armourbackground.sti");
 
 	// load the gunsgrid graphic and add it
-	guiArmourGrid = AddVideoObjectFromFile("LAPTOP/Armourgrid.sti");
+	guiArmourGrid = AddVideoObjectFromFile(LAPTOPDIR "/Armourgrid.sti");
 
 	InitBobbyBrTitle();
 	//Draw menu bar

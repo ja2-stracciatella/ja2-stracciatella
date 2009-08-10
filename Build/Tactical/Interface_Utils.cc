@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Local.h"
 #include "HImage.h"
 #include "VObject.h"
@@ -60,10 +61,10 @@ void LoadCarPortraitValues(void)
 	// the car portrait file names
 	static char const* const pbCarPortraitFileNames[] =
 	{
-		"INTERFACE/eldorado.sti",
-		"INTERFACE/Hummer.sti",
-		"INTERFACE/ice Cream Truck.sti",
-		"INTERFACE/Jeep.sti"
+		INTERFACEDIR "/eldorado.sti",
+		INTERFACEDIR "/Hummer.sti",
+		INTERFACEDIR "/ice Cream Truck.sti",
+		INTERFACEDIR "/Jeep.sti"
 	};
 
 	if (giCarPortraits[0]) return;
@@ -274,7 +275,7 @@ void RenderSoldierFace(SOLDIERTYPE const& s, INT16 const sFaceX, INT16 const sFa
 
 void LoadInterfaceUtilsGraphics()
 {
-	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile(INTERFACEDIR "/Bars.sti");
 }
 
 

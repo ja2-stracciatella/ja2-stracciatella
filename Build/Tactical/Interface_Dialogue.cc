@@ -1,5 +1,6 @@
 #include "Animation_Control.h"
 #include "Animation_Data.h"
+#include "Directories.h"
 #include "FindLocations.h"
 #include "Font.h"
 #include "HImage.h"
@@ -373,7 +374,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	gTalkPanel.fHandled		=		FALSE;
 	gTalkPanel.fOnName		=		FALSE;
 
-	gTalkPanel.uiPanelVO = AddVideoObjectFromFile("INTERFACE/talkbox1.sti");
+	gTalkPanel.uiPanelVO = AddVideoObjectFromFile(INTERFACEDIR "/talkbox1.sti");
 
 	ETRLEObject const& ETRLEProps = gTalkPanel.uiPanelVO->SubregionProperties(0);
 	gTalkPanel.usWidth  = ETRLEProps.usWidth;
@@ -460,7 +461,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
-	gTalkPanel.iButtonImages = LoadButtonImage("INTERFACE/talkbox2.sti", 3, 4);
+	gTalkPanel.iButtonImages = LoadButtonImage(INTERFACEDIR "/talkbox2.sti", 3, 4);
 
 	gTalkPanel.uiCancelButton = CreateIconAndTextButton(gTalkPanel.iButtonImages, zDialogActions, MILITARYFONT1,
 														 33, DEFAULT_SHADOW,

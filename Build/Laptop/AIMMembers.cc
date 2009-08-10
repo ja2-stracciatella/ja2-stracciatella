@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "Cursors.h"
+#include "Directories.h"
 #include "EMail.h"
 #include "Font.h"
 #include "HImage.h"
@@ -51,7 +52,7 @@
 #include "Encrypted_File.h"
 #include "Strategic_Town_Loyalty.h"
 
-#define	MERCBIOSFILENAME		"BINARYDATA/aimbios.edt"
+#define	MERCBIOSFILENAME		BINARYDATADIR "/aimbios.edt"
 
 
 
@@ -446,37 +447,37 @@ void EnterAIMMembers()
 	guiVideoFaceBackground = AddVideoSurface(AIM_MEMBER_VIDEO_FACE_WIDTH, AIM_MEMBER_VIDEO_FACE_HEIGHT, PIXEL_DEPTH);
 
 	// load the stats graphic and add it
-	guiStats = AddVideoObjectFromFile("LAPTOP/stats.sti");
+	guiStats = AddVideoObjectFromFile(LAPTOPDIR "/stats.sti");
 
 	// load the Price graphic and add it
-	guiPrice = AddVideoObjectFromFile("LAPTOP/price.sti");
+	guiPrice = AddVideoObjectFromFile(LAPTOPDIR "/price.sti");
 
 	// load the Portait graphic and add it
-	guiPortrait = AddVideoObjectFromFile("LAPTOP/portrait.sti");
+	guiPortrait = AddVideoObjectFromFile(LAPTOPDIR "/portrait.sti");
 
 	// load the WeaponBox graphic and add it
-	guiWeaponBox = AddVideoObjectFromFile("LAPTOP/weaponbox.sti");
+	guiWeaponBox = AddVideoObjectFromFile(LAPTOPDIR "/weaponbox.sti");
 
 	// load the videoconf Popup graphic and add it
-	guiVideoConfPopup = AddVideoObjectFromFile("LAPTOP/VideoConfPopup.sti");
+	guiVideoConfPopup = AddVideoObjectFromFile(LAPTOPDIR "/VideoConfPopup.sti");
 
 	// load the video conf terminal graphic and add it
-	guiVideoConfTerminal = AddVideoObjectFromFile("LAPTOP/VideoConfTerminal.sti");
+	guiVideoConfTerminal = AddVideoObjectFromFile(LAPTOPDIR "/VideoConfTerminal.sti");
 
 	// load the background snow for the video conf terminal
-	guiBWSnow = AddVideoObjectFromFile("LAPTOP/BWSnow.sti");
+	guiBWSnow = AddVideoObjectFromFile(LAPTOPDIR "/BWSnow.sti");
 
 	// load the fuzzy line for the video conf terminal
-	guiFuzzLine = AddVideoObjectFromFile("LAPTOP/FuzzLine.sti");
+	guiFuzzLine = AddVideoObjectFromFile(LAPTOPDIR "/FuzzLine.sti");
 
 	// load the line distortion for the video conf terminal
-	guiStraightLine = AddVideoObjectFromFile("LAPTOP/LineInterference.sti");
+	guiStraightLine = AddVideoObjectFromFile(LAPTOPDIR "/LineInterference.sti");
 
 	// load the translucent snow for the video conf terminal
-	guiTransSnow = AddVideoObjectFromFile("LAPTOP/TransSnow.sti");
+	guiTransSnow = AddVideoObjectFromFile(LAPTOPDIR "/TransSnow.sti");
 
 	// load the translucent snow for the video conf terminal
-	guiVideoContractCharge = AddVideoObjectFromFile("LAPTOP/VideoContractCharge.sti");
+	guiVideoContractCharge = AddVideoObjectFromFile(LAPTOPDIR "/VideoContractCharge.sti");
 
 
 	//** Mouse Regions **
@@ -491,10 +492,10 @@ void EnterAIMMembers()
 
 
 	//Button Regions
-	giXToCloseVideoConfButtonImage = LoadButtonImage("LAPTOP/x_button.sti", 0, 1);
+	giXToCloseVideoConfButtonImage = LoadButtonImage(LAPTOPDIR "/x_button.sti", 0, 1);
 
 
-	guiPreviousContactNextButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
+	guiPreviousContactNextButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
 
 	giPreviousButton = MakeButton(CharacterInfo[AIM_MEMBER_PREVIOUS], PREVIOUS_X, BtnPreviousButtonCallback);
 	giContactButton  = MakeButton(CharacterInfo[AIM_MEMBER_CONTACT],  CONTACT_X,  BtnContactButtonCallback);
@@ -989,7 +990,7 @@ try
 
 	// load the face graphic
 	char sTemp[100];
-  sprintf(sTemp, "FACES/BIGFACES/%02d.sti", id);
+  sprintf(sTemp, FACESDIR "/BIGFACES/%02d.sti", id);
 	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
 
 	BOOLEAN                  shaded;
@@ -1456,12 +1457,12 @@ static void CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* cons
 	usPopUpBoxPosY = usPosY;
 
 	// load the popup box graphic
-	guiPopUpBox = AddVideoObjectFromFile("LAPTOP/VideoConfPopUp.sti");
+	guiPopUpBox = AddVideoObjectFromFile(LAPTOPDIR "/VideoConfPopUp.sti");
 
 	BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
 
 	//Create the popup boxes button
-	guiPopUpImage = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
+	guiPopUpImage = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
 	INT16 const colour = AIM_POPUP_BOX_COLOR;
 	INT16 const shadow = AIM_M_VIDEO_NAME_SHADOWCOLOR;
 	INT16 const x      = usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X;
@@ -1962,7 +1963,7 @@ static void HandleVideoDistortion(void)
 		//if it is time to start playing another sound
 		if( uiStaticNoiseSound == NO_SAMPLE )
 		{
-			uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP/static4.wav", LOWVOLUME, 1, MIDDLEPAN);
+			uiStaticNoiseSound = PlayJA2SampleFromFile(LAPTOPDIR "/static4.wav", LOWVOLUME, 1, MIDDLEPAN);
 		}
 	}
 	else
@@ -2015,7 +2016,7 @@ static void HandleVideoDistortion(void)
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP/static1.wav", LOWVOLUME, 1, MIDDLEPAN);
+					uiStaticNoiseSound = PlayJA2SampleFromFile(LAPTOPDIR "/static1.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2025,7 +2026,7 @@ static void HandleVideoDistortion(void)
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP/static5.wav", LOWVOLUME, 1, MIDDLEPAN);
+					uiStaticNoiseSound = PlayJA2SampleFromFile(LAPTOPDIR "/static5.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2035,7 +2036,7 @@ static void HandleVideoDistortion(void)
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP/static6.wav", LOWVOLUME, 1, MIDDLEPAN);
+					uiStaticNoiseSound = PlayJA2SampleFromFile(LAPTOPDIR "/static6.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2045,7 +2046,7 @@ static void HandleVideoDistortion(void)
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP/static3.wav", LOWVOLUME, 1, MIDDLEPAN);
+					uiStaticNoiseSound = PlayJA2SampleFromFile(LAPTOPDIR "/static3.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2055,7 +2056,7 @@ static void HandleVideoDistortion(void)
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP/static5.wav", LOWVOLUME, 1, MIDDLEPAN);
+					uiStaticNoiseSound = PlayJA2SampleFromFile(LAPTOPDIR "/static5.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 
@@ -2065,7 +2066,7 @@ static void HandleVideoDistortion(void)
 				//if it is time to start playing another sound
 				if( uiStaticNoiseSound == NO_SAMPLE )
 				{
-					uiStaticNoiseSound = PlayJA2SampleFromFile("LAPTOP/static4.wav", LOWVOLUME, 1, MIDDLEPAN);
+					uiStaticNoiseSound = PlayJA2SampleFromFile(LAPTOPDIR "/static4.wav", LOWVOLUME, 1, MIDDLEPAN);
 				}
 				break;
 		}
@@ -2378,7 +2379,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 				// Create a background video surface to blt the face onto
 				guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-				BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0);
+				BltVideoObjectOnce(guiVideoTitleBar, LAPTOPDIR "/VideoTitleBar.sti", 0, 0, 0);
 
 				gfAimMemberCanMercSayOpeningQuote = TRUE;
 			}
@@ -2414,7 +2415,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Hang up button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 			for (UINT8 i = 0; i < 2; ++i)
 			{
@@ -2437,7 +2438,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// Contract Length button
-			BUTTON_PICS* const img0 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 0, 1);
+			BUTTON_PICS* const img0 = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 0, 1);
 			guiVideoConferenceButtonImage[0] = img0;
 			{ UINT16 usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
 				for (UINT8 i = 0; i < 3; ++i)
@@ -2470,7 +2471,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Authorize button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img1 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img1 = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[1] = img1;
 			for (UINT8 i = 0; i < 2; ++i)
 			{
@@ -2493,7 +2494,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Leave msg button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 
 			giAnsweringMachineButton[0] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
@@ -2525,7 +2526,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// The hangup button
-			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 			giHangUpButton = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HANG_UP], AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BtnHangUpButtonCallback);
 			giHangUpButton->SetUserData(1);
@@ -2549,7 +2550,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Create a background video surface to blt the face onto
 			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-			BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0);
+			BltVideoObjectOnce(guiVideoTitleBar, LAPTOPDIR "/VideoTitleBar.sti", 0, 0, 0);
 			break;
 		}
 	}

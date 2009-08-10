@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -207,10 +208,10 @@ void EnterBobbyRGuns()
 	gfBigImageMouseRegionCreated = FALSE;
 
 	// load the background graphic and add it
-	guiGunBackground = AddVideoObjectFromFile("LAPTOP/gunbackground.sti");
+	guiGunBackground = AddVideoObjectFromFile(LAPTOPDIR "/gunbackground.sti");
 
 	// load the gunsgrid graphic and add it
-	guiGunsGrid = AddVideoObjectFromFile("LAPTOP/gunsgrid.sti");
+	guiGunsGrid = AddVideoObjectFromFile(LAPTOPDIR "/gunsgrid.sti");
 
 	InitBobbyBrTitle();
 
@@ -282,7 +283,7 @@ static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 void InitBobbyBrTitle()
 {
 	// load the br title graphic and add it
-	guiBrTitle = AddVideoObjectFromFile("LAPTOP/br.sti");
+	guiBrTitle = AddVideoObjectFromFile(LAPTOPDIR "/br.sti");
 
 	//initialize the link to the homepage by clicking on the title
 	MSYS_DefineRegion( &gSelectedTitleImageLinkRegion, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y, (BOBBYR_BRTITLE_X + BOBBYR_BRTITLE_WIDTH), (UINT16)(BOBBYR_BRTITLE_Y + BOBBYR_BRTITLE_HEIGHT), MSYS_PRIORITY_HIGH,
@@ -329,15 +330,15 @@ void InitBobbyMenuBar(void)
 	UINT8		bCurMode;
 
 	// Previous button
-	guiBobbyRPreviousPageImage = LoadButtonImage("LAPTOP/PreviousButton.sti", 0, 1);
+	guiBobbyRPreviousPageImage = LoadButtonImage(LAPTOPDIR "/PreviousButton.sti", 0, 1);
 	guiBobbyRPreviousPage = MakeButton(guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BtnBobbyRPreviousPageCallback);
 	guiBobbyRPreviousPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 
-	guiBobbyRPageMenuImage = LoadButtonImage("LAPTOP/CatalogueButton1.sti", 0, 1);
+	guiBobbyRPageMenuImage = LoadButtonImage(LAPTOPDIR "/CatalogueButton1.sti", 0, 1);
 
 	// Next button
-	guiBobbyRNextPageImage = LoadButtonImage("LAPTOP/NextButton.sti", 0, 1);
+	guiBobbyRNextPageImage = LoadButtonImage(LAPTOPDIR "/NextButton.sti", 0, 1);
 	guiBobbyRNextPage = MakeButton(guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BtnBobbyRNextPageCallback);
 	guiBobbyRNextPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
@@ -355,11 +356,11 @@ void InitBobbyMenuBar(void)
 	}
 
 	// Order Form button
-	guiBobbyROrderFormImage = LoadButtonImage("LAPTOP/OrderFormButton.sti", 0, 1);
+	guiBobbyROrderFormImage = LoadButtonImage(LAPTOPDIR "/OrderFormButton.sti", 0, 1);
 	guiBobbyROrderForm = MakeButton(guiBobbyROrderFormImage, BobbyRText[BOBBYR_GUNS_ORDER_FORM], BOBBYR_ORDER_FORM_X, BOBBYR_ORDER_FORM_Y, BtnBobbyROrderFormCallback);
 
 	// Home button
-	guiBobbyRHomeImage = LoadButtonImage("LAPTOP/CatalogueButton.sti", 0, 1);
+	guiBobbyRHomeImage = LoadButtonImage(LAPTOPDIR "/CatalogueButton.sti", 0, 1);
 	guiBobbyRHome = MakeButton(guiBobbyRHomeImage, BobbyRText[BOBBYR_GUNS_HOME], BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BtnBobbyRHomeButtonCallback);
 }
 

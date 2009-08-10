@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "BobbyRShipments.h"
@@ -97,9 +98,9 @@ void EnterBobbyRShipments()
 	InitBobbyRWoodBackground();
 
 	// load the Order Grid graphic and add it
-	guiBobbyRShipmentGrid = AddVideoObjectFromFile("LAPTOP/BobbyRay_OnOrder.sti");
+	guiBobbyRShipmentGrid = AddVideoObjectFromFile(LAPTOPDIR "/BobbyRay_OnOrder.sti");
 
-	guiBobbyRShipmentBackImage = LoadButtonImage("LAPTOP/CatalogueButton.sti", 0, 1);
+	guiBobbyRShipmentBackImage = LoadButtonImage(LAPTOPDIR "/CatalogueButton.sti", 0, 1);
 	guiBobbyRShipmetBack = MakeButton(guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_SHIPMENT_BACK_BUTTON_X, BtnBobbyRShipmentBackCallback);
 
 	giBobbyRShipmentHomeImage = UseLoadedButtonImage(guiBobbyRShipmentBackImage, 0, 1);

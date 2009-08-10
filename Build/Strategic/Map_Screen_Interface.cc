@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "FileMan.h"
 #include "Font.h"
 #include "HImage.h"
@@ -705,7 +706,7 @@ void PlayGlowRegionSound( void )
 	}
 
 	// otherwise no sound playing, play one
-	uiSoundId = PlayJA2SampleFromFile("Sounds/glowclick.wav", MIDVOLUME, 1, MIDDLEPAN);
+	uiSoundId = PlayJA2SampleFromFile(SOUNDSDIR "/glowclick.wav", MIDVOLUME, 1, MIDDLEPAN);
 }
 
 
@@ -3263,7 +3264,7 @@ static void AddSoldierToUpdateBox(SOLDIERTYPE* const pSoldier)
 	// if update
 	if( pUpdateSoldierBox[ iCounter ] == NULL )
 	{
-		giMercPanelImage = AddVideoObjectFromFile("Interface/panels.sti");
+		giMercPanelImage = AddVideoObjectFromFile(INTERFACEDIR "/panels.sti");
 	}
 
 	// run thought list of update soldiers
@@ -3276,7 +3277,7 @@ static void AddSoldierToUpdateBox(SOLDIERTYPE* const pSoldier)
 			pUpdateSoldierBox[ iCounter ] = pSoldier;
 
 			SGPFILENAME ImageFile;
-			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
+			sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
 			giUpdateSoldierFaces[iCounter] = AddVideoObjectFromFile(ImageFile);
 
 			return;
@@ -3499,7 +3500,7 @@ void DisplaySoldierUpdateBox( )
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* text, const wchar_t* help_text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/group_confirm_tactical.sti", 7, 8, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/group_confirm_tactical.sti", 7, 8, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	guiUpdatePanelButtons[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, MAP_SCREEN_FONT, FONT_MCOLOR_BLACK, FONT_BLACK);
 	btn->SetFastHelpText(help_text);
@@ -3568,7 +3569,7 @@ void CreateDestroyTheUpdateBox( void )
 		DisplaySoldierUpdateBox( );
 
 		// Do beep
-		PlayJA2SampleFromFile("Sounds/newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile(SOUNDSDIR "/newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
 	}
 	else if (fCreated && !fShowUpdateBox)
 	{
@@ -4471,8 +4472,8 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 
 void LoadMapScreenInterfaceGraphics()
 {
-	guiSectorLocatorGraphicID = AddVideoObjectFromFile("INTERFACE/hilite.sti");
-	guiSelectedCharArrow      = AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti");
+	guiSectorLocatorGraphicID = AddVideoObjectFromFile(INTERFACEDIR "/hilite.sti");
+	guiSelectedCharArrow      = AddVideoObjectFromFile(INTERFACEDIR "/selectedchararrow.sti");
 }
 
 

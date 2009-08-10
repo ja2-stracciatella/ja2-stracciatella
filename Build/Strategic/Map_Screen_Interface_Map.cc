@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "HImage.h"
@@ -607,7 +608,7 @@ static void ShowTownText(void);
 void DrawMap(void)
 {
 #ifdef JA2DEMO
-	BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/map_1.sti", 0, 290, 26);
+	BltVideoObjectOnce(guiSAVEBUFFER, INTERFACEDIR "/map_1.sti", 0, 290, 26);
 #else
 	if (!iCurrentMapSectorZ)
 	{
@@ -1116,7 +1117,7 @@ static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColo
 void InitializePalettesForMap(void)
 {
 #ifndef JA2DEMO
-	AutoSGPVSurface uiTempMap(AddVideoSurfaceFromFile("INTERFACE/b_map.pcx"));
+	AutoSGPVSurface uiTempMap(AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx"));
 
 	SGPPaletteEntry const* const pal = uiTempMap->GetPalette();
 
@@ -3693,26 +3694,26 @@ static void DropAPersonInASector(UINT8 const type, INT16 const x, INT16 const y)
 void LoadMapScreenInterfaceMapGraphics()
 {
 #ifndef JA2DEMO
-	guiBIGMAP                      = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
-	guiBULLSEYE                    = AddVideoObjectFromFile("INTERFACE/BullsEye.sti");
-	guiSAMICON                     = AddVideoObjectFromFile("INTERFACE/SAM.sti");
+	guiBIGMAP                      = AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx");
+	guiBULLSEYE                    = AddVideoObjectFromFile(INTERFACEDIR "/BullsEye.sti");
+	guiSAMICON                     = AddVideoObjectFromFile(INTERFACEDIR "/SAM.sti");
 #endif
-	guiCHARBETWEENSECTORICONS      = AddVideoObjectFromFile("INTERFACE/merc_between_sector_icons.sti");
-	guiCHARBETWEENSECTORICONSCLOSE = AddVideoObjectFromFile("INTERFACE/merc_mvt_green_arrows.sti");
-	guiCHARICONS                   = AddVideoObjectFromFile("INTERFACE/boxes.sti");
-	guiHelicopterIcon              = AddVideoObjectFromFile("INTERFACE/Helicop.sti");
-	guiMAPCURSORS                  = AddVideoObjectFromFile("INTERFACE/mapcursr.sti");
-	guiMINEICON                    = AddVideoObjectFromFile("INTERFACE/mine.sti");
-	guiMapBorderHeliSectors        = AddVideoObjectFromFile("INTERFACE/pos2.sti");
-	guiMilitia                     = AddVideoObjectFromFile("INTERFACE/Militia.sti");
-	guiMilitiaMaps                 = AddVideoObjectFromFile("INTERFACE/Militiamaps.sti");
-	guiMilitiaSectorHighLight      = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline2.sti");
-	guiMilitiaSectorOutline        = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti");
-	guiORTAICON                    = AddVideoObjectFromFile("INTERFACE/map_item.sti");
-	guiSubLevel1                   = AddVideoObjectFromFile("INTERFACE/Mine_1.sti");
-	guiSubLevel2                   = AddVideoObjectFromFile("INTERFACE/Mine_2.sti");
-	guiSubLevel3                   = AddVideoObjectFromFile("INTERFACE/Mine_3.sti");
-	guiTIXAICON                    = AddVideoObjectFromFile("INTERFACE/prison.sti");
+	guiCHARBETWEENSECTORICONS      = AddVideoObjectFromFile(INTERFACEDIR "/merc_between_sector_icons.sti");
+	guiCHARBETWEENSECTORICONSCLOSE = AddVideoObjectFromFile(INTERFACEDIR "/merc_mvt_green_arrows.sti");
+	guiCHARICONS                   = AddVideoObjectFromFile(INTERFACEDIR "/boxes.sti");
+	guiHelicopterIcon              = AddVideoObjectFromFile(INTERFACEDIR "/Helicop.sti");
+	guiMAPCURSORS                  = AddVideoObjectFromFile(INTERFACEDIR "/mapcursr.sti");
+	guiMINEICON                    = AddVideoObjectFromFile(INTERFACEDIR "/mine.sti");
+	guiMapBorderHeliSectors        = AddVideoObjectFromFile(INTERFACEDIR "/pos2.sti");
+	guiMilitia                     = AddVideoObjectFromFile(INTERFACEDIR "/Militia.sti");
+	guiMilitiaMaps                 = AddVideoObjectFromFile(INTERFACEDIR "/Militiamaps.sti");
+	guiMilitiaSectorHighLight      = AddVideoObjectFromFile(INTERFACEDIR "/MilitiamapsectorOutline2.sti");
+	guiMilitiaSectorOutline        = AddVideoObjectFromFile(INTERFACEDIR "/MilitiamapsectorOutline.sti");
+	guiORTAICON                    = AddVideoObjectFromFile(INTERFACEDIR "/map_item.sti");
+	guiSubLevel1                   = AddVideoObjectFromFile(INTERFACEDIR "/Mine_1.sti");
+	guiSubLevel2                   = AddVideoObjectFromFile(INTERFACEDIR "/Mine_2.sti");
+	guiSubLevel3                   = AddVideoObjectFromFile(INTERFACEDIR "/Mine_3.sti");
+	guiTIXAICON                    = AddVideoObjectFromFile(INTERFACEDIR "/prison.sti");
 }
 
 
@@ -4004,7 +4005,7 @@ void CreateDestroyMilitiaSectorButtons()
 		INT16       y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT + 2;
 		for (INT32 i = 0; i != 3; y += MILITIA_BTN_HEIGHT, ++i)
 		{
-			GUIButtonRef b = QuickCreateButtonImg("INTERFACE/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
+			GUIButtonRef b = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
 			b->SpecifyGeneralTextAttributes(0, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
@@ -4340,7 +4341,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 
 static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/militia.sti", 1, 2, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 1, 2, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giMapMilitiaButton[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, FONT_BLACK, FONT_BLACK);
 }

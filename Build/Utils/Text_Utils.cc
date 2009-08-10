@@ -1,8 +1,12 @@
+#include "Directories.h"
 #include "Text.h"
 #include "Text_Utils.h"
 #include "FileMan.h"
 #include "GameSettings.h"
 #include "Encrypted_File.h"
+
+
+#define ITEMSTRINGFILENAME BINARYDATADIR "/ITEMDESC.EDT"
 
 
 void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])

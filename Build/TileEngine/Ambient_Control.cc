@@ -1,4 +1,5 @@
 #include "Ambient_Types.h"
+#include "Directories.h"
 #include "FileMan.h"
 #include "Environment.h"
 #include "Sound_Control.h"
@@ -16,7 +17,7 @@ static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 try
 {
 	SGPFILENAME zFilename;
-	sprintf(zFilename, "AMBIENT/%d.bad", ubAmbientID);
+	sprintf(zFilename, AMBIENTDIR "/%d.bad", ubAmbientID);
 
 	AutoSGPFile hFile(FileOpen(zFilename, FILE_ACCESS_READ));
 
@@ -28,7 +29,7 @@ try
 	{
 		FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT));
 
-		sprintf(zFilename, "AMBIENT/%s", gAmbData[cnt].zFilename);
+		sprintf(zFilename, AMBIENTDIR "/%s", gAmbData[cnt].zFilename);
 		strcpy(gAmbData[cnt].zFilename, zFilename);
 	}
 

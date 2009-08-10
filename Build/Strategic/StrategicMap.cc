@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Interface.h"
@@ -358,7 +359,7 @@ void BeginLoadScreen( )
 		iLastShadePercentage = 0;
 		uiStartTime = GetClock();
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-		PlayJA2SampleFromFile("SOUNDS/Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile(SOUNDSDIR "/Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iPercentage < 100  )
 		{
 			uiCurrTime = GetClock();
@@ -464,7 +465,7 @@ static void EndLoadScreen(void)
 	if( fStartNewFile )
 	{ //start new file
 		fp = fopen( "TimeResults.txt", "w" );
-		ScreenMsg( FONT_YELLOW, MSG_TESTVERSION, L"See JA2/Data/TimeResults.txt for more detailed timings." );
+		ScreenMsg(FONT_YELLOW, MSG_TESTVERSION, L"See JA2/" BASEDATADIR "/TimeResults.txt for more detailed timings.");
 		fStartNewFile = FALSE;
 	}
 	else

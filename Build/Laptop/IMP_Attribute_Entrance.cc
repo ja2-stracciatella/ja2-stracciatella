@@ -1,4 +1,5 @@
 #include "CharProfile.h"
+#include "Directories.h"
 #include "Font.h"
 #include "IMP_Attribute_Entrance.h"
 #include "IMPVideoObjects.h"
@@ -56,7 +57,7 @@ static void CreateIMPAttributeEntranceButtons(void)
 {
 
 	// the begin button
-	giIMPAttributeEntranceButtonImage[0] = LoadButtonImage("LAPTOP/button_2.sti", 0, 1);
+	giIMPAttributeEntranceButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_2.sti", 0, 1);
 	 giIMPAttributeEntranceButton[0] = CreateIconAndTextButton( giIMPAttributeEntranceButtonImage[ 0 ], pImpButtonText[ 13 ], FONT12ARIAL,
 														 FONT_WHITE, DEFAULT_SHADOW,
 														 FONT_WHITE, DEFAULT_SHADOW,

@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "JA2_Splash.h"
 #include "VSurface.h"
 #include "Timer_Control.h"
@@ -23,7 +24,7 @@ void InitJA2SplashScreen(void)
 	InitializeJA2Clock();
 
 	STRING512 DataDir;
-	sprintf(DataDir, "%s/Data", GetExecutableDirectory());
+	sprintf(DataDir, "%s/" BASEDATADIR, GetExecutableDirectory());
 	SetFileManCurrentDirectory(DataDir);
 
 	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));

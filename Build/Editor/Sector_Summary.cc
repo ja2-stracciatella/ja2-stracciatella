@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "Directories.h"
 #include "HImage.h"
 #include "LoadSaveSoldierCreate.h"
 #include "Local.h"
@@ -254,12 +255,12 @@ void CreateSummaryWindow()
 	iSummaryButton[SUMMARY_OKAY] = CreateTextButton(L"Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, 585, 325, 50, 30, MSYS_PRIORITY_HIGH, SummaryOkayCallback);
 
 	iSummaryButton[ SUMMARY_GRIDCHECKBOX ] =
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
+		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
 	iSummaryButton[SUMMARY_GRIDCHECKBOX]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderGrid = TRUE;
 
 	iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] =
-		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
+		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
 	iSummaryButton[SUMMARY_PROGRESSCHECKBOX]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderProgress = TRUE;
 
@@ -280,24 +281,24 @@ void CreateSummaryWindow()
 		iSummaryButton[SUMMARY_B3]->uiFlags |= BUTTON_CLICKED_ON;
 
 	iSummaryButton[ SUMMARY_ALTERNATE ] =
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
+		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
 	if( gfAlternateMaps )
 		iSummaryButton[SUMMARY_ALTERNATE]->uiFlags |= BUTTON_CLICKED_ON;
 
 	iSummaryButton[SUMMARY_LOAD] = CreateTextButton(L"LOAD", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT,      MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummaryLoadMapCallback);
 	iSummaryButton[SUMMARY_SAVE] = CreateTextButton(L"SAVE", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT + 55, MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummarySaveMapCallback);
 	iSummaryButton[ SUMMARY_OVERRIDE ] =
-		CreateCheckBoxButton( ( INT16 ) ( MAP_LEFT + 110 ), ( INT16 ) ( MAP_BOTTOM + 59 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryOverrideCallback );
+		CreateCheckBoxButton( ( INT16 ) ( MAP_LEFT + 110 ), ( INT16 ) ( MAP_BOTTOM + 59 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryOverrideCallback );
 
 
 	iSummaryButton[SUMMARY_UPDATE] = CreateTextButton(L"Update", FONT12POINT1, FONT_BLACK, FONT_BLACK, 255, 15, 40, 16, MSYS_PRIORITY_HIGH, SummaryUpdateCallback);
 
 	iSummaryButton[ SUMMARY_REAL ] =
-		CreateCheckBoxButton( 350, 47, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryRealCallback );
+		CreateCheckBoxButton( 350, 47, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryRealCallback );
 	iSummaryButton[ SUMMARY_SCIFI ] =
-		CreateCheckBoxButton( 376, 47, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummarySciFiCallback );
+		CreateCheckBoxButton( 376, 47, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_HIGH, SummarySciFiCallback );
 	iSummaryButton[ SUMMARY_ENEMY ] =
-		CreateCheckBoxButton( 350, 60, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryEnemyCallback );
+		CreateCheckBoxButton( 350, 60, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryEnemyCallback );
 
 	//iSummaryButton[SUMMARY_SCIFI]->SetFastHelpText(L"Display items that appear in SciFi mode.");
 	//iSummaryButton[SUMMARY_REAL ]->SetFastHelpText(L"Display items that appear in Realistic mode.");
@@ -1993,7 +1994,7 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 			if( gubOverrideStatus == READONLY )
 			{
 				char filename[40];
-				sprintf( filename, "MAPS/%ls", gszDisplayName );
+				sprintf(filename, MAPSDIR "/%ls", gszDisplayName);
 				FileClearAttributes( filename );
 			}
 			if(	ExternalSaveMap( gszDisplayName ) )
@@ -2029,7 +2030,7 @@ static void CalculateOverrideStatus(void)
 	gfOverride = FALSE;
 	if( gfTempFile )
 	{
-		sprintf( szFilename, "MAPS/%ls", gszTempFilename );
+		sprintf(szFilename, MAPSDIR "/%ls", gszTempFilename);
 		if( strlen( szFilename ) == 5 )
 			strcat( szFilename, "test.dat" );
 		char* ptr = strstr( szFilename, "." );
@@ -2039,7 +2040,7 @@ static void CalculateOverrideStatus(void)
 			strcpy(ptr, ".dat");
 	}
 	else
-		sprintf( szFilename, "MAPS/%ls", gszFilename );
+		sprintf(szFilename, MAPSDIR "/%ls", gszFilename);
 	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%hs", szFilename + 5);
 	const UINT32 attr = FileGetAttributes(szFilename);
 	if (attr != FILE_ATTR_ERROR)
@@ -2072,7 +2073,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 	FLOAT dMajorMapVersion;
 	{
 		char filename[40];
-		sprintf(filename, "Maps/%c%d%s.dat", 'A' + y, x + 1, suffix);
+		sprintf(filename, MAPSDIR "/%c%d%s.dat", 'A' + y, x + 1, suffix);
 		AutoSGPFile f_map;
 		try
 		{
@@ -2536,7 +2537,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	}
 	//Open the original map for the sector
 	char szFilename[40];
-	sprintf( szFilename, "MAPS/%ls", gszFilename );
+	sprintf(szFilename, MAPSDIR "/%ls", gszFilename);
 	AutoSGPFile hfile(FileOpen(szFilename, FILE_ACCESS_READ));
 	//Now fileseek directly to the file position where the number of world items are stored
 	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);

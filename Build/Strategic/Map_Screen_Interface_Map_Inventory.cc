@@ -1,5 +1,6 @@
 #include "Auto_Resolve.h"
 #include "Buffer.h"
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Handle_Items.h"
@@ -115,7 +116,7 @@ BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 void LoadInventoryPoolGraphic(void)
 {
 	// add to V-object index
-	guiMapInventoryPoolBackground = AddVideoObjectFromFile("INTERFACE/sector_inventory.sti");
+	guiMapInventoryPoolBackground = AddVideoObjectFromFile(INTERFACEDIR "/sector_inventory.sti");
 }
 
 
@@ -660,8 +661,8 @@ static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateMapInventoryButtons(void)
 {
-	guiMapInvenButton[0] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 10, 1, -1, 3, -1, 559, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolNextBtn);
-	guiMapInvenButton[1] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti",  9, 0, -1, 2, -1, 487, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolPrevBtn);
+	guiMapInvenButton[0] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 10, 1, -1, 3, -1, 559, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolNextBtn);
+	guiMapInvenButton[1] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti",  9, 0, -1, 2, -1, 487, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolPrevBtn);
 
 	//reset the current inventory page to be the first page
 	iCurrentInventoryPoolPage = 0;
@@ -1139,7 +1140,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 static void CreateMapInventoryPoolDoneButton(void)
 {
 	// create done button
-	guiMapInvenButton[2] = QuickCreateButtonImg("INTERFACE/done_button.sti", 0, 1, 587, 333, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
+	guiMapInvenButton[2] = QuickCreateButtonImg(INTERFACEDIR "/done_button.sti", 0, 1, 587, 333, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
 }
 
 

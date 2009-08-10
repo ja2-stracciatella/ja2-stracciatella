@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "LoadSaveBullet.h"
 #include "TileDat.h"
 #include "WorldDef.h"
@@ -92,11 +93,11 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 
 			if ( pBullet->usFlags & ( BULLET_FLAG_CREATURE_SPIT ) )
 			{
-				AniParams.zCachedFile = "TILECACHE/spit2.sti";
+				AniParams.zCachedFile = TILECACHEDIR "/spit2.sti";
 			}
 			else if ( pBullet->usFlags & ( BULLET_FLAG_KNIFE ) )
 			{
-				AniParams.zCachedFile = "TILECACHE/knifing.sti";
+				AniParams.zCachedFile = TILECACHEDIR "/knifing.sti";
 				pBullet->ubItemStatus = pBullet->pFirer->inv[ HANDPOS ].bStatus[0];
 			}
 
@@ -328,19 +329,19 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 
 	if ( pBullet->usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_TANK_CANNON ) )
 	{
-		AniParams.zCachedFile = "TILECACHE/msle_smk.sti";
+		AniParams.zCachedFile = TILECACHEDIR "/msle_smk.sti";
 	}
 	else if ( pBullet->usFlags & ( BULLET_FLAG_SMALL_MISSILE ) )
 	{
-		AniParams.zCachedFile = "TILECACHE/msle_sma.sti";
+		AniParams.zCachedFile = TILECACHEDIR "/msle_sma.sti";
 	}
 	else if ( pBullet->usFlags & ( BULLET_FLAG_CREATURE_SPIT ) )
 	{
-		AniParams.zCachedFile = "TILECACHE/msle_spt.sti";
+		AniParams.zCachedFile = TILECACHEDIR "/msle_spt.sti";
 	}
 	else if ( pBullet->usFlags & ( BULLET_FLAG_FLAME ) )
 	{
-		AniParams.zCachedFile = "TILECACHE/flmthr2.sti";
+		AniParams.zCachedFile = TILECACHEDIR "/flmthr2.sti";
 		AniParams.sDelay							= (INT16)( 100 );
 	}
 

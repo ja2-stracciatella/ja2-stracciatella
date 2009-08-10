@@ -4,7 +4,7 @@
 //#include "LaptopSave.h"
 
 
-#define		BOBBYRDESCFILE										"BINARYDATA/BrayDesc.edt"
+#define		BOBBYRDESCFILE										BINARYDATADIR "/BrayDesc.edt"
 
 #define BOBBYR_ITEM_DESC_NAME_SIZE  80
 #define BOBBYR_ITEM_DESC_INFO_SIZE 320

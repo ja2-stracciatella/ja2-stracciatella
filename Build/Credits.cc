@@ -1,6 +1,7 @@
 #include "Credits.h"
 #include "Cursors.h"
 #include "Debug.h"
+#include "Directories.h"
 #include "Encrypted_File.h"
 #include "English.h"
 #include "Font.h"
@@ -35,7 +36,7 @@ struct CRDT_NODE
 #define		CRDT_FLAG__END_SECTION				0x00000004
 
 
-#define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA/Credits.edt"
+#define		CRDT_NAME_OF_CREDIT_FILE				BINARYDATADIR "/Credits.edt"
 
 #define CREDITS_LINESIZE 80
 
@@ -196,8 +197,8 @@ static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 
 static BOOLEAN EnterCreditsScreen(void)
 try
 {
-	guiCreditBackGroundImage = AddVideoObjectFromFile("INTERFACE/Credits.sti");
-	guiCreditFaces           = AddVideoObjectFromFile("INTERFACE/Credit Faces.sti");
+	guiCreditBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/Credits.sti");
+	guiCreditFaces           = AddVideoObjectFromFile(INTERFACEDIR "/Credit Faces.sti");
 
 	guiCreditScreenActiveFont  = FONT12ARIAL;
 	gubCreditScreenActiveColor = FONT_MCOLOR_DKWHITE;

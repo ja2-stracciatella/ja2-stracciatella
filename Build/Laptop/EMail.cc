@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "EMail.h"
@@ -300,19 +301,19 @@ void EnterEmail()
 	iCurrentPage = LaptopSaveInfo.iCurrentEmailPage;
 
 	// title bar
-	guiEmailTitle = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	guiEmailTitle = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// the list background
-	guiEmailBackground = AddVideoObjectFromFile("LAPTOP/Mailwindow.sti");
+	guiEmailBackground = AddVideoObjectFromFile(LAPTOPDIR "/Mailwindow.sti");
 
 	// the indication/notification box
-	guiEmailIndicator = AddVideoObjectFromFile("LAPTOP/MailIndicator.sti");
+	guiEmailIndicator = AddVideoObjectFromFile(LAPTOPDIR "/MailIndicator.sti");
 
 	// the message background
-	guiEmailMessage = AddVideoObjectFromFile("LAPTOP/emailviewer.sti");
+	guiEmailMessage = AddVideoObjectFromFile(LAPTOPDIR "/emailviewer.sti");
 
   // the message background
-	guiMAILDIVIDER = AddVideoObjectFromFile("LAPTOP/maillistdivider.sti");
+	guiMAILDIVIDER = AddVideoObjectFromFile(LAPTOPDIR "/maillistdivider.sti");
 
 	// initialize mouse regions
 	InitializeMouseRegions();
@@ -513,7 +514,7 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 
 static void LoadEMailText(wchar_t buf[], UINT32 entry)
 {
-	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/Email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
 }
 
 
@@ -1057,7 +1058,7 @@ static void BtnNewOkback(GUI_BUTTON *btn, INT32 reason)
 
 static GUIButtonRef MakeButtonNewMail(INT32 image, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", image, image + 3, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/NewMailButtons.sti", image, image + 3, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -1110,7 +1111,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		fOldDisplayMessageFlag=TRUE;
 
 		// add X button
-		giMessageButton = QuickCreateButtonImg("LAPTOP/X.sti", 0, 1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
+		giMessageButton = QuickCreateButtonImg(LAPTOPDIR "/X.sti", 0, 1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
 	  giMessageButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		if( giNumberOfPagesToCurrentEmail > 2 )
@@ -1157,7 +1158,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 
 static GUIButtonRef MakeButtonYesNo(INT32 image, INT16 x, GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", image, image + 1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/YesNoButtons.sti", image, image + 1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -1501,7 +1502,7 @@ static void DestroyMailScreenButtons(void)
 
 static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/mailbuttons.sti", idx, idx + 4, x, FROM_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/mailbuttons.sti", idx, idx + 4, x, FROM_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giSortButton[idx] = btn;
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	if (text)
@@ -1871,7 +1872,7 @@ ENUM_BITSET(PhysicalBits)
 
 static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)
 {
-	LoadEncryptedDataFromFile("BINARYDATA/Impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/Impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
 }
 
 

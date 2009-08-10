@@ -1,4 +1,5 @@
 #include "Buffer.h"
+#include "Directories.h"
 #include "Font_Control.h"
 #include "LoadSaveData.h"
 #include "Types.h"
@@ -212,15 +213,15 @@ try
 	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
 	{
 		// use a copy of Herve's data file instead!
-		sprintf( zFileName, "NPCData/%03d.npc", HERVE );
+		sprintf(zFileName, NPCDATADIR "/%03d.npc", HERVE);
 	}
 	else if ( ubNPC < FIRST_RPC || (ubNPC < FIRST_NPC && gMercProfiles[ ubNPC ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) )
 	{
-		sprintf( zFileName, "NPCData/000.npc", ubNPC );
+		sprintf(zFileName, NPCDATADIR "/000.npc", ubNPC);
 	}
 	else
 	{
-		sprintf( zFileName, "NPCData/%03d.npc", ubNPC );
+		sprintf(zFileName, NPCDATADIR "/%03d.npc", ubNPC);
 	}
 
 	// ATE: Put some stuff i here to use a different NPC file if we are in a meanwhile.....
@@ -229,13 +230,13 @@ try
 		// If we are the queen....
 		if ( ubNPC == QUEEN )
 		{
-			sprintf( zFileName, "NPCData/%03d.npc", gubAlternateNPCFileNumsForQueenMeanwhiles[ GetMeanwhileID( ) ] );
+			sprintf(zFileName, NPCDATADIR "/%03d.npc", gubAlternateNPCFileNumsForQueenMeanwhiles[GetMeanwhileID()]);
 		}
 
 		// If we are elliot....
 		if ( ubNPC == ELLIOT )
 		{
-			sprintf( zFileName, "NPCData/%03d.npc", gubAlternateNPCFileNumsForElliotMeanwhiles[ GetMeanwhileID( ) ] );
+			sprintf(zFileName, NPCDATADIR "/%03d.npc", gubAlternateNPCFileNumsForElliotMeanwhiles[GetMeanwhileID()]);
 		}
 
 	}
@@ -375,11 +376,11 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 	char        buf[255];
 	if (idx == MINERS_CIV_QUOTE_INDEX)
 	{
-		filename = "NPCData/miners.npc";
+		filename = NPCDATADIR "/miners.npc";
 	}
 	else
 	{
-		sprintf(buf, "NPCData/%c%d.npc", 'A' + gsCivQuoteSector[idx][1] - 1, gsCivQuoteSector[idx][0]);
+		sprintf(buf, NPCDATADIR "/%c%d.npc", 'A' + gsCivQuoteSector[idx][1] - 1, gsCivQuoteSector[idx][0]);
 		filename = buf;
 	}
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));

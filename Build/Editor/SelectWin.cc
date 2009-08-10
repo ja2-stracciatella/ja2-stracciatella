@@ -1,6 +1,7 @@
 #ifdef JA2EDITOR
 
 #include "Button_System.h"
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Input.h"
@@ -251,11 +252,11 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 	iSelectWin = CreateHotSpot(0, 0, SCREEN_WIDTH - 40, TASKBAR_Y, MSYS_PRIORITY_HIGH, SelWinClkCallback);
 
 	INT16 y;
-	iOkWin      = MakeButton(OK_ICON,     "EDITOR/checkmark.sti",   y  =  0, 40, OkClkCallback,   L"Accept selections");
-	iCancelWin  = MakeButton(CANCEL_ICON, "EDITOR/bigX.sti",        y += 40, 40, CnclClkCallback, L"Cancel selections");
+	iOkWin      = MakeButton(OK_ICON,     EDITORDIR "/checkmark.sti",   y  =  0, 40, OkClkCallback,   L"Accept selections");
+	iCancelWin  = MakeButton(CANCEL_ICON, EDITORDIR "/bigX.sti",        y += 40, 40, CnclClkCallback, L"Cancel selections");
 	INT16 const h = (TASKBAR_Y - 40 - 40) / 2;
-	iScrollUp   = MakeButton(UP_ICON,     "EDITOR/lgUpArrow.sti",   y += 40,  h, UpClkCallback,   L"Scroll window up");
-	iScrollDown = MakeButton(DOWN_ICON,   "EDITOR/lgDownArrow.sti", y += h,   h, DwnClkCallback,  L"Scroll window down");
+	iScrollUp   = MakeButton(UP_ICON,     EDITORDIR "/lgUpArrow.sti",   y += 40,  h, UpClkCallback,   L"Scroll window up");
+	iScrollDown = MakeButton(DOWN_ICON,   EDITORDIR "/lgDownArrow.sti", y += h,   h, DwnClkCallback,  L"Scroll window down");
 
 	fButtonsPresent = TRUE;
 

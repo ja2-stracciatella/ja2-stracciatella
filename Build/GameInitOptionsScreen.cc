@@ -2,6 +2,7 @@
 #include "Button_System.h"
 #include "Cursor_Control.h"
 #include "Cursors.h"
+#include "Directories.h"
 #include "English.h"
 #include "Fade_Screen.h"
 #include "Font.h"
@@ -271,10 +272,10 @@ static void EnterGIOScreen(void)
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
 	// load the Main trade screen backgroiund image
-	guiGIOMainBackGroundImage = AddVideoObjectFromFile("InterFace/OptionsScreenBackGround.sti");
+	guiGIOMainBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/OptionsScreenBackGround.sti");
 
 	//Ok button
-	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", 0, 2);
+	giGIODoneBtnImage = LoadButtonImage(INTERFACEDIR "/PreferencesButtons.sti", 0, 2);
 	guiGIODoneButton = MakeButton(giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], GIO_BTN_OK_X, BtnGIODoneCallback);
 	guiGIODoneButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 
@@ -288,7 +289,7 @@ static void EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
 	{
 		guiDifficultySettingsToggles[ cnt ] = CreateCheckBoxButton(	GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnDifficultyTogglesCallback );
 		guiDifficultySettingsToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -308,7 +309,7 @@ static void EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
 	{
 		guiGameStyleToggles[ cnt ] = CreateCheckBoxButton(	GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameStyleTogglesCallback );
 		guiGameStyleToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -321,7 +322,7 @@ static void EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
 	{
 		guiGameSaveToggles[ cnt ] = CreateCheckBoxButton(	GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameSaveTogglesCallback );
 		guiGameSaveToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -334,7 +335,7 @@ static void EnterGIOScreen(void)
 	for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
 	{
 		guiGunOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGunOptionsTogglesCallback);
 		guiGunOptionToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -364,7 +365,7 @@ static void EnterGIOScreen(void)
 	for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 	{
 		guiTimedTurnToggles[ cnt ] = CreateCheckBoxButton(	GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
+																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnTimedTurnsTogglesCallback );
 		guiTimedTurnToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;

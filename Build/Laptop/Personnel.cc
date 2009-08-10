@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -60,8 +61,8 @@
 #define PERS_FONT_COLOR                FONT_WHITE
 
 
-#define FACES_DIR       "FACES/BIGFACES/"
-#define SMALL_FACES_DIR "FACES/"
+#define FACES_DIR       FACESDIR "/BIGFACES/"
+#define SMALL_FACES_DIR FACESDIR "/"
 
 #define NEXT_MERC_FACE_X   LAPTOP_SCREEN_UL_X + 448
 #define MERC_FACE_SCROLL_Y LAPTOP_SCREEN_UL_Y + 150
@@ -380,12 +381,12 @@ static void LoadPersonnelGraphics(void)
 	// load graphics needed for personnel screen
 
 	// title bar
-	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// the background grpahics
-	guiSCREEN = AddVideoObjectFromFile("LAPTOP/personnelwindow.sti");
+	guiSCREEN = AddVideoObjectFromFile(LAPTOPDIR "/personnelwindow.sti");
 
-	guiPersonnelInventory = AddVideoObjectFromFile("LAPTOP/personnel_inventory.sti");
+	guiPersonnelInventory = AddVideoObjectFromFile(LAPTOPDIR "/personnel_inventory.sti");
 }
 
 
@@ -596,8 +597,8 @@ static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason);
 static void CreatePersonnelButtons(void)
 {
 	// left/right buttons
-	g_personnel.prev = MakeButton("LAPTOP/personnelbuttons.sti", 0, 1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, LeftButtonCallBack);
-	g_personnel.next = MakeButton("LAPTOP/personnelbuttons.sti", 2, 3, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, RightButtonCallBack);
+	g_personnel.prev = MakeButton(LAPTOPDIR "/personnelbuttons.sti", 0, 1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, LeftButtonCallBack);
+	g_personnel.next = MakeButton(LAPTOPDIR "/personnelbuttons.sti", 2, 3, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, RightButtonCallBack);
 }
 
 
@@ -886,10 +887,10 @@ static void LoadPersonnelScreenBackgroundGraphics(void)
 	// will load the graphics for the personeel screen background
 
 	// departed bar
-	guiDEPARTEDTEAM = AddVideoObjectFromFile("LAPTOP/departed.sti");
+	guiDEPARTEDTEAM = AddVideoObjectFromFile(LAPTOPDIR "/departed.sti");
 
 	// current bar
-	guiCURRENTTEAM = AddVideoObjectFromFile("LAPTOP/CurrentTeam.sti");
+	guiCURRENTTEAM = AddVideoObjectFromFile(LAPTOPDIR "/CurrentTeam.sti");
 }
 
 
@@ -1330,8 +1331,8 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 
 	if (gubPersonnelInfoState == PRSNL_INV && !fCreated)
 	{
-		giPersonnelInventoryButtons[0] = MakeButton("LAPTOP/personnel_inventory.sti", 1, 2, 176 + 397, 2 +   200, InventoryUpButtonCallback);
-		giPersonnelInventoryButtons[1] = MakeButton("LAPTOP/personnel_inventory.sti", 3, 4, 176 + 397, 200 + 223, InventoryDownButtonCallback);
+		giPersonnelInventoryButtons[0] = MakeButton(LAPTOPDIR "/personnel_inventory.sti", 1, 2, 176 + 397, 2 +   200, InventoryUpButtonCallback);
+		giPersonnelInventoryButtons[1] = MakeButton(LAPTOPDIR "/personnel_inventory.sti", 3, 4, 176 + 397, 200 + 223, InventoryDownButtonCallback);
 
 		MSYS_DefineRegion(&gMouseScrollPersonnelINV, X_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION, X_OF_PERSONNEL_SCROLL_REGION + X_SIZE_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION + Y_SIZE_OF_PERSONNEL_SCROLL_REGION, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleSliderBarClickCallback);
 
@@ -1758,8 +1759,8 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 	{
 		if (fCreated) return;
 		// not created. create
-		g_personnel.depart_up = MakeButton("LAPTOP/departuresbuttons.sti", 0, 2, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   DepartedUpCallBack);
-		g_personnel.depart_dn = MakeButton("LAPTOP/departuresbuttons.sti", 1, 3, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, DepartedDownCallBack);
+		g_personnel.depart_up = MakeButton(LAPTOPDIR "/departuresbuttons.sti", 0, 2, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   DepartedUpCallBack);
+		g_personnel.depart_dn = MakeButton(LAPTOPDIR "/departuresbuttons.sti", 1, 3, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, DepartedDownCallBack);
 	}
 	else
 	{
@@ -1990,7 +1991,7 @@ static void DisplayHighLightBox(INT32 const sel_id)
 	// will display highlight box around selected merc
 	const INT32 x = SMALL_PORTRAIT_START_X + sel_id % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
 	const INT32 y = SMALL_PORTRAIT_START_Y + sel_id / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
-	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/PicBorde.sti", 0, x, y);
+	BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/PicBorde.sti", 0, x, y);
 }
 
 
@@ -2130,7 +2131,7 @@ try
 {
 	// just show basic panel
 	// bounding
-	AutoSGPVObject uiBox(AddVideoObjectFromFile("LAPTOP/AtmButtons.sti"));
+	AutoSGPVObject uiBox(AddVideoObjectFromFile(LAPTOPDIR "/AtmButtons.sti"));
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 }
@@ -2139,7 +2140,7 @@ catch (...) { /* XXX ignore */ }
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text)
 {
-	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/AtmButtons.sti", 2, 3);
+	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/AtmButtons.sti", 2, 3);
 	giPersonnelATMStartButtonImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;

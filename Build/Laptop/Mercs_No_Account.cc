@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "Mercs_No_Account.h"
@@ -58,10 +59,10 @@ void EnterMercsNoAccount()
 	InitMercBackGround();
 
 	// load the Account box graphic and add it
-	guiNoAccountImage = AddVideoObjectFromFile("LAPTOP/NoAccountBox.sti");
+	guiNoAccountImage = AddVideoObjectFromFile(LAPTOPDIR "/NoAccountBox.sti");
 
 	// Open Accouint button
-	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", 0, 1);
+	guiOpenAccountBoxButtonImage = LoadButtonImage(LAPTOPDIR "/BigButtons.sti", 0, 1);
 	guiOpenAccountBoxButton = MakeButton(MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT], MERC_OPEN_BUTTON_X,   BtnOpenAccountBoxButtonCallback);
 	guiCancelBoxButton      = MakeButton(MercNoAccountText[MERC_NO_ACC_CANCEL],       MERC_CANCEL_BUTTON_X, BtnCancelBoxButtonCallback);
 

@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "HImage.h"
 #include "Handle_Items.h"
 #include "Local.h"
@@ -1369,7 +1370,7 @@ void MapScreenInit(void)
 	// set up leave list arrays for dismissed mercs
 	InitLeaveList( );
 
-	guiUpdatePanelTactical = AddVideoObjectFromFile("INTERFACE/group_confirm_tactical.sti");
+	guiUpdatePanelTactical = AddVideoObjectFromFile(INTERFACEDIR "/group_confirm_tactical.sti");
 }
 
 
@@ -1592,7 +1593,7 @@ try
 		// init the timer menus
 		InitTimersForMoveMenuMouseRegions( );
 
-		giMapContractButton = QuickCreateButtonImg("INTERFACE/contractbutton.sti", 0, 1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
+		giMapContractButton = QuickCreateButtonImg(INTERFACEDIR "/contractbutton.sti", 0, 1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		giMapContractButton->SpecifyGeneralTextAttributes(pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
 		giMapContractButton->SetFastHelpText(pMapScreenMouseRegionHelpText[3]);
 
@@ -3652,8 +3653,8 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	if( !gfDontStartTransitionFromLaptop )
 	{
 		//Load a tiny graphic of the on screen and draw it to the buffer.
-		PlayJA2SampleFromFile("SOUNDS/Initial Power Up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
-		BltVideoObjectOnce(FRAME_BUFFER, "INTERFACE/LaptopOn.sti", 0, 465, 417);
+		PlayJA2SampleFromFile(SOUNDSDIR "/Initial Power Up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/LaptopOn.sti", 0, 465, 417);
 		InvalidateRegion( 465, 417, 480, 427 );
 		ExecuteBaseDirtyRectQueue( );
 		EndFrameBufferRender( );
@@ -6619,7 +6620,7 @@ static void CreateDestroyTrashCanRegion(void)
 							 MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
 
 		// done inventory button define
-		giMapInvDoneButton = QuickCreateButtonImg("INTERFACE/done_button2.sti", 0, 1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
+		giMapInvDoneButton = QuickCreateButtonImg(INTERFACEDIR "/done_button2.sti", 0, 1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
 		giMapInvDoneButton->SetFastHelpText(pMiscMapScreenMouseRegionHelpText[2]);
 
 		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
@@ -6795,20 +6796,20 @@ static bool AnyMercsLeavingRealSoon()
 
 void HandlePreloadOfMapGraphics(void)
 {
-	guiSleepIcon                = AddVideoObjectFromFile("INTERFACE/sleepicon.sti");
-	guiCHARINFO                 = AddVideoObjectFromFile("INTERFACE/charinfo.sti");
-	guiCHARLIST                 = AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti");
+	guiSleepIcon                = AddVideoObjectFromFile(INTERFACEDIR "/sleepicon.sti");
+	guiCHARINFO                 = AddVideoObjectFromFile(INTERFACEDIR "/charinfo.sti");
+	guiCHARLIST                 = AddVideoObjectFromFile(INTERFACEDIR "/newgoldpiece3.sti");
 
-	guiMAPINV                   = AddVideoObjectFromFile("INTERFACE/mapinv.sti");
+	guiMAPINV                   = AddVideoObjectFromFile(INTERFACEDIR "/mapinv.sti");
 
 	// the upper left corner piece icons
-	guiULICONS                  = AddVideoObjectFromFile("INTERFACE/top_left_corner_icons.sti");
+	guiULICONS                  = AddVideoObjectFromFile(INTERFACEDIR "/top_left_corner_icons.sti");
 
 	HandleLoadOfMapBottomGraphics( );
 
 #ifndef JA2DEMO
 	//Kris:  Added this because I need to blink the icons button.
-	guiNewMailIcons             = AddVideoObjectFromFile("INTERFACE/newemail.sti");
+	guiNewMailIcons             = AddVideoObjectFromFile(INTERFACEDIR "/newemail.sti");
 #endif
 
 	// graphic for pool inventory
@@ -6941,8 +6942,8 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 	{
 		const INT16 prio = MSYS_PRIORITY_HIGHEST - 5;
 
-		giCharInfoButton[0] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1, 67, 69, prio, PrevInventoryMapBtnCallback);
-		giCharInfoButton[1] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1, 67, 87, prio, NextInventoryMapBtnCallback);
+		giCharInfoButton[0] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1, 67, 69, prio, PrevInventoryMapBtnCallback);
+		giCharInfoButton[1] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1, 67, 87, prio, NextInventoryMapBtnCallback);
 
 		giCharInfoButton[0]->SetFastHelpText(pMapScreenPrevNextCharButtonHelpText[0]);
 		giCharInfoButton[1]->SetFastHelpText(pMapScreenPrevNextCharButtonHelpText[1]);

@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Types.h"
 #include "FileMan.h"
 #include "LibraryDataBase.h"
@@ -129,7 +130,7 @@ try
 	if (hFile == NULL)
 	{
 		char zTempPath[SGPFILENAME_LEN];
-		snprintf(zTempPath, lengthof(zTempPath), "%s/Data/%s", GetBinDataPath(), lib_name);
+		snprintf(zTempPath, lengthof(zTempPath), "%s/" BASEDATADIR "/%s", GetBinDataPath(), lib_name);
 		hFile = fopen(zTempPath, "rb");
 		if (hFile == NULL)
 		{

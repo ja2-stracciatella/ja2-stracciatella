@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "BobbyR.h"
@@ -185,20 +186,20 @@ void EnterBobbyR()
 	guiBobbyName = AddVideoObjectFromFile(ImageFile);
 
 	// load the plaque graphic and add it
-	guiPlaque = AddVideoObjectFromFile("LAPTOP/BobbyPlaques.sti");
+	guiPlaque = AddVideoObjectFromFile(LAPTOPDIR "/BobbyPlaques.sti");
 
 	// load the TopHinge graphic and add it
-	guiTopHinge = AddVideoObjectFromFile("LAPTOP/BobbyTopHinge.sti");
+	guiTopHinge = AddVideoObjectFromFile(LAPTOPDIR "/BobbyTopHinge.sti");
 
 	// load the BottomHinge graphic and add it
-	guiBottomHinge = AddVideoObjectFromFile("LAPTOP/BobbyBottomHinge.sti");
+	guiBottomHinge = AddVideoObjectFromFile(LAPTOPDIR "/BobbyBottomHinge.sti");
 
 	// load the Store Plaque graphic and add it
 	ImageFile = GetMLGFilename(MLG_STOREPLAQUE);
 	guiStorePlaque = AddVideoObjectFromFile(ImageFile);
 
 	// load the Handle graphic and add it
-	guiHandle = AddVideoObjectFromFile("LAPTOP/BobbyHandle.sti");
+	guiHandle = AddVideoObjectFromFile(LAPTOPDIR "/BobbyHandle.sti");
 
 
 	InitBobbiesMouseRegion(BOBBIES_NUMBER_SIGNS, usMouseRegionPosArray, gSelectedBobbiesSignMenuRegion);
@@ -207,7 +208,7 @@ void EnterBobbyR()
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
 		// load the Handle graphic and add it
-		guiUnderConstructionImage = AddVideoObjectFromFile("LAPTOP/UnderConstruction.sti");
+		guiUnderConstructionImage = AddVideoObjectFromFile(LAPTOPDIR "/UnderConstruction.sti");
 
 		for(i=0; i<BOBBIES_NUMBER_SIGNS; i++)
 		{
@@ -316,7 +317,7 @@ void RenderBobbyR()
 void InitBobbyRWoodBackground()
 {
 	// load the Wood bacground graphic and add it
-	guiWoodBackground = AddVideoObjectFromFile("LAPTOP/BobbyWood.sti");
+	guiWoodBackground = AddVideoObjectFromFile(LAPTOPDIR "/BobbyWood.sti");
 }
 
 

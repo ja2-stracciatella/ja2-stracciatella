@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "Input.h"
 #include "MessageBoxScreen.h"
@@ -372,7 +373,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 	uiInterfaceImages = AddVideoObjectFromFile(panel_file);
 
 	// Create the 3 buttons
-	iPBButtonImage[0] = LoadButtonImage("INTERFACE/PreBattleButton.sti", 0, 1);
+	iPBButtonImage[0] = LoadButtonImage(INTERFACEDIR "/PreBattleButton.sti", 0, 1);
 	iPBButtonImage[1] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
 	iPBButtonImage[2] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
 	MakeButton(0,  27, gpStrategicString[STR_PB_AUTORESOLVE_BTN],  AutoResolveBattleCallback);
@@ -680,7 +681,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 
 	//hide the prebattle interface
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 261, 359 );
-	PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+	PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	InvalidateScreen();
 	RefreshScreen();
 

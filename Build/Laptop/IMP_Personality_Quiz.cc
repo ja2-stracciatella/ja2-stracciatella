@@ -1,4 +1,5 @@
 #include "CharProfile.h"
+#include "Directories.h"
 #include "Font.h"
 #include "IMP_Personality_Quiz.h"
 #include "IMPVideoObjects.h"
@@ -172,17 +173,17 @@ static void CreateIMPPersonalityQuizButtons(void)
   const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
 
 	// ths Done button
-	giIMPPersonalityQuizButtonImage[0] = LoadButtonImage("LAPTOP/button_7.sti", 0, 1);
+	giIMPPersonalityQuizButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_7.sti", 0, 1);
 	giIMPPersonalityQuizButton[0] = MakeButton(giIMPPersonalityQuizButtonImage[0], pImpButtonText[8], dx + 197, dy + 302, BtnIMPPersonalityQuizAnswerConfirmCallback);
 
   // start over
-	giIMPPersonalityQuizButtonImage[1] = LoadButtonImage("LAPTOP/button_5.sti", 0, 1);
+	giIMPPersonalityQuizButtonImage[1] = LoadButtonImage(LAPTOPDIR "/button_5.sti", 0, 1);
 	giIMPPersonalityQuizButton[1] = MakeButton(giIMPPersonalityQuizButtonImage[1], pImpButtonText[7], dx + BTN_FIRST_COLUMN_X, dy + 302, BtnIMPPersonalityQuizStartOverCallback);
 
-	giPreviousQuestionButtonImage = LoadButtonImage("LAPTOP/button_3.sti", 0, 1);
+	giPreviousQuestionButtonImage = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
 	giPreviousQuestionButton = MakeButton(giPreviousQuestionButtonImage, pImpButtonText[12], dx + 197, dy + 361, PreviousQuestionButtonCallback);
 
-	giNextQuestionButtonImage = LoadButtonImage("LAPTOP/button_3.sti", 0, 1);
+	giNextQuestionButtonImage = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
 	giNextQuestionButton = MakeButton(giNextQuestionButtonImage, pImpButtonText[13], dx + 417, dy + 361, NextQuestionButtonCallback);
 
 	giNextQuestionButton->SpecifyTextSubOffsets(    0, -1, FALSE);
@@ -301,7 +302,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 	{
 		INT32 XLoc = LAPTOP_SCREEN_UL_X + (i < 4 ? BTN_FIRST_COLUMN_X : BTN_SECOND_COLUMN_X);
 		INT32 YLoc = LAPTOP_SCREEN_WEB_UL_Y + 97 + i % 4 * 50;
-		BUTTON_PICS* const Image = LoadButtonImage("LAPTOP/button_6.sti", 0, 1);
+		BUTTON_PICS* const Image = LoadButtonImage(LAPTOPDIR "/button_6.sti", 0, 1);
 		giIMPPersonalityQuizAnswerButtonImage[i] = Image;
 		GUIButtonRef const Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, BtnQuizAnswerCallback);
 		giIMPPersonalityQuizAnswerButton[i] = Button;

@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "Config.h"
+#include "Directories.h"
 #include "FileMan.h"
 #include "LibraryDataBase.h"
 #include "MemMan.h"
@@ -197,10 +198,10 @@ void InitializeFileManager(void)
 	}
 
 	char DataPath[512];
-	snprintf(DataPath, lengthof(DataPath), "%s/Data", LocalPath);
+	snprintf(DataPath, lengthof(DataPath), "%s/" BASEDATADIR, LocalPath);
 	if (mkdir(DataPath, 0700) != 0 && errno != EEXIST)
 	{
-		throw std::runtime_error("Unable to create directory \"" LOCALDIR "/Data\"");
+		throw std::runtime_error("Unable to create directory \"" LOCALDIR "/" BASEDATADIR "\"");
 	}
 	BinDataDir = ConfigRegisterKey("data_dir");
 
@@ -229,7 +230,7 @@ bool FileExists(char const* const filename)
 	if (!file)
 	{
 		char path[512];
-		snprintf(path, lengthof(path), "%s/Data/%s", GetBinDataPath(), filename);
+		snprintf(path, lengthof(path), "%s/" BASEDATADIR "/%s", GetBinDataPath(), filename);
 		file = fopen(path, "rb");
 		if (!file) return CheckIfFileExistInLibrary(filename);
 	}
@@ -301,7 +302,7 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 		if (d < 0)
 		{
 			char path[512];
-			snprintf(path, lengthof(path), "%s/Data/%s", GetBinDataPath(), filename);
+			snprintf(path, lengthof(path), "%s/" BASEDATADIR "/%s", GetBinDataPath(), filename);
 			d = open(path, mode);
 			if (d < 0)
 			{

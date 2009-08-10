@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Encrypted_File.h"
 #include "Font.h"
 #include "HImage.h"
@@ -516,7 +517,7 @@ static void EnterHelpScreen(void)
 	usPosY = gHelpScreen.usScreenLocY + HELP_SCREEN_EXIT_BTN_LOC_Y;
 
 	//Create the exit buttons
-	giExitBtnImage = LoadButtonImage("INTERFACE/HelpScreen.sti", -1,0,4,2,6 );
+	giExitBtnImage = LoadButtonImage(INTERFACEDIR "/HelpScreen.sti", -1,0,4,2,6 );
 
 	guiHelpScreenExitBtn = QuickCreateButton(giExitBtnImage, usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenExitCallback);
 	guiHelpScreenExitBtn->SetFastHelpText(gzHelpScreenText);
@@ -539,7 +540,7 @@ static void EnterHelpScreen(void)
 	if( !gHelpScreen.fForceHelpScreenToComeUp)
 	{
 		gHelpScreenDontShowHelpAgainToggle = CreateCheckBoxButton( usPosX, (UINT16)(usPosY-3),
-																		"INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGHEST,
+																		INTERFACEDIR "/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGHEST,
 																		BtnHelpScreenDontShowHelpAgainCallback );
 
 		gHelpScreenDontShowHelpAgainToggle->SetCursor(gHelpScreen.usCursor);
@@ -552,7 +553,7 @@ static void EnterHelpScreen(void)
 	}
 
 	// load the help screen background graphic and add it
-	guiHelpScreenBackGround = AddVideoObjectFromFile("INTERFACE/HelpScreen.sti");
+	guiHelpScreenBackGround = AddVideoObjectFromFile(INTERFACEDIR "/HelpScreen.sti");
 
 	//create the text buffer
 	CreateHelpScreenTextBuffer();
@@ -1271,7 +1272,7 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 
 static void GetHelpScreenText(const UINT32 uiRecordToGet, wchar_t* const pText)
 {
-	LoadEncryptedDataFromFile(HELPSCREEN_FILE, pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/Help.edt", pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
 }
 
 
@@ -2022,7 +2023,7 @@ static void CreateScrollAreaButtons(void)
 	MSYS_DefineRegion( &gHelpScreenScrollArea, usPosX, (UINT16)iPosY, (UINT16)(usPosX+usWidth), (UINT16)(iPosY+HLP_SCRN__HEIGHT_OF_SCROLL_AREA), MSYS_PRIORITY_HIGHEST,
 							 gHelpScreen.usCursor, SelectHelpScrollAreaMovementCallBack, SelectHelpScrollAreaCallBack );
 
-	guiHelpScreenScrollArrowImage[ 0 ] = LoadButtonImage( "INTERFACE/HelpScreen.sti", 14,10, 11, 12 ,13 );
+	guiHelpScreenScrollArrowImage[ 0 ] = LoadButtonImage( INTERFACEDIR "/HelpScreen.sti", 14,10, 11, 12 ,13 );
 	guiHelpScreenScrollArrowImage[ 1 ] = UseLoadedButtonImage( guiHelpScreenScrollArrowImage[ 0 ] ,19,15,16,17,18 );
 
 	if( gHelpScreen.bNumberOfButtons != 0 )

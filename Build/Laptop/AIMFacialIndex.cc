@@ -1,4 +1,5 @@
 #include "Cursors.h"
+#include "Directories.h"
 #include "HImage.h"
 #include "Laptop.h"
 #include "AIMFacialIndex.h"
@@ -68,11 +69,10 @@ void EnterAimFacialIndex()
 {
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
-	const char *sFaceLoc = "FACES/";
 	char			sTemp[100];
 
 	// load the Portait graphic and add it
-	guiMugShotBorder = AddVideoObjectFromFile("LAPTOP/MugShotBorder3.sti");
+	guiMugShotBorder = AddVideoObjectFromFile(LAPTOPDIR "/MugShotBorder3.sti");
 
 	usPosX = AIM_FI_FIRST_MUGSHOT_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y;
@@ -86,7 +86,7 @@ void EnterAimFacialIndex()
 								 CURSOR_WWW, SelectMercFaceMoveRegionCallBack, SelectMercFaceRegionCallBack);
 			MSYS_SetRegionUserData( &gMercFaceMouseRegions[ i ], 0, i);
 
-			sprintf(sTemp, "%s%02d.sti", sFaceLoc, AimMercArray[i]);
+			sprintf(sTemp, FACESDIR "/%02d.sti", AimMercArray[i]);
 			guiAimFiFace[i] = AddVideoObjectFromFile(sTemp);
 
 			usPosX += AIM_FI_PORTRAIT_WIDTH + AIM_FI_MUGSHOT_GAP_X;

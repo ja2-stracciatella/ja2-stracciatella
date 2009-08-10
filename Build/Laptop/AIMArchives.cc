@@ -1,4 +1,5 @@
 #include "Cursors.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "AIMArchives.h"
@@ -13,8 +14,8 @@
 #include "Font_Control.h"
 
 
-#define		AIM_ALUMNI_NAME_FILE		"BINARYDATA/AlumName.edt"
-#define		AIM_ALUMNI_FILE					"BINARYDATA/Alumni.edt"
+#define		AIM_ALUMNI_NAME_FILE		BINARYDATADIR "/AlumName.edt"
+#define		AIM_ALUMNI_FILE					BINARYDATADIR "/Alumni.edt"
 
 
 #define		AIM_ALUMNI_TITLE_FONT					FONT14ARIAL
@@ -143,15 +144,15 @@ void EnterAimArchives()
 
 	gubPageNum = (UINT8)giCurrentSubPage;
 
-	guiAlumniFrame = AddVideoObjectFromFile("LAPTOP/AlumniFrame.sti");
-	guiOldAim      = AddVideoObjectFromFile("LAPTOP/Old_Aim.sti"); // 1st set of faces
-	guiPopUpPic    = AddVideoObjectFromFile("LAPTOP/PopupPicFrame.sti");
-	guiAlumniPopUp = AddVideoObjectFromFile("LAPTOP/AlumniPopUp.sti");
-	guiDoneButton  = AddVideoObjectFromFile("LAPTOP/DoneButton.sti");
+	guiAlumniFrame = AddVideoObjectFromFile(LAPTOPDIR "/AlumniFrame.sti");
+	guiOldAim      = AddVideoObjectFromFile(LAPTOPDIR "/Old_Aim.sti"); // 1st set of faces
+	guiPopUpPic    = AddVideoObjectFromFile(LAPTOPDIR "/PopupPicFrame.sti");
+	guiAlumniPopUp = AddVideoObjectFromFile(LAPTOPDIR "/AlumniPopUp.sti");
+	guiDoneButton  = AddVideoObjectFromFile(LAPTOPDIR "/DoneButton.sti");
 
 	InitAlumniFaceRegions();
 
-	guiAlumniPageButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
+	guiAlumniPageButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
 
 	INT16 x       = AIM_ALUMNI_PAGE1_X;
 	INT16 const y = AIM_ALUMNI_PAGE1_Y;

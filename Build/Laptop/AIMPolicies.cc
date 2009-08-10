@@ -1,4 +1,5 @@
 #include "Cursors.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Laptop.h"
 #include "AIMPolicies.h"
@@ -15,7 +16,7 @@
 
 #define	NUM_AIM_POLICY_PAGES				11
 #define	NUM_AIM_POLICY_TOC_BUTTONS	9
-#define	AIMPOLICYFILE		"BINARYDATA/AimPol.edt"
+#define	AIMPOLICYFILE		BINARYDATADIR "/AimPol.edt"
 #define AIM_POLICY_LINE_SIZE 80 * 5
 
 #define AIM_POLICY_TITLE_FONT				FONT14ARIAL
@@ -186,7 +187,7 @@ void EnterAimPolicies()
 	gfInPolicyToc = FALSE;
 
 	// load the Content Buttons graphic and add it
-	guiContentButton = AddVideoObjectFromFile("LAPTOP/ContentButton.sti");
+	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/ContentButton.sti");
 
 	RenderAimPolicies();
 }
@@ -371,7 +372,7 @@ static void InitAimPolicyMenuBar(void)
 	if (gfAimPolicyMenuBarLoaded) return;
 
 	//Load graphic for buttons
-	guiPoliciesMenuButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
+	guiPoliciesMenuButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
 
 	usPosX = AIM_POLICY_MENU_X;
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
@@ -530,7 +531,7 @@ static void InitAgreementRegion(void)
 	gfExitingPolicesAgreeButton = FALSE;
 
 	//Load graphic for buttons
-	guiPoliciesButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", 0, 1);
+	guiPoliciesButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
 
 	usPosX = AIM_POLICY_AGREEMENT_X;
 	for(i=0; i < 2; i++)

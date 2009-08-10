@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Laptop.h"
 #include "Florist.h"
 #include "Florist_Cards.h"
@@ -62,7 +63,7 @@ void EnterFloristCards()
 	InitFloristDefaults();
 
 	// load the Flower Account Box graphic and add it
-	guiCardBackground = AddVideoObjectFromFile("LAPTOP/CardBlank.sti");
+	guiCardBackground = AddVideoObjectFromFile(LAPTOPDIR "/CardBlank.sti");
 
 	ubCount = 0;
 	usPosY = FLORIST_CARD_FIRST_POS_Y;
@@ -81,7 +82,7 @@ void EnterFloristCards()
 	}
 
 
-	guiFlowerCardsButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", 0, 1);
+	guiFlowerCardsButtonImage	= LoadButtonImage(LAPTOPDIR "/FloristButtons.sti", 0, 1);
 
 	guiFlowerCardsBackButton = CreateIconAndTextButton( guiFlowerCardsButtonImage, sFloristCards[FLORIST_CARDS_BACK], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,

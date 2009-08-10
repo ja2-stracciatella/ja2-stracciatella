@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Directories.h"
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
@@ -201,7 +202,7 @@ InterfacePanelKind gsCurInterfacePanel  = TEAM_PANEL;
 void InitializeTacticalInterface()
 {
 	// Load button Interfaces
-	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage("INTERFACE/newicons3.sti", -1,3,4,5,-1 );
+	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage(INTERFACEDIR "/newicons3.sti", -1,3,4,5,-1 );
 	iIconImages[ SNEAK_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 6, 7, 8, -1 );
 	iIconImages[ RUN_IMAGES ]				= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 0, 1, 2, -1 );
 	iIconImages[ CRAWL_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 9, 10, 11, -1 );
@@ -220,7 +221,7 @@ void InitializeTacticalInterface()
 	iIconImages[ WIRECUTACTIONC_IMAGES ]	= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 42, 43, 44, -1 );
 #endif
 
-	iIconImages[ OPEN_DOOR_IMAGES ]				= LoadButtonImage("INTERFACE/door_op2.sti", -1,9,10,11,-1 );
+	iIconImages[ OPEN_DOOR_IMAGES ]				= LoadButtonImage(INTERFACEDIR "/door_op2.sti", -1,9,10,11,-1 );
 	iIconImages[ EXAMINE_DOOR_IMAGES ]		= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 12, 13, 14, -1 );
 	iIconImages[ LOCKPICK_DOOR_IMAGES ]		= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 21, 22, 23, -1 );
 	iIconImages[ BOOT_DOOR_IMAGES ]				= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 25, 26, 27, -1 );
@@ -230,21 +231,21 @@ void InitializeTacticalInterface()
 	iIconImages[ EXPLOSIVE_DOOR_IMAGES ]	= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 15, 16, 17, -1 );
 
 	// Load interface panels
-	guiCLOSE         = AddVideoObjectFromFile("INTERFACE/p_close.sti");
-	guiDEAD          = AddVideoObjectFromFile("INTERFACE/p_dead.sti");
-	guiHATCH         = AddVideoObjectFromFile("INTERFACE/hatch.sti");
-	guiGUNSM         = AddVideoObjectFromFile("INTERFACE/mdguns.sti");    // interface gun pictures
-	guiP1ITEMS       = AddVideoObjectFromFile("INTERFACE/mdp1items.sti"); // interface item pictures
-	guiP2ITEMS       = AddVideoObjectFromFile("INTERFACE/mdp2items.sti"); // interface item pictures
-	guiP3ITEMS       = AddVideoObjectFromFile("INTERFACE/mdp3items.sti"); // interface item pictures
-	guiBUTTONBORDER  = AddVideoObjectFromFile("INTERFACE/button_frame.sti");
-	guiVEHINV        = AddVideoObjectFromFile("INTERFACE/inventor.sti");
-	guiBURSTACCUM    = AddVideoObjectFromFile("INTERFACE/burst1.sti");
-	guiPORTRAITICONS = AddVideoObjectFromFile("INTERFACE/portraiticons.sti");
-	guiRADIO         = AddVideoObjectFromFile("INTERFACE/radio.sti");
-	guiRADIO2        = AddVideoObjectFromFile("INTERFACE/radio2.sti");
-	guiCOMPANEL      = AddVideoObjectFromFile("INTERFACE/communicationpopup.sti");
-	guiCOMPANELB     = AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti");
+	guiCLOSE         = AddVideoObjectFromFile(INTERFACEDIR "/p_close.sti");
+	guiDEAD          = AddVideoObjectFromFile(INTERFACEDIR "/p_dead.sti");
+	guiHATCH         = AddVideoObjectFromFile(INTERFACEDIR "/hatch.sti");
+	guiGUNSM         = AddVideoObjectFromFile(INTERFACEDIR "/mdguns.sti");    // interface gun pictures
+	guiP1ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
+	guiP2ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
+	guiP3ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
+	guiBUTTONBORDER  = AddVideoObjectFromFile(INTERFACEDIR "/button_frame.sti");
+	guiVEHINV        = AddVideoObjectFromFile(INTERFACEDIR "/inventor.sti");
+	guiBURSTACCUM    = AddVideoObjectFromFile(INTERFACEDIR "/burst1.sti");
+	guiPORTRAITICONS = AddVideoObjectFromFile(INTERFACEDIR "/portraiticons.sti");
+	guiRADIO         = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
+	guiRADIO2        = AddVideoObjectFromFile(INTERFACEDIR "/radio2.sti");
+	guiCOMPANEL      = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup.sti");
+	guiCOMPANELB     = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup_2.sti");
 
 	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
 
@@ -1742,21 +1743,21 @@ static void CreateTopMessage(void)
 		case COMPUTER_INTERRUPT_MESSAGE:
 		case MILITIA_INTERRUPT_MESSAGE:
 		case AIR_RAID_TURN_MESSAGE:
-			bar_file    = "INTERFACE/rect.sti";
+			bar_file    = INTERFACEDIR "/rect.sti";
 			foreground  = FONT_MCOLOR_WHITE;
 			shadow      = DEFAULT_SHADOW;
 			fDoLimitBar = TRUE;
 			break;
 
 		case PLAYER_INTERRUPT_MESSAGE:
-			bar_file   = "INTERFACE/timebaryellow.sti";
+			bar_file   = INTERFACEDIR "/timebaryellow.sti";
 			foreground = FONT_MCOLOR_BLACK;
 			shadow     = NO_SHADOW;
 			if (gGameOptions.fTurnTimeLimit) fDoLimitBar = TRUE;
 			break;
 
 		case PLAYER_TURN_MESSAGE:
-			bar_file   = "INTERFACE/timebargreen.sti";
+			bar_file   = INTERFACEDIR "/timebargreen.sti";
 			foreground = FONT_MCOLOR_BLACK;
 			shadow     = NO_SHADOW;
 			if (gGameOptions.fTurnTimeLimit)
@@ -1900,7 +1901,7 @@ void HandleTopMessages(void)
 						if (GetJA2Clock() - gTopMessage.uiTimeSinceLastBeep > PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS)
 						{
 							gTopMessage.uiTimeSinceLastBeep = GetJA2Clock();
-							PlayJA2SampleFromFile("SOUNDS/TURN_NEAR_END.WAV", HIGHVOLUME, 1, MIDDLEPAN);
+							PlayJA2SampleFromFile(SOUNDSDIR "/TURN_NEAR_END.WAV", HIGHVOLUME, 1, MIDDLEPAN);
 						}
 					}
 					else

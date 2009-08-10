@@ -10,9 +10,6 @@
 #include "Soldier_Profile_Type.h"
 
 
-#define		MAPS_DIR		"Temp/"
-
-
 //Load the Map modifications from the saved game file
 void LoadMapTempFilesFromSavedGameFile(HWFILE, UINT32 savegame_version);
 

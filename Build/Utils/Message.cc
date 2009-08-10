@@ -1,5 +1,6 @@
 #include "Buffer.h"
 #include "Debug.h"
+#include "Directories.h"
 #include "Font.h"
 #include "LoadSaveData.h"
 #include "PODObj.h"
@@ -639,7 +640,7 @@ static void PlayNewMessageSound(void)
 		return;
 	}
 
-	uiSoundId = PlayJA2SampleFromFile("Sounds/newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
+	uiSoundId = PlayJA2SampleFromFile(SOUNDSDIR "/newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
 }
 
 

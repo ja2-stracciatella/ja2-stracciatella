@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "WorldDat.h"
 #include "WorldDef.h"
 #include "TileDef.h"
@@ -19,7 +20,7 @@ static void SetTilesetTwoTerrainValues(void);
 void InitEngineTilesets(void)
 try
 {
-	AutoSGPFile f(FileOpen("BINARYDATA/JA2SET.DAT", FILE_ACCESS_READ));
+	AutoSGPFile f(FileOpen(BINARYDATADIR "/JA2SET.DAT", FILE_ACCESS_READ));
 
 	// READ # TILESETS and compare
 	UINT8 ubNumSets;

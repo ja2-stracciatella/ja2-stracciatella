@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Types.h"
 #include "Button_Sound_Control.h"
 #include "Sound_Control.h"
@@ -100,7 +101,7 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 				case BUTTON_SOUND_SCHEME_BIGSWITCH3:
 				case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:
 				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile(SOUNDSDIR "/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					return;
 
 				default: return;

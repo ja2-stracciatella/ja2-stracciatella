@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Font.h"
 #include "IMP_MainPage.h"
 #include "CharProfile.h"
@@ -153,21 +154,21 @@ static void CreateIMPMainPageButtons(void)
   const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
 
 	// the back button button
-	MakeButton(0, "LAPTOP/button_3.sti", pImpButtonText[19], dx + 15, dy + 360, BtnIMPMainPageBackCallback);
+	MakeButton(0, LAPTOPDIR "/button_3.sti", pImpButtonText[19], dx + 15, dy + 360, BtnIMPMainPageBackCallback);
 	giIMPMainPageButton[0]->SpecifyTextSubOffsets(0, -1, FALSE);
 
 	// the begin profiling button
 	const wchar_t* const profiling_text = (iCurrentProfileMode == 0 || iCurrentProfileMode > 2 ? pImpButtonText[1] : pImpButtonText[22]);
-	MakeButton(1, "LAPTOP/button_2.sti", profiling_text, dx + 136, dy + 174, BtnIMPMainPageBeginCallback);
+	MakeButton(1, LAPTOPDIR "/button_2.sti", profiling_text, dx + 136, dy + 174, BtnIMPMainPageBeginCallback);
 
 	// the personality button
-	MakeButton(2, "LAPTOP/button_8.sti", pImpButtonText[2], dx + 13, dy + 245, BtnIMPMainPagePersonalityCallback);
+	MakeButton(2, LAPTOPDIR "/button_8.sti", pImpButtonText[2], dx + 13, dy + 245, BtnIMPMainPagePersonalityCallback);
 
 	// the attribs button
-	MakeButton(3, "LAPTOP/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPMainPageAttributesCallback);
+	MakeButton(3, LAPTOPDIR "/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPMainPageAttributesCallback);
 
   // the portrait button
-	MakeButton(4, "LAPTOP/button_8.sti", pImpButtonText[4], dx + 253, dy + 245, BtnIMPMainPagePortraitCallback);
+	MakeButton(4, LAPTOPDIR "/button_8.sti", pImpButtonText[4], dx + 253, dy + 245, BtnIMPMainPagePortraitCallback);
 
 	// the voice button
 	wchar_t sString[128];
@@ -179,7 +180,7 @@ static void CreateIMPMainPageButtons(void)
 	{
 		swprintf(sString, lengthof(sString), pImpButtonText[25]);
 	}
-	MakeButton(5, "LAPTOP/button_8.sti", sString, dx + 373, dy + 245, BtnIMPMainPageVoiceCallback);
+	MakeButton(5, LAPTOPDIR "/button_8.sti", sString, dx + 373, dy + 245, BtnIMPMainPageVoiceCallback);
 }
 
 

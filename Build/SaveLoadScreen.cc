@@ -1,5 +1,6 @@
 #include <exception>
 
+#include "Directories.h"
 #include "Font.h"
 #include "GameLoop.h"
 #include "HImage.h"
@@ -379,10 +380,10 @@ static void EnterSaveLoadScreen()
 	}
 
 	// Load main background and add ons graphic
-	guiSlgBackGroundImage = AddVideoObjectFromFile("INTERFACE/LoadScreen.sti");
+	guiSlgBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/LoadScreen.sti");
 	guiBackGroundAddOns   = AddVideoObjectFromFile(GetMLGFilename(MLG_LOADSAVEHEADER));
 
-	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", 6, 9);
+	guiSlgButtonImage = LoadButtonImage(INTERFACEDIR "/LoadScreenAddOns.sti", 6, 9);
 	guiSlgCancelBtn   = MakeButton(guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], SLG_LOAD_CANCEL_POS_X, BtnSlgCancelCallback);
 
 	// Either the save or load button

@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "Directories.h"
 #include "Input.h"
 #include "MapUtility.h"
 #include "SGP.h"
@@ -79,7 +80,7 @@ ScreenID MapUtilScreenHandle()
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		try
 		{
-			SGP::FindFiles find("MAPS/*.dat");
+			SGP::FindFiles find(MAPSDIR "/*.dat");
 			for (;;)
 			{
 				const char* const filename = find.Next();
@@ -268,7 +269,7 @@ ScreenID MapUtilScreenHandle()
 			}
 		}
 
-		sprintf( zFilename2, "RADARMAPS/%s.STI", zFilename );
+		sprintf(zFilename2, RADARMAPSDIR "/%s.STI", zFilename);
 		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
 	}
 

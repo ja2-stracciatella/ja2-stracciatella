@@ -1,4 +1,5 @@
 #include "CharProfile.h"
+#include "Directories.h"
 #include "Font.h"
 #include "IMP_Voices.h"
 #include "IMP_MainPage.h"
@@ -160,9 +161,9 @@ static void CreateIMPVoicesButtons(void)
   // will create buttons need for the IMP Voices screen
 	const INT16 dx = LAPTOP_SCREEN_UL_X;
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
-	MakeButton(0, "LAPTOP/voicearrows.sti", 1, 3, pImpButtonText[13], dx + 343, dy + 205, BtnIMPVoicesNextCallback);     // Next button
-	MakeButton(1, "LAPTOP/voicearrows.sti", 0, 2, pImpButtonText[12], dx +  93, dy + 205, BtnIMPVoicesPreviousCallback); // Previous button
-	MakeButton(2, "LAPTOP/button_5.sti",    0, 1, pImpButtonText[11], dx + 187, dy + 330, BtnIMPVoicesDoneCallback);     // Done button
+	MakeButton(0, LAPTOPDIR "/voicearrows.sti", 1, 3, pImpButtonText[13], dx + 343, dy + 205, BtnIMPVoicesNextCallback);     // Next button
+	MakeButton(1, LAPTOPDIR "/voicearrows.sti", 0, 2, pImpButtonText[12], dx +  93, dy + 205, BtnIMPVoicesPreviousCallback); // Previous button
+	MakeButton(2, LAPTOPDIR "/button_5.sti",    0, 1, pImpButtonText[11], dx + 187, dy + 330, BtnIMPVoicesDoneCallback);     // Done button
 }
 
 
@@ -248,9 +249,9 @@ static void PlayVoice()
 	{
 		switch (iCurrentVoices)
 		{
-			case 0:  filename = "Speech/051_001.wav"; break;
-			case 1:  filename = "Speech/052_001.wav"; break;
-			case 2:  filename = "Speech/053_001.wav"; break;
+			case 0:  filename = SPEECHDIR "/051_001.wav"; break;
+			case 1:  filename = SPEECHDIR "/052_001.wav"; break;
+			case 2:  filename = SPEECHDIR "/053_001.wav"; break;
 			default: return;
 		}
 	}
@@ -258,9 +259,9 @@ static void PlayVoice()
 	{
 		switch (iCurrentVoices)
 		{
-			case 0:  filename = "Speech/054_001.wav"; break;
-			case 1:  filename = "Speech/055_001.wav"; break;
-			case 2:  filename = "Speech/056_001.wav"; break;
+			case 0:  filename = SPEECHDIR "/054_001.wav"; break;
+			case 1:  filename = SPEECHDIR "/055_001.wav"; break;
+			case 2:  filename = SPEECHDIR "/056_001.wav"; break;
 			default: return;
 		}
 	}

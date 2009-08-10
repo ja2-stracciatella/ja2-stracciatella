@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Laptop.h"
 #include "BobbyRUsed.h"
 #include "BobbyR.h"
@@ -17,10 +18,10 @@ static SGPVObject* guiUsedGrid;
 void EnterBobbyRUsed()
 {
 	// load the background graphic and add it
-	guiUsedBackground = AddVideoObjectFromFile("LAPTOP/usedbackground.sti");
+	guiUsedBackground = AddVideoObjectFromFile(LAPTOPDIR "/usedbackground.sti");
 
 	// load the gunsgrid graphic and add it
-	guiUsedGrid = AddVideoObjectFromFile("LAPTOP/usedgrid.sti");
+	guiUsedGrid = AddVideoObjectFromFile(LAPTOPDIR "/usedgrid.sti");
 
 	InitBobbyBrTitle();
 
