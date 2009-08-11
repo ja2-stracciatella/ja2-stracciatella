@@ -218,6 +218,7 @@ SRCS += Build/LoadSaveEMail.cc
 SRCS += Build/LoadSaveTacticalStatusType.cc
 SRCS += Build/Loading_Screen.cc
 SRCS += Build/MainMenuScreen.cc
+SRCS += Build/MercPortrait.cc
 SRCS += Build/MessageBoxScreen.cc
 SRCS += Build/Options_Screen.cc
 SRCS += Build/SaveLoadGame.cc

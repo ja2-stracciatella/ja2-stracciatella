@@ -5,6 +5,7 @@
 #include "Files.h"
 #include "Game_Clock.h"
 #include "LoadSaveData.h"
+#include "MercPortrait.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
 #include "VObject.h"
@@ -990,9 +991,8 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		// Show picture
 		if (giFilesPage == 0 && clause == 4)
 		{
-			char filename[128];
-			sprintf(filename, FACESDIR "/BIGFACES/%02d.sti", info.profile_id);
-			BltVideoObjectOnce(FRAME_BUFFER, filename,                         0, FILE_VIEWER_X + 30, y + 76);
+			AutoSGPVObject vo(LoadBigPortrait(GetProfile(info.profile_id)));
+			BltVideoObject(    FRAME_BUFFER, vo,                               0, FILE_VIEWER_X + 30, y + 76);
 			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, y + 71);
 		}
 

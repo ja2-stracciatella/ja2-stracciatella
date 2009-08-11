@@ -2,6 +2,7 @@
 #include "Font_Control.h"
 #include "HImage.h"
 #include "Laptop.h"
+#include "MercPortrait.h"
 #include "Merc_Hiring.h"
 #include "Mercs_Files.h"
 #include "Mercs.h"
@@ -290,9 +291,7 @@ try
 	SOLDIERTYPE       const* const s = FindSoldierByProfileIDOnPlayerTeam(pid);
 
 	// Load the face graphic
-	char sTemp[100];
-  sprintf(sTemp, FACESDIR "/BIGFACES/%02d.sti", pid);
-	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
+	AutoSGPVObject face(LoadBigPortrait(p));
 
 	BOOLEAN        shaded;
 	const wchar_t* text;

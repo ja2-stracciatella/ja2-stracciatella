@@ -10,6 +10,7 @@
 #include "AIMMembers.h"
 #include "AIM.h"
 #include "Local.h"
+#include "MercPortrait.h"
 #include "MessageBoxScreen.h"
 #include "Timer_Control.h"
 #include "SysUtil.h"
@@ -982,20 +983,18 @@ static void DisplayMercsFace(void)
 try
 {
 	// see if the merc is currently hired
-	const ProfileID          id = gbCurrentSoldier;
-	const SOLDIERTYPE* const s  = FindSoldierByProfileIDOnPlayerTeam(id);
+	ProfileID          const  id = gbCurrentSoldier;
+	SOLDIERTYPE const* const  s  = FindSoldierByProfileIDOnPlayerTeam(id);
+	MERCPROFILESTRUCT  const& p  = GetProfile(id);
 
 	// Portrait Frame
 	BltVideoObject(FRAME_BUFFER, guiPortrait, 0, PORTRAIT_X, PORTRAIT_Y);
 
 	// load the face graphic
-	char sTemp[100];
-  sprintf(sTemp, FACESDIR "/BIGFACES/%02d.sti", id);
-	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
+	AutoSGPVObject face(LoadBigPortrait(p));
 
 	BOOLEAN                  shaded;
 	wchar_t           const* text;
-	MERCPROFILESTRUCT const& p = GetProfile(id);
 	if (IsMercDead(p))
 	{
 		// the merc is dead, so shade the face red

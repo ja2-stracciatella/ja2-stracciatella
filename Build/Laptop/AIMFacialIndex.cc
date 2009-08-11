@@ -3,6 +3,7 @@
 #include "HImage.h"
 #include "Laptop.h"
 #include "AIMFacialIndex.h"
+#include "MercPortrait.h"
 #include "Merc_Hiring.h"
 #include "Soldier_Control.h"
 #include "VObject.h"
@@ -69,7 +70,6 @@ void EnterAimFacialIndex()
 {
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
-	char			sTemp[100];
 
 	// load the Portait graphic and add it
 	guiMugShotBorder = AddVideoObjectFromFile(LAPTOPDIR "/MugShotBorder3.sti");
@@ -86,8 +86,7 @@ void EnterAimFacialIndex()
 								 CURSOR_WWW, SelectMercFaceMoveRegionCallBack, SelectMercFaceRegionCallBack);
 			MSYS_SetRegionUserData( &gMercFaceMouseRegions[ i ], 0, i);
 
-			sprintf(sTemp, FACESDIR "/%02d.sti", AimMercArray[i]);
-			guiAimFiFace[i] = AddVideoObjectFromFile(sTemp);
+			guiAimFiFace[i] = LoadSmallPortrait(GetProfile(AimMercArray[i]));
 
 			usPosX += AIM_FI_PORTRAIT_WIDTH + AIM_FI_MUGSHOT_GAP_X;
 			i++;

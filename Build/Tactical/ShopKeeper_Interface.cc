@@ -8,6 +8,7 @@
 #include "Local.h"
 #include "Timer_Control.h"
 #include "Types.h"
+#include "MercPortrait.h"
 #include "ShopKeeper_Interface.h"
 #include "Game_Clock.h"
 #include "Render_Dirty.h"
@@ -530,8 +531,6 @@ static void SelectArmsDealersFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 
 static void EnterShopKeeperInterface(void)
 {
-	CHAR8						zTemp[32];
-
 	// make sure current merc is close enough and eligible to talk to the shopkeeper.
 	AssertMsg(CanMercInteractWithSelectedShopkeeper(GetSelectedMan()), "Selected merc can't interact with shopkeeper.  Send save AM-1");
 
@@ -572,11 +571,8 @@ static void EnterShopKeeperInterface(void)
 			// remember whose face is in this slot
 			gubArrayOfEmployedMercs[ gubNumberMercsInArray ] = pSoldier->ubProfile;
 
-			//Create the string for the face file name
-			sprintf( zTemp, FACESDIR "/33FACE/%02d.sti", gMercProfiles[ pSoldier->ubProfile ].ubFaceIndex );
-
 			//While we are at it, add their small face
-			guiSmallSoldiersFace[gubNumberMercsInArray] = AddVideoObjectFromFile(zTemp);
+			guiSmallSoldiersFace[gubNumberMercsInArray] = Load33Portrait(GetProfile(pSoldier->ubProfile));
 
 			gubNumberMercsInArray++;
 		}

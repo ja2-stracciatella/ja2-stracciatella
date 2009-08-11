@@ -4,6 +4,7 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
+#include "MercPortrait.h"
 #include "Personnel.h"
 #include "VObject.h"
 #include "Debug.h"
@@ -60,9 +61,6 @@
 #define PERS_TEXT_FONT_ALTERNATE_COLOR FONT_YELLOW
 #define PERS_FONT_COLOR                FONT_WHITE
 
-
-#define FACES_DIR       FACESDIR "/BIGFACES/"
-#define SMALL_FACES_DIR FACESDIR "/"
 
 #define NEXT_MERC_FACE_X   LAPTOP_SCREEN_UL_X + 448
 #define MERC_FACE_SCROLL_Y LAPTOP_SCREEN_UL_Y + 150
@@ -467,9 +465,7 @@ static void RenderPersonnelStats(SOLDIERTYPE const& s)
 static void RenderPersonnelFace(MERCPROFILESTRUCT const& p, BOOLEAN const alive)
 try
 {
-	{ char sTemp[100];
-		sprintf(sTemp, FACES_DIR "%02d.sti", p.ubFaceIndex);
-		AutoSGPVObject guiFACE(AddVideoObjectFromFile(sTemp));
+	{ AutoSGPVObject guiFACE(LoadBigPortrait(p));
 		if (!alive)
 		{
 			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
@@ -960,9 +956,7 @@ try
 		// found the next actual guy
 		INT32 const x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 		INT32 const y = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
-		{ char sTemp[100];
-			sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
-			AutoSGPVObject guiFACE(AddVideoObjectFromFile(sTemp));
+		{ AutoSGPVObject guiFACE(LoadSmallPortrait(GetProfile(s->ubProfile)));
 			if (s->bLife <= 0)
 			{
 				guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
@@ -1875,9 +1869,7 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 static void DisplayPortraitOfPastMerc(const INT32 iId, const INT32 iCounter, const BOOLEAN fDead)
 try
 {
-	char sTemp[100];
-	sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[iId].ubFaceIndex);
-	AutoSGPVObject guiFACE(AddVideoObjectFromFile(sTemp));
+	AutoSGPVObject guiFACE(LoadSmallPortrait(GetProfile(iId)));
 
 	if (fDead)
 	{

@@ -3,6 +3,7 @@
 #include "HImage.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
+#include "MercPortrait.h"
 #include "Types.h"
 #include "MouseSystem.h"
 #include "Button_System.h"
@@ -312,11 +313,9 @@ void InitTacticalPlacementGUI()
 	for (INT32 i = 0; i < giPlacements; ++i)
 	{
 		//Load the faces
-		SGPFILENAME ImageFile;
-		sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex);
 		try
 		{
-			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
+			gMercPlacement[i].uiVObjectID = Load65Portrait(GetProfile(gMercPlacement[i].pSoldier->ubProfile));
 		}
 		catch (...)
 		{

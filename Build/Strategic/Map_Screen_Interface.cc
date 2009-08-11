@@ -6,6 +6,7 @@
 #include "LoadSaveObjectType.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map.h"
+#include "MercPortrait.h"
 #include "Render_Dirty.h"
 #include "Font_Control.h"
 #include "Assignments.h"
@@ -3275,11 +3276,7 @@ static void AddSoldierToUpdateBox(SOLDIERTYPE* const pSoldier)
 		{
 			// add to box
 			pUpdateSoldierBox[ iCounter ] = pSoldier;
-
-			SGPFILENAME ImageFile;
-			sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", gMercProfiles[pSoldier->ubProfile].ubFaceIndex);
-			giUpdateSoldierFaces[iCounter] = AddVideoObjectFromFile(ImageFile);
-
+			giUpdateSoldierFaces[iCounter] = Load65Portrait(GetProfile(pSoldier->ubProfile));
 			return;
 		}
 	}

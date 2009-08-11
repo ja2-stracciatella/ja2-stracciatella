@@ -4,6 +4,7 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Isometric_Utils.h"
+#include "MercPortrait.h"
 #include "MessageBoxScreen.h"
 #include "Timer.h"
 #include "Timer_Control.h"
@@ -1618,12 +1619,10 @@ static void CreateAutoResolveInterface(void)
 	FOR_ALL_AR_MERCS(cell)
 	{
 		//Load the face
-		SGPFILENAME ImageFile;
-		sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", GetProfile(cell->pSoldier->ubProfile).ubFaceIndex);
 		SGPVObject* face;
 		try
 		{
-			face = AddVideoObjectFromFile(ImageFile);
+			face = Load65Portrait(GetProfile(cell->pSoldier->ubProfile));
 		}
 		catch (...)
 		{

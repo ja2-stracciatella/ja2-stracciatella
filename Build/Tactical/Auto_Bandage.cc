@@ -4,6 +4,7 @@
 #include "HImage.h"
 #include "Local.h"
 #include "Medical.h"
+#include "MercPortrait.h"
 #include "Overhead.h"
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
@@ -817,11 +818,8 @@ static void AddFacesToAutoBandageBox(void)
 		const SOLDIERTYPE* const doctor = gdoctor_list[iCounter];
 		if (doctor != NULL)
 		{
-			SGPFILENAME ImageFile;
-			sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", gMercProfiles[doctor->ubProfile].ubFaceIndex);
-			giAutoBandagesSoldierFaces[iCounter] = AddVideoObjectFromFile(ImageFile);
+			giAutoBandagesSoldierFaces[iCounter] = Load65Portrait(GetProfile(doctor->ubProfile));
 			iNumberOfDoctors++;
-
 		}
 	}
 
@@ -830,9 +828,7 @@ static void AddFacesToAutoBandageBox(void)
 		const SOLDIERTYPE* const patient = gpatient_list[iCounter];
 		if (patient != NULL)
 		{
-			SGPFILENAME ImageFile;
-			sprintf(ImageFile, FACESDIR "/65Face/%02d.sti", gMercProfiles[patient->ubProfile].ubFaceIndex);
-			giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors] = AddVideoObjectFromFile(ImageFile);
+			giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors] = Load65Portrait(GetProfile(patient->ubProfile));
 		}
 	}
 

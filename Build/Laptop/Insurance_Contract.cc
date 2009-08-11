@@ -4,6 +4,7 @@
 #include "Laptop.h"
 #include "Insurance.h"
 #include "Insurance_Contract.h"
+#include "MercPortrait.h"
 #include "Merc_Hiring.h"
 #include "MessageBoxScreen.h"
 #include "VObject.h"
@@ -398,14 +399,11 @@ try
 
 	BltVideoObject(FRAME_BUFFER, guiInsOrderGridImage, 0, dx, dy);
 
-	ProfileID         const  pid     = pSoldier->ubProfile;
-	MERCPROFILESTRUCT const& p       = GetProfile(pid);
+	MERCPROFILESTRUCT const& p       = GetProfile(pSoldier->ubProfile);
 	bool              const  is_dead = IsMercDead(p);
 	{
 		// load the mercs face graphic and add it
-		char sTemp[100];
-		sprintf(sTemp, FACESDIR "/%02d.sti", pid);
-		AutoSGPVObject uiInsMercFaceImage(AddVideoObjectFromFile(sTemp));
+		AutoSGPVObject uiInsMercFaceImage(LoadSmallPortrait(p));
 
 		//if the merc is dead, shade the face red
 		if (is_dead)
