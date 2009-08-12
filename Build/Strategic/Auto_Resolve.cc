@@ -1619,15 +1619,7 @@ static void CreateAutoResolveInterface(void)
 	FOR_ALL_AR_MERCS(cell)
 	{
 		//Load the face
-		SGPVObject* face;
-		try
-		{
-			face = Load65Portrait(GetProfile(cell->pSoldier->ubProfile));
-		}
-		catch (...)
-		{
-			face = AddVideoObjectFromFile(FACESDIR "/65Face/speck.sti");
-		}
+		SGPVObject* const face = Load65Portrait(GetProfile(cell->pSoldier->ubProfile));
 		cell->uiVObjectID = face;
 		SGPPaletteEntry const* const pal = face->Palette();
 		face->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);

@@ -171,17 +171,7 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	SGPFILENAME ImageFile;
 	sprintf(ImageFile, face_file, face_id);
-	SGPVObject* vo;
-	try
-	{
-		vo = AddVideoObjectFromFile(ImageFile);
-	}
-	catch (...)
-	{
-		// If we are a big face, use placeholder...
-		if (!(uiInitFlags & FACE_BIGFACE)) throw;
-		vo = AddVideoObjectFromFile(FACESDIR "/placeholder.sti");
-	}
+	SGPVObject* const vo = AddVideoObjectFromFile(ImageFile);
 
 	memset(&f, 0, sizeof(f));
 	f.uiFlags               = uiInitFlags;

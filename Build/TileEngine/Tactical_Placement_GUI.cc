@@ -313,14 +313,7 @@ void InitTacticalPlacementGUI()
 	for (INT32 i = 0; i < giPlacements; ++i)
 	{
 		//Load the faces
-		try
-		{
-			gMercPlacement[i].uiVObjectID = Load65Portrait(GetProfile(gMercPlacement[i].pSoldier->ubProfile));
-		}
-		catch (...)
-		{
-			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile(FACESDIR "/65Face/speck.sti");
-		}
+		gMercPlacement[i].uiVObjectID = Load65Portrait(GetProfile(gMercPlacement[i].pSoldier->ubProfile));
 		const INT32 xp = 91 + i / 2 * 54;
 		const INT32 yp = (i % 2 ? 412 : 361);
 		MSYS_DefineRegion( &gMercPlacement[ i ].region, (UINT16)xp, (UINT16)yp, (UINT16)(xp + 54), (UINT16)(yp + 62), MSYS_PRIORITY_HIGH, 0, MercMoveCallback, MercClickCallback );
