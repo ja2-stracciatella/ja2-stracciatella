@@ -618,7 +618,7 @@ void TacticalPlacementHandle()
 }
 
 
-static void PickUpMercPiece(INT32 iPlacement);
+static void PickUpMercPiece(MERCPLACEMENT&);
 
 
 static void KillTacticalPlacementGUI(void)
@@ -667,7 +667,7 @@ static void KillTacticalPlacementGUI(void)
 
 	for( i = 0; i < giPlacements; i++ )
 	{
-		PickUpMercPiece( i );
+		PickUpMercPiece(gMercPlacement[i]);
 	}
 
 	PrepareLoadedSector();
@@ -728,7 +728,7 @@ static void PlaceMercs(void)
 		case CLEAR_BUTTON:
 			for( i = 0; i < giPlacements; i++ )
 			{
-				PickUpMercPiece( i );
+				PickUpMercPiece(gMercPlacement[i]);
 			}
 			gubSelectedGroupID = 0;
 			gbSelectedMercID = 0;
@@ -1025,8 +1025,8 @@ static void PutDownMercPiece(INT32 iPlacement)
 			Assert( 0 );
 			break;
 	}
-	if( gMercPlacement[ iPlacement ].fPlaced )
-		PickUpMercPiece( iPlacement );
+	MERCPLACEMENT& m = gMercPlacement[iPlacement];
+	if (m.fPlaced) PickUpMercPiece(m);
 	const INT16 sGridNo = FindGridNoFromSweetSpot(pSoldier, pSoldier->sInsertionGridNo, 4);
 	if( sGridNo != NOWHERE )
 	{
@@ -1040,11 +1040,12 @@ static void PutDownMercPiece(INT32 iPlacement)
 }
 
 
-static void PickUpMercPiece(INT32 iPlacement)
+static void PickUpMercPiece(MERCPLACEMENT& m)
 {
-	RemoveSoldierFromGridNo(*gMercPlacement[iPlacement].pSoldier);
-	gMercPlacement[ iPlacement ].fPlaced = FALSE;
-	gMercPlacement[ iPlacement ].pSoldier->bInSector = FALSE;
+	m.fPlaced = FALSE;
+	SOLDIERTYPE& s = *m.pSoldier;
+	RemoveSoldierFromGridNo(s);
+	s.bInSector = FALSE;
 }
 
 
