@@ -211,7 +211,7 @@ static void GroupPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 static void MercClickCallback(MOUSE_REGION* reg, INT32 reason);
 static void MercMoveCallback(MOUSE_REGION* reg, INT32 reason);
 static void PlaceMercs(void);
-static void SetCursorMerc(INT8 bPlacementID);
+static void SetCursorMerc(INT8 placement);
 static void SpreadPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 
 
@@ -993,15 +993,17 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 }
 
 
-static void SetCursorMerc(INT8 bPlacementID)
+static void SetCursorMerc(INT8 const placement)
 {
-	if( gbCursorMercID != bPlacementID )
+	if (gbCursorMercID == placement) return;
+
+	if (gbCursorMercID == -1 ||
+			placement      == -1 ||
+			gMercPlacement[gbCursorMercID].ubStrategicInsertionCode != gMercPlacement[placement].ubStrategicInsertionCode)
 	{
-		if( gbCursorMercID == -1 || bPlacementID == -1 ||
-			  gMercPlacement[ gbCursorMercID ].ubStrategicInsertionCode != gMercPlacement[ bPlacementID ].ubStrategicInsertionCode )
-			gfValidLocationsChanged = TRUE;
-		gbCursorMercID = bPlacementID;
+		gfValidLocationsChanged = TRUE;
 	}
+	gbCursorMercID = placement;
 }
 
 
