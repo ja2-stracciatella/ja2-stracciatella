@@ -53,7 +53,11 @@ struct MERCPLACEMENT
 	BOOLEAN				fPlaced;
 };
 
-MERCPLACEMENT *gMercPlacement = NULL;
+static MERCPLACEMENT* gMercPlacement = 0;
+static INT32          giPlacements   = 0;
+
+#define FOR_EACH_MERC_PLACEMENT(iter) \
+	for (MERCPLACEMENT* iter = gMercPlacement, * const iter##__end = gMercPlacement + giPlacements; iter##__end != iter##__end; ++i)
 
 enum
 {
@@ -73,7 +77,6 @@ BOOLEAN gfKillTacticalGUI = FALSE;
 static SGPVObject* giOverheadPanelImage;
 static BUTTON_PICS* giOverheadButtonImages[NUM_TP_BUTTONS];
 SGPVObject* giMercPanelImage = 0;
-INT32 giPlacements = 0;
 BOOLEAN gfTacticalPlacementGUIDirty = FALSE;
 BOOLEAN gfValidLocationsChanged = FALSE;
 SGPRect gTPClipRect = {0,0,0,0};
@@ -489,16 +492,13 @@ static void RenderTacticalPlacementGUI(void)
 static void EnsureDoneButtonStatus(void)
 {
 	bool enable = true;
-	INT32 i;
 	//static BOOLEAN fInside = FALSE;
 	//BOOLEAN fChanged = FALSE;
-	for( i = 0; i < giPlacements; i++ )
+	FOR_EACH_MERC_PLACEMENT(i)
 	{
-		if( !gMercPlacement[ i ].fPlaced )
-		{
-			enable = false;
-			break;
-		}
+		if (i->fPlaced) continue;
+		enable = false;
+		break;
 	}
 	GUI_BUTTON& b = *iTPButtons[DONE_BUTTON];
 	// Only enable it when it is disabled, otherwise the button will stay down
@@ -625,8 +625,6 @@ static void PickUpMercPiece(MERCPLACEMENT&);
 
 static void KillTacticalPlacementGUI(void)
 {
-	INT32 i;
-
 	gbHilightedMercID = -1;
 	gbSelectedMercID = -1;
 	gubSelectedGroupID = 0;
@@ -643,16 +641,17 @@ static void KillTacticalPlacementGUI(void)
 	DeleteVideoObject(giOverheadPanelImage);
 	DeleteVideoObject(giMercPanelImage);
 	//Delete buttons
-	for( i = 0; i < NUM_TP_BUTTONS; i++ )
+	for (INT32 i = 0; i < NUM_TP_BUTTONS; ++i)
 	{
 		UnloadButtonImage( giOverheadButtonImages[ i ] );
 		RemoveButton( iTPButtons[ i ] );
 	}
 	//Delete faces and regions
-	for( i = 0; i < giPlacements; i++ )
+	FOR_EACH_MERC_PLACEMENT(i)
 	{
-		DeleteVideoObject(gMercPlacement[i].uiVObjectID);
-		MSYS_RemoveRegion( &gMercPlacement[ i ].region );
+		MERCPLACEMENT& m = *i;
+		DeleteVideoObject(m.uiVObjectID);
+		MSYS_RemoveRegion(&m.region);
 	}
 
 	if( gsCurInterfacePanel < 0 || gsCurInterfacePanel >= NUM_UI_PANELS )
@@ -667,10 +666,7 @@ static void KillTacticalPlacementGUI(void)
 	SetCurrentInterfacePanel( TEAM_PANEL );
 	//Initialize the rest of the map (AI, enemies, civs, etc.)
 
-	for( i = 0; i < giPlacements; i++ )
-	{
-		PickUpMercPiece(gMercPlacement[i]);
-	}
+	FOR_EACH_MERC_PLACEMENT(i) PickUpMercPiece(*i);
 
 	PrepareLoadedSector();
 	EnableScrollMessages();
@@ -689,10 +685,9 @@ static void PutDownMercPiece(MERCPLACEMENT&);
 
 static void ChooseRandomEdgepoints(void)
 {
-	INT32 i;
-	for( i = 0; i < giPlacements; i++ )
+	FOR_EACH_MERC_PLACEMENT(i)
 	{
-		MERCPLACEMENT& m = gMercPlacement[i];
+		MERCPLACEMENT& m = *i;
 		if (!(m.pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			m.pSoldier->usStrategicInsertionData = ChooseMapEdgepoint(m.ubStrategicInsertionCode);
@@ -702,14 +697,11 @@ static void ChooseRandomEdgepoints(void)
 			}
 			else
 			{
-				#if 0 /* XXX unsigned < 0 ? */
-				if (m.pSoldier->usStrategicInsertionData < 0 || m.pSoldier->usStrategicInsertionData > WORLD_MAX)
-				#else
-				if (m.pSoldier->usStrategicInsertionData > WORLD_MAX)
-				#endif
-				{
-					i = i;
-				}
+#if 0 /* XXX unsigned < 0 ? */
+				Assert(0 <= m.pSoldier->usStrategicInsertionData && m.pSoldier->usStrategicInsertionData < WORLD_MAX);
+#else
+				Assert(m.pSoldier->usStrategicInsertionData < WORLD_MAX);
+#endif
 				m.pSoldier->ubStrategicInsertionCode = m.ubStrategicInsertionCode;
 			}
 		}
@@ -722,17 +714,13 @@ static void ChooseRandomEdgepoints(void)
 
 static void PlaceMercs(void)
 {
-	INT32 i;
 	switch( gubDefaultButton )
 	{
 		case SPREAD_BUTTON: //Place mercs randomly along their side using map edgepoints.
 			ChooseRandomEdgepoints();
 			break;
 		case CLEAR_BUTTON:
-			for( i = 0; i < giPlacements; i++ )
-			{
-				PickUpMercPiece(gMercPlacement[i]);
-			}
+			FOR_EACH_MERC_PLACEMENT(i) PickUpMercPiece(*i);
 			gubSelectedGroupID = 0;
 			gbSelectedMercID = 0;
 			SetCursorMerc( 0 );
@@ -903,7 +891,6 @@ static void DialogRemoved(MessageBoxReturnValue);
 
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 {
-	INT32 i;
 	BOOLEAN fInvalidArea = FALSE;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{ //if we have a selected merc, move him to the new closest map edgepoint of his side.
@@ -918,14 +905,15 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 
 					if( gubDefaultButton == GROUP_BUTTON )
 					{ //We are placing a whole group.
-						for( i = 0; i < giPlacements; i++ )
+						FOR_EACH_MERC_PLACEMENT(i)
 						{ //Find locations of each member of the group, but don't place them yet.  If
 							//one of the mercs can't be placed, then we won't place any, and tell the user
 							//the problem.  If everything's okay, we will place them all.
-							if( gMercPlacement[ i ].pSoldier->ubGroupID == gubSelectedGroupID )
+							MERCPLACEMENT const& m = *i;
+							if (m.pSoldier->ubGroupID == gubSelectedGroupID)
 							{
-								gMercPlacement[ i ].pSoldier->usStrategicInsertionData = SearchForClosestPrimaryMapEdgepoint( sGridNo, gMercPlacement[ i ].ubStrategicInsertionCode );
-								if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData == NOWHERE )
+								m.pSoldier->usStrategicInsertionData = SearchForClosestPrimaryMapEdgepoint(sGridNo, m.ubStrategicInsertionCode);
+								if (m.pSoldier->usStrategicInsertionData == NOWHERE)
 								{
 									fInvalidArea = TRUE;
 									break;
@@ -935,9 +923,9 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 						if( !fInvalidArea )
 						{ //One or more of the mercs in the group didn't get gridno assignments, so we
 							//report an error.
-							for( i = 0; i < giPlacements; i++ )
+							FOR_EACH_MERC_PLACEMENT(i)
 							{
-								MERCPLACEMENT& m = gMercPlacement[i];
+								MERCPLACEMENT& m = *i;
 								m.pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 								if (m.pSoldier->ubGroupID == gubSelectedGroupID)
 								{
