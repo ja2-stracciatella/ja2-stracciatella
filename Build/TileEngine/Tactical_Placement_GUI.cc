@@ -87,7 +87,10 @@ INT8  gbCursorMercID = -1;
 SOLDIERTYPE *gpTacticalPlacementSelectedSoldier = NULL;
 SOLDIERTYPE *gpTacticalPlacementHilightedSoldier = NULL;
 
-BOOLEAN gfNorth, gfEast, gfSouth, gfWest;
+static bool gfNorth;
+static bool gfEast;
+static bool gfSouth;
+static bool gfWest;
 
 
 #ifdef JA2BETAVERSION
@@ -213,19 +216,19 @@ static void SpreadPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 void InitTacticalPlacementGUI()
 {
 	gfTacticalPlacementGUIActive = TRUE;
-	gfTacticalPlacementGUIDirty = TRUE;
-	gfValidLocationsChanged = TRUE;
+	gfTacticalPlacementGUIDirty  = TRUE;
+	gfValidLocationsChanged      = TRUE;
 	gfTacticalPlacementFirstTime = TRUE;
-	gfNorth = gfEast = gfSouth = gfWest = FALSE;
-	#ifdef JA2BETAVERSION
-		gfNorthValid = gfEastValid = gfSouthValid = gfWestValid = FALSE;
-		gfChangedEntrySide = FALSE;
-	#endif
+#ifdef JA2BETAVERSION
+	gfNorthValid = FALSE;
+	gfEastValid  = FALSE;
+	gfSouthValid = FALSE;
+	gfWestValid  = FALSE;
+	gfChangedEntrySide = FALSE;
+#endif
 
-	//Enter overhead map
 	GoIntoOverheadMap();
 
-	//Load the images
 	giOverheadPanelImage = AddVideoObjectFromFile(INTERFACEDIR "/OverheadInterface.sti");
 	giMercPanelImage     = AddVideoObjectFromFile(INTERFACEDIR "/panels.sti");
 
@@ -235,107 +238,91 @@ void InitTacticalPlacementGUI()
 	giOverheadButtonImages[GROUP_BUTTON]  = UseLoadedButtonImage(img, 0, 1);
 	giOverheadButtonImages[CLEAR_BUTTON]  = UseLoadedButtonImage(img, 0, 1);
 
-	//Create the buttons which provide automatic placements.
+	// Create the buttons which provide automatic placements.
 	MakeButton(CLEAR_BUTTON,  332, ClearPlacementsCallback,            gpStrategicString[STR_TP_CLEAR],  gpStrategicString[STR_TP_CLEARHELP]);
 	MakeButton(SPREAD_BUTTON, 367, SpreadPlacementsCallback,           gpStrategicString[STR_TP_SPREAD], gpStrategicString[STR_TP_SPREADHELP]);
 	MakeButton(GROUP_BUTTON,  402, GroupPlacementsCallback,            gpStrategicString[STR_TP_GROUP],  gpStrategicString[STR_TP_GROUPHELP]);
 	MakeButton(DONE_BUTTON,   437, DoneOverheadPlacementClickCallback, gpStrategicString[STR_TP_DONE],   gpStrategicString[STR_TP_DONEHELP]);
 	iTPButtons[DONE_BUTTON]->AllowDisabledFastHelp();
 
-	//First pass:  Count the number of mercs that are going to be placed by the player.
-	//             This determines the size of the array we will allocate.
-	giPlacements = 0;
+	GROUP const& bg = *gpBattleGroup;
+	/* First pass: Count the number of mercs that are going to be placed by the
+	 * player. This determines the size of the array we will allocate. */
+	size_t n = 0;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (!s->fBetweenSectors &&
-				s->sSectorX == gpBattleGroup->ubSectorX &&
-				s->sSectorY == gpBattleGroup->ubSectorY	&&
-				!(s->uiStatusFlags & SOLDIER_VEHICLE) && // ATE Ignore vehicles
-				s->bAssignment != ASSIGNMENT_POW &&
-				s->bAssignment != IN_TRANSIT &&
-				!s->bSectorZ)
-		{
-			giPlacements++;
-		}
+		if (s->fBetweenSectors)                 continue;
+		if (s->sSectorX != bg.ubSectorX)        continue;
+		if (s->sSectorY != bg.ubSectorY)        continue;
+		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
+		if (s->bAssignment == ASSIGNMENT_POW)   continue;
+		if (s->bAssignment == IN_TRANSIT)       continue;
+		if (s->bSectorZ != 0)                   continue;
+		++n;
 	}
-	//Allocate the array based on how many mercs there are.
-	gMercPlacement = MALLOCNZ(MERCPLACEMENT, giPlacements);
-	//Second pass:  Assign the mercs to their respective slots.
+	// Allocate the array based on how many mercs there are.
+	gMercPlacement = MALLOCNZ(MERCPLACEMENT, n);
+
+	// Second pass: Assign the mercs to their respective slots.
 	giPlacements = 0;
+	gfNorth      = false;
+	gfEast       = false;
+	gfSouth      = false;
+	gfWest       = false;
 	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (s->bLife != 0 &&
-				!s->fBetweenSectors &&
-				s->sSectorX == gpBattleGroup->ubSectorX &&
-				s->sSectorY == gpBattleGroup->ubSectorY	&&
-				s->bAssignment != ASSIGNMENT_POW &&
-				s->bAssignment != IN_TRANSIT &&
-				!(s->uiStatusFlags & SOLDIER_VEHICLE) && // ATE Ignore vehicles
-				!s->bSectorZ)
+		if (s->bLife == 0)                      continue;
+		if (s->fBetweenSectors)                 continue;
+		if (s->sSectorX != bg.ubSectorX)        continue;
+		if (s->sSectorY != bg.ubSectorY)        continue;
+		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
+		if (s->bAssignment == ASSIGNMENT_POW)   continue;
+		if (s->bAssignment == IN_TRANSIT)       continue;
+		if (s->bSectorZ != 0)                   continue;
+
+		if (s->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
+				s->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)
 		{
-
-			// ATE: If we are in a vehicle - remove ourselves from it!
-			//if (s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER))
-			//{
-			//	RemoveSoldierFromVehicle(s, s->bVehicleID);
-			//}
-
-			if (s->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
-					s->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)
-			{
-				s->ubStrategicInsertionCode = (UINT8)s->usStrategicInsertionData;
-			}
-			gMercPlacement[giPlacements].pSoldier = s;
-			gMercPlacement[giPlacements].ubStrategicInsertionCode = s->ubStrategicInsertionCode;
-			gMercPlacement[ giPlacements ].fPlaced = FALSE;
-			#ifdef JA2BETAVERSION
-				CheckForValidMapEdge(&s->ubStrategicInsertionCode);
-			#endif
-			switch (s->ubStrategicInsertionCode)
-			{
-				case INSERTION_CODE_NORTH:
-					gfNorth = TRUE;
-					break;
-				case INSERTION_CODE_EAST:
-					gfEast	= TRUE;
-					break;
-				case INSERTION_CODE_SOUTH:
-					gfSouth = TRUE;
-					break;
-				case INSERTION_CODE_WEST:
-					gfWest	= TRUE;
-					break;
-			}
-			giPlacements++;
+			s->ubStrategicInsertionCode = (UINT8)s->usStrategicInsertionData;
 		}
-	}
-	//add all the faces now
-	for (INT32 i = 0; i < giPlacements; ++i)
-	{
-		//Load the faces
-		gMercPlacement[i].uiVObjectID = Load65Portrait(GetProfile(gMercPlacement[i].pSoldier->ubProfile));
-		const INT32 xp = 91 + i / 2 * 54;
-		const INT32 yp = (i % 2 ? 412 : 361);
-		MSYS_DefineRegion( &gMercPlacement[ i ].region, (UINT16)xp, (UINT16)yp, (UINT16)(xp + 54), (UINT16)(yp + 62), MSYS_PRIORITY_HIGH, 0, MercMoveCallback, MercClickCallback );
+
+		size_t const   i = giPlacements++;
+		MERCPLACEMENT& m = gMercPlacement[i];
+		m.pSoldier                 = s;
+		m.ubStrategicInsertionCode = s->ubStrategicInsertionCode;
+		m.fPlaced                  = FALSE;
+		m.uiVObjectID              = Load65Portrait(GetProfile(m.pSoldier->ubProfile));
+		INT32 const x =  91 + i / 2 * 54;
+		INT32 const y = 361 + i % 2 * 51;
+		MSYS_DefineRegion(&m.region, x, y, x + 54, y + 62, MSYS_PRIORITY_HIGH, 0, MercMoveCallback, MercClickCallback);
+
+#ifdef JA2BETAVERSION
+		CheckForValidMapEdge(&s->ubStrategicInsertionCode);
+#endif
+		switch (s->ubStrategicInsertionCode)
+		{
+			case INSERTION_CODE_NORTH: gfNorth = true; break;
+			case INSERTION_CODE_EAST:  gfEast  = true; break;
+			case INSERTION_CODE_SOUTH: gfSouth = true; break;
+			case INSERTION_CODE_WEST:  gfWest  = true; break;
+		}
 	}
 
 	PlaceMercs();
 
-	if( gubDefaultButton == GROUP_BUTTON )
+	if (gubDefaultButton == GROUP_BUTTON)
 	{
 		iTPButtons[GROUP_BUTTON]->uiFlags |= BUTTON_CLICKED_ON;
-		for (INT32 i = 0; i < giPlacements; ++i)
-		{ //go from the currently selected soldier to the end
-			if( !gMercPlacement[ i ].fPlaced )
-			{ //Found an unplaced merc.  Select him.
-				gbSelectedMercID = (INT8)i;
-				if( gubDefaultButton == GROUP_BUTTON )
-					gubSelectedGroupID = gMercPlacement[ i ].pSoldier->ubGroupID;
-				gfTacticalPlacementGUIDirty = TRUE;
-				SetCursorMerc( (INT8)i );
-				gpTacticalPlacementSelectedSoldier = gMercPlacement[ i ].pSoldier;
-				break;
-			}
+		for (INT32 i = 0; i != giPlacements; ++i)
+		{
+			MERCPLACEMENT const& m = gMercPlacement[i];
+			if (m.fPlaced) continue;
+			// Found an unplaced merc. Select him.
+			gbSelectedMercID                   = i;
+			gubSelectedGroupID                 = m.pSoldier->ubGroupID;
+			gpTacticalPlacementSelectedSoldier = m.pSoldier;
+			SetCursorMerc(i);
+			break;
 		}
 	}
 }

@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 
-void InitTacticalPlacementGUI(void);
+void InitTacticalPlacementGUI();
 void TacticalPlacementHandle(void);
 
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason);
