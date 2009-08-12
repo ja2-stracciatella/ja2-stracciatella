@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -682,7 +684,7 @@ static void KillTacticalPlacementGUI(void)
 }
 
 
-static void PutDownMercPiece(INT32 iPlacement);
+static void PutDownMercPiece(MERCPLACEMENT&);
 
 
 static void ChooseRandomEdgepoints(void)
@@ -690,28 +692,29 @@ static void ChooseRandomEdgepoints(void)
 	INT32 i;
 	for( i = 0; i < giPlacements; i++ )
 	{
-		if ( !( gMercPlacement[ i ].pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		MERCPLACEMENT& m = gMercPlacement[i];
+		if (!(m.pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
-			gMercPlacement[ i ].pSoldier->usStrategicInsertionData = ChooseMapEdgepoint( gMercPlacement[ i ].ubStrategicInsertionCode );
-			if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData != NOWHERE )
+			m.pSoldier->usStrategicInsertionData = ChooseMapEdgepoint(m.ubStrategicInsertionCode);
+			if (m.pSoldier->usStrategicInsertionData != NOWHERE)
 			{
-				gMercPlacement[ i ].pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				m.pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 			}
 			else
 			{
 				#if 0 /* XXX unsigned < 0 ? */
-				if( gMercPlacement[ i ].pSoldier->usStrategicInsertionData < 0 || gMercPlacement[ i ].pSoldier->usStrategicInsertionData > WORLD_MAX )
+				if (m.pSoldier->usStrategicInsertionData < 0 || m.pSoldier->usStrategicInsertionData > WORLD_MAX)
 				#else
-				if (gMercPlacement[ i ].pSoldier->usStrategicInsertionData > WORLD_MAX)
+				if (m.pSoldier->usStrategicInsertionData > WORLD_MAX)
 				#endif
 				{
 					i = i;
 				}
-				gMercPlacement[ i ].pSoldier->ubStrategicInsertionCode = gMercPlacement[ i ].ubStrategicInsertionCode;
+				m.pSoldier->ubStrategicInsertionCode = m.ubStrategicInsertionCode;
 			}
 		}
 
-		PutDownMercPiece( i );
+		PutDownMercPiece(m);
 	}
 	gfEveryonePlaced = TRUE;
 }
@@ -934,21 +937,23 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 							//report an error.
 							for( i = 0; i < giPlacements; i++ )
 							{
-								gMercPlacement[ i ].pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-								if( gMercPlacement[ i ].pSoldier->ubGroupID == gubSelectedGroupID )
+								MERCPLACEMENT& m = gMercPlacement[i];
+								m.pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+								if (m.pSoldier->ubGroupID == gubSelectedGroupID)
 								{
-									PutDownMercPiece( i );
+									PutDownMercPiece(m);
 								}
 							}
 						}
 					}
 					else
 					{ //This is a single merc placement.  If valid, then place him, else report error.
-						gMercPlacement[ gbSelectedMercID ].pSoldier->usStrategicInsertionData = SearchForClosestPrimaryMapEdgepoint( sGridNo, gMercPlacement[ gbSelectedMercID ].ubStrategicInsertionCode );
-						if( gMercPlacement[ gbSelectedMercID ].pSoldier->usStrategicInsertionData != NOWHERE )
+						MERCPLACEMENT& m = gMercPlacement[gbSelectedMercID];
+						m.pSoldier->usStrategicInsertionData = SearchForClosestPrimaryMapEdgepoint(sGridNo, m.ubStrategicInsertionCode);
+						if (m.pSoldier->usStrategicInsertionData != NOWHERE)
 						{
-							gMercPlacement[ gbSelectedMercID ].pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-							PutDownMercPiece( gbSelectedMercID );
+							m.pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+							PutDownMercPiece(m);
 						}
 						else
 						{
@@ -1000,42 +1005,30 @@ static void SetCursorMerc(INT8 bPlacementID)
 }
 
 
-static void PutDownMercPiece(INT32 iPlacement)
+static void PutDownMercPiece(MERCPLACEMENT& m)
 {
-	SOLDIERTYPE *pSoldier;
-	pSoldier = gMercPlacement[ iPlacement ].pSoldier;
-	switch( pSoldier->ubStrategicInsertionCode )
+	SOLDIERTYPE& s = *m.pSoldier;
+	GridNo       insertion_gridno;
+	switch (s.ubStrategicInsertionCode)
 	{
-		case INSERTION_CODE_NORTH:
-			pSoldier->sInsertionGridNo = gMapInformation.sNorthGridNo;
-			break;
-		case INSERTION_CODE_SOUTH:
-			pSoldier->sInsertionGridNo = gMapInformation.sSouthGridNo;
-			break;
-		case INSERTION_CODE_EAST:
-			pSoldier->sInsertionGridNo = gMapInformation.sEastGridNo;
-			break;
-		case INSERTION_CODE_WEST:
-			pSoldier->sInsertionGridNo = gMapInformation.sWestGridNo;
-			break;
-		case INSERTION_CODE_GRIDNO:
-			pSoldier->sInsertionGridNo = pSoldier->usStrategicInsertionData;
-			break;
-		default:
-			Assert( 0 );
-			break;
+		case INSERTION_CODE_NORTH:  insertion_gridno = gMapInformation.sNorthGridNo; break;
+		case INSERTION_CODE_SOUTH:  insertion_gridno = gMapInformation.sSouthGridNo; break;
+		case INSERTION_CODE_EAST:   insertion_gridno = gMapInformation.sEastGridNo;  break;
+		case INSERTION_CODE_WEST:   insertion_gridno = gMapInformation.sWestGridNo;  break;
+		case INSERTION_CODE_GRIDNO: insertion_gridno = s.usStrategicInsertionData;   break;
+		default: throw std::logic_error("invalid strategic insertion code");
 	}
-	MERCPLACEMENT& m = gMercPlacement[iPlacement];
+	s.sInsertionGridNo = insertion_gridno;
 	if (m.fPlaced) PickUpMercPiece(m);
-	const INT16 sGridNo = FindGridNoFromSweetSpot(pSoldier, pSoldier->sInsertionGridNo, 4);
-	if( sGridNo != NOWHERE )
+	GridNo const gridno = FindGridNoFromSweetSpot(&s, insertion_gridno, 4);
+	if (gridno != NOWHERE)
 	{
-		EVENT_SetSoldierPositionNoCenter(pSoldier, sGridNo, SSP_NONE);
-		const UINT8 ubDirection = GetDirectionToGridNoFromGridNo(sGridNo, CENTER_GRIDNO);
-		EVENT_SetSoldierDirection( pSoldier, ubDirection );
-		pSoldier->ubInsertionDirection = pSoldier->bDirection;
-		gMercPlacement[ iPlacement ].fPlaced = TRUE;
-		gMercPlacement[ iPlacement ].pSoldier->bInSector = TRUE;
+		EVENT_SetSoldierPositionNoCenter(&s, gridno, SSP_NONE);
+		UINT8 const direction = GetDirectionToGridNoFromGridNo(gridno, CENTER_GRIDNO);
+		EVENT_SetSoldierDirection(&s, direction);
+		s.ubInsertionDirection = s.bDirection;
+		m.fPlaced = TRUE;
+		m.pSoldier->bInSector = TRUE;
 	}
 }
 
