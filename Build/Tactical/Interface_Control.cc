@@ -144,46 +144,29 @@ void RenderTacticalInterfaceWhileScrolling( )
 	HandleAutoFaces();
 }
 
-void SetUpInterface( )
+
+void SetUpInterface()
 {
-	LEVELNODE									 *pIntTile;
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
 
-	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	DrawUICursor();
+	SetupPhysicsTrajectoryUI();
+
+	if (g_ui_message_overlay && GetJA2Clock() - guiUIMessageTime > guiUIMessageTimeDelay)
 	{
-		return;
+		EndUIMessage();
 	}
 
-	DrawUICursor( );
+	if (gCurrentUIMode == OPENDOOR_MENU_MODE) HandleOpenDoorMenu();
 
-	SetupPhysicsTrajectoryUI( );
+	HandleTalkingMenu();
 
-	if (g_ui_message_overlay != NULL)
-	{
-		if ( ( GetJA2Clock( ) - guiUIMessageTime ) > guiUIMessageTimeDelay )
-		{
-			EndUIMessage( );
-		}
-	}
+	if (gCurrentUIMode == EXITSECTORMENU_MODE) HandleSectorExitMenu();
 
-	if ( gCurrentUIMode == OPENDOOR_MENU_MODE )
-	{
-		HandleOpenDoorMenu( );
-	}
+	// For the most part - shutdown interface when it's the enemy's turn
+	if (gTacticalStatus.ubCurrentTeam != gbPlayerNum) return;
 
-	HandleTalkingMenu( );
-
-	if ( gCurrentUIMode == EXITSECTORMENU_MODE )
-	{
-		HandleSectorExitMenu( );
-	}
-
-	// FOR THE MOST PART - SHUTDOWN INTERFACE WHEN IT'S THE ENEMY'S TURN
-	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
-	{
-		return;
-	}
-
-	HandleInterfaceBackgrounds( );
+	HandleInterfaceBackgrounds();
 
 	switch (gfUIHandleSelection)
 	{
@@ -195,58 +178,38 @@ void SetUpInterface( )
 		case ENEMY_GUY_SELECTION:       idx = FIRSTPOINTERS2; goto add_node;
 		default:                        break;
 
-add_node:;
-			LEVELNODE* n;
-			if (gsSelectedLevel > 0)
-			{
-				n = AddRoofToHead(gsSelectedGridNo, idx);
-			}
-			else
-			{
-				n = AddObjectToHead(gsSelectedGridNo, idx);
-			}
+add_node:
+			LEVELNODE* (&add)(UINT32, UINT16) = gsSelectedLevel == 0 ? AddObjectToHead : AddRoofToHead;
+			LEVELNODE* const n                = add(gsSelectedLevel, idx);
 			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
 			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 			break;
 	}
 
-	if ( gfUIHandleShowMoveGrid )
+	if (gfUIHandleShowMoveGrid)
 	{
-		const SOLDIERTYPE* const sel = GetSelectedMan();
-		if (sel != NULL && sel->sGridNo != gsUIHandleShowMoveGridLocation)
+		SOLDIERTYPE const* const sel = GetSelectedMan();
+		if (sel && sel->sGridNo != gsUIHandleShowMoveGridLocation)
 		{
-			UINT16 idx;
-			if (gfUIHandleShowMoveGrid == 2)
-			{
-				idx = FIRSTPOINTERS4;
-			}
-			else if (sel->bStealthMode)
-			{
-				idx = FIRSTPOINTERS9;
-			}
-			else
-			{
-				idx = FIRSTPOINTERS2;
-			}
+			UINT16 const idx =
+				gfUIHandleShowMoveGrid == 2 ? FIRSTPOINTERS4 :
+				sel->bStealthMode           ? FIRSTPOINTERS9 :
+				FIRSTPOINTERS2;
 			LEVELNODE* const n = AddTopmostToHead(gsUIHandleShowMoveGridLocation, GetSnapCursorIndex(idx));
 			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
 			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
 	}
 
-	// Check if we are over an interactive tile...
-	if ( gfUIShowCurIntTile )
-	{
-		pIntTile = GetCurInteractiveTileGridNo( &gsUICurIntTileEffectGridNo );
-
-		if ( pIntTile != NULL )
+	if (gfUIShowCurIntTile)
+	{ // Check if we are over an interactive tile
+		if (LEVELNODE* const int_tile = GetCurInteractiveTileGridNo(&gsUICurIntTileEffectGridNo))
 		{
-			gusUICurIntTileEffectIndex = pIntTile->usIndex;
-
+			gusUICurIntTileEffectIndex = int_tile->usIndex;
 			// Shade green
-			gsUICurIntTileOldShade = pIntTile->ubShadeLevel;
-			pIntTile->ubShadeLevel = 0;
-			pIntTile->uiFlags |= LEVELNODE_DYNAMIC;
+			gsUICurIntTileOldShade     = int_tile->ubShadeLevel;
+			int_tile->ubShadeLevel     = 0;
+			int_tile->uiFlags         |= LEVELNODE_DYNAMIC;
 		}
 	}
 }
