@@ -252,77 +252,51 @@ add_node:;
 }
 
 
-void ResetInterface( )
+void ResetInterface()
 {
-	LEVELNODE *pNode;
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
 
-	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		return;
-	}
-
-	// find out if we need to show any menus
+	// Find out if we need to show any menus
 	DetermineWhichAssignmentMenusCanBeShown();
-	CreateDestroyAssignmentPopUpBoxes( );
+	CreateDestroyAssignmentPopUpBoxes();
 
-	HideUICursor( );
+	HideUICursor();
+	ResetPhysicsTrajectoryUI();
 
-	ResetPhysicsTrajectoryUI( );
-
-	if ( gfUIHandleSelection )
+	if (gfUIHandleSelection)
 	{
-		if ( gsSelectedLevel > 0 )
-		{
-			RemoveRoof( gsSelectedGridNo, GOODRING1 );
-			RemoveRoof( gsSelectedGridNo, FIRSTPOINTERS2 );
-		}
-		else
-		{
-			RemoveObject( gsSelectedGridNo, FIRSTPOINTERS2 );
-			RemoveObject( gsSelectedGridNo, GOODRING1 );
-
-		}
+		BOOLEAN (&remove)(UINT32, UINT16) = gsSelectedLevel == 0 ? RemoveObject : RemoveRoof;
+		GridNo const gridno               = gsSelectedGridNo;
+		remove(gridno, GOODRING1);
+		remove(gridno, FIRSTPOINTERS2);
 	}
 
-	if ( gfUIHandleShowMoveGrid )
+	if (gfUIHandleShowMoveGrid)
 	{
-		RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS4	);
-		RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS9	);
-		RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS2 );
-		RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS13 );
-		RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS15 );
-		RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS19 );
-		RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS20 );
+		GridNo const gridno = gsUIHandleShowMoveGridLocation;
+		RemoveTopmost(gridno, FIRSTPOINTERS2);
+		RemoveTopmost(gridno, FIRSTPOINTERS4);
+		RemoveTopmost(gridno, FIRSTPOINTERS9);
+		RemoveTopmost(gridno, FIRSTPOINTERS13);
+		RemoveTopmost(gridno, FIRSTPOINTERS15);
+		RemoveTopmost(gridno, FIRSTPOINTERS19);
+		RemoveTopmost(gridno, FIRSTPOINTERS20);
 	}
 
-	if ( fInterfacePanelDirty )
-	{
-		fInterfacePanelDirty = FALSE;
-	}
-
+	fInterfacePanelDirty = FALSE;
 
 	// Reset int tile cursor stuff
-	if ( gfUIShowCurIntTile )
+	if (gfUIShowCurIntTile && gsUICurIntTileEffectGridNo != NOWHERE)
 	{
-		if ( gsUICurIntTileEffectGridNo != NOWHERE )
+		for (LEVELNODE* i = gpWorldLevelData[gsUICurIntTileEffectGridNo].pStructHead; i; i = i->pNext)
 		{
-			//Find our tile!
-			pNode = gpWorldLevelData[ gsUICurIntTileEffectGridNo].pStructHead;
-
-			while( pNode != NULL )
-			{
-				if ( pNode->usIndex == gusUICurIntTileEffectIndex )
-				{
-					pNode->ubShadeLevel = gsUICurIntTileOldShade;
-					pNode->uiFlags &= (~LEVELNODE_DYNAMIC);
-					break;
-				}
-
-				pNode = pNode->pNext;
-			}
+			LEVELNODE& n = *i;
+			if (n.usIndex != gusUICurIntTileEffectIndex) continue;
+			n.ubShadeLevel  = gsUICurIntTileOldShade;
+			n.uiFlags      &= ~LEVELNODE_DYNAMIC;
+			break;
 		}
 	}
-
 }
 
 

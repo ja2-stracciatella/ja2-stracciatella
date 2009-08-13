@@ -12,7 +12,7 @@ extern UINT32 guiTacticalInterfaceFlags;
 void SetTacticalInterfaceFlags( UINT32 uiFlags );
 
 void SetUpInterface(void);
-void ResetInterface(void);
+void ResetInterface();
 void RenderTopmostTacticalInterface(void);
 void RenderTacticalInterface(void);
 
