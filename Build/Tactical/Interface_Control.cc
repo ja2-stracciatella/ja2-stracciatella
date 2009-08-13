@@ -180,7 +180,7 @@ void SetUpInterface()
 
 add_node:
 			LEVELNODE* (&add)(UINT32, UINT16) = gsSelectedLevel == 0 ? AddObjectToHead : AddRoofToHead;
-			LEVELNODE* const n                = add(gsSelectedLevel, idx);
+			LEVELNODE* const n                = add(gsSelectedGridNo, idx);
 			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
 			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 			break;
