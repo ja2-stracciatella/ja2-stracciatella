@@ -79,7 +79,6 @@ static BUTTON_PICS* giOverheadButtonImages[NUM_TP_BUTTONS];
 SGPVObject* giMercPanelImage = 0;
 BOOLEAN gfTacticalPlacementGUIDirty = FALSE;
 BOOLEAN gfValidLocationsChanged = FALSE;
-SGPRect gTPClipRect = {0,0,0,0};
 BOOLEAN gfValidCursor = FALSE;
 BOOLEAN gfEveryonePlaced = FALSE;
 
@@ -333,159 +332,142 @@ void InitTacticalPlacementGUI()
 }
 
 
-static void RenderTacticalPlacementGUI(void)
+static void DrawBar(SGPVSurface* const buf, INT32 const x, INT32 const y, INT32 const h, UINT32 const colour1, UINT32 const colour2)
 {
-	INT32 i, xp, yp, width;
-	INT32 iStartY;
-	SOLDIERTYPE *pSoldier;
-	UINT16 usHatchColor;
-	wchar_t str[ 128 ];
-	UINT8 ubColor;
-	if( gfTacticalPlacementFirstTime )
+	ColorFillVideoSurfaceArea(buf, x,     y - h, x + 1, y, Get16BPPColor(colour1));
+	ColorFillVideoSurfaceArea(buf, x + 1, y - h, x + 2, y, Get16BPPColor(colour2));
+}
+
+
+static void RenderTacticalPlacementGUI()
+{
+	if (gfTacticalPlacementFirstTime)
 	{
 		gfTacticalPlacementFirstTime = FALSE;
 		DisableScrollMessages();
 	}
-	//Check to make sure that if we have a hilighted merc (not selected) and the mouse has moved out
-	//of it's region, then we will clear the hilighted ID, and refresh the display.
-	if( !gfTacticalPlacementGUIDirty && gbHilightedMercID != -1 )
+
+	/* Check to make sure that if we have a hilighted merc (not selected) and the
+	 * mouse has moved out of its region, then we will clear the hilighted ID, and
+	 * refresh the display. */
+	if (!gfTacticalPlacementGUIDirty && gbHilightedMercID != -1)
 	{
-		xp = 91 + (gbHilightedMercID / 2) * 54;
-		yp = (gbHilightedMercID % 2) ? 412 : 361;
-		if( gusMouseXPos < xp || gusMouseXPos > xp + 54 || gusMouseYPos < yp || gusMouseYPos > yp + 62 )
+		INT32 const x =  91 + gbHilightedMercID / 2 * 54;
+		INT32 const y = 361 + gbHilightedMercID % 2 * 51;
+		if (gusMouseXPos < x || x + 54 < gusMouseXPos ||
+				gusMouseYPos < y || y + 62 < gusMouseYPos)
 		{
-			gbHilightedMercID = -1;
-			gubHilightedGroupID = 0;
-			SetCursorMerc( gbSelectedMercID );
-			gpTacticalPlacementHilightedSoldier = NULL;
+			gbHilightedMercID   = -1;
+			gubHilightedGroupID =  0;
+			SetCursorMerc(gbSelectedMercID);
+			gpTacticalPlacementHilightedSoldier = 0;
 		}
 	}
-	//If the display is dirty render the entire panel.
-	if( gfTacticalPlacementGUIDirty )
+
+	SGPVSurface* const buf = FRAME_BUFFER;
+	// If the display is dirty render the entire panel.
+	if (gfTacticalPlacementGUIDirty)
 	{
-		BltVideoObject(FRAME_BUFFER, giOverheadPanelImage, 0, 0, 320);
+		BltVideoObject(buf, giOverheadPanelImage, 0, 0, 320);
 		InvalidateRegion(0, 0, 320, SCREEN_HEIGHT);
 		gfTacticalPlacementGUIDirty = FALSE;
 		MarkButtonsDirty();
-		for( i = 0; i < giPlacements; i++ )
-		{ //Render the mercs
-			pSoldier = gMercPlacement[ i ].pSoldier;
-			xp = 95 + (i / 2) * 54;
-			yp = (i % 2) ? 422 : 371;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, yp+2, xp+44,	yp+30, 0 );
-			BltVideoObject(FRAME_BUFFER, giMercPanelImage,              0, xp,     yp);
-			BltVideoObject(FRAME_BUFFER, gMercPlacement[i].uiVObjectID, 0, xp + 2, yp + 2);
-			//HEALTH BAR
-			if( !pSoldier->bLife )
-				continue;
-			//yellow one for bleeding
-			iStartY = yp + 29 - 27*pSoldier->bLifeMax/100;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
-			//pink one for bandaged.
-			iStartY += 27*pSoldier->bBleeding/100;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 156, 57, 57 ) ) );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
-			//red one for actual health
-			iStartY = yp + 29 - 27*pSoldier->bLife/100;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, iStartY, xp+37, yp+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+37, iStartY, xp+38, yp+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
-			//BREATH BAR
-			iStartY = yp + 29 - 27*pSoldier->bBreathMax/100;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+39, iStartY, xp+40, yp+29, Get16BPPColor( FROMRGB( 8, 8, 132 ) ) );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+40, iStartY, xp+41, yp+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
-			//MORALE BAR
-			iStartY = yp + 29 - 27*pSoldier->bMorale/100;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+42, iStartY, xp+43, yp+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+43, iStartY, xp+44, yp+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
-		}
-		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
-		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, lengthof(str), TRUE );
-		mprintf( 120, 335, L"%ls %ls -- %ls...", gpStrategicString[ STR_TP_SECTOR ], str, gpStrategicString[ STR_TP_CHOOSEENTRYPOSITIONS ] );
+		for (INT32 i = 0; i != giPlacements; ++i)
+		{ // Render the mercs
+			MERCPLACEMENT const& m = gMercPlacement[i];
+			INT32         const  x =  95 + i / 2 * 54;
+			INT32         const  y = 371 + i % 2 * 51;
+			ColorFillVideoSurfaceArea(buf, x + 36, y + 2, x + 44, y + 30, 0);
+			BltVideoObject(buf, giMercPanelImage, 0, x,     y);
+			BltVideoObject(buf, m.uiVObjectID,    0, x + 2, y + 2);
 
-		//Shade out the part of the tactical map that isn't considered placable.
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 320, SCREEN_WIDTH, 160);
+			SOLDIERTYPE const& s = *m.pSoldier;
+			if (s.bLife == 0) continue;
+
+			DrawBar(buf, x + 36, y + 29, s.bLifeMax   * 27 / 100, FROMRGB(107, 107,  57), FROMRGB(222, 181, 115)); // Yellow one for bleeding
+			DrawBar(buf, x + 36, y + 29, s.bBleeding  * 27 / 100, FROMRGB(156,  57,  57), FROMRGB(222, 132, 132)); // Pink one for bandaged
+			DrawBar(buf, x + 36, y + 29, s.bLife      * 27 / 100, FROMRGB(107,   8,   8), FROMRGB(206,   0,   0)); // Red one for actual health
+			DrawBar(buf, x + 39, y + 29, s.bBreathMax * 27 / 100, FROMRGB(  8,   8, 132), FROMRGB(  8,   8, 107)); // Breath bar
+			DrawBar(buf, x + 42, y + 29, s.bMorale    * 27 / 100, FROMRGB(  8, 156,   8), FROMRGB(  8, 107,   8)); // Morale bar
+		}
+
+		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
+		wchar_t str[128];
+		GetSectorIDString(gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, lengthof(str), TRUE);
+		mprintf(120, 335, L"%ls %ls -- %ls...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]);
+
+		// Shade out the part of the tactical map that isn't considered placable.
+		BlitBufferToBuffer(buf, guiSAVEBUFFER, 0, 320, SCREEN_WIDTH, 160);
 	}
-	if( gfValidLocationsChanged )
+
+	if (gfValidLocationsChanged)
 	{
-		if( DayTime() )
-		{ //6AM to 9PM is black
-			usHatchColor = 0; //Black
-		}
-		else
-		{ //9PM to 6AM is gray (black is too dark to distinguish)
-			usHatchColor = Get16BPPColor( FROMRGB( 63, 31, 31 ) );
-		}
-		gfValidLocationsChanged--;
-		BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, 4, 4, 636, 320 );
-		InvalidateRegion( 4, 4, 636, 320 );
-		if( gbCursorMercID == -1 )
+		gfValidLocationsChanged = FALSE;
+		BlitBufferToBuffer(guiSAVEBUFFER, buf, 4, 4, 636, 320);
+		InvalidateRegion(4, 4, 636, 320);
+
+		UINT16 const hatch_colour =
+			DayTime() ? 0 :                     // 6AM to 9PM is black
+			Get16BPPColor(FROMRGB(63, 31, 31)); // 9PM to 6AM is gray (black is too dark to distinguish)
+		SGPRect clip = { 4, 4, 636, 320 };
+		if (gbCursorMercID == -1)
 		{
-			gTPClipRect.iLeft		= gfWest	? 30	: 4;
-			gTPClipRect.iTop			= gfNorth ? 30	: 4;
-			gTPClipRect.iRight		= gfEast	? 610 : 636;
-			gTPClipRect.iBottom	= gfSouth ? 290 : 320;
+			if (gfNorth) clip.iTop    =  30;
+			if (gfEast)  clip.iRight  = 610;
+			if (gfSouth) clip.iBottom = 290;
+			if (gfWest)  clip.iLeft   =  30;
 		}
 		else
 		{
-			gTPClipRect.iLeft		= 4;
-			gTPClipRect.iTop			= 4;
-			gTPClipRect.iRight		= 636;
-			gTPClipRect.iBottom	= 320;
-			switch( gMercPlacement[ gbCursorMercID ].ubStrategicInsertionCode )
+			switch (gMercPlacement[gbCursorMercID].ubStrategicInsertionCode)
 			{
-				case INSERTION_CODE_NORTH:	gTPClipRect.iTop			= 30;			break;
-				case INSERTION_CODE_EAST:		gTPClipRect.iRight		= 610;		break;
-				case INSERTION_CODE_SOUTH:	gTPClipRect.iBottom	= 290;		break;
-				case INSERTION_CODE_WEST:		gTPClipRect.iLeft		= 30;			break;
+				case INSERTION_CODE_NORTH: clip.iTop    =  30; break;
+				case INSERTION_CODE_EAST:  clip.iRight  = 610; break;
+				case INSERTION_CODE_SOUTH: clip.iBottom = 290; break;
+				case INSERTION_CODE_WEST:  clip.iLeft   =  30; break;
 			}
 		}
-		SGPVSurface::Lock l(FRAME_BUFFER);
+		SGPVSurface::Lock l(buf);
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
-		Blt16BPPBufferLooseHatchRectWithColor( (UINT16*)pDestBuf, uiDestPitchBYTES, &gTPClipRect, usHatchColor );
+		Blt16BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_colour);
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		RectangleDraw( TRUE, gTPClipRect.iLeft, gTPClipRect.iTop, gTPClipRect.iRight, gTPClipRect.iBottom, usHatchColor, pDestBuf );
-	}
-	for( i = 0; i < giPlacements; i++ )
-	{ //Render the merc's names
-		pSoldier = gMercPlacement[ i ].pSoldier;
-		xp = 95 + (i / 2) * 54;
-		yp = (i % 2) ? 422 : 371;
-		//NAME
-		if( gubDefaultButton == GROUP_BUTTON && gMercPlacement[ i ].pSoldier->ubGroupID == gubSelectedGroupID ||
-			  gubDefaultButton != GROUP_BUTTON && i == gbSelectedMercID )
-		{
-			ubColor = FONT_YELLOW;
-		}
-		else if( gubDefaultButton == GROUP_BUTTON && gMercPlacement[ i ].pSoldier->ubGroupID == gubHilightedGroupID ||
-						 gubDefaultButton != GROUP_BUTTON && i == gbHilightedMercID )
-		{
-			ubColor = FONT_WHITE;
-		}
-		else
-		{
-			ubColor = FONT_GRAY3;
-		}
-		SetFontAttributes(FONT10ARIALBOLD, ubColor);
-		//Render the question mark over the face if the merc hasn't yet been placed.
-		if( gMercPlacement[ i ].fPlaced )
-		{
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, xp + 16, yp + 14, 8, 8);
-		}
-		else
-		{
-			MPrint(xp + 16, yp + 14, L"?");
-			InvalidateRegion( xp + 16, yp + 14, xp + 24, yp + 22 );
-		}
-		SetFont( BLOCKFONT );
-		width = StringPixLength( pSoldier->name, BLOCKFONT );
-		xp = xp + ( 48 - width ) / 2;
-		yp = yp + 33;
-		MPrint(xp, yp, pSoldier->name);
-		InvalidateRegion( xp, yp, xp + width, yp + width );
+		RectangleDraw(TRUE, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_colour, pDestBuf);
 	}
 
+	bool const is_group = gubDefaultButton == GROUP_BUTTON;
+	for (INT32 i = 0; i != giPlacements; ++i)
+	{ // Render the merc's names
+		INT32 const x =  95 + i / 2 * 54;
+		INT32 const y = 371 + i % 2 * 51;
+
+		MERCPLACEMENT const& m     = gMercPlacement[i];
+		SOLDIERTYPE   const& s     = *m.pSoldier;
+		UINT8         const colour =
+			(is_group ? s.ubGroupID == gubSelectedGroupID  : i == gbSelectedMercID)  ? FONT_YELLOW :
+			(is_group ? s.ubGroupID == gubHilightedGroupID : i == gbHilightedMercID) ? FONT_WHITE  :
+			FONT_GRAY3;
+		SetFontAttributes(BLOCKFONT, colour);
+		INT32 const w  = StringPixLength(s.name, BLOCKFONT);
+		INT32 const nx = x + (48 - w) / 2;
+		INT32 const ny = y + 33;
+		MPrint(nx, ny, s.name);
+		InvalidateRegion(nx, ny, nx + w, ny + w);
+
+		// Render a question mark over the face, if the merc hasn't yet been placed.
+		INT32 const qx = x + 16;
+		INT32 const qy = y + 14;
+		if (m.fPlaced)
+		{
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, qx, qy, 8, 8);
+		}
+		else
+		{
+			SetFont(FONT10ARIALBOLD);
+			MPrint(qx, qy, L"?");
+			InvalidateRegion(qx, qy, qx + 8, qy + 8);
+		}
+	}
 }
 
 
