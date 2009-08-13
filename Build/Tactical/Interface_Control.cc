@@ -195,7 +195,8 @@ add_node:
 				gfUIHandleShowMoveGrid == 2 ? FIRSTPOINTERS4 :
 				sel->bStealthMode           ? FIRSTPOINTERS9 :
 				FIRSTPOINTERS2;
-			LEVELNODE* const n = AddTopmostToHead(gsUIHandleShowMoveGridLocation, GetSnapCursorIndex(idx));
+			LEVELNODE* (&add)(UINT32, UINT16) = gsInterfaceLevel == 0 ? AddTopmostToHead : AddOnRoofToHead;
+			LEVELNODE* const n                = add(gsUIHandleShowMoveGridLocation, GetSnapCursorIndex(idx));
 			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
 			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
@@ -236,14 +237,15 @@ void ResetInterface()
 
 	if (gfUIHandleShowMoveGrid)
 	{
-		GridNo const gridno = gsUIHandleShowMoveGridLocation;
-		RemoveTopmost(gridno, FIRSTPOINTERS2);
-		RemoveTopmost(gridno, FIRSTPOINTERS4);
-		RemoveTopmost(gridno, FIRSTPOINTERS9);
-		RemoveTopmost(gridno, FIRSTPOINTERS13);
-		RemoveTopmost(gridno, FIRSTPOINTERS15);
-		RemoveTopmost(gridno, FIRSTPOINTERS19);
-		RemoveTopmost(gridno, FIRSTPOINTERS20);
+		BOOLEAN (&remove)(UINT32, UINT16) = gsInterfaceLevel == 0 ? RemoveTopmost : RemoveOnRoof;
+		GridNo const gridno               = gsUIHandleShowMoveGridLocation;
+		remove(gridno, FIRSTPOINTERS2);
+		remove(gridno, FIRSTPOINTERS4);
+		remove(gridno, FIRSTPOINTERS9);
+		remove(gridno, FIRSTPOINTERS13);
+		remove(gridno, FIRSTPOINTERS15);
+		remove(gridno, FIRSTPOINTERS19);
+		remove(gridno, FIRSTPOINTERS20);
 	}
 
 	fInterfacePanelDirty = FALSE;
