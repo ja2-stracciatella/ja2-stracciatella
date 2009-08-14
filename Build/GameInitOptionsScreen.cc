@@ -180,7 +180,7 @@ static GUIButtonRef guiGameSaveToggles[NUM_SAVE_OPTIONS];
 static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 
-static void EnterGIOScreen(void);
+static void EnterGIOScreen();
 static void ExitGIOScreen(void);
 static void HandleGIOScreen(void);
 static void RenderGIOScreen(void);
@@ -256,128 +256,96 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 }
 
 
-static void ClickButton(GUIButtonRef const btn)
+static void MakeCheckBoxes(GUIButtonRef* const btns, size_t const n, INT16 const x, INT16 y, GUI_CALLBACK const click, size_t const def)
 {
-	btn->uiFlags |= BUTTON_CLICKED_ON;
+	for (size_t i = 0; i != n; y += GIO_GAP_BN_SETTINGS, ++i)
+	{
+		GUIButtonRef const b = CreateCheckBoxButton(x, y, INTERFACEDIR "/optionscheck.sti", MSYS_PRIORITY_HIGH + 10, click);
+		btns[i] = b;
+		b->SetUserData(i);
+	}
+	btns[def]->uiFlags |= BUTTON_CLICKED_ON;
 }
 
 
-static void EnterGIOScreen(void)
+static void EnterGIOScreen()
 {
-	UINT16					cnt;
-	UINT16					usPosY;
-
 	if (gfGIOButtonsAllocated) return;
 
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
-	// load the Main trade screen backgroiund image
-	guiGIOMainBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/OptionsScreenBackGround.sti");
+	guiGIOMainBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/optionsscreenbackground.sti");
 
-	//Ok button
-	giGIODoneBtnImage = LoadButtonImage(INTERFACEDIR "/PreferencesButtons.sti", 0, 2);
-	guiGIODoneButton = MakeButton(giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], GIO_BTN_OK_X, BtnGIODoneCallback);
+	// Ok button
+	giGIODoneBtnImage = LoadButtonImage(INTERFACEDIR "/preferencesbuttons.sti", 0, 2);
+	guiGIODoneButton  = MakeButton(giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], GIO_BTN_OK_X, BtnGIODoneCallback);
 	guiGIODoneButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 
-	//Cancel button
+	// Cancel button
 	giGIOCancelBtnImage = UseLoadedButtonImage(giGIODoneBtnImage, 1, 3);
-	guiGIOCancelButton = MakeButton(giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], GIO_CANCEL_X, BtnGIOCancelCallback);
+	guiGIOCancelButton  = MakeButton(giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], GIO_CANCEL_X, BtnGIOCancelCallback);
 
-	//Check box to toggle Difficulty settings
-	usPosY = GIO_DIF_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-
-	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
-	{
-		guiDifficultySettingsToggles[ cnt ] = CreateCheckBoxButton(	GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
-																		BtnDifficultyTogglesCallback );
-		guiDifficultySettingsToggles[cnt]->SetUserData(cnt);
-		usPosY += GIO_GAP_BN_SETTINGS;
-	}
-	UINT diff_btn;
-	switch (gGameOptions.ubDifficultyLevel)
-	{
-		case DIF_LEVEL_EASY:   diff_btn = GIO_DIFF_EASY; break;
-		default:
-		case DIF_LEVEL_MEDIUM: diff_btn = GIO_DIFF_MED;  break;
-		case DIF_LEVEL_HARD:   diff_btn = GIO_DIFF_HARD; break;
-	}
-	ClickButton(guiDifficultySettingsToggles[diff_btn]);
-
-	//Check box to toggle Game settings ( realistic, sci fi )
-	usPosY = GIO_GAME_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
-	{
-		guiGameStyleToggles[ cnt ] = CreateCheckBoxButton(	GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
-																		BtnGameStyleTogglesCallback );
-		guiGameStyleToggles[cnt]->SetUserData(cnt);
-		usPosY += GIO_GAP_BN_SETTINGS;
-	}
-	const UINT style_btn = (gGameOptions.fSciFi ? GIO_SCI_FI : GIO_REALISTIC);
-	ClickButton(guiGameStyleToggles[style_btn]);
-
-	// JA2Gold: iron man buttons
-	usPosY = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
-	{
-		guiGameSaveToggles[ cnt ] = CreateCheckBoxButton(	GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
-																		BtnGameSaveTogglesCallback );
-		guiGameSaveToggles[cnt]->SetUserData(cnt);
-		usPosY += GIO_GAP_BN_SETTINGS;
-	}
-	const UINT mode_btn = (gGameOptions.fIronManMode ? GIO_IRON_MAN : GIO_CAN_SAVE);
-	ClickButton(guiGameSaveToggles[mode_btn]);
-
-	// Check box to toggle Gun options
-	usPosY = GIO_GUN_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
-	{
-		guiGunOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
-																		BtnGunOptionsTogglesCallback);
-		guiGunOptionToggles[cnt]->SetUserData(cnt);
-		usPosY += GIO_GAP_BN_SETTINGS;
+	{ // Check box to toggle difficulty settings
+		INT16 const x = GIO_DIF_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX;
+		INT16 const y = GIO_DIF_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
+		size_t def;
+		switch (gGameOptions.ubDifficultyLevel)
+		{
+			case DIF_LEVEL_EASY:   def = GIO_DIFF_EASY; break;
+			default:
+			case DIF_LEVEL_MEDIUM: def = GIO_DIFF_MED;  break;
+			case DIF_LEVEL_HARD:   def = GIO_DIFF_HARD; break;
+		}
+		MakeCheckBoxes(guiDifficultySettingsToggles, lengthof(guiDifficultySettingsToggles), x, y, BtnDifficultyTogglesCallback, def);
 	}
 
-//if its the demo, make sure the defuat is for additional guns
+	{ // Check box to toggle game settings (realistic, sci fi)
+		INT16  const x   = GIO_GAME_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX;
+		INT16  const y   = GIO_GAME_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
+		size_t const def = gGameOptions.fSciFi ? GIO_SCI_FI : GIO_REALISTIC;
+		MakeCheckBoxes(guiGameStyleToggles, lengthof(guiGameStyleToggles), x, y, BtnGameStyleTogglesCallback, def);
+	}
+
+	{ // JA2Gold: iron man buttons
+		INT16  const x   = GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TOGGLE_BOX;
+		INT16  const y   = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
+		size_t const def = gGameOptions.fIronManMode ? GIO_IRON_MAN : GIO_CAN_SAVE;
+		MakeCheckBoxes(guiGameSaveToggles, lengthof(guiGameSaveToggles), x, y, BtnGameSaveTogglesCallback, def);
+	}
+
+	// If it's the demo, make sure the default is for additional guns
 #ifdef JA2DEMO
 	gGameOptions.fGunNut = TRUE;
 #endif
 
-	const UINT gun_btn = (gGameOptions.fGunNut ? GIO_GUN_NUT : GIO_REDUCED_GUNS);
-	ClickButton(guiGunOptionToggles[gun_btn]);
+	{ // Check box to toggle Gun options
+		INT16  const x   = GIO_GUN_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX;
+		INT16  const y   = GIO_GUN_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
+		size_t const def = gGameOptions.fGunNut ? GIO_GUN_NUT : GIO_REDUCED_GUNS;
+		MakeCheckBoxes(guiGunOptionToggles, lengthof(guiGunOptionToggles), x, y, BtnGunOptionsTogglesCallback, def);
+	}
 
-//if its the demo, make sure to disable the buttons
+	// If it's the demo, make sure to disable the buttons
 #ifdef JA2DEMO
 	guiGunOptionToggles[GIO_GUN_NUT     ]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	guiGunOptionToggles[GIO_REDUCED_GUNS]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
-
 	DisableButton(guiGunOptionToggles[GIO_GUN_NUT]);
 	DisableButton(guiGunOptionToggles[GIO_REDUCED_GUNS]);
 #endif
 
-
 #if 0 // JA2 Gold: no more timed turns
-	// Check box to toggle the timed turn option
-	usPosY = GIO_TIMED_TURN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
-	{
-		guiTimedTurnToggles[ cnt ] = CreateCheckBoxButton(	GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
-																		INTERFACEDIR "/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
-																		BtnTimedTurnsTogglesCallback );
-		guiTimedTurnToggles[cnt]->SetUserData(cnt);
-		usPosY += GIO_GAP_BN_SETTINGS;
+	{ // Check box to toggle the timed turn option
+		INT16  const x   = GIO_TIMED_TURN_SETTING_X + GIO_OFFSET_TO_TOGGLE_BOX;
+		INT16  const y   = GIO_TIMED_TURN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
+		size_t const def = gGameOptions.fGunNut ? GIO_TIMED_TURNS : GIO_NO_TIMED_TURNS;
+		MakeCheckBoxes(guiTimedTurnToggles, lengthof(guiTimedTurnToggles), x, y, BtnTimedTurnsTogglesCallback, def);
 	}
-	const UINT time_btn = (gGameOptions.fGunNut ? GIO_TIMED_TURNS : GIO_NO_TIMED_TURNS);
-	ClickButton(guiTimedTurnToggles[time_btn];
 #endif
 
-	//Reset the exit screen
+	// Reset the exit screen
 	gubGIOExitScreen = GAME_INIT_OPTIONS_SCREEN;
 
-	//REnder the screen once so we can blt ot to ths save buffer
+	// Render the screen once, so we can blt to the save buffer
 	RenderGIOScreen();
 
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
