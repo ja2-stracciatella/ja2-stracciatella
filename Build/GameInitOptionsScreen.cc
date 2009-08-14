@@ -770,7 +770,6 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 	gubGIOExitScreen = INTRO_SCREEN;
 
 	//set the fact that we should do the intro videos
-//	gbIntroScreenMode = INTRO_BEGINING;
 #ifdef JA2TESTVERSION
 	if (gfKeyState[ALT])
 	{

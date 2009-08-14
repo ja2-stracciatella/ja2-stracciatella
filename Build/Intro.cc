@@ -34,7 +34,7 @@ static ScreenID guiIntroExitScreen = INTRO_SCREEN;
 
 extern	BOOLEAN	gfDoneWithSplashScreen;
 
-SMKFLIC *gpSmackFlic = NULL;
+static SMKFLIC* gpSmackFlic = 0;
 
 #define		SMKINTRO_FIRST_VIDEO				255
 #define		SMKINTRO_NO_VIDEO						-1
@@ -63,31 +63,31 @@ enum
 	SMKINTRO_LAST_END_GAME,
 };
 
-INT32	giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
+static INT32 giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
 
-const char *gpzSmackerFileNames[] =
+static char const* const gpzSmackerFileNames[] =
 {
 	//begining of the game
-	INTRODIR "/Rebel_cr.smk",
-	INTRODIR "/Omerta.smk",
-	INTRODIR "/Prague_cr.smk",
-	INTRODIR "/Prague.smk",
+	INTRODIR "/rebel_cr.smk",
+	INTRODIR "/omerta.smk",
+	INTRODIR "/prague_cr.smk",
+	INTRODIR "/prague.smk",
 
 
 	//endgame
-	INTRODIR "/Throne_Mig.smk",
-	INTRODIR "/Throne_NoMig.smk",
-	INTRODIR "/Heli_FlyBy.smk",
-	INTRODIR "/Heli_Sky.smk",
-	INTRODIR "/Heli_NoSky.smk",
+	INTRODIR "/throne_mig.smk",
+	INTRODIR "/throne_nomig.smk",
+	INTRODIR "/heli_flyby.smk",
+	INTRODIR "/heli_sky.smk",
+	INTRODIR "/heli_nosky.smk",
 
-	INTRODIR "/SplashScreen.smk",
-	INTRODIR "/TalonSoftid_endhold.smk",
+	INTRODIR "/splashscreen.smk",
+	INTRODIR "/talonsoftid_endhold.smk",
 };
 
 
 //enums used for when the intro screen can come up, either begining game intro, or end game cinematic
-INT8	gbIntroScreenMode=-1;
+static INT8 gbIntroScreenMode = -1;
 
 
 static void EnterIntroScreen(void);
@@ -407,7 +407,7 @@ void SetIntroType( INT8 bIntroType )
 static void DisplaySirtechSplashScreen(void)
 {
 	FRAME_BUFFER->Fill(0);
-	BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/SirtechSplash.sti", 0, 0, 0);
+	BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/sirtechsplash.sti", 0, 0, 0);
 	InvalidateScreen();
 	RefreshScreen();
 }
