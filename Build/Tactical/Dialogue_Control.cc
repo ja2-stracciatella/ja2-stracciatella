@@ -1446,21 +1446,24 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 }
 
 
-void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT16 usQuoteNum )
+void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z, UINT16 const quote_id)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
-	size_t merc_count = 0;
+	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
-	{
-		// Add guy if he's a candidate...
-		if (s->sSectorX == sSectorX && s->sSectorY == sSectorY && s->bSectorZ == bSectorZ && !AM_AN_EPC(s) && !(s->uiStatusFlags & SOLDIER_GASSED) && !AM_A_ROBOT(s) && !s->fMercAsleep)
-		{
-			mercs_in_sector[merc_count++] = s;
-		}
+	{ // Add guy if he's a candidate
+		if (s->sSectorX != x)                  continue;
+		if (s->sSectorY != y)                  continue;
+		if (s->bSectorZ != z)                  continue;
+		if (AM_AN_EPC(s))                      continue;
+		if (s->uiStatusFlags & SOLDIER_GASSED) continue;
+		if (AM_A_ROBOT(s))                     continue;
+		if (s->fMercAsleep)                    continue;
+		mercs_in_sector[n_mercs++] = s;
 	}
 
-	ChooseRedIfPresentAndAirRaid(mercs_in_sector, merc_count, usQuoteNum);
+	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
 }
 
 
