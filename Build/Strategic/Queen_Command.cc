@@ -32,7 +32,6 @@
 #include "Game_Event_Hook.h"
 #include "Game_Clock.h"
 #include "RenderWorld.h"
-#include "Dialogue_Control.h"
 #include "Campaign_Init.h"
 #include "Meanwhile.h"
 #include "Soldier_Macros.h"
@@ -1028,7 +1027,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static void AddEnemiesToBattle(GROUP const*, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared);
+static void AddEnemiesToBattle(GROUP const*, UINT8 strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites);
 
 
 /* Rarely, there will be more enemies than supported by the engine. In this
@@ -1112,7 +1111,7 @@ void AddPossiblePendingEnemiesToBattle()
 			} // XXX else exception?
 			/* Add the number of each type of troop and place them in the appropriate
 			 * positions */
-			AddEnemiesToBattle(&g, strategic_insertion_code, n_admins, n_troops, n_elites, FALSE);
+			AddEnemiesToBattle(&g, strategic_insertion_code, n_admins, n_troops, n_elites);
 		}
 	}
 
@@ -1125,62 +1124,7 @@ void AddPossiblePendingEnemiesToBattle()
 }
 
 
-static void NotifyPlayersOfNewEnemies(void)
-{
-	INT32 iSoldiers;
-	INT32 iChosenSoldier;
-	BOOLEAN fIgnoreBreath = FALSE;
-
-	iSoldiers = 0;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
-	{ //find a merc that is aware.
-		if (s->bInSector && s->bLife >= OKLIFE && s->bBreath >= OKBREATH)
-		{
-			iSoldiers++;
-		}
-	}
-	if( !iSoldiers )
-	{ // look for an out of breath merc.
-		fIgnoreBreath = TRUE;
-
-		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
-		{ //find a merc that is aware.
-			if (s->bInSector && s->bLife >= OKLIFE)
-			{
-				iSoldiers++;
-			}
-		}
-	}
-	if( iSoldiers )
-	{
-		iChosenSoldier = Random( iSoldiers );
-		FOR_ALL_IN_TEAM(s, OUR_TEAM)
-		{ //find a merc that is aware.
-			if (s->bInSector &&
-					s->bLife >= OKLIFE &&
-					(s->bBreath >= OKBREATH || fIgnoreBreath))
-			{
-				if( !iChosenSoldier )
-				{
-					// ATE: This is to allow special handling of initial heli drop
-					if ( !DidGameJustStart() )
-					{
-						TacticalCharacterDialogue(s, QUOTE_ENEMY_PRESENCE);
-					}
-					return;
-				}
-				iChosenSoldier--;
-			}
-		}
-	}
-	else
-	{ //There is either nobody here or our mercs can't talk
-
-	}
-}
-
-
-static void AddEnemiesToBattle(GROUP const* const g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites, BOOLEAN const magically_appeared)
+static void AddEnemiesToBattle(GROUP const* const g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites)
 {
 #ifdef JA2TESTVERSION
 	ScreenMsg(FONT_RED, MSG_INTERFACE, L"Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)", n_admins, n_troops, n_elites);
@@ -1194,31 +1138,6 @@ static void AddEnemiesToBattle(GROUP const* const g, UINT8 const strategic_inser
 		case INSERTION_CODE_SOUTH: desired_direction = NORTHWEST; break;
 		case INSERTION_CODE_WEST:  desired_direction = NORTHEAST; break;
 		default: throw std::logic_error("Illegal direction passed to AddEnemiesToBattle()");
-	}
-
-	if (magically_appeared)
-	{ // Update the strategic counters
-		if (gbWorldSectorZ == 0)
-		{
-			SECTORINFO& sector = SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
-			sector.ubNumAdmins      += n_admins;
-			sector.ubAdminsInBattle += n_admins;
-			sector.ubNumTroops      += n_troops;
-			sector.ubTroopsInBattle += n_troops;
-			sector.ubNumElites      += n_elites;
-			sector.ubElitesInBattle += n_elites;
-		}
-		else if (UNDERGROUND_SECTORINFO* const sector = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
-		{
-			sector->ubNumAdmins      += n_admins;
-			sector->ubAdminsInBattle += n_admins;
-			sector->ubNumTroops      += n_troops;
-			sector->ubTroopsInBattle += n_troops;
-			sector->ubNumElites      += n_elites;
-			sector->ubElitesInBattle += n_elites;
-		}
-		// Because the enemies magically appeared, have one of our soldiers say something
-		NotifyPlayersOfNewEnemies();
 	}
 
 	UINT8            n_total   = n_admins + n_troops + n_elites;
