@@ -578,19 +578,21 @@ static void BothModesCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
+static GUIButtonRef MakeRadioButton(INT16 const x, GUI_CALLBACK const click, wchar_t const* const help)
+{
+	GUIButtonRef const b = CreateCheckBoxButton(x, 365, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, click);
+	b->SetFastHelpText(help);
+	return b;
+}
+
+
 static void SetupGameTypeFlags(void)
 {
 	if( gpEditingItemPool )
 	{
-		giBothCheckboxButton =
-			CreateCheckBoxButton(	573, 365, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, BothModesCheckboxCallback );
-		giBothCheckboxButton->SetFastHelpText(L"Item appears in both Sci-Fi and Realistic modes. (|B)");
-		giRealisticCheckboxButton =
-			CreateCheckBoxButton(	595, 365, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, RealisticOnlyCheckboxCallback );
-		giRealisticCheckboxButton->SetFastHelpText(L"Item appears in |Realistic mode only.");
-		giSciFiCheckboxButton =
-			CreateCheckBoxButton(	616, 365, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, SciFiOnlyCheckboxCallback );
-		giSciFiCheckboxButton->SetFastHelpText(L"Item appears in |Sci-Fi mode only.");
+		giBothCheckboxButton      = MakeRadioButton(573, BothModesCheckboxCallback,     L"Item appears in both Sci-Fi and Realistic modes. (|B)");
+		giRealisticCheckboxButton = MakeRadioButton(595, RealisticOnlyCheckboxCallback, L"Item appears in |Realistic mode only.");
+		giSciFiCheckboxButton     = MakeRadioButton(616, SciFiOnlyCheckboxCallback,     L"Item appears in |Sci-Fi mode only.");
 
 		GUIButtonRef     btn;
 		WORLDITEM& wi = GetWorldItem(gpEditingItemPool->iItemIndex);

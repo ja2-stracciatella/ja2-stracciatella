@@ -675,6 +675,14 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, INT16 y, INT16 w, I
 }
 
 
+static GUIButtonRef MakeCheckBox(INT16 const x, INT16 const y, GUI_CALLBACK const click, bool const checked = false)
+{
+	GUIButtonRef const b = CreateCheckBoxButton(x, y, INTERFACEDIR "/checkbox.sti", MSYS_PRIORITY_HIGH + 2, click);
+	if (checked) b->uiFlags |= BUTTON_CLICKED_ON;
+	return b;
+}
+
+
 static void AddNPCsInSectorToArray(void);
 static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnQDPgUpButtonButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -719,8 +727,7 @@ static void EnterQuestDebugSystem(void)
 	guiQuestDebugExitButton = MakeButton(QuestDebugText[QUEST_DBS_EXIT_QUEST_DEBUG], 535, 450, 100, 25, MSYS_PRIORITY_HIGH + 10, BtnQuestDebugExitButtonCallback);
 
 	//Check box to toggle between all and local npc's
-	guiQuestDebugAllOrSectorNPCToggle =
-		CreateCheckBoxButton(	QUEST_DBS_NPC_CHCKBOX_TGL_X, QUEST_DBS_NPC_CHCKBOX_TGL_Y, INTERFACEDIR "/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAllOrSectorNPCToggleCallback );
+	guiQuestDebugAllOrSectorNPCToggle = MakeCheckBox(QUEST_DBS_NPC_CHCKBOX_TGL_X, QUEST_DBS_NPC_CHCKBOX_TGL_Y, BtnQuestDebugAllOrSectorNPCToggleCallback);
 
 	//Currently Selected NPC button
 	guiQuestDebugCurNPCButton = MakeButton(QuestDebugText[QUEST_DBS_SELECTED_NPC], QUEST_DBS_SELECTED_NPC_BUTN_X, QUEST_DBS_SELECTED_NPC_BUTN_Y, QUEST_DBS_LIST_BOX_WIDTH, QDS_BUTTON_HEIGHT, MSYS_PRIORITY_HIGH + 2, BtnQuestDebugCurNPCButtonCallback);
@@ -769,18 +776,10 @@ static void EnterQuestDebugSystem(void)
 
 
 	//checkbox for weather to add the merc to the players team
-	guiQuestDebugAddNpcToTeamToggle =
-		CreateCheckBoxButton(	QUEST_DBS_ADD_NPC_TO_TEAM_BTN_X, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y, INTERFACEDIR "/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAddNpcToTeamToggleCallback );
-	if( gfAddNpcToTeam )
-		guiQuestDebugAddNpcToTeamToggle->uiFlags |= BUTTON_CLICKED_ON;
-
+	guiQuestDebugAddNpcToTeamToggle = MakeCheckBox(QUEST_DBS_ADD_NPC_TO_TEAM_BTN_X, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y, BtnQuestDebugAddNpcToTeamToggleCallback, gfAddNpcToTeam);
 
 	//checkbox for weather have rpc say the sector description
-	guiQuestDebugRPCSaySectorDescToggle =
-		CreateCheckBoxButton(	QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_X, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, INTERFACEDIR "/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugRPCSaySectorDescToggleCallback );
-	if( gfRpcToSaySectorDesc )
-		guiQuestDebugRPCSaySectorDescToggle->uiFlags |= BUTTON_CLICKED_ON;
-
+	guiQuestDebugRPCSaySectorDescToggle = MakeCheckBox(QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_X, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, BtnQuestDebugRPCSaySectorDescToggleCallback, gfRpcToSaySectorDesc);
 
 	//Setup mouse regions for the Quest list
 	usPosX = QUEST_DBS_FIRST_COL_NUMBER_X;

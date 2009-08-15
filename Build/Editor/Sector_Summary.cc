@@ -205,6 +205,20 @@ enum{
 GUIButtonRef iSummaryButton[NUM_SUMMARY_BUTTONS];
 
 
+static GUIButtonRef MakeCheckBox(INT16 const x, INT16 const y, GUI_CALLBACK const click, bool const checked = false)
+{
+	GUIButtonRef const b = CreateCheckBoxButton(x, y, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, click);
+	if (checked) b->uiFlags |= BUTTON_CLICKED_ON;
+	return b;
+}
+
+
+static GUIButtonRef MakeRadioButton(INT16 const x, INT16 const y, GUI_CALLBACK const click)
+{
+	return CreateCheckBoxButton(x, y, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_HIGH, click);
+}
+
+
 static void LoadGlobalSummary(void);
 static void MapClickCallback(MOUSE_REGION* reg, INT32 reason);
 static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason);
@@ -254,14 +268,10 @@ void CreateSummaryWindow()
 
 	iSummaryButton[SUMMARY_OKAY] = CreateTextButton(L"Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, 585, 325, 50, 30, MSYS_PRIORITY_HIGH, SummaryOkayCallback);
 
-	iSummaryButton[ SUMMARY_GRIDCHECKBOX ] =
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
-	iSummaryButton[SUMMARY_GRIDCHECKBOX]->uiFlags |= BUTTON_CLICKED_ON;
+	iSummaryButton[SUMMARY_GRIDCHECKBOX] = MakeCheckBox(MAP_LEFT, MAP_BOTTOM + 5, SummaryToggleGridCallback, true);
 	gfRenderGrid = TRUE;
 
-	iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] =
-		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
-	iSummaryButton[SUMMARY_PROGRESSCHECKBOX]->uiFlags |= BUTTON_CLICKED_ON;
+	iSummaryButton[SUMMARY_PROGRESSCHECKBOX] = MakeCheckBox(MAP_LEFT + 50, MAP_BOTTOM + 5, SummaryToggleProgressCallback, true);
 	gfRenderProgress = TRUE;
 
 	iSummaryButton[SUMMARY_ALL] = CreateTextButton(L"A",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 110, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
@@ -280,25 +290,18 @@ void CreateSummaryWindow()
 	if( giCurrentViewLevel == BASEMENT3_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_B3_MASK )
 		iSummaryButton[SUMMARY_B3]->uiFlags |= BUTTON_CLICKED_ON;
 
-	iSummaryButton[ SUMMARY_ALTERNATE ] =
-		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
-	if( gfAlternateMaps )
-		iSummaryButton[SUMMARY_ALTERNATE]->uiFlags |= BUTTON_CLICKED_ON;
+	iSummaryButton[SUMMARY_ALTERNATE] = MakeCheckBox(MAP_LEFT, MAP_BOTTOM + 25, SummaryToggleAlternateCallback, gfAlternateMaps);
 
 	iSummaryButton[SUMMARY_LOAD] = CreateTextButton(L"LOAD", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT,      MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummaryLoadMapCallback);
 	iSummaryButton[SUMMARY_SAVE] = CreateTextButton(L"SAVE", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT + 55, MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummarySaveMapCallback);
-	iSummaryButton[ SUMMARY_OVERRIDE ] =
-		CreateCheckBoxButton( ( INT16 ) ( MAP_LEFT + 110 ), ( INT16 ) ( MAP_BOTTOM + 59 ), EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryOverrideCallback );
+	iSummaryButton[SUMMARY_OVERRIDE] = MakeCheckBox(MAP_LEFT + 110, MAP_BOTTOM + 59, SummaryOverrideCallback);
 
 
 	iSummaryButton[SUMMARY_UPDATE] = CreateTextButton(L"Update", FONT12POINT1, FONT_BLACK, FONT_BLACK, 255, 15, 40, 16, MSYS_PRIORITY_HIGH, SummaryUpdateCallback);
 
-	iSummaryButton[ SUMMARY_REAL ] =
-		CreateCheckBoxButton( 350, 47, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryRealCallback );
-	iSummaryButton[ SUMMARY_SCIFI ] =
-		CreateCheckBoxButton( 376, 47, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_HIGH, SummarySciFiCallback );
-	iSummaryButton[ SUMMARY_ENEMY ] =
-		CreateCheckBoxButton( 350, 60, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryEnemyCallback );
+	iSummaryButton[SUMMARY_REAL]  = MakeRadioButton(350, 47, SummaryRealCallback);
+	iSummaryButton[SUMMARY_SCIFI] = MakeRadioButton(376, 47, SummarySciFiCallback);
+	iSummaryButton[SUMMARY_ENEMY] = MakeRadioButton(350, 60, SummaryEnemyCallback);
 
 	//iSummaryButton[SUMMARY_SCIFI]->SetFastHelpText(L"Display items that appear in SciFi mode.");
 	//iSummaryButton[SUMMARY_REAL ]->SetFastHelpText(L"Display items that appear in Realistic mode.");
