@@ -1999,19 +1999,17 @@ void SetGroupSectorValue(INT16 const x, INT16 const y, INT16 const z, GROUP& g)
 }
 
 
-void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
+void SetEnemyGroupSector(GROUP& g, UINT8 const sector_id)
 {
-	// make sure it is valid
-	Assert( pGroup );
-	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
+	// Make sure it is valid
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
-	if (!gfRandomizingPatrolGroup) RemoveGroupWaypoints(*pGroup);
+	if (!gfRandomizingPatrolGroup) RemoveGroupWaypoints(g);
 
-	// set sector x and y to passed values
-	pGroup->ubSectorX = pGroup->ubNextX = (UINT8)SECTORX( ubSectorID );
-	pGroup->ubSectorY = pGroup->ubNextY = (UINT8)SECTORY( ubSectorID );
-	pGroup->ubSectorZ = 0;
-	pGroup->fBetweenSectors = FALSE;
+	g.ubSectorX = g.ubNextX = SECTORX(sector_id);
+	g.ubSectorY = g.ubNextY = SECTORY(sector_id);
+	g.ubSectorZ = 0;
+	g.fBetweenSectors = FALSE;
 }
 
 
@@ -3350,7 +3348,7 @@ void RandomizePatrolGroupLocation( GROUP *pGroup )
 	//1 minute to actual traverse time between the sectors.
 	gfRandomizingPatrolGroup = TRUE;
 
-	SetEnemyGroupSector( pGroup, ubSectorID );
+	SetEnemyGroupSector(*pGroup, ubSectorID);
 	InitiateGroupMovementToNextSector( pGroup );
 
 	//Immediately turn off the flag once finished.

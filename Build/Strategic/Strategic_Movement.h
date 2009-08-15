@@ -198,7 +198,7 @@ void CalculateNextMoveIntention( GROUP *pGroup );
 // Set current sector of the group, used for player controlled mercs
 void SetGroupSectorValue(INT16 x, INT16 y, INT16 z, GROUP&);
 
-void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID );
+void SetEnemyGroupSector(GROUP&, UINT8 sector_id);
 
 
 // calculate the eta time in world total mins of this group

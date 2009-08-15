@@ -4020,7 +4020,7 @@ static void RequestHighPriorityGarrisonReinforcements(INT32 iGarrisonID, UINT8 u
 			RecalculatePatrolWeight(gPatrolGroup[iBestIndex]);
 			//The ONLY case where the group is told to move somewhere else when they could be BETWEEN sectors.  The movegroup functions
 			//don't work if this is the case.  Teleporting them to their previous sector is the best and easiest way to deal with this.
-			SetEnemyGroupSector( pGroup, (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) );
+			SetEnemyGroupSector(*pGroup, SECTOR(pGroup->ubSectorX, pGroup->ubSectorY));
 
 			MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iGarrisonID ].ubSectorID, EVASIVE, REINFORCEMENTS );
 			ValidateGroup( pGroup );
@@ -4530,7 +4530,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 
 	//First thing to do, is teleport the group to be AT the sector he is currently moving from.  Otherwise, the
 	//strategic pathing can break if the group is between sectors upon reassignment.
-	SetEnemyGroupSector( *pGroup, ubSectorID );
+	SetEnemyGroupSector(**pGroup, ubSectorID);
 
 	if( giRequestPoints <= 0  )
 	{ //we have no request for reinforcements, so send the group to Meduna for reassignment in the pool.
@@ -4813,7 +4813,7 @@ static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMove
 
 	if( (*pGroup)->fBetweenSectors )
 	{
-		SetEnemyGroupSector( *pGroup, (UINT8)SECTOR( (*pGroup)->ubSectorX, (*pGroup)->ubSectorY ) );
+		SetEnemyGroupSector(**pGroup, SECTOR((*pGroup)->ubSectorX, (*pGroup)->ubSectorY));
 	}
 
 	(*pGroup)->pEnemyGroup->ubIntention = ubIntention;
@@ -4873,7 +4873,7 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSec
 				pWaypoint = GetFinalWaypoint( pGroup );
 				Assert( pWaypoint );
 				ubDestSectorID = (UINT8)SECTOR( pWaypoint->x, pWaypoint->y );
-				SetEnemyGroupSector( pGroup, (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) );
+				SetEnemyGroupSector(*pGroup, SECTOR(pGroup->ubSectorX, pGroup->ubSectorY));
 				MoveSAIGroupToSector( &pGroup, ubDestSectorID, EVASIVE, pGroup->pEnemyGroup->ubIntention );
 				ubNumGroupsRedirected++;
 			}
