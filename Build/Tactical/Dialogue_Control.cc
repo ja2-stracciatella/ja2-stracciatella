@@ -1400,40 +1400,49 @@ talk:
 }
 
 
-void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
+void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
-	size_t merc_count = 0;
+	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
-	{
-		// Add guy if he's a candidate...
-		if (OkControllableMerc(s) &&
-				!AM_AN_EPC(s) &&
-				!(s->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_A_ROBOT(s) &&
-				!s->fMercAsleep)
-		{
-			if (gTacticalStatus.bNumFoughtInBattle[ENEMY_TEAM] == 0)
-			{
-				// quotes referring to Deidranna's men so we skip quote if there were no army guys fought
-				if (usQuoteNum == QUOTE_SECTOR_SAFE &&
-						(s->ubProfile == IRA || s->ubProfile == MIGUEL || s->ubProfile == SHANK))
-				{
-					continue;
-				}
-				if (usQuoteNum == QUOTE_ENEMY_PRESENCE &&
-						(s->ubProfile == IRA || s->ubProfile == DIMITRI || s->ubProfile == DYNAMO || s->ubProfile == SHANK))
-				{
-					continue;
-				}
-			}
+	{ // Add guy if he's a candidate
+		if (!OkControllableMerc(s))            continue;
+		if (AM_AN_EPC(s))                      continue;
+		if (s->uiStatusFlags & SOLDIER_GASSED) continue;
+		if (AM_A_ROBOT(s))                     continue;
+		if (s->fMercAsleep)                    continue;
 
-			mercs_in_sector[merc_count++] = s;
+		if (gTacticalStatus.bNumFoughtInBattle[ENEMY_TEAM] == 0)
+		{ /* Skip quotes referring to Deidranna's men, if there were no army guys
+			 * fought */
+			switch (quote_id)
+			{
+				case QUOTE_SECTOR_SAFE:
+					switch (s->ubProfile)
+					{
+						case IRA:    continue;
+						case MIGUEL: continue;
+						case SHANK:  continue;
+					}
+					break;
+
+				case QUOTE_ENEMY_PRESENCE:
+					switch (s->ubProfile)
+					{
+						case DIMITRI: continue;
+						case DYNAMO:  continue;
+						case IRA:     continue;
+						case SHANK:   continue;
+					}
+					break;
+			}
 		}
+
+		mercs_in_sector[n_mercs++] = s;
 	}
 
-	ChooseRedIfPresentAndAirRaid(mercs_in_sector, merc_count, usQuoteNum);
+	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
 }
 
 
