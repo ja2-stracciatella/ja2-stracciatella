@@ -1405,13 +1405,14 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{ // Add guy if he's a candidate
-		if (!OkControllableMerc(s))            continue;
-		if (AM_AN_EPC(s))                      continue;
-		if (s->uiStatusFlags & SOLDIER_GASSED) continue;
-		if (AM_A_ROBOT(s))                     continue;
-		if (s->fMercAsleep)                    continue;
+		SOLDIERTYPE& s = *i;
+		if (!OkControllableMerc(&s))          continue;
+		if (AM_AN_EPC(&s))                    continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED) continue;
+		if (AM_A_ROBOT(&s))                   continue;
+		if (s.fMercAsleep)                    continue;
 
 		if (gTacticalStatus.bNumFoughtInBattle[ENEMY_TEAM] == 0)
 		{ /* Skip quotes referring to Deidranna's men, if there were no army guys
@@ -1419,7 +1420,7 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 			switch (quote_id)
 			{
 				case QUOTE_SECTOR_SAFE:
-					switch (s->ubProfile)
+					switch (s.ubProfile)
 					{
 						case IRA:    continue;
 						case MIGUEL: continue;
@@ -1428,7 +1429,7 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 					break;
 
 				case QUOTE_ENEMY_PRESENCE:
-					switch (s->ubProfile)
+					switch (s.ubProfile)
 					{
 						case DIMITRI: continue;
 						case DYNAMO:  continue;
@@ -1439,7 +1440,7 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 			}
 		}
 
-		mercs_in_sector[n_mercs++] = s;
+		mercs_in_sector[n_mercs++] = &s;
 	}
 
 	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
@@ -1451,57 +1452,50 @@ void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z,
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{ // Add guy if he's a candidate
-		if (s->sSectorX != x)                  continue;
-		if (s->sSectorY != y)                  continue;
-		if (s->bSectorZ != z)                  continue;
-		if (AM_AN_EPC(s))                      continue;
-		if (s->uiStatusFlags & SOLDIER_GASSED) continue;
-		if (AM_A_ROBOT(s))                     continue;
-		if (s->fMercAsleep)                    continue;
-		mercs_in_sector[n_mercs++] = s;
+		SOLDIERTYPE& s = *i;
+		if (s.sSectorX != x)                  continue;
+		if (s.sSectorY != y)                  continue;
+		if (s.bSectorZ != z)                  continue;
+		if (AM_AN_EPC(&s))                    continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED) continue;
+		if (AM_A_ROBOT(&s))                   continue;
+		if (s.fMercAsleep)                    continue;
+		mercs_in_sector[n_mercs++] = &s;
 	}
 
 	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
 }
 
 
-void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum )
+void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UINT16 const quote_id)
 {
-	UINT8	ubNumMercs = 0;
-
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// run through list
+	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
-	{
-		// Add guy if he's a candidate...
-		if (OkControllableMerc(s) &&
-				PythSpacesAway(sGridNo, s->sGridNo) < bDistance &&
-				!AM_AN_EPC(s) &&
-				!(s->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_A_ROBOT(s) &&
-				!s->fMercAsleep &&
-				SoldierTo3DLocationLineOfSightTest(s, sGridNo, 0, 0, MaxDistanceVisible(), TRUE))
-		{
-			if (usQuoteNum == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(s))
-			{
-				continue;
-			}
-			mercs_in_sector[ubNumMercs++] = s;
-		}
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
+	{ // Add guy if he's a candidate
+		SOLDIERTYPE& s = *i;
+		if (!OkControllableMerc(&s))                       continue;
+		if (PythSpacesAway(gridno, s.sGridNo) >= distance) continue;
+		if (AM_AN_EPC(&s))                                 continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED)              continue;
+		if (AM_A_ROBOT(&s))                                continue;
+		if (s.fMercAsleep)                                 continue;
+		if (SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE)) continue;
+		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(&s))     continue;
+		mercs_in_sector[n_mercs++] = &s;
 	}
 
-	if ( ubNumMercs > 0 )
+	if (n_mercs > 0)
 	{
-		SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
-		if (usQuoteNum == QUOTE_STUFF_MISSING_DRASSEN)
+		SOLDIERTYPE* const chosen = mercs_in_sector[Random(n_mercs)];
+		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN)
 		{
-			SetFactTrue( FACT_PLAYER_FOUND_ITEMS_MISSING );
+			SetFactTrue(FACT_PLAYER_FOUND_ITEMS_MISSING);
 		}
-		TacticalCharacterDialogue(chosen, usQuoteNum);
+		TacticalCharacterDialogue(chosen, quote_id);
 	}
 }
 
