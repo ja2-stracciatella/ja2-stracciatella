@@ -261,7 +261,7 @@ void UnPauseDialogueQueue( void );
 
 void SetExternMapscreenSpeechPanelXY( INT16 sXPos, INT16 sYPos );
 
-BOOLEAN IsMercSayingDialogue(UINT8 ubProfileID);
+bool IsMercSayingDialogue(ProfileID);
 
 extern FACETYPE* gpCurrentTalkingFace;
 

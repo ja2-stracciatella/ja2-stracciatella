@@ -1521,7 +1521,7 @@ void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, 
 		switch (QuoteExp_GenderCode[s.ubProfile])
 		{
 			case 0: if (sex == FEMALE) continue; break;
-			case 0: if (sex == MALE)   continue; break;
+			case 1: if (sex == MALE)   continue; break;
 		}
 
 		mercs_in_sector[n_mercs++] = &s;
@@ -1636,13 +1636,9 @@ void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack )
 }
 
 
-BOOLEAN IsMercSayingDialogue(UINT8 ubProfileID)
+bool IsMercSayingDialogue(ProfileID const pid)
 {
-	if ( gpCurrentTalkingFace != NULL && gubCurrentTalkingID == ubProfileID )
-	{
-		return( TRUE );
-	}
-	return( FALSE );
+	return gpCurrentTalkingFace && gubCurrentTalkingID == pid;
 }
 
 
