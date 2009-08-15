@@ -1027,7 +1027,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static void AddEnemiesToBattle(GROUP const*, UINT8 strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites);
+static void AddEnemiesToBattle(GROUP const&, UINT8 strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites);
 
 
 /* Rarely, there will be more enemies than supported by the engine. In this
@@ -1111,7 +1111,7 @@ void AddPossiblePendingEnemiesToBattle()
 			} // XXX else exception?
 			/* Add the number of each type of troop and place them in the appropriate
 			 * positions */
-			AddEnemiesToBattle(&g, strategic_insertion_code, n_admins, n_troops, n_elites);
+			AddEnemiesToBattle(g, strategic_insertion_code, n_admins, n_troops, n_elites);
 		}
 	}
 
@@ -1124,7 +1124,7 @@ void AddPossiblePendingEnemiesToBattle()
 }
 
 
-static void AddEnemiesToBattle(GROUP const* const g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites)
+static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites)
 {
 #ifdef JA2TESTVERSION
 	ScreenMsg(FONT_RED, MSG_INTERFACE, L"Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)", n_admins, n_troops, n_elites);
@@ -1137,7 +1137,7 @@ static void AddEnemiesToBattle(GROUP const* const g, UINT8 const strategic_inser
 		case INSERTION_CODE_EAST:  desired_direction = SOUTHWEST; break;
 		case INSERTION_CODE_SOUTH: desired_direction = NORTHWEST; break;
 		case INSERTION_CODE_WEST:  desired_direction = NORTHEAST; break;
-		default: throw std::logic_error("Illegal direction passed to AddEnemiesToBattle()");
+		default: throw std::logic_error("Invalid direction passed to AddEnemiesToBattle()");
 	}
 
 	UINT8            n_total   = n_admins + n_troops + n_elites;
@@ -1152,20 +1152,20 @@ static void AddEnemiesToBattle(GROUP const* const g, UINT8 const strategic_inser
 			roll < n_elites + n_total ? --n_total,  SOLDIER_CLASS_ARMY  :
 			(--n_admins, SOLDIER_CLASS_ADMINISTRATOR);
 
-		SOLDIERTYPE* const s = TacticalCreateEnemySoldier(sc);
-		if (g) s->ubGroupID = g->ubGroupID;
-		s->ubInsertionDirection = desired_direction;
+		SOLDIERTYPE& s = *TacticalCreateEnemySoldier(sc);
+		s.ubGroupID = g.ubGroupID;
+		s.ubInsertionDirection = desired_direction;
 		// Setup the position
 		if (curr_slot < edgepoint_info.ubNumPoints)
 		{ // Use an edgepoint
-			s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-			s->usStrategicInsertionData = edgepoint_info.sGridNo[curr_slot++];
+			s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+			s.usStrategicInsertionData = edgepoint_info.sGridNo[curr_slot++];
 		}
 		else
 		{ // No edgepoints left, so put him at the entrypoint
-			s->ubStrategicInsertionCode = strategic_insertion_code;
+			s.ubStrategicInsertionCode = strategic_insertion_code;
 		}
-		UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, 0);
+		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, 0);
 	}
 }
 
