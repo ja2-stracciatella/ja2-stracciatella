@@ -1028,103 +1028,98 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static void AddEnemiesToBattle(GROUP* pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared);
+static void AddEnemiesToBattle(GROUP const*, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared);
 
 
-//Rarely, there will be more enemies than supported by the engine.  In this case, these
-//soldier's are waiting for a slot to be free so that they can enter the battle.  This
-//essentially allows for an infinite number of troops, though only 32 at a time can fight.
-//This is also called whenever an enemy group's reinforcements arrive because the code is
-//identical, though it is highly likely that they will all be successfully added on the first call.
+/* Rarely, there will be more enemies than supported by the engine. In this
+ * case, these soldier's are waiting for a slot to be free so that they can
+ * enter the battle. This essentially allows for an infinite number of troops,
+ * though only 32 at a time can fight. This is also called whenever an enemy
+ * group's reinforcements arrive because the code is identical, though it is
+ * highly likely that they will all be successfully added on the first call. */
 void AddPossiblePendingEnemiesToBattle()
 {
-	UINT8 ubSlots, ubNumAvailable;
-	UINT8 ubNumElites, ubNumTroops, ubNumAdmins;
-  if( !gfPendingEnemies )
-	{ //Optimization.  No point in checking if we know that there aren't any more enemies that can
-		//be added to this battle.  This changes whenever a new enemy group arrives at the scene.
-		return;
-	}
-	ubSlots = NumFreeEnemySlots();
-	if( !ubSlots )
-	{ //no available slots to add enemies to.  Try again later...
+  if (!gfPendingEnemies)
+	{ /* Optimization: No point in checking if we know that there aren't any more
+		 * enemies that can be added to this battle. This changes whenever a new
+		 * enemy group arrives at the scene. */
 		return;
 	}
 
-	FOR_ALL_ENEMY_GROUPS(pGroup)
+	UINT8 n_slots = NumFreeEnemySlots();
+	CFOR_ALL_ENEMY_GROUPS(i)
 	{
-		if (ubSlots == 0) break;
+		if (n_slots == 0) break;
 
-		if (!pGroup->fVehicle                  &&
-				pGroup->ubSectorX == gWorldSectorX &&
-				pGroup->ubSectorY == gWorldSectorY &&
-				!gbWorldSectorZ)
-		{ //This enemy group is currently in the sector.
-			ubNumElites = ubNumTroops = ubNumAdmins = 0;
-			ubNumAvailable = pGroup->ubGroupSize - pGroup->pEnemyGroup->ubElitesInBattle - pGroup->pEnemyGroup->ubTroopsInBattle - pGroup->pEnemyGroup->ubAdminsInBattle;
-			while( ubNumAvailable && ubSlots )
-			{ //This group has enemies waiting for a chance to enter the battle.
-				if( pGroup->pEnemyGroup->ubTroopsInBattle < pGroup->pEnemyGroup->ubNumTroops )
-				{ //Add a regular troop.
-					pGroup->pEnemyGroup->ubTroopsInBattle++;
-					ubNumAvailable--;
-					ubSlots--;
-					ubNumTroops++;
-				}
-				else if( pGroup->pEnemyGroup->ubElitesInBattle < pGroup->pEnemyGroup->ubNumElites )
-				{ //Add an elite troop
-					pGroup->pEnemyGroup->ubElitesInBattle++;
-					ubNumAvailable--;
-					ubSlots--;
-					ubNumElites++;
-				}
-				else if( pGroup->pEnemyGroup->ubAdminsInBattle < pGroup->pEnemyGroup->ubNumAdmins )
-				{ //Add an elite troop
-					pGroup->pEnemyGroup->ubAdminsInBattle++;
-					ubNumAvailable--;
-					ubSlots--;
-					ubNumAdmins++;
-				}
-				else
-				{
-					AssertMsg( 0, "AddPossiblePendingEnemiesToBattle():  Logic Error -- by Kris" );
-				}
+		GROUP const& g = *i;
+		if (g.fVehicle)                   continue;
+		if (g.ubSectorX != gWorldSectorX) continue;
+		if (g.ubSectorY != gWorldSectorY) continue;
+		if (gbWorldSectorZ != 0)          continue;
+		// This enemy group is currently in the sector.
+		ENEMYGROUP& eg          = *g.pEnemyGroup;
+		UINT8       n_elites    = 0;
+		UINT8       n_troops    = 0;
+		UINT8       n_admins    = 0;
+		UINT8       n_available = g.ubGroupSize - eg.ubElitesInBattle - eg.ubTroopsInBattle - eg.ubAdminsInBattle;
+		while (n_available != 0 && n_slots != 0)
+		{ // This group has enemies waiting for a chance to enter the battle.
+			if (eg.ubTroopsInBattle < eg.ubNumTroops)
+			{ // Add a regular troop.
+				++eg.ubTroopsInBattle;
+				++n_troops;
 			}
-			if( ubNumAdmins || ubNumTroops || ubNumElites )
-			{ //This group has contributed forces, then add them now, because different
-				//groups appear on different sides of the map.
-				UINT8 ubStrategicInsertionCode=0;
-				//First, determine which entrypoint to use, based on the travel direction of the group.
-				if( pGroup->ubPrevX && pGroup->ubPrevY )
-				{
-					if( pGroup->ubSectorX < pGroup->ubPrevX )
-						ubStrategicInsertionCode = INSERTION_CODE_EAST;
-					else if( pGroup->ubSectorX > pGroup->ubPrevX )
-						ubStrategicInsertionCode = INSERTION_CODE_WEST;
-					else if( pGroup->ubSectorY < pGroup->ubPrevY )
-						ubStrategicInsertionCode = INSERTION_CODE_SOUTH;
-					else if( pGroup->ubSectorY > pGroup->ubPrevY )
-						ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-				}
-				else if( pGroup->ubNextX && pGroup->ubNextY )
-				{
-					if( pGroup->ubSectorX < pGroup->ubNextX )
-						ubStrategicInsertionCode = INSERTION_CODE_EAST;
-					else if( pGroup->ubSectorX > pGroup->ubNextX )
-						ubStrategicInsertionCode = INSERTION_CODE_WEST;
-					else if( pGroup->ubSectorY < pGroup->ubNextY )
-						ubStrategicInsertionCode = INSERTION_CODE_SOUTH;
-					else if( pGroup->ubSectorY > pGroup->ubNextY )
-						ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-				}
-				//Add the number of each type of troop and place them in the appropriate positions
-				AddEnemiesToBattle( pGroup, ubStrategicInsertionCode, ubNumAdmins, ubNumTroops, ubNumElites, FALSE );
+			else if (eg.ubElitesInBattle < eg.ubNumElites)
+			{ // Add an elite troop.
+				++eg.ubElitesInBattle;
+				++n_elites;
 			}
+			else if (eg.ubAdminsInBattle < eg.ubNumAdmins)
+			{ // Add an admin troop.
+				++eg.ubAdminsInBattle;
+				++n_admins;
+			}
+			else
+			{
+				throw std::logic_error("AddPossiblePendingEnemiesToBattle(): Logic Error");
+			}
+			--n_available;
+			--n_slots;
+		}
+
+		if (n_admins != 0 || n_troops != 0 || n_elites != 0)
+		{ /* This group has contributed forces, then add them now, because different
+			 * groups appear on different sides of the map. */
+			UINT8 strategic_insertion_code = 0;
+			//First, determine which entrypoint to use, based on the travel direction of the group.
+			if (g.ubPrevX != 0 && g.ubPrevY != 0)
+			{
+				strategic_insertion_code =
+					g.ubSectorX < g.ubPrevX ? INSERTION_CODE_EAST  :
+					g.ubSectorX > g.ubPrevX ? INSERTION_CODE_WEST  :
+					g.ubSectorY < g.ubPrevY ? INSERTION_CODE_SOUTH :
+					g.ubSectorY > g.ubPrevY ? INSERTION_CODE_NORTH :
+					0; // XXX exception?
+			}
+			else if (g.ubNextX != 0 && g.ubNextY != 0)
+			{
+				strategic_insertion_code =
+					g.ubSectorX < g.ubNextX ? INSERTION_CODE_EAST  :
+					g.ubSectorX > g.ubNextX ? INSERTION_CODE_WEST  :
+					g.ubSectorY < g.ubNextY ? INSERTION_CODE_SOUTH :
+					g.ubSectorY > g.ubNextY ? INSERTION_CODE_NORTH :
+					0; // XXX exception?
+			} // XXX else exception?
+			/* Add the number of each type of troop and place them in the appropriate
+			 * positions */
+			AddEnemiesToBattle(&g, strategic_insertion_code, n_admins, n_troops, n_elites, FALSE);
 		}
 	}
-	if( ubSlots )
-	{ //After going through the process, we have finished with some free slots and no more enemies to add.
-    //So, we can turn off the flag, as this check is no longer needed.
+
+	if (n_slots != 0)
+	{ /* After going through the process, we have finished with some free slots
+		 * and no more enemies to add. So, we can turn off the flag, as this check
+		 * is no longer needed. */
 		gfPendingEnemies = FALSE;
 	}
 }
@@ -1185,7 +1180,7 @@ static void NotifyPlayersOfNewEnemies(void)
 }
 
 
-static void AddEnemiesToBattle(GROUP* const g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites, BOOLEAN const magically_appeared)
+static void AddEnemiesToBattle(GROUP const* const g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites, BOOLEAN const magically_appeared)
 {
 #ifdef JA2TESTVERSION
 	ScreenMsg(FONT_RED, MSG_INTERFACE, L"Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)", n_admins, n_troops, n_elites);
