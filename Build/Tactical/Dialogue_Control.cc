@@ -1483,8 +1483,8 @@ void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UI
 		if (s.uiStatusFlags & SOLDIER_GASSED)              continue;
 		if (AM_A_ROBOT(&s))                                continue;
 		if (s.fMercAsleep)                                 continue;
-		if (SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE)) continue;
-		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(&s))     continue;
+		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE)) continue;
+		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(&s))      continue;
 		mercs_in_sector[n_mercs++] = &s;
 	}
 
@@ -1500,44 +1500,37 @@ void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UI
 }
 
 
-void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum, INT8 bSex )
+void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, UINT16 const quote_id, INT8 const sex)
 {
-	UINT8	ubNumMercs = 0;
-
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// run through list
+	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{
-		// Add guy if he's a candidate...
-		if (OkControllableMerc(s) &&
-				PythSpacesAway(sGridNo, s->sGridNo) < bDistance &&
-				!AM_AN_EPC(s) &&
-				!(s->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_A_ROBOT(s) &&
-				!s->fMercAsleep &&
-				SoldierTo3DLocationLineOfSightTest(s, sGridNo, 0, 0, MaxDistanceVisible(), TRUE))
+		// Add guy if he's a candidate
+		SOLDIERTYPE& s = *i;
+		if (!OkControllableMerc(&s))                       continue;
+		if (PythSpacesAway(gridno, s.sGridNo) >= distance) continue;
+		if (AM_AN_EPC(&s))                                 continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED)              continue;
+		if (AM_A_ROBOT(&s))                                continue;
+		if (s.fMercAsleep)                                 continue;
+		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE)) continue;
+
+		// ATE: This is to check gedner for this quote
+		switch (QuoteExp_GenderCode[s.ubProfile])
 		{
-			// ATE: This is to check gedner for this quote...
-			if (QuoteExp_GenderCode[s->ubProfile] == 0 && bSex == FEMALE)
-			{
-				continue;
-			}
-
-			if (QuoteExp_GenderCode[s->ubProfile] == 1 && bSex == MALE)
-			{
-				continue;
-			}
-
-			mercs_in_sector[ubNumMercs++] = s;
+			case 0: if (sex == FEMALE) continue; break;
+			case 0: if (sex == MALE)   continue; break;
 		}
+
+		mercs_in_sector[n_mercs++] = &s;
 	}
 
-	if ( ubNumMercs > 0 )
+	if (n_mercs > 0)
 	{
-		SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
-		TacticalCharacterDialogue(chosen, usQuoteNum);
+		SOLDIERTYPE* const chosen = mercs_in_sector[Random(n_mercs)];
+		TacticalCharacterDialogue(chosen, quote_id);
 	}
 }
 
