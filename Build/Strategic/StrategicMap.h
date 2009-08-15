@@ -103,11 +103,11 @@ BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 // init sam sites
 void InitializeSAMSites( void );
 
-// get town sector size
-UINT8 GetTownSectorSize( INT8 bTownId );
+// Number of sectors this town takes up
+UINT8 GetTownSectorSize(INT8 town_id);
 
-// get town sector size, that is under play control
-UINT8 GetTownSectorsUnderControl( INT8 bTownId );
+// Number of sectors under player control for this town
+UINT8 GetTownSectorsUnderControl(INT8 town_id);
 
 
 BOOLEAN OKForSectorExit(INT8 bExitDirection, UINT16 usAdditionalData, UINT32* puiTraverseTimeInMinutes = 0);

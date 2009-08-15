@@ -547,28 +547,20 @@ UINT8 GetTownIdForSector( INT16 sMapX, INT16 sMapY )
 }
 
 
-// return number of sectors this town takes up
-UINT8 GetTownSectorSize( INT8 bTownId )
+UINT8 GetTownSectorSize(INT8 const town_id)
 {
-	UINT8 ubSectorSize = 0;
-	INT32 iCounterA =0, iCounterB = 0;
-
-	for( iCounterA = 0; iCounterA < ( INT32 )( MAP_WORLD_X - 1 ); iCounterA++ )
+	UINT8 n = 0;
+	for (UINT32 x = 0; x != MAP_WORLD_X - 1; ++x)
 	{
-		for( iCounterB = 0; iCounterB < ( INT32 )( MAP_WORLD_Y - 1 ); iCounterB++ )
+		for (UINT32 y = 0; y != MAP_WORLD_Y - 1; ++y)
 		{
-			if(  StrategicMap[CALCULATE_STRATEGIC_INDEX( iCounterA, iCounterB )].bNameId == bTownId )
-			{
-				ubSectorSize++;
-			}
+			if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId == town_id) ++n;
 		}
 	}
-
-	return( ubSectorSize );
+	return n;
 }
 
 
-// return number of sectors under player control for this town
 UINT8 GetTownSectorsUnderControl(INT8 const town_id)
 {
 	UINT8 n = 0;
