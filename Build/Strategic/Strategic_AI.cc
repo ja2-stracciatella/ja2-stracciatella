@@ -1346,7 +1346,7 @@ enum SAIMOVECODE
 	EVASIVE,
 	STAGE
 };
-static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, UINT8 ubIntention);
+static void MoveSAIGroupToSector(GROUP**, UINT8 sector, SAIMOVECODE, UINT8 intention);
 
 
 static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerGroup, GROUP* pEnemyGroup)
@@ -4804,55 +4804,40 @@ static void RemoveSoldiersFromGarrisonBasedOnComposition(INT32 iGarrisonID, UINT
 }
 
 
-static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, UINT8 ubIntention)
+static void MoveSAIGroupToSector(GROUP** const pGroup, UINT8 const sector, SAIMOVECODE const move_code, UINT8 const intention)
 {
-	UINT8 ubDstSectorX, ubDstSectorY;
+	UINT8 const dst_x = SECTORX(sector);
+	UINT8 const dst_y = SECTORY(sector);
+	GROUP&      g     = **pGroup;
 
-	ubDstSectorX = (UINT8)SECTORX( ubSectorID );
-	ubDstSectorY = (UINT8)SECTORY( ubSectorID );
+	if (g.fBetweenSectors) SetEnemyGroupSector(g, SECTOR(g.ubSectorX, g.ubSectorY));
 
-	if( (*pGroup)->fBetweenSectors )
+	g.pEnemyGroup->ubIntention = intention;
+	g.ubMoveType               = ONE_WAY;
+
+	/* Make sure that the group isn't moving into a garrison sector. These sectors
+	 * should be using ASSAULT intentions! */
+	Assert(intention != PURSUIT || SectorInfo[sector].ubGarrisonID == NO_GARRISON);
+
+	/* If the destination sector is the current location. Instead of causing code
+	 * logic problems, simply process them as if they just arrived. */
+	if (g.ubSectorX == dst_x && g.ubSectorY == dst_y && EvaluateGroupSituation(&g))
+	{ // The group was deleted.
+		*pGroup = 0;
+		return;
+	}
+
+	UINT8 const x = g.ubSectorX;
+	UINT8 const y = g.ubSectorY;
+	switch (move_code)
 	{
-		SetEnemyGroupSector(**pGroup, SECTOR((*pGroup)->ubSectorX, (*pGroup)->ubSectorY));
+		case STAGE:   MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(g, x, y, dst_x, dst_y); break;
+		case EVASIVE: MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(                         g, x, y, dst_x, dst_y); break;
+		case DIRECT:  MoveGroupFromSectorToSector(                                                        g, x, y, dst_x, dst_y); break;
 	}
-
-	(*pGroup)->pEnemyGroup->ubIntention = ubIntention;
-	(*pGroup)->ubMoveType = ONE_WAY;
-
-	if( ubIntention == PURSUIT )
-	{	//Make sure that the group isn't moving into a garrison sector.  These sectors should be using ASSAULT intentions!
-		if( SectorInfo[ ubSectorID ].ubGarrisonID != NO_GARRISON )
-		{
-			//Good place for a breakpoint.
-			pGroup = pGroup;
-		}
-	}
-
-	if( (*pGroup)->ubSectorX == ubDstSectorX && (*pGroup)->ubSectorY == ubDstSectorY )
-	{ //The destination sector is the current location.  Instead of causing code logic problems,
-		//simply process them as if they just arrived.
-		if( EvaluateGroupSituation( *pGroup ) )
-		{ //The group was deleted.
-			*pGroup = NULL;
-			return;
-		}
-	}
-
-	switch( uiMoveCode )
-	{
-		case STAGE:
-			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(**pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
-			break;
-		case EVASIVE:
-			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(**pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
-			break;
-		case DIRECT:
-		default:
-			MoveGroupFromSectorToSector(**pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
-			break;
-	}
-	//Make sure that the group is moving.  If this fails, then the pathing may have failed for some reason.
-	ValidateGroup( *pGroup );
+	/* Make sure that the group is moving. If this fails, then the pathing may
+	 * have failed for some reason. */
+	ValidateGroup(&g);
 }
 
 
