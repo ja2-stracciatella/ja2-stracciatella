@@ -134,7 +134,7 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 	gMercProfiles[ pSoldier->ubProfile ].bMercStatus = MERC_IS_DEAD;
 
 	// handle strategic level death
-	HandleStrategicDeath( pSoldier );
+	HandleStrategicDeath(*pSoldier);
 }
 
 

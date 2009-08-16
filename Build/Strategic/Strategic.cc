@@ -16,26 +16,26 @@
 static void HandleSoldierDeadComments(SOLDIERTYPE const*);
 
 
-void HandleStrategicDeath(SOLDIERTYPE* const s)
+void HandleStrategicDeath(SOLDIERTYPE& s)
 {
-	if (s->bAssignment == VEHICLE && s->iVehicleId != -1)
+	if (s.bAssignment == VEHICLE && s.iVehicleId != -1)
 	{
-		TakeSoldierOutOfVehicle(s);
+		TakeSoldierOutOfVehicle(&s);
   }
 
-	RemoveCharacterFromSquads(s);
-	if (s->bAssignment != ASSIGNMENT_DEAD)
+	RemoveCharacterFromSquads(&s);
+	if (s.bAssignment != ASSIGNMENT_DEAD)
 	{
-		SetTimeOfAssignmentChangeForMerc(s);
+		SetTimeOfAssignmentChangeForMerc(&s);
 	}
-	ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
+	ChangeSoldiersAssignment(&s, ASSIGNMENT_DEAD);
 
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
 		ReBuildCharactersList();
 
-		HandleSoldierDeadComments(s);
-		AddDeadSoldierToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ, s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+		HandleSoldierDeadComments(&s);
+		AddDeadSoldierToUnLoadedSector(s.sSectorX, s.sSectorY, s.bSectorZ, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 
 		fReDrawFace = TRUE;
 

@@ -20,6 +20,6 @@ enum InsertionCode
 };
 
 
-void HandleStrategicDeath(SOLDIERTYPE*);
+void HandleStrategicDeath(SOLDIERTYPE&);
 
 #endif
