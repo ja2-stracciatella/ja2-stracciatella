@@ -148,7 +148,7 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 }
 
 
-static void DoneFadeOutKilledQueen(void);
+static void DoneFadeOutKilledQueen();
 
 
 static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 sGridNo, const INT8 bLevel)
@@ -215,40 +215,41 @@ static void DoneFadeInKilledQueen(void)
 }
 
 
-static void DoneFadeOutKilledQueen(void)
+static void DoneFadeOutKilledQueen()
 {
-	// For one, loop through our current squad and move them over
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	// Move current squad over
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{
-		// Are we in this sector, On the current squad?
-		if (s->bLife >= OKLIFE && s->bInSector && s->bAssignment == CurrentSquad())
-		{
-			gfTacticalTraversal = TRUE;
-			SetGroupSectorValue(3, MAP_ROW_P, 0, *GetGroup(s->ubGroupID));
+		SOLDIERTYPE& s = *i;
+		// Are we in this sector, on the current squad?
+		if (s.bLife < OKLIFE)                continue;
+		if (!s.bInSector)                    continue;
+		if (s.bAssignment != CurrentSquad()) continue;
 
-			// Set next sectore
-			s->sSectorX = 3;
-			s->sSectorY = MAP_ROW_P;
-			s->bSectorZ = 0;
+		gfTacticalTraversal = TRUE;
+		SetGroupSectorValue(3, MAP_ROW_P, 0, *GetGroup(s.ubGroupID));
 
-			// Set gridno
-			s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-			s->usStrategicInsertionData = 5687;
-			// Set direction to face....
-			s->ubInsertionDirection     = 100 + NORTHWEST;
-		}
+		// XXX redundant, SetGroupSectorValue() handles this
+		s.sSectorX                 = 3;
+		s.sSectorY                 = MAP_ROW_P;
+		s.bSectorZ                 = 0;
+		// Set gridno
+		s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+		s.usStrategicInsertionData = 5687;
+		// Set direction to face
+		s.ubInsertionDirection     = 100 + NORTHWEST;
 	}
 
-	// Kill all enemies in world.....
-	CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
+	// Kill all enemies in world
+	CFOR_ALL_IN_TEAM(i, ENEMY_TEAM)
 	{
+		SOLDIERTYPE const& s = *i;
 		// For sure for flag thet they are dead is not set
 		// Check for any more badguys
 		// ON THE STRAGETY LAYER KILL BAD GUYS!
-		if (!s->bNeutral && s->bSide != gbPlayerNum)
-		{
-			ProcessQueenCmdImplicationsOfDeath(s);
-		}
+		if (s.bNeutral)             continue;
+		if (s.bSide == gbPlayerNum) continue;
+		ProcessQueenCmdImplicationsOfDeath(&s);
 	}
 
 	// 'End' battle
@@ -257,43 +258,41 @@ static void DoneFadeOutKilledQueen(void)
 	// Set enemy presence to false
 	gTacticalStatus.fEnemyInSector = FALSE;
 
-	SetMusicMode( MUSIC_TACTICAL_VICTORY );
+	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	HandleMoraleEvent( NULL, MORALE_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0 );
-	HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0 );
+	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
+	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
 
-	SetMusicMode( MUSIC_TACTICAL_VICTORY );
+	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	SetThisSectorAsPlayerControlled( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE );
+	SetThisSectorAsPlayerControlled(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
 
 	// ATE: Force change of level set z to 1
 	gbWorldSectorZ = 1;
 
-	// Clear out dudes.......
-	SectorInfo[ SEC_P3 ].ubNumAdmins = 0;
-	SectorInfo[ SEC_P3 ].ubNumTroops = 0;
-	SectorInfo[ SEC_P3 ].ubNumElites = 0;
-	SectorInfo[ SEC_P3 ].ubAdminsInBattle = 0;
-	SectorInfo[ SEC_P3 ].ubTroopsInBattle = 0;
-	SectorInfo[ SEC_P3 ].ubElitesInBattle = 0;
+	// Clear out dudes
+	SECTORINFO& sector = SectorInfo[SEC_P3];
+	sector.ubNumAdmins      = 0;
+	sector.ubNumTroops      = 0;
+	sector.ubNumElites      = 0;
+	sector.ubAdminsInBattle = 0;
+	sector.ubTroopsInBattle = 0;
+	sector.ubElitesInBattle = 0;
 
-  // ATE: GEt rid of elliot in P3...
-  gMercProfiles[ ELLIOT ].sSectorX = 1;
+  // ATE: Get rid of Elliot in P3
+  GetProfile(ELLIOT).sSectorX = 1;
 
 	ChangeNpcToDifferentSector(GetProfile(DEREK),  3, MAP_ROW_P, 0);
 	ChangeNpcToDifferentSector(GetProfile(OLIVER), 3, MAP_ROW_P, 0);
 
-	// OK, insertion data found, enter sector!
-	SetCurrentWorldSector( 3, MAP_ROW_P, 0 );
+	SetCurrentWorldSector(3, MAP_ROW_P, 0);
 
-	// OK, once down here, adjust the above map with crate info....
-	gfTacticalTraversal = FALSE;
-	gpTacticalTraversalGroup = NULL;
-	gpTacticalTraversalChosenSoldier = NULL;
+	gfTacticalTraversal              = FALSE;
+	gpTacticalTraversalGroup         = 0;
+	gpTacticalTraversalChosenSoldier = 0;
 
 	gFadeInDoneCallback = DoneFadeInKilledQueen;
-
-	FadeInGameScreen( );
+	FadeInGameScreen();
 }
 
 
