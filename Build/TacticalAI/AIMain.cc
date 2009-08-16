@@ -115,7 +115,7 @@ void InitAI(void)
 }
 
 
-static void HandleAITacticalTraversal(SOLDIERTYPE* pSoldier);
+static void HandleAITacticalTraversal(SOLDIERTYPE&);
 static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier);
 
 
@@ -517,7 +517,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 						}
 						else if (pSoldier->ubQuoteActionID >= QUOTE_ACTION_ID_TRAVERSE_EAST && pSoldier->ubQuoteActionID <= QUOTE_ACTION_ID_TRAVERSE_NORTH)
 						{
-							HandleAITacticalTraversal( pSoldier );
+							HandleAITacticalTraversal(*pSoldier);
 							return;
 						}
 					}
@@ -530,7 +530,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 				// for regular guys still have to check for leaving the map
 				else if (pSoldier->ubQuoteActionID >= QUOTE_ACTION_ID_TRAVERSE_EAST && pSoldier->ubQuoteActionID <= QUOTE_ACTION_ID_TRAVERSE_NORTH)
 				{
-					HandleAITacticalTraversal( pSoldier );
+					HandleAITacticalTraversal(*pSoldier);
 					return;
 				}
 
@@ -2269,37 +2269,38 @@ void SetNewSituation( SOLDIERTYPE * pSoldier )
 }
 
 
-static void HandleAITacticalTraversal(SOLDIERTYPE* pSoldier)
+static void HandleAITacticalTraversal(SOLDIERTYPE& s)
 {
-	HandleNPCChangesForTacticalTraversal( pSoldier );
+	HandleNPCChangesForTacticalTraversal(&s);
 
-	if ( pSoldier->ubProfile != NO_PROFILE && NPCHasUnusedRecordWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_TRAVERSAL ) )
+	if (s.ubProfile != NO_PROFILE &&
+			NPCHasUnusedRecordWithGivenApproach(s.ubProfile, APPROACH_DONE_TRAVERSAL))
 	{
-		gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL;
+		GetProfile(s.ubProfile).ubMiscFlags3 |= PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL;
 	}
 	else
 	{
-		pSoldier->ubQuoteActionID = 0;
+		s.ubQuoteActionID = 0;
 	}
 
-	#ifdef TESTAICONTROL
-		if (gfTurnBasedAI)
-		{
-			DebugAI( String("Ending turn for %d because traversing out", pSoldier->ubID ) );
-		}
-	#endif
-
-	EndAIGuysTurn( pSoldier );
-	RemoveManAsTarget( pSoldier );
-	if (pSoldier->bTeam == CIV_TEAM && pSoldier->fAIFlags & AI_CHECK_SCHEDULE)
+#ifdef TESTAICONTROL
+	if (gfTurnBasedAI)
 	{
-		MoveSoldierFromMercToAwaySlot( pSoldier );
-		pSoldier->bInSector = FALSE;
+		DebugAI(String("Ending turn for %d because traversing out", s.ubID));
+	}
+#endif
+
+	EndAIGuysTurn(&s);
+	RemoveManAsTarget(&s);
+	if (s.bTeam == CIV_TEAM && s.fAIFlags & AI_CHECK_SCHEDULE)
+	{
+		MoveSoldierFromMercToAwaySlot(&s);
+		s.bInSector = FALSE;
 	}
 	else
 	{
-		ProcessQueenCmdImplicationsOfDeath( pSoldier );
-		TacticalRemoveSoldier(*pSoldier);
+		ProcessQueenCmdImplicationsOfDeath(&s);
+		TacticalRemoveSoldier(s);
 	}
-	CheckForEndOfBattle( TRUE );
+	CheckForEndOfBattle(TRUE);
 }
