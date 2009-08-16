@@ -2500,7 +2500,7 @@ void MoveAllGroupsInCurrentSectorToSector(UINT8 const x, UINT8 const y, UINT8 co
 }
 
 
-static void SaveEnemyGroupStruct(HWFILE, GROUP const*);
+static void SaveEnemyGroupStruct(HWFILE, GROUP const&);
 static void SavePlayerGroupList(HWFILE, GROUP const*);
 static void SaveWayPointList(HWFILE, GROUP const*);
 
@@ -2554,8 +2554,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 		}
 		else
 		{
-			Assert(g->pEnemyGroup);
-			SaveEnemyGroupStruct(f, g);
+			SaveEnemyGroupStruct(f, *g);
 		}
 
 		SaveWayPointList(f, g);
@@ -2566,7 +2565,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 }
 
 
-static void LoadEnemyGroupStructFromSavedGame(HWFILE, GROUP*);
+static void LoadEnemyGroupStructFromSavedGame(HWFILE, GROUP&);
 static void LoadPlayerGroupList(HWFILE, GROUP*);
 static void LoadWayPointList(HWFILE, GROUP*);
 
@@ -2625,7 +2624,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 		}
 		else // Else it's an enemy group
 		{
-			LoadEnemyGroupStructFromSavedGame(f, g);
+			LoadEnemyGroupStructFromSavedGame(f, *g);
 		}
 
 		LoadWayPointList(f, g);
@@ -2697,18 +2696,48 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 
 
 // Saves the enemy group struct to the saved game file
-static void SaveEnemyGroupStruct(HWFILE const f, GROUP const* const g)
+static void SaveEnemyGroupStruct(HWFILE const f, GROUP const& g)
 {
-	FileWrite(f, g->pEnemyGroup, sizeof(ENEMYGROUP));
+	BYTE              data[29];
+	BYTE*             d  = data;
+	ENEMYGROUP const& eg = *g.pEnemyGroup;
+	INJ_U8(  d, eg.ubNumTroops)
+	INJ_U8(  d, eg.ubNumElites)
+	INJ_U8(  d, eg.ubNumAdmins)
+	INJ_SKIP(d, 1)
+	INJ_U8(  d, eg.ubPendingReinforcements)
+	INJ_U8(  d, eg.ubAdminsInBattle)
+	INJ_U8(  d, eg.ubIntention)
+	INJ_U8(  d, eg.ubTroopsInBattle)
+	INJ_U8(  d, eg.ubElitesInBattle)
+	INJ_SKIP(d, 20)
+	Assert(d == endof(data));
+
+	FileWrite(f, data, sizeof(data));
 }
 
 
 // Loads the enemy group struct from the saved game file
-static void LoadEnemyGroupStructFromSavedGame(HWFILE const f, GROUP* const g)
+static void LoadEnemyGroupStructFromSavedGame(HWFILE const f, GROUP& g)
 {
+	BYTE data[29];
+	FileRead(f, data, sizeof(data));
+
 	ENEMYGROUP* const eg = MALLOCZ(ENEMYGROUP);
-	FileRead(f, eg, sizeof(ENEMYGROUP));
-	g->pEnemyGroup = eg;
+	BYTE*             d  = data;
+	EXTR_U8(  d, eg->ubNumTroops)
+	EXTR_U8(  d, eg->ubNumElites)
+	EXTR_U8(  d, eg->ubNumAdmins)
+	EXTR_SKIP(d, 1)
+	EXTR_U8(  d, eg->ubPendingReinforcements)
+	EXTR_U8(  d, eg->ubAdminsInBattle)
+	EXTR_U8(  d, eg->ubIntention)
+	EXTR_U8(  d, eg->ubTroopsInBattle)
+	EXTR_U8(  d, eg->ubElitesInBattle)
+	EXTR_SKIP(d, 20)
+	Assert(d == endof(data));
+
+	g.pEnemyGroup = eg;
 }
 
 

@@ -56,15 +56,12 @@ struct ENEMYGROUP
 	UINT8 ubNumTroops;						//number of regular troops in the group
 	UINT8 ubNumElites;						//number of elite troops in the group
 	UINT8 ubNumAdmins;						//number of administrators in the group
-	UINT8 ubLeaderProfileID;			//could be Mike, maybe the warden... someone new, but likely nobody.
 	UINT8 ubPendingReinforcements;//This group is waiting for reinforcements before attacking or attempting to fortify newly aquired sector.
 	UINT8 ubAdminsInBattle;				//number of administrators in currently in battle.
 	UINT8 ubIntention;						//the type of group this is:  patrol, assault, spies, etc.
 	UINT8 ubTroopsInBattle;				//number of soldiers currently in battle.
 	UINT8 ubElitesInBattle;				//number of elite soldiers currently in battle.
-	INT8  bPadding[20]; // XXX HACK000B
 };
-CASSERT(sizeof(ENEMYGROUP) == 29)
 
 
 //NOTE:  ALL FLAGS ARE CLEARED WHENEVER A GROUP ARRIVES IN A SECTOR, OR ITS WAYPOINTS ARE
