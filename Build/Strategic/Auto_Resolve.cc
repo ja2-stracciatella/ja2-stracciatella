@@ -547,7 +547,7 @@ static void CreateAutoResolveInterface(void);
 static void DetermineTeamLeader(BOOLEAN fFriendlyTeam);
 static void HandleAutoResolveInput(void);
 static void ProcessBattleFrame(void);
-static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood);
+static void RemoveAutoResolveInterface(bool delete_for_good);
 
 
 ScreenID AutoResolveScreenHandle()
@@ -578,7 +578,7 @@ ScreenID AutoResolveScreenHandle()
 	if( gpAR->fExitAutoResolve )
 	{
 		gfEnteringMapScreen = TRUE;
-		RemoveAutoResolveInterface( TRUE );
+		RemoveAutoResolveInterface(true);
 		#ifdef JA2BETAVERSION
 		{
 			UINT32 uiRandoms, uiPreRandoms;
@@ -1746,229 +1746,235 @@ static bool IsAnybodyWounded()
 }
 
 
-static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
+static void RemoveAutoResolveInterface(bool const delete_for_good)
 {
-	INT32 i;
-	UINT8 ubCurrentRank;
-	UINT8 ubCurrentGroupID = 0;
-	BOOLEAN fFirstGroup = TRUE;
+	AUTORESOLVE_STRUCT& ar = *gpAR;
 
-	MSYS_RemoveRegion( &gpAR->AutoResolveRegion );
-	DeleteVideoObject(gpAR->iPanelImages);
-	DeleteVideoObject(gpAR->iFaces);
-	DeleteVideoObject(gpAR->iIndent);
-	DeleteVideoSurface(gpAR->iInterfaceBuffer);
+	MSYS_RemoveRegion(&ar.AutoResolveRegion);
+	DeleteVideoObject(ar.iPanelImages);
+	DeleteVideoObject(ar.iFaces);
+	DeleteVideoObject(ar.iIndent);
+	DeleteVideoSurface(ar.iInterfaceBuffer);
 
-	if( fDeleteForGood )
-	{ //Delete the soldier instances -- done when we are completely finished.
+	if (delete_for_good)
+	{ // Delete the soldier instances -- done when we are completely finished.
 
-		//KM: By request of AM, I have added this bleeding event in cases where autoresolve is
-		//	  complete and there are bleeding mercs remaining.  AM coded the internals
-		//    of the strategic event.
+		/* KM: By request of AM, I have added this bleeding event in cases where
+		 * autoresolve is complete and there are bleeding mercs remaining. AM coded
+		 * the internals of the strategic event. */
 		if (IsAnybodyWounded())
-		{
-			// ARM: only one event is needed regardless of how many are bleeding
+		{ // ARM: only one event is needed regardless of how many are bleeding
 			AddStrategicEvent(EVENT_BANDAGE_BLEEDING_MERCS, GetWorldTotalMin() + 1, 0);
 		}
 
-		// ARM: Update assignment flashing: Doctors may now have new patients or lost them all, etc.
+		/* ARM: Update assignment flashing: Doctors may now have new patients or
+		 * lost them all, etc. */
 		gfReEvaluateEveryonesNothingToDo = TRUE;
 
+		if (ar.pRobotCell) UpdateRobotControllerGivenRobot(ar.pRobotCell->pSoldier);
 
-		if( gpAR->pRobotCell)
+		for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
 		{
-			UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
-		}
-		for( i = 0; i < gpAR->iNumMercFaces; i++ )
-		{
-			if( i >= gpAR->iActualMercFaces )
-				TacticalRemoveSoldier(*gpMercs[i].pSoldier);
-			else
-			{ //Record finishing information for our mercs
-				if( !gpMercs[ i ].pSoldier->bLife )
-				{
-					StrategicHandlePlayerTeamMercDeath( gpMercs[ i ].pSoldier );
-				}
-				else if( gpAR->ubBattleStatus == BATTLE_SURRENDERED || gpAR->ubBattleStatus == BATTLE_CAPTURED )
-				{
-					EnemyCapturesPlayerSoldier( gpMercs[ i ].pSoldier );
-				}
-				else if( gpAR->ubBattleStatus == BATTLE_VICTORY )
-				{ //merc is alive, so group them at the center gridno.
-					gpMercs[ i ].pSoldier->ubStrategicInsertionCode = INSERTION_CODE_CENTER;
-				}
-				gMercProfiles[ gpMercs[ i ].pSoldier->ubProfile ].usBattlesFought++;
-			}
-		}
-		for( i = 0; i < gpAR->iNumMercFaces; i++ )
-		{
-			if( gpAR->ubBattleStatus == BATTLE_VICTORY && gpMercs[ i ].pSoldier->bLife >= OKLIFE )
+			SOLDIERTYPE& s = *gpMercs[i].pSoldier;
+			if (i >= ar.iActualMercFaces)
 			{
-				if( gpMercs[ i ].pSoldier->ubGroupID != ubCurrentGroupID )
-				{
-					ubCurrentGroupID = gpMercs[ i ].pSoldier->ubGroupID;
-
-					// look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
-					// NOTE: Only the first group found will stop for NPCs, it's just too much hassle to stop them all
-					PlayerGroupArrivedSafelyInSector(*GetGroup(gpMercs[i].pSoldier->ubGroupID), fFirstGroup);
-					fFirstGroup = FALSE;
-				}
+				TacticalRemoveSoldier(s);
 			}
-			gpMercs[ i ].pSoldier = NULL;
+			else
+			{ // Record finishing information for our mercs
+				if (s.bLife == 0)
+				{
+					StrategicHandlePlayerTeamMercDeath(&s);
+				}
+				else switch (ar.ubBattleStatus)
+				{
+					case BATTLE_SURRENDERED:
+					case BATTLE_CAPTURED:
+						EnemyCapturesPlayerSoldier(&s);
+						break;
+
+					case BATTLE_VICTORY:
+						// Merc is alive, so group them at the center gridno.
+						s.ubStrategicInsertionCode = INSERTION_CODE_CENTER;
+						break;
+				}
+				++GetProfile(s.ubProfile).usBattlesFought;
+			}
 		}
 
-		// End capture squence....
-		if( gpAR->ubBattleStatus == BATTLE_SURRENDERED || gpAR->ubBattleStatus == BATTLE_CAPTURED )
+		bool  first_group      = true;
+		UINT8 current_group_id = 0;
+		for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
 		{
-			EndCaptureSequence( );
+			SOLDIERTYPE*& slot = gpMercs[i].pSoldier;
+			SOLDIERTYPE&  s    = *slot;
+			slot = 0;
+
+			if (ar.ubBattleStatus != BATTLE_VICTORY) continue;
+			if (s.bLife < OKLIFE)                    continue;
+			if (s.ubGroupID == current_group_id)     continue;
+			current_group_id = s.ubGroupID;
+
+			/* Look for NPCs to stop for, anyone is too tired to keep going, if all OK
+			 * rebuild waypoints & continue movement.
+			 * NOTE: Only the first group found will stop for NPCs, it's just too much
+			 * hassle to stop them all */
+			PlayerGroupArrivedSafelyInSector(*GetGroup(s.ubGroupID), first_group);
+			first_group = false;
 		}
 
+		// End capture squence
+		if (ar.ubBattleStatus == BATTLE_SURRENDERED ||
+				ar.ubBattleStatus == BATTLE_CAPTURED)
+		{
+			EndCaptureSequence();
+		}
 	}
-	//Delete all of the faces.
-	for( i = 0; i < gpAR->iNumMercFaces; i++ )
+
+	// Delete all of the faces.
+	for (INT32 i = 0; i != ar.iNumMercFaces; ++i)
 	{
-		if (gpMercs[i].uiVObjectID)
-		{
-			DeleteVideoObject(gpMercs[i].uiVObjectID);
-			gpMercs[i].uiVObjectID = 0;
-		}
+		SGPVObject*& vo = gpMercs[i].uiVObjectID;
+		if (vo) DeleteVideoObject(vo);
+		vo = 0;
 		MouseRegion*& r = gpMercs[i].pRegion;
 		delete r;
 		r = 0;
 	}
-	//Delete all militia
+
+	UINT8 const x = ar.ubSectorX;
+	UINT8 const y = ar.ubSectorY;
+
+	// Delete all militia
 	gbGreenToElitePromotions = 0;
-	gbGreenToRegPromotions = 0;
-	gbRegToElitePromotions = 0;
-	gbMilitiaPromotions = 0;
-	for( i = 0; i < MAX_ALLOWABLE_MILITIA_PER_SECTOR; i++ )
+	gbGreenToRegPromotions   = 0;
+	gbRegToElitePromotions   = 0;
+	gbMilitiaPromotions      = 0;
+	for (INT32 i = 0; i != MAX_ALLOWABLE_MILITIA_PER_SECTOR; ++i)
 	{
-		if( gpCivs[ i ].pSoldier )
+		if (!gpCivs[i].pSoldier) continue;
+		SOLDIERTYPE& s = *gpCivs[i].pSoldier;
+
+		UINT8 current_rank = 255;
+		switch (s.ubSoldierClass)
 		{
-			ubCurrentRank = 255;
-			switch( gpCivs[ i ].pSoldier->ubSoldierClass )
+			case SOLDIER_CLASS_GREEN_MILITIA: current_rank = GREEN_MILITIA;   break;
+			case SOLDIER_CLASS_REG_MILITIA:   current_rank = REGULAR_MILITIA; break;
+			case SOLDIER_CLASS_ELITE_MILITIA: current_rank = ELITE_MILITIA;   break;
+			default:
+#ifdef JA2BETAVERSION
+				ScreenMsg(FONT_RED, MSG_ERROR, L"Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
+#endif
+				break;
+		}
+		if (delete_for_good)
+		{
+			if (s.bLife < OKLIFE / 2)
 			{
-				case SOLDIER_CLASS_GREEN_MILITIA:		ubCurrentRank = GREEN_MILITIA;		break;
-				case SOLDIER_CLASS_REG_MILITIA:			ubCurrentRank = REGULAR_MILITIA;	break;
-				case SOLDIER_CLASS_ELITE_MILITIA:		ubCurrentRank = ELITE_MILITIA;		break;
-				default:
-					#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_RED, MSG_ERROR, L"Removing autoresolve militia with invalid ubSoldierClass %d.",gpCivs[ i ].pSoldier->ubSoldierClass );
-					#endif
-					break;
-			}
-			if( fDeleteForGood && gpCivs[ i ].pSoldier->bLife < OKLIFE/2 )
-			{
-				AddDeadSoldierToUnLoadedSector( gpAR->ubSectorX, gpAR->ubSectorY, 0, gpCivs[ i ].pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
-				StrategicRemoveMilitiaFromSector( gpAR->ubSectorX, gpAR->ubSectorY, ubCurrentRank, 1 );
-				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_NATIVE_KILLED, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+				AddDeadSoldierToUnLoadedSector(x, y, 0, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+				StrategicRemoveMilitiaFromSector(x, y, current_rank, 1);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, x, y, 0);
 			}
 			else
-			{
-				UINT8 ubPromotions;
-				// this will check for promotions and handle them for you
-				if( fDeleteForGood && ( gpCivs[ i ].pSoldier->ubMilitiaKills > 0) && ( ubCurrentRank < ELITE_MILITIA ) )
+			{ // This will check for promotions
+				UINT8 const promotions = CheckOneMilitiaForPromotion(x, y, current_rank, s.ubMilitiaKills);
+				if (promotions == 1)
 				{
-					ubPromotions = CheckOneMilitiaForPromotion( gpAR->ubSectorX, gpAR->ubSectorY, ubCurrentRank, gpCivs[ i ].pSoldier->ubMilitiaKills );
-					if( ubPromotions )
+					if (current_rank == GREEN_MILITIA)
 					{
-						if( ubPromotions == 2 )
-						{
-							gbGreenToElitePromotions++;
-							gbMilitiaPromotions++;
-						}
-						else if( gpCivs[ i ].pSoldier->ubSoldierClass == SOLDIER_CLASS_GREEN_MILITIA )
-						{
-							gbGreenToRegPromotions++;
-							gbMilitiaPromotions++;
-						}
-						else if( gpCivs[ i ].pSoldier->ubSoldierClass == SOLDIER_CLASS_REG_MILITIA )
-						{
-							gbRegToElitePromotions++;
-							gbMilitiaPromotions++;
-						}
+						++gbGreenToRegPromotions;
+						++gbMilitiaPromotions;
+					}
+					else if (current_rank == REGULAR_MILITIA)
+					{
+						++gbRegToElitePromotions;
+						++gbMilitiaPromotions;
 					}
 				}
+				else if (promotions == 2)
+				{
+					++gbGreenToElitePromotions;
+					++gbMilitiaPromotions;
+				}
 			}
-			TacticalRemoveSoldier(*gpCivs[i].pSoldier);
-			memset( &gpCivs[ i ], 0, sizeof( SOLDIERCELL ) );
 		}
+		TacticalRemoveSoldier(s);
+		memset(&gpCivs[i], 0, sizeof(SOLDIERCELL));
 	}
 
-	//Record and process all enemy deaths
-	for( i = 0; i < 32; i++ )
+	if (delete_for_good)
 	{
-		if( gpEnemies[ i ].pSoldier )
+		// Record and process all enemy deaths
+		for (INT32 i = 0; i != 32; ++i)
 		{
-			if( fDeleteForGood && gpEnemies[ i ].pSoldier->bLife < OKLIFE )
-			{
-				TrackEnemiesKilled( ENEMY_KILLED_IN_AUTO_RESOLVE, gpEnemies[ i ].pSoldier->ubSoldierClass );
-				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ENEMY_KILLED, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
-				ProcessQueenCmdImplicationsOfDeath( gpEnemies[ i ].pSoldier );
-				AddDeadSoldierToUnLoadedSector( gpAR->ubSectorX, gpAR->ubSectorY, 0, gpEnemies[ i ].pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
-			}
+			if (!gpEnemies[i].pSoldier) continue;
+			SOLDIERTYPE& s = *gpEnemies[i].pSoldier;
+			if (s.bLife >= OKLIFE) continue;
+			TrackEnemiesKilled(ENEMY_KILLED_IN_AUTO_RESOLVE, s.ubSoldierClass);
+			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, x, y, 0);
+			ProcessQueenCmdImplicationsOfDeath(&s);
+			AddDeadSoldierToUnLoadedSector(x, y, 0, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 		}
-	}
-	//Eliminate all excess soldiers (as more than 32 can exist in the same battle.
-	//Autoresolve only processes 32, so the excess is slaughtered as the player never
-	//knew they existed.
-	if( fDeleteForGood )
-	{ //Warp the game time accordingly
-		if( gpAR->ubBattleStatus == BATTLE_VICTORY )
-		{	//Get rid of any extra enemies that could be here.  It is possible for the number of total enemies to exceed 32, but
-			//autoresolve can only process 32.  We basically cheat by eliminating the rest of them.
-			EliminateAllEnemies( gpAR->ubSectorX, gpAR->ubSectorY );
+
+		/* Eliminate all excess soldiers (as more than 32 can exist in the same
+		 * battle. Autoresolve only processes 32, so the excess is slaughtered as
+		 * the player never knew they existed. */
+		if (ar.ubBattleStatus == BATTLE_VICTORY)
+		{	/* Get rid of any extra enemies that could be here. It is possible for the
+			 * number of total enemies to exceed 32, but autoresolve can only process
+			 * 32. We basically cheat by eliminating the rest of them. */
+			EliminateAllEnemies(x, y);
 		}
 		else
-		{ //The enemy won, so repoll movement.
-			ResetMovementForEnemyGroupsInLocation( gpAR->ubSectorX, gpAR->ubSectorY );
-		}
-	}
-	//Physically delete the soldiers now.
-	for( i = 0; i < 32; i++ )
-	{
-		if( gpEnemies[ i ].pSoldier )
-		{
-			TacticalRemoveSoldier(*gpEnemies[i].pSoldier);
-			memset( &gpEnemies[ i ], 0, sizeof( SOLDIERCELL ) );
+		{ // The enemy won, so repoll movement.
+			ResetMovementForEnemyGroupsInLocation(x, y);
 		}
 	}
 
-	for( i = 0; i < NUM_AR_BUTTONS; i++ )
+	// Physically delete the soldiers now.
+	for (INT32 i = 0; i != 32; ++i)
 	{
-		UnloadButtonImage( gpAR->iButtonImage[ i ] );
-		RemoveButton( gpAR->iButton[ i ] );
+		SOLDIERCELL& slot = gpEnemies[i];
+		if (!slot.pSoldier) continue;
+		TacticalRemoveSoldier(*slot.pSoldier);
+		memset(&slot, 0, sizeof(slot));
 	}
-	if( fDeleteForGood )
+
+	for (INT32 i = 0; i != NUM_AR_BUTTONS; ++i)
+	{
+		UnloadButtonImage(ar.iButtonImage[i]);
+		RemoveButton(ar.iButton[i]);
+	}
+
+	if (delete_for_good)
 	{ //Warp the game time accordingly
 
-		WarpGameTime( gpAR->uiTotalElapsedBattleTimeInMilliseconds/1000, WARPTIME_NO_PROCESSING_OF_EVENTS );
+		WarpGameTime(ar.uiTotalElapsedBattleTimeInMilliseconds / 1000, WARPTIME_NO_PROCESSING_OF_EVENTS);
 
-		//Deallocate all of the global memory.
-		//Everything internal to them, should have already been deleted.
-		MemFree( gpAR );
-		gpAR = NULL;
+		// Deallocate all of the global memory.
+		// Everything internal to them, should have already been deleted.
+		MemFree(gpAR);
+		gpAR = 0;
 
-		MemFree( gpMercs );
-		gpMercs = NULL;
+		MemFree(gpMercs);
+		gpMercs = 0;
 
-		MemFree( gpCivs );
-		gpCivs = NULL;
+		MemFree(gpCivs);
+		gpCivs = 0;
 
-		MemFree( gpEnemies );
-		gpEnemies = NULL;
-
+		MemFree(gpEnemies);
+		gpEnemies = 0;
 	}
 
 	//KM : Aug 09, 1999 Patch fix -- Would break future dialog while time compressing
 	gTacticalStatus.ubCurrentTeam = gbPlayerNum;
 
-	gpBattleGroup = NULL;
+	gpBattleGroup = 0;
 
-	if( gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
+	if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE)
 	{
 		gubNumCreaturesAttackingTown = 0;
-		gubSectorIDOfCreatureAttack = 0;
+		gubSectorIDOfCreatureAttack  = 0;
 	}
 }
 
@@ -2286,7 +2292,7 @@ static void ResetAutoResolveInterface(void)
 {
 	guiPreRandomIndex = gpAR->uiPreRandomIndex;
 
-	RemoveAutoResolveInterface( FALSE );
+	RemoveAutoResolveInterface(false);
 
 	gpAR->ubBattleStatus = BATTLE_IN_PROGRESS;
 
