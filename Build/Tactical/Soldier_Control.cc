@@ -5341,7 +5341,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 			{
 				if ( pSoldier->bLife == 0 && !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 				{
-					StrategicHandlePlayerTeamMercDeath( pSoldier );
+					StrategicHandlePlayerTeamMercDeath(*pSoldier);
 
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
       		pSoldier->fDeadSoundPlayed = TRUE;

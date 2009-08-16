@@ -41,100 +41,82 @@
 #define		NUM_DAYS_TILL_UNPAID_RPC_QUITS				3
 
 
-void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
+void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 {
-	INT16 sSectorX, sSectorY;
+	UINT32 const now = GetWorldTotalMin();
 
-	//if the soldier HAS a profile
-	if( pSoldier->ubProfile != NO_PROFILE )
-	{
-		//add to the history log the fact that the merc died and the circumstances
+	if (s.ubProfile != NO_PROFILE)
+	{ // Add to the history log the fact that the merc died and the circumstances
 
-		// CJC Nov 11, 2002
-		// Use the soldier's sector location unless impossible
-		if (pSoldier->sSectorX != 0 && pSoldier->sSectorY != 0)
+		// CJC Nov 11, 2002: Use the soldier's sector location unless impossible
+		INT16 x = s.sSectorX;
+		INT16 y = s.sSectorY;
+		if (s.sSectorX == 0 || s.sSectorY == 0)
 		{
-			sSectorX = pSoldier->sSectorX;
-			sSectorY = pSoldier->sSectorY;
-		}
-		else
-		{
-			sSectorX = gWorldSectorX;
-			sSectorY = gWorldSectorY;
+			x = gWorldSectorX;
+			y = gWorldSectorY;
 		}
 
-		const SOLDIERTYPE* const killer = pSoldier->attacker;
-		const UINT8              code   = (killer && killer->bTeam == OUR_TEAM ? HISTORY_MERC_KILLED_CHARACTER : HISTORY_MERC_KILLED);
-		AddHistoryToPlayersLog(code, pSoldier->ubProfile, GetWorldTotalMin(), sSectorX, sSectorY);
+		SOLDIERTYPE const* const killer = s.attacker;
+		UINT8              const code   = killer && killer->bTeam == OUR_TEAM ? HISTORY_MERC_KILLED_CHARACTER : HISTORY_MERC_KILLED;
+		AddHistoryToPlayersLog(code, s.ubProfile, now, x, y);
 	}
 
-	if ( guiCurrentScreen != GAME_SCREEN )
+	if (guiCurrentScreen != GAME_SCREEN)
 	{
-		ScreenMsg(FONT_RED, MSG_INTERFACE, pMercDeadString, pSoldier->name);
+		ScreenMsg(FONT_RED, MSG_INTERFACE, pMercDeadString, s.name);
 	}
 
-	// robot and EPCs don't count against death rate - the mercs back home don't particularly give a damn about locals & machines!
-	if ( !AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) )
-	{
-		// keep track of how many mercs have died under player's command (for death rate, can't wait until removed from team)
-		gStrategicStatus.ubMercDeaths++;
+	/* Robot and EPCs don't count against death rate - the mercs back home don't
+	 * particularly give a damn about locals & machines! */
+	if (!AM_AN_EPC(&s) && !AM_A_ROBOT(&s))
+	{ /* Keep track of how many mercs have died under player's command (for death
+		 * rate, can't wait until removed from team) */
+		++gStrategicStatus.ubMercDeaths;
 	}
 
+	s.uiStatusFlags |= SOLDIER_DEAD;
+	s.bBreathMax     = 0;
+	s.bBreath        = 0;
+	s.fMercAsleep    = FALSE; // Not asleep, dead
 
-	pSoldier->uiStatusFlags |= SOLDIER_DEAD;
+	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+	p.bMercStatus = MERC_IS_DEAD;
 
-	// Set breath to 0!
-	pSoldier->bBreathMax = pSoldier->bBreath = 0;
-
-	// not asleep, DEAD!
-	pSoldier->fMercAsleep = FALSE;
-
-
-	//if the merc had life insurance
-	if( pSoldier->usLifeInsurance )
+	if (s.usLifeInsurance)
 	{
-		// if he didn't die during auto-resolve
-		if( guiCurrentScreen != AUTORESOLVE_SCREEN )
-		{
-			// check whether this was obviously a suspicious death
-			// if killed within an hour of being insured
-			if ( pSoldier->uiStartTimeOfInsuranceContract <= GetWorldTotalMin() && GetWorldTotalMin() - pSoldier->uiStartTimeOfInsuranceContract < 60 )
-			{
-				gMercProfiles[ pSoldier->ubProfile ].ubSuspiciousDeath = VERY_SUSPICIOUS_DEATH;
+		if (guiCurrentScreen != AUTORESOLVE_SCREEN)
+		{ // Check whether this was obviously a suspicious death
+			if (now >= s.uiStartTimeOfInsuranceContract && now - s.uiStartTimeOfInsuranceContract < 60)
+			{ // Killed within an hour of being insured
+				p.ubSuspiciousDeath = VERY_SUSPICIOUS_DEATH;
 			}
-			// if killed by someone on our team, or while there weren't any opponents around
-			else if (pSoldier->attacker->bTeam == OUR_TEAM || !gTacticalStatus.fEnemyInSector)
-			{
-				// cause insurance company to suspect fraud and investigate this claim
-				gMercProfiles[ pSoldier->ubProfile ].ubSuspiciousDeath = SUSPICIOUS_DEATH;
+			else if (s.attacker->bTeam == OUR_TEAM || !gTacticalStatus.fEnemyInSector)
+			{ /* Killed by someone on our team or while there weren't any opponents
+				 * around, cause insurance company to suspect fraud and investigate this
+				 * claim */
+				p.ubSuspiciousDeath = SUSPICIOUS_DEATH;
 			}
 		}
 
-		AddLifeInsurancePayout( pSoldier );
+		AddLifeInsurancePayout(&s);
 	}
 
-
-	// robot and EPCs don't penalize morale - merc don't care about fighting machines and the lives of locals much
-	if ( !AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) )
-	{
-		// Change morale of others based on this
-		HandleMoraleEvent( pSoldier, MORALE_TEAMMATE_DIED, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+	/* Robot and EPCs don't penalize morale - merc don't care about fighting
+	 * machines and the lives of locals much */
+	if (!AM_AN_EPC(&s) && !AM_A_ROBOT(&s))
+	{ // Change morale of others based on this
+		HandleMoraleEvent(&s, MORALE_TEAMMATE_DIED, s.sSectorX, s.sSectorY, s.bSectorZ);
 	}
 
-	//if its a MERC merc, record the time of his death
-	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC )
-	{
-		pSoldier->iEndofContractTime = GetWorldTotalMin();
-
-		//set is so Speck can say that a merc is dead
+	if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+	{ // It's a MERC merc, record the time of his death
+		s.iEndofContractTime = now;
+		// Set is so Speck can say that a merc is dead
 		LaptopSaveInfo.ubSpeckCanSayPlayersLostQuote = 1;
 	}
 
-	//Set the fact that the merc is DEAD!!
-	gMercProfiles[ pSoldier->ubProfile ].bMercStatus = MERC_IS_DEAD;
-
-	// handle strategic level death
-	HandleStrategicDeath(*pSoldier);
+	HandleStrategicDeath(s);
 }
 
 

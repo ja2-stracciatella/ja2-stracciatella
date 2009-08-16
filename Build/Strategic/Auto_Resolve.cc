@@ -1784,7 +1784,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			{ // Record finishing information for our mercs
 				if (s.bLife == 0)
 				{
-					StrategicHandlePlayerTeamMercDeath(&s);
+					StrategicHandlePlayerTeamMercDeath(s);
 				}
 				else switch (ar.ubBattleStatus)
 				{

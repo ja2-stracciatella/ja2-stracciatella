@@ -2,7 +2,7 @@
 #define _STRATEGIC_MERC_HANDLER_H_
 
 
-void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier );
+void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE&);
 void MercDailyUpdate(void);
 void MercsContractIsFinished(SOLDIERTYPE* s);
 void RPCWhineAboutNoPay(SOLDIERTYPE&);

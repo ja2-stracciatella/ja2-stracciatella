@@ -2481,7 +2481,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	}
 
 	//Make a call to handle the strategic things, such as Life Insurance, record it in history file etc.
-	StrategicHandlePlayerTeamMercDeath(pSoldier);
+	StrategicHandlePlayerTeamMercDeath(*pSoldier);
 
 	CheckForEndOfBattle(FALSE);
 
