@@ -28,7 +28,7 @@ ENUM_BITSET(SoldierFindFlags)
 
 
 SOLDIERTYPE* FindSoldierFromMouse(void);
-SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags);
+SOLDIERTYPE* FindSoldier(GridNo, UINT32 flags);
 
 bool IsOwnedMerc(SOLDIERTYPE const&);
 SoldierFindFlags GetSoldierFindFlags(SOLDIERTYPE const&);
