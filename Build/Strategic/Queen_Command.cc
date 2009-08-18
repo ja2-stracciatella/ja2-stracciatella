@@ -1148,8 +1148,8 @@ static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_c
 	{
 		UINT32       const roll = Random(n_total--);
 		SoldierClass const sc   =
-			roll < n_elites           ? --n_elites, SOLDIER_CLASS_ELITE :
-			roll < n_elites + n_total ? --n_total,  SOLDIER_CLASS_ARMY  :
+			roll < n_elites            ? --n_elites, SOLDIER_CLASS_ELITE :
+			roll < n_elites + n_troops ? --n_troops, SOLDIER_CLASS_ARMY  :
 			(--n_admins, SOLDIER_CLASS_ADMINISTRATOR);
 
 		SOLDIERTYPE& s = *TacticalCreateEnemySoldier(sc);
@@ -1167,6 +1167,9 @@ static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_c
 		}
 		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, 0);
 	}
+	Assert(n_admins == 0);
+	Assert(n_troops == 0);
+	Assert(n_elites == 0);
 }
 
 
