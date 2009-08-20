@@ -935,7 +935,7 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 
 // Palette functions for soldiers
-void  CreateSoldierPalettes(SOLDIERTYPE*);
+void  CreateSoldierPalettes(SOLDIERTYPE&);
 UINT8 GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
 void  SetPaletteReplacement(SGPPaletteEntry*, PaletteRepID);
 void  LoadPaletteData(void);

@@ -2407,8 +2407,7 @@ void SlideToLocation(const INT16 sDestGridNo)
 
 void RebuildAllSoldierShadeTables(void)
 {
-	// Loop through all mercs and make go
-	FOR_ALL_SOLDIERS(s) CreateSoldierPalettes(s);
+	FOR_ALL_SOLDIERS(i) CreateSoldierPalettes(*i);
 }
 
 

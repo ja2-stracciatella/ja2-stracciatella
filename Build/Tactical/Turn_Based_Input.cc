@@ -2663,7 +2663,7 @@ static void ChangeSoldiersBodyType(UINT8 ubBodyType, BOOLEAN fCreateNewPalette)
 	EVENT_InitNewSoldierAnim(sel, STANDING, 0 , TRUE);
 	if (fCreateNewPalette)
 	{
-		CreateSoldierPalettes(sel);
+		CreateSoldierPalettes(*sel);
 
 		switch (ubBodyType)
 		{

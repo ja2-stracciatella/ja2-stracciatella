@@ -285,7 +285,7 @@ static void PalEditRenderHook(void)
 }
 
 
-static void CyclePaletteReplacement(SOLDIERTYPE* const s, PaletteRepID pal)
+static void CyclePaletteReplacement(SOLDIERTYPE& s, PaletteRepID pal)
 {
 	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(pal);
 	const UINT8 ubType = gpPalRep[ubPaletteRep].ubType;
@@ -319,10 +319,10 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
   {
   	case SDLK_ESCAPE: gfExitPalEditScreen = TRUE; break;
 
-  	case 'h': CyclePaletteReplacement(sel, sel->HeadPal);  break;
-  	case 'v': CyclePaletteReplacement(sel, sel->VestPal);  break;
-  	case 'p': CyclePaletteReplacement(sel, sel->PantsPal); break;
-  	case 's': CyclePaletteReplacement(sel, sel->SkinPal);  break;
+  	case 'h': CyclePaletteReplacement(*sel, sel->HeadPal);  break;
+  	case 'v': CyclePaletteReplacement(*sel, sel->VestPal);  break;
+  	case 'p': CyclePaletteReplacement(*sel, sel->PantsPal); break;
+  	case 's': CyclePaletteReplacement(*sel, sel->SkinPal);  break;
 
   	default: return FALSE;
   }

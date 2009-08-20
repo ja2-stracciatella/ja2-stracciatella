@@ -1528,7 +1528,7 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 		TacticalCopySoldierFromProfile(*s, *spp);
 		UpdateStaticDetailedPlacementWithProfileInformation( spp, spp->ubProfile );
 		SetSoldierAnimationSurface( s, s->usAnimState );
-		CreateSoldierPalettes( s );
+		CreateSoldierPalettes(*s);
 		return;
 	}
 
@@ -1679,8 +1679,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 	SetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
 
 	// Re-Create palettes
-	CreateSoldierPalettes( pSoldier );
-
+	CreateSoldierPalettes(*pSoldier);
 }
 
 #define CENTRAL_GRIDNO 13202

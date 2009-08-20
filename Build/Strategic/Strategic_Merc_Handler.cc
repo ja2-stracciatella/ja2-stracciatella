@@ -742,7 +742,7 @@ void HourlyCamouflageUpdate()
 			if (s.bCamo <= 2)
 			{
 				s.bCamo = 0;
-				if (s.bInSector) CreateSoldierPalettes(&s);
+				if (s.bInSector) CreateSoldierPalettes(s);
 
 				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WORN_OFF], s.name);
 				DirtyMercPanelInterface(&s, DIRTYLEVEL2);

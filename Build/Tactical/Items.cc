@@ -4332,7 +4332,7 @@ void WaterDamage(SOLDIERTYPE& s)
 		if (s.bCamo == 0)
 		{
 			// Reload palettes....
-			if (s.bInSector) CreateSoldierPalettes(&s);
+			if (s.bInSector) CreateSoldierPalettes(s);
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WASHED_OFF], s.name);
 		}
 	}
@@ -4400,7 +4400,7 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 	// Reload palettes....
 	if ( pSoldier->bInSector )
 	{
-		CreateSoldierPalettes( pSoldier );
+		CreateSoldierPalettes(*pSoldier);
 	}
 
 	return( TRUE );

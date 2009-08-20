@@ -272,7 +272,7 @@ void ProcessMercEditing(void)
 	if (iEditMercMode != EDIT_MERC_NEXT_COLOR) return;
 
 	// Handle changes to the merc colors
-	SOLDIERTYPE* const s = g_selected_merc;
+	SOLDIERTYPE& s = *g_selected_merc;
 	char* soldier_pal;
 	char* placement_pal;
 	UINT8 ubType;
@@ -281,28 +281,28 @@ void ProcessMercEditing(void)
 		case 0:
 		case 1:
 			ubType        = EDIT_COLOR_HEAD;
-			soldier_pal   = s->HeadPal;
+			soldier_pal   = s.HeadPal;
 			placement_pal = gpSelected->pDetailedPlacement->HeadPal;
 			break;
 
 		case 2:
 		case 3:
 			ubType        = EDIT_COLOR_SKIN;
-			soldier_pal   = s->SkinPal;
+			soldier_pal   = s.SkinPal;
 			placement_pal = gpSelected->pDetailedPlacement->SkinPal;
 			break;
 
 		case 4:
 		case 5:
 			ubType        = EDIT_COLOR_VEST;
-			soldier_pal   = s->VestPal;
+			soldier_pal   = s.VestPal;
 			placement_pal = gpSelected->pDetailedPlacement->VestPal;
 			break;
 
 		case 6:
 		case 7:
 			ubType        = EDIT_COLOR_PANTS;
-			soldier_pal   = s->PantsPal;
+			soldier_pal   = s.PantsPal;
 			placement_pal = gpSelected->pDetailedPlacement->PantsPal;
 			break;
 
@@ -1485,7 +1485,7 @@ static void ChangeBodyType(INT8 bOffset)  //+1 or -1 only
 		gbCurrCreature = (INT8)iIndex;
 		AssignCreatureInventory( gpSelected->pSoldier );
 	}
-	CreateSoldierPalettes( gpSelected->pSoldier );
+	CreateSoldierPalettes(*gpSelected->pSoldier);
 }
 
 
@@ -2457,7 +2457,7 @@ void SetEnemyColorCode( UINT8 ubColorCode )
 		default:
 			return;
 	}
-	CreateSoldierPalettes( gpSelected->pSoldier );
+	CreateSoldierPalettes(*gpSelected->pSoldier);
 }
 
 void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )

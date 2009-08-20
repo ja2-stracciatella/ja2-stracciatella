@@ -642,7 +642,7 @@ try
 		EVENT_InitNewSoldierAnim(&s, ani_state, ani_code, TRUE);
 	}
 
-	CreateSoldierPalettes(&s);
+	CreateSoldierPalettes(s);
 }
 catch (...)
 {
@@ -1742,7 +1742,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 	// If we are certain animations, reload palette
 	if ( usNewState == VEHICLE_DIE || usNewState == CHARIOTS_OF_FIRE || usNewState == BODYEXPLODING )
 	{
-		CreateSoldierPalettes( pSoldier );
+		CreateSoldierPalettes(*pSoldier);
 	}
 
 	// ATE: if the old animation was a movement, and new is not, play sound...
@@ -4604,10 +4604,10 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale);
 
 
-void CreateSoldierPalettes(SOLDIERTYPE* const s)
+void CreateSoldierPalettes(SOLDIERTYPE& s)
 {
 	// --- TAKE FROM CURRENT ANIMATION HVOBJECT!
-	UINT16 const anim_surface = GetSoldierAnimationSurface(s);
+	UINT16 const anim_surface = GetSoldierAnimationSurface(&s);
 	if (anim_surface == INVALID_ANIMATION_SURFACE)
 	{
 		throw std::runtime_error("Palette creation failed, soldier has invalid animation");
@@ -4617,21 +4617,21 @@ void CreateSoldierPalettes(SOLDIERTYPE* const s)
 	memset(tmp_pal, 0, sizeof(*tmp_pal) * 256);
 
 	SGPPaletteEntry const*       pal;
-	char            const* const substitution = GetBodyTypePaletteSubstitution(s, s->ubBodyType);
+	char            const* const substitution = GetBodyTypePaletteSubstitution(&s, s.ubBodyType);
 	if (!substitution)
 	{
 		// ATE: here we want to use the breath cycle for the palette.....
-		UINT16 const palette_anim_surface = LoadSoldierAnimationSurface(*s, STANDING);
+		UINT16 const palette_anim_surface = LoadSoldierAnimationSurface(s, STANDING);
 		if (palette_anim_surface != INVALID_ANIMATION_SURFACE)
 		{
 			// Use palette from HVOBJECT, then use substitution for pants, etc
 			memcpy(tmp_pal, gAnimSurfaceDatabase[palette_anim_surface].hVideoObject->Palette(), sizeof(*tmp_pal) * 256);
 
 			// Substitute based on head, etc
-			SetPaletteReplacement(tmp_pal, s->HeadPal);
-			SetPaletteReplacement(tmp_pal, s->VestPal);
-			SetPaletteReplacement(tmp_pal, s->PantsPal);
-			SetPaletteReplacement(tmp_pal, s->SkinPal);
+			SetPaletteReplacement(tmp_pal, s.HeadPal);
+			SetPaletteReplacement(tmp_pal, s.VestPal);
+			SetPaletteReplacement(tmp_pal, s.PantsPal);
+			SetPaletteReplacement(tmp_pal, s.SkinPal);
 		}
 		pal = tmp_pal;
 	}
@@ -4648,65 +4648,65 @@ void CreateSoldierPalettes(SOLDIERTYPE* const s)
 
 	for (INT32 i = 0; i < NUM_SOLDIER_SHADES; ++i)
 	{
-		if (s->pShades[i] != NULL)
+		if (s.pShades[i])
 		{
-			MemFree(s->pShades[i]);
-			s->pShades[i] = NULL;
+			MemFree(s.pShades[i]);
+			s.pShades[i] = 0;
 		}
 	}
 
-	if (s->effect_shade)
+	if (s.effect_shade)
 	{
-		MemFree(s->effect_shade);
-		s->effect_shade = 0;
+		MemFree(s.effect_shade);
+		s.effect_shade = 0;
 	}
 
 	for (INT32 i = 0; i < 20; ++i)
 	{
-		if (s->pGlowShades[i] != NULL)
+		if (s.pGlowShades[i])
 		{
-			MemFree(s->pGlowShades[i]);
-			s->pGlowShades[i] = NULL;
+			MemFree(s.pGlowShades[i]);
+			s.pGlowShades[i] = 0;
 		}
 	}
 
 
-	CreateBiasedShadedPalettes(s->pShades, pal);
+	CreateBiasedShadedPalettes(s.pShades, pal);
 
-	s->effect_shade = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
+	s.effect_shade = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
 
 	// Build shades for glowing visible bad guy
 
 	// First do visible guy
-	s->pGlowShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	s.pGlowShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 	for (INT32 i = 1; i < 10; ++i)
 	{
-		s->pGlowShades[i] = CreateEnemyGlow16BPPPalette(pal, gRedGlowR[i], 0);
+		s.pGlowShades[i] = CreateEnemyGlow16BPPPalette(pal, gRedGlowR[i], 0);
 	}
 
 	// Now for gray guy...
-	s->pGlowShades[10] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
+	s.pGlowShades[10] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
 	for (INT32 i = 11; i < 19; ++i)
 	{
-		s->pGlowShades[i] = CreateEnemyGreyGlow16BPPPalette(pal, gRedGlowR[i], 0);
+		s.pGlowShades[i] = CreateEnemyGreyGlow16BPPPalette(pal, gRedGlowR[i], 0);
 	}
-	s->pGlowShades[19] = CreateEnemyGreyGlow16BPPPalette(pal, gRedGlowR[18], 0);
+	s.pGlowShades[19] = CreateEnemyGreyGlow16BPPPalette(pal, gRedGlowR[18], 0);
 
 	// ATE: OK, piggyback on the shades we are not using for 2 colored lighting....
 	// ORANGE, VISIBLE GUY
-	s->pShades[20] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	s.pShades[20] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 	for (INT32 i = 21; i < 30; ++i)
 	{
-		s->pShades[i] = CreateEnemyGlow16BPPPalette(pal, gOrangeGlowR[i - 20], gOrangeGlowG[i - 20]);
+		s.pShades[i] = CreateEnemyGlow16BPPPalette(pal, gOrangeGlowR[i - 20], gOrangeGlowG[i - 20]);
 	}
 
 	// ORANGE, GREY GUY
-	s->pShades[30] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
+	s.pShades[30] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
 	for (INT32 i = 31; i < 39; ++i)
 	{
-		s->pShades[i] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[i - 20], gOrangeGlowG[i - 20]);
+		s.pShades[i] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[i - 20], gOrangeGlowG[i - 20]);
 	}
-	s->pShades[39] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[18], gOrangeGlowG[18]);
+	s.pShades[39] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[18], gOrangeGlowG[18]);
 }
 
 
