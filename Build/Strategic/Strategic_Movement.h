@@ -253,7 +253,7 @@ void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY );
 BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
 
 
-BOOLEAN VehicleHasFuel(const SOLDIERTYPE* s);
+bool VehicleHasFuel(SOLDIERTYPE const&);
 
 
 void RandomizePatrolGroupLocation( GROUP *pGroup );

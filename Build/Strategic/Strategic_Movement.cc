@@ -3207,14 +3207,10 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 }
 
 
-BOOLEAN VehicleHasFuel(const SOLDIERTYPE* const pSoldier)
+bool VehicleHasFuel(SOLDIERTYPE const& s)
 {
-	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
-	if( pSoldier->sBreathRed )
-	{
-		return TRUE;
-	}
-	return FALSE;
+	Assert(s.uiStatusFlags & SOLDIER_VEHICLE);
+	return s.sBreathRed != 0;
 }
 
 
