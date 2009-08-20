@@ -1688,56 +1688,36 @@ plain_sector:;
 }
 
 
-static UINT8 SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirection, INT16 sAdditionalData)
+static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 const tactical_direction, INT16 const additional_data)
 {
-	UINT8				ubDirection;
-	EXITGRID		ExitGrid;
-
-
 	// Set insertion code
-	switch( ubTacticalDirection )
+	switch (tactical_direction)
 	{
-		// OK, we are using an exit grid - set insertion values...
-
 		case 255:
-			if ( !GetExitGrid( sAdditionalData, &ExitGrid ) )
+			// We are using an exit grid, set insertion values
+			EXITGRID ExitGrid;
+			if (!GetExitGrid(additional_data, &ExitGrid))
 			{
 				AssertMsg(0, "No valid Exit grid can be found when one was expected: SetInsertionDataFromAdjacentMoveDirection.");
 			}
-			ubDirection = 255;
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-			pSoldier->usStrategicInsertionData = ExitGrid.usGridNo;
-			pSoldier->bUseExitGridForReentryDirection = TRUE;
+			s.ubStrategicInsertionCode        = INSERTION_CODE_GRIDNO;
+			s.usStrategicInsertionData        = ExitGrid.usGridNo;
+			s.bUseExitGridForReentryDirection = TRUE;
 			break;
 
-		case NORTH:
-			ubDirection = NORTH_STRATEGIC_MOVE;
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_SOUTH;
+		case NORTH: s.ubStrategicInsertionCode = INSERTION_CODE_SOUTH; break;
+		case SOUTH: s.ubStrategicInsertionCode = INSERTION_CODE_NORTH; break;
+		case EAST:  s.ubStrategicInsertionCode = INSERTION_CODE_WEST;  break;
+		case WEST:  s.ubStrategicInsertionCode = INSERTION_CODE_EAST;  break;
+
+		default: // Wrong direction given
+#ifdef JA2BETAVERSION
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction));
+			ScreenMsg(FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
+#endif
+			s.ubStrategicInsertionCode = INSERTION_CODE_WEST;
 			break;
-		case SOUTH:
-			ubDirection = SOUTH_STRATEGIC_MOVE;
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-			break;
-		case EAST:
-			ubDirection = EAST_STRATEGIC_MOVE;
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_WEST;
-			break;
-		case WEST:
-			ubDirection = WEST_STRATEGIC_MOVE;
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_EAST;
-			break;
-		default:
-			// Wrong direction given!
-			#ifdef JA2BETAVERSION
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection ) );
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection );
-			#endif
-			ubDirection = EAST_STRATEGIC_MOVE;
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_WEST;
 	}
-
-	return( ubDirection );
-
 }
 
 
@@ -1812,7 +1792,7 @@ static UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection(UINT8 ubTactical
 		default:
 			// Wrong direction given!
 			#ifdef JA2BETAVERSION
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection ) );
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection ) );
 				ScreenMsg( FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection );
 			#endif
 			ubDirection = EAST_STRATEGIC_MOVE;
@@ -2082,7 +2062,7 @@ void AllMercsWalkedToExitGrid()
 		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
 			SOLDIERTYPE& s = *pPlayer->pSoldier;
-			SetInsertionDataFromAdjacentMoveDirection(&s, gubTacticalDirection, gsAdditionalData);
+			SetInsertionDataFromAdjacentMoveDirection(s, gubTacticalDirection, gsAdditionalData);
 			RemoveSoldierFromTacticalSector(s);
 		}
 
@@ -2125,7 +2105,7 @@ void AllMercsWalkedToExitGrid()
 		Assert( gpAdjacentGroup );
 		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
-			SetInsertionDataFromAdjacentMoveDirection( pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData );
+			SetInsertionDataFromAdjacentMoveDirection(*pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData);
 		}
 		SetGroupSectorValue(gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, *gpAdjacentGroup);
 
@@ -2154,7 +2134,7 @@ static void SetupTacticalTraversalInformation(void)
 	{
 		SOLDIERTYPE& s = *pPlayer->pSoldier;
 
-		SetInsertionDataFromAdjacentMoveDirection(&s, gubTacticalDirection, gsAdditionalData );
+		SetInsertionDataFromAdjacentMoveDirection(s, gubTacticalDirection, gsAdditionalData);
 
 		// pass flag that this is a tactical traversal, the path built MUST go in the traversed direction even if longer!
 		PlotPathForCharacter(s, gsAdjacentSectorX, gsAdjacentSectorY, true);
