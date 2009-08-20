@@ -2445,11 +2445,10 @@ void SetEnemyColorCode( UINT8 ubColorCode )
 			ClickEditorButton( MERCS_ELITE_CODE );
 			break;
 		case SOLDIER_CLASS_MINER:
-			//will probably never get called
-			gpSelected->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_ELITE;
+			gpSelected->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_MINER;
 			gubSoldierClass = SOLDIER_CLASS_MINER;
 			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->ubSoldierClass = SOLDIER_CLASS_ELITE;
+				gpSelected->pDetailedPlacement->ubSoldierClass = SOLDIER_CLASS_MINER;
 			SET_PALETTEREP_ID( gpSelected->pSoldier->VestPal, "greyVEST"  );
 			SET_PALETTEREP_ID( gpSelected->pSoldier->PantsPal, "BEIGEPANTS"   );
 			break;
