@@ -1215,7 +1215,7 @@ static void AutoBandageMercs(void)
 				continue;
 			}
 			UINT32 const points_used = VirtualSoldierDressWound(&s, &s, kit, kit_pts, kit_pts);
-			UseKitPoints(kit, points_used, &s);
+			UseKitPoints(*kit, points_used, s);
 			curr_points_used += points_used;
 			if (++cnt > 50) break;
 		}
@@ -1246,7 +1246,7 @@ static void AutoBandageMercs(void)
 				continue;
 			}
 			UINT32 const points_used = VirtualSoldierDressWound(best, &s, kit, kit_pts, kit_pts);
-			UseKitPoints(kit, points_used, &s);
+			UseKitPoints(*kit, points_used, s);
 			parallel_points_used += points_used;
 		}
 	}

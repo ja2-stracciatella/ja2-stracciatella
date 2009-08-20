@@ -151,7 +151,7 @@ void EndDeadlockMsg(void);
 #	define EndDeadlockMsg() ((void)0)
 #endif
 
-void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel );
+void DirtyMercPanelInterface(SOLDIERTYPE const*, UINT8 ubDirtyLevel);
 
 
 void EndUIMessage(void);

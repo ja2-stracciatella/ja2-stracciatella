@@ -3984,7 +3984,7 @@ void HandlePlayerServices(SOLDIERTYPE& s)
 		done = TRUE;
 	}
 
-	UseKitPoints(&in_hand, points_used, &s);
+	UseKitPoints(in_hand, points_used, s);
 
 	// Whether or not recipient is all bandaged, check if we've used them up
 	if (TotalPoints(&in_hand) > 0) return;

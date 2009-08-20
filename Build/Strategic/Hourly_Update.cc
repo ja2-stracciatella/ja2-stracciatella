@@ -261,7 +261,7 @@ static void HourlyLarryUpdate(void)
 					SwapLarrysProfiles( pSoldier );
 					if ( bSlot != NO_SLOT )
 					{
-						UseKitPoints( &(pSoldier->inv[ bSlot ]), LarryItems[ bLarryItemLoop ][ 2 ], pSoldier );
+						UseKitPoints(pSoldier->inv[bSlot], LarryItems[bLarryItemLoop][2], *pSoldier);
 					}
 				}
 			}
@@ -291,7 +291,7 @@ static void HourlyLarryUpdate(void)
 				if ( bSlot != NO_SLOT )
 				{
 					// ahhhh!!!
-					UseKitPoints( &(pSoldier->inv[ bSlot ]), LarryItems[ bLarryItemLoop ][ 2 ], pSoldier );
+					UseKitPoints(pSoldier->inv[bSlot], LarryItems[bLarryItemLoop][2], *pSoldier);
 				}
 			}
 		}

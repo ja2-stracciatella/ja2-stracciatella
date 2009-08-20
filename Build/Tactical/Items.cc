@@ -3343,41 +3343,33 @@ UINT16 TotalPoints(const OBJECTTYPE* const pObj)
 	return( usPoints );
 }
 
-UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier )
-{
-	// start consuming from the last kit in, so we end up with fewer fuller kits rather than
-	// lots of half-empty ones.
-	INT8		bLoop;
-	UINT16 usOriginalPoints = usPoints;
 
-	for (bLoop = pObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop--)
+UINT16 UseKitPoints(OBJECTTYPE& o, UINT16 const original_points, SOLDIERTYPE const& s)
+{ /* Start consuming from the last kit in, so we end up with fewer fuller kits
+	 * rather than lots of half-empty ones. */
+	UINT16 points = original_points;
+	UINT8& n      = o.ubNumberOfObjects;
+	for (INT8 i = n - 1; i >= 0; --i)
 	{
-		if (usPoints < (UINT16) pObj->bStatus[bLoop])
+		INT8& status = o.bStatus[i];
+		if (points < (UINT16)status)
 		{
-			pObj->bStatus[bLoop] -= (INT8) usPoints;
-			return( usOriginalPoints );
+			status -= (INT8)points;
+			return original_points;
 		}
 		else
-		{
-			// consume this kit totally
-			usPoints -= pObj->bStatus[bLoop];
-			pObj->bStatus[bLoop] = 0;
-
-			pObj->ubNumberOfObjects--;
+		{ // Consume this kit totally
+			points -= status;
+			status  = 0;
+			--n;
 		}
 	}
 
-	// check if pocket/hand emptied..update inventory, then update panel
-	if( pObj->ubNumberOfObjects == 0 )
-	{
-		// Delete object
-		DeleteObj( pObj );
-
-		// dirty interface panel
-		DirtyMercPanelInterface(  pSoldier, DIRTYLEVEL2 );
-	}
-
-	return( usOriginalPoints -  usPoints );
+	// Pocket/hand emptied, update inventory, then update panel
+	Assert(n == 0);
+	DeleteObj(&o);
+	DirtyMercPanelInterface(&s, DIRTYLEVEL2);
+	return original_points - points;
 }
 
 
@@ -4401,7 +4393,7 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 	bPointsToUse = __min( bPointsToUse, usTotalKitPoints );
 	pSoldier->bCamo = __min( 100, pSoldier->bCamo + bPointsToUse * 2);
 
-	UseKitPoints( pObj, bPointsToUse, pSoldier );
+	UseKitPoints(*pObj, bPointsToUse, *pSoldier);
 
 	DeductPoints( pSoldier, AP_CAMOFLAGE, 0 );
 
@@ -4456,7 +4448,7 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 	// CJC Feb 9.  Canteens don't seem effective enough, so doubled return from them
 	DeductPoints( pSoldier, AP_DRINK, (INT16) (2 * sPointsToUse * -(100 - pSoldier->bBreath) ) );
 
-	UseKitPoints( pObj, sPointsToUse, pSoldier );
+	UseKitPoints(*pObj, sPointsToUse, *pSoldier);
 
 	return( TRUE );
 }
@@ -4493,7 +4485,7 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 	sPointsToUse = ( MAX_HUMAN_CREATURE_SMELL - pSoldier->bMonsterSmell ) * 2;
 	sPointsToUse = __min( sPointsToUse, usTotalKitPoints );
 
-	UseKitPoints( pObj, sPointsToUse, pSoldier );
+	UseKitPoints(*pObj, sPointsToUse, *pSoldier);
 
 	pSoldier->bMonsterSmell += sPointsToUse / 2;
 

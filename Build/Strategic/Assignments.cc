@@ -1483,10 +1483,11 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 		// go through doctor's pockets and heal, starting at with his in-hand item
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			if (IsMedicalKitItem(&pDoctor->inv[bPocket]))
+			OBJECTTYPE o = pDoctor->inv[bPocket];
+			if (IsMedicalKitItem(&o))
 			{
 				// ok, we have med kit in this pocket, use it
-				bPointsUsed = UseKitPoints(&pDoctor->inv[bPocket], bPointsToUse, pDoctor);
+				bPointsUsed   = UseKitPoints(o, bPointsToUse, *pDoctor);
 				bPointsHealed = bPointsUsed;
 
 				bPointsToUse -= bPointsHealed;
@@ -1521,10 +1522,11 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 		// the healing pts are based on what type of medkit is in his hand, so we HAVE to start there first!
 		for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 		{
-			if (IsMedicalKitItem(&pDoctor->inv[bPocket]))
+			OBJECTTYPE& o = pDoctor->inv[bPocket];
+			if (IsMedicalKitItem(&o))
 			{
 				// ok, we have med kit in this pocket, use it  (use only half if it's worth double)
-				bPointsUsed = UseKitPoints(&pDoctor->inv[bPocket], bPointsToUse, pDoctor);
+				bPointsUsed   = UseKitPoints(o, bPointsToUse, *pDoctor);
 				bPointsHealed = bPointsUsed;
 
 				bPointsToUse -= bPointsHealed;
@@ -1992,7 +1994,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE& s)
 		if (Random(100) < repair_pts_used * 5) // CJC: added a x5 as this wasn't going down anywhere fast enough
 		{
 			// kit item damaged/depleted, burn up points of toolkit..which is in right hand
-			UseKitPoints(&s.inv[HANDPOS], 1, &s);
+			UseKitPoints(s.inv[HANDPOS], 1, s);
 		}
 	}
 
@@ -6715,7 +6717,6 @@ void BandageBleedingDyingPatientsBeingTreated( )
 {
 	SOLDIERTYPE *pDoctor = NULL;
 	INT32 iKitSlot;
-	OBJECTTYPE *pKit = NULL;
 	UINT16 usKitPts;
 	UINT32 uiKitPtsUsed;
 	BOOLEAN fSomeoneStillBleedingDying = FALSE;
@@ -6750,13 +6751,13 @@ void BandageBleedingDyingPatientsBeingTreated( )
 						iKitSlot = FindObjClass( pDoctor, IC_MEDKIT );
 						if( iKitSlot != NO_SLOT )
 						{
-							pKit = &( pDoctor->inv[ iKitSlot ] );
+							OBJECTTYPE& kit = pDoctor->inv[iKitSlot];
 
-							usKitPts = TotalPoints( pKit );
+							usKitPts = TotalPoints(&kit);
 							if( usKitPts )
 							{
-								uiKitPtsUsed = VirtualSoldierDressWound( pDoctor, pSoldier, pKit, usKitPts, usKitPts );
-								UseKitPoints( pKit, (UINT16)uiKitPtsUsed, pDoctor );
+								uiKitPtsUsed = VirtualSoldierDressWound(pDoctor, pSoldier, &kit, usKitPts, usKitPts);
+								UseKitPoints(kit, (UINT16)uiKitPtsUsed, *pDoctor);
 
 								// if he is STILL bleeding or dying
 								if( ( pSoldier->bBleeding ) || ( pSoldier->bLife < OKLIFE ) )

@@ -1291,7 +1291,7 @@ void RestoreInterface( )
 }
 
 
-void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel )
+void DirtyMercPanelInterface(SOLDIERTYPE const* const pSoldier, UINT8 const ubDirtyLevel)
 {
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{

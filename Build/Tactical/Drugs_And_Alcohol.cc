@@ -126,7 +126,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 				ubKitPoints = 100;
 			}
 
-			UseKitPoints( pObject, ubKitPoints, pSoldier );
+			UseKitPoints(*pObject, ubKitPoints, *pSoldier);
 		}
 		else
 		{

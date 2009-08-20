@@ -42,7 +42,7 @@ UINT8	CalculateObjectWeight(const OBJECTTYPE* pObject);
 UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier);
 
 extern UINT16 TotalPoints(const OBJECTTYPE*);
-extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
+UINT16 UseKitPoints(OBJECTTYPE&, UINT16 points, SOLDIERTYPE const&);
 
 extern BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo );
 void CreateItem(UINT16 usItem, INT8 bStatus, OBJECTTYPE*);
