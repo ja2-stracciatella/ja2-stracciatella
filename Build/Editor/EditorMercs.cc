@@ -2409,55 +2409,52 @@ static void SetDroppableCheckboxesBasedOnMercsInventory(void)
 	}
 }
 
-void SetEnemyColorCode( UINT8 ubColorCode )
-{
-	if( gpSelected->pDetailedPlacement && gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
-		return;
 
-	UnclickEditorButtons( FIRST_MERCS_COLORCODE_BUTTON, LAST_MERCS_COLORCODE_BUTTON );
-	switch( ubColorCode )
+void SetEnemyColorCode(UINT8 const colour_code)
+{
+	SOLDIERINITNODE       const& sel = *gpSelected;
+	SOLDIERCREATE_STRUCT* const  dp  = sel.pDetailedPlacement;
+	if (dp && dp->ubProfile != NO_PROFILE) return;
+
+	UnclickEditorButtons(FIRST_MERCS_COLORCODE_BUTTON, LAST_MERCS_COLORCODE_BUTTON);
+	char const* vest;
+	char const* pants;
+	switch (colour_code)
 	{
 		case SOLDIER_CLASS_ARMY:
-			gpSelected->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_ARMY;
-			gubSoldierClass = SOLDIER_CLASS_ARMY;
-			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->ubSoldierClass = SOLDIER_CLASS_ARMY;
-			SET_PALETTEREP_ID( gpSelected->pSoldier->VestPal, "REDVEST"  );
-			SET_PALETTEREP_ID( gpSelected->pSoldier->PantsPal, "GREENPANTS"   );
-			ClickEditorButton( MERCS_ARMY_CODE );
-			break;
-		case SOLDIER_CLASS_ADMINISTRATOR:
-			gpSelected->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_ADMINISTRATOR;
-			gubSoldierClass = SOLDIER_CLASS_ADMINISTRATOR;
-			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->ubSoldierClass = SOLDIER_CLASS_ADMINISTRATOR;
-			ClickEditorButton( MERCS_ADMIN_CODE );
-			SET_PALETTEREP_ID( gpSelected->pSoldier->VestPal, "BLUEVEST"  );
-			SET_PALETTEREP_ID( gpSelected->pSoldier->PantsPal, "BLUEPANTS"   );
-			break;
-		case SOLDIER_CLASS_ELITE:
-			gpSelected->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_ELITE;
-			gubSoldierClass = SOLDIER_CLASS_ELITE;
-			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->ubSoldierClass = SOLDIER_CLASS_ELITE;
-			SET_PALETTEREP_ID( gpSelected->pSoldier->VestPal, "BLACKSHIRT"  );
-			SET_PALETTEREP_ID( gpSelected->pSoldier->PantsPal, "BLACKPANTS"   );
-			ClickEditorButton( MERCS_ELITE_CODE );
-			break;
-		case SOLDIER_CLASS_MINER:
-			gpSelected->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_MINER;
-			gubSoldierClass = SOLDIER_CLASS_MINER;
-			if( gpSelected->pDetailedPlacement )
-				gpSelected->pDetailedPlacement->ubSoldierClass = SOLDIER_CLASS_MINER;
-			SET_PALETTEREP_ID( gpSelected->pSoldier->VestPal, "greyVEST"  );
-			SET_PALETTEREP_ID( gpSelected->pSoldier->PantsPal, "BEIGEPANTS"   );
+			ClickEditorButton(MERCS_ARMY_CODE);
+			vest  = "REDVEST";
+			pants = "GREENPANTS";
 			break;
 
-		default:
-			return;
+		case SOLDIER_CLASS_ADMINISTRATOR:
+			ClickEditorButton(MERCS_ADMIN_CODE);
+			vest  = "BLUEVEST";
+			pants = "BLUEPANTS";
+			break;
+
+		case SOLDIER_CLASS_ELITE:
+			ClickEditorButton(MERCS_ELITE_CODE);
+			vest  = "BLACKSHIRT";
+			pants = "BLACKPANTS";
+			break;
+
+		case SOLDIER_CLASS_MINER:
+			vest  = "greyVEST";
+			pants = "BEIGEPANTS";
+			break;
+
+		default: return;
 	}
-	CreateSoldierPalettes(*gpSelected->pSoldier);
+	gubSoldierClass                     = colour_code;
+	sel.pBasicPlacement->ubSoldierClass = colour_code;
+	if (dp) dp->ubSoldierClass = colour_code;
+	SOLDIERTYPE& s = *sel.pSoldier;
+	SET_PALETTEREP_ID(s.VestPal,  vest);
+	SET_PALETTEREP_ID(s.PantsPal, pants);
+	CreateSoldierPalettes(s);
 }
+
 
 void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable )
 {
