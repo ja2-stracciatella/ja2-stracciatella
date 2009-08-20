@@ -214,17 +214,10 @@ BOOLEAN gfShowCivilians = TRUE;
   #undef RANDOM
 #endif
 #define RANDOM	-1
-#define MAX_ENEMYTYPES				7
-//#define MAX_ENEMYRANDOMTYPES	5
-#define MAX_CREATURETYPES			8
-#define MAX_REBELTYPES				7
-#define MAX_CIVTYPES					18
-//#define MAX_CIVRANDOMTYPES		11
-INT8 bEnemyArray[MAX_ENEMYTYPES]={ RANDOM, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE, TANK_NW, TANK_NE };
-INT8 bCreatureArray[MAX_CREATURETYPES]={ BLOODCAT, LARVAE_MONSTER, INFANT_MONSTER, YAF_MONSTER, YAM_MONSTER, ADULTFEMALEMONSTER, AM_MONSTER, QUEENMONSTER };
-INT8 bRebelArray[MAX_REBELTYPES]={ RANDOM, FATCIV, MANCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE };
-INT8 bCivArray[MAX_CIVTYPES]={ RANDOM, FATCIV, MANCIV, MINICIV, DRESSCIV, HATKIDCIV, KIDCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE,
-															 HUMVEE, ELDORADO, ICECREAMTRUCK, JEEP, CRIPPLECIV, ROBOTNOWEAPON, COW };
+static INT8 const bEnemyArray[]    = { RANDOM, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE, TANK_NW, TANK_NE };
+static INT8 const bCreatureArray[] = { BLOODCAT, LARVAE_MONSTER, INFANT_MONSTER, YAF_MONSTER, YAM_MONSTER, ADULTFEMALEMONSTER, AM_MONSTER, QUEENMONSTER };
+static INT8 const bRebelArray[]    = { RANDOM, FATCIV, MANCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE };
+static INT8 const bCivArray[]      = { RANDOM, FATCIV, MANCIV, MINICIV, DRESSCIV, HATKIDCIV, KIDCIV, REGMALE, BIGMALE, STOCKYMALE, REGFEMALE, HUMVEE, ELDORADO, ICECREAMTRUCK, JEEP, CRIPPLECIV, ROBOTNOWEAPON, COW };
 INT8 gbCurrCreature = BLOODCAT;
 
 
@@ -1391,60 +1384,45 @@ void KillDetailedPlacementForMerc()
 }
 
 
-static void ChangeBodyType(INT8 bOffset)  //+1 or -1 only
+static void ChangeBodyType(INT8 const offset)
 {
-	INT8 *pbArray; // HACK000E
-	INT32	iMax, x; // HACK000E
+	Assert(offset == -1 || offset == 1); // only +/-1 allowed
 
-	gfRenderTaskbar = TRUE;
+	gfRenderTaskbar  = TRUE;
 	gfRenderMercInfo = TRUE;
-	//verify that we have a proper offset ( only +-1 allowed )
-	Assert( bOffset == -1 || bOffset == 1 );
-	//get access to information depending on the team
-	switch( gpSelected->pBasicPlacement->bTeam )
-	{
-		case ENEMY_TEAM:
-			pbArray = bEnemyArray;
-			iMax = MAX_ENEMYTYPES;
-			break;
-		case CREATURE_TEAM:
-			pbArray = bCreatureArray;
-			iMax = MAX_CREATURETYPES;
-			break;
-		case MILITIA_TEAM:
-			pbArray = bRebelArray;
-			iMax = MAX_REBELTYPES;
-			break;
-		case CIV_TEAM:
-			pbArray = bCivArray;
-			iMax = MAX_CIVTYPES;
-			break;
 
+	SOLDIERINITNODE const&      sel = *gpSelected;
+	BASIC_SOLDIERCREATE_STRUCT& bp  = *sel.pBasicPlacement;
+	// Select next body type depending on offset
+	INT8 const*                 body_types; // HACK000E
+	INT32	                      n;          // HACK000E
+	switch (bp.bTeam)
+	{
+		case ENEMY_TEAM:    body_types = bEnemyArray;    n = lengthof(bEnemyArray);    break;
+		case CREATURE_TEAM: body_types = bCreatureArray; n = lengthof(bCreatureArray); break;
+		case MILITIA_TEAM:  body_types = bRebelArray;    n = lengthof(bRebelArray);    break;
+		case CIV_TEAM:      body_types = bCivArray;      n = lengthof(bCivArray);      break;
 		default: abort(); // HACK000E
 	}
-	//find the matching bodytype index within the array.
-	INT32 iIndex = -1; // XXX HACK000E
-	for( x = 0; x < iMax; x++ )
+	INT32 next = 0; // XXX HACK000E
+	for (INT32 i = 0; i != n; ++i)
 	{
-		iIndex = pbArray[ x ];
-		if( iIndex == gpSelected->pBasicPlacement->bBodyType )
-			break;
+		if (body_types[i] != bp.bBodyType) continue;
+		next = i + offset;
+		if      (next >= n) next = 0;
+		else if (next <  0) next = n - 1;
+		break;
 	}
-	Assert( iIndex == gpSelected->pBasicPlacement->bBodyType );
-	//now we have a match, so go to the next element (depending on offset value)
-	x += bOffset;
-	if( x >= iMax )
-		x = 0;
-	else if( x < 0 )
-		x = iMax-1;
-	iIndex = pbArray[ x ];
-	//Set the new bodytype into the and update the soldier info
-	if( iIndex != -1 )
+	INT8 const body_type = body_types[next];
+
+	SOLDIERTYPE& s = *sel.pSoldier;
+	// Set the new bodytype into the and update the soldier info
+	if (body_type != RANDOM)
 	{
-		gpSelected->pSoldier->ubBodyType = (UINT8)iIndex;
-		//Set the flags based on the bodytype
-		gpSelected->pSoldier->uiStatusFlags &= ~(SOLDIER_VEHICLE | SOLDIER_ROBOT | SOLDIER_ANIMAL | SOLDIER_MONSTER);
-		switch( gpSelected->pSoldier->ubBodyType )
+		s.ubBodyType = body_type;
+		// Set the flags based on the bodytype
+		s.uiStatusFlags &= ~(SOLDIER_VEHICLE | SOLDIER_ROBOT | SOLDIER_ANIMAL | SOLDIER_MONSTER);
+		switch (body_type)
 		{
 			case ADULTFEMALEMONSTER:
 			case AM_MONSTER:
@@ -1452,40 +1430,32 @@ static void ChangeBodyType(INT8 bOffset)  //+1 or -1 only
 			case YAM_MONSTER:
 			case LARVAE_MONSTER:
 			case INFANT_MONSTER:
-			case QUEENMONSTER:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_MONSTER;
-				break;
+			case QUEENMONSTER:       s.uiStatusFlags |= SOLDIER_MONSTER; break;
+
 			case BLOODCAT:
 			case COW:
-			case CROW:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_ANIMAL;
-				break;
-			case ROBOTNOWEAPON:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_ROBOT;
-				break;
+			case CROW:               s.uiStatusFlags |= SOLDIER_ANIMAL;  break;
+
+			case ROBOTNOWEAPON:      s.uiStatusFlags |= SOLDIER_ROBOT;   break;
+
 			case HUMVEE:
 			case ELDORADO:
 			case ICECREAMTRUCK:
 			case JEEP:
 			case TANK_NW:
-			case TANK_NE:
-				gpSelected->pSoldier->uiStatusFlags |= SOLDIER_VEHICLE;
-				break;
+			case TANK_NE:            s.uiStatusFlags |= SOLDIER_VEHICLE; break;
 		}
-		SetSoldierAnimationSurface( gpSelected->pSoldier, gpSelected->pSoldier->usAnimState );
+		SetSoldierAnimationSurface(&s, s.usAnimState);
 	}
-	//Update the placement's info as well.
-	gpSelected->pBasicPlacement->bBodyType = (INT8)iIndex;
-	if( gpSelected->pDetailedPlacement )
+	// Update the placement's info as well.
+	bp.bBodyType = body_type;
+	if (SOLDIERCREATE_STRUCT* const dp = sel.pDetailedPlacement) dp->bBodyType = body_type;
+	if (s.bTeam == CREATURE_TEAM)
 	{
-		gpSelected->pDetailedPlacement->bBodyType = (INT8)iIndex;
+		gbCurrCreature = body_type;
+		AssignCreatureInventory(&s);
 	}
-	if( gpSelected->pSoldier->bTeam == CREATURE_TEAM )
-	{
-		gbCurrCreature = (INT8)iIndex;
-		AssignCreatureInventory( gpSelected->pSoldier );
-	}
-	CreateSoldierPalettes(*gpSelected->pSoldier);
+	CreateSoldierPalettes(s);
 }
 
 
