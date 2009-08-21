@@ -3210,7 +3210,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 bDire
 	if ( fBlownAway )
 	{
 		// Only for mercs...
-		if ( pSoldier->ubBodyType < 4 )
+		if (pSoldier->ubBodyType <= REGFEMALE)
 		{
 			ChangeToFlybackAnimation( pSoldier, (INT8)bDirection );
 			return;
@@ -3220,7 +3220,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 bDire
 	if ( fHeadHit )
 	{
 		// Only for mercs ( or KIDS! )
-		if ( pSoldier->ubBodyType < 4 || pSoldier->ubBodyType == HATKIDCIV || pSoldier->ubBodyType == KIDCIV )
+		if (pSoldier->ubBodyType <= REGFEMALE || pSoldier->ubBodyType == HATKIDCIV || pSoldier->ubBodyType == KIDCIV)
 		{
 			EVENT_InitNewSoldierAnim( pSoldier, JFK_HITDEATH, 0 , FALSE );
 			return;
@@ -3268,7 +3268,7 @@ static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const UINT16 usW
 	}
 
   // If we can't fal back or such, so generic hit...
-	if ( pSoldier->ubBodyType >= 4 )
+	if (pSoldier->ubBodyType > REGFEMALE)
 	{
     DoGenericHit( pSoldier, 0, bDirection );
     return;

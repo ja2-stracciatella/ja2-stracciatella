@@ -1162,7 +1162,7 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 
 
 static void ChangeCurrentSquad(INT32 iSquad);
-static void ChangeSoldiersBodyType(UINT8 ubBodyType, BOOLEAN fCreateNewPalette);
+static void ChangeSoldiersBodyType(SoldierBodyType, BOOLEAN fCreateNewPalette);
 static void CreateNextCivType(void);
 static void CreatePlayerControlledMonster(void);
 static void CreateRandomItem(void);
@@ -2654,7 +2654,7 @@ static void RefreshSoldier(void)
 }
 
 
-static void ChangeSoldiersBodyType(UINT8 ubBodyType, BOOLEAN fCreateNewPalette)
+static void ChangeSoldiersBodyType(SoldierBodyType const ubBodyType, BOOLEAN const fCreateNewPalette)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return;

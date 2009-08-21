@@ -606,7 +606,7 @@ void AddSoldierInitListTeamToWorld(INT8 const team)
 			BASIC_SOLDIERCREATE_STRUCT& bp = *i->pBasicPlacement;
 			if (bp.bTeam != CIV_TEAM || i->pDetailedPlacement) continue;
 			bp.ubSoldierClass = SOLDIER_CLASS_MINER;
-			bp.bBodyType      = -1;
+			bp.bBodyType      = BODY_RANDOM;
 		}
 	}
 
@@ -1904,7 +1904,7 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 		curr->pDetailedPlacement = NULL;
 		bp->fDetailedPlacement = FALSE;
 		bp->fPriorityExistance = FALSE;
-		bp->bBodyType          = -1;
+		bp->bBodyType          = BODY_RANDOM;
 		RandomizeRelativeLevel(&bp->bRelativeAttributeLevel, bp->ubSoldierClass);
 		RandomizeRelativeLevel(&bp->bRelativeEquipmentLevel, bp->ubSoldierClass);
 	}

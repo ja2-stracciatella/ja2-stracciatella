@@ -30,6 +30,7 @@
 
 enum SoldierBodyType
 {
+	BODY_RANDOM = -1,
 	REGMALE = 0,
 	BIGMALE,
 	STOCKYMALE,

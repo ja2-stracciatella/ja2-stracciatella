@@ -1384,10 +1384,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	spp->bDirection = bp->bDirection;
 
 	//Only creatures have mandatory body types specified.
-	if( spp->bTeam == CREATURE_TEAM )
-		spp->bBodyType = bp->bBodyType;
-	else
-		spp->bBodyType = -1;
+	spp->bBodyType = spp->bTeam == CREATURE_TEAM ? bp->bBodyType : BODY_RANDOM;
 
 	//Set up all possible static values.
 	//By setting them all to -1, that signifies that the attribute isn't static.
@@ -1733,7 +1730,7 @@ SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const sc)
 	bp.bTeam          = ENEMY_TEAM;
 	bp.bOrders        = SEEKENEMY;
 	bp.bAttitude      = Random(MAXATTITUDES);
-	bp.bBodyType      = -1;
+	bp.bBodyType      = BODY_RANDOM;
 	bp.ubSoldierClass = sc;
 
 	SOLDIERCREATE_STRUCT pp;
@@ -1776,7 +1773,7 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	bp.bOrders = STATIONARY;
 	bp.bAttitude = (INT8) Random( MAXATTITUDES );
 	//bp.bAttitude = AGGRESSIVE;
-	bp.bBodyType = -1;
+	bp.bBodyType = BODY_RANDOM;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
 	return TacticalCreateSoldier(pp);
 }
