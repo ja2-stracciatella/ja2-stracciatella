@@ -201,30 +201,29 @@ const char* const gzActionStr[] =
 };
 
 
-// TEMP VALUES FOR TEAM DEAFULT POSITIONS
-static const UINT8 DefaultTeamStart[] =
+struct TeamInfo
 {
-	  0,              // 20 US
-	 20,              // 32 ENEMY
-	 52,              // 32 CREATURE
-	 84,              // 32 REBELS (OUR GUYS)
-	116,              // 32 CIVILIANS
-	MAX_NUM_SOLDIERS, //  8 PLANNING SOLDIERS
-	TOTAL_SOLDIERS
+	UINT8    size;
+	INT8     side;
+	bool     human;
+	COLORVAL colour;
 };
-CASSERT(lengthof(DefaultTeamStart) == MAXTEAMS + 1)
 
 
-static const COLORVAL DefaultTeamColors[] =
+/* Militia guys on our side.
+ * Creatures are on no one's side but their own.
+ * NB: side 2 is used for hostile rebels.
+ * Rest hostile (enemies, or civilians; civs are potentially hostile but neutral) */
+static TeamInfo const g_default_team_info[] =
 {
-	FROMRGB(255, 255,   0),
-	FROMRGB(255,   0,   0),
-	FROMRGB(255,   0, 255),
-	FROMRGB(  0, 255,   0),
-	FROMRGB(255, 255, 255),
-	FROMRGB(  0,   0, 255)
+	{ 20,                 0, true,  FROMRGB(255, 255,   0) }, // Us
+	{ 32,                 1, false, FROMRGB(255,   0,   0) }, // Enemy
+	{ 32,                 3, false, FROMRGB(255,   0, 255) }, // Creature
+	{ 32,                 0, false, FROMRGB(  0, 255,   0) }, // Rebels (our guys)
+	{ 32,                 1, false, FROMRGB(255, 255, 255) }, // Civilians
+	{ NUM_PLANNING_MERCS, 0, true,  FROMRGB(  0,   0, 255) }  // Planning soldiers
 };
-CASSERT(lengthof(DefaultTeamColors) == MAXTEAMS)
+CASSERT(lengthof(g_default_team_info) == MAXTEAMS)
 
 
 UINT8         gubWaitingForAllMercsToExitCode  = 0;
@@ -395,74 +394,46 @@ void ShutdownTacticalEngine(void)
 }
 
 
-void InitOverhead(void)
+void InitOverhead()
 {
 	memset(MercSlots, 0, sizeof(MercSlots));
 	memset(AwaySlots, 0, sizeof(AwaySlots));
 	memset(Menptr,    0, sizeof(Menptr));
 
-	memset(&gTacticalStatus, 0, sizeof(TacticalStatusType));
+	TacticalStatusType& t = gTacticalStatus;
+	memset(&t, 0, sizeof(TacticalStatusType));
+	t.uiFlags                 = TURNBASED;
+	t.sSlideTarget            = NOWHERE;
+	t.uiTimeOfLastInput       = GetJA2Clock();
+	t.uiTimeSinceDemoOn       = GetJA2Clock();
+	t.bRealtimeSpeed          = MAX_REALTIME_SPEED_VAL / 2;
+	for (INT16* i = t.sPanicTriggerGridNo; i != endof(t.sPanicTriggerGridNo); ++i) *i = NOWHERE;
+	t.fDidGameJustStart       = TRUE;
+	t.ubLastRequesterTargetID = NO_PROFILE;
 
 	// Set team values
-	for (UINT32 i = 0; i < MAXTEAMS; ++i)
+	UINT8 team_start = 0;
+	for (UINT32 i = 0; i != MAXTEAMS; ++i)
 	{
+		TacticalTeamType& team = t.Team[i];
+		TeamInfo const&   info = g_default_team_info[i];
 		// For now, set hard-coded values
-		gTacticalStatus.Team[i].bFirstID   = DefaultTeamStart[i];
-		gTacticalStatus.Team[i].bLastID    = DefaultTeamStart[i + 1] - 1;
-		gTacticalStatus.Team[i].RadarColor = DefaultTeamColors[i];
-
-		if (i == gbPlayerNum || i == PLAYER_PLAN)
-		{
-			gTacticalStatus.Team[i].bSide  = 0;
-			gTacticalStatus.Team[i].bHuman = TRUE;
-		}
-		else
-		{
-			/* militia guys on our side!
-			 * creatures are on no one's side but their own
-			 * NB side 2 is used for hostile rebels....
-			 * rest hostile (enemies, or civilians; civs are potentially hostile but neutral) */
-			INT8 side;
-			switch (i)
-			{
-				case MILITIA_TEAM:  side = 0; break;
-				case CREATURE_TEAM: side = 3; break;
-				default:            side = 1; break;
-			}
-			gTacticalStatus.Team[i].bSide  = side;
-			gTacticalStatus.Team[i].bHuman = FALSE;
-		}
-
-		gTacticalStatus.Team[i].last_merc_to_radio = NULL;
-		gTacticalStatus.Team[i].bAwareOfOpposition = FALSE;
+		team.bFirstID           = team_start;
+		team_start += info.size;
+		team.bLastID            = team_start - 1;
+		team.RadarColor         = info.colour;
+		team.bSide              = info.side;
+		team.bAwareOfOpposition = FALSE;
+		team.bHuman             = info.human;
+		team.last_merc_to_radio = 0;
 	}
 
-	// Zero out merc slots!
-	for (UINT32 i = 0; i < TOTAL_SOLDIERS; ++i)
-	{
-		MercSlots[i] = NULL;
-	}
-
-	// Set other tactical flags
-	gTacticalStatus.uiFlags                 = TURNBASED;
-	gTacticalStatus.sSlideTarget            = NOWHERE;
-	gTacticalStatus.uiTimeOfLastInput       = GetJA2Clock();
-	gTacticalStatus.uiTimeSinceDemoOn       = GetJA2Clock();
-	gTacticalStatus.fDidGameJustStart       = TRUE;
-	gTacticalStatus.ubLastRequesterTargetID = NO_PROFILE;
-
-	for (UINT32 i = 0; i < NUM_PANIC_TRIGGERS; ++i)
-	{
-		gTacticalStatus.sPanicTriggerGridNo[i] = NOWHERE;
-	}
-	gTacticalStatus.bRealtimeSpeed = MAX_REALTIME_SPEED_VAL / 2;
-
-	gfInAirRaid = FALSE;
-	gpCustomizableTimerCallback = NULL;
+	gfInAirRaid                 = FALSE;
+	gpCustomizableTimerCallback = 0;
 
 	// Reset cursor
-	gpItemPointer        = NULL;
-	gpItemPointerSoldier = NULL;
+	gpItemPointer        = 0;
+	gpItemPointerSoldier = 0;
 	memset(gbInvalidPlacementSlot, 0, sizeof(gbInvalidPlacementSlot));
 
 	InitCivQuoteSystem();
