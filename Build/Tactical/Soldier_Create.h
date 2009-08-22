@@ -7,16 +7,6 @@
 #include "Soldier_Control.h"
 
 
-//Kris:
-//This value is the total maximum number of slots in a map.
-//Players		20
-//Enemies		32
-//Creatures 32
-//Rebels		32
-//Civilians 32
-//Total			148
-#define MAX_INDIVIDUALS											148
-
 //Kris:  SERIALIZING INFORMATION
 //All maps must have:
 //	-MAPCREATE_STRUCT

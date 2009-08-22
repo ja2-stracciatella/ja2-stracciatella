@@ -168,7 +168,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 	if( !fp )
 		return FALSE;
 
-	if( gMapInformation.ubNumIndividuals > MAX_INDIVIDUALS )
+	if (gMapInformation.ubNumIndividuals > MAX_NUM_SOLDIERS)
 		return FALSE;
 
 	//If we are perhaps in the alternate version of the editor, we don't want bad things to
@@ -212,9 +212,9 @@ void LoadSoldiersFromMap(HWFILE const f)
 	KillSoldierInitList();
 	InitSoldierInitList();
 
-	if (n_individuals > MAX_INDIVIDUALS)
+	if (n_individuals > MAX_NUM_SOLDIERS)
 	{
-		throw std::runtime_error("Corrupt map check failed.  ubNumIndividuals is greater than MAX_INDIVIDUALS.");
+		throw std::runtime_error("Corrupt map check failed. ubNumIndividuals is greater than MAX_NUM_SOLDIERS.");
 	}
 
 	/* Because we are loading the map, we needed to know how many guys are being
