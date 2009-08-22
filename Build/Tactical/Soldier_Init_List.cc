@@ -1755,17 +1755,18 @@ void AddProfilesUsingProfileInsertionData()
 
 void AddProfilesNotUsingProfileInsertionData()
 {
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_ALL_SOLDIERINITNODES(i)
 	{
-		if( !curr->pSoldier &&
-				curr->pBasicPlacement->bTeam == CIV_TEAM &&
-				curr->pDetailedPlacement &&
-				curr->pDetailedPlacement->ubProfile != NO_PROFILE &&
-				!gMercProfiles[ curr->pDetailedPlacement->ubProfile ].fUseProfileInsertionInfo &&
-				gMercProfiles[ curr->pDetailedPlacement->ubProfile ].bLife )
-		{
-			AddPlacementToWorld( curr );
-		}
+		SOLDIERINITNODE& si = *i;
+		if (si.pSoldier)                           continue;
+		if (si.pBasicPlacement->bTeam != CIV_TEAM) continue;
+		if (!si.pDetailedPlacement)                continue;
+		ProfileID const pid = si.pDetailedPlacement->ubProfile;
+		if (pid == NO_PROFILE)                     continue;
+		MERCPROFILESTRUCT const& p = GetProfile(pid);
+		if (p.fUseProfileInsertionInfo)            continue;
+		if (p.bLife == 0)                          continue;
+		AddPlacementToWorld(&si);
 	}
 }
 
