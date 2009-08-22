@@ -3991,15 +3991,6 @@ INT8 FindObjectInSoldierProfile(MERCPROFILESTRUCT const& p, UINT16 const item_id
 }
 
 
-BOOLEAN ObjectExistsInSoldierProfile( UINT8 ubProfile, UINT16 usItem )
-{
-	INT8	bSlot;
-
-	bSlot = FindObjectInSoldierProfile(GetProfile(ubProfile), usItem);
-	return( bSlot != NO_SLOT );
-}
-
-
 static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 {
 	INT8 bInvPos;

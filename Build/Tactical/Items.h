@@ -60,7 +60,6 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject );
 BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem );
 INT8 FindObjectInSoldierProfile(MERCPROFILESTRUCT const&, UINT16 item_id);
 
-BOOLEAN ObjectExistsInSoldierProfile( UINT8 ubProfile, UINT16 usItem );
 void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney );
 
 void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage );

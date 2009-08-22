@@ -611,7 +611,7 @@ static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, Approach 
 		// Check if we have the item / are in right spot
 		if (pNPCQuoteInfo->sRequiredItem > 0)
 		{
-			if (!ObjectExistsInSoldierProfile(ubNPC, pNPCQuoteInfo->sRequiredItem))
+			if (FindObjectInSoldierProfile(GetProfile(ubNPC), pNPCQuoteInfo->sRequiredItem) == NO_SLOT)
 			{
 				continue;
 			}
