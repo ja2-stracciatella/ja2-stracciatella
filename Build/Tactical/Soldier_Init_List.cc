@@ -1877,7 +1877,7 @@ void NewWayOfLoadingCivilianInitListLinks(HWFILE const f)
 }
 
 
-void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
+void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 {
 	if (!gfWorldLoaded || gbWorldSectorZ != 0)
 	{ /* No world loaded or underground.  Underground sectors don't matter seeing
@@ -1885,8 +1885,8 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 		return;
 	}
 
-	SECTORINFO* const sector = &SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
-	if (sector->uiTimeLastPlayerLiberated == 0)
+	SECTORINFO const& sector = SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
+	if (sector.uiTimeLastPlayerLiberated == 0)
 	{ // The player has never owned the sector.
 		return;
 	}
@@ -1894,19 +1894,19 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 	/* The player has owned the sector at one point.  By stripping all of the
 	 * detailed placements, only basic placements will remain.  This prevents
 	 * tanks and "specially detailed" enemies from coming back. */
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_ALL_SOLDIERINITNODES(i)
 	{
-		if (!curr->pDetailedPlacement) continue;
+		SOLDIERINITNODE&            si = *i;
+		BASIC_SOLDIERCREATE_STRUCT& bp = *si.pBasicPlacement;
+		if (bp.bTeam != ENEMY_TEAM) continue;
+		if (!si.pDetailedPlacement) continue;
 
-		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-		if (bp->bTeam != ENEMY_TEAM) continue;
-
-		MemFree(curr->pDetailedPlacement);
-		curr->pDetailedPlacement = NULL;
-		bp->fDetailedPlacement = FALSE;
-		bp->fPriorityExistance = FALSE;
-		bp->bBodyType          = BODY_RANDOM;
-		RandomizeRelativeLevel(&bp->bRelativeAttributeLevel, bp->ubSoldierClass);
-		RandomizeRelativeLevel(&bp->bRelativeEquipmentLevel, bp->ubSoldierClass);
+		MemFree(si.pDetailedPlacement);
+		si.pDetailedPlacement = 0;
+		bp.fDetailedPlacement = FALSE;
+		bp.fPriorityExistance = FALSE;
+		bp.bBodyType          = BODY_RANDOM;
+		RandomizeRelativeLevel(&bp.bRelativeAttributeLevel, bp.ubSoldierClass);
+		RandomizeRelativeLevel(&bp.bRelativeEquipmentLevel, bp.ubSoldierClass);
 	}
 }

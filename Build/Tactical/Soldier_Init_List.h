@@ -70,7 +70,7 @@ void EvaluateDeathEffectsToSoldierInitList(SOLDIERTYPE const&);
 void AddProfilesUsingProfileInsertionData(void);
 void AddProfilesNotUsingProfileInsertionData(void);
 
-void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void);
+void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated();
 
 #if defined JA2BETAVERSION
 BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode);
