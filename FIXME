@@ -229,9 +229,6 @@ bRacist
 sMedicalDepositAmount: overwritten after load from data file
 usOptionalGearCost: overwritten after load from data file
 
-BASIC_SOLDIERCREATE_STRUCT
-PADDINGSLOTS[14]
-
 OBJECTTYPE
 ubGunUnused
 bMoneyStatus: only one use, which most probably is wrong

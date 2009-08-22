@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "Directories.h"
+#include "LoadSaveBasicSoldierCreateStruct.h"
 #include "LoadSaveSoldierCreate.h"
 #include "Types.h"
 #include "StrategicMap.h"
@@ -185,7 +186,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 		if( !curr )
 			return FALSE;
 		curr->ubNodeID = (UINT8)i;
-		FileWrite(fp, curr->pBasicPlacement, sizeof(BASIC_SOLDIERCREATE_STRUCT));
+		InjectBasicSoldierCreateStructIntoFile(fp, *curr->pBasicPlacement);
 
 		if( curr->pBasicPlacement->fDetailedPlacement )
 		{
@@ -226,7 +227,7 @@ void LoadSoldiersFromMap(HWFILE const f)
 	for (UINT32 i = 0; i != n_individuals; ++i)
 	{
 		BASIC_SOLDIERCREATE_STRUCT bp;
-		FileRead(f, &bp, sizeof(bp));
+		ExtractBasicSoldierCreateStructFromFile(f, bp);
 		SOLDIERINITNODE* const n = AddBasicPlacementToSoldierInitList(bp);
 		n->ubNodeID = i;
 

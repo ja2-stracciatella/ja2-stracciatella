@@ -29,8 +29,8 @@
 //what is used to define these values.
 struct BASIC_SOLDIERCREATE_STRUCT
 {
-	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
 	UINT16 usStartingGridNo;				//Where the placement position is.
+	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
 	INT8 bTeam;											//The team this individual is part of.
 	INT8 bRelativeAttributeLevel;
 	INT8 bRelativeEquipmentLevel;
@@ -45,9 +45,7 @@ struct BASIC_SOLDIERCREATE_STRUCT
 	UINT8 ubCivilianGroup;
 	BOOLEAN fPriorityExistance;			//These slots are used first
 	BOOLEAN fHasKeys;
-	INT8 PADDINGSLOTS[ 14 ];
-}; //50 bytes
-CASSERT(sizeof(BASIC_SOLDIERCREATE_STRUCT) == 52)
+};
 
 struct SOLDIERCREATE_STRUCT
 {

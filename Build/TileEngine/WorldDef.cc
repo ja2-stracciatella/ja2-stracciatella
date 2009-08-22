@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "Directories.h"
 #include "HImage.h"
+#include "LoadSaveBasicSoldierCreateStruct.h"
 #include "LoadSaveData.h"
 #include "LoadSaveLightSprite.h"
 #include "LoadSaveSoldierCreate.h"
@@ -1837,7 +1838,7 @@ try
 		for (INT32 i = 0; i < pSummary->MapInfo.ubNumIndividuals; ++i)
 		{
 			BASIC_SOLDIERCREATE_STRUCT basic;
-			FileRead(f, &basic, sizeof(basic));
+			ExtractBasicSoldierCreateStructFromFile(f, basic);
 
 			TEAMSUMMARY* pTeam = NULL;
 			switch (basic.bTeam)

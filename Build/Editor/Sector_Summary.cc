@@ -2,6 +2,7 @@
 
 #include "Directories.h"
 #include "HImage.h"
+#include "LoadSaveBasicSoldierCreateStruct.h"
 #include "LoadSaveSoldierCreate.h"
 #include "Local.h"
 #include "Font.h"
@@ -2504,7 +2505,6 @@ void ApologizeOverrideAndForceUpdateEverything()
 static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 {
 	UINT32 uiNumItems;
-	BASIC_SOLDIERCREATE_STRUCT basic;
 	SOLDIERCREATE_STRUCT priority;
 	INT32 i, j;
 	UINT16 usNumItems;
@@ -2577,7 +2577,8 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
-		FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT));
+		BASIC_SOLDIERCREATE_STRUCT basic;
+		ExtractBasicSoldierCreateStructFromFile(hfile, basic);
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 			ExtractSoldierCreateFromFileUTF16(hfile, &priority);
@@ -2625,7 +2626,8 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
-		FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT));
+		BASIC_SOLDIERCREATE_STRUCT basic;
+		ExtractBasicSoldierCreateStructFromFile(hfile, basic);
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 			ExtractSoldierCreateFromFileUTF16(hfile, &priority);
