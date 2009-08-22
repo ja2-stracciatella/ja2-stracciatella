@@ -453,7 +453,7 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 				case AUTO_ROCKET_RIFLE:
 				{
 					// Give her auto rifle
-					const INT8 bSlot = FindObjectInSoldierProfile(QUEEN, ROCKET_RIFLE);
+					INT8 const bSlot = FindObjectInSoldierProfile(q, ROCKET_RIFLE);
 					if (bSlot != NO_SLOT) q.inv[bSlot] = AUTO_ROCKET_RIFLE;
 					break;
 				}

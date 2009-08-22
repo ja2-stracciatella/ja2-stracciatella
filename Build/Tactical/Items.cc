@@ -3978,28 +3978,24 @@ void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 	}
 }
 
-INT8 FindObjectInSoldierProfile( UINT8 ubProfile, UINT16 usItem )
-{
-	INT8	bLoop;
 
-	for (bLoop = 0; bLoop < 19; bLoop++)
+INT8 FindObjectInSoldierProfile(MERCPROFILESTRUCT const& p, UINT16 const item_id)
+{
+	for (INT8 i = 0; i != NUM_INV_SLOTS; ++i)
 	{
-		if ( gMercProfiles[ ubProfile ].bInvNumber[ bLoop ] > 0 )
-		{
-			if ( gMercProfiles[ ubProfile ].inv[ bLoop ] == usItem )
-			{
-				return( bLoop );
-			}
-		}
+		if (p.bInvNumber[i] == 0) continue;
+		if (p.inv[i] != item_id)  continue;
+		return i;
 	}
-	return( NO_SLOT );
+	return NO_SLOT;
 }
+
 
 BOOLEAN ObjectExistsInSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 {
 	INT8	bSlot;
 
-	bSlot = FindObjectInSoldierProfile( ubProfile, usItem );
+	bSlot = FindObjectInSoldierProfile(GetProfile(ubProfile), usItem);
 	return( bSlot != NO_SLOT );
 }
 

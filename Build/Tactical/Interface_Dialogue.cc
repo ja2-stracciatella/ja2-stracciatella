@@ -1707,7 +1707,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
 					UINT16	usGun;
-					INT8		bNewSlot, bOldSlot;
+					INT8		bNewSlot;
 
 					usGun = pSoldier->inv[HANDPOS].usItem;
 
@@ -1715,19 +1715,23 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE );
 
 					bNewSlot = FindObj( pSoldier, usGun );
-					if ( bNewSlot != NO_SLOT && gMercProfiles[ ubTargetNPC ].inv[ bNewSlot ] == NOTHING )
+					if (bNewSlot != NO_SLOT)
 					{
-						// find where the gun is stored in the profile data and
-						// move it to the new location
-						bOldSlot = FindObjectInSoldierProfile( ubTargetNPC, usGun );
-						if ( bOldSlot != NO_SLOT  )
+						MERCPROFILESTRUCT& p = GetProfile(ubTargetNPC);
+						if (p.inv[bNewSlot] == NOTHING)
 						{
-							// rearrange profile... NB # of guns can only be 1 so this is easy
-							gMercProfiles[ ubTargetNPC ].inv[ bOldSlot ] = NOTHING;
-							gMercProfiles[ ubTargetNPC ].bInvNumber[ bOldSlot ] = 0;
+							// find where the gun is stored in the profile data and
+							// move it to the new location
+							INT8 const bOldSlot = FindObjectInSoldierProfile(p, usGun);
+							if ( bOldSlot != NO_SLOT  )
+							{
+								// rearrange profile... NB # of guns can only be 1 so this is easy
+								p.inv[bOldSlot]        = NOTHING;
+								p.bInvNumber[bOldSlot] = 0;
 
-							gMercProfiles[ ubTargetNPC ].inv[ bNewSlot ] = usGun;
-							gMercProfiles[ ubTargetNPC ].bInvNumber[ bNewSlot ] = 1;
+								p.inv[bNewSlot]        = usGun;
+								p.bInvNumber[bNewSlot] = 1;
+							}
 						}
 					}
 				}
