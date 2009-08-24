@@ -8,8 +8,8 @@
 extern	INT16				gsQdsEnteringGridNo;
 
 
-void NpcRecordLoggingInit(UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, Approach);
-void NpcRecordLogging(Approach, char const* pStringA, ...);
+void NpcRecordLoggingInit(ProfileID npc_id, ProfileID merc_id, UINT8 quote_id, Approach);
+void NpcRecordLogging(Approach, char const* fmt, ...);
 
 void     QuestDebugScreenInit(void);
 ScreenID QuestDebugScreenHandle(void);

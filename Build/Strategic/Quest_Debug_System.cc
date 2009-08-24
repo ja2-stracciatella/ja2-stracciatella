@@ -2744,56 +2744,28 @@ static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-void NpcRecordLoggingInit(UINT8 const ubNpcID, UINT8 const ubMercID, UINT8 const ubQuoteNum, Approach const ubApproach)
+void NpcRecordLoggingInit(ProfileID const npc_id, ProfileID const merc_id, UINT8 const quote_id, Approach const approach)
 {
-	static BOOLEAN	fFirstTimeIn = TRUE;
-
-  char			DestString[1024];
-//	char			MercName[ NICKNAME_LENGTH ];
-//	char			NpcName[ NICKNAME_LENGTH ];
-
-	DestString[0] = '\0';
-
-	//if the npc log button is turned off, ignore
-	if( !gfNpcLogButton )
-		return;
-
-	//if the approach is NPC_INITIATING_CONV, return
-	if( ubApproach == NPC_INITIATING_CONV )
-		return;
-
-
-	//if its the first time in the game
-	if( fFirstTimeIn )
-	{
-		//open a new file for writing
-
-		try
-		{
-			FileDelete(QUEST_DEBUG_FILE);
-		}
-		catch (...)
-		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to delete %s file", QUEST_DEBUG_FILE) );
-			return;
-		}
-		fFirstTimeIn = FALSE;
-	}
+	// If the NPC log button is turned off, ignore
+	if (!gfNpcLogButton) return;
+	// If the approach is NPC_INITIATING_CONV, return
+	if (approach == NPC_INITIATING_CONV) return;
 
 	try
 	{
-		AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+		// Truncate when it's the first time in the game
+		static FileOpenFlags flags = FILE_ACCESS_APPEND | FILE_CREATE_ALWAYS;
+		AutoSGPFile f(FileOpen(QUEST_DEBUG_FILE, flags));
+		flags = FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS;
 
-		sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d '%ls' against Merc: %d '%ls'", ubNpcID, gMercProfiles[ ubNpcID ].zNickname, ubMercID, gMercProfiles[ ubMercID ].zNickname );
-		//	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d  against Merc: %d ", ubNpcID, ubMercID );
-
-		FileWrite(hFile, DestString, strlen(DestString));
-
-		//Testing Record #
-		sprintf( DestString, "\n\tTesting Record #: %d", ubQuoteNum );
-
-		//append to file
-		FileWrite(hFile, DestString, strlen(DestString));
+		char buf[1024];
+		snprintf(buf, lengthof(buf),
+			"\n"
+			"\n"
+			"New Approach for NPC ID: %d '%ls' against Merc: %d '%ls'\n"
+			"\tTesting Record #: %d\n",
+			npc_id, GetProfile(npc_id).zNickname, merc_id, GetProfile(merc_id).zNickname, quote_id);
+		FileWrite(f, buf, strlen(buf));
 	}
 	catch (...)
 	{
@@ -2802,38 +2774,25 @@ void NpcRecordLoggingInit(UINT8 const ubNpcID, UINT8 const ubMercID, UINT8 const
 }
 
 
-void NpcRecordLogging(Approach const ubApproach, char const* const pStringA, ...)
+void NpcRecordLogging(Approach const approach, char const* const fmt, ...)
 {
-//	static UINT32		uiLineNumber = 1;
-//	static UINT32		uiRecordNumber = 1;
-  va_list		argptr;
-  char		TempString[1024];
-  char		DestString[1024];
+	// If the NPC log button is turned off, ignore
+	if (!gfNpcLogButton) return;
+	// If the approach is NPC_INITIATING_CONV, return
+	if (approach == NPC_INITIATING_CONV) return;
 
-	TempString[0] = '\0';
-	DestString[0] = '\0';
-
-	//if the npc log button is turned off, ignore
-	if( !gfNpcLogButton )
-		return;
-
-	//if the approach is NPC_INITIATING_CONV, return
-	if( ubApproach == NPC_INITIATING_CONV )
-		return;
-
-
-	va_start(argptr, pStringA);       	// Set up variable argument pointer
-	vsprintf(TempString, pStringA, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
+  char    tmp_buf[1024];
+  va_list ap;
+	va_start(ap, fmt);
+	vsnprintf(tmp_buf, lengthof(tmp_buf), fmt, ap);
+	va_end(ap);
 
 	try
 	{
-		AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-
-		sprintf( DestString, "\n\t\t%s", TempString );
-
-		//append to file
-		FileWrite(hFile, DestString, strlen(DestString));
+		AutoSGPFile f(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+		char buf[1024];
+		snprintf(buf, lengthof(buf), "\t\t%s\n", tmp_buf);
+		FileWrite(f, buf, strlen(buf));
 	}
 	catch (...)
 	{
