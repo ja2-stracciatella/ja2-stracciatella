@@ -319,6 +319,7 @@ static void PickABoxer()
 			{
 				boxer->ubSkillTrait1 = MARTIALARTS;
 			}
+			break;
 		}
 	}
 }
