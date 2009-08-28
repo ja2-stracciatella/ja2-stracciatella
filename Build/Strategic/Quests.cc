@@ -186,32 +186,23 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 }
 
 
-static INT8 NumWoundedMercsNearby(UINT8 ubProfileID)
+static INT8 NumWoundedMercsNearby(ProfileID const pid)
 {
-	INT8						bNumber = 0;
-	INT16						sGridNo;
+	SOLDIERTYPE const* const npc = FindSoldierByProfileID(pid);
+	if (!npc) return 0;
 
-	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
-	if (!pNPC)
-	{
-		return( FALSE );
-	}
-	sGridNo = pNPC->sGridNo;
-
+	INT8         n      = 0;
+	GridNo const gridno = npc->sGridNo;
 	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam       == gbPlayerNum &&
-				s->bLife       >  0           &&
-				s->bLife       <  s->bLifeMax &&
-				s->bAssignment != ASSIGNMENT_HOSPITAL &&
-				PythSpacesAway(sGridNo, s->sGridNo) <= HOSPITAL_PATIENT_DISTANCE)
-		{
-			++bNumber;
-		}
+		SOLDIERTYPE const& s = **i;
+		if (s.bTeam != gbPlayerNum)                                        continue;
+		if (s.bLife <= 0 || s.bLifeMax <= s.bLife)                         continue;
+		if (s.bAssignment == ASSIGNMENT_HOSPITAL)                          continue;
+		if (PythSpacesAway(gridno, s.sGridNo) > HOSPITAL_PATIENT_DISTANCE) continue;
+		++n;
 	}
-
-	return( bNumber );
+	return n;
 }
 
 
