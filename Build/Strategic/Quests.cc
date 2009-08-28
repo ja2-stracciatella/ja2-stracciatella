@@ -355,31 +355,23 @@ static INT8 NumMalesPresent(ProfileID const pid)
 }
 
 
-static BOOLEAN FemalePresent(UINT8 ubProfileID)
+static bool FemalePresent(ProfileID const pid)
 {
-	INT16						sGridNo;
+	SOLDIERTYPE const* const npc = FindSoldierByProfileID(pid);
+	if (!npc) return false;
 
-	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
-	if (!pNPC)
-	{
-		return( FALSE );
-	}
-	sGridNo = pNPC->sGridNo;
-
+	GridNo const gridno = npc->sGridNo;
 	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam     == gbPlayerNum             &&
-				s->bLife     >= OKLIFE                  &&
-				s->ubProfile != NO_PROFILE              &&
-				GetProfile(s->ubProfile).bSex == FEMALE &&
-				PythSpacesAway(sGridNo, s->sGridNo) <= 10)
-		{
-			return TRUE;
-		}
+		SOLDIERTYPE const& s = **i;
+		if (s.bTeam     != gbPlayerNum)             continue;
+		if (s.bLife     <  OKLIFE)                  continue;
+		if (s.ubProfile == NO_PROFILE)              continue;
+		if (GetProfile(s.ubProfile).bSex != FEMALE) continue;
+		if (PythSpacesAway(gridno, s.sGridNo) > 10) continue;
+		return true;
 	}
-
-	return( FALSE );
+	return false;
 }
 
 
