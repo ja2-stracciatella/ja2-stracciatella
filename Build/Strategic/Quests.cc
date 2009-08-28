@@ -206,30 +206,22 @@ static INT8 NumWoundedMercsNearby(ProfileID const pid)
 }
 
 
-static INT8 NumMercsNear(UINT8 ubProfileID, UINT8 ubMaxDist)
+static INT8 NumMercsNear(UINT8 const pid, UINT8 const max_dist)
 {
-	INT8						bNumber = 0;
-	INT16						sGridNo;
+	SOLDIERTYPE const* const npc = FindSoldierByProfileID(pid);
+	if (!npc) return 0;
 
-	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
-	if (!pNPC)
-	{
-		return( FALSE );
-	}
-	sGridNo = pNPC->sGridNo;
-
+	INT8         n      = 0;
+	GridNo const gridno = npc->sGridNo;
 	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam == gbPlayerNum &&
-				s->bLife >= OKLIFE      &&
-				PythSpacesAway(sGridNo, s->sGridNo) <= ubMaxDist)
-		{
-			++bNumber;
-		}
+		SOLDIERTYPE const& s = **i;
+		if (s.bTeam != gbPlayerNum)                        continue;
+		if (s.bLife <  OKLIFE)                             continue;
+		if (PythSpacesAway(gridno, s.sGridNo) <= max_dist) continue;
+		++n;
 	}
-
-	return( bNumber );
+	return n;
 }
 
 
