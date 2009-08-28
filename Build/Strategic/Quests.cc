@@ -206,7 +206,7 @@ static INT8 NumWoundedMercsNearby(ProfileID const pid)
 }
 
 
-static INT8 NumMercsNear(UINT8 const pid, UINT8 const max_dist)
+static INT8 NumMercsNear(ProfileID const pid, UINT8 const max_dist)
 {
 	SOLDIERTYPE const* const npc = FindSoldierByProfileID(pid);
 	if (!npc) return 0;
@@ -334,32 +334,24 @@ static BOOLEAN CheckTalkerUnpropositionedFemale(void)
 }
 
 
-static INT8 NumMalesPresent(UINT8 ubProfileID)
+static INT8 NumMalesPresent(ProfileID const pid)
 {
-	INT8						bNumber = 0;
-	INT16						sGridNo;
+	SOLDIERTYPE const* const npc = FindSoldierByProfileID(pid);
+	if (!npc) return 0;
 
-	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
-	if (!pNPC)
-	{
-		return( FALSE );
-	}
-	sGridNo = pNPC->sGridNo;
-
+	INT8         n      = 0;
+	GridNo const gridno = npc->sGridNo;
 	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam     == gbPlayerNum           &&
-				s->bLife     >= OKLIFE                &&
-				s->ubProfile != NO_PROFILE            &&
-				GetProfile(s->ubProfile).bSex == MALE &&
-				PythSpacesAway(sGridNo, s->sGridNo) <= 8)
-		{
-			++bNumber;
-		}
+		SOLDIERTYPE const& s = **i;
+		if (s.bTeam     != gbPlayerNum)            continue;
+		if (s.bLife     <  OKLIFE)                 continue;
+		if (s.ubProfile == NO_PROFILE)             continue;
+		if (GetProfile(s.ubProfile).bSex != MALE)  continue;
+		if (PythSpacesAway(gridno, s.sGridNo) > 8) continue;
+		++n;
 	}
-
-	return( bNumber );
+	return n;
 }
 
 
