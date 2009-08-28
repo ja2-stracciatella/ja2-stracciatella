@@ -412,20 +412,18 @@ static BOOLEAN CheckNPCSector(UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY,
 }
 
 
-static BOOLEAN AIMMercWithin(INT16 sGridNo, INT16 sDistance)
+static bool AIMMercWithin(GridNo const gridno, INT16 const distance)
 {
 	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam               == gbPlayerNum         &&
-				s->bLife               >= OKLIFE              &&
-				s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC &&
-				PythSpacesAway(sGridNo, s->sGridNo) <= sDistance)
-		{
-			return TRUE;
-		}
+		SOLDIERTYPE const& s = **i;
+		if (s.bTeam               != gbPlayerNum)         continue;
+		if (s.bLife               <  OKLIFE)              continue;
+		if (s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
+		if (PythSpacesAway(gridno, s.sGridNo) > distance) continue;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
