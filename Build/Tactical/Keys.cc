@@ -46,47 +46,7 @@ static UINT8        gubNumDoorStatus = 0;
 	for (DOOR_STATUS* iter = gpDoorStatus, * const iter##__end = iter + gubNumDoorStatus; iter != iter##__end; ++iter)
 
 
-KEY KeyTable[NUM_KEYS] =
-{
-	// Item #			Flags		Sector, Date Found
-	//
-	{KEY_1,				0,			0,			0},
-	{KEY_2,				0,			0,			0},
-	{KEY_3,				0,			0,			0},
-	{KEY_4,				0,			0,			0},
-	{KEY_5,				0,			0,			0},
-	{KEY_6,				0,			0,			0},
-	{KEY_7,				0,			0,			0},
-	{KEY_8,				0,			0,			0},
-	{KEY_9,				0,			0,			0},
-	{KEY_10,			0,			0,			0},
-
-	{KEY_11,			0,			0,			0},
-	{KEY_12,			0,			0,			0},
-	{KEY_13,			0,			0,			0},
-	{KEY_14,			0,			0,			0},
-	{KEY_15,			0,			0,			0},
-	{KEY_16,			0,			0,			0},
-	{KEY_17,			0,			0,			0},
-	{KEY_18,			0,			0,			0},
-	{KEY_19,			0,			0,			0},
-	{KEY_20,			0,			0,			0},
-
-	{KEY_21,			0,			0,			0},
-	{KEY_22,			0,			0,			0},
-	{KEY_23,			0,			0,			0},
-	{KEY_24,			0,			0,			0},
-	{KEY_25,			0,			0,			0},
-	{KEY_26,			0,			0,			0},
-	{KEY_27,			0,			0,			0},
-	{KEY_28,			0,			0,			0},
-	{KEY_29,			0,			0,			0},
-	{KEY_30,			0,			0,			0},
-
-	{KEY_31,			0,			0,			0},
-	{KEY_32,			0,			0,			0}
-
-};
+KEY KeyTable[NUM_KEYS];
 
 //Current number of doors in world.
 UINT8 gubNumDoors = 0;
@@ -1286,9 +1246,7 @@ void SaveKeyTableToSaveGameFile(HWFILE const f)
 		KEY const& k = *i;
 		BYTE       data[8];
 		BYTE*      d = data;
-		INJ_U16( d, k.usItem)
-		INJ_U8(  d, k.fFlags)
-		INJ_SKIP(d, 1)
+		INJ_SKIP(d, 4)
 		INJ_U16( d, k.usSectorFound)
 		INJ_U16( d, k.usDateFound)
 		Assert(d == endof(data));
@@ -1305,9 +1263,7 @@ void LoadKeyTableFromSaveedGameFile(HWFILE const f)
 		FileRead(f, data, sizeof(data));
 		KEY&  k = *i;
 		BYTE* d = data;
-		EXTR_U16( d, k.usItem)
-		EXTR_U8(  d, k.fFlags)
-		EXTR_SKIP(d, 1)
+		EXTR_SKIP(d, 4)
 		EXTR_U16( d, k.usSectorFound)
 		EXTR_U16( d, k.usDateFound)
 		Assert(d == endof(data));

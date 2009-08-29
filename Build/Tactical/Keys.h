@@ -8,8 +8,6 @@
 
 struct KEY
 {
-	UINT16		usItem;						// index in item table for key
-	UINT8			fFlags;						// flags...
 	UINT16		usSectorFound;		// where and
 	UINT16		usDateFound;			// when the key was found
 };

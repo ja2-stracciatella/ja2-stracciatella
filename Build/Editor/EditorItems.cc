@@ -306,17 +306,17 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	{ //Keys use a totally different method for determining
 		for( i = 0; i < eInfo.sNumItems; i++ )
 		{
-			const INVTYPE* item = &Item[KeyTable[0].usItem + LockTable[i].usKeyItem];
+			UINT16 const item_id = KEY_1 + LockTable[i].usKeyItem;
 
 			//Store these item pointers for later when rendering selected items.
-			eInfo.pusItemIndex[i] = KeyTable[ 0 ].usItem + LockTable[ i ].usKeyItem;
+			eInfo.pusItemIndex[i] = item_id;
 
 			SetFontDestBuffer(eInfo.uiBuffer);
 
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-			DrawItemCentered(*item, eInfo.uiBuffer, x, y + 2, TRANSPARENT);
+			DrawItemCentered(Item[item_id], eInfo.uiBuffer, x, y + 2, TRANSPARENT);
 
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 			if( y == 0 )
