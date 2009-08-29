@@ -57,7 +57,7 @@ static MERCPLACEMENT* gMercPlacement = 0;
 static INT32          giPlacements   = 0;
 
 #define FOR_EACH_MERC_PLACEMENT(iter) \
-	for (MERCPLACEMENT* iter = gMercPlacement, * const iter##__end = gMercPlacement + giPlacements; iter##__end != iter##__end; ++i)
+	for (MERCPLACEMENT* iter = gMercPlacement, * const iter##__end = gMercPlacement + giPlacements; iter != iter##__end; ++i)
 
 enum
 {
