@@ -20,7 +20,7 @@ static void SetTilesetTwoTerrainValues(void);
 void InitEngineTilesets(void)
 try
 {
-	AutoSGPFile f(FileOpen(BINARYDATADIR "/JA2SET.DAT", FILE_ACCESS_READ));
+	AutoSGPFile f(FileOpen(BINARYDATADIR "/ja2set.dat", FILE_ACCESS_READ));
 
 	// READ # TILESETS and compare
 	UINT8 ubNumSets;

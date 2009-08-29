@@ -278,7 +278,7 @@ static void BuildListFile(void)
 
 
 	//Verify the existance of the header text file.
-	infoFile = fopen( "ANITEST.DAT", "rb");
+	infoFile = fopen("anitest.dat", "rb");
 	if(!infoFile)
 	{
 		return;

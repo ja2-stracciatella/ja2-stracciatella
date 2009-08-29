@@ -1070,7 +1070,7 @@ static BOOLEAN ValidFilename(void)
 	{
 		pDest = wcsstr( gzFilename, L".dat" );
 		if( !pDest )
-			pDest = wcsstr( gzFilename, L".DAT" );
+			pDest = wcsstr(gzFilename, L".dat");
 		if( pDest && pDest != gzFilename && pDest[4] == '\0' )
 			return TRUE;
 	}

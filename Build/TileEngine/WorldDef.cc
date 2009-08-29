@@ -62,7 +62,7 @@
 #define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
 #define  SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b )
 
-#define	 TEMP_FILE_FOR_TILESET_CHANGE				"jatileS34.dat"
+#define TEMP_FILE_FOR_TILESET_CHANGE "jatiles34.dat"
 
 #define	 MAP_FULLSOLDIER_SAVED				0x00000001
 #define	 MAP_WORLDLIGHTS_SAVED				0x00000004

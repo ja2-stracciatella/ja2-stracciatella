@@ -634,7 +634,7 @@ void GetMapFileName(INT16 const x, INT16 const y, INT8 const z, char* const buf,
 		if (add_alternate_map_letter) n += sprintf(buf + n, "_m");
 	}
 
-	sprintf(buf + n, ".DAT");
+	sprintf(buf + n, ".dat");
 }
 
 

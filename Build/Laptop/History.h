@@ -8,7 +8,7 @@ void HandleHistory(void);
 void RenderHistory(void);
 
 
-#define HISTORY_DATA_FILE TEMPDIR "/History.dat"
+#define HISTORY_DATA_FILE TEMPDIR "/history.dat"
 
 
 enum{

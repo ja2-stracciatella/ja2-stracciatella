@@ -184,7 +184,7 @@ static void StartSomeMercsOnAssignment(void);
 
 void LoadMercProfiles()
 {
-	{ AutoSGPFile f(FileOpen(BINARYDATADIR "/Prof.dat", FILE_ACCESS_READ));
+	{ AutoSGPFile f(FileOpen(BINARYDATADIR "/prof.dat", FILE_ACCESS_READ));
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
 #ifdef JA2DEMO

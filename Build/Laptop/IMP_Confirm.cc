@@ -28,7 +28,7 @@
 #include "FileMan.h"
 
 
-#define IMP_MERC_FILE "IMP.dat"
+#define IMP_MERC_FILE "imp.dat"
 
 static BUTTON_PICS* giIMPConfirmButtonImage[2];
 GUIButtonRef giIMPConfirmButton[2];
