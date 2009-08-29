@@ -13,7 +13,6 @@ struct KEY
 	UINT16		usSectorFound;		// where and
 	UINT16		usDateFound;			// when the key was found
 };
-CASSERT(sizeof(KEY) == 8)
 
 
 #define KEY_USED				0x01

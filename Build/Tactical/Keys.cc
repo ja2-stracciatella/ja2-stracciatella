@@ -1,6 +1,7 @@
 #include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
+#include "LoadSaveData.h"
 #include "Soldier_Profile.h"
 #include "Types.h"
 #include "Soldier_Control.h"
@@ -1278,17 +1279,39 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 }
 
 
-void SaveKeyTableToSaveGameFile(HWFILE const hFile)
+void SaveKeyTableToSaveGameFile(HWFILE const f)
 {
-	// Save the KeyTable
-	FileWrite(hFile, KeyTable, sizeof(KEY) * NUM_KEYS);
+	for (KEY const* i = KeyTable; i != endof(KeyTable); ++i)
+	{
+		KEY const& k = *i;
+		BYTE       data[8];
+		BYTE*      d = data;
+		INJ_U16( d, k.usItem)
+		INJ_U8(  d, k.fFlags)
+		INJ_SKIP(d, 1)
+		INJ_U16( d, k.usSectorFound)
+		INJ_U16( d, k.usDateFound)
+		Assert(d == endof(data));
+		FileWrite(f, data, sizeof(data));
+	}
 }
 
 
-void LoadKeyTableFromSaveedGameFile(HWFILE const hFile)
+void LoadKeyTableFromSaveedGameFile(HWFILE const f)
 {
-	// Load the KeyTable
-	FileRead(hFile, KeyTable, sizeof(KEY) * NUM_KEYS);
+	for (KEY* i = KeyTable; i != endof(KeyTable); ++i)
+	{
+		BYTE data[8];
+		FileRead(f, data, sizeof(data));
+		KEY&  k = *i;
+		BYTE* d = data;
+		EXTR_U16( d, k.usItem)
+		EXTR_U8(  d, k.fFlags)
+		EXTR_SKIP(d, 1)
+		EXTR_U16( d, k.usSectorFound)
+		EXTR_U16( d, k.usDateFound)
+		Assert(d == endof(data));
+	}
 }
 
 
