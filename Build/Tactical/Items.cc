@@ -2705,6 +2705,16 @@ static BOOLEAN DropObjIfThereIsRoom(SOLDIERTYPE* pSoldier, INT8 bPos, OBJECTTYPE
 }
 
 
+static void CollectKey(SOLDIERTYPE const& s, OBJECTTYPE const& o)
+{
+	if (!(s.uiStatusFlags & SOLDIER_PC)) return;
+	KEY& k = KeyTable[o.ubKeyID];
+	if (k.usDateFound != 0) return;
+	k.usDateFound   = GetWorldDay();
+	k.usSectorFound = SECTOR(s.sSectorX, s.sSectorY);
+}
+
+
 BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 {
 	// returns object to have in hand after placement... same as original in the
@@ -2743,14 +2753,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		}
 	}
 
-	if ( Item[ pObj->usItem ].usItemClass == IC_KEY && pSoldier->uiStatusFlags & SOLDIER_PC )
-	{
-		if ( KeyTable[ pObj->ubKeyID ].usDateFound == 0 )
-		{
-			KeyTable[ pObj->ubKeyID ].usDateFound = (UINT16) GetWorldDay();
-			KeyTable[ pObj->ubKeyID ].usSectorFound = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
-		}
-	}
+	if (Item[pObj->usItem].usItemClass == IC_KEY) CollectKey(*pSoldier, *pObj);
 
 	ubSlotLimit = ItemSlotLimit( pObj->usItem, bPos );
 
@@ -3248,14 +3251,8 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 {
 	UINT8 ubNumberNotAdded = 0;
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_PC ) // redundant but what the hey
-	{
-		if ( KeyTable[ pObj->ubKeyID ].usDateFound == 0 )
-		{
-			KeyTable[ pObj->ubKeyID ].usDateFound = (UINT16) GetWorldDay();
-			KeyTable[ pObj->ubKeyID ].usSectorFound = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
-		}
-	}
+	// redundant but what the hey
+	CollectKey(*pSoldier, *pObj);
 
 	// check if we are going to far
 	if ( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber + pObj->ubNumberOfObjects ) > Item[ pObj->usItem ].ubPerPocket )
