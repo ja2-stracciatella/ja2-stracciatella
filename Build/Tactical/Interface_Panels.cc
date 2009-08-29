@@ -3464,7 +3464,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				else
 				{
 					// Swap!
-					SwapKeysToSlot( gpItemPopupSoldier, (INT8) uiKeyRing, gpItemPointer );
+					SwapKeysToSlot(*gpItemPopupSoldier, (INT8)uiKeyRing, *gpItemPointer);
 
 					if ( fDeductPoints )
 					{

@@ -3262,21 +3262,16 @@ UINT8 AddKeysToSlot(SOLDIERTYPE& s, INT8 const key_ring_pos, OBJECTTYPE const& k
 }
 
 
-UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj )
+void SwapKeysToSlot(SOLDIERTYPE& s, INT8 const key_ring_pos, OBJECTTYPE& key)
 {
-	// swap keys in keyring slot and keys in pocket
-	OBJECTTYPE	TempObj;
+	KEY_ON_RING& keyring = s.pKeyRing[key_ring_pos];
+	UINT8 const  n_keys  = keyring.ubNumber;
+	UINT8 const  key_id  = keyring.ubKeyID;
 
-	// create temp object to hold keys currently in key ring slot
-	CreateKeyObject( &TempObj, pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber, pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID );
+	keyring.ubNumber = key.ubNumberOfObjects;
+	keyring.ubKeyID  = key.ubKeyID;
 
-	pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = pObj->ubNumberOfObjects;
-	pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->ubKeyID;
-
-	// swap params?
-	*pObj = TempObj;
-
-	return( 1 );
+	CreateKeyObject(&key, n_keys, key_id);
 }
 
 

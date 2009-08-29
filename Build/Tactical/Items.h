@@ -75,7 +75,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 BOOLEAN AutoPlaceObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN fNewItem );
 BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj );
 
-UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
+// Swap keys in keyring slot and keys in pocket
+void SwapKeysToSlot(SOLDIERTYPE&, INT8 key_ring_pos, OBJECTTYPE&);
 
 // create a keyobject
 void CreateKeyObject(OBJECTTYPE*, UINT8 ubNumberOfKeys, UINT8 ubKeyIdValue);
