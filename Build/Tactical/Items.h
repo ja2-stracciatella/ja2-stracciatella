@@ -89,7 +89,7 @@ BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECT
 BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8 ubNumberOfKeys ,OBJECTTYPE * pObj );
 
 // add the keys to an inventory slot
-UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
+UINT8 AddKeysToSlot(SOLDIERTYPE&, INT8 key_ring_pos, OBJECTTYPE const& key);
 
 
 

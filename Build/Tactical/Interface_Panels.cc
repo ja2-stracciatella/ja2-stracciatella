@@ -3287,7 +3287,6 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	UINT16	usOldItemIndex;
 	static BOOLEAN	fRightDown = FALSE;
 	static BOOLEAN	fLeftDown = FALSE;
-	INT32 iNumberOfKeysTaken = 0;
 
 	uiKeyRing = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -3420,7 +3419,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				if ( gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == INVALID_KEY_NUMBER || gpItemPopupSoldier->pKeyRing[ uiKeyRing ].ubKeyID == gpItemPointer->ubKeyID)
 				{
 					// Try to place here
-					if ( ( iNumberOfKeysTaken = AddKeysToSlot( gpItemPopupSoldier, ( INT8 )uiKeyRing, gpItemPointer ) ) )
+					INT32 const iNumberOfKeysTaken = AddKeysToSlot(*gpItemPopupSoldier, (INT8)uiKeyRing, *gpItemPointer);
+					if (iNumberOfKeysTaken != 0)
 					{
 
 						if ( fDeductPoints )

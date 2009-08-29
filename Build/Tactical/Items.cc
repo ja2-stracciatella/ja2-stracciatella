@@ -3246,44 +3246,21 @@ BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8
 	}
 }
 
+
 // return number added
-UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj )
+UINT8 AddKeysToSlot(SOLDIERTYPE& s, INT8 const key_ring_pos, OBJECTTYPE const& key)
 {
-	UINT8 ubNumberNotAdded = 0;
-
 	// redundant but what the hey
-	CollectKey(*pSoldier, *pObj);
+	CollectKey(s, key);
 
-	// check if we are going to far
-	if ( ( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber + pObj->ubNumberOfObjects ) > Item[ pObj->usItem ].ubPerPocket )
-	{
-		// only take what we can
-		ubNumberNotAdded = pObj->ubNumberOfObjects - ( Item[ pObj->usItem ].ubPerPocket - pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber );
-
-		// set to max
-		pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber = Item[ pObj->usItem ].ubPerPocket;
-
-		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 )
-		{
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->ubKeyID;
-		}
-
-		// return number used
-		return( pObj->ubNumberOfObjects - ubNumberNotAdded );
-	}
-	else
-	{
-		// check
-		if( pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber == 0 )
-		{
-			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = pObj->ubKeyID;
-		}
-
-		pSoldier->pKeyRing[ bKeyRingPosition ].ubNumber += pObj->ubNumberOfObjects;
-	}
-
-	return( pObj->ubNumberOfObjects );
+	KEY_ON_RING& keyring = s.pKeyRing[key_ring_pos];
+	if (keyring.ubNumber == 0) keyring.ubKeyID = key.ubKeyID;
+	// Only take what we can
+	UINT8 const n_added = MIN(key.ubNumberOfObjects, Item[key.usItem].ubPerPocket - keyring.ubNumber);
+	keyring.ubNumber += n_added;
+	return n_added;
 }
+
 
 UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj )
 {
