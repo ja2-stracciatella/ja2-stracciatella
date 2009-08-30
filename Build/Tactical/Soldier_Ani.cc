@@ -2345,12 +2345,12 @@ no_cry:
 					{
 						INT16 sNewGridNo;
 
-						InternalDropBlood( pSoldier->sGridNo, pSoldier->bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
+						InternalDropBlood(pSoldier->sGridNo, pSoldier->bLevel, HUMAN, MAXBLOODQUANTITY, 1);
 
 						// Move forward one gridno....
 						sNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(pSoldier->bDirection)));
 
-						InternalDropBlood( sNewGridNo, pSoldier->bLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
+						InternalDropBlood(sNewGridNo, pSoldier->bLevel, HUMAN, MAXBLOODQUANTITY, 1);
 
 					}
 					break;

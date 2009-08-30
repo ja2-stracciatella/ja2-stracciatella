@@ -343,7 +343,7 @@ void DropSmell(SOLDIERTYPE& s)
 }
 
 
-void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStrength, INT8 bVisible )
+void InternalDropBlood(INT16 const sGridNo, INT8 const bLevel, BloodKind const ubType, UINT8 ubStrength, INT8 const bVisible)
 {
 	MAP_ELEMENT *		pMapElement;
 	UINT8						ubOldStrength=0;
@@ -457,7 +457,7 @@ void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStreng
 
 void DropBlood(const SOLDIERTYPE* pSoldier, UINT8 ubStrength, INT8 bVisible)
 {
-	UINT8						ubType;
+	BloodKind ubType;
 
 	/*
 	 * Dropping some blood;
@@ -478,7 +478,7 @@ void DropBlood(const SOLDIERTYPE* pSoldier, UINT8 ubStrength, INT8 bVisible)
 	}
 	else
 	{
-		ubType = 0;
+		ubType = HUMAN;
 	}
 
 

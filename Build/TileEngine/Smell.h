@@ -1,9 +1,12 @@
 #include "JA2Types.h"
 
 
-#define HUMAN							 0
-#define CREATURE_ON_FLOOR	 0x01
-#define CREATURE_ON_ROOF   0x02
+enum BloodKind
+{
+	HUMAN             = 0,
+	CREATURE_ON_FLOOR = 1,
+	CREATURE_ON_ROOF  = 2
+};
 
 #define NORMAL_HUMAN_SMELL_STRENGTH			10
 #define COW_SMELL_STRENGTH							15
@@ -22,4 +25,4 @@ void DropSmell(SOLDIERTYPE&);
 void DropBlood(const SOLDIERTYPE* pSoldier, UINT8 ubStrength, INT8 bVisible);
 void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel );
 void RemoveBlood( INT16 sGridNo, INT8 bLevel );
-void InternalDropBlood( INT16 sGridNo, INT8 bLevel, UINT8 ubType, UINT8 ubStrength, INT8 bVisible );
+void InternalDropBlood(INT16 sGridNo, INT8 bLevel, BloodKind, UINT8 ubStrength, INT8 bVisible);

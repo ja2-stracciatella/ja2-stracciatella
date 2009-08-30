@@ -2176,7 +2176,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
     if ( fCanSpewBlood )
     {
       // Drop blood dude!
-			InternalDropBlood( sNewGridNo, bSpewBloodLevel, 0, (UINT8)(MAXBLOODQUANTITY), 1 );
+			InternalDropBlood(sNewGridNo, bSpewBloodLevel, HUMAN, MAXBLOODQUANTITY, 1);
     }
   }
 
