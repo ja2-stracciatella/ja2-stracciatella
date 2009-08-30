@@ -24,5 +24,5 @@ void DecayBloodAndSmells( UINT32 uiTime );
 void DropSmell(SOLDIERTYPE&);
 void DropBlood(SOLDIERTYPE const&, UINT8 strength);
 void UpdateBloodGraphics(GridNo, INT8 level);
-void RemoveBlood( INT16 sGridNo, INT8 bLevel );
+void RemoveBlood(GridNo, INT8 level);
 void InternalDropBlood(GridNo, INT8 level, BloodKind, UINT8 strength, INT8 visible);

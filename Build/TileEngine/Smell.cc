@@ -135,13 +135,13 @@
 	(s) = BLOOD_ROOF_TYPE( ntr ) | (s & 0xFD); \
 }
 
-void RemoveBlood( INT16 sGridNo, INT8 bLevel )
+
+void RemoveBlood(GridNo const gridno, INT8 const level)
 {
-	gpWorldLevelData[ sGridNo ].ubBloodInfo = 0;
-
-	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_REEVALUATEBLOOD;
-
-	UpdateBloodGraphics( sGridNo, bLevel );
+	MAP_ELEMENT& me = gpWorldLevelData[gridno];
+	me.ubBloodInfo  = 0;
+	me.uiFlags     |= MAPELEMENT_REEVALUATEBLOOD;
+	UpdateBloodGraphics(gridno, level);
 }
 
 
