@@ -343,115 +343,92 @@ void DropSmell(SOLDIERTYPE& s)
 }
 
 
-void InternalDropBlood(INT16 const sGridNo, INT8 const bLevel, BloodKind const ubType, UINT8 ubStrength, INT8 const bVisible)
+void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const blood_kind, UINT8 strength, INT8 const visible)
 {
-	MAP_ELEMENT *		pMapElement;
-	UINT8						ubOldStrength=0;
-	UINT8						ubNewStrength=0;
+	/* Dropping some blood;
+	 * We can check the type of blood by consulting the type in the smell byte */
 
-	/*
-	 * Dropping some blood;
-	 * We can check the type of blood by consulting the type in the smell byte
-	 */
-
-	// If we are in water...
-	if ( GetTerrainType( sGridNo ) == DEEP_WATER || GetTerrainType( sGridNo ) == LOW_WATER || GetTerrainType( sGridNo ) == MED_WATER )
+	// ATE: Send warning if dropping blood nowhere
+	if (gridno == NOWHERE)
 	{
+#ifdef JA2BETAVERSION
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Attempting to drop blood NOWHERE");
+#endif
 		return;
 	}
 
-	// ATE: Send warning if dropping blood nowhere....
-	if ( sGridNo == NOWHERE )
-	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Attempting to drop blood NOWHERE" );
-		#endif
-		return;
-	}
+	if (Water(gridno)) return;
 
-	// ensure max strength is okay
-	ubStrength = __min( ubStrength, BLOOD_STRENGTH_MAX );
+	// Ensure max strength is okay
+	strength = __min(strength, BLOOD_STRENGTH_MAX);
 
-	pMapElement = &(gpWorldLevelData[ sGridNo ]);
-	if ( bLevel == 0 )
-	{
-		// dropping blood on ground
-		ubOldStrength = BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo );
-		if (ubOldStrength > 0)
+	UINT8 new_strength = 0;
+	MAP_ELEMENT& me = gpWorldLevelData[gridno];
+	if (level == 0)
+	{ // Dropping blood on ground
+		UINT8 const old_strength = BLOOD_FLOOR_STRENGTH(me.ubBloodInfo);
+		if (old_strength > 0)
 		{
 			// blood already there... we'll leave the decay time as it is
-			if (BLOOD_FLOOR_TYPE( pMapElement->ubBloodInfo ) == ubType)
-			{
-				// combine blood strengths!
-				ubNewStrength = __min( ( ubOldStrength + ubStrength ), BLOOD_STRENGTH_MAX );
-
-				SET_BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo, ubNewStrength );
+			if (BLOOD_FLOOR_TYPE(me.ubBloodInfo) == blood_kind)
+			{ // Combine blood strengths
+				new_strength = __min(old_strength + strength, BLOOD_STRENGTH_MAX);
+				SET_BLOOD_FLOOR_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else
-			{
-				// replace the existing blood if more is being dropped than exists
-				if (ubStrength > ubOldStrength )
-				{
-					// replace!
-					SET_BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo, ubStrength );
+			{ // Replace the existing blood if more is being dropped than exists
+				if (strength > old_strength)
+				{ // Replace
+					SET_BLOOD_FLOOR_STRENGTH(me.ubBloodInfo, strength);
 				}
-				// else we don't drop anything at all
+				// Else we don't drop anything at all
 			}
 		}
 		else
 		{
-			// no blood on the ground yet, so drop this amount!
-			// set decay time
-			SET_BLOOD_DELAY_TIME( pMapElement->ubBloodInfo );
-			SET_BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo, ubStrength );
+			// No blood on the ground yet, so drop this amount.
+			// Set decay time
+			SET_BLOOD_DELAY_TIME(me.ubBloodInfo);
+			SET_BLOOD_FLOOR_STRENGTH(me.ubBloodInfo, strength);
 			// NB blood floor type stored in smell byte!
-			SET_BLOOD_FLOOR_TYPE( pMapElement->ubSmellInfo, ubType );
+			SET_BLOOD_FLOOR_TYPE(me.ubSmellInfo, blood_kind);
 		}
 	}
 	else
-	{
-		// dropping blood on roof
-		ubOldStrength = BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo );
-		if (ubOldStrength > 0)
+	{ // Dropping blood on roof
+		UINT8 const old_strength = BLOOD_ROOF_STRENGTH(me.ubBloodInfo);
+		if (old_strength > 0)
 		{
-			// blood already there... we'll leave the decay time as it is
-			if (BLOOD_ROOF_TYPE( pMapElement->ubSmellInfo ) == ubType)
-			{
-				// combine blood strengths!
-				ubNewStrength = __max( ubOldStrength, ubStrength ) + 1;
+			// Blood already there, we'll leave the decay time as it is
+			if (BLOOD_ROOF_TYPE(me.ubSmellInfo) == blood_kind)
+			{ // Combine blood strengths
+				new_strength = __max(old_strength, strength) + 1;
 				// make sure the strength is legal
-				ubNewStrength = __max( ubNewStrength, BLOOD_STRENGTH_MAX );
-				SET_BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo, ubNewStrength );
+				new_strength = __max(new_strength, BLOOD_STRENGTH_MAX);
+				SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else
-			{
-				// replace the existing blood if more is being dropped than exists
-				if (ubStrength > ubOldStrength )
-				{
-					// replace!
-					SET_BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo, ubStrength );
+			{ // Replace the existing blood if more is being dropped than exists
+				if (strength > old_strength)
+				{ // Replace
+					SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, strength);
 				}
-				// else we don't drop anything at all
+				// Else we don't drop anything at all
 			}
 		}
 		else
 		{
-			// no blood on the roof yet, so drop this amount!
-			// set decay time
-			SET_BLOOD_DELAY_TIME( pMapElement->ubBloodInfo );
-			SET_BLOOD_ROOF_STRENGTH( pMapElement->ubBloodInfo, ubNewStrength );
-			SET_BLOOD_ROOF_TYPE( pMapElement->ubSmellInfo, ubType );
+			// No blood on the roof yet, so drop this amount.
+			// Set decay time
+			SET_BLOOD_DELAY_TIME(me.ubBloodInfo);
+			SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, new_strength); // XXX new_strength always 0 here
+			SET_BLOOD_ROOF_TYPE(me.ubSmellInfo, blood_kind);
 		}
 	}
 
-	// Turn on flag...
-	pMapElement->uiFlags |= MAPELEMENT_REEVALUATEBLOOD;
+	me.uiFlags |= MAPELEMENT_REEVALUATEBLOOD;
 
-	if ( bVisible != -1 )
-	{
-		UpdateBloodGraphics( sGridNo, bLevel );
-	}
-
+	if (visible != -1) UpdateBloodGraphics(gridno, level);
 }
 
 
