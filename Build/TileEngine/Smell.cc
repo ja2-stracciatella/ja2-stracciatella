@@ -443,66 +443,42 @@ void DropBlood(SOLDIERTYPE const& s, UINT8 const strength)
 }
 
 
-void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
+void UpdateBloodGraphics(GridNo const gridno, INT8 const level)
 {
-	MAP_ELEMENT *		pMapElement;
-	INT8						bValue;
+	// Based on level, type, display graphics for blood
 
-	// OK, based on level, type, display graphics for blood
-	pMapElement = &(gpWorldLevelData[ sGridNo ]);
+	// Check for blood option
+	if (!gGameSettings.fOptions[TOPTION_BLOOD_N_GORE]) return;
 
-	// CHECK FOR BLOOD OPTION
-	if ( !gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
-	{
-		return;
+	MAP_ELEMENT& me = gpWorldLevelData[gridno];
+	if (!(me.uiFlags & MAPELEMENT_REEVALUATEBLOOD)) return;
+	me.uiFlags &= ~MAPELEMENT_REEVALUATEBLOOD;
+
+	if (level == 0)
+	{ // Ground
+		// Remove tile graphic if one exists.
+		if (LEVELNODE const* const n = TypeRangeExistsInObjectLayer(gridno, HUMANBLOOD, CREATUREBLOOD))
+		{
+			RemoveObject(gridno, n->usIndex);
+		}
+
+		// Pick new one. based on strength and randomness
+		INT8 const strength = BLOOD_FLOOR_STRENGTH(me.ubBloodInfo);
+		if (strength == 0) return;
+
+		UINT16 const index     = Random(4) * 4 + 3 - strength / 2U;
+		UINT32 const type      =
+			BLOOD_FLOOR_TYPE(me.ubSmellInfo) == HUMAN ? HUMANBLOOD :
+			CREATUREBLOOD;
+		UINT16 const new_index = GetTileIndexFromTypeSubIndex(type, index + 1);
+		AddObjectToHead(gridno, new_index);
+
+		// Update rendering
+		me.uiFlags |= MAPELEMENT_REDRAW;
+		SetRenderFlags(RENDER_FLAG_MARKED);
 	}
-
-	if ( pMapElement->uiFlags & MAPELEMENT_REEVALUATEBLOOD )
-	{
-
-		// Turn off flag!
-		pMapElement->uiFlags &= ( ~MAPELEMENT_REEVALUATEBLOOD );
-
-		// Ground
-		if ( bLevel == 0 )
-		{
-			bValue = BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo );
-
-			// OK, remove tile graphic if one exists....
-			if (LEVELNODE const* const n = TypeRangeExistsInObjectLayer(sGridNo, HUMANBLOOD, CREATUREBLOOD))
-			{
-				RemoveObject(sGridNo, n->usIndex);
-			}
-
-			// OK, pick new one. based on strength and randomness
-
-			if ( bValue > 0 )
-			{
-				UINT16 const usIndex = Random(4) * 4 + 3 - bValue / 2U;
-
-				UINT16 usNewIndex;
-				if ( BLOOD_FLOOR_TYPE( pMapElement->ubSmellInfo )	== 0 )
-				{
-					usNewIndex = GetTileIndexFromTypeSubIndex(HUMANBLOOD, usIndex + 1);
-				}
-				else
-				{
-					usNewIndex = GetTileIndexFromTypeSubIndex(CREATUREBLOOD, usIndex + 1);
-				}
-
-				AddObjectToHead( sGridNo, usNewIndex );
-
-				// Update rendering!
-				pMapElement->uiFlags|=MAPELEMENT_REDRAW;
-				SetRenderFlags(RENDER_FLAG_MARKED);
-
-			}
-		}
-		// Roof
-		else
-		{
-
-
-		}
+	else
+	{ // Roof
+		// XXX no visible blood on roofs
 	}
 }
