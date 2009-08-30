@@ -455,14 +455,14 @@ void InternalDropBlood(INT16 const sGridNo, INT8 const bLevel, BloodKind const u
 }
 
 
-void DropBlood(SOLDIERTYPE const& s, UINT8 const strength, INT8 const visible)
+void DropBlood(SOLDIERTYPE const& s, UINT8 const strength)
 {
 	// Figure out the kind of blood that we're dropping
 	BloodKind const b =
 		!(s.uiStatusFlags & SOLDIER_MONSTER) ? HUMAN             :
 		s.bLevel == 0                        ? CREATURE_ON_FLOOR :
 		CREATURE_ON_ROOF;
-	InternalDropBlood(s.sGridNo, s.bLevel, b, strength, visible);
+	InternalDropBlood(s.sGridNo, s.bLevel, b, strength, s.bVisible);
 }
 
 
