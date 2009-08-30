@@ -19,7 +19,7 @@ enum BloodKind
 #define MAXBLOODQUANTITY						7
 #define BLOODDIVISOR								10
 
-void DecaySmells( void );
+void DecaySmells();
 void DecayBloodAndSmells( UINT32 uiTime );
 void DropSmell(SOLDIERTYPE&);
 void DropBlood(SOLDIERTYPE const&, UINT8 strength);

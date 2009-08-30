@@ -145,22 +145,15 @@ void RemoveBlood(GridNo const gridno, INT8 const level)
 }
 
 
-void DecaySmells( void )
+void DecaySmells()
 {
-	//return;
-
-	FOR_ALL_WORLD_TILES(pMapElement)
+	FOR_ALL_WORLD_TILES(i)
 	{
-		if (pMapElement->ubSmellInfo)
-		{
-			// decay smell strength!
-			DECAY_SMELL_STRENGTH( pMapElement->ubSmellInfo );
-			// if the strength left is 0, wipe the whole byte to clear the type
-			if (SMELL_STRENGTH( pMapElement->ubSmellInfo ) == 0)
-			{
-				pMapElement->ubSmellInfo = 0;
-			}
-		}
+		UINT8& smell = i->ubSmellInfo;
+		if (smell == 0) continue;
+		DECAY_SMELL_STRENGTH(smell);
+		// If the strength left is 0, wipe the whole byte to clear the type
+		if (SMELL_STRENGTH(smell) == 0) smell = 0;
 	}
 }
 
