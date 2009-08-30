@@ -4004,7 +4004,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 				// ATE: Only if in sector
 				if (blood != NOBLOOD && s.bInSector)
 				{
-					DropBlood(&s, blood, s.bVisible);
+					DropBlood(s, blood, s.bVisible);
 				}
 			}
 		}
@@ -5708,7 +5708,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 		 {
 			if ( pSoldier->bInSector )
 			{
-				DropBlood( pSoldier, ubBlood, pSoldier->bVisible );
+				DropBlood(*pSoldier, ubBlood, pSoldier->bVisible);
 			}
 		 }
 	}

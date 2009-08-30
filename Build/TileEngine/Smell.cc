@@ -455,36 +455,15 @@ void InternalDropBlood(INT16 const sGridNo, INT8 const bLevel, BloodKind const u
 }
 
 
-void DropBlood(const SOLDIERTYPE* pSoldier, UINT8 ubStrength, INT8 bVisible)
+void DropBlood(SOLDIERTYPE const& s, UINT8 const strength, INT8 const visible)
 {
-	BloodKind ubType;
-
-	/*
-	 * Dropping some blood;
-	 * We can check the type of blood by consulting the type in the smell byte
-	 */
-
-	// figure out the type of blood that we're dropping
-	if ( pSoldier->uiStatusFlags & SOLDIER_MONSTER )
-	{
-		if ( pSoldier->bLevel == 0 )
-		{
-			ubType = CREATURE_ON_FLOOR;
-		}
-		else
-		{
-			ubType = CREATURE_ON_ROOF;
-		}
-	}
-	else
-	{
-		ubType = HUMAN;
-	}
-
-
-	InternalDropBlood( pSoldier->sGridNo, pSoldier->bLevel, ubType, ubStrength, bVisible );
+	// Figure out the kind of blood that we're dropping
+	BloodKind const b =
+		!(s.uiStatusFlags & SOLDIER_MONSTER) ? HUMAN             :
+		s.bLevel == 0                        ? CREATURE_ON_FLOOR :
+		CREATURE_ON_ROOF;
+	InternalDropBlood(s.sGridNo, s.bLevel, b, strength, visible);
 }
-
 
 
 void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )

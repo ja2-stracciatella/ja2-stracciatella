@@ -5985,7 +5985,7 @@ static void HandleBloodForNewGridNo(const SOLDIERTYPE* pSoldier)
 		if (bBlood >= 0)
 		{
 			// this handles all soldiers' dropping blood during movement
-			DropBlood(pSoldier, bBlood, pSoldier->bVisible);
+			DropBlood(*pSoldier, bBlood, pSoldier->bVisible);
 		}
 	}
 }

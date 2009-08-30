@@ -22,7 +22,7 @@ enum BloodKind
 void DecaySmells( void );
 void DecayBloodAndSmells( UINT32 uiTime );
 void DropSmell(SOLDIERTYPE&);
-void DropBlood(const SOLDIERTYPE* pSoldier, UINT8 ubStrength, INT8 bVisible);
+void DropBlood(SOLDIERTYPE const&, UINT8 strength, INT8 visible);
 void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel );
 void RemoveBlood( INT16 sGridNo, INT8 bLevel );
 void InternalDropBlood(INT16 sGridNo, INT8 bLevel, BloodKind, UINT8 ubStrength, INT8 bVisible);
