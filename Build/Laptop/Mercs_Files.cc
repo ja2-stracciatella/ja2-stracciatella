@@ -209,7 +209,7 @@ void RenderMercsFiles()
 	DisplayMercsStats(p);
 
 	bool const enable =
-		!IsMercDead &&
+		!IsMercDead(p) &&
 		(
 			LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_VALID     ||
 			LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_SUSPENDED ||
