@@ -5173,9 +5173,6 @@ BlitLoop:
 **********************************************************************************************/
 BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8 *pSrcBuffer, INT32 iX, INT32 iY)
 {
-	UINT16 *p16BPPPalette;
-//	UINT32 uiOffset;
-	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
 	INT32	 iTempX, iTempY;
 
@@ -5186,7 +5183,7 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPV
 
 	// Get Offsets from Index into structure
 	UINT32 const usWidth  = hSrcVSurface->Width();
-	//UINT32 const usHeight = hSrcVSurface->Height();
+	UINT32 const usHeight = hSrcVSurface->Height();
 
 	// Add to start position of dest buffer
 	iTempX = iX;
@@ -5196,14 +5193,22 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPV
 	CHECKF( iTempX >= 0 );
 	CHECKF( iTempY >= 0 );
 
-
-	SrcPtr= (UINT8 *)pSrcBuffer;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	p16BPPPalette = hSrcVSurface->p16BPPPalette;
+	UINT8*  SrcPtr        = pSrcBuffer;
+	UINT16* DestPtr       = pBuffer + uiDestPitchBYTES / 2 * iTempY + iTempX;
+	UINT16* p16BPPPalette = hSrcVSurface->p16BPPPalette;
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED
+	for (size_t h = usHeight; h != 0; --h)
+	{
+		for (size_t w = 0; w != usWidth; ++w)
+		{
+			DestPtr[w] = p16BPPPalette[SrcPtr[w]];
+		}
+
+		SrcPtr  += usWidth;
+		DestPtr += uiDestPitchBYTES / 2;
+	}
 #else
 	UINT32 rows;
 	__asm {
