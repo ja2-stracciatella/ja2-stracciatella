@@ -274,7 +274,7 @@ ScreenID MapUtilScreenHandle()
 	}
 
 	SetFontAttributes(TINYFONT1, FONT_MCOLOR_DKGRAY);
-	mprintf( 10, 340, L"Writing radar image %ls", zFilename2 );
+	mprintf(10, 340, L"Writing radar image %hs", zFilename2);
 	mprintf(10, 350, L"Using tileset %ls", gTilesets[giCurrentTilesetID].zName);
 
 	InvalidateScreen( );
