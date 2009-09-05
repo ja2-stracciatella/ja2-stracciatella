@@ -114,7 +114,7 @@ static bool gfUpdateSummaryInfo = true;
 
 
 static void CreateFileDialog(const wchar_t* zTitle);
-static void TrashFDlgList(FDLG_LIST* pList);
+static void TrashFDlgList(FDLG_LIST*);
 
 
 static void LoadSaveScreenEntry(void)
@@ -639,15 +639,13 @@ static void RemoveFromFDlgList(FDLG_LIST** const head, FDLG_LIST* const node)
 }
 
 
-static void TrashFDlgList(FDLG_LIST* pList)
+static void TrashFDlgList(FDLG_LIST* i)
 {
-	FDLG_LIST *pNode;
-
-	while(pList != NULL)
+	while (i)
 	{
-		pNode = pList;
-		pList = pList->pNext;
-		MemFree(pNode);
+		FDLG_LIST* const del = i;
+		i = i->pNext;
+		MemFree(del);
 	}
 }
 
