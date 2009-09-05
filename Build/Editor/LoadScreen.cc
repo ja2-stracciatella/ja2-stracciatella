@@ -605,34 +605,21 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 }
 
 
-FDLG_LIST* AddToFDlgList(FDLG_LIST* const pList, const char* const filename)
-{
-	// Add to start of list
-	if ( pList == NULL )
+FDLG_LIST* AddToFDlgList(FDLG_LIST* const list, char const* const filename)
+{ // Add and sort alphabetically without regard to case
+	FDLG_LIST* prev = 0;
+	FDLG_LIST* i;
+	for (i = list; i; prev = i, i = i->pNext)
 	{
-		FDLG_LIST* const pNode = MALLOC(FDLG_LIST);
-		strlcpy(pNode->filename, filename, lengthof(pNode->filename));
-		pNode->pPrev = pNode->pNext = NULL;
-		return(pNode);
+		if (strcasecmp(i->filename, filename) > 0) break;
 	}
-
-	// Add and sort alphabetically without regard to case -- function limited to 10 chars comparison
-	if (strcasecmp(pList->filename, filename) > 0)
-	{
-		// filename is smaller than pList (i.e. Insert before)
-		FDLG_LIST* const pNode = MALLOC(FDLG_LIST);
-		strlcpy(pNode->filename, filename, lengthof(pNode->filename));
-		pNode->pNext = pList;
-		pNode->pPrev = pList->pPrev;
-		pList->pPrev = pNode;
-		return(pNode);
-	}
-	else
-	{
-		pList->pNext = AddToFDlgList(pList->pNext, filename);
-		pList->pNext->pPrev = pList;
-	}
-	return(pList);
+	FDLG_LIST* const n = MALLOC(FDLG_LIST);
+	strlcpy(n->filename, filename, lengthof(n->filename));
+	n->pPrev = prev;
+	n->pNext = i;
+	if (i)    i->pPrev    = n;
+	if (prev) prev->pNext = n;
+	return prev ? list : n;
 }
 
 

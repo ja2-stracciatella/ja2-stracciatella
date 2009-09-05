@@ -13,7 +13,7 @@ struct FDLG_LIST
 	FDLG_LIST* pPrev;
 };
 
-FDLG_LIST* AddToFDlgList(FDLG_LIST* pList, const char* filename);
+FDLG_LIST* AddToFDlgList(FDLG_LIST*, char const* filename);
 
 
 BOOLEAN ExternalLoadMap(const wchar_t* szFilename);
