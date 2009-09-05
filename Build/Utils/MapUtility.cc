@@ -269,7 +269,7 @@ ScreenID MapUtilScreenHandle()
 			}
 		}
 
-		sprintf(zFilename2, RADARMAPSDIR "/%s.STI", zFilename);
+		sprintf(zFilename2, RADARMAPSDIR "/%s.sti", zFilename);
 		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
 	}
 

@@ -21,10 +21,10 @@
 
 
 // Names of the default generic button image files.
-#define DEFAULT_GENERIC_BUTTON_OFF    "GENBUTN.STI"
-#define DEFAULT_GENERIC_BUTTON_ON     "GENBUTN2.STI"
-#define DEFAULT_GENERIC_BUTTON_OFF_HI "GENBUTN3.STI"
-#define DEFAULT_GENERIC_BUTTON_ON_HI  "GENBUTN4.STI"
+#define DEFAULT_GENERIC_BUTTON_OFF    "genbutn.sti"
+#define DEFAULT_GENERIC_BUTTON_ON     "genbutn2.sti"
+#define DEFAULT_GENERIC_BUTTON_OFF_HI "genbutn3.sti"
+#define DEFAULT_GENERIC_BUTTON_ON_HI  "genbutn4.sti"
 
 
 #define MSYS_STARTING_CURSORVAL 0

@@ -1941,8 +1941,8 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 	// Load graphic
 	guiItemDescBox    = AddVideoObjectFromFile(INTERFACEDIR "/infobox.sti");
-	guiMapItemDescBox = AddVideoObjectFromFile(INTERFACEDIR "/iteminfoc.STI");
-	guiBullet         = AddVideoObjectFromFile(INTERFACEDIR "/bullet.STI");
+	guiMapItemDescBox = AddVideoObjectFromFile(INTERFACEDIR "/iteminfoc.sti");
+	guiBullet         = AddVideoObjectFromFile(INTERFACEDIR "/bullet.sti");
 
 	if (o->usItem != MONEY)
 	{
@@ -3816,7 +3816,7 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
   }
 
 	// Load graphics
-	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.STI");
+	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.sti");
 
 	// Get size
 	ETRLEObject const& pTrav        = guiItemPopupBoxes->SubregionProperties(0);
@@ -4005,7 +4005,7 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 	gpItemPopupSoldier = pSoldier;
 
 	// Load graphics
-	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.STI");
+	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.sti");
 
 	// Get size
 	ETRLEObject const& pTrav         = guiItemPopupBoxes->SubregionProperties(0);

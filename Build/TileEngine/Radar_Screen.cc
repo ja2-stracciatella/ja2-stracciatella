@@ -82,7 +82,7 @@ void LoadRadarScreenBitmap(const char* const filename)
 
 	// Grab the Map image
 	SGPFILENAME image_filename;
-	ReplacePath(image_filename, lengthof(image_filename), RADARMAPSDIR "/", filename, ".STI");
+	ReplacePath(image_filename, lengthof(image_filename), RADARMAPSDIR "/", filename, ".sti");
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
 	gusRadarImage = radar;
 
