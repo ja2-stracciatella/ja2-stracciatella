@@ -171,7 +171,7 @@ static void LoadSaveScreenEntry(void)
 
 
 static void RemoveFileDialog(void);
-static BOOLEAN RemoveFromFDlgList(FDLG_LIST** head, FDLG_LIST* node);
+static void RemoveFromFDlgList(FDLG_LIST** head, FDLG_LIST* node);
 static BOOLEAN ValidFilename(void);
 
 
@@ -623,27 +623,19 @@ FDLG_LIST* AddToFDlgList(FDLG_LIST* const list, char const* const filename)
 }
 
 
-static BOOLEAN RemoveFromFDlgList(FDLG_LIST** head, FDLG_LIST* node)
+static void RemoveFromFDlgList(FDLG_LIST** const head, FDLG_LIST* const node)
 {
-	FDLG_LIST *curr;
-	curr = *head;
-	while( curr )
+	for (FDLG_LIST* i = *head; i; i = i->pNext)
 	{
-		if( curr == node )
-		{
-			if( *head == node )
-				*head = (*head)->pNext;
-			if( curr->pPrev )
-				curr->pPrev->pNext = curr->pNext;
-			if( curr->pNext )
-				curr->pNext->pPrev = curr->pPrev;
-			MemFree( node );
-			node = NULL;
-			return TRUE;
-		}
-		curr = curr->pNext;
+		if (i != node) continue;
+		if (*head == node) *head = (*head)->pNext;
+		FDLG_LIST* const prev = i->pPrev;
+		FDLG_LIST* const next = i->pNext;
+		if (prev) prev->pNext = next;
+		if (next) next->pPrev = prev;
+		MemFree(node);
+		break;
 	}
-	return FALSE; //wasn't deleted
 }
 
 
