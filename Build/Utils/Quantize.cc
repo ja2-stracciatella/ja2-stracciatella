@@ -114,10 +114,7 @@ static NODE* ProcessImage(const SGPPaletteEntry* pData, const int iWidth, const 
 	for (size_t i = iWidth * iHeight; i != 0; --i)
 	{
 		SGPPaletteEntry const& c = *pData++;
-		BYTE            const  r = c.r;
-		BYTE            const  g = c.g;
-		BYTE            const  b = c.b;
-		AddColor(&tree, b, g, r, 0); // XXX TODO0016 r and b are swapped (vanilla)
+		AddColor(&tree, c.r, c.g, c.b, 0);
 		while (g_leaf_count > MAX_COLOURS) ReduceTree();
 	}
 	return tree;

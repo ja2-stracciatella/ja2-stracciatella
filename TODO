@@ -28,7 +28,6 @@ TODO0021
 - TODO0013 Code and comment disagree
 - TODO0014 Properly resolve the bReverse mess
 - TODO0015 Inconsistency between AddStructToTailCommon() and AddStructToHead() regarding return value of FindStructure()
-- TODO0016 r and b are swapped
 - TODO0017 does the order of printing and dirtying matter?
 - TODO0018 give quest facts proper names
 - TODO0019 remove quirk, which ignores failure to open a file, which happens at the start of the game
