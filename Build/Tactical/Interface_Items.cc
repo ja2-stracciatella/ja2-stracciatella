@@ -659,43 +659,41 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 }
 
 
-void InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_REGION_DESC* const pCamoRegion, const MOUSE_CALLBACK INVMoveCallback, const MOUSE_CALLBACK INVClickCallback, const MOUSE_CALLBACK INVMoveCamoCallback, const MOUSE_CALLBACK INVClickCamoCallback)
+void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_DESC const* const pCamoRegion, MOUSE_CALLBACK const INVMoveCallback, MOUSE_CALLBACK const INVClickCallback, MOUSE_CALLBACK const INVMoveCamoCallback, MOUSE_CALLBACK const INVClickCamoCallback)
 {
-	INT32 cnt;
-
 	// Load all four body type images
-	guiBodyInvVO[1][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male.sti");
-	guiBodyInvVO[1][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male_h.sti");
-
 	guiBodyInvVO[0][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
 	guiBodyInvVO[0][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male_h.sti");
-
+	guiBodyInvVO[1][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male.sti");
+	guiBodyInvVO[1][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male_h.sti");
 	guiBodyInvVO[2][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
 	guiBodyInvVO[2][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
-
 	guiBodyInvVO[3][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female.sti");
 	guiBodyInvVO[3][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female_h.sti");
 
 #ifndef JA2DEMO
-	// add gold key graphic
+	// Add gold key graphic
 	guiGoldKeyVO = AddVideoObjectFromFile(INTERFACEDIR "/gold_key_button.sti");
 #endif
 
 	// Add camo region
-	MSYS_DefineRegion(&gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, pCamoRegion->sX + CAMO_REGION_WIDTH, pCamoRegion->sY + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCamoCallback, INVClickCamoCallback);
+	UINT16 const x = pCamoRegion->sX;
+	UINT16 const y = pCamoRegion->sY;
+	MSYS_DefineRegion(&gSMInvCamoRegion, x, y, x + CAMO_REGION_WIDTH, y + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCamoCallback, INVClickCamoCallback);
 
 	// Add regions for inventory slots
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
-	{
-		// set inventory pocket coordinates from the table passed in
-		gSMInvData[ cnt ].sX = pRegionDesc[ cnt ].sX;
-		gSMInvData[ cnt ].sY = pRegionDesc[ cnt ].sY;
+	for (size_t i = 0; i != NUM_INV_SLOTS; ++i)
+	{ // Set inventory pocket coordinates from the table passed in
+		INV_REGIONS& r = gSMInvData[i];
+		r.sX = pRegionDesc[i].sX;
+		r.sY = pRegionDesc[i].sY;
 
-		MSYS_DefineRegion(&gSMInvRegion[cnt], gSMInvData[cnt].sX, gSMInvData[cnt].sY, gSMInvData[cnt].sX + gSMInvData[cnt].sWidth, gSMInvData[cnt].sY + gSMInvData[cnt].sHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
-		MSYS_SetRegionUserData( &gSMInvRegion[ cnt ], 0, cnt );
+		MOUSE_REGION& m = gSMInvRegion[i];
+		MSYS_DefineRegion(&m, r.sX, r.sY, r.sX + r.sWidth, r.sY + r.sHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
+		MSYS_SetRegionUserData(&m, 0, i);
 	}
 
-	memset( gbCompatibleAmmo, 0, sizeof( gbCompatibleAmmo ) );
+	memset(gbCompatibleAmmo, 0, sizeof(gbCompatibleAmmo));
 }
 
 
