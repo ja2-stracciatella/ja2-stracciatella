@@ -37,7 +37,7 @@ BOOLEAN HandleItemPickupMenu(void);
 
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
 void InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGION_DESC* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback);
-void ShutdownInvSlotInterface(void);
+void ShutdownInvSlotInterface();
 void HandleRenderInvSlots(SOLDIERTYPE const&, UINT8 dirty_level);
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel );
 void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY);

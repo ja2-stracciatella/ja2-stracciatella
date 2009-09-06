@@ -762,34 +762,25 @@ void DisableInvRegions( BOOLEAN fDisable )
 
 }
 
-void ShutdownInvSlotInterface( )
-{
-	UINT32		cnt;
 
+void ShutdownInvSlotInterface()
+{
 	// Remove all body type panels
-	DeleteVideoObject(guiBodyInvVO[0][0]);
-	DeleteVideoObject(guiBodyInvVO[2][0]);
-	DeleteVideoObject(guiBodyInvVO[1][0]);
-	DeleteVideoObject(guiBodyInvVO[3][0]);
-	DeleteVideoObject(guiBodyInvVO[0][1]);
-	DeleteVideoObject(guiBodyInvVO[2][1]);
-	DeleteVideoObject(guiBodyInvVO[1][1]);
-	DeleteVideoObject(guiBodyInvVO[3][1]);
+	for (SGPVObject* (*i)[2] = guiBodyInvVO; i != endof(guiBodyInvVO); ++i)
+	{
+		for (SGPVObject** k = *i; k != endof(*i); ++k) DeleteVideoObject(*k);
+	}
 
 #ifndef JA2DEMO
 	DeleteVideoObject(guiGoldKeyVO);
 #endif
 
-	// Remove regions
-	// Add regions for inventory slots
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	for (MOUSE_REGION* i = gSMInvRegion; i != endof(gSMInvRegion); ++i)
 	{
-		// Remove region
-		MSYS_RemoveRegion( &gSMInvRegion[ cnt ] );
+		MSYS_RemoveRegion(&*i);
 	}
 
-	// Remove camo
-	MSYS_RemoveRegion( &gSMInvCamoRegion );
+	MSYS_RemoveRegion(&gSMInvCamoRegion);
 }
 
 
