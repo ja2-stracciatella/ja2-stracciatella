@@ -1589,10 +1589,10 @@ static void CreateAutoResolveInterface(void)
 	ar->fExitAutoResolve   = FALSE;
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
-	ar->iPanelImages = AddVideoObjectFromFile(INTERFACEDIR "/AutoResolve.sti");
+	ar->iPanelImages = AddVideoObjectFromFile(INTERFACEDIR "/autoresolve.sti");
 
 	// Load the button images file, and assign it to the first button.
-	BUTTON_PICS* const btn_pics = LoadButtonImage(INTERFACEDIR "/AutoBtns.sti", 0, 7);
+	BUTTON_PICS* const btn_pics = LoadButtonImage(INTERFACEDIR "/autobtns.sti", 0, 7);
 	ar->iButtonImage[PAUSE_BUTTON]    = btn_pics;
 	// Have the other buttons hook into the first button containing the images.
 	ar->iButtonImage[PLAY_BUTTON]     = UseLoadedButtonImage(btn_pics,  1,  8);
@@ -1606,7 +1606,7 @@ static void CreateAutoResolveInterface(void)
 	ar->iButtonImage[DONELOSE_BUTTON] = UseLoadedButtonImage(btn_pics, 16, 17);
 
 	// Load the generic faces for civs and enemies
-	SGPVObject* const faces = AddVideoObjectFromFile(INTERFACEDIR "/SmFaces.sti");
+	SGPVObject* const faces = AddVideoObjectFromFile(INTERFACEDIR "/smfaces.sti");
 	ar->iFaces = faces;
 	SGPPaletteEntry const* const pal = faces->Palette();
 	faces->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);

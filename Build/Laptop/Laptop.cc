@@ -506,10 +506,10 @@ static void EnterLaptop(void)
 	guiLIGHTS = AddVideoObjectFromFile(LAPTOPDIR "/lights.sti");
 
 	// icons for title bars
-	guiTITLEBARICONS = AddVideoObjectFromFile(LAPTOPDIR "/ICONS.sti");
+	guiTITLEBARICONS = AddVideoObjectFromFile(LAPTOPDIR "/icons.sti");
 
 	// load, blt and delete graphics
-	guiEmailWarning = AddVideoObjectFromFile(LAPTOPDIR "/NewMailWarning.sti");
+	guiEmailWarning = AddVideoObjectFromFile(LAPTOPDIR "/newmailwarning.sti");
 	// load background
 	LoadDesktopBackground();
 

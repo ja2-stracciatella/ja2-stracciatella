@@ -886,7 +886,7 @@ static void LoadPersonnelScreenBackgroundGraphics(void)
 	guiDEPARTEDTEAM = AddVideoObjectFromFile(LAPTOPDIR "/departed.sti");
 
 	// current bar
-	guiCURRENTTEAM = AddVideoObjectFromFile(LAPTOPDIR "/CurrentTeam.sti");
+	guiCURRENTTEAM = AddVideoObjectFromFile(LAPTOPDIR "/currentteam.sti");
 }
 
 
@@ -1983,7 +1983,7 @@ static void DisplayHighLightBox(INT32 const sel_id)
 	// will display highlight box around selected merc
 	const INT32 x = SMALL_PORTRAIT_START_X + sel_id % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
 	const INT32 y = SMALL_PORTRAIT_START_Y + sel_id / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
-	BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/PicBorde.sti", 0, x, y);
+	BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/picborde.sti", 0, x, y);
 }
 
 
@@ -2123,7 +2123,7 @@ try
 {
 	// just show basic panel
 	// bounding
-	AutoSGPVObject uiBox(AddVideoObjectFromFile(LAPTOPDIR "/AtmButtons.sti"));
+	AutoSGPVObject uiBox(AddVideoObjectFromFile(LAPTOPDIR "/atmbuttons.sti"));
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 }
@@ -2132,7 +2132,7 @@ catch (...) { /* XXX ignore */ }
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text)
 {
-	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/AtmButtons.sti", 2, 3);
+	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/atmbuttons.sti", 2, 3);
 	giPersonnelATMStartButtonImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;

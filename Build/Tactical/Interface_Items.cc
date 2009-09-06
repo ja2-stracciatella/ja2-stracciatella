@@ -665,16 +665,16 @@ void InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_RE
 
 	// Load all four body type images
 	guiBodyInvVO[1][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male.sti");
-	guiBodyInvVO[1][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male_H.sti");
+	guiBodyInvVO[1][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_large_male_h.sti");
 
 	guiBodyInvVO[0][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
-	guiBodyInvVO[0][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male_H.sti");
+	guiBodyInvVO[0][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male_h.sti");
 
 	guiBodyInvVO[2][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
 	guiBodyInvVO[2][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_normal_male.sti");
 
 	guiBodyInvVO[3][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female.sti");
-	guiBodyInvVO[3][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female_H.sti");
+	guiBodyInvVO[3][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female_h.sti");
 
 #ifndef JA2DEMO
 	// add gold key graphic
@@ -1970,7 +1970,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile(INTERFACEDIR "/info_bil.sti");
 
 		// Create buttons for the money
-		guiMoneyButtonImage = LoadButtonImage(INTERFACEDIR "/Info_bil.sti", 1, 2);
+		guiMoneyButtonImage = LoadButtonImage(INTERFACEDIR "/info_bil.sti", 1, 2);
 		const MoneyLoc* const loc = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
 		INT32 i;
 		for (i = 0; i < MAX_ATTACHMENTS - 1; i++)

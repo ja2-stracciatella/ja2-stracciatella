@@ -274,20 +274,20 @@ void EnterFloristOrderForm()
 {
 	InitFloristDefaults();
 
-	guiDeliveryLocation               = AddVideoObjectFromFile(LAPTOPDIR "/DeliveryLocation.sti");
-	guiFlowerFrame                    = AddVideoObjectFromFile(LAPTOPDIR "/FlowerFrame.sti");
-	guiPersonalSentiments             = AddVideoObjectFromFile(LAPTOPDIR "/PersonalSentiments.sti");
-	guiNameBox                        = AddVideoObjectFromFile(LAPTOPDIR "/NameBox.sti");
-	guiFlowerOrderCheckBoxButtonImage = AddVideoObjectFromFile(LAPTOPDIR "/OrderCheckBox.sti");
+	guiDeliveryLocation               = AddVideoObjectFromFile(LAPTOPDIR "/deliverylocation.sti");
+	guiFlowerFrame                    = AddVideoObjectFromFile(LAPTOPDIR "/flowerframe.sti");
+	guiPersonalSentiments             = AddVideoObjectFromFile(LAPTOPDIR "/personalsentiments.sti");
+	guiNameBox                        = AddVideoObjectFromFile(LAPTOPDIR "/namebox.sti");
+	guiFlowerOrderCheckBoxButtonImage = AddVideoObjectFromFile(LAPTOPDIR "/ordercheckbox.sti");
 
 	// load the currently selected flower bouquet
 	char sTemp[40];
-	sprintf(sTemp, LAPTOPDIR "/Flower_%d.sti", guiCurrentlySelectedFlower);
+	sprintf(sTemp, LAPTOPDIR "/flower_%d.sti", guiCurrentlySelectedFlower);
 	guiCurrentlySelectedFlowerImage = AddVideoObjectFromFile(sTemp);
 
-	guiDropDownBorder = AddVideoObjectFromFile(INTERFACEDIR "/TactPopUp.sti");
+	guiDropDownBorder = AddVideoObjectFromFile(INTERFACEDIR "/tactpopup.sti");
 
-	guiFlowerOrderButtonImage	  = LoadButtonImage(LAPTOPDIR "/FloristButtons.sti", 0, 1);
+	guiFlowerOrderButtonImage	  = LoadButtonImage(LAPTOPDIR "/floristbuttons.sti", 0, 1);
 	guiFlowerOrderBackButton    = MakeButton(sOrderFormText[FLORIST_ORDER_BACK],    FLOWER_ORDER_BACK_BUTTON_X,    FLOWER_ORDER_BACK_BUTTON_Y,    BtnFlowerOrderBackButtonCallback);
 	guiFlowerOrderSendButton    = MakeButton(sOrderFormText[FLORIST_ORDER_SEND],    FLOWER_ORDER_SEND_BUTTON_X,    FLOWER_ORDER_SEND_BUTTON_Y,    BtnFlowerOrderSendButtonCallback);
 	guiFlowerOrderClearButton   = MakeButton(sOrderFormText[FLORIST_ORDER_CLEAR],   FLOWER_ORDER_CLEAR_BUTTON_X,   FLOWER_ORDER_CLEAR_BUTTON_Y,   BtnFlowerOrderClearButtonCallback);

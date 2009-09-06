@@ -111,7 +111,7 @@ void EnterAimHistory()
 	InitAimHistoryMenuBar();
 
 	// load the Content Buttons graphic and add it
-	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/ContentButton.sti");
+	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/contentbutton.sti");
 
 	gubCurPageNum = (UINT8) giCurrentSubPage;
 	RenderAimHistory();
@@ -226,7 +226,7 @@ static void InitAimHistoryMenuBar(void)
 {
 	UINT16					i, usPosX;
 
-	guiHistoryMenuButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
+	guiHistoryMenuButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
 	usPosX = AIM_HISTORY_MENU_X;
 	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
 	{

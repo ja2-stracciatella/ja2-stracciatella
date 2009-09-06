@@ -105,7 +105,7 @@ void EnterInsurance()
 	guiInsuranceTitleImage = AddVideoObjectFromFile(ImageFile);
 
 	// load the red bar on the side of the page and add it
-	guiInsuranceBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/Bullet.sti");
+	guiInsuranceBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
 
 	usPosX = INSURANCE_BOTTOM_LINK_RED_BAR_X;
 	for(i=0; i<3; i++)
@@ -216,13 +216,13 @@ static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 
 void InitInsuranceDefaults()
 {
 	// load the Flower Account Box graphic and add it
-	guiInsuranceBackGround = AddVideoObjectFromFile(LAPTOPDIR "/BackGroundTile.sti");
+	guiInsuranceBackGround = AddVideoObjectFromFile(LAPTOPDIR "/backgroundtile.sti");
 
 	// load the red bar on the side of the page and add it
-	guiInsuranceRedBarImage = AddVideoObjectFromFile(LAPTOPDIR "/LeftTile.sti");
+	guiInsuranceRedBarImage = AddVideoObjectFromFile(LAPTOPDIR "/lefttile.sti");
 
 	// load the red bar on the side of the page and add it
-	guiInsuranceBigRedLineImage = AddVideoObjectFromFile(LAPTOPDIR "/LargeBar.sti");
+	guiInsuranceBigRedLineImage = AddVideoObjectFromFile(LAPTOPDIR "/largebar.sti");
 
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )

@@ -373,7 +373,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 	uiInterfaceImages = AddVideoObjectFromFile(panel_file);
 
 	// Create the 3 buttons
-	iPBButtonImage[0] = LoadButtonImage(INTERFACEDIR "/PreBattleButton.sti", 0, 1);
+	iPBButtonImage[0] = LoadButtonImage(INTERFACEDIR "/prebattlebutton.sti", 0, 1);
 	iPBButtonImage[1] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
 	iPBButtonImage[2] = UseLoadedButtonImage(iPBButtonImage[0], 0, 1);
 	MakeButton(0,  27, gpStrategicString[STR_PB_AUTORESOLVE_BTN],  AutoResolveBattleCallback);

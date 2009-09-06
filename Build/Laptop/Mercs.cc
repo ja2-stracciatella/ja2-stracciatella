@@ -302,25 +302,25 @@ void EnterMercs()
 	InitMercBackGround();
 
 	// load the Account box graphic and add it
-	guiAccountBox = AddVideoObjectFromFile(LAPTOPDIR "/AccountBox.sti");
+	guiAccountBox = AddVideoObjectFromFile(LAPTOPDIR "/accountbox.sti");
 
 	// load the files Box graphic and add it
-	guiFilesBox = AddVideoObjectFromFile(LAPTOPDIR "/FilesBox.sti");
+	guiFilesBox = AddVideoObjectFromFile(LAPTOPDIR "/filesbox.sti");
 
 	// load the MercSymbol graphic and add it
-	guiMercSymbol = AddVideoObjectFromFile(LAPTOPDIR "/MERCSymbol.sti");
+	guiMercSymbol = AddVideoObjectFromFile(LAPTOPDIR "/mercsymbol.sti");
 
 	// load the SpecPortrait graphic and add it
-	guiSpecPortrait = AddVideoObjectFromFile(LAPTOPDIR "/SpecPortrait.sti");
+	guiSpecPortrait = AddVideoObjectFromFile(LAPTOPDIR "/specportrait.sti");
 
 	// load the Arrow graphic and add it
-	guiArrow = AddVideoObjectFromFile(LAPTOPDIR "/Arrow.sti");
+	guiArrow = AddVideoObjectFromFile(LAPTOPDIR "/arrow.sti");
 
 	// load the Merc video conf background graphic and add it
-	guiMercVideoPopupBackground = AddVideoObjectFromFile(LAPTOPDIR "/SpeckComWindow.sti");
+	guiMercVideoPopupBackground = AddVideoObjectFromFile(LAPTOPDIR "/speckcomwindow.sti");
 
 	// Account Box button
-	guiAccountBoxButtonImage = LoadButtonImage(LAPTOPDIR "/SmallButtons.sti", 0, 1);
+	guiAccountBoxButtonImage = LoadButtonImage(LAPTOPDIR "/smallbuttons.sti", 0, 1);
 
 	guiAccountBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_ACCOUNT_BUTTON_X, MERC_ACCOUNT_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnAccountBoxButtonCallback);
 	guiAccountBoxButton->SetCursor(CURSOR_LAPTOP_SCREEN);
@@ -543,7 +543,7 @@ void RenderMercs()
 void InitMercBackGround()
 {
 	// load the Merc background graphic and add it
-	guiMercBackGround = AddVideoObjectFromFile(LAPTOPDIR "/MERCBackGround.sti");
+	guiMercBackGround = AddVideoObjectFromFile(LAPTOPDIR "/mercbackground.sti");
 }
 
 
@@ -1014,7 +1014,7 @@ static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 	//if we are asked to create the buttons and the button isnt already created
 	if( fCreate && !fButtonCreated )
 	{
-		guiXToCloseMercVideoButton = QuickCreateButtonImg(LAPTOPDIR "/CloseButton.sti", 0, 1, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y, MSYS_PRIORITY_HIGH, BtnXToCloseMercVideoButtonCallback);
+		guiXToCloseMercVideoButton = QuickCreateButtonImg(LAPTOPDIR "/closebutton.sti", 0, 1, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y, MSYS_PRIORITY_HIGH, BtnXToCloseMercVideoButtonCallback);
 		guiXToCloseMercVideoButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		fButtonCreated = TRUE;

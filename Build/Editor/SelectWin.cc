@@ -253,10 +253,10 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 
 	INT16 y;
 	iOkWin      = MakeButton(OK_ICON,     EDITORDIR "/checkmark.sti",   y  =  0, 40, OkClkCallback,   L"Accept selections");
-	iCancelWin  = MakeButton(CANCEL_ICON, EDITORDIR "/bigX.sti",        y += 40, 40, CnclClkCallback, L"Cancel selections");
+	iCancelWin  = MakeButton(CANCEL_ICON, EDITORDIR "/bigx.sti",        y += 40, 40, CnclClkCallback, L"Cancel selections");
 	INT16 const h = (TASKBAR_Y - 40 - 40) / 2;
-	iScrollUp   = MakeButton(UP_ICON,     EDITORDIR "/lgUpArrow.sti",   y += 40,  h, UpClkCallback,   L"Scroll window up");
-	iScrollDown = MakeButton(DOWN_ICON,   EDITORDIR "/lgDownArrow.sti", y += h,   h, DwnClkCallback,  L"Scroll window down");
+	iScrollUp   = MakeButton(UP_ICON,     EDITORDIR "/lguparrow.sti",   y += 40,  h, UpClkCallback,   L"Scroll window up");
+	iScrollDown = MakeButton(DOWN_ICON,   EDITORDIR "/lgdownarrow.sti", y += h,   h, DwnClkCallback,  L"Scroll window down");
 
 	fButtonsPresent = TRUE;
 

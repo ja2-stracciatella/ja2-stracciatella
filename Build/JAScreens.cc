@@ -565,7 +565,7 @@ void DoDemoIntroduction(void)
 	SetCurrentCursorFromDatabase( 0 );
 
 	//Load the background image.
-	BltVideoObjectOnce(FRAME_BUFFER, DEMOADSDIR "/DemoScreen1.sti", 0, 0, 0);
+	BltVideoObjectOnce(FRAME_BUFFER, DEMOADSDIR "/demoscreen1.sti", 0, 0, 0);
 	InvalidateScreen();
 
 	//print out the information
@@ -673,7 +673,7 @@ static void DisplayTopwareGermanyAddress(void)
 	FRAME_BUFFER->ShadowRect(208, 390, 431, 475);
 
 	//Draw the anti-aliased address now.
-	BltVideoObjectOnce(FRAME_BUFFER, "German/topware_germany.sti", 0, 218, 400);
+	BltVideoObjectOnce(FRAME_BUFFER, "german/topware_germany.sti", 0, 218, 400);
 
 	InvalidateRegion( 208, 390, 431, 475 );
 	ExecuteBaseDirtyRectQueue();

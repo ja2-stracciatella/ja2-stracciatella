@@ -233,10 +233,10 @@ void InitTacticalPlacementGUI()
 
 	GoIntoOverheadMap();
 
-	giOverheadPanelImage = AddVideoObjectFromFile(INTERFACEDIR "/OverheadInterface.sti");
+	giOverheadPanelImage = AddVideoObjectFromFile(INTERFACEDIR "/overheadinterface.sti");
 	giMercPanelImage     = AddVideoObjectFromFile(INTERFACEDIR "/panels.sti");
 
-	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/OverheadUIButtons.sti", 0, 1);
+	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/overheaduibuttons.sti", 0, 1);
 	giOverheadButtonImages[DONE_BUTTON]   = img;
 	giOverheadButtonImages[SPREAD_BUTTON] = UseLoadedButtonImage(img, 0, 1);
 	giOverheadButtonImages[GROUP_BUTTON]  = UseLoadedButtonImage(img, 0, 1);

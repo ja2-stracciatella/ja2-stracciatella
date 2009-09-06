@@ -747,9 +747,9 @@ static void HandleSpecialFiles(void)
 	// place pictures
 	switch (giFilesPage)
 	{
-		case 0: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/ArucoFilesMap.sti", 0, 300, 270); break; // Picture of country
-		case 4: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/Enrico_Y.sti",      0, 260, 225); break; // Kid pic
-		case 5: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/Enrico_W.sti",      0, 260,  85); break; // Wedding pic
+		case 0: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/arucofilesmap.sti", 0, 300, 270); break; // Picture of country
+		case 4: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/enrico_y.sti",      0, 260, 225); break; // Kid pic
+		case 5: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/enrico_w.sti",      0, 260,  85); break; // Wedding pic
 	}
 }
 
@@ -993,7 +993,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		{
 			AutoSGPVObject vo(LoadBigPortrait(GetProfile(info.profile_id)));
 			BltVideoObject(    FRAME_BUFFER, vo,                               0, FILE_VIEWER_X + 30, y + 76);
-			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, y + 71);
+			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/interceptborder.sti", 0, FILE_VIEWER_X + 25, y + 71);
 		}
 
 		Font const font = giFilesPage == 0 && clause == 0 ?

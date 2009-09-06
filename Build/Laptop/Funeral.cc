@@ -117,13 +117,13 @@ void EnterFuneral()
 	guiClosedSign = AddVideoObjectFromFile(ImageFile);
 
 	// load the Left column graphic and add it
-	guiLeftColumn = AddVideoObjectFromFile(LAPTOPDIR "/LeftColumn.sti");
+	guiLeftColumn = AddVideoObjectFromFile(LAPTOPDIR "/leftcolumn.sti");
 
 	// load the Link carving graphic and add it
-	guiLinkCarving = AddVideoObjectFromFile(LAPTOPDIR "/LinkCarving.sti");
+	guiLinkCarving = AddVideoObjectFromFile(LAPTOPDIR "/linkcarving.sti");
 
 	// load the Marble graphic and add it
-	guiMarbleBackground = AddVideoObjectFromFile(LAPTOPDIR "/Marble.sti");
+	guiMarbleBackground = AddVideoObjectFromFile(LAPTOPDIR "/marble.sti");
 
 	// load the McGillicuttys sign graphic and add it
 	ImageFile = GetMLGFilename(MLG_MCGILLICUTTYS);
@@ -134,7 +134,7 @@ void EnterFuneral()
 	guiMortuary = AddVideoObjectFromFile(ImageFile);
 
 	// load the right column graphic and add it
-	guiRightColumn = AddVideoObjectFromFile(LAPTOPDIR "/RightColumn.sti");
+	guiRightColumn = AddVideoObjectFromFile(LAPTOPDIR "/rightcolumn.sti");
 
 
 	usPosX = FUNERAL_LINK_1_X;

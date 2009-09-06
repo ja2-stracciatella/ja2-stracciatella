@@ -181,7 +181,7 @@ void EnterInsuranceContract()
 
 
 	// load the Insurance title graphic and add it
-	guiInsOrderGridImage = AddVideoObjectFromFile(LAPTOPDIR "/InsOrderGrid.sti");
+	guiInsOrderGridImage = AddVideoObjectFromFile(LAPTOPDIR "/insordergrid.sti");
 
 	// load the Insurance bullet graphic and add it
 	guiInsOrderBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
@@ -199,11 +199,11 @@ void EnterInsuranceContract()
 
 
 	//left arrow
-	guiInsContractPrevButtonImage	= LoadButtonImage(LAPTOPDIR "/InsLeftButton.sti", 2,0,-1,1,-1 );
+	guiInsContractPrevButtonImage	= LoadButtonImage(LAPTOPDIR "/insleftbutton.sti", 2, 0, -1, 1, -1);
 	guiInsContractPrevBackButton  = MakeButtonBig(guiInsContractPrevButtonImage, InsContractText[INS_CONTRACT_PREVIOUS], INS_INFO_LEFT_ARROW_BUTTON_X, BtnInsContractPrevButtonCallback, 17);
 
 	//Right arrow
-	guiInsContractNextButtonImage	= LoadButtonImage(LAPTOPDIR "/InsRightButton.sti", 2,0,-1,1,-1 );
+	guiInsContractNextButtonImage	= LoadButtonImage(LAPTOPDIR "/insrightbutton.sti", 2, 0, -1, 1, -1);
 	guiInsContractNextBackButton  = MakeButtonBig(guiInsContractNextButtonImage, InsContractText[INS_CONTRACT_NEXT], INS_INFO_RIGHT_ARROW_BUTTON_X, BtnInsContractNextButtonCallBack, 18);
 
 	//create the new set of buttons
@@ -628,7 +628,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		//place the 3 accept buttons for the different forms
 
 		//The accept button image
-		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage(LAPTOPDIR "/AcceptClearBox.sti", 0, 1);
+		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage(LAPTOPDIR "/acceptclearbox.sti", 0, 1);
 
 		const wchar_t* const text       = InsContractText[INS_CONTRACT_ACCEPT];
 		const INT16          text_col   = INS_FONT_BTN_COLOR;

@@ -460,25 +460,25 @@ void EnterAIMMembers()
 	guiWeaponBox = AddVideoObjectFromFile(LAPTOPDIR "/weaponbox.sti");
 
 	// load the videoconf Popup graphic and add it
-	guiVideoConfPopup = AddVideoObjectFromFile(LAPTOPDIR "/VideoConfPopup.sti");
+	guiVideoConfPopup = AddVideoObjectFromFile(LAPTOPDIR "/videoconfpopup.sti");
 
 	// load the video conf terminal graphic and add it
-	guiVideoConfTerminal = AddVideoObjectFromFile(LAPTOPDIR "/VideoConfTerminal.sti");
+	guiVideoConfTerminal = AddVideoObjectFromFile(LAPTOPDIR "/videoconfterminal.sti");
 
 	// load the background snow for the video conf terminal
-	guiBWSnow = AddVideoObjectFromFile(LAPTOPDIR "/BWSnow.sti");
+	guiBWSnow = AddVideoObjectFromFile(LAPTOPDIR "/bwsnow.sti");
 
 	// load the fuzzy line for the video conf terminal
-	guiFuzzLine = AddVideoObjectFromFile(LAPTOPDIR "/FuzzLine.sti");
+	guiFuzzLine = AddVideoObjectFromFile(LAPTOPDIR "/fuzzline.sti");
 
 	// load the line distortion for the video conf terminal
-	guiStraightLine = AddVideoObjectFromFile(LAPTOPDIR "/LineInterference.sti");
+	guiStraightLine = AddVideoObjectFromFile(LAPTOPDIR "/lineinterference.sti");
 
 	// load the translucent snow for the video conf terminal
-	guiTransSnow = AddVideoObjectFromFile(LAPTOPDIR "/TransSnow.sti");
+	guiTransSnow = AddVideoObjectFromFile(LAPTOPDIR "/transsnow.sti");
 
 	// load the translucent snow for the video conf terminal
-	guiVideoContractCharge = AddVideoObjectFromFile(LAPTOPDIR "/VideoContractCharge.sti");
+	guiVideoContractCharge = AddVideoObjectFromFile(LAPTOPDIR "/videocontractcharge.sti");
 
 
 	//** Mouse Regions **
@@ -496,7 +496,7 @@ void EnterAIMMembers()
 	giXToCloseVideoConfButtonImage = LoadButtonImage(LAPTOPDIR "/x_button.sti", 0, 1);
 
 
-	guiPreviousContactNextButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
+	guiPreviousContactNextButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
 
 	giPreviousButton = MakeButton(CharacterInfo[AIM_MEMBER_PREVIOUS], PREVIOUS_X, BtnPreviousButtonCallback);
 	giContactButton  = MakeButton(CharacterInfo[AIM_MEMBER_CONTACT],  CONTACT_X,  BtnContactButtonCallback);
@@ -1456,12 +1456,12 @@ static void CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* cons
 	usPopUpBoxPosY = usPosY;
 
 	// load the popup box graphic
-	guiPopUpBox = AddVideoObjectFromFile(LAPTOPDIR "/VideoConfPopUp.sti");
+	guiPopUpBox = AddVideoObjectFromFile(LAPTOPDIR "/videoconfpopup.sti");
 
 	BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
 
 	//Create the popup boxes button
-	guiPopUpImage = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
+	guiPopUpImage = LoadButtonImage(LAPTOPDIR "/videoconfbuttons.sti", 2, 3);
 	INT16 const colour = AIM_POPUP_BOX_COLOR;
 	INT16 const shadow = AIM_M_VIDEO_NAME_SHADOWCOLOR;
 	INT16 const x      = usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X;
@@ -2378,7 +2378,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 				// Create a background video surface to blt the face onto
 				guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-				BltVideoObjectOnce(guiVideoTitleBar, LAPTOPDIR "/VideoTitleBar.sti", 0, 0, 0);
+				BltVideoObjectOnce(guiVideoTitleBar, LAPTOPDIR "/videotitlebar.sti", 0, 0, 0);
 
 				gfAimMemberCanMercSayOpeningQuote = TRUE;
 			}
@@ -2414,7 +2414,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Hang up button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/videoconfbuttons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 			for (UINT8 i = 0; i < 2; ++i)
 			{
@@ -2437,7 +2437,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// Contract Length button
-			BUTTON_PICS* const img0 = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 0, 1);
+			BUTTON_PICS* const img0 = LoadButtonImage(LAPTOPDIR "/videoconfbuttons.sti", 0, 1);
 			guiVideoConferenceButtonImage[0] = img0;
 			{ UINT16 usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
 				for (UINT8 i = 0; i < 3; ++i)
@@ -2470,7 +2470,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Authorize button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img1 = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img1 = LoadButtonImage(LAPTOPDIR "/videoconfbuttons.sti", 2, 3);
 			guiVideoConferenceButtonImage[1] = img1;
 			for (UINT8 i = 0; i < 2; ++i)
 			{
@@ -2493,7 +2493,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Leave msg button
 			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/videoconfbuttons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 
 			giAnsweringMachineButton[0] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
@@ -2525,7 +2525,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// The hangup button
-			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/VideoConfButtons.sti", 2, 3);
+			BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/videoconfbuttons.sti", 2, 3);
 			guiVideoConferenceButtonImage[2] = img;
 			giHangUpButton = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HANG_UP], AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BtnHangUpButtonCallback);
 			giHangUpButton->SetUserData(1);
@@ -2549,7 +2549,7 @@ static void InitDeleteVideoConferencePopUp(void)
 
 			// Create a background video surface to blt the face onto
 			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-			BltVideoObjectOnce(guiVideoTitleBar, LAPTOPDIR "/VideoTitleBar.sti", 0, 0, 0);
+			BltVideoObjectOnce(guiVideoTitleBar, LAPTOPDIR "/videotitlebar.sti", 0, 0, 0);
 			break;
 		}
 	}

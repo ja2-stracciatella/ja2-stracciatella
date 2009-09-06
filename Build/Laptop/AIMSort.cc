@@ -147,7 +147,7 @@ void EnterAimSort()
 	InitAimDefaults();
 
 	// load the SortBy box graphic and add it
-	guiSortByBox = AddVideoObjectFromFile(LAPTOPDIR "/SortBy.sti");
+	guiSortByBox = AddVideoObjectFromFile(LAPTOPDIR "/sortby.sti");
 
 	const char* ImageFile;
 
@@ -164,7 +164,7 @@ void EnterAimSort()
 	guiToStats = AddVideoObjectFromFile(ImageFile);
 
 	// load the SelectLight graphic and add it
-	guiSelectLight = AddVideoObjectFromFile(LAPTOPDIR "/SelectLight.sti");
+	guiSelectLight = AddVideoObjectFromFile(LAPTOPDIR "/selectlight.sti");
 
 
 	//** Mouse Regions **

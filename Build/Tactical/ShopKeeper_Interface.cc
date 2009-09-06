@@ -556,7 +556,7 @@ static void EnterShopKeeperInterface(void)
 	SetSMPanelCurrentMerc(sel);
 
 	// load the Main trade screen backgroiund image
-	guiMainTradeScreenImage = AddVideoObjectFromFile(INTERFACEDIR "/TradeScreen.sti");
+	guiMainTradeScreenImage = AddVideoObjectFromFile(INTERFACEDIR "/tradescreen.sti");
 
 	// load the Main trade screen background image
 	guiItemCrossOut = AddVideoObjectFromFile(INTERFACEDIR "/itemcrossout.sti");
@@ -579,7 +579,7 @@ static void EnterShopKeeperInterface(void)
 	}
 
 	//Load the graphic for the arrow button
-	guiSKI_InvPageUpButtonImage   = LoadButtonImage(INTERFACEDIR "/TradeScrollArrows.sti", 0, 1);
+	guiSKI_InvPageUpButtonImage   = LoadButtonImage(INTERFACEDIR "/tradescrollarrows.sti", 0, 1);
 	guiSKI_InvPageDownButtonImage = UseLoadedButtonImage(guiSKI_InvPageUpButtonImage,      2, 3);
 
 
@@ -592,7 +592,7 @@ static void EnterShopKeeperInterface(void)
 	guiSKI_InvPageDownButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 
-	guiSKI_TransactionButtonImage = LoadButtonImage(INTERFACEDIR "/TradeButtons.sti",   0, 1);
+	guiSKI_TransactionButtonImage = LoadButtonImage(INTERFACEDIR "/tradebuttons.sti",   0, 1);
 	guiSKI_DoneButtonImage        = UseLoadedButtonImage(guiSKI_TransactionButtonImage, 0, 1);
 
 	//Transaction button

@@ -337,7 +337,7 @@ static void LoadFinances(void)
 	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// top portion of the screen background
-	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/Financeswindow.sti");
+	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/financeswindow.sti");
 
   // black divider line - long ( 480 length)
 	guiLONGLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline480.sti");

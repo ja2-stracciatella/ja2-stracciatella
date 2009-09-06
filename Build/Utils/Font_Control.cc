@@ -36,25 +36,25 @@ static void CreateFontPaletteTables(Font);
 void InitializeFonts(void)
 {
 #define M(var, file) (CreateFontPaletteTables((var) = LoadFontFile((file))))
-	M(gp10PointArial,          FONTSDIR "/FONT10ARIAL.sti");
-	M(gp10PointArialBold,      FONTSDIR "/FONT10ARIALBOLD.sti");
-	M(gp12PointArial,          FONTSDIR "/FONT12ARIAL.sti");
-	M(gp12PointArialFixedFont, FONTSDIR "/FONT12ARIALFIXEDWIDTH.sti");
-	M(gp12PointFont1,          FONTSDIR "/FONT12POINT1.sti");
-	M(gp14PointArial,          FONTSDIR "/FONT14ARIAL.sti");
-	M(gp14PointHumanist,       FONTSDIR "/FONT14HUMANIST.sti");
-	M(gp16PointArial,          FONTSDIR "/FONT16ARIAL.sti");
-	M(gpBlockFontNarrow,       FONTSDIR "/BLOCKFONTNARROW.sti");
-	M(gpBlockyFont,            FONTSDIR "/BLOCKFONT.sti");
-	M(gpBlockyFont2,           FONTSDIR "/BLOCKFONT2.sti");
-	M(gpCompFont,              FONTSDIR "/COMPFONT.sti");
-	M(gpLargeFontType1,        FONTSDIR "/LARGEFONT1.sti");
-	M(gpSmallCompFont,         FONTSDIR "/SMALLCOMPFONT.sti");
-	M(gpSmallFontType1,        FONTSDIR "/SMALLFONT1.sti");
-	M(gpTinyFontType1,         FONTSDIR "/TINYFONT1.sti");
+	M(gp10PointArial,          FONTSDIR "/font10arial.sti");
+	M(gp10PointArialBold,      FONTSDIR "/font10arialbold.sti");
+	M(gp12PointArial,          FONTSDIR "/font12arial.sti");
+	M(gp12PointArialFixedFont, FONTSDIR "/font12arialfixedwidth.sti");
+	M(gp12PointFont1,          FONTSDIR "/font12point1.sti");
+	M(gp14PointArial,          FONTSDIR "/font14arial.sti");
+	M(gp14PointHumanist,       FONTSDIR "/font14humanist.sti");
+	M(gp16PointArial,          FONTSDIR "/font16arial.sti");
+	M(gpBlockFontNarrow,       FONTSDIR "/blockfontnarrow.sti");
+	M(gpBlockyFont,            FONTSDIR "/blockfont.sti");
+	M(gpBlockyFont2,           FONTSDIR "/blockfont2.sti");
+	M(gpCompFont,              FONTSDIR "/compfont.sti");
+	M(gpLargeFontType1,        FONTSDIR "/largefont1.sti");
+	M(gpSmallCompFont,         FONTSDIR "/smallcompfont.sti");
+	M(gpSmallFontType1,        FONTSDIR "/smallfont1.sti");
+	M(gpTinyFontType1,         FONTSDIR "/tinyfont1.sti");
 
 #if defined JA2EDITOR && defined ENGLISH
-	M(gpHugeFont, FONTSDIR "/HUGEFONT.sti");
+	M(gpHugeFont, FONTSDIR "/hugefont.sti");
 #endif
 #undef M
 

@@ -279,13 +279,13 @@ static void EnterOptionsScreen(void)
 	gfExitOptionsDueToMessageBox = FALSE;
 
 	// load the options screen background graphic and add it
-	guiOptionBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/OptionScreenBase.sti");
+	guiOptionBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/optionscreenbase.sti");
 
 	// load button, title graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_OPTIONHEADER);
 	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
 
-	giOptionsButtonImages = LoadButtonImage(INTERFACEDIR "/OptionScreenAddons.sti", 2, 3);
+	giOptionsButtonImages = LoadButtonImage(INTERFACEDIR "/optionscreenaddons.sti", 2, 3);
 
 	//Save game button
 	guiOptGotoSaveGameBtn = MakeButton(OPT_SAVE_BTN_X, BtnOptGotoSaveGameCallback, zOptionsText[OPT_SAVE_GAME]);
@@ -315,7 +315,7 @@ static void EnterOptionsScreen(void)
 		}
 
 		//Check box to toggle tracking mode
-		GUIButtonRef const check = CreateCheckBoxButton(pos_x, pos_y, INTERFACEDIR "/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
+		GUIButtonRef const check = CreateCheckBoxButton(pos_x, pos_y, INTERFACEDIR "/optionscheckboxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
 		guiOptionsToggles[cnt] = check;
 		check->SetUserData(cnt);
 

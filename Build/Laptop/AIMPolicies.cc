@@ -187,7 +187,7 @@ void EnterAimPolicies()
 	gfInPolicyToc = FALSE;
 
 	// load the Content Buttons graphic and add it
-	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/ContentButton.sti");
+	guiContentButton = AddVideoObjectFromFile(LAPTOPDIR "/contentbutton.sti");
 
 	RenderAimPolicies();
 }
@@ -372,7 +372,7 @@ static void InitAimPolicyMenuBar(void)
 	if (gfAimPolicyMenuBarLoaded) return;
 
 	//Load graphic for buttons
-	guiPoliciesMenuButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
+	guiPoliciesMenuButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
 
 	usPosX = AIM_POLICY_MENU_X;
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
@@ -531,7 +531,7 @@ static void InitAgreementRegion(void)
 	gfExitingPolicesAgreeButton = FALSE;
 
 	//Load graphic for buttons
-	guiPoliciesButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
+	guiPoliciesButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
 
 	usPosX = AIM_POLICY_AGREEMENT_X;
 	for(i=0; i < 2; i++)

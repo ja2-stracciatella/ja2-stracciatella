@@ -107,7 +107,7 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		}
 
 		char adjusted_file[128];
-		sprintf(adjusted_file, TILESETSDIR "/%d/T/%s", use_tileset, filename);
+		sprintf(adjusted_file, TILESETSDIR "/%d/t/%s", use_tileset, filename);
 		SGPVObject* vo;
 		try
 		{
@@ -116,7 +116,7 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		catch (...)
 		{
 			// Load one we know about
-			vo = AddVideoObjectFromFile(TILESETSDIR "/0/T/grass.sti");
+			vo = AddVideoObjectFromFile(TILESETSDIR "/0/t/grass.sti");
 		}
 
 		gSmTileSurf[i].vo = vo;
@@ -393,10 +393,10 @@ void GoIntoOverheadMap( )
 	MSYS_DefineRegion(&OverheadRegion, 0, 0, gsVIEWPORT_END_X, 320, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, ClickOverheadRegionCallback);
 
 	// LOAD CLOSE ANIM
-	uiOVERMAP = AddVideoObjectFromFile(INTERFACEDIR "/MAP_BORD.sti");
+	uiOVERMAP = AddVideoObjectFromFile(INTERFACEDIR "/map_bord.sti");
 
 	// LOAD PERSONS
-	uiPERSONS = AddVideoObjectFromFile(INTERFACEDIR "/PERSONS.sti");
+	uiPERSONS = AddVideoObjectFromFile(INTERFACEDIR "/persons.sti");
 
 	// Add shades to persons....
 	SGPVObject*            const vo  = uiPERSONS;

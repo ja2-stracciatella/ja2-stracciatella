@@ -72,7 +72,7 @@ void EnterAimFacialIndex()
 	UINT16		usPosX, usPosY, x,y;
 
 	// load the Portait graphic and add it
-	guiMugShotBorder = AddVideoObjectFromFile(LAPTOPDIR "/MugShotBorder3.sti");
+	guiMugShotBorder = AddVideoObjectFromFile(LAPTOPDIR "/mugshotborder3.sti");
 
 	usPosX = AIM_FI_FIRST_MUGSHOT_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y;

@@ -446,8 +446,8 @@ static void CreateAttributeSliderButtons(void)
 {
 	// Create the buttons for the attribute slider
 	// the finished button
-	giIMPAttributeSelectionSliderButtonImage[0] = LoadButtonImage(LAPTOPDIR "/AttributeArrows.sti", 0, 1);
-	giIMPAttributeSelectionSliderButtonImage[1] = LoadButtonImage(LAPTOPDIR "/AttributeArrows.sti", 3, 4);
+	giIMPAttributeSelectionSliderButtonImage[0] = LoadButtonImage(LAPTOPDIR "/attributearrows.sti", 0, 1);
+	giIMPAttributeSelectionSliderButtonImage[1] = LoadButtonImage(LAPTOPDIR "/attributearrows.sti", 3, 4);
 
 	for (INT32 iCounter = 0; iCounter < 20; iCounter += 2)
 	{

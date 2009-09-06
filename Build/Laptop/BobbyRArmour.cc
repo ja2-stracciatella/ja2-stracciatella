@@ -17,10 +17,10 @@ static SGPVObject* guiArmourGrid;
 void EnterBobbyRArmour()
 {
 	// load the background graphic and add it
-	guiArmourBackground = AddVideoObjectFromFile(LAPTOPDIR "/Armourbackground.sti");
+	guiArmourBackground = AddVideoObjectFromFile(LAPTOPDIR "/armourbackground.sti");
 
 	// load the gunsgrid graphic and add it
-	guiArmourGrid = AddVideoObjectFromFile(LAPTOPDIR "/Armourgrid.sti");
+	guiArmourGrid = AddVideoObjectFromFile(LAPTOPDIR "/armourgrid.sti");
 
 	InitBobbyBrTitle();
 	//Draw menu bar

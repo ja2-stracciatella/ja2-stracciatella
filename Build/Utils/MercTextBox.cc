@@ -36,21 +36,21 @@
 // filenames for border popup .sti's
 static char const* const zMercBorderPopupFilenames[] =
 {
- INTERFACEDIR "/TactPopUp.sti",
- INTERFACEDIR "/TactRedPopUp.sti",
- INTERFACEDIR "/TactBluePopUp.sti",
- INTERFACEDIR "/TactPopUpMain.sti",
- INTERFACEDIR "/LaptopPopup.sti"
+ INTERFACEDIR "/tactpopup.sti",
+ INTERFACEDIR "/tactredpopup.sti",
+ INTERFACEDIR "/tactbluepopup.sti",
+ INTERFACEDIR "/tactpopupmain.sti",
+ INTERFACEDIR "/laptoppopup.sti"
 };
 
 // filenames for background popup .pcx's
 static char const* const zMercBackgroundPopupFilenames[] =
 {
-  INTERFACEDIR "/TactPopupBackground.pcx",
-  INTERFACEDIR "/TactPopupWhiteBackground.pcx",
-  INTERFACEDIR "/TactPopupGreyBackground.pcx",
-  INTERFACEDIR "/TactPopupBackgroundMain.pcx",
-  INTERFACEDIR "/LaptopPopupBackground.pcx",
+  INTERFACEDIR "/tactpopupbackground.pcx",
+  INTERFACEDIR "/tactpopupwhitebackground.pcx",
+  INTERFACEDIR "/tactpopupgreybackground.pcx",
+  INTERFACEDIR "/tactpopupbackgroundmain.pcx",
+  INTERFACEDIR "/laptoppopupbackground.pcx",
 	INTERFACEDIR "/imp_popup_background.pcx"
 };
 

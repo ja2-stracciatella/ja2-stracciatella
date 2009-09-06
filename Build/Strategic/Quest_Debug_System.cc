@@ -805,7 +805,7 @@ static void EnterQuestDebugSystem(void)
 	}
 
 	// load Scroll Horizontal Arrow graphic and add it
-	guiQdScrollArrowImage = AddVideoObjectFromFile(INTERFACEDIR "/Qd_ScrollArrows.sti");
+	guiQdScrollArrowImage = AddVideoObjectFromFile(INTERFACEDIR "/qd_scrollarrows.sti");
 
 	gfRedrawQuestDebugSystem = TRUE;
 

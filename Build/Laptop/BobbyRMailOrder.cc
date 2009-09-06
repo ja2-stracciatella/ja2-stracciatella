@@ -354,29 +354,29 @@ void EnterBobbyRMailOrder()
 	gubDropDownAction = BR_DROP_DOWN_NO_ACTION;
 
 	// load the Order Grid graphic and add it
-	guiBobbyROrderGrid = AddVideoObjectFromFile(LAPTOPDIR "/BobbyOrderGrid.sti");
+	guiBobbyROrderGrid = AddVideoObjectFromFile(LAPTOPDIR "/bobbyordergrid.sti");
 
 	// load the Location graphic and add it
-	guiBobbyRLocationGraphic = AddVideoObjectFromFile(LAPTOPDIR "/BobbyLocationBox.sti");
+	guiBobbyRLocationGraphic = AddVideoObjectFromFile(LAPTOPDIR "/bobbylocationbox.sti");
 
 	// load the delivery speed graphic and add it
-	guiDeliverySpeedGraphic = AddVideoObjectFromFile(LAPTOPDIR "/BobbyDeliverySpeed.sti");
+	guiDeliverySpeedGraphic = AddVideoObjectFromFile(LAPTOPDIR "/bobbydeliveryspeed.sti");
 
 	// load the delivery speed graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_CONFIRMORDER);
 	guiConfirmGraphic = AddVideoObjectFromFile(ImageFile);
 
 	// load the delivery speed graphic and add it
-	guiTotalSaveArea = AddVideoObjectFromFile(LAPTOPDIR "/TotalSaveArea.sti");
+	guiTotalSaveArea = AddVideoObjectFromFile(LAPTOPDIR "/totalsavearea.sti");
 
   // border
-	guiDropDownBorder = AddVideoObjectFromFile(INTERFACEDIR "/TactPopUp.sti");
+	guiDropDownBorder = AddVideoObjectFromFile(INTERFACEDIR "/tactpopup.sti");
 
   // Gold Arrow for the scroll area
-	guiGoldArrowImages = AddVideoObjectFromFile(LAPTOPDIR "/GoldArrows.sti");
+	guiGoldArrowImages = AddVideoObjectFromFile(LAPTOPDIR "/goldarrows.sti");
 
   // Package Weight Graphic
-	guiPackageWeightImage = AddVideoObjectFromFile(LAPTOPDIR "/PackageWeight.sti");
+	guiPackageWeightImage = AddVideoObjectFromFile(LAPTOPDIR "/packageweight.sti");
 
 
 	InitBobbyRWoodBackground();
@@ -386,14 +386,14 @@ void EnterBobbyRMailOrder()
 	//
 
 	// Clear Order button
-	guiBobbyRClearOrderImage = LoadButtonImage(LAPTOPDIR "/EraseOrderButton.sti", 0, 1);
+	guiBobbyRClearOrderImage = LoadButtonImage(LAPTOPDIR "/eraseorderbutton.sti", 0, 1);
 	guiBobbyRClearOrder = MakeButton(guiBobbyRClearOrderImage, BobbyROrderFormText[BOBBYR_CLEAR_ORDER], BOBBYR_CLEAR_ORDER_X, BOBBYR_CLEAR_ORDER_Y + 4, BtnBobbyRClearOrderCallback);
 	guiBobbyRClearOrder->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 	guiBobbyRClearOrder->SpecifyTextOffsets(39, 10, TRUE);
 
 
 	// Accept Order button
-	guiBobbyRAcceptOrderImage = LoadButtonImage(LAPTOPDIR "/AcceptOrderButton.sti", 2,0,-1,1,-1 );
+	guiBobbyRAcceptOrderImage = LoadButtonImage(LAPTOPDIR "/acceptorderbutton.sti", 2, 0, -1, 1, -1);
 	guiBobbyRAcceptOrder = MakeButton(guiBobbyRAcceptOrderImage, BobbyROrderFormText[BOBBYR_ACCEPT_ORDER], BOBBYR_ACCEPT_ORDER_X, BOBBYR_ACCEPT_ORDER_Y + 4, BtnBobbyRAcceptOrderCallback);
 	guiBobbyRAcceptOrder->SpecifyTextOffsets(43, 24, TRUE);
 	guiBobbyRAcceptOrder->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
@@ -408,7 +408,7 @@ void EnterBobbyRMailOrder()
 	}
 
 
-	guiBobbyRBackImage = LoadButtonImage(LAPTOPDIR "/CatalogueButton.sti", 0, 1);
+	guiBobbyRBackImage = LoadButtonImage(LAPTOPDIR "/cataloguebutton.sti", 0, 1);
 	guiBobbyRBack = MakeButton(guiBobbyRBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_BACK_BUTTON_X, BOBBYR_BACK_BUTTON_Y, BtnBobbyRBackCallback);
 
 	guiBobbyRHomeImage = UseLoadedButtonImage(guiBobbyRBackImage, 0, 1);
@@ -1972,7 +1972,7 @@ static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason)
 void CreateBobbyRayOrderTitle()
 {
 		// load BobbyRayTitle graphic and add it
-	guiBobbyRayTitle = AddVideoObjectFromFile(LAPTOPDIR "/BobbyRayTitle.sti");
+	guiBobbyRayTitle = AddVideoObjectFromFile(LAPTOPDIR "/bobbyraytitle.sti");
 
 	//the link to home page from the title
 	MSYS_DefineRegion( &gSelectedTitleLinkRegion, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y, (BOBBYR_BOBBY_RAY_TITLE_X + BOBBYR_BOBBY_RAY_TITLE_WIDTH), (UINT16)(BOBBYR_BOBBY_RAY_TITLE_Y + BOBBYR_BOBBY_RAY_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,

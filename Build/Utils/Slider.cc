@@ -65,7 +65,7 @@ static SGPVObject* guiSliderBoxImage;
 void InitSlider(void)
 {
 	// load Slider Box Graphic graphic and add it
-	guiSliderBoxImage = AddVideoObjectFromFile(INTERFACEDIR "/SliderBox.sti");
+	guiSliderBoxImage = AddVideoObjectFromFile(INTERFACEDIR "/sliderbox.sti");
 }
 
 

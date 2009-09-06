@@ -144,15 +144,15 @@ void EnterAimArchives()
 
 	gubPageNum = (UINT8)giCurrentSubPage;
 
-	guiAlumniFrame = AddVideoObjectFromFile(LAPTOPDIR "/AlumniFrame.sti");
-	guiOldAim      = AddVideoObjectFromFile(LAPTOPDIR "/Old_Aim.sti"); // 1st set of faces
-	guiPopUpPic    = AddVideoObjectFromFile(LAPTOPDIR "/PopupPicFrame.sti");
-	guiAlumniPopUp = AddVideoObjectFromFile(LAPTOPDIR "/AlumniPopUp.sti");
-	guiDoneButton  = AddVideoObjectFromFile(LAPTOPDIR "/DoneButton.sti");
+	guiAlumniFrame = AddVideoObjectFromFile(LAPTOPDIR "/alumniframe.sti");
+	guiOldAim      = AddVideoObjectFromFile(LAPTOPDIR "/old_aim.sti"); // 1st set of faces
+	guiPopUpPic    = AddVideoObjectFromFile(LAPTOPDIR "/popuppicframe.sti");
+	guiAlumniPopUp = AddVideoObjectFromFile(LAPTOPDIR "/alumnipopup.sti");
+	guiDoneButton  = AddVideoObjectFromFile(LAPTOPDIR "/donebutton.sti");
 
 	InitAlumniFaceRegions();
 
-	guiAlumniPageButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
+	guiAlumniPageButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
 
 	INT16 x       = AIM_ALUMNI_PAGE1_X;
 	INT16 const y = AIM_ALUMNI_PAGE1_Y;

@@ -1137,8 +1137,7 @@ static void SetupTriggersGUI(void)
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 		if (gpItem->bFrequency >= PANIC_FREQUENCY_3)
 		{
-			giAlarmTriggerButton =
-				CreateCheckBoxButton(	485, 405, EDITORDIR "/smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
+			giAlarmTriggerButton = CreateCheckBoxButton(485, 405, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback);
 			giAlarmTriggerButton->SetFastHelpText(L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
 			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
 				giAlarmTriggerButton->uiFlags |= BUTTON_CLICKED_ON;

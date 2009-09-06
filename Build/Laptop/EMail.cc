@@ -304,10 +304,10 @@ void EnterEmail()
 	guiEmailTitle = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
 
 	// the list background
-	guiEmailBackground = AddVideoObjectFromFile(LAPTOPDIR "/Mailwindow.sti");
+	guiEmailBackground = AddVideoObjectFromFile(LAPTOPDIR "/mailwindow.sti");
 
 	// the indication/notification box
-	guiEmailIndicator = AddVideoObjectFromFile(LAPTOPDIR "/MailIndicator.sti");
+	guiEmailIndicator = AddVideoObjectFromFile(LAPTOPDIR "/mailindicator.sti");
 
 	// the message background
 	guiEmailMessage = AddVideoObjectFromFile(LAPTOPDIR "/emailviewer.sti");
@@ -1058,7 +1058,7 @@ static void BtnNewOkback(GUI_BUTTON *btn, INT32 reason)
 
 static GUIButtonRef MakeButtonNewMail(INT32 image, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/NewMailButtons.sti", image, image + 3, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/newmailbuttons.sti", image, image + 3, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -1111,7 +1111,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		fOldDisplayMessageFlag=TRUE;
 
 		// add X button
-		giMessageButton = QuickCreateButtonImg(LAPTOPDIR "/X.sti", 0, 1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
+		giMessageButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
 	  giMessageButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		if( giNumberOfPagesToCurrentEmail > 2 )
@@ -1158,7 +1158,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 
 static GUIButtonRef MakeButtonYesNo(INT32 image, INT16 x, GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/YesNoButtons.sti", image, image + 1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/yesnobuttons.sti", image, image + 1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }

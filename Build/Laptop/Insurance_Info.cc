@@ -112,11 +112,11 @@ void EnterInsuranceInfo()
 	guiBulletImage = AddVideoObjectFromFile(LAPTOPDIR "/bullet.sti");
 
 	//left arrow
-	guiInsPrevButtonImage	= LoadButtonImage(LAPTOPDIR "/InsLeftButton.sti", 2,0,-1,1,-1 );
+	guiInsPrevButtonImage	= LoadButtonImage(LAPTOPDIR "/insleftbutton.sti", 2, 0, -1, 1, -1);
 	guiInsPrevBackButton  = MakeButtonBig(guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_INFO_LEFT_ARROW_BUTTON_X, BtnInsPrevButtonCallback, 17);
 
 	//Right arrow
-	guiInsNextButtonImage	= LoadButtonImage(LAPTOPDIR "/InsRightButton.sti", 2,0,-1,1,-1 );
+	guiInsNextButtonImage	= LoadButtonImage(LAPTOPDIR "/insrightbutton.sti", 2, 0, -1, 1, -1);
 	guiInsNextBackButton  = MakeButtonBig(guiInsNextButtonImage, InsInfoText[INS_INFO_NEXT], INS_INFO_RIGHT_ARROW_BUTTON_X, BtnInsNextButtonCallback, 18);
 
 	usPosX = INS_INFO_LINK_START_X;

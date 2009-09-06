@@ -380,10 +380,10 @@ static void EnterSaveLoadScreen()
 	}
 
 	// Load main background and add ons graphic
-	guiSlgBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/LoadScreen.sti");
+	guiSlgBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/loadscreen.sti");
 	guiBackGroundAddOns   = AddVideoObjectFromFile(GetMLGFilename(MLG_LOADSAVEHEADER));
 
-	guiSlgButtonImage = LoadButtonImage(INTERFACEDIR "/LoadScreenAddOns.sti", 6, 9);
+	guiSlgButtonImage = LoadButtonImage(INTERFACEDIR "/loadscreenaddons.sti", 6, 9);
 	guiSlgCancelBtn   = MakeButton(guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], SLG_LOAD_CANCEL_POS_X, BtnSlgCancelCallback);
 
 	// Either the save or load button

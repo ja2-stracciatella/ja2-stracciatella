@@ -53,7 +53,7 @@ extern void DrawBonusPointsRemaining( void );
 void LoadProfileBackGround(void)
 {
 	// this procedure will load in the graphics for the generic background
-	guiBACKGROUND = AddVideoObjectFromFile(LAPTOPDIR "/MetalBackGround.sti");
+	guiBACKGROUND = AddVideoObjectFromFile(LAPTOPDIR "/metalbackground.sti");
 }
 
 
@@ -115,7 +115,7 @@ void RenderIMPSymbol(INT16 sX, INT16 sY)
 void LoadBeginIndent(void)
 {
 	// this procedure will load the indent main symbol into memory
-	guiBEGININDENT = AddVideoObjectFromFile(LAPTOPDIR "/BeginScreenIndent.sti");
+	guiBEGININDENT = AddVideoObjectFromFile(LAPTOPDIR "/beginscreenindent.sti");
 }
 
 
@@ -135,7 +135,7 @@ void RenderBeginIndent(INT16 sX, INT16 sY)
 void LoadActivationIndent(void)
 {
 	// this procedure will load the activation indent into memory
-	guiACTIVATIONINDENT = AddVideoObjectFromFile(LAPTOPDIR "/ActivationIndent.sti");
+	guiACTIVATIONINDENT = AddVideoObjectFromFile(LAPTOPDIR "/activationindent.sti");
 }
 
 
@@ -155,7 +155,7 @@ void RenderActivationIndent(INT16 sX, INT16 sY)
 void LoadFrontPageIndent(void)
 {
 	// this procedure will load the activation indent into memory
-	guiFRONTPAGEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/FrontPageIndent.sti");
+	guiFRONTPAGEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/frontpageindent.sti");
 }
 
 
@@ -175,7 +175,7 @@ void RenderFrontPageIndent(INT16 sX, INT16 sY)
 void LoadAnalyse(void)
 {
 	// this procedure will load the activation indent into memory
-	guiANALYSE = AddVideoObjectFromFile(LAPTOPDIR "/Analyze.sti");
+	guiANALYSE = AddVideoObjectFromFile(LAPTOPDIR "/analyze.sti");
 }
 
 
@@ -189,7 +189,7 @@ void DeleteAnalyse( void )
 void LoadAttributeGraph(void)
 {
 	// this procedure will load the activation indent into memory
-	guiATTRIBUTEGRAPH = AddVideoObjectFromFile(LAPTOPDIR "/Attributegraph.sti");
+	guiATTRIBUTEGRAPH = AddVideoObjectFromFile(LAPTOPDIR "/attributegraph.sti");
 }
 
 
@@ -203,7 +203,7 @@ void DeleteAttributeGraph( void )
 void LoadNickNameIndent(void)
 {
 	// this procedure will load the activation indent into memory
-	guiNICKNAMEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/NickName.sti");
+	guiNICKNAMEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/nickname.sti");
 }
 
 
@@ -223,7 +223,7 @@ void RenderNickNameIndent(INT16 sX, INT16 sY)
 void LoadNameIndent(void)
 {
 	// this procedure will load the activation indent into memory
-	guiNAMEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/NameIndent.sti");
+	guiNAMEINDENT = AddVideoObjectFromFile(LAPTOPDIR "/nameindent.sti");
 }
 
 
@@ -243,7 +243,7 @@ void RenderNameIndent(INT16 sX, INT16 sY)
 void LoadGenderIndent(void)
 {
 	// this procedure will load the activation indent into memory
-	guiGENDERINDENT = AddVideoObjectFromFile(LAPTOPDIR "/GenderIndent.sti");
+	guiGENDERINDENT = AddVideoObjectFromFile(LAPTOPDIR "/genderindent.sti");
 }
 
 
@@ -263,7 +263,7 @@ void RenderGenderIndent(INT16 sX, INT16 sY)
 void LoadSmallSilhouette(void)
 {
 	// this procedure will load the activation indent into memory
-	guiSMALLSILHOUETTE = AddVideoObjectFromFile(LAPTOPDIR "/SmallSilhouette.sti");
+	guiSMALLSILHOUETTE = AddVideoObjectFromFile(LAPTOPDIR "/smallsilhouette.sti");
 }
 
 
@@ -421,7 +421,7 @@ void RenderButton4Image(INT16 sX, INT16 sY)
 void LoadPortraitFrame(void)
 {
 	// this procedure will load the activation indent into memory
-	guiPORTRAITFRAME = AddVideoObjectFromFile(LAPTOPDIR "/Voice_PortraitFrame.sti");
+	guiPORTRAITFRAME = AddVideoObjectFromFile(LAPTOPDIR "/voice_portraitframe.sti");
 }
 
 
@@ -662,7 +662,7 @@ void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 void LoadQtnShort2IndentHighFrame(void)
 {
 	// this procedure will load the activation indent into memory
-	guiSHORT2HINDENT = AddVideoObjectFromFile(LAPTOPDIR "/shortindent2High.sti");
+	guiSHORT2HINDENT = AddVideoObjectFromFile(LAPTOPDIR "/shortindent2high.sti");
 }
 
 

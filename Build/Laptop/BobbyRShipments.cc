@@ -98,9 +98,9 @@ void EnterBobbyRShipments()
 	InitBobbyRWoodBackground();
 
 	// load the Order Grid graphic and add it
-	guiBobbyRShipmentGrid = AddVideoObjectFromFile(LAPTOPDIR "/BobbyRay_OnOrder.sti");
+	guiBobbyRShipmentGrid = AddVideoObjectFromFile(LAPTOPDIR "/bobbyray_onorder.sti");
 
-	guiBobbyRShipmentBackImage = LoadButtonImage(LAPTOPDIR "/CatalogueButton.sti", 0, 1);
+	guiBobbyRShipmentBackImage = LoadButtonImage(LAPTOPDIR "/cataloguebutton.sti", 0, 1);
 	guiBobbyRShipmetBack = MakeButton(guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_SHIPMENT_BACK_BUTTON_X, BtnBobbyRShipmentBackCallback);
 
 	giBobbyRShipmentHomeImage = UseLoadedButtonImage(guiBobbyRShipmentBackImage, 0, 1);

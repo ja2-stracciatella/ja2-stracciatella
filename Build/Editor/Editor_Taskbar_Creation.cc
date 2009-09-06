@@ -22,7 +22,7 @@ static void InitEditorItemStatsButtons(void)
 {
 	INT16 const y = TASKBAR_Y;
 	iEditorButton[ITEMSTATS_PANEL]      = CreateLabel(NULL, 0, 0, 0, 480, y + 1, 160, 99, MSYS_PRIORITY_NORMAL);
-	iEditorButton[ITEMSTATS_HIDDEN_BTN] = CreateCheckBoxButton(485, y + 5, EDITORDIR "/SmCheckbox.sti", MSYS_PRIORITY_NORMAL, ItemStatsToggleHideCallback);
+	iEditorButton[ITEMSTATS_HIDDEN_BTN] = CreateCheckBoxButton(485, y + 5, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL, ItemStatsToggleHideCallback);
 	iEditorButton[ITEMSTATS_DELETE_BTN] = CreateTextButton(L"Delete", FONT10ARIAL, FONT_RED, FONT_BLACK, 600, y + 81, 36, 16, MSYS_PRIORITY_NORMAL + 1, ItemStatsDeleteCallback);
 }
 
@@ -120,7 +120,7 @@ static void MakeButtonSchedule(UINT idx, INT16 x, INT16 y, INT16 w, INT16 h, GUI
 
 static void MakeButtonInventory(UINT idx, INT16 x, INT16 y, INT32 pos)
 {
-	GUIButtonRef const btn = CreateCheckBoxButton(x, y, EDITORDIR "/smCheckbox.sti", MSYS_PRIORITY_NORMAL + 1, MercsInventorySlotCallback);
+	GUIButtonRef const btn = CreateCheckBoxButton(x, y, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL + 1, MercsInventorySlotCallback);
 	iEditorButton[idx] = btn;
 	btn->SetUserData(pos);
 }
@@ -128,11 +128,11 @@ static void MakeButtonInventory(UINT idx, INT16 x, INT16 y, INT32 pos)
 
 static void InitEditorMercsToolbar(void)
 {
-	MakeCheck(MERCS_PLAYERTOGGLE,   4,  2, MercsTogglePlayers,   EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of players");
-	MakeCheck(MERCS_ENEMYTOGGLE,    4, 22, MercsToggleEnemies,   EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of enemies");
-	MakeCheck(MERCS_CREATURETOGGLE, 4, 42, MercsToggleCreatures, EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of creatures");
-	MakeCheck(MERCS_REBELTOGGLE,    4, 62, MercsToggleRebels,    EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of rebels");
-	MakeCheck(MERCS_CIVILIANTOGGLE, 4, 82, MercsToggleCivilians, EDITORDIR "/SmCheckbox.sti", L"Toggle viewing of civilians");
+	MakeCheck(MERCS_PLAYERTOGGLE,   4,  2, MercsTogglePlayers,   EDITORDIR "/smcheckbox.sti", L"Toggle viewing of players");
+	MakeCheck(MERCS_ENEMYTOGGLE,    4, 22, MercsToggleEnemies,   EDITORDIR "/smcheckbox.sti", L"Toggle viewing of enemies");
+	MakeCheck(MERCS_CREATURETOGGLE, 4, 42, MercsToggleCreatures, EDITORDIR "/smcheckbox.sti", L"Toggle viewing of creatures");
+	MakeCheck(MERCS_REBELTOGGLE,    4, 62, MercsToggleRebels,    EDITORDIR "/smcheckbox.sti", L"Toggle viewing of rebels");
+	MakeCheck(MERCS_CIVILIANTOGGLE, 4, 82, MercsToggleCivilians, EDITORDIR "/smcheckbox.sti", L"Toggle viewing of civilians");
 	if (gfShowPlayers)   ClickEditorButton(MERCS_PLAYERTOGGLE);
 	if (gfShowEnemies)   ClickEditorButton(MERCS_ENEMYTOGGLE);
 	if (gfShowCreatures) ClickEditorButton(MERCS_CREATURETOGGLE);
@@ -154,15 +154,15 @@ static void InitEditorMercsToolbar(void)
 	iEditorButton[MERCS_1]->SpecifyTextWrappedWidth(46);
 	iEditorButton[MERCS_DETAILEDCHECKBOX] = CreateCheckBoxButton(103, y + 5, EDITORDIR "/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsDetailedPlacementCallback);
 
-	MakeButton(MERCS_GENERAL,      100, 22, MercsGeneralModeCallback,    EDITORDIR "/MercGeneral.sti",      L"General information mode");
-	MakeButton(MERCS_APPEARANCE,   134, 22, MercsAppearanceModeCallback, EDITORDIR "/MercAppearance.sti",   L"Physical appearance mode");
-	MakeButton(MERCS_ATTRIBUTES,   100, 48, MercsAttributesModeCallback, EDITORDIR "/MercAttributes.sti",   L"Attributes mode");
-	MakeButton(MERCS_INVENTORY,    134, 48, MercsInventoryModeCallback,  EDITORDIR "/MercInventory.sti",    L"Inventory mode");
-	MakeButton(MERCS_PROFILE,      100, 74, MercsProfileModeCallback,    EDITORDIR "/MercProfile.sti",      L"Profile ID mode");
-	MakeButton(MERCS_SCHEDULE,     134, 74, MercsScheduleModeCallback,   EDITORDIR "/MercSchedule.sti",     L"Schedule mode");
+	MakeButton(MERCS_GENERAL,      100, 22, MercsGeneralModeCallback,    EDITORDIR "/mercgeneral.sti",      L"General information mode");
+	MakeButton(MERCS_APPEARANCE,   134, 22, MercsAppearanceModeCallback, EDITORDIR "/mercappearance.sti",   L"Physical appearance mode");
+	MakeButton(MERCS_ATTRIBUTES,   100, 48, MercsAttributesModeCallback, EDITORDIR "/mercattributes.sti",   L"Attributes mode");
+	MakeButton(MERCS_INVENTORY,    134, 48, MercsInventoryModeCallback,  EDITORDIR "/mercinventory.sti",    L"Inventory mode");
+	MakeButton(MERCS_PROFILE,      100, 74, MercsProfileModeCallback,    EDITORDIR "/mercprofile.sti",      L"Profile ID mode");
+	MakeButton(MERCS_SCHEDULE,     134, 74, MercsScheduleModeCallback,   EDITORDIR "/mercschedule.sti",     L"Schedule mode");
 	//Workaround for identical buttons.
 	iEditorButton[MERCS_SCHEDULE]->uiFlags |= BUTTON_NO_DUPLICATE;
-	MakeButton(MERCS_GLOWSCHEDULE, 134, 74, MercsScheduleModeCallback,   EDITORDIR "/MercGlowSchedule.sti", L"Schedule mode");
+	MakeButton(MERCS_GLOWSCHEDULE, 134, 74, MercsScheduleModeCallback,   EDITORDIR "/mercglowschedule.sti", L"Schedule mode");
 	HideEditorButton( MERCS_GLOWSCHEDULE );
 
 	iEditorButton[MERCS_DELETE] = MakeTextButton(L"DELETE", FONT_DKBLUE, 600,  2, 40, 20, MercsDeleteCallback);
@@ -246,10 +246,10 @@ static void InitEditorMercsToolbar(void)
 	MakeButton(MERCS_BODYTYPE_DOWN, 460, 4, MercsSetBodyTypeCallback, EDITORDIR "/leftarrow.sti",  L"Previous body type");
 	MakeButton(MERCS_BODYTYPE_UP,   560, 4, MercsSetBodyTypeCallback, EDITORDIR "/rightarrow.sti", L"Next body type");
 
-	MakeCheck(MERCS_SCHEDULE_VARIANCE1, 309, 15, MercsScheduleToggleVariance1Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
-	MakeCheck(MERCS_SCHEDULE_VARIANCE2, 309, 36, MercsScheduleToggleVariance2Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
-	MakeCheck(MERCS_SCHEDULE_VARIANCE3, 309, 57, MercsScheduleToggleVariance3Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
-	MakeCheck(MERCS_SCHEDULE_VARIANCE4, 309, 78, MercsScheduleToggleVariance4Callback, EDITORDIR "/SmCheckBox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE1, 309, 15, MercsScheduleToggleVariance1Callback, EDITORDIR "/smcheckbox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE2, 309, 36, MercsScheduleToggleVariance2Callback, EDITORDIR "/smcheckbox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE3, 309, 57, MercsScheduleToggleVariance3Callback, EDITORDIR "/smcheckbox.sti", L"Toggle time variance (+ or - 15 minutes)");
+	MakeCheck(MERCS_SCHEDULE_VARIANCE4, 309, 78, MercsScheduleToggleVariance4Callback, EDITORDIR "/smcheckbox.sti", L"Toggle time variance (+ or - 15 minutes)");
 
 	MakeButtonSchedule(MERCS_SCHEDULE_ACTION1, 186, 13, 77, 16, MercsScheduleAction1Callback, L"No action");
 	MakeButtonSchedule(MERCS_SCHEDULE_ACTION2, 186, 34, 77, 16, MercsScheduleAction2Callback, L"No action");
@@ -310,8 +310,8 @@ static void InitEditorBuildingsToolbar(void)
 	MakeButton(BUILDING_NEW_ROOF,           400, 70, BuildingNewRoofCallback,        EDITORDIR "/newroof.sti",      L"Add/replace building's roof with new flat roof.");
 	MakeButton(BUILDING_COPY_BUILDING,      430, 70, BuildingCopyBuildingCallback,   EDITORDIR "/copyroom.sti",     L"Copy a building");
 	MakeButton(BUILDING_MOVE_BUILDING,      460, 70, BuildingMoveBuildingCallback,   EDITORDIR "/moveroom.sti",     L"Move a building");
-	MakeButton(BUILDING_DRAW_ROOMNUM,       410, 10, BuildingDrawRoomNumCallback,    EDITORDIR "/addTileRoom.sti",  L"Draw room number");
-	MakeButton(BUILDING_ERASE_ROOMNUM,      440, 10, BuildingEraseRoomNumCallback,   EDITORDIR "/killTileRoom.sti", L"Erase room numbers");
+	MakeButton(BUILDING_DRAW_ROOMNUM,       410, 10, BuildingDrawRoomNumCallback,    EDITORDIR "/addtileroom.sti",  L"Draw room number");
+	MakeButton(BUILDING_ERASE_ROOMNUM,      440, 10, BuildingEraseRoomNumCallback,   EDITORDIR "/killtileroom.sti", L"Erase room numbers");
 
 	MakeButton(BUILDING_TOGGLE_ERASEMODE,   500, 40, BtnEraseCallback,               EDITORDIR "/eraser.sti",       L"Toggle erase mode");
 

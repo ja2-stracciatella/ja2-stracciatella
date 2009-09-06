@@ -62,9 +62,9 @@ void LoadCarPortraitValues(void)
 	static char const* const pbCarPortraitFileNames[] =
 	{
 		INTERFACEDIR "/eldorado.sti",
-		INTERFACEDIR "/Hummer.sti",
-		INTERFACEDIR "/ice Cream Truck.sti",
-		INTERFACEDIR "/Jeep.sti"
+		INTERFACEDIR "/hummer.sti",
+		INTERFACEDIR "/ice cream truck.sti",
+		INTERFACEDIR "/jeep.sti"
 	};
 
 	if (giCarPortraits[0]) return;
@@ -275,7 +275,7 @@ void RenderSoldierFace(SOLDIERTYPE const& s, INT16 const sFaceX, INT16 const sFa
 
 void LoadInterfaceUtilsGraphics()
 {
-	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile(INTERFACEDIR "/Bars.sti");
+	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile(INTERFACEDIR "/bars.sti");
 }
 
 

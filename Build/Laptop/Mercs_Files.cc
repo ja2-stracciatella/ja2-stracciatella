@@ -143,12 +143,12 @@ void EnterMercsFiles()
 	guiStatsBox = AddVideoObjectFromFile(ImageFile);
 
 	// load the Portrait box graphic and add it
-	guiPortraitBox = AddVideoObjectFromFile(LAPTOPDIR "/PortraitBox.sti");
+	guiPortraitBox = AddVideoObjectFromFile(LAPTOPDIR "/portraitbox.sti");
 
 	// load the bio box graphic and add it
-	guiBioBox = AddVideoObjectFromFile(LAPTOPDIR "/BioBox.sti");
+	guiBioBox = AddVideoObjectFromFile(LAPTOPDIR "/biobox.sti");
 
-	guiButtonImage    = LoadButtonImage(LAPTOPDIR "/BigButtons.sti", 0, 1);
+	guiButtonImage    = LoadButtonImage(LAPTOPDIR "/bigbuttons.sti", 0, 1);
 	guiPrevButton     = MakeButton(MercInfo[MERC_FILES_PREVIOUS], MERC_FILES_PREV_BUTTON_X, BtnMercPrevButtonCallback);
 	guiNextButton     = MakeButton(MercInfo[MERC_FILES_NEXT],     MERC_FILES_NEXT_BUTTON_X, BtnMercNextButtonCallback);
 	guiHireButton     = MakeButton(MercInfo[MERC_FILES_HIRE],     MERC_FILES_HIRE_BUTTON_X, BtnMercHireButtonCallback);

@@ -25,7 +25,7 @@
 
 
 #ifdef JA2DEMO
-#	define MAP_BORDER_FILE INTERFACEDIR "/MAPBORDER0225.sti"
+#	define MAP_BORDER_FILE INTERFACEDIR "/mapborder0225.sti"
 #	define BTN_TOWN_X      272
 #	define BTN_MINE_X      315
 #	define BTN_TEAMS_X     358
@@ -35,7 +35,7 @@
 
 #	define MAP_LEVEL_MARKER_X    485
 #else
-#	define MAP_BORDER_FILE INTERFACEDIR "/MBS.sti"
+#	define MAP_BORDER_FILE INTERFACEDIR "/mbs.sti"
 #	define BTN_TOWN_X      299
 #	define BTN_MINE_X      342
 #	define BTN_TEAMS_X     385
@@ -120,7 +120,7 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 void LoadMapBorderGraphics(void)
 {
   // this procedure will load the graphics needed for the map border
-	guiLEVELMARKER       = AddVideoObjectFromFile(INTERFACEDIR "/GreenArr.sti");
+	guiLEVELMARKER       = AddVideoObjectFromFile(INTERFACEDIR "/greenarr.sti");
 	guiMapBorder         = AddVideoObjectFromFile(MAP_BORDER_FILE);
 	guiMapBorderEtaPopUp = AddVideoObjectFromFile(INTERFACEDIR "/eta_pop_up.sti");
 

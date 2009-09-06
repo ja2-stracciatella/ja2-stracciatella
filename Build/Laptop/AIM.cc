@@ -208,10 +208,10 @@ void EnterAIM()
 	guiMemberCard = AddVideoObjectFromFile(LAPTOPDIR "/membercard.sti");
 
 	// load the Policies graphic and add it
-	guiPolicies = AddVideoObjectFromFile(LAPTOPDIR "/Policies.sti");
+	guiPolicies = AddVideoObjectFromFile(LAPTOPDIR "/policies.sti");
 
 	// load the Links graphic and add it
-	guiLinks = AddVideoObjectFromFile(LAPTOPDIR "/Links.sti");
+	guiLinks = AddVideoObjectFromFile(LAPTOPDIR "/links.sti");
 
 	const char* ImageFile;
 
@@ -478,7 +478,7 @@ void InitAimMenuBar(void)
 	UINT8	i;
 	UINT16	usPosX;
 
-	guiBottomButtonImage = LoadButtonImage(LAPTOPDIR "/BottomButtons2.sti", 0, 1);
+	guiBottomButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
 
 	usPosX = BOTTOM_BUTTON_START_X;
 	for(i=0; i<BOTTOM_BUTTON_AMOUNT; i++)

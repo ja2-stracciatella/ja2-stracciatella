@@ -197,8 +197,8 @@ static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 
 static BOOLEAN EnterCreditsScreen(void)
 try
 {
-	guiCreditBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/Credits.sti");
-	guiCreditFaces           = AddVideoObjectFromFile(INTERFACEDIR "/Credit Faces.sti");
+	guiCreditBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/credits.sti");
+	guiCreditFaces           = AddVideoObjectFromFile(INTERFACEDIR "/credit faces.sti");
 
 	guiCreditScreenActiveFont  = FONT12ARIAL;
 	gubCreditScreenActiveColor = FONT_MCOLOR_DKWHITE;

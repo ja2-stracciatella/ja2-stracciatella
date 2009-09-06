@@ -227,9 +227,9 @@ static BOOLEAN CreateAIViewer(void)
 	wchar_t str[6];
 
 	//Check to see if data exists.
-	if( !FileExists( "DevTools/arulco.sti" )			||
-			!FileExists( "DevTools/icons.sti" )			||
-			!FileExists( "DevTools/SmCheckbox.sti" ) )
+	if (!FileExists("devtools/arulco.sti") ||
+			!FileExists("devtools/icons.sti")  ||
+			!FileExists("devtools/smcheckbox.sti"))
 	{
 		ScreenMsg( FONT_WHITE, MSG_BETAVERSION, L"AIViewer missing data.  Aborted." );
 		gfExitViewer = FALSE;
@@ -240,8 +240,8 @@ static BOOLEAN CreateAIViewer(void)
 	DisableScrollMessages();
 	giSaveTCMode = giTimeCompressMode;
 
-	guiMapGraphicID = AddVideoObjectFromFile("DevTools/arulco.sti");
-	guiMapIconsID   = AddVideoObjectFromFile("DevTools/icons.sti");
+	guiMapGraphicID = AddVideoObjectFromFile("devtools/arulco.sti");
+	guiMapIconsID   = AddVideoObjectFromFile("devtools/icons.sti");
 
 	gfRenderViewer = TRUE;
 
@@ -267,8 +267,7 @@ static BOOLEAN CreateAIViewer(void)
 	iViewerButton[SPREAD_CREATURES]     = CreateTextButton(L"Spread Creatures",     FONT12POINT1, FONT_BLACK, FONT_BLACK, VIEWER_RIGHT + 20, 150, 120, 18, MSYS_PRIORITY_HIGH, SpreadCreaturesCallback);
 	iViewerButton[CREATURE_ATTACK]      = CreateTextButton(L"Creature Attack",      FONT12POINT1, FONT_BLACK, FONT_BLACK, VIEWER_RIGHT + 20, 175, 120, 18, MSYS_PRIORITY_HIGH, CreatureAttackCallback);
 
-	iViewerButton[ QUEEN_AWAKE_TOGGLE ] =
-		CreateCheckBoxButton(	104, VIEWER_BOTTOM + 22, "DevTools/SmCheckbox.sti", MSYS_PRIORITY_HIGH, ToggleQueenAwake );
+	iViewerButton[QUEEN_AWAKE_TOGGLE] = CreateCheckBoxButton(104, VIEWER_BOTTOM + 22, "devtools/smcheckbox.sti", MSYS_PRIORITY_HIGH, ToggleQueenAwake);
 	if( gfQueenAIAwake )
 	{
 		iViewerButton[QUEEN_AWAKE_TOGGLE]->uiFlags |= BUTTON_CLICKED_ON;

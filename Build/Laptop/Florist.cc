@@ -84,9 +84,9 @@ void EnterFlorist()
 	InitFloristDefaults();
 
 	// load the handbullet graphic and add it
-	guiHandBullet = AddVideoObjectFromFile(LAPTOPDIR "/HandBullet.sti");
+	guiHandBullet = AddVideoObjectFromFile(LAPTOPDIR "/handbullet.sti");
 
-	guiGalleryButtonImage	= LoadButtonImage(LAPTOPDIR "/FloristButtons.sti", 0, 1);
+	guiGalleryButtonImage	= LoadButtonImage(LAPTOPDIR "/floristbuttons.sti", 0, 1);
 
 	guiGalleryButton = CreateIconAndTextButton( guiGalleryButtonImage, sFloristText[FLORIST_GALLERY], FLORIST_BUTTON_TEXT_FONT,
 													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,

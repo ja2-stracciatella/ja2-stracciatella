@@ -146,15 +146,15 @@ static void InitEditorRegions(void)
 static void LoadEditorImages(void)
 {
 	//Set up the merc inventory panel
-	guiMercInventoryPanel = AddVideoObjectFromFile(EDITORDIR "/InvPanel.sti");
+	guiMercInventoryPanel = AddVideoObjectFromFile(EDITORDIR "/invpanel.sti");
 	//Set up small omerta map
 	guiOmertaMap          = AddVideoObjectFromFile(EDITORDIR "/omerta.sti");
 	//Set up the merc directional buttons.
 	giEditMercDirectionIcons[0] = LoadGenericButtonIcon(EDITORDIR "/arrowsoff.sti");
 	giEditMercDirectionIcons[1] = LoadGenericButtonIcon(EDITORDIR "/arrowson.sti");
 
-	guiExclamation = AddVideoObjectFromFile(EDITORDIR "/Exclamation.sti");
-	guiKeyImage    = AddVideoObjectFromFile(EDITORDIR "/KeyImage.sti");
+	guiExclamation = AddVideoObjectFromFile(EDITORDIR "/exclamation.sti");
+	guiKeyImage    = AddVideoObjectFromFile(EDITORDIR "/keyimage.sti");
 }
 
 
