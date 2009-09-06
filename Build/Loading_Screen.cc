@@ -1,16 +1,16 @@
-#include "Directories.h"
-#include "Local.h"
-#include "Strategic_Movement.h"
-#include "VSurface.h"
-#include "Loading_Screen.h"
 #include "Campaign_Types.h"
-#include "Game_Clock.h"
-#include "Random.h"
+#include "Debug.h"
+#include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
-#include "Video.h"
+#include "Game_Clock.h"
+#include "Loading_Screen.h"
+#include "Local.h"
+#include "Random.h"
 #include "Render_Dirty.h"
-#include "Debug.h"
+#include "Strategic_Movement.h"
+#include "VSurface.h"
+#include "Video.h"
 
 
 LoadingScreenID gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
@@ -18,7 +18,7 @@ LoadingScreenID gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
 
 LoadingScreenID GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
 {
-	bool  const night     = NightTime(); // Before 5AM or after 9PM
+	bool  const night     = NightTime();
 	UINT8 const sector_id = SECTOR(x, y);
 	switch (z)
 	{
@@ -131,82 +131,79 @@ LoadingScreenID GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
 }
 
 
-//sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER,
-//and refreshing the screen with it.
-void DisplayLoadScreenWithID(LoadingScreenID const ubLoadScreenID)
+void DisplayLoadScreenWithID(LoadingScreenID const id)
 {
-	const char* ImageFile;
-
-	switch (ubLoadScreenID)
+	char const* filename;
+	switch (id)
 	{
 #ifdef JA2DEMO
-		case LOADINGSCREEN_NOTHING:       ImageFile = INTERFACEDIR "/loadscreen1.sti";        break;
-		case LOADINGSCREEN_NIGHTGENERIC:  ImageFile = INTERFACEDIR "/loadscreen2.sti";        break;
-		case LOADINGSCREEN_HELI:          ImageFile = INTERFACEDIR "/loadscreen1.sti";        break;
-		case LOADINGSCREEN_BASEMENT:      ImageFile = INTERFACEDIR "/loadscreen4.sti";        break;
-		case LOADINGSCREEN_CAVE:          ImageFile = INTERFACEDIR "/loadscreen5.sti";        break;
-		default:                          ImageFile = INTERFACEDIR "/loadscreen1.sti";        break;
+		case LOADINGSCREEN_NOTHING:       filename = INTERFACEDIR "/loadscreen1.sti";        break;
+		case LOADINGSCREEN_NIGHTGENERIC:  filename = INTERFACEDIR "/loadscreen2.sti";        break;
+		case LOADINGSCREEN_HELI:          filename = INTERFACEDIR "/loadscreen1.sti";        break;
+		case LOADINGSCREEN_BASEMENT:      filename = INTERFACEDIR "/loadscreen4.sti";        break;
+		case LOADINGSCREEN_CAVE:          filename = INTERFACEDIR "/loadscreen5.sti";        break;
+		default:                          filename = INTERFACEDIR "/loadscreen1.sti";        break;
 #else
-		case LOADINGSCREEN_NOTHING:       ImageFile = LOADSCREENSDIR "/LS_Heli.sti";          break;
-		case LOADINGSCREEN_DAYGENERIC:    ImageFile = LOADSCREENSDIR "/LS_DayGeneric.sti";    break;
-		case LOADINGSCREEN_DAYTOWN1:      ImageFile = LOADSCREENSDIR "/LS_DayTown1.sti";      break;
-		case LOADINGSCREEN_DAYTOWN2:      ImageFile = LOADSCREENSDIR "/LS_DayTown2.sti";      break;
-		case LOADINGSCREEN_DAYWILD:       ImageFile = LOADSCREENSDIR "/LS_DayWild.sti";       break;
-		case LOADINGSCREEN_DAYTROPICAL:   ImageFile = LOADSCREENSDIR "/LS_DayTropical.sti";   break;
-		case LOADINGSCREEN_DAYFOREST:     ImageFile = LOADSCREENSDIR "/LS_DayForest.sti";     break;
-		case LOADINGSCREEN_DAYDESERT:     ImageFile = LOADSCREENSDIR "/LS_DayDesert.sti";     break;
-		case LOADINGSCREEN_DAYPALACE:     ImageFile = LOADSCREENSDIR "/LS_DayPalace.sti";     break;
-		case LOADINGSCREEN_NIGHTGENERIC:  ImageFile = LOADSCREENSDIR "/LS_NightGeneric.sti";  break;
-		case LOADINGSCREEN_NIGHTWILD:     ImageFile = LOADSCREENSDIR "/LS_NightWild.sti";     break;
-		case LOADINGSCREEN_NIGHTTOWN1:    ImageFile = LOADSCREENSDIR "/LS_NightTown1.sti";    break;
-		case LOADINGSCREEN_NIGHTTOWN2:    ImageFile = LOADSCREENSDIR "/LS_NightTown2.sti";    break;
-		case LOADINGSCREEN_NIGHTFOREST:   ImageFile = LOADSCREENSDIR "/LS_NightForest.sti";   break;
-		case LOADINGSCREEN_NIGHTTROPICAL: ImageFile = LOADSCREENSDIR "/LS_NightTropical.sti"; break;
-		case LOADINGSCREEN_NIGHTDESERT:   ImageFile = LOADSCREENSDIR "/LS_NightDesert.sti";   break;
-		case LOADINGSCREEN_NIGHTPALACE:   ImageFile = LOADSCREENSDIR "/LS_NightPalace.sti";   break;
-		case LOADINGSCREEN_HELI:          ImageFile = LOADSCREENSDIR "/LS_Heli.sti";          break;
-		case LOADINGSCREEN_BASEMENT:      ImageFile = LOADSCREENSDIR "/LS_Basement.sti";      break;
-		case LOADINGSCREEN_MINE:          ImageFile = LOADSCREENSDIR "/LS_Mine.sti";          break;
-		case LOADINGSCREEN_CAVE:          ImageFile = LOADSCREENSDIR "/LS_Cave.sti";          break;
-		case LOADINGSCREEN_DAYPINE:       ImageFile = LOADSCREENSDIR "/LS_DayPine.sti";       break;
-		case LOADINGSCREEN_NIGHTPINE:     ImageFile = LOADSCREENSDIR "/LS_NightPine.sti";     break;
-		case LOADINGSCREEN_DAYMILITARY:   ImageFile = LOADSCREENSDIR "/LS_DayMilitary.sti";   break;
-		case LOADINGSCREEN_NIGHTMILITARY: ImageFile = LOADSCREENSDIR "/LS_NightMilitary.sti"; break;
-		case LOADINGSCREEN_DAYSAM:        ImageFile = LOADSCREENSDIR "/LS_DaySAM.sti";        break;
-		case LOADINGSCREEN_NIGHTSAM:      ImageFile = LOADSCREENSDIR "/LS_NightSAM.sti";      break;
-		case LOADINGSCREEN_DAYPRISON:     ImageFile = LOADSCREENSDIR "/LS_DayPrison.sti";     break;
-		case LOADINGSCREEN_NIGHTPRISON:   ImageFile = LOADSCREENSDIR "/LS_NightPrison.sti";   break;
-		case LOADINGSCREEN_DAYHOSPITAL:   ImageFile = LOADSCREENSDIR "/LS_DayHospital.sti";   break;
-		case LOADINGSCREEN_NIGHTHOSPITAL: ImageFile = LOADSCREENSDIR "/LS_NightHospital.sti"; break;
-		case LOADINGSCREEN_DAYAIRPORT:    ImageFile = LOADSCREENSDIR "/LS_DayAirport.sti";    break;
-		case LOADINGSCREEN_NIGHTAIRPORT:  ImageFile = LOADSCREENSDIR "/LS_NightAirport.sti";  break;
-		case LOADINGSCREEN_DAYLAB:        ImageFile = LOADSCREENSDIR "/LS_DayLab.sti";        break;
-		case LOADINGSCREEN_NIGHTLAB:      ImageFile = LOADSCREENSDIR "/LS_NightLab.sti";      break;
-		case LOADINGSCREEN_DAYOMERTA:     ImageFile = LOADSCREENSDIR "/LS_DayOmerta.sti";     break;
-		case LOADINGSCREEN_NIGHTOMERTA:   ImageFile = LOADSCREENSDIR "/LS_NightOmerta.sti";   break;
-		case LOADINGSCREEN_DAYCHITZENA:   ImageFile = LOADSCREENSDIR "/LS_DayChitzena.sti";   break;
-		case LOADINGSCREEN_NIGHTCHITZENA: ImageFile = LOADSCREENSDIR "/LS_NightChitzena.sti"; break;
-		case LOADINGSCREEN_DAYMINE:       ImageFile = LOADSCREENSDIR "/LS_DayMine.sti" ;      break;
-		case LOADINGSCREEN_NIGHTMINE:     ImageFile = LOADSCREENSDIR "/LS_NightMine.sti" ;    break;
-		case LOADINGSCREEN_DAYBALIME:     ImageFile = LOADSCREENSDIR "/LS_DayBalime.sti" ;    break;
-		case LOADINGSCREEN_NIGHTBALIME:   ImageFile = LOADSCREENSDIR "/LS_NightBalime.sti";   break;
-		default:                          ImageFile = LOADSCREENSDIR "/LS_Heli.sti";          break;
+		case LOADINGSCREEN_NOTHING:       filename = LOADSCREENSDIR "/LS_Heli.sti";          break;
+		case LOADINGSCREEN_DAYGENERIC:    filename = LOADSCREENSDIR "/LS_DayGeneric.sti";    break;
+		case LOADINGSCREEN_DAYTOWN1:      filename = LOADSCREENSDIR "/LS_DayTown1.sti";      break;
+		case LOADINGSCREEN_DAYTOWN2:      filename = LOADSCREENSDIR "/LS_DayTown2.sti";      break;
+		case LOADINGSCREEN_DAYWILD:       filename = LOADSCREENSDIR "/LS_DayWild.sti";       break;
+		case LOADINGSCREEN_DAYTROPICAL:   filename = LOADSCREENSDIR "/LS_DayTropical.sti";   break;
+		case LOADINGSCREEN_DAYFOREST:     filename = LOADSCREENSDIR "/LS_DayForest.sti";     break;
+		case LOADINGSCREEN_DAYDESERT:     filename = LOADSCREENSDIR "/LS_DayDesert.sti";     break;
+		case LOADINGSCREEN_DAYPALACE:     filename = LOADSCREENSDIR "/LS_DayPalace.sti";     break;
+		case LOADINGSCREEN_NIGHTGENERIC:  filename = LOADSCREENSDIR "/LS_NightGeneric.sti";  break;
+		case LOADINGSCREEN_NIGHTWILD:     filename = LOADSCREENSDIR "/LS_NightWild.sti";     break;
+		case LOADINGSCREEN_NIGHTTOWN1:    filename = LOADSCREENSDIR "/LS_NightTown1.sti";    break;
+		case LOADINGSCREEN_NIGHTTOWN2:    filename = LOADSCREENSDIR "/LS_NightTown2.sti";    break;
+		case LOADINGSCREEN_NIGHTFOREST:   filename = LOADSCREENSDIR "/LS_NightForest.sti";   break;
+		case LOADINGSCREEN_NIGHTTROPICAL: filename = LOADSCREENSDIR "/LS_NightTropical.sti"; break;
+		case LOADINGSCREEN_NIGHTDESERT:   filename = LOADSCREENSDIR "/LS_NightDesert.sti";   break;
+		case LOADINGSCREEN_NIGHTPALACE:   filename = LOADSCREENSDIR "/LS_NightPalace.sti";   break;
+		case LOADINGSCREEN_HELI:          filename = LOADSCREENSDIR "/LS_Heli.sti";          break;
+		case LOADINGSCREEN_BASEMENT:      filename = LOADSCREENSDIR "/LS_Basement.sti";      break;
+		case LOADINGSCREEN_MINE:          filename = LOADSCREENSDIR "/LS_Mine.sti";          break;
+		case LOADINGSCREEN_CAVE:          filename = LOADSCREENSDIR "/LS_Cave.sti";          break;
+		case LOADINGSCREEN_DAYPINE:       filename = LOADSCREENSDIR "/LS_DayPine.sti";       break;
+		case LOADINGSCREEN_NIGHTPINE:     filename = LOADSCREENSDIR "/LS_NightPine.sti";     break;
+		case LOADINGSCREEN_DAYMILITARY:   filename = LOADSCREENSDIR "/LS_DayMilitary.sti";   break;
+		case LOADINGSCREEN_NIGHTMILITARY: filename = LOADSCREENSDIR "/LS_NightMilitary.sti"; break;
+		case LOADINGSCREEN_DAYSAM:        filename = LOADSCREENSDIR "/LS_DaySAM.sti";        break;
+		case LOADINGSCREEN_NIGHTSAM:      filename = LOADSCREENSDIR "/LS_NightSAM.sti";      break;
+		case LOADINGSCREEN_DAYPRISON:     filename = LOADSCREENSDIR "/LS_DayPrison.sti";     break;
+		case LOADINGSCREEN_NIGHTPRISON:   filename = LOADSCREENSDIR "/LS_NightPrison.sti";   break;
+		case LOADINGSCREEN_DAYHOSPITAL:   filename = LOADSCREENSDIR "/LS_DayHospital.sti";   break;
+		case LOADINGSCREEN_NIGHTHOSPITAL: filename = LOADSCREENSDIR "/LS_NightHospital.sti"; break;
+		case LOADINGSCREEN_DAYAIRPORT:    filename = LOADSCREENSDIR "/LS_DayAirport.sti";    break;
+		case LOADINGSCREEN_NIGHTAIRPORT:  filename = LOADSCREENSDIR "/LS_NightAirport.sti";  break;
+		case LOADINGSCREEN_DAYLAB:        filename = LOADSCREENSDIR "/LS_DayLab.sti";        break;
+		case LOADINGSCREEN_NIGHTLAB:      filename = LOADSCREENSDIR "/LS_NightLab.sti";      break;
+		case LOADINGSCREEN_DAYOMERTA:     filename = LOADSCREENSDIR "/LS_DayOmerta.sti";     break;
+		case LOADINGSCREEN_NIGHTOMERTA:   filename = LOADSCREENSDIR "/LS_NightOmerta.sti";   break;
+		case LOADINGSCREEN_DAYCHITZENA:   filename = LOADSCREENSDIR "/LS_DayChitzena.sti";   break;
+		case LOADINGSCREEN_NIGHTCHITZENA: filename = LOADSCREENSDIR "/LS_NightChitzena.sti"; break;
+		case LOADINGSCREEN_DAYMINE:       filename = LOADSCREENSDIR "/LS_DayMine.sti" ;      break;
+		case LOADINGSCREEN_NIGHTMINE:     filename = LOADSCREENSDIR "/LS_NightMine.sti" ;    break;
+		case LOADINGSCREEN_DAYBALIME:     filename = LOADSCREENSDIR "/LS_DayBalime.sti" ;    break;
+		case LOADINGSCREEN_NIGHTBALIME:   filename = LOADSCREENSDIR "/LS_NightBalime.sti";   break;
+		default:                          filename = LOADSCREENSDIR "/LS_Heli.sti";          break;
 #endif
 	}
 
-	try // Blit the background image
-	{
-		BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0);
+	try
+	{ // Blit the background image.
+		BltVideoSurfaceOnce(FRAME_BUFFER, filename, 0, 0);
 	}
 	catch (...)
-	{ //Failed to load the file, so use a black screen and print out message.
+	{ // Failed to load the file, so use a black screen and print out message.
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		FRAME_BUFFER->Fill(0);
-		mprintf(5, 5, L"%hs loadscreen data file not found...", ImageFile);
+		mprintf(5, 5, L"%hs loadscreen data file not found", filename);
 	}
 
-	gubLastLoadingScreenID = ubLoadScreenID;
-	InvalidateScreen( );
+	gubLastLoadingScreenID = id;
+	InvalidateScreen();
 	ExecuteBaseDirtyRectQueue();
 	RefreshScreen();
 }

@@ -1,5 +1,5 @@
-#ifndef __LOADING_SCREEN_H
-#define __LOADING_SCREEN_H
+#ifndef LOADING_SCREEN_H
+#define LOADING_SCREEN_H
 
 
 enum LoadingScreenID
@@ -50,15 +50,14 @@ enum LoadingScreenID
 };
 
 
-
-//For use by the game loader, before it can possibly know the situation.
+// For use by the game loader, before it can possibly know the situation.
 extern LoadingScreenID gubLastLoadingScreenID;
 
 // Return the loading screen ID for the specified sector.
 LoadingScreenID GetLoadScreenID(INT16 x, INT16 y, INT8 z);
 
-//sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER,
-//and refreshing the screen with it.
+/* Set up the loadscreen with specified ID, draw it to the FRAME_BUFFER, and
+ * refresh the screen with it. */
 void DisplayLoadScreenWithID(LoadingScreenID);
 
 #endif
