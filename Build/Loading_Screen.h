@@ -54,8 +54,8 @@ enum LoadingScreenID
 //For use by the game loader, before it can possibly know the situation.
 extern LoadingScreenID gubLastLoadingScreenID;
 
-//returns the UINT8 ID for the specified sector.
-LoadingScreenID GetLoadScreenID(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+// Return the loading screen ID for the specified sector.
+LoadingScreenID GetLoadScreenID(INT16 x, INT16 y, INT8 z);
 
 //sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER,
 //and refreshing the screen with it.
