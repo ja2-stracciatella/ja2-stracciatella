@@ -452,7 +452,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	//hide the autoresolve
 	BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, x, y, w, h);
 
-	PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( iPercentage < 100  )
 	{
 		uiCurrTime = GetClock();

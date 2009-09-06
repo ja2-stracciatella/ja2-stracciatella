@@ -542,17 +542,17 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		const char* filename;
 		if ( pSoldier->usAnimState == NINJA_SPINKICK )
 		{
-			filename = BATTLESNDSDIR "/033_CHOP2.WAV";
+			filename = BATTLESNDSDIR "/033_chop2.wav";
 		}
 		else
 		{
 			if ( Random( 2 ) == 0 )
 			{
-				filename = BATTLESNDSDIR "/033_CHOP3.WAV";
+				filename = BATTLESNDSDIR "/033_chop3.wav";
 			}
 			else
 			{
-				filename = BATTLESNDSDIR "/033_CHOP1.WAV";
+				filename = BATTLESNDSDIR "/033_chop1.wav";
 			}
 		}
 		const UINT32 uiSoundID = SoundPlay(filename, volume, pan, 1, NULL, NULL);

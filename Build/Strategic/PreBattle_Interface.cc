@@ -681,7 +681,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 
 	//hide the prebattle interface
 	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, 0, 0, 261, 359 );
-	PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	InvalidateScreen();
 	RefreshScreen();
 

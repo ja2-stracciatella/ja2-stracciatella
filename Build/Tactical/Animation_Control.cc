@@ -2300,21 +2300,21 @@ void	InitAnimationSurfacesPerBodytype( )
 	gRandomAnimDefs[ COW ][ 1 ].ubStartRoll					= 0;
 	gRandomAnimDefs[ COW ][ 1 ].ubEndRoll						= 1;
 	gRandomAnimDefs[ COW ][ 1 ].ubAnimHeight				= ANIM_STAND;
-	gRandomAnimDefs[COW][1].zSoundFile = SOUNDSDIR "/COWMOO1.WAV";
+	gRandomAnimDefs[COW][1].zSoundFile = SOUNDSDIR "/cowmoo1.wav";
 
 	gRandomAnimDefs[ COW ][ 2 ].ubHandRestriction		= RANDOM_ANIM_IRRELEVENTINHAND;
 	gRandomAnimDefs[ COW ][ 2 ].sAnimID							= RANDOM_ANIM_SOUND;
 	gRandomAnimDefs[ COW ][ 2 ].ubStartRoll					= 2;
 	gRandomAnimDefs[ COW ][ 2 ].ubEndRoll						= 3;
 	gRandomAnimDefs[ COW ][ 2 ].ubAnimHeight				= ANIM_STAND;
-	gRandomAnimDefs[COW][2].zSoundFile = SOUNDSDIR "/COWMOO2.WAV";
+	gRandomAnimDefs[COW][2].zSoundFile = SOUNDSDIR "/cowmoo2.wav";
 
 	gRandomAnimDefs[ COW ][ 3 ].ubHandRestriction		= RANDOM_ANIM_IRRELEVENTINHAND;
 	gRandomAnimDefs[ COW ][ 3 ].sAnimID							= RANDOM_ANIM_SOUND;
 	gRandomAnimDefs[ COW ][ 3 ].ubStartRoll					= 4;
 	gRandomAnimDefs[ COW ][ 3 ].ubEndRoll						= 5;
 	gRandomAnimDefs[ COW ][ 3 ].ubAnimHeight				= ANIM_STAND;
-	gRandomAnimDefs[COW][3].zSoundFile = SOUNDSDIR "/COWMOO3.WAV";
+	gRandomAnimDefs[COW][3].zSoundFile = SOUNDSDIR "/cowmoo3.wav";
 
 
 	gubAnimSurfaceIndex[ CROW ][ STANDING ]																				= CROWWALKING;
@@ -2331,14 +2331,14 @@ void	InitAnimationSurfacesPerBodytype( )
 	gRandomAnimDefs[ CROW ][ 0 ].ubStartRoll					= 0;
 	gRandomAnimDefs[ CROW ][ 0 ].ubEndRoll						= 50;
 	gRandomAnimDefs[ CROW ][ 0 ].ubAnimHeight					= ANIM_STAND;
-	gRandomAnimDefs[CROW][0].zSoundFile = SOUNDSDIR "/CROW3.WAV";
+	gRandomAnimDefs[CROW][0].zSoundFile = SOUNDSDIR "/crow3.wav";
 
 	gRandomAnimDefs[ CROW ][ 1 ].ubHandRestriction		= RANDOM_ANIM_IRRELEVENTINHAND;
 	gRandomAnimDefs[ CROW ][ 1 ].sAnimID							= RANDOM_ANIM_SOUND;
 	gRandomAnimDefs[ CROW ][ 1 ].ubStartRoll					= 51;
 	gRandomAnimDefs[ CROW ][ 1 ].ubEndRoll						= 70;
 	gRandomAnimDefs[ CROW ][ 1 ].ubAnimHeight					= ANIM_STAND;
-	gRandomAnimDefs[CROW][1].zSoundFile = SOUNDSDIR "/CROW2.WAV";
+	gRandomAnimDefs[CROW][1].zSoundFile = SOUNDSDIR "/crow2.wav";
 
 	// BLOOD CAT
 	gubAnimSurfaceIndex[ BLOODCAT ][ STANDING ]																		= CATBREATH;

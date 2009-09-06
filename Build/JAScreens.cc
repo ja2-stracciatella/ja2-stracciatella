@@ -491,7 +491,7 @@ ScreenID SexScreenHandle(void)
 	// if we are animation smile...
 	if ( ubCurrentScreen == 1 )
 	{
-		PlayJA2StreamingSampleFromFile(SOUNDSDIR "/Sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
+		PlayJA2StreamingSampleFromFile(SOUNDSDIR "/sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 		if ( ( uiTime - uiTimeOfLastUpdate ) > SMILY_DELAY )
 		{
 			uiTimeOfLastUpdate = uiTime;
@@ -889,7 +889,7 @@ ScreenID DemoExitScreenHandle(void)
 			}
 			uiStartTime = uiTime;
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-			PlayJA2SampleFromFile(DEMOADSDIR "/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -951,7 +951,7 @@ ScreenID DemoExitScreenHandle(void)
 		if( iPercentage == 100 )
 		{
 			SetMusicMode( MUSIC_MAIN_MENU );
-			PlayJA2SampleFromFile(DEMOADSDIR "/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			SetMusicFadeSpeed(50);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 4;
@@ -1056,7 +1056,7 @@ ScreenID DemoExitScreenHandle(void)
 			}
 			uiStartTime = uiTime;
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-			PlayJA2SampleFromFile(DEMOADSDIR "/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
 		}
 
 		iPercentage = (uiTime - uiStartTime) * 100 / 1200;
@@ -1116,7 +1116,7 @@ ScreenID DemoExitScreenHandle(void)
 		}
 		if( iPercentage == 100 )
 		{
-			PlayJA2SampleFromFile(DEMOADSDIR "/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(DEMOADSDIR "/hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 6;
 			DeleteVideoSurface(uiCollageID);

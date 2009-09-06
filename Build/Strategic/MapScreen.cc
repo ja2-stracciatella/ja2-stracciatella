@@ -3653,7 +3653,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	if( !gfDontStartTransitionFromLaptop )
 	{
 		//Load a tiny graphic of the on screen and draw it to the buffer.
-		PlayJA2SampleFromFile(SOUNDSDIR "/Initial Power Up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile(SOUNDSDIR "/initial power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/laptopon.sti", 0, 465, 417);
 		InvalidateRegion( 465, 417, 480, 427 );
 		ExecuteBaseDirtyRectQueue( );

@@ -341,19 +341,19 @@ static const char* const gzBurstSndStrings[] =
 {
 	"",													// NOAMMO
 	"",													// 38
-	"9mm Burst ",								// 9mm
-	"45 Caliber Burst ",				// 45
+	"9mm burst ",								// 9mm
+	"45 caliber burst ",				// 45
 	"",													// 357
 	"",						              // 12G
-	"Shotgun Burst ",						// CAWS
-	"5,45 Burst ",							// 5.45
-	"5,56 Burst ",							// 5.56
-	"7,62 NATO Burst ",					// 7,62 N
-	"7,62 WP Burst ",						// 7,62 W
-	"4,7 Caliber Burst ",				// 4.7
-	"5,7 Burst ",								// 5,7
+	"shotgun burst ",						// CAWS
+	"5,45 burst ",							// 5.45
+	"5,56 burst ",							// 5.56
+	"7,62 nato burst ",					// 7,62 N
+	"7,62 wp burst ",						// 7,62 W
+	"4,7 caliber burst ",				// 4.7
+	"5,7 burst ",								// 5,7
 	"",													// Monster
-	"RL Automatic ",            // Rocket
+	"rl automatic ",            // Rocket
 	"",													// Dart
 	"",													// Flame (unused)
 };
@@ -891,7 +891,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				if( FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT )
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( zBurstString, SOUNDSDIR "/WEAPONS/SILENCER BURST %d.wav", pSoldier->bBulletsLeft );
+					sprintf( zBurstString, SOUNDSDIR "/weapons/silencer burst %d.wav", pSoldier->bBulletsLeft );
 
 					// Try playing sound...
 					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
@@ -899,7 +899,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				else
 				{
 					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( zBurstString, SOUNDSDIR "/WEAPONS/%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
+					sprintf( zBurstString, SOUNDSDIR "/weapons/%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
 
 					// Try playing sound...
 					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);

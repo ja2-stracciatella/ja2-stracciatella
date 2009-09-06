@@ -101,7 +101,7 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 				case BUTTON_SOUND_SCHEME_BIGSWITCH3:
 				case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:
 				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:
-					PlayJA2SampleFromFile(SOUNDSDIR "/Disabled Button.wav", 15, 1, MIDDLEPAN);
+					PlayJA2SampleFromFile(SOUNDSDIR "/disabled button.wav", 15, 1, MIDDLEPAN);
 					return;
 
 				default: return;

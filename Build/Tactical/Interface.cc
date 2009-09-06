@@ -1901,7 +1901,7 @@ void HandleTopMessages(void)
 						if (GetJA2Clock() - gTopMessage.uiTimeSinceLastBeep > PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS)
 						{
 							gTopMessage.uiTimeSinceLastBeep = GetJA2Clock();
-							PlayJA2SampleFromFile(SOUNDSDIR "/TURN_NEAR_END.WAV", HIGHVOLUME, 1, MIDDLEPAN);
+							PlayJA2SampleFromFile(SOUNDSDIR "/turn_near_end.wav", HIGHVOLUME, 1, MIDDLEPAN);
 						}
 					}
 					else

@@ -582,7 +582,7 @@ static void GetOptionsScreenUserInput(void)
 					{
 					static	UINT32	uiTest2 = NO_SAMPLE;
 					if( !SoundIsPlaying( uiTest2 ) )
-						uiTest2 = PlayJA2SampleFromFile(SOUNDSDIR "/RAID Dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
+						uiTest2 = PlayJA2SampleFromFile(SOUNDSDIR "/raid dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
 					}
 					break;
 #endif
@@ -797,7 +797,7 @@ static void HandleSliderBarMovementSounds(void)
 			HandleNewSectorAmbience( gTilesets[ giCurrentTilesetID ].ubAmbientID );
 
 		if( !SoundIsPlaying( uiLastPlayingSoundID ) )
-			uiLastPlayingSoundID = PlayJA2SampleFromFile(SOUNDSDIR "/Weapons/LMG Reload.wav", HIGHVOLUME, 1, MIDDLEPAN);
+			uiLastPlayingSoundID = PlayJA2SampleFromFile(SOUNDSDIR "/weapons/lmg reload.wav", HIGHVOLUME, 1, MIDDLEPAN);
 	}
 	else
 		uiLastSoundFxTime = GetJA2Clock();

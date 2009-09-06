@@ -1059,7 +1059,7 @@ ScreenID LaptopScreenHandle()
 		const UINT32 uiStartTime = GetClock();
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER,   0, 0, NULL);
 		BltVideoSurface(FRAME_BUFFER,  guiEXTRABUFFER, 0, 0, NULL);
-		PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while (iRealPercentage < 100)
 		{
 			const UINT32 uiCurrTime = GetClock();
@@ -1455,7 +1455,7 @@ static void LeaveLapTopScreen(void)
 			INT32 iRealPercentage = 100;
 			const UINT32 uiStartTime = GetClock();
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-			PlayJA2SampleFromFile(SOUNDSDIR "/Laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
+			PlayJA2SampleFromFile(SOUNDSDIR "/laptop power down (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 			while (iRealPercentage > 0)
 			{
 				BltVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, 0, 0, NULL);

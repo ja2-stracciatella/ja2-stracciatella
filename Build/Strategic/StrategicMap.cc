@@ -359,7 +359,7 @@ void BeginLoadScreen( )
 		iLastShadePercentage = 0;
 		uiStartTime = GetClock();
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-		PlayJA2SampleFromFile(SOUNDSDIR "/Final Psionic Blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
+		PlayJA2SampleFromFile(SOUNDSDIR "/final psionic blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
 		while( iPercentage < 100  )
 		{
 			uiCurrTime = GetClock();

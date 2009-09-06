@@ -16,325 +16,325 @@ static UINT32 guiSoundEffectsVolume = MIDVOLUME;
 
 static char const* const szSoundEffects[NUM_SAMPLES] =
 {
-		SOUNDSDIR "/RICOCHET 01.WAV",
-		SOUNDSDIR "/RICOCHET 02.WAV",
-		SOUNDSDIR "/RICOCHET 01.WAV",
-		SOUNDSDIR "/RICOCHET 02.WAV",
-		SOUNDSDIR "/RICOCHET 01.WAV",
-		SOUNDSDIR "/RICOCHET 02.WAV",
-		SOUNDSDIR "/RICOCHET 01.WAV",
-		SOUNDSDIR "/RICOCHET 02.WAV",
-		SOUNDSDIR "/DIRT IMPACT 01.WAV",
-		SOUNDSDIR "/DIRT IMPACT 01.WAV",
-		SOUNDSDIR "/KNIFE HIT GROUND.WAV",
-		SOUNDSDIR "/FALL TO KNEES 01.WAV",
-		SOUNDSDIR "/FALL TO KNEES 02.WAV",
-		SOUNDSDIR "/KNEES TO DIRT 01.WAV",
-		SOUNDSDIR "/KNEES TO DIRT 02.WAV",
-		SOUNDSDIR "/KNEES TO DIRT 03.WAV",
-		SOUNDSDIR "/HEAVY FALL 01.WAV",
-		SOUNDSDIR "/BODY_SPLAT.WAV",
-		SOUNDSDIR "/GLASS_BREAK1.WAV",
-		SOUNDSDIR "/GLASS_BREAK2.WAV",
+		SOUNDSDIR "/ricochet 01.wav",
+		SOUNDSDIR "/ricochet 02.wav",
+		SOUNDSDIR "/ricochet 01.wav",
+		SOUNDSDIR "/ricochet 02.wav",
+		SOUNDSDIR "/ricochet 01.wav",
+		SOUNDSDIR "/ricochet 02.wav",
+		SOUNDSDIR "/ricochet 01.wav",
+		SOUNDSDIR "/ricochet 02.wav",
+		SOUNDSDIR "/dirt impact 01.wav",
+		SOUNDSDIR "/dirt impact 01.wav",
+		SOUNDSDIR "/knife hit ground.wav",
+		SOUNDSDIR "/fall to knees 01.wav",
+		SOUNDSDIR "/fall to knees 02.wav",
+		SOUNDSDIR "/knees to dirt 01.wav",
+		SOUNDSDIR "/knees to dirt 02.wav",
+		SOUNDSDIR "/knees to dirt 03.wav",
+		SOUNDSDIR "/heavy fall 01.wav",
+		SOUNDSDIR "/body_splat.wav",
+		SOUNDSDIR "/glass_break1.wav",
+		SOUNDSDIR "/glass_break2.wav",
 
-		SOUNDSDIR "/DOOR OPEN 01.WAV",
-		SOUNDSDIR "/DOOR OPEN 02.WAV",
-		SOUNDSDIR "/DOOR OPEN 03.WAV",
-		SOUNDSDIR "/DOOR CLOSE 01.WAV",
-		SOUNDSDIR "/DOOR CLOSE 02.WAV",
-		SOUNDSDIR "/UNLOCK LOCK.WAV",
-		SOUNDSDIR "/KICKIN LOCK.WAV",
-		SOUNDSDIR "/BREAK LOCK.WAV",
-		SOUNDSDIR "/PICKING LOCK.WAV",
+		SOUNDSDIR "/door open 01.wav",
+		SOUNDSDIR "/door open 02.wav",
+		SOUNDSDIR "/door open 03.wav",
+		SOUNDSDIR "/door close 01.wav",
+		SOUNDSDIR "/door close 02.wav",
+		SOUNDSDIR "/unlock lock.wav",
+		SOUNDSDIR "/kickin lock.wav",
+		SOUNDSDIR "/break lock.wav",
+		SOUNDSDIR "/picking lock.wav",
 
-		SOUNDSDIR "/GARAGE DOOR OPEN.WAV",
-		SOUNDSDIR "/GARAGE DOOR CLOSE.WAV",
-		SOUNDSDIR "/ELEVATOR DOOR OPEN.WAV",
-		SOUNDSDIR "/ELEVATOR DOOR CLOSE.WAV",
-		SOUNDSDIR "/HIGH TECH DOOR OPEN.WAV",
-		SOUNDSDIR "/HIGH TECH DOOR CLOSE.WAV",
-		SOUNDSDIR "/CURTAINS DOOR OPEN.WAV",
-		SOUNDSDIR "/CURTAINS DOOR CLOSE.WAV",
-		SOUNDSDIR "/METAL DOOR OPEN.WAV",
-		SOUNDSDIR "/METAL DOOR CLOSE.WAV",
+		SOUNDSDIR "/garage door open.wav",
+		SOUNDSDIR "/garage door close.wav",
+		SOUNDSDIR "/elevator door open.wav",
+		SOUNDSDIR "/elevator door close.wav",
+		SOUNDSDIR "/high tech door open.wav",
+		SOUNDSDIR "/high tech door close.wav",
+		SOUNDSDIR "/curtains door open.wav",
+		SOUNDSDIR "/curtains door close.wav",
+		SOUNDSDIR "/metal door open.wav",
+		SOUNDSDIR "/metal door close.wav",
 
-		SOUNDSDIR "/ftp gravel 01.WAV",
-		SOUNDSDIR "/ftp gravel 02.WAV",
-		SOUNDSDIR "/ftp gravel 03.WAV",
-		SOUNDSDIR "/ftp gravel 04.WAV",
-		SOUNDSDIR "/ftp gritty 01.WAV",
-		SOUNDSDIR "/ftp gritty 02.WAV",
-		SOUNDSDIR "/ftp gritty 03.WAV",
-		SOUNDSDIR "/ftp gritty 04.WAV",
-		SOUNDSDIR "/ftp leaves 01.WAV",
-		SOUNDSDIR "/ftp leaves 02.WAV",
-		SOUNDSDIR "/ftp leaves 03.WAV",
-		SOUNDSDIR "/ftp leaves 04.WAV",
+		SOUNDSDIR "/ftp gravel 01.wav",
+		SOUNDSDIR "/ftp gravel 02.wav",
+		SOUNDSDIR "/ftp gravel 03.wav",
+		SOUNDSDIR "/ftp gravel 04.wav",
+		SOUNDSDIR "/ftp gritty 01.wav",
+		SOUNDSDIR "/ftp gritty 02.wav",
+		SOUNDSDIR "/ftp gritty 03.wav",
+		SOUNDSDIR "/ftp gritty 04.wav",
+		SOUNDSDIR "/ftp leaves 01.wav",
+		SOUNDSDIR "/ftp leaves 02.wav",
+		SOUNDSDIR "/ftp leaves 03.wav",
+		SOUNDSDIR "/ftp leaves 04.wav",
 
-		SOUNDSDIR "/CRAWLING 01.WAV",
-		SOUNDSDIR "/CRAWLING 02.WAV",
-		SOUNDSDIR "/CRAWLING 03.WAV",
-		SOUNDSDIR "/CRAWLING 04.WAV",
-		SOUNDSDIR "/BEEP2.WAV",
-		SOUNDSDIR "/ENDTURN.WAV",
-		SOUNDSDIR "/JA2 DEATH HIT.WAV",
-		SOUNDSDIR "/DOORCR_B.WAV",
-		SOUNDSDIR "/HEAD EXPLODING 01.WAV",
-		SOUNDSDIR "/BODY EXPLODING.WAV",
-		SOUNDSDIR "/EXPLODE1.WAV",
-		SOUNDSDIR "/CROW EXPLODING.WAV",
-		SOUNDSDIR "/SMALL EXPLOSION 01.WAV",
+		SOUNDSDIR "/crawling 01.wav",
+		SOUNDSDIR "/crawling 02.wav",
+		SOUNDSDIR "/crawling 03.wav",
+		SOUNDSDIR "/crawling 04.wav",
+		SOUNDSDIR "/beep2.wav",
+		SOUNDSDIR "/endturn.wav",
+		SOUNDSDIR "/ja2 death hit.wav",
+		SOUNDSDIR "/doorcr_b.wav",
+		SOUNDSDIR "/head exploding 01.wav",
+		SOUNDSDIR "/body exploding.wav",
+		SOUNDSDIR "/explode1.wav",
+		SOUNDSDIR "/crow exploding.wav",
+		SOUNDSDIR "/small explosion 01.wav",
 
-		SOUNDSDIR "/HELI1.WAV",
-		SOUNDSDIR "/BULLET IMPACT 01.WAV",
-		SOUNDSDIR "/BULLET IMPACT 02.WAV",
-		SOUNDSDIR "/BULLET IMPACT 02.WAV",
+		SOUNDSDIR "/heli1.wav",
+		SOUNDSDIR "/bullet impact 01.wav",
+		SOUNDSDIR "/bullet impact 02.wav",
+		SOUNDSDIR "/bullet impact 02.wav",
 
-		STSOUNDSDIR "/BLAH.WAV",									// CREATURE ATTACK
+		STSOUNDSDIR "/blah.wav",									// CREATURE ATTACK
 
-		SOUNDSDIR "/STEP INTO WATER.WAV",
-		SOUNDSDIR "/SPLASH FROM SHALLOW TO DEEP.WAV",
+		SOUNDSDIR "/step into water.wav",
+		SOUNDSDIR "/splash from shallow to deep.wav",
 
-		SOUNDSDIR "/COW HIT.WAV",																	// COW HIT
-		SOUNDSDIR "/COW DIE.WAV",																	// COW DIE
+		SOUNDSDIR "/cow hit.wav",																	// COW HIT
+		SOUNDSDIR "/cow die.wav",																	// COW DIE
 
 		// THREE COMPUTER VOICE SOUNDS FOR RG
-		SOUNDSDIR "/LINE 02 FX.WAV",
-		SOUNDSDIR "/LINE 01 FX.WAV",
-		SOUNDSDIR "/LINE 03 FX.WAV",
+		SOUNDSDIR "/line 02 fx.wav",
+		SOUNDSDIR "/line 01 fx.wav",
+		SOUNDSDIR "/line 03 fx.wav",
 
-		SOUNDSDIR "/CAVE COLLAPSING.WAV",														// CAVE_COLLAPSE
+		SOUNDSDIR "/cave collapsing.wav",														// CAVE_COLLAPSE
 
 
-		SOUNDSDIR "/RAID WHISTLE.WAV",															// RAID
-		SOUNDSDIR "/RAID AMBIENT.WAV",
-		SOUNDSDIR "/RAID DIVE.WAV",
-		SOUNDSDIR "/RAID DIVE.WAV",
-		SOUNDSDIR "/RAID WHISTLE.WAV",															// RAID
+		SOUNDSDIR "/raid whistle.wav",															// RAID
+		SOUNDSDIR "/raid ambient.wav",
+		SOUNDSDIR "/raid dive.wav",
+		SOUNDSDIR "/raid dive.wav",
+		SOUNDSDIR "/raid whistle.wav",															// RAID
 
 		// VEHICLES
-		SOUNDSDIR "/DRIVING 01.WAV",																// DRIVING
-		SOUNDSDIR "/ENGINE START.WAV",															// ON
-		SOUNDSDIR "/ENGINE OFF.WAV",																// OFF
-		SOUNDSDIR "/INTO VEHICLE.WAV",															// INTO
+		SOUNDSDIR "/driving 01.wav",																// DRIVING
+		SOUNDSDIR "/engine start.wav",															// ON
+		SOUNDSDIR "/engine off.wav",																// OFF
+		SOUNDSDIR "/into vehicle.wav",															// INTO
 
 
-		SOUNDSDIR "/WEAPONS/DRY FIRE 1.WAV",											// Dry fire sound ( for gun jam )
+		SOUNDSDIR "/weapons/dry fire 1.wav",											// Dry fire sound ( for gun jam )
 
 		// IMPACTS
-		SOUNDSDIR "/WOOD IMPACT 01A.WAV",													 // S_WOOD_IMPACT1
-		SOUNDSDIR "/WOOD IMPACT 01B.WAV",
-		SOUNDSDIR "/WOOD IMPACT 01A.WAV",
-		SOUNDSDIR "/PORCELAIN IMPACT.WAV",
-		SOUNDSDIR "/TIRE IMPACT 01.WAV",
-		SOUNDSDIR "/STONE IMPACT 01.WAV",
-		SOUNDSDIR "/WATER IMPACT 01.WAV",
-		SOUNDSDIR "/VEG IMPACT 01.WAV",
-		SOUNDSDIR "/METAL HIT 01.WAV",															 // S_METAL_HIT1
-		SOUNDSDIR "/METAL HIT 01.WAV",
-		SOUNDSDIR "/METAL HIT 01.WAV",
+		SOUNDSDIR "/wood impact 01a.wav",													 // S_WOOD_IMPACT1
+		SOUNDSDIR "/wood impact 01b.wav",
+		SOUNDSDIR "/wood impact 01a.wav",
+		SOUNDSDIR "/porcelain impact.wav",
+		SOUNDSDIR "/tire impact 01.wav",
+		SOUNDSDIR "/stone impact 01.wav",
+		SOUNDSDIR "/water impact 01.wav",
+		SOUNDSDIR "/veg impact 01.wav",
+		SOUNDSDIR "/metal hit 01.wav",															 // S_METAL_HIT1
+		SOUNDSDIR "/metal hit 01.wav",
+		SOUNDSDIR "/metal hit 01.wav",
 
-		SOUNDSDIR "/SLAP_IMPACT.WAV",
+		SOUNDSDIR "/slap_impact.wav",
 
 		// FIREARM RELOAD
-		SOUNDSDIR "/WEAPONS/REVOLVER RELOAD.WAV",										// REVOLVER
-		SOUNDSDIR "/WEAPONS/PISTOL RELOAD.WAV",											// PISTOL
-		SOUNDSDIR "/WEAPONS/SMG RELOAD.WAV",												// SMG
-		SOUNDSDIR "/WEAPONS/RIFLE RELOAD.WAV",											// RIFLE
-		SOUNDSDIR "/WEAPONS/SHOTGUN RELOAD.WAV",										// SHOTGUN
-		SOUNDSDIR "/WEAPONS/LMG RELOAD.WAV",												// LMG
+		SOUNDSDIR "/weapons/revolver reload.wav",										// REVOLVER
+		SOUNDSDIR "/weapons/pistol reload.wav",											// PISTOL
+		SOUNDSDIR "/weapons/smg reload.wav",												// SMG
+		SOUNDSDIR "/weapons/rifle reload.wav",											// RIFLE
+		SOUNDSDIR "/weapons/shotgun reload.wav",										// SHOTGUN
+		SOUNDSDIR "/weapons/lmg reload.wav",												// LMG
 
 		// FIREARM LOCKNLOAD
-		SOUNDSDIR "/WEAPONS/REVOLVER LNL.WAV",											// REVOLVER
-		SOUNDSDIR "/WEAPONS/PISTOL LNL.WAV",												// PISTOL
-		SOUNDSDIR "/WEAPONS/SMG LNL.WAV",														// SMG
-		SOUNDSDIR "/WEAPONS/RIFLE LNL.WAV",													// RIFLE
-		SOUNDSDIR "/WEAPONS/SHOTGUN LNL.WAV",												// SHOTGUN
-		SOUNDSDIR "/WEAPONS/LMG LNL.WAV",														// LMG
+		SOUNDSDIR "/weapons/revolver lnl.wav",											// REVOLVER
+		SOUNDSDIR "/weapons/pistol lnl.wav",												// PISTOL
+		SOUNDSDIR "/weapons/smg lnl.wav",														// SMG
+		SOUNDSDIR "/weapons/rifle lnl.wav",													// RIFLE
+		SOUNDSDIR "/weapons/shotgun lnl.wav",												// SHOTGUN
+		SOUNDSDIR "/weapons/lmg lnl.wav",														// LMG
 
 		// ROCKET LAUCNHER
-		SOUNDSDIR "/WEAPONS/SMALL ROCKET LAUNCHER.WAV",							// SMALL ROCKET LUANCHER
-		SOUNDSDIR "/WEAPONS/MORTAR FIRE 01.WAV",										// GRENADE LAUNCHER
-		SOUNDSDIR "/WEAPONS/MORTAR FIRE 01.WAV",										// UNDERSLUNG GRENADE LAUNCHER
-		SOUNDSDIR "/WEAPONS/ROCKET LAUNCHER.WAV",
-		SOUNDSDIR "/WEAPONS/MORTAR FIRE 01.WAV",
+		SOUNDSDIR "/weapons/small rocket launcher.wav",							// SMALL ROCKET LUANCHER
+		SOUNDSDIR "/weapons/mortar fire 01.wav",										// GRENADE LAUNCHER
+		SOUNDSDIR "/weapons/mortar fire 01.wav",										// UNDERSLUNG GRENADE LAUNCHER
+		SOUNDSDIR "/weapons/rocket launcher.wav",
+		SOUNDSDIR "/weapons/mortar fire 01.wav",
 
 		// FIREARMS
-		SOUNDSDIR "/WEAPONS/9mm SINGLE SHOT.WAV",										//	S_GLOCK17				9mm
-		SOUNDSDIR "/WEAPONS/9mm SINGLE SHOT.WAV",										//	S_GLOCK18				9mm
-		SOUNDSDIR "/WEAPONS/9mm SINGLE SHOT.WAV",										//	S_BERETTA92			9mm
-		SOUNDSDIR "/WEAPONS/9mm SINGLE SHOT.WAV",										//	S_BERETTA93			9mm
-		SOUNDSDIR "/WEAPONS/38 CALIBER.WAV",												//	S_SWSPECIAL			.38
-		SOUNDSDIR "/WEAPONS/357 SINGLE SHOT.WAV",										//	S_BARRACUDA			.357
-		SOUNDSDIR "/WEAPONS/357 SINGLE SHOT.WAV",										//	S_DESERTEAGLE		.357
-		SOUNDSDIR "/WEAPONS/45 CALIBER SINGLE SHOT.WAV",						//	S_M1911					.45
-		SOUNDSDIR "/WEAPONS/9mm SINGLE SHOT.WAV",										//	S_MP5K					9mm
-		SOUNDSDIR "/WEAPONS/45 CALIBER SINGLE SHOT.WAV",						//	S_MAC10					.45
-		SOUNDSDIR "/WEAPONS/45 CALIBER SINGLE SHOT.WAV",						//	S_THOMPSON			.45
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_COMMANDO			5.56
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_MP53					5.56?
-		SOUNDSDIR "/WEAPONS/5,45 SINGLE SHOT.WAV",									//	S_AKSU74				5.45
-		SOUNDSDIR "/WEAPONS/5,7 SINGLE SHOT.WAV",									//	S_P90						5.7
-		SOUNDSDIR "/WEAPONS/7,62 WP SINGLE SHOT.WAV",							//	S_TYPE85				7.62 WP
-		SOUNDSDIR "/WEAPONS/7,62 WP SINGLE SHOT.WAV",								//	S_SKS						7.62 WP
-		SOUNDSDIR "/WEAPONS/7,62 WP SINGLE SHOT.WAV",								//	S_DRAGUNOV			7.62 WP
-		SOUNDSDIR "/WEAPONS/7,62 NATO SINGLE SHOT.WAV",							//	S_M24						7.62 NATO
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_AUG						5.56mm
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_G41						5.56mm
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_RUGERMINI			5.56mm
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_C7						5.56mm
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_FAMAS					5.56mm
-		SOUNDSDIR "/WEAPONS/5,45 SINGLE SHOT.WAV",									//	S_AK74					5.45mm
-		SOUNDSDIR "/WEAPONS/7,62 WP SINGLE SHOT.WAV",								//	S_AKM						7.62mm WP
-		SOUNDSDIR "/WEAPONS/7,62 NATO SINGLE SHOT.WAV",							//	S_M14						7.62mm NATO
-		SOUNDSDIR "/WEAPONS/7,62 NATO SINGLE SHOT.WAV",							//	S_FNFAL					7.62mm NATO
-		SOUNDSDIR "/WEAPONS/7,62 NATO SINGLE SHOT.WAV",							//	S_G3A3					7.62mm NATO
-		SOUNDSDIR "/WEAPONS/4,7 SINGLE SHOT.WAV",										//	S_G11						4.7mm
-		SOUNDSDIR "/WEAPONS/SHOTGUN SINGLE SHOT.WAV",								//	S_M870					SHOTGUN
-		SOUNDSDIR "/WEAPONS/SHOTGUN SINGLE SHOT.WAV",								//	S_SPAS					SHOTGUN
-		SOUNDSDIR "/WEAPONS/SHOTGUN SINGLE SHOT.WAV",								//	S_CAWS					SHOTGUN
-		SOUNDSDIR "/WEAPONS/5,56 SINGLE SHOT.WAV",									//	S_FNMINI				5.56mm
-		SOUNDSDIR "/WEAPONS/5,45 SINGLE SHOT.WAV",									//	S_RPK74					5.45mm
-		SOUNDSDIR "/WEAPONS/7,62 WP SINGLE SHOT.WAV",								//	S_21E						7.62mm
-		SOUNDSDIR "/WEAPONS/KNIFE THROW SWOOSH.WAV",												//	KNIFE THROW
-		SOUNDSDIR "/WEAPONS/TANK_CANNON.WAV",
-		SOUNDSDIR "/WEAPONS/BURSTTYPE1.WAV",
-		SOUNDSDIR "/WEAPONS/AUTOMAG SINGLE.WAV",
+		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_GLOCK17				9mm
+		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_GLOCK18				9mm
+		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_BERETTA92			9mm
+		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_BERETTA93			9mm
+		SOUNDSDIR "/weapons/38 caliber.wav",												//	S_SWSPECIAL			.38
+		SOUNDSDIR "/weapons/357 single shot.wav",										//	S_BARRACUDA			.357
+		SOUNDSDIR "/weapons/357 single shot.wav",										//	S_DESERTEAGLE		.357
+		SOUNDSDIR "/weapons/45 caliber single shot.wav",						//	S_M1911					.45
+		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_MP5K					9mm
+		SOUNDSDIR "/weapons/45 caliber single shot.wav",						//	S_MAC10					.45
+		SOUNDSDIR "/weapons/45 caliber single shot.wav",						//	S_THOMPSON			.45
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_COMMANDO			5.56
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_MP53					5.56?
+		SOUNDSDIR "/weapons/5,45 single shot.wav",									//	S_AKSU74				5.45
+		SOUNDSDIR "/weapons/5,7 single shot.wav",									//	S_P90						5.7
+		SOUNDSDIR "/weapons/7,62 wp single shot.wav",							//	S_TYPE85				7.62 WP
+		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_SKS						7.62 WP
+		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_DRAGUNOV			7.62 WP
+		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_M24						7.62 NATO
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_AUG						5.56mm
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_G41						5.56mm
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_RUGERMINI			5.56mm
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_C7						5.56mm
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_FAMAS					5.56mm
+		SOUNDSDIR "/weapons/5,45 single shot.wav",									//	S_AK74					5.45mm
+		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_AKM						7.62mm WP
+		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_M14						7.62mm NATO
+		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_FNFAL					7.62mm NATO
+		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_G3A3					7.62mm NATO
+		SOUNDSDIR "/weapons/4,7 single shot.wav",										//	S_G11						4.7mm
+		SOUNDSDIR "/weapons/shotgun single shot.wav",								//	S_M870					SHOTGUN
+		SOUNDSDIR "/weapons/shotgun single shot.wav",								//	S_SPAS					SHOTGUN
+		SOUNDSDIR "/weapons/shotgun single shot.wav",								//	S_CAWS					SHOTGUN
+		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_FNMINI				5.56mm
+		SOUNDSDIR "/weapons/5,45 single shot.wav",									//	S_RPK74					5.45mm
+		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_21E						7.62mm
+		SOUNDSDIR "/weapons/knife throw swoosh.wav",												//	KNIFE THROW
+		SOUNDSDIR "/weapons/tank_cannon.wav",
+		SOUNDSDIR "/weapons/bursttype1.wav",
+		SOUNDSDIR "/weapons/automag single.wav",
 
-		SOUNDSDIR "/WEAPONS/SILENCER 02.WAV",
-		SOUNDSDIR "/WEAPONS/SILENCER 03.WAV",
+		SOUNDSDIR "/weapons/silencer 02.wav",
+		SOUNDSDIR "/weapons/silencer 03.wav",
 
-		SOUNDSDIR "/SWOOSH 01.WAV",
-		SOUNDSDIR "/SWOOSH 03.WAV",
-		SOUNDSDIR "/SWOOSH 05.WAV",
-		SOUNDSDIR "/SWOOSH 06.WAV",
-		SOUNDSDIR "/SWOOSH 11.WAV",
-		SOUNDSDIR "/SWOOSH 14.WAV",
+		SOUNDSDIR "/swoosh 01.wav",
+		SOUNDSDIR "/swoosh 03.wav",
+		SOUNDSDIR "/swoosh 05.wav",
+		SOUNDSDIR "/swoosh 06.wav",
+		SOUNDSDIR "/swoosh 11.wav",
+		SOUNDSDIR "/swoosh 14.wav",
 
 		// CREATURE_SOUNDS
-		SOUNDSDIR "/ADULT FALL 01.WAV",
-		SOUNDSDIR "/ADULT STEP 01.WAV",
-		SOUNDSDIR "/ADULT STEP 02.WAV",
-		SOUNDSDIR "/ADULT SWIPE 01.WAV",
-		SOUNDSDIR "/Eating_Flesh 01.WAV",
-		SOUNDSDIR "/ADULT CRIPPLED.WAV",
-		SOUNDSDIR "/ADULT DYING PART 1.WAV",
-		SOUNDSDIR "/ADULT DYING PART 2.WAV",
-		SOUNDSDIR "/ADULT LUNGE 01.WAV",
-		SOUNDSDIR "/ADULT SMELLS THREAT.WAV",
-		SOUNDSDIR "/ADULT SMELLS PREY.WAV",
-		SOUNDSDIR "/ADULT SPIT.WAV",
+		SOUNDSDIR "/adult fall 01.wav",
+		SOUNDSDIR "/adult step 01.wav",
+		SOUNDSDIR "/adult step 02.wav",
+		SOUNDSDIR "/adult swipe 01.wav",
+		SOUNDSDIR "/eating_flesh 01.wav",
+		SOUNDSDIR "/adult crippled.wav",
+		SOUNDSDIR "/adult dying part 1.wav",
+		SOUNDSDIR "/adult dying part 2.wav",
+		SOUNDSDIR "/adult lunge 01.wav",
+		SOUNDSDIR "/adult smells threat.wav",
+		SOUNDSDIR "/adult smells prey.wav",
+		SOUNDSDIR "/adult spit.wav",
 
 		// BABY
-		SOUNDSDIR "/BABY DYING 01.WAV",
-		SOUNDSDIR "/BABY DRAGGING 01.WAV",
-		SOUNDSDIR "/BABY SHRIEK 01.WAV",
-		SOUNDSDIR "/BABY SPITTING 01.WAV",
+		SOUNDSDIR "/baby dying 01.wav",
+		SOUNDSDIR "/baby dragging 01.wav",
+		SOUNDSDIR "/baby shriek 01.wav",
+		SOUNDSDIR "/baby spitting 01.wav",
 
 		// LARVAE
-		SOUNDSDIR "/LARVAE MOVEMENT 01.WAV",
-		SOUNDSDIR "/LARVAE RUPTURE 01.WAV",
+		SOUNDSDIR "/larvae movement 01.wav",
+		SOUNDSDIR "/larvae rupture 01.wav",
 
 		//QUEEN
-		SOUNDSDIR "/QUEEN SHRIEK 01.WAV",
-		SOUNDSDIR "/QUEEN DYING 01.WAV",
-		SOUNDSDIR "/QUEEN ENRAGED ATTACK.WAV",
-		SOUNDSDIR "/QUEEN RUPTURING.WAV",
-		SOUNDSDIR "/QUEEN CRIPPLED.WAV",
-		SOUNDSDIR "/QUEEN SMELLS THREAT.WAV",
-		SOUNDSDIR "/QUEEN WHIP ATTACK.WAV",
+		SOUNDSDIR "/queen shriek 01.wav",
+		SOUNDSDIR "/queen dying 01.wav",
+		SOUNDSDIR "/queen enraged attack.wav",
+		SOUNDSDIR "/queen rupturing.wav",
+		SOUNDSDIR "/queen crippled.wav",
+		SOUNDSDIR "/queen smells threat.wav",
+		SOUNDSDIR "/queen whip attack.wav",
 
-		SOUNDSDIR "/ROCK HIT 01.WAV",
-		SOUNDSDIR "/ROCK HIT 02.WAV",
+		SOUNDSDIR "/rock hit 01.wav",
+		SOUNDSDIR "/rock hit 02.wav",
 
-		SOUNDSDIR "/SCRATCH.WAV",
-		SOUNDSDIR "/ARMPIT.WAV",
-		SOUNDSDIR "/CRACKING BACK.WAV",
+		SOUNDSDIR "/scratch.wav",
+		SOUNDSDIR "/armpit.wav",
+		SOUNDSDIR "/cracking back.wav",
 
-		SOUNDSDIR "/WEAPONS/Auto Resolve Composite 02 (8-22).wav",							//  The FF sound in autoresolve interface
+		SOUNDSDIR "/weapons/auto resolve composite 02 (8-22).wav",							//  The FF sound in autoresolve interface
 
-		SOUNDSDIR "/Email Alert 01.wav",
-		SOUNDSDIR "/Entering Text 02.wav",
-		SOUNDSDIR "/Removing Text 02.wav",
-		SOUNDSDIR "/Computer Beep 01 In.wav",
-		SOUNDSDIR "/Computer Beep 01 Out.wav",
-		SOUNDSDIR "/Computer Switch 01 In.wav",
-		SOUNDSDIR "/Computer Switch 01 Out.wav",
-		SOUNDSDIR "/Very Small Switch 01 In.wav",
-		SOUNDSDIR "/Very Small Switch 01 Out.wav",
-		SOUNDSDIR "/Very Small Switch 02 In.wav",
-		SOUNDSDIR "/Very Small Switch 02 Out.wav",
-		SOUNDSDIR "/Small Switch 01 In.wav",
-		SOUNDSDIR "/Small Switch 01 Out.wav",
-		SOUNDSDIR "/Small Switch 02 In.wav",
-		SOUNDSDIR "/Small Switch 02 Out.wav",
-		SOUNDSDIR "/Small Switch 03 In.wav",
-		SOUNDSDIR "/Small Switch 03 Out.wav",
-		SOUNDSDIR "/Big Switch 03 In.wav",
-		SOUNDSDIR "/Big Switch 03 Out.wav",
-		SOUNDSDIR "/Alarm.wav",
-		SOUNDSDIR "/Fight Bell.wav",
-		SOUNDSDIR "/Helicopter Crash Sequence.wav",
-		SOUNDSDIR "/Attachment.wav",
-		SOUNDSDIR "/Ceramic Armour Insert.wav",
-		SOUNDSDIR "/Detonator Beep.wav",
-		SOUNDSDIR "/Grab Roof.wav",
-		SOUNDSDIR "/Land On Roof.wav",
-		SOUNDSDIR "/Branch Snap 01.wav",
-		SOUNDSDIR "/Branch Snap 02.wav",
-		SOUNDSDIR "/Indoor Bump 01.wav",
+		SOUNDSDIR "/email alert 01.wav",
+		SOUNDSDIR "/entering text 02.wav",
+		SOUNDSDIR "/removing text 02.wav",
+		SOUNDSDIR "/computer beep 01 in.wav",
+		SOUNDSDIR "/computer beep 01 out.wav",
+		SOUNDSDIR "/computer switch 01 in.wav",
+		SOUNDSDIR "/computer switch 01 out.wav",
+		SOUNDSDIR "/very small switch 01 in.wav",
+		SOUNDSDIR "/very small switch 01 out.wav",
+		SOUNDSDIR "/very small switch 02 in.wav",
+		SOUNDSDIR "/very small switch 02 out.wav",
+		SOUNDSDIR "/small switch 01 in.wav",
+		SOUNDSDIR "/small switch 01 out.wav",
+		SOUNDSDIR "/small switch 02 in.wav",
+		SOUNDSDIR "/small switch 02 out.wav",
+		SOUNDSDIR "/small switch 03 in.wav",
+		SOUNDSDIR "/small switch 03 out.wav",
+		SOUNDSDIR "/big switch 03 in.wav",
+		SOUNDSDIR "/big switch 03 out.wav",
+		SOUNDSDIR "/alarm.wav",
+		SOUNDSDIR "/fight bell.wav",
+		SOUNDSDIR "/helicopter crash sequence.wav",
+		SOUNDSDIR "/attachment.wav",
+		SOUNDSDIR "/ceramic armour insert.wav",
+		SOUNDSDIR "/detonator beep.wav",
+		SOUNDSDIR "/grab roof.wav",
+		SOUNDSDIR "/land on roof.wav",
+		SOUNDSDIR "/branch snap 01.wav",
+		SOUNDSDIR "/branch snap 02.wav",
+		SOUNDSDIR "/indoor bump 01.wav",
 
-		SOUNDSDIR "/Fridge Door Open.wav",
-		SOUNDSDIR "/Fridge Door Close.wav",
+		SOUNDSDIR "/fridge door open.wav",
+		SOUNDSDIR "/fridge door close.wav",
 
-		SOUNDSDIR "/Fire 03 Loop.wav",
-		SOUNDSDIR "/GLASS_CRACK.wav",
-		SOUNDSDIR "/SPIT RICOCHET.WAV",
-		SOUNDSDIR "/TIGER HIT.WAV",
-		SOUNDSDIR "/bloodcat dying 02.WAV",
-		SOUNDSDIR "/SLAP.WAV",
-		SOUNDSDIR "/ROBOT BEEP.WAV",
-		SOUNDSDIR "/ELECTRICITY.WAV",
-		SOUNDSDIR "/SWIMMING 01.WAV",
-		SOUNDSDIR "/SWIMMING 02.WAV",
-		SOUNDSDIR "/KEY FAILURE.WAV",
-		SOUNDSDIR "/target cursor.WAV",
-		SOUNDSDIR "/statue open.WAV",
-		SOUNDSDIR "/remote activate.WAV",
-		SOUNDSDIR "/wirecutters.WAV",
-		SOUNDSDIR "/drink from canteen.WAV",
+		SOUNDSDIR "/fire 03 loop.wav",
+		SOUNDSDIR "/glass_crack.wav",
+		SOUNDSDIR "/spit ricochet.wav",
+		SOUNDSDIR "/tiger hit.wav",
+		SOUNDSDIR "/bloodcat dying 02.wav",
+		SOUNDSDIR "/slap.wav",
+		SOUNDSDIR "/robot beep.wav",
+		SOUNDSDIR "/electricity.wav",
+		SOUNDSDIR "/swimming 01.wav",
+		SOUNDSDIR "/swimming 02.wav",
+		SOUNDSDIR "/key failure.wav",
+		SOUNDSDIR "/target cursor.wav",
+		SOUNDSDIR "/statue open.wav",
+		SOUNDSDIR "/remote activate.wav",
+		SOUNDSDIR "/wirecutters.wav",
+		SOUNDSDIR "/drink from canteen.wav",
 		SOUNDSDIR "/bloodcat attack.wav",
 		SOUNDSDIR "/bloodcat loud roar.wav",
 		SOUNDSDIR "/robot greeting.wav",
 		SOUNDSDIR "/robot death.wav",
-		SOUNDSDIR "/gas grenade explode.WAV",
-		SOUNDSDIR "/air escaping.WAV",
-		SOUNDSDIR "/drawer open.WAV",
-		SOUNDSDIR "/drawer close.WAV",
-		SOUNDSDIR "/locker door open.WAV",
-		SOUNDSDIR "/locker door close.WAV",
-		SOUNDSDIR "/wooden box open.WAV",
-		SOUNDSDIR "/wooden box close.WAV",
-		SOUNDSDIR "/robot stop moving.WAV",
+		SOUNDSDIR "/gas grenade explode.wav",
+		SOUNDSDIR "/air escaping.wav",
+		SOUNDSDIR "/drawer open.wav",
+		SOUNDSDIR "/drawer close.wav",
+		SOUNDSDIR "/locker door open.wav",
+		SOUNDSDIR "/locker door close.wav",
+		SOUNDSDIR "/wooden box open.wav",
+		SOUNDSDIR "/wooden box close.wav",
+		SOUNDSDIR "/robot stop moving.wav",
 		SOUNDSDIR "/water movement 01.wav",
 		SOUNDSDIR "/water movement 02.wav",
 		SOUNDSDIR "/water movement 03.wav",
 		SOUNDSDIR "/water movement 04.wav",
-		SOUNDSDIR "/PRONE TO CROUCH.WAV",
-		SOUNDSDIR "/CROUCH TO PRONE.WAV",
-		SOUNDSDIR "/CROUCH TO STAND.WAV",
-		SOUNDSDIR "/STAND TO CROUCH.WAV",
-		SOUNDSDIR "/picking something up.WAV",
+		SOUNDSDIR "/prone to crouch.wav",
+		SOUNDSDIR "/crouch to prone.wav",
+		SOUNDSDIR "/crouch to stand.wav",
+		SOUNDSDIR "/stand to crouch.wav",
+		SOUNDSDIR "/picking something up.wav",
 		SOUNDSDIR "/cow falling.wav",
 		SOUNDSDIR "/bloodcat_growl_01.wav",
 		SOUNDSDIR "/bloodcat_growl_02.wav",
 		SOUNDSDIR "/bloodcat_growl_03.wav",
 		SOUNDSDIR "/bloodcat_growl_04.wav",
 		SOUNDSDIR "/spit ricochet.wav",
-		SOUNDSDIR "/ADULT crippled.WAV",
+		SOUNDSDIR "/adult crippled.wav",
 		SOUNDSDIR "/death disintegration.wav",
-		SOUNDSDIR "/Queen Ambience.wav",
-		SOUNDSDIR "/Alien Impact.wav",
+		SOUNDSDIR "/queen ambience.wav",
+		SOUNDSDIR "/alien impact.wav",
 		SOUNDSDIR "/crow pecking flesh 01.wav",
 		SOUNDSDIR "/crow fly.wav",
 		SOUNDSDIR "/slap 02.wav",
@@ -347,8 +347,8 @@ static char const* const szSoundEffects[NUM_SAMPLES] =
 		SOUNDSDIR "/stab into flesh.wav",
 		SOUNDSDIR "/explosion 10.wav",
 		SOUNDSDIR "/explosion 12.wav",
-		SOUNDSDIR "/drink from canteen male.WAV",
-		SOUNDSDIR "/x ray activated.WAV",
+		SOUNDSDIR "/drink from canteen male.wav",
+		SOUNDSDIR "/x ray activated.wav",
 		SOUNDSDIR "/catch object.wav",
 		SOUNDSDIR "/fence open.wav",
 };
