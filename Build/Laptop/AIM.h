@@ -1,7 +1,7 @@
 #ifndef __AIM_H
 #define __AIM_H
 
-#define	AIMHISTORYFILE		BINARYDATADIR "/AimHist.edt"
+#define	AIMHISTORYFILE BINARYDATADIR "/aimhist.edt"
 #define AIM_HISTORY_LINE_SIZE 400
 
 

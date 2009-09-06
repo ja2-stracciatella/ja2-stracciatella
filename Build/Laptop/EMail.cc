@@ -514,7 +514,7 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 
 static void LoadEMailText(wchar_t buf[], UINT32 entry)
 {
-	LoadEncryptedDataFromFile(BINARYDATADIR "/Email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
 }
 
 
@@ -1872,7 +1872,7 @@ ENUM_BITSET(PhysicalBits)
 
 static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)
 {
-	LoadEncryptedDataFromFile(BINARYDATADIR "/Impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
 }
 
 

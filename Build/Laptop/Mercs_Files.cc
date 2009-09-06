@@ -32,7 +32,7 @@
 #include "Cheats.h"
 
 
-#define		MERCBIOFILE												BINARYDATADIR "/MercBios.edt"
+#define		MERCBIOFILE												BINARYDATADIR "/mercbios.edt"
 
 #define		MERC_BIO_FONT											FONT14ARIAL//FONT12ARIAL
 #define		MERC_BIO_COLOR										FONT_MCOLOR_WHITE

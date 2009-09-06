@@ -19,8 +19,8 @@
 #include "Font_Control.h"
 
 
-#define INSURANCE_TEXT_SINGLE_FILE BINARYDATADIR "/InsuranceSingle.edt"
-#define INSURANCE_TEXT_MULTI_FILE  BINARYDATADIR "/InsuranceMulti.edt"
+#define INSURANCE_TEXT_SINGLE_FILE BINARYDATADIR "/insurancesingle.edt"
+#define INSURANCE_TEXT_MULTI_FILE  BINARYDATADIR "/insurancemulti.edt"
 
 
 #define		INSURANCE_BACKGROUND_WIDTH					125

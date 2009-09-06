@@ -43,7 +43,7 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
 	}
 
 	wchar_t sString[IMP_SEEK_AMOUNT];
-	LoadEncryptedDataFromFile(BINARYDATADIR "/IMPText.EDT", sString, sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/imptext.edt", sString, sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
 	DisplayWrappedString(sStartX, sStartY, sLineLength, 2, font, ubColor, sString, FONT_BLACK, uiFlags);
 
 	// reset shadow

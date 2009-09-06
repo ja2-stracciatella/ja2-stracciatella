@@ -16,7 +16,7 @@
 
 #define	NUM_AIM_POLICY_PAGES				11
 #define	NUM_AIM_POLICY_TOC_BUTTONS	9
-#define	AIMPOLICYFILE		BINARYDATADIR "/AimPol.edt"
+#define	AIMPOLICYFILE BINARYDATADIR "/aimpol.edt"
 #define AIM_POLICY_LINE_SIZE 80 * 5
 
 #define AIM_POLICY_TITLE_FONT				FONT14ARIAL
@@ -77,7 +77,7 @@
 #define AIM_POLICY_AGREE_PAGE				0
 
 
-// These enums represent which paragraph they are located in the AimPol.edt file
+// These enums represent which paragraph they are located in the AIMPOLICYFILE file
 enum AimPolicyTextLocations
 {
 	AIM_STATEMENT_OF_POLICY,

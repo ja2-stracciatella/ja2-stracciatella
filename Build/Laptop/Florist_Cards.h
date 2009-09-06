@@ -2,7 +2,7 @@
 #define __FLORIST_CARDS_H
 
 
-#define		FLOR_CARD_TEXT_FILE							BINARYDATADIR "/FlowerCard.edt"
+#define FLOR_CARD_TEXT_FILE       BINARYDATADIR "/flowercard.edt"
 #define FLOR_CARD_TEXT_TITLE_SIZE 5 * 80
 
 

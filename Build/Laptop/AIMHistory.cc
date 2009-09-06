@@ -67,7 +67,7 @@ static GUIButtonRef guiHistoryMenuButton[AIM_HISTORY_MENU_BUTTON_AMOUNT];
 static BUTTON_PICS* guiHistoryMenuButtonImage;
 
 
-// These enums represent which paragraph they are located in the AimHist.edt file
+// These enums represent which paragraph they are located in the AIMHISTORYFILE file
 enum AimHistoryTextLocations
 {
 	IN_THE_BEGINNING =6,

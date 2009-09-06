@@ -368,7 +368,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 
 bool IsMercHireable(MERCPROFILESTRUCT const& p)
 {
-	/* If the merc has an .EDT file, is not away on assignment, and isn't already
+	/* If the merc has an .edt file, is not away on assignment, and isn't already
 	 * hired (but not arrived yet), he is not dead and he isn't returning home */
 	return
 		p.bMercStatus <= 0                              &&

@@ -698,7 +698,7 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 static void HandleSpecialFiles(void)
 {
 	FileRecordWidth*  const width_list = CreateWidthRecordsForAruloIntelFile();
-	AutoStringList    const head(LoadStringsIntoFileList(BINARYDATADIR "/RIS.EDT", 0, LENGTH_OF_ENRICO_FILE));
+	AutoStringList    const head(LoadStringsIntoFileList(BINARYDATADIR "/ris.edt", 0, LENGTH_OF_ENRICO_FILE));
 	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
@@ -973,7 +973,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 
 	FileRecordWidth*  const width_list = CreateWidthRecordsForTerroristFile();
 	FileInfo   const&       info       = g_file_info[file_idx];
-	AutoStringList    const head(LoadStringsIntoFileList(BINARYDATADIR "/files.EDT", info.file_offset, SLAY_LENGTH));
+	AutoStringList    const head(LoadStringsIntoFileList(BINARYDATADIR "/files.edt", info.file_offset, SLAY_LENGTH));
 	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 

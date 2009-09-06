@@ -1272,7 +1272,7 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 
 static void GetHelpScreenText(const UINT32 uiRecordToGet, wchar_t* const pText)
 {
-	LoadEncryptedDataFromFile(BINARYDATADIR "/Help.edt", pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
+	LoadEncryptedDataFromFile(BINARYDATADIR "/help.edt", pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
 }
 
 

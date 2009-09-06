@@ -14,8 +14,8 @@
 #include "Font_Control.h"
 
 
-#define		AIM_ALUMNI_NAME_FILE		BINARYDATADIR "/AlumName.edt"
-#define		AIM_ALUMNI_FILE					BINARYDATADIR "/Alumni.edt"
+#define AIM_ALUMNI_NAME_FILE BINARYDATADIR "/alumname.edt"
+#define AIM_ALUMNI_FILE      BINARYDATADIR "/alumni.edt"
 
 
 #define		AIM_ALUMNI_TITLE_FONT					FONT14ARIAL

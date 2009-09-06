@@ -6,7 +6,7 @@
 #include "Encrypted_File.h"
 
 
-#define ITEMSTRINGFILENAME BINARYDATADIR "/ITEMDESC.EDT"
+#define ITEMSTRINGFILENAME BINARYDATADIR "/itemdesc.edt"
 
 
 void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])

@@ -895,7 +895,7 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/d_%03d.EDT", ubCharacterNum);
+			sprintf(zFileName, NPCDATADIR "/d_%03d.edt", ubCharacterNum);
 		}
 	}
 	else if ( ubCharacterNum >= FIRST_RPC &&
@@ -926,7 +926,7 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		else
 		{
 		// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/%03d.EDT", ubFileNumID);
+			sprintf(zFileName, NPCDATADIR "/%03d.edt", ubFileNumID);
 		}
 	}
 	else
@@ -947,7 +947,7 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, MERCEDTDIR "/%03d.EDT", ubCharacterNum);
+			sprintf(zFileName, MERCEDTDIR "/%03d.edt", ubCharacterNum);
 		}
 	}
 
