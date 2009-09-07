@@ -462,8 +462,8 @@ LNGS += Build/Utils/_RussianText.cc
 
 SRCS += $(LNGS)
 
-DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cc=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
+DEPS = $(OBJS:.o=.d)
 
 .SUFFIXES:
 .SUFFIXES: .c .cc .d .o
@@ -472,13 +472,7 @@ Q ?= @
 
 all: $(BINARY)
 
-ifndef NO_DEPS
-depend: $(DEPS)
-
-ifeq ($(findstring $(MAKECMDGOALS), clean depend deinstall distclean lowercase),)
 -include $(DEPS)
-endif
-endif
 
 $(BINARY): $(OBJS)
 	@echo '===> LD $@'
@@ -486,19 +480,11 @@ $(BINARY): $(OBJS)
 
 .c.o:
 	@echo '===> CC $<'
-	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
+	$(Q)$(CC) $(CCFLAGS) -c -MMD -o $@ $<
 
 .cc.o:
 	@echo '===> CXX $<'
-	$(Q)$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.c.d:
-	@echo '===> DEP $<'
-	$(Q)$(CC) $(CCFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
-
-.cc.d:
-	@echo '===> DEP $<'
-	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+	$(Q)$(CXX) $(CXXFLAGS) -c -MMD -o $@ $<
 
 clean distclean:
 	@echo '===> CLEAN'
