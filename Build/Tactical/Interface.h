@@ -81,7 +81,6 @@ extern SGPVObject* guiP1ITEMS;
 extern SGPVObject* guiP2ITEMS;
 extern SGPVObject* guiP3ITEMS;
 extern SGPVObject* guiRADIO;
-extern SGPVObject* guiPORTRAITICONS;
 extern SGPVObject* guiBURSTACCUM;
 
 

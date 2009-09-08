@@ -213,4 +213,7 @@ void DeleteSoldierFace( SOLDIERTYPE *pSoldier );
  * status and does not require eye blinking or mouth movements, call */
 void ExternRenderFace(SGPVSurface* buffer, FACETYPE&, INT16 x, INT16 y);
 
+void LoadFacesGraphics();
+void DeleteFacesGraphics();
+
 #endif

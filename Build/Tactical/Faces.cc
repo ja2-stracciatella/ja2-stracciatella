@@ -105,6 +105,9 @@ static const RPC_SMALL_FACE_VALUES gRPCSmallFaceValues[] =
 };
 
 
+static SGPVObject* guiPORTRAITICONS;
+
+
 static FACETYPE& GetFreeFace(void)
 {
 	for (FACETYPE* i = gFacesData; i != gFacesData + guiNumFaces; ++i)
@@ -1399,4 +1402,16 @@ static void SetupFinalTalkingDelay(FACETYPE& f)
 	}
 
 	f.fValidSpeech = FALSE;
+}
+
+
+void LoadFacesGraphics()
+{
+	guiPORTRAITICONS = AddVideoObjectFromFile(INTERFACEDIR "/portraiticons.sti");
+}
+
+
+void DeleteFacesGraphics()
+{
+	DeleteVideoObject(guiPORTRAITICONS);
 }

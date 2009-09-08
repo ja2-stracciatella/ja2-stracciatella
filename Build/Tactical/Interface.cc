@@ -175,7 +175,6 @@ static SGPVObject* guiBUTTONBORDER;
 SGPVObject* guiRADIO;
 static SGPVObject* guiRADIO2;
 SGPVObject* guiBURSTACCUM;
-SGPVObject* guiPORTRAITICONS;
 
 // UI Globals
 MOUSE_REGION	gViewportRegion;
@@ -237,7 +236,6 @@ void InitializeTacticalInterface()
 	guiP3ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
 	guiBUTTONBORDER  = AddVideoObjectFromFile(INTERFACEDIR "/button_frame.sti");
 	guiBURSTACCUM    = AddVideoObjectFromFile(INTERFACEDIR "/burst1.sti");
-	guiPORTRAITICONS = AddVideoObjectFromFile(INTERFACEDIR "/portraiticons.sti");
 	guiRADIO         = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
 	guiRADIO2        = AddVideoObjectFromFile(INTERFACEDIR "/radio2.sti");
 
