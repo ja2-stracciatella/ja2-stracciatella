@@ -364,16 +364,14 @@ static BOOLEAN gfItemDescHelpTextOffset = FALSE;
 // A STRUCT USED INTERNALLY FOR INV SLOT REGIONS
 struct INV_REGIONS
 {
-	INT16 const sWidth;
-	INT16 const sHeight;
-	INT16       sX; // starts at 0, gets set via InitInvSlotInterface()
-	INT16       sY; // starts at 0, gets set via InitInvSlotInterface()
+	INT16 w;
+	INT16 h;
 };
 
 // ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS (sX,sY get set via InitInvSlotInterface() )
-static INV_REGIONS gSMInvData[] =
+static INV_REGIONS const gSMInvData[] =
 {
-#define M(w, h) { w, h, 0, 0 }
+#define M(w, h) { w, h }
 	M(HEAD_INV_SLOT_WIDTH, HEAD_INV_SLOT_HEIGHT), // HELMETPOS
 	M(VEST_INV_SLOT_WIDTH, VEST_INV_SLOT_HEIGHT), // VESTPOS
 	M(LEGS_INV_SLOT_WIDTH, LEGS_INV_SLOT_HEIGHT), // LEGPOS,
@@ -684,12 +682,11 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 	// Add regions for inventory slots
 	for (size_t i = 0; i != NUM_INV_SLOTS; ++i)
 	{ // Set inventory pocket coordinates from the table passed in
-		INV_REGIONS& r = gSMInvData[i];
-		r.sX = pRegionDesc[i].sX;
-		r.sY = pRegionDesc[i].sY;
-
-		MOUSE_REGION& m = gSMInvRegion[i];
-		MSYS_DefineRegion(&m, r.sX, r.sY, r.sX + r.sWidth, r.sY + r.sHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
+		INT16       const  x = pRegionDesc[i].sX;
+		INT16       const  y = pRegionDesc[i].sY;
+		INV_REGIONS const& r = gSMInvData[i];
+		MOUSE_REGION&      m = gSMInvRegion[i];
+		MSYS_DefineRegion(&m, x, y, x + r.w, y + r.h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
 		MSYS_SetRegionUserData(&m, 0, i);
 	}
 
@@ -794,8 +791,9 @@ void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY)
 static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT8 const dirty_level)
 {
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
-	bool        const  in_map = guiCurrentScreen == MAP_SCREEN;
-	OBJECTTYPE  const& o      = s.inv[pocket];
+	bool       const  in_map = guiCurrentScreen == MAP_SCREEN;
+	OBJECTTYPE const& o      = s.inv[pocket];
+	MOUSE_REGION&     r      = gSMInvRegion[pocket];
 
 	bool   hatch_out = false;
 	UINT16 outline   = TRANSPARENT;
@@ -803,7 +801,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 	{
 		wchar_t buf[150];
 		GetHelpTextForItem(buf, lengthof(buf), o);
-		gSMInvRegion[pocket].SetFastHelpText(buf);
+		r.SetFastHelpText(buf);
 
 		/* If it's the second hand and this hand cannot contain anything, remove the
 		 * second hand position graphic */
@@ -831,9 +829,8 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 		if (gbCompatibleAmmo[pocket]) outline = Get16BPPColor(FROMRGB(255, 255, 255));
 	}
 
-	INV_REGIONS const& xy = gSMInvData[pocket];
-	INT16       const  x  = xy.sX;
-	INT16       const  y  = xy.sY;
+	INT16 const x = r.X();
+	INT16 const y = r.Y();
 
 	// Now render as normal
 	UINT8 const render_dirty_level =
@@ -841,7 +838,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 		gsCurInterfacePanel     != SM_PANEL    ||
 		fInterfacePanelDirty    == DIRTYLEVEL2 ? dirty_level :
 		DIRTYLEVEL0; // We have a new item and we are in the right panel
-	INVRenderItem(guiSAVEBUFFER, &s, o, x, y, xy.sWidth, xy.sHeight, render_dirty_level, 0, outline);
+	INVRenderItem(guiSAVEBUFFER, &s, o, x, y, r.W(), r.H(), render_dirty_level, 0, outline);
 
 	if (gbInvalidPlacementSlot[pocket])
 	{
@@ -862,7 +859,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 	if (hatch_out)
 	{
 		SGPVSurface* const dst = in_map ? guiSAVEBUFFER : FRAME_BUFFER;
-		DrawHatchOnInventory(dst, x, y, xy.sWidth, xy.sHeight);
+		DrawHatchOnInventory(dst, x, y, r.W(), r.H());
 	}
 
 	if (o.usItem != NOTHING)
@@ -1494,7 +1491,6 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 {
 	UINT32 cnt;
-	INT16  sX, sY;
 	OBJECTTYPE		*pObject;
 
 
@@ -1515,10 +1511,6 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 
 		if ( pSoldier->bNewItemCount[ cnt ] > 0 )
 		{
-
-			sX = gSMInvData[ cnt ].sX;
-			sY = gSMInvData[ cnt ].sY;
-
 			pObject = &(pSoldier->inv[ cnt ]);
 
 			if ( pObject->usItem == NOTHING )
@@ -1526,7 +1518,8 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 				continue;
 			}
 
-			INVRenderItem(guiSAVEBUFFER, pSoldier, *pObject, sX, sY, gSMInvData[cnt].sWidth, gSMInvData[cnt].sHeight, DIRTYLEVEL2, 0, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
+			MOUSE_REGION const& r = gSMInvRegion[cnt];
+			INVRenderItem(guiSAVEBUFFER, pSoldier, *pObject, r.X(), r.Y(), r.W(), r.H(), DIRTYLEVEL2, 0, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
 		}
 	}
 }
@@ -3817,9 +3810,9 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 	gubNumItemPopups = ubLimit;
 
 	// Calculate X,Y, first center
-	const INV_REGIONS* reg = &gSMInvData[ubPosition];
-	INT16 sCenX = reg->sX - (gsItemPopupWidth / 2 + reg->sWidth / 2);
-	INT16 sCenY	= reg->sY;
+	MOUSE_REGION const& r = gSMInvRegion[ubPosition];
+	INT16 sCenX = r.X() - (gsItemPopupWidth / 2 + r.W() / 2);
+	INT16 sCenY	= r.Y();
 
 	// Limit it to window for item desc
 	if ( sCenX < gsItemPopupInvX )
