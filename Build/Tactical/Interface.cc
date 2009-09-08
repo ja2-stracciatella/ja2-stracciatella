@@ -170,7 +170,6 @@ SGPVObject* guiHATCH;
 static SGPVObject* guiBUTTONBORDER;
 SGPVObject* guiRADIO;
 static SGPVObject* guiRADIO2;
-SGPVObject* guiBURSTACCUM;
 
 // UI Globals
 MOUSE_REGION	gViewportRegion;
@@ -227,7 +226,6 @@ void InitializeTacticalInterface()
 	guiDEAD          = AddVideoObjectFromFile(INTERFACEDIR "/p_dead.sti");
 	guiHATCH         = AddVideoObjectFromFile(INTERFACEDIR "/hatch.sti");
 	guiBUTTONBORDER  = AddVideoObjectFromFile(INTERFACEDIR "/button_frame.sti");
-	guiBURSTACCUM    = AddVideoObjectFromFile(INTERFACEDIR "/burst1.sti");
 	guiRADIO         = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
 	guiRADIO2        = AddVideoObjectFromFile(INTERFACEDIR "/radio2.sti");
 

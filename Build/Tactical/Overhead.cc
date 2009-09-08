@@ -2,6 +2,7 @@
 #include "Handle_Items.h"
 #include "MapScreen.h"
 #include "Soldier_Find.h"
+#include "Spread_Burst.h"
 #include "TileDef.h"
 #include "VObject.h"
 #include "WCheck.h"
@@ -378,6 +379,7 @@ void InitTacticalEngine(void)
 	LoadPaletteData();
 	LoadDialogueControlGraphics();
 	LoadFacesGraphics();
+	LoadSpreadBurstGraphics();
 
 	LoadLockTable();
 	InitPathAI();
@@ -388,6 +390,7 @@ void InitTacticalEngine(void)
 
 void ShutdownTacticalEngine(void)
 {
+	DeleteSpreadBurstGraphics();
 	DeleteFacesGraphics();
 	DeleteDialogueControlGraphics();
 	DeletePaletteData();

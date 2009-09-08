@@ -1,3 +1,4 @@
+#include "Directories.h"
 #include "Real_Time_Input.h"
 #include "Spread_Burst.h"
 #include "VObject.h"
@@ -8,7 +9,6 @@
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
-#include "Interface.h"
 #include "VSurface.h"
 
 
@@ -25,6 +25,8 @@ struct BURST_LOCATIONS
 
 static BURST_LOCATIONS gsBurstLocations[MAX_BURST_LOCATIONS];
 static INT8            gbNumBurstLocations = 0;
+
+static SGPVObject* guiBURSTACCUM;
 
 
 void ResetBurstLocations( )
@@ -182,4 +184,16 @@ void RenderAccumulatedBurstLocations( )
 			BltVideoObject(FRAME_BUFFER, guiBURSTACCUM, 1, sXPos, sYPos);
 		}
 	}
+}
+
+
+void LoadSpreadBurstGraphics()
+{
+	guiBURSTACCUM = AddVideoObjectFromFile(INTERFACEDIR "/burst1.sti");
+}
+
+
+void DeleteSpreadBurstGraphics()
+{
+	DeleteVideoObject(guiBURSTACCUM);
 }

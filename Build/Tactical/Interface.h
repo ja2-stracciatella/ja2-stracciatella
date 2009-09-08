@@ -77,7 +77,6 @@ extern SGPVObject* guiCLOSE;
 extern SGPVObject* guiDEAD;
 extern SGPVObject* guiHATCH;
 extern SGPVObject* guiRADIO;
-extern SGPVObject* guiBURSTACCUM;
 
 
 extern MOUSE_REGION gViewportRegion;
