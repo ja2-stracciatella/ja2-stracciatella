@@ -1488,43 +1488,31 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 }
 
 
-void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
+void HandleNewlyAddedItems(SOLDIERTYPE& s, BOOLEAN* const dirty_level)
 {
-	UINT32 cnt;
-	OBJECTTYPE		*pObject;
+	// If item description up, stop
+	if (gfInItemDescBox) return;
 
-
-	// If item description up.... stop
-	if ( gfInItemDescBox )
+	for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
 	{
-		return;
-	}
-
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
-	{
-		if ( pSoldier->bNewItemCount[ cnt ] == -2 )
-		{
-			// Stop
-			*fDirtyLevel = DIRTYLEVEL2;
-			pSoldier->bNewItemCount[ cnt ] = 0;
+		INT8& new_item_count = s.bNewItemCount[i];
+		if (new_item_count == -2)
+		{ // Stop
+			*dirty_level   = DIRTYLEVEL2;
+			new_item_count = 0;
 		}
 
-		if ( pSoldier->bNewItemCount[ cnt ] > 0 )
-		{
-			pObject = &(pSoldier->inv[ cnt ]);
-
-			if ( pObject->usItem == NOTHING )
-			{
-				continue;
-			}
-
-			MOUSE_REGION const& r = gSMInvRegion[cnt];
-			INVRenderItem(guiSAVEBUFFER, pSoldier, *pObject, r.X(), r.Y(), r.W(), r.H(), DIRTYLEVEL2, 0, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
-		}
+		if (new_item_count <= 0) continue;
+		OBJECTTYPE const& o        = s.inv[i];
+		if (o.usItem == NOTHING) continue;
+		MOUSE_REGION const& r      = gSMInvRegion[i];
+		UINT16       const  colour = us16BPPItemCyclePlacedItemColors[s.bNewItemCycleCount[i]];
+		INVRenderItem(guiSAVEBUFFER, &s, o, r.X(), r.Y(), r.W(), r.H(), DIRTYLEVEL2, 0, colour);
 	}
 }
 
-void CheckForAnyNewlyAddedItems( SOLDIERTYPE *pSoldier )
+
+void CheckForAnyNewlyAddedItems(SOLDIERTYPE *pSoldier )
 {
 	UINT32 cnt;
 

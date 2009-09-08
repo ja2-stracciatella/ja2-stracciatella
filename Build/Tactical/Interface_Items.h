@@ -39,7 +39,7 @@ BOOLEAN HandleItemPickupMenu(void);
 void InitInvSlotInterface(INV_REGION_DESC const* pRegionDesc, INV_REGION_DESC const* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback);
 void ShutdownInvSlotInterface();
 void HandleRenderInvSlots(SOLDIERTYPE const&, UINT8 dirty_level);
-void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel );
+void HandleNewlyAddedItems(SOLDIERTYPE&, BOOLEAN* dirty_level);
 void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY);
 void DisableInvRegions( BOOLEAN fDisable );
 
