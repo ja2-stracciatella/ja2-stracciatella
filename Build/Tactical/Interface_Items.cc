@@ -1569,24 +1569,6 @@ void DegradeNewlyAddedItems( )
 }
 
 
-void InitItemInterface( )
-{
-	/* Build a sawtooth black-white-black colour gradient */
-	const UINT length = lengthof(us16BPPItemCyclePlacedItemColors);
-	UINT i = 0;
-	for (i; i != length / 2; ++i)
-	{
-		const UINT l = 25 * (i + 1);
-		us16BPPItemCyclePlacedItemColors[i] = Get16BPPColor(FROMRGB(l, l, l));
-	}
-	for (; i != length; ++i)
-	{
-		const UINT l = 25 * (length - i);
-		us16BPPItemCyclePlacedItemColors[i] = Get16BPPColor(FROMRGB(l, l, l));
-	}
-}
-
-
 void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, INT16 const outline_colour)
 {
 	if (o.usItem    == NOTHING)     return;
@@ -5398,6 +5380,16 @@ void LoadInterfaceItemsGraphics()
 	guiP1ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
 	guiP2ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
 	guiP3ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
+
+	/* Build a sawtooth black-white-black colour gradient */
+	size_t const length = lengthof(us16BPPItemCyclePlacedItemColors);
+	for (size_t i = 0; i != length / 2; ++i)
+	{
+		UINT32 const l = 25 * (i + 1);
+		UINT16 const c = Get16BPPColor(FROMRGB(l, l, l));
+		us16BPPItemCyclePlacedItemColors[i]              = c;
+		us16BPPItemCyclePlacedItemColors[length - i - 1] = c;
+	}
 }
 
 

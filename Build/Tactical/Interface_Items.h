@@ -103,7 +103,6 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 void EndItemPointer(void);
 void DrawItemFreeCursor(void);
 void DrawItemTileCursor(void);
-void InitItemInterface(void);
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
 SGPVObject const& GetInterfaceGraphicForItem(INVTYPE const&);
 UINT16            GetTileGraphicForItem(INVTYPE const&);

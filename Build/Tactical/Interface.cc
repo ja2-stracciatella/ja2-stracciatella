@@ -229,8 +229,6 @@ void InitializeTacticalInterface()
 
 	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
 
-	InitItemInterface( );
-
 	InitRadarScreen( );
 
 	InitTEAMSlots( );
