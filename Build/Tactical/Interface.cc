@@ -174,8 +174,6 @@ SGPVObject* guiP3ITEMS;
 static SGPVObject* guiBUTTONBORDER;
 SGPVObject* guiRADIO;
 static SGPVObject* guiRADIO2;
-SGPVObject* guiCOMPANEL;
-SGPVObject* guiCOMPANELB;
 SGPVObject* guiBURSTACCUM;
 SGPVObject* guiPORTRAITICONS;
 
@@ -242,8 +240,6 @@ void InitializeTacticalInterface()
 	guiPORTRAITICONS = AddVideoObjectFromFile(INTERFACEDIR "/portraiticons.sti");
 	guiRADIO         = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
 	guiRADIO2        = AddVideoObjectFromFile(INTERFACEDIR "/radio2.sti");
-	guiCOMPANEL      = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup.sti");
-	guiCOMPANELB     = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup_2.sti");
 
 	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
 

@@ -80,8 +80,6 @@ extern SGPVObject* guiGUNSM;
 extern SGPVObject* guiP1ITEMS;
 extern SGPVObject* guiP2ITEMS;
 extern SGPVObject* guiP3ITEMS;
-extern SGPVObject* guiCOMPANEL;
-extern SGPVObject* guiCOMPANELB;
 extern SGPVObject* guiRADIO;
 extern SGPVObject* guiPORTRAITICONS;
 extern SGPVObject* guiBURSTACCUM;

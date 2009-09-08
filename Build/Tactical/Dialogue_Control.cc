@@ -3,7 +3,6 @@
 #include "Font_Control.h"
 #include "GameLoop.h"
 #include "Handle_UI.h"
-#include "Interface.h"
 #include "Isometric_Utils.h"
 #include "MapScreen.h"
 #include "MessageBoxScreen.h"
@@ -140,6 +139,10 @@ static INT8 gubLogForMeTooBleeds = FALSE;
 // has the text region been created?
 static BOOLEAN fTextBoxMouseRegionCreated  = FALSE;
 static BOOLEAN fExternFaceBoxRegionCreated = FALSE;
+
+
+static SGPVObject* guiCOMPANEL;
+static SGPVObject* guiCOMPANELB;
 
 
 BOOLEAN DialogueActive( )
@@ -1709,4 +1712,18 @@ void SetExternMapscreenSpeechPanelXY( INT16 sXPos, INT16 sYPos )
 {
   gsExternPanelXPosition     = sXPos;
   gsExternPanelYPosition     = sYPos;
+}
+
+
+void LoadDialogueControlGraphics()
+{
+	guiCOMPANEL  = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup.sti");
+	guiCOMPANELB = AddVideoObjectFromFile(INTERFACEDIR "/communicationpopup_2.sti");
+}
+
+
+void DeleteDialogueControlGraphics()
+{
+	DeleteVideoObject(guiCOMPANEL);
+	DeleteVideoObject(guiCOMPANELB);
 }

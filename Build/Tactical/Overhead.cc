@@ -376,6 +376,7 @@ void InitTacticalEngine(void)
 	InitializeTacticalInterface();
 	InitializeGameVideoObjects();
 	LoadPaletteData();
+	LoadDialogueControlGraphics();
 
 	LoadLockTable();
 	InitPathAI();
@@ -386,6 +387,7 @@ void InitTacticalEngine(void)
 
 void ShutdownTacticalEngine(void)
 {
+	DeleteDialogueControlGraphics();
 	DeletePaletteData();
 	ShutdownStaticExternalNPCFaces();
 	ShutDownPathAI();
