@@ -1499,7 +1499,6 @@ static void AIDecideRadioAnimation(SOLDIERTYPE* pSoldier)
 
 INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 {
-	INT32 iRetCode;
 	//NumMessage("ExecuteAction - Guy#",pSoldier->ubID);
 
 	// in most cases, merc will change location, or may cause damage to opponents,
@@ -1806,6 +1805,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			// fall through
 		case AI_ACTION_FIRE_GUN:              // shoot at nearby opponent
 		case AI_ACTION_THROW_KNIFE:						// throw knife at nearby opponent
+		{
 			// randomly decide whether to say civ quote
 			if ( pSoldier->bVisible != -1 && pSoldier->bTeam != MILITIA_TEAM )
 			{
@@ -1830,7 +1830,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				SimulMessage(tempstr,3000,NODECRYPT);
 			}
 #endif
-			iRetCode = HandleItem( pSoldier, pSoldier->usActionData, pSoldier->bTargetLevel, pSoldier->inv[HANDPOS].usItem, FALSE );
+			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, pSoldier->bTargetLevel, pSoldier->inv[HANDPOS].usItem, FALSE);
 			if ( iRetCode != ITEM_HANDLE_OK)
 			{
 				if ( iRetCode != ITEM_HANDLE_BROKEN ) // if the item broke, this is 'legal' and doesn't need reporting
@@ -1848,6 +1848,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				EndAIGuysTurn( pSoldier );
 			}
 			break;
+		}
 
 		case AI_ACTION_PULL_TRIGGER:          // activate an adjacent panic trigger
 
@@ -1963,8 +1964,9 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			break;
 
 		case AI_ACTION_GIVE_AID:              // help injured/dying friend
+		{
 			//pSoldier->usUIMovementMode = RUNNING;
-			iRetCode = HandleItem( pSoldier, pSoldier->usActionData, 0, pSoldier->inv[HANDPOS].usItem, FALSE );
+			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, 0, pSoldier->inv[HANDPOS].usItem, FALSE);
 			if ( iRetCode != ITEM_HANDLE_OK)
 			{
 #ifdef JA2BETAVERSION
@@ -1980,6 +1982,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				EndAIGuysTurn( pSoldier );
 			}
 			break;
+		}
 
 		case AI_ACTION_OPEN_OR_CLOSE_DOOR:
 		case AI_ACTION_UNLOCK_DOOR:

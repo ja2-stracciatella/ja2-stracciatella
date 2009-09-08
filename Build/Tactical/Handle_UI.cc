@@ -2030,7 +2030,6 @@ static ScreenID UIHandleCAOnTerrain(UI_EVENT* pUIEvent)
 
 static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldier, UINT16 usMapPos)
 {
-	INT32							iHandleReturn;
 	INT16							sTargetGridNo;
 	INT8							bTargetLevel;
 	LEVELNODE					*pIntNode;
@@ -2139,6 +2138,7 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 	}
 
 
+	ItemHandleResult iHandleReturn;
 	if (pSoldier->bWeaponMode == WM_ATTACHED)
 	{
 		iHandleReturn = HandleItem( pSoldier, sTargetGridNo, bTargetLevel, UNDER_GLAUNCHER, TRUE );

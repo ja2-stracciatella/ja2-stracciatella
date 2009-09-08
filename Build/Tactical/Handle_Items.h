@@ -5,15 +5,18 @@
 #include "World_Items.h"
 
 
-#define ITEM_HANDLE_OK													1
-#define ITEM_HANDLE_RELOADING										-1
-#define ITEM_HANDLE_UNCONSCIOUS									-2
-#define ITEM_HANDLE_NOAPS												-3
-#define ITEM_HANDLE_NOAMMO											-4
-#define ITEM_HANDLE_CANNOT_GETTO_LOCATION				-5
-#define ITEM_HANDLE_BROKEN											-6
-#define ITEM_HANDLE_NOROOM											-7
-#define ITEM_HANDLE_REFUSAL											-8
+enum ItemHandleResult
+{
+	ITEM_HANDLE_OK                    =  1,
+	ITEM_HANDLE_RELOADING             = -1,
+	ITEM_HANDLE_UNCONSCIOUS           = -2,
+	ITEM_HANDLE_NOAPS                 = -3,
+	ITEM_HANDLE_NOAMMO                = -4,
+	ITEM_HANDLE_CANNOT_GETTO_LOCATION = -5,
+	ITEM_HANDLE_BROKEN                = -6,
+	ITEM_HANDLE_NOROOM                = -7,
+	ITEM_HANDLE_REFUSAL               = -8
+};
 
 // Define for code to try and pickup all items....
 #define ITEM_PICKUP_ACTION_ALL									32000
@@ -47,7 +50,7 @@ struct ITEM_POOL
 };
 
 
-INT32 HandleItem(SOLDIERTYPE* pSoldier, INT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI);
+ItemHandleResult HandleItem(SOLDIERTYPE* pSoldier, INT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI);
 
 /* iItemIndex is ignored for player soldiers */
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
