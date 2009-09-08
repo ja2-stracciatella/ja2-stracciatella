@@ -52,6 +52,11 @@ struct MOUSE_REGION
 
 	template<typename T> T* GetUserPtr() const { return static_cast<T*>(user.ptr); }
 
+	INT16 X() const { return RegionTopLeftX; }
+	INT16 Y() const { return RegionTopLeftY; }
+	INT16 W() const { return RegionBottomRightX - RegionTopLeftX; }
+	INT16 H() const { return RegionBottomRightY - RegionTopLeftY; }
+
 	INT8									PriorityLevel;			// Region's Priority, set by system and/or caller
 	UINT32								uiFlags;						// Region's state flags
 	INT16									RegionTopLeftX;			// Screen area affected by this region (absolute coordinates)
