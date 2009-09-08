@@ -92,7 +92,7 @@ void LoadRadarScreenBitmap(const char* const filename)
 	radar->pShades[1] = Create16BPPPaletteShaded(pal, 100, 100, 100, FALSE);
 
 	// Dirty interface
-	fInterfacePanelDirty = TRUE;
+	fInterfacePanelDirty = DIRTYLEVEL1;
 }
 
 

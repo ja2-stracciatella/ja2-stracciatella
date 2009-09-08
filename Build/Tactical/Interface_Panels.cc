@@ -1159,13 +1159,13 @@ static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 
 }
 
 
-void RenderSMPanel(BOOLEAN* const pfDirty)
+void RenderSMPanel(DirtyLevel* const dirty_level)
 {
 	// Give him the panel
 	if (gSelectSMPanelToMerc) SetSMPanelCurrentMerc(gSelectSMPanelToMerc);
 
 	// ATE: Don't do anything if we are in stack popup and are refreshing stuff
-	if ((InItemStackPopup() || InKeyRingPopup()) && *pfDirty == DIRTYLEVEL1) return;
+	if ((InItemStackPopup() || InKeyRingPopup()) && *dirty_level == DIRTYLEVEL1) return;
 
 	SOLDIERTYPE& s = *gpSMCurrentMerc;
 
@@ -1173,19 +1173,19 @@ void RenderSMPanel(BOOLEAN* const pfDirty)
 	{
 		if (HandleCompatibleAmmoUI(&s, (INT8)gbCheckForMouseOverItemPos, TRUE))
 		{
-			*pfDirty = DIRTYLEVEL2;
+			*dirty_level = DIRTYLEVEL2;
 		}
 
 		gfCheckForMouseOverItem = FALSE;
 	}
 
-	HandleNewlyAddedItems(&s, pfDirty);
+	HandleNewlyAddedItems(s, dirty_level);
 
-	if (InItemDescriptionBox()) HandleItemDescriptionBox(pfDirty);
+	if (InItemDescriptionBox()) HandleItemDescriptionBox(dirty_level);
 
 	INT32 const dy = INV_INTERFACE_START_Y;
 
-	if (*pfDirty == DIRTYLEVEL2)
+	if (*dirty_level == DIRTYLEVEL2)
 	{
 		BltVideoObject(guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, dy);
 
@@ -1293,7 +1293,7 @@ no_plate:
 		MPrint(sFontX, sFontY, s.name);
 	}
 
-	if (*pfDirty != DIRTYLEVEL0)
+	if (*dirty_level != DIRTYLEVEL0)
 	{
 		SetStatsHelp(gSM_SELMERCBarsRegion, s);
 
@@ -1308,9 +1308,9 @@ no_plate:
 	UpdateSMPanel();
 
 	// Render items in guy's hand
-	HandleRenderInvSlots(s, *pfDirty);
+	HandleRenderInvSlots(s, *dirty_level);
 
-	if (gfSMDisableForItems && *pfDirty != DIRTYLEVEL0)
+	if (gfSMDisableForItems && *dirty_level != DIRTYLEVEL0)
 	{
 		SGPRect ClipRect;
 		ClipRect.iLeft	 = 87;
@@ -2301,13 +2301,13 @@ static void RenderTeamSlotBorder(const SOLDIERTYPE* const s, const INT32 dx, con
 }
 
 
-static void RenderSoldierTeamInv(SOLDIERTYPE const*, INT16 sX, INT16 sY, BOOLEAN fDirty);
+static void RenderSoldierTeamInv(SOLDIERTYPE const*, INT16 sX, INT16 sY, DirtyLevel);
 static void UpdateTEAMPanel(void);
 
 
-void RenderTEAMPanel(BOOLEAN fDirty)
+void RenderTEAMPanel(DirtyLevel const dirty_level)
 {
-	if (fDirty == DIRTYLEVEL2)
+	if (dirty_level == DIRTYLEVEL2)
 	{
 		MarkAButtonDirty(iTEAMPanelButtons[TEAM_DONE_BUTTON]);
 		MarkAButtonDirty(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]);
@@ -2412,10 +2412,10 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				s->sPanelFaceY = s->face->usFaceY;
 			}
 
-			if (fDirty != DIRTYLEVEL0)
+			if (dirty_level != DIRTYLEVEL0)
 			{
 				// Update stats!
-				if (fDirty == DIRTYLEVEL2) SetStatsHelp(i->bars, *s);
+				if (dirty_level == DIRTYLEVEL2) SetStatsHelp(i->bars, *s);
 
 				const INT32 x = dx + TM_AP_X;
 				const INT32 y = dy + TM_AP_Y;
@@ -2433,7 +2433,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				}
 			}
 
-			RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, dy + TM_INV_HAND1STARTY, fDirty);
+			RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, dy + TM_INV_HAND1STARTY, dirty_level);
 		}
 		dx += TM_INV_HAND_SEP;
 	}
@@ -2949,7 +2949,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 }
 
 
-static void RenderSoldierTeamInv(SOLDIERTYPE const* const pSoldier, INT16 const sX, INT16 const sY, BOOLEAN const fDirty)
+static void RenderSoldierTeamInv(SOLDIERTYPE const* const pSoldier, INT16 const sX, INT16 const sY, DirtyLevel const dirty_level)
 {
 	if ( pSoldier->bActive && !(pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 	{
@@ -2961,7 +2961,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE const* const pSoldier, INT16 const 
 		else
 		{
 			// Look in primary hand
-			INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[HANDPOS], sX, sY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, TRANSPARENT);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[HANDPOS], sX, sY, TM_INV_WIDTH, TM_INV_HEIGHT, dirty_level, 0, TRANSPARENT);
 		}
 
 		if ( pSoldier->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
@@ -2972,7 +2972,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE const* const pSoldier, INT16 const 
 		else
 		{
 			// Do secondary hand
-			INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[SECONDHANDPOS], sX, sY + TM_INV_HAND_SEPY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, TRANSPARENT);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[SECONDHANDPOS], sX, sY + TM_INV_HAND_SEPY, TM_INV_WIDTH, TM_INV_HEIGHT, dirty_level, 0, TRANSPARENT);
 		}
 	}
 }

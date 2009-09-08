@@ -100,17 +100,20 @@ extern MOUSE_REGION gRadarRegion;
 #define				MOVEMENT_MENU_PRONE			8
 
 
-#define				DIRTYLEVEL0							0
-#define				DIRTYLEVEL1							1
-#define				DIRTYLEVEL2							2
+enum DirtyLevel
+{
+	DIRTYLEVEL0 = 0,
+	DIRTYLEVEL1 = 1,
+	DIRTYLEVEL2 = 2
+};
 
 
 void InitializeTacticalInterface(void);
-extern BOOLEAN fInterfacePanelDirty;
-extern BOOLEAN gfPausedTacticalRenderFlags;
-extern BOOLEAN gfPausedTacticalRenderInterfaceFlags;
-extern INT16   gsInterfaceLevel;
-extern BOOLEAN gfInMovementMenu;
+extern DirtyLevel fInterfacePanelDirty;
+extern BOOLEAN    gfPausedTacticalRenderFlags;
+extern DirtyLevel gfPausedTacticalRenderInterfaceFlags;
+extern INT16      gsInterfaceLevel;
+extern BOOLEAN    gfInMovementMenu;
 
 
 void PopupMovementMenu( UI_EVENT *pUIEvent );
@@ -151,7 +154,7 @@ void EndDeadlockMsg(void);
 #	define EndDeadlockMsg() ((void)0)
 #endif
 
-void DirtyMercPanelInterface(SOLDIERTYPE const*, UINT8 ubDirtyLevel);
+void DirtyMercPanelInterface(SOLDIERTYPE const*, DirtyLevel);
 
 
 void EndUIMessage(void);

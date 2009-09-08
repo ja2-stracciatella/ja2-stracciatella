@@ -2,6 +2,7 @@
 #define __INTERFACE_PANELS
 
 #include "Button_System.h"
+#include "Interface.h"
 #include "JA2Types.h"
 #include "MouseSystem.h"
 
@@ -50,7 +51,7 @@ void CreateSMPanelButtons(void);
 void RemoveSMPanelButtons(void);
 void InitializeSMPanel(void);
 void ShutdownSMPanel(void);
-void RenderSMPanel(BOOLEAN* pfDirty);
+void RenderSMPanel(DirtyLevel*);
 void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup);
 
 
@@ -58,7 +59,7 @@ void CreateTEAMPanelButtons(void);
 void RemoveTEAMPanelButtons(void);
 void InitializeTEAMPanel(void);
 void ShutdownTEAMPanel(void);
-void RenderTEAMPanel(BOOLEAN fDirty);
+void RenderTEAMPanel(DirtyLevel);
 
 
 void SetSMPanelCurrentMerc(SOLDIERTYPE* s);

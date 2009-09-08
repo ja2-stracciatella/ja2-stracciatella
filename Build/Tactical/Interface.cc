@@ -194,7 +194,7 @@ static BACKGROUND_SAVE* giUpArrowRect   = NO_BGND_RECT;
 static BACKGROUND_SAVE* giDownArrowRect = NO_BGND_RECT;
 
 
-BOOLEAN            fInterfacePanelDirty = DIRTYLEVEL2;
+DirtyLevel         fInterfacePanelDirty = DIRTYLEVEL2;
 INT16              gsInterfaceLevel     = I_GROUND_LEVEL;
 InterfacePanelKind gsCurInterfacePanel  = TEAM_PANEL;
 
@@ -1291,14 +1291,14 @@ void RestoreInterface( )
 }
 
 
-void DirtyMercPanelInterface(SOLDIERTYPE const* const pSoldier, UINT8 const ubDirtyLevel)
+void DirtyMercPanelInterface(SOLDIERTYPE const* const pSoldier, DirtyLevel const dirty_level)
 {
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// ONly set to a higher level!
-		if ( fInterfacePanelDirty < ubDirtyLevel )
+		if (fInterfacePanelDirty < dirty_level)
 		{
-			fInterfacePanelDirty = ubDirtyLevel;
+			fInterfacePanelDirty = dirty_level;
 		}
 	}
 

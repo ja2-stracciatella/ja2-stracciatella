@@ -53,8 +53,8 @@ UINT8			gsUICurIntTileOldShade;
 BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;
 
 
-BOOLEAN	gfPausedTacticalRenderInterfaceFlags = FALSE;
-BOOLEAN	gfPausedTacticalRenderFlags					 = FALSE;
+DirtyLevel gfPausedTacticalRenderInterfaceFlags = DIRTYLEVEL0;
+BOOLEAN    gfPausedTacticalRenderFlags          = FALSE;
 
 
 void SetTacticalInterfaceFlags( UINT32 uiFlags )
@@ -129,10 +129,10 @@ static void HandlePausedTacticalRender(void)
 		gfPausedTacticalRenderFlags = FALSE;
 	}
 
-	if ( gfPausedTacticalRenderInterfaceFlags )
+	if (gfPausedTacticalRenderInterfaceFlags != DIRTYLEVEL0)
 	{
 		fInterfacePanelDirty = gfPausedTacticalRenderInterfaceFlags;
-		gfPausedTacticalRenderInterfaceFlags = FALSE;
+		gfPausedTacticalRenderInterfaceFlags = DIRTYLEVEL0;
 	}
 }
 
@@ -248,7 +248,7 @@ void ResetInterface()
 		remove(gridno, FIRSTPOINTERS20);
 	}
 
-	fInterfacePanelDirty = FALSE;
+	fInterfacePanelDirty = DIRTYLEVEL0;
 
 	// Reset int tile cursor stuff
 	if (gfUIShowCurIntTile && gsUICurIntTileEffectGridNo != NOWHERE)

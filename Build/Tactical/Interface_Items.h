@@ -2,6 +2,7 @@
 #define __INTERFACE_ITEMS_H
 
 #include "Button_System.h"
+#include "Interface.h"
 #include "MouseSystem.h"
 #include "Soldier_Control.h"
 
@@ -38,8 +39,8 @@ BOOLEAN HandleItemPickupMenu(void);
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
 void InitInvSlotInterface(INV_REGION_DESC const* pRegionDesc, INV_REGION_DESC const* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback);
 void ShutdownInvSlotInterface();
-void HandleRenderInvSlots(SOLDIERTYPE const&, UINT8 dirty_level);
-void HandleNewlyAddedItems(SOLDIERTYPE&, BOOLEAN* dirty_level);
+void HandleRenderInvSlots(SOLDIERTYPE const&, DirtyLevel);
+void HandleNewlyAddedItems(SOLDIERTYPE&, DirtyLevel*);
 void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY);
 void DisableInvRegions( BOOLEAN fDisable );
 
@@ -59,7 +60,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 //							if == DIRTYLEVEL1 will render bullets and status only
 //
 //  Last parameter used mainly for when mouse is over item
-void INVRenderItem(SGPVSurface* uiBuffer, const SOLDIERTYPE* pSoldier, OBJECTTYPE const&, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, INT16 sOutlineColor);
+void INVRenderItem(SGPVSurface* uiBuffer, SOLDIERTYPE const* pSoldier, OBJECTTYPE const&, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, DirtyLevel, UINT8 ubStatusIndex, INT16 sOutlineColor);
 
 
 extern BOOLEAN gfInItemDescBox;
@@ -69,7 +70,7 @@ void InitItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, I
 void InternalInitItemDescriptionBox(OBJECTTYPE* pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);
 void InitKeyItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY);
 void RenderItemDescriptionBox(void);
-void HandleItemDescriptionBox( BOOLEAN *pfDirty );
+void HandleItemDescriptionBox(DirtyLevel*);
 void DeleteItemDescriptionBox(void);
 
 

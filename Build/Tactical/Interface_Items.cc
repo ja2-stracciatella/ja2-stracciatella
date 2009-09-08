@@ -788,7 +788,7 @@ void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY)
 }
 
 
-static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT8 const dirty_level)
+static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, DirtyLevel const dirty_level)
 {
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
 	bool       const  in_map = guiCurrentScreen == MAP_SCREEN;
@@ -833,7 +833,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 	INT16 const y = r.Y();
 
 	// Now render as normal
-	UINT8 const render_dirty_level =
+	DirtyLevel const render_dirty_level =
 		s.bNewItemCount[pocket] <= 0           ||
 		gsCurInterfacePanel     != SM_PANEL    ||
 		fInterfacePanelDirty    == DIRTYLEVEL2 ? dirty_level :
@@ -869,7 +869,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 }
 
 
-void HandleRenderInvSlots(SOLDIERTYPE const& s, UINT8 const dirty_level)
+void HandleRenderInvSlots(SOLDIERTYPE const& s, DirtyLevel const dirty_level)
 {
 	if (InItemDescriptionBox() || InItemStackPopup() || InKeyRingPopup()) return;
 
@@ -1488,7 +1488,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 }
 
 
-void HandleNewlyAddedItems(SOLDIERTYPE& s, BOOLEAN* const dirty_level)
+void HandleNewlyAddedItems(SOLDIERTYPE& s, DirtyLevel* const dirty_level)
 {
 	// If item description up, stop
 	if (gfInItemDescBox) return;
@@ -1583,16 +1583,16 @@ void InitItemInterface( )
 }
 
 
-void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, OBJECTTYPE const& o, const INT16 sX, const INT16 sY, const INT16 sWidth, const INT16 sHeight, const UINT8 fDirtyLevel, const UINT8 ubStatusIndex, const INT16 outline_colour)
+void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, INT16 const outline_colour)
 {
 	if (o.usItem    == NOTHING)     return;
-	if (fDirtyLevel == DIRTYLEVEL0) return;
+	if (dirty_level == DIRTYLEVEL0) return;
 
 	INVTYPE const& item =
 		ubStatusIndex < RENDER_ITEM_ATTACHMENT1 ? Item[o.usItem] :
 		Item[o.usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
 
-	if (fDirtyLevel == DIRTYLEVEL2)
+	if (dirty_level == DIRTYLEVEL2)
 	{
 		// Center the object in the slot
 		SGPVObject  const& item_vo = GetInterfaceGraphicForItem(item);
@@ -2653,13 +2653,13 @@ void RenderItemDescriptionBox(void)
 }
 
 
-void HandleItemDescriptionBox( BOOLEAN *pfDirty )
+void HandleItemDescriptionBox(DirtyLevel* const dirty_level)
 {
 	if ( fItemDescDelete )
 	{
 		DeleteItemDescriptionBox( );
 		fItemDescDelete = FALSE;
-		*pfDirty = DIRTYLEVEL2;
+		*dirty_level = DIRTYLEVEL2;
 	}
 
 }
