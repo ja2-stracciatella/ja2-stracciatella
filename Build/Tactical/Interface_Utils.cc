@@ -4,7 +4,6 @@
 #include "VObject.h"
 #include "Interface_Utils.h"
 #include "Render_Dirty.h"
-#include "Interface.h"
 #include "Interface_Control.h"
 #include "SysUtil.h"
 #include "Faces.h"
@@ -248,13 +247,7 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 
 void RenderSoldierFace(SOLDIERTYPE const& s, INT16 const sFaceX, INT16 const sFaceY)
 {
-	if (!s.bActive)
-	{
-		// Put close panel there
-		BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, sFaceX, sFaceY);
-		RestoreExternBackgroundRect(sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT);
-	}
-	else if (s.uiStatusFlags & SOLDIER_VEHICLE)
+	if (s.uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		// just draw the vehicle
 		const UINT8 vehicle_type = pVehicleList[s.bVehicleID].ubVehicleType;
