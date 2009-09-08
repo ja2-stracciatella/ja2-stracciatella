@@ -167,10 +167,6 @@ static GUIButtonRef iActionIcons[NUM_ICONS];
 SGPVObject* guiCLOSE;
 SGPVObject* guiDEAD;
 SGPVObject* guiHATCH;
-SGPVObject* guiGUNSM;
-SGPVObject* guiP1ITEMS;
-SGPVObject* guiP2ITEMS;
-SGPVObject* guiP3ITEMS;
 static SGPVObject* guiBUTTONBORDER;
 SGPVObject* guiRADIO;
 static SGPVObject* guiRADIO2;
@@ -230,10 +226,6 @@ void InitializeTacticalInterface()
 	guiCLOSE         = AddVideoObjectFromFile(INTERFACEDIR "/p_close.sti");
 	guiDEAD          = AddVideoObjectFromFile(INTERFACEDIR "/p_dead.sti");
 	guiHATCH         = AddVideoObjectFromFile(INTERFACEDIR "/hatch.sti");
-	guiGUNSM         = AddVideoObjectFromFile(INTERFACEDIR "/mdguns.sti");    // interface gun pictures
-	guiP1ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
-	guiP2ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
-	guiP3ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
 	guiBUTTONBORDER  = AddVideoObjectFromFile(INTERFACEDIR "/button_frame.sti");
 	guiBURSTACCUM    = AddVideoObjectFromFile(INTERFACEDIR "/burst1.sti");
 	guiRADIO         = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");

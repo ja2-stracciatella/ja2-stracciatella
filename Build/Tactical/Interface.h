@@ -76,10 +76,6 @@ extern InterfacePanelKind gsCurInterfacePanel;
 extern SGPVObject* guiCLOSE;
 extern SGPVObject* guiDEAD;
 extern SGPVObject* guiHATCH;
-extern SGPVObject* guiGUNSM;
-extern SGPVObject* guiP1ITEMS;
-extern SGPVObject* guiP2ITEMS;
-extern SGPVObject* guiP3ITEMS;
 extern SGPVObject* guiRADIO;
 extern SGPVObject* guiBURSTACCUM;
 

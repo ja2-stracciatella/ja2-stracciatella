@@ -420,6 +420,10 @@ INT8						gbCompatibleApplyItem = FALSE;
 static SGPVObject* guiMapInvSecondHandBlockout;
 #endif
 static SGPVObject* guiSecItemHiddenVO;
+static SGPVObject* guiGUNSM;
+static SGPVObject* guiP1ITEMS;
+static SGPVObject* guiP2ITEMS;
+static SGPVObject* guiP3ITEMS;
 
 
 static BOOLEAN AttemptToAddSubstring(wchar_t* const zDest, const wchar_t* const zTemp, UINT32* const puiStringLength, const UINT32 uiPixLimit)
@@ -5390,6 +5394,10 @@ void LoadInterfaceItemsGraphics()
 	guiMapInvSecondHandBlockout = AddVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
 #endif
 	guiSecItemHiddenVO          = AddVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
+	guiGUNSM                    = AddVideoObjectFromFile(INTERFACEDIR "/mdguns.sti");    // interface gun pictures
+	guiP1ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
+	guiP2ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
+	guiP3ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
 }
 
 
@@ -5399,4 +5407,8 @@ void DeleteInterfaceItemsGraphics()
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
 #endif
 	DeleteVideoObject(guiSecItemHiddenVO);
+	DeleteVideoObject(guiGUNSM);
+	DeleteVideoObject(guiP1ITEMS);
+	DeleteVideoObject(guiP2ITEMS);
+	DeleteVideoObject(guiP3ITEMS);
 }
