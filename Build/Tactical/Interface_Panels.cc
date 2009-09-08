@@ -339,6 +339,7 @@ static SGPVObject* guiSMObjects2;
 
 static SGPVObject* guiTEAMPanel;
 static SGPVObject* guiTEAMObjects;
+static SGPVObject* guiVEHINV;
 
 // Globals for various mouse regions
 static MOUSE_REGION gSM_SELMERCPanelRegion;
@@ -2220,6 +2221,7 @@ void InitializeTEAMPanel(void)
 
 	guiTEAMPanel   = AddVideoObjectFromFile(INTERFACEDIR "/bottom_bar.sti");
 	guiTEAMObjects = AddVideoObjectFromFile(INTERFACEDIR "/gold_front.sti");
+	guiVEHINV      = AddVideoObjectFromFile(INTERFACEDIR "/inventor.sti");
 
 	// Create buttons
 	CreateTEAMPanelButtons();
@@ -2264,6 +2266,7 @@ void ShutdownTEAMPanel(void)
 	// We may want to delete them at the interm as well, to free up room for other panels
 	DeleteVideoObject(guiTEAMPanel);
 	DeleteVideoObject(guiTEAMObjects);
+	DeleteVideoObject(guiVEHINV);
 
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);

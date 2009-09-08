@@ -207,7 +207,6 @@ void GetSoldierAboveGuyPositions(const SOLDIERTYPE* s, INT16* psX, INT16* psY, B
 
 void UpdateEnemyUIBar(void);
 
-extern SGPVObject* guiVEHINV;
 extern BOOLEAN gfInOpenDoorMenu;
 extern UINT32  guiUIMessageTimeDelay;
 extern BOOLEAN gfTopMessageDirty;

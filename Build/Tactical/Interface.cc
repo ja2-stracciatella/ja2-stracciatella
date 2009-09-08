@@ -176,7 +176,6 @@ SGPVObject* guiRADIO;
 static SGPVObject* guiRADIO2;
 SGPVObject* guiCOMPANEL;
 SGPVObject* guiCOMPANELB;
-SGPVObject* guiVEHINV;
 SGPVObject* guiBURSTACCUM;
 SGPVObject* guiPORTRAITICONS;
 
@@ -239,7 +238,6 @@ void InitializeTacticalInterface()
 	guiP2ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
 	guiP3ITEMS       = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
 	guiBUTTONBORDER  = AddVideoObjectFromFile(INTERFACEDIR "/button_frame.sti");
-	guiVEHINV        = AddVideoObjectFromFile(INTERFACEDIR "/inventor.sti");
 	guiBURSTACCUM    = AddVideoObjectFromFile(INTERFACEDIR "/burst1.sti");
 	guiPORTRAITICONS = AddVideoObjectFromFile(INTERFACEDIR "/portraiticons.sti");
 	guiRADIO         = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
