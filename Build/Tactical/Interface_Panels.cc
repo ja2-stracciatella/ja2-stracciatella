@@ -2301,7 +2301,7 @@ static void RenderTeamSlotBorder(const SOLDIERTYPE* const s, const INT32 dx, con
 }
 
 
-static void RenderSoldierTeamInv(SOLDIERTYPE const*, INT16 sX, INT16 sY, DirtyLevel);
+static void RenderSoldierTeamInv(SOLDIERTYPE const&, INT16 x, INT16 y, DirtyLevel);
 static void UpdateTEAMPanel(void);
 
 
@@ -2433,7 +2433,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				}
 			}
 
-			RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, dy + TM_INV_HAND1STARTY, dirty_level);
+			RenderSoldierTeamInv(*s, dx + TM_INV_HAND1STARTX, dy + TM_INV_HAND1STARTY, dirty_level);
 		}
 		dx += TM_INV_HAND_SEP;
 	}
@@ -2949,31 +2949,33 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 }
 
 
-static void RenderSoldierTeamInv(SOLDIERTYPE const* const pSoldier, INT16 const sX, INT16 const sY, DirtyLevel const dirty_level)
+static void RenderSoldierTeamInv(SOLDIERTYPE const& s, INT16 const x, INT16 y, DirtyLevel const dirty_level)
 {
-	if ( pSoldier->bActive && !(pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
-	{
-		if ( pSoldier->uiStatusFlags & SOLDIER_DRIVER )
-		{
-			BltVideoObject(guiSAVEBUFFER, guiVEHINV, 0, sX, sY);
-			RestoreExternBackgroundRect( sX, sY, (INT16)( TM_INV_WIDTH ) , (INT16)( TM_INV_HEIGHT ) );
-		}
-		else
-		{
-			// Look in primary hand
-			INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[HANDPOS], sX, sY, TM_INV_WIDTH, TM_INV_HEIGHT, dirty_level, 0, TRANSPARENT);
-		}
+	if (!s.bActive)                     return;
+	if (s.uiStatusFlags & SOLDIER_DEAD) return;
 
-		if ( pSoldier->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
-		{
-			BltVideoObject(guiSAVEBUFFER, guiVEHINV, 1, sX, sY + TM_INV_HAND_SEPY);
-			RestoreExternBackgroundRect( sX, (INT16)(sY + TM_INV_HAND_SEPY), (INT16)(TM_INV_WIDTH ) , (INT16)( TM_INV_HEIGHT ) );
-		}
-		else
-		{
-			// Do secondary hand
-			INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[SECONDHANDPOS], sX, sY + TM_INV_HAND_SEPY, TM_INV_WIDTH, TM_INV_HEIGHT, dirty_level, 0, TRANSPARENT);
-		}
+	SGPVSurface* const buf = guiSAVEBUFFER;
+	INT16        const w   = TM_INV_WIDTH;
+	INT16        const h   = TM_INV_HEIGHT;
+	if (s.uiStatusFlags & SOLDIER_DRIVER)
+	{
+		BltVideoObject(buf, guiVEHINV, 0, x, y);
+		RestoreExternBackgroundRect(x, y, w, h);
+	}
+	else
+	{ // Look in primary hand
+		INVRenderItem(buf, &s, s.inv[HANDPOS], x, y, w, h, dirty_level, 0, TRANSPARENT);
+	}
+
+	y += TM_INV_HAND_SEPY;
+	if (s.uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER))
+	{
+		BltVideoObject(buf, guiVEHINV, 1, x, y);
+		RestoreExternBackgroundRect(x, y, w, h);
+	}
+	else
+	{ // Do secondary hand
+		INVRenderItem(buf, &s, s.inv[SECONDHANDPOS], x, y, w, h, dirty_level, 0, TRANSPARENT);
 	}
 }
 
