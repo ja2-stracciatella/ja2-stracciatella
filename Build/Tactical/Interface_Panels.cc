@@ -341,6 +341,8 @@ static SGPVObject* guiTEAMPanel;
 static SGPVObject* guiTEAMObjects;
 static SGPVObject* guiVEHINV;
 
+static SGPVObject* guiCLOSE;
+
 // Globals for various mouse regions
 static MOUSE_REGION gSM_SELMERCPanelRegion;
 static MOUSE_REGION gSM_SELMERCBarsRegion;
@@ -3736,4 +3738,16 @@ void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvP
 			pSoldier->bWeaponMode = WM_NORMAL;
 		}
 	}
+}
+
+
+void LoadInterfacePanelGraphics()
+{
+	guiCLOSE = AddVideoObjectFromFile(INTERFACEDIR "/p_close.sti");
+}
+
+
+void DeleteInterfacePanelGraphics()
+{
+	DeleteVideoObject(guiCLOSE);
 }

@@ -73,7 +73,6 @@ extern InterfacePanelKind gbNewPanel;
 extern InterfacePanelKind gsCurInterfacePanel;
 
 
-extern SGPVObject* guiCLOSE;
 extern SGPVObject* guiDEAD;
 extern SGPVObject* guiHATCH;
 extern SGPVObject* guiRADIO;

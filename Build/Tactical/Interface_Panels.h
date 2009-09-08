@@ -127,4 +127,7 @@ extern BOOLEAN      gfDeductPoints;
 extern BOOLEAN      gfSMDisableForItems;
 extern SOLDIERTYPE* gNewPanelSoldier;
 
+void LoadInterfacePanelGraphics();
+void DeleteInterfacePanelGraphics();
+
 #endif

@@ -164,7 +164,6 @@ enum
 static GUIButtonRef iActionIcons[NUM_ICONS];
 
 // GLOBAL INTERFACE SURFACES
-SGPVObject* guiCLOSE;
 SGPVObject* guiDEAD;
 SGPVObject* guiHATCH;
 static SGPVObject* guiBUTTONBORDER;
@@ -222,12 +221,11 @@ void InitializeTacticalInterface()
 	iIconImages[ EXPLOSIVE_DOOR_IMAGES ]	= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 15, 16, 17, -1 );
 
 	// Load interface panels
-	guiCLOSE         = AddVideoObjectFromFile(INTERFACEDIR "/p_close.sti");
-	guiDEAD          = AddVideoObjectFromFile(INTERFACEDIR "/p_dead.sti");
-	guiHATCH         = AddVideoObjectFromFile(INTERFACEDIR "/hatch.sti");
-	guiBUTTONBORDER  = AddVideoObjectFromFile(INTERFACEDIR "/button_frame.sti");
-	guiRADIO         = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
-	guiRADIO2        = AddVideoObjectFromFile(INTERFACEDIR "/radio2.sti");
+	guiDEAD         = AddVideoObjectFromFile(INTERFACEDIR "/p_dead.sti");
+	guiHATCH        = AddVideoObjectFromFile(INTERFACEDIR "/hatch.sti");
+	guiBUTTONBORDER = AddVideoObjectFromFile(INTERFACEDIR "/button_frame.sti");
+	guiRADIO        = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
+	guiRADIO2       = AddVideoObjectFromFile(INTERFACEDIR "/radio2.sti");
 
 	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
 
