@@ -2954,7 +2954,6 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 
 static void RenderSoldierTeamInv(SOLDIERTYPE const& s, INT16 const x, INT16 y, DirtyLevel const dirty_level)
 {
-	if (!s.bActive)                     return;
 	if (s.uiStatusFlags & SOLDIER_DEAD) return;
 
 	SGPVSurface* const buf = guiSAVEBUFFER;
