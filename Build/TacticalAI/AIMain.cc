@@ -1835,8 +1835,8 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			{
 				if ( iRetCode != ITEM_HANDLE_BROKEN ) // if the item broke, this is 'legal' and doesn't need reporting
 				{
-					DebugAI( String( "AI %d got error code %ld from HandleItem, doing action %d, has %d APs... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction, pSoldier->bActionPoints ) );
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"AI %d got error code %ld from HandleItem, doing action %d... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction );
+					DebugAI(String("AI %d got error code %d from HandleItem, doing action %d, has %d APs... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction, pSoldier->bActionPoints));
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"AI %d got error code %d from HandleItem, doing action %d... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction);
 				}
 				CancelAIAction(pSoldier);
 				#ifdef TESTAICONTROL
@@ -1970,7 +1970,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			if ( iRetCode != ITEM_HANDLE_OK)
 			{
 #ifdef JA2BETAVERSION
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"AI %d got error code %ld from HandleItem, doing action %d... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction );
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"AI %d got error code %d from HandleItem, doing action %d... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction);
 #endif
 				CancelAIAction(pSoldier);
 				#ifdef TESTAICONTROL
