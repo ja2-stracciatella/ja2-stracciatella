@@ -66,7 +66,7 @@ static AILIST* CreateNewAIListEntry(SOLDIERTYPE* const s, INT8 const priority)
 }
 
 
-static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCount, BOOLEAN fDoRandomChecks);
+static bool SatisfiesAIListConditions(SOLDIERTYPE&, UINT8* n_done, bool do_random_checks);
 
 
 SOLDIERTYPE* RemoveFirstAIListEntry()
@@ -74,10 +74,10 @@ SOLDIERTYPE* RemoveFirstAIListEntry()
 	while (AILIST* const e = gpFirstAIListEntry)
 	{
 		gpFirstAIListEntry = e->pNext;
-		SOLDIERTYPE* const s = e->soldier;
+		SOLDIERTYPE& s = *e->soldier;
 		DeleteAIListEntry(e);
 		// Make sure conditions still met
-		if (SatisfiesAIListConditions(s, 0, FALSE)) return s;
+		if (SatisfiesAIListConditions(s, 0, false)) return &s;
 	}
 	return 0;
 }
@@ -111,108 +111,67 @@ static void InsertIntoAIList(SOLDIERTYPE* const s, INT8 const priority)
 }
 
 
-static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCount, BOOLEAN fDoRandomChecks)
+static bool SatisfiesAIListConditions(SOLDIERTYPE& s, UINT8* const n_done, bool const do_random_checks)
 {
-	if ( (gTacticalStatus.bBoxingState == BOXING) && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
+	if (gTacticalStatus.bBoxingState == BOXING && !(s.uiStatusFlags & SOLDIER_BOXER)) return false;
+	if (!s.bActive)           return false;
+	if (!s.bInSector)         return false;
+	if (s.bLife   < OKLIFE)   return false;
+	if (s.bBreath < OKBREATH) return false;
+
+	if (s.bMoved)
 	{
-		return( FALSE );
+		if (s.bActionPoints <= 1 && n_done) ++*n_done;
+		return false;
 	}
 
-	if ( ! ( pSoldier->bActive && pSoldier->bInSector ) )
-	{
-		// the check for
-		return( FALSE );
-	}
+	// Do we need to re-evaluate alert status here?
+	DecideAlertStatus(&s);
 
-	if ( ! ( pSoldier->bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH ) )
+	/* If we are dealing with the civ team and this person hasn't heard any
+	 * gunfire, handle only 1 time in 10 */
+	if (IsOnCivTeam(&s))
 	{
-		return( FALSE );
-	}
+		// Don't handle cows and crows in TB!
+		if (s.ubBodyType == CROW || s.ubBodyType == COW) return false;
 
-	if ( pSoldier->bMoved )
-	{
-		if ( pSoldier->bActionPoints <= 1 && pubDoneCount )
+		/* If someone in a civ group is neutral but the civ group is non-neutral,
+		 * should be handled all the time */
+		if (s.bNeutral && (s.ubCivilianGroup == NON_CIV_GROUP || gTacticalStatus.fCivGroupHostile[s.ubCivilianGroup] == CIV_GROUP_NEUTRAL))
 		{
-			(*pubDoneCount)++;
-		}
-		return( FALSE );
-	}
-
-	// do we need to re-evaluate alert status here?
-	DecideAlertStatus( pSoldier );
-
-	// if we are dealing with the civ team and this person
-	// hasn't heard any gunfire, handle only 1 time in 10
-	if (IsOnCivTeam(pSoldier))
-	{
-		if ( pSoldier->ubBodyType == CROW || pSoldier->ubBodyType == COW )
-		{
-			// don't handle cows and crows in TB!
-			return( FALSE );
-		}
-
-		// if someone in a civ group is neutral but the civ group is non-neutral, should be handled all the time
-		if ( pSoldier->bNeutral && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || gTacticalStatus.fCivGroupHostile[pSoldier->ubCivilianGroup] == CIV_GROUP_NEUTRAL ) )
-		{
-			if ( pSoldier->bAlertStatus < STATUS_RED )
-			{
-				// unalerted, barely handle
-				if ( fDoRandomChecks && PreRandom( 10 ) && !(pSoldier->ubQuoteRecord) )
-				{
-					return( FALSE );
-				}
+			if (s.bAlertStatus < STATUS_RED)
+			{ // Unalerted, barely handle
+				if (do_random_checks && PreRandom(10) != 0 && !s.ubQuoteRecord) return false;
 			}
 			else
-			{
-				// heard gunshots
-				if ( pSoldier->uiStatusFlags & SOLDIER_COWERING )
+			{ // Heard gunshots
+				if (s.uiStatusFlags & SOLDIER_COWERING)
 				{
-					if ( pSoldier->bVisible )
-					{
-						// if have profile, don't handle, don't want them running around
-						if ( pSoldier->ubProfile != NO_PROFILE )
-						{
-							return( FALSE );
-						}
-						// else don't handle much
-						if ( fDoRandomChecks && PreRandom( 3 ) )
-						{
-							return( FALSE );
-						}
-					}
-					else
-					{
-						// never handle
-						return( FALSE );
-					}
+					if (!s.bVisible) return false; // never handle
+					// If have profile, don't handle, don't want them running around
+					if (s.ubProfile != NO_PROFILE) return false;
+					// Else don't handle much
+					if (do_random_checks && PreRandom(3) != 0) return false;
 				}
-				else if ( pSoldier->ubBodyType == COW || pSoldier->ubBodyType == CRIPPLECIV )
-				{
-					// don't handle much
-					if ( fDoRandomChecks && PreRandom( 3 ) )
-					{
-						return( FALSE );
-					}
+				else if (s.ubBodyType == CRIPPLECIV)
+				{ // Don't handle much
+					if (do_random_checks && PreRandom(3) != 0) return false;
 				}
 			}
 		}
 		// non-neutral civs should be handled all the time, right?
-		// reset last action if cowering
 
-		if ( pSoldier->uiStatusFlags & SOLDIER_COWERING )
-		{
-			pSoldier->bLastAction = AI_ACTION_NONE;
-		}
-
+		// Reset last action if cowering
+		if (s.uiStatusFlags & SOLDIER_COWERING) s.bLastAction = AI_ACTION_NONE;
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
 bool MoveToFrontOfAIList(SOLDIERTYPE* const s)
 {
-	if (!SatisfiesAIListConditions(s, 0, FALSE)) return false; // Cannot do that
+	if (!SatisfiesAIListConditions(*s, 0, false)) return false; // Cannot do that
 
 	RemoveAIListEntryForID(s);
 
@@ -242,7 +201,7 @@ bool BuildAIListForTeam(INT8 const team)
 		SOLDIERTYPE& s = **i;
 		// non-null merc slot ensures active
 		if (s.bTeam != team) continue;
-		if (!SatisfiesAIListConditions(&s, &n_done, TRUE)) continue;
+		if (!SatisfiesAIListConditions(s, &n_done, true)) continue;
 
 		INT8 priority = s.bAlertStatus;
 		if (s.bVisible == TRUE) priority += 3;
