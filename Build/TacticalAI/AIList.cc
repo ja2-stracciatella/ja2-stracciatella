@@ -34,8 +34,8 @@ struct AILIST
 
 #define AI_LIST_SIZE TOTAL_SOLDIERS
 
-AILIST		gAIList[ AI_LIST_SIZE ];
-AILIST *	gpFirstAIListEntry = NULL;
+static AILIST  gAIList[AI_LIST_SIZE];
+static AILIST* gpFirstAIListEntry;
 
 
 static void DeleteAIListEntry(AILIST* pEntry)
