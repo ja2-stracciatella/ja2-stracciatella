@@ -120,56 +120,17 @@ static void RemoveAIListEntryForID(const SOLDIERTYPE* s)
 }
 
 
-static BOOLEAN InsertIntoAIList(SOLDIERTYPE* s, INT8 bPriority)
+static void InsertIntoAIList(SOLDIERTYPE* const s, INT8 const priority)
 {
-	AILIST *	pEntry, * pNewEntry, * pPrevEntry = NULL;
-
-	pNewEntry = CreateNewAIListEntry(s, bPriority);
-
-	// look through the list now to see where to insert the entry
-	if (gpFirstAIListEntry == NULL)
+	AILIST* const e = CreateNewAIListEntry(s, priority);
+	// Look through the list to see where to insert the entry
+	AILIST** anchor;
+	for (anchor = &gpFirstAIListEntry; *anchor; anchor = &(*anchor)->pNext)
 	{
-		// empty list!
-		gpFirstAIListEntry = pNewEntry;
-		// new entry's next ptr is null already
-		return( TRUE );
+		if (priority > (*anchor)->bPriority) break;
 	}
-	else
-	{
-		pEntry = gpFirstAIListEntry;
-		do
-		{
-			if ( bPriority > pEntry->bPriority )
-			{
-				// insert before this entry
-				pNewEntry->pNext = pEntry;
-				if (pEntry == gpFirstAIListEntry)
-				{
-					// inserting at head of list
-					gpFirstAIListEntry = pNewEntry;
-				}
-				else
-				{
-					Assert(pPrevEntry != NULL);
-					pPrevEntry->pNext = pNewEntry;
-				}
-				return( TRUE );
-			}
-			else if (pEntry->pNext == NULL)
-			{
-				// end of list!
-				pEntry->pNext = pNewEntry;
-				return( TRUE );
-			}
-			pPrevEntry = pEntry;
-			pEntry = pEntry->pNext;
-			AssertMsg( pEntry != gpFirstAIListEntry, "Fatal error: Loop in AI list!" );
-		}
-		while( pEntry != NULL );
-	}
-
-	// I don't know how the heck we would get here...
-	return( FALSE );
+	e->pNext = *anchor;
+	*anchor  = e;
 }
 
 
@@ -289,7 +250,7 @@ BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
 
 	if (gpFirstAIListEntry == NULL)
 	{
-		return InsertIntoAIList(s, MAX_AI_PRIORITY);
+		InsertIntoAIList(s, MAX_AI_PRIORITY);
 	}
 	else
 	{
@@ -299,8 +260,8 @@ BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
 		// insert at front
 		pNewEntry->pNext = gpFirstAIListEntry;
 		gpFirstAIListEntry = pNewEntry;
-		return( TRUE );
 	}
+	return TRUE;
 }
 
 
@@ -324,7 +285,7 @@ bool BuildAIListForTeam(INT8 const team)
 		INT8 priority = s.bAlertStatus;
 		if (s.bVisible == TRUE) priority += 3;
 
-		if (!InsertIntoAIList(&s, priority)) break; // wtf?
+		InsertIntoAIList(&s, priority);
 		++n;
 	}
 
