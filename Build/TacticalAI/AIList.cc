@@ -32,9 +32,7 @@ struct AILIST
 };
 
 
-#define AI_LIST_SIZE TOTAL_SOLDIERS
-
-static AILIST  gAIList[AI_LIST_SIZE];
+static AILIST  gAIList[TOTAL_SOLDIERS];
 static AILIST* gpFirstAIListEntry;
 
 
@@ -46,15 +44,10 @@ static void DeleteAIListEntry(AILIST* pEntry)
 }
 
 
-static void ClearAIList(void)
+static void ClearAIList()
 {
-	UINT8	ubLoop;
-
-	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
-	{
-		DeleteAIListEntry(&gAIList[ubLoop]);
-	}
-	gpFirstAIListEntry = NULL; // ??
+	memset(gAIList, 0, sizeof(gAIList));
+	gpFirstAIListEntry = 0;
 }
 
 
