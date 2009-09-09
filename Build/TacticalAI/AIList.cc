@@ -90,31 +90,15 @@ SOLDIERTYPE* RemoveFirstAIListEntry()
 }
 
 
-static void RemoveAIListEntryForID(const SOLDIERTYPE* s)
+static void RemoveAIListEntryForID(SOLDIERTYPE const* const s)
 {
-	AILIST *	pEntry;
-	AILIST *	pPrevEntry;
-
-	pEntry = gpFirstAIListEntry;
-	pPrevEntry = NULL;
-
-	while( pEntry != NULL )
+	for (AILIST** anchor = &gpFirstAIListEntry; *anchor; anchor = &(*anchor)->pNext)
 	{
-		if (pEntry->soldier == s)
-		{
-			if ( pEntry == gpFirstAIListEntry )
-			{
-				RemoveFirstAIListEntry();
-			}
-			else
-			{
-				pPrevEntry->pNext = pEntry->pNext;
-				DeleteAIListEntry( pEntry );
-			}
-			return;
-		}
-		pPrevEntry = pEntry;
-		pEntry = pEntry->pNext;
+		AILIST* const e = *anchor;
+		if (e->soldier != s) continue;
+		*anchor = e->pNext;
+		DeleteAIListEntry(e);
+		return;
 	}
 	// none found, that's okay
 }
@@ -124,13 +108,13 @@ static void InsertIntoAIList(SOLDIERTYPE* const s, INT8 const priority)
 {
 	AILIST* const e = CreateNewAIListEntry(s, priority);
 	// Look through the list to see where to insert the entry
-	AILIST** anchor;
-	for (anchor = &gpFirstAIListEntry; *anchor; anchor = &(*anchor)->pNext)
+	for (AILIST** anchor = &gpFirstAIListEntry; *anchor; anchor = &(*anchor)->pNext)
 	{
-		if (priority > (*anchor)->bPriority) break;
+		if (*anchor && priority <= (*anchor)->bPriority) continue;
+		e->pNext = *anchor;
+		*anchor  = e;
+		break;
 	}
-	e->pNext = *anchor;
-	*anchor  = e;
 }
 
 
