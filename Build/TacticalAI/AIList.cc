@@ -303,56 +303,31 @@ BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
 	}
 }
 
-BOOLEAN BuildAIListForTeam( INT8 bTeam )
+
+bool BuildAIListForTeam(INT8 const team)
 {
-	// loop through all non-player-team guys and add to list
-	BOOLEAN					fInsertRet;
-	BOOLEAN					fRet = FALSE;
-	UINT8						ubCount = 0;
-	UINT8						ubDoneCount = 0;
-	INT8						bPriority;
+	// This team is being given control so reset their muzzle flashes
+	TurnOffTeamsMuzzleFlashes(team);
 
-	// this team is being given control so reset their muzzle flashes
-	TurnOffTeamsMuzzleFlashes( bTeam );
-
-	// clear the AI list
 	ClearAIList();
 
-	// create a new list
+	// Create a new list
+	UINT8 n      = 0;
+	UINT8 n_done = 0;
 	FOR_ALL_MERCS(i)
 	{
-		SOLDIERTYPE* const pSoldier = *i;
+		SOLDIERTYPE& s = **i;
 		// non-null merc slot ensures active
-		if (pSoldier->bTeam == bTeam)
-		{
-			if ( !SatisfiesAIListConditions( pSoldier, &ubDoneCount, TRUE ) )
-			{
-				continue;
-			}
+		if (s.bTeam != team) continue;
+		if (!SatisfiesAIListConditions(&s, &n_done, TRUE)) continue;
 
-			bPriority = pSoldier->bAlertStatus;
-			if ( pSoldier->bVisible == TRUE )
-			{
-				bPriority += 3;
-			}
+		INT8 priority = s.bAlertStatus;
+		if (s.bVisible == TRUE) priority += 3;
 
-			fInsertRet = InsertIntoAIList(pSoldier, bPriority);
-			if (!fInsertRet)
-			{
-				// wtf???
-				break;
-			}
-			else
-			{
-				fRet = TRUE;
-				ubCount++;
-			}
-		}
+		if (!InsertIntoAIList(&s, priority)) break; // wtf?
+		++n;
 	}
 
-	if (fRet && ubCount > 0)
-	{
-		InitEnemyUIBar( ubCount, ubDoneCount );
-	}
-	return( fRet );
+	if (n > 0) InitEnemyUIBar(n, n_done);
+	return n > 0;
 }

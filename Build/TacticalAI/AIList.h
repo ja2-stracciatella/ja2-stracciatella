@@ -5,7 +5,7 @@
 
 
 SOLDIERTYPE* RemoveFirstAIListEntry();
-extern BOOLEAN BuildAIListForTeam( INT8 bTeam );
+bool         BuildAIListForTeam(INT8 team);
 BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* s);
 
 #endif
