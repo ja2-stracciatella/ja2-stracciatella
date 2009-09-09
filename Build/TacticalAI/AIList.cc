@@ -58,25 +58,18 @@ static void ClearAIList(void)
 }
 
 
-static UINT8 FindEmptyAIListEntry(void)
+static AILIST* CreateNewAIListEntry(SOLDIERTYPE* const s, INT8 const priority)
 {
-	UINT8	ubLoop;
-
-	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
+	for (AILIST* i = gAIList; i != endof(gAIList); ++i)
 	{
-		if (gAIList[ubLoop].soldier == NULL) return ubLoop;
+		AILIST& e = *i;
+		if (e.soldier) continue;
+		e.soldier   = s;
+		e.bPriority = priority;
+		e.pNext     = 0;
+		return &e;
 	}
 	throw std::runtime_error("out of AI list entries");
-}
-
-
-static AILIST* CreateNewAIListEntry(UINT8 ubNewEntry, SOLDIERTYPE* s, INT8 bPriority)
-{
-	AILIST* const e = &gAIList[ubNewEntry];
-	e->soldier   = s;
-	e->bPriority = bPriority;
-	e->pNext     = NULL;
-	return e;
 }
 
 
@@ -137,12 +130,9 @@ static void RemoveAIListEntryForID(const SOLDIERTYPE* s)
 
 static BOOLEAN InsertIntoAIList(SOLDIERTYPE* s, INT8 bPriority)
 {
-	UINT8			ubNewEntry;
 	AILIST *	pEntry, * pNewEntry, * pPrevEntry = NULL;
 
-	ubNewEntry = FindEmptyAIListEntry();
-
-	pNewEntry = CreateNewAIListEntry(ubNewEntry, s, bPriority);
+	pNewEntry = CreateNewAIListEntry(s, bPriority);
 
 	// look through the list now to see where to insert the entry
 	if (gpFirstAIListEntry == NULL)
@@ -295,7 +285,6 @@ BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
 	// we'll have to fake this guy's alert status (in the list) to be the same as the current
 	// front of the list
 	INT8			bPriority;
-	UINT8			ubNewEntry;
 	AILIST *	pNewEntry;
 
 	if ( !SatisfiesAIListConditions(s, NULL, FALSE))
@@ -313,8 +302,7 @@ BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
 	else
 	{
 		bPriority = gpFirstAIListEntry->bPriority;
-		ubNewEntry = FindEmptyAIListEntry();
-		pNewEntry = CreateNewAIListEntry(ubNewEntry, s, bPriority);
+		pNewEntry = CreateNewAIListEntry(s, bPriority);
 
 		// insert at front
 		pNewEntry->pNext = gpFirstAIListEntry;
