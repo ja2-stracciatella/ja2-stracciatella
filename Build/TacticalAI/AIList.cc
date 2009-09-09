@@ -9,6 +9,7 @@
  * (BLACK, then RED, then YELLOW, then GREEN)
  *
  */
+#include <stdexcept>
 
 #include "AIList.h"
 #include "Animation_Data.h"
@@ -65,8 +66,7 @@ static UINT8 FindEmptyAIListEntry(void)
 	{
 		if (gAIList[ubLoop].soldier == NULL) return ubLoop;
 	}
-	AssertMsg( 0, "Fatal error: Could not find empty AI list entry." );
-	return( AI_LIST_SIZE );
+	throw std::runtime_error("out of AI list entries");
 }
 
 
