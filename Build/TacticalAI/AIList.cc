@@ -101,12 +101,12 @@ static void InsertIntoAIList(SOLDIERTYPE* const s, INT8 const priority)
 {
 	AILIST* const e = CreateNewAIListEntry(s, priority);
 	// Look through the list to see where to insert the entry
-	for (AILIST** anchor = &gpFirstAIListEntry; *anchor; anchor = &(*anchor)->pNext)
+	for (AILIST** anchor = &gpFirstAIListEntry;; anchor = &(*anchor)->pNext)
 	{
 		if (*anchor && priority <= (*anchor)->bPriority) continue;
 		e->pNext = *anchor;
 		*anchor  = e;
-		break;
+		return;
 	}
 }
 
