@@ -76,25 +76,17 @@ static AILIST* CreateNewAIListEntry(SOLDIERTYPE* const s, INT8 const priority)
 static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCount, BOOLEAN fDoRandomChecks);
 
 
-SOLDIERTYPE* RemoveFirstAIListEntry(void)
+SOLDIERTYPE* RemoveFirstAIListEntry()
 {
-	AILIST *	pOldFirstEntry;
-
-	while ( gpFirstAIListEntry != NULL)
+	while (AILIST* const e = gpFirstAIListEntry)
 	{
-		// record pointer to start of list, and advance head ptr
-		pOldFirstEntry = gpFirstAIListEntry;
-		gpFirstAIListEntry = gpFirstAIListEntry->pNext;
-
-		// record ID, and delete old now unused entry
-		SOLDIERTYPE* const s = pOldFirstEntry->soldier;
-		DeleteAIListEntry( pOldFirstEntry );
-
-		// make sure conditions still met
-		if (SatisfiesAIListConditions(s, NULL, FALSE)) return s;
+		gpFirstAIListEntry = e->pNext;
+		SOLDIERTYPE* const s = e->soldier;
+		DeleteAIListEntry(e);
+		// Make sure conditions still met
+		if (SatisfiesAIListConditions(s, 0, FALSE)) return s;
 	}
-
-	return NULL;
+	return 0;
 }
 
 

@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 
-SOLDIERTYPE* RemoveFirstAIListEntry(void);
+SOLDIERTYPE* RemoveFirstAIListEntry();
 extern BOOLEAN BuildAIListForTeam( INT8 bTeam );
 BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* s);
 
