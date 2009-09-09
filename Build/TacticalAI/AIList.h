@@ -6,6 +6,6 @@
 
 SOLDIERTYPE* RemoveFirstAIListEntry();
 bool         BuildAIListForTeam(INT8 team);
-BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* s);
+bool         MoveToFrontOfAIList(SOLDIERTYPE*);
 
 #endif

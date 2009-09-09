@@ -217,35 +217,20 @@ static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCo
 }
 
 
-BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
+bool MoveToFrontOfAIList(SOLDIERTYPE* const s)
 {
-	// we'll have to fake this guy's alert status (in the list) to be the same as the current
-	// front of the list
-	INT8			bPriority;
-	AILIST *	pNewEntry;
-
-	if ( !SatisfiesAIListConditions(s, NULL, FALSE))
-	{
-		// can't do dat!
-		return( FALSE );
-	}
+	if (!SatisfiesAIListConditions(s, 0, FALSE)) return false; // Cannot do that
 
 	RemoveAIListEntryForID(s);
 
-	if (gpFirstAIListEntry == NULL)
-	{
-		InsertIntoAIList(s, MAX_AI_PRIORITY);
-	}
-	else
-	{
-		bPriority = gpFirstAIListEntry->bPriority;
-		pNewEntry = CreateNewAIListEntry(s, bPriority);
-
-		// insert at front
-		pNewEntry->pNext = gpFirstAIListEntry;
-		gpFirstAIListEntry = pNewEntry;
-	}
-	return TRUE;
+	/* We have to fake this guy's alert status (in the list) to be the same as the
+	 * current front of the list */
+	AILIST* const head     = gpFirstAIListEntry;
+	INT8    const priority = head ? head->bPriority : MAX_AI_PRIORITY;
+	AILIST* const e        = CreateNewAIListEntry(s, priority);
+	e->pNext           = head;
+	gpFirstAIListEntry = e;
+	return true;
 }
 
 
