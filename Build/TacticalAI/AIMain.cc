@@ -668,44 +668,32 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 }
 
 
-
-void EndAIDeadlock(void)
+void EndAIDeadlock()
 {
-	INT8 bFound=FALSE;
+	// Escape enemy's turn
 
-	// ESCAPE ENEMY'S TURN
-
-	// find enemy with problem and free him up...
-	FOR_ALL_SOLDIERS(pSoldier)
+	// Find enemy with problem and free him up
+	FOR_ALL_SOLDIERS(i)
 	{
-		if (pSoldier->bInSector)
+		SOLDIERTYPE& s = *i;
+		if (!s.bInSector) continue;
+		if (!(s.uiStatusFlags & SOLDIER_UNDERAICONTROL)) continue;
+		CancelAIAction(&s);
+#ifdef TESTAICONTROL
+		if (gfTurnBasedAI)
 		{
-			if (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL)
-			{
-				CancelAIAction(pSoldier);
-				#ifdef TESTAICONTROL
-					if (gfTurnBasedAI)
-					{
-						DebugAI( String("Ending turn for %d because breaking deadlock", pSoldier->ubID ) );
-					}
-				#endif
-
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Number of bullets in the air is %ld", guiNumBullets ) );
-
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from deadlock break");
-				gTacticalStatus.ubAttackBusyCount = 0;
-
-				EndAIGuysTurn(pSoldier);
-				bFound = TRUE;
-				break;
-			}
+			DebugAI(String("Ending turn for %d because breaking deadlock", s.ubID));
 		}
-	}
+#endif
 
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Number of bullets in the air is %ld", guiNumBullets));
 
-	if (!bFound)
-	{
-		StartPlayerTeamTurn( TRUE, FALSE );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from deadlock break");
+		gTacticalStatus.ubAttackBusyCount = 0;
+
+		EndAIGuysTurn(&s);
+		StartPlayerTeamTurn(TRUE, FALSE);
+		return;
 	}
 }
 
