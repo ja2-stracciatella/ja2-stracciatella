@@ -158,7 +158,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK);
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier );
 
 void EndAIDeadlock();
-void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
+void EndAIGuysTurn(SOLDIERTYPE&);
 
 INT8  ExecuteAction(SOLDIERTYPE *pSoldier);
 

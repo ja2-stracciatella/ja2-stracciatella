@@ -192,7 +192,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 				}
 			#endif
 			// this guy doesn't get to act!
-			EndAIGuysTurn( pSoldier );
+			EndAIGuysTurn(*pSoldier);
 			return;
 		}
 
@@ -240,7 +240,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 					DebugAI( String("Ending turn for %d because not a boxer", pSoldier->ubID ) );
 				}
 			#endif
-			EndAIGuysTurn( pSoldier );
+			EndAIGuysTurn(*pSoldier);
 			return;
 		}
 	}
@@ -259,7 +259,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			}
 		#endif
 
-		EndAIGuysTurn( pSoldier );
+		EndAIGuysTurn(*pSoldier);
 		return;
 	}
 
@@ -281,7 +281,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 				}
 			#endif
 
-			EndAIGuysTurn( pSoldier );
+			EndAIGuysTurn(*pSoldier);
 			return;
 		}
 	}
@@ -296,7 +296,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			}
 		#endif
 
-		EndAIGuysTurn( pSoldier );
+		EndAIGuysTurn(*pSoldier);
 		return;
 	}
 
@@ -310,7 +310,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			}
 		#endif
 
-		EndAIGuysTurn( pSoldier );
+		EndAIGuysTurn(*pSoldier);
 		return;
 	}
 
@@ -331,7 +331,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 		// stunned/collapsed!
 		CancelAIAction(pSoldier);
-		EndAIGuysTurn( pSoldier );
+		EndAIGuysTurn(*pSoldier);
 		return;
 	}
 
@@ -599,71 +599,59 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 }
 
-#define NOSCORE 99
 
-void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
+void EndAIGuysTurn(SOLDIERTYPE& s)
 {
-	if (gfTurnBasedAI)
+	if (!gfTurnBasedAI) return;
+
+	TacticalStatusType& ts = gTacticalStatus;
+	if (ts.fSomeoneHit)
 	{
-		if (gTacticalStatus.fSomeoneHit)
-		{
-			gTacticalStatus.fSomeoneHit = FALSE;
-		}
-		else
-		{
-			SayCloseCallQuotes();
-		}
-
-		// if civ in civ group and hostile, try to change nearby guys to hostile
-		if ( pSoldier->ubCivilianGroup != NON_CIV_GROUP && !pSoldier->bNeutral )
-		{
-
-			if ( !(pSoldier->uiStatusFlags & SOLDIER_BOXER)	|| !( gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING ) )
-			{
-				UINT8 ubFirstProfile;
-
-				ubFirstProfile = CivilianGroupMembersChangeSidesWithinProximity( pSoldier );
-				if ( ubFirstProfile != NO_PROFILE )
-				{
-					TriggerFriendWithHostileQuote( ubFirstProfile );
-				}
-			}
-		}
-
-		if ( gTacticalStatus.uiFlags & SHOW_ALL_ROOFS && ( gTacticalStatus.uiFlags & INCOMBAT ) )
-		{
-			SetRenderFlags( RENDER_FLAG_FULL );
-			gTacticalStatus.uiFlags &= (~SHOW_ALL_ROOFS );
-			InvalidateWorldRedundency( );
-		}
-
-		// End this NPC's control, move to next dude
-		EndRadioLocator(pSoldier);
-		pSoldier->uiStatusFlags &= ( ~SOLDIER_UNDERAICONTROL );
-		pSoldier->fTurnInProgress = FALSE;
-		pSoldier->bMoved = TRUE;
-		pSoldier->bBypassToGreen = FALSE;
-
-	#ifdef TESTAICONTROL
-		DebugAI(String("Ending control for %d", pSoldier->ubID));
-	#endif
-
-		// find the next AI guy
-		SOLDIERTYPE* const s = RemoveFirstAIListEntry();
-		if (s != NULL)
-		{
-			StartNPCAI(s);
-			return;
-		}
-
-		// We are at the end, return control to next team
-		DebugAI("Ending AI turn\n");
-		EndAITurn();
-
+		ts.fSomeoneHit = FALSE;
 	}
 	else
 	{
-		// realtime
+		SayCloseCallQuotes();
+	}
+
+	// If civ in civ group and hostile, try to change nearby guys to hostile
+	if (s.ubCivilianGroup != NON_CIV_GROUP && !s.bNeutral)
+	{
+		if (!(s.uiStatusFlags & SOLDIER_BOXER) ||
+				(ts.bBoxingState != PRE_BOXING && ts.bBoxingState != BOXING))
+		{
+			ProfileID const first_pid = CivilianGroupMembersChangeSidesWithinProximity(&s);
+			if (first_pid != NO_PROFILE) TriggerFriendWithHostileQuote(first_pid);
+		}
+	}
+
+	if (ts.uiFlags & SHOW_ALL_ROOFS && ts.uiFlags & INCOMBAT)
+	{
+		ts.uiFlags &= ~SHOW_ALL_ROOFS;
+		SetRenderFlags(RENDER_FLAG_FULL);
+		InvalidateWorldRedundency();
+	}
+
+	// End this NPC's control, move to next dude
+	EndRadioLocator(&s);
+	s.uiStatusFlags   &= ~SOLDIER_UNDERAICONTROL;
+	s.fTurnInProgress  = FALSE;
+	s.bMoved           = TRUE;
+	s.bBypassToGreen   = FALSE;
+
+#ifdef TESTAICONTROL
+	DebugAI(String("Ending control for %d", s.ubID));
+#endif
+
+	// Find the next AI guy
+	if (SOLDIERTYPE* const s = RemoveFirstAIListEntry())
+	{
+		StartNPCAI(s);
+	}
+	else
+	{ // We are at the end, return control to next team
+		DebugAI("Ending AI turn\n");
+		EndAITurn();
 	}
 }
 
@@ -691,7 +679,7 @@ void EndAIDeadlock()
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from deadlock break");
 		gTacticalStatus.ubAttackBusyCount = 0;
 
-		EndAIGuysTurn(&s);
+		EndAIGuysTurn(s);
 		StartPlayerTeamTurn(TRUE, FALSE);
 		return;
 	}
@@ -1047,7 +1035,7 @@ static void NPCDoesNothing(SOLDIERTYPE* pSoldier)
 		}
 	#endif
 
-	EndAIGuysTurn(pSoldier);
+	EndAIGuysTurn(*pSoldier);
 
 	// *** IAN deleted lots of interrupt related code here to simplify JA2	development
 }
@@ -1224,7 +1212,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 					SoldierTriesToContinueAlongPath(pSoldier);
 
 					// since we just gave up on our action due to running out of points, better end our turn
-					//EndAIGuysTurn(pSoldier);
+					//EndAIGuysTurn(*pSoldier);
 				}
 			}
 */
@@ -1390,7 +1378,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 			if ( !pSoldier->bActionInProgress && pSoldier->sAbsoluteFinalDestination != NOWHERE )
 			{
 				// turn based... abort this guy's turn
-				EndAIGuysTurn( pSoldier );
+				EndAIGuysTurn(*pSoldier);
 			}
 		}
 		else
@@ -1620,7 +1608,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 					// loop found!
 					ActionDone( pSoldier );
-					EndAIGuysTurn( pSoldier );
+					EndAIGuysTurn(*pSoldier);
 				}
 				else
 				{
@@ -1833,7 +1821,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 						DebugAI( String("Ending turn for %d because of error from HandleItem", pSoldier->ubID ) );
 					}
 				#endif
-				EndAIGuysTurn( pSoldier );
+				EndAIGuysTurn(*pSoldier);
 			}
 			break;
 		}
@@ -1967,7 +1955,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 						DebugAI( String("Ending turn for %d because of error from HandleItem", pSoldier->ubID ) );
 					}
 				#endif
-				EndAIGuysTurn( pSoldier );
+				EndAIGuysTurn(*pSoldier);
 			}
 			break;
 		}
@@ -2003,7 +1991,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 							DebugAI( String("Ending turn for %d because of error opening door", pSoldier->ubID ) );
 						}
 					#endif
-					EndAIGuysTurn( pSoldier );
+					EndAIGuysTurn(*pSoldier);
 				}
 
 				StartInteractiveObject(sDoorGridNo, *pStructure, *pSoldier, bDirection);
@@ -2031,14 +2019,14 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			ActionDone( pSoldier );
 			if (gfTurnBasedAI)
 			{
-				EndAIGuysTurn( pSoldier );
+				EndAIGuysTurn(*pSoldier);
 			}
 			return( FALSE );         // nothing is in progress
 
 		case AI_ACTION_TRAVERSE_DOWN:
 			if (gfTurnBasedAI)
 			{
-				EndAIGuysTurn( pSoldier );
+				EndAIGuysTurn(*pSoldier);
 			}
 			if ( pSoldier->ubProfile != NO_PROFILE )
 			{
@@ -2281,7 +2269,7 @@ static void HandleAITacticalTraversal(SOLDIERTYPE& s)
 	}
 #endif
 
-	EndAIGuysTurn(&s);
+	EndAIGuysTurn(s);
 	RemoveManAsTarget(&s);
 	if (s.bTeam == CIV_TEAM && s.fAIFlags & AI_CHECK_SCHEDULE)
 	{

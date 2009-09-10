@@ -772,7 +772,7 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE& s)
 #ifdef TESTAICONTROL
 		DebugAI(String("Ending turn for %d because out of APs for movement", s.ubID));
 #endif
-		EndAIGuysTurn(&s);
+		EndAIGuysTurn(s);
 	}
 }
 

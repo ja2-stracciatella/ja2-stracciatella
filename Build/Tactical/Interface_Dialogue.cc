@@ -3836,7 +3836,7 @@ action_punch_pc:
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier )
 				{
-					EndAIGuysTurn( pSoldier );
+					EndAIGuysTurn(*pSoldier);
 					RemoveManAsTarget( pSoldier );
 					TacticalRemoveSoldier(*pSoldier);
 					gMercProfiles[ ubTargetNPC ].sSectorX = 0;

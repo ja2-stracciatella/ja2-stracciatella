@@ -8022,7 +8022,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 				DebugAI( String("Ending turn for %d because of error from HandleItem", pSoldier->ubID ) );
 			#endif
 
-			EndAIGuysTurn( pSoldier );
+			EndAIGuysTurn(*pSoldier);
 		}
 	}
 }
