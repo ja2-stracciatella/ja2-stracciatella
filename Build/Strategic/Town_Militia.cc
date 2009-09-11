@@ -51,7 +51,7 @@ static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrain
 static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY);
 static bool ServeNextFriendlySectorInTown(INT16* neighbour_x, INT16* neighbour_y);
 static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
-static void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany);
+static void StrategicPromoteMilitiaInSector(INT16 x, INT16 y, UINT8 current_rank, UINT8 n);
 
 
 void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY )
@@ -219,24 +219,18 @@ static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, 
 }
 
 
-// promote militias of a certain rank
-static void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany)
+// Promote militias of a certain rank
+static void StrategicPromoteMilitiaInSector(INT16 const x, INT16 const y, UINT8 const current_rank, UINT8 const n)
 {
-	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
+	SECTORINFO& si = SectorInfo[SECTOR(x, y)];
 
-	// damn well better have that many around to promote!
-	Assert(pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank ] >= ubHowMany);
-
+	Assert(si.ubNumberOfCivsAtLevel[current_rank] >= n);
 	//KM : July 21, 1999 patch fix
-	if( pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank ] < ubHowMany )
-	{
-		return;
-	}
+	if (si.ubNumberOfCivsAtLevel[current_rank] < n) return;
 
-	pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank     ] -= ubHowMany;
-	pSectorInfo->ubNumberOfCivsAtLevel[ ubCurrentRank + 1 ] += ubHowMany;
+	si.ubNumberOfCivsAtLevel[current_rank    ] -= n;
+	si.ubNumberOfCivsAtLevel[current_rank + 1] += n;
 
-	// update the screen display
 	fMapPanelDirty = TRUE;
 }
 
