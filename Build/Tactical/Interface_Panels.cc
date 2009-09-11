@@ -2785,15 +2785,7 @@ void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed)
 
 	if ( ubLocatorSpeed == SHOW_LOCATOR_NORMAL )
 	{
-		// If we are an AI guy, and we have the baton, make lower...
-		// (s->uiStatusFlags & SOLDIER_UNDERAICONTROL && s->bTeam != gbPlayerNum)
-		//
-		//s->ubNumLocateCycles = 3;
-		//
-		//se
-		//
-			s->ubNumLocateCycles = 5;
-		//
+		s->ubNumLocateCycles = 5;
 	}
 	else
 	{

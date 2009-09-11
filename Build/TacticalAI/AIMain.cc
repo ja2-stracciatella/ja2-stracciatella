@@ -170,7 +170,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		// why do we let the quote record thing be in here?  we're in turnbased the quote record doesn't matter,
 		// we can't act out of turn!
 		if ( !(pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
-		//if ( !(pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) && (pSoldier->ubQuoteRecord == 0))
 		{
 			return;
 		}
@@ -691,7 +690,6 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 
 	BOOLEAN fInValidSoldier = FALSE;
 
-		//pSoldier->uiStatusFlags |= SOLDIER_UNDERAICONTROL;
 		SetSoldierAsUnderAiControl( pSoldier );
 
 		pSoldier->fTurnInProgress = TRUE;

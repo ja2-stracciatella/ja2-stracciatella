@@ -428,8 +428,6 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 
 	CommonEnterCombatModeCode( );
 
-	//JA2Gold: use function to make sure flags turned off everywhere else
-	//pActingSoldier->uiStatusFlags |= SOLDIER_UNDERAICONTROL;
 	SetSoldierAsUnderAiControl( pActingSoldier );
 	DebugAI( String( "Giving AI control to %d", pActingSoldier->ubID ) );
 	pActingSoldier->fTurnInProgress = TRUE;
@@ -931,24 +929,9 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		// if his team's already in control
 		if (pSoldier->bTeam == gTacticalStatus.ubCurrentTeam )
 		{
-			// if this is a player's a merc or civilian
-			if (pSoldier->uiStatusFlags & SOLDIER_PC || IsOnCivTeam(pSoldier))
-			{
-				// then they are not allowed to interrupt their own team
-				return(FALSE);
-			}
-			else
-			{
-				// enemies, MAY interrupt each other, but NOT themselves!
-				//if ( pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL )
-				//{
-					return(FALSE);
-				//}
-			}
-
 		// CJC, July 9 1998
 			// NO ONE EVER interrupts his own team
-			//return( FALSE );
+			return FALSE;
 		}
 		else if ( gTacticalStatus.bBoxingState != NOT_BOXING )
 		{
