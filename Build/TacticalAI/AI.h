@@ -213,7 +213,7 @@ void SetNewSituation( SOLDIERTYPE * pSoldier );
 
 UINT8 SoldierDifficultyLevel( SOLDIERTYPE * pSoldier );
 void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier);
-void StartNPCAI(SOLDIERTYPE *pSoldier);
+void StartNPCAI(SOLDIERTYPE&);
 void TempHurt(SOLDIERTYPE *pVictim, SOLDIERTYPE *pAttacker);
 int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno);
 

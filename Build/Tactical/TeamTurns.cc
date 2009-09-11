@@ -354,7 +354,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 					// Dirty panel interface!
 					fInterfacePanelDirty = DIRTYLEVEL2;
 					AddTopMessage(COMPUTER_TURN_MESSAGE);
-					StartNPCAI(s);
+					StartNPCAI(*s);
 					return;
 				}
 			}
@@ -656,7 +656,7 @@ static void StartInterrupt(void)
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Interrupt ( could be hidden )" );
 		#endif
 
-		StartNPCAI( pSoldier );
+		StartNPCAI(*pSoldier);
 	}
 
 	if ( !gfHiddenInterrupt )
@@ -869,7 +869,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 					if (s != NULL)
 					{
 						fFound = TRUE;
-						StartNPCAI(s);
+						StartNPCAI(*s);
 					}
 				}
 

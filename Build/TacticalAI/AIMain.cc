@@ -645,7 +645,7 @@ void EndAIGuysTurn(SOLDIERTYPE& s)
 	// Find the next AI guy
 	if (SOLDIERTYPE* const s = RemoveFirstAIListEntry())
 	{
-		StartNPCAI(s);
+		StartNPCAI(*s);
 	}
 	else
 	{ // We are at the end, return control to next team
@@ -685,82 +685,52 @@ void EndAIDeadlock()
 }
 
 
-void StartNPCAI(SOLDIERTYPE *pSoldier)
+void StartNPCAI(SOLDIERTYPE& s)
 {
+	SetSoldierAsUnderAiControl(&s);
 
-	BOOLEAN fInValidSoldier = FALSE;
+	s.fTurnInProgress      = TRUE;
+	s.sLastTwoLocations[0] = NOWHERE;
+	s.sLastTwoLocations[1] = NOWHERE;
 
-		SetSoldierAsUnderAiControl( pSoldier );
-
-		pSoldier->fTurnInProgress = TRUE;
-
-		pSoldier->sLastTwoLocations[0] = NOWHERE;
-		pSoldier->sLastTwoLocations[1] = NOWHERE;
-
-		RefreshAI(pSoldier);
+	RefreshAI(&s);
 
 #ifdef TESTAICONTROL
-		DebugAI(String("Giving control to %d", pSoldier->ubID));
+	DebugAI(String("Giving control to %d", s.ubID));
 #endif
 
-		gTacticalStatus.uiTimeSinceMercAIStart = GetJA2Clock();
+	TacticalStatusType& ts = gTacticalStatus;
+	ts.uiTimeSinceMercAIStart = GetJA2Clock();
 
+	/* important: if "fPausedAnimation" is TRUE, then we have to turn it off else
+	 * HandleSoldierAI() will not be called! */
 
-		// important: if "fPausedAnimation" is TRUE, then we have to turn it off else
-		// HandleSoldierAI() will not be called!
-
-		if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	// Locate to soldier, if we are not in an interrupt situation.
+	if (ts.uiFlags & TURNBASED && ts.uiFlags & INCOMBAT && gubOutOfTurnPersons == 0)
+	{
+		if ((!(s.uiStatusFlags & SOLDIER_VEHICLE) || GetNumberInVehicle(GetVehicle(s.bVehicleID)) != 0) &&
+				((s.bVisible != -1 && s.bLife != 0) || ts.uiFlags & SHOW_ALL_MERCS))
 		{
-			if (GetNumberInVehicle(GetVehicle(pSoldier->bVehicleID)) == 0)
+			// If we are on a roof, set flag for rendering.
+			if (s.bLevel != 0 && ts.uiFlags & INCOMBAT)
 			{
-				fInValidSoldier = TRUE;
+				ts.uiFlags |= SHOW_ALL_ROOFS;
+				SetRenderFlags(RENDER_FLAG_FULL);
+				InvalidateWorldRedundency();
+			}
+
+			// Skip locator for green friendly militia.
+			if (s.bTeam != MILITIA_TEAM || s.bSide != 0 || s.bAlertStatus != STATUS_GREEN)
+			{
+				LocateSoldier(&s, SETLOCATORFAST);
 			}
 		}
 
-		// Locate to soldier
-		// If we are not in an interrupt situation!
-		if ( (( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.uiFlags & INCOMBAT )) && gubOutOfTurnPersons == 0 )
-		{
-			if (!fInValidSoldier &&
-					(
-						(pSoldier->bVisible != -1 && pSoldier->bLife) ||
-						gTacticalStatus.uiFlags & SHOW_ALL_MERCS
-					))
-			{
-				// If we are on a roof, set flag for rendering...
-				if ( pSoldier->bLevel != 0 && ( gTacticalStatus.uiFlags & INCOMBAT ) )
-				{
-					gTacticalStatus.uiFlags |= SHOW_ALL_ROOFS;
-					SetRenderFlags( RENDER_FLAG_FULL );
-					InvalidateWorldRedundency( );
-				}
+		UpdateEnemyUIBar();
+	}
 
-
-				//ATE: Changed to show locator
-
-				// Skip locator for green friendly militia
-				if ( !(pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == 0 && pSoldier->bAlertStatus == STATUS_GREEN) )
-				{
-					LocateSoldier(pSoldier, SETLOCATORFAST);
-				}
-
-				// try commenting this out altogether
-				/*
-				// so long as he's not a neutral civ or a militia friendly to the player
-				if ( !(pSoldier->bNeutral || (pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == 0) ) )
-				{
-					PauseAITemporarily();
-				}
-				*/
-			}
-
-			UpdateEnemyUIBar( );
-
-		}
-
-		// Remove deadlock message
-		EndDeadlockMsg( );
-		DecideAlertStatus( pSoldier );
+	EndDeadlockMsg(); // Remove deadlock message
+	DecideAlertStatus(&s);
 }
 
 
