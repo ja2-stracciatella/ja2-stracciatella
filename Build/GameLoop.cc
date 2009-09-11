@@ -379,63 +379,54 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen)
 	}
 }
 
-void HandleShortCutExitState( void )
+
+void HandleShortCutExitState()
 {
-	// look at the state of fGameIsRunning, if set false, then prompt user for confirmation
+	// Use YES/NO pop up box, setup for particular screen
+	SGPBox const pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 
-	// use YES/NO Pop up box, settup for particular screen
-	const SGPBox pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	switch (guiCurrentScreen)
+	{
+		case AUTORESOLVE_SCREEN:
+			DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
+			return;
 
-	if( guiCurrentScreen == ERROR_SCREEN )
-	{ //an assert failure, don't bring up the box!
-		gfProgramIsRunning = FALSE;
+		case ERROR_SCREEN:
+			// An assert failure, do not bring up the box.
+			gfProgramIsRunning = FALSE;
+			return;
+	}
+
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	{ // set up for mapscreen
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], MAP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
 		return;
 	}
 
-	if( guiCurrentScreen == AUTORESOLVE_SCREEN )
+	switch (guiCurrentScreen)
 	{
-		DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
-		return;
-	}
-
-	/// which screen are we in?
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		// set up for mapscreen
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack );
-
-	}
-	else if( guiCurrentScreen == LAPTOP_SCREEN )
-	{
-		// set up for laptop
-		DoLapTopSystemMessageBox(pMessageStrings[MSG_EXITGAME], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
-	}
-	else if( guiCurrentScreen == SHOPKEEPER_SCREEN )
-	{
-		DoSkiMessageBox(pMessageStrings[MSG_EXITGAME], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
-	}
-	else
-	{
-
-		// check if error or editor
 #ifdef JA2BETAVERSION
-		if ( guiCurrentScreen == AIVIEWER_SCREEN || guiCurrentScreen == QUEST_DEBUG_SCREEN )
-		{
-			// then don't prompt
-			gfProgramIsRunning = FALSE;
-			return;
-		}
+		case AIVIEWER_SCREEN:
+		case QUEST_DEBUG_SCREEN:
 #endif
-
-		if( ( guiCurrentScreen == ERROR_SCREEN ) || ( guiCurrentScreen == EDIT_SCREEN ) || ( guiCurrentScreen == DEBUG_SCREEN ) )
-		{
-			// then don't prompt
+		case DEBUG_SCREEN:
+		case EDIT_SCREEN:
+			// Do not prompt if error or editor
 			gfProgramIsRunning = FALSE;
 			return;
-		}
 
-		// set up for all otherscreens
-		DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
+		case LAPTOP_SCREEN:
+			DoLapTopSystemMessageBox(pMessageStrings[MSG_EXITGAME], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
+			break;
+
+		case SHOPKEEPER_SCREEN:
+			DoSkiMessageBox(pMessageStrings[MSG_EXITGAME], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
+			break;
+
+		default:
+			// set up for all otherscreens
+			DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
+			break;
 	}
 }
 

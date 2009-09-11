@@ -11,7 +11,7 @@ void ShutdownGame(void);
 void GameLoop(void);
 
 // handle exit from game due to shortcut key
-void HandleShortCutExitState( void );
+void HandleShortCutExitState();
 
 void SetPendingNewScreen(ScreenID);
 
