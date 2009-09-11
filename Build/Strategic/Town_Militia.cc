@@ -256,48 +256,29 @@ void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UI
 
 
 // kill pts are (2 * kills) + assists
-UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubRecentKillPts)
+UINT8 CheckOneMilitiaForPromotion(INT16 const x, INT16 const y, UINT8 const current_rank, UINT8 kill_points)
 {
-	UINT32 uiChanceToLevel = 0;
-
-	switch( ubCurrentRank )
+	UINT8 n_promotions = 0;
+	switch (current_rank)
 	{
 		case GREEN_MILITIA:
-			// 2 kill pts minimum
-			if (ubRecentKillPts >= 2)
-			{
-				// 25% chance per kill pt
-				uiChanceToLevel = 25 * ubRecentKillPts;
-			}
-			break;
+			// 2 kill points minimum, 25% chance per kill point
+			if (kill_points < 2)           break;
+			if (!Chance(25 * kill_points)) break;
+			StrategicPromoteMilitiaInSector(x, y, GREEN_MILITIA, 1);
+			++n_promotions;
+			// Attempt another level up
+			kill_points -= 2;
+			/* FALLTHROUGH */
 		case REGULAR_MILITIA:
-			// 5 kill pts minimum
-			if (ubRecentKillPts >= 5)
-			{
-				// 10% chance per kill pt.
-				uiChanceToLevel = 10 * ubRecentKillPts;
-			}
+			// 5 kill points minimum, 10% chance per kill point
+			if (kill_points < 5)           break;
+			if (!Chance(10 * kill_points)) break;
+			StrategicPromoteMilitiaInSector(x, y, REGULAR_MILITIA, 1);
+			++n_promotions;
 			break;
-		case ELITE_MILITIA:
-			return 0;
 	}
-	// roll the bones, and see if he makes it
-	if (Random(100) < uiChanceToLevel)
-	{
-		StrategicPromoteMilitiaInSector(sMapX, sMapY, ubCurrentRank, 1);
-		if( ubCurrentRank == GREEN_MILITIA )
-		{ //Attempt yet another level up if sufficient points
-			if( ubRecentKillPts > 2 )
-			{
-				if( CheckOneMilitiaForPromotion( sMapX, sMapY, REGULAR_MILITIA, (UINT8)(ubRecentKillPts - 2) ) )
-				{ //success, this militia was promoted twice
-					return 2;
-				}
-			}
-		}
-		return 1;
-	}
-	return 0;
+	return n_promotions;
 }
 
 
