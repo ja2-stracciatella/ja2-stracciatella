@@ -23,14 +23,14 @@
 // this handles what happens when a new militia unit is finishes getting trained
 void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY );
 
-// feed this a SOLDIER_CLASS_, it will return you a _MITILIA rank, or -1 if the guy's not militia
-INT8 SoldierClassToMilitiaRank(UINT8 ubSoldierClass);
+// Given a SOLDIER_CLASS_ returns a _MITILIA rank or -1 if it is not militia
+INT8 SoldierClassToMilitiaRank(UINT8 soldier_class);
 
 // remove militias of a certain rank
 void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
 
-// this will check for promotions and handle them for you
-UINT8 CheckOneMilitiaForPromotion(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubRecentKillPts);
+// Check for promotions and handle them
+UINT8 CheckOneMilitiaForPromotion(INT16 x, INT16 y, UINT8 current_rank, UINT8 kill_points);
 
 void BuildMilitiaPromotionsString( wchar_t *str, size_t Length);
 

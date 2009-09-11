@@ -185,25 +185,15 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 }
 
 
-// feed this a SOLDIER_CLASS_, it will return you a _MITILIA rank, or -1 if the guy's not militia
-INT8 SoldierClassToMilitiaRank(UINT8 ubSoldierClass)
+INT8 SoldierClassToMilitiaRank(UINT8 const soldier_class)
 {
-	INT8 bRank = -1;
-
-	switch( ubSoldierClass )
+	switch (soldier_class)
 	{
-		case SOLDIER_CLASS_GREEN_MILITIA:
-			bRank = GREEN_MILITIA;
-			break;
-		case SOLDIER_CLASS_REG_MILITIA:
-			bRank = REGULAR_MILITIA;
-			break;
-		case SOLDIER_CLASS_ELITE_MILITIA:
-			bRank = ELITE_MILITIA;
-			break;
+		case SOLDIER_CLASS_GREEN_MILITIA: return GREEN_MILITIA;
+		case SOLDIER_CLASS_REG_MILITIA:   return REGULAR_MILITIA;
+		case SOLDIER_CLASS_ELITE_MILITIA: return ELITE_MILITIA;
+		default:                          return -1;
 	}
-
-	return(bRank);
 }
 
 
