@@ -542,7 +542,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 
 static void ContinueTrainingInThisSector(void);
 static void MilitiaTrainingRejected(void);
-static void StartTrainingInAllUnpaidTrainableSectors(void);
+static void StartTrainingInAllUnpaidTrainableSectors();
 
 
 // IMPORTANT: This same callback is used both for initial training and for continue training prompt
@@ -885,25 +885,15 @@ static INT32 GetNumberOfUnpaidTrainableSectors()
 static void PayForTrainingInSector(UINT8 ubSector);
 
 
-static void StartTrainingInAllUnpaidTrainableSectors(void)
+static void StartTrainingInAllUnpaidTrainableSectors()
 {
-	INT32 iCounter = 0;
-	UINT8 ubSector;
-
-
-	SetAssignmentForList( TRAIN_TOWN, 0 );
-
+	SetAssignmentForList(TRAIN_TOWN, 0);
+	// Pay up in each sector
 	BuildListOfUnpaidTrainableSectors();
-
-	// pay up in each sector
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	for (INT16 const* i = gsUnpaidStrategicSector; i != endof(gsUnpaidStrategicSector); ++i)
 	{
-		if( gsUnpaidStrategicSector[ iCounter ] > 0 )
-		{
-			// convert strategic sector to 0-255 system
-			ubSector = STRATEGIC_INDEX_TO_SECTOR_INFO( gsUnpaidStrategicSector[ iCounter ] );
-			PayForTrainingInSector( ubSector );
-		}
+		if (*i == 0) continue;
+		PayForTrainingInSector(STRATEGIC_INDEX_TO_SECTOR_INFO(*i));
 	}
 }
 
