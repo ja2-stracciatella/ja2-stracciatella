@@ -579,7 +579,7 @@ void MessageBoxScreenShutdown()
 }
 
 
-static void DoScreenIndependantMessageBoxWithRect(wchar_t const* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
+static void DoScreenIndependantMessageBoxWithRect(wchar_t const* msg, MessageBoxFlags, MSGBOX_CALLBACK, SGPBox const* centering_rect);
 
 
 // a basic box that don't care what screen we came from
@@ -598,36 +598,15 @@ void DoLowerScreenIndependantMessageBox(wchar_t const* const zString, MessageBox
 }
 
 
-static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPBox const* const centering_rect)
+static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const msg, MessageBoxFlags const flags, MSGBOX_CALLBACK const callback, SGPBox const* const centering_rect)
 {
-	/// which screen are we in?
-
-	// Map Screen (excluding AI Viewer)
-#ifdef JA2BETAVERSION
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && guiCurrentScreen != AIVIEWER_SCREEN)
-#else
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
-#endif
+	switch (ScreenID const screen = guiCurrentScreen)
 	{
-		// auto resolve is a special case
-		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
-		{
-			DoMessageBox(MSG_BOX_BASIC_STYLE, zString, AUTORESOLVE_SCREEN, usFlags, ReturnCallback, centering_rect);
-		}
-		else
-		{
-			// set up for mapscreen
-			DoMapMessageBoxWithRect(MSG_BOX_BASIC_STYLE, zString, MAP_SCREEN, usFlags, ReturnCallback, centering_rect);
-		}
-	}
-	else
-	{
-		switch (guiCurrentScreen)
-		{
-			case LAPTOP_SCREEN:    DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, zString, LAPTOP_SCREEN,    usFlags, ReturnCallback, centering_rect); break;
-			case SAVE_LOAD_SCREEN: DoSaveLoadMessageBoxWithRect(                            zString, SAVE_LOAD_SCREEN, usFlags, ReturnCallback, centering_rect); break;
-			case OPTIONS_SCREEN:   DoOptionsMessageBoxWithRect(                             zString, OPTIONS_SCREEN,   usFlags, ReturnCallback, centering_rect); break;
-			case GAME_SCREEN:      DoMessageBox(                    MSG_BOX_BASIC_STYLE,    zString, guiCurrentScreen, usFlags, ReturnCallback, centering_rect); break;
-		}
+		case AUTORESOLVE_SCREEN:
+		case GAME_SCREEN:        DoMessageBox(                    MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, centering_rect); break;
+		case LAPTOP_SCREEN:      DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, msg, screen, flags, callback, centering_rect); break;
+		case MAP_SCREEN:         DoMapMessageBoxWithRect(         MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, centering_rect); break;
+		case OPTIONS_SCREEN:     DoOptionsMessageBoxWithRect(                             msg, screen, flags, callback, centering_rect); break;
+		case SAVE_LOAD_SCREEN:   DoSaveLoadMessageBoxWithRect(                            msg, screen, flags, callback, centering_rect); break;
 	}
 }
