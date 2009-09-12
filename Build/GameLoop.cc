@@ -20,7 +20,6 @@
 #include "Tactical_Save.h"
 #include "Interface.h"
 #include "GameSettings.h"
-#include "Interface_Control.h"
 #include "Text.h"
 #include "HelpScreen.h"
 #include "SaveLoadGame.h"
@@ -383,26 +382,6 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen)
 void HandleShortCutExitState()
 {
 	// Use YES/NO pop up box, setup for particular screen
-	SGPBox const pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-
-	switch (guiCurrentScreen)
-	{
-		case AUTORESOLVE_SCREEN:
-			DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
-			return;
-
-		case ERROR_SCREEN:
-			// An assert failure, do not bring up the box.
-			gfProgramIsRunning = FALSE;
-			return;
-	}
-
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
-	{ // set up for mapscreen
-		DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], MAP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
-		return;
-	}
-
 	switch (guiCurrentScreen)
 	{
 #ifdef JA2BETAVERSION
@@ -411,22 +390,29 @@ void HandleShortCutExitState()
 #endif
 		case DEBUG_SCREEN:
 		case EDIT_SCREEN:
+		case ERROR_SCREEN:
 			// Do not prompt if error or editor
 			gfProgramIsRunning = FALSE;
-			return;
+			break;
 
 		case LAPTOP_SCREEN:
 			DoLapTopSystemMessageBox(pMessageStrings[MSG_EXITGAME], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
 			break;
+
+		case MAP_SCREEN:
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], MAP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
+			return;
 
 		case SHOPKEEPER_SCREEN:
 			DoSkiMessageBox(pMessageStrings[MSG_EXITGAME], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
 			break;
 
 		default:
-			// set up for all otherscreens
+		{ // set up for all otherscreens
+			SGPBox const pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 			DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
 			break;
+		}
 	}
 }
 
