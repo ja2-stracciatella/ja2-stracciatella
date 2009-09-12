@@ -405,7 +405,7 @@ static bool ServeNextFriendlySectorInTown(INT16* const neighbour_x, INT16* const
 
 
 static void CantTrainMilitiaOkBoxCallback(MessageBoxReturnValue);
-static INT32 GetNumberOfUnpaidTrainableSectors(void);
+static INT32 GetNumberOfUnpaidTrainableSectors();
 static void PayMilitiaTrainingYesNoBoxCallback(MessageBoxReturnValue);
 
 
@@ -870,25 +870,15 @@ static void BuildListOfUnpaidTrainableSectors()
 }
 
 
-static INT32 GetNumberOfUnpaidTrainableSectors(void)
+static INT32 GetNumberOfUnpaidTrainableSectors()
 {
-	INT32 iCounter = 0;
-	INT32 iNumberOfSectors = 0;
-
 	BuildListOfUnpaidTrainableSectors();
-
-	// now count up the results
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	INT32 n = 0;
+	for (INT16 const* i = gsUnpaidStrategicSector; i != endof(gsUnpaidStrategicSector); ++i)
 	{
-		if( gsUnpaidStrategicSector[ iCounter ] > 0 )
-		{
-			iNumberOfSectors++;
-		}
+		if (*i != 0) ++n;
 	}
-
-	// return the result
-	return( iNumberOfSectors );
-
+	return n;
 }
 
 
