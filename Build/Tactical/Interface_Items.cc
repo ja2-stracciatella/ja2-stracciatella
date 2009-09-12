@@ -2733,7 +2733,6 @@ void DeleteItemDescriptionBox( )
 
 	gfInItemDescBox = FALSE;
 
-//	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN  )
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
 		RemoveButton( giMapInvDescButton );
@@ -2772,7 +2771,6 @@ void DeleteItemDescriptionBox( )
 		UnloadButtonImage( giItemDescAmmoButtonImages );
 		RemoveButton( giItemDescAmmoButton );
 	}
-//	if(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
 	 fCharacterInfoPanelDirty=TRUE;
@@ -3832,7 +3830,6 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 
 	gfInItemStackPopup = TRUE;
 
-//	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
 		EnableSMPanelButtons( FALSE, FALSE );
@@ -3921,7 +3918,6 @@ static void DeleteItemStackPopup(void)
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
-//	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
 		EnableSMPanelButtons( TRUE, FALSE );
@@ -3994,7 +3990,6 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
-//	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
 		EnableSMPanelButtons( FALSE , FALSE );
@@ -4090,7 +4085,6 @@ void DeleteKeyRingPopup(void)
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
-//	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if (guiCurrentItemDescriptionScreen != MAP_SCREEN)
 	{
 		EnableSMPanelButtons(TRUE, FALSE);

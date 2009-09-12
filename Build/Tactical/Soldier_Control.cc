@@ -5332,10 +5332,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 
 			}
 
-			//if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-      {
-      	HandleSoldierTakeDamageFeedback( pSoldier );
-      }
+			HandleSoldierTakeDamageFeedback(pSoldier);
 
 			if(( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) || !pSoldier->bInSector )
 			{

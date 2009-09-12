@@ -1684,22 +1684,6 @@ void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 )
 	OBJECTTYPE Temp = *pObj1;
 	*pObj1 = *pObj2;
 	*pObj2 = Temp;
-/*
-	//if we are in the shop keeper interface, switch the items
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-	{
-		memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
-		gMoveingItem.fActive = TRUE;
-		gMoveingItem.sItemIndex = pObj1->usItem;
-
-		gMoveingItem.ubLocationOfObject = PLAYERS_INVENTORY;
-		gMoveingItem.ubIdOfMercWhoOwnsTheItem = gpItemPointerSoldier->ubProfile;
-
-		//Get the item from the slot.
-		memcpy( &gMoveingItem.ItemObject, &pObj1, sizeof( OBJECTTYPE ) );
-
-	}
-*/
 }
 
 void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
@@ -2773,14 +2757,6 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		// could be wrong type of object for slot... need to check...
 		// but assuming it isn't
 		*pInSlot = *pObj;
-/*
-		//if we are in the shopkeeper interface
-		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-		{
-			memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
-			SetSkiCursor( CURSOR_NORMAL );
-		}
-*/
 
 		if (ubNumberToDrop != pObj->ubNumberOfObjects)
 		{
@@ -2834,13 +2810,6 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				{
 					pInSlot->uiMoneyAmount += pObj->uiMoneyAmount;
 					DeleteObj( pObj );
-/*
-					if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-					{
-						memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
-						SetSkiCursor( CURSOR_NORMAL );
-					}
-*/
 				}
 			}
 			else if ( ubSlotLimit == 1 || (ubSlotLimit == 0 && bPos >= HANDPOS && bPos <= BIGPOCK4POS ) )
