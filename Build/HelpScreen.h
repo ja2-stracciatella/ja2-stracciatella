@@ -3,8 +3,9 @@
 
 
 //enum used for the different help screens that can come up
-enum
+enum HelpScreenID
 {
+	HELP_SCREEN_NONE = -1,
 	HELP_SCREEN_LAPTOP,
 	HELP_SCREEN_MAPSCREEN,
 	HELP_SCREEN_MAPSCREEN_NO_ONE_HIRED,
@@ -20,7 +21,7 @@ enum
 
 struct HELP_SCREEN_STRUCT
 {
-	INT8		bCurrentHelpScreen;
+	HelpScreenID bCurrentHelpScreen;
 	UINT32	uiFlags;
 
 	UINT16	usHasPlayerSeenHelpScreenInCurrentScreen;
@@ -60,13 +61,11 @@ struct HELP_SCREEN_STRUCT
 extern HELP_SCREEN_STRUCT gHelpScreen;
 
 
-
-
-BOOLEAN ShouldTheHelpScreenComeUp( UINT8 ubScreenID, BOOLEAN fForceHelpScreenToComeUp );
+BOOLEAN ShouldTheHelpScreenComeUp(HelpScreenID, BOOLEAN fForceHelpScreenToComeUp);
 void HelpScreenHandler(void);
 void InitHelpScreenSystem(void);
 void NewScreenSoResetHelpScreen(void);
-INT8 HelpScreenDetermineWhichMapScreenHelpToShow(void);
+HelpScreenID HelpScreenDetermineWhichMapScreenHelpToShow();
 
 
 #endif

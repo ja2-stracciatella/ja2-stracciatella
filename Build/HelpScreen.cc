@@ -332,7 +332,8 @@ void InitHelpScreenSystem()
 	gHelpScreen.fHaveAlreadyBeenInHelpScreenSinceEnteringCurrenScreen = FALSE;
 }
 
-BOOLEAN ShouldTheHelpScreenComeUp( UINT8 ubScreenID, BOOLEAN fForceHelpScreenToComeUp )
+
+BOOLEAN ShouldTheHelpScreenComeUp(HelpScreenID const ubScreenID, BOOLEAN const fForceHelpScreenToComeUp)
 {
 #ifdef JA2DEMO
 	return FALSE; // disabled due to missing data files
@@ -471,7 +472,7 @@ void HelpScreenHandler()
 		ExitHelpScreen();
 
 		//reset the helpscreen id
-		gHelpScreen.bCurrentHelpScreen = -1;
+		gHelpScreen.bCurrentHelpScreen = HELP_SCREEN_NONE;
 	}
 }
 
@@ -1851,7 +1852,7 @@ static void RefreshAllHelpScreenButtons(void)
 }
 
 
-INT8 HelpScreenDetermineWhichMapScreenHelpToShow(void)
+HelpScreenID HelpScreenDetermineWhichMapScreenHelpToShow()
 {
 	return
 		fShowMapInventoryPool ? HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY :
