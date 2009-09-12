@@ -44,7 +44,7 @@ static SOLDIERTYPE* g_list_of_merc_in_sectors_completed_militia_training[SIZE_OF
 SOLDIERTYPE *pMilitiaTrainerSoldier = NULL;
 
 // note that these sector values are STRATEGIC INDEXES, not 0-255!
-INT16 gsUnpaidStrategicSector[ MAX_CHARACTER_COUNT ];
+static INT16 gsUnpaidStrategicSector[MAX_CHARACTER_COUNT];
 
 
 static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer);
@@ -831,58 +831,41 @@ void HandleContinueOfTownTraining( void )
 }
 
 
-static void BuildListOfUnpaidTrainableSectors(void)
+static void AddIfTrainingUnpaidSector(SOLDIERTYPE const& s)
 {
-	INT32 iCounter = 0, iCounterB = 0;
-
-	memset( gsUnpaidStrategicSector, 0, sizeof( INT16 ) * MAX_CHARACTER_COUNT );
-
-	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+	if (!CanCharacterTrainMilitia(&s)) return;
+	// Check if this sector is a town and needs equipment.
+	if (SectorInfo[SECTOR(s.sSectorX, s.sSectorY)].fMilitiaTrainingPaid) return;
+	INT16 const sector = CALCULATE_STRATEGIC_INDEX(s.sSectorX, s.sSectorY);
+	for (INT16* i = gsUnpaidStrategicSector;; ++i)
 	{
-		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+		if (*i == 0)
 		{
-			const MapScreenCharacterSt* const c        = &gCharactersList[iCounter];
-			const SOLDIERTYPE* const          pSoldier = c->merc;
-			if (pSoldier == NULL) continue;
+			*i = sector;
+			break;
+		}
+		if (*i == sector) break; // Do not add duplicate
+	}
+}
 
-			if ((c->selected || iCounter == bSelectedAssignChar) &&
-					CanCharacterTrainMilitia(pSoldier)               &&
-					!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
-			{
-				// check to see if this sector is a town and needs equipment
-				gsUnpaidStrategicSector[iCounter] = CALCULATE_STRATEGIC_INDEX(pSoldier->sSectorX, pSoldier->sSectorY);
-			}
+
+static void BuildListOfUnpaidTrainableSectors()
+{
+	memset(gsUnpaidStrategicSector, 0, sizeof(gsUnpaidStrategicSector));
+
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	{
+		for (INT32 i = 0; i != MAX_CHARACTER_COUNT; ++i)
+		{
+			MapScreenCharacterSt const& c = gCharactersList[i];
+			if (!c.merc)                                 continue;
+			if (!c.selected && i != bSelectedAssignChar) continue;
+			AddIfTrainingUnpaidSector(*c.merc);
 		}
 	}
 	else
-	{
-		// handle for tactical
-		const SOLDIERTYPE* const pSoldier = gUIFullTarget;
-		iCounter = 0;
-
-		if (CanCharacterTrainMilitia(pSoldier))
-		{
-			if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
-			{
-				// check to see if this sector is a town and needs equipment
-				gsUnpaidStrategicSector[ iCounter ] = CALCULATE_STRATEGIC_INDEX( pSoldier->sSectorX, pSoldier->sSectorY );
-			}
-		}
-	}
-
-	// now clean out repeated sectors
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT - 1; iCounter++ )
-	{
-		if( gsUnpaidStrategicSector[ iCounter ] > 0 )
-		{
-			for( iCounterB = iCounter + 1 ; iCounterB < MAX_CHARACTER_COUNT; iCounterB++ )
-			{
-				if( gsUnpaidStrategicSector[ iCounterB ] == gsUnpaidStrategicSector[ iCounter ] )
-				{
-					gsUnpaidStrategicSector[ iCounterB ] = 0;
-				}
-			}
-		}
+	{ // Handle for tactical
+		AddIfTrainingUnpaidSector(*gUIFullTarget);
 	}
 }
 
