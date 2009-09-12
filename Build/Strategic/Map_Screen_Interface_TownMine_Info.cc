@@ -209,7 +209,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 	AddSecondColumnMonoString(box, wString);
 
 	// main facilities
-	swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 8 ] );
+	swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[4]);
 	AddMonoString(box, wString);
 	GetSectorFacilitiesFlags( bCurrentTownMineSectorX, bCurrentTownMineSectorY, wString, lengthof(wString));
 	AddSecondColumnMonoString(box, wString);
@@ -218,7 +218,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 	if ( MilitiaTrainingAllowedInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0 ) )
 	{
 		// town control
-		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 2 ] );
+		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[1]);
 		AddMonoString(box, wString);
 		swprintf(wString, lengthof(wString), L"%d%%", GetTownSectorsUnderControl(ubTownId) * 100 / GetTownSectorSize(ubTownId));
 		AddSecondColumnMonoString(box, wString);
@@ -228,7 +228,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 	if( gTownLoyalty[ ubTownId ].fStarted && gfTownUsesLoyalty[ ubTownId ])
 	{
 		// town loyalty
-		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 5 ] );
+		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[3]);
 		AddMonoString(box, wString);
 		swprintf(wString, lengthof(wString), L"%d%%", gTownLoyalty[ubTownId].ubRating);
 		AddSecondColumnMonoString(box, wString);
@@ -239,7 +239,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 	if( sMineSector != -1 )
 	{
 		// Associated Mine: Sector
-	  swprintf( wString, lengthof(wString), L"%ls:",  pwTownInfoStrings[ 4 ] );
+	  swprintf(wString, lengthof(wString), L"%ls:",  pwTownInfoStrings[2]);
 		AddMonoString(box, wString);
 	  GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString, lengthof(wString));
 		AddSecondColumnMonoString(box, wString);
@@ -456,7 +456,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 		AddSecondColumnMonoString(box, pwMiscSectorStrings[StrategicMap[CALCULATE_STRATEGIC_INDEX(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].fEnemyControlled ? 6 : 5]);
 
 		// militia - is there any?
-		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 11 ] );
+		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[6]);
 		AddMonoString(box, wString);
 
 		ubMilitiaTotal = CountAllMilitiaInSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
@@ -477,7 +477,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 
 
 		// percentage of current militia squad training completed
-		swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 10 ] );
+		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[5]);
 		AddMonoString(box, wString);
 		swprintf(wString, lengthof(wString), L"%d%%", SectorInfo[SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].ubMilitiaTrainingPercentDone);
 		AddSecondColumnMonoString(box, wString);

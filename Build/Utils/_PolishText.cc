@@ -1329,17 +1329,12 @@ const wchar_t* pMapPopUpInventoryText[] =
 
 const wchar_t* pwTownInfoStrings[] =
 {
-	L"Rozmiar",					// 0 // size of the town in sectors
-	L"", 						// blank line, required
+	L"Rozmiar",					// size of the town in sectors
 	L"Pod kontrolą", 					// how much of town is controlled
-	L"Brak", 					// none of this town
 	L"Przynależna kopalnia", 				// mine associated with this town
-	L"Lojalność",					// 5 // the loyalty level of this town
-	L"Wyszkolonych", 					// the forces in the town trained by the player
-	L"",
+	L"Lojalność",					// the loyalty level of this town
 	L"Główne obiekty", 				// main facilities in this town
-	L"Poziom", 					// the training level of civilians in this town
-	L"Szkolenie cywili",				// 10 // state of civilian training in town
+	L"Szkolenie cywili",				// state of civilian training in town
 	L"Samoobrona", 					// the state of the trained civilians in the town
 };
 

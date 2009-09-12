@@ -1330,17 +1330,12 @@ const wchar_t* pMapPopUpInventoryText[] =
 
 const wchar_t* pwTownInfoStrings[] =
 {
-	L"Dimensione",					// 0 // size of the town in sectors
-	L"", 						// blank line, required
+	L"Dimensione",					// size of the town in sectors
 	L"Controllo", 					// how much of town is controlled
-	L"Nessuno", 					// none of this town
 	L"Miniera", 				// mine associated with this town
-	L"Lealtà",					// 5 // the loyalty level of this town
-	L"Addestrato", 					// the forces in the town trained by the player
-	L"",
+	L"Lealtà",					// the loyalty level of this town
 	L"Servizi principali", 				// main facilities in this town
-	L"Livello", 					// the training level of civilians in this town
-	L"addestramento civili",				// 10 // state of civilian training in town
+	L"addestramento civili",				// state of civilian training in town
 	L"Esercito", 					// the state of the trained civilians in the town
 };
 

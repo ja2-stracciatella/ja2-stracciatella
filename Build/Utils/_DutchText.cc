@@ -1344,17 +1344,12 @@ const wchar_t* pMapPopUpInventoryText[] =
 
 const wchar_t* pwTownInfoStrings[] =
 {
-	L"Grootte",					// 0 // size of the town in sectors
-	L"", 						// blank line, required
+	L"Grootte",					// size of the town in sectors
 	L"Gezag", 					// how much of town is controlled
-	L"Geen", 					// none of this town
 	L"Verboden Mijn", 				// mine associated with this town
-	L"Loyaliteit",					// 5 // the loyalty level of this town
-	L"Getraind", 					// the forces in the town trained by the player
-	L"",
+	L"Loyaliteit",					// the loyalty level of this town
 	L"Voorzieningen", 				// main facilities in this town
-	L"Niveau", 					// the training level of civilians in this town
-	L"Training Burgers",				// 10 // state of civilian training in town
+	L"Training Burgers",				// state of civilian training in town
 	L"Militie", 					// the state of the trained civilians in the town
 };
 
