@@ -17,7 +17,6 @@
 #include "GameLoop.h"
 #include "English.h"
 #include "GameSettings.h"
-#include "Interface_Control.h"
 #include "Cursor_Control.h"
 #include "Laptop.h"
 #include "Text.h"
