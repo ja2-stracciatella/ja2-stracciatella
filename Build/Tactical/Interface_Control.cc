@@ -598,12 +598,8 @@ void ResetInterfaceAndUI( )
 	HandleTacticalUI( );
 }
 
-BOOLEAN InterfaceOKForMeanwhilePopup()
-{
-	if ( gfSwitchPanel )
-	{
-		return( FALSE );
-	}
 
-	return( TRUE );
+bool InterfaceOKForMeanwhilePopup()
+{
+	return !gfSwitchPanel;
 }

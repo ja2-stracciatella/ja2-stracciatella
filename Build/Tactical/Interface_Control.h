@@ -26,7 +26,7 @@ BOOLEAN AreWeInAUIMenu(void);
 
 void HandleTacticalPanelSwitch(void);
 
-BOOLEAN InterfaceOKForMeanwhilePopup(void);
+bool InterfaceOKForMeanwhilePopup();
 
 extern BOOLEAN gfRerenderInterfaceFromHelpText;
 
