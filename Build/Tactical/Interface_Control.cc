@@ -42,13 +42,14 @@
 #include "Civ_Quotes.h"
 
 
-SGPRect				gOldClippingRect, gOldDirtyClippingRect;
+static SGPRect gOldClippingRect;
+static SGPRect gOldDirtyClippingRect;
 
 UINT32		guiTacticalInterfaceFlags;
 
-UINT16		gusUICurIntTileEffectIndex;
-INT16			gsUICurIntTileEffectGridNo;
-UINT8			gsUICurIntTileOldShade;
+static UINT16 gusUICurIntTileEffectIndex;
+static INT16  gsUICurIntTileEffectGridNo;
+static UINT8  gsUICurIntTileOldShade;
 
 BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;
 
