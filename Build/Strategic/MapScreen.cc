@@ -6523,23 +6523,15 @@ static void TrashItemMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 }
 
 
-static void TrashCanBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void TrashCanBtnCallback(MOUSE_REGION*, INT32 const reason)
 {
-
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		// check if an item is in the cursor, if so, warn player
-		if( gpItemPointer != NULL )
+		// Check if an item is in the cursor, if so, warn player
+		if (OBJECTTYPE* const o = gpItemPointer)
 		{
-		  // set up for mapscreen
-			if( gpItemPointer -> ubMission )
-			{
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pTrashItemText[ 1 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, TrashItemMessageBoxCallBack );
-			}
-			else
-			{
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pTrashItemText[ 0 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, TrashItemMessageBoxCallBack );
-			}
+			wchar_t const* const msg = o->ubMission ? pTrashItemText[1] : pTrashItemText[0];
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_YESNO, TrashItemMessageBoxCallBack);
 		}
 	}
 }
