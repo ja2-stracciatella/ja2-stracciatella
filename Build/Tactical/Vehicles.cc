@@ -25,7 +25,6 @@
 #include "Explosion_Control.h"
 #include "Soldier_Create.h"
 #include "StrategicMap.h"
-#include "Interface_Control.h"
 #include "Campaign_Types.h"
 #include "Sys_Globals.h"
 #include "Map_Screen_Interface.h"
@@ -570,7 +569,7 @@ bool PutSoldierInVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 			s.sSectorY == gWorldSectorY          &&
 			s.bSectorZ == 0                      &&
 			!IsHelicopter(v)                     &&
-			!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
+			guiCurrentScreen == GAME_SCREEN)
 	{
 		SetCurrentInterfacePanel(TEAM_PANEL);
 	}
