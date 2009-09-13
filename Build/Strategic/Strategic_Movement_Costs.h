@@ -4,7 +4,7 @@
 #include "Types.h"
 
 
-void InitStrategicMovementCosts(void);
+void InitStrategicMovementCosts();
 
 UINT8 GetTraversability(INT16 sStartSector, INT16 sEndSector);
 

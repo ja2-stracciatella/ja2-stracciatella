@@ -144,19 +144,19 @@ CASSERT(lengthof(g_travel_rating) == 16)
 #undef X
 
 
-void InitStrategicMovementCosts(void)
+void InitStrategicMovementCosts()
 {
-	for (INT32 y = 1; y <= 16; ++y)
+	for (INT32 y = 0; y < 16; ++y)
 	{
-		for (INT32 x = 1; x <= 16; ++x)
+		for (INT32 x = 0; x < 16; ++x)
 		{
-			SECTORINFO* const s = &SectorInfo[SECTOR(x, y)];
-			s->ubTravelRating                           = g_travel_rating[   y - 1][x - 1];
-			s->ubTraversability[WEST_STRATEGIC_MOVE]    = g_traverse_we[     y - 1][x - 1];
-			s->ubTraversability[EAST_STRATEGIC_MOVE]    = g_traverse_we[     y - 1][x    ];
-			s->ubTraversability[NORTH_STRATEGIC_MOVE]   = g_traverse_ns[     y - 1][x - 1];
-			s->ubTraversability[SOUTH_STRATEGIC_MOVE]   = g_traverse_ns[     y    ][x - 1];
-			s->ubTraversability[THROUGH_STRATEGIC_MOVE] = g_traverse_through[y - 1][x - 1];
+			SECTORINFO& s = SectorInfo[SECTOR(x + 1, y + 1)];
+			s.ubTravelRating                           = g_travel_rating[   y][x];
+			s.ubTraversability[WEST_STRATEGIC_MOVE]    = g_traverse_we[     y][x];
+			s.ubTraversability[EAST_STRATEGIC_MOVE]    = g_traverse_we[     y][x + 1];
+			s.ubTraversability[NORTH_STRATEGIC_MOVE]   = g_traverse_ns[     y][x];
+			s.ubTraversability[SOUTH_STRATEGIC_MOVE]   = g_traverse_ns[ 1 + y][x];
+			s.ubTraversability[THROUGH_STRATEGIC_MOVE] = g_traverse_through[y][x];
 		}
 	}
 }
