@@ -8861,7 +8861,7 @@ void MakeDialogueEventEnterMapScreen()
 		public:
 			bool Execute()
 			{
-				if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
+				if (guiCurrentScreen != MAP_SCREEN)
 				{
 					gfEnteringMapScreen    = TRUE;
 					fEnterMapDueToContract = TRUE;
