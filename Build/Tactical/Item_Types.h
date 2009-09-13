@@ -137,33 +137,6 @@ struct OBJECTTYPE
 CASSERT(sizeof(OBJECTTYPE) == 36)
 
 
-/*
-struct INVTYPE
-{
-	UINT8		ubCursor;
-	INT8		bSoundType;
-	UINT8		ubGraphicNum;
-	INT8		bMaxLoad;
-
-	UINT8		ubPerPocket;
-	UINT8		ubCanDamage;
-	UINT8		ubWaterDamage;
-	UINT8		ubCanRepair;
-
-	UINT8		ubSeeMeter;
-	UINT8		ubRange;
-	UINT8		ubMetal;
-	UINT8		ubSinkable;
-
-	UINT16	ubPrice;
-	UINT8		ubMission;
-	UINT8		ubCoolness;
-};
-
-*/
-
-
-
 // SUBTYPES
 #define IC_NONE						0x00000001
 #define IC_GUN						0x00000002
