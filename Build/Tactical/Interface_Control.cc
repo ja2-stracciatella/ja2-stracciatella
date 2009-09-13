@@ -563,16 +563,9 @@ void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 }
 
 
-BOOLEAN AreWeInAUIMenu( )
+bool AreWeInAUIMenu()
 {
-	if ( gfInMovementMenu || gfInOpenDoorMenu || gfInItemPickupMenu || gfInSectorExitMenu || gfInTalkPanel )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return gfInMovementMenu || gfInOpenDoorMenu || gfInItemPickupMenu || gfInSectorExitMenu || gfInTalkPanel;
 }
 
 

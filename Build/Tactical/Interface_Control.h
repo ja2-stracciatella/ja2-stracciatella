@@ -22,7 +22,7 @@ void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock );
 
 void ResetInterfaceAndUI(void);
 
-BOOLEAN AreWeInAUIMenu(void);
+bool AreWeInAUIMenu();
 
 void HandleTacticalPanelSwitch(void);
 
