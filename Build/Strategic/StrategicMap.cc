@@ -1674,7 +1674,7 @@ plain_sector:;
 				INT8 const town_name_id = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
 				add =
 					town_name_id != BLANK_SECTOR ? pTownNames[town_name_id] :
-					pLandTypeStrings[SectorInfo[sector_id].ubTraversability[4]];
+					pLandTypeStrings[SectorInfo[sector_id].ubTraversability[THROUGH_STRATEGIC_MOVE]];
 				break;
 		}
 	}

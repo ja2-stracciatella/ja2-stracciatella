@@ -385,7 +385,7 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 
 		// SAM Site 4 in Meduna is within town limits, so it's handled in AddTextToTownBox()
 
-		default: title = pLandTypeStrings[SectorInfo[usSectorValue].ubTraversability[4]]; break;
+		default: title = pLandTypeStrings[SectorInfo[usSectorValue].ubTraversability[THROUGH_STRATEGIC_MOVE]]; break;
 	}
 	AddMonoString(box, title);
 

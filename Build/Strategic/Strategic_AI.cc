@@ -526,7 +526,7 @@ static BOOLEAN AdjacentSectorIsImportantAndUndefended(UINT8 ubSectorID)
 	{
 		return FALSE;
 	}
-	if( pSector->ubTraversability[ 4 ] == TOWN )
+	if (pSector->ubTraversability[THROUGH_STRATEGIC_MOVE] == TOWN)
 	{
 		if( !PlayerSectorDefended( ubSectorID ) )
 		{
