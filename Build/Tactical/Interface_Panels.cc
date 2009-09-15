@@ -29,7 +29,6 @@
 #include "Message.h"
 #include "Text.h"
 #include "Interface_Items.h"
-#include "Interface_Control.h"
 #include "Interface_Utils.h"
 #include "Game_Clock.h"
 #include "Soldier_Macros.h"
@@ -390,7 +389,7 @@ void CheckForDisabledForGiveItem(void)
 	const SOLDIERTYPE* const cur = gpSMCurrentMerc;
 	Assert(cur != NULL);
 
-	if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 	{
 		gfSMDisableForItems = !CanMercInteractWithSelectedShopkeeper(cur);
 		return;
@@ -508,7 +507,7 @@ void SetSMPanelCurrentMerc(SOLDIERTYPE* s)
 	}
 	else
 	{
-		if (gpItemPointer != NULL || guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE || s->bLife < OKLIFE)
+		if (gpItemPointer || guiCurrentScreen == SHOPKEEPER_SCREEN || s->bLife < OKLIFE)
 		{
 			CheckForDisabledForGiveItem( );
 		}
@@ -792,7 +791,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 		if ( fEnable )
 		{
 			// only enable the following if NOT in shopkeeper's interface
-			if ( !(guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) )
+			if (guiCurrentScreen != SHOPKEEPER_SCREEN)
 			{
 				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 				EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
@@ -1536,7 +1535,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (guiCurrentScreen == MAP_SCREEN) return; // XXX necessary?
 
 	//if we are in the shop keeper interface
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 	{
 		// and this inventory slot is hatched out
 		if( ShouldSoldierDisplayHatchOnItem( gpSMCurrentMerc->ubProfile, (INT16)uiHandPos ) )
@@ -1589,7 +1588,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			BeginItemPointer( gpSMCurrentMerc, (UINT8)uiHandPos );
 
 			//if we are in the shopkeeper interface
-			if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 			{
 				// pick up item from regular inventory slot into cursor OR try to sell it ( unless CTRL is held down )
 				BeginSkiItemPointer( PLAYERS_INVENTORY, ( INT8 ) uiHandPos, ( BOOLEAN )!gfKeyState[ CTRL ] );
@@ -1676,7 +1675,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						gusNewItemIndex = usNewItemIndex;
 						gfDeductPoints = fDeductPoints;
 
-						if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+						if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 						{
 							//the only way to merge items is to pick them up.  In SKI when you pick up an item, the cursor is
 							//locked in a region, free it up.
@@ -1695,7 +1694,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				// remember the item type currently in the item pointer
 				usItemPrevInItemPointer = gpItemPointer->usItem;
 
-				if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+				if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 				{
 					// If it's just been purchased or repaired, mark it as a "new item"
 					fNewItem = ( BOOLEAN ) ( gMoveingItem.uiFlags & ( ARMS_INV_JUST_PURCHASED | ARMS_INV_ITEM_REPAIRED ) );
@@ -1705,7 +1704,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				if ( UIHandleItemPlacement( (UINT8) uiHandPos, usOldItemIndex, usNewItemIndex, fDeductPoints ) )
 				{
 					// it worked!  if we're in the SKI...
-					if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+					if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 					{
 						SetNewItem( gpSMCurrentMerc, ( UINT8 ) uiHandPos, fNewItem );
 
@@ -1916,8 +1915,7 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 
 	//if we are in the shop keeper interface
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-		return;
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -1973,8 +1971,7 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 	}
 
 	//if we are in the shop keeper interface
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-		return;
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2109,7 +2106,7 @@ static void SelectMerc(SOLDIERTYPE* const s)
 	if (!gfInItemPickupMenu)
 	{
 		BOOLEAN set_locator;
-		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
+		if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 		{
 			// Refresh background for player slots (in case item values change due to Flo's discount)
 			gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
@@ -2123,8 +2120,7 @@ static void SelectMerc(SOLDIERTYPE* const s)
 	}
 
 	// If the user is in the shop keeper interface and is in the item desc
-	if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE &&
-			InItemDescriptionBox())
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN && InItemDescriptionBox())
 	{
 		DeleteItemDescriptionBox();
 	}
@@ -3223,8 +3219,7 @@ void BeginKeyPanelFromKeyShortcut(void)
 	pSoldier = gpSMCurrentMerc;
 
 	//if we are in the shop keeper interface
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-		return;
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN) return;
 
 	InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
 }
@@ -3259,8 +3254,7 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 
 	//if we are in the shop keeper interface
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-		return;
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -3295,7 +3289,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		fLeftDown = FALSE;
 
 		//if we are in the shop keeper interface
-		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+		if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 		{
 			INVENTORY_IN_SLOT InvSlot;
 
@@ -3593,11 +3587,7 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				if( guiCurrentScreen == SHOPKEEPER_SCREEN )
 				{
 					//if we are in the shop keeper interface, free the cursor
-					if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-					{
-						FreeMouseCursor();
-					}
-
+					FreeMouseCursor();
 					DoMessageBox(MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmationToDepositMoneyToPlayersAccount, NULL);
 				}
 				else

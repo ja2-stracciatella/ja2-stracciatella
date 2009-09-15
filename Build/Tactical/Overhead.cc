@@ -2198,7 +2198,7 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 	if (guiCurrentScreen == LAPTOP_SCREEN || guiCurrentScreen == MAP_SCREEN) return;
 
 	//if we are in the shop keeper interface
-	if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 	{
 		//dont allow the player to change the selected merc
 		return;

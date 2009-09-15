@@ -853,7 +853,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	}
 	else
 	{
-		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE &&
+		if (guiCurrentScreen == SHOPKEEPER_SCREEN &&
 				ShouldSoldierDisplayHatchOnItem(s.ubProfile, pocket))
 		{
 			hatch_out = true;
@@ -1369,7 +1369,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 		else if ( CompatibleItemForApplyingOnMerc( pTestObject ) )
 		{
 			//If we are currently NOT in the Shopkeeper interface
-			if( !( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) )
+			if (guiCurrentScreen != SHOPKEEPER_SCREEN)
 			{
 				fFound = TRUE;
 				gbCompatibleApplyItem = fOn;
@@ -1425,7 +1425,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 
 	//if we are in the shopkeeper interface
 	const OBJECTTYPE* pTestObject;
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 	{
 		// if the inventory position is -1, this is a flag from the Shopkeeper interface screen
 		//indicating that we are to use a different object to do the search
@@ -1845,7 +1845,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 		/* Disable the eject button, if we are being init from the shop keeper
 		 * screen and this is a dealer item we are getting info from */
-		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE && pShopKeeperItemDescObject != NULL)
+		if (guiCurrentScreen == SHOPKEEPER_SCREEN && pShopKeeperItemDescObject)
 		{
 			ammo_btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 			DisableButton(ammo_btn);
@@ -2033,7 +2033,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, INT32 const reason)
 		else
 		{
 			// if in SKI, load item into SKI's item pointer
-			if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
+			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 			{
 				// pick up bullets from weapon into cursor (don't try to sell)
 				BeginSkiItemPointer(PLAYERS_INVENTORY, -1, FALSE);
@@ -2066,7 +2066,7 @@ static void DoAttachment(void)
 				SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 
 				//if we are currently in the shopkeeper interface
-				if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+				if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 				{
 					//Clear out the moving cursor
 					memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
@@ -2123,7 +2123,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// if the item being described belongs to a shopkeeper, ignore attempts to pick it up / replace it
-		if( ( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) && ( pShopKeeperItemDescObject != NULL ) )
+		if (guiCurrentScreen == SHOPKEEPER_SCREEN && pShopKeeperItemDescObject)
 		{
 			return;
 		}
@@ -2163,7 +2163,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					}
 
 					//if we are currently in the shopkeeper interface
-					else if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+					else if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 					{
 						// pick up attachment from item into cursor (don't try to sell)
 						BeginSkiItemPointer( PLAYERS_INVENTORY, -1, FALSE );
@@ -2196,7 +2196,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			BOOLEAN fShopkeeperItem = FALSE;
 
 			// remember if this is a shopkeeper's item we're viewing ( pShopKeeperItemDescObject will get nuked on deletion )
-			if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE && pShopKeeperItemDescObject != NULL )
+			if (guiCurrentScreen == SHOPKEEPER_SCREEN && pShopKeeperItemDescObject)
 			{
 				fShopkeeperItem = TRUE;
 			}
@@ -2661,7 +2661,7 @@ void DeleteItemDescriptionBox( )
 //	DEF:
 
 	//Used in the shopkeeper interface
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 	{
 		DeleteShopKeeperItemDescBox();
 	}
@@ -2914,7 +2914,7 @@ void EndItemPointer( )
 		gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 		MSYS_SetCurrentCursor( CURSOR_NORMAL );
 
-		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+		if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 		{
 			memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
 			SetSkiCursor( CURSOR_NORMAL );
@@ -4225,7 +4225,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					  gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 					  SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 
-						if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+						if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 						{
 							memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
 							SetSkiCursor( CURSOR_NORMAL );
@@ -4259,7 +4259,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
         }
 
 				//if we are in the shop keeper interface
-				if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+				if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 				{
 					// pick up stacked item into cursor and try to sell it ( unless CTRL is held down )
 					BeginSkiItemPointer( PLAYERS_INVENTORY, -1, ( BOOLEAN )!gfKeyState[ CTRL ] );
@@ -5119,7 +5119,7 @@ static void RemoveMoney(void)
 	if( gRemoveMoney.uiMoneyRemoving != 0 )
 	{
 		//if we are in the shop keeper interface
-		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+		if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 		{
 			INVENTORY_IN_SLOT InvSlot;
 

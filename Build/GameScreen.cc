@@ -203,8 +203,6 @@ void EnterTacticalScreen(void)
 		SetCurrentInterfacePanel(gsCurInterfacePanel);
 	}
 
-	SetTacticalInterfaceFlags( 0 );
-
 	// set default squad on sector entry
 	SetDefaultSquadOnSectorEntry( FALSE );
 	ExamineCurrentSquadLights( );

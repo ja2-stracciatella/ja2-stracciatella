@@ -4,6 +4,7 @@
 #include "Handle_Items.h"
 #include "Items.h"
 #include "Action_Items.h"
+#include "JAScreens.h"
 #include "TileDef.h"
 #include "Weapons.h"
 #include "Interface_Cursors.h"
@@ -27,7 +28,6 @@
 #include "Message.h"
 #include "Text.h"
 #include "FOV.h"
-#include "Interface_Control.h"
 #include "ShopKeeper_Interface.h"
 #include "GameSettings.h"
 #include "Environment.h"
@@ -3072,7 +3072,7 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 					{
 						// NEW: If in SKI, don't auto-place anything into a stackable slot that's currently hatched out!  Such slots
 						// will disappear in their entirety if sold/moved, causing anything added through here to vanish also!
-						if( !( ( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) && ShouldSoldierDisplayHatchOnItem( pSoldier->ubProfile, bSlot ) ) )
+						if (guiCurrentScreen != SHOPKEEPER_SCREEN || !ShouldSoldierDisplayHatchOnItem(pSoldier->ubProfile, bSlot))
 						{
 							PlaceObject( pSoldier, bSlot, pObj );
 							SetNewItem( pSoldier, bSlot, fNewItem );

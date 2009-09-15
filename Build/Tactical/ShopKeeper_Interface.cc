@@ -644,10 +644,6 @@ static void EnterShopKeeperInterface(void)
 	//Setup the currently selected arms dealer
 	InitializeShopKeeper( TRUE );
 
-
-	//Set the flag indicating that we are in the shop keeper interface
-	guiTacticalInterfaceFlags |= INTERFACE_SHOPKEEP_INTERFACE;
-
 	memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
 
 	memset( &gfCommonQuoteUsedThisSession, FALSE, sizeof( gfCommonQuoteUsedThisSession ) );
@@ -823,9 +819,6 @@ static void ExitShopKeeperInterface(void)
 		MemFree( gpTempDealersInventory );
 		gpTempDealersInventory = NULL;
 	}
-
-	//Set the flag indicating that we are NOT in the shop keeper interface
-	guiTacticalInterfaceFlags &= ~INTERFACE_SHOPKEEP_INTERFACE;
 
 	//if there is a subtitles box up, remove it
 	RemoveShopKeeperSubTitledText();

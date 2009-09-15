@@ -46,8 +46,6 @@
 static SGPRect gOldClippingRect;
 static SGPRect gOldDirtyClippingRect;
 
-UINT32		guiTacticalInterfaceFlags;
-
 static UINT16 gusUICurIntTileEffectIndex;
 static INT16  gsUICurIntTileEffectGridNo;
 static UINT8  gsUICurIntTileOldShade;
@@ -59,11 +57,6 @@ DirtyLevel gfPausedTacticalRenderInterfaceFlags = DIRTYLEVEL0;
 BOOLEAN    gfPausedTacticalRenderFlags          = FALSE;
 
 
-void SetTacticalInterfaceFlags( UINT32 uiFlags )
-{
-	guiTacticalInterfaceFlags = uiFlags;
-}
-
 void HandleTacticalPanelSwitch( )
 {
 	if ( gfSwitchPanel )
@@ -72,7 +65,7 @@ void HandleTacticalPanelSwitch( )
 		SetCurrentTacticalPanelCurrentMerc(gNewPanelSoldier);
 		gfSwitchPanel = FALSE;
 
-		if (!(guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE))
+		if (guiCurrentScreen != SHOPKEEPER_SCREEN) // XXX necessary?
 		{
 			RenderButtons( );
 		}
@@ -113,9 +106,7 @@ void RenderTacticalInterface( )
 	RenderPanel();
 
 	// Handle faces
-	if( !(guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) )
-		HandleAutoFaces( );
-
+	if (guiCurrentScreen != SHOPKEEPER_SCREEN) HandleAutoFaces();
 }
 
 

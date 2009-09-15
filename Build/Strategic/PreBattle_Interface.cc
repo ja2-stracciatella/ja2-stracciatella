@@ -40,7 +40,6 @@
 #include "Map_Screen_Interface_Border.h"
 #include "Cheats.h"
 #include "Strategic_Status.h"
-#include "Interface_Control.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Squads.h"
 #include "Assignments.h"
@@ -1162,7 +1161,6 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			SetCurrentWorldSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
 
 			KillPreBattleInterface();
-			SetTacticalInterfaceFlags( 0 );
 		}
 	}
 }

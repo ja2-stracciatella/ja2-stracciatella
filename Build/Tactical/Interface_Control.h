@@ -3,12 +3,6 @@
 
 #include "Types.h"
 
-#define		INTERFACE_SHOPKEEP_INTERFACE		0x00000008
-
-extern UINT32 guiTacticalInterfaceFlags;
-
-
-void SetTacticalInterfaceFlags( UINT32 uiFlags );
 
 void SetUpInterface();
 void ResetInterface();
