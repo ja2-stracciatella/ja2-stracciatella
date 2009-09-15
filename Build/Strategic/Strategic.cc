@@ -1,8 +1,8 @@
+#include "JAScreens.h"
 #include "MapScreen.h"
 #include "Types.h"
 #include "Squads.h"
 #include "Assignments.h"
-#include "Interface_Control.h"
 #include "Overhead.h"
 #include "Soldier_Profile.h"
 #include "Dialogue_Control.h"
@@ -30,7 +30,7 @@ void HandleStrategicDeath(SOLDIERTYPE& s)
 	}
 	ChangeSoldiersAssignment(&s, ASSIGNMENT_DEAD);
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen != GAME_SCREEN)
 	{
 		ReBuildCharactersList();
 

@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "Handle_Items.h"
 #include "Isometric_Utils.h"
+#include "JAScreens.h"
 #include "Local.h"
 #include "HImage.h"
 #include "Soldier_Find.h"
@@ -98,7 +99,7 @@ void RenderTacticalInterface( )
 	// handle paused render of tactical
 	HandlePausedTacticalRender( );
 
-	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiCurrentScreen != MAP_SCREEN)
 	{
 		HandleFlashingItems( );
 
@@ -148,7 +149,7 @@ void RenderTacticalInterfaceWhileScrolling( )
 
 void SetUpInterface()
 {
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
+	if (guiCurrentScreen != GAME_SCREEN) return; // XXX necessary?
 
 	DrawUICursor();
 	SetupPhysicsTrajectoryUI();
@@ -219,7 +220,7 @@ add_node:
 
 void ResetInterface()
 {
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
+	if (guiCurrentScreen != GAME_SCREEN) return; // XXX necessary?
 
 	// Find out if we need to show any menus
 	DetermineWhichAssignmentMenusCanBeShown();
@@ -343,7 +344,7 @@ void RenderTopmostTacticalInterface()
 		gfRerenderInterfaceFromHelpText = FALSE;
 	}
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen == MAP_SCREEN) // XXX necessary?
 	{
 		// If we want to rederaw whole screen, dirty all buttons!
 		if (fInterfacePanelDirty == DIRTYLEVEL2) MarkButtonsDirty();

@@ -636,7 +636,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 					return true;
 				}
 
-				if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && !GamePaused())
+				if (guiCurrentScreen == MAP_SCREEN && !GamePaused())
 				{
 					PauseGame();
 					LockPauseState(LOCK_PAUSE_15);

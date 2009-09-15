@@ -40,7 +40,6 @@
 #include "Finances.h"
 #include "LaptopSave.h"
 #include "RenderWorld.h"
-#include "Interface_Control.h"
 #include "Interface.h"
 #include "Soldier_Find.h"
 #include "AI.h"
@@ -3691,7 +3690,7 @@ static void HideBoxIfShownMap(PopUpBox* const box)
 
 static void ShowAssignmentBox(void)
 {
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen == MAP_SCREEN)
 	{
 		const SOLDIERTYPE* const s = GetSelectedInfoChar();
 		if (s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW)
@@ -3723,7 +3722,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 {
 	BOOLEAN fCharacterNoLongerValid = FALSE;
 
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiCurrentScreen == MAP_SCREEN)
 	{
 		if (fShowMapScreenMovementList)
 		{
@@ -3866,7 +3865,7 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
 		// created
 		fCreated = TRUE;
 
-		if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+		if (guiCurrentScreen == GAME_SCREEN)
 		{
 			gAssignmentScreenMaskRegion.ChangeCursor(0);
 		}
@@ -4533,7 +4532,7 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	BOOLEAN fOkToClose = FALSE;
 
 	// can't renew contracts from tactical!
-	Assert(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN);
+	Assert(guiCurrentScreen == MAP_SCREEN);
 
 	SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 	Assert(pSoldier);
@@ -4760,7 +4759,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ) || ( iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN ) )
 	{
-		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && !fShowMapInventoryPool )
+		if (guiCurrentScreen == MAP_SCREEN && !fShowMapInventoryPool)
 		{
 			UnMarkButtonDirty( giMapBorderButtons[ MAP_BORDER_TOWN_BTN ] );
 		}
@@ -5591,7 +5590,7 @@ void DetermineBoxPositions()
 	// no soldier is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
 	if (s == NULL) return;
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen == MAP_SCREEN)
 	{
 		SGPBox const& area = GetBoxArea(ghAssignmentBox);
 		gsAssignmentBoxesX = area.x;
@@ -5705,8 +5704,8 @@ static void AdjustBoxPos(SGPBox const& assignment_area, PopUpBox* const other_bo
 
 static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 {
-	if (!fShowAssignmentMenu) return;
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
+	if (!fShowAssignmentMenu)            return;
+	if (guiCurrentScreen != GAME_SCREEN) return;
 
 	SOLDIERTYPE const& s               = *GetSelectedAssignSoldier(FALSE);
 	PopUpBox*   const  assignment_box  = s.ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
@@ -6861,7 +6860,7 @@ void ReEvaluateEveryonesNothingToDo()
 void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 {
 	// if not in mapscreen, there is no functionality available to change multiple assignments simultaneously!
-	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)) return;
+	if (guiCurrentScreen != MAP_SCREEN) return;
 
 	SOLDIERTYPE* const sel = bSelectedAssignChar != -1 ?
 		gCharactersList[bSelectedAssignChar].merc : NULL;
@@ -7130,7 +7129,7 @@ static void InternalUnescortEPC(SOLDIERTYPE* const s)
 
 void UnEscortEPC(SOLDIERTYPE* const s)
 {
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen != GAME_SCREEN)
 	{
 		InternalUnescortEPC(s);
 
@@ -7257,7 +7256,7 @@ static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiCurrentScreen != GAME_SCREEN)
 	{
 		// mapscreen version
 		if (bSelectedAssignChar >= 0 && bSelectedAssignChar < MAX_CHARACTER_COUNT)

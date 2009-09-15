@@ -1472,8 +1472,6 @@ try
 		fFlashAssignDone = FALSE;
 		gfEnteringMapScreen = 0;
 
-		guiTacticalInterfaceFlags |= INTERFACE_MAPSCREEN;
-
 //		fDisabledMapBorder = FALSE;
 
 		// handle the sort buttons

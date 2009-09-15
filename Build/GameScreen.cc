@@ -457,17 +457,6 @@ ScreenID MainGameScreenHandle(void)
 		}
 	}
 
-	// ATE: check that this flag is not set.... display message if so
-	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-	{
-		// Unset
-		guiTacticalInterfaceFlags &= (~INTERFACE_MAPSCREEN );
-
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"MAPSCREEN_INTERFACE flag set: Please remember how you entered Tactical." );
-		#endif
-	}
-
 	if ( HandleFadeOutCallback( ) )
 	{
 		return( GAME_SCREEN );

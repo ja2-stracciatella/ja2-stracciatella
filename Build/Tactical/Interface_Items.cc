@@ -936,7 +936,7 @@ static BOOLEAN CompatibleGunForAmmo(const OBJECTTYPE* pTryObject, const OBJECTTY
 static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* const test)
 {
   // ATE: If in mapscreen, return false always....
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return FALSE;
+	if (guiCurrentScreen == MAP_SCREEN) return FALSE;
 
 	switch (test->usItem)
 	{
@@ -2052,7 +2052,7 @@ static void DoAttachment(void)
 		{
 			// attachment attached, merge item consumed, etc
 
-    	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+    	if (guiCurrentScreen == MAP_SCREEN)
       {
         MAPEndItemPointer( );
       }
@@ -2893,10 +2893,7 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 		SetItemPointer(&gItemPointer, pSoldier);
 		gbItemPointerSrcSlot = ubKeyRingPosition;
 
-		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-		{
-			SetMapCursorItem();
-		}
+		if (guiCurrentScreen == MAP_SCREEN) SetMapCursorItem();
 	}
 	else
 	{
@@ -4218,7 +4215,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 				if ( !PlaceObjectAtObjectIndex( gpItemPointer, gpItemPopupObject, (UINT8)uiItemPos ) )
 				{
-    		  if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+    		  if (guiCurrentScreen == MAP_SCREEN)
           {
             MAPEndItemPointer( );
           }
@@ -4251,7 +4248,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				//RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
 				GetObjFrom( gpItemPopupObject, (UINT8)uiItemPos, &gItemPointer );
 
-    		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+    		if (guiCurrentScreen == MAP_SCREEN)
         {
 			    // pick it up
           InternalMAPBeginItemPointer( gpItemPopupSoldier );
@@ -5326,7 +5323,7 @@ void UpdateItemHatches(void)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
-  if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+  if (guiCurrentScreen == MAP_SCREEN)
   {
 		if (fShowInventoryFlag) pSoldier = GetSelectedInfoChar();
 	}

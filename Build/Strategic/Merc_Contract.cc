@@ -18,7 +18,6 @@
 #include "WorldDef.h"
 #include "Rotting_Corpses.h"
 #include "Strategic_Merc_Handler.h"
-#include "Interface_Control.h"
 #include "GameScreen.h"
 #include "JAScreens.h"
 #include "Random.h"
@@ -697,7 +696,7 @@ void StrategicRemoveMerc(SOLDIERTYPE& s)
 
 	CheckAndHandleUnloadingOfCurrentWorld();
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen == MAP_SCREEN)
 	{
 		ReBuildCharactersList();
 	}
@@ -795,7 +794,7 @@ no_choice:
 		flags = add_rehire_button ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK;
 	}
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen == MAP_SCREEN)
 	{
 		DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, flags, MercDepartEquipmentBoxCallBack);
 	}
@@ -840,7 +839,7 @@ static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_valu
 
 static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 {
-	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiCurrentScreen != MAP_SCREEN)
 	{
 		gfEnteringMapScreen = TRUE;
 

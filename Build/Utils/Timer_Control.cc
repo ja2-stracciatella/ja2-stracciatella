@@ -2,12 +2,12 @@
 #include <stdexcept>
 
 #include "Debug.h"
+#include "JAScreens.h"
 #include "Soldier_Control.h"
 #include "Timer_Control.h"
 #include "Overhead.h"
 #include "Handle_Items.h"
 #include "WorldDef.h"
-#include "Interface_Control.h"
 
 
 INT32	giClockTimer = -1;
@@ -92,7 +92,7 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 		}
 
 #ifndef BOUNDS_CHECKER
-		if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+		if (guiCurrentScreen == MAP_SCREEN)
 		{
 			// IN Mapscreen, loop through player's team
 			FOR_ALL_IN_TEAM(s, gbPlayerNum)

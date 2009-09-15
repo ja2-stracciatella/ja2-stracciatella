@@ -21,7 +21,6 @@
 #include "Queen_Command.h"
 #include "PreBattle_Interface.h"
 #include "Map_Screen_Interface_Border.h"
-#include "Interface_Control.h"
 #include "Map_Screen_Interface_Map.h"
 #include "JAScreens.h"
 #include "Debug.h"
@@ -853,7 +852,7 @@ static void BuildListOfUnpaidTrainableSectors()
 {
 	memset(gsUnpaidStrategicSector, 0, sizeof(gsUnpaidStrategicSector));
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	if (guiCurrentScreen == MAP_SCREEN)
 	{
 		for (INT32 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 		{

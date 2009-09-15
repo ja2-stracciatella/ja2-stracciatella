@@ -31,7 +31,6 @@
 #include "SysUtil.h"
 #include "Exit_Grids.h"
 #include "Text.h"
-#include "Interface_Control.h"
 #include "Message.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Map_Information.h"
@@ -126,8 +125,6 @@ static SLIDER* guiMusicSlider;
 static BOOLEAN gfOptionsScreenEntry  = TRUE;
 static BOOLEAN gfOptionsScreenExit   = FALSE;
 static BOOLEAN gfRedrawOptionsScreen = TRUE;
-
-static BOOLEAN gfEnteredFromMapScreen = FALSE;
 
 static ScreenID guiOptionsScreen        = OPTIONS_SCREEN;
 ScreenID        guiPreviousOptionScreen = OPTIONS_SCREEN;
@@ -253,14 +250,6 @@ static void SpeechSliderChangeCallBack(INT32 iNewValue);
 
 static void EnterOptionsScreen(void)
 {
-	//if we are coming from mapscreen
-	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-	{
-		guiTacticalInterfaceFlags &= ~INTERFACE_MAPSCREEN;
-		gfEnteredFromMapScreen = TRUE;
-	}
-
-
 	// Stop ambients...
 	StopAmbients( );
 
@@ -439,13 +428,6 @@ static void ExitOptionsScreen(void)
   MSYS_RemoveRegion( &gSelectedToggleBoxAreaRegion );
 
 	ShutDownSlider();
-
-	//if we are coming from mapscreen
-	if( gfEnteredFromMapScreen )
-	{
-		gfEnteredFromMapScreen = FALSE;
-		guiTacticalInterfaceFlags |= INTERFACE_MAPSCREEN;
-	}
 
 	//if the user changed the  TREE TOP option, AND a world is loaded
 	if( gfSettingOfTreeTopStatusOnEnterOfOptionScreen != gGameSettings.fOptions[ TOPTION_TOGGLE_TREE_TOPS ] && gfWorldLoaded )
@@ -741,7 +723,6 @@ static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue const 
 	// yes, Quit to main menu
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-		gfEnteredFromMapScreen = FALSE;
 		gfExitOptionsAfterMessageBox = TRUE;
 		SetOptionsExitScreen( MAINMENU_SCREEN );
 

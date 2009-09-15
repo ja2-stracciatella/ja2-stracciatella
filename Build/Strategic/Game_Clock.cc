@@ -16,7 +16,6 @@
 #include "PreBattle_Interface.h"
 #include "Event_Pump.h"
 #include "Text.h"
-#include "Interface_Control.h"
 #include "Map_Screen_Interface_Map.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "MapScreen.h"
@@ -992,18 +991,17 @@ BOOLEAN NightTime()
 void ClearTacticalStuffDueToTimeCompression( void )
 {
 	// is this test the right thing?  ARM
-	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+	if (guiCurrentScreen != MAP_SCREEN) return; // XXX necessary?
+
+	// clear tactical event queue
+	ClearEventQueue( );
+
+	// clear tactical message queue
+	ClearTacticalMessageQueue( );
+
+	if( gfWorldLoaded )
 	{
-		// clear tactical event queue
-		ClearEventQueue( );
-
-		// clear tactical message queue
-		ClearTacticalMessageQueue( );
-
-		if( gfWorldLoaded )
-		{
-			// clear tactical actions
-			CencelAllActionsForTimeCompression( );
-		}
+		// clear tactical actions
+		CencelAllActionsForTimeCompression( );
 	}
 }

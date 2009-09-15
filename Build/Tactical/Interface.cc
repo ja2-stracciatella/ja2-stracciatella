@@ -3,6 +3,7 @@
 #include "Directories.h"
 #include "Font.h"
 #include "Isometric_Utils.h"
+#include "JAScreens.h"
 #include "Local.h"
 #include "HImage.h"
 #include "Soldier_Find.h"
@@ -1195,10 +1196,7 @@ void EndDeadlockMsg(void)
 
 void ClearInterface( )
 {
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		return;
-	}
+	if (guiCurrentScreen != GAME_SCREEN) return; // XXX necessary?
 
 	// Stop any UI menus!
 	if ( gCurrentUIMode == MENU_MODE )

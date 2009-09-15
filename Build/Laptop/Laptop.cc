@@ -455,9 +455,6 @@ static void EnterLaptop(void)
 
 	gfDontStartTransitionFromLaptop = FALSE;
 
-	//Since we are coming in from MapScreen, uncheck the flag
-	guiTacticalInterfaceFlags &= ~INTERFACE_MAPSCREEN;
-
 	// ATE: Disable messages....
 	DisableScrollMessages();
 
@@ -656,9 +653,6 @@ void ExitLaptop(void)
 	DeleteBookmark();
 	DeleteLoadPending();
 	fReDrawNewMailFlag = FALSE;
-
-	//Since we are going to MapScreen, check the flag
-	guiTacticalInterfaceFlags |= INTERFACE_MAPSCREEN;
 
 	//pause the game because we dont want time to advance in the laptop
 	UnPauseGame();

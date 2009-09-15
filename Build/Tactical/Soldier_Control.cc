@@ -68,7 +68,6 @@
 #include "Arms_Dealer_Init.h"
 #include "Vehicles.h"
 #include "Rotting_Corpses.h"
-#include "Interface_Control.h"
 #include "StrategicMap.h"
 #include "Morale.h"
 #include "Meanwhile.h"
@@ -5334,7 +5333,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 
 			HandleSoldierTakeDamageFeedback(pSoldier);
 
-			if(( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) || !pSoldier->bInSector )
+			if (guiCurrentScreen != GAME_SCREEN || !pSoldier->bInSector)
 			{
 				if ( pSoldier->bLife == 0 && !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 				{

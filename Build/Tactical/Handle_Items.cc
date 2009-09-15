@@ -2,6 +2,7 @@
 #include "Items.h"
 #include "Action_Items.h"
 #include "Handle_Items.h"
+#include "JAScreens.h"
 #include "Local.h"
 #include "MapScreen.h"
 #include "Overhead.h"
@@ -60,7 +61,6 @@
 #include "GameSettings.h"
 #include "StrategicMap.h"
 #include "End_Game.h"
-#include "Interface_Control.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "ScreenIDs.h"
 #include "VSurface.h"
@@ -2839,7 +2839,7 @@ static void BoobyTrapDialogueCallBack(void)
 	gfJustFoundBoobyTrap = TRUE;
 
 	// now prompt the user...
-	MSGBOX_CALLBACK const callback = guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ?
+	MSGBOX_CALLBACK const callback = guiCurrentScreen == MAP_SCREEN ?
 		BoobyTrapInMapScreenMessageBoxCallBack : BoobyTrapMessageBoxCallBack;
 	DoScreenIndependantMessageBox(TacticalStr[DISARM_BOOBYTRAP_PROMPT], MSG_BOX_FLAG_YESNO, callback);
 }

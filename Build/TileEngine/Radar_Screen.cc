@@ -247,7 +247,7 @@ void RenderRadarScreen()
 			gfRadarCurrentGuyFlash = !gfRadarCurrentGuyFlash;
 		}
 
-		if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
+		if (guiCurrentScreen != MAP_SCREEN)
 		{
 			// Find the diustance from render center to true world center
 			INT16 const sDistToCenterX = gsRenderCenterX - gCenterWorldX;
