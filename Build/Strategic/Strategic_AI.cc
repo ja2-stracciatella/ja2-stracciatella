@@ -154,7 +154,6 @@ of the group.  If the priority of the group is high, they
 BOOLEAN gfAutoAIAware = FALSE;
 
 //Saved vars
-INT8		gbPadding2[3]						= {0, 0, 0};	//NOT USED // XXX HACK000B
 BOOLEAN gfExtraElites						= 0;	//Set when queen compositions are augmented with bonus elites.
 static INT32 giGarrisonArraySize = 0;
 INT32		giPatrolArraySize				= 0;
@@ -922,9 +921,6 @@ void InitStrategicAI()
 	UINT8 ubNumTroops;
 	//Initialize the basic variables.
 
-	gbPadding2[0]						= 0;
-	gbPadding2[1]						= 0;
-	gbPadding2[2]						= 0;
 	gfExtraElites						= FALSE;
 	giGarrisonArraySize			= 0;
 	giPatrolArraySize				= 0;
@@ -2916,7 +2912,7 @@ void SaveStrategicAI(HWFILE const hFile)
 	memset( &gTempPatrolGroup, 0, sizeof( PATROL_GROUP ) );
 	memset( &gTempArmyComp, 0, sizeof( ARMY_COMPOSITION ) );
 
-	FileWrite(hFile, gbPadding2,                          3);
+	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 	FileWrite(hFile, &gfExtraElites,                      1);
 	FileWrite(hFile, &giGarrisonArraySize,                4);
 	FileWrite(hFile, &giPatrolArraySize,                  4);
@@ -2981,7 +2977,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	INT32 i;
 	UINT8 ubSAIVersion;
 
-	FileRead(hFile, gbPadding2,                          3);
+	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 	FileRead(hFile, &gfExtraElites,                      1);
 	FileRead(hFile, &giGarrisonArraySize,                4);
 	FileRead(hFile, &giPatrolArraySize,                  4);
