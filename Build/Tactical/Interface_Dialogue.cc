@@ -828,9 +828,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					gTalkPanel.fHandledCanDeleteVal = TRUE;
 
 					// open inv panel...
-					gfSwitchPanel = TRUE;
-					gbNewPanel = SM_PANEL;
-					gNewPanelSoldier = gpSrcSoldier;
+					SetNewPanel(gpSrcSoldier);
 
 					// Wait!
 					gpDestSoldier->bNextAction = AI_ACTION_WAIT;

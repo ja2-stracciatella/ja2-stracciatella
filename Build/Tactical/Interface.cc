@@ -336,17 +336,7 @@ void SetCurrentInterfacePanel(InterfacePanelKind const ubNewPanel)
 
 void ToggleTacticalPanels( )
 {
-	gfSwitchPanel			= TRUE;
-	gNewPanelSoldier = GetSelectedMan();
-
-	if ( gsCurInterfacePanel == SM_PANEL )
-	{
-		gbNewPanel = TEAM_PANEL;
-	}
-	else
-	{
-		gbNewPanel = SM_PANEL;
-	}
+	SetNewPanel(gsCurInterfacePanel == SM_PANEL ? 0 : GetSelectedMan());
 }
 
 

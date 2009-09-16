@@ -1,5 +1,6 @@
 #include "Directories.h"
 #include "Font.h"
+#include "Interface_Control.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Soldier_Ani.h"
@@ -273,10 +274,6 @@ static BUTTON_PICS* iTEAMPanelImages[NUM_TEAM_BUTTON_IMAGES];
 
 static BUTTON_PICS* giSMStealthImages;
 GUIButtonRef giSMStealthButton;
-
-BOOLEAN            gfSwitchPanel    = FALSE;
-InterfacePanelKind gbNewPanel       = SM_PANEL;
-SOLDIERTYPE*       gNewPanelSoldier = 0;
 
 BOOLEAN									gfUIStanceDifferent = FALSE;
 static BOOLEAN gfAllDisabled = FALSE;
@@ -1955,8 +1952,7 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					DeleteItemDescriptionBox( );
 				}
 
-				gfSwitchPanel = TRUE;
-				gbNewPanel		= TEAM_PANEL;
+				SetNewPanel(0);
 			}
 		}
 	}
@@ -2660,9 +2656,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					!AM_AN_EPC(s) &&
 					!(s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER)))
 			{
-				gfSwitchPanel = TRUE;
-				gbNewPanel = SM_PANEL;
-				gNewPanelSoldier = s;
+				SetNewPanel(s);
 			}
 		}
 	}

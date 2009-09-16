@@ -125,7 +125,6 @@ extern UINT16       gusOldItemIndex;
 extern UINT16       gusNewItemIndex;
 extern BOOLEAN      gfDeductPoints;
 extern BOOLEAN      gfSMDisableForItems;
-extern SOLDIERTYPE* gNewPanelSoldier;
 
 void LoadInterfacePanelGraphics();
 void DeleteInterfacePanelGraphics();

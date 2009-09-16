@@ -1,7 +1,7 @@
 #ifndef __INTERFACE_CONTROL_H
 #define __INTERFACE_CONTROL_H
 
-#include "Types.h"
+#include "JA2Types.h"
 
 
 void SetUpInterface();
@@ -22,5 +22,9 @@ void HandleTacticalPanelSwitch(void);
 bool InterfaceOKForMeanwhilePopup();
 
 extern BOOLEAN gfRerenderInterfaceFromHelpText;
+
+/* If given a null pointer, show the team panel. Otherwise show the given merc
+ * in the single merc panel. */
+void SetNewPanel(SOLDIERTYPE*);
 
 #endif

@@ -3551,10 +3551,6 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			// OK, do the transfer...
 			{
 				{
-					// Change to inventory....
-					//gfSwitchPanel = TRUE;
-					//gbNewPanel = SM_PANEL;
-					//gNewPanelSoldier = pSoldier;
 					if ( !EnoughPoints( pSoldier, 3, 0, TRUE ) ||
 							 !EnoughPoints( gpItemPointerSoldier, 3, 0, TRUE ) )
 					{
@@ -4448,9 +4444,7 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	UnSetUIBusy(pSoldier);
 
 	// Change to INV panel if not there already...
-	gfSwitchPanel    = TRUE;
-	gbNewPanel       = SM_PANEL;
-	gNewPanelSoldier = pSoldier;
+	SetNewPanel(pSoldier);
 
 	//Determine total #
 	INT32 cnt = 0;

@@ -57,13 +57,25 @@ DirtyLevel gfPausedTacticalRenderInterfaceFlags = DIRTYLEVEL0;
 BOOLEAN    gfPausedTacticalRenderFlags          = FALSE;
 
 
+static bool         g_switch_panel      = false;
+static SOLDIERTYPE* g_new_panel_soldier = 0;
+
+
+void SetNewPanel(SOLDIERTYPE* const s)
+{
+	g_switch_panel      = true;
+	g_new_panel_soldier = s;
+}
+
+
 void HandleTacticalPanelSwitch( )
 {
-	if ( gfSwitchPanel )
+	if (g_switch_panel)
 	{
-		SetCurrentInterfacePanel( gbNewPanel );
-		SetCurrentTacticalPanelCurrentMerc(gNewPanelSoldier);
-		gfSwitchPanel = FALSE;
+		g_switch_panel = false;
+		SOLDIERTYPE* const s = g_new_panel_soldier;
+		SetCurrentInterfacePanel(s ? SM_PANEL : TEAM_PANEL);
+		SetCurrentTacticalPanelCurrentMerc(s);
 
 		if (guiCurrentScreen != SHOPKEEPER_SCREEN) // XXX necessary?
 		{
@@ -586,5 +598,5 @@ void ResetInterfaceAndUI( )
 
 bool InterfaceOKForMeanwhilePopup()
 {
-	return !gfSwitchPanel;
+	return !g_switch_panel;
 }

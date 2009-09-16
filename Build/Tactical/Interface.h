@@ -67,9 +67,7 @@ enum InterfacePanelKind
 };
 
 
-extern BOOLEAN            gfSwitchPanel;
 extern BOOLEAN            gfUIStanceDifferent;
-extern InterfacePanelKind gbNewPanel;
 extern InterfacePanelKind gsCurInterfacePanel;
 
 
