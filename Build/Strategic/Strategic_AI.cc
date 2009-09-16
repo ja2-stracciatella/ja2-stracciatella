@@ -1204,10 +1204,10 @@ void InitStrategicAI()
 	}
 
 	//Setup the flags for the four sam sites.
-	SectorInfo[SEC_D2].uiFlags |= SF_SAM_SITE;
-	SectorInfo[SEC_D15].uiFlags |= SF_SAM_SITE;
-	SectorInfo[SEC_I8].uiFlags |= SF_SAM_SITE;
-	SectorInfo[SEC_N4].uiFlags |= SF_SAM_SITE;
+	FOR_EACH(INT16 const, i, pSamList)
+	{
+		SectorInfo[*i].uiFlags |= SF_SAM_SITE;
+	}
 
 	//final thing to do is choose 1 cache map out of 5 possible maps.  Simply select the sector randomly,
 	//set up the flags to use the alternate map, then place 8-12 regular troops there (no ai though).
