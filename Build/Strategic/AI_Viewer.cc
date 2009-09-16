@@ -119,7 +119,7 @@ enum
 	NUM_ICON_TYPES
 };
 
-enum
+enum IconColour
 {
 	ICON_COLOR_RED,
 	ICON_COLOR_BLUE,
@@ -358,8 +358,8 @@ static void ClearViewerRegion(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBott
 }
 
 
-static void BlitGroupIcon(UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY, SGPVObject const*);
-static UINT8 ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites);
+static void BlitGroupIcon(UINT8 ubIconType, IconColour, UINT32 uiX, UINT32 uiY, SGPVObject const*);
+static IconColour ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites);
 
 
 static void RenderStationaryGroups()
@@ -380,9 +380,9 @@ static void RenderStationaryGroups()
 			if (si.uiFlags & SF_MINING_SITE) BltVideoObject(FRAME_BUFFER, icons, MINING_ICON, xp + 25, yp - 1);
 			if (si.uiFlags & SF_SAM_SITE)    BltVideoObject(FRAME_BUFFER, icons, SAM_ICON,    xp + 20, yp + 4);
 
-			UINT8 icon_colour;
-			UINT8 text_colour = FONT_YELLOW;
-			UINT8 n           = si.ubNumberOfCivsAtLevel[0] + si.ubNumberOfCivsAtLevel[1] + si.ubNumberOfCivsAtLevel[2];
+			IconColour icon_colour;
+			UINT8      text_colour = FONT_YELLOW;
+			UINT8      n           = si.ubNumberOfCivsAtLevel[0] + si.ubNumberOfCivsAtLevel[1] + si.ubNumberOfCivsAtLevel[2];
 			if (n != 0)
 			{ // Show militia
 				icon_colour = ICON_COLOR_BLUE;
@@ -423,7 +423,6 @@ static void RenderMovingGroupsAndMercs(void)
 	float ratio;
 	INT32 minX, maxX, minY, maxY;
 	UINT8 ubIconType;
-	UINT8 ubIconColor;
 	UINT8 ubFontColor;
 
 
@@ -452,7 +451,7 @@ static void RenderMovingGroupsAndMercs(void)
 				y = VIEWER_TOP + VIEWER_CELLH * (pGroup->ubSectorY-1);
 			}
 
-
+			IconColour ubIconColor;
 			if( pGroup->fPlayer )
 			{
 				ubIconType = ( pGroup->uiTraverseTime ) ? ICON_TYPE_ASSAULT : ICON_TYPE_STOPPED;
@@ -1694,10 +1693,8 @@ static void PrintEnemiesKilledTable(void)
 }
 
 
-static UINT8 ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites)
+static IconColour ChooseEnemyIconColor(UINT8 const ubAdmins, UINT8 const ubTroops, UINT8 const ubElites)
 {
-	UINT8 ubIconColor;
-
 	// The colors are:
 	//	Yellow		Admins only
 	//	Red				Troops only
@@ -1707,6 +1704,7 @@ static UINT8 ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites
 
 	Assert( ubAdmins || ubTroops || ubElites );
 
+	IconColour ubIconColor;
 	if ( ubElites )
 	{
 		if ( ubTroops || ubAdmins )
@@ -1733,7 +1731,7 @@ static UINT8 ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites
 }
 
 
-static void BlitGroupIcon(UINT8 const ubIconType, UINT8 const ubIconColor, UINT32 const uiX, UINT32 const uiY, SGPVObject const* const hVObject)
+static void BlitGroupIcon(UINT8 const ubIconType, IconColour const ubIconColor, UINT32 const uiX, UINT32 const uiY, SGPVObject const* const hVObject)
 {
 	UINT8 ubObjectIndex;
 
