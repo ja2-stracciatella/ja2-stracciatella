@@ -89,14 +89,14 @@ static const ExplosionInfo explosion_info[] =
 #define BOMB_QUEUE_DELAY (1000 + Random( 500 ) )
 
 #define MAX_BOMB_QUEUE 40
-ExplosionQueueElement		gExplosionQueue[MAX_BOMB_QUEUE];
-UINT8										gubElementsOnExplosionQueue = 0;
-BOOLEAN									gfExplosionQueueActive = FALSE;
+static ExplosionQueueElement gExplosionQueue[MAX_BOMB_QUEUE];
+UINT8                        gubElementsOnExplosionQueue = 0;
+BOOLEAN                      gfExplosionQueueActive      = FALSE;
 
-BOOLEAN									gfExplosionQueueMayHaveChangedSight = FALSE;
-static SOLDIERTYPE* gPersonToSetOffExplosions = NULL;
+static BOOLEAN      gfExplosionQueueMayHaveChangedSight = FALSE;
+static SOLDIERTYPE* gPersonToSetOffExplosions           = 0;
 
-INT16			gsTempActionGridNo = NOWHERE;
+static INT16 gsTempActionGridNo = NOWHERE;
 
 
 #define	NUM_EXPLOSION_SLOTS 100
