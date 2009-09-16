@@ -358,84 +358,59 @@ static void ClearViewerRegion(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBott
 }
 
 
-static void BlitGroupIcon(UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY, HVOBJECT hVObject);
+static void BlitGroupIcon(UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY, SGPVObject const*);
 static UINT8 ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites);
 
 
-static void RenderStationaryGroups(void)
+static void RenderStationaryGroups()
 {
-	SECTORINFO *pSector;
-	INT32 x, y, xp, yp;
-	INT32 iSector = 0;
-	UINT8 ubIconColor;
-	UINT8 ubGroupSize = 0;
+	SetFont(FONT10ARIAL);
+	SetFontShadow(FONT_NEARBLACK);
 
-
-	SetFont( FONT10ARIAL );
-	SetFontShadow( FONT_NEARBLACK );
-
-	//Render groups that are stationary...
-	for( y = 0; y < 16; y++ )
+	// Render groups that are stationary
+	SGPVObject const* const icons = guiMapIconsID;
+	for (INT32 y = 0; y != 16; ++y)
 	{
-		yp = VIEWER_TOP + VIEWER_CELLH * y + 1;
-		for( x = 0; x < 16; x++ )
+		INT32 const yp = VIEWER_TOP + VIEWER_CELLH * y + 1;
+		for (INT32 x = 0; x != 16; ++x)
 		{
-			SetFontForeground( FONT_YELLOW );
-			xp = VIEWER_LEFT + VIEWER_CELLW * x + 1;
-			pSector = &SectorInfo[ iSector ];
+			INT32      const  xp = VIEWER_LEFT + VIEWER_CELLW * x + 1;
+			SECTORINFO const& si = SectorInfo[SECTOR(x + 1, y + 1)];
 
-			if( pSector->uiFlags & SF_MINING_SITE )
-				BltVideoObject( FRAME_BUFFER, guiMapIconsID, MINING_ICON, xp + 25, yp - 1);
+			if (si.uiFlags & SF_MINING_SITE) BltVideoObject(FRAME_BUFFER, icons, MINING_ICON, xp + 25, yp - 1);
+			if (si.uiFlags & SF_SAM_SITE)    BltVideoObject(FRAME_BUFFER, icons, SAM_ICON,    xp + 20, yp + 4);
 
-			if( pSector->uiFlags & SF_SAM_SITE )
-				BltVideoObject( FRAME_BUFFER, guiMapIconsID, SAM_ICON, xp + 20, yp + 4);
-
-
-			if( pSector->ubNumberOfCivsAtLevel[0] + pSector->ubNumberOfCivsAtLevel[1] + pSector->ubNumberOfCivsAtLevel[2] )
-			{
-				// show militia
-				ubIconColor = ICON_COLOR_BLUE;
-				ubGroupSize = pSector->ubNumberOfCivsAtLevel[0] + pSector->ubNumberOfCivsAtLevel[1] + pSector->ubNumberOfCivsAtLevel[2];
+			UINT8 icon_colour;
+			UINT8 text_colour = FONT_YELLOW;
+			UINT8 n           = si.ubNumberOfCivsAtLevel[0] + si.ubNumberOfCivsAtLevel[1] + si.ubNumberOfCivsAtLevel[2];
+			if (n != 0)
+			{ // Show militia
+				icon_colour = ICON_COLOR_BLUE;
 			}
 			else
-			if( pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites )
-			{
-				// show enemies
-				ubIconColor = ChooseEnemyIconColor( pSector->ubNumAdmins, pSector->ubNumTroops, pSector->ubNumElites );
-				ubGroupSize = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-				if( pSector->ubGarrisonID != NO_GARRISON )
+			{ // Show enemies
+				n = si.ubNumAdmins + si.ubNumTroops + si.ubNumElites;
+				if (n == 0) continue;
+
+				icon_colour = ChooseEnemyIconColor(si.ubNumAdmins, si.ubNumTroops, si.ubNumElites);
+				if (si.ubGarrisonID == NO_GARRISON)
 				{
-					if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
+					if (GetJA2Clock() % 1000 < 333)
 					{
-						if( GetJA2Clock() % 1000 < 333 )
-						{
-							SetFontForeground( FONT_LTRED );
-						}
+						text_colour = FONT_LTKHAKI;
 					}
 				}
-				else
+				else if (gGarrisonGroup[si.ubGarrisonID].ubPendingGroupID != 0)
 				{
-					if( GetJA2Clock() % 1000 < 333 )
+					if (GetJA2Clock() % 1000 < 333)
 					{
-						SetFontForeground( FONT_LTKHAKI );
+						text_colour = FONT_LTRED;
 					}
 				}
 			}
-			else
-			{
-				ubGroupSize = 0;
-				ubIconColor = (UINT8)-1; // XXX HACK000E
-			}
-
-			if ( ubGroupSize > 0 )
-			{
-				// draw the icon
-				BlitGroupIcon( ICON_TYPE_STOPPED, ubIconColor, xp, yp, guiMapIconsID );
-
-				mprintf(xp + 2, yp + 2, L"%d", ubGroupSize);
-			}
-
-			iSector++;
+			SetFontForeground(text_colour);
+			BlitGroupIcon(ICON_TYPE_STOPPED, icon_colour, xp, yp, icons);
+			mprintf(xp + 2, yp + 2, L"%d", n);
 		}
 	}
 }
@@ -1758,7 +1733,7 @@ static UINT8 ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites
 }
 
 
-static void BlitGroupIcon(UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT32 uiY, HVOBJECT hVObject)
+static void BlitGroupIcon(UINT8 const ubIconType, UINT8 const ubIconColor, UINT32 const uiX, UINT32 const uiY, SGPVObject const* const hVObject)
 {
 	UINT8 ubObjectIndex;
 
