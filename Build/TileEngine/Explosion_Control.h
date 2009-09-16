@@ -47,7 +47,6 @@ struct ExplosionQueueElement
 	UINT32	uiTimeStamp;
 	UINT8		fExists;
 };
-CASSERT(sizeof(ExplosionQueueElement) == 12)
 
 
 #define	ERASE_SPREAD_EFFECT					2

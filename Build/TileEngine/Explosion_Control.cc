@@ -1,5 +1,6 @@
 #include "Directories.h"
 #include "Font_Control.h"
+#include "LoadSaveData.h"
 #include "LoadSaveExplosionType.h"
 #include "Overhead.h"
 #include "Structure.h"
@@ -2576,11 +2577,18 @@ void SaveExplosionTableToSaveGameFile(HWFILE const hFile)
 	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 
 	//loop through and add all the explosions
-	for( uiCnt=0; uiCnt< MAX_BOMB_QUEUE; uiCnt++)
+	FOR_EACH(ExplosionQueueElement const, i, gExplosionQueue)
 	{
-		FileWrite(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement));
+		ExplosionQueueElement const& e = *i;
+		BYTE  data[12];
+		BYTE* d = data;
+		INJ_U32( d, e.uiWorldBombIndex)
+		INJ_U32( d, e.uiTimeStamp)
+		INJ_U8(  d, e.fExists)
+		INJ_SKIP(d, 3)
+		Assert(d == endof(data));
+		FileWrite(hFile, data, sizeof(data));
 	}
-
 
 	//
 	//	Explosion Data
@@ -2617,20 +2625,23 @@ void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 	//	Explosion Queue
 	//
 
-	//Clear the Explosion queue
-	memset( gExplosionQueue, 0, sizeof( ExplosionQueueElement ) * MAX_BOMB_QUEUE );
-
 	//Read the number of explosions queue's
 	FileRead(hFile, &gubElementsOnExplosionQueue, sizeof(gubElementsOnExplosionQueue));
 	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 
 	//loop through read all the active explosions fro the file
-	for (UINT32 uiCnt = 0; uiCnt < MAX_BOMB_QUEUE; ++uiCnt)
+	FOR_EACH(ExplosionQueueElement, i, gExplosionQueue)
 	{
-		FileRead(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement));
+		BYTE  data[12];
+		FileRead(hFile, data, sizeof(data));
+		BYTE*                  d = data;
+		ExplosionQueueElement& e = *i;
+		EXTR_U32( d, e.uiWorldBombIndex)
+		EXTR_U32( d, e.uiTimeStamp)
+		EXTR_U8(  d, e.fExists)
+		EXTR_SKIP(d, 3)
+		Assert(d == endof(data));
 	}
-
-
 
 	//
 	//	Explosion Data
