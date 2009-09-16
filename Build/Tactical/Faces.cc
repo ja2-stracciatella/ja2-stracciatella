@@ -297,7 +297,7 @@ static void GetFaceRelativeCoordinates(FACETYPE const& f, UINT16* const pusEyesX
 			(!(f.uiFlags & FACE_BIGFACE) && p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
 	{
 		// Loop through all values of available profiles to find ours
-		for (const RPC_SMALL_FACE_VALUES* i = gRPCSmallFaceValues; i != endof(gRPCSmallFaceValues); ++i)
+		FOR_EACH(RPC_SMALL_FACE_VALUES const, i, gRPCSmallFaceValues)
 		{
 			if (i->profile != pid) continue;
 			*pusEyesX  = i->bEyesX;

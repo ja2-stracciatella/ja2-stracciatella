@@ -181,7 +181,7 @@ void EnterAimSort()
 	MSYS_DefineRegion( &gSelectedToArchiveRegion, AIM_SORT_TO_ALUMNI_X, AIM_SORT_TO_ALUMNI_Y, (AIM_SORT_TO_ALUMNI_X + AIM_SORT_TO_ALUMNI_SIZE), (AIM_SORT_TO_ALUMNI_Y + AIM_SORT_TO_ALUMNI_SIZE), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectToArchiveRegionCallBack );
 
-	for (AIMSortInfo* i = g_aim_sort_info; i != endof(g_aim_sort_info); ++i)
+	FOR_EACH(AIMSortInfo, i, g_aim_sort_info)
 	{
 		const UINT16 txt_w = StringPixLength(i->text, AIM_SORT_FONT_SORT_TEXT);
 		const UINT16 x = i->x - (i->align == LEFT_JUSTIFIED ? 0 : 4 + txt_w);
@@ -215,7 +215,7 @@ void ExitAimSort()
   MSYS_RemoveRegion( &gSelectedToStatsRegion);
   MSYS_RemoveRegion( &gSelectedToArchiveRegion);
 
-	for (AIMSortInfo* i = g_aim_sort_info; i != endof(g_aim_sort_info); ++i)
+	FOR_EACH(AIMSortInfo, i, g_aim_sort_info)
 	{
 		MSYS_RemoveRegion(&i->region);
 	}
@@ -251,7 +251,7 @@ void RenderAimSort()
 	DrawTextToScreen(AimSortText[SORT_BY], AIM_SORT_SORT_BY_TEXT_X, AIM_SORT_SORT_BY_TEXT_Y, 0, AIM_SORT_FONT_TITLE, AIM_SORT_SORT_BY_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	// Display all the sort by text
-	for (const AIMSortInfo* i = g_aim_sort_info; i != endof(g_aim_sort_info); ++i)
+	FOR_EACH(AIMSortInfo const, i, g_aim_sort_info)
 	{
 		const UINT16 x = i->x + (i->align == LEFT_JUSTIFIED ? 14 : -AIM_SORT_ASC_DESC_WIDTH - 4);
 		DrawTextToScreen(i->text, x, i->y + 2, AIM_SORT_ASC_DESC_WIDTH, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_COLOR_SORT_TEXT, FONT_MCOLOR_BLACK, i->align);

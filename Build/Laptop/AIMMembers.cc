@@ -3052,7 +3052,7 @@ void DemoHiringOfMercs()
 	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE) return;
 #endif
 
-	for (ProfileID const* i = MercID; i != endof(MercID); ++i)
+	FOR_EACH(ProfileID const, i, MercID)
 	{
 		ProfileID const    pid = *i;
 		MERCPROFILESTRUCT& p   = GetProfile(pid);

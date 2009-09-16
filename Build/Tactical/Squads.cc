@@ -872,7 +872,7 @@ BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 
 void CheckSquadMovementGroups()
 {
-	for (INT8* i = SquadMovementGroups; i != endof(SquadMovementGroups); ++i)
+	FOR_EACH(INT8, i, SquadMovementGroups)
 	{
 		if (GetGroup(*i)) continue;
 

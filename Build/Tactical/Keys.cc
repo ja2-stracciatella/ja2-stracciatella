@@ -1241,7 +1241,7 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 
 void SaveKeyTableToSaveGameFile(HWFILE const f)
 {
-	for (KEY const* i = KeyTable; i != endof(KeyTable); ++i)
+	FOR_EACH(KEY const, i, KeyTable)
 	{
 		KEY const& k = *i;
 		BYTE       data[8];
@@ -1257,7 +1257,7 @@ void SaveKeyTableToSaveGameFile(HWFILE const f)
 
 void LoadKeyTableFromSaveedGameFile(HWFILE const f)
 {
-	for (KEY* i = KeyTable; i != endof(KeyTable); ++i)
+	FOR_EACH(KEY, i, KeyTable)
 	{
 		BYTE data[8];
 		FileRead(f, data, sizeof(data));

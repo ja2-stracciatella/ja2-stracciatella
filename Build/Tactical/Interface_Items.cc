@@ -767,14 +767,14 @@ void ShutdownInvSlotInterface()
 	// Remove all body type panels
 	for (SGPVObject* (*i)[2] = guiBodyInvVO; i != endof(guiBodyInvVO); ++i)
 	{
-		for (SGPVObject** k = *i; k != endof(*i); ++k) DeleteVideoObject(*k);
+		FOR_EACH(SGPVObject*, k, *i) DeleteVideoObject(*k);
 	}
 
 #ifndef JA2DEMO
 	DeleteVideoObject(guiGoldKeyVO);
 #endif
 
-	for (MOUSE_REGION* i = gSMInvRegion; i != endof(gSMInvRegion); ++i)
+	FOR_EACH(MOUSE_REGION, i, gSMInvRegion)
 	{
 		MSYS_RemoveRegion(&*i);
 	}
@@ -4572,7 +4572,7 @@ static void SetupPickupPage(INT8 bPage)
   INT16           sValue;
 
 	// Reset page slots
-	for (INT32* i = gItemPickupMenu.items; i != endof(gItemPickupMenu.items); ++i)
+	FOR_EACH(INT32, i, gItemPickupMenu.items)
 	{
 		*i = -1;
 	}
@@ -5221,7 +5221,7 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 		// Add attachment string....
 		wchar_t const* const first_prefix = L" (";
 		wchar_t const*       prefix       = first_prefix;
-		for (UINT16 const* i = obj.usAttachItem; i != endof(obj.usAttachItem); ++i)
+		FOR_EACH(UINT16 const, i, obj.usAttachItem)
 		{
 			UINT16 const attachment = *i;
 			if (attachment == NOTHING) continue;

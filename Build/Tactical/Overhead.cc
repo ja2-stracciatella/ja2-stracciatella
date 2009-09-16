@@ -416,7 +416,7 @@ void InitOverhead()
 	t.uiTimeOfLastInput       = GetJA2Clock();
 	t.uiTimeSinceDemoOn       = GetJA2Clock();
 	t.bRealtimeSpeed          = MAX_REALTIME_SPEED_VAL / 2;
-	for (INT16* i = t.sPanicTriggerGridNo; i != endof(t.sPanicTriggerGridNo); ++i) *i = NOWHERE;
+	FOR_EACH(INT16, i, t.sPanicTriggerGridNo) *i = NOWHERE;
 	t.fDidGameJustStart       = TRUE;
 	t.ubLastRequesterTargetID = NO_PROFILE;
 

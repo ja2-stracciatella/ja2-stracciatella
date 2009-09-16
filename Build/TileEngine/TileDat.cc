@@ -592,7 +592,7 @@ static void SetAnimDataIfInList(INT16 const* const list, UINT16 const database_e
 void SetSpecificDatabaseValues(UINT16 const type, UINT16 const database_elem, TILE_ELEMENT& te, bool const use_raised_object_type)
 {
 	// Setup buddies for structures and shadows
-	for (ShadowBuddies const* i = g_shadow_buddies; i != endof(g_shadow_buddies); ++i)
+	FOR_EACH(ShadowBuddies const, i, g_shadow_buddies)
 	{
 		if (type == i->shadow)
 		{

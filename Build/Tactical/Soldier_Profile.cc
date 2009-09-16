@@ -210,7 +210,7 @@ void LoadMercProfiles()
 			if (!gGameOptions.fGunNut)
 			{
 				// CJC: replace guns in profile if they aren't available
-				for (UINT16* k = p.inv; k != endof(p.inv); ++k)
+				FOR_EACH(UINT16, k, p.inv)
 				{
 					UINT16 const item = *k;
 					if (!(Item[item].usItemClass & IC_GUN) || !ExtendedGunListGun(item)) continue;
@@ -221,7 +221,7 @@ void LoadMercProfiles()
 					*k = new_gun;
 
 					// Search through inventory and replace ammo accordingly
-					for (UINT16* l = p.inv; l != endof(p.inv); ++l)
+					FOR_EACH(UINT16, l, p.inv)
 					{
 						UINT16 const ammo = *l;
 						if (!(Item[ammo].usItemClass & IC_AMMO)) continue;
@@ -239,7 +239,7 @@ void LoadMercProfiles()
 			p.bMainGunAttractiveness = -1;
 			p.bArmourAttractiveness  = -1;
 			p.usOptionalGearCost     =  0;
-			for (UINT16 const* k = p.inv; k != endof(p.inv); ++k)
+			FOR_EACH(UINT16 const, k, p.inv)
 			{
 				UINT16 const item_id = *k;
 				if (item_id == NOTHING) continue;

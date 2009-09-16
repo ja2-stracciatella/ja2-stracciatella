@@ -1226,7 +1226,7 @@ static void SaveMercProfiles(HWFILE const f)
 	// Loop through all the profiles to save
 	void (&writer)(HWFILE, BYTE const*, UINT32) = guiSavedGameVersion < 87 ?
 		JA2EncryptedFileWrite : NewJA2EncryptedFileWrite;
-	for (MERCPROFILESTRUCT* i = gMercProfiles; i != endof(gMercProfiles); ++i)
+	FOR_EACH(MERCPROFILESTRUCT, i, gMercProfiles)
 	{
 #ifdef _WIN32 // XXX HACK000A
 		BYTE data[716];
@@ -1244,7 +1244,7 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version)
 	// Loop through all the profiles to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
 		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
-	for (MERCPROFILESTRUCT* i = gMercProfiles; i != endof(gMercProfiles); ++i)
+	FOR_EACH(MERCPROFILESTRUCT, i, gMercProfiles)
 	{
 #ifdef _WIN32 // XXX HACK000A
 		BYTE data[716];
@@ -1845,7 +1845,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_BOOL( d, fDisableDueToBattleRoster)
 	INJ_BOOL( d, fDisableMapInterfaceDueToBattle)
 	INJ_I16A( d, gsBoxerGridNo, lengthof(gsBoxerGridNo))
-	for (SOLDIERTYPE* const* i = gBoxer; i != endof(gBoxer); ++i)
+	FOR_EACH(SOLDIERTYPE* const, i, gBoxer)
 	{
 		INJ_SOLDIER(d, *i)
 	}
@@ -1996,7 +1996,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, fDisableDueToBattleRoster)
 	EXTR_BOOL( d, fDisableMapInterfaceDueToBattle)
 	EXTR_I16A( d, gsBoxerGridNo, lengthof(gsBoxerGridNo))
-	for (SOLDIERTYPE** i = gBoxer; i != endof(gBoxer); ++i)
+	FOR_EACH(SOLDIERTYPE*, i, gBoxer)
 	{
 		EXTR_SOLDIER(d, *i)
 	}
@@ -2122,7 +2122,7 @@ static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const f, UINT32 const saveg
 
 static void SaveMeanwhileDefsToSaveGameFile(HWFILE const f)
 {
-	for (MEANWHILE_DEFINITION* i = gMeanwhileDef; i != endof(gMeanwhileDef); ++i)
+	FOR_EACH(MEANWHILE_DEFINITION, i, gMeanwhileDef)
 	{
 		BYTE data[8];
 		InjectMeanwhileDefinition(data, *i);

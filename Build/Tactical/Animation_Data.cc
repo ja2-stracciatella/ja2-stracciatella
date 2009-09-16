@@ -562,7 +562,7 @@ static void DeleteAnimationProfiles(void);
 
 void DeInitAnimationSystem()
 {
-	for (AnimationSurfaceType* i = gAnimSurfaceDatabase; i != endof(gAnimSurfaceDatabase); ++i)
+	FOR_EACH(AnimationSurfaceType, i, gAnimSurfaceDatabase)
 	{
 		SGPVObject*& vo = i->hVideoObject;
 		if (!vo) continue;

@@ -597,7 +597,7 @@ void InitializeSAMSites()
 	gsMercArriveSectorY = 1;
 
 	// All SAM sites start game in perfect working condition.
-	for (INT16 const* i = pSamList; i != endof(pSamList); ++i)
+	FOR_EACH(INT16 const, i, pSamList)
 	{
 		StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(*i)].bSAMCondition = 100;
 	}
@@ -702,7 +702,7 @@ static void HandleRPCDescriptionOfSector(INT16 const x, INT16 const y, INT16 con
 	if (z != 0) return;
 
 	// Check if we are in a good sector
-	for (SectorDescriptionInfo const* i = sector_description; i != endof(sector_description); ++i)
+	FOR_EACH(SectorDescriptionInfo const, i, sector_description)
 	{
 		if (x != i->x || y != i->y) continue;
 
@@ -2901,7 +2901,7 @@ bool IsThisSectorASAMSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	if (z != 0) return false;
 
-	for (INT16 const* i = pSamList; i != endof(pSamList); ++i)
+	FOR_EACH(INT16 const, i, pSamList)
 	{
 		if (*i == SECTOR(x, y)) return true;
 	}
@@ -2912,13 +2912,13 @@ bool IsThisSectorASAMSector(INT16 const x, INT16 const y, INT8 const z)
 void SaveStrategicInfoToSavedFile(HWFILE const f)
 {
 	// Save the strategic map information
-	for (StrategicMapElement const* i = StrategicMap; i != endof(StrategicMap); ++i)
+	FOR_EACH(StrategicMapElement const, i, StrategicMap)
 	{
 		InjectStrategicMapElementIntoFile(f, *i);
 	}
 
 	// Save the Sector Info
-	for (SECTORINFO const* i = SectorInfo; i != endof(SectorInfo); ++i)
+	FOR_EACH(SECTORINFO const, i, SectorInfo)
 	{
 		InjectSectorInfoIntoFile(f, *i);
 	}
@@ -2934,13 +2934,13 @@ void SaveStrategicInfoToSavedFile(HWFILE const f)
 void LoadStrategicInfoFromSavedFile(HWFILE const f)
 {
 	// Load the strategic map information
-	for (StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
+	FOR_EACH (StrategicMapElement, i, StrategicMap)
 	{
 		ExtractStrategicMapElementFromFile(f, *i);
 	}
 
 	// Load the Sector Info
-	for (SECTORINFO* i = SectorInfo; i != endof(SectorInfo); ++i)
+	FOR_EACH(SECTORINFO, i, SectorInfo)
 	{
 		ExtractSectorInfoFromFile(f, *i);
 	}

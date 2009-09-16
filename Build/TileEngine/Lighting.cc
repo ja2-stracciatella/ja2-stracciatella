@@ -71,7 +71,7 @@ struct LightTemplate
 static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 
 #define FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
-	for (LightTemplate* iter = g_light_templates, * const iter##__end = endof(g_light_templates); iter != iter##__end; ++iter)
+	FOR_EACH(LightTemplate, iter, g_light_templates)
 
 #define FOR_ALL_LIGHT_TEMPLATES(iter) \
 	FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
@@ -2158,7 +2158,7 @@ void LightSetColor(const SGPPaletteEntry* const pPal)
 // Returns the next available sprite.
 static LIGHT_SPRITE* LightSpriteGetFree(void)
 {
-	for (LIGHT_SPRITE* l = LightSprites; l != endof(LightSprites); ++l)
+	FOR_EACH(LIGHT_SPRITE, l, LightSprites)
 	{
 		if (!(l->uiFlags & LIGHT_SPR_ACTIVE)) return l;
 	}

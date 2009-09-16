@@ -764,7 +764,7 @@ void BuildListOfTownSectors()
 void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE const f)
 {
 	//Save the Town Loyalty
-	for (TOWN_LOYALTY const* i = gTownLoyalty; i != endof(gTownLoyalty); ++i)
+	FOR_EACH(TOWN_LOYALTY const, i, gTownLoyalty)
 	{
 		BYTE  data[26];
 		BYTE* d = data;
@@ -785,7 +785,7 @@ void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE const f)
 void LoadStrategicTownLoyaltyFromSavedGameFile(HWFILE const f)
 {
 	//Restore the Town Loyalty
-	for (TOWN_LOYALTY* i = gTownLoyalty; i != endof(gTownLoyalty); ++i)
+	FOR_EACH(TOWN_LOYALTY, i, gTownLoyalty)
 	{
 		BYTE data[26];
 		FileRead(f, data, sizeof(data));

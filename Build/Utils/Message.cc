@@ -706,7 +706,7 @@ void SaveMapScreenMessagesToSaveGameFile(HWFILE const hFile)
 	FileWrite(hFile, &gubCurrentMapMessageString, sizeof(UINT8));
 
 	//Loopthrough all the messages
-	for (ScrollStringSt*const *i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
+	FOR_EACH(ScrollStringSt* const, i, gMapScreenMessageList)
 	{
 		InjectScrollStringIntoFile(hFile, *i);
 	}
@@ -732,7 +732,7 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile)
 	FileRead(hFile, &gubCurrentMapMessageString, sizeof(UINT8));
 
 	//Loopthrough all the messages
-	for (ScrollStringSt** i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
+	FOR_EACH(ScrollStringSt*, i, gMapScreenMessageList)
 	{
 		ScrollStringSt* const s = ExtractScrollStringFromFile(hFile);
 
@@ -792,7 +792,7 @@ static void WriteMessageToFile(const wchar_t* pString)
 
 void FreeGlobalMessageList(void)
 {
-	for (ScrollStringSt** i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
+	FOR_EACH(ScrollStringSt*, i, gMapScreenMessageList)
 	{
 		ScrollStringSt* const s = *i;
 		if (s != NULL)

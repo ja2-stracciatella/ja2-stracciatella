@@ -965,7 +965,7 @@ void TrashOverheadMap(void)
 	if (gubSmTileNum == TILESET_INVALID) return;
 	gubSmTileNum = TILESET_INVALID;
 
-	for (SMALL_TILE_SURF* i = gSmTileSurf; i != endof(gSmTileSurf); ++i)
+	FOR_EACH(SMALL_TILE_SURF, i, gSmTileSurf)
 	{
 		DeleteVideoObject(i->vo);
 	}

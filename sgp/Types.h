@@ -40,6 +40,8 @@
 #define MAX(a, b) __max(a, b)
 #define MIN(a, b) __min(a, b)
 
+#define FOR_EACH(type, iter, array) for (type* iter = (array); iter != endof((array)); ++iter)
+
 template<typename T> static inline void Swap(T& a, T& b)
 {
 	T t(a);

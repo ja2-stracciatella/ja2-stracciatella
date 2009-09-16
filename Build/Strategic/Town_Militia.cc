@@ -873,7 +873,7 @@ static INT32 GetNumberOfUnpaidTrainableSectors()
 {
 	BuildListOfUnpaidTrainableSectors();
 	INT32 n = 0;
-	for (INT16 const* i = gsUnpaidStrategicSector; i != endof(gsUnpaidStrategicSector); ++i)
+	FOR_EACH(INT16 const, i, gsUnpaidStrategicSector)
 	{
 		if (*i != 0) ++n;
 	}
@@ -889,7 +889,7 @@ static void StartTrainingInAllUnpaidTrainableSectors()
 	SetAssignmentForList(TRAIN_TOWN, 0);
 	// Pay up in each sector
 	BuildListOfUnpaidTrainableSectors();
-	for (INT16 const* i = gsUnpaidStrategicSector; i != endof(gsUnpaidStrategicSector); ++i)
+	FOR_EACH(INT16 const, i, gsUnpaidStrategicSector)
 	{
 		if (*i == 0) continue;
 		PayForTrainingInSector(STRATEGIC_INDEX_TO_SECTOR_INFO(*i));

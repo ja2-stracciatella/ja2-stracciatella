@@ -17,7 +17,7 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f)
 	TacticalStatusType* const s = &gTacticalStatus;
 	const BYTE* d = data;
 	EXTR_U32(d, s->uiFlags)
-	for (TacticalTeamType* t = s->Team; t != endof(s->Team); ++t)
+	FOR_EACH(TacticalTeamType, t, s->Team)
 	{
 		EXTR_U8(d, t->bFirstID)
 		EXTR_U8(d, t->bLastID)
@@ -143,7 +143,7 @@ void InjectTacticalStatusTypeIntoFile(HWFILE const f)
 	BYTE*                     d = data;
 	TacticalStatusType* const s = &gTacticalStatus;
 	INJ_U32(d, s->uiFlags)
-	for (TacticalTeamType* t = s->Team; t != endof(s->Team); ++t)
+	FOR_EACH(TacticalTeamType const, t, s->Team)
 	{
 		INJ_U8(d, t->bFirstID)
 		INJ_U8(d, t->bLastID)

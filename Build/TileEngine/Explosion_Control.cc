@@ -104,7 +104,7 @@ static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
 
 static EXPLOSIONTYPE* GetFreeExplosion(void)
 {
-	for (EXPLOSIONTYPE* e = gExplosionData; e != endof(gExplosionData); ++e)
+	FOR_EACH(EXPLOSIONTYPE, e, gExplosionData)
 	{
 		if (!e->fAllocated) return e;
 	}

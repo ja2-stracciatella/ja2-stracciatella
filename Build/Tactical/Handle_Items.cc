@@ -2171,7 +2171,7 @@ static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Call
 
 void RemoveFlashItemSlot(ITEM_POOL const* const ip)
 {
-	for (ITEM_POOL_LOCATOR* i = FlashItemSlots; i != endof(FlashItemSlots); ++i)
+	FOR_EACH(ITEM_POOL_LOCATOR, i, FlashItemSlots)
 	{
 		if (i->pItemPool != ip) continue;
 		i->pItemPool = 0;

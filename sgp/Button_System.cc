@@ -50,7 +50,7 @@
 
 
 #define FOR_ALL_BUTTONS(iter) \
-	for (GUI_BUTTON** iter = ButtonList; iter != endof(ButtonList); ++iter) \
+	FOR_EACH(GUI_BUTTON*, iter, ButtonList) \
 		if (!*iter) continue; else
 
 
@@ -140,7 +140,7 @@ extern MOUSE_REGION* MSYS_PrevRegion;
 static BUTTON_PICS* FindFreeButtonSlot(void)
 {
 	// Search for a slot
-	for (BUTTON_PICS* i = ButtonPictures; i != endof(ButtonPictures); ++i)
+	FOR_EACH(BUTTON_PICS, i, ButtonPictures)
 	{
 		if (i->vobj == NULL) return i;
 	}
@@ -251,7 +251,7 @@ void UnloadButtonImage(BUTTON_PICS* const pics)
 		/* Deleting a non-duplicate, so see if any dups present. if so, then convert
 		 * one of them to an original!
 		 */
-		for (BUTTON_PICS* other = ButtonPictures; other != endof(ButtonPictures); ++other)
+		FOR_EACH(BUTTON_PICS, other, ButtonPictures)
 		{
 			if (other == pics) continue;
 			if (other->vobj != pics->vobj) continue;
@@ -392,7 +392,7 @@ void UnloadGenericButtonIcon(INT16 GenImg)
 static void ShutdownButtonImageManager(void)
 {
 	// Remove all QuickButton images
-	for (BUTTON_PICS* i = ButtonPictures; i != endof(ButtonPictures); ++i)
+	FOR_EACH(BUTTON_PICS, i, ButtonPictures)
 	{
 		if (i->vobj != NULL) UnloadButtonImage(i);
 	}

@@ -3588,7 +3588,7 @@ static void BlitMineGridMarkers(void)
 	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
 	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
-	for (MINE_LOCATION_TYPE const* i = gMineLocation; i != endof(gMineLocation); ++i)
+	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
 	{
 		INT16 x;
 		INT16 y;

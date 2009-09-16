@@ -328,7 +328,7 @@ void DestroyTileShadeTables(void)
 
 static void DestroyTileSurfaces(void)
 {
-	for (TILE_IMAGERY** i = gTileSurfaceArray; i != endof(gTileSurfaceArray); ++i)
+	FOR_EACH(TILE_IMAGERY*, i, gTileSurfaceArray)
 	{
 		if (!*i) continue;
 		DeleteTileSurface(*i);

@@ -41,7 +41,7 @@ try
 	}
 
 	// Loop through each tileset, load name then files
-	for (TILESET* ts = gTilesets; ts != endof(gTilesets); ++ts)
+	FOR_EACH(TILESET, ts, gTilesets)
 	{
 		//Read name
 		char zName[32];

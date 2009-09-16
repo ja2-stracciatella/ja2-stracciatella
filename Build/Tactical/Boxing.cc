@@ -282,7 +282,7 @@ bool CheckOnBoxers()
 
 bool BoxerExists()
 {
-	for (GridNo const* i = gsBoxerGridNo; i != endof(gsBoxerGridNo); ++i)
+	FOR_EACH(GridNo const, i, gsBoxerGridNo)
 	{
 		if (WhoIsThere2(*i, 0)) return true;
 	}

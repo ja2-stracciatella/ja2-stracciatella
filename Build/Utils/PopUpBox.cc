@@ -52,8 +52,8 @@ struct PopUpBox
 
 static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
 
-#define FOR_ALL_POPUP_BOXES(iter)                                           \
-	for (PopUpBox** iter = PopUpBoxList; iter != endof(PopUpBoxList); ++iter) \
+#define FOR_ALL_POPUP_BOXES(iter) \
+	FOR_EACH(PopUpBox*, iter, PopUpBoxList) \
 		if (*iter == NULL) continue; else
 
 
@@ -87,7 +87,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r, const UINT32 line_space)
 {
 	// find first free box
-	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
+	FOR_EACH(PopUpBox*, i, PopUpBoxList)
 	{
 		if (*i == NULL)
 		{

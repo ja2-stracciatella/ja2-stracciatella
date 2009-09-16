@@ -3267,7 +3267,7 @@ static void UpdateStatusOfDisplayingBookMarks(void)
 static void InitalizeSubSitesList(void)
 {
 	// init all subsites list to not visited
-	for (bool* i = gfWWWaitSubSitesVisitedFlags; i != endof(gfWWWaitSubSitesVisitedFlags); ++i)
+	FOR_EACH(bool, i, gfWWWaitSubSitesVisitedFlags)
 	{
 		*i = false;
 	}
@@ -3488,11 +3488,11 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_U32(  d, l.guiPlayersMercAccountNumber)
 	INJ_U8(   d, l.gubLastMercIndex)
 	INJ_SKIP( d, 1)
-	for (STORE_INVENTORY const* i = l.BobbyRayInventory; i != endof(l.BobbyRayInventory); ++i)
+	FOR_EACH(STORE_INVENTORY const, i, l.BobbyRayInventory)
 	{
 		d = InjectStoreInvetory(d, *i);
 	}
-	for (STORE_INVENTORY const* i = l.BobbyRayUsedInventory; i != endof(l.BobbyRayUsedInventory); ++i)
+	FOR_EACH(STORE_INVENTORY const, i, l.BobbyRayUsedInventory)
 	{
 		d = InjectStoreInvetory(d, *i);
 	}
@@ -3580,11 +3580,11 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_U32(  d, l.guiPlayersMercAccountNumber)
 	EXTR_U8(   d, l.gubLastMercIndex)
 	EXTR_SKIP( d, 1)
-	for (STORE_INVENTORY* i = l.BobbyRayInventory; i != endof(l.BobbyRayInventory); ++i)
+	FOR_EACH(STORE_INVENTORY, i, l.BobbyRayInventory)
 	{
 		d = ExtractStoreInvetory(d, *i);
 	}
-	for (STORE_INVENTORY* i = l.BobbyRayUsedInventory; i != endof(l.BobbyRayUsedInventory); ++i)
+	FOR_EACH(STORE_INVENTORY, i, l.BobbyRayUsedInventory)
 	{
 		d = ExtractStoreInvetory(d, *i);
 	}

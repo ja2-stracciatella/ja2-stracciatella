@@ -732,7 +732,7 @@ BOOLEAN PlayerControlsMine(INT8 bMineIndex)
 
 void SaveMineStatusToSaveGameFile(HWFILE const f)
 {
-	for (MINE_STATUS_TYPE const* i = gMineStatus; i != endof(gMineStatus); ++i)
+	FOR_EACH(MINE_STATUS_TYPE const, i, gMineStatus)
 	{
 		BYTE  data[44];
 		BYTE* d = data;
@@ -763,7 +763,7 @@ void SaveMineStatusToSaveGameFile(HWFILE const f)
 
 void LoadMineStatusFromSavedGameFile(HWFILE const f)
 {
-	for (MINE_STATUS_TYPE* i = gMineStatus; i != endof(gMineStatus); ++i)
+	FOR_EACH(MINE_STATUS_TYPE, i, gMineStatus)
 	{
 		BYTE  data[44];
 		FileRead(f, data, sizeof(data));

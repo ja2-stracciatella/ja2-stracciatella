@@ -72,7 +72,7 @@ static void InitKnowFacilitiesFlags(void)
 
 static void InitMiningLocations()
 {
-	for (MINE_LOCATION_TYPE const* i = gMineLocation; i != endof(gMineLocation); ++i)
+	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
 	{
 		MINE_LOCATION_TYPE const& l = *i;
 		SectorInfo[SECTOR(l.sSectorX, l.sSectorY)].uiFlags |= SF_MINING_SITE;

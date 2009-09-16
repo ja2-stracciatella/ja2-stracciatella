@@ -673,7 +673,7 @@ void DeleteSoldier(SOLDIERTYPE& s)
 
 	DeleteSoldierFace(&s);
 
-	for (UINT16** i = s.pShades; i != endof(s.pShades); ++i)
+	FOR_EACH(UINT16*, i, s.pShades)
 	{
 		if (*i == NULL) continue;
 		MemFree(*i);
@@ -686,7 +686,7 @@ void DeleteSoldier(SOLDIERTYPE& s)
 		s.effect_shade = 0;
 	}
 
-	for (UINT16** i = s.pGlowShades; i != endof(s.pGlowShades); ++i)
+	FOR_EACH(UINT16*, i, s.pGlowShades)
 	{
 		if (*i == NULL) continue;
 		MemFree(*i);

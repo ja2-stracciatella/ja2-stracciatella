@@ -2406,12 +2406,12 @@ BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, Approach const app
 
 void SaveNPCInfoToSaveGameFile(HWFILE const f)
 {
-	for (NPCQuoteInfo* const* i = gpNPCQuoteInfoArray; i != endof(gpNPCQuoteInfoArray); ++i)
+	FOR_EACH(NPCQuoteInfo* const, i, gpNPCQuoteInfoArray)
 	{
 		ConditionalInjectNPCQuoteInfoArrayIntoFile(f, *i);
 	}
 
-	for (NPCQuoteInfo* const* i = gpCivQuoteInfoArray; i != endof(gpCivQuoteInfoArray); ++i)
+	FOR_EACH(NPCQuoteInfo* const, i, gpCivQuoteInfoArray)
 	{
 		ConditionalInjectNPCQuoteInfoArrayIntoFile(f, *i);
 	}
@@ -2516,7 +2516,7 @@ void LoadNPCInfoFromSavedGameFile(HWFILE const f, UINT32 const uiSaveGameVersion
 
 void SaveBackupNPCInfoToSaveGameFile(HWFILE const f)
 {
-	for (NPCQuoteInfo* const* i = gpBackupNPCQuoteInfoArray; i != endof(gpBackupNPCQuoteInfoArray); ++i)
+	FOR_EACH(NPCQuoteInfo* const, i, gpBackupNPCQuoteInfoArray)
 	{
 		ConditionalInjectNPCQuoteInfoArrayIntoFile(f, *i);
 	}
@@ -2525,7 +2525,7 @@ void SaveBackupNPCInfoToSaveGameFile(HWFILE const f)
 
 void LoadBackupNPCInfoFromSavedGameFile(HWFILE const f)
 {
-	for (NPCQuoteInfo** i = gpBackupNPCQuoteInfoArray; i != endof(gpBackupNPCQuoteInfoArray); ++i)
+	FOR_EACH(NPCQuoteInfo*, i, gpBackupNPCQuoteInfoArray)
 	{
 		ConditionalExtractNPCQuoteInfoArrayFromFile(f, *i);
 	}

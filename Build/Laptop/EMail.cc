@@ -596,7 +596,7 @@ static void RemoveEmailMessage(Email* Mail)
 static void AddEmailPage(void)
 {
 	Page* const p = MALLOC(Page);
-	for (Email** i = p->Mail; i != endof(p->Mail); ++i) *i = NULL;
+	FOR_EACH(Email*, i, p->Mail) *i = 0;
 	p->Next = NULL;
 
 	if (pPageList)
@@ -781,8 +781,9 @@ static void DisplayEmailList(void)
 
 	// draw each line of the list for this page
 	INT32 y = MIDDLE_Y;
-	for (Email* const * e = p->Mail; e != endof(p->Mail) && *e != NULL; ++e)
+	FOR_EACH(Email* const, e, p->Mail)
 	{
+		if (!*e) break;
 		DrawEmailSummary(y, *e);
 		y += MIDDLE_WIDTH;
 	}

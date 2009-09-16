@@ -1615,7 +1615,7 @@ void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier )
 
 static bool IsStopTimeQuote(UINT16 const quote_id)
 {
-	for (UINT16 const* i = gusStopTimeQuoteList; i != endof(gusStopTimeQuoteList); ++i)
+	FOR_EACH(UINT16 const, i, gusStopTimeQuoteList)
 	{
 		if (*i == quote_id) return true;
 	}

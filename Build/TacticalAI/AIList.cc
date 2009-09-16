@@ -53,7 +53,7 @@ static void ClearAIList()
 
 static AILIST* CreateNewAIListEntry(SOLDIERTYPE* const s, INT8 const priority)
 {
-	for (AILIST* i = gAIList; i != endof(gAIList); ++i)
+	FOR_EACH(AILIST, i, gAIList)
 	{
 		AILIST& e = *i;
 		if (e.soldier) continue;

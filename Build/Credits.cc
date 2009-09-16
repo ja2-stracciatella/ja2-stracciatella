@@ -540,7 +540,7 @@ static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 
 static void InitCreditEyeBlinking(void)
 {
 	const UINT32 now = GetJA2Clock();
-	for (CDRT_FACE* f = gCreditFaces; f != endof(gCreditFaces); ++f)
+	FOR_EACH(CDRT_FACE, f, gCreditFaces)
 	{
 		f->uiLastBlinkTime = now + Random(f->sBlinkFreq * 2);
 	}

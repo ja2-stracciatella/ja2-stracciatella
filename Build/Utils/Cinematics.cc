@@ -44,7 +44,7 @@ static UINT32  guiSmackPixelFormat = SMACKBUFFER565;
 BOOLEAN SmkPollFlics(void)
 {
 	BOOLEAN fFlicStatus = FALSE;
-	for (SMKFLIC* i = SmkList; i != endof(SmkList); ++i)
+	FOR_EACH(SMKFLIC, i, SmkList)
 	{
 		if (!(i->uiFlags & SMK_FLIC_PLAYING)) continue;
 		fFlicStatus = TRUE;
@@ -85,7 +85,7 @@ void SmkInitialize(void)
 void SmkShutdown(void)
 {
 	// Close and deallocate any open flics
-	for (SMKFLIC* i = SmkList; i != endof(SmkList); ++i)
+	FOR_EACH(SMKFLIC, i, SmkList)
 	{
 		if (i->uiFlags & SMK_FLIC_OPEN) SmkCloseFlic(i);
 	}
@@ -166,7 +166,7 @@ void SmkCloseFlic(SMKFLIC* const sf)
 
 static SMKFLIC* SmkGetFreeFlic(void)
 {
-	for (SMKFLIC* i = SmkList; i != endof(SmkList); ++i)
+	FOR_EACH(SMKFLIC, i, SmkList)
 	{
 		if (!(i->uiFlags & SMK_FLIC_OPEN)) return i;
 	}

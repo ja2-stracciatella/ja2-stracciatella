@@ -651,7 +651,7 @@ static void SetupGunGUI()
 	 * could be available for a particular weapon. Show only the ones that we can
 	 * apply to this gun. */
 	INT16 y = 383;
-	for (AttachmentInfo* i = g_weapon_attachment; i != endof(g_weapon_attachment); ++i)
+	FOR_EACH(AttachmentInfo, i, g_weapon_attachment)
 	{
 		if (MakeAttachmentButton(*i, 570, y, 60, ToggleWeaponAttachment)) y += 14;
 	}
@@ -662,7 +662,7 @@ static void SetupGunGUI()
 
 static void RemoveGunGUI(void)
 {
-	for (AttachmentInfo* i = g_weapon_attachment; i != endof(g_weapon_attachment); ++i)
+	FOR_EACH(AttachmentInfo, i, g_weapon_attachment)
 	{
 		GUIButtonRef& b = i->button;
 		if (b) RemoveButton(b);
@@ -1368,7 +1368,7 @@ void UpdateActionItem( INT8 bActionItemIndex )
 
 static void ReEvaluateAttachmentStatii(void)
 {
-	for (AttachmentInfo* i = g_weapon_attachment; i != endof(g_weapon_attachment); ++i)
+	FOR_EACH(AttachmentInfo, i, g_weapon_attachment)
 	{
 		AttachmentInfo const& a = *i;
 		if (!a.button) continue;

@@ -180,7 +180,7 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 
 	for (DEALER_ITEM_HEADER const (*dealer)[MAXITEMS] = gArmsDealersInventory; dealer != endof(gArmsDealersInventory); ++dealer)
 	{
-		for (DEALER_ITEM_HEADER const* item = *dealer; item != endof(*dealer); ++item)
+		FOR_EACH(DEALER_ITEM_HEADER const, item, *dealer)
 		{
 			BYTE  data[16];
 			BYTE* d = data;
@@ -231,7 +231,7 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 
 	for (DEALER_ITEM_HEADER (*dealer)[MAXITEMS] = gArmsDealersInventory; dealer != gArmsDealersInventory + n_dealers_saved; ++dealer)
 	{
-		for (DEALER_ITEM_HEADER* item = *dealer; item != endof(*dealer); ++item)
+		FOR_EACH(DEALER_ITEM_HEADER, item, *dealer)
 		{
 			BYTE data[16];
 			FileRead(f, data, sizeof(data));

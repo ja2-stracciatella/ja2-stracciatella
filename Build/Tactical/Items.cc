@@ -1626,7 +1626,7 @@ UINT8 CalculateObjectWeight(OBJECTTYPE const* const o)
 	if (item.ubPerPocket <= 1)
 	{
 		// Account for any attachments
-		for (UINT16 const* i = o->usAttachItem; i != endof(o->usAttachItem); ++i)
+		FOR_EACH(UINT16 const, i, o->usAttachItem)
 		{
 			if (*i == NOTHING) continue;
 			weight += Item[*i].ubWeight;
@@ -2324,7 +2324,7 @@ static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 		if (m.usItem != o.usItem) continue;
 
 		// Search for all the appropriate attachments
-		for (UINT16 const* k = m.usAttachment; k != endof(m.usAttachment); ++k)
+		FOR_EACH(UINT16 const, k, m.usAttachment)
 		{
 			UINT16 const attachment = *k;
 			if (attachment == NOTHING) continue;
@@ -2346,7 +2346,7 @@ static void PerformAttachmentComboMerge(OBJECTTYPE& o, ComboMergeInfoStruct cons
 	 * - Change object */
 	UINT32 total_status          = o.bStatus[0];
 	INT8   n_status_contributors = 1;
-	for (UINT16 const* i = m.usAttachment; i != endof(m.usAttachment); ++i)
+	FOR_EACH(UINT16 const, i, m.usAttachment)
 	{
 		if (*i == NOTHING) continue;
 

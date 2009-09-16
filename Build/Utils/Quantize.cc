@@ -187,7 +187,7 @@ void QuantizeImage(UINT8* const pDest, const SGPPaletteEntry* const pSrc, const 
 {
 	// First create palette
 	g_leaf_count = 0;
-	for (NODE** i = g_reducible_nodes; i != endof(g_reducible_nodes); ++i) *i = 0;
+	FOR_EACH(NODE*, i, g_reducible_nodes) *i = 0;
 	NODE* const tree = ProcessImage(pSrc, sWidth, sHeight);
 
 	memset(pPalette, 0,  sizeof(*pPalette) * 256);

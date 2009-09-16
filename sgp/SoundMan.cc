@@ -322,7 +322,7 @@ void SoundStopAll(void)
 	if (!fSoundSystemInit) return;
 
 	SDL_PauseAudio(1);
-	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
+	FOR_EACH(SOUNDTAG, i, pSoundList)
 	{
 		if (SoundStopChannel(i))
 		{
@@ -378,7 +378,7 @@ static UINT32 SoundStartRandom(SAMPLETAG* s);
 
 void SoundServiceRandom(void)
 {
-	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
+	FOR_EACH(SAMPLETAG, i, pSampleList)
 	{
 		if (SoundRandomShouldPlay(i)) SoundStartRandom(i);
 	}
@@ -422,7 +422,7 @@ static UINT32 SoundStartRandom(SAMPLETAG* s)
 void SoundStopAllRandom(void)
 {
 	// Stop all currently playing random sounds
-	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
+	FOR_EACH(SOUNDTAG, i, pSoundList)
 	{
 		if (i->State == CHANNEL_PLAY && i->pSample->uiFlags & SAMPLE_RANDOM)
 		{
@@ -432,7 +432,7 @@ void SoundStopAllRandom(void)
 
 	// Unlock all random sounds so they can be dumped from the cache, and
 	// take the random flag off so they won't be serviced/played
-	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
+	FOR_EACH(SAMPLETAG, i, pSampleList)
 	{
 		if (i->uiFlags & SAMPLE_RANDOM)
 		{
@@ -490,7 +490,7 @@ static void SoundEmptyCache(void)
 {
 	SoundStopAll();
 
-	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
+	FOR_EACH(SAMPLETAG, i, pSampleList)
 	{
 		SoundFreeSample(i);
 	}
@@ -518,7 +518,7 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 {
 	if (pFilename[0] == '\0') return NULL; // XXX HACK0009
 
-	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
+	FOR_EACH(SAMPLETAG, i, pSampleList)
 	{
 		if (strcasecmp(i->pName, pFilename) == 0) return i;
 	}
@@ -849,7 +849,7 @@ static BOOLEAN SoundCleanCache(void)
 {
 	SAMPLETAG* candidate = NULL;
 
-	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
+	FOR_EACH(SAMPLETAG, i, pSampleList)
 	{
 		if (i->uiFlags & SAMPLE_ALLOCATED &&
 				!(i->uiFlags & SAMPLE_LOCKED) &&
@@ -882,7 +882,7 @@ static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
  * Returns: A free sample or NULL if none are left. */
 static SAMPLETAG* SoundGetEmptySample(void)
 {
-	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
+	FOR_EACH(SAMPLETAG, i, pSampleList)
 	{
 		if (!(i->uiFlags & SAMPLE_ALLOCATED)) return i;
 	}
@@ -910,7 +910,7 @@ static void SoundFreeSample(SAMPLETAG* s)
  *          otherwise. */
 static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 {
-	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
+	FOR_EACH(SOUNDTAG, i, pSoundList)
 	{
 		if (i->uiSoundID == uiSoundID) return i;
 	}
@@ -1046,7 +1046,7 @@ static void SoundShutdownHardware(void)
  * Returns: Pointer to a sound channel if one was found, NULL if not. */
 static SOUNDTAG* SoundGetFreeChannel(void)
 {
-	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
+	FOR_EACH(SOUNDTAG, i, pSoundList)
 	{
 		if (i->State == CHANNEL_FREE) return i;
 	}

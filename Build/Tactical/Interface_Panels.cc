@@ -366,8 +366,7 @@ struct TeamPanelSlot
 
 static TeamPanelSlot gTeamPanel[NUM_TEAM_SLOTS];
 
-#define FOR_ALL_TEAM_PANEL_SLOTS(iter) \
-	for (TeamPanelSlot* iter = gTeamPanel; iter != endof(gTeamPanel); ++iter)
+#define FOR_ALL_TEAM_PANEL_SLOTS(iter) FOR_EACH(TeamPanelSlot, iter, gTeamPanel)
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
