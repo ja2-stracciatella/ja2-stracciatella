@@ -412,10 +412,6 @@ static SGPPoint const pTownPoints[] =
 };
 
 
-static INT16 const gpSamSectorX[] = { SAM_1_X, SAM_2_X, SAM_3_X, SAM_4_X };
-static INT16 const gpSamSectorY[] = { SAM_1_Y, SAM_2_Y, SAM_3_Y, SAM_4_Y };
-
-
 // map region
 SGPRect MapScreenRect={	(MAP_VIEW_START_X+MAP_GRID_X - 2),	( MAP_VIEW_START_Y+MAP_GRID_Y - 1), MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 + MAP_GRID_X , MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-10+MAP_GRID_Y};
 
@@ -4720,8 +4716,9 @@ static void ShowSAMSitesOnStrategicMap(void)
 			continue;
 		}
 
-		const INT16 sSectorX = gpSamSectorX[iCounter];
-		const INT16 sSectorY = gpSamSectorY[iCounter];
+		INT16 const sector   = pSamList[iCounter];
+		INT16 const sSectorX = SECTORX(sector);
+		INT16 const sSectorY = SECTORY(sector);
 
 #ifndef JA2DEMO
 		DrawSite(sSectorX, sSectorY, guiSAMICON);
@@ -4802,9 +4799,10 @@ static void BlitSAMGridMarkers(void)
 			continue;
 		}
 
+		INT16 const sector = pSamList[iCounter];
 		if( fZoomFlag )
 		{
-			GetScreenXYFromMapXYStationary( gpSamSectorX[ iCounter ], gpSamSectorY[ iCounter ], &sScreenX, &sScreenY );
+			GetScreenXYFromMapXYStationary(SECTORX(sector), SECTORY(sector), &sScreenX, &sScreenY);
 			sScreenX -= MAP_GRID_X;
 			sScreenY -= MAP_GRID_Y;
 
@@ -4814,7 +4812,7 @@ static void BlitSAMGridMarkers(void)
 		else
 		{
 			// get location on screen
-			GetScreenXYFromMapXY( gpSamSectorX[ iCounter ], gpSamSectorY[ iCounter ], &sScreenX, &sScreenY );
+			GetScreenXYFromMapXY(SECTORX(sector), SECTORY(sector), &sScreenX, &sScreenY);
 			sWidth = MAP_GRID_X;
 			sHeight= MAP_GRID_Y;
 		}
