@@ -98,7 +98,7 @@ bool CanGoToTacticalInSector(INT16 x, INT16 y, UINT8 z);
 
 void UpdateAirspaceControl( void );
 
-BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+bool IsThisSectorASAMSector(INT16 x, INT16 y, INT8 z);
 
 // init sam sites
 void InitializeSAMSites( void );

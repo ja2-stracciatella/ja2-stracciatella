@@ -2901,33 +2901,16 @@ BOOLEAN IsThereAFunctionalSAMSiteInSector( INT16 sSectorX, INT16 sSectorY, INT8 
 	return( TRUE );
 }
 
-BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+
+bool IsThisSectorASAMSector(INT16 const x, INT16 const y, INT8 const z)
 {
+	if (z != 0) return false;
 
-	// is the sector above ground?
-	if( bSectorZ != 0 )
+	for (INT16 const* i = pSamList; i != endof(pSamList); ++i)
 	{
-		return( FALSE );
+		if (*i == SECTOR(x, y)) return true;
 	}
-
-	if( ( SAM_1_X == sSectorX ) && ( SAM_1_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_2_X == sSectorX ) && ( SAM_2_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_3_X == sSectorX ) && ( SAM_3_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-	else 	if( ( SAM_4_X == sSectorX ) && ( SAM_4_Y == sSectorY ) )
-	{
-		return( TRUE );
-	}
-
-	return ( FALSE );
+	return false;
 }
 
 
