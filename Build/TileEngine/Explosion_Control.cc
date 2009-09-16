@@ -2225,25 +2225,21 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 }
 
 
-static void AddBombToQueue(UINT32 uiWorldBombIndex, UINT32 uiTimeStamp)
+static void AddBombToQueue(UINT32 const world_bomb_idx, UINT32 const timestamp)
 {
-	if (gubElementsOnExplosionQueue == MAX_BOMB_QUEUE)
-	{
-		return;
-	}
+	if (gubElementsOnExplosionQueue == MAX_BOMB_QUEUE) return; // XXX exception?
 
-	gExplosionQueue[gubElementsOnExplosionQueue].uiWorldBombIndex = uiWorldBombIndex;
-	gExplosionQueue[gubElementsOnExplosionQueue].uiTimeStamp = uiTimeStamp;
-	gExplosionQueue[gubElementsOnExplosionQueue].fExists = TRUE;
+	ExplosionQueueElement& e = gExplosionQueue[gubElementsOnExplosionQueue++];
+	e.uiWorldBombIndex = world_bomb_idx;
+	e.uiTimeStamp      = timestamp;
+	e.fExists          = TRUE;
+
 	if (!gfExplosionQueueActive)
 	{
-		// lock UI
-		guiPendingOverrideEvent = LU_BEGINUILOCK;
-		// disable sight
-		gTacticalStatus.uiFlags |= DISALLOW_SIGHT;
+		gfExplosionQueueActive   = TRUE;
+		guiPendingOverrideEvent  = LU_BEGINUILOCK; // Lock UI
+		gTacticalStatus.uiFlags |= DISALLOW_SIGHT; // Disable sight
 	}
-	gubElementsOnExplosionQueue++;
-	gfExplosionQueueActive = TRUE;
 }
 
 
