@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "Font_Control.h"
 #include "Soldier_Tile.h"
@@ -912,39 +914,25 @@ static void ClearStrategicLog(void);
 
 void InitStrategicAI()
 {
-	INT32 i, cnt, iRandom;
-	INT32 iEliteChance, iTroopChance, iAdminChance;
-	INT32 iWeight;
-	INT32 iStartPop, iDesiredPop, iPriority;
-	SECTORINFO *pSector = NULL;
-	GROUP *pGroup;
-	UINT8 ubNumTroops;
-	//Initialize the basic variables.
-
-	gfExtraElites						= FALSE;
-	giGarrisonArraySize			= 0;
-	giPatrolArraySize				= 0;
-	giForcePercentage				= 0;
-	giArmyAlertness					= 0;
-	giArmyAlertnessDecay		= 0;
-	gubNumAwareBattles			= 0;
-	gfQueenAIAwake					= FALSE;
-	giReinforcementPool			= 0;
-	giReinforcementPoints		= 0;
-	giRequestPoints					= 0;
-	gubSAIVersion						= SAI_VERSION;
-	gubQueenPriorityPhase		= 0;
+	gfExtraElites                      = FALSE;
+	gubNumAwareBattles                 = 0;
+	gfQueenAIAwake                     = FALSE;
+	giReinforcementPoints              = 0;
+	giRequestPoints                    = 0;
+	gubSAIVersion                      = SAI_VERSION;
+	gubQueenPriorityPhase              = 0;
 	gfFirstBattleMeanwhileScenePending = FALSE;
-	gfMassFortificationOrdered = FALSE;
-	gubMinEnemyGroupSize		= 0;
-	gubHoursGracePeriod			= 0;
-	gusPlayerBattleVictories = 0;
-	gfUseAlternateQueenPosition = FALSE;
+	gfMassFortificationOrdered         = FALSE;
+	gusPlayerBattleVictories           = 0;
+	gfUseAlternateQueenPosition        = FALSE;
 
-	#ifdef JA2BETAVERSION
-		ClearStrategicLog();
-	#endif
-	switch( gGameOptions.ubDifficultyLevel )
+#ifdef JA2BETAVERSION
+	ClearStrategicLog();
+#endif
+	// 475 is 7:55am in minutes since midnight, the time the game starts on day 1
+	UINT32      evaluate_time = 475;
+	UINT8 const difficulty    = gGameOptions.ubDifficultyLevel;
+	switch (difficulty)
 	{
 		case DIF_LEVEL_EASY:
 			giReinforcementPool		= EASY_QUEENS_POOL_OF_TROOPS;
@@ -953,9 +941,9 @@ void InitStrategicAI()
 			giArmyAlertnessDecay	= EASY_ENEMY_STARTING_ALERT_DECAY;
 			gubMinEnemyGroupSize	= EASY_MIN_ENEMY_GROUP_SIZE;
 			gubHoursGracePeriod   = EASY_GRACE_PERIOD_IN_HOURS;
-			// 475 is 7:55am in minutes since midnight, the time the game starts on day 1
-			AddStrategicEvent( EVENT_EVALUATE_QUEEN_SITUATION, 475 + EASY_TIME_EVALUATE_IN_MINUTES + Random( EASY_TIME_EVALUATE_VARIANCE ), 0 );
+			evaluate_time += EASY_TIME_EVALUATE_IN_MINUTES + Random(EASY_TIME_EVALUATE_VARIANCE);
 			break;
+
 		case DIF_LEVEL_MEDIUM:
 			giReinforcementPool		= NORMAL_QUEENS_POOL_OF_TROOPS;
 			giForcePercentage			= NORMAL_INITIAL_GARRISON_PERCENTAGES;
@@ -963,8 +951,9 @@ void InitStrategicAI()
 			giArmyAlertnessDecay	= NORMAL_ENEMY_STARTING_ALERT_DECAY;
 			gubMinEnemyGroupSize	= NORMAL_MIN_ENEMY_GROUP_SIZE;
 			gubHoursGracePeriod   = NORMAL_GRACE_PERIOD_IN_HOURS;
-			AddStrategicEvent( EVENT_EVALUATE_QUEEN_SITUATION, 475 + NORMAL_TIME_EVALUATE_IN_MINUTES + Random( NORMAL_TIME_EVALUATE_VARIANCE ), 0 );
+			evaluate_time += NORMAL_TIME_EVALUATE_IN_MINUTES + Random(NORMAL_TIME_EVALUATE_VARIANCE);
 			break;
+
 		case DIF_LEVEL_HARD:
 			giReinforcementPool		= HARD_QUEENS_POOL_OF_TROOPS;
 			giForcePercentage			= HARD_INITIAL_GARRISON_PERCENTAGES;
@@ -972,255 +961,246 @@ void InitStrategicAI()
 			giArmyAlertnessDecay	= HARD_ENEMY_STARTING_ALERT_DECAY;
 			gubMinEnemyGroupSize	= HARD_MIN_ENEMY_GROUP_SIZE;
 			gubHoursGracePeriod   = HARD_GRACE_PERIOD_IN_HOURS;
-			AddStrategicEvent( EVENT_EVALUATE_QUEEN_SITUATION, 475 + HARD_TIME_EVALUATE_IN_MINUTES + Random( HARD_TIME_EVALUATE_VARIANCE ), 0 );
+			evaluate_time += HARD_TIME_EVALUATE_IN_MINUTES + Random(HARD_TIME_EVALUATE_VARIANCE);
 			break;
+
+		default:
+			throw std::logic_error("invalid difficulty level");
 	}
+	AddStrategicEvent(EVENT_EVALUATE_QUEEN_SITUATION, evaluate_time, 0);
 
 	//Initialize the sectorinfo structure so all sectors don't point to a garrisonID.
-	for( i = 0; i <= 255; i++ )
+	FOR_EACH(SECTORINFO, i, SectorInfo)
 	{
-		SectorInfo[ i ].ubGarrisonID = NO_GARRISON;
+		i->ubGarrisonID = NO_GARRISON;
 	}
 
-	//copy over the original army composition as it does get modified during the campaign.  This
-	//bulletproofs starting the game over again.
-	memcpy( gArmyComp, gOrigArmyComp, sizeof( gArmyComp ) );
+	/* Copy over the original army composition as it does get modified during the
+	 * campaign. This bulletproofs starting the game over again. */
+	memcpy(gArmyComp, gOrigArmyComp, sizeof(gArmyComp));
 
-	//Eliminate more perimeter defenses on the easier levels.
-	switch( gGameOptions.ubDifficultyLevel )
+	// Eliminate more perimeter defenses on the easier levels.
+	switch (difficulty)
 	{
 		case DIF_LEVEL_EASY:
-			gArmyComp[ LEVEL2_DEFENCE ].bDesiredPopulation = 0;
-			gArmyComp[ LEVEL2_DEFENCE ].bStartPopulation = 0;
-			gArmyComp[ LEVEL3_DEFENCE ].bDesiredPopulation = 0;
-			gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
-			break;
+			gArmyComp[LEVEL2_DEFENCE].bDesiredPopulation = 0;
+			gArmyComp[LEVEL2_DEFENCE].bStartPopulation   = 0;
+			/* FALLTHROUGH */
 		case DIF_LEVEL_MEDIUM:
-			gArmyComp[ LEVEL3_DEFENCE ].bDesiredPopulation = 0;
-			gArmyComp[ LEVEL3_DEFENCE ].bStartPopulation = 0;
+			gArmyComp[LEVEL3_DEFENCE].bDesiredPopulation = 0;
+			gArmyComp[LEVEL3_DEFENCE].bStartPopulation   = 0;
 			break;
 	}
-	//initialize the patrol group definitions
-	giPatrolArraySize = sizeof( gOrigPatrolGroup ) / sizeof( PATROL_GROUP );
-	if( !gPatrolGroup )
-	{ //Allocate it (otherwise, we just overwrite it because the size never changes)
+
+	// Initialize the patrol group definitions
+	giPatrolArraySize = lengthof(gOrigPatrolGroup);
+	if (!gPatrolGroup)
+	{ // Allocate it (otherwise, we just overwrite it because the size never changes)
 		gPatrolGroup = MALLOCN(PATROL_GROUP, lengthof(gOrigPatrolGroup));
 	}
-	memcpy( gPatrolGroup, gOrigPatrolGroup, sizeof( gOrigPatrolGroup ) );
-
+	memcpy(gPatrolGroup, gOrigPatrolGroup, sizeof(gOrigPatrolGroup));
 	gubPatrolReinforcementsDenied = MALLOCNZ(UINT8, giPatrolArraySize);
 
-	//initialize the garrison group definitions
-	giGarrisonArraySize = sizeof( gOrigGarrisonGroup ) / sizeof( GARRISON_GROUP );
-	if( !gGarrisonGroup )
+	// Initialize the garrison group definitions
+	giGarrisonArraySize = lengthof(gOrigGarrisonGroup);
+	if (!gGarrisonGroup)
 	{
 		gGarrisonGroup = MALLOCN(GARRISON_GROUP, lengthof(gOrigGarrisonGroup));
 	}
-	memcpy( gGarrisonGroup, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
-
+	memcpy(gGarrisonGroup, gOrigGarrisonGroup, sizeof(gOrigGarrisonGroup));
 	gubGarrisonReinforcementsDenied = MALLOCNZ(UINT8, giGarrisonArraySize);
 
-	//Modify initial force sizes?
-	if( giForcePercentage != 100 )
-	{ //The initial force sizes are being modified, so go through each of the army compositions
-		//and adjust them accordingly.
-		for( i = 0; i < NUM_ARMY_COMPOSITIONS; i++ )
+	// Modify initial force sizes?
+	INT32 const force_percentage = giForcePercentage;
+	if (force_percentage != 100)
+	{ /* The initial force sizes are being modified, so go through each of the
+		 * army compositions and adjust them accordingly. */
+		for (INT32 i = 0; i != NUM_ARMY_COMPOSITIONS; ++i)
 		{
-			if( i != QUEEN_DEFENCE )
+			ARMY_COMPOSITION& a = gArmyComp[i];
+			if (i != QUEEN_DEFENCE)
 			{
-				gArmyComp[ i ].bDesiredPopulation = (INT8)MIN( MAX_STRATEGIC_TEAM_SIZE, (gArmyComp[ i ].bDesiredPopulation * giForcePercentage / 100) );
-				if( gArmyComp[ i ].bStartPopulation != MAX_STRATEGIC_TEAM_SIZE )
-				{ //if the value is MAX_STRATEGIC_TEAM_SIZE, then that means the particular sector is a spawning location.
-					//Don't modify the value if it is MAX_STRATEGIC_TEAM_SIZE.  Everything else is game.
-					gArmyComp[ i ].bStartPopulation = (INT8)MIN( MAX_STRATEGIC_TEAM_SIZE, (gArmyComp[ i ].bStartPopulation * giForcePercentage / 100) );
+				a.bDesiredPopulation = MIN(MAX_STRATEGIC_TEAM_SIZE, a.bDesiredPopulation * force_percentage / 100);
+				if (a.bStartPopulation != MAX_STRATEGIC_TEAM_SIZE)
+				{ /* If the value is MAX_STRATEGIC_TEAM_SIZE, then that means the
+					 * particular sector is a spawning location. Don't modify the value if
+					 * it is MAX_STRATEGIC_TEAM_SIZE. Everything else is game. */
+					a.bStartPopulation = MIN(MAX_STRATEGIC_TEAM_SIZE, a.bStartPopulation * force_percentage / 100);
 				}
 			}
 			else
 			{
-				gArmyComp[ i ].bDesiredPopulation = (INT8)MIN( 32, (gArmyComp[ i ].bDesiredPopulation * giForcePercentage / 100) );
-				gArmyComp[ i ].bStartPopulation = gArmyComp[ i ].bDesiredPopulation;
+				a.bDesiredPopulation = MIN(32, a.bDesiredPopulation * force_percentage / 100);
+				a.bStartPopulation   = a.bDesiredPopulation;
 			}
 		}
-		for( i = 0; i < giPatrolArraySize; i++ )
-		{ //force modified range within 1-MAX_STRATEGIC_TEAM_SIZE.
-			gPatrolGroup[ i ].bSize = (INT8)MAX( gubMinEnemyGroupSize, MIN( MAX_STRATEGIC_TEAM_SIZE, (gPatrolGroup[ i ].bSize * giForcePercentage / 100 ) ) );
+		for (INT32 i = 0; i != giPatrolArraySize; ++i)
+		{ // Force modified range within 1 - MAX_STRATEGIC_TEAM_SIZE.
+			INT8& size = gPatrolGroup[i].bSize;
+			size = MAX(gubMinEnemyGroupSize, MIN(MAX_STRATEGIC_TEAM_SIZE, size * force_percentage / 100));
 		}
 	}
 
-	//Now, initialize the garrisons based on the initial sizes (all variances are plus or minus 1).
-	for( i = 0; i < giGarrisonArraySize; i++ )
+	/* Initialize the garrisons based on the initial sizes (all variances are plus
+	 * or minus 1). */
+	for (INT32 i = 0; i != giGarrisonArraySize; ++i)
 	{
-		pSector = &SectorInfo[ gGarrisonGroup[ i ].ubSectorID ];
-		pSector->ubGarrisonID = (UINT8)i;
-		iStartPop = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bStartPopulation;
-		iDesiredPop = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bDesiredPopulation;
-		iPriority = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bPriority;
-		iEliteChance = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bElitePercentage;
-		iTroopChance = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bTroopPercentage + iEliteChance;
-		iAdminChance = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bAdminPercentage;
+		GARRISON_GROUP& gg = gGarrisonGroup[i];
+		SECTORINFO&     si = SectorInfo[gg.ubSectorID];
+		si.ubGarrisonID = i;
+		ARMY_COMPOSITION const& ac = gArmyComp[gg.ubComposition];
+		INT32       start_pop    = ac.bStartPopulation;
+		INT32 const desired_pop  = ac.bDesiredPopulation;
+		INT32 const iPriority    = ac.bPriority;
+		INT32 const elite_chance = ac.bElitePercentage;
+		INT32 const troop_chance = ac.bTroopPercentage + elite_chance;
+		INT32 const admin_chance = ac.bAdminPercentage;
 
-		switch( gGarrisonGroup[ i ].ubComposition )
+		switch (gg.ubComposition)
 		{
 			case ROADBLOCK:
-				pSector->uiFlags |= SF_ENEMY_AMBUSH_LOCATION;
-				if( Chance( 20 ) )
-					iStartPop = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bDesiredPopulation;
-				else
-					iStartPop = 0;
+				si.uiFlags |= SF_ENEMY_AMBUSH_LOCATION;
+				start_pop   = Chance(20) ? ac.bDesiredPopulation : 0;
 				break;
+
 			case SANMONA_SMALL:
-				iStartPop = 0; //not appropriate until Kingpin is killed.
+				start_pop = 0; // Not appropriate until Kingpin is killed.
 				break;
 		}
 
-		if( iStartPop )
+		if (start_pop != 0)
 		{
-			if( gGarrisonGroup[ i ].ubSectorID != SEC_P3 )
+			if (gg.ubSectorID != SEC_P3)
 			{
 				// if population is less than maximum
-				if( iStartPop != MAX_STRATEGIC_TEAM_SIZE )
+				if (start_pop != MAX_STRATEGIC_TEAM_SIZE)
 				{
 					// then vary it a bit (+/- 25%)
-					iStartPop = iStartPop * ( 100 + ( Random ( 51 ) - 25 ) ) / 100;
+					start_pop = start_pop * (100 + Random(51) - 25) / 100;
 				}
 
-				iStartPop = MAX( gubMinEnemyGroupSize, MIN( MAX_STRATEGIC_TEAM_SIZE, iStartPop ) );
+				start_pop = MAX(gubMinEnemyGroupSize, MIN(MAX_STRATEGIC_TEAM_SIZE, start_pop));
 			}
-			cnt = iStartPop;
 
-			if( iAdminChance )
+			if (admin_chance != 0)
 			{
-				pSector->ubNumAdmins = iAdminChance * iStartPop / 100;
+				si.ubNumAdmins = admin_chance * start_pop / 100;
 			}
-			else while( cnt-- )
-			{ //for each person, randomly determine the types of each soldier.
+			else for (INT32 cnt = start_pop; cnt != 0; --cnt)
+			{ // For each soldier randomly determine the type.
+				INT32 const roll = Random(100);
+				if (roll < elite_chance)
 				{
-					iRandom = Random( 100 );
-					if( iRandom < iEliteChance )
-					{
-						pSector->ubNumElites++;
-					}
-					else if( iRandom < iTroopChance )
-					{
-						pSector->ubNumTroops++;
-					}
+					++si.ubNumElites;
+				}
+				else if (roll < troop_chance)
+				{
+					++si.ubNumTroops;
 				}
 			}
-			switch( gGarrisonGroup[ i ].ubComposition )
+
+			switch (gg.ubComposition)
 			{
 				case CAMBRIA_DEFENCE:
 				case CAMBRIA_MINE:
 				case ALMA_MINE:
 				case GRUMM_MINE:
-					//Fill up extra start slots with troops
-					pSector->ubNumTroops = (UINT8)(iStartPop -= pSector->ubNumAdmins);
+					// Fill up extra start slots with troops
+					start_pop      -= si.ubNumAdmins;
+					si.ubNumTroops  = start_pop;
 					break;
+
 				case DRASSEN_AIRPORT:
 				case DRASSEN_DEFENCE:
 				case DRASSEN_MINE:
-					pSector->ubNumAdmins = (UINT8)MAX( 5, pSector->ubNumAdmins );
+					si.ubNumAdmins = MAX(5, si.ubNumAdmins);
 					break;
+
 				case TIXA_PRISON:
-					pSector->ubNumAdmins = (UINT8)MAX( 8, pSector->ubNumAdmins );
+					si.ubNumAdmins = MAX(8, si.ubNumAdmins);
 					break;
-
 			}
 		}
-		if( iAdminChance && pSector->ubNumAdmins < gubMinEnemyGroupSize )
+
+		if (admin_chance != 0 && si.ubNumAdmins < gubMinEnemyGroupSize)
 		{
-			pSector->ubNumAdmins = gubMinEnemyGroupSize;
+			si.ubNumAdmins = gubMinEnemyGroupSize;
 		}
-		//Calculate weight (range is -20 to +20 before multiplier).
-		//The multiplier of 3 brings it to a range of -96 to +96 which is
-		//close enough to a plus/minus 100%.  The resultant percentage is then
-		//converted based on the priority.
-		iWeight = (iDesiredPop - iStartPop) * 3;
-		if( iWeight > 0 )
-		{ //modify it by it's priority.
-			//generates a value between 2 and 100
-			iWeight = iWeight * iPriority / 96;
-			iWeight = MAX( iWeight, 2 );
-			giRequestPoints += iWeight;
-		}
-		else if( iWeight < 0 )
-		{ //modify it by it's reverse priority
-			//generates a value between -2 and -100
-			iWeight = iWeight * (100-iPriority) / 96;
-			iWeight = MIN( iWeight, -2 );
-			giReinforcementPoints -= iWeight;
-		}
-		gGarrisonGroup[ i ].bWeight = (INT8)iWeight;
 
-		//Now post an event which allows them to check adjacent sectors periodically.
-		//Spread them out so that they process at different times.
-		AddPeriodStrategicEventWithOffset( EVENT_CHECK_ENEMY_CONTROLLED_SECTOR, 140 - 20 * gGameOptions.ubDifficultyLevel + Random( 4 ), 475 + i, gGarrisonGroup[ i ].ubSectorID );
-	}
-	//Now, initialize each of the patrol groups
-	for( i = 0; i < giPatrolArraySize; i++ )
-	{	// IGNORE COMMENT, FEATURE REMOVED!
-		//Some of the patrol groups aren't there at the beginning of the game.  This is
-		//based on the difficulty settings in the above patrol table.
-		//if( gPatrolGroup[ i ].ubUNUSEDStartIfDifficulty <= gGameOptions.ubDifficultyLevel )
-		{ //Add this patrol group now.
-			ubNumTroops = (UINT8)(gPatrolGroup[ i ].bSize + Random( 3 ) - 1);
-			ubNumTroops = (UINT8)MAX( gubMinEnemyGroupSize, MIN( MAX_STRATEGIC_TEAM_SIZE, ubNumTroops ) );
-			//ubNumTroops = (UINT8)MAX( gubMinEnemyGroupSize, MIN( MAX_STRATEGIC_TEAM_SIZE, gPatrolGroup[ i ].bSize + Random( 3 ) - 1 ) );
-			//Note on adding patrol groups...
-			//The patrol group can't actually start on the first waypoint, so we set it to the second way
-			//point for initialization, and then add the waypoints from 0 up
-			pGroup = CreateNewEnemyGroupDepartingFromSector( gPatrolGroup[ i ].ubSectorID[ 1 ], 0, ubNumTroops, 0 );
-
-			if( i == 3 || i == 4 )
-			{ //Special case:  Two patrol groups are administrator groups -- rest are troops
-				pGroup->pEnemyGroup->ubNumAdmins = pGroup->pEnemyGroup->ubNumTroops;
-				pGroup->pEnemyGroup->ubNumTroops = 0;
-			}
-			gPatrolGroup[ i ].ubGroupID = pGroup->ubGroupID;
-			pGroup->pEnemyGroup->ubIntention = PATROL;
-			pGroup->ubMoveType = ENDTOEND_FORWARDS;
-			AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 0 ] );
-			AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 1 ] );
-			if( gPatrolGroup[ i ].ubSectorID[ 2 ] )
-			{ //Add optional waypoints if included.
-				AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 2 ] );
-				if( gPatrolGroup[ i ].ubSectorID[ 3 ] )
-					AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 3 ] );
-			}
-			RandomizePatrolGroupLocation( pGroup );
-			ValidateGroup( pGroup );
+		/* Calculate weight (range is -20 to +20 before multiplier). The multiplier
+		 * of 3 brings it to a range of -96 to +96 which is close enough to a
+		 * plus/minus 100%. The resultant percentage is then converted based on the
+		 * priority. */
+		INT32 weight = (desired_pop - start_pop) * 3;
+		if (weight > 0)
+		{ // Modify it by its priority.
+			// Generates a value between 2 and 100
+			weight = weight * iPriority / 96;
+			weight = MAX(weight, 2);
+			giRequestPoints += weight;
 		}
-		//else
-		//{ //we aren't creating this patrol group at the beginning of the game, so we
-			//need to set up the weighting values to prioritize it's reinforcement request so that
-			//it gets filled up later in the game.
-		//	iWeight = gPatrolGroup[ i ].bSize * 3 * gPatrolGroup[ i ].bPriority / 96;
-		//	gPatrolGroup[ i ].bWeight = (INT8)iWeight;
-		//	giRequestPoints += iWeight;
-		//}
+		else if (weight < 0)
+		{ // Modify it by its reverse priority
+			// Generates a value between -2 and -100
+			weight = weight * (100 - iPriority) / 96;
+			weight = MIN(weight, -2);
+			giReinforcementPoints -= weight;
+		}
+		gg.bWeight = weight;
+
+		/* Post an event which allows them to check adjacent sectors periodically.
+		 * Spread them out so that they process at different times. */
+		AddPeriodStrategicEventWithOffset(EVENT_CHECK_ENEMY_CONTROLLED_SECTOR, 140 - 20 * difficulty + Random(4), 475 + i, gg.ubSectorID);
 	}
 
-	//Setup the flags for the four sam sites.
+	// Initialize each of the patrol groups
+	for (INT32 i = 0; i != giPatrolArraySize; ++i)
+	{
+		PATROL_GROUP& pg = gPatrolGroup[i];
+		UINT8 n_troops = pg.bSize + Random(3) - 1;
+		n_troops = MAX(gubMinEnemyGroupSize, MIN(MAX_STRATEGIC_TEAM_SIZE, n_troops));
+		/* Note on adding patrol groups: The patrol group can't actually start on
+		 * the first waypoint, so we set it to the second way point for
+		 * initialization, and then add the waypoints from 0 up */
+		GROUP&      g  = *CreateNewEnemyGroupDepartingFromSector(pg.ubSectorID[1], 0, n_troops, 0);
+		ENEMYGROUP& eg = *g.pEnemyGroup;
+
+		if (i == 3 || i == 4)
+		{ /* Special case: Two patrol groups are administrator groups -- rest are
+			 * troops */
+			eg.ubNumAdmins = eg.ubNumTroops;
+			eg.ubNumTroops = 0;
+		}
+		pg.ubGroupID   = g.ubGroupID;
+		eg.ubIntention = PATROL;
+		g.ubMoveType   = ENDTOEND_FORWARDS;
+		FOR_EACH(UINT8 const, i, pg.ubSectorID)
+		{
+			if (*i == 0) break;
+			AddWaypointIDToPGroup(&g, *i);
+		}
+		RandomizePatrolGroupLocation(&g);
+		ValidateGroup(&g);
+	}
+
+	// Setup the flags for the four sam sites.
 	FOR_EACH(INT16 const, i, pSamList)
 	{
 		SectorInfo[*i].uiFlags |= SF_SAM_SITE;
 	}
 
-	//final thing to do is choose 1 cache map out of 5 possible maps.  Simply select the sector randomly,
-	//set up the flags to use the alternate map, then place 8-12 regular troops there (no ai though).
-	//changing MAX_STRATEGIC_TEAM_SIZE may require changes to to the defending force here.
-	switch( Random( 5 ) )
-	{
-		case 0:	pSector = &SectorInfo[ SEC_E11 ]; break;
-		case 1:	pSector = &SectorInfo[ SEC_H5 ]; break;
-		case 2:	pSector = &SectorInfo[ SEC_H10 ]; break;
-		case 3:	pSector = &SectorInfo[ SEC_J12 ]; break;
-		case 4:	pSector = &SectorInfo[ SEC_M9 ]; break;
-	}
-	pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
-	pSector->ubNumTroops = (UINT8)(6 + gGameOptions.ubDifficultyLevel * 2);
+	/* Choose one cache map out of five possible maps. Select the sector randomly,
+	 * set up the flags to use the alternate map, then place 8-12 regular troops
+	 * there (no AI though). Changing MAX_STRATEGIC_TEAM_SIZE may require changes
+	 * to to the defending force here. */
+	static UINT8 const cache_sectors[] = { SEC_E11, SEC_H5, SEC_H10, SEC_J12, SEC_M9 };
+	SECTORINFO& si = SectorInfo[cache_sectors[Random(lengthof(cache_sectors))]];
+	si.uiFlags     |= SF_USE_ALTERNATE_MAP;
+	si.ubNumTroops  = 6 + difficulty * 2;
 
-	ValidateWeights( 1 );
+	ValidateWeights(1);
 }
+
 
 void KillStrategicAI()
 {
