@@ -4,6 +4,7 @@
 #include "Campaign_Types.h"
 #include "Queen_Command.h"
 #include "Overhead.h"
+#include "Strategic_Mines.h"
 #include "Strategic_Movement.h"
 #include "Strategic_Movement_Costs.h"
 #include "Strategic_Status.h"
@@ -69,35 +70,13 @@ static void InitKnowFacilitiesFlags(void)
 }
 
 
-static void InitMiningLocations(void)
+static void InitMiningLocations()
 {
-	SECTORINFO *pSector;
-	//Set up mining sites
-
-	pSector = &SectorInfo[SEC_D4];
-	pSector->uiFlags |= SF_MINING_SITE;
-//	pSector->ubIncomeValue = 33;
-
-	pSector = &SectorInfo[SEC_D13];
-	pSector->uiFlags |= SF_MINING_SITE;
-//	pSector->ubIncomeValue = 41;
-
-	pSector = &SectorInfo[SEC_B2];
-	pSector->uiFlags |= SF_MINING_SITE;
-//	pSector->ubIncomeValue = 20;
-
-	pSector = &SectorInfo[SEC_H8];
-	pSector->uiFlags |= SF_MINING_SITE;
-//	pSector->ubIncomeValue = 64;
-
-	pSector = &SectorInfo[SEC_I14];
-	pSector->uiFlags |= SF_MINING_SITE;
-//	pSector->ubIncomeValue = 80;
-
-	//Grumm
-	pSector = &SectorInfo[SEC_H3];
-	pSector->uiFlags |= SF_MINING_SITE;
-//	pSector->ubIncomeValue = 100;
+	for (MINE_LOCATION_TYPE const* i = gMineLocation; i != endof(gMineLocation); ++i)
+	{
+		MINE_LOCATION_TYPE const& l = *i;
+		SectorInfo[SECTOR(l.sSectorX, l.sSectorY)].uiFlags |= SF_MINING_SITE;
+	}
 }
 
 
