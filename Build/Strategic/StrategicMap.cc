@@ -2889,16 +2889,11 @@ void UpdateAirspaceControl( void )
 }
 
 
-BOOLEAN IsThereAFunctionalSAMSiteInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+bool IsThereAFunctionalSAMSiteInSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	if (!IsThisSectorASAMSector(sSectorX, sSectorY, bSectorZ)) return FALSE;
-
-	if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].bSAMCondition < MIN_CONDITION_FOR_SAM_SITE_TO_WORK )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return
+		IsThisSectorASAMSector(x, y, z) &&
+		StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK;
 }
 
 

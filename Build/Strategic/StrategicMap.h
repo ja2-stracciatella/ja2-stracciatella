@@ -139,7 +139,7 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld(void);
 INT32 GetNumberOfSAMSitesUnderPlayerControl( void );
 
 // is there a FUNCTIONAL SAM site in this sector?
-BOOLEAN IsThereAFunctionalSAMSiteInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+bool IsThereAFunctionalSAMSiteInSector(INT16 x, INT16 y, INT8 z);
 
 bool IsSectorDesert(INT16 x, INT16 y);
 
