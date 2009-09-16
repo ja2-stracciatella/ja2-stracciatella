@@ -302,26 +302,26 @@ void InitCreatureQuest()
 	//Default them all to infectible
 	memset( fMineInfectible, 1, sizeof( BOOLEAN ) * 4 );
 
-	if( gMineStatus[ DRASSEN_MINE ].fAttackedHeadMiner ||
-			gMineStatus[ DRASSEN_MINE ].uiOreRunningOutPoint ||
+	if (gMineStatus[MINE_DRASSEN].fAttackedHeadMiner   ||
+			gMineStatus[MINE_DRASSEN].uiOreRunningOutPoint ||
 			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_D13 ) ].fEnemyControlled )
 	{ //If head miner was attacked, ore will/has run out, or enemy controlled
 		fMineInfectible[ 0 ] = FALSE;
 	}
-	if( gMineStatus[ CAMBRIA_MINE ].fAttackedHeadMiner ||
-			gMineStatus[ CAMBRIA_MINE ].uiOreRunningOutPoint ||
+	if (gMineStatus[MINE_CAMBRIA].fAttackedHeadMiner   ||
+			gMineStatus[MINE_CAMBRIA].uiOreRunningOutPoint ||
 			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_H8 ) ].fEnemyControlled )
 	{ //If head miner was attacked, ore will/has run out, or enemy controlled
 		fMineInfectible[ 1 ] = FALSE;
 	}
-	if( gMineStatus[ ALMA_MINE ].fAttackedHeadMiner ||
-			gMineStatus[ ALMA_MINE ].uiOreRunningOutPoint ||
+	if (gMineStatus[MINE_ALMA].fAttackedHeadMiner   ||
+			gMineStatus[MINE_ALMA].uiOreRunningOutPoint ||
 			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_I14 ) ].fEnemyControlled )
 	{ //If head miner was attacked, ore will/has run out, or enemy controlled
 		fMineInfectible[ 2 ] = FALSE;
 	}
-	if( gMineStatus[ GRUMM_MINE ].fAttackedHeadMiner ||
-			gMineStatus[ GRUMM_MINE ].uiOreRunningOutPoint ||
+	if (gMineStatus[MINE_GRUMM].fAttackedHeadMiner   ||
+			gMineStatus[MINE_GRUMM].uiOreRunningOutPoint ||
 			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_H3 ) ].fEnemyControlled )
 	{ //If head miner was attacked, ore will/has run out, or enemy controlled
 		fMineInfectible[ 3 ] = FALSE;

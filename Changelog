@@ -1,3 +1,4 @@
+(r6758) Fix a vanilla out of bounds array access, when starting the creature quest.
 (r6650) Fix a vanilla bug in the editor: When selecting a miner, he was turned into an elite soldier.
 (r6622) Fix a vanilla glitch: While a merc is on a roof and planning to perform an action (usually giving first aid), the highlighted tile was incorrectly drawn on the floor level.
 (r6606) All directory names (especially data/) are lowercase now.
