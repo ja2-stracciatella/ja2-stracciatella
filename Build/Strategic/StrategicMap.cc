@@ -590,19 +590,19 @@ static void InitializeMapStructure(void)
 }
 
 
-void InitializeSAMSites( void )
+void InitializeSAMSites()
 {
-	// move the landing zone over to Omerta
+	// Move the landing zone over to Omerta.
 	gsMercArriveSectorX = 9;
 	gsMercArriveSectorY = 1;
 
-	// all SAM sites start game in perfect working condition
-	StrategicMap[(SAM_1_X)+(MAP_WORLD_X*(SAM_1_Y))].bSAMCondition = 100;
-	StrategicMap[(SAM_2_X)+(MAP_WORLD_X*(SAM_2_Y))].bSAMCondition = 100;
-	StrategicMap[(SAM_3_X)+(MAP_WORLD_X*(SAM_3_Y))].bSAMCondition = 100;
-	StrategicMap[(SAM_4_X)+(MAP_WORLD_X*(SAM_4_Y))].bSAMCondition = 100;
+	// All SAM sites start game in perfect working condition.
+	for (INT16 const* i = pSamList; i != endof(pSamList); ++i)
+	{
+		StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(*i)].bSAMCondition = 100;
+	}
 
-	UpdateAirspaceControl( );
+	UpdateAirspaceControl();
 }
 
 

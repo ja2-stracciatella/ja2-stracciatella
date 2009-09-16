@@ -100,8 +100,7 @@ void UpdateAirspaceControl( void );
 
 bool IsThisSectorASAMSector(INT16 x, INT16 y, INT8 z);
 
-// init sam sites
-void InitializeSAMSites( void );
+void InitializeSAMSites();
 
 // Number of sectors this town takes up
 UINT8 GetTownSectorSize(INT8 town_id);
