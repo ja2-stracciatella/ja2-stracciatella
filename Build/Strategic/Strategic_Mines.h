@@ -7,7 +7,8 @@
 
 
 // the mines
-enum{
+enum MineID
+{
 	  MINE_SAN_MONA = 0,
 		MINE_DRASSEN,
 		MINE_ALMA,

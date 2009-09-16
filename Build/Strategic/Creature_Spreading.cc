@@ -247,6 +247,17 @@ static void InitLairGrumm(void)
 }
 
 
+static bool IsMineInfectible(MineID const id)
+{ // If head miner was attacked, ore will/has run out or enemy controlled
+	MINE_STATUS_TYPE   const& m = gMineStatus[id];
+	MINE_LOCATION_TYPE const& l = gMineLocation[id];
+	return
+		!m.fAttackedHeadMiner   &&
+		!m.uiOreRunningOutPoint &&
+		!StrategicMap[CALCULATE_STRATEGIC_INDEX(l.sSectorX, l.sSectorY)].fEnemyControlled;
+}
+
+
 void InitCreatureQuest()
 {
 	UNDERGROUND_SECTORINFO *curr;
@@ -295,37 +306,13 @@ void InitCreatureQuest()
 			break;
 	}
 
-	//Determine which of the four maps are infectible by creatures.  Infectible mines
-	//are those that are player controlled and unlimited.  We don't want the creatures to
-	//infect the mine that runs out.
-
-	//Default them all to infectible
-	memset( fMineInfectible, 1, sizeof( BOOLEAN ) * 4 );
-
-	if (gMineStatus[MINE_DRASSEN].fAttackedHeadMiner   ||
-			gMineStatus[MINE_DRASSEN].uiOreRunningOutPoint ||
-			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_D13 ) ].fEnemyControlled )
-	{ //If head miner was attacked, ore will/has run out, or enemy controlled
-		fMineInfectible[ 0 ] = FALSE;
-	}
-	if (gMineStatus[MINE_CAMBRIA].fAttackedHeadMiner   ||
-			gMineStatus[MINE_CAMBRIA].uiOreRunningOutPoint ||
-			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_H8 ) ].fEnemyControlled )
-	{ //If head miner was attacked, ore will/has run out, or enemy controlled
-		fMineInfectible[ 1 ] = FALSE;
-	}
-	if (gMineStatus[MINE_ALMA].fAttackedHeadMiner   ||
-			gMineStatus[MINE_ALMA].uiOreRunningOutPoint ||
-			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_I14 ) ].fEnemyControlled )
-	{ //If head miner was attacked, ore will/has run out, or enemy controlled
-		fMineInfectible[ 2 ] = FALSE;
-	}
-	if (gMineStatus[MINE_GRUMM].fAttackedHeadMiner   ||
-			gMineStatus[MINE_GRUMM].uiOreRunningOutPoint ||
-			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_H3 ) ].fEnemyControlled )
-	{ //If head miner was attacked, ore will/has run out, or enemy controlled
-		fMineInfectible[ 3 ] = FALSE;
-	}
+	/* Determine which of the four mines are infectible by creatures. Infectible
+	 * mines are those that are player controlled and unlimited. We don't want the
+	 * creatures to infect the mine that runs out. */
+	fMineInfectible[0] = IsMineInfectible(MINE_DRASSEN);
+	fMineInfectible[1] = IsMineInfectible(MINE_CAMBRIA);
+	fMineInfectible[2] = IsMineInfectible(MINE_ALMA);
+	fMineInfectible[3] = IsMineInfectible(MINE_GRUMM);
 
 	#ifdef JA2BETAVERSION
 	if( guiCurrentScreen == AIVIEWER_SCREEN )
