@@ -110,7 +110,7 @@ enum
 	GROUP_ANCHOR,
 };
 
-enum
+enum IconType
 {
 	ICON_TYPE_PATROL,
 	ICON_TYPE_STOPPED,
@@ -358,7 +358,7 @@ static void ClearViewerRegion(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBott
 }
 
 
-static void BlitGroupIcon(UINT8 ubIconType, IconColour, UINT32 uiX, UINT32 uiY, SGPVObject const*);
+static void BlitGroupIcon(IconType, IconColour, UINT32 uiX, UINT32 uiY, SGPVObject const*);
 static IconColour ChooseEnemyIconColor(UINT8 ubAdmins, UINT8 ubTroops, UINT8 ubElites);
 
 
@@ -422,7 +422,6 @@ static void RenderMovingGroupsAndMercs(void)
 	UINT8 ubNumTroops, ubNumAdmins, ubNumElites;
 	float ratio;
 	INT32 minX, maxX, minY, maxY;
-	UINT8 ubIconType;
 	UINT8 ubFontColor;
 
 
@@ -451,6 +450,7 @@ static void RenderMovingGroupsAndMercs(void)
 				y = VIEWER_TOP + VIEWER_CELLH * (pGroup->ubSectorY-1);
 			}
 
+			IconType   ubIconType;
 			IconColour ubIconColor;
 			if( pGroup->fPlayer )
 			{
@@ -1731,7 +1731,7 @@ static IconColour ChooseEnemyIconColor(UINT8 const ubAdmins, UINT8 const ubTroop
 }
 
 
-static void BlitGroupIcon(UINT8 const ubIconType, IconColour const ubIconColor, UINT32 const uiX, UINT32 const uiY, SGPVObject const* const hVObject)
+static void BlitGroupIcon(IconType const ubIconType, IconColour const ubIconColor, UINT32 const uiX, UINT32 const uiY, SGPVObject const* const hVObject)
 {
 	UINT8 ubObjectIndex;
 
