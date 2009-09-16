@@ -68,19 +68,18 @@ void SetNewPanel(SOLDIERTYPE* const s)
 }
 
 
-void HandleTacticalPanelSwitch( )
+void HandleTacticalPanelSwitch()
 {
-	if (g_switch_panel)
-	{
-		g_switch_panel = false;
-		SOLDIERTYPE* const s = g_new_panel_soldier;
-		SetCurrentInterfacePanel(s ? SM_PANEL : TEAM_PANEL);
-		SetCurrentTacticalPanelCurrentMerc(s);
+	if (!g_switch_panel) return;
+	g_switch_panel = false;
 
-		if (guiCurrentScreen != SHOPKEEPER_SCREEN) // XXX necessary?
-		{
-			RenderButtons( );
-		}
+	SOLDIERTYPE* const s = g_new_panel_soldier;
+	SetCurrentInterfacePanel(s ? SM_PANEL : TEAM_PANEL);
+	SetCurrentTacticalPanelCurrentMerc(s);
+
+	if (guiCurrentScreen != SHOPKEEPER_SCREEN) // XXX necessary?
+	{
+		RenderButtons();
 	}
 }
 

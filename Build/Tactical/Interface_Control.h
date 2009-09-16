@@ -17,7 +17,7 @@ void ResetInterfaceAndUI(void);
 
 bool AreWeInAUIMenu();
 
-void HandleTacticalPanelSwitch(void);
+void HandleTacticalPanelSwitch();
 
 bool InterfaceOKForMeanwhilePopup();
 
