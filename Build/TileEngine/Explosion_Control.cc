@@ -2243,98 +2243,85 @@ static void AddBombToQueue(UINT32 const world_bomb_idx, UINT32 const timestamp)
 }
 
 
-void HandleExplosionQueue(void)
+void HandleExplosionQueue()
 {
-	UINT32				uiIndex;
-	UINT32				uiWorldBombIndex;
-	UINT32				uiCurrentTime;
+	if (!gfExplosionQueueActive) return;
 
-	if ( !gfExplosionQueueActive )
+	UINT32 const now = GetJA2Clock();
+	for (UINT32 i = 0; i != gubElementsOnExplosionQueue; ++i)
 	{
-		return;
-	}
+		ExplosionQueueElement& e = gExplosionQueue[i];
+		if (!e.fExists)          continue;
+		if (now < e.uiTimeStamp) continue;
 
-	uiCurrentTime = GetJA2Clock();
-	for ( uiIndex = 0; uiIndex < gubElementsOnExplosionQueue; uiIndex++ )
-	{
-		if ( gExplosionQueue[ uiIndex ].fExists && uiCurrentTime >= gExplosionQueue[ uiIndex ].uiTimeStamp )
+		// Set off this bomb now.
+		WORLDITEM&  wi     = GetWorldItem(gWorldBombs[e.uiWorldBombIndex].iItemIndex);
+		OBJECTTYPE& o      = wi.o;
+		INT16 const gridno = wi.sGridNo;
+		UINT8 const level  = wi.ubLevel;
+
+		if (o.usItem == ACTION_ITEM && o.bActionValue != ACTION_ITEM_BLOW_UP)
 		{
-			// Set off this bomb now!
-
-			// Preliminary assignments:
-			uiWorldBombIndex = gExplosionQueue[ uiIndex ].uiWorldBombIndex;
-			WORLDITEM&  wi      = GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex);
-			OBJECTTYPE& o       = wi.o;
-			INT16 const sGridNo = wi.sGridNo;
-			UINT8 const ubLevel = wi.ubLevel;
-
-			if (o.usItem == ACTION_ITEM && o.bActionValue != ACTION_ITEM_BLOW_UP)
-			{
-				PerformItemAction(sGridNo, &o);
-			}
-			else if (o.usBombItem == TRIP_KLAXON)
-			{
-				PlayLocationJA2Sample(sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
-				CallAvailableEnemiesTo( sGridNo );
-				//RemoveItemFromPool(&wi);
-			}
-			else if (o.usBombItem == TRIP_FLARE)
-			{
-				NewLightEffect( sGridNo, LIGHT_FLARE_MARK_1 );
-				RemoveItemFromPool(&wi);
-			}
-			else
-			{
-				gfExplosionQueueMayHaveChangedSight = TRUE;
-
-				// We have to remove the item first to prevent the explosion from detonating it
-				// a second time :-)
-				RemoveItemFromPool(&wi);
-
-				// make sure no one thinks there is a bomb here any more!
-				if ( gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT )
-				{
-					RemoveBlueFlag( sGridNo, ubLevel );
-				}
-				gpWorldLevelData[sGridNo].uiFlags &= ~(MAPELEMENT_ENEMY_MINE_PRESENT);
-
-				// BOOM!
-
-				// bomb objects only store the SIDE who placed the bomb! :-(
-				SOLDIERTYPE* const owner = o.ubBombOwner > 1 ? ID2SOLDIER(o.ubBombOwner - 2) : 0;
-				IgniteExplosion(owner, 0, sGridNo, o.usBombItem, ubLevel);
-			}
-
-			// Bye bye bomb
-			gExplosionQueue[ uiIndex ].fExists = FALSE;
+			PerformItemAction(gridno, &o);
 		}
+		else if (o.usBombItem == TRIP_KLAXON)
+		{
+			PlayLocationJA2Sample(gridno, KLAXON_ALARM, MIDVOLUME, 5);
+			CallAvailableEnemiesTo(gridno);
+		}
+		else if (o.usBombItem == TRIP_FLARE)
+		{
+			NewLightEffect(gridno, LIGHT_FLARE_MARK_1);
+			RemoveItemFromPool(&wi);
+		}
+		else
+		{
+			gfExplosionQueueMayHaveChangedSight = TRUE;
+
+			/* Remove the item first to prevent the explosion from detonating it a
+			 * second time. */
+			RemoveItemFromPool(&wi);
+
+			// Make sure no one thinks there is a bomb here any more
+			UINT16& flags = gpWorldLevelData[gridno].uiFlags;
+			if (flags & MAPELEMENT_PLAYER_MINE_PRESENT)
+			{
+				RemoveBlueFlag(gridno, level);
+			}
+			flags &= ~MAPELEMENT_ENEMY_MINE_PRESENT;
+
+			// Bomb objects only store the side who placed the bomb.
+			SOLDIERTYPE* const owner = o.ubBombOwner > 1 ? ID2SOLDIER(o.ubBombOwner - 2) : 0;
+			IgniteExplosion(owner, 0, gridno, o.usBombItem, level);
+		}
+
+		e.fExists = FALSE;
 	}
 
-	// See if we can reduce the # of elements on the queue that we have recorded
-	// Easier to do it at this time rather than in the loop above
+	/* See if we can reduce the # of elements on the queue that we have recorded.
+	 * Easier to do it at this time rather than in the loop above. */
 	while (gubElementsOnExplosionQueue > 0 && !gExplosionQueue[gubElementsOnExplosionQueue - 1].fExists)
 	{
-		gubElementsOnExplosionQueue--;
+		--gubElementsOnExplosionQueue;
 	}
 
+	TacticalStatusType& ts = gTacticalStatus;
 	if (gubElementsOnExplosionQueue == 0 &&
-			(gPersonToSetOffExplosions == NULL || gTacticalStatus.ubAttackBusyCount == 0))
-	{
-		// turn off explosion queue
+			(!gPersonToSetOffExplosions || ts.ubAttackBusyCount == 0))
+	{ // Turn off explosion queue
+		ts.uiFlags &= ~DISALLOW_SIGHT; // Re-enable sight
 
-		// re-enable sight
-		gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
-
-		if (gPersonToSetOffExplosions != NULL && !(gPersonToSetOffExplosions->uiStatusFlags & SOLDIER_PC))
+		SOLDIERTYPE* const s = gPersonToSetOffExplosions;
+		if (s && !(s->uiStatusFlags & SOLDIER_PC))
 		{
-			FreeUpNPCFromPendingAction(gPersonToSetOffExplosions);
+			FreeUpNPCFromPendingAction(s);
 		}
 
 		if (gfExplosionQueueMayHaveChangedSight)
 		{
-			// set variable so we may at least have someone to resolve interrupts vs
-			gInterruptProvoker = gPersonToSetOffExplosions;
-			AllTeamsLookForAll( TRUE );
+			// Set variable so we may at least have someone to resolve interrupts against
+			gInterruptProvoker = s;
+			AllTeamsLookForAll(TRUE);
 
 			// call fov code
 			FOR_ALL_IN_TEAM(s, gbPlayerNum)
@@ -2343,19 +2330,18 @@ void HandleExplosionQueue(void)
 			}
 
 			gfExplosionQueueMayHaveChangedSight = FALSE;
-			gPersonToSetOffExplosions = NULL;
+			gPersonToSetOffExplosions           = 0;
 		}
 
-		if ( !(gTacticalStatus.uiFlags & INCOMBAT) || gTacticalStatus.ubCurrentTeam == gbPlayerNum )
-		{
-			// don't end UI lock when it's a computer turn
+		if (!(ts.uiFlags & INCOMBAT) || ts.ubCurrentTeam == gbPlayerNum)
+		{ // Don't end UI lock when it's a computer turn
 			guiPendingOverrideEvent = LU_ENDUILOCK;
 		}
 
 		gfExplosionQueueActive = FALSE;
 	}
-
 }
+
 
 void DecayBombTimers( void )
 {

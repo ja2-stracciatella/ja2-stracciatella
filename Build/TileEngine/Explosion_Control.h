@@ -88,7 +88,7 @@ void RemoveAllActiveTimedBombs( void );
 
 BOOLEAN DishOutGasDamage(SOLDIERTYPE* pSoldier, EXPLOSIVETYPE const* pExplosive, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* owner);
 
-void HandleExplosionQueue(void);
+void HandleExplosionQueue();
 
 BOOLEAN DoesSAMExistHere(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo);
 
