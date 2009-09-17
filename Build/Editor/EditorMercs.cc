@@ -354,10 +354,7 @@ void AddMercToWorld( INT32 iMapIndex )
 
 	if( IsLocationSittable( iMapIndex, gfRoofPlacement ) )
 	{
-		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
-
- 		GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 		//Set up some general information.
 		gTempBasicPlacement.fDetailedPlacement = FALSE;
@@ -373,8 +370,8 @@ void AddMercToWorld( INT32 iMapIndex )
 		CreateDetailedPlacementGivenBasicPlacementInfo( &gTempDetailedPlacement, &gTempBasicPlacement );
 
 		//Set the sector information -- probably unnecessary.
-		gTempDetailedPlacement.sSectorX = sSectorX;
-		gTempDetailedPlacement.sSectorY = sSectorY;
+		gTempDetailedPlacement.sSectorX = gWorldSectorX;
+		gTempDetailedPlacement.sSectorY = gWorldSectorY;
 
 		//Create the soldier, but don't place it yet.
 		SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(gTempDetailedPlacement);
@@ -2958,10 +2955,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 	if( IsLocationSittable( iMapIndex, gfRoofPlacement ) )
 	{
-		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
-
- 		GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 		//Set up some general information.
 		//gTempBasicPlacement.fDetailedPlacement = TRUE;
@@ -2978,8 +2972,8 @@ void PasteMercPlacement( INT32 iMapIndex )
 		}
 
 		//Set the sector information -- probably unnecessary.
-		gTempDetailedPlacement.sSectorX = sSectorX;
-		gTempDetailedPlacement.sSectorY = sSectorY;
+		gTempDetailedPlacement.sSectorX = gWorldSectorX;
+		gTempDetailedPlacement.sSectorY = gWorldSectorY;
 
 		if( gTempBasicPlacement.fDetailedPlacement )
 		{

@@ -254,9 +254,10 @@ void CreateSummaryWindow()
 	DisableEditorTaskbar();
 	DisableAllTextFields();
 
-	GetCurrentWorldSector( &gsSectorX, &gsSectorY );
-	gsSelSectorX = gsSectorX;
-	gsSelSectorY = gsSectorY;
+	gsSectorX    = gWorldSectorX;
+	gsSectorY    = gWorldSectorY;
+	gsSelSectorX = gWorldSectorX;
+	gsSelSectorY = gWorldSectorY;
 	gfSummaryWindowActive = TRUE;
 	gfPersistantSummary = FALSE;
 	giInitTimer = GetJA2Clock();

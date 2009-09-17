@@ -1905,16 +1905,12 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	const GridNo pos = GetMouseMapPos();
 	if (pos == NOWHERE) return;
 
-	INT16 sSectorX;
-	INT16 sSectorY;
-	GetCurrentWorldSector(&sSectorX, &sSectorY);
-
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
 	MercCreateStruct.bTeam            = bTeam;
 	MercCreateStruct.ubProfile        = ubProfileID;
-	MercCreateStruct.sSectorX         = sSectorX;
-	MercCreateStruct.sSectorY         = sSectorY;
+	MercCreateStruct.sSectorX         = gWorldSectorX;
+	MercCreateStruct.sSectorY         = gWorldSectorY;
 	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
 	MercCreateStruct.sInsertionGridNo = pos;
 

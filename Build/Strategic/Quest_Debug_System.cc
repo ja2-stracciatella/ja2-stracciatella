@@ -2425,15 +2425,12 @@ static void DestroyQuestDebugTextInputBoxes(void)
 static void AddNPCToGridNo(INT32 iGridNo)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	INT16										sSectorX, sSectorY;
-
-	GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= (UINT8)gpActiveListBox->sCurSelectedItem;
-	MercCreateStruct.sSectorX			= sSectorX;
-	MercCreateStruct.sSectorY			= sSectorY;
+	MercCreateStruct.sSectorX			= gWorldSectorX;
+	MercCreateStruct.sSectorY			= gWorldSectorY;
 	MercCreateStruct.bSectorZ			= gbWorldSectorZ;
 	MercCreateStruct.sInsertionGridNo		= (UINT16) iGridNo;
 

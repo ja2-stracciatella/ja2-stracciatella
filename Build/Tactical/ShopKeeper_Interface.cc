@@ -5840,15 +5840,12 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* pSoldier)
 void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo )
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	INT16										sSectorX, sSectorY;
-
-	GetCurrentWorldSector( &sSectorX, &sSectorY );
 
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= ubProfile;
-	MercCreateStruct.sSectorX			= sSectorX;
-	MercCreateStruct.sSectorY			= sSectorY;
+	MercCreateStruct.sSectorX			= gWorldSectorX;
+	MercCreateStruct.sSectorY			= gWorldSectorY;
 	MercCreateStruct.bSectorZ			= gbWorldSectorZ;
 	MercCreateStruct.sInsertionGridNo		= sGridNo;
 

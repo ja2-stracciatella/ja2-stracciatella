@@ -588,13 +588,6 @@ void GetMapFileName(INT16 const x, INT16 const y, INT8 const z, char* const buf,
 }
 
 
-void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY )
-{
-	*psMapX = gWorldSectorX;
-	*psMapY = gWorldSectorY;
-}
-
-
 static void HandleRPCDescriptionOfSector(INT16 const x, INT16 const y, INT16 const z)
 {
 	struct SectorDescriptionInfo
