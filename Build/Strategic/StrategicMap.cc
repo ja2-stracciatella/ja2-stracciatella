@@ -189,12 +189,6 @@ INT8 gbSAMGraphicList[ NUMBER_OF_SAMS ]={
 };
 
 
-// the amount of time that a soldier will wait to return to desired/old squad
-#define DESIRE_SQUAD_RESET_DELAY 12 * 60
-
-
-
-
 UINT8 ubSAMControlledSectors[ MAP_WORLD_Y ][ MAP_WORLD_X ] = {
 //       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
 	{ 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0 },
