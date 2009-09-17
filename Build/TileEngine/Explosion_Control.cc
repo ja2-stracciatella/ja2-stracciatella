@@ -2643,33 +2643,19 @@ void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 }
 
 
-BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo )
+bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno)
 {
-	INT32 cnt;
-	INT16	sSectorNo;
+	// ATE: If we are below, return right away
+	if (z != 0) return false;
 
-	// ATE: If we are belwo, return right away...
-	if ( sSectorZ != 0 )
+	INT16 const sector = SECTOR(x, y);
+	for (INT32 i = 0; i != NUMBER_OF_SAMS; ++i)
 	{
-		return( FALSE );
+		if (pSamList[i] != sector) continue;
+		if (pSamGridNoAList[i] == gridno) return true;
+		if (pSamGridNoBList[i] == gridno) return true;
 	}
-
-	sSectorNo = SECTOR( sSectorX, sSectorY );
-
-	for ( cnt = 0; cnt < NUMBER_OF_SAMS; cnt++ )
-	{
-		// Are we i nthe same sector...
-		if ( pSamList[ cnt ] == sSectorNo )
-		{
-			// Are we in the same gridno?
-			if ( pSamGridNoAList[ cnt ] == sGridNo || pSamGridNoBList[ cnt ] == sGridNo )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
-	return( FALSE );
+	return false;
 }
 
 
