@@ -151,8 +151,6 @@ BOOLEAN gfSetupItemDetailsMode = TRUE;
 
 UINT16 usNumSummaryFilesOutOfDate;
 
-BOOLEAN gfMapFileDirty;
-
 //Override status.  Hide is when there is nothing to override, readonly, when checked is to override a
 //readonly status file, so that you can write to it, and overwrite, when checked, allows you to save,
 //replacing the existing file.  These states are not persistant, which forces the user to check the
@@ -263,8 +261,6 @@ void CreateSummaryWindow()
 	giInitTimer = GetJA2Clock();
 	gfDeniedSummaryCreation = FALSE;
 	gfRenderSummary = TRUE;
-	if( gfWorldLoaded )
-		gfMapFileDirty = TRUE;
 	//Create all of the buttons here
 	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH - 1);
 
@@ -1449,7 +1445,6 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 		y = gszFilename[0] - L'a' + 1;
 	else
 		y = gszFilename[0] - L'A' + 1;
-	gfMapFileDirty = FALSE;
 
 	//Validate that the values extracted are in fact a sector
 	if( x < 1 || x > 16 || y < 1 || y > 16 )
@@ -1966,7 +1961,6 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 			gsSectorX = gsSelSectorX;
 			gsSectorY = gsSelSectorY;
 			gfOverrideDirty = TRUE;
-			gfMapFileDirty = FALSE;
 		}
 		RemoveProgressBar( 0 );
 		ptr = wcsstr( gszDisplayName, L"_b" );
@@ -2008,7 +2002,6 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 				{
 					gsSectorX = gsSelSectorX;
 					gsSectorY = gsSelSectorY;
-					gfMapFileDirty = FALSE;
 					gfOverrideDirty = TRUE;
 				}
 			}
