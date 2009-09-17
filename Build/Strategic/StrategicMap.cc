@@ -238,50 +238,6 @@ INT16 DirYIncrementer[8] =
  };
 
 
-const char *pVertStrings[]={
-"X",
-"A",
-"B",
-"C",
-"D",
-"E",
-"F",
-"G",
-"H",
-"I",
-"J",
-"K",
-"L",
-"M",
-"N",
-"O",
-"P",
-"Q",
-"R",
-};
-
-const char *pHortStrings[]={
-"X",
-"1",
-"2",
-"3",
-"4",
-"5",
-"6",
-"7",
-"8",
-"9",
-"10",
-"11",
-"12",
-"13",
-"14",
-"15",
-"16",
-"17",
-};
-
-
 extern BOOLEAN gfOverrideSector;
 
 
@@ -604,13 +560,13 @@ void InitializeSAMSites()
 void GetShortSectorString(const INT16 sMapX, const INT16 sMapY, wchar_t* const sString, const size_t Length)
 {
 	// OK, build string id like J11
-	swprintf(sString, Length, L"%hs%hs", pVertStrings[sMapY], pHortStrings[sMapX]);
+	swprintf(sString, Length, L"%lc%d", L'A' - 1 + sMapY, sMapX);
 }
 
 
 void GetMapFileName(INT16 const x, INT16 const y, INT8 const z, char* const buf, BOOLEAN const add_alternate_map_letter)
 {
-	size_t n = sprintf(buf, "%s%s", pVertStrings[y], pHortStrings[x]);
+	size_t n = sprintf(buf, "%c%d", 'A' - 1 + y, x);
 
 	if (z != 0) n += sprintf(buf + n, "_b%d", z);
 
