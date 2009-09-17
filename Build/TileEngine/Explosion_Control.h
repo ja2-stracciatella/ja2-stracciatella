@@ -75,7 +75,7 @@ void UpdateExplosionFrame(EXPLOSIONTYPE* e, INT16 sCurrentFrame);
 void RemoveExplosionData(EXPLOSIONTYPE* e);
 
 void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage );
-void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  );
+void UpdateSAMDoneRepair(INT16 x, INT16 y, INT16 z);
 
 
 void SaveExplosionTableToSaveGameFile(HWFILE);

@@ -2702,61 +2702,35 @@ void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 }
 
 
-void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
+void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
 {
-	INT32 cnt;
-	INT16	sSectorNo;
-	BOOLEAN		fInSector = FALSE;
+	// ATE: If we are below, return right away
+	if (z != 0) return;
 
-	// ATE: If we are below, return right away...
-	if ( sSectorZ != 0 )
+	INT16 const sector = SECTOR(x, y);
+	for (INT32 i = 0; i != NUMBER_OF_SAMS; ++i)
 	{
-		return;
-	}
+		if (pSamList[i] != sector) continue;
 
-	if ( sSectorX == gWorldSectorX && sSectorY == gWorldSectorY && sSectorZ == gbWorldSectorZ )
-	{
-		fInSector = TRUE;
-	}
-
-
-	sSectorNo = SECTOR( sSectorX, sSectorY );
-
-	for ( cnt = 0; cnt < NUMBER_OF_SAMS; cnt++ )
-	{
-		// Are we i nthe same sector...
-		if ( pSamList[ cnt ] == sSectorNo )
-		{
-			// get graphic.......
-			UINT16 usGoodGraphic = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, gbSAMGraphicList[cnt]);
-
-			// Damaged one ( current ) is 2 less...
-			UINT16 usDamagedGraphic = usGoodGraphic - 2;
-
-			// First gridno listed is base gridno....
-
-			// if this is loaded....
-			if ( fInSector )
-			{
-				// Update graphic.....
-				// Remove old!
-				ApplyMapChangesToMapTempFile app;
-				RemoveStruct( pSamGridNoAList[ cnt ], usDamagedGraphic );
-				AddStructToHead( pSamGridNoAList[ cnt ], usGoodGraphic );
-			}
-			else
-			{
-				// We add temp changes to map not loaded....
-				// Remove old
-				RemoveStructFromUnLoadedMapTempFile( pSamGridNoAList[ cnt ], usDamagedGraphic, sSectorX, sSectorY, (UINT8)sSectorZ );
-				// Add new
-				AddStructToUnLoadedMapTempFile( pSamGridNoAList[ cnt ], usGoodGraphic, sSectorX, sSectorY, (UINT8)sSectorZ );
-			}
+		UINT16 const good_graphic    = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, gbSAMGraphicList[i]);
+		UINT16 const damaged_graphic = good_graphic - 2; // Damaged one (current) is 2 less
+		GridNo const gridno          = pSamGridNoAList[i];
+		if (x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ)
+		{ // Sector loaded, update graphic
+			ApplyMapChangesToMapTempFile app;
+			RemoveStruct(   gridno, damaged_graphic);
+			AddStructToHead(gridno, good_graphic);
 		}
+		else
+		{ // We add temp changes to map not loaded
+			RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, x, y, z);
+			AddStructToUnLoadedMapTempFile(     gridno, good_graphic,    x, y, z);
+		}
+		break;
 	}
 
-	// SAM site may have been put back into working order...
-	UpdateAirspaceControl( );
+	// SAM site may have been put back into working order
+	UpdateAirspaceControl();
 }
 
 
