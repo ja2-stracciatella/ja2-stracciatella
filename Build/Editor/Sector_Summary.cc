@@ -149,8 +149,6 @@ UINT16 gusNEnemyItemsSummaryArraySize = 0;
 
 BOOLEAN gfSetupItemDetailsMode = TRUE;
 
-UINT16 usNumSummaryFilesOutOfDate;
-
 //Override status.  Hide is when there is nothing to override, readonly, when checked is to override a
 //readonly status file, so that you can write to it, and overwrite, when checked, allows you to save,
 //replacing the existing file.  These states are not persistant, which forces the user to check the
