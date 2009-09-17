@@ -185,7 +185,7 @@ INT8 gbSAMGraphicList[ NUMBER_OF_SAMS ]={
 	4,
 	3,
 	3,
-  3,
+	4
 };
 
 
