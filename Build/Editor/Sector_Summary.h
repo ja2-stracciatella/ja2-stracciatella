@@ -18,8 +18,6 @@ extern BOOLEAN gfGlobalSummaryExists;
 
 extern BOOLEAN gfSummaryWindowActive;
 
-extern UINT16 gusNumEntriesWithOutdatedOrNoSummaryInfo;
-
 void AutoLoadMap(void);
 
 BOOLEAN HandleSummaryInput(InputAtom*);

@@ -72,27 +72,28 @@ static const wchar_t* const gszVersionType[5] = { L"Pre-Alpha", L"Alpha", L"Demo
 #define ALTERNATE_B3_MASK			0x80
 #define ALTERNATE_LEVELS_MASK	0xf0
 
-INT32 giCurrLevel;
+static INT32 giCurrLevel;
 
-BOOLEAN gfOutdatedDenied;
-UINT16 gusNumEntriesWithOutdatedOrNoSummaryInfo;
+static BOOLEAN gfOutdatedDenied;
+static UINT16 gusNumEntriesWithOutdatedOrNoSummaryInfo;
 
 BOOLEAN gfUpdatingNow;
-UINT16 gusTotal, gusCurrent;
+static UINT16 gusTotal;
+static UINT16 gusCurrent;
 
 BOOLEAN gfMustForceUpdateAllMaps = FALSE;
-UINT16 gusNumberOfMapsToBeForceUpdated = 0;
+static UINT16 gusNumberOfMapsToBeForceUpdated = 0;
 BOOLEAN gfMajorUpdate = FALSE;
 
-INT32 giCurrentViewLevel = ALL_LEVELS_MASK;
+static INT32 giCurrentViewLevel = ALL_LEVELS_MASK;
 
-BOOLEAN gbSectorLevels[16][16];
-BOOLEAN gfGlobalSummaryLoaded = FALSE;
+static BOOLEAN gbSectorLevels[16][16];
+static BOOLEAN gfGlobalSummaryLoaded = FALSE;
 
-SUMMARYFILE *gpSectorSummary[16][16][8];
-SUMMARYFILE *gpCurrentSectorSummary;
+static SUMMARYFILE *gpSectorSummary[16][16][8];
+static SUMMARYFILE *gpCurrentSectorSummary;
 
-MOUSE_REGION MapRegion;
+static MOUSE_REGION MapRegion;
 
 extern INT8 gbMercSlotTypes[9];
 
@@ -102,32 +103,32 @@ extern INT8 gbMercSlotTypes[9];
 BOOLEAN gfGlobalSummaryExists;
 //If you don't wish to create a global summary, you can deny it.  This safely locks the system
 //from generating one.
-BOOLEAN gfDeniedSummaryCreation;
+static BOOLEAN gfDeniedSummaryCreation;
 //Set whenever the entire display is to be marked dirty.
-BOOLEAN gfRenderSummary;
+static BOOLEAN gfRenderSummary;
 //Used externally to determine if the summary window is up or not.
 BOOLEAN gfSummaryWindowActive;
 //When set, the summary window stays up until told otherwise.  When clear, the summary will disappear
 //when the assigned key (F5) is released.  The latter mode is initiated when F5 is held down for longer
 //than .4 seconds, and is useful for quickly looking at the information in the current map being edited.
-BOOLEAN gfPersistantSummary;
+static BOOLEAN gfPersistantSummary;
 //When set, a grid is overlayed on top of the sector.  This grid defines each of the 256 sectors.  It is
 //on by default.
-BOOLEAN gfRenderGrid;
+static BOOLEAN gfRenderGrid;
 //When set, parts of the map are darkened, showing that those sectors don't exist in the currently selected
 //layer.  When clear, the entire map is shown in full color.
-BOOLEAN gfRenderProgress;
+static BOOLEAN gfRenderProgress;
 //When set, only the map section is rerendered.
 static BOOLEAN gfRenderMap;
 //When set, then we are overriding the ability to use normal methods for selecting sectors for saving and
 //loading.  Immediately upon entering the text input mode; for the temp file; then we are assuming that
 //the user will type in a name that doesn't follow standard naming conventions for the purposes of the
 //campaign editor.  This is useful for naming a temp file for saving or loading.
-BOOLEAN gfTempFile;
+static BOOLEAN gfTempFile;
 //When set, only the alternate version of the maps will be displayed.  This is used for alternate maps in
 //particular sectors, such as the SkyRider quest which could be located at one of four maps randomly.  If
 //that particular map is chosen, then the alternate map will be used.
-BOOLEAN gfAlternateMaps = FALSE;
+static BOOLEAN gfAlternateMaps = FALSE;
 
 
 enum
@@ -136,34 +137,35 @@ enum
 	ITEMMODE_REAL,
 	ITEMMODE_ENEMY,
 };
-UINT8 gubSummaryItemMode = ITEMMODE_SCIFI;
+static UINT8 gubSummaryItemMode = ITEMMODE_SCIFI;
 
-BOOLEAN gfItemDetailsMode = FALSE;
+static BOOLEAN gfItemDetailsMode = FALSE;
 
-WORLDITEM *gpWorldItemsSummaryArray = NULL;
-UINT16 gusWorldItemsSummaryArraySize = 0;
-OBJECTTYPE *gpPEnemyItemsSummaryArray = NULL;
-UINT16 gusPEnemyItemsSummaryArraySize = 0;
-OBJECTTYPE *gpNEnemyItemsSummaryArray = NULL;
-UINT16 gusNEnemyItemsSummaryArraySize = 0;
+static WORLDITEM*  gpWorldItemsSummaryArray       = 0;
+static UINT16      gusWorldItemsSummaryArraySize  = 0;
+static OBJECTTYPE* gpPEnemyItemsSummaryArray      = 0;
+static UINT16      gusPEnemyItemsSummaryArraySize = 0;
+static OBJECTTYPE* gpNEnemyItemsSummaryArray      = 0;
+static UINT16      gusNEnemyItemsSummaryArraySize = 0;
 
-BOOLEAN gfSetupItemDetailsMode = TRUE;
+static BOOLEAN gfSetupItemDetailsMode = TRUE;
 
 //Override status.  Hide is when there is nothing to override, readonly, when checked is to override a
 //readonly status file, so that you can write to it, and overwrite, when checked, allows you to save,
 //replacing the existing file.  These states are not persistant, which forces the user to check the
 //box before saving.
 enum{ INACTIVE, READONLY, OVERWRITE };
-UINT8 gubOverrideStatus;
+static UINT8 gubOverrideStatus;
 //Set when the a new sector/level is selected, forcing the user to reselect the override status.
-BOOLEAN gfOverrideDirty;
+static BOOLEAN gfOverrideDirty;
 //The state of the override button, true if overriden intended.
-BOOLEAN gfOverride;
+static BOOLEAN gfOverride;
 
 //The sector coordinates of the map currently loaded in memory (blue)
-INT16 gsSectorX, gsSectorY;
+static INT16 gsSectorX;
+static INT16 gsSectorY;
 //The layer of the sector that is currently loaded in memory.
-INT32 gsSectorLayer;
+static INT32 gsSectorLayer;
 //The sector coordinates of the mouse position (yellow)
 static INT16 gsHiSectorX;
 static INT16 gsHiSectorY;
@@ -173,7 +175,7 @@ static INT16 gsSelSectorY;
 
 //Used to determine how long the F5 key has been held down for to determine whether or not the
 //summary is going to be persistant or not.
-UINT32 giInitTimer;
+static UINT32 giInitTimer;
 
 static wchar_t gszFilename[40];
 static wchar_t gszTempFilename[21];
@@ -199,7 +201,7 @@ enum{
 	SUMMARY_ENEMY,
 	NUM_SUMMARY_BUTTONS
 };
-GUIButtonRef iSummaryButton[NUM_SUMMARY_BUTTONS];
+static GUIButtonRef iSummaryButton[NUM_SUMMARY_BUTTONS];
 
 
 static GUIButtonRef MakeCheckBox(INT16 const x, INT16 const y, GUI_CALLBACK const click, bool const checked = false)
