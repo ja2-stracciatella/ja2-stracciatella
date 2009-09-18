@@ -124,13 +124,14 @@ INT16			gWorldSectorX = 0;
 INT16			gWorldSectorY = 0;
 INT8			gbWorldSectorZ = -1;
 
-INT16			gsAdjacentSectorX, gsAdjacentSectorY;
-INT8			gbAdjacentSectorZ;
-GROUP			*gpAdjacentGroup = NULL;
-UINT8			gubAdjacentJumpCode;
-UINT32		guiAdjacentTraverseTime;
+static INT16  gsAdjacentSectorX;
+static INT16  gsAdjacentSectorY;
+static INT8   gbAdjacentSectorZ;
+static GROUP* gpAdjacentGroup = 0;
+static UINT8  gubAdjacentJumpCode;
+static UINT32 guiAdjacentTraverseTime;
 UINT8			gubTacticalDirection;
-INT16			gsAdditionalData;
+static INT16  gsAdditionalData;
 
 static BOOLEAN fUsingEdgePointsForStrategicEntry = FALSE;
 BOOLEAN		gfInvalidTraversal = FALSE;
@@ -212,7 +213,7 @@ UINT8 ubSAMControlledSectors[ MAP_WORLD_Y ][ MAP_WORLD_X ] = {
 	{ 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0 }
 };
 
-INT16 DirXIncrementer[8] =
+static INT16 const DirXIncrementer[8] =
  {
   0,        //N
 	1,        //NE
@@ -224,7 +225,7 @@ INT16 DirXIncrementer[8] =
 	-1       //NW
  };
 
-INT16 DirYIncrementer[8] =
+static INT16 const DirYIncrementer[8] =
  {
   -1,        //N
 	-1,        //NE
