@@ -131,7 +131,6 @@ UINT8			gubAdjacentJumpCode;
 UINT32		guiAdjacentTraverseTime;
 UINT8			gubTacticalDirection;
 INT16			gsAdditionalData;
-UINT16		gusDestExitGridNo;
 
 static BOOLEAN fUsingEdgePointsForStrategicEntry = FALSE;
 BOOLEAN		gfInvalidTraversal = FALSE;
@@ -1859,7 +1858,6 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		gsAdjacentSectorX				= ExitGrid.ubGotoSectorX;
 		gsAdjacentSectorY				= ExitGrid.ubGotoSectorY;
 		gbAdjacentSectorZ				= ExitGrid.ubGotoSectorZ;
-		gusDestExitGridNo				= ExitGrid.usGridNo;
 	}
 
 	// Give guy(s) orders to walk off sector...
