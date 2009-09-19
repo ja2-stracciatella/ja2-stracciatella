@@ -295,8 +295,8 @@ void JumpToLevel( INT32 iLevel );
 // check to see if we need to update the screen
 void CheckAndUpdateBasedOnContractTimes( void );
 
-// display red arrow by name of selected merc
-void HandleDisplayOfSelectedMercArrows( void );
+// Display a red arrow by the name of each selected merc
+void HandleDisplayOfSelectedMercArrows();
 
 // check which guys can move with this guy
 void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* s);

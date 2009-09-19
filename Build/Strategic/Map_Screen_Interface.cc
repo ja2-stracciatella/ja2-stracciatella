@@ -953,46 +953,30 @@ void CheckAndUpdateBasedOnContractTimes( void )
 }
 
 
-
-void HandleDisplayOfSelectedMercArrows( void )
+void HandleDisplayOfSelectedMercArrows()
 {
-	INT16 sYPosition = 0;
-	UINT8 ubCount = 0;
-	// blit an arrow by the name of each merc in a selected list
+	if (!GetSelectedInfoChar()) return;
+	if (fShowInventoryFlag)     return;
 
-	if (GetSelectedInfoChar() == NULL) return;
-
-	if (fShowInventoryFlag) return;
-
-	// now blit one by the selected merc
-	sYPosition = Y_START+( bSelectedInfoChar * ( Y_SIZE + 2 ) ) - 1;
-
-
-	if( bSelectedInfoChar >= FIRST_VEHICLE )
-	{
-		sYPosition += 6;
+	{ // Blit one by the selected merc
+		INT16 y = Y_START + bSelectedInfoChar * (Y_SIZE + 2) - 1;
+		if (bSelectedInfoChar >= FIRST_VEHICLE) y += 6;
+		BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0,SELECTED_CHAR_ARROW_X, y);
 	}
 
-	BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0,SELECTED_CHAR_ARROW_X, sYPosition);
-
 	// now run through the selected list of guys, an arrow for each
-	for( ubCount = 0; ubCount < MAX_CHARACTER_COUNT; ubCount++ )
+	UINT8 const dest_group = bSelectedDestChar != -1 ? gCharactersList[bSelectedDestChar].merc->ubGroupID : 0;
+	for (UINT8 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		const SOLDIERTYPE* const s = gCharactersList[ubCount].merc;
-		if (s == NULL) continue;
+		SOLDIERTYPE const* const s = gCharactersList[i].merc;
+		if (!s) continue;
 
-		// are they in the selected list or int he same mvt group as this guy
-		if (IsEntryInSelectedListSet(ubCount) ||
-				(bSelectedDestChar != -1 && s->ubGroupID != 0 && gCharactersList[bSelectedDestChar].merc->ubGroupID == s->ubGroupID))
-		{
-			sYPosition = Y_START+( ubCount * ( Y_SIZE + 2) ) - 1;
-			if( ubCount >= FIRST_VEHICLE )
-			{
-				sYPosition += 6;
-			}
+		// Is he in the selected list or in the same mvt group as this guy?
+		if (!IsEntryInSelectedListSet(i) && (s->ubGroupID == 0 || s->ubGroupID != dest_group)) continue;
 
-			BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, sYPosition);
-		}
+		INT16 y = Y_START + i * (Y_SIZE + 2) - 1;
+		if (i >= FIRST_VEHICLE) y += 6;
+		BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, y);
 	}
 }
 
