@@ -5640,7 +5640,6 @@ static void RenderTeamRegionBackground()
 		BltVideoObject(guiSAVEBUFFER, guiCHARLIST, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 		HandleHighLightingOfLinesInTeamPanel();
 		DisplayCharacterList();
-		HandleDisplayOfSelectedMercArrows();
 		DisplayIconsForMercsAsleep();
 	}
 	else
