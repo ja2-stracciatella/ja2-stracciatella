@@ -5629,52 +5629,31 @@ void RenderMapRegionBackground( void )
 static void DisplayIconsForMercsAsleep(void);
 
 
-static void RenderTeamRegionBackground(void)
+static void RenderTeamRegionBackground()
 {
-	// renders to save buffer when dirty flag set
-	if (!fTeamPanelDirty)
-	{
-		// not dirty, leave
-		return;
-	}
+	// Render to save buffer when dirty flag set
+	if (!fTeamPanelDirty) return;
 
-	// show inventory or the team list?
+	// Show inventory or the team list?
 	if (!fShowInventoryFlag)
 	{
 		BltVideoObject(guiSAVEBUFFER, guiCHARLIST, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
+		HandleHighLightingOfLinesInTeamPanel();
+		DisplayCharacterList();
+		HandleDisplayOfSelectedMercArrows();
+		DisplayIconsForMercsAsleep();
 	}
 	else
 	{
 		BltCharInvPanel();
 	}
 
-
-	if ( !fShowInventoryFlag )
-	{
-		// if we are not in inventory mode, show character list
-		HandleHighLightingOfLinesInTeamPanel( );
-
-		DisplayCharacterList();
-	}
-
-	fDrawCharacterList = FALSE;
-
-
-	// display arrows by selected people
-	HandleDisplayOfSelectedMercArrows( );
-  DisplayIconsForMercsAsleep(  );
-
-
-	// reset dirty flag
-	fTeamPanelDirty = FALSE;
+	fDrawCharacterList  = FALSE;
+	fTeamPanelDirty     = FALSE;
 	gfRenderPBInterface = TRUE;
 
-	// mark all pop ups as dirty
-	MarkAllBoxesAsAltered( );
-
-	// restore background for area
-	RestoreExternBackgroundRect( 0, 107, 261 - 0, 359 - 107 );
-
+	MarkAllBoxesAsAltered();
+	RestoreExternBackgroundRect(0, 107, 261 - 0, 359 - 107);
 	MapscreenMarkButtonsDirty();
 }
 
