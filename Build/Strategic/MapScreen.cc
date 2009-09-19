@@ -1313,7 +1313,6 @@ static void LoadCharacters(void)
 }
 
 
-static void DrawCharInfo(INT16 row, UINT8 text_color);
 static void EnableDisableTeamListRegionsAndHelpText(void);
 
 
@@ -1331,23 +1330,54 @@ static void DisplayCharacterList(void)
 
 	for (INT16 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		SOLDIERTYPE const* const s = gCharactersList[i].merc;
-		if (!s) continue;
+		if (!gCharactersList[i].merc) continue;
+		SOLDIERTYPE const& s = *gCharactersList[i].merc;
 
-		UINT8 const foreground =
-			i == (INT16)giHighLine            ? FONT_WHITE     :
-			s->bLife == 0                     ? FONT_METALGRAY :
-			CharacterIsGettingPathPlotted(i)  ? FONT_LTBLUE    :
+		UINT8 foreground =
+			i == (INT16)giHighLine           ? FONT_WHITE     :
+			s.bLife == 0                     ? FONT_METALGRAY :
+			CharacterIsGettingPathPlotted(i) ? FONT_LTBLUE    :
 			/* Not in current sector? */
-			s->sSectorX != sSelMapX ||
-			s->sSectorY != sSelMapY ||
-			s->bSectorZ != iCurrentMapSectorZ ? 5              :
+			s.sSectorX != sSelMapX ||
+			s.sSectorY != sSelMapY ||
+			s.bSectorZ != iCurrentMapSectorZ ? 5              :
 			/* Mobile? */
-			s->bAssignment < ON_DUTY ||
-			s->bAssignment == VEHICLE         ? FONT_YELLOW    :
+			s.bAssignment < ON_DUTY ||
+			s.bAssignment == VEHICLE         ? FONT_YELLOW    :
 			FONT_MAP_DKYELLOW;
 		SetFontForeground(foreground);
-		DrawCharInfo(i, foreground);
+
+		UINT16 y = Y_START + i * (Y_SIZE + Y_OFFSET) + 1;
+		if (i >= FIRST_VEHICLE) y += 6;
+
+		// Name
+		DrawStringCentered(s.name, NAME_X + 1, y, NAME_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
+
+		wchar_t str[32];
+
+		// Location
+		GetMapscreenMercLocationString(s, str, lengthof(str));
+		DrawStringCentered(str, LOC_X + 1, y, LOC_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
+
+		// Destination
+		GetMapscreenMercDestinationString(s, str, lengthof(str));
+		if (str[0] != '\0')
+		{
+			DrawStringCentered(str, DEST_ETA_X + 1, y, DEST_ETA_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
+		}
+
+		// Assignment
+		if (fFlashAssignDone && s.fDoneAssignmentAndNothingToDoFlag)
+		{
+			SetFontForeground(FONT_RED);
+		}
+		wchar_t const* const assignment = GetMapscreenMercAssignmentString(s);
+		DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
+
+		// Remaining contract time
+		GetMapscreenMercDepartureString(s, str, lengthof(str), foreground != FONT_WHITE ? &foreground : 0);
+		SetFontForeground(foreground);
+		DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 	}
 
 	HandleDisplayOfSelectedMercArrows();
@@ -2193,43 +2223,6 @@ static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UI
 	INT16 ry;
 	FindFontRightCoordinates(x, y, w, h, str, font, &rx, &ry);
 	DrawString(str, rx, ry, font);
-}
-
-
-static void DrawCharInfo(INT16 const row, UINT8 text_color)
-{
-	UINT16 y = Y_START + row * (Y_SIZE + Y_OFFSET) + 1;
-	if (row >= FIRST_VEHICLE) y += 6;
-
-	SOLDIERTYPE const& s = *gCharactersList[row].merc;
-	wchar_t            str[32];
-
-	// Name
-	DrawStringCentered(s.name, NAME_X + 1, y, NAME_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
-
-	// Location
-	GetMapscreenMercLocationString(s, str, lengthof(str));
-	DrawStringCentered(str, LOC_X + 1, y, LOC_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
-
-	// Destination
-	GetMapscreenMercDestinationString(s, str, lengthof(str));
-	if (str[0] != '\0')
-	{
-		DrawStringCentered(str, DEST_ETA_X + 1, y, DEST_ETA_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
-	}
-
-	// Assignment
-	if (fFlashAssignDone && s.fDoneAssignmentAndNothingToDoFlag)
-	{
-		SetFontForeground(FONT_RED);
-	}
-	wchar_t const* const assignment = GetMapscreenMercAssignmentString(s);
-	DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
-
-	// Remaining contract time
-	GetMapscreenMercDepartureString(s, str, lengthof(str), row != giHighLine ? &text_color : 0);
-	SetFontForeground(text_color);
-	DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 }
 
 
