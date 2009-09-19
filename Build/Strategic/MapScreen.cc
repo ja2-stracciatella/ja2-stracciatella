@@ -2227,8 +2227,7 @@ static void DrawCharInfo(INT16 const row, UINT8 text_color)
 	DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 	// Remaining contract time
-	GetMapscreenMercDepartureString(s, str, lengthof(str), &text_color);
-	if (row == giHighLine) text_color = FONT_WHITE;
+	GetMapscreenMercDepartureString(s, str, lengthof(str), row != giHighLine ? &text_color : 0);
 	SetFontForeground(text_color);
 	DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 }
@@ -8506,7 +8505,7 @@ void GetMapscreenMercDepartureString(SOLDIERTYPE const& s, wchar_t* const buf, s
 	{ // 3 or more days remain
 		INT32 const days_remaining = mins_remaining / (24*60);
 		swprintf(buf, n, L"%d%ls", days_remaining, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
-		*text_colour = FONT_LTGREEN;
+		if (text_colour) *text_colour = FONT_LTGREEN;
 		return;
 	}
 
@@ -8515,8 +8514,11 @@ void GetMapscreenMercDepartureString(SOLDIERTYPE const& s, wchar_t* const buf, s
 	swprintf(buf, n, L"%d%ls", hours_remaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION]);
 
 	// last 3 days is Red, last 4 hours start flashing red/white!
-	*text_colour = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
-		FONT_WHITE : FONT_RED;
+	if (text_colour)
+	{
+		*text_colour = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
+			FONT_WHITE : FONT_RED;
+	}
 }
 
 
