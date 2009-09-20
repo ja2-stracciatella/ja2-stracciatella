@@ -155,7 +155,7 @@ static LaptopMode const gubBobbyRPages[] =
 
 
 //Bobby's Sign menu mouse regions
-MOUSE_REGION    gSelectedBobbiesSignMenuRegion[ BOBBIES_NUMBER_SIGNS ];
+static MOUSE_REGION gSelectedBobbiesSignMenuRegion[BOBBIES_NUMBER_SIGNS];
 
 
 static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset);
@@ -222,9 +222,6 @@ void EnterBobbyR()
 }
 
 
-static void RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region);
-
-
 void ExitBobbyR()
 {
 
@@ -243,7 +240,7 @@ void ExitBobbyR()
 
 	DeleteBobbyRWoodBackground();
 
-	RemoveBobbiesMouseRegion(BOBBIES_NUMBER_SIGNS, gSelectedBobbiesSignMenuRegion);
+	FOR_EACH(MOUSE_REGION, i, gSelectedBobbiesSignMenuRegion) MSYS_RemoveRegion(&*i);
 
 	guiLastBobbyRayPage = LAPTOP_MODE_BOBBY_R;
 }
@@ -357,15 +354,6 @@ static void InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPo
 
 		ubCount +=4;
 	}
-}
-
-
-static void RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region)
-{
-	UINT8 i;
-
-	for(i=0; i<ubNumberRegions; i++)
-		MSYS_RemoveRegion( &Mouse_Region[i]);
 }
 
 
