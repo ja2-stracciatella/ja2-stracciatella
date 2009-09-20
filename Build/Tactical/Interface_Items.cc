@@ -988,7 +988,7 @@ void HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* const o)
 	const INT32 squad = CurrentSquad();
 	if (squad == NUMBER_OF_SQUADS) return;
 
-	FOR_ALL_IN_SQUAD(i, squad)
+	FOR_EACH_IN_SQUAD(i, squad)
 	{
 		SOLDIERTYPE const* const s = *i;
 		FACETYPE*          const f = s->face;

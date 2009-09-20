@@ -3100,7 +3100,7 @@ static SOLDIERTYPE* FindNextActiveSquadRange(INT8 begin, INT8 end)
 {
 	for (INT32 i = begin; i != end; ++i)
 	{
-		FOR_ALL_IN_SQUAD(j, i)
+		FOR_EACH_IN_SQUAD(j, i)
 		{
 			SOLDIERTYPE* const s = *j;
 			if (!s->bInSector)                      continue;

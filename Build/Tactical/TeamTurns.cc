@@ -542,7 +542,7 @@ static void StartInterrupt(void)
 		// build string in separate loop here, want to linearly process squads...
 		for (INT32 iSquad = 0; iSquad < NUMBER_OF_SQUADS; ++iSquad)
 		{
-			FOR_ALL_IN_SQUAD(i, iSquad)
+			FOR_EACH_IN_SQUAD(i, iSquad)
 			{
 				SOLDIERTYPE const* const s = *i;
 				if (!s->bActive)   continue;

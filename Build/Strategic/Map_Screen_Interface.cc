@@ -1974,7 +1974,7 @@ static void SelectSquadForMovement(INT32 const squad_no)
 		// Try to select everyone in squad
 		bool some_cant_move = false;
 		bool first_failure  = true;
-		FOR_ALL_IN_SQUAD(k, squad_no)
+		FOR_EACH_IN_SQUAD(k, squad_no)
 		{
 			SOLDIERTYPE& s = **k;
 			if (!s.bActive) continue;
@@ -2007,7 +2007,7 @@ static void DeselectSquadForMovement(INT32 const squad_no)
 		fSquadIsMoving[i] = FALSE;
 
 		// Now deselect everyone in squad
-		FOR_ALL_IN_SQUAD(k, squad_no)
+		FOR_EACH_IN_SQUAD(k, squad_no)
 		{
 			SOLDIERTYPE& s = **k;
 			if (!s.bActive) continue;
