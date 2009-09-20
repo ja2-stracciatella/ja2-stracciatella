@@ -452,14 +452,14 @@ void ResetAllMercPositions()
 {
 	//Remove all of the alternate placements (editor takes precedence)
 	UseEditorAlternateList();
-	FOR_ALL_SOLDIERINITNODES_SAFE(curr)
+	FOR_EACH_SOLDIERINITNODE_SAFE(curr)
 	{
 		gpSelected = curr;
 		RemoveSoldierNodeFromInitList( gpSelected );
 	}
 	//Now, remove any existing original list mercs, then readd them.
 	UseEditorOriginalList();
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pSoldier )
 		{
@@ -2465,7 +2465,7 @@ static void RenderCurrentSchedule(void);
 
 void RenderMercStrings()
 {
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		SOLDIERTYPE const* const s = curr->pSoldier;
 		if (!s || s->bVisible != 1) continue;
@@ -2536,7 +2536,7 @@ void SetMercTeamVisibility( INT8 bTeam, BOOLEAN fVisible )
 {
 	INT8 bVisible;
 	bVisible = fVisible ? 1 : -1;
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pBasicPlacement->bTeam == bTeam )
 		{

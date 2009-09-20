@@ -270,7 +270,7 @@ void OptimizeSchedules()
 		if( ubOldScheduleID != gubScheduleID )
 		{ //The schedule ID has changed, so change all links accordingly.
 			pSchedule->ubScheduleID = gubScheduleID;
-			CFOR_ALL_SOLDIERINITNODES(pNode)
+			CFOR_EACH_SOLDIERINITNODE(pNode)
 			{
 				if( pNode->pDetailedPlacement && pNode->pDetailedPlacement->ubScheduleID == ubOldScheduleID )
 				{
@@ -288,7 +288,7 @@ void OptimizeSchedules()
 		pSchedule = pSchedule->next;
 	}
 	//Remove the +100 IDs.
-	CFOR_ALL_SOLDIERINITNODES(pNode)
+	CFOR_EACH_SOLDIERINITNODE(pNode)
 	{
 		if( pNode->pDetailedPlacement && pNode->pDetailedPlacement->ubScheduleID > 100 )
 		{
@@ -454,7 +454,7 @@ void ReverseSchedules()
 void ClearAllSchedules()
 {
 	DestroyAllSchedules();
-	CFOR_ALL_SOLDIERINITNODES(pNode)
+	CFOR_EACH_SOLDIERINITNODE(pNode)
 	{
 		if( pNode->pDetailedPlacement && pNode->pDetailedPlacement->ubScheduleID )
 		{
@@ -955,7 +955,7 @@ void PostSchedules()
 	{
 		fDefaultSchedulesPossible = TRUE;
 	}
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pSoldier && curr->pSoldier->bTeam == CIV_TEAM )
 		{

@@ -141,7 +141,7 @@ void LoadEnemySoldiersFromTempFile()
 	 * fPriorityExistance flag.  We will use these flags to determine which
 	 * slots have been modified as we load the data into the map pristine
 	 * soldier init list. */
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
 		if (!bp->fPriorityExistance) continue;
@@ -181,7 +181,7 @@ void LoadEnemySoldiersFromTempFile()
 	{
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
 		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
 			if (bp->fPriorityExistance) continue;
@@ -398,7 +398,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	/* For all the enemy slots (enemy/creature), clear the fPriorityExistance
 	 * flag.  We will use these flags to determine which slots have been
 	 * modified as we load the data into the map pristine soldier init list. */
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
 		if (!bp->fPriorityExistance)                               continue;
@@ -425,7 +425,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	{
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
 		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
 			if (bp->fPriorityExistance)                   continue;
@@ -565,7 +565,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	/* For all the civilian slots, clear the fPriorityExistance flag.  We will
 	 * use these flags to determine which slots have been modified as we load
 	 * the data into the map pristine soldier init list. */
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
 		if (!bp->fPriorityExistance) continue;
@@ -577,7 +577,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	for (INT32 i = 0; i != slots; ++i)
 	{
 		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
 			if (bp->fPriorityExistance)                   continue;
@@ -630,7 +630,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	}
 
 	// now remove any non-priority placement which matches the conditions!
-	FOR_ALL_SOLDIERINITNODES_SAFE(curr)
+	FOR_EACH_SOLDIERINITNODE_SAFE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT const* const bp = curr->pBasicPlacement;
 		if (bp->fPriorityExistance)                   continue;

@@ -426,7 +426,7 @@ void PrepareEnemyForSectorBattle()
 		total_admins = 0;
 		total_troops = 0;
 		total_elites = 0;
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT const& bp = *curr->pBasicPlacement;
 			if (bp.bTeam != ENEMY_TEAM) continue;

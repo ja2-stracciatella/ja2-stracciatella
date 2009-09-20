@@ -139,7 +139,7 @@ static void UpdateOldVersionMap(void)
 	{
 		//Soldier information contained two fixable bugs.
 		gMapInformation.ubMapVersion++;
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			//Bug #01)  Nodes without detailed slots weren't initialized.
 			if( !curr->pBasicPlacement->fDetailedPlacement )
@@ -166,7 +166,7 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion == 2 )
 	{
 		gMapInformation.ubMapVersion++;
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			//Bug #04)  Assign enemy mercs default army color code if applicable
 			if( curr->pBasicPlacement->bTeam == ENEMY_TEAM && !curr->pBasicPlacement->ubSoldierClass )
@@ -269,7 +269,7 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion == 6 )
 	{ //Bug 8)  Change droppable status of merc items so that they are all undroppable.
 		gMapInformation.ubMapVersion++;
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			//Bug #04)  Assign enemy mercs default army color code if applicable
 			if( curr->pDetailedPlacement )
@@ -290,7 +290,7 @@ static void UpdateOldVersionMap(void)
 		//Bug 9)  Priority placements have been dropped in favor of splitting it into two categories.
 		//				The first is Detailed placements, and the second is priority existance.  So, all
 		//				current detailed placements will also have priority existance.
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if( curr->pDetailedPlacement )
 			{
@@ -363,7 +363,7 @@ static void UpdateOldVersionMap(void)
 	{
 		gMapInformation.ubMapVersion++;
 		//Bug 10) Padding on detailed placements is uninitialized.  Clear it.
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if (!curr->pDetailedPlacement) continue;
 			SOLDIERCREATE_STRUCT& dp = *curr->pDetailedPlacement;
@@ -377,7 +377,7 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion == 9 )
 	{
 		gMapInformation.ubMapVersion++;
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			//Bug 11) Convert all wheelchaired placement bodytypes to cows.  Result of change in the animation database.
 			if( curr->pDetailedPlacement && curr->pDetailedPlacement->bBodyType == CRIPPLECIV )
@@ -397,7 +397,7 @@ static void UpdateOldVersionMap(void)
 		INT32 i, cnt;
 		OBJECTTYPE *pItem;
 		gMapInformation.ubMapVersion++;
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if( curr->pDetailedPlacement )
 			{
@@ -473,7 +473,7 @@ static void UpdateOldVersionMap(void)
 		//Laymen terms:  If any items slots are locked to be empty, make them empty but available
 		//for random item generation.
 		gMapInformation.ubMapVersion = 21;
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if( curr->pDetailedPlacement )
 			{
@@ -503,7 +503,7 @@ static void UpdateOldVersionMap(void)
 		gMapInformation.ubMapVersion = 23;
 		if (giCurrentTilesetID == CAVES_1) //cave/mine tileset only
 		{ //convert all civilians to miners which use uniforms and more masculine body types.
-			CFOR_ALL_SOLDIERINITNODES(curr)
+			CFOR_EACH_SOLDIERINITNODE(curr)
 			{
 				if( curr->pBasicPlacement->bTeam == CIV_TEAM && !curr->pDetailedPlacement )
 				{
@@ -532,7 +532,7 @@ static void AutoCalculateItemNoOverwriteStatus(void)
 	//Recalculate the "no overwrite" status flag on all items.  There are two different cases:
 	//1)  If detailed placement has item, the item "no overwrite" flag is set
 	//2)  If detailed placement doesn't have item, but item is set to drop (forced empty slot), the "no overwrite" flag is set.
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pDetailedPlacement )
 		{

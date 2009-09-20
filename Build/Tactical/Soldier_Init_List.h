@@ -17,12 +17,12 @@ struct SOLDIERINITNODE
 extern SOLDIERINITNODE *gSoldierInitHead;
 extern SOLDIERINITNODE *gSoldierInitTail;
 
-#define BASE_FOR_ALL_SOLDIERINITNODES(type, iter)                      \
+#define BASE_FOR_EACH_SOLDIERINITNODE(type, iter)                      \
 	for (type* iter = gSoldierInitHead; iter != NULL; iter = iter->next)
-#define FOR_ALL_SOLDIERINITNODES( iter) BASE_FOR_ALL_SOLDIERINITNODES(      SOLDIERINITNODE, iter)
-#define CFOR_ALL_SOLDIERINITNODES(iter) BASE_FOR_ALL_SOLDIERINITNODES(const SOLDIERINITNODE, iter)
+#define FOR_EACH_SOLDIERINITNODE( iter) BASE_FOR_EACH_SOLDIERINITNODE(      SOLDIERINITNODE, iter)
+#define CFOR_EACH_SOLDIERINITNODE(iter) BASE_FOR_EACH_SOLDIERINITNODE(const SOLDIERINITNODE, iter)
 
-#define FOR_ALL_SOLDIERINITNODES_SAFE(iter)                                                 \
+#define FOR_EACH_SOLDIERINITNODE_SAFE(iter)                                                 \
 	for (SOLDIERINITNODE* iter = gSoldierInitHead, * iter##__next; iter; iter = iter##__next) \
 		if (iter##__next = iter->next, false) {} else                                           \
 

@@ -602,7 +602,7 @@ void AddSoldierInitListTeamToWorld(INT8 const team)
 	if (giCurrentTilesetID == CAVES_1) // Cave/mine tileset only
 	{ /* Convert all civilians to miners which use uniforms and more masculine
 		 * body types. */
-		CFOR_ALL_SOLDIERINITNODES(i)
+		CFOR_EACH_SOLDIERINITNODE(i)
 		{
 			BASIC_SOLDIERCREATE_STRUCT& bp = *i->pBasicPlacement;
 			if (bp.bTeam != CIV_TEAM || i->pDetailedPlacement) continue;
@@ -662,7 +662,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 	//Now count the number of nodes that are basic placements of desired team AND CLASS
 	//This information will be used to randomly determine which of these placements
 	//will be added based on the number of slots we can still add.
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if (curr->pSoldier) break;
 		if( curr->pBasicPlacement->bTeam == ENEMY_TEAM )
@@ -725,7 +725,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 				break;
 		}
 		//Now, loop through the priority existance and detailed placement section of the list.
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if (ubMaxNum == 0 ||
 					*pCurrTotal == 0 ||
@@ -978,7 +978,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 
 	//First, count up the total number of free slots.
 	ubFreeSlots = 0;
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 			ubFreeSlots++;
@@ -986,7 +986,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 
 	//Now, loop through the entire list again, but for the last time.  All enemies will be inserted now ignoring
 	//detailed placements and classes.
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if (ubFreeSlots == 0 || ubMaxNum == 0) break;
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == ENEMY_TEAM )
@@ -1206,7 +1206,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 
 	//First, count up the total number of free slots.
 	ubFreeSlots = 0;
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( !curr->pSoldier && (curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM) )
 			ubFreeSlots++;
@@ -1214,7 +1214,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 
 	//Now, loop through the entire list again, but for the last time.  All enemies will be inserted now ignoring
 	//detailed placements and classes.
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if (ubFreeSlots == 0 || ubMaxNum == 0) break;
 		if( !curr->pSoldier && (curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM) )
@@ -1283,7 +1283,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 	ubNumCreatures = (UINT8)(ubNumLarvae + ubNumInfants + ubNumYoungMales + ubNumYoungFemales + ubNumAdultMales + ubNumAdultFemales);
 	if( fQueen )
 	{
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if( !curr->pSoldier && curr->pBasicPlacement->bTeam == CREATURE_TEAM && curr->pBasicPlacement->bBodyType == QUEENMONSTER )
 			{
@@ -1303,7 +1303,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 	}
 
 	//First fill up only the priority existance slots (as long as the availability and bodytypes match)
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if (!curr->pBasicPlacement->fPriorityExistance || ubNumCreatures == 0) break;
 		fDoPlacement = TRUE;
@@ -1341,14 +1341,14 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 
 	//Count how many free creature slots are left.
 	ubFreeSlots = 0;
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == CREATURE_TEAM )
 			ubFreeSlots++;
 	}
 	//Now, if we still have creatures to place, do so completely randomly, overriding priority
 	//placements, etc.
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if (ubFreeSlots == 0 || ubNumCreatures == 0) break;
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == CREATURE_TEAM )
@@ -1417,7 +1417,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 
 SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 {
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pSoldier->ubID == usID )
 			return curr;
@@ -1428,7 +1428,7 @@ SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 
 SOLDIERINITNODE* FindSoldierInitNodeBySoldier(SOLDIERTYPE const& s)
 {
-	FOR_ALL_SOLDIERINITNODES(i)
+	FOR_EACH_SOLDIERINITNODE(i)
 	{
 		if (i->pSoldier == &s) return i;
 	}
@@ -1486,11 +1486,11 @@ void SaveSoldierInitListLinks(HWFILE const hfile)
 	UINT8 ubSlots = 0;
 
 	//count the number of soldier init nodes...
-	CFOR_ALL_SOLDIERINITNODES(curr) ++ubSlots;
+	CFOR_EACH_SOLDIERINITNODE(curr) ++ubSlots;
 	//...and save it.
 	FileWrite(hfile, &ubSlots, 1);
 	//Now, go through each node, and save just the ubSoldierID, if that soldier is alive.
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pSoldier && !curr->pSoldier->bActive )
 		{
@@ -1515,7 +1515,7 @@ void LoadSoldierInitListLinks(HWFILE const f)
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
 
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if (curr->ubNodeID != node_id) continue;
 
@@ -1553,7 +1553,7 @@ void AddSoldierInitListBloodcats()
 	{ //We don't yet know the number of bloodcat placements in this sector so
 		//count them now, and permanently record it.
 		INT8 bBloodCatPlacements = 0;
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if( curr->pBasicPlacement->bBodyType == BLOODCAT )
 			{
@@ -1593,7 +1593,7 @@ void AddSoldierInitListBloodcats()
 		SortSoldierInitList();
 
 		//Count the current number of soldiers of the specified team
-		CFOR_ALL_SOLDIERINITNODES(curr)
+		CFOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if( curr->pBasicPlacement->bBodyType == BLOODCAT && curr->pSoldier )
 				ubNumAdded++;  //already one here!
@@ -1673,7 +1673,7 @@ void AddSoldierInitListBloodcats()
 
 static SOLDIERINITNODE* FindSoldierInitListNodeByProfile(UINT8 ubProfile)
 {
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if ( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == ubProfile )
 		{
@@ -1756,7 +1756,7 @@ void AddProfilesUsingProfileInsertionData()
 
 void AddProfilesNotUsingProfileInsertionData()
 {
-	FOR_ALL_SOLDIERINITNODES(i)
+	FOR_EACH_SOLDIERINITNODE(i)
 	{
 		SOLDIERINITNODE& si = *i;
 		if (si.pSoldier)                           continue;
@@ -1777,7 +1777,7 @@ BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 {
 	UINT32 uiNumInvalids = 0;
 	wchar_t str[512];
-	CFOR_ALL_SOLDIERINITNODES(curr)
+	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pSoldier )
 		{
@@ -1837,7 +1837,7 @@ void NewWayOfLoadingEnemySoldierInitListLinks(HWFILE const f)
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
 
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if (curr->ubNodeID != node_id) continue;
 
@@ -1864,7 +1864,7 @@ void NewWayOfLoadingCivilianInitListLinks(HWFILE const f)
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
 
-		FOR_ALL_SOLDIERINITNODES(curr)
+		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if (curr->ubNodeID != node_id) continue;
 
@@ -1895,7 +1895,7 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 	/* The player has owned the sector at one point.  By stripping all of the
 	 * detailed placements, only basic placements will remain.  This prevents
 	 * tanks and "specially detailed" enemies from coming back. */
-	FOR_ALL_SOLDIERINITNODES(i)
+	FOR_EACH_SOLDIERINITNODE(i)
 	{
 		SOLDIERINITNODE&            si = *i;
 		BASIC_SOLDIERCREATE_STRUCT& bp = *si.pBasicPlacement;

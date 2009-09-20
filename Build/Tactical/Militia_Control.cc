@@ -28,7 +28,7 @@ void ResetMilitia()
 static void RemoveMilitiaFromTactical(void)
 {
 	FOR_EACH_IN_TEAM(i, MILITIA_TEAM) TacticalRemoveSoldier(*i);
-	FOR_ALL_SOLDIERINITNODES(curr)
+	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pBasicPlacement->bTeam == MILITIA_TEAM )
 		{
