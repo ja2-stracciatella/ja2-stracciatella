@@ -298,10 +298,6 @@ MOUSE_REGION    gHelpScreenFullScreenMask;
 // region to mask the background
 MOUSE_REGION    gHelpScreenScrollArea;
 
-// region to mask the background
-MOUSE_REGION    gHelpScreenScrollAreaArrows;
-void SelectHelpScrollAreaArrowsCallBack( MOUSE_REGION * pRegion, INT32 iReason );
-
 
 //checkbox to toggle show help again toggle
 GUIButtonRef gHelpScreenDontShowHelpAgainToggle;
