@@ -893,7 +893,7 @@ void HandleRottingCorpses( )
 
 	// ATE: Check for multiple crows.....
 	// Couint how many we have now...
-	CFOR_ALL_IN_TEAM(s, CIV_TEAM)
+	CFOR_EACH_IN_TEAM(s, CIV_TEAM)
 	{
 		if (s->bInSector &&
 				s->bLife >= OKLIFE &&
@@ -1390,7 +1390,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
     // 50% chance of adding 1 to other mercs....
     if ( Random( 2 ) == 1 )
     {
-			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	    {
 			  // ATE: Ok, lets check for some basic things here!
 			  if (s->bLife >= OKLIFE && s->sGridNo != NOWHERE && s->bInSector)

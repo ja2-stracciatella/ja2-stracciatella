@@ -401,7 +401,7 @@ void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 	}
 
 	// Check to see if anyone hates this merc and will now complain
-	FOR_ALL_IN_TEAM(other, gbPlayerNum)
+	FOR_EACH_IN_TEAM(other, gbPlayerNum)
 	{
 		if (other->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
 
@@ -464,7 +464,7 @@ UINT32 GetMercArrivalTimeOfDay( )
 
 void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 {
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bAssignment == IN_TRANSIT && s->fUseLandingZoneForArrival)
 		{

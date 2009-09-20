@@ -398,7 +398,7 @@ void CheckForDisabledForGiveItem(void)
 	if (cur->bLife < OKLIFE && gpItemPointer != NULL)
 	{
 		// Go through each merc and see if there is one closeby....
-		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			if (s->bLife >= OKLIFE && !IsMechanical(*s) && s->bInSector && IsMercOnCurrentSquad(s))
 			{
@@ -2789,7 +2789,7 @@ void EndRadioLocator(SOLDIERTYPE* s)
 
 void FinishAnySkullPanelAnimations(void)
 {
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bLife == 0 &&
 				(s->fUIdeadMerc || s->fClosePanelToDie))

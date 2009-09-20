@@ -27,7 +27,7 @@ void ResetMilitia()
 
 static void RemoveMilitiaFromTactical(void)
 {
-	FOR_ALL_IN_TEAM(i, MILITIA_TEAM) TacticalRemoveSoldier(*i);
+	FOR_EACH_IN_TEAM(i, MILITIA_TEAM) TacticalRemoveSoldier(*i);
 	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pBasicPlacement->bTeam == MILITIA_TEAM )
@@ -64,7 +64,7 @@ void HandleMilitiaPromotions()
 	gbRegToElitePromotions   = 0;
 	gbMilitiaPromotions      = 0;
 
-	FOR_ALL_IN_TEAM(i, MILITIA_TEAM)
+	FOR_EACH_IN_TEAM(i, MILITIA_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		if (!s.bInSector)          continue;

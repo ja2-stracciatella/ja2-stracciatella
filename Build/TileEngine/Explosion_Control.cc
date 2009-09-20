@@ -1824,7 +1824,7 @@ static void BillyBlocksDoorCallback(void)
 
 static BOOLEAN HookerInRoom(UINT8 ubRoom)
 {
-	FOR_ALL_IN_TEAM(s, CIV_TEAM)
+	FOR_EACH_IN_TEAM(s, CIV_TEAM)
 	{
 		if (!s->bInSector)                 continue;
 		if (s->bLife < OKLIFE)             continue;
@@ -2090,7 +2090,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] = CIV_GROUP_HOSTILE;
 
 			{
-				FOR_ALL_IN_TEAM(civ, CIV_TEAM)
+				FOR_EACH_IN_TEAM(civ, CIV_TEAM)
 				{
 					if (civ->bInSector && civ->ubCivilianGroup == KINGPIN_CIV_GROUP)
 					{
@@ -2324,7 +2324,7 @@ void HandleExplosionQueue()
 			AllTeamsLookForAll(TRUE);
 
 			// call fov code
-			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, gbPlayerNum)
 			{
 				if (s->bInSector) RevealRoofsAndItems(s, FALSE);
 			}
@@ -2727,7 +2727,7 @@ static void HandleBuldingDestruction(const INT16 sGridNo, const SOLDIERTYPE* con
 {
 	if (owner == NULL || owner->bTeam != gbPlayerNum) return;
 
-	FOR_ALL_IN_TEAM(pSoldier, CIV_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, CIV_TEAM)
 	{
 		if (pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral)
 		{

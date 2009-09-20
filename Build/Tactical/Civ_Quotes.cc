@@ -152,7 +152,7 @@ static void SurrenderMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 		BeginCaptureSquence();
 
     // Do capture....
-		FOR_ALL_IN_TEAM(i, gbPlayerNum)
+		FOR_EACH_IN_TEAM(i, gbPlayerNum)
 		{
 			SOLDIERTYPE& s = *i;
 			if (!s.bInSector) continue;

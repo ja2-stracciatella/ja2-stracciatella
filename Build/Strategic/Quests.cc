@@ -274,7 +274,7 @@ static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 	}
 	ubRoom = gubWorldRoomInfo[ pNPC->sGridNo ];
 
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector && gubWorldRoomInfo[s->sGridNo] == ubRoom)
 		{
@@ -377,7 +377,7 @@ static bool FemalePresent(ProfileID const pid)
 
 static BOOLEAN CheckPlayerHasHead(void)
 {
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bLife > 0 && FindObjInObjRange(s, HEAD_2, HEAD_7) != NO_SLOT)
 		{

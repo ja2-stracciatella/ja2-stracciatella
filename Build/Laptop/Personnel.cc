@@ -151,7 +151,7 @@ enum
 
 
 #define CFOR_ALL_PERSONNEL(iter) \
-	CFOR_ALL_IN_TEAM(iter, OUR_TEAM)  \
+	CFOR_EACH_IN_TEAM(iter, OUR_TEAM)  \
 		if (iter->uiStatusFlags & SOLDIER_VEHICLE) continue; else
 
 

@@ -929,7 +929,7 @@ static void PayForTrainingInSector(UINT8 ubSector)
 
 static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 {
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		if (pSoldier->bAssignment == TRAIN_TOWN &&
 				SECTOR(pSoldier->sSectorX, pSoldier->sSectorY) == ubSector &&

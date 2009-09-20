@@ -2230,7 +2230,7 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[40];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
 		if (OkControllableMerc(s) &&
@@ -2545,7 +2545,7 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 	const INT8 bTeam = pSoldier->bTeam;
 
 	// Loop through all our guys and find one to yell
-	CFOR_ALL_IN_TEAM(s, bTeam)
+	CFOR_EACH_IN_TEAM(s, bTeam)
 	{
 		// Add guy if he's a candidate...
 		if (pSoldier->bInSector && s->bLife >= OKLIFE && s->bBreath >= OKBREATH && s->bOppCnt > 0 && s->ubProfile != NO_PROFILE)

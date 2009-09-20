@@ -773,7 +773,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 	// make a list of all of our team's mercs
 	UINT radio_cnt = 0;
 	SOLDIERTYPE* radio_men[20];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		/* if this merc is in this sector, and well enough to look, then put him on
 		 * our list */
@@ -805,7 +805,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponent, const SOLDIERTYPE* const exclude, const INT8 bIteration)
 {
  // look for all mercs on the same team, check opplists for this soldier
-	CFOR_ALL_IN_TEAM(pMate, ubTeam)
+	CFOR_EACH_IN_TEAM(pMate, ubTeam)
   {
    // if this "teammate" is me, myself, or I (whom we want to exclude)
 		if (pMate == exclude)
@@ -1091,7 +1091,7 @@ void TurnOffEveryonesMuzzleFlashes(void)
 
 void TurnOffTeamsMuzzleFlashes( UINT8 ubTeam )
 {
-	FOR_ALL_IN_TEAM(s, ubTeam)
+	FOR_EACH_IN_TEAM(s, ubTeam)
 	{
 		if (s->fMuzzleFlash) EndMuzzleFlash(s);
 	}
@@ -1198,7 +1198,7 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
   }
 
 	// the player team now radios about all sightings
-	FOR_ALL_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, gbPlayerNum)
 	{
 		HandleSight(*i, SIGHT_RADIO); // looking was done above
 	}
@@ -2213,7 +2213,7 @@ static void UpdatePublic(const UINT8 ubTeam, SOLDIERTYPE* const s, const INT8 bN
  if (ubTeamMustLookAgain)
   {
    // then everyone on team who's not aware of guynum must look for him
-		FOR_ALL_IN_TEAM(pSoldier, ubTeam)
+		FOR_EACH_IN_TEAM(pSoldier, ubTeam)
     {
      // if this soldier is active, in this sector, and well enough to look
      if (pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->uiStatusFlags & SOLDIER_GASSED))
@@ -3825,7 +3825,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 		SOLDIERTYPE* heard_loudest_by = NULL;
 
 		// All mercs on this team check if they are eligible to hear this noise
-		FOR_ALL_IN_TEAM(pSoldier, bTeam)
+		FOR_EACH_IN_TEAM(pSoldier, bTeam)
 		{
 			// if this "listener" is in no condition to care
 			if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_DEAD || (pSoldier->bLife < OKLIFE) || pSoldier->ubBodyType == LARVAE_MONSTER)
@@ -5086,7 +5086,7 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 	INT8						bDir;
 	INT16						sDistAway, sDistVisible;
 
-	FOR_ALL_IN_TEAM(pSoldier, pDyingSoldier->bTeam)
+	FOR_EACH_IN_TEAM(pSoldier, pDyingSoldier->bTeam)
 	{
 		if (pSoldier->bInSector && pSoldier != pDyingSoldier && pSoldier->bLife >= OKLIFE && pSoldier->bAlertStatus < STATUS_RED)
 		{
@@ -5116,7 +5116,7 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 bool MercSeesCreature(SOLDIERTYPE const& s)
 {
 	if (s.bOppCnt <= 0) return false;
-	CFOR_ALL_IN_TEAM(i, CREATURE_TEAM)
+	CFOR_EACH_IN_TEAM(i, CREATURE_TEAM)
 	{
 		SOLDIERTYPE const& tgt = *i;
 		if (!tgt.uiStatusFlags & SOLDIER_MONSTER) continue;
@@ -5249,7 +5249,7 @@ static void CommunicateWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 
 
 	const INT8 bTeam = watcher->bTeam;
 
-	CFOR_ALL_IN_TEAM(s, bTeam)
+	CFOR_EACH_IN_TEAM(s, bTeam)
 	{
 		if (s == watcher) continue;
 		if (!s->bInSector || s->bLife < OKLIFE)
@@ -5403,7 +5403,7 @@ static void DecayWatchedLocs(INT8 bTeam)
 
 static void MakeBloodcatsHostile(void)
 {
-	FOR_ALL_IN_TEAM(s, CREATURE_TEAM)
+	FOR_EACH_IN_TEAM(s, CREATURE_TEAM)
 	{
 		if (s->ubBodyType == BLOODCAT && s->bInSector && s->bLife > 0)
 		{

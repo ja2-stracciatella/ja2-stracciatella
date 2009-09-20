@@ -275,7 +275,7 @@ static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 			))
 	{
 		// see if a kingpin goon can see us
-		FOR_ALL_IN_TEAM(pGoon, CIV_TEAM)
+		FOR_EACH_IN_TEAM(pGoon, CIV_TEAM)
 		{
 			if (pGoon->ubCivilianGroup == KINGPIN_CIV_GROUP &&
 					pGoon->bInSector &&

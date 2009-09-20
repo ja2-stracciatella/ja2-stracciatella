@@ -1286,7 +1286,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			}
 			else if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{ // ATE: This key will select everybody in the sector
-				FOR_ALL_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, gbPlayerNum)
 				{
 					if (!OkControllableMerc(s)) continue;
 					if (s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)) continue;
@@ -1674,7 +1674,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'u':
 			if (CHEATER_CHEAT_LEVEL() && GetSelectedMan())
 			{
-				FOR_ALL_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, gbPlayerNum)
 				{
 					if (s->bLife <= 0) continue;
 
@@ -1792,7 +1792,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 						(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->Enabled())
 					))
 			{
-				FOR_ALL_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, gbPlayerNum)
 				{
 					if (s->bLife <= 0) continue;
 					// Get APs back
@@ -1930,7 +1930,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		{
 			// Check if at least one guy is on stealth
 			bool stealth_on = true;
-			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+			CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 			{
 				if (!OkControllableMerc(s))           continue;
 				if (s->bAssignment != CurrentSquad()) continue;
@@ -1939,7 +1939,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 				break;
 			}
 
-			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, gbPlayerNum)
 			{
 				if (!OkControllableMerc(s))           continue;
 				if (s->bAssignment != CurrentSquad()) continue;
@@ -3166,7 +3166,7 @@ static void TestMeanWhile(INT32 iID)
 		y = 14;
 
 		// Loop through our mercs and set gridnos once some found.....
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			if (s->bInSector)
 			{
@@ -3228,7 +3228,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	// If we have multiple guys selected, make all change stance!
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 			{
@@ -3267,7 +3267,7 @@ static void HandleStealthChangeFromUIKeys()
 	// If we have multiple guys selected, make all change stance!
 	if (gTacticalStatus.fAtLeastOneGuyOnMultiSelect)
 	{
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			if (AM_A_ROBOT(s)) continue;
 			if (!s->bInSector) continue;
@@ -3291,7 +3291,7 @@ static void TestCapture()
 
 	// Loop through sodliers and pick 3 lucky ones
 	UINT32 n = 3;
-	FOR_ALL_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, gbPlayerNum)
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.bLife < OKLIFE) continue;

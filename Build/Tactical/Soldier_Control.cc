@@ -809,7 +809,7 @@ BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 				{
 					// Pick a guy this buddy sees and turn towards them!
 					INT16 sClosestDist = 10000;
-					CFOR_ALL_IN_TEAM(opp, OUR_TEAM)
+					CFOR_EACH_IN_TEAM(opp, OUR_TEAM)
 					{
 						if (pSoldier->bOppList[opp->ubID] == SEEN_CURRENTLY)
 						{
@@ -8720,7 +8720,7 @@ SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier )
 void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pRobot )
 {
 	// Loop through guys and look for a controller!
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (ControllingRobot(s))
 		{
@@ -8741,7 +8741,7 @@ void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->uiStatusFlags & SOLDIER_ROBOT)
 		{
@@ -8884,7 +8884,7 @@ void PlayStealthySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 
 void CrowsFlyAway(const UINT8 ubTeam)
 {
-	FOR_ALL_IN_TEAM(s, ubTeam)
+	FOR_EACH_IN_TEAM(s, ubTeam)
 	{
 		if (s->bInSector &&
 				s->ubBodyType  == CROW &&
@@ -8914,7 +8914,7 @@ void DebugValidateSoldierData( )
 	// reset frame counter
 	uiFrameCount = 0;
 
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// OK, first check for alive people
 		// Don't do this check if we are a vehicle...
@@ -9035,7 +9035,7 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE*);
 
 static void EnableDisableSoldierLightEffects(BOOLEAN const enable_lights)
 {
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (!s->bInSector)     continue;
 		if (s->bLife < OKLIFE) continue;

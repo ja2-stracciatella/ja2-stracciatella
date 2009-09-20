@@ -1691,7 +1691,7 @@ try
 	//all remaining enemy troops (or creatures) to finish the battle in autoresolve.  To
 	//signify that the troop has already been reserved, we simply set their gridno to NOWHERE.
 	const INT8 team = (ubSoldierClass == SOLDIER_CLASS_CREATURE ? CREATURE_TEAM : ENEMY_TEAM);
-	FOR_ALL_IN_TEAM(s, team)
+	FOR_EACH_IN_TEAM(s, team)
 	{
 		if (s->bInSector && s->bLife != 0 && s->sGridNo != NOWHERE)
 		{

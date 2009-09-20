@@ -1575,7 +1575,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 
 			// Loop through all mercs and make go!
 			// TODO: Only our squad!
-			FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+			FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
 			{
 				if (OkControllableMerc(pSoldier) && pSoldier->bAssignment == CurrentSquad() && !pSoldier->fMercAsleep)
 				{
@@ -3759,7 +3759,7 @@ static ScreenID UIHandleLCLook(UI_EVENT* pUIEvent)
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
 		// OK, loop through all guys who are 'multi-selected' and
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 			{
@@ -4030,7 +4030,7 @@ void EndMultiSoldierSelection(BOOLEAN acknowledge)
 	 * selected guy is among them - if not, change to a guy who is */
 	SOLDIERTYPE*             first = NULL;
 	const SOLDIERTYPE* const sel   = GetSelectedMan();
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (!s->bInSector)                                continue;
 		if (!(s->uiStatusFlags & SOLDIER_MULTI_SELECTED)) continue;
@@ -4059,7 +4059,7 @@ void StopRubberBandedMercFromMoving( )
 		return;
 	}
 
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 		{
@@ -4097,7 +4097,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 	gfGetNewPathThroughPeople = TRUE;
 
 	const SOLDIERTYPE* const sel = GetSelectedMan();
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector &&
 				s->uiStatusFlags & SOLDIER_MULTI_SELECTED &&
@@ -4108,7 +4108,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 		}
 	}
 
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		if (pSoldier->bInSector)
 		{
@@ -4162,7 +4162,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 
 void ResetMultiSelection( )
 {
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 		{
@@ -4206,7 +4206,7 @@ static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 	}
 
 	// ATE:Check at least for one guy that's in point!
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Check if this guy is OK to control....
 		if (OkControllableMerc(s) && !(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))
@@ -4233,7 +4233,7 @@ static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
   }
 
 	// ATE: Now loop through our guys and see if any fit!
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Check if this guy is OK to control....
 		if (OkControllableMerc(s) && !(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))

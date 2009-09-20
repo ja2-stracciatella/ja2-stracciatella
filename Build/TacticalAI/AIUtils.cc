@@ -1179,7 +1179,7 @@ INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 	INT16					sDist;
 	INT16					sGridNo = NOWHERE;
 
-	CFOR_ALL_IN_TEAM(pTargetSoldier, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(pTargetSoldier, gbPlayerNum)
 	{
 		if (!pTargetSoldier->bInSector)
 		{
@@ -1514,7 +1514,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 	INT16					sMinDist = 1000;
 	INT16					sDist;
 
-	CFOR_ALL_IN_TEAM(pTargetSoldier, pSoldier->bTeam)
+	CFOR_EACH_IN_TEAM(pTargetSoldier, pSoldier->bTeam)
 	{
 		if (pTargetSoldier == pSoldier) continue;
 
@@ -2262,7 +2262,7 @@ INT32 RangeChangeDesire( SOLDIERTYPE * pSoldier )
 
 BOOLEAN ArmySeesOpponents( void )
 {
-	CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
+	CFOR_EACH_IN_TEAM(s, ENEMY_TEAM)
 	{
 		if (s->bInSector && s->bLife >= OKLIFE && s->bOppCnt > 0)
 		{

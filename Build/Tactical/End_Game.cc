@@ -164,7 +164,7 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 
 	// STEP 1 ) START ALL QUOTES GOING!
 	// OK - loop through all witnesses and see if they want to say something abou this...
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s != pKillerSoldier &&
 				OkControllableMerc(s) &&
@@ -218,7 +218,7 @@ static void DoneFadeInKilledQueen(void)
 static void DoneFadeOutKilledQueen()
 {
 	// Move current squad over
-	FOR_ALL_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, gbPlayerNum)
 	{
 		SOLDIERTYPE& s = *i;
 		// Are we in this sector, on the current squad?
@@ -241,7 +241,7 @@ static void DoneFadeOutKilledQueen()
 	}
 
 	// Kill all enemies in world
-	CFOR_ALL_IN_TEAM(i, ENEMY_TEAM)
+	CFOR_EACH_IN_TEAM(i, ENEMY_TEAM)
 	{
 		SOLDIERTYPE const& s = *i;
 		// For sure for flag thet they are dead is not set
@@ -305,7 +305,7 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
   gTacticalStatus.uiFlags |= IN_ENDGAME_SEQUENCE;
 
 	// first thing is to loop through team and say end quote...
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bLife >= OKLIFE && !AM_AN_EPC(s))
 		{
@@ -385,7 +385,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 
 	// Kill all enemies in creature team.....
-	FOR_ALL_IN_TEAM(s, CREATURE_TEAM)
+	FOR_EACH_IN_TEAM(s, CREATURE_TEAM)
 	{
 		// Are we ALIVE.....
 		if (s->bLife > 0)
@@ -419,7 +419,7 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16
 
 	// STEP 1 ) START ALL QUOTES GOING!
 	// OK - loop through all witnesses and see if they want to say something abou this...
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s != pKillerSoldier &&
 				OkControllableMerc(s) &&

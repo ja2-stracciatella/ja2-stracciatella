@@ -966,7 +966,7 @@ static bool CanSoldierDriveVehicle(SOLDIERTYPE const& s, INT32 const vehicle_id,
 
 static bool OnlyThisSoldierCanDriveVehicle(SOLDIERTYPE const& s, INT32 const vehicle_id)
 {
-	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE const& other = *i;
 		// Skip checking this soldier, we want to know about everyone else

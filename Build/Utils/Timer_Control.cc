@@ -95,7 +95,7 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 		if (fInMapMode)
 		{
 			// IN Mapscreen, loop through player's team
-			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, gbPlayerNum)
 			{
 				UPDATETIMECOUNTER(s->PortraitFlashCounter);
 				UPDATETIMECOUNTER(s->PanelAnimateCounter);

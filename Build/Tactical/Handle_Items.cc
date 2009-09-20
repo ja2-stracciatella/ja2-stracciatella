@@ -3303,7 +3303,7 @@ static void CheckForPickedOwnership(void)
 		{ // skip because hicks appeased
 			continue;
 		}
-		FOR_ALL_IN_TEAM(s, CIV_TEAM)
+		FOR_EACH_IN_TEAM(s, CIV_TEAM)
 		{
 			if (s->ubCivilianGroup != civ_group) continue;
 			TestPotentialOwner(s);

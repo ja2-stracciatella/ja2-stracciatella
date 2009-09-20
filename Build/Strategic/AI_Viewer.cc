@@ -570,7 +570,7 @@ static void RenderInfoInSector(void)
 	}
 
 	//Count the number of mercs and their states (even for underground sectors)
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->sSectorX == ubSectorX &&
 				s->sSectorY == ubSectorY &&

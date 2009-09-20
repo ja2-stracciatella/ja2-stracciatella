@@ -438,7 +438,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	// check if LOS between any civ, killer and killed
 	// if so, then do not adjust
 
-	FOR_ALL_IN_TEAM(pCivSoldier, CIV_TEAM)
+	FOR_EACH_IN_TEAM(pCivSoldier, CIV_TEAM)
 	{
 		if ( pCivSoldier == pSoldier )
 		{
@@ -1243,7 +1243,7 @@ static UINT32 PlayerStrength(void)
 {
 	UINT32					uiStrength, uiTotal = 0;
 
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector ||
 				(

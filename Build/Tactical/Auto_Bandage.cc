@@ -81,7 +81,7 @@ void BeginAutoBandage( )
 	}
 
 	// check for anyone needing bandages
-	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// if the soldier isn't active or in sector, we have problems..leave
 		if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_VEHICLE || pSoldier->bAssignment == VEHICLE)
@@ -152,7 +152,7 @@ void HandleAutoBandagePending( )
 		}
 
 		// Do any guys have pending actions...?
-		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->sSectorX == gWorldSectorX &&
 					s->sSectorY == gWorldSectorY &&
@@ -307,7 +307,7 @@ void AutoBandage( BOOLEAN fStart )
 		// Compress time...
 		//SetGameTimeCompressionLevel( TIME_COMPRESS_5MINS );
 
-		FOR_ALL_IN_TEAM(s, OUR_TEAM)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			s->bSlotItemTakenFrom   = NO_SLOT;
 			s->auto_bandaging_medic = NULL;
@@ -326,7 +326,7 @@ void AutoBandage( BOOLEAN fStart )
 		gTacticalStatus.fAutoBandageMode = FALSE;
 		gTacticalStatus.uiFlags					 &= ( ~OUR_MERCS_AUTO_MOVE );
 
-		FOR_ALL_IN_TEAM(s, OUR_TEAM)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			ActionDone(s);
 			if (s->bSlotItemTakenFrom != NO_SLOT)
@@ -345,7 +345,7 @@ void AutoBandage( BOOLEAN fStart )
 			}
 		}
 
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			ActionDone(s);
 
@@ -408,7 +408,7 @@ static void SetUpAutoBandageUpdatePanel(void)
 {
 	const SOLDIERTYPE** next_doctor  = gdoctor_list;
 	const SOLDIERTYPE** next_patient = gpatient_list;
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (CanCharacterAutoBandageTeammate(s))      *next_doctor++  = s;
 		if (CanCharacterBeAutoBandagedByTeammate(s)) *next_patient++ = s;

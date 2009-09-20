@@ -4630,7 +4630,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// vehicles can't scout!
 		if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )

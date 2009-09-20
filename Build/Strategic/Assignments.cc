@@ -257,7 +257,7 @@ void InitSectorsWithSoldiersList( void )
 void BuildSectorsWithSoldiersList( void )
 {
 	// fills array with pressence of player controlled characters
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		fSectorsWithSoldiers[s->sSectorX + s->sSectorY * MAP_WORLD_X][s->bSectorZ] = TRUE;
 	}
@@ -484,7 +484,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 	if ( bHighestPass != - 1 )
 	{
 		// now look for items to repair on other mercs
-		CFOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(pOtherSoldier, gbPlayerNum)
 		{
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 			{
@@ -640,7 +640,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE*
 static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* const pSoldier)
 {
 	INT8 bCount = 0;
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s != pSoldier &&
 				s->bLife >= OKLIFE &&
@@ -1059,7 +1059,7 @@ static UINT8 GetNumberThatCanBeDoctored(SOLDIERTYPE* pDoctor, BOOLEAN fThisHour,
 {
 	// go through list of characters, find all who are patients/doctors healable by this doctor
 	UINT8 ubNumberOfPeople = 0;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (CanSoldierBeHealedByDoctor(s, pDoctor, fThisHour, fSkipKitCheck, fSkipSkillCheck))
 		{
@@ -1074,7 +1074,7 @@ static UINT8 GetNumberThatCanBeDoctored(SOLDIERTYPE* pDoctor, BOOLEAN fThisHour,
 SOLDIERTYPE *AnyDoctorWhoCanHealThisPatient( SOLDIERTYPE *pPatient, BOOLEAN fThisHour )
 {
 	// go through list of characters, find all who are patients/doctors healable by this doctor
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// doctor?
 		if (s->bAssignment == DOCTOR &&
@@ -1248,7 +1248,7 @@ static void HandleDoctorsInSector(INT16 const x, INT16 const y, INT8 const z)
 	// will handle doctor/patient relationship in sector
 
 	// go through list of characters, find all doctors in sector
-	FOR_ALL_IN_TEAM(i, OUR_TEAM)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.sSectorX != x)         continue;
@@ -1268,7 +1268,7 @@ static void HandleDoctorsInSector(INT16 const x, INT16 const y, INT8 const z)
 // Update characters who might done healing but are still patients
 static void UpdatePatientsWhoAreDoneHealing()
 {
-	FOR_ALL_IN_TEAM(i, OUR_TEAM)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.bAssignment != PATIENT) continue;
@@ -1310,7 +1310,7 @@ static void HealCharacters(SOLDIERTYPE* const pDoctor)
 
 
 		// heal each of the healable mercs by this equal amount
-		FOR_ALL_IN_TEAM(s, OUR_TEAM)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (CanSoldierBeHealedByDoctor(s, pDoctor, HEALABLE_THIS_HOUR, FALSE, FALSE))
 			{
@@ -1329,7 +1329,7 @@ static void HealCharacters(SOLDIERTYPE* const pDoctor)
 			{
 				// find the worst hurt patient
 				pWorstHurtSoldier = NULL;
-				FOR_ALL_IN_TEAM(s, OUR_TEAM)
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
 				{
 					if (CanSoldierBeHealedByDoctor(s, pDoctor, HEALABLE_THIS_HOUR, FALSE, FALSE))
 					{
@@ -1572,7 +1572,7 @@ static void CheckForAndHandleHospitalPatients(void)
 	}
 
 	// go through list of characters, find all who are on this assignment
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bAssignment == ASSIGNMENT_HOSPITAL &&
 				s->sSectorX == HOSPITAL_SECTOR_X &&
@@ -1654,7 +1654,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE&);
 // handle any repair man in sector
 static void HandleRepairmenInSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	FOR_ALL_IN_TEAM(i, OUR_TEAM)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.sSectorX    != x)      continue;
@@ -2166,7 +2166,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 		sBestTrainingPts = -1;
 
 		// search team for active instructors in this sector
-		CFOR_ALL_IN_TEAM(pTrainer, OUR_TEAM)
+		CFOR_EACH_IN_TEAM(pTrainer, OUR_TEAM)
 		{
 			if (pTrainer->sSectorX == sMapX && pTrainer->sSectorY == sMapY && pTrainer->bSectorZ == bZ)
 			{
@@ -2192,7 +2192,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 
 
 	// now search team for active self-trainers in this sector
-	FOR_ALL_IN_TEAM(pStudent, OUR_TEAM)
+	FOR_EACH_IN_TEAM(pStudent, OUR_TEAM)
 	{
 		// see if this merc is active and in the same sector
 		if (pStudent->sSectorX == sMapX && pStudent->sSectorY == sMapY && pStudent->bSectorZ == bZ)
@@ -2247,7 +2247,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 		ubTownTrainers = 0;
 
 		// build list of all the town trainers in this sector and their training pts
-		FOR_ALL_IN_TEAM(pTrainer, OUR_TEAM)
+		FOR_EACH_IN_TEAM(pTrainer, OUR_TEAM)
 		{
 			if (pTrainer->sSectorX == sMapX && pTrainer->sSectorY == sMapY && pTrainer->bSectorZ == bZ)
 			{
@@ -2545,7 +2545,7 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 	UINT16 usBestMaxTrainerPts = 0; // XXX HACK000E
 
 	// search team for active instructors in this sector
-	CFOR_ALL_IN_TEAM(pTrainer, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(pTrainer, OUR_TEAM)
 	{
 		if (pTrainer->sSectorX == s->sSectorX && pTrainer->sSectorY == s->sSectorY && pTrainer->bSectorZ == s->bSectorZ)
 		{
@@ -2819,7 +2819,7 @@ static void HandleHealingByNaturalCauses(SOLDIERTYPE* pSoldier);
 // handle natural healing for all mercs on players team
 static void HandleNaturalHealing(void)
 {
-	FOR_ALL_IN_TEAM(i, OUR_TEAM)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		// mechanical members don't regenerate!
@@ -5787,7 +5787,7 @@ static void HandleRestFatigueAndSleepStatus()
 		bool   reason_added = false;
 		bool   box_set_up   = false;
 		UINT16 sleep_quote  = QUOTE_NEED_SLEEP;
-		FOR_ALL_IN_TEAM(i, OUR_TEAM)
+		FOR_EACH_IN_TEAM(i, OUR_TEAM)
 		{
 			SOLDIERTYPE& s = *i;
 			if (IsMechanical(s))                 continue;
@@ -5868,7 +5868,7 @@ static void HandleRestFatigueAndSleepStatus()
 		 * loop */
 		bool box_set_up   = false;
 		bool reason_added = false;
-		FOR_ALL_IN_TEAM(i, OUR_TEAM)
+		FOR_EACH_IN_TEAM(i, OUR_TEAM)
 		{
 			SOLDIERTYPE& s = *i;
 			if (IsMechanical(s))                 continue;
@@ -5956,7 +5956,7 @@ static BOOLEAN IsRobotInThisSector(INT16 const sSectorX, INT16 const sSectorY, I
 
 static SOLDIERTYPE* GetRobotSoldier(void)
 {
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (AM_A_ROBOT(s)) return s;
 	}
@@ -6439,7 +6439,7 @@ static BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound(SOLDIERTYPE* pT
 static void ReportTrainersTraineesWithoutPartners(void)
 {
 	// check for each instructor
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bAssignment == TRAIN_TEAMMATE &&
 				s->bLife > 0 &&
@@ -6450,7 +6450,7 @@ static void ReportTrainersTraineesWithoutPartners(void)
 	}
 
 	// check each trainee
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bAssignment == TRAIN_BY_OTHER &&
 				s->bLife > 0 &&
@@ -6683,7 +6683,7 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep(BOOLEAN const wake_up, BOOLEAN const d
 
 BOOLEAN IsAnyOneOnPlayersTeamOnThisAssignment( INT8 bAssignment )
 {
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bAssignment == bAssignment) return TRUE;
 	}
@@ -6713,7 +6713,7 @@ void BandageBleedingDyingPatientsBeingTreated( )
 	UINT32 uiKitPtsUsed;
 	BOOLEAN fSomeoneStillBleedingDying = FALSE;
 
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// and he is bleeding or dying
 		if( ( pSoldier->bBleeding ) || ( pSoldier->bLife < OKLIFE ) )
@@ -6780,7 +6780,7 @@ void ReEvaluateEveryonesNothingToDo()
 {
 	BOOLEAN fNothingToDo;
 
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		switch (pSoldier->bAssignment)
 		{
@@ -7038,7 +7038,7 @@ static BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound(SOLDIERTYPE* pT
 	// this function only makes sense for training teammates or by others, not for self training which doesn't require partners
 	Assert( ( bTargetAssignment == TRAIN_TEAMMATE ) || ( bTargetAssignment == TRAIN_BY_OTHER ) );
 
-	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// if the guy is not the target, has the assignment we want, is training the same stat, and is in our sector, alive
 		// and is training the stat we want
@@ -7314,7 +7314,7 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 
 
 		// look for jammed guns on other soldiers in sector and unjam them
-		FOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
+		FOR_EACH_IN_TEAM(pOtherSoldier, gbPlayerNum)
 		{
 			// check character is valid, alive, same sector, not between, has inventory, etc.
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
@@ -7333,7 +7333,7 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 			pBestOtherSoldier = NULL;
 
 			// now look for items to repair on other mercs
-			FOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
+			FOR_EACH_IN_TEAM(pOtherSoldier, gbPlayerNum)
 			{
 				// check character is valid, alive, same sector, not between, has inventory, etc.
 				if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )

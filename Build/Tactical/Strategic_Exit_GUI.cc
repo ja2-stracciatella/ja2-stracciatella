@@ -179,7 +179,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	if ( gTacticalStatus.uiFlags & INCOMBAT )
 	{
 		INT32 cnt = 0;
-		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (OkControllableMerc(s)) ++cnt;
 		}
@@ -209,7 +209,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	gExitDialog.ubNumPeopleOnSquad = NumberOfPlayerControllableMercsInSquad(sel->bAssignment);
 
 	//Determine
-	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		if (pSoldier == sel) continue;
 		if( !pSoldier->fBetweenSectors &&
@@ -244,7 +244,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 		//Assuming that the matching squad assignment is in the same sector.
 		UINT8 ubNumMercs = 1; //selected soldier is a merc
 		UINT8 ubNumEPCs = 0;
-		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s == sel) continue;
 			if (s->bAssignment == sel->bAssignment)
@@ -367,7 +367,7 @@ static void DoneFadeInWarp(void)
 static void DoneFadeOutWarpCallback(void)
 {
   // Warp!
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// Are we in this sector, On the current squad?
 		if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)

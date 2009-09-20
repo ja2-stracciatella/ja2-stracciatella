@@ -199,7 +199,7 @@ void EndTurn( UINT8 ubNextTeam )
 		FreezeInterfaceForEnemyTurn();
 
 		// Loop through all mercs and set to moved
-		FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
+		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
 			s->bMoved = TRUE;
 		}
@@ -222,7 +222,7 @@ void EndAITurn( void )
 	}
 	else
 	{
-		FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
+		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
 			s->bMoved = TRUE;
 			// record old life value... for creature AI; the human AI might
@@ -248,7 +248,7 @@ void EndAllAITurns( void )
 
 	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 	{
-		FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
+		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
 			s->bMoved = TRUE;
 			s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
@@ -315,7 +315,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 			// decay team's public opplist
 			DecayPublicOpplist( ubTeam );
 
-			FOR_ALL_IN_TEAM(i, ubTeam)
+			FOR_EACH_IN_TEAM(i, ubTeam)
 			{
 				SOLDIERTYPE& s = *i;
 				if (s.bLife <= 0) continue;
@@ -471,7 +471,7 @@ static BOOLEAN EveryoneInInterruptListOnSameTeam(void)
 void SayCloseCallQuotes(void)
 {
 	// report any close call quotes for us here
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (OkControllableMerc(s) &&
 				s->fCloseCall &&
@@ -602,7 +602,7 @@ static void StartInterrupt(void)
 
 		// what we do is set everyone to moved except for people with interrupts at the moment
 		/*
-		FOR_ALL_IN_TEAM(s, first_interrupter->bTeam)
+		FOR_EACH_IN_TEAM(s, first_interrupter->bTeam)
 		{
 			s->bMovedPriorToInterrupt = s->bMoved;
 			s->bMoved                 = TRUE;
@@ -692,7 +692,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 	}
 
 	// Loop through all mercs and see if any passed on this interrupt
-	FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
+	FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 	{
 		if (s->bInSector && !s->bMoved && s->bActionPoints == s->bIntStartAPs)
 		{
@@ -741,7 +741,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			// set everyone on the team to however they were set moved before the interrupt
 			// must do this before selecting soldier...
 			/*
-			FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
+			FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 			{
 				s->bMoved = s->bMovedPriorToInterrupt;
 			}
@@ -1528,7 +1528,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 		{
 			if (IsTeamActive(ubTeam) && gTacticalStatus.Team[ubTeam].bSide != pSoldier->bSide && ubTeam != CIV_TEAM)
 			{
-				FOR_ALL_IN_TEAM(pOpponent, ubTeam)
+				FOR_EACH_IN_TEAM(pOpponent, ubTeam)
 				{
 					if (pOpponent->bInSector && pOpponent->bLife >= OKLIFE && !pOpponent->bCollapsed)
 					{
@@ -1640,7 +1640,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 			{
 				// if anyone on this team is under AI control, remove
 				// their AI control flag and put them on the queue instead of this guy
-				FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
+				FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 				{
 					if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 					{

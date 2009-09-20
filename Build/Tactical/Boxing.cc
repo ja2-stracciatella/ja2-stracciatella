@@ -368,7 +368,7 @@ BOOLEAN AnotherFightPossible( void )
 		return( FALSE );
 	}
 
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector && s->bLife > OKLIFE + 5 && !s->bCollapsed)
 		{

@@ -68,7 +68,7 @@ static void ValidateEnemiesHaveWeapons(void)
 {
 #ifdef JA2BETAVERSION
 	INT32 iNumInvalid = 0;
-	CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
+	CFOR_EACH_IN_TEAM(s, ENEMY_TEAM)
 	{
 		if (!s->bInSector) continue;
 		if (!s->inv[HANDPOS].usItem) iNumInvalid++;
@@ -296,7 +296,7 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 
 static bool IsAnyOfTeamOKInSector(INT8 const team)
 {
-	CFOR_ALL_IN_TEAM(i, team)
+	CFOR_EACH_IN_TEAM(i, team)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (s.bInSector && s.bLife >= OKLIFE) return true;
@@ -582,7 +582,7 @@ void PrepareEnemyForSectorBattle()
 		UINT8 n_admins = g->pEnemyGroup->ubAdminsInBattle;
 		UINT8 n_troops = g->pEnemyGroup->ubTroopsInBattle;
 		UINT8 n_elites = g->pEnemyGroup->ubElitesInBattle;
-		FOR_ALL_IN_TEAM(s, ENEMY_TEAM)
+		FOR_EACH_IN_TEAM(s, ENEMY_TEAM)
 		{
 			if (n == 0 || n_slots == 0) break;
 			if (s->ubGroupID != 0) continue;
@@ -1432,7 +1432,7 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 
 static BOOLEAN AnyNonNeutralOfTeamInSector(INT8 team)
 {
-	CFOR_ALL_IN_TEAM(s, team)
+	CFOR_EACH_IN_TEAM(s, team)
 	{
 		if (s->bInSector && s->bLife != 0 && !s->bNeutral)
 		{

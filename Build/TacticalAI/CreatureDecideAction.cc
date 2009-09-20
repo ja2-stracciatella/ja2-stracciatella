@@ -111,7 +111,7 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 			break;
 	}
 
-	FOR_ALL_IN_TEAM(pReceiver, pCaller->bTeam)
+	FOR_EACH_IN_TEAM(pReceiver, pCaller->bTeam)
 	{
 		if (pReceiver->bInSector &&
 				pReceiver->bLife >= OKLIFE &&

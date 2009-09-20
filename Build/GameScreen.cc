@@ -727,7 +727,7 @@ static void TacticalScreenLocateToSoldier(void)
 	}
 
 	// Set locator to first merc
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (OkControllableMerc(s) && OK_INTERRUPT_MERC(s))
 		{
@@ -744,7 +744,7 @@ void UpdateTeamPanelAssignments( )
 	// Remove all players
 	RemoveAllPlayersFromSlot( );
 
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Setup team interface
 		CheckForAndAddMercToTeamPanel(s);

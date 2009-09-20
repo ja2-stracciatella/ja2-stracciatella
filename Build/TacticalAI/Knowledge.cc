@@ -33,7 +33,7 @@ void CallAvailableTeamEnemiesTo(GridNo const grid_no, INT8 const team)
 	gubPublicNoiseVolume[team] = MAX_MISC_NOISE_DURATION;
 
 	// New situation for everyone
-	FOR_ALL_IN_TEAM(s, team)
+	FOR_EACH_IN_TEAM(s, team)
 	{
 		if (!s->bInSector || s->bLife < OKLIFE) continue;
 
@@ -57,7 +57,7 @@ void CallAvailableKingpinMenTo( INT16 sGridNo )
 		gubPublicNoiseVolume[CIV_TEAM] = MAX_MISC_NOISE_DURATION;
 
 		// new situation for everyone...
-		FOR_ALL_IN_TEAM(s, CIV_TEAM)
+		FOR_EACH_IN_TEAM(s, CIV_TEAM)
 		{
 			if (s->bInSector && s->bLife >= OKLIFE && s->ubCivilianGroup == KINGPIN_CIV_GROUP && s->ubProfile == NO_PROFILE)
 			{

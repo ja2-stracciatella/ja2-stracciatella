@@ -678,7 +678,7 @@ SOLDIERTYPE* FindSoldierByProfileID(const ProfileID pid)
 
 SOLDIERTYPE* FindSoldierByProfileIDOnPlayerTeam(const ProfileID pid)
 {
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->ubProfile == pid) return s;
 	}

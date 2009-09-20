@@ -974,7 +974,7 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier
 void HandleAnyStatChangesAfterAttack( void )
 {
 	// must check everyone on player's team, not just the shooter
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		ProcessUpdateStats(GetProfile(s->ubProfile), s);
 	}
@@ -1470,7 +1470,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 	}
 
 	// to do: find guys in sector on the currently active squad, those that are conscious get this amount in XPs
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector &&
 				IsMercOnCurrentSquad(s) &&

@@ -875,7 +875,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew(void)
 	SOLDIERTYPE* soldier_who_will_quit = 0;
 	UINT8        n_mercs               = 0;
 	SOLDIERTYPE* potential_mercs[20];
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bLife               == 0)                   continue;
 		if (s->bAssignment         == IN_TRANSIT)          continue;

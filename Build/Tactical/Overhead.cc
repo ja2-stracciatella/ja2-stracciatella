@@ -2176,7 +2176,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 void SelectNextAvailSoldier(const SOLDIERTYPE* const last)
 {
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	FOR_ALL_IN_TEAM(s, last->bTeam)
+	FOR_EACH_IN_TEAM(s, last->bTeam)
 	{
 		if (OkControllableMerc(s))
 		{
@@ -2398,7 +2398,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 
 	// look for all mercs on the same team,
 	SOLDIERTYPE* new_selected_soldier = NULL;
-	FOR_ALL_IN_TEAM(s, pSoldier->bTeam)
+	FOR_EACH_IN_TEAM(s, pSoldier->bTeam)
 	{
 		if (s->bLife >= OKLIFE && s->bInSector)
 		{
@@ -2416,7 +2416,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 		}
 
 		// see if this was the friend of a living merc
-		FOR_ALL_IN_TEAM(s, pSoldier->bTeam)
+		FOR_EACH_IN_TEAM(s, pSoldier->bTeam)
 		{
 			if (s->bInSector && s->bLife >= OKLIFE)
 			{
@@ -2888,7 +2888,7 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity(SOLDIERTYPE* pAttacked)
 	if (pAttacked->ubCivilianGroup == NON_CIV_GROUP) return pAttacked->ubProfile;
 
 	UINT8 ubFirstProfile = NO_PROFILE;
-	FOR_ALL_IN_TEAM(s, CIV_TEAM)
+	FOR_EACH_IN_TEAM(s, CIV_TEAM)
 	{
 		if (!s->bInSector || s->bLife == 0 || !s->bNeutral) continue;
 		if (s->ubCivilianGroup != pAttacked->ubCivilianGroup || s->ubBodyType == COW) continue;
@@ -2930,7 +2930,7 @@ SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked )
 
 	// remove anyone (rebels) on our team and put them back in the civ team
 	UINT8 ubFirstProfile = NO_PROFILE;
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		if (pSoldier->bInSector && pSoldier->bLife != 0)
 		{
@@ -2991,7 +2991,7 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 	gTacticalStatus.fCivGroupHostile[ ubCivilianGroup ] = CIV_GROUP_HOSTILE;
 
 	// now change sides for anyone on the civ team
-	FOR_ALL_IN_TEAM(pSoldier, CIV_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, CIV_TEAM)
 	{
 		if (pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral)
 		{
@@ -3024,7 +3024,7 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 static void HickCowAttacked(SOLDIERTYPE* pNastyGuy, SOLDIERTYPE* pTarget)
 {
 	// now change sides for anyone on the civ team
-	FOR_ALL_IN_TEAM(pSoldier, CIV_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, CIV_TEAM)
 	{
 		if (pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral && pSoldier->ubCivilianGroup == HICKS_CIV_GROUP)
 		{
@@ -3045,7 +3045,7 @@ static void MilitiaChangesSides(void)
 	if (!IsTeamActive(MILITIA_TEAM)) return;
 
 	// remove anyone (rebels) on our team and put them back in the civ team
-	FOR_ALL_IN_TEAM(s, MILITIA_TEAM)
+	FOR_EACH_IN_TEAM(s, MILITIA_TEAM)
 	{
 		if (s->bInSector && s->bLife != 0)
 		{
@@ -3352,7 +3352,7 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 
 BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 {
-	CFOR_ALL_IN_TEAM(s, bTeam)
+	CFOR_EACH_IN_TEAM(s, bTeam)
 	{
 		if (s->bInSector &&
 				s->bLife >= OKLIFE &&
@@ -3932,7 +3932,7 @@ BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos)
 
 void HandleTeamServices( UINT8 ubTeamNum )
 {
-	FOR_ALL_IN_TEAM(i, ubTeamNum)
+	FOR_EACH_IN_TEAM(i, ubTeamNum)
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.bInSector) HandlePlayerServices(s);
@@ -4128,7 +4128,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 		if (sel == NULL || sel->bOppCnt == 0)
 		{
 			// OK, look through and find one....
-			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, gbPlayerNum)
 			{
 				if (OkControllableMerc(s) && s->bOppCnt > 0)
 				{
@@ -4259,7 +4259,7 @@ static bool SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE const& s)
 		if (gTacticalStatus.Team[team].bSide == s.bSide) continue;
 
 		// Check this team for possible enemies
-		CFOR_ALL_IN_TEAM(i, team)
+		CFOR_EACH_IN_TEAM(i, team)
 		{
 			SOLDIERTYPE const& other = *i;
 			if (!other.bInSector)                                   continue;
@@ -4329,7 +4329,7 @@ static void SayBattleSoundFromAnyBodyInSector(BattleSound const iBattleSnd)
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
 		if (OkControllableMerc(s) &&
@@ -4685,7 +4685,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			if ( gTacticalStatus.bNumFoughtInBattle[ ENEMY_TEAM ] + gTacticalStatus.bNumFoughtInBattle[ CREATURE_TEAM ] + gTacticalStatus.bNumFoughtInBattle[ CIV_TEAM ] > 0 )
 			//if ( gTacticalStatus.bNumEnemiesFoughtInBattle > 0 )
 			{
-				FOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
+				FOR_EACH_IN_TEAM(pTeamSoldier, gbPlayerNum)
 				{
 					if (pTeamSoldier->bInSector &&
 							pTeamSoldier->bTeam == gbPlayerNum)
@@ -4768,7 +4768,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			}
 
 			// Loop through all militia and restore them to peaceful status
-			FOR_ALL_IN_TEAM(pTeamSoldier, MILITIA_TEAM)
+			FOR_EACH_IN_TEAM(pTeamSoldier, MILITIA_TEAM)
 			{
 				if (pTeamSoldier->bInSector)
 				{
@@ -4787,7 +4787,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition = FALSE;
 
 			// Loop through all civs and restore them to peaceful status
-			FOR_ALL_IN_TEAM(pTeamSoldier, CIV_TEAM)
+			FOR_EACH_IN_TEAM(pTeamSoldier, CIV_TEAM)
 			{
 				if (pTeamSoldier->bInSector)
 				{
@@ -4933,7 +4933,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 UINT NumberOfMercsOnPlayerTeam(void)
 {
 	INT8 bNumber = 0;
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (!(s->uiStatusFlags & SOLDIER_VEHICLE)) bNumber++;
 	}
@@ -5071,7 +5071,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 	BOOLEAN     fMilitiaInSector = FALSE;
 
 	// ATE: Check for MILITIA - we won't lose if we have some.....
-	CFOR_ALL_IN_TEAM(s, MILITIA_TEAM)
+	CFOR_EACH_IN_TEAM(s, MILITIA_TEAM)
 	{
 		if (s->bInSector && s->bSide == gbPlayerNum && s->bLife >= OKLIFE)
 		{
@@ -5081,7 +5081,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 		}
 	}
 
-	CFOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(pTeamSoldier, gbPlayerNum)
 	{
 		// Are we in sector.....
 		if (pTeamSoldier->bInSector && !(pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE))
@@ -5162,7 +5162,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 			gfKillingGuysForLosingBattle = TRUE;
 
 			// Kill them now...
-			FOR_ALL_IN_TEAM(i, gbPlayerNum)
+			FOR_EACH_IN_TEAM(i, gbPlayerNum)
 			{
 				SOLDIERTYPE& s = *i;
 				// Are we in sector.....
@@ -5759,7 +5759,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 			{
 				// Loop through our team, make guys who can see this fly away....
 				const UINT8 ubTeam = pTarget->bTeam;
-				FOR_ALL_IN_TEAM(s, ubTeam)
+				FOR_EACH_IN_TEAM(s, ubTeam)
 				{
 					if (s->bInSector &&
 							s->ubBodyType == CROW &&
@@ -5886,7 +5886,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		AllTeamsLookForAll( FALSE );
 
 		// call fov code
-		FOR_ALL_IN_TEAM(pSightSoldier, gbPlayerNum)
+		FOR_EACH_IN_TEAM(pSightSoldier, gbPlayerNum)
 		{
 			if (pSightSoldier->bInSector)
 			{
@@ -6132,7 +6132,7 @@ void InitializeTacticalStatusAtBattleStart(void)
 	ClearIntList();
 
 	// make sure none of our guys have leftover shock values etc
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		s->bShock      = 0;
 		s->bTilesMoved = 0;
@@ -6216,7 +6216,7 @@ void DoPOWPathChecks(void)
 {
 	/* loop through all mercs on our team and if they are POWs in sector, do POW
 	 * path check and put on a squad if available */
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (!s->bInSector || s->bAssignment != ASSIGNMENT_POW) continue;
 
@@ -6242,7 +6242,7 @@ BOOLEAN HostileCiviliansPresent( void )
 {
 	if (!IsTeamActive(CIV_TEAM)) return FALSE;
 
-	CFOR_ALL_IN_TEAM(s, CIV_TEAM)
+	CFOR_EACH_IN_TEAM(s, CIV_TEAM)
 	{
 		if (s->bInSector && s->bLife > 0 && !s->bNeutral)
 		{
@@ -6258,7 +6258,7 @@ BOOLEAN HostileBloodcatsPresent(void)
 {
 	if (!IsTeamActive(CREATURE_TEAM)) return FALSE;
 
-	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
+	CFOR_EACH_IN_TEAM(s, CREATURE_TEAM)
 	{
 		/* KM : Aug 11, 1999 -- Patch fix:  Removed the check for bNeutral.
 		 * Bloodcats automatically become hostile on sight.  Because the check used
@@ -6292,7 +6292,7 @@ static void HandleCreatureTenseQuote(void)
 		// run through list
 		UINT8	ubNumMercs = 0;
 		SOLDIERTYPE* mercs_in_sector[20];
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			// Add guy if he's a candidate...
 			if (OkControllableMerc(s) &&

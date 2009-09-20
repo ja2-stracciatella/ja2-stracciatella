@@ -395,7 +395,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 	UINT8 group_id           = 0;
 	INT8  best_exp_level     = 0;
 	bool  use_plural_version = false;
-	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (s.bLife == 0 || s.uiStatusFlags & SOLDIER_VEHICLE) continue;
@@ -974,7 +974,7 @@ void RenderPreBattleInterface()
 		// Print the participants of the battle
 		// |  NAME  | ASSIGN |  COND  |   HP   |   BP   |
 		{ INT32 y = TOP_Y + 1;
-			CFOR_ALL_IN_TEAM(i, OUR_TEAM)
+			CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE const& s = *i;
 				if (s.bLife == 0)                       continue;
@@ -1007,7 +1007,7 @@ void RenderPreBattleInterface()
 		else
 		{
 			INT32 y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
-			CFOR_ALL_IN_TEAM(i, OUR_TEAM)
+			CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE const& s = *i;
 				if (s.bLife == 0)                      continue;
@@ -1405,7 +1405,7 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 
 void WakeUpAllMercsInSectorUnderAttack()
 {
-	FOR_ALL_IN_TEAM(i, OUR_TEAM)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.bLife == 0)                       continue;
@@ -1506,7 +1506,7 @@ static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSect
 static void CheckForRobotAndIfItsControlled(void)
 {
 	// search for the robot on player's team
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bLife != 0 && AM_A_ROBOT(s))
 		{

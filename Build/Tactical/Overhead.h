@@ -188,14 +188,14 @@ static inline BOOLEAN IsTeamActive(const UINT team)
 }
 
 
-#define BASE_FOR_ALL_IN_TEAM(type, iter, team)                                      \
+#define BASE_FOR_EACH_IN_TEAM(type, iter, team)                                      \
 	for (type*       iter        = &Menptr[gTacticalStatus.Team[(team)].bFirstID],    \
 	         * const end__##iter = &Menptr[gTacticalStatus.Team[(team)].bLastID + 1]; \
 	     iter != end__##iter;                                                         \
 	     ++iter)                                                                      \
 		if (!iter->bActive) continue; else
-#define FOR_ALL_IN_TEAM( iter, team) BASE_FOR_ALL_IN_TEAM(      SOLDIERTYPE, iter, (team))
-#define CFOR_ALL_IN_TEAM(iter, team) BASE_FOR_ALL_IN_TEAM(const SOLDIERTYPE, iter, (team))
+#define FOR_EACH_IN_TEAM( iter, team) BASE_FOR_EACH_IN_TEAM(      SOLDIERTYPE, iter, (team))
+#define CFOR_EACH_IN_TEAM(iter, team) BASE_FOR_EACH_IN_TEAM(const SOLDIERTYPE, iter, (team))
 
 #define BASE_FOR_EACH_SOLDIER(type, iter)                  \
 	for (type* iter = Menptr; iter != Menptr + MAX_NUM_SOLDIERS; ++iter) \

@@ -1379,7 +1379,7 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const
 {
 	UINT8	         n_items = 0;
 	AmmoKind const calibre = Magazine[ammo->ubClassIndex].ubCalibre;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Loop through all the pockets on the merc
 		CFOR_EACH_SOLDIER_INV_SLOT(i, *s)

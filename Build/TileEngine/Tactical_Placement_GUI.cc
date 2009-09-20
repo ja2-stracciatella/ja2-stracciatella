@@ -253,7 +253,7 @@ void InitTacticalPlacementGUI()
 	/* First pass: Count the number of mercs that are going to be placed by the
 	 * player. This determines the size of the array we will allocate. */
 	size_t n = 0;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->fBetweenSectors)                 continue;
 		if (s->sSectorX != bg.ubSectorX)        continue;
@@ -273,7 +273,7 @@ void InitTacticalPlacementGUI()
 	gfEast       = false;
 	gfSouth      = false;
 	gfWest       = false;
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bLife == 0)                      continue;
 		if (s->fBetweenSectors)                 continue;

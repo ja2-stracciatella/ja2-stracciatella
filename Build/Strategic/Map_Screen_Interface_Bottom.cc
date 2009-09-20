@@ -1046,7 +1046,7 @@ BOOLEAN CommonTimeCompressionChecks( void )
 bool AnyUsableRealMercenariesOnTeam()
 { /* Check whether there is a merc on team, who is not a vehicle, robot, POW or
 	 * EPC. */
-	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (s.bLife <= 0)                            continue;

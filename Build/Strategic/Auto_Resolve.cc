@@ -1414,7 +1414,7 @@ static void RenderAutoResolve(void)
 
 				case BATTLE_SURRENDERED:
 				case BATTLE_CAPTURED:
-					FOR_ALL_IN_TEAM(i, OUR_TEAM)
+					FOR_EACH_IN_TEAM(i, OUR_TEAM)
 					{
 						SOLDIERTYPE& s = *i;
 						if (s.bLife != 0 && !IsMechanical(s))

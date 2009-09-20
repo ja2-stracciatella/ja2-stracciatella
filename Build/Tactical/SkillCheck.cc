@@ -418,7 +418,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 		if (iRoll < iChance)
 		{
 			// If a buddy of this merc is standing around nearby, they'll make a positive comment.
-			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, gbPlayerNum)
 			{
 				if (!OkControllableMerc(s)) continue;
 

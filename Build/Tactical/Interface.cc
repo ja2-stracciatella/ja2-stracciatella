@@ -1978,7 +1978,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 	{
 		gTacticalStatus.usTactialTurnLimitCounter = 0;
 
-		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			if (s->bInSector)
 			{

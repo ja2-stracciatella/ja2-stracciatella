@@ -147,7 +147,7 @@ void MercDailyUpdate()
 	AddSameDayStrategicEvent(EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_2, 0);
 	AddSameDayStrategicEvent(EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_3, 0);
 
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bAssignment == ASSIGNMENT_POW)
 		{
@@ -262,7 +262,7 @@ void MercDailyUpdate()
 	 * player refused to pay */
 	if (LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_INVALID)
 	{
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, gbPlayerNum)
 		{
 			if (s->bAssignment         == ASSIGNMENT_POW)  continue;
 			if (s->bAssignment         == IN_TRANSIT)      continue;
@@ -521,7 +521,7 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 
 void UpdateBuddyAndHatedCounters(void)
 {
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// If the merc is active and on a combat assignment
 		if (s->bAssignment >= ON_DUTY) continue;
@@ -534,7 +534,7 @@ void UpdateBuddyAndHatedCounters(void)
 
 		bool fUpdatedTimeTillNextHatedComplaint = false;
 
-		CFOR_ALL_IN_TEAM(other, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(other, gbPlayerNum)
 		{
 			// Is this guy in the same sector and on active duty (or in the same moving group)
 			if (other != s && other->bAssignment < ON_DUTY)
@@ -732,7 +732,7 @@ void UpdateBuddyAndHatedCounters(void)
 
 void HourlyCamouflageUpdate()
 {
-	FOR_ALL_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, gbPlayerNum)
 	{
 		SOLDIERTYPE& s = *i;
 

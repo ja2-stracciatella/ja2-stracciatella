@@ -2584,7 +2584,7 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
 		if (OkControllableMerc(s) &&
@@ -2745,7 +2745,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 			{
 				// Check if a person is here that has this quote....
 				SOLDIERTYPE* mercs_in_sector[20];
-				FOR_ALL_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, gbPlayerNum)
 				{
 					if (s != pKillerSoldier &&
 							OkControllableMerc(s) &&

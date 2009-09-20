@@ -1598,7 +1598,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Squad here to search for...
 
 				INT8 bNumDone = 0;
-				FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+				FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
 				{
 					// Are we in this sector, On the current squad?
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad())
@@ -1883,7 +1883,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// OK, we want to goto the basement level!
 				// For one, loop through our current squad and move them over
 				INT8 bNumDone = 0;
-				FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+				FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
 				{
 					// Are we in this sector, On the current squad?
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
@@ -3333,7 +3333,7 @@ action_punch_pc:
 				if ( pSoldier2 )
 				{
 					//HOSPITAL_PATIENT_DISTANCE
-					FOR_ALL_IN_TEAM(i, gbPlayerNum)
+					FOR_EACH_IN_TEAM(i, gbPlayerNum)
 					{
 						SOLDIERTYPE& s = *i;
 						// Are we in this sector, On the current squad?
@@ -4068,7 +4068,7 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 
 	sGridNo = pNPC->sGridNo;
 
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector &&
 				0 < s->bLife && s->bLife < s->bLifeMax &&
@@ -4286,7 +4286,7 @@ static void DialogueMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 				// He tried to lie.....
 				// Find the best conscious merc with a chance....
 				SOLDIERTYPE* pLier = NULL;
-				FOR_ALL_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, gbPlayerNum)
 				{
 					if (s->bInSector &&
 							s->bLife >= OKLIFE &&
@@ -4478,7 +4478,7 @@ static void DoneFadeInActionBasement(void)
 	// Start conversation, etc
 
 	// Look for someone to talk to
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Are we in this sector, On the current squad?
 		if (s->bLife >= OKLIFE && s->bInSector && s->bAssignment == CurrentSquad())

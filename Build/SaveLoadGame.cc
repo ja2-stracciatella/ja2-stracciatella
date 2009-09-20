@@ -2225,7 +2225,7 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	}
 
 	//loop through all the mercs on the players team to find the one that is not moving
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
 		{
@@ -2238,7 +2238,7 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	}
 
 	// loop through all the mercs and find one that is moving
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		//we found an alive, merc that is not moving
 		*psSectorX = s->sSectorX;

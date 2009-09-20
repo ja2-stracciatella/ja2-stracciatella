@@ -711,7 +711,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 	UINT8 ubGroupID;
 	//Go through each merc slot in the player team
 	iNumErrors = 0;
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{ //check to see if the merc has a group ID
 		if (!pSoldier->bLife || !pSoldier->ubGroupID)
 		{ //non-existant, dead, or in no group (don't care, skip to next merc)
@@ -3216,7 +3216,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		}
 		else
 		{ //We are in the basement sector, relocate queen to proper position.
-			FOR_ALL_IN_TEAM(i, CIV_TEAM)
+			FOR_EACH_IN_TEAM(i, CIV_TEAM)
 			{
 				SOLDIERTYPE& s = *i;
 				if (s.ubProfile != QUEEN) continue;

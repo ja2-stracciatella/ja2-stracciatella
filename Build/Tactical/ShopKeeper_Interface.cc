@@ -564,7 +564,7 @@ static void EnterShopKeeperInterface(void)
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
 	// This is to support showing of repair item owner's faces even when they're not in the sector, as long as they still work for player
 	gubNumberMercsInArray = 0;
-	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		if (pSoldier->ubProfile != NO_PROFILE && !IsMechanical(*pSoldier))
 		{

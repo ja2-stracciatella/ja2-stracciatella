@@ -1290,7 +1290,7 @@ static void LoadCharacters(void)
 	UINT16 uiCount=0;
 
 	// fills array with pressence of player controlled characters
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		AddCharacter(s);
 		++uiCount;
@@ -5860,7 +5860,7 @@ void ReBuildCharactersList( void )
 		gCharactersList[sCount].merc = NULL;
 	}
 
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		AddCharacter(s);
 	}
@@ -7961,7 +7961,7 @@ static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE* const pSoldie
 
 static BOOLEAN AnyMovableCharsInOrBetweenThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// POWs, dead guys, guys in transit can't move
 		if ( ( pSoldier->bAssignment == IN_TRANSIT ) ||

@@ -1031,7 +1031,7 @@ void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT8 *pubNumCr
 	*pubNumCreatures = 0;
 	pSector->ubNumCreatures = 0;
 	pSector->ubCreaturesInBattle = 0;
-	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
+	CFOR_EACH_IN_TEAM(s, CREATURE_TEAM)
 	{
 		if (s->bInSector && s->bLife)
 		{
@@ -1375,7 +1375,7 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 		bSectorZ = (INT8)curr->pLevel->ubSectorZ;
 		//Loop through all the creature directives (mine sectors that are infectible) and
 		//see if players are there.
-		CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+		CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 		{
 			if (pSoldier->bLife    != 0 &&
 					pSoldier->sSectorX == sSectorX &&

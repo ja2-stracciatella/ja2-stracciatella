@@ -45,7 +45,7 @@ void HandleStrategicDeath(SOLDIERTYPE& s)
 
 static void HandleSoldierDeadComments(SOLDIERTYPE const* const dead)
 {
-	FOR_ALL_IN_TEAM(s, dead->bTeam)
+	FOR_EACH_IN_TEAM(s, dead->bTeam)
 	{
 		if (s->bLife < OKLIFE) continue;
 

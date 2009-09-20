@@ -417,7 +417,7 @@ void InitNewGame()
 
 BOOLEAN AnyMercsHired( )
 {
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		return TRUE;
 	}

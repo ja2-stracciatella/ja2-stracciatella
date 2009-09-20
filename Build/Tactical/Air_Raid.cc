@@ -205,7 +205,7 @@ BOOLEAN BeginAirRaid( )
 				gAirRaidDef.sSectorZ == gbWorldSectorZ )
 	*/
 		// Do we have any guys in here...
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->sSectorX == gAirRaidDef.sSectorX &&
 				s->sSectorY == gAirRaidDef.sSectorY &&
@@ -310,7 +310,7 @@ static INT16 PickLocationNearAnyMercInSector(void)
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t num_mercs = 0;
 	const SOLDIERTYPE* mercs_in_sector[20];
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
 		if (OkControllableMerc(s)) mercs_in_sector[num_mercs++] = s;
@@ -1303,7 +1303,7 @@ void LoadAirRaidInfoFromSaveGameFile(HWFILE const hFile)
 
 static void SetTeamStatusGreen(INT8 team)
 {
-	FOR_ALL_IN_TEAM(s, team)
+	FOR_EACH_IN_TEAM(s, team)
 	{
 		if (s->bInSector) s->bAlertStatus = STATUS_GREEN;
 	}
