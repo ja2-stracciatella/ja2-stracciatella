@@ -487,7 +487,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 	BOOLEAN				fKingpinWillDiscover = FALSE, fKingpinDiscovers = FALSE;
 
 	// money in D5b1 must be less than 30k
-	CFOR_ALL_WORLD_ITEMS(wi)
+	CFOR_EACH_WORLD_ITEM(wi)
 	{
 		OBJECTTYPE const& o = wi->o;
 		if (o.usItem == MONEY) uiTotalCash += o.uiMoneyAmount;
@@ -537,7 +537,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// the sector is unloaded NOW so set Kingpin's balance and remove the cash
 		gMercProfiles[ KINGPIN ].iBalance = - (30000 - (INT32) uiTotalCash);
 		// remove all money from map
-		FOR_ALL_WORLD_ITEMS(wi)
+		FOR_EACH_WORLD_ITEM(wi)
 		{
 			if (wi->o.usItem == MONEY) wi->fExists = FALSE; // remove!
 		}
@@ -963,7 +963,7 @@ void CheckForMissingHospitalSupplies( void )
 {
 	UINT8					ubMedicalObjects = 0;
 
-	CFOR_ALL_WORLD_ITEMS(wi)
+	CFOR_EACH_WORLD_ITEM(wi)
 	{
 		// loop through all items, look for ownership
 		if (wi->o.usItem != OWNERSHIP || wi->o.ubOwnerCivGroup != DOCTORS_CIV_GROUP) continue;

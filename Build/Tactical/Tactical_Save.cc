@@ -406,7 +406,7 @@ void HandleAllReachAbleItemsInTheSector(INT16 const x, INT16 const y, INT8 const
 
 	GlobalItemsReachableTest(grid_no, grid_no2);
 
-	FOR_ALL_WORLD_ITEMS(wi)
+	FOR_EACH_WORLD_ITEM(wi)
 	{
 		bool reachable;
 		if (wi->o.bTrap > 0)
@@ -1343,7 +1343,7 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 cons
 static UINT32 UpdateLoadedSectorsItemInventory(INT16 const x, INT16 const y, INT8 const z, UINT32 const n_items)
 {
 	UINT32 n = 0;
-	CFOR_ALL_WORLD_ITEMS(wi)
+	CFOR_EACH_WORLD_ITEM(wi)
 	{
 		if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
 		n += wi->o.ubNumberOfObjects;

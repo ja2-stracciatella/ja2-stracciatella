@@ -726,7 +726,7 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 	}
 	else	// handle a loaded sector
 	{
-		FOR_ALL_WORLD_ITEMS(wi)
+		FOR_EACH_WORLD_ITEM(wi)
 		{
 			// note, can't do reachable test here because we'd have to do a path call
 			if (wi->bVisible != VISIBLE) continue;

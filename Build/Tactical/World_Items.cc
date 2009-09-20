@@ -183,7 +183,7 @@ static INT32 GetFreeWorldItemIndex(void)
 static UINT32 GetNumUsedWorldItems(void)
 {
 	UINT32 count = 0;
-	CFOR_ALL_WORLD_ITEMS(wi) ++count;
+	CFOR_EACH_WORLD_ITEM(wi) ++count;
 	return count;
 }
 
@@ -240,7 +240,7 @@ void TrashWorldItems()
 {
 	if( gWorldItems )
 	{
-		FOR_ALL_WORLD_ITEMS(wi)
+		FOR_EACH_WORLD_ITEM(wi)
 		{
 			RemoveItemFromPool(wi);
 		}
@@ -264,7 +264,7 @@ void SaveWorldItemsToMap(HWFILE const f)
 	UINT32 const n_actual_world_items = GetNumUsedWorldItems();
 	FileWrite(f, &n_actual_world_items, sizeof(n_actual_world_items));
 
-	CFOR_ALL_WORLD_ITEMS(wi) FileWrite(f, wi, sizeof(WORLDITEM));
+	CFOR_EACH_WORLD_ITEM(wi) FileWrite(f, wi, sizeof(WORLDITEM));
 }
 
 #endif
@@ -393,7 +393,7 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 	// only do this after Carmen has talked to player and terrorists have been placed
 	//if ( CheckFact( FACT_CARMEN_EXPLAINED_DEAL, 0 ) == TRUE )
 	{
-		CFOR_ALL_WORLD_ITEMS(wi)
+		CFOR_EACH_WORLD_ITEM(wi)
 		{
 			// loop through all items, look for ownership
 			if (wi->o.usItem != OWNERSHIP) continue;
@@ -409,7 +409,7 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 			// then all items in this location should be deleted
 			const INT16 sGridNo = wi->sGridNo;
 			const UINT8 ubLevel = wi->ubLevel;
-			FOR_ALL_WORLD_ITEMS(owned_item)
+			FOR_EACH_WORLD_ITEM(owned_item)
 			{
 				if (owned_item->sGridNo == sGridNo && owned_item->ubLevel == ubLevel)
 				{
@@ -433,7 +433,7 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 		return;
 	}
 
-	CFOR_ALL_WORLD_ITEMS(wi)
+	CFOR_EACH_WORLD_ITEM(wi)
 	{
 		// Look for items belonging to the queen
 		if (wi->o.usItem         != OWNERSHIP) continue;
@@ -442,7 +442,7 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 		// Delete all items on this tile
 		const INT16 sGridNo = wi->sGridNo;
 		const UINT8 ubLevel = wi->ubLevel;
-		FOR_ALL_WORLD_ITEMS(item)
+		FOR_EACH_WORLD_ITEM(item)
 		{
 			if (item->sGridNo != sGridNo) continue;
 			if (item->ubLevel != ubLevel) continue;

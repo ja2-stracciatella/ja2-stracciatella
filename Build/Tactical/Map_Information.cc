@@ -445,7 +445,7 @@ static void UpdateOldVersionMap(void)
 	{
 		// replace useless crowbars with proper ones
 		gMapInformation.ubMapVersion = 18;
-		FOR_ALL_WORLD_ITEMS(wi)
+		FOR_EACH_WORLD_ITEM(wi)
 		{
 			OBJECTTYPE& o = wi->o;
 			if (o.usItem == JAR_ELIXIR) o.usItem = CROWBAR;

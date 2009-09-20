@@ -808,7 +808,7 @@ static void RenderOverheadOverlays(void)
 	// Items overlay
 	if (!gfTacticalPlacementGUIActive)
 	{
-		CFOR_ALL_WORLD_ITEMS(wi)
+		CFOR_EACH_WORLD_ITEM(wi)
 		{
 			if (wi->bVisible != VISIBLE && !(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS))
 			{
