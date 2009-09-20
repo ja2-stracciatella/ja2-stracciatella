@@ -55,10 +55,10 @@ static SGPVObject* guiAimFiFace[MAX_NUMBER_MERCS];
 //Mouse Regions
 
 //Face regions
-MOUSE_REGION		gMercFaceMouseRegions[ MAX_NUMBER_MERCS ];
+static MOUSE_REGION gMercFaceMouseRegions[MAX_NUMBER_MERCS];
 
 //Screen region, used to right click to go back to previous page
-MOUSE_REGION		gScreenMouseRegions;
+static MOUSE_REGION gScreenMouseRegions;
 
 
 static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason);
