@@ -150,7 +150,6 @@ BOOLEAN		gfInPolicyToc =  FALSE;
 BOOLEAN		gfInAgreementPage = FALSE;
 BOOLEAN		gfAimPolicyMenuBarLoaded = FALSE;
 static SGPVObject* guiContentButton;
-BOOLEAN		gfExitingPolicesAgreeButton;
 BOOLEAN		gfExitingAimPolicy;
 BOOLEAN		AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
 
@@ -520,8 +519,6 @@ static void InitAgreementRegion(void)
 {
 	UINT16	usPosX,i;
 
-	gfExitingPolicesAgreeButton = FALSE;
-
 	//Load graphic for buttons
 	guiPoliciesButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
 
@@ -547,8 +544,6 @@ static void InitAgreementRegion(void)
 static void ExitAgreementButton(void)
 {
 	UINT8 i;
-
-	gfExitingPolicesAgreeButton = TRUE;
 
 	UnloadButtonImage( guiPoliciesButtonImage);
 
