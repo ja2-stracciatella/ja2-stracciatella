@@ -127,11 +127,11 @@ extern GROUP *gpGroupList;
 #define FOR_EACH_ENEMY_GROUP(iter)  BASE_FOR_EACH_ENEMY_GROUP(      GROUP*, iter)
 #define CFOR_EACH_ENEMY_GROUP(iter) BASE_FOR_EACH_ENEMY_GROUP(const GROUP*, iter)
 
-#define BASE_FOR_ALL_PLAYER_GROUPS(type, iter) \
+#define BASE_FOR_EACH_PLAYER_GROUP(type, iter) \
 	BASE_FOR_EACH_GROUP(type, iter)              \
 		if (!iter->fPlayer) continue; else
-#define FOR_ALL_PLAYER_GROUPS(iter)  BASE_FOR_ALL_PLAYER_GROUPS(      GROUP*, iter)
-#define CFOR_ALL_PLAYER_GROUPS(iter) BASE_FOR_ALL_PLAYER_GROUPS(const GROUP*, iter)
+#define FOR_EACH_PLAYER_GROUP(iter)  BASE_FOR_EACH_PLAYER_GROUP(      GROUP*, iter)
+#define CFOR_EACH_PLAYER_GROUP(iter) BASE_FOR_EACH_PLAYER_GROUP(const GROUP*, iter)
 
 #define FOR_EACH_GROUP_SAFE(iter)                                                    \
 	for (GROUP* iter = gpGroupList, * iter##__next; iter != NULL; iter = iter##__next) \

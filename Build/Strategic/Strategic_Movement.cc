@@ -784,7 +784,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	HandleOtherGroupsArrivingSimultaneously( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ );
 
-	FOR_ALL_PLAYER_GROUPS(i)
+	FOR_EACH_PLAYER_GROUP(i)
 	{
 		GROUP& g = *i;
 		if (g.ubGroupSize)
@@ -1559,7 +1559,7 @@ static void PrepareGroupsForSimultaneousArrival()
 	/* For all of the groups that haven't arrived yet, determine which one is
 	 * going to take the longest. */
 	UINT32 latest_arrival_time = 0;
-	FOR_ALL_PLAYER_GROUPS(i)
+	FOR_EACH_PLAYER_GROUP(i)
 	{
 		GROUP& g = *i;
 		if (&g == &first_group)                 continue;
@@ -1643,7 +1643,7 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 	/* Count the number of groups that are scheduled to arrive in the same sector
 	 * and are currently adjacent to the sector in question. */
 	UINT8 n_nearby_groups = 0;
-	FOR_ALL_PLAYER_GROUPS(i)
+	FOR_EACH_PLAYER_GROUP(i)
 	{
 		GROUP& g = *i;
 		if (&g == first_group)                                 continue;
@@ -2300,7 +2300,7 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 UINT8 PlayerMercsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 {
 	UINT8 n_mercs = 0;
-	CFOR_ALL_PLAYER_GROUPS(g)
+	CFOR_EACH_PLAYER_GROUP(g)
 	{
 		if (g->fBetweenSectors) continue;
 		if (g->ubSectorX != x || g->ubSectorY != y || g->ubSectorZ != z) continue;
@@ -2322,7 +2322,7 @@ UINT8 PlayerMercsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 UINT8 PlayerGroupsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 {
 	UINT8 n_groups = 0;
-	CFOR_ALL_PLAYER_GROUPS(g)
+	CFOR_EACH_PLAYER_GROUP(g)
 	{
 		if (g->fBetweenSectors) continue;
 		if (g->ubSectorX != x || g->ubSectorY != y || g->ubSectorZ != z) continue;
@@ -2411,7 +2411,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 	 * Special conditions during pre-battle interface to return where this
 	 * function is used to show potential retreating directions instead! */
 
-	CFOR_ALL_PLAYER_GROUPS(i)
+	CFOR_EACH_PLAYER_GROUP(i)
 	{
 		GROUP const& g = *i;
 		bool  const is_heli_group = IsGroupTheHelicopterGroup(g);
@@ -2477,7 +2477,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 
 void MoveAllGroupsInCurrentSectorToSector(UINT8 const x, UINT8 const y, UINT8 const z)
 {
-	FOR_ALL_PLAYER_GROUPS(g)
+	FOR_EACH_PLAYER_GROUP(g)
 	{
 		if (g->ubSectorX != gWorldSectorX)  continue;
 		if (g->ubSectorY != gWorldSectorY)  continue;
@@ -2926,7 +2926,7 @@ GROUP* FindEnemyMovementGroupInSector(const UINT8 ubSectorX, const UINT8 ubSecto
 
 GROUP* FindPlayerMovementGroupInSector(const UINT8 x, const UINT8 y)
 {
-	FOR_ALL_PLAYER_GROUPS(i)
+	FOR_EACH_PLAYER_GROUP(i)
 	{
 		GROUP& g = *i;
 		// NOTE: These checks must always match the INVOLVED group checks in PBI!!!

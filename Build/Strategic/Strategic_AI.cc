@@ -728,7 +728,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 		//iGroups ------ counts the number of groups the merc is in.
 		//iMismatches -- counts the cases where the merc's ubGroupID doesn't match the ubGroupID of the group
 		//               the merc exists in.
-		CFOR_ALL_PLAYER_GROUPS(pGroup)
+		CFOR_EACH_PLAYER_GROUP(pGroup)
 		{
 			CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 			{
@@ -759,7 +759,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					iMismatches = 0;
 					iGroups = 0;
 					const GROUP* pOtherGroup = NULL;
-					CFOR_ALL_PLAYER_GROUPS(pGroup)
+					CFOR_EACH_PLAYER_GROUP(pGroup)
 					{
 						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 						{
@@ -799,7 +799,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					iMismatches = 0;
 					iGroups = 0;
 					const GROUP* pOtherGroup = NULL;
-					CFOR_ALL_PLAYER_GROUPS(pGroup)
+					CFOR_EACH_PLAYER_GROUP(pGroup)
 					{
 						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 						{
