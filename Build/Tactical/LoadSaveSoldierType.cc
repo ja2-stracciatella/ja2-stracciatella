@@ -20,7 +20,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 	EXTR_I8(d, s->bInitialActionPoints)
 	EXTR_SKIP(d, 3)
 	EXTR_U32(d, s->uiStatusFlags)
-	FOR_ALL_SOLDIER_INV_SLOTS(i, *s)
+	FOR_EACH_SOLDIER_INV_SLOT(i, *s)
 	{
 		d = ExtractObject(d, i);
 	}
@@ -522,7 +522,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I8(d, s->bInitialActionPoints)
 	INJ_SKIP(d, 3)
 	INJ_U32(d, s->uiStatusFlags)
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
+	CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 	{
 		d = InjectObject(d, i);
 	}

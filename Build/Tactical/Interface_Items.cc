@@ -964,14 +964,14 @@ static BOOLEAN SoldierContainsAnyCompatibleStuff(const SOLDIERTYPE* const s, con
 	const UINT16 item_class = Item[test->usItem].usItemClass;
 	if (item_class & IC_GUN)
 	{
-		CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
+		CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 		{
 			if (CompatibleAmmoForGun(i, test)) return TRUE;
 		}
 	}
 	else if (item_class & IC_AMMO)
 	{
-		CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
+		CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 		{
 			if (CompatibleGunForAmmo(i, test)) return TRUE;
 		}

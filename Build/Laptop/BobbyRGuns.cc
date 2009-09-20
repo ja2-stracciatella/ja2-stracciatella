@@ -1382,7 +1382,7 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
 		// Loop through all the pockets on the merc
-		CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
+		CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 		{
 			OBJECTTYPE const& o = *i;
 			// If there is a weapon here

@@ -1290,7 +1290,7 @@ static void CaptureSoldier(SOLDIERTYPE* const s, INT16 const x, INT16 const y, G
 	s->usStrategicInsertionData = soldier_pos;
 
 	// Drop all items
-	FOR_ALL_SOLDIER_INV_SLOTS(i, *s)
+	FOR_EACH_SOLDIER_INV_SLOT(i, *s)
 	{
 		OBJECTTYPE& o = *i;
 		if (o.usItem == NOTHING) continue;

@@ -713,7 +713,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
   else
   {
 	  // OK, Place what objects this guy was carrying on the ground!
-	  FOR_ALL_SOLDIER_INV_SLOTS(pObj, s)
+	  FOR_EACH_SOLDIER_INV_SLOT(pObj, s)
 	  {
 		  if ( pObj->usItem != NOTHING )
 		  {

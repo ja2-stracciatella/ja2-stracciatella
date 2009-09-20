@@ -1025,7 +1025,7 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 		}
 	}
 
-	FOR_ALL_SOLDIER_INV_SLOTS(i, s)
+	FOR_EACH_SOLDIER_INV_SLOT(i, s)
 	{
 		if (i->ubNumberOfObjects == 0) continue;
 
@@ -1208,7 +1208,7 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE& s)
 	INT32 const slot = FindFreeSlotInLeaveList();
 	if (slot == -1) return -1;
 
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
+	CFOR_EACH_SOLDIER_INV_SLOT(i, s)
 	{
 		if (i->ubNumberOfObjects == 0) continue;
 

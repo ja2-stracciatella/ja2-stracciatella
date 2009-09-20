@@ -3261,7 +3261,7 @@ static BOOLEAN AttackerHasKnife(SOLDIERCELL* const attacker)
 
 static BOOLEAN TargetHasLoadedGun(SOLDIERTYPE* pSoldier)
 {
-	CFOR_ALL_SOLDIER_INV_SLOTS(pItem, *pSoldier)
+	CFOR_EACH_SOLDIER_INV_SLOT(pItem, *pSoldier)
 	{
 		if( Item[ pItem->usItem ].usItemClass == IC_GUN )
 		{

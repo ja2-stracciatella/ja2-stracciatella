@@ -434,7 +434,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 	INT8		bBestArmour = -1;
 	INT8		bBestGun = -1;
 
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	CFOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
 		usItem = i->usItem;
 

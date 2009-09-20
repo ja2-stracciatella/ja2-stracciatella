@@ -433,7 +433,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 	UINT8 ubPassType;
 
 	// check for jams
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	CFOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
 		ubItemsInPocket = i->ubNumberOfObjects;
 		// unjam any jammed weapons
@@ -449,7 +449,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 	}
 
 	// now check for items to repair
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	CFOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
 		OBJECTTYPE const& o = *i;
 

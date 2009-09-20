@@ -146,7 +146,7 @@ bool KeyExistsInKeyRing(SOLDIERTYPE const& s, UINT8 const key_id)
 
 static bool KeyExistsInInventory(SOLDIERTYPE const& s, UINT8 const key_id)
 {
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
+	CFOR_EACH_SOLDIER_INV_SLOT(i, s)
 	{
 		if (Item[i->usItem].usItemClass != IC_KEY)    continue;
 		if (i->ubKeyID != key_id && key_id != ANYKEY) continue;

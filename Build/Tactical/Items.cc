@@ -1648,7 +1648,7 @@ UINT8 CalculateObjectWeight(OBJECTTYPE const* const o)
 UINT32 CalculateCarriedWeight(SOLDIERTYPE const* const s)
 {
 	UINT32 total_weight = 0;
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
+	CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 	{
 		UINT16 weight = i->ubWeight;
 		if (Item[i->usItem].ubPerPocket > 1)
@@ -4098,7 +4098,7 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 		return;
 	}
 
-	FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	FOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
 		ubNumberOfObjects = i->ubNumberOfObjects;
 		fBlowsUp = DamageItem(i, iDamage, FALSE);
@@ -4126,7 +4126,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 	UINT8				ubNumberOfObjects;
 	BOOLEAN			fPlayedGlassBreak = FALSE;
 
-	FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	FOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
 		switch (i->usItem)
 		{
@@ -4218,7 +4218,7 @@ void WaterDamage(SOLDIERTYPE& s)
 
 	if (s.bOverTerrainType == DEEP_WATER)
 	{
-		FOR_ALL_SOLDIER_INV_SLOTS(i, s)
+		FOR_EACH_SOLDIER_INV_SLOT(i, s)
 		{
 			// if there's an item here that can get water damaged...
 			if (i->usItem && Item[i->usItem].fFlags & ITEM_WATER_DAMAGES)
