@@ -3326,7 +3326,7 @@ static void LoopLevelNodeForItemGlowFlag(LEVELNODE* pNode, BOOLEAN fOn)
 
 void ToggleItemGlow(BOOLEAN fOn)
 {
-	FOR_ALL_WORLD_TILES(e)
+	FOR_EACH_WORLD_TILE(e)
 	{
 		LoopLevelNodeForItemGlowFlag(e->pStructHead, fOn);
 		LoopLevelNodeForItemGlowFlag(e->pOnRoofHead, fOn);

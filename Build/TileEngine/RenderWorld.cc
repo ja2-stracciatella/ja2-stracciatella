@@ -2484,7 +2484,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
 static void ClearMarkedTiles(void)
 {
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		i->uiFlags &= ~MAPELEMENT_REDRAW;
 	}
@@ -2494,7 +2494,7 @@ static void ClearMarkedTiles(void)
 void InvalidateWorldRedundency(void)
 {
 	SetRenderFlags(RENDER_FLAG_CHECKZ);
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		i->uiFlags |= MAPELEMENT_REEVALUATE_REDUNDENCY;
 	}

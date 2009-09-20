@@ -147,7 +147,7 @@ void RemoveBlood(GridNo const gridno, INT8 const level)
 
 void DecaySmells()
 {
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		UINT8& smell = i->ubSmellInfo;
 		if (smell == 0) continue;
@@ -160,7 +160,7 @@ void DecaySmells()
 
 static void DecayBlood(void)
 {
-	FOR_ALL_WORLD_TILES(pMapElement)
+	FOR_EACH_WORLD_TILE(pMapElement)
 	{
 		if (pMapElement->ubBloodInfo)
 		{

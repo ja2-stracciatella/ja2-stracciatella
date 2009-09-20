@@ -1471,7 +1471,7 @@ try
 	}
 
 	UINT8 const test[] = { 1, 1 };
-	FOR_ALL_WORLD_TILES(e)
+	FOR_EACH_WORLD_TILE(e)
 	{ // Write land layers
 		LEVELNODE const* i = e->pLandHead;
 		if (!i)
@@ -1488,7 +1488,7 @@ try
 		}
 	}
 
-	FOR_ALL_WORLD_TILES(e)
+	FOR_EACH_WORLD_TILE(e)
 	{ // Write object layer
 		for (LEVELNODE const* i = e->pObjectHead; i; i = i->pNext)
 		{
@@ -1512,7 +1512,7 @@ try
 		}
 	}
 
-	FOR_ALL_WORLD_TILES(e)
+	FOR_EACH_WORLD_TILE(e)
 	{ // Write struct layer
 		for (LEVELNODE const* i = e->pStructHead; i; i = i->pNext)
 		{
@@ -1524,7 +1524,7 @@ try
 	}
 
 	UINT16 n_exit_grids = 0;
-	FOR_ALL_WORLD_TILES(e)
+	FOR_EACH_WORLD_TILE(e)
 	{ // Write shadows
 		for (LEVELNODE const* i = e->pShadowHead; i; i = i->pNext)
 		{
@@ -1540,7 +1540,7 @@ try
 		}
 	}
 
-	FOR_ALL_WORLD_TILES(e)
+	FOR_EACH_WORLD_TILE(e)
 	{
 		for (LEVELNODE const* i = e->pRoofHead; i; i = i->pNext)
 		{
@@ -1551,7 +1551,7 @@ try
 		}
 	}
 
-	FOR_ALL_WORLD_TILES(e)
+	FOR_EACH_WORLD_TILE(e)
 	{ // Write OnRoofs
 		for (LEVELNODE const* i = e->pOnRoofHead; i; i = i->pNext)
 		{
@@ -1644,7 +1644,7 @@ static void OptimizeMapForShadows()
 
 static void SetBlueFlagFlags(void)
 {
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		for (LEVELNODE const* k = i->pStructHead; k; k = k->pNext)
 		{
@@ -2554,7 +2554,7 @@ void TrashWorld(void)
 	// On trash world check if we have to set up the first meanwhile
 	HandleFirstMeanWhileSetUpWithTrashWorld();
 
-	FOR_ALL_WORLD_TILES(me)
+	FOR_EACH_WORLD_TILE(me)
 	{
 		// Free the memory associated with the map tile link lists
 		FreeLevelNodeList(&me->pLandHead);
@@ -2580,7 +2580,7 @@ void TrashWorld(void)
 	memset(gpWorldLevelData, 0, WORLD_MAX * sizeof(*gpWorldLevelData));
 
 	// Set some default flags
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		i->uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
 	}

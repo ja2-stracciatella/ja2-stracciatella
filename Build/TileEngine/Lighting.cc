@@ -961,7 +961,7 @@ static void LightResetLevel(LEVELNODE* n)
 // Reset all tiles on the map to their baseline values.
 static void LightResetAllTiles(void)
 {
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		LightResetLevel(i->pLandHead);
 		LightResetLevel(i->pObjectHead);
@@ -1521,7 +1521,7 @@ void LightSetBaseLevel(UINT8 iIntensity)
 	UINT16 shade = iIntensity;
 	shade = __max(SHADE_MAX, shade);
 	shade = __min(SHADE_MIN, shade);
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		LightSetNaturalTile(*i, shade);
 	}

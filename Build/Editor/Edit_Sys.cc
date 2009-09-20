@@ -868,7 +868,7 @@ void RaiseWorldLand( )
 
 	fRaiseSet=FALSE;
 
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		i->uiFlags &= ~MAPELEMENT_RAISE_LAND_START;
 		i->uiFlags &= ~MAPELEMENT_RAISE_LAND_END;

@@ -60,7 +60,7 @@ void CountLevelNodes(void)
 		guiLNCount[uiLoop2] = 0;
 	}
 
-	FOR_ALL_WORLD_TILES(pME)
+	FOR_EACH_WORLD_TILE(pME)
 	{
 		// start at 1 to skip land head ptr; 0 stores total
 		for (UINT32 uiLoop2 = 1; uiLoop2 < 9; uiLoop2++)
@@ -1829,7 +1829,7 @@ LEVELNODE* FindShadow(INT16 sGridNo, UINT16 usStructIndex)
 
 void WorldHideTrees(void)
 {
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		for (LEVELNODE* pNode = i->pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{
@@ -1847,7 +1847,7 @@ void WorldHideTrees(void)
 
 void WorldShowTrees(void)
 {
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		for (LEVELNODE* pNode = i->pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{

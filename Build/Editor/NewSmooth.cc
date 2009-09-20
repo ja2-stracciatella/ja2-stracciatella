@@ -1108,7 +1108,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 
 void AnalyseCaveMapForStructureInfo()
 {
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		for (LEVELNODE* k = i->pStructHead; k; k = k->pNext)
 		{

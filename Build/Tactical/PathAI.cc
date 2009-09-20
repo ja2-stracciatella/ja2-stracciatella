@@ -1940,7 +1940,7 @@ void GlobalReachableTest( INT16 sStartGridNo )
 	s.bTeam = 1;
 
 	//reset the flag for gridno's
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		i->uiFlags &= ~MAPELEMENT_REACHABLE;
 	}
@@ -2002,7 +2002,7 @@ void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 	s.bTeam = 1;
 
 	//reset the flag for gridno's
-	FOR_ALL_WORLD_TILES(i)
+	FOR_EACH_WORLD_TILE(i)
 	{
 		i->uiFlags &= ~MAPELEMENT_REACHABLE;
 	}
