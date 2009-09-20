@@ -378,7 +378,7 @@ BOOLEAN MultipleCharacterListEntriesSelected( void )
 
 void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList()
 {
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE* const pSoldier = c->merc;
 		if( pSoldier->bAssignment == TRAIN_TOWN )
@@ -394,7 +394,7 @@ void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList()
 
 void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, INT16 sSectorY )
 {
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE* const pSoldier = c->merc;
 		if( pSoldier->bAssignment == TRAIN_TOWN )
@@ -1460,7 +1460,7 @@ INT32 GetNumberOfPeopleInCharacterList( void )
 {
 	// get the number of valid mercs in the mapscreen character list
 	INT32 count = 0;
-	CFOR_ALL_IN_CHAR_LIST(c) ++count;
+	CFOR_EACH_IN_CHAR_LIST(c) ++count;
 	return count;
 }
 
@@ -2281,7 +2281,7 @@ void SetUpMovingListsForSector(INT16 const x, INT16 const y, INT16 const z)
 
 	/* Note that Skyrider can't be moved using the move box, and won't appear
 	 * because the helicoprer is not in the char list */
-	CFOR_ALL_IN_CHAR_LIST(i)
+	CFOR_EACH_IN_CHAR_LIST(i)
 	{
 		SOLDIERTYPE& s = *i->merc;
 		if (s.bAssignment == IN_TRANSIT)     continue;
@@ -4013,7 +4013,7 @@ MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE& s)
 
 	/* If anyone in the merc's group or also selected cannot move for whatever
 	 * reason return an error */
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE& other = *c->merc;
 		if (&other == &s) continue; // Skip the same guy we did already

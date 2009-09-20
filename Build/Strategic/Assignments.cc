@@ -1035,7 +1035,7 @@ void UpdateAssignments()
 #ifdef JA2BETAVERSION
 void VerifyTownTrainingIsPaidFor()
 {
-	CFOR_ALL_IN_CHAR_LIST(i)
+	CFOR_EACH_IN_CHAR_LIST(i)
 	{
 		SOLDIERTYPE const& s = *i->merc;
 		if (s.bAssignment != TRAIN_TOWN) continue;

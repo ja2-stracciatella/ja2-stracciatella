@@ -839,7 +839,7 @@ static void DrawMapBoxIcon(HVOBJECT, UINT16 icon, INT16 sec_x, INT16 sec_y, UINT
 static INT32 ShowOnDutyTeam(INT16 const x, INT16 const y)
 {
 	UINT8 icon_pos = 0;
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE const& s = *c->merc;
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)                    continue;
@@ -858,7 +858,7 @@ static INT32 ShowOnDutyTeam(INT16 const x, INT16 const y)
 
 static INT32 ShowAssignedTeam(INT16 const x, INT16 const y, INT32 icon_pos)
 {
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE const& s = *c->merc;
 		// given number of on duty members, find number of assigned chars

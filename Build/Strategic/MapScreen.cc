@@ -6700,7 +6700,7 @@ static void HandlePreBattleInterfaceWithInventoryPanelUp(void)
 // this puts anyone who is on NO_ASSIGNMENT onto a free squad
 static void UpdateBadAssignments(void)
 {
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		CheckIfSoldierUnassigned(c->merc);
 	}
@@ -6753,7 +6753,7 @@ static void HandleContractTimeFlashForMercThatIsAboutLeave(void)
 static bool AnyMercsLeavingRealSoon()
 {
 	UINT32 const now = GetWorldTotalMin();
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		if (c->merc->iEndofContractTime - now > MINS_TO_FLASH_CONTRACT_TIME) continue;
 		return true;
@@ -7285,7 +7285,7 @@ static void HandleAssignmentsDoneAndAwaitingFurtherOrders(void)
 		// update timer so that we only run check so often
 		giFlashAssignBaseTime = iCurrentTime;
 
-		CFOR_ALL_IN_CHAR_LIST(c)
+		CFOR_EACH_IN_CHAR_LIST(c)
 		{
 			// toggle and redraw if flash was left ON even though the flag is OFF
 			if (c->merc->fDoneAssignmentAndNothingToDoFlag || fFlashAssignDone)
@@ -7805,7 +7805,7 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 void CopyPathToAllSelectedCharacters(PathSt* pPath)
 {
 	// run through list and copy paths for each selected character
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		if (!c->selected) continue;
 
