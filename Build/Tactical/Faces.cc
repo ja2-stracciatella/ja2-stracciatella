@@ -49,7 +49,7 @@ static FACETYPE gFacesData[NUM_FACE_SLOTS];
 static UINT32   guiNumFaces = 0;
 
 
-#define FOR_ALL_FACES(iter)                                    \
+#define FOR_EACH_FACE(iter)                                    \
 	for (FACETYPE*       iter        = gFacesData,               \
 	             * const iter##__end = gFacesData + guiNumFaces; \
 	     iter != iter##__end;                                    \
@@ -453,7 +453,7 @@ void SetAutoFaceInActive(FACETYPE& f)
 
 void SetAllAutoFacesInactive(  )
 {
-	FOR_ALL_FACES(i)
+	FOR_EACH_FACE(i)
 	{
 		SetAutoFaceInActive(*i);
 	}
@@ -1140,7 +1140,7 @@ static void NewMouth(FACETYPE& f)
 
 void HandleAutoFaces(void)
 {
-	FOR_ALL_FACES(i)
+	FOR_EACH_FACE(i)
 	{
 		FACETYPE& f = *i;
 		if (f.fDisabled) continue;
@@ -1250,7 +1250,7 @@ void HandleAutoFaces(void)
 
 void HandleTalkingAutoFaces( )
 {
-	FOR_ALL_FACES(i)
+	FOR_EACH_FACE(i)
 	{
 		HandleTalkingAutoFace(*i);
 	}
