@@ -32,14 +32,14 @@ static SMOKEEFFECT gSmokeEffectData[NUM_SMOKE_EFFECT_SLOTS];
 static UINT32      guiNumSmokeEffects = 0;
 
 
-#define BASE_FOR_ALL_SMOKE_EFFECTS(type, iter)                    \
+#define BASE_FOR_EACH_SMOKE_EFFECT(type, iter)                    \
 	for (type* iter        = gSmokeEffectData,                      \
 	         * iter##__end = gSmokeEffectData + guiNumSmokeEffects; \
 	     iter != iter##__end;                                       \
 	     ++iter)                                                    \
 		if (!iter->fAllocated) continue; else
-#define FOR_ALL_SMOKE_EFFECTS(iter)  BASE_FOR_ALL_SMOKE_EFFECTS(      SMOKEEFFECT, iter)
-#define CFOR_ALL_SMOKE_EFFECTS(iter) BASE_FOR_ALL_SMOKE_EFFECTS(const SMOKEEFFECT, iter)
+#define FOR_EACH_SMOKE_EFFECT(iter)  BASE_FOR_EACH_SMOKE_EFFECT(      SMOKEEFFECT, iter)
+#define CFOR_EACH_SMOKE_EFFECT(iter) BASE_FOR_EACH_SMOKE_EFFECT(const SMOKEEFFECT, iter)
 
 
 static SMOKEEFFECT* GetFreeSmokeEffect(void)
@@ -338,7 +338,7 @@ void DecaySmokeEffects( UINT32 uiTime )
   // all the deleting has to be done first///
 
   // age all active tear gas clouds, deactivate those that are just dispersing
-	FOR_ALL_SMOKE_EFFECTS(pSmoke)
+	FOR_EACH_SMOKE_EFFECT(pSmoke)
   {
 		fSpreadEffect = TRUE;
 
@@ -424,7 +424,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 		}
   }
 
-	FOR_ALL_SMOKE_EFFECTS(pSmoke)
+	FOR_EACH_SMOKE_EFFECT(pSmoke)
 	{
 		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
 		{
@@ -474,7 +474,7 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile, UINT32 const savegame_
 	}
 
 	//loop through and apply the smoke effects to the map
-	FOR_ALL_SMOKE_EFFECTS(s)
+	FOR_EACH_SMOKE_EFFECT(s)
 	{
 		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
 		SpreadEffectSmoke(s, TRUE, bLevel);
@@ -494,7 +494,7 @@ void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	FileDelete( zMapName );
 
 	//loop through and count the number of smoke effects
-	CFOR_ALL_SMOKE_EFFECTS(s) ++uiNumSmokeEffects;
+	CFOR_EACH_SMOKE_EFFECT(s) ++uiNumSmokeEffects;
 
 	//if there are no smoke effects
 	if( uiNumSmokeEffects == 0 )
@@ -509,7 +509,7 @@ void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	//Save the Number of Smoke Effects
 	FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32));
 
-	CFOR_ALL_SMOKE_EFFECTS(s)
+	CFOR_EACH_SMOKE_EFFECT(s)
 	{
 		InjectSmokeEffectIntoFile(hFile, s);
 	}
@@ -541,7 +541,7 @@ void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 	}
 
 	//loop through and apply the smoke effects to the map
-	FOR_ALL_SMOKE_EFFECTS(s)
+	FOR_EACH_SMOKE_EFFECT(s)
 	{
 		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
 		SpreadEffectSmoke(s, TRUE, bLevel);
@@ -559,7 +559,7 @@ void ResetSmokeEffects()
 
 void UpdateSmokeEffectGraphics( )
 {
-	FOR_ALL_SMOKE_EFFECTS(s)
+	FOR_EACH_SMOKE_EFFECT(s)
 	{
 		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
 		SpreadEffectSmoke(s, ERASE_SPREAD_EFFECT, bLevel);
