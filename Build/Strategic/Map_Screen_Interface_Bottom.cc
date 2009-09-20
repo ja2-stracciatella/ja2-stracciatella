@@ -129,7 +129,7 @@ GUIButtonRef guiMapBottomTimeButtons[2];
 MOUSE_REGION gMapMessageScrollBarRegion;
 MOUSE_REGION gMapPauseRegion;
 
-MOUSE_REGION gTimeCompressionMask[ 3 ];
+static MOUSE_REGION gTimeCompressionMask[3];
 
 
 static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason);
@@ -980,47 +980,24 @@ static void DisplayCurrentBalanceForMapBottom(void)
 static void CompressMaskClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void CreateDestroyMouseRegionMasksForTimeCompressionButtons( void )
+void CreateDestroyMouseRegionMasksForTimeCompressionButtons()
 {
-	BOOLEAN fDisabled = FALSE;
-	static BOOLEAN fCreated = FALSE;
+	static bool created = false;
 
-	// allowed to time compress?
-	if (!AllowedToTimeCompress())
+	// Disable buttons, if not allowed to compress time.
+	bool const disabled = fInMapMode && !AllowedToTimeCompress();
+	if (disabled && !created)
 	{
-		// no, disable buttons
-		fDisabled = TRUE;
+		// Mask over compress more, compress less and paus game buttons.
+		MSYS_DefineRegion(&gTimeCompressionMask[0], 528, 456, 528 + 13, 456 + 14, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
+		MSYS_DefineRegion(&gTimeCompressionMask[1], 466, 456, 466 + 13, 456 + 14, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
+		MSYS_DefineRegion(&gTimeCompressionMask[2], 487, 456, 487 + 35, 456 + 11, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
+		created = true;
 	}
-
-	if (!fInMapMode)
+	else if (!disabled && created)
 	{
-		fDisabled = FALSE;
-	}
-
-	// check if disabled and not created, create
-	if (fDisabled && !fCreated)
-	{
-		// mask over compress more button
-		MSYS_DefineRegion( &gTimeCompressionMask[ 0 ], 528, 456, 528 + 13, 456 + 14, MSYS_PRIORITY_HIGHEST - 1,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback );
-
-		// mask over compress less button
-		MSYS_DefineRegion( &gTimeCompressionMask[ 1 ], 466, 456, 466 + 13, 456 + 14, MSYS_PRIORITY_HIGHEST - 1,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback );
-
-		// mask over pause game button
-		MSYS_DefineRegion( &gTimeCompressionMask[ 2 ], 487, 456, 522, 467, MSYS_PRIORITY_HIGHEST - 1,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback );
-
-		fCreated = TRUE;
-	}
-	else if (!fDisabled && fCreated)
-	{
-		// created and no longer need to disable
-		MSYS_RemoveRegion( &gTimeCompressionMask[ 0 ] );
-		MSYS_RemoveRegion( &gTimeCompressionMask[ 1 ] );
-		MSYS_RemoveRegion( &gTimeCompressionMask[ 2 ] );
-		fCreated = FALSE;
+		FOR_EACH(MOUSE_REGION, i, gTimeCompressionMask) MSYS_RemoveRegion(&*i);
+		created = false;
 	}
 }
 

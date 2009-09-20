@@ -51,7 +51,7 @@ BOOLEAN AllowedToTimeCompress( void );
 void EnableDisAbleMapScreenOptionsButton( BOOLEAN fEnable );
 
 // create and destroy masks to cover the time compression buttons as needed
-void CreateDestroyMouseRegionMasksForTimeCompressionButtons( void );
+void CreateDestroyMouseRegionMasksForTimeCompressionButtons();
 
 BOOLEAN CommonTimeCompressionChecks( void );
 
