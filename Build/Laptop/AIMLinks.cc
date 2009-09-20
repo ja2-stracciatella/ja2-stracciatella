@@ -39,13 +39,10 @@
 static SGPVObject* guiBobbyLink;
 static SGPVObject* guiFuneralLink;
 static SGPVObject* guiInsuranceLink;
-UINT8			gubLinkPages[]={
-							BOBBYR_BOOKMARK,
-							FUNERAL_BOOKMARK,
-							INSURANCE_BOOKMARK};
+static UINT8 const gubLinkPages[] = { BOBBYR_BOOKMARK, FUNERAL_BOOKMARK, INSURANCE_BOOKMARK };
 
 //Clicking on guys Face
-MOUSE_REGION    gSelectedLinkRegion[ AIM_LINK_NUM_LINKS ] ;
+static MOUSE_REGION gSelectedLinkRegion[AIM_LINK_NUM_LINKS];
 
 
 static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
