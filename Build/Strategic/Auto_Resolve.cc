@@ -280,7 +280,7 @@ static SOLDIERCELL*        gpEnemies;
 #define FOR_ALL_AR_CIVS(iter) \
 	for (SOLDIERCELL* iter = gpCivs, *const iter##__end = &gpCivs[gpAR->ubCivs]; iter != iter##__end; ++iter)
 
-#define FOR_ALL_AR_ENEMIES(iter) \
+#define FOR_EACH_AR_ENEMY(iter) \
 	for (SOLDIERCELL* iter = gpEnemies, *const iter##__end = &gpEnemies[gpAR->ubEnemies]; iter != iter##__end; ++iter)
 
 
@@ -299,7 +299,7 @@ static void EliminateAllMercs(void)
 	SOLDIERCELL *pAttacker = NULL;
 	if( gpAR )
 	{
-		FOR_ALL_AR_ENEMIES(i)
+		FOR_EACH_AR_ENEMY(i)
 		{
 			if (i->pSoldier->bLife == 0) continue;
 			pAttacker = i;
@@ -402,7 +402,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 
 	if( gpAR )
 	{
-		FOR_ALL_AR_ENEMIES(i)
+		FOR_EACH_AR_ENEMY(i)
 		{
 			i->pSoldier->bLife = 0;
 		}
@@ -643,7 +643,7 @@ static void AssociateEnemiesWithStrategicGroups(void)
 
 	//Now go through our enemies in the autoresolve array, and assign the ubGroupID to the soldier
 	//Stationary groups have a group ID of 0
-	FOR_ALL_AR_ENEMIES(i)
+	FOR_EACH_AR_ENEMY(i)
 	{
 		if (i->uiFlags & CELL_ELITE && ubNumElites != 0)
 		{
@@ -683,7 +683,7 @@ static void AssociateEnemiesWithStrategicGroups(void)
 			ubNumElitesInGroup = pGroup->pEnemyGroup->ubNumElites;
 			ubNumTroopsInGroup = pGroup->pEnemyGroup->ubNumTroops;
 			ubNumAdminsInGroup = pGroup->pEnemyGroup->ubNumAdmins;
-			FOR_ALL_AR_ENEMIES(i)
+			FOR_EACH_AR_ENEMY(i)
 			{
 				if (i->uiFlags & CELL_ASSIGNED) continue;
 
@@ -1297,7 +1297,7 @@ static void RenderAutoResolve(void)
 			if (!(i->uiFlags & CELL_DIRTY)) continue;
 			RenderSoldierCell(i);
 		}
-		FOR_ALL_AR_ENEMIES(i)
+		FOR_EACH_AR_ENEMY(i)
 		{
 			if (!(i->uiFlags & CELL_DIRTY)) continue;
 			RenderSoldierCell(i);
@@ -1316,7 +1316,7 @@ static void RenderAutoResolve(void)
 	{
 		RenderSoldierCell(i);
 	}
-	FOR_ALL_AR_ENEMIES(i)
+	FOR_EACH_AR_ENEMY(i)
 	{
 		RenderSoldierCell(i);
 	}
@@ -2877,7 +2877,7 @@ static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 	}
 	//ENEMY TEAM
 	gpAR->ubEnemyLeadership = 0;
-	FOR_ALL_AR_ENEMIES(i)
+	FOR_EACH_AR_ENEMY(i)
 	{
 		if (gpAR->ubEnemyLeadership >= i->pSoldier->bLeadership) continue;
 		gpAR->ubEnemyLeadership = i->pSoldier->bLeadership;
@@ -3072,7 +3072,7 @@ static void CalculateAttackValues(void)
 	{
 		i->usNextAttack -= usBestAttack;
 	}
-	FOR_ALL_AR_ENEMIES(i)
+	FOR_EACH_AR_ENEMY(i)
 	{
 		i->usNextAttack -= usBestAttack;
 	}
@@ -3761,7 +3761,7 @@ static BOOLEAN IsBattleOver(void)
 				gpAR->ubAliveMercs--;
 			}
 		}
-		FOR_ALL_AR_ENEMIES(i)
+		FOR_EACH_AR_ENEMY(i)
 		{
 			if (i->pSoldier->bLife == 0) continue;
 			if (gubEnemyEncounterCode != CREATURE_ATTACK_CODE)
@@ -3831,7 +3831,7 @@ static BOOLEAN AttemptPlayerCapture(void)
 	}
 	//make sure that these enemies are actually concious!
 	iConciousEnemies = 0;
-	FOR_ALL_AR_ENEMIES(i)
+	FOR_EACH_AR_ENEMY(i)
 	{
 		if (i->pSoldier->bLife < OKLIFE) continue;
 		++iConciousEnemies;
@@ -4024,7 +4024,7 @@ static void ProcessBattleFrame(void)
 			i->uiFlags &= ~CELL_PROCESSED;
 		FOR_ALL_AR_CIVS(i)
 			i->uiFlags &= ~CELL_PROCESSED;
-		FOR_ALL_AR_ENEMIES(i)
+		FOR_EACH_AR_ENEMY(i)
 			i->uiFlags &= ~CELL_PROCESSED;
 		while( --iTotal )
 		{
