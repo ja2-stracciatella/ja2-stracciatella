@@ -2348,7 +2348,7 @@ void InitSoldierOppList(SOLDIERTYPE& s)
 void BetweenTurnsVisibilityAdjustments()
 {
 	// Make all soldiers on other teams, that are no longer seen, not visible
-	FOR_ALL_SOLDIERS(i)
+	FOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE& s = *i;
 		if (!s.bInSector)            continue;
@@ -4650,7 +4650,7 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 	if (pSoldier->bLife < OKLIFE)
 	{
 		// must make sure that public opplist is kept to match...
-		FOR_ALL_SOLDIERS(tgt)
+		FOR_EACH_SOLDIER(tgt)
 		{
 			if (pSoldier->bOppList[tgt->ubID] == SEEN_CURRENTLY)
 			{

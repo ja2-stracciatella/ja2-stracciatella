@@ -2528,7 +2528,7 @@ void TrashWorld(void)
 	ResetLightEffects();
 
 	// Set soldiers to not active!
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		if (s->bTeam == gbPlayerNum)
 		{
@@ -2963,7 +2963,7 @@ void ReloadTileset(TileSetID const ubID)
 
 BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 {
-	CFOR_ALL_SOLDIERS(s)
+	CFOR_EACH_SOLDIER(s)
 	{
 		if (s->light == l) return TRUE;
 	}

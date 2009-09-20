@@ -1155,7 +1155,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	if (version < 68)
 	{
 		// correct bVehicleUnderRepairID for all mercs
-		FOR_ALL_SOLDIERS(s) s->bVehicleUnderRepairID = -1;
+		FOR_EACH_SOLDIER(s) s->bVehicleUnderRepairID = -1;
 	}
 
 	if (version < 73 && LaptopSaveInfo.fMercSiteHasGoneDownYet)
@@ -1294,7 +1294,7 @@ static void SaveSoldierStructure(HWFILE const f)
 static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 {
 	// Loop through all the soldier and delete them all
-	FOR_ALL_SOLDIERS(i) TacticalRemoveSoldier(*i);
+	FOR_EACH_SOLDIER(i) TacticalRemoveSoldier(*i);
 
 	// Loop through all the soldier structs to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?

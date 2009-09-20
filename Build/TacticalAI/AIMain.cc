@@ -660,7 +660,7 @@ void EndAIDeadlock()
 	// Escape enemy's turn
 
 	// Find enemy with problem and free him up
-	FOR_ALL_SOLDIERS(i)
+	FOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE& s = *i;
 		if (!s.bInSector) continue;

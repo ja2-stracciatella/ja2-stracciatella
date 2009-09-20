@@ -274,7 +274,7 @@ void LightReset(void)
 	LightLoad("TRANSLUC.LHT");
 
 	// Loop through mercs and reset light value
-	FOR_ALL_SOLDIERS(s) s->light = 0;
+	FOR_EACH_SOLDIER(s) s->light = 0;
 }
 
 

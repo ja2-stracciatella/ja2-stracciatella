@@ -747,7 +747,7 @@ INT8 RepairVehicle(VEHICLETYPE const& v, INT8 const bRepairPtsLeft, BOOLEAN* con
 
 SOLDIERTYPE& GetSoldierStructureForVehicle(VEHICLETYPE const& v)
 {
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		if (!(s->uiStatusFlags & SOLDIER_VEHICLE)) continue;
 		if (s->bVehicleID != VEHICLE2ID(v))        continue;

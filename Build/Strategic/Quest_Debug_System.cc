@@ -2677,7 +2677,7 @@ static void AddNPCsInSectorToArray(void)
 {
 	//Setup array of merc who are in the current sector
 	UINT16 i = 0;
-	CFOR_ALL_SOLDIERS(pSoldier)
+	CFOR_EACH_SOLDIER(pSoldier)
 	{
 		//if soldier is a NPC, add him to the local NPC array
 		if (pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < NUM_PROFILES)
@@ -2887,7 +2887,7 @@ static INT16 IsMercInTheSector(UINT16 usMercID)
 	if( usMercID == (UINT16)-1 ) /* XXX */
 		return( FALSE );
 
-	CFOR_ALL_SOLDIERS(s)
+	CFOR_EACH_SOLDIER(s)
 	{
 		if (s->ubProfile == usMercID) return s->ubID;
 	}
@@ -2902,7 +2902,7 @@ static void RefreshAllNPCInventory(void)
 	OBJECTTYPE	TempObject;
 	UINT16		usItem;
 
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		//is the merc a rpc or npc
 		if (s->ubProfile >= FIRST_RPC)

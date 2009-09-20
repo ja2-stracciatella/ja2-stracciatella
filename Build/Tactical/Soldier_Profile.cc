@@ -668,7 +668,7 @@ static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT const& p)
 
 SOLDIERTYPE* FindSoldierByProfileID(const ProfileID pid)
 {
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		if (s->ubProfile == pid) return s;
 	}

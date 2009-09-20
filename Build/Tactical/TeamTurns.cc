@@ -505,7 +505,7 @@ static void StartInterrupt(void)
 
 	gTacticalStatus.fInterruptOccurred = TRUE;
 
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		s->bMovedPriorToInterrupt = s->bMoved;
 		s->bMoved                 = TRUE;
@@ -716,7 +716,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 		SOLDIERTYPE* const interrupted = LatestInterruptGuy();
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: interrupt over, %d's team regains control", interrupted->ubID));
 
-		FOR_ALL_SOLDIERS(s)
+		FOR_EACH_SOLDIER(s)
 		{
 			// AI guys only here...
 			if (s->bActionPoints == 0)

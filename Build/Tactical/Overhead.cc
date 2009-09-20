@@ -453,7 +453,7 @@ void InitOverhead()
 void ShutdownOverhead(void)
 {
 	// Delete any soldiers which have been created!
-	FOR_ALL_SOLDIERS(i) DeleteSoldier(*i);
+	FOR_EACH_SOLDIER(i) DeleteSoldier(*i);
 }
 
 
@@ -2346,7 +2346,7 @@ void SlideTo(SOLDIERTYPE* const tgt, const BOOLEAN fSetLocator)
 {
 	if (fSetLocator == SETANDREMOVEPREVIOUSLOCATOR)
 	{
-		FOR_ALL_SOLDIERS(s)
+		FOR_EACH_SOLDIER(s)
 		{
 			if (s->bInSector)
 			{
@@ -2387,7 +2387,7 @@ void SlideToLocation(const INT16 sDestGridNo)
 
 void RebuildAllSoldierShadeTables(void)
 {
-	FOR_ALL_SOLDIERS(i) CreateSoldierPalettes(*i);
+	FOR_EACH_SOLDIER(i) CreateSoldierPalettes(*i);
 }
 
 
@@ -4021,7 +4021,7 @@ void CommonEnterCombatModeCode( )
 
 	// OK, loop thorugh all guys and stop them!
 	// Loop through all mercs and make go
-	FOR_ALL_SOLDIERS(pSoldier)
+	FOR_EACH_SOLDIER(pSoldier)
 	{
 		if ( pSoldier->bInSector && pSoldier->ubBodyType != CROW )
 		{
@@ -4165,7 +4165,7 @@ void ExitCombatMode( )
 	// Set virgin sector to true....
 	gTacticalStatus.fVirginSector = TRUE;
 
-	FOR_ALL_SOLDIERS(pSoldier)
+	FOR_EACH_SOLDIER(pSoldier)
 	{
 		if ( pSoldier->bInSector )
 		{
@@ -4968,7 +4968,7 @@ UINT8 NumPCsInSector(void)
 UINT8 NumEnemyInSector()
 {
 	UINT8 n_enemies = 0;
-	CFOR_ALL_SOLDIERS(i)
+	CFOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (!s.bInSector) continue;
@@ -4984,7 +4984,7 @@ UINT8 NumEnemyInSector()
 static UINT8 NumEnemyInSectorExceptCreatures()
 {
 	UINT8 n_enemies = 0;
-	CFOR_ALL_SOLDIERS(i)
+	CFOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (!s.bInSector)             continue;
@@ -5001,7 +5001,7 @@ static UINT8 NumEnemyInSectorExceptCreatures()
 static UINT8 NumEnemyInSectorNotDeadOrDying()
 {
 	UINT8 n_enemies = 0;
-	CFOR_ALL_SOLDIERS(i)
+	CFOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (!s.bInSector)                   continue;
@@ -5021,7 +5021,7 @@ static UINT8 NumEnemyInSectorNotDeadOrDying()
 static UINT8 NumBloodcatsInSectorNotDeadOrDying()
 {
 	UINT8 n_enemies = 0;
-	CFOR_ALL_SOLDIERS(i)
+	CFOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (!s.bInSector)                   continue;
@@ -5042,7 +5042,7 @@ static UINT8 NumBloodcatsInSectorNotDeadOrDying()
 UINT8 NumCapableEnemyInSector()
 {
 	UINT8 n_enemies = 0;
-	CFOR_ALL_SOLDIERS(i)
+	CFOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (!s.bInSector)                   continue;
@@ -5212,7 +5212,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 static bool KillIncompacitatedEnemyInSector()
 {
 	bool ret = false;
-	FOR_ALL_SOLDIERS(i)
+	FOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE& s = *i;
 		if (!s.bInSector)                   continue;
@@ -5959,7 +5959,7 @@ SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* const target)
 
 void ResetAllMercSpeeds(void)
 {
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		if (s->bInSector) SetSoldierAniSpeed(s);
 	}
@@ -6001,7 +6001,7 @@ static void HandleBloodForNewGridNo(const SOLDIERTYPE* pSoldier)
 
 void CencelAllActionsForTimeCompression( void )
 {
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		if (!s->bInSector) continue;
 
@@ -6139,7 +6139,7 @@ void InitializeTacticalStatusAtBattleStart(void)
 	}
 
 	// loop through everyone; clear misc flags
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		s->ubMiscSoldierFlags = 0;
 	}

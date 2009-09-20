@@ -2065,7 +2065,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 			s.bOppCnt > 0) // opponents in sight
 	{
 		// Check each possible enemy
-		CFOR_ALL_SOLDIERS(enemy)
+		CFOR_EACH_SOLDIER(enemy)
 		{
 			// If this guy is here and alive enough to be looking for us
 			if (!enemy->bInSector)     continue;
@@ -7204,7 +7204,7 @@ static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEA
 	if (pSoldier->ubServiceCount <= 0) return;
 
 	// Loop through guys who have us as servicing
-	FOR_ALL_SOLDIERS(pTSoldier)
+	FOR_EACH_SOLDIER(pTSoldier)
 	{
 		if (pTSoldier->service_partner == pSoldier)
 		{
@@ -9003,7 +9003,7 @@ void SetSoldierAsUnderAiControl( SOLDIERTYPE *pSoldierToSet )
 		return;
 	}
 
-	FOR_ALL_SOLDIERS(s)
+	FOR_EACH_SOLDIER(s)
 	{
 		s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 	}
