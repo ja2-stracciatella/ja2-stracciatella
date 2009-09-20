@@ -15,9 +15,6 @@
 #define		AIM_LINK_TITLE_FONT						FONT14ARIAL
 #define		AIM_LINK_TITLE_COLOR					AIM_GREEN
 
-#define   AIM_LINK_FONT									FONT12ARIAL
-#define   AIM_LINK_COLOR								AIM_FONT_GOLD
-
 #define		AIM_LINK_NUM_LINKS						3
 
 #define		AIM_LINK_LINK_OFFSET_Y				94//90
@@ -37,8 +34,6 @@
 #define		AIM_LINK_TITLE_X							IMAGE_OFFSET_X + 149
 #define		AIM_LINK_TITLE_Y							AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y + 10
 #define		AIM_LINK_TITLE_WIDTH					AIM_SYMBOL_WIDTH
-
-#define		AIM_LINK_LINK_TEXT_1_Y				AIM_LINK_BOBBY_LINK_Y + 71
 
 
 static SGPVObject* guiBobbyLink;
