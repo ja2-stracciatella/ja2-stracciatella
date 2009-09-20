@@ -129,19 +129,19 @@ static BOOLEAN gfRedrawOptionsScreen = TRUE;
 static ScreenID guiOptionsScreen        = OPTIONS_SCREEN;
 ScreenID        guiPreviousOptionScreen = OPTIONS_SCREEN;
 
-BOOLEAN		gfExitOptionsDueToMessageBox=FALSE;
-BOOLEAN		gfExitOptionsAfterMessageBox = FALSE;
+static BOOLEAN gfExitOptionsDueToMessageBox = FALSE;
+static BOOLEAN gfExitOptionsAfterMessageBox = FALSE;
 
 
-UINT32		guiSoundFxSliderMoving = 0xffffffff;
-UINT32		guiSpeechSliderMoving = 0xffffffff;
+static UINT32 guiSoundFxSliderMoving = 0xFFFFFFFF;
+static UINT32 guiSpeechSliderMoving  = 0xFFFFFFFF;
 
-INT8			gbHighLightedOptionText = -1;
+static INT8 gbHighLightedOptionText = -1;
 
 
-BOOLEAN		gfSettingOfTreeTopStatusOnEnterOfOptionScreen;
-BOOLEAN		gfSettingOfItemGlowStatusOnEnterOfOptionScreen;
-BOOLEAN   gfSettingOfDontAnimateSmoke;
+static BOOLEAN gfSettingOfTreeTopStatusOnEnterOfOptionScreen;
+static BOOLEAN gfSettingOfItemGlowStatusOnEnterOfOptionScreen;
+static BOOLEAN gfSettingOfDontAnimateSmoke;
 
 static BUTTON_PICS* giOptionsButtonImages;
 static GUIButtonRef guiOptGotoSaveGameBtn;
@@ -151,16 +151,16 @@ static GUIButtonRef guiDoneButton;
 
 
 //checkbox to toggle tracking mode on or off
-GUIButtonRef guiOptionsToggles[NUM_GAME_OPTIONS];
+static GUIButtonRef guiOptionsToggles[NUM_GAME_OPTIONS];
 static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 //Mouse regions for the name of the option
-MOUSE_REGION    gSelectedOptionTextRegion[ NUM_GAME_OPTIONS ];
+static MOUSE_REGION gSelectedOptionTextRegion[NUM_GAME_OPTIONS];
 
 
 //Mouse regions for the area around the toggle boxs
-MOUSE_REGION    gSelectedToggleBoxAreaRegion;
+static MOUSE_REGION gSelectedToggleBoxAreaRegion;
 
 
 static void EnterOptionsScreen(void);
