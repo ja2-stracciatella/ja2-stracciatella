@@ -600,7 +600,7 @@ static void RemoveGroupFromList(GROUP* const g)
 
 GROUP* GetGroup( UINT8 ubGroupID )
 {
-	FOR_ALL_GROUPS(curr)
+	FOR_EACH_GROUP(curr)
 	{
 		if( curr->ubGroupID == ubGroupID )
 			return curr;
@@ -892,7 +892,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 		if( gubNumGroupsArrivedSimultaneously )
 		{ //Because this is a battle case, clear all the group flags
-			FOR_ALL_GROUPS(curr)
+			FOR_EACH_GROUP(curr)
 			{
 				if (gubNumGroupsArrivedSimultaneously == 0) break;
 				if( curr->uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY )
@@ -1435,7 +1435,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 
 			if (gubNumGroupsArrivedSimultaneously != 0)
 			{
-				FOR_ALL_GROUPS_SAFE(i)
+				FOR_EACH_GROUP_SAFE(i)
 				{
 					GROUP& g = *i;
 					if (!(g.uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY)) continue;
@@ -1573,7 +1573,7 @@ static void PrepareGroupsForSimultaneousArrival()
 
 	/* Now, go through the list again, and reset their arrival event to the latest
 	 * arrival time. */
-	FOR_ALL_GROUPS(i)
+	FOR_EACH_GROUP(i)
 	{
 		GROUP& g = *i;
 		if (!(g.uiFlags & GROUPFLAG_MARKER)) continue;
@@ -2509,10 +2509,10 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 {
 	// Save the number of movement groups to the saved game file
 	UINT32 uiNumberOfGroups = 0;
-	CFOR_ALL_GROUPS(g) ++uiNumberOfGroups;
+	CFOR_EACH_GROUP(g) ++uiNumberOfGroups;
 	FileWrite(f, &uiNumberOfGroups, sizeof(UINT32));
 
-	CFOR_ALL_GROUPS(g)
+	CFOR_EACH_GROUP(g)
 	{
 		BYTE data[84];
 		BYTE* d = data;
@@ -2637,7 +2637,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 	//@@@ TEMP!
 	//Rebuild the uniqueIDMask as a very old bug broke the uniqueID assignments in extremely rare cases.
 	memset(uniqueIDMask, 0, sizeof(uniqueIDMask));
-	CFOR_ALL_GROUPS(g)
+	CFOR_EACH_GROUP(g)
 	{
 		const UINT32 index = g->ubGroupID / 32;
 		const UINT32 bit   = g->ubGroupID % 32;
@@ -3004,7 +3004,7 @@ void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY )
 	INT16 sSectorX, sSectorY, sSectorZ;
 
 	GetCurrentBattleSectorXYZ( &sSectorX, &sSectorY, &sSectorZ );
-	FOR_ALL_GROUPS_SAFE(pGroup)
+	FOR_EACH_GROUP_SAFE(pGroup)
 	{
 		if( !pGroup->fPlayer )
 		{
@@ -3098,7 +3098,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 	if ( fDoChange )
 	{
 		//Remove all empty groups
-		FOR_ALL_GROUPS_SAFE(i)
+		FOR_EACH_GROUP_SAFE(i)
 		{
 			GROUP& g = *i;
 			if (g.ubGroupSize == 0 && !g.fPersistant) RemoveGroup(g);

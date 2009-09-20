@@ -1329,7 +1329,7 @@ static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 {
 	// IMPORTANT: Have to do this by group, so everyone inside vehicles gets assigned to the same squad.  Needed for
 	// the tactical placement interface to work in case of simultaneous multi-vehicle arrivals!
-	FOR_ALL_GROUPS_SAFE(i)
+	FOR_EACH_GROUP_SAFE(i)
 	{
 		GROUP& g = *i;
 		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
@@ -1421,7 +1421,7 @@ void WakeUpAllMercsInSectorUnderAttack()
 // we are entering the sector, clear out all mvt orders for grunts
 static void ClearMovementForAllInvolvedPlayerGroups(void)
 {
-	FOR_ALL_GROUPS(i)
+	FOR_EACH_GROUP(i)
 	{
 		GROUP& g = *i;
 		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
@@ -1436,7 +1436,7 @@ void RetreatAllInvolvedPlayerGroups( void )
 	// but don't exit vehicles - drive off in them!
 	PutNonSquadMercsInBattleSectorOnSquads( FALSE );
 
-	FOR_ALL_GROUPS(i)
+	FOR_EACH_GROUP(i)
 	{
 		GROUP& g = *i;
 		if (!PlayerGroupInvolvedInThisCombat(g)) continue;

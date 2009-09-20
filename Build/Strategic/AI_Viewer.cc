@@ -429,7 +429,7 @@ static void RenderMovingGroupsAndMercs(void)
 	SetFontShadow( FONT_NEARBLACK );
 
 	//Render groups that are moving...
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_EACH_GROUP(pGroup)
 	{
 		if( pGroup->ubGroupSize && !pGroup->fVehicle)
 		{

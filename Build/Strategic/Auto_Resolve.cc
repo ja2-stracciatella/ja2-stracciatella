@@ -378,7 +378,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 		pSector->ubNumAdmins = 0;
 		pSector->ubNumCreatures = 0;
 		//Remove the mobile forces here, but only if battle is over.
-		FOR_ALL_GROUPS_SAFE(i)
+		FOR_EACH_GROUP_SAFE(i)
 		{
 			GROUP& g = *i;
 			if (g.fPlayer)                continue;
@@ -2248,7 +2248,7 @@ static void CalculateAutoResolveInfo(void)
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 	gpAR->ubCivs = CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY );
 	gpAR->ubMercs = 0;
-	CFOR_ALL_GROUPS(i)
+	CFOR_EACH_GROUP(i)
 	{
 		GROUP const& g = *i;
 		if (!PlayerGroupInvolvedInThisCombat(g)) continue;

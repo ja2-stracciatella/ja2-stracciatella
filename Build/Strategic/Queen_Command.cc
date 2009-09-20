@@ -495,7 +495,7 @@ void PrepareEnemyForSectorBattle()
 	/* Now, process all of the groups and search for both enemy and player groups
 	 * in the sector. For enemy groups, we fill up the slots until we have none
 	 * left or all of the groups have been processed. */
-	FOR_ALL_GROUPS(g)
+	FOR_EACH_GROUP(g)
 	{
 		if (n_slots == 0) break;
 

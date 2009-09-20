@@ -684,7 +684,7 @@ static void ValidateLargeGroup(GROUP* pGroup)
 #ifdef JA2BETAVERSION
 static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE& s)
 {
-	FOR_ALL_GROUPS_SAFE(i)
+	FOR_EACH_GROUP_SAFE(i)
 	{
 		GROUP& g = *i;
 		if (!g.fPlayer) continue;
@@ -3133,7 +3133,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	{ //Patch all groups that have this flag set
 		gubNumGroupsArrivedSimultaneously = 0;
 		{
-			FOR_ALL_GROUPS(pGroup)
+			FOR_EACH_GROUP(pGroup)
 			{
 				if( pGroup->uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY )
 				{
@@ -3178,7 +3178,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	}
 	if( ubSAIVersion < 21 )
 	{
-		FOR_ALL_GROUPS(pGroup) pGroup->uiFlags = 0;
+		FOR_EACH_GROUP(pGroup) pGroup->uiFlags = 0;
 	}
 	if( ubSAIVersion < 22 )
 	{ //adjust down the number of bloodcats based on difficulty in the two special bloodcat levels
@@ -3316,7 +3316,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( 3, 16 ) ].fEnemyControlled )
 		{ //Eliminate all enemy groups in this sector, because the player owns the sector, and it is not
 			//possible for them to spawn there!
-			FOR_ALL_GROUPS_SAFE(i)
+			FOR_EACH_GROUP_SAFE(i)
 			{
 				GROUP& g = *i;
 				if (g.fPlayer)         continue;
@@ -3342,7 +3342,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	EvolveQueenPriorityPhase( TRUE );
 
 	//Count and correct the floating groups
-	FOR_ALL_GROUPS_SAFE(pGroup)
+	FOR_EACH_GROUP_SAFE(pGroup)
 	{
 		if( !pGroup->fPlayer )
 		{
