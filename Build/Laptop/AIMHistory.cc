@@ -55,13 +55,13 @@
 
 static SGPVObject* guiContentButton;
 
-static UINT8 gubCurPageNum;
-BOOLEAN		gfInToc =  FALSE;
-BOOLEAN		gfExitingAimHistory;
-BOOLEAN		AimHistorySubPagesVisitedFlag[ NUM_AIM_HISTORY_PAGES ];
+static UINT8   gubCurPageNum;
+static BOOLEAN gfInToc =  FALSE;
+static BOOLEAN gfExitingAimHistory;
+static BOOLEAN AimHistorySubPagesVisitedFlag[NUM_AIM_HISTORY_PAGES];
 
 
-MOUSE_REGION    gSelectedHistoryTocMenuRegion[ NUM_AIM_HISTORY_PAGES ];
+static MOUSE_REGION gSelectedHistoryTocMenuRegion[NUM_AIM_HISTORY_PAGES];
 
 static GUIButtonRef guiHistoryMenuButton[AIM_HISTORY_MENU_BUTTON_AMOUNT];
 static BUTTON_PICS* guiHistoryMenuButtonImage;
