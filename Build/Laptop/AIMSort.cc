@@ -104,13 +104,13 @@ UINT8			gubCurrentListMode;
 
 // Mouse stuff
 //Clicking on To Mugshot
-MOUSE_REGION    gSelectedToMugShotRegion;
+static MOUSE_REGION gSelectedToMugShotRegion;
 
 //Clicking on ToStats
-MOUSE_REGION    gSelectedToStatsRegion;
+static MOUSE_REGION gSelectedToStatsRegion;
 
 //Clicking on ToStats
-MOUSE_REGION    gSelectedToArchiveRegion;
+static MOUSE_REGION gSelectedToArchiveRegion;
 
 
 static SGPVObject* guiSortByBox;
