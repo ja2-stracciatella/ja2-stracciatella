@@ -6566,7 +6566,7 @@ BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const& g)
 {
 	BOOLEAN group_must_stop = FALSE;
 	UINT16  quote           = QUOTE_NEED_SLEEP;
-	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
+	CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 	{
 		if (!i->pSoldier) continue;
 		SOLDIERTYPE& s = *i->pSoldier;

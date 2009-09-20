@@ -2253,7 +2253,7 @@ static void CalculateAutoResolveInfo(void)
 		GROUP const& g = *i;
 		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
 
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
+		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
 		{
 			SOLDIERTYPE& s = *pPlayer->pSoldier;
 			// NOTE: Must check each merc individually, e.g. Robot without controller is an uninvolved merc on an involved group!

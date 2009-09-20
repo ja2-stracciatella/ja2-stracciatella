@@ -801,7 +801,7 @@ static void VerifyAllMercsInGroupAreOnSameSquad(GROUP const& g)
 	INT8 bSquad = -1;
 
 	// Let's choose somebody in group.....
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
+	CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
 	{
 		pSoldier = pPlayer->pSoldier;
 		Assert( pSoldier );
@@ -1122,7 +1122,7 @@ void ClearMercPathsAndWaypointsForAllInGroup(GROUP& g)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
+	CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
 	{
 		pSoldier = pPlayer->pSoldier;
 
@@ -1181,7 +1181,7 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 	{
 		pSoldier = pPlayer->pSoldier;
 

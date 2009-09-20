@@ -138,7 +138,7 @@ extern GROUP *gpGroupList;
 		if (iter##__next = iter->next, FALSE) {} else                                    \
 
 
-#define CFOR_ALL_PLAYERS_IN_GROUP(iter, group) \
+#define CFOR_EACH_PLAYER_IN_GROUP(iter, group) \
 	for (PLAYERGROUP const* iter = (Assert((group)->fPlayer), (group)->pPlayerList); iter; iter = iter->next)
 
 

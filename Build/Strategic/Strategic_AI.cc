@@ -690,7 +690,7 @@ static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE& s)
 		if (!g.fPlayer) continue;
 		if (s.ubGroupID == g.ubGroupID) continue;
 
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
+		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
 		{
 			if (pPlayer->pSoldier != &s) continue;
 			RemovePlayerFromPGroup(g, s);
@@ -730,7 +730,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 		//               the merc exists in.
 		CFOR_ALL_PLAYER_GROUPS(pGroup)
 		{
-			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+			CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 			{
 				if( pPlayer->pSoldier == pSoldier )
 				{
@@ -761,7 +761,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					const GROUP* pOtherGroup = NULL;
 					CFOR_ALL_PLAYER_GROUPS(pGroup)
 					{
-						CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 						{
 							if( pPlayer->pSoldier == pSoldier )
 							{
@@ -801,7 +801,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					const GROUP* pOtherGroup = NULL;
 					CFOR_ALL_PLAYER_GROUPS(pGroup)
 					{
-						CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 						{
 							if( pPlayer->pSoldier == pSoldier )
 							{

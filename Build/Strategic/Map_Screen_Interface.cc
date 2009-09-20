@@ -1438,7 +1438,7 @@ void RandomMercInGroupSaysQuote(GROUP const& g, UINT16 const quote_num)
 	// Choose somebody in group
 	SOLDIERTYPE* mercs_in_group[20];
 	UINT8        n_mercs = 0;
-	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
+	CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 	{
 		SOLDIERTYPE& s = *i->pSoldier;
 		if (s.bLife < OKLIFE) continue;

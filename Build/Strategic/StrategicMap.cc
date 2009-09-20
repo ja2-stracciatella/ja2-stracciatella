@@ -1866,7 +1866,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	{	//For player groups, update the soldier information
 		UINT8				ubNum = 0;
 
-		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
+		CFOR_EACH_PLAYER_IN_GROUP(curr, pGroup)
 		{
 			if ( OK_CONTROLLABLE_MERC( curr->pSoldier) )
 			{
@@ -1926,7 +1926,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 		// ATE: Do another round, removing guys from group that can't go on...
 BEGINNING_LOOP:
-		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
+		CFOR_EACH_PLAYER_IN_GROUP(curr, pGroup)
 		{
 			if ( !OK_CONTROLLABLE_MERC( curr->pSoldier ) )
 			{
@@ -2001,7 +2001,7 @@ void AllMercsWalkedToExitGrid()
 	if( gubAdjacentJumpCode == JUMP_ALL_NO_LOAD || gubAdjacentJumpCode == JUMP_SINGLE_NO_LOAD )
 	{
 		Assert( gpAdjacentGroup );
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
+		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
 			SOLDIERTYPE& s = *pPlayer->pSoldier;
 			SetInsertionDataFromAdjacentMoveDirection(s, gubTacticalDirection, gsAdditionalData);
@@ -2045,7 +2045,7 @@ void AllMercsWalkedToExitGrid()
 
 		// OK, Set insertion direction for all these guys....
 		Assert( gpAdjacentGroup );
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
+		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
 			SetInsertionDataFromAdjacentMoveDirection(*pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData);
 		}
@@ -2072,7 +2072,7 @@ static void SetupTacticalTraversalInformation(void)
 	INT16 sScreenX, sScreenY;
 
 	Assert( gpAdjacentGroup );
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
+	CFOR_EACH_PLAYER_IN_GROUP(pPlayer, gpAdjacentGroup)
 	{
 		SOLDIERTYPE& s = *pPlayer->pSoldier;
 
@@ -2160,7 +2160,7 @@ void AllMercsHaveWalkedOffSector( )
 	if( ( gubAdjacentJumpCode == JUMP_ALL_NO_LOAD || gubAdjacentJumpCode == JUMP_SINGLE_NO_LOAD ) )
 	{ //Case 1:  Group is leaving sector, but there are other mercs in sector and player wants to stay, or
 		//         there are other mercs in sector while a battle is in progress.
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
+		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
 			RemoveSoldierFromTacticalSector(*pPlayer->pSoldier);
 		}
@@ -2271,7 +2271,7 @@ static void DoneFadeOutAdjacentSector(void)
 		UINT32 uiAttempts;
 		INT16				sGridNo, sOldGridNo;
 		UINT8				ubNum = 0;
-		CFOR_ALL_PLAYERS_IN_GROUP(curr, gpAdjacentGroup)
+		CFOR_EACH_PLAYER_IN_GROUP(curr, gpAdjacentGroup)
 		{
 			if (curr->pSoldier->sGridNo != NOWHERE)
 			{
@@ -3960,7 +3960,7 @@ static void HandlePotentialMoraleHitForSkimmingSectors(GROUP* pGroup)
 		//time to setup a good ambush!
 		pGroup->uiFlags |= GROUPFLAG_HIGH_POTENTIAL_FOR_AMBUSH;
 
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 	  {
       // Do morale hit...
       // CC look here!
