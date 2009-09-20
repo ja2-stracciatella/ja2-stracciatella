@@ -707,11 +707,11 @@ static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT
 
 	// Save the number of the rotting corpses
 	UINT32 n_corpses = 0;
-	CFOR_ALL_ROTTING_CORPSES(c) ++n_corpses;
+	CFOR_EACH_ROTTING_CORPSE(c) ++n_corpses;
 	FileWrite(f, &n_corpses, sizeof(UINT32));
 
 	// Loop through all the carcases in the array and save the active ones
-	CFOR_ALL_ROTTING_CORPSES(c)
+	CFOR_EACH_ROTTING_CORPSE(c)
 	{
 		InjectRottingCorpseIntoFile(f, &c->def);
 	}

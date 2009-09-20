@@ -165,14 +165,14 @@ static inline ROTTING_CORPSE* ID2Corpse(const UINT32 id)
 #define CORPSE2ID(c) (Corpse2ID((c)))
 #define ID2CORPSE(i) (ID2Corpse((i)))
 
-#define BASE_FOR_ALL_ROTTING_CORPSES(type, iter)                      \
+#define BASE_FOR_EACH_ROTTING_CORPSE(type, iter)                      \
 	for (type*       iter        = gRottingCorpse,                      \
 	         * const end__##iter = gRottingCorpse + giNumRottingCorpse; \
 	     iter != end__##iter;                                           \
 	     ++iter)                                                        \
 	  if (!iter->fActivated) continue; else
-#define  FOR_ALL_ROTTING_CORPSES(iter) BASE_FOR_ALL_ROTTING_CORPSES(      ROTTING_CORPSE, iter)
-#define CFOR_ALL_ROTTING_CORPSES(iter) BASE_FOR_ALL_ROTTING_CORPSES(const ROTTING_CORPSE, iter)
+#define  FOR_EACH_ROTTING_CORPSE(iter) BASE_FOR_EACH_ROTTING_CORPSE(      ROTTING_CORPSE, iter)
+#define CFOR_EACH_ROTTING_CORPSE(iter) BASE_FOR_EACH_ROTTING_CORPSE(const ROTTING_CORPSE, iter)
 
 ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo , INT8 bLevel );
 BOOLEAN IsValidDecapitationCorpse(const ROTTING_CORPSE* c);

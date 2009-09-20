@@ -550,7 +550,7 @@ static void RemoveCorpse(ROTTING_CORPSE* c);
 
 void RemoveCorpses( )
 {
-	FOR_ALL_ROTTING_CORPSES(c) RemoveCorpse(c);
+	FOR_EACH_ROTTING_CORPSE(c) RemoveCorpse(c);
 	giNumRottingCorpse = 0;
 }
 
@@ -774,7 +774,7 @@ INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier )
 	INT16 sLowestGridNo = NOWHERE;
 
 	// OK, loop through our current listing of bodies
-	CFOR_ALL_ROTTING_CORPSES(c)
+	CFOR_EACH_ROTTING_CORPSE(c)
 	{
 		// Check rotting state
 		if (c->def.ubType == ROTTING_STAGE2)
@@ -1406,7 +1406,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 INT16 GetGridNoOfCorpseGivenProfileID(const UINT8 ubProfileID)
 {
 	// Loop through all corpses....
-	CFOR_ALL_ROTTING_CORPSES(c)
+	CFOR_EACH_ROTTING_CORPSE(c)
 	{
 		if (c->def.ubProfile == ubProfileID) return c->def.sGridNo;
   }
@@ -1416,7 +1416,7 @@ INT16 GetGridNoOfCorpseGivenProfileID(const UINT8 ubProfileID)
 
 void DecayRottingCorpseAIWarnings(void)
 {
-	FOR_ALL_ROTTING_CORPSES(c)
+	FOR_EACH_ROTTING_CORPSE(c)
 	{
 		if (c->def.ubAIWarningValue > 0) --c->def.ubAIWarningValue;
 	}
@@ -1426,7 +1426,7 @@ void DecayRottingCorpseAIWarnings(void)
 UINT8 GetNearestRottingCorpseAIWarning(const INT16 sGridNo)
 {
 	UINT8 ubHighestWarning = 0;
-	CFOR_ALL_ROTTING_CORPSES(c)
+	CFOR_EACH_ROTTING_CORPSE(c)
 	{
 		if (c->def.ubAIWarningValue > 0                                    &&
 				PythSpacesAway(sGridNo, c->def.sGridNo) <= CORPSE_WARNING_DIST &&
