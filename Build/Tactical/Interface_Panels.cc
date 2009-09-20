@@ -366,7 +366,7 @@ struct TeamPanelSlot
 
 static TeamPanelSlot gTeamPanel[NUM_TEAM_SLOTS];
 
-#define FOR_ALL_TEAM_PANEL_SLOTS(iter) FOR_EACH(TeamPanelSlot, iter, gTeamPanel)
+#define FOR_EACH_TEAM_PANEL_SLOT(iter) FOR_EACH(TeamPanelSlot, iter, gTeamPanel)
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
@@ -545,7 +545,7 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	}
 	else
 	{
-		FOR_ALL_TEAM_PANEL_SLOTS(i)
+		FOR_EACH_TEAM_PANEL_SLOT(i)
 		{
 			if (i->merc != pSoldier)       continue;
 			if (!IsMouseInRegion(i->face)) continue;
@@ -2222,7 +2222,7 @@ void InitializeTEAMPanel(void)
 
 	INT32       dx = 0;
 	INT32 const dy = INTERFACE_START_Y;
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		TeamPanelSlot& tp = *i;
 
@@ -2261,7 +2261,7 @@ void ShutdownTEAMPanel(void)
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);
 
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		MSYS_RemoveRegion(&i->face);
 		MSYS_RemoveRegion(&i->enemy_indicator);
@@ -2311,7 +2311,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 		// LOOP THROUGH ALL MERCS ON TEAM PANEL
 		INT32       dx = 0;
 		INT32 const dy = INTERFACE_START_Y;
-		FOR_ALL_TEAM_PANEL_SLOTS(i)
+		FOR_EACH_TEAM_PANEL_SLOT(i)
 		{
 			SOLDIERTYPE const* const s  = i->merc;
 			if (s)
@@ -2393,7 +2393,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 	// Loop through all mercs and make go
 	INT32       dx = 0;
 	INT32 const dy = INTERFACE_START_Y;
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		SOLDIERTYPE* const s = i->merc;
 		if (s)
@@ -2534,7 +2534,7 @@ static void UpdateTEAMPanel(void)
 		DisableButton(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
 		// OK, disable item regions.......
-		FOR_ALL_TEAM_PANEL_SLOTS(i)
+		FOR_EACH_TEAM_PANEL_SLOT(i)
 		{
 			i->enemy_indicator.Disable();
 			i->first_hand.Disable();
@@ -2549,7 +2549,7 @@ static void UpdateTEAMPanel(void)
 	{
 		EnableButton(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
-		FOR_ALL_TEAM_PANEL_SLOTS(i)
+		FOR_EACH_TEAM_PANEL_SLOT(i)
 		{
 			i->enemy_indicator.Enable();
 			i->first_hand.Enable();
@@ -3020,7 +3020,7 @@ static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static BOOLEAN PlayerExistsInSlot(const SOLDIERTYPE* const s)
 {
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		if (i->merc == s) return TRUE;
 	}
@@ -3033,7 +3033,7 @@ static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot&);
 
 BOOLEAN RemovePlayerFromTeamSlot(const SOLDIERTYPE* const s)
 {
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		if (i->merc != s) continue;
 		RemovePlayerFromInterfaceTeamSlot(*i);
@@ -3048,7 +3048,7 @@ static void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 	if (PlayerExistsInSlot(s)) return;
 
 	// Find a free slot
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		if (i->merc) continue;
 		i->merc = s;
@@ -3060,7 +3060,7 @@ static void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 
 void InitTEAMSlots(void)
 {
-	FOR_ALL_TEAM_PANEL_SLOTS(i) i->merc = 0;
+	FOR_EACH_TEAM_PANEL_SLOT(i) i->merc = 0;
 }
 
 
@@ -3073,7 +3073,7 @@ SOLDIERTYPE* GetPlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 
 void RemoveAllPlayersFromSlot(void)
 {
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		if (!i->merc) continue;
 		RemovePlayerFromInterfaceTeamSlot(*i);
@@ -3157,7 +3157,7 @@ SOLDIERTYPE* FindNextMercInTeamPanel(SOLDIERTYPE* const prev)
 {
 	bool         seen_prev = false;
 	SOLDIERTYPE* before    = 0;
-	FOR_ALL_TEAM_PANEL_SLOTS(i)
+	FOR_EACH_TEAM_PANEL_SLOT(i)
 	{
 		SOLDIERTYPE* const s = i->merc;
 		if (!s) continue;
