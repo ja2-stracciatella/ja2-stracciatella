@@ -650,7 +650,7 @@ void SetUpHelicopterForMovement( void )
 		v.ubMovementGroup = g.ubGroupID;
 
 		// add everyone in vehicle to this mvt group
-		CFOR_ALL_PASSENGERS(v, i)
+		CFOR_EACH_PASSENGER(v, i)
 		{
 			AddPlayerToGroup(g, **i);
 		}
@@ -784,7 +784,7 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 
 	// go through list of everyone in helicopter
 	VEHICLETYPE const& v = GetHelicopter();
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_EACH_PASSENGER(v, i)
 	{
 		SOLDIERTYPE* const pSoldier = *i;
 		Assert(InHelicopter(*pSoldier));

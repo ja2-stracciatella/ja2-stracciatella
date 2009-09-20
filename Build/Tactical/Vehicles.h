@@ -36,7 +36,7 @@ struct VEHICLETYPE
  BOOLEAN fValid;
 };
 
-#define CFOR_ALL_PASSENGERS(v, iter)                                                   \
+#define CFOR_EACH_PASSENGER(v, iter)                                                   \
 	for (SOLDIERTYPE* const*       iter        = (v).pPassengers,                        \
 	                * const* const end__##iter = (v).pPassengers + GetVehicleSeats((v)); \
 	     iter != end__##iter;                                                            \

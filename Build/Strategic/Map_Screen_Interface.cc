@@ -2041,7 +2041,7 @@ static void SelectVehicleForMovement(INT32 const vehicle_id, BOOLEAN const and_a
 		bool               first_failure = true;
 		bool               has_driver    = false;
 		VEHICLETYPE const& v             = pVehicleList[vehicle_id];
-		CFOR_ALL_PASSENGERS(v, k)
+		CFOR_EACH_PASSENGER(v, k)
 		{
 			SOLDIERTYPE& s = **k;
 
@@ -2083,7 +2083,7 @@ static void DeselectVehicleForMovement(INT32 const vehicle_id)
 
 		// Now deselect everyone in vehicle
 		VEHICLETYPE const& v = pVehicleList[vehicle_id];
-		CFOR_ALL_PASSENGERS(v, i)
+		CFOR_EACH_PASSENGER(v, i)
 		{
 			SOLDIERTYPE& s = **i;
 			if (s.bActive) DeselectSoldierForMovement(s);

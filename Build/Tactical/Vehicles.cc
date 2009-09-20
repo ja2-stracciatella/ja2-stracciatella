@@ -221,7 +221,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 	}
 
 	// check if the grunt is already here
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_EACH_PASSENGER(v, i)
 	{
 		if (*i == &s) return true; // guy found, no need to add
 	}
@@ -374,7 +374,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	else
 	{
 		// check if anyone left in vehicle
-		CFOR_ALL_PASSENGERS(v, i) return true;
+		CFOR_EACH_PASSENGER(v, i) return true;
 
 		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
@@ -482,7 +482,7 @@ static bool KillPersonInVehicle(SOLDIERTYPE& s)
 BOOLEAN KillAllInVehicle(VEHICLETYPE const& v)
 {
 	// go through list of occupants and kill them
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_EACH_PASSENGER(v, i)
 	{
 		if (!KillPersonInVehicle(**i)) return FALSE;
 	}
@@ -494,7 +494,7 @@ INT32 GetNumberInVehicle(VEHICLETYPE const& v)
 {
 	// go through list of occupants in vehicles and count them
 	INT32 count = 0;
-	CFOR_ALL_PASSENGERS(v, i) ++count;
+	CFOR_EACH_PASSENGER(v, i) ++count;
 	return count;
 }
 
@@ -505,7 +505,7 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 	VEHICLETYPE const& v = GetVehicle(iId);
 
 	INT32 count = 0;
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_EACH_PASSENGER(v, i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (!AM_AN_EPC(s)) ++count;
@@ -517,7 +517,7 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 {
 	VEHICLETYPE const& v = GetVehicle(iId);
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_EACH_PASSENGER(v, i)
 	{
 		if (ControllingRobot(*i)) return TRUE;
 	}
@@ -812,7 +812,7 @@ void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const x, UINT8 const y)
 	p.sSectorY = y;
 
 	// Go through list of mercs in vehicle and set all their states as arrived
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_EACH_PASSENGER(v, i)
 	{
 		SOLDIERTYPE& s = **i;
 		s.sSectorX        = x;
@@ -829,7 +829,7 @@ void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 	VEHICLETYPE const& v = pVehicleList[vs->bVehicleID];
 
 	// Loop through passengers and update each guy's position
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_EACH_PASSENGER(v, i)
 	{
 		EVENT_SetSoldierPositionXY(*i, vs->dXPos, vs->dYPos, SSP_NONE);
 	}
@@ -1035,7 +1035,7 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_vehicle[20];
-	CFOR_ALL_PASSENGERS(v, i) mercs_in_vehicle[n_mercs++] = *i;
+	CFOR_EACH_PASSENGER(v, i) mercs_in_vehicle[n_mercs++] = *i;
 
 	return n_mercs == 0 ? NULL : mercs_in_vehicle[Random(n_mercs)];
 }
