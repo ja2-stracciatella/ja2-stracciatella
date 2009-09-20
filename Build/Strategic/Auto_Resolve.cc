@@ -277,7 +277,7 @@ static SOLDIERCELL*        gpEnemies;
 #define FOR_EACH_AR_MERC(iter) \
 	for (SOLDIERCELL* iter = gpMercs, *const iter##__end = &gpMercs[gpAR->ubMercs]; iter != iter##__end; ++iter)
 
-#define FOR_ALL_AR_CIVS(iter) \
+#define FOR_EACH_AR_CIV(iter) \
 	for (SOLDIERCELL* iter = gpCivs, *const iter##__end = &gpCivs[gpAR->ubCivs]; iter != iter##__end; ++iter)
 
 #define FOR_EACH_AR_ENEMY(iter) \
@@ -332,7 +332,7 @@ static void EliminateAllFriendlies(void)
 			i->pSoldier->bLife = 0;
 		}
 		gpAR->ubAliveMercs = 0;
-		FOR_ALL_AR_CIVS(i)
+		FOR_EACH_AR_CIV(i)
 		{
 			i->pSoldier->bLife = 0;
 		}
@@ -1292,7 +1292,7 @@ static void RenderAutoResolve(void)
 			if (!(i->uiFlags & CELL_DIRTY)) continue;
 			RenderSoldierCell(i);
 		}
-		FOR_ALL_AR_CIVS(i)
+		FOR_EACH_AR_CIV(i)
 		{
 			if (!(i->uiFlags & CELL_DIRTY)) continue;
 			RenderSoldierCell(i);
@@ -1312,7 +1312,7 @@ static void RenderAutoResolve(void)
 	{
 		RenderSoldierCell(i);
 	}
-	FOR_ALL_AR_CIVS(i)
+	FOR_EACH_AR_CIV(i)
 	{
 		RenderSoldierCell(i);
 	}
@@ -2861,7 +2861,7 @@ static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 			gpAR->ubPlayerLeadership = i->pSoldier->bLeadership;
 			pBestLeaderCell          = i;
 		}
-		FOR_ALL_AR_CIVS(i)
+		FOR_EACH_AR_CIV(i)
 		{
 			if (gpAR->ubPlayerLeadership >= i->pSoldier->bLeadership) continue;
 			gpAR->ubPlayerLeadership = i->pSoldier->bLeadership;
@@ -3068,7 +3068,7 @@ static void CalculateAttackValues(void)
 	{
 		i->usNextAttack -= usBestAttack;
 	}
-	FOR_ALL_AR_CIVS(i)
+	FOR_EACH_AR_CIV(i)
 	{
 		i->usNextAttack -= usBestAttack;
 	}
@@ -4022,7 +4022,7 @@ static void ProcessBattleFrame(void)
 		iEnemies = iEnemiesLeft = gpAR->ubEnemies;
 		FOR_EACH_AR_MERC(i)
 			i->uiFlags &= ~CELL_PROCESSED;
-		FOR_ALL_AR_CIVS(i)
+		FOR_EACH_AR_CIV(i)
 			i->uiFlags &= ~CELL_PROCESSED;
 		FOR_EACH_AR_ENEMY(i)
 			i->uiFlags &= ~CELL_PROCESSED;
