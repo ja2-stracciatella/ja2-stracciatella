@@ -1753,7 +1753,7 @@ void SpreadEffectSmoke(const SMOKEEFFECT* const s, const BOOLEAN subsequent, con
 static void ToggleActionItemsByFrequency(INT8 bFrequency)
 {
 	// Go through all the bombs in the world, and look for remote ones
-	CFOR_ALL_WORLD_BOMBS(wb)
+	CFOR_EACH_WORLD_BOMB(wb)
 	{
 		OBJECTTYPE& o = GetWorldItem(wb->iItemIndex).o;
 		if (o.bDetonatorType == BOMB_REMOTE)
@@ -1779,7 +1779,7 @@ static void ToggleActionItemsByFrequency(INT8 bFrequency)
 static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
 {
 	// Go through all the bombs in the world, and look for remote ones
-	CFOR_ALL_WORLD_BOMBS(wb)
+	CFOR_EACH_WORLD_BOMB(wb)
 	{
 		WORLDITEM& wi = GetWorldItem(wb->iItemIndex);
 		if (wi.sGridNo != sGridNo) continue;
@@ -2523,7 +2523,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 void ActivateSwitchInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo)
 {
 	// Go through all the bombs in the world, and look for mines at this location
-	CFOR_ALL_WORLD_BOMBS(wb)
+	CFOR_EACH_WORLD_BOMB(wb)
 	{
 		WORLDITEM const& wi = GetWorldItem(wb->iItemIndex);
 		if (wi.sGridNo != sGridNo) continue;
@@ -2752,7 +2752,7 @@ static void HandleBuldingDestruction(const INT16 sGridNo, const SOLDIERTYPE* con
 static INT32 FindActiveTimedBomb(void)
 {
 	// Go through all the bombs in the world, and look for timed ones
-	FOR_ALL_WORLD_BOMBS(wb)
+	FOR_EACH_WORLD_BOMB(wb)
 	{
 		OBJECTTYPE const& o = GetWorldItem(wb->iItemIndex).o;
 		if (o.bDetonatorType != BOMB_TIMED || o.fFlags & OBJECT_DISABLED_BOMB) continue;

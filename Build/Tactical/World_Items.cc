@@ -80,7 +80,7 @@ static void RemoveBombFromWorldByItemIndex(INT32 iItemIndex)
 {
 	// Find the world bomb which corresponds with a particular world item, then
 	// remove the world bomb from the table.
-	FOR_ALL_WORLD_BOMBS(wb)
+	FOR_EACH_WORLD_BOMB(wb)
 	{
 		if (wb->iItemIndex != iItemIndex) continue;
 
@@ -92,7 +92,7 @@ static void RemoveBombFromWorldByItemIndex(INT32 iItemIndex)
 
 INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 {
-	CFOR_ALL_WORLD_BOMBS(wb)
+	CFOR_EACH_WORLD_BOMB(wb)
 	{
 		WORLDITEM const& wi = GetWorldItem(wb->iItemIndex);
 		if (wi.sGridNo != sGridNo || wi.ubLevel != bLevel) continue;
@@ -106,7 +106,7 @@ INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 void FindPanicBombsAndTriggers(void)
 {
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
-	CFOR_ALL_WORLD_BOMBS(wb)
+	CFOR_EACH_WORLD_BOMB(wb)
 	{
 		WORLDITEM  const& wi = GetWorldItem(wb->iItemIndex);
 		OBJECTTYPE const& o  = wi.o;

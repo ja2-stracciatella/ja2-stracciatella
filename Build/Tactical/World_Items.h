@@ -75,14 +75,14 @@ struct WORLDBOMB
 extern WORLDBOMB * gWorldBombs;
 extern UINT32 guiNumWorldBombs;
 
-#define BASE_FOR_ALL_WORLD_BOMBS(type, iter)                     \
+#define BASE_FOR_EACH_WORLD_BOMB(type, iter)                     \
 	for (type*       iter        = gWorldBombs,                    \
 	         * const end__##iter = gWorldBombs + guiNumWorldBombs; \
 	     iter != end__##iter;                                      \
 	     ++iter)                                                   \
 		if (!iter->fExists) continue; else
-#define FOR_ALL_WORLD_BOMBS( iter) BASE_FOR_ALL_WORLD_BOMBS(      WORLDBOMB, iter)
-#define CFOR_ALL_WORLD_BOMBS(iter) BASE_FOR_ALL_WORLD_BOMBS(const WORLDBOMB, iter)
+#define FOR_EACH_WORLD_BOMB( iter) BASE_FOR_EACH_WORLD_BOMB(      WORLDBOMB, iter)
+#define CFOR_EACH_WORLD_BOMB(iter) BASE_FOR_EACH_WORLD_BOMB(const WORLDBOMB, iter)
 
 extern void FindPanicBombsAndTriggers( void );
 extern INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel);

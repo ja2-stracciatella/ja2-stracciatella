@@ -3115,7 +3115,7 @@ BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const 
 		if (pMapElement->uiFlags & fCheckFlag) continue;
 
 		// check for boobytraps
-		CFOR_ALL_WORLD_BOMBS(wb)
+		CFOR_EACH_WORLD_BOMB(wb)
 		{
 			WORLDITEM& wi = GetWorldItem(wb->iItemIndex);
 			if (wi.sGridNo != sNextGridNo) continue;
