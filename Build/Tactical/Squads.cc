@@ -43,7 +43,7 @@ void InitSquads( void )
 	// null each list of ptrs.
 	for( iCounter = 0; iCounter <  NUMBER_OF_SQUADS; iCounter++ )
 	{
-		FOR_ALL_SLOTS_IN_SQUAD(i, iCounter)
+		FOR_EACH_SLOT_IN_SQUAD(i, iCounter)
 		{
 			*i = 0;
 		}
@@ -60,7 +60,7 @@ void InitSquads( void )
 BOOLEAN IsThisSquadFull( INT8 bSquadValue )
 {
 	// run through entries in the squad list, make sure there is a free entry
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_EACH_SLOT_IN_SQUAD(i, bSquadValue)
 	{
 		if (!*i) return FALSE;
 	}
@@ -107,7 +107,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 	// if squad is on the move, can't add someone
 	if (IsThisSquadOnTheMove(bSquadValue)) return FALSE;
 
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_EACH_SLOT_IN_SQUAD(i, bSquadValue)
 	{
 		SOLDIERTYPE const* const t = *i;
 		// check if on current squad and current slot?
@@ -288,7 +288,7 @@ BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 {
 	for (INT32 squad = 0; squad < NUMBER_OF_SQUADS; ++squad)
 	{
-		FOR_ALL_SLOTS_IN_SQUAD(i, squad)
+		FOR_EACH_SLOT_IN_SQUAD(i, squad)
 		{
 			if (*i != s) continue;
 			*i = 0;
@@ -655,7 +655,7 @@ void SaveSquadInfoToSavedGameFile(HWFILE const f)
 	BYTE* d = data;
 	for (INT32 squad = 0; squad < NUMBER_OF_SQUADS; ++squad)
 	{
-		FOR_ALL_SLOTS_IN_SQUAD(slot, squad)
+		FOR_EACH_SLOT_IN_SQUAD(slot, squad)
 		{
 			SOLDIERTYPE const* const s = *slot;
 			INJ_I16(d, s ? s->ubID : -1)
@@ -678,7 +678,7 @@ void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 	FileRead(f, data, sizeof(data));
 	for (INT32 squad = 0; squad != NUMBER_OF_SQUADS; ++squad)
 	{
-		FOR_ALL_SLOTS_IN_SQUAD(slot, squad)
+		FOR_EACH_SLOT_IN_SQUAD(slot, squad)
 		{
 			INT16 id;
 			EXTR_I16(d, id)
@@ -819,7 +819,7 @@ BOOLEAN IsMercOnCurrentSquad(const SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	FOR_ALL_SLOTS_IN_SQUAD(i, iCurrentTacticalSquad)
+	FOR_EACH_SLOT_IN_SQUAD(i, iCurrentTacticalSquad)
 	{
 		if (*i == pSoldier) return TRUE;
 	}
