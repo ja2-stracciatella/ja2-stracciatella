@@ -272,46 +272,44 @@ static const INT32 gHelpScreenBtnTextRecordNum[HELP_SCREEN_NUMBER_OF_HELP_SCREEN
 };
 
 
-BOOLEAN	gfHelpScreenEntry = TRUE;
-BOOLEAN	gfHelpScreenExit = FALSE;
-
+static BOOLEAN gfHelpScreenEntry = TRUE;
+static BOOLEAN gfHelpScreenExit  = FALSE;
 
 
 static SGPVObject* guiHelpScreenBackGround;
 static SGPVSurface* guiHelpScreenTextBufferSurface;
 
-BOOLEAN	gfScrollBoxIsScrolling = FALSE;
+static BOOLEAN gfScrollBoxIsScrolling = FALSE;
 
-BOOLEAN	gfHaveRenderedFirstFrameToSaveBuffer=FALSE;
+static BOOLEAN gfHaveRenderedFirstFrameToSaveBuffer = FALSE;
 
 
 //  must use this cause you have ur cursor over a button when entering the help screen, the button will burn though.
 //It does this cause that region loses it focus so it draws the button again.
-UINT8		gubRenderHelpScreenTwiceInaRow=0;
+static UINT8 gubRenderHelpScreenTwiceInaRow = 0;
 
 
 // region to mask the background
-MOUSE_REGION    gHelpScreenFullScreenMask;
-//void SelectHelpTextFullScreenMaskCallBack(MOUSE_REGION * pRegion, INT32 iReason );
+static MOUSE_REGION gHelpScreenFullScreenMask;
 
 
 // region to mask the background
-MOUSE_REGION    gHelpScreenScrollArea;
+static MOUSE_REGION gHelpScreenScrollArea;
 
 
 //checkbox to toggle show help again toggle
-GUIButtonRef gHelpScreenDontShowHelpAgainToggle;
+static GUIButtonRef gHelpScreenDontShowHelpAgainToggle;
 
 
 static BUTTON_PICS* giHelpScreenButtonsImage[HELP_SCREEN_NUM_BTNS];
-GUIButtonRef guiHelpScreenBtns[HELP_SCREEN_NUM_BTNS];
+static GUIButtonRef guiHelpScreenBtns[HELP_SCREEN_NUM_BTNS];
 
 static BUTTON_PICS* giExitBtnImage;
-GUIButtonRef guiHelpScreenExitBtn;
+static GUIButtonRef guiHelpScreenExitBtn;
 
 
 static BUTTON_PICS* guiHelpScreenScrollArrowImage[2];
-GUIButtonRef giHelpScreenScrollArrows[2];
+static GUIButtonRef giHelpScreenScrollArrows[2];
 
 
 void InitHelpScreenSystem()
