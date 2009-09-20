@@ -1265,7 +1265,7 @@ static UINT32 PlayerStrength(void)
 static UINT32 EnemyStrength(void)
 {
 	UINT32 strength = 0;
-	CFOR_ALL_NON_PLAYER_SOLDIERS(s)
+	CFOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		if (!s->bInSector || s->bNeutral) continue;
 		/* count this person's strength (condition), calculated as life reduced up

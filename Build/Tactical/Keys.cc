@@ -1280,7 +1280,7 @@ void ExamineDoorsOnEnteringSector()
 	if (GetWorldTotalMin() - gTacticalStatus.uiTimeSinceLastInTactical < 30) return;
 
 	// If there is at least one human being in that sector, close doors.
-	CFOR_ALL_NON_PLAYER_SOLDIERS(s)
+	CFOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		if (!s->bInSector) continue;
 

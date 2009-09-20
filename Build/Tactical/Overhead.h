@@ -203,14 +203,14 @@ static inline BOOLEAN IsTeamActive(const UINT team)
 #define FOR_EACH_SOLDIER( iter) BASE_FOR_EACH_SOLDIER(      SOLDIERTYPE, iter)
 #define CFOR_EACH_SOLDIER(iter) BASE_FOR_EACH_SOLDIER(const SOLDIERTYPE, iter)
 
-#define BASE_FOR_ALL_NON_PLAYER_SOLDIERS(type, iter)                                    \
+#define BASE_FOR_EACH_NON_PLAYER_SOLDIER(type, iter)                                    \
 	for (type*       iter        = &Menptr[gTacticalStatus.Team[ENEMY_TEAM].bFirstID],    \
 	         * const end__##iter = &Menptr[gTacticalStatus.Team[CIV_TEAM  ].bLastID + 1]; \
 	     iter != end__##iter;                                                             \
 	     ++iter)                                                                          \
 		if (!iter->bActive) continue; else
-#define FOR_ALL_NON_PLAYER_SOLDIERS( iter) BASE_FOR_ALL_NON_PLAYER_SOLDIERS(      SOLDIERTYPE, iter)
-#define CFOR_ALL_NON_PLAYER_SOLDIERS(iter) BASE_FOR_ALL_NON_PLAYER_SOLDIERS(const SOLDIERTYPE, iter)
+#define FOR_EACH_NON_PLAYER_SOLDIER( iter) BASE_FOR_EACH_NON_PLAYER_SOLDIER(      SOLDIERTYPE, iter)
+#define CFOR_EACH_NON_PLAYER_SOLDIER(iter) BASE_FOR_EACH_NON_PLAYER_SOLDIER(const SOLDIERTYPE, iter)
 
 
 void InitTacticalEngine(void);

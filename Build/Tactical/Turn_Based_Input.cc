@@ -2749,7 +2749,7 @@ static void ObliterateSector()
 #ifdef JA2BETAVERSION
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Obliterating Sector!");
 #endif
-	FOR_ALL_NON_PLAYER_SOLDIERS(s)
+	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		if (s->bNeutral || s->bSide == gbPlayerNum) continue;
 		EVENT_SoldierGotHit(s, 0, 400, 0, s->bDirection, 320, 0, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);

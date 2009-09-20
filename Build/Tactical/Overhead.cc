@@ -4848,7 +4848,7 @@ void CycleThroughKnownEnemies( )
 		usStartToLook = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 	}
 
-	FOR_ALL_NON_PLAYER_SOLDIERS(s)
+	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		// try to find first active, OK enemy
 		if (s->bInSector            &&
@@ -4891,7 +4891,7 @@ void CycleThroughKnownEnemies( )
 
 void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 {
-	FOR_ALL_NON_PLAYER_SOLDIERS(s)
+	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		// try to find first active, OK enemy
 		if (s->bInSector                                     &&
@@ -4911,7 +4911,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 	// If here.. reset to zero...
 	pSrcSoldier->ubLastEnemyCycledID = 0;
 
-	FOR_ALL_NON_PLAYER_SOLDIERS(s)
+	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		// try to find first active, OK enemy
 		if (s->bInSector                                     &&
