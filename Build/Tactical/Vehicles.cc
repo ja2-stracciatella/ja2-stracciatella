@@ -156,7 +156,7 @@ void ClearOutVehicleList(void)
 {
 	if (pVehicleList == NULL) return;
 
-	FOR_ALL_VEHICLES(v)
+	FOR_EACH_VEHICLE(v)
 	{
 		v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
 	}
@@ -460,7 +460,7 @@ VEHICLETYPE& GetVehicle(INT32 const vehicle_id)
 VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const& g)
 {
 	// given the id of a mvt group, find a vehicle in this group
-	FOR_ALL_VEHICLES(i)
+	FOR_EACH_VEHICLE(i)
 	{
 		VEHICLETYPE& v = *i;
 		if (v.ubMovementGroup == g.ubGroupID) return v;
@@ -527,7 +527,7 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 
 bool AnyAccessibleVehiclesInSoldiersSector(SOLDIERTYPE const& s)
 {
-	CFOR_ALL_VEHICLES(v)
+	CFOR_EACH_VEHICLE(v)
 	{
 		if (IsThisVehicleAccessibleToSoldier(s, *v)) return true;
 	}
@@ -938,7 +938,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 
 void AddVehicleFuelToSave( )
 {
-	CFOR_ALL_VEHICLES(i)
+	CFOR_EACH_VEHICLE(i)
 	{
 		VEHICLETYPE const& v = *i;
 		if (IsHelicopter(v)) continue;

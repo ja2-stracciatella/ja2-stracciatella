@@ -52,14 +52,14 @@ extern UINT8 ubNumberOfVehicles;
 
 #define VEHICLE2ID(v) (&(v) - pVehicleList)
 
-#define BASE_FOR_ALL_VEHICLES(type, iter)                           \
+#define BASE_FOR_EACH_VEHICLE(type, iter)                           \
 	for (type*       iter        = pVehicleList,                      \
 	         * const end__##iter = pVehicleList + ubNumberOfVehicles; \
 	     iter != end__##iter;                                         \
 	     ++iter)                                                      \
 		if (!iter->fValid) continue; else
-#define FOR_ALL_VEHICLES( iter) BASE_FOR_ALL_VEHICLES(      VEHICLETYPE, iter)
-#define CFOR_ALL_VEHICLES(iter) BASE_FOR_ALL_VEHICLES(const VEHICLETYPE, iter)
+#define FOR_EACH_VEHICLE( iter) BASE_FOR_EACH_VEHICLE(      VEHICLETYPE, iter)
+#define CFOR_EACH_VEHICLE(iter) BASE_FOR_EACH_VEHICLE(const VEHICLETYPE, iter)
 
 
 void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle );

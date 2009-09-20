@@ -882,7 +882,7 @@ static INT32 ShowAssignedTeam(INT16 const x, INT16 const y, INT32 icon_pos)
 
 static INT32 ShowVehicles(INT16 const x, INT16 const y, INT32 icon_pos)
 {
-	CFOR_ALL_VEHICLES(i)
+	CFOR_EACH_VEHICLE(i)
 	{
 		VEHICLETYPE const& v = *i;
 		// skip the chopper, it has its own icon and displays in airspace mode
