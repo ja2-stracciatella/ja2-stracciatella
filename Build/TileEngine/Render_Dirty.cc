@@ -43,11 +43,11 @@ UINT32 guiNumBackSaves=0;
 static VIDEO_OVERLAY* gVideoOverlays;
 
 
-#define FOR_ALL_VIDEO_OVERLAYS(iter)                                  \
+#define FOR_EACH_VIDEO_OVERLAY(iter)                                  \
 	for (VIDEO_OVERLAY* iter = gVideoOverlays; iter; iter = iter->next) \
 		if (iter->fDisabled) continue; else
 
-#define FOR_ALL_VIDEO_OVERLAYS_SAFE(iter)                             \
+#define FOR_EACH_VIDEO_OVERLAY_SAFE(iter)                             \
 	for (VIDEO_OVERLAY* iter = gVideoOverlays, * iter##__next; iter; iter = iter##__next) \
 		if (iter##__next = iter->next, iter->fDisabled) continue; else
 
@@ -538,7 +538,7 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 // FUnctions for entrie array of blitters
 void ExecuteVideoOverlays(void)
 {
-	FOR_ALL_VIDEO_OVERLAYS(v)
+	FOR_EACH_VIDEO_OVERLAY(v)
 	{
 		// If we are scrolling but haven't saved yet, don't!
 		if (!v->fActivelySaving && gfScrollInertia > 0) continue;
@@ -555,7 +555,7 @@ void ExecuteVideoOverlays(void)
 
 void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 {
-	FOR_ALL_VIDEO_OVERLAYS(v)
+	FOR_EACH_VIDEO_OVERLAY(v)
 	{
 		if (!v->fActivelySaving) continue;
 
@@ -582,7 +582,7 @@ static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 
 void AllocateVideoOverlaysArea(void)
 {
-	FOR_ALL_VIDEO_OVERLAYS(v)
+	FOR_EACH_VIDEO_OVERLAY(v)
 	{
 		AllocateVideoOverlayArea(v);
 	}
@@ -595,7 +595,7 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 	UINT16* const pSrcBuf         = l.Buffer<UINT16>();
 	UINT32  const uiSrcPitchBYTES = l.Pitch();
 
-	FOR_ALL_VIDEO_OVERLAYS(v)
+	FOR_EACH_VIDEO_OVERLAY(v)
 	{
 		// OK, if our saved area is null, allocate it here!
 		if (v->pSaveArea == NULL)
@@ -613,7 +613,7 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 
 void DeleteVideoOverlaysArea(void)
 {
-	FOR_ALL_VIDEO_OVERLAYS_SAFE(v)
+	FOR_EACH_VIDEO_OVERLAY_SAFE(v)
 	{
 		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
 		v->pSaveArea       = NULL;
@@ -634,7 +634,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	FOR_ALL_VIDEO_OVERLAYS_SAFE(v)
+	FOR_EACH_VIDEO_OVERLAY_SAFE(v)
 	{
 		if (v->pSaveArea == NULL) continue;
 
