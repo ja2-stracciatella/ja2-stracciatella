@@ -360,7 +360,7 @@ BOOLEAN MultipleCharacterListEntriesSelected( void )
 	UINT8 ubSelectedCnt = 0;
 
 	// check if more than one person is selected in the selected list
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+	CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 	{
 		++ubSelectedCnt;
 	}
@@ -528,7 +528,7 @@ void SelectUnselectedMercsWhoMustMoveWithThisGuy( void )
 
 static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(const SOLDIERTYPE* const pSoldier)
 {
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+	CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 	{
 		const SOLDIERTYPE* const pSoldier2 = c->merc;
 

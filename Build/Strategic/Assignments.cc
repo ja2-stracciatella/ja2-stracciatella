@@ -6649,7 +6649,7 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep(BOOLEAN const wake_up, BOOLEAN const d
 {
 	BOOLEAN                  success = TRUE;
 	const SOLDIERTYPE* const sel     = GetSelectedInfoChar();
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+	CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 	{
 		// if the current character in the list is valid...then grab soldier pointer for the character
 		SOLDIERTYPE& s = *c->merc;
@@ -6861,7 +6861,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 
 	// sets assignment for the list
 	BOOLEAN fNotifiedOfFailure = FALSE;
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+	CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE& s = *c->merc;
 		if (&s == sel || s.uiStatusFlags & SOLDIER_VEHICLE) continue;

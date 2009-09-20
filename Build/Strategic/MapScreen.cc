@@ -6257,7 +6257,7 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 
 	memset( fGroupIDRebuilt, FALSE, sizeof( fGroupIDRebuilt ) );
 
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+	CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 	{
 		const SOLDIERTYPE* const pSoldier = c->merc;
 
@@ -7840,7 +7840,7 @@ void CancelPathsOfAllSelectedCharacters()
 	BOOLEAN fSkyriderMsgShown = FALSE;
 
 	// cancel destination for the clicked and ALL other valid & selected characters with a route set
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+	CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE* const pSoldier = c->merc;
 		// and he has a route set
@@ -8358,7 +8358,7 @@ static void BullsEyeOrChopperSelectionPopupCallback(MessageBoxReturnValue const 
 // Wake up anybody who needs to be awake to travel
 static void WakeUpAnySleepingSelectedMercsOnFootOrDriving()
 {
-	CFOR_ALL_SELECTED_IN_CHAR_LIST(i)
+	CFOR_EACH_SELECTED_IN_CHAR_LIST(i)
 	{
 		SOLDIERTYPE& s = *i->merc;
 		if (!s.fMercAsleep) continue;
@@ -8576,7 +8576,7 @@ static void RestorePreviousPaths(void)
 	}
 	else	// character(s) plotting
 	{
-		CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
+		CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 		{
 			SOLDIERTYPE* const pSoldier = c->merc;
 

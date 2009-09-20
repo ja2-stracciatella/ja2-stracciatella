@@ -189,11 +189,11 @@ extern MapScreenCharacterSt gCharactersList[ ];
 #define FOR_EACH_IN_CHAR_LIST(iter)  BASE_FOR_EACH_IN_CHAR_LIST(      MapScreenCharacterSt, iter)
 #define CFOR_EACH_IN_CHAR_LIST(iter) BASE_FOR_EACH_IN_CHAR_LIST(const MapScreenCharacterSt, iter)
 
-#define BASE_FOR_ALL_SELECTED_IN_CHAR_LIST(type, iter)                                      \
+#define BASE_FOR_EACH_SELECTED_IN_CHAR_LIST(type, iter)                                      \
 	for (type* iter = gCharactersList; iter != gCharactersList + MAX_CHARACTER_COUNT; ++iter) \
 		if (Assert(!iter->selected || iter->merc != NULL), Assert(iter->merc == NULL || iter->merc->bActive), !iter->selected) continue; else
-#define FOR_ALL_SELECTED_IN_CHAR_LIST(iter)  BASE_FOR_ALL_SELECTED_IN_CHAR_LIST(      MapScreenCharacterSt, iter)
-#define CFOR_ALL_SELECTED_IN_CHAR_LIST(iter) BASE_FOR_ALL_SELECTED_IN_CHAR_LIST(const MapScreenCharacterSt, iter)
+#define FOR_EACH_SELECTED_IN_CHAR_LIST(iter)  BASE_FOR_EACH_SELECTED_IN_CHAR_LIST(      MapScreenCharacterSt, iter)
+#define CFOR_EACH_SELECTED_IN_CHAR_LIST(iter) BASE_FOR_EACH_SELECTED_IN_CHAR_LIST(const MapScreenCharacterSt, iter)
 
 
 // highlighted lines
