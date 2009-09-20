@@ -12,7 +12,7 @@ void RemoveFogFromGridNo( UINT32 uiGridNo )
 	INT32 x, y;
 	x = uiGridNo % WORLD_COLS;
 	y = uiGridNo / WORLD_COLS;
-	FOR_ALL_LIGHT_SPRITES(l)
+	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->iX == x && l->iY == y)
 		{

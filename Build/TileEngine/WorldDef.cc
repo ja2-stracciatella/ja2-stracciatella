@@ -2984,7 +2984,7 @@ static void SaveMapLights(HWFILE hfile)
 	FileWrite(hfile, LColor, sizeof(*LColor));
 
 	//count number of non-merc lights.
-	CFOR_ALL_LIGHT_SPRITES(l)
+	CFOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (!IsSoldierLight(l)) ++usNumLights;
 	}
@@ -2992,7 +2992,7 @@ static void SaveMapLights(HWFILE hfile)
 	//save the number of lights.
 	FileWrite(hfile, &usNumLights, 2);
 
-	CFOR_ALL_LIGHT_SPRITES(l)
+	CFOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (!IsSoldierLight(l)) InjectLightSpriteIntoFile(hfile, l);
 	}

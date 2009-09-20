@@ -588,7 +588,7 @@ static void RenderMapEntryPointsAndLights(void)
 	RenderEntryPoint(gMapInformation.sIsolatedGridNo, L"Isolated Entry Point");
 
 	//Do the lights now.
-	CFOR_ALL_LIGHT_SPRITES(l)
+	CFOR_EACH_LIGHT_SPRITE(l)
 	{
 		INT16       x;
 		INT16       y;

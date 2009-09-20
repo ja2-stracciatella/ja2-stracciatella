@@ -134,11 +134,11 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel );
 // Sprite data
 extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];
 
-#define BASE_FOR_ALL_LIGHT_SPRITES(type, iter) \
+#define BASE_FOR_EACH_LIGHT_SPRITE(type, iter) \
 	FOR_EACH(type, iter, LightSprites) \
 		if (!(iter->uiFlags & LIGHT_SPR_ACTIVE)) continue; else
-#define FOR_ALL_LIGHT_SPRITES( iter) BASE_FOR_ALL_LIGHT_SPRITES(      LIGHT_SPRITE, iter)
-#define CFOR_ALL_LIGHT_SPRITES(iter) BASE_FOR_ALL_LIGHT_SPRITES(const LIGHT_SPRITE, iter)
+#define FOR_EACH_LIGHT_SPRITE( iter) BASE_FOR_EACH_LIGHT_SPRITE(      LIGHT_SPRITE, iter)
+#define CFOR_EACH_LIGHT_SPRITE(iter) BASE_FOR_EACH_LIGHT_SPRITE(const LIGHT_SPRITE, iter)
 
 
 // Lighting system general data

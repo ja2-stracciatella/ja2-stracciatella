@@ -328,7 +328,7 @@ static void EditModeInit(void)
 		SetEditorSmoothingMode( gMapInformation.ubEditorSmoothingType );
 		AddLockedDoorCursors();
 
-		FOR_ALL_LIGHT_SPRITES(l)
+		FOR_EACH_LIGHT_SPRITE(l)
 		{
 			if (!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 			{
@@ -2503,7 +2503,7 @@ BOOLEAN RemoveLight(const GridNo pos)
 {
 	// Check all lights if any at this given position
 	const char* pLastLightName = NULL;
-	FOR_ALL_LIGHT_SPRITES(l)
+	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (MAPROWCOLTOPOS(l->iY, l->iX) == pos)
 		{
@@ -2532,7 +2532,7 @@ BOOLEAN RemoveLight(const GridNo pos)
 
 void ShowLightPositionHandles(void)
 {
-	CFOR_ALL_LIGHT_SPRITES(l)
+	CFOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (IsSoldierLight(l)) continue;
 
@@ -2549,7 +2549,7 @@ void ShowLightPositionHandles(void)
  * that may be present. */
 static void RemoveLightPositionHandles(void)
 {
-	CFOR_ALL_LIGHT_SPRITES(l)
+	CFOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (IsSoldierLight(l)) continue;
 

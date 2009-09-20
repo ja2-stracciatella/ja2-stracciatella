@@ -502,7 +502,7 @@ void EnvEndRainStorm( )
 
 void TurnOnNightLights()
 {
-	FOR_ALL_LIGHT_SPRITES(l)
+	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->uiFlags & LIGHT_NIGHTTIME &&
 				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
@@ -515,7 +515,7 @@ void TurnOnNightLights()
 
 void TurnOffNightLights()
 {
-	FOR_ALL_LIGHT_SPRITES(l)
+	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->uiFlags & LIGHT_NIGHTTIME &&
 				l->uiFlags & LIGHT_SPR_ON &&
@@ -529,7 +529,7 @@ void TurnOffNightLights()
 
 void TurnOnPrimeLights()
 {
-	FOR_ALL_LIGHT_SPRITES(l)
+	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->uiFlags & LIGHT_PRIMETIME &&
 				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
@@ -542,7 +542,7 @@ void TurnOnPrimeLights()
 
 void TurnOffPrimeLights()
 {
-	FOR_ALL_LIGHT_SPRITES(l)
+	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->uiFlags & LIGHT_PRIMETIME &&
 				l->uiFlags & LIGHT_SPR_ON &&
