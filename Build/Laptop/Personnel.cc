@@ -150,7 +150,7 @@ enum
 #define SIZE_OF_PERSONNEL_CURSOR 19
 
 
-#define CFOR_ALL_PERSONNEL(iter) \
+#define CFOR_EACH_PERSONNEL(iter) \
 	CFOR_EACH_IN_TEAM(iter, OUR_TEAM)  \
 		if (iter->uiStatusFlags & SOLDIER_VEHICLE) continue; else
 
@@ -903,7 +903,7 @@ static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void)
 	INT32 iCounter = 0;
 
 	// grab number on team
-	CFOR_ALL_PERSONNEL(s) ++iCounter;
+	CFOR_EACH_PERSONNEL(s) ++iCounter;
 	return iCounter;
 }
 
@@ -951,7 +951,7 @@ try
 	if (!fCurrentTeamMode) return;
 
 	INT32 i = 0;
-	CFOR_ALL_PERSONNEL(s)
+	CFOR_EACH_PERSONNEL(s)
 	{
 		// found the next actual guy
 		INT32 const x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
@@ -1392,7 +1392,7 @@ static void DisplayCostOfCurrentTeam(void)
 	INT32 max_cost = 0;
 	INT32 sum_cost = 0;
 
-	CFOR_ALL_PERSONNEL(s)
+	CFOR_EACH_PERSONNEL(s)
 	{
 		if (s->bLife <= 0) continue;
 
@@ -1480,7 +1480,7 @@ static void DisplayTeamStats(void)
 		INT32 count             = 0;
 		if (fCurrentTeamMode)
 		{
-			CFOR_ALL_PERSONNEL(s)
+			CFOR_EACH_PERSONNEL(s)
 			{
 				if (s->bLife <= 0 || AM_A_ROBOT(s)) continue;
 
@@ -2090,7 +2090,7 @@ static void SelectFirstDisplayedMerc(void)
 	// set current soldier
 	if (fCurrentTeamMode)
 	{
-		CFOR_ALL_PERSONNEL(s)
+		CFOR_EACH_PERSONNEL(s)
 		{
 			iCurrentPersonSelectedId = 0;
 			return;
@@ -2109,7 +2109,7 @@ static SOLDIERTYPE const& GetSoldierOfCurrentSlot(void)
 	Assert(fCurrentTeamMode);
 
 	INT32 slot = iCurrentPersonSelectedId;
-	CFOR_ALL_PERSONNEL(s)
+	CFOR_EACH_PERSONNEL(s)
 	{
 		if (slot-- == 0) return *s;
 	}
