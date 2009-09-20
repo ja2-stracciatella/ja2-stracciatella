@@ -52,7 +52,7 @@ struct PopUpBox
 
 static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
 
-#define FOR_ALL_POPUP_BOXES(iter) \
+#define FOR_EACH_POPUP_BOX(iter) \
 	FOR_EACH(PopUpBox*, iter, PopUpBoxList) \
 		if (*iter == NULL) continue; else
 
@@ -431,7 +431,7 @@ void RemoveAllBoxStrings(PopUpBox* const box)
 
 void RemoveBox(PopUpBox* const box)
 {
-	FOR_ALL_POPUP_BOXES(i)
+	FOR_EACH_POPUP_BOX(i)
 	{
 		if (*i == box)
 		{
@@ -467,7 +467,7 @@ void HideBox(PopUpBox* const box)
 
 void DisplayBoxes(SGPVSurface* const uiBuffer)
 {
-	FOR_ALL_POPUP_BOXES(i)
+	FOR_EACH_POPUP_BOX(i)
 	{
 		DisplayOnePopupBox(*i, uiBuffer);
 	}
@@ -702,7 +702,7 @@ BOOLEAN IsBoxShown(const PopUpBox* const box)
 
 void MarkAllBoxesAsAltered( void )
 {
-	FOR_ALL_POPUP_BOXES(i)
+	FOR_EACH_POPUP_BOX(i)
 	{
 		ForceUpDateOfBox(*i);
 	}
@@ -711,7 +711,7 @@ void MarkAllBoxesAsAltered( void )
 
 void HideAllBoxes( void )
 {
-	FOR_ALL_POPUP_BOXES(i)
+	FOR_EACH_POPUP_BOX(i)
 	{
 		HideBox(*i);
 	}
