@@ -133,25 +133,25 @@ enum AimPolicyTextLocations
 
 
 //Toc menu mouse regions
-MOUSE_REGION    gSelectedPolicyTocMenuRegion[ NUM_AIM_POLICY_TOC_BUTTONS ];
+static MOUSE_REGION gSelectedPolicyTocMenuRegion[NUM_AIM_POLICY_TOC_BUTTONS];
 
 //Agree/Disagree menu Buttons regions
 static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason);
 static BUTTON_PICS* guiPoliciesButtonImage;
-GUIButtonRef guiPoliciesAgreeButton[2];
+static GUIButtonRef guiPoliciesAgreeButton[2];
 
 //Bottom Menu Buttons
 static BUTTON_PICS* guiPoliciesMenuButtonImage;
-GUIButtonRef guiPoliciesMenuButton[AIM_POLICY_MENU_BUTTON_AMOUNT];
+static GUIButtonRef guiPoliciesMenuButton[AIM_POLICY_MENU_BUTTON_AMOUNT];
 
 
 static UINT8       gubCurPageNum;
-BOOLEAN		gfInPolicyToc =  FALSE;
-BOOLEAN		gfInAgreementPage = FALSE;
-BOOLEAN		gfAimPolicyMenuBarLoaded = FALSE;
+static BOOLEAN     gfInPolicyToc            = FALSE;
+static BOOLEAN     gfInAgreementPage        = FALSE;
+static BOOLEAN     gfAimPolicyMenuBarLoaded = FALSE;
 static SGPVObject* guiContentButton;
-BOOLEAN		gfExitingAimPolicy;
-BOOLEAN		AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
+static BOOLEAN     gfExitingAimPolicy;
+static BOOLEAN     AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
 
 
 void EnterInitAimPolicies()
