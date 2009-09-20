@@ -121,9 +121,9 @@ static SGPVObject* guiMAPBOTTOMPANEL;
 static SGPVObject* guiSliderBar;
 
 // buttons
-GUIButtonRef guiMapMessageScrollButtons[2];
-GUIButtonRef guiMapBottomExitButtons[3];
-GUIButtonRef guiMapBottomTimeButtons[2];
+GUIButtonRef        guiMapBottomExitButtons[3];
+static GUIButtonRef guiMapBottomTimeButtons[2];
+static GUIButtonRef guiMapMessageScrollButtons[2];
 
 // mouse regions
 MOUSE_REGION gMapMessageScrollBarRegion;
@@ -184,7 +184,7 @@ void DeleteMapBottomGraphics( void )
 
 
 static void DeleteMapScreenBottomMessageScrollRegion(void);
-static void DestroyButtonsForMapScreenInterfaceBottom(void);
+static void DestroyButtonsForMapScreenInterfaceBottom();
 static void RemoveCompressModePause(void);
 
 
@@ -306,19 +306,11 @@ static void CreateButtonsForMapScreenInterfaceBottom(void)
 }
 
 
-static void DestroyButtonsForMapScreenInterfaceBottom(void)
+static void DestroyButtonsForMapScreenInterfaceBottom()
 {
-	// will destroy the buttons for the mapscreen bottom interface
-
-	RemoveButton( guiMapBottomExitButtons[ 0 ] );
-	RemoveButton( guiMapBottomExitButtons[ 1 ] );
-	RemoveButton( guiMapBottomExitButtons[ 2 ] );
-	RemoveButton( guiMapMessageScrollButtons[ 0 ] );
-	RemoveButton( guiMapMessageScrollButtons[ 1 ] );
-	RemoveButton( guiMapBottomTimeButtons[ 0 ] );
-	RemoveButton( guiMapBottomTimeButtons[ 1 ] );
-
-	// reset dirty flag
+	FOR_EACH(GUIButtonRef, i, guiMapBottomExitButtons)    RemoveButton(*i);
+	FOR_EACH(GUIButtonRef, i, guiMapBottomTimeButtons)    RemoveButton(*i);
+	FOR_EACH(GUIButtonRef, i, guiMapMessageScrollButtons) RemoveButton(*i);
 	fMapScreenBottomDirty = TRUE;
 }
 
