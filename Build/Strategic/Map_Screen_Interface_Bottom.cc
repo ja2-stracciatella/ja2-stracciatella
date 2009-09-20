@@ -1043,23 +1043,20 @@ BOOLEAN CommonTimeCompressionChecks( void )
 }
 
 
-
-BOOLEAN AnyUsableRealMercenariesOnTeam( void )
-{
-	// get number of mercs on team who are not vehicles or robot, POWs or EPCs
-	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+bool AnyUsableRealMercenariesOnTeam()
+{ /* Check whether there is a merc on team, who is not a vehicle, robot, POW or
+	 * EPC. */
+	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		if (pSoldier->bLife > 0 &&
-				!IsMechanical(*pSoldier) &&
-				( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
-				( pSoldier->bAssignment != ASSIGNMENT_DEAD ) &&
-				( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__EPC ) )
-		{
-			return( TRUE );
-		}
+		SOLDIERTYPE const& s = *i;
+		if (s.bLife <= 0)                            continue;
+		if (IsMechanical(s))                         continue;
+		if (s.bAssignment == ASSIGNMENT_POW)         continue;
+		if (s.bAssignment == ASSIGNMENT_DEAD)        continue;
+		if (s.ubWhatKindOfMercAmI == MERC_TYPE__EPC) continue;
+		return true;
 	}
-
-	return( FALSE );
+	return false;
 }
 
 

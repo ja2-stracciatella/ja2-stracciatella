@@ -55,7 +55,7 @@ void CreateDestroyMouseRegionMasksForTimeCompressionButtons();
 
 BOOLEAN CommonTimeCompressionChecks( void );
 
-BOOLEAN AnyUsableRealMercenariesOnTeam( void );
+bool AnyUsableRealMercenariesOnTeam();
 
 void    RequestTriggerExitFromMapscreen(ExitToWhere);
 BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere);
