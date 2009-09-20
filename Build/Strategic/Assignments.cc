@@ -1032,28 +1032,21 @@ void UpdateAssignments()
 }
 
 
-
 #ifdef JA2BETAVERSION
-void VerifyTownTrainingIsPaidFor( void )
+void VerifyTownTrainingIsPaidFor()
 {
-	CFOR_ALL_IN_CHAR_LIST(c)
+	CFOR_ALL_IN_CHAR_LIST(i)
 	{
-		const SOLDIERTYPE* const pSoldier = c->merc;
-		if (pSoldier->bAssignment == TRAIN_TOWN)
-		{
-			// make sure that sector is paid up!
-			if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
-			{
-				// NOPE!  We've got a bug somewhere
-				StopTimeCompression();
-
-				// report the error
-				DoScreenIndependantMessageBox( L"ERROR: Unpaid militia training. Describe *how* you're re-assigning mercs, how many/where/when! Send *prior* save!", MSG_BOX_FLAG_OK, NULL );
-
-				// avoid repeating this
-				break;
-			}
-		}
+		SOLDIERTYPE const& s = *i->merc;
+		if (s.bAssignment != TRAIN_TOWN) continue;
+		// Make sure that sector is paid up
+		if (SectorInfo[SECTOR(s.sSectorX, s.sSectorY)].fMilitiaTrainingPaid) continue;
+		// No, we've got a bug somewhere
+		StopTimeCompression();
+		// Report the error
+		DoScreenIndependantMessageBox(L"ERROR: Unpaid militia training. Describe *how* you're re-assigning mercs, how many/where/when! Send *prior* save!", MSG_BOX_FLAG_OK, 0);
+		// Avoid repeating this
+		break;
 	}
 }
 #endif
