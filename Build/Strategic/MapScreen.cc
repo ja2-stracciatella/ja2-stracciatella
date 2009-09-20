@@ -433,14 +433,19 @@ static MOUSE_REGION gMapScreenMaskRegion;
 static MOUSE_REGION gTrashCanRegion;
 
 // mouse regions for team info panel
-static MOUSE_REGION gTeamListNameRegion[MAX_CHARACTER_COUNT];
+struct CharacterRegions
+{
+	MOUSE_REGION name;
 #ifndef JA2DEMO
-static MOUSE_REGION gTeamListAssignmentRegion[MAX_CHARACTER_COUNT];
-static MOUSE_REGION gTeamListSleepRegion[MAX_CHARACTER_COUNT];
-static MOUSE_REGION gTeamListLocationRegion[MAX_CHARACTER_COUNT];
-static MOUSE_REGION gTeamListDestinationRegion[MAX_CHARACTER_COUNT];
-static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
+	MOUSE_REGION assignment;
+	MOUSE_REGION sleep;
+	MOUSE_REGION location;
+	MOUSE_REGION destination;
+	MOUSE_REGION contract;
 #endif
+};
+
+static CharacterRegions g_character_regions[MAX_CHARACTER_COUNT];
 
 
 static PathSt* g_prev_path;
@@ -4780,14 +4785,15 @@ static void CreateMouseRegionsForTeamList(void)
 #else
 		const UINT16 w = NAME_WIDTH;
 #endif
-		MakeRegion(&gTeamListNameRegion[i],        i, NAME_X,           y, w,                    TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // name region
+		CharacterRegions& r = g_character_regions[i];
+		MakeRegion(&r.name,        i, NAME_X,           y, w,                    TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // name region
 #ifndef JA2DEMO
-		MakeRegion(&gTeamListAssignmentRegion[i],  i, ASSIGN_X,         y, ASSIGN_WIDTH,         TeamListAssignmentRegionMvtCallBack,  TeamListAssignmentRegionBtnCallBack,  pMapScreenMouseRegionHelpText[1]); // assignment region
+		MakeRegion(&r.assignment,  i, ASSIGN_X,         y, ASSIGN_WIDTH,         TeamListAssignmentRegionMvtCallBack,  TeamListAssignmentRegionBtnCallBack,  pMapScreenMouseRegionHelpText[1]); // assignment region
+		MakeRegion(&r.sleep,       i, SLEEP_X,          y, SLEEP_WIDTH,          TeamListSleepRegionMvtCallBack,       TeamListSleepRegionBtnCallBack,       pMapScreenMouseRegionHelpText[5]); // sleep region
 		// same function as name regions, so uses the same callbacks
-		MakeRegion(&gTeamListLocationRegion[i],    i, LOC_X,            y, LOC_WIDTH,            TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // location region
-		MakeRegion(&gTeamListDestinationRegion[i], i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack, pMapScreenMouseRegionHelpText[2]); // destination region
-		MakeRegion(&gTeamListContractRegion[i],    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, TeamListContractRegionMvtCallBack,    TeamListContractRegionBtnCallBack,    pMapScreenMouseRegionHelpText[3]); // contract region
-		MakeRegion(&gTeamListSleepRegion[i],       i, SLEEP_X,          y, SLEEP_WIDTH,          TeamListSleepRegionMvtCallBack,       TeamListSleepRegionBtnCallBack,       pMapScreenMouseRegionHelpText[5]); // sleep region
+		MakeRegion(&r.location,    i, LOC_X,            y, LOC_WIDTH,            TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // location region
+		MakeRegion(&r.destination, i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack, pMapScreenMouseRegionHelpText[2]); // destination region
+		MakeRegion(&r.contract,    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, TeamListContractRegionMvtCallBack,    TeamListContractRegionBtnCallBack,    pMapScreenMouseRegionHelpText[3]); // contract region
 #endif
 	}
 }
@@ -4798,13 +4804,14 @@ static void DestroyMouseRegionsForTeamList(void)
 	// will destroy mouse regions overlaying the team list area
 	for (UINT i = 0; i < MAX_CHARACTER_COUNT; ++i)
 	{
-	  MSYS_RemoveRegion(&gTeamListNameRegion[i]);
+		CharacterRegions& r = g_character_regions[i];
+	  MSYS_RemoveRegion(&r.name);
 #ifndef JA2DEMO
-		MSYS_RemoveRegion(&gTeamListAssignmentRegion[i]);
-		MSYS_RemoveRegion(&gTeamListSleepRegion[i]);
-		MSYS_RemoveRegion(&gTeamListDestinationRegion[i]);
-		MSYS_RemoveRegion(&gTeamListLocationRegion[i]);
-		MSYS_RemoveRegion(&gTeamListContractRegion[i]);
+		MSYS_RemoveRegion(&r.assignment);
+		MSYS_RemoveRegion(&r.sleep);
+		MSYS_RemoveRegion(&r.location);
+		MSYS_RemoveRegion(&r.destination);
+		MSYS_RemoveRegion(&r.contract);
 #endif
 	}
 }
@@ -5927,73 +5934,74 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 
 	for( bCharNum = 0; bCharNum < MAX_CHARACTER_COUNT; bCharNum++ )
 	{
-		const SOLDIERTYPE* const s = gCharactersList[bCharNum].merc;
+		SOLDIERTYPE const* const s = gCharactersList[bCharNum].merc;
+		CharacterRegions&        r = g_character_regions[bCharNum];
 		if (s == NULL)
 		{
 			// disable regions in all team list columns
-			gTeamListNameRegion[bCharNum].Disable();
+			r.name.Disable();
 #ifndef JA2DEMO
-			gTeamListAssignmentRegion[bCharNum].Disable();
-			gTeamListLocationRegion[bCharNum].Disable();
-			gTeamListSleepRegion[bCharNum].Disable();
-			gTeamListDestinationRegion[bCharNum].Disable();
-			gTeamListContractRegion[bCharNum].Disable();
+			r.assignment.Disable();
+			r.sleep.Disable();
+			r.location.Disable();
+			r.destination.Disable();
+			r.contract.Disable();
 #endif
 		}
 		else
 		{
 			// always enable Name and Location regions
-			gTeamListNameRegion[bCharNum].Enable();
+			r.name.Enable();
 #ifndef JA2DEMO
-			gTeamListLocationRegion[bCharNum].Enable();
+			r.location.Enable();
 
 			// valid character.  If it's a vehicle, however
 			if (s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
 				// Can't change assignment for vehicles
-				gTeamListAssignmentRegion[bCharNum].Disable();
+				r.assignment.Disable();
 			}
 			else
 			{
-				gTeamListAssignmentRegion[bCharNum].Enable();
+				r.assignment.Enable();
 
 				// POW or dead ?
 				if (s->bAssignment == ASSIGNMENT_POW || s->bLife == 0)
 				{
 					// "Remove Merc"
-					gTeamListAssignmentRegion[bCharNum].SetFastHelpText(pRemoveMercStrings[0]);
-					gTeamListDestinationRegion[bCharNum].SetFastHelpText(L"");
+					r.assignment.SetFastHelpText(pRemoveMercStrings[0]);
+					r.destination.SetFastHelpText(L"");
 				}
 				else
 				{
 					// "Assign Merc"
-					gTeamListAssignmentRegion[bCharNum].SetFastHelpText(pMapScreenMouseRegionHelpText[1]);
+					r.assignment.SetFastHelpText(pMapScreenMouseRegionHelpText[1]);
 					// "Plot Travel Route"
-					gTeamListDestinationRegion[bCharNum].SetFastHelpText(pMapScreenMouseRegionHelpText[2]);
+					r.destination.SetFastHelpText(pMapScreenMouseRegionHelpText[2]);
 				}
 			}
 
 			if (CanExtendContractForSoldier(s))
 			{
-				gTeamListContractRegion[bCharNum].Enable();
+				r.contract.Enable();
 			}
 			else
 			{
-				gTeamListContractRegion[bCharNum].Disable();
+				r.contract.Disable();
 			}
 
 			if (CanChangeSleepStatusForSoldier(s))
 			{
-				gTeamListSleepRegion[bCharNum].Enable();
+				r.sleep.Enable();
 			}
 			else
 			{
-				gTeamListSleepRegion[bCharNum].Disable();
+				r.sleep.Disable();
 			}
 
 			// destination region is always enabled for all valid character slots.
 			// if the character can't move at this time, then the region handler must be able to tell the player why not
-			gTeamListDestinationRegion[bCharNum].Enable();
+			r.destination.Enable();
 #endif
 		}
 	}
