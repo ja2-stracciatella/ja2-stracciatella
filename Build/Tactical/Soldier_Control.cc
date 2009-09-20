@@ -5333,7 +5333,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 
 			HandleSoldierTakeDamageFeedback(pSoldier);
 
-			if (guiCurrentScreen != GAME_SCREEN || !pSoldier->bInSector)
+			if (fInMapMode || !pSoldier->bInSector)
 			{
 				if ( pSoldier->bLife == 0 && !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 				{

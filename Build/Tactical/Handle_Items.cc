@@ -2,7 +2,6 @@
 #include "Items.h"
 #include "Action_Items.h"
 #include "Handle_Items.h"
-#include "JAScreens.h"
 #include "Local.h"
 #include "MapScreen.h"
 #include "Overhead.h"
@@ -2839,7 +2838,7 @@ static void BoobyTrapDialogueCallBack(void)
 	gfJustFoundBoobyTrap = TRUE;
 
 	// now prompt the user...
-	MSGBOX_CALLBACK const callback = guiCurrentScreen == MAP_SCREEN ?
+	MSGBOX_CALLBACK const callback = fInMapMode ?
 		BoobyTrapInMapScreenMessageBoxCallBack : BoobyTrapMessageBoxCallBack;
 	DoScreenIndependantMessageBox(TacticalStr[DISARM_BOOBYTRAP_PROMPT], MSG_BOX_FLAG_YESNO, callback);
 }

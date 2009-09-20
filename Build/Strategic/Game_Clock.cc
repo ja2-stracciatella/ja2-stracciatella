@@ -991,7 +991,7 @@ BOOLEAN NightTime()
 void ClearTacticalStuffDueToTimeCompression( void )
 {
 	// is this test the right thing?  ARM
-	if (guiCurrentScreen != MAP_SCREEN) return; // XXX necessary?
+	if (!fInMapMode) return; // XXX necessary?
 
 	// clear tactical event queue
 	ClearEventQueue( );

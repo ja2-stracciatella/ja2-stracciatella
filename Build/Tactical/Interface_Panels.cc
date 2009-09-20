@@ -1528,7 +1528,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
-	if (guiCurrentScreen == MAP_SCREEN) return; // XXX necessary?
+	if (fInMapMode) return; // XXX necessary?
 
 	//if we are in the shop keeper interface
 	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
@@ -2564,7 +2564,7 @@ static void UpdateTEAMPanel(void)
 static void MercFacePanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// If our flags are set to do this, gofoit!
-	if (guiCurrentScreen == MAP_SCREEN) return; // XXX necessary?
+	if (fInMapMode) return; // XXX necessary?
 
 	SOLDIERTYPE* const s = pRegion->GetUserPtr<TeamPanelSlot>()->merc;
 	if (!s || !s->bActive) return;
@@ -2608,7 +2608,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (!s || !s->bActive) return;
 
 	// If our flags are set to do this, gofoit!
-	if (guiCurrentScreen == MAP_SCREEN) // XXX necessary?
+	if (fInMapMode) // XXX necessary?
 	{
 		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN) SetInfoChar(s);
 		return;
@@ -3327,7 +3327,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 				return;
 
 			// If our flags are set to do this, gofoit!
-			if (guiCurrentScreen == GAME_SCREEN)
+			if (!fInMapMode)
 			{
 				SelectSoldier(gpItemPopupSoldier, SELSOLDIER_NONE);
 			}
@@ -3423,7 +3423,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 						// Check if it's the same now!
 						if ( gpItemPointer->ubNumberOfObjects == 0 )
 						{
-							if (guiCurrentScreen == MAP_SCREEN)
+							if (fInMapMode)
 							{
 								MAPEndItemPointer();
 							}
@@ -3486,7 +3486,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		// Check for # of slots in item
 		if ( !InItemDescriptionBox( ) )
 		{
-			if (guiCurrentScreen == MAP_SCREEN)
+			if (fInMapMode)
 			{
 				//InitKeyItemDescriptionBox(gpItemPopupSoldier, (UINT8)uiKeyRing, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y);
       }

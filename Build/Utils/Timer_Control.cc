@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 #include "Debug.h"
-#include "JAScreens.h"
+#include "MapScreen.h"
 #include "Soldier_Control.h"
 #include "Timer_Control.h"
 #include "Overhead.h"
@@ -92,7 +92,7 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 		}
 
 #ifndef BOUNDS_CHECKER
-		if (guiCurrentScreen == MAP_SCREEN)
+		if (fInMapMode)
 		{
 			// IN Mapscreen, loop through player's team
 			FOR_ALL_IN_TEAM(s, gbPlayerNum)

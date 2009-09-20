@@ -696,7 +696,7 @@ void StrategicRemoveMerc(SOLDIERTYPE& s)
 
 	CheckAndHandleUnloadingOfCurrentWorld();
 
-	if (guiCurrentScreen == MAP_SCREEN)
+	if (fInMapMode)
 	{
 		ReBuildCharactersList();
 	}
@@ -794,7 +794,7 @@ no_choice:
 		flags = add_rehire_button ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK;
 	}
 
-	if (guiCurrentScreen == MAP_SCREEN)
+	if (fInMapMode)
 	{
 		DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, flags, MercDepartEquipmentBoxCallBack);
 	}
@@ -839,7 +839,7 @@ static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_valu
 
 static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 {
-	if (guiCurrentScreen != MAP_SCREEN)
+	if (!fInMapMode)
 	{
 		gfEnteringMapScreen = TRUE;
 

@@ -4,6 +4,7 @@
 #include "JAScreens.h"
 #include "Local.h"
 #include "HImage.h"
+#include "MapScreen.h"
 #include "Soldier_Find.h"
 #include "TileDat.h"
 #include "Timer_Control.h"
@@ -103,7 +104,7 @@ void RenderTacticalInterface( )
 	// handle paused render of tactical
 	HandlePausedTacticalRender( );
 
-	if (guiCurrentScreen != MAP_SCREEN)
+	if (!fInMapMode) // XXX necessary?
 	{
 		HandleFlashingItems( );
 
@@ -151,7 +152,7 @@ void RenderTacticalInterfaceWhileScrolling( )
 
 void SetUpInterface()
 {
-	if (guiCurrentScreen != GAME_SCREEN) return; // XXX necessary?
+	if (fInMapMode) return; // XXX necessary?
 
 	DrawUICursor();
 	SetupPhysicsTrajectoryUI();
@@ -222,7 +223,7 @@ add_node:
 
 void ResetInterface()
 {
-	if (guiCurrentScreen != GAME_SCREEN) return; // XXX necessary?
+	if (fInMapMode) return; // XXX necessary?
 
 	// Find out if we need to show any menus
 	DetermineWhichAssignmentMenusCanBeShown();
@@ -346,7 +347,7 @@ void RenderTopmostTacticalInterface()
 		gfRerenderInterfaceFromHelpText = FALSE;
 	}
 
-	if (guiCurrentScreen == MAP_SCREEN) // XXX necessary?
+	if (fInMapMode) // XXX necessary?
 	{
 		// If we want to rederaw whole screen, dirty all buttons!
 		if (fInterfacePanelDirty == DIRTYLEVEL2) MarkButtonsDirty();

@@ -936,7 +936,7 @@ static BOOLEAN CompatibleGunForAmmo(const OBJECTTYPE* pTryObject, const OBJECTTY
 static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* const test)
 {
   // ATE: If in mapscreen, return false always....
-	if (guiCurrentScreen == MAP_SCREEN) return FALSE;
+	if (fInMapMode) return FALSE;
 
 	switch (test->usItem)
 	{
@@ -2052,7 +2052,7 @@ static void DoAttachment(void)
 		{
 			// attachment attached, merge item consumed, etc
 
-    	if (guiCurrentScreen == MAP_SCREEN)
+    	if (fInMapMode)
       {
         MAPEndItemPointer( );
       }
@@ -2893,7 +2893,7 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 		SetItemPointer(&gItemPointer, pSoldier);
 		gbItemPointerSrcSlot = ubKeyRingPosition;
 
-		if (guiCurrentScreen == MAP_SCREEN) SetMapCursorItem();
+		if (fInMapMode) SetMapCursorItem();
 	}
 	else
 	{
@@ -4211,7 +4211,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 				if ( !PlaceObjectAtObjectIndex( gpItemPointer, gpItemPopupObject, (UINT8)uiItemPos ) )
 				{
-    		  if (guiCurrentScreen == MAP_SCREEN)
+    		  if (fInMapMode)
           {
             MAPEndItemPointer( );
           }
@@ -4244,7 +4244,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				//RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex )
 				GetObjFrom( gpItemPopupObject, (UINT8)uiItemPos, &gItemPointer );
 
-    		if (guiCurrentScreen == MAP_SCREEN)
+    		if (fInMapMode)
         {
 			    // pick it up
           InternalMAPBeginItemPointer( gpItemPopupSoldier );
@@ -5317,7 +5317,7 @@ void UpdateItemHatches(void)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
-  if (guiCurrentScreen == MAP_SCREEN)
+  if (fInMapMode)
   {
 		if (fShowInventoryFlag) pSoldier = GetSelectedInfoChar();
 	}

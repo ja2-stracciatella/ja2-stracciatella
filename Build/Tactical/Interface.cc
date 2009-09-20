@@ -3,9 +3,9 @@
 #include "Directories.h"
 #include "Font.h"
 #include "Isometric_Utils.h"
-#include "JAScreens.h"
 #include "Local.h"
 #include "HImage.h"
+#include "MapScreen.h"
 #include "Soldier_Find.h"
 #include "TileDef.h"
 #include "Timer_Control.h"
@@ -1186,7 +1186,7 @@ void EndDeadlockMsg(void)
 
 void ClearInterface( )
 {
-	if (guiCurrentScreen != GAME_SCREEN) return; // XXX necessary?
+	if (fInMapMode) return; // XXX necessary?
 
 	// Stop any UI menus!
 	if ( gCurrentUIMode == MENU_MODE )

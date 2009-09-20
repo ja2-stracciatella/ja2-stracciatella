@@ -852,7 +852,7 @@ static void BuildListOfUnpaidTrainableSectors()
 {
 	memset(gsUnpaidStrategicSector, 0, sizeof(gsUnpaidStrategicSector));
 
-	if (guiCurrentScreen == MAP_SCREEN)
+	if (fInMapMode)
 	{
 		for (INT32 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 		{

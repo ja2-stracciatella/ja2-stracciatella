@@ -1,4 +1,3 @@
-#include "JAScreens.h"
 #include "MapScreen.h"
 #include "Types.h"
 #include "Squads.h"
@@ -30,7 +29,7 @@ void HandleStrategicDeath(SOLDIERTYPE& s)
 	}
 	ChangeSoldiersAssignment(&s, ASSIGNMENT_DEAD);
 
-	if (guiCurrentScreen != GAME_SCREEN)
+	if (fInMapMode)
 	{
 		ReBuildCharactersList();
 

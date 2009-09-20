@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
+#include "MapScreen.h"
 #include "Radar_Screen.h"
 #include "Line.h"
 #include "RenderWorld.h"
@@ -247,7 +248,7 @@ void RenderRadarScreen()
 			gfRadarCurrentGuyFlash = !gfRadarCurrentGuyFlash;
 		}
 
-		if (guiCurrentScreen != MAP_SCREEN)
+		if (!fInMapMode)
 		{
 			// Find the diustance from render center to true world center
 			INT16 const sDistToCenterX = gsRenderCenterX - gCenterWorldX;
