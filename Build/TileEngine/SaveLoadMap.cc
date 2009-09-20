@@ -331,7 +331,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 		if( gpWorldLevelData[cnt].uiFlags & MAPELEMENT_STRUCTURE_DAMAGED )
 		{
 			//loop through all the structures and add all that are damaged
-			FOR_ALL_STRUCTURES(pCurrent, cnt, STRUCTURE_BASE_TILE)
+			FOR_EACH_STRUCTURE(pCurrent, cnt, STRUCTURE_BASE_TILE)
 			{
 				//if the structure has been damaged
 				if( pCurrent->ubHitPoints < pCurrent->pDBStructureRef->pDBStructure->ubHitPoints )

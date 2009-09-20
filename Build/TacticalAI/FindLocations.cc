@@ -2124,7 +2124,7 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 		{
 			// calculate the next potential gridno
 			sGridNo = sStartGridNo + sXOffset + (MAXCOL * sYOffset);
-			FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_OPENABLE)
+			FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_OPENABLE)
 			{
 				// skip any doors
 				if (pStructure->fFlags & STRUCTURE_ANYDOOR) continue;

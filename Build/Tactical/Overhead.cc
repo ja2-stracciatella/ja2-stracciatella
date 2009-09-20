@@ -3138,7 +3138,7 @@ static bool IsDestinationBlocked(GridNo const grid_no, INT8 const level, SOLDIER
 
 	// Check obstruction in future
 	INT16 const desired_level = level == 0 ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF;
-	FOR_ALL_STRUCTURES(i, grid_no, STRUCTURE_BLOCKSMOVES)
+	FOR_EACH_STRUCTURE(i, grid_no, STRUCTURE_BLOCKSMOVES)
 	{
 		if (i->fFlags & STRUCTURE_PASSABLE) continue;
 
@@ -3317,7 +3317,7 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 	{
 		// Something is here, check obstruction in future
 		sDesiredLevel = fOnRoof ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		FOR_ALL_STRUCTURES(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
+		FOR_EACH_STRUCTURE(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
 				return FALSE;
@@ -3340,7 +3340,7 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 	{
 		// Something is here, check obstruction in future
 		sDesiredLevel = fOnRoof ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		FOR_ALL_STRUCTURES(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
+		FOR_EACH_STRUCTURE(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
 				return FALSE;

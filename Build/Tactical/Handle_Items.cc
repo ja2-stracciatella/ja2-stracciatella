@@ -1534,7 +1534,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	{
 		// Something is here, check obstruction in future
 		const INT16 sDesiredLevel = ubLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		FOR_ALL_STRUCTURES(pStructure, sNewGridNo, STRUCTURE_BLOCKSMOVES)
+		FOR_EACH_STRUCTURE(pStructure, sNewGridNo, STRUCTURE_BLOCKSMOVES)
 		{
 			if (pStructure->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE)) continue;
 			if (pStructure->sCubeOffset != sDesiredLevel) continue;
@@ -2518,7 +2518,7 @@ GridNo AdjustGridNoForItemPlacement(SOLDIERTYPE* const s, GridNo const grid_no)
 	// Check if destination is blocked
 	bool        struct_found  = false;
 	INT16 const desired_level = s->bLevel != 0 ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-	FOR_ALL_STRUCTURES(i, grid_no, STRUCTURE_BLOCKSMOVES)
+	FOR_EACH_STRUCTURE(i, grid_no, STRUCTURE_BLOCKSMOVES)
 	{
 		if (i->fFlags & STRUCTURE_PASSABLE)  continue;
 		if (i->sCubeOffset != desired_level) continue;

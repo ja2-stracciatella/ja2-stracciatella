@@ -67,7 +67,7 @@ BOOLEAN	IsTreePresentAtGridno( INT16 sGridNo )
 
 STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, INT8 const orientation)
 {
-	FOR_ALL_STRUCTURES(pStructure, grid_no, STRUCTURE_WALLSTUFF)
+	FOR_EACH_STRUCTURE(pStructure, grid_no, STRUCTURE_WALLSTUFF)
 	{
 		if (pStructure->ubWallOrientation != orientation) continue;
 
@@ -140,7 +140,7 @@ BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo )
 BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo )
 {
 	// CJC: changing to search only for normal walls, July 16, 1998
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALL)
+	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_WALL)
 	{
 		// Check orientation
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_LEFT || pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT )
@@ -155,7 +155,7 @@ BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo )
 BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo )
 {
 	// CJC: changing to search only for normal walls, July 16, 1998
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALL)
+	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_WALL)
 	{
 		// Check orientation
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_RIGHT || pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT )
@@ -169,7 +169,7 @@ BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo )
 
 BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
 {
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
+	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
 	{
 		// skip it if it's an open door
 		if ( ! ( ( pStructure->fFlags & STRUCTURE_ANYDOOR ) && ( pStructure->fFlags & STRUCTURE_OPEN ) ) )
@@ -187,7 +187,7 @@ BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
 
 BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
 {
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
+	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
 	{
 		// skip it if it's an open door
 		if ( ! ( ( pStructure->fFlags & STRUCTURE_ANYDOOR ) && ( pStructure->fFlags & STRUCTURE_OPEN ) ) )
@@ -205,7 +205,7 @@ BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
 
 BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
 {
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_ANYDOOR)
+	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_ANYDOOR)
 	{
 		if (!(pStructure->fFlags & STRUCTURE_OPEN)) break;
 		// Check orientation
@@ -223,7 +223,7 @@ BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
 
 BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo )
 {
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_ANYDOOR)
+	FOR_EACH_STRUCTURE(pStructure, sGridNo, STRUCTURE_ANYDOOR)
 	{
 		if (!(pStructure->fFlags & STRUCTURE_OPEN)) break;
 		// Check orientation
