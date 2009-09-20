@@ -88,9 +88,7 @@ UINT32 uiFullNameCursorPosition =196 + LAPTOP_SCREEN_UL_X;
 BOOLEAN fNewCharInString = FALSE;
 
 
-
-// mouse regions
-MOUSE_REGION		gIMPBeginScreenMouseRegions[ 4 ];
+static MOUSE_REGION gIMPBeginScreenMouseRegions[4];
 
 
 static void CreateIMPBeginScreenButtons(void);
@@ -189,7 +187,7 @@ void RenderIMPBeginScreen( void )
 }
 
 
-static void DestroyIMPBeginScreenMouseRegions(void);
+static void DestroyIMPBeginScreenMouseRegions();
 static void RemoveIMPBeginScreenButtons(void);
 
 
@@ -640,19 +638,12 @@ static void CreateIMPBeginScreenMouseRegions(void)
 }
 
 
-static void DestroyIMPBeginScreenMouseRegions(void)
+static void DestroyIMPBeginScreenMouseRegions()
 {
-	// this function destroys the IMP mouse regions
+	// Do not remove regions, if only reviewing text.
+	if (ubTextEnterMode == 5) return;
 
-	// are we only reviewing text?.. if so, do not remove regions
-	if( ubTextEnterMode == 5 )
-		return;
-
-	// remove regions
-  MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 0 ]);
-	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 1 ]);
-	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 2 ]);
-	MSYS_RemoveRegion(&gIMPBeginScreenMouseRegions[ 3 ]);
+	FOR_EACH(MOUSE_REGION, i, gIMPBeginScreenMouseRegions) MSYS_RemoveRegion(&*i);
 }
 
 
