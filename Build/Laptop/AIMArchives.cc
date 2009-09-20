@@ -98,25 +98,24 @@ static SGPVObject* guiAlumniPopUp;
 static SGPVObject* guiPopUpPic;
 static SGPVObject* guiDoneButton;
 
-UINT8			gubPageNum;
-UINT8			gubDrawOldMerc;
-UINT8			gfDrawPopUpBox=FALSE;
-BOOLEAN		gfDestroyPopUpBox;
-BOOLEAN		gfFaceMouseRegionsActive;
-//BOOLEAN		gfDestroyDoneRegion;
-BOOLEAN		gfReDrawScreen=FALSE;
+static UINT8   gubPageNum;
+static UINT8   gubDrawOldMerc;
+static UINT8   gfDrawPopUpBox = FALSE;
+static BOOLEAN gfDestroyPopUpBox;
+static BOOLEAN gfFaceMouseRegionsActive;
+static BOOLEAN gfReDrawScreen = FALSE;
 
-BOOLEAN		AimArchivesSubPagesVisitedFlag[3] = {0,0,0};
+static BOOLEAN AimArchivesSubPagesVisitedFlag[3] = {0, 0, 0};
 
 //Face regions
-MOUSE_REGION		gMercAlumniFaceMouseRegions[ MAX_NUMBER_OLD_MERCS_ON_PAGE ];
+static MOUSE_REGION gMercAlumniFaceMouseRegions[MAX_NUMBER_OLD_MERCS_ON_PAGE];
 
 //Done region
-MOUSE_REGION		gDoneRegion;
+static MOUSE_REGION gDoneRegion;
 
 //Previous Button
 static BUTTON_PICS* guiAlumniPageButtonImage;
-GUIButtonRef guiAlumniPageButton[3];
+static GUIButtonRef guiAlumniPageButton[3];
 
 
 void EnterInitAimArchives()
@@ -428,7 +427,6 @@ static void CreateDestroyDoneMouseRegion(UINT16 usPosY)
 	{
 		MSYS_RemoveRegion( &gDoneRegion );
 		DoneRegionCreated = FALSE;
-//		gfDestroyDoneRegion = FALSE;
 	}
 }
 
