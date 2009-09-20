@@ -73,7 +73,7 @@ static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 #define FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
 	FOR_EACH(LightTemplate, iter, g_light_templates)
 
-#define FOR_ALL_LIGHT_TEMPLATES(iter) \
+#define FOR_EACH_LIGHT_TEMPLATE(iter) \
 	FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
 		if (!iter->lights) continue; else
 
@@ -247,7 +247,7 @@ static BOOLEAN LightDelete(LightTemplate*);
 void ShutdownLightingSystem(void)
 {
 	// free up all allocated light nodes
-	FOR_ALL_LIGHT_TEMPLATES(t)
+	FOR_EACH_LIGHT_TEMPLATE(t)
 	{
 		LightDelete(t);
 	}
@@ -263,7 +263,7 @@ void ShutdownLightingSystem(void)
 void LightReset(void)
 {
 	// reset all light lists
-	FOR_ALL_LIGHT_TEMPLATES(t)
+	FOR_EACH_LIGHT_TEMPLATE(t)
 	{
 		LightDelete(t);
 	}
@@ -2109,7 +2109,7 @@ static LightTemplate* LightLoad(const char* pFilename)
  * loaded from disk. */
 static LightTemplate* LightLoadCachedTemplate(const char* pFilename)
 {
-	FOR_ALL_LIGHT_TEMPLATES(t)
+	FOR_EACH_LIGHT_TEMPLATE(t)
 	{
 		if (strcasecmp(pFilename, t->name) == 0) return t;
 	}
