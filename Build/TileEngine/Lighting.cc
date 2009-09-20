@@ -70,11 +70,11 @@ struct LightTemplate
 
 static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 
-#define FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
+#define FOR_EACH_LIGHT_TEMPLATE_SLOT(iter) \
 	FOR_EACH(LightTemplate, iter, g_light_templates)
 
 #define FOR_EACH_LIGHT_TEMPLATE(iter) \
-	FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
+	FOR_EACH_LIGHT_TEMPLATE_SLOT(iter) \
 		if (!iter->lights) continue; else
 
 
@@ -521,7 +521,7 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 /* Returns an available slot for a new light template. */
 static LightTemplate* LightGetFree(void)
 {
-	FOR_ALL_LIGHT_TEMPLATE_SLOTS(t)
+	FOR_EACH_LIGHT_TEMPLATE_SLOT(t)
 	{
 		if (!t->lights) return t;
 	}
