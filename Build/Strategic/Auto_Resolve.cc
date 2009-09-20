@@ -675,7 +675,7 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	}
 
 	//Now assign the rest of the soldiers to groups
-	CFOR_ALL_ENEMY_GROUPS(pGroup)
+	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (pGroup->ubSectorX == gpAR->ubSectorX &&
 				pGroup->ubSectorY == gpAR->ubSectorY)

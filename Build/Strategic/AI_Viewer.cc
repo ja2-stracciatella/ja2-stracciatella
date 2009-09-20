@@ -605,7 +605,7 @@ static void RenderInfoInSector(void)
 		pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
 
 		//Now count the number of mobile groups in the sector.
-		CFOR_ALL_ENEMY_GROUPS(pGroup)
+		CFOR_EACH_ENEMY_GROUP(pGroup)
 		{
 			if (!pGroup->fVehicle &&
 					pGroup->ubSectorX == ubSectorX &&
@@ -1436,7 +1436,7 @@ static void PrintEnemyPopTable(void)
 	}
 
 	// count moving enemies
-	CFOR_ALL_ENEMY_GROUPS(pGroup)
+	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (!pGroup->fDebugGroup)
 		{
@@ -1807,7 +1807,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 
 
 	// handle mobile enemies anchored in this sector
-	CFOR_ALL_ENEMY_GROUPS(pGroup)
+	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (!pGroup->fVehicle)
 		{

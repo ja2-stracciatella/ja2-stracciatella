@@ -2382,7 +2382,7 @@ static void TruncateStrategicGroupSizes(void)
 		}
 	}
 	//Enemy groups
-	FOR_ALL_ENEMY_GROUPS(pGroup)
+	FOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites > MAX_STRATEGIC_TEAM_SIZE )
 		{
