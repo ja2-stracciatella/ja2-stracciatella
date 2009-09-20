@@ -810,7 +810,7 @@ static void SaveNPCInformationToProfileStruct(void)
 	// Only do this on save now... on traversal this is handled in the strategic code
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) return;
 
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		//if it is an active NPC

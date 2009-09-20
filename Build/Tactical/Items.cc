@@ -4457,7 +4457,7 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 
 	// first, scan through all mercs and turn off xrayed flag for anyone
 	// previously xrayed by this guy
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const tgt = *i;
 		if (tgt->ubMiscSoldierFlags &  SOLDIER_MISC_XRAYED &&
@@ -4468,7 +4468,7 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 		}
 	}
 	// now turn on xray for anyone within range
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const tgt = *i;
 		if (tgt->bTeam != pSoldier->bTeam &&
@@ -4490,7 +4490,7 @@ void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 
 	// scan through all mercs and turn off xrayed flag for anyone
 	// xrayed by this guy
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const tgt = *i;
 		if (tgt->ubMiscSoldierFlags &  SOLDIER_MISC_XRAYED &&

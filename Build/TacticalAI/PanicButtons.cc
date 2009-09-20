@@ -35,7 +35,7 @@ void MakeClosestEnemyChosenOne()
 
 	// consider every enemy, looking for the closest capable, unbusy one
 	SOLDIERTYPE* closest_enemy = NULL;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pSoldier = *i;
 

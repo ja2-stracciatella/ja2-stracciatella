@@ -125,7 +125,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
  //pbPersOL = &(pSoldier->bOppList[0]);
 
  // determine which attack against which target has the greatest attack value
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
@@ -498,7 +498,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	ubDiff = SoldierDifficultyLevel( pSoldier );
 
 	// make a list of tiles one's friends are positioned in
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pFriend = *i;
 
@@ -523,7 +523,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	//NumMessage("ubFriendCnt = ",ubFriendCnt);
 
 	// make a list of tiles one's CURRENTLY SEEN opponents are positioned in
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
@@ -1069,7 +1069,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
  // determine which attack against which target has the greatest attack value
 
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
@@ -1270,7 +1270,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
  pSoldier->usAttackingWeapon = pSoldier->inv[HANDPOS].usItem;
 
  // determine which attack against which target has the greatest attack value
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
@@ -1406,7 +1406,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 static UINT8 NumMercsCloseTo(INT16 sGridNo, UINT8 ubMaxDist)
 {
 	INT8 bNumber = 0;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (s->bTeam == gbPlayerNum &&

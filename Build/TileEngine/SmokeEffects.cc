@@ -332,7 +332,7 @@ void DecaySmokeEffects( UINT32 uiTime )
   UINT16   usNumUpdates = 1;
 
 	// reset 'hit by gas' flags
-	FOR_ALL_MERCS(i) (*i)->fHitByGasFlags = 0;
+	FOR_EACH_MERC(i) (*i)->fHitByGasFlags = 0;
 
   // ATE: 1 ) make first pass and delete/mark any smoke effect for update
   // all the deleting has to be done first///

@@ -193,7 +193,7 @@ static INT8 NumWoundedMercsNearby(ProfileID const pid)
 
 	INT8         n      = 0;
 	GridNo const gridno = npc->sGridNo;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
 		if (s.bTeam != gbPlayerNum)                                        continue;
@@ -213,7 +213,7 @@ static INT8 NumMercsNear(ProfileID const pid, UINT8 const max_dist)
 
 	INT8         n      = 0;
 	GridNo const gridno = npc->sGridNo;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
 		if (s.bTeam != gbPlayerNum)                        continue;
@@ -341,7 +341,7 @@ static INT8 NumMalesPresent(ProfileID const pid)
 
 	INT8         n      = 0;
 	GridNo const gridno = npc->sGridNo;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
 		if (s.bTeam     != gbPlayerNum)            continue;
@@ -361,7 +361,7 @@ static bool FemalePresent(ProfileID const pid)
 	if (!npc) return false;
 
 	GridNo const gridno = npc->sGridNo;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
 		if (s.bTeam     != gbPlayerNum)             continue;
@@ -414,7 +414,7 @@ static BOOLEAN CheckNPCSector(UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY,
 
 static bool AIMMercWithin(GridNo const gridno, INT16 const distance)
 {
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
 		if (s.bTeam               != gbPlayerNum)         continue;

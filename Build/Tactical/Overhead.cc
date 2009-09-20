@@ -1276,7 +1276,7 @@ void ExecuteOverhead(void)
 				gbNumMercsUntilWaitingOver = 0;
 
 				// Reset all waitng codes
-				FOR_ALL_MERCS(i) (*i)->ubWaitActionToDo = 0;
+				FOR_EACH_MERC(i) (*i)->ubWaitActionToDo = 0;
 			}
 
 			if (gbNumMercsUntilWaitingOver == 0)
@@ -4281,7 +4281,7 @@ static bool SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE const& s)
 
 static BOOLEAN WeSeeNoOne(void)
 {
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (s->bTeam == gbPlayerNum && s->bOppCnt > 0) return FALSE;
@@ -4292,7 +4292,7 @@ static BOOLEAN WeSeeNoOne(void)
 
 static BOOLEAN NobodyAlerted(void)
 {
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (s->bTeam        != gbPlayerNum &&
@@ -4309,7 +4309,7 @@ static BOOLEAN NobodyAlerted(void)
 
 static BOOLEAN WeSawSomeoneThisTurn(void)
 {
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (s->bTeam != gbPlayerNum) continue;
@@ -4390,7 +4390,7 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 	else
 	{
 		// we have to loop through EVERYONE to see if anyone sees a hostile... if so, stay in turnbased...
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE const& s = **i;
 			if (s.bLife >= OKLIFE &&
@@ -4956,7 +4956,7 @@ BOOLEAN PlayerTeamFull( )
 UINT8 NumPCsInSector(void)
 {
 	UINT8 ubNumPlayers = 0;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (s->bTeam == gbPlayerNum && s->bLife > 0) ++ubNumPlayers;
@@ -5299,7 +5299,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 	UINT8									ubPointsLost, ubTotalPointsLost, ubNewStance;
 	UINT8									ubLoop2;
 
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pSoldier = *i;
 		if (IS_MERC_BODY_TYPE(pSoldier) && pSoldier->bLife >= OKLIFE && pSoldier->ubSuppressionPoints > 0)

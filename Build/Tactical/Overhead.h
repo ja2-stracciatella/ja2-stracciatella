@@ -172,12 +172,12 @@ static inline void SetSelectedMan(SOLDIERTYPE* const s)
 extern SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
 extern UINT32       guiNumMercSlots;
 
-#define FOR_ALL_MERCS(iter)                                           \
+#define FOR_EACH_MERC(iter)                                           \
 	for (SOLDIERTYPE**       iter        = MercSlots,                   \
 	                ** const end__##iter = MercSlots + guiNumMercSlots; \
 	     iter != end__##iter;                                           \
 	     ++iter)                                                        \
-		if (Assert(*iter == NULL || (*iter)->bActive), *iter == NULL) continue; else
+		if (Assert(!*iter || (*iter)->bActive), !*iter) continue; else
 
 
 extern TacticalStatusType gTacticalStatus;

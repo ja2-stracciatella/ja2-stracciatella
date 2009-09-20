@@ -152,7 +152,7 @@ void HandleTacticalEndTurn()
 
 		/* We're looping through only mercs in tactical engine, ignoring our mercs
 		 * because they were done earlier */
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE& s = **i;
 			if (s.bTeam == gbPlayerNum) continue;

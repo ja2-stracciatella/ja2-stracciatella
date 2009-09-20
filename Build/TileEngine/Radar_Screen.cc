@@ -290,7 +290,7 @@ void RenderRadarScreen()
 			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, line_colour, pDestBuf);
 
 			// Re-render radar
-			FOR_ALL_MERCS(i)
+			FOR_EACH_MERC(i)
 			{
 				SOLDIERTYPE const* const s = *i;
 

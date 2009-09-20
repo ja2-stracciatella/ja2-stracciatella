@@ -141,7 +141,7 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 
 	INT16        heighest_merc_screen_y = -32000;
 	SOLDIERTYPE* best_merc              = 0;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE& s = **i;
 

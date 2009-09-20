@@ -1950,13 +1950,13 @@ ITEM_POOL* GetItemPool(UINT16 const usMapPos, UINT8 const ubLevel)
 
 void NotifySoldiersToLookforItems(void)
 {
-	FOR_ALL_MERCS(i) (*i)->uiStatusFlags |= SOLDIER_LOOKFOR_ITEMS;
+	FOR_EACH_MERC(i) (*i)->uiStatusFlags |= SOLDIER_LOOKFOR_ITEMS;
 }
 
 
 void AllSoldiersLookforItems(void)
 {
-	FOR_ALL_MERCS(i) RevealRoofsAndItems(*i, TRUE);
+	FOR_EACH_MERC(i) RevealRoofsAndItems(*i, TRUE);
 }
 
 

@@ -273,7 +273,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 	INT32 iTotalCoverPoints = 0;
 	INT8  bNumEnemies       = 0;
 	INT32 iHighestValue     = 0;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 

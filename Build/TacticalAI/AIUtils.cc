@@ -575,7 +575,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 	// go through each soldier, looking for "friends" (soldiers on same side)
 	UINT8 ubFriendCount = 0;
 	const SOLDIERTYPE* friends[MAXMERCS];
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const candidate = *i;
 		if (candidate == s) continue; // skip ourselves
@@ -819,7 +819,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 
 	// look through this man's personal & public opplists for opponents known
 	INT8 bClosestLevel = 0; // XXX HACK000E
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pOpp = *i;
 
@@ -1002,7 +1002,7 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
 
 	// look through this man's personal & public opplists for opponents known
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pOpp = *i;
 
@@ -1096,7 +1096,7 @@ INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLeve
 	bClosestLevel = -1;
 
 	// look through this man's personal & public opplists for opponents known
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pOpp = *i;
 
@@ -1442,7 +1442,7 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 	if (IsOnCivTeam(pSoldier)) return sClosestFriend;
 
 	// consider every friend of this soldier (locations assumed to be known)
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pFriend = *i;
 
@@ -1664,7 +1664,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 	const INT8* pSeenOpp = &gbSeenOpponents[pSoldier->ubID][0];
 
  // loop through every one of my possible opponents
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
@@ -1721,7 +1721,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
    // THROUGH THEIR PERSONAL OPPLISTS AND CHECK WHICH OF MY FRIENDS KNOW
    // SOMETHING ABOUT HIM AND WHAT THEIR THREAT VALUE TO HIM IS.
 
-		FOR_ALL_MERCS(j)
+		FOR_EACH_MERC(j)
 		{
 			SOLDIERTYPE* const pFriend = *j;
 

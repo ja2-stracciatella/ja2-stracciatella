@@ -639,7 +639,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	iMyThreatValue = CalcManThreatValue(pSoldier,NOWHERE,FALSE,pSoldier);
 
 	// look through all opponents for those we know of
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
@@ -1066,7 +1066,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	// BUILD A LIST OF THREATENING GRID #s FROM PERSONAL & PUBLIC opplistS
 
 	// look through all opponents for those we know of
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 

@@ -388,7 +388,7 @@ void RenderTopmostTacticalInterface()
   RenderTopmostMultiPurposeLocator();
 	RenderAccumulatedBurstLocations();
 
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE& s = **i;
 		DrawSelectedUIAboveGuy(s);

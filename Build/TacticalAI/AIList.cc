@@ -196,7 +196,7 @@ bool BuildAIListForTeam(INT8 const team)
 	// Create a new list
 	UINT8 n      = 0;
 	UINT8 n_done = 0;
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE& s = **i;
 		// non-null merc slot ensures active

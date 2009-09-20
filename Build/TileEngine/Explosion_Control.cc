@@ -1734,7 +1734,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	if (fAnyMercHit)
 	{
 		// reset explosion hit flag so we can damage mercs again
-		FOR_ALL_MERCS(i) (*i)->ubMiscSoldierFlags &= ~SOLDIER_MISC_HURT_BY_EXPLOSION;
+		FOR_EACH_MERC(i) (*i)->ubMiscSoldierFlags &= ~SOLDIER_MISC_HURT_BY_EXPLOSION;
 	}
 
 	if ( fSubsequent != BLOOD_SPREAD_EFFECT )

@@ -131,7 +131,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	pbPublOL = gbPublicOpplist[pSoldier->bTeam];
 
 	// look through this man's personal & public opplists for opponents heard
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pTemp = *i;
 
@@ -306,7 +306,7 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 	pbPersOL = &(pSoldier->bOppList[0]);
 	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
 
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pTemp = *i;
 

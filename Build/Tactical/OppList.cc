@@ -424,7 +424,7 @@ static void HandleBestSightingPositionInRealtime(void)
 		}
 
 #if defined FORCE_ASSERTS_ON
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const s = *i;
 			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
@@ -486,7 +486,7 @@ static void HandleBestSightingPositionInTurnbased(void)
 		}
 
 #if defined FORCE_ASSERTS_ON
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const s = *i;
 			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
@@ -725,7 +725,7 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 		/* All non-humans under our control would now radio, if they were allowed to
 		 * radio automatically (but they're not). So just nuke new opp cnt. */
 		// NEW: under LOCALOPPLIST, humans on other teams now also radio in here
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE& them = **i;
 			if (them.bLife < OKLIFE) continue;
@@ -1051,7 +1051,7 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 		pSoldier->bVisible = 0; // indeterminate state
 	}
 
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOtherSoldier = *i;
 		if ( pOtherSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
@@ -1081,7 +1081,7 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 
 void TurnOffEveryonesMuzzleFlashes(void)
 {
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const s = *i;
 		if (s->fMuzzleFlash) EndMuzzleFlash(s);
@@ -1191,7 +1191,7 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
 		}
 	}
 
-  FOR_ALL_MERCS(i)
+  FOR_EACH_MERC(i)
   {
   	SOLDIERTYPE& s = **i;
   	if (s.bLife >= OKLIFE) HandleSight(s, SIGHT_LOOK); // no radio or interrupts yet
@@ -1241,7 +1241,7 @@ static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 
 
   // one soldier (pSoldier) looks for every soldier on another team (pOpponent)
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 		if (pOpponent->bLife)
@@ -2031,7 +2031,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 
 
 	// all soldiers not on oppPtr's team now look for him
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pSoldier = *i;
 
@@ -2261,7 +2261,7 @@ static void UpdatePersonal(SOLDIERTYPE* pSoldier, UINT8 ubID, INT8 bNewOpplist, 
 
 static void ResetLastKnownLocs(SOLDIERTYPE const& s)
 {
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SoldierID tgt_id = (*i)->ubID;
 		gsLastKnownOppLoc[s.ubID][tgt_id] = NOWHERE;
@@ -2380,14 +2380,14 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 	{
 		// Get total enemies.
 		// Loop through all mercs in sector and count # of enemies
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			const SOLDIERTYPE* const t = *i;
 			if (OK_ENEMY_MERC(t)) ++ubNumEnemies;
 		}
 
 		// OK, after this, check our guys
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			const SOLDIERTYPE* const t = *i;
 			if (!OK_ENEMY_MERC(t) && t->bOppCnt >= ubNumEnemies / 2) ++ubNumAllies;
@@ -2421,7 +2421,7 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 
 				// Get total enemies.
 				// Loop through all mercs in sector and count # of enemies
-				FOR_ALL_MERCS(i)
+				FOR_EACH_MERC(i)
 				{
 					const SOLDIERTYPE* const t = *i;
 					if (OK_ENEMY_MERC(t)                   &&
@@ -4575,7 +4575,7 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 	}
 
 	// man looks for each of his opponents WHO ARE ALREADY KNOWN TO HIM
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 		// if this merc is active, here, and alive
@@ -4664,7 +4664,7 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 	}
 
 	// man looks for each of his opponents WHO IS CURRENTLY SEEN
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pOpponent = *i;
 		// if this merc is active, here, and alive
@@ -4708,7 +4708,7 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 
 
 	// Deceased looks for each of his opponents who is "seen currently"
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
@@ -4733,7 +4733,7 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 			{
 				// then we need to know if any teammates ALSO see this opponent, so loop through
 				// trying to find ONE witness to the death...
-				FOR_ALL_MERCS(j)
+				FOR_EACH_MERC(j)
 				{
 					const SOLDIERTYPE* const pTeamMate = *j;
 					// if this teammate is active, here, and alive
@@ -4801,7 +4801,7 @@ void DecayPublicOpplist(INT8 bTeam)
 	}
 
 	// decay the team's Public Opplist
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pSoldier = *i;
 		// for every living soldier on ANOTHER team
@@ -4865,7 +4865,7 @@ void NonCombatDecayPublicOpplist( UINT32 uiTime )
 	if ( uiTime - gTacticalStatus.uiTimeSinceLastOpplistDecay >= TIME_BETWEEN_RT_OPPLIST_DECAYS)
 	{
 		// decay!
-		FOR_ALL_MERCS(i) VerifyAndDecayOpplist(*i);
+		FOR_EACH_MERC(i) VerifyAndDecayOpplist(*i);
 
 		for (UINT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
 		{
@@ -4882,7 +4882,7 @@ void RecalculateOppCntsDueToNoLongerNeutral( SOLDIERTYPE * pSoldier )
 
 	if (!pSoldier->bNeutral)
 	{
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const pOpponent = *i;
 			// for every living soldier on ANOTHER team
@@ -4913,7 +4913,7 @@ void RecalculateOppCntsDueToBecomingNeutral( SOLDIERTYPE * pSoldier )
 	{
 		pSoldier->bOppCnt = 0;
 
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const pOpponent = *i;
 			// for every living soldier on ANOTHER team

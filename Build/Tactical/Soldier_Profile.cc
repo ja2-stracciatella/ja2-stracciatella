@@ -752,7 +752,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 
 		// OK, loop through all active merc slots, change
 		// Change ANY attacker's target if they were once on this guy.....
-		FOR_ALL_MERCS(i)
+		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const s = *i;
 			if (s->target == pSoldier) s->target = pNewSoldier;
@@ -1055,7 +1055,7 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 {
 	BOOLEAN				fDoCopy = FALSE;
 
-	FOR_ALL_MERCS(i)
+	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pSoldier = *i;
 		if ( pSoldier->ubProfile != NO_PROFILE )
