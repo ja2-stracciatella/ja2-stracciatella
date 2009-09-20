@@ -25,14 +25,14 @@ static LIGHTEFFECT gLightEffectData[NUM_LIGHT_EFFECT_SLOTS];
 static UINT32      guiNumLightEffects = 0;
 
 
-#define BASE_FOR_ALL_LIGHTEFFECTS(type, iter)                           \
+#define BASE_FOR_EACH_LIGHTEFFECT(type, iter)                           \
 	for (type*       iter        = gLightEffectData,                      \
 	         * const iter##__end = gLightEffectData + guiNumLightEffects; \
 	     iter != iter##__end;                                             \
 	     ++iter)                                                          \
 		if (!iter->fAllocated) continue; else
-#define FOR_ALL_LIGHTEFFECTS(iter)  BASE_FOR_ALL_LIGHTEFFECTS(      LIGHTEFFECT, iter)
-#define CFOR_ALL_LIGHTEFFECTS(iter) BASE_FOR_ALL_LIGHTEFFECTS(const LIGHTEFFECT, iter)
+#define FOR_EACH_LIGHTEFFECT(iter)  BASE_FOR_EACH_LIGHTEFFECT(      LIGHTEFFECT, iter)
+#define CFOR_EACH_LIGHTEFFECT(iter) BASE_FOR_EACH_LIGHTEFFECT(const LIGHTEFFECT, iter)
 
 
 static LIGHTEFFECT* GetFreeLightEffect(void)
@@ -120,7 +120,7 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 void DecayLightEffects( UINT32 uiTime )
 {
   // age all active tear gas clouds, deactivate those that are just dispersing
-	FOR_ALL_LIGHTEFFECTS(l)
+	FOR_EACH_LIGHTEFFECT(l)
   {
 		// ATE: Do this every so ofte, to acheive the effect we want...
 		if (uiTime - l->uiTimeOfLastUpdate <= 350) continue;
@@ -184,7 +184,7 @@ void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 	}
 
 	//loop through and apply the light effects to the map
-	FOR_ALL_LIGHTEFFECTS(l)
+	FOR_EACH_LIGHTEFFECT(l)
 	{
 		UpdateLightingSprite(l);
 	}
@@ -203,7 +203,7 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	FileDelete( zMapName );
 
 	//loop through and count the number of Light effects
-	CFOR_ALL_LIGHTEFFECTS(l)
+	CFOR_EACH_LIGHTEFFECT(l)
 	{
 		++uiNumLightEffects;
 	}
@@ -222,7 +222,7 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32));
 
 	//loop through and save the number of Light effects
-	CFOR_ALL_LIGHTEFFECTS(l)
+	CFOR_EACH_LIGHTEFFECT(l)
 	{
 		InjectLightEffectIntoFile(hFile, l);
 	}
@@ -253,7 +253,7 @@ void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 	}
 
 	//loop through and apply the light effects to the map
-	FOR_ALL_LIGHTEFFECTS(l)
+	FOR_EACH_LIGHTEFFECT(l)
 	{
 		UpdateLightingSprite(l);
 	}
