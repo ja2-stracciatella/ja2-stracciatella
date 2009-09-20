@@ -49,7 +49,7 @@
 #endif
 
 
-#define FOR_ALL_BUTTONS(iter) \
+#define FOR_EACH_BUTTON(iter) \
 	FOR_EACH(GUI_BUTTON*, iter, ButtonList) \
 		if (!*iter) continue; else
 
@@ -59,7 +59,7 @@
 // Called immediately before assigning the button to the button list.
 static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 {
-	FOR_ALL_BUTTONS(i)
+	FOR_EACH_BUTTON(i)
 	{
 		GUI_BUTTON const* const c = *i;
 		if (c->uiFlags            &   BUTTON_DELETION_PENDING) continue;
@@ -444,7 +444,7 @@ void InitButtonSystem(void)
 void ShutdownButtonSystem(void)
 {
 	// Kill off all buttons in the system
-	FOR_ALL_BUTTONS(i)
+	FOR_EACH_BUTTON(i)
 	{
 		delete *i;
 	}
@@ -454,7 +454,7 @@ void ShutdownButtonSystem(void)
 
 static void RemoveButtonsMarkedForDeletion(void)
 {
-	FOR_ALL_BUTTONS(i)
+	FOR_EACH_BUTTON(i)
 	{
 		if ((*i)->uiFlags & BUTTON_DELETION_PENDING) delete *i;
 	}
@@ -965,7 +965,7 @@ static void DrawButtonFromPtr(GUI_BUTTON* b);
 void RenderButtons(void)
 {
 	SaveFontSettings();
-	FOR_ALL_BUTTONS(i)
+	FOR_EACH_BUTTON(i)
 	{
 		// If the button exists, and it's not owned by another object, draw it
 		// Kris:  and make sure that the button isn't hidden.
@@ -1014,7 +1014,7 @@ void MarkAButtonDirty(GUIButtonRef const b)
 
 void MarkButtonsDirty(void)
 {
-	FOR_ALL_BUTTONS(i)
+	FOR_EACH_BUTTON(i)
 	{
 		(*i)->uiFlags |= BUTTON_DIRTY;
 	}
@@ -1030,7 +1030,7 @@ void UnMarkButtonDirty(GUIButtonRef const b)
 
 void UnmarkButtonsDirty(void)
 {
-	FOR_ALL_BUTTONS(i)
+	FOR_EACH_BUTTON(i)
 	{
 		UnMarkButtonDirty(*i);
 	}
