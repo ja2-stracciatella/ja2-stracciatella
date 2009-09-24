@@ -6,11 +6,6 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	return RScreenCenterY + gsCY - gsTLY;
 }
 
-#define	TopmostZLevel()    \
-{                          \
-	sZLevel=TOPMOST_Z_LEVEL; \
-}
-
 #define SoldierZLevel( pSoldier, sMapX, sMapY )                                        \
 {                                                                                      \
 	INT16 sWorldY;                                                                       \

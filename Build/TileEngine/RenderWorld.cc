@@ -785,8 +785,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								goto zlevel_onroof;
 
 							case TILES_STATIC_TOPMOST:
-								TopmostZLevel();
-								break;
+								goto zlevel_topmost;
 
 							case TILES_DYNAMIC_LAND:
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
@@ -926,8 +925,9 @@ zlevel_onroof:
 							}
 
 							case TILES_DYNAMIC_TOPMOST:
-								TopmostZLevel();
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
+zlevel_topmost:
+								sZLevel = TOPMOST_Z_LEVEL;
 								break;
 
 							case TILES_DYNAMIC_MERCS:
