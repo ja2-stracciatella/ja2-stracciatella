@@ -624,7 +624,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 										pShadeTable = pCorpse->pShades[pNode->ubShadeLevel];
 
 										// OK, if this is a corpse.... stop if not visible
-										if (pCorpse->def.bVisible != 1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
+										if (pCorpse->def.bVisible != 1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_prev_node;
 
 										INT16 x;
 										INT16 y;
@@ -734,7 +734,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								// LIMIT RENDERING OF ITEMS TO ABOUT 7, DO NOT RENDER HIDDEN ITEMS TOO!
 								if (bVisibleItemCount == MAX_RENDERED_ITEMS || wi.bVisible != VISIBLE || wi.usFlags & WORLD_ITEM_DONTRENDER)
 								{
-									if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_node;
+									if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_prev_node;
 								}
 
 								if (wi.bRenderZHeightAboveLevel > 0)
@@ -744,7 +744,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 							}
 
 							// If render tile is false...
-							if (!fRenderTile) goto next_node;
+							if (!fRenderTile) goto next_prev_node;
 						}
 
 						// specific code for node types on a per-tile basis
@@ -857,35 +857,19 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								if (uiRowFlags == TILES_DYNAMIC_MERCS)
 								{
 									// If we are multi-tiled, ignore here
-									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
-									{
-										pNode = pNode->pNext;
-										continue;
-									}
+									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
 
 									// If we are at a higher level, no not do anything unless we are at the highmerc stage
-									if (pSoldier->bLevel > 0)
-									{
-										pNode = pNode->pNext;
-										continue;
-									}
+									if (pSoldier->bLevel > 0) goto next_node;
 								}
 
 								if (uiRowFlags == TILES_DYNAMIC_HIGHMERCS)
 								{
 									// If we are multi-tiled, ignore here
-									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
-									{
-										pNode = pNode->pNext;
-										continue;
-									}
+									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
 
 									// If we are at a lower level, no not do anything unless we are at the highmerc stage
-									if (pSoldier->bLevel == 0)
-									{
-										pNode = pNode->pNext;
-										continue;
-									}
+									if (pSoldier->bLevel == 0) goto next_node;
 								}
 
 								if (uiRowFlags == TILES_DYNAMIC_STRUCT_MERCS)
@@ -894,11 +878,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									if (!(pSoldier->uiStatusFlags & SOLDIER_MULTITILE))
 									{
 										// If we are at a low level, no not do anything unless we are at the merc stage
-										if (pSoldier->bLevel == 0)
-										{
-											pNode = pNode->pNext;
-											continue;
-										}
+										if (pSoldier->bLevel == 0) goto next_node;
 									}
 									else
 									{
@@ -919,26 +899,14 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								}
 
 								// IF we are not active, or are a placeholder for multi-tile animations do nothing
-								if (!pSoldier->bActive  || uiLevelNodeFlags & LEVELNODE_MERCPLACEHOLDER)
-								{
-									pNode = pNode->pNext;
-									continue;
-								}
+								if (!pSoldier->bActive  || uiLevelNodeFlags & LEVELNODE_MERCPLACEHOLDER) goto next_node;
 
 								// Skip if we cannot see the guy!
-								if (pSoldier->bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
-								{
-									pNode = pNode->pNext;
-									continue;
-								}
+								if (pSoldier->bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
 
 								// Get animation surface....
 								UINT16 const usAnimSurface = GetSoldierAnimationSurface(pSoldier);
-								if (usAnimSurface == INVALID_ANIMATION_SURFACE)
-								{
-									pNode = pNode->pNext;
-									continue;
-								}
+								if (usAnimSurface == INVALID_ANIMATION_SURFACE) goto next_node;
 
 								// Shade guy always lighter than sceane default!
 								UINT8 ubShadeLevel;
@@ -1053,11 +1021,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								}
 
 								hVObject = gAnimSurfaceDatabase[usAnimSurface].hVideoObject;
-								if (hVObject == NULL)
-								{
-									pNode = pNode->pNext;
-									continue;
-								}
+								if (!hVObject) goto next_node;
 
 								// ATE: If we are in a gridno that we should not use obscure blitter, set!
 								if (!(me.ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT))
@@ -1080,12 +1044,12 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						// Adjust for interface level
 						sYPos += gsRenderHeight;
 
-						if (!fRenderTile) goto next_node;
+						if (!fRenderTile) goto next_prev_node;
 
 						if (uiLevelNodeFlags & LEVELNODE_HIDDEN &&
 								/* If it is a roof and SHOW_ALL_ROOFS is on, turn off hidden tile check */
 								(!TileElem || !(TileElem->uiFlags & ROOF_TILE) || !(gTacticalStatus.uiFlags & SHOW_ALL_ROOFS)))
-							goto next_node;
+							goto next_prev_node;
 
 						if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
 						{
@@ -1494,8 +1458,16 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 							}
 						}
 
+next_prev_node:
+						if (fLinkedListDirection)
+						{
 next_node:
-						pNode = (fLinkedListDirection ? pNode->pNext : pNode->pPrevNode);
+							pNode = pNode->pNext;
+						}
+						else
+						{
+							pNode = pNode->pPrevNode;
+						}
 					}
 				}
 				else
