@@ -36,12 +36,6 @@
 #include <math.h>
 
 
-///////////////////////////
-// C file include here
-#include "Render_Z.c"
-///////////////////////////
-
-
 UINT16* gpZBuffer = NULL;
 
 static INT16 gsCurrentGlowFrame     = 0;
@@ -313,6 +307,15 @@ void RenderSetShadows(BOOLEAN fShadows)
 	{
 		gRenderFlags &= ~RENDER_FLAG_SHADOWS;
 	}
+}
+
+
+static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
+{
+	INT16 RDistToCenterX = WorldCellX * CELL_X_SIZE - gCenterWorldX;
+	INT16 RDistToCenterY = WorldCellY * CELL_Y_SIZE - gCenterWorldY;
+	INT16 RScreenCenterY = RDistToCenterX + RDistToCenterY;
+	return RScreenCenterY + gsCY - gsTLY;
 }
 
 
