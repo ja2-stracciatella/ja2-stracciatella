@@ -7,12 +7,6 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 }
 
 
-#define LandZLevel()      \
-{                         \
-	sZLevel = LAND_Z_LEVEL; \
-}
-
-
 #define ObjectZLevel(sMapX, sMapY)                     \
 {                                                      \
 	if ( uiTileElemFlags & CLIFFHANG_TILE )              \

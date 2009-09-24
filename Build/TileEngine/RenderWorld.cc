@@ -751,8 +751,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						switch (uiRowFlags)
 						{
 							case TILES_STATIC_LAND:
-								LandZLevel();
-								break;
+								goto zlevel_land;
 
 							case TILES_STATIC_OBJECTS:
 								// ATE: Modified to use constant z level, as these are same level as land items
@@ -808,8 +807,9 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								break;
 
 							case TILES_DYNAMIC_LAND:
-								LandZLevel();
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
+zlevel_land:
+								sZLevel = LAND_Z_LEVEL;
 								break;
 
 							case TILES_DYNAMIC_SHADOWS:
