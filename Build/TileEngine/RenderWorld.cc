@@ -1097,8 +1097,45 @@ zlevel_topmost:
 									}
 								}
 
-								// Calculate Z level
-								SoldierZLevel(pSoldier, iTempPosX_M, iTempPosY_M);
+								{ // Calculate Z level
+									INT16 world_y;
+									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
+									{
+										if (pNode->pStructureData)
+										{
+											DB_STRUCTURE const& dbs = *pNode->pStructureData->pDBStructureRef->pDBStructure;
+											sZOffsetX = dbs.bZTileOffsetX;
+											sZOffsetY = dbs.bZTileOffsetY;
+										}
+										world_y = GetMapXYWorldY(iTempPosX_M + sZOffsetX, iTempPosY_M + sZOffsetY);
+									}
+									else
+									{
+										world_y = GetMapXYWorldY(iTempPosX_M, iTempPosY_M);
+									}
+
+									if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
+									{
+										sZLevel = (world_y * Z_SUBLAYERS) + STRUCT_Z_LEVEL;
+									}
+									else if (gsForceSoldierZLevel != 0)
+									{
+										sZLevel = gsForceSoldierZLevel;
+									}
+									else if (pSoldier->sZLevelOverride != -1)
+									{
+										sZLevel = pSoldier->sZLevelOverride;
+									}
+									else if (pSoldier->dHeightAdjustment > 0)
+									{
+										world_y += WALL_HEIGHT + 20;
+										sZLevel = (world_y * Z_SUBLAYERS) + ONROOF_Z_LEVEL;
+									}
+									else
+									{
+										sZLevel = (world_y * Z_SUBLAYERS) + MERC_Z_LEVEL;
+									}
+								}
 
 								if (!(uiFlags & TILES_DIRTY) && pSoldier->fForceShade)
 								{
