@@ -766,19 +766,12 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								goto zlevel_shadows;
 
 							case TILES_STATIC_STRUCTURES:
-								StructZLevel(iTempPosX_M, iTempPosY_M);
-
-								if (fUseTileElem && TileElem->uiFlags & MULTI_Z_TILE)
+								if (fUseTileElem)
 								{
-									fMultiZBlitter = TRUE;
+									if (TileElem->uiFlags & MULTI_Z_TILE) fMultiZBlitter = TRUE;
+									if (TileElem->uiFlags & WALL_TILE)    fWallTile      = TRUE;
 								}
-
-								// ATE: if we are a wall, set flag
-								if (fUseTileElem && TileElem->uiFlags & WALL_TILE)
-								{
-									fWallTile = TRUE;
-								}
-								break;
+								goto zlevel_structures;
 
 							case TILES_STATIC_ROOF:
 								RoofZLevel(iTempPosX_M, iTempPosY_M);
@@ -837,9 +830,72 @@ zlevel_shadows:
 							}
 
 							case TILES_DYNAMIC_STRUCTURES:
-								StructZLevel(iTempPosX_M, iTempPosY_M);
+							{
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
+zlevel_structures:
+								INT16 world_y = GetMapXYWorldY(iTempPosX_M, iTempPosY_M);
+								if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
+								{
+									if (pCorpse->def.usFlags & ROTTING_CORPSE_VEHICLE)
+									{
+										if (pNode->pStructureData)
+										{
+											DB_STRUCTURE const& dbs = *pNode->pStructureData->pDBStructureRef->pDBStructure;
+											sZOffsetX = dbs.bZTileOffsetX;
+											sZOffsetY = dbs.bZTileOffsetY;
+										}
+										world_y = GetMapXYWorldY(iTempPosX_M + sZOffsetX, iTempPosY_M + sZOffsetY);
+										sZLevel = STRUCT_Z_LEVEL;
+									}
+									else
+									{
+										sZOffsetX = -1;
+										sZOffsetY = -1;
+										world_y   = GetMapXYWorldY(iTempPosX_M + sZOffsetX, iTempPosY_M + sZOffsetY);
+										world_y  += 20;
+										sZLevel   = LAND_Z_LEVEL;
+									}
+								}
+								else if (uiLevelNodeFlags & LEVELNODE_PHYSICSOBJECT)
+								{
+									world_y += pNode->sRelativeZ;
+									sZLevel  = ONROOF_Z_LEVEL;
+								}
+								else if (uiLevelNodeFlags & LEVELNODE_ITEM)
+								{
+									WORLDITEM const& wi = GetWorldItem(pNode->pItemPool->iItemIndex);
+									if (wi.bRenderZHeightAboveLevel > 0)
+									{
+										sZLevel  = STRUCT_Z_LEVEL + wi.bRenderZHeightAboveLevel;
+									}
+									else
+									{
+										sZLevel = OBJECT_Z_LEVEL;
+									}
+								}
+								else if (uiAniTileFlags & ANITILE_SMOKE_EFFECT)
+								{
+									sZLevel = OBJECT_Z_LEVEL;
+								}
+								else if (uiLevelNodeFlags & LEVELNODE_USEZ)
+								{
+									if (uiLevelNodeFlags & LEVELNODE_NOZBLITTER)
+									{
+										world_y += 40;
+									}
+									else
+									{
+										world_y += pNode->sRelativeZ;
+									}
+									sZLevel = ONROOF_Z_LEVEL;
+								}
+								else
+								{
+									sZLevel = STRUCT_Z_LEVEL;
+								}
+								sZLevel += world_y * Z_SUBLAYERS;
 								break;
+							}
 
 							case TILES_DYNAMIC_ROOF:
 								sYPos -= WALL_HEIGHT;
