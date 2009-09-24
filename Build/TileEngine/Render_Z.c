@@ -6,26 +6,6 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	return RScreenCenterY + gsCY - gsTLY;
 }
 
-#define	OnRoofZLevel( sMapX, sMapY )                \
-{                                                   \
-	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY);     \
-                                                    \
-	if ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE ) \
-	{                                                 \
-		sWorldY += ( WALL_HEIGHT + 40 );                \
-	}                                                 \
-	if ( uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE ) \
-	{                                                 \
-		sWorldY += ( WALL_HEIGHT + 40 );                \
-	}                                                 \
-	else                                              \
-	{                                                 \
-		sWorldY += WALL_HEIGHT;                         \
-	}                                                 \
-                                                    \
-	sZLevel=(sWorldY*Z_SUBLAYERS)+ONROOF_Z_LEVEL;     \
-}
-
 #define	TopmostZLevel()    \
 {                          \
 	sZLevel=TOPMOST_Z_LEVEL; \

@@ -782,10 +782,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								goto zlevel_roof;
 
 							case TILES_STATIC_ONROOF:
-								OnRoofZLevel(iTempPosX_M, iTempPosY_M);
-								// Automatically adjust height!
-								sYPos -= WALL_HEIGHT;
-								break;
+								goto zlevel_onroof;
 
 							case TILES_STATIC_TOPMOST:
 								TopmostZLevel();
@@ -905,11 +902,28 @@ zlevel_roof:
 							}
 
 							case TILES_DYNAMIC_ONROOF:
-								OnRoofZLevel(iTempPosX_M, iTempPosY_M);
+							{
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
-								// Automatically adjust height!
+zlevel_onroof:
+								// Automatically adjust height.
 								sYPos -= WALL_HEIGHT;
+
+								INT16 world_y = GetMapXYWorldY(iTempPosX_M, iTempPosY_M);
+								if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
+								{
+									world_y += WALL_HEIGHT + 40;
+								}
+								if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
+								{ // XXX duplicate?
+									world_y += WALL_HEIGHT + 40;
+								}
+								else
+								{
+									world_y += WALL_HEIGHT;
+								}
+								sZLevel = (world_y * Z_SUBLAYERS) + ONROOF_Z_LEVEL;
 								break;
+							}
 
 							case TILES_DYNAMIC_TOPMOST:
 								TopmostZLevel();
