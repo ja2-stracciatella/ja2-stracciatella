@@ -774,17 +774,12 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								goto zlevel_structures;
 
 							case TILES_STATIC_ROOF:
-								RoofZLevel(iTempPosX_M, iTempPosY_M);
-
-								// Automatically adjust height!
-								sYPos -= WALL_HEIGHT;
-
 								// ATE: Added for shadows on roofs
 								if (fUseTileElem && TileElem->uiFlags & ROOFSHADOW_TILE)
 								{
 									fShadowBlitter = TRUE;
 								}
-								break;
+								goto zlevel_roof;
 
 							case TILES_STATIC_ONROOF:
 								OnRoofZLevel(iTempPosX_M, iTempPosY_M);
@@ -898,10 +893,16 @@ zlevel_structures:
 							}
 
 							case TILES_DYNAMIC_ROOF:
-								sYPos -= WALL_HEIGHT;
-								RoofZLevel(iTempPosX_M, iTempPosY_M);
+							{
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
+zlevel_roof:
+								// Automatically adjust height.
+								sYPos -= WALL_HEIGHT;
+
+								INT16 const world_y = WALL_HEIGHT + GetMapXYWorldY(iTempPosX_M, iTempPosY_M);
+								sZLevel = (world_y * Z_SUBLAYERS) + ROOF_Z_LEVEL;
 								break;
+							}
 
 							case TILES_DYNAMIC_ONROOF:
 								OnRoofZLevel(iTempPosX_M, iTempPosY_M);

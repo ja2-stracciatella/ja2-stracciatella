@@ -6,13 +6,6 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	return RScreenCenterY + gsCY - gsTLY;
 }
 
-#define	RoofZLevel( sMapX, sMapY )              \
-{                                               \
-	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY); \
-	sWorldY += WALL_HEIGHT;                       \
-	sZLevel=(sWorldY*Z_SUBLAYERS)+ROOF_Z_LEVEL;   \
-}
-
 #define	OnRoofZLevel( sMapX, sMapY )                \
 {                                                   \
 	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY);     \
