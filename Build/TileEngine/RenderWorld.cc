@@ -757,6 +757,14 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								// ATE: Modified to use constant z level, as these are same level as land items
 								goto zlevel_objects;
 
+							case TILES_STATIC_SHADOWS:
+								if (uiLevelNodeFlags & LEVELNODE_EXITGRID)
+								{
+									fIntensityBlitter = TRUE;
+									fShadowBlitter    = FALSE;
+								}
+								goto zlevel_shadows;
+
 							case TILES_STATIC_STRUCTURES:
 								StructZLevel(iTempPosX_M, iTempPosY_M);
 
@@ -795,16 +803,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								TopmostZLevel();
 								break;
 
-							case TILES_STATIC_SHADOWS:
-								ShadowZLevel(iTempPosX_M, iTempPosY_M);
-
-								if (uiLevelNodeFlags & LEVELNODE_EXITGRID)
-								{
-									fIntensityBlitter = TRUE;
-									fShadowBlitter    = FALSE;
-								}
-								break;
-
 							case TILES_DYNAMIC_LAND:
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
 zlevel_land:
@@ -830,9 +828,13 @@ zlevel_objects:
 								break;
 
 							case TILES_DYNAMIC_SHADOWS:
-								ShadowZLevel(iTempPosX_M, iTempPosY_M);
+							{
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
+zlevel_shadows:
+								INT16 const world_y = GetMapXYWorldY(iTempPosX_M, iTempPosY_M);
+								sZLevel = __max(((world_y - 80) * Z_SUBLAYERS) + SHADOW_Z_LEVEL, 0);
 								break;
+							}
 
 							case TILES_DYNAMIC_STRUCTURES:
 								StructZLevel(iTempPosX_M, iTempPosY_M);

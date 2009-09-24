@@ -104,12 +104,6 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	sZLevel=TOPMOST_Z_LEVEL; \
 }
 
-#define	ShadowZLevel( sMapX, sMapY )                                   \
-{                                                                      \
-	INT16 sWorldY = GetMapXYWorldY(sMapX, sMapY);                        \
-	sZLevel=__max( ( (sWorldY - 80 ) *Z_SUBLAYERS )+SHADOW_Z_LEVEL, 0 ); \
-}
-
 #define SoldierZLevel( pSoldier, sMapX, sMapY )                                        \
 {                                                                                      \
 	INT16 sWorldY;                                                                       \
