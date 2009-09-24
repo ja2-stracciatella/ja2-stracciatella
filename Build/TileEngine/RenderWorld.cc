@@ -61,7 +61,7 @@ enum RenderTilesFlags
 ENUM_BITSET(RenderTilesFlags)
 
 
-#define MAX_RENDERED_ITEMS 3
+#define MAX_RENDERED_ITEMS 2
 
 
 // RENDERER FLAGS FOR DIFFERENT RENDER LEVELS
@@ -441,10 +441,8 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						pNode = me.pLevelNodes[ubLevelNodeStartIndex[cnt]];
 					}
 
-					INT8 bItemCount = 0;
-					INT8 bVisibleItemCount = 0;
-					const ITEM_POOL* pItemPool  = NULL;
-
+					INT8             n_visible_items = 0;
+					ITEM_POOL const* item_pool       = 0;
 					while (pNode != NULL)
 					{
 						const RenderFXType RenderingFX = RenderFXList[cnt];
@@ -713,32 +711,19 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 							// COUNT # OF ITEMS AT THIS LOCATION
 							if (uiLevelNodeFlags & LEVELNODE_ITEM)
 							{
-								// OK set item pool for this location....
-								if (bItemCount == 0)
-								{
-									pItemPool = pNode->pItemPool;
-								}
-								else
-								{
-									pItemPool = pItemPool->pNext;
-								}
+								// Set item pool for this location.
+								item_pool = item_pool ? item_pool->pNext : pNode->pItemPool;
+								WORLDITEM const& wi = GetWorldItem(item_pool->iItemIndex);
 
-								WORLDITEM const& wi = GetWorldItem(pItemPool->iItemIndex);
-								if (bItemCount < MAX_RENDERED_ITEMS)
-								{
-									bItemCount++;
-
-									if (wi.bVisible == VISIBLE)
-									{
-										bVisibleItemCount++;
-									}
-								}
-
-								// LIMIT RENDERING OF ITEMS TO ABOUT 7, DO NOT RENDER HIDDEN ITEMS TOO!
-								if (bVisibleItemCount == MAX_RENDERED_ITEMS || wi.bVisible != VISIBLE || wi.usFlags & WORLD_ITEM_DONTRENDER)
+								/* Limit rendering of items to MAX_RENDERED_ITEMS. Do not render
+								 * hidden items either. */
+								if (wi.bVisible != VISIBLE             ||
+										wi.usFlags & WORLD_ITEM_DONTRENDER ||
+										n_visible_items == MAX_RENDERED_ITEMS)
 								{
 									if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_prev_node;
 								}
+								++n_visible_items;
 
 								if (wi.bRenderZHeightAboveLevel > 0)
 								{
