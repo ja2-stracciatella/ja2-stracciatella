@@ -940,33 +940,33 @@ zlevel_topmost:
 								// Set flag to set layer as used
 								uiAdditiveLayerUsedFlags |= uiRowFlags;
 
-								SOLDIERTYPE const* const pSoldier = pNode->pSoldier;
+								SOLDIERTYPE const& s = *pNode->pSoldier;
 
 								if (uiRowFlags == TILES_DYNAMIC_MERCS)
 								{
 									// If we are multi-tiled, ignore here
-									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
+									if (s.uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
 
 									// If we are at a higher level, no not do anything unless we are at the highmerc stage
-									if (pSoldier->bLevel > 0) goto next_node;
+									if (s.bLevel > 0) goto next_node;
 								}
 
 								if (uiRowFlags == TILES_DYNAMIC_HIGHMERCS)
 								{
 									// If we are multi-tiled, ignore here
-									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
+									if (s.uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
 
 									// If we are at a lower level, no not do anything unless we are at the highmerc stage
-									if (pSoldier->bLevel == 0) goto next_node;
+									if (s.bLevel == 0) goto next_node;
 								}
 
 								if (uiRowFlags == TILES_DYNAMIC_STRUCT_MERCS)
 								{
 									// If we are not multi-tiled, ignore here
-									if (!(pSoldier->uiStatusFlags & SOLDIER_MULTITILE))
+									if (!(s.uiStatusFlags & SOLDIER_MULTITILE))
 									{
 										// If we are at a low level, no not do anything unless we are at the merc stage
-										if (pSoldier->bLevel == 0) goto next_node;
+										if (s.bLevel == 0) goto next_node;
 									}
 									else
 									{
@@ -975,32 +975,32 @@ zlevel_topmost:
 										fZBlitter                 = TRUE;
 
 										// ATE: Use one direction for queen!
-										if (pSoldier->ubBodyType == QUEENMONSTER)
+										if (s.ubBodyType == QUEENMONSTER)
 										{
 											sMultiTransShadowZBlitterIndex = 0;
 										}
 										else
 										{
-											sMultiTransShadowZBlitterIndex = OneCDirection(pSoldier->bDirection);
+											sMultiTransShadowZBlitterIndex = OneCDirection(s.bDirection);
 										}
 									}
 								}
 
 								// IF we are not active, or are a placeholder for multi-tile animations do nothing
-								if (!pSoldier->bActive  || uiLevelNodeFlags & LEVELNODE_MERCPLACEHOLDER) goto next_node;
+								if (!s.bActive || uiLevelNodeFlags & LEVELNODE_MERCPLACEHOLDER) goto next_node;
 
 								// Skip if we cannot see the guy!
-								if (pSoldier->bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
+								if (s.bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
 
 								// Get animation surface....
-								UINT16 const usAnimSurface = GetSoldierAnimationSurface(pSoldier);
+								UINT16 const usAnimSurface = GetSoldierAnimationSurface(&s);
 								if (usAnimSurface == INVALID_ANIMATION_SURFACE) goto next_node;
 
 								// Shade guy always lighter than sceane default!
 								UINT8 ubShadeLevel;
-								if (pSoldier->fBeginFade)
+								if (s.fBeginFade)
 								{
-									ubShadeLevel = pSoldier->ubFadeLevel;
+									ubShadeLevel = s.ubFadeLevel;
 								}
 								else
 								{
@@ -1008,11 +1008,11 @@ zlevel_topmost:
 									ubShadeLevel  = __max(ubShadeLevel - 2, DEFAULT_SHADE_LEVEL);
 									ubShadeLevel |= pNode->ubShadeLevel & 0x30;
 								}
-								pShadeTable = pSoldier->pShades[ubShadeLevel];
+								pShadeTable = s.pShades[ubShadeLevel];
 
 								// Position guy based on guy's position
-								const float dOffsetX = pSoldier->dXPos - gsRenderCenterX;
-								const float dOffsetY = pSoldier->dYPos - gsRenderCenterY;
+								float const dOffsetX = s.dXPos - gsRenderCenterX;
+								float const dOffsetY = s.dYPos - gsRenderCenterY;
 
 								// Calculate guy's position
 								float dTempX_S;
@@ -1027,50 +1027,43 @@ zlevel_topmost:
 								sYPos -= gsRenderWorldOffsetY;
 
 								// Adjust for soldier height
-								sYPos -= pSoldier->sHeightAdjustment;
+								sYPos -= s.sHeightAdjustment;
 
 								// Handle shade stuff....
-								if (!pSoldier->fBeginFade)
+								if (!s.fBeginFade)
 								{
 									// Special effect - draw ghost if is seen by a guy in player's team but not current guy
 									// ATE: Todo: setup flag for 'bad-guy' - can releive some checks in renderer
-									if (!pSoldier->bNeutral && pSoldier->bSide != gbPlayerNum)
+									if (!s.bNeutral && s.bSide != gbPlayerNum)
 									{
 										INT8 bGlowShadeOffset = 0;
 
 										if (gTacticalStatus.ubCurrentTeam == gbPlayerNum)
 										{
 											// Shade differently depending on visiblity
-											if (pSoldier->bLastRenderVisibleValue == 0)
+											if (s.bLastRenderVisibleValue == 0)
 											{
 												bGlowShadeOffset = 10;
 											}
 
 											const SOLDIERTYPE* const sel = GetSelectedMan();
-											if (sel != NULL                                       &&
-													sel->bOppList[pSoldier->ubID] != SEEN_CURRENTLY   &&
-													pSoldier->usAnimState         != CHARIOTS_OF_FIRE &&
-													pSoldier->usAnimState         != BODYEXPLODING)
+											if (sel                                       &&
+													sel->bOppList[s.ubID] != SEEN_CURRENTLY   &&
+													s.usAnimState         != CHARIOTS_OF_FIRE &&
+													s.usAnimState         != BODYEXPLODING)
 											{
 												bGlowShadeOffset = 10;
 											}
 										}
 
-										UINT16* const * pShadeStart;
-										if (pSoldier->bLevel == 0)
-										{
-											pShadeStart = &pSoldier->pGlowShades[0];
-										}
-										else
-										{
-											pShadeStart = &pSoldier->pShades[20];
-										}
+										UINT16* const* pShadeStart =
+											s.bLevel == 0 ? &s.pGlowShades[0] : &s.pShades[20];
 
 										// Set shade
 										// If a bad guy is highlighted
 										if (gSelectedGuy != NULL && gSelectedGuy->bSide != gbPlayerNum)
 										{
-											if (gSelectedGuy == pSoldier)
+											if (gSelectedGuy == &s)
 											{
 												pShadeTable = pShadeStart[gsGlowFrames[gsCurrentGlowFrame] + bGlowShadeOffset];
 												gsForceSoldierZLevel = TOPMOST_Z_LEVEL;
@@ -1080,7 +1073,7 @@ zlevel_topmost:
 												// Are we dealing with a not-so visible merc?
 												if (bGlowShadeOffset == 10)
 												{
-													pShadeTable = pSoldier->effect_shade;
+													pShadeTable = s.effect_shade;
 												}
 											}
 										}
@@ -1088,7 +1081,7 @@ zlevel_topmost:
 										{
 											// Not highlighted, but maybe we are in enemy's turn and they have the baton
 											if (gTacticalStatus.ubCurrentTeam == OUR_TEAM ||
-													pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) // Does he have baton?
+													s.uiStatusFlags & SOLDIER_UNDERAICONTROL) // Does he have baton?
 											{
 												pShadeTable = pShadeStart[gsGlowFrames[gsCurrentGlowFrame] + bGlowShadeOffset];
 												if (gsGlowFrames[gsCurrentGlowFrame] >= 7)
@@ -1102,7 +1095,7 @@ zlevel_topmost:
 
 								{ // Calculate Z level
 									INT16 world_y;
-									if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
+									if (s.uiStatusFlags & SOLDIER_MULTITILE)
 									{
 										if (pNode->pStructureData)
 										{
@@ -1117,7 +1110,7 @@ zlevel_topmost:
 										world_y = GetMapXYWorldY(iTempPosX_M, iTempPosY_M);
 									}
 
-									if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
+									if (s.uiStatusFlags & SOLDIER_VEHICLE)
 									{
 										sZLevel = (world_y * Z_SUBLAYERS) + STRUCT_Z_LEVEL;
 									}
@@ -1125,11 +1118,11 @@ zlevel_topmost:
 									{
 										sZLevel = gsForceSoldierZLevel;
 									}
-									else if (pSoldier->sZLevelOverride != -1)
+									else if (s.sZLevelOverride != -1)
 									{
-										sZLevel = pSoldier->sZLevelOverride;
+										sZLevel = s.sZLevelOverride;
 									}
-									else if (pSoldier->dHeightAdjustment > 0)
+									else if (s.dHeightAdjustment > 0)
 									{
 										world_y += WALL_HEIGHT + 20;
 										sZLevel = (world_y * Z_SUBLAYERS) + ONROOF_Z_LEVEL;
@@ -1140,9 +1133,9 @@ zlevel_topmost:
 									}
 								}
 
-								if (!(uiFlags & TILES_DIRTY) && pSoldier->fForceShade)
+								if (!(uiFlags & TILES_DIRTY) && s.fForceShade)
 								{
-									pShadeTable = pSoldier->pForcedShade;
+									pShadeTable = s.pForcedShade;
 								}
 
 								hVObject = gAnimSurfaceDatabase[usAnimSurface].hVideoObject;
@@ -1159,7 +1152,7 @@ zlevel_topmost:
 									sZLevel += 2;
 								}
 
-								usImageIndex = pSoldier->usAniFrame;
+								usImageIndex = s.usAniFrame;
 
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
 								break;
