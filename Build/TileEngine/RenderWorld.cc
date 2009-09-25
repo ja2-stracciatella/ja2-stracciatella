@@ -332,7 +332,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 	static RenderFXType RenderFXList[NUM_RENDER_FX_TYPES];
 
 	HVOBJECT hVObject = NULL; // XXX HACK000E
-	const TILE_ELEMENT* TileElem  = NULL;
 	BOOLEAN fPixelate = FALSE;
 	INT16 sMultiTransShadowZBlitterIndex = -1;
 
@@ -459,7 +458,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						BOOLEAN fIntensityBlitter         = FALSE;
 						BOOLEAN fSaveZ                    = FALSE;
 						BOOLEAN fWallTile                 = FALSE;
-						BOOLEAN fUseTileElem              = FALSE;
 						BOOLEAN fMultiTransShadowZBlitter = FALSE;
 						BOOLEAN fObscuredBlitter          = FALSE;
 						UINT32 uiAniTileFlags = 0;
@@ -506,6 +504,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						INT16 sXPos = iTempPosX_S;
 						INT16 sYPos = iTempPosY_S;
 
+						TILE_ELEMENT const* TileElem  = 0;
 						// setup for any tile type except mercs
 						if (!fMerc)
 						{
@@ -538,8 +537,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 								// Set Tile elem flags here!
 								uiTileElemFlags = TileElem->uiFlags;
-								// Set valid tile elem!
-								fUseTileElem = TRUE;
 
 								if (!fPixelate)
 								{
@@ -754,7 +751,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								goto zlevel_shadows;
 
 							case TILES_STATIC_STRUCTURES:
-								if (fUseTileElem)
+								if (TileElem)
 								{
 									if (TileElem->uiFlags & MULTI_Z_TILE) fMultiZBlitter = TRUE;
 									if (TileElem->uiFlags & WALL_TILE)    fWallTile      = TRUE;
@@ -763,7 +760,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 							case TILES_STATIC_ROOF:
 								// ATE: Added for shadows on roofs
-								if (fUseTileElem && TileElem->uiFlags & ROOFSHADOW_TILE)
+								if (TileElem && TileElem->uiFlags & ROOFSHADOW_TILE)
 								{
 									fShadowBlitter = TRUE;
 								}
