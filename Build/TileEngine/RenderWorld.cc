@@ -430,19 +430,11 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						LogMouseOverInteractiveTile(uiTileIndex);
 					}
 
-					LEVELNODE* pNode;
-					if (uiFlags & TILES_MARKED && !(me.uiFlags & MAPELEMENT_REDRAW))
-					{
-						pNode = NULL;
-					}
-					else
-					{
-						pNode = me.pLevelNodes[ubLevelNodeStartIndex[cnt]];
-					}
+					if (uiFlags & TILES_MARKED && !(me.uiFlags & MAPELEMENT_REDRAW)) goto next_tile;
 
 					INT8             n_visible_items = 0;
 					ITEM_POOL const* item_pool       = 0;
-					while (pNode != NULL)
+					for (LEVELNODE* pNode = me.pLevelNodes[ubLevelNodeStartIndex[cnt]]; pNode;)
 					{
 						const RenderFXType RenderingFX = RenderFXList[cnt];
 						const BOOLEAN fObscured            = RenderingFX.fObscured;
@@ -1590,6 +1582,7 @@ next_node:
 					}
 				}
 
+next_tile:
 				iTempPosX_S += 40;
 				iTempPosX_M++;
 				iTempPosY_M--;
