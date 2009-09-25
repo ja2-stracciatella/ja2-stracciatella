@@ -475,20 +475,17 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						if (sModifiedTileHeight < 0) sModifiedTileHeight = 0;
 
 						BOOLEAN fRenderTile = TRUE;
-						if (uiLevelNodeFlags & LEVELNODE_REVEAL)
+						if (!(uiLevelNodeFlags & LEVELNODE_REVEAL))
 						{
-							if (!fDynamic)
-							{
-								fRenderTile = FALSE;
-							}
-							else
-							{
-								fPixelate = TRUE;
-							}
+							fPixelate = FALSE;
+						}
+						else if (fDynamic)
+						{
+							fPixelate = TRUE;
 						}
 						else
 						{
-							fPixelate = FALSE;
+							fRenderTile = FALSE;
 						}
 
 						// non-type specific setup
