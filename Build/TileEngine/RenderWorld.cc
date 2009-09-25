@@ -462,7 +462,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 								!(me.uiFlags & MAPELEMENT_REEVALUATE_REDUNDENCY) && // If we donot want to re-evaluate first
 								!(gTacticalStatus.uiFlags & NOHIDE_REDUNDENCY))
 						{
-							pNode = NULL;
 							break;
 						}
 
