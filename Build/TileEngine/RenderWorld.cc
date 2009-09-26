@@ -304,7 +304,7 @@ void ResetSpecificLayerOptimizing(RenderLayerFlags const uiRowFlag)
 }
 
 
-static void SumAddiviveLayerOptimization(void)
+static void SumAdditiveLayerOptimization()
 {
 	uiLayerUsedFlags = uiAdditiveLayerUsedFlags;
 }
@@ -1828,7 +1828,7 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 		sLevelIDs[8] = RENDER_DYNAMIC_ONROOF;
 		RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 9, sLevelIDs);
 
-		SumAddiviveLayerOptimization();
+		SumAdditiveLayerOptimization();
 	}
 
 	ResetRenderParameters();
@@ -1962,7 +1962,7 @@ static void RenderDynamicWorld(void)
 	// ATE: check here for mouse over structs.....
 	RenderTiles(TILES_DYNAMIC_CHECKFOR_INT_TILE, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 
-	SumAddiviveLayerOptimization();
+	SumAdditiveLayerOptimization();
 	ResetRenderParameters();
 }
 
