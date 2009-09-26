@@ -1961,7 +1961,7 @@ static void RenderDynamicWorld(void)
 	uiLevelFlags[2] = TILES_DYNAMIC_STRUCT_MERCS;
 	uiLevelFlags[3] = TILES_DYNAMIC_MERCS;
 	uiLevelFlags[4] = TILES_DYNAMIC_STRUCTURES;
-	uiLevelFlags[5] = TILES_DYNAMIC_HIGHMERCS; // XXX TODO0020 This is the only place where TILES_* and RENDER_* do not match
+	uiLevelFlags[5] = TILES_DYNAMIC_HIGHMERCS;
 	uiLevelFlags[6] = TILES_DYNAMIC_ROOF;
 	uiLevelFlags[7] = TILES_DYNAMIC_ONROOF;
 	uiLevelFlags[8] = TILES_DYNAMIC_TOPMOST;
@@ -1971,7 +1971,7 @@ static void RenderDynamicWorld(void)
 	sLevelIDs[2] = RENDER_DYNAMIC_STRUCT_MERCS;
 	sLevelIDs[3] = RENDER_DYNAMIC_MERCS;
 	sLevelIDs[4] = RENDER_DYNAMIC_STRUCTS;
-	sLevelIDs[5] = RENDER_DYNAMIC_MERCS; // XXX TODO0020 This is the only place where TILES_* and RENDER_* do not match
+	sLevelIDs[5] = RENDER_DYNAMIC_HIGHMERCS;
 	sLevelIDs[6] = RENDER_DYNAMIC_ROOF;
 	sLevelIDs[7] = RENDER_DYNAMIC_ONROOF;
 	sLevelIDs[8] = RENDER_DYNAMIC_TOPMOST;
