@@ -119,7 +119,7 @@ void RenderSetShadows(BOOLEAN fShadows);
 extern UINT16* gpZBuffer;
 extern BOOLEAN gfIgnoreScrolling;
 
-extern BOOLEAN gfScrollInertia;
+extern bool    g_scroll_inertia;
 extern BOOLEAN gfScrollPending;
 
 void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom, BOOLEAN fDynamicsToo);

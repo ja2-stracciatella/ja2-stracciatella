@@ -425,10 +425,7 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 		ubLevel=ubLightningTable[uiStrike][uiIndex][1];
 
     // ATE: Don't modify if scrolling!
-	  if ( gfScrollPending || gfScrollInertia )
-	  {
-	  }
-	  else
+	  if (!gfScrollPending && !g_scroll_inertia)
 	  {
  		  if(ubLastLevel!=ubLevel)
 		  {

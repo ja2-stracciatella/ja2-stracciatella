@@ -746,25 +746,17 @@ static void SetUIMouseCursor(void)
 				gsGlobalCursorYOffset = 0;
 				SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 			}
-			else
+			else if (!gfScrollPending && !g_scroll_inertia)
 			{
-				if ( gfScrollPending || gfScrollInertia )
-				{
+				// Adjust viewport to edge of screen!
+				// Define region for viewport
+				MSYS_RemoveRegion(&gViewportRegion);
+				MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-				}
-				else
-				{
-					// Adjust viewport to edge of screen!
-					// Define region for viewport
-					MSYS_RemoveRegion( &gViewportRegion );
-					MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+				gsGlobalCursorYOffset = SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y;
+				SetCurrentCursorFromDatabase(gUICursors[guiNewUICursor].usFreeCursorName);
 
-					gsGlobalCursorYOffset = SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y;
-					SetCurrentCursorFromDatabase( gUICursors[ guiNewUICursor ].usFreeCursorName );
-
-          gfViewPortAdjustedForSouth = TRUE;
-
-				}
+				gfViewPortAdjustedForSouth = TRUE;
 			}
 		}
     else

@@ -494,55 +494,49 @@ ScreenID MainGameScreenHandle(void)
 	//}
 
 
-//	if ( gfScrollInertia == FALSE )
+	if (!ARE_IN_FADE_IN())
 	{
-		if ( !ARE_IN_FADE_IN( ) )
-		{
-			UpdateBullets( );
+		UpdateBullets();
 
-			// Execute Tactical Overhead
-			ExecuteOverhead( );
-		}
+		// Execute Tactical Overhead
+		ExecuteOverhead();
+	}
 
-		// Handle animated cursors
-		if( gfWorldLoaded )
-		{
-			HandleAnimatedCursors( );
+	// Handle animated cursors
+	if (gfWorldLoaded)
+	{
+		HandleAnimatedCursors();
 
-			// Handle Interface
-			ScreenID const uiNewScreen = HandleTacticalUI();
+		// Handle Interface
+		ScreenID const uiNewScreen = HandleTacticalUI();
 
-			HandleTalkingAutoFaces( );
+		HandleTalkingAutoFaces();
 
-			if (uiNewScreen != GAME_SCREEN) return uiNewScreen;
-		}
+		if (uiNewScreen != GAME_SCREEN) return uiNewScreen;
+	}
 #ifdef JA2EDITOR
-		else if( gfIntendOnEnteringEditor )
-		{
-			DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Aborting normal game mode and entering editor mode...");
-			SetPendingNewScreen(NO_PENDING_SCREEN);
-			return EDIT_SCREEN;
-		}
+	else if (gfIntendOnEnteringEditor)
+	{
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Aborting normal game mode and entering editor mode...");
+		SetPendingNewScreen(NO_PENDING_SCREEN);
+		return EDIT_SCREEN;
+	}
 #endif
-		else if( !gfEnteringMapScreen )
-		{
-			gfEnteringMapScreen = TRUE;
-		}
+	else if (!gfEnteringMapScreen)
+	{
+		gfEnteringMapScreen = TRUE;
+	}
 
-		// Deque all game events
-		if ( !ARE_IN_FADE_IN( ) )
-		{
-			DequeAllGameEvents();
-		}
+	// Deque all game events
+	if (!ARE_IN_FADE_IN())
+	{
+		DequeAllGameEvents();
 	}
 
 
 	HandleTopMessages( );
 
-	if ( gfScrollPending || gfScrollInertia )
-	{
-	}
-	else
+	if (!gfScrollPending && !g_scroll_inertia)
 	{
 		// Handle Interface Stuff
 		SetUpInterface( );
@@ -561,7 +555,7 @@ ScreenID MainGameScreenHandle(void)
 		gRenderOverride( );
 	}
 
-	if ( gfScrollPending || gfScrollInertia )
+	if (gfScrollPending || g_scroll_inertia)
 	{
 		RenderTacticalInterfaceWhileScrolling( );
 	}
@@ -641,7 +635,7 @@ ScreenID MainGameScreenHandle(void)
 	}
 
 	//Don't render if we have a scroll pending!
-	if ( !gfScrollPending && !gfScrollInertia && !gfRenderFullThisFrame )
+	if (!gfScrollPending && !g_scroll_inertia && !gfRenderFullThisFrame)
 	{
 		RenderButtonsFastHelp( );
 	}

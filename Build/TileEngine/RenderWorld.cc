@@ -153,7 +153,7 @@ double gdScaleY;
 #define FASTMAPROWCOLTOPOS(r, c) ((r) * WORLD_COLS + (c))
 
 
-BOOLEAN gfScrollInertia = FALSE;
+bool g_scroll_inertia = false;
 
 
 // GLOBALS FOR CALCULATING STARTING PARAMETERS
@@ -1719,15 +1719,15 @@ void RenderWorld(void)
 		if (!(gRenderFlags & RENDER_FLAG_SAVEOFF)) UpdateSaveBuffer();
 	}
 
-	if (gfScrollInertia == FALSE ||
-			gRenderFlags & RENDER_FLAG_NOZ ||
+	if (!g_scroll_inertia               ||
+			gRenderFlags & RENDER_FLAG_NOZ  ||
 			gRenderFlags & RENDER_FLAG_FULL ||
 			gRenderFlags & RENDER_FLAG_MARKED)
 	{
 		RenderDynamicWorld();
 	}
 
-	if (gfScrollInertia) EmptyBackgroundRects();
+	if (g_scroll_inertia) EmptyBackgroundRects();
 
 	if (gRenderFlags & RENDER_FLAG_ROOMIDS)
 	{
@@ -2102,7 +2102,7 @@ void ScrollWorld(void)
 
 			// Do mouse - PUT INTO A TIMER!
 			// Put a counter on starting from mouse, if we have not started already!
-			if (!gfScrollInertia && !gfScrollPending)
+			if (!g_scroll_inertia && !gfScrollPending)
 			{
 				if (!COUNTERDONE(STARTSCROLL)) break;
 				RESETCOUNTER(STARTSCROLL);
@@ -2138,7 +2138,7 @@ void ScrollWorld(void)
 			RESETCOUNTER(NEXTSCROLL);
 
 			// Are we starting a new scroll?
-			if (gfScrollInertia == 0 && !gfScrollPending)
+			if (!g_scroll_inertia && !gfScrollPending)
 			{
 				// We are starting to scroll - setup scroll pending
 				gfScrollPending = TRUE;
@@ -2153,8 +2153,7 @@ void ScrollWorld(void)
 			// If here, set scroll pending to false
 			gfScrollPending = FALSE;
 
-			// INcrement scroll intertia
-			gfScrollInertia++;
+			g_scroll_inertia = true;
 
 			// Now we actually begin our scrolling
 			HandleScrollDirections(ScrollFlags, sScrollXStep, sScrollYStep, FALSE);
@@ -2176,7 +2175,7 @@ void ScrollWorld(void)
 		}
 
 		// Check if we have just stopped scrolling!
-		if (gfScrollInertia)
+		if (g_scroll_inertia)
 		{
 			SetRenderFlags(RENDER_FLAG_FULL | RENDER_FLAG_CHECKZ);
 
@@ -2187,8 +2186,8 @@ void ScrollWorld(void)
 			DeleteVideoOverlaysArea();
 		}
 
-		gfScrollInertia = FALSE;
-		gfScrollPending = FALSE;
+		g_scroll_inertia = false;
+		gfScrollPending  = FALSE;
 	}
 }
 
@@ -5917,7 +5916,7 @@ void SetRenderCenter(INT16 sNewX, INT16 sNewY)
 		DeleteVideoOverlaysArea();
 	}
 
-	gfScrollInertia = FALSE;
+	g_scroll_inertia = false;
 }
 
 

@@ -142,11 +142,8 @@ void ScrollString(void)
 		return;
 	}
 
-	// DONOT UPDATE IF WE ARE SCROLLING!
-	if (gfScrollPending || gfScrollInertia)
-	{
-		return;
-	}
+	// Do not update if we are scrolling.
+	if (gfScrollPending || g_scroll_inertia) return;
 
 	// messages hidden
 	if (fScrollMessagesHidden)

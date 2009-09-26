@@ -541,7 +541,7 @@ void ExecuteVideoOverlays(void)
 	FOR_EACH_VIDEO_OVERLAY(v)
 	{
 		// If we are scrolling but haven't saved yet, don't!
-		if (!v->fActivelySaving && gfScrollInertia > 0) continue;
+		if (!v->fActivelySaving && g_scroll_inertia) continue;
 
 		// ATE: Wait a frame before executing!
 		switch (v->fAllocated)

@@ -255,7 +255,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 										gRubberBandActive			= TRUE;
 
 										// ATE: If we have stopped scrolling.....
-										if (gfScrollInertia)
+										if (g_scroll_inertia)
 										{
 											SetRenderFlags( RENDER_FLAG_FULL | RENDER_FLAG_CHECKZ );
 
@@ -265,7 +265,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 											// Delete Topmost blitters saved areas
 											DeleteVideoOverlaysArea( );
 
-											gfScrollInertia = FALSE;
+											g_scroll_inertia = false;
 										}
 
 										*puiNewEvent = RB_ON_TERRAIN;
