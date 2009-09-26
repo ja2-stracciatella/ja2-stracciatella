@@ -911,49 +911,41 @@ zlevel_topmost:
 								uiAdditiveLayerUsedFlags |= uiRowFlags;
 
 								SOLDIERTYPE const& s = *pNode->pSoldier;
-
-								if (uiRowFlags == TILES_DYNAMIC_MERCS)
+								switch (uiRowFlags)
 								{
-									// If we are multi-tiled, ignore here
-									if (s.uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
+									case TILES_DYNAMIC_MERCS:
+										// If we are multi-tiled, ignore here
+										if (s.uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
+										// If we are at a higher level, no not do anything unless we are at the highmerc stage
+										if (s.bLevel > 0) goto next_node;
+										break;
 
-									// If we are at a higher level, no not do anything unless we are at the highmerc stage
-									if (s.bLevel > 0) goto next_node;
-								}
-
-								if (uiRowFlags == TILES_DYNAMIC_HIGHMERCS)
-								{
-									// If we are multi-tiled, ignore here
-									if (s.uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
-
-									// If we are at a lower level, no not do anything unless we are at the highmerc stage
-									if (s.bLevel == 0) goto next_node;
-								}
-
-								if (uiRowFlags == TILES_DYNAMIC_STRUCT_MERCS)
-								{
-									// If we are not multi-tiled, ignore here
-									if (!(s.uiStatusFlags & SOLDIER_MULTITILE))
-									{
-										// If we are at a low level, no not do anything unless we are at the merc stage
+									case TILES_DYNAMIC_HIGHMERCS:
+										// If we are multi-tiled, ignore here
+										if (s.uiStatusFlags & SOLDIER_MULTITILE) goto next_node;
+										// If we are at a lower level, no not do anything unless we are at the highmerc stage
 										if (s.bLevel == 0) goto next_node;
-									}
-									else
-									{
-										fSaveZ                    = TRUE;
-										fMultiTransShadowZBlitter = TRUE;
-										fZBlitter                 = TRUE;
+										break;
 
-										// ATE: Use one direction for queen!
-										if (s.ubBodyType == QUEENMONSTER)
+									case TILES_DYNAMIC_STRUCT_MERCS:
+										// If we are not multi-tiled, ignore here
+										if (!(s.uiStatusFlags & SOLDIER_MULTITILE))
 										{
-											sMultiTransShadowZBlitterIndex = 0;
+											// If we are at a low level, no not do anything unless we are at the merc stage
+											if (s.bLevel == 0) goto next_node;
 										}
 										else
 										{
-											sMultiTransShadowZBlitterIndex = OneCDirection(s.bDirection);
+											fSaveZ                    = TRUE;
+											fMultiTransShadowZBlitter = TRUE;
+											fZBlitter                 = TRUE;
+
+											// ATE: Use one direction for queen!
+											sMultiTransShadowZBlitterIndex =
+												s.ubBodyType == QUEENMONSTER ? 0 :
+												OneCDirection(s.bDirection);
 										}
-									}
+										break;
 								}
 
 								// IF we are not active, or are a placeholder for multi-tile animations do nothing
