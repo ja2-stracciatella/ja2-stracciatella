@@ -224,6 +224,7 @@ static const RenderFXType RenderFX[] =
 	{ TRUE,  FALSE, TRUE,  FALSE, TRUE,  FALSE, FALSE, FALSE }, // DYNAMIC ONROOF
 	{ TRUE,  FALSE, TRUE,  FALSE, TRUE,  FALSE, FALSE, FALSE }  // DYNAMIC TOPMOST
 };
+CASSERT(lengthof(RenderFX) == NUM_RENDER_FX_TYPES)
 
 
 static const UINT8 RenderFXStartIndex[] =
@@ -246,6 +247,30 @@ static const UINT8 RenderFXStartIndex[] =
 	ONROOF_START_INDEX,  // DYNAMIC ONROOF
 	TOPMOST_START_INDEX, // DYNAMIC TOPMOST
 };
+CASSERT(lengthof(RenderFXStartIndex) == NUM_RENDER_FX_TYPES)
+
+
+static RenderLayerFlags const g_render_fx_layer_flags[] =
+{
+	TILES_STATIC_LAND,
+	TILES_STATIC_OBJECTS,
+	TILES_STATIC_SHADOWS,
+	TILES_STATIC_STRUCTURES,
+	TILES_STATIC_ROOF,
+	TILES_STATIC_ONROOF,
+	TILES_STATIC_TOPMOST,
+	TILES_DYNAMIC_LAND,
+	TILES_DYNAMIC_OBJECTS,
+	TILES_DYNAMIC_SHADOWS,
+	TILES_DYNAMIC_STRUCT_MERCS,
+	TILES_DYNAMIC_MERCS,
+	TILES_DYNAMIC_STRUCTURES,
+	TILES_DYNAMIC_ROOF,
+	TILES_DYNAMIC_HIGHMERCS,
+	TILES_DYNAMIC_ONROOF,
+	TILES_DYNAMIC_TOPMOST
+};
+CASSERT(lengthof(g_render_fx_layer_flags) == NUM_RENDER_FX_TYPES)
 
 
 #ifdef _DEBUG
@@ -326,7 +351,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
 
 
-static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX_M, INT32 const iStartPointY_M, INT32 const iStartPointX_S, INT32 const iStartPointY_S, INT32 const iEndXS, INT32 const iEndYS, UINT8 const ubNumLevels, RenderLayerFlags const* const puiLevels, RenderLayerID const* const psLevelIDs)
+static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX_M, INT32 const iStartPointY_M, INT32 const iStartPointX_S, INT32 const iStartPointY_S, INT32 const iEndXS, INT32 const iEndYS, UINT8 const ubNumLevels, RenderLayerID const* const psLevelIDs)
 {
 	static UINT8        ubLevelNodeStartIndex[NUM_RENDER_FX_TYPES];
 	static RenderFXType RenderFXList[NUM_RENDER_FX_TYPES];
@@ -402,7 +427,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 		for (UINT32 cnt = 0; cnt < ubNumLevels; cnt++)
 		{
-			RenderLayerFlags const uiRowFlags = puiLevels[cnt];
+			RenderLayerFlags const uiRowFlags = g_render_fx_layer_flags[psLevelIDs[cnt]];
 
 			if (uiRowFlags & TILES_ALL_DYNAMICS && !(uiLayerUsedFlags & uiRowFlags) && !(uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE)) continue;
 
@@ -1757,8 +1782,7 @@ static void ResetRenderParameters(void);
 // Then render away!
 void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom, BOOLEAN fDynamicsToo)
 {
-	RenderLayerFlags uiLevelFlags[10];
-	RenderLayerID    sLevelIDs[10];
+	RenderLayerID sLevelIDs[10];
 
 	// Calculate render starting parameters
 	CalcRenderParameters(sLeft, sTop, sRight, sBottom);
@@ -1767,56 +1791,32 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 	ResetLayerOptimizing();
 
 	// STATICS
-	uiLevelFlags[0] = TILES_STATIC_LAND;
-	sLevelIDs[0]    = RENDER_STATIC_LAND;
-	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_LAND;
+	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, sLevelIDs);
 
-	uiLevelFlags[0] = TILES_STATIC_OBJECTS;
-	sLevelIDs[0]    = RENDER_STATIC_OBJECTS;
-	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, uiLevelFlags, sLevelIDs);
-
+	sLevelIDs[0] = RENDER_STATIC_OBJECTS;
+	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, sLevelIDs);
 
 	if (gRenderFlags & RENDER_FLAG_SHADOWS)
 	{
-		uiLevelFlags[0] = TILES_STATIC_SHADOWS;
-		sLevelIDs[0]    = RENDER_STATIC_SHADOWS;
-		RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, uiLevelFlags, sLevelIDs);
+		sLevelIDs[0] = RENDER_STATIC_SHADOWS;
+		RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, sLevelIDs);
 	}
-
-	uiLevelFlags[0] = TILES_STATIC_STRUCTURES;
-	uiLevelFlags[1] = TILES_STATIC_ROOF;
-	uiLevelFlags[2] = TILES_STATIC_ONROOF;
-	uiLevelFlags[3] = TILES_STATIC_TOPMOST;
 
 	sLevelIDs[0] = RENDER_STATIC_STRUCTS;
 	sLevelIDs[1] = RENDER_STATIC_ROOF;
 	sLevelIDs[2] = RENDER_STATIC_ONROOF;
 	sLevelIDs[3] = RENDER_STATIC_TOPMOST;
-
-	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 4, uiLevelFlags, sLevelIDs);
-
+	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 4, sLevelIDs);
 
 	//ATE: Do obsucred layer!
-	uiLevelFlags[0] = TILES_STATIC_STRUCTURES;
-	sLevelIDs[0]    = RENDER_STATIC_STRUCTS;
-	uiLevelFlags[1] = TILES_STATIC_ONROOF;
-	sLevelIDs[1]    = RENDER_STATIC_ONROOF;
-	RenderTiles(TILES_OBSCURED, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 2, uiLevelFlags, sLevelIDs);
-
+	sLevelIDs[0] = RENDER_STATIC_STRUCTS;
+	sLevelIDs[1] = RENDER_STATIC_ONROOF;
+	RenderTiles(TILES_OBSCURED, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 2, sLevelIDs);
 
 	if (fDynamicsToo)
 	{
 		// DYNAMICS
-		uiLevelFlags[0] = TILES_DYNAMIC_LAND;
-		uiLevelFlags[1] = TILES_DYNAMIC_OBJECTS;
-		uiLevelFlags[2] = TILES_DYNAMIC_SHADOWS;
-		uiLevelFlags[3] = TILES_DYNAMIC_STRUCT_MERCS;
-		uiLevelFlags[4] = TILES_DYNAMIC_MERCS;
-		uiLevelFlags[5] = TILES_DYNAMIC_STRUCTURES;
-		uiLevelFlags[6] = TILES_DYNAMIC_ROOF;
-		uiLevelFlags[7] = TILES_DYNAMIC_HIGHMERCS;
-		uiLevelFlags[8] = TILES_DYNAMIC_ONROOF;
-
 		sLevelIDs[0] = RENDER_DYNAMIC_LAND;
 		sLevelIDs[1] = RENDER_DYNAMIC_OBJECTS;
 		sLevelIDs[2] = RENDER_DYNAMIC_SHADOWS;
@@ -1826,7 +1826,7 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 		sLevelIDs[6] = RENDER_DYNAMIC_ROOF;
 		sLevelIDs[7] = RENDER_DYNAMIC_HIGHMERCS;
 		sLevelIDs[8] = RENDER_DYNAMIC_ONROOF;
-		RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 9, uiLevelFlags , sLevelIDs);
+		RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 9, sLevelIDs);
 
 		SumAddiviveLayerOptimization();
 	}
@@ -1839,8 +1839,7 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 
 static void RenderStaticWorld(void)
 {
-	RenderLayerFlags uiLevelFlags[9];
-	RenderLayerID    sLevelIDs[9];
+	RenderLayerID sLevelIDs[9];
 
 	// Calculate render starting parameters
 	CalcRenderParameters(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
@@ -1851,40 +1850,28 @@ static void RenderStaticWorld(void)
 	FreeBackgroundRectType(BGND_FLAG_ANIMATED);
 	InvalidateBackgroundRects();
 
-	uiLevelFlags[0] = TILES_STATIC_LAND;
-	sLevelIDs[0]    = RENDER_STATIC_LAND;
-	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_LAND;
+	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, sLevelIDs);
 
-	uiLevelFlags[0] = TILES_STATIC_OBJECTS;
-	sLevelIDs[0]    = RENDER_STATIC_OBJECTS;
-	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, uiLevelFlags, sLevelIDs);
-
+	sLevelIDs[0] = RENDER_STATIC_OBJECTS;
+	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, sLevelIDs);
 
 	if (gRenderFlags & RENDER_FLAG_SHADOWS)
 	{
-		uiLevelFlags[0] = TILES_STATIC_SHADOWS;
-		sLevelIDs[0]    = RENDER_STATIC_SHADOWS;
-		RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, uiLevelFlags , sLevelIDs);
+		sLevelIDs[0] = RENDER_STATIC_SHADOWS;
+		RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 1, sLevelIDs);
 	}
-
-	uiLevelFlags[0] = TILES_STATIC_STRUCTURES;
-	uiLevelFlags[1] = TILES_STATIC_ROOF;
-	uiLevelFlags[2] = TILES_STATIC_ONROOF;
-	uiLevelFlags[3] = TILES_STATIC_TOPMOST;
 
 	sLevelIDs[0] = RENDER_STATIC_STRUCTS;
 	sLevelIDs[1] = RENDER_STATIC_ROOF;
 	sLevelIDs[2] = RENDER_STATIC_ONROOF;
 	sLevelIDs[3] = RENDER_STATIC_TOPMOST;
-
-	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 4, uiLevelFlags, sLevelIDs);
+	RenderTiles(TILES_NONE, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 4, sLevelIDs);
 
 	//ATE: Do obsucred layer!
-	uiLevelFlags[0] = TILES_STATIC_STRUCTURES;
-	sLevelIDs[0]    = RENDER_STATIC_STRUCTS;
-	uiLevelFlags[1] = TILES_STATIC_ONROOF;
-	sLevelIDs[1]    = RENDER_STATIC_ONROOF;
-	RenderTiles(TILES_OBSCURED, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 2, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_STRUCTS;
+	sLevelIDs[1] = RENDER_STATIC_ONROOF;
+	RenderTiles(TILES_OBSCURED, gsLStartPointX_M, gsLStartPointY_M, gsLStartPointX_S, gsLStartPointY_S, gsLEndXS, gsLEndYS, 2, sLevelIDs);
 
 	AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 	ResetRenderParameters();
@@ -1893,8 +1880,7 @@ static void RenderStaticWorld(void)
 
 static void RenderMarkedWorld(void)
 {
-	RenderLayerFlags uiLevelFlags[4];
-	RenderLayerID    sLevelIDs[4];
+	RenderLayerID sLevelIDs[4];
 
 	CalcRenderParameters(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
 
@@ -1904,34 +1890,27 @@ static void RenderMarkedWorld(void)
 
 	ResetLayerOptimizing();
 
-	uiLevelFlags[0] = TILES_STATIC_LAND;
-	uiLevelFlags[1] = TILES_STATIC_OBJECTS;
-	sLevelIDs[0]    = RENDER_STATIC_LAND;
-	sLevelIDs[1]    = RENDER_STATIC_OBJECTS;
-	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 2, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_LAND;
+	sLevelIDs[1] = RENDER_STATIC_OBJECTS;
+	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 2, sLevelIDs);
 
 	if (gRenderFlags & RENDER_FLAG_SHADOWS)
 	{
-		uiLevelFlags[0] = TILES_STATIC_SHADOWS;
-		sLevelIDs[0]    = RENDER_STATIC_SHADOWS;
-		RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, uiLevelFlags, sLevelIDs);
+		sLevelIDs[0] = RENDER_STATIC_SHADOWS;
+		RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 	}
 
-	uiLevelFlags[0] = TILES_STATIC_STRUCTURES;
-	sLevelIDs[0]    = RENDER_STATIC_STRUCTS;
-	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_STRUCTS;
+	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 
-	uiLevelFlags[0] = TILES_STATIC_ROOF;
-	sLevelIDs[0]    = RENDER_STATIC_ROOF;
-	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_ROOF;
+	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 
-	uiLevelFlags[0] = TILES_STATIC_ONROOF;
-	sLevelIDs[0]    = RENDER_STATIC_ONROOF;
-	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_ONROOF;
+	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 
-	uiLevelFlags[0] = TILES_STATIC_TOPMOST;
-	sLevelIDs[0]    = RENDER_STATIC_TOPMOST;
-	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, uiLevelFlags, sLevelIDs);
+	sLevelIDs[0] = RENDER_STATIC_TOPMOST;
+	RenderTiles(TILES_MARKED, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 
 	AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_WINDOW_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 
@@ -1941,22 +1920,11 @@ static void RenderMarkedWorld(void)
 
 static void RenderDynamicWorld(void)
 {
-	RenderLayerFlags uiLevelFlags[10];
-	RenderLayerID    sLevelIDs[10];
+	RenderLayerID sLevelIDs[10];
 
 	CalcRenderParameters(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
 
 	RestoreBackgroundRects();
-
-	uiLevelFlags[0] = TILES_DYNAMIC_OBJECTS;
-	uiLevelFlags[1] = TILES_DYNAMIC_SHADOWS;
-	uiLevelFlags[2] = TILES_DYNAMIC_STRUCT_MERCS;
-	uiLevelFlags[3] = TILES_DYNAMIC_MERCS;
-	uiLevelFlags[4] = TILES_DYNAMIC_STRUCTURES;
-	uiLevelFlags[5] = TILES_DYNAMIC_HIGHMERCS;
-	uiLevelFlags[6] = TILES_DYNAMIC_ROOF;
-	uiLevelFlags[7] = TILES_DYNAMIC_ONROOF;
-	uiLevelFlags[8] = TILES_DYNAMIC_TOPMOST;
 
 	sLevelIDs[0] = RENDER_DYNAMIC_OBJECTS;
 	sLevelIDs[1] = RENDER_DYNAMIC_SHADOWS;
@@ -1967,8 +1935,7 @@ static void RenderDynamicWorld(void)
 	sLevelIDs[6] = RENDER_DYNAMIC_ROOF;
 	sLevelIDs[7] = RENDER_DYNAMIC_ONROOF;
 	sLevelIDs[8] = RENDER_DYNAMIC_TOPMOST;
-
-	RenderTiles(TILES_DIRTY, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 9, uiLevelFlags, sLevelIDs);
+	RenderTiles(TILES_DIRTY, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 9, sLevelIDs);
 
 #if defined JA2EDITOR
 	if (!gfEditMode && !gfAniEditMode)
@@ -1979,35 +1946,21 @@ static void RenderDynamicWorld(void)
 
 	SaveBackgroundRects();
 
-	uiLevelFlags[0] = TILES_DYNAMIC_OBJECTS;
-	uiLevelFlags[1] = TILES_DYNAMIC_SHADOWS;
-	uiLevelFlags[2] = TILES_DYNAMIC_STRUCT_MERCS;
-	uiLevelFlags[3] = TILES_DYNAMIC_MERCS;
-	uiLevelFlags[4] = TILES_DYNAMIC_STRUCTURES;
-
 	sLevelIDs[0] = RENDER_DYNAMIC_OBJECTS;
 	sLevelIDs[1] = RENDER_DYNAMIC_SHADOWS;
 	sLevelIDs[2] = RENDER_DYNAMIC_STRUCT_MERCS;
 	sLevelIDs[3] = RENDER_DYNAMIC_MERCS;
 	sLevelIDs[4] = RENDER_DYNAMIC_STRUCTS;
-
-	RenderTiles(TILES_NONE, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 5, uiLevelFlags, sLevelIDs);
-
-	uiLevelFlags[0] = TILES_DYNAMIC_ROOF;
-	uiLevelFlags[1] = TILES_DYNAMIC_HIGHMERCS;
-	uiLevelFlags[2] = TILES_DYNAMIC_ONROOF;
+	RenderTiles(TILES_NONE, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 5, sLevelIDs);
 
 	sLevelIDs[0] = RENDER_DYNAMIC_ROOF;
 	sLevelIDs[1] = RENDER_DYNAMIC_HIGHMERCS;
 	sLevelIDs[2] = RENDER_DYNAMIC_ONROOF;
+	RenderTiles(TILES_NONE, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 3, sLevelIDs);
 
-	RenderTiles(TILES_NONE, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 3, uiLevelFlags, sLevelIDs);
-
-	uiLevelFlags[0] = TILES_DYNAMIC_TOPMOST;
-	sLevelIDs[0]    = RENDER_DYNAMIC_TOPMOST;
-
+	sLevelIDs[0] = RENDER_DYNAMIC_TOPMOST;
 	// ATE: check here for mouse over structs.....
-	RenderTiles(TILES_DYNAMIC_CHECKFOR_INT_TILE, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, uiLevelFlags, sLevelIDs);
+	RenderTiles(TILES_DYNAMIC_CHECKFOR_INT_TILE, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 1, sLevelIDs);
 
 	SumAddiviveLayerOptimization();
 	ResetRenderParameters();
