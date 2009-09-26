@@ -64,10 +64,7 @@ void SetupTextInputForMapInfo()
 	AddTextInputField( 120, 414, 25, 18, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//Scroll restriction ID
-	if( !gMapInformation.ubRestrictedScrollID )
-		swprintf(str, lengthof(str), L"");
-	else
-		swprintf(str, lengthof(str), L"%d", gMapInformation.ubRestrictedScrollID);
+	swprintf(str, lengthof(str), L"%.d", gMapInformation.ubRestrictedScrollID);
 	AddTextInputField( 210, 420, 30, 20, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//exit grid input fields
@@ -190,10 +187,7 @@ void ExtractAndUpdateMapInfo()
 	}
 
 	temp = (INT8)GetNumericStrictValueFromField( 6 );
-	if( temp == -1 )
-		gMapInformation.ubRestrictedScrollID = 0;
-	else
-		gMapInformation.ubRestrictedScrollID = (UINT8)temp;
+	gMapInformation.ubRestrictedScrollID = temp != -1 ? temp : 0;
 
 	//set up fields for exitgrid information
 	wchar_t const* const str = GetStringFromField(7);
