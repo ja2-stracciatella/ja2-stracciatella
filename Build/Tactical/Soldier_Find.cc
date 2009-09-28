@@ -397,26 +397,17 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX,
 }
 
 
-BOOLEAN GridNoOnScreen( INT16 sGridNo )
+bool GridNoOnScreen(GridNo const gridno)
 {
-	INT16 sWorldX;
-	INT16 sWorldY;
-  INT16 sAllowance = 20;
-
-  if ( gsVIEWPORT_WINDOW_START_Y == 20 )
-  {
-    sAllowance = 40;
-  }
-
-	GetAbsoluteScreenXYFromMapPos(sGridNo, &sWorldX, &sWorldY);
-
-	// ATE: OK, here, adjust the top value so that it's a tile and a bit over, because of our mercs!
-	if ( sWorldX >= gsTopLeftWorldX && sWorldX <= gsBottomRightWorldX &&
-			 sWorldY >= ( gsTopLeftWorldY + sAllowance )	&& sWorldY <= ( gsBottomRightWorldY + 20 ) )
-	{
-		return( TRUE );
-	}
-	return( FALSE );
+	INT16 world_x;
+	INT16 world_y;
+	GetAbsoluteScreenXYFromMapPos(gridno, &world_x, &world_y);
+	INT16 const allowance = gsVIEWPORT_WINDOW_START_Y == 20 ? 40 : 20;
+	/* ATE: Adjust the top value so that it's a tile and a bit over, because of
+	 * our mercs. */
+	return
+		gsTopLeftWorldX             <= world_x && world_x <= gsBottomRightWorldX &&
+		gsTopLeftWorldY + allowance <= world_y && world_y <= gsBottomRightWorldY + 20;
 }
 
 

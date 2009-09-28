@@ -35,7 +35,7 @@ SoldierFindFlags GetSoldierFindFlags(SOLDIERTYPE const&);
 
 BOOLEAN CycleSoldierFindStack( UINT16 usMapPos );
 
-BOOLEAN GridNoOnScreen( INT16 sGridNo );
+bool GridNoOnScreen(GridNo);
 
 BOOLEAN SoldierOnScreen(const SOLDIERTYPE* s);
 BOOLEAN SoldierLocationRelativeToScreen(INT16 sGridNo, INT8* pbDirection, UINT32* puiScrollFlags);
