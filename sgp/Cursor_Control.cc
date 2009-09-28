@@ -41,13 +41,13 @@ static BOOLEAN BltToMouseCursorFromVObject(HVOBJECT hVObject, UINT16 usVideoObje
 }
 
 
-static BOOLEAN BltToMouseCursorFromVObjectWithOutline(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
+static void BltToMouseCursorFromVObjectWithOutline(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
 	// Center and adjust for offsets
 	ETRLEObject const& pTrav = hVObject->SubregionProperties(usVideoObjectSubIndex);
 	INT16       const  sXPos = (gsCurMouseWidth  - pTrav.usWidth)  / 2 - pTrav.sOffsetX;
 	INT16       const  sYPos = (gsCurMouseHeight - pTrav.usHeight) / 2 - pTrav.sOffsetY;
-	return BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor(FROMRGB(0, 255, 0)));
+	BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor(FROMRGB(0, 255, 0)));
 }
 
 
@@ -295,16 +295,15 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 				if (pCurImage->usPosX != HIDE_SUBCURSOR && pCurImage->usPosY != HIDE_SUBCURSOR)
 				{
 					// Blit cursor at position in mouse buffer
-					BOOLEAN ReturnValue;
 					if (CFData->ubFlags & USE_OUTLINE_BLITTER)
 					{
-						ReturnValue = BltToMouseCursorFromVObjectWithOutline(CFData->hVObject, usSubIndex, pCurImage->usPosX, pCurImage->usPosY);
+						BltToMouseCursorFromVObjectWithOutline(CFData->hVObject, usSubIndex, pCurImage->usPosX, pCurImage->usPosY);
 					}
 					else
 					{
-						ReturnValue = BltToMouseCursorFromVObject(CFData->hVObject, usSubIndex, pCurImage->usPosX, pCurImage->usPosY);
+						BOOLEAN const ReturnValue = BltToMouseCursorFromVObject(CFData->hVObject, usSubIndex, pCurImage->usPosX, pCurImage->usPosY);
+						if (!ReturnValue) return FALSE;
 					}
-					if (!ReturnValue) return FALSE;
 				}
 			}
 
