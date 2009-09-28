@@ -1010,17 +1010,17 @@ static BOOLEAN IsInSelectionList(const DisplayList* pNode)
 }
 
 
-//	Finds an occurance of a particular display list object in the current selection list.
-//	if found, returns the selection list's index where it can be found.
-static INT32 FindInSelectionList(DisplayList* pNode)
+/* Find an occurance of a particular display list object in the current
+ * selection list. If found, returns the selection list's index where it can be
+ * found. */
+static INT32 FindInSelectionList(DisplayList const& n)
 {
-	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
+	for (INT32 i = 0; i != *pNumSelList; ++i)
 	{
-		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
-		{
-			return iIndex;
-		}
+		Selections const& sel = pSelList[i];
+		if (n.uiObjIndx != sel.uiObject) continue;
+		if (n.uiIndex   != sel.usIndex)  continue;
+		return i;
 	}
 	throw std::logic_error("node not in selection list");
 }
@@ -1235,7 +1235,7 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 
 	if (n->fChosen)
 	{
-		INT16 const count = pSelList[FindInSelectionList(n)].sCount;
+		INT16 const count = pSelList[FindInSelectionList(*n)].sCount;
 		if (count != 0) gprintf(x, y, L"%d", count);
 	}
 }
