@@ -1,5 +1,7 @@
 #ifdef JA2EDITOR
 
+#include <stdexcept>
+
 #include "Button_System.h"
 #include "Directories.h"
 #include "Font.h"
@@ -1009,26 +1011,18 @@ static BOOLEAN IsInSelectionList(const DisplayList* pNode)
 
 
 //	Finds an occurance of a particular display list object in the current selection list.
-//	if found, returns the selection list's index where it can be found. otherwise it
-//	returns -1
+//	if found, returns the selection list's index where it can be found.
 static INT32 FindInSelectionList(DisplayList* pNode)
 {
-	INT32 iIndex,iUseIndex;
-	BOOLEAN fFound;
-
-	fFound = FALSE;
-	iUseIndex = -1;
-	for (iIndex = 0; iIndex < (*pNumSelList) && !fFound; iIndex++ )
+	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
 				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
-			fFound = TRUE;
-			iUseIndex = iIndex;
+			return iIndex;
 		}
 	}
-
-	return ( iUseIndex );
+	throw std::logic_error("node not in selection list");
 }
 
 
