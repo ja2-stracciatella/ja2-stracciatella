@@ -301,14 +301,7 @@ void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 c
 	UINT32  const SrcPitchBYTES  = lsrc.Pitch();
 	UINT16* const DestBuf        = ldst.Buffer<UINT16>();
 	UINT32  const DestPitchBYTES = ldst.Pitch();
-	if (!src_rect)
-	{
-		Blt8BPPDataTo16BPPBufferHalf(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY);
-	}
-	else
-	{
-		Blt8BPPDataTo16BPPBufferHalfRect(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY, src_rect);
-	}
+	Blt8BPPDataTo16BPPBufferHalf(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY, src_rect);
 }
 
 

@@ -5311,73 +5311,73 @@ DoneBlit:											// finished blit
 }
 
 
-/**********************************************************************************************
- Blt8BPPDataTo16BPPBufferHalf
-
-	Blits from a flat surface to a 16-bit buffer, dividing the source image into
-exactly half the size.
-
-**********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY)
+/* Blit from a flat surface to a 16-bit buffer, dividing the source image into
+ * exactly half the size, optionally from a sub-region.
+ * - Source rect is in source units.
+ * - In order to make sure the same pixels are skipped, always align the top and
+ *   left coordinates to the same factor of two.
+ * - A rect specifying an odd number of pixels will divide out to an even number
+ *   of pixels blitted to the destination. */
+BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* const dst_buf, UINT32 const uiDestPitchBYTES, SGPVSurface* const src_surface, UINT8 const* const src_buf, UINT32 const src_pitch, INT32 const x, INT32 const y, SGPBox const* const rect)
 {
-	UINT16 *p16BPPPalette;
-	UINT8	 *SrcPtr, *DestPtr;
-	UINT32 LineSkip;
-	INT32	 iTempX, iTempY;
-	UINT32 uiSrcSkip;
+	Assert(src_surface);
+	Assert(src_buf);
+	Assert(dst_buf);
 
-	// Assertions
-	Assert( hSrcVSurface != NULL );
-	Assert( pSrcBuffer != NULL );
-	Assert( pBuffer != NULL );
+	CHECKF(x >= 0);
+	CHECKF(y >= 0);
 
-	// Get Offsets from Index into structure
-	UINT32 const usWidth  = hSrcVSurface->Width();
-	UINT32       usHeight = hSrcVSurface->Height();
+	UINT8 const* src = src_buf;
+	UINT32       width;
+	UINT32       height;
+	if (rect)
+	{
+		width  = rect->w;
+		height = rect->h;
+		CHECKF(0 < width  && width  <= src_surface->Width());
+		CHECKF(0 < height && height <= src_surface->Height());
 
-	// Add to start position of dest buffer
-	iTempX = iX;
-	iTempY = iY;
+		src += src_pitch * rect->y + rect->x;
+	}
+	else
+	{
+		width  = src_surface->Width();
+		height = src_surface->Height();
+	}
 
-	// Validations
-	CHECKF( iTempX >= 0 );
-	CHECKF( iTempY >= 0 );
-
-	SrcPtr= (UINT8 *)pSrcBuffer;
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	p16BPPPalette = hSrcVSurface->p16BPPPalette;
-	LineSkip=(uiDestPitchBYTES-(usWidth&0xfffffffe));
-	uiSrcSkip=(uiSrcPitch*2)-(usWidth&0xfffffffe);
+	UINT16*             dst      = dst_buf + uiDestPitchBYTES / 2 * y + x;
+	UINT32        const src_skip = (src_pitch - width / 2) * 2;
+	UINT32        const dst_skip = uiDestPitchBYTES / 2 - width / 2;
+	UINT16 const* const pal      = src_surface->p16BPPPalette;
 
 #if 1 // XXX TODO
-	usHeight /= 2;
+	height /= 2;
 	do
 	{
-		UINT32 w = usWidth / 2;
+		UINT32 w = width / 2;
 		do
 		{
-			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
-			SrcPtr += 2;
-			DestPtr += 2;
+			*dst++ = pal[*src];
+			src += 2;
 		}
 		while (--w > 0);
-		SrcPtr += uiSrcSkip;
-		DestPtr += LineSkip;
+		src += src_skip;
+		dst += dst_skip;
 	}
-	while (--usHeight > 0);
+	while (--height > 0);
 #else
 	__asm {
 
-		mov		esi, SrcPtr					// pointer to current line start address in source
-		mov		edi, DestPtr				// pointer to current line start address in destination
-		mov		ebx, usHeight				// line counter (goes top to bottom)
+		mov		esi, src						// pointer to current line start address in source
+		mov		edi, dst						// pointer to current line start address in destination
+		mov		ebx, height					// line counter (goes top to bottom)
 		shr		ebx, 1							// half the rows
-		mov		edx, p16BPPPalette
+		mov		edx, pal
 
 		xor		eax, eax
 
 BlitSetup:
-		mov		ecx, usWidth
+		mov		ecx, width
 		shr		ecx, 1							// divide the width by 2
 
 ReadMask:
@@ -5398,8 +5398,8 @@ ReadMask:
 
 //DoneRow:
 
-		add		esi, uiSrcSkip			// move source pointer down one line
-		add		edi, LineSkip
+		add		esi, src_skip				// move source pointer down one line
+		add		edi, dst_skip
 
 		dec		ebx									// check line counter
 		jnz		BlitSetup						// done blitting, exit
@@ -5408,120 +5408,7 @@ ReadMask:
 	}
 #endif
 
-	return( TRUE );
-
-}
-
-
-/**********************************************************************************************
- Blt8BPPDataTo16BPPBufferHalfRect
-
-	Blits from a flat surface to a 16-bit buffer, dividing the source image into
-exactly half the size, from a sub-region.
-	- Source rect is in source units.
-	- In order to make sure the same pixels are skipped, always align the top and
-		left coordinates to the same factor of two.
-	- A rect specifying an odd number of pixels will divide out to an even
-		number of pixels blitted to the destination.
-
-**********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* const pBuffer, UINT32 const uiDestPitchBYTES, SGPVSurface* const hSrcVSurface, UINT8 const* const pSrcBuffer, UINT32 const uiSrcPitch, INT32 const iX, INT32 const iY, SGPBox const* const rect)
-{
-	UINT16 *p16BPPPalette;
-	UINT8	 *SrcPtr, *DestPtr;
-	UINT32 LineSkip;
-	INT32	 iTempX, iTempY;
-	UINT32 uiSrcSkip;
-
-	// Assertions
-	Assert( hSrcVSurface != NULL );
-	Assert( pSrcBuffer != NULL );
-	Assert( pBuffer != NULL );
-	Assert(rect);
-
-	// Get Offsets from Index into structure
-	UINT32 const usWidth  = (UINT32)rect->w;
-	UINT32       usHeight = (UINT32)rect->h;
-
-	// Add to start position of dest buffer
-	iTempX = iX;
-	iTempY = iY;
-
-	// Validations
-	CHECKF( iTempX   >= 0 );
-	CHECKF( iTempY   >= 0 );
-	CHECKF(	usWidth  >  0 );
-	CHECKF(	usHeight >  0 );
-	CHECKF(usWidth  <= hSrcVSurface->Width());
-	CHECKF(usHeight <= hSrcVSurface->Height());
-
-	SrcPtr        = (UINT8*)pSrcBuffer + uiSrcPitch * rect->y + rect->x;
-	DestPtr				= (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	p16BPPPalette = hSrcVSurface->p16BPPPalette;
-	LineSkip			= (uiDestPitchBYTES-(usWidth&0xfffffffe));
-	uiSrcSkip			= (uiSrcPitch*2)-(usWidth&0xfffffffe);
-
-#if 1 // XXX TODO
-	usHeight /= 2;
-	do
-	{
-		UINT32 w = usWidth / 2;
-		do
-		{
-			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
-			SrcPtr  += 2;
-			DestPtr += 2;
-		}
-		while (--w > 0);
-		SrcPtr  += uiSrcSkip;
-		DestPtr += LineSkip;
-	}
-	while (--usHeight > 0);
-#else
-	__asm {
-
-		mov		esi, SrcPtr					// pointer to current line start address in source
-		mov		edi, DestPtr				// pointer to current line start address in destination
-		mov		ebx, usHeight				// line counter (goes top to bottom)
-		shr		ebx, 1							// half the rows
-		mov		edx, p16BPPPalette
-
-		xor		eax, eax
-
-BlitSetup:
-		mov		ecx, usWidth
-		shr		ecx, 1							// divide the width by 2
-
-ReadMask:
-		mov		al, [esi]
-		xor		ah, ah
-		inc		esi									// skip one source byte
-		inc		esi
-
-		shl		eax, 1							// make it into a word index
-		mov		ax, [edx+eax]				// get 16-bit version of 8-bit pixel
-		mov		[edi], ax						// store it in destination buffer
-		inc		edi									// next pixel
-		inc		edi
-
-		dec		ecx
-		jnz		ReadMask
-
-
-//DoneRow:
-
-		add		esi, uiSrcSkip			// move source pointer down one line
-		add		edi, LineSkip
-
-		dec		ebx									// check line counter
-		jnz		BlitSetup						// done blitting, exit
-
-//DoneBlit:											// finished blit
-	}
-#endif
-
-	return( TRUE );
-
+	return TRUE;
 }
 
 
