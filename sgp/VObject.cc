@@ -311,7 +311,7 @@ void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcV
 }
 
 
-BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
+void BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
 {
 	SGPVSurface::Lock l(dst);
 	UINT16* const pBuffer = l.Buffer<UINT16>();
@@ -325,8 +325,6 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* co
 	{
 		Blt8BPPDataTo16BPPBufferOutlineShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
 	}
-
-	return TRUE;
 }
 
 
