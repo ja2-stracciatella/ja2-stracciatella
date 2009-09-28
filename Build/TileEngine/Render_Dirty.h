@@ -84,7 +84,10 @@ VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y,
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, Font font, UINT8 foreground, UINT8 background, wchar_t const* text);
 void ExecuteVideoOverlays(void);
 void SaveVideoOverlaysArea(SGPVSurface* src);
+
+// Delete Topmost blitters saved areas
 void DeleteVideoOverlaysArea(void);
+
 void AllocateVideoOverlaysArea(void);
 void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* buffer);
 void RemoveVideoOverlay(VIDEO_OVERLAY*);

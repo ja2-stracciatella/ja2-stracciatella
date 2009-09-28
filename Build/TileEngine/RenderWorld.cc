@@ -2170,7 +2170,6 @@ void ScrollWorld(void)
 			// Restore Interface!
 			RestoreInterface();
 
-			// Delete Topmost blitters saved areas
 			DeleteVideoOverlaysArea();
 		}
 
@@ -2182,7 +2181,6 @@ void ScrollWorld(void)
 			// Restore Interface!
 			RestoreInterface();
 
-			// Delete Topmost blitters saved areas
 			DeleteVideoOverlaysArea();
 		}
 
@@ -5912,7 +5910,6 @@ void SetRenderCenter(INT16 sNewX, INT16 sNewY)
 		// Restore Interface!
 		RestoreInterface();
 
-		// Delete Topmost blitters saved areas
 		DeleteVideoOverlaysArea();
 	}
 

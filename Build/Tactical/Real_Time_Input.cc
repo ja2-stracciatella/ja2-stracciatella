@@ -262,7 +262,6 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 											// Restore Interface!
 											RestoreInterface( );
 
-											// Delete Topmost blitters saved areas
 											DeleteVideoOverlaysArea( );
 
 											g_scroll_inertia = false;
