@@ -1236,7 +1236,6 @@ catch (...) { return FALSE; }
 static BOOLEAN DisplayWindowFunc(DisplayList* const pNode, INT16 const iTopCutOff, SGPBox const* const area, UINT16 const fFlags)
 {
 	INT16						iCurrY;
-	BOOLEAN					fReturnVal;
 	UINT16					usFillColor;
 	INT16						sCount;
 
@@ -1246,40 +1245,38 @@ static BOOLEAN DisplayWindowFunc(DisplayList* const pNode, INT16 const iTopCutOf
 	if ( pNode->iY < iTopCutOff )
 		return(TRUE);
 
-	fReturnVal = FALSE;
-	if (DisplayWindowFunc(pNode->pNext, iTopCutOff, area, fFlags))
+	if (!DisplayWindowFunc(pNode->pNext, iTopCutOff, area, fFlags)) return FALSE;
+
+	iCurrY = area->y + pNode->iY - iTopCutOff;
+
+	if (iCurrY > area->y + area->h) return TRUE;
+
+	if (fFlags & CLEAR_BACKGROUND)
 	{
-		iCurrY = area->y + pNode->iY - iTopCutOff;
-
-		if (iCurrY > area->y + area->h) return TRUE;
-
-		if (fFlags & CLEAR_BACKGROUND)
-		{
-			usFillColor = SelWinFillColor;
-			if (pNode->fChosen)
-				usFillColor = SelWinHilightFillColor;
-
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, pNode->iX, iCurrY,
-												pNode->iX + pNode->iWidth,
-												iCurrY + pNode->iHeight, usFillColor);
-		}
-
-		sCount = 0;
+		usFillColor = SelWinFillColor;
 		if (pNode->fChosen)
-			sCount = pSelList[ FindInSelectionList( pNode ) ].sCount;
+			usFillColor = SelWinHilightFillColor;
 
-		SGPVObject* const  vo = pNode->hObj;
-		ETRLEObject const& e  = vo->SubregionProperties(pNode->uiIndex);
-		vo->CurrentShade(DEFAULT_SHADE_LEVEL);
-		fReturnVal = BltVideoObject(FRAME_BUFFER, vo, pNode->uiIndex, pNode->iX - e.sOffsetX, iCurrY - e.sOffsetY);
-
-		if ( sCount != 0)
-		{
-			gprintf( pNode->iX, iCurrY, L"%d", sCount );
-		}
+		ColorFillVideoSurfaceArea( FRAME_BUFFER, pNode->iX, iCurrY,
+											pNode->iX + pNode->iWidth,
+											iCurrY + pNode->iHeight, usFillColor);
 	}
 
-	return(fReturnVal);
+	sCount = 0;
+	if (pNode->fChosen)
+		sCount = pSelList[ FindInSelectionList( pNode ) ].sCount;
+
+	SGPVObject* const  vo = pNode->hObj;
+	ETRLEObject const& e  = vo->SubregionProperties(pNode->uiIndex);
+	vo->CurrentShade(DEFAULT_SHADE_LEVEL);
+	BltVideoObject(FRAME_BUFFER, vo, pNode->uiIndex, pNode->iX - e.sOffsetX, iCurrY - e.sOffsetY);
+
+	if ( sCount != 0)
+	{
+		gprintf( pNode->iX, iCurrY, L"%d", sCount );
+	}
+
+	return TRUE;
 }
 
 

@@ -122,7 +122,7 @@ static inline void DeleteVideoObject(SGPVObject* const vo)
 }
 
 // Blits a video object to another video object
-BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
+void BltVideoObject(SGPVSurface* dst, SGPVObject const* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
 
 void BltVideoObjectOutline(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);

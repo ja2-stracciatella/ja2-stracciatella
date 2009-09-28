@@ -274,7 +274,7 @@ SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 }
 
 
-BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY)
+void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 const usRegionIndex, INT32 const iDestX, INT32 const iDestY)
 {
 	Assert(src->BPP() ==  8);
 	Assert(dst->BPP() == 16);
@@ -291,8 +291,6 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 	{
 		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
 	}
-
-	return TRUE;
 }
 
 

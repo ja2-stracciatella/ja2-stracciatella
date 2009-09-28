@@ -35,9 +35,9 @@ static void EraseMouseCursor(void)
 }
 
 
-static BOOLEAN BltToMouseCursorFromVObject(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
+static void BltToMouseCursorFromVObject(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
-	return BltVideoObject(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, usXPos, usYPos);
+	BltVideoObject(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, usXPos, usYPos);
 }
 
 
@@ -301,8 +301,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 					}
 					else
 					{
-						BOOLEAN const ReturnValue = BltToMouseCursorFromVObject(CFData->hVObject, usSubIndex, pCurImage->usPosX, pCurImage->usPosY);
-						if (!ReturnValue) return FALSE;
+						BltToMouseCursorFromVObject(CFData->hVObject, usSubIndex, pCurImage->usPosX, pCurImage->usPosY);
 					}
 				}
 			}
