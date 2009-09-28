@@ -198,8 +198,8 @@ INT32				iNumNewRoofsSelected = 1;
 INT32				iNumRoomsSelected = 1;
 
 // Holds the previous selection list when a selection window is up. Used for canceling the selection window
-Selections	OldSelList[MAX_SELECTIONS];
-INT32				iOldNumSelList;
+static Selections OldSelList[MAX_SELECTIONS];
+static INT32      iOldNumSelList;
 
 // Global pointers for selection list
 Selections  *pSelList;
@@ -211,8 +211,8 @@ INT32				iCurBank = 0;
 static DisplayList* pDispList;
 static INT16 iTopWinCutOff;
 
-UINT16 SelWinFillColor = 0x0000;					// Black
-UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
+static UINT16 const SelWinFillColor        = 0x0000; // Black
+static UINT16 const SelWinHilightFillColor = 0x000D; // A kind of medium dark blue
 
 
 static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing);
