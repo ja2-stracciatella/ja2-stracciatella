@@ -1135,7 +1135,7 @@ static void DwnClkCallback(GUI_BUTTON* button, INT32 reason)
 }
 
 
-static bool DisplayWindowFunc(DisplayList* pNode, INT16 top_cut_off, SGPBox const* area, UINT16 flags);
+static void DisplayWindowFunc(DisplayList* pNode, INT16 top_cut_off, SGPBox const* area, UINT16 flags);
 
 
 //	Displays the objects in the display list to the selection window.
@@ -1229,16 +1229,16 @@ catch (...) { return FALSE; }
 /* Blit the actual object images in the display list on the selection window.
  * The objects that have been selected (in the selection list) are highlighted
  * and the count placed in the upper left corner of the image. */
-static bool DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGPBox const* const area, UINT16 const flags)
+static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGPBox const* const area, UINT16 const flags)
 {
-	if (!n)                  return true;
-	if (n->iY < top_cut_off) return true;
+	if (!n)                  return;
+	if (n->iY < top_cut_off) return;
 
-	if (!DisplayWindowFunc(n->pNext, top_cut_off, area, flags)) return false;
+	DisplayWindowFunc(n->pNext, top_cut_off, area, flags);
 
 	INT16 const x = n->iX;
 	INT16 const y = n->iY + area->y - top_cut_off;
-	if (y > area->y + area->h) return true;
+	if (y > area->y + area->h) return;
 
 	if (flags & CLEAR_BACKGROUND)
 	{
@@ -1257,8 +1257,6 @@ static bool DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 		INT16 const count = pSelList[FindInSelectionList(n)].sCount;
 		if (count != 0) gprintf(x, y, L"%d", count);
 	}
-
-	return true;
 }
 
 #endif
