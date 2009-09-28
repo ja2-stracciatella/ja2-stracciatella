@@ -1135,7 +1135,7 @@ static void DwnClkCallback(GUI_BUTTON* button, INT32 reason)
 }
 
 
-static void DisplayWindowFunc(DisplayList* pNode, INT16 top_cut_off, SGPBox const* area, UINT16 flags);
+static void DisplayWindowFunc(DisplayList*, INT16 top_cut_off, SGPBox const* area);
 
 
 //	Displays the objects in the display list to the selection window.
@@ -1154,7 +1154,7 @@ static void DrawSelections(void)
 	SetFont( gpLargeFontType1 );
 	SetFontShade(LARGEFONT1, FONT_SHADE_GREY_165);
 
-	DisplayWindowFunc(pDispList, iTopWinCutOff, &g_sel_win_box, CLEAR_BACKGROUND);
+	DisplayWindowFunc(pDispList, iTopWinCutOff, &g_sel_win_box);
 
 	SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 
@@ -1229,23 +1229,19 @@ catch (...) { return FALSE; }
 /* Blit the actual object images in the display list on the selection window.
  * The objects that have been selected (in the selection list) are highlighted
  * and the count placed in the upper left corner of the image. */
-static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGPBox const* const area, UINT16 const flags)
+static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGPBox const* const area)
 {
 	if (!n)                  return;
 	if (n->iY < top_cut_off) return;
 
-	DisplayWindowFunc(n->pNext, top_cut_off, area, flags);
+	DisplayWindowFunc(n->pNext, top_cut_off, area);
 
 	INT16 const x = n->iX;
 	INT16 const y = n->iY + area->y - top_cut_off;
 	if (y > area->y + area->h) return;
 
-	if (flags & CLEAR_BACKGROUND)
-	{
-		UINT16 const fill_colour =
-			n->fChosen ? SelWinHilightFillColor : SelWinFillColor;
-		ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + n->iWidth, y + n->iHeight, fill_colour);
-	}
+	UINT16 const fill_colour = n->fChosen ? SelWinHilightFillColor : SelWinFillColor;
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + n->iWidth, y + n->iHeight, fill_colour);
 
 	SGPVObject* const  vo = n->hObj;
 	ETRLEObject const& e  = vo->SubregionProperties(n->uiIndex);
