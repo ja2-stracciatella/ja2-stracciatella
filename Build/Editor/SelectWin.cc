@@ -1135,7 +1135,7 @@ static void DwnClkCallback(GUI_BUTTON* button, INT32 reason)
 }
 
 
-static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, SGPBox const* area, UINT16 fFlags);
+static bool DisplayWindowFunc(DisplayList* pNode, INT16 top_cut_off, SGPBox const* area, UINT16 flags);
 
 
 //	Displays the objects in the display list to the selection window.
@@ -1226,61 +1226,39 @@ try
 catch (...) { return FALSE; }
 
 
-//----------------------------------------------------------------------------------------------
-//	DisplayWindowFunc
-//
-//	Blits the actual object images in the display list on the selection window. The objects that
-//	have been selected (in the selection list) are highlighted and the count placed in the upper
-//	left corner of the image.
-//
-static BOOLEAN DisplayWindowFunc(DisplayList* const pNode, INT16 const iTopCutOff, SGPBox const* const area, UINT16 const fFlags)
+/* Blit the actual object images in the display list on the selection window.
+ * The objects that have been selected (in the selection list) are highlighted
+ * and the count placed in the upper left corner of the image. */
+static bool DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGPBox const* const area, UINT16 const flags)
 {
-	INT16						iCurrY;
-	UINT16					usFillColor;
-	INT16						sCount;
+	if (!n)                  return true;
+	if (n->iY < top_cut_off) return true;
 
-	if ( pNode == NULL )
-		return(TRUE);
+	if (!DisplayWindowFunc(n->pNext, top_cut_off, area, flags)) return false;
 
-	if ( pNode->iY < iTopCutOff )
-		return(TRUE);
+	INT16 const x = n->iX;
+	INT16 const y = n->iY + area->y - top_cut_off;
+	if (y > area->y + area->h) return true;
 
-	if (!DisplayWindowFunc(pNode->pNext, iTopCutOff, area, fFlags)) return FALSE;
-
-	iCurrY = area->y + pNode->iY - iTopCutOff;
-
-	if (iCurrY > area->y + area->h) return TRUE;
-
-	if (fFlags & CLEAR_BACKGROUND)
+	if (flags & CLEAR_BACKGROUND)
 	{
-		usFillColor = SelWinFillColor;
-		if (pNode->fChosen)
-			usFillColor = SelWinHilightFillColor;
-
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, pNode->iX, iCurrY,
-											pNode->iX + pNode->iWidth,
-											iCurrY + pNode->iHeight, usFillColor);
+		UINT16 const fill_colour =
+			n->fChosen ? SelWinHilightFillColor : SelWinFillColor;
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + n->iWidth, y + n->iHeight, fill_colour);
 	}
 
-	sCount = 0;
-	if (pNode->fChosen)
-		sCount = pSelList[ FindInSelectionList( pNode ) ].sCount;
-
-	SGPVObject* const  vo = pNode->hObj;
-	ETRLEObject const& e  = vo->SubregionProperties(pNode->uiIndex);
+	SGPVObject* const  vo = n->hObj;
+	ETRLEObject const& e  = vo->SubregionProperties(n->uiIndex);
 	vo->CurrentShade(DEFAULT_SHADE_LEVEL);
-	BltVideoObject(FRAME_BUFFER, vo, pNode->uiIndex, pNode->iX - e.sOffsetX, iCurrY - e.sOffsetY);
+	BltVideoObject(FRAME_BUFFER, vo, n->uiIndex, x - e.sOffsetX, y - e.sOffsetY);
 
-	if ( sCount != 0)
+	if (n->fChosen)
 	{
-		gprintf( pNode->iX, iCurrY, L"%d", sCount );
+		INT16 const count = pSelList[FindInSelectionList(n)].sCount;
+		if (count != 0) gprintf(x, y, L"%d", count);
 	}
 
-	return TRUE;
+	return true;
 }
-
-
-
-
 
 #endif
