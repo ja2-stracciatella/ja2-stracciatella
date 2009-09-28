@@ -25,14 +25,6 @@
 #define DISPLAY_TEXT    1
 #define DISPLAY_GRAPHIC 2
 
-enum DisplayWindowFlags
-{
-	ONE_COLUMN       = 0x0001,
-	ONE_ROW          = 0x0002,
-	CLEAR_BACKGROUND = 0x0004
-};
-ENUM_BITSET(DisplayWindowFlags)
-
 #define DISPLAY_ALL_OBJECTS 0xFFFF
 
 
@@ -221,7 +213,7 @@ UINT16 SelWinFillColor = 0x0000;					// Black
 UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
 
 
-static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing, DisplayWindowFlags);
+static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing);
 static void CnclClkCallback(GUI_BUTTON* button, INT32 reason);
 static void DwnClkCallback(GUI_BUTTON* button, INT32 reason);
 static void OkClkCallback(GUI_BUTTON* button, INT32 reason);
@@ -384,7 +376,7 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 		default: abort(); // HACK000E
 	}
 
-	BuildDisplayWindow(pDSpec, usNSpecs, &pDispList, &g_sel_win_box, &SelWinSpacing, CLEAR_BACKGROUND);
+	BuildDisplayWindow(pDSpec, usNSpecs, &pDispList, &g_sel_win_box, &SelWinSpacing);
 }
 
 
@@ -1164,7 +1156,7 @@ static void DrawSelections(void)
 
 /* Create a display list from a display specification list.  Also set variables
  * up for properly scrolling the window etc. */
-static BOOLEAN BuildDisplayWindow(DisplaySpec const* const pDisplaySpecs, UINT16 const usNumSpecs, DisplayList** const pDisplayList, SGPBox const* const area, SGPPoint const* const pSpacing, DisplayWindowFlags const flags)
+static BOOLEAN BuildDisplayWindow(DisplaySpec const* const pDisplaySpecs, UINT16 const usNumSpecs, DisplayList** const pDisplayList, SGPBox const* const area, SGPPoint const* const pSpacing)
 try
 {
 	SaveSelectionList();
@@ -1194,9 +1186,8 @@ try
 		{
 			ETRLEObject const& e = vo->SubregionProperties(usETRLELoop);
 
-			if (x + e.usWidth > area->x + area->w || flags & ONE_COLUMN)
+			if (x + e.usWidth > area->x + area->w)
 			{
-				if (flags & ONE_ROW) break;
 				x  = area->x;
 				y += max_h + pSpacing->iY;
 				max_h = 0;
