@@ -121,7 +121,7 @@ void VideoToggleFullScreen(void)
 }
 
 
-static void GetRGBDistribution(void);
+static void GetRGBDistribution();
 
 
 void InitializeVideoManager(void)
@@ -672,24 +672,23 @@ SDL_Surface* GetMouseBufferObject(void)
 }
 
 
-static void GetRGBDistribution(void)
+static void GetRGBDistribution()
 {
-	const SDL_PixelFormat* const f = ScreenBuffer->format;
+	SDL_PixelFormat const& f = *ScreenBuffer->format;
+	UINT32          const  r = f.Rmask;
+	UINT32          const  g = f.Gmask;
+	UINT32          const  b = f.Bmask;
 
-	gusRedMask   = f->Rmask;
-	gusGreenMask = f->Gmask;
-	gusBlueMask  = f->Bmask;
+	/* Mask the highest bit of each component. This is used for alpha blending. */
+	guiTranslucentMask = r & r >> 1 | g & g >> 1 | b & b >> 1;
 
-	// RGB 5,5,5
-	if((gusRedMask==0x7c00) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
-		guiTranslucentMask=0x3def;
-	// RGB 5,6,5
-	else// if((gusRedMask==0xf800) && (gusGreenMask==0x03e0) && (gusBlueMask==0x1f))
-		guiTranslucentMask=0x7bef;
+	gusRedMask   = r;
+	gusGreenMask = g;
+	gusBlueMask  = b;
 
-	gusRedShift   = f->Rshift - f->Rloss;
-	gusGreenShift = f->Gshift - f->Gloss;
-	gusBlueShift  = f->Bshift - f->Bloss;
+	gusRedShift   = f.Rshift - f.Rloss;
+	gusGreenShift = f.Gshift - f.Gloss;
+	gusBlueShift  = f.Bshift - f.Bloss;
 }
 
 
