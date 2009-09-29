@@ -344,11 +344,11 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 }
 
 
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
+static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
+static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
+static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
 
 
 static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX_M, INT32 const iStartPointY_M, INT32 const iStartPointX_S, INT32 const iStartPointY_S, INT32 const iEndXS, INT32 const iEndYS, UINT8 const ubNumLevels, RenderLayerID const* const psLevelIDs)
@@ -2516,7 +2516,7 @@ void InvalidateWorldRedundency(void)
 	must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
+static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -2564,8 +2564,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 	INT32       BlitHeight = usHeight - TopSkip  - BottomSkip;
 
 	// check if whole thing is clipped
-	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
-	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
+	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
+	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
 	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
@@ -2576,14 +2576,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 
 	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_STRIP_DELTA_Y;
@@ -3027,8 +3027,6 @@ RSLoop2:
 BlitDone:
 	}
 #endif
-
-	return TRUE;
 }
 
 
@@ -3042,7 +3040,7 @@ BlitDone:
 	must be the same dimensions (including Pitch) as the destination.
 
 **********************************************************************************************/
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
+static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -3090,8 +3088,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 	INT32       BlitHeight = usHeight - TopSkip  - BottomSkip;
 
 	// check if whole thing is clipped
-	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
-	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
+	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
+	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
 	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
@@ -3102,14 +3100,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 
 	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_STRIP_DELTA_Y;
@@ -3552,8 +3550,6 @@ RSLoop2:
 BlitDone:
 	}
 #endif
-
-	return TRUE;
 }
 
 
@@ -3570,7 +3566,7 @@ BlitDone:
 	// render at all
 
 **********************************************************************************************/
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
+static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -3620,8 +3616,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UIN
 	INT32       BlitHeight = usHeight - TopSkip  - BottomSkip;
 
 	// check if whole thing is clipped
-	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
-	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
+	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
+	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
 	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
@@ -3632,14 +3628,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UIN
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 
 	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_STRIP_DELTA_Y;
@@ -4106,8 +4102,6 @@ RSLoop2:
 BlitDone:
 	}
 #endif
-
-	return TRUE;
 }
 
 
@@ -4116,7 +4110,7 @@ BlitDone:
  * 2) strip z-blitter
  * 3) clipped
  * 4) trans shadow - if value is 254, makes a shadow */
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -4166,8 +4160,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* p
 	INT32       BlitHeight = usHeight - TopSkip - BottomSkip;
 
 	// check if whole thing is clipped
-	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
-	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
+	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
+	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
 	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
@@ -4177,14 +4171,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* p
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
 	if (pZInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 
 	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_SUBLAYERS * 10;
@@ -4670,8 +4664,6 @@ RSLoop2:
 BlitDone:
 	}
 #endif
-
-	return TRUE;
 }
 
 
@@ -4711,7 +4703,7 @@ static void CorrectRenderCenter(INT16 sRenderX, INT16 sRenderY, INT16* pSNewX, I
  * 2) strip z-blitter
  * 3) clipped
  * 4) trans shadow - if value is 254, makes a shadow */
-static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
+static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
 {
 	UINT32 Unblitted;
 	INT32  LSCount;
@@ -4759,8 +4751,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 	INT32       BlitHeight = usHeight - TopSkip  - BottomSkip;
 
 	// check if whole thing is clipped
-	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
-	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
+	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return;
+	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return;
 
 	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
@@ -4770,14 +4762,14 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
 	if (pZInfo == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
-		return FALSE;
+		return;
 	}
 
 	UINT16 usZStartLevel = (INT16)usZValue + pZInfo->bInitialZChange * Z_SUBLAYERS * 10;
@@ -5242,8 +5234,6 @@ RSLoop2:
 BlitDone:
 	}
 #endif
-
-	return TRUE;
 }
 
 
