@@ -648,29 +648,15 @@ BlitDone:
 }
 
 
-/**********************************************************************************************
- InitZBuffer
-
-	Allocates and initializes a Z buffer for use with the Z buffer blitters. Doesn't really do
-	much except allocate a chunk of memory, and zero it.
-
-**********************************************************************************************/
 UINT16* InitZBuffer(const UINT32 width, const UINT32 height)
 {
 	return MALLOCNZ(UINT16, width * height);
 }
 
 
-/**********************************************************************************************
- ShutdownZBuffer
-
-	Frees up the memory allocated for the Z buffer.
-
-**********************************************************************************************/
-BOOLEAN ShutdownZBuffer(UINT16 *pBuffer)
+void ShutdownZBuffer(UINT16* const pBuffer)
 {
 	MemFree(pBuffer);
-	return(TRUE);
 }
 
 
