@@ -465,90 +465,79 @@ BlitDone:
 }
 
 
-/**********************************************************************************************
- Blt8BPPDataTo16BPPBufferTransZNBTranslucent
-
-	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
-	buffer as a destination. As it is blitting, it checks the Z value of the ZBuffer, and if the
-	pixel's Z level is below that of the current pixel, it is written on, and the Z value is
-	NOT updated to the current value,	for any non-transparent pixels. The Z-buffer is 16 bit, and
-	must be the same dimensions (including Pitch) as the destination.
-
-	Blits every second pixel ("Translucents").
-
-**********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransZNBTranslucent( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
+/* Blit an image into the destination buffer, using an ETRLE brush as a source,
+ * and a 16-bit buffer as a destination. As it is blitting, it checks the Z
+ * value of the ZBuffer, and if the pixel's Z level is below that of the current
+ * pixel, it is written on, and the Z value is NOT updated to the current value,
+ * for any non-transparent pixels. The Z-buffer is 16 bit, and must be the same
+ * dimensions (including pitch) as the destination.
+ * Blits every second pixel ("Translucents"). */
+void Blt8BPPDataTo16BPPBufferTransZNBTranslucent(UINT16* const buf, UINT32 const uiDestPitchBYTES, UINT16* const zbuf, UINT16 const zval, HVOBJECT const hSrcVObject, INT32 const iX, INT32 const iY, UINT16 const usIndex)
 {
-UINT32 LineSkip;
-UINT8	 *DestPtr, *ZPtr;
-UINT32 uiLineFlag;
+	Assert(hSrcVObject);
+	Assert(buf);
 
-	// Assertions
-	Assert( hSrcVObject != NULL );
-	Assert( pBuffer != NULL );
+	// Get offsets from index into structure.
+	ETRLEObject const& e      = hSrcVObject->SubregionProperties(usIndex);
+	UINT32             height = e.usHeight;
+	UINT32      const  width  = e.usWidth;
 
-	// Get Offsets from Index into structure
-	ETRLEObject const& pTrav    = hSrcVObject->SubregionProperties(usIndex);
-	UINT32             usHeight = pTrav.usHeight;
-	UINT32      const  usWidth  = pTrav.usWidth;
+	// Add to start position of dest buffer.
+	INT32 const x = iX + e.sOffsetX;
+	INT32 const y = iY + e.sOffsetY;
 
-	// Add to start position of dest buffer
-	INT32 const iTempX = iX + pTrav.sOffsetX;
-	INT32 const iTempY = iY + pTrav.sOffsetY;
+	CHECKV(x >= 0);
+	CHECKV(y >= 0);
 
-	// Validations
-	CHECKV(iTempX >= 0);
-	CHECKV(iTempY >= 0);
-
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
-	LineSkip=(uiDestPitchBYTES-(usWidth*2));
-	uiLineFlag=(iTempY&1);
+	UINT32         const pitch     = uiDestPitchBYTES / 2;
+	UINT8   const*       src       = hSrcVObject->PixData(e);
+	UINT16*              dst       = buf  + pitch * y + x;
+	UINT16  const*       zdst      = zbuf + pitch * y + x;
+	UINT16  const* const pal       = hSrcVObject->CurrentShade();
+	UINT32               line_skip = pitch - width;
 
 #if 1 // XXX TODO
+	UINT32 const translucent_mask = guiTranslucentMask;
 	do
 	{
 		for (;;)
 		{
-			UINT8 data = *SrcPtr++;
+			UINT8 data = *src++;
 
 			if (data == 0) break;
 			if (data & 0x80)
 			{
 				data &= 0x7F;
-				DestPtr += 2 * data;
-				ZPtr += 2 * data;
+				dst  += data;
+				zdst += data;
 			}
 			else
 			{
 				do
 				{
-					if (*(UINT16*)ZPtr <= usZValue)
-					{
-						*(UINT16*)DestPtr =
-							((p16BPPPalette[*SrcPtr] >> 1) & guiTranslucentMask) +
-							((*(UINT16*)DestPtr      >> 1) & guiTranslucentMask);
-					}
+					if (*zdst > zval) continue;
+					*dst =
+						((pal[*src] >> 1) & translucent_mask) +
+						((*dst      >> 1) & translucent_mask);
 				}
-				while (SrcPtr++, DestPtr += 2, ZPtr += 2, --data > 0);
+				while (++src, ++dst, ++zdst, --data > 0);
 			}
 		}
-		DestPtr += LineSkip;
-		ZPtr += LineSkip;
-		uiLineFlag ^= 1;
+		dst  += line_skip;
+		zdst += line_skip;
 	}
-	while (--usHeight > 0);
+	while (--height > 0);
 #else
+	line_skip *= 2;
+
 	__asm {
 
-		mov		esi, SrcPtr
-		mov		edi, DestPtr
+		mov		esi, src
+		mov		edi, dst
 		xor		eax, eax
-		mov		ebx, ZPtr
+		mov		ebx, zdst
 		xor		ecx, ecx
-		mov		edx, p16BPPPalette
+		mov		edx, pal
 
 BlitDispatch:
 
@@ -567,7 +556,7 @@ BlitNTL4:
 
 		xor		edx, edx
 		xor		eax, eax
-		mov		edx, p16BPPPalette
+		mov		edx, pal
 		mov		al, [esi]
 		mov		ax, [edx+eax*2]
 		shr		eax, 1
@@ -604,9 +593,8 @@ BlitDoneLine:
 
 		dec		usHeight
 		jz		BlitDone
-		add		edi, LineSkip
-		add		ebx, LineSkip
-		xor		uiLineFlag, 1
+		add		edi, line_skip
+		add		ebx, line_skip
 		jmp		BlitDispatch
 
 
