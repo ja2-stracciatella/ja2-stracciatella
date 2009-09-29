@@ -490,50 +490,38 @@ static FILE* CreateScreenshotFile(void)
 }
 
 
-static void TakeScreenshot(void)
+static void TakeScreenshot()
 {
-	FILE* const OutputFile = CreateScreenshotFile();
-	if (OutputFile == NULL) return;
+	FILE* const f = CreateScreenshotFile();
+	if (!f) return;
 
-	WriteTGAHeader(OutputFile);
+	WriteTGAHeader(f);
 
-	// Copy 16 bit buffer to file
-
-	// 5/6/5.. create buffer...
-	UINT16* p16BPPData = NULL; // XXX HACK000E
-	if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
+	// If not 5/5/5, create buffer
+	UINT16* buf = 0;
+	if (gusRedMask != 0x7C00 || gusGreenMask != 0x03E0 || gusBlueMask != 0x001F)
 	{
-		p16BPPData = MALLOCN(UINT16, SCREEN_WIDTH);
+		buf = MALLOCN(UINT16, SCREEN_WIDTH);
 	}
 
-	for (INT32 iIndex = SCREEN_HEIGHT - 1; iIndex >= 0; iIndex--)
+	UINT16 const* src = static_cast<UINT16 const*>(ScreenBuffer->pixels);
+	for (INT32 y = SCREEN_HEIGHT - 1; y >= 0; --y)
 	{
-		// ATE: OK, fix this such that it converts pixel format to 5/5/5
-		// if current settings are 5/6/5....
-		if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-		{
-			// Read into a buffer...
-			memcpy(p16BPPData, (UINT16*)ScreenBuffer->pixels + iIndex * SCREEN_WIDTH, SCREEN_WIDTH * 2);
-
-			// Convert....
-			ConvertRGBDistribution565To555(p16BPPData, SCREEN_WIDTH);
-
-			// Write
-			fwrite(p16BPPData, SCREEN_WIDTH * 2, 1, OutputFile);
+		if (buf)
+		{ // ATE: Fix this such that it converts pixel format to 5/5/5
+			memcpy(buf, src + y * SCREEN_WIDTH, SCREEN_WIDTH * sizeof(*buf));
+			ConvertRGBDistribution565To555(buf, SCREEN_WIDTH);
+			fwrite(buf, sizeof(*buf), SCREEN_WIDTH, f);
 		}
 		else
 		{
-			fwrite((UINT16*)ScreenBuffer->pixels + iIndex * SCREEN_WIDTH, SCREEN_WIDTH * 2, 1, OutputFile);
+			fwrite(src + y * SCREEN_WIDTH, SCREEN_WIDTH * 2, 1, f);
 		}
 	}
 
-	// 5/6/5.. Delete buffer...
-	if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
-	{
-		MemFree(p16BPPData);
-	}
+	if (buf) MemFree(buf);
 
-	fclose(OutputFile);
+	fclose(f);
 }
 
 
