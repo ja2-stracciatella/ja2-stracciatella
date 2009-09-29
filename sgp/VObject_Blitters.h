@@ -67,7 +67,7 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPV
 BOOLEAN Blt8BPPDataSubTo16BPPBuffer(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, SGPBox const* rect);
 
 // Blits from flat 8bpp source, to 16bpp dest, divides in half
-BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* dst_buf, UINT32 uiDestPitchBYTES, SGPVSurface* src_surface, UINT8 const* src_buf, UINT32 src_pitch, INT32 x, INT32 y, SGPBox const* rect);
+void Blt8BPPDataTo16BPPBufferHalf(UINT16* dst_buf, UINT32 uiDestPitchBYTES, SGPVSurface* src_surface, UINT8 const* src_buf, UINT32 src_pitch, INT32 x, INT32 y, SGPBox const* rect);
 
 
 // ATE: New blitters for showing an outline at color 254

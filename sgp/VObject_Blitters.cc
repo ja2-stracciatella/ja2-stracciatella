@@ -5318,14 +5318,14 @@ DoneBlit:											// finished blit
  *   left coordinates to the same factor of two.
  * - A rect specifying an odd number of pixels will divide out to an even number
  *   of pixels blitted to the destination. */
-BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* const dst_buf, UINT32 const uiDestPitchBYTES, SGPVSurface* const src_surface, UINT8 const* const src_buf, UINT32 const src_pitch, INT32 const x, INT32 const y, SGPBox const* const rect)
+void Blt8BPPDataTo16BPPBufferHalf(UINT16* const dst_buf, UINT32 const uiDestPitchBYTES, SGPVSurface* const src_surface, UINT8 const* const src_buf, UINT32 const src_pitch, INT32 const x, INT32 const y, SGPBox const* const rect)
 {
 	Assert(src_surface);
 	Assert(src_buf);
 	Assert(dst_buf);
 
-	CHECKF(x >= 0);
-	CHECKF(y >= 0);
+	CHECKV(x >= 0);
+	CHECKV(y >= 0);
 
 	UINT8 const* src = src_buf;
 	UINT32       width;
@@ -5334,8 +5334,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* const dst_buf, UINT32 const uiDestP
 	{
 		width  = rect->w;
 		height = rect->h;
-		CHECKF(0 < width  && width  <= src_surface->Width());
-		CHECKF(0 < height && height <= src_surface->Height());
+		CHECKV(0 < width  && width  <= src_surface->Width());
+		CHECKV(0 < height && height <= src_surface->Height());
 
 		src += src_pitch * rect->y + rect->x;
 	}
@@ -5407,8 +5407,6 @@ ReadMask:
 //DoneBlit:											// finished blit
 	}
 #endif
-
-	return TRUE;
 }
 
 
