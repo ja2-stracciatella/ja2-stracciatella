@@ -1,5 +1,6 @@
 #include "Types.h"
 #include "Campaign_Init.h"
+#include "Quests.h"
 #include "Random.h"
 #include "Campaign_Types.h"
 #include "Queen_Command.h"
@@ -279,8 +280,8 @@ void InitNewCampaign()
 
 	BuildUndergroundSectorInfoList();
 
-	// allow overhead view of omerta A9 on game onset
-	SetSectorFlag( 9, 1, 0, SF_ALREADY_VISITED );
+	// Allow overhead view of start sector on game onset.
+	SetSectorFlag(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0, SF_ALREADY_VISITED);
 
 	//Generates the initial forces in a new campaign.  The idea is to randomize numbers and sectors
 	//so that no two games are the same.

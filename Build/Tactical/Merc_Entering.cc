@@ -1,6 +1,7 @@
 #include "Directories.h"
 #include "Font_Control.h"
 #include "Overhead.h"
+#include "Quests.h"
 #include "Timer_Control.h"
 #include "Soldier_Control.h"
 #include "Weapons.h"
@@ -457,7 +458,7 @@ void HandleHeliDrop( )
 				// Add merc to sector
 				SOLDIERTYPE& s = *gHeliSeats[cnt];
 				s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-				UpdateMercInSector(s, 9, 1, 0);
+				UpdateMercInSector(s, SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
 
 				// Check for merc arrives quotes...
 				HandleMercArrivesQuotes(s);
@@ -590,7 +591,7 @@ void HandleHeliDrop( )
 						// Change insertion code
 						s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 
-						UpdateMercInSector(s, 9, 1, 0);
+						UpdateMercInSector(s, SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
 
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )

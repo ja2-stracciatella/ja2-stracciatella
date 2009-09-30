@@ -1546,8 +1546,8 @@ try
 		// NOTE: Must come after border buttons are created, since it may toggle them!
 		if (!AnyMercsHired())
 		{
-			// select starting sector (A9 - Omerta)
-			ChangeSelectedMapSector( 9, 1, 0 );
+			// Select starting sector.
+			ChangeSelectedMapSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
 		}
 		else if( ( gWorldSectorX > 0 ) && ( gWorldSectorY > 0 ) && ( gbWorldSectorZ != -1 ) )
 		{
@@ -1556,10 +1556,10 @@ try
 		}
 		else	// no loaded sector
 		{
-			// only select A9 - Omerta IF there is no current selection, otherwise leave it as is
+			// Only select start sector, if there is no current selection, otherwise leave it as is.
 			if ( ( sSelMapX == 0 ) || ( sSelMapY == 0 ) || ( iCurrentMapSectorZ == -1 ) )
 			{
-				ChangeSelectedMapSector( 9, 1, 0 );
+				ChangeSelectedMapSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
 			}
 		}
 

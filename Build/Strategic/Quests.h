@@ -204,9 +204,8 @@ enum Quests
 #define		PABLOS_STOLEN_DEST_GRIDNO						1
 #define		LOST_SHIPMENT_GRIDNO								2
 
-// omerta positions
-#define OMERTA_LEAVE_EQUIP_SECTOR   SEC_A9
-#define OMERTA_LEAVE_EQUIP_GRIDNO			4868
+#define START_SECTOR                    SEC_A9
+#define START_SECTOR_LEAVE_EQUIP_GRIDNO 4868
 
 // NB brothel rooms 88-90 removed because they are the antechamber
 #define IN_BROTHEL( room ) (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && (room) >= 91 && (room) <= 119)

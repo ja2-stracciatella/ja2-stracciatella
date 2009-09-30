@@ -1106,7 +1106,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo
 
 void HandleEquipmentLeftInOmerta(const UINT32 uiSlotIndex)
 {
-	HandleEquipmentLeft(uiSlotIndex, OMERTA_LEAVE_EQUIP_SECTOR, OMERTA_LEAVE_EQUIP_GRIDNO);
+	HandleEquipmentLeft(uiSlotIndex, START_SECTOR, START_SECTOR_LEAVE_EQUIP_GRIDNO);
 }
 
 
@@ -3752,13 +3752,13 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	// make sure the game just started
 	if (!DidGameJustStart()) return FALSE;
 
-	// select starting sector (A9 - Omerta)
-	ChangeSelectedMapSector( 9, 1, 0 );
+	// Select starting sector.
+	ChangeSelectedMapSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
 
 	// load starting sector
 	try
 	{
-		SetCurrentWorldSector(9, 1, 0);
+		SetCurrentWorldSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
 	}
 	catch (...) /* XXX exception should probably propagate; caller ignores return value */
 	{
@@ -3768,8 +3768,8 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	//Setup variables in the PBI for this first battle.  We need to support the
 	//non-persistant PBI in case the user goes to mapscreen.
 	gfBlitBattleSectorLocator = TRUE;
-	gubPBSectorX = 9;
-	gubPBSectorY = 1;
+	gubPBSectorX = SECTORX(START_SECTOR);
+	gubPBSectorY = SECTORY(START_SECTOR);
 	gubPBSectorZ = 0;
 	gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
 

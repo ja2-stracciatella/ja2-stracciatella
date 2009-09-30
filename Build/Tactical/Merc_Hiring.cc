@@ -54,9 +54,9 @@ extern BOOLEAN		gfTacticalDoHeliRun;
 extern BOOLEAN		gfFirstHeliRun;
 
 // ATE: Globals that dictate where the mercs will land once being hired
-// Default to Omerta
+// Default to start sector
 // Saved in general saved game structure
-INT16 g_merc_arrive_sector = SEC_A9;
+INT16 g_merc_arrive_sector = START_SECTOR;
 
 
 INT8 HireMerc(MERC_HIRE_STRUCT& h)
@@ -241,11 +241,13 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 {
 	UINT32									uiTimeOfPost;
 
-	if (!DidGameJustStart() && g_merc_arrive_sector == SEC_A9)
-	{ //Mercs arriving in A9.  This sector has been deemed as the always safe sector.
-		//Seeing we don't support entry into a hostile sector (except for the beginning),
-		//we will nuke any enemies in this sector first.
-		if( gWorldSectorX != 9 || gWorldSectorY != 1 || gbWorldSectorZ )
+	if (!DidGameJustStart() && g_merc_arrive_sector == START_SECTOR)
+	{ /* Mercs arriving in start sector. This sector has been deemed as the always
+		 * safe sector. Seeing we don't support entry into a hostile sector (except
+		 * for the beginning), we will nuke any enemies in this sector first. */
+		if (gWorldSectorX  != SECTORX(START_SECTOR) ||
+				gWorldSectorY  != SECTORY(START_SECTOR) ||
+				gbWorldSectorZ != 0)
 		{
 			EliminateAllEnemies(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 		}
@@ -276,7 +278,8 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 		// OK, If this sector is currently loaded, and guy does not have CHOPPER insertion code....
 		// ( which means we are at beginning of game if so )
 		// Setup chopper....
-		if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER && s.sSectorX == 9 && s.sSectorY == 1)
+		if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER &&
+				SECTOR(s.sSectorX, s.sSectorY) == START_SECTOR)
 		{
 			gfTacticalDoHeliRun = TRUE;
 

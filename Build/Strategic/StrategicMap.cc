@@ -542,8 +542,8 @@ static void InitializeMapStructure(void)
 
 void InitializeSAMSites()
 {
-	// Move the landing zone over to Omerta.
-	g_merc_arrive_sector = SEC_A9;
+	// Move the landing zone over to the start sector.
+	g_merc_arrive_sector = START_SECTOR;
 
 	// All SAM sites start game in perfect working condition.
 	FOR_EACH(INT16 const, i, pSamList)
@@ -1468,8 +1468,9 @@ check_entry:
 		}
 
 		case INSERTION_CODE_ARRIVING_GAME:
-			// Are we in Omerta?
-			if (x == 9 && y == 1 && z == 0 && gWorldSectorX == 9 && gWorldSectorY == 1 && gbWorldSectorZ == 0)
+			// Are we in the start sector?
+			if (SECTOR(x,             y)             == START_SECTOR && z              == 0 &&
+					SECTOR(gWorldSectorX, gWorldSectorY) == START_SECTOR && gbWorldSectorZ == 0)
 			{ // Try another location and walk into map
 				gridno = 4379;
 			}
@@ -2804,8 +2805,8 @@ void UpdateAirspaceControl( void )
 		// get the name of the old sector
 		GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sMsgSubString1, lengthof(sMsgSubString1), FALSE);
 
-		// move the landing zone over to Omerta
-		g_merc_arrive_sector = SEC_A9;
+		// Move the landing zone over to the start sector.
+		g_merc_arrive_sector = START_SECTOR;
 
 		// get the name of the new sector
 		GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sMsgSubString2, lengthof(sMsgSubString2), FALSE);
@@ -3749,7 +3750,7 @@ try
 		return FALSE;
 	}
 
-	if (DidGameJustStart() && gWorldSectorX == 9 && gWorldSectorY == 1 && !gbWorldSectorZ)
+	if (DidGameJustStart() && SECTOR(gWorldSectorX, gWorldSectorY) == START_SECTOR && gbWorldSectorZ == 0)
 	{
 		return FALSE;
 	}
