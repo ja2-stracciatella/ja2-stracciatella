@@ -23,14 +23,13 @@ LoadingScreenID GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
 	switch (z)
 	{
 		case 0:
+			if (DidGameJustStart()) return LOADINGSCREEN_HELI;
 			switch (sector_id)
 			{
 				case SEC_A2:
 				case SEC_B2:
 					return night ? LOADINGSCREEN_NIGHTCHITZENA : LOADINGSCREEN_DAYCHITZENA;
 				case SEC_A9:
-					if (DidGameJustStart()) return LOADINGSCREEN_HELI;
-					/* FALLTHROUGH */
 				case SEC_A10:
 					return night ? LOADINGSCREEN_NIGHTOMERTA : LOADINGSCREEN_DAYOMERTA;
 				case SEC_P3:
