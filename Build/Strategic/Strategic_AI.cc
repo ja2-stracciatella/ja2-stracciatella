@@ -2,6 +2,7 @@
 
 #include "Font.h"
 #include "Font_Control.h"
+#include "MapScreen.h"
 #include "Soldier_Tile.h"
 #include "Types.h"
 #include "Strategic_Movement.h"
@@ -511,30 +512,23 @@ static void RequestAttackOnSector(UINT8 ubSectorID, UINT16 usDefencePoints)
 }
 
 
-static BOOLEAN AdjacentSectorIsImportantAndUndefended(UINT8 ubSectorID)
+static bool AdjacentSectorIsImportantAndUndefended(UINT8 const sector_id)
 {
-	SECTORINFO *pSector;
-	switch( ubSectorID )
+	switch (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector_id)].bNameId)
 	{
-		case SEC_A9:	case SEC_A10:								//Omerta
-		case SEC_C5:	case SEC_C6:	case SEC_D5:	//San Mona
-		case SEC_I6:															//Estoni
-			//These sectors aren't important.
-			return FALSE;
+		case OMERTA:
+		case SAN_MONA:
+		case ESTONI:
+			// These towns aren't important.
+			return false;
 	}
-	pSector = &SectorInfo[ ubSectorID ];
-	if( pSector->ubNumTroops || pSector->ubNumElites || pSector->ubNumAdmins )
-	{
-		return FALSE;
-	}
-	if (pSector->ubTraversability[THROUGH_STRATEGIC_MOVE] == TOWN)
-	{
-		if( !PlayerSectorDefended( ubSectorID ) )
-		{
-			return TRUE;
-		}
-	}
-	return FALSE;
+	SECTORINFO const& si = SectorInfo[sector_id];
+	return
+		si.ubNumTroops == 0                                 &&
+		si.ubNumElites == 0                                 &&
+		si.ubNumAdmins == 0                                 &&
+		si.ubTraversability[THROUGH_STRATEGIC_MOVE] == TOWN &&
+		!PlayerSectorDefended(sector_id);
 }
 
 
