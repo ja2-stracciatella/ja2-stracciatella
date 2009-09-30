@@ -39,7 +39,7 @@ struct MERC_HIRE_STRUCT
 extern INT16 g_merc_arrive_sector;
 
 
-INT8		HireMerc( MERC_HIRE_STRUCT *pHireMerc);
+INT8 HireMerc(MERC_HIRE_STRUCT&);
 void MercArrivesCallback(SOLDIERTYPE&);
 bool IsMercHireable(MERCPROFILESTRUCT const&);
 bool IsMercDead(MERCPROFILESTRUCT const&);

@@ -183,7 +183,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	SetProfileFaceData(HireMercStruct.ubProfileID, 200 + iPortraitNumber, fi->eye_x, fi->eye_y, fi->mouth_x, fi->mouth_y);
 
 	//if we succesfully hired the merc
-	if( !HireMerc( &HireMercStruct ) )
+	if (!HireMerc(HireMercStruct))
 	{
 		return(FALSE);
 	}

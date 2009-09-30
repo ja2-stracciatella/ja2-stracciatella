@@ -59,9 +59,9 @@ extern BOOLEAN		gfFirstHeliRun;
 INT16 g_merc_arrive_sector = SEC_A9;
 
 
-INT8 HireMerc(MERC_HIRE_STRUCT* const h)
+INT8 HireMerc(MERC_HIRE_STRUCT& h)
 {
-	ProfileID  const   pid = h->ubProfileID;
+	ProfileID  const   pid = h.ubProfileID;
 	MERCPROFILESTRUCT& p   = GetProfile(pid);
 
 	// If we are to disregard the status of the merc
@@ -85,21 +85,21 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 
 	// ATE: if we are to use landing zone, update to latest value
 	// they will be updated again just before arrival...
-	if (h->fUseLandingZoneForArrival)
+	if (h.fUseLandingZoneForArrival)
 	{
-		h->sSectorX	= SECTORX(g_merc_arrive_sector);
-		h->sSectorY	= SECTORY(g_merc_arrive_sector);
-		h->bSectorZ	= 0;
+		h.sSectorX = SECTORX(g_merc_arrive_sector);
+		h.sSectorY = SECTORY(g_merc_arrive_sector);
+		h.bSectorZ = 0;
 	}
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
 	MercCreateStruct.ubProfile             = pid;
-	MercCreateStruct.sSectorX              = h->sSectorX;
-	MercCreateStruct.sSectorY              = h->sSectorY;
-	MercCreateStruct.bSectorZ              = h->bSectorZ;
+	MercCreateStruct.sSectorX              = h.sSectorX;
+	MercCreateStruct.sSectorY              = h.sSectorY;
+	MercCreateStruct.bSectorZ              = h.bSectorZ;
 	MercCreateStruct.bTeam                 = OUR_TEAM;
-	MercCreateStruct.fCopyProfileItemsOver = h->fCopyProfileItemsOver;
+	MercCreateStruct.fCopyProfileItemsOver = h.fCopyProfileItemsOver;
 	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s == NULL)
 	{
@@ -125,37 +125,37 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 		}
 
 		// Set insertion for first time in chopper
-		h->ubInsertionCode = INSERTION_CODE_CHOPPER;
+		h.ubInsertionCode = INSERTION_CODE_CHOPPER;
 	}
 #endif
 
 	// Record how long the merc will be gone for
-	p.bMercStatus = (UINT8)h->iTotalContractLength;
+	p.bMercStatus = (UINT8)h.iTotalContractLength;
 
 	// Copy over insertion data
-	s->ubStrategicInsertionCode = h->ubInsertionCode;
-	s->usStrategicInsertionData = h->usInsertionData;
+	s->ubStrategicInsertionCode = h.ubInsertionCode;
+	s->usStrategicInsertionData = h.usInsertionData;
 	// ATE: Copy over value for using landing zone to soldier type
-	s->fUseLandingZoneForArrival = h->fUseLandingZoneForArrival;
+	s->fUseLandingZoneForArrival = h.fUseLandingZoneForArrival;
 
 	// Set assignment
 	if (s->bAssignment != IN_TRANSIT) SetTimeOfAssignmentChangeForMerc(s);
 	ChangeSoldiersAssignment(s, IN_TRANSIT);
 
 	// Set the contract length
-	s->iTotalContractLength = h->iTotalContractLength;
+	s->iTotalContractLength = h.iTotalContractLength;
 
 	// Reset the insurance values
 	s->iStartOfInsuranceContract       = 0;
 	s->iTotalLengthOfInsuranceContract = 0;
 
 	// Store arrival time in soldier structure so map screen can display it
-	s->uiTimeSoldierWillArrive = h->uiTimeTillMercArrives;
+	s->uiTimeSoldierWillArrive = h.uiTimeTillMercArrives;
 
 	if (DidGameJustStart())
 	{
 		// Set time of initial merc arrival in minutes
-		h->uiTimeTillMercArrives = (STARTING_TIME + FIRST_ARRIVAL_DELAY) / NUM_SEC_IN_MIN;
+		h.uiTimeTillMercArrives = (STARTING_TIME + FIRST_ARRIVAL_DELAY) / NUM_SEC_IN_MIN;
 
 		//set when the merc's contract is finished
 		s->iEndofContractTime = GetMidnightOfFutureDayInMinutes(s->iTotalContractLength) + GetHourWhenContractDone(s) * 60;
@@ -168,12 +168,12 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 
 	// Set the time and ID of the last hired merc will arrive
 	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc     = pid;
-	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = h->uiTimeTillMercArrives;
+	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = h.uiTimeTillMercArrives;
 
 	// If we are trying to hire a merc that should arrive later, put the merc in the queue
-	if (h->uiTimeTillMercArrives != 0)
+	if (h.uiTimeTillMercArrives != 0)
 	{
-		AddStrategicEvent(EVENT_DELAYED_HIRING_OF_MERC, h->uiTimeTillMercArrives, s->ubID);
+		AddStrategicEvent(EVENT_DELAYED_HIRING_OF_MERC, h.uiTimeTillMercArrives, s->ubID);
 		// Specify that the merc is hired but has not arrived yet
 		p.bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
 	}
@@ -184,7 +184,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 		s->ubWhatKindOfMercAmI = MERC_TYPE__AIM_MERC;
 
 		// Determine how much the contract is, and remember what type of contract he got
-		switch (h->iTotalContractLength)
+		switch (h.iTotalContractLength)
 		{
 			case 1:
 				s->bTypeOfLastContract   = CONTRACT_EXTEND_1_DAY;

@@ -560,7 +560,7 @@ static BOOLEAN QuickGameMemberHireMerc(UINT8 ubCurrentSoldier)
 	HireMercStruct.uiTimeTillMercArrives = 0;
 
 	//if we succesfully hired the merc
-	if( !HireMerc( &HireMercStruct ) )
+	if (!HireMerc(HireMercStruct))
 	{
 		return(FALSE);
 	}

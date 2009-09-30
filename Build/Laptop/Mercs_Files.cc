@@ -465,7 +465,7 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 //	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = HireMercStruct.uiTimeTillMercArrives;
 
 
-	bReturnCode = HireMerc( &HireMercStruct );
+	bReturnCode = HireMerc(HireMercStruct);
 	//already have 20 mercs on the team
 	if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
 	{

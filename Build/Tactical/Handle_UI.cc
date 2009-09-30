@@ -916,7 +916,7 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 			HireMercStruct.uiTimeTillMercArrives = 0;
 
 			//if we succesfully hired the merc
-			bReturnCode = HireMerc( &HireMercStruct );
+			bReturnCode = HireMerc(HireMercStruct);
 
 			if( bReturnCode == MERC_HIRE_FAILED )
 			{

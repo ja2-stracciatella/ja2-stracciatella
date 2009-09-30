@@ -1244,7 +1244,7 @@ static INT8 AimMemberHireMerc(void)
 	}
 	h.iTotalContractLength = contract_length;
 
-	INT8 const ret = HireMerc(&h);
+	INT8 const ret = HireMerc(h);
 	if (ret == MERC_HIRE_OK)
 	{
 		// Set the type of contract the merc is on
@@ -2859,7 +2859,7 @@ void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
 			gfKeyState[ALT]  ? 14 :
 			gfKeyState[CTRL] ?  7 :
 			1;
-		HireMerc(&hire);
+		HireMerc(hire);
 
 		// add an entry in the finacial page for the hiring of the merc
 		AddTransactionToPlayersBook(HIRED_MERC, pid, GetWorldTotalMin(), -(INT32)p.sSalary);
@@ -2955,7 +2955,7 @@ static void QuickHireMerc(void)
 		1;
 
 	SetFlagToForceHireMerc(TRUE);
-	INT8 const ret = HireMerc(&h);
+	INT8 const ret = HireMerc(h);
 	SetFlagToForceHireMerc(FALSE);
 	if (ret == MERC_HIRE_OK)
 	{
@@ -3069,7 +3069,7 @@ void DemoHiringOfMercs()
 		h.fCopyProfileItemsOver = TRUE;
 		h.iTotalContractLength  = 60;
 		h.uiTimeTillMercArrives = GetMercArrivalTimeOfDay();
-		HireMerc(&h);
+		HireMerc(h);
 
 		UINT32 const now = GetWorldTotalMin();
 		// Add an entry in the finacial page for the hiring of the merc
