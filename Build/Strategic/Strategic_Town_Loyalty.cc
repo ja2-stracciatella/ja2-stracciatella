@@ -70,9 +70,8 @@
 TOWN_LOYALTY gTownLoyalty[ NUM_TOWNS ];
 
 
-// town name and locations arrays, for town theft and what not
-INT32 pTownNamesList[ 40 ];
-INT32 pTownLocationsList[ 40 ];
+// Town names and locations
+TownSectorInfo g_town_sectors[40];
 
 
 #define BASIC_COST_FOR_CIV_MURDER	(10 * GAIN_PTS_PER_LOYALTY_PT)
@@ -741,10 +740,9 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 
 void BuildListOfTownSectors()
 {
-	memset(pTownNamesList,     BLANK_SECTOR, sizeof(pTownNamesList));
-	memset(pTownLocationsList, 0xFF,         sizeof(pTownLocationsList));
+	memset(g_town_sectors, 0, sizeof(g_town_sectors));
 
-	INT32 n = 0;
+	TownSectorInfo* i = g_town_sectors;
 	for (INT32 x = 0; x != MAP_WORLD_X; ++x)
 	{
 		for (INT32 y = 0; y != MAP_WORLD_Y; ++y)
@@ -753,9 +751,9 @@ void BuildListOfTownSectors()
 			INT8   const town   = StrategicMap[sector].bNameId;
 			if (town < FIRST_TOWN || NUM_TOWNS <= town) continue;
 
-			pTownNamesList[n]     = town;
-			pTownLocationsList[n] = sector;
-			++n;
+			i->sector = sector;
+			i->town   = town;
+			++i;
 		}
 	}
 }
@@ -1018,7 +1016,6 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 {
 	INT16 sEventSector;
 	INT8 bTownId;
-	UINT32 uiIndex;
 	INT32 iThisDistance;
 	INT32 iShortestDistance[NUM_TOWNS];
 	INT32 iPercentAdjustment;
@@ -1037,24 +1034,21 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(sSectorX, sSectorY);
 
 	// calc distance to the event sector from EACH SECTOR of each town, keeping only the shortest one for every town
-	uiIndex = 0;
-	while( pTownNamesList[ uiIndex ] != 0 )
+	FOR_EACH_TOWN_SECTOR(i)
 	{
-		bTownId = (UINT8) pTownNamesList[ uiIndex ];
+		bTownId = i->town;
 
 		// skip path test if distance is already known to be zero to speed this up a bit
 		if (iShortestDistance[ bTownId ] > 0 )
 		{
 			// calculate across how many sectors the fastest travel path from event to this town sector
-			iThisDistance = FindStratPath(sEventSector, pTownLocationsList[uiIndex], g, FALSE);
+			iThisDistance = FindStratPath(sEventSector, i->sector, g, FALSE);
 
 			if (iThisDistance < iShortestDistance[ bTownId ])
 			{
 				iShortestDistance[ bTownId ] = iThisDistance;
 			}
 		}
-
-		uiIndex++;
 	}
 
 	// must always remove that temporary group!

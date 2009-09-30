@@ -3525,16 +3525,16 @@ static void BlitTownGridMarkers(void)
 
 	// Go through list of towns and place on screen
 	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
-	for (INT32 i = 0; pTownNamesList[i] != BLANK_SECTOR; ++i)
+	FOR_EACH_TOWN_SECTOR(i)
 	{
 		// skip Orta/Tixa until found
-		switch (pTownNamesList[i])
+		switch (i->town)
 		{
 			case ORTA: if (!fFoundOrta) continue; break;
 			case TIXA: if (!fFoundTixa) continue; break;
 		}
 
-		INT32 const loc = pTownLocationsList[i];
+		INT32 const loc = i->sector;
 		INT16       x;
 		INT16       y;
 		INT16       w;
@@ -4164,11 +4164,9 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 
 	INT32 const n_under_control = GetTownSectorsUnderControl(town);
 
-	for (INT32 i = 0; pTownNamesList[i] != 0; ++i)
+	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
-		if (pTownNamesList[i] != town) continue;
-
-		INT32 const loc = pTownLocationsList[i];
+		INT32 const loc = i->sector;
 		SECTORINFO& si  = SectorInfo[STRATEGIC_INDEX_TO_SECTOR_INFO(loc)];
 		UINT8       n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
 		UINT8       n_regular = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
@@ -4214,9 +4212,9 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 		}
 
 		bool last_one = true;
-		for (INT32 const* k = pTownNamesList + i + 1; *k != 0; ++k)
+		for (TownSectorInfo const* k = i + 1; k->town != BLANK_SECTOR; ++k)
 		{
-			if (*k != town) continue;
+			if (k->town != town) continue;
 			last_one = false;
 			break;
 		}
@@ -4282,11 +4280,9 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 	INT32 n_left_over_regular = n_regular % n_under_control;
 	INT32 n_left_over_elite   = n_elite   % n_under_control;
 
-	for (INT32 i = 0; pTownNamesList[i] != BLANK_SECTOR; ++i)
+	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
-		if (pTownNamesList[i] != town) continue;
-
-		INT32 const loc = pTownLocationsList[i];
+		INT32 const loc = i->sector;
 		INT16 const x   = GET_X_FROM_STRATEGIC_INDEX(loc);
 		INT16 const y   = GET_Y_FROM_STRATEGIC_INDEX(loc);
 
@@ -4460,9 +4456,9 @@ static void DrawTownMilitiaForcesOnMap(void)
 {
 	ClipBlitsToMapViewRegion();
 
-	for (INT32 i = 0; pTownNamesList[i] != 0; ++i)
+	FOR_EACH_TOWN_SECTOR(i)
 	{
-		INT32 const sector = STRATEGIC_INDEX_TO_SECTOR_INFO(pTownLocationsList[i]);
+		INT32 const sector = STRATEGIC_INDEX_TO_SECTOR_INFO(i->sector);
 		DrawMilitiaForcesForSector(sector);
 	}
 

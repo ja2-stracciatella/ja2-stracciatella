@@ -75,13 +75,23 @@ struct TOWN_LOYALTY
 // the loyalty variables for each town
 extern TOWN_LOYALTY gTownLoyalty[];
 
-// town names list
-extern INT32 pTownNamesList[];
-// town locations list
-extern INT32 pTownLocationsList[];
 // whether town maintains/displays loyalty or not
 extern BOOLEAN gfTownUsesLoyalty[];
 
+
+struct TownSectorInfo
+{
+	UINT8  town;
+	UINT16 sector;
+};
+
+extern TownSectorInfo g_town_sectors[];
+
+#define FOR_EACH_TOWN_SECTOR(iter) \
+	for (TownSectorInfo const* iter = g_town_sectors; iter->town != BLANK_SECTOR; ++iter)
+
+#define FOR_EACH_SECTOR_IN_TOWN(iter, town_) \
+	FOR_EACH_TOWN_SECTOR(iter) if (iter->town != (town_)) continue; else
 
 
 // initialize a specific town's loyalty if it hasn't already been
