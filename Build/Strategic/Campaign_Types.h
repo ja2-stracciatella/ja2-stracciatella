@@ -184,7 +184,6 @@ struct SECTORINFO
 	UINT8		ubTraversability[5];//determines the traversability ratings to adjacent sectors.
 															//The last index represents the traversability if travelling
 															//throught the sector without entering it.
-	INT8  bNameId;
 	INT8 bBloodCats;
 	INT8 bBloodCatPlacements;
 
