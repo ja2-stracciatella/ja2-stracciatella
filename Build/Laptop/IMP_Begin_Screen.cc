@@ -926,8 +926,8 @@ static BOOLEAN CheckCharacterInputForEgg(void)
 		iPortraitNumber         = 2;
 
 		MERC_HIRE_STRUCT HireMercStruct;
-		HireMercStruct.sSectorX                  = gsMercArriveSectorX;
-		HireMercStruct.sSectorY                  = gsMercArriveSectorY;
+		HireMercStruct.sSectorX                  = SECTORX(g_merc_arrive_sector);
+		HireMercStruct.sSectorY                  = SECTORY(g_merc_arrive_sector);
 		HireMercStruct.bSectorZ                  = 0;
 		HireMercStruct.fUseLandingZoneForArrival = TRUE;
 		HireMercStruct.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;

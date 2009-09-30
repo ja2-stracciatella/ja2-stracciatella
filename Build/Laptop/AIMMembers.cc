@@ -1214,8 +1214,8 @@ static INT8 AimMemberHireMerc(void)
 	MERC_HIRE_STRUCT h;
 	memset(&h, 0, sizeof(h));
 	h.ubProfileID               = pid;
-	h.sSectorX                  = gsMercArriveSectorX;
-	h.sSectorY                  = gsMercArriveSectorY;
+	h.sSectorX                  = SECTORX(g_merc_arrive_sector);
+	h.sSectorY                  = SECTORY(g_merc_arrive_sector);
 	h.fUseLandingZoneForArrival = TRUE;
 	h.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
 	h.fCopyProfileItemsOver     = gfBuyEquipment;
@@ -2849,8 +2849,8 @@ void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
 		MERC_HIRE_STRUCT hire;
 		memset(&hire, 0, sizeof(hire));
 		hire.ubProfileID               = pid;
-		hire.sSectorX                  = gsMercArriveSectorX;
-		hire.sSectorY                  = gsMercArriveSectorY;
+		hire.sSectorX                  = SECTORX(g_merc_arrive_sector);
+		hire.sSectorY                  = SECTORY(g_merc_arrive_sector);
 		hire.fCopyProfileItemsOver     = TRUE;
 		hire.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
 		hire.ubInsertionCode	         = INSERTION_CODE_ARRIVING_GAME;
@@ -2942,8 +2942,8 @@ static void QuickHireMerc(void)
 
 	MERC_HIRE_STRUCT h;
 	h.ubProfileID               = pid;
-	h.sSectorX                  = gsMercArriveSectorX;
-	h.sSectorY                  = gsMercArriveSectorY;
+	h.sSectorX                  = SECTORX(g_merc_arrive_sector);
+	h.sSectorY                  = SECTORY(g_merc_arrive_sector);
 	h.bSectorZ                  = 0;
 	h.fUseLandingZoneForArrival = TRUE;
 	h.ubInsertionCode	          = INSERTION_CODE_ARRIVING_GAME;
@@ -3107,7 +3107,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	swprintf(time_string, lengthof(time_string), L"%02d:00", hour);
 
 	wchar_t sector_string[512];
-	GetSectorIDString(gsMercArriveSectorX, gsMercArriveSectorY, 0, sector_string, lengthof(sector_string), FALSE);
+	GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sector_string, lengthof(sector_string), FALSE);
 
 	wchar_t              msg[512];
 	wchar_t const* const nickname = GetProfile(h.iIdOfMerc).zNickname;

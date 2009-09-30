@@ -4961,7 +4961,7 @@ static void DrawBullseye(void)
 #ifndef JA2DEMO
 	INT16 sX, sY;
 
-	GetScreenXYFromMapXY( gsMercArriveSectorX, gsMercArriveSectorY, &sX, &sY );
+	GetScreenXYFromMapXY(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), &sX, &sY);
 	sY -= 2;
 
 	BltVideoObject(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);

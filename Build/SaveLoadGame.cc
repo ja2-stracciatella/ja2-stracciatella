@@ -1896,8 +1896,8 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_BOOL( d, gfBoxersResting)
 	INJ_U8(   d, gubDesertTemperature)
 	INJ_U8(   d, gubGlobalTemperature)
-	INJ_I16(  d, gsMercArriveSectorX)
-	INJ_I16(  d, gsMercArriveSectorY)
+	INJ_I16(  d, SECTORX(g_merc_arrive_sector))
+	INJ_I16(  d, SECTORY(g_merc_arrive_sector))
 	INJ_BOOL( d, gfCreatureMeanwhileScenePlayed)
 	INJ_U8(   d, gbPlayerNum)
 	INJ_BOOL( d, gfPersistantPBI)
@@ -2050,8 +2050,14 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, gfBoxersResting)
 	EXTR_U8(   d, gubDesertTemperature)
 	EXTR_U8(   d, gubGlobalTemperature)
-	EXTR_I16(  d, gsMercArriveSectorX)
-	EXTR_I16(  d, gsMercArriveSectorY)
+	INT16 merc_arrive_x;
+	INT16 merc_arrive_y;
+	EXTR_I16(  d, merc_arrive_x)
+	EXTR_I16(  d, merc_arrive_y)
+	g_merc_arrive_sector =
+		1 <= merc_arrive_x && merc_arrive_x <= 16 &&
+		1 <= merc_arrive_y && merc_arrive_y <= 16 ? SECTOR(merc_arrive_x, merc_arrive_y) :
+		SEC_A9;
 	EXTR_BOOL( d, gfCreatureMeanwhileScenePlayed)
 	EXTR_U8(   d, gbPlayerNum)
 	EXTR_BOOL( d, gfPersistantPBI)

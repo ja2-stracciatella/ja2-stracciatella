@@ -1,3 +1,4 @@
+#include "Campaign_Types.h"
 #include "CharProfile.h"
 #include "Directories.h"
 #include "Font.h"
@@ -166,8 +167,8 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	}
 
 
-	HireMercStruct.sSectorX									 = gsMercArriveSectorX;
-	HireMercStruct.sSectorY									 = gsMercArriveSectorY;
+	HireMercStruct.sSectorX									 = SECTORX(g_merc_arrive_sector);
+	HireMercStruct.sSectorY									 = SECTORY(g_merc_arrive_sector);
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.fCopyProfileItemsOver = TRUE;

@@ -56,8 +56,7 @@ extern BOOLEAN		gfFirstHeliRun;
 // ATE: Globals that dictate where the mercs will land once being hired
 // Default to Omerta
 // Saved in general saved game structure
-INT16	gsMercArriveSectorX = 9;
-INT16	gsMercArriveSectorY = 1;
+INT16 g_merc_arrive_sector = SEC_A9;
 
 
 INT8 HireMerc(MERC_HIRE_STRUCT* const h)
@@ -88,8 +87,8 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 	// they will be updated again just before arrival...
 	if (h->fUseLandingZoneForArrival)
 	{
-		h->sSectorX	= gsMercArriveSectorX;
-		h->sSectorY	= gsMercArriveSectorY;
+		h->sSectorX	= SECTORX(g_merc_arrive_sector);
+		h->sSectorY	= SECTORY(g_merc_arrive_sector);
 		h->bSectorZ	= 0;
 	}
 
@@ -242,13 +241,13 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 {
 	UINT32									uiTimeOfPost;
 
-	if( !DidGameJustStart() && gsMercArriveSectorX == 9 && gsMercArriveSectorY == 1 )
+	if (!DidGameJustStart() && g_merc_arrive_sector == SEC_A9)
 	{ //Mercs arriving in A9.  This sector has been deemed as the always safe sector.
 		//Seeing we don't support entry into a hostile sector (except for the beginning),
 		//we will nuke any enemies in this sector first.
 		if( gWorldSectorX != 9 || gWorldSectorY != 1 || gbWorldSectorZ )
 		{
-			EliminateAllEnemies( (UINT8)gsMercArriveSectorX, (UINT8)gsMercArriveSectorY );
+			EliminateAllEnemies(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 		}
 	}
 
@@ -266,8 +265,8 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	// ATE: Make sure we use global.....
 	if (s.fUseLandingZoneForArrival)
 	{
-		s.sSectorX = gsMercArriveSectorX;
-		s.sSectorY = gsMercArriveSectorY;
+		s.sSectorX = SECTORX(g_merc_arrive_sector);
+		s.sSectorY = SECTORY(g_merc_arrive_sector);
 		s.bSectorZ = 0;
 	}
 
@@ -468,8 +467,8 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 	{
 		if (s->bAssignment == IN_TRANSIT && s->fUseLandingZoneForArrival)
 		{
-			s->sSectorX = gsMercArriveSectorX;
-			s->sSectorY = gsMercArriveSectorY;
+			s->sSectorX = SECTORX(g_merc_arrive_sector);
+			s->sSectorY = SECTORY(g_merc_arrive_sector);
 			s->bSectorZ = 0;
 		}
 	}
@@ -510,7 +509,7 @@ static void CheckForValidArrivalSector(void)
 	CHAR16 zShortTownIDString1[ 50 ];
 	CHAR16 zShortTownIDString2[ 50 ];
 
-	sSectorGridNo = gsMercArriveSectorX + ( MAP_WORLD_X * gsMercArriveSectorY );
+	sSectorGridNo = SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector);
 
 	// Check if valid...
 	if ( !StrategicMap[ sSectorGridNo ].fEnemyControlled )
@@ -518,7 +517,7 @@ static void CheckForValidArrivalSector(void)
 		return;
 	}
 
-	GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString1, lengthof(zShortTownIDString1));
+	GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), zShortTownIDString1, lengthof(zShortTownIDString1));
 
 
 	// If here - we need to do a search!
@@ -557,12 +556,11 @@ static void CheckForValidArrivalSector(void)
 
 	if ( fFound )
 	{
-		gsMercArriveSectorX = gsMercArriveSectorX + sGoodX;
-		gsMercArriveSectorY = gsMercArriveSectorY + sGoodY;
+		g_merc_arrive_sector = SECTOR(SECTORX(g_merc_arrive_sector) + sGoodX, SECTORY(g_merc_arrive_sector) + sGoodY);
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		GetShortSectorString( gsMercArriveSectorX ,gsMercArriveSectorY, zShortTownIDString2, lengthof(zShortTownIDString2));
+		GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), zShortTownIDString2, lengthof(zShortTownIDString2));
 
 		swprintf(sString, lengthof(sString), str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
 

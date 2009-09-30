@@ -543,8 +543,7 @@ static void InitializeMapStructure(void)
 void InitializeSAMSites()
 {
 	// Move the landing zone over to Omerta.
-	gsMercArriveSectorX = 9;
-	gsMercArriveSectorY = 1;
+	g_merc_arrive_sector = SEC_A9;
 
 	// All SAM sites start game in perfect working condition.
 	FOR_EACH(INT16 const, i, pSamList)
@@ -2797,20 +2796,19 @@ void UpdateAirspaceControl( void )
 	// check if currently selected arrival sector still has secure airspace
 
 	// if it's not enemy air controlled
-	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(gsMercArriveSectorX, gsMercArriveSectorY)].fEnemyAirControlled)
+	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector)].fEnemyAirControlled)
 	{
 		// NOPE!
 		CHAR16 sMsgString[ 256 ], sMsgSubString1[ 64 ], sMsgSubString2[ 64 ];
 
 		// get the name of the old sector
-		GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, sMsgSubString1, lengthof(sMsgSubString1), FALSE );
+		GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sMsgSubString1, lengthof(sMsgSubString1), FALSE);
 
 		// move the landing zone over to Omerta
-		gsMercArriveSectorX = 9;
-		gsMercArriveSectorY = 1;
+		g_merc_arrive_sector = SEC_A9;
 
 		// get the name of the new sector
-		GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, sMsgSubString2, lengthof(sMsgSubString2), FALSE );
+		GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sMsgSubString2, lengthof(sMsgSubString2), FALSE);
 
 		// now build the string
 		swprintf( sMsgString, lengthof(sMsgString), pBullseyeStrings[ 4 ], sMsgSubString1, sMsgSubString2 );

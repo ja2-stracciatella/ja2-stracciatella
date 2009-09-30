@@ -35,9 +35,8 @@ struct MERC_HIRE_STRUCT
 	BOOLEAN	fUseLandingZoneForArrival;
 };
 
-// ATE: Globals that dictate where the mercs will land once being hired
-extern INT16	gsMercArriveSectorX;
-extern INT16	gsMercArriveSectorY;
+// ATE: Global that dictates where the mercs will land once being hired
+extern INT16 g_merc_arrive_sector;
 
 
 INT8		HireMerc( MERC_HIRE_STRUCT *pHireMerc);

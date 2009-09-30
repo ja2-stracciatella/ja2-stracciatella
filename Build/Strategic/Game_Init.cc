@@ -547,8 +547,8 @@ static BOOLEAN QuickGameMemberHireMerc(UINT8 ubCurrentSoldier)
 
 	HireMercStruct.ubProfileID = ubCurrentSoldier;
 
-	HireMercStruct.sSectorX = gsMercArriveSectorX;
-	HireMercStruct.sSectorY = gsMercArriveSectorY;
+	HireMercStruct.sSectorX                  = SECTORX(g_merc_arrive_sector);
+	HireMercStruct.sSectorY                  = SECTORY(g_merc_arrive_sector);
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.fCopyProfileItemsOver =	TRUE;

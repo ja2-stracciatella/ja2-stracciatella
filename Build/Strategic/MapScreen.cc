@@ -1492,14 +1492,6 @@ try
 
 		InitPreviousPaths();
 
-		// if arrival sector is invalid, reset to A9
-		if ( ( gsMercArriveSectorX <  1 ) || ( gsMercArriveSectorY <  1 ) ||
-				 ( gsMercArriveSectorX > 16 ) || ( gsMercArriveSectorY > 16 ) )
-		{
-			gsMercArriveSectorX = 9;
-			gsMercArriveSectorY = 1;
-		}
-
 		gfInConfirmMapMoveMode = FALSE;
 		gfInChangeArrivalSectorMode = FALSE;
 
@@ -2548,8 +2540,7 @@ static UINT32 HandleMapUI(void)
 							CHAR16 sMsgString[ 128 ], sMsgSubString[ 64 ];
 
 							// move the landing zone over here
-							gsMercArriveSectorX = sMapX;
-							gsMercArriveSectorY = sMapY;
+							g_merc_arrive_sector = SECTOR(sMapX, sMapY);
 
 							// change arrival sector for all mercs currently in transit who are showing up at the landing zone
 							UpdateAnyInTransitMercsWithGlobalArrivalSector();
@@ -8313,7 +8304,7 @@ static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY)
 		if (!DidGameJustStart())
 		{
 			// if he clicked on the bullseye, and we're on the surface level
-			if ( ( sMapX == gsMercArriveSectorX ) && ( sMapY == gsMercArriveSectorY ) && ( iCurrentMapSectorZ == 0 ) )
+			if (g_merc_arrive_sector == SECTOR(sMapX, sMapY) && iCurrentMapSectorZ == 0)
 			{
 				return( TRUE );
 			}
@@ -8453,8 +8444,8 @@ void GetMapscreenMercDestinationString(SOLDIERTYPE const& s, wchar_t* const buf,
 		INT32 y;
 		if (s.bAssignment == IN_TRANSIT)
 		{ // Show the sector he'll be arriving in
-			x = gsMercArriveSectorX;
-			y = gsMercArriveSectorY;
+			x = SECTORX(g_merc_arrive_sector);
+			y = SECTORY(g_merc_arrive_sector);
 		}
 		else if (GetLengthOfMercPath(&s) > 0)
 		{ // He's going somewhere
