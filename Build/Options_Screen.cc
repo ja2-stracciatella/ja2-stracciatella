@@ -782,7 +782,7 @@ static void HandleSliderBarMovementSounds(void)
 		guiSpeechSliderMoving = 0xffffffff;
 
 		if( !SoundIsPlaying( uiLastPlayingSpeechID ) )
-			uiLastPlayingSpeechID = PlayJA2GapSample(SOUNDSDIR "/m_cool.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
+			uiLastPlayingSpeechID = PlayJA2GapSample(BATTLESNDSDIR "/m_cool.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 	}
 	else
 		uiLastSpeechTime = GetJA2Clock();
