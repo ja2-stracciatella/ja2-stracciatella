@@ -743,15 +743,14 @@ void BuildListOfTownSectors()
 	memset(g_town_sectors, 0, sizeof(g_town_sectors));
 
 	TownSectorInfo* i = g_town_sectors;
-	for (INT32 x = 0; x != MAP_WORLD_X; ++x)
+	for (INT32 x = 1; x != MAP_WORLD_X - 1; ++x)
 	{
-		for (INT32 y = 0; y != MAP_WORLD_Y; ++y)
+		for (INT32 y = 1; y != MAP_WORLD_Y - 1; ++y)
 		{
-			UINT16 const sector = x + y * MAP_WORLD_X;
-			INT8   const town   = StrategicMap[sector].bNameId;
+			INT8 const town = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
 			if (town < FIRST_TOWN || NUM_TOWNS <= town) continue;
 
-			i->sector = sector;
+			i->sector = SECTOR(x, y);
 			i->town   = town;
 			++i;
 		}
@@ -1042,7 +1041,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 		if (iShortestDistance[ bTownId ] > 0 )
 		{
 			// calculate across how many sectors the fastest travel path from event to this town sector
-			iThisDistance = FindStratPath(sEventSector, i->sector, g, FALSE);
+			iThisDistance = FindStratPath(sEventSector, SECTOR_INFO_TO_STRATEGIC_INDEX(i->sector), g, FALSE);
 
 			if (iThisDistance < iShortestDistance[ bTownId ])
 			{

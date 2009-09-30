@@ -81,8 +81,8 @@ extern BOOLEAN gfTownUsesLoyalty[];
 
 struct TownSectorInfo
 {
-	UINT8  town;
-	UINT16 sector;
+	UINT8 town;
+	UINT8 sector;
 };
 
 extern TownSectorInfo g_town_sectors[];

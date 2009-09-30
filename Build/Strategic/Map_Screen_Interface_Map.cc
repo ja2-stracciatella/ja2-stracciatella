@@ -3534,14 +3534,14 @@ static void BlitTownGridMarkers(void)
 			case TIXA: if (!fFoundTixa) continue; break;
 		}
 
-		INT32 const loc = i->sector;
+		INT32 const sector = i->sector;
 		INT16       x;
 		INT16       y;
 		INT16       w;
 		INT16       h;
 		if (fZoomFlag)
 		{
-			GetScreenXYFromMapXYStationary(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &x, &y);
+			GetScreenXYFromMapXYStationary(SECTORX(sector), SECTORY(sector), &x, &y);
 			x -= MAP_GRID_X - 1;
 			y -= MAP_GRID_Y;
 			w  = 2 * MAP_GRID_X;
@@ -3549,12 +3549,13 @@ static void BlitTownGridMarkers(void)
 		}
 		else
 		{ // Get location on screen
-			GetScreenXYFromMapXY(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &x, &y);
+			GetScreenXYFromMapXY(SECTORX(sector), SECTORY(sector), &x, &y);
 			w  = MAP_GRID_X - 1;
 			h  = MAP_GRID_Y;
 			x += 2;
 		}
 
+		INT32 const loc = SECTOR_INFO_TO_STRATEGIC_INDEX(sector);
 		if (StrategicMap[loc - MAP_WORLD_X].bNameId == BLANK_SECTOR)
 		{
 			LineDraw(TRUE, x - 1, y - 1, x + w - 1, y - 1, color, buf);
@@ -4166,12 +4167,12 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
-		INT32 const loc = i->sector;
-		SECTORINFO& si  = SectorInfo[STRATEGIC_INDEX_TO_SECTOR_INFO(loc)];
+		INT32 const sector    = i->sector;
+		SECTORINFO& si        = SectorInfo[sector];
 		UINT8       n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
 		UINT8       n_regular = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
 		UINT8       n_elite   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
-		if (SectorOursAndPeaceful(loc % MAP_WORLD_X, loc / MAP_WORLD_X, 0))
+		if (SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0))
 		{
 			INT32 n = MAX_ALLOWABLE_MILITIA_PER_SECTOR;
 			n -= n_green;
@@ -4205,7 +4206,7 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 				}
 			}
 
-			if (STRATEGIC_INDEX_TO_SECTOR_INFO(loc) == SECTOR(gWorldSectorX, gWorldSectorY))
+			if (sector == SECTOR(gWorldSectorX, gWorldSectorY))
 			{
 				gfStrategicMilitiaChangesMade = TRUE;
 			}
@@ -4282,15 +4283,11 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
-		INT32 const loc = i->sector;
-		INT16 const x   = GET_X_FROM_STRATEGIC_INDEX(loc);
-		INT16 const y   = GET_Y_FROM_STRATEGIC_INDEX(loc);
+		INT32 const sector = i->sector;
+		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
+		if (NumHostilesInSector(SECTORX(sector), SECTORY(sector), 0) != 0)         continue;
 
-		if (StrategicMap[loc].fEnemyControlled) continue;
-		if (NumHostilesInSector(x, y, 0) != 0) continue;
-
-		INT16 const sector = SECTOR(x, y);
-		SECTORINFO& si     = SectorInfo[sector];
+		SECTORINFO& si = SectorInfo[sector];
 
 		// Distribute here
 		si.ubNumberOfCivsAtLevel[GREEN_MILITIA]   = n_green_per_sector;
@@ -4458,8 +4455,7 @@ static void DrawTownMilitiaForcesOnMap(void)
 
 	FOR_EACH_TOWN_SECTOR(i)
 	{
-		INT32 const sector = STRATEGIC_INDEX_TO_SECTOR_INFO(i->sector);
-		DrawMilitiaForcesForSector(sector);
+		DrawMilitiaForcesForSector(i->sector);
 	}
 
 	// now handle militia for sam sectors

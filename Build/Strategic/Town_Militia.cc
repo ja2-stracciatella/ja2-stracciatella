@@ -381,13 +381,13 @@ static bool ServeNextFriendlySectorInTown(INT16* const neighbour_x, INT16* const
 {
 	while (g_town_sectors[gubTownSectorServerIndex].town != BLANK_SECTOR)
 	{
-		INT32 const loc = g_town_sectors[gubTownSectorServerIndex++].sector;
+		INT32 const sector = g_town_sectors[gubTownSectorServerIndex++].sector;
 
 		// if this sector is in the town we're looking for
-		if (StrategicMap[loc].bNameId != gubTownSectorServerTownId) continue;
+		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].bNameId != gubTownSectorServerTownId) continue;
 
-		INT16 const x = loc % MAP_WORLD_X;
-		INT16 const y = loc / MAP_WORLD_X;
+		INT16 const x = SECTORX(sector);
+		INT16 const y = SECTORY(sector);
 
 		// Make sure we're not supposed to skip it
 		if (x == gsTownSectorServerSkipX && y == gsTownSectorServerSkipY) continue;
@@ -685,8 +685,8 @@ BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const IN
 	{
 		FOR_EACH_SECTOR_IN_TOWN(i, town_id)
 		{
-			INT16 const town_x = i->sector % MAP_WORLD_X;
-			INT16 const town_y = i->sector / MAP_WORLD_X;
+			INT16 const town_x = SECTORX(i->sector);
+			INT16 const town_y = SECTORY(i->sector);
 			if (SectorOursAndPeaceful(town_x, town_y, 0))
 			{
 				// don't count GREEN militia, they can be trained into regulars first
