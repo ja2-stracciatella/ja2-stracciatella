@@ -64,8 +64,7 @@ BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
 
 
 // the airport sector
-#define AIRPORT_X 13
-#define AIRPORT_Y 2
+#define AIRPORT_SECTOR SEC_B13
 
 
 void SaveContractRenewalDataToSaveGameFile(HWFILE const hFile)
@@ -773,8 +772,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	if (s.ubProfile < FIRST_RPC || FIRST_NPC <= s.ubProfile)
 	{ // The character is not an RPC
 		INT16 const elsewhere =
-			!StrategicMap[CALCULATE_STRATEGIC_INDEX(AIRPORT_X, AIRPORT_Y)].fEnemyControlled ? SECTOR(AIRPORT_X, AIRPORT_Y) :
-			SECTOR(OMERTA_LEAVE_EQUIP_SECTOR_X, OMERTA_LEAVE_EQUIP_SECTOR_Y);
+			!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(AIRPORT_SECTOR)].fEnemyControlled ? AIRPORT_SECTOR :
+			OMERTA_LEAVE_EQUIP_SECTOR;
 		if (elsewhere == SECTOR(x, y) && z == 0) goto no_choice;
 
 		// Set strings for generic buttons

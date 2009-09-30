@@ -206,9 +206,6 @@ enum Quests
 
 // omerta positions
 #define OMERTA_LEAVE_EQUIP_SECTOR   SEC_A9
-#define OMERTA_LEAVE_EQUIP_SECTOR_X SECTORX(OMERTA_LEAVE_EQUIP_SECTOR)
-#define OMERTA_LEAVE_EQUIP_SECTOR_Y SECTORY(OMERTA_LEAVE_EQUIP_SECTOR)
-#define OMERTA_LEAVE_EQUIP_SECTOR_Z		0
 #define OMERTA_LEAVE_EQUIP_GRIDNO			4868
 
 // NB brothel rooms 88-90 removed because they are the antechamber
