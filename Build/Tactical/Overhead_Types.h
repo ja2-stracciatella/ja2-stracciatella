@@ -234,7 +234,6 @@ enum WorldDirections
 #define MILITIA_TEAM		3
 #define CIV_TEAM				4
 #define LAST_TEAM				CIV_TEAM
-#define	PLAYER_PLAN			5
 
 
 //-----------------------------------------------

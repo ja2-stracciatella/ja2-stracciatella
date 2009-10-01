@@ -181,7 +181,7 @@ try
 		TacticalCopySoldierFromCreateStruct(*s, c);
 	}
 
-	if (team_id == OUR_TEAM || team_id == PLAYER_PLAN)
+	if (team_id == OUR_TEAM)
 	{
 		s->uiStatusFlags |= SOLDIER_PC;
 		s->bVisible       = 1;
