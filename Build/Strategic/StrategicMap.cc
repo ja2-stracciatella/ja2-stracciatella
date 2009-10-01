@@ -500,13 +500,7 @@ UINT8 GetTownIdForSector( INT16 sMapX, INT16 sMapY )
 UINT8 GetTownSectorSize(INT8 const town_id)
 {
 	UINT8 n = 0;
-	for (UINT32 x = 0; x != MAP_WORLD_X - 1; ++x)
-	{
-		for (UINT32 y = 0; y != MAP_WORLD_Y - 1; ++y)
-		{
-			if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId == town_id) ++n;
-		}
-	}
+	FOR_EACH_SECTOR_IN_TOWN(i, town_id) ++n;
 	return n;
 }
 
