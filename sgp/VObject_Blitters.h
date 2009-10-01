@@ -50,7 +50,7 @@ void Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 
 
 void Blt8BPPDataTo16BPPBufferTransparentClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, const SGPRect* clipregion);
-void Blt8BPPDataTo16BPPBufferTransparent(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
+void Blt8BPPDataTo16BPPBufferTransparent(UINT16* buf, UINT32 uiDestPitchBYTES, SGPVObject const* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
 
 void Blt8BPPDataTo16BPPBufferTransShadow(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, const UINT16* p16BPPPalette);
 

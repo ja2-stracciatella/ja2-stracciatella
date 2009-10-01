@@ -5608,73 +5608,61 @@ BlitDone:
 }
 
 
-/**********************************************************************************************
- Blt8BPPDataTo16BPPBufferTransparent
-
-	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
-	buffer as a destination.
-
-**********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransparent(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, const SGPVObject* const hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex)
+/* Blit an image into the destination buffer, using an ETRLE brush as a source
+ * and a 16-bit buffer as a destination. */
+void Blt8BPPDataTo16BPPBufferTransparent(UINT16* const buf, UINT32 const uiDestPitchBYTES, SGPVObject const* const hSrcVObject, INT32 const iX, INT32 const iY, UINT16 const usIndex)
 {
-	UINT8	 *DestPtr;
-	UINT32 LineSkip;
+	Assert(hSrcVObject);
+	Assert(buf);
 
-	// Assertions
-	Assert( hSrcVObject != NULL );
-	Assert( pBuffer != NULL );
-
-	// Get Offsets from Index into structure
-	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(usIndex);
-	UINT32             usHeight = pTrav.usHeight;
-	UINT32      const  usWidth  = pTrav.usWidth;
+	// Get offsets from index into structure
+	ETRLEObject const& e      = hSrcVObject->SubregionProperties(usIndex);
+	UINT32             height = e.usHeight;
+	UINT32      const  width  = e.usWidth;
 
 	// Add to start position of dest buffer
-	INT32 const iTempX = iX + pTrav.sOffsetX;
-	INT32 const iTempY = iY + pTrav.sOffsetY;
+	INT32 const x = iX + e.sOffsetX;
+	INT32 const y = iY + e.sOffsetY;
 
-	// Validations
-	CHECKV(iTempX >= 0);
-	CHECKV(iTempY >= 0);
+	CHECKV(x >= 0);
+	CHECKV(y >= 0);
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
-	LineSkip=(uiDestPitchBYTES-(usWidth*2));
+	UINT32        const pitch     = uiDestPitchBYTES / 2;
+	UINT8  const*       src       = hSrcVObject->PixData(e);
+	UINT16*             dst       = buf + pitch * y + x;
+	UINT16 const* const pal       = hSrcVObject->CurrentShade();
+	UINT32              line_skip = pitch - width;
 
 #if 1 // XXX TODO
 	for (;;)
 	{
-		UINT8 data = *SrcPtr++;
-
+		UINT8 data = *src++;
 		if (data == 0)
 		{
-			if (--usHeight == 0) break;
-			DestPtr += LineSkip;
-			continue;
+			if (--height == 0) break;
+			dst += line_skip;
 		}
-		if (data & 0x80)
-		{
-			// Transparent
-			DestPtr += (data & 0x7F) * 2;
+		else if (data & 0x80)
+		{ // Transparent
+			dst += data & 0x7F;
 		}
 		else
 		{
 			do
 			{
-				*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
-				SrcPtr++;
-				DestPtr += 2;
+				*dst++ = pal[*src++];
 			}
 			while (--data != 0);
 		}
 	}
 #else
+	line_skip *= 2;
+
 	__asm {
 
-		mov		esi, SrcPtr
-		mov		edi, DestPtr
-		mov		edx, p16BPPPalette
+		mov		esi, src
+		mov		edi, dst
+		mov		edx, pal
 		xor		eax, eax
 		xor		ebx, ebx
 		xor		ecx, ecx
@@ -5759,9 +5747,9 @@ BlitTransparent:
 
 BlitDoneLine:
 
-		dec		usHeight
+		dec		height
 		jz		BlitDone
-		add		edi, LineSkip
+		add		edi, line_skip
 		jmp		BlitDispatch
 
 
