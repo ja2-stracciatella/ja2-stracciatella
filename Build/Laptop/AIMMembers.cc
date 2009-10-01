@@ -1368,16 +1368,20 @@ static void DrawButtonSelection(GUI_BUTTON const* const btn, bool const selected
 
 static void DisplaySelectLights()
 {
-	//First draw the select light for the contract length buttons
-	for (UINT16 i = 0; i != 3; ++i)
-	{
-		DrawButtonSelection(giContractLengthButton[i], gubContractLength == i);
+	{ // First draw the select light for the contract length buttons.
+		size_t selected = gubContractLength;
+		FOR_EACH(GUIButtonRef, i, giContractLengthButton)
+		{
+			DrawButtonSelection(*i, selected-- == 0);
+		}
 	}
 
-	//draw the select light for the buy equipment buttons
-	for (UINT16 i = 0; i != 2; ++i)
-	{
-		DrawButtonSelection(giBuyEquipmentButton[i], gfBuyEquipment == i);
+	{ // Draw the select light for the buy equipment buttons.
+		size_t selected = gfBuyEquipment;
+		FOR_EACH(GUIButtonRef, i, giBuyEquipmentButton)
+		{
+			DrawButtonSelection(*i, selected-- == 0);
+		}
 	}
 
 	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y);
