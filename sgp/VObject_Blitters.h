@@ -75,7 +75,7 @@ void Blt8BPPDataTo16BPPBufferHalf(UINT16* dst_buf, UINT32 uiDestPitchBYTES, SGPV
 
 
 // ATE: New blitters for showing an outline at color 254
-void Blt8BPPDataTo16BPPBufferOutline(    UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor);
+void Blt8BPPDataTo16BPPBufferOutline(    UINT16* buf, UINT32 uiDestPitchBYTES, SGPVObject const* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 outline);
 void Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, const SGPRect* clipregion);
 void Blt8BPPDataTo16BPPBufferOutlineZ(                    UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor);
 void Blt8BPPDataTo16BPPBufferOutlineShadow(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
