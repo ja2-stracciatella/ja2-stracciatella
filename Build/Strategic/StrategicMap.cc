@@ -2594,59 +2594,48 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 }
 
 
-void SetupNewStrategicGame( )
+void SetupNewStrategicGame()
 {
-	INT16 sSectorX, sSectorY;
-
-	// Set all sectors as enemy controlled
-	for ( sSectorX = 0; sSectorX < MAP_WORLD_X; sSectorX++ )
+	// Set all sectors as enemy controlled.
+	FOR_EACH(StrategicMapElement, i, StrategicMap)
 	{
-		for ( sSectorY = 0; sSectorY < MAP_WORLD_Y; sSectorY++ )
-		{
-			StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].fEnemyControlled = TRUE;
-		}
+		i->fEnemyControlled = TRUE;
 	}
 
-	//Initialize the game time
 	InitNewGameClock();
-	//Remove all events
 	DeleteAllStrategicEvents();
 
-	//Set up all events that get processed daily...
-	//.............................................
+	// Set up all events that get processed daily.
 	BuildDayLightLevels();
-	// Check for quests each morning
-	AddEveryDayStrategicEvent( EVENT_CHECKFORQUESTS, QUEST_CHECK_EVENT_TIME, 0 );
-	// Some things get updated in the very early morning
-	AddEveryDayStrategicEvent( EVENT_DAILY_EARLY_MORNING_EVENTS, EARLY_MORNING_TIME, 0 );
-	//Daily Update BobbyRay Inventory
-	AddEveryDayStrategicEvent( EVENT_DAILY_UPDATE_BOBBY_RAY_INVENTORY, BOBBYRAY_UPDATE_TIME, 0 );
-	//Daily Update of the M.E.R.C. site.
-	AddEveryDayStrategicEvent( EVENT_DAILY_UPDATE_OF_MERC_SITE, 0, 0 );
-	//Daily update of insured mercs
-	AddEveryDayStrategicEvent( EVENT_HANDLE_INSURED_MERCS, INSURANCE_UPDATE_TIME,	0 );
-	//Daily update of mercs
-	AddEveryDayStrategicEvent( EVENT_MERC_DAILY_UPDATE, 0, 0 );
-	// Daily mine production processing events
-	AddEveryDayStrategicEvent( EVENT_SETUP_MINE_INCOME, 0, 0 );
-	// Daily checks for E-mail from Enrico
-	AddEveryDayStrategicEvent( EVENT_ENRICO_MAIL, ENRICO_MAIL_TIME , 0 );
+	// Check for quests each morning.
+	AddEveryDayStrategicEvent(EVENT_CHECKFORQUESTS,                   QUEST_CHECK_EVENT_TIME, 0);
+	// Some things get updated in the very early morning.
+	AddEveryDayStrategicEvent(EVENT_DAILY_EARLY_MORNING_EVENTS,       EARLY_MORNING_TIME,     0);
+	// Daily update BobbyRay Inventory.
+	AddEveryDayStrategicEvent(EVENT_DAILY_UPDATE_BOBBY_RAY_INVENTORY, BOBBYRAY_UPDATE_TIME,   0);
+	// Daily update of the M.E.R.C. site..
+	AddEveryDayStrategicEvent(EVENT_DAILY_UPDATE_OF_MERC_SITE,        0,                      0);
+	// Daily update of insured mercs.
+	AddEveryDayStrategicEvent(EVENT_HANDLE_INSURED_MERCS,             INSURANCE_UPDATE_TIME,  0);
+	// Daily update of mercs.
+	AddEveryDayStrategicEvent(EVENT_MERC_DAILY_UPDATE,                0,                      0);
+	// Daily mine production processing events.
+	AddEveryDayStrategicEvent(EVENT_SETUP_MINE_INCOME,                0,                      0);
+	// Daily checks for E-mail from Enrico.
+	AddEveryDayStrategicEvent(EVENT_ENRICO_MAIL,                      ENRICO_MAIL_TIME,       0);
 
 	// Hourly update of all sorts of things
-	AddPeriodStrategicEvent( EVENT_HOURLY_UPDATE, 60, 0 );
-	AddPeriodStrategicEvent( EVENT_QUARTER_HOUR_UPDATE, 15, 0 );
+	AddPeriodStrategicEvent(EVENT_HOURLY_UPDATE,       60, 0);
+	AddPeriodStrategicEvent(EVENT_QUARTER_HOUR_UPDATE, 15, 0);
 
-	#ifdef JA2DEMO
-		AddPeriodStrategicEventWithOffset( EVENT_MINUTE_UPDATE, 60, 475, 0 );
-	#endif
+#ifdef JA2DEMO
+	AddPeriodStrategicEventWithOffset(EVENT_MINUTE_UPDATE, 60, 475, 0);
+#endif
 
-	//Clear any possible battle locator
+	// Clear any possible battle locator.
 	gfBlitBattleSectorLocator = FALSE;
 
-
-
-
-	StrategicTurnsNewGame( );
+	StrategicTurnsNewGame();
 }
 
 
