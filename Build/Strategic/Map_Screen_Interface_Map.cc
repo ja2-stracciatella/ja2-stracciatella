@@ -4163,8 +4163,6 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 	// check if anyone still on the cursor
 	if (sGreensOnCursor == 0 && sRegularsOnCursor == 0 && sElitesOnCursor == 0) return;
 
-	INT32 const n_under_control = GetTownSectorsUnderControl(town);
-
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
 		INT32 const sector    = i->sector;
@@ -4211,27 +4209,11 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 				gfStrategicMilitiaChangesMade = TRUE;
 			}
 		}
-
-		bool last_one = true;
-		for (TownSectorInfo const* k = i + 1; k->town != BLANK_SECTOR; ++k)
-		{
-			if (k->town != town) continue;
-			last_one = false;
-			break;
-		}
-		if (last_one)
-		{ // XXX is sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor != 0 here?
-			n_green   += sGreensOnCursor   % n_under_control;
-			n_regular += sRegularsOnCursor % n_under_control;
-			n_elite   += sElitesOnCursor   % n_under_control;
-		}
 	}
 
-	// XXX is sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor != 0 here?
-	// zero out numbers on the cursor
-	sGreensOnCursor   = 0;
-	sRegularsOnCursor = 0;
-	sElitesOnCursor   = 0;
+	Assert(sGreensOnCursor   == 0);
+	Assert(sRegularsOnCursor == 0);
+	Assert(sElitesOnCursor   == 0);
 }
 
 
