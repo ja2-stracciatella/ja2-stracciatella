@@ -177,7 +177,7 @@ void PauseTimeForInterupt(void);
 
 extern BOOLEAN gfTimeInterrupt;
 
-BOOLEAN DidGameJustStart(void);
+bool DidGameJustStart();
 
 void SaveGameClock(HWFILE, BOOLEAN fGamePaused, BOOLEAN fLockPauseState);
 void LoadGameClock(HWFILE);

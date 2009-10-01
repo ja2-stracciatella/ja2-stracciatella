@@ -317,12 +317,9 @@ static void ToggleSuperCompression(void)
 }
 
 
-BOOLEAN DidGameJustStart()
+bool DidGameJustStart()
 {
-	if( gTacticalStatus.fDidGameJustStart )
-		return(TRUE);
-	else
-		return(FALSE);
+	return gTacticalStatus.fDidGameJustStart;
 }
 
 
