@@ -4166,48 +4166,41 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
 		INT32 const sector    = i->sector;
+		if (!SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0)) continue;
 		SECTORINFO& si        = SectorInfo[sector];
 		UINT8&      n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
 		UINT8&      n_regular = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
 		UINT8&      n_elite   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
-		if (SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0))
+		INT32       n         = MAX_ALLOWABLE_MILITIA_PER_SECTOR - n_green - n_regular - n_elite;
+		if (n == 0) continue;
+
+		while (sGreensOnCursor != 0 || sRegularsOnCursor != 0 || sElitesOnCursor != 0)
 		{
-			INT32 n = MAX_ALLOWABLE_MILITIA_PER_SECTOR;
-			n -= n_green;
-			n -= n_regular;
-			n -= n_elite;
-
-			if (n != 0)
+			if (sGreensOnCursor != 0)
 			{
-				while (sGreensOnCursor != 0 || sRegularsOnCursor != 0 || sElitesOnCursor != 0)
-				{
-					if (sGreensOnCursor != 0)
-					{
-						++n_green;
-						--sGreensOnCursor;
-						if (--n == 0) break;
-					}
-
-					if (sRegularsOnCursor != 0)
-					{
-						++n_regular;
-						--sRegularsOnCursor;
-						if (--n == 0) break;
-					}
-
-					if (sElitesOnCursor != 0)
-					{
-						++n_elite;
-						--sElitesOnCursor;
-						if (--n == 0) break;
-					}
-				}
+				++n_green;
+				--sGreensOnCursor;
+				if (--n == 0) break;
 			}
 
-			if (sector == SECTOR(gWorldSectorX, gWorldSectorY))
+			if (sRegularsOnCursor != 0)
 			{
-				gfStrategicMilitiaChangesMade = TRUE;
+				++n_regular;
+				--sRegularsOnCursor;
+				if (--n == 0) break;
 			}
+
+			if (sElitesOnCursor != 0)
+			{
+				++n_elite;
+				--sElitesOnCursor;
+				if (--n == 0) break;
+			}
+		}
+
+		if (sector == SECTOR(gWorldSectorX, gWorldSectorY))
+		{
+			gfStrategicMilitiaChangesMade = TRUE;
 		}
 	}
 
