@@ -514,16 +514,13 @@ UINT8 GetTownSectorSize(INT8 const town_id)
 UINT8 GetTownSectorsUnderControl(INT8 const town_id)
 {
 	UINT8 n = 0;
-	for (UINT32 x = 0; x != MAP_WORLD_X - 1; ++x)
+	FOR_EACH_SECTOR_IN_TOWN(i, town_id)
 	{
-		for (UINT32 y = 0; y != MAP_WORLD_Y - 1; ++y)
-		{
-			StrategicMapElement const& m = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)];
-			if (m.bNameId != town_id)          continue;
-			if (m.fEnemyControlled)            continue;
-			if (NumEnemiesInSector(x, y) != 0) continue;
-			++n;
-		}
+		UINT32 const x = SECTORX(i->sector);
+		UINT32 const y = SECTORY(i->sector);
+		if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) continue;
+		if (NumEnemiesInSector(x, y) != 0)                                  continue;
+		++n;
 	}
 	return n;
 }
