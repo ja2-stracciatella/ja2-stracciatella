@@ -320,19 +320,11 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 
 
 #ifdef JA2TESTVERSION
-void ClearMapControlledFlags( void )
+void ClearMapControlledFlags()
 {
-	INT32 iCounterA = 0, iCounterB = 0;
-	UINT16 usMapSector = 0;
-
-
-	for( iCounterA = 1; iCounterA < MAP_WORLD_X - 1; iCounterA++ )
+	FOR_EACH(StrategicMapElement, i, StrategicMap)
 	{
-		for( iCounterB = 1; iCounterB < MAP_WORLD_Y - 1; iCounterB++ )
-		{
-			usMapSector = iCounterA + ( iCounterB * MAP_WORLD_X );
-			StrategicMap[ usMapSector ].fEnemyControlled = FALSE;
-		}
+		i->fEnemyControlled = FALSE;
 	}
 }
 #endif

@@ -16,7 +16,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 
 
 #ifdef JA2TESTVERSION
-void ClearMapControlledFlags( void );
+void ClearMapControlledFlags();
 #endif
 
 #endif
