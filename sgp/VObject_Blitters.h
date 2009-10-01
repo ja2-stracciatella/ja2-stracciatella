@@ -68,7 +68,7 @@ void Blt16BPPBufferFilterRect(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const UI
 void Blt8BPPDataTo16BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex );
 
 void Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8 *pSrcBuffer, INT32 iX, INT32 iY);
-void Blt8BPPDataSubTo16BPPBuffer(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, SGPBox const* rect);
+void Blt8BPPDataSubTo16BPPBuffer(UINT16* buf, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8* pSrcBuffer, UINT32 src_pitch, INT32 iX, INT32 iY, SGPBox const* rect);
 
 // Blits from flat 8bpp source, to 16bpp dest, divides in half
 void Blt8BPPDataTo16BPPBufferHalf(UINT16* dst_buf, UINT32 uiDestPitchBYTES, SGPVSurface* src_surface, UINT8 const* src_buf, UINT32 src_pitch, INT32 x, INT32 y, SGPBox const* rect);

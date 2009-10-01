@@ -4963,65 +4963,50 @@ BlitDone:
 }
 
 
-/**********************************************************************************************
- Blt8BPPDataSubTo16BPPBuffer
-
-	Blits a subrect from a flat 8 bit surface to a 16-bit buffer.
-
-**********************************************************************************************/
-void Blt8BPPDataSubTo16BPPBuffer(UINT16* const pBuffer, UINT32 const uiDestPitchBYTES, SGPVSurface* const hSrcVSurface, UINT8* const pSrcBuffer, UINT32 const uiSrcPitch, INT32 const iX, INT32 const iY, SGPBox const* const rect)
+/* Blit a subrect from a flat 8 bit surface to a 16-bit buffer. */
+void Blt8BPPDataSubTo16BPPBuffer(UINT16* const buf, UINT32 const uiDestPitchBYTES, SGPVSurface* const hSrcVSurface, UINT8* const pSrcBuffer, UINT32 const src_pitch, INT32 const x, INT32 const y, SGPBox const* const rect)
 {
-	UINT16 *p16BPPPalette;
-	UINT8	 *SrcPtr, *DestPtr;
-	UINT32 LineSkip, SrcSkip;
-	INT32	 iTempX, iTempY;
+	Assert(hSrcVSurface);
+	Assert(pSrcBuffer);
+	Assert(buf);
 
-	// Assertions
-	Assert( hSrcVSurface != NULL );
-	Assert( pSrcBuffer != NULL );
-	Assert( pBuffer != NULL );
-
-	// Add to start position of dest buffer
-	iTempX = iX;
-	iTempY = iY;
-
-	// Validations
-	CHECKV(iTempX >= 0);
-	CHECKV(iTempY >= 0);
+	CHECKV(x >= 0);
+	CHECKV(y >= 0);
 
 	UINT32 const LeftSkip   = rect->x;
-	UINT32 const TopSkip    = rect->y * uiSrcPitch;
+	UINT32 const TopSkip    = rect->y * src_pitch;
 	UINT32 const BlitLength = rect->w;
 	UINT32       BlitHeight = rect->h;
-	SrcSkip=uiSrcPitch-BlitLength;
+	UINT32 const src_skip   = src_pitch - BlitLength;
 
-	SrcPtr= (UINT8 *)(pSrcBuffer+TopSkip+LeftSkip);
-	DestPtr = ((UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2));
-	p16BPPPalette = hSrcVSurface->p16BPPPalette;
-	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
+	UINT32        const pitch     = uiDestPitchBYTES / 2;
+	UINT8  const*       src       = pSrcBuffer + TopSkip + LeftSkip;
+	UINT16*             dst       = buf + pitch * y + x;
+	UINT16 const* const pal       = hSrcVSurface->p16BPPPalette;
+	UINT32              line_skip = pitch - BlitLength;
 
 #if 1 // XXX TODO
 	do
 	{
 		UINT32 w = BlitLength;
-
 		do
 		{
-			*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr++];
-			DestPtr += 2;
+			*dst++ = pal[*src++];
 		}
-		while (--w > 0);
-		SrcPtr  += SrcSkip;
-		DestPtr += LineSkip;
+		while (--w != 0);
+		src += src_skip;
+		dst += line_skip;
 	}
-	while (--BlitHeight > 0);
+	while (--BlitHeight != 0);
 #else
+	line_skip *= 2;
+
 	__asm {
 
-		mov		esi, SrcPtr					// pointer to current line start address in source
-		mov		edi, DestPtr				// pointer to current line start address in destination
+		mov		esi, src						// pointer to current line start address in source
+		mov		edi, dst						// pointer to current line start address in destination
 		mov		ebx, BlitHeight			// line counter (goes top to bottom)
-		mov		edx, p16BPPPalette	// conversion table
+		mov		edx, pal						// conversion table
 
 		sub		eax, eax
 		sub		ecx, ecx
@@ -5043,8 +5028,8 @@ BlitLoop:
 		dec		ecx
 		jnz		BlitLoop
 
-		add		esi, SrcSkip				// move line pointers down one line
-		add		edi, LineSkip
+		add		esi, src_skip				// move line pointers down one line
+		add		edi, line_skip
 
 		dec		ebx									// check line counter
 		jnz		NewRow							// done blitting, exit
