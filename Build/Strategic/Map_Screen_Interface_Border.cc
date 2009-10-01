@@ -606,7 +606,7 @@ void ToggleShowMinesMode( void )
 }
 
 
-static BOOLEAN DoesPlayerHaveAnyMilitia(void);
+static bool DoesPlayerHaveAnyMilitia();
 
 
 void ToggleShowMilitiaMode( void )
@@ -1300,26 +1300,14 @@ static void InitializeMapBorderButtonStates(void)
 }
 
 
-static BOOLEAN DoesPlayerHaveAnyMilitia(void)
+static bool DoesPlayerHaveAnyMilitia()
 {
-	INT16 sX, sY;
-
-	// run through list of towns that might have militia..if any return TRUE..else return FALSE
-	for( sX = 1; sX < MAP_WORLD_X - 1; sX++ )
+	FOR_EACH(SECTORINFO const, i, SectorInfo)
 	{
-		for( sY = 1; sY < MAP_WORLD_Y - 1; sY++ )
-		{
-			if( ( SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ GREEN_MILITIA ] +  SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ]
-					+ SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ ELITE_MILITIA ] ) > 0 )
-			{
-				// found at least one
-				return( TRUE );
-			}
-		}
+		UINT8 const (&n)[MAX_MILITIA_LEVELS] = i->ubNumberOfCivsAtLevel;
+		if (n[GREEN_MILITIA] + n[REGULAR_MILITIA] + n[ELITE_MILITIA] != 0) return true;
 	}
-
-	// no one found
-	return( FALSE );
+	return false;
 }
 
 
