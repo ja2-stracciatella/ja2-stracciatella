@@ -4336,7 +4336,7 @@ static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* tex
 }
 
 
-static BOOLEAN CanMilitiaAutoDistribute(void);
+static bool CanMilitiaAutoDistribute();
 static void MilitiaAutoButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void MilitiaDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
@@ -4818,56 +4818,24 @@ static void BlitSAMGridMarkers(void)
 }
 
 
-static BOOLEAN CanMilitiaAutoDistribute(void)
+static bool CanMilitiaAutoDistribute()
 {
-	INT32 iCounter = 0;
-	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0;
-	INT16 sSectorX = 0, sSectorY = 0;
-	INT32 iTotalTroopsInTown = 0;
+	INT8 const town = sSelectedMilitiaTown;
 
+	// Cannot auto-distribute, if we don't have a town selected. (this excludes SAM sites)
+	if (town == BLANK_SECTOR) return false;
 
-	// can't auto-distribute if we don't have a town selected (this excludes SAM sites)
-	if( sSelectedMilitiaTown == BLANK_SECTOR )
-		return( FALSE );
-
-	// can't auto-distribute if we don't control any sectors in the the town
-	if( !GetTownSectorsUnderControl( ( INT8 ) sSelectedMilitiaTown ) )
-		return( FALSE );
-
-
-	// get the sector value for the upper left corner
-	sBaseSectorValue = GetBaseSectorForCurrentTown( );
-
-	// render icons for map
-	for( iCounter = 0; iCounter < 9; iCounter++ )
+	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
-		// grab current sector value
-		sCurrentSectorValue = sBaseSectorValue + ( ( iCounter % MILITIA_BOX_ROWS ) + ( iCounter / MILITIA_BOX_ROWS ) * ( 16 ) );
+		INT16 const sector = i->sector;
+		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
 
-		sSectorX = SECTORX( sCurrentSectorValue );
-		sSectorY = SECTORY( sCurrentSectorValue );
-
-		// skip sectors not in the selected town (nearby other towns or wilderness SAM Sites)
-		if( GetTownIdForSector( sSectorX, sSectorY ) != sSelectedMilitiaTown )
-		{
-			continue;
-		}
-
-		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].fEnemyControlled )
-		{
-			// get number of each
-			iTotalTroopsInTown += SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ] +
-															SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] +
-															SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
-		}
+		UINT8 const (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[sector].ubNumberOfCivsAtLevel;
+		if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] != 0) return true;
 	}
 
-	// can't auto-distribute if we don't have any militia in the town
-	if( !iTotalTroopsInTown )
-		return( FALSE );
-
-	// can auto-distribute
-	return( TRUE );
+	// No militia in town, cannot auto-distribute.
+	return false;
 }
 
 
