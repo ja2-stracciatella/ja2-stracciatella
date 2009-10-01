@@ -4169,9 +4169,9 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 	{
 		INT32 const sector    = i->sector;
 		SECTORINFO& si        = SectorInfo[sector];
-		UINT8       n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
-		UINT8       n_regular = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
-		UINT8       n_elite   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
+		UINT8&      n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
+		UINT8&      n_regular = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
+		UINT8&      n_elite   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
 		if (SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0))
 		{
 			INT32 n = MAX_ALLOWABLE_MILITIA_PER_SECTOR;
