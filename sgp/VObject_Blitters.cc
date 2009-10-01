@@ -1237,86 +1237,79 @@ BlitDone:
 }
 
 
-/**********************************************************************************************
- Blt8BPPDataTo16BPPBufferTransZ
-
-	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
-	buffer as a destination. As it is blitting, it checks the Z value of the ZBuffer, and if the
-	pixel's Z level is below that of the current pixel, it is written on, and the Z value is
-	updated to the current value,	for any non-transparent pixels. The Z-buffer is 16 bit, and
-	must be the same dimensions (including Pitch) as the destination.
-
-**********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
+/* Blit an image into the destination buffer, using an ETRLE brush as a source
+ * and a 16-bit buffer as a destination. As it is blitting, it checks the Z-
+ * value of the ZBuffer, and if the pixel's Z level is below that of the current
+ * pixel, it is written on, and the Z value is updated to the current value, for
+ * any non-transparent pixels. The Z-buffer is 16 bit, and must be the same
+ * dimensions (including Pitch) as the destination. */
+void Blt8BPPDataTo16BPPBufferTransZ(UINT16* const buf, UINT32 const uiDestPitchBYTES, UINT16* const zbuf, UINT16 const zval, HVOBJECT const hSrcVObject, INT32 const iX, INT32 const iY, UINT16 const usIndex)
 {
-	UINT8	 *DestPtr, *ZPtr;
-	UINT32 LineSkip;
+	Assert(hSrcVObject);
+	Assert(buf);
 
-	// Assertions
-	Assert( hSrcVObject != NULL );
-	Assert( pBuffer != NULL );
-
-	// Get Offsets from Index into structure
-	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(usIndex);
-	UINT32             usHeight = pTrav.usHeight;
-	UINT32      const  usWidth  = pTrav.usWidth;
+	// Get offsets from index into structure
+	ETRLEObject const& e      = hSrcVObject->SubregionProperties(usIndex);
+	UINT32             height = e.usHeight;
+	UINT32      const  width  = e.usWidth;
 
 	// Add to start position of dest buffer
-	INT32 const iTempX = iX + pTrav.sOffsetX;
-	INT32 const iTempY = iY + pTrav.sOffsetY;
+	INT32 const x = iX + e.sOffsetX;
+	INT32 const y = iY + e.sOffsetY;
 
 	// Validations
-	CHECKV(iTempX >= 0);
-	CHECKV(iTempY >= 0);
+	CHECKV(x >= 0);
+	CHECKV(y >= 0);
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
-	LineSkip=(uiDestPitchBYTES-(usWidth*2));
+	UINT8 const*        src       = hSrcVObject->PixData(e);
+	UINT32        const pitch     = uiDestPitchBYTES / 2;
+	UINT16*             dst       = buf  + pitch * y + x;
+	UINT16*             zdst      = zbuf + pitch * y + x;
+	UINT16 const* const pal       = hSrcVObject->CurrentShade();
+	UINT32              line_skip = pitch - width;
 
 #if 1 // XXX TODO
-	do
+	for (;;)
 	{
-		for (;;)
+		UINT8 data = *src++;
+		if (data == 0)
 		{
-			UINT8 data = *SrcPtr++;
-
-			if  (data == 0) break;
-			if  (data & 0x80)
-			{
-				data &= 0x7F;
-				DestPtr += 2 * data;
-				ZPtr += 2 * data;
-			}
-			else
-			{
-				do
-				{
-					if (*(UINT16*)ZPtr <= usZValue)
-					{
-						*(UINT16*)ZPtr = usZValue;
-						*(UINT16*)DestPtr = p16BPPPalette[*SrcPtr];
-					}
-					SrcPtr++;
-					DestPtr += 2;
-					ZPtr += 2;
-				}
-				while (--data > 0);
-			}
+			if (--height == 0) break;
+			dst  += line_skip;
+			zdst += line_skip;
 		}
-		DestPtr += LineSkip;
-		ZPtr += LineSkip;
+		else if (data & 0x80)
+		{
+			data &= 0x7F;
+			dst  += data;
+			zdst += data;
+		}
+		else
+		{
+			do
+			{
+				if (*zdst <= zval)
+				{
+					*zdst = zval;
+					*dst  = pal[*src];
+				}
+				++src;
+				++dst;
+				++zdst;
+			}
+			while (--data != 0);
+		}
 	}
-	while (--usHeight > 0);
 #else
+	line_skip *= 2;
+
 	__asm {
 
-		mov		esi, SrcPtr
-		mov		edi, DestPtr
-		mov		edx, p16BPPPalette
+		mov		esi, src
+		mov		edi, dst
+		mov		edx, pal
 		xor		eax, eax
-		mov		ebx, ZPtr
+		mov		ebx, zdst
 		xor		ecx, ecx
 
 BlitDispatch:
@@ -1369,10 +1362,10 @@ BlitTransparent:
 
 BlitDoneLine:
 
-		dec		usHeight
+		dec		height
 		jz		BlitDone
-		add		edi, LineSkip
-		add		ebx, LineSkip
+		add		edi, line_skip
+		add		ebx, line_skip
 		jmp		BlitDispatch
 
 
