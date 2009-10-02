@@ -1,3 +1,4 @@
+(r6924) Fix a vanilla glitch in the editor: Pressing page up/down while an item is selected and the options menu is active caused some widgets of the items menu to be shown.
 (r6864) Fix a vanilla glitch: Too few items could be drawn, if some items on the ground were not visible.
 (r6777) Fix a vanilla glitch: When the SAM control in Meduna was rebuilt, a graphic with wrong orientation was used.
 (r6758) Fix a vanilla out of bounds array access, when starting the creature quest.

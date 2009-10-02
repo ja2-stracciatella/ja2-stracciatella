@@ -369,6 +369,7 @@ void DoTaskbar(void)
 			break;
 		case TASK_OPTIONS:
 			ClickEditorButton( TAB_OPTIONS );
+			iDrawMode           = DRAW_MODE_NOTHING;
 			TerrainTileDrawMode = TERRAIN_TILES_NODRAW;
 			break;
 	}
