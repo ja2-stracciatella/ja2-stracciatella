@@ -2,6 +2,7 @@
 #ifndef EDITSCREEN_H
 #define EDITSCREEN_H
 
+#include "EditorDefines.h"
 #include "JA2Types.h"
 #include "ScreenIDs.h"
 
@@ -30,9 +31,9 @@ extern UINT16 gusEditorTaskbarColor;
 extern UINT16 gusEditorTaskbarHiColor;
 extern UINT16 gusEditorTaskbarLoColor;
 
-extern INT32 iOldTaskMode;
-extern INT32 iCurrentTaskbar;
-extern INT32 iTaskMode;
+extern TaskMode iOldTaskMode;
+extern TaskMode iCurrentTaskbar;
+extern TaskMode iTaskMode;
 
 void ProcessAreaSelection( BOOLEAN fWithLeftButton );
 

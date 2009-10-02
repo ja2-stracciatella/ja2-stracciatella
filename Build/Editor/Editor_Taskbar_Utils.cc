@@ -198,7 +198,7 @@ static void DeleteEditorBuffers(void)
 }
 
 
-static void ShowEditorToolbar(INT32 iNewTaskMode)
+static void ShowEditorToolbar(TaskMode const iNewTaskMode)
 {
 	switch( iNewTaskMode )
 	{
@@ -213,7 +213,7 @@ static void ShowEditorToolbar(INT32 iNewTaskMode)
 }
 
 
-static void HideEditorToolbar(INT32 iOldTaskMode)
+static void HideEditorToolbar(TaskMode const iOldTaskMode)
 {
 	INT32 i, iStart, iEnd;
 	switch( iOldTaskMode )
@@ -259,7 +259,7 @@ void DeleteEditorTaskbar()
 
 void DoTaskbar(void)
 {
-	if(!iTaskMode || iTaskMode == iCurrentTaskbar )
+	if (iTaskMode == TASK_NONE || iTaskMode == iCurrentTaskbar)
 	{
 		return;
 	}

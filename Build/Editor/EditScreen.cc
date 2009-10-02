@@ -118,9 +118,9 @@ INT16				gsLightRadius = 5;
 static BOOLEAN gfOldDoVideoScroll;     // Saved for returning to previous settings
 static UINT8   gubOldCurScrollSpeedID; // Saved for returning to previous settings
 
-INT32 iOldTaskMode = TASK_OPTIONS;
-
-INT32 iTaskMode = TASK_NONE;
+TaskMode iOldTaskMode    = TASK_OPTIONS;
+TaskMode iCurrentTaskbar = TASK_NONE;
+TaskMode iTaskMode       = TASK_NONE;
 
 BOOLEAN gfMercResetUponEditorEntry;
 
@@ -139,8 +139,6 @@ INT32 iCurrentAction,iActionParam;
 
 GUIButtonRef iEditorButton[NUMBER_EDITOR_BUTTONS];
 ToolbarMode  iEditorToolbarState = TBAR_MODE_NONE;
-
-INT32 iCurrentTaskbar;
 
 static UINT16 iCurBankMapIndex;
 

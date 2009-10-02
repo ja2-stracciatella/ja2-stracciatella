@@ -80,7 +80,7 @@ enum ToolbarMode
 	TBAR_MODE_ITEM_KEYS,
 };
 
-enum
+enum TaskMode
 {
 	TASK_NONE,
 	TASK_TERRAIN,
