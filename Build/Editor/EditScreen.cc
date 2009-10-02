@@ -138,7 +138,7 @@ INT32 iDrawMode = DRAW_MODE_NOTHING;
 INT32 iCurrentAction,iActionParam;
 
 GUIButtonRef iEditorButton[NUMBER_EDITOR_BUTTONS];
-INT32 iEditorToolbarState;
+ToolbarMode  iEditorToolbarState = TBAR_MODE_NONE;
 
 INT32 iCurrentTaskbar;
 
@@ -153,10 +153,10 @@ static BOOLEAN gfRealGunNut             = TRUE;
 
 static BOOLEAN fNewMap = FALSE;
 
-static INT32  iPrevDrawMode          = DRAW_MODE_NOTHING;
-static UINT16 PrevCurrentPaste       = FIRSTTEXTURE;
-static INT32  gPrevCurrentBackground = FIRSTTEXTURE;
-static INT32  iPrevJA2ToolbarState   = TBAR_MODE_NONE;
+static INT32       iPrevDrawMode          = DRAW_MODE_NOTHING;
+static UINT16      PrevCurrentPaste       = FIRSTTEXTURE;
+static INT32       gPrevCurrentBackground = FIRSTTEXTURE;
+static ToolbarMode iPrevJA2ToolbarState   = TBAR_MODE_NONE;
 
 UINT16 gusEditorTaskbarColor;
 UINT16 gusEditorTaskbarHiColor;

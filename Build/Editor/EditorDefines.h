@@ -7,7 +7,7 @@
 #include "Types.h"
 #include "Button_Defines.h"
 
-enum
+enum ToolbarMode
 {
 	TBAR_MODE_NONE,
 	TBAR_MODE_DRAW,
@@ -223,7 +223,7 @@ enum
 };
 
 extern GUIButtonRef iEditorButton[NUMBER_EDITOR_BUTTONS];
-extern INT32 iEditorToolbarState;
+extern ToolbarMode  iEditorToolbarState;
 extern INT32 iDrawMode;
 extern INT32 iCurrentAction;
 extern INT32 iActionParam;

@@ -2,13 +2,16 @@
 #ifndef __EDITORITEMS_H
 #define __EDITORITEMS_H
 
+#include "EditorDefines.h"
+
+
 struct EditorItemsInfo
 {
 	BOOLEAN fGameInit;	//Used for initializing save variables the first time.
 	BOOLEAN fActive;		//currently active
 	UINT16 *pusItemIndex;		//a dynamic array of Item indices
 	SGPVSurface* uiBuffer;
-	UINT32	uiItemType; //Weapons, ammo, armour, explosives, equipment
+	ToolbarMode  uiItemType; //Weapons, ammo, armour, explosives, equipment
 	INT16   sNumItems;	//total number of items in the current class of item.
 	INT16		sSelItemIndex;	//currently selected item index.
 	INT16   sHilitedItemIndex;
@@ -26,7 +29,7 @@ struct EditorItemsInfo
 extern EditorItemsInfo eInfo;
 
 void EntryInitEditorItemsInfo(void);
-void InitEditorItemsInfo(UINT32 uiItemType);
+void InitEditorItemsInfo(ToolbarMode uiItemType);
 void RenderEditorItemsInfo(void);
 void ClearEditorItemsInfo(void);
 void DisplayItemStatistics(void);

@@ -187,7 +187,7 @@ static void DrawItemCentered(INVTYPE const& item, SGPVSurface* const vs, INT32 x
 }
 
 
-void InitEditorItemsInfo(UINT32 uiItemType)
+void InitEditorItemsInfo(ToolbarMode const uiItemType)
 {
 	SGPRect	SaveRect, NewRect;
 	INT16 i, x, y;
