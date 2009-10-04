@@ -447,7 +447,7 @@ void EnterBobbyRMailOrder()
 
 
 static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction);
-static void RemovePurchasedItemsFromBobbyRayInventory(void);
+static void RemovePurchasedItemsFromBobbyRayInventory();
 
 
 void ExitBobbyRMailOrder()
@@ -1415,35 +1415,17 @@ static void SelectCloseDroDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static void RemovePurchasedItemsFromBobbyRayInventory(void)
+static void RemovePurchasedItemsFromBobbyRayInventory()
 {
-	INT16 i;
-
-	for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
+	FOR_EACH(BobbyRayPurchaseStruct const, i, BobbyRayPurchases)
 	{
-		//if the item was purchased
-		if( BobbyRayPurchases[ i ].ubNumberPurchased )
-		{
-			//if the item is used
-			if( BobbyRayPurchases[ i ].fUsed)
-			{
-				//removee it from Bobby Rays Inventory
-				if( ( LaptopSaveInfo.BobbyRayUsedInventory[ BobbyRayPurchases[ i ].usBobbyItemIndex ].ubQtyOnHand - BobbyRayPurchases[ i ].ubNumberPurchased) > 0 )
-					LaptopSaveInfo.BobbyRayUsedInventory[ BobbyRayPurchases[ i ].usBobbyItemIndex ].ubQtyOnHand -= BobbyRayPurchases[ i ].ubNumberPurchased;
-				else
-					LaptopSaveInfo.BobbyRayUsedInventory[ BobbyRayPurchases[ i ].usBobbyItemIndex ].ubQtyOnHand = 0;
-			}
-
-			//else the purchase is new
-			else
-			{
-				//removee it from Bobby Rays Inventory
-				if( (LaptopSaveInfo.BobbyRayInventory[ BobbyRayPurchases[ i ].usBobbyItemIndex ].ubQtyOnHand - BobbyRayPurchases[ i ].ubNumberPurchased) > 0 )
-					LaptopSaveInfo.BobbyRayInventory[ BobbyRayPurchases[ i ].usBobbyItemIndex ].ubQtyOnHand -= BobbyRayPurchases[ i ].ubNumberPurchased;
-				else
-					LaptopSaveInfo.BobbyRayInventory[ BobbyRayPurchases[ i ].usBobbyItemIndex ].ubQtyOnHand = 0;
-			}
-		}
+		BobbyRayPurchaseStruct const& p = *i;
+		if (p.ubNumberPurchased == 0) continue;
+		// Is the item used?
+		STORE_INVENTORY (&inv)[MAXITEMS] = p.fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
+		UINT8&            qty            = inv[p.usBobbyItemIndex].ubQtyOnHand;
+		// Remove it from Bobby Rays Inventory
+		qty = qty > p.ubNumberPurchased ? qty - p.ubNumberPurchased : 0;
 	}
 	gfRemoveItemsFromStock = FALSE;
 }
