@@ -436,7 +436,7 @@ static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, INT32 const rea
 
 
 static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
-static UINT32 CalculateTotalPurchasePrice(void);
+static UINT32 CalculateTotalPurchasePrice();
 static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INVTYPE* const items[]);
 static void DisableBobbyRButtons(void);
 static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
@@ -1328,21 +1328,16 @@ UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 }
 
 
-static UINT32 CalculateTotalPurchasePrice(void)
+static UINT32 CalculateTotalPurchasePrice()
 {
-	UINT16	i;
-	UINT32	uiTotal = 0;
-
-	for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
+	UINT32 total = 0;
+	FOR_EACH(BobbyRayPurchaseStruct const, i, BobbyRayPurchases)
 	{
-		//if the item was purchased
-		if( BobbyRayPurchases[ i ].ubNumberPurchased )
-		{
-			uiTotal += CalcBobbyRayCost( BobbyRayPurchases[ i ].usItemIndex, BobbyRayPurchases[ i ].usBobbyItemIndex, BobbyRayPurchases[ i ].fUsed ) * BobbyRayPurchases[ i ].ubNumberPurchased;
-		}
+		BobbyRayPurchaseStruct const& p = *i;
+		if (p.ubNumberPurchased == 0) continue;
+		total += CalcBobbyRayCost(p.usItemIndex, p.usBobbyItemIndex, p.fUsed) * p.ubNumberPurchased;
 	}
-
-	return(uiTotal);
+	return total;
 }
 
 
