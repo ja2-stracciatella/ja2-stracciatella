@@ -1608,7 +1608,7 @@ static void DrawGoldRectangle(INT8 bCityNum)
 }
 
 
-static UINT32 CalcPackageTotalWeight(void);
+static UINT32 CalcPackageTotalWeight();
 
 
 static UINT32 CalcCostFromWeightOfPackage(UINT8 ubTypeOfService)
@@ -1895,23 +1895,16 @@ void EnterInitBobbyRayOrder()
 }
 
 
-static UINT32 CalcPackageTotalWeight(void)
+static UINT32 CalcPackageTotalWeight()
 {
-	UINT16	i;
-	UINT32	uiTotalWeight=0;
-
-	//loop through all the packages
-	for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
+	UINT32 mass = 0;
+	FOR_EACH(BobbyRayPurchaseStruct const, i, BobbyRayPurchases)
 	{
-		//if the item was purchased
-		if( BobbyRayPurchases[ i ].ubNumberPurchased )
-		{
-			//add the current weight to the total
-			uiTotalWeight += Item[ BobbyRayPurchases[ i ].usItemIndex ].ubWeight * BobbyRayPurchases[ i ].ubNumberPurchased;
-		}
+		BobbyRayPurchaseStruct const& p = *i;
+		if (p.ubNumberPurchased == 0) continue;
+		mass += Item[p.usItemIndex].ubWeight * p.ubNumberPurchased;
 	}
-
-	return( uiTotalWeight );
+	return mass;
 }
 
 
