@@ -1310,7 +1310,7 @@ static void SelectDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 }
 
 
-static BOOLEAN IsAnythingPurchasedFromBobbyRayPage(void);
+static bool IsAnythingPurchasedFromBobbyRayPage();
 
 
 static void DrawSelectedCity(UINT8 ubCityNumber)
@@ -1431,20 +1431,13 @@ static void RemovePurchasedItemsFromBobbyRayInventory()
 }
 
 
-static BOOLEAN IsAnythingPurchasedFromBobbyRayPage(void)
+static bool IsAnythingPurchasedFromBobbyRayPage()
 {
-	UINT16 i;
-	BOOLEAN	fReturnType = FALSE;
-
-	for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
+	FOR_EACH(BobbyRayPurchaseStruct const, i, BobbyRayPurchases)
 	{
-		//if the item was purchased
-		if( BobbyRayPurchases[ i ].ubNumberPurchased )
-		{
-			fReturnType = TRUE;
-		}
+		if (i->ubNumberPurchased != 0) return true;
 	}
-	return( fReturnType );
+	return false;
 }
 
 
