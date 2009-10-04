@@ -1115,32 +1115,6 @@ void InitExitGameDialogBecauseFileHackDetected()
 }
 
 
-UINT32 MercChecksum(SOLDIERTYPE const& s)
-{
-	UINT32 sum = 1;
-
-	sum += 1 + s.bLife;
-	sum *= 1 + s.bLifeMax;
-	sum += 1 + s.bAgility;
-	sum *= 1 + s.bDexterity;
-	sum += 1 + s.bStrength;
-	sum *= 1 + s.bMarksmanship;
-	sum += 1 + s.bMedical;
-	sum *= 1 + s.bMechanical;
-	sum += 1 + s.bExplosive;
-	sum *= 1 + s.bExpLevel;
-	sum += 1 + s.ubProfile;
-
-	CFOR_EACH_SOLDIER_INV_SLOT(i, s)
-	{
-		sum += i->usItem;
-		sum += i->ubNumberOfObjects;
-	}
-
-	return sum;
-}
-
-
 static UINT8 const* GetRotationArray();
 
 
