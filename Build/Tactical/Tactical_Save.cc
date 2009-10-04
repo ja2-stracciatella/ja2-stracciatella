@@ -1141,31 +1141,6 @@ UINT32 MercChecksum(SOLDIERTYPE const& s)
 }
 
 
-UINT32 ProfileChecksum(MERCPROFILESTRUCT const& p)
-{
-	UINT32 sum = 1;
-
-	sum += 1 + p.bLife;
-	sum *= 1 + p.bLifeMax;
-	sum += 1 + p.bAgility;
-	sum *= 1 + p.bDexterity;
-	sum += 1 + p.bStrength;
-	sum *= 1 + p.bMarksmanship;
-	sum += 1 + p.bMedical;
-	sum *= 1 + p.bMechanical;
-	sum += 1 + p.bExplosive;
-	sum *= 1 + p.bExpLevel;
-
-	for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
-	{
-		sum += p.inv[i];
-		sum += p.bInvNumber[i];
-	}
-
-	return sum;
-}
-
-
 static UINT8 const* GetRotationArray();
 
 

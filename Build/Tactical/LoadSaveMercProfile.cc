@@ -336,6 +336,28 @@ void ExtractMercProfileUTF16(BYTE const* const Src, MERCPROFILESTRUCT& p)
 }
 
 
+static UINT32 ProfileChecksum(MERCPROFILESTRUCT const& p)
+{
+	UINT32 sum = 1;
+
+	sum += 1 + p.bLife;
+	sum *= 1 + p.bLifeMax;
+	sum += 1 + p.bAgility;
+	sum *= 1 + p.bDexterity;
+	sum += 1 + p.bStrength;
+	sum *= 1 + p.bMarksmanship;
+	sum += 1 + p.bMedical;
+	sum *= 1 + p.bMechanical;
+	sum += 1 + p.bExplosive;
+	sum *= 1 + p.bExpLevel;
+
+	FOR_EACH(UINT16 const, i, p.inv)        sum += *i;
+	FOR_EACH(UINT8  const, i, p.bInvNumber) sum += *i;
+
+	return sum;
+}
+
+
 void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p)
 {
 	const BYTE* S = Src;
