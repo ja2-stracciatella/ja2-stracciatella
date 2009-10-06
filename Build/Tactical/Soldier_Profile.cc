@@ -342,7 +342,6 @@ static void DecideActiveTerrorists(void)
 			// random 40% chance of adding this terrorist if not yet placed
 			if ( ( gMercProfiles[ ubTerrorist ].sSectorX == 0 ) && ( Random( 100 ) < 40 ) )
 			{
-				fFoundSpot = FALSE;
 				// Since there are 5 spots per terrorist and a maximum of 5 terrorists, we
 				// are guaranteed to be able to find a spot for each terrorist since there
 				// aren't enough other terrorists to use up all the spots for any one
@@ -350,6 +349,7 @@ static void DecideActiveTerrorists(void)
 				do
 				{
 					// pick a random spot, see if it's already been used by another terrorist
+					fFoundSpot = TRUE;
 					uiLocationChoice = Random( NUM_TERRORIST_POSSIBLE_LOCATIONS );
 					for (ubLoop2 = 0; ubLoop2 < ubNumTerroristsAdded; ubLoop2++)
 					{
@@ -357,11 +357,11 @@ static void DecideActiveTerrorists(void)
 						{
 							if (sTerroristPlacement[ubLoop2][1] == gsTerroristSector[ubLoop][uiLocationChoice][1] )
 							{
-								continue;
+								fFoundSpot = FALSE;
+								break;
 							}
 						}
 					}
-					fFoundSpot = TRUE;
 				} while( !fFoundSpot );
 
 				// place terrorist!
