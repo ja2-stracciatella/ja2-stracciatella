@@ -337,15 +337,12 @@ void SetBoxSecondColumnBackground(PopUpBox* const box, UINT8 const colour)
 }
 
 
-void SetBoxSecondColumnHighLight(PopUpBox* const box, const UINT8 ubColor)
+void SetBoxSecondColumnHighLight(PopUpBox* const box, UINT8 const colour)
 {
-	UINT32 iCounter = 0;
-	for (iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++)
+	FOR_EACH(PopUpString*, i, box->pSecondColumnString)
 	{
-		if (box->pSecondColumnString[iCounter])
-		{
-			box->pSecondColumnString[iCounter]->ubHighLight = ubColor;
-		}
+		PopUpString* const p = *i;
+		if (p) p->ubHighLight = colour;
 	}
 }
 
