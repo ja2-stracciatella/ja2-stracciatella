@@ -81,7 +81,7 @@ void SetBoxSecondColumnHighLight(PopUpBox*, UINT8 ubColor);
 void SetBoxSecondColumnShade(PopUpBox*, UINT8 ubColor);
 
 // secondary shades for boxes
-void SetBoxSecondaryShade(PopUpBox*, UINT8 ubColor);
+void SetBoxSecondaryShade(PopUpBox*, UINT8 colour);
 
 // min width for box
 void SpecifyBoxMinWidth(PopUpBox*, INT32 iMinWidth);

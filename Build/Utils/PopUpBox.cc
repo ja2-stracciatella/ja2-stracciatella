@@ -267,15 +267,12 @@ void SetBoxLineForeground(PopUpBox* const box, const INT32 iStringValue, const U
 }
 
 
-void SetBoxSecondaryShade(PopUpBox* const box, const UINT8 ubColor)
+void SetBoxSecondaryShade(PopUpBox* const box, UINT8 const colour)
 {
-	UINT32 uiCounter;
-	for ( uiCounter = 0; uiCounter < MAX_POPUP_BOX_STRING_COUNT; uiCounter++ )
+	FOR_EACH(PopUpString*, i, box->Text)
 	{
-		if (box->Text[uiCounter] != NULL)
-		{
-			box->Text[uiCounter]->ubSecondaryShade = ubColor;
-		}
+		PopUpString* const p = *i;
+		if (p) p->ubSecondaryShade = colour;
 	}
 }
 
