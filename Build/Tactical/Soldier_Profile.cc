@@ -148,33 +148,22 @@ INT16 gsRobotGridNo;
 
 #define NUM_ASSASSINS 6
 
-UINT8 gubAssassins[NUM_ASSASSINS] =
+struct AssassinInfo
 {
-	JIM,
-	JACK,
-	OLAF,
-	RAY,
-	OLGA,
-	TYRONE
+	ProfileID profile;
+	UINT8     towns[5];
 };
 
-#define NUM_ASSASSIN_POSSIBLE_TOWNS 5
-
-INT8 gbAssassinTown[NUM_ASSASSINS][NUM_ASSASSIN_POSSIBLE_TOWNS] =
+static AssassinInfo const g_assassin_info[] =
 {
-	// Jim
-	{ CAMBRIA, DRASSEN, ALMA, BALIME, GRUMM },
-	// Jack
-	{ CHITZENA,	ESTONI, ALMA, BALIME, GRUMM },
-	// Olaf
-	{ DRASSEN, ESTONI, ALMA, CAMBRIA, BALIME },
-	// Ray
-	{ CAMBRIA, OMERTA, BALIME, GRUMM, DRASSEN },
-	// Olga
-	{ CHITZENA, OMERTA, CAMBRIA, ALMA, GRUMM },
-	// Tyrone
-	{ CAMBRIA, BALIME, ALMA, GRUMM, DRASSEN },
+	{ JIM,    { CAMBRIA,  DRASSEN, ALMA,    BALIME,  GRUMM   } },
+	{ JACK,   { CHITZENA, ESTONI,  ALMA,    BALIME,  GRUMM   } },
+	{ OLAF,   { DRASSEN,  ESTONI,  ALMA,    CAMBRIA, BALIME  } },
+	{ RAY,    { CAMBRIA,  OMERTA,  BALIME,  GRUMM,   DRASSEN } },
+	{ OLGA,   { CHITZENA, OMERTA,  CAMBRIA, ALMA,    GRUMM   } },
+	{ TYRONE, { CAMBRIA,  BALIME,  ALMA,    GRUMM,   DRASSEN } }
 };
+CASSERT(lengthof(g_assassin_info) == NUM_ASSASSINS)
 
 
 static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT const&);
@@ -467,22 +456,23 @@ void DecideOnAssassin( void )
 {
 	UINT8		ubAssassinPossibility[NUM_ASSASSINS] = { NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE };
 	UINT8		ubAssassinsPossible = 0;
-	UINT8		ubLoop, ubLoop2;
 	UINT8		ubTown;
 
 	ubTown = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
 
-	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
+	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
+		AssassinInfo const a = *i;
 		// make sure alive and not placed already
-		if ( gMercProfiles[ gubAssassins[ ubLoop ] ].bMercStatus != MERC_IS_DEAD && gMercProfiles[ gubAssassins[ ubLoop ] ].sSectorX == 0 && gMercProfiles[ gubAssassins[ ubLoop ] ].sSectorY == 0 )
+		MERCPROFILESTRUCT const& p = GetProfile(a.profile);
+		if (p.bMercStatus != MERC_IS_DEAD && p.sSectorX == 0 && p.sSectorY == 0)
 		{
 			// check this merc to see if the town is a possibility
-			for ( ubLoop2 = 0; ubLoop2 < NUM_ASSASSIN_POSSIBLE_TOWNS; ubLoop2++ )
+			FOR_EACH(UINT8 const, i, a.towns)
 			{
-				if ( gbAssassinTown[ ubLoop ][ ubLoop2 ] == ubTown )
+				if (*i == ubTown)
 				{
-					ubAssassinPossibility[ ubAssassinsPossible ] = gubAssassins[ ubLoop ];
+					ubAssassinPossibility[ubAssassinsPossible] = a.profile;
 					ubAssassinsPossible++;
 				}
 			}
@@ -491,7 +481,7 @@ void DecideOnAssassin( void )
 
 	if ( ubAssassinsPossible != 0 )
 	{
-		ubLoop = ubAssassinPossibility[ Random( ubAssassinsPossible ) ];
+		UINT8 const ubLoop = ubAssassinPossibility[ Random( ubAssassinsPossible ) ];
 		gMercProfiles[ ubLoop ].sSectorX = gWorldSectorX;
 		gMercProfiles[ ubLoop ].sSectorY = gWorldSectorY;
 		AddStrategicEvent( EVENT_REMOVE_ASSASSIN, GetWorldTotalMin() + 60 * ( 3 + Random( 3 ) ), ubLoop );
@@ -501,14 +491,14 @@ void DecideOnAssassin( void )
 
 void MakeRemainingAssassinsTougher( void )
 {
-	UINT8					ubRemainingAssassins = 0, ubLoop;
+	UINT8					ubRemainingAssassins = 0;
 	UINT16				usNewItem, usOldItem;
 	OBJECTTYPE		Object;
 	UINT8					ubRemainingDifficulty;
 
-	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
+	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
-		if ( gMercProfiles[ gubAssassins[ ubLoop ] ].bMercStatus != MERC_IS_DEAD  )
+		if (GetProfile(i->profile).bMercStatus != MERC_IS_DEAD)
 		{
 			ubRemainingAssassins++;
 		}
@@ -568,15 +558,16 @@ void MakeRemainingAssassinsTougher( void )
 	Object.usItem = usNewItem;
 	Object.bStatus[ 0 ] = 100;
 
-	for ( ubLoop = 0; ubLoop < NUM_ASSASSINS; ubLoop++ )
+	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
-		if ( gMercProfiles[ gubAssassins[ ubLoop ] ].bMercStatus != MERC_IS_DEAD )
+		ProfileID const pid = i->profile;
+		if (GetProfile(pid).bMercStatus != MERC_IS_DEAD)
 		{
 			if ( usOldItem != NOTHING )
 			{
-				RemoveObjectFromSoldierProfile( gubAssassins[ ubLoop ], usOldItem );
+				RemoveObjectFromSoldierProfile(pid, usOldItem);
 			}
-			PlaceObjectInSoldierProfile( gubAssassins[ ubLoop ], &Object );
+			PlaceObjectInSoldierProfile(pid, &Object);
 		}
 	}
 }
