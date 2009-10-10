@@ -452,42 +452,35 @@ void MakeRemainingTerroristsTougher()
 }
 
 
-void DecideOnAssassin( void )
+void DecideOnAssassin()
 {
-	UINT8		ubAssassinPossibility[NUM_ASSASSINS] = { NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE, NO_PROFILE };
-	UINT8		ubAssassinsPossible = 0;
-	UINT8		ubTown;
-
-	ubTown = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
-
+	ProfileID   assassins[lengthof(g_assassin_info)];
+	UINT8       n    = 0;
+	UINT8 const town = GetTownIdForSector(gWorldSectorX, gWorldSectorY);
 	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
-		AssassinInfo const a = *i;
-		// make sure alive and not placed already
+		AssassinInfo      const  a = *i;
 		MERCPROFILESTRUCT const& p = GetProfile(a.profile);
-		if (p.bMercStatus != MERC_IS_DEAD && p.sSectorX == 0 && p.sSectorY == 0)
+		// Make sure alive and not placed already.
+		if (p.bMercStatus == MERC_IS_DEAD)      continue;
+		if (p.sSectorX != 0 || p.sSectorY != 0) continue;
+		// Check this merc to see if the town is a possibility.
+		FOR_EACH(UINT8 const, k, a.towns)
 		{
-			// check this merc to see if the town is a possibility
-			FOR_EACH(UINT8 const, i, a.towns)
-			{
-				if (*i == ubTown)
-				{
-					ubAssassinPossibility[ubAssassinsPossible] = a.profile;
-					ubAssassinsPossible++;
-				}
-			}
+			if (*k != town) continue;
+			assassins[n++] = a.profile;
+			break;
 		}
 	}
 
-	if ( ubAssassinsPossible != 0 )
-	{
-		UINT8 const ubLoop = ubAssassinPossibility[ Random( ubAssassinsPossible ) ];
-		gMercProfiles[ ubLoop ].sSectorX = gWorldSectorX;
-		gMercProfiles[ ubLoop ].sSectorY = gWorldSectorY;
-		AddStrategicEvent( EVENT_REMOVE_ASSASSIN, GetWorldTotalMin() + 60 * ( 3 + Random( 3 ) ), ubLoop );
-	}
-
+	if (n == 0) return;
+	ProfileID const    pid = assassins[Random(n)];
+	MERCPROFILESTRUCT& p   = GetProfile(pid);
+	p.sSectorX             = gWorldSectorX;
+	p.sSectorY             = gWorldSectorY;
+	AddStrategicEvent(EVENT_REMOVE_ASSASSIN, GetWorldTotalMin() + 60 * (3 + Random(3)), pid);
 }
+
 
 void MakeRemainingAssassinsTougher( void )
 {

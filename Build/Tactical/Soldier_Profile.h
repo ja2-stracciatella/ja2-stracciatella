@@ -215,7 +215,7 @@ BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile );
 void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs );
 
 
-void DecideOnAssassin( void );
+void DecideOnAssassin();
 
 extern BOOLEAN gubNumTerrorists;
 
