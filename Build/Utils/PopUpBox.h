@@ -76,7 +76,7 @@ void SetBoxSecondColumnMinimumOffset(PopUpBox*, UINT32 uiWidth);
 
 // now on a box wide basis, one if recomened to use this function after adding all the strings..rather than on an individual basis
 void SetBoxSecondColumnForeground(PopUpBox*, UINT8 colour);
-void SetBoxSecondColumnBackground(PopUpBox*, UINT8 ubColor);
+void SetBoxSecondColumnBackground(PopUpBox*, UINT8 colour);
 void SetBoxSecondColumnHighLight(PopUpBox*, UINT8 ubColor);
 void SetBoxSecondColumnShade(PopUpBox*, UINT8 ubColor);
 
