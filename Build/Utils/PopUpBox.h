@@ -23,7 +23,7 @@ SGPBox const& GetBoxArea(PopUpBox const*);
 void AddMonoString(PopUpBox*, const wchar_t* pString);
 void SetBoxFont(PopUpBox*, Font);
 Font GetBoxFont(const PopUpBox*);
-void SetBoxForeground(PopUpBox*, UINT8 ubColor);
+void SetBoxForeground(PopUpBox*, UINT8 colour);
 void SetBoxBackground(PopUpBox*, UINT8 ubColor);
 void SetBoxHighLight(PopUpBox*, UINT8 ubColor);
 void SetBoxShade(PopUpBox*, UINT8 ubColor);
