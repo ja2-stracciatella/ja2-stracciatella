@@ -78,7 +78,7 @@ void SetBoxSecondColumnMinimumOffset(PopUpBox*, UINT32 uiWidth);
 void SetBoxSecondColumnForeground(PopUpBox*, UINT8 colour);
 void SetBoxSecondColumnBackground(PopUpBox*, UINT8 colour);
 void SetBoxSecondColumnHighLight(PopUpBox*, UINT8 colour);
-void SetBoxSecondColumnShade(PopUpBox*, UINT8 ubColor);
+void SetBoxSecondColumnShade(PopUpBox*, UINT8 colour);
 
 // secondary shades for boxes
 void SetBoxSecondaryShade(PopUpBox*, UINT8 colour);
