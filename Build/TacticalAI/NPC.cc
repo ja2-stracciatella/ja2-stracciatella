@@ -410,22 +410,13 @@ try
 catch (...) { return false; }
 
 
-void ShutdownNPCQuotes( void )
+void ShutdownNPCQuotes()
 {
-	UINT8		ubLoop;
-
-	for ( ubLoop = 0; ubLoop < NUM_PROFILES; ubLoop++ )
-	{
-		FreeNull(gpNPCQuoteInfoArray[ubLoop]);
-		FreeNull(gpBackupNPCQuoteInfoArray[ubLoop]);
-	}
-
-
-	for ( ubLoop = 0; ubLoop < NUM_CIVQUOTE_SECTORS; ubLoop++ )
-	{
-		FreeNull(gpCivQuoteInfoArray[ubLoop]);
-	}
+	FOR_EACH(NPCQuoteInfo*, i, gpNPCQuoteInfoArray)       FreeNull(*i);
+	FOR_EACH(NPCQuoteInfo*, i, gpBackupNPCQuoteInfoArray) FreeNull(*i);
+	FOR_EACH(NPCQuoteInfo*, i, gpCivQuoteInfoArray)       FreeNull(*i);
 }
+
 
 //
 // GENERAL LOW LEVEL ROUTINES

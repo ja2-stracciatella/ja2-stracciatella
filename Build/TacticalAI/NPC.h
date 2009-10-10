@@ -131,7 +131,7 @@ enum StandardQuoteIDs
 
 extern INT8	gbFirstApproachFlags[4];
 
-extern void ShutdownNPCQuotes( void );
+void ShutdownNPCQuotes();
 
 extern void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord );
 
