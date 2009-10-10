@@ -26,7 +26,7 @@ Font GetBoxFont(const PopUpBox*);
 void SetBoxForeground(PopUpBox*, UINT8 colour);
 void SetBoxBackground(PopUpBox*, UINT8 colour);
 void SetBoxHighLight(PopUpBox*, UINT8 colour);
-void SetBoxShade(PopUpBox*, UINT8 ubColor);
+void SetBoxShade(PopUpBox*, UINT8 colour);
 
 void ShadeStringInBox(PopUpBox*, INT32 line, bool shade);
 
