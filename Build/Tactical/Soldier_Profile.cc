@@ -146,7 +146,6 @@ INT16	gsTerroristSector[NUM_TERRORISTS][NUM_TERRORIST_POSSIBLE_LOCATIONS][2] =
 
 INT16 gsRobotGridNo;
 
-#define NUM_ASSASSINS 6
 
 struct AssassinInfo
 {
@@ -163,7 +162,6 @@ static AssassinInfo const g_assassin_info[] =
 	{ OLGA,   { CHITZENA, OMERTA,  CAMBRIA, ALMA,    GRUMM   } },
 	{ TYRONE, { CAMBRIA,  BALIME,  ALMA,    GRUMM,   DRASSEN } }
 };
-CASSERT(lengthof(g_assassin_info) == NUM_ASSASSINS)
 
 
 static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT const&);
@@ -482,86 +480,67 @@ void DecideOnAssassin()
 }
 
 
-void MakeRemainingAssassinsTougher( void )
+void MakeRemainingAssassinsTougher()
 {
-	UINT8					ubRemainingAssassins = 0;
-	UINT16				usNewItem, usOldItem;
-	OBJECTTYPE		Object;
-	UINT8					ubRemainingDifficulty;
-
+	UINT8 n_remaining_assassins = 0;
 	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
-		if (GetProfile(i->profile).bMercStatus != MERC_IS_DEAD)
-		{
-			ubRemainingAssassins++;
-		}
+		if (GetProfile(i->profile).bMercStatus == MERC_IS_DEAD) continue;
+		++n_remaining_assassins;
 	}
 
-	ubRemainingDifficulty = (60 / NUM_ASSASSINS) * (NUM_ASSASSINS - ubRemainingAssassins);
-
-	switch( gGameOptions.ubDifficultyLevel )
+	size_t const n_assassins = lengthof(g_assassin_info);
+	UINT8        difficulty  = 60 / n_assassins * (n_assassins - n_remaining_assassins);
+	switch (gGameOptions.ubDifficultyLevel)
 	{
-		case DIF_LEVEL_MEDIUM:
-			ubRemainingDifficulty = (ubRemainingDifficulty * 13) / 10;
-			break;
-		case DIF_LEVEL_HARD:
-			ubRemainingDifficulty = (ubRemainingDifficulty * 16) / 10;
-			break;
-		default:
-			break;
+		case DIF_LEVEL_MEDIUM: difficulty = difficulty * 13 / 10; break;
+		case DIF_LEVEL_HARD:   difficulty = difficulty * 16 / 10; break;
+		default: break;
 	}
 
-	if ( ubRemainingDifficulty < 14 )
-	{
-		// nothing
+	UINT16 new_item;
+	UINT16 old_item;
+	if (difficulty < 14)
+	{ // Nothing
 		return;
 	}
-	else if ( ubRemainingDifficulty < 28 )
-	{
-		// mini grenade
-		usOldItem = NOTHING;
-		usNewItem = MINI_GRENADE;
+	else if (difficulty < 28)
+	{ // Mini grenade
+		old_item = NOTHING;
+		new_item = MINI_GRENADE;
 	}
-	else if ( ubRemainingDifficulty < 42)
-	{
-		// hand grenade
-		usOldItem = MINI_GRENADE;
-		usNewItem = HAND_GRENADE;
+	else if (difficulty < 42)
+	{ // Hand grenade
+		old_item = MINI_GRENADE;
+		new_item = HAND_GRENADE;
 	}
-	else if ( ubRemainingDifficulty < 56)
-	{
-		// mustard
-		usOldItem = HAND_GRENADE;
-		usNewItem = MUSTARD_GRENADE;
+	else if (difficulty < 56)
+	{ // Mustard grenade
+		old_item = HAND_GRENADE;
+		new_item = MUSTARD_GRENADE;
 	}
-	else if ( ubRemainingDifficulty < 70)
-	{
-		// LAW
-		usOldItem = MUSTARD_GRENADE;
-		usNewItem = ROCKET_LAUNCHER;
+	else if (difficulty < 70)
+	{ // LAW
+		old_item = MUSTARD_GRENADE;
+		new_item = ROCKET_LAUNCHER;
 	}
 	else
-	{
-		// LAW and hand grenade
-		usOldItem = NOTHING;
-		usNewItem = HAND_GRENADE;
+	{ // LAW and hand grenade
+		old_item = NOTHING;
+		new_item = HAND_GRENADE;
 	}
 
-	DeleteObj( &Object );
-	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
-
+	OBJECTTYPE o;
+	CreateItem(new_item, 100, &o);
 	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
 		ProfileID const pid = i->profile;
-		if (GetProfile(pid).bMercStatus != MERC_IS_DEAD)
+		if (GetProfile(pid).bMercStatus == MERC_IS_DEAD) continue;
+		if (old_item != NOTHING)
 		{
-			if ( usOldItem != NOTHING )
-			{
-				RemoveObjectFromSoldierProfile(pid, usOldItem);
-			}
-			PlaceObjectInSoldierProfile(pid, &Object);
+			RemoveObjectFromSoldierProfile(pid, old_item);
 		}
+		PlaceObjectInSoldierProfile(pid, &o);
 	}
 }
 

@@ -220,7 +220,7 @@ void DecideOnAssassin();
 extern BOOLEAN gubNumTerrorists;
 
 void MakeRemainingTerroristsTougher( void );
-void MakeRemainingAssassinsTougher( void );
+void MakeRemainingAssassinsTougher();
 SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier );
 
 BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo );
