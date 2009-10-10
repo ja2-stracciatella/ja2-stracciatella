@@ -380,11 +380,10 @@ BOOLEAN GetBoxShadeFlag(const PopUpBox* const box, const INT32 iLineNumber)
 
 void UnHighLightBox(PopUpBox* const box)
 {
-	INT32 iCounter = 0;
-
-	for (iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++)
+	FOR_EACH(PopUpString*, i, box->Text)
 	{
-		if (box->Text[iCounter]) box->Text[iCounter]->fHighLightFlag = FALSE;
+		PopUpString* const p = *i;
+		if (p) p->fHighLightFlag = FALSE;
 	}
 }
 
