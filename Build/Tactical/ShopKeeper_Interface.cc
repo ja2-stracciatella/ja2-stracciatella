@@ -3181,7 +3181,7 @@ class DialogueEventShopkeeperMoney : public DialogueEvent
 
 static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea(void);
 static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea(void);
-static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea(void);
+static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea();
 static void DealerGetsBribed(UINT8 ubProfileId, UINT32 uiMoneyAmount);
 static void GivePlayerSomeChange(UINT32 uiAmount);
 static BOOLEAN IsMoneyTheOnlyItemInThePlayersOfferArea(void);
@@ -4276,23 +4276,17 @@ static void ShutUpShopKeeper(void)
 }
 
 
-static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea(void)
+static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea()
 {
-	UINT8	ubCnt;
-	UINT8	ubCount=0;
-
-	//loop through the players offer area and see if there are any items there
-	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
+	UINT8	n = 0;
+	FOR_EACH(INVENTORY_IN_SLOT const, i, PlayersOfferArea)
 	{
-		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
-		//if is an item here
-		if (o->fActive)
-		{
-			//and if it has no value
-			if (!(o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)) ubCount++;
-		}
+		INVENTORY_IN_SLOT const& o = *i;
+		if (!o.fActive)                                  continue;
+		if (o.uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE) continue;
+		++n;
 	}
-	return( ubCount );
+	return n;
 }
 
 
