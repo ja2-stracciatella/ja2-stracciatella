@@ -523,7 +523,7 @@ static void HandleShopKeeperDialog(UINT8 ubInit);
 static BOOLEAN InitShopKeepersFace(UINT8 ubMercID);
 static void InitializeShopKeeper(BOOLEAN fResetPage);
 static BOOLEAN OfferObjectToDealer(OBJECTTYPE* pComplexObject, UINT8 ubOwnerProfileId, INT8 bOwnerSlotId);
-static void ResetAllQuoteSaidFlags(void);
+static void ResetAllQuoteSaidFlags();
 static void SelectArmsDealersDropItemToGroundMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectArmsDealersFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -5879,15 +5879,10 @@ static void ExitSKIRequested(void)
 }
 
 
-static void ResetAllQuoteSaidFlags(void)
+static void ResetAllQuoteSaidFlags()
 {
-	UINT8 uiCnt;
-
-	// reset flags for quotes said
-	for ( uiCnt = 0; uiCnt < NUM_EVAL_RESULTS; uiCnt++ )
-	{
-		gfEvalResultQuoteSaid[ uiCnt ] = FALSE;
-	}
+	// Reset flags for quotes said.
+	FOR_EACH(BOOLEAN, i, gfEvalResultQuoteSaid) *i = FALSE;
 
 	guiLastTimeDealerSaidNormalEvaluationQuote = 0;
 }
