@@ -25,7 +25,7 @@ void EnableEditorTaskbar(void);
 void DisableEditorTaskbar();
 
 void CreateEditorTaskbar(void);
-void DeleteEditorTaskbar(void);
+void DeleteEditorTaskbar();
 
 //Button manipulation functions
 void ClickEditorButton( INT32 iEditorButtonID );

@@ -242,20 +242,18 @@ void CreateEditorTaskbar()
 	HideItemStatsPanel();
 }
 
+
 void DeleteEditorTaskbar()
 {
-	INT32 x;
-
 	iOldTaskMode = iCurrentTaskbar;
 
-	for( x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
-		RemoveButton( iEditorButton[ x ] );
+	FOR_EACH(GUIButtonRef, i, iEditorButton) RemoveButton(*i);
 
 	RemoveEditorRegions();
 	DeleteEditorImages();
 	DeleteEditorBuffers();
-
 }
+
 
 void DoTaskbar(void)
 {
