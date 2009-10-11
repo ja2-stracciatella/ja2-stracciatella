@@ -717,9 +717,9 @@ INT32 GetNumberOfPassengersInHelicopter( void )
 
 bool IsRefuelSiteInSector(INT16 const sector)
 {
-	for (INT32 i = 0; i != NUMBER_OF_REFUEL_SITES; ++i)
+	FOR_EACH(RefuelSite const, i, g_refuel_site)
 	{
-		if (g_refuel_site[i].sector == sector) return true;
+		if (i->sector == sector) return true;
 	}
 	return false;
 }
