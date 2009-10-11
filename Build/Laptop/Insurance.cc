@@ -126,17 +126,14 @@ void EnterInsurance()
 
 void ExitInsurance()
 {
-	UINT8 i;
-
 	RemoveInsuranceDefaults();
 
 	DeleteVideoObject(guiInsuranceTitleImage);
 	DeleteVideoObject(guiInsuranceBulletImage);
 
-	for(i=0; i<3; i++)
-		MSYS_RemoveRegion( &gSelectedInsuranceLinkRegion[i]);
-
+	FOR_EACH(MOUSE_REGION, i, gSelectedInsuranceLinkRegion) MSYS_RemoveRegion(&*i);
 }
+
 
 void HandleInsurance()
 {
