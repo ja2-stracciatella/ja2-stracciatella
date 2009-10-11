@@ -185,7 +185,7 @@ void EnterAimPolicies()
 
 
 static void ExitAgreementButton(void);
-static void ExitAimPolicyMenuBar(void);
+static void ExitAimPolicyMenuBar();
 static void ExitAimPolicyTocMenu();
 
 
@@ -385,18 +385,12 @@ static void InitAimPolicyMenuBar(void)
 }
 
 
-static void ExitAimPolicyMenuBar(void)
+static void ExitAimPolicyMenuBar()
 {
-	int i;
-
 	if (!gfAimPolicyMenuBarLoaded) return;
-
-	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
-		RemoveButton( guiPoliciesMenuButton[i]);
-
-	UnloadButtonImage( guiPoliciesMenuButtonImage );
-
 	gfAimPolicyMenuBarLoaded = FALSE;
+	FOR_EACH(GUIButtonRef, i, guiPoliciesMenuButton) RemoveButton(*i);
+	UnloadButtonImage(guiPoliciesMenuButtonImage);
 }
 
 
