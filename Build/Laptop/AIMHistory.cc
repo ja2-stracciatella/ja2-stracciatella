@@ -120,7 +120,7 @@ void EnterAimHistory()
 
 
 static void ExitAimHistoryMenuBar(void);
-static void ExitTocMenu(void);
+static void ExitTocMenu();
 
 
 void ExitAimHistory()
@@ -329,16 +329,11 @@ static void InitTocMenu(void)
 }
 
 
-static void ExitTocMenu(void)
+static void ExitTocMenu()
 {
-	UINT16 i;
-
-	if( gfInToc )
-	{
-		gfInToc = FALSE;
-		for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
-			MSYS_RemoveRegion( &gSelectedHistoryTocMenuRegion[i]);
-	}
+	if (!gfInToc) return;
+	gfInToc = FALSE;
+	FOR_EACH(MOUSE_REGION, i, gSelectedHistoryTocMenuRegion) MSYS_RemoveRegion(&*i);
 }
 
 
