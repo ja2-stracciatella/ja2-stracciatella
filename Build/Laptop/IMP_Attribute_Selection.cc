@@ -527,12 +527,8 @@ static void CreateSlideRegionMouseRegions()
 
 
 static void DestroySlideRegionMouseRegions()
-{
-	// Destroy the regions user for the slider 'jumping'
-	for (size_t i = 0; i != lengthof(pSliderRegions); ++i)
-	{
-		MSYS_RemoveRegion(&pSliderRegions[i]);
-	}
+{ // Destroy the regions used for the slider 'jumping'
+	FOR_EACH(MOUSE_REGION, i, pSliderRegions) MSYS_RemoveRegion(&*i);
 }
 
 
