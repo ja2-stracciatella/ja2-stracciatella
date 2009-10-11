@@ -633,13 +633,12 @@ void RenderDoorEditingWindow()
 	MPrint(238, 218, L"Locked");
 }
 
+
 void KillDoorEditing()
 {
-	INT32 i;
 	EnableEditorTaskbar();
-	MSYS_RemoveRegion( &DoorRegion );
-	for( i = 0; i < NUM_DOOR_BUTTONS; i++ )
-		RemoveButton( iDoorButton[ i ] );
+	MSYS_RemoveRegion(&DoorRegion);
+	FOR_EACH(GUIButtonRef, i, iDoorButton) RemoveButton(*i);
 	gfEditingDoor = FALSE;
 	KillTextInputMode();
 }

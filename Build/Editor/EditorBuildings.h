@@ -39,7 +39,7 @@ void UpdateRoofsView(void);
 
 void InitDoorEditing( INT32 iMapIndex );
 void ExtractAndUpdateDoorInfo(void);
-void KillDoorEditing(void);
+void KillDoorEditing();
 void RenderDoorEditingWindow(void);
 
 void AddLockedDoorCursors();
