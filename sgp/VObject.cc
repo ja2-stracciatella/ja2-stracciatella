@@ -204,23 +204,20 @@ UINT8 SGPVObject::GetETRLEPixelValue(UINT16 const usETRLEIndex, UINT16 const usX
  * new tables are calculated, or things WILL go boom. */
 void SGPVObject::DestroyPalettes()
 {
-	for (UINT32 x = 0; x < HVOBJECT_SHADE_TABLES; x++)
+	FOR_EACH(UINT16*, i, pShades)
 	{
 		if (flags_ & SHADETABLE_SHARED) continue;
-
-		if (pShades[x] != NULL)
-		{
-			if (palette16_ == pShades[x]) palette16_ = 0;
-
-			MemFree(pShades[x]);
-			pShades[x] = NULL;
-		}
+		UINT16* const p = *i;
+		if (!p)                         continue;
+		if (palette16_ == p) palette16_ = 0;
+		*i = 0;
+		MemFree(p);
 	}
 
-	if (palette16_ != NULL)
+	if (UINT16* const p = palette16_)
 	{
-		MemFree(palette16_);
 		palette16_ = 0;
+		MemFree(p);
 	}
 
 	current_shade_ = 0;
