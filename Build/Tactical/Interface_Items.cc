@@ -1405,17 +1405,10 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 
 }
 
-void ResetCompatibleItemArray( )
-{
-	INT32 cnt = 0;
 
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
-	{
-		if ( gbCompatibleAmmo[ cnt ] )
-		{
-			gbCompatibleAmmo[ cnt ] = FALSE;
-		}
-	}
+void ResetCompatibleItemArray()
+{
+	FOR_EACH(INT8, i, gbCompatibleAmmo) *i = FALSE;
 }
 
 

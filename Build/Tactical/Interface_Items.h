@@ -118,7 +118,7 @@ void SaveItemCursorToSavedGame(HWFILE);
 // handle compatable items for merc and map inventory
 BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc);
 BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInvPos, INT32 iStartSlotNumber, BOOLEAN fOn, BOOLEAN fFromMerc  );
-void ResetCompatibleItemArray(void);
+void ResetCompatibleItemArray();
 
 void CycleItemDescriptionItem(void);
 
