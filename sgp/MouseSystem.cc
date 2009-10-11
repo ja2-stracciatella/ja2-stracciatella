@@ -57,7 +57,7 @@ static MOUSE_REGION* g_clicked_region;
 
 static MOUSE_REGION* MSYS_RegList = NULL;
 
-MOUSE_REGION *MSYS_PrevRegion = NULL;
+static MOUSE_REGION* MSYS_PrevRegion = 0;
 static MOUSE_REGION* MSYS_CurrRegion = NULL;
 
 static const INT16 gsFastHelpDelay = 600; // In timer ticks

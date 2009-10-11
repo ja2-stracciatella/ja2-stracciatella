@@ -59,10 +59,10 @@ SGPVObject* guiExclamation;
 SGPVObject* guiKeyImage;
 
 //editor Mouseregion storage vars
-MOUSE_REGION TerrainTileButtonRegion[ NUM_TERRAIN_TILE_REGIONS ];
-MOUSE_REGION ItemsRegion;
-MOUSE_REGION MercRegion;
-MOUSE_REGION EditorRegion;
+static MOUSE_REGION TerrainTileButtonRegion[NUM_TERRAIN_TILE_REGIONS];
+static MOUSE_REGION ItemsRegion;
+static MOUSE_REGION MercRegion;
+static MOUSE_REGION EditorRegion;
 
 void EnableEditorRegion( INT8 bRegionID )
 {

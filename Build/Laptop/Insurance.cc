@@ -83,10 +83,10 @@ static SGPVObject* guiInsuranceBulletImage;
 
 
 //link to the varios pages
-MOUSE_REGION    gSelectedInsuranceLinkRegion[3];
+static MOUSE_REGION gSelectedInsuranceLinkRegion[3];
 
 //link to the home page by clicking on the small title
-MOUSE_REGION    gSelectedInsuranceTitleLinkRegion;
+static MOUSE_REGION gSelectedInsuranceTitleLinkRegion;
 
 
 static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);

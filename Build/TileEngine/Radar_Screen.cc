@@ -45,16 +45,16 @@ extern INT32 iCurrentMapSectorZ;
 #define SUBTRACTOR_FOR_SQUAD_LIST 0
 
 
-INT16			gsRadarX;
-INT16			gsRadarY;
+static INT16       gsRadarX;
+static INT16       gsRadarY;
 static SGPVObject* gusRadarImage;
 BOOLEAN   fRenderRadarScreen = TRUE;
-INT16			sSelectedSquadLine = -1;
+static INT16       sSelectedSquadLine = -1;
 
 BOOLEAN		gfRadarCurrentGuyFlash = FALSE;
 
 
-MOUSE_REGION gRadarRegionSquadList[ NUMBER_OF_SQUADS ];
+static MOUSE_REGION gRadarRegionSquadList[NUMBER_OF_SQUADS];
 
 
 static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);

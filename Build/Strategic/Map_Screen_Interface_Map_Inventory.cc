@@ -84,22 +84,22 @@ WORLDITEM *pInventoryPoolList = NULL;
 
 // current page of inventory
 INT32 iCurrentInventoryPoolPage = 0;
-INT32 iLastInventoryPoolPage = 0;
+static INT32 iLastInventoryPoolPage = 0;
 
 // total number of slots allocated
-INT32 iTotalNumberOfSlots = 0;
+static INT32 iTotalNumberOfSlots = 0;
 
 INT16 sObjectSourceGridNo = 0;
 
 // number of unseen items in sector
-UINT32 uiNumberOfUnSeenItems = 0;
+static UINT32 uiNumberOfUnSeenItems = 0;
 
 
 // the inventory slots
-MOUSE_REGION MapInventoryPoolSlots[ MAP_INVENTORY_POOL_SLOT_COUNT ];
-MOUSE_REGION MapInventoryPoolMask;
+static MOUSE_REGION MapInventoryPoolSlots[MAP_INVENTORY_POOL_SLOT_COUNT];
+static MOUSE_REGION MapInventoryPoolMask;
 BOOLEAN fMapInventoryItemCompatable[ MAP_INVENTORY_POOL_SLOT_COUNT ];
-BOOLEAN fChangedInventorySlots = FALSE;
+static BOOLEAN      fChangedInventorySlots = FALSE;
 
 // the unseen items list...have to save this
 static WORLDITEM* pUnSeenItems = NULL;
@@ -107,9 +107,9 @@ static WORLDITEM* pUnSeenItems = NULL;
 INT32 giFlashHighlightedItemBaseTime = 0;
 INT32 giCompatibleItemBaseTime = 0;
 
-GUIButtonRef guiMapInvenButton[3];
+static GUIButtonRef guiMapInvenButton[3];
 
-BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
+static BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 
 
 // load the background panel graphics for inventory

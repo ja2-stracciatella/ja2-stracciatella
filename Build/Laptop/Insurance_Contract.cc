@@ -109,9 +109,9 @@
 static SGPVObject* guiInsOrderGridImage;
 static SGPVObject* guiInsOrderBulletImage;
 
-UINT8		gubNumberofDisplayedInsuranceGrids;
+static UINT8 gubNumberofDisplayedInsuranceGrids;
 
-BOOLEAN	gfChangeInsuranceFormButtons = FALSE;
+static BOOLEAN gfChangeInsuranceFormButtons = FALSE;
 
 static SOLDIERTYPE* g_insurance_merc_array[20];
 static UINT         g_n_insurable_mercs;
@@ -119,15 +119,15 @@ INT16		gsCurrentInsuranceMercIndex;
 
 
 //link to the varios pages
-MOUSE_REGION    gSelectedInsuranceContractLinkRegion[2];
+static MOUSE_REGION gSelectedInsuranceContractLinkRegion[2];
 
 static BUTTON_PICS* guiInsContractPrevButtonImage;
 static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiInsContractPrevBackButton;
+static GUIButtonRef guiInsContractPrevBackButton;
 
 static BUTTON_PICS* guiInsContractNextButtonImage;
 static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiInsContractNextBackButton;
+static GUIButtonRef guiInsContractNextBackButton;
 
 
 //Graphic for Accept, Clear button for form 1

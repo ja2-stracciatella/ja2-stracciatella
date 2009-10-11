@@ -236,24 +236,24 @@ static SGPVObject* guiGoldArrowImages;
 static SGPVObject* guiPackageWeightImage;
 
 
-BOOLEAN		gfReDrawBobbyOrder=FALSE;
+static BOOLEAN gfReDrawBobbyOrder = FALSE;
 
-INT32			giGrandTotal;
-UINT32		guiShippingCost;
-UINT32		guiSubTotal;
+static INT32  giGrandTotal;
+static UINT32 guiShippingCost;
+static UINT32 guiSubTotal;
 
-UINT8			gubSelectedLight;
+static UINT8 gubSelectedLight;
 
-BOOLEAN		gfDrawConfirmOrderGrpahic;
-BOOLEAN		gfDestroyConfirmGrphiArea;
+static BOOLEAN gfDrawConfirmOrderGrpahic;
+static BOOLEAN gfDestroyConfirmGrphiArea;
 
-BOOLEAN		gfCanAcceptOrder;
+static BOOLEAN gfCanAcceptOrder;
 
-UINT8			gubDropDownAction;
-INT8			gbSelectedCity=-1;				//keeps track of the currently selected city
-UINT8			gubCityAtTopOfList;
+static UINT8 gubDropDownAction;
+static INT8  gbSelectedCity = -1;				//keeps track of the currently selected city
+static UINT8 gubCityAtTopOfList;
 
-BOOLEAN		gfRemoveItemsFromStock=FALSE;
+static BOOLEAN gfRemoveItemsFromStock = FALSE;
 
 NewBobbyRayOrderStruct	*gpNewBobbyrShipments;
 INT32			giNumberOfNewBobbyRShipment;
@@ -266,7 +266,7 @@ INT32			giNumberOfNewBobbyRShipment;
 //Clear Order Button
 static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* guiBobbyRClearOrderImage;
-GUIButtonRef guiBobbyRClearOrder;
+static GUIButtonRef guiBobbyRClearOrder;
 
 //Accept Order Button
 static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason);
@@ -276,7 +276,7 @@ static GUIButtonRef guiBobbyRAcceptOrder;
 //Back Button
 static void BtnBobbyRBackCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* guiBobbyRBackImage;
-GUIButtonRef guiBobbyRBack;
+static GUIButtonRef guiBobbyRBack;
 
 //Home Button
 static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, INT32 reason);
@@ -286,33 +286,33 @@ static GUIButtonRef guiBobbyRHome;
 //Goto Shipment Page Button
 static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* giBobbyRGotoShipmentPageImage;
-GUIButtonRef guiBobbyRGotoShipmentPage;
+static GUIButtonRef guiBobbyRGotoShipmentPage;
 
 
 //mouse region for the shipping speed selection area
-MOUSE_REGION    gSelectedShippingSpeedRegion[3];
+static MOUSE_REGION gSelectedShippingSpeedRegion[3];
 
 //mouse region for the confirm area
-MOUSE_REGION    gSelectedConfirmOrderRegion;
+static MOUSE_REGION gSelectedConfirmOrderRegion;
 
 //mouse region for the drop down city location area
-MOUSE_REGION    gSelectedDropDownRegion[ BOBBYR_ORDER_NUM_SHIPPING_CITIES ];
+static MOUSE_REGION gSelectedDropDownRegion[BOBBYR_ORDER_NUM_SHIPPING_CITIES];
 
 //mouse region for scroll area for the drop down city location area
-MOUSE_REGION    gSelectedScrollAreaDropDownRegion[BOBBYR_ORDER_NUM_SHIPPING_CITIES];
+static MOUSE_REGION gSelectedScrollAreaDropDownRegion[BOBBYR_ORDER_NUM_SHIPPING_CITIES];
 
 
 //mouse region to activate the shipping location drop down
-MOUSE_REGION    gSelectedActivateCityDroDownRegion;
+static MOUSE_REGION gSelectedActivateCityDroDownRegion;
 
 //mouse region to close the drop down menu
-MOUSE_REGION    gSelectedCloseDropDownRegion;
+static MOUSE_REGION gSelectedCloseDropDownRegion;
 
 //mouse region to click on the title to go to the home page
-MOUSE_REGION    gSelectedTitleLinkRegion;
+static MOUSE_REGION gSelectedTitleLinkRegion;
 
 //mouse region to click on the up or down arrow on the scroll area
-MOUSE_REGION    gSelectedUpDownArrowOnScrollAreaRegion[2];
+static MOUSE_REGION gSelectedUpDownArrowOnScrollAreaRegion[2];
 
 
 void GameInitBobbyRMailOrder()

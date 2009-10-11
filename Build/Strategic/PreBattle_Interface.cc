@@ -99,19 +99,19 @@ BOOLEAN gfDisplayPotentialRetreatPaths = FALSE;
 GROUP *gpBattleGroup = NULL;
 
 
-MOUSE_REGION PBInterfaceBlanket;
+static MOUSE_REGION PBInterfaceBlanket;
 BOOLEAN gfPreBattleInterfaceActive = FALSE;
-GUIButtonRef iPBButton[3];
+static GUIButtonRef iPBButton[3];
 static BUTTON_PICS* iPBButtonImage[3];
-static SGPVObject* uiInterfaceImages;
+static SGPVObject*  uiInterfaceImages;
 BOOLEAN gfRenderPBInterface;
-BOOLEAN	gfPBButtonsHidden;
+static BOOLEAN      gfPBButtonsHidden;
 BOOLEAN fDisableMapInterfaceDueToBattle = FALSE;
 
-BOOLEAN gfBlinkHeader;
+static BOOLEAN gfBlinkHeader;
 
-UINT32 guiNumInvolved;
-UINT32 guiNumUninvolved;
+static UINT32 guiNumInvolved;
+static UINT32 guiNumUninvolved;
 
 //SAVE START
 

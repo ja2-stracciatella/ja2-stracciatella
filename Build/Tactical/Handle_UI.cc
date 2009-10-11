@@ -270,15 +270,15 @@ static UIEventKind      guiOldEvent             = I_DO_NOTHING;
 UICursorID        guiCurrentUICursor = NO_UICURSOR;
 static UICursorID guiNewUICursor     = NORMAL_SNAPUICURSOR;
 UIEventKind             guiPendingOverrideEvent = I_DO_NOTHING;
-UINT16									gusSavedMouseX;
-UINT16									gusSavedMouseY;
+static UINT16      gusSavedMouseX;
+static UINT16      gusSavedMouseY;
 UIKEYBOARD_HOOK					gUIKeyboardHook			= NULL;
 BOOLEAN									gUIActionModeChangeDueToMouseOver = FALSE;
 
-BOOLEAN									gfDisplayTimerCursor = FALSE;
-static UICursorID guiTimerCursorID   = NO_UICURSOR;
-UINT32									guiTimerLastUpdate = 0;
-UINT32									guiTimerCursorDelay = 0;
+static BOOLEAN    gfDisplayTimerCursor = FALSE;
+static UICursorID guiTimerCursorID     = NO_UICURSOR;
+static UINT32     guiTimerLastUpdate   = 0;
+static UINT32     guiTimerCursorDelay  = 0;
 
 
 MOUSE_REGION	gDisableRegion;
@@ -300,7 +300,7 @@ BOOLEAN	gUIUseReverse					= FALSE;
 SGPRect	gRubberBandRect = { 0, 0, 0, 0 };
 BOOLEAN	gRubberBandActive = FALSE;
 BOOLEAN	gfIgnoreOnSelectedGuy = FALSE;
-BOOLEAN gfViewPortAdjustedForSouth = FALSE;
+static BOOLEAN gfViewPortAdjustedForSouth = FALSE;
 
 // FLAGS
 // These flags are set for a single frame execution and then are reset for the next iteration.
@@ -343,10 +343,10 @@ BOOLEAN		gfUIRefreshArrows								= FALSE;
 
 // Thse flags are not re-set after each frame
 BOOLEAN		gfPlotNewMovement								= FALSE;
-BOOLEAN		gfPlotNewMovementNOCOST					= FALSE;
+static BOOLEAN gfPlotNewMovementNOCOST = FALSE;
 UINT32		guiShowUPDownArrows							= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
-INT8			gbAdjustStanceDiff							= 0;
-INT8			gbClimbID												= 0;
+static INT8    gbAdjustStanceDiff      = 0;
+static INT8    gbClimbID               = 0;
 
 BOOLEAN        gfUIShowExitEast     = FALSE;
 BOOLEAN        gfUIShowExitWest     = FALSE;
@@ -354,7 +354,7 @@ BOOLEAN        gfUIShowExitNorth    = FALSE;
 BOOLEAN        gfUIShowExitSouth    = FALSE;
 static BOOLEAN gfUIShowExitExitGrid = FALSE;
 
-BOOLEAN		gfUINewStateForIntTile						= FALSE;
+static BOOLEAN gfUINewStateForIntTile = FALSE;
 
 BOOLEAN		gfUIForceReExamineCursorData		= FALSE;
 

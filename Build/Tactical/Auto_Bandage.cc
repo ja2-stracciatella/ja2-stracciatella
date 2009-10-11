@@ -40,10 +40,10 @@
 #define NUMBER_MERC_FACES_AUTOBANDAGE_BOX 4
 
 
-BOOLEAN	gfBeginningAutoBandage  = FALSE;
-UINT32  guiAutoBandageSeconds		= 0;
-BOOLEAN fAutoBandageComplete = FALSE;
-BOOLEAN fEndAutoBandage = FALSE;
+static BOOLEAN gfBeginningAutoBandage = FALSE;
+static UINT32  guiAutoBandageSeconds  = 0;
+static BOOLEAN fAutoBandageComplete   = FALSE;
+static BOOLEAN fEndAutoBandage        = FALSE;
 
 BOOLEAN gfAutoBandageFailed;
 
@@ -51,7 +51,7 @@ BOOLEAN gfAutoBandageFailed;
 static GUIButtonRef iEndAutoBandageButton[2];
 
 
-MOUSE_REGION gAutoBandageRegion;
+static MOUSE_REGION gAutoBandageRegion;
 
 
 // the lists of the doctor and patient
@@ -62,7 +62,7 @@ static const SOLDIERTYPE* gpatient_list[MAX_CHARACTER_COUNT];
 static SGPVObject* giAutoBandagesSoldierFaces[2 * MAX_CHARACTER_COUNT];
 
 // has the button for autobandage end been setup yet
-BOOLEAN fAutoEndBandageButtonCreated = FALSE;
+static BOOLEAN fAutoEndBandageButtonCreated = FALSE;
 
 
 static void BeginAutoBandageCallBack(MessageBoxReturnValue);

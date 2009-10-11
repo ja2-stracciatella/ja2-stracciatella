@@ -62,23 +62,22 @@
 
 static SGPVObject* guiBobbyRShipmentGrid;
 
-BOOLEAN		gfBobbyRShipmentsDirty = FALSE;
+static BOOLEAN gfBobbyRShipmentsDirty = FALSE;
 
-INT32			giBobbyRShipmentSelectedShipment = -1;
+static INT32 giBobbyRShipmentSelectedShipment = -1;
 
 //Back Button
 static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* guiBobbyRShipmentBackImage;
-GUIButtonRef guiBobbyRShipmetBack;
+static GUIButtonRef guiBobbyRShipmetBack;
 
 //Home Button
 static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* giBobbyRShipmentHomeImage;
-GUIButtonRef guiBobbyRShipmentHome;
+static GUIButtonRef guiBobbyRShipmentHome;
 
 
-
-MOUSE_REGION    gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS];
+static MOUSE_REGION gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS];
 
 
 static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)

@@ -60,25 +60,24 @@ enum
 	INS_INFO_CANCELATION,
 	INS_INFO_LAST_PAGE,
 };
-UINT8	gubCurrentInsInfoSubPage = 0;
+static UINT8 gubCurrentInsInfoSubPage = 0;
 
-BOOLEAN		InsuranceInfoSubPagesVisitedFlag[ INS_INFO_LAST_PAGE-1 ];
-
+static BOOLEAN InsuranceInfoSubPagesVisitedFlag[INS_INFO_LAST_PAGE - 1];
 
 
 static BUTTON_PICS* guiInsPrevButtonImage;
 static void BtnInsPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiInsPrevBackButton;
+static GUIButtonRef guiInsPrevBackButton;
 
 static BUTTON_PICS* guiInsNextButtonImage;
 static void BtnInsNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiInsNextBackButton;
+static GUIButtonRef guiInsNextBackButton;
 
 
 //link to the varios pages
-MOUSE_REGION    gSelectedInsuranceInfoLinkRegion;
+static MOUSE_REGION gSelectedInsuranceInfoLinkRegion;
 
-MOUSE_REGION    gSelectedInsuranceInfoHomeLinkRegion;
+static MOUSE_REGION gSelectedInsuranceInfoHomeLinkRegion;
 
 
 void EnterInitInsuranceInfo()

@@ -58,7 +58,7 @@
 
 
 // mouse levels
-MOUSE_REGION LevelMouseRegions[ 4 ];
+static MOUSE_REGION LevelMouseRegions[4];
 
 // graphics
 static SGPVObject* guiLEVELMARKER; // the white rectangle highlighting the current level on the map border

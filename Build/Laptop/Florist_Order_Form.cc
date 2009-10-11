@@ -188,14 +188,14 @@ static SGPVObject* guiFlowerOrderCheckBoxButtonImage;
 static SGPVObject* guiDropDownBorder;
 
 
-BOOLEAN		gfFLoristCheckBox0Down = FALSE;			// next day delviery
-BOOLEAN		gfFLoristCheckBox1Down = TRUE;			// when it gets there delivery
-BOOLEAN		gfFLoristCheckBox2Down = FALSE;
-BOOLEAN		gfFLoristCheckBox3Down = FALSE;
-BOOLEAN		gfFLoristCheckBox4Down = FALSE;
-BOOLEAN		gfFLoristCheckBox5Down = FALSE;
+static BOOLEAN gfFLoristCheckBox0Down = FALSE; // next day delviery
+static BOOLEAN gfFLoristCheckBox1Down = TRUE;  // when it gets there delivery
+static BOOLEAN gfFLoristCheckBox2Down = FALSE;
+static BOOLEAN gfFLoristCheckBox3Down = FALSE;
+static BOOLEAN gfFLoristCheckBox4Down = FALSE;
+static BOOLEAN gfFLoristCheckBox5Down = FALSE;
 
-UINT32		guiFlowerPrice;
+static UINT32 guiFlowerPrice;
 
 //drop down menu
 enum
@@ -206,51 +206,51 @@ enum
 	FLOWER_ORDER_DROP_DOWN_DISPLAY,
 };
 //the current mode of the drop down display
-UINT8	gubFlowerDestDropDownMode;
-UINT8	gubCurrentlySelectedFlowerLocation;
+static UINT8 gubFlowerDestDropDownMode;
+static UINT8 gubCurrentlySelectedFlowerLocation;
 
 
-wchar_t		gsSentimentTextField[ FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS ] = {0} ;
-wchar_t		gsNameTextField[ FLOWER_ORDER_NAME_FIELD_NUM_CHARS ] = {0};
+static wchar_t gsSentimentTextField[FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS];
+static wchar_t gsNameTextField[FLOWER_ORDER_NAME_FIELD_NUM_CHARS];
 
 
 //buttons
 static BUTTON_PICS* guiFlowerOrderButtonImage;
 
-UINT8		gubFlowerOrder_AdditioanalServicePrices[] = {10, 20, 10, 10};
+static UINT8 const gubFlowerOrder_AdditioanalServicePrices[] = { 10, 20, 10, 10 };
 
 static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiFlowerOrderBackButton;
+static GUIButtonRef guiFlowerOrderBackButton;
 
 static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiFlowerOrderSendButton;
+static GUIButtonRef guiFlowerOrderSendButton;
 
 static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiFlowerOrderClearButton;
+static GUIButtonRef guiFlowerOrderClearButton;
 
 static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiFlowerOrderGalleryButton;
+static GUIButtonRef guiFlowerOrderGalleryButton;
 
 
 //Clicking on OrderCheckBox
-MOUSE_REGION    gSelectedFloristCheckBoxRegion[ 6 ];
+static MOUSE_REGION gSelectedFloristCheckBoxRegion[6];
 
 //link to the card gallery
-MOUSE_REGION    gSelectedFloristCardGalleryLinkRegion;
+static MOUSE_REGION gSelectedFloristCardGalleryLinkRegion;
 
 //link to the flower gallery by clicking on the flower
-MOUSE_REGION    gSelectedFloristGalleryLinkRegion;
+static MOUSE_REGION gSelectedFloristGalleryLinkRegion;
 
 
 //the drop down for the city
-MOUSE_REGION    gSelectedFloristDropDownRegion;
+static MOUSE_REGION gSelectedFloristDropDownRegion;
 
 //to disable the drop down window
-MOUSE_REGION    gSelectedFloristDisableDropDownRegion;
+static MOUSE_REGION gSelectedFloristDisableDropDownRegion;
 
 
 //mouse region for the drop down city location area
-MOUSE_REGION    gSelectedFlowerDropDownRegion[ FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS ];
+static MOUSE_REGION gSelectedFlowerDropDownRegion[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS];
 
 
 static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)

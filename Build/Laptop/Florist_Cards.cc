@@ -44,11 +44,11 @@ static SGPVObject* guiCardBackground;
 INT8			gbCurrentlySelectedCard;
 
 //link to the card gallery
-MOUSE_REGION    gSelectedFloristCardsRegion[9];
+static MOUSE_REGION gSelectedFloristCardsRegion[9];
 
 
 static BUTTON_PICS* guiFlowerCardsButtonImage;
-GUIButtonRef guiFlowerCardsBackButton;
+static GUIButtonRef guiFlowerCardsBackButton;
 
 
 static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON* btn, INT32 reason);

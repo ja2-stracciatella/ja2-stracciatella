@@ -123,7 +123,7 @@ struct CONTITION_FOR_MERC_AVAILABLE
 	UINT8		ubMercArrayID;
 };
 
-CONTITION_FOR_MERC_AVAILABLE gConditionsForMercAvailability[ NUM_MERC_ARRIVALS ] =
+static CONTITION_FOR_MERC_AVAILABLE const gConditionsForMercAvailability[NUM_MERC_ARRIVALS] =
 {
 	{  5000,  8,  6 }, // BUBBA
 	{ 10000, 15,  7 }, // Larry
@@ -166,12 +166,11 @@ UINT8			gubCurMercIndex;
 
 static MercPopUpBox* g_merc_popup_box;
 
-UINT16		gusPositionOfSpecksDialogBox_X;
-wchar_t		gsSpeckDialogueTextPopUp[ 900 ];
-UINT16		gusSpeckDialogueX;
-UINT16		gusSpeckDialogueActualWidth;
+static wchar_t gsSpeckDialogueTextPopUp[900];
+static UINT16  gusSpeckDialogueX;
+static UINT16  gusSpeckDialogueActualWidth;
 
-BOOLEAN		gfInMercSite=FALSE;		//this flag is set when inide of the merc site
+static BOOLEAN gfInMercSite = FALSE; // this flag is set when inide of the merc site
 
 //Merc Video Conferencing Mode
 enum
@@ -182,24 +181,24 @@ enum
 	MERC_VIDEO_EXIT_VIDEO_MODE,
 };
 
-UINT8			gubCurrentMercVideoMode;
-BOOLEAN		gfMercVideoIsBeingDisplayed;
+static UINT8     gubCurrentMercVideoMode;
+static BOOLEAN   gfMercVideoIsBeingDisplayed;
 static FACETYPE* g_video_speck_face;
 UINT16		gusMercVideoSpeckSpeech;
 
-BOOLEAN		gfDisplaySpeckTextBox=FALSE;
+static BOOLEAN gfDisplaySpeckTextBox = FALSE;
 
-BOOLEAN		gfJustEnteredMercSite=FALSE;
+static BOOLEAN gfJustEnteredMercSite = FALSE;
 UINT8			gubArrivedFromMercSubSite=MERC_CAME_FROM_OTHER_PAGE;		//the merc is arriving from one of the merc sub pages
-BOOLEAN		gfDoneIntroSpeech=TRUE;
+static BOOLEAN gfDoneIntroSpeech     = TRUE;
 
-BOOLEAN		gfMercSiteScreenIsReDrawn=FALSE;
+static BOOLEAN gfMercSiteScreenIsReDrawn = FALSE;
 
 BOOLEAN		gfJustHiredAMercMerc=FALSE;
 
-BOOLEAN		gfRedrawMercSite=FALSE;
+static BOOLEAN gfRedrawMercSite = FALSE;
 
-BOOLEAN		gfFirstTimeIntoMERCSiteSinceEnteringLaptop=FALSE;
+static BOOLEAN gfFirstTimeIntoMERCSiteSinceEnteringLaptop = FALSE;
 
 //used for the random quotes to try to balance the ones that are said
 struct NUMBER_TIMES_QUOTE_SAID
@@ -208,7 +207,7 @@ struct NUMBER_TIMES_QUOTE_SAID
 	UINT32	uiNumberOfTimesQuoteSaid;
 };
 
-NUMBER_TIMES_QUOTE_SAID			gNumberOfTimesQuoteSaid[ MERC_NUMBER_OF_RANDOM_QUOTES ] =
+static NUMBER_TIMES_QUOTE_SAID gNumberOfTimesQuoteSaid[MERC_NUMBER_OF_RANDOM_QUOTES] =
 {
 		{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BIFF, 0 },
 		{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_HAYWIRE, 0 },
@@ -235,19 +234,19 @@ NUMBER_TIMES_QUOTE_SAID			gNumberOfTimesQuoteSaid[ MERC_NUMBER_OF_RANDOM_QUOTES 
 // The Account Box button
 static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 static BUTTON_PICS* guiAccountBoxButtonImage;
-GUIButtonRef guiAccountBoxButton;
+static GUIButtonRef guiAccountBoxButton;
 
 //File Box
 static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiFileBoxButton;
+static GUIButtonRef guiFileBoxButton;
 
 // The 'X' to close the video conf window button
 static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason);
-GUIButtonRef guiXToCloseMercVideoButton;
+static GUIButtonRef guiXToCloseMercVideoButton;
 
 
 //Mouse region for the subtitles region when the merc is talking
-MOUSE_REGION		gMercSiteSubTitleMouseRegion;
+static MOUSE_REGION gMercSiteSubTitleMouseRegion;
 
 
 void GameInitMercs()

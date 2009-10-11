@@ -97,10 +97,10 @@ static SGPVObject* guiRightColumn;
 
 
 //Clicking on Funeral link
-MOUSE_REGION    gSelectedFuneralLinkRegion[ FUNERAL_NUMBER_OF_LINKS ];
+static MOUSE_REGION gSelectedFuneralLinkRegion[FUNERAL_NUMBER_OF_LINKS];
 
 //Clicking on rip sign to make it disappear
-MOUSE_REGION    gSelectedRipSignRegion;
+static MOUSE_REGION gSelectedRipSignRegion;
 
 
 static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);

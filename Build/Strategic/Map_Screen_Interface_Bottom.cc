@@ -93,7 +93,7 @@ enum{
 
 BOOLEAN fMapScreenBottomDirty = TRUE;
 
-BOOLEAN fMapBottomDirtied = FALSE;
+static BOOLEAN fMapBottomDirtied = FALSE;
 
 //Used to flag the transition animation from mapscreen to laptop.
 BOOLEAN gfStartMapScreenToLaptopTransition = FALSE;
@@ -112,7 +112,7 @@ static BOOLEAN gfOneFramePauseOnExit = FALSE;
 // exit states
 static ExitToWhere gbExitingMapScreenToWhere = MAP_EXIT_TO_INVALID;
 
-UINT8 gubFirstMapscreenMessageIndex = 0;
+static UINT8 gubFirstMapscreenMessageIndex = 0;
 
 UINT32 guiCompressionStringBaseTime = 0;
 
@@ -126,8 +126,8 @@ static GUIButtonRef guiMapBottomTimeButtons[2];
 static GUIButtonRef guiMapMessageScrollButtons[2];
 
 // mouse regions
-MOUSE_REGION gMapMessageScrollBarRegion;
-MOUSE_REGION gMapPauseRegion;
+static MOUSE_REGION gMapMessageScrollBarRegion;
+static MOUSE_REGION gMapPauseRegion;
 
 static MOUSE_REGION gTimeCompressionMask[3];
 

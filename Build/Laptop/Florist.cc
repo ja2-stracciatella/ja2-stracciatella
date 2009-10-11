@@ -63,7 +63,7 @@ static SGPVObject* guiLargeTitleSymbol;
 static SGPVObject* guiSmallTitleSymbol;
 
 
-BOOLEAN		gfHomePageActive=FALSE;		//Specifies whether or not the home page or the sub pages are active
+static BOOLEAN gfHomePageActive = FALSE; // Specifies whether or not the home page or the sub pages are active
 
 //Buttons
 
@@ -74,7 +74,7 @@ static GUIButtonRef guiGalleryButton;
 
 
 //link to the flower home page by clicking on the flower title
-MOUSE_REGION    gSelectedFloristTitleHomeLinkRegion;
+static MOUSE_REGION gSelectedFloristTitleHomeLinkRegion;
 
 
 void EnterFlorist()

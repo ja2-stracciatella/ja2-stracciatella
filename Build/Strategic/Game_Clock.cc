@@ -37,9 +37,9 @@ extern	BOOLEAN			gfFadeOut;
 
 
 // is the clock pause region created currently?
-BOOLEAN fClockMouseRegionCreated = FALSE;
+static BOOLEAN fClockMouseRegionCreated = FALSE;
 
-BOOLEAN fTimeCompressHasOccured = FALSE;
+static BOOLEAN fTimeCompressHasOccured = FALSE;
 
 //This value represents the time that the sector was loaded.  If you are in sector A9, and leave
 //the game clock at that moment will get saved into the temp file associated with it.  The next time you
@@ -50,8 +50,8 @@ UINT32 guiTimeCurrentSectorWasLastLoaded = 0;
 BOOLEAN gfJustFinishedAPause = FALSE;
 
 // clock mouse region
-MOUSE_REGION gClockMouseRegion;
-MOUSE_REGION gClockScreenMaskMouseRegion;
+static MOUSE_REGION gClockMouseRegion;
+static MOUSE_REGION gClockScreenMaskMouseRegion;
 
 
 #define SECONDS_PER_COMPRESSION 1 // 1/2 minute passes every 1 second of real time
@@ -66,33 +66,33 @@ MOUSE_REGION gClockScreenMaskMouseRegion;
 //These contain all of the information about the game time, rate of time, etc.
 //All of these get saved and loaded.
 INT32				giTimeCompressMode			=	TIME_COMPRESS_X0;
-UINT8				gubClockResolution			= 1;
+static UINT8         gubClockResolution          = 1;
 BOOLEAN			gfGamePaused						= TRUE;
 BOOLEAN			gfTimeInterrupt					= FALSE;
-static BOOLEAN gfTimeInterruptPause = FALSE;
-BOOLEAN			fSuperCompression				= FALSE;
+static BOOLEAN       gfTimeInterruptPause        = FALSE;
+static BOOLEAN       fSuperCompression           = FALSE;
 UINT32			guiGameClock						= STARTING_TIME;
-UINT32			guiPreviousGameClock = 0;		// used only for error-checking purposes
-UINT32			guiGameSecondsPerRealSecond;
-UINT32			guiTimesThisSecondProcessed = 0;
+static UINT32        guiPreviousGameClock        = 0; // used only for error-checking purposes
+static UINT32        guiGameSecondsPerRealSecond;
+static UINT32        guiTimesThisSecondProcessed = 0;
 static MercPopUpBox* g_paused_popup_box;
 UINT32			guiDay;
 UINT32			guiHour;
 UINT32			guiMin;
 wchar_t			gswzWorldTimeStr[20];
 INT32				giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ] = { 0, 1, 5 * 60, 30 * 60, 60 * 60 };
-UINT16      usPausedActualWidth;
-UINT16			usPausedActualHeight;
+static UINT16        usPausedActualWidth;
+static UINT16        usPausedActualHeight;
 UINT32			guiTimeOfLastEventQuery = 0;
 BOOLEAN			gfLockPauseState = FALSE;
 BOOLEAN			gfPauseDueToPlayerGamePause = FALSE;
 BOOLEAN			gfResetAllPlayerKnowsEnemiesFlags = FALSE;
-BOOLEAN			gfTimeCompressionOn = FALSE;
+static BOOLEAN       gfTimeCompressionOn = FALSE;
 UINT32			guiLockPauseStateLastReasonId = 0;
 //***When adding new saved time variables, make sure you remove the appropriate amount from the paddingbytes and
 //   more IMPORTANTLY, add appropriate code in Save/LoadGameClock()!
 #define			TIME_PADDINGBYTES		20
-UINT8				gubUnusedTimePadding[TIME_PADDINGBYTES]; // XXX HACK000B
+static UINT8         gubUnusedTimePadding[TIME_PADDINGBYTES]; // XXX HACK000B
 
 
 

@@ -37,7 +37,7 @@ static SGPVObject* guiInsCmntBulletImage;
 
 
 //link to the varios pages
-MOUSE_REGION    gSelectedInsuranceCommentLinkRegion[3];
+static MOUSE_REGION gSelectedInsuranceCommentLinkRegion[3];
 
 
 static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
