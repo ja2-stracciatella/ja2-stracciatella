@@ -1277,7 +1277,7 @@ void HandleFlashForHighLightedItem( void )
 }
 
 
-static void ResetMapSectorInventoryPoolHighLights(void);
+static void ResetMapSectorInventoryPoolHighLights();
 
 
 static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
@@ -1372,18 +1372,9 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 }
 
 
-static void ResetMapSectorInventoryPoolHighLights(void)
-{
-	INT32 iCounter = 0;
-
-	// now reset the highlight list for the map sector inventory
-	for ( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
-	{
-		if ( fMapInventoryItemCompatable[ iCounter ] )
-		{
-			fMapInventoryItemCompatable[ iCounter ] = FALSE;
-		}
-	}
+static void ResetMapSectorInventoryPoolHighLights()
+{ // Reset the highlight list for the map sector inventory.
+	FOR_EACH(BOOLEAN, i, fMapInventoryItemCompatable) *i = FALSE;
 }
 
 
