@@ -496,15 +496,9 @@ static void HandleBestSightingPositionInTurnbased(void)
 }
 
 
-static void InitSightArrays(void)
+static void InitSightArrays()
 {
-	UINT32		uiLoop;
-
-	for ( uiLoop = 0; uiLoop < BEST_SIGHTING_ARRAY_SIZE; uiLoop++ )
-	{
-		gBestToMakeSighting[uiLoop] = NULL;
-	}
-	//gfHumanSawSomeoneInRealtime = FALSE;
+	FOR_EACH(SOLDIERTYPE*, i, gBestToMakeSighting) *i = 0;
 }
 
 
