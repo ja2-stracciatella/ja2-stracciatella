@@ -73,7 +73,7 @@ void ExitAIM(void);
 void HandleAIM(void);
 void RenderAIM(void);
 
-void ExitAimMenuBar(void);
+void ExitAimMenuBar();
 void InitAimMenuBar(void);
 
 void RemoveAimDefaults(void);

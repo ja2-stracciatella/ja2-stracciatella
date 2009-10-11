@@ -496,16 +496,10 @@ void InitAimMenuBar(void)
 }
 
 
-void ExitAimMenuBar(void)
+void ExitAimMenuBar()
 {
-	UINT8	i;
-
-	UnloadButtonImage( guiBottomButtonImage );
-
-	for(i=0; i<BOTTOM_BUTTON_AMOUNT; i++)
-	{
-		RemoveButton( guiBottomButtons[i] );
-	}
+	FOR_EACH(GUIButtonRef, i, guiBottomButtons) RemoveButton(*i);
+	UnloadButtonImage(guiBottomButtonImage);
 }
 
 
