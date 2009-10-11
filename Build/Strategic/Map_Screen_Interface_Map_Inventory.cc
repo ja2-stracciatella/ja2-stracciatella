@@ -273,7 +273,7 @@ static void CreateMapInventoryPoolDoneButton(void);
 static void CreateMapInventoryPoolSlots(void);
 static void DestroyInventoryPoolDoneButton(void);
 static void DestroyMapInventoryButtons(void);
-static void DestroyMapInventoryPoolSlots(void);
+static void DestroyMapInventoryPoolSlots();
 static void DestroyStash(void);
 static void HandleMapSectorInventory(void);
 static void SaveSeenAndUnseenItems(void);
@@ -502,18 +502,10 @@ static void CreateMapInventoryPoolSlots(void)
 }
 
 
-static void DestroyMapInventoryPoolSlots(void)
+static void DestroyMapInventoryPoolSlots()
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
-	{
-		MSYS_RemoveRegion(  &MapInventoryPoolSlots[ iCounter ] );
-	}
-
-	// remove map inventory mask
-	MSYS_RemoveRegion( &MapInventoryPoolMask );
-
+	FOR_EACH(MOUSE_REGION, i, MapInventoryPoolSlots) MSYS_RemoveRegion(&*i);
+	MSYS_RemoveRegion(&MapInventoryPoolMask);
 }
 
 
