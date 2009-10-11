@@ -3157,21 +3157,14 @@ static void ResetSoldierUpdateBox(void)
 }
 
 
-INT32 GetNumberOfMercsInUpdateList(void)
+INT32 GetNumberOfMercsInUpdateList()
 {
-	INT32 iCounter = 0, iCount = 0;
-
-	// run through the non-empty slots
-	for( iCounter = 0; iCounter < SIZE_OF_UPDATE_BOX; iCounter++ )
+	INT32 n = 0;
+	FOR_EACH(SOLDIERTYPE* const, i, pUpdateSoldierBox)
 	{
-		// valid guy here
-		if( pUpdateSoldierBox[ iCounter ] != NULL )
-		{
-			iCount++;
-		}
+		if (*i) ++n;
 	}
-
-	return( iCount );
+	return n;
 }
 
 

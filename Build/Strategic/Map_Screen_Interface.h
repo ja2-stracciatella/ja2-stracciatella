@@ -478,7 +478,7 @@ void EndUpdateBox( BOOLEAN fContinueTimeCompression );
 
 BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE*);
 
-INT32 GetNumberOfMercsInUpdateList(void);
+INT32 GetNumberOfMercsInUpdateList();
 
 extern MOUSE_REGION gMapStatusBarsRegion;
 
