@@ -69,12 +69,10 @@ void EnterInsuranceComments()
 
 void ExitInsuranceComments()
 {
-	UINT8 i;
 	RemoveInsuranceDefaults();
 	DeleteVideoObject(guiInsCmntBulletImage);
 
-	for(i=0; i<3; i++)
-		MSYS_RemoveRegion( &gSelectedInsuranceCommentLinkRegion[i]);
+	FOR_EACH(MOUSE_REGION, i, gSelectedInsuranceCommentLinkRegion) MSYS_RemoveRegion(&*i);
 }
 
 
