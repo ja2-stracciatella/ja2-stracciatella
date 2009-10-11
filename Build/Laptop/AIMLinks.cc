@@ -85,20 +85,17 @@ void EnterAimLinks()
 
 void ExitAimLinks()
 {
-	INT16						i;
-
 	RemoveAimDefaults();
 
 	DeleteVideoObject(guiBobbyLink);
 	DeleteVideoObject(guiFuneralLink);
 	DeleteVideoObject(guiInsuranceLink);
 
-	for(i=0; i<AIM_LINK_NUM_LINKS; i++)
-		MSYS_RemoveRegion( &gSelectedLinkRegion[i]);
+	FOR_EACH(MOUSE_REGION, i, gSelectedLinkRegion) MSYS_RemoveRegion(&*i);
 
 	ExitAimMenuBar();
-
 }
+
 
 void HandleAimLinks()
 {
