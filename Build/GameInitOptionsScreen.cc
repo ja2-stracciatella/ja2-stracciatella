@@ -181,7 +181,7 @@ static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 static void EnterGIOScreen();
-static void ExitGIOScreen(void);
+static void ExitGIOScreen();
 static void HandleGIOScreen(void);
 static void RenderGIOScreen(void);
 static void GetGIOScreenUserInput(void);
@@ -354,13 +354,12 @@ static void EnterGIOScreen()
 }
 
 
-static void ExitGIOScreen(void)
+static void ExitGIOScreen()
 {
-	UINT16	cnt;
-
 	if (!gfGIOButtonsAllocated) return;
+	gfGIOButtonsAllocated = FALSE;
 
-	//Delete the main options screen background
+	// Delete the main options screen background.
 	DeleteVideoObject(guiGIOMainBackGroundImage);
 
 	RemoveButton(guiGIOCancelButton);
@@ -369,35 +368,27 @@ static void ExitGIOScreen(void)
 	UnloadButtonImage(giGIOCancelBtnImage);
 	UnloadButtonImage(giGIODoneBtnImage);
 
-	// Check box to toggle Difficulty settings
-	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
-		RemoveButton(guiDifficultySettingsToggles[cnt]);
+	// Check box to toggle difficulty settings
+	FOR_EACH(GUIButtonRef, i, guiDifficultySettingsToggles) RemoveButton(*i);
 
-	// Check box to toggle Game settings (realistic, sci fi)
-	for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
-		RemoveButton(guiGameStyleToggles[cnt]);
+	// Check box to toggle game settings (realistic, sci fi)
+	FOR_EACH(GUIButtonRef, i, guiGameStyleToggles) RemoveButton(*i);
 
-	// Check box to toggle Gun options
-	for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
-		RemoveButton(guiGunOptionToggles[cnt]);
+	// Check box to toggle gun options
+	FOR_EACH(GUIButtonRef, i, guiGunOptionToggles) RemoveButton(*i);
 
 #if 0 // JA2Gold: no more timed turns setting
-	// Remove the timed turns toggle
-	for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
-		RemoveButton(guiTimedTurnToggles[cnt]);
+	// Remove the timed turns toggle.
+	FOR_EACH(GUIButtonRef, i, guiTimedTurnToggles) RemoveButton(*i);
 #endif
 
-	// JA2Gold: remove iron man buttons
-	for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
-		RemoveButton(guiGameSaveToggles[cnt]);
+	// JA2Gold: Remove iron man buttons.
+	FOR_EACH(GUIButtonRef, i, guiGameSaveToggles) RemoveButton(*i);
 
-	gfGIOButtonsAllocated = FALSE;
+	// If we are starting the game stop playing the music.
+	if (gubGameOptionScreenHandler == GIO_EXIT) SetMusicMode(MUSIC_NONE);
 
-	// If we are starting the game stop playing the music
-	if (gubGameOptionScreenHandler == GIO_EXIT)
-		SetMusicMode(MUSIC_NONE);
-
-	gfGIOScreenExit = FALSE;
+	gfGIOScreenExit  = FALSE;
 	gfGIOScreenEntry = TRUE;
 }
 
