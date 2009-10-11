@@ -45,8 +45,9 @@
 #include "Debug.h"
 
 
-#define NUM_CIVQUOTE_SECTORS 20
-#define MINERS_CIV_QUOTE_INDEX  16
+#define NUM_NPC_QUOTE_RECORDS  50
+#define NUM_CIVQUOTE_SECTORS   20
+#define MINERS_CIV_QUOTE_INDEX 16
 
 static const INT16 gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
 {
@@ -73,31 +74,106 @@ static const INT16 gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
 	{  0, 0         },
 };
 
-#define NO_FACT									(MAX_FACTS - 1)
-#define NO_QUEST								255
+#define NO_FACT                 (MAX_FACTS - 1)
+#define NO_QUEST                255
 #define QUEST_NOT_STARTED_NUM   100
-#define QUEST_DONE_NUM					200
-#define NO_QUOTE								255
-#define IRRELEVANT							255
-#define NO_MOVE									65535
+#define QUEST_DONE_NUM          200
+#define NO_QUOTE                255
+#define IRRELEVANT              255
+#define MUST_BE_NEW_DAY         254
+#define NO_MOVE                 65535
+#define INITIATING_FACTOR       30
 
-NPCQuoteInfo *	gpNPCQuoteInfoArray[NUM_PROFILES] = { NULL };
-NPCQuoteInfo *	gpBackupNPCQuoteInfoArray[NUM_PROFILES] = { NULL };
-NPCQuoteInfo *	gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS] = { NULL };
+#define TURN_FLAG_ON(a, b)  ((a) |= (b))
+#define TURN_FLAG_OFF(a, b) ((a) &= ~(b))
+#define CHECK_FLAG(a, b)    ((a) & (b))
 
-#ifdef JA2TESTVERSION
-	// Warning: cheap hack approaching
-	BOOLEAN					gfTriedToLoadQuoteInfoArray[NUM_PROFILES] = { FALSE };
+#define QUOTE_FLAG_SAID               0x0001
+#define QUOTE_FLAG_ERASE_ONCE_SAID    0x0002
+#define QUOTE_FLAG_SAY_ONCE_PER_CONVO 0x0004
+
+#define TURN_UI_OFF         65000
+#define TURN_UI_ON          65001
+#define SPECIAL_TURN_UI_OFF 65002
+#define SPECIAL_TURN_UI_ON  65003
+
+#define LARGE_AMOUNT_MONEY 1000
+
+#define ACCEPT_ANY_ITEM 1000
+#define ANY_RIFLE       1001
+
+#define NUM_REAL_APPROACHES APPROACH_RECRUIT
+
+
+enum StandardQuoteIDs
+{
+	QUOTE_INTRO = 0,
+	QUOTE_SUBS_INTRO,
+	QUOTE_FRIENDLY_DEFAULT1,
+	QUOTE_FRIENDLY_DEFAULT2,
+	QUOTE_GIVEITEM_NO,
+	QUOTE_DIRECT_DEFAULT,
+	QUOTE_THREATEN_DEFAULT,
+	QUOTE_RECRUIT_NO,
+	QUOTE_BYE,
+	QUOTE_GETLOST
+};
+
+
+struct NPCQuoteInfo
+{
+#if defined RUSSIAN
+  UINT8   ubIdentifier[4];
 #endif
 
-INT8	gbFirstApproachFlags[4] = { 0x01, 0x02, 0x04, 0x08 };
+  UINT16  fFlags;
+
+  // conditions
+  union
+  {
+    INT16 sRequiredItem;      // item NPC must have to say quote
+    INT16 sRequiredGridno;    // location for NPC req'd to say quote
+  };
+  UINT16  usFactMustBeTrue;   // ...before saying quote
+  UINT16  usFactMustBeFalse;  // ...before saying quote
+  UINT8   ubQuest;            // quest must be current to say quote
+  UINT8   ubFirstDay;         // first day quote can be said
+  UINT8   ubLastDay;          // last day quote can be said
+  UINT8   ubApproachRequired; // must use this approach to generate quote
+  UINT8   ubOpinionRequired;  // opinion needed for this quote
+
+  // quote to say (if any)
+  UINT8   ubQuoteNum;         // this is the quote to say
+  UINT8   ubNumQuotes;        // total # of quotes to say
+
+  // actions
+  UINT8   ubStartQuest;
+  UINT8   ubEndQuest;
+  UINT8   ubTriggerNPC;
+  UINT8   ubTriggerNPCRec;
+  UINT16  usSetFactTrue;
+  UINT16  usGiftItem;         // item NPC gives to merc after saying quote
+  UINT16  usGoToGridno;
+  INT16   sActionData;        // special action value
+};
+
+static NPCQuoteInfo* gpNPCQuoteInfoArray[NUM_PROFILES];
+static NPCQuoteInfo* gpBackupNPCQuoteInfoArray[NUM_PROFILES];
+static NPCQuoteInfo* gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS];
+
+#ifdef JA2TESTVERSION
+// Warning: cheap hack approaching
+static BOOLEAN gfTriedToLoadQuoteInfoArray[NUM_PROFILES];
+#endif
+
+INT8 const gbFirstApproachFlags[] = { 0x01, 0x02, 0x04, 0x08 };
 
 
-UINT8	gubAlternateNPCFileNumsForQueenMeanwhiles[] = { 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176 };
-UINT8	gubAlternateNPCFileNumsForElliotMeanwhiles[] = { 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196 };
+static UINT8 const gubAlternateNPCFileNumsForQueenMeanwhiles[]  = { 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176 };
+static UINT8 const gubAlternateNPCFileNumsForElliotMeanwhiles[] = { 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196 };
 
 #ifdef JA2BETAVERSION
-BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
+static BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
 #endif
 
 

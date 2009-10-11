@@ -5,71 +5,7 @@
 #include "JA2Types.h"
 
 
-#define NUM_NPC_QUOTE_RECORDS 50
-
-//#define IRRELEVANT 255
-//#define NO_QUEST 255
-//#define NO_FACT 255
-//#define NO_QUOTE 255
-#define MUST_BE_NEW_DAY 254
-#define INITIATING_FACTOR 30
-
-#define TURN_FLAG_ON( a, b ) (a |= b)
-#define TURN_FLAG_OFF( a, b ) (a &= ~(b))
-#define CHECK_FLAG( a, b) (a & b)
-
-#define QUOTE_FLAG_SAID								0x0001
-#define QUOTE_FLAG_ERASE_ONCE_SAID		0x0002
-#define QUOTE_FLAG_SAY_ONCE_PER_CONVO	0x0004
-
 #define	NPC_TALK_RADIUS						4
-
-#define TURN_UI_OFF 65000
-#define TURN_UI_ON  65001
-#define SPECIAL_TURN_UI_OFF 65002
-#define SPECIAL_TURN_UI_ON 65003
-
-#define LARGE_AMOUNT_MONEY 1000
-
-#define ACCEPT_ANY_ITEM 1000
-#define ANY_RIFLE 1001
-
-struct NPCQuoteInfo
-{
-#if defined RUSSIAN
-	UINT8		ubIdentifier[4];
-#endif
-
-	UINT16	fFlags;
-
-	// conditions
-	union
-	{
-		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		sRequiredGridno;		// location for NPC req'd to say quote
-	};
-	UINT16	usFactMustBeTrue;		// ...before saying quote
-	UINT16 	usFactMustBeFalse;	// ...before saying quote
-	UINT8		ubQuest;						// quest must be current to say quote
-	UINT8		ubFirstDay;					// first day quote can be said
-	UINT8		ubLastDay;					// last day quote can be said
-	UINT8		ubApproachRequired;	// must use this approach to generate quote
-	UINT8		ubOpinionRequired;	// opinion needed for this quote
-
-	// quote to say (if any)
-	UINT8		ubQuoteNum;					// this is the quote to say
-	UINT8		ubNumQuotes;				// total # of quotes to say
-
-	// actions
-	UINT8		ubStartQuest;
-	UINT8		ubEndQuest;
-	UINT8		ubTriggerNPC;
-	UINT8		ubTriggerNPCRec;
-	UINT16	usSetFactTrue;
-	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
-	UINT16	usGoToGridno;
-	INT16		sActionData;		// special action value
-};
 
 
 enum Approach
@@ -113,23 +49,7 @@ enum Approach
 	APPROACH_FRIENDLY_DIRECT_OR_RECRUIT,	// 30
 };
 
-enum StandardQuoteIDs
-{
-	QUOTE_INTRO = 0,
-	QUOTE_SUBS_INTRO,
-	QUOTE_FRIENDLY_DEFAULT1,
-	QUOTE_FRIENDLY_DEFAULT2,
-	QUOTE_GIVEITEM_NO,
-	QUOTE_DIRECT_DEFAULT,
-	QUOTE_THREATEN_DEFAULT,
-	QUOTE_RECRUIT_NO,
-	QUOTE_BYE,
-	QUOTE_GETLOST
-};
-
-#define NUM_REAL_APPROACHES APPROACH_RECRUIT
-
-extern INT8	gbFirstApproachFlags[4];
+extern INT8 const gbFirstApproachFlags[4];
 
 void ShutdownNPCQuotes();
 
@@ -200,8 +120,6 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s);
 BOOLEAN NPCHasUnusedHostileRecord(UINT8 ubNPC, Approach);
 
 void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void );
-
-extern NPCQuoteInfo* gpNPCQuoteInfoArray[];
 
 INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* pNPC);
 
