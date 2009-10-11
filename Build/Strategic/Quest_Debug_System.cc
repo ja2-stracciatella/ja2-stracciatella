@@ -2970,7 +2970,7 @@ static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 }
 
 
-static void EnableFactMouseRegions(void);
+static void EnableFactMouseRegions();
 
 
 static void EndMercTalking(void)
@@ -3192,14 +3192,9 @@ static void DisableFactMouseRegions()
 }
 
 
-static void EnableFactMouseRegions(void)
+static void EnableFactMouseRegions()
 {
-	UINT	i;
-
-	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
-	{
-		gFactListRegion[i].Enable();
-	}
+	FOR_EACH(MOUSE_REGION, i, gFactListRegion) i->Enable();
 }
 
 
