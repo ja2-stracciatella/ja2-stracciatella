@@ -103,8 +103,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
 //flag.
 void ClearAnySectorsFlashingNumberOfEnemies(void);
 
-void InitMapSecrets( void );
-
+void InitMapSecrets();
 
 
 enum {

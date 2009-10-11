@@ -4916,17 +4916,11 @@ static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY
 }
 
 
-void InitMapSecrets( void )
+void InitMapSecrets()
 {
-	UINT8 ubSamIndex;
-
 	fFoundTixa = FALSE;
 	fFoundOrta = FALSE;
-
-	for( ubSamIndex = 0; ubSamIndex < NUMBER_OF_SAMS; ubSamIndex++ )
-	{
-		fSamSiteFound[ ubSamIndex ] = FALSE;
-	}
+	FOR_EACH(BOOLEAN, i, fSamSiteFound) *i = FALSE;
 }
 
 
