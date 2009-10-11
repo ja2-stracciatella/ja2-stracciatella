@@ -320,45 +320,39 @@ static void BtnBobbyRNextPageCallback(GUI_BUTTON*, INT32 reason);
 static void BtnBobbyRPreviousPageCallback(GUI_BUTTON*, INT32 reason);
 
 
-void InitBobbyMenuBar(void)
+void InitBobbyMenuBar()
 {
-	UINT8	i;
-	UINT16	usPosX;
-	UINT8		bCurMode;
-
 	// Previous button
 	guiBobbyRPreviousPageImage = LoadButtonImage(LAPTOPDIR "/previousbutton.sti", 0, 1);
-	guiBobbyRPreviousPage = MakeButton(guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BtnBobbyRPreviousPageCallback);
+	guiBobbyRPreviousPage      = MakeButton(guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BtnBobbyRPreviousPageCallback);
 	guiBobbyRPreviousPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
-
-
-	guiBobbyRPageMenuImage = LoadButtonImage(LAPTOPDIR "/cataloguebutton1.sti", 0, 1);
 
 	// Next button
 	guiBobbyRNextPageImage = LoadButtonImage(LAPTOPDIR "/nextbutton.sti", 0, 1);
-	guiBobbyRNextPage = MakeButton(guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BtnBobbyRNextPageCallback);
+	guiBobbyRNextPage      = MakeButton(guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BtnBobbyRNextPageCallback);
 	guiBobbyRNextPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
+	BUTTON_PICS* const gfx = LoadButtonImage(LAPTOPDIR "/cataloguebutton1.sti", 0, 1);
+	guiBobbyRPageMenuImage = gfx;
 
-	bCurMode = 0;
-	usPosX = BOBBYR_CATALOGUE_BUTTON_START_X;
-	for(i=0; i<NUM_CATALOGUE_BUTTONS; i++)
-	{
-		// Catalogue Buttons button
-		guiBobbyRPageMenu[i] = MakeButton(guiBobbyRPageMenuImage, BobbyRText[BOBBYR_GUNS_GUNS + i], usPosX, BOBBYR_CATALOGUE_BUTTON_Y, BtnBobbyRPageMenuCallback);
-		guiBobbyRPageMenu[i]->SetUserData(ubCatalogueButtonValues[bCurMode]);
-
-		usPosX += BOBBYR_CATALOGUE_BUTTON_GAP;
-		bCurMode++;
+	UINT16             x    = BOBBYR_CATALOGUE_BUTTON_START_X;
+	UINT16     const   y    = BOBBYR_CATALOGUE_BUTTON_Y;
+	wchar_t    const** text = BobbyRText + BOBBYR_GUNS_GUNS;
+	LaptopMode const*  mode = ubCatalogueButtonValues;
+	FOR_EACHX(GUIButtonRef, i, guiBobbyRPageMenu, x += BOBBYR_CATALOGUE_BUTTON_GAP)
+	{ // Catalogue buttons
+		GUIButtonRef const b = MakeButton(gfx, *text++, x, y, BtnBobbyRPageMenuCallback);
+		b->SetUserData(*mode++);
+		*i = b;
 	}
 
 	// Order Form button
 	guiBobbyROrderFormImage = LoadButtonImage(LAPTOPDIR "/orderformbutton.sti", 0, 1);
-	guiBobbyROrderForm = MakeButton(guiBobbyROrderFormImage, BobbyRText[BOBBYR_GUNS_ORDER_FORM], BOBBYR_ORDER_FORM_X, BOBBYR_ORDER_FORM_Y, BtnBobbyROrderFormCallback);
+	guiBobbyROrderForm      = MakeButton(guiBobbyROrderFormImage, BobbyRText[BOBBYR_GUNS_ORDER_FORM], BOBBYR_ORDER_FORM_X, BOBBYR_ORDER_FORM_Y, BtnBobbyROrderFormCallback);
 
 	// Home button
 	guiBobbyRHomeImage = LoadButtonImage(LAPTOPDIR "/cataloguebutton.sti", 0, 1);
-	guiBobbyRHome = MakeButton(guiBobbyRHomeImage, BobbyRText[BOBBYR_GUNS_HOME], BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BtnBobbyRHomeButtonCallback);
+	guiBobbyRHome      = MakeButton(guiBobbyRHomeImage, BobbyRText[BOBBYR_GUNS_HOME], BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BtnBobbyRHomeButtonCallback);
 }
 
 
