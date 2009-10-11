@@ -52,9 +52,6 @@
 #include "FileMan.h"
 
 
-#define MAPS_DIR TEMPDIR "/"
-
-
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
 
@@ -666,8 +663,8 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 
 void InitTacticalSave()
 {
-	MakeFileManDirectory(MAPS_DIR);
-	EraseDirectory(MAPS_DIR);
+	MakeFileManDirectory(TEMPDIR);
+	EraseDirectory(TEMPDIR);
 }
 
 
@@ -1112,7 +1109,7 @@ void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 co
 
 		default: Assert(0); return;
 	}
-	sprintf(pMapName, MAPS_DIR "%s_%s", prefix, zTempName);
+	sprintf(pMapName, TEMPDIR "/%s_%s", prefix, zTempName);
 }
 
 
