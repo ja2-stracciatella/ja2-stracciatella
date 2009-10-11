@@ -92,8 +92,6 @@ UINT32			guiLockPauseStateLastReasonId = 0;
 //***When adding new saved time variables, make sure you remove the appropriate amount from the paddingbytes and
 //   more IMPORTANTLY, add appropriate code in Save/LoadGameClock()!
 #define			TIME_PADDINGBYTES		20
-static UINT8         gubUnusedTimePadding[TIME_PADDINGBYTES]; // XXX HACK000B
-
 
 
 extern			UINT32		guiEnvTime;
@@ -112,7 +110,6 @@ void InitNewGameClock( )
 	guiTimeCurrentSectorWasLastLoaded = 0;
 	guiGameSecondsPerRealSecond = 0;
 	gubClockResolution = 1;
-	memset( gubUnusedTimePadding, 0, TIME_PADDINGBYTES );
 }
 
 UINT32 GetWorldTotalMin( )
@@ -786,7 +783,7 @@ void SaveGameClock(HWFILE const hFile, BOOLEAN const fGamePaused, BOOLEAN const 
 	FileWrite(hFile, &guiPreviousGameClock,              sizeof(UINT32));
 	FileWrite(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32));
 
-	FileWrite(hFile, gubUnusedTimePadding, TIME_PADDINGBYTES);
+	FileSeek(hFile, TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
 }
 
 
@@ -811,7 +808,7 @@ void LoadGameClock(HWFILE const hFile)
 	FileRead(hFile, &guiPreviousGameClock,              sizeof(UINT32));
 	FileRead(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32));
 
-	FileRead(hFile, gubUnusedTimePadding, TIME_PADDINGBYTES);
+	FileSeek(hFile, TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
 
 	//Update the game clock
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
