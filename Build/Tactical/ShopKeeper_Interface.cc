@@ -516,7 +516,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 }
 
 
-static UINT8 CountNumberOfItemsInThePlayersOfferArea(void);
+static UINT8 CountNumberOfItemsInThePlayersOfferArea();
 static void CreateSkiInventorySlotMouseRegions(void);
 static void HandlePossibleRepairDelays(void);
 static void HandleShopKeeperDialog(UINT8 ubInit);
@@ -4290,21 +4290,14 @@ static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea()
 }
 
 
-static UINT8 CountNumberOfItemsInThePlayersOfferArea(void)
+static UINT8 CountNumberOfItemsInThePlayersOfferArea()
 {
-	UINT8	ubCnt;
-	UINT8	ubItemCount=0;
-
-	//loop through the player's offer area and see if there are any items there
-	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
+	UINT8	n = 0;
+	FOR_EACH(INVENTORY_IN_SLOT const, i, PlayersOfferArea)
 	{
-		//if is an item here
-		if( PlayersOfferArea[ubCnt].fActive )
-		{
-			ubItemCount++;
-		}
+		if (i->fActive) ++n;
 	}
-	return( ubItemCount );
+	return n;
 }
 
 
