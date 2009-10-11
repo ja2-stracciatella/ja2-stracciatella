@@ -2931,7 +2931,7 @@ static void RefreshAllNPCInventory(void)
 }
 
 
-static void DisableFactMouseRegions(void);
+static void DisableFactMouseRegions();
 static INT32 GetMaxNumberOfQuotesToPlay(void);
 static void SetQDSMercProfile(void);
 
@@ -3186,14 +3186,9 @@ static UINT8 WhichPanelShouldTalkingMercUse(void)
 }
 
 
-static void DisableFactMouseRegions(void)
+static void DisableFactMouseRegions()
 {
-	UINT	i;
-
-	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
-	{
-		gFactListRegion[i].Disable();
-	}
+	FOR_EACH(MOUSE_REGION, i, gFactListRegion) i->Disable();
 }
 
 
