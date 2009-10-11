@@ -160,7 +160,7 @@ void EnterInitAimPolicies()
 }
 
 
-static void InitAimPolicyMenuBar(void);
+static void InitAimPolicyMenuBar();
 
 
 void EnterAimPolicies()
@@ -356,32 +356,26 @@ void RenderAimPolicies()
 static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason);
 
 
-static void InitAimPolicyMenuBar(void)
+static void InitAimPolicyMenuBar()
 {
-	UINT16					i, usPosX;
-
 	if (gfAimPolicyMenuBarLoaded) return;
-
-	//Load graphic for buttons
-	guiPoliciesMenuButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
-
-	usPosX = AIM_POLICY_MENU_X;
-	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
-	{
-		guiPoliciesMenuButton[i] = CreateIconAndTextButton( guiPoliciesMenuButtonImage, AimPolicyText[i], FONT10ARIAL,
-														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 usPosX, AIM_POLICY_MENU_Y, MSYS_PRIORITY_HIGH,
-														 BtnPoliciesMenuButtonCallback);
-		guiPoliciesMenuButton[i]->SetCursor(CURSOR_WWW);
-		guiPoliciesMenuButton[i]->SetUserData(i);
-
-
-
-		usPosX += AIM_POLICY_GAP_X;
-	}
-
 	gfAimPolicyMenuBarLoaded = TRUE;
+
+	// Load graphic for buttons
+	BUTTON_PICS* const gfx = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
+	guiPoliciesMenuButtonImage = gfx;
+
+	UINT16          x    = AIM_POLICY_MENU_X;
+	UINT16  const   y    = AIM_POLICY_MENU_Y;
+	wchar_t const** text = AimPolicyText;
+	INT32           idx  = 0;
+	FOR_EACHX(GUIButtonRef, i, guiPoliciesMenuButton, x += AIM_POLICY_GAP_X)
+	{
+		GUIButtonRef const b = CreateIconAndTextButton(gfx, *text++, FONT10ARIAL, AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, y, MSYS_PRIORITY_HIGH, BtnPoliciesMenuButtonCallback);
+		b->SetCursor(CURSOR_WWW);
+		b->SetUserData(idx++);
+		*i = b;
+	}
 }
 
 
