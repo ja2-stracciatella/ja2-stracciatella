@@ -4225,20 +4225,13 @@ static void RemoveShopKeeperSubTitledText(void)
 }
 
 
-static BOOLEAN AreThereItemsInTheArmsDealersOfferArea(void)
+static bool AreThereItemsInTheArmsDealersOfferArea()
 {
-	UINT8	ubCnt;
-
-	//loop through the players offer area and see if there are any items there
-	for( ubCnt = 0; ubCnt < SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
+	FOR_EACH(INVENTORY_IN_SLOT const, i, ArmsDealerOfferArea)
 	{
-		//if is an item here
-		if( ArmsDealerOfferArea[ ubCnt ].fActive )
-		{
-			return( TRUE );
-		}
+		if (i->fActive) return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 
