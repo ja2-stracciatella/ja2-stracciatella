@@ -186,7 +186,7 @@ void EnterAimPolicies()
 
 static void ExitAgreementButton(void);
 static void ExitAimPolicyMenuBar(void);
-static void ExitAimPolicyTocMenu(void);
+static void ExitAimPolicyTocMenu();
 
 
 void ExitAimPolicies()
@@ -458,13 +458,10 @@ static void InitAimPolicyTocMenu(void)
 }
 
 
-static void ExitAimPolicyTocMenu(void)
+static void ExitAimPolicyTocMenu()
 {
-	UINT16 i;
-
 	gfInPolicyToc = FALSE;
-	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
-		MSYS_RemoveRegion( &gSelectedPolicyTocMenuRegion[i]);
+	FOR_EACH(MOUSE_REGION, i, gSelectedPolicyTocMenuRegion) MSYS_RemoveRegion(&*i);
 }
 
 
