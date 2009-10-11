@@ -375,12 +375,10 @@ void DoTaskbar(void)
 	}
 }
 
-//Disables the task bar, but leaves it on screen. Used when a selection window is up.
-void DisableEditorTaskbar(void)
+
+void DisableEditorTaskbar()
 {
-	INT32 x;
-	for(x = 0; x < NUMBER_EDITOR_BUTTONS; x++ )
-		DisableButton( iEditorButton[ x ] );
+	FOR_EACH(GUIButtonRef, i, iEditorButton) DisableButton(*i);
 }
 
 

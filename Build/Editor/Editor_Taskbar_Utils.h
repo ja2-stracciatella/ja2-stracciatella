@@ -19,7 +19,11 @@ enum
 void DoTaskbar(void);
 void ProcessEditorRendering(void);
 void EnableEditorTaskbar(void);
-void DisableEditorTaskbar(void);
+
+/* Disable the task bar, but leave it on screen. Used when a selection window is
+ * up. */
+void DisableEditorTaskbar();
+
 void CreateEditorTaskbar(void);
 void DeleteEditorTaskbar(void);
 
