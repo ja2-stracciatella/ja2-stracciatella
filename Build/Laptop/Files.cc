@@ -237,7 +237,7 @@ void EnterFiles(void)
 
 static void DeleteButtonsForFilesPage(void);
 static void RemoveFiles(void);
-static void RemoveFilesMouseRegions(void);
+static void RemoveFilesMouseRegions();
 
 
 void ExitFiles(void)
@@ -474,13 +474,9 @@ static void InitializeFilesMouseRegions(void)
 }
 
 
-static void RemoveFilesMouseRegions(void)
+static void RemoveFilesMouseRegions()
 {
-  INT32 iCounter=0;
-  for(iCounter=0; iCounter <MAX_FILES_PAGE; iCounter++)
-	{
-	 MSYS_RemoveRegion( &pFilesRegions[iCounter]);
-	}
+	FOR_EACH(MOUSE_REGION, i, pFilesRegions) MSYS_RemoveRegion(&*i);
 }
 
 
