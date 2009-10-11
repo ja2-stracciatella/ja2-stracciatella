@@ -159,8 +159,6 @@ void EnterFuneral()
 
 void ExitFuneral()
 {
-	UINT8 i;
-
 	DeleteVideoObject(guiClosedSign);
 	DeleteVideoObject(guiLeftColumn);
 	DeleteVideoObject(guiLinkCarving);
@@ -169,13 +167,10 @@ void ExitFuneral()
 	DeleteVideoObject(guiMortuary);
 	DeleteVideoObject(guiRightColumn);
 
-	for(i=0; i<FUNERAL_NUMBER_OF_LINKS; i++)
-	{
-	  MSYS_RemoveRegion( &gSelectedFuneralLinkRegion[i]);
-	}
-
-	MSYS_RemoveRegion( &gSelectedRipSignRegion );
+	FOR_EACH(MOUSE_REGION, i, gSelectedFuneralLinkRegion) MSYS_RemoveRegion(&*i);
+	MSYS_RemoveRegion(&gSelectedRipSignRegion);
 }
+
 
 void HandleFuneral()
 {
