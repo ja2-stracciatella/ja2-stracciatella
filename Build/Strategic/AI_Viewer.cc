@@ -312,22 +312,18 @@ static BOOLEAN CreateAIViewer(void)
 }
 
 
-static void DestroyAIViewer(void)
+static void DestroyAIViewer()
 {
-	INT32 i;
-	gfExitViewer = FALSE;
+	gfExitViewer  = FALSE;
 	gfViewerEntry = TRUE;
-	for( i = 0; i < NUM_VIEWER_BUTTONS; i++ )
-	{
-		RemoveButton( iViewerButton[ i ] );
-	}
+	FOR_EACH(GUIButtonRef, i, iViewerButton) RemoveButton(*i);
 	DeleteVideoObject(guiMapGraphicID);
 	DeleteVideoObject(guiMapIconsID);
-	MSYS_RemoveRegion( &ViewerRegion );
+	MSYS_RemoveRegion(&ViewerRegion);
 
 	KillTextInputMode();
 
-	SetGameTimeCompressionLevel( giSaveTCMode );
+	SetGameTimeCompressionLevel(giSaveTCMode);
 	EnableScrollMessages();
 }
 
