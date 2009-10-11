@@ -598,7 +598,6 @@ void ReStartingGame()
 	//we are going to restart a game so initialize the variable so we can initialize a new game
 	gubScreenCount = 0;
 
-	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave();
 
 	//Loop through all the soldier and delete them all

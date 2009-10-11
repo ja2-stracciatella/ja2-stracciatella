@@ -642,7 +642,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	 * pre-load state. */
 	TrashWorld();
 
-	// Deletes all the Temp files in the Maps/Temp directory
 	InitTacticalSave();
 
 	// ATE: Added to empty dialogue q

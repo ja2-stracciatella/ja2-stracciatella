@@ -664,7 +664,6 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 }
 
 
-//Deletes the Temp map Directory
 void InitTacticalSave()
 {
 	MakeFileManDirectory(MAPS_DIR);
