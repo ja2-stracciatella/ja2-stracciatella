@@ -228,7 +228,7 @@ static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT
 static void DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum);
 static void DisplayAimPolicyTitleText(void);
 static void DrawAimPolicyMenu(void);
-static void InitAgreementRegion(void);
+static void InitAgreementRegion();
 static void InitAimPolicyTocMenu();
 
 
@@ -497,27 +497,22 @@ static void DisplayAimPolicyStatement(void)
 }
 
 
-static void InitAgreementRegion(void)
+static void InitAgreementRegion()
 {
-	UINT16	usPosX,i;
+	// Load graphic for buttons
+	BUTTON_PICS* const gfx = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
+	guiPoliciesButtonImage = gfx;
 
-	//Load graphic for buttons
-	guiPoliciesButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
-
-	usPosX = AIM_POLICY_AGREEMENT_X;
-	for(i=0; i < 2; i++)
+	UINT16          x    = AIM_POLICY_AGREEMENT_X;
+	UINT16  const   y    = AIM_POLICY_AGREEMENT_Y;
+	wchar_t const** text = AimPolicyText + AIM_POLICIES_DISAGREE;
+	INT32           idx  = 0;
+	FOR_EACHX(GUIButtonRef, i, guiPoliciesAgreeButton, x += 125)
 	{
-		guiPoliciesAgreeButton[i] = CreateIconAndTextButton( guiPoliciesButtonImage, AimPolicyText[i+AIM_POLICIES_DISAGREE], AIM_POLICY_TOC_FONT,
-														 AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW,
-														 AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW,
-														 usPosX, AIM_POLICY_AGREEMENT_Y, MSYS_PRIORITY_HIGH,
-														 BtnPoliciesAgreeButtonCallback);
-		guiPoliciesAgreeButton[i]->SetCursor(CURSOR_WWW);
-		guiPoliciesAgreeButton[i]->SetUserData(i);
-
-
-
-		usPosX += 125;
+		GUIButtonRef const b = CreateIconAndTextButton(gfx, *text++, AIM_POLICY_TOC_FONT, AIM_POLICY_AGREE_TOC_COLOR_ON, DEFAULT_SHADOW, AIM_POLICY_AGREE_TOC_COLOR_OFF, DEFAULT_SHADOW, x, y, MSYS_PRIORITY_HIGH, BtnPoliciesAgreeButtonCallback);
+		b->SetCursor(CURSOR_WWW);
+		b->SetUserData(idx++);
+		*i = b;
 	}
 	gfInAgreementPage = TRUE;
 }
