@@ -50,33 +50,24 @@ static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 void EnterAimLinks()
 {
-	UINT16					usPosY;
-	INT16						i;
-
 	InitAimDefaults();
 	InitAimMenuBar();
 
-	const char* ImageFile;
+	// Load the Bobby link graphic.
+	guiBobbyLink = AddVideoObjectFromFile(GetMLGFilename(MLG_BOBBYRAYLINK));
+	// Load the Funeral graphic.
+	guiFuneralLink = AddVideoObjectFromFile(GetMLGFilename(MLG_MORTUARYLINK));
+	// Load the Insurance graphic.
+	guiInsuranceLink = AddVideoObjectFromFile(GetMLGFilename(MLG_INSURANCELINK));
 
-	// load the Bobby link graphic and add it
-	ImageFile = GetMLGFilename(MLG_BOBBYRAYLINK);
-	guiBobbyLink = AddVideoObjectFromFile(ImageFile);
-
-	// load the Funeral graphic and add it
-	ImageFile = GetMLGFilename(MLG_MORTUARYLINK);
-	guiFuneralLink = AddVideoObjectFromFile(ImageFile);
-
-	// load the Insurance graphic and add it
-	ImageFile = GetMLGFilename(MLG_INSURANCELINK);
-	guiInsuranceLink = AddVideoObjectFromFile(ImageFile);
-
-	usPosY = AIM_LINK_BOBBY_LINK_Y;
-	for(i=0; i<AIM_LINK_NUM_LINKS; i++)
+	UINT16 const  x    = AIM_LINK_LINK_OFFSET_Y;
+	UINT16        y    = AIM_LINK_BOBBY_LINK_Y;
+	UINT8  const* page = gubLinkPages;
+	FOR_EACHX(MOUSE_REGION, i, gSelectedLinkRegion, y += AIM_LINK_LINK_OFFSET_Y)
 	{
-		MSYS_DefineRegion( &gSelectedLinkRegion[i], AIM_LINK_BOBBY_LINK_X, usPosY , AIM_LINK_BOBBY_LINK_X + AIM_LINK_LINK_WIDTH, (UINT16)(usPosY + AIM_LINK_LINK_HEIGHT), MSYS_PRIORITY_HIGH,
-								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectLinkRegionCallBack );
-		MSYS_SetRegionUserData( &gSelectedLinkRegion[i], 0, gubLinkPages[i]);
-		usPosY += AIM_LINK_LINK_OFFSET_Y;
+		MOUSE_REGION& r = *i;
+		MSYS_DefineRegion(&r, x, y, x + AIM_LINK_LINK_WIDTH, y + AIM_LINK_LINK_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectLinkRegionCallBack);
+		MSYS_SetRegionUserData(&r, 0, *page++);
 	}
 
 	RenderAimLinks();
