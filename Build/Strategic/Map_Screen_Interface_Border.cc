@@ -979,12 +979,9 @@ void CreateMouseRegionsForLevelMarkers(void)
 }
 
 
-void DeleteMouseRegionsForLevelMarkers( void )
+void DeleteMouseRegionsForLevelMarkers()
 {
-	for (UINT sCounter = 0; sCounter < 4; ++sCounter)
-	{
-		MSYS_RemoveRegion(&LevelMouseRegions[sCounter]);
-	}
+	FOR_EACH(MOUSE_REGION, i, LevelMouseRegions) MSYS_RemoveRegion(&*i);
 }
 
 

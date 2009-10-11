@@ -93,7 +93,7 @@ void RenderMapBorderEtaPopUp( void );
 
 // create mouse regions for level markers
 void CreateMouseRegionsForLevelMarkers( void );
-void DeleteMouseRegionsForLevelMarkers( void );
+void DeleteMouseRegionsForLevelMarkers();
 
 void InitMapScreenFlags( void );
 
