@@ -381,47 +381,29 @@ static void ReleaseSummaryWindow(void)
 	}
 }
 
+
 void DestroySummaryWindow()
 {
-	INT32 i;
-	if( !gfSummaryWindowActive )
-		return;
-	for( i = 0; i < NUM_SUMMARY_BUTTONS; i++ )
-	{
-		RemoveButton( iSummaryButton[ i ] );
-	}
+	if (!gfSummaryWindowActive) return;
 
-	MSYS_RemoveRegion( &MapRegion );
+	FOR_EACH(GUIButtonRef, i, iSummaryButton) RemoveButton(*i);
+	MSYS_RemoveRegion(&MapRegion);
 
 	gfSummaryWindowActive = FALSE;
-	gfPersistantSummary = FALSE;
+	gfPersistantSummary   = FALSE;
 	MarkWorldDirty();
 	KillTextInputMode();
 	EnableEditorTaskbar();
 	EnableAllTextFields();
 
-	if( gpWorldItemsSummaryArray )
-	{
-		MemFree( gpWorldItemsSummaryArray );
-		gpWorldItemsSummaryArray = NULL;
-		gusWorldItemsSummaryArraySize = 0;
-	}
-	if( gpPEnemyItemsSummaryArray )
-	{
-		MemFree( gpPEnemyItemsSummaryArray );
-		gpPEnemyItemsSummaryArray = NULL;
-		gusPEnemyItemsSummaryArraySize = 0;
-	}
-	if( gpNEnemyItemsSummaryArray )
-	{
-		MemFree( gpNEnemyItemsSummaryArray );
-		gpNEnemyItemsSummaryArray = NULL;
-		gusNEnemyItemsSummaryArraySize = 0;
-	}
-	if( gfWorldLoaded )
-	{
-		gfConfirmExitFirst = TRUE;
-	}
+	FreeNull(gpWorldItemsSummaryArray);
+	gusWorldItemsSummaryArraySize = 0;
+	FreeNull(gpPEnemyItemsSummaryArray);
+	gusPEnemyItemsSummaryArraySize = 0;
+	FreeNull(gpNEnemyItemsSummaryArray);
+	gusNEnemyItemsSummaryArraySize = 0;
+
+	if (gfWorldLoaded) gfConfirmExitFirst = TRUE;
 }
 
 

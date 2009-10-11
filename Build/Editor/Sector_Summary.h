@@ -6,7 +6,7 @@
 
 
 void CreateSummaryWindow(void);
-void DestroySummaryWindow(void);
+void DestroySummaryWindow();
 void RenderSummaryWindow(void);
 void LoadWorldInfo(void);
 
