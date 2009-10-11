@@ -326,7 +326,7 @@ static void ExitTocMenu()
 
 
 static void ChangingAimHistorySubPage(UINT8 ubSubPageNumber);
-static void ResetAimHistoryButtons(void);
+static void ResetAimHistoryButtons();
 
 
 static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
@@ -396,13 +396,11 @@ static void BtnHistoryMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void ResetAimHistoryButtons(void)
+static void ResetAimHistoryButtons()
 {
-	int i=0;
-
-	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
+	FOR_EACH(GUIButtonRef, i, guiHistoryMenuButton)
 	{
-		guiHistoryMenuButton[i]->uiFlags &= ~BUTTON_CLICKED_ON;
+		(*i)->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
