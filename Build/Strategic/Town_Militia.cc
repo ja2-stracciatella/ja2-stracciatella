@@ -764,15 +764,11 @@ void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE*
 	g_list_of_merc_in_sectors_completed_militia_training[iCounter] = pSoldier;
 }
 
-// clear out the list of training sectors...should be done once the list is posted
-void ClearSectorListForCompletedTrainingOfMilitia( void )
-{
-	INT32 iCounter = 0;
 
-	for( iCounter = 0; iCounter < SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST; iCounter++ )
-	{
-		g_list_of_merc_in_sectors_completed_militia_training[iCounter] = NULL;
-	}
+// clear out the list of training sectors...should be done once the list is posted
+void ClearSectorListForCompletedTrainingOfMilitia()
+{
+	FOR_EACH(SOLDIERTYPE*, i, g_list_of_merc_in_sectors_completed_militia_training) *i = 0;
 }
 
 

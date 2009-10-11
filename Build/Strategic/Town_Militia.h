@@ -56,7 +56,7 @@ BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const IN
 void HandleContinueOfTownTraining( void );
 
 // clear the list of training completed sectors
-void ClearSectorListForCompletedTrainingOfMilitia( void );
+void ClearSectorListForCompletedTrainingOfMilitia();
 
 BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId );
