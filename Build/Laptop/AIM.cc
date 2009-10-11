@@ -473,25 +473,21 @@ void DisplayAimCopyright()
 static void BtnAimBottomButtonsCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-void InitAimMenuBar(void)
+void InitAimMenuBar()
 {
-	UINT8	i;
-	UINT16	usPosX;
+	BUTTON_PICS* const gfx = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
+	guiBottomButtonImage = gfx;
 
-	guiBottomButtonImage = LoadButtonImage(LAPTOPDIR "/bottombuttons2.sti", 0, 1);
-
-	usPosX = BOTTOM_BUTTON_START_X;
-	for(i=0; i<BOTTOM_BUTTON_AMOUNT; i++)
+	UINT16             x    = BOTTOM_BUTTON_START_X;
+	UINT16     const   y    = BOTTOM_BUTTON_START_Y;
+	wchar_t    const** text = AimBottomMenuText;
+	LaptopMode const*  page = gCurrentAimPage;
+	FOR_EACHX(GUIButtonRef, i, guiBottomButtons, x += BOTTOM_BUTTON_START_WIDTH)
 	{
-		guiBottomButtons[i] = CreateIconAndTextButton( guiBottomButtonImage, AimBottomMenuText[i], FONT10ARIAL,
-														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 usPosX, BOTTOM_BUTTON_START_Y, MSYS_PRIORITY_HIGH,
-														 BtnAimBottomButtonsCallback);
-		guiBottomButtons[i]->SetCursor(CURSOR_LAPTOP_SCREEN);
-		guiBottomButtons[i]->SetUserData(gCurrentAimPage[i]);
-
-		usPosX += BOTTOM_BUTTON_START_WIDTH;
+		GUIButtonRef const b = CreateIconAndTextButton(gfx, *text++, FONT10ARIAL, AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW, AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, y, MSYS_PRIORITY_HIGH, BtnAimBottomButtonsCallback);
+		b->SetCursor(CURSOR_LAPTOP_SCREEN);
+		b->SetUserData(*page++);
+		*i = b;
 	}
 }
 

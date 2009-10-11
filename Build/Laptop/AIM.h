@@ -74,7 +74,7 @@ void HandleAIM(void);
 void RenderAIM(void);
 
 void ExitAimMenuBar();
-void InitAimMenuBar(void);
+void InitAimMenuBar();
 
 void RemoveAimDefaults(void);
 void InitAimDefaults(void);
