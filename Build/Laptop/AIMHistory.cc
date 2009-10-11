@@ -132,9 +132,7 @@ void ExitAimHistory()
 	DeleteVideoObject(guiContentButton);
 	giCurrentSubPage = gubCurPageNum;
 
-	if(gfInToc)
-		ExitTocMenu();
-
+	ExitTocMenu();
 }
 
 void HandleAimHistory()
@@ -395,7 +393,7 @@ static void BtnHistoryMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 				{
 					gubCurPageNum++;
 					ChangingAimHistorySubPage(gubCurPageNum);
-					if (gfInToc) ExitTocMenu();
+					ExitTocMenu();
 				}
 				else
 				{
