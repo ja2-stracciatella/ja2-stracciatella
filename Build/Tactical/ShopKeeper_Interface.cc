@@ -3179,7 +3179,7 @@ class DialogueEventShopkeeperMoney : public DialogueEvent
 };
 
 
-static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea(void);
+static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea();
 static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea();
 static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea();
 static void DealerGetsBribed(UINT8 ubProfileId, UINT32 uiMoneyAmount);
@@ -4522,26 +4522,17 @@ void MoveRepairEvaluatedPlayerOfferedItemsToArmsDealersOfferArea()
 */
 
 
-static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea(void)
+static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea()
 {
-	UINT8	ubCnt;
-	UINT32	uiTotalMoneyValue=0;
-
-
-	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
+	UINT32 total = 0;
+	FOR_EACH(INVENTORY_IN_SLOT const, i, PlayersOfferArea)
 	{
-		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
-		//if there is an item here
-		if (o->fActive)
-		{
-			if (Item[o->sItemIndex].usItemClass == IC_MONEY)
-			{
-				uiTotalMoneyValue += o->ItemObject.uiMoneyAmount;
-			}
-		}
+		INVENTORY_IN_SLOT const& o = *i;
+		if (!o.fActive)                                 continue;
+		if (Item[o.sItemIndex].usItemClass != IC_MONEY) continue;
+		total += o.ItemObject.uiMoneyAmount;
 	}
-
-	return( uiTotalMoneyValue );
+	return total;
 }
 
 
