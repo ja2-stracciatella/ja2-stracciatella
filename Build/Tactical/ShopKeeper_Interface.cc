@@ -3180,7 +3180,7 @@ class DialogueEventShopkeeperMoney : public DialogueEvent
 
 
 static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea(void);
-static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea(void);
+static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea();
 static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea();
 static void DealerGetsBribed(UINT8 ubProfileId, UINT32 uiMoneyAmount);
 static void GivePlayerSomeChange(UINT32 uiAmount);
@@ -4301,21 +4301,14 @@ static UINT8 CountNumberOfItemsInThePlayersOfferArea()
 }
 
 
-static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea(void)
+static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea()
 {
-	UINT8	ubCnt;
-	UINT8	ubItemCount=0;
-
-	//loop through the dealer's offer area and see if there are any items there
-	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
+	UINT8	n = 0;
+	FOR_EACH(INVENTORY_IN_SLOT const, i, ArmsDealerOfferArea)
 	{
-		//if is an item here
-		if( ArmsDealerOfferArea[ubCnt].fActive )
-		{
-			ubItemCount++;
-		}
+		if (i->fActive) ++n;
 	}
-	return( ubItemCount );
+	return n;
 }
 
 
