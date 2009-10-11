@@ -260,7 +260,7 @@ static void ExitCreditScreen(void)
 
 
 static BOOLEAN GetNextCreditFromTextFile(void);
-static void HandleCreditEyeBlinking(void);
+static void HandleCreditEyeBlinking();
 static void HandleCreditNodes(void);
 
 
@@ -547,27 +547,28 @@ static void InitCreditEyeBlinking(void)
 }
 
 
-static void HandleCreditEyeBlinking(void)
+static void HandleCreditEyeBlinking()
 {
-	for (size_t i = 0; i != NUM_PEOPLE_IN_CREDITS; ++i)
+	UINT16 gfx = 0;
+	FOR_EACHX(CDRT_FACE, i, gCreditFaces, gfx += 3)
 	{
-		CDRT_FACE* const f   = &gCreditFaces[i];
-		const UINT32     now = GetJA2Clock();
-		if (now - f->uiLastBlinkTime > f->sBlinkFreq)
+		CDRT_FACE&   f   = *i;
+		UINT32 const now = GetJA2Clock();
+		if (now - f.uiLastBlinkTime > f.sBlinkFreq)
 		{
-			const INT32 x = f->sEyeX;
-			const INT32 y = f->sEyeY;
-			BltVideoObject(FRAME_BUFFER, guiCreditFaces, i * 3, x, y);
+			INT32 const x = f.sEyeX;
+			INT32 const y = f.sEyeY;
+			BltVideoObject(FRAME_BUFFER, guiCreditFaces, gfx, x, y);
 			InvalidateRegion(x, y, x + CRDT_EYE_WIDTH, y + CRDT_EYE_HEIGHT);
 
-			f->uiLastBlinkTime  = now;
-			f->uiEyesClosedTime = now + CRDT_EYES_CLOSED_TIME + Random(CRDT_EYES_CLOSED_TIME);
+			f.uiLastBlinkTime  = now;
+			f.uiEyesClosedTime = now + CRDT_EYES_CLOSED_TIME + Random(CRDT_EYES_CLOSED_TIME);
 		}
-		else if (now > f->uiEyesClosedTime)
+		else if (now > f.uiEyesClosedTime)
 		{
-			f->uiEyesClosedTime = 0;
+			RestoreExternBackgroundRect(f.sEyeX, f.sEyeY, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT);
 
-			RestoreExternBackgroundRect(f->sEyeX, f->sEyeY, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT);
+			f.uiEyesClosedTime = 0;
 		}
 	}
 }
