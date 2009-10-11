@@ -184,7 +184,7 @@ void EnterAimPolicies()
 }
 
 
-static void ExitAgreementButton(void);
+static void ExitAgreementButton();
 static void ExitAimPolicyMenuBar();
 static void ExitAimPolicyTocMenu();
 
@@ -523,15 +523,10 @@ static void InitAgreementRegion(void)
 }
 
 
-static void ExitAgreementButton(void)
+static void ExitAgreementButton()
 {
-	UINT8 i;
-
-	UnloadButtonImage( guiPoliciesButtonImage);
-
-	for(i=0; i<2; i++)
-	  RemoveButton( guiPoliciesAgreeButton[ i ]);
-
+	FOR_EACH(GUIButtonRef, i, guiPoliciesAgreeButton) RemoveButton(*i);
+	UnloadButtonImage(guiPoliciesButtonImage);
 	gfInAgreementPage = FALSE;
 }
 
