@@ -34,7 +34,7 @@ void AddItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridN
 void AddWorldItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, const WORLDITEM* pWorldItem);
 
 //Deletes all the Temp files in the Maps\Temp directory
-void InitTacticalSave(BOOLEAN fCreateTempDir);
+void InitTacticalSave();
 
 
 //Call this function to set the new sector a NPC will travel to

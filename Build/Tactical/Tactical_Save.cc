@@ -58,24 +58,6 @@
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
 
-// This struct is used to save info from the NPCQuoteInfo struct that can change.
-struct TempNPCQuoteInfoSave
-{
-	UINT16	usFlags;
-
-	union
-	{
-		INT16		sRequiredItem;			// item NPC must have to say quote
-		INT16		sRequiredGridno;		// location for NPC req'd to say quote
-	};
-
-	UINT16	usGoToGridno;
-};
-
-
-#define NPC_TEMP_QUOTE_FILE TEMPDIR "/NpcQuote.tmp"
-
-
 static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFlags const type, INT16 const x, INT16 const y, INT8 const z)
 {
 	if (!(flags & type)) return;
@@ -682,20 +664,11 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 }
 
 
-static void InitTempNpcQuoteInfoForNPCFromTempFile(void);
-
-
 //Deletes the Temp map Directory
-void InitTacticalSave(BOOLEAN const fCreateTempDir)
+void InitTacticalSave()
 {
 	MakeFileManDirectory(MAPS_DIR);
 	EraseDirectory(MAPS_DIR);
-
-	if( fCreateTempDir )
-	{
-		//Create the initial temp file for the Npc Quote Info
-		InitTempNpcQuoteInfoForNPCFromTempFile();
-	}
 }
 
 
@@ -802,9 +775,6 @@ void AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const I
 }
 
 
-static void SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId);
-
-
 static void SaveNPCInformationToProfileStruct(void)
 {
 	// Only do this on save now... on traversal this is handled in the strategic code
@@ -815,8 +785,6 @@ static void SaveNPCInformationToProfileStruct(void)
 		const SOLDIERTYPE* const s = *i;
 		//if it is an active NPC
 		if (s->ubProfile == NO_PROFILE || s->bTeam != CIV_TEAM) continue;
-
-		SaveTempNpcQuoteInfoForNPCToTempFile(s->ubProfile);
 
 		MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 
@@ -830,73 +798,6 @@ static void SaveNPCInformationToProfileStruct(void)
 		p.fUseProfileInsertionInfo = TRUE;
 		p.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		p.usStrategicInsertionData = s->sGridNo;
-	}
-}
-
-
-//Initializes the NPC temp array
-static void InitTempNpcQuoteInfoForNPCFromTempFile(void)
-{
-	UINT8	ubCnt;
-	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
-	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
-	UINT16	usCnt1;
-
-	AutoSGPFile hFile(FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-
-	//loop through all the npc accounts and write the temp array to disk
-	for( usCnt1=0; usCnt1< ( NUM_PROFILES-FIRST_RPC ); usCnt1++)
-	{
-
-		memset( TempNpcQuote, 0, uiSizeOfTempArray );
-
-		//Loop through and build the temp array to save
-		for( ubCnt=0; ubCnt<NUM_NPC_QUOTE_RECORDS; ubCnt++ )
-		{
-			if( gpNPCQuoteInfoArray[ usCnt1 ] )
-			{
-				TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].fFlags;
-				TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].sRequiredItem;
-				TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ usCnt1 ][ ubCnt ].usGoToGridno;
-			}
-		}
-
-		//Save the array to a temp file
-		FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray);
-	}
-}
-
-
-static void SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 const ubNpcId)
-{
-	UINT8	ubCnt;
-	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
-	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
-	UINT32	uiSpotInFile = ubNpcId - FIRST_RPC;
-
-	//if there are records to save
-	if( gpNPCQuoteInfoArray[ ubNpcId ] )
-	{
-		AutoSGPFile hFile(FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS));
-
-		memset( TempNpcQuote, 0, uiSizeOfTempArray );
-
-		//Loop through and build the temp array to save
-		for( ubCnt=0; ubCnt<NUM_NPC_QUOTE_RECORDS; ubCnt++ )
-		{
-			TempNpcQuote[ ubCnt ].usFlags				= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags;
-			TempNpcQuote[ ubCnt ].sRequiredItem = gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem;
-			TempNpcQuote[ ubCnt ].usGoToGridno	= gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno;
-		}
-
-		//Seek to the correct spot in the file
-		FileSeek( hFile, uiSpotInFile * uiSizeOfTempArray, FILE_SEEK_FROM_START );
-
-		//Save the array to a temp file
-		FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray);
-
-		//Set the fact that the merc has the temp npc quote data
-		gMercProfiles[ ubNpcId ].ubMiscFlags |= PROFILE_MISC_FLAG_TEMP_NPC_QUOTE_DATA_EXISTS;
 	}
 }
 
@@ -1089,14 +990,17 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 
 
 void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
-{
-	SaveFilesToSavedGame(NPC_TEMP_QUOTE_FILE, f);
+{ // Write zero size marker for the obsolescent temporary NPC quote file.
+	UINT32 const size = 0;
+	FileWrite(f, &size, sizeof(size));
 }
 
 
 void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
-{
-	LoadFilesFromSavedGame(NPC_TEMP_QUOTE_FILE, f);
+{ // Skip obsolescent temporary NPC quote file.
+	UINT32 size;
+	FileRead(f, &size, sizeof(size));
+	FileSeek(f, size, FILE_SEEK_FROM_CURRENT);
 }
 
 

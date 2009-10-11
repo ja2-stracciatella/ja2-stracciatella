@@ -599,7 +599,7 @@ void ReStartingGame()
 	gubScreenCount = 0;
 
 	//Deletes all the Temp files in the Maps\Temp directory
-	InitTacticalSave( TRUE );
+	InitTacticalSave();
 
 	//Loop through all the soldier and delete them all
 	FOR_EACH_SOLDIER(i) TacticalRemoveSoldier(*i);

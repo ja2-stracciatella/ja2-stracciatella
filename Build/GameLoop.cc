@@ -88,7 +88,7 @@ void InitializeGame(void)
 	InitializeFonts();
 
 	//Deletes all the Temp files in the Maps\Temp directory
-	InitTacticalSave( TRUE );
+	InitTacticalSave();
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %s", g_version_label));
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s", g_version_number));
@@ -135,7 +135,7 @@ void    ShutdownGame(void)
 
 
 	//Deletes all the Temp files in the Maps\Temp directory
-	InitTacticalSave( FALSE );
+	InitTacticalSave();
 }
 
 
