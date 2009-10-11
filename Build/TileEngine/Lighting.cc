@@ -2222,29 +2222,18 @@ BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* const l)
 }
 
 
-/********************************************************************************
-* LightSpriteRenderAll
-*
-*		Resets all tiles in the world to the ambient light level, and redraws all
-* active lights.
-*
-********************************************************************************/
-void LightSpriteRenderAll(void)
+void LightSpriteRenderAll()
 {
-INT32 iCount;
-
 	LightResetAllTiles();
-	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
+	FOR_EACH(LIGHT_SPRITE, i, LightSprites)
 	{
-		LIGHT_SPRITE* const l = &LightSprites[iCount];
-		l->uiFlags &= ~LIGHT_SPR_ERASE;
-
-		if (l->uiFlags & LIGHT_SPR_ACTIVE && (l->uiFlags & LIGHT_SPR_ON))
-		{
-			LightDraw(l);
-			l->uiFlags |= LIGHT_SPR_ERASE;
-			LightSpriteDirty(l);
-		}
+		LIGHT_SPRITE& l = *i;
+		l.uiFlags &= ~LIGHT_SPR_ERASE;
+		if (!(l.uiFlags & LIGHT_SPR_ACTIVE)) continue;
+		if (!(l.uiFlags & LIGHT_SPR_ON))     continue;
+		LightDraw(&l);
+		l.uiFlags |= LIGHT_SPR_ERASE;
+		LightSpriteDirty(&l);
 	}
 }
 

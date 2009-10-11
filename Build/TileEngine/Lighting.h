@@ -115,8 +115,11 @@ BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* l);
 void LightSpritePosition(LIGHT_SPRITE* l, INT16 iX, INT16 iY);
 // Sets the flag of a light sprite to "fake" (in game for merc navig purposes)
 BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
-// Renders all lights
-void LightSpriteRenderAll(void);
+
+/* Reset all tiles in the world to the ambient light level and redraw all active
+ * lights. */
+void LightSpriteRenderAll();
+
 // Turns on/off power to a light
 void LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
 // Moves light to/from roof position
