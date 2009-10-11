@@ -197,19 +197,13 @@ void InitalizeStaticExternalNPCFaces( void )
 }
 
 
-void ShutdownStaticExternalNPCFaces( void )
+void ShutdownStaticExternalNPCFaces()
 {
-	INT32 iCounter = 0;
-
 	if (!fExternFacesLoaded) return;
-
 	fExternFacesLoaded = FALSE;
 
-	// remove all external npc faces
-	for( iCounter = 0; iCounter < NUMBER_OF_EXTERNAL_NPC_FACES; iCounter++ )
-	{
-		DeleteFace( uiExternalStaticNPCFaces[ iCounter ] );
-	}
+	// Remove all external NPC faces.
+	FOR_EACH(FACETYPE*, i, uiExternalStaticNPCFaces) DeleteFace(*i);
 }
 
 

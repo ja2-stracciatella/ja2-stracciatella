@@ -225,7 +225,7 @@ BOOLEAN DialogueQueueIsEmptyOrSomebodyTalkingNow(void);
 
 // set up and shutdown static external NPC faces
 void InitalizeStaticExternalNPCFaces( void );
-void ShutdownStaticExternalNPCFaces( void );
+void ShutdownStaticExternalNPCFaces();
 
 
 void SayQuoteFromAnyBodyInSector(UINT16 quote_id);
