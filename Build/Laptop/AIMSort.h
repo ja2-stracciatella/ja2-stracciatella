@@ -13,7 +13,6 @@ extern UINT8 gubCurrentListMode;
 void GameInitAimSort(void);
 void EnterAimSort(void);
 void ExitAimSort(void);
-void HandleAimSort(void);
 void RenderAimSort(void);
 
 #endif

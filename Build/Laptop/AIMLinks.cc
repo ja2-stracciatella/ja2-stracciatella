@@ -97,11 +97,6 @@ void ExitAimLinks()
 }
 
 
-void HandleAimLinks()
-{
-
-}
-
 void RenderAimLinks()
 {
 	DrawAimDefaults();

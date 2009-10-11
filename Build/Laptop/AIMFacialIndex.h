@@ -19,7 +19,6 @@
 
 void EnterAimFacialIndex(void);
 void ExitAimFacialIndex(void);
-void HandleAimFacialIndex(void);
 void RenderAimFacialIndex(void);
 
 #endif

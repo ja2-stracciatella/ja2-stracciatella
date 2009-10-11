@@ -31,10 +31,6 @@ void ExitBrokenLink()
 {
 }
 
-void HandleBrokenLink()
-{
-}
-
 
 static void DrawBrokenLinkWhiteBackground(void);
 

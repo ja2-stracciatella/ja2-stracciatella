@@ -220,11 +220,6 @@ void ExitAimSort()
 
 }
 
-void HandleAimSort()
-{
-
-}
-
 
 static void DrawSelectLight(UINT8 ubMode, UINT8 ubImage);
 

@@ -3,7 +3,6 @@
 
 void EnterInsuranceComments(void);
 void ExitInsuranceComments(void);
-void HandleInsuranceComments(void);
 void RenderInsuranceComments(void);
 
 #endif

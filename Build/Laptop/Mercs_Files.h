@@ -3,7 +3,6 @@
 
 void EnterMercsFiles(void);
 void ExitMercsFiles(void);
-void HandleMercsFiles(void);
 void RenderMercsFiles(void);
 
 #endif

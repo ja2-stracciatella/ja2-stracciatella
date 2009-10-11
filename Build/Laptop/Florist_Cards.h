@@ -8,7 +8,6 @@
 
 void EnterFloristCards(void);
 void ExitFloristCards(void);
-void HandleFloristCards(void);
 void RenderFloristCards(void);
 
 

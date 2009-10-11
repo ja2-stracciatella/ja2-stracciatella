@@ -4,7 +4,6 @@
 #include "Types.h"
 
 void RenderBrokenLink(void);
-void HandleBrokenLink(void);
 void ExitBrokenLink(void);
 void EnterBrokenLink(void);
 

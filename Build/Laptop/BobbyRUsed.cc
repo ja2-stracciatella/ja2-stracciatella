@@ -46,9 +46,6 @@ void ExitBobbyRUsed()
 	guiLastBobbyRayPage = LAPTOP_MODE_BOBBY_R_USED;
 }
 
-void HandleBobbyRUsed()
-{
-}
 
 void RenderBobbyRUsed()
 {

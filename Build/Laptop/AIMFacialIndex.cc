@@ -123,13 +123,6 @@ void ExitAimFacialIndex()
   MSYS_RemoveRegion( &gScreenMouseRegions);
 }
 
-void HandleAimFacialIndex()
-{
-//	if( fShowBookmarkInfo )
-//		fPausedReDrawScreenFlag = TRUE;
-
-}
-
 
 static void DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage);
 

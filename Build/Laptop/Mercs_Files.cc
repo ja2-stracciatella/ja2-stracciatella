@@ -173,11 +173,6 @@ void ExitMercsFiles()
 	RemoveMercBackGround();
 }
 
-void HandleMercsFiles()
-{
-
-}
-
 
 static void DisplayMercFace(ProfileID);
 static void DisplayMercsStats(MERCPROFILESTRUCT const&);

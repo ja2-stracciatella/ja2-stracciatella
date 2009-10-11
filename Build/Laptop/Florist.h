@@ -11,7 +11,6 @@
 
 void EnterFlorist(void);
 void ExitFlorist(void);
-void HandleFlorist(void);
 void RenderFlorist(void);
 
 void RemoveFloristDefaults(void);

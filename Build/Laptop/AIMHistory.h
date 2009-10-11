@@ -3,7 +3,6 @@
 
 void EnterAimHistory(void);
 void ExitAimHistory(void);
-void HandleAimHistory(void);
 void RenderAimHistory(void);
 void EnterInitAimHistory(void);
 

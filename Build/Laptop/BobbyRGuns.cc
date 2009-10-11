@@ -240,9 +240,6 @@ void ExitBobbyRGuns()
 	guiLastBobbyRayPage = LAPTOP_MODE_BOBBY_R_GUNS;
 }
 
-void HandleBobbyRGuns()
-{
-}
 
 void RenderBobbyRGuns()
 {

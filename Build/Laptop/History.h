@@ -4,7 +4,6 @@
 void GameInitHistory(void);
 void EnterHistory(void);
 void ExitHistory(void);
-void HandleHistory(void);
 void RenderHistory(void);
 
 

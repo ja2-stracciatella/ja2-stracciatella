@@ -3,9 +3,6 @@
 
 void EnterBobbyRUsed(void);
 void ExitBobbyRUsed(void);
-void HandleBobbyRUsed(void);
 void RenderBobbyRUsed(void);
-
-
 
 #endif

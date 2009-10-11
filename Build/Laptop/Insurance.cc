@@ -135,11 +135,6 @@ void ExitInsurance()
 }
 
 
-void HandleInsurance()
-{
-
-}
-
 void RenderInsurance()
 {
 	wchar_t		sText[800];

@@ -4,7 +4,6 @@
 void GameInitFinances(void);
 void EnterFinances(void);
 void ExitFinances(void);
-void HandleFinances(void);
 void RenderFinances(void);
 
 #define	FINANCES_DATA_FILE TEMPDIR "/finances.dat"

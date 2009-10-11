@@ -135,11 +135,6 @@ void ExitAimHistory()
 	ExitTocMenu();
 }
 
-void HandleAimHistory()
-{
-
-}
-
 
 static void LoadAIMHistoryText(wchar_t buf[], UINT32 entry)
 {

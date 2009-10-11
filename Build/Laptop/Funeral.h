@@ -3,7 +3,6 @@
 
 void EnterFuneral(void);
 void ExitFuneral();
-void HandleFuneral(void);
 void RenderFuneral(void);
 
 #endif

@@ -3,7 +3,6 @@
 
 void EnterMercsNoAccount(void);
 void ExitMercsNoAccount(void);
-void HandleMercsNoAccount(void);
 void RenderMercsNoAccount(void);
 
 #endif

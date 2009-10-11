@@ -35,7 +35,6 @@ extern UINT8			gubLastGunIndex;
 void GameInitBobbyRGuns(void);
 void EnterBobbyRGuns(void);
 void ExitBobbyRGuns(void);
-void HandleBobbyRGuns(void);
 void RenderBobbyRGuns(void);
 
 

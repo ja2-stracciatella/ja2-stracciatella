@@ -77,11 +77,6 @@ void ExitInsuranceComments()
 		MSYS_RemoveRegion( &gSelectedInsuranceCommentLinkRegion[i]);
 }
 
-void HandleInsuranceComments()
-{
-
-}
-
 
 static void DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY);
 

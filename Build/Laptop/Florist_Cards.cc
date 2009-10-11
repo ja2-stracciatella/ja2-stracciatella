@@ -113,10 +113,6 @@ void ExitFloristCards()
 	RemoveButton( guiFlowerCardsBackButton );
 }
 
-void HandleFloristCards()
-{
-
-}
 
 void RenderFloristCards()
 {

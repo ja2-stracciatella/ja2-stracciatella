@@ -22,7 +22,6 @@
 
 void EnterInsurance(void);
 void ExitInsurance();
-void HandleInsurance(void);
 void RenderInsurance(void);
 
 void InitInsuranceDefaults(void);

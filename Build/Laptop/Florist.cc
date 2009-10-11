@@ -121,9 +121,6 @@ void ExitFlorist()
 	RemoveButton(guiGalleryButton);
 }
 
-void HandleFlorist()
-{
-}
 
 void RenderFlorist()
 {

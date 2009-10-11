@@ -954,48 +954,26 @@ static void HandleLapTopHandles(void)
 	{
 		case LAPTOP_MODE_AIM:                      HandleAIM();               break;
 		case LAPTOP_MODE_AIM_MEMBERS:              HandleAIMMembers();        break;
-		case LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX: HandleAimFacialIndex();    break;
-		case LAPTOP_MODE_AIM_MEMBERS_SORTED_FILES: HandleAimSort();           break;
 		case LAPTOP_MODE_AIM_MEMBERS_ARCHIVES:     HandleAimArchives();       break;
 		case LAPTOP_MODE_AIM_POLICIES:             HandleAimPolicies();       break;
-		case LAPTOP_MODE_AIM_LINKS:                HandleAimLinks();          break;
-		case LAPTOP_MODE_AIM_HISTORY:              HandleAimHistory();        break;
 
 		case LAPTOP_MODE_MERC:                     HandleMercs();             break;
-		case LAPTOP_MODE_MERC_FILES:               HandleMercsFiles();        break;
 		case LAPTOP_MODE_MERC_ACCOUNT:             HandleMercsAccount();      break;
-		case LAPTOP_MODE_MERC_NO_ACCOUNT:          HandleMercsNoAccount();    break;
 
 		case LAPTOP_MODE_BOBBY_R:                  HandleBobbyR();            break;
-		case LAPTOP_MODE_BOBBY_R_GUNS:             HandleBobbyRGuns();        break;
-		case LAPTOP_MODE_BOBBY_R_AMMO:             HandleBobbyRAmmo();        break;
-		case LAPTOP_MODE_BOBBY_R_ARMOR:            HandleBobbyRArmour();      break;
-		case LAPTOP_MODE_BOBBY_R_MISC:             HandleBobbyRMisc();        break;
-		case LAPTOP_MODE_BOBBY_R_USED:             HandleBobbyRUsed();        break;
 		case LAPTOP_MODE_BOBBY_R_MAILORDER:        HandleBobbyRMailOrder();   break;
 		case LAPTOP_MODE_BOBBYR_SHIPMENTS:         HandleBobbyRShipments();   break;
 
 		case LAPTOP_MODE_CHAR_PROFILE:             HandleCharProfile();       break;
 
-		case LAPTOP_MODE_FLORIST:                  HandleFlorist();           break;
 		case LAPTOP_MODE_FLORIST_FLOWER_GALLERY:   HandleFloristGallery();    break;
 		case LAPTOP_MODE_FLORIST_ORDERFORM:        HandleFloristOrderForm();  break;
-		case LAPTOP_MODE_FLORIST_CARD_GALLERY:     HandleFloristCards();      break;
 
-		case LAPTOP_MODE_INSURANCE:                HandleInsurance();         break;
-		case LAPTOP_MODE_INSURANCE_INFO:           HandleInsuranceInfo();     break;
 		case LAPTOP_MODE_INSURANCE_CONTRACT:       HandleInsuranceContract(); break;
-		case LAPTOP_MODE_INSURANCE_COMMENTS:       HandleInsuranceComments(); break;
 
-		case LAPTOP_MODE_FUNERAL:                  HandleFuneral();           break;
-
-		case LAPTOP_MODE_FINANCES:                 HandleFinances();          break;
 		case LAPTOP_MODE_PERSONNEL:                HandlePersonnel();         break;
-		case LAPTOP_MODE_HISTORY:                  HandleHistory();           break;
 		case LAPTOP_MODE_FILES:                    HandleFiles();             break;
 		case LAPTOP_MODE_EMAIL:                    HandleEmail();             break;
-
-		case LAPTOP_MODE_BROKEN_LINK:              HandleBrokenLink();        break;
 	}
 }
 

@@ -296,11 +296,6 @@ void ExitFinances( void )
 	RemoveFinances( );
 }
 
-void HandleFinances( void )
-{
-
-}
-
 
 static void DisplayFinancePageNumberAndDateRange(void);
 static void DrawAPageOfRecords(void);

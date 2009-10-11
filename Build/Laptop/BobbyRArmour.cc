@@ -45,9 +45,6 @@ void ExitBobbyRArmour()
 	guiLastBobbyRayPage = LAPTOP_MODE_BOBBY_R_ARMOR;
 }
 
-void HandleBobbyRArmour()
-{
-}
 
 void RenderBobbyRArmour()
 {

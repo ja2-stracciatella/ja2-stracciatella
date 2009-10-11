@@ -172,11 +172,6 @@ void ExitFuneral()
 }
 
 
-void HandleFuneral()
-{
-
-}
-
 void RenderFuneral()
 {
 	UINT16 i, usPosX, usStringHeight;

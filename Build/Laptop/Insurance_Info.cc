@@ -153,12 +153,6 @@ void ExitInsuranceInfo()
 }
 
 
-void HandleInsuranceInfo()
-{
-
-}
-
-
 static void DisableArrowButtonsIfOnLastOrFirstPage(void);
 static void DisplayCancelationPagePage(void);
 static void DisplayInfoTocPage(void);

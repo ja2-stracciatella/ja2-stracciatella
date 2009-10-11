@@ -43,9 +43,6 @@ void ExitBobbyRMisc()
 	guiLastBobbyRayPage = LAPTOP_MODE_BOBBY_R_MISC;
 }
 
-void HandleBobbyRMisc()
-{
-}
 
 void RenderBobbyRMisc()
 {

@@ -81,10 +81,6 @@ void ExitMercsNoAccount()
 	RemoveMercBackGround();
 }
 
-void HandleMercsNoAccount()
-{
-
-}
 
 void RenderMercsNoAccount()
 {

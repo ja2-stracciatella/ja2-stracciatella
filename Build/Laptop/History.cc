@@ -182,13 +182,6 @@ void ExitHistory()
 	ClearHistoryList( );
 }
 
-void HandleHistory()
-{
-	// DEF 2/5/99 Dont need to update EVERY FRAME!!!!
-  // check and update status of buttons
-//  SetHistoryButtonStates( );
-}
-
 
 static void DrawAPageofHistoryRecords(void);
 static void RenderHistoryBackGround(void);

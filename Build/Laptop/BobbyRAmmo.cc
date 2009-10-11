@@ -48,9 +48,6 @@ void ExitBobbyRAmmo()
 	guiLastBobbyRayPage = LAPTOP_MODE_BOBBY_R_AMMO;
 }
 
-void HandleBobbyRAmmo()
-{
-}
 
 void RenderBobbyRAmmo()
 {
