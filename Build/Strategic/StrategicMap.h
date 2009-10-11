@@ -134,7 +134,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier );
 BOOLEAN CheckAndHandleUnloadingOfCurrentWorld(void);
 
 // number of SAM sites under player control
-INT32 GetNumberOfSAMSitesUnderPlayerControl( void );
+INT32 GetNumberOfSAMSitesUnderPlayerControl();
 
 // is there a FUNCTIONAL SAM site in this sector?
 bool IsThereAFunctionalSAMSiteInSector(INT16 x, INT16 y, INT8 z);

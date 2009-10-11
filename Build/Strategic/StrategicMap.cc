@@ -2699,21 +2699,16 @@ bool CanGoToTacticalInSector(INT16 const x, INT16 const y, UINT8 const z)
 }
 
 
-INT32 GetNumberOfSAMSitesUnderPlayerControl( void )
+INT32 GetNumberOfSAMSitesUnderPlayerControl()
 {
-	INT32 iNumber = 0, iCounter = 0;
-
-	// if the sam site is under player control, up the number
-	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
+	INT32 n = 0;
+	FOR_EACH(INT16 const, i, pSamList)
 	{
-		if (!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(pSamList[iCounter])].fEnemyControlled)
-		{
-			iNumber++;
-		}
+		if (!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(*i)].fEnemyControlled) ++n;
 	}
-
-	return( iNumber );
+	return n;
 }
+
 
 INT32 SAMSitesUnderPlayerControl( INT16 sX, INT16 sY )
 {
