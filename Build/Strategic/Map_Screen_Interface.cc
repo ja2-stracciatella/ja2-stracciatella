@@ -3673,15 +3673,9 @@ void SetSAMSiteAsFound( UINT8 uiSamIndex )
 }
 
 
-// ste up the timers for move menu in mapscreen for double click detection
-void InitTimersForMoveMenuMouseRegions( void )
+void InitTimersForMoveMenuMouseRegions()
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++ )
-	{
-		giDblClickTimersForMoveBoxMouseRegions[ iCounter ] = 0;
-	}
+	FOR_EACH(INT32, i, giDblClickTimersForMoveBoxMouseRegions) *i = 0;
 }
 
 

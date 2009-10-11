@@ -410,8 +410,8 @@ void SetOrtaAsFound( void );
 // set this SAM site as being found by the player
 void SetSAMSiteAsFound( UINT8 uiSamIndex );
 
-// init time menus
-void InitTimersForMoveMenuMouseRegions( void );
+// Set up the timers for the move menu in mapscreen for double click detection.
+void InitTimersForMoveMenuMouseRegions();
 
 // the screen mask
 void CreateScreenMaskForMoveBox( void );
