@@ -229,7 +229,7 @@ static void DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum);
 static void DisplayAimPolicyTitleText(void);
 static void DrawAimPolicyMenu(void);
 static void InitAgreementRegion(void);
-static void InitAimPolicyTocMenu(void);
+static void InitAimPolicyTocMenu();
 
 
 void RenderAimPolicies()
@@ -438,23 +438,20 @@ static void DrawAimPolicyMenu(void)
 static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void InitAimPolicyTocMenu(void)
+static void InitAimPolicyTocMenu()
 {
-	UINT16			i, usPosY;
-
 	if (gfInPolicyToc) return;
-
-	usPosY = AIM_POLICY_TOC_Y;
-	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
-	{
-		//Mouse region for the toc buttons
-		MSYS_DefineRegion( &gSelectedPolicyTocMenuRegion[i], AIM_POLICY_TOC_X, usPosY, (UINT16)(AIM_POLICY_TOC_X + AIM_CONTENTBUTTON_WIDTH), (UINT16)(usPosY + AIM_CONTENTBUTTON_HEIGHT), MSYS_PRIORITY_HIGH,
-								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectPolicyTocMenuRegionCallBack);
-		MSYS_SetRegionUserData( &gSelectedPolicyTocMenuRegion[i], 0, i+2);
-
-		usPosY += AIM_POLICY_TOC_GAP_Y;
-	}
 	gfInPolicyToc = TRUE;
+
+	UINT16 const x    = AIM_POLICY_TOC_X;
+	UINT16       y    = AIM_POLICY_TOC_Y;
+	INT32        page = 2;
+	FOR_EACHX(MOUSE_REGION, i, gSelectedPolicyTocMenuRegion, y += AIM_POLICY_TOC_GAP_Y)
+	{ // Mouse region for the toc buttons
+		MOUSE_REGION& r = *i;
+		MSYS_DefineRegion(&r, x, y, x + AIM_CONTENTBUTTON_WIDTH, y + AIM_CONTENTBUTTON_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectPolicyTocMenuRegionCallBack);
+		MSYS_SetRegionUserData(&r, 0, page++);
+	}
 }
 
 
