@@ -112,33 +112,33 @@ static void RemoveEditorRegions(void)
 }
 
 
-static void InitEditorRegions(void)
+static void InitEditorRegions()
 {
-	INT32 x;
-
-	//By doing this, all of the buttons underneath are blanketed and can't be used anymore.
-	//Any new buttons will cover this up as well.  Think of it as a barrier between the editor buttons,
-	//and the game's interface panel buttons and regions.
+	/* By doing this, all of the buttons underneath are blanketed and can't be
+	 * used anymore. Any new buttons will cover this up as well. Think of it as a
+	 * barrier between the editor buttons and the game's interface panel buttons
+	 * and regions. */
 	MSYS_DefineRegion(&EditorRegion, 0, 360, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	//Create the regions for the terrain tile selections
-	for( x = 0; x < NUM_TERRAIN_TILE_REGIONS; x++ )
+	// Create the regions for the terrain tile selections.
+	UINT16       x   = 261;
+	UINT16 const y   = 369;
+	INT32        idx =   0;
+	FOR_EACHX(MOUSE_REGION, i, TerrainTileButtonRegion, x += 42)
 	{
-		MSYS_DefineRegion(&TerrainTileButtonRegion[x],(INT16)(261+x*42),369,(INT16)(303+x*42),391,
-			MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, TerrainTileButtonRegionCallback);
-		MSYS_SetRegionUserData( &TerrainTileButtonRegion[x], 0, x );
-		TerrainTileButtonRegion[x].Disable();
+		MOUSE_REGION& r = *i;
+		MSYS_DefineRegion(&r, x, y, x + 42, y + 22, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, TerrainTileButtonRegionCallback);
+		MSYS_SetRegionUserData(&r, 0, idx++);
+		r.Disable();
 	}
-	gfShowTerrainTileButtons=FALSE;
+	gfShowTerrainTileButtons = FALSE;
 
-	//Create the region for the items selection window.
-	MSYS_DefineRegion( &ItemsRegion, 100, 360, 540, 440, MSYS_PRIORITY_NORMAL, 0,
-		MouseMovedInItemsRegion, MouseClickedInItemsRegion);
+	// Create the region for the items selection window.
+	MSYS_DefineRegion(&ItemsRegion, 100, 360, 540, 440, MSYS_PRIORITY_NORMAL, 0, MouseMovedInItemsRegion, MouseClickedInItemsRegion);
 	ItemsRegion.Disable();
 
-	//Create the region for the merc inventory panel.
-	MSYS_DefineRegion( &MercRegion, 175, 361, 450, 460, MSYS_PRIORITY_NORMAL, 0,
-		MouseMovedInMercRegion, MouseClickedInMercRegion );
+	// Create the region for the merc inventory panel.
+	MSYS_DefineRegion(&MercRegion, 175, 361, 450, 460, MSYS_PRIORITY_NORMAL, 0, MouseMovedInMercRegion, MouseClickedInMercRegion);
 	MercRegion.Disable();
 }
 
