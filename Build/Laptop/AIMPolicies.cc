@@ -457,7 +457,7 @@ static void ExitAimPolicyTocMenu()
 
 
 static void ChangingAimPoliciesSubPage(UINT8 ubSubPageNumber);
-static void ResetAimPolicyButtons(void);
+static void ResetAimPolicyButtons();
 
 
 static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
@@ -673,13 +673,11 @@ static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void ResetAimPolicyButtons(void)
+static void ResetAimPolicyButtons()
 {
-	int i=0;
-
-	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
+	FOR_EACH(GUIButtonRef, i, guiPoliciesMenuButton)
 	{
-		guiPoliciesMenuButton[i]->uiFlags &= ~BUTTON_CLICKED_ON;
+		(*i)->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
