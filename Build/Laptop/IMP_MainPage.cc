@@ -443,10 +443,9 @@ static void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 	UINT16 const y = LAPTOP_SCREEN_WEB_UL_Y + 245;
 	UINT16 const w = 115;
 	UINT16 const h =  93;
-	FOR_EACH(MOUSE_REGION, r, pIMPMainPageMouseRegions)
+	FOR_EACHX(MOUSE_REGION, r, pIMPMainPageMouseRegions, x += 120)
 	{
 		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGH + 5, CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback);
-		x += 120;
 	}
 }
 
