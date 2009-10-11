@@ -3463,7 +3463,7 @@ static void GetMapKeyboardInput(MapEvent& new_event)
 
 
 static void DestroyMouseRegionsForTeamList(void);
-static void RemoveTeamPanelSortButtonsForMapScreen(void);
+static void RemoveTeamPanelSortButtonsForMapScreen();
 
 
 void EndMapScreen( BOOLEAN fDuringFade )
@@ -7224,14 +7224,9 @@ static void SwapCharactersInList(INT32 iCharA, INT32 iCharB)
 }
 
 
-static void RemoveTeamPanelSortButtonsForMapScreen(void)
+static void RemoveTeamPanelSortButtonsForMapScreen()
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAX_SORT_METHODS; iCounter++ )
-	{
-		RemoveButton( giMapSortButton[ iCounter ] );
-	}
+	FOR_EACH(GUIButtonRef, i, giMapSortButton) RemoveButton(*i);
 }
 
 
