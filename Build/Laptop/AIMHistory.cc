@@ -119,7 +119,7 @@ void EnterAimHistory()
 }
 
 
-static void ExitAimHistoryMenuBar(void);
+static void ExitAimHistoryMenuBar();
 static void ExitTocMenu();
 
 
@@ -236,15 +236,10 @@ static void InitAimHistoryMenuBar(void)
 }
 
 
-static void ExitAimHistoryMenuBar(void)
+static void ExitAimHistoryMenuBar()
 {
-	int i;
-
-	UnloadButtonImage( guiHistoryMenuButtonImage );
-
-
-	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
- 		RemoveButton( guiHistoryMenuButton[i] );
+	FOR_EACH(GUIButtonRef, i, guiHistoryMenuButton) RemoveButton(*i);
+	UnloadButtonImage(guiHistoryMenuButtonImage);
 }
 
 
