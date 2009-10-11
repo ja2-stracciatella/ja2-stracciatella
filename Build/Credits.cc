@@ -90,7 +90,7 @@ struct CRDT_NODE
 #define		CRDT_EYES_CLOSED_TIME						150
 
 
-struct CDRT_FACE
+struct CreditFace
 {
 	const INT16  sX;
 	const INT16  sY;
@@ -108,7 +108,7 @@ struct CDRT_FACE
 	UINT32       uiEyesClosedTime;
 };
 
-static CDRT_FACE gCreditFaces[] =
+static CreditFace gCreditFaces[] =
 {
 #define M(x, y, w, h, ex, ey, mx, my, f) { x, y, w, h, ex, ey, mx, my, f, 0, 0 }
 	M(298, 137, 37, 49, 310, 157, 304, 170, 2500), // Camfield
@@ -217,12 +217,12 @@ try
 	for (size_t i = 0; i != lengthof(gCrdtMouseRegions); ++i)
 	{
 		// Make a mouse region
-		MOUSE_REGION*    const r = &gCrdtMouseRegions[i];
-		const CDRT_FACE* const f = &gCreditFaces[i];
-		const UINT16           x = f->sX;
-		const UINT16           y = f->sY;
-		const UINT16           w = f->sWidth;
-		const UINT16           h = f->sHeight;
+		MOUSE_REGION* const  r = &gCrdtMouseRegions[i];
+		CreditFace    const& f = gCreditFaces[i];
+		UINT16        const  x = f.sX;
+		UINT16        const  y = f.sY;
+		UINT16        const  w = f.sWidth;
+		UINT16        const  h = f.sHeight;
 		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
 		MSYS_SetRegionUserData(r, 0, i);
 	}
@@ -540,7 +540,7 @@ static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 
 static void InitCreditEyeBlinking(void)
 {
 	const UINT32 now = GetJA2Clock();
-	FOR_EACH(CDRT_FACE, f, gCreditFaces)
+	FOR_EACH(CreditFace, f, gCreditFaces)
 	{
 		f->uiLastBlinkTime = now + Random(f->sBlinkFreq * 2);
 	}
@@ -550,9 +550,9 @@ static void InitCreditEyeBlinking(void)
 static void HandleCreditEyeBlinking()
 {
 	UINT16 gfx = 0;
-	FOR_EACHX(CDRT_FACE, i, gCreditFaces, gfx += 3)
+	FOR_EACHX(CreditFace, i, gCreditFaces, gfx += 3)
 	{
-		CDRT_FACE&   f   = *i;
+		CreditFace&  f   = *i;
 		UINT32 const now = GetJA2Clock();
 		if (now - f.uiLastBlinkTime > f.sBlinkFreq)
 		{
