@@ -260,16 +260,10 @@ static void InitializeMouseRegions(void)
 }
 
 
-static void DeleteEmailMouseRegions(void)
+static void DeleteEmailMouseRegions()
 {
-	// this function will remove the mouse regions added
-	for(INT32 i = 0; i < MAX_MESSAGES_PAGE; ++i)
-	{
-		MSYS_RemoveRegion(&pEmailRegions[i]);
-	}
-
-	RemoveButton(giMailPageButtons[0]);
-	RemoveButton(giMailPageButtons[1]);
+	FOR_EACH(MOUSE_REGION, i, pEmailRegions)     MSYS_RemoveRegion(&*i);
+	FOR_EACH(GUIButtonRef, i, giMailPageButtons) RemoveButton(*i);
 }
 
 
