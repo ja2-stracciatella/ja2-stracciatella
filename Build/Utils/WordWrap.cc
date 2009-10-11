@@ -9,7 +9,7 @@
 
 static WRAPPED_STRING* AllocWrappedString(const wchar_t* start, const wchar_t* end)
 {
-	WRAPPED_STRING* const ws = MALLOCE(WRAPPED_STRING, sizeof(*ws->sString) * (end - start + 1));
+	WRAPPED_STRING* const ws = MALLOCE(WRAPPED_STRING, sString, end - start + 1);
 	ws->pNextWrappedString = NULL;
 	wchar_t* d = ws->sString;
 	for (wchar_t const* i = start; i != end; i++) *d++ = *i;

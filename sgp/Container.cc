@@ -31,6 +31,7 @@ struct ListHeader
 	UINT32 uiMax_size;
 	UINT32 uiHead;
 	UINT32 uiTail;
+	BYTE   data[];
 };
 
 
@@ -41,6 +42,7 @@ struct QueueHeader
 	UINT32 uiMax_size;
 	UINT32 uiHead;
 	UINT32 uiTail;
+	BYTE   data[];
 };
 
 
@@ -56,7 +58,7 @@ HQUEUE CreateQueue(UINT32 const uiNum_items, UINT32 const uiSiz_each)
 	}
 
 	UINT32 const uiAmount = uiNum_items * uiSiz_each;
-	HQUEUE const q        = MALLOCE(QueueHeader, uiAmount);
+	HQUEUE const q        = MALLOCE(QueueHeader, data, uiAmount);
 	q->uiMax_size    = uiAmount + sizeof(QueueHeader);
 	q->uiTotal_items = 0;
 	q->uiSiz_of_elem = uiSiz_each;
@@ -78,7 +80,7 @@ HLIST CreateList(UINT32 const uiNum_items, UINT32 const uiSiz_each)
 	}
 
 	UINT32 const uiAmount = uiNum_items * uiSiz_each;
-	HLIST  const l        = MALLOCE(ListHeader, uiAmount);
+	HLIST  const l        = MALLOCE(ListHeader, data, uiAmount);
 	l->uiMax_size    = uiAmount + sizeof(ListHeader);
 	l->uiTotal_items = 0;
 	l->uiSiz_of_elem = uiSiz_each;

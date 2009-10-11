@@ -39,7 +39,7 @@ static EventList* GetQueue(EventQueueID ubQueueID);
 
 void AddEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, UINT32 const uiDataSize, EventQueueID const ubQueueID)
 {
-	EVENT* pEvent = MALLOCE(EVENT, uiDataSize);
+	EVENT* pEvent = MALLOCE(EVENT, Data, uiDataSize);
 	pEvent->TimeStamp  = GetJA2Clock();
 	pEvent->usDelay    = usDelay;
 	pEvent->uiEvent    = uiEvent;

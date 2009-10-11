@@ -63,11 +63,11 @@ template<typename T> static inline void FreeNull(T*& r) throw()
 	MemFree(p);
 }
 
-#define MALLOC(type)          (type*)MemAlloc(sizeof(type))
-#define MALLOCE(type, extra)  (type*)MemAlloc(sizeof(type) + (extra))
-#define MALLOCN(type, count)  (type*)MemAlloc(sizeof(type) * (count))
-#define MALLOCNZ(type, count) (type*)MallocZ(sizeof(type) * (count))
-#define MALLOCZ(type)         (type*)MallocZ(sizeof(type))
+#define MALLOC(type)             (type*)MemAlloc(sizeof(type))
+#define MALLOCE(type, member, n) (type*)MemAlloc(sizeof(type) + sizeof(*((type*)0)->member) * (n))
+#define MALLOCN(type, count)     (type*)MemAlloc(sizeof(type) * (count))
+#define MALLOCNZ(type, count)    (type*)MallocZ(sizeof(type) * (count))
+#define MALLOCZ(type)            (type*)MallocZ(sizeof(type))
 
 #define REALLOC(ptr, type, count) (type*)MemRealloc(ptr, sizeof(type) * (count))
 
