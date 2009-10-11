@@ -364,23 +364,20 @@ void InitBobbyMenuBar(void)
 
 void DeleteBobbyMenuBar()
 {
-	UINT8	i;
+	RemoveButton(guiBobbyRPreviousPage);
+	UnloadButtonImage(guiBobbyRPreviousPageImage);
 
-	UnloadButtonImage( guiBobbyRNextPageImage );
-	UnloadButtonImage( guiBobbyRPreviousPageImage );
-	UnloadButtonImage( guiBobbyRPageMenuImage );
-	UnloadButtonImage( guiBobbyROrderFormImage );
-	UnloadButtonImage( guiBobbyRHomeImage );
+	RemoveButton(guiBobbyRNextPage);
+	UnloadButtonImage(guiBobbyRNextPageImage);
 
-	RemoveButton( guiBobbyRNextPage );
-	RemoveButton( guiBobbyRPreviousPage );
-	RemoveButton( guiBobbyROrderForm );
-	RemoveButton( guiBobbyRHome );
+	FOR_EACH(GUIButtonRef, i, guiBobbyRPageMenu) RemoveButton(*i);
+	UnloadButtonImage(guiBobbyRPageMenuImage);
 
-	for(i=0; i<NUM_CATALOGUE_BUTTONS; i++)
-	{
-		RemoveButton( guiBobbyRPageMenu[i] );
-	}
+	RemoveButton(guiBobbyROrderForm);
+	UnloadButtonImage(guiBobbyROrderFormImage);
+
+	RemoveButton(guiBobbyRHome);
+	UnloadButtonImage(guiBobbyRHomeImage);
 }
 
 

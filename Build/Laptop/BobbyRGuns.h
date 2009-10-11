@@ -42,7 +42,7 @@ void DisplayBobbyRBrTitle(void);
 void DeleteBobbyBrTitle(void);
 void InitBobbyBrTitle(void);
 void InitBobbyMenuBar(void);
-void DeleteBobbyMenuBar(void);
+void DeleteBobbyMenuBar();
 
 //BOOLEAN DisplayWeaponInfo();
 void DisplayItemInfo(UINT32 uiItemClass);
