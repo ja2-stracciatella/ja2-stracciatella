@@ -1008,8 +1008,10 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 					}
 					while( ubRandomMiner[ ubMiner ] == 0 );
 
-					MERCPROFILESTRUCT& p = GetProfile(ubRandomMiner[ubMiner]);
-					GetMineSector(ubMine, &p.sSectorX, &p.sSectorY);
+					MERCPROFILESTRUCT& p      = GetProfile(ubRandomMiner[ubMiner]);
+					UINT8 const        sector = GetMineSector(ubMine);
+					p.sSectorX = SECTORX(sector);
+					p.sSectorY = SECTORY(sector);
 					p.bSectorZ = 0;
 					p.bTown = gMineLocation[ ubMine ].bAssociatedTown;
 

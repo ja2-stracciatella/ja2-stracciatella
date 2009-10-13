@@ -382,10 +382,7 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 		gMineStatus[ bMineIndex ].fRunningOut = FALSE;
 
 		// tell the strategic AI about this, that mine's and town's value is greatly reduced
-		UINT16 sSectorX;
-		UINT16 sSectorY;
-		GetMineSector( bMineIndex, &sSectorX, &sSectorY );
-		StrategicHandleMineThatRanOut( ( UINT8 ) SECTOR( sSectorX, sSectorY ) );
+		StrategicHandleMineThatRanOut(GetMineSector(bMineIndex));
 
 		AddHistoryToPlayersLog( HISTORY_MINE_RAN_OUT, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
 	}
@@ -688,12 +685,11 @@ INT8 GetMineIndexForSector(UINT8 const sector)
 }
 
 
-void GetMineSector(const UINT8 ubMineIndex, UINT16* const psX, UINT16* const psY)
+UINT8 GetMineSector(UINT8 const ubMineIndex)
 {
 	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
-
-	*psX = gMineLocation[ ubMineIndex ].sSectorX;
-	*psY = gMineLocation[ ubMineIndex ].sSectorY;
+	MINE_LOCATION_TYPE const& m = gMineLocation[ubMineIndex];
+	return SECTOR(m.sSectorX, m.sSectorY);
 }
 
 
