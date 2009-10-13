@@ -95,15 +95,16 @@ void CreateDestroyTownInfoBox(void)
 		// decide what kind of text to add to display
 		if (bCurrentTownMineSectorZ == 0)
 		{
+			UINT8 const sector = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 			// only show the mine info when mines button is selected, otherwise we need to see the sector's regular town info
-			if (fShowMineFlag && GetMineIndexForSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY) != -1)
+			if (fShowMineFlag && GetMineIndexForSector(sector) != -1)
 			{
 				AddTextToMineBox(box);
 			}
 			else
 			{
 				// do we add text for the town box?
-				INT8 const bTownId = GetTownIdForSector(SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY));
+				INT8 const bTownId = GetTownIdForSector(sector);
 				if (bTownId != BLANK_SECTOR)
 				{
 					// add text for town box
@@ -246,11 +247,10 @@ static void AddTextToTownBox(PopUpBox* const box)
 // adds text to mine info box
 static void AddTextToMineBox(PopUpBox* const box)
 {
-	UINT8 ubMineIndex;
 	UINT8 ubTown;
 	CHAR16 wString[ 64 ];
 
-	ubMineIndex = GetMineIndexForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
+	UINT8 const ubMineIndex = GetMineIndexForSector(SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY));
 
 	// name of town followed by "mine"
 	swprintf( wString, lengthof(wString), L"%ls %ls", pTownNames[ GetTownAssociatedWithMine( ubMineIndex ) ], pwMineStrings[ 0 ] );

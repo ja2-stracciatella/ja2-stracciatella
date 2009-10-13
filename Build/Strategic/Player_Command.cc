@@ -53,14 +53,13 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 	UINT16 usMapSector = 0;
 	BOOLEAN fWasEnemyControlled = FALSE;
 	INT8 bTownId = 0;
-	UINT8 ubSectorID;
-
 
 	if( AreInMeanwhile( ) )
 	{
 		return FALSE;
 	}
 
+	UINT8 const sector = SECTOR(sMapX, sMapY);
 	if( bMapZ == 0 )
 	{
 		usMapSector = sMapX + ( sMapY * MAP_WORLD_X );
@@ -114,8 +113,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 				// don't do these for takeovers of Omerta sectors at the beginning of the game
 				if ((bTownId != OMERTA) || (GetWorldDay() != 1))
 				{
-					ubSectorID = (UINT8)SECTOR( sMapX, sMapY );
-					if( !bMapZ && ubSectorID != SEC_J9 && ubSectorID != SEC_K4 )
+					if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
 					{
 						HandleMoraleEvent( NULL, MORALE_TOWN_LIBERATED, sMapX, sMapY, bMapZ );
 						HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMapX, sMapY, bMapZ );
@@ -127,7 +125,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			}
 
 			// if it's a mine that's still worth something
-			INT8 const mine_id = GetMineIndexForSector(sMapX, sMapY);
+			INT8 const mine_id = GetMineIndexForSector(sector);
 			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
 				HandleMoraleEvent(NULL, MORALE_MINE_LIBERATED, sMapX, sMapY, bMapZ);
@@ -153,7 +151,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 					gfSkyriderSaidCongratsOnTakingSAM = TRUE;
 				}
 
-				if ( !SectorInfo[ SECTOR( sMapX, sMapY ) ].fSurfaceWasEverPlayerControlled )
+				if (!SectorInfo[sector].fSurfaceWasEverPlayerControlled)
 				{
 					// grant grace period
 					if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_HARD )
@@ -187,7 +185,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 	}
 	else
 	{
-		if( sMapX == 3 && sMapY == 16 && bMapZ == 1 )
+		if (sector == SEC_P3 && bMapZ == 1)
 		{ //Basement sector (P3_b1)
 			gfUseAlternateQueenPosition = TRUE;
 		}
@@ -195,7 +193,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 
 	if ( bMapZ == 0 )
 	{
-		SectorInfo[ SECTOR( sMapX, sMapY ) ].fSurfaceWasEverPlayerControlled = TRUE;
+		SectorInfo[sector].fSurfaceWasEverPlayerControlled = TRUE;
 	}
 
 	//KM : Aug 11, 1999 -- Patch fix:  Relocated this check so it gets called everytime a sector changes hands,
@@ -218,7 +216,6 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 	BOOLEAN fWasPlayerControlled = FALSE;
 	INT8 bTownId = 0;
 	UINT8 ubTheftChance;
-	UINT8 ubSectorID;
 
 	//KM : August 6, 1999 Patch fix
 	//     This check was added because this function gets called when player mercs retreat from an unresolved
@@ -244,14 +241,14 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 				return FALSE;
 			}
 
+			UINT8 const sector = SECTOR(sMapX, sMapY);
 			// check if there's a town in the sector
 			bTownId = StrategicMap[ usMapSector ].bNameId;
 
 			// and it's a town
 			if ((bTownId >= FIRST_TOWN) && (bTownId < NUM_TOWNS))
 			{
-				ubSectorID = (UINT8)SECTOR( sMapX, sMapY );
-				if( !bMapZ && ubSectorID != SEC_J9 && ubSectorID != SEC_K4 )
+				if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
 				{
 					HandleMoraleEvent( NULL, MORALE_TOWN_LOST, sMapX, sMapY, bMapZ );
 					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sMapX, sMapY, bMapZ );
@@ -261,7 +258,7 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 			}
 
 			// if the sector has a mine which is still worth something
-			INT8 const mine_id = GetMineIndexForSector(sMapX, sMapY);
+			INT8 const mine_id = GetMineIndexForSector(sector);
 			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
 				QueenHasRegainedMineSector(mine_id);

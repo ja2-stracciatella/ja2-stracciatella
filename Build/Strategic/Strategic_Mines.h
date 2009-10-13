@@ -120,7 +120,7 @@ UINT32 PredictDailyIncomeFromAMine( INT8 bMineIndex );
 INT32 CalcMaxPlayerIncomeFromMines( void );
 
 // get index of this mine, return -1 if no mine found
-INT8 GetMineIndexForSector(INT16 x, INT16 y);
+INT8 GetMineIndexForSector(UINT8 sector);
 
 // get the sector value for the mine associated with this town
 INT16 GetMineSectorForTown(INT8 town_id);

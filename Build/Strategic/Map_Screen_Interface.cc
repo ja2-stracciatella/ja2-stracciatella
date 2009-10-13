@@ -3789,7 +3789,8 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 
 	}
 	else
 	{
-		INT8 const mine_id = GetMineIndexForSector(x, y);
+		UINT8 const sector  = SECTOR(x, y);
+		INT8  const mine_id = GetMineIndexForSector(sector);
 		if (mine_id != -1                           &&
 				GetMaxDailyRemovalFromMine(mine_id) > 0 &&
 				SpokenToHeadMiner(mine_id))
@@ -3802,7 +3803,7 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 
 		}
 		else
 		{
-			INT8 const town_id = GetTownIdForSector(SECTOR(x, y));
+			INT8 const town_id = GetTownIdForSector(sector);
 			if (town_id != BLANK_SECTOR)
 			{
 				// San Mona isn't important

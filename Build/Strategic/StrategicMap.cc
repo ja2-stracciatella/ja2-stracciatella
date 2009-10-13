@@ -966,10 +966,11 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 		gMercProfiles[ CARMEN ].bSectorZ = 0;
 	}
 
+	UINT8 const sector = SECTOR(sNewSectorX, sNewSectorY);
 	// are we in a mine sector, on the surface?
 	if (bNewSectorZ == 0)
 	{
-		INT8 const ubThisMine = GetMineIndexForSector(sNewSectorX, sNewSectorY);
+		INT8 const ubThisMine = GetMineIndexForSector(sector);
 		if (ubThisMine != -1 && !CheckFact(FACT_MINERS_PLACED, 0))
 		{
 			// SET HEAD MINER LOCATIONS
@@ -1065,16 +1066,16 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	}
 #endif
 
-	if (gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS                     &&
-			CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, 0)                        &&
-			GetTownIdForSector(SECTOR(sNewSectorX, sNewSectorY)) != BLANK_SECTOR &&
+	if (gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS &&
+			CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, 0)    &&
+			GetTownIdForSector(sector) != BLANK_SECTOR       &&
 			Random(10 + GetNumberOfMilitiaInSector(sNewSectorX, sNewSectorY, bNewSectorZ)) < 3)
 	{
 		DecideOnAssassin();
 	}
 
 /*
-	if ( sNewSectorX == 5 && sNewSectorY == MAP_ROW_C )
+	if (sector == SEC_C5)
 	{
 		// reset Madame Layla counters
 		gMercProfiles[ MADAME ].bNPCData = 0;
@@ -1082,7 +1083,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	}
 	*/
 
-	if ( sNewSectorX == 6 && sNewSectorY == MAP_ROW_C && gubQuest[ QUEST_RESCUE_MARIA ] == QUESTDONE )
+	if (sector == SEC_C6 && gubQuest[QUEST_RESCUE_MARIA] == QUESTDONE)
 	{
 		// make sure Maria and Angel are gone
 		gMercProfiles[ MARIA ].sSectorX = 0;
@@ -1091,14 +1092,14 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 		gMercProfiles[ ANGEL ].sSectorY = 0;
 	}
 
-	if ( sNewSectorX == 5 && sNewSectorY == MAP_ROW_D )
+	if (sector == SEC_D5)
 	{
 		gBoxer[0] = NULL;
 		gBoxer[1] = NULL;
 		gBoxer[2] = NULL;
 	}
 
-	if ( sNewSectorX == 3 && sNewSectorY == MAP_ROW_P )
+	if (sector == SEC_P3)
 	{
 		// heal up Elliot if he's been hurt
 		if ( gMercProfiles[ ELLIOT ].bLife < gMercProfiles[ ELLIOT ].bLifeMax )

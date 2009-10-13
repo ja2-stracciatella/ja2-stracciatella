@@ -3466,7 +3466,7 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
 	SetFontAttributes(MAP_FONT, FONT_LTGREEN);
 
-	UINT8 const mine_idx = GetMineIndexForSector(sMapX, sMapY);
+	UINT8 const mine_idx = GetMineIndexForSector(SECTOR(sMapX, sMapY));
 	INT32 const x        = sScreenX;
 	INT32       y        = sScreenY;
 	INT32 const h        = GetFontHeight(MAP_FONT);

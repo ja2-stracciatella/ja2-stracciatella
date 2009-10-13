@@ -677,12 +677,12 @@ INT32 CalcMaxPlayerIncomeFromMines( void )
 }
 
 
-INT8 GetMineIndexForSector(INT16 const x, INT16 const y)
+INT8 GetMineIndexForSector(UINT8 const sector)
 {
 	for (size_t i = 0; i != lengthof(gMineLocation); ++i)
 	{
 		MINE_LOCATION_TYPE const& m = gMineLocation[i];
-		if (m.sSectorX == x && m.sSectorY == y) return i;
+		if (SECTOR(m.sSectorX, m.sSectorY) == sector) return i;
 	}
 	return -1;
 }
@@ -1104,13 +1104,14 @@ BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId )
 
 INT8 GetIdOfMineForSector(INT16 const x, INT16 const y, INT8 const z)
 {
+	UINT8 const sector = SECTOR(x, y);
 	switch (z)
 	{
 		case 0:
-			return GetMineIndexForSector(x, y);
+			return GetMineIndexForSector(sector);
 
 		case 1:
-			switch (SECTOR(x, y))
+			switch (sector)
 			{
 				case SEC_H3:
 				case SEC_I3:  return MINE_GRUMM;
@@ -1127,7 +1128,7 @@ INT8 GetIdOfMineForSector(INT16 const x, INT16 const y, INT8 const z)
 			break;
 
 		case 2:
-			switch (SECTOR(x, y))
+			switch (sector)
 			{
 				case SEC_I3:
 				case SEC_H3:
