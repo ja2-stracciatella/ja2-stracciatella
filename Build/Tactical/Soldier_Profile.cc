@@ -75,71 +75,22 @@ INT8 gbSkillTraitBonus[NUM_SKILLTRAITS] =
 };
 
 
-#define NUM_TERRORISTS 6
-
-static UINT8 const gubTerrorists[NUM_TERRORISTS + 1] =
-{
-	DRUGGIST,
-	SLAY,
-	ANNIE,
-	CHRIS,
-	TIFFANY,
-	T_REX,
-	0
-};
-
 UINT8	gubNumTerrorists = 0;
 
-static INT16 const gsTerroristSector[NUM_TERRORISTS][5][2] =
+struct TerroristInfo
 {
-	// Elgin... preplaced
-	{
-		{ 0, 0 },
-		{ 0, 0 },
-		{ 0, 0 },
-		{ 0, 0 },
-		{ 0, 0 }
-	},
-	// Slay
-	{
-		{ 9,	MAP_ROW_F },
-		{ 14,	MAP_ROW_I },
-		{ 1,	MAP_ROW_G },
-		{ 2,	MAP_ROW_G },
-		{ 8,	MAP_ROW_G }
-	},
-	// Matron
-	{
-		{ 14,	MAP_ROW_I },
-		{ 6,	MAP_ROW_C },
-		{ 2,	MAP_ROW_B },
-		{ 11, MAP_ROW_L },
-		{ 8,	MAP_ROW_G }
-	},
-	// Imposter
-	{
-		{ 1,	MAP_ROW_G },
-		{ 9,	MAP_ROW_F },
-		{	11,	MAP_ROW_L },
-		{	8,	MAP_ROW_G },
-		{ 2,	MAP_ROW_G }
-	},
-	// Tiffany
-	{
-		{ 14,	MAP_ROW_I },
-		{ 2,	MAP_ROW_G },
-		{ 14,	MAP_ROW_H },
-		{	6,	MAP_ROW_C },
-		{	2,	MAP_ROW_B }
-	},
-	// Rexall
-	{
-		{	9,	MAP_ROW_F },
-		{ 14,	MAP_ROW_H },
-		{ 2,	MAP_ROW_H },
-		{ 1,	MAP_ROW_G },
-		{ 2,	MAP_ROW_B }
-	}
+	ProfileID profile;
+	UINT8     sectors[5];
+};
+
+static TerroristInfo const g_terrorist_infos[] =
+{
+	DRUGGIST, { 0,       0,       0,       0,       0      }, // Elgin, preplaced
+	SLAY,     { SEC_F9,  SEC_I14, SEC_G1,  SEC_G2,  SEC_G8 }, // Slay
+	ANNIE,    { SEC_I14, SEC_C6,  SEC_B2,  SEC_L11, SEC_G8 }, // Matron
+	CHRIS,    { SEC_G1,  SEC_F9,  SEC_L11, SEC_G8,  SEC_G2 }, // Imposter
+	TIFFANY,  { SEC_I14, SEC_G2,  SEC_H14, SEC_C6,  SEC_B2 }, // Tiffany
+	T_REX,    { SEC_F9,  SEC_H14, SEC_H2,  SEC_G1,  SEC_B2 }  // Rexall
 };
 
 INT16 gsRobotGridNo;
@@ -296,13 +247,15 @@ static void DecideActiveTerrorists()
 	n_additional_terrorists = 4;
 #endif
 
-	INT16 terrorist_placement[MAX_ADDITIONAL_TERRORISTS][2];
+	UINT8 terrorist_placement[MAX_ADDITIONAL_TERRORISTS];
 	for (UINT8 n_terrorists_added = 0; n_terrorists_added != n_additional_terrorists;)
 	{
-		// NB terrorist ID of 0 indicates end of array
-		for (UINT8 i = 1; n_terrorists_added != n_additional_terrorists && gubTerrorists[i] != 0; ++i)
+		FOR_EACH(TerroristInfo const, i, g_terrorist_infos)
 		{
-			MERCPROFILESTRUCT& p = GetProfile(gubTerrorists[i]);
+			if (n_terrorists_added == n_additional_terrorists) break;
+
+			TerroristInfo const& t = *i;
+			MERCPROFILESTRUCT&   p = GetProfile(t.profile);
 			// Random 40% chance of adding this terrorist if not yet placed.
 			if (p.sSectorX != 0)   continue;
 			if (Random(100) >= 40) continue;
@@ -313,21 +266,17 @@ static void DecideActiveTerrorists()
 			 * terrorist */
 pick_sector:
 			// Pick a random spot, see if it's already been used by another terrorist.
-			INT16 const* const sector = gsTerroristSector[i][Random(lengthof(gsTerroristSector[i]))];
+			UINT8 const sector = t.sectors[Random(lengthof(t.sectors))];
 			for (UINT8 k = 0; k != n_terrorists_added; ++k)
 			{
-				if (terrorist_placement[k][0] != sector[0]) continue;
-				if (terrorist_placement[k][1] != sector[1]) continue;
-				goto pick_sector;
+				if (terrorist_placement[k] == sector) goto pick_sector;
 			}
 
 			// Place terrorist.
-			p.sSectorX = sector[0];
-			p.sSectorY = sector[1];
+			p.sSectorX = SECTORX(sector);
+			p.sSectorY = SECTORY(sector);
 			p.bSectorZ = 0;
-			terrorist_placement[n_terrorists_added][0] = sector[0];
-			terrorist_placement[n_terrorists_added][1] = sector[1];
-			++n_terrorists_added;
+			terrorist_placement[n_terrorists_added++] = sector;
 		}
 	}
 
@@ -341,9 +290,9 @@ pick_sector:
 void MakeRemainingTerroristsTougher()
 {
 	UINT8 n_remaining_terrorists = 0;
-	for (UINT8 i = 0; i != NUM_TERRORISTS; ++i)
+	FOR_EACH(TerroristInfo const, i, g_terrorist_infos)
 	{
-		ProfileID         const  pid = gubTerrorists[i];
+		ProfileID         const  pid = i->profile;
 		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
 		// Slay on player's team, doesn't count towards remaining terrorists
@@ -397,9 +346,9 @@ void MakeRemainingTerroristsTougher()
 	Object.usItem     = new_item;
 	Object.bStatus[0] = 100;
 
-	for (UINT8 i = 0; i != NUM_TERRORISTS; ++i)
+	FOR_EACH(TerroristInfo const, i, g_terrorist_infos)
 	{
-		ProfileID         const  pid = gubTerrorists[i];
+		ProfileID         const  pid = i->profile;
 		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
 		// Slay on player's team, doesn't count towards remaining terrorists
