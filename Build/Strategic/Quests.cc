@@ -476,17 +476,14 @@ static BOOLEAN NPCHeardShot(UINT8 ubProfileID)
 }
 
 
-static BOOLEAN InTownSectorWithTrainingLoyalty(INT16 sSectorX, INT16 sSectorY)
+static bool InTownSectorWithTrainingLoyalty(UINT8 const sector)
 {
-	UINT8 const ubTown = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
-	if ( ( ubTown != BLANK_SECTOR ) && gTownLoyalty[ ubTown ].fStarted && gfTownUsesLoyalty[ ubTown ])
-	{
-		return( gTownLoyalty[ ubTown ].ubRating >= MIN_RATING_TO_TRAIN_TOWN );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	UINT8 const town = GetTownIdForSector(sector);
+	return
+		town != BLANK_SECTOR        &&
+		gfTownUsesLoyalty[town]     &&
+		gTownLoyalty[town].fStarted &&
+		gTownLoyalty[town].ubRating >= MIN_RATING_TO_TRAIN_TOWN;
 }
 
 
@@ -1027,7 +1024,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_ENOUGH_LOYALTY_TO_TRAIN_MILITIA:
-			gubFact[usFact] = InTownSectorWithTrainingLoyalty( gWorldSectorX, gWorldSectorY );
+			gubFact[usFact] = InTownSectorWithTrainingLoyalty(SECTOR(gWorldSectorX, gWorldSectorY));
 			break;
 
 		case FACT_WALKER_AT_BAR:
