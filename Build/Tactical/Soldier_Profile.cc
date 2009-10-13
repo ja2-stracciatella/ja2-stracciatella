@@ -927,34 +927,15 @@ BOOLEAN IsProfileAHeadMiner(UINT8 ubProfile)
 }
 
 
-void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
+void UpdateSoldierPointerDataIntoProfile()
 {
-	BOOLEAN				fDoCopy = FALSE;
-
 	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const pSoldier = *i;
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-			fDoCopy = FALSE;
-
 			// If we are above player mercs
-			if ( fPlayerMercs )
-			{
-				if ( pSoldier->ubProfile < FIRST_RPC )
-				{
-					fDoCopy = TRUE;
-				}
-			}
-			else
-			{
-				if ( pSoldier->ubProfile >= FIRST_RPC )
-				{
-					fDoCopy = TRUE;
-				}
-			}
-
-			if ( fDoCopy )
+			if (pSoldier->ubProfile >= FIRST_RPC)
 			{
 				// Copy....
 				MERCPROFILESTRUCT& p = GetProfile(pSoldier->ubProfile);

@@ -210,7 +210,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam );
 BOOLEAN IsProfileATerrorist( UINT8 ubProfile );
 BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile );
 
-void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs );
+void UpdateSoldierPointerDataIntoProfile();
 
 
 void DecideOnAssassin();

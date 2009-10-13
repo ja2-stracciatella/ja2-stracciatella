@@ -3641,7 +3641,7 @@ static void HandleDefiniteUnloadingOfWorld(UINT8 const ubUnloadCode)
 			SaveCurrentSectorsInformationToTempItemFile();
 
 			// Update any mercs currently in sector, their profile info...
-			UpdateSoldierPointerDataIntoProfile( FALSE );
+			UpdateSoldierPointerDataIntoProfile();
 		}
 	}
 	else if( ubUnloadCode == ABOUT_TO_TRASH_WORLD )
