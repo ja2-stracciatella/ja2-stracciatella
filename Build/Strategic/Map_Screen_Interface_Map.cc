@@ -3667,13 +3667,12 @@ static void PickUpATownPersonFromSector(UINT8 const type, UINT8 const sector)
 }
 
 
-static void DropAPersonInASector(UINT8 const type, INT16 const x, INT16 const y)
+static void DropAPersonInASector(UINT8 const type, UINT8 const sector)
 {
-	UINT8 const sector = SECTOR(x, y);
 	// Are they in the same town as they were picked up from?
 	if (GetTownIdForSector(sector) != sSelectedMilitiaTown) return;
 
-	if (!SectorOursAndPeaceful(x, y, 0)) return;
+	if (!SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0)) return;
 
 	UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[sector].ubNumberOfCivsAtLevel;
 	if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] >= MAX_ALLOWABLE_MILITIA_PER_SECTOR) return;
@@ -4074,7 +4073,7 @@ static void MilitiaButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		DropAPersonInASector((UINT8)iValue, (INT16)(sGlobalMapSector % 16 + 1), (INT16)(sGlobalMapSector / 16 + 1));
+		DropAPersonInASector(iValue, sGlobalMapSector);
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
