@@ -883,7 +883,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 			break;
 
 		case TRAIN_TOWN:
-			assignment2 = pTownNames[GetTownIdForSector(s.sSectorX, s.sSectorY)];
+			assignment2 = pTownNames[GetTownIdForSector(SECTOR(s.sSectorX, s.sSectorY))];
 			break;
 
 		case REPAIR:
@@ -8198,7 +8198,6 @@ static void DestinationPlottingCompleted(void)
 
 static void HandleMilitiaRedistributionClick(void)
 {
-	INT8 bTownId;
 	BOOLEAN fTownStillHidden;
 	CHAR16 sString[ 128 ];
 
@@ -8206,7 +8205,7 @@ static void HandleMilitiaRedistributionClick(void)
 	// if on the surface
 	if ( iCurrentMapSectorZ == 0 )
 	{
-		bTownId = GetTownIdForSector( sSelMapX, sSelMapY );
+		INT8 const bTownId = GetTownIdForSector(SECTOR(sSelMapX, sSelMapY));
 		fTownStillHidden = ( ( bTownId == TIXA ) && !fFoundTixa ) || ( ( bTownId == ORTA ) && !fFoundOrta );
 
 		if( ( bTownId != BLANK_SECTOR ) && !fTownStillHidden )

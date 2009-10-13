@@ -487,13 +487,14 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 		else
 		{ // Are enemies invading a town, or just encountered the player.
-			if (GetTownIdForSector(x, y))
+			UINT8 const sector = SECTOR(x, y);
+			if (GetTownIdForSector(sector))
 			{
 				gubEnemyEncounterCode = ENEMY_INVASION_CODE;
 			}
 			else
 			{
-				switch (SECTOR(x, y))
+				switch (sector)
 				{
 					case SEC_D2:
 					case SEC_D15:

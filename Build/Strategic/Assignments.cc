@@ -623,7 +623,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE*
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
 	if (s->bSectorZ != 0) return FALSE;
 
-	const INT8 bTownId = GetTownIdForSector(s->sSectorX, s->sSectorY);
+	INT8 const bTownId = GetTownIdForSector(SECTOR(s->sSectorX, s->sSectorY));
 	if (bTownId != BLANK_SECTOR)
 	{
 		// Does this town have sufficient loyalty to train militia?
@@ -4741,7 +4741,6 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
 	SOLDIERTYPE * pSoldier = NULL;
-	INT8 bTownId;
 	CHAR16 sString[ 128 ];
 	CHAR16 sStringA[ 128 ];
 
@@ -4785,7 +4784,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			case( TRAIN_MENU_TOWN):
 				if( BasicCanCharacterTrainMilitia(pSoldier) )
 				{
-					bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
+					INT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
 
 					// if it's a town sector (the following 2 errors can't happen at non-town SAM sites)
 					if( bTownId != BLANK_SECTOR )

@@ -103,7 +103,7 @@ void CreateDestroyTownInfoBox(void)
 			else
 			{
 				// do we add text for the town box?
-				const INT8 bTownId = GetTownIdForSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
+				INT8 const bTownId = GetTownIdForSector(SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY));
 				if (bTownId != BLANK_SECTOR)
 				{
 					// add text for town box
@@ -167,18 +167,14 @@ void CreateDestroyTownInfoBox(void)
 static void AddTextToTownBox(PopUpBox* const box)
 {
 	CHAR16 wString[ 64 ];
-	UINT8 ubTownId = 0;
-	UINT16 usTownSectorIndex;
 	INT16 sMineSector = 0;
 
-	// remember town id
-	ubTownId = GetTownIdForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
+	UINT8 const sector   = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
+	UINT8 const ubTownId = GetTownIdForSector(sector);
 	Assert((ubTownId >= FIRST_TOWN) && (ubTownId < NUM_TOWNS));
 
-	usTownSectorIndex = SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
-
 	const wchar_t* title;
-	switch( usTownSectorIndex )
+	switch (sector)
 	{
 		case SEC_B13: title = pLandTypeStrings[DRASSEN_AIRPORT_SITE];                    break;
 		case SEC_F8:  title = pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];                   break;

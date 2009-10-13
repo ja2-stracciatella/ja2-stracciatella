@@ -780,7 +780,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		wcslcpy(gzUserDefinedButton1, town_sector, lengthof(gzUserDefinedButton1));
 		GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere), gzUserDefinedButton2, lengthof(gzUserDefinedButton2));
 
-		wchar_t const* const town = g_towns_locative[GetTownIdForSector(SECTORX(elsewhere), SECTORY(elsewhere))];
+		wchar_t const* const town = g_towns_locative[GetTownIdForSector(elsewhere)];
 		wchar_t const* const text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
 		swprintf(msg, lengthof(msg), text, s.name, town_sector, town, gzUserDefinedButton2);
 		flags = add_rehire_button ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;

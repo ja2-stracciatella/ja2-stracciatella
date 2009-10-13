@@ -367,7 +367,7 @@ void DecideOnAssassin()
 {
 	ProfileID   assassins[lengthof(g_assassin_info)];
 	UINT8       n    = 0;
-	UINT8 const town = GetTownIdForSector(gWorldSectorX, gWorldSectorY);
+	UINT8 const town = GetTownIdForSector(SECTOR(gWorldSectorX, gWorldSectorY));
 	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
 		AssassinInfo      const  a = *i;

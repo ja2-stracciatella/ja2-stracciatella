@@ -489,11 +489,10 @@ void InitStrategicEngine()
 }
 
 
-UINT8 GetTownIdForSector( INT16 sMapX, INT16 sMapY )
+UINT8 GetTownIdForSector(UINT8 const sector)
 {
 	// return the name value of the town in this sector
-
-	return( StrategicMap[CALCULATE_STRATEGIC_INDEX( sMapX, sMapY )].bNameId );
+	return StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].bNameId;
 }
 
 
@@ -1066,7 +1065,10 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	}
 #endif
 
-	if ( (gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS) && CheckFact( FACT_KINGPIN_CAN_SEND_ASSASSINS, 0 ) && (GetTownIdForSector( sNewSectorX, sNewSectorY ) != BLANK_SECTOR) && Random( 10 + GetNumberOfMilitiaInSector( sNewSectorX, sNewSectorY, bNewSectorZ ) ) < 3 )
+	if (gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS                     &&
+			CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, 0)                        &&
+			GetTownIdForSector(SECTOR(sNewSectorX, sNewSectorY)) != BLANK_SECTOR &&
+			Random(10 + GetNumberOfMilitiaInSector(sNewSectorX, sNewSectorY, bNewSectorZ)) < 3)
 	{
 		DecideOnAssassin();
 	}

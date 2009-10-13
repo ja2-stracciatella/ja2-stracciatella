@@ -349,7 +349,6 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 {
 	// handle the impact on loyalty of the murder of a civilian
-	INT8 bTownId = 0;
 	INT32 iLoyaltyChange = 0;
 	INT8 bSeenState = 0;
 	UINT32 uiChanceFalseAccusal = 0;
@@ -400,9 +399,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 		HandleMoraleEvent(killer, MORALE_KILLED_CIVILIAN, killer->sSectorX, killer->sSectorY, killer->bSectorZ);
 	}
 
-
-	// get town id
-	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
+	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
 
 	// if civilian is NOT in a town
 	if( bTownId == BLANK_SECTOR )
@@ -596,11 +593,9 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 // check town and raise loyalty value for hiring a merc from a town...not a lot of a gain, but some
 void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 {
-	INT8 bTownId = 0;
 	UINT32 uiLoyaltyValue = 0;
 
-	// get town id civilian
-	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
+	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
 
   // is the merc currently in their home town?
 	if( bTownId == gMercProfiles[ pSoldier->ubProfile ].bTown )
@@ -624,8 +619,6 @@ static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sP
 	// more penalty for the people who did it, a lesser one for those who should have stopped it
 	INT16 sLoyaltyValue = 0;
 	INT16 sPolicingLoyalty = 0;
-	INT8 bTownId = 0;
-
 
 	// hurt loyalty for damaging the building
 	sLoyaltyValue = sPointsDmg * MULTIPLIER_FOR_DAMAGING_A_BUILDING;
@@ -633,8 +626,7 @@ static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sP
 	// penalty for not preventing the action
 	sPolicingLoyalty = sPointsDmg * MULTIPLIER_FOR_NOT_PREVENTING_BUILDING_DAMAGE;
 
-	// get town id
-	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
+	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
 
 	// penalize the side that did it
 	if( pSoldier->bTeam == OUR_TEAM )
@@ -888,14 +880,11 @@ static INT32 IsTownUnderCompleteControlByEnemy(INT8 bTownId)
 
 void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 ubHowMany)
 {
-	INT8 bTownId = 0;
 	UINT32 uiLoyaltyChange = 0;
 	wchar_t str[256];
 	wchar_t pSectorString[128];
 
-
-	// get town id
-	bTownId = GetTownIdForSector( sSectorX, sSectorY );
+	UINT8 const bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
 
 	// if NOT in a town
 	if( bTownId == BLANK_SECTOR )
@@ -943,7 +932,7 @@ void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY
 	if( bSectorZ == 0 )
 	{
 		// grab town id, if this event occured within one
-		bTownId = GetTownIdForSector( sSectorX, sSectorY );
+		bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
 	}
 
 	// should other towns ignore events occuring in this town?
@@ -1228,7 +1217,7 @@ void SetTheFirstBattleSector( INT16 sSectorValue )
 // Did first battle take place here?
 bool DidFirstBattleTakePlaceInThisTown(INT8 const town)
 {
-	return GetTownIdForSector(sWorldSectorLocationOfFirstBattle % MAP_WORLD_X, sWorldSectorLocationOfFirstBattle / MAP_WORLD_X) == town;
+	return GetTownIdForSector(STRATEGIC_INDEX_TO_SECTOR_INFO(sWorldSectorLocationOfFirstBattle)) == town;
 }
 
 

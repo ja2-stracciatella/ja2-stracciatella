@@ -74,7 +74,7 @@ extern	BOOLEAN		gfUseAlternateMap;
 
 
 // grab the town id value
-UINT8 GetTownIdForSector( INT16 sMapX, INT16 sMapY );
+UINT8 GetTownIdForSector(UINT8 sector);
 
 void SetCurrentWorldSector(INT16 x, INT16 y, INT8 z);
 

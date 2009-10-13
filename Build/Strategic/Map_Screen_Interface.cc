@@ -1072,7 +1072,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo
 	if (MERC_LEAVE_ITEM* i = gpLeaveListHead[slot_idx])
 	{
 		wchar_t sString[128];
-		wchar_t const* const town = g_towns_locative[GetTownIdForSector(SECTORX(sector), SECTORY(sector))];
+		wchar_t const* const town = g_towns_locative[GetTownIdForSector(sector)];
 		int            const x    = SECTORX(sector);
 		char           const y    = SECTORY(sector) - 1 + 'A';
 		ProfileID      const id   = guiLeaveListOwnerProfileId[slot_idx];
@@ -3802,7 +3802,7 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 
 		}
 		else
 		{
-			INT8 const town_id = GetTownIdForSector(x, y);
+			INT8 const town_id = GetTownIdForSector(SECTOR(x, y));
 			if (town_id != BLANK_SECTOR)
 			{
 				// San Mona isn't important
@@ -3838,7 +3838,7 @@ void NotifyPlayerOfInvasionByEnemyForces(INT16 const x, INT16 const y, INT8 cons
 		swprintf(buf, lengthof(buf), pMapErrorString[22], sector_desc);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
-	else if (GetTownIdForSector(x, y) != BLANK_SECTOR)
+	else if (GetTownIdForSector(SECTOR(x, y)) != BLANK_SECTOR)
 	{
 		GetSectorIDString(x, y, z, sector_desc, lengthof(sector_desc), TRUE);
 		swprintf(buf, lengthof(buf), pMapErrorString[23], sector_desc);

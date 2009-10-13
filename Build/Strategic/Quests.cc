@@ -478,9 +478,7 @@ static BOOLEAN NPCHeardShot(UINT8 ubProfileID)
 
 static BOOLEAN InTownSectorWithTrainingLoyalty(INT16 sSectorX, INT16 sSectorY)
 {
-	UINT8	ubTown;
-
-	ubTown = GetTownIdForSector( sSectorX, sSectorY );
+	UINT8 const ubTown = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
 	if ( ( ubTown != BLANK_SECTOR ) && gTownLoyalty[ ubTown ].fStarted && gfTownUsesLoyalty[ ubTown ])
 	{
 		return( gTownLoyalty[ ubTown ].ubRating >= MIN_RATING_TO_TRAIN_TOWN );

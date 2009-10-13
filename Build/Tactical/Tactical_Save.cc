@@ -707,7 +707,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 
 	bool const maybe_dont_add =
 		!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) &&
-		z == 0 && GetTownIdForSector(x, y) != BLANK_SECTOR; // In town?
+		z == 0 && GetTownIdForSector(SECTOR(x, y)) != BLANK_SECTOR; // In town?
 	for (UINT32 n = n_corpses; n != 0; --n)
 	{
 		ROTTING_CORPSE_DEFINITION def;

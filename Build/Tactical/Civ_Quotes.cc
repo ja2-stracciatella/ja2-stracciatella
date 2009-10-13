@@ -385,7 +385,6 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, BOOLEAN fCanUseHints)
 {
 	UINT8	ubCivType;
-	INT8	bTownId;
 	BOOLEAN	bCivLowLoyalty = FALSE;
 	BOOLEAN	bCivHighLoyalty = FALSE;
 	INT8		bCivHint;
@@ -427,9 +426,7 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 	}
 
 	// Are we in a town sector?
-	// get town id
-	bTownId = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
-
+	UINT8 const bTownId = GetTownIdForSector(SECTOR(gWorldSectorX, gWorldSectorY));
 
 	// If a married PC...
 	if ( ubCivType == CIV_TYPE_MARRIED_PC )

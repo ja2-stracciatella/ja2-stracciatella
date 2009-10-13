@@ -476,13 +476,12 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	CHAR16 sString[ 128 ];
 	INT16 sSectorX = 0, sSectorY = 0;
 	CHAR16 sStringB[ 128 ];
-	INT8 bTownId;
-
 
 	sSectorX = pSoldier->sSectorX;
 	sSectorY = pSoldier->sSectorY;
+	UINT8 const sector = SECTOR(sSectorX, sSectorY);
 
-	Assert(!SectorInfo[SECTOR(sSectorX, sSectorY)].fMilitiaTrainingPaid);
+	Assert(!SectorInfo[sector].fMilitiaTrainingPaid);
 
 	pMilitiaTrainerSoldier = pSoldier;
 
@@ -492,7 +491,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	if (!DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(pSoldier))
 	{
 		// loyalty too low to continue training
-		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[8], pTownNames[ GetTownIdForSector(sSectorX, sSectorY)], MIN_RATING_TO_TRAIN_TOWN);
+		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[8], pTownNames[GetTownIdForSector(sector)], MIN_RATING_TO_TRAIN_TOWN);
 		DoContinueMilitiaTrainingMessageBox( sSectorX, sSectorY, sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
@@ -500,7 +499,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	if (IsAreaFullOfMilitia(sSectorX, sSectorY, pSoldier->bSectorZ))
 	{
 		// we're full!!! go home!
-		bTownId = GetTownIdForSector( sSectorX, sSectorY );
+		UINT8 const bTownId = GetTownIdForSector(sector);
 		if ( bTownId == BLANK_SECTOR )
 		{
 			// wilderness SAM site
@@ -680,7 +679,7 @@ BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const IN
 	UINT32 count_milita = 0;
 	UINT32 max_milita   = 0;
 
-	const INT8 town_id = GetTownIdForSector(sector_x, sector_y);
+	INT8 const town_id = GetTownIdForSector(SECTOR(sector_x, sector_y));
 	if (town_id != BLANK_SECTOR)
 	{
 		FOR_EACH_SECTOR_IN_TOWN(i, town_id)
@@ -939,7 +938,6 @@ static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 
 BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	INT8 bTownId;
 	BOOLEAN fSamSitePresent = FALSE;
 
 
@@ -956,10 +954,7 @@ BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSe
 		return(TRUE);
 	}
 
-
-	bTownId = GetTownIdForSector( sSectorX, sSectorY );
-
-
+	UINT8 const bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
 	return( MilitiaTrainingAllowedInTown( bTownId ) );
 }
 

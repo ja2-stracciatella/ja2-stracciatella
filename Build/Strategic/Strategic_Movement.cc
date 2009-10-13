@@ -1262,7 +1262,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		if (z == 0)
 		{
 			// check for discovering secret locations
-			switch (GetTownIdForSector(x, y))
+			switch (GetTownIdForSector(SECTOR(x, y)))
 			{
 				case ORTA: SetOrtaAsFound(); break;
 				case TIXA: SetTixaAsFound(); break;

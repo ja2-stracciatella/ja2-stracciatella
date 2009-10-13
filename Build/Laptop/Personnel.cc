@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Campaign_Types.h"
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -641,7 +642,7 @@ static void DisplayCharName(SOLDIERTYPE const& s)
 			s.bAssignment != IN_TRANSIT)
 	{
 		// name of town, if any
-		INT8 bTownId = GetTownIdForSector(s.sSectorX, s.sSectorY);
+		INT8 const bTownId = GetTownIdForSector(SECTOR(s.sSectorX, s.sSectorY));
 		if (bTownId != BLANK_SECTOR) sTownName = pTownNames[bTownId];
 	}
 

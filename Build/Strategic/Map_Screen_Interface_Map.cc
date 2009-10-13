@@ -3651,30 +3651,32 @@ static INT16& GetPickedUpMilitia(UINT8 const type)
 // function to manipulate the number of towns people on the cursor
 static void PickUpATownPersonFromSector(UINT8 const type, INT16 const x, INT16 const y)
 {
+	UINT8 const sector = SECTOR(x, y);
 	// Are they in the same town as they were picked up from?
-	if (GetTownIdForSector(x, y) != sSelectedMilitiaTown) return;
+	if (GetTownIdForSector(sector) != sSelectedMilitiaTown) return;
 
 	if (!SectorOursAndPeaceful(x, y, 0)) return;
 
-	UINT8& n_type = SectorInfo[SECTOR(x, y)].ubNumberOfCivsAtLevel[type];
+	UINT8& n_type = SectorInfo[sector].ubNumberOfCivsAtLevel[type];
 	// See if there are any militia of this type in this sector
 	if (n_type == 0) return;
 
 	--n_type;                   // Reduce number in this sector
 	++GetPickedUpMilitia(type); // Pick this guy up
 	fMapPanelDirty = TRUE;
-	if (SECTOR(x, y) == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
+	if (sector == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
 }
 
 
 static void DropAPersonInASector(UINT8 const type, INT16 const x, INT16 const y)
 {
+	UINT8 const sector = SECTOR(x, y);
 	// Are they in the same town as they were picked up from?
-	if (GetTownIdForSector(x, y) != sSelectedMilitiaTown) return;
+	if (GetTownIdForSector(sector) != sSelectedMilitiaTown) return;
 
 	if (!SectorOursAndPeaceful(x, y, 0)) return;
 
-	UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[SECTOR(x, y)].ubNumberOfCivsAtLevel;
+	UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[sector].ubNumberOfCivsAtLevel;
 	if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] >= MAX_ALLOWABLE_MILITIA_PER_SECTOR) return;
 
 	// Drop the guy into this sector
@@ -3684,7 +3686,7 @@ static void DropAPersonInASector(UINT8 const type, INT16 const x, INT16 const y)
 	--n_type;
 	++n_milita[type]; // Up the number in this sector of this type of militia
 	fMapPanelDirty = TRUE;
-	if (SECTOR(x, y) == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
+	if (sector == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
 }
 
 
@@ -3855,22 +3857,21 @@ static void RenderIconsPerSectorForSelectedTown(void)
 	INT16 const sBaseSectorValue = GetBaseSectorForCurrentTown();
 	for (INT32 iCounter = 0; iCounter != 9; ++iCounter)
 	{
-		INT32 const dx    = iCounter % MILITIA_BOX_ROWS;
-		INT32 const dy    = iCounter / MILITIA_BOX_ROWS;
-		INT16 const sec_x = SECTORX(sBaseSectorValue) + dx;
-		INT16 const sec_y = SECTORY(sBaseSectorValue) + dy;
+		INT32 const dx     = iCounter % MILITIA_BOX_ROWS;
+		INT32 const dy     = iCounter / MILITIA_BOX_ROWS;
+		INT16 const sector = sBaseSectorValue + dx + dy * 16;
 
 		// skip sectors not in the selected town (nearby other towns or wilderness SAM Sites)
-		if (GetTownIdForSector(sec_x, sec_y) != sSelectedMilitiaTown) continue;
+		if (GetTownIdForSector(sector) != sSelectedMilitiaTown) continue;
 
 		// get number of each
-		SECTORINFO const& si         = SectorInfo[SECTOR(sec_x, sec_y)];
+		SECTORINFO const& si         = SectorInfo[sector];
 		INT32      const  n_greens   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
 		INT32      const  n_regulars = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
 		INT32      const  n_elites   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
 		INT32      const  n_total    = n_greens + n_regulars + n_elites;
 
-		StrategicMapElement const& e = StrategicMap[CALCULATE_STRATEGIC_INDEX(sec_x, sec_y)];
+		StrategicMapElement const& e = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)];
 		if (e.bNameId != BLANK_SECTOR && !e.fEnemyControlled)
 		{
 			// print number of troops
@@ -4226,13 +4227,11 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 	for (INT32 i = 0; i != 9; ++i)
 	{
 		INT16 const sector = base_sector + i % MILITIA_BOX_ROWS + i / MILITIA_BOX_ROWS * 16;
-		INT16 const x      = SECTORX(sector);
-		INT16 const y      = SECTORY(sector);
 
 		// Skip sectors not in the selected town (nearby other towns or wilderness SAM Sites)
-		if (GetTownIdForSector(x, y) != town) continue;
+		if (GetTownIdForSector(sector) != town) continue;
 
-		if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) continue;
+		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
 
 		SECTORINFO const& si = SectorInfo[sector];
 		n_green   += si.ubNumberOfCivsAtLevel[GREEN_MILITIA];

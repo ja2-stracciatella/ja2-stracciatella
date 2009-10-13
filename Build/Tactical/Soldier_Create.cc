@@ -2063,19 +2063,14 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 	UINT8 ubLocationModifier;
 	UINT8 ubPalaceDistance;
 	INT16 sSectorX, sSectorY, sSectorZ;
-	INT8 bTownId;
 	BOOLEAN fSuccess;
-
 
 	// where is all this taking place?
 	fSuccess = GetCurrentBattleSectorXYZ( &sSectorX, &sSectorY, &sSectorZ );
 	Assert( fSuccess );
 
 	// ignore sSectorZ - treat any underground enemies as if they were on the surface!
-	bTownId = GetTownIdForSector( sSectorX, sSectorY );
-
-
-	switch ( bTownId )
+	switch (GetTownIdForSector(SECTOR(sSectorX, sSectorY)))
 	{
 		case ORTA:
 		case TIXA:
