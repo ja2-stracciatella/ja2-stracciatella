@@ -207,7 +207,7 @@ INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const&);
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam );
 
-BOOLEAN IsProfileATerrorist( UINT8 ubProfile );
+bool IsProfileATerrorist(ProfileID);
 BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile );
 
 void UpdateSoldierPointerDataIntoProfile();

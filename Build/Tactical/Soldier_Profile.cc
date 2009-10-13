@@ -898,18 +898,13 @@ INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const& p)
 }
 
 
-BOOLEAN IsProfileATerrorist(UINT8 ubProfile)
+bool IsProfileATerrorist(ProfileID const pid)
 {
-	switch (ubProfile)
+	FOR_EACH(TerroristInfo const, i, g_terrorist_infos)
 	{
-		case SLAY:
-		case ANNIE:
-		case CHRIS:
-		case TIFFANY:
-		case T_REX:
-		case DRUGGIST: return TRUE;
-		default:       return FALSE;
+		if (i->profile == pid) return true;
 	}
+	return false;
 }
 
 
