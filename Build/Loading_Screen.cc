@@ -8,6 +8,7 @@
 #include "Local.h"
 #include "Random.h"
 #include "Render_Dirty.h"
+#include "StrategicMap.h"
 #include "Strategic_Movement.h"
 #include "VSurface.h"
 #include "Video.h"
@@ -43,11 +44,6 @@ LoadingScreenID GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
 					return night ? LOADINGSCREEN_NIGHTLAB : LOADINGSCREEN_DAYLAB;
 				case SEC_J9:
 					return night ? LOADINGSCREEN_NIGHTPRISON : LOADINGSCREEN_DAYPRISON;
-				case SEC_D2:
-				case SEC_D15:
-				case SEC_I8:
-				case SEC_N4:
-					return night ? LOADINGSCREEN_NIGHTSAM : LOADINGSCREEN_DAYSAM;
 				case SEC_F8:
 					return night ? LOADINGSCREEN_NIGHTHOSPITAL : LOADINGSCREEN_DAYHOSPITAL;
 				case SEC_B13:
@@ -61,6 +57,12 @@ LoadingScreenID GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
 				case SEC_D4:
 					return night ? LOADINGSCREEN_NIGHTMINE : LOADINGSCREEN_DAYMINE;
 			}
+
+			if (IsThisSectorASAMSector(x, y, z))
+			{
+				return night ? LOADINGSCREEN_NIGHTSAM : LOADINGSCREEN_DAYSAM;
+			}
+
 			switch (SectorInfo[sector_id].ubTraversability[THROUGH_STRATEGIC_MOVE])
 			{
 				case TOWN:
