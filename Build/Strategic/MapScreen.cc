@@ -8234,10 +8234,13 @@ static void HandleMilitiaRedistributionClick(void)
 				DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 			}
 		}
-		else if( IsThisSectorASAMSector( sSelMapX, sSelMapY, 0 ) && fSamSiteFound[ GetSAMIdFromSector( sSelMapX, sSelMapY, 0 ) ] )
+		else
 		{
-			// can't move militia around sam sites
-			DoScreenIndependantMessageBox( pMapErrorString[ 30 ], MSG_BOX_FLAG_OK, NULL );
+			INT8 const sam_id = GetSAMIdFromSector(sSelMapX, sSelMapY, 0);
+			if (sam_id != -1 && fSamSiteFound[sam_id])
+			{ // Cannot move militia around sam sites.
+				DoScreenIndependantMessageBox(pMapErrorString[30], MSG_BOX_FLAG_OK, NULL);
+			}
 		}
 	}
 }

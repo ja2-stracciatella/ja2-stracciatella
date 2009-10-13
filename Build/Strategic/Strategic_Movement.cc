@@ -1268,10 +1268,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 				case TIXA: SetTixaAsFound(); break;
 
 				default:
-					if (IsThisSectorASAMSector(x, y, 0))
-					{
-						SetSAMSiteAsFound(GetSAMIdFromSector(x, y, 0));
-					}
+					INT8 const sam_id = GetSAMIdFromSector(x, y, 0);
+					if (sam_id != -1) SetSAMSiteAsFound(sam_id);
 					break;
 			}
 		}

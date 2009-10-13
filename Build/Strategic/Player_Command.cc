@@ -133,12 +133,13 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			}
 
 			// if it's a SAM site sector
-			if( IsThisSectorASAMSector( sMapX, sMapY, bMapZ ) )
+			INT8 const sam_id = GetSAMIdFromSector(sMapX, sMapY, bMapZ);
+			if (sam_id != -1)
 			{
 				if ( 1 /*!GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE ) */)
 				{
 					// SAM site liberated for first time, schedule meanwhile
-					HandleMeanWhileEventPostingForSAMLiberation( GetSAMIdFromSector( sMapX, sMapY, bMapZ ) );
+					HandleMeanWhileEventPostingForSAMLiberation(sam_id);
 				}
 
 				HandleMoraleEvent( NULL, MORALE_SAM_SITE_LIBERATED, sMapX, sMapY, bMapZ );
