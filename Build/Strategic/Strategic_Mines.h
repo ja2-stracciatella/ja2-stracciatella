@@ -130,7 +130,7 @@ void SaveMineStatusToSaveGameFile(HWFILE);
 void LoadMineStatusFromSavedGameFile(HWFILE);
 
 // if the player controls a given mine
-BOOLEAN PlayerControlsMine(INT8 bMineIndex);
+bool PlayerControlsMine(INT8 mine_id);
 
 void ShutOffMineProduction( INT8 bMineIndex );
 void RestartMineProduction( INT8 bMineIndex );

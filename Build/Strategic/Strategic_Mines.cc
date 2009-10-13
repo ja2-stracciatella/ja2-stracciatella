@@ -713,23 +713,13 @@ INT16 GetMineSectorForTown(INT8 const town_id)
 }
 
 
-BOOLEAN PlayerControlsMine(INT8 bMineIndex)
+bool PlayerControlsMine(INT8 const mine_id)
 {
-	// a value of TRUE is from the enemy's point of view
-	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(gMineLocation[bMineIndex].sector)].fEnemyControlled)
-		return(FALSE);
-	else
-	{
-		// player only controls the actual mine after he has made arrangements to do so with the head miner there
-		if (gMineStatus[ bMineIndex ].fSpokeToHeadMiner)
-		{
-			return(TRUE);
-		}
-		else
-		{
-			return(FALSE);
-		}
-	}
+	return
+		!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(gMineLocation[mine_id].sector)].fEnemyControlled &&
+		/* Player only controls the actual mine after he has made arrangements to do
+		 * so with the head miner there. */
+		gMineStatus[mine_id].fSpokeToHeadMiner;
 }
 
 
