@@ -7,8 +7,6 @@
 
 
 extern INT8 gbSkillTraitBonus[NUM_SKILLTRAITS];
-extern UINT8 gubTerrorists[];
-extern INT16 gsTerroristSector[][5][2];
 extern BOOLEAN	gfPotentialTeamChangeDuringDeath;
 
 extern MERCPROFILESTRUCT gMercProfiles[NUM_PROFILES];

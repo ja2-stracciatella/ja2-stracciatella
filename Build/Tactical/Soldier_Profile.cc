@@ -77,7 +77,7 @@ INT8 gbSkillTraitBonus[NUM_SKILLTRAITS] =
 
 #define NUM_TERRORISTS 6
 
-UINT8	gubTerrorists[NUM_TERRORISTS + 1] =
+static UINT8 const gubTerrorists[NUM_TERRORISTS + 1] =
 {
 	DRUGGIST,
 	SLAY,
@@ -90,9 +90,7 @@ UINT8	gubTerrorists[NUM_TERRORISTS + 1] =
 
 UINT8	gubNumTerrorists = 0;
 
-#define NUM_TERRORIST_POSSIBLE_LOCATIONS 5
-
-INT16	gsTerroristSector[NUM_TERRORISTS][NUM_TERRORIST_POSSIBLE_LOCATIONS][2] =
+static INT16 const gsTerroristSector[NUM_TERRORISTS][5][2] =
 {
 	// Elgin... preplaced
 	{
@@ -165,7 +163,7 @@ static AssassinInfo const g_assassin_info[] =
 
 
 static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT const&);
-static void DecideActiveTerrorists(void);
+static void DecideActiveTerrorists();
 static void StartSomeMercsOnAssignment(void);
 
 
@@ -272,105 +270,71 @@ void LoadMercProfiles()
 #define MAX_ADDITIONAL_TERRORISTS 4
 
 
-static void DecideActiveTerrorists(void)
+/* One terrorist is always Elgin. Determine how many more terrorists - 2 to 4
+ * more. */
+static void DecideActiveTerrorists()
 {
-	UINT8		ubLoop, ubLoop2;
-	UINT8		ubTerrorist;
-	UINT8		ubNumAdditionalTerrorists, ubNumTerroristsAdded = 0;
-	UINT32	uiChance, uiLocationChoice;
-	BOOLEAN	fFoundSpot;
-	INT16		sTerroristPlacement[MAX_ADDITIONAL_TERRORISTS][2] = { {0, 0}, {0, 0}, {0, 0}, {0, 0} };
-
-	// one terrorist will always be Elgin
-	// determine how many more terrorists - 2 to 4 more
-
-	// using this stochastic process(!), the chances for terrorists are:
-	// EASY:		3, 9%			4, 42%		5, 49%
-	// MEDIUM:	3, 25%		4, 50%		5, 25%
-	// HARD:		3, 49%		4, 42%		5, 9%
-	switch( gGameOptions.ubDifficultyLevel )
+	/* Using this stochastic process(!), the chances for terrorists are:
+	 * EASY:    3,  9%    4, 42%    5, 49%
+	 * MEDIUM:  3, 25%    4, 50%    5, 25%
+	 * HARD:    3, 49%    4, 42%    5,  9% */
+	UINT32 chance;
+	switch (gGameOptions.ubDifficultyLevel)
 	{
-		case DIF_LEVEL_EASY:
-			uiChance = 70;
-			break;
-		case DIF_LEVEL_HARD:
-			uiChance = 30;
-			break;
-		default:
-			uiChance = 50;
-			break;
+		case DIF_LEVEL_EASY: chance = 70; break;
+		default:             chance = 50; break;
+		case DIF_LEVEL_HARD: chance = 30; break;
 	}
-	// add at least 2 more
-	ubNumAdditionalTerrorists = 2;
-	for (ubLoop = 0; ubLoop < (MAX_ADDITIONAL_TERRORISTS - 2); ubLoop++)
+	UINT8 n_additional_terrorists = 2; // Add at least 2 more.
+	for (UINT8 n = MAX_ADDITIONAL_TERRORISTS - n_additional_terrorists; n != 0; --n)
 	{
-		if (Random( 100 ) < uiChance)
-		{
-			ubNumAdditionalTerrorists++;
-		}
+		if (Chance(chance)) ++n_additional_terrorists;
 	}
 
 	// ifdefs added by CJC
-	#ifdef JA2TESTVERSION
-		ubNumAdditionalTerrorists = 4;
-	#endif
+#ifdef JA2TESTVERSION
+	n_additional_terrorists = 4;
+#endif
 
-	while ( ubNumTerroristsAdded < ubNumAdditionalTerrorists )
+	INT16 terrorist_placement[MAX_ADDITIONAL_TERRORISTS][2];
+	for (UINT8 n_terrorists_added = 0; n_terrorists_added != n_additional_terrorists;)
 	{
-
-		ubLoop = 1; // start at beginning of array (well, after Elgin)
-
 		// NB terrorist ID of 0 indicates end of array
-		while ( ubNumTerroristsAdded < ubNumAdditionalTerrorists && gubTerrorists[ ubLoop ] != 0 )
+		for (UINT8 i = 1; n_terrorists_added != n_additional_terrorists && gubTerrorists[i] != 0; ++i)
 		{
+			MERCPROFILESTRUCT& p = GetProfile(gubTerrorists[i]);
+			// Random 40% chance of adding this terrorist if not yet placed.
+			if (p.sSectorX != 0)   continue;
+			if (Random(100) >= 40) continue;
 
-			ubTerrorist = gubTerrorists[ ubLoop ];
-
-			// random 40% chance of adding this terrorist if not yet placed
-			if ( ( gMercProfiles[ ubTerrorist ].sSectorX == 0 ) && ( Random( 100 ) < 40 ) )
+			/* Since there are 5 spots per terrorist and a maximum of 5 terrorists, we
+			 * are guaranteed to be able to find a spot for each terrorist since there
+			 * aren't enough other terrorists to use up all the spots for any one
+			 * terrorist */
+pick_sector:
+			// Pick a random spot, see if it's already been used by another terrorist.
+			INT16 const* const sector = gsTerroristSector[i][Random(lengthof(gsTerroristSector[i]))];
+			for (UINT8 k = 0; k != n_terrorists_added; ++k)
 			{
-				// Since there are 5 spots per terrorist and a maximum of 5 terrorists, we
-				// are guaranteed to be able to find a spot for each terrorist since there
-				// aren't enough other terrorists to use up all the spots for any one
-				// terrorist
-				do
-				{
-					// pick a random spot, see if it's already been used by another terrorist
-					fFoundSpot = TRUE;
-					uiLocationChoice = Random( NUM_TERRORIST_POSSIBLE_LOCATIONS );
-					for (ubLoop2 = 0; ubLoop2 < ubNumTerroristsAdded; ubLoop2++)
-					{
-						if (sTerroristPlacement[ubLoop2][0] == gsTerroristSector[ubLoop][uiLocationChoice][0] )
-						{
-							if (sTerroristPlacement[ubLoop2][1] == gsTerroristSector[ubLoop][uiLocationChoice][1] )
-							{
-								fFoundSpot = FALSE;
-								break;
-							}
-						}
-					}
-				} while( !fFoundSpot );
-
-				// place terrorist!
-				gMercProfiles[ ubTerrorist ].sSectorX = gsTerroristSector[ ubLoop ][ uiLocationChoice ][ 0 ];
-				gMercProfiles[ ubTerrorist ].sSectorY = gsTerroristSector[ ubLoop ][ uiLocationChoice ][ 1 ];
-				gMercProfiles[ ubTerrorist ].bSectorZ = 0;
-				sTerroristPlacement[ ubNumTerroristsAdded ][ 0 ] = gMercProfiles[ ubTerrorist ].sSectorX;
-				sTerroristPlacement[ ubNumTerroristsAdded ][ 1 ] = gMercProfiles[ ubTerrorist ].sSectorY;
-				ubNumTerroristsAdded++;
+				if (terrorist_placement[k][0] != sector[0]) continue;
+				if (terrorist_placement[k][1] != sector[1]) continue;
+				goto pick_sector;
 			}
-			ubLoop++;
 
+			// Place terrorist.
+			p.sSectorX = sector[0];
+			p.sSectorY = sector[1];
+			p.bSectorZ = 0;
+			terrorist_placement[n_terrorists_added][0] = sector[0];
+			terrorist_placement[n_terrorists_added][1] = sector[1];
+			++n_terrorists_added;
 		}
-
-		// start over if necessary
 	}
 
-	// set total terrorists outstanding in Carmen's info byte
-	GetProfile(CARMEN).bNPCData = 1 + ubNumAdditionalTerrorists;
-
-	// store total terrorists
-	gubNumTerrorists = 1 + ubNumAdditionalTerrorists;
+	// Set total terrorists outstanding in Carmen's info byte.
+	GetProfile(CARMEN).bNPCData = 1 + n_additional_terrorists;
+	// Store total terrorists.
+	gubNumTerrorists = 1 + n_additional_terrorists;
 }
 
 
