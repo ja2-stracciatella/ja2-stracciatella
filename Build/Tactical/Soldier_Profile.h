@@ -190,8 +190,9 @@ enum NPCIDs
 
 void LoadMercProfiles();
 
-// This function will overload the default for the face index ( which is the ubCharNum )
-void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY );
+// Overload the default for the face index (which is the profile ID)
+void SetProfileFaceData(ProfileID, UINT8 face_idx, UINT16 eyes_x, UINT16 eyes_y, UINT16 mouth_x, UINT16 mouth_y);
+
 SOLDIERTYPE* FindSoldierByProfileID(ProfileID);
 SOLDIERTYPE* FindSoldierByProfileIDOnPlayerTeam(ProfileID);
 

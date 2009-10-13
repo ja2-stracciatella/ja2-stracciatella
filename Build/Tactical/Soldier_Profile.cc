@@ -488,13 +488,14 @@ static void StartSomeMercsOnAssignment(void)
 }
 
 
-void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY )
+void SetProfileFaceData(ProfileID const pid, UINT8 const face_idx, UINT16 const eyes_x, UINT16 const eyes_y, UINT16 const mouth_x, UINT16 const mouth_y)
 {
-	 gMercProfiles[ ubCharNum ].ubFaceIndex = ubFaceIndex;
-	 gMercProfiles[ ubCharNum ].usEyesX			= usEyesX;
-	 gMercProfiles[ ubCharNum ].usEyesY			= usEyesY;
-	 gMercProfiles[ ubCharNum ].usMouthX		= usMouthX;
-	 gMercProfiles[ ubCharNum ].usMouthY		= usMouthY;
+	MERCPROFILESTRUCT& p = GetProfile(pid);
+	p.ubFaceIndex = face_idx;
+	p.usEyesX     = eyes_x;
+	p.usEyesY     = eyes_y;
+	p.usMouthX    = mouth_x;
+	p.usMouthY    = mouth_y;
 }
 
 
