@@ -1657,7 +1657,7 @@ void GoToPrevCharacterInList( void )
 }
 
 
-void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16 sQuoteNumber, BOOLEAN fForceMapscreen )
+void HandleMinerEvent(UINT8 const bMinerNumber, INT16 const sQuoteNumber, BOOLEAN const fForceMapscreen)
 {
 	BOOLEAN fFromMapscreen = FALSE;
 

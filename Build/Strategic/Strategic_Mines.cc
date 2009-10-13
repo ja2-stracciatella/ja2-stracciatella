@@ -900,8 +900,7 @@ void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
 
 	/* Cause this quote to come up for this profile id and an indicator to flash
 	 * over the mine sector */
-	MINE_LOCATION_TYPE const& loc = gMineLocation[mine_idx];
-	HandleMinerEvent(miner_data.ubExternalFace, loc.sSectorX, loc.sSectorY, bQuoteNum, force_mapscreen);
+	HandleMinerEvent(miner_data.ubExternalFace, bQuoteNum, force_mapscreen);
 
 	// Stop time compression with any miner quote - these are important events.
 	StopTimeCompression();

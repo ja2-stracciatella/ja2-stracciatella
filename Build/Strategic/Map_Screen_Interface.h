@@ -349,7 +349,7 @@ void GoToPrevCharacterInList( void );
 void GoToNextCharacterInList( void );
 
 // this does the whole miner giving player info speil
-void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16 sQuoteNumber, BOOLEAN fForceMapscreen );
+void HandleMinerEvent(UINT8 bMinerNumber, INT16 sQuoteNumber, BOOLEAN fForceMapscreen);
 
 void TurnOnSectorLocator( UINT8 ubProfileID );
 void TurnOffSectorLocator(void);
