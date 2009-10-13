@@ -931,28 +931,24 @@ void UpdateSoldierPointerDataIntoProfile()
 {
 	FOR_EACH_MERC(i)
 	{
-		const SOLDIERTYPE* const pSoldier = *i;
-		if ( pSoldier->ubProfile != NO_PROFILE )
-		{
-			// If we are above player mercs
-			if (pSoldier->ubProfile >= FIRST_RPC)
-			{
-				// Copy....
-				MERCPROFILESTRUCT& p = GetProfile(pSoldier->ubProfile);
-				p.bLife         = pSoldier->bLife;
-				p.bLifeMax      = pSoldier->bLifeMax;
-				p.bAgility      = pSoldier->bAgility;
-				p.bLeadership   = pSoldier->bLeadership;
-				p.bDexterity    = pSoldier->bDexterity;
-				p.bStrength     = pSoldier->bStrength;
-				p.bWisdom       = pSoldier->bWisdom;
-				p.bExpLevel     = pSoldier->bExpLevel;
-				p.bMarksmanship = pSoldier->bMarksmanship;
-				p.bMedical      = pSoldier->bMedical;
-				p.bMechanical   = pSoldier->bMechanical;
-				p.bExplosive    = pSoldier->bExplosive;
-			}
-		}
+		SOLDIERTYPE const& s = **i;
+		if (s.ubProfile == NO_PROFILE) continue;
+		// If we are above player mercs
+		if (s.ubProfile < FIRST_RPC)   continue;
+
+		MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+		p.bLife         = s.bLife;
+		p.bLifeMax      = s.bLifeMax;
+		p.bAgility      = s.bAgility;
+		p.bLeadership   = s.bLeadership;
+		p.bDexterity    = s.bDexterity;
+		p.bStrength     = s.bStrength;
+		p.bWisdom       = s.bWisdom;
+		p.bExpLevel     = s.bExpLevel;
+		p.bMarksmanship = s.bMarksmanship;
+		p.bMedical      = s.bMedical;
+		p.bMechanical   = s.bMechanical;
+		p.bExplosive    = s.bExplosive;
 	}
 }
 
