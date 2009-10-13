@@ -249,12 +249,11 @@ static void InitLairGrumm(void)
 
 static bool IsMineInfectible(MineID const id)
 { // If neither head miner was attacked, ore will/has run out nor enemy controlled
-	MINE_STATUS_TYPE   const& m = gMineStatus[id];
-	MINE_LOCATION_TYPE const& l = gMineLocation[id];
+	MINE_STATUS_TYPE const& m = gMineStatus[id];
 	return
 		!m.fAttackedHeadMiner       &&
 		m.uiOreRunningOutPoint == 0 &&
-		!StrategicMap[CALCULATE_STRATEGIC_INDEX(l.sSectorX, l.sSectorY)].fEnemyControlled;
+		!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(gMineLocation[id].sector)].fEnemyControlled;
 }
 
 

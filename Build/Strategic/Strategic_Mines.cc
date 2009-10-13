@@ -41,14 +41,14 @@
 MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];
 
 // this table holds mine values that never change and don't need to be saved
-const MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES] =
+MINE_LOCATION_TYPE const gMineLocation[] =
 {
-	{		 4,		4,		SAN_MONA		},
-	{		13,		4,		DRASSEN			},
-	{		14,		9,		ALMA				},
-	{		 8,		8,		CAMBRIA			},
-	{		 2,		2,		CHITZENA		},
-	{		 3,		8,		GRUMM				},
+	{ SEC_D4,  SAN_MONA },
+	{ SEC_D13, DRASSEN  },
+	{ SEC_I14, ALMA     },
+	{ SEC_H8,  CAMBRIA  },
+	{ SEC_B2,  CHITZENA },
+	{ SEC_H3,  GRUMM    }
 };
 
 // the are not being randomized at all at this time
@@ -274,7 +274,8 @@ void HourlyMinesUpdate(void)
 						if ( gubQuest[ QUEST_CREATURES ] == QUESTNOTSTARTED )
 						{
 							// start it now!
-							StartQuest( QUEST_CREATURES, gMineLocation[ ubMineIndex ].sSectorX, gMineLocation[ ubMineIndex ].sSectorY );
+							UINT8 const sector = gMineLocation[ubMineIndex].sector;
+							StartQuest(QUEST_CREATURES, SECTORX(sector), SECTORY(sector));
 						}
 					}
 
@@ -354,7 +355,7 @@ INT8 GetTownAssociatedWithMine( INT8 bMineIndex )
 static void AddMineHistoryEvent(UINT8 const event, UINT const mine_id)
 {
 	MINE_LOCATION_TYPE const& m = gMineLocation[mine_id];
-	AddHistoryToPlayersLog(event, m.bAssociatedTown, GetWorldTotalMin(), m.sSectorX,  m.sSectorY);
+	AddHistoryToPlayersLog(event, m.bAssociatedTown, GetWorldTotalMin(), SECTORX(m.sector), SECTORY(m.sector));
 }
 
 
@@ -686,7 +687,7 @@ INT8 GetMineIndexForSector(UINT8 const sector)
 	for (size_t i = 0; i != lengthof(gMineLocation); ++i)
 	{
 		MINE_LOCATION_TYPE const& m = gMineLocation[i];
-		if (SECTOR(m.sSectorX, m.sSectorY) == sector) return i;
+		if (m.sector == sector) return i;
 	}
 	return -1;
 }
@@ -695,8 +696,7 @@ INT8 GetMineIndexForSector(UINT8 const sector)
 UINT8 GetMineSector(UINT8 const ubMineIndex)
 {
 	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
-	MINE_LOCATION_TYPE const& m = gMineLocation[ubMineIndex];
-	return SECTOR(m.sSectorX, m.sSectorY);
+	return gMineLocation[ubMineIndex].sector;
 }
 
 
@@ -707,7 +707,7 @@ INT16 GetMineSectorForTown(INT8 const town_id)
 	{
 		MINE_LOCATION_TYPE const& m = gMineLocation[i];
 		if (m.bAssociatedTown != town_id) continue;
-		return CALCULATE_STRATEGIC_INDEX(m.sSectorX, m.sSectorY);
+		return SECTOR_INFO_TO_STRATEGIC_INDEX(m.sector);
 	}
 	return -1;
 }
@@ -716,7 +716,7 @@ INT16 GetMineSectorForTown(INT8 const town_id)
 BOOLEAN PlayerControlsMine(INT8 bMineIndex)
 {
 	// a value of TRUE is from the enemy's point of view
-	if (StrategicMap[gMineLocation[bMineIndex].sSectorX + MAP_WORLD_X * gMineLocation[bMineIndex].sSectorY].fEnemyControlled)
+	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(gMineLocation[bMineIndex].sector)].fEnemyControlled)
 		return(FALSE);
 	else
 	{

@@ -75,8 +75,7 @@ static void InitMiningLocations()
 {
 	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
 	{
-		MINE_LOCATION_TYPE const& l = *i;
-		SectorInfo[SECTOR(l.sSectorX, l.sSectorY)].uiFlags |= SF_MINING_SITE;
+		SectorInfo[i->sector].uiFlags |= SF_MINING_SITE;
 	}
 }
 

@@ -694,8 +694,9 @@ void DrawMap(void)
 		// draw mine icons and descriptive text
 		for (INT32 i = 0; i < MAX_NUMBER_OF_MINES; ++i)
 		{
-			const INT16 x = gMineLocation[i].sSectorX;
-			const INT16 y = gMineLocation[i].sSectorY;
+			UINT8 const sector = gMineLocation[i].sector;
+			INT16 const x      = SECTORX(sector);
+			INT16 const y      = SECTORY(sector);
 			BlitMineIcon(x, y);
 			// show mine name/production text
 			if (fShowMineFlag) BlitMineText(x, y);
@@ -3591,13 +3592,16 @@ static void BlitMineGridMarkers(void)
 	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
 	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
 	{
-		INT16 x;
-		INT16 y;
-		INT16 w;
-		INT16 h;
+		INT16                     x;
+		INT16                     y;
+		INT16                     w;
+		INT16                     h;
+		MINE_LOCATION_TYPE const& m  = *i;
+		INT16              const  mx = SECTORX(m.sector);
+		INT16              const  my = SECTORY(m.sector);
 		if (fZoomFlag)
 		{
-			GetScreenXYFromMapXYStationary(i->sSectorX, i->sSectorY , &x, &y);
+			GetScreenXYFromMapXYStationary(mx, my, &x, &y);
 			x -= MAP_GRID_X;
 			y -= MAP_GRID_Y;
 			w  = 2 * MAP_GRID_X;
@@ -3605,7 +3609,7 @@ static void BlitMineGridMarkers(void)
 		}
 		else
 		{ // Get location on screen
-			GetScreenXYFromMapXY(i->sSectorX, i->sSectorY, &x, &y);
+			GetScreenXYFromMapXY(mx, my, &x, &y);
 			w = MAP_GRID_X;
 			h = MAP_GRID_Y;
 		}
