@@ -351,6 +351,13 @@ INT8 GetTownAssociatedWithMine( INT8 bMineIndex )
 }
 
 
+static void AddMineHistoryEvent(UINT8 const event, UINT const mine_id)
+{
+	MINE_LOCATION_TYPE const& m = gMineLocation[mine_id];
+	AddHistoryToPlayersLog(event, m.bAssociatedTown, GetWorldTotalMin(), m.sSectorX,  m.sSectorY);
+}
+
+
 // remove actual ore from mine
 static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 {
@@ -384,7 +391,7 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 		// tell the strategic AI about this, that mine's and town's value is greatly reduced
 		StrategicHandleMineThatRanOut(GetMineSector(bMineIndex));
 
-		AddHistoryToPlayersLog( HISTORY_MINE_RAN_OUT, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+		AddMineHistoryEvent(HISTORY_MINE_RAN_OUT, bMineIndex);
 	}
 	else	// still some left after this extraction
 	{
@@ -410,7 +417,7 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 					// that mine's head miner tells player that the mine is running out
 					IssueHeadMinerQuote( bMineIndex, HEAD_MINER_STRATEGIC_QUOTE_RUNNING_OUT );
 					gMineStatus[ bMineIndex ].fWarnedOfRunningOut = TRUE;
-					AddHistoryToPlayersLog( HISTORY_MINE_RUNNING_OUT, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+					AddMineHistoryEvent(HISTORY_MINE_RUNNING_OUT, bMineIndex);
 				}
 			}
 		}
@@ -795,7 +802,7 @@ void ShutOffMineProduction( INT8 bMineIndex )
 	if ( !gMineStatus[ bMineIndex ].fShutDown )
 	{
 		gMineStatus[ bMineIndex ].fShutDown = TRUE;
-		AddHistoryToPlayersLog( HISTORY_MINE_SHUTDOWN, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+		AddMineHistoryEvent(HISTORY_MINE_SHUTDOWN, bMineIndex);
 	}
 }
 
@@ -809,7 +816,7 @@ void RestartMineProduction( INT8 bMineIndex )
 		if ( gMineStatus[ bMineIndex ].fShutDown )
 		{
 			gMineStatus[ bMineIndex ].fShutDown = FALSE;
-			AddHistoryToPlayersLog( HISTORY_MINE_REOPENED, gMineLocation[ bMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ bMineIndex ].sSectorX,  gMineLocation[ bMineIndex ].sSectorY );
+			AddMineHistoryEvent(HISTORY_MINE_REOPENED, bMineIndex);
 		}
 	}
 }
@@ -935,7 +942,7 @@ void PlayerSpokeToHeadMiner( UINT8 ubMinerProfileId )
 	// if this is our first time set a history fact
 	if (!gMineStatus[ubMineIndex].fSpokeToHeadMiner)
 	{
-		AddHistoryToPlayersLog( HISTORY_TALKED_TO_MINER, gMineLocation[ ubMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ ubMineIndex ].sSectorX,  gMineLocation[ ubMineIndex ].sSectorY );
+		AddMineHistoryEvent(HISTORY_TALKED_TO_MINER, ubMineIndex);
 		gMineStatus[ ubMineIndex ].fSpokeToHeadMiner = TRUE;
 	}
 }
