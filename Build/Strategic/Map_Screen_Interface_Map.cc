@@ -3649,13 +3649,12 @@ static INT16& GetPickedUpMilitia(UINT8 const type)
 
 
 // function to manipulate the number of towns people on the cursor
-static void PickUpATownPersonFromSector(UINT8 const type, INT16 const x, INT16 const y)
+static void PickUpATownPersonFromSector(UINT8 const type, UINT8 const sector)
 {
-	UINT8 const sector = SECTOR(x, y);
 	// Are they in the same town as they were picked up from?
 	if (GetTownIdForSector(sector) != sSelectedMilitiaTown) return;
 
-	if (!SectorOursAndPeaceful(x, y, 0)) return;
+	if (!SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0)) return;
 
 	UINT8& n_type = SectorInfo[sector].ubNumberOfCivsAtLevel[type];
 	// See if there are any militia of this type in this sector
@@ -4079,7 +4078,7 @@ static void MilitiaButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		PickUpATownPersonFromSector((UINT8)iValue, (INT16)(sGlobalMapSector % 16 + 1), (INT16)(sGlobalMapSector / 16 + 1));
+		PickUpATownPersonFromSector(iValue, sGlobalMapSector);
 	}
 }
 
