@@ -596,7 +596,7 @@ static void DrawTownMilitiaForcesOnMap();
 static void HandleLowerLevelMapBlit(void);
 static void ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
 static void ShowItemsOnMap(void);
-static void ShowSAMSitesOnStrategicMap(void);
+static void ShowSAMSitesOnStrategicMap();
 static void ShowTeamAndVehicles();
 static void ShowTownText(void);
 
@@ -4668,74 +4668,59 @@ static void HandleShowingOfEnemyForcesInSector(INT16 const x, INT16 const y, INT
 static void BlitSAMGridMarkers();
 
 
-static void ShowSAMSitesOnStrategicMap(void)
+static void ShowSAMSitesOnStrategicMap()
 {
-	if( fShowAircraftFlag )
-	{
-		BlitSAMGridMarkers( );
-	}
+	if (fShowAircraftFlag) BlitSAMGridMarkers();
 
-	for (INT32 iCounter = 0; iCounter < NUMBER_OF_SAM_SITES; ++iCounter)
+	BOOLEAN const* found = fSamSiteFound;
+	FOR_EACH(INT16 const, i, pSamList)
 	{
-		// has the sam site here been found?
-		if( !fSamSiteFound[ iCounter ] )
-		{
-			continue;
-		}
+		// Has the sam site here been found?
+		if (!*found++) continue;
 
-		INT16 const sector   = pSamList[iCounter];
-		INT16 const sSectorX = SECTORX(sector);
-		INT16 const sSectorY = SECTORY(sector);
+		INT16 const sector = *i;
+		INT16 const sec_x  = SECTORX(sector);
+		INT16 const sec_y  = SECTORY(sector);
 
 #ifndef JA2DEMO
-		DrawSite(sSectorX, sSectorY, guiSAMICON);
+		DrawSite(sec_x, sec_y, guiSAMICON);
 #endif
 
-		if( fShowAircraftFlag )
-		{
-			// write "SAM Site" centered underneath
-
-			INT16 sX;
-			INT16 sY;
-			if( fZoomFlag )
+		if (fShowAircraftFlag)
+		{ // write "SAM Site" centered underneath
+			INT16 x;
+			INT16 y;
+			if (fZoomFlag)
 			{
-				GetScreenXYFromMapXYStationary(sSectorX, sSectorY, &sX, &sY);
-				sX += 1;
-				sY += 9;
+				GetScreenXYFromMapXYStationary(sec_x, sec_y, &x, &y);
+				x += 1;
+				y += 9;
 			}
 			else
 			{
-				GetScreenXYFromMapXY(sSectorX, sSectorY, &sX, &sY);
-				sX += 11;
-				sY += 19;
+				GetScreenXYFromMapXY(sec_x, sec_y, &x, &y);
+				x += 11;
+				y += 19;
 			}
 
-			const wchar_t* SAMSite = pLandTypeStrings[SAM_SITE];
+			wchar_t const* const sam_site = pLandTypeStrings[SAM_SITE];
 
-			// we're CENTERING the first string AROUND sX, so calculate the starting X value
-			sX -= StringPixLength(SAMSite, MAP_FONT) / 2;
+			// Center the first string around x.
+			x -= StringPixLength(sam_site, MAP_FONT) / 2;
 
-			// if within view region...render, else don't
-			if( ( sX > MAP_VIEW_START_X + MAP_VIEW_WIDTH  ) || ( sX < MAP_VIEW_START_X ) ||
-					( sY > MAP_VIEW_START_Y + MAP_VIEW_HEIGHT ) || ( sY < MAP_VIEW_START_Y ) )
-			{
-				continue;
-			}
-
+			if (x < MAP_VIEW_START_X || MAP_VIEW_START_X + MAP_VIEW_WIDTH  < x) continue;
+			if (y < MAP_VIEW_START_Y || MAP_VIEW_START_Y + MAP_VIEW_HEIGHT < y) continue;
+			// Within view, render.
 
 			SetFontDestBuffer(guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom);
 
-			// clip blits to mapscreen region
-			ClipBlitsToMapViewRegion( );
+			ClipBlitsToMapViewRegion();
 
-			// Green on green doesn't contrast well, use Yellow
+			// Green on green does not contrast well, use yellow.
 			SetFontAttributes(MAP_FONT, FONT_MCOLOR_LTYELLOW);
+			GDirtyPrint(x, y, sam_site);
 
-			// draw the text
-			GDirtyPrint(sX, sY, SAMSite);
-
-			// restore clip blits
-			RestoreClipRegionToFullScreen( );
+			RestoreClipRegionToFullScreen();
 		}
 	}
 }
