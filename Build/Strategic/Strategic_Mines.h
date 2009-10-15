@@ -86,7 +86,9 @@ INT32 GetTotalLeftInMine( INT8 bMineIndex );
 
 // get max rates for this mine (per period, per day)
 UINT32 GetMaxPeriodicRemovalFromMine( INT8 bMineIndex );
-UINT32 GetMaxDailyRemovalFromMine( INT8 bMineIndex );
+
+// Get the max amount that can be mined in one day.
+UINT32 GetMaxDailyRemovalFromMine(INT8 mine_id);
 
 // which town does this mine belong to?
 INT8 GetTownAssociatedWithMine( INT8 bMineIndex );

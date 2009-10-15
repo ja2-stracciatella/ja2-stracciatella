@@ -300,30 +300,16 @@ UINT32 GetMaxPeriodicRemovalFromMine( INT8 bMineIndex )
 }
 
 
-UINT32 GetMaxDailyRemovalFromMine( INT8 bMineIndex )
+UINT32 GetMaxDailyRemovalFromMine(INT8 const mine_id)
 {
-	UINT32 uiAmtExtracted;
+	Assert(0 <= mine_id && mine_id < MAX_NUMBER_OF_MINES);
+	MINE_STATUS_TYPE const& m = gMineStatus[mine_id];
 
-	// returns max amount that can be mined in one day
+	if (m.fShutDown) return 0;
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < MAX_NUMBER_OF_MINES ) );
-
-	// if mine is shut down
-	if ( gMineStatus[ bMineIndex ].fShutDown)
-	{
-		return ( 0 );
-	}
-
-	uiAmtExtracted = MINE_PRODUCTION_NUMBER_OF_PERIODS * gMineStatus[ bMineIndex ].uiMaxRemovalRate;
-
-	// check if we will take more than there is
-	if( uiAmtExtracted > gMineStatus[ bMineIndex ].uiRemainingOreSupply )
-	{
-		// yes, reduce to value of mine
-		uiAmtExtracted = gMineStatus[ bMineIndex ].uiRemainingOreSupply;
-	}
-
-	return(uiAmtExtracted);
+	UINT32 const rate      = MINE_PRODUCTION_NUMBER_OF_PERIODS * m.uiMaxRemovalRate;
+	UINT32 const remaining = m.uiRemainingOreSupply;
+	return rate < remaining ? rate : remaining;
 }
 
 
