@@ -592,7 +592,7 @@ static void DisplayLevelString(void);
 static void DrawBullseye(void);
 static void DrawOrta(void);
 static void DrawTixa(void);
-static void DrawTownMilitiaForcesOnMap(void);
+static void DrawTownMilitiaForcesOnMap();
 static void HandleLowerLevelMapBlit(void);
 static void ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
 static void ShowItemsOnMap(void);
@@ -4424,7 +4424,7 @@ static void DrawMilitiaForcesForSector(INT32 const sector)
 }
 
 
-static void DrawTownMilitiaForcesOnMap(void)
+static void DrawTownMilitiaForcesOnMap()
 {
 	ClipBlitsToMapViewRegion();
 
@@ -4434,9 +4434,9 @@ static void DrawTownMilitiaForcesOnMap(void)
 	}
 
 	// now handle militia for sam sectors
-	for (INT32 i = 0; i != NUMBER_OF_SAMS; ++i)
+	FOR_EACH(INT16 const, i, pSamList)
 	{
-		DrawMilitiaForcesForSector(pSamList[i]);
+		DrawMilitiaForcesForSector(*i);
 	}
 
 	RestoreClipRegionToFullScreen();
