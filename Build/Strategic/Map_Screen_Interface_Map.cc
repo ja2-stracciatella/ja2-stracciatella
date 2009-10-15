@@ -4665,7 +4665,7 @@ static void HandleShowingOfEnemyForcesInSector(INT16 const x, INT16 const y, INT
 }
 
 
-static void BlitSAMGridMarkers(void);
+static void BlitSAMGridMarkers();
 
 
 static void ShowSAMSitesOnStrategicMap(void)
@@ -4741,55 +4741,45 @@ static void ShowSAMSitesOnStrategicMap(void)
 }
 
 
-static void BlitSAMGridMarkers(void)
+static void BlitSAMGridMarkers()
 {
-	INT16 sScreenX = 0, sScreenY = 0;
-	UINT16 usColor = 0;
-	INT32 iCounter = 0;
-	INT16 sWidth = 0, sHeight = 0;
-
-
-	// get 16 bpp color
-	usColor = Get16BPPColor( FROMRGB( 100, 100, 100) );
+	UINT16 const colour = Get16BPPColor(FROMRGB(100, 100, 100));
 
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 	UINT32 const uiDestPitchBYTES = l.Pitch();
 
-	// clip to view region
-	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
+	ClipBlitsToMapViewRegionForRectangleAndABit(uiDestPitchBYTES);
 
-	for( iCounter = 0; iCounter < NUMBER_OF_SAM_SITES; iCounter++ )
+	BOOLEAN const* found = fSamSiteFound;
+	FOR_EACH(INT16 const, i, pSamList)
 	{
-		// has the sam site here been found?
-		if( !fSamSiteFound[ iCounter ] )
-		{
-			continue;
-		}
+		// Has the sam site here been found?
+		if (!*found++) continue;
 
-		INT16 const sector = pSamList[iCounter];
-		if( fZoomFlag )
+		INT16 x;
+		INT16 y;
+		INT16 w;
+		INT16 h;
+		INT16 const sector = *i;
+		if (fZoomFlag)
 		{
-			GetScreenXYFromMapXYStationary(SECTORX(sector), SECTORY(sector), &sScreenX, &sScreenY);
-			sScreenX -= MAP_GRID_X;
-			sScreenY -= MAP_GRID_Y;
-
-			sWidth = 2 * MAP_GRID_X;
-			sHeight= 2 * MAP_GRID_Y;
+			GetScreenXYFromMapXYStationary(SECTORX(sector), SECTORY(sector), &x, &y);
+			x -= MAP_GRID_X;
+			y -= MAP_GRID_Y;
+			w  = MAP_GRID_X * 2;
+			h  = MAP_GRID_Y * 2;
 		}
 		else
 		{
-			// get location on screen
-			GetScreenXYFromMapXY(SECTORX(sector), SECTORY(sector), &sScreenX, &sScreenY);
-			sWidth = MAP_GRID_X;
-			sHeight= MAP_GRID_Y;
+			GetScreenXYFromMapXY(SECTORX(sector), SECTORY(sector), &x, &y);
+			w = MAP_GRID_X;
+			h = MAP_GRID_Y;
 		}
 
-		// draw rectangle
-		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT16>());
+		RectangleDraw(TRUE, x, y - 1, x + w, y + h - 1, colour, l.Buffer<UINT16>());
 	}
 
-	// restore clips
-	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
+	RestoreClipRegionToFullScreenForRectangle(uiDestPitchBYTES);
 }
 
 
