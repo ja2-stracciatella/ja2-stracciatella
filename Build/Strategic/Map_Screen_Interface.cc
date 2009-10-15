@@ -3774,10 +3774,10 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 }
 
 
-BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 const y, INT8 const z)
+void NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	// There is nothing important to player below ground
-	if (z != 0) return FALSE;
+	if (z != 0) return;
 
 	wchar_t sector_desc[128];
 	GetSectorIDString(x, y, z, sector_desc, lengthof(sector_desc), TRUE);
@@ -3804,21 +3804,14 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 
 		else
 		{
 			INT8 const town_id = GetTownIdForSector(sector);
-			if (town_id != BLANK_SECTOR)
-			{
-				// San Mona isn't important
-				if (town_id == SAN_MONA) return TRUE;
+			if (town_id == BLANK_SECTOR) return;
+			// San Mona isn't important
+			if (town_id == SAN_MONA) return;
 
-				swprintf(buf, lengthof(buf), pMapErrorString[25], sector_desc);
-			}
-			else
-			{
-				return FALSE;
-			}
+			swprintf(buf, lengthof(buf), pMapErrorString[25], sector_desc);
 		}
 	}
 	DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
-	return TRUE;
 }
 
 
