@@ -586,7 +586,7 @@ static void HandleShowingOfEnemiesWithMilitiaOn(void)
 
 static void BlitMineGridMarkers(void);
 static void BlitMineIcon(INT16 sMapX, INT16 sMapY);
-static void BlitMineText(INT16 sMapX, INT16 sMapY);
+static void BlitMineText(UINT8 mine_idx, INT16 sMapX, INT16 sMapY);
 static void BlitTownGridMarkers(void);
 static void DisplayLevelString(void);
 static void DrawBullseye(void);
@@ -699,7 +699,7 @@ void DrawMap(void)
 			INT16 const y      = SECTORY(sector);
 			BlitMineIcon(x, y);
 			// show mine name/production text
-			if (fShowMineFlag) BlitMineText(x, y);
+			if (fShowMineFlag) BlitMineText(i, x, y);
 		}
 
 		// draw towns names & loyalty ratings, and grey town limit borders
@@ -3445,7 +3445,7 @@ static void PrintStringCenteredBoxed(INT32 x, const INT32 y, const wchar_t* cons
 }
 
 
-static void BlitMineText(INT16 sMapX, INT16 sMapY)
+static void BlitMineText(UINT8 const mine_idx, INT16 const sMapX, INT16 const sMapY)
 {
 	// set coordinates for start of mine text
 	INT16 sScreenX;
@@ -3467,10 +3467,9 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
 	SetFontAttributes(MAP_FONT, FONT_LTGREEN);
 
-	UINT8 const mine_idx = GetMineIndexForSector(SECTOR(sMapX, sMapY));
-	INT32 const x        = sScreenX;
-	INT32       y        = sScreenY;
-	INT32 const h        = GetFontHeight(MAP_FONT);
+	INT32 const x = sScreenX;
+	INT32       y = sScreenY;
+	INT32 const h = GetFontHeight(MAP_FONT);
 	wchar_t     buf[32];
 
 	// display associated town name, followed by "mine"
