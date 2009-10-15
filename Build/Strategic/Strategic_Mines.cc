@@ -703,9 +703,9 @@ UINT8 GetMineSector(UINT8 const ubMineIndex)
 // get the sector value for the mine associated with this town
 INT16 GetMineSectorForTown(INT8 const town_id)
 {
-	for (size_t i = 0; i != lengthof(gMineLocation); ++i)
+	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
 	{
-		MINE_LOCATION_TYPE const& m = gMineLocation[i];
+		MINE_LOCATION_TYPE const& m = *i;
 		if (m.bAssociatedTown != town_id) continue;
 		return SECTOR_INFO_TO_STRATEGIC_INDEX(m.sector);
 	}
