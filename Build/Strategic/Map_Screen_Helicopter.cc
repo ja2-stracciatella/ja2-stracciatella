@@ -895,7 +895,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 			SkyriderDialogue(MENTION_DRASSEN_SAM_SITE);
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
-			if (StrategicMap[CALCULATE_STRATEGIC_INDEX(SAM_2_X, SAM_2_Y)].fEnemyControlled)
+			if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(pSamList[1])].fEnemyControlled)
 			{
 				SkyriderDialogue(SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE);
 			}
@@ -1017,6 +1017,12 @@ void CheckAndHandleSkyriderMonologues( void )
 }
 
 
+static void HandleBlitOfSectorLocatorIcon(UINT8 const sector, UINT8 const locator)
+{
+	HandleBlitOfSectorLocatorIcon(SECTORX(sector), SECTORY(sector), 0, locator);
+}
+
+
 void HandleAnimationOfSectors( void )
 {
 	BOOLEAN fSkipSpeakersLocator = FALSE;
@@ -1032,8 +1038,8 @@ void HandleAnimationOfSectors( void )
 	if( fShowDrassenSAMHighLight )
 	{
 		fOldShowDrassenSAMHighLight = TRUE;
-		// Drassen's SAM site is #3
-		HandleBlitOfSectorLocatorIcon( SAM_2_X, SAM_2_Y, 0, LOCATOR_COLOR_RED );
+		// Drassen's SAM site is #2
+		HandleBlitOfSectorLocatorIcon(pSamList[1], LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowDrassenSAMHighLight )
@@ -1059,9 +1065,9 @@ void HandleAnimationOfSectors( void )
 	if( fShowOtherSAMHighLight )
 	{
 		fOldShowOtherSAMHighLight = TRUE;
-		HandleBlitOfSectorLocatorIcon( SAM_1_X, SAM_1_Y, 0, LOCATOR_COLOR_RED );
-		HandleBlitOfSectorLocatorIcon( SAM_3_X, SAM_3_Y, 0, LOCATOR_COLOR_RED );
-		HandleBlitOfSectorLocatorIcon( SAM_4_X, SAM_4_Y, 0, LOCATOR_COLOR_RED );
+		HandleBlitOfSectorLocatorIcon(pSamList[0], LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(pSamList[2], LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(pSamList[3], LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowOtherSAMHighLight )

@@ -158,11 +158,12 @@ BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ]={
 	FALSE,
 };
 
-INT16 pSamList[ NUMBER_OF_SAMS ]={
-	SECTOR( SAM_1_X, SAM_1_Y ),
-	SECTOR( SAM_2_X, SAM_2_Y ),
-	SECTOR( SAM_3_X, SAM_3_Y ),
-	SECTOR( SAM_4_X, SAM_4_Y ),
+INT16 const pSamList[] =
+{
+	SEC_D2,
+	SEC_D15,
+	SEC_I8,
+	SEC_N4
 };
 
 INT16 pSamGridNoAList[ NUMBER_OF_SAMS ]={
