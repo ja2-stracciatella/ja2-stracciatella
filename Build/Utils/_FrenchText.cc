@@ -1357,7 +1357,6 @@ const wchar_t* pwMineStrings[] =
 	L"Type de minerai",				// 10
 	L"Contrôle de la ville",
 	L"Loyauté de la ville",
-//	L"Mineurs au travail",
 };
 
 // blank sector strings

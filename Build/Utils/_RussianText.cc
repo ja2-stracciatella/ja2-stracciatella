@@ -1356,7 +1356,6 @@ const wchar_t* pwMineStrings[] =
 	L"Тип руды",				// 10
 	L"Контроль над городом",
 	L"Отношение города",
-//	L"Работ.шахтеры",
 };
 
 // blank sector strings

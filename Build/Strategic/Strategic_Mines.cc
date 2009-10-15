@@ -91,22 +91,6 @@ static const HEAD_MINER_TYPE gHeadMinerData[NUM_HEAD_MINERS] =
 };
 
 
-
-/* gradual monster infestation concept was ditched, now simply IN PRODUCTION or SHUT DOWN
-
-// percentage of workers working depends on level of mine infestation
-UINT8 gubMonsterMineInfestation[]={
-	100,
-	99,
-	95,
-	70,
-	30,
-	1,
-	0,
-};
-*/
-
-
 void InitializeMines( void )
 {
 	UINT8 ubMineIndex;
@@ -128,7 +112,6 @@ void InitializeMines( void )
 		pMineStatus->fEmpty = (pMineStatus->uiMaxRemovalRate == 0) ? TRUE : FALSE;
 		pMineStatus->fRunningOut = FALSE;
 		pMineStatus->fWarnedOfRunningOut = FALSE;
-//		pMineStatus->bMonsters = MINES_NO_MONSTERS;
 		pMineStatus->fShutDown = FALSE;
 		pMineStatus->fPrevInvadedByMonsters = FALSE;
 		pMineStatus->fSpokeToHeadMiner = FALSE;
@@ -460,12 +443,6 @@ static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
 	// get workforce size (is 0-100 based on local town's loyalty)
 	iWorkForceSize = gTownLoyalty[ bTownId ].ubRating;
 
-/*
-	// adjust for monster infestation
-	iWorkForceSize *= gubMonsterMineInfestation[ gMineStatus[ bMineIndex ].bMonsters ];
-	iWorkForceSize /= 100;
-*/
-
 	// now adjust for town size.. the number of sectors you control
 	iWorkForceSize *= GetTownSectorsUnderControl( bTownId );
 	iWorkForceSize /= GetTownSectorSize( bTownId );
@@ -500,12 +477,6 @@ static INT32 GetAvailableWorkForceForMineForEnemy(INT8 bMineIndex)
 
 	// get workforce size (is 0-100 based on REVERSE of local town's loyalty)
 	iWorkForceSize = 100 - gTownLoyalty[ bTownId ].ubRating;
-
-/*
-	// adjust for monster infestation
-	iWorkForceSize *= gubMonsterMineInfestation[ gMineStatus[ bMineIndex ].bMonsters ];
-	iWorkForceSize /= 100;
-*/
 
 	// now adjust for town size.. the number of sectors you control
 	iWorkForceSize *= ( GetTownSectorSize( bTownId ) - GetTownSectorsUnderControl( bTownId ) );

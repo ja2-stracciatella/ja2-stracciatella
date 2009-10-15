@@ -338,14 +338,6 @@ static void AddTextToMineBox(PopUpBox* const box)
 			AddSecondColumnMonoString(box, wString);
 		}
 
-/* gradual monster infestation concept was ditched, now simply IN PRODUCTION or SHUT DOWN
-		// percentage of miners working
-		swprintf(wString, lengthof(wString), L"%ls:", pwMineStrings[14]);
-		AddMonoString(box, wString);
-		swprintf(wString, lengthof(wString), L"%d%%", gubMonsterMineInfestation[gMineStatus[ubMineIndex].bMonsters]);
-		AddSecondColumnMonoString(box, wString);
-*/
-
 		// ore type (silver/gold
 		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 11 ]);
 		AddMonoString(box, wString);

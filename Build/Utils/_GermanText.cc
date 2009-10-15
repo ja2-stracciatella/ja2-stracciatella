@@ -1323,7 +1323,6 @@ const wchar_t *pwMineStrings[] =
 	L"Erzart",				// 10
 	L"Kontrolle über Stadt",
 	L"Loyalität der Stadt",
-//	L"Minenarbeiter",
 };
 
 // blank sector strings

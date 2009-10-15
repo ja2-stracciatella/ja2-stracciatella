@@ -1356,7 +1356,6 @@ const wchar_t* pwMineStrings[] =
 	L"Typ złoża",				// 10
 	L"Kontrola miasta",
 	L"Lojalność miasta",
-//	L"Górnicy",
 };
 
 // blank sector strings

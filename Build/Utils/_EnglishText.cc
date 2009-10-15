@@ -1357,7 +1357,6 @@ const wchar_t *pwMineStrings[] =
 	L"Ore Type",				// 10
 	L"Town Control",
 	L"Town Loyalty",
-//	L"Working Miners",
 };
 
 // blank sector strings

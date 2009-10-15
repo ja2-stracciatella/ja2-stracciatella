@@ -1371,7 +1371,6 @@ const wchar_t* pwMineStrings[] =
 	L"Ertstype",				// 10
 	L"Gezag Dorp",
 	L"Loyaliteit Dorp",
-//	L"Mijnwerkers",
 };
 
 // blank sector strings

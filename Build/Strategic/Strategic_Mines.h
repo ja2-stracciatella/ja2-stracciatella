@@ -35,17 +35,6 @@ enum{
 };
 
 
-// monster infestatation level, as percieved by the villagers
-enum{
-	MINES_NO_MONSTERS = 0,	 // nothing there at all
-  MINES_TRACE_MONSTERS,    // monsters leave traces behind, but no one has seen them yet
-	MINES_SOME_MONSTERS,		 // there have been sightings but no one believes the witnesses
-  MINES_MODERATE_MONSTERS, // scattered reports of monsters in lower levels, leaves workers uneasy
-	MINES_HIGH_MONSTERS,		 // workers know they are there and all but a few refuse to work
-	MINES_RAMPANT_MONSTERS,  // the few that go down don't seem to return, no one wants to work period
-	MINES_MONSTERS_SURFACE,  // monsters are coming out of the mines into the town looking for any edibles
-};
-
 // head miner quote types
 enum HeadMinerQuote
 {
