@@ -2715,25 +2715,6 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl()
 }
 
 
-INT32 SAMSitesUnderPlayerControl( INT16 sX, INT16 sY )
-{
-	BOOLEAN fSamSiteUnderControl = FALSE;
-
-	// is this sector a SAM sector?
-	if (IsThisSectorASAMSector(sX, sY, 0))
-	{
-		// is it under control by the player
-		if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyControlled)
-		{
-			// yes
-			fSamSiteUnderControl = TRUE;
-		}
-	}
-
-	return( fSamSiteUnderControl );
-}
-
-
 void UpdateAirspaceControl( void )
 {
 	INT32 iCounterA = 0, iCounterB = 0;

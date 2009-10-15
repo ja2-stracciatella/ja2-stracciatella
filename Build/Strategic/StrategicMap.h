@@ -141,9 +141,6 @@ bool IsThereAFunctionalSAMSiteInSector(INT16 x, INT16 y, INT8 z);
 
 bool IsSectorDesert(INT16 x, INT16 y);
 
-// sam site under players control?
-INT32 SAMSitesUnderPlayerControl( INT16 sX, INT16 sY );
-
 INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s);

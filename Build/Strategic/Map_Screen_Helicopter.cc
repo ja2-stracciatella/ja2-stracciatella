@@ -895,7 +895,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 			SkyriderDialogue(MENTION_DRASSEN_SAM_SITE);
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
-			if (!SAMSitesUnderPlayerControl(SAM_2_X, SAM_2_Y))
+			if (StrategicMap[CALCULATE_STRATEGIC_INDEX(SAM_2_X, SAM_2_Y)].fEnemyControlled)
 			{
 				SkyriderDialogue(SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE);
 			}
