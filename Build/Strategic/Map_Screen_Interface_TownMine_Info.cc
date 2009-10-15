@@ -77,7 +77,7 @@ static void AddInventoryButtonForMapPopUpBox(const PopUpBox*);
 static void AddItemsInSectorToBox(PopUpBox*);
 static void AddSectorToBox(PopUpBox*);
 static void AddTextToBlankSectorBox(PopUpBox*);
-static void AddTextToMineBox(PopUpBox*);
+static void AddTextToMineBox(PopUpBox*, INT8 mine);
 static void AddTextToTownBox(PopUpBox*);
 static void MinWidthOfTownMineInfoBox(void);
 static void PositionTownMineInfoBox(PopUpBox*);
@@ -97,12 +97,15 @@ void CreateDestroyTownInfoBox(void)
 		{
 			UINT8 const sector = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 			// only show the mine info when mines button is selected, otherwise we need to see the sector's regular town info
-			if (fShowMineFlag && GetMineIndexForSector(sector) != -1)
+			if (fShowMineFlag)
 			{
-				AddTextToMineBox(box);
+				INT8 const mine = GetMineIndexForSector(sector);
+				if (mine == -1) goto no_mine;
+				AddTextToMineBox(box, mine);
 			}
 			else
 			{
+no_mine:
 				// do we add text for the town box?
 				INT8 const bTownId = GetTownIdForSector(sector);
 				if (bTownId != BLANK_SECTOR)
@@ -245,114 +248,81 @@ static void AddTextToTownBox(PopUpBox* const box)
 
 
 // adds text to mine info box
-static void AddTextToMineBox(PopUpBox* const box)
+static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 {
-	UINT8 ubTown;
-	CHAR16 wString[ 64 ];
+	UINT8            const  town   = GetTownAssociatedWithMine(mine);
+	MINE_STATUS_TYPE const& status = gMineStatus[mine];
+	wchar_t                 buf[64];
 
-	UINT8 const ubMineIndex = GetMineIndexForSector(SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY));
+	// Name of town followed by "mine"
+	swprintf(buf, lengthof(buf), L"%ls %ls", pTownNames[town], pwMineStrings[0]);
+	AddMonoString(box, buf);
 
-	// name of town followed by "mine"
-	swprintf( wString, lengthof(wString), L"%ls %ls", pTownNames[ GetTownAssociatedWithMine( ubMineIndex ) ], pwMineStrings[ 0 ] );
-	AddMonoString(box, wString);
-
-	// blank line
-	AddMonoString(box, L"");
+	AddMonoString(box, L""); // Blank line
 
 	AddSectorToBox(box);
 
-	// mine status
-	swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 9 ]);
-	AddMonoString(box, wString);
+	// Mine status
+	swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[9]);
+	AddMonoString(box, buf);
+	wchar_t const* const status_txt =
+		status.fEmpty      ? pwMineStrings[5] : // Abandonded
+		status.fShutDown   ? pwMineStrings[6] : // Shut down
+		status.fRunningOut ? pwMineStrings[7] : // Running out
+		pwMineStrings[8];                       // Producing
+	AddSecondColumnMonoString(box, status_txt);
 
-	// check if mine is empty (abandoned) or running out
-	const wchar_t* MineStatus;
-	if (gMineStatus[ ubMineIndex ].fEmpty)
+	if (!status.fEmpty)
 	{
-		// abandonded
-		MineStatus = pwMineStrings[5];
-	}
-	else
-	if (gMineStatus[ ubMineIndex ].fShutDown)
-	{
-		// shut down
-		MineStatus = pwMineStrings[6];
-	}
-	else
-	if (gMineStatus[ ubMineIndex ].fRunningOut)
-	{
-		// running out
-		MineStatus = pwMineStrings[7];
-	}
-	else
-	{
-		// producing
-		MineStatus = pwMineStrings[8];
-	}
-	AddSecondColumnMonoString(box, MineStatus);
+		// Current production
+		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[3]);
+		AddMonoString(box, buf);
+		UINT32 const predicted_income = PredictDailyIncomeFromAMine(mine);
+		SPrintMoney(buf, predicted_income);
+		AddSecondColumnMonoString(box, buf);
 
+		// Potential production
+		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[4]);
+		AddMonoString(box, buf);
+		UINT32 const max_removal = GetMaxDailyRemovalFromMine(mine);
+		SPrintMoney(buf, max_removal);
+		AddSecondColumnMonoString(box, buf);
 
-	// if still producing
-	if (!gMineStatus[ ubMineIndex ].fEmpty)
-	{
-		// current production
-		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 3 ]);
-		AddMonoString(box, wString);
-
-		SPrintMoney(wString, PredictDailyIncomeFromAMine(ubMineIndex));
-		AddSecondColumnMonoString(box, wString);
-
-
-		// potential production
-		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 4 ]);
-		AddMonoString(box, wString);
-
-		SPrintMoney(wString, GetMaxDailyRemovalFromMine(ubMineIndex));
-		AddSecondColumnMonoString(box, wString);
-
-
-		// if potential is not nil
-		if (GetMaxPeriodicRemovalFromMine(ubMineIndex) > 0)
-		{
-			// production rate (current production as a percentage of potential production)
-			swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 10 ]);
-			AddMonoString(box, wString);
-			swprintf(wString, lengthof(wString), L"%d%%", PredictDailyIncomeFromAMine(ubMineIndex) * 100 / GetMaxDailyRemovalFromMine(ubMineIndex));
-			AddSecondColumnMonoString(box, wString);
+		if (GetMaxPeriodicRemovalFromMine(mine) > 0)
+		{ // Production rate (current production as a percentage of potential production)
+			swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[10]);
+			AddMonoString(box, buf);
+			swprintf(buf, lengthof(buf), L"%d%%", predicted_income * 100 / max_removal);
+			AddSecondColumnMonoString(box, buf);
 		}
 
+		// Town control percentage
+		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[12]);
+		AddMonoString(box, buf);
+		swprintf(buf, lengthof(buf), L"%d%%", GetTownSectorsUnderControl(town) * 100 / GetTownSectorSize(town));
+		AddSecondColumnMonoString(box, buf);
 
-		// town control percentage
-		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 12 ]);
-		AddMonoString(box, wString);
-		swprintf(wString, lengthof(wString), L"%d%%", GetTownSectorsUnderControl(gMineLocation[ubMineIndex].bAssociatedTown) * 100 / GetTownSectorSize(gMineLocation[ubMineIndex].bAssociatedTown));
-		AddSecondColumnMonoString(box, wString);
-
-		ubTown = gMineLocation[ ubMineIndex ].bAssociatedTown;
-		if( gTownLoyalty[ ubTown ].fStarted && gfTownUsesLoyalty[ ubTown ])
-		{
-			// town loyalty percentage
-			swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 13 ]);
-			AddMonoString(box, wString);
-			swprintf(wString, lengthof(wString), L"%d%%", gTownLoyalty[gMineLocation[ubMineIndex].bAssociatedTown].ubRating);
-			AddSecondColumnMonoString(box, wString);
+		TOWN_LOYALTY const& loyalty = gTownLoyalty[town];
+		if (loyalty.fStarted && gfTownUsesLoyalty[town])
+		{ // Town loyalty percentage
+			swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[13]);
+			AddMonoString(box, buf);
+			swprintf(buf, lengthof(buf), L"%d%%", loyalty.ubRating);
+			AddSecondColumnMonoString(box, buf);
 		}
 
-		// ore type (silver/gold
-		swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 11 ]);
-		AddMonoString(box, wString);
-		AddSecondColumnMonoString(box, gMineStatus[ubMineIndex].ubMineType == SILVER_MINE ? pwMineStrings[1] : pwMineStrings[2]);
+		// Ore type (silver/gold)
+		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[11]);
+		AddMonoString(box, buf);
+		AddSecondColumnMonoString(box, status.ubMineType == SILVER_MINE ? pwMineStrings[1] : pwMineStrings[2]);
 	}
-
 
 #ifdef _DEBUG
-	// dollar amount remaining in mine
+	// Dollar amount remaining in mine
 	AddMonoString(box, L"Remaining (DEBUG):");
-
-	SPrintMoney(wString, GetTotalLeftInMine(ubMineIndex));
-	AddSecondColumnMonoString(box, wString);
+	SPrintMoney(buf, GetTotalLeftInMine(mine));
+	AddSecondColumnMonoString(box, buf);
 #endif
-
 }
 
 
