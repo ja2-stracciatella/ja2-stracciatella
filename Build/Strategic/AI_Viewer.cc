@@ -363,8 +363,16 @@ static void RenderStationaryGroups()
 	SetFont(FONT10ARIAL);
 	SetFontShadow(FONT_NEARBLACK);
 
-	// Render groups that are stationary
 	SGPVObject const* const icons = guiMapIconsID;
+	FOR_EACH(INT16 const, i, pSamList)
+	{
+		UINT8 const sector = *i;
+		INT32 const xp     = VIEWER_LEFT + VIEWER_CELLW * SECTORX(sector);
+		INT32 const yp     = VIEWER_TOP  + VIEWER_CELLH * SECTORY(sector);
+		BltVideoObject(dst, icons, SAM_ICON, xp + 20, yp + 4);
+	}
+
+	// Render groups that are stationary
 	for (INT32 y = 0; y != 16; ++y)
 	{
 		INT32 const yp = VIEWER_TOP + VIEWER_CELLH * y + 1;
@@ -374,7 +382,6 @@ static void RenderStationaryGroups()
 			SECTORINFO const& si = SectorInfo[SECTOR(x + 1, y + 1)];
 
 			if (si.uiFlags & SF_MINING_SITE) BltVideoObject(FRAME_BUFFER, icons, MINING_ICON, xp + 25, yp - 1);
-			if (si.uiFlags & SF_SAM_SITE)    BltVideoObject(FRAME_BUFFER, icons, SAM_ICON,    xp + 20, yp + 4);
 
 			IconColour icon_colour;
 			UINT8      text_colour = FONT_YELLOW;

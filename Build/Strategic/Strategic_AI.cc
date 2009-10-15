@@ -1177,12 +1177,6 @@ void InitStrategicAI()
 		ValidateGroup(&g);
 	}
 
-	// Setup the flags for the four sam sites.
-	FOR_EACH(INT16 const, i, pSamList)
-	{
-		SectorInfo[*i].uiFlags |= SF_SAM_SITE;
-	}
-
 	/* Choose one cache map out of five possible maps. Select the sector randomly,
 	 * set up the flags to use the alternate map, then place 8-12 regular troops
 	 * there (no AI though). Changing MAX_STRATEGIC_TEAM_SIZE may require changes
