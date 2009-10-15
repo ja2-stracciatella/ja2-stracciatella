@@ -71,15 +71,6 @@ static void InitKnowFacilitiesFlags(void)
 }
 
 
-static void InitMiningLocations()
-{
-	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
-	{
-		SectorInfo[i->sector].uiFlags |= SF_MINING_SITE;
-	}
-}
-
-
 void TrashUndergroundSectorInfo()
 {
 	UNDERGROUND_SECTORINFO *curr;
@@ -274,7 +265,6 @@ void InitNewCampaign()
 	InitStrategicMovementCosts();
 	RemoveAllGroups();
 
-	InitMiningLocations();
 	InitKnowFacilitiesFlags( );
 
 	BuildUndergroundSectorInfoList();

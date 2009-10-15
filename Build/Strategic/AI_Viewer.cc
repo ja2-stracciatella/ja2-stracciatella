@@ -5,6 +5,7 @@
 #include "HImage.h"
 #include "Local.h"
 #include "English.h"
+#include "Strategic_Mines.h"
 #include "Timer_Control.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -364,6 +365,15 @@ static void RenderStationaryGroups()
 	SetFontShadow(FONT_NEARBLACK);
 
 	SGPVObject const* const icons = guiMapIconsID;
+	SGPVSurface*      const dst   = FRAME_BUFFER;
+	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
+	{
+		UINT8 const sector = i->sector;
+		INT32 const xp     = VIEWER_LEFT + VIEWER_CELLW * SECTORX(sector);
+		INT32 const yp     = VIEWER_TOP  + VIEWER_CELLH * SECTORY(sector);
+		BltVideoObject(dst, icons, MINING_ICON, xp + 25, yp - 1);
+	}
+
 	FOR_EACH(INT16 const, i, pSamList)
 	{
 		UINT8 const sector = *i;
@@ -380,8 +390,6 @@ static void RenderStationaryGroups()
 		{
 			INT32      const  xp = VIEWER_LEFT + VIEWER_CELLW * x + 1;
 			SECTORINFO const& si = SectorInfo[SECTOR(x + 1, y + 1)];
-
-			if (si.uiFlags & SF_MINING_SITE) BltVideoObject(FRAME_BUFFER, icons, MINING_ICON, xp + 25, yp - 1);
 
 			IconColour icon_colour;
 			UINT8      text_colour = FONT_YELLOW;

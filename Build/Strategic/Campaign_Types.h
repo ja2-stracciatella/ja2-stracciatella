@@ -53,7 +53,6 @@ enum SectorFlags
 	 * mark is displayed to reflect that the player no longer knows. */
 	SF_PLAYER_KNOWS_ENEMIES_ARE_HERE      = 0x00000004,
 
-	SF_MINING_SITE                        = 0x00000010,
 	SF_ALREADY_VISITED                    = 0x00000020,
 	SF_USE_ALTERNATE_MAP                  = 0x00000040,
 	SF_PENDING_ALTERNATE_MAP              = 0x00000080,
