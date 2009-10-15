@@ -61,7 +61,7 @@ static GROUP* gpPendingSimultaneousGroup = NULL;
 
 #ifdef JA2BETAVERSION
 	extern BOOLEAN gfExitViewer;
-static void ValidateGroups(GROUP const*);
+static void ValidateGroups(GROUP const&);
 #endif
 
 extern BOOLEAN gubNumAwareBattles;
@@ -886,9 +886,9 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		//then we will go straight to autoresolve, where the enemy will likely annihilate them or capture them.
 		//If there are no alive mercs, then there is nothing anybody can do.  The enemy will completely ignore
 		//this, and continue on.
-		#ifdef JA2BETAVERSION
-			ValidateGroups( pGroup );
-		#endif
+#ifdef JA2BETAVERSION
+		ValidateGroups(*pGroup);
+#endif
 
 		if( gubNumGroupsArrivedSimultaneously )
 		{ //Because this is a battle case, clear all the group flags
@@ -3757,32 +3757,35 @@ bool GroupHasInTransitDeadOrPOWMercs(GROUP const& g)
 
 #ifdef JA2BETAVERSION
 
-static void ValidateGroups(GROUP const* const pGroup)
+static void ValidateGroups(GROUP const& g)
 {
-	//Do error checking, and report group
+	// Do error checking, and report group
 	ValidatePlayersAreInOneGroupOnly();
-	if( !pGroup->fPlayer && !pGroup->ubGroupSize )
-	{
-		//report error
-		wchar_t str[512];
-		if( pGroup->ubSectorIDOfLastReassignment == 255 )
-		{
-			swprintf(str, lengthof(str), L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted."
-										 L"  Group %d in sector %c%d originated from sector %c%d.",
-										 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-										 SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ) );
-		}
-		else
-		{
-			swprintf(str, lengthof(str), L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted."
-										 L"  Group %d in sector %c%d originated from sector %c%d and last reassignment location was %c%d.",
-										 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-										 SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
-										 SECTORY( pGroup->ubSectorIDOfLastReassignment ) + 'A' - 1, SECTORX( pGroup->ubSectorIDOfLastReassignment ) );
-		}
-		//correct error
+	if (g.fPlayer || g.ubGroupSize != 0) return;
 
-		DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
+	// Report error
+	wchar_t str[512];
+	if (g.ubSectorIDOfLastReassignment == 255)
+	{
+		swprintf(str, lengthof(str),
+			L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted.  Group %d in sector %c%d originated from sector %c%d.",
+			g.ubGroupID,
+			'A' - 1 + g.ubSectorY,                  g.ubSectorX,
+			'A' - 1 + SECTORY(g.ubCreatedSectorID), SECTORX(g.ubCreatedSectorID)
+			);
 	}
+	else
+	{
+		swprintf(str, lengthof(str),
+			L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted.  Group %d in sector %c%d originated from sector %c%d and last reassignment location was %c%d.",
+			g.ubGroupID,
+			'A' - 1 + g.ubSectorY,                             g.ubSectorX,
+			'A' - 1 + SECTORY(g.ubCreatedSectorID),            SECTORX(g.ubCreatedSectorID),
+			'A' - 1 + SECTORY(g.ubSectorIDOfLastReassignment), SECTORX(g.ubSectorIDOfLastReassignment)
+		);
+	}
+
+	DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, 0);
 }
+
 #endif
