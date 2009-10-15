@@ -3573,7 +3573,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP& g)
 }
 
 
-static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP&);
+static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP&);
 
 
 // look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
@@ -3624,87 +3624,51 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
-static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
+static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 {
-	INT16 sSectorX = 0, sSectorY = 0;
-	INT8 bSectorZ = 0;
-	CHAR16 sString[ 128 ];
-	CHAR16 wSectorName[ 128 ];
-	INT16 sStrategicSector;
-
 	Assert(g.fPlayer);
 
-	// nobody in the group (perfectly legal with the chopper)
-	if (g.pPlayerList == NULL)
-	{
-		return( FALSE );
-	}
+	// Nobody in the group (perfectly legal with the chopper).
+	if (!g.pPlayerList) return false;
 
-	// chopper doesn't stop for NPCs
-	if (IsGroupTheHelicopterGroup(g))
-	{
-		return( FALSE );
-	}
+	// Chopper doesn't stop for NPCs.
+	if (IsGroupTheHelicopterGroup(g)) return false;
 
-	// if we're already in the middle of a prompt (possible with simultaneously group arrivals!), don't try to prompt again
-	if ( gpGroupPrompting != NULL )
-	{
-		return( FALSE );
-	}
+	/* If we're already in the middle of a prompt (possible with simultaneously
+	 * group arrivals!), don't try to prompt again. */
+	if (gpGroupPrompting) return false;
 
-	// get the sector values
-	sSectorX = g.ubSectorX;
-	sSectorY = g.ubSectorY;
-	bSectorZ = g.ubSectorZ;
+	INT16 const x = g.ubSectorX;
+	INT16 const y = g.ubSectorY;
+	INT8  const z = g.ubSectorZ;
 
-	// don't do this for underground sectors
-	if ( bSectorZ != 0 )
-	{
-		return( FALSE );
-	}
+	// Don't do this for underground sectors.
+	if (z != 0) return false;
 
-	// get the strategic sector value
-	sStrategicSector = sSectorX + MAP_WORLD_X * sSectorY;
+	// Skip towns/pseudo-towns (anything that shows up on the map as being special).
+	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR) return false;
 
-	// skip towns/pseudo-towns (anything that shows up on the map as being special)
-	if( StrategicMap[ sStrategicSector ].bNameId != BLANK_SECTOR )
-	{
-		return( FALSE );
-	}
+	// Skip SAM sites.
+	if (IsThisSectorASAMSector(x, y, z)) return false;
 
-	// skip SAM-sites
-	if ( IsThisSectorASAMSector( sSectorX, sSectorY, bSectorZ ) )
-	{
-		return( FALSE );
-	}
+	// Check for profiled NPCs in sector.
+	if (!WildernessSectorWithAllProfiledNPCsNotSpokenWith(x, y, z)) return false;
 
-	// check for profiled NPCs in sector
-	if (!WildernessSectorWithAllProfiledNPCsNotSpokenWith(sSectorX, sSectorY, bSectorZ))
-	{
-		return( FALSE );
-	}
-
-
-	// store the group ptr for use by the callback function
+	// Store the group pointer for use by the callback function.
 	gpGroupPrompting = &g;
 
-	// build string for squad
-	GetSectorIDString( sSectorX, sSectorY, bSectorZ, wSectorName, lengthof(wSectorName), FALSE );
-	swprintf(sString, lengthof(sString), pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, wSectorName);
+	// Build string for squad.
+	wchar_t sector_name[128];
+	GetSectorIDString(x, y, z, sector_name, lengthof(sector_name), FALSE);
+	wchar_t msg[128];
+	swprintf(msg, lengthof(msg), pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, sector_name);
 
-	if (GroupAtFinalDestination(&g))
-	{
-		// do an OK message box
-		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback );
-	}
-	else
-	{
-		// do a CONTINUE/STOP message box
-		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_CONTINUESTOP, HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback );
-	}
-
+	MessageBoxFlags const flags =
+		GroupAtFinalDestination(&g) ? MSG_BOX_FLAG_OK :
+		MSG_BOX_FLAG_CONTINUESTOP;
+	DoScreenIndependantMessageBox(msg, flags, HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback);
 	// wait, we're prompting the player
-	return( TRUE );
+	return true;
 }
 
 
