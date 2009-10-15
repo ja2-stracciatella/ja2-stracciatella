@@ -3621,7 +3621,7 @@ void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 
 
 static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageBoxReturnValue);
-static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 x, INT16 y, INT8 z);
 
 
 static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
@@ -3672,47 +3672,34 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 }
 
 
-static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const y, INT8 const z)
 {
-	UINT8									ubProfile;
-	BOOLEAN fFoundSomebody = FALSE;
-
-
-	for ( ubProfile = FIRST_RPC; ubProfile < NUM_PROFILES; ubProfile++ )
+	bool found_somebody = false;
+	for (UINT8 pid = FIRST_RPC; pid != NUM_PROFILES; ++pid)
 	{
-		MERCPROFILESTRUCT const& p = GetProfile(ubProfile);
-
-		// skip stiffs
+		MERCPROFILESTRUCT const& p = GetProfile(pid);
+		// Skip dead.
 		if (p.bMercStatus == MERC_IS_DEAD) continue;
 		if (p.bLife <= 0)                  continue;
+ 		// Skip vehicles.
+		if (PROF_HUMMER <= pid && pid <= PROF_HELICOPTER) continue;
 
- 		// skip vehicles
-		if ( ubProfile >= PROF_HUMMER && ubProfile <= PROF_HELICOPTER )
-		{
-			continue;
-		}
+		// In this sector?
+		if (p.sSectorX != x || p.sSectorY != y || p.bSectorZ != z) continue;
 
-		// in this sector?
-		if (p.sSectorX == sSectorX && p.sSectorY == sSectorY && p.bSectorZ == bSectorZ)
-		{
-			// if we haven't talked to him yet, and he's not currently recruired/escorted by player (!)
-			if (p.ubLastDateSpokenTo == 0 &&
-					!(p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
-			{
-				// then this is a guy we need to stop for...
-				fFoundSomebody = TRUE;
-			}
-			else
-			{
-				// already spoke to this guy, don't prompt about this sector again, regardless of status of other NPCs here
-				// (although Hamous wanders around, he never shares the same wilderness sector as other important NPCs)
-				return( FALSE );
-			}
+		if (p.ubLastDateSpokenTo != 0 ||
+				p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE))
+		{ /* Already spoke to this guy, don't prompt about this sector again,
+			 * regardless of status of other NPCs here. Although Hamous wanders
+			 * around, he never shares the same wilderness sector as other important
+			 * NPCs. */
+			return false;
 		}
+		/* We haven't talked to him yet and he's not currently recruired/escorted by
+		 * player. This is a guy we need to stop for. */
+		found_somebody = true;
 	}
-
-
-	return( fFoundSomebody );
+	return found_somebody;
 }
 
 
