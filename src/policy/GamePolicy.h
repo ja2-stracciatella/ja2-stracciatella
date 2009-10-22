@@ -10,4 +10,7 @@ public:
   int32_t starting_cash_easy;
   int32_t starting_cash_medium;
   int32_t starting_cash_hard;
+
+  /* Battle */
+  bool f_drop_everything;               /**< Enemy drop all equipment. */
 };

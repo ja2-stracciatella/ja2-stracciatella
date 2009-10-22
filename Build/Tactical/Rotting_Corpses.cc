@@ -43,6 +43,8 @@
 #include "MemMan.h"
 
 #include "FileMan.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #define CORPSE_WARNING_MAX 5
 #define CORPSE_WARNING_DIST 5
@@ -718,7 +720,9 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 		  if ( pObj->usItem != NOTHING )
 		  {
 			  // Check if it's supposed to be dropped
-			  if (!(pObj->fFlags & OBJECT_UNDROPPABLE) || s.bTeam == OUR_TEAM)
+			  if (!(pObj->fFlags & OBJECT_UNDROPPABLE)
+            || (s.bTeam == OUR_TEAM)
+            || GGP->f_drop_everything)
 			  {
 				  // and make sure that it really is a droppable item type
 				  if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
