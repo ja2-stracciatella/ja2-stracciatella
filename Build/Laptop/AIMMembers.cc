@@ -54,6 +54,9 @@
 #include "Strategic_Town_Loyalty.h"
 #include "GameRes.h"
 
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
+
 #define	MERCBIOSFILENAME		BINARYDATADIR "/aimbios.edt"
 
 
@@ -894,8 +897,12 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		INT16       const  sCenX    = x + abs(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  sCenY    = y + abs(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
-		// Blt the shadow of the item
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
+    if(GGP->f_draw_item_shadow)
+    {
+      // Blt the shadow of the item
+      BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
+    }
+
 		// Blt the item
 		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX,     sCenY, SGP_TRANSPARENT);
 

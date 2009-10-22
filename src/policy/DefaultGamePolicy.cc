@@ -3,5 +3,5 @@
 
 DefaultGamePolicy::DefaultGamePolicy()
 {
-  UI_drawItemShadow = true;
+  f_draw_item_shadow = true;
 }

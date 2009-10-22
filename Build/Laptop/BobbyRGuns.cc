@@ -28,6 +28,8 @@
 #	include "Debug.h"
 #endif
 
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #define		BOBBYR_GRID_PIC_WIDTH							118
 #define		BOBBYR_GRID_PIC_HEIGHT						69
@@ -703,8 +705,11 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 	INT16       const  sCenX   = PosX + abs(int(BOBBYR_GRID_PIC_WIDTH - usWidth)) / 2 - pTrav.sOffsetX;
 	INT16       const  sCenY   = PosY + 8;
 
-	//blt the shadow of the item
-	BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
+  if(GGP->f_draw_item_shadow)
+  {
+    //blt the shadow of the item
+    BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
+  }
 
 	BltVideoObject(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
 }

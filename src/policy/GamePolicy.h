@@ -3,5 +3,5 @@
 class GamePolicy
 {
 public:
-  bool UI_drawItemShadow;
+  bool f_draw_item_shadow;                      /**< Draw shadows from the inventory items. */
 };

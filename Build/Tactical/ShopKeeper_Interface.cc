@@ -65,6 +65,8 @@
 #	include "Soldier_Create.h"
 #endif
 
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #define		SKI_BUTTON_FONT										MILITARYFONT1//FONT14ARIAL
 #define		SKI_BUTTON_COLOR									73
@@ -2070,9 +2072,11 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		ETRLEObject const& e       = item_vo.SubregionProperties(item.ubGraphicNum);
 		INT16              cen_x   = x + 7 + abs(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
 		INT16              cen_y   = y +     abs(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, cen_x - 2, cen_y + 2);
-		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, cen_x,     cen_y, outline);
-	}
+    if(GGP->f_draw_item_shadow)
+    {
+      BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, cen_x - 2, cen_y + 2);
+    }
+		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, cen_x,     cen_y, outline);	}
 
 	{ // Display the status of the item
 		UINT16 const colour = Get16BPPColor(FROMRGB(140, 136, 119));

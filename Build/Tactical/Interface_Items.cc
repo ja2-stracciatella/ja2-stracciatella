@@ -73,7 +73,9 @@
 #include "Items.h"
 #include "UILayout.h"
 
+#include "GameInstance.h"
 #include "Soldier.h"
+#include "policy/GamePolicy.h"
 
 #define		ITEMDESC_FONT							BLOCKFONT2
 #define		ITEMDESC_FONTSHADOW2			32
@@ -1562,7 +1564,10 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 		INT16       const  cx      = sX + (sWidth  - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  cy      = sY + (sHeight - e.usHeight) / 2 - e.sOffsetY;
 
-		BltVideoObjectOutlineShadow(buffer, &item_vo, gfx_idx, cx - 2, cy + 2);
+    if(GGP->f_draw_item_shadow)
+    {
+      BltVideoObjectOutlineShadow(buffer, &item_vo, gfx_idx, cx - 2, cy + 2);
+    }
 		BltVideoObjectOutline(      buffer, &item_vo, gfx_idx, cx,     cy, outline_colour);
 
 		if (buffer == FRAME_BUFFER)
@@ -2239,7 +2244,10 @@ void RenderItemDescriptionBox(void)
 		SGPBox      const& xy = in_map ? g_desc_item_box_map: g_desc_item_box;
 		INT32       const  x  = dx + xy.x + (xy.w - e.usWidth)  / 2 - e.sOffsetX;
 		INT32       const  y  = dy + xy.y + (xy.h - e.usHeight) / 2 - e.sOffsetY;
-		BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
+    if(GGP->f_draw_item_shadow)
+    {
+      BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
+    }
 		BltVideoObject(             guiSAVEBUFFER, guiItemGraphic, 0, x,     y);
 	}
 
