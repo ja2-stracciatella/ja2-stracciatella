@@ -613,6 +613,8 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	new_s->bExplosive              = old_s->bExplosive;
 	new_s->bLastRenderVisibleValue = old_s->bLastRenderVisibleValue;
 	new_s->bVisible                = old_s->bVisible;
+	new_s->bCamo                   = old_s->bCamo;
+	if (new_s->bCamo != 0) CreateSoldierPalettes(*new_s);
 
 	if (team == gbPlayerNum) new_s->bVisible = 1;
 

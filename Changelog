@@ -1,3 +1,4 @@
+(r7055) Fix a vanilla bug: When a soldier changed team (e.g. getting hostile), he lost his camouflage.
 (r6933) Plug a vanilla one-time memory leak.
 (r6926) Fix a vanilla bug: Due to a logic bug multiple terrorists could end up in the same sector.
 (r6924) Fix a vanilla glitch in the editor: Pressing page up/down while an item is selected and the options menu is active caused some widgets of the items menu to be shown.
