@@ -105,8 +105,9 @@ INT32 PredictIncomeFromPlayerMines( void );
 // predict income from a mine
 UINT32 PredictDailyIncomeFromAMine(INT8 mine_id);
 
-// calculate maximum possible daily income from all mines
-INT32 CalcMaxPlayerIncomeFromMines( void );
+/* Calculate how much player could make daily if he owned all mines with 100%
+ * control and 100% loyalty. */
+INT32 CalcMaxPlayerIncomeFromMines();
 
 // get index of this mine, return -1 if no mine found
 INT8 GetMineIndexForSector(UINT8 sector);

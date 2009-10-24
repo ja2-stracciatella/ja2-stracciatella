@@ -616,19 +616,14 @@ INT32 PredictIncomeFromPlayerMines( void )
 }
 
 
-INT32 CalcMaxPlayerIncomeFromMines( void )
+INT32 CalcMaxPlayerIncomeFromMines()
 {
-	INT32 iTotal = 0;
-	INT8 bCounter = 0;
-
-	// calculate how much player could make daily if he owned all mines with 100% control and 100% loyalty
-	for( bCounter = 0; bCounter < MAX_NUMBER_OF_MINES; bCounter++ )
+	INT32 total = 0;
+	FOR_EACH(MINE_STATUS_TYPE const, i, gMineStatus)
 	{
-		// add up the total
-		iTotal += (MINE_PRODUCTION_NUMBER_OF_PERIODS * gMineStatus[bCounter].uiMaxRemovalRate);
+		total += MINE_PRODUCTION_NUMBER_OF_PERIODS * i->uiMaxRemovalRate;
 	}
-
-	return( iTotal );
+	return total;
 }
 
 
