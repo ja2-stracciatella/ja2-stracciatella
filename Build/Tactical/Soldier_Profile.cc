@@ -563,117 +563,95 @@ SOLDIERTYPE* FindSoldierByProfileIDOnPlayerTeam(const ProfileID pid)
 }
 
 
-SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
+SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 {
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT32									cnt;
-	INT16										sOldGridNo;
+	if (gfInTalkPanel) DeleteTalkingMenu();
 
-	if (gfInTalkPanel)
+	GridNo const old_gridno = old_s->sGridNo;
+
+	// At the low level check if this guy is in inv panel, else remove.
+	if (gsCurInterfacePanel == SM_PANEL && gpSMCurrentMerc == old_s)
 	{
-		DeleteTalkingMenu();
+		SetCurrentInterfacePanel(TEAM_PANEL);
 	}
 
-	sOldGridNo = pSoldier->sGridNo;
+	// Remove him from the game.
+	InternalTacticalRemoveSoldier(*old_s, FALSE);
 
-	// Remove him from the game!
-	InternalTacticalRemoveSoldier(*pSoldier, FALSE);
-
-	// Create a new one!
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-	MercCreateStruct.bTeam							= ubTeam;
-	MercCreateStruct.ubProfile					= pSoldier->ubProfile;
-	MercCreateStruct.bBodyType					= pSoldier->ubBodyType;
-	MercCreateStruct.sSectorX						= pSoldier->sSectorX;
-	MercCreateStruct.sSectorY						= pSoldier->sSectorY;
-	MercCreateStruct.bSectorZ						= pSoldier->bSectorZ;
-	MercCreateStruct.sInsertionGridNo		= pSoldier->sGridNo;
-	MercCreateStruct.bDirection					= pSoldier->bDirection;
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	// Create a new one.
+	SOLDIERCREATE_STRUCT c;
+	memset(&c, 0, sizeof(c));
+	c.bTeam            = team;
+	c.ubProfile        = old_s->ubProfile;
+	c.bBodyType        = old_s->ubBodyType;
+	c.sSectorX         = old_s->sSectorX;
+	c.sSectorY         = old_s->sSectorY;
+	c.bSectorZ         = old_s->bSectorZ;
+	c.sInsertionGridNo = old_s->sGridNo; // XXX always NOWHERE due to InternalTacticalRemoveSoldier() above
+	c.bDirection       = old_s->bDirection;
+	if (old_s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		MercCreateStruct.ubProfile					= NO_PROFILE;
-		MercCreateStruct.fUseGivenVehicle		= TRUE;
-		MercCreateStruct.bUseGivenVehicleID	= pSoldier->bVehicleID;
+		c.ubProfile          = NO_PROFILE;
+		c.fUseGivenVehicle   = TRUE;
+		c.bUseGivenVehicleID = old_s->bVehicleID;
+	}
+	SOLDIERTYPE* const new_s = TacticalCreateSoldier(c);
+	if (!new_s) return 0;
+
+	// Copy vital stats back.
+	new_s->bLife                   = old_s->bLife;
+	new_s->bLifeMax                = old_s->bLifeMax;
+	new_s->bAgility                = old_s->bAgility;
+	new_s->bLeadership             = old_s->bLeadership;
+	new_s->bDexterity              = old_s->bDexterity;
+	new_s->bStrength               = old_s->bStrength;
+	new_s->bWisdom                 = old_s->bWisdom;
+	new_s->bExpLevel               = old_s->bExpLevel;
+	new_s->bMarksmanship           = old_s->bMarksmanship;
+	new_s->bMedical                = old_s->bMedical;
+	new_s->bMechanical             = old_s->bMechanical;
+	new_s->bExplosive              = old_s->bExplosive;
+	new_s->bLastRenderVisibleValue = old_s->bLastRenderVisibleValue;
+	new_s->bVisible                = old_s->bVisible;
+
+	if (team == gbPlayerNum) new_s->bVisible = 1;
+
+	// Copy over any items.
+	for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
+	{
+		new_s->inv[i] = old_s->inv[i];
 	}
 
-	SOLDIERTYPE* const pNewSoldier = TacticalCreateSoldier(MercCreateStruct);
-	if (pNewSoldier != NULL)
+	/* Loop through all active merc slots, change any attacker's target if they
+	 * were once on this guy. */
+	FOR_EACH_MERC(i)
 	{
-		// Copy vital stats back!
-		pNewSoldier->bLife													= pSoldier->bLife;
-		pNewSoldier->bLifeMax												= pSoldier->bLifeMax;
-		pNewSoldier->bAgility												= pSoldier->bAgility;
-		pNewSoldier->bLeadership										= pSoldier->bLeadership;
-		pNewSoldier->bDexterity											= pSoldier->bDexterity;
-		pNewSoldier->bStrength											= pSoldier->bStrength;
-		pNewSoldier->bWisdom												= pSoldier->bWisdom;
-		pNewSoldier->bExpLevel											= pSoldier->bExpLevel;
-		pNewSoldier->bMarksmanship									= pSoldier->bMarksmanship;
-		pNewSoldier->bMedical												= pSoldier->bMedical;
-		pNewSoldier->bMechanical										= pSoldier->bMechanical;
-		pNewSoldier->bExplosive											= pSoldier->bExplosive;
-		pNewSoldier->bLastRenderVisibleValue				= pSoldier->bLastRenderVisibleValue;
-		pNewSoldier->bVisible												= pSoldier->bVisible;
-
-		if ( ubTeam == gbPlayerNum )
-		{
-			pNewSoldier->bVisible											= 1;
-		}
-
-		// Copy over any items....
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
-		{
-			pNewSoldier->inv[ cnt ] = pSoldier->inv[ cnt ];
-		}
-
-		// OK, loop through all active merc slots, change
-		// Change ANY attacker's target if they were once on this guy.....
-		FOR_EACH_MERC(i)
-		{
-			SOLDIERTYPE* const s = *i;
-			if (s->target == pSoldier) s->target = pNewSoldier;
-		}
-
-		// Set insertion gridNo
-		pNewSoldier->sInsertionGridNo								= sOldGridNo;
-
-		if ( gfPotentialTeamChangeDuringDeath )
-		{
-			HandleCheckForDeathCommonCode( pSoldier );
-		}
-
-		if ( gfWorldLoaded &&  pSoldier->bInSector
-		//pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ
-		 )
-		{
-			AddSoldierToSectorNoCalculateDirectionUseAnimation(pNewSoldier, pSoldier->usAnimState, pSoldier->usAniCode);
-			HandleSight(*pNewSoldier, SIGHT_LOOK | SIGHT_RADIO);
-		}
-
-		if ( pNewSoldier->ubProfile != NO_PROFILE )
-		{
-			if ( ubTeam == gbPlayerNum )
-			{
-				gMercProfiles[ pNewSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
-			}
-			else
-			{
-				gMercProfiles[ pNewSoldier->ubProfile ].ubMiscFlags &= (~PROFILE_MISC_FLAG_RECRUITED);
-			}
-		}
-
+		SOLDIERTYPE& s = **i;
+		if (s.target == old_s) s.target = new_s;
 	}
 
-	// AT the low level check if this poor guy is in inv panel, else
-	// remove....
-	if ( gsCurInterfacePanel == SM_PANEL && gpSMCurrentMerc == pSoldier )
+	new_s->sInsertionGridNo = old_gridno;
+
+	if (gfPotentialTeamChangeDuringDeath)
 	{
-		// Switch....
-		SetCurrentInterfacePanel( TEAM_PANEL );
+		HandleCheckForDeathCommonCode(old_s);
 	}
 
-	return( pNewSoldier );
+	if (gfWorldLoaded && old_s->bInSector)
+	{
+		AddSoldierToSectorNoCalculateDirectionUseAnimation(new_s, old_s->usAnimState, old_s->usAniCode);
+		HandleSight(*new_s, SIGHT_LOOK | SIGHT_RADIO);
+	}
+
+	if (new_s->ubProfile != NO_PROFILE)
+	{
+		UINT8& misc_flags = GetProfile(new_s->ubProfile).ubMiscFlags;
+		misc_flags = team == gbPlayerNum ?
+			misc_flags |  PROFILE_MISC_FLAG_RECRUITED :
+			misc_flags & ~PROFILE_MISC_FLAG_RECRUITED;
+	}
+
+	return new_s;
 }
 
 
