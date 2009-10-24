@@ -634,41 +634,22 @@ void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void )
 }
 
 
-BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY )
+bool CanNearbyMilitiaScoutThisSector(INT16 const sec_x, INT16 const sec_y)
 {
-	INT16 sSectorValue = 0;
-	INT16 sCounterA = 0, sCounterB = 0;
-	UINT8 ubScoutingRange = 1;
-
-	for( sCounterA = sSectorX - ubScoutingRange; sCounterA <= sSectorX + ubScoutingRange; sCounterA++ )
+	INT16 const scout_range = 1;
+	INT16 const xstart      = sec_x >      scout_range ? sec_x - scout_range :  1;
+	INT16 const ystart      = sec_y >      scout_range ? sec_y - scout_range :  1;
+	INT16 const xend        = sec_x < 16 - scout_range ? sec_x + scout_range : 16;
+	INT16 const yend        = sec_y < 16 - scout_range ? sec_x + scout_range : 16;
+	for (INT16 y = ystart; y <= yend; ++y)
 	{
-		for( sCounterB = sSectorY - ubScoutingRange; sCounterB <= sSectorY + ubScoutingRange; sCounterB++ )
+		for (INT16 x = xstart; x <= xend; ++x)
 		{
-			// skip out of bounds sectors
-			if ( ( sCounterA < 1 ) || ( sCounterA > 16 ) || ( sCounterB < 1 ) || ( sCounterB > 16 ) )
-			{
-				continue;
-			}
-
-			sSectorValue = SECTOR( sCounterA, sCounterB );
-
-			// check if any sort of militia here
-			if( SectorInfo[ sSectorValue ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ] )
-			{
-				return( TRUE );
-			}
-			else if( SectorInfo[ sSectorValue ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] )
-			{
-				return( TRUE );
-			}
-			else if( SectorInfo[ sSectorValue ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ] )
-			{
-				return( TRUE );
-			}
+			UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[SECTOR(x, y)].ubNumberOfCivsAtLevel;
+			if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] != 0) return true;
 		}
 	}
-
-	return( FALSE );
+	return false;
 }
 
 

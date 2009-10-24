@@ -46,8 +46,8 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier );
 // call this when the sector changes...
 void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void );
 
-// is there a town with militia here or nearby?
-BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY );
+// Is there a town with militia here or nearby?
+bool CanNearbyMilitiaScoutThisSector(INT16 x, INT16 y);
 
 // Is the town or SAM site here full of milita?
 BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const INT8 sector_z);
