@@ -106,7 +106,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	UINT8					ubDesiredHeight;
 	BOOLEAN				bOKFireWeapon;
 	BOOLEAN				bWeaponJammed;
-	BOOLEAN				fFreeUpAttacker=FALSE;
   UINT16        usUIMovementMode;
 
   do
@@ -636,14 +635,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->bDoBurst > Weapon[ pSoldier->usAttackingWeapon ].ubShotsPerBurst )
 					{
 						fStop = TRUE;
-						fFreeUpAttacker = TRUE;
 					}
 
 					// CHECK IF WE HAVE AMMO LEFT, IF NOT, END ANIMATION!
 					if ( !EnoughAmmo( pSoldier, FALSE, pSoldier->ubAttackingHand ) )
 					{
 						fStop = TRUE;
-						fFreeUpAttacker = TRUE;
 						if ( pSoldier->bTeam == gbPlayerNum	 )
 						{
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ BURST_FIRE_DEPLETED_CLIP_STR ] );
@@ -656,7 +653,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if ( bWeaponJammed == TRUE )
 						{
 							fStop = TRUE;
-							fFreeUpAttacker = TRUE;
 							// stop shooting!
 							pSoldier->bBulletsLeft = 0;
 
@@ -689,12 +685,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						pSoldier->fDoSpread = FALSE;
 						pSoldier->bDoBurst = 1;
-//						pSoldier->fBurstCompleted = TRUE;
-						if ( fFreeUpAttacker )
-						{
-//							DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - aborting start of attack");
-//							FreeUpAttacker(pSoldier);
-						}
 
 						// ATE; Reduce it due to animation being stopped...
 						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - Burst animation ended");
