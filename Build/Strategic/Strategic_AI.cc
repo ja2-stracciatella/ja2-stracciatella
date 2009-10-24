@@ -2751,7 +2751,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 static void EvolveQueenPriorityPhase(BOOLEAN fForceChange);
 static BOOLEAN GarrisonRequestingMinimumReinforcements(INT32 iGarrisonID);
 static BOOLEAN PatrolRequestingMinimumReinforcements(INT32 iPatrolID);
-static void UpgradeAdminsToTroops(void);
+static void UpgradeAdminsToTroops();
 
 
 //Periodically does a general poll and check on each of the groups and garrisons, determines
@@ -4294,108 +4294,83 @@ static void EliminateSurplusTroopsForGarrison(GROUP* pGroup, SECTORINFO* pSector
 }
 
 
-// once Queen is awake, she'll gradually begin replacing admins with regular troops.  This is mainly to keep player from
-// fighting many more admins once they are no longer any challenge for him.  Eventually all admins will vanish off map.
-static void UpgradeAdminsToTroops(void)
+/* Once Queen is awake, she'll gradually begin replacing admins with regular
+ * troops. This is mainly to keep player from fighting many more admins once
+ * they are no longer any challenge for him. Eventually all admins will vanish
+ * off map. */
+static void UpgradeAdminsToTroops()
 {
-	INT32 i;
-	SECTORINFO *pSector;
-	INT8 bPriority;
-	UINT8 ubAdminsToCheck;
-	INT16 sPatrolIndex;
+	/* On normal, AI evaluates approximately every 10 hrs. There are about
+	 * 130 administrators seeded on the map. Some of these will be killed by the
+	 * player. */
 
+	INT32 const min_priority = 100 - 10 * HighestPlayerProgressPercentage();
 
-	// on normal, AI evaluates approximately every 10 hrs.  There are about 130 administrators seeded on the map.
-	// Some of these will be killed by the player.
-
-	// check all garrisons for administrators
-	for( i = 0; i < giGarrisonArraySize; i++ )
+	// Check all garrisons for administrators.
+	GARRISON_GROUP const* end = gGarrisonGroup + giGarrisonArraySize;
+	for (GARRISON_GROUP const* i = gGarrisonGroup; i != end; ++i)
 	{
-		// skip sector if it's currently loaded, we'll never upgrade guys in those
-		if ( SECTOR( gWorldSectorX, gWorldSectorY ) == gGarrisonGroup[ i ].ubSectorID )
+		GARRISON_GROUP const& g = *i;
+
+		// Skip sector if it's currently loaded, we'll never upgrade guys in those.
+		if (SECTOR(gWorldSectorX, gWorldSectorY) == g.ubSectorID) continue;
+
+		SECTORINFO& sector = SectorInfo[g.ubSectorID];
+		if (sector.ubNumAdmins == 0) continue; // No admins in garrison.
+
+		INT8 const priority = gArmyComp[g.ubComposition].bPriority;
+
+		/* Highest priority sectors are upgraded first. Each 1% of progress lowers
+		 * the priority threshold required to start triggering upgrades by 10%. */
+		if (priority <= min_priority) continue;
+
+		for (UINT8 n_to_check = sector.ubNumAdmins; n_to_check != 0; --n_to_check)
 		{
-			continue;
-		}
-
-		pSector = &SectorInfo[ gGarrisonGroup[ i ].ubSectorID ];
-
-		// if there are any admins currently in this garrison
-		if ( pSector->ubNumAdmins > 0 )
-		{
-			bPriority = gArmyComp[ gGarrisonGroup[ i ].ubComposition ].bPriority;
-
-			// highest priority sectors are upgraded first. Each 1% of progress lower the
-			// priority threshold required to start triggering upgrades by 10%.
-			if ( ( 100 - ( 10 * HighestPlayerProgressPercentage() ) ) < bPriority )
-			{
-				ubAdminsToCheck = pSector->ubNumAdmins;
-
-				while ( ubAdminsToCheck > 0)
-				{
-					// chance to upgrade at each check is random, and also dependant on the garrison's priority
-					if ( Chance ( bPriority ) )
-					{
-						pSector->ubNumAdmins--;
-						pSector->ubNumTroops++;
-					}
-
-					ubAdminsToCheck--;
-				}
-			}
+			/* Chance to upgrade at each check is random and is dependent on the
+			 * garrison's priority. */
+			if (!Chance(priority)) continue;
+			--sector.ubNumAdmins;
+			++sector.ubNumTroops;
 		}
 	}
 
-
-	// check all moving enemy groups for administrators
-	FOR_EACH_ENEMY_GROUP(pGroup)
+	// Check all moving enemy groups for administrators.
+	FOR_EACH_ENEMY_GROUP(i)
 	{
-		if (pGroup->ubGroupSize && !pGroup->fVehicle)
+		GROUP const& g = *i;
+		if (g.ubGroupSize == 0) continue;
+		if (g.fVehicle)         continue;
+
+		// Skip sector if it's currently loaded, we'll never upgrade guys in those.
+		if (g.ubSectorX == gWorldSectorX && g.ubSectorY == gWorldSectorY) continue;
+
+		Assert(g.pEnemyGroup);
+		ENEMYGROUP& eg = *g.pEnemyGroup;
+		if (eg.ubNumAdmins == 0) continue; // No admins in group.
+
+		INT8 priority;
+		if (eg.ubIntention == PATROL)
+		{ // Use that patrol's priority.
+			INT16 const patrol_id = FindPatrolGroupIndexForGroupID(g.ubGroupID);
+			Assert(patrol_id != -1);
+			priority = gPatrolGroup[patrol_id].bPriority;
+		}
+		else
+		{ // Use a default priority.
+			priority = 50;
+		}
+
+		/* Highest priority groups are upgraded first. Each 1% of progress lowers
+		 * the priority threshold required to start triggering upgrades by 10%. */
+		if (priority <= min_priority) continue;
+
+		for (UINT8 n_to_check = eg.ubNumAdmins; n_to_check != 0; --n_to_check)
 		{
-			Assert ( pGroup->pEnemyGroup );
-
-			// skip sector if it's currently loaded, we'll never upgrade guys in those
-			if ( ( pGroup->ubSectorX == gWorldSectorX ) && ( pGroup->ubSectorY == gWorldSectorY ) )
-			{
-				continue;
-			}
-
-			// if there are any admins currently in this group
-			if ( pGroup->pEnemyGroup->ubNumAdmins > 0 )
-			{
-				// if it's a patrol group
-				if ( pGroup->pEnemyGroup->ubIntention == PATROL )
-				{
-					sPatrolIndex = FindPatrolGroupIndexForGroupID( pGroup->ubGroupID );
-					Assert( sPatrolIndex != -1 );
-
-					// use that patrol's priority
-					bPriority = gPatrolGroup[ sPatrolIndex ].bPriority;
-				}
-				else	// not a patrol group
-				{
-					// use a default priority
-					bPriority = 50;
-				}
-
-				// highest priority groups are upgraded first. Each 1% of progress lower the
-				// priority threshold required to start triggering upgrades by 10%.
-				if ( ( 100 - ( 10 * HighestPlayerProgressPercentage() ) ) < bPriority )
-				{
-					ubAdminsToCheck = pGroup->pEnemyGroup->ubNumAdmins;
-
-					while ( ubAdminsToCheck > 0)
-					{
-						// chance to upgrade at each check is random, and also dependant on the group's priority
-						if ( Chance ( bPriority ) )
-						{
-							pGroup->pEnemyGroup->ubNumAdmins--;
-							pGroup->pEnemyGroup->ubNumTroops++;
-						}
-
-						ubAdminsToCheck--;
-					}
-				}
-			}
+			/* Chance to upgrade at each check is random and is dependent on the
+			 * group's priority. */
+			if (!Chance(priority)) continue;
+			--eg.ubNumAdmins;
+			++eg.ubNumTroops;
 		}
 	}
 }
