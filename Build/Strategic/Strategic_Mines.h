@@ -103,7 +103,7 @@ void HandleIncomeFromMines( void );
 INT32 PredictIncomeFromPlayerMines( void );
 
 // predict income from a mine
-UINT32 PredictDailyIncomeFromAMine( INT8 bMineIndex );
+UINT32 PredictDailyIncomeFromAMine(INT8 mine_id);
 
 // calculate maximum possible daily income from all mines
 INT32 CalcMaxPlayerIncomeFromMines( void );

@@ -585,26 +585,19 @@ void HandleIncomeFromMines( void )
 }
 
 
-UINT32 PredictDailyIncomeFromAMine( INT8 bMineIndex )
+UINT32 PredictDailyIncomeFromAMine(INT8 const mine_id)
 {
-	// predict income from this mine, estimate assumes mining situation will not change during next 4 income periods
-	// (miner loyalty, % town controlled, monster infestation level, and current max removal rate may all in fact change)
-	UINT32 uiAmtExtracted = 0;
+	/* Predict income from this mine, estimate assumes mining situation will not
+	 * change during next 4 income periods (miner loyalty, % town controlled,
+	 * monster infestation level, and current max removal rate may all in fact
+	 * change) */
+	if (!PlayerControlsMine(mine_id)) return 0;
 
-	if(PlayerControlsMine(bMineIndex))
-	{
-		// get daily income for this mine (regardless of what time of day it currently is)
-		uiAmtExtracted = MINE_PRODUCTION_NUMBER_OF_PERIODS * GetCurrentWorkRateOfMineForPlayer( bMineIndex );
-
-		// check if we will take more than there is
-		if( uiAmtExtracted > gMineStatus[ bMineIndex ].uiRemainingOreSupply )
-		{
-			// yes reduce to value of mine
-			uiAmtExtracted = gMineStatus[ bMineIndex ].uiRemainingOreSupply;
-		}
-	}
-
-	return( uiAmtExtracted );
+	/* Get daily income for this mine (regardless of what time of day it currently
+	 * is) */
+	UINT32 const amount    = MINE_PRODUCTION_NUMBER_OF_PERIODS * GetCurrentWorkRateOfMineForPlayer(mine_id);
+	UINT32 const remaining = gMineStatus[mine_id].uiRemainingOreSupply;
+	return amount < remaining ? amount : remaining;
 }
 
 
