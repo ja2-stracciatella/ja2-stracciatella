@@ -2467,10 +2467,10 @@ try
 
 #ifdef JA2TESTVERSION
 	uiLoadWorldTime = GetJA2Clock() - uiLoadWorldStartTime;
+#endif
 
   // ATE: Not while updating maps!
   if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();
-#endif
 
 	RenderProgressBar(0, 100);
 	DequeueAllKeyBoardEvents();
