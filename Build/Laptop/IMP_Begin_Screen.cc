@@ -30,6 +30,7 @@
 #include "Font_Control.h"
 
 #if defined JA2BETAVERSION && defined _DEBUG
+#	include "Campaign_Types.h"
 #	include "Soldier_Profile.h"
 #	include "Strategic.h"
 #endif
@@ -936,19 +937,19 @@ static BOOLEAN CheckCharacterInputForEgg(void)
 		HireMercStruct.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
 
 		HireMercStruct.ubProfileID = REAPER;
-		HireMerc(&HireMercStruct);
+		HireMerc(HireMercStruct);
 
 		HireMercStruct.ubProfileID = SHADOW;
-		HireMerc(&HireMercStruct);
+		HireMerc(HireMercStruct);
 
 		HireMercStruct.ubProfileID = RAVEN;
-		HireMerc(&HireMercStruct);
+		HireMerc(HireMercStruct);
 
 		HireMercStruct.ubProfileID = LYNX;
-		HireMerc(&HireMercStruct);
+		HireMerc(HireMercStruct);
 
 		HireMercStruct.ubProfileID = CLIFF;
-		HireMerc(&HireMercStruct);
+		HireMerc(HireMercStruct);
 	}
 	else if (wcscmp(pFullNameString, L"dleifmaC sirhC") == 0 && wcscmp(pNickNameString, L"SSR") == 0)
 	{
