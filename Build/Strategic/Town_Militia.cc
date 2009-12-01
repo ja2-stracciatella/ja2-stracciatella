@@ -640,7 +640,7 @@ bool CanNearbyMilitiaScoutThisSector(INT16 const sec_x, INT16 const sec_y)
 	INT16 const xstart      = sec_x >      scout_range ? sec_x - scout_range :  1;
 	INT16 const ystart      = sec_y >      scout_range ? sec_y - scout_range :  1;
 	INT16 const xend        = sec_x < 16 - scout_range ? sec_x + scout_range : 16;
-	INT16 const yend        = sec_y < 16 - scout_range ? sec_x + scout_range : 16;
+	INT16 const yend        = sec_y < 16 - scout_range ? sec_y + scout_range : 16;
 	for (INT16 y = ystart; y <= yend; ++y)
 	{
 		for (INT16 x = xstart; x <= xend; ++x)
