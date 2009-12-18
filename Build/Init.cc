@@ -128,8 +128,7 @@ editor:
 			//For editor purposes, need to know the default map file.
 			strcpy(g_filename, "none");
 			//also set the sector
-			gWorldSectorX            = 0;
-			gWorldSectorY            = 0;
+			SetWorldSectorInvalid();
 			gfIntendOnEnteringEditor = TRUE;
 			gGameOptions.fGunNut     = TRUE;
 			return GAME_SCREEN;

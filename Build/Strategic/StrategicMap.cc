@@ -3824,8 +3824,7 @@ try
 
 
 	//Clear the world sector values.
-	gWorldSectorX = gWorldSectorY = 0;
-	gbWorldSectorZ = -1;
+	SetWorldSectorInvalid();
 
 	//Clear the flags regarding.
 	gfCaves = FALSE;

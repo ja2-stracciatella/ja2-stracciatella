@@ -28,6 +28,13 @@ extern INT16 gWorldSectorX;
 extern INT16 gWorldSectorY;
 extern INT8  gbWorldSectorZ;
 
+static inline void SetWorldSectorInvalid()
+{
+	gWorldSectorX  =  0;
+	gWorldSectorY  =  0;
+	gbWorldSectorZ = -1;
+}
+
 #define NUMBER_OF_SAMS 4
 
 

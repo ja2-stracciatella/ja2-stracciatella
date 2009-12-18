@@ -700,7 +700,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		INT8  const bLoadSectorZ = gbWorldSectorZ;
 
 		// This will guarantee that the sector will be loaded
-		gbWorldSectorZ = -1;
+		SetWorldSectorInvalid();
 
 		//if we should load a sector (if the person didnt just start the game game)
 		if (gWorldSectorX != 0 && gWorldSectorY != 0)
@@ -711,8 +711,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	}
 	else
 	{ //By clearing these values, we can avoid "in sector" checks -- at least, that's the theory.
-		gWorldSectorX = 0;
-		gWorldSectorY = 0;
+		SetWorldSectorInvalid();
 
 		INT16 const x = SaveGameHeader.sSectorX;
 		INT16 const y = SaveGameHeader.sSectorY;

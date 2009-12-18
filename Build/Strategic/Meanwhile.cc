@@ -631,9 +631,7 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 	{
 		TrashWorld( );
 		// NB no world is loaded!
-		gWorldSectorX = 0;
-		gWorldSectorY = 0;
-		gbWorldSectorZ = -1;
+		SetWorldSectorInvalid();
 	}
 
 	ChangeSelectedMapSector( gsOldSelectedSectorX, gsOldSelectedSectorY, (INT8) gsOldSelectedSectorZ );

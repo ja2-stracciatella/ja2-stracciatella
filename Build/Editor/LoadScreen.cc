@@ -820,9 +820,7 @@ static void SetGlobalSectorValues()
 		return;
 	}
 invalid:
-	gWorldSectorX  = -1;
-	gWorldSectorY  = -1;
-	gbWorldSectorZ =  0;
+	SetWorldSectorInvalid();
 }
 
 

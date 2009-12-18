@@ -590,8 +590,7 @@ void ReStartingGame()
 	gfGamePaused = TRUE;
 
 	//Reset the sectors
-	gWorldSectorX = gWorldSectorY = 0;
-	gbWorldSectorZ = -1;
+	SetWorldSectorInvalid();
 
 	SoundStopAll( );
 
