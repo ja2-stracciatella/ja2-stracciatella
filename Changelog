@@ -1,3 +1,4 @@
+(r7062) Fix a vanilla bug: When a player group arrives in a sector, in some cases it was checked on the wrong (out of bounds) side, whether enemies noticed them.
 (r7056) Fix a vanilla bug, which prevented enemies from climbing roofs.
 (r7055) Fix a vanilla bug: When a soldier changed team (e.g. getting hostile), he lost his camouflage.
 (r6933) Plug a vanilla one-time memory leak.
