@@ -1825,14 +1825,33 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 }
 
 
+static bool EnemyNoticesPlayerArrival(GROUP const& pg, UINT8 const x, UINT8 const y)
+{
+	GROUP* const eg = FindEnemyMovementGroupInSector(x, y);
+	if (eg && AttemptToNoticeAdjacentGroupSucceeds())
+	{
+		HandlePlayerGroupNoticedByPatrolGroup(&pg, eg);
+		return true;
+	}
+
+	SECTORINFO const& s         = SectorInfo[SECTOR(x, y)];
+	UINT8      const  n_enemies = s.ubNumAdmins + s.ubNumTroops + s.ubNumElites;
+	if (n_enemies && s.ubGarrisonID != NO_GARRISON && AttemptToNoticeAdjacentGroupSucceeds())
+	{
+		HandlePlayerGroupNoticedByGarrison(&pg, SECTOR(x, y));
+		return true;
+	}
+
+	return false;
+}
+
+
 static void SendGroupToPool(GROUP** pGroup);
 
 
 //returns TRUE if the group was deleted.
 BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 {
-	SECTORINFO *pSector;
-	UINT8 ubNumEnemies;
 	UINT8 ubSectorID;
 	if( !gfQueenAIAwake )
 	{ //The queen isn't aware the player's presence yet, so she is oblivious to any situations.
@@ -1948,85 +1967,26 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 	}
 	else
-	{ //The player group has arrived at a new sector and now controls it.
-		//Look in each of the four directions, and the enemy alertness rating will
-		//determine if the enemy notices that the player is here.
-		//Additionally, there are also stationary enemy groups that may also notice the
-		//player's new presence.
-		//NOTE:  Always returns false because it is the player group that we are handling.  We
-		//       don't mess with the player group here!
-		const GROUP* const pPlayerGroup = pGroup;
-		if( pPlayerGroup->ubSectorZ )
-			return FALSE;
-		if( !EnemyPermittedToAttackSector( NULL, (UINT8)SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY ) ) )
-			return FALSE;
-		if( pPlayerGroup->ubSectorY > 1 )
-		{
-			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY - 1);
-			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
-				return FALSE;
-			}
-			pSector = &SectorInfo[ SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY-1 ) ];
-			ubNumEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-			if( ubNumEnemies && pSector->ubGarrisonID != NO_GARRISON && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, (UINT8)SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY-1 ) );
-				return FALSE;
-			}
-		}
-		if( pPlayerGroup->ubSectorX < 16 )
-		{
-			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX + 1, pPlayerGroup->ubSectorY);
-			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
-				return FALSE;
-			}
-			pSector = &SectorInfo[ SECTOR( pPlayerGroup->ubSectorX+1, pPlayerGroup->ubSectorY ) ];
-			ubNumEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-			if( ubNumEnemies && pSector->ubGarrisonID != NO_GARRISON && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, (UINT8)SECTOR( pPlayerGroup->ubSectorX+1, pPlayerGroup->ubSectorY ) );
-				return FALSE;
-			}
-		}
-		if( pPlayerGroup->ubSectorY < 16 )
-		{
-			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY + 1);
-			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
-				return FALSE;
-			}
-			pSector = &SectorInfo[ SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY+1 ) ];
-			ubNumEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-			if( ubNumEnemies && pSector->ubGarrisonID != NO_GARRISON && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, (UINT8)SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY+1 ) );
-				return FALSE;
-			}
-		}
-		if( pPlayerGroup->ubSectorX > 1 )
-		{
-			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX - 1, pPlayerGroup->ubSectorY);
-			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
-				return FALSE;
-			}
-			pSector = &SectorInfo[ SECTOR( pPlayerGroup->ubSectorX-1, pPlayerGroup->ubSectorY ) ];
-			ubNumEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-			if( ubNumEnemies && pSector->ubGarrisonID != NO_GARRISON && AttemptToNoticeAdjacentGroupSucceeds() )
-			{
-				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, (UINT8)SECTOR( pPlayerGroup->ubSectorX-1, pPlayerGroup->ubSectorY ) );
-				return FALSE;
-			}
-		}
+	{ /* The player group has arrived at a new sector and now controls it.  Look
+		 * in each of the four directions, and the enemy alertness rating will
+		 * determine if the enemy notices that the player is here.  Additionally,
+		 * there are also stationary enemy groups that may also notice the player's
+		 * new presence.
+		 * NOTE: Always returns false because it is the player group that we are
+		 *       handling.  We don't mess with the player group here! */
+		GROUP const& pg = *pGroup;
+		if (pg.ubSectorZ != 0) return FALSE;
+		UINT8 const x = pg.ubSectorX;
+		UINT8 const y = pg.ubSectorY;
+		if (!EnemyPermittedToAttackSector(0, SECTOR(x, y))) return FALSE;
+		if (y >  1 && EnemyNoticesPlayerArrival(pg, x,     y - 1)) return FALSE;
+		if (x < 16 && EnemyNoticesPlayerArrival(pg, x + 1, y))     return FALSE;
+		if (y < 16 && EnemyNoticesPlayerArrival(pg, x,     y + 1)) return FALSE;
+		if (x >  1 && EnemyNoticesPlayerArrival(pg, x - 1, y))     return FALSE;
 	}
 	return FALSE;
 }
+
 
 //This is called periodically for each enemy occupied sector containing garrisons.
 void CheckEnemyControlledSector( UINT8 ubSectorID )
