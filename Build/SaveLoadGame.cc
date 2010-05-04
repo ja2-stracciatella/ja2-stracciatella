@@ -703,7 +703,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		SetWorldSectorInvalid();
 
 		//if we should load a sector (if the person didnt just start the game game)
-		if (gWorldSectorX != 0 && gWorldSectorY != 0)
+		if (sLoadSectorX != 0 && sLoadSectorY != 0)
 		{
 			//Load the sector
 			SetCurrentWorldSector(sLoadSectorX, sLoadSectorY, bLoadSectorZ);
