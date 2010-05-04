@@ -28,6 +28,10 @@ extern INT16 gWorldSectorX;
 extern INT16 gWorldSectorY;
 extern INT8  gbWorldSectorZ;
 
+#define NO_SECTOR ((UINT)-1)
+
+UINT GetWorldSector();
+
 static inline void SetWorldSectorInvalid()
 {
 	gWorldSectorX  =  0;

@@ -4307,13 +4307,14 @@ static void UpgradeAdminsToTroops()
 	INT32 const min_priority = 100 - 10 * HighestPlayerProgressPercentage();
 
 	// Check all garrisons for administrators.
-	GARRISON_GROUP const* end = gGarrisonGroup + giGarrisonArraySize;
+	UINT                  const cur = GetWorldSector();
+	GARRISON_GROUP const* const end = gGarrisonGroup + giGarrisonArraySize;
 	for (GARRISON_GROUP const* i = gGarrisonGroup; i != end; ++i)
 	{
 		GARRISON_GROUP const& g = *i;
 
 		// Skip sector if it's currently loaded, we'll never upgrade guys in those.
-		if (SECTOR(gWorldSectorX, gWorldSectorY) == g.ubSectorID) continue;
+		if (cur == g.ubSectorID) continue;
 
 		SECTORINFO& sector = SectorInfo[g.ubSectorID];
 		if (sector.ubNumAdmins == 0) continue; // No admins in garrison.

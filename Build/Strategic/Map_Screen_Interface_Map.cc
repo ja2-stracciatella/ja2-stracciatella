@@ -3666,7 +3666,7 @@ static void PickUpATownPersonFromSector(UINT8 const type, UINT8 const sector)
 	--n_type;                   // Reduce number in this sector
 	++GetPickedUpMilitia(type); // Pick this guy up
 	fMapPanelDirty = TRUE;
-	if (sector == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
+	if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
 }
 
 
@@ -3687,7 +3687,7 @@ static void DropAPersonInASector(UINT8 const type, UINT8 const sector)
 	--n_type;
 	++n_milita[type]; // Up the number in this sector of this type of militia
 	fMapPanelDirty = TRUE;
-	if (sector == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
+	if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
 }
 
 
@@ -4200,10 +4200,7 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 			}
 		}
 
-		if (sector == SECTOR(gWorldSectorX, gWorldSectorY))
-		{
-			gfStrategicMilitiaChangesMade = TRUE;
-		}
+		if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
 	}
 
 	Assert(sGreensOnCursor   == 0);
@@ -4290,10 +4287,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 			--n_left_over_elite;
 		}
 
-		if (sector == SECTOR(gWorldSectorX, gWorldSectorY) && gWorldSectorY != 0)
-		{ // This sector is currently loaded
-			gfStrategicMilitiaChangesMade = TRUE;
-		}
+		if (sector == GetWorldSector()) gfStrategicMilitiaChangesMade = TRUE;
 	}
 
 	// Zero out numbers on the cursor

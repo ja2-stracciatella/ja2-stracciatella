@@ -3928,3 +3928,10 @@ static void HandlePotentialMoraleHitForSkimmingSectors(GROUP* pGroup)
 	  }
   }
 }
+
+
+UINT GetWorldSector()
+{
+	if (gWorldSectorX == 0 || gWorldSectorY == 0) return NO_SECTOR;
+	return SECTOR(gWorldSectorX, gWorldSectorY);
+}
