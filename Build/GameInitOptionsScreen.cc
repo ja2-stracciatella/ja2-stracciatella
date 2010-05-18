@@ -762,9 +762,9 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 
 	//set the fact that we should do the intro videos
 #ifdef JA2TESTVERSION
-	if (gfKeyState[ALT])
+	if (_KeyDown(ALT))
 	{
-		if (gfKeyState[CTRL])
+		if (_KeyDown(CTRL))
 		{
 			gMercProfiles[MIGUEL].bMercStatus   = MERC_IS_DEAD;
 			gMercProfiles[SKYRIDER].bMercStatus = MERC_IS_DEAD;

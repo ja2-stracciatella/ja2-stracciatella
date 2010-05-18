@@ -571,13 +571,13 @@ static void GetSaveLoadScreenUserInput(void)
 	// If we are going to be instantly leaving the screen, dont draw the numbers
 	if (gfLoadGameUponEntry) return;
 
-	DisplayOnScreenNumber(gfKeyState[ALT]);
+	DisplayOnScreenNumber(_KeyDown(ALT));
 
-	if (gfKeyState[CTRL] || fWasCtrlHeldDownLastFrame)
+	if (_KeyDown(CTRL) || fWasCtrlHeldDownLastFrame)
 	{
 		DisplaySaveGameEntry(gbSelectedSaveLocation);
 	}
-	fWasCtrlHeldDownLastFrame = gfKeyState[CTRL];
+	fWasCtrlHeldDownLastFrame = _KeyDown(CTRL);
 
 	SGPPoint mouse_pos;
 	GetMousePos(&mouse_pos);
@@ -609,7 +609,7 @@ static void GetSaveLoadScreenUserInput(void)
 			switch (e.usParam)
 			{
 				case 'a':
-					if (gfKeyState[ALT] && !gfSaveGame)
+					if (_KeyDown(ALT) && !gfSaveGame)
 					{
 						INT8 const slot = GetNumberForAutoSave(TRUE);
 						if (slot == -1) break;
@@ -621,7 +621,7 @@ static void GetSaveLoadScreenUserInput(void)
 					break;
 
 				case 'b':
-					if (gfKeyState[ALT] && !gfSaveGame)
+					if (_KeyDown(ALT) && !gfSaveGame)
 					{
 						INT8 const slot = GetNumberForAutoSave(FALSE);
 						if (slot == -1) break;
@@ -837,7 +837,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 			y--;
 		}
 
-		if (!gfSaveGame && gfKeyState[CTRL] && is_selected)
+		if (!gfSaveGame && _KeyDown(CTRL) && is_selected)
 		{ // The user is LOADING and holding down the CTRL key, display the additional info
 			// Create a string for difficulty level
 			wchar_t difficulty[256];

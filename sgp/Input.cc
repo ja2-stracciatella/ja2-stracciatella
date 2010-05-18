@@ -243,17 +243,17 @@ void KeyDown(const SDL_keysym* KeySym)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			gfKeyState[SHIFT] = TRUE;
+			_KeyDown(SHIFT) = TRUE;
 			break;
 
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			gfKeyState[CTRL] = TRUE;
+			_KeyDown(CTRL) = TRUE;
 			break;
 
 		case SDLK_LALT:
 		case SDLK_RALT:
-			gfKeyState[ALT] = TRUE;
+			_KeyDown(ALT) = TRUE;
 			break;
 
 		case SDLK_PRINT:
@@ -273,17 +273,17 @@ void KeyUp(const SDL_keysym* KeySym)
 	{
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			gfKeyState[SHIFT] = FALSE;
+			_KeyDown(SHIFT) = FALSE;
 			break;
 
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			gfKeyState[CTRL] = FALSE;
+			_KeyDown(CTRL) = FALSE;
 			break;
 
 		case SDLK_LALT:
 		case SDLK_RALT:
-			gfKeyState[ALT] = FALSE;
+			_KeyDown(ALT) = FALSE;
 			break;
 
 		case SDLK_PRINT:
@@ -299,7 +299,7 @@ void KeyUp(const SDL_keysym* KeySym)
 			break;
 
 		case SDLK_RETURN:
-			if (gfKeyState[ALT])
+			if (_KeyDown(ALT))
 			{
 				VideoToggleFullScreen();
 				break;

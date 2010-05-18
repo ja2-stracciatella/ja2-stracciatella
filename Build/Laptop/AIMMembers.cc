@@ -2860,8 +2860,8 @@ void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
 		hire.ubInsertionCode	         = INSERTION_CODE_ARRIVING_GAME;
 		hire.fUseLandingZoneForArrival = TRUE;
 		hire.iTotalContractLength      =
-			gfKeyState[ALT]  ? 14 :
-			gfKeyState[CTRL] ?  7 :
+			_KeyDown(ALT)  ? 14 :
+			_KeyDown(CTRL) ?  7 :
 			1;
 		HireMerc(hire);
 
@@ -2954,8 +2954,8 @@ static void QuickHireMerc(void)
 	h.fCopyProfileItemsOver     = TRUE;
 	h.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
 	h.iTotalContractLength      =
-		gfKeyState[ALT]  ? 14 :
-		gfKeyState[CTRL] ?  7 :
+		_KeyDown(ALT)  ? 14 :
+		_KeyDown(CTRL) ?  7 :
 		1;
 
 	SetFlagToForceHireMerc(TRUE);

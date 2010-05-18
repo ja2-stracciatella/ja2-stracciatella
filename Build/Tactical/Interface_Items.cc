@@ -4251,7 +4251,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 				{
 					// pick up stacked item into cursor and try to sell it ( unless CTRL is held down )
-					BeginSkiItemPointer( PLAYERS_INVENTORY, -1, ( BOOLEAN )!gfKeyState[ CTRL ] );
+					BeginSkiItemPointer(PLAYERS_INVENTORY, -1, !_KeyDown(CTRL));
 
 					// if we've just removed the last one there
 					if ( gpItemPopupObject->ubNumberOfObjects == 0 )

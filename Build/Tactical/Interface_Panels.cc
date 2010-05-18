@@ -1587,7 +1587,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 			{
 				// pick up item from regular inventory slot into cursor OR try to sell it ( unless CTRL is held down )
-				BeginSkiItemPointer( PLAYERS_INVENTORY, ( INT8 ) uiHandPos, ( BOOLEAN )!gfKeyState[ CTRL ] );
+				BeginSkiItemPointer(PLAYERS_INVENTORY, (INT8)uiHandPos, !_KeyDown(CTRL));
 			}
 
 			HandleTacticalEffectsOfEquipmentChange( gpSMCurrentMerc, uiHandPos, usOldItemIndex, NOTHING );

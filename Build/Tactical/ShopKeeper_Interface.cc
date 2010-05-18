@@ -1372,7 +1372,7 @@ static void SelectDealersInventoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iR
 						gpTempDealersInventory[ ubSelectedInvSlot ].bSlotIdInOtherLocation = ubLocation;
 
 						//if the shift key is being pressed, remove them all
-						if( gfKeyState[ SHIFT ] )
+						if (_KeyDown(SHIFT))
 						{
 							gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects = 0;
 						}
@@ -1390,7 +1390,7 @@ static void SelectDealersInventoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iR
 				UINT8 ubNumToMove;
 
 				//if the shift key is being pressed, remove them all
-				if( gfKeyState[ SHIFT ] )
+				if (_KeyDown(SHIFT))
 				{
 					ubNumToMove = gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects;
 				}
@@ -1648,7 +1648,7 @@ static void SelectDealersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 			else	//non-repairman
 			{
 				//if the shift key is being pressed, remove them all
-				if (gfKeyState[SHIFT] || a->ItemObject.ubNumberOfObjects == 1)
+				if (_KeyDown(SHIFT) || a->ItemObject.ubNumberOfObjects == 1)
 				{
 					RemoveItemFromArmsDealerOfferArea(ubSelectedInvSlot, TRUE);//a->bSlotIdInOtherLocation
 				}
@@ -2752,7 +2752,7 @@ static INT8 AddItemToArmsDealerOfferArea(const INVENTORY_IN_SLOT* pInvSlot, INT8
 			*a = *pInvSlot;
 
 			//if the shift key is being pressed, add them all
-			if( gfKeyState[ SHIFT ] )
+			if (_KeyDown(SHIFT))
 			{
 				a->ItemObject.ubNumberOfObjects = pInvSlot->ItemObject.ubNumberOfObjects;
 			}

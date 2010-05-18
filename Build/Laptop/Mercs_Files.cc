@@ -418,7 +418,7 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 	MERCPROFILESTRUCT& p = GetProfile(ubMercID);
 
 	//if the ALT key is down
-	if( gfKeyState[ ALT ] && CHEATER_CHEAT_LEVEL( ) )
+	if (_KeyDown(ALT) && CHEATER_CHEAT_LEVEL())
 	{
 		//set the merc to be hireable
 		p.bMercStatus           = MERC_OK;

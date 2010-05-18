@@ -256,7 +256,7 @@ static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		switch (gbHandledMainMenu)
 		{
 			case NEW_GAME:  SetMainMenuExitScreen(GAME_INIT_OPTIONS_SCREEN); break;
-			case LOAD_GAME: if (gfKeyState[ALT]) gfLoadGameUponEntry = TRUE; break;
+			case LOAD_GAME: if (_KeyDown(ALT)) gfLoadGameUponEntry = TRUE;   break;
 		}
 	}
 }
@@ -288,7 +288,7 @@ static void HandleMainMenuInput(void)
 #endif
 
 				case 'c':
-					if (gfKeyState[ALT]) gfLoadGameUponEntry = TRUE;
+					if (_KeyDown(ALT)) gfLoadGameUponEntry = TRUE;
 					gbHandledMainMenu = LOAD_GAME;
 					break;
 
