@@ -1,6 +1,5 @@
-#if !defined( STCI_H )
-
-#define STCI_H
+#ifndef IMGFMT_H
+#define IMGFMT_H
 
 // Sir-Tech's Crazy Image (STCI) file format specifications.  Each file is composed of:
 // 1		ImageFileHeader, uncompressed
