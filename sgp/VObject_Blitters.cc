@@ -6653,7 +6653,7 @@ CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 
 }
 
 
-// ATE New blitter for rendering a differrent color for value 254. Can be transparent if outline is TRANSPARENT
+// ATE New blitter for rendering a differrent color for value 254. Can be transparent if outline is SGP_TRANSPARENT
 void Blt8BPPDataTo16BPPBufferOutline(UINT16* const buf, UINT32 const uiDestPitchBYTES, SGPVObject const* const hSrcVObject, INT32 const iX, INT32 const iY, UINT16 const usIndex, INT16 const outline)
 {
 	Assert(hSrcVObject);
@@ -6699,7 +6699,7 @@ void Blt8BPPDataTo16BPPBufferOutline(UINT16* const buf, UINT32 const uiDestPitch
 				{
 					*dst = pal[px];
 				}
-				else if (outline != TRANSPARENT)
+				else if (outline != SGP_TRANSPARENT)
 				{
 					*dst = outline;
 				}
@@ -6783,7 +6783,7 @@ BlitDone:
 }
 
 
-// ATE New blitter for rendering a differrent color for value 254. Can be transparent if s16BPPColor is TRANSPARENT
+// ATE New blitter for rendering a differrent color for value 254. Can be transparent if s16BPPColor is SGP_TRANSPARENT
 void Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, const SGPVObject* const hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const INT16 s16BPPColor, const SGPRect* const clipregion)
 {
 	UINT32 Unblitted;
@@ -6920,7 +6920,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 					{
 						*(UINT16*)DestPtr = p16BPPPalette[src];
 					}
-					else if (s16BPPColor != TRANSPARENT)
+					else if (s16BPPColor != SGP_TRANSPARENT)
 					{
 						*(UINT16*)DestPtr = s16BPPColor;
 					}

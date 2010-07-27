@@ -1280,7 +1280,7 @@ zlevel_topmost:
 								}
 								else if (bBlitClipVal == TRUE)
 								{
-									Blt8BPPDataTo16BPPBufferOutlineClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, TRANSPARENT, &gClippingRect);
+									Blt8BPPDataTo16BPPBufferOutlineClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, SGP_TRANSPARENT, &gClippingRect);
 								}
 							}
 						}

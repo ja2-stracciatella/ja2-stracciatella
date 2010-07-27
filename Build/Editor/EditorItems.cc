@@ -316,7 +316,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-			DrawItemCentered(Item[item_id], eInfo.uiBuffer, x, y + 2, TRANSPARENT);
+			DrawItemCentered(Item[item_id], eInfo.uiBuffer, x, y + 2, SGP_TRANSPARENT);
 
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 			if( y == 0 )
@@ -444,7 +444,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 				}
 				DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-				DrawItemCentered(*item, eInfo.uiBuffer, x, y + 2, TRANSPARENT);
+				DrawItemCentered(*item, eInfo.uiBuffer, x, y + 2, SGP_TRANSPARENT);
 
 				//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 				if( y == 0 )

@@ -206,7 +206,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			UINT16      const  usEffHeight = pTrav.usHeight + pTrav.sOffsetY;
 			UINT16      const  usEffWidth  = pTrav.usWidth  + pTrav.sOffsetX;
 
-			BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, TRANSPARENT);
+			BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, SGP_TRANSPARENT);
 
 			// Hook into hook function
 			if (gMouseBltOverride != NULL) gMouseBltOverride();

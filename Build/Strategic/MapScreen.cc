@@ -712,7 +712,7 @@ static void RenderHandPosItem()
 	SOLDIERTYPE const* const s = GetSelectedInfoChar();
 	if (!s || s->bLife == 0) return;
 
-	INVRenderItem(guiSAVEBUFFER, s, s->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y, 58, 23, DIRTYLEVEL2, 0, TRANSPARENT);
+	INVRenderItem(guiSAVEBUFFER, s, s->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y, 58, 23, DIRTYLEVEL2, 0, SGP_TRANSPARENT);
 }
 
 

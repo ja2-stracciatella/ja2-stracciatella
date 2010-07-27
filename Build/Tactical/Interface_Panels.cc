@@ -2946,7 +2946,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE const& s, INT16 const x, INT16 y, D
 	}
 	else
 	{ // Look in primary hand
-		INVRenderItem(buf, &s, s.inv[HANDPOS], x, y, w, h, dirty_level, 0, TRANSPARENT);
+		INVRenderItem(buf, &s, s.inv[HANDPOS], x, y, w, h, dirty_level, 0, SGP_TRANSPARENT);
 	}
 
 	y += TM_INV_HAND_SEPY;
@@ -2957,7 +2957,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE const& s, INT16 const x, INT16 y, D
 	}
 	else
 	{ // Do secondary hand
-		INVRenderItem(buf, &s, s.inv[SECONDHANDPOS], x, y, w, h, dirty_level, 0, TRANSPARENT);
+		INVRenderItem(buf, &s, s.inv[SECONDHANDPOS], x, y, w, h, dirty_level, 0, SGP_TRANSPARENT);
 	}
 }
 

@@ -140,7 +140,7 @@ struct SGPFile;
 typedef SGPFile* HWFILE;
 
 
-#define TRANSPARENT ((UINT16)0)
+#define SGP_TRANSPARENT ((UINT16)0)
 
 
 #ifdef __cplusplus

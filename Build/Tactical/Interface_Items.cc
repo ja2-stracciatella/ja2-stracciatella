@@ -800,7 +800,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	MOUSE_REGION&     r      = gSMInvRegion[pocket];
 
 	bool   hatch_out = false;
-	UINT16 outline   = TRANSPARENT;
+	UINT16 outline   = SGP_TRANSPARENT;
 	if (dirty_level == DIRTYLEVEL2)
 	{
 		wchar_t buf[150];
@@ -2296,7 +2296,7 @@ void RenderItemDescriptionBox(void)
 				INT16 const item_y = agi.item_box.y + y;
 				INT16 const item_w = agi.item_box.w;
 				INT16 const item_h = agi.item_box.h;
-				INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
+				INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, SGP_TRANSPARENT);
 
 				INT16 const bar_x = agi.bar_box.x + x;
 				INT16 const bar_h = agi.bar_box.h;
@@ -3870,7 +3870,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			INT16 sX = gsItemPopupX + cnt * usWidth + 11;
 			INT16 sY = gsItemPopupY + 3;
 
-			INVRenderItem(FRAME_BUFFER, NULL, *gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, TRANSPARENT);
+			INVRenderItem(FRAME_BUFFER, NULL, *gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, SGP_TRANSPARENT);
 
 			// Do status bar here...
 			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
@@ -4047,7 +4047,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		o.usItem            = FIRST_KEY + LockTable[key->ubKeyID].usKeyItem;
 
 		DrawItemUIBarEx(o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
-		INVRenderItem(FRAME_BUFFER, NULL, o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, TRANSPARENT);
+		INVRenderItem(FRAME_BUFFER, NULL, o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, SGP_TRANSPARENT);
 	}
 
 	InvalidateRegion(dx, dy, dx + gsKeyRingPopupInvWidth, dy + gsKeyRingPopupInvHeight);
@@ -4731,7 +4731,7 @@ void RenderItemPickupMenu()
 			// ATE: Adjust to basic shade.....
 			te->hTileSurface->CurrentShade(4);
 
-			UINT16 const outline = (menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? outline_col : TRANSPARENT);
+			UINT16 const outline = menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? outline_col : SGP_TRANSPARENT;
 			Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
 
 			if (o.ubNumberOfObjects > 1)

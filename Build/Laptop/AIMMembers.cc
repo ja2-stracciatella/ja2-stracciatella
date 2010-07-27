@@ -896,7 +896,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		// Blt the shadow of the item
 		BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
 		// Blt the item
-		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX,     sCenY, TRANSPARENT);
+		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX,     sCenY, SGP_TRANSPARENT);
 
 		/* If there are more then 1 piece of equipment in the current slot, display
 		 * how many there are */

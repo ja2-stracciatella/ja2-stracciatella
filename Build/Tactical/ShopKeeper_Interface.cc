@@ -2053,7 +2053,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	}
 	else if (gubSkiDirtyLevel != SKI_DIRTY_LEVEL0)
 	{
-		outline = TRANSPARENT;
+		outline = SGP_TRANSPARENT;
 	}
 	else
 	{ // The item is not highlighted and we are not rerendering the screen

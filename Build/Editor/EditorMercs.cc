@@ -2163,7 +2163,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	//now draw the fullsize item into the temp buffer
 	INVTYPE    const& item = Item[gusMercsNewItemIndex];
 	SGPVObject const& vo   = GetInterfaceGraphicForItem(item);
-	BltVideoObjectOutline(uiSrcID, &vo, item.ubGraphicNum, 0, 0, TRANSPARENT);
+	BltVideoObjectOutline(uiSrcID, &vo, item.ubGraphicNum, 0, 0, SGP_TRANSPARENT);
 
 	//crop the source image
 	ETRLEObject const& pObject    = vo.SubregionProperties(item.ubGraphicNum);
