@@ -208,7 +208,7 @@ try
 	MouseSystemHook(MOUSE_POS, MousePos.iX, MousePos.iY);
 	MusicPoll();
 
-  while (DequeueSpecificEvent(&InputEvent, INPUT_MOUSE))
+  while (DequeueSpecificEvent(&InputEvent, MOUSE_EVENTS))
   {
 		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 	}
