@@ -851,7 +851,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 							{
 								UINT8 const room = GetRoom(kingpin->sGridNo);
 								// first boxer, bring kingpin over
-								if (IN_KINGPIN_HOUSE(room)) id = 17;
+								if (IN_KINGPIN_HOUSE(room)) id = 18;
 							}
 
 							return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, id);
