@@ -247,7 +247,7 @@ static const ARMY_COMPOSITION gOrigArmyComp[NUM_ARMY_COMPOSITIONS] =
 	M(ALMA_DEFENCE,          74,  15,  85,   0,  11,  20),
 	M(ALMA_MINE,             80,  20,  80,  45,  15,  20),
 	M(CAMBRIA_DEFENCE,       50,   0, 100,  30,  10,   6),
-	M(CAMBRIA_MINE,          60,  15,  90,  40,  11,   6),
+	M(CAMBRIA_MINE,          60,  15,  85,  40,  11,   6),
 	M(CHITZENA_DEFENCE,      30,   0, 100,  75,  12,  10),
 	M(CHITZENA_MINE,         40,   0, 100,  75,  10,  10),
 	M(CHITZENA_SAMSITE,      75,  10,  90,   0,   9,   9),

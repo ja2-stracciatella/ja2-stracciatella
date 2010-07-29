@@ -1,3 +1,4 @@
+(r7069) Fix a vanilla bug: The sum of fractions for troops and elites was more than 100% for one army composition.
 (r7066) Fix a bug in r3615, which caused an assertion failure/null-pointer access when removing a dead merc via the contract menu.
 (r7062) Fix a vanilla bug: When a player group arrives in a sector, in some cases it was checked on the wrong (out of bounds) side, whether enemies noticed them.
 (r7056) Fix a vanilla bug, which prevented enemies from climbing roofs.
