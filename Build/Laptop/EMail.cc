@@ -1063,8 +1063,8 @@ static void PrevMailPage()
 {
 	if (giMessagePage == 0) return;
 	--giMessagePage;
-	RenderEmail();
 	MarkButtonsDirty();
+	fReDrawScreenFlag = TRUE;
 }
 
 
