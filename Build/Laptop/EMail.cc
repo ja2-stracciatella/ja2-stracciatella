@@ -1120,7 +1120,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 				UINT16 const y = VIEWER_MESSAGE_BODY_START_Y + iViewerPositionY;
 				UINT16 const w = MESSAGE_WIDTH + 3;
 				UINT16 const h = 227;
-				MSYS_DefineRegion(&g_mail_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, NULL, MailScrollRegionCallback);
+				MSYS_DefineRegion(&g_mail_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, NULL, MailScrollRegionCallback);
 			}
 			gfPageButtonsWereCreated = TRUE;
 		}
