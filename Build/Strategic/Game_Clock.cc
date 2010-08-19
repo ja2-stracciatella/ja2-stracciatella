@@ -57,7 +57,7 @@ static MOUSE_REGION gClockScreenMaskMouseRegion;
 #define SECONDS_PER_COMPRESSION 1 // 1/2 minute passes every 1 second of real time
 
 #define CLOCK_X      554
-#define CLOCK_Y      (SCREEN_HEIGHT - 23)
+#define CLOCK_Y      fInMapMode ? (INTERFACE_HEIGHT - 23) : (SCREEN_HEIGHT - 23)
 #define CLOCK_HEIGHT  13
 #define CLOCK_WIDTH   66
 #define CLOCK_FONT   COMPFONT

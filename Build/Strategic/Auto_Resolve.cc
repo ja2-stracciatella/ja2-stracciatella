@@ -740,7 +740,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	}
 	gpAR->uiTimeSlice = gpAR->uiTimeSlice * gpAR->ubTimeModifierPercentage / 100;
 
-	iTop = (SCREEN_HEIGHT - gpAR->rect.h) / 2;
+	iTop = (INTERFACE_HEIGHT - gpAR->rect.h) / 2;
 	if( iTop > 120 )
 		iTop -= 40;
 
@@ -952,8 +952,8 @@ static void BuildInterfaceBuffer(void)
 	INT32						x,y;
 
 	//Setup the blitting clip regions, so we don't draw outside of the region (for excess panelling)
-	gpAR->rect.x = (SCREEN_WIDTH  - gpAR->rect.w) / 2;
-	gpAR->rect.y = (SCREEN_HEIGHT - gpAR->rect.h) / 2;
+	gpAR->rect.x = (INTERFACE_WIDTH  - gpAR->rect.w) / 2;
+	gpAR->rect.y = (INTERFACE_HEIGHT - gpAR->rect.h) / 2;
 	if (gpAR->rect.y > 120) gpAR->rect.y -= 40;
 
 	DestRect.iLeft			= 0;
@@ -1712,10 +1712,10 @@ static void CreateAutoResolveInterface(void)
 
 	/* If we are bumping up the interface, then also use that piece of info to
 	 * move the buttons up by the same amount. */
-	ar->bVerticalOffset = (SCREEN_HEIGHT - ar->rect.h) / 2 > 120 ? -40 : 0;
+	ar->bVerticalOffset = (INTERFACE_HEIGHT - ar->rect.h) / 2 > 120 ? -40 : 0;
 
 	const INT16 dx = ar->sCenterStartX;
-	const INT16 dy = ar->bVerticalOffset + SCREEN_HEIGHT / 2;
+	const INT16 dy = ar->bVerticalOffset + INTERFACE_HEIGHT / 2;
 
 	// Create the buttons -- subject to relocation
 	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, 0);

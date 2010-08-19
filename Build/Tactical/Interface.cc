@@ -69,7 +69,7 @@ static INT32 giMenuAnchorX;
 static INT32 giMenuAnchorY;
 
 
-static const SGPBox g_progress_bar_box = { 5, 2, 630, 12 };
+static const SGPBox g_progress_bar_box = { 5, 2, INTERFACE_WIDTH-10, 12 };
 
 static BOOLEAN gfProgBarActive   = FALSE;
 static UINT8   gubProgNumEnemies = 0;

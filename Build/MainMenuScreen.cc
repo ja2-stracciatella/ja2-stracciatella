@@ -349,7 +349,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 		{
 			BUTTON_PICS* const img = iMenuImages[cnt];
 			const UINT16       w   = GetDimensionsOfButtonPic(img)->w;
-			const INT16        x   = (SCREEN_WIDTH - w) / 2;
+			const INT16        x   = (INTERFACE_WIDTH - w) / 2;
 			const INT16        y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
 			GUIButtonRef const b = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
 			iMenuButtons[cnt] = b;
@@ -404,7 +404,7 @@ static void RenderMainMenu(void)
 	TEST_FONT(FONT14HUMANIST);
 #	undef TEST_FONT
 #else
-	DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(gzCopyrightText, 0, INTERFACE_HEIGHT - 15, INTERFACE_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 #endif
 }
 

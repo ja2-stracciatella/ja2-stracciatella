@@ -11,8 +11,11 @@
 // Basic defines for the video manager. These represent the starting values
 //
 
-#define SCREEN_WIDTH          640
-#define SCREEN_HEIGHT         480
+#define SCREEN_WIDTH          1600 
+#define SCREEN_HEIGHT         1000
 #define PIXEL_DEPTH           16
+
+#define INTERFACE_WIDTH       640
+#define INTERFACE_HEIGHT      480
 
 #endif

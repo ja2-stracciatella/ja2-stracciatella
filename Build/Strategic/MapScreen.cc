@@ -1668,6 +1668,8 @@ try
 			fEnterMapDueToContract = FALSE;
 		}
 
+		MoveRadarScreen();
+
 	}
 
 
