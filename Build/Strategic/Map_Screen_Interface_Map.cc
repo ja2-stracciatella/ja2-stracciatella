@@ -2843,6 +2843,8 @@ void ClipBlitsToMapViewRegion( void )
 
 void RestoreClipRegionToFullScreen( void )
 {
+	FullScreenRect.iBottom = g_screen_height;
+	FullScreenRect.iRight = g_screen_width;
 	SetClippingRect( &FullScreenRect );
 	gDirtyClipRect = gOldClipRect;
 }

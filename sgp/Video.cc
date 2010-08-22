@@ -130,6 +130,10 @@ void InitializeVideoManager(void)
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
+	ClippingRect.iLeft = 0;
+	ClippingRect.iTop = 0;
+	ClippingRect.iRight = g_screen_width;
+	ClippingRect.iBottom = g_screen_height;
 
 	ScreenBuffer = SDL_SetVideoMode(g_screen_width, g_screen_height, PIXEL_DEPTH, g_video_flags);
 	if (!ScreenBuffer) throw std::runtime_error("Failed to set up video mode");

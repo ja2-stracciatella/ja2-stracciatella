@@ -120,8 +120,8 @@ static const UINT8 gsGlowFrames[] =
 
 const INT16 gsVIEWPORT_START_X        = 0;
 const INT16 gsVIEWPORT_START_Y        = 0;
-const INT16 gsVIEWPORT_END_X          = g_screen_width;
-const INT16 gsVIEWPORT_END_Y          = g_screen_height - 120;
+INT16 gsVIEWPORT_END_X          = g_screen_width;
+INT16 gsVIEWPORT_END_Y          = g_screen_height - 120;
 INT16       gsVIEWPORT_WINDOW_START_Y = 0;
 INT16       gsVIEWPORT_WINDOW_END_Y   = g_screen_height - 120;
 
@@ -183,7 +183,7 @@ INT16 gsScrollYIncrement;
 // Rendering flags (full, partial, etc.)
 static RenderFlags gRenderFlags = RENDER_FLAG_NONE;
 
-static SGPRect gClippingRect = { 0, 0, g_screen_width, 360 };
+static SGPRect gClippingRect;// = { 0, 0, g_screen_width, 360 };
 static SGPRect gOldClipRect;
 INT16   gsRenderCenterX;
 INT16   gsRenderCenterY;
@@ -2192,6 +2192,14 @@ void ScrollWorld(void)
 
 void InitRenderParams(UINT8 ubRestrictionID)
 {
+	gClippingRect.iTop = 0;
+	gClippingRect.iLeft = 0;
+	gClippingRect.iBottom = g_screen_height - 120;
+	gClippingRect.iRight = g_screen_width;
+	gsVIEWPORT_END_X          = g_screen_width;
+	gsVIEWPORT_END_Y          = g_screen_height - 120;
+	gsVIEWPORT_WINDOW_END_Y   = g_screen_height - 120;
+
 	INT16 gTopLeftWorldLimitX;     // XXX HACK000E
 	INT16 gTopLeftWorldLimitY;     // XXX HACK000E
 	INT16 gTopRightWorldLimitX;    // XXX HACK000E

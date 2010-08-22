@@ -296,8 +296,8 @@ BOOLEAN gfDeductPoints;
 
 
 // ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS
-static const INV_REGION_DESC gSMInvPocketXY[] =
-{
+static INV_REGION_DESC gSMInvPocketXY[19];// =
+/*{
 	{ 344, INV_INTERFACE_START_Y +   6 }, // HELMETPOS
 	{ 344, INV_INTERFACE_START_Y +  35 }, // VESTPOS
 	{ 344, INV_INTERFACE_START_Y +  95 }, // LEGPOS,
@@ -317,7 +317,7 @@ static const INV_REGION_DESC gSMInvPocketXY[] =
 	{ 432, INV_INTERFACE_START_Y +  29 }, // SMALLPOCK6
 	{ 432, INV_INTERFACE_START_Y +  53 }, // SMALLPOCK7
 	{ 432, INV_INTERFACE_START_Y +  77 }  // SMALLPOCK8
-};
+};*/
 
 static const INV_REGION_DESC gSMCamoXY =
 {
@@ -859,6 +859,45 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 
 void InitializeSMPanel(void)
 {
+	gSMInvPocketXY[0].sX = 344;
+	gSMInvPocketXY[0].sY = INV_INTERFACE_START_Y +   6; // HELMETPOS
+	gSMInvPocketXY[1].sX = 344;
+	gSMInvPocketXY[1].sY = INV_INTERFACE_START_Y +  35; // VESTPOS
+	gSMInvPocketXY[2].sX = 344;
+	gSMInvPocketXY[2].sY = INV_INTERFACE_START_Y +  95; // LEGPOS,
+	gSMInvPocketXY[3].sX = 226;
+	gSMInvPocketXY[3].sY = INV_INTERFACE_START_Y +   6, // HEAD1POS
+	gSMInvPocketXY[4].sX = 226;
+	gSMInvPocketXY[4].sY = INV_INTERFACE_START_Y +  30, // HEAD2POS
+	gSMInvPocketXY[5].sX = 226;
+	gSMInvPocketXY[5].sY = INV_INTERFACE_START_Y +  84, // HANDPOS,
+	gSMInvPocketXY[6].sX= 226;
+	gSMInvPocketXY[6].sY = INV_INTERFACE_START_Y + 108, // SECONDHANDPOS
+	gSMInvPocketXY[7].sX = 468;
+	gSMInvPocketXY[7].sY = INV_INTERFACE_START_Y +   5, // BIGPOCK1
+	gSMInvPocketXY[8].sX = 468;
+	gSMInvPocketXY[8].sY = INV_INTERFACE_START_Y +  29, // BIGPOCK2
+	gSMInvPocketXY[9].sX = 468;
+	gSMInvPocketXY[9].sY = INV_INTERFACE_START_Y +  53, // BIGPOCK3
+	gSMInvPocketXY[10].sX = 468;
+	gSMInvPocketXY[10].sY = INV_INTERFACE_START_Y +  77, // BIGPOCK4
+	gSMInvPocketXY[11].sX = 396;
+	gSMInvPocketXY[11].sY = INV_INTERFACE_START_Y +   5, // SMALLPOCK1
+	gSMInvPocketXY[12].sX = 396;
+	gSMInvPocketXY[12].sY = INV_INTERFACE_START_Y +  29, // SMALLPOCK2
+	gSMInvPocketXY[13].sX = 396;
+	gSMInvPocketXY[13].sY = INV_INTERFACE_START_Y +  53, // SMALLPOCK3
+	gSMInvPocketXY[14].sX = 396;
+	gSMInvPocketXY[14].sY = INV_INTERFACE_START_Y +  77, // SMALLPOCK4
+	gSMInvPocketXY[15].sX = 432;
+	gSMInvPocketXY[15].sY = INV_INTERFACE_START_Y +   5, // SMALLPOCK5
+	gSMInvPocketXY[16].sX = 432;
+	gSMInvPocketXY[16].sY = INV_INTERFACE_START_Y +  29, // SMALLPOCK6
+	gSMInvPocketXY[17].sX = 432;
+	gSMInvPocketXY[17].sY = INV_INTERFACE_START_Y +  53, // SMALLPOCK7
+	gSMInvPocketXY[18].sX = 432;
+	gSMInvPocketXY[18].sY = INV_INTERFACE_START_Y +  77;  // SMALLPOCK8
+
 	guiSMPanel    = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
 	guiSMObjects  = AddVideoObjectFromFile(INTERFACEDIR "/inventory_gold_front.sti");
 	guiSMObjects2 = AddVideoObjectFromFile(INTERFACEDIR "/inv_frn.sti");
