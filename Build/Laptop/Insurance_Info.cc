@@ -440,7 +440,7 @@ static void DisplayInfoTocPage(void)
 
 	//Display the sub title
 	GetInsuranceText( INS_SNGL_WE_CAN_OFFER_U, sText );
-	DrawTextToScreen(sText, INS_INFO_TOC_SUBTITLE_X, usNewLineOffset, SCREEN_WIDTH - INS_INFO_INFO_TOC_TITLE_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(sText, INS_INFO_TOC_SUBTITLE_X, usNewLineOffset, g_screen_width - INS_INFO_INFO_TOC_TITLE_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usPosY = usNewLineOffset + 12;
 	DisplaySmallRedLineWithShadow( INS_INFO_SUBTITLE_X, usPosY, (UINT16)(INS_INFO_SUBTITLE_X+INS_INFO_SUBTITLE_LINE_WIDTH), usPosY );
 

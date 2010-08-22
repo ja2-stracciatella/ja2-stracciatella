@@ -374,8 +374,8 @@ void GetRestrictedClipCursor(SGPRect* pRectangle)
 #if 1 // XXX TODO0000
 	pRectangle->iLeft   = 0;
 	pRectangle->iTop    = 0;
-	pRectangle->iRight  = SCREEN_WIDTH;
-	pRectangle->iBottom = SCREEN_HEIGHT;
+	pRectangle->iRight  = g_screen_width;
+	pRectangle->iBottom = g_screen_height;
 #else
 	GetClipCursor((RECT *) pRectangle );
 #endif
@@ -393,8 +393,8 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
 	// mouse_event() uses your current Windows resolution to calculate the resulting x,y coordinates.  So in order to get
 	// the right coordinates, you'd have to find out the current Windows resolution through a system call, and then do:
-	//		uiNewXPos = uiNewXPos * SCREEN_WIDTH  / WinScreenResX;
-	//		uiNewYPos = uiNewYPos * SCREEN_HEIGHT / WinScreenResY;
+	//		uiNewXPos = uiNewXPos * g_screen_width  / WinScreenResX;
+	//		uiNewYPos = uiNewYPos * g_screen_height / WinScreenResY;
 	//
 	// JA2 doesn't have this problem, 'cause they use DirectDraw calls that change the Windows resolution properly.
 	//
@@ -405,8 +405,8 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 	SDL_WarpMouse(uiNewXPos, uiNewYPos);
 #else
 	// Adjust coords based on our resolution
-	FLOAT flNewXPos = (FLOAT)uiNewXPos / SCREEN_WIDTH  * 65536;
-	FLOAT flNewYPos = (FLOAT)uiNewYPos / SCREEN_HEIGHT * 65536;
+	FLOAT flNewXPos = (FLOAT)uiNewXPos / g_screen_width  * 65536;
+	FLOAT flNewYPos = (FLOAT)uiNewYPos / g_screen_height * 65536;
 
 	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0);
 #endif

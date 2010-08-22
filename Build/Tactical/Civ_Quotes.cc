@@ -348,9 +348,9 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 		}
 
 		// CHECK FOR LEFT/RIGHT
-		if (sX + gusCivQuoteBoxWidth > SCREEN_WIDTH)
+		if (sX + gusCivQuoteBoxWidth > g_screen_width)
 		{
-			sX = SCREEN_WIDTH - gusCivQuoteBoxWidth;
+			sX = g_screen_width - gusCivQuoteBoxWidth;
 		}
 
 		// Now check for top

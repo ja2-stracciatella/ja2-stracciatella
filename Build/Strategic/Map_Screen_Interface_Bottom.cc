@@ -239,7 +239,7 @@ void RenderMapScreenInterfaceBottom( void )
 		MarkButtonsDirty( );
 
 		// invalidate region
-		RestoreExternBackgroundRect(MAP_BOTTOM_X, MAP_BOTTOM_Y, SCREEN_WIDTH - MAP_BOTTOM_X, SCREEN_HEIGHT - MAP_BOTTOM_Y);
+		RestoreExternBackgroundRect(MAP_BOTTOM_X, MAP_BOTTOM_Y, g_screen_width - MAP_BOTTOM_X, g_screen_height - MAP_BOTTOM_Y);
 
 		// re render radar map
 		RenderRadarScreen( );

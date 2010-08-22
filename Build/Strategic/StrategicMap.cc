@@ -304,7 +304,7 @@ void BeginLoadScreen( )
 
 	if( guiCurrentScreen == MAP_SCREEN && !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && !AreInMeanwhile() )
 	{
-		SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+		SGPBox const DstRect = { 0, 0, g_screen_width, g_screen_height };
 		uiTimeRange = 2000;
 		iPercentage = 0;
 		iLastShadePercentage = 0;
@@ -337,7 +337,7 @@ void BeginLoadScreen( )
 					//	iReqShadePercentage = iFactor;
 					//Record the new final shade percentage.
 					//iLastShadePercentage = iFactor;
-					guiSAVEBUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					guiSAVEBUFFER->ShadowRectUsingLowPercentTable(0, 0, g_screen_width, g_screen_height);
 			//	}
 			}
 
@@ -345,8 +345,8 @@ void BeginLoadScreen( )
 			{
 				536 * iPercentage / 100,
 				367 * iPercentage / 100,
-				SCREEN_WIDTH  - 541 * iPercentage / 100,
-				SCREEN_HEIGHT - 406 * iPercentage / 100
+				g_screen_width  - 541 * iPercentage / 100,
+				g_screen_height - 406 * iPercentage / 100
 			};
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
 			InvalidateScreen();

@@ -369,7 +369,7 @@ static void CalculateNewSliderIncrement(SLIDER* s, UINT16 usPos)
 static void OptDisplayLine(UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY, INT16 iColor)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, iColor, l.Buffer<UINT16>());
 }
 

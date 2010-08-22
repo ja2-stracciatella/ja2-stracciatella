@@ -29,9 +29,11 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "Local.h"
 #include <SDL.h>
 #include "GameRes.h"
 #include "Logger.h"
+#include <sstream>
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -408,6 +410,26 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		else if (strcmp(argv[i], "-window") == 0)
 		{
 			VideoSetFullScreen(FALSE);
+		}
+		else if (strcmp(arg, "-width") == 0)
+		{
+			std::stringstream ssinput;
+			char const* const argArgument = *++argv;
+			ssinput.str(argArgument);
+			unsigned int width;
+			ssinput >> width;
+			if( width > INTERFACE_WIDTH)
+				g_screen_width = width;
+		}
+		else if (strcmp(arg, "-height") == 0)
+		{
+			std::stringstream ssinput;
+			char const* const argArgument = *++argv;
+			ssinput.str(argArgument);
+			unsigned int height;
+			ssinput >> height;
+			if( height > INTERFACE_HEIGHT)
+				g_screen_height = height;
 		}
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)

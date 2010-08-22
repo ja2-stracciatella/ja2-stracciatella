@@ -206,7 +206,7 @@ ScreenID SaveLoadScreenHandle()
 		PauseGame();
 
 		//save the new rect
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, g_screen_width, 439);
 	}
 
 	RestoreBackgroundRects();
@@ -418,7 +418,7 @@ static void EnterSaveLoadScreen()
 	}
 
 	// Create the screen mask to enable ability to right click to cancel the save game
-	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
+	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
 
 	ClearSelectedSaveSlot();
 

@@ -390,9 +390,9 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 		sX -= sCenterXVal;
 
 		// Check right
-		if (sX + gTalkPanel.usWidth > SCREEN_WIDTH)
+		if (sX + gTalkPanel.usWidth > g_screen_width)
 		{
-			sX = SCREEN_WIDTH - gTalkPanel.usWidth;
+			sX = g_screen_width - gTalkPanel.usWidth;
 		}
 
 		// Check left
@@ -432,7 +432,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 
 
 	//Define main region
-	MSYS_DefineRegion(&gTalkPanel.ScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gTalkPanel.ScreenRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	//Define main region
 	MSYS_DefineRegion( &(gTalkPanel.BackRegion), (INT16)(gTalkPanel.sX), (INT16)(gTalkPanel.sY), (INT16)(gTalkPanel.sX + gTalkPanel.usWidth ),(INT16)( gTalkPanel.sY + gTalkPanel.usHeight ), MSYS_PRIORITY_HIGHEST,

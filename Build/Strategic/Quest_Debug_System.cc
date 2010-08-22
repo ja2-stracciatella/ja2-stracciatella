@@ -722,7 +722,7 @@ static void EnterQuestDebugSystem(void)
 		return;
 	}
 
-	MSYS_DefineRegion(&gQuestDebugSysScreenRegions, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gQuestDebugSysScreenRegions, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	guiQuestDebugExitButton = MakeButton(QuestDebugText[QUEST_DBS_EXIT_QUEST_DEBUG], 535, 450, 100, 25, MSYS_PRIORITY_HIGH + 10, BtnQuestDebugExitButtonCallback);
 
@@ -978,7 +978,7 @@ static void RenderQuestDebugSystem(void)
 	ButtonDestBuffer->Fill(gusQuestDebugBlue);
 
 	//display the title
-	DisplayWrappedString(0, 5, SCREEN_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, QuestDebugText[QUEST_DBS_TITLE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(0, 5, g_screen_width, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, QuestDebugText[QUEST_DBS_TITLE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 
 	//Display vertical lines b/n sections
@@ -1262,7 +1262,7 @@ static void DisplaySectionLine(void)
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
   // draw the line in b/n the first and second section
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
 
   // draw the line in b/n the second and third section
@@ -1272,7 +1272,7 @@ static void DisplaySectionLine(void)
 
 	//draw the horizopntal line under the title
 	usStartX = 0;
-	usEndX   = SCREEN_WIDTH - 1;
+	usEndX   = g_screen_width - 1;
 	usStartY = usEndY = 75;
 	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
 }
@@ -1522,7 +1522,7 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 			//create a mask to block out the screen
 			if( !gfBackgroundMaskEnabled )
 			{
-				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 15, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
+				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH + 15, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
 				gfBackgroundMaskEnabled = TRUE;
 			}
 
@@ -1866,7 +1866,7 @@ static void DrawQdsScrollRectangle(void)
 	//display the line
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 
   // draw the gold highlite line on the top and left
 	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth-1, usPosY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
@@ -2244,7 +2244,7 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pStr
 			//create a mask to block out the screen
 			if( !gfBackgroundMaskEnabled )
 			{
-				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 40, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
+				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH + 40, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
 				gfBackgroundMaskEnabled = TRUE;
 			}
 
@@ -2546,7 +2546,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 			//create a mask to block out the screen
 			if( !gfBackgroundMaskEnabled )
 			{
-				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 40, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
+				MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH + 40, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
 				gfBackgroundMaskEnabled = TRUE;
 			}
 
@@ -2961,7 +2961,7 @@ static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 		//create a mask to block out the screen
 	if( !gfBackgroundMaskEnabled )
 	{
-		MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH + 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
+		MSYS_DefineRegion(&gQuestTextEntryDebugDisableScreenRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH + 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, QuestDebugTextEntryDisableScreenRegionCallBack);
 		gfBackgroundMaskEnabled = TRUE;
 	}
 

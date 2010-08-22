@@ -195,7 +195,7 @@ void InitPopupMenu(GUIButtonRef const button, PopupMenuID const ubPopupMenuID, U
 	gPopup.ubMaxEntriesPerColumn = gPopup.ubNumEntries;
 	usMenuHeight = gPopup.ubNumEntries * gusEntryHeight + 3;
 	while (usMenuHeight                 >= usY && (ubDirection == DIR_UPLEFT   || ubDirection == DIR_UPRIGHT) ||
-				 SCREEN_HEIGHT - usMenuHeight >= usY && (ubDirection == DIR_DOWNLEFT || ubDirection == DIR_DOWNRIGHT))
+				 g_screen_height - usMenuHeight >= usY && (ubDirection == DIR_DOWNLEFT || ubDirection == DIR_DOWNRIGHT))
 	{ //menu has too many entries.  Increase the number of columns until the height is
 		//less than the max height.
 		gPopup.ubMaxEntriesPerColumn = (gPopup.ubNumEntries+gPopup.ubColumns)/(gPopup.ubColumns+1);
@@ -252,7 +252,7 @@ void InitPopupMenu(GUIButtonRef const button, PopupMenuID const ubPopupMenuID, U
 			gPopup.usBottom = usY + usMenuHeight + 1;
 			break;
 	}
-	MSYS_DefineRegion(&popupRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&popupRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	RenderPopupMenu();
 }
@@ -268,7 +268,7 @@ static void RenderPopupMenu(void)
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 		UINT32  const pitch    = l.Pitch();
-		SetClippingRegionAndImageWidth(pitch, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetClippingRegionAndImageWidth(pitch, 0, 0, g_screen_width, g_screen_height);
 		UINT16 const line_colour = Get16BPPColor(FROMRGB(64, 64, 64));
 		RectangleDraw(TRUE, p.usLeft, p.usTop, p.usRight - 1, p.usBottom - 1, line_colour, pDestBuf);
 		// Draw a vertical line between each column

@@ -118,7 +118,7 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 
 MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight, MercPopupBoxFlags const flags)
 {
-	if (usWidth >= SCREEN_WIDTH)
+	if (usWidth >= g_screen_width)
 	{
 		throw std::logic_error("Tried to create too wide merc popup box");
 	}

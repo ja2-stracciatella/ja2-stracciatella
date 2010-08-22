@@ -501,7 +501,7 @@ static void EnterHelpScreen(void)
 	SetSizeAndPropertiesOfHelpScreen();
 
 	//Create a mouse region 'mask' the entrire screen
-	MSYS_DefineRegion(&gHelpScreenFullScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, gHelpScreen.usCursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gHelpScreenFullScreenMask, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, gHelpScreen.usCursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	//Create the exit button
 	if( gHelpScreen.bNumberOfButtons != 0 )
@@ -770,8 +770,8 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 		gHelpScreen.usScreenWidth = HELP_SCREEN_DEFUALT_LOC_WIDTH;
 		gHelpScreen.usScreenHeight = HELP_SCREEN_DEFUALT_LOC_HEIGHT;
 
-		gHelpScreen.usScreenLocX = (SCREEN_WIDTH  - gHelpScreen.usScreenWidth)  / 2;
-		gHelpScreen.usScreenLocY = (SCREEN_HEIGHT - gHelpScreen.usScreenHeight) / 2;
+		gHelpScreen.usScreenLocX = (g_screen_width  - gHelpScreen.usScreenWidth)  / 2;
+		gHelpScreen.usScreenLocY = (g_screen_height - gHelpScreen.usScreenHeight) / 2;
 
 		gHelpScreen.bCurrentHelpScreenActiveSubPage = 0;
 
@@ -786,8 +786,8 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 			gHelpScreen.usCursor = CURSOR_LAPTOP_SCREEN;
 
 			//center the screen inside the laptop screen
-			gHelpScreen.usScreenLocX = LAPTOP_SCREEN_UL_X + ( LAPTOP_SCREEN_WIDTH - gHelpScreen.usScreenWidth ) / 2;
-			gHelpScreen.usScreenLocY = LAPTOP_SCREEN_UL_Y + ( LAPTOP_SCREEN_HEIGHT - gHelpScreen.usScreenHeight ) / 2;
+			gHelpScreen.usScreenLocX = LAPTOP_SCREEN_UL_X + ( LAPTOP_g_screen_width - gHelpScreen.usScreenWidth ) / 2;
+			gHelpScreen.usScreenLocY = LAPTOP_SCREEN_UL_Y + ( LAPTOP_g_screen_height - gHelpScreen.usScreenHeight ) / 2;
 
 			break;
 		case HELP_SCREEN_MAPSCREEN:
@@ -810,7 +810,7 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 			gHelpScreen.usScreenHeight = HELP_SCREEN_SMALL_LOC_HEIGHT;
 
 			//calc screen position since we just set the width and height
-			gHelpScreen.usScreenLocX = (SCREEN_WIDTH - gHelpScreen.usScreenWidth) / 2;
+			gHelpScreen.usScreenLocX = (g_screen_width - gHelpScreen.usScreenWidth) / 2;
 
 			//calc the center position based on the current panel thats being displayed
 			gHelpScreen.usScreenLocY = ( gsVIEWPORT_END_Y - gHelpScreen.usScreenHeight ) / 2;
@@ -1977,7 +1977,7 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 		SGPVSurface::Lock l(FRAME_BUFFER);
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, g_screen_width, g_screen_height);
 
 		// draw the gold highlite line on the top and left
 		LineDraw(FALSE, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);

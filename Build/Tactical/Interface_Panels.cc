@@ -875,7 +875,7 @@ void InitializeSMPanel(void)
 
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gSMPanelRegion, 0, dy, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gSMPanelRegion, 0, dy, g_screen_width, g_screen_height, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	INT32 x;
 	INT32 y;
@@ -1273,7 +1273,7 @@ no_plate:
 
 			SetFontDestBuffer(FRAME_BUFFER);
 
-			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
+			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, g_screen_width - INTERFACE_START_X, g_screen_height - INV_INTERFACE_START_Y);
 		}
 
 		// Render name
@@ -1314,7 +1314,7 @@ no_plate:
 		ClipRect.iLeft	 = 87;
 		ClipRect.iRight  = 536;
 		ClipRect.iTop		 = INV_INTERFACE_START_Y;
-		ClipRect.iBottom = SCREEN_HEIGHT;
+		ClipRect.iBottom = g_screen_height;
 		SGPVSurface::Lock l(FRAME_BUFFER);
 		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 	}
@@ -1794,7 +1794,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if ( !InItemStackPopup( )  )
 			{
 				//InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, SM_ITEMDESC_WIDTH, SM_ITEMDESC_HEIGHT );
-				InitItemStackPopup(gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
+				InitItemStackPopup(gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, g_screen_height - INV_INTERFACE_START_Y);
 			}
 		}
 		else
@@ -2218,7 +2218,7 @@ void InitializeTEAMPanel(void)
 
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y, g_screen_width, g_screen_height, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	INT32       dx = 0;
 	INT32 const dy = INTERFACE_START_Y;
@@ -2385,7 +2385,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 			dx += TM_INV_HAND_SEP;
 		}
 
-		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INTERFACE_START_Y);
+		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, g_screen_width - INTERFACE_START_X, g_screen_height - INTERFACE_START_Y);
 
 		RenderTownIDString();
 	}
@@ -3109,7 +3109,7 @@ void RenderTownIDString(void)
 	SetFontAttributes(COMPFONT, 183);
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
 	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
-	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
+	FindFontCenterCoordinates(548, g_screen_height - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }
 
@@ -3207,8 +3207,8 @@ void BeginKeyPanelFromKeyShortcut(void)
 
 
 	sStartYPosition = INV_INTERFACE_START_Y;
-	sWidth  = SCREEN_WIDTH;
-	sHeight = SCREEN_HEIGHT - INV_INTERFACE_START_Y;
+	sWidth  = g_screen_width;
+	sHeight = g_screen_height - INV_INTERFACE_START_Y;
 	pSoldier = gpSMCurrentMerc;
 
 	//if we are in the shop keeper interface
@@ -3241,8 +3241,8 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 
 		sStartYPosition = INV_INTERFACE_START_Y;
-		sWidth   = SCREEN_WIDTH;
-		sHeight  = SCREEN_HEIGHT - INV_INTERFACE_START_Y;
+		sWidth   = g_screen_width;
+		sHeight  = g_screen_height - INV_INTERFACE_START_Y;
 		pSoldier = gpSMCurrentMerc;
 	}
 

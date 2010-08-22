@@ -91,7 +91,7 @@ ScreenID MainMenuScreenHandle(void)
 		// Fade the splash screen.
 		if (guiSplashFrameFade > 2)
 		{
-			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, g_screen_width, g_screen_height);
 		}
 		else if (guiSplashFrameFade > 1)
 		{
@@ -378,7 +378,7 @@ static void RenderMainMenu(void)
 	BltVideoObject(guiSAVEBUFFER, guiMainMenuBackGroundImage, 0,   0,  0);
 	BltVideoObject(guiSAVEBUFFER, guiJa2LogoImage,            0, 188, 15);
 
-	RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	RestoreExternBackgroundRect(0, 0, g_screen_width, g_screen_height);
 
 #if defined TESTFOREIGNFONTS
 	UINT16 y = 105;

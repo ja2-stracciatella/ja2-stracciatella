@@ -844,7 +844,7 @@ void DoMapMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zStri
 	giHighLine = -1;
 
 	// do message box and return
-	SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	SGPBox const centering_rect = { 0, 0, g_screen_width, INV_INTERFACE_START_Y };
 	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &centering_rect);
 }
 
@@ -1818,8 +1818,8 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 		iX = 0;
 
 	// gone too far
-	if ( ( pRegion->iX + iW ) >= SCREEN_WIDTH )
-		iX = (SCREEN_WIDTH - iW - 4);
+	if ( ( pRegion->iX + iW ) >= g_screen_width )
+		iX = (g_screen_width - iW - 4);
 
 	// what about the y value?
 	iY = (INT32)pRegion->iY - (  iH * 3 / 4);
@@ -1829,11 +1829,11 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 		iY = 0;
 
 	// too far
-	if ( (iY + iH) >= SCREEN_HEIGHT )
-		iY = (SCREEN_HEIGHT - iH - 15);
+	if ( (iY + iH) >= g_screen_height )
+		iY = (g_screen_height - iH - 15);
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 		RectangleDraw(TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), pDestBuf);
 		RectangleDraw(TRUE, iX,     iY,     iX + iW - 2, iY + iH - 2, Get16BPPColor(FROMRGB(227, 198, 88)), pDestBuf);
@@ -1873,7 +1873,7 @@ static void SetUpShutDownMapScreenHelpTextScreenMask(void)
 	// create or destroy the screen mask as needed
 	if (fInterfaceFastHelpTextActive && !fCreated)
 	{
-		MSYS_DefineRegion(&gMapScreenHelpTextMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenHelpTextScreenMaskBtnCallback);
+		MSYS_DefineRegion(&gMapScreenHelpTextMask, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenHelpTextScreenMaskBtnCallback);
 		fCreated = TRUE;
 	}
 	else if (!fInterfaceFastHelpTextActive && fCreated)
@@ -3094,7 +3094,7 @@ void CreateScreenMaskForMoveBox( void )
 	if (!fScreenMaskForMoveCreated)
 	{
 		// set up the screen mask
-		MSYS_DefineRegion(&gMoveBoxScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MoveScreenMaskBtnCallback);
+		MSYS_DefineRegion(&gMoveBoxScreenMask, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MoveScreenMaskBtnCallback);
 
 		fScreenMaskForMoveCreated = TRUE;
 	}

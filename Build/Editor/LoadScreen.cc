@@ -846,7 +846,7 @@ static ScreenID ProcessFileIO(void)
 			SetFontAttributes(HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI);
 			wchar_t zOrigName[60];
 			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
-			usStartX = (SCREEN_WIDTH - StringPixLength(zOrigName, HUGEFONT)) / 2;
+			usStartX = (g_screen_width - StringPixLength(zOrigName, HUGEFONT)) / 2;
 			usStartY = 180 - GetFontHeight(HUGEFONT) / 2;
 			MPrint(usStartX, usStartY, zOrigName);
 

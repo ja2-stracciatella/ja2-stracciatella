@@ -216,7 +216,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 	{ UINT16 actual_w;
 		UINT16 actual_h;
 		AutoMercPopUpBox const save_load_game_message_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &actual_w, &actual_h));
-		UINT16 const x = (SCREEN_WIDTH - actual_w) / 2;
+		UINT16 const x = (g_screen_width - actual_w) / 2;
 		RenderMercPopUpBox(save_load_game_message_box, x, 160, FRAME_BUFFER);
 	}
 

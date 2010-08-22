@@ -8,8 +8,8 @@ void LoadRadarScreenBitmap(const char* filename);
 
 // RADAR WINDOW DEFINES
 #define	RADAR_WINDOW_X				543
-#define RADAR_WINDOW_TM_Y			fInMapMode ? (INTERFACE_HEIGHT - 107) : (SCREEN_HEIGHT - 107)
-#define RADAR_WINDOW_SM_Y			fInMapMode ? (INTERFACE_HEIGHT - 107) : (SCREEN_HEIGHT - 107)
+#define RADAR_WINDOW_TM_Y			fInMapMode ? (INTERFACE_HEIGHT - 107) : (g_screen_height - 107)
+#define RADAR_WINDOW_SM_Y			fInMapMode ? (INTERFACE_HEIGHT - 107) : (g_screen_height - 107)
 #define RADAR_WINDOW_WIDTH		88
 #define RADAR_WINDOW_HEIGHT		44
 

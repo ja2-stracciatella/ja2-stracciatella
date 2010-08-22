@@ -87,7 +87,7 @@ void RenderProfileBackGround( void )
 	MarkButtonsDirty( );
 
 	// force refresh of screen
-  InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, SCREEN_WIDTH, SCREEN_HEIGHT);
+  InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, g_screen_width, g_screen_height);
 }
 
 

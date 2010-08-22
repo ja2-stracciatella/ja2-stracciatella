@@ -197,7 +197,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	aRect.iTop    = 0;
 	aRect.iLeft   = 0;
 	aRect.iBottom = INV_INTERFACE_START_Y;
-	aRect.iRight  = SCREEN_WIDTH;
+	aRect.iRight  = g_screen_width;
 
 
 	if( gExitDialog.fAllMoveOn )
@@ -320,7 +320,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 
 	gfInSectorExitMenu = TRUE;
 
-	MSYS_DefineRegion(&gExitDialog.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, SectorExitBackgroundCallback);
+	MSYS_DefineRegion(&gExitDialog.BackRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, SectorExitBackgroundCallback);
 
 	gExitDialog.iButtonImages = LoadButtonImage(INTERFACEDIR "/popupbuttons.sti", 0, 1);
 

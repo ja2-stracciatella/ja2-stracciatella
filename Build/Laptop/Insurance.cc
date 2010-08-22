@@ -287,7 +287,7 @@ void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 End
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 

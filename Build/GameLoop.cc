@@ -406,7 +406,7 @@ void HandleShortCutExitState()
 
 		default:
 		{ // set up for all otherscreens
-			SGPBox const pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+			SGPBox const pCenteringRect = { 0, 0, g_screen_width, INV_INTERFACE_START_Y };
 			DoMessageBox(MSG_BOX_BASIC_STYLE, pMessageStrings[MSG_EXITGAME], guiCurrentScreen, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack, &pCenteringRect);
 			break;
 		}

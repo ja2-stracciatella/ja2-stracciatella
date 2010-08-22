@@ -10,7 +10,7 @@
 #include "WCheck.h"
 
 
-SGPRect	ClippingRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+SGPRect	ClippingRect = { 0, 0, g_screen_width, g_screen_height };
 													//555      565
 UINT32	guiTranslucentMask=0x3def; //0x7bef;		// mask for halving 5,6,5
 

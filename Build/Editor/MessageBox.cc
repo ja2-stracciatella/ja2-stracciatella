@@ -30,8 +30,8 @@ void CreateMessageBox(wchar_t const* const msg)
 	INT16 const h      = 96;
 	if (w > 600) w = 600;
 
-	INT16 const x = (SCREEN_WIDTH  - w) / 2;
-	INT16 const y = (SCREEN_HEIGHT - h) / 2;
+	INT16 const x = (g_screen_width  - w) / 2;
+	INT16 const y = (g_screen_height - h) / 2;
 
 	// Fake button for background with text
 	iMsgBoxBgrnd = CreateLabel(msg, font, FONT_LTKHAKI, FONT_DKKHAKI, x, y, w, h, MSYS_PRIORITY_HIGHEST - 2);

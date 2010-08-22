@@ -51,8 +51,8 @@ extern SOLDIERINITNODE *gpSelected;
 
 // OK, these are values that are calculated in InitRenderParams( ) with normal view settings.
 // These would be different if we change ANYTHING about the game worlkd map sizes...
-#define	NORMAL_MAP_SCREEN_WIDTH			3160
-#define	NORMAL_MAP_SCREEN_HEIGHT		1540
+#define	NORMAL_MAP_g_screen_width			3160
+#define	NORMAL_MAP_g_screen_height		1540
 #define	NORMAL_MAP_SCREEN_X					1580
 #define	NORMAL_MAP_SCREEN_BY				2400
 #define	NORMAL_MAP_SCREEN_TY				860
@@ -158,8 +158,8 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		INT16 sY1;
 		INT16 sX2;
 		INT16 sY2;
-		CalculateRestrictedMapCoords(NORTH, &sX1, &sY1, &sX2, &gsStartRestrictedY, SCREEN_WIDTH, 320);
-		CalculateRestrictedMapCoords(WEST,  &sX1, &sY1, &gsStartRestrictedX, &sY2, SCREEN_WIDTH, 320);
+		CalculateRestrictedMapCoords(NORTH, &sX1, &sY1, &sX2, &gsStartRestrictedY, g_screen_width, 320);
+		CalculateRestrictedMapCoords(WEST,  &sX1, &sY1, &gsStartRestrictedX, &sY2, g_screen_width, 320);
 	}
 
 	// Copy over shade tables from main tileset
@@ -278,7 +278,7 @@ void HandleOverheadMap(void)
 
 	RestoreBackgroundRects();
 
-	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, FALSE);
+	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, g_screen_width, 320, FALSE);
 
 	HandleTalkingAutoFaces();
 
@@ -388,7 +388,7 @@ void GoIntoOverheadMap( )
 
 	gfInOverheadMap = TRUE;
 
-	MSYS_DefineRegion(&OverheadBackgroundRegion, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&OverheadBackgroundRegion, 0, 0, g_screen_width, 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	MSYS_DefineRegion(&OverheadRegion, 0, 0, gsVIEWPORT_END_X, 320, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, ClickOverheadRegionCallback);
 
@@ -934,13 +934,13 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 
 			*psX1 = 0;
 			*psX2 = sEndXS;
-			*psY1 = ( NORMAL_MAP_SCREEN_HEIGHT - abs( NORMAL_MAP_SCREEN_BY - gsBLY ) ) / 5;
+			*psY1 = ( NORMAL_MAP_g_screen_height - abs( NORMAL_MAP_SCREEN_BY - gsBLY ) ) / 5;
 			*psY2 = sEndYS;
 			break;
 
 		case EAST:
 
-			*psX1 = ( NORMAL_MAP_SCREEN_WIDTH - abs( NORMAL_MAP_SCREEN_X - gsTRX ) ) / 5;
+			*psX1 = ( NORMAL_MAP_g_screen_width - abs( NORMAL_MAP_SCREEN_X - gsTRX ) ) / 5;
 			*psX2 = sEndXS;
 			*psY1 = 0;
 			*psY2 = sEndYS;

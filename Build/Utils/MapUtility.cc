@@ -120,12 +120,12 @@ ScreenID MapUtilScreenHandle()
 
 	gfOverheadMapDirty = TRUE;
 
-	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, TRUE);
+	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, g_screen_width, 320, TRUE);
 
   TrashOverheadMap( );
 
 	// OK, NOW PROCESS OVERHEAD MAP ( SHOUIDL BE ON THE FRAMEBUFFER )
-	gdXStep	= SCREEN_WIDTH / 88.f;
+	gdXStep	= g_screen_width / 88.f;
 	gdYStep	= 320 / 44.f;
 	dStartX = dStartY = 0;
 
@@ -133,10 +133,10 @@ ScreenID MapUtilScreenHandle()
 	if ( gMapInformation.ubRestrictedScrollID != 0 )
 	{
 
-		CalculateRestrictedMapCoords(NORTH, &sX1,    &sY1,     &sX2,   &sTop, SCREEN_WIDTH, 320);
-		CalculateRestrictedMapCoords(SOUTH, &sX1,    &sBottom, &sX2,   &sY2,  SCREEN_WIDTH, 320);
-		CalculateRestrictedMapCoords(WEST,  &sX1,    &sY1,     &sLeft, &sY2,  SCREEN_WIDTH, 320);
-		CalculateRestrictedMapCoords(EAST,  &sRight, &sY1,     &sX2,   &sY2,  SCREEN_WIDTH, 320);
+		CalculateRestrictedMapCoords(NORTH, &sX1,    &sY1,     &sX2,   &sTop, g_screen_width, 320);
+		CalculateRestrictedMapCoords(SOUTH, &sX1,    &sBottom, &sX2,   &sY2,  g_screen_width, 320);
+		CalculateRestrictedMapCoords(WEST,  &sX1,    &sY1,     &sLeft, &sY2,  g_screen_width, 320);
+		CalculateRestrictedMapCoords(EAST,  &sRight, &sY1,     &sX2,   &sY2,  g_screen_width, 320);
 
 		gdXStep	= (float)( sRight - sLeft )/(float)88;
 		gdYStep	= (float)( sBottom - sTop )/(float)44;
@@ -180,7 +180,7 @@ ScreenID MapUtilScreenHandle()
 				{
 					for ( iWindowY = iSubY1; iWindowY < iSubY2; iWindowY++ )
 					{
-						if (0 <= iWindowX && iWindowX < SCREEN_WIDTH &&
+						if (0 <= iWindowX && iWindowX < g_screen_width &&
 								0 <= iWindowY && iWindowY < 320)
 						{
 							s16BPPSrc = pSrcBuf[ ( iWindowY * (uiSrcPitchBYTES/2) ) + iWindowX ];
@@ -247,7 +247,7 @@ ScreenID MapUtilScreenHandle()
 				INT32 sX = 0, sY = 420;
 				UINT16 usLineColor;
 
-				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, g_screen_width, g_screen_height);
 
 				for ( cnt = 0; cnt < 256; cnt++ )
 				{

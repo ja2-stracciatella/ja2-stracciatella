@@ -563,7 +563,7 @@ ScreenID AutoResolveScreenHandle()
 	{
 		gpAR->fEnteringAutoResolve = FALSE;
 		//Take the framebuffer, shade it, and save it to the SAVEBUFFER.
-		FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		FRAME_BUFFER->ShadowRect(0, 0, g_screen_width, g_screen_height);
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 		KillPreBattleInterface();
 		CalculateAutoResolveInfo();
@@ -1584,7 +1584,7 @@ static void CreateAutoResolveInterface(void)
 	AUTORESOLVE_STRUCT* const ar = gpAR;
 
 	// Setup new autoresolve blanket interface.
-	MSYS_DefineRegion(&ar->AutoResolveRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&ar->AutoResolveRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH - 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	ar->fRenderAutoResolve = TRUE;
 	ar->fExitAutoResolve   = FALSE;
 
@@ -2479,7 +2479,7 @@ static void CalculateRowsAndColumns(void)
 	}
 
 	if( gpAR->ubMercCols + gpAR->ubEnemyCols == 9 )
-		gpAR->rect.w = SCREEN_WIDTH;
+		gpAR->rect.w = g_screen_width;
 	else
 		gpAR->rect.w = 146 + 55 * (MAX(MAX(gpAR->ubMercCols, gpAR->ubCivCols), 2) + MAX(gpAR->ubEnemyCols, 2));
 

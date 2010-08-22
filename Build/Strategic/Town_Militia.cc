@@ -451,7 +451,7 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 	}
 	else
 	{
-		SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+		SGPBox const centering_rect = { 0, 0, g_screen_width, INV_INTERFACE_START_Y };
 		DoMessageBox(MSG_BOX_BASIC_STYLE, sString, GAME_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback, &centering_rect);
 	}
 }

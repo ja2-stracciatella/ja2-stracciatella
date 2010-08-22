@@ -118,7 +118,7 @@ static void InitEditorRegions()
 	 * used anymore. Any new buttons will cover this up as well. Think of it as a
 	 * barrier between the editor buttons and the game's interface panel buttons
 	 * and regions. */
-	MSYS_DefineRegion(&EditorRegion, 0, 360, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&EditorRegion, 0, 360, g_screen_width, g_screen_height, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Create the regions for the terrain tile selections.
 	UINT16       x   = 261;
@@ -435,13 +435,13 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 		ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, 360, sRight, 361, gusEditorTaskbarHiColor );
 		sTop++;
 	}
-	if (sBottom == SCREEN_HEIGHT)
+	if (sBottom == g_screen_height)
 	{
-		ColorFillVideoSurfaceArea(ButtonDestBuffer, sLeft, SCREEN_HEIGHT - 1, sRight, SCREEN_HEIGHT, gusEditorTaskbarLoColor);
+		ColorFillVideoSurfaceArea(ButtonDestBuffer, sLeft, g_screen_height - 1, sRight, g_screen_height, gusEditorTaskbarLoColor);
 	}
-	if (sRight == SCREEN_WIDTH)
+	if (sRight == g_screen_width)
 	{
-		ColorFillVideoSurfaceArea(ButtonDestBuffer, SCREEN_WIDTH - 1, sTop, SCREEN_WIDTH, sBottom, gusEditorTaskbarLoColor);
+		ColorFillVideoSurfaceArea(ButtonDestBuffer, g_screen_width - 1, sTop, g_screen_width, sBottom, gusEditorTaskbarLoColor);
 	}
 
 	InvalidateRegion( sLeft, sTop, sRight, sBottom );
@@ -567,7 +567,7 @@ static void RenderEntryPoint(INT16 const gridno, wchar_t const* const label)
 	INT16 x;
 	INT16 y;
 	GetGridNoScreenPos(gridno, 0, &x, &y);
-	if (x < -40 || SCREEN_WIDTH <= x || y < -20 || TASKBAR_Y - 20 <= y) return;
+	if (x < -40 || g_screen_width <= x || y < -20 || TASKBAR_Y - 20 <= y) return;
 	DisplayWrappedString(x, y - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, label, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 }
 
@@ -591,7 +591,7 @@ static void RenderMapEntryPointsAndLights(void)
 		INT16       y;
 		INT16 const gridno = l->iY * WORLD_COLS + l->iX;
 		GetGridNoScreenPos(gridno, 0, &x, &y);
-		if (x < -40 || SCREEN_WIDTH <= x || y < -50 || TASKBAR_Y - 60 <= y) continue;
+		if (x < -40 || g_screen_width <= x || y < -50 || TASKBAR_Y - 60 <= y) continue;
 
 		UINT8          colour;
 		wchar_t const* text;
@@ -818,7 +818,7 @@ void ProcessEditorRendering()
 	BOOLEAN fSaveBuffer = FALSE;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{
-		ClearTaskbarRegion(0, 0, SCREEN_WIDTH, 120);
+		ClearTaskbarRegion(0, 0, g_screen_width, 120);
 		RenderTerrainTileButtons();
 		MarkButtonsDirty();
 		gfRenderTaskbar = FALSE;
@@ -864,7 +864,7 @@ void ProcessEditorRendering()
 
 
 	if( fSaveBuffer )
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 360, SCREEN_WIDTH, 120);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 360, g_screen_width, 120);
 
 	//Make sure this is TRUE at all times.
 	//It is set to false when before we save the buffer, so the buttons don't get

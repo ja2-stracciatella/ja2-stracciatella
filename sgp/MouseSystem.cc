@@ -688,11 +688,11 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 
 	INT32 x = r->RegionTopLeftX + 10;
 	if (x <  0)                x = 0;
-	if (x >= SCREEN_WIDTH - w) x = SCREEN_WIDTH - w - 4;
+	if (x >= g_screen_width - w) x = g_screen_width - w - 4;
 
 	INT32 y = r->RegionTopLeftY - h * 3 / 4;
 	if (y <  0)                 y = 0;
-	if (y >= SCREEN_HEIGHT - h) y = SCREEN_HEIGHT - h - 15;
+	if (y >= g_screen_height - h) y = g_screen_height - h - 15;
 
 	if (!(r->uiFlags & MSYS_GOT_BACKGROUND))
 	{
@@ -703,7 +703,7 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 	{
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			UINT16* const buf = l.Buffer<UINT16>();
-			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 			RectangleDraw(TRUE, x + 1, y + 1, x + w - 1, y + h - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), buf);
 			RectangleDraw(TRUE, x,     y,     x + w - 2, y + h - 2, Get16BPPColor(FROMRGB(227, 198, 88)), buf);
 		}

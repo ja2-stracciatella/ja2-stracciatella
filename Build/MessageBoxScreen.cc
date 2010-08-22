@@ -141,8 +141,8 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	}
 	else
 	{
-		gMsgBox.sX = (SCREEN_WIDTH  - usTextBoxWidth)  / 2;
-		gMsgBox.sY = (SCREEN_HEIGHT - usTextBoxHeight) / 2;
+		gMsgBox.sX = (g_screen_width  - usTextBoxWidth)  / 2;
+		gMsgBox.sY = (g_screen_height - usTextBoxHeight) / 2;
 	}
 
 	if (guiCurrentScreen == GAME_SCREEN)
@@ -169,7 +169,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 
 	UINT16 const cursor = style.cursor;
 	// Create top-level mouse region
-	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, cursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, cursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	if (!gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE])
 	{
@@ -584,7 +584,7 @@ static void DoScreenIndependantMessageBoxWithRect(wchar_t const* msg, MessageBox
 // a basic box that don't care what screen we came from
 void DoScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	SGPBox const centering_rect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	SGPBox const centering_rect = {0, 0, g_screen_width, INV_INTERFACE_START_Y };
 	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
 }
 
@@ -592,7 +592,7 @@ void DoScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags
 // a basic box that don't care what screen we came from
 void DoLowerScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	SGPBox const centering_rect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
+	SGPBox const centering_rect = {0, INV_INTERFACE_START_Y / 2, g_screen_width, INV_INTERFACE_START_Y / 2 };
 	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
 }
 

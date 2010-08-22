@@ -45,14 +45,14 @@
 #define		OPT_HIGHLIGHT_COLOR										FONT_MCOLOR_WHITE//FONT_MCOLOR_LTYELLOW
 
 
-#define		OPTIONS_SCREEN_WIDTH									440
-#define		OPTIONS_SCREEN_HEIGHT									400
+#define		OPTIONS_g_screen_width									440
+#define		OPTIONS_g_screen_height									400
 
 
 #define		OPTIONS__TOP_LEFT_X										100
 #define		OPTIONS__TOP_LEFT_Y										40
-#define		OPTIONS__BOTTOM_RIGHT_X								OPTIONS__TOP_LEFT_X + OPTIONS_SCREEN_WIDTH
-#define		OPTIONS__BOTTOM_RIGHT_Y								OPTIONS__TOP_LEFT_Y + OPTIONS_SCREEN_HEIGHT
+#define		OPTIONS__BOTTOM_RIGHT_X								OPTIONS__TOP_LEFT_X + OPTIONS_g_screen_width
+#define		OPTIONS__BOTTOM_RIGHT_Y								OPTIONS__TOP_LEFT_Y + OPTIONS_g_screen_height
 
 #define OPT_SAVE_BTN_X  51
 #define OPT_LOAD_BTN_X 190
@@ -324,7 +324,7 @@ static void EnterOptionsScreen(void)
 	}
 
 	//Create a mouse region so when the user leaves a togglebox text region we can detect it then unselect the region
-	MSYS_DefineRegion(&gSelectedToggleBoxAreaRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, SelectedToggleBoxAreaRegionMovementCallBack, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gSelectedToggleBoxAreaRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, SelectedToggleBoxAreaRegionMovementCallBack, MSYS_NO_CALLBACK);
 
 	//Render the scene before adding the slider boxes
 	RenderOptionsScreen();

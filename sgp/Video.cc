@@ -131,7 +131,7 @@ void InitializeVideoManager(void)
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
 
-	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, g_video_flags);
+	ScreenBuffer = SDL_SetVideoMode(g_screen_width, g_screen_height, PIXEL_DEPTH, g_video_flags);
 	if (!ScreenBuffer) throw std::runtime_error("Failed to set up video mode");
 
 	Uint32 Rmask = ScreenBuffer->format->Rmask;
@@ -140,7 +140,7 @@ void InitializeVideoManager(void)
 	Uint32 Amask = ScreenBuffer->format->Amask;
 
 	FrameBuffer = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
+		SDL_SWSURFACE, g_screen_width, g_screen_height, PIXEL_DEPTH,
 		Rmask, Gmask, Bmask, Amask
 	);
 
@@ -228,8 +228,8 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 		if (iLeft < 0) iLeft = 0;
 		if (iTop  < 0) iTop  = 0;
 
-		if (iRight  > SCREEN_WIDTH)  iRight  = SCREEN_WIDTH;
-		if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
+		if (iRight  > g_screen_width)  iRight  = g_screen_width;
+		if (iBottom > g_screen_height) iBottom = g_screen_height;
 
 		if (iRight - iLeft <= 0) return;
 		if (iBottom - iTop <= 0) return;
@@ -280,8 +280,8 @@ static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 		if (iLeft < 0) iLeft = 0;
 		if (iTop  < 0) iTop  = 0;
 
-		if (iRight  > SCREEN_WIDTH)  iRight  = SCREEN_WIDTH;
-		if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
+		if (iRight  > g_screen_width)  iRight  = g_screen_width;
+		if (iBottom > g_screen_height) iBottom = g_screen_height;
 
 		if (iRight - iLeft <= 0) return;
 		if (iBottom - iTop <= 0) return;
@@ -328,7 +328,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	SDL_Rect     StripRegions[2];
 	UINT16       NumStrips = 0;
 
-	const UINT16 usWidth  = SCREEN_WIDTH;
+	const UINT16 usWidth  = g_screen_width;
 	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 
 	if (sScrollXIncrement < 0)
@@ -406,7 +406,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 		UINT h = StripRegions[i].h;
 		for (UINT j = y; j < y + h; ++j)
 		{
-			memset(gpZBuffer + j * SCREEN_WIDTH + x, 0, w * sizeof(*gpZBuffer));
+			memset(gpZBuffer + j * g_screen_width + x, 0, w * sizeof(*gpZBuffer));
 		}
 
 		RenderStaticWorldRect(x, y, x + w, y + h, TRUE);
@@ -459,8 +459,8 @@ static void WriteTGAHeader(FILE* const f)
 		0,
 		0, 0,
 		0, 0,
-		SCREEN_WIDTH  % 256, SCREEN_WIDTH  / 256,
-		SCREEN_HEIGHT % 256, SCREEN_HEIGHT / 256,
+		g_screen_width  % 256, g_screen_width  / 256,
+		g_screen_height % 256, g_screen_height / 256,
 		PIXEL_DEPTH,
 		0
 	};
@@ -503,21 +503,21 @@ static void TakeScreenshot()
 	UINT16* buf = 0;
 	if (gusRedMask != 0x7C00 || gusGreenMask != 0x03E0 || gusBlueMask != 0x001F)
 	{
-		buf = MALLOCN(UINT16, SCREEN_WIDTH);
+		buf = MALLOCN(UINT16, g_screen_width);
 	}
 
 	UINT16 const* src = static_cast<UINT16 const*>(ScreenBuffer->pixels);
-	for (INT32 y = SCREEN_HEIGHT - 1; y >= 0; --y)
+	for (INT32 y = g_screen_height - 1; y >= 0; --y)
 	{
 		if (buf)
 		{ // ATE: Fix this such that it converts pixel format to 5/5/5
-			memcpy(buf, src + y * SCREEN_WIDTH, SCREEN_WIDTH * sizeof(*buf));
-			ConvertRGBDistribution565To555(buf, SCREEN_WIDTH);
-			fwrite(buf, sizeof(*buf), SCREEN_WIDTH, f);
+			memcpy(buf, src + y * g_screen_width, g_screen_width * sizeof(*buf));
+			ConvertRGBDistribution565To555(buf, g_screen_width);
+			fwrite(buf, sizeof(*buf), g_screen_width, f);
 		}
 		else
 		{
-			fwrite(src + y * SCREEN_WIDTH, SCREEN_WIDTH * 2, 1, f);
+			fwrite(src + y * g_screen_width, g_screen_width * 2, 1, f);
 		}
 	}
 
@@ -732,11 +732,11 @@ static void SnapshotSmall(void)
 
 	UINT16* pDest = gpFrameData[giNumFrames];
 
-	for (INT32 iCountY = SCREEN_HEIGHT - 1; iCountY >= 0; iCountY--)
+	for (INT32 iCountY = g_screen_height - 1; iCountY >= 0; iCountY--)
 	{
-		for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX++)
+		for (INT32 iCountX = 0; iCountX < g_screen_width; iCountX++)
 		{
-			pDest[iCountY * SCREEN_WIDTH + iCountX] = pVideo[iCountY * SCREEN_WIDTH + iCountX];
+			pDest[iCountY * g_screen_width + iCountX] = pVideo[iCountY * g_screen_width + iCountX];
 		}
 	}
 
@@ -754,7 +754,7 @@ void VideoCaptureToggle(void)
 	{
 		for (INT32 cnt = 0; cnt < MAX_NUM_FRAMES; cnt++)
 		{
-			gpFrameData[cnt] = MALLOCN(UINT16, SCREEN_WIDTH * SCREEN_HEIGHT);
+			gpFrameData[cnt] = MALLOCN(UINT16, g_screen_width * g_screen_height);
 		}
 		guiLastFrame = GetClock();
 	}
@@ -792,11 +792,11 @@ static void RefreshMovieCache(void)
 
 		UINT16* pDest = gpFrameData[cnt];
 
-		for (INT32 iCountY = SCREEN_HEIGHT - 1; iCountY >= 0; iCountY -= 1)
+		for (INT32 iCountY = g_screen_height - 1; iCountY >= 0; iCountY -= 1)
 		{
-			for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX ++)
+			for (INT32 iCountX = 0; iCountX < g_screen_width; iCountX ++)
 			{
-				fwrite(pDest + iCountY * SCREEN_WIDTH + iCountX, sizeof(UINT16), 1, disk);
+				fwrite(pDest + iCountY * g_screen_width + iCountX, sizeof(UINT16), 1, disk);
 			}
 		}
 

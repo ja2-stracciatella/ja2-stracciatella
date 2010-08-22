@@ -1180,7 +1180,7 @@ void CreateDestroyNewMailButton()
 	giNewMailButton = MakeButtonYesNo(0, NEW_BTN_X + 10, BtnNewOkback);
 
 	// set up screen mask region
-	MSYS_DefineRegion(&pScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
+	MSYS_DefineRegion(&pScreenMask, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
 	MarkAButtonDirty(giNewMailButton);
 	fReDrawScreenFlag = TRUE;
  }
@@ -1318,7 +1318,7 @@ void CreateDestroyDeleteNoticeMailButton()
 	giDeleteMailButton[1] = MakeButtonYesNo(2, NEW_BTN_X + 40, BtnDeleteNoback);
 
 	// set up screen mask to prevent other actions while delete mail box is destroyed
-	MSYS_DefineRegion(&pDeleteScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
+	MSYS_DefineRegion(&pDeleteScreenMask, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
 
 	// force update
 	fReDrawScreenFlag = TRUE;

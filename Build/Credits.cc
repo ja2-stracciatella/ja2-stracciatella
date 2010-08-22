@@ -82,7 +82,7 @@ struct CRDT_NODE
 #define		CRDT_SPACE_BN_SECTIONS					50
 #define		CRDT_SPACE_BN_NODES							12
 
-#define CRDT_START_POS_Y        (SCREEN_HEIGHT - 1)
+#define CRDT_START_POS_Y        (g_screen_height - 1)
 
 #define		CRDT_EYE_WIDTH									30
 #define		CRDT_EYE_HEIGHT									12
@@ -423,9 +423,9 @@ static void DisplayCreditNode(const CRDT_NODE* const pCurrent)
 		h += y;
 		y = 0;
 	}
-	else if (y + h > SCREEN_HEIGHT)
+	else if (y + h > g_screen_height)
 	{
-		h = SCREEN_HEIGHT - y;
+		h = g_screen_height - y;
 	}
 	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, y, CRDT_WIDTH_OF_TEXT_AREA, h);
 

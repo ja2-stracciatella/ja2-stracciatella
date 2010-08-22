@@ -238,7 +238,7 @@ static void FadeFrameBufferRealFade(void)
 {
 	if ( gsFadeRealCount != gsFadeCount )
 	{
-		FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, g_screen_width, g_screen_height);
 
 		gsFadeRealCount = gsFadeCount;
 	}
@@ -255,13 +255,13 @@ static void FadeInFrameBufferRealFade(void)
 
 		for ( cnt = 0; cnt < ( gsFadeLimit - gsFadeCount ); cnt++ )
 		{
-			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, g_screen_width, g_screen_height);
 		}
 
 		RefreshScreen();
 
 		// Copy save buffer back
-		RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		RestoreExternBackgroundRect(0, 0, g_screen_width, g_screen_height);
 
 		gsFadeRealCount = gsFadeCount;
 	}

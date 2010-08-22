@@ -227,7 +227,7 @@ static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_
 {
 	INT32 img = LoadGenericButtonIcon(gfx);
 	iButtonIcons[idx] = img;
-	GUIButtonRef const btn = CreateIconButton(img, 0, SCREEN_WIDTH - 40, y, 40, h, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconButton(img, 0, g_screen_width - 40, y, 40, h, MSYS_PRIORITY_HIGH, click);
 	btn->SetFastHelpText(help);
 	return btn;
 }
@@ -243,7 +243,7 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 
 	DisableEditorTaskbar( );
 
-	iSelectWin = CreateHotSpot(0, 0, SCREEN_WIDTH - 40, TASKBAR_Y, MSYS_PRIORITY_HIGH, SelWinClkCallback);
+	iSelectWin = CreateHotSpot(0, 0, g_screen_width - 40, TASKBAR_Y, MSYS_PRIORITY_HIGH, SelWinClkCallback);
 
 	INT16 y;
 	iOkWin      = MakeButton(OK_ICON,     EDITORDIR "/checkmark.sti",   y  =  0, 40, OkClkCallback,   L"Accept selections");
@@ -261,7 +261,7 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 
 	g_sel_win_box.x =  1;
 	g_sel_win_box.y = 15;
-	g_sel_win_box.w = SCREEN_WIDTH - g_sel_win_box.x - 40;
+	g_sel_win_box.w = g_screen_width - g_sel_win_box.x - 40;
 	g_sel_win_box.h = TASKBAR_Y    - g_sel_win_box.y;
 
 	switch( sWhat )
@@ -674,7 +674,7 @@ void RenderSelectionWindow( void )
 	if (!fButtonsPresent)
 		return;
 
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH - 40, TASKBAR_Y, GetGenericButtonFillColor());
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, g_screen_width - 40, TASKBAR_Y, GetGenericButtonFillColor());
 	DrawSelections( );
 	MarkButtonsDirty();
 	RenderButtons( );

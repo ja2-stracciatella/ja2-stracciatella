@@ -1024,7 +1024,7 @@ ScreenID LaptopScreenHandle()
 
 		//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 		//         Start transitioning the screen.
-		SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+		SGPBox const DstRect = { 0, 0, g_screen_width, g_screen_height };
 		const UINT32 uiTimeRange = 1000;
 		INT32 iPercentage     = 0;
 		INT32 iRealPercentage = 0;
@@ -1054,9 +1054,9 @@ ScreenID LaptopScreenHandle()
 			//Mapscreen source rect
 			SGPRect SrcRect1;
 			SrcRect1.iLeft   =                 464 * iPercentage / 100;
-			SrcRect1.iRight  = SCREEN_WIDTH  - 163 * iPercentage / 100;
+			SrcRect1.iRight  = g_screen_width  - 163 * iPercentage / 100;
 			SrcRect1.iTop    =                 417 * iPercentage / 100;
-			SrcRect1.iBottom = SCREEN_HEIGHT -  55 * iPercentage / 100;
+			SrcRect1.iBottom = g_screen_height -  55 * iPercentage / 100;
 			//Laptop source rect
 			INT32 iScalePercentage;
 			if (iPercentage < 99)
@@ -1083,7 +1083,7 @@ ScreenID LaptopScreenHandle()
 			//SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 			//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 			//{ SGPVSurface::Lock(FRAME_BUFFER);
-			//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 			//	UINT16* const pDestBuf = l.Buffer<UINT16>();
 			//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
 			//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
@@ -1421,7 +1421,7 @@ static void LeaveLapTopScreen(void)
 
 			//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 			//         Start transitioning the screen.
-			SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+			SGPBox const DstRect = { 0, 0, g_screen_width, g_screen_height };
 			const UINT32 uiTimeRange = 1000;
 			INT32 iPercentage     = 100;
 			INT32 iRealPercentage = 100;
@@ -1453,9 +1453,9 @@ static void LeaveLapTopScreen(void)
 				//Mapscreen source rect
 				SGPRect SrcRect1;
 				SrcRect1.iLeft   =                 464 * iPercentage / 100;
-				SrcRect1.iRight  = SCREEN_WIDTH  - 163 * iPercentage / 100;
+				SrcRect1.iRight  = g_screen_width  - 163 * iPercentage / 100;
 				SrcRect1.iTop    =                 417 * iPercentage / 100;
-				SrcRect1.iBottom = SCREEN_HEIGHT -  55 * iPercentage / 100;
+				SrcRect1.iBottom = g_screen_height -  55 * iPercentage / 100;
 				//Laptop source rect
 				INT32 iScalePercentage;
 				if (iPercentage < 99)
@@ -1482,7 +1482,7 @@ static void LeaveLapTopScreen(void)
 				//SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 				//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 				//{ SGPVSurface::Lock(FRAME_BUFFER);
-				//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
 				//	UINT16* const pDestBuf = l.Buffer<UINT16>();
 				//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
 				//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
@@ -1702,7 +1702,7 @@ static void DisplayBookMarks(void)
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
 
-	SetFontDestBuffer(FRAME_BUFFER, BOOK_X, BOOK_TOP_Y, BOOK_X + BOOK_WIDTH - 10, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER, BOOK_X, BOOK_TOP_Y, BOOK_X + BOOK_WIDTH - 10, g_screen_height);
 
 	// blt in book mark background
 	INT32 const h  = BOOK_HEIGHT + 6;
@@ -2212,7 +2212,7 @@ void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 void DoLapTopMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	SGPBox const centering_rect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_WIDTH, LAPTOP_SCREEN_HEIGHT };
+	SGPBox const centering_rect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_g_screen_width, LAPTOP_g_screen_height };
 	DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &centering_rect);
 }
 
@@ -2229,7 +2229,7 @@ void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID const ubStyle, wchar_t c
 
 void DoLapTopSystemMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	SGPBox const centering_rect = { 0, 0, g_screen_width, INV_INTERFACE_START_Y };
 	DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, zString, uiExitScreen, usFlags, ReturnCallback, &centering_rect);
 }
 
