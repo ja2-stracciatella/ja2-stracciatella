@@ -29,17 +29,15 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
-#include "Local.h"
 #include <SDL.h>
 #include "GameRes.h"
 #include "Logger.h"
 #include <sstream>
+#include "Local.h"
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
-
-#	include "Local.h"
 #endif
 
 #include "Multi_Language_Graphic_Utils.h"
@@ -420,6 +418,8 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 			ssinput >> width;
 			if( width > INTERFACE_WIDTH)
 				g_screen_width = width;
+			else
+				g_screen_width = INTERFACE_WIDTH;
 		}
 		else if (strcmp(arg, "-height") == 0)
 		{
@@ -430,6 +430,8 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 			ssinput >> height;
 			if( height > INTERFACE_HEIGHT)
 				g_screen_height = height;
+			else
+				g_screen_height = INTERFACE_HEIGHT;
 		}
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)
