@@ -51,8 +51,8 @@ extern SOLDIERINITNODE *gpSelected;
 
 // OK, these are values that are calculated in InitRenderParams( ) with normal view settings.
 // These would be different if we change ANYTHING about the game worlkd map sizes...
-#define	NORMAL_MAP_g_screen_width			3160
-#define	NORMAL_MAP_g_screen_height		1540
+#define	NORMAL_MAP_SCREEN_WIDTH			3160
+#define	NORMAL_MAP_SCREEN_HEIGHT		1540
 #define	NORMAL_MAP_SCREEN_X					1580
 #define	NORMAL_MAP_SCREEN_BY				2400
 #define	NORMAL_MAP_SCREEN_TY				860
@@ -934,13 +934,13 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 
 			*psX1 = 0;
 			*psX2 = sEndXS;
-			*psY1 = ( NORMAL_MAP_g_screen_height - abs( NORMAL_MAP_SCREEN_BY - gsBLY ) ) / 5;
+			*psY1 = ( NORMAL_MAP_SCREEN_HEIGHT - abs( NORMAL_MAP_SCREEN_BY - gsBLY ) ) / 5;
 			*psY2 = sEndYS;
 			break;
 
 		case EAST:
 
-			*psX1 = ( NORMAL_MAP_g_screen_width - abs( NORMAL_MAP_SCREEN_X - gsTRX ) ) / 5;
+			*psX1 = ( NORMAL_MAP_SCREEN_WIDTH - abs( NORMAL_MAP_SCREEN_X - gsTRX ) ) / 5;
 			*psX2 = sEndXS;
 			*psY1 = 0;
 			*psY2 = sEndYS;
