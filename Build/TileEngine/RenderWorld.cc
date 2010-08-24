@@ -1007,7 +1007,7 @@ zlevel_topmost:
 								FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
 								sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-								sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - sTileHeight;
+								sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - sTileHeight - (g_screen_height > 480 ? 10 : 0);
 
 								// Adjust for offset position on screen
 								sXPos -= gsRenderWorldOffsetX;
