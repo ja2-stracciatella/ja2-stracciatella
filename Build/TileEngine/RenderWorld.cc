@@ -1188,7 +1188,7 @@ zlevel_topmost:
 								sXPos += pTrav.sOffsetX;
 								sYPos += pTrav.sOffsetY;
 
-								INT16 const h = MIN(uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
+								INT16 const h = MIN((INT16)uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
 								RegisterBackgroundRect(uiDirtyFlags, sXPos, sYPos, uiBrushWidth, h);
 								if (fSaveZ)
 								{
