@@ -91,6 +91,7 @@
 #include "Debug.h"
 #include "Button_System.h"
 #include "JAScreens.h"
+#include "UILayout.h"
 
 #ifdef JA2TESTVERSION
 #	include "Map_Information.h"
@@ -565,7 +566,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT16>());
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
 }
@@ -624,7 +625,7 @@ static void GlowItem(void)
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw(TRUE, 3, 80, 64, 104, usColor, l.Buffer<UINT16>());
 	InvalidateRegion( 3, 80, 65, 105 );
 }
@@ -661,7 +662,7 @@ static void GlowTrashCan(void)
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT16>());
 		InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
 	}
@@ -1216,7 +1217,7 @@ static void HighLightSelection(HighLightState& state, INT32 const line, UINT16 c
 	state.colour_idx += state.delta ? -1 : +1;
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 	UINT16 const colour = GlowColor(state.colour_idx);
@@ -1609,7 +1610,7 @@ try
 
 		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X + INV_REGION_WIDTH, INV_REGION_Y + INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		// screen mask for animated cursors
-		MSYS_DefineRegion(&gMapScreenMaskRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
+		MSYS_DefineRegion(&gMapScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
 
 		// set help text for item glow region
 		gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
@@ -1669,7 +1670,6 @@ try
 		}
 
 		MoveRadarScreen();
-
 	}
 
 
@@ -5597,7 +5597,7 @@ void RenderMapRegionBackground( void )
 
 	MapscreenMarkButtonsDirty();
 
-	RestoreExternBackgroundRect(261, 0, g_screen_width - 261, 359);
+	RestoreExternBackgroundRect(261, 0, SCREEN_WIDTH - 261, 359);
 
 	// don't bother if showing sector inventory instead of the map!!!
 	if( !fShowMapInventoryPool )
@@ -7334,7 +7334,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 
 	UINT16 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, l.Buffer<UINT16>());
 	InvalidateRegion(495, 408, 529+1, 442+1);
 }

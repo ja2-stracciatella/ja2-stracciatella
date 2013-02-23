@@ -71,6 +71,7 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "Items.h"
+#include "UILayout.h"
 
 
 #define		ITEMDESC_FONT							BLOCKFONT2
@@ -224,13 +225,7 @@ static UINT16 gusOriginalAttachItem[MAX_ATTACHMENTS];
 static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
 static SOLDIERTYPE* gpAttachSoldier;
 
-struct MoneyLoc
-{
-	UINT16 x;
-	UINT16 y;
-};
-
-static const MoneyLoc gMoneyButtonLoc = { 343, INV_INTERFACE_START_Y + 11 };
+#define gMoneyButtonLoc (g_ui.m_moneyButtonLoc)
 static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
 static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
 
@@ -4463,9 +4458,9 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	INT16 sY = gusMouseYPos;
 
 	// CHECK FOR LEFT/RIGHT
-	if (sX + menu.sWidth > g_screen_width)
+	if (sX + menu.sWidth > SCREEN_WIDTH)
 	{
-		sX = g_screen_width - menu.sWidth - ITEMPICK_START_X_OFFSET;
+		sX = SCREEN_WIDTH - menu.sWidth - ITEMPICK_START_X_OFFSET;
 	}
 	else
 	{
@@ -4506,7 +4501,7 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	menu.iOKButtonImages     = UseLoadedButtonImage(pics, 4,  9);
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&menu.BackRegion, 532, 367, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&menu.BackRegion, 532, 367, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion(&menu.BackRegions, sX, sY, menu.sX + menu.sWidth, sY + menu.sHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);

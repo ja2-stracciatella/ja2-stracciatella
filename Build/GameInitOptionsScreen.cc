@@ -24,6 +24,7 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WordWrap.h"
+#include "UILayout.h"
 
 #ifdef JA2TESTVERSION
 #	include "Soldier_Profile.h"
@@ -44,7 +45,7 @@
 //main title
 #define		GIO_MAIN_TITLE_X										0
 #define		GIO_MAIN_TITLE_Y										68
-#define GIO_MAIN_TITLE_WIDTH g_screen_width
+#define GIO_MAIN_TITLE_WIDTH SCREEN_WIDTH
 
 //radio box locations
 #define		GIO_GAP_BN_SETTINGS									35
@@ -347,7 +348,7 @@ static void EnterGIOScreen()
 	// Render the screen once, so we can blt to the save buffer
 	RenderGIOScreen();
 
-	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, g_screen_width, 439);
+	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
 
 	gfGIOButtonsAllocated = TRUE;
 }

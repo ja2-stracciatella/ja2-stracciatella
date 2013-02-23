@@ -38,6 +38,7 @@
 #include "SoundMan.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 // Defines
@@ -552,7 +553,7 @@ static void DrawFaceRect(FACETYPE const& f, SGPVSurface* const buffer, const INT
 	const UINT16 usLineColor = Get16BPPColor(colour);
 	RectangleDraw(TRUE, x - 2, y - 1, x + f.usFaceWidth + 1, y + f.usFaceHeight, usLineColor, l.Buffer<UINT16>());
 
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -829,7 +830,7 @@ static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffe
 
 				// Draw box
 				SGPVSurface::Lock l(uiRenderBuffer);
-				SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+				SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				const UINT16 usLineColor = Get16BPPColor(FROMRGB(105, 8, 9));
 				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, l.Buffer<UINT16>());

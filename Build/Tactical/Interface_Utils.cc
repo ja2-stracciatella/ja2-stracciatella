@@ -16,6 +16,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 #define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )
@@ -186,7 +187,7 @@ void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPo
 	}
 
 	SGPVSurface::Lock l(uiBuffer);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 	DrawLifeUIBar(s, sXPos, sYPos, BarHeight, pDestBuf);
@@ -225,7 +226,7 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 	}
 
 	{ SGPVSurface::Lock l(uiBuffer);
-		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 		--max_h; // LineDraw() includes the end point

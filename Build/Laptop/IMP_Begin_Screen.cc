@@ -28,6 +28,7 @@
 #include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
+#include "UILayout.h"
 
 #if defined JA2BETAVERSION && defined _DEBUG
 #	include "Campaign_Types.h"
@@ -490,7 +491,7 @@ static UINT16 CurrentGlowColour(void)
 static void DisplayNameStringCursor(INT32 x, INT32 y)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	LineDraw(TRUE, x, y, x, y + CURSOR_HEIGHT + 1, CurrentGlowColour(), l.Buffer<UINT16>());
 	InvalidateRegion(x, y , x + 1, y + CURSOR_HEIGHT + 2);
 }
@@ -537,7 +538,7 @@ static void DisplayGenderGlowCursor(INT32 x)
 {
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, CurrentGlowColour(), l.Buffer<UINT16>());
   InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
 }

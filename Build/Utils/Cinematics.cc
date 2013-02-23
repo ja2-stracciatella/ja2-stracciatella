@@ -18,6 +18,7 @@
 #include "Types.h"
 #include "VSurface.h"
 #include "Video.h"
+#include "UILayout.h"
 
 
 struct SMKFLIC
@@ -131,7 +132,7 @@ try
 	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
 	// Allocate a Smacker buffer for video decompression
-	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, g_screen_width, g_screen_height, 0, 0);
+	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	if (sf->SmackBuffer == NULL)
 	{
 		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");

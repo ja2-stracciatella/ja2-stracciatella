@@ -66,6 +66,7 @@
 #include "Debug.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 // DEFINES FOR VARIOUS PANELS
@@ -294,30 +295,6 @@ UINT16 gusOldItemIndex;
 UINT16 gusNewItemIndex;
 BOOLEAN gfDeductPoints;
 
-
-// ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS
-static INV_REGION_DESC gSMInvPocketXY[19];// =
-/*{
-	{ 344, INV_INTERFACE_START_Y +   6 }, // HELMETPOS
-	{ 344, INV_INTERFACE_START_Y +  35 }, // VESTPOS
-	{ 344, INV_INTERFACE_START_Y +  95 }, // LEGPOS,
-	{ 226, INV_INTERFACE_START_Y +   6 }, // HEAD1POS
-	{ 226, INV_INTERFACE_START_Y +  30 }, // HEAD2POS
-	{ 226, INV_INTERFACE_START_Y +  84 }, // HANDPOS,
-	{ 226, INV_INTERFACE_START_Y + 108 }, // SECONDHANDPOS
-	{ 468, INV_INTERFACE_START_Y +   5 }, // BIGPOCK1
-	{ 468, INV_INTERFACE_START_Y +  29 }, // BIGPOCK2
-	{ 468, INV_INTERFACE_START_Y +  53 }, // BIGPOCK3
-	{ 468, INV_INTERFACE_START_Y +  77 }, // BIGPOCK4
-	{ 396, INV_INTERFACE_START_Y +   5 }, // SMALLPOCK1
-	{ 396, INV_INTERFACE_START_Y +  29 }, // SMALLPOCK2
-	{ 396, INV_INTERFACE_START_Y +  53 }, // SMALLPOCK3
-	{ 396, INV_INTERFACE_START_Y +  77 }, // SMALLPOCK4
-	{ 432, INV_INTERFACE_START_Y +   5 }, // SMALLPOCK5
-	{ 432, INV_INTERFACE_START_Y +  29 }, // SMALLPOCK6
-	{ 432, INV_INTERFACE_START_Y +  53 }, // SMALLPOCK7
-	{ 432, INV_INTERFACE_START_Y +  77 }  // SMALLPOCK8
-};*/
 
 static const INV_REGION_DESC gSMCamoXY =
 {
@@ -859,45 +836,6 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 
 void InitializeSMPanel(void)
 {
-	gSMInvPocketXY[0].sX = 344;
-	gSMInvPocketXY[0].sY = INV_INTERFACE_START_Y +   6; // HELMETPOS
-	gSMInvPocketXY[1].sX = 344;
-	gSMInvPocketXY[1].sY = INV_INTERFACE_START_Y +  35; // VESTPOS
-	gSMInvPocketXY[2].sX = 344;
-	gSMInvPocketXY[2].sY = INV_INTERFACE_START_Y +  95; // LEGPOS,
-	gSMInvPocketXY[3].sX = 226;
-	gSMInvPocketXY[3].sY = INV_INTERFACE_START_Y +   6, // HEAD1POS
-	gSMInvPocketXY[4].sX = 226;
-	gSMInvPocketXY[4].sY = INV_INTERFACE_START_Y +  30, // HEAD2POS
-	gSMInvPocketXY[5].sX = 226;
-	gSMInvPocketXY[5].sY = INV_INTERFACE_START_Y +  84, // HANDPOS,
-	gSMInvPocketXY[6].sX= 226;
-	gSMInvPocketXY[6].sY = INV_INTERFACE_START_Y + 108, // SECONDHANDPOS
-	gSMInvPocketXY[7].sX = 468;
-	gSMInvPocketXY[7].sY = INV_INTERFACE_START_Y +   5, // BIGPOCK1
-	gSMInvPocketXY[8].sX = 468;
-	gSMInvPocketXY[8].sY = INV_INTERFACE_START_Y +  29, // BIGPOCK2
-	gSMInvPocketXY[9].sX = 468;
-	gSMInvPocketXY[9].sY = INV_INTERFACE_START_Y +  53, // BIGPOCK3
-	gSMInvPocketXY[10].sX = 468;
-	gSMInvPocketXY[10].sY = INV_INTERFACE_START_Y +  77, // BIGPOCK4
-	gSMInvPocketXY[11].sX = 396;
-	gSMInvPocketXY[11].sY = INV_INTERFACE_START_Y +   5, // SMALLPOCK1
-	gSMInvPocketXY[12].sX = 396;
-	gSMInvPocketXY[12].sY = INV_INTERFACE_START_Y +  29, // SMALLPOCK2
-	gSMInvPocketXY[13].sX = 396;
-	gSMInvPocketXY[13].sY = INV_INTERFACE_START_Y +  53, // SMALLPOCK3
-	gSMInvPocketXY[14].sX = 396;
-	gSMInvPocketXY[14].sY = INV_INTERFACE_START_Y +  77, // SMALLPOCK4
-	gSMInvPocketXY[15].sX = 432;
-	gSMInvPocketXY[15].sY = INV_INTERFACE_START_Y +   5, // SMALLPOCK5
-	gSMInvPocketXY[16].sX = 432;
-	gSMInvPocketXY[16].sY = INV_INTERFACE_START_Y +  29, // SMALLPOCK6
-	gSMInvPocketXY[17].sX = 432;
-	gSMInvPocketXY[17].sY = INV_INTERFACE_START_Y +  53, // SMALLPOCK7
-	gSMInvPocketXY[18].sX = 432;
-	gSMInvPocketXY[18].sY = INV_INTERFACE_START_Y +  77;  // SMALLPOCK8
-
 	guiSMPanel    = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
 	guiSMObjects  = AddVideoObjectFromFile(INTERFACEDIR "/inventory_gold_front.sti");
 	guiSMObjects2 = AddVideoObjectFromFile(INTERFACEDIR "/inv_frn.sti");
@@ -914,7 +852,7 @@ void InitializeSMPanel(void)
 
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gSMPanelRegion, 0, dy, g_screen_width, g_screen_height, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gSMPanelRegion, 0, dy, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	INT32 x;
 	INT32 y;
@@ -943,7 +881,7 @@ void InitializeSMPanel(void)
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, 62, dy + 2, 85, dy + 51, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback);
 
-	InitInvSlotInterface(gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
+	InitInvSlotInterface(g_ui.m_invSlotPosition, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
 
 	// this is important! It will disable buttons like SM_MAP_SCREEN_BUTTON when they're supposed to be disabled - the previous
@@ -1312,7 +1250,7 @@ no_plate:
 
 			SetFontDestBuffer(FRAME_BUFFER);
 
-			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, g_screen_width - INTERFACE_START_X, g_screen_height - INV_INTERFACE_START_Y);
+			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
 		}
 
 		// Render name
@@ -1353,7 +1291,7 @@ no_plate:
 		ClipRect.iLeft	 = 87;
 		ClipRect.iRight  = 536;
 		ClipRect.iTop		 = INV_INTERFACE_START_Y;
-		ClipRect.iBottom = g_screen_height;
+		ClipRect.iBottom = SCREEN_HEIGHT;
 		SGPVSurface::Lock l(FRAME_BUFFER);
 		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 	}
@@ -1833,7 +1771,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if ( !InItemStackPopup( )  )
 			{
 				//InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, SM_ITEMDESC_WIDTH, SM_ITEMDESC_HEIGHT );
-				InitItemStackPopup(gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, g_screen_height - INV_INTERFACE_START_Y);
+				InitItemStackPopup(gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
 			}
 		}
 		else
@@ -2257,7 +2195,7 @@ void InitializeTEAMPanel(void)
 
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y, g_screen_width, g_screen_height, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	INT32       dx = 0;
 	INT32 const dy = INTERFACE_START_Y;
@@ -2424,7 +2362,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 			dx += TM_INV_HAND_SEP;
 		}
 
-		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, g_screen_width - INTERFACE_START_X, g_screen_height - INTERFACE_START_Y);
+		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INTERFACE_START_Y);
 
 		RenderTownIDString();
 	}
@@ -3148,7 +3086,7 @@ void RenderTownIDString(void)
 	SetFontAttributes(COMPFONT, 183);
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
 	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
-	FindFontCenterCoordinates(548, g_screen_height - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
+	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }
 
@@ -3246,8 +3184,8 @@ void BeginKeyPanelFromKeyShortcut(void)
 
 
 	sStartYPosition = INV_INTERFACE_START_Y;
-	sWidth  = g_screen_width;
-	sHeight = g_screen_height - INV_INTERFACE_START_Y;
+	sWidth  = SCREEN_WIDTH;
+	sHeight = SCREEN_HEIGHT - INV_INTERFACE_START_Y;
 	pSoldier = gpSMCurrentMerc;
 
 	//if we are in the shop keeper interface
@@ -3280,8 +3218,8 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 
 		sStartYPosition = INV_INTERFACE_START_Y;
-		sWidth   = g_screen_width;
-		sHeight  = g_screen_height - INV_INTERFACE_START_Y;
+		sWidth   = SCREEN_WIDTH;
+		sHeight  = SCREEN_HEIGHT - INV_INTERFACE_START_Y;
 		pSoldier = gpSMCurrentMerc;
 	}
 

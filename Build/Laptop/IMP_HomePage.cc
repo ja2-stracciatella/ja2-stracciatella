@@ -21,6 +21,7 @@
 #include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
+#include "UILayout.h"
 
 
 const UINT32 GlowColorsList[] = {
@@ -211,7 +212,7 @@ static void DisplayActivationStringCursor(void)
 	}
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		// draw line in current state
 		LineDraw(TRUE, uiCursorPosition, CURSOR_Y, uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor(GlowColorsList[iCurrentState]), l.Buffer<UINT16>());
 	}

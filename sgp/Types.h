@@ -94,12 +94,31 @@ struct SGPBox
 	INT16 h;
 };
 
+struct SGPBoxEx : public SGPBox
+{
+    SGPBoxEx(INT16 _x, INT16 _y, INT16 _w, INT16 _h)
+    {
+        x = _x;
+        y = _y;
+        w = _w;
+        h = _h;
+    }
+};
+
 struct SGPRect
 {
   INT32 iLeft;
   INT32 iTop;
   INT32 iRight;
   INT32 iBottom;
+
+  void set(INT32 left, INT32 top, INT32 right, INT32 bottom)
+  {
+    iLeft       = left;
+    iTop        = top;
+    iRight      = right;
+    iBottom     = bottom;
+  }
 };
 
 struct SGPPoint

@@ -29,6 +29,7 @@
 #include "Button_System.h"
 #include "ScreenIDs.h"
 #include "FileMan.h"
+#include "UILayout.h"
 
 
 //#define DEBUG_GAME_CLOCK
@@ -57,7 +58,7 @@ static MOUSE_REGION gClockScreenMaskMouseRegion;
 #define SECONDS_PER_COMPRESSION 1 // 1/2 minute passes every 1 second of real time
 
 #define CLOCK_X      554
-#define CLOCK_Y      fInMapMode ? (INTERFACE_HEIGHT - 23) : (g_screen_height - 23)
+#define CLOCK_Y      (g_ui.get_CLOCK_Y())
 #define CLOCK_HEIGHT  13
 #define CLOCK_WIDTH   66
 #define CLOCK_FONT   COMPFONT
@@ -928,7 +929,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 	else if (gfPauseDueToPlayerGamePause && !fCreated)
 	{
 		// create a mouse region for pausing of game clock
-		MSYS_DefineRegion(&gClockScreenMaskMouseRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, 0, MSYS_NO_CALLBACK, ScreenMaskForGamePauseBtnCallBack);
+		MSYS_DefineRegion(&gClockScreenMaskMouseRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, 0, MSYS_NO_CALLBACK, ScreenMaskForGamePauseBtnCallBack);
 		fCreated = TRUE;
 
 		//re create region on top of this
@@ -960,7 +961,7 @@ void RenderPausedGameBox( void )
 {
 	if (gfPauseDueToPlayerGamePause && gfGamePaused && g_paused_popup_box)
 	{
-		const INT32 x = (g_screen_width - usPausedActualWidth)  / 2;
+		const INT32 x = (SCREEN_WIDTH - usPausedActualWidth)  / 2;
 		const INT32 y = 200 - usPausedActualHeight / 2;
 		RenderMercPopUpBox(g_paused_popup_box, x, y, FRAME_BUFFER);
 		InvalidateRegion(x, y, x + usPausedActualWidth, y + usPausedActualHeight);

@@ -979,10 +979,6 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 	WAYPOINT *wp;
 
 	Assert( pGroup );
-	if( pGroup->ubGroupID == 0)
-	{
-		return;
-	}
 
 	//TEMP:  Ignore resting...
 

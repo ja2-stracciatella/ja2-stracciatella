@@ -162,6 +162,7 @@ endif
 SRCS :=
 SRCS += Build/AniViewScreen.cc
 SRCS += Build/Credits.cc
+SRCS += Build/UILayout.cc
 
 ifdef JA2EDITOR
 SRCS += Build/Editor/Cursor_Modes.cc

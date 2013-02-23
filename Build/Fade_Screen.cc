@@ -11,6 +11,7 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 
 static ScreenID guiExitScreen;
@@ -238,7 +239,7 @@ static void FadeFrameBufferRealFade(void)
 {
 	if ( gsFadeRealCount != gsFadeCount )
 	{
-		FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, g_screen_width, g_screen_height);
+		FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		gsFadeRealCount = gsFadeCount;
 	}
@@ -255,13 +256,13 @@ static void FadeInFrameBufferRealFade(void)
 
 		for ( cnt = 0; cnt < ( gsFadeLimit - gsFadeCount ); cnt++ )
 		{
-			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, g_screen_width, g_screen_height);
+			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 
 		RefreshScreen();
 
 		// Copy save buffer back
-		RestoreExternBackgroundRect(0, 0, g_screen_width, g_screen_height);
+		RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		gsFadeRealCount = gsFadeCount;
 	}

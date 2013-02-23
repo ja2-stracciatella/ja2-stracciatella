@@ -31,6 +31,7 @@
 #include "VSurface.h"
 #include "Button_System.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 extern INT32 iCurrentMapSectorZ;
@@ -118,15 +119,7 @@ void MoveRadarScreen( )
 
 	// Add new one
 
-	// Move based on inventory panel
-	if ( gsCurInterfacePanel == SM_PANEL )
-	{
-		gsRadarY = RADAR_WINDOW_TM_Y;
-	}
-	else
-	{
-		gsRadarY = RADAR_WINDOW_TM_Y;
-	}
+  gsRadarY = RADAR_WINDOW_TM_Y;
 
 	// Add region for radar
 	MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, (UINT16)(gsRadarY),

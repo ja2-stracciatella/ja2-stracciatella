@@ -13,6 +13,7 @@
 #include "Render_Dirty.h"
 #include "Video.h"
 #include "MemMan.h"
+#include "UILayout.h"
 
 
 #define		TEXT_POPUP_GAP_BN_LINES						10
@@ -118,7 +119,7 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 
 MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight, MercPopupBoxFlags const flags)
 {
-	if (usWidth >= g_screen_width)
+	if (usWidth >= SCREEN_WIDTH)
 	{
 		throw std::logic_error("Tried to create too wide merc popup box");
 	}

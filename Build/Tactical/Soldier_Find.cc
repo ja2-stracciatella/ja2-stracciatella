@@ -35,6 +35,7 @@
 #include "Vehicles.h"
 #include "GameSettings.h"
 #include "UI_Cursors.h"
+#include "UILayout.h"
 
 
 // This value is used to keep a small static array of uBID's which are stacked

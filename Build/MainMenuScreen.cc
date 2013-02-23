@@ -25,6 +25,7 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WordWrap.h"
+#include "UILayout.h"
 
 #ifdef JA2DEMOADS
 #	include "Fade_Screen.h"
@@ -91,7 +92,7 @@ ScreenID MainMenuScreenHandle(void)
 		// Fade the splash screen.
 		if (guiSplashFrameFade > 2)
 		{
-			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, g_screen_width, g_screen_height);
+			FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
 		else if (guiSplashFrameFade > 1)
 		{
@@ -349,7 +350,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 		{
 			BUTTON_PICS* const img = iMenuImages[cnt];
 			const UINT16       w   = GetDimensionsOfButtonPic(img)->w;
-			const INT16        x   = (INTERFACE_WIDTH - w) / 2;
+			const INT16        x   = (SCREEN_WIDTH - w) / 2;
 			const INT16        y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
 			GUIButtonRef const b = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
 			iMenuButtons[cnt] = b;
@@ -378,7 +379,7 @@ static void RenderMainMenu(void)
 	BltVideoObject(guiSAVEBUFFER, guiMainMenuBackGroundImage, 0,   0,  0);
 	BltVideoObject(guiSAVEBUFFER, guiJa2LogoImage,            0, 188, 15);
 
-	RestoreExternBackgroundRect(0, 0, g_screen_width, g_screen_height);
+	RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 #if defined TESTFOREIGNFONTS
 	UINT16 y = 105;
@@ -404,7 +405,7 @@ static void RenderMainMenu(void)
 	TEST_FONT(FONT14HUMANIST);
 #	undef TEST_FONT
 #else
-	DrawTextToScreen(gzCopyrightText, 0, INTERFACE_HEIGHT - 15, INTERFACE_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 #endif
 }
 

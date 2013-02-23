@@ -11,6 +11,7 @@
 #include "Overhead.h"
 #include "Random.h"
 #include "PathAI.h"
+#include "UILayout.h"
 
 
 UINT32 guiForceRefreshMousePositionCalculation = 0;

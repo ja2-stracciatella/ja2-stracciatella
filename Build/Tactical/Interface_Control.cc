@@ -42,6 +42,7 @@
 #include "Line.h"
 #include "Map_Screen_Interface.h"
 #include "Civ_Quotes.h"
+#include "UILayout.h"
 
 
 static SGPRect gOldClippingRect;
@@ -524,17 +525,17 @@ static void StartViewportOverlays(void)
 	// Set bottom clipping value for blitter clipping rect
 	ClippingRect.iLeft   = INTERFACE_START_X;
 	ClippingRect.iTop    = gsVIEWPORT_WINDOW_START_Y;
-	ClippingRect.iRight  = g_screen_width;
+	ClippingRect.iRight  = SCREEN_WIDTH;
 	ClippingRect.iBottom = gsVIEWPORT_WINDOW_END_Y;
 
 	// Set values for dirty rect clipping rect
 	gDirtyClipRect.iLeft   = INTERFACE_START_X;
 	gDirtyClipRect.iTop    = gsVIEWPORT_WINDOW_START_Y;
-	gDirtyClipRect.iRight  = g_screen_width;
+	gDirtyClipRect.iRight  = SCREEN_WIDTH;
 	gDirtyClipRect.iBottom = gsVIEWPORT_WINDOW_END_Y;
 
 	SaveFontSettings( );
-	SetFontDestBuffer(FRAME_BUFFER, 0, gsVIEWPORT_WINDOW_START_Y, g_screen_width, gsVIEWPORT_WINDOW_END_Y);
+	SetFontDestBuffer(FRAME_BUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
 }
 
 

@@ -53,6 +53,8 @@
 #include "Video.h"
 #include "Items.h"
 
+#include "UILayout.h"
+
 
 #define ARROWS_X_OFFSET			10
 #define	ARROWS_HEIGHT				20
@@ -67,9 +69,6 @@
 BOOLEAN	gfInMovementMenu = FALSE;
 static INT32 giMenuAnchorX;
 static INT32 giMenuAnchorY;
-
-
-static const SGPBox g_progress_bar_box = { 5, 2, INTERFACE_WIDTH-10, 12 };
 
 static BOOLEAN gfProgBarActive   = FALSE;
 static UINT8   gubProgNumEnemies = 0;
@@ -228,7 +227,7 @@ void InitializeTacticalInterface()
 	guiRADIO        = AddVideoObjectFromFile(INTERFACEDIR "/radio.sti");
 	guiRADIO2       = AddVideoObjectFromFile(INTERFACEDIR "/radio2.sti");
 
-	gTopMessage.uiSurface = AddVideoSurface(g_screen_width, 20, PIXEL_DEPTH);
+	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
 
 	InitRadarScreen( );
 
@@ -391,7 +390,7 @@ void PopupMovementMenu(UI_EVENT* const ev)
 	EraseInterfaceMenus(TRUE);
 
 	// Create mouse region over all area to facilitate clicking to end
-	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MovementMenuBackregionCallback);
+	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MovementMenuBackregionCallback);
 
 	giMenuAnchorX = gusMouseXPos - 18;
 	giMenuAnchorY = gusMouseYPos - 18;
@@ -401,9 +400,9 @@ void PopupMovementMenu(UI_EVENT* const ev)
 	if (giMenuAnchorY < 0) giMenuAnchorY = 0;
 
 	// Check for boundaries
-	if (giMenuAnchorX > g_screen_width - BUTTON_PANEL_WIDTH)
+	if (giMenuAnchorX > SCREEN_WIDTH - BUTTON_PANEL_WIDTH)
 	{
-		giMenuAnchorX = g_screen_width - BUTTON_PANEL_WIDTH;
+		giMenuAnchorX = SCREEN_WIDTH - BUTTON_PANEL_WIDTH;
 	}
 	if (giMenuAnchorY > gsVIEWPORT_WINDOW_END_Y - BUTTON_PANEL_HEIGHT)
 	{
@@ -1126,7 +1125,7 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	// Draw new size
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, gsVIEWPORT_WINDOW_START_Y, g_screen_width, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
 
 	// get amt bandaged
 	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
@@ -1236,7 +1235,7 @@ void ClearInterface( )
 	gUserTurnRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 	// Remove special thing for south arrow...
-	if (gsGlobalCursorYOffset == g_screen_height - gsVIEWPORT_WINDOW_END_Y)
+	if (gsGlobalCursorYOffset == SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y)
 	{
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 	}
@@ -1316,9 +1315,9 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 
 
 	// OK, CHECK FOR BOUNDARIES!
-	if (gOpenDoorMenu.sX + BUTTON_PANEL_WIDTH > g_screen_width)
+	if (gOpenDoorMenu.sX + BUTTON_PANEL_WIDTH > SCREEN_WIDTH)
 	{
-		gOpenDoorMenu.sX = g_screen_width - BUTTON_PANEL_WIDTH;
+		gOpenDoorMenu.sX = SCREEN_WIDTH - BUTTON_PANEL_WIDTH;
 	}
 	if ( ( gOpenDoorMenu.sY + BUTTON_PANEL_HEIGHT ) > gsVIEWPORT_WINDOW_END_Y )
 	{
@@ -1380,7 +1379,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	dy += 8;
 
 	// Create mouse region over all area to facilitate clicking to end
-	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, DoorMenuBackregionCallback);
+	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, DoorMenuBackregionCallback);
 
 	const BOOLEAN d0 = fClosingDoor || AM_AN_EPC(gOpenDoorMenu.pSoldier);
 	BOOLEAN d;
@@ -1615,7 +1614,7 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 
 	if (g_ui_message_overlay == NULL)
 	{
-		INT16 const x = (g_screen_width - gusUIMessageWidth) / 2;
+		INT16 const x = (SCREEN_WIDTH - gusUIMessageWidth) / 2;
 		g_ui_message_overlay = RegisterVideoOverlay(RenderUIMessage, x, 150, gusUIMessageWidth, gusUIMessageHeight);
 	}
 
@@ -1741,7 +1740,7 @@ static void CreateTopMessage(void)
 	}
 	SetFontAttributes(TINYFONT1, foreground, shadow);
 
-	const SGPBox* const bar = &g_progress_bar_box;
+	const SGPBox* const bar = &g_ui.m_progress_bar_box;
 	{
 		AutoSGPVObject bar_vo(AddVideoObjectFromFile(bar_file));
 
@@ -1913,7 +1912,7 @@ void HandleTopMessages(void)
 		SGPVSurface* const src = gTopMessage.uiSurface;
 		BltVideoSurface(FRAME_BUFFER,  src, 0, 0, 0);
 		BltVideoSurface(guiSAVEBUFFER, src, 0, 0, 0);
-		InvalidateRegion(0, 0, g_screen_width, 20);
+		InvalidateRegion(0, 0, SCREEN_WIDTH, 20);
 	}
 }
 

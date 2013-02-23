@@ -34,6 +34,7 @@
 #include "VSurface.h"
 #include "MemMan.h"
 #include "Button_System.h"
+#include "UILayout.h"
 
 
 // max number of merc faces per row in autobandage box
@@ -220,7 +221,7 @@ BOOLEAN HandleAutoBandage( )
 		if ( gfBeginningAutoBandage )
 		{
 			//Shadow area
-			FRAME_BUFFER->ShadowRect(0, 0, g_screen_width, g_screen_height);
+			FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			InvalidateScreen( );
 			RefreshScreen();
 		}
@@ -316,7 +317,7 @@ void AutoBandage( BOOLEAN fStart )
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Begin auto bandage." );
 
 		// build a mask
-		MSYS_DefineRegion(&gAutoBandageRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+		MSYS_DefineRegion(&gAutoBandageRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 		gfBeginningAutoBandage = TRUE;
 
@@ -562,7 +563,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	iTotalPixelsWide = TACT_UPDATE_MERC_FACE_X_WIDTH * iNumberDoctorsWide;
 
 	// now get the x and y position for the box
-	sXPosition = (g_screen_width          - iTotalPixelsWide) / 2;
+	sXPosition = (SCREEN_WIDTH          - iTotalPixelsWide) / 2;
 	sYPosition = (INV_INTERFACE_START_Y - iTotalPixelsHigh) / 2;
 
 	const SGPVObject* const hBackGroundHandle = guiUpdatePanelTactical;

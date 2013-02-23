@@ -31,6 +31,7 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 #include "FileMan.h"
+#include "UILayout.h"
 
 
 struct BobbyROrderLocationStruct
@@ -1595,7 +1596,7 @@ static void DrawGoldRectangle(INT8 bCityNum)
 	//display the line
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   // draw the gold highlite line on the top and left
 	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth, usPosY, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);

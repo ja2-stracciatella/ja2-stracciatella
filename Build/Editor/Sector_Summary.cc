@@ -261,7 +261,7 @@ void CreateSummaryWindow()
 	gfDeniedSummaryCreation = FALSE;
 	gfRenderSummary = TRUE;
 	//Create all of the buttons here
-	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, g_screen_width, 360, MSYS_PRIORITY_HIGH - 1);
+	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH - 1);
 
 	iSummaryButton[SUMMARY_OKAY] = CreateTextButton(L"Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, 585, 325, 50, 30, MSYS_PRIORITY_HIGH, SummaryOkayCallback);
 
@@ -899,7 +899,7 @@ void RenderSummaryWindow()
 		}
 
 		iSummaryButton[SUMMARY_BACKGROUND]->Draw();
-		InvalidateRegion(0, 0, g_screen_width, 360);
+		InvalidateRegion(0, 0, SCREEN_WIDTH, 360);
 
 		SetFontAttributes(BLOCKFONT2, FONT_LTKHAKI, FONT_DKKHAKI);
 		if( !gfItemDetailsMode )
@@ -1215,7 +1215,7 @@ void RenderSummaryWindow()
 		SetFontForeground( FONT_YELLOW );
 		MPrint(354, 18, L"Summary");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
-			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT16>());
 		}
 		FRAME_BUFFER->ShadowRectUsingLowPercentTable(351, 16, 404, 27);
@@ -1232,7 +1232,7 @@ void RenderSummaryWindow()
 		}
 		MPrint(354, 33, L"Items");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
-			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT16>());
 		}
 		if( gpCurrentSectorSummary )
@@ -1275,7 +1275,7 @@ void RenderSummaryWindow()
 			UINT16 pos;
 			SGPVSurface::Lock l(FRAME_BUFFER);
 			UINT16* const pDestBuf = l.Buffer<UINT16>();
-			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			for( i = 1; i <= 15; i++ )
 			{
 				//draw vertical lines
@@ -1359,7 +1359,7 @@ void RenderSummaryWindow()
 	{
 		SGPVSurface::Lock l(FRAME_BUFFER);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
-		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		//Render the grid for the map currently residing in memory (blue).
 		if( gfWorldLoaded && !gfTempFile && gsSectorX )
 		{
@@ -1512,7 +1512,7 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 		}
 		else
 		{
-			MPrint((g_screen_width - StringPixLength(str, FONT10ARIAL)) / 2, 190, str);
+			MPrint((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 190, str);
 			InvalidateRegion( 200, 190, 400, 200 );
 			CreateProgressBar(0, 250, 200, 140, 10);
 		}
@@ -2356,17 +2356,17 @@ void ApologizeOverrideAndForceUpdateEverything()
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
 	gfMajorUpdate = TRUE;
-	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH - 1);
+	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1);
 	//Draw it
 	iSummaryButton[SUMMARY_BACKGROUND]->Draw();
 	InvalidateScreen();
 	SetFontAttributes(HUGEFONT, FONT_RED);
 	const wchar_t* UpdateInfo = L"MAJOR VERSION UPDATE";
-	MPrint((g_screen_width - StringPixLength(UpdateInfo, HUGEFONT)) / 2, 105, UpdateInfo);
+	MPrint((SCREEN_WIDTH - StringPixLength(UpdateInfo, HUGEFONT)) / 2, 105, UpdateInfo);
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_YELLOW );
 	swprintf(str, lengthof(str), L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated);
-	MPrint((g_screen_width - StringPixLength(str, FONT10ARIAL)) / 2, 130, str);
+	MPrint((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 130, str);
 
 	CreateProgressBar(2, 120, 170, 400, 32);
 	DefineProgressBarPanel( 2, 65, 79, 94, 100, 150, 540, 222 );

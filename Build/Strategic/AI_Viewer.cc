@@ -307,7 +307,7 @@ static BOOLEAN CreateAIViewer(void)
 	iViewerButton[COMPRESSION0]->uiFlags |= BUTTON_CLICKED_ON;
 	if( !GamePaused() )
 		SetGameMinutesPerSecond( 0 );
-	ClearViewerRegion(0, 0, g_screen_width, g_screen_height);
+	ClearViewerRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return TRUE;
 }
@@ -344,13 +344,13 @@ static void ClearViewerRegion(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBott
 		ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, 0, sRight, 1, gusLtBlue );
 		sTop++;
 	}
-	if (sBottom == g_screen_height)
+	if (sBottom == SCREEN_HEIGHT)
 	{
-		ColorFillVideoSurfaceArea(ButtonDestBuffer, sLeft, g_screen_height - 1, sRight, g_screen_height, gusDkBlue);
+		ColorFillVideoSurfaceArea(ButtonDestBuffer, sLeft, SCREEN_HEIGHT - 1, sRight, SCREEN_HEIGHT, gusDkBlue);
 	}
-	if (sRight == g_screen_width)
+	if (sRight == SCREEN_WIDTH)
 	{
-		ColorFillVideoSurfaceArea(ButtonDestBuffer, g_screen_width - 1, sTop, g_screen_width, sBottom, gusDkBlue);
+		ColorFillVideoSurfaceArea(ButtonDestBuffer, SCREEN_WIDTH - 1, sTop, SCREEN_WIDTH, sBottom, gusDkBlue);
 	}
 }
 
@@ -631,7 +631,7 @@ static void RenderInfoInSector(void)
 				ubNumGroups++;
 			}
 		}
-		ClearViewerRegion(280, 375, g_screen_width, g_screen_height);
+		ClearViewerRegion(280, 375, SCREEN_WIDTH, SCREEN_HEIGHT);
 		mprintf( 280, yp, L"SECTOR INFO:  %c%d  (ID: %d)", ubSectorY + 'A' - 1, ubSectorX, SECTOR( ubSectorX, ubSectorY ) );
 		yp += 10;
 		SetFontForeground( FONT_LTGREEN );
@@ -670,7 +670,7 @@ static void RenderInfoInSector(void)
 	else
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		ClearViewerRegion(280, 375, g_screen_width, g_screen_height);
+		ClearViewerRegion(280, 375, SCREEN_WIDTH, SCREEN_HEIGHT);
 		pSector = FindUnderGroundSector( ubSectorX, ubSectorY, gbViewLevel );
 		if( !pSector )
 		{
@@ -785,7 +785,7 @@ static void RenderViewer(void)
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//Render the grid for the sector if the mouse is over it (yellow).
 	if( gsHiSectorX > 0 )
@@ -1514,7 +1514,7 @@ static void PrintEnemyPopTable(void)
 	usY = 200;
 
 	// titles and headings mean 2 extra rows
-	ClearViewerRegion(usX, usY, g_screen_width, usY + POP_TABLE_Y_GAP * (POP_TABLE_ENEMY_TYPES + 2) + 11);
+	ClearViewerRegion(usX, usY, SCREEN_WIDTH, usY + POP_TABLE_Y_GAP * (POP_TABLE_ENEMY_TYPES + 2) + 11);
 
 	// print table title
 	SetFontForeground( FONT_RED );
@@ -1652,7 +1652,7 @@ static void PrintEnemiesKilledTable(void)
 	usY = 310;
 
 	// titles and headings mean 2 extra rows
-	ClearViewerRegion(usX, usY, g_screen_width, usY + KILLED_TABLE_Y_GAP * (KILLED_TABLE_ROWS + 2) + 11);
+	ClearViewerRegion(usX, usY, SCREEN_WIDTH, usY + KILLED_TABLE_Y_GAP * (KILLED_TABLE_ROWS + 2) + 11);
 
 	// print table title
 	SetFontForeground( FONT_RED );

@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include "MemMan.h"
 #include "Debug.h"
+#include "UILayout.h"
 
 
 #define BACKGROUND_BUFFERS 500
@@ -52,7 +53,7 @@ static VIDEO_OVERLAY* gVideoOverlays;
 		if (iter##__next = iter->next, iter->fDisabled) continue; else
 
 
-SGPRect gDirtyClipRect = { 0, 0, g_screen_width, g_screen_height };
+SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 
 static BOOLEAN gfViewportDirty = FALSE;
@@ -61,16 +62,16 @@ static BOOLEAN gfViewportDirty = FALSE;
 void AddBaseDirtyRect(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
 	if (iLeft < 0)            iLeft = 0;
-	if (iLeft > g_screen_width) iLeft = g_screen_width;
+	if (iLeft > SCREEN_WIDTH) iLeft = SCREEN_WIDTH;
 
 	if (iTop < 0)             iTop = 0;
-	if (iTop > g_screen_height) iTop = g_screen_height;
+	if (iTop > SCREEN_HEIGHT) iTop = SCREEN_HEIGHT;
 
 	if (iRight < 0)            iRight = 0;
-	if (iRight > g_screen_width) iRight = g_screen_width;
+	if (iRight > SCREEN_WIDTH) iRight = SCREEN_WIDTH;
 
 	if (iBottom < 0)             iBottom = 0;
-	if (iBottom > g_screen_height) iBottom = g_screen_height;
+	if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
 
 	if (iLeft == iRight || iTop == iBottom) return;
 
@@ -371,13 +372,13 @@ void ShutdownBackgroundRects(void)
 void UpdateSaveBuffer(void)
 {
 	// Update saved buffer - do for the viewport size ony!
-	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, g_screen_width, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
+	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
 }
 
 
 void RestoreExternBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight)
 {
-	Assert(0 <= sLeft && sLeft + sWidth <= g_screen_width && 0 <= sTop && sTop + sHeight <= g_screen_height);
+	Assert(0 <= sLeft && sLeft + sWidth <= SCREEN_WIDTH && 0 <= sTop && sTop + sHeight <= SCREEN_HEIGHT);
 
 	BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, sLeft, sTop, sWidth, sHeight);
 
@@ -627,7 +628,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 {
 	const INT32 ClipX1 = 0;
 	const INT32 ClipY1 = gsVIEWPORT_WINDOW_START_Y;
-	const INT32 ClipX2 = g_screen_width;
+	const INT32 ClipX2 = SCREEN_WIDTH;
 	const INT32 ClipY2 = gsVIEWPORT_WINDOW_END_Y - 1;
 
 	SGPVSurface::Lock l(BACKBUFFER);

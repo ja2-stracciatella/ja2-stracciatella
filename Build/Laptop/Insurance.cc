@@ -17,6 +17,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+#include "UILayout.h"
 
 
 #define INSURANCE_TEXT_SINGLE_FILE BINARYDATADIR "/insurancesingle.edt"
@@ -287,7 +288,7 @@ void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 End
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 

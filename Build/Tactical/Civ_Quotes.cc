@@ -28,6 +28,7 @@
 #include "Strategic_Mines.h"
 #include "Random.h"
 #include "FileMan.h"
+#include "UILayout.h"
 
 
 #define CIV_QUOTE_TEXT_SIZE 160
@@ -348,9 +349,9 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 		}
 
 		// CHECK FOR LEFT/RIGHT
-		if (sX + gusCivQuoteBoxWidth > g_screen_width)
+		if (sX + gusCivQuoteBoxWidth > SCREEN_WIDTH)
 		{
-			sX = g_screen_width - gusCivQuoteBoxWidth;
+			sX = SCREEN_WIDTH - gusCivQuoteBoxWidth;
 		}
 
 		// Now check for top

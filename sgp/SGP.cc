@@ -32,12 +32,13 @@
 #include <SDL.h>
 #include "GameRes.h"
 #include "Logger.h"
-#include <sstream>
-#include "Local.h"
+#include "UILayout.h"
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
+
+#	include "Local.h"
 #endif
 
 #include "Multi_Language_Graphic_Utils.h"
@@ -411,27 +412,11 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		}
 		else if (strcmp(arg, "-width") == 0)
 		{
-			std::stringstream ssinput;
-			char const* const argArgument = *++argv;
-			ssinput.str(argArgument);
-			unsigned int width;
-			ssinput >> width;
-			if( width > INTERFACE_WIDTH)
-				g_screen_width = width;
-			else
-				g_screen_width = INTERFACE_WIDTH;
+      g_ui.setScreenWidth(atoi(*++argv));
 		}
 		else if (strcmp(arg, "-height") == 0)
 		{
-			std::stringstream ssinput;
-			char const* const argArgument = *++argv;
-			ssinput.str(argArgument);
-			unsigned int height;
-			ssinput >> height;
-			if( height > INTERFACE_HEIGHT)
-				g_screen_height = height;
-			else
-				g_screen_height = INTERFACE_HEIGHT;
+      g_ui.setScreenHeight(atoi(*++argv));
 		}
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)
@@ -488,6 +473,8 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 			"  -help        Display this information\n"
 			"  -nosound     Turn the sound and music off\n"
 			"  -window      Start the game in a window\n"
+			"  -width XXX   Set window width to XXX pixels\n"
+			"  -height XXX  Set window height to XXX pixels\n",
 			"  -resversion  Version of the game resources (data files)\n"
 			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
 			"                 Default value is ENGLISH\n"

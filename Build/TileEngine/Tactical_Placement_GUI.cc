@@ -42,6 +42,7 @@
 #include "Game_Clock.h"
 #include "MemMan.h"
 #include "JAScreens.h"
+#include "UILayout.h"
 
 
 struct MERCPLACEMENT
@@ -369,7 +370,7 @@ static void RenderTacticalPlacementGUI()
 	if (gfTacticalPlacementGUIDirty)
 	{
 		BltVideoObject(buf, giOverheadPanelImage, 0, 0, 320);
-		InvalidateRegion(0, 0, 320, g_screen_height);
+		InvalidateRegion(0, 0, 320, SCREEN_HEIGHT);
 		gfTacticalPlacementGUIDirty = FALSE;
 		MarkButtonsDirty();
 		for (INT32 i = 0; i != giPlacements; ++i)
@@ -397,7 +398,7 @@ static void RenderTacticalPlacementGUI()
 		mprintf(120, 335, L"%ls %ls -- %ls...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]);
 
 		// Shade out the part of the tactical map that isn't considered placable.
-		BlitBufferToBuffer(buf, guiSAVEBUFFER, 0, 320, g_screen_width, 160);
+		BlitBufferToBuffer(buf, guiSAVEBUFFER, 0, 320, SCREEN_WIDTH, 160);
 	}
 
 	if (gfValidLocationsChanged)
@@ -431,7 +432,7 @@ static void RenderTacticalPlacementGUI()
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 		Blt16BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_colour);
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, g_screen_width, g_screen_height);
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		RectangleDraw(TRUE, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_colour, pDestBuf);
 	}
 

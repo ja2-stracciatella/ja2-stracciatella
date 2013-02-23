@@ -7,9 +7,6 @@
 
 #define					MAX_UICOMPOSITES	4
 
-#define	INTERFACE_START_Y     (g_screen_height - 120)
-#define	INV_INTERFACE_START_Y (g_screen_height - 140)
-
 #define	INTERFACE_START_X					0
 
 // FLASH PORTRAIT CODES

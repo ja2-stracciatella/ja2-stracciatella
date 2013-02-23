@@ -65,6 +65,7 @@
 #include "Map_Information.h"
 #include "MemMan.h"
 #include "Debug.h"
+#include "UILayout.h"
 
 #ifdef JA2BETAVERSION
 #	include "Cheats.h"
@@ -563,7 +564,7 @@ ScreenID AutoResolveScreenHandle()
 	{
 		gpAR->fEnteringAutoResolve = FALSE;
 		//Take the framebuffer, shade it, and save it to the SAVEBUFFER.
-		FRAME_BUFFER->ShadowRect(0, 0, g_screen_width, g_screen_height);
+		FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 		KillPreBattleInterface();
 		CalculateAutoResolveInfo();
@@ -740,7 +741,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	}
 	gpAR->uiTimeSlice = gpAR->uiTimeSlice * gpAR->ubTimeModifierPercentage / 100;
 
-	iTop = (INTERFACE_HEIGHT - gpAR->rect.h) / 2;
+	iTop = (SCREEN_HEIGHT - gpAR->rect.h) / 2;
 	if( iTop > 120 )
 		iTop -= 40;
 
@@ -952,8 +953,8 @@ static void BuildInterfaceBuffer(void)
 	INT32						x,y;
 
 	//Setup the blitting clip regions, so we don't draw outside of the region (for excess panelling)
-	gpAR->rect.x = (INTERFACE_WIDTH  - gpAR->rect.w) / 2;
-	gpAR->rect.y = (INTERFACE_HEIGHT - gpAR->rect.h) / 2;
+	gpAR->rect.x = (SCREEN_WIDTH  - gpAR->rect.w) / 2;
+	gpAR->rect.y = (SCREEN_HEIGHT - gpAR->rect.h) / 2;
 	if (gpAR->rect.y > 120) gpAR->rect.y -= 40;
 
 	DestRect.iLeft			= 0;
@@ -1584,7 +1585,7 @@ static void CreateAutoResolveInterface(void)
 	AUTORESOLVE_STRUCT* const ar = gpAR;
 
 	// Setup new autoresolve blanket interface.
-	MSYS_DefineRegion(&ar->AutoResolveRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH - 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&ar->AutoResolveRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	ar->fRenderAutoResolve = TRUE;
 	ar->fExitAutoResolve   = FALSE;
 
@@ -1712,10 +1713,10 @@ static void CreateAutoResolveInterface(void)
 
 	/* If we are bumping up the interface, then also use that piece of info to
 	 * move the buttons up by the same amount. */
-	ar->bVerticalOffset = (INTERFACE_HEIGHT - ar->rect.h) / 2 > 120 ? -40 : 0;
+	ar->bVerticalOffset = (SCREEN_HEIGHT - ar->rect.h) / 2 > 120 ? -40 : 0;
 
 	const INT16 dx = ar->sCenterStartX;
-	const INT16 dy = ar->bVerticalOffset + INTERFACE_HEIGHT / 2;
+	const INT16 dy = ar->bVerticalOffset + SCREEN_HEIGHT / 2;
 
 	// Create the buttons -- subject to relocation
 	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, 0);
@@ -2479,7 +2480,7 @@ static void CalculateRowsAndColumns(void)
 	}
 
 	if( gpAR->ubMercCols + gpAR->ubEnemyCols == 9 )
-		gpAR->rect.w = g_screen_width;
+		gpAR->rect.w = SCREEN_WIDTH;
 	else
 		gpAR->rect.w = 146 + 55 * (MAX(MAX(gpAR->ubMercCols, gpAR->ubCivCols), 2) + MAX(gpAR->ubEnemyCols, 2));
 

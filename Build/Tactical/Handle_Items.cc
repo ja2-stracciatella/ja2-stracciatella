@@ -65,6 +65,7 @@
 #include "VSurface.h"
 #include "MemMan.h"
 #include "Debug.h"
+#include "UILayout.h"
 
 
 #define					NUM_ITEMS_LISTED			8
@@ -2067,7 +2068,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 
 	/* Put list to the right of the given coordinate, if there is space,
 	 * otherwise to the left */
-	INT16 const x = (sXPos + 15 + max_w <= g_screen_width ? sXPos + 15 : sXPos - max_w);
+	INT16 const x = (sXPos + 15 + max_w <= SCREEN_WIDTH ? sXPos + 15 : sXPos - max_w);
 
 	/* Try to center the list vertically relative to the given coordinate, but
 	 * clamp to the view area */

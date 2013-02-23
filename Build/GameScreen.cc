@@ -57,6 +57,7 @@
 #include "Debug.h"
 #include "Video.h"
 #include "JAScreens.h"
+#include "UILayout.h"
 
 #ifdef JA2TESTVERSION
 #	include "Scheduling.h"
@@ -109,7 +110,7 @@ static void BlitMFont(VIDEO_OVERLAY* const ovr)
 
 void MainGameScreenInit(void)
 {
-	gpZBuffer = InitZBuffer(g_screen_width, g_screen_height);
+	gpZBuffer = InitZBuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 	InitializeBackgroundRects();
 
 	//EnvSetTimeInHours(ENV_TIME_12);
@@ -757,7 +758,7 @@ void EnterModalTactical( INT8 bMode )
 		{
 			gfTacticalDisableRegionActive = TRUE;
 
-			MSYS_DefineRegion(&gTacticalDisableRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGH, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+			MSYS_DefineRegion(&gTacticalDisableRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		}
 	}
 

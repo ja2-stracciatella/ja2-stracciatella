@@ -67,6 +67,7 @@
 #include "Button_System.h"
 #include "ScreenIDs.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 
 // various reason an assignment can be aborted before completion
@@ -3852,7 +3853,7 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
 	// not created, create
 	if (!fCreated && (fShowAssignmentMenu || fShowContractMenu || fShowTownInfo))
 	{
-		MSYS_DefineRegion(&gAssignmentScreenMaskRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, AssignmentScreenMaskBtnCallback);
+		MSYS_DefineRegion(&gAssignmentScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, AssignmentScreenMaskBtnCallback);
 
 		// created
 		fCreated = TRUE;
@@ -5294,7 +5295,7 @@ static void CreateSquadBox(void)
 	DetermineBoxPositions();
 
 	SGPBox const& area  = GetBoxArea(box);
-	INT16  const  max_y = g_screen_height - area.h;
+	INT16  const  max_y = SCREEN_HEIGHT - area.h;
 	if (giBoxY > max_y)
 	{
 		SquadPosition.iY = max_y;
@@ -5318,7 +5319,7 @@ static void CreateEPCBox(void)
 	ResizeBoxToText(box);
 
 	SGPBox const& area  = GetBoxArea(box);
-	INT16  const  max_y = g_screen_height - area.h;
+	INT16  const  max_y = SCREEN_HEIGHT - area.h;
 	if (giBoxY > max_y)
 	{
 		AssignmentPosition.iY = max_y;
@@ -5639,7 +5640,7 @@ void SetTacticalPopUpAssignmentBoxXY()
 
 	// ATE: Check if we are past tactical viewport....
 	// Use estimate widths/heights
-	if (sX > g_screen_width - 100) sX = g_screen_width - 100;
+	if (sX > SCREEN_WIDTH - 100) sX = SCREEN_WIDTH - 100;
 	if (sY > 320 - 130)          sY = 190;
 
 	gsAssignmentBoxesX = sX;
@@ -5670,7 +5671,7 @@ static void AdjustBoxPos(SGPBox const& assignment_area, PopUpBox* const other_bo
 {
 	SGPBox const& other_area = GetBoxArea(other_box);
 
-	INT16 const max_x = g_screen_width - assignment_area.w - other_area.w;
+	INT16 const max_x = SCREEN_WIDTH - assignment_area.w - other_area.w;
 	if (gsAssignmentBoxesX > max_x)
 	{
 		gsAssignmentBoxesX = max_x;
@@ -5715,7 +5716,7 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 		SGPBox const& train_area = GetBoxArea(ghTrainingBox);
 		SGPBox const& attr_area  = GetBoxArea(ghAttributeBox);
 
-		INT16 const max_x = g_screen_width - assignment_area.w - train_area.w - attr_area.w;
+		INT16 const max_x = SCREEN_WIDTH - assignment_area.w - train_area.w - attr_area.w;
 		if (gsAssignmentBoxesX > max_x)
 		{
 			gsAssignmentBoxesX = max_x;
@@ -5742,7 +5743,7 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	else
 	{
 		// just the assignment box
-		INT16 const max_x = g_screen_width - assignment_area.w;
+		INT16 const max_x = SCREEN_WIDTH - assignment_area.w;
 		if (gsAssignmentBoxesX > max_x)
 		{
 			gsAssignmentBoxesX = max_x;

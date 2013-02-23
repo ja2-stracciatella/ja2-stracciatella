@@ -477,8 +477,8 @@ static void DrawBox(const PopUpBox* const box)
 	const UINT16 h = box->pos.h;
 
 	// make sure it will fit on screen!
-	Assert(x + w <= g_screen_width);
-	Assert(y + h <= g_screen_height);
+	Assert(x + w <= SCREEN_WIDTH);
+	Assert(y + h <= SCREEN_HEIGHT);
 
 	// subtract 4 because the 2 2-pixel corners are handled separately
 	const UINT32 uiNumTilesWide = (w - 4) / BORDER_WIDTH;

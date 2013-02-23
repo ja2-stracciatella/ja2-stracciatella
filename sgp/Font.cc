@@ -10,6 +10,7 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "GameRes.h"
+#include "UILayout.h"
 
 
 typedef UINT8 GlyphIdx;
@@ -18,7 +19,7 @@ typedef UINT8 GlyphIdx;
 // Destination printing parameters
 Font                FontDefault      = 0;
 static SGPVSurface* FontDestBuffer;
-static SGPRect      FontDestRegion   = { 0, 0, g_screen_width, g_screen_height };
+static SGPRect      FontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16       FontForeground16 = 0;
 static UINT16       FontBackground16 = 0;
 static UINT16       FontShadow16     = DEFAULT_SHADOW;
@@ -26,7 +27,7 @@ static UINT16       FontShadow16     = DEFAULT_SHADOW;
 // Temp, for saving printing parameters
 static Font         SaveFontDefault      = 0;
 static SGPVSurface* SaveFontDestBuffer   = NULL;
-static SGPRect      SaveFontDestRegion   = { 0, 0, g_screen_width, g_screen_height };
+static SGPRect      SaveFontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16       SaveFontForeground16 = 0;
 static UINT16       SaveFontShadow16     = 0;
 static UINT16       SaveFontBackground16 = 0;
@@ -332,6 +333,6 @@ void InitializeFontManager(void)
 
 	FontDestRegion.iLeft   = 0;
 	FontDestRegion.iTop    = 0;
-	FontDestRegion.iRight  = g_screen_width;
-	FontDestRegion.iBottom = g_screen_height;
+	FontDestRegion.iRight  = SCREEN_WIDTH;
+	FontDestRegion.iBottom = SCREEN_HEIGHT;
 }

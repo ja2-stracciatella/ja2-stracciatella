@@ -72,6 +72,7 @@
 #include "Map_Information.h"
 #include "Video.h"
 #include "Screens.h"
+#include "UILayout.h"
 
 
 #define MAX_ON_DUTY_SOLDIERS 6
@@ -649,7 +650,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_EAST_UICURSOR;
 			}
 
-			if (gusMouseXPos < g_screen_width - 5)
+			if (gusMouseXPos < SCREEN_WIDTH - 5)
 			{
 				gfUIShowExitEast = FALSE;
 			}
@@ -731,7 +732,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_SOUTH_UICURSOR;
 			}
 
-			if (gusMouseYPos < g_screen_height - 2)
+			if (gusMouseYPos < SCREEN_HEIGHT - 2)
 			{
 				gfUIShowExitSouth = FALSE;
 
@@ -751,9 +752,9 @@ static void SetUIMouseCursor(void)
 				// Adjust viewport to edge of screen!
 				// Define region for viewport
 				MSYS_RemoveRegion(&gViewportRegion);
-				MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, g_screen_height, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+				MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-				gsGlobalCursorYOffset = g_screen_height - gsVIEWPORT_WINDOW_END_Y;
+				gsGlobalCursorYOffset = SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y;
 				SetCurrentCursorFromDatabase(gUICursors[guiNewUICursor].usFreeCursorName);
 
 				gfViewPortAdjustedForSouth = TRUE;
@@ -3889,7 +3890,7 @@ static ScreenID UIHandleLUIBeginLock(UI_EVENT* pUIEvent)
 		RemoveTacticalCursor( );
 		//SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
-		MSYS_DefineRegion(&gDisableRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, CURSOR_WAIT, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+		MSYS_DefineRegion(&gDisableRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_WAIT, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 		//guiPendingOverrideEvent = LOCKUI_MODE;
 
@@ -4330,7 +4331,7 @@ static ScreenID UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
 		//guiNewUICursor = NO_UICURSOR;
 		//SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
-		MSYS_DefineRegion(&gUserTurnRegion, 0, 0, g_screen_width, g_screen_height, MSYS_PRIORITY_HIGHEST, CURSOR_WAIT, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+		MSYS_DefineRegion(&gUserTurnRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_WAIT, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 		//guiPendingOverrideEvent = LOCKOURTURN_UI_MODE;
 

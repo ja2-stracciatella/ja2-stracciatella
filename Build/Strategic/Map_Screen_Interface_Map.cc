@@ -46,6 +46,7 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Debug.h"
+#include "UILayout.h"
 
 
 // zoom x and y coords for map scrolling
@@ -416,9 +417,6 @@ static SGPPoint const pTownPoints[] =
 SGPRect MapScreenRect={	(MAP_VIEW_START_X+MAP_GRID_X - 2),	( MAP_VIEW_START_Y+MAP_GRID_Y - 1), MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 + MAP_GRID_X , MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-10+MAP_GRID_Y};
 
 static SGPRect gOldClipRect;
-
-// screen region
-static SGPRect FullScreenRect = { 0, 0, g_screen_width, g_screen_height };
 
 // temp helicopter path
 PathSt* pTempHelicopterPath = NULL;
@@ -1944,7 +1942,7 @@ static void TracePathRoute(PathSt* const pPath)
 
 		if (!fZoomFlag ||
 				(
-					MAP_VIEW_START_X < iX && iX < g_screen_width     - MAP_GRID_X * 2 &&
+					MAP_VIEW_START_X < iX && iX < SCREEN_WIDTH     - MAP_GRID_X * 2 &&
 					MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT
 				))
 		{
@@ -2697,7 +2695,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
       if(!fUTurnFlag)
 			{
 				if (!fZoomFlag ||
-						(MAP_VIEW_START_X < iX && iX < g_screen_width - MAP_GRID_X * 2 && MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT))
+						(MAP_VIEW_START_X < iX && iX < SCREEN_WIDTH - MAP_GRID_X * 2 && MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT))
 			 {
 
          //if(!fZoomFlag)
@@ -2843,8 +2841,7 @@ void ClipBlitsToMapViewRegion( void )
 
 void RestoreClipRegionToFullScreen( void )
 {
-	FullScreenRect.iBottom = g_screen_height;
-	FullScreenRect.iRight = g_screen_width;
+  SGPRect FullScreenRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SetClippingRect( &FullScreenRect );
 	gDirtyClipRect = gOldClipRect;
 }
@@ -2863,7 +2860,7 @@ void ClipBlitsToMapViewRegionForRectangleAndABit( UINT32 uiDestPitchBYTES )
 void RestoreClipRegionToFullScreenForRectangle( UINT32 uiDestPitchBYTES )
 {
 	// clip blits to map view region
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, g_screen_width, g_screen_height);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -3161,8 +3158,8 @@ void DisplayPositionOfHelicopter( void )
 	UINT32 x,y;
 	UINT16 minX, minY, maxX, maxY;
 
-	AssertMsg(0 <= sOldMapX && sOldMapX < g_screen_width,  String("DisplayPositionOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
-	AssertMsg(0 <= sOldMapY && sOldMapY < g_screen_height, String("DisplayPositionOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
+	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH,  String("DisplayPositionOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
+	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
 
 	// restore background on map where it is
 	if( sOldMapX != 0 )
@@ -3259,10 +3256,10 @@ void DisplayPositionOfHelicopter( void )
 			}
 
 
-			AssertMsg(0 <= x && x < g_screen_width, String("DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
+			AssertMsg(0 <= x && x < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
 							x, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minX, maxX ) );
 
-			AssertMsg(0 <= y && y < g_screen_height, String("DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
+			AssertMsg(0 <= y && y < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
 							y, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minY, maxY ) );
 
 
@@ -3292,8 +3289,8 @@ static void DisplayDestinationOfHelicopter(void)
 	INT16 sMapX, sMapY;
 	UINT32 x,y;
 
-	AssertMsg(0 <= sOldMapX && sOldMapX < g_screen_width, String("DisplayDestinationOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
-	AssertMsg(0 <= sOldMapY && sOldMapY < g_screen_height, String("DisplayDestinationOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
+	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
+	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
 
 	// restore background on map where it is
 	if( sOldMapX != 0 )
@@ -3313,8 +3310,8 @@ static void DisplayDestinationOfHelicopter(void)
 		x = MAP_VIEW_START_X + ( MAP_GRID_X * sMapX ) + 1;
 		y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMapY ) + 3;
 
-		AssertMsg(0 <= x && x < g_screen_width, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY));
-		AssertMsg(0 <= y && y < g_screen_height, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY));
+		AssertMsg(0 <= x && x < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY));
+		AssertMsg(0 <= y && y < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY));
 
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );

@@ -1,6 +1,7 @@
 #include "Local.h"
 #include "SysUtil.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 
 SGPVSurface* guiSAVEBUFFER;
@@ -9,6 +10,6 @@ SGPVSurface* guiEXTRABUFFER;
 
 void InitializeGameVideoObjects()
 {
-	guiSAVEBUFFER  = AddVideoSurface(g_screen_width, g_screen_height, PIXEL_DEPTH);
-	guiEXTRABUFFER = AddVideoSurface(g_screen_width, g_screen_height, PIXEL_DEPTH);
+	guiSAVEBUFFER  = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
+	guiEXTRABUFFER = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
 }

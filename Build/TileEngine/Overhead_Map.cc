@@ -38,6 +38,7 @@
 #include "Tile_Surface.h"
 #include "Button_System.h"
 #include "Video.h"
+#include "UILayout.h"
 
 #ifdef JA2DEMO
 #	include "Message.h"
@@ -158,8 +159,8 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		INT16 sY1;
 		INT16 sX2;
 		INT16 sY2;
-		CalculateRestrictedMapCoords(NORTH, &sX1, &sY1, &sX2, &gsStartRestrictedY, g_screen_width, 320);
-		CalculateRestrictedMapCoords(WEST,  &sX1, &sY1, &gsStartRestrictedX, &sY2, g_screen_width, 320);
+		CalculateRestrictedMapCoords(NORTH, &sX1, &sY1, &sX2, &gsStartRestrictedY, SCREEN_WIDTH, 320);
+		CalculateRestrictedMapCoords(WEST,  &sX1, &sY1, &gsStartRestrictedX, &sY2, SCREEN_WIDTH, 320);
 	}
 
 	// Copy over shade tables from main tileset
@@ -278,7 +279,7 @@ void HandleOverheadMap(void)
 
 	RestoreBackgroundRects();
 
-	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, g_screen_width, 320, FALSE);
+	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, FALSE);
 
 	HandleTalkingAutoFaces();
 
@@ -388,7 +389,7 @@ void GoIntoOverheadMap( )
 
 	gfInOverheadMap = TRUE;
 
-	MSYS_DefineRegion(&OverheadBackgroundRegion, 0, 0, g_screen_width, 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&OverheadBackgroundRegion, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	MSYS_DefineRegion(&OverheadRegion, 0, 0, gsVIEWPORT_END_X, 320, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, ClickOverheadRegionCallback);
 
