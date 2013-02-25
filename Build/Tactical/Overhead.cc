@@ -626,19 +626,6 @@ void ExecuteOverhead(void)
 					}
 				}
 
-				// Handle reload counters
-				if (pSoldier->fReloading)
-				{
-					if (TIMECOUNTERDONE(pSoldier->ReloadCounter, pSoldier->sReloadDelay))
-					{
-						pSoldier->fReloading = FALSE;
-						/*
-						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - realtime reloading");
-						FreeUpAttacker(pSoldier);
-						*/
-					}
-				}
-
 				// Checkout fading
 				if (pSoldier->fBeginFade &&
 						TIMECOUNTERDONE(pSoldier->FadeCounter, NEW_FADE_DELAY))

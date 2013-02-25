@@ -3170,7 +3170,6 @@ void DebugSoldierPage3()
 		GPrintStat(150, y += h, L"AniCode:",            gusAnimInst[s->usAnimState][s->usAniCode]);
 		GPrintStat(150, y += h, L"No APS To fin Move:", s->fNoAPToFinishMove);
 		GPrintStat(150, y += h, L"Reload Delay:",       s->sReloadDelay);
-		GPrintStat(150, y += h, L"Reloading:",          s->fReloading);
 		GPrintStat(150, y += h, L"Bullets out:",        s->bBulletsLeft);
 		GPrintStat(150, y += h, L"Anim non-int:",       s->fInNonintAnim);
 		GPrintStat(150, y += h, L"RT Anim non-int:",    s->fRTInNonintAnim);

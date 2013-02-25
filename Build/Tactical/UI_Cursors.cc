@@ -170,13 +170,6 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		{
 			guiPendingOverrideEvent = CA_MERC_SHOOT;
 		}
-
-		// Check if we are reloading
-		if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
-				s->fReloading)
-		{
-			return ACTION_TARGET_RELOADING;
-		}
 	}
 
 	// Determine where we are shooting/aiming
@@ -383,7 +376,6 @@ static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo co
 		if (gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
 		{
 			DetermineCursorBodyLocation(GetSelectedMan(), show_APs, fRecalc);
-			if (s->fReloading) return ACTION_TARGET_RELOADING;
 		}
 
 		if (!EnoughAmmo(s, FALSE, HANDPOS))

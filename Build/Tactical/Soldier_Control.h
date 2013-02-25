@@ -333,7 +333,6 @@ struct SOLDIERTYPE
 	INT16												sBreathRed;			// current breath value
 	BOOLEAN											fDelayedMovement;
 
-	BOOLEAN											fReloading;
 	UINT8												ubWaitActionToDo;
 	INT8												ubInsertionDirection;
 	// skills

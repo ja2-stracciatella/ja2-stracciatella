@@ -248,7 +248,6 @@ fUseGivenVehicle: strange
 fHasKeys: strange
 
 SOLDIERTYPE
-fReloading: always FALSE
 sHeightAdjustment: seems to be always 0
 sDesiredHeight: strange
 sTempNewGridNo: strange

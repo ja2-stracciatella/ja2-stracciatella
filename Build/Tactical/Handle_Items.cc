@@ -323,13 +323,6 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 				s->fDoSpread = FALSE;
 				return ITEM_HANDLE_NOAMMO;
 			}
-
-			// Check if we are reloading
-			if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
-					s->fReloading)
-			{
-				return ITEM_HANDLE_RELOADING;
-			}
 		}
 
 		// Get gridno - either soldier's position or the gridno

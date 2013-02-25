@@ -1,3 +1,4 @@
+
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "MapScreen.h"
@@ -835,8 +836,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// CODE: CHANGE ATTACKING TO FIRST HAND
 					pSoldier->ubAttackingHand = HANDPOS;
 					pSoldier->usAttackingWeapon = pSoldier->inv[pSoldier->ubAttackingHand].usItem;
-					// Adjust fReloading to FALSE
-					pSoldier->fReloading = FALSE;
 					break;
 
 				case 458:
@@ -844,8 +843,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// CODE: CHANGE ATTACKING TO SECOND HAND
 					pSoldier->ubAttackingHand = SECONDHANDPOS;
 					pSoldier->usAttackingWeapon = pSoldier->inv[pSoldier->ubAttackingHand].usItem;
-					// Adjust fReloading to FALSE
-					pSoldier->fReloading = FALSE;
 					break;
 
 				case 460:

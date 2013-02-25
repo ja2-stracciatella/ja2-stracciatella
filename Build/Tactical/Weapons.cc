@@ -658,15 +658,6 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 {
 	// ignore passed in target gridno for now
 
-	// If realtime and we are reloading - do not fire until counter is done!
-	if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) && !pSoldier->bDoBurst )
-	{
-		if ( pSoldier->fReloading )
-		{
-			return( FALSE );
-		}
-	}
-
 	// if target gridno is the same as ours, do not fire!
 	if (sTargetGridNo == pSoldier->sGridNo)
 	{
@@ -1006,9 +997,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			{
 				pSoldier->sReloadDelay	= ( pSoldier->sReloadDelay * 2 );
 			}
-
-			//pSoldier->fReloading		= TRUE;
-			//RESETTIMECOUNTER( pSoldier->ReloadCounter, pSoldier->sReloadDelay );
 		}
 
 		// Deduct AMMO!
