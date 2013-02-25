@@ -1,0 +1,6 @@
+*.d
+*.o
+*~
+TAGS
+ja2
+ja2.exe
