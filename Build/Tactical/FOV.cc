@@ -337,11 +337,11 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
   // a gassed merc can only see 1 tile away due to blurred vision
 	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 	{
-		range = 1;
+		range = GASSED_VIEW_RANGE;
 	}
   else
 	{
-    range = pSoldier->bViewRange;
+    range = NORMAL_VIEW_RANGE;
 		// balance item viewing range between normal and the limit set by opplist-type functions -- CJC
 		range = (AdjustMaxSightRangeForEnvEffects(LightTrueLevel(pSoldier->sGridNo, pSoldier->bLevel), range) + range) / 2;
 	}

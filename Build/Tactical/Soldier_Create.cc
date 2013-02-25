@@ -912,7 +912,6 @@ static void InitSoldierStruct(SOLDIERTYPE& s)
 	s.next_to_previous_attacker = 0;
 	s.light                     = 0;
 	s.ubDesiredHeight           = NO_DESIRED_HEIGHT;
-	s.bViewRange                = NORMAL_VIEW_RANGE;
 	s.bInSector                 = FALSE;
 	s.sGridNo                   = NOWHERE;
 	s.muzzle_flash              = 0;

@@ -258,7 +258,6 @@ fUICloseMerc: strange
 ReloadCounter: never gets reset, probably unnecessary, see fReloading
 sReloadDelay: seems to be always 0, probably unnecessary, see fReloading
 fTurnInProgress: only gets printed for debug
-bViewRange: always NORMAL_VIEW_RANGE
 bNewOppCnt: strange
 bTargetCubeLevel: always 0? Only place setting it (UIHandleMercAttack()) seems to be unreachable
 fShowLocator: maybe unnecessary

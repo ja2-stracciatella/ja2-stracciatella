@@ -418,7 +418,6 @@ struct SOLDIERTYPE
 
 	INT8												bLife;				// current life (hit points or health)
 	UINT8												bSide;
-	UINT8												bViewRange;
 	INT8 												bNewOppCnt;
 
 	UINT16											usAniCode;

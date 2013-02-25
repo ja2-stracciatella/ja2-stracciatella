@@ -66,6 +66,7 @@
 #define			CONSCIOUSNESS				10
 
 // VIEWRANGE DEFINES
+#define     GASSED_VIEW_RANGE					1         /**< a gassed merc can only see 1 tile away due to blurred vision */
 #define     NORMAL_VIEW_RANGE					13
 
 // MODIFIERS FOR AP COST FOR MOVEMENT
