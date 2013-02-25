@@ -277,3 +277,7 @@ KillPreBattleInterface(): EnableDisAbleMapScreenOptionsButton(TRUE) maybe tries 
 
 
 WORKLIST
+
+
+
+gbPlayerNum:    seems to be always = 0 (OUR_TEAM)
