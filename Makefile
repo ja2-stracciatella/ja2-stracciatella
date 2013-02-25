@@ -86,7 +86,7 @@ endif
 ifdef JA2TESTVERSION
   CFLAGS += -DJA2TESTVERSION
   ifndef JA2BETAVERSION
-  	JA2BETAVERSION := yes
+	JA2BETAVERSION := yes
   endif
 endif
 
@@ -515,3 +515,7 @@ lowercase:
 		lower="`dirname "$$i"`/`basename "$$i" | LANG=C tr '[A-Z]' '[a-z]'`"; \
 		[ "$$i" = "$$lower" ] || mv "$$i" "$$lower"; \
 	done
+
+rebuild-tags:
+	-rm TAGS
+	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs etags --append
