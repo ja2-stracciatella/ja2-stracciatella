@@ -61,7 +61,6 @@
 // bonus to hit with working laser scope
 #define LASERSCOPE_BONUS				20
 
-#define MANDATORY_WEAPON_DELAY		1200
 #define NO_WEAPON_SOUND        NO_SOUND
 
 #define HEAD_DAMAGE_ADJUSTMENT( x ) ((x * 3) / 2)
@@ -985,20 +984,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	// Some things we don't do for knives...
 	if ( Item[ usItemNum ].usItemClass != IC_THROWING_KNIFE )
 	{
-		// If realtime - set counter to freeup from attacking once done
-		if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
-		{
-
-			// Set delay based on stats, weapon type, etc
-			pSoldier->sReloadDelay	= (INT16)( Weapon[ usItemNum ].usReloadDelay + MANDATORY_WEAPON_DELAY );
-
-			// If a bad guy, double the delay!
-			if ( (pSoldier->uiStatusFlags & SOLDIER_ENEMY ) )
-			{
-				pSoldier->sReloadDelay	= ( pSoldier->sReloadDelay * 2 );
-			}
-		}
-
 		// Deduct AMMO!
 		DeductAmmo( pSoldier, pSoldier->ubAttackingHand );
 

@@ -109,7 +109,6 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 				SOLDIERTYPE* const s = *i;
 				UPDATETIMECOUNTER(s->UpdateCounter);
 				UPDATETIMECOUNTER(s->DamageCounter);
-				UPDATETIMECOUNTER(s->ReloadCounter);
 				UPDATETIMECOUNTER(s->BlinkSelCounter);
 				UPDATETIMECOUNTER(s->PortraitFlashCounter);
 				UPDATETIMECOUNTER(s->AICounter);

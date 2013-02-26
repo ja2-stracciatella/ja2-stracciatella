@@ -189,7 +189,7 @@ struct WEAPONTYPE
 	UINT8    ubDeadliness;     // comparative ratings of guns
 	UINT8    ubMagSize;
 	UINT16   usRange;
-	UINT16   usReloadDelay;
+	UINT16   usReloadDelay;               /**< not used */
 	UINT8    ubAttackVolume;
 	UINT8    ubHitVolume;
 	SoundID  sSound;

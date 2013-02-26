@@ -389,7 +389,6 @@ struct SOLDIERTYPE
 
 	TIMECOUNTER									UpdateCounter;
 	TIMECOUNTER									DamageCounter;
-	TIMECOUNTER									ReloadCounter;
 	TIMECOUNTER									AICounter;
 	TIMECOUNTER									FadeCounter;
 
@@ -398,7 +397,6 @@ struct SOLDIERTYPE
 
 	INT8												bDexterity;		// dexterity (hand coord) value
 	INT8												bWisdom;
-	INT16												sReloadDelay;
 	SOLDIERTYPE*                attacker;
 	SOLDIERTYPE*                previous_attacker;
 	SOLDIERTYPE*                next_to_previous_attacker;

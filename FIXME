@@ -254,12 +254,8 @@ sTempNewGridNo: strange
 fPausedMove: strange
 fUIdeadMerc: strange
 fUICloseMerc: strange
-ReloadCounter: never gets reset, probably unnecessary, see fReloading
-sReloadDelay: seems to be always 0, probably unnecessary, see fReloading
-fTurnInProgress: only gets printed for debug
 bNewOppCnt: strange
 bTargetCubeLevel: always 0? Only place setting it (UIHandleMercAttack()) seems to be unreachable
-fShowLocator: maybe unnecessary
 pThrowParams: load/save?
 pLevelNode: load/save?
 sDestXPos: see sDestination
@@ -267,10 +263,8 @@ sDestYPos: see sDestination
 sDestination: sDestination == sDestYPos / 10 * 160 + sDestXPos / 10 seems to hold
 sBlackList: strange
 bHasKeys: strange
-fForceShade: pForceShade != NULL?
-fDoingExternalDeath: always TRUE?
-ubLastDamageReason: necessary?
 
+Soldier_Ani.cc, AdjustToNextAnimationFrame              - a lot of hardcoded numbers in switch
 
 BUGS
 KillPreBattleInterface(): EnableDisAbleMapScreenOptionsButton(TRUE) maybe tries to enable non-existent buttons

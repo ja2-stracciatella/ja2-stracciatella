@@ -1,6 +1,8 @@
 *.d
 *.o
 *~
+.cproject
+.project
 TAGS
 ja2
 ja2.exe
