@@ -246,7 +246,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// ATE: Change interface level.....
 					// CJC: only if we are a player merc
-					if (pSoldier->bTeam == gbPlayerNum)
+					if (pSoldier->bTeam == OUR_TEAM)
 					{
 
 						if (gTacticalStatus.fAutoBandageMode)
@@ -642,7 +642,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( !EnoughAmmo( pSoldier, FALSE, pSoldier->ubAttackingHand ) )
 					{
 						fStop = TRUE;
-						if ( pSoldier->bTeam == gbPlayerNum	 )
+						if ( pSoldier->bTeam == OUR_TEAM	 )
 						{
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ BURST_FIRE_DEPLETED_CLIP_STR ] );
 						}
@@ -663,7 +663,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								SoundStop( pSoldier->iBurstSoundID );
 							}
 
-							if ( pSoldier->bTeam == gbPlayerNum	 )
+							if ( pSoldier->bTeam == OUR_TEAM	 )
 							{
 								PlayLocationJA2Sample(pSoldier->sGridNo, S_DRYFIRE1, MIDVOLUME, 1);
 								//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Gun jammed!" );
@@ -1146,7 +1146,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// ATE: Change interface level.....
 					// CJC: only if we are a player merc
-					if ( (pSoldier->bTeam == gbPlayerNum) && !gTacticalStatus.fAutoBandageMode)
+					if ( (pSoldier->bTeam == OUR_TEAM) && !gTacticalStatus.fAutoBandageMode)
 					{
 						if (pSoldier == GetSelectedMan())
 						{
@@ -1176,10 +1176,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// CODE: Locate to target ( if an AI guy.. )
 					if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
 					{
-						if ( pSoldier->bTeam != gbPlayerNum )
+						if ( pSoldier->bTeam != OUR_TEAM )
 						{
 							// only locate if the enemy is visible or he's aiming at a player
-							if (pSoldier->bVisible != -1 || (pSoldier->target != NULL && pSoldier->target->bTeam == gbPlayerNum))
+							if (pSoldier->bVisible != -1 || (pSoldier->target != NULL && pSoldier->target->bTeam == OUR_TEAM))
 							{
 								LocateGridNo( pSoldier->sTargetGridNo );
 							}
@@ -1453,7 +1453,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 										if ( ( pAnimDef->ubFlags & RANDOM_ANIM_CASUAL ) )
 										{
 											// If he's a bad guy, do not do it!
-											if ( pSoldier->bTeam != gbPlayerNum  || ( gTacticalStatus.uiFlags & INCOMBAT ) )
+											if ( pSoldier->bTeam != OUR_TEAM  || ( gTacticalStatus.uiFlags & INCOMBAT ) )
 											{
 												continue;
 											}
@@ -1522,7 +1522,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 										// OK, stop merc....
 										EVENT_StopMerc(pTSoldier);
 
-										if ( pTSoldier->bTeam != gbPlayerNum )
+										if ( pTSoldier->bTeam != OUR_TEAM )
 										{
 											CancelAIAction(pTSoldier);
 										}
@@ -1751,7 +1751,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->ubDesiredHeight == gAnimControl[ pSoldier->usAnimState ].ubEndHeight || pSoldier->ubDesiredHeight == NO_DESIRED_HEIGHT )
 					{
 						// Adjust movement mode......
-						if ( pSoldier->bTeam == gbPlayerNum && !pSoldier->fContinueMoveAfterStanceChange )
+						if ( pSoldier->bTeam == OUR_TEAM && !pSoldier->fContinueMoveAfterStanceChange )
 						{
 							usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 
@@ -2571,7 +2571,7 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Add guy if he's a candidate...
 		if (OkControllableMerc(s) &&
@@ -2732,7 +2732,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 			{
 				// Check if a person is here that has this quote....
 				SOLDIERTYPE* mercs_in_sector[20];
-				FOR_EACH_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
 				{
 					if (s != pKillerSoldier &&
 							OkControllableMerc(s) &&
@@ -2852,7 +2852,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		pSoldier->fGettingHit = FALSE;
 
 		// Find next closest team member!
-		if ( pSoldier->bTeam == gbPlayerNum )
+		if ( pSoldier->bTeam == OUR_TEAM )
 		{
 			// Set guy to close panel!
 			// ONLY IF VISIBLE ON SCREEN
@@ -2874,7 +2874,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			SOLDIERTYPE* const attacker = pSoldier->attacker;
 			if (attacker != NULL)
 			{
-				if (attacker->bTeam == gbPlayerNum && gTacticalStatus.ubAttackBusyCount > 0)
+				if (attacker->bTeam == OUR_TEAM && gTacticalStatus.ubAttackBusyCount > 0)
 				{
 					gTacticalStatus.fKilledEnemyOnAttack          = TRUE;
 					gTacticalStatus.enemy_killed_on_attack        = pSoldier;
@@ -2905,7 +2905,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			// militia also now track kills...
 			if (attacker != NULL)
 			{
-				if (attacker->bTeam == gbPlayerNum)
+				if (attacker->bTeam == OUR_TEAM)
 				{
 					// increment kills
 					gMercProfiles[attacker->ubProfile].usKills++;
@@ -2924,7 +2924,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 			if (assister != NULL && assister->bActive && assister != attacker)
 			{
-				if (assister->bTeam == gbPlayerNum )
+				if (assister->bTeam == OUR_TEAM )
 				{
 					gMercProfiles[assister->ubProfile].usAssists++;
 				}
@@ -2947,7 +2947,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		// Re-evaluate visiblitiy for the team!
 		BetweenTurnsVisibilityAdjustments();
 
-		if ( pSoldier->bTeam != gbPlayerNum )
+		if ( pSoldier->bTeam != OUR_TEAM )
 		{
       if ( !pSoldier->fDoingExternalDeath )
       {

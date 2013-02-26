@@ -98,7 +98,7 @@ void ExitBoxing(void)
 // out of the ring!
 void EndBoxingMatch( SOLDIERTYPE * pLoser )
 {
-	if (pLoser->bTeam == gbPlayerNum )
+	if (pLoser->bTeam == OUR_TEAM )
 	{
 		SetBoxingState( LOST_ROUND );
 	}
@@ -368,7 +368,7 @@ BOOLEAN AnotherFightPossible( void )
 		return( FALSE );
 	}
 
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector && s->bLife > OKLIFE + 5 && !s->bCollapsed)
 		{

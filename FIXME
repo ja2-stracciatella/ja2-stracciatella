@@ -255,5 +255,4 @@ WORKLIST
 
 
 
-gbPlayerNum:    seems to be always = 0 (OUR_TEAM)
 Build/Tactical/Soldier_Ani.cc,          AdjustToNextAnimationFrame              - a lot of hardcoded numbers in switch

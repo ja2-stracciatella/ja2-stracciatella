@@ -1967,7 +1967,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 	}
 
 	//KM : Aug 09, 1999 Patch fix -- Would break future dialog while time compressing
-	gTacticalStatus.ubCurrentTeam = gbPlayerNum;
+	gTacticalStatus.ubCurrentTeam = OUR_TEAM;
 
 	gpBattleGroup = 0;
 

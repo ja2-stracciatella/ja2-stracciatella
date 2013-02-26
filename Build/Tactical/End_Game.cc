@@ -164,7 +164,7 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 
 	// STEP 1 ) START ALL QUOTES GOING!
 	// OK - loop through all witnesses and see if they want to say something abou this...
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s != pKillerSoldier &&
 				OkControllableMerc(s) &&
@@ -218,7 +218,7 @@ static void DoneFadeInKilledQueen(void)
 static void DoneFadeOutKilledQueen()
 {
 	// Move current squad over
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		// Are we in this sector, on the current squad?
@@ -248,7 +248,7 @@ static void DoneFadeOutKilledQueen()
 		// Check for any more badguys
 		// ON THE STRAGETY LAYER KILL BAD GUYS!
 		if (s.bNeutral)             continue;
-		if (s.bSide == gbPlayerNum) continue;
+		if (s.bSide == OUR_TEAM) continue;
 		ProcessQueenCmdImplicationsOfDeath(&s);
 	}
 
@@ -305,7 +305,7 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
   gTacticalStatus.uiFlags |= IN_ENDGAME_SEQUENCE;
 
 	// first thing is to loop through team and say end quote...
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bLife >= OKLIFE && !AM_AN_EPC(s))
 		{
@@ -395,7 +395,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
 
 			// HELLO!  THESE ARE CREATURES!  THEY CAN'T BE NEUTRAL!
-			//if (!s->bNeutral && s->bSide != gbPlayerNum)
+			//if (!s->bNeutral && s->bSide != OUR_TEAM)
 			{
     		gTacticalStatus.ubAttackBusyCount++;
 				EVENT_SoldierGotHit(s, 0, 10000, 0, s->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
@@ -419,7 +419,7 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16
 
 	// STEP 1 ) START ALL QUOTES GOING!
 	// OK - loop through all witnesses and see if they want to say something abou this...
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s != pKillerSoldier &&
 				OkControllableMerc(s) &&

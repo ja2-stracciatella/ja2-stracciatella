@@ -292,7 +292,7 @@ static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIE
 	}
 
 	// find which squad this guy is, then set selected squad to this guy
-	if ( pSrcSoldier->bTeam == gbPlayerNum && gTacticalStatus.ubCurrentTeam == gbPlayerNum )
+	if ( pSrcSoldier->bTeam == OUR_TEAM && gTacticalStatus.ubCurrentTeam == OUR_TEAM )
 	{
 		SetCurrentSquad( gpSrcSoldier->bAssignment, FALSE );
 
@@ -1295,7 +1295,7 @@ void HandleNPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, BO
 	gfShowDialogueMenu	= fShowDialogueMenu;
 
 
-	if ( pSoldier->bTeam == gbPlayerNum )
+	if ( pSoldier->bTeam == OUR_TEAM )
 	{
 		// make sure they are in the right alert status to receive orders (it's a bug that
 		// this could be set for the player...)
@@ -1458,7 +1458,7 @@ static void HandleNPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, 
 	}
 
 	// if player controlled, set under AI control flag
-	if (pSoldier->bTeam == gbPlayerNum)
+	if (pSoldier->bTeam == OUR_TEAM)
 	{
 		pSoldier->uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
 	}
@@ -1598,7 +1598,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Squad here to search for...
 
 				INT8 bNumDone = 0;
-				FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+				FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 				{
 					// Are we in this sector, On the current squad?
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad())
@@ -1883,7 +1883,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// OK, we want to goto the basement level!
 				// For one, loop through our current squad and move them over
 				INT8 bNumDone = 0;
-				FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+				FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 				{
 					// Are we in this sector, On the current squad?
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
@@ -3333,7 +3333,7 @@ action_punch_pc:
 				if ( pSoldier2 )
 				{
 					//HOSPITAL_PATIENT_DISTANCE
-					FOR_EACH_IN_TEAM(i, gbPlayerNum)
+					FOR_EACH_IN_TEAM(i, OUR_TEAM)
 					{
 						SOLDIERTYPE& s = *i;
 						// Are we in this sector, On the current squad?
@@ -4068,7 +4068,7 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 
 	sGridNo = pNPC->sGridNo;
 
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector &&
 				0 < s->bLife && s->bLife < s->bLifeMax &&
@@ -4194,7 +4194,7 @@ static void DialogueMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 						// Mary might be alive, and if so we need to ensure two places
 						pSoldier = FindSoldierByProfileID(MARY);
 						if (pSoldier != NULL &&
-								NumberOfMercsOnPlayerTeam() > gTacticalStatus.Team[gbPlayerNum].bLastID - 3)
+								NumberOfMercsOnPlayerTeam() > gTacticalStatus.Team[OUR_TEAM].bLastID - 3)
 						{
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_RECRUIT_TEAM_FULL ] );
 							break;
@@ -4286,7 +4286,7 @@ static void DialogueMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 				// He tried to lie.....
 				// Find the best conscious merc with a chance....
 				SOLDIERTYPE* pLier = NULL;
-				FOR_EACH_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
 				{
 					if (s->bInSector &&
 							s->bLife >= OKLIFE &&
@@ -4478,7 +4478,7 @@ static void DoneFadeInActionBasement(void)
 	// Start conversation, etc
 
 	// Look for someone to talk to
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Are we in this sector, On the current squad?
 		if (s->bLife >= OKLIFE && s->bInSector && s->bAssignment == CurrentSquad())

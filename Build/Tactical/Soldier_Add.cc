@@ -1165,7 +1165,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* const s, INT16 const sGridNo, 
 
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
 
-	if (!(s->uiStatusFlags & SOLDIER_DEAD) && s->bTeam == gbPlayerNum)
+	if (!(s->uiStatusFlags & SOLDIER_DEAD) && s->bTeam == OUR_TEAM)
 	{
 		RevealRoofsAndItems(s, FALSE);
 
@@ -1189,7 +1189,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* const s, INT16 const sGridNo, 
 
 	// If he's an enemy... set presence
 	// ATE: Added if not bloodcats, only do this once they are seen
-	if (!s->bNeutral && s->bSide != gbPlayerNum && s->ubBodyType != BLOODCAT)
+	if (!s->bNeutral && s->bSide != OUR_TEAM && s->ubBodyType != BLOODCAT)
 	{
 		SetEnemyPresence();
 	}

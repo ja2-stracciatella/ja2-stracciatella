@@ -1774,7 +1774,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 						// Is this one of us?
-						if ( pSoldier->bTeam == gbPlayerNum )
+						if ( pSoldier->bTeam == OUR_TEAM )
 						{
 							INT8 const bSlot = FindExactObj(pSoldier, o);
 							if (bSlot != NO_SLOT)
@@ -2048,7 +2048,7 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 		if (pMerc == NULL) continue;
 
 		// only look for mercs on the side of the player
-		if (pMerc->bSide != gbPlayerNum) continue;
+		if (pMerc->bSide != OUR_TEAM) continue;
 
 		// only look for active mercs
 		if (pMerc->bAssignment >= ON_DUTY) continue;
@@ -2103,7 +2103,7 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 
 	// Clear values!
 	pNPC->ubQuoteRecord = 0;
-	if (pNPC->bTeam == gbPlayerNum)
+	if (pNPC->bTeam == OUR_TEAM)
 	{
 		// the "under ai control" flag was set temporarily; better turn it off now
 		pNPC->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
@@ -2297,7 +2297,7 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[40];
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Add guy if he's a candidate...
 		if (OkControllableMerc(s) &&

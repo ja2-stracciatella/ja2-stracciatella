@@ -1337,7 +1337,7 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 		}
 
 		//if the soldier is an IMP character
-		if (s->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER && s->bTeam == gbPlayerNum)
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER && s->bTeam == OUR_TEAM)
 		{
 			ResetIMPCharactersEyesAndMouthOffsets(s->ubProfile);
 		}
@@ -1897,7 +1897,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_I16(  d, SECTORX(g_merc_arrive_sector))
 	INJ_I16(  d, SECTORY(g_merc_arrive_sector))
 	INJ_BOOL( d, gfCreatureMeanwhileScenePlayed)
-	INJ_U8(   d, gbPlayerNum)
+	INJ_SKIP_U8(d)
 	INJ_BOOL( d, gfPersistantPBI)
 	INJ_U8(   d, gubEnemyEncounterCode)
 	INJ_BOOL( d, gubExplicitEnemyEncounterCode)
@@ -2057,7 +2057,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 		1 <= merc_arrive_y && merc_arrive_y <= 16 ? SECTOR(merc_arrive_x, merc_arrive_y) :
 		START_SECTOR;
 	EXTR_BOOL( d, gfCreatureMeanwhileScenePlayed)
-	EXTR_U8(   d, gbPlayerNum)
+	EXTR_SKIP_U8(d)
 	EXTR_BOOL( d, gfPersistantPBI)
 	EXTR_U8(   d, gubEnemyEncounterCode)
 	EXTR_BOOL( d, gubExplicitEnemyEncounterCode)
@@ -2229,7 +2229,7 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	}
 
 	//loop through all the mercs on the players team to find the one that is not moving
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
 		{
@@ -2242,7 +2242,7 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	}
 
 	// loop through all the mercs and find one that is moving
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		//we found an alive, merc that is not moving
 		*psSectorX = s->sSectorX;

@@ -983,7 +983,7 @@ bool AllMercsLookForDoor(GridNo const gridno)
 {
 	if (!GetDoorStatus(gridno)) return false;
 
-	CFOR_EACH_IN_TEAM(i, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE const& s = *i;
 		if (s.bLife < OKLIFE)     continue;

@@ -163,7 +163,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 	// If TURN BASED and NOT NPC's turn, or realtime and not our chance to think, bail...
 	if (gfTurnBasedAI)
 	{
-		if ( (pSoldier->bTeam != OUR_TEAM) && gTacticalStatus.ubCurrentTeam == gbPlayerNum )
+		if ( (pSoldier->bTeam != OUR_TEAM) && gTacticalStatus.ubCurrentTeam == OUR_TEAM )
 		{
 			return;
 		}
@@ -2194,7 +2194,7 @@ static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 
 void SetNewSituation( SOLDIERTYPE * pSoldier )
 {
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if ( pSoldier->bTeam != OUR_TEAM )
 	{
 		if ( pSoldier->ubQuoteRecord == 0 && !gTacticalStatus.fAutoBandageMode && !(pSoldier->bNeutral && gTacticalStatus.uiFlags & ENGAGED_IN_CONV) )
 		{

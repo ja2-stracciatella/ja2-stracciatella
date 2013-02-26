@@ -672,7 +672,7 @@ static void HandleAcceptButton(SOLDIERTYPE* s)
 // determines if a merc will run out of their insurance contract
 void DailyUpdateOfInsuredMercs()
 {
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		//if the merc has life insurance
 		if (s->usLifeInsurance)
@@ -821,7 +821,7 @@ static void BuildInsuranceArray(void)
 	g_n_insurable_mercs = 0;
 
 	// store profile #s of all insurable mercs in an array
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (MercIsInsurable(s))
 		{
@@ -1231,7 +1231,7 @@ static INT32 CalcStartDayOfInsurance(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN AreAnyAimMercsOnTeam(void)
 {
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC) return TRUE;
 	}

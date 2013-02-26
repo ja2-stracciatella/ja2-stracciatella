@@ -49,7 +49,7 @@ INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno
 	}
 	else if (IS_TRAVELCOST_DOOR( sSwitchValue ))
 	{
-		sSwitchValue = DoorTravelCost(pSoldier, sGridno, (UINT8)sSwitchValue, pSoldier->bTeam == gbPlayerNum, NULL);
+		sSwitchValue = DoorTravelCost(pSoldier, sGridno, (UINT8)sSwitchValue, pSoldier->bTeam == OUR_TEAM, NULL);
 	}
 
 	if (sSwitchValue >= TRAVELCOST_BLOCKED && sSwitchValue != TRAVELCOST_DOOR )
@@ -416,7 +416,7 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 	if ( sNewAP < 0 )
 	{
 		// Display message if it's our own guy
-		if ( pSoldier->bTeam == gbPlayerNum && fDisplayMsg )
+		if ( pSoldier->bTeam == OUR_TEAM && fDisplayMsg )
 		{
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NOT_ENOUGH_APS_STR ] );
 		}

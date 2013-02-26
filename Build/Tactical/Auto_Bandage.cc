@@ -81,7 +81,7 @@ void BeginAutoBandage( )
 	}
 
 	// check for anyone needing bandages
-	CFOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// if the soldier isn't active or in sector, we have problems..leave
 		if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_VEHICLE || pSoldier->bAssignment == VEHICLE)
@@ -345,7 +345,7 @@ void AutoBandage( BOOLEAN fStart )
 			}
 		}
 
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			ActionDone(s);
 
@@ -408,7 +408,7 @@ static void SetUpAutoBandageUpdatePanel(void)
 {
 	const SOLDIERTYPE** next_doctor  = gdoctor_list;
 	const SOLDIERTYPE** next_patient = gpatient_list;
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (CanCharacterAutoBandageTeammate(s))      *next_doctor++  = s;
 		if (CanCharacterBeAutoBandagedByTeammate(s)) *next_patient++ = s;

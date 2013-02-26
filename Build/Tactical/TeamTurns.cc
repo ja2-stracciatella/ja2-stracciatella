@@ -246,7 +246,7 @@ void EndAllAITurns( void )
 		EndInterrupt( FALSE );
 	}
 
-	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
+	if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 	{
 		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
@@ -257,7 +257,7 @@ void EndAllAITurns( void )
 			s->bOldLife = s->bLife;
 		}
 
-		gTacticalStatus.ubCurrentTeam = gbPlayerNum;
+		gTacticalStatus.ubCurrentTeam = OUR_TEAM;
 		//BeginTeamTurn( gTacticalStatus.ubCurrentTeam );
 	}
 }
@@ -267,7 +267,7 @@ static void EndTurnEvents(void)
 {
 	// HANDLE END OF TURN EVENTS
 	// handle team services like healing
-	HandleTeamServices( gbPlayerNum );
+	HandleTeamServices( OUR_TEAM );
 	// handle smell and blood decay
 	DecaySmells();
 	// decay bomb timers and maybe set some off!
@@ -290,8 +290,8 @@ void BeginTeamTurn( UINT8 ubTeam )
 			if ( HandleAirRaidEndTurn( ubTeam ) )
 			{
 				// End turn!!
-				ubTeam = gbPlayerNum;
-				gTacticalStatus.ubCurrentTeam = gbPlayerNum;
+				ubTeam = OUR_TEAM;
+				gTacticalStatus.ubCurrentTeam = OUR_TEAM;
 				EndTurnEvents();
 			}
 			else
@@ -333,7 +333,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 
 		}
 
-		if (ubTeam == gbPlayerNum )
+		if (ubTeam == OUR_TEAM )
 		{
 			// ATE: Check if we are still in a valid battle...
 			// ( they could have blead to death above )
@@ -471,7 +471,7 @@ static BOOLEAN EveryoneInInterruptListOnSameTeam(void)
 void SayCloseCallQuotes(void)
 {
 	// report any close call quotes for us here
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (OkControllableMerc(s) &&
 				s->fCloseCall &&
@@ -723,7 +723,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			{
 				s->bMoved = TRUE;
 			}
-			else if (s->bTeam != gbPlayerNum && s->bNewSituation == IS_NEW_SITUATION)
+			else if (s->bTeam != OUR_TEAM && s->bNewSituation == IS_NEW_SITUATION)
 			{
 				s->bMoved = FALSE;
 			}
@@ -996,7 +996,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 
 
 	// don't let mercs on assignment get interrupts
-	if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bAssignment >= ON_DUTY)
+	if ( pSoldier->bTeam == OUR_TEAM && pSoldier->bAssignment >= ON_DUTY)
 	{
 		return( FALSE );
 	}
@@ -1030,7 +1030,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		// if the interrupted opponent is not the selected character, then the only
 		// people eligible to win an interrupt are those on the SAME SIDE AS
 		// the selected character, ie. his friends...
-		if ( pOpponent->bTeam == gbPlayerNum )
+		if ( pOpponent->bTeam == OUR_TEAM )
 		{
 			const SOLDIERTYPE* const sel = GetSelectedMan();
 			if (pOpponent != sel && pSoldier->bSide != sel->bSide)

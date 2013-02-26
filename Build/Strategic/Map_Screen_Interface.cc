@@ -3920,7 +3920,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 		UINT8	const room = GetRoom(s.sGridNo);
 		if (22 <= room && room <= 41)
 		{
-			CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+			CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (FindObj(s, CHALICE) != ITEM_NOT_FOUND) return ME_MUSEUM;
 			}

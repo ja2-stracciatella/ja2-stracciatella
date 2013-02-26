@@ -1183,7 +1183,7 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 					if (IsValidTargetMerc(tgt))
 					{
 						gUITargetSoldier = tgt;
-						if (tgt->bTeam == gbPlayerNum && gUIActionModeChangeDueToMouseOver)
+						if (tgt->bTeam == OUR_TEAM && gUIActionModeChangeDueToMouseOver)
 						{
 							*puiNewEvent = A_CHANGE_TO_MOVE;
 							return;

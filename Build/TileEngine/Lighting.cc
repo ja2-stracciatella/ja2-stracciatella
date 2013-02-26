@@ -1514,7 +1514,7 @@ void LightSetBaseLevel(UINT8 iIntensity)
 		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const s = *i;
-			if (s->bTeam == gbPlayerNum) ReCreateSoldierLight(s);
+			if (s->bTeam == OUR_TEAM) ReCreateSoldierLight(s);
 		}
 	}
 

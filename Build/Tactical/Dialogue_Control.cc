@@ -311,7 +311,7 @@ void HandleDialogue()
 					HandleTacticalUI();
 
 					// ATE: If this is NOT the player's turn.. engage AI UI lock!
-					if (gTacticalStatus.ubCurrentTeam != gbPlayerNum)
+					if (gTacticalStatus.ubCurrentTeam != OUR_TEAM)
 					{
 						// Setup locked UI
 						guiPendingOverrideEvent = LU_BEGINUILOCK;
@@ -621,7 +621,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 			bool Execute()
 			{
 				// Check if this one is to be delayed until we gain control.
-				if (delayed_ && gTacticalStatus.ubCurrentTeam != gbPlayerNum) return true;
+				if (delayed_ && gTacticalStatus.ubCurrentTeam != OUR_TEAM) return true;
 
 				// Try to find soldier...
 				SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(character_);
@@ -655,7 +655,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 				ExecuteCharacterDialogue(character_, quote_, face, dialogue_handler_, from_soldier_);
 
 				s = FindSoldierByProfileID(character_);
-				if (s && s->bTeam == gbPlayerNum)
+				if (s && s->bTeam == OUR_TEAM)
 				{
 					CheckForStopTimeQuotes(quote_);
 				}
@@ -781,7 +781,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 
 		{
 			// This quote might spawn another quote from someone
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (s->ubProfile != ubCharacterNum &&
 						OkControllableMerc(s) &&
@@ -1402,7 +1402,7 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{ // Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;
 		if (!OkControllableMerc(&s))          continue;
@@ -1449,7 +1449,7 @@ void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z,
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{ // Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;
 		if (s.sSectorX != x)                  continue;
@@ -1471,7 +1471,7 @@ void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UI
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{ // Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;
 		if (!OkControllableMerc(&s))                       continue;
@@ -1502,7 +1502,7 @@ void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, 
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		// Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;

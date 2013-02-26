@@ -101,7 +101,7 @@ SoldierFindFlags GetSoldierFindFlags(SOLDIERTYPE const& s)
 	}
 	else
 	{ // Check the side, etc
-		if (!s.bNeutral && s.bSide != gbPlayerNum)
+		if (!s.bNeutral && s.bSide != OUR_TEAM)
 		{ // It's an enemy merc
 			flags |= ENEMY_MERC;
 		}
@@ -328,7 +328,7 @@ BOOLEAN IsValidTargetMerc(const SOLDIERTYPE* const s)
 	//if (s->bLife == 0) return FALSE;
 
 	// IF BAD GUY - CHECK VISIVILITY
-	if (s->bTeam != gbPlayerNum &&
+	if (s->bTeam != OUR_TEAM &&
 			s->bVisible == -1 &&
 			!(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 	{

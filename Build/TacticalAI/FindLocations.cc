@@ -2060,7 +2060,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
-	if (pSoldier->bTeam == gbPlayerNum && !fInRing)
+	if (pSoldier->bTeam == OUR_TEAM && !fInRing)
 	{
 		// have player not go to the left of the ring
 		sMaxLeft = 0;

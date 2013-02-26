@@ -69,7 +69,7 @@ static BOOLEAN FullPatientCheck(const SOLDIERTYPE* const pPatient)
 	}
 	else
 	{
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			// can this character help out?
 			if (CanCharacterAutoBandageTeammate(s))
@@ -101,7 +101,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 	// returns false if we should stop being in auto-bandage mode
 	UINT8					ubMedics = 0, ubPatients = 0;
 
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// can this character help out?
 		if (CanCharacterAutoBandageTeammate(s))
@@ -117,7 +117,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 		return( FALSE );
 	}
 
-	CFOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// can this character be helped out by a teammate?
 		if (CanCharacterBeAutoBandagedByTeammate(pSoldier))

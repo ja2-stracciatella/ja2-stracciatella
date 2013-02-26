@@ -2071,13 +2071,13 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	}
 
 	// check to see if the guy is a friendly?..if so, up the number of times wounded
-	if (tgt.bTeam == gbPlayerNum)
+	if (tgt.bTeam == OUR_TEAM)
 	{
 		++gMercProfiles[tgt.ubProfile].usTimesWounded;
 	}
 
 	// check to see if someone was accidentally hit when no target was specified by the player
-	if (pFirer->bTeam == gbPlayerNum && pFirer->target == NULL && tgt.bNeutral)
+	if (pFirer->bTeam == OUR_TEAM && pFirer->target == NULL && tgt.bNeutral)
 	{
 		if (tgt.ubCivilianGroup == KINGPIN_CIV_GROUP || tgt.ubCivilianGroup == HICKS_CIV_GROUP)
 		{
@@ -2180,7 +2180,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
     }
   }
 
-  if (gTacticalStatus.ubCurrentTeam != OUR_TEAM && tgt.bTeam == gbPlayerNum)
+  if (gTacticalStatus.ubCurrentTeam != OUR_TEAM && tgt.bTeam == OUR_TEAM)
   {
 	  // someone has been hit so no close-call quotes
 	  gTacticalStatus.fSomeoneHit = TRUE;
@@ -3750,7 +3750,7 @@ void MoveBullet(BULLET* const pBullet)
 					}
 
 					// this might be a close call
-					if (tgt.bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum && sDesiredLevel == tgt.bLevel)
+					if (tgt.bTeam == OUR_TEAM && pBullet->pFirer->bTeam != OUR_TEAM && sDesiredLevel == tgt.bLevel)
 					{
 						tgt.fCloseCall = TRUE;
 					}
@@ -3884,7 +3884,7 @@ void MoveBullet(BULLET* const pBullet)
 
 /*
 								// this could be a close call
-								if ( pTarget->bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum )
+								if ( pTarget->bTeam == OUR_TEAM && pBullet->pFirer->bTeam != OUR_TEAM )
 								{
 									pTarget->fCloseCall = TRUE;
 								}

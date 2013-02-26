@@ -1148,7 +1148,7 @@ void HandleHelicopterOnGroundGraphic(void)
 				// See if we can find him and remove him if so
 				// ATE: Don't do this if buddy is on our team!
 				SOLDIERTYPE* const s = FindSoldierByProfileID(SKYRIDER);
-				if (s && s->bTeam != gbPlayerNum) TacticalRemoveSoldier(*s);
+				if (s && s->bTeam != OUR_TEAM) TacticalRemoveSoldier(*s);
 			}
 		}
 
@@ -1193,7 +1193,7 @@ void HandleHelicopterOnGroundSkyriderProfile(void)
 				// See if we can find him and remove him if so
 				// ATE: Don't do this if buddy is on our team!
 				SOLDIERTYPE* const s = FindSoldierByProfileID(SKYRIDER);
-				if (s && s->bTeam != gbPlayerNum) TacticalRemoveSoldier(*s);
+				if (s && s->bTeam != OUR_TEAM) TacticalRemoveSoldier(*s);
 			}
 		}
 

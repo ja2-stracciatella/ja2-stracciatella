@@ -152,7 +152,7 @@ static void SurrenderMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 		BeginCaptureSquence();
 
     // Do capture....
-		FOR_EACH_IN_TEAM(i, gbPlayerNum)
+		FOR_EACH_IN_TEAM(i, OUR_TEAM)
 		{
 			SOLDIERTYPE& s = *i;
 			if (!s.bInSector) continue;
@@ -227,7 +227,7 @@ INT8 GetCivType(const SOLDIERTYPE* pCiv)
 	if ( gWorldSectorX == 10 && gWorldSectorY == 6 && gbWorldSectorZ == 0 )
 	{
     // 2 ) the only female....
-    if ( pCiv->ubCivilianGroup == 0 && pCiv->bTeam != gbPlayerNum && pCiv->ubBodyType == REGFEMALE )
+    if ( pCiv->ubCivilianGroup == 0 && pCiv->bTeam != OUR_TEAM && pCiv->ubBodyType == REGFEMALE )
 		{
 			// She's a ho!
 			return( CIV_TYPE_MARRIED_PC );

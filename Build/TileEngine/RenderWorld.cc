@@ -1021,11 +1021,11 @@ zlevel_topmost:
 								{
 									// Special effect - draw ghost if is seen by a guy in player's team but not current guy
 									// ATE: Todo: setup flag for 'bad-guy' - can releive some checks in renderer
-									if (!s.bNeutral && s.bSide != gbPlayerNum)
+									if (!s.bNeutral && s.bSide != OUR_TEAM)
 									{
 										INT8 bGlowShadeOffset = 0;
 
-										if (gTacticalStatus.ubCurrentTeam == gbPlayerNum)
+										if (gTacticalStatus.ubCurrentTeam == OUR_TEAM)
 										{
 											// Shade differently depending on visiblity
 											if (s.bLastRenderVisibleValue == 0)
@@ -1048,7 +1048,7 @@ zlevel_topmost:
 
 										// Set shade
 										// If a bad guy is highlighted
-										if (gSelectedGuy != NULL && gSelectedGuy->bSide != gbPlayerNum)
+										if (gSelectedGuy != NULL && gSelectedGuy->bSide != OUR_TEAM)
 										{
 											if (gSelectedGuy == &s)
 											{

@@ -1179,7 +1179,7 @@ INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 	INT16					sDist;
 	INT16					sGridNo = NOWHERE;
 
-	CFOR_EACH_IN_TEAM(pTargetSoldier, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(pTargetSoldier, OUR_TEAM)
 	{
 		if (!pTargetSoldier->bInSector)
 		{

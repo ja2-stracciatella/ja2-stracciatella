@@ -564,7 +564,7 @@ void RebuildCurrentSquad( void )
 void ExamineCurrentSquadLights( void )
 {
 	// OK, we should add lights for any guy currently bInSector who is not bad OKLIFE...
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector && s->bLife >= OKLIFE) PositionSoldierLight(s);
 	}

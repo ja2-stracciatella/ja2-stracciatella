@@ -971,7 +971,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 			// Add bars
 			RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
-			SGPVObject const* const gfx = s.bNeutral || s.bSide == gbPlayerNum ?
+			SGPVObject const* const gfx = s.bNeutral || s.bSide == OUR_TEAM ?
 				guiRADIO : guiRADIO2;
 			BltVideoObject(FRAME_BUFFER, gfx, s.sLocatorFrame, sXPos, sYPos);
 		}
@@ -1029,7 +1029,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 			swprintf(buf, lengthof(buf), L"(%ls)", pAssignmentStrings[s.bAssignment]);
 			action = buf;
 		}
-		else if (s.bTeam == gbPlayerNum     &&
+		else if (s.bTeam == OUR_TEAM     &&
 				s.bAssignment < ON_DUTY         &&
 				s.bAssignment != CurrentSquad() &&
 				!(s.uiStatusFlags & SOLDIER_MULTI_SELECTED))
@@ -1259,7 +1259,7 @@ void RestoreInterface( )
 
 void DirtyMercPanelInterface(SOLDIERTYPE const* const pSoldier, DirtyLevel const dirty_level)
 {
-	if ( pSoldier->bTeam == gbPlayerNum )
+	if ( pSoldier->bTeam == OUR_TEAM )
 	{
 		// ONly set to a higher level!
 		if (fInterfacePanelDirty < dirty_level)
@@ -1978,7 +1978,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 	{
 		gTacticalStatus.usTactialTurnLimitCounter = 0;
 
-		CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->bInSector)
 			{

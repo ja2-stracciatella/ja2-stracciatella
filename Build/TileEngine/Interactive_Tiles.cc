@@ -120,7 +120,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 	if (!(structure->fFlags & STRUCTURE_SWITCH))
 	{
 		bool did_missing_quote = false;
-		if (s->bTeam == gbPlayerNum)
+		if (s->bTeam == OUR_TEAM)
 		{
 			if (grid_no        == BOBBYR_SHIPPING_DEST_GRIDNO        &&
 					gWorldSectorX  == BOBBYR_SHIPPING_DEST_SECTOR_X      &&
@@ -150,7 +150,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 				bool do_humm     = true;
 				bool do_locators = true;
 
-				if (s->bTeam != gbPlayerNum)
+				if (s->bTeam != OUR_TEAM)
 				{
 					do_humm     = false;
 					do_locators = false;

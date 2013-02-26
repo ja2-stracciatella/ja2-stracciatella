@@ -145,7 +145,7 @@ try
 		TacticalTeamType const& team = gTacticalStatus.Team[team_id];
 		id = team.bFirstID;
 		// ATE: If we are a vehicle, and a player, start at a different slot (2 - max)
-		if (team_id == gbPlayerNum)
+		if (team_id == OUR_TEAM)
 		{
 			switch (profile != NO_PROFILE ? GetProfile(profile).ubBodyType : c.bBodyType)
 			{

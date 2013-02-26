@@ -678,7 +678,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	Corpse.uiTimeOfDeath = GetWorldTotalMin( );
 
 	// If corpse is not valid. make items visible
-	if (ubType == NO_CORPSE && s.bTeam != gbPlayerNum)
+	if (ubType == NO_CORPSE && s.bTeam != OUR_TEAM)
 	{
 		usItemFlags &= (~WORLD_ITEM_DONTRENDER );
 	}
@@ -687,7 +687,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	// ATE: If the queen is killed, she should
 	// make items visible because it ruins end sequence....
 	Visibility const bVisible =
-		s.bTeam == gbPlayerNum || s.ubProfile == QUEEN ?
+		s.bTeam == OUR_TEAM || s.ubProfile == QUEEN ?
 			VISIBLE : INVISIBLE;
 
   // Not for a robot...
@@ -718,7 +718,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 		  if ( pObj->usItem != NOTHING )
 		  {
 			  // Check if it's supposed to be dropped
-			  if (!(pObj->fFlags & OBJECT_UNDROPPABLE) || s.bTeam == gbPlayerNum)
+			  if (!(pObj->fFlags & OBJECT_UNDROPPABLE) || s.bTeam == OUR_TEAM)
 			  {
 				  // and make sure that it really is a droppable item type
 				  if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
@@ -738,7 +738,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 
 	// If not a player, you can completely remove soldiertype
 	// otherwise, just remove their graphic
-	if (s.bTeam != gbPlayerNum)
+	if (s.bTeam != OUR_TEAM)
 	{
 		// Remove merc!
 		// ATE: Remove merc slot first - will disappear if no corpse data found!
@@ -759,7 +759,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
 
 	// If this is our guy......make visible...
-	//if (s.bTeam == gbPlayerNum)
+	//if (s.bTeam == OUR_TEAM)
 	{
 		added_corpse->def.bVisible = 1;
 	}
@@ -1338,7 +1338,7 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 
 void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE const& s, OBJECTTYPE& o)
 {
-	if (s.bTeam == gbPlayerNum) return;
+	if (s.bTeam == OUR_TEAM) return;
 	if (Item[o.usItem].usItemClass != IC_AMMO) return;
 
 	/* Don't drop all the clips, just a random # of them between 1 and how
@@ -1390,7 +1390,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
     // 50% chance of adding 1 to other mercs....
     if ( Random( 2 ) == 1 )
     {
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	    {
 			  // ATE: Ok, lets check for some basic things here!
 			  if (s->bLife >= OKLIFE && s->sGridNo != NOWHERE && s->bInSector)

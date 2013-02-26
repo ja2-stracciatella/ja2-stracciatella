@@ -3053,7 +3053,7 @@ void DrawItemTileCursor( )
 				{
 					// Are they on our team?
 					// ATE: Can't be an EPC
-					if (tgt->bTeam == gbPlayerNum && !AM_AN_EPC(tgt) && !(tgt->uiStatusFlags & SOLDIER_VEHICLE))
+					if (tgt->bTeam == OUR_TEAM && !AM_AN_EPC(tgt) && !(tgt->uiStatusFlags & SOLDIER_VEHICLE))
 					{
 						if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE )
 						{
@@ -3537,7 +3537,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		SOLDIERTYPE* const pSoldier = gUIFullTarget;
 		if (sDist <= PASSING_ITEM_DISTANCE_OKLIFE &&
 				pSoldier != NULL &&
-				pSoldier->bTeam == gbPlayerNum &&
+				pSoldier->bTeam == OUR_TEAM &&
 				!AM_AN_EPC(pSoldier) &&
 				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
@@ -3633,7 +3633,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			SOLDIERTYPE* target = NULL;
 			if (pSoldier != NULL)
 			{
-				if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+				if ( pSoldier->bTeam == OUR_TEAM && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 				{
 					// OK, on our team,
 

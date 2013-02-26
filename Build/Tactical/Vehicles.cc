@@ -187,10 +187,10 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 	if (!IsHelicopter(v))
 	{
 		vs = &GetSoldierStructureForVehicle(v);
-		if (vs->bTeam != gbPlayerNum)
+		if (vs->bTeam != OUR_TEAM)
 		{
 			// Change sides
-			vs = ChangeSoldierTeam(vs, gbPlayerNum);
+			vs = ChangeSoldierTeam(vs, OUR_TEAM);
 			// add it to mapscreen list
 			fReBuildCharacterList = TRUE;
 		}

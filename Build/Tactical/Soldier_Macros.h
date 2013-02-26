@@ -32,7 +32,7 @@ static inline bool IsMechanical(SOLDIERTYPE const& s)
 
 static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)
 {
-	return !s->bNeutral && s->bSide != gbPlayerNum && s->bLife >= OKLIFE;
+	return !s->bNeutral && s->bSide != OUR_TEAM && s->bLife >= OKLIFE;
 }
 
 // Checks if our guy can be controllable .... checks bInSector, team, on duty, etc...
@@ -42,7 +42,7 @@ static inline BOOLEAN OkControllableMerc(const SOLDIERTYPE* const s)
 	return
 		s->bLife >= OKLIFE &&
 		s->bInSector &&
-		s->bTeam == gbPlayerNum &&
+		s->bTeam == OUR_TEAM &&
 		s->bAssignment < ON_DUTY;
 }
 #define OK_CONTROLLABLE_MERC(s) ((s)->bActive && OkControllableMerc((s)))

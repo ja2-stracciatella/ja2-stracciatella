@@ -616,7 +616,7 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	new_s->bCamo                   = old_s->bCamo;
 	if (new_s->bCamo != 0) CreateSoldierPalettes(*new_s);
 
-	if (team == gbPlayerNum) new_s->bVisible = 1;
+	if (team == OUR_TEAM) new_s->bVisible = 1;
 
 	// Copy over any items.
 	for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
@@ -648,7 +648,7 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	if (new_s->ubProfile != NO_PROFILE)
 	{
 		UINT8& misc_flags = GetProfile(new_s->ubProfile).ubMiscFlags;
-		misc_flags = team == gbPlayerNum ?
+		misc_flags = team == OUR_TEAM ?
 			misc_flags |  PROFILE_MISC_FLAG_RECRUITED :
 			misc_flags & ~PROFILE_MISC_FLAG_RECRUITED;
 	}
@@ -669,7 +669,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
 
 	// Add this guy to our team!
-	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam(pSoldier, gbPlayerNum);
+	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam(pSoldier, OUR_TEAM);
 
 	// handle set up any RPC's that will leave us in time
 	if ( ubCharNum == SLAY )
@@ -758,7 +758,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags3 &= ~PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 
 	// Add this guy to our team!
-	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
+	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam( pSoldier, OUR_TEAM );
 	pNewSoldier->ubWhatKindOfMercAmI = MERC_TYPE__EPC;
 
 	// Try putting them into the current squad

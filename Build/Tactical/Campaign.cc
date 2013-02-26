@@ -1470,7 +1470,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 	}
 
 	// to do: find guys in sector on the currently active squad, those that are conscious get this amount in XPs
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector &&
 				IsMercOnCurrentSquad(s) &&

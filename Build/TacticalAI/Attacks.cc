@@ -1409,7 +1409,7 @@ static UINT8 NumMercsCloseTo(INT16 sGridNo, UINT8 ubMaxDist)
 	FOR_EACH_MERC(i)
 	{
 		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam == gbPlayerNum &&
+		if (s->bTeam == OUR_TEAM &&
 				s->bLife >= OKLIFE      &&
 				PythSpacesAway(sGridNo, s->sGridNo) <= ubMaxDist)
 		{

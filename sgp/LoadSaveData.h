@@ -51,6 +51,7 @@ static inline void ExtractWideString32(wchar_t* Dst, const BYTE* Src, size_t Siz
 #define EXTR_SKIP(S, Size) (S) += (Size);
 #define EXTR_SKIP_I16(S)   (S) += (2);
 #define EXTR_SKIP_I32(S)   (S) += (4);
+#define EXTR_SKIP_U8(S)    (S) += (1);
 #define EXTR_SOLDIER(S, D) (D) = ID2Soldier(*(const SoldierID*)(S)); (S) += sizeof(SoldierID);
 #define EXTR_VEC3(S, D) EXTR_FLOAT(S, (D).x); EXTR_FLOAT(S, (D).y); EXTR_FLOAT(S, (D).z);
 
@@ -92,6 +93,7 @@ static inline void InjectWideString32(const wchar_t* Src, BYTE* Dst, size_t Size
 #define INJ_SKIP(D, Size) memset(D, 0, Size); (D) += Size;
 #define INJ_SKIP_I16(D)   memset(D, 0, 2);    (D) += 2;
 #define INJ_SKIP_I32(D)   memset(D, 0, 4);    (D) += 4;
+#define INJ_SKIP_U8(D)    memset(D, 0, 1);    (D) += 1;
 #define INJ_SOLDIER(D, S) *(SoldierID*)(D) = Soldier2ID((S)); (D) += sizeof(SoldierID);
 #define INJ_VEC3(D, S) INJ_FLOAT(D, (S).x); INJ_FLOAT(D, (S).y); INJ_FLOAT(D, (S).z);
 

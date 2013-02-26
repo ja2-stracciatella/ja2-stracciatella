@@ -47,7 +47,7 @@ static INT8 RTDecideAction(SOLDIERTYPE* pSoldier)
 	{
 		return( CrowDecideAction( pSoldier ) );
 	}
-	else if (pSoldier->bTeam == gbPlayerNum)
+	else if (pSoldier->bTeam == OUR_TEAM)
 	{
 		return( RTPlayerDecideAction( pSoldier ) );
 	}

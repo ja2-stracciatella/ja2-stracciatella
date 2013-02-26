@@ -2225,7 +2225,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 		else if ( Item[ pObject->Obj.usItem ].usItemClass & IC_GRENADE  )
 		{
 /* ARM: Removed.  Rewards even missed throws, and pulling a pin doesn't really teach anything about explosives
-			if (pObject->owner->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT)
+			if (pObject->owner->bTeam == OUR_TEAM && gTacticalStatus.uiFlags & INCOMBAT)
 			{
 				// tossed grenade, not a dud, so grant xp
 				// EXPLOSIVES GAIN (10):  Tossing grenade

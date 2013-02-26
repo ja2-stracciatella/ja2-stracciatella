@@ -371,7 +371,7 @@ void HandleAllReachAbleItemsInTheSector(INT16 const x, INT16 const y, INT8 const
 	GridNo const isolated = gMapInformation.sIsolatedGridNo;
 	if (isolated != -1)
 	{
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->bLife <= 0) continue;
 			if (s->sSectorX != x) continue;
@@ -932,7 +932,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 			OBJECTTYPE& o = *i;
 			if (o.usItem == NOTHING) continue;
 
-			if (s->bTeam != gbPlayerNum)
+			if (s->bTeam != OUR_TEAM)
 			{
 				/* This percent of the time, they don't drop stuff they would've dropped
 				 * in tactical */

@@ -531,7 +531,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		UINT32 volume = CalculateSpeechVolume(HIGHVOLUME);
 
 		// If we are an enemy.....reduce due to volume
-		if ( pSoldier->bTeam != gbPlayerNum )
+		if ( pSoldier->bTeam != OUR_TEAM )
 		{
 			volume = SoundVolume(volume, pSoldier->sGridNo);
 		}
@@ -712,7 +712,7 @@ void DeleteSoldier(SOLDIERTYPE& s)
 
 static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 {
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if ( pSoldier->bTeam != OUR_TEAM )
 	{
 		return( FALSE );
 	}
@@ -745,7 +745,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 
 void ReCreateSoldierLight(SOLDIERTYPE* const s)
 {
-	if (s->bTeam != gbPlayerNum) return;
+	if (s->bTeam != OUR_TEAM) return;
 	if (!s->bActive)             return;
 	if (!s->bInSector)           return;
 
@@ -860,7 +860,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 		pSoldier->fGettingHit = FALSE;
 
 		// ATE: if our guy, have 10% change of say damn, if still conscious...
-		if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE )
+		if ( pSoldier->bTeam == OUR_TEAM && pSoldier->bLife >= OKLIFE )
 		{
 			if ( Random( 10 ) == 0 )
 			{
@@ -1038,7 +1038,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 		{
 			// Don't do some of this if we are a monster!
       // ATE: LOWER AIMATION IS GOOD, RAISE ONE HOWEVER MAY CAUSE PROBLEMS FOR AI....
-			if ( !(pSoldier->uiStatusFlags & SOLDIER_MONSTER ) && pSoldier->ubBodyType != ROBOTNOWEAPON && pSoldier->bTeam == gbPlayerNum )
+			if ( !(pSoldier->uiStatusFlags & SOLDIER_MONSTER ) && pSoldier->ubBodyType != ROBOTNOWEAPON && pSoldier->bTeam == OUR_TEAM )
 			{
 				// If this animation is a raise_weapon animation
 				if ( ( gAnimControl[ usNewState ].uiFlags & ANIM_RAISE_WEAPON ) && !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_RAISE_WEAPON | ANIM_NOCHANGE_WEAPON ) ) )
@@ -2060,7 +2060,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 	}
 
 	// Merc got to a new tile by "sneaking". Did we theoretically sneak past an enemy?
-	if (s.bTeam == gbPlayerNum &&
+	if (s.bTeam == OUR_TEAM &&
 			s.bStealthMode         &&
 			s.bOppCnt > 0) // opponents in sight
 	{
@@ -2202,7 +2202,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 					// Set flag indicating we are about to shoot once destination direction is hit
 					pSoldier->fTurningToShoot = TRUE;
 
-					if ( pSoldier->bTeam != gbPlayerNum  && pSoldier->bVisible != -1)
+					if ( pSoldier->bTeam != OUR_TEAM  && pSoldier->bVisible != -1)
 					{
 						LocateSoldier(pSoldier, DONTSETLOCATOR);
 					}
@@ -2669,12 +2669,12 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	{
 		if (att != NULL)
 		{
-			if (att->bTeam == gbPlayerNum)
+			if (att->bTeam == OUR_TEAM)
 			{
 				HandleMoraleEvent(att, MORALE_DID_LOTS_OF_DAMAGE, att->sSectorX, att->sSectorY, att->bSectorZ);
 			}
 		}
-		if (pSoldier->bTeam == gbPlayerNum)
+		if (pSoldier->bTeam == OUR_TEAM)
 		{
 			HandleMoraleEvent( pSoldier, MORALE_TOOK_LOTS_OF_DAMAGE, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 		}
@@ -2800,7 +2800,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 
 	// ATE: OK, Let's check our ASSIGNMENT state,
 	// If anything other than on a squad or guard, make them guard....
-	if ( pSoldier->bTeam == gbPlayerNum )
+	if ( pSoldier->bTeam == OUR_TEAM )
 	{
 		if ( pSoldier->bAssignment >= ON_DUTY && pSoldier->bAssignment != ASSIGNMENT_POW )
 		{
@@ -2830,7 +2830,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	}
 
 	// IAN ADDED THIS SAT JUNE 14th : HAVE TO SHOW VICTIM!
-	if (gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bVisible != -1 && pSoldier->bTeam == gbPlayerNum )
+	if (gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bVisible != -1 && pSoldier->bTeam == OUR_TEAM )
 	{
 		LocateSoldier(pSoldier, DONTSETLOCATOR);
 	}
@@ -3400,7 +3400,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	// Ifd this code, make true if a player
 	if ( fFromUI == 3 )
 	{
-		if ( pSoldier->bTeam == gbPlayerNum )
+		if ( pSoldier->bTeam == OUR_TEAM )
 		{
 			fFromUI = 1;
 		}
@@ -3592,7 +3592,7 @@ void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier )
 {
 	// ATE: This is to turn off fast movement, that us used to change movement mode
 	// for ui display on stance changes....
-	if ( pSoldier->bTeam == gbPlayerNum )
+	if ( pSoldier->bTeam == OUR_TEAM )
 	{
 		//pSoldier->fUIMovementFast = FALSE;
 	}
@@ -3600,7 +3600,7 @@ void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier )
 	// The queen, if she sees anybody, goes to ready, not normal breath....
 	if ( pSoldier->ubBodyType == QUEENMONSTER )
 	{
-		if ( pSoldier->bOppCnt > 0 || pSoldier->bTeam == gbPlayerNum )
+		if ( pSoldier->bOppCnt > 0 || pSoldier->bTeam == OUR_TEAM )
 		{
 			EVENT_InitNewSoldierAnim( pSoldier, QUEEN_READY, 0 , TRUE );
 			return;
@@ -4066,7 +4066,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 			if (s.uiXRayActivatedTime != 0) TurnOffXRayEffects(&s);
 		}
 
-		if (s.bTeam == gbPlayerNum && s.ubProfile != NO_PROFILE)
+		if (s.bTeam == OUR_TEAM && s.ubProfile != NO_PROFILE)
 		{
 			switch (GetProfile(s.ubProfile).bPersonalityTrait)
 			{
@@ -5142,7 +5142,7 @@ void BeginSoldierClimbUpRoof(SOLDIERTYPE* const s)
 
 	if (!EnoughPoints(s, GetAPsToClimbRoof(s, FALSE), 0, TRUE)) return;
 
-	if (s->bTeam == gbPlayerNum) SetUIBusy(s);
+	if (s->bTeam == OUR_TEAM) SetUIBusy(s);
 
 	s->sTempNewGridNo     = NewGridNo(s->sGridNo, DirectionInc(direction));
 	s->ubPendingDirection = direction;
@@ -5539,7 +5539,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 
 	// ATE: Put some logic in here to allow enemies to die quicker.....
 	// Are we an enemy?
-	if ( pSoldier->bSide != gbPlayerNum && !pSoldier->bNeutral && pSoldier->ubProfile == NO_PROFILE )
+	if ( pSoldier->bSide != OUR_TEAM && !pSoldier->bNeutral && pSoldier->ubProfile == NO_PROFILE )
 	{
 		// ATE: Give them a chance to fall down...
 		if ( pSoldier->bLife > 0 && pSoldier->bLife < ( OKLIFE - 1 ) )
@@ -5681,7 +5681,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 				if ( !( pSoldier->inv[ HANDPOS ].fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					// ATE: if our guy, make visible....
-					Visibility  const bVisible = pSoldier->bTeam == gbPlayerNum ?
+					Visibility  const bVisible = pSoldier->bTeam == OUR_TEAM ?
 						VISIBLE : INVISIBLE;
 					AddItemToPool( pSoldier->sGridNo, &(pSoldier->inv[ HANDPOS ]), bVisible, pSoldier->bLevel, 0, -1 );
 					DeleteObj( &(pSoldier->inv[HANDPOS]) );
@@ -5710,7 +5710,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 	}
 
 	//Set UI Flag for unconscious, if it's our own guy!
-	if ( pSoldier->bTeam == gbPlayerNum  )
+	if ( pSoldier->bTeam == OUR_TEAM  )
 	{
 		if ( pSoldier->bLife < OKLIFE && pSoldier->bLife > 0 && bOldLife >= OKLIFE )
 		{
@@ -5731,7 +5731,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 	if (attacker != NULL)
 	{
 		// don't give exp for hitting friends!
-		if (attacker->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum)
+		if (attacker->bTeam == OUR_TEAM && pSoldier->bTeam != OUR_TEAM)
 		{
 			if ( ubReason == TAKE_DAMAGE_EXPLOSION )
 			{
@@ -5981,7 +5981,7 @@ file_exists:;
 	UINT32       volume      = CalculateSpeechVolume(base_volume);
 
 	// If we are an enemy.....reduce due to volume
-	if (s->bTeam != gbPlayerNum)
+	if (s->bTeam != OUR_TEAM)
 	{
 		volume = SoundVolume(volume, s->sGridNo);
 	}
@@ -6142,7 +6142,7 @@ void BeginSoldierClimbDownRoof(SOLDIERTYPE* const s)
 
 	if (!EnoughPoints(s, GetAPsToClimbRoof(s, TRUE), 0, TRUE)) return;
 
-	if (s->bTeam == gbPlayerNum) SetUIBusy(s);
+	if (s->bTeam == OUR_TEAM) SetUIBusy(s);
 
 	s->sTempNewGridNo     = NewGridNo(s->sGridNo, DirectionInc(direction));
 	s->ubPendingDirection = TwoCDirection(direction);
@@ -6380,7 +6380,7 @@ static void AdjustForFastTurnAnimation(SOLDIERTYPE* pSoldier)
 
  // CHECK FOR FASTTURN ANIMATIONS
  // ATE: Mod: Only fastturn for OUR guys!
- if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FASTTURN && pSoldier->bTeam == gbPlayerNum && !( pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
+ if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FASTTURN && pSoldier->bTeam == OUR_TEAM && !( pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
  {
 		if ( pSoldier->bDirection != pSoldier->bDesiredDirection )
 		{
@@ -6669,7 +6669,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 							// OK, stop merc....
 							EVENT_StopMerc(pTSoldier);
 
-							if ( pTSoldier->bTeam != gbPlayerNum )
+							if ( pTSoldier->bTeam != OUR_TEAM )
 							{
 								CancelAIAction(pTSoldier);
 							}
@@ -6795,7 +6795,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 						// OK, stop merc....
 						EVENT_StopMerc(pTSoldier);
 
-						if ( pTSoldier->bTeam != gbPlayerNum )
+						if ( pTSoldier->bTeam != OUR_TEAM )
 						{
 							CancelAIAction(pTSoldier);
 						}
@@ -6915,7 +6915,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 	if (pTSoldier != NULL)
 	{
 		// OK, check if we should play quote...
-		if ( pTSoldier->bTeam != gbPlayerNum )
+		if ( pTSoldier->bTeam != OUR_TEAM )
 		{
 			if ( pTSoldier->ubProfile != NO_PROFILE && pTSoldier->ubProfile >= FIRST_RPC && !RPC_RECRUITED( pTSoldier ) )
 			{
@@ -7528,10 +7528,10 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 	{
 		sAPCost = PtsToMoveDirection( pSoldier, (UINT8)guiPathingData[ 0 ] );
 
-		if (EnoughPoints(pSoldier, sAPCost, 0, pSoldier->bTeam == gbPlayerNum))
+		if (EnoughPoints(pSoldier, sAPCost, 0, pSoldier->bTeam == OUR_TEAM))
 		{
 			// Acknowledge
-			if ( pSoldier->bTeam == gbPlayerNum )
+			if ( pSoldier->bTeam == OUR_TEAM )
 			{
 				DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
 
@@ -8078,7 +8078,7 @@ void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if ( pSoldier->bTeam != OUR_TEAM )
 	{
 		return;
 	}
@@ -8656,7 +8656,7 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 	// Don't require s->bInSector here, it must work from mapscreen!
 
 	// are we in ok shape?
-	if (s->bLife < OKLIFE || s->bTeam != gbPlayerNum)
+	if (s->bLife < OKLIFE || s->bTeam != OUR_TEAM)
 	{
 		return( FALSE );
 	}
@@ -8720,7 +8720,7 @@ SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier )
 void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pRobot )
 {
 	// Loop through guys and look for a controller!
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (ControllingRobot(s))
 		{
@@ -8741,7 +8741,7 @@ void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->uiStatusFlags & SOLDIER_ROBOT)
 		{
@@ -8768,7 +8768,7 @@ static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* const s)
 void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 {
 	// Are we an AI guy?
-	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
+	if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM && pSoldier->bTeam != OUR_TEAM )
 	{
 		if ( pSoldier->bNewSituation == IS_NEW_SITUATION )
 		{
@@ -8914,7 +8914,7 @@ void DebugValidateSoldierData( )
 	// reset frame counter
 	uiFrameCount = 0;
 
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// OK, first check for alive people
 		// Don't do this check if we are a vehicle...

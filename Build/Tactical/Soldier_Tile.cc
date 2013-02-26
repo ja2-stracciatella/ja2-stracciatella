@@ -102,7 +102,7 @@ void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bVal
 	if (person != NULL)
 	{
 		// if they are our own team members ( both )
-		if (person->bTeam == gbPlayerNum && pSoldier->bTeam == gbPlayerNum)
+		if (person->bTeam == OUR_TEAM && pSoldier->bTeam == OUR_TEAM)
 		{
 			// Here we have another guy.... save his stats so we can use them for
 			// speed determinations....
@@ -125,7 +125,7 @@ static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 		}
 	#endif
 
-  if ( pSoldier->bTeam == gbPlayerNum  && fGivenUp )
+  if ( pSoldier->bTeam == OUR_TEAM  && fGivenUp )
   {
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
   }
@@ -191,7 +191,7 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 		if (tgt != pSoldier)
 		{
 			// OK, set flag indicating we are blocked by a merc....
-			if ( pSoldier->bTeam != gbPlayerNum ) // CJC: shouldn't this be in all cases???
+			if ( pSoldier->bTeam != OUR_TEAM ) // CJC: shouldn't this be in all cases???
 		//if ( 0 )
 			{
 				pSoldier->fBlockedByAnotherMerc = TRUE;
@@ -359,7 +359,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 		{
 			// Is the next gridno our destination?
 			// OK: Let's check if we are NOT walking off screen
-			if ( sGridNo == sFinalDestTile && pSoldier->ubWaitActionToDo == 0 && (pSoldier->bTeam == gbPlayerNum || pSoldier->sAbsoluteFinalDestination == NOWHERE) )
+			if ( sGridNo == sFinalDestTile && pSoldier->ubWaitActionToDo == 0 && (pSoldier->bTeam == OUR_TEAM || pSoldier->sAbsoluteFinalDestination == NOWHERE) )
 			{
 				// Yah, well too bad, stop here.
 				SetFinalTile( pSoldier, pSoldier->sGridNo, FALSE );
@@ -630,8 +630,8 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 					if (tgt != NULL)
 					{
 						if (pSoldier->ubQuoteRecord != 0 ||
-								(pSoldier->bTeam != gbPlayerNum && pSoldier->bOrders != STATIONARY && tgt->bTeam != gbPlayerNum && tgt->bOrders != STATIONARY) ||
-								(pSoldier->bTeam == gbPlayerNum && gTacticalStatus.fAutoBandageMode && (tgt->bTeam != CIV_TEAM || tgt->bOrders != STATIONARY)))
+								(pSoldier->bTeam != OUR_TEAM && pSoldier->bOrders != STATIONARY && tgt->bTeam != OUR_TEAM && tgt->bOrders != STATIONARY) ||
+								(pSoldier->bTeam == OUR_TEAM && gTacticalStatus.fAutoBandageMode && (tgt->bTeam != CIV_TEAM || tgt->bOrders != STATIONARY)))
 						{
 							// Swap now!
 							//tgt->fBlockedByAnotherMerc = FALSE;
@@ -672,7 +672,7 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 				// Are we close enough to give up? ( and are a pc )
 				if ( pSoldier->fDelayedMovement > 20 && pSoldier->fDelayedMovement != 150)
 				{
-					if ( PythSpacesAway( pSoldier->sGridNo, pSoldier->sFinalDestination ) < 5 && pSoldier->bTeam == gbPlayerNum )
+					if ( PythSpacesAway( pSoldier->sGridNo, pSoldier->sFinalDestination ) < 5 && pSoldier->bTeam == OUR_TEAM )
 					{
 						// Quit...
 						SetFinalTile( pSoldier, pSoldier->sGridNo, FALSE );
@@ -683,7 +683,7 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 				// Are we close enough to give up? ( and are a pc )
 				if ( pSoldier->fDelayedMovement > 170 )
 				{
-					if ( PythSpacesAway( pSoldier->sGridNo, pSoldier->sFinalDestination ) < 5 && pSoldier->bTeam == gbPlayerNum )
+					if ( PythSpacesAway( pSoldier->sGridNo, pSoldier->sFinalDestination ) < 5 && pSoldier->bTeam == OUR_TEAM )
 					{
 						// Quit...
 						SetFinalTile( pSoldier, pSoldier->sGridNo, FALSE );

@@ -894,7 +894,7 @@ static INT32 ShowVehicles(INT16 const x, INT16 const y, INT32 icon_pos)
 		if (PlayerIDGroupInMotion(v.ubMovementGroup)) continue;
 
 		SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
-		if (vs.bTeam != gbPlayerNum) continue;
+		if (vs.bTeam != OUR_TEAM) continue;
 
 		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, x, y, icon_pos++);
 	}

@@ -146,7 +146,7 @@ static void DecayStrategicMorale(SOLDIERTYPE* pSoldier)
 
 void DecayTacticalMoraleModifiers(void)
 {
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		//if the merc is in Arulco
 		// CJC: decay modifiers while asleep! or POW!
@@ -187,7 +187,7 @@ void DecayTacticalMoraleModifiers(void)
 					{
 						// look for anyone else in same sector
 						handle_nervous = TRUE;
-						CFOR_EACH_IN_TEAM(other, gbPlayerNum)
+						CFOR_EACH_IN_TEAM(other, OUR_TEAM)
 						{
 							if (other != s &&
 									other->sSectorX == s->sSectorX &&
@@ -230,7 +230,7 @@ void DecayTacticalMoraleModifiers(void)
 
 static void DecayStrategicMoraleModifiers(void)
 {
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		//if the merc is active, in Arulco
 		// CJC: decay modifiers while asleep! or POW!
@@ -457,7 +457,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 		case MORALE_BATTLE_WON:
 			// affects everyone to varying degrees
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (SOLDIER_IN_SECTOR(s, sMapX, sMapY, bMapZ))
 				{
@@ -472,7 +472,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 		case MORALE_RAN_AWAY:
 			// affects everyone to varying degrees
-			FOR_EACH_IN_TEAM(i, gbPlayerNum)
+			FOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE& s = *i;
 				/* CJC: adding to SOLDIER_IN_SECTOR check special stuff because the old
@@ -521,7 +521,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 		case MORALE_MONSTER_QUEEN_KILLED:
 		case MORALE_DEIDRANNA_KILLED:
 			// affects everyone, everywhere
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				HandleMoraleEventForSoldier(s, bMoraleEvent);
 			}
@@ -531,7 +531,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 		case MORALE_GREAT_MORALE:
 		case MORALE_AIRSTRIKE:
 			// affects every in sector
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (SOLDIER_IN_SECTOR(s, sMapX, sMapY, bMapZ))
 				{
@@ -545,7 +545,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			Assert( pSoldier );
 
 			// affects everyone
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				HandleMoraleEventForSoldier(s, bMoraleEvent);
 			}
@@ -556,7 +556,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			Assert( pSoldier );
 
 			// affects everyone, in sector differently than not, extra bonuses if it's a buddy or hated merc
-			FOR_EACH_IN_TEAM(i, gbPlayerNum)
+			FOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE& other = *i;
 				if (other.ubProfile == NO_PROFILE) continue;
@@ -588,7 +588,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 		case MORALE_MERC_MARRIED:
 			/* Female mercs get unhappy based on how sexist they are (=hate men),
 			 * gentlemen males get unhappy too */
-			FOR_EACH_IN_TEAM(i, gbPlayerNum)
+			FOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE& other = *i;
 				if (other.ubProfile == NO_PROFILE) continue;
@@ -686,7 +686,7 @@ void HourlyMoraleUpdate()
 	static INT8 strategic_morale_update_counter = 0;
 
 	// loop through all mercs to calculate their morale
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		//if the merc is active, in Arulco, and conscious, not POW
 		if (s->ubProfile   == NO_PROFILE)      continue;
@@ -710,7 +710,7 @@ void HourlyMoraleUpdate()
 		INT8 highest_team_leadership = EffectiveLeadership(s);
 
 		// loop through all other mercs
-		CFOR_EACH_IN_TEAM(other, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(other, OUR_TEAM)
 		{
 			// skip past ourselves and all inactive mercs
 			if (other              == s)               continue;

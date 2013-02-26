@@ -352,7 +352,7 @@ void HandleOverheadMap(void)
 			SOLDIERTYPE* const s = GetClosestMercInOverheadMap(usMapPos, 1);
 			if (s != NULL)
 			{
-				if (s->bTeam == gbPlayerNum) gSelectedGuy = s;
+				if (s->bTeam == OUR_TEAM) gSelectedGuy = s;
 				DisplayMercNameInOverhead(*s);
       }
 		}

@@ -1225,7 +1225,7 @@ static UINT32 PlayerStrength(void)
 {
 	UINT32					uiStrength, uiTotal = 0;
 
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector ||
 				(

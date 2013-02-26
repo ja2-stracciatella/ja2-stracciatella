@@ -376,7 +376,7 @@ ScreenID MainGameScreenHandle(void)
 			if ( ( GetJA2Clock( ) - gTacticalStatus.uiTimeSinceDemoOn ) > 3000 )
 			{
 				SOLDIERTYPE* const s = gTacticalStatus.enemy_sighting_on_their_turn_enemy;
-				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
+				if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 				{
 					AdjustNoAPToFinishMove(s, FALSE);
 				}
@@ -722,7 +722,7 @@ static void TacticalScreenLocateToSoldier(void)
 	}
 
 	// Set locator to first merc
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (OkControllableMerc(s) && OK_INTERRUPT_MERC(s))
 		{
@@ -739,7 +739,7 @@ void UpdateTeamPanelAssignments( )
 	// Remove all players
 	RemoveAllPlayersFromSlot( );
 
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Setup team interface
 		CheckForAndAddMercToTeamPanel(s);

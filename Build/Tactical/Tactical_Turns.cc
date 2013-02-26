@@ -60,7 +60,7 @@ void HandleRPCDescription()
 	// Count how many RPC guys we have
 	UINT8        n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Add guy if he's a candidate
 		if (!RPC_RECRUITED(s))                          continue;
@@ -130,7 +130,7 @@ void HandleTacticalEndTurn()
 		 *  If not a player merc (ubTeam), do things like 1, 2, 3 above
 		 */
 
-		FOR_EACH_IN_TEAM(i, gbPlayerNum)
+		FOR_EACH_IN_TEAM(i, OUR_TEAM)
 		{
 			SOLDIERTYPE& s = *i;
 			if (s.bLife <= 0)    continue;
@@ -155,7 +155,7 @@ void HandleTacticalEndTurn()
 		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE& s = **i;
-			if (s.bTeam == gbPlayerNum) continue;
+			if (s.bTeam == OUR_TEAM) continue;
 
 			// Handle everything from getting breath back, to bleeding, etc.
 			EVENT_BeginMercTurn(s);

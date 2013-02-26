@@ -622,7 +622,7 @@ BOOLEAN	OKFireWeapon( SOLDIERTYPE *pSoldier )
 	{
 		if ( !EnoughAmmo( pSoldier, FALSE, pSoldier->ubAttackingHand ) )
 		{
-			if ( pSoldier->bTeam == gbPlayerNum	 )
+			if ( pSoldier->bTeam == OUR_TEAM	 )
 			{
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_2ND_CLIP_DEPLETED ] );
 				return( FALSE );
@@ -990,7 +990,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		// ATE: Check if we should say quote...
 		if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft == 0 && pSoldier->usAttackingWeapon != ROCKET_LAUNCHER )
 		{
-			if ( pSoldier->bTeam == gbPlayerNum )
+			if ( pSoldier->bTeam == OUR_TEAM )
 			{
 				pSoldier->fSayAmmoQuotePending = TRUE;
 			}
@@ -1186,7 +1186,7 @@ static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLD
 {
 	// if it was another team attacking someone under our control
 	if (target->bTeam != attacker->bTeam &&
-			target->bTeam == gbPlayerNum)
+			target->bTeam == OUR_TEAM)
 	{
 		StatChange(*target, AGILAMT, agil_amt, FROM_SUCCESS);
 	}
@@ -1421,7 +1421,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 
 					usOldItem = pTargetSoldier->inv[HANDPOS].usItem;
 
-					if (pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !IsMechanical(*pTargetSoldier) && !TANK(pTargetSoldier))
+					if (pSoldier->bTeam == OUR_TEAM && pTargetSoldier->bTeam != OUR_TEAM && !IsMechanical(*pTargetSoldier) && !TANK(pTargetSoldier))
 					{
 						// made a steal; give experience
 						StatChange(*pSoldier, STRAMT, 8, FROM_SUCCESS);
@@ -1445,7 +1445,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 					else
 					{
 
-						if ( pSoldier->bTeam == gbPlayerNum )
+						if ( pSoldier->bTeam == OUR_TEAM )
 						{
 							DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
 						}
@@ -1474,12 +1474,12 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
 						Message[ STR_FAILED_TO_STEAL_SOMETHING ],
 						pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ] );
-					if ( pSoldier->bTeam == gbPlayerNum )
+					if ( pSoldier->bTeam == OUR_TEAM )
 					{
 						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
 					}
 
-					if (iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !IsMechanical(*pTargetSoldier) && !TANK(pTargetSoldier))
+					if (iHitChance > 0 && pSoldier->bTeam == OUR_TEAM && pTargetSoldier->bTeam != OUR_TEAM && !IsMechanical(*pTargetSoldier) && !TANK(pTargetSoldier))
 					{
 						// failed a steal; give some experience
 						StatChange(*pSoldier, STRAMT, 4, FROM_FAILURE);
@@ -1503,7 +1503,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				iDiceRoll = PreRandom( iHitChance );
 			}
 
-			if ( pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum )
+			if ( pSoldier->bTeam == OUR_TEAM && pTargetSoldier->bTeam != OUR_TEAM )
 			{
 				// made an HTH attack; give experience
 				UINT8           ubExpGain;
@@ -1581,7 +1581,7 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 	}
 	#endif
 
-	if ( pSoldier->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT )
+	if ( pSoldier->bTeam == OUR_TEAM && gTacticalStatus.uiFlags & INCOMBAT )
 	{
 		// check target gridno
 		const SOLDIERTYPE* pTargetSoldier = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bTargetLevel);
@@ -1917,7 +1917,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 		case SMGCLASS:
 		case MGCLASS:
 			// Guy has missed, play random sound
-			if (attacker->bTeam == gbPlayerNum &&
+			if (attacker->bTeam == OUR_TEAM &&
 					!attacker->bDoBurst &&
 					Random(40) == 0)
 			{
@@ -2061,7 +2061,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 
 				// ATE: Show misses...( if our team )
 				if (gGameSettings.fOptions[TOPTION_SHOW_MISSES] &&
-						attacker->bTeam == gbPlayerNum)
+						attacker->bTeam == OUR_TEAM)
 				{
 					LocateGridNo(sGridNo);
 				}
@@ -2963,7 +2963,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 						pArmour->usAttachItem[ bPlatePos ] = NOTHING;
 						pArmour->bAttachStatus[ bPlatePos ] = 0;
 						DirtyMercPanelInterface(&pTarget, DIRTYLEVEL2);
-						if (pTarget.bTeam == gbPlayerNum)
+						if (pTarget.bTeam == OUR_TEAM)
 						{
 							// report plates destroyed!
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, str_ceramic_plates_smashed, pTarget.name);
@@ -3423,7 +3423,7 @@ void ShotMiss(const BULLET* const b)
 		case SMGCLASS:
 		case MGCLASS:
 			// Guy has missed, play random sound
-			if (pAttacker->bTeam == gbPlayerNum && Random(40) == 0)
+			if (pAttacker->bTeam == OUR_TEAM && Random(40) == 0)
 			{
 				DoMercBattleSound(pAttacker, BATTLE_SOUND_CURSE1);
 			}
@@ -3437,7 +3437,7 @@ void ShotMiss(const BULLET* const b)
 
 			// ATE: Show misses...( if our team )
 			if (gGameSettings.fOptions[TOPTION_SHOW_MISSES] &&
-					pAttacker->bTeam == gbPlayerNum)
+					pAttacker->bTeam == OUR_TEAM)
 			{
 				LocateGridNo(b->sGridNo);
 			}
@@ -4113,7 +4113,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 
 static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObj)
 {
-  if ( pSoldier->bTeam == gbPlayerNum || pSoldier->bVisible == 1 )
+  if ( pSoldier->bTeam == OUR_TEAM || pSoldier->bVisible == 1 )
   {
     if ( (INT8)(PreRandom( 40 ) + PreRandom( 40 ) ) > pObj->bStatus[0] )
     {

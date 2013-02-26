@@ -576,7 +576,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 	fTurnBased = ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) );
 
-	fPathingForPlayer = ( (s->bTeam == gbPlayerNum) && (!gTacticalStatus.fAutoBandageMode) && !(s->uiStatusFlags & SOLDIER_PCUNDERAICONTROL) );
+	fPathingForPlayer = ( (s->bTeam == OUR_TEAM) && (!gTacticalStatus.fAutoBandageMode) && !(s->uiStatusFlags & SOLDIER_PCUNDERAICONTROL) );
 	fNonFenceJumper = !( IS_MERC_BODY_TYPE( s ) );
 	fNonSwimmer = !( IS_MERC_BODY_TYPE( s ) );
 	if ( fNonSwimmer )
@@ -1050,7 +1050,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				{
 					// For our team, skip a location with a known mines unless it is the end of our
 					// path; for others on our side, skip such locations completely;
-					if (s->bTeam != gbPlayerNum || newLoc != iDestination)
+					if (s->bTeam != OUR_TEAM || newLoc != iDestination)
 					{
 						if (gpWorldLevelData[newLoc].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT)
 						{

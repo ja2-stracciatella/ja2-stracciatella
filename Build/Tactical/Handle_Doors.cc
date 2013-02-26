@@ -201,7 +201,7 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 			// Send this guy into stationary stance
 			EVENT_StopMerc(&s);
 
-			if (s.bTeam == gbPlayerNum)
+			if (s.bTeam == OUR_TEAM)
 			{
 				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[DOOR_IS_BUSY]);
 			}
@@ -857,7 +857,7 @@ try
 		if (pSoldier )
 		{
 			// OK, Are we a player merc or AI?
-			if ( pSoldier->bTeam != gbPlayerNum )
+			if ( pSoldier->bTeam != OUR_TEAM )
 			{
 				// If an AI guy... do LOS check first....
 				// If guy is visible... OR fading...
@@ -951,7 +951,7 @@ try
 		if (pSoldier )
 		{
 			// OK, Are we a player merc or AI?
-			if ( pSoldier->bTeam != gbPlayerNum )
+			if ( pSoldier->bTeam != OUR_TEAM )
 			{
 				// If an AI guy... do LOS check first....
 				// If guy is visible... OR fading...

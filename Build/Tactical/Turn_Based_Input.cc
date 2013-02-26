@@ -856,7 +856,7 @@ void GetTBMousePositionInput(UIEventKind* const puiNewEvent)
 					{
 						gUITargetSoldier = tgt;
 
-						if (tgt->bTeam != gbPlayerNum)
+						if (tgt->bTeam != OUR_TEAM)
 						{
 							fOnValidGuy = TRUE;
 						}
@@ -1286,7 +1286,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			}
 			else if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{ // ATE: This key will select everybody in the sector
-				FOR_EACH_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
 				{
 					if (!OkControllableMerc(s)) continue;
 					if (s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)) continue;
@@ -1315,7 +1315,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			// End turn only if in combat and it is the player's turn
 			if (gTacticalStatus.uiFlags & TURNBASED          &&
 					gTacticalStatus.uiFlags & INCOMBAT           &&
-					gTacticalStatus.ubCurrentTeam == gbPlayerNum &&
+					gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
 					!gpItemPointer                               &&
 					!gfDisableTacticalPanelButtons               &&
@@ -1445,7 +1445,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 					s1->bLife >= OKLIFE                                                         && // Check if both OK
 					s2->bLife >= OKLIFE                                                         &&
 					CanSoldierReachGridNoInGivenTileLimit(s1, s2->sGridNo, 1, gsInterfaceLevel) &&
-					(s2->bNeutral || s2->bSide == gbPlayerNum)                                  && // Exclude enemies
+					(s2->bNeutral || s2->bSide == OUR_TEAM)                                  && // Exclude enemies
 					CanExchangePlaces(s1, s2, TRUE))
 			{
 				SwapMercPositions(*s1, *s2);
@@ -1674,7 +1674,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'u':
 			if (CHEATER_CHEAT_LEVEL() && GetSelectedMan())
 			{
-				FOR_EACH_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
 				{
 					if (s->bLife <= 0) continue;
 
@@ -1783,7 +1783,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			if (CHEATER_CHEAT_LEVEL()                        &&
 					gTacticalStatus.uiFlags & TURNBASED          &&
 					gTacticalStatus.uiFlags & INCOMBAT           &&
-					gTacticalStatus.ubCurrentTeam == gbPlayerNum &&
+					gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
 					!gpItemPointer                               &&
 					!gfDisableTacticalPanelButtons               &&
@@ -1792,7 +1792,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 						(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->Enabled())
 					))
 			{
-				FOR_EACH_IN_TEAM(s, gbPlayerNum)
+				FOR_EACH_IN_TEAM(s, OUR_TEAM)
 				{
 					if (s->bLife <= 0) continue;
 					// Get APs back
@@ -1930,7 +1930,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		{
 			// Check if at least one guy is on stealth
 			bool stealth_on = true;
-			CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+			CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (!OkControllableMerc(s))           continue;
 				if (s->bAssignment != CurrentSquad()) continue;
@@ -1939,7 +1939,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 				break;
 			}
 
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (!OkControllableMerc(s))           continue;
 				if (s->bAssignment != CurrentSquad()) continue;
@@ -2115,7 +2115,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 		if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
 			{
-				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
+				if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 				{
 					if ( CHEATER_CHEAT_LEVEL( ) )
 					{
@@ -2751,7 +2751,7 @@ static void ObliterateSector()
 #endif
 	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
-		if (s->bNeutral || s->bSide == gbPlayerNum) continue;
+		if (s->bNeutral || s->bSide == OUR_TEAM) continue;
 		EVENT_SoldierGotHit(s, 0, 400, 0, s->bDirection, 320, 0, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
 	}
 }
@@ -3166,7 +3166,7 @@ static void TestMeanWhile(INT32 iID)
 		y = 14;
 
 		// Loop through our mercs and set gridnos once some found.....
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->bInSector)
 			{
@@ -3228,7 +3228,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	// If we have multiple guys selected, make all change stance!
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 			{
@@ -3267,7 +3267,7 @@ static void HandleStealthChangeFromUIKeys()
 	// If we have multiple guys selected, make all change stance!
 	if (gTacticalStatus.fAtLeastOneGuyOnMultiSelect)
 	{
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (AM_A_ROBOT(s)) continue;
 			if (!s->bInSector) continue;
@@ -3291,7 +3291,7 @@ static void TestCapture()
 
 	// Loop through sodliers and pick 3 lucky ones
 	UINT32 n = 3;
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
 		if (s.bLife < OKLIFE) continue;

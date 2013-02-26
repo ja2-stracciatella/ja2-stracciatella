@@ -810,7 +810,7 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 void RemoveMercsInSector( )
 {
 	// ATE: only for OUR guys.. the rest is taken care of in TrashWorld() when a new sector is added...
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		RemoveSoldierFromGridNo(*i);
 	}
@@ -1045,7 +1045,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 
 	// Check to see if any player merc has the Chalice; if so,
 	// note it as stolen
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (FindObj(s, CHALICE) != ITEM_NOT_FOUND)
 		{
@@ -1762,7 +1762,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	{
 		// TODO: Check flags to see if we can jump!
 		// Move controllable mercs!
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			// If we are controllable
 			if (OkControllableMerc(s) && s->bAssignment == CurrentSquad())
@@ -2442,7 +2442,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	gPotentiallyAbandonedEPC = NULL;
 
 	// Look through all mercs and check if they are within range of east end....
-	FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// If we are controllable
 		if (OkControllableMerc(pSoldier) && pSoldier->bAssignment == CurrentSquad())
@@ -2683,7 +2683,7 @@ bool CanGoToTacticalInSector(INT16 const x, INT16 const y, UINT8 const z)
 
   /* Look for all living, fighting mercs on player's team. Robot and EPCs
    * qualify! */
-	CFOR_EACH_IN_TEAM(i, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE const& s = *i;
 		/* ARM: Now allows loading of sector with all mercs below OKLIFE as long as

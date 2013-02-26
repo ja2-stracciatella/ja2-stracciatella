@@ -599,7 +599,7 @@ void CheckHostileOrSayQuoteList( void )
 			// We want to make this guy visible to the player.
 			if (speaker->bVisible != TRUE)
 			{
-				gbPublicOpplist[gbPlayerNum][speaker->ubID] = HEARD_THIS_TURN;
+				gbPublicOpplist[OUR_TEAM][speaker->ubID] = HEARD_THIS_TURN;
 				HandleSight(*speaker, SIGHT_LOOK | SIGHT_RADIO);
 			}
 			// trigger hater
@@ -735,7 +735,7 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 				// Do our own team, too, since we've bypassed random radioing
 #else
 				// Exclude our own team, we've already done them, randomly
-				if (them.bTeam != gbPlayerNum)
+				if (them.bTeam != OUR_TEAM)
 #endif
 					RadioSightings(&them, &s, them.bTeam);
 			}
@@ -767,7 +767,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 	// make a list of all of our team's mercs
 	UINT radio_cnt = 0;
 	SOLDIERTYPE* radio_men[20];
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		/* if this merc is in this sector, and well enough to look, then put him on
 		 * our list */
@@ -821,15 +821,15 @@ static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponen
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 	if ( bIteration == 0 )
 	{
-		if (ubTeam == gbPlayerNum && IsTeamActive(MILITIA_TEAM))
+		if (ubTeam == OUR_TEAM && IsTeamActive(MILITIA_TEAM))
 		{
 			// check militia team as well
 			return TeamNoLongerSeesMan(MILITIA_TEAM, pOpponent, exclude, 1);
 		}
-		else if (ubTeam == MILITIA_TEAM && IsTeamActive(gbPlayerNum))
+		else if (ubTeam == MILITIA_TEAM && IsTeamActive(OUR_TEAM))
 		{
 			// check player team as well
-			return TeamNoLongerSeesMan(gbPlayerNum, pOpponent, exclude, 1);
+			return TeamNoLongerSeesMan(OUR_TEAM, pOpponent, exclude, 1);
 		}
 	}
 #endif
@@ -1037,9 +1037,9 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 	pSoldier->fMuzzleFlash = FALSE;
 
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-	if ( pSoldier->bTeam != gbPlayerNum && pSoldier->bTeam != MILITIA_TEAM )
+	if ( pSoldier->bTeam != OUR_TEAM && pSoldier->bTeam != MILITIA_TEAM )
 #else
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if ( pSoldier->bTeam != OUR_TEAM )
 #endif
 	{
 		pSoldier->bVisible = 0; // indeterminate state
@@ -1059,9 +1059,9 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 				}
 				// else this person is still seen, if the looker is on our side or the militia the person should stay visible
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-				else if ( pOtherSoldier->bTeam == gbPlayerNum || pOtherSoldier->bTeam == MILITIA_TEAM )
+				else if ( pOtherSoldier->bTeam == OUR_TEAM || pOtherSoldier->bTeam == MILITIA_TEAM )
 #else
-				else if ( pOtherSoldier->bTeam == gbPlayerNum )
+				else if ( pOtherSoldier->bTeam == OUR_TEAM )
 #endif
 				{
 					pSoldier->bVisible = TRUE; // yes, still seen
@@ -1192,7 +1192,7 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
   }
 
 	// the player team now radios about all sightings
-	FOR_EACH_IN_TEAM(i, gbPlayerNum)
+	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		HandleSight(*i, SIGHT_RADIO); // looking was done above
 	}
@@ -1288,7 +1288,7 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 
 	*pPersOL = SEEN_THIS_TURN;
 
-	if ( (pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP) && (pOpponent->bTeam == gbPlayerNum ) )
+	if ( (pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP) && (pOpponent->bTeam == OUR_TEAM ) )
 	{
 		UINT8 const ubRoom = GetRoom(pOpponent->sGridNo);
 		if (IN_BROTHEL(ubRoom) && IN_BROTHEL_GUARD_ROOM(ubRoom))
@@ -1326,9 +1326,9 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 
 			// ATE: Set visiblity to 0
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-			if ( (pSoldier->bTeam == gbPlayerNum || pSoldier->bTeam == MILITIA_TEAM) && !(pOpponent->bTeam == gbPlayerNum || pOpponent->bTeam == MILITIA_TEAM ) )
+			if ( (pSoldier->bTeam == OUR_TEAM || pSoldier->bTeam == MILITIA_TEAM) && !(pOpponent->bTeam == OUR_TEAM || pOpponent->bTeam == MILITIA_TEAM ) )
 #else
-			if ( pSoldier->bTeam == gbPlayerNum && pOpponent->bTeam != gbPlayerNum )
+			if ( pSoldier->bTeam == OUR_TEAM && pOpponent->bTeam != OUR_TEAM )
 #endif
 			{
 				pOpponent->bVisible = 0;
@@ -1592,7 +1592,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 	// If we're seeing a guy we didn't see on our last chance to look for him
 	if (s.bOppList[opponent.ubID] != SEEN_CURRENTLY)
 	{
-		if (opponent.bTeam == gbPlayerNum)
+		if (opponent.bTeam == OUR_TEAM)
 		{
 			if (s.ubProfile != NO_PROFILE)
 			{
@@ -1713,7 +1713,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 							{
 								TriggerNPCRecord(s.ubProfile, 9);
 								iggy.ubMiscFlags2 |= PROFILE_MISC_FLAG2_SAID_FIRSTSEEN_QUOTE;
-								gbPublicOpplist[gbPlayerNum][s.ubID] = HEARD_THIS_TURN;
+								gbPublicOpplist[OUR_TEAM][s.ubID] = HEARD_THIS_TURN;
 							}
 							break;
 						}
@@ -1774,7 +1774,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 				}
 			}
 		}
-		else if (s.bTeam == gbPlayerNum)
+		else if (s.bTeam == OUR_TEAM)
 		{
 			switch (opponent.ubProfile)
 			{
@@ -1907,7 +1907,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 					ReevaluateBestSightingPosition(&s, CalcInterruptDuelPts(&s, &opponent, TRUE));
 				}
 			}
-			else if (s.bTeam != gbPlayerNum || opponent.bLife >= OKLIFE)
+			else if (s.bTeam != OUR_TEAM || opponent.bLife >= OKLIFE)
 			{ /* Require the enemy not to be dying if we are the sighter; in other
 				 * words, always add for AI guys, and always add for people with life >=
 				 * OKLIFE */
@@ -2009,9 +2009,9 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 
 	// if the guy we're looking for is NOT on our team AND is currently visible
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-	if ((pOpponent->bTeam != gbPlayerNum && pOpponent->bTeam != MILITIA_TEAM) && (pOpponent->bVisible >= 0 && pOpponent->bVisible < 2) && pOpponent->bLife)
+	if ((pOpponent->bTeam != OUR_TEAM && pOpponent->bTeam != MILITIA_TEAM) && (pOpponent->bVisible >= 0 && pOpponent->bVisible < 2) && pOpponent->bLife)
 #else
-	if ((pOpponent->bTeam != gbPlayerNum) && (pOpponent->bVisible >= 0 && pOpponent->bVisible < 2) && pOpponent->bLife)
+	if ((pOpponent->bTeam != OUR_TEAM) && (pOpponent->bVisible >= 0 && pOpponent->bVisible < 2) && pOpponent->bLife)
 #endif
 	{
 		// assume he's no longer visible, until one of our mercs sees him again
@@ -2073,7 +2073,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 
 
 	// if he's not on our team
-	if (pOpponent->bTeam != gbPlayerNum)
+	if (pOpponent->bTeam != OUR_TEAM)
 	{
 		DecideTrueVisibility(pOpponent);
 	}
@@ -2109,7 +2109,7 @@ static void AddOneOpponent(SOLDIERTYPE* pSoldier)
 		}
 	}
 
-	if (pSoldier->bTeam == gbPlayerNum)
+	if (pSoldier->bTeam == OUR_TEAM)
 	{
 		// adding an opponent for player; reset # of turns that we haven't seen an enemy
 		gTacticalStatus.bConsNumTurnsNotSeen = 0;
@@ -2352,7 +2352,7 @@ void BetweenTurnsVisibilityAdjustments()
 		if (s.bTeam == MILITIA_TEAM) continue;
 #endif
 		// Check if anyone on our team currently sees him (exclude NOBODY)
-		if (!TeamNoLongerSeesMan(gbPlayerNum, &s, 0, 0)) continue;
+		if (!TeamNoLongerSeesMan(OUR_TEAM, &s, 0, 0)) continue;
 		// then our team has lost sight of him
 		s.bVisible = -1; // Make him fully invisible
 	}
@@ -2500,7 +2500,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 	}
 	else
 	{
-		if ( pSoldier->bTeam == gbPlayerNum )
+		if ( pSoldier->bTeam == OUR_TEAM )
 		{
 			// STOP IF WE WERE MOVING....
 			/// Speek up!
@@ -2699,9 +2699,9 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 				if ( fContactSeen )
 				{
-					if ( pSoldier->bTeam == gbPlayerNum )
+					if ( pSoldier->bTeam == OUR_TEAM )
 					{
-						if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
+						if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 						{
 							// Save some stuff!
 							if (gTacticalStatus.fEnemySightingOnTheirTurn)
@@ -3794,7 +3794,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 
 				default:
 					/*
-					if (noise_maker->bVisible == TRUE && bTeam == gbPlayerNum)
+					if (noise_maker->bVisible == TRUE && bTeam == OUR_TEAM)
 					{
 						ScreenMsg(MSG_FONT_YELLOW, MSG_TESTVERSION, L"Handling noise from person not currently seen in player's public opplist");
 					}
@@ -3830,7 +3830,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 				continue; // skip
 			}
 
-			if ( bTeam == gbPlayerNum && pSoldier->bAssignment == ASSIGNMENT_POW )
+			if ( bTeam == OUR_TEAM && pSoldier->bAssignment == ASSIGNMENT_POW )
 			{
 				// POWs should not be processed for noise
 				continue;
@@ -4370,7 +4370,7 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 					{
 						// require the enemy not to be dying if we are the sighter; in other words,
 						// always add for AI guys, and always add for people with life >= OKLIFE
-						if (pSoldier->bTeam != gbPlayerNum || noise_maker->bLife >= OKLIFE)
+						if (pSoldier->bTeam != OUR_TEAM || noise_maker->bLife >= OKLIFE)
 						{
 							ReevaluateBestSightingPosition( pSoldier, (UINT8) (ubPoints + (ubVolume / 2)) );
 						}
@@ -4495,7 +4495,7 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const 
 		3;                // 12+:  very loud noise
 
 #ifdef JA2BETAVERSION
-	if (noise_maker && s->bTeam == gbPlayerNum && s->bTeam == noise_maker->bTeam)
+	if (noise_maker && s->bTeam == OUR_TEAM && s->bTeam == noise_maker->bTeam)
 	{
 		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"ERROR! TAKE SCREEN CAPTURE AND TELL CAMFIELD NOW!");
 		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d", s->name, s->ubID, noise_maker->name, noise_maker->ubID, sGridNo, level, noise_type);
@@ -4992,7 +4992,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 		pDefender->bNewOppCnt = 0;
 
 
-		if (pDefender->bTeam == gbPlayerNum)
+		if (pDefender->bTeam == OUR_TEAM)
 		{
 			// EXPERIENCE GAIN (5): Victim notices/sees a previously UNSEEN attacker
 			StatChange(*pDefender, EXPERAMT, 5, FROM_SUCCESS);

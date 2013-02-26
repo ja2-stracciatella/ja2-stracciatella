@@ -169,7 +169,7 @@ void SetUpInterface()
 	if (gCurrentUIMode == EXITSECTORMENU_MODE) HandleSectorExitMenu();
 
 	// For the most part - shutdown interface when it's the enemy's turn
-	if (gTacticalStatus.ubCurrentTeam != gbPlayerNum) return;
+	if (gTacticalStatus.ubCurrentTeam != OUR_TEAM) return;
 
 	HandleInterfaceBackgrounds();
 
@@ -424,7 +424,7 @@ void RenderTopmostTacticalInterface()
 	}
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN
-	if (gTacticalStatus.ubCurrentTeam == gbPlayerNum)
+	if (gTacticalStatus.ubCurrentTeam == OUR_TEAM)
 	{
 		RenderArrows();
 	}

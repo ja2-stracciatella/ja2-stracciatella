@@ -2530,7 +2530,7 @@ void TrashWorld(void)
 	// Set soldiers to not active!
 	FOR_EACH_SOLDIER(s)
 	{
-		if (s->bTeam == gbPlayerNum)
+		if (s->bTeam == OUR_TEAM)
 		{
 			s->pLevelNode = NULL; // Just delete levelnode
 		}

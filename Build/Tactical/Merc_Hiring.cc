@@ -341,7 +341,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	s.iEndofContractTime = GetMidnightOfFutureDayInMinutes(s.iTotalContractLength) + GetHourWhenContractDone(&s) * 60;
 
 	// Do initial check for bad items
-	if (s.bTeam == gbPlayerNum)
+	if (s.bTeam == OUR_TEAM)
 	{
 		//ATE: Try to see if our equipment sucks!
 		if (SoldierHasWorseEquipmentThanUsedTo(&s))
@@ -403,7 +403,7 @@ void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 	}
 
 	// Check to see if anyone hates this merc and will now complain
-	FOR_EACH_IN_TEAM(other, gbPlayerNum)
+	FOR_EACH_IN_TEAM(other, OUR_TEAM)
 	{
 		if (other->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
 
@@ -466,7 +466,7 @@ UINT32 GetMercArrivalTimeOfDay( )
 
 void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 {
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bAssignment == IN_TRANSIT && s->fUseLandingZoneForArrival)
 		{

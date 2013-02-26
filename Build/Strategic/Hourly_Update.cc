@@ -84,7 +84,7 @@ void HandleHourlyUpdate()
 
 static void UpdateRegenCounters(void)
 {
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bRegenBoostersUsedToday > 0) --s->bRegenBoostersUsedToday;
 	}

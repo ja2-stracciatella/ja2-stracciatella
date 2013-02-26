@@ -484,7 +484,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 	if ( bHighestPass != - 1 )
 	{
 		// now look for items to repair on other mercs
-		CFOR_EACH_IN_TEAM(pOtherSoldier, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(pOtherSoldier, OUR_TEAM)
 		{
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 			{
@@ -640,7 +640,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE*
 static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* const pSoldier)
 {
 	INT8 bCount = 0;
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s != pSoldier &&
 				s->bLife >= OKLIFE &&
@@ -7312,7 +7312,7 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 
 
 		// look for jammed guns on other soldiers in sector and unjam them
-		FOR_EACH_IN_TEAM(pOtherSoldier, gbPlayerNum)
+		FOR_EACH_IN_TEAM(pOtherSoldier, OUR_TEAM)
 		{
 			// check character is valid, alive, same sector, not between, has inventory, etc.
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
@@ -7331,7 +7331,7 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 			pBestOtherSoldier = NULL;
 
 			// now look for items to repair on other mercs
-			FOR_EACH_IN_TEAM(pOtherSoldier, gbPlayerNum)
+			FOR_EACH_IN_TEAM(pOtherSoldier, OUR_TEAM)
 			{
 				// check character is valid, alive, same sector, not between, has inventory, etc.
 				if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )

@@ -167,7 +167,7 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 	{
 		return( FALSE );
 	}
-	if (pNPC->bSide == gbPlayerNum || pNPC->bNeutral)
+	if (pNPC->bSide == OUR_TEAM || pNPC->bNeutral)
 	{
 		if (pNPC->ubCivilianGroup != NON_CIV_GROUP)
 		{
@@ -196,7 +196,7 @@ static INT8 NumWoundedMercsNearby(ProfileID const pid)
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
-		if (s.bTeam != gbPlayerNum)                                        continue;
+		if (s.bTeam != OUR_TEAM)                                        continue;
 		if (s.bLife <= 0 || s.bLifeMax <= s.bLife)                         continue;
 		if (s.bAssignment == ASSIGNMENT_HOSPITAL)                          continue;
 		if (PythSpacesAway(gridno, s.sGridNo) > HOSPITAL_PATIENT_DISTANCE) continue;
@@ -216,7 +216,7 @@ static INT8 NumMercsNear(ProfileID const pid, UINT8 const max_dist)
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
-		if (s.bTeam != gbPlayerNum)                        continue;
+		if (s.bTeam != OUR_TEAM)                        continue;
 		if (s.bLife <  OKLIFE)                             continue;
 		if (PythSpacesAway(gridno, s.sGridNo) <= max_dist) continue;
 		++n;
@@ -274,7 +274,7 @@ static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 	}
 	ubRoom = gubWorldRoomInfo[ pNPC->sGridNo ];
 
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector && gubWorldRoomInfo[s->sGridNo] == ubRoom)
 		{
@@ -288,11 +288,11 @@ static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 
 static BOOLEAN CheckTalkerStrong(void)
 {
-	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum)
+	if (gpSrcSoldier && gpSrcSoldier->bTeam == OUR_TEAM)
 	{
 		return( gpSrcSoldier->bStrength >= 84 );
 	}
-	else if (gpDestSoldier && gpDestSoldier->bTeam == gbPlayerNum)
+	else if (gpDestSoldier && gpDestSoldier->bTeam == OUR_TEAM)
 	{
 		return( gpDestSoldier->bStrength >= 84 );
 	}
@@ -302,11 +302,11 @@ static BOOLEAN CheckTalkerStrong(void)
 
 static BOOLEAN CheckTalkerFemale(void)
 {
-	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum && gpSrcSoldier->ubProfile != NO_PROFILE)
+	if (gpSrcSoldier && gpSrcSoldier->bTeam == OUR_TEAM && gpSrcSoldier->ubProfile != NO_PROFILE)
 	{
 		return( gMercProfiles[ gpSrcSoldier->ubProfile ].bSex == FEMALE );
 	}
-	else if (gpDestSoldier && gpDestSoldier->bTeam == gbPlayerNum && gpDestSoldier->ubProfile != NO_PROFILE)
+	else if (gpDestSoldier && gpDestSoldier->bTeam == OUR_TEAM && gpDestSoldier->ubProfile != NO_PROFILE)
 	{
 		return( gMercProfiles[ gpDestSoldier->ubProfile ].bSex == FEMALE );
 	}
@@ -316,14 +316,14 @@ static BOOLEAN CheckTalkerFemale(void)
 
 static BOOLEAN CheckTalkerUnpropositionedFemale(void)
 {
-	if (gpSrcSoldier && gpSrcSoldier->bTeam == gbPlayerNum && gpSrcSoldier->ubProfile != NO_PROFILE)
+	if (gpSrcSoldier && gpSrcSoldier->bTeam == OUR_TEAM && gpSrcSoldier->ubProfile != NO_PROFILE)
 	{
 		if ( !(gMercProfiles[ gpSrcSoldier->ubProfile ].ubMiscFlags2 & PROFILE_MISC_FLAG2_ASKED_BY_HICKS) )
 		{
 			return( gMercProfiles[ gpSrcSoldier->ubProfile ].bSex == FEMALE );
 		}
 	}
-	else if (gpDestSoldier && gpDestSoldier->bTeam == gbPlayerNum && gpDestSoldier->ubProfile != NO_PROFILE)
+	else if (gpDestSoldier && gpDestSoldier->bTeam == OUR_TEAM && gpDestSoldier->ubProfile != NO_PROFILE)
 	{
 		if ( !(gMercProfiles[ gpDestSoldier->ubProfile ].ubMiscFlags2 & PROFILE_MISC_FLAG2_ASKED_BY_HICKS) )
 		{
@@ -344,7 +344,7 @@ static INT8 NumMalesPresent(ProfileID const pid)
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
-		if (s.bTeam     != gbPlayerNum)            continue;
+		if (s.bTeam     != OUR_TEAM)            continue;
 		if (s.bLife     <  OKLIFE)                 continue;
 		if (s.ubProfile == NO_PROFILE)             continue;
 		if (GetProfile(s.ubProfile).bSex != MALE)  continue;
@@ -364,7 +364,7 @@ static bool FemalePresent(ProfileID const pid)
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
-		if (s.bTeam     != gbPlayerNum)             continue;
+		if (s.bTeam     != OUR_TEAM)             continue;
 		if (s.bLife     <  OKLIFE)                  continue;
 		if (s.ubProfile == NO_PROFILE)              continue;
 		if (GetProfile(s.ubProfile).bSex != FEMALE) continue;
@@ -377,7 +377,7 @@ static bool FemalePresent(ProfileID const pid)
 
 static BOOLEAN CheckPlayerHasHead(void)
 {
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bLife > 0 && FindObjInObjRange(s, HEAD_2, HEAD_7) != NO_SLOT)
 		{
@@ -417,7 +417,7 @@ static bool AIMMercWithin(GridNo const gridno, INT16 const distance)
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE const& s = **i;
-		if (s.bTeam               != gbPlayerNum)         continue;
+		if (s.bTeam               != OUR_TEAM)         continue;
 		if (s.bLife               <  OKLIFE)              continue;
 		if (s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
 		if (PythSpacesAway(gridno, s.sGridNo) > distance) continue;

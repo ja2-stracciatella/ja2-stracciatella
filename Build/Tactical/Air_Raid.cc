@@ -310,7 +310,7 @@ static INT16 PickLocationNearAnyMercInSector(void)
 	// Loop through all our guys and randomly say one from someone in our sector
 	size_t num_mercs = 0;
 	const SOLDIERTYPE* mercs_in_sector[20];
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Add guy if he's a candidate...
 		if (OkControllableMerc(s)) mercs_in_sector[num_mercs++] = s;

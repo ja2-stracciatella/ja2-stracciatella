@@ -699,7 +699,7 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 				{
 					// done!
 					pSoldier->uiStatusFlags &= ~(SOLDIER_BOXER);
-					if (pSoldier->bTeam == gbPlayerNum)
+					if (pSoldier->bTeam == OUR_TEAM)
 					{
 						pSoldier->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
 						TriggerEndOfBoxingRecord( pSoldier );
@@ -2981,7 +2981,7 @@ bCanAttack = FALSE;
 				// look around for a worthy target (which sets BestShot.ubPossible)
 				CalcBestShot(pSoldier,&BestShot);
 
-				if (pSoldier->bTeam == gbPlayerNum && BestShot.ubChanceToReallyHit < 30)
+				if (pSoldier->bTeam == OUR_TEAM && BestShot.ubChanceToReallyHit < 30)
 				{
 					// skip firing, our chance isn't good enough
 					BestShot.ubPossible = FALSE;
@@ -3259,7 +3259,7 @@ bCanAttack = FALSE;
  // and either he can't attack any more, or his attack did wound someone
  if ( (ubCanMove && !SkipCoverCheck && !gfHiddenInterrupt &&
       ((ubBestAttackAction == AI_ACTION_NONE) || pSoldier->bLastAttackHit) &&
-	  	(pSoldier->bTeam != gbPlayerNum || pSoldier->fAIFlags & AI_RTP_OPTION_CAN_SEEK_COVER) &&
+	  	(pSoldier->bTeam != OUR_TEAM || pSoldier->fAIFlags & AI_RTP_OPTION_CAN_SEEK_COVER) &&
 		  !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
 			|| fAllowCoverCheck )
  {
@@ -3430,7 +3430,7 @@ bCanAttack = FALSE;
 			if (IsGunBurstCapable(pSoldier, BestAttack.bWeaponIn) &&
 					BestShot.opponent->bLife >= OKLIFE && // don't burst at downed targets
 					pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
-					pSoldier->bTeam != gbPlayerNum)
+					pSoldier->bTeam != OUR_TEAM)
 			{
 				UINT8 const ubBurstAPs = CalcAPsToBurst(CalcActionPoints(pSoldier), pSoldier->inv[BestAttack.bWeaponIn]);
 				if (pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) >= ubBurstAPs )
@@ -3608,7 +3608,7 @@ bCanAttack = FALSE;
  ////////////////////////////////////////////////////////////////////////////
 
  // if soldier has enough APs left to move at least 1 square's worth
- if ( ubCanMove && (pSoldier->bTeam != gbPlayerNum || pSoldier->fAIFlags & AI_RTP_OPTION_CAN_RETREAT) )
+ if ( ubCanMove && (pSoldier->bTeam != OUR_TEAM || pSoldier->fAIFlags & AI_RTP_OPTION_CAN_RETREAT) )
  {
    if ((pSoldier->bAIMorale == MORALE_HOPELESS) || !bCanAttack)
    {

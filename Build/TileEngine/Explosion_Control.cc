@@ -793,7 +793,7 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 
 	 pSoldier->ubMiscSoldierFlags |= SOLDIER_MISC_HURT_BY_EXPLOSION;
 
-	if (owner != NULL && owner->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum)
+	if (owner != NULL && owner->bTeam == OUR_TEAM && pSoldier->bTeam != OUR_TEAM)
 	 {
 		ProcessImplicationsOfPCAttack(owner, pSoldier, REASON_EXPLOSION);
 	 }
@@ -937,7 +937,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE const* const
 			DoMercBattleSound(pSoldier, BATTLE_SOUND_HIT1);
 		}
 
-		if (owner != NULL && owner->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum)
+		if (owner != NULL && owner->bTeam == OUR_TEAM && pSoldier->bTeam != OUR_TEAM)
 	  {
 			ProcessImplicationsOfPCAttack(owner, pSoldier, REASON_EXPLOSION);
 	  }
@@ -1995,7 +1995,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 			{
 				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
-				if (tgt != NULL && tgt->bTeam == gbPlayerNum)
+				if (tgt != NULL && tgt->bTeam == OUR_TEAM)
 				{
 					if (tgt->sOldGridNo == sGridNo + DirectionInc(SOUTH))
 					{
@@ -2068,7 +2068,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 			{
 				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
-				if (tgt != NULL && tgt->bTeam == gbPlayerNum && tgt->sOldGridNo == sGridNo + DirectionInc(NORTH))
+				if (tgt != NULL && tgt->bTeam == OUR_TEAM && tgt->sOldGridNo == sGridNo + DirectionInc(NORTH))
 				{
 					gMercProfiles[ MADAME ].bNPCData2--;
 					if ( gMercProfiles[ MADAME ].bNPCData2 == 0 )
@@ -2094,7 +2094,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				{
 					if (civ->bInSector && civ->ubCivilianGroup == KINGPIN_CIV_GROUP)
 					{
-						for (UINT8 ubID2 = gTacticalStatus.Team[gbPlayerNum].bFirstID; ubID2 <= gTacticalStatus.Team[gbPlayerNum].bLastID; ++ubID2)
+						for (UINT8 ubID2 = gTacticalStatus.Team[OUR_TEAM].bFirstID; ubID2 <= gTacticalStatus.Team[OUR_TEAM].bLastID; ++ubID2)
 						{
 							if (civ->bOppList[ubID2] == SEEN_CURRENTLY)
 							{
@@ -2125,7 +2125,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 
 				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
 				if (tgt != NULL)
-					if (tgt->bTeam == gbPlayerNum)
+					if (tgt->bTeam == OUR_TEAM)
 					{
 						UINT8 const room     = GetRoom(sGridNo);
 						UINT8 const old_room = GetRoom(tgt->sOldGridNo);
@@ -2324,7 +2324,7 @@ void HandleExplosionQueue()
 			AllTeamsLookForAll(TRUE);
 
 			// call fov code
-			FOR_EACH_IN_TEAM(s, gbPlayerNum)
+			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (s->bInSector) RevealRoofsAndItems(s, FALSE);
 			}
@@ -2333,7 +2333,7 @@ void HandleExplosionQueue()
 			gPersonToSetOffExplosions           = 0;
 		}
 
-		if (!(ts.uiFlags & INCOMBAT) || ts.ubCurrentTeam == gbPlayerNum)
+		if (!(ts.uiFlags & INCOMBAT) || ts.ubCurrentTeam == OUR_TEAM)
 		{ // Don't end UI lock when it's a computer turn
 			guiPendingOverrideEvent = LU_ENDUILOCK;
 		}
@@ -2473,7 +2473,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 		{
 			if (fAllBombs || o.bDetonatorType == BOMB_PRESSURE)
 			{
-				if (!fAllBombs && s->bTeam != gbPlayerNum)
+				if (!fAllBombs && s->bTeam != OUR_TEAM)
 				{
 					// ignore this unless it is a mine, etc which would have to have been placed by the
 					// player, seeing as how the others are all marked as known to the AI.
@@ -2485,7 +2485,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 
 				// player and militia ignore bombs set by player
 				if (o.ubBombOwner > 1 &&
-						(s->bTeam == gbPlayerNum || s->bTeam == MILITIA_TEAM))
+						(s->bTeam == OUR_TEAM || s->bTeam == MILITIA_TEAM))
 				{
 					continue;
 				}
@@ -2725,7 +2725,7 @@ void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
 // see if they get angry
 static void HandleBuldingDestruction(const INT16 sGridNo, const SOLDIERTYPE* const owner)
 {
-	if (owner == NULL || owner->bTeam != gbPlayerNum) return;
+	if (owner == NULL || owner->bTeam != OUR_TEAM) return;
 
 	FOR_EACH_IN_TEAM(pSoldier, CIV_TEAM)
 	{

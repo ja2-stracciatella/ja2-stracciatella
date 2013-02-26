@@ -367,7 +367,7 @@ static void DoneFadeInWarp(void)
 static void DoneFadeOutWarpCallback(void)
 {
   // Warp!
-	FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// Are we in this sector, On the current squad?
 		if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)

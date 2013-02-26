@@ -2104,7 +2104,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		}
 	}
 
-	if (pSoldier->bTeam == gbPlayerNum)
+	if (pSoldier->bTeam == OUR_TEAM)
 	{
 		// spit out a message if this is one of our folks reloading
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_PLAYER_RELOADS], pSoldier->name );
@@ -2568,7 +2568,7 @@ default_merge:
 			}
 			DeleteObj(&attachment);
 			target.ubWeight = CalculateObjectWeight(&target);
-			if (s && s->bTeam == gbPlayerNum)
+			if (s && s->bTeam == OUR_TEAM)
 			{
 				DoMercBattleSound(s, BATTLE_SOUND_COOL1);
 			}
@@ -2897,7 +2897,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	}
 
 	// ATE: Put this in to see if we should update the robot, if we were given a controller...
-	if ( pSoldier->bTeam == gbPlayerNum && fObjectWasRobotRemote )
+	if ( pSoldier->bTeam == OUR_TEAM && fObjectWasRobotRemote )
 	{
 		UpdateRobotControllerGivenController( pSoldier );
 	}
@@ -4261,7 +4261,7 @@ void WaterDamage(SOLDIERTYPE& s)
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WASHED_OFF], s.name);
 		}
 	}
-	if (s.bTeam == gbPlayerNum && s.bMonsterSmell > 0)
+	if (s.bTeam == OUR_TEAM && s.bMonsterSmell > 0)
 	{
 		if (s.bOverTerrainType == DEEP_WATER)
 		{
@@ -4356,7 +4356,7 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 		return( TRUE );
 	}
 
-  if ( pSoldier->bTeam == gbPlayerNum )
+  if ( pSoldier->bTeam == OUR_TEAM )
   {
     if ( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
     {

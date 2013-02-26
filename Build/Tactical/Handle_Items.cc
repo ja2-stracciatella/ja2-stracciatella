@@ -222,9 +222,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	const INVTYPE* const item = &Item[usHandItem];
 
 	if (fFromUI                                      &&
-			s->bTeam == gbPlayerNum                      &&
+			s->bTeam == OUR_TEAM                      &&
 			tgt                                          &&
-			(tgt->bTeam == gbPlayerNum || tgt->bNeutral) &&
+			(tgt->bTeam == OUR_TEAM || tgt->bNeutral) &&
 			tgt->ubBodyType != CROW                      &&
 			item->usItemClass != IC_MEDKIT               &&
 			s->ubProfile != NO_PROFILE)
@@ -284,7 +284,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 						wpn.ubImprintID = s->ubProfile;
 
 						// this could be an NPC (Krott)
-						if (s->bTeam == gbPlayerNum)
+						if (s->bTeam == OUR_TEAM)
 						{
 							PlayJA2Sample(RG_ID_IMPRINTED, HIGHVOLUME, 1, MIDDLE);
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"\"%ls\"", TacticalStr[GUN_GOT_FINGERPRINT]);
@@ -294,7 +294,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 					else
 					{
 						// access denied!
-						if (s->bTeam == gbPlayerNum)
+						if (s->bTeam == OUR_TEAM)
 						{
 							PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
 						}
@@ -429,7 +429,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 			s->bShownAimTime = REFINE_AIM_1;
 
 			// Locate to soldier if he's about to shoot!
-			if (s->bTeam != gbPlayerNum) ShowRadioLocator(s, SHOW_LOCATOR_NORMAL);
+			if (s->bTeam != OUR_TEAM) ShowRadioLocator(s, SHOW_LOCATOR_NORMAL);
 		}
 
 		SetUIBusy(s);
@@ -1173,7 +1173,7 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 	// CHECK IF NOT AT SAME GRIDNO
 	if ( pSoldier->sGridNo != sActionGridNo )
 	{
-		if ( pSoldier->bTeam == gbPlayerNum )
+		if ( pSoldier->bTeam == OUR_TEAM )
 		{
 			EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, TRUE, TRUE );
 
@@ -1198,7 +1198,7 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 
 static void HandleAutoPlaceFail(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const o, const INT16 sGridNo)
 {
-	if (pSoldier->bTeam != gbPlayerNum) return;
+	if (pSoldier->bTeam != OUR_TEAM) return;
 
 	if (gpItemPointer == NULL)
 	{
@@ -1361,7 +1361,7 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 		return;
 	}
 
-	if (s->bTeam != gbPlayerNum)
+	if (s->bTeam != OUR_TEAM)
 	{ // An enemy, go directly (skip menu)
 		SoldierGetItemFromWorld(s, item_idx, gridno, z_level, 0);
 		return;
@@ -2009,7 +2009,7 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 	}
 
 	WORLDITEM const& wi = GetWorldItem(pItemPool->iItemIndex);
-	if ( pSoldier->bTeam == gbPlayerNum )
+	if ( pSoldier->bTeam == OUR_TEAM )
 	{
 		// Setup some conditions!
 		if (wi.bVisible != VISIBLE)
@@ -2683,7 +2683,7 @@ static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot)
 			fItemWorks = FALSE;
 		}
 
-		if (!fItemWorks && pSoldier->bTeam == gbPlayerNum)
+		if (!fItemWorks && pSoldier->bTeam == OUR_TEAM)
 		{
 			// merc says "This thing doesn't work!"
 			TacticalCharacterDialogue( pSoldier, QUOTE_USELESS_ITEM );
@@ -2758,7 +2758,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 
 	if (o.bTrap > 0)
 	{
-		if (pSoldier->bTeam == gbPlayerNum)
+		if (pSoldier->bTeam == OUR_TEAM)
 		{
 			// does the player know about this item?
 			fBoobyTrapKnowledge = (o.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0;
@@ -3338,7 +3338,7 @@ BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSol
 
 	if (pObject->bTrap > 0)
 	{
-		if (pSoldier->bTeam == gbPlayerNum)
+		if (pSoldier->bTeam == OUR_TEAM)
 		{
 			// does the player know about this item?
 			fBoobyTrapKnowledge = ((pObject->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);

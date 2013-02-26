@@ -1016,7 +1016,7 @@ ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 		}
 
 		// End our turn!
-		EndTurn( gbPlayerNum + 1 );
+		EndTurn( OUR_TEAM + 1 );
 	}
 
 	return( GAME_SCREEN );
@@ -1567,7 +1567,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 
 			// Loop through all mercs and make go!
 			// TODO: Only our squad!
-			FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+			FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 			{
 				if (OkControllableMerc(pSoldier) && pSoldier->bAssignment == CurrentSquad() && !pSoldier->fMercAsleep)
 				{
@@ -2188,7 +2188,7 @@ static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 	if (tgt != NULL)
 	{
 		// If this is one of our own guys.....pop up requiester...
-		if ((tgt->bTeam == gbPlayerNum || tgt->bTeam == MILITIA_TEAM)    &&
+		if ((tgt->bTeam == OUR_TEAM || tgt->bTeam == MILITIA_TEAM)    &&
 				Item[sel->inv[HANDPOS].usItem].usItemClass != IC_MEDKIT      &&
 				sel->inv[HANDPOS].usItem                   != GAS_CAN        &&
 				gTacticalStatus.ubLastRequesterTargetID    != tgt->ubProfile &&
@@ -2610,7 +2610,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 				{
 
 					// Check if this guy is on the enemy team....
-					if ( !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum ) )
+					if ( !pSoldier->bNeutral && (pSoldier->bSide != OUR_TEAM ) )
 					{
 						gUIActionModeChangeDueToMouseOver = TRUE;
 
@@ -3751,7 +3751,7 @@ static ScreenID UIHandleLCLook(UI_EVENT* pUIEvent)
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
 		// OK, loop through all guys who are 'multi-selected' and
-		FOR_EACH_IN_TEAM(s, gbPlayerNum)
+		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 			{
@@ -4022,7 +4022,7 @@ void EndMultiSoldierSelection(BOOLEAN acknowledge)
 	 * selected guy is among them - if not, change to a guy who is */
 	SOLDIERTYPE*             first = NULL;
 	const SOLDIERTYPE* const sel   = GetSelectedMan();
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (!s->bInSector)                                continue;
 		if (!(s->uiStatusFlags & SOLDIER_MULTI_SELECTED)) continue;
@@ -4051,7 +4051,7 @@ void StopRubberBandedMercFromMoving( )
 		return;
 	}
 
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 		{
@@ -4089,7 +4089,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 	gfGetNewPathThroughPeople = TRUE;
 
 	const SOLDIERTYPE* const sel = GetSelectedMan();
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector &&
 				s->uiStatusFlags & SOLDIER_MULTI_SELECTED &&
@@ -4100,7 +4100,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 		}
 	}
 
-	FOR_EACH_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		if (pSoldier->bInSector)
 		{
@@ -4154,7 +4154,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 
 void ResetMultiSelection( )
 {
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 		{
@@ -4198,7 +4198,7 @@ static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 	}
 
 	// ATE:Check at least for one guy that's in point!
-	CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Check if this guy is OK to control....
 		if (OkControllableMerc(s) && !(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))
@@ -4225,7 +4225,7 @@ static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
   }
 
 	// ATE: Now loop through our guys and see if any fit!
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Check if this guy is OK to control....
 		if (OkControllableMerc(s) && !(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))
@@ -4370,7 +4370,7 @@ static ScreenID UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
 		guiPendingOverrideEvent = M_ON_TERRAIN;
 		HandleTacticalUI( );
 
-		TurnOffTeamsMuzzleFlashes( gbPlayerNum );
+		TurnOffTeamsMuzzleFlashes( OUR_TEAM );
 
 		// UnPause time!
 		UnLockPauseState();
@@ -4422,7 +4422,7 @@ BOOLEAN IsValidTalkableNPC(const SOLDIERTYPE* pSoldier, BOOLEAN fGive, BOOLEAN f
 
 
 	// IF BAD GUY - CHECK VISIVILITY
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if ( pSoldier->bTeam != OUR_TEAM )
 	{
 		if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) )
 		{
@@ -4442,7 +4442,7 @@ BOOLEAN IsValidTalkableNPC(const SOLDIERTYPE* pSoldier, BOOLEAN fGive, BOOLEAN f
 	}
 
 	// ATE: We can talk to our own teammates....
-	if ( pSoldier->bTeam == gbPlayerNum && fAllowMercs  )
+	if ( pSoldier->bTeam == OUR_TEAM && fAllowMercs  )
 	{
 		fValidGuy = TRUE;
 	}
@@ -4529,7 +4529,7 @@ BOOLEAN HandleTalkInit(  )
 				}
 
 				// ATE: if our own guy...
-				if ( pTSoldier->bTeam == gbPlayerNum && !AM_AN_EPC( pTSoldier ) )
+				if ( pTSoldier->bTeam == OUR_TEAM && !AM_AN_EPC( pTSoldier ) )
 				{
           if ( pTSoldier->ubProfile == DIMITRI )
           {
@@ -4680,7 +4680,7 @@ BOOLEAN HandleTalkInit(  )
 
 void SetUIBusy(const SOLDIERTYPE* const s)
 {
-	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == gbPlayerNum ) )
+	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == OUR_TEAM ) )
 	{
 		if (s == GetSelectedMan())
 		{
@@ -4693,7 +4693,7 @@ void SetUIBusy(const SOLDIERTYPE* const s)
 
 void UnSetUIBusy(const SOLDIERTYPE* const s)
 {
-	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == gbPlayerNum ) )
+	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == OUR_TEAM ) )
 	{
 		if ( !gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
 		{
@@ -5022,8 +5022,8 @@ BOOLEAN ValidQuickExchangePosition(void)
 	if (pOverSoldier != NULL)
 	{
 		//KM: Replaced this older if statement for the new one which allows exchanging with militia
-		//if ( ( pOverSoldier->bSide != gbPlayerNum ) && pOverSoldier->bNeutral  )
-		if ( ( pOverSoldier->bTeam != gbPlayerNum && pOverSoldier->bNeutral ) || (pOverSoldier->bTeam == MILITIA_TEAM && pOverSoldier->bSide == 0 ) )
+		//if ( ( pOverSoldier->bSide != OUR_TEAM ) && pOverSoldier->bNeutral  )
+		if ( ( pOverSoldier->bTeam != OUR_TEAM && pOverSoldier->bNeutral ) || (pOverSoldier->bTeam == MILITIA_TEAM && pOverSoldier->bSide == 0 ) )
 		{
       // hehe - don't allow animals to exchange places
       if ( !( pOverSoldier->uiStatusFlags & ( SOLDIER_ANIMAL ) ) )
@@ -5096,7 +5096,7 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
     ubMovementCost = gubWorldMovementCosts[ sIntSpot ][ sDirs[ cnt ] ][ pSoldier->bLevel ];
 	  if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
     {
-			ubMovementCost = DoorTravelCost(pSoldier, sIntSpot, ubMovementCost, pSoldier->bTeam == gbPlayerNum, NULL);
+			ubMovementCost = DoorTravelCost(pSoldier, sIntSpot, ubMovementCost, pSoldier->bTeam == OUR_TEAM, NULL);
 	  }
 
 	  // If we have hit an obstacle, STOP HERE

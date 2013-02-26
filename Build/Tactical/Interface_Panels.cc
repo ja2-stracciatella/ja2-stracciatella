@@ -398,7 +398,7 @@ void CheckForDisabledForGiveItem(void)
 	if (cur->bLife < OKLIFE && gpItemPointer != NULL)
 	{
 		// Go through each merc and see if there is one closeby....
-		CFOR_EACH_IN_TEAM(s, gbPlayerNum)
+		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->bLife >= OKLIFE && !IsMechanical(*s) && s->bInSector && IsMercOnCurrentSquad(s))
 			{
@@ -648,7 +648,7 @@ static void UpdateSMPanel()
 		FindFenceJumpDirection(&s);
 	EnableButton(iSMPanelButtons[CLIMB_BUTTON], enable_climb);
 
-	EnableButton(iSMPanelButtons[SM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == gbPlayerNum && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
+	EnableButton(iSMPanelButtons[SM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == OUR_TEAM && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
 
 	SetButtonState(UPDOWN_BUTTON, gsInterfaceLevel > 0);
 
@@ -659,7 +659,7 @@ static void UpdateSMPanel()
 	// If not selected (or dead), disable/gray some buttons
 	if (&s                            != GetSelectedMan() ||
 			s.bLife                       <  OKLIFE           ||
-			gTacticalStatus.ubCurrentTeam != gbPlayerNum      ||
+			gTacticalStatus.ubCurrentTeam != OUR_TEAM      ||
 			gfSMDisableForItems)
 	{
 		DisableButton(iSMPanelButtons[CLIMB_BUTTON]);
@@ -2523,7 +2523,7 @@ void SetTEAMPanelCurrentMerc(void)
 
 static void UpdateTEAMPanel(void)
 {
-	EnableButton(iTEAMPanelButtons[TEAM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == gbPlayerNum && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
+	EnableButton(iTEAMPanelButtons[TEAM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == OUR_TEAM && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
 
 	EnableButton(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON], !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV));
 
@@ -2789,7 +2789,7 @@ void EndRadioLocator(SOLDIERTYPE* s)
 
 void FinishAnySkullPanelAnimations(void)
 {
-	FOR_EACH_IN_TEAM(s, gbPlayerNum)
+	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bLife == 0 &&
 				(s->fUIdeadMerc || s->fClosePanelToDie))
@@ -2805,7 +2805,7 @@ void FinishAnySkullPanelAnimations(void)
 
 void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 {
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if ( pSoldier->bTeam != OUR_TEAM )
 	{
 		return;
 	}
@@ -3117,7 +3117,7 @@ void RenderTownIDString(void)
 void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 {
 	if (!s->bActive) return;
-	if (s->bTeam != gbPlayerNum) return;
+	if (s->bTeam != OUR_TEAM) return;
 
 	// Are we in the loaded sector?
 	if (s->sSectorX == gWorldSectorX  &&
