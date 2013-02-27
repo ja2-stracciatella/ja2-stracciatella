@@ -29,6 +29,9 @@ ifndef LDFLAGS_SDL
 LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
 endif
 
+ifdef WITH_DEBUGINFO
+CFLAGS += -g
+endif
 
 CFLAGS += $(CFLAGS_SDL)
 CFLAGS += -I Build
@@ -151,6 +154,7 @@ endif
 SRCS += Build/Fade_Screen.cc
 SRCS += Build/GameInitOptionsScreen.cc
 SRCS += Build/GameLoop.cc
+SRCS += Build/GameResources.cc
 SRCS += Build/GameScreen.cc
 SRCS += Build/GameSettings.cc
 SRCS += Build/GameVersion.cc
@@ -519,3 +523,20 @@ lowercase:
 rebuild-tags:
 	-rm TAGS
 	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs etags --append
+
+
+# How to
+# ========================================
+#
+# Debug a segfault
+# ----------------
+#
+#  make clean
+#  make all WITH_DEBUGINFO=1
+#
+#  gdb ./ja2
+#
+#  (gdb) run
+#  (gdb) backtrace
+#
+#

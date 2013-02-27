@@ -1,3 +1,9 @@
+#include "LibraryDataBase.h"
+
+#ifndef ENGLISH
+# include "Multi_Language_Graphic_Utils.h"
+#endif
+
 static const char* gGameLibaries[] =
 {
 	"data.slf",
@@ -51,3 +57,8 @@ static const char* gGameLibaries[] =
 	"editor.slf"
 #endif
 };
+
+void InitGameResources(void)
+{
+  InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));
+}

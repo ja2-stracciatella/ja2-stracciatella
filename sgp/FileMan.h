@@ -63,7 +63,6 @@ INT32 FileGetPos(HWFILE);
 
 UINT32 FileGetSize(HWFILE);
 
-void        SetFileManCurrentDirectory(char const* pcDirectory);
 const char* GetExecutableDirectory(void);
 
 /* Create the directory at path.  Returns true, iff the creation succeeded or
@@ -129,8 +128,15 @@ FILE* GetRealFileHandleFromFileManFileHandle(HWFILE hFile);
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
-const char* GetBinDataPath(void);
-
 typedef SGP::AutoObj<SGPFile, FileClose> AutoSGPFile;
+
+/** Get path to the 'Data' directory of the game. */
+const char* GetDataDirPath();
+
+/** Get path to the 'Data/Tilecache' directory of the game. */
+const char* GetTilecacheDirPath();
+
+/** Open file in the 'Data' directory in case-insensitive manner. */
+FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags);
 
 #endif

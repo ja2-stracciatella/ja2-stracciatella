@@ -11,9 +11,6 @@
 #endif
 
 
-#include "Libraries.inc"
-
-
 UINT32 guiSplashFrameFade = 10;
 UINT32 guiSplashStartTime = 0;
 
@@ -22,12 +19,6 @@ UINT32 guiSplashStartTime = 0;
 void InitJA2SplashScreen(void)
 {
 	InitializeJA2Clock();
-
-	STRING512 DataDir;
-	sprintf(DataDir, "%s/" BASEDATADIR, GetExecutableDirectory());
-	SetFileManCurrentDirectory(DataDir);
-
-	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));
 
 #ifdef ENGLISH
 	ClearMainMenu();

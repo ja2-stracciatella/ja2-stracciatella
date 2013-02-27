@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -12,6 +13,7 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "PODObj.h"
+#include "Logger.h"
 
 #ifdef _WIN32
 #	include <shlobj.h>
@@ -26,6 +28,14 @@
 #	endif
 #endif
 
+#ifdef _WIN32
+#define CASE_SENSITIVE_FS   0
+#else
+#define CASE_SENSITIVE_FS   1
+#endif
+
+#define BASEDATADIR    "data"
+#define LOCAL_CURRENT_DIR "tmp"
 
 enum SGPFileFlags
 {
@@ -43,6 +53,21 @@ struct SGPFile
 	} u;
 };
 
+
+static const char* GetBinDataPath(void);
+static void SetFileManCurrentDirectory(char const* const pcDirectory);
+
+#if CASE_SENSITIVE_FS
+/**
+ * Find an object (file or subdirectory) in the given directory in case-independent manner.
+ * @return true when found, copy found name into fileNameBuf. */
+static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, char *nameBuf, int nameBufSize);
+#endif
+
+/** Get file open modes from our enumeration.
+ * Abort program if conversion is not found.
+ * @return file mode for fopen call and posix mode using parameter 'posixMode' */
+static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode);
 
 SGP::FindFiles::FindFiles(char const* const pattern) :
 #ifdef _WIN32
@@ -171,9 +196,6 @@ void InitializeFileManager(void)
 	{
 		throw std::runtime_error("Unable to locate home directory\n");
 	}
-
-#	define LOCALDIR "JA2"
-
 #else
 	const char* home = getenv("HOME");
 	if (home == NULL)
@@ -186,23 +208,39 @@ void InitializeFileManager(void)
 
 		home = passwd->pw_dir;
 	}
-
-#	define LOCALDIR ".ja2"
-
 #endif
 
-	snprintf(LocalPath, lengthof(LocalPath), "%s/" LOCALDIR, home);
+#ifdef _WIN32
+	snprintf(LocalPath, lengthof(LocalPath), "%s/JA2", home);
+#else
+	snprintf(LocalPath, lengthof(LocalPath), "%s/.ja2", home);
+#endif
+
 	if (mkdir(LocalPath, 0700) != 0 && errno != EEXIST)
 	{
-		throw std::runtime_error("Unable to create directory \"" LOCALDIR "\"");
+    LOG_ERROR("Unable to create directory '%s'\n", LocalPath);
+		throw std::runtime_error("Unable to local directory");
 	}
 
-	char DataPath[512];
-	snprintf(DataPath, lengthof(DataPath), "%s/" BASEDATADIR, LocalPath);
-	if (mkdir(DataPath, 0700) != 0 && errno != EEXIST)
+  // Create another directory and set is as the current directory for the process
+  // Temporary files will be created in this directory.
+  // ----------------------------------------------------------------------------
+
+	char TmpPath[512];
+	snprintf(TmpPath, lengthof(TmpPath), "%s/" LOCAL_CURRENT_DIR, LocalPath);
+	if (mkdir(TmpPath, 0700) != 0 && errno != EEXIST)
 	{
-		throw std::runtime_error("Unable to create directory \"" LOCALDIR "/" BASEDATADIR "\"");
+    LOG_ERROR("Unable to create tmp directory '%s'\n", TmpPath);
+		throw std::runtime_error("Unable to create tmp directory");
 	}
+  else
+  {
+    SetFileManCurrentDirectory(TmpPath);
+  }
+
+  // Get directory with JA2 resources
+  // --------------------------------------------
+
 	BinDataDir = ConfigRegisterKey("data_dir");
 
 #if defined __APPLE__  && defined __MACH__
@@ -221,6 +259,18 @@ void InitializeFileManager(void)
 		TellAboutDataDir(ConfigFile);
 		throw std::runtime_error("Path to binary data is not set.");
 	}
+
+  // Check that 'Data' directory exists inside the folder with JA2 resources
+  // -----------------------------------------------------------------------
+
+  if (GetDataDirPath() == NULL)
+  {
+    LOG_ERROR("ERROR: 'Data' directory is not found in '%s'\n", GetBinDataPath());
+		throw std::runtime_error("'Data' directory is not found.");
+  }
+
+  LOG_INFO("Data directory:      '%s'\n", GetDataDirPath());
+  LOG_INFO("Tilecache directory: '%s'\n", GetTilecacheDirPath());
 }
 
 
@@ -230,7 +280,7 @@ bool FileExists(char const* const filename)
 	if (!file)
 	{
 		char path[512];
-		snprintf(path, lengthof(path), "%s/" BASEDATADIR "/%s", GetBinDataPath(), filename);
+		snprintf(path, lengthof(path), "%s/%s", GetDataDirPath(), filename);
 		file = fopen(path, "rb");
 		if (!file) return CheckIfFileExistInLibrary(filename);
 	}
@@ -239,6 +289,51 @@ bool FileExists(char const* const filename)
 	return true;
 }
 
+/**
+ * Open file in the Data directory.
+ *
+ * Return file descriptor or -1 if file is not found. */
+static int OpenFileInDataDirFD(const char *filename, int mode)
+{
+  char path[512];
+  snprintf(path, lengthof(path), "%s/%s", GetDataDirPath(), filename);
+  int d = open(path, mode);
+  if (d < 0)
+  {
+#if CASE_SENSITIVE_FS
+    // on case-sensitive file system need to try to find another name
+    char newFileName[128];
+    if(findObjectCaseInsensitive(GetDataDirPath(), filename, true, false, newFileName, sizeof(newFileName)))
+    {
+      snprintf(path, lengthof(path), "%s/%s", GetDataDirPath(), newFileName);
+      d = open(path, mode);
+    }
+#endif
+  }
+  return d;
+}
+
+/** Open file in the 'Data' directory in case-insensitive manner. */
+FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags)
+{
+	int mode;
+	const char* fmode = GetFileOpenModes(flags, &mode);
+
+  int d = OpenFileInDataDirFD(filename, mode);
+  if(d >= 0)
+  {
+    FILE* hFile = fdopen(d, fmode);
+    if (hFile == NULL)
+    {
+      close(d);
+    }
+    else
+    {
+      return hFile;
+    }
+  }
+  return NULL;
+}
 
 void FileDelete(char const* const path)
 {
@@ -267,22 +362,36 @@ void FileDelete(char const* const path)
 }
 
 
-HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
+/** Get file open modes from our enumeration.
+ * Abort program if conversion is not found.
+ * @return file mode for fopen call and posix mode using parameter 'posixMode' */
+static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
 {
+  const char *cMode = NULL;
+
 #ifndef _WIN32
-#	define O_BINARY 0
+  *posixMode = 0;
+#else
+	*posixMode = O_BINARY;
 #endif
-	const char* fmode;
-	int         mode = O_BINARY;
+
 	switch (flags & (FILE_ACCESS_READWRITE | FILE_ACCESS_APPEND))
 	{
-		case FILE_ACCESS_READ:      fmode = "rb";  mode |= O_RDONLY;            break;
-		case FILE_ACCESS_WRITE:     fmode = "wb";  mode |= O_WRONLY;            break;
-		case FILE_ACCESS_READWRITE: fmode = "r+b"; mode |= O_RDWR;              break;
-		case FILE_ACCESS_APPEND:    fmode = "ab";  mode |= O_WRONLY | O_APPEND; break;
+		case FILE_ACCESS_READ:      cMode = "rb";  *posixMode |= O_RDONLY;            break;
+		case FILE_ACCESS_WRITE:     cMode = "wb";  *posixMode |= O_WRONLY;            break;
+		case FILE_ACCESS_READWRITE: cMode = "r+b"; *posixMode |= O_RDWR;              break;
+		case FILE_ACCESS_APPEND:    cMode = "ab";  *posixMode |= O_WRONLY | O_APPEND; break;
 
 		default: abort();
 	}
+  return cMode;
+}
+
+
+HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
+{
+	int         mode;
+	const char* fmode = GetFileOpenModes(flags, &mode);
 
 	SGP::PODObj<SGPFile> file;
 
@@ -301,19 +410,33 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 		d = open(filename, mode);
 		if (d < 0)
 		{
-			char path[512];
-			snprintf(path, lengthof(path), "%s/" BASEDATADIR "/%s", GetBinDataPath(), filename);
-			d = open(path, mode);
+      // failed to open file in the local directory
+      // let's try Data
+      d = OpenFileInDataDirFD(filename, mode);
 			if (d < 0)
 			{
-				if (OpenFileFromLibrary(filename, &file->u.lib)) return file.Release();
+        // failed to open in the data dir
+        // let's try libraries
+				if (OpenFileFromLibrary(filename, &file->u.lib))
+        {
+          LOG__FILE_OPEN("Opened file (from library ): %s\n", filename);
+          return file.Release();
+        }
 
 				if (flags & FILE_OPEN_ALWAYS)
 				{
 					d = open(filename, mode | O_CREAT, 0600);
 				}
 			}
+      else
+      {
+        LOG__FILE_OPEN("Opened file (from data dir): %s\n", filename);
+      }
 		}
+    else
+    {
+      LOG__FILE_OPEN("Opened file (current dir  ): %s\n", filename);
+    }
 	}
 
 	if (d < 0) throw std::runtime_error("Opening file failed");
@@ -431,7 +554,7 @@ UINT32 FileGetSize(const HWFILE f)
 }
 
 
-void SetFileManCurrentDirectory(char const* const pcDirectory)
+static void SetFileManCurrentDirectory(char const* const pcDirectory)
 {
 #if 1 // XXX TODO
 	if (chdir(pcDirectory) != 0)
@@ -622,3 +745,90 @@ const char* GetBinDataPath(void)
 {
 	return ConfigGetValue(BinDataDir);
 }
+
+#if CASE_SENSITIVE_FS
+/**
+ * Find an object (file or subdirectory) in the given directory in case-independent manner.
+ * @return true when found, copy found name into fileNameBuf. */
+static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, char *nameBuf, int nameBufSize)
+{
+  DIR *d;
+  struct dirent *entry;
+  uint8_t objectTypes = (lookForFiles ? DT_REG : 0) | (lookForSubdirs ? DT_DIR : 0);
+  bool result = false;
+
+  d = opendir(directory);
+  if (d)
+  {
+    while ((entry = readdir(d)) != NULL)
+    {
+      if((entry->d_type & objectTypes)
+         && !strcasecmp(name, entry->d_name))
+      {
+        // found
+        strncpy(nameBuf, entry->d_name, nameBufSize);
+        nameBuf[nameBufSize - 1] = 0;
+        result = true;
+      }
+    }
+    closedir(d);
+  }
+  return result;
+}
+#endif
+
+static char *s_dataDir = NULL;
+static char *s_tileDir = NULL;
+static char s_dataDirBuf[256] = "";
+static char s_tileDirBuf[256] = "";
+static bool s_needToFindDataDirs = true;
+
+
+/**
+ * Find actual paths to directories 'Data' and 'Data/Tilecache'.
+ * On case-sensitive filesystems that might be tricky.
+ */
+static void findDataDirs()
+{
+#if !CASE_SENSITIVE_FS
+    snprintf(s_dataDirBuf, lengthof(s_dataDirBuf), "%s/%s",    GetBinDataPath(), BASEDATADIR);
+    snprintf(s_tileDirBuf, lengthof(s_tileDirBuf), "%s/%s/%s", GetBinDataPath(), BASEDATADIR, TILECACHEDIR);
+    s_dataDir = s_dataDirBuf;
+    s_tileDir = s_tileDirBuf;
+#else
+    s_dataDir = NULL;
+    s_tileDir = NULL;
+    char name[128];
+    if(findObjectCaseInsensitive(GetBinDataPath(), BASEDATADIR, false, true, name, sizeof(name)))
+    {
+      snprintf(s_dataDirBuf, lengthof(s_dataDirBuf), "%s/%s", GetBinDataPath(), name);
+      s_dataDir = s_dataDirBuf;
+      if(findObjectCaseInsensitive(s_dataDir, TILECACHEDIR, false, true, name, sizeof(name)))
+      {
+        snprintf(s_tileDirBuf, lengthof(s_tileDirBuf), "%s/%s", s_dataDir, name);
+        s_tileDir = s_tileDirBuf;
+      }
+    }
+#endif
+}
+
+/** Get path to the 'Data' directory of the game. */
+const char* GetDataDirPath()
+{
+  if(s_needToFindDataDirs)
+  {
+    findDataDirs();
+  }
+  return s_dataDir;
+}
+
+/** Get path to the 'Data/Tilecache' directory of the game. */
+const char* GetTilecacheDirPath()
+{
+  if(s_needToFindDataDirs)
+  {
+    findDataDirs();
+  }
+  return s_tileDir;
+}
+

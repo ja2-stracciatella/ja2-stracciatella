@@ -7,6 +7,7 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "Debug.h"
+#include "Logger.h"
 
 
 #define	FILENAME_SIZE 256
@@ -126,18 +127,11 @@ static char* Slashify(const char* s)
 static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct* const lib)
 try
 {
-	FILE* hFile = fopen(lib_name, "rb");
-	if (hFile == NULL)
-	{
-		char zTempPath[SGPFILENAME_LEN];
-		snprintf(zTempPath, lengthof(zTempPath), "%s/" BASEDATADIR "/%s", GetBinDataPath(), lib_name);
-		hFile = fopen(zTempPath, "rb");
-		if (hFile == NULL)
-		{
-			fprintf(stderr, "ERROR: Failed to open \"%s\"\n", zTempPath);
+  FILE* hFile = OpenFileInDataDir(lib_name, FILE_ACCESS_READ);
+  if (hFile == NULL)
+  {
+      fprintf(stderr, "ERROR: Failed to open library \"%s\"\n", lib_name);
 			return FALSE;
-		}
-		FastDebugMsg(String("CD Library %s opened.", zTempPath));
 	}
 
 	// read in the library header (at the begining of the library)

@@ -21,6 +21,7 @@
 #include "Input.h"
 #include "Intro.h"
 #include "JA2_Splash.h"
+#include "GameResources.h"
 #include "MemMan.h"
 #include "Random.h"
 #include "SGP.h"
@@ -145,6 +146,8 @@ static void InitializeStandardGamingPlatform(void)
 
 	FastDebugMsg("Initializing Video Surface Manager");
 	InitializeVideoSurfaceManager();
+
+  InitGameResources();
 
 #ifdef JA2
 	InitJA2SplashScreen();

@@ -416,7 +416,7 @@ static void EndLoadScreen(void)
 	if( fStartNewFile )
 	{ //start new file
 		fp = fopen( "TimeResults.txt", "w" );
-		ScreenMsg(FONT_YELLOW, MSG_TESTVERSION, L"See JA2/" BASEDATADIR "/TimeResults.txt for more detailed timings.");
+		ScreenMsg(FONT_YELLOW, MSG_TESTVERSION, L"See JA2/%s/TimeResults.txt for more detailed timings.", GetDataDirPath());
 		fStartNewFile = FALSE;
 	}
 	else

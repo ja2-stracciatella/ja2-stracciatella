@@ -1,8 +1,6 @@
 #ifndef DIRECTORIES_H
 #define DIRECTORIES_H
 
-#define BASEDATADIR    "data"
-
 #define AMBIENTDIR     "ambient"
 #define ANIMSDIR       "anims"
 #define BATTLESNDSDIR  "battlesnds"

@@ -43,9 +43,8 @@ void InitTileCache(void)
 	}
 
 	// Look for JSD files in the tile cache directory and load any we find
-	const char* const data_path = GetBinDataPath();
 	char              jsd_file_pattern[512];
-	snprintf(jsd_file_pattern, lengthof(jsd_file_pattern), "%s/" BASEDATADIR "/" TILECACHEDIR "/*.jsd", data_path);
+	snprintf(jsd_file_pattern, lengthof(jsd_file_pattern), "%s/*.jsd", GetTilecacheDirPath());
 
 	// Loop through and set filenames
 	SGP::FindFiles find(jsd_file_pattern);
@@ -55,7 +54,7 @@ void InitTileCache(void)
 		if (find_filename == NULL) break;
 
 		char filename[150];
-		sprintf(filename, "%s/" BASEDATADIR "/" TILECACHEDIR "/%s", data_path, find_filename);
+		sprintf(filename, "%s/%s", GetTilecacheDirPath(), find_filename);
 
 		TILE_CACHE_STRUCT tc;
 		GetRootName(tc.zRootName, lengthof(tc.zRootName), filename);
