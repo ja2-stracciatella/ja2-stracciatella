@@ -343,6 +343,8 @@ void InitNewGame()
 	uiMeanWhileFlags = 0;
 	SetSelectedMan(0);
 
+  resetCheatLevelToInitialValue();
+
 	if (gubScreenCount == 0)
 	{
 		LoadMercProfiles();
@@ -359,10 +361,12 @@ void InitNewGame()
 
 	// Setup initial money
 	AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 20500);
-#	ifdef GERMAN
-	// The different mercs are slightly more expensive. This adds that difference
-	AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 1075);
-#	endif
+
+  if(isGermanVersion())
+  {
+    // The different mercs are slightly more expensive. This adds that difference
+    AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 1075);
+  }
 
 	SetCurrentWorldSector(1, 16, 0);
 	SetLaptopExitScreen(MAP_SCREEN);
@@ -651,5 +655,5 @@ void ReStartingGame()
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;
 
-	gubCheatLevel = STARTING_CHEAT_LEVEL;
+  resetCheatLevelToInitialValue();
 }

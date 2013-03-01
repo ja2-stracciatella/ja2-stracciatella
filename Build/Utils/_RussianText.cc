@@ -1,5 +1,3 @@
-#if defined RUSSIAN || defined RUSSIAN_GOLD
-
 #include "Text.h"
 
 /*
@@ -103,7 +101,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 // NATO is the North Atlantic Treaty Organization
 // WP is Warsaw Pact
 // cal is an abbreviation for calibre
-const wchar_t AmmoCaliber[][20] =
+static StrPointer s_rus_AmmoCaliber[AmmoCaliber_SIZE] =
 {
 	L"0",
 	L",38 кал",
@@ -131,7 +129,7 @@ const wchar_t AmmoCaliber[][20] =
 // NATO is the North Atlantic Treaty Organization
 // WP is Warsaw Pact
 // cal is an abbreviation for calibre
-const wchar_t BobbyRayAmmoCaliber[][20] =
+static StrPointer s_rus_BobbyRayAmmoCaliber[BobbyRayAmmoCaliber_SIZE] =
 {
 	L"0",
 	L",38 кал",
@@ -152,7 +150,7 @@ const wchar_t BobbyRayAmmoCaliber[][20] =
 };
 
 
-const wchar_t WeaponType[][30] =
+static StrPointer s_rus_WeaponType[WeaponType_SIZE] =
 {
 	L"Другое",
 	L"Пистолет",
@@ -165,7 +163,7 @@ const wchar_t WeaponType[][30] =
 	L"Дробовик"
 };
 
-const wchar_t* const TeamTurnString[] =
+static StrPointer s_rus_TeamTurnString[TeamTurnString_SIZE] =
 {
 	L"Ход игрока", // player's turn
 	L"Ход противника",
@@ -175,7 +173,7 @@ const wchar_t* const TeamTurnString[] =
 	// planning turn
 };
 
-const wchar_t* const Message[] =
+static StrPointer s_rus_Message[Message_SIZE] =
 {
 	// In the following 8 strings, the %ls is the merc's name, and the %d (if any) is a number.
 
@@ -267,7 +265,7 @@ const wchar_t* const Message[] =
 
 // the names of the towns in the game
 
-const wchar_t* pTownNames[] =
+static const wchar_t *s_rus_pTownNames[pTownNames_SIZE] =
 {
 	L"",
 	L"Омерта",
@@ -284,7 +282,7 @@ const wchar_t* pTownNames[] =
 	L"Читзена",
 };
 
-wchar_t const* const g_towns_locative[] =
+static const wchar_t *s_rus_g_towns_locative[g_towns_locative_SIZE] =
 {
 	L"",
 	L"Омерте",
@@ -304,7 +302,7 @@ wchar_t const* const g_towns_locative[] =
 // the types of time compression. For example: is the timer paused? at normal speed, 5 minutes per second, etc.
 // min is an abbreviation for minutes
 
-const wchar_t* sTimeStrings[] =
+static const wchar_t *s_rus_sTimeStrings[sTimeStrings_SIZE] =
 {
 	L"Пауза",
 	L"Норма",
@@ -318,7 +316,7 @@ const wchar_t* sTimeStrings[] =
 // Assignment Strings: what assignment does the merc  have right now? For example, are they on a squad, training,
 // administering medical aid (doctor) or training a town. All are abbreviated. 8 letters is the longest it can be.
 
-const wchar_t* pAssignmentStrings[] =
+static const wchar_t *s_rus_pAssignmentStrings[pAssignmentStrings_SIZE] =
 {
 	L"Отряд 1",
 	L"Отряд 2",
@@ -358,7 +356,7 @@ const wchar_t* pAssignmentStrings[] =
 };
 
 
-const wchar_t* pMilitiaString[] =
+static const wchar_t *s_rus_pMilitiaString[pMilitiaString_SIZE] =
 {
 	L"Ополчение", // the title of the militia box
 	L"не распределено:", //the number of unassigned militia troops
@@ -366,13 +364,13 @@ const wchar_t* pMilitiaString[] =
 };
 
 
-const wchar_t* pMilitiaButtonString[] =
+static const wchar_t *s_rus_pMilitiaButtonString[pMilitiaButtonString_SIZE] =
 {
 	L"Авто", // auto place the militia troops for the player
 	L"Готово", // done placing militia troops
 };
 
-const wchar_t* pConditionStrings[] =
+static const wchar_t *s_rus_pConditionStrings[pConditionStrings_SIZE] =
 {
 	L"Отлично", //состояние солдата..отличное здоровье
 	L"Хорошо", //хорошее здоровье
@@ -385,7 +383,7 @@ const wchar_t* pConditionStrings[] =
 	L"Труп", // мертв
 };
 
-const wchar_t* pEpcMenuStrings[] =
+static const wchar_t *s_rus_pEpcMenuStrings[pEpcMenuStrings_SIZE] =
 {
 	L"На службе", // set merc on active duty
 	L"Пациент", // set as a patient to receive medical aid
@@ -397,7 +395,7 @@ const wchar_t* pEpcMenuStrings[] =
 
 // look at pAssignmentString above for comments
 
-const wchar_t* pLongAssignmentStrings[] =
+static const wchar_t *s_rus_pLongAssignmentStrings[pLongAssignmentStrings_SIZE] =
 {
 	L"Отряд 1",
 	L"Отряд 2",
@@ -439,7 +437,7 @@ const wchar_t* pLongAssignmentStrings[] =
 
 // the contract options
 
-const wchar_t* pContractStrings[] =
+static const wchar_t *s_rus_pContractStrings[pContractStrings_SIZE] =
 {
 	L"Действия по контракту:",
 	L"", // a blank line, required
@@ -450,20 +448,20 @@ const wchar_t* pContractStrings[] =
 	L"Отмена", // stop showing this menu
 };
 
-const wchar_t* pPOWStrings[] =
+static const wchar_t *s_rus_pPOWStrings[pPOWStrings_SIZE] =
 {
 	L"В плену",  //an acronym for Prisoner of War
 	L"??",
 };
 
-const wchar_t* pInvPanelTitleStrings[] =
+static const wchar_t *s_rus_pInvPanelTitleStrings[pInvPanelTitleStrings_SIZE] =
 {
 	L"Броня", // the armor rating of the merc
 	L"Груз", // the weight the merc is carrying
 	L"Камуфляж", // the merc's camouflage rating
 };
 
-const wchar_t* pShortAttributeStrings[] =
+static const wchar_t *s_rus_pShortAttributeStrings[pShortAttributeStrings_SIZE] =
 {
 	L"Прв", // the abbreviated version of : agility
 	L"Лов", // dexterity
@@ -478,7 +476,7 @@ const wchar_t* pShortAttributeStrings[] =
 };
 
 
-const wchar_t* pUpperLeftMapScreenStrings[] =
+static const wchar_t *s_rus_pUpperLeftMapScreenStrings[pUpperLeftMapScreenStrings_SIZE] =
 {
 	L"Задание", // the mercs current assignment
 	L"Здоровье", // the health level of the current merc
@@ -486,7 +484,7 @@ const wchar_t* pUpperLeftMapScreenStrings[] =
 	L"Сост.",	// the condition of the current vehicle
 };
 
-const wchar_t* pTrainingStrings[] =
+static const wchar_t *s_rus_pTrainingStrings[pTrainingStrings_SIZE] =
 {
 	L"Практика", // tell merc to train self
 	L"Ополчение", // tell merc to train town
@@ -494,7 +492,7 @@ const wchar_t* pTrainingStrings[] =
 	L"Ученик", // tell merc to be train by other
 };
 
-const wchar_t* pAssignMenuStrings[] =
+static const wchar_t *s_rus_pAssignMenuStrings[pAssignMenuStrings_SIZE] =
 {
 	L"На службе", // merc is on active duty
 	L"Доктор", // the merc is acting as a doctor
@@ -505,13 +503,13 @@ const wchar_t* pAssignMenuStrings[] =
 	L"Отмена", // cancel this menu
 };
 
-const wchar_t* pRemoveMercStrings[] =
+static const wchar_t *s_rus_pRemoveMercStrings[pRemoveMercStrings_SIZE] =
 {
 	L"Исключить из команды", // remove dead or captured by enemy merc from team
 	L"Отмена",
 };
 
-const wchar_t* pAttributeMenuStrings[] =
+static const wchar_t *s_rus_pAttributeMenuStrings[pAttributeMenuStrings_SIZE] =
 {
 	L"Сила",
 	L"Ловкость",
@@ -525,7 +523,7 @@ const wchar_t* pAttributeMenuStrings[] =
 	L"Отмена",
 };
 
-const wchar_t* pTrainingMenuStrings[] =
+static const wchar_t *s_rus_pTrainingMenuStrings[pTrainingMenuStrings_SIZE] =
 {
 	L"Практика", // train yourself
 	L"Ополчение", // train the town
@@ -535,7 +533,7 @@ const wchar_t* pTrainingMenuStrings[] =
 };
 
 
-const wchar_t* pSquadMenuStrings[] =
+static const wchar_t *s_rus_pSquadMenuStrings[pSquadMenuStrings_SIZE] =
 {
 	L"Отряд  1",
 	L"Отряд  2",
@@ -561,7 +559,7 @@ const wchar_t* pSquadMenuStrings[] =
 };
 
 
-const wchar_t* pPersonnelScreenStrings[] =
+static const wchar_t *s_rus_pPersonnelScreenStrings[pPersonnelScreenStrings_SIZE] =
 {
 	L"Медицинский депозит:", // amount of medical deposit put down on the merc
 	L"Срок контракта:", // time of remaining contract
@@ -581,7 +579,7 @@ const wchar_t* pPersonnelScreenStrings[] =
 
 
 //These string correspond to enums used in by the SkillTrait enums in SoldierProfileType.h
-const wchar_t* gzMercSkillText[] =
+static const wchar_t *s_rus_gzMercSkillText[gzMercSkillText_SIZE] =
 {
 	L"Нет навыков",
 	L"Взлом",
@@ -605,7 +603,7 @@ const wchar_t* gzMercSkillText[] =
 
 // This is pop up help text for the options that are available to the merc
 
-const wchar_t* pTacticalPopupButtonStrings[] =
+static const wchar_t *s_rus_pTacticalPopupButtonStrings[pTacticalPopupButtonStrings_SIZE] =
 {
 	L"Стоять/Идти (|S)",
 	L"Присядью (|C)",
@@ -632,7 +630,7 @@ const wchar_t* pTacticalPopupButtonStrings[] =
 
 // Door Traps. When we examine a door, it could have a particular trap on it. These are the traps.
 
-const wchar_t* pDoorTrapStrings[] =
+static const wchar_t *s_rus_pDoorTrapStrings[pDoorTrapStrings_SIZE] =
 {
 	L"нет ловушки",
 	L"мина",
@@ -643,7 +641,7 @@ const wchar_t* pDoorTrapStrings[] =
 
 // On the map screen, there are four columns. This text is popup help text that identifies the individual columns.
 
-const wchar_t* pMapScreenMouseRegionHelpText[] =
+static const wchar_t *s_rus_pMapScreenMouseRegionHelpText[pMapScreenMouseRegionHelpText_SIZE] =
 {
 	L"Выбрать наемника",
 	L"Дать задание",
@@ -655,7 +653,7 @@ const wchar_t* pMapScreenMouseRegionHelpText[] =
 
 // volumes of noises
 
-const wchar_t* pNoiseVolStr[] =
+static const wchar_t *s_rus_pNoiseVolStr[pNoiseVolStr_SIZE] =
 {
 	L"ТИХИЙ",
 	L"ЧЕТКИЙ",
@@ -665,7 +663,7 @@ const wchar_t* pNoiseVolStr[] =
 
 // types of noises
 
-const wchar_t* pNoiseTypeStr[] = // OBSOLETE
+static const wchar_t *s_rus_pNoiseTypeStr[pNoiseTypeStr_SIZE] = // OBSOLETE
 {
 	L"НЕЗНАКОМЫЙ",
 	L"звук ДВИЖЕНИЯ",
@@ -683,7 +681,7 @@ const wchar_t* pNoiseTypeStr[] = // OBSOLETE
 
 // Directions that are used to report noises
 
-const wchar_t* pDirectionStr[] =
+static const wchar_t *s_rus_pDirectionStr[pDirectionStr_SIZE] =
 {
 	L"с СЕВ-ВОСТОКА",
 	L"с ВОСТОКА",
@@ -697,7 +695,7 @@ const wchar_t* pDirectionStr[] =
 
 // These are the different terrain types.
 
-const wchar_t* pLandTypeStrings[] =
+static const wchar_t *s_rus_pLandTypeStrings[pLandTypeStrings_SIZE] =
 {
 	L"Город",
 	L"Дорога",
@@ -745,7 +743,7 @@ const wchar_t* pLandTypeStrings[] =
 	L"",							//Unused
 };
 
-const wchar_t* gpStrategicString[] =
+static const wchar_t *s_rus_gpStrategicString[gpStrategicString_SIZE] =
 {
 	L"%ls обнаружены в секторе %c%d и вот-вот прибудет еще один отряд.", //STR_DETECTED_SINGULAR
 	L"%ls обнаружены в секторе %c%d и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
@@ -878,11 +876,11 @@ const wchar_t* gpStrategicString[] =
 };
 
 //This is the day represented in the game clock.  Must be very short, 4 characters max.
-const wchar_t gpGameClockString[] = L"День";
+static const wchar_t s_rus_gpGameClockString[] = L"День";
 
 //When the merc finds a key, they can get a description of it which
 //tells them where and when they found it.
-const wchar_t* sKeyDescriptionStrings[2] =
+static const wchar_t *s_rus_sKeyDescriptionStrings[sKeyDescriptionStrings_SIZE] =
 {
 	L"Найден в:",
 	L"День находки:",
@@ -890,7 +888,7 @@ const wchar_t* sKeyDescriptionStrings[2] =
 
 //The headers used to describe various weapon statistics.
 
-const wchar_t* gWeaponStatsDesc[] =
+static StrPointer s_rus_gWeaponStatsDesc[ gWeaponStatsDesc_SIZE] =
 {
 	L"Вес (%ls):",
 	L"Состояние:",
@@ -903,7 +901,7 @@ const wchar_t* gWeaponStatsDesc[] =
 
 //The headers used for the merc's money.
 
-const wchar_t gMoneyStatsDesc[][ 13 ] =
+static const wchar_t *s_rus_gMoneyStatsDesc[gMoneyStatsDesc_SIZE] =
 {
 	L"Денег в",
 	L"пачке:", //this is the overall balance
@@ -919,7 +917,7 @@ const wchar_t gMoneyStatsDesc[][ 13 ] =
 //The health of various creatures, enemies, characters in the game. The numbers following each are for comment
 //only, but represent the precentage of points remaining.
 
-const wchar_t zHealthStr[][13] = ///TRNSL_BAD (GENDER)
+static const wchar_t *s_rus_zHealthStr[zHealthStr_SIZE] = ///TRNSL_BAD (GENDER)
 {
 	L"УМИРАЕТ",  // >=  0
 	L"КРИТИЧНО", // >= 15
@@ -930,7 +928,7 @@ const wchar_t zHealthStr[][13] = ///TRNSL_BAD (GENDER)
 	L"ОТЛИЧНО",  // >= 90
 };
 
-const wchar_t* gzMoneyAmounts[6] =
+static const wchar_t *s_rus_gzMoneyAmounts[gzMoneyAmounts_SIZE] =
 {
 	L"1000$",
 	L"100$",
@@ -941,11 +939,11 @@ const wchar_t* gzMoneyAmounts[6] =
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons."
-const wchar_t gzProsLabel[] = L"Плюсы:";
-const wchar_t gzConsLabel[] = L"Минусы:";
+static const wchar_t s_rus_gzProsLabel[] = L"Плюсы:";
+static const wchar_t s_rus_gzConsLabel[] = L"Минусы:";
 
 //Conversation options a player has when encountering an NPC
-const wchar_t zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
+static StrPointer s_rus_zTalkMenuStrings[zTalkMenuStrings_SIZE] =
 {
 	L"Еще раз?", 	//meaning "Repeat yourself"
 	L"Дружески",		//approach in a friendly
@@ -956,7 +954,7 @@ const wchar_t zTalkMenuStrings[6][ SMALL_STRING_LENGTH ] =
 };
 
 //Some NPCs buy, sell or repair items. These different options are available for those NPCs as well.
-const wchar_t zDealerStrings[4][ SMALL_STRING_LENGTH ]=
+static StrPointer s_rus_zDealerStrings[zDealerStrings_SIZE] =
 {
 	L"Торговля",
 	L"Купить",
@@ -964,12 +962,12 @@ const wchar_t zDealerStrings[4][ SMALL_STRING_LENGTH ]=
 	L"Ремонт",
 };
 
-const wchar_t zDialogActions[] = L"Готово";
+static const wchar_t s_rus_zDialogActions[] = L"Готово";
 
 
 //These are vehicles in the game.
 
-const wchar_t* pVehicleStrings[] =
+static const wchar_t *s_rus_pVehicleStrings[pVehicleStrings_SIZE] =
 {
 	L"Эльдорадо",
 	L"Хаммер", // a hummer jeep/truck -- military vehicle
@@ -979,7 +977,7 @@ const wchar_t* pVehicleStrings[] =
 	L"Вертолет",
 };
 
-const wchar_t* pShortVehicleStrings[] =
+static const wchar_t *s_rus_pShortVehicleStrings[pVehicleStrings_SIZE] =
 {
 	L"Эльдор",
 	L"Хаммер",			// the HMVV
@@ -989,7 +987,7 @@ const wchar_t* pShortVehicleStrings[] =
 	L"Верт.", 				// the helicopter
 };
 
-const wchar_t* zVehicleName[] =
+static const wchar_t *s_rus_zVehicleName[pVehicleStrings_SIZE] =
 {
 	L"Эльдорадо",
 	L"Хаммер",		//a military jeep. This is a brand name.
@@ -1002,7 +1000,7 @@ const wchar_t* zVehicleName[] =
 
 //These are messages Used in the Tactical Screen
 
-const wchar_t* const TacticalStr[] =
+static StrPointer s_rus_TacticalStr[TacticalStr_SIZE] =
 {
 	L"Воздушный налет",
 	L"Оказать первую помощь?",
@@ -1192,7 +1190,7 @@ const wchar_t* const TacticalStr[] =
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
-const wchar_t* pExitingSectorHelpText[] =
+static const wchar_t *s_rus_pExitingSectorHelpText[pExitingSectorHelpText_SIZE] =
 {
 	//Helptext for the "Go to Sector" checkbox button, that explains what will happen when the box is checked.
 	L"Если выбрана эта опция, вы сразу перейдете в смежный сектор.",
@@ -1236,7 +1234,7 @@ const wchar_t* pExitingSectorHelpText[] =
 
 
 
-const wchar_t* pRepairStrings[] =
+static const wchar_t *s_rus_pRepairStrings[pRepairStrings_SIZE] =
 {
 	L"Вещи", 		// tell merc to repair items in inventory
 	L"ПВО", 		// tell merc to repair SAM site - SAM is an acronym for Surface to Air Missile
@@ -1248,7 +1246,7 @@ const wchar_t* pRepairStrings[] =
 // NOTE: combine prestatbuildstring with statgain to get a line like the example below.
 // "John has gained 3 points of marksmanship skill."
 
-const wchar_t* sPreStatBuildString[] =
+static const wchar_t *s_rus_sPreStatBuildString[sPreStatBuildString_SIZE] =
 {
 	L"теряет", 			// the merc has lost a statistic
 	L"получает", 		// the merc has gained a statistic
@@ -1258,7 +1256,7 @@ const wchar_t* sPreStatBuildString[] =
 	L"уровня",	// plural
 };
 
-const wchar_t* sStatGainStrings[] =
+static const wchar_t *s_rus_sStatGainStrings[sStatGainStrings_SIZE] =
 {
 	L"здоровья.",
 	L"подвижности.",
@@ -1274,7 +1272,7 @@ const wchar_t* sStatGainStrings[] =
 };
 
 
-const wchar_t* pHelicopterEtaStrings[] =
+static const wchar_t *s_rus_pHelicopterEtaStrings[pHelicopterEtaStrings_SIZE] =
 {
 	L"Общее расстояние:  ", 			// total distance for helicopter to travel
 	L" Безопасно:  ", 			// distance to travel to destination
@@ -1288,15 +1286,15 @@ const wchar_t* pHelicopterEtaStrings[] =
 	L"Прибывающие",
 };
 
-const wchar_t sMapLevelString[] = L"Подуровень "; // what level below the ground is the player viewing in mapscreen
+static const wchar_t s_rus_sMapLevelString[] = L"Подуровень "; // what level below the ground is the player viewing in mapscreen
 
-const wchar_t gsLoyalString[] = L"Отношение %d%%"; // the loyalty rating of a town ie : Loyal 53%
+static const wchar_t s_rus_gsLoyalString[] = L"Отношение %d%%"; // the loyalty rating of a town ie : Loyal 53%
 
 
 // error message for when player is trying to give a merc a travel order while he's underground.
-const wchar_t gsUndergroundString[] = L"не может двигаться по карте, находясь под землей.";
+static const wchar_t s_rus_gsUndergroundString[] = L"не может двигаться по карте, находясь под землей.";
 
-const wchar_t* gsTimeStrings[] =
+static const wchar_t *s_rus_gsTimeStrings[gsTimeStrings_SIZE] =
 {
 	L"ч",				// hours abbreviation
 	L"м",				// minutes abbreviation
@@ -1306,7 +1304,7 @@ const wchar_t* gsTimeStrings[] =
 
 // text for the various facilities in the sector
 
-const wchar_t* sFacilitiesStrings[] =
+static const wchar_t *s_rus_sFacilitiesStrings[sFacilitiesStrings_SIZE] =
 {
 	L"Нет",
 	L"Госпиталь",
@@ -1319,7 +1317,7 @@ const wchar_t* sFacilitiesStrings[] =
 
 // text for inventory pop up button
 
-const wchar_t* pMapPopUpInventoryText[] =
+static const wchar_t *s_rus_pMapPopUpInventoryText[pMapPopUpInventoryText_SIZE] =
 {
 	L"Предметы",
 	L"Выход",
@@ -1327,7 +1325,7 @@ const wchar_t* pMapPopUpInventoryText[] =
 
 // town strings
 
-const wchar_t* pwTownInfoStrings[] =
+static const wchar_t *s_rus_pwTownInfoStrings[pwTownInfoStrings_SIZE] =
 {
 	L"Размер",					// size of the town in sectors
 	L"Контроль над городом", 					// how much of town is controlled
@@ -1340,7 +1338,7 @@ const wchar_t* pwTownInfoStrings[] =
 
 // Mine strings
 
-const wchar_t* pwMineStrings[] =
+static const wchar_t *s_rus_pwMineStrings[pwMineStrings_SIZE] =
 {
 	L"Шахта",						// 0
 	L"Серебро",
@@ -1360,7 +1358,7 @@ const wchar_t* pwMineStrings[] =
 
 // blank sector strings
 
-const wchar_t* pwMiscSectorStrings[] =
+static const wchar_t *s_rus_pwMiscSectorStrings[pwMiscSectorStrings_SIZE] =
 {
 	L"Силы врага",
 	L"Сектор",
@@ -1373,7 +1371,7 @@ const wchar_t* pwMiscSectorStrings[] =
 
 // error strings for inventory
 
-const wchar_t* pMapInventoryErrorString[] =
+static const wchar_t *s_rus_pMapInventoryErrorString[pMapInventoryErrorString_SIZE] =
 {
 	L"Нельзя выбрать этого бойца.",  //MARK CARTER
 	L"%ls не в этом секторе, и не может взять этот предмет.",
@@ -1382,7 +1380,7 @@ const wchar_t* pMapInventoryErrorString[] =
 	L"%ls не в этом секторе, и не может бросить этот предмет.",
 };
 
-const wchar_t* pMapInventoryStrings[] =
+static const wchar_t *s_rus_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
 {
 	L"Сектор", 			// sector these items are in
 	L"Всего предметов", 		// total number of items in sector
@@ -1391,7 +1389,7 @@ const wchar_t* pMapInventoryStrings[] =
 
 // movement menu text
 
-const wchar_t* pMovementMenuStrings[] =
+static const wchar_t *s_rus_pMovementMenuStrings[pMovementMenuStrings_SIZE] =
 {
 	L"Отправить бойцов из сектора %ls", 	// title for movement box
 	L"Проложить маршрут", 		// done with movement menu, start plotting movement
@@ -1400,7 +1398,7 @@ const wchar_t* pMovementMenuStrings[] =
 };
 
 
-const wchar_t* pUpdateMercStrings[] =
+static const wchar_t *s_rus_pUpdateMercStrings[pUpdateMercStrings_SIZE] =
 {
 	L"Ой!:", 			// an error has occured
 	L"Контракты закончились:", 	// this pop up came up due to a merc contract ending
@@ -1412,7 +1410,7 @@ const wchar_t* pUpdateMercStrings[] =
 
 // map screen map border buttons help text
 
-const wchar_t* pMapScreenBorderButtonHelpText[] =
+static const wchar_t *s_rus_pMapScreenBorderButtonHelpText[pMapScreenBorderButtonHelpText_SIZE] =
 {
 	L"Показать города (|W)",
 	L"Показать шахты (|M)",
@@ -1423,7 +1421,7 @@ const wchar_t* pMapScreenBorderButtonHelpText[] =
 };
 
 
-const wchar_t* pMapScreenBottomFastHelp[] =
+static const wchar_t *s_rus_pMapScreenBottomFastHelp[pMapScreenBottomFastHelp_SIZE] =
 {
 	L"Лэптоп (|L)",
 	L"Тактика (|E|s|c)",
@@ -1435,16 +1433,16 @@ const wchar_t* pMapScreenBottomFastHelp[] =
 	L"Пауза/Снять с паузы (|S|p|a|c|e)",	// start/stop time compression
 };
 
-const wchar_t pMapScreenBottomText[] = L"Текущий баланс"; // current balance in player bank account
+static const wchar_t s_rus_pMapScreenBottomText[] = L"Текущий баланс"; // current balance in player bank account
 
-const wchar_t pMercDeadString[] = L"%ls мертв(а).";
+static const wchar_t s_rus_pMercDeadString[] = L"%ls мертв(а).";
 
 
-const wchar_t pDayStrings[] = L"День";
+static const wchar_t s_rus_pDayStrings[] = L"День";
 
 // the list of email sender names
 
-const wchar_t* pSenderNameList[] = // GOLD and BUKA use slightly different names
+static const wchar_t *s_rus_pSenderNameList[pSenderNameList_SIZE] = // GOLD and BUKA use slightly different names
 {
 	L"Энрико",
 	L"Псих Про Инк.",
@@ -1457,22 +1455,14 @@ const wchar_t* pSenderNameList[] = // GOLD and BUKA use slightly different names
 	L"Рысь",
 	L"Гризли",
 	L"Вики",			//10
-#if defined RUSSIAN_GOLD
-	L"Тревор",
-#else
 	L"Тревер",
-#endif
 	L"Хряп",
 	L"Иван",
 	L"Анаболик",
 	L"Игорь",			//15
 	L"Тень",
 	L"Рыжий",
-#if defined RUSSIAN_GOLD
-	L"Жнец",
-#else
 	L"Потрошитель",
-#endif
 	L"Фидель",
 	L"Лиска",				//20
 	L"Сидней",
@@ -1480,11 +1470,7 @@ const wchar_t* pSenderNameList[] = // GOLD and BUKA use slightly different names
 	L"Сдоба",
 	L"Айс",
 	L"Паук",		//25
-#if defined RUSSIAN_GOLD
-	L"Скала",
-#else
 	L"Клифф",
-#endif
 	L"Бык",
 	L"Стрелок",
 	L"Тоска",
@@ -1494,11 +1480,64 @@ const wchar_t* pSenderNameList[] = // GOLD and BUKA use slightly different names
 	L"Лен",
 	L"Данни",
 	L"Маг",
-#if defined RUSSIAN_GOLD
-	L"Стефан",
-#else
 	L"Стэфен",
-#endif
+	L"Лысый",
+	L"Злобный",
+	L"Доктор Кью",
+	L"Гвоздь",
+	L"Тор",
+	L"Стрелка",
+	L"Волк",
+	L"ЭмДи",
+	L"Лава",
+	//----------
+	L"M.I.S. Страх",
+	L"Бобби Рэй",
+	L"Босс",
+	L"Джон Калба",
+	L"А.I.М.",
+};
+
+
+static const wchar_t *s_rusGold_pSenderNameList[pSenderNameList_SIZE] = // GOLD and BUKA use slightly different names
+{
+	L"Энрико",
+	L"Псих Про Инк.",
+	L"Помощь",
+	L"Псих Про Инк.",
+	L"Спек",
+	L"R.I.S.",		//5
+	L"Барри",
+	L"Блад",
+	L"Рысь",
+	L"Гризли",
+	L"Вики",			//10
+	L"Тревор",
+	L"Хряп",
+	L"Иван",
+	L"Анаболик",
+	L"Игорь",			//15
+	L"Тень",
+	L"Рыжий",
+	L"Жнец",
+	L"Фидель",
+	L"Лиска",				//20
+	L"Сидней",
+	L"Гас",
+	L"Сдоба",
+	L"Айс",
+	L"Паук",		//25
+	L"Скала",
+	L"Бык",
+	L"Стрелок",
+	L"Тоска",
+	L"Рейдер",		//30
+	L"Сова",
+	L"Статик",
+	L"Лен",
+	L"Данни",
+	L"Маг",
+	L"Стефан",
 	L"Лысый",
 	L"Злобный",
 	L"Доктор Кью",
@@ -1518,12 +1557,12 @@ const wchar_t* pSenderNameList[] = // GOLD and BUKA use slightly different names
 
 
 // new mail notify string
-const wchar_t pNewMailStrings[] = L"Получена новая почта...";
+static const wchar_t s_rus_pNewMailStrings[] = L"Получена новая почта...";
 
 
 // confirm player's intent to delete messages
 
-const wchar_t* pDeleteMailStrings[] =
+static const wchar_t *s_rus_pDeleteMailStrings[pDeleteMailStrings_SIZE] =
 {
 	L"Стереть сообщение?",
 	L"Стереть НЕПРОЧТЕННЫЕ?",
@@ -1532,7 +1571,7 @@ const wchar_t* pDeleteMailStrings[] =
 
 // the sort header strings
 
-const wchar_t* pEmailHeaders[] =
+static const wchar_t *s_rus_pEmailHeaders[pEmailHeaders_SIZE] =
 {
 	L"От:",
 	L"Тема:",
@@ -1540,13 +1579,13 @@ const wchar_t* pEmailHeaders[] =
 };
 
 // email titlebar text
-const wchar_t pEmailTitleText[] = L"Почтовый ящик";
+static const wchar_t s_rus_pEmailTitleText[] = L"Почтовый ящик";
 
 
 // the financial screen strings
-const wchar_t pFinanceTitle[] = L"Бухгалтер Плюс"; // the name we made up for the financial program in the game
+static const wchar_t s_rus_pFinanceTitle[] = L"Бухгалтер Плюс"; // the name we made up for the financial program in the game
 
-const wchar_t* pFinanceSummary[] =
+static const wchar_t *s_rus_pFinanceSummary[pFinanceSummary_SIZE] =
 {
 	L"Расход:", 				// credit (subtract from) to player's account
 	L"Приход:", 				// debit (add to) to player's account
@@ -1565,7 +1604,7 @@ const wchar_t* pFinanceSummary[] =
 
 // headers to each list in financial screen
 
-const wchar_t* pFinanceHeaders[] =
+static const wchar_t *s_rus_pFinanceHeaders[pFinanceHeaders_SIZE] =
 {
 	L"День", 					// the day column
 	L"Приход", 				// the credits column
@@ -1577,7 +1616,7 @@ const wchar_t* pFinanceHeaders[] =
 };
 
 
-const wchar_t* pTransactionText[] =
+static const wchar_t *s_rus_pTransactionText[pTransactionText_SIZE] =
 {
 	L"Проценты",			// interest the player has accumulated so far
 	L"Анонимный вклад",
@@ -1611,7 +1650,7 @@ const wchar_t* pTransactionText[] =
 
 // helicopter pilot payment
 
-const wchar_t* pSkyriderText[] =
+static const wchar_t *s_rus_pSkyriderText[pSkyriderText_SIZE] =
 {
 	L"Всаднику выплачено $%d", 			// skyrider was paid an amount of money
 	L"Всаднику недоплачено $%d", 		// skyrider is still owed an amount of money
@@ -1621,7 +1660,7 @@ const wchar_t* pSkyriderText[] =
 
 // strings for different levels of merc morale
 
-const wchar_t* pMoralStrings[] =
+static const wchar_t *s_rus_pMoralStrings[pMoralStrings_SIZE] =
 {
 	L"Боевой",
 	L"Бодрый",
@@ -1632,11 +1671,11 @@ const wchar_t* pMoralStrings[] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-const wchar_t str_left_equipment[]   = L"%ls оставляет снаряжение в %ls (%c%d).";
+static const wchar_t s_rus_str_left_equipment[]   = L"%ls оставляет снаряжение в %ls (%c%d).";
 
 // Status that appears on the Map Screen
 
-const wchar_t* pMapScreenStatusStrings[] =
+static const wchar_t *s_rus_pMapScreenStatusStrings[pMapScreenStatusStrings_SIZE] =
 {
 	L"Здоровье",
 	L"Энергия",
@@ -1646,23 +1685,23 @@ const wchar_t* pMapScreenStatusStrings[] =
 };
 
 
-const wchar_t* pMapScreenPrevNextCharButtonHelpText[] =
+static const wchar_t *s_rus_pMapScreenPrevNextCharButtonHelpText[pMapScreenPrevNextCharButtonHelpText_SIZE] =
 {
 	L"Предыдущий наемник (|L|e|f|t)", 			// previous merc in the list
 	L"Следующий наемник (|R|i|g|h|t)", 				// next merc in the list
 };
 
 
-const wchar_t pEtaString[] = L"ОВП:"; // eta is an acronym for Estimated Time of Arrival
+static const wchar_t s_rus_pEtaString[] = L"ОВП:"; // eta is an acronym for Estimated Time of Arrival
 
-const wchar_t* pTrashItemText[] =
+static const wchar_t *s_rus_pTrashItemText[pTrashItemText_SIZE] =
 {
 	L"Вы потеряете этот предмет навсегда. Выбросить?", 	// do you want to continue and lose the item forever
 	L"Похоже, это действительно ВАЖНАЯ вещь. Вы ТОЧНО уверены, что хотите ее выбросить?", // does the user REALLY want to trash this item
 };
 
 
-const wchar_t* pMapErrorString[] =
+static const wchar_t *s_rus_pMapErrorString[pMapErrorString_SIZE] =
 {
 	L"Отряд не может двигаться, пока бойцы спят.",
 
@@ -1729,7 +1768,7 @@ const wchar_t* pMapErrorString[] =
 
 
 // help text used during strategic route plotting
-const wchar_t* pMapPlotStrings[] =
+static const wchar_t *s_rus_pMapPlotStrings[pMapPlotStrings_SIZE] =
 {
 	L"Кликните на секторе еще раз чтобы направить туда отряд, или щелкните по другому сектору для прокладки маршрута.",
 	L"Маршрут движения проложен.",
@@ -1740,7 +1779,7 @@ const wchar_t* pMapPlotStrings[] =
 
 
 // help text used when moving the merc arrival sector
-const wchar_t* pBullseyeStrings[] =
+static const wchar_t *s_rus_pBullseyeStrings[pBullseyeStrings_SIZE] =
 {
 	L"Выберите сектор высадки прибывающих наемников.",
 	L"Теперь прибывающие наемники будут высаживаться в %ls",
@@ -1752,7 +1791,7 @@ const wchar_t* pBullseyeStrings[] =
 
 // help text for mouse regions
 
-const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
+static const wchar_t *s_rus_pMiscMapScreenMouseRegionHelpText[pMiscMapScreenMouseRegionHelpText_SIZE] =
 {
 	L"Просмотр инвентаря (|E|n|t|e|r)",
 	L"Выкинуть предмет",
@@ -1760,15 +1799,15 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 };
 
 
-const wchar_t str_he_leaves_where_drop_equipment[]  = L"%ls должен оставить снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
-const wchar_t str_she_leaves_where_drop_equipment[] = L"%ls должна оставить свое снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
-const wchar_t str_he_leaves_drops_equipment[]       = L"%ls собрался уйти, оставив свое снаряжение в %ls.";
-const wchar_t str_she_leaves_drops_equipment[]      = L"%ls собралась уйти, оставив свое снаряжение в %ls.";
+static const wchar_t s_rus_str_he_leaves_where_drop_equipment[]  = L"%ls должен оставить снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
+static const wchar_t s_rus_str_she_leaves_where_drop_equipment[] = L"%ls должна оставить свое снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
+static const wchar_t s_rus_str_he_leaves_drops_equipment[]       = L"%ls собрался уйти, оставив свое снаряжение в %ls.";
+static const wchar_t s_rus_str_she_leaves_drops_equipment[]      = L"%ls собралась уйти, оставив свое снаряжение в %ls.";
 
 
 // Text used on IMP Web Pages
 
-const wchar_t* pImpPopUpStrings[] =
+static const wchar_t *s_rus_pImpPopUpStrings[pImpPopUpStrings_SIZE] =
 {
 	L"Неверный код авторизации!",
 	L"Вы уверены, что хотите начать процесс профилирования заново?",
@@ -1782,7 +1821,7 @@ const wchar_t* pImpPopUpStrings[] =
 
 // button labels used on the IMP site
 
-const wchar_t* pImpButtonText[] =
+static const wchar_t *s_rus_pImpButtonText[pImpButtonText_SIZE] =
 {
 	L"Подробнее", 			// about the IMP site
 	L"НАЧАТЬ", 			// begin profiling
@@ -1812,7 +1851,7 @@ const wchar_t* pImpButtonText[] =
 	L"Голос",
 };
 
-const wchar_t* pExtraIMPStrings[] =
+static const wchar_t *s_rus_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 {
 	L"Чтобы начать профилирование, протестируйте свои личные качества.",
 	L"Личные качества оценены, переходите к свойствам.",
@@ -1820,9 +1859,9 @@ const wchar_t* pExtraIMPStrings[] =
 	L"Чтобы завершить процесс, выберите подходящий голос."
 };
 
-const wchar_t pFilesTitle[] = L"Просмотр файлов";
+static const wchar_t s_rus_pFilesTitle[] = L"Просмотр файлов";
 
-const wchar_t* pFilesSenderList[] =
+static const wchar_t *s_rus_pFilesSenderList[pFilesSenderList_SIZE] =
 {
 	L"Отчет разведки", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
 	L"Перехват #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
@@ -1834,9 +1873,9 @@ const wchar_t* pFilesSenderList[] =
 };
 
 // Text having to do with the History Log
-const wchar_t pHistoryTitle[] = L"События";
+static const wchar_t s_rus_pHistoryTitle[] = L"События";
 
-const wchar_t* pHistoryHeaders[] =
+static const wchar_t *s_rus_pHistoryHeaders[pHistoryHeaders_SIZE] =
 {
 	L"День", 			// the day the history event occurred
 	L"Стр.", 			// the current page in the history report we are in
@@ -1851,7 +1890,7 @@ const wchar_t* pHistoryHeaders[] =
 // IS TO TURN "CHEAT MODE" ON AND USE CONTROL-R IN THE TACTICAL SCREEN, THEN
 // GO INTO THE LAPTOP/HISTORY LOG AND CHECK OUT THE STRINGS. CONTROL-R INSERTS
 // MANY (NOT ALL) OF THE STRINGS IN THE FOLLOWING LIST INTO THE GAME.
-const wchar_t* pHistoryStrings[] =
+static const wchar_t *s_rus_pHistoryStrings[pHistoryStrings_SIZE] =
 {
 	L"",																						// leave this line blank
 	//1-5
@@ -1948,11 +1987,11 @@ const wchar_t* pHistoryStrings[] =
 	L"Убил %ls",
 };
 
-const wchar_t pHistoryLocations[] = L"Н/П"; // N/A is an acronym for Not Applicable
+static const wchar_t s_rus_pHistoryLocations[] = L"Н/П"; // N/A is an acronym for Not Applicable
 
 // icon text strings that appear on the laptop
 
-const wchar_t* pLaptopIcons[] =
+static const wchar_t *s_rus_pLaptopIcons[pLaptopIcons_SIZE] =
 {
 	L"Почта",
 	L"Сеть",
@@ -1967,7 +2006,7 @@ const wchar_t* pLaptopIcons[] =
 // bookmarks for different websites
 // IMPORTANT make sure you move down the Cancel string as bookmarks are being added
 
-const wchar_t* pBookMarkStrings[] =
+static const wchar_t *s_rus_pBookMarkStrings[pBookMarkStrings_SIZE] =
 {
 	L"А.I.M.",
 	L"Бобби Рэй",
@@ -1981,7 +2020,7 @@ const wchar_t* pBookMarkStrings[] =
 
 // When loading or download a web page
 
-const wchar_t* pDownloadString[] =
+static const wchar_t *s_rus_pDownloadString[pDownloadString_SIZE] =
 {
 	L"Загрузка...",
 	L"Перегрузка...",
@@ -1989,7 +2028,7 @@ const wchar_t* pDownloadString[] =
 
 //This is the text used on the bank machines, here called ATMs for Automatic Teller Machine
 
-const wchar_t* gsAtmStartButtonText[] =
+static const wchar_t *s_rus_gsAtmStartButtonText[gsAtmStartButtonText_SIZE] =
 {
 	L"Параметры", 			// view stats of the merc
 	L"Снаряжение", 			// view the inventory of the merc
@@ -2000,18 +2039,18 @@ const wchar_t* gsAtmStartButtonText[] =
 // DNS is the acronym for Domain Name Server
 // URL is the acronym for Uniform Resource Locator
 
-const wchar_t pErrorStrings[] = L"Плохое соединение. Попробуйте позднее.";
+static const wchar_t s_rus_pErrorStrings[] = L"Плохое соединение. Попробуйте позднее.";
 
 
-const wchar_t pPersonnelString[] = L"Бойцов:"; // mercs we have
+static const wchar_t s_rus_pPersonnelString[] = L"Бойцов:"; // mercs we have
 
 
-const wchar_t pWebTitle[] = L"сир-ФЕР 4.0"; // our name for the version of the browser, play on company name
+static const wchar_t s_rus_pWebTitle[] = L"сир-ФЕР 4.0"; // our name for the version of the browser, play on company name
 
 
 // The titles for the web program title bar, for each page loaded
 
-const wchar_t* pWebPagesTitles[] =
+static const wchar_t *s_rus_pWebPagesTitles[pWebPagesTitles_SIZE] =
 {
 	L"А.I.M.",
 	L"A.I.M. - Наемники",
@@ -2050,13 +2089,13 @@ const wchar_t* pWebPagesTitles[] =
 	L"",
 };
 
-const wchar_t* pShowBookmarkString[] =
+static const wchar_t *s_rus_pShowBookmarkString[pShowBookmarkString_SIZE] =
 {
 	L"Sir-Помощь",
 	L"Закладки: кликните на кнопке Сеть еще раз.",
 };
 
-const wchar_t* pLaptopTitles[] =
+static const wchar_t *s_rus_pLaptopTitles[pLaptopTitles_SIZE] =
 {
 	L"Почтовый ящик",
 	L"Просмотр файлов",
@@ -2065,7 +2104,7 @@ const wchar_t* pLaptopTitles[] =
 	L"Журнал",
 };
 
-const wchar_t* pPersonnelDepartedStateStrings[] =
+static const wchar_t *s_rus_pPersonnelDepartedStateStrings[pPersonnelDepartedStateStrings_SIZE] =
 {
 	//reasons why a merc has left.
 	L"Убит в бою",
@@ -2076,7 +2115,7 @@ const wchar_t* pPersonnelDepartedStateStrings[] =
 };
 // personnel strings appearing in the Personnel Manager on the laptop
 
-const wchar_t* pPersonelTeamStrings[] =
+static const wchar_t *s_rus_pPersonelTeamStrings[pPersonelTeamStrings_SIZE] =
 {
 	L"В команде",
 	L"Убывшие",
@@ -2089,7 +2128,7 @@ const wchar_t* pPersonelTeamStrings[] =
 };
 
 
-const wchar_t* pPersonnelCurrentTeamStatsStrings[] =
+static const wchar_t *s_rus_pPersonnelCurrentTeamStatsStrings[pPersonnelCurrentTeamStatsStrings_SIZE] =
 {
 	L"Минимум",
 	L"Среднее",
@@ -2097,7 +2136,7 @@ const wchar_t* pPersonnelCurrentTeamStatsStrings[] =
 };
 
 
-const wchar_t* pPersonnelTeamStatsStrings[] =
+static const wchar_t *s_rus_pPersonnelTeamStatsStrings[pPersonnelTeamStatsStrings_SIZE] =
 {
 	L"ЗДОР",
 	L"ПРВ",
@@ -2115,7 +2154,7 @@ const wchar_t* pPersonnelTeamStatsStrings[] =
 
 // horizontal and vertical indices on the map screen
 
-const wchar_t* pMapVertIndex[] =
+static const wchar_t *s_rus_pMapVertIndex[pMapVertIndex_SIZE] =
 {
 	L"X",
 	L"A",
@@ -2136,7 +2175,7 @@ const wchar_t* pMapVertIndex[] =
 	L"P",
 };
 
-const wchar_t* pMapHortIndex[] =
+static const wchar_t *s_rus_pMapHortIndex[pMapHortIndex_SIZE] =
 {
 	L"X",
 	L"1",
@@ -2157,7 +2196,7 @@ const wchar_t* pMapHortIndex[] =
 	L"16",
 };
 
-const wchar_t* pMapDepthIndex[] =
+static const wchar_t *s_rus_pMapDepthIndex[pMapDepthIndex_SIZE] =
 {
 	L"",
 	L"-1",
@@ -2167,11 +2206,11 @@ const wchar_t* pMapDepthIndex[] =
 
 // text that appears on the contract button
 
-const wchar_t pContractButtonString[] = L"Контракт";
+static const wchar_t s_rus_pContractButtonString[] = L"Контракт";
 
 // text that appears on the update panel buttons
 
-const wchar_t* pUpdatePanelButtons[] =
+static const wchar_t *s_rus_pUpdatePanelButtons[pUpdatePanelButtons_SIZE] =
 {
 	L"Дальше",
 	L"Стоп",
@@ -2179,7 +2218,7 @@ const wchar_t* pUpdatePanelButtons[] =
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
-const wchar_t* const LargeTacticalStr[] =
+static StrPointer s_rus_LargeTacticalStr[LargeTacticalStr_SIZE] =
 {
 	L"В этом секторе вам нанесли поражение!",
 	L"Враг, без тени сожаления, пожрет всех до единого!",
@@ -2191,7 +2230,7 @@ const wchar_t* const LargeTacticalStr[] =
 //Insurance Contract.c
 //The text on the buttons at the bottom of the screen.
 
-const wchar_t* InsContractText[] =
+static const wchar_t *s_rus_InsContractText[InsContractText_SIZE] =
 {
 	L"Назад",
 	L"Далее",
@@ -2204,7 +2243,7 @@ const wchar_t* InsContractText[] =
 //Insurance Info
 // Text on the buttons on the bottom of the screen
 
-const wchar_t* InsInfoText[] =
+static const wchar_t *s_rus_InsInfoText[InsInfoText_SIZE] =
 {
 	L"Назад",
 	L"Далее"
@@ -2214,7 +2253,7 @@ const wchar_t* InsInfoText[] =
 
 //For use at the M.E.R.C. web site. Text relating to the player's account with MERC
 
-const wchar_t* MercAccountText[] =
+static const wchar_t *s_rus_MercAccountText[MercAccountText_SIZE] =
 {
 	// Text on the buttons on the bottom of the screen
 	L"Оплатить",
@@ -2233,7 +2272,7 @@ const wchar_t* MercAccountText[] =
 //For use at the M.E.R.C. web site. Text relating a MERC mercenary
 
 
-const wchar_t* MercInfo[] =
+static const wchar_t *s_rus_MercInfo[MercInfo_SIZE] =
 {
 	L"Назад",
 	L"Нанять",
@@ -2253,7 +2292,7 @@ const wchar_t* MercInfo[] =
 
 // For use at the M.E.R.C. web site. Text relating to opening an account with MERC
 
-const wchar_t* MercNoAccountText[] =
+static const wchar_t *s_rus_MercNoAccountText[MercNoAccountText_SIZE] =
 {
 	//Text on the buttons at the bottom of the screen
 	L"Открыть счет",
@@ -2265,7 +2304,7 @@ const wchar_t* MercNoAccountText[] =
 
 // For use at the M.E.R.C. web site. MERC Homepage
 
-const wchar_t* MercHomePageText[] =
+static const wchar_t *s_rus_MercHomePageText[MercHomePageText_SIZE] =
 {
 	//Description of various parts on the MERC page
 	L"Спек Т. Клайн, основатель",
@@ -2278,7 +2317,7 @@ const wchar_t* MercHomePageText[] =
 
 // For use at MiGillicutty's Web Page.
 
-const wchar_t* sFuneralString[] =
+static const wchar_t *s_rus_sFuneralString[sFuneralString_SIZE] =
 {
 	L"Похоронное агенство Макгилликати: скорбим вместе с семьями усопших с 1983 года.",
 	L"Директор по похоронам и бывший наемник А.I.М Мюррэй \"Папаша\" Макгилликати - специалист по части похорон.",
@@ -2300,7 +2339,7 @@ const wchar_t* sFuneralString[] =
 
 // Text for the florist Home page
 
-const wchar_t* sFloristText[] =
+static const wchar_t *s_rus_sFloristText[sFloristText_SIZE] =
 {
 	//Text on the button on the bottom of the page
 
@@ -2330,7 +2369,7 @@ const wchar_t* sFloristText[] =
 
 //Florist OrderForm
 
-const wchar_t* sOrderFormText[] =
+static const wchar_t *s_rus_sOrderFormText[sOrderFormText_SIZE] =
 {
 	//Text on the buttons
 
@@ -2368,7 +2407,7 @@ const wchar_t* sOrderFormText[] =
 
 //Florist Gallery.c
 
-const wchar_t* sFloristGalleryText[] =
+static const wchar_t *s_rus_sFloristGalleryText[sFloristGalleryText_SIZE] =
 {
 	//text on the buttons
 
@@ -2385,7 +2424,7 @@ const wchar_t* sFloristGalleryText[] =
 
 //Florist Cards
 
-const wchar_t* sFloristCards[] =
+static const wchar_t *s_rus_sFloristCards[sFloristCards_SIZE] =
 {
 	L"Кликните для выбора",
 	L"Назад"
@@ -2395,7 +2434,7 @@ const wchar_t* sFloristCards[] =
 
 // Text for Bobby Ray's Mail Order Site
 
-const wchar_t* BobbyROrderFormText[] =
+static const wchar_t *s_rus_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 {
 	L"Бланк заказа",				//Title of the page
 	L"Шт.",					// The number of items ordered
@@ -2428,7 +2467,7 @@ const wchar_t* BobbyROrderFormText[] =
 
 // This text is used when on the various Bobby Ray Web site pages that sell items
 
-const wchar_t* BobbyRText[] =
+static const wchar_t *s_rus_BobbyRText[BobbyRText_SIZE] =
 {
 	L"Правила:",				// Title
 	// instructions on how to order
@@ -2478,12 +2517,12 @@ const wchar_t* BobbyRText[] =
 /* The following line is used on the Ammunition page.  It is used for help text
  * to display how many items the player's merc has that can use this type of
  * ammo. */
-const wchar_t str_bobbyr_guns_num_guns_that_use_ammo[] = L"Количество единиц оружия у вашей команды, использующих этот боеприпас: %d";
+static const wchar_t s_rus_str_bobbyr_guns_num_guns_that_use_ammo[] = L"Количество единиц оружия у вашей команды, использующих этот боеприпас: %d";
 
 
 // Text for Bobby Ray's Home Page
 
-const wchar_t* BobbyRaysFrontText[] =
+static const wchar_t *s_rus_BobbyRaysFrontText[BobbyRaysFrontText_SIZE] =
 {
 	//Details on the web site
 
@@ -2509,7 +2548,7 @@ const wchar_t* BobbyRaysFrontText[] =
 // Text for the AIM page.
 // This is the text used when the user selects the way to sort the aim mercanaries on the AIM mug shot page
 
-const wchar_t* AimSortText[] =
+static const wchar_t *s_rus_AimSortText[AimSortText_SIZE] =
 {
 	L"Наемники А.I.M.",				// Title
 	// Title for the way to sort
@@ -2524,20 +2563,20 @@ const wchar_t* AimSortText[] =
 
 
 // text to display how the entries will be sorted
-const wchar_t str_aim_sort_price[]        = L"Цена";
-const wchar_t str_aim_sort_experience[]   = L"Опытность";
-const wchar_t str_aim_sort_marksmanship[] = L"Меткость";
-const wchar_t str_aim_sort_medical[]      = L"Медицина";
-const wchar_t str_aim_sort_explosives[]   = L"Взрывчатка";
-const wchar_t str_aim_sort_mechanical[]   = L"Механика";
-const wchar_t str_aim_sort_ascending[]    = L"по возрастанию";
-const wchar_t str_aim_sort_descending[]   = L"по убыванию   ";
+static const wchar_t s_rus_str_aim_sort_price[]        = L"Цена";
+static const wchar_t s_rus_str_aim_sort_experience[]   = L"Опытность";
+static const wchar_t s_rus_str_aim_sort_marksmanship[] = L"Меткость";
+static const wchar_t s_rus_str_aim_sort_medical[]      = L"Медицина";
+static const wchar_t s_rus_str_aim_sort_explosives[]   = L"Взрывчатка";
+static const wchar_t s_rus_str_aim_sort_mechanical[]   = L"Механика";
+static const wchar_t s_rus_str_aim_sort_ascending[]    = L"по возрастанию";
+static const wchar_t s_rus_str_aim_sort_descending[]   = L"по убыванию   ";
 
 
 //Aim Policies.c
 //The page in which the AIM policies and regulations are displayed
 
-const wchar_t* AimPolicyText[] =
+static const wchar_t *s_rus_AimPolicyText[AimPolicyText_SIZE] =
 {
 	// The text on the buttons at the bottom of the page
 
@@ -2556,7 +2595,7 @@ const wchar_t* AimPolicyText[] =
 
 // Instructions to the user to either start video conferencing with the merc, or to go the mug shot index
 
-const wchar_t* AimMemberText[] =
+static const wchar_t *s_rus_AimMemberText[AimMemberText_SIZE] =
 {
 	L"Левый щелчок",
 	L"связаться",
@@ -2567,7 +2606,7 @@ const wchar_t* AimMemberText[] =
 //Aim Member.c
 //The page in which the players hires AIM mercenaries
 
-const wchar_t* CharacterInfo[] =
+static const wchar_t *s_rus_CharacterInfo[CharacterInfo_SIZE] =
 {
 	// the contract expenses' area
 
@@ -2596,7 +2635,7 @@ const wchar_t* CharacterInfo[] =
 
 //The following text is used with the video conference popup
 
-const wchar_t* VideoConfercingText[] =
+static const wchar_t *s_rus_VideoConfercingText[VideoConfercingText_SIZE] =
 {
 	L"Цена контракта:",				//Title beside the cost of hiring the merc
 
@@ -2635,7 +2674,7 @@ const wchar_t* VideoConfercingText[] =
 
 // The text that pops up when you select the TRANSFER FUNDS button
 
-const wchar_t* AimPopUpText[] =
+static const wchar_t *s_rus_AimPopUpText[AimPopUpText_SIZE] =
 {
 	L"ЭЛЕКТРОННЫЙ ПЛАТЕЖ ПРОШЕЛ УСПЕШНО",	// You hired the merc
 	L"ОШИБКА! НЕТ",		// Player doesn't have enough money, message 1
@@ -2658,7 +2697,7 @@ const wchar_t* AimPopUpText[] =
 
 //AIM Link.c
 
-const wchar_t AimLinkText[] = L"Ссылки A.I.M.";	// The title of the AIM links page
+static const wchar_t s_rus_AimLinkText[] = L"Ссылки A.I.M.";	// The title of the AIM links page
 
 
 
@@ -2666,7 +2705,7 @@ const wchar_t AimLinkText[] = L"Ссылки A.I.M.";	// The title of the AIM li
 
 // This page displays the history of AIM
 
-const wchar_t* AimHistoryText[] =
+static const wchar_t *s_rus_AimHistoryText[AimHistoryText_SIZE] =
 {
 	L"История A.I.M.",					//Title
 
@@ -2683,7 +2722,7 @@ const wchar_t* AimHistoryText[] =
 
 //The page in which all the AIM members' portraits are displayed in the order selected by the AIM sort page.
 
-const wchar_t* AimFiText[] =
+static const wchar_t *s_rus_AimFiText[AimFiText_SIZE] =
 {
 	// displays the way in which the mercs were sorted
 
@@ -2717,7 +2756,7 @@ const wchar_t* AimFiText[] =
 //AimArchives.
 // The page that displays information about the older AIM alumni merc... mercs who are no longer with AIM
 
-const wchar_t* AimAlumniText[] =
+static const wchar_t *s_rus_AimAlumniText[AimAlumniText_SIZE] =
 {
 	// Text of the buttons
 
@@ -2737,7 +2776,7 @@ const wchar_t* AimAlumniText[] =
 
 //AIM Home Page
 
-const wchar_t* AimScreenText[] =
+static const wchar_t *s_rus_AimScreenText[AimScreenText_SIZE] =
 {
 	// AIM disclaimers
 
@@ -2757,7 +2796,7 @@ const wchar_t* AimScreenText[] =
 
 //Aim Home Page
 
-const wchar_t* AimBottomMenuText[] =
+static const wchar_t *s_rus_AimBottomMenuText[AimBottomMenuText_SIZE] =
 {
 	//Text for the links at the bottom of all AIM pages
 	L"Главная",
@@ -2774,7 +2813,7 @@ const wchar_t* AimBottomMenuText[] =
 // The shopkeeper interface is displayed when the merc wants to interact with
 // the various store clerks scattered through out the game.
 
-const wchar_t* SKI_Text[ ] =
+static const wchar_t *s_rus_SKI_Text[SKI_SIZE ] =
 {
 	L"ТОВАРЫ В ПРОДАЖЕ",		//Header for the merchandise available
 	L"СТР",				//The current store inventory page being displayed
@@ -2793,7 +2832,7 @@ const wchar_t* SKI_Text[ ] =
 };
 
 
-const wchar_t* SkiMessageBoxText[] =
+static const wchar_t *s_rus_SkiMessageBoxText[SkiMessageBoxText_SIZE] =
 {
 	L"Cнять %ls со своего основного счета, чтобы покрыть разницу?",
 	L"Недостаточно денег. Не хватает %ls",
@@ -2807,7 +2846,7 @@ const wchar_t* SkiMessageBoxText[] =
 
 //OptionScreen.c
 
-const wchar_t* zOptionsText[] =
+static const wchar_t *s_rus_zOptionsText[zOptionsText_SIZE] =
 {
 	//button Text
 	L"Сохранить",
@@ -2828,7 +2867,7 @@ const wchar_t* zOptionsText[] =
 
 
 //SaveLoadScreen
-const wchar_t* zSaveLoadText[] =
+static const wchar_t *s_rus_zSaveLoadText[zSaveLoadText_SIZE] =
 {
 	L"Сохранить",
 	L"Загрузить",
@@ -2882,7 +2921,7 @@ const wchar_t* zSaveLoadText[] =
 
 
 //MapScreen
-const wchar_t* zMarksMapScreenText[] =
+static const wchar_t *s_rus_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 {
 	L"Уровень карты",
 	L"У вас нет ополчения. Подготовьте его из гражданского населения.",
@@ -2914,10 +2953,10 @@ const wchar_t* zMarksMapScreenText[] =
 };
 
 
-const wchar_t pLandMarkInSectorString[] = L"Отряд %d заметил кого-то в секторе %ls";
+static const wchar_t s_rus_pLandMarkInSectorString[] = L"Отряд %d заметил кого-то в секторе %ls";
 
 // confirm the player wants to pay X dollars to build a militia force in town
-const wchar_t* pMilitiaConfirmStrings[] =
+static const wchar_t *s_rus_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
 {
 	L"Тренировка отряда ополчения будет стоить $", // telling player how much it will cost
 	L"Оплатить расходы?", // asking player if they wish to pay the amount requested
@@ -2932,7 +2971,7 @@ const wchar_t* pMilitiaConfirmStrings[] =
 };
 
 #ifdef JA2DEMOADS
-const wchar_t* gpDemoString[] =
+static const wchar_t *s_rus_gpDemoString[gpDemoString_SIZE] =
 {
 	//0-9
 	L"ЛУЧШАЯ СТРАТЕГИЯ",
@@ -2982,7 +3021,7 @@ const wchar_t* gpDemoString[] =
 	L"Закажите игру в Буке Сегодня! buka@dol.ru",
 };
 
-const wchar_t* gpDemoIntroString[] =
+static const wchar_t *s_rus_gpDemoIntroString[gpDemoIntroString_SIZE] =
 {
 	L"Сейчас вы узнаете, что такое настоящая стратегия, тактика и ролевая игра:",
 	//Point 1 (uses one string)
@@ -2999,21 +3038,20 @@ const wchar_t* gpDemoIntroString[] =
 #endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
-const wchar_t* gzMoneyWithdrawMessageText[] =
+static const wchar_t *s_rus_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
 {
 	L"За один раз можно снять со счета не более $20,000.",
 	L"Вы уверены, что хотите положить %ls на свой счет?",
 };
 
-const wchar_t gzCopyrightText[] =
-#if defined RUSSIAN_GOLD
-	L"(C) 2002 Strategy First и компания Акелла. Все права защищены.";
-#else
+static const wchar_t s_rus_gzCopyrightText[] =
 	L"Авторские права(C) 1999 Sir-Tech Canada Ltd. Все права защищены. Распространение на территории стран СНГ компания БУКА.";
-#endif
+
+static const wchar_t s_rusGold_gzCopyrightText[] =
+	L"(C) 2002 Strategy First и компания Акелла. Все права защищены.";
 
 //option Text
-const wchar_t* zOptionsToggleText[] =
+static const wchar_t *s_rus_zOptionsToggleText[zOptionsToggleText_SIZE] =
 {
 	L"Речь",
 	L"Заглушить отзывы",
@@ -3038,7 +3076,7 @@ const wchar_t* zOptionsToggleText[] =
 };
 
 //This is the help text associated with the above toggles.
-const wchar_t* zOptionsScreenHelpText[] =
+static const wchar_t *s_rus_zOptionsScreenHelpText[zOptionsToggleText_SIZE] =
 {
 	//speech
 	L"Включите эту опцию, если хотите слышать диалоги персонажей.",
@@ -3101,7 +3139,7 @@ const wchar_t* zOptionsScreenHelpText[] =
 };
 
 
-const wchar_t* gzGIOScreenText[] =
+static const wchar_t *s_rus_gzGIOScreenText[gzGIOScreenText_SIZE] =
 {
 	L"ИГРОВЫЕ НАСТРОЙКИ",
 	L"Стиль игры",
@@ -3121,7 +3159,7 @@ const wchar_t* gzGIOScreenText[] =
 	L"СТАЛЬНАЯ ВОЛЯ"
 };
 
-const wchar_t* pDeliveryLocationStrings[] =
+static const wchar_t *s_rus_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
 {
 	L"Остин",			//Austin, Texas, USA
 	L"Багдад",			//Baghdad, Iraq (Suddam Hussein's home)
@@ -3145,17 +3183,17 @@ const wchar_t* pDeliveryLocationStrings[] =
 /* This string is used in the IMP character generation.  It is possible to
  * select 0 ability in a skill meaning you can't use it.  This text is
  * confirmation to the player. */
-const wchar_t pSkillAtZeroWarning[]    = L"Уверены? Ноль означает отсутствие навыка.";
-const wchar_t pIMPBeginScreenStrings[] = L"(не более 8 букв)";
-const wchar_t pIMPFinishButtonText[]   = L"Анализ";
-const wchar_t pIMPFinishStrings[]      = L"Спасибо, %ls"; //%ls is the name of the merc
-const wchar_t pIMPVoicesStrings[]      = L"Голос"; // the strings for imp voices screen
+static const wchar_t s_rus_pSkillAtZeroWarning[]    = L"Уверены? Ноль означает отсутствие навыка.";
+static const wchar_t s_rus_pIMPBeginScreenStrings[] = L"(не более 8 букв)";
+static const wchar_t s_rus_pIMPFinishButtonText[]   = L"Анализ";
+static const wchar_t s_rus_pIMPFinishStrings[]      = L"Спасибо, %ls"; //%ls is the name of the merc
+static const wchar_t s_rus_pIMPVoicesStrings[]      = L"Голос"; // the strings for imp voices screen
 
 // title for program
-const wchar_t pPersTitleText[] = L"Кадры";
+static const wchar_t s_rus_pPersTitleText[] = L"Кадры";
 
 // paused game strings
-const wchar_t* pPausedGameText[] =
+static const wchar_t *s_rus_pPausedGameText[pPausedGameText_SIZE] =
 {
 	L"Пауза",
 	L"Снять с паузы (|P|a|u|s|e)",
@@ -3163,7 +3201,7 @@ const wchar_t* pPausedGameText[] =
 };
 
 
-const wchar_t* pMessageStrings[] =
+static const wchar_t *s_rus_pMessageStrings[pMessageStrings_SIZE] =
 {
 	L"Выйти из игры?",
 	L"OK",
@@ -3263,7 +3301,7 @@ const wchar_t* pMessageStrings[] =
 };
 
 
-const wchar_t ItemPickupHelpPopup[][40] =
+static const wchar_t *s_rus_ItemPickupHelpPopup[ItemPickupHelpPopup_SIZE] =
 {
 	L"Взять выделенные",
 	L"Листать вверх",
@@ -3272,13 +3310,13 @@ const wchar_t ItemPickupHelpPopup[][40] =
 	L"Отмена"
 };
 
-const wchar_t* pDoctorWarningString[] =
+static const wchar_t *s_rus_pDoctorWarningString[pDoctorWarningString_SIZE] =
 {
 	L"%ls слишком далеко для лечения.",
 	L"Медики не смогли перевязать всех.",
 };
 
-const wchar_t* pMilitiaButtonsHelpText[] =
+static const wchar_t *s_rus_pMilitiaButtonsHelpText[pMilitiaButtonsHelpText_SIZE] =
 {
 	L"Взять новобранцев (Правый клик)/Распределить (Левый клик)", // button help text informing player they can pick up or drop militia with this button
 	L"Взять солдат (Правый клик)/Распределить (Левый клик)",
@@ -3287,12 +3325,12 @@ const wchar_t* pMilitiaButtonsHelpText[] =
 };
 
 // to inform the player to hire some mercs to get things going
-const wchar_t pMapScreenJustStartedHelpText[] = L"Сходите на сайт АIM и наймите наемников (*Подсказка* через ноутбук)";
+static const wchar_t s_rus_pMapScreenJustStartedHelpText[] = L"Сходите на сайт АIM и наймите наемников (*Подсказка* через ноутбук)";
 
-const wchar_t pAntiHackerString[] = L"Ошибка. Испорченные или отсутствующие файлы. Игра завершает работу.";
+static const wchar_t s_rus_pAntiHackerString[] = L"Ошибка. Испорченные или отсутствующие файлы. Игра завершает работу.";
 
 
-const wchar_t* gzLaptopHelpText[] =
+static const wchar_t *s_rus_gzLaptopHelpText[gzLaptopHelpText_SIZE] =
 {
 	//Buttons:
 	L"Просмотреть электроные письма",
@@ -3318,9 +3356,9 @@ const wchar_t* gzLaptopHelpText[] =
 };
 
 
-const wchar_t gzHelpScreenText[] = L"Закрыть помощь";
+static const wchar_t s_rus_gzHelpScreenText[] = L"Закрыть помощь";
 
-const wchar_t* gzNonPersistantPBIText[] =
+static const wchar_t *s_rus_gzNonPersistantPBIText[gzNonPersistantPBIText_SIZE] =
 {
 	L"Идет бой. Отступить можно только с тактической карты",
 	L"Войти в сектор, чтобы продолжить бой (|E)",
@@ -3334,7 +3372,7 @@ const wchar_t* gzNonPersistantPBIText[] =
 	L"Сейчас отступить нельзя",
 };
 
-const wchar_t* gzMiscString[] =
+static const wchar_t *s_rus_gzMiscString[gzMiscString_SIZE] =
 {
 	L"Ваше ополчение сражается без помощи наемников...",
 	L"Транспорт полностью заправлен.",
@@ -3343,13 +3381,13 @@ const wchar_t* gzMiscString[] =
 	L"Вы потеряли заправку.",
 };
 
-const wchar_t gzIntroScreen[] = L"Невозможно найти вступительный ролик";
+static const wchar_t s_rus_gzIntroScreen[] = L"Невозможно найти вступительный ролик";
 
 // These strings are combined with a merc name, a volume string (from pNoiseVolStr),
 // and a direction (either "above", "below", or a string from pDirectionStr) to
 // report a noise.
 // e.g. "Sidney hears a loud sound of MOVEMENT coming from the SOUTH."
-const wchar_t* pNewNoiseStr[] =
+static const wchar_t *s_rus_pNewNoiseStr[pNewNoiseStr_SIZE] =
 {
 	L"%ls слышит %ls звук, идущий %ls.",
 	L"%ls слышит %ls звук ДВИЖЕНИЯ, идущий %ls.",
@@ -3364,7 +3402,7 @@ const wchar_t* pNewNoiseStr[] =
 	L"%ls слышит %ls ГРОХОТ, идущий %ls.",
 };
 
-const wchar_t* wMapScreenSortButtonHelpText[] =
+static const wchar_t *s_rus_wMapScreenSortButtonHelpText[wMapScreenSortButtonHelpText_SIZE] =
 {
 	L"Сортировка по имени (|F|1)",
 	L"Сортировка по заданию (|F|2)",
@@ -3376,14 +3414,14 @@ const wchar_t* wMapScreenSortButtonHelpText[] =
 
 
 
-const wchar_t* BrokenLinkText[] =
+static const wchar_t *s_rus_BrokenLinkText[BrokenLinkText_SIZE] =
 {
 	L"Ошибка 404",
 	L"URL не найден.",
 };
 
 
-const wchar_t* gzBobbyRShipmentText[] =
+static const wchar_t *s_rus_gzBobbyRShipmentText[gzBobbyRShipmentText_SIZE] =
 {
 	L"Последние заказы",
 	L"Заказ #",
@@ -3392,7 +3430,7 @@ const wchar_t* gzBobbyRShipmentText[] =
 };
 
 
-const wchar_t* gzCreditNames[]=
+static const wchar_t *s_rus_gzCreditNames[gzCreditNames_SIZE]=
 {
 	L"Chris Camfield",
 	L"Shaun Lyng",
@@ -3412,7 +3450,7 @@ const wchar_t* gzCreditNames[]=
 };
 
 
-const wchar_t* gzCreditNameTitle[]=
+static const wchar_t *s_rus_gzCreditNameTitle[gzCreditNameTitle_SIZE]=
 {
 	L"Ведущий программист игры", 			// Chris Camfield !!!
 	L"Дизайн/Сценарий",							// Shaun Lyng
@@ -3431,7 +3469,7 @@ const wchar_t* gzCreditNameTitle[]=
 	L"Художник по портретам",								// Joey \"Joeker\" Whelan",
 };
 
-const wchar_t* gzCreditNameFunny[]=
+static const wchar_t *s_rus_gzCreditNameFunny[gzCreditNameFunny_SIZE]=
 {
 	L"", 																			// Chris Camfield
 	L"(все еще зубрит правила пунктуации)",					// Shaun Lyng
@@ -3450,7 +3488,7 @@ const wchar_t* gzCreditNameFunny[]=
 	L"(делал предметы и загрузочные экраны!)",	// Joey \"Joeker\" Whelan",
 };
 
-const wchar_t* sRepairsDoneString[] =
+static const wchar_t *s_rus_sRepairsDoneString[sRepairsDoneString_SIZE] =
 {
 	L"%ls отремонтировал(а) свои вещи",
 	L"%ls отремонтировал(а) оружие и броню команды",
@@ -3458,14 +3496,14 @@ const wchar_t* sRepairsDoneString[] =
 	L"%ls отремонтировал(а) транспортируемые командой вещи",
 };
 
-const wchar_t* zGioDifConfirmText[]=
+static const wchar_t *s_rus_zGioDifConfirmText[zGioDifConfirmText_SIZE]=
 {
 	L"Вы выбрали сложность НОВОБРАНЕЦ. Это подходит для новичков в Jagged Alliance, для новичков в жанре стратегий вообще, или для тех, кто желает сократить битвы в игре. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Уверены, что хотите играть новобранцем?",
 	L"Вы выбрали сложность СОЛДАТ. Это подходит для игроков, уже знакомых с играми Jagged Alliance или с подобными им. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Уверены, что хотите играть солдатом?",
 	L"Вы выбрали сложность ВЕТЕРАН. Мы Вас предупредили. Нечего на нас пенять, если вас доставят назад в цинковом гробу. Ваш выбор скажется на игре в целом, так что выбирайте с умом. Уверены, что хотите играть ветераном?",
 };
 
-const wchar_t* gzLateLocalizedString[] =
+static const wchar_t *s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 {
 	//1-5
 	L"Робот не может покинуть сектор, если им никто не управляет.",
@@ -3600,35 +3638,557 @@ const wchar_t* gzLateLocalizedString[] =
 	L"Выключатель нажат."
 };
 
-const wchar_t str_ceramic_plates_smashed[] = L"%ls: в бронежилете разбились пластины!";
+static const wchar_t s_rus_str_ceramic_plates_smashed[] = L"%ls: в бронежилете разбились пластины!";
 
-const wchar_t str_arrival_rerouted[] = L"Место высадки новоприбывших наемников перенесено в сектор %ls; ранее заданный сектор %ls захвачен врагом.";
+static const wchar_t s_rus_str_arrival_rerouted[] = L"Место высадки новоприбывших наемников перенесено в сектор %ls; ранее заданный сектор %ls захвачен врагом.";
 
 #ifdef JA2DEMO
-const wchar_t str_disabled_for_the_demo[]    = L"Отключено в демо-версии";
+static const wchar_t s_rus_str_disabled_for_the_demo[]    = L"Отключено в демо-версии";
 /* informs player this option/button has been disabled in the demo */
-const wchar_t str_disabled_in_demo[]         = L"Извините. В демо версии это отключено.";
-const wchar_t str_go_see_gabby[]             = L"С этим покончено. Может, стоит повидаться с Габби?";
-const wchar_t str_too_bad_you_killed_gabby[] = L"Жаль правда, что вы убили его.";
+static const wchar_t s_rus_str_disabled_in_demo[]         = L"Извините. В демо версии это отключено.";
+static const wchar_t s_rus_str_go_see_gabby[]             = L"С этим покончено. Может, стоит повидаться с Габби?";
+static const wchar_t s_rus_str_too_bad_you_killed_gabby[] = L"Жаль правда, что вы убили его.";
 /* For the demo, the sector exit interface, you'll be able to split your teams
  * up, but the demo has this feature disabled.  This string is fast help text
  * that appears over "single" button. */
-const wchar_t str_strategic_exit_gui_demo[]  = L"В полной игре вы сможете разделять\nкоманду, но не в демо версии.";
+static const wchar_t s_rus_str_strategic_exit_gui_demo[]  = L"В полной игре вы сможете разделять\nкоманду, но не в демо версии.";
 /* The overhead map is a map of the entire sector, which you can go into
  * anytime, except in the demo. */
-const wchar_t str_overhead_map_disabled[]    = L"Общая карта в демо-версии отсутствует.";
+static const wchar_t s_rus_str_overhead_map_disabled[]    = L"Общая карта в демо-версии отсутствует.";
 #endif
 
-const wchar_t str_stat_health[]       = L"Здоровье";
-const wchar_t str_stat_agility[]      = L"Проворность";
-const wchar_t str_stat_dexterity[]    = L"Ловкость";
-const wchar_t str_stat_strength[]     = L"Сила";
-const wchar_t str_stat_leadership[]   = L"Лидерство";
-const wchar_t str_stat_wisdom[]       = L"Мудрость";
-const wchar_t str_stat_exp_level[]    = L"Опытность"; // Уровень опыта
-const wchar_t str_stat_marksmanship[] = L"Меткость";
-const wchar_t str_stat_mechanical[]   = L"Механика";
-const wchar_t str_stat_explosive[]    = L"Взрывник";
-const wchar_t str_stat_medical[]      = L"Медицина";
+static const wchar_t s_rus_str_stat_health[]       = L"Здоровье";
+static const wchar_t s_rus_str_stat_agility[]      = L"Проворность";
+static const wchar_t s_rus_str_stat_dexterity[]    = L"Ловкость";
+static const wchar_t s_rus_str_stat_strength[]     = L"Сила";
+static const wchar_t s_rus_str_stat_leadership[]   = L"Лидерство";
+static const wchar_t s_rus_str_stat_wisdom[]       = L"Мудрость";
+static const wchar_t s_rus_str_stat_exp_level[]    = L"Опытность"; // Уровень опыта
+static const wchar_t s_rus_str_stat_marksmanship[] = L"Меткость";
+static const wchar_t s_rus_str_stat_mechanical[]   = L"Механика";
+static const wchar_t s_rus_str_stat_explosive[]    = L"Взрывник";
+static const wchar_t s_rus_str_stat_medical[]      = L"Медицина";
 
+static const wchar_t *s_rus_str_stat_list[str_stat_list_SIZE] =
+{
+	s_rus_str_stat_health,
+	s_rus_str_stat_agility,
+	s_rus_str_stat_dexterity,
+	s_rus_str_stat_strength,
+	s_rus_str_stat_leadership,
+	s_rus_str_stat_wisdom,
+	s_rus_str_stat_exp_level,
+	s_rus_str_stat_marksmanship,
+	s_rus_str_stat_mechanical,
+	s_rus_str_stat_explosive,
+	s_rus_str_stat_medical
+};
+
+static const wchar_t *s_rus_str_aim_sort_list[str_aim_sort_list_SIZE] =
+{
+  s_rus_str_aim_sort_price,
+  s_rus_str_aim_sort_experience,
+  s_rus_str_aim_sort_marksmanship,
+  s_rus_str_aim_sort_medical,
+  s_rus_str_aim_sort_explosives,
+  s_rus_str_aim_sort_mechanical,
+  s_rus_str_aim_sort_ascending,
+  s_rus_str_aim_sort_descending,
+};
+
+static const wchar_t * s_rus_zNewTacticalMessages[] =
+{
+	L"Расстояние до цели: %d клеток",
+	L"Дальнобойность оружия: %d клеток, расстояние до цели: %d клеток",
+	L"Отобразить укрытия",
+	L"Зона обзора",
+	L"Это игра для человека со СТАЛЬНОЙ ВОЛЕЙ. Нельзя сохраняться, когда рядом враги!",
+	L"(Нельзя сохранять игру в бою)",
+};
+
+static const wchar_t s_rus_str_iron_man_mode_warning[] = L"Вы выбрали режим СТАЛЬНОЙ ВОЛИ. Эта настройка сильно усложняет игру, так как вы не сможете сохраняться, когда в секторе есть враги. ЖЕЛЕЗНАЯ ВОЛЯ действует в течение всей игры. Уверены, что хотите включить этот режим?";
+
+/** Russian language resources. */
+LanguageRes g_LanguageResRussian = {
+
+  s_rus_AmmoCaliber,
+  s_rus_BobbyRayAmmoCaliber,
+  s_rus_WeaponType,
+
+  s_rus_Message,
+  s_rus_TeamTurnString,
+  s_rus_pAssignMenuStrings,
+  s_rus_pTrainingStrings,
+  s_rus_pTrainingMenuStrings,
+  s_rus_pAttributeMenuStrings,
+  s_rus_pVehicleStrings,
+  s_rus_pShortAttributeStrings,
+  s_rus_pContractStrings,
+  s_rus_pAssignmentStrings,
+  s_rus_pConditionStrings,
+  s_rus_pTownNames,
+  s_rus_g_towns_locative,
+  s_rus_pPersonnelScreenStrings,
+  s_rus_pUpperLeftMapScreenStrings,
+  s_rus_pTacticalPopupButtonStrings,
+  s_rus_pSquadMenuStrings,
+  s_rus_pDoorTrapStrings,
+  s_rus_pLongAssignmentStrings,
+  s_rus_pMapScreenMouseRegionHelpText,
+  s_rus_pNoiseVolStr,
+  s_rus_pNoiseTypeStr,
+  s_rus_pDirectionStr,
+  s_rus_pRemoveMercStrings,
+  s_rus_sTimeStrings,
+  s_rus_pLandTypeStrings,
+  s_rus_pInvPanelTitleStrings,
+  s_rus_pPOWStrings,
+  s_rus_pMilitiaString,
+  s_rus_pMilitiaButtonString,
+  s_rus_pEpcMenuStrings,
+  s_rus_pRepairStrings,
+  s_rus_sPreStatBuildString,
+  s_rus_sStatGainStrings,
+  s_rus_pHelicopterEtaStrings,
+  s_rus_sMapLevelString,
+  s_rus_gsLoyalString,
+  s_rus_gsUndergroundString,
+  s_rus_gsTimeStrings,
+  s_rus_sFacilitiesStrings,
+  s_rus_pMapPopUpInventoryText,
+  s_rus_pwTownInfoStrings,
+  s_rus_pwMineStrings,
+  s_rus_pwMiscSectorStrings,
+  s_rus_pMapInventoryErrorString,
+  s_rus_pMapInventoryStrings,
+  s_rus_pMovementMenuStrings,
+  s_rus_pUpdateMercStrings,
+  s_rus_pMapScreenBorderButtonHelpText,
+  s_rus_pMapScreenBottomFastHelp,
+  s_rus_pMapScreenBottomText,
+  s_rus_pMercDeadString,
+  s_rus_pSenderNameList,
+  s_rus_pNewMailStrings,
+  s_rus_pDeleteMailStrings,
+  s_rus_pEmailHeaders,
+  s_rus_pEmailTitleText,
+  s_rus_pFinanceTitle,
+  s_rus_pFinanceSummary,
+  s_rus_pFinanceHeaders,
+  s_rus_pTransactionText,
+  s_rus_pMoralStrings,
+  s_rus_pSkyriderText,
+  s_rus_str_left_equipment,
+  s_rus_pMapScreenStatusStrings,
+  s_rus_pMapScreenPrevNextCharButtonHelpText,
+  s_rus_pEtaString,
+  s_rus_pShortVehicleStrings,
+  s_rus_pTrashItemText,
+  s_rus_pMapErrorString,
+  s_rus_pMapPlotStrings,
+  s_rus_pBullseyeStrings,
+  s_rus_pMiscMapScreenMouseRegionHelpText,
+  s_rus_str_he_leaves_where_drop_equipment,
+  s_rus_str_she_leaves_where_drop_equipment,
+  s_rus_str_he_leaves_drops_equipment,
+  s_rus_str_she_leaves_drops_equipment,
+  s_rus_pImpPopUpStrings,
+  s_rus_pImpButtonText,
+  s_rus_pExtraIMPStrings,
+  s_rus_pFilesTitle,
+  s_rus_pFilesSenderList,
+  s_rus_pHistoryLocations,
+  s_rus_pHistoryStrings,
+  s_rus_pHistoryHeaders,
+  s_rus_pHistoryTitle,
+  s_rus_pShowBookmarkString,
+  s_rus_pWebPagesTitles,
+  s_rus_pWebTitle,
+  s_rus_pPersonnelString,
+  s_rus_pErrorStrings,
+  s_rus_pDownloadString,
+  s_rus_pBookMarkStrings,
+  s_rus_pLaptopIcons,
+  s_rus_gsAtmStartButtonText,
+  s_rus_pPersonnelTeamStatsStrings,
+  s_rus_pPersonnelCurrentTeamStatsStrings,
+  s_rus_pPersonelTeamStrings,
+  s_rus_pPersonnelDepartedStateStrings,
+  s_rus_pMapHortIndex,
+  s_rus_pMapVertIndex,
+  s_rus_pMapDepthIndex,
+  s_rus_pLaptopTitles,
+  s_rus_pDayStrings,
+  s_rus_pMilitiaConfirmStrings,
+  s_rus_pDeliveryLocationStrings,
+  s_rus_pSkillAtZeroWarning,
+  s_rus_pIMPBeginScreenStrings,
+  s_rus_pIMPFinishButtonText,
+  s_rus_pIMPFinishStrings,
+  s_rus_pIMPVoicesStrings,
+  s_rus_pPersTitleText,
+  s_rus_pPausedGameText,
+  s_rus_zOptionsToggleText,
+  s_rus_zOptionsScreenHelpText,
+  s_rus_pDoctorWarningString,
+  s_rus_pMilitiaButtonsHelpText,
+  s_rus_pMapScreenJustStartedHelpText,
+  s_rus_pLandMarkInSectorString,
+  s_rus_gzMercSkillText,
+  s_rus_gzNonPersistantPBIText,
+  s_rus_gzMiscString,
+  s_rus_wMapScreenSortButtonHelpText,
+  s_rus_pNewNoiseStr,
+  s_rus_gzLateLocalizedString,
+  s_rus_pAntiHackerString,
+  s_rus_pMessageStrings,
+  s_rus_ItemPickupHelpPopup,
+  s_rus_TacticalStr,
+  s_rus_LargeTacticalStr,
+  s_rus_zDialogActions,
+  s_rus_zDealerStrings,
+  s_rus_zTalkMenuStrings,
+  s_rus_gzMoneyAmounts,
+  s_rus_gzProsLabel,
+  s_rus_gzConsLabel,
+  s_rus_gMoneyStatsDesc,
+  s_rus_gWeaponStatsDesc,
+  s_rus_sKeyDescriptionStrings,
+  s_rus_zHealthStr,
+  s_rus_zVehicleName,
+  s_rus_pExitingSectorHelpText,
+  s_rus_InsContractText,
+  s_rus_InsInfoText,
+  s_rus_MercAccountText,
+  s_rus_MercInfo,
+  s_rus_MercNoAccountText,
+  s_rus_MercHomePageText,
+  s_rus_sFuneralString,
+  s_rus_sFloristText,
+  s_rus_sOrderFormText,
+  s_rus_sFloristGalleryText,
+  s_rus_sFloristCards,
+  s_rus_BobbyROrderFormText,
+  s_rus_BobbyRText,
+  s_rus_str_bobbyr_guns_num_guns_that_use_ammo,
+  s_rus_BobbyRaysFrontText,
+  s_rus_AimSortText,
+  s_rus_str_aim_sort_price,
+  s_rus_str_aim_sort_experience,
+  s_rus_str_aim_sort_marksmanship,
+  s_rus_str_aim_sort_medical,
+  s_rus_str_aim_sort_explosives,
+  s_rus_str_aim_sort_mechanical,
+  s_rus_str_aim_sort_ascending,
+  s_rus_str_aim_sort_descending,
+  s_rus_AimPolicyText,
+  s_rus_AimMemberText,
+  s_rus_CharacterInfo,
+  s_rus_VideoConfercingText,
+  s_rus_AimPopUpText,
+  s_rus_AimLinkText,
+  s_rus_AimHistoryText,
+  s_rus_AimFiText,
+  s_rus_AimAlumniText,
+  s_rus_AimScreenText,
+  s_rus_AimBottomMenuText,
+  s_rus_zMarksMapScreenText,
+  s_rus_gpStrategicString,
+  s_rus_gpGameClockString,
+  s_rus_SKI_Text,
+  s_rus_SkiMessageBoxText,
+  s_rus_zSaveLoadText,
+  s_rus_zOptionsText,
+  s_rus_gzGIOScreenText,
+  s_rus_gzHelpScreenText,
+  s_rus_gzLaptopHelpText,
+  s_rus_gzMoneyWithdrawMessageText,
+  s_rus_gzCopyrightText,
+  s_rus_BrokenLinkText,
+  s_rus_gzBobbyRShipmentText,
+  s_rus_zGioDifConfirmText,
+  s_rus_gzCreditNames,
+  s_rus_gzCreditNameTitle,
+  s_rus_gzCreditNameFunny,
+  s_rus_pContractButtonString,
+  s_rus_gzIntroScreen,
+  s_rus_pUpdatePanelButtons,
+  s_rus_sRepairsDoneString,
+  s_rus_str_ceramic_plates_smashed,
+  s_rus_str_arrival_rerouted,
+
+#ifdef JA2DEMO
+  s_rus_str_disabled_for_the_demo,
+  s_rus_str_disabled_in_demo,
+  s_rus_str_go_see_gabby,
+  s_rus_str_too_bad_you_killed_gabby,
+  s_rus_str_strategic_exit_gui_demo,
+  s_rus_str_overhead_map_disabled,
 #endif
+
+#ifdef JA2DEMOADS
+  s_rus_gpDemoString,
+  s_rus_gpDemoIntroString,
+#endif
+
+  s_rus_str_stat_health,
+  s_rus_str_stat_agility,
+  s_rus_str_stat_dexterity,
+  s_rus_str_stat_strength,
+  s_rus_str_stat_leadership,
+  s_rus_str_stat_wisdom,
+  s_rus_str_stat_exp_level,
+  s_rus_str_stat_marksmanship,
+  s_rus_str_stat_mechanical,
+  s_rus_str_stat_explosive,
+  s_rus_str_stat_medical,
+
+  s_rus_str_stat_list,
+  s_rus_str_aim_sort_list,
+
+  s_rus_zNewTacticalMessages,
+  s_rus_str_iron_man_mode_warning,
+};
+
+
+/** Russian Gold language resources. */
+LanguageRes g_LanguageResRussianGold = {
+
+  s_rus_AmmoCaliber,
+  s_rus_BobbyRayAmmoCaliber,
+  s_rus_WeaponType,
+
+  s_rus_Message,
+  s_rus_TeamTurnString,
+  s_rus_pAssignMenuStrings,
+  s_rus_pTrainingStrings,
+  s_rus_pTrainingMenuStrings,
+  s_rus_pAttributeMenuStrings,
+  s_rus_pVehicleStrings,
+  s_rus_pShortAttributeStrings,
+  s_rus_pContractStrings,
+  s_rus_pAssignmentStrings,
+  s_rus_pConditionStrings,
+  s_rus_pTownNames,
+  s_rus_g_towns_locative,
+  s_rus_pPersonnelScreenStrings,
+  s_rus_pUpperLeftMapScreenStrings,
+  s_rus_pTacticalPopupButtonStrings,
+  s_rus_pSquadMenuStrings,
+  s_rus_pDoorTrapStrings,
+  s_rus_pLongAssignmentStrings,
+  s_rus_pMapScreenMouseRegionHelpText,
+  s_rus_pNoiseVolStr,
+  s_rus_pNoiseTypeStr,
+  s_rus_pDirectionStr,
+  s_rus_pRemoveMercStrings,
+  s_rus_sTimeStrings,
+  s_rus_pLandTypeStrings,
+  s_rus_pInvPanelTitleStrings,
+  s_rus_pPOWStrings,
+  s_rus_pMilitiaString,
+  s_rus_pMilitiaButtonString,
+  s_rus_pEpcMenuStrings,
+  s_rus_pRepairStrings,
+  s_rus_sPreStatBuildString,
+  s_rus_sStatGainStrings,
+  s_rus_pHelicopterEtaStrings,
+  s_rus_sMapLevelString,
+  s_rus_gsLoyalString,
+  s_rus_gsUndergroundString,
+  s_rus_gsTimeStrings,
+  s_rus_sFacilitiesStrings,
+  s_rus_pMapPopUpInventoryText,
+  s_rus_pwTownInfoStrings,
+  s_rus_pwMineStrings,
+  s_rus_pwMiscSectorStrings,
+  s_rus_pMapInventoryErrorString,
+  s_rus_pMapInventoryStrings,
+  s_rus_pMovementMenuStrings,
+  s_rus_pUpdateMercStrings,
+  s_rus_pMapScreenBorderButtonHelpText,
+  s_rus_pMapScreenBottomFastHelp,
+  s_rus_pMapScreenBottomText,
+  s_rus_pMercDeadString,
+  s_rusGold_pSenderNameList,
+  s_rus_pNewMailStrings,
+  s_rus_pDeleteMailStrings,
+  s_rus_pEmailHeaders,
+  s_rus_pEmailTitleText,
+  s_rus_pFinanceTitle,
+  s_rus_pFinanceSummary,
+  s_rus_pFinanceHeaders,
+  s_rus_pTransactionText,
+  s_rus_pMoralStrings,
+  s_rus_pSkyriderText,
+  s_rus_str_left_equipment,
+  s_rus_pMapScreenStatusStrings,
+  s_rus_pMapScreenPrevNextCharButtonHelpText,
+  s_rus_pEtaString,
+  s_rus_pShortVehicleStrings,
+  s_rus_pTrashItemText,
+  s_rus_pMapErrorString,
+  s_rus_pMapPlotStrings,
+  s_rus_pBullseyeStrings,
+  s_rus_pMiscMapScreenMouseRegionHelpText,
+  s_rus_str_he_leaves_where_drop_equipment,
+  s_rus_str_she_leaves_where_drop_equipment,
+  s_rus_str_he_leaves_drops_equipment,
+  s_rus_str_she_leaves_drops_equipment,
+  s_rus_pImpPopUpStrings,
+  s_rus_pImpButtonText,
+  s_rus_pExtraIMPStrings,
+  s_rus_pFilesTitle,
+  s_rus_pFilesSenderList,
+  s_rus_pHistoryLocations,
+  s_rus_pHistoryStrings,
+  s_rus_pHistoryHeaders,
+  s_rus_pHistoryTitle,
+  s_rus_pShowBookmarkString,
+  s_rus_pWebPagesTitles,
+  s_rus_pWebTitle,
+  s_rus_pPersonnelString,
+  s_rus_pErrorStrings,
+  s_rus_pDownloadString,
+  s_rus_pBookMarkStrings,
+  s_rus_pLaptopIcons,
+  s_rus_gsAtmStartButtonText,
+  s_rus_pPersonnelTeamStatsStrings,
+  s_rus_pPersonnelCurrentTeamStatsStrings,
+  s_rus_pPersonelTeamStrings,
+  s_rus_pPersonnelDepartedStateStrings,
+  s_rus_pMapHortIndex,
+  s_rus_pMapVertIndex,
+  s_rus_pMapDepthIndex,
+  s_rus_pLaptopTitles,
+  s_rus_pDayStrings,
+  s_rus_pMilitiaConfirmStrings,
+  s_rus_pDeliveryLocationStrings,
+  s_rus_pSkillAtZeroWarning,
+  s_rus_pIMPBeginScreenStrings,
+  s_rus_pIMPFinishButtonText,
+  s_rus_pIMPFinishStrings,
+  s_rus_pIMPVoicesStrings,
+  s_rus_pPersTitleText,
+  s_rus_pPausedGameText,
+  s_rus_zOptionsToggleText,
+  s_rus_zOptionsScreenHelpText,
+  s_rus_pDoctorWarningString,
+  s_rus_pMilitiaButtonsHelpText,
+  s_rus_pMapScreenJustStartedHelpText,
+  s_rus_pLandMarkInSectorString,
+  s_rus_gzMercSkillText,
+  s_rus_gzNonPersistantPBIText,
+  s_rus_gzMiscString,
+  s_rus_wMapScreenSortButtonHelpText,
+  s_rus_pNewNoiseStr,
+  s_rus_gzLateLocalizedString,
+  s_rus_pAntiHackerString,
+  s_rus_pMessageStrings,
+  s_rus_ItemPickupHelpPopup,
+  s_rus_TacticalStr,
+  s_rus_LargeTacticalStr,
+  s_rus_zDialogActions,
+  s_rus_zDealerStrings,
+  s_rus_zTalkMenuStrings,
+  s_rus_gzMoneyAmounts,
+  s_rus_gzProsLabel,
+  s_rus_gzConsLabel,
+  s_rus_gMoneyStatsDesc,
+  s_rus_gWeaponStatsDesc,
+  s_rus_sKeyDescriptionStrings,
+  s_rus_zHealthStr,
+  s_rus_zVehicleName,
+  s_rus_pExitingSectorHelpText,
+  s_rus_InsContractText,
+  s_rus_InsInfoText,
+  s_rus_MercAccountText,
+  s_rus_MercInfo,
+  s_rus_MercNoAccountText,
+  s_rus_MercHomePageText,
+  s_rus_sFuneralString,
+  s_rus_sFloristText,
+  s_rus_sOrderFormText,
+  s_rus_sFloristGalleryText,
+  s_rus_sFloristCards,
+  s_rus_BobbyROrderFormText,
+  s_rus_BobbyRText,
+  s_rus_str_bobbyr_guns_num_guns_that_use_ammo,
+  s_rus_BobbyRaysFrontText,
+  s_rus_AimSortText,
+  s_rus_str_aim_sort_price,
+  s_rus_str_aim_sort_experience,
+  s_rus_str_aim_sort_marksmanship,
+  s_rus_str_aim_sort_medical,
+  s_rus_str_aim_sort_explosives,
+  s_rus_str_aim_sort_mechanical,
+  s_rus_str_aim_sort_ascending,
+  s_rus_str_aim_sort_descending,
+  s_rus_AimPolicyText,
+  s_rus_AimMemberText,
+  s_rus_CharacterInfo,
+  s_rus_VideoConfercingText,
+  s_rus_AimPopUpText,
+  s_rus_AimLinkText,
+  s_rus_AimHistoryText,
+  s_rus_AimFiText,
+  s_rus_AimAlumniText,
+  s_rus_AimScreenText,
+  s_rus_AimBottomMenuText,
+  s_rus_zMarksMapScreenText,
+  s_rus_gpStrategicString,
+  s_rus_gpGameClockString,
+  s_rus_SKI_Text,
+  s_rus_SkiMessageBoxText,
+  s_rus_zSaveLoadText,
+  s_rus_zOptionsText,
+  s_rus_gzGIOScreenText,
+  s_rus_gzHelpScreenText,
+  s_rus_gzLaptopHelpText,
+  s_rus_gzMoneyWithdrawMessageText,
+  s_rusGold_gzCopyrightText,
+  s_rus_BrokenLinkText,
+  s_rus_gzBobbyRShipmentText,
+  s_rus_zGioDifConfirmText,
+  s_rus_gzCreditNames,
+  s_rus_gzCreditNameTitle,
+  s_rus_gzCreditNameFunny,
+  s_rus_pContractButtonString,
+  s_rus_gzIntroScreen,
+  s_rus_pUpdatePanelButtons,
+  s_rus_sRepairsDoneString,
+  s_rus_str_ceramic_plates_smashed,
+  s_rus_str_arrival_rerouted,
+
+#ifdef JA2DEMO
+  s_rus_str_disabled_for_the_demo,
+  s_rus_str_disabled_in_demo,
+  s_rus_str_go_see_gabby,
+  s_rus_str_too_bad_you_killed_gabby,
+  s_rus_str_strategic_exit_gui_demo,
+  s_rus_str_overhead_map_disabled,
+#endif
+
+#ifdef JA2DEMOADS
+  s_rus_gpDemoString,
+  s_rus_gpDemoIntroString,
+#endif
+
+  s_rus_str_stat_health,
+  s_rus_str_stat_agility,
+  s_rus_str_stat_dexterity,
+  s_rus_str_stat_strength,
+  s_rus_str_stat_leadership,
+  s_rus_str_stat_wisdom,
+  s_rus_str_stat_exp_level,
+  s_rus_str_stat_marksmanship,
+  s_rus_str_stat_mechanical,
+  s_rus_str_stat_explosive,
+  s_rus_str_stat_medical,
+
+  s_rus_str_stat_list,
+  s_rus_str_aim_sort_list,
+
+  s_rus_zNewTacticalMessages,
+  s_rus_str_iron_man_mode_warning,
+};

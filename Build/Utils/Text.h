@@ -4,144 +4,684 @@
 #include "Item_Types.h"
 #include "Types.h"
 
-
 extern wchar_t ShortItemNames[MAXITEMS][80];
 extern wchar_t ItemNames[MAXITEMS][80];
-extern const wchar_t AmmoCaliber[][20];
-extern const wchar_t BobbyRayAmmoCaliber[][20];
-extern const wchar_t WeaponType[][30];
 
-extern const wchar_t* const Message[];
-extern const wchar_t* const TeamTurnString[];
-extern const wchar_t *pAssignMenuStrings[];
-extern const wchar_t *pTrainingStrings[];
-extern const wchar_t *pTrainingMenuStrings[];
-extern const wchar_t *pAttributeMenuStrings[];
-extern const wchar_t *pVehicleStrings[];
-extern const wchar_t *pShortAttributeStrings[];
-extern const wchar_t *pContractStrings[];
-extern const wchar_t *pAssignmentStrings[];
-extern const wchar_t *pConditionStrings[];
-extern const wchar_t *pTownNames[];
-extern wchar_t const* const g_towns_locative[];
-extern const wchar_t *pPersonnelScreenStrings[];
-extern const wchar_t *pUpperLeftMapScreenStrings[];
-extern const wchar_t *pTacticalPopupButtonStrings[];
-extern const wchar_t *pSquadMenuStrings[];
-extern const wchar_t *pDoorTrapStrings[];
-extern const wchar_t *pLongAssignmentStrings[];
-extern const wchar_t *pMapScreenMouseRegionHelpText[];
-extern const wchar_t *pNoiseVolStr[];
-extern const wchar_t *pNoiseTypeStr[];
-extern const wchar_t *pDirectionStr[];
-extern const wchar_t *pRemoveMercStrings[];
-extern const wchar_t *sTimeStrings[];
-extern const wchar_t *pLandTypeStrings[];
-extern const wchar_t *pInvPanelTitleStrings[];
-extern const wchar_t *pPOWStrings[];
-extern const wchar_t *pMilitiaString[];
-extern const wchar_t *pMilitiaButtonString[];
-extern const wchar_t *pEpcMenuStrings[];
+extern void LoadAllExternalText( void );
+extern const wchar_t * GetWeightUnitString( void );
+extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 
-extern const wchar_t *pRepairStrings[];
-extern const wchar_t *sPreStatBuildString[];
-extern const wchar_t *sStatGainStrings[];
-extern const wchar_t *pHelicopterEtaStrings[];
-extern const wchar_t  sMapLevelString[];
-extern const wchar_t  gsLoyalString[];
-extern const wchar_t  gsUndergroundString[];
-extern const wchar_t *gsTimeStrings[];
-extern const wchar_t *sFacilitiesStrings[];
-extern const wchar_t *pMapPopUpInventoryText[];
-extern const wchar_t *pwTownInfoStrings[];
-extern const wchar_t *pwMineStrings[];
-extern const wchar_t *pwMiscSectorStrings[];
-extern const wchar_t *pMapInventoryErrorString[];
-extern const wchar_t *pMapInventoryStrings[];
-extern const wchar_t *pMovementMenuStrings[];
-extern const wchar_t *pUpdateMercStrings[];
-extern const wchar_t *pMapScreenBorderButtonHelpText[];
-extern const wchar_t *pMapScreenBottomFastHelp[];
-extern const wchar_t  pMapScreenBottomText[];
-extern const wchar_t  pMercDeadString[];
-extern const wchar_t *pSenderNameList[];
-extern const wchar_t  pNewMailStrings[];
-extern const wchar_t *pDeleteMailStrings[];
-extern const wchar_t *pEmailHeaders[];
-extern const wchar_t  pEmailTitleText[];
-extern const wchar_t  pFinanceTitle[];
-extern const wchar_t *pFinanceSummary[];
-extern const wchar_t *pFinanceHeaders[];
-extern const wchar_t *pTransactionText[];
-extern const wchar_t *pMoralStrings[];
-extern const wchar_t *pSkyriderText[];
-extern const wchar_t  str_left_equipment[];
-extern const wchar_t *pMapScreenStatusStrings[];
-extern const wchar_t *pMapScreenPrevNextCharButtonHelpText[];
-extern const wchar_t  pEtaString[];
-extern const wchar_t *pShortVehicleStrings[];
-extern const wchar_t *pTrashItemText[];
-extern const wchar_t *pMapErrorString[];
-extern const wchar_t *pMapPlotStrings[];
-extern const wchar_t* pBullseyeStrings[];
-extern const wchar_t *pMiscMapScreenMouseRegionHelpText[];
-extern const wchar_t  str_he_leaves_where_drop_equipment[];
-extern const wchar_t  str_she_leaves_where_drop_equipment[];
-extern const wchar_t  str_he_leaves_drops_equipment[];
-extern const wchar_t  str_she_leaves_drops_equipment[];
-extern const wchar_t *pImpPopUpStrings[];
-extern const wchar_t *pImpButtonText[];
-extern const wchar_t *pExtraIMPStrings[];
-extern const wchar_t  pFilesTitle[];
-extern const wchar_t *pFilesSenderList[];
-extern const wchar_t  pHistoryLocations[];
-//extern const wchar_t *pHistoryAlternateStrings[];
-extern const wchar_t *pHistoryStrings[];
-extern const wchar_t *pHistoryHeaders[];
-extern const wchar_t  pHistoryTitle[];
-extern const wchar_t *pShowBookmarkString[];
-extern const wchar_t *pWebPagesTitles[];
-extern const wchar_t  pWebTitle[];
-extern const wchar_t  pPersonnelString[];
-extern const wchar_t  pErrorStrings[];
-extern const wchar_t *pDownloadString[];
-extern const wchar_t *pBookMarkStrings[];
-extern const wchar_t *pLaptopIcons[];
-extern const wchar_t *gsAtmStartButtonText[];
-extern const wchar_t *pPersonnelTeamStatsStrings[];
-extern const wchar_t *pPersonnelCurrentTeamStatsStrings[];
-extern const wchar_t *pPersonelTeamStrings[];
-extern const wchar_t *pPersonnelDepartedStateStrings[];
-extern const wchar_t *pMapHortIndex[];
-extern const wchar_t *pMapVertIndex[];
-extern const wchar_t *pMapDepthIndex[];
-extern const wchar_t *pLaptopTitles[];
-extern const wchar_t  pDayStrings[];
-extern const wchar_t *pMilitiaConfirmStrings[];
-extern const wchar_t *pDeliveryLocationStrings[];
+#define AmmoCaliber_SIZE 17
+#define BobbyRayAmmoCaliber_SIZE 16
+#define WeaponType_SIZE 9
+#define TeamTurnString_SIZE 5
+#define Message_SIZE 59
+#define pTownNames_SIZE 13
+#define g_towns_locative_SIZE 13
+#define sTimeStrings_SIZE 6
+#define pAssignmentStrings_SIZE 35
+#define pMilitiaString_SIZE 3
+#define pMilitiaButtonString_SIZE 2
+#define pConditionStrings_SIZE 9
+#define pEpcMenuStrings_SIZE 5
+#define pLongAssignmentStrings_SIZE 35
+#define pContractStrings_SIZE 7
+#define pPOWStrings_SIZE 2
+#define pInvPanelTitleStrings_SIZE 3
+#define pShortAttributeStrings_SIZE 10
+#define pUpperLeftMapScreenStrings_SIZE 4
+#define pTrainingStrings_SIZE 4
+#define pAssignMenuStrings_SIZE 7
+#define pRemoveMercStrings_SIZE 2
+#define pAttributeMenuStrings_SIZE 10
+#define pTrainingMenuStrings_SIZE 5
+#define pSquadMenuStrings_SIZE 21
+#define pPersonnelScreenStrings_SIZE 14
+#define gzMercSkillText_SIZE 17
+#define pTacticalPopupButtonStrings_SIZE 19
+#define pDoorTrapStrings_SIZE 5
+#define pMapScreenMouseRegionHelpText_SIZE 6
+#define pNoiseVolStr_SIZE 4
+#define pNoiseTypeStr_SIZE 12
+#define pDirectionStr_SIZE 8
+#define pLandTypeStrings_SIZE 40
+#define gpStrategicString_SIZE 69
+#define sKeyDescriptionStrings_SIZE 2
+#define gWeaponStatsDesc_SIZE 7
+#define gzMoneyAmounts_SIZE 6
+#define pVehicleStrings_SIZE 6
+#define zVehicleName_SIZE 6
+#define const_SIZE 137
+#define pExitingSectorHelpText_SIZE 14
+#define pRepairStrings_SIZE 4
+#define sPreStatBuildString_SIZE 6
+#define sStatGainStrings_SIZE 11
+#define pHelicopterEtaStrings_SIZE 10
+#define gsTimeStrings_SIZE 4
+#define sFacilitiesStrings_SIZE 7
+#define pMapPopUpInventoryText_SIZE 2
+#define pwTownInfoStrings_SIZE 7
+#define pwMineStrings_SIZE 14
+#define pwMiscSectorStrings_SIZE 7
+#define pMapInventoryErrorString_SIZE 5
+#define pMapInventoryStrings_SIZE 2
+#define pMovementMenuStrings_SIZE 4
+#define pUpdateMercStrings_SIZE 6
+#define pMapScreenBorderButtonHelpText_SIZE 6
+#define pMapScreenBottomFastHelp_SIZE 8
+#define pSenderNameList_SIZE 51
+#define pDeleteMailStrings_SIZE 2
+#define pEmailHeaders_SIZE 3
+#define pFinanceSummary_SIZE 12
+#define pFinanceHeaders_SIZE 7
+#define pTransactionText_SIZE 28
+#define pSkyriderText_SIZE 3
+#define pMoralStrings_SIZE 6
+#define pMapScreenStatusStrings_SIZE 5
+#define pMapScreenPrevNextCharButtonHelpText_SIZE 2
+#define pShortVehicleStrings_SIZE 6
+#define pVehicleStrings_SIZE 6
+#define pTrashItemText_SIZE 2
+#define pMapErrorString_SIZE 50
+#define pMapPlotStrings_SIZE 5
+#define pBullseyeStrings_SIZE 5
+#define pMiscMapScreenMouseRegionHelpText_SIZE 3
+#define pImpPopUpStrings_SIZE 7
+#define pImpButtonText_SIZE 26
+#define pExtraIMPStrings_SIZE 4
+#define pFilesSenderList_SIZE 7
+#define pHistoryHeaders_SIZE 5
+#define pHistoryStrings_SIZE 78
+#define pLaptopIcons_SIZE 8
+#define pBookMarkStrings_SIZE 8
+#define pDownloadString_SIZE 2
+#define gsAtmStartButtonText_SIZE 3
+#define pWebPagesTitles_SIZE 35
+#define pShowBookmarkString_SIZE 2
+#define pLaptopTitles_SIZE 5
+#define pPersonnelDepartedStateStrings_SIZE 5
+#define pPersonelTeamStrings_SIZE 8
+#define pPersonnelCurrentTeamStatsStrings_SIZE 3
+#define pPersonnelTeamStatsStrings_SIZE 11
+#define pMapVertIndex_SIZE 17
+#define pMapHortIndex_SIZE 17
+#define pMapDepthIndex_SIZE 4
+#define pUpdatePanelButtons_SIZE 2
+#define LargeTacticalStr_SIZE 4
+#define InsContractText_SIZE 4
+#define InsInfoText_SIZE 2
+#define MercAccountText_SIZE 9
+#define MercInfo_SIZE 11
+#define MercNoAccountText_SIZE 3
+#define MercHomePageText_SIZE 5
+#define sFuneralString_SIZE 12
+#define sFloristText_SIZE 14
+#define sOrderFormText_SIZE 22
+#define sFloristGalleryText_SIZE 5
+#define sFloristCards_SIZE 2
+#define BobbyROrderFormText_SIZE 26
+#define BobbyRText_SIZE 26
+#define BobbyRaysFrontText_SIZE 9
+#define AimSortText_SIZE 5
+#define AimPolicyText_SIZE 6
+#define AimMemberText_SIZE 4
+#define CharacterInfo_SIZE 12
+#define VideoConfercingText_SIZE 15
+#define AimPopUpText_SIZE 9
+#define AimHistoryText_SIZE 5
+#define AimFiText_SIZE 14
+#define AimAlumniText_SIZE 5
+#define AimScreenText_SIZE 8
+#define AimBottomMenuText_SIZE 6
+#define SKI_SIZE 14
+#define SkiMessageBoxText_SIZE 7
+#define zOptionsText_SIZE 9
 
-extern const wchar_t pSkillAtZeroWarning[];
-extern const wchar_t pIMPBeginScreenStrings[];
-extern const wchar_t pIMPFinishButtonText[];
-extern const wchar_t pIMPFinishStrings[];
-extern const wchar_t pIMPVoicesStrings[];
+#ifdef JA2BETAVERSION
+#define zSaveLoadText_SIZE 23
+#else
+#define zSaveLoadText_SIZE 21
+#endif
 
-extern const wchar_t pPersTitleText[];
+#define zMarksMapScreenText_SIZE 23
+#define pMilitiaConfirmStrings_SIZE 10
+#define gpDemoString_SIZE 41
+#define gpDemoIntroString_SIZE 6
+#define gzMoneyWithdrawMessageText_SIZE 2
+#define zOptionsToggleText_SIZE 20
+#define gzGIOScreenText_SIZE 16
+#define pDeliveryLocationStrings_SIZE 17
+#define pPausedGameText_SIZE 3
 
-extern const wchar_t *pPausedGameText[];
-extern const wchar_t *zOptionsToggleText[];
-extern const wchar_t *zOptionsScreenHelpText[];
-extern const wchar_t *pDoctorWarningString[];
-extern const wchar_t *pMilitiaButtonsHelpText[];
-extern const wchar_t pMapScreenJustStartedHelpText[];
-extern const wchar_t  pLandMarkInSectorString[];
-extern const wchar_t *gzMercSkillText[];
-extern const wchar_t *gzNonPersistantPBIText[];
-extern const wchar_t *gzMiscString[];
+#ifdef JA2BETAVERSION
+#define pMessageStrings_SIZE 69
+#else
+#define pMessageStrings_SIZE 68
+#endif
 
-extern const wchar_t *wMapScreenSortButtonHelpText[];
-extern const wchar_t *pNewNoiseStr[];
-extern const wchar_t *gzLateLocalizedString[];
+#define pDoctorWarningString_SIZE 2
+#define pMilitiaButtonsHelpText_SIZE 4
+#define gzLaptopHelpText_SIZE 16
+#define gzNonPersistantPBIText_SIZE 10
+#define gzMiscString_SIZE 5
+#define pNewNoiseStr_SIZE 11
+#define wMapScreenSortButtonHelpText_SIZE 6
+#define BrokenLinkText_SIZE 2
+#define gzBobbyRShipmentText_SIZE 4
+#define gzCreditNames_SIZE 15
+#define gzCreditNameTitle_SIZE 15
+#define gzCreditNameFunny_SIZE 15
+#define sRepairsDoneString_SIZE 4
+#define zGioDifConfirmText_SIZE 3
+#define gzLateLocalizedString_SIZE 58
+#define zOptionsScreenHelpText_SIZE 20
+#define ItemPickupHelpPopup_SIZE 5
+#define TacticalStr_SIZE 137
+#define zDealerStrings_SIZE 4
+#define zTalkMenuStrings_SIZE 6
+#define gMoneyStatsDesc_SIZE 8
+#define zHealthStr_SIZE 7
+#define SKI_Text_SIZE 14
+#define str_stat_list_SIZE 11
+#define str_aim_sort_list_SIZE 8
+#define zNewTacticalMessages_SIZE 6
+
+//Weapon Name and Description size
+#define SIZE_ITEM_NAME        80
+#define SIZE_SHORT_ITEM_NAME  80
+#define SIZE_ITEM_INFO       240
+#define SIZE_ITEM_PROS       160
+#define SIZE_ITEM_CONS       160
+
+typedef const wchar_t *   StrPointer;
+
+struct LanguageRes
+{
+  const StrPointer *AmmoCaliber;
+  const StrPointer *BobbyRayAmmoCaliber;
+  const StrPointer *WeaponType;
+
+  const StrPointer *Message;
+  const StrPointer *TeamTurnString;
+  const StrPointer *pAssignMenuStrings;
+  const StrPointer *pTrainingStrings;
+  const StrPointer *pTrainingMenuStrings;
+  const StrPointer *pAttributeMenuStrings;
+  const StrPointer *pVehicleStrings;
+  const StrPointer *pShortAttributeStrings;
+  const StrPointer *pContractStrings;
+  const StrPointer *pAssignmentStrings;
+  const StrPointer *pConditionStrings;
+  const StrPointer *pTownNames;
+  const StrPointer *g_towns_locative;
+  const StrPointer *pPersonnelScreenStrings;
+  const StrPointer *pUpperLeftMapScreenStrings;
+  const StrPointer *pTacticalPopupButtonStrings;
+  const StrPointer *pSquadMenuStrings;
+  const StrPointer *pDoorTrapStrings;
+  const StrPointer *pLongAssignmentStrings;
+  const StrPointer *pMapScreenMouseRegionHelpText;
+  const StrPointer *pNoiseVolStr;
+  const StrPointer *pNoiseTypeStr;
+  const StrPointer *pDirectionStr;
+  const StrPointer *pRemoveMercStrings;
+  const StrPointer *sTimeStrings;
+  const StrPointer *pLandTypeStrings;
+  const StrPointer *pInvPanelTitleStrings;
+  const StrPointer *pPOWStrings;
+  const StrPointer *pMilitiaString;
+  const StrPointer *pMilitiaButtonString;
+  const StrPointer *pEpcMenuStrings;
+  const StrPointer *pRepairStrings;
+  const StrPointer *sPreStatBuildString;
+  const StrPointer *sStatGainStrings;
+  const StrPointer *pHelicopterEtaStrings;
+  const StrPointer  sMapLevelString;
+  const StrPointer  gsLoyalString;
+  const StrPointer  gsUndergroundString;
+  const StrPointer *gsTimeStrings;
+  const StrPointer *sFacilitiesStrings;
+  const StrPointer *pMapPopUpInventoryText;
+  const StrPointer *pwTownInfoStrings;
+  const StrPointer *pwMineStrings;
+  const StrPointer *pwMiscSectorStrings;
+  const StrPointer *pMapInventoryErrorString;
+  const StrPointer *pMapInventoryStrings;
+  const StrPointer *pMovementMenuStrings;
+  const StrPointer *pUpdateMercStrings;
+  const StrPointer *pMapScreenBorderButtonHelpText;
+  const StrPointer *pMapScreenBottomFastHelp;
+  const StrPointer  pMapScreenBottomText;
+  const StrPointer  pMercDeadString;
+  const StrPointer *pSenderNameList;
+  const StrPointer  pNewMailStrings;
+  const StrPointer *pDeleteMailStrings;
+  const StrPointer *pEmailHeaders;
+  const StrPointer  pEmailTitleText;
+  const StrPointer  pFinanceTitle;
+  const StrPointer *pFinanceSummary;
+  const StrPointer *pFinanceHeaders;
+  const StrPointer *pTransactionText;
+  const StrPointer *pMoralStrings;
+  const StrPointer *pSkyriderText;
+  const StrPointer  str_left_equipment;
+  const StrPointer *pMapScreenStatusStrings;
+  const StrPointer *pMapScreenPrevNextCharButtonHelpText;
+  const StrPointer  pEtaString;
+  const StrPointer *pShortVehicleStrings;
+  const StrPointer *pTrashItemText;
+  const StrPointer *pMapErrorString;
+  const StrPointer *pMapPlotStrings;
+  const StrPointer *pBullseyeStrings;
+  const StrPointer *pMiscMapScreenMouseRegionHelpText;
+  const StrPointer  str_he_leaves_where_drop_equipment;
+  const StrPointer  str_she_leaves_where_drop_equipment;
+  const StrPointer  str_he_leaves_drops_equipment;
+  const StrPointer  str_she_leaves_drops_equipment;
+  const StrPointer *pImpPopUpStrings;
+  const StrPointer *pImpButtonText;
+  const StrPointer *pExtraIMPStrings;
+  const StrPointer  pFilesTitle;
+  const StrPointer *pFilesSenderList;
+  const StrPointer  pHistoryLocations;
+  const StrPointer *pHistoryStrings;
+  const StrPointer *pHistoryHeaders;
+  const StrPointer  pHistoryTitle;
+  const StrPointer *pShowBookmarkString;
+  const StrPointer *pWebPagesTitles;
+  const StrPointer  pWebTitle;
+  const StrPointer  pPersonnelString;
+  const StrPointer  pErrorStrings;
+  const StrPointer *pDownloadString;
+  const StrPointer *pBookMarkStrings;
+  const StrPointer *pLaptopIcons;
+  const StrPointer *gsAtmStartButtonText;
+  const StrPointer *pPersonnelTeamStatsStrings;
+  const StrPointer *pPersonnelCurrentTeamStatsStrings;
+  const StrPointer *pPersonelTeamStrings;
+  const StrPointer *pPersonnelDepartedStateStrings;
+  const StrPointer *pMapHortIndex;
+  const StrPointer *pMapVertIndex;
+  const StrPointer *pMapDepthIndex;
+  const StrPointer *pLaptopTitles;
+  const StrPointer  pDayStrings;
+  const StrPointer *pMilitiaConfirmStrings;
+  const StrPointer *pDeliveryLocationStrings;
+  const StrPointer  pSkillAtZeroWarning;
+  const StrPointer  pIMPBeginScreenStrings;
+  const StrPointer  pIMPFinishButtonText;
+  const StrPointer  pIMPFinishStrings;
+  const StrPointer  pIMPVoicesStrings;
+  const StrPointer  pPersTitleText;
+  const StrPointer *pPausedGameText;
+  const StrPointer *zOptionsToggleText;
+  const StrPointer *zOptionsScreenHelpText;
+  const StrPointer *pDoctorWarningString;
+  const StrPointer *pMilitiaButtonsHelpText;
+  const StrPointer  pMapScreenJustStartedHelpText;
+  const StrPointer  pLandMarkInSectorString;
+  const StrPointer *gzMercSkillText;
+  const StrPointer *gzNonPersistantPBIText;
+  const StrPointer *gzMiscString;
+  const StrPointer *wMapScreenSortButtonHelpText;
+  const StrPointer *pNewNoiseStr;
+  const StrPointer *gzLateLocalizedString;
+  const StrPointer  pAntiHackerString;
+  const StrPointer *pMessageStrings;
+  const StrPointer *ItemPickupHelpPopup;
+  const StrPointer *TacticalStr;
+  const StrPointer *LargeTacticalStr;
+  const StrPointer  zDialogActions;
+  const StrPointer *zDealerStrings;
+  const StrPointer *zTalkMenuStrings;
+  const StrPointer *gzMoneyAmounts;
+  const StrPointer  gzProsLabel;
+  const StrPointer  gzConsLabel;
+  const StrPointer *gMoneyStatsDesc;
+  const StrPointer *gWeaponStatsDesc;
+  const StrPointer *sKeyDescriptionStrings;
+  const StrPointer *zHealthStr;
+  const StrPointer *zVehicleName;
+  const StrPointer *pExitingSectorHelpText;
+  const StrPointer *InsContractText;
+  const StrPointer *InsInfoText;
+  const StrPointer *MercAccountText;
+  const StrPointer *MercInfo;
+  const StrPointer *MercNoAccountText;
+  const StrPointer *MercHomePageText;
+  const StrPointer *sFuneralString;
+  const StrPointer *sFloristText;
+  const StrPointer *sOrderFormText;
+  const StrPointer *sFloristGalleryText;
+  const StrPointer *sFloristCards;
+  const StrPointer *BobbyROrderFormText;
+  const StrPointer *BobbyRText;
+  const StrPointer  str_bobbyr_guns_num_guns_that_use_ammo;
+  const StrPointer *BobbyRaysFrontText;
+  const StrPointer *AimSortText;
+  const StrPointer  str_aim_sort_price;
+  const StrPointer  str_aim_sort_experience;
+  const StrPointer  str_aim_sort_marksmanship;
+  const StrPointer  str_aim_sort_medical;
+  const StrPointer  str_aim_sort_explosives;
+  const StrPointer  str_aim_sort_mechanical;
+  const StrPointer  str_aim_sort_ascending;
+  const StrPointer  str_aim_sort_descending;
+  const StrPointer *AimPolicyText;
+  const StrPointer *AimMemberText;
+  const StrPointer *CharacterInfo;
+  const StrPointer *VideoConfercingText;
+  const StrPointer *AimPopUpText;
+  const StrPointer  AimLinkText;
+  const StrPointer *AimHistoryText;
+  const StrPointer *AimFiText;
+  const StrPointer *AimAlumniText;
+  const StrPointer *AimScreenText;
+  const StrPointer *AimBottomMenuText;
+  const StrPointer *zMarksMapScreenText;
+  const StrPointer *gpStrategicString;
+  const StrPointer  gpGameClockString;
+  const StrPointer *SKI_Text;
+  const StrPointer *SkiMessageBoxText;
+  const StrPointer *zSaveLoadText;
+  const StrPointer *zOptionsText;
+  const StrPointer *gzGIOScreenText;
+  const StrPointer  gzHelpScreenText;
+  const StrPointer *gzLaptopHelpText;
+  const StrPointer *gzMoneyWithdrawMessageText;
+  const StrPointer  gzCopyrightText;
+  const StrPointer *BrokenLinkText;
+  const StrPointer *gzBobbyRShipmentText;
+  const StrPointer *zGioDifConfirmText;
+  const StrPointer *gzCreditNames;
+  const StrPointer *gzCreditNameTitle;
+  const StrPointer *gzCreditNameFunny;
+  const StrPointer  pContractButtonString;
+  const StrPointer  gzIntroScreen;
+  const StrPointer *pUpdatePanelButtons;
+  const StrPointer *sRepairsDoneString;
+  const StrPointer  str_ceramic_plates_smashed;
+  const StrPointer  str_arrival_rerouted;
+
+#ifdef JA2DEMO
+  const StrPointer  str_disabled_for_the_demo;
+  const StrPointer  str_disabled_in_demo;
+  const StrPointer  str_go_see_gabby;
+  const StrPointer  str_too_bad_you_killed_gabby;
+  const StrPointer  str_strategic_exit_gui_demo;
+  const StrPointer  str_overhead_map_disabled;
+#endif
+
+#ifdef JA2DEMOADS
+  const StrPointer *gpDemoString;
+  const StrPointer *gpDemoIntroString;
+#endif
+
+  const StrPointer  str_stat_health;
+  const StrPointer  str_stat_agility;
+  const StrPointer  str_stat_dexterity;
+  const StrPointer  str_stat_strength;
+  const StrPointer  str_stat_leadership;
+  const StrPointer  str_stat_wisdom;
+  const StrPointer  str_stat_exp_level;
+  const StrPointer  str_stat_marksmanship;
+  const StrPointer  str_stat_mechanical;
+  const StrPointer  str_stat_explosive;
+  const StrPointer  str_stat_medical;
+
+  const StrPointer *str_stat_list;
+  const StrPointer *str_aim_sort_list;
+
+  const StrPointer *zNewTacticalMessages;
+  const StrPointer  str_iron_man_mode_warning;
+};
+
+/** Current language resources. */
+extern const LanguageRes* g_langRes;
+
+/* -------------------------------------------------------------------------------------------- */
+/* below are defines that helps to keep original source code in tact
+/* -------------------------------------------------------------------------------------------- */
+
+#define AmmoCaliber                                         (g_langRes->AmmoCaliber)
+#define BobbyRayAmmoCaliber                                 (g_langRes->BobbyRayAmmoCaliber)
+#define WeaponType                                          (g_langRes->WeaponType)
+
+#define Message                                             (g_langRes->Message)
+#define TeamTurnString                                      (g_langRes->TeamTurnString)
+#define pAssignMenuStrings                                  (g_langRes->pAssignMenuStrings)
+#define pTrainingStrings                                    (g_langRes->pTrainingStrings)
+#define pTrainingMenuStrings                                (g_langRes->pTrainingMenuStrings)
+#define pAttributeMenuStrings                               (g_langRes->pAttributeMenuStrings)
+#define pVehicleStrings                                     (g_langRes->pVehicleStrings)
+#define pShortAttributeStrings                              (g_langRes->pShortAttributeStrings)
+#define pContractStrings                                    (g_langRes->pContractStrings)
+#define pAssignmentStrings                                  (g_langRes->pAssignmentStrings)
+#define pConditionStrings                                   (g_langRes->pConditionStrings)
+#define pTownNames                                          (g_langRes->pTownNames)
+#define g_towns_locative                                    (g_langRes->g_towns_locative)
+#define pPersonnelScreenStrings                             (g_langRes->pPersonnelScreenStrings)
+#define pUpperLeftMapScreenStrings                          (g_langRes->pUpperLeftMapScreenStrings)
+#define pTacticalPopupButtonStrings                         (g_langRes->pTacticalPopupButtonStrings)
+#define pSquadMenuStrings                                   (g_langRes->pSquadMenuStrings)
+#define pDoorTrapStrings                                    (g_langRes->pDoorTrapStrings)
+#define pLongAssignmentStrings                              (g_langRes->pLongAssignmentStrings)
+#define pMapScreenMouseRegionHelpText                       (g_langRes->pMapScreenMouseRegionHelpText)
+#define pNoiseVolStr                                        (g_langRes->pNoiseVolStr)
+#define pNoiseTypeStr                                       (g_langRes->pNoiseTypeStr)
+#define pDirectionStr                                       (g_langRes->pDirectionStr)
+#define pRemoveMercStrings                                  (g_langRes->pRemoveMercStrings)
+#define sTimeStrings                                        (g_langRes->sTimeStrings)
+#define pLandTypeStrings                                    (g_langRes->pLandTypeStrings)
+#define pInvPanelTitleStrings                               (g_langRes->pInvPanelTitleStrings)
+#define pPOWStrings                                         (g_langRes->pPOWStrings)
+#define pMilitiaString                                      (g_langRes->pMilitiaString)
+#define pMilitiaButtonString                                (g_langRes->pMilitiaButtonString)
+#define pEpcMenuStrings                                     (g_langRes->pEpcMenuStrings)
+#define pRepairStrings                                      (g_langRes->pRepairStrings)
+#define sPreStatBuildString                                 (g_langRes->sPreStatBuildString)
+#define sStatGainStrings                                    (g_langRes->sStatGainStrings)
+#define pHelicopterEtaStrings                               (g_langRes->pHelicopterEtaStrings)
+#define sMapLevelString                                     (g_langRes->sMapLevelString)
+#define gsLoyalString                                       (g_langRes->gsLoyalString)
+#define gsUndergroundString                                 (g_langRes->gsUndergroundString)
+#define gsTimeStrings                                       (g_langRes->gsTimeStrings)
+#define sFacilitiesStrings                                  (g_langRes->sFacilitiesStrings)
+#define pMapPopUpInventoryText                              (g_langRes->pMapPopUpInventoryText)
+#define pwTownInfoStrings                                   (g_langRes->pwTownInfoStrings)
+#define pwMineStrings                                       (g_langRes->pwMineStrings)
+#define pwMiscSectorStrings                                 (g_langRes->pwMiscSectorStrings)
+#define pMapInventoryErrorString                            (g_langRes->pMapInventoryErrorString)
+#define pMapInventoryStrings                                (g_langRes->pMapInventoryStrings)
+#define pMovementMenuStrings                                (g_langRes->pMovementMenuStrings)
+#define pUpdateMercStrings                                  (g_langRes->pUpdateMercStrings)
+#define pMapScreenBorderButtonHelpText                      (g_langRes->pMapScreenBorderButtonHelpText)
+#define pMapScreenBottomFastHelp                            (g_langRes->pMapScreenBottomFastHelp)
+#define pMapScreenBottomText                                (g_langRes->pMapScreenBottomText)
+#define pMercDeadString                                     (g_langRes->pMercDeadString)
+#define pSenderNameList                                     (g_langRes->pSenderNameList)
+#define pNewMailStrings                                     (g_langRes->pNewMailStrings)
+#define pDeleteMailStrings                                  (g_langRes->pDeleteMailStrings)
+#define pEmailHeaders                                       (g_langRes->pEmailHeaders)
+#define pEmailTitleText                                     (g_langRes->pEmailTitleText)
+#define pFinanceTitle                                       (g_langRes->pFinanceTitle)
+#define pFinanceSummary                                     (g_langRes->pFinanceSummary)
+#define pFinanceHeaders                                     (g_langRes->pFinanceHeaders)
+#define pTransactionText                                    (g_langRes->pTransactionText)
+#define pMoralStrings                                       (g_langRes->pMoralStrings)
+#define pSkyriderText                                       (g_langRes->pSkyriderText)
+#define str_left_equipment                                  (g_langRes->str_left_equipment)
+#define pMapScreenStatusStrings                             (g_langRes->pMapScreenStatusStrings)
+#define pMapScreenPrevNextCharButtonHelpText                (g_langRes->pMapScreenPrevNextCharButtonHelpText)
+#define pEtaString                                          (g_langRes->pEtaString)
+#define pShortVehicleStrings                                (g_langRes->pShortVehicleStrings)
+#define pTrashItemText                                      (g_langRes->pTrashItemText)
+#define pMapErrorString                                     (g_langRes->pMapErrorString)
+#define pMapPlotStrings                                     (g_langRes->pMapPlotStrings)
+#define pBullseyeStrings                                    (g_langRes->pBullseyeStrings)
+#define pMiscMapScreenMouseRegionHelpText                   (g_langRes->pMiscMapScreenMouseRegionHelpText)
+#define str_he_leaves_where_drop_equipment                  (g_langRes->str_he_leaves_where_drop_equipment)
+#define str_she_leaves_where_drop_equipment                 (g_langRes->str_she_leaves_where_drop_equipment)
+#define str_he_leaves_drops_equipment                       (g_langRes->str_he_leaves_drops_equipment)
+#define str_she_leaves_drops_equipment                      (g_langRes->str_she_leaves_drops_equipment)
+#define pImpPopUpStrings                                    (g_langRes->pImpPopUpStrings)
+#define pImpButtonText                                      (g_langRes->pImpButtonText)
+#define pExtraIMPStrings                                    (g_langRes->pExtraIMPStrings)
+#define pFilesTitle                                         (g_langRes->pFilesTitle)
+#define pFilesSenderList                                    (g_langRes->pFilesSenderList)
+#define pHistoryLocations                                   (g_langRes->pHistoryLocations)
+#define pHistoryStrings                                     (g_langRes->pHistoryStrings)
+#define pHistoryHeaders                                     (g_langRes->pHistoryHeaders)
+#define pHistoryTitle                                       (g_langRes->pHistoryTitle)
+#define pShowBookmarkString                                 (g_langRes->pShowBookmarkString)
+#define pWebPagesTitles                                     (g_langRes->pWebPagesTitles)
+#define pWebTitle                                           (g_langRes->pWebTitle)
+#define pPersonnelString                                    (g_langRes->pPersonnelString)
+#define pErrorStrings                                       (g_langRes->pErrorStrings)
+#define pDownloadString                                     (g_langRes->pDownloadString)
+#define pBookMarkStrings                                    (g_langRes->pBookMarkStrings)
+#define pLaptopIcons                                        (g_langRes->pLaptopIcons)
+#define gsAtmStartButtonText                                (g_langRes->gsAtmStartButtonText)
+#define pPersonnelTeamStatsStrings                          (g_langRes->pPersonnelTeamStatsStrings)
+#define pPersonnelCurrentTeamStatsStrings                   (g_langRes->pPersonnelCurrentTeamStatsStrings)
+#define pPersonelTeamStrings                                (g_langRes->pPersonelTeamStrings)
+#define pPersonnelDepartedStateStrings                      (g_langRes->pPersonnelDepartedStateStrings)
+#define pMapHortIndex                                       (g_langRes->pMapHortIndex)
+#define pMapVertIndex                                       (g_langRes->pMapVertIndex)
+#define pMapDepthIndex                                      (g_langRes->pMapDepthIndex)
+#define pLaptopTitles                                       (g_langRes->pLaptopTitles)
+#define pDayStrings                                         (g_langRes->pDayStrings)
+#define pMilitiaConfirmStrings                              (g_langRes->pMilitiaConfirmStrings)
+#define pDeliveryLocationStrings                            (g_langRes->pDeliveryLocationStrings)
+#define pSkillAtZeroWarning                                 (g_langRes->pSkillAtZeroWarning)
+#define pIMPBeginScreenStrings                              (g_langRes->pIMPBeginScreenStrings)
+#define pIMPFinishButtonText                                (g_langRes->pIMPFinishButtonText)
+#define pIMPFinishStrings                                   (g_langRes->pIMPFinishStrings)
+#define pIMPVoicesStrings                                   (g_langRes->pIMPVoicesStrings)
+#define pPersTitleText                                      (g_langRes->pPersTitleText)
+#define pPausedGameText                                     (g_langRes->pPausedGameText)
+#define zOptionsToggleText                                  (g_langRes->zOptionsToggleText)
+#define zOptionsScreenHelpText                              (g_langRes->zOptionsScreenHelpText)
+#define pDoctorWarningString                                (g_langRes->pDoctorWarningString)
+#define pMilitiaButtonsHelpText                             (g_langRes->pMilitiaButtonsHelpText)
+#define pMapScreenJustStartedHelpText                       (g_langRes->pMapScreenJustStartedHelpText)
+#define pLandMarkInSectorString                             (g_langRes->pLandMarkInSectorString)
+#define gzMercSkillText                                     (g_langRes->gzMercSkillText)
+#define gzNonPersistantPBIText                              (g_langRes->gzNonPersistantPBIText)
+#define gzMiscString                                        (g_langRes->gzMiscString)
+#define wMapScreenSortButtonHelpText                        (g_langRes->wMapScreenSortButtonHelpText)
+#define pNewNoiseStr                                        (g_langRes->pNewNoiseStr)
+#define gzLateLocalizedString                               (g_langRes->gzLateLocalizedString)
+#define pAntiHackerString                                   (g_langRes->pAntiHackerString)
+#define pMessageStrings                                     (g_langRes->pMessageStrings)
+#define ItemPickupHelpPopup                                 (g_langRes->ItemPickupHelpPopup)
+#define TacticalStr                                         (g_langRes->TacticalStr)
+#define LargeTacticalStr                                    (g_langRes->LargeTacticalStr)
+#define zDialogActions                                      (g_langRes->zDialogActions)
+#define zDealerStrings                                      (g_langRes->zDealerStrings)
+#define zTalkMenuStrings                                    (g_langRes->zTalkMenuStrings)
+#define gzMoneyAmounts                                      (g_langRes->gzMoneyAmounts)
+#define gzProsLabel                                         (g_langRes->gzProsLabel)
+#define gzConsLabel                                         (g_langRes->gzConsLabel)
+#define gMoneyStatsDesc                                     (g_langRes->gMoneyStatsDesc)
+#define gWeaponStatsDesc                                    (g_langRes->gWeaponStatsDesc)
+#define sKeyDescriptionStrings                              (g_langRes->sKeyDescriptionStrings)
+#define zHealthStr                                          (g_langRes->zHealthStr)
+#define zVehicleName                                        (g_langRes->zVehicleName)
+#define pExitingSectorHelpText                              (g_langRes->pExitingSectorHelpText)
+#define InsContractText                                     (g_langRes->InsContractText)
+#define InsInfoText                                         (g_langRes->InsInfoText)
+#define MercAccountText                                     (g_langRes->MercAccountText)
+#define MercInfo                                            (g_langRes->MercInfo)
+#define MercNoAccountText                                   (g_langRes->MercNoAccountText)
+#define MercHomePageText                                    (g_langRes->MercHomePageText)
+#define sFuneralString                                      (g_langRes->sFuneralString)
+#define sFloristText                                        (g_langRes->sFloristText)
+#define sOrderFormText                                      (g_langRes->sOrderFormText)
+#define sFloristGalleryText                                 (g_langRes->sFloristGalleryText)
+#define sFloristCards                                       (g_langRes->sFloristCards)
+#define BobbyROrderFormText                                 (g_langRes->BobbyROrderFormText)
+#define BobbyRText                                          (g_langRes->BobbyRText)
+#define str_bobbyr_guns_num_guns_that_use_ammo              (g_langRes->str_bobbyr_guns_num_guns_that_use_ammo)
+#define BobbyRaysFrontText                                  (g_langRes->BobbyRaysFrontText)
+#define AimSortText                                         (g_langRes->AimSortText)
+#define str_aim_sort_price                                  (g_langRes->str_aim_sort_price)
+#define str_aim_sort_experience                             (g_langRes->str_aim_sort_experience)
+#define str_aim_sort_marksmanship                           (g_langRes->str_aim_sort_marksmanship)
+#define str_aim_sort_medical                                (g_langRes->str_aim_sort_medical)
+#define str_aim_sort_explosives                             (g_langRes->str_aim_sort_explosives)
+#define str_aim_sort_mechanical                             (g_langRes->str_aim_sort_mechanical)
+#define str_aim_sort_ascending                              (g_langRes->str_aim_sort_ascending)
+#define str_aim_sort_descending                             (g_langRes->str_aim_sort_descending)
+#define AimPolicyText                                       (g_langRes->AimPolicyText)
+#define AimMemberText                                       (g_langRes->AimMemberText)
+#define CharacterInfo                                       (g_langRes->CharacterInfo)
+#define VideoConfercingText                                 (g_langRes->VideoConfercingText)
+#define AimPopUpText                                        (g_langRes->AimPopUpText)
+#define AimLinkText                                         (g_langRes->AimLinkText)
+#define AimHistoryText                                      (g_langRes->AimHistoryText)
+#define AimFiText                                           (g_langRes->AimFiText)
+#define AimAlumniText                                       (g_langRes->AimAlumniText)
+#define AimScreenText                                       (g_langRes->AimScreenText)
+#define AimBottomMenuText                                   (g_langRes->AimBottomMenuText)
+#define zMarksMapScreenText                                 (g_langRes->zMarksMapScreenText)
+#define gpStrategicString                                   (g_langRes->gpStrategicString)
+#define gpGameClockString                                   (g_langRes->gpGameClockString)
+#define SKI_Text                                            (g_langRes->SKI_Text)
+#define SkiMessageBoxText                                   (g_langRes->SkiMessageBoxText)
+#define zSaveLoadText                                       (g_langRes->zSaveLoadText)
+#define zOptionsText                                        (g_langRes->zOptionsText)
+#define gzGIOScreenText                                     (g_langRes->gzGIOScreenText)
+#define gzHelpScreenText                                    (g_langRes->gzHelpScreenText)
+#define gzLaptopHelpText                                    (g_langRes->gzLaptopHelpText)
+#define gzMoneyWithdrawMessageText                          (g_langRes->gzMoneyWithdrawMessageText)
+#define gzCopyrightText                                     (g_langRes->gzCopyrightText)
+#define BrokenLinkText                                      (g_langRes->BrokenLinkText)
+#define gzBobbyRShipmentText                                (g_langRes->gzBobbyRShipmentText)
+#define zGioDifConfirmText                                  (g_langRes->zGioDifConfirmText)
+#define gzCreditNames                                       (g_langRes->gzCreditNames)
+#define gzCreditNameTitle                                   (g_langRes->gzCreditNameTitle)
+#define gzCreditNameFunny                                   (g_langRes->gzCreditNameFunny)
+#define pContractButtonString                               (g_langRes->pContractButtonString)
+#define gzIntroScreen                                       (g_langRes->gzIntroScreen)
+#define pUpdatePanelButtons                                 (g_langRes->pUpdatePanelButtons)
+#define sRepairsDoneString                                  (g_langRes->sRepairsDoneString)
+#define str_ceramic_plates_smashed                          (g_langRes->str_ceramic_plates_smashed)
+#define str_arrival_rerouted                                (g_langRes->str_arrival_rerouted)
+
+#ifdef JA2DEMO
+#define str_disabled_for_the_demo                           (g_langRes->str_disabled_for_the_demo)
+#define str_disabled_in_demo                                (g_langRes->str_disabled_in_demo)
+#define str_go_see_gabby                                    (g_langRes->str_go_see_gabby)
+#define str_too_bad_you_killed_gabby                        (g_langRes->str_too_bad_you_killed_gabby)
+#define str_strategic_exit_gui_demo                         (g_langRes->str_strategic_exit_gui_demo)
+#define str_overhead_map_disabled                           (g_langRes->str_overhead_map_disabled)
+#endif
+
+#ifdef JA2DEMOADS
+#define gpDemoString                                        (g_langRes->gpDemoString)
+#define gpDemoIntroString                                   (g_langRes->gpDemoIntroString)
+#endif
+
+#define str_stat_health                                     (g_langRes->str_stat_health)
+#define str_stat_agility                                    (g_langRes->str_stat_agility)
+#define str_stat_dexterity                                  (g_langRes->str_stat_dexterity)
+#define str_stat_strength                                   (g_langRes->str_stat_strength)
+#define str_stat_leadership                                 (g_langRes->str_stat_leadership)
+#define str_stat_wisdom                                     (g_langRes->str_stat_wisdom)
+#define str_stat_exp_level                                  (g_langRes->str_stat_exp_level)
+#define str_stat_marksmanship                               (g_langRes->str_stat_marksmanship)
+#define str_stat_mechanical                                 (g_langRes->str_stat_mechanical)
+#define str_stat_explosive                                  (g_langRes->str_stat_explosive)
+#define str_stat_medical                                    (g_langRes->str_stat_medical)
+
+#define str_stat_list                                       (g_langRes->str_stat_list)
+#define str_aim_sort_list                                   (g_langRes->str_aim_sort_list)
+
+#define zNewTacticalMessages                                (g_langRes->zNewTacticalMessages)
+#define str_iron_man_mode_warning                           (g_langRes->str_iron_man_mode_warning)
+
+/* -------------------------------------------------------------------------------------------- */
 
 enum
 {
@@ -205,7 +745,6 @@ enum
 	STR_LATE_58
 };
 
-extern const wchar_t  pAntiHackerString[];
 
 enum
 {
@@ -281,9 +820,7 @@ enum
 	MSG_END_TURN_AUTO_SAVE,
 #endif
 };
-extern const wchar_t *pMessageStrings[];
 
-extern const wchar_t ItemPickupHelpPopup[][40];
 
 enum
 {
@@ -348,23 +885,8 @@ enum
 	STR_BLOODCATS_TURN,
 };
 
-#define	SMALL_STRING_LENGTH			20
-
-extern const wchar_t* const TacticalStr[];
-extern const wchar_t* const LargeTacticalStr[];
 
 
-extern const wchar_t  zDialogActions[];
-extern const wchar_t	zDealerStrings[][ SMALL_STRING_LENGTH ];
-extern const wchar_t	zTalkMenuStrings[][ SMALL_STRING_LENGTH ];
-extern const wchar_t *gzMoneyAmounts[6];
-extern const wchar_t  gzProsLabel[];
-extern const wchar_t  gzConsLabel[];
-extern const wchar_t	gMoneyStatsDesc[][ 13 ];
-extern const wchar_t* gWeaponStatsDesc[];
-extern const wchar_t *sKeyDescriptionStrings[2];
-extern const wchar_t	zHealthStr[][13];
-extern const wchar_t *zVehicleName[ 6 ];
 
 enum
 {
@@ -525,7 +1047,6 @@ enum{
 	EXIT_GUI_ALL_TRAVERSAL_WILL_MOVE_CURRENT_SQUAD_HELPTEXT,
 	EXIT_GUI_ESCORTED_CHARACTERS_CANT_LEAVE_SECTOR_ALONE_STR,
 };
-extern const wchar_t *pExitingSectorHelpText[];
 
 
 enum
@@ -544,7 +1065,6 @@ enum
 	INS_CONTRACT_ACCEPT,
 	INS_CONTRACT_CLEAR,
 };
-extern		const wchar_t *InsContractText[];
 
 
 //Insurance Info
@@ -553,7 +1073,6 @@ enum
 	INS_INFO_PREVIOUS,
 	INS_INFO_NEXT,
 };
-extern		const wchar_t *InsInfoText[];
 
 //Merc Account.c
 enum
@@ -569,7 +1088,6 @@ enum
 	MERC_ACCOUNT_AUTHORIZE_CONFIRMATION,
 	MERC_ACCOUNT_NOT_ENOUGH_MONEY,
 };
-extern		const wchar_t *MercAccountText[];
 
 
 //MercFile.c
@@ -589,7 +1107,6 @@ enum
 
 	MERC_FILES_MERC_UNAVAILABLE,
 };
-extern		const wchar_t *MercInfo[];
 
 
 //MercNoAccount.c
@@ -599,7 +1116,6 @@ enum
 	MERC_NO_ACC_CANCEL,
 	MERC_NO_ACC_NO_ACCOUNT_OPEN_ONE,
 };
-extern		const wchar_t *MercNoAccountText[];
 
 
 
@@ -612,7 +1128,6 @@ enum
 	MERC_VIEW_FILES,
 	MERC_SPECK_COM,
 };
-extern		const wchar_t *MercHomePageText[];
 
 
 //Funerl.c
@@ -631,7 +1146,6 @@ enum
 	FUNERAL_OUR_CONDOLENCES,	//10
 	FUNERAL_OUR_SYMPATHIES,
 };
-extern		const wchar_t *sFuneralString[];
 
 
 //Florist.c
@@ -651,7 +1165,6 @@ enum
 	FLORIST_ADVERTISEMENT_7,
 	FLORIST_ADVERTISEMENT_8,
 };
-extern		const wchar_t *sFloristText[];
 
 
 //Florist Order Form
@@ -680,7 +1193,6 @@ enum
 	FLORIST_ORDER_BILLING_INFO,							//20
 	FLORIST_ORDER_NAME,
 };
-extern		const wchar_t *sOrderFormText[];
 
 
 
@@ -693,7 +1205,6 @@ enum
 	FLORIST_GALLERY_ADDIFTIONAL_FEE,
 	FLORIST_GALLERY_HOME,
 };
-extern		const wchar_t *sFloristGalleryText[];
 
 
 //Florist Cards
@@ -702,7 +1213,6 @@ enum
 	FLORIST_CARDS_CLICK_SELECTION,
 	FLORIST_CARDS_BACK,
 };
-extern		const wchar_t *sFloristCards[];
 
 // Bobbyr Mail Order.c
 enum
@@ -734,7 +1244,6 @@ enum
 	BOBBYR_MINIMUM_WEIGHT,
 	BOBBYR_GOTOSHIPMENT_PAGE,
 };
-extern		const wchar_t *BobbyROrderFormText[];
 
 
 //BobbyRGuns.c
@@ -771,9 +1280,7 @@ enum
 
 };
 
-extern		const wchar_t *BobbyRText[];
 
-extern const wchar_t str_bobbyr_guns_num_guns_that_use_ammo[];
 
 
 //BobbyR.c
@@ -789,7 +1296,6 @@ enum
 	BOBBYR_ADVERTISMENT_3,
 	BOBBYR_UNDER_CONSTRUCTION,
 };
-extern		const wchar_t *BobbyRaysFrontText[];
 
 //Aim Sort.c
 enum
@@ -800,16 +1306,7 @@ enum
 	MERCENARY_FILES,
 	ALUMNI_GALLERY
 };
-extern		const wchar_t *AimSortText[];
 
-extern const wchar_t str_aim_sort_price[];
-extern const wchar_t str_aim_sort_experience[];
-extern const wchar_t str_aim_sort_marksmanship[];
-extern const wchar_t str_aim_sort_medical[];
-extern const wchar_t str_aim_sort_explosives[];
-extern const wchar_t str_aim_sort_mechanical[];
-extern const wchar_t str_aim_sort_ascending[];
-extern const wchar_t str_aim_sort_descending[];
 
 
 //Aim Policies.c
@@ -822,14 +1319,6 @@ enum
 	AIM_POLICIES_DISAGREE,
 	AIM_POLICIES_AGREE,
 };
-extern		const wchar_t *AimPolicyText[];
-
-
-
-
-//Aim Member.c
-extern		const wchar_t *AimMemberText[];
-
 
 
 //Aim Member.c
@@ -848,7 +1337,6 @@ enum
 	AIM_MEMBER_OPTIONAL_GEAR,
 	AIM_MEMBER_MEDICAL_DEPOSIT_REQ,
 };
-extern		const wchar_t *CharacterInfo[];
 
 
 
@@ -871,7 +1359,6 @@ enum
 	AIM_MEMBER_CONNECTING,
 	AIM_MEMBER_WITH_MEDICAL,		//14
 };
-extern		const wchar_t *VideoConfercingText[];
 
 //Aim Member.c
 enum
@@ -890,10 +1377,8 @@ enum
 	AIM_MEMBER_MESSAGE_RECORDED,
 
 };
-extern		const wchar_t *AimPopUpText[];
 
 //AIM Link.c
-extern const wchar_t AimLinkText[];
 
 
 //Aim History
@@ -905,7 +1390,6 @@ enum
 	AIM_HISTORY_AIM_ALUMNI,
 	AIM_HISTORY_NEXT,
 };
-extern		const wchar_t *AimHistoryText[];
 
 
 
@@ -926,7 +1410,6 @@ enum
 	AIM_FI_TO_ENTER_SORT_PAGE,
 	AIM_FI_DEAD,
 };
-extern		const wchar_t *AimFiText[];
 
 
 //AimArchives.
@@ -938,7 +1421,6 @@ enum
 	AIM_ALUMNI_ALUMNI,
 	AIM_ALUMNI_DONE,
 };
-extern		const wchar_t *AimAlumniText[];
 
 
 
@@ -961,7 +1443,6 @@ enum
 
 };
 
-extern		const wchar_t *AimScreenText[];
 
 //Aim Home Page
 enum
@@ -974,9 +1455,6 @@ enum
 	AIM_LINKS,
 };
 
-extern const wchar_t *AimBottomMenuText[];
-
-
 
 // MapScreen
 enum
@@ -984,18 +1462,6 @@ enum
 	MAP_SCREEN_MAP_LEVEL,
 	MAP_SCREEN_NO_MILITIA_TEXT,
 };
-extern	const wchar_t *zMarksMapScreenText[];
-
-
-
-//Weapon Name and Description size
-#define SIZE_ITEM_NAME        80
-#define SIZE_SHORT_ITEM_NAME  80
-#define SIZE_ITEM_INFO       240
-#define SIZE_ITEM_PROS       160
-#define SIZE_ITEM_CONS       160
-
-extern void LoadAllExternalText( void );
 
 enum
 {
@@ -1081,10 +1547,6 @@ enum
 	STR_DIALOG_CREATURES_ATTACK_UNCONCIOUSMERCS,
 };
 
-//Strings used in conjunction with above enumerations
-extern const wchar_t *gpStrategicString[];
-
-extern const wchar_t gpGameClockString[];
 
 //enums for the Shopkeeper Interface
 enum
@@ -1104,7 +1566,6 @@ enum
 	SKI_TEXT_MINUTES,
 	SKI_TEXT_DROP_ITEM_TO_GROUND,
 };
-extern	const wchar_t *SKI_Text[];
 
 //ShopKeeperInterface Message Box defines
 enum
@@ -1119,8 +1580,6 @@ enum
 
 	SKI_PLAYERS_CURRENT_BALANCE,
 };
-
-extern	const wchar_t *SkiMessageBoxText[];
 
 
 //enums for the above text
@@ -1149,8 +1608,6 @@ enum
 
 	SLG_DIFF,
 };
-extern	const wchar_t *zSaveLoadText[];
-
 
 
 //OptionScreen.h
@@ -1167,8 +1624,6 @@ enum
 	OPT_RETURN_TO_MAIN,
 	OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON,
 };
-
-extern	const wchar_t *zOptionsText[];
 
 
 //used with the gMoneyStatsDesc[]
@@ -1221,7 +1676,6 @@ enum
 	GIO_SAVE_ANYWHERE_TEXT,
 	GIO_IRON_MAN_TEXT
 };
-extern const wchar_t *gzGIOScreenText[];
 
 
 
@@ -1249,18 +1703,6 @@ enum
 
 };
 
-
-extern const wchar_t gzHelpScreenText[];
-
-
-extern	const wchar_t *gzLaptopHelpText[];
-
-
-extern	const wchar_t *gzMoneyWithdrawMessageText[];
-extern const wchar_t gzCopyrightText[];
-
-
-
 //enums used for the mapscreen inventory messages
 enum
 {
@@ -1279,7 +1721,6 @@ enum
 	BROKEN_LINK_TXT_ERROR_404,
 	BROKEN_LINK_TXT_SITE_NOT_FOUND,
 };
-extern	const wchar_t *BrokenLinkText[];
 
 //Bobby rays page for recent shipments
 enum
@@ -1290,7 +1731,6 @@ enum
 	BOBBYR_SHIPMENT__ORDERED_ON,
 };
 
-extern const wchar_t *gzBobbyRShipmentText[];
 
 
 enum
@@ -1299,7 +1739,6 @@ enum
 	GIO_CFS_EXPERIENCED,
 	GIO_CFS_EXPERT,
 };
-extern const wchar_t *zGioDifConfirmText[];
 
 
 enum
@@ -1323,52 +1762,15 @@ enum
 	NUM_PEOPLE_IN_CREDITS,
 };
 
-extern const wchar_t *gzCreditNames[];
-extern const wchar_t *gzCreditNameTitle[];
-extern const wchar_t *gzCreditNameFunny[];
-
-
-extern const wchar_t * GetWeightUnitString( void );
-FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
-
-
-// the title for the contract button on the character info panel in the upper left portion of the mapscreen
-extern const wchar_t pContractButtonString[];
-
-extern const wchar_t gzIntroScreen[];
-
-extern const wchar_t* pUpdatePanelButtons[];
-
-extern const wchar_t* sRepairsDoneString[];
-
-extern const wchar_t str_ceramic_plates_smashed[];
-
-extern const wchar_t str_arrival_rerouted[];
-
-#ifdef JA2DEMO
-extern const wchar_t str_disabled_for_the_demo[];
-extern const wchar_t str_disabled_in_demo[];
-extern const wchar_t str_go_see_gabby[];
-extern const wchar_t str_too_bad_you_killed_gabby[];
-extern const wchar_t str_strategic_exit_gui_demo[];
-extern const wchar_t str_overhead_map_disabled[];
-#endif
-
-#ifdef JA2DEMOADS
-extern const wchar_t* gpDemoString[];
-extern const wchar_t* gpDemoIntroString[];
-#endif
-
-extern const wchar_t str_stat_health[];
-extern const wchar_t str_stat_agility[];
-extern const wchar_t str_stat_dexterity[];
-extern const wchar_t str_stat_strength[];
-extern const wchar_t str_stat_leadership[];
-extern const wchar_t str_stat_wisdom[];
-extern const wchar_t str_stat_exp_level[];
-extern const wchar_t str_stat_marksmanship[];
-extern const wchar_t str_stat_mechanical[];
-extern const wchar_t str_stat_explosive[];
-extern const wchar_t str_stat_medical[];
+/* This is from _JA25EnglishText.h  */
+enum
+{
+	TCTL_MSG__RANGE_TO_TARGET,
+	TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE,
+	TCTL_MSG__DISPLAY_COVER,
+	TCTL_MSG__LOS,
+	TCTL_MSG__IRON_MAN_CANT_SAVE_NOW,
+	TCTL_MSG__CANNOT_SAVE_DURING_COMBAT,
+};
 
 #endif

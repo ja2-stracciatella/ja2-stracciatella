@@ -4,21 +4,9 @@
 # Just pass parameters to make.  This is much simpler and way less error prone
 # this way.  This file is NOT intended for package building.  For a package
 # just use
-#   make LNG=$YOUR_LANGUAGE PREFIX=$YOUR_PREFIX
+#   make PREFIX=$YOUR_PREFIX
 # as build command and maybe some more variables, though on a sane system this
 # should not be necessary.
-
-# Uncomment exactly ONE of these
-#LNG := DUTCH
-#LNG := ENGLISH
-#LNG := FRENCH
-#LNG := GERMAN
-#LNG := ITALIAN
-#LNG := POLISH
-# Russian BUKA Agonia Vlasti release
-#LNG := RUSSIAN
-# Russian Gold release
-#LNG := RUSSIAN_GOLD
 
 #JA2BETAVERSION   := yes
 #JA2TESTVERSION   := yes
@@ -31,10 +19,6 @@
 
 #CFLAGS += -g
 #CFLAGS += -Werror
-
-# Specify here were the Jagged Alliance 2 data files are located
-#SGPDATADIR := /usr/local/share/ja2
-
 
 # Tunables for installation. The default values are shown
 #PREFIX    := /usr/local

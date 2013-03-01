@@ -44,7 +44,6 @@
 #include "Creature_Spreading.h"
 #include "Soldier_Macros.h"
 #include "GameSettings.h"
-#include "_JA25EnglishText.h"
 #include "SaveLoadScreen.h"
 #include "Debug.h"
 #include "JAScreens.h"

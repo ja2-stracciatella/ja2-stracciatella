@@ -664,7 +664,6 @@ void DoDemoIntroduction(void)
 }
 
 
-#	ifdef GERMAN
 static void DisplayTopwareGermanyAddress(void)
 {
 	//bring up the Topware address screen
@@ -679,7 +678,6 @@ static void DisplayTopwareGermanyAddress(void)
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 }
-#	endif
 
 
 ScreenID DemoExitScreenHandle(void)
@@ -1102,11 +1100,8 @@ ScreenID DemoExitScreenHandle(void)
 			SGPBox const DstRect =
 			{
 				155 * (iPercentage - 50) / 50,
-#ifdef GERMAN
-				246 * (iPercentage - 50) / 50 - iPercentage + 50,
-#else
-				246 * (iPercentage - 50) / 50,
-#endif
+        isGermalVersion() ? (246 * (iPercentage - 50) / 50 - iPercentage + 50)
+                          : (246 * (iPercentage - 50) / 50),
 				SCREEN_WIDTH  - 309 * (iPercentage - 50) / 50,
 				SCREEN_HEIGHT - 332 * (iPercentage - 50) / 50
 			};
@@ -1152,9 +1147,10 @@ ScreenID DemoExitScreenHandle(void)
 		}
 		if( iPercentage > 160 && uiCharsPrinted == wcslen( gpDemoString[ 40 ] ) )
 		{
-			#ifdef GERMAN
-			DisplayTopwareGermanyAddress();
-			#endif
+      if(isGermanVersion())
+      {
+        DisplayTopwareGermanyAddress();
+      }
 			ubCurrentScreen = 7;
 			ubPreviousScreen = 6;
 			iPrevPercentage = 0;
@@ -1170,11 +1166,7 @@ ScreenID DemoExitScreenHandle(void)
 			wcscpy( str, gpDemoString[40] );
 			str[ uiCharsToPrint ] = L'\0';
 			const INT32 x = (SCREEN_WIDTH - uiWidthString) / 2;
-#if defined GERMAN
-			const INT32 y = 370;
-#else
-			const INT32 y = 420;
-#endif
+			const INT32 y = isGermanVersion() ? 370 : 420;
 			MPrint(x, y, str);
 			InvalidateRegion(x, y, x + uiWidthString, y + 13);
 			ExecuteBaseDirtyRectQueue();
@@ -1190,9 +1182,10 @@ ScreenID DemoExitScreenHandle(void)
 		if( ubPreviousScreen == 6 )
 		{
 			uiStartTime = GetJA2Clock();
-#ifdef GERMAN
-			uiStartTime = 4000000000U; //you could break the system by playing the game for 46 real-time days or longer.
-#endif
+      if(isGermanVersion())
+      {
+        uiStartTime = 4000000000U; //you could break the system by playing the game for 46 real-time days or longer.
+      }
 		}
 		uiTime = GetJA2Clock();
 		if( !fSetMusicToFade && gfLeftButtonState )
@@ -1201,13 +1194,14 @@ ScreenID DemoExitScreenHandle(void)
 			SetMusicMode( MUSIC_NONE );
 			uiStartTime = uiTime - 6000;
 		}
-		#ifndef GERMAN
-			if( uiStartTime + 6000 < uiTime && !fSetMusicToFade )
-			{
-				fSetMusicToFade = TRUE;
-				SetMusicMode( MUSIC_NONE );
-			}
-		#endif
+    if(isGermanVersion())
+    {
+      if( uiStartTime + 6000 < uiTime && !fSetMusicToFade )
+      {
+        fSetMusicToFade = TRUE;
+        SetMusicMode( MUSIC_NONE );
+      }
+    }
 		if( uiStartTime + 7000 < uiTime )
 		{
 			ubCurrentScreen = 8;

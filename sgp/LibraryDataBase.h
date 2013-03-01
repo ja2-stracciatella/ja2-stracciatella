@@ -50,7 +50,7 @@ struct LibraryFile
 };
 
 
-void InitializeFileDatabase(char const* LibFilenames[], UINT LibCount);
+void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, char const* extraLib);
 void ShutDownFileDatabase(void);
 bool CheckIfFileExistInLibrary(char const* filename);
 

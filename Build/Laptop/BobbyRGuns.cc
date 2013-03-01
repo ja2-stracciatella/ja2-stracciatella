@@ -337,7 +337,7 @@ void InitBobbyMenuBar()
 
 	UINT16             x    = BOBBYR_CATALOGUE_BUTTON_START_X;
 	UINT16     const   y    = BOBBYR_CATALOGUE_BUTTON_Y;
-	wchar_t    const** text = BobbyRText + BOBBYR_GUNS_GUNS;
+	const StrPointer * text = BobbyRText + BOBBYR_GUNS_GUNS;
 	LaptopMode const*  mode = ubCatalogueButtonValues;
 	FOR_EACHX(GUIButtonRef, i, guiBobbyRPageMenu, x += BOBBYR_CATALOGUE_BUTTON_GAP)
 	{ // Catalogue buttons

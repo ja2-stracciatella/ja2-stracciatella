@@ -104,7 +104,6 @@
 #include "BobbyRMailOrder.h"
 #include "Mercs.h"
 
-
 static const char g_quicksave_name[] = "QuickSave";
 static const char g_savegame_name[]  = "SaveGame";
 static const char g_savegame_ext[]   = "sav";
@@ -1356,7 +1355,8 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 			}
 		}
 
-#ifdef GERMAN
+  if(isGermanVersion())
+  {
 		// Fix neutral flags
 		if (savegame_version < 94 &&
 				s->bTeam == OUR_TEAM  &&
@@ -1366,7 +1366,7 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 			// turn off neutral flag
 			s->bNeutral = FALSE;
 		}
-#endif
+  }
 		// JA2Gold: fix next-to-previous attacker value
 		if (savegame_version < 99)
 		{
@@ -2579,9 +2579,10 @@ static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 		}
 	}
 
-#ifdef GERMAN
-	set *= 11;
-#endif
+  if(isGermanVersion())
+  {
+    set *= 11;
+  }
 
 	set %= 10;
 	set += h.uiDay / 10;

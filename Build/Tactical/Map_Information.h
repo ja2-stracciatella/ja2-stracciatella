@@ -4,7 +4,6 @@
 #include "JA2Types.h"
 
 
-extern FLOAT gdMajorMapVersion;
 extern UINT8 gubMinorMapVersion;
 
 enum //for use with MAPCREATE_STRUCT.ubEditorSmoothingType

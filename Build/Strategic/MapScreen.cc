@@ -80,7 +80,6 @@
 #include "Multi_Language_Graphic_Utils.h"
 #include "HelpScreen.h"
 #include "Soldier_Macros.h"
-#include "_JA25EnglishText.h"
 #include "Cheats.h"
 #include "GameSettings.h"
 #include "Tactical_Save.h"

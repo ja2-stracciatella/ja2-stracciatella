@@ -122,9 +122,7 @@ enum StandardQuoteIDs
 
 struct NPCQuoteInfo
 {
-#if defined RUSSIAN
-  UINT8   ubIdentifier[4];
-#endif
+  UINT32  ubIdentifier;
 
   UINT16  fFlags;
 
@@ -186,9 +184,14 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		FileRead(f, data, sizeof(data));
 
 		BYTE const* d = data;
-#if defined RUSSIAN
-		EXTR_U8A( d, i->ubIdentifier, lengthof(i->ubIdentifier))
-#endif
+    if(isRussianVersion())
+    {
+      EXTR_U32( d, i->ubIdentifier);
+    }
+    else
+    {
+      i->ubIdentifier = 0;
+    }
 		EXTR_U16( d, i->fFlags)
 		EXTR_I16( d, i->sRequiredItem)
 		EXTR_U16( d, i->usFactMustBeTrue)
@@ -209,9 +212,10 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		EXTR_U16( d, i->usGiftItem)
 		EXTR_U16( d, i->usGoToGridno)
 		EXTR_I16( d, i->sActionData)
-#if !defined RUSSIAN
-		EXTR_SKIP(d, 4)
-#endif
+    if(!isRussianVersion())
+    {
+      EXTR_SKIP(d, 4);
+    }
 		Assert(d == endof(data));
 	}
 	return buf.Release();
@@ -244,9 +248,10 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 	{
 		BYTE  data[32];
 		BYTE* d = data;
-#if defined RUSSIAN
-		INJ_U8A( d, i->ubIdentifier, lengthof(i->ubIdentifier))
-#endif
+    if(isRussianVersion())
+    {
+      INJ_U32( d, i->ubIdentifier);
+    }
 		INJ_U16( d, i->fFlags)
 		INJ_I16( d, i->sRequiredItem)
 		INJ_U16( d, i->usFactMustBeTrue)
@@ -267,9 +272,10 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 		INJ_U16( d, i->usGiftItem)
 		INJ_U16( d, i->usGoToGridno)
 		INJ_I16( d, i->sActionData)
-#if !defined RUSSIAN
-		INJ_SKIP(d, 4)
-#endif
+    if(!isRussianVersion())
+    {
+      INJ_SKIP(d, 4);
+    }
 		Assert(d == endof(data));
 		FileWrite(f, data, sizeof(data));
 	}

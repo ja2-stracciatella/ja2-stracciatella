@@ -71,7 +71,7 @@ struct AIMSortInfo
 	UINT16         const x;
 	UINT16         const y;
 	UINT32         const align;
-	const wchar_t* const text;
+	UINT16         const index;
 	MOUSE_CALLBACK const click;
 	MOUSE_REGION         region;
 };
@@ -87,16 +87,16 @@ static void SelectMedicalBoxRegionCallBack(   MOUSE_REGION* pRegion, INT32 iReas
 static void SelectPriceBoxRegionCallBack(     MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static AIMSortInfo g_aim_sort_info[] =
+static AIMSortInfo g_aim_sort_info[str_aim_sort_list_SIZE] =
 {
-	{ AIM_SORT_SORT_BY_X +   9, AIM_SORT_SORT_BY_Y + 34, LEFT_JUSTIFIED,  str_aim_sort_price,        SelectPriceBoxRegionCallBack      },
-	{ AIM_SORT_SORT_BY_X +   9, AIM_SORT_SORT_BY_Y + 47, LEFT_JUSTIFIED,  str_aim_sort_experience,   SelectExpBoxRegionCallBack        },
-	{ AIM_SORT_SORT_BY_X +   9, AIM_SORT_SORT_BY_Y + 60, LEFT_JUSTIFIED,  str_aim_sort_marksmanship, SelectMarkBoxRegionCallBack       },
-	{ AIM_SORT_SORT_BY_X + 111, AIM_SORT_SORT_BY_Y + 34, LEFT_JUSTIFIED,  str_aim_sort_medical,      SelectMedicalBoxRegionCallBack    },
-	{ AIM_SORT_SORT_BY_X + 111, AIM_SORT_SORT_BY_Y + 47, LEFT_JUSTIFIED,  str_aim_sort_explosives,   SelectExplosiveBoxRegionCallBack  },
-	{ AIM_SORT_SORT_BY_X + 111, AIM_SORT_SORT_BY_Y + 60, LEFT_JUSTIFIED,  str_aim_sort_mechanical,   SelectMechanicalBoxRegionCallBack },
-	{ AIM_SORT_SORT_BY_X + 172, AIM_SORT_SORT_BY_Y +  4, RIGHT_JUSTIFIED, str_aim_sort_ascending,    SelectAscendBoxRegionCallBack     },
-	{ AIM_SORT_SORT_BY_X + 172, AIM_SORT_SORT_BY_Y + 17, RIGHT_JUSTIFIED, str_aim_sort_descending,   SelectDescendBoxRegionCallBack    }
+	{ AIM_SORT_SORT_BY_X +   9, AIM_SORT_SORT_BY_Y + 34, LEFT_JUSTIFIED,  0, SelectPriceBoxRegionCallBack      },
+	{ AIM_SORT_SORT_BY_X +   9, AIM_SORT_SORT_BY_Y + 47, LEFT_JUSTIFIED,  1, SelectExpBoxRegionCallBack        },
+	{ AIM_SORT_SORT_BY_X +   9, AIM_SORT_SORT_BY_Y + 60, LEFT_JUSTIFIED,  2, SelectMarkBoxRegionCallBack       },
+	{ AIM_SORT_SORT_BY_X + 111, AIM_SORT_SORT_BY_Y + 34, LEFT_JUSTIFIED,  3, SelectMedicalBoxRegionCallBack    },
+	{ AIM_SORT_SORT_BY_X + 111, AIM_SORT_SORT_BY_Y + 47, LEFT_JUSTIFIED,  4, SelectExplosiveBoxRegionCallBack  },
+	{ AIM_SORT_SORT_BY_X + 111, AIM_SORT_SORT_BY_Y + 60, LEFT_JUSTIFIED,  6, SelectMechanicalBoxRegionCallBack },
+	{ AIM_SORT_SORT_BY_X + 172, AIM_SORT_SORT_BY_Y +  4, RIGHT_JUSTIFIED, 7, SelectAscendBoxRegionCallBack     },
+	{ AIM_SORT_SORT_BY_X + 172, AIM_SORT_SORT_BY_Y + 17, RIGHT_JUSTIFIED, 8, SelectDescendBoxRegionCallBack    }
 };
 
 UINT8			gubCurrentSortMode;
@@ -179,7 +179,7 @@ void EnterAimSort()
 
 	FOR_EACH(AIMSortInfo, i, g_aim_sort_info)
 	{
-		const UINT16 txt_w = StringPixLength(i->text, AIM_SORT_FONT_SORT_TEXT);
+		const UINT16 txt_w = StringPixLength(str_aim_sort_list[i->index], AIM_SORT_FONT_SORT_TEXT);
 		const UINT16 x = i->x - (i->align == LEFT_JUSTIFIED ? 0 : 4 + txt_w);
 		const UINT16 w = AIM_SORT_CHECKBOX_SIZE + 4 + txt_w;
 		const UINT16 y = i->y;
@@ -245,7 +245,7 @@ void RenderAimSort()
 	FOR_EACH(AIMSortInfo const, i, g_aim_sort_info)
 	{
 		const UINT16 x = i->x + (i->align == LEFT_JUSTIFIED ? 14 : -AIM_SORT_ASC_DESC_WIDTH - 4);
-		DrawTextToScreen(i->text, x, i->y + 2, AIM_SORT_ASC_DESC_WIDTH, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_COLOR_SORT_TEXT, FONT_MCOLOR_BLACK, i->align);
+		DrawTextToScreen(str_aim_sort_list[i->index], x, i->y + 2, AIM_SORT_ASC_DESC_WIDTH, AIM_SORT_FONT_SORT_TEXT, AIM_SORT_COLOR_SORT_TEXT, FONT_MCOLOR_BLACK, i->align);
 	}
 
 	// Display text for the 3 icons

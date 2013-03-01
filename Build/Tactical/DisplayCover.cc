@@ -5,7 +5,6 @@
 #include "Message.h"
 #include "Soldier_Find.h"
 #include "TileDat.h"
-#include "_JA25EnglishText.h"
 #include "GameSettings.h"
 #include "RenderWorld.h"
 #include "Interface.h"

@@ -152,31 +152,30 @@ static SGPPoint const g_order_check_box_pos[]=
 
 struct FlowerOrderLocationStruct
 {
-	const wchar_t **psCityLoc;
 	UINT8	ubNextDayDeliveryCost;
 	UINT8	ubWhenItGetsThereCost;
 };
 
-#define		FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS		17
+#define		FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS		(pDeliveryLocationStrings_SIZE)
 
 FlowerOrderLocationStruct FlowerOrderLocations[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS]={
-	{	&pDeliveryLocationStrings[0],	20, 15},
-	{	&pDeliveryLocationStrings[1],	95, 70},
-	{	&pDeliveryLocationStrings[2],	100, 75},
-	{	&pDeliveryLocationStrings[3],	50, 35},
-	{	&pDeliveryLocationStrings[4],	70, 50},
-	{	&pDeliveryLocationStrings[5],	45, 35},
-	{	&pDeliveryLocationStrings[6],	30, 25},
-	{	&pDeliveryLocationStrings[7],	100, 75},
-	{	&pDeliveryLocationStrings[8],	100, 75},
-	{	&pDeliveryLocationStrings[9],	30, 25},
-	{	&pDeliveryLocationStrings[10],	95, 70},
-	{	&pDeliveryLocationStrings[11],	30, 25},
-	{	&pDeliveryLocationStrings[12],	40, 30},
-	{	&pDeliveryLocationStrings[13],	45, 35},
-	{	&pDeliveryLocationStrings[14],	95, 70},
-	{	&pDeliveryLocationStrings[15],	50, 40},
-	{	&pDeliveryLocationStrings[16],	40, 30}
+	{	  20, 15},
+	{	  95, 70},
+	{	  100, 75},
+	{	  50, 35},
+	{	  70, 50},
+	{	  45, 35},
+	{	  30, 25},
+	{	  100, 75},
+	{	  100, 75},
+	{	  30, 25},
+	{		95, 70},
+	{		30, 25},
+	{		40, 30},
+	{		45, 35},
+	{		95, 70},
+	{		50, 40},
+	{		40, 30}
 };
 
 static SGPVObject* guiDeliveryLocation;
@@ -821,7 +820,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 			//display the name on the title bar
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_LOCATION_X+3, FLOWER_ORDER_DELIVERY_LOCATION_Y+3, FLOWER_ORDER_DROP_DOWN_LOCATION_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH,	FLOWER_ORDER_DELIVERY_LOCATION_Y+FLOWER_ORDER_DELIVERY_LOCATION_HEIGHT-2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-			DrawTextToScreen(*(FlowerOrderLocations[gubCurrentlySelectedFlowerLocation].psCityLoc), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, FLOWER_ORDER_DROP_DOWN_CITY_START_Y + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen((pDeliveryLocationStrings[gubCurrentlySelectedFlowerLocation]), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, FLOWER_ORDER_DROP_DOWN_CITY_START_Y + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//enable the drop down region
 		  gSelectedFloristDisableDropDownRegion.Disable();
@@ -884,7 +883,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			usPosY = FLOWER_ORDER_DROP_DOWN_CITY_START_Y + 3;
 			for( i=0; i< FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS; i++)
 			{
-				DrawTextToScreen(*(FlowerOrderLocations[i].psCityLoc), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+				DrawTextToScreen((pDeliveryLocationStrings[i]), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 				usPosY += usFontHeight + 2;
 			}
 
@@ -909,7 +908,7 @@ static void FlowerOrderDrawSelectedCity(UINT8 ubNumber)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_CITY_START_X, usPosY+2, FLOWER_ORDER_DROP_DOWN_CITY_START_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH-9,	usPosY+usFontHeight+4, Get16BPPColor( FROMRGB( 255, 255, 255 ) ) );
 
 	SetFontShadow(NO_SHADOW);
-	DrawTextToScreen(*(FlowerOrderLocations[ubNumber].psCityLoc), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen((pDeliveryLocationStrings[ubNumber]), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	SetFontShadow(DEFAULT_SHADOW);
 
 	FlowerOrderDisplayShippingLocationCity();
@@ -920,7 +919,7 @@ static void FlowerOrderDisplayShippingLocationCity(void)
 {
 	//display the name on the title bar
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_LOCATION_X+3, FLOWER_ORDER_DELIVERY_LOCATION_Y+3, FLOWER_ORDER_DROP_DOWN_LOCATION_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH,	FLOWER_ORDER_DELIVERY_LOCATION_Y+FLOWER_ORDER_DELIVERY_LOCATION_HEIGHT-2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-	DrawTextToScreen(*(FlowerOrderLocations[gubCurrentlySelectedFlowerLocation].psCityLoc), FLOWER_ORDER_DELIVERY_LOCATION_X + 5, FLOWER_ORDER_DELIVERY_LOCATION_Y + 5, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen((pDeliveryLocationStrings[gubCurrentlySelectedFlowerLocation]), FLOWER_ORDER_DELIVERY_LOCATION_X + 5, FLOWER_ORDER_DELIVERY_LOCATION_Y + 5, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
 

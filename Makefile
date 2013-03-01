@@ -2,15 +2,6 @@ CONFIG ?= config.default
 -include $(CONFIG)
 
 
-ifeq ($(findstring $(LNG), DUTCH ENGLISH FRENCH GERMAN ITALIAN POLISH RUSSIAN RUSSIAN_GOLD),)
-$(error LNG must be set to one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN or RUSSIAN_GOLD. Copy config.template to config.default and uncomment one of the languages)
-endif
-
-ifndef SGPDATADIR
-$(warn No SGPDATADIR specified, make lowercase will not work)
-endif
-
-
 BINARY    ?= ja2
 PREFIX    ?= /usr/local
 MANPREFIX ?= $(PREFIX)
@@ -101,10 +92,6 @@ ifdef JA2EDITOR
 CFLAGS += -DJA2EDITOR
 endif
 
-CFLAGS += -D$(LNG)
-
-CFLAGS += -DSGPDATADIR=\"$(SGPDATADIR)\"
-
 CCFLAGS += $(CFLAGS)
 CCFLAGS += -std=gnu99
 CCFLAGS += -Werror-implicit-function-declaration
@@ -151,10 +138,11 @@ SRCS += Build/Editor/Smooth.cc
 SRCS += Build/Editor/Smoothing_Utils.cc
 endif
 
+SRCS += Build/Cheats.cc
 SRCS += Build/Fade_Screen.cc
 SRCS += Build/GameInitOptionsScreen.cc
 SRCS += Build/GameLoop.cc
-SRCS += Build/GameResources.cc
+SRCS += Build/GameRes.cc
 SRCS += Build/GameScreen.cc
 SRCS += Build/GameSettings.cc
 SRCS += Build/GameVersion.cc
@@ -410,7 +398,6 @@ SRCS += Build/Utils/Font_Control.cc
 SRCS += Build/Utils/MapUtility.cc
 SRCS += Build/Utils/MercTextBox.cc
 SRCS += Build/Utils/Message.cc
-SRCS += Build/Utils/Multi_Language_Graphic_Utils.cc
 SRCS += Build/Utils/Music_Control.cc
 SRCS += Build/Utils/PopUpBox.cc
 SRCS += Build/Utils/Quantize.cc
@@ -446,7 +433,10 @@ SRCS += sgp/STCI.cc
 SRCS += sgp/Shading.cc
 SRCS += sgp/Smack_Stub.cc
 SRCS += sgp/SoundMan.cc
-SRCS += sgp/TranslationTable.c
+SRCS += sgp/TranslationTableEnglish.c
+SRCS += sgp/TranslationTableFrench.c
+SRCS += sgp/TranslationTableRussian.c
+SRCS += sgp/TranslationTableRussianGold.c
 SRCS += sgp/VObject.cc
 SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
@@ -458,9 +448,6 @@ LNGS += Build/Utils/_EnglishText.cc
 LNGS += Build/Utils/_FrenchText.cc
 LNGS += Build/Utils/_GermanText.cc
 LNGS += Build/Utils/_ItalianText.cc
-LNGS += Build/Utils/_JA25EnglishText.cc
-LNGS += Build/Utils/_JA25GermanText.cc
-LNGS += Build/Utils/_JA25RussianText.cc
 LNGS += Build/Utils/_PolishText.cc
 LNGS += Build/Utils/_RussianText.cc
 
@@ -509,16 +496,6 @@ deinstall:
 	$(Q)rm $(PREFIX)/share/applications/ja2-stracciatella.desktop
 	$(Q)rm $(PREFIX)/share/pixmaps/jagged2.ico
 
-
-lowercase:
-	$(Q)for i in \
-		"$(SGPDATADIR)"/Data/*.[Ss][Ll][Ff] \
-		"$(SGPDATADIR)"/Data/TILECACHE/*.[Jj][Ss][Dd] \
-		"$(SGPDATADIR)"/Data/TILECACHE/*.[Ss][Tt][Ii]; \
-	do \
-		lower="`dirname "$$i"`/`basename "$$i" | LANG=C tr '[A-Z]' '[a-z]'`"; \
-		[ "$$i" = "$$lower" ] || mv "$$i" "$$lower"; \
-	done
 
 rebuild-tags:
 	-rm TAGS

@@ -60,17 +60,24 @@ static DatabaseManagerHeaderStruct gFileDataBase;
 static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader);
 
 
-void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount)
+static void ThrowExcOnLibLoadFailure(const char* pLibraryName)
+{
+  FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id (%s) is to be loaded but cannot be found.\n", pLibraryName));
+  throw std::runtime_error("Initialising libraries failed");
+}
+
+void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, char const* extraLib)
 {
 	INT16			i;
+  int totalLibCount = LibCount + (extraLib ? 1 : 0);
 
 	//if all the libraries exist, set them up
-	gFileDataBase.usNumberOfLibraries = LibCount;
+  gFileDataBase.usNumberOfLibraries = totalLibCount;
 
 	//allocate memory for the each of the library headers
-	if (LibCount > 0)
+	if (totalLibCount > 0)
 	{
-		LibraryHeaderStruct* const libs = MALLOCNZ(LibraryHeaderStruct, LibCount);
+		LibraryHeaderStruct* const libs = MALLOCNZ(LibraryHeaderStruct, totalLibCount);
 		gFileDataBase.pLibraries = libs;
 
 		//Load up each library
@@ -78,10 +85,16 @@ void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount)
 		{
 			if (!InitializeLibrary(LibFilenames[i], &libs[i]))
 			{
-				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
-				throw std::runtime_error("Initialising libraries failed");
+        ThrowExcOnLibLoadFailure(LibFilenames[i]);
 			}
 		}
+    if(extraLib)
+    {
+			if (!InitializeLibrary(extraLib, &libs[totalLibCount-1]))
+			{
+        ThrowExcOnLibLoadFailure(extraLib);
+			}
+    }
 	}
 }
 

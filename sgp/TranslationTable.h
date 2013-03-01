@@ -2,7 +2,8 @@
 #define TRANSLATIONTABLE_H
 
 
-/* The code point to glyph map table. */
-extern unsigned char const TranslationTable[0x452];
+#define TRANSLATION_TABLE_SIZE (0x452)
+extern unsigned char const *TranslationTable;
+
 
 #endif

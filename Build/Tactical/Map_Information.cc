@@ -18,15 +18,6 @@
 #include "World_Items.h"
 
 
-//Don't mess with this value, unless you want to force update all maps in the game!
-#if defined RUSSIAN
-	#define MAJOR_MAP_VERSION		6.00
-#else
-	#define MAJOR_MAP_VERSION		5.00
-#endif
-
-FLOAT gdMajorMapVersion = MAJOR_MAP_VERSION;
-
 BOOLEAN gfWorldLoaded;
 
 MAPCREATE_STRUCT gMapInformation;

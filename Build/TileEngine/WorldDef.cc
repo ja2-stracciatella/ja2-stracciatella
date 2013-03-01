@@ -1347,8 +1347,9 @@ try
 	AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
 	// Write JA2 Version ID
-	FileWrite(f, &gdMajorMapVersion, sizeof(FLOAT));
-	if (gdMajorMapVersion >= 4.00)
+  FLOAT mapVersion = getMajorMapVersion();
+	FileWrite(f, &mapVersion, sizeof(FLOAT));
+	if (mapVersion >= 4.00)
 	{
 		FileWrite(f, &gubMinorMapVersion, sizeof(UINT8));
 	}
@@ -1733,7 +1734,7 @@ try
 	//clear the summary file info
 	SUMMARYFILE* const pSummary = MALLOCZ(SUMMARYFILE);
 	pSummary->ubSummaryVersion = GLOBAL_SUMMARY_VERSION;
-	pSummary->dMajorMapVersion = gdMajorMapVersion;
+	pSummary->dMajorMapVersion = getMajorMapVersion();
 
 	//skip JA2 Version ID
 	FLOAT	dMajorMapVersion;
@@ -2065,9 +2066,10 @@ try
 	FLOAT dMajorMapVersion;
 	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
 
-#if defined RUSSIAN
-	if (dMajorMapVersion != 6.00) throw std::runtime_error("Incompatible major map version");
-#endif
+  if(isRussianVersion() && (dMajorMapVersion != 6.00))
+  {
+    throw std::runtime_error("Incompatible major map version");
+  }
 
 	UINT8 ubMinorMapVersion;
 	if (dMajorMapVersion >= 4.00)
@@ -2314,9 +2316,10 @@ try
 		}
 	}
 
-#if defined RUSSIAN
-	FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
-#endif
+  if(isRussianVersion())
+  {
+    FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
+  }
 
 	SetRelativeStartAndEndPercentage(0, 58, 59, L"Loading room information...");
 	RenderProgressBar(0, 100);

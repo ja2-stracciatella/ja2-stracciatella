@@ -9,6 +9,7 @@
 #include "VSurface.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
+#include "GameRes.h"
 
 
 typedef UINT8 GlyphIdx;
@@ -162,17 +163,10 @@ UINT16 GetFontHeight(Font const font)
 }
 
 
-#if defined RUSSIAN
-#	define ZERO_GLYPH_CHAR L' '
-#else
-#	define ZERO_GLYPH_CHAR L'A'
-#endif
-
-
 bool IsPrintableChar(wchar_t const c)
 {
-	if (lengthof(TranslationTable) <= c) return false;
-	return TranslationTable[c] != 0 || c == ZERO_GLYPH_CHAR;
+	if (TRANSLATION_TABLE_SIZE <= c) return false;
+	return TranslationTable[c] != 0 || c == getZeroGlyphChar();
 }
 
 
@@ -180,10 +174,10 @@ bool IsPrintableChar(wchar_t const c)
  * exists for the requested wide char, the glyph index of '?' is returned. */
 static GlyphIdx GetGlyphIndex(wchar_t const c)
 {
-	if (c < lengthof(TranslationTable))
+	if (c < TRANSLATION_TABLE_SIZE)
 	{
 		GlyphIdx const idx = TranslationTable[c];
-		if (idx != 0 || c == ZERO_GLYPH_CHAR) return idx;
+		if (idx != 0 || c == getZeroGlyphChar()) return idx;
 	}
 	DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U+%04X", c));
 	return TranslationTable[L'?'];

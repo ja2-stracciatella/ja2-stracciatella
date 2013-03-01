@@ -52,6 +52,7 @@
 #include "Font_Control.h"
 #include "Encrypted_File.h"
 #include "Strategic_Town_Loyalty.h"
+#include "GameRes.h"
 
 #define	MERCBIOSFILENAME		BINARYDATADIR "/aimbios.edt"
 
@@ -3042,11 +3043,7 @@ static void WaitForMercToFinishTalkingOrUserToClick(void)
 
 void DemoHiringOfMercs()
 {
-#ifdef GERMAN
-	ProfileID const MercID[] = { IVAN, SHADOW, VICKY, FOX, BUBBA };
-#else
-	ProfileID const MercID[] = { IVAN, SHADOW, VICKY, GASKET, DR_Q };
-#endif
+	ProfileID const MercID[] = { IVAN, SHADOW, VICKY, isGermanVersion() ? FOX : GASKET, isGermanVersion() ? BUBBA : DR_Q };
 
 #ifndef JA2DEMO
 	static bool was_called_before = false;
@@ -3116,12 +3113,17 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	wchar_t              msg[512];
 	wchar_t const* const nickname = GetProfile(h.iIdOfMerc).zNickname;
 	UINT32         const day      = h.uiArrivalTime / 1440;
-#ifdef GERMAN
+
 	// German version has a different argument order
-	swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, day, time_string, sector_string);
-#else
-	swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, sector_string, day, time_string);
-#endif
+  if(isGermanVersion())
+  {
+    swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, day, time_string, sector_string);
+  }
+  else
+  {
+    swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, sector_string, day, time_string);
+  }
+
 	DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, msg, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack);
 
 	// Reset the id of the last merc

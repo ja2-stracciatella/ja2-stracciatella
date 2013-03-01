@@ -666,22 +666,6 @@ static void DisplayCharName(SOLDIERTYPE const& s)
 }
 
 
-static const wchar_t* const str_stat[] =
-{
-	str_stat_health,
-	str_stat_agility,
-	str_stat_dexterity,
-	str_stat_strength,
-	str_stat_leadership,
-	str_stat_wisdom,
-	str_stat_exp_level,
-	str_stat_marksmanship,
-	str_stat_mechanical,
-	str_stat_explosive,
-	str_stat_medical
-};
-
-
 static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 {
 	wchar_t sString[50];
@@ -696,7 +680,7 @@ static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 		MPrint(sX, y, sString);
 	}
 	swprintf(sString, lengthof(sString), L"%d", stat);
-	mprintf(pers_stat_x, y, L"%ls:", str_stat[idx]);
+	mprintf(pers_stat_x, y, L"%ls:", str_stat_list[idx]);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 }
@@ -748,7 +732,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 		for (INT32 i = 1; i < 11; ++i)
 		{
 			const INT32 y = pers_stat_y[i];
-			mprintf(pers_stat_x, y, L"%ls:", str_stat[i]);
+			mprintf(pers_stat_x, y, L"%ls:", str_stat_list[i]);
 			const wchar_t* const na = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, na, PERS_FONT, &sX, &sY);
 			MPrint(sX, y, na);

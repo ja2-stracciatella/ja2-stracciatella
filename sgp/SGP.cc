@@ -21,7 +21,6 @@
 #include "Input.h"
 #include "Intro.h"
 #include "JA2_Splash.h"
-#include "GameResources.h"
 #include "MemMan.h"
 #include "Random.h"
 #include "SGP.h"
@@ -31,6 +30,8 @@
 #include "Video.h"
 #include "VSurface.h"
 #include <SDL.h>
+#include "GameRes.h"
+#include "Logger.h"
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -38,6 +39,8 @@
 
 #	include "Local.h"
 #endif
+
+#include "Multi_Language_Graphic_Utils.h"
 
 
 #ifdef JA2
@@ -272,7 +275,7 @@ static int Failure(char const* const msg)
 }
 
 
-static BOOLEAN ParseParameters(char* const argv[]);
+static BOOLEAN ParseParameters(int argc, char* const argv[]);
 
 
 int main(int argc, char* argv[])
@@ -285,7 +288,9 @@ try
 	}
 #endif
 
-	if (!ParseParameters(argv)) return EXIT_FAILURE;
+  setGameVersion(GV_ENGLISH);
+
+	if (!ParseParameters(argc, argv)) return EXIT_FAILURE;
 
 	InitializeStandardGamingPlatform();
 
@@ -338,56 +343,111 @@ static void SGPExit(void)
 }
 
 
-static BOOLEAN ParseParameters(char* const argv[])
+/** Set game resources version. */
+static BOOLEAN setResourceVersion(const char *version)
+{
+  if(strcasecmp(version, "ENGLISH") == 0)
+  {
+    setGameVersion(GV_ENGLISH);
+  }
+  else if(strcasecmp(version, "DUTCH") == 0)
+  {
+    setGameVersion(GV_DUTCH);
+  }
+  else if(strcasecmp(version, "FRENCH") == 0)
+  {
+    setGameVersion(GV_FRENCH);
+  }
+  else if(strcasecmp(version, "GERMAN") == 0)
+  {
+    setGameVersion(GV_GERMAN);
+  }
+  else if(strcasecmp(version, "ITALIAN") == 0)
+  {
+    setGameVersion(GV_ITALIAN);
+  }
+  else if(strcasecmp(version, "POLISH") == 0)
+  {
+    setGameVersion(GV_POLISH);
+  }
+  else if(strcasecmp(version, "RUSSIAN") == 0)
+  {
+    setGameVersion(GV_RUSSIAN);
+  }
+  else if(strcasecmp(version, "RUSSIAN_GOLD") == 0)
+  {
+    setGameVersion(GV_RUSSIAN_GOLD);
+  }
+  else
+  {
+    LOG_ERROR("Unknown version of the game: %s\n", version);
+    return false;
+  }
+  LOG_INFO("Game version: %s\n", version);
+  return true;
+}
+
+static BOOLEAN ParseParameters(int argc, char* const argv[])
 {
 	const char* const name = *argv;
 	if (name == NULL) return TRUE; // argv does not even contain the program name
 
 	BOOLEAN success = TRUE;
-	for (;;)
-	{
-		char const* const arg = *++argv;
-		if (!arg) break;
+  for(int i = 1; i < argc; i++)
+  {
+    bool haveNextParameter = (i + 1) < argc;
 
-		if (strcmp(arg, "-fullscreen") == 0)
+		if (strcmp(argv[i], "-fullscreen") == 0)
 		{
 			VideoSetFullScreen(TRUE);
 		}
-		else if (strcmp(arg, "-nosound") == 0)
+		else if (strcmp(argv[i], "-nosound") == 0)
 		{
 			SoundEnableSound(FALSE);
 		}
-		else if (strcmp(arg, "-window") == 0)
+		else if (strcmp(argv[i], "-window") == 0)
 		{
 			VideoSetFullScreen(FALSE);
 		}
 #if defined JA2BETAVERSION
-		else if (strcmp(arg, "-quicksave") == 0)
+		else if (strcmp(argv[i], "-quicksave") == 0)
 		{
 			/* This allows the QuickSave Slots to be autoincremented, i.e. everytime
 			 * the user saves, there will be a new quick save file */
 			gfUseConsecutiveQuickSaveSlots = TRUE;
 		}
-		else if (strcmp(arg, "-domaps") == 0)
+		else if (strcmp(argv[i], "-domaps") == 0)
 		{
 			g_game_mode = GAME_MODE_MAP_UTILITY;
 		}
 #	if defined JA2EDITOR
-		else if (strcmp(arg, "-editor") == 0)
+		else if (strcmp(argv[i], "-editor") == 0)
 		{
 			g_game_mode = GAME_MODE_EDITOR;
 		}
-		else if (strcmp(arg, "-editorauto") == 0)
+		else if (strcmp(argv[i], "-editorauto") == 0)
 		{
 			g_game_mode = GAME_MODE_EDITOR_AUTO;
 		}
 #	endif
 #endif
+    else if (strcmp(argv[i], "-resversion") == 0)
+    {
+      if(haveNextParameter)
+      {
+        success = setResourceVersion(argv[++i]);
+      }
+      else
+      {
+        LOG_ERROR("Missing value for command-line key '-resversion'\n");
+        success = FALSE;
+      }
+    }
 		else
 		{
-			if (strcmp(arg, "-help") != 0)
+			if (strcmp(argv[i], "-help") != 0)
 			{
-				fprintf(stderr, "Unknown switch \"%s\"\n", arg);
+				fprintf(stderr, "Unknown switch \"%s\"\n", argv[i]);
 			}
 			success = FALSE;
 		}
@@ -403,7 +463,13 @@ static BOOLEAN ParseParameters(char* const argv[])
 			"  -fullscreen  Start the game in fullscreen mode\n"
 			"  -help        Display this information\n"
 			"  -nosound     Turn the sound and music off\n"
-			"  -window      Start the game in a window\n",
+			"  -window      Start the game in a window\n"
+			"  -resversion  Version of the game resources (data files)\n"
+			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
+			"                 Default value is ENGLISH\n"
+			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
+			"                 RUSSIAN_GOLD is for Gold release\n"
+            ,
 			name
 		);
 	}

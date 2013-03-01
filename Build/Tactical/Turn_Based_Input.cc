@@ -83,11 +83,11 @@
 #include "Strategic_Status.h"
 #include "Queen_Command.h"
 #include "PreBattle_Interface.h"
-#include "_JA25EnglishText.h"
 #include "VSurface.h"
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Items.h"
+#include "GameRes.h"
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
@@ -108,16 +108,6 @@
 static BOOLEAN gfFirstCycleMovementStarted = FALSE;
 
 const SOLDIERTYPE* gUITargetSoldier = NULL;
-
-
-UINT8			gubCheatLevel		= STARTING_CHEAT_LEVEL;
-
-static char const cheat_code[] =
-#ifdef GERMAN
-	"iguana";
-#else
-	"gabbi";
-#endif
 
 
 static void QueryTBLeftButton(UIEventKind*);
@@ -2301,11 +2291,11 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 
 			if (mod == CTRL_DOWN)
 			{
-				if (gubCheatLevel < lengthof(cheat_code) - 1)
+				if (gubCheatLevel < strlen(getCheatCode()))
 				{
-					if (key == cheat_code[gubCheatLevel])
+					if (key == getCheatCode()[gubCheatLevel])
 					{
-						if (++gubCheatLevel == lengthof(cheat_code) - 1)
+						if (++gubCheatLevel == strlen(getCheatCode()))
 						{
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CHEAT_LEVEL_TWO]);
 							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1);
@@ -2313,14 +2303,14 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 						continue;
 					}
 				}
-				else if (gubCheatLevel == lengthof(cheat_code) - 1 && key == 'b')
+				else if (gubCheatLevel == strlen(getCheatCode()) && key == 'b')
 				{
 					++gubCheatLevel;
 					continue;
 				}
 			}
 
-			if (gubCheatLevel < lengthof(cheat_code) - 1) RESET_CHEAT_LEVEL();
+			if (gubCheatLevel < strlen(getCheatCode())) RESET_CHEAT_LEVEL();
 
 			switch (mod)
 			{

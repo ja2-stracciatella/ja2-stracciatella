@@ -39,7 +39,6 @@
 #include "Soldier_Create.h"
 #include "Video.h"
 
-
 #define DEVINFO_DIR "../DevInfo"
 
 
@@ -2082,7 +2081,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		fclose(f_sum);
 
 		if (sum->ubSummaryVersion < MINIMUMVERSION ||
-				dMajorMapVersion      < gdMajorMapVersion)
+				dMajorMapVersion      < getMajorMapVersion())
 		{
 			++gusNumberOfMapsToBeForceUpdated;
 			gfMustForceUpdateAllMaps = TRUE;
@@ -2386,7 +2385,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 0 ) )
@@ -2396,7 +2395,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & BASEMENT1_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][1];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 1 ) )
@@ -2406,7 +2405,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & BASEMENT2_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][2];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 2 ) )
@@ -2416,7 +2415,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & BASEMENT3_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][3];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 3 ) )
@@ -2426,7 +2425,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & ALTERNATE_GROUND_MASK )
 		{
 			pSF = gpSectorSummary[x][y][4];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 4 ) )
@@ -2436,7 +2435,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & ALTERNATE_B1_MASK )
 		{
 			pSF = gpSectorSummary[x][y][5];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 5 ) )
@@ -2446,7 +2445,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & ALTERNATE_B2_MASK )
 		{
 			pSF = gpSectorSummary[x][y][6];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 6 ) )
@@ -2456,7 +2455,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 		if( gbSectorLevels[x][y] & ALTERNATE_B3_MASK )
 		{
 			pSF = gpSectorSummary[x][y][7];
-			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < gdMajorMapVersion )
+			if( !pSF || pSF->ubSummaryVersion < MINIMUMVERSION || pSF->dMajorMapVersion < getMajorMapVersion() )
 			{
 				gpCurrentSectorSummary = pSF;
 				if( !EvaluateWorld( name, 7 ) )

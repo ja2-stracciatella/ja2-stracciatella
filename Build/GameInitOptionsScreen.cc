@@ -24,7 +24,6 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WordWrap.h"
-#include "_JA25EnglishText.h"
 
 #ifdef JA2TESTVERSION
 #	include "Soldier_Profile.h"

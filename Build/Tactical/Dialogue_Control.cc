@@ -50,7 +50,7 @@
 #include "Video.h"
 #include "SoundMan.h"
 #include "Container.h"
-
+#include "GameRes.h"
 
 #define DIALOGUESIZE 240
 #define   QUOTE_MESSAGE_SIZE		520
@@ -930,16 +930,23 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 	{
 		if ( fWavFile )
 		{
-#if defined RUSSIAN || defined RUSSIAN_GOLD
-			if (ubCharacterNum >= FIRST_RPC && gMercProfiles[ubCharacterNum].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
-			{
-				sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
-			}
-			else
-#endif
-			{	// build name of wav file (characternum + quotenum)
+      if(isRussianVersion() || isRussianGoldVersion())
+      {
+        if (ubCharacterNum >= FIRST_RPC && gMercProfiles[ubCharacterNum].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
+        {
+          sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+        }
+        else
+        {
+          // build name of wav file (characternum + quotenum)
+          sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+        }
+      }
+      else
+      {
+        // build name of wav file (characternum + quotenum)
 				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", ubCharacterNum, usQuoteNum);
-			}
+      }
 		}
 		else
 		{

@@ -35,32 +35,31 @@
 
 struct BobbyROrderLocationStruct
 {
-	const wchar_t **psCityLoc;
 	UINT16	usOverNightExpress;
 	UINT16	us2DaysService;
 	UINT16	usStandardService;
 };
 
 
-BobbyROrderLocationStruct BobbyROrderLocations[]=
+BobbyROrderLocationStruct BobbyROrderLocations[pDeliveryLocationStrings_SIZE]=
 {
-	{	&pDeliveryLocationStrings[0],		20,		15,		10 },
-	{	&pDeliveryLocationStrings[1],    295,	150,	85 },
-	{	&pDeliveryLocationStrings[2],    200,	100,	50 },	// the only one that really matters
-	{	&pDeliveryLocationStrings[3],		100,	55,		30 },
-	{	&pDeliveryLocationStrings[4],    95,		65,		40 },
-	{	&pDeliveryLocationStrings[5],    55,		40,		25 },
-	{	&pDeliveryLocationStrings[6],		35,		25,		15 },
-	{	&pDeliveryLocationStrings[7],    200,	100,	50 },
-	{	&pDeliveryLocationStrings[8],		190,	90,		45 },
-	{	&pDeliveryLocationStrings[9],    35,		25,		15 },
-	{	&pDeliveryLocationStrings[10],   100,	55,		30 },
-	{	&pDeliveryLocationStrings[11],   35,		25,		15 },
-	{	&pDeliveryLocationStrings[12],   45,		30,		20 },
-	{	&pDeliveryLocationStrings[13],   55,		40,		25 },
-	{	&pDeliveryLocationStrings[14],   100,	55,		30 },
-	{	&pDeliveryLocationStrings[15],   100,	55,		30 },
-	{	&pDeliveryLocationStrings[16],   45,		30,		20 },
+	{	20,		15,		10 },
+	{	 295,	150,	85 },
+	{	 200,	100,	50 },	// the only one that really matters
+	{	100,	55,		30 },
+	{	 95,		65,		40 },
+	{	 55,		40,		25 },
+	{	35,		25,		15 },
+	{	 200,	100,	50 },
+	{	190,	90,		45 },
+	{	 35,		25,		15 },
+	{	 100,	55,		30 },
+	{	 35,		25,		15 },
+	{	 45,		30,		20 },
+	{	 55,		40,		25 },
+	{	 100,	55,		30 },
+	{	 100,	55,		30 },
+	{	 45,		30,		20 },
  };
 
 //drop down menu
@@ -662,7 +661,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 				else
 				{
 					//else pop up a confirmation box
-					swprintf( zTemp, lengthof(zTemp), BobbyROrderFormText[BOBBYR_CONFIRM_DEST],  *BobbyROrderLocations[gbSelectedCity].psCityLoc );
+					swprintf( zTemp, lengthof(zTemp), BobbyROrderFormText[BOBBYR_CONFIRM_DEST],  pDeliveryLocationStrings[gbSelectedCity] );
 					DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, zTemp, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmBobbyRPurchaseMessageBoxCallBack );
 				}
 
@@ -1163,7 +1162,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			if( gbSelectedCity == -1 )
 				DrawTextToScreen(BobbyROrderFormText[BOBBYR_SELECT_DEST], BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			else
-				DrawTextToScreen(*(BobbyROrderLocations[gbSelectedCity].psCityLoc), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+				DrawTextToScreen((pDeliveryLocationStrings[gbSelectedCity]), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//disable the r\close regiuon
 		  gSelectedCloseDropDownRegion.Disable();
@@ -1328,7 +1327,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 	usPosY = BOBBYR_CITY_START_LOCATION_Y + 5;
 	for( i=gubCityAtTopOfList; i< gubCityAtTopOfList+BOBBYR_NUM_DISPLAYED_CITIES; i++)
 	{
-		DrawTextToScreen(*(BobbyROrderLocations[i].psCityLoc), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen((pDeliveryLocationStrings[i]), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		usPosY += usFontHeight + 2;
 	}
 
@@ -1342,7 +1341,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X+4, usPosY+4, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH-4,	usPosY+usFontHeight+6, Get16BPPColor( FROMRGB( 200, 169, 87 ) ) );
 
 	SetFontShadow(NO_SHADOW);
-	const wchar_t* city = *(BobbyROrderLocations[ubCityNumber == 255 ? 0 : ubCityNumber].psCityLoc);
+	const wchar_t* city = (pDeliveryLocationStrings[ubCityNumber == 255 ? 0 : ubCityNumber]);
 	DrawTextToScreen(city, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY + 5, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1367,7 +1366,7 @@ static void DisplayShippingLocationCity(void)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 
 	//if there is no city selected
-	const wchar_t* dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : *(BobbyROrderLocations[gbSelectedCity].psCityLoc));
+	const wchar_t* dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : (pDeliveryLocationStrings[gbSelectedCity]));
 	DrawTextToScreen(dest, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );

@@ -30,6 +30,7 @@
 #include "AI.h"
 #include "Soldier_Macros.h"
 #include "Debug.h"
+#include "GameRes.h"
 
 
 static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations);
@@ -1077,9 +1078,10 @@ void SetDoorString(INT16 const sGridNo)
 	// ATE: If here, we try to say, opened or closed...
 	if (!GetIntTileLocation2Text())
 	{
-#ifdef GERMAN
+  if(isGermanVersion())
+  {
 		SetIntTileLocation2Text(TacticalStr[DOOR_DOOR_MOUSE_DESCRIPTION]);
-#endif
+  }
 
 		// Try to get doors status here...
 		bool                     open;
@@ -1099,10 +1101,13 @@ void SetDoorString(INT16 const sGridNo)
 		}
 		wchar_t const* const state = open ?
 			pMessageStrings[MSG_OPENED] : pMessageStrings[MSG_CLOSED];
-#ifdef GERMAN
+  if(isGermanVersion())
+  {
 		SetIntTileLocationText(state);
-#else
+  }
+  else
+  {
 		SetIntTileLocation2Text(state);
-#endif
+  }
 	}
 }
