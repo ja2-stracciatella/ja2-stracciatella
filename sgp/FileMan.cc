@@ -439,7 +439,12 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
     }
 	}
 
-	if (d < 0) throw std::runtime_error("Opening file failed");
+	if (d < 0)
+  {
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
+    throw std::runtime_error(buf);
+  }
 
 	FILE* const f = fdopen(d, fmode);
 	if (!f)
@@ -747,32 +752,77 @@ const char* GetBinDataPath(void)
 }
 
 #if CASE_SENSITIVE_FS
+
+/** Join two path components. */
+static void joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize)
+{
+  strncpy(outputBuf, first, outputBufSize);
+  if(first[strlen(first) - 1] != '/')
+  {
+    strncat(outputBuf, "/", outputBufSize);
+  }
+  strncat(outputBuf, second, outputBufSize);
+}
+
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
  * @return true when found, copy found name into fileNameBuf. */
 static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, char *nameBuf, int nameBufSize)
 {
-  DIR *d;
-  struct dirent *entry;
-  uint8_t objectTypes = (lookForFiles ? DT_REG : 0) | (lookForSubdirs ? DT_DIR : 0);
   bool result = false;
 
-  d = opendir(directory);
-  if (d)
+  // if name contains directories, than we have to find actual case-sensitive name of the directory
+  // and only then look for a file
+  const char *splitter = strstr(name, "/");
+  int dirNameLen = splitter - name;
+  if(splitter && (dirNameLen > 0) && splitter[1] != 0)
   {
-    while ((entry = readdir(d)) != NULL)
+    // we have directory in the name
+    // let's find its correct name first
+    char newDirectory[128];
+    char actualSubdirName[128];
+    strncpy(newDirectory, name, sizeof(newDirectory));
+    newDirectory[dirNameLen] = 0;
+
+    if(findObjectCaseInsensitive(directory, newDirectory, false, true, actualSubdirName, sizeof(actualSubdirName)))
     {
-      if((entry->d_type & objectTypes)
-         && !strcasecmp(name, entry->d_name))
+      // found subdirectory; let's continue the full search
+      char pathInSubdir[128];
+      joinPaths(directory, actualSubdirName, newDirectory, sizeof(newDirectory));
+      if(findObjectCaseInsensitive(newDirectory, splitter + 1, lookForFiles, lookForSubdirs, pathInSubdir, sizeof(pathInSubdir)))
       {
-        // found
-        strncpy(nameBuf, entry->d_name, nameBufSize);
-        nameBuf[nameBufSize - 1] = 0;
+        // found name in subdir
+        joinPaths(actualSubdirName, pathInSubdir, nameBuf, nameBufSize);
         result = true;
       }
     }
-    closedir(d);
   }
+  else
+  {
+    // name contains only file, no directories
+    DIR *d;
+    struct dirent *entry;
+    uint8_t objectTypes = (lookForFiles ? DT_REG : 0) | (lookForSubdirs ? DT_DIR : 0);
+
+    d = opendir(directory);
+    if (d)
+    {
+      while ((entry = readdir(d)) != NULL)
+      {
+        if((entry->d_type & objectTypes)
+           && !strcasecmp(name, entry->d_name))
+        {
+          // found
+          strncpy(nameBuf, entry->d_name, nameBufSize);
+          nameBuf[nameBufSize - 1] = 0;
+          result = true;
+        }
+      }
+      closedir(d);
+    }
+  }
+
+  // LOG_INFO("XXXXX Looking for %s/[ %s ] : %s\n", directory, name, result ? "success" : "failure");
   return result;
 }
 #endif
