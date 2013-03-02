@@ -19,12 +19,6 @@ extern LanguageRes g_LanguageResRussian;
 extern LanguageRes g_LanguageResRussianGold;
 
 
-extern unsigned char const g_en_TranslationTable[TRANSLATION_TABLE_SIZE];
-extern unsigned char const g_fr_TranslationTable[TRANSLATION_TABLE_SIZE];
-extern unsigned char const g_rus_TranslationTable[TRANSLATION_TABLE_SIZE];
-extern unsigned char const g_rusGold_TranslationTable[TRANSLATION_TABLE_SIZE];
-
-
 /** Game version. */
 static GameVersion s_gameVersion = GV_ENGLISH;
 
@@ -32,7 +26,7 @@ static GameVersion s_gameVersion = GV_ENGLISH;
 const LanguageRes* g_langRes = &g_LanguageResEnglish;
 
 /** Character->Glyph translation table for the current language. */
-unsigned char const *TranslationTable = g_en_TranslationTable;
+unsigned char const *TranslationTable = g_en_TranslationTable->m_table;
 
 
 wchar_t getZeroGlyphChar()
@@ -49,10 +43,10 @@ wchar_t getZeroGlyphChar()
 
 
 /** Set language resources. */
-static void setResources(const LanguageRes* langRes, unsigned char const *translationTable)
+static void setResources(const LanguageRes* langRes, const CTranslationTable *translationTable)
 {
   g_langRes = langRes;
-  TranslationTable = translationTable;
+  TranslationTable = translationTable->m_table;
 }
 
 
