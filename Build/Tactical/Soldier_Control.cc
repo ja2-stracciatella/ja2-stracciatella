@@ -4134,6 +4134,8 @@ say_personality_quote:
 
 BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 {
+	static UINT8 const gDirectionFrom8to2[] = { 0, 0, 1, 1, 0, 1, 1, 0 };
+
 	// Given ani code, adjust for facing direction
 
 	// get anim surface and determine # of frames
@@ -4152,7 +4154,6 @@ BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 		case 32: temp_dir  = ExtOneCDirection(s->ubHiResDirection); break;
 
 		case  2:
-			static UINT8 const gDirectionFrom8to2[] = { 0, 0, 1, 1, 0, 1, 1, 0 };
 			temp_dir = gDirectionFrom8to2[s->bDirection];
 			break;
 

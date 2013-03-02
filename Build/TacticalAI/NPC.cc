@@ -1444,6 +1444,8 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 
 void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT8 const approach_record, OBJECTTYPE* const o)
 {
+	static INT32 giNPCSpecialReferenceCount = 0;
+
 	NPCQuoteInfo					QuoteInfo;
 	NPCQuoteInfo *				pQuotePtr = &(QuoteInfo);
 	UINT8									ubLoop, ubQuoteNum, ubRecordNum;
@@ -1837,8 +1839,6 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				{
 					switch ( pQuotePtr->usGiftItem )
 					{
-						static INT32 giNPCSpecialReferenceCount = 0;
-
 						case TURN_UI_OFF:
 							if ( !(gTacticalStatus.uiFlags & INCOMBAT) )
 							{
