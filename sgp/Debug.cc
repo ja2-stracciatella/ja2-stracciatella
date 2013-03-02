@@ -1,4 +1,4 @@
-#ifdef SGP_DEBUG
+#if defined ( SGP_DEBUG ) || defined ( FORCE_ASSERTS_ON )
 
 #include <SDL.h>
 #include <stdarg.h>

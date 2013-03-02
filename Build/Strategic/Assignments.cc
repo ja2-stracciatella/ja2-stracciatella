@@ -789,14 +789,14 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 			// If he's in the loaded sector, and it's hostile or in combat
 			if (s.bInSector && (gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector))
 			{
-				why = Message[STR_SECTOR_NOT_CLEARED];
+				why = g_langRes->Message[STR_SECTOR_NOT_CLEARED];
 				goto cannot_sleep;
 			}
 
 			// on surface, and enemies are in the sector
 			if (s.bSectorZ == 0 && NumEnemiesInAnySector(s.sSectorX, s.sSectorY, s.bSectorZ) > 0)
 			{
-				why = Message[STR_SECTOR_NOT_CLEARED];
+				why = g_langRes->Message[STR_SECTOR_NOT_CLEARED];
 				goto cannot_sleep;
 			}
 		}
@@ -1839,7 +1839,7 @@ static bool DoRepair(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner
 	{ // report it as fixed
 		if (repairer == owner)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_REPAIRED], repairer->name, ItemNames[item]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_REPAIRED], repairer->name, ItemNames[item]);
 		}
 		else
 		{ // NOTE: may need to be changed for localized versions

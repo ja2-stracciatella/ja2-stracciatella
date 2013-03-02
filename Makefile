@@ -433,10 +433,7 @@ SRCS += sgp/STCI.cc
 SRCS += sgp/Shading.cc
 SRCS += sgp/Smack_Stub.cc
 SRCS += sgp/SoundMan.cc
-SRCS += sgp/TranslationTableEnglish.c
-SRCS += sgp/TranslationTableFrench.c
-SRCS += sgp/TranslationTableRussian.c
-SRCS += sgp/TranslationTableRussianGold.c
+SRCS += sgp/TranslationTable.cc
 SRCS += sgp/VObject.cc
 SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
@@ -500,6 +497,10 @@ deinstall:
 rebuild-tags:
 	-rm TAGS
 	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs etags --append
+
+rebuild-tags-win:
+	-rm TAGS
+	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs /c/Programs/emacs-23.3/bin/etags.exe --append
 
 
 # How to

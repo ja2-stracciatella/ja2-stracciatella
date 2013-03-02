@@ -4134,6 +4134,8 @@ say_personality_quote:
 
 BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 {
+	static UINT8 const gDirectionFrom8to2[] = { 0, 0, 1, 1, 0, 1, 1, 0 };
+
 	// Given ani code, adjust for facing direction
 
 	// get anim surface and determine # of frames
@@ -4152,7 +4154,6 @@ BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 		case 32: temp_dir  = ExtOneCDirection(s->ubHiResDirection); break;
 
 		case  2:
-			static UINT8 const gDirectionFrom8to2[] = { 0, 0, 1, 1, 0, 1, 1, 0 };
 			temp_dir = gDirectionFrom8to2[s->bDirection];
 			break;
 
@@ -6928,12 +6929,12 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 				{
 					// nope!!
 					fRefused = TRUE;
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_REFUSE_FIRSTAID_FOR_CREATURE ] );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[ STR_REFUSE_FIRSTAID_FOR_CREATURE ] );
 				}
 				else if ( !pTSoldier->bNeutral && pTSoldier->bLife >= OKLIFE && pTSoldier->bSide != pSoldier->bSide )
 				{
 					fRefused = TRUE;
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_REFUSE_FIRSTAID ] );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[ STR_REFUSE_FIRSTAID ] );
 				}
 
 			}

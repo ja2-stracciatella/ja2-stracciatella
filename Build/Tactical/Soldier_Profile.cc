@@ -510,10 +510,10 @@ static UINT16 CalcCompetence(MERCPROFILESTRUCT const& p)
 	uiStats = ((2 * p.bLifeMax) + p.bStrength + p.bAgility + p.bDexterity + ((p.bLeadership + p.bWisdom) / 2)) / 3;
 
 	// marksmanship is very important, count it double
-	uiSkills = (UINT32) ((2   * (pow(p.bMarksmanship, 3) / 10000)) +
-												1.5 *	(pow(p.bMedical, 3) / 10000) +
-															(pow(p.bMechanical, 3) / 10000) +
-															(pow(p.bExplosive, 3) / 10000));
+	uiSkills = (UINT32) ((2   * (pow((double)p.bMarksmanship, 3) / 10000)) +
+												1.5 *	(pow((double)p.bMedical, 3) / 10000) +
+															(pow((double)p.bMechanical, 3) / 10000) +
+															(pow((double)p.bExplosive, 3) / 10000));
 
 	// action points
 	uiActionPoints = 5 + (((10 * p.bExpLevel +

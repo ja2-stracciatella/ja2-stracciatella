@@ -2116,7 +2116,7 @@ UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
 	// dist^2 = rows^2 + cols^2, so use the square root to get the distance
 	fValue = ( float )sqrt(( float )(sRows * sRows) + ( float )(sCols * sCols));
 
-	if(  fmod( fValue, 1.0 ) >= 0.50 )
+	if(  fmod( fValue, 1.0f ) >= 0.50 )
 	{
 		ubDistance = (UINT8)( 1 + fValue );
 	}

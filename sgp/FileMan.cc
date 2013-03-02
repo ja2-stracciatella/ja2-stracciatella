@@ -1,12 +1,10 @@
 #include <stdexcept>
 
-#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <unistd.h>
 #include "Config.h"
 #include "Directories.h"
 #include "FileMan.h"
@@ -15,23 +13,14 @@
 #include "PODObj.h"
 #include "Logger.h"
 
-#ifdef _WIN32
-#	include <shlobj.h>
-
-#	define mkdir(path, mode) _mkdir(path)
-#else
-#	include <pwd.h>
-
-#	if defined __APPLE__ && defined __MACH__
-#		include <CoreFoundation/CoreFoundation.h>
-#		include <sys/param.h>
-#	endif
+#if _WIN32
+#include <shlobj.h>
 #endif
 
-#ifdef _WIN32
-#define CASE_SENSITIVE_FS   0
-#else
-#define CASE_SENSITIVE_FS   1
+#include "PlatformIO.h"
+
+#if CASE_SENSITIVE_FS
+#include <dirent.h>
 #endif
 
 #define BASEDATADIR    "data"
@@ -400,12 +389,12 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 	int d;
 	if (flags & FILE_CREATE_ALWAYS)
 	{
-		d = open(filename, mode | O_CREAT | O_TRUNC, 0600);
+		d = open3(filename, mode | O_CREAT | O_TRUNC, 0600);
 	}
 	else if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
 	{
 		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
-		d = open(filename, mode, 0600);
+		d = open3(filename, mode, 0600);
 	}
 	else
 	{
@@ -427,7 +416,7 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 
 				if (flags & FILE_OPEN_ALWAYS)
 				{
-					d = open(filename, mode | O_CREAT, 0600);
+					d = open3(filename, mode | O_CREAT, 0600);
 				}
 			}
       else
@@ -656,7 +645,8 @@ BOOLEAN FileClearAttributes(const char* const filename)
 BOOLEAN GetFileManFileTime(const HWFILE f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED
+	UNIMPLEMENTED;
+  return FALSE;
 #else
 	//Initialize the passed in variables
 	memset(pCreationTime,     0, sizeof(*pCreationTime));
@@ -694,7 +684,8 @@ BOOLEAN GetFileManFileTime(const HWFILE f, SGP_FILETIME* const pCreationTime, SG
 INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FILETIME* const pSecondFileTime)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED
+	UNIMPLEMENTED;
+  return 0;
 #else
 	return CompareFileTime(pFirstFileTime, pSecondFileTime);
 #endif

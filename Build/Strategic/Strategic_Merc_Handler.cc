@@ -744,7 +744,7 @@ void HourlyCamouflageUpdate()
 				s.bCamo = 0;
 				if (s.bInSector) CreateSoldierPalettes(s);
 
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WORN_OFF], s.name);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_CAMO_WORN_OFF], s.name);
 				DirtyMercPanelInterface(&s, DIRTYLEVEL2);
 			}
 			else

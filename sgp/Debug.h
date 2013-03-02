@@ -5,7 +5,7 @@
 #include "TopicIDs.h"
 
 
-#if defined ( _DEBUG ) || defined ( FORCE_ASSERTS_ON )
+#if defined ( SGP_DEBUG ) || defined ( FORCE_ASSERTS_ON )
 
 // If DEBUG_ is defined, we need to initialize all the debug macros. Otherwise all the
 // debug macros will be substituted by blank lines at compile time

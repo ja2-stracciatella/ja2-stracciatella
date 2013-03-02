@@ -1,0 +1,793 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{350548DD-B52B-409F-9232-1D81B6F7E52C}</ProjectGuid>
+    <RootNamespace>ja2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\exe\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\exe\</OutDir>
+    <IntDir>$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JA2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JA2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Build\AniViewScreen.cc" />
+    <ClCompile Include="..\..\Build\Cheats.cc" />
+    <ClCompile Include="..\..\Build\Credits.cc" />
+    <ClCompile Include="..\..\Build\Editor\Cursor_Modes.cc" />
+    <ClCompile Include="..\..\Build\Editor\EditorBuildings.cc" />
+    <ClCompile Include="..\..\Build\Editor\EditorItems.cc" />
+    <ClCompile Include="..\..\Build\Editor\EditorMapInfo.cc" />
+    <ClCompile Include="..\..\Build\Editor\EditorMercs.cc" />
+    <ClCompile Include="..\..\Build\Editor\EditorTerrain.cc" />
+    <ClCompile Include="..\..\Build\Editor\Editor_Callbacks.cc" />
+    <ClCompile Include="..\..\Build\Editor\Editor_Modes.cc" />
+    <ClCompile Include="..\..\Build\Editor\Editor_Taskbar_Creation.cc" />
+    <ClCompile Include="..\..\Build\Editor\Editor_Taskbar_Utils.cc" />
+    <ClCompile Include="..\..\Build\Editor\Editor_Undo.cc" />
+    <ClCompile Include="..\..\Build\Editor\EditScreen.cc" />
+    <ClCompile Include="..\..\Build\Editor\Edit_Sys.cc" />
+    <ClCompile Include="..\..\Build\Editor\Item_Statistics.cc" />
+    <ClCompile Include="..\..\Build\Editor\LoadScreen.cc" />
+    <ClCompile Include="..\..\Build\Editor\MessageBox.cc" />
+    <ClCompile Include="..\..\Build\Editor\NewSmooth.cc" />
+    <ClCompile Include="..\..\Build\Editor\PopupMenu.cc" />
+    <ClCompile Include="..\..\Build\Editor\Road_Smoothing.cc" />
+    <ClCompile Include="..\..\Build\Editor\Sector_Summary.cc" />
+    <ClCompile Include="..\..\Build\Editor\SelectWin.cc" />
+    <ClCompile Include="..\..\Build\Editor\SmartMethod.cc" />
+    <ClCompile Include="..\..\Build\Editor\Smooth.cc" />
+    <ClCompile Include="..\..\Build\Editor\Smoothing_Utils.cc" />
+    <ClCompile Include="..\..\Build\Fade_Screen.cc" />
+    <ClCompile Include="..\..\Build\GameInitOptionsScreen.cc" />
+    <ClCompile Include="..\..\Build\GameLoop.cc" />
+    <ClCompile Include="..\..\Build\GameRes.cc" />
+    <ClCompile Include="..\..\Build\GameScreen.cc" />
+    <ClCompile Include="..\..\Build\GameSettings.cc" />
+    <ClCompile Include="..\..\Build\GameVersion.cc" />
+    <ClCompile Include="..\..\Build\HelpScreen.cc" />
+    <ClCompile Include="..\..\Build\Init.cc" />
+    <ClCompile Include="..\..\Build\Intro.cc" />
+    <ClCompile Include="..\..\Build\JA2_Splash.cc" />
+    <ClCompile Include="..\..\Build\JAScreens.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIM.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIMArchives.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIMFacialIndex.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIMHistory.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIMLinks.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIMMembers.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIMPolicies.cc" />
+    <ClCompile Include="..\..\Build\Laptop\AIMSort.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyR.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyRAmmo.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyRArmour.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyRGuns.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyRMailOrder.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyRMisc.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyRShipments.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BobbyRUsed.cc" />
+    <ClCompile Include="..\..\Build\Laptop\BrokenLink.cc" />
+    <ClCompile Include="..\..\Build\Laptop\CharProfile.cc" />
+    <ClCompile Include="..\..\Build\Laptop\EMail.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Files.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Finances.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Florist.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Florist_Cards.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Florist_Gallery.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Florist_Order_Form.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Funeral.cc" />
+    <ClCompile Include="..\..\Build\Laptop\History.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMPVideoObjects.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_AboutUs.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Attribute_Entrance.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Attribute_Finish.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Attribute_Selection.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Begin_Screen.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Compile_Character.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Confirm.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Finish.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_HomePage.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_MainPage.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Personality_Entrance.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Personality_Finish.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Personality_Quiz.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Portraits.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Text_System.cc" />
+    <ClCompile Include="..\..\Build\Laptop\IMP_Voices.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Insurance.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Insurance_Comments.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Insurance_Contract.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Insurance_Info.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Laptop.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Mercs.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Mercs_Account.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Mercs_Files.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Mercs_No_Account.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Personnel.cc" />
+    <ClCompile Include="..\..\Build\Laptop\Store_Inventory.cc" />
+    <ClCompile Include="..\..\Build\Loading_Screen.cc" />
+    <ClCompile Include="..\..\Build\LoadSaveEMail.cc" />
+    <ClCompile Include="..\..\Build\LoadSaveTacticalStatusType.cc" />
+    <ClCompile Include="..\..\Build\MainMenuScreen.cc" />
+    <ClCompile Include="..\..\Build\MercPortrait.cc" />
+    <ClCompile Include="..\..\Build\MessageBoxScreen.cc" />
+    <ClCompile Include="..\..\Build\Options_Screen.cc" />
+    <ClCompile Include="..\..\Build\SaveLoadGame.cc" />
+    <ClCompile Include="..\..\Build\SaveLoadScreen.cc" />
+    <ClCompile Include="..\..\Build\Screens.cc" />
+    <ClCompile Include="..\..\Build\Strategic\AI_Viewer.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Assignments.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Auto_Resolve.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Campaign_Init.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Creature_Spreading.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Game_Clock.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Game_Events.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Game_Event_Hook.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Game_Init.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Hourly_Update.cc" />
+    <ClCompile Include="..\..\Build\Strategic\LoadSaveSectorInfo.cc" />
+    <ClCompile Include="..\..\Build\Strategic\LoadSaveStrategicMapElement.cc" />
+    <ClCompile Include="..\..\Build\Strategic\LoadSaveUndergroundSectorInfo.cc" />
+    <ClCompile Include="..\..\Build\Strategic\MapScreen.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Helicopter.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Border.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Bottom.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Map.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Map_Inventory.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_TownMine_Info.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Meanwhile.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Merc_Contract.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Player_Command.cc" />
+    <ClCompile Include="..\..\Build\Strategic\PreBattle_Interface.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Queen_Command.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Quests.cc" />
+    <ClCompile Include="..\..\Build\Strategic\QuestText.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Quest_Debug_System.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Scheduling.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic.cc" />
+    <ClCompile Include="..\..\Build\Strategic\StrategicMap.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_AI.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Event_Handler.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Merc_Handler.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Mines.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Movement.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Movement_Costs.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Pathing.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Status.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Town_Loyalty.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Turns.cc" />
+    <ClCompile Include="..\..\Build\Strategic\Town_Militia.cc" />
+    <ClCompile Include="..\..\Build\Sys_Globals.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\AIList.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\AIMain.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\AIUtils.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\Attacks.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\CreatureDecideAction.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\DecideAction.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\FindLocations.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\Knowledge.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\Medical.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\Movement.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\NPC.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\PanicButtons.cc" />
+    <ClCompile Include="..\..\Build\TacticalAI\Realtime.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Air_Raid.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Animation_Cache.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Animation_Control.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Animation_Data.cc" />
+    <ClCompile Include="..\..\Build\Tactical\ArmsDealerInvInit.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Arms_Dealer_Init.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Auto_Bandage.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Boxing.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Bullets.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Campaign.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Civ_Quotes.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Dialogue_Control.cc" />
+    <ClCompile Include="..\..\Build\Tactical\DisplayCover.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Drugs_And_Alcohol.cc" />
+    <ClCompile Include="..\..\Build\Tactical\End_Game.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Enemy_Soldier_Save.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Faces.cc" />
+    <ClCompile Include="..\..\Build\Tactical\FOV.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Gap.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Handle_Doors.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Handle_Items.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Handle_UI.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Interface.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Interface_Control.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Interface_Cursors.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Interface_Dialogue.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Interface_Items.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Interface_Panels.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Interface_Utils.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Inventory_Choosing.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Items.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Keys.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveBasicSoldierCreateStruct.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveBullet.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveMercProfile.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveObjectType.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveRottingCorpse.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveSoldierCreate.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveSoldierType.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveVehicleType.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LOS.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Map_Information.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Merc_Entering.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Merc_Hiring.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Militia_Control.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Morale.cc" />
+    <ClCompile Include="..\..\Build\Tactical\OppList.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Overhead.cc" />
+    <ClCompile Include="..\..\Build\Tactical\PathAI.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Points.cc" />
+    <ClCompile Include="..\..\Build\Tactical\QArray.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Real_Time_Input.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Rotting_Corpses.cc" />
+    <ClCompile Include="..\..\Build\Tactical\ShopKeeper_Interface.cc" />
+    <ClCompile Include="..\..\Build\Tactical\SkillCheck.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Add.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Ani.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Control.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Create.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Find.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Init_List.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Profile.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Tile.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Spread_Burst.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Squads.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Strategic_Exit_GUI.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Structure_Wrap.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Tactical_Save.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Tactical_Turns.cc" />
+    <ClCompile Include="..\..\Build\Tactical\TeamTurns.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Turn_Based_Input.cc" />
+    <ClCompile Include="..\..\Build\Tactical\UI_Cursors.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Vehicles.cc" />
+    <ClCompile Include="..\..\Build\Tactical\Weapons.cc" />
+    <ClCompile Include="..\..\Build\Tactical\World_Items.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Ambient_Control.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Buildings.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Environment.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Exit_Grids.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Explosion_Control.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Fog_Of_War.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Interactive_Tiles.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Isometric_Utils.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\LightEffects.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Lighting.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveExplosionType.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveLightEffect.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveLightSprite.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveRealObject.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveSmokeEffect.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Map_Edgepoints.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Overhead_Map.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Physics.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Phys_Math.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Pits.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Radar_Screen.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\RenderWorld.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Render_Dirty.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Render_Fun.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\SaveLoadMap.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Simple_Render_Utils.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Smell.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\SmokeEffects.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Structure.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\SysUtil.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Tactical_Placement_GUI.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\TileDat.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\TileDef.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Tile_Animation.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Tile_Cache.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\Tile_Surface.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\WorldDat.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\WorldDef.cc" />
+    <ClCompile Include="..\..\Build\TileEngine\WorldMan.cc" />
+    <ClCompile Include="..\..\Build\Utils\Animated_ProgressBar.cc" />
+    <ClCompile Include="..\..\Build\Utils\Cinematics.cc" />
+    <ClCompile Include="..\..\Build\Utils\Cursors.cc" />
+    <ClCompile Include="..\..\Build\Utils\Debug_Control.cc" />
+    <ClCompile Include="..\..\Build\Utils\Encrypted_File.cc" />
+    <ClCompile Include="..\..\Build\Utils\Event_Manager.cc" />
+    <ClCompile Include="..\..\Build\Utils\Event_Pump.cc" />
+    <ClCompile Include="..\..\Build\Utils\Font_Control.cc" />
+    <ClCompile Include="..\..\Build\Utils\MapUtility.cc" />
+    <ClCompile Include="..\..\Build\Utils\MercTextBox.cc" />
+    <ClCompile Include="..\..\Build\Utils\Message.cc" />
+    <ClCompile Include="..\..\Build\Utils\Music_Control.cc" />
+    <ClCompile Include="..\..\Build\Utils\PopUpBox.cc" />
+    <ClCompile Include="..\..\Build\Utils\Quantize.cc" />
+    <ClCompile Include="..\..\Build\Utils\Slider.cc" />
+    <ClCompile Include="..\..\Build\Utils\Sound_Control.cc" />
+    <ClCompile Include="..\..\Build\Utils\STIConvert.cc" />
+    <ClCompile Include="..\..\Build\Utils\Text.cc" />
+    <ClCompile Include="..\..\Build\Utils\Text_Input.cc" />
+    <ClCompile Include="..\..\Build\Utils\Text_Utils.cc" />
+    <ClCompile Include="..\..\Build\Utils\Timer_Control.cc" />
+    <ClCompile Include="..\..\Build\Utils\Utilities.cc" />
+    <ClCompile Include="..\..\Build\Utils\WordWrap.cc" />
+    <ClCompile Include="..\..\Build\Utils\_DutchText.cc" />
+    <ClCompile Include="..\..\Build\Utils\_EnglishText.cc" />
+    <ClCompile Include="..\..\Build\Utils\_FrenchText.cc" />
+    <ClCompile Include="..\..\Build\Utils\_GermanText.cc" />
+    <ClCompile Include="..\..\Build\Utils\_ItalianText.cc" />
+    <ClCompile Include="..\..\Build\Utils\_PolishText.cc" />
+    <ClCompile Include="..\..\Build\Utils\_RussianText.cc" />
+    <ClCompile Include="..\..\sgp\Button_Sound_Control.cc" />
+    <ClCompile Include="..\..\sgp\Button_System.cc" />
+    <ClCompile Include="..\..\sgp\Config.cc" />
+    <ClCompile Include="..\..\sgp\Container.cc" />
+    <ClCompile Include="..\..\sgp\Cursor_Control.cc" />
+    <ClCompile Include="..\..\sgp\Debug.cc" />
+    <ClCompile Include="..\..\sgp\FileMan.cc" />
+    <ClCompile Include="..\..\sgp\Font.cc" />
+    <ClCompile Include="..\..\sgp\HImage.cc" />
+    <ClCompile Include="..\..\sgp\ImpTGA.cc" />
+    <ClCompile Include="..\..\sgp\Input.cc" />
+    <ClCompile Include="..\..\sgp\LibraryDataBase.cc" />
+    <ClCompile Include="..\..\sgp\Line.cc" />
+    <ClCompile Include="..\..\sgp\MemMan.cc" />
+    <ClCompile Include="..\..\sgp\MouseSystem.cc" />
+    <ClCompile Include="..\..\sgp\PCX.cc" />
+    <ClCompile Include="..\..\sgp\Random.cc" />
+    <ClCompile Include="..\..\sgp\SGP.cc" />
+    <ClCompile Include="..\..\sgp\SGPStrings.cc" />
+    <ClCompile Include="..\..\sgp\Shading.cc" />
+    <ClCompile Include="..\..\sgp\Smack_Stub.cc" />
+    <ClCompile Include="..\..\sgp\SoundMan.cc" />
+    <ClCompile Include="..\..\sgp\STCI.cc" />
+    <ClCompile Include="..\..\sgp\TranslationTable.cc" />
+    <ClCompile Include="..\..\sgp\Video.cc" />
+    <ClCompile Include="..\..\sgp\VObject.cc" />
+    <ClCompile Include="..\..\sgp\VObject_Blitters.cc" />
+    <ClCompile Include="..\..\sgp\VSurface.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Build\AniViewScreen.h" />
+    <ClInclude Include="..\..\Build\Cheats.h" />
+    <ClInclude Include="..\..\Build\Credits.h" />
+    <ClInclude Include="..\..\Build\Directories.h" />
+    <ClInclude Include="..\..\Build\Editor\Button_Defines.h" />
+    <ClInclude Include="..\..\Build\Editor\Cursor_Modes.h" />
+    <ClInclude Include="..\..\Build\Editor\EditorBuildings.h" />
+    <ClInclude Include="..\..\Build\Editor\EditorDefines.h" />
+    <ClInclude Include="..\..\Build\Editor\EditorItems.h" />
+    <ClInclude Include="..\..\Build\Editor\EditorMapInfo.h" />
+    <ClInclude Include="..\..\Build\Editor\EditorMercs.h" />
+    <ClInclude Include="..\..\Build\Editor\EditorTerrain.h" />
+    <ClInclude Include="..\..\Build\Editor\Editor_Callback_Prototypes.h" />
+    <ClInclude Include="..\..\Build\Editor\Editor_Modes.h" />
+    <ClInclude Include="..\..\Build\Editor\Editor_Taskbar_Creation.h" />
+    <ClInclude Include="..\..\Build\Editor\Editor_Taskbar_Utils.h" />
+    <ClInclude Include="..\..\Build\Editor\Editor_Undo.h" />
+    <ClInclude Include="..\..\Build\Editor\EditScreen.h" />
+    <ClInclude Include="..\..\Build\Editor\Edit_Sys.h" />
+    <ClInclude Include="..\..\Build\Editor\Item_Statistics.h" />
+    <ClInclude Include="..\..\Build\Editor\LoadScreen.h" />
+    <ClInclude Include="..\..\Build\Editor\MessageBox.h" />
+    <ClInclude Include="..\..\Build\Editor\NewSmooth.h" />
+    <ClInclude Include="..\..\Build\Editor\PopupMenu.h" />
+    <ClInclude Include="..\..\Build\Editor\Road_Smoothing.h" />
+    <ClInclude Include="..\..\Build\Editor\Sector_Summary.h" />
+    <ClInclude Include="..\..\Build\Editor\SelectWin.h" />
+    <ClInclude Include="..\..\Build\Editor\SmartMethod.h" />
+    <ClInclude Include="..\..\Build\Editor\Smooth.h" />
+    <ClInclude Include="..\..\Build\Editor\Smoothing_Utils.h" />
+    <ClInclude Include="..\..\Build\Editor\Summary_Info.h" />
+    <ClInclude Include="..\..\Build\Fade_Screen.h" />
+    <ClInclude Include="..\..\Build\GameInitOptionsScreen.h" />
+    <ClInclude Include="..\..\Build\GameLoop.h" />
+    <ClInclude Include="..\..\Build\GameRes.h" />
+    <ClInclude Include="..\..\Build\GameScreen.h" />
+    <ClInclude Include="..\..\Build\GameSettings.h" />
+    <ClInclude Include="..\..\Build\GameVersion.h" />
+    <ClInclude Include="..\..\Build\HelpScreen.h" />
+    <ClInclude Include="..\..\Build\HelpScreenText.h" />
+    <ClInclude Include="..\..\Build\Init.h" />
+    <ClInclude Include="..\..\Build\Intro.h" />
+    <ClInclude Include="..\..\Build\JA2Types.h" />
+    <ClInclude Include="..\..\Build\JA2_Splash.h" />
+    <ClInclude Include="..\..\Build\JAScreens.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIM.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIMArchives.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIMFacialIndex.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIMHistory.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIMLinks.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIMMembers.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIMPolicies.h" />
+    <ClInclude Include="..\..\Build\Laptop\AIMSort.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyR.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyRAmmo.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyRArmour.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyRGuns.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyRMailOrder.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyRMisc.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyRShipments.h" />
+    <ClInclude Include="..\..\Build\Laptop\BobbyRUsed.h" />
+    <ClInclude Include="..\..\Build\Laptop\BrokenLink.h" />
+    <ClInclude Include="..\..\Build\Laptop\CharProfile.h" />
+    <ClInclude Include="..\..\Build\Laptop\EMail.h" />
+    <ClInclude Include="..\..\Build\Laptop\Files.h" />
+    <ClInclude Include="..\..\Build\Laptop\Finances.h" />
+    <ClInclude Include="..\..\Build\Laptop\Florist.h" />
+    <ClInclude Include="..\..\Build\Laptop\Florist_Cards.h" />
+    <ClInclude Include="..\..\Build\Laptop\Florist_Gallery.h" />
+    <ClInclude Include="..\..\Build\Laptop\Florist_Order_Form.h" />
+    <ClInclude Include="..\..\Build\Laptop\Funeral.h" />
+    <ClInclude Include="..\..\Build\Laptop\History.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMPVideoObjects.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_AboutUs.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Attribute_Entrance.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Attribute_Finish.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Attribute_Selection.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Begin_Screen.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Compile_Character.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Confirm.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Finish.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_HomePage.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_MainPage.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Personality_Entrance.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Personality_Finish.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Personality_Quiz.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Portraits.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Text_System.h" />
+    <ClInclude Include="..\..\Build\Laptop\IMP_Voices.h" />
+    <ClInclude Include="..\..\Build\Laptop\Insurance.h" />
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Comments.h" />
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Contract.h" />
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Info.h" />
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Text.h" />
+    <ClInclude Include="..\..\Build\Laptop\Laptop.h" />
+    <ClInclude Include="..\..\Build\Laptop\LaptopSave.h" />
+    <ClInclude Include="..\..\Build\Laptop\Mercs.h" />
+    <ClInclude Include="..\..\Build\Laptop\Mercs_Account.h" />
+    <ClInclude Include="..\..\Build\Laptop\Mercs_Files.h" />
+    <ClInclude Include="..\..\Build\Laptop\Mercs_No_Account.h" />
+    <ClInclude Include="..\..\Build\Laptop\Personnel.h" />
+    <ClInclude Include="..\..\Build\Laptop\Speck_Quotes.h" />
+    <ClInclude Include="..\..\Build\Laptop\Store_Inventory.h" />
+    <ClInclude Include="..\..\Build\Loading_Screen.h" />
+    <ClInclude Include="..\..\Build\LoadSaveEMail.h" />
+    <ClInclude Include="..\..\Build\LoadSaveTacticalStatusType.h" />
+    <ClInclude Include="..\..\Build\Local.h" />
+    <ClInclude Include="..\..\Build\MainMenuScreen.h" />
+    <ClInclude Include="..\..\Build\MercPortrait.h" />
+    <ClInclude Include="..\..\Build\MessageBoxScreen.h" />
+    <ClInclude Include="..\..\Build\Options_Screen.h" />
+    <ClInclude Include="..\..\Build\Res\afxres.h" />
+    <ClInclude Include="..\..\Build\Res\Resource.h" />
+    <ClInclude Include="..\..\Build\SaveLoadGame.h" />
+    <ClInclude Include="..\..\Build\SaveLoadScreen.h" />
+    <ClInclude Include="..\..\Build\ScreenIDs.h" />
+    <ClInclude Include="..\..\Build\Screens.h" />
+    <ClInclude Include="..\..\Build\Strategic\AI_Viewer.h" />
+    <ClInclude Include="..\..\Build\Strategic\Assignments.h" />
+    <ClInclude Include="..\..\Build\Strategic\Auto_Resolve.h" />
+    <ClInclude Include="..\..\Build\Strategic\Campaign_Init.h" />
+    <ClInclude Include="..\..\Build\Strategic\Campaign_Types.h" />
+    <ClInclude Include="..\..\Build\Strategic\Creature_Spreading.h" />
+    <ClInclude Include="..\..\Build\Strategic\Facts.h" />
+    <ClInclude Include="..\..\Build\Strategic\Game_Clock.h" />
+    <ClInclude Include="..\..\Build\Strategic\Game_Events.h" />
+    <ClInclude Include="..\..\Build\Strategic\Game_Event_Hook.h" />
+    <ClInclude Include="..\..\Build\Strategic\Game_Init.h" />
+    <ClInclude Include="..\..\Build\Strategic\Hourly_Update.h" />
+    <ClInclude Include="..\..\Build\Strategic\LoadSaveSectorInfo.h" />
+    <ClInclude Include="..\..\Build\Strategic\LoadSaveStrategicMapElement.h" />
+    <ClInclude Include="..\..\Build\Strategic\LoadSaveUndergroundSectorInfo.h" />
+    <ClInclude Include="..\..\Build\Strategic\MapScreen.h" />
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Helicopter.h" />
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface.h" />
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Border.h" />
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Bottom.h" />
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Map.h" />
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Map_Inventory.h" />
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_TownMine_Info.h" />
+    <ClInclude Include="..\..\Build\Strategic\Meanwhile.h" />
+    <ClInclude Include="..\..\Build\Strategic\Merc_Contract.h" />
+    <ClInclude Include="..\..\Build\Strategic\Player_Command.h" />
+    <ClInclude Include="..\..\Build\Strategic\PreBattle_Interface.h" />
+    <ClInclude Include="..\..\Build\Strategic\Queen_Command.h" />
+    <ClInclude Include="..\..\Build\Strategic\Quests.h" />
+    <ClInclude Include="..\..\Build\Strategic\QuestText.h" />
+    <ClInclude Include="..\..\Build\Strategic\Quest_Debug_System.h" />
+    <ClInclude Include="..\..\Build\Strategic\Scheduling.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic.h" />
+    <ClInclude Include="..\..\Build\Strategic\StrategicMap.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_AI.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Event_Handler.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Merc_Handler.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Mines.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Movement.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Movement_Costs.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Pathing.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Status.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Town_Loyalty.h" />
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Turns.h" />
+    <ClInclude Include="..\..\Build\Strategic\Town_Militia.h" />
+    <ClInclude Include="..\..\Build\Sys_Globals.h" />
+    <ClInclude Include="..\..\Build\TacticalAI\AI.h" />
+    <ClInclude Include="..\..\Build\TacticalAI\AIInternals.h" />
+    <ClInclude Include="..\..\Build\TacticalAI\AIList.h" />
+    <ClInclude Include="..\..\Build\TacticalAI\FindLocations.h" />
+    <ClInclude Include="..\..\Build\TacticalAI\Medical.h" />
+    <ClInclude Include="..\..\Build\TacticalAI\NPC.h" />
+    <ClInclude Include="..\..\Build\Tactical\Action_Items.h" />
+    <ClInclude Include="..\..\Build\Tactical\Air_Raid.h" />
+    <ClInclude Include="..\..\Build\Tactical\Animation_Cache.h" />
+    <ClInclude Include="..\..\Build\Tactical\Animation_Control.h" />
+    <ClInclude Include="..\..\Build\Tactical\Animation_Data.h" />
+    <ClInclude Include="..\..\Build\Tactical\ArmsDealerInvInit.h" />
+    <ClInclude Include="..\..\Build\Tactical\Arms_Dealer.h" />
+    <ClInclude Include="..\..\Build\Tactical\Arms_Dealer_Init.h" />
+    <ClInclude Include="..\..\Build\Tactical\Auto_Bandage.h" />
+    <ClInclude Include="..\..\Build\Tactical\Boxing.h" />
+    <ClInclude Include="..\..\Build\Tactical\Bullets.h" />
+    <ClInclude Include="..\..\Build\Tactical\Campaign.h" />
+    <ClInclude Include="..\..\Build\Tactical\Civ_Quotes.h" />
+    <ClInclude Include="..\..\Build\Tactical\Dialogue_Control.h" />
+    <ClInclude Include="..\..\Build\Tactical\DisplayCover.h" />
+    <ClInclude Include="..\..\Build\Tactical\Drugs_And_Alcohol.h" />
+    <ClInclude Include="..\..\Build\Tactical\End_Game.h" />
+    <ClInclude Include="..\..\Build\Tactical\Enemy_Soldier_Save.h" />
+    <ClInclude Include="..\..\Build\Tactical\Faces.h" />
+    <ClInclude Include="..\..\Build\Tactical\FOV.h" />
+    <ClInclude Include="..\..\Build\Tactical\Gap.h" />
+    <ClInclude Include="..\..\Build\Tactical\Handle_Doors.h" />
+    <ClInclude Include="..\..\Build\Tactical\Handle_Items.h" />
+    <ClInclude Include="..\..\Build\Tactical\Handle_UI.h" />
+    <ClInclude Include="..\..\Build\Tactical\Interface.h" />
+    <ClInclude Include="..\..\Build\Tactical\Interface_Control.h" />
+    <ClInclude Include="..\..\Build\Tactical\Interface_Cursors.h" />
+    <ClInclude Include="..\..\Build\Tactical\Interface_Dialogue.h" />
+    <ClInclude Include="..\..\Build\Tactical\Interface_Items.h" />
+    <ClInclude Include="..\..\Build\Tactical\Interface_Panels.h" />
+    <ClInclude Include="..\..\Build\Tactical\Interface_Utils.h" />
+    <ClInclude Include="..\..\Build\Tactical\Inventory_Choosing.h" />
+    <ClInclude Include="..\..\Build\Tactical\Items.h" />
+    <ClInclude Include="..\..\Build\Tactical\Item_Types.h" />
+    <ClInclude Include="..\..\Build\Tactical\Keys.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveBasicSoldierCreateStruct.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveBullet.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveMercProfile.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveObjectType.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveRottingCorpse.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveSoldierCreate.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveSoldierType.h" />
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveVehicleType.h" />
+    <ClInclude Include="..\..\Build\Tactical\LOS.h" />
+    <ClInclude Include="..\..\Build\Tactical\Map_Information.h" />
+    <ClInclude Include="..\..\Build\Tactical\Merc_Entering.h" />
+    <ClInclude Include="..\..\Build\Tactical\Merc_Hiring.h" />
+    <ClInclude Include="..\..\Build\Tactical\Militia_Control.h" />
+    <ClInclude Include="..\..\Build\Tactical\Morale.h" />
+    <ClInclude Include="..\..\Build\Tactical\OppList.h" />
+    <ClInclude Include="..\..\Build\Tactical\Overhead.h" />
+    <ClInclude Include="..\..\Build\Tactical\Overhead_Types.h" />
+    <ClInclude Include="..\..\Build\Tactical\PathAI.h" />
+    <ClInclude Include="..\..\Build\Tactical\PathAIDebug.h" />
+    <ClInclude Include="..\..\Build\Tactical\Points.h" />
+    <ClInclude Include="..\..\Build\Tactical\QArray.h" />
+    <ClInclude Include="..\..\Build\Tactical\Real_Time_Input.h" />
+    <ClInclude Include="..\..\Build\Tactical\Rotting_Corpses.h" />
+    <ClInclude Include="..\..\Build\Tactical\RT_Time_Defines.h" />
+    <ClInclude Include="..\..\Build\Tactical\ShopKeeper_Interface.h" />
+    <ClInclude Include="..\..\Build\Tactical\ShopKeeper_Quotes.h" />
+    <ClInclude Include="..\..\Build\Tactical\SkillCheck.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Add.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Ani.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Control.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Create.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Find.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Functions.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Init_List.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Macros.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Profile.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Profile_Type.h" />
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Tile.h" />
+    <ClInclude Include="..\..\Build\Tactical\Spread_Burst.h" />
+    <ClInclude Include="..\..\Build\Tactical\Squads.h" />
+    <ClInclude Include="..\..\Build\Tactical\Strategic_Exit_GUI.h" />
+    <ClInclude Include="..\..\Build\Tactical\Structure_Wrap.h" />
+    <ClInclude Include="..\..\Build\Tactical\Tactical_Save.h" />
+    <ClInclude Include="..\..\Build\Tactical\Tactical_Turns.h" />
+    <ClInclude Include="..\..\Build\Tactical\TeamTurns.h" />
+    <ClInclude Include="..\..\Build\Tactical\Turn_Based_Input.h" />
+    <ClInclude Include="..\..\Build\Tactical\UI_Cursors.h" />
+    <ClInclude Include="..\..\Build\Tactical\Vehicles.h" />
+    <ClInclude Include="..\..\Build\Tactical\Weapons.h" />
+    <ClInclude Include="..\..\Build\Tactical\World_Items.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Ambient_Control.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Ambient_Types.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Buildings.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Environment.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Exit_Grids.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Explosion_Control.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Fog_Of_War.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Interactive_Tiles.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Isometric_Utils.h" />
+    <ClInclude Include="..\..\Build\TileEngine\LightEffects.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Lighting.h" />
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveExplosionType.h" />
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveLightEffect.h" />
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveLightSprite.h" />
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveRealObject.h" />
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveSmokeEffect.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Map_Edgepoints.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Overhead_Map.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Physics.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Phys_Math.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Pits.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Radar_Screen.h" />
+    <ClInclude Include="..\..\Build\TileEngine\RenderWorld.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Render_Dirty.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Render_Fun.h" />
+    <ClInclude Include="..\..\Build\TileEngine\SaveLoadMap.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Simple_Render_Utils.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Smell.h" />
+    <ClInclude Include="..\..\Build\TileEngine\SmokeEffects.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Structure.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Structure_Internals.h" />
+    <ClInclude Include="..\..\Build\TileEngine\SysUtil.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Tactical_Placement_GUI.h" />
+    <ClInclude Include="..\..\Build\TileEngine\TileDat.h" />
+    <ClInclude Include="..\..\Build\TileEngine\TileDef.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Tile_Animation.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Tile_Cache.h" />
+    <ClInclude Include="..\..\Build\TileEngine\Tile_Surface.h" />
+    <ClInclude Include="..\..\Build\TileEngine\WorldDat.h" />
+    <ClInclude Include="..\..\Build\TileEngine\WorldDef.h" />
+    <ClInclude Include="..\..\Build\TileEngine\WorldMan.h" />
+    <ClInclude Include="..\..\Build\TileEngine\World_Tileset_Enums.h" />
+    <ClInclude Include="..\..\Build\Utils\Animated_ProgressBar.h" />
+    <ClInclude Include="..\..\Build\Utils\Cinematics.h" />
+    <ClInclude Include="..\..\Build\Utils\Cursors.h" />
+    <ClInclude Include="..\..\Build\Utils\Debug_Control.h" />
+    <ClInclude Include="..\..\Build\Utils\Encrypted_File.h" />
+    <ClInclude Include="..\..\Build\Utils\Event_Manager.h" />
+    <ClInclude Include="..\..\Build\Utils\Event_Pump.h" />
+    <ClInclude Include="..\..\Build\Utils\Font_Control.h" />
+    <ClInclude Include="..\..\Build\Utils\MapUtility.h" />
+    <ClInclude Include="..\..\Build\Utils\MercTextBox.h" />
+    <ClInclude Include="..\..\Build\Utils\Message.h" />
+    <ClInclude Include="..\..\Build\Utils\Multi_Language_Graphic_Utils.h" />
+    <ClInclude Include="..\..\Build\Utils\Music_Control.h" />
+    <ClInclude Include="..\..\Build\Utils\PopUpBox.h" />
+    <ClInclude Include="..\..\Build\Utils\Quantize.h" />
+    <ClInclude Include="..\..\Build\Utils\Slider.h" />
+    <ClInclude Include="..\..\Build\Utils\Sound_Control.h" />
+    <ClInclude Include="..\..\Build\Utils\STIConvert.h" />
+    <ClInclude Include="..\..\Build\Utils\Text.h" />
+    <ClInclude Include="..\..\Build\Utils\Text_Input.h" />
+    <ClInclude Include="..\..\Build\Utils\Text_Utils.h" />
+    <ClInclude Include="..\..\Build\Utils\Timer_Control.h" />
+    <ClInclude Include="..\..\Build\Utils\Utilities.h" />
+    <ClInclude Include="..\..\Build\Utils\WordWrap.h" />
+    <ClInclude Include="..\..\sgp\AutoObj.h" />
+    <ClInclude Include="..\..\sgp\AutoPtr.h" />
+    <ClInclude Include="..\..\sgp\Buffer.h" />
+    <ClInclude Include="..\..\sgp\Button_Sound_Control.h" />
+    <ClInclude Include="..\..\sgp\Button_System.h" />
+    <ClInclude Include="..\..\sgp\Config.h" />
+    <ClInclude Include="..\..\sgp\Container.h" />
+    <ClInclude Include="..\..\sgp\Cursor_Control.h" />
+    <ClInclude Include="..\..\sgp\Debug.h" />
+    <ClInclude Include="..\..\sgp\English.h" />
+    <ClInclude Include="..\..\sgp\FileMan.h" />
+    <ClInclude Include="..\..\sgp\Font.h" />
+    <ClInclude Include="..\..\sgp\HImage.h" />
+    <ClInclude Include="..\..\sgp\ImgFmt.h" />
+    <ClInclude Include="..\..\sgp\ImpTGA.h" />
+    <ClInclude Include="..\..\sgp\Input.h" />
+    <ClInclude Include="..\..\sgp\LibraryDataBase.h" />
+    <ClInclude Include="..\..\sgp\Line.h" />
+    <ClInclude Include="..\..\sgp\LoadSaveData.h" />
+    <ClInclude Include="..\..\sgp\Logger.h" />
+    <ClInclude Include="..\..\sgp\MemMan.h" />
+    <ClInclude Include="..\..\sgp\MouseSystem.h" />
+    <ClInclude Include="..\..\sgp\PCX.h" />
+    <ClInclude Include="..\..\sgp\PODObj.h" />
+    <ClInclude Include="..\..\sgp\Rad.h" />
+    <ClInclude Include="..\..\sgp\Random.h" />
+    <ClInclude Include="..\..\sgp\SGP.h" />
+    <ClInclude Include="..\..\sgp\SGPStrings.h" />
+    <ClInclude Include="..\..\sgp\Shading.h" />
+    <ClInclude Include="..\..\sgp\Smack.h" />
+    <ClInclude Include="..\..\sgp\Smack_Stub.h" />
+    <ClInclude Include="..\..\sgp\SoundMan.h" />
+    <ClInclude Include="..\..\sgp\STCI.h" />
+    <ClInclude Include="..\..\sgp\Timer.h" />
+    <ClInclude Include="..\..\sgp\TopicIDs.h" />
+    <ClInclude Include="..\..\sgp\TranslationTable.h" />
+    <ClInclude Include="..\..\sgp\Types.h" />
+    <ClInclude Include="..\..\sgp\Vector.h" />
+    <ClInclude Include="..\..\sgp\Video.h" />
+    <ClInclude Include="..\..\sgp\VObject.h" />
+    <ClInclude Include="..\..\sgp\VObject_Blitters.h" />
+    <ClInclude Include="..\..\sgp\VSurface.h" />
+    <ClInclude Include="..\..\sgp\WCheck.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Build\Libraries.inc" />
+    <None Include="..\..\Build\Res\jagged3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\lib-SDL-devel-1.2.15-VC\lib\x86\SDL.lib" />
+    <Library Include="..\lib-SDL-devel-1.2.15-VC\lib\x86\SDLmain.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Build\Res\ja2.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

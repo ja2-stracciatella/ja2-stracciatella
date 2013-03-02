@@ -537,7 +537,7 @@ static void StartInterrupt(void)
 			}
 		}
 
-		wcscpy( sTemp, Message[ STR_INTERRUPT_FOR ] );
+		wcscpy( sTemp, g_langRes->Message[ STR_INTERRUPT_FOR ] );
 
 		// build string in separate loop here, want to linearly process squads...
 		for (INT32 iSquad = 0; iSquad < NUMBER_OF_SQUADS; ++iSquad)

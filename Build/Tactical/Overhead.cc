@@ -1676,7 +1676,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
 						if (pSoldier->bTeam == OUR_TEAM)
 						{
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[STR_SLIPPED_MARBLES], pSoldier->name);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_SLIPPED_MARBLES], pSoldier->name);
 						}
 						RemoveItemFromPool(&GetWorldItem(iMarblesIndex));
 						SoldierCollapse(pSoldier);

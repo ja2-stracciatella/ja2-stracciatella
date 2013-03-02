@@ -1421,7 +1421,7 @@ static void RemovePurchasedItemsFromBobbyRayInventory()
 		BobbyRayPurchaseStruct const& p = *i;
 		if (p.ubNumberPurchased == 0) continue;
 		// Is the item used?
-		STORE_INVENTORY (&inv)[MAXITEMS] = p.fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
+		STORE_INVENTORY *inv = p.fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
 		UINT8&            qty            = inv[p.usBobbyItemIndex].ubQtyOnHand;
 		// Remove it from Bobby Rays Inventory
 		qty = qty > p.ubNumberPurchased ? qty - p.ubNumberPurchased : 0;

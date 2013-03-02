@@ -2385,7 +2385,7 @@ void HandleArrivalOfReinforcements(GROUP const* const g)
 			if (first) TacticalCharacterDialogue(&s, QUOTE_MERC_REACHED_DESTINATION);
 			first = false;
 		}
-		ScreenMsg(FONT_YELLOW, MSG_INTERFACE, Message[STR_PLAYER_REINFORCEMENTS]);
+		ScreenMsg(FONT_YELLOW, MSG_INTERFACE, g_langRes->Message[STR_PLAYER_REINFORCEMENTS]);
 	}
 	else
 	{
