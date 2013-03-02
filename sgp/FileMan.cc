@@ -254,6 +254,8 @@ void InitializeFileManager(void)
 		fprintf(stderr, "WARNING: Could not open configuration file (\"%s\").\n", ConfigFile);
 	}
 
+  LOG_INFO("Configuration file:  '%s'\n", ConfigFile);
+
 	if (GetBinDataPath() == NULL)
 	{
 		TellAboutDataDir(ConfigFile);
