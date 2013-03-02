@@ -1,13 +1,14 @@
 #include "Encrypted_File.h"
 #include "FileMan.h"
 #include "GameRes.h"
+#include "MemMan.h"
 
 void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek_chars, UINT32 const read_chars)
 {
 	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
 
-	UINT16 Str[read_chars];
-	FileRead(File, Str, sizeof(Str));
+	UINT16 *Str = MALLOCN(UINT16, read_chars);
+	FileRead(File, Str, sizeof(UINT16) * read_chars);
 
 	Str[read_chars - 1] = '\0';
 	for (const UINT16* i = Str; *i != '\0'; ++i)
@@ -88,6 +89,7 @@ void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek
 		*DestString++ = c;
 	}
 	*DestString = L'\0';
+  MemFree(Str);
 }
 
 
