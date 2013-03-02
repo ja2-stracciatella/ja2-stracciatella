@@ -1219,7 +1219,7 @@ zlevel_topmost:
 							bool const on_roof = uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF;
 							if (gGameSettings.fOptions[TOPTION_GLOW_ITEMS])
 							{
-								UINT16 const (&palette)[NUM_ITEM_CYCLE_COLORS] =
+								UINT16 const *palette =
 									on_roof                                    ? us16BPPItemCycleYellowColors :
 									gTacticalStatus.uiFlags & RED_ITEM_GLOW_ON ? us16BPPItemCycleRedColors    :
 									us16BPPItemCycleWhiteColors;
