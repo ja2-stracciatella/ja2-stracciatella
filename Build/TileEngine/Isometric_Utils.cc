@@ -419,7 +419,7 @@ INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 	// Convert our grid-not into an XY
 	ConvertGridNoToXY( sGridNo2, &sXPos2, &sYPos2 );
 
-	uiDist = (INT16)sqrt( ( sXPos2 - sXPos )*( sXPos2 - sXPos ) + ( sYPos2 - sYPos ) * ( sYPos2 - sYPos ) );
+	uiDist = (INT16)sqrt(double(( sXPos2 - sXPos )*( sXPos2 - sXPos ) + ( sYPos2 - sYPos ) * ( sYPos2 - sYPos )));
 
 	return( uiDist );
 }
@@ -434,7 +434,7 @@ INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 	// Convert our grid-not into an XY
 	ConvertGridNoToXY( sGridNo2, &sXPos2, &sYPos2 );
 
-	return( (INT32)( sqrt( ( sXPos2 - sXPos ) * ( sXPos2 - sXPos ) + ( sYPos2 - sYPos ) * ( sYPos2 - sYPos ) ) ) * CELL_X_SIZE );
+	return( (INT32)( sqrt(double(( sXPos2 - sXPos ) * ( sXPos2 - sXPos ) + ( sYPos2 - sYPos ) * ( sYPos2 - sYPos ) )) ) * CELL_X_SIZE );
 
 }
 
@@ -471,7 +471,7 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 
 	// apply Pythagoras's theorem for right-handed triangle:
 	// dist^2 = rows^2 + cols^2, so use the square root to get the distance
-	sResult = (INT16)sqrt((sRows * sRows) + (sCols * sCols));
+	sResult = (INT16)sqrt(double((sRows * sRows) + (sCols * sCols)));
 
 	return(sResult);
 }

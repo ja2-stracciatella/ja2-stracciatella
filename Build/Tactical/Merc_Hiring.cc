@@ -488,7 +488,7 @@ static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 
 	// apply Pythagoras's theorem for right-handed triangle:
 	// dist^2 = rows^2 + cols^2, so use the square root to get the distance
-	sResult = (INT16)sqrt((sRows * sRows) + (sCols * sCols));
+	sResult = (INT16)sqrt((double)((sRows * sRows) + (sCols * sCols)));
 
 	return(sResult);
 }
