@@ -1069,7 +1069,7 @@ static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const ui
 					// not enough cash
 					ScreenMsg( FONT_MCOLOR_LTYELLOW,
 						MSG_INTERFACE,
-						Message[ STR_NEED_TO_GIVE_MONEY ],
+						g_langRes->Message[ STR_NEED_TO_GIVE_MONEY ],
 						gMercProfiles[ ubNPC ].zNickname,
 						sTempString );
 					quote_id = 27;

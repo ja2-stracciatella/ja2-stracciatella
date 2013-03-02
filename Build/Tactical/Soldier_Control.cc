@@ -6928,12 +6928,12 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 				{
 					// nope!!
 					fRefused = TRUE;
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_REFUSE_FIRSTAID_FOR_CREATURE ] );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[ STR_REFUSE_FIRSTAID_FOR_CREATURE ] );
 				}
 				else if ( !pTSoldier->bNeutral && pTSoldier->bLife >= OKLIFE && pTSoldier->bSide != pSoldier->bSide )
 				{
 					fRefused = TRUE;
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_REFUSE_FIRSTAID ] );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[ STR_REFUSE_FIRSTAID ] );
 				}
 
 			}

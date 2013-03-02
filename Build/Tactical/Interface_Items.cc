@@ -471,7 +471,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if (Item[usItem].ubWeight <= EXCEPTIONAL_WEIGHT)
 	{
-		zTemp = Message[STR_LIGHT];
+		zTemp = g_langRes->Message[STR_LIGHT];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -480,7 +480,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if (Item[usItem].ubPerPocket >= 1) // fits in a small pocket
 	{
-		zTemp = Message[STR_SMALL];
+		zTemp = g_langRes->Message[STR_SMALL];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -489,7 +489,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if (GunRange(o) >= EXCEPTIONAL_RANGE)
 	{
-		zTemp = Message[STR_LONG_RANGE];
+		zTemp = g_langRes->Message[STR_LONG_RANGE];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -498,7 +498,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if (Weapon[usItem].ubImpact >= EXCEPTIONAL_DAMAGE)
 	{
-		zTemp = Message[STR_HIGH_DAMAGE];
+		zTemp = g_langRes->Message[STR_HIGH_DAMAGE];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -507,7 +507,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if (BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *gpItemDescObject) <= EXCEPTIONAL_AP_COST)
 	{
-		zTemp = Message[STR_QUICK_FIRING];
+		zTemp = g_langRes->Message[STR_QUICK_FIRING];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -516,7 +516,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if (Weapon[usItem].ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || usItem == G11)
 	{
-		zTemp = Message[STR_FAST_BURST];
+		zTemp = g_langRes->Message[STR_FAST_BURST];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -525,7 +525,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if (Weapon[usItem].ubMagSize > EXCEPTIONAL_MAGAZINE)
 	{
-		zTemp = Message[STR_LARGE_AMMO_CAPACITY];
+		zTemp = g_langRes->Message[STR_LARGE_AMMO_CAPACITY];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -534,7 +534,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if ( Item[usItem].bReliability >= EXCEPTIONAL_RELIABILITY )
 	{
-		zTemp = Message[STR_RELIABLE];
+		zTemp = g_langRes->Message[STR_RELIABLE];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -543,7 +543,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 
 	if ( Item[usItem].bRepairEase >= EXCEPTIONAL_REPAIR_EASE )
 	{
-		zTemp = Message[STR_EASY_TO_REPAIR];
+		zTemp = g_langRes->Message[STR_EASY_TO_REPAIR];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -553,7 +553,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 	if ( zItemPros[0] == 0 )
 	{
 		// empty string, so display "None"
-		if ( ! AttemptToAddSubstring( zItemPros, Message[ STR_NONE ], &uiStringLength, uiPixLimit ) )
+		if ( ! AttemptToAddSubstring( zItemPros, g_langRes->Message[ STR_NONE ], &uiStringLength, uiPixLimit ) )
 		{
 			return;
 		}
@@ -579,7 +579,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if (ubWeight >= BAD_WEIGHT)
 	{
-		zTemp = Message[STR_HEAVY];
+		zTemp = g_langRes->Message[STR_HEAVY];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -588,7 +588,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if (GunRange(o) <= BAD_RANGE)
 	{
-		zTemp = Message[STR_SHORT_RANGE];
+		zTemp = g_langRes->Message[STR_SHORT_RANGE];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -597,7 +597,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if (Weapon[usItem].ubImpact <= BAD_DAMAGE)
 	{
-		zTemp = Message[STR_LOW_DAMAGE];
+		zTemp = g_langRes->Message[STR_LOW_DAMAGE];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -606,7 +606,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if (BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *gpItemDescObject) >= BAD_AP_COST)
 	{
-		zTemp = Message[STR_SLOW_FIRING];
+		zTemp = g_langRes->Message[STR_SLOW_FIRING];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -615,7 +615,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if (Weapon[usItem].ubShotsPerBurst == 0)
 	{
-		zTemp = Message[STR_NO_BURST];
+		zTemp = g_langRes->Message[STR_NO_BURST];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -624,7 +624,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if (Weapon[usItem].ubMagSize < BAD_MAGAZINE)
 	{
-		zTemp = Message[STR_SMALL_AMMO_CAPACITY];
+		zTemp = g_langRes->Message[STR_SMALL_AMMO_CAPACITY];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -633,7 +633,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if ( Item[usItem].bReliability <= BAD_RELIABILITY )
 	{
-		zTemp = Message[STR_UNRELIABLE];
+		zTemp = g_langRes->Message[STR_UNRELIABLE];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -642,7 +642,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 
 	if ( Item[usItem].bRepairEase <= BAD_REPAIR_EASE )
 	{
-		zTemp = Message[STR_HARD_TO_REPAIR];
+		zTemp = g_langRes->Message[STR_HARD_TO_REPAIR];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
 		{
 			return;
@@ -653,7 +653,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 	if ( zItemCons[0] == 0 )
 	{
 		// empty string, so display "None"
-		if ( ! AttemptToAddSubstring( zItemCons, Message[ STR_NONE ], &uiStringLength, uiPixLimit ) )
+		if ( ! AttemptToAddSubstring( zItemCons, g_langRes->Message[ STR_NONE ], &uiStringLength, uiPixLimit ) )
 		{
 			return;
 		}
@@ -1769,7 +1769,7 @@ static void SetAttachmentTooltips(void)
 	for (UINT i = 0; i < MAX_ATTACHMENTS; ++i)
 	{
 		const UINT16 attachment = gpItemDescObject->usAttachItem[i];
-		const wchar_t* const tip = (attachment != NOTHING ? ItemNames[attachment] : Message[STR_ATTACHMENTS]);
+		const wchar_t* const tip = (attachment != NOTHING ? ItemNames[attachment] : g_langRes->Message[STR_ATTACHMENTS]);
 		gItemDescAttachmentRegions[i].SetFastHelpText(tip);
 	}
 }
@@ -1845,7 +1845,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		}
 		else
 		{
-			ammo_btn->SetFastHelpText(Message[STR_EJECT_AMMO]);
+			ammo_btn->SetFastHelpText(g_langRes->Message[STR_EJECT_AMMO]);
 		}
 
 		INT16 usX;
@@ -1971,11 +1971,11 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 					ValidMerge(     gpItemPointer->usItem, o->usItem)
 				))
 		{
-			text = Message[STR_ATTACHMENT_HELP];
+			text = g_langRes->Message[STR_ATTACHMENT_HELP];
 		}
 		else
 		{
-			text = Message[STR_ATTACHMENT_INVALID_HELP];
+			text = g_langRes->Message[STR_ATTACHMENT_INVALID_HELP];
 		}
 		SetUpFastHelpRegion(69 + gsInvDescX, 12 + gsInvDescY, 170, text);
 
@@ -2130,7 +2130,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			{
 				if ( (Item[ gpItemPointer->usItem ].fFlags & ITEM_INSEPARABLE) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
 				{
-					DoScreenIndependantMessageBox(Message[STR_PERMANENT_ATTACHMENT], MSG_BOX_FLAG_YESNO, PermanantAttachmentMessageBoxCallBack);
+					DoScreenIndependantMessageBox(g_langRes->Message[STR_PERMANENT_ATTACHMENT], MSG_BOX_FLAG_YESNO, PermanantAttachmentMessageBoxCallBack);
 					return;
 				}
 

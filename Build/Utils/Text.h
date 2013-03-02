@@ -447,7 +447,6 @@ extern const LanguageRes* g_langRes;
 #define BobbyRayAmmoCaliber                                 (g_langRes->BobbyRayAmmoCaliber)
 #define WeaponType                                          (g_langRes->WeaponType)
 
-#define Message                                             (g_langRes->Message)
 #define TeamTurnString                                      (g_langRes->TeamTurnString)
 #define pAssignMenuStrings                                  (g_langRes->pAssignMenuStrings)
 #define pTrainingStrings                                    (g_langRes->pTrainingStrings)

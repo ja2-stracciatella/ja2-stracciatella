@@ -76,7 +76,7 @@ void BeginAutoBandage( )
 	// If we are in combat, we con't...
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) || (NumEnemyInSector() != 0) )
 	{
-		DoMessageBox(MSG_BOX_BASIC_STYLE, Message[STR_SECTOR_NOT_CLEARED], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, g_langRes->Message[STR_SECTOR_NOT_CLEARED], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 		return;
 	}
 

@@ -1778,14 +1778,14 @@ static void CreateTopMessage(void)
 		{
 			const UINT8 team = ts->ubCurrentTeam;
 			msg =
-				team == CREATURE_TEAM && HostileBloodcatsPresent() ? Message[STR_BLOODCATS_TURN] :
+				team == CREATURE_TEAM && HostileBloodcatsPresent() ? g_langRes->Message[STR_BLOODCATS_TURN] :
 				                                                     TeamTurnString[team];
 			break;
 		}
 
 		case COMPUTER_INTERRUPT_MESSAGE:
 		case PLAYER_INTERRUPT_MESSAGE:
-		case MILITIA_INTERRUPT_MESSAGE:  msg = Message[STR_INTERRUPT];             break;
+		case MILITIA_INTERRUPT_MESSAGE:  msg = g_langRes->Message[STR_INTERRUPT];            break;
 		case AIR_RAID_TURN_MESSAGE:      msg = TacticalStr[AIR_RAID_TURN_MESSAGE]; break;
 		case PLAYER_TURN_MESSAGE:        msg = TeamTurnString[OUR_TEAM];           break;
 

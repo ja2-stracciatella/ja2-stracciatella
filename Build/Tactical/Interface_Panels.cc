@@ -1677,10 +1677,10 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 							//locked in a region, free it up.
 							FreeMouseCursor();
 
-							DoMessageBox(MSG_BOX_BASIC_STYLE, Message[STR_MERGE_ITEMS], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, MergeMessageBoxCallBack, NULL);
+							DoMessageBox(MSG_BOX_BASIC_STYLE, g_langRes->Message[STR_MERGE_ITEMS], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, MergeMessageBoxCallBack, NULL);
 						}
 						else
-							DoMessageBox(MSG_BOX_BASIC_STYLE, Message[STR_MERGE_ITEMS], GAME_SCREEN, MSG_BOX_FLAG_YESNO, MergeMessageBoxCallBack, NULL);
+							DoMessageBox(MSG_BOX_BASIC_STYLE, g_langRes->Message[STR_MERGE_ITEMS], GAME_SCREEN, MSG_BOX_FLAG_YESNO, MergeMessageBoxCallBack, NULL);
 						return;
 					}
 					// else handle normally
@@ -3663,7 +3663,7 @@ void GoToMapScreenFromTactical(void)
 	if ( gTacticalStatus.bBoxingState != NOT_BOXING )
 	{
 		// pop up dialogue asking whether the player wants to abandon the fight
-		DoMessageBox(MSG_BOX_BASIC_STYLE, Message[STR_ABANDON_FIGHT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, AbandonBoxingCallback, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, g_langRes->Message[STR_ABANDON_FIGHT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, AbandonBoxingCallback, NULL);
 		return;
 	}
 	// ok, proceed!
