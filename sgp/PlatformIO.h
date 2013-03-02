@@ -23,8 +23,6 @@
   #include <unistd.h>
   #define open3(filename, flags, permission)        open(filename, flags, permission)
 
-  /* #include <pwd.h> */
-
 /* #  if defined __APPLE__ && defined __MACH__ */
 /* #    include <CoreFoundation/CoreFoundation.h> */
 /* #    include <sys/param.h> */

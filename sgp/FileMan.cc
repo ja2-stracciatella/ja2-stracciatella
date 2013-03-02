@@ -15,6 +15,8 @@
 
 #if _WIN32
 #include <shlobj.h>
+#else
+#include <pwd.h>
 #endif
 
 #include "PlatformIO.h"
