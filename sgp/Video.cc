@@ -18,7 +18,8 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
-#include <unistd.h>
+
+#include "PlatformIO.h"
 
 
 #define BUFFER_READY      0x00
@@ -189,7 +190,8 @@ void SuspendVideoManager(void)
 BOOLEAN RestoreVideoManager(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED
+	UNIMPLEMENTED;
+  return false;
 #else
 	// Make sure the video manager is indeed suspended before moving on
 
@@ -477,7 +479,7 @@ static FILE* CreateScreenshotFile(void)
 #ifndef _WIN32
 #	define O_BINARY 0
 #endif
-		int const fd = open(filename, O_WRONLY | O_CREAT | O_EXCL | O_BINARY, 0644);
+		int const fd = open3(filename, O_WRONLY | O_CREAT | O_EXCL | O_BINARY, 0644);
 		if (fd >= 0)
 		{
 			FILE* const f = fdopen(fd, "wb");

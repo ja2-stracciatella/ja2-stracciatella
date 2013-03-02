@@ -4,7 +4,8 @@
 #include <cwchar>
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
+
+#include "PlatformStrings.h"
 
 
 #if defined(__linux__) || defined(_WIN32)

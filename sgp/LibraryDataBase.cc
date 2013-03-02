@@ -160,7 +160,7 @@ try
 
 	/* place the file pointer at the begining of the file headers (they are at the
 	 * end of the file) */
-	fseek(hFile, -(ssize_t)(count_entries * sizeof(DIRENTRY)), SEEK_END);
+	fseek(hFile, -(int)(count_entries * sizeof(DIRENTRY)), SEEK_END);
 
 	UINT32 used_entries = 0;
 	for (UINT32 uiLoop = 0; uiLoop < count_entries; ++uiLoop)

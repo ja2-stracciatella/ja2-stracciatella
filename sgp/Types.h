@@ -3,6 +3,7 @@
 
 #include <SDL_video.h>
 
+#include "Platform.h"
 #include "SGPStrings.h"
 
 #include <stdlib.h> // for abort()
@@ -29,8 +30,6 @@
 #define endof(a) ((a) + lengthof(a))
 
 
-#define __max(a, b) ((a) > (b) ? (a) : (b))
-#define __min(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) __max(a, b)
 #define MIN(a, b) __min(a, b)
 

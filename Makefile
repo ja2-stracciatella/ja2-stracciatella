@@ -498,6 +498,10 @@ rebuild-tags:
 	-rm TAGS
 	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs etags --append
 
+rebuild-tags-win:
+	-rm TAGS
+	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs /c/Programs/emacs-23.3/bin/etags.exe --append
+
 
 # How to
 # ========================================

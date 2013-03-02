@@ -1,0 +1,2160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Build">
+      <UniqueIdentifier>{3aa6eed1-fe34-4a11-ac9a-6178ca66fbb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sgp">
+      <UniqueIdentifier>{ac3482ef-0e2c-4728-9b9b-69d0aede4c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Build\Editor">
+      <UniqueIdentifier>{c7124529-4597-4ffc-8b5e-93a57ea31432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Build\Laptop">
+      <UniqueIdentifier>{187520e1-3f94-4bce-8144-313814983289}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Build\Strategic">
+      <UniqueIdentifier>{2fb3c77a-6c14-4c40-9c0e-2056844e726c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Build\TacticalAI">
+      <UniqueIdentifier>{3052ff8c-997f-4270-b121-22687ec55a8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Build\TileEngine">
+      <UniqueIdentifier>{df5c05b1-6f6f-4374-a4b0-19f33b87f63b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Build\Utils">
+      <UniqueIdentifier>{9a336873-d067-4be1-86e6-cd381fe00654}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Build\Tactical">
+      <UniqueIdentifier>{1ab19b76-377a-49b1-b5c6-b67176553e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{792ca79f-e946-4e60-8a0e-8dc28d53b168}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Build\AniViewScreen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Credits.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Fade_Screen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\GameInitOptionsScreen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\GameLoop.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\GameScreen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\GameSettings.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\GameVersion.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\HelpScreen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Init.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Intro.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\JA2_Splash.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\JAScreens.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Loading_Screen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\LoadSaveEMail.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\LoadSaveTacticalStatusType.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\MainMenuScreen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\MercPortrait.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\MessageBoxScreen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Options_Screen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\SaveLoadGame.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\SaveLoadScreen.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Screens.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Sys_Globals.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Button_Sound_Control.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Button_System.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Config.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Container.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Cursor_Control.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Debug.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\FileMan.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Font.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\HImage.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\ImpTGA.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Input.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\LibraryDataBase.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Line.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\MemMan.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\MouseSystem.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\PCX.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Random.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\SGP.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\SGPStrings.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Shading.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Smack_Stub.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\SoundMan.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\STCI.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\Video.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\VObject.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\VObject_Blitters.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\VSurface.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Cheats.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\GameRes.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\TranslationTable.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Cursor_Modes.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Edit_Sys.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Editor_Callbacks.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Editor_Modes.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Editor_Taskbar_Creation.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Editor_Taskbar_Utils.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Editor_Undo.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\EditorBuildings.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\EditorItems.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\EditorMapInfo.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\EditorMercs.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\EditorTerrain.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\EditScreen.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Item_Statistics.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\LoadScreen.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\MessageBox.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\NewSmooth.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\PopupMenu.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Road_Smoothing.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Sector_Summary.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\SelectWin.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\SmartMethod.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Smooth.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Editor\Smoothing_Utils.cc">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIM.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIMArchives.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIMFacialIndex.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIMHistory.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIMLinks.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIMMembers.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIMPolicies.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\AIMSort.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyR.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyRAmmo.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyRArmour.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyRGuns.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyRMailOrder.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyRMisc.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyRShipments.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BobbyRUsed.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\BrokenLink.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\CharProfile.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\EMail.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Files.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Finances.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Florist.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Florist_Cards.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Florist_Gallery.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Florist_Order_Form.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Funeral.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\History.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_AboutUs.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Attribute_Entrance.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Attribute_Finish.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Attribute_Selection.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Begin_Screen.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Compile_Character.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Confirm.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Finish.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_HomePage.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_MainPage.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Personality_Entrance.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Personality_Finish.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Personality_Quiz.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Portraits.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Text_System.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMP_Voices.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\IMPVideoObjects.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Insurance.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Insurance_Comments.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Insurance_Contract.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Insurance_Info.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Laptop.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Mercs.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Mercs_Account.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Mercs_Files.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Mercs_No_Account.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Personnel.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Laptop\Store_Inventory.cc">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\_DutchText.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\_EnglishText.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\_FrenchText.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\_GermanText.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\_ItalianText.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\_PolishText.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\_RussianText.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Animated_ProgressBar.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Cinematics.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Cursors.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Debug_Control.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Encrypted_File.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Event_Manager.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Event_Pump.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Font_Control.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\MapUtility.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\MercTextBox.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Message.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Music_Control.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\PopUpBox.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Quantize.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Slider.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Sound_Control.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\STIConvert.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Text.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Text_Input.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Text_Utils.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Timer_Control.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\Utilities.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Utils\WordWrap.cc">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Air_Raid.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Animation_Cache.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Animation_Control.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Animation_Data.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Arms_Dealer_Init.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\ArmsDealerInvInit.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Auto_Bandage.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Boxing.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Bullets.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Campaign.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Civ_Quotes.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Dialogue_Control.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\DisplayCover.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Drugs_And_Alcohol.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\End_Game.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Enemy_Soldier_Save.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Faces.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\FOV.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Gap.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Handle_Doors.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Handle_Items.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Handle_UI.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Interface.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Interface_Control.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Interface_Cursors.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Interface_Dialogue.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Interface_Items.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Interface_Panels.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Interface_Utils.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Inventory_Choosing.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Items.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Keys.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveBasicSoldierCreateStruct.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveBullet.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveMercProfile.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveObjectType.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveRottingCorpse.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveSoldierCreate.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveSoldierType.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveVehicleType.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LOS.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Map_Information.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Merc_Entering.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Merc_Hiring.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Militia_Control.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Morale.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\OppList.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Overhead.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\PathAI.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Points.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\QArray.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Real_Time_Input.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Rotting_Corpses.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\ShopKeeper_Interface.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\SkillCheck.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Add.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Ani.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Control.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Create.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Find.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Init_List.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Profile.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Soldier_Tile.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Spread_Burst.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Squads.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Strategic_Exit_GUI.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Structure_Wrap.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Tactical_Save.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Tactical_Turns.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\TeamTurns.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Turn_Based_Input.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\UI_Cursors.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Vehicles.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\Weapons.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\World_Items.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\AI_Viewer.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Assignments.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Auto_Resolve.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Campaign_Init.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Creature_Spreading.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Game_Clock.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Game_Event_Hook.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Game_Events.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Game_Init.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Hourly_Update.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\LoadSaveSectorInfo.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\LoadSaveStrategicMapElement.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\LoadSaveUndergroundSectorInfo.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Helicopter.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Border.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Bottom.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Map.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_Map_Inventory.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Map_Screen_Interface_TownMine_Info.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\MapScreen.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Meanwhile.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Merc_Contract.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Player_Command.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\PreBattle_Interface.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Queen_Command.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Quest_Debug_System.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Quests.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\QuestText.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Scheduling.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_AI.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Event_Handler.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Merc_Handler.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Mines.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Movement.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Movement_Costs.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Pathing.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Status.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Town_Loyalty.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Strategic_Turns.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\StrategicMap.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Strategic\Town_Militia.cc">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\AIList.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\AIMain.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\AIUtils.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\Attacks.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\CreatureDecideAction.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\DecideAction.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\FindLocations.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\Knowledge.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\Medical.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\Movement.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\NPC.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\PanicButtons.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TacticalAI\Realtime.cc">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Ambient_Control.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Buildings.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Environment.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Exit_Grids.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Explosion_Control.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Fog_Of_War.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Interactive_Tiles.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Isometric_Utils.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\LightEffects.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Lighting.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveExplosionType.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveLightEffect.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveLightSprite.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveRealObject.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\LoadSaveSmokeEffect.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Map_Edgepoints.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Overhead_Map.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Phys_Math.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Physics.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Pits.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Radar_Screen.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Render_Dirty.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Render_Fun.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\RenderWorld.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\SaveLoadMap.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Simple_Render_Utils.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Smell.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\SmokeEffects.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Structure.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\SysUtil.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Tactical_Placement_GUI.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Tile_Animation.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Tile_Cache.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\Tile_Surface.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\TileDat.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\TileDef.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\WorldDat.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\WorldDef.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\TileEngine\WorldMan.cc">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Build\AniViewScreen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Cheats.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Credits.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Directories.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Fade_Screen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\GameInitOptionsScreen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\GameLoop.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\GameScreen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\GameSettings.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\GameVersion.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\HelpScreen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\HelpScreenText.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Init.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Intro.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\JA2_Splash.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\JA2Types.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\JAScreens.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Loading_Screen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\LoadSaveEMail.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\LoadSaveTacticalStatusType.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Local.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\MainMenuScreen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\MercPortrait.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\MessageBoxScreen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Options_Screen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\SaveLoadGame.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\SaveLoadScreen.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\ScreenIDs.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Screens.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Sys_Globals.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\AutoObj.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\AutoPtr.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Buffer.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Button_Sound_Control.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Button_System.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Config.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Container.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Cursor_Control.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Debug.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\English.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\FileMan.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Font.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\HImage.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\ImgFmt.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\ImpTGA.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Input.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\LibraryDataBase.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Line.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\LoadSaveData.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\MemMan.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\MouseSystem.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\PCX.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\PODObj.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Rad.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Random.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\SGP.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\SGPStrings.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Shading.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Smack.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Smack_Stub.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\SoundMan.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\STCI.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Timer.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\TopicIDs.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\TranslationTable.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Types.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Vector.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Video.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\VObject.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\VObject_Blitters.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\VSurface.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\WCheck.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\GameRes.h">
+      <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Logger.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Button_Defines.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Cursor_Modes.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Edit_Sys.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Editor_Callback_Prototypes.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Editor_Modes.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Editor_Taskbar_Creation.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Editor_Taskbar_Utils.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Editor_Undo.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\EditorBuildings.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\EditorDefines.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\EditorItems.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\EditorMapInfo.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\EditorMercs.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\EditorTerrain.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\EditScreen.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Item_Statistics.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\LoadScreen.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\MessageBox.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\NewSmooth.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\PopupMenu.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Road_Smoothing.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Sector_Summary.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\SelectWin.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\SmartMethod.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Smooth.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Smoothing_Utils.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Editor\Summary_Info.h">
+      <Filter>Source Files\Build\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIM.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIMArchives.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIMFacialIndex.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIMHistory.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIMLinks.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIMMembers.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIMPolicies.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\AIMSort.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyR.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyRAmmo.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyRArmour.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyRGuns.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyRMailOrder.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyRMisc.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyRShipments.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BobbyRUsed.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\BrokenLink.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\CharProfile.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\EMail.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Files.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Finances.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Florist.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Florist_Cards.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Florist_Gallery.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Florist_Order_Form.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Funeral.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\History.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_AboutUs.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Attribute_Entrance.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Attribute_Finish.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Attribute_Selection.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Begin_Screen.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Compile_Character.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Confirm.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Finish.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_HomePage.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_MainPage.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Personality_Entrance.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Personality_Finish.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Personality_Quiz.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Portraits.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Text_System.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMP_Voices.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\IMPVideoObjects.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Insurance.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Comments.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Contract.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Info.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Insurance_Text.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Laptop.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\LaptopSave.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Mercs.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Mercs_Account.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Mercs_Files.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Mercs_No_Account.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Personnel.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Speck_Quotes.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Laptop\Store_Inventory.h">
+      <Filter>Source Files\Build\Laptop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Animated_ProgressBar.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Cinematics.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Cursors.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Debug_Control.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Encrypted_File.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Event_Manager.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Event_Pump.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Font_Control.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\MapUtility.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\MercTextBox.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Message.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Multi_Language_Graphic_Utils.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Music_Control.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\PopUpBox.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Quantize.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Slider.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Sound_Control.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\STIConvert.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Text.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Text_Input.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Text_Utils.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Timer_Control.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\Utilities.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Utils\WordWrap.h">
+      <Filter>Source Files\Build\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Action_Items.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Air_Raid.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Animation_Cache.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Animation_Control.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Animation_Data.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Arms_Dealer.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Arms_Dealer_Init.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\ArmsDealerInvInit.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Auto_Bandage.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Boxing.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Bullets.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Campaign.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Civ_Quotes.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Dialogue_Control.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\DisplayCover.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Drugs_And_Alcohol.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\End_Game.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Enemy_Soldier_Save.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Faces.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\FOV.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Gap.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Handle_Doors.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Handle_Items.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Handle_UI.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Interface.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Interface_Control.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Interface_Cursors.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Interface_Dialogue.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Interface_Items.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Interface_Panels.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Interface_Utils.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Inventory_Choosing.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Item_Types.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Items.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Keys.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveBasicSoldierCreateStruct.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveBullet.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveMercProfile.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveObjectType.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveRottingCorpse.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveSoldierCreate.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveSoldierType.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LoadSaveVehicleType.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\LOS.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Map_Information.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Merc_Entering.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Merc_Hiring.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Militia_Control.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Morale.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\OppList.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Overhead.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Overhead_Types.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\PathAI.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\PathAIDebug.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Points.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\QArray.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Real_Time_Input.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Rotting_Corpses.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\RT_Time_Defines.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\ShopKeeper_Interface.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\ShopKeeper_Quotes.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\SkillCheck.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Add.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Ani.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Control.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Create.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Find.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Functions.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Init_List.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Macros.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Profile.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Profile_Type.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Soldier_Tile.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Spread_Burst.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Squads.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Strategic_Exit_GUI.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Structure_Wrap.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Tactical_Save.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Tactical_Turns.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\TeamTurns.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Turn_Based_Input.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\UI_Cursors.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Vehicles.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\Weapons.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Tactical\World_Items.h">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\AI_Viewer.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Assignments.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Auto_Resolve.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Campaign_Init.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Campaign_Types.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Creature_Spreading.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Facts.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Game_Clock.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Game_Event_Hook.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Game_Events.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Game_Init.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Hourly_Update.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\LoadSaveSectorInfo.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\LoadSaveStrategicMapElement.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\LoadSaveUndergroundSectorInfo.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Helicopter.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Border.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Bottom.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Map.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_Map_Inventory.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Map_Screen_Interface_TownMine_Info.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\MapScreen.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Meanwhile.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Merc_Contract.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Player_Command.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\PreBattle_Interface.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Queen_Command.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Quest_Debug_System.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Quests.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\QuestText.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Scheduling.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_AI.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Event_Handler.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Merc_Handler.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Mines.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Movement.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Movement_Costs.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Pathing.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Status.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Town_Loyalty.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Strategic_Turns.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\StrategicMap.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Strategic\Town_Militia.h">
+      <Filter>Source Files\Build\Strategic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TacticalAI\AI.h">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TacticalAI\AIInternals.h">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TacticalAI\AIList.h">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TacticalAI\FindLocations.h">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TacticalAI\Medical.h">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TacticalAI\NPC.h">
+      <Filter>Source Files\Build\TacticalAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Ambient_Control.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Ambient_Types.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Buildings.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Environment.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Exit_Grids.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Explosion_Control.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Fog_Of_War.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Interactive_Tiles.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Isometric_Utils.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\LightEffects.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Lighting.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveExplosionType.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveLightEffect.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveLightSprite.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveRealObject.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\LoadSaveSmokeEffect.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Map_Edgepoints.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Overhead_Map.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Phys_Math.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Physics.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Pits.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Radar_Screen.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Render_Dirty.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Render_Fun.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\RenderWorld.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\SaveLoadMap.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Simple_Render_Utils.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Smell.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\SmokeEffects.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Structure.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Structure_Internals.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\SysUtil.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Tactical_Placement_GUI.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Tile_Animation.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Tile_Cache.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\Tile_Surface.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\TileDat.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\TileDef.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\World_Tileset_Enums.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\WorldDat.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\WorldDef.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\TileEngine\WorldMan.h">
+      <Filter>Source Files\Build\TileEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Res\Resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\Res\afxres.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Build\Libraries.inc">
+      <Filter>Source Files\Build</Filter>
+    </None>
+    <None Include="..\..\Build\Res\jagged3.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\lib-SDL-devel-1.2.15-VC\lib\x86\SDL.lib">
+      <Filter>Libraries</Filter>
+    </Library>
+    <Library Include="..\lib-SDL-devel-1.2.15-VC\lib\x86\SDLmain.lib">
+      <Filter>Libraries</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Build\Res\ja2.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
