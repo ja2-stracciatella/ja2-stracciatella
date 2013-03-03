@@ -16,7 +16,7 @@ the project ceased in 2010.
 
 See the following resources if you want to learn more:
 
- * [Original project homepage](http://http://tron.homeunix.org/ja2)
+ * [Original project homepage](http://tron.homeunix.org/ja2)
 
  * [JA2-Stracciatella Q&A](http://www.ja-galaxy-forum.com/board/ubbthreads.php/topics/186601/JA2_Stracciatella_Q_A.html)
 
@@ -25,6 +25,10 @@ See the following resources if you want to learn more:
 ### New work
 
 Unless specified explicitly in the commit message, all changes since `commit 8287b98` are released to the public domain.
+
+### Libraries
+
+All libraries in `_build/lib-*` have their own licenses.
 
 ### Tron's changes
 

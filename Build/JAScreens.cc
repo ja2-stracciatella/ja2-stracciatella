@@ -180,14 +180,11 @@ ScreenID InitScreenHandle(void)
 		MPrint(x, y - 60, L"(Beta version error reporting enabled)");
 #endif
 
-		mprintf(x, y - 50,
 #ifdef _DEBUG
-			L"%ls: %hs (Debug %hs)",
+		mprintf(x, y - 50, L"%ls: %hs (Debug %hs)", pMessageStrings[MSG_VERSION], g_version_label, g_version_number);
 #else
-			L"%ls: %hs (%hs)",
+		mprintf(x, y - 50, L"%hs", g_version_label, g_version_number);
 #endif
-			pMessageStrings[MSG_VERSION], g_version_label, g_version_number
-		);
 
 #ifdef _DEBUG
 		mprintf(x, y - 40, L"SOLDIERTYPE: %d bytes", sizeof(SOLDIERTYPE));
