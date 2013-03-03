@@ -3,13 +3,26 @@ How to build on Linux
 
 1. sudo apt-get install gcc g++ libsdl1.2-dev
 
-2. make LNG=ENGLISH
+2. make clean
 
-3. Edit file ~/.ja2/ja2.ini,
+3. make
+
+4. Edit file ~/.ja2/ja2.ini,
    set data_dir = path/to/ja2/resources/directory
 
    For example, on my machine at the time of writing:
      data_dir = /home/user/games/ja2-installed
+
+
+How to build Windows version on Linux
+-------------------------------------
+
+1. sudo apt-get install mingw32
+
+2. make clean
+
+3. make build-win-release-on-linux
+
 
 How to build on Windows
 -----------------------
@@ -26,7 +39,9 @@ How to build on Windows
 
 4. From MinGW shell enter directory with JA2 Stracciatella sources.
 
-5. Execute: make LNG=ENGLISH
+5. Execute:
+     make clean
+     make
    File ja2.exe will be built.
 
 6. Copy GCC and SDL runtime DLLs to the folder with ja2.exe

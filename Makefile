@@ -12,6 +12,11 @@ INSTALL_MAN     ?= $(INSTALL) -m 444
 INSTALL_DATA    ?= $(INSTALL) -m 444
 
 
+BUILD_NUMBER := $(shell git log 8287b98.. --oneline | wc -l)
+GAME_VERSION := v0.12.$(BUILD_NUMBER)
+CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
+
+
 SDL_CONFIG  ?= sdl-config
 ifndef CFLAGS_SDL
 CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
@@ -22,6 +27,14 @@ endif
 
 ifdef WITH_DEBUGINFO
 CFLAGS += -g
+endif
+
+ifdef USE_MINGW
+MINGW_PREFIX ?= i586-mingw32msvc
+CC=$(MINGW_PREFIX)-gcc
+CXX=$(MINGW_PREFIX)-g++
+CPP=$(MINGW_PREFIX)-cpp
+RANLIB=$(MINGW_PREFIX)-ranlib
 endif
 
 CFLAGS += $(CFLAGS_SDL)
@@ -501,6 +514,30 @@ rebuild-tags:
 rebuild-tags-win:
 	-rm TAGS
 	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs /c/Programs/emacs-23.3/bin/etags.exe --append
+
+fix-permissions:
+	chmod +x _build/solution-vs10e/Debug/exe/SDL.dll
+	chmod +x _build/solution-vs10e/Release/exe/SDL.dll
+
+RELEASE_BASE_DIR := "release-win-mingw-cross"
+RELEASE_NAME := "ja2-$(GAME_VERSION)"
+RELEASE := $(RELEASE_BASE_DIR)/$(RELEASE_NAME)
+RELEASE_ZIP := $(RELEASE_BASE_DIR)/$(RELEASE_NAME).zip
+WIN_SDL_LIB ?= _build/lib-SDL-devel-1.2.15-mingw32
+WIN_CFLAGS_SDL= -I./$(WIN_SDL_LIB)/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main
+WIN_LDFLAGS_SDL=-L./$(WIN_SDL_LIB)/lib -lmingw32 -lSDLmain -lSDL -mwindows
+
+build-win-release-on-linux:
+	-rm -rf $(RELEASE) $(RELEASE_ZIP)
+	mkdir -p $(RELEASE)
+	make USE_MINGW=1 "CFLAGS_SDL=$(WIN_CFLAGS_SDL)" "LDFLAGS_SDL=$(WIN_LDFLAGS_SDL)"
+	mv ./ja2 $(RELEASE)/ja2.exe
+	cp $(WIN_SDL_LIB)/bin/SDL.dll $(RELEASE)
+	cp _build/distr-files-win/*.bat $(RELEASE)
+	cp _build/distr-files-win/*.txt $(RELEASE)
+	cp Changelog $(RELEASE)/Changelog.txt
+	cd $(RELEASE_BASE_DIR) && zip -r $(RELEASE_NAME).zip $(RELEASE_NAME)
+
 
 
 # How to
