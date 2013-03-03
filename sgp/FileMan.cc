@@ -21,7 +21,7 @@
 
 #include "PlatformIO.h"
 
-#if defined __APPLE__  && defined __MACH__
+#if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 #include <CoreFoundation/CFBundle.h>
 #endif
 
@@ -149,7 +149,7 @@ static void TellAboutDataDir(const char* ConfigFile)
 }
 
 
-#if defined __APPLE__  && defined __MACH__
+#if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 
 void SetBinDataDirFromBundle(void)
 {
@@ -238,7 +238,7 @@ void InitializeFileManager(void)
 
 	BinDataDir = ConfigRegisterKey("data_dir");
 
-#if defined __APPLE__  && defined __MACH__
+#if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 	SetBinDataDirFromBundle();
 #endif
 

@@ -24,10 +24,6 @@ In order to play JA2-Stracciatella you need to do following:
      data_dir = D:\games\ja2\
 
 
-   Mac OS NOTICE: at the moment the configuration files is not used
-                  on Mac OS.  Data files should always be put into folder
-                  ja2_EXECUTABLE_LOCATION/Contents/Resources/ja2
-
 4. If you installed not English version of the original game, but one of the
    localized varieties (e.g. French or Russian), you need to start ja2.exe
    with parameter telling which version of the game you are using.
