@@ -60,7 +60,21 @@ Build release for distribution
 Build project on MacOS using GCC
 --------------------------------
 
-  TODO
+  Xcode should be already installed.
+
+  First of all, let's install SDL library.  We are going to compile it from source codes.
+
+    $ curl -O http://www.libsdl.org/release/SDL-1.2.15.tar.gz
+    $ tar -xzf SDL-1.2.15.tar.gz
+    $ cd SDL-1.2.15
+    $ ./configure
+    $ make
+    $ sudo make install
+
+  Build the project:
+
+    $ make clean
+    $ make all
 
 
 Build project on Windows using Visual Studio 2010 Express

@@ -21,6 +21,10 @@
 
 #include "PlatformIO.h"
 
+#if defined __APPLE__  && defined __MACH__
+#include <CoreFoundation/CFBundle.h>
+#endif
+
 #if CASE_SENSITIVE_FS
 #include <dirent.h>
 #endif
