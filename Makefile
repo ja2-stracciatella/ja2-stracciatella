@@ -1,3 +1,8 @@
+#
+# See COMPILATION.txt for instructions.
+# Please update COMPILATION.txt if necessary after changing this file.
+#
+
 CONFIG ?= config.default
 -include $(CONFIG)
 
@@ -5,6 +10,7 @@ CONFIG ?= config.default
 BINARY    ?= ja2
 PREFIX    ?= /usr/local
 MANPREFIX ?= $(PREFIX)
+
 
 INSTALL         ?= install
 INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
@@ -17,6 +23,22 @@ GAME_VERSION := v0.12.$(BUILD_NUMBER)
 CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
 
 
+############################################################
+# SDL Library settings.
+# Project can be built with local SDL library (from _build/lib-SDL-devel-*)
+# or system installed SDL library.
+############################################################
+
+
+ifdef LOCAL_SDL_LIB
+CFLAGS_SDL= -I./$(LOCAL_SDL_LIB)/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main
+LDFLAGS_SDL=-L./$(LOCAL_SDL_LIB)/lib -lmingw32 -lSDLmain -lSDL -mwindows
+endif
+
+ifndef LOCAL_SDL_LIB
+
+# using system SDL library
+
 SDL_CONFIG  ?= sdl-config
 ifndef CFLAGS_SDL
 CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
@@ -25,19 +47,37 @@ ifndef LDFLAGS_SDL
 LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
 endif
 
-ifdef WITH_DEBUGINFO
-CFLAGS += -g
 endif
 
+CFLAGS += $(CFLAGS_SDL)
+LDFLAGS += $(LDFLAGS_SDL)
+
+############################################################
+# MinGW settings for building on Windows and for
+# cross-building on Linux
+############################################################
+
 ifdef USE_MINGW
-MINGW_PREFIX ?= i586-mingw32msvc
+
+ifndef MINGW_PREFIX
+$(error MINGW_PREFIX is not specified.  Examples: MINGW_PREFIX=i586-mingw32msvc (on Linux), MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 (on Windows))
+endif
+
 CC=$(MINGW_PREFIX)-gcc
 CXX=$(MINGW_PREFIX)-g++
 CPP=$(MINGW_PREFIX)-cpp
 RANLIB=$(MINGW_PREFIX)-ranlib
+
 endif
 
-CFLAGS += $(CFLAGS_SDL)
+############################################################
+#
+############################################################
+
+ifdef WITH_DEBUGINFO
+CFLAGS += -g
+endif
+
 CFLAGS += -I Build
 CFLAGS += -I Build/Tactical
 CFLAGS += -I Build/Strategic
@@ -113,7 +153,6 @@ CCFLAGS += -Wmissing-prototypes
 
 CXXFLAGS += $(CFLAGS)
 
-LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lm
 
 ifdef WITH_ZLIB
@@ -506,7 +545,6 @@ deinstall:
 	$(Q)rm $(PREFIX)/share/applications/ja2-stracciatella.desktop
 	$(Q)rm $(PREFIX)/share/pixmaps/jagged2.ico
 
-
 rebuild-tags:
 	-rm TAGS
 	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs etags --append
@@ -523,20 +561,24 @@ RELEASE_BASE_DIR := "release-win-mingw-cross"
 RELEASE_NAME := "ja2-$(GAME_VERSION)"
 RELEASE := $(RELEASE_BASE_DIR)/$(RELEASE_NAME)
 RELEASE_ZIP := $(RELEASE_BASE_DIR)/$(RELEASE_NAME).zip
-WIN_SDL_LIB ?= _build/lib-SDL-devel-1.2.15-mingw32
-WIN_CFLAGS_SDL= -I./$(WIN_SDL_LIB)/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main
-WIN_LDFLAGS_SDL=-L./$(WIN_SDL_LIB)/lib -lmingw32 -lSDLmain -lSDL -mwindows
 
 build-win-release-on-linux:
 	-rm -rf $(RELEASE) $(RELEASE_ZIP)
 	mkdir -p $(RELEASE)
-	make USE_MINGW=1 "CFLAGS_SDL=$(WIN_CFLAGS_SDL)" "LDFLAGS_SDL=$(WIN_LDFLAGS_SDL)"
+	make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
 	mv ./ja2 $(RELEASE)/ja2.exe
-	cp $(WIN_SDL_LIB)/bin/SDL.dll $(RELEASE)
+	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(RELEASE)
 	cp _build/distr-files-win/*.bat $(RELEASE)
 	cp _build/distr-files-win/*.txt $(RELEASE)
 	cp Changelog $(RELEASE)/Changelog.txt
 	cd $(RELEASE_BASE_DIR) && zip -r $(RELEASE_NAME).zip $(RELEASE_NAME)
+
+build-on-win:
+	PATH=/cygdrive/c/MinGW/bin:$$PATH make all USE_MINGW=1 MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
+	cp /cygdrive/c/MinGW/bin/libstdc++-6.dll .
+	cp /cygdrive/c/MinGW/bin/libgcc_s_dw2-1.dll .
+	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll .
+
 
 
 

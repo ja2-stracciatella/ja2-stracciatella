@@ -1,57 +1,41 @@
-How to build on Linux
----------------------
+In order to play JA2-Stracciatella you need to do following:
 
-1. sudo apt-get install gcc g++ libsdl1.2-dev
+1. Find one of the original Jagged Alliance 2 games and install it on your computer.
+   Data files from the original game will be used by JA2-Stracciatella
 
-2. make clean
+2. Download JA2-Stracciatella or compile it yourself from the sources codes.
+   Windows version can be downloaded from https://bitbucket.org/gennady/ja2-stracciatella/downloads
+   Versions for other platforms should be compiled from sources.
+   See file COMPILATION.txt for details.
 
-3. make
+3. Edit configuration file and set parameter data_dir to point on the
+   directory where the original game installed was installed on step 1.
 
-4. Edit file ~/.ja2/ja2.ini,
-   set data_dir = path/to/ja2/resources/directory
+   On Unix-like systems the configuration file is: ~/.ja2/ja2.ini
+   On Windows: %USERPROFILE%\Documents\JA2\ja2.ini
 
-   For example, on my machine at the time of writing:
+   For example, on my Linux machine at the time of writing, I have following
+   value in ja2.init:
+
      data_dir = /home/user/games/ja2-installed
 
+   On my Windows machine:
 
-How to build Windows version on Linux
--------------------------------------
+     data_dir = D:\games\ja2\
 
-1. sudo apt-get install mingw32
+4. If you installed not English version of the original game, but one of the
+   localized varieties (e.g. French or Russian), you need to start ja2.exe
+   with parameter telling which version of the game you are using.
 
-2. make clean
+   For example, with French version of the original game, use following
+   command:
 
-3. make build-win-release-on-linux
+     ja2.exe -resversion FRENCH
 
+   Here is the list of supported localizations: DUTCH, ENGLISH, FRENCH,
+   GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD.
 
-How to build on Windows
------------------------
+   RUSSIAN is for BUKA Agonia Vlasty release, RUSSIAN_GOLD is for Gold release
 
-1. Install MinGW from http://sourceforge.net/projects/mingw
-
-2. Run MinGW Shell from the start menu
-
-3. Download SDL development libraries for MinGW from http://www.libsdl.org/download-1.2.php
-   For example, file http://www.libsdl.org/release/SDL-devel-1.2.15-mingw32.tar.gz
-   Extract this file somewhere, enter the extracted directory from MinGW shell and
-   execute: make install-sdl
-   SDL development library will be installed into MinGW.
-
-4. From MinGW shell enter directory with JA2 Stracciatella sources.
-
-5. Execute:
-     make clean
-     make
-   File ja2.exe will be built.
-
-6. Copy GCC and SDL runtime DLLs to the folder with ja2.exe
-   On my machine at the time of writing the following files are required:
-     - C:\MinGW\bin\libgcc_s_dw2-1.dll
-     - C:\MinGW\bin\libstdc++-6.dll
-     - C:\MinGW\msys\1.0\bin\SDL.dll
-
-7. Edit file %USERPROFILE%\Documents\JA2\ja2.ini,
-   set data_dir = path/to/ja2/resources/directory
-
-   For example, on my machine at the time of writing:
-     data_dir = D:\games\ja2-installed\
+   If you downloaded precompiled version of JA2-Stracciatella, the archive
+   may already contain set of bat files for each supported localizations.

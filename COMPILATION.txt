@@ -1,0 +1,70 @@
+Here you can find compilation instructions for different platforms.
+
+Building project on Linux using GCC
+-----------------------------------
+
+  Install GCC C/C++ compiler and SDL development library.  On Ubuntu it can be
+  done like this:
+
+    $ sudo apt-get install gcc g++ libsdl1.2-dev
+
+  To compile the project:
+
+    $ make clean
+    $ make all
+
+
+Build project for Windows on Linux using MinGW (cross build)
+-----------------------------------------------------------
+
+  Install GCC C/C++ compiler and MinGW.
+  On Ubuntu it can be done like this:
+
+    $ sudo apt-get install gcc g++ mingw32
+
+  To compile the project:
+
+    $ make clean
+    $ make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
+
+Build project on Windows using MinGW
+------------------------------------
+
+  Install Cygwin enviroment (www.cygwin.com).
+
+  Install MinGW from http://sourceforge.net/projects/mingw
+
+  To compile the project from the Cygwin shell, execute:
+
+    $ make clean LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
+    $ PATH=/cygdrive/c/MinGW/bin:$PATH make USE_MINGW=1 MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
+
+  We suppose that MinGW is installed into c:\MinGW.  If not, change the command accordingly.
+
+  You may need to copy following files to the current directory (where ja2.exe is), so it can
+  start:
+     C:\MinGW\bin\libgcc_s_dw2-1.dll
+     C:\MinGW\bin\libstdc++-6.dll
+     _build\lib-SDL-devel-1.2.15-VC\lib\x86\SDL.dll
+
+
+Build release for distribution
+------------------------------
+
+  On Linux:
+
+    $ make clean
+    $ make build-win-release-on-linux
+
+
+Build project on MacOS using GCC
+--------------------------------
+
+  TODO
+
+
+Build project on Windows using Visual Studio 2010 Express
+---------------------------------------------------------
+
+  Open solution file _build\solution-vs10e\ja2.sln and build the project.
+
