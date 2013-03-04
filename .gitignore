@@ -1,6 +1,7 @@
 *.d
 *.o
 *~
+.DS_Store
 .cproject
 .project
 SDL.dll
