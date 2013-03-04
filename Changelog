@@ -1,9 +1,10 @@
 JA2-Stracciatella Continued
 ---------------------------
 
- - Project can now be built on Mac OS using Xcode.
+ - Added compilation instructions for building the project on Linux,
+   Windows, Mac OS 10.6 - 10.8, cross building on Linux for Windows.
 
- - Project can now be built on Windows using Visual Studio 10 Express.
+ - Added solution files for Visual Studio 10 Express, Xcode 4.2, 4.6
 
  - Single exe can now work with many versions (localizations) of the game.
    There is no need anymore to compile binary for every version of the game.
