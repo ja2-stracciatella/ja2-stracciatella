@@ -4368,7 +4368,7 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if ( !InItemStackPopup( ) )
 			{
-				InitItemStackPopup( pSoldier, (UINT8)uiHandPos, 0, INV_REGION_Y, 261, 248 );
+				InitItemStackPopup( pSoldier, (UINT8)uiHandPos, INV_REGION_X, INV_REGION_Y, 261, 248 );
 			  fTeamPanelDirty=TRUE;
 			  fInterfacePanelDirty = DIRTYLEVEL2;
 			}
