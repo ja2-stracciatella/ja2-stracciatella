@@ -3345,12 +3345,12 @@ void DisplaySoldierUpdateBox( )
 	iUpdatePanelHeight = ( iNumberHigh + 1 ) * TACT_HEIGHT_OF_UPDATE_PANEL_BLOCKS;
 
 	// get the x,y offsets on the screen of the panel
-	iX = 290 + ( 336 - iUpdatePanelWidth ) / 2;
+	iX = STD_SCREEN_X + 290 + ( 336 - iUpdatePanelWidth ) / 2;
 
 //	iY = 28 + ( 288 - iUpdatePanelHeight ) / 2;
 
 	// Have the bottom of the box ALWAYS a set distance from the bottom of the map ( so user doesnt have to move mouse far )
-	iY = 280 - iUpdatePanelHeight;
+	iY = STD_SCREEN_Y + 280 - iUpdatePanelHeight;
 
 	const SGPVObject* const hBackGroundHandle = guiUpdatePanelTactical;
 
