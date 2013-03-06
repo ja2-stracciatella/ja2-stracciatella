@@ -1635,7 +1635,7 @@ static INT32 GetNumberOfOtherOnPastTeam(void)
 static void DisplayStateOfPastTeamMembers(void)
 {
 	INT16 sX, sY;
-	CHAR16 sString[32];
+	wchar_t sString[32];
 
 	// dead
 	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[5]);
@@ -2332,7 +2332,7 @@ static void UpDateStateOfStartButton(void)
 static void DisplayAmountOnChar(SOLDIERTYPE const& s)
 {
 	// will display the amount that the merc is carrying on him or herself
-	CHAR16 sString[64];
+	wchar_t sString[64];
 	SPrintMoney(sString, GetFundsOnMerc(s));
 
 	SetFontAttributes(ATM_FONT, FONT_WHITE);

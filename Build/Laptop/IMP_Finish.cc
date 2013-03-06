@@ -269,7 +269,7 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 static void RenderCharFullName(void)
 {
 
-	CHAR16 sString[ 64 ];
+	wchar_t sString[ 64 ];
 	INT16 sX, sY;
 
 	// render the characters full name

@@ -51,8 +51,8 @@ INT32 iMechanical = 55;
 BOOLEAN fCharacterIsMale = TRUE;
 
 // name and nick name
-CHAR16 pFullName[ 32 ];
-CHAR16 pNickName[ 32 ];
+wchar_t pFullName[ 32 ];
+wchar_t pNickName[ 32 ];
 
 // skills
 INT32 iSkillA = 0;

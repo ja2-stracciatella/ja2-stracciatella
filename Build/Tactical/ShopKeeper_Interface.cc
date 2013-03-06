@@ -971,7 +971,7 @@ static void RestoreTacticalBackGround(void);
 
 static void RenderShopKeeperInterface(void)
 {
-	CHAR16	zMoney[128];
+	wchar_t	zMoney[128];
 
 	if (InItemDescriptionBox() && pShopKeeperItemDescObject != NULL) return;
 
@@ -1131,7 +1131,7 @@ static void DisplayAllDealersCash(void)
 {
 	INT8		bArmsDealer;
 	UINT16	usPosY=0;
-	CHAR16	zTemp[512];
+	wchar_t	zTemp[512];
 	UINT8		ubForeColor;
 
 	//loop through all the shopkeeper's and display their money
@@ -1906,7 +1906,7 @@ static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pR
 
 static void DisplayArmsDealerCurrentInventoryPage(void)
 {
-	CHAR16			zTemp[32];
+	wchar_t			zTemp[32];
 	UINT16			uiFontHeight;
 	UINT16			usCnt=0;
 	UINT16			usPosX, usPosY;
@@ -2663,7 +2663,7 @@ static FLOAT ItemConditionModifier(UINT16 usItemIndex, INT8 bStatus)
 static void DisplayArmsDealerOfferArea(void)
 {
 	INT16		sCnt, sCount;
-	CHAR16	zTemp[32];
+	wchar_t	zTemp[32];
 	UINT32	uiTotalCost;
 	UINT16	usPosX, usPosY;
 	BOOLEAN fDisplayHatchOnItem;
@@ -2819,7 +2819,7 @@ static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVE
 
 static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
 {
-	CHAR16 zHelpText[ 512 ];
+	wchar_t zHelpText[ 512 ];
 
 	Assert( pRegion );
 
@@ -2830,8 +2830,8 @@ static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pR
 
 static void SetSkiFaceRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
 {
-	CHAR16 zTempText[ 512 ];
-	CHAR16 zHelpText[ 512 ];
+	wchar_t zTempText[ 512 ];
+	wchar_t zHelpText[ 512 ];
 
 	Assert( pRegion );
 
@@ -2936,7 +2936,7 @@ static BOOLEAN WillShopKeeperRejectObjectsFromPlayer(INT8 bDealerId, INT8 bSlotI
 static void DisplayPlayersOfferArea(void)
 {
 	INT16		sCnt, sCount;
-	CHAR16	zTemp[32];
+	wchar_t	zTemp[32];
 	UINT32	uiTotalCost;
 	UINT16	usPosX, usPosY;
 	BOOLEAN	fDisplayHatchOnItem=FALSE;
@@ -6404,8 +6404,8 @@ static void BuildDoneWhenTimeString(wchar_t sString[], size_t const Length, Arms
 
 static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea)
 {
-	CHAR16 zHelpText[ 512 ];
-	CHAR16 zRepairTime[ 64 ];
+	wchar_t zHelpText[ 512 ];
+	wchar_t zRepairTime[ 64 ];
 
 	if( pInv != NULL )
 	{

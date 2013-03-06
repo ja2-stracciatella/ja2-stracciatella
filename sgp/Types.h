@@ -62,7 +62,6 @@ typedef float           FLOAT;
 typedef double          DOUBLE;
 // strings
 typedef char			      CHAR8;
-typedef wchar_t					CHAR16;
 // other
 typedef unsigned char		BOOLEAN;
 typedef void *					PTR;

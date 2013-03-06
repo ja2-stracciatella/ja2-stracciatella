@@ -958,7 +958,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 static void DisplayCurrentBalanceForMapBottom(void)
 {
 	// show the current balance for the player on the map panel bottom
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -1007,7 +1007,7 @@ static void DisplayProjectedDailyMineIncome(void)
 {
 	INT32 iRate = 0;
 	static INT32 iOldRate = -1;
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
 	INT16 sFontX, sFontY;
 
 	// grab the rate from the financial system

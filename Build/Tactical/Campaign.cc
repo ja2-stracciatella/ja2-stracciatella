@@ -630,7 +630,7 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 			}
 			else
 			{
-				CHAR16 wTempString[ 128 ];
+				wchar_t wTempString[ 128 ];
 
 				// tell player about it
 				BuildStatChangeString( wTempString, lengthof(wTempString), pSoldier->name, fChangeTypeIncrease, sPtsChanged, ubStat );

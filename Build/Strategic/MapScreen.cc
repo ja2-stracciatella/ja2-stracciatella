@@ -2519,7 +2519,7 @@ static UINT32 HandleMapUI(void)
 						// if it's not enemy air controlled
 						if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sMapX, sMapY)].fEnemyAirControlled)
 						{
-							CHAR16 sMsgString[ 128 ], sMsgSubString[ 64 ];
+							wchar_t sMsgString[ 128 ], sMsgSubString[ 64 ];
 
 							// move the landing zone over here
 							g_merc_arrive_sector = SECTOR(sMapX, sMapY);
@@ -4039,7 +4039,7 @@ void CreateDestroyMapInvButton()
 
 static void BltCharInvPanel(void)
 {
-	CHAR16 sString[ 32 ];
+	wchar_t sString[ 32 ];
 
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 	Assert(MapCharacterHasAccessibleInventory(*pSoldier));
@@ -8183,7 +8183,7 @@ static void DestinationPlottingCompleted(void)
 static void HandleMilitiaRedistributionClick(void)
 {
 	BOOLEAN fTownStillHidden;
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
 
 
 	// if on the surface
@@ -8234,7 +8234,7 @@ static void HandleMilitiaRedistributionClick(void)
 void DumpSectorDifficultyInfo(void)
 {
 	// NOTE: This operates on the selected map sector!
-	CHAR16 wSectorName[ 128 ];
+	wchar_t wSectorName[ 128 ];
 
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel]);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );

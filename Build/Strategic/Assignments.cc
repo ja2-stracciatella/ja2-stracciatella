@@ -825,7 +825,7 @@ cannot_sleep:
 
 static BOOLEAN CanCharacterBeAwakened(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhyNot)
 {
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
 
 	// if dead tired
 	if( ( pSoldier -> bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM ) && !pSoldier->fMercCollapsedFlag )
@@ -4741,8 +4741,8 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
 	SOLDIERTYPE * pSoldier = NULL;
-	CHAR16 sString[ 128 ];
-	CHAR16 sStringA[ 128 ];
+	wchar_t sString[ 128 ];
+	wchar_t sStringA[ 128 ];
 
 
 	pSoldier = GetSelectedAssignSoldier( FALSE );
@@ -4986,7 +4986,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
 
 	SOLDIERTYPE * pSoldier = NULL;
 

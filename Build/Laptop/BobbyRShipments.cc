@@ -239,7 +239,7 @@ static INT32 CountNumberValidShipmentForTheShipmentsPage(void);
 static void DisplayPreviousShipments(void)
 {
 	UINT32 uiCnt;
-	CHAR16	zText[512];
+	wchar_t	zText[512];
 	UINT16	usPosY = BOBBYR_SHIPMENT_ORDER_NUM_START_Y;
 	UINT32	uiNumItems = CountNumberValidShipmentForTheShipmentsPage();
 	UINT32	uiNumberItemsInShipments = 0;

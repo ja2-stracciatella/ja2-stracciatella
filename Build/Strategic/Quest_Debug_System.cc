@@ -923,7 +923,7 @@ static void TextEntryBox(const wchar_t* pString, TEXT_ENTRY_CALLBACK TextEntryCa
 
 static void HandleQuestDebugSystem(void)
 {
-	CHAR16	zTemp[512];
+	wchar_t	zTemp[512];
 
 	HandleQDSTalkingMerc();
 
@@ -1034,7 +1034,7 @@ static void DisplayCurrentGridNo(void)
 {
 	if( gsQdsEnteringGridNo != 0 )
 	{
-		CHAR16	zTemp[512];
+		wchar_t	zTemp[512];
 
 		swprintf(zTemp, lengthof(zTemp), L"%ls:  %d", QuestDebugText[QUEST_DBS_CURRENT_GRIDNO], gsQdsEnteringGridNo);
 		DrawTextToScreen(zTemp, QUEST_DBS_NPC_CURRENT_GRIDNO_X, QUEST_DBS_NPC_CURRENT_GRIDNO_Y, QUEST_DBS_NUMBER_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -1165,7 +1165,7 @@ static void GetUserInput(void)
 
 				case 'd':
 					{
-						CHAR16 zTemp[512];
+						wchar_t zTemp[512];
 
 						// toggle whether dropped items are damaged or not
 						gfDropDamagedItems ^= 1;
@@ -1663,7 +1663,7 @@ static void DisplaySelectedNPC(void)
 	INT16   usLocationX;
 	INT16   usLocationY;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
-	CHAR16  sTempString[ 64 ];
+	wchar_t  sTempString[ 64 ];
 	wchar_t	zButtonName[ 256 ];
 
 
@@ -2063,7 +2063,7 @@ static void BtnQuestDebugAddNpcToLocationButtonCallback(GUI_BUTTON* btn, INT32 r
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		CHAR16	zTemp[512];
+		wchar_t	zTemp[512];
 		swprintf(zTemp, lengthof(zTemp), L"%ls where %ls will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], gMercProfiles[gNpcListBox.sCurSelectedItem].zNickname);
 		TextEntryBox( zTemp, AddNPCToGridNo );
 	}
@@ -2077,7 +2077,7 @@ static void BtnQuestDebugAddItemToLocationButtonCallback(GUI_BUTTON* btn, INT32 
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		CHAR16	zTemp[512];
+		wchar_t	zTemp[512];
 		swprintf(zTemp, lengthof(zTemp), L"%ls where the %ls will be added.", QuestDebugText[QUEST_DBS_ENTER_GRID_NUM], ShortItemNames[gItemListBox.sCurSelectedItem]);
 		TextEntryBox( zTemp, AddItemToGridNo );
 	}
@@ -2117,7 +2117,7 @@ static void BtnQuestDebugChangeDayButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		CHAR16	zTemp[512];
+		wchar_t	zTemp[512];
 		swprintf(zTemp, lengthof(zTemp), L"%ls   Current Day is %d", QuestDebugText[QUEST_DBS_PLEASE_ENTER_DAY], GetWorldDay());
 
 		//get the day to change the game day to
@@ -2939,7 +2939,7 @@ static void SetQDSMercProfile(void);
 
 static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 {
-	CHAR16	zTemp[512];
+	wchar_t	zTemp[512];
 	INT32		uiMaxNumberOfQuotes = GetMaxNumberOfQuotesToPlay( );
 
 	//make sure the current character is created
@@ -3111,7 +3111,7 @@ static void SetQDSMercProfile(void)
 
 static void DisplayQDSCurrentlyQuoteNum(void)
 {
-	CHAR16	zTemp[512];
+	wchar_t	zTemp[512];
 	UINT16	usPosY;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_TEXT_ENTRY ) + 2;
 

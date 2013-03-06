@@ -51,7 +51,7 @@ GUIButtonRef giIMPHomePageButton[1];
 static BUTTON_PICS* giIMPHomePageButtonImage[1];
 
 // the player activation string
-CHAR16 pPlayerActivationString[32];
+wchar_t pPlayerActivationString[32];
 
 // position within player activation string
 INT32 iStringPos=0;
@@ -309,7 +309,7 @@ static void HandleTextEvent(const InputAtom* Inp)
 					{
 						iStringPos = 0;
 					}
-          // valid char, capture and convert to CHAR16
+          // valid char, capture and convert to wchar_t
 					pPlayerActivationString[iStringPos] = Char;
 
 					// null out next char position

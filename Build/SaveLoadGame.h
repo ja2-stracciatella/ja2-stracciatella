@@ -20,7 +20,7 @@ struct SAVED_GAME_HEADER
 	UINT32	uiSavedGameVersion;
 	char zGameVersionNumber[GAME_VERSION_LENGTH];
 
-	CHAR16	sSavedGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
+	wchar_t	sSavedGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
 
 	//The following will be used to quickly access info to display in the save/load screen
 	UINT32	uiDay;

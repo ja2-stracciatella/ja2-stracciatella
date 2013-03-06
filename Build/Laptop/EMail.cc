@@ -2511,7 +2511,7 @@ static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, con
 			}
 			else
 			{
-				CHAR16	sDollarAmount[64];
+				wchar_t	sDollarAmount[64];
 				SPrintMoney(sDollarAmount, pMail->iFirstData);
 
 				//add the mercs name to the string

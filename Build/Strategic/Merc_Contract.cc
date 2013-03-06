@@ -931,8 +931,8 @@ static void ExtendMercInsuranceContractCallBack(MessageBoxReturnValue);
 
 static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ubLength, INT32 iCost)
 {
-	CHAR16 sString[ 128 ];
-	CHAR16 sStringA[ 32 ];
+	wchar_t sString[ 128 ];
+	wchar_t sStringA[ 32 ];
 
 	SPrintMoney(sStringA, iCost);
 

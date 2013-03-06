@@ -411,7 +411,7 @@ static void PayMilitiaTrainingYesNoBoxCallback(MessageBoxReturnValue);
 
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 {
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
 	INT32 iNumberOfSectors = 0;
 
 	pMilitiaTrainerSoldier = pSoldier;
@@ -474,9 +474,9 @@ static void DoContinueMilitiaTrainingMessageBox(INT16 const sSectorX, INT16 cons
 // continue training?
 static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* const pSoldier)
 {
-	CHAR16 sString[ 128 ];
+	wchar_t sString[ 128 ];
 	INT16 sSectorX = 0, sSectorY = 0;
-	CHAR16 sStringB[ 128 ];
+	wchar_t sStringB[ 128 ];
 
 	sSectorX = pSoldier->sSectorX;
 	sSectorY = pSoldier->sSectorY;

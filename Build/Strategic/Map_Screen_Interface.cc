@@ -2348,7 +2348,7 @@ static BOOLEAN AllOtherSoldiersInListAreSelected(void);
 static void AddStringsToMoveBox(PopUpBox* const box)
 {
 	INT32 iCount = 0, iCountB = 0;
-	CHAR16 sString[ 128 ], sStringB[ 128 ];
+	wchar_t sString[ 128 ], sStringB[ 128 ];
 	BOOLEAN fFirstOne = TRUE;
 
 	// clear all the strings out of the box

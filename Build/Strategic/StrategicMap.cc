@@ -2766,7 +2766,7 @@ void UpdateAirspaceControl( void )
 	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector)].fEnemyAirControlled)
 	{
 		// NOPE!
-		CHAR16 sMsgString[ 256 ], sMsgSubString1[ 64 ], sMsgSubString2[ 64 ];
+		wchar_t sMsgString[ 256 ], sMsgSubString1[ 64 ], sMsgSubString2[ 64 ];
 
 		// get the name of the old sector
 		GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sMsgSubString1, lengthof(sMsgSubString1), FALSE);

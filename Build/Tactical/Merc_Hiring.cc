@@ -508,9 +508,9 @@ static void CheckForValidArrivalSector(void)
 	INT16	 sSectorGridNo, sSectorGridNo2;
 	INT32	 uiRange, uiLowestRange = 999999;
 	BOOLEAN	fFound = FALSE;
-	CHAR16 sString[ 1024 ];
-	CHAR16 zShortTownIDString1[ 50 ];
-	CHAR16 zShortTownIDString2[ 50 ];
+	wchar_t sString[ 1024 ];
+	wchar_t zShortTownIDString1[ 50 ];
+	wchar_t zShortTownIDString2[ 50 ];
 
 	sSectorGridNo = SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector);
 

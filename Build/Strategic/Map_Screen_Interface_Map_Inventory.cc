@@ -247,7 +247,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 
 static void UpdateHelpTextForInvnentoryStashSlots(void)
 {
-	CHAR16 pStr[ 512 ];
+	wchar_t pStr[ 512 ];
 	INT32 iCounter = 0;
 	INT32 iFirstSlotOnPage = ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT );
 
@@ -1052,7 +1052,7 @@ static void MapInventoryPoolDoneBtn(GUI_BUTTON* btn, INT32 reason)
 static void DisplayPagesForMapInventoryPool(void)
 {
 	// get the current and last pages and display them
-	CHAR16 sString[ 32 ];
+	wchar_t sString[ 32 ];
 	INT16 sX, sY;
 
 	SetFontAttributes(COMPFONT, 183);
@@ -1108,7 +1108,7 @@ static INT32 GetTotalNumberOfItems(void)
 static void DrawNumberOfIventoryPoolItems(void)
 {
 	INT32 iNumberOfItems = 0;
-	CHAR16 sString[ 32 ];
+	wchar_t sString[ 32 ];
 	INT16 sX, sY;
 
 
@@ -1146,7 +1146,7 @@ static void DestroyInventoryPoolDoneButton(void)
 static void DisplayCurrentSector(void)
 {
 	// grab current sector being displayed
-	CHAR16 sString[ 32 ];
+	wchar_t sString[ 32 ];
 	INT16 sX, sY;
 
 
@@ -1188,7 +1188,7 @@ static void DrawTextOnSectorInventory(void);
 
 static void DrawTextOnMapInventoryBackground(void)
 {
-//	CHAR16 sString[ 64 ];
+//	wchar_t sString[ 64 ];
 	UINT16 usStringHeight;
 
 	SetFontDestBuffer(guiSAVEBUFFER);

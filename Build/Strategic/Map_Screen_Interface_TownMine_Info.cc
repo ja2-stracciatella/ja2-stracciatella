@@ -170,7 +170,7 @@ no_mine:
 // adds text to town info box
 static void AddTextToTownBox(PopUpBox* const box)
 {
-	CHAR16 wString[ 64 ];
+	wchar_t wString[ 64 ];
 	INT16 sMineSector = 0;
 
 	UINT8 const sector   = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
@@ -357,8 +357,8 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 // add "sector" line text to any popup box
 static void AddSectorToBox(PopUpBox* const box)
 {
-	CHAR16 wString[ 64 ];
-	CHAR16 wString2[ 10 ];
+	wchar_t wString[ 64 ];
+	wchar_t wString2[ 10 ];
 
 	// sector
 	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 1 ]);
@@ -377,7 +377,7 @@ static void AddSectorToBox(PopUpBox* const box)
 
 static void AddCommonInfoToBox(PopUpBox* const box)
 {
-	CHAR16 wString[ 64 ];
+	wchar_t wString[ 64 ];
 	BOOLEAN fUnknownSAMSite = FALSE;
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubNumEnemies;
@@ -482,7 +482,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 
 static void AddItemsInSectorToBox(PopUpBox* const box)
 {
-	CHAR16 wString[ 64 ];
+	wchar_t wString[ 64 ];
 
 	// items in sector (this works even for underground)
 

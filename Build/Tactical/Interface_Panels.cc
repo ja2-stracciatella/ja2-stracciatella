@@ -3083,7 +3083,7 @@ static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot& tp)
 
 void RenderTownIDString(void)
 {
-	CHAR16	zTownIDString[80];
+	wchar_t	zTownIDString[80];
 	INT16 sFontX, sFontY;
 
 	// Render town, position
@@ -3549,8 +3549,8 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			//and the item is money
 			if( Item[ gpItemPointer->usItem ].usItemClass == IC_MONEY )
 			{
-				CHAR16	zText[512];
-				CHAR16	zMoney[64];
+				wchar_t	zText[512];
+				wchar_t	zMoney[64];
 
         // Make sure we go back to movement mode...
 		    guiPendingOverrideEvent = A_CHANGE_TO_MOVE;

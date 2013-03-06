@@ -185,8 +185,8 @@ static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		CHAR16 wzAuthorizeString[512];
-		CHAR16 wzDollarAmount[128];
+		wchar_t wzAuthorizeString[512];
+		wchar_t wzDollarAmount[128];
 
 		SPrintMoney(wzDollarAmount, giMercTotalContractCharge);
 

@@ -8901,7 +8901,7 @@ void CrowsFlyAway(const UINT8 ubTeam)
 #ifdef JA2BETAVERSION
 void DebugValidateSoldierData( )
 {
-	CHAR16 sString[ 1024 ];
+	wchar_t sString[ 1024 ];
 	BOOLEAN fProblemDetected = FALSE;
 	static UINT32 uiFrameCount = 0;
 

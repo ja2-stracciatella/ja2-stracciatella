@@ -303,7 +303,7 @@ static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason
 static void RenderVoiceIndex(void)
 {
 
-	CHAR16 sString[ 32 ];
+	wchar_t sString[ 32 ];
 	INT16 sX, sY;
 
 	// render the voice index value on the the blank portrait

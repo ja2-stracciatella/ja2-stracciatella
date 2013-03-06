@@ -64,8 +64,8 @@ enum{
 };
 
 // beginning character stats
-CHAR16 pFullNameString[128];
-CHAR16 pNickNameString[128];
+wchar_t pFullNameString[128];
+wchar_t pNickNameString[128];
 
 
 // positions in name strings
