@@ -3354,7 +3354,7 @@ static UINT16 FindReplacementMagazine(AmmoKind const calibre, UINT8 const mag_si
 		MAGTYPE const& mag = Magazine[i];
 		if (mag.ubCalibre == NOAMMO)   break;
 		if (mag.ubCalibre != calibre)  continue;
-		if (mag.ubMagSize == mag_size) continue;
+		if (mag.ubMagSize != mag_size) continue;
 
 		if (mag.ubAmmoType == ammo_type) return MagazineClassIndexToItemType(i);
 
