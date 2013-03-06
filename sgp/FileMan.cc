@@ -403,7 +403,7 @@ HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
 
   {
     d = open(filename, mode);
-    if (d < 0)
+    if ((d < 0) && useSmartLookup)
     {
       // failed to open file in the local directory
       // let's try Data
