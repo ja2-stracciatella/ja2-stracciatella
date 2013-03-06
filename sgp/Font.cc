@@ -175,7 +175,7 @@ bool IsPrintableChar(wchar_t const c)
  * exists for the requested wide char, the glyph index of '?' is returned. */
 static GlyphIdx GetGlyphIndex(wchar_t const c)
 {
-	if (c < TRANSLATION_TABLE_SIZE)
+	if ((0 <= c) && (c < TRANSLATION_TABLE_SIZE))
 	{
 		GlyphIdx const idx = TranslationTable[c];
 		if (idx != 0 || c == getZeroGlyphChar()) return idx;
