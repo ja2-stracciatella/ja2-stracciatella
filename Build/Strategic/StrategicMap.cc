@@ -1091,8 +1091,8 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	{
 		// make sure Maria and Angel are gone
 		gMercProfiles[ MARIA ].sSectorX = 0;
-		gMercProfiles[ ANGEL ].sSectorY = 0;
-		gMercProfiles[ MARIA ].sSectorX = 0;
+		gMercProfiles[ MARIA ].sSectorY = 0;
+		gMercProfiles[ ANGEL ].sSectorX = 0;
 		gMercProfiles[ ANGEL ].sSectorY = 0;
 	}
 
