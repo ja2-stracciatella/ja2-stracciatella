@@ -1,6 +1,7 @@
 #ifndef __TYPES_
 #define __TYPES_
 
+#include <stdint.h>
 #include <SDL_video.h>
 
 #include "Platform.h"
@@ -47,16 +48,16 @@ template<typename T> static inline void Swap(T& a, T& b)
 }
 
 
-typedef          int  INT;
-typedef unsigned int UINT;
-typedef unsigned int UINT32;
-typedef   signed int  INT32;
+typedef int32_t     INT;
+typedef int32_t     INT32;
+typedef uint32_t    UINT;
+typedef uint32_t    UINT32;
 
 // integers
-typedef unsigned char   UINT8;
-typedef signed char     INT8;
-typedef unsigned short  UINT16;
-typedef signed short    INT16;
+typedef uint8_t         UINT8;
+typedef int8_t          INT8;
+typedef uint16_t        UINT16;
+typedef int16_t         INT16;
 // floats
 typedef float           FLOAT;
 typedef double          DOUBLE;
