@@ -53,41 +53,41 @@
 INT32 iZoomX = 0;
 INT32 iZoomY = 0;
 
-// Scroll region width
-#define SCROLL_REGION 4
+// // Scroll region width
+// #define SCROLL_REGION 4
 
-// The Map/Mouse Scroll defines
-#define EAST_DIR  0
-#define WEST_DIR  1
-#define NORTH_DIR 2
-#define SOUTH_DIR 3
-#define TOP_NORTH  2
-#define TOP_SOUTH  13
-#define RIGHT_WEST 250
-#define RIGHT_EAST 260
-#define LEFT_EAST  640
-#define LEFT_WEST  630
-#define BOTTOM_NORTH 320
-#define BOTTOM_SOUTH 330
+// // The Map/Mouse Scroll defines
+// #define EAST_DIR  0
+// #define WEST_DIR  1
+// #define NORTH_DIR 2
+// #define SOUTH_DIR 3
+// #define TOP_NORTH  2
+// #define TOP_SOUTH  13
+// #define RIGHT_WEST 250
+// #define RIGHT_EAST 260
+// #define LEFT_EAST  640
+// #define LEFT_WEST  630
+// #define BOTTOM_NORTH 320
+// #define BOTTOM_SOUTH 330
 
-// Map Scroll Defines
-#define SCROLL_EAST  0
-#define SCROLL_WEST  1
-#define SCROLL_NORTH 2
-#define SCROLL_SOUTH 3
-#define SCROLL_DELAY 50
-#define HORT_SCROLL 14
-#define VERT_SCROLL 10
+// // Map Scroll Defines
+// #define SCROLL_EAST  0
+// #define SCROLL_WEST  1
+// #define SCROLL_NORTH 2
+// #define SCROLL_SOUTH 3
+// #define SCROLL_DELAY 50
+// #define HORT_SCROLL 14
+// #define VERT_SCROLL 10
 
 // the pop up for helicopter stuff
-#define MAP_HELICOPTER_ETA_POPUP_X 400
-#define MAP_HELICOPTER_ETA_POPUP_Y 250
-#define MAP_HELICOPTER_UPPER_ETA_POPUP_Y 50
+#define MAP_HELICOPTER_ETA_POPUP_X (STD_SCREEN_X + 400)
+#define MAP_HELICOPTER_ETA_POPUP_Y (STD_SCREEN_Y + 250)
+#define MAP_HELICOPTER_UPPER_ETA_POPUP_Y (STD_SCREEN_Y + 50)
 #define MAP_HELICOPTER_ETA_POPUP_WIDTH 120
 #define MAP_HELICOPTER_ETA_POPUP_HEIGHT 68
 
-#define MAP_LEVEL_STRING_X 432
-#define MAP_LEVEL_STRING_Y 305
+#define MAP_LEVEL_STRING_X (STD_SCREEN_X + 432)
+#define MAP_LEVEL_STRING_Y (STD_SCREEN_Y + 305)
 
 // font
 #define MAP_FONT BLOCKFONT2
@@ -102,19 +102,19 @@ INT32 iZoomY = 0;
 //Map Location index regions
 
 // x start of hort index
-#define MAP_HORT_INDEX_X 292
+#define MAP_HORT_INDEX_X (STD_SCREEN_X + 292)
 
 // y position of hort index
-#define MAP_HORT_INDEX_Y  10
+#define MAP_HORT_INDEX_Y  (STD_SCREEN_Y + 10)
 
 // height of hort index
 #define MAP_HORT_HEIGHT  GetFontHeight(MAP_FONT)
 
 // vert index start x
-#define MAP_VERT_INDEX_X 273
+#define MAP_VERT_INDEX_X (STD_SCREEN_X + 273)
 
 // vert index start y
-#define MAP_VERT_INDEX_Y  31
+#define MAP_VERT_INDEX_Y  (STD_SCREEN_Y + 31)
 
 // vert width
 #define MAP_VERT_WIDTH   GetFontHeight(MAP_FONT)
@@ -414,7 +414,7 @@ static SGPPoint const pTownPoints[] =
 
 
 // map region
-SGPRect MapScreenRect={	(MAP_VIEW_START_X+MAP_GRID_X - 2),	( MAP_VIEW_START_Y+MAP_GRID_Y - 1), MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 + MAP_GRID_X , MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-10+MAP_GRID_Y};
+SGPRect MapScreenRect;
 
 static SGPRect gOldClipRect;
 
@@ -479,6 +479,12 @@ static SGPVObject* guiSAMICON;
 // helicopter icon
 static SGPVObject* guiHelicopterIcon;
 
+
+void InitMapScreenInterfaceMap()
+{
+  MapScreenRect.set((MAP_VIEW_START_X+MAP_GRID_X - 2), ( MAP_VIEW_START_Y+MAP_GRID_Y - 1),
+                    MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 + MAP_GRID_X , MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-10+MAP_GRID_Y);
+}
 
 void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 {

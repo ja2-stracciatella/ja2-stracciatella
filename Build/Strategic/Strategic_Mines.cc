@@ -21,6 +21,7 @@
 #include "Campaign_Types.h"
 #include "Debug.h"
 #include "FileMan.h"
+#include "UILayout.h"
 
 
 // this .c file will handle the strategic level of mines and income from them

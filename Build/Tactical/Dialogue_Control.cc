@@ -51,6 +51,7 @@
 #include "SoundMan.h"
 #include "Container.h"
 #include "GameRes.h"
+#include "UILayout.h"
 
 #define DIALOGUESIZE 240
 #define   QUOTE_MESSAGE_SIZE		520
@@ -111,8 +112,8 @@ static DialogueHandler gbUIHandlerID;
 
 INT32				giNPCReferenceCount = 0;
 
-static INT16 gsExternPanelXPosition = DEFAULT_EXTERN_PANEL_X_POS;
-static INT16 gsExternPanelYPosition = DEFAULT_EXTERN_PANEL_Y_POS;
+static INT16 gsExternPanelXPosition;
+static INT16 gsExternPanelYPosition;
 
 static BOOLEAN        gfDialogueQueuePaused = FALSE;
 static UINT16         gusSubtitleBoxWidth;
@@ -123,10 +124,6 @@ static UINT32         guiScreenIDUsedWhenUICreated;
 static MOUSE_REGION   gTextBoxMouseRegion;
 static MOUSE_REGION   gFacePopupMouseRegion;
 static BOOLEAN        gfUseAlternateDialogueFile = FALSE;
-
-// set the top position value for merc dialogue pop up boxes
-static INT16 gsTopPosition = 20;
-
 
 MercPopUpBox* g_dialogue_box;
 
@@ -160,6 +157,8 @@ void InitalizeDialogueControl()
 {
 	ghDialogueQ         = new DialogueQueue(INITIAL_Q_SIZE);
 	giNPCReferenceCount = 0;
+  gsExternPanelXPosition = DEFAULT_EXTERN_PANEL_X_POS;
+  gsExternPanelYPosition = DEFAULT_EXTERN_PANEL_Y_POS;
 }
 
 void ShutdownDialogueControl()
@@ -1004,7 +1003,7 @@ static void HandleTacticalNPCTextUI(const UINT8 ubCharacterNum, const wchar_t* c
 }
 
 
-static void ExecuteTacticalTextBox(INT16 sLeftPosition, const wchar_t* pString);
+static void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const wchar_t* pString);
 
 
 // Handlers for tactical UI stuff
@@ -1026,30 +1025,23 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{
   	sLeft			 = ( gsExternPanelXPosition + 97 );
-		gsTopPosition = gsExternPanelYPosition;
 	}
   else
   {
 	  sLeft			 = ( 110 );
   }
 
-	ExecuteTacticalTextBox( sLeft, gTalkPanel.zQuoteStr );
+	ExecuteTacticalTextBox( sLeft, gsExternPanelYPosition, gTalkPanel.zQuoteStr );
 }
 
 
 static void HandleTacticalTextUI(const ProfileID profile_id, const wchar_t* const zQuoteStr)
 {
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
-	INT16									sLeft = 0;
 
 	swprintf( zText, lengthof(zText), L"\"%ls\"", zQuoteStr );
-	sLeft	= 110;
 
-
-	//previous version
-	//sLeft = 110;
-
-	ExecuteTacticalTextBox( sLeft, zText );
+	ExecuteTacticalTextBox( g_ui.getTacticalTextBoxX(), g_ui.getTacticalTextBoxY(), zText );
 
 	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls: \"%ls\"", GetProfile(profile_id).zNickname, zQuoteStr);
 }
@@ -1059,7 +1051,7 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter);
 static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void ExecuteTacticalTextBox(const INT16 sLeftPosition, const wchar_t* const pString)
+static void ExecuteTacticalTextBox(const INT16 sLeftPosition, INT16 sTopPosition, const wchar_t* const pString)
 {
 	// check if mouse region created, if so, do not recreate
 	if (fTextBoxMouseRegionCreated) return;
@@ -1068,13 +1060,11 @@ static void ExecuteTacticalTextBox(const INT16 sLeftPosition, const wchar_t* con
 	g_dialogue_box = PrepareMercPopupBox(g_dialogue_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pString, DIALOGUE_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &gusSubtitleBoxWidth, &gusSubtitleBoxHeight);
 
 	INT16  const x = sLeftPosition;
-	INT16  const y = gsTopPosition;
+	INT16  const y = sTopPosition;
 	UINT16 const w = gusSubtitleBoxWidth;
 	UINT16 const h = gusSubtitleBoxHeight;
 
 	g_text_box_overlay = RegisterVideoOverlay(RenderSubtitleBoxOverlay, x, y, w, h);
-
-	gsTopPosition = 20;
 
 	//Define main region
 	MSYS_DefineRegion(&gTextBoxMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback);

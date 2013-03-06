@@ -552,7 +552,7 @@ rebuild-tags:
 
 rebuild-tags-win:
 	-rm TAGS
-	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs /c/Programs/emacs-23.3/bin/etags.exe --append
+	find . -type f \( -name "*.c" -o -iname "*.cc" -o -name "*.h" \) | xargs /cygdrive/c/Programs/emacs-23.3/bin/etags.exe --append
 
 fix-permissions:
 	chmod +x _build/solution-vs10e/Debug/exe/SDL.dll

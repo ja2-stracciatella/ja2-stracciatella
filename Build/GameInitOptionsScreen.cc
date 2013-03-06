@@ -38,14 +38,14 @@
 #define		GIO_TOGGLE_TEXT_COLOR								FONT_MCOLOR_WHITE
 
 //buttons
-#define		GIO_BTN_OK_X												141
-#define		GIO_BTN_OK_Y												418
-#define		GIO_CANCEL_X												379
+#define		GIO_BTN_OK_X												(STD_SCREEN_X + 141)
+#define		GIO_BTN_OK_Y												(STD_SCREEN_Y + 418)
+#define		GIO_CANCEL_X												(STD_SCREEN_X + 379)
 
 //main title
-#define		GIO_MAIN_TITLE_X										0
-#define		GIO_MAIN_TITLE_Y										68
-#define GIO_MAIN_TITLE_WIDTH SCREEN_WIDTH
+#define		GIO_MAIN_TITLE_X										(STD_SCREEN_X + 0)
+#define		GIO_MAIN_TITLE_Y										(STD_SCREEN_Y + 68)
+#define GIO_MAIN_TITLE_WIDTH 640
 
 //radio box locations
 #define		GIO_GAP_BN_SETTINGS									35
@@ -53,12 +53,12 @@
 #define		GIO_OFFSET_TO_TOGGLE_BOX						155//200
 #define		GIO_OFFSET_TO_TOGGLE_BOX_Y					9
 
-#define		GIO_DIF_SETTINGS_X									80
-#define		GIO_DIF_SETTINGS_Y									150
+#define		GIO_DIF_SETTINGS_X									(STD_SCREEN_X + 80)
+#define		GIO_DIF_SETTINGS_Y									(STD_SCREEN_Y + 150)
 #define		GIO_DIF_SETTINGS_WIDTH							GIO_OFFSET_TO_TOGGLE_BOX - GIO_OFFSET_TO_TEXT //230
 
-#define		GIO_GAME_SETTINGS_X									350
-#define		GIO_GAME_SETTINGS_Y									300//280//150
+#define		GIO_GAME_SETTINGS_X									(STD_SCREEN_X + 350)
+#define		GIO_GAME_SETTINGS_Y									(STD_SCREEN_Y + 300)
 #define		GIO_GAME_SETTINGS_WIDTH							GIO_DIF_SETTINGS_WIDTH
 
 #define		GIO_GUN_SETTINGS_X									GIO_GAME_SETTINGS_X
@@ -348,7 +348,7 @@ static void EnterGIOScreen()
 	// Render the screen once, so we can blt to the save buffer
 	RenderGIOScreen();
 
-	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
+	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, STD_SCREEN_X, STD_SCREEN_Y, 640, 439);
 
 	gfGIOButtonsAllocated = TRUE;
 }
@@ -437,10 +437,10 @@ static void RenderGIOScreen(void)
 {
 	UINT16		usPosY;
 
-	BltVideoObject(FRAME_BUFFER, guiGIOMainBackGroundImage, 0, 0, 0);
+	BltVideoObject(FRAME_BUFFER, guiGIOMainBackGroundImage, 0, STD_SCREEN_X, STD_SCREEN_Y);
 
 	//Shade the background
-	FRAME_BUFFER->ShadowRect(48, 55, 592, 378); //358
+	FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 48, STD_SCREEN_Y + 55, STD_SCREEN_X + 592, STD_SCREEN_Y + 378); //358
 
 
 	//Display the title

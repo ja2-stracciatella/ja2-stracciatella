@@ -1502,10 +1502,10 @@ static void RenderAutoResolve(void)
 			//Render the results of the battle.
 			SetFont( BLOCKFONT2 );
 			xp = gpAR->sCenterStartX + 12;
-			yp = 218 + gpAR->bVerticalOffset;
+			yp = STD_SCREEN_Y + 218 + gpAR->bVerticalOffset;
 			BltVideoObject( FRAME_BUFFER, gpAR->iIndent, 0, xp, yp);
 			xp = gpAR->sCenterStartX + 70 - StringPixLength(BattleResult, BLOCKFONT2) / 2;
-			yp = 227 + gpAR->bVerticalOffset;
+			yp = STD_SCREEN_Y + 227 + gpAR->bVerticalOffset;
 			MPrint(xp, yp, BattleResult);
 
 			//Render the total battle time elapsed.
@@ -1517,7 +1517,7 @@ static void RenderAutoResolve(void)
 				gpAR->uiTotalElapsedBattleTimeInMilliseconds % 60000 / 1000,
 				gsTimeStrings[2]);
 			xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
-			yp = 290 + gpAR->bVerticalOffset;
+			yp = STD_SCREEN_Y + 290 + gpAR->bVerticalOffset;
 			SetFontForeground( FONT_YELLOW );
 			MPrint(xp, yp, str);
 	}
@@ -2484,7 +2484,7 @@ static void CalculateRowsAndColumns(void)
 	else
 		gpAR->rect.w = 146 + 55 * (MAX(MAX(gpAR->ubMercCols, gpAR->ubCivCols), 2) + MAX(gpAR->ubEnemyCols, 2));
 
-	gpAR->sCenterStartX = 323 - gpAR->rect.w / 2 + MAX(MAX(gpAR->ubMercCols, 2), MAX(gpAR->ubCivCols, 2)) * 55;
+	gpAR->sCenterStartX = STD_SCREEN_X + 323 - gpAR->rect.w / 2 + MAX(MAX(gpAR->ubMercCols, 2), MAX(gpAR->ubCivCols, 2)) * 55;
 
 	//Anywhere from 48*3 to 48*10
 	gpAR->rect.h = 48 * MAX(3, MAX(gpAR->ubMercRows + gpAR->ubCivRows, gpAR->ubEnemyRows));

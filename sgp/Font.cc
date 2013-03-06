@@ -9,8 +9,8 @@
 #include "VSurface.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
-#include "GameRes.h"
 #include "UILayout.h"
+#include "GameRes.h"
 
 
 typedef UINT8 GlyphIdx;

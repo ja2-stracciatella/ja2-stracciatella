@@ -1744,7 +1744,7 @@ static void CreateTopMessage(void)
 	{
 		AutoSGPVObject bar_vo(AddVideoObjectFromFile(bar_file));
 
-		BltVideoObject(dst, bar_vo, bar_gfx, 0, 0);
+		BltVideoObject(dst, bar_vo, bar_gfx, STD_SCREEN_X, 0);
 
 		if (fDoLimitBar)
 		{

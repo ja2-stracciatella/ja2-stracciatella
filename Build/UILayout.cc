@@ -2,6 +2,7 @@
 
 #include "MapScreen.h"
 #include "Soldier_Control.h"
+#include "JAScreens.h"
 
 #define MIN_INTERFACE_WIDTH       640
 #define MIN_INTERFACE_HEIGHT      480
@@ -15,8 +16,7 @@ UILayout g_ui(MIN_INTERFACE_WIDTH, MIN_INTERFACE_HEIGHT);
 /** Constructor. */
 UILayout::UILayout(INT16 screenWidth, INT16 screenHeight)
   :m_mapScreenWidth(MIN_INTERFACE_WIDTH), m_mapScreenHeight(MIN_INTERFACE_HEIGHT),
-   m_screenWidth(screenWidth), m_screenHeight(screenHeight),
-   m_progress_bar_box(5, 2, m_mapScreenWidth-10, 12)
+   m_screenWidth(screenWidth), m_screenHeight(screenHeight)
 {
   recalculatePositions();
 }
@@ -44,8 +44,18 @@ void UILayout::setScreenHeight(INT16 screenHeight)
   }
 }
 
-INT16 UILayout::currentHeight()             { return fInMapMode ? m_mapScreenHeight : m_screenHeight;       }
+
+/** Check if the screen is bigger than original 640x480. */
+bool UILayout::isBigScreen()
+{
+  return (m_screenWidth > 640) || (m_screenHeight > 480);
+}
+
+
+INT16 UILayout::currentHeight()             { return fInMapMode ? (STD_SCREEN_Y + m_mapScreenHeight) : m_screenHeight; }
+INT16 UILayout::get_CLOCK_X()               { return fInMapMode ? (STD_SCREEN_X + 554) : 554;               }
 INT16 UILayout::get_CLOCK_Y()               { return currentHeight() - 23;                                  }
+INT16 UILayout::get_RADAR_WINDOW_X()        { return fInMapMode ? (STD_SCREEN_X + 543) : 543;               }
 INT16 UILayout::get_RADAR_WINDOW_TM_Y()     { return currentHeight() - 107;                                 }
 INT16 UILayout::get_INTERFACE_START_Y()     { return m_screenHeight - 120;                                  }
 INT16 UILayout::get_INV_INTERFACE_START_Y() { return m_screenHeight - 140;                                  }
@@ -56,26 +66,54 @@ void UILayout::recalculatePositions()
 {
   INT16 startInvY = get_INV_INTERFACE_START_Y();
 
-  m_invSlotPosition[HELMETPOS           ].set(344, startInvY +   6);
-  m_invSlotPosition[VESTPOS             ].set(344, startInvY +  35);
-  m_invSlotPosition[LEGPOS              ].set(344, startInvY +  95);
-  m_invSlotPosition[HEAD1POS            ].set(226, startInvY +   6);
-  m_invSlotPosition[HEAD2POS            ].set(226, startInvY +  30);
-  m_invSlotPosition[HANDPOS             ].set(226, startInvY +  84);
-  m_invSlotPosition[SECONDHANDPOS       ].set(226, startInvY + 108);
-  m_invSlotPosition[BIGPOCK1POS         ].set(468, startInvY +   5);
-  m_invSlotPosition[BIGPOCK2POS         ].set(468, startInvY +  29);
-  m_invSlotPosition[BIGPOCK3POS         ].set(468, startInvY +  53);
-  m_invSlotPosition[BIGPOCK4POS         ].set(468, startInvY +  77);
-  m_invSlotPosition[SMALLPOCK1POS       ].set(396, startInvY +   5);
-  m_invSlotPosition[SMALLPOCK2POS       ].set(396, startInvY +  29);
-  m_invSlotPosition[SMALLPOCK3POS       ].set(396, startInvY +  53);
-  m_invSlotPosition[SMALLPOCK4POS       ].set(396, startInvY +  77);
-  m_invSlotPosition[SMALLPOCK5POS       ].set(432, startInvY +   5);
-  m_invSlotPosition[SMALLPOCK6POS       ].set(432, startInvY +  29);
-  m_invSlotPosition[SMALLPOCK7POS       ].set(432, startInvY +  53);
-  m_invSlotPosition[SMALLPOCK8POS       ].set(432, startInvY +  7);
+  m_stdScreenOffsetX            = (m_screenWidth - MIN_INTERFACE_WIDTH) / 2;
+  m_stdScreenOffsetY            = (m_screenHeight - MIN_INTERFACE_HEIGHT) / 2;
 
+  // tactical screen inventory position
+  m_invSlotPositionTac[HELMETPOS           ].set(344, startInvY +   6);
+  m_invSlotPositionTac[VESTPOS             ].set(344, startInvY +  35);
+  m_invSlotPositionTac[LEGPOS              ].set(344, startInvY +  95);
+  m_invSlotPositionTac[HEAD1POS            ].set(226, startInvY +   6);
+  m_invSlotPositionTac[HEAD2POS            ].set(226, startInvY +  30);
+  m_invSlotPositionTac[HANDPOS             ].set(226, startInvY +  84);
+  m_invSlotPositionTac[SECONDHANDPOS       ].set(226, startInvY + 108);
+  m_invSlotPositionTac[BIGPOCK1POS         ].set(468, startInvY +   5);
+  m_invSlotPositionTac[BIGPOCK2POS         ].set(468, startInvY +  29);
+  m_invSlotPositionTac[BIGPOCK3POS         ].set(468, startInvY +  53);
+  m_invSlotPositionTac[BIGPOCK4POS         ].set(468, startInvY +  77);
+  m_invSlotPositionTac[SMALLPOCK1POS       ].set(396, startInvY +   5);
+  m_invSlotPositionTac[SMALLPOCK2POS       ].set(396, startInvY +  29);
+  m_invSlotPositionTac[SMALLPOCK3POS       ].set(396, startInvY +  53);
+  m_invSlotPositionTac[SMALLPOCK4POS       ].set(396, startInvY +  77);
+  m_invSlotPositionTac[SMALLPOCK5POS       ].set(432, startInvY +   5);
+  m_invSlotPositionTac[SMALLPOCK6POS       ].set(432, startInvY +  29);
+  m_invSlotPositionTac[SMALLPOCK7POS       ].set(432, startInvY +  53);
+  m_invSlotPositionTac[SMALLPOCK8POS       ].set(432, startInvY +  77);
+
+  // map screen inventory position
+  m_invSlotPositionMap[HELMETPOS           ].set(m_stdScreenOffsetX + 204, m_stdScreenOffsetY + 116);
+  m_invSlotPositionMap[VESTPOS             ].set(m_stdScreenOffsetX + 204, m_stdScreenOffsetY + 145);
+  m_invSlotPositionMap[LEGPOS              ].set(m_stdScreenOffsetX + 204, m_stdScreenOffsetY + 205);
+  m_invSlotPositionMap[HEAD1POS            ].set(m_stdScreenOffsetX +  21, m_stdScreenOffsetY + 116);
+  m_invSlotPositionMap[HEAD2POS            ].set(m_stdScreenOffsetX +  21, m_stdScreenOffsetY + 140);
+  m_invSlotPositionMap[HANDPOS             ].set(m_stdScreenOffsetX +  21, m_stdScreenOffsetY + 194);
+  m_invSlotPositionMap[SECONDHANDPOS       ].set(m_stdScreenOffsetX +  21, m_stdScreenOffsetY + 218);
+  m_invSlotPositionMap[BIGPOCK1POS         ].set(m_stdScreenOffsetX +  98, m_stdScreenOffsetY + 251);
+  m_invSlotPositionMap[BIGPOCK2POS         ].set(m_stdScreenOffsetX +  98, m_stdScreenOffsetY + 275);
+  m_invSlotPositionMap[BIGPOCK3POS         ].set(m_stdScreenOffsetX +  98, m_stdScreenOffsetY + 299);
+  m_invSlotPositionMap[BIGPOCK4POS         ].set(m_stdScreenOffsetX +  98, m_stdScreenOffsetY + 323);
+  m_invSlotPositionMap[SMALLPOCK1POS       ].set(m_stdScreenOffsetX +  22, m_stdScreenOffsetY + 251);
+  m_invSlotPositionMap[SMALLPOCK2POS       ].set(m_stdScreenOffsetX +  22, m_stdScreenOffsetY + 275);
+  m_invSlotPositionMap[SMALLPOCK3POS       ].set(m_stdScreenOffsetX +  22, m_stdScreenOffsetY + 299);
+  m_invSlotPositionMap[SMALLPOCK4POS       ].set(m_stdScreenOffsetX +  22, m_stdScreenOffsetY + 323);
+  m_invSlotPositionMap[SMALLPOCK5POS       ].set(m_stdScreenOffsetX +  60, m_stdScreenOffsetY + 251);
+  m_invSlotPositionMap[SMALLPOCK6POS       ].set(m_stdScreenOffsetX +  60, m_stdScreenOffsetY + 275);
+  m_invSlotPositionMap[SMALLPOCK7POS       ].set(m_stdScreenOffsetX +  60, m_stdScreenOffsetY + 299);
+  m_invSlotPositionMap[SMALLPOCK8POS       ].set(m_stdScreenOffsetX +  60, m_stdScreenOffsetY + 323);
+
+  m_invCamoRegion.set(SM_BODYINV_X, SM_BODYINV_Y);
+
+  m_progress_bar_box.set(STD_SCREEN_X + 5, 2, MIN_INTERFACE_WIDTH - 10, 12);
   m_moneyButtonLoc.set(343, startInvY + 11);
 
   m_VIEWPORT_END_X              = m_screenWidth;
@@ -83,4 +121,39 @@ void UILayout::recalculatePositions()
   m_VIEWPORT_WINDOW_END_Y       = m_screenHeight - 120;
 
   m_wordlClippingRect.set(0, 0, m_screenWidth, m_screenHeight - 120);
+
+  m_contractPosition.set(       m_stdScreenOffsetX + 120, m_stdScreenOffsetY +  50);
+  m_attributePosition.set(      m_stdScreenOffsetX + 220, m_stdScreenOffsetY + 150);
+  m_trainPosition.set(          m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
+  m_vehiclePosition.set(        m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
+  m_repairPosition.set(         m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
+  m_assignmentPosition.set(     m_stdScreenOffsetX + 120, m_stdScreenOffsetY + 150);
+  m_squadPosition.set(          m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
+}
+
+/** Get X position of tactical textbox. */
+INT16 UILayout::getTacticalTextBoxX()
+{
+
+  if ( guiCurrentScreen == MAP_SCREEN )
+  {
+    return STD_SCREEN_X + 110;
+  }
+  else
+  {
+    return 110;
+  }
+}
+
+/** Get Y position of tactical textbox. */
+INT16 UILayout::getTacticalTextBoxY()
+{
+  if ( guiCurrentScreen == MAP_SCREEN )
+  {
+    return DEFAULT_EXTERN_PANEL_Y_POS;
+  }
+  else
+  {
+    return 20;
+  }
 }

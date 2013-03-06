@@ -18,8 +18,8 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
-#include "PlatformIO.h"
 #include "UILayout.h"
+#include "PlatformIO.h"
 
 
 #define BUFFER_READY      0x00

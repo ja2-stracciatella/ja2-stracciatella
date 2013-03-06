@@ -145,7 +145,7 @@ static void UpdateHelpTextForInvnentoryStashSlots(void);
 void BlitInventoryPoolGraphic( void )
 {
 	const SGPBox* const box = &g_sector_inv_box;
-	BltVideoObject(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0, box->x, box->y);
+	BltVideoObject(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0, STD_SCREEN_X + box->x, STD_SCREEN_Y + box->y);
 
 	// resize list
 	CheckAndUnDateSlotAllocation( );
@@ -200,8 +200,8 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	if (item->o.ubNumberOfObjects == 0) return FALSE;
 
 	const SGPBox* const slot_box = &g_sector_inv_slot_box;
-	const INT32 dx = slot_box->x + slot_box->w * (iCurrentSlot / MAP_INV_SLOT_ROWS);
-	const INT32 dy = slot_box->y + slot_box->h * (iCurrentSlot % MAP_INV_SLOT_ROWS);
+	const INT32 dx = STD_SCREEN_X + slot_box->x + slot_box->w * (iCurrentSlot / MAP_INV_SLOT_ROWS);
+	const INT32 dy = STD_SCREEN_Y + slot_box->y + slot_box->h * (iCurrentSlot % MAP_INV_SLOT_ROWS);
 
 	SetFontDestBuffer(guiSAVEBUFFER);
 	const SGPBox* const item_box = &g_sector_inv_item_box;
@@ -478,8 +478,8 @@ static void CreateMapInventoryPoolSlots(void)
 {
 	{
 		const SGPBox* const inv_box = &g_sector_inv_box;
-		UINT16        const x       = inv_box->x;
-		UINT16        const y       = inv_box->y;
+		UINT16        const x       = STD_SCREEN_X + inv_box->x;
+		UINT16        const y       = STD_SCREEN_Y + inv_box->y;
 		UINT16        const w       = inv_box->w;
 		UINT16        const h       = inv_box->h;
 		MSYS_DefineRegion(&MapInventoryPoolMask, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallback);
@@ -491,8 +491,8 @@ static void CreateMapInventoryPoolSlots(void)
 	{
 		UINT16        const sx = i / MAP_INV_SLOT_ROWS;
 		UINT16        const sy = i % MAP_INV_SLOT_ROWS;
-		UINT16        const x  = reg_box->x + slot_box->x + sx * slot_box->w;
-		UINT16        const y  = reg_box->y + slot_box->y + sy * slot_box->h;
+		UINT16        const x  = reg_box->x + STD_SCREEN_X + slot_box->x + sx * slot_box->w;
+		UINT16        const y  = reg_box->y + STD_SCREEN_Y + slot_box->y + sy * slot_box->h;
 		UINT16        const w  = reg_box->w;
 		UINT16        const h  = reg_box->h;
 		MOUSE_REGION* const r  = &MapInventoryPoolSlots[i];
@@ -653,8 +653,8 @@ static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateMapInventoryButtons(void)
 {
-	guiMapInvenButton[0] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 10, 1, -1, 3, -1, 559, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolNextBtn);
-	guiMapInvenButton[1] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti",  9, 0, -1, 2, -1, 487, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolPrevBtn);
+	guiMapInvenButton[0] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 10, 1, -1, 3, -1, STD_SCREEN_X + 559, STD_SCREEN_Y + 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolNextBtn);
+	guiMapInvenButton[1] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti",  9, 0, -1, 2, -1, STD_SCREEN_X + 487, STD_SCREEN_Y + 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolPrevBtn);
 
 	//reset the current inventory page to be the first page
 	iCurrentInventoryPoolPage = 0;
@@ -1063,7 +1063,7 @@ static void DisplayPagesForMapInventoryPool(void)
 
 	// grab centered coords
 	const SGPBox* const box = &g_sector_inv_page_box;
-	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
+	FindFontCenterCoordinates(STD_SCREEN_X + box->x, STD_SCREEN_Y + box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
 	MPrint(sX, sY, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -1122,7 +1122,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 
 	// grab centered coords
 	const SGPBox* const box = &g_sector_inv_count_box;
-	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
+	FindFontCenterCoordinates(STD_SCREEN_X + box->x, STD_SCREEN_Y + box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
 	MPrint(sX, sY, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -1132,7 +1132,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 static void CreateMapInventoryPoolDoneButton(void)
 {
 	// create done button
-	guiMapInvenButton[2] = QuickCreateButtonImg(INTERFACEDIR "/done_button.sti", 0, 1, 587, 333, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
+	guiMapInvenButton[2] = QuickCreateButtonImg(INTERFACEDIR "/done_button.sti", 0, 1, STD_SCREEN_X + 587, STD_SCREEN_Y + 333, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
 }
 
 
@@ -1157,7 +1157,7 @@ static void DisplayCurrentSector(void)
 
 	// grab centered coords
 	const SGPBox* const box = &g_sector_inv_loc_box;
-	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
+	FindFontCenterCoordinates(STD_SCREEN_X + box->x, STD_SCREEN_Y + box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
 	MPrint(sX, sY, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -1230,7 +1230,7 @@ static void DrawTextOnSectorInventory(void)
 	INT16 y;
 	const SGPBox*  const box   = &g_sector_inv_title_box;
 	const wchar_t* const title = zMarksMapScreenText[11];
-	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, title, FONT14ARIAL, &x, &y);
+	FindFontCenterCoordinates(STD_SCREEN_X + box->x, STD_SCREEN_Y + box->y, box->w, box->h, title, FONT14ARIAL, &x, &y);
 	MPrint(x, y, title);
 
 	SetFontDestBuffer(FRAME_BUFFER);

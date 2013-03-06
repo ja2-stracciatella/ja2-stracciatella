@@ -464,6 +464,22 @@ void BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, INT
 	BltVideoSurface(dst, src, x, y, NULL);
 }
 
+/** Draw image on the video surface stretching the image if necessary. */
+void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const filename)
+{
+	AutoSGPVSurface src(AddVideoSurfaceFromFile(filename));
+  FillVideoSurfaceWithStretch(dst, src);
+}
+
+/** Fill video surface with another one with stretch. */
+void FillVideoSurfaceWithStretch(SGPVSurface* const dst, SGPVSurface* const src)
+{
+  SGPBox srcRec;
+  SGPBox dstRec;
+  srcRec.set(0, 0, src->Width(), src->Height());
+  dstRec.set(0, 0, dst->Width(), dst->Height());
+  BltStretchVideoSurface(dst, src, &srcRec, &dstRec);
+}
 
 #ifdef SGP_VIDEO_DEBUGGING
 

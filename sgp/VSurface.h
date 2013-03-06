@@ -154,6 +154,12 @@ static inline void DeleteVideoSurface(SGPVSurface* const vs)
 
 void BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
 
+/** Draw image on the video surface stretching the image if necessary. */
+void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const filename);
+
+/** Fill video surface with another one with stretch. */
+void FillVideoSurfaceWithStretch(SGPVSurface* const dst, SGPVSurface* const src);
+
 typedef SGP::AutoPtr<SGPVSurface> AutoSGPVSurface;
 
 #endif

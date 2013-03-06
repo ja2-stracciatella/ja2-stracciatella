@@ -162,10 +162,10 @@ enum
 #define		BOBBYR_ORDER_FORM_TITLE_Y					BOBBYR_BOBBY_RAY_TITLE_Y + 37
 #define		BOBBYR_ORDER_FORM_TITLE_WIDTH			159
 
-#define		BOBBYR_BACK_BUTTON_X							130
-#define		BOBBYR_BACK_BUTTON_Y							400 + LAPTOP_SCREEN_WEB_DELTA_Y + 4
+#define		BOBBYR_BACK_BUTTON_X							(STD_SCREEN_X + 130)
+#define		BOBBYR_BACK_BUTTON_Y							(STD_SCREEN_Y + 400 + LAPTOP_SCREEN_WEB_DELTA_Y + 4)
 
-#define		BOBBYR_HOME_BUTTON_X							515
+#define		BOBBYR_HOME_BUTTON_X							(STD_SCREEN_X + 515)
 #define		BOBBYR_HOME_BUTTON_Y							BOBBYR_BACK_BUTTON_Y
 
 #define		BOBBYR_SHIPMENT_BUTTON_X					( LAPTOP_SCREEN_UL_X + ( LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X - 75 ) / 2)
@@ -174,8 +174,8 @@ enum
 #define		SHIPPING_SPEED_LIGHT_WIDTH				9
 #define		SHIPPING_SPEED_LIGHT_HEIGHT				9
 
-#define		BOBBYR_CONFIRM_ORDER_X						220
-#define		BOBBYR_CONFIRM_ORDER_Y						170
+#define		BOBBYR_CONFIRM_ORDER_X						(STD_SCREEN_X + 220)
+#define		BOBBYR_CONFIRM_ORDER_Y						(STD_SCREEN_Y + 170)
 
 #define		BOBBYR_CITY_START_LOCATION_X			BOBBYR_LOCATION_BOX_X + 6
 #define		BOBBYR_CITY_START_LOCATION_Y			BOBBYR_LOCATION_BOX_Y + 61
@@ -209,8 +209,8 @@ enum
 #define		BOBBYR_TOTAL_SAVED_AREA_X					BOBBYR_ORDERGRID_X + 221
 #define		BOBBYR_TOTAL_SAVED_AREA_Y					BOBBYR_ORDERGRID_Y + 237
 
-#define		BOBBYR_USED_WARNING_X							122
-#define		BOBBYR_USED_WARNING_Y							382 + LAPTOP_SCREEN_WEB_DELTA_Y
+#define		BOBBYR_USED_WARNING_X							(STD_SCREEN_X + 122)
+#define		BOBBYR_USED_WARNING_Y							(STD_SCREEN_Y + 382 + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 
 #define		BOBBYR_PACKAXGE_WEIGHT_X					BOBBYR_LOCATION_BOX_X
@@ -220,9 +220,8 @@ enum
 
 
 
-UINT16 gShippingSpeedAreas[] = {585, 218 + LAPTOP_SCREEN_WEB_DELTA_Y,
-																585, 238 + LAPTOP_SCREEN_WEB_DELTA_Y,
-																585, 258 + LAPTOP_SCREEN_WEB_DELTA_Y};
+UINT16 gShippingSpeedAreas[6];
+
 
 // Identifier for the images
 static SGPVObject* guiBobbyRayTitle;
@@ -1017,7 +1016,7 @@ static void DrawShippingSpeedLights(UINT8 ubSelected)
 	else
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[4], gShippingSpeedAreas[5], gShippingSpeedAreas[4]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[5]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 
-	InvalidateRegion(585, 218, 594, 287);
+	InvalidateRegion(STD_SCREEN_X + 585, STD_SCREEN_Y + 218, STD_SCREEN_X + 594, STD_SCREEN_Y + 287);
 }
 
 
@@ -1892,6 +1891,14 @@ void EnterInitBobbyRayOrder()
 
 	//Get rid of the city drop dowm, if it is being displayed
 	gubDropDownAction = BR_DROP_DOWN_DESTROY;
+
+  int cnt = 0;
+  gShippingSpeedAreas[cnt++] = STD_SCREEN_X + 585;
+  gShippingSpeedAreas[cnt++] = STD_SCREEN_Y + 218 + LAPTOP_SCREEN_WEB_DELTA_Y;
+  gShippingSpeedAreas[cnt++] = STD_SCREEN_X + 585;
+  gShippingSpeedAreas[cnt++] = STD_SCREEN_Y + 238 + LAPTOP_SCREEN_WEB_DELTA_Y;
+  gShippingSpeedAreas[cnt++] = STD_SCREEN_X + 585;
+  gShippingSpeedAreas[cnt++] = STD_SCREEN_Y + 258 + LAPTOP_SCREEN_WEB_DELTA_Y;
 }
 
 

@@ -4,6 +4,8 @@
 #include "JA2Types.h"
 
 
+void InitMapScreenInterfaceMap();
+
 // functions
 void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow );
 //void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow );
@@ -126,14 +128,14 @@ enum {
 
 
 // scroll bounds
-#define EAST_ZOOM_BOUND 378
-#define WEST_ZOOM_BOUND 42
-#define SOUTH_ZOOM_BOUND 324
-#define NORTH_ZOOM_BOUND 36
+#define EAST_ZOOM_BOUND (STD_SCREEN_X + 378)
+#define WEST_ZOOM_BOUND (STD_SCREEN_X + 42)
+#define SOUTH_ZOOM_BOUND (STD_SCREEN_Y + 324)
+#define NORTH_ZOOM_BOUND (STD_SCREEN_Y + 36)
 
 // map view region
-#define			MAP_VIEW_START_X			270
-#define			MAP_VIEW_START_Y			10
+#define			MAP_VIEW_START_X			(STD_SCREEN_X + 270)
+#define			MAP_VIEW_START_Y			(STD_SCREEN_Y + 10)
 #define			MAP_VIEW_WIDTH				336
 #define			MAP_VIEW_HEIGHT				298
 

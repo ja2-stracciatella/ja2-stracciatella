@@ -19,6 +19,7 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 #ifndef JA2BETAVERSION
 #	include "GameSettings.h"
@@ -407,7 +408,7 @@ void SetIntroType( INT8 bIntroType )
 static void DisplaySirtechSplashScreen(void)
 {
 	FRAME_BUFFER->Fill(0);
-	BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/sirtechsplash.sti", 0, 0, 0);
+	BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/sirtechsplash.sti", 0, STD_SCREEN_X, STD_SCREEN_Y);
 	InvalidateScreen();
 	RefreshScreen();
 }

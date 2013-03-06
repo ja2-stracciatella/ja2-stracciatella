@@ -352,6 +352,7 @@
     <ClCompile Include="..\..\Build\TileEngine\WorldDat.cc" />
     <ClCompile Include="..\..\Build\TileEngine\WorldDef.cc" />
     <ClCompile Include="..\..\Build\TileEngine\WorldMan.cc" />
+    <ClCompile Include="..\..\Build\UILayout.cc" />
     <ClCompile Include="..\..\Build\Utils\Animated_ProgressBar.cc" />
     <ClCompile Include="..\..\Build\Utils\Cinematics.cc" />
     <ClCompile Include="..\..\Build\Utils\Cursors.cc" />
@@ -708,6 +709,7 @@
     <ClInclude Include="..\..\Build\TileEngine\WorldDef.h" />
     <ClInclude Include="..\..\Build\TileEngine\WorldMan.h" />
     <ClInclude Include="..\..\Build\TileEngine\World_Tileset_Enums.h" />
+    <ClInclude Include="..\..\Build\UILayout.h" />
     <ClInclude Include="..\..\Build\Utils\Animated_ProgressBar.h" />
     <ClInclude Include="..\..\Build\Utils\Cinematics.h" />
     <ClInclude Include="..\..\Build\Utils\Cursors.h" />

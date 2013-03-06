@@ -5,6 +5,7 @@
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
 #include "Types.h"
+#include "UILayout.h"
 
 
 void ExitLaptop(void);
@@ -100,16 +101,16 @@ extern BOOLEAN     fReDrawBookMarkInfo;
 // bookamrks for WWW bookmark list
 
 
-#define LAPTOP_X 0
-#define LAPTOP_Y 0
+#define LAPTOP_X (0 + STD_SCREEN_X)
+#define LAPTOP_Y (0 + STD_SCREEN_Y)
 
 
-#define LAPTOP_SCREEN_UL_X 111
-#define LAPTOP_SCREEN_UL_Y  27
-#define LAPTOP_SCREEN_LR_X 613
-#define LAPTOP_SCREEN_LR_Y 427
-#define LAPTOP_UL_X 24
-#define LAPTOP_UL_Y 27
+#define LAPTOP_SCREEN_UL_X (111 + STD_SCREEN_X)
+#define LAPTOP_SCREEN_UL_Y ( 27 + STD_SCREEN_Y)
+#define LAPTOP_SCREEN_LR_X (613 + STD_SCREEN_X)
+#define LAPTOP_SCREEN_LR_Y (427 + STD_SCREEN_Y)
+#define LAPTOP_UL_X (24 + STD_SCREEN_X)
+#define LAPTOP_UL_Y (27 + STD_SCREEN_Y)
 #define LAPTOP_SCREEN_WIDTH  LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X
 #define LAPTOP_SCREEN_HEIGHT LAPTOP_SCREEN_LR_Y - LAPTOP_SCREEN_UL_Y
 

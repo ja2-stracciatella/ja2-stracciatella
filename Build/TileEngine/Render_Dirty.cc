@@ -53,7 +53,7 @@ static VIDEO_OVERLAY* gVideoOverlays;
 		if (iter##__next = iter->next, iter->fDisabled) continue; else
 
 
-SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+SGPRect gDirtyClipRect;
 
 
 static BOOLEAN gfViewportDirty = FALSE;
@@ -311,7 +311,10 @@ void FreeBackgroundRect(BACKGROUND_SAVE* const b)
 
 void FreeBackgroundRectPending(BACKGROUND_SAVE* const b)
 {
-	b->fPendingDelete = TRUE;
+  if(b)
+  {
+    b->fPendingDelete = TRUE;
+  }
 }
 
 
@@ -345,6 +348,7 @@ void FreeBackgroundRectType(BackgroundFlags const uiFlags)
 void InitializeBackgroundRects(void)
 {
 	guiNumBackSaves = 0;
+  gDirtyClipRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 

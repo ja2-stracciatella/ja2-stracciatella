@@ -30,9 +30,9 @@
 #include "Video.h"
 #include "VSurface.h"
 #include <SDL.h>
+#include "UILayout.h"
 #include "GameRes.h"
 #include "Logger.h"
-#include "UILayout.h"
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -410,13 +410,13 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		{
 			VideoSetFullScreen(FALSE);
 		}
-		else if (strcmp(arg, "-width") == 0)
+		else if (strcmp(argv[i], "-width") == 0)
 		{
-      g_ui.setScreenWidth(atoi(*++argv));
+      g_ui.setScreenWidth(atoi(argv[++i]));
 		}
-		else if (strcmp(arg, "-height") == 0)
+		else if (strcmp(argv[i], "-height") == 0)
 		{
-      g_ui.setScreenHeight(atoi(*++argv));
+      g_ui.setScreenHeight(atoi(argv[++i]));
 		}
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)

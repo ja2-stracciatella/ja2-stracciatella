@@ -24,7 +24,7 @@ void InitJA2SplashScreen(void)
 	ClearMainMenu();
 #else
 	const char* const ImageFile = GetMLGFilename(MLG_SPLASH);
-	BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0);
+  BltVideoSurfaceOnceWithStretch(FRAME_BUFFER, ImageFile);
 #endif
 
 	InvalidateScreen();

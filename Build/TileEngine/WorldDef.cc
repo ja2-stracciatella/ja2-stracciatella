@@ -1100,7 +1100,10 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
 			if (usGridNo < WORLD_MAX)
 			{
-				CompileTileMovementCosts( usGridNo );
+        if(usGridNo >= 0)
+        {
+				  CompileTileMovementCosts( usGridNo );
+        }
 			}
 		}
 	}

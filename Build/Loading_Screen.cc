@@ -12,6 +12,7 @@
 #include "Strategic_Movement.h"
 #include "VSurface.h"
 #include "Video.h"
+#include "UILayout.h"
 
 
 LoadingScreenID gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
@@ -194,7 +195,7 @@ void DisplayLoadScreenWithID(LoadingScreenID const id)
 
 	try
 	{ // Blit the background image.
-		BltVideoSurfaceOnce(FRAME_BUFFER, filename, 0, 0);
+		BltVideoSurfaceOnce(FRAME_BUFFER, filename, STD_SCREEN_X, STD_SCREEN_Y);
 	}
 	catch (...)
 	{ // Failed to load the file, so use a black screen and print out message.

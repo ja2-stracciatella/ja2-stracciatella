@@ -11,6 +11,9 @@
 	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
 	abort();
 
+#define UNIMPLEMENTED_NO_ABORT \
+	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__);
+
 #ifdef WITH_FIXMES
 #	define FIXME \
 	fprintf(stderr, "===> %s:%d: %s() FIXME\n", __FILE__, __LINE__, __func__);
@@ -88,21 +91,18 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 
 struct SGPBox
 {
-	INT16 x;
-	INT16 y;
-	INT16 w;
-	INT16 h;
-};
+  INT16 x;
+  INT16 y;
+  INT16 w;
+  INT16 h;
 
-struct SGPBoxEx : public SGPBox
-{
-    SGPBoxEx(INT16 _x, INT16 _y, INT16 _w, INT16 _h)
-    {
-        x = _x;
-        y = _y;
-        w = _w;
-        h = _h;
-    }
+  void set(INT16 _x, INT16 _y, INT16 _w, INT16 _h)
+  {
+    x = _x;
+    y = _y;
+    w = _w;
+    h = _h;
+  }
 };
 
 struct SGPRect
@@ -125,6 +125,12 @@ struct SGPPoint
 {
 	INT32 	iX;
 	INT32   iY;
+
+  void set(INT32 x, INT32 y)
+  {
+    iX = x;
+    iY = y;
+  }
 };
 
 

@@ -22,39 +22,40 @@
 #include "Assignments.h"
 #include "Debug.h"
 #include "Video.h"
+#include "UILayout.h"
 
 
 #ifdef JA2DEMO
 #	define MAP_BORDER_FILE INTERFACEDIR "/mapborder0225.sti"
-#	define BTN_TOWN_X      272
-#	define BTN_MINE_X      315
-#	define BTN_TEAMS_X     358
-#	define BTN_MILITIA_X   401
-#	define BTN_AIR_X       444
-#	define BTN_ITEM_X      546
+#	define BTN_TOWN_X      (STD_SCREEN_X + 272)
+#	define BTN_MINE_X      (STD_SCREEN_X + 315)
+#	define BTN_TEAMS_X     (STD_SCREEN_X + 358)
+#	define BTN_MILITIA_X   (STD_SCREEN_X + 401)
+#	define BTN_AIR_X       (STD_SCREEN_X + 444)
+#	define BTN_ITEM_X      (STD_SCREEN_X + 546)
 
-#	define MAP_LEVEL_MARKER_X    485
+#	define MAP_LEVEL_MARKER_X    (STD_SCREEN_X + 485)
 #else
 #	define MAP_BORDER_FILE INTERFACEDIR "/mbs.sti"
-#	define BTN_TOWN_X      299
-#	define BTN_MINE_X      342
-#	define BTN_TEAMS_X     385
-#	define BTN_MILITIA_X   428
-#	define BTN_AIR_X       471
-#	define BTN_ITEM_X      514
+#	define BTN_TOWN_X      (STD_SCREEN_X + 299)
+#	define BTN_MINE_X      (STD_SCREEN_X + 342)
+#	define BTN_TEAMS_X     (STD_SCREEN_X + 385)
+#	define BTN_MILITIA_X   (STD_SCREEN_X + 428)
+#	define BTN_AIR_X       (STD_SCREEN_X + 471)
+#	define BTN_ITEM_X      (STD_SCREEN_X + 514)
 
-#	define MAP_LEVEL_MARKER_X    565
+#	define MAP_LEVEL_MARKER_X    (STD_SCREEN_X + 565)
 #endif
-#define MAP_LEVEL_MARKER_Y     323
+#define MAP_LEVEL_MARKER_Y     (STD_SCREEN_Y + 323)
 #define MAP_LEVEL_MARKER_DELTA   8
 #define MAP_LEVEL_MARKER_WIDTH  55
 
 
-#define MAP_BORDER_X 261
-#define MAP_BORDER_Y 0
+#define MAP_BORDER_X (STD_SCREEN_X + 261)
+#define MAP_BORDER_Y (STD_SCREEN_Y + 0)
 
-#define MAP_BORDER_CORNER_X 584
-#define MAP_BORDER_CORNER_Y 279
+#define MAP_BORDER_CORNER_X (STD_SCREEN_X + 584)
+#define MAP_BORDER_CORNER_Y (STD_SCREEN_Y + 279)
 
 
 // mouse levels
@@ -212,9 +213,9 @@ void RenderMapBorderEtaPopUp( void )
 		return;
 	}
 
-	BltVideoObject(FRAME_BUFFER, guiMapBorderEtaPopUp, 0, MAP_BORDER_X + 215, 291);
+	BltVideoObject(FRAME_BUFFER, guiMapBorderEtaPopUp, 0, MAP_BORDER_X + 215, STD_SCREEN_Y + 291);
 
-	InvalidateRegion( MAP_BORDER_X + 215, 291, MAP_BORDER_X + 215 + 100 , 310);
+	InvalidateRegion( MAP_BORDER_X + 215, (STD_SCREEN_Y + 291), MAP_BORDER_X + 215 + 100 , (STD_SCREEN_Y + 310));
 }
 
 
@@ -222,7 +223,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 {
 	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/map_border_buttons.sti", gfx, gfx + 9);
 	giMapBorderButtonsImage[idx] = img;
-	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, 323, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, (STD_SCREEN_Y + 323), MSYS_PRIORITY_HIGH, click);
 	giMapBorderButtons[idx] = btn;
 	btn->SetFastHelpText(help);
 	btn->SetCursor(MSYS_NO_CURSOR);

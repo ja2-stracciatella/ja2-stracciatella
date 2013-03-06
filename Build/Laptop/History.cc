@@ -43,9 +43,9 @@ struct HistoryUnit
 #define TOP_X											0+LAPTOP_SCREEN_UL_X
 #define TOP_Y											LAPTOP_SCREEN_UL_Y
 #define BOX_HEIGHT								14
-#define TOP_DIVLINE_Y							101
-#define TITLE_X										140
-#define TITLE_Y										33
+#define TOP_DIVLINE_Y							(STD_SCREEN_Y + 101)
+#define TITLE_X										(STD_SCREEN_X + 140)
+#define TITLE_Y										(STD_SCREEN_Y + 33 )
 #define PAGE_SIZE									22
 #define RECORD_Y									TOP_DIVLINE_Y
 #define RECORD_HISTORY_WIDTH			200
@@ -59,16 +59,16 @@ struct HistoryUnit
 #define HISTORY_TEXT_FONT FONT12ARIAL
 #define RECORD_DATE_X TOP_X+10
 #define RECORD_DATE_WIDTH 31//68
-#define RECORD_HEADER_Y 90
+#define RECORD_HEADER_Y           (STD_SCREEN_Y + 90)
 
 
 #define NUM_RECORDS_PER_PAGE PAGE_SIZE
 #define SIZE_OF_HISTORY_FILE_RECORD ( sizeof( UINT8 ) + sizeof( UINT8 ) + sizeof( UINT32 ) + sizeof( UINT16 ) + sizeof( UINT16 ) + sizeof( UINT8 ) + sizeof( UINT8 ) )
 
 // button positions
-#define NEXT_BTN_X 577
-#define PREV_BTN_X 553
-#define BTN_Y 53
+#define NEXT_BTN_X (STD_SCREEN_X + 577)
+#define PREV_BTN_X (STD_SCREEN_X + 553)
+#define BTN_Y      (STD_SCREEN_Y + 53 )
 
 // graphics handles
 static SGPVObject* guiTITLE;

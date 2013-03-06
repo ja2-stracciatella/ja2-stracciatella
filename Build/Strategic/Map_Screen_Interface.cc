@@ -73,7 +73,7 @@
 // number of LINKED LISTS for sets of leave items (each slot holds an unlimited # of items)
 #define NUM_LEAVE_LIST_SLOTS 20
 
-#define SELECTED_CHAR_ARROW_X 8
+#define SELECTED_CHAR_ARROW_X (STD_SCREEN_X + 8)
 
 #define SIZE_OF_UPDATE_BOX 20
 
@@ -260,18 +260,6 @@ BOOLEAN fShowSquadMenu = FALSE;
 BOOLEAN fShowContractMenu = FALSE;
 
 static BOOLEAN fRebuildMoveBox = FALSE;
-
-// positions for all the pop up boxes
-SGPPoint ContractPosition={120,50};
-SGPPoint AttributePosition={220,150};
-SGPPoint TrainPosition={160,150};
-SGPPoint VehiclePosition={160,150};
-
-SGPPoint RepairPosition={160,150};
-
-SGPPoint AssignmentPosition = { 120, 150 };
-SGPPoint SquadPosition ={ 160, 150 };
-
 
 // at least one merc was hired at some time
 BOOLEAN gfAtLeastOneMercWasHired = FALSE;

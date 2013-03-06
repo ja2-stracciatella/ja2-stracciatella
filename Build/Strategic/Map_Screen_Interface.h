@@ -9,12 +9,12 @@
 
 
 // char breath and life position
-#define BAR_INFO_X 66
-#define BAR_INFO_Y 61
+#define BAR_INFO_X (STD_SCREEN_X + 66)
+#define BAR_INFO_Y (STD_SCREEN_Y + 61)
 
 // merc icon position
-#define CHAR_ICON_CONTRACT_Y 64
-#define CHAR_ICON_X 187
+#define CHAR_ICON_CONTRACT_Y (STD_SCREEN_Y + 64)
+#define CHAR_ICON_X (STD_SCREEN_X + 187)
 #define CHAR_ICON_WIDTH 10
 #define CHAR_ICON_HEIGHT 10
 #define CHAR_ICON_SPACING 13
@@ -27,8 +27,8 @@
 #define MAP_SCREEN_FONT BLOCKFONT2
 
 // characterlist regions
-#define     Y_START               146
-#define			MAP_START_KEYRING_Y   107
+#define     Y_START               (STD_SCREEN_Y + 146)
+#define			MAP_START_KEYRING_Y   (STD_SCREEN_Y + 107)
 #define     Y_SIZE                GetFontHeight(MAP_SCREEN_FONT)
 
 
@@ -206,14 +206,13 @@ extern INT32 giSleepHighLine;
 extern SGPVObject* guiUpdatePanelTactical;
 extern BOOLEAN fShowUpdateBox;
 
-extern SGPPoint ContractPosition;
-extern SGPPoint AttributePosition;
-extern SGPPoint TrainPosition;
-extern SGPPoint VehiclePosition;
-extern SGPPoint AssignmentPosition ;
-extern SGPPoint SquadPosition ;
-
-extern SGPPoint RepairPosition;
+#define ContractPosition                (g_ui.m_contractPosition)
+#define AttributePosition               (g_ui.m_attributePosition)
+#define TrainPosition                   (g_ui.m_trainPosition)
+#define VehiclePosition                 (g_ui.m_vehiclePosition)
+#define RepairPosition                  (g_ui.m_repairPosition)
+#define AssignmentPosition              (g_ui.m_assignmentPosition )
+#define SquadPosition                   (g_ui.m_squadPosition )
 
 // disble team info panel due to showing of battle roster
 extern BOOLEAN fDisableDueToBattleRoster;

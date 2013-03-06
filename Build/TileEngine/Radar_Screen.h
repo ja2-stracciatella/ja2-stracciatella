@@ -7,7 +7,7 @@
 void LoadRadarScreenBitmap(const char* filename);
 
 // RADAR WINDOW DEFINES
-#define	RADAR_WINDOW_X				543
+#define	RADAR_WINDOW_X				(g_ui.get_RADAR_WINDOW_X())
 #define RADAR_WINDOW_TM_Y     (g_ui.get_RADAR_WINDOW_TM_Y())
 #define RADAR_WINDOW_WIDTH		88
 #define RADAR_WINDOW_HEIGHT		44

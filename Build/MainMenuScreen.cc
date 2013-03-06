@@ -351,7 +351,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 			BUTTON_PICS* const img = iMenuImages[cnt];
 			const UINT16       w   = GetDimensionsOfButtonPic(img)->w;
 			const INT16        x   = (SCREEN_WIDTH - w) / 2;
-			const INT16        y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
+			const INT16        y   = STD_SCREEN_Y + MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
 			GUIButtonRef const b = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
 			iMenuButtons[cnt] = b;
 			b->SetUserData(cnt);
@@ -376,8 +376,8 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 
 static void RenderMainMenu(void)
 {
-	BltVideoObject(guiSAVEBUFFER, guiMainMenuBackGroundImage, 0,   0,  0);
-	BltVideoObject(guiSAVEBUFFER, guiJa2LogoImage,            0, 188, 15);
+	BltVideoObject(guiSAVEBUFFER, guiMainMenuBackGroundImage, 0, STD_SCREEN_X,       STD_SCREEN_Y     );
+	BltVideoObject(guiSAVEBUFFER, guiJa2LogoImage,            0, STD_SCREEN_X + 188, STD_SCREEN_Y + 15);
 
 	RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 

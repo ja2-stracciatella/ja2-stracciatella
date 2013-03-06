@@ -12,6 +12,7 @@
 #include "Music_Control.h"
 #include "Timer_Control.h"
 #include "SysUtil.h"
+#include "UILayout.h"
 
 
 #define MAX_PROGRESSBARS 4
@@ -47,7 +48,7 @@ static PROGRESSBAR* pBar[MAX_PROGRESSBARS];
 
 void CreateLoadingScreenProgressBar()
 {
-	CreateProgressBar(0, 162, 427, 318, 16);
+	CreateProgressBar(0, STD_SCREEN_X + 162, STD_SCREEN_Y + 427, 318, 16);
 	pBar[0]->flags |= PROGRESS_LOAD_BAR;
 }
 

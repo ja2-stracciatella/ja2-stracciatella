@@ -84,8 +84,8 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "Files.h"
-#include "GameRes.h"
 #include "UILayout.h"
+#include "GameRes.h"
 
 
 static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525, 13524 };

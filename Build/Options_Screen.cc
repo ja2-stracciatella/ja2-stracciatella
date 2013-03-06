@@ -50,16 +50,16 @@
 #define		OPTIONS_SCREEN_HEIGHT									400
 
 
-#define		OPTIONS__TOP_LEFT_X										100
-#define		OPTIONS__TOP_LEFT_Y										40
+#define		OPTIONS__TOP_LEFT_X										(100 + STD_SCREEN_X)
+#define		OPTIONS__TOP_LEFT_Y										(40  + STD_SCREEN_Y)
 #define		OPTIONS__BOTTOM_RIGHT_X								OPTIONS__TOP_LEFT_X + OPTIONS_SCREEN_WIDTH
 #define		OPTIONS__BOTTOM_RIGHT_Y								OPTIONS__TOP_LEFT_Y + OPTIONS_SCREEN_HEIGHT
 
-#define OPT_SAVE_BTN_X  51
-#define OPT_LOAD_BTN_X 190
-#define OPT_QUIT_BTN_X 329
-#define OPT_DONE_BTN_X 469
-#define OPT_BTN_Y      438
+#define OPT_SAVE_BTN_X ( 51 + STD_SCREEN_X)
+#define OPT_LOAD_BTN_X (190 + STD_SCREEN_X)
+#define OPT_QUIT_BTN_X (329 + STD_SCREEN_X)
+#define OPT_DONE_BTN_X (469 + STD_SCREEN_X)
+#define OPT_BTN_Y      (438 + STD_SCREEN_Y)
 
 
 #define		OPT_GAP_BETWEEN_TOGGLE_BOXES					31//40
@@ -74,9 +74,9 @@
 #define		OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX		30//220
 #define		OPT_TOGGLE_TEXT_OFFSET_Y								2//3
 
-#define		OPT_TOGGLE_BOX_FIRST_COLUMN_X						265 //257 //OPT_TOGGLE_BOX_TEXT_X + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX
-#define		OPT_TOGGLE_BOX_SECOND_COLUMN_X					428 //OPT_TOGGLE_BOX_TEXT_X + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX
-#define   OPT_TOGGLE_BOX_START_Y                  89
+#define		OPT_TOGGLE_BOX_FIRST_COLUMN_X						(265 + STD_SCREEN_X)
+#define		OPT_TOGGLE_BOX_SECOND_COLUMN_X					(428 + STD_SCREEN_X)
+#define   OPT_TOGGLE_BOX_START_Y                  (89 + STD_SCREEN_Y)
 
 #define		OPT_TOGGLE_BOX_TEXT_WIDTH								OPT_TOGGLE_BOX_SECOND_COLUMN_X - OPT_TOGGLE_BOX_FIRST_COLUMN_X - 20
 
@@ -85,22 +85,22 @@
 
 #define		OPT_SLIDER_TEXT_WIDTH								45
 
-#define		OPT_SOUND_FX_TEXT_X									38
-#define		OPT_SOUND_FX_TEXT_Y									87//116//110
+#define		OPT_SOUND_FX_TEXT_X									(38 + STD_SCREEN_X)
+#define		OPT_SOUND_FX_TEXT_Y									(87 + STD_SCREEN_Y)
 
-#define		OPT_SPEECH_TEXT_X										85//OPT_SOUND_FX_TEXT_X + OPT_SLIDER_TEXT_WIDTH
+#define		OPT_SPEECH_TEXT_X										(85 + STD_SCREEN_X)
 #define		OPT_SPEECH_TEXT_Y										OPT_SOUND_FX_TEXT_Y
 
-#define		OPT_MUSIC_TEXT_X										137
+#define		OPT_MUSIC_TEXT_X										(137 + STD_SCREEN_X)
 #define		OPT_MUSIC_TEXT_Y										OPT_SOUND_FX_TEXT_Y
 
-#define		OPT_SOUND_EFFECTS_SLIDER_X					56
-#define		OPT_SOUND_EFFECTS_SLIDER_Y					126
+#define		OPT_SOUND_EFFECTS_SLIDER_X					(56 + STD_SCREEN_X)
+#define		OPT_SOUND_EFFECTS_SLIDER_Y					(126 + STD_SCREEN_Y)
 
-#define		OPT_SPEECH_SLIDER_X									107
+#define		OPT_SPEECH_SLIDER_X									(107 + STD_SCREEN_X)
 #define		OPT_SPEECH_SLIDER_Y									OPT_SOUND_EFFECTS_SLIDER_Y
 
-#define		OPT_MUSIC_SLIDER_X									158
+#define		OPT_MUSIC_SLIDER_X									(158 + STD_SCREEN_X)
 #define		OPT_MUSIC_SLIDER_Y									OPT_SOUND_EFFECTS_SLIDER_Y
 
 #define		OPT_MUSIC_SLIDER_PLAY_SOUND_DELAY		75
@@ -457,11 +457,11 @@ static void HandleOptionsScreen(void)
 
 static void RenderOptionsScreen(void)
 {
-	BltVideoObject(FRAME_BUFFER, guiOptionBackGroundImage, 0, 0, 0);
+	BltVideoObject(FRAME_BUFFER, guiOptionBackGroundImage, 0, STD_SCREEN_X, STD_SCREEN_Y);
 
 	//Get and display the titla image
-  BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 0, 0, 0);
-  BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 1, 0, 434);
+  BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 0, STD_SCREEN_X + 0, STD_SCREEN_Y +   0);
+  BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 1, STD_SCREEN_X + 0, STD_SCREEN_Y + 434);
 
 	//
 	// Text for the toggle boxes
