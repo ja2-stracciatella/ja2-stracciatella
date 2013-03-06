@@ -95,7 +95,7 @@
 #define		MERC_INTRO_TIME									1000
 #define		MERC_EXIT_TIME									500
 
-#define		MERC_TEXT_BOX_POS_Y							255
+#define		MERC_TEXT_BOX_POS_Y							(STD_SCREEN_Y + 255)
 
 #define		SPECK_IDLE_CHAT_DELAY						10000
 
