@@ -357,7 +357,7 @@ static void OpenAndReadFilesFile(void)
 	AutoSGPFile f;
 	try
 	{
-		f = FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ);
+		f = SmartFileOpenRO(FILES_DAT_FILE, true);
 	}
 	catch (...) { return; /* XXX TODO0019 ignore */ }
 
@@ -651,7 +651,7 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 {
 	FileString*  head   = 0;
 	FileString** anchor = &head;
-	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(filename, true));
 	for (; n != 0; ++offset, --n)
 	{
 		wchar_t str[FILE_STRING_SIZE];

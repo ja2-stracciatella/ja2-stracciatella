@@ -222,7 +222,7 @@ try
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return SOUND_ERROR;
 
-	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
+	AutoSGPFile hFile(SmartFileOpenRO(pFilename, true));
 
 	// MSS cannot determine which provider to play if you don't give it a real filename
 	// so if the file isn't in a library, play it normally
@@ -717,7 +717,7 @@ try
 {
 	Assert(pFilename != NULL);
 
-	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
+	AutoSGPFile hFile(SmartFileOpenRO(pFilename, true));
 
 	UINT32 uiSize = FileGetSize(hFile);
 
@@ -1157,7 +1157,7 @@ static UINT32 SoundGetUniqueID(void)
 static BOOLEAN SoundPlayStreamed(const char* pFilename)
 try
 {
-	AutoSGPFile hDisk(FileOpen(pFilename, FILE_ACCESS_READ));
+	AutoSGPFile hDisk(SmartFileOpenRO(pFilename, true));
 	return FileGetSize(hDisk) >= guiSoundCacheThreshold;
 }
 catch (...) { return FALSE; }

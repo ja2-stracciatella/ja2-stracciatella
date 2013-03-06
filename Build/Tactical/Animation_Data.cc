@@ -760,7 +760,7 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 static void LoadAnimationProfiles(void)
 try
 {
-	AutoSGPFile f(FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(ANIMPROFILEFILENAME, true));
 
 	FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles));
 

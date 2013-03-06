@@ -932,7 +932,7 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 
 		try
 		{
-			AutoSGPFile f(FileOpen(zSavedGameName, FILE_ACCESS_READ));
+			AutoSGPFile f(SmartFileOpenRO(zSavedGameName, false));
 			ExtractSavedGameHeaderFromFile(f, *header);
 			endof(header->zGameVersionNumber)[-1] =  '\0';
 			endof(header->sSavedGameDesc)[-1]     = L'\0';

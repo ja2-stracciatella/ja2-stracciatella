@@ -350,7 +350,7 @@ static void OpenAndReadHistoryFile(void)
 {
 	ClearHistoryList();
 
-	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(HISTORY_DATA_FILE, true));
 
 	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	while (entry_count-- > 0)
@@ -699,7 +699,7 @@ try
 	// check if bad page
 	if (uiPage == 0) return FALSE;
 
-	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(HISTORY_DATA_FILE, true));
 
 	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
@@ -842,7 +842,7 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 
 static INT32 GetNumberOfHistoryPages(void)
 {
-	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(HISTORY_DATA_FILE, true));
 
 	const UINT32 uiFileSize = FileGetSize(f);
 

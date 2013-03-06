@@ -34,7 +34,7 @@ static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 w, UINT16 h);
 
 SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 {
-	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(filename, true));
 
 	PcxHeader header;
 	FileRead(f, &header, sizeof(header));

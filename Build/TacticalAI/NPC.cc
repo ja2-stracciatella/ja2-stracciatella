@@ -323,7 +323,7 @@ try
 
 	}
 
-	AutoSGPFile f(FileOpen(zFileName, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(zFileName, true));
 	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
 catch (...) { return 0; }
@@ -465,7 +465,7 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 		sprintf(buf, NPCDATADIR "/%c%d.npc", 'A' + gsCivQuoteSector[idx][1] - 1, gsCivQuoteSector[idx][0]);
 		filename = buf;
 	}
-	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(filename, true));
 	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
 
