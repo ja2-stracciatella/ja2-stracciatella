@@ -649,7 +649,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(SmartFileOpenRO(zSaveGameName, true));
+	AutoSGPFile f(SmartFileOpenRO(zSaveGameName, false));
 	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
@@ -2477,14 +2477,14 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( FileExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zFileName1, true));
+		AutoSGPFile hFile(SmartFileOpenRO(zFileName1, false));
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( FileExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zFileName2, true));
+		AutoSGPFile hFile(SmartFileOpenRO(zFileName2, false));
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}
