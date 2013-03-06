@@ -42,6 +42,7 @@
 #include "Game_Clock.h"
 #include "MemMan.h"
 #include "JAScreens.h"
+#include "UILayout.h"
 
 
 struct MERCPLACEMENT
@@ -199,7 +200,7 @@ static void CheckForValidMapEdge(UINT8* pubStrategicInsertionCode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text, const wchar_t* help)
 {
-	GUIButtonRef const btn = QuickCreateButton(giOverheadButtonImages[idx], 11, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButton(giOverheadButtonImages[idx], STD_SCREEN_X + 11, STD_SCREEN_Y + y, MSYS_PRIORITY_HIGH, click);
 	iTPButtons[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, BLOCKFONT, FONT_BEIGE, 141);
 	btn->SetFastHelpText(help);
@@ -296,8 +297,8 @@ void InitTacticalPlacementGUI()
 		m.ubStrategicInsertionCode = s->ubStrategicInsertionCode;
 		m.fPlaced                  = FALSE;
 		m.uiVObjectID              = Load65Portrait(GetProfile(m.pSoldier->ubProfile));
-		INT32 const x =  91 + i / 2 * 54;
-		INT32 const y = 361 + i % 2 * 51;
+		INT32 const x = STD_SCREEN_X +  91 + i / 2 * 54;
+		INT32 const y = STD_SCREEN_Y + 361 + i % 2 * 51;
 		MSYS_DefineRegion(&m.region, x, y, x + 54, y + 62, MSYS_PRIORITY_HIGH, 0, MercMoveCallback, MercClickCallback);
 
 #ifdef JA2BETAVERSION
@@ -352,8 +353,8 @@ static void RenderTacticalPlacementGUI()
 	 * refresh the display. */
 	if (!gfTacticalPlacementGUIDirty && gbHilightedMercID != -1)
 	{
-		INT32 const x =  91 + gbHilightedMercID / 2 * 54;
-		INT32 const y = 361 + gbHilightedMercID % 2 * 51;
+		INT32 const x = STD_SCREEN_X +  91 + gbHilightedMercID / 2 * 54;
+		INT32 const y = STD_SCREEN_Y + 361 + gbHilightedMercID % 2 * 51;
 		if (gusMouseXPos < x || x + 54 < gusMouseXPos ||
 				gusMouseYPos < y || y + 62 < gusMouseYPos)
 		{
@@ -368,8 +369,8 @@ static void RenderTacticalPlacementGUI()
 	// If the display is dirty render the entire panel.
 	if (gfTacticalPlacementGUIDirty)
 	{
-		BltVideoObject(buf, giOverheadPanelImage, 0, 0, 320);
-		InvalidateRegion(0, 0, 320, SCREEN_HEIGHT);
+		BltVideoObject(buf, giOverheadPanelImage, 0, STD_SCREEN_X + 0, STD_SCREEN_Y + 320);
+		InvalidateRegion(STD_SCREEN_X + 0, STD_SCREEN_Y + 0, STD_SCREEN_X + 320, STD_SCREEN_Y + 480);
 		gfTacticalPlacementGUIDirty = FALSE;
 		MarkButtonsDirty();
 		for (INT32 i = 0; i != giPlacements; ++i)
@@ -378,68 +379,68 @@ static void RenderTacticalPlacementGUI()
 			INT32         const  x =  95 + i / 2 * 54;
 			INT32         const  y = 371 + i % 2 * 51;
 			ColorFillVideoSurfaceArea(buf, x + 36, y + 2, x + 44, y + 30, 0);
-			BltVideoObject(buf, giMercPanelImage, 0, x,     y);
-			BltVideoObject(buf, m.uiVObjectID,    0, x + 2, y + 2);
+			BltVideoObject(buf, giMercPanelImage, 0, STD_SCREEN_X + x,     STD_SCREEN_Y + y);
+			BltVideoObject(buf, m.uiVObjectID,    0, STD_SCREEN_X + x + 2, STD_SCREEN_Y + y + 2);
 
 			SOLDIERTYPE const& s = *m.pSoldier;
 			if (s.bLife == 0) continue;
 
-			DrawBar(buf, x + 36, y + 29, s.bLifeMax   * 27 / 100, FROMRGB(107, 107,  57), FROMRGB(222, 181, 115)); // Yellow one for bleeding
-			DrawBar(buf, x + 36, y + 29, s.bBleeding  * 27 / 100, FROMRGB(156,  57,  57), FROMRGB(222, 132, 132)); // Pink one for bandaged
-			DrawBar(buf, x + 36, y + 29, s.bLife      * 27 / 100, FROMRGB(107,   8,   8), FROMRGB(206,   0,   0)); // Red one for actual health
-			DrawBar(buf, x + 39, y + 29, s.bBreathMax * 27 / 100, FROMRGB(  8,   8, 132), FROMRGB(  8,   8, 107)); // Breath bar
-			DrawBar(buf, x + 42, y + 29, s.bMorale    * 27 / 100, FROMRGB(  8, 156,   8), FROMRGB(  8, 107,   8)); // Morale bar
+			DrawBar(buf, STD_SCREEN_X + x + 36, STD_SCREEN_Y + y + 29, s.bLifeMax   * 27 / 100, FROMRGB(107, 107,  57), FROMRGB(222, 181, 115)); // Yellow one for bleeding
+			DrawBar(buf, STD_SCREEN_X + x + 36, STD_SCREEN_Y + y + 29, s.bBleeding  * 27 / 100, FROMRGB(156,  57,  57), FROMRGB(222, 132, 132)); // Pink one for bandaged
+			DrawBar(buf, STD_SCREEN_X + x + 36, STD_SCREEN_Y + y + 29, s.bLife      * 27 / 100, FROMRGB(107,   8,   8), FROMRGB(206,   0,   0)); // Red one for actual health
+			DrawBar(buf, STD_SCREEN_X + x + 39, STD_SCREEN_Y + y + 29, s.bBreathMax * 27 / 100, FROMRGB(  8,   8, 132), FROMRGB(  8,   8, 107)); // Breath bar
+			DrawBar(buf, STD_SCREEN_X + x + 42, STD_SCREEN_Y + y + 29, s.bMorale    * 27 / 100, FROMRGB(  8, 156,   8), FROMRGB(  8, 107,   8)); // Morale bar
 		}
 
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
 		wchar_t str[128];
 		GetSectorIDString(gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, lengthof(str), TRUE);
-		mprintf(120, 335, L"%ls %ls -- %ls...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]);
+		mprintf(STD_SCREEN_X + 120, STD_SCREEN_Y + 335, L"%ls %ls -- %ls...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]);
 
 		// Shade out the part of the tactical map that isn't considered placable.
-		BlitBufferToBuffer(buf, guiSAVEBUFFER, 0, 320, SCREEN_WIDTH, 160);
+		BlitBufferToBuffer(buf, guiSAVEBUFFER, STD_SCREEN_X + 0, STD_SCREEN_Y + 320, 640, 160);
 	}
 
 	if (gfValidLocationsChanged)
 	{
 		gfValidLocationsChanged = FALSE;
-		BlitBufferToBuffer(guiSAVEBUFFER, buf, 4, 4, 636, 320);
-		InvalidateRegion(4, 4, 636, 320);
+		BlitBufferToBuffer(guiSAVEBUFFER, buf, STD_SCREEN_X + 4, STD_SCREEN_Y + 4, 636, 320);
+		InvalidateRegion(STD_SCREEN_X + 4, STD_SCREEN_Y + 4, STD_SCREEN_X + 636, STD_SCREEN_Y + 320);
 
 		UINT16 const hatch_colour =
 			DayTime() ? 0 :                     // 6AM to 9PM is black
 			Get16BPPColor(FROMRGB(63, 31, 31)); // 9PM to 6AM is gray (black is too dark to distinguish)
-		SGPRect clip = { 4, 4, 636, 320 };
+		SGPRect clip = { STD_SCREEN_X + 4, STD_SCREEN_Y + 4, STD_SCREEN_X + 636, STD_SCREEN_Y + 320 };
 		if (gbCursorMercID == -1)
 		{
-			if (gfNorth) clip.iTop    =  30;
-			if (gfEast)  clip.iRight  = 610;
-			if (gfSouth) clip.iBottom = 290;
-			if (gfWest)  clip.iLeft   =  30;
+			if (gfNorth) clip.iTop    = STD_SCREEN_Y +  30;
+			if (gfEast)  clip.iRight  = STD_SCREEN_X + 610;
+			if (gfSouth) clip.iBottom = STD_SCREEN_Y + 290;
+			if (gfWest)  clip.iLeft   = STD_SCREEN_X +  30;
 		}
 		else
 		{
 			switch (gMercPlacement[gbCursorMercID].ubStrategicInsertionCode)
 			{
-				case INSERTION_CODE_NORTH: clip.iTop    =  30; break;
-				case INSERTION_CODE_EAST:  clip.iRight  = 610; break;
-				case INSERTION_CODE_SOUTH: clip.iBottom = 290; break;
-				case INSERTION_CODE_WEST:  clip.iLeft   =  30; break;
+				case INSERTION_CODE_NORTH: clip.iTop    = STD_SCREEN_Y +  30; break;
+				case INSERTION_CODE_EAST:  clip.iRight  = STD_SCREEN_X + 610; break;
+				case INSERTION_CODE_SOUTH: clip.iBottom = STD_SCREEN_Y + 290; break;
+				case INSERTION_CODE_WEST:  clip.iLeft   = STD_SCREEN_X +  30; break;
 			}
 		}
 		SGPVSurface::Lock l(buf);
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 		Blt16BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_colour);
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, STD_SCREEN_X + 0, STD_SCREEN_Y + 0, 640, 480);
 		RectangleDraw(TRUE, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_colour, pDestBuf);
 	}
 
 	bool const is_group = gubDefaultButton == GROUP_BUTTON;
 	for (INT32 i = 0; i != giPlacements; ++i)
 	{ // Render the merc's names
-		INT32 const x =  95 + i / 2 * 54;
-		INT32 const y = 371 + i % 2 * 51;
+		INT32 const x = STD_SCREEN_X +  95 + i / 2 * 54;
+		INT32 const y = STD_SCREEN_Y + 371 + i % 2 * 51;
 
 		MERCPLACEMENT const& m     = gMercPlacement[i];
 		SOLDIERTYPE   const& s     = *m.pSoldier;
@@ -543,24 +544,26 @@ void TacticalPlacementHandle()
 		}
 	}
 	gfValidCursor = FALSE;
-	if( gbSelectedMercID != -1 && gusMouseYPos < 320 )
+	if( gbSelectedMercID != -1
+      && (gusMouseYPos >= STD_SCREEN_Y) && (gusMouseYPos < STD_SCREEN_Y + 320)
+      && (gusMouseXPos >= STD_SCREEN_X) && (gusMouseXPos < STD_SCREEN_X + 640) )
 	{
 		switch( gMercPlacement[ gbCursorMercID ].ubStrategicInsertionCode )
 		{
 			case INSERTION_CODE_NORTH:
-				if( gusMouseYPos <= 40 )
+				if( gusMouseYPos <= (STD_SCREEN_Y + 40) )
 					gfValidCursor = TRUE;
 				break;
 			case INSERTION_CODE_EAST:
-				if( gusMouseXPos >= 600 )
+				if( gusMouseXPos >= (STD_SCREEN_X + 600) )
 					gfValidCursor = TRUE;
 				break;
 			case INSERTION_CODE_SOUTH:
-				if( gusMouseYPos >= 280 )
+				if( gusMouseYPos >= (STD_SCREEN_Y + 280) )
 					gfValidCursor = TRUE;
 				break;
 			case INSERTION_CODE_WEST:
-				if( gusMouseXPos <= 40 )
+				if( gusMouseXPos <= (STD_SCREEN_X + 40) )
 					gfValidCursor = TRUE;
 				break;
 		}
@@ -941,7 +944,7 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 
 					if( fInvalidArea )
 					{ //Report error due to invalid placement.
-						SGPBox const CenterRect = { 220, 120, 200, 80 };
+						SGPBox const CenterRect = { STD_SCREEN_X + 220, STD_SCREEN_Y + 120, 200, 80 };
 						DoMessageBox(MSG_BOX_BASIC_STYLE, gpStrategicString[STR_TP_INACCESSIBLE_MESSAGE], guiCurrentScreen, MSG_BOX_FLAG_OK, DialogRemoved, &CenterRect);
 					}
 					else
@@ -955,7 +958,7 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 		{ //not a valid cursor location...
 			if( gbCursorMercID != - 1 )
 			{
-				SGPBox const CenterRect = { 220, 120, 200, 80 };
+				SGPBox const CenterRect = { STD_SCREEN_X + 220, STD_SCREEN_Y + 120, 200, 80 };
 				DoMessageBox(MSG_BOX_BASIC_STYLE, gpStrategicString[STR_TP_INVALID_MESSAGE], guiCurrentScreen, MSG_BOX_FLAG_OK, DialogRemoved, &CenterRect);
 			}
 		}

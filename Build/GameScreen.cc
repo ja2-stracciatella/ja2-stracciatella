@@ -57,6 +57,7 @@
 #include "Debug.h"
 #include "Video.h"
 #include "JAScreens.h"
+#include "UILayout.h"
 
 #ifdef JA2TESTVERSION
 #	include "Scheduling.h"

@@ -9,6 +9,7 @@
 #include "VSurface.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
+#include "UILayout.h"
 #include "GameRes.h"
 
 

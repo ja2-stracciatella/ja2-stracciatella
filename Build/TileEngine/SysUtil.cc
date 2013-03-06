@@ -1,6 +1,7 @@
 #include "Local.h"
 #include "SysUtil.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 
 SGPVSurface* guiSAVEBUFFER;

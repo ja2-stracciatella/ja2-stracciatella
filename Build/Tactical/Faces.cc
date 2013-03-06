@@ -38,6 +38,7 @@
 #include "SoundMan.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 // Defines

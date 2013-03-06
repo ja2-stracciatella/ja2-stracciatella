@@ -17,6 +17,7 @@
 
 #define		AIM_LINK_NUM_LINKS						3
 
+#define		AIM_LINK_LINK_OFFSET_X				94
 #define		AIM_LINK_LINK_OFFSET_Y				94//90
 
 #define		AIM_LINK_LINK_WIDTH						420
@@ -60,7 +61,7 @@ void EnterAimLinks()
 	// Load the Insurance graphic.
 	guiInsuranceLink = AddVideoObjectFromFile(GetMLGFilename(MLG_INSURANCELINK));
 
-	UINT16 const  x    = AIM_LINK_LINK_OFFSET_Y;
+	UINT16 const  x    = STD_SCREEN_X + AIM_LINK_LINK_OFFSET_X;
 	UINT16        y    = AIM_LINK_BOBBY_LINK_Y;
 	UINT8  const* page = gubLinkPages;
 	FOR_EACHX(MOUSE_REGION, i, gSelectedLinkRegion, y += AIM_LINK_LINK_OFFSET_Y)

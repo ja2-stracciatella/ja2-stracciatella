@@ -85,6 +85,7 @@
 #include "Debug.h"
 #include "Button_System.h"
 #include "JAScreens.h"
+#include "UILayout.h"
 
 #ifdef JA2TESTVERSION
 #	include "Arms_Dealer_Init.h"
@@ -114,8 +115,8 @@ enum
 #define DOWNLOAD_FONT FONT12ARIAL
 
 
-#define BOOK_X      111
-#define BOOK_TOP_Y   79
+#define BOOK_X      (111 + STD_SCREEN_X)
+#define BOOK_TOP_Y  ( 79 + STD_SCREEN_Y)
 #define BOOK_HEIGHT  12
 #define DOWN_HEIGHT  19
 #define BOOK_WIDTH  100
@@ -126,8 +127,8 @@ enum
 #define FAST_UNIT_TIME          3
 #define FASTEST_UNIT_TIME       2
 #define ALMOST_FAST_UNIT_TIME  25
-#define DOWNLOAD_X            300
-#define DOWNLOAD_Y            200
+#define DOWNLOAD_X            (300 + STD_SCREEN_X)
+#define DOWNLOAD_Y            (200 + STD_SCREEN_Y)
 #define LAPTOP_WINDOW_X       DOWNLOAD_X + 12
 #define LAPTOP_WINDOW_Y       DOWNLOAD_Y + 25
 #define LAPTOP_BAR_Y          LAPTOP_WINDOW_Y + 2
@@ -135,8 +136,8 @@ enum
 #define UNIT_WIDTH              4
 #define DOWN_STRING_X         DOWNLOAD_X + 47
 #define DOWN_STRING_Y         DOWNLOAD_Y +  5
-#define LAPTOP_TITLE_ICONS_X  113
-#define LAPTOP_TITLE_ICONS_Y   27
+#define LAPTOP_TITLE_ICONS_X  (113 + STD_SCREEN_X)
+#define LAPTOP_TITLE_ICONS_Y  ( 27 + STD_SCREEN_Y)
 
 // HD flicker times
 #define HD_FLICKER_TIME 3000
@@ -147,14 +148,14 @@ enum
 #define LAPTOP_TITLE_BAR_WIDTH               500
 #define LAPTOP_TITLE_BAR_HEIGHT               24
 
-#define LAPTOP_TITLE_BAR_TOP_LEFT_X          111
-#define LAPTOP_TITLE_BAR_TOP_LEFT_Y           25
-#define LAPTOP_TITLE_BAR_TOP_RIGHT_X         610
+#define LAPTOP_TITLE_BAR_TOP_LEFT_X          (111 + STD_SCREEN_X)
+#define LAPTOP_TITLE_BAR_TOP_LEFT_Y          ( 25 + STD_SCREEN_Y)
+#define LAPTOP_TITLE_BAR_TOP_RIGHT_X         (610 + STD_SCREEN_X)
 
-#define LAPTOP_TITLE_BAR_ICON_OFFSET_X         5
-#define LAPTOP_TITLE_BAR_ICON_OFFSET_Y         2
-#define LAPTOP_TITLE_BAR_TEXT_OFFSET_X        29
-#define LAPTOP_TITLE_BAR_TEXT_OFFSET_Y         8
+#define LAPTOP_TITLE_BAR_ICON_OFFSET_X         (5 + STD_SCREEN_X)
+#define LAPTOP_TITLE_BAR_ICON_OFFSET_Y         (2 + STD_SCREEN_Y)
+#define LAPTOP_TITLE_BAR_TEXT_OFFSET_X        (29 + STD_SCREEN_X)
+#define LAPTOP_TITLE_BAR_TEXT_OFFSET_Y         (8 + STD_SCREEN_Y)
 
 #define LAPTOP_PROGRAM_ICON_X      LAPTOP_TITLE_BAR_TOP_LEFT_X
 #define LAPTOP_PROGRAM_ICON_Y      LAPTOP_TITLE_BAR_TOP_LEFT_Y
@@ -168,10 +169,10 @@ enum
 static SGPVSurface* guiTitleBarSurface;
 static BOOLEAN gfTitleBarSurfaceAlreadyActive = FALSE;
 
-#define LAPTOP__NEW_FILE_ICON_X  83
-#define LAPTOP__NEW_FILE_ICON_Y 412
+#define LAPTOP__NEW_FILE_ICON_X  (83 + STD_SCREEN_X)
+#define LAPTOP__NEW_FILE_ICON_Y (412 + STD_SCREEN_Y)
 
-#define LAPTOP__NEW_EMAIL_ICON_X (83 - 16)
+#define LAPTOP__NEW_EMAIL_ICON_X ((83 - 16) + STD_SCREEN_X)
 #define LAPTOP__NEW_EMAIL_ICON_Y LAPTOP__NEW_FILE_ICON_Y
 
 
@@ -663,8 +664,8 @@ static void RenderLapTopImage(void)
 {
 	if (fMaximizingProgram || fMinizingProgram) return;
 
-	BltVideoObject(FRAME_BUFFER, guiLAPTOP,           0, LAPTOP_X, LAPTOP_Y);
-	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25,       23);
+	BltVideoObject(FRAME_BUFFER, guiLAPTOP,           0, LAPTOP_X,      LAPTOP_Y);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, LAPTOP_X + 25, LAPTOP_Y + 23);
 
 	MarkButtonsDirty();
 }
@@ -1024,7 +1025,7 @@ ScreenID LaptopScreenHandle()
 
 		//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 		//         Start transitioning the screen.
-		SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+		SGPBox const DstRect = { STD_SCREEN_X, STD_SCREEN_Y, MAP_SCREEN_WIDTH, MAP_SCREEN_HEIGHT };
 		const UINT32 uiTimeRange = 1000;
 		INT32 iPercentage     = 0;
 		INT32 iRealPercentage = 0;
@@ -1051,13 +1052,6 @@ ScreenID LaptopScreenHandle()
 				iPercentage += (100 - iPercentage) * iFactor * 0.01 + 0.5;
 			}
 
-			//Mapscreen source rect
-			SGPRect SrcRect1;
-			SrcRect1.iLeft   =                 464 * iPercentage / 100;
-			SrcRect1.iRight  = SCREEN_WIDTH  - 163 * iPercentage / 100;
-			SrcRect1.iTop    =                 417 * iPercentage / 100;
-			SrcRect1.iBottom = SCREEN_HEIGHT -  55 * iPercentage / 100;
-			//Laptop source rect
 			INT32 iScalePercentage;
 			if (iPercentage < 99)
 			{
@@ -1072,22 +1066,7 @@ ScreenID LaptopScreenHandle()
 			const INT32 iX      = 472 - (472 - 320) * iScalePercentage / 5333;
 			const INT32 iY      = 424 - (424 - 240) * iScalePercentage / 5333;
 
-			SGPBox const SrcRect2 = { iX - iWidth / 2, iY - iHeight / 2, iWidth, iHeight };
-			//SrcRect2.iLeft = 464 - 464 * iScalePercentage / 100;
-			//SrcRect2.iRight = 477 + 163 * iScalePercentage / 100;
-			//SrcRect2.iTop = 417 - 417 * iScalePercentage / 100;
-			//SrcRect2.iBottom = 425 + 55 * iScalePercentage / 100;
-
-			//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
-
-			//SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-			//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
-			//{ SGPVSurface::Lock(FRAME_BUFFER);
-			//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			//	UINT16* const pDestBuf = l.Buffer<UINT16>();
-			//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
-			//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
-			//}
+			SGPBox const SrcRect2 = { STD_SCREEN_X + iX - iWidth / 2, STD_SCREEN_Y + iY - iHeight / 2, iWidth, iHeight };
 
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 			InvalidateScreen();
@@ -1330,7 +1309,7 @@ static void ExitLaptopMode(UINT32 uiMode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const wchar_t* text, const wchar_t* help_text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/buttonsforlaptop.sti", idx, idx + 8, 29, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/buttonsforlaptop.sti", idx, idx + 8, (29 + STD_SCREEN_X), (y + STD_SCREEN_Y), MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
 	btn->SetFastHelpText(help_text);
 	btn->SpecifyTextOffsets(off_x, 11, TRUE);
@@ -1390,7 +1369,7 @@ static void LeaveLapTopScreen(void)
 		if (gfAtLeastOneMercWasHired)
 		{
 			if (LaptopSaveInfo.gfNewGameLaptop)
-			{
+	{
 				LaptopSaveInfo.gfNewGameLaptop = FALSE;
 				fExitingLaptopFlag = TRUE;
 				InitNewGame();
@@ -1421,7 +1400,7 @@ static void LeaveLapTopScreen(void)
 
 			//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 			//         Start transitioning the screen.
-			SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+      SGPBox const DstRect = { STD_SCREEN_X, STD_SCREEN_Y, MAP_SCREEN_WIDTH, MAP_SCREEN_HEIGHT };
 			const UINT32 uiTimeRange = 1000;
 			INT32 iPercentage     = 100;
 			INT32 iRealPercentage = 100;
@@ -1471,22 +1450,7 @@ static void LeaveLapTopScreen(void)
 				const INT32 iX = 472 - (472 - 320) * iScalePercentage / 5333;
 				const INT32 iY = 424 - (424 - 240) * iScalePercentage / 5333;
 
-				SGPBox const SrcRect2 = { iX - iWidth / 2, iY - iHeight / 2, iWidth, iHeight };
-				//SrcRect2.iLeft = 464 - 464 * iScalePercentage / 100;
-				//SrcRect2.iRight = 477 + 163 * iScalePercentage / 100;
-				//SrcRect2.iTop = 417 - 417 * iScalePercentage / 100;
-				//SrcRect2.iBottom = 425 + 55 * iScalePercentage / 100;
-
-				//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
-
-				//SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-				//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
-				//{ SGPVSurface::Lock(FRAME_BUFFER);
-				//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				//	UINT16* const pDestBuf = l.Buffer<UINT16>();
-				//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
-				//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
-				//}
+				SGPBox const SrcRect2 = { STD_SCREEN_X + iX - iWidth / 2, STD_SCREEN_Y + iY - iHeight / 2, iWidth, iHeight };
 
 				BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 				InvalidateScreen();
@@ -2017,7 +1981,7 @@ static void DisplayLoadPending(void)
 	INT16 sXPosition = 0;
 	INT16 sYPosition = 0;
 	FindFontCenterCoordinates(328, 0, 446 - 328, 0, str, DOWNLOAD_FONT, &sXPosition, &sYPosition);
-	MPrint(sXPosition, DOWN_STRING_Y, str);
+	MPrint(STD_SCREEN_X + sXPosition, DOWN_STRING_Y, str);
 
 	BltVideoObject(FRAME_BUFFER, guiGRAPHWINDOW, 0, LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
 
@@ -2256,7 +2220,8 @@ static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGra
 	Assert(uiBackgroundGraphic);
 
 	// Create a background video surface to blt the title bar onto
-	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
+	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH + LAPTOP_TITLE_BAR_ICON_OFFSET_X,
+                                       LAPTOP_TITLE_BAR_HEIGHT + LAPTOP_TITLE_BAR_ICON_OFFSET_Y, PIXEL_DEPTH);
 
 	BltVideoObject(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
 	BltVideoObject(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
@@ -2397,16 +2362,16 @@ static void HandleSlidingTitleBar(void)
 		UINT16 y;
 		switch (bProgramBeingMaximized)
 		{
-			case LAPTOP_PROGRAM_MAILER:      y =  66; break;
-			case LAPTOP_PROGRAM_FILES:       y = 120; break;
-			case LAPTOP_PROGRAM_FINANCES:    y = 226; break;
-			case LAPTOP_PROGRAM_PERSONNEL:   y = 194; break;
-			case LAPTOP_PROGRAM_HISTORY:     y = 162; break;
-			case LAPTOP_PROGRAM_WEB_BROWSER: y =  99; break;
+			case LAPTOP_PROGRAM_MAILER:      y = STD_SCREEN_Y +  66; break;
+			case LAPTOP_PROGRAM_FILES:       y = STD_SCREEN_Y + 120; break;
+			case LAPTOP_PROGRAM_FINANCES:    y = STD_SCREEN_Y + 226; break;
+			case LAPTOP_PROGRAM_PERSONNEL:   y = STD_SCREEN_Y + 194; break;
+			case LAPTOP_PROGRAM_HISTORY:     y = STD_SCREEN_Y + 162; break;
+			case LAPTOP_PROGRAM_WEB_BROWSER: y = STD_SCREEN_Y +  99; break;
 			default: goto no_display_max;
 		}
 
-		fMaximizingProgram = !DisplayTitleBarMaximizeGraphic(TRUE, fInitTitle, 29, y, 29 + 20);
+		fMaximizingProgram = !DisplayTitleBarMaximizeGraphic(TRUE, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
 		if (!fMaximizingProgram)
 		{
 			RemoveTitleBarMaximizeGraphics();
@@ -2425,16 +2390,16 @@ no_display_max:
 		UINT16 y;
 		switch (bProgramBeingMaximized)
 		{
-			case LAPTOP_PROGRAM_MAILER:      y =  66; break;
-			case LAPTOP_PROGRAM_FILES:       y = 130; break; // XXX only difference to max case
-			case LAPTOP_PROGRAM_FINANCES:    y = 226; break;
-			case LAPTOP_PROGRAM_PERSONNEL:   y = 194; break;
-			case LAPTOP_PROGRAM_HISTORY:     y = 162; break;
-			case LAPTOP_PROGRAM_WEB_BROWSER: y =  99; break;
+			case LAPTOP_PROGRAM_MAILER:      y = STD_SCREEN_Y +  66; break;
+			case LAPTOP_PROGRAM_FILES:       y = STD_SCREEN_Y + 130; break; // XXX only difference to max case
+			case LAPTOP_PROGRAM_FINANCES:    y = STD_SCREEN_Y + 226; break;
+			case LAPTOP_PROGRAM_PERSONNEL:   y = STD_SCREEN_Y + 194; break;
+			case LAPTOP_PROGRAM_HISTORY:     y = STD_SCREEN_Y + 162; break;
+			case LAPTOP_PROGRAM_WEB_BROWSER: y = STD_SCREEN_Y +  99; break;
 			default: goto no_display_min;
 		}
 
-		fMinizingProgram = !DisplayTitleBarMaximizeGraphic(FALSE, fInitTitle, 29, y, 29 + 20);
+		fMinizingProgram = !DisplayTitleBarMaximizeGraphic(FALSE, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
 		if (!fMinizingProgram)
 		{
 			RemoveTitleBarMaximizeGraphics();
@@ -2458,8 +2423,8 @@ no_display_min:;
 static void ShowLights(void)
 {
 	// will show lights depending on state
-	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1, 44, 466);
-	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fHardDriveLightOn ? 0 : 1, 88, 466);
+	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1, STD_SCREEN_X + 44, STD_SCREEN_Y + 466);
+	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fHardDriveLightOn ? 0 : 1, STD_SCREEN_X + 88, STD_SCREEN_Y + 466);
 }
 
 
@@ -2585,7 +2550,7 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void CreateMinimizeButtonForCurrentMode(void)
 {
 	// create minimize button
-	gLaptopMinButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1, 590, 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
+	gLaptopMinButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1, STD_SCREEN_X + 590, STD_SCREEN_Y + 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
 	gLaptopMinButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
@@ -2769,8 +2734,8 @@ void PrintBalance(void)
 	wchar_t pString[32];
 	SPrintMoney(pString, LaptopSaveInfo.iCurrentBalance);
 
-	INT32 x = 47;
-	INT32 y = 257 + 15;
+	INT32 x = STD_SCREEN_X + 47;
+	INT32 y = STD_SCREEN_Y + 257 + 15;
 	if (gLaptopButton[5]->Clicked())
 	{
 		++x;
@@ -2788,8 +2753,8 @@ void PrintNumberOnTeam(void)
 
 	const INT32 iCounter = NumberOfMercsOnPlayerTeam();
 
-	UINT16 usPosX = 47;
-	UINT16 usPosY = 194 + 30;
+	UINT16 usPosX = STD_SCREEN_X + 47;
+	UINT16 usPosY = STD_SCREEN_Y + 194 + 30;
 	if (gLaptopButton[3]->Clicked())
 	{
 		++usPosX;
@@ -2804,7 +2769,7 @@ void PrintNumberOnTeam(void)
 void PrintDate(void)
 {
 	SetFontAttributes(FONT10ARIAL, FONT_BLACK, NO_SHADOW);
-	MPrint(30 + (70 - StringPixLength(WORLDTIMESTR, FONT10ARIAL)) / 2, 433, WORLDTIMESTR);
+	MPrint(STD_SCREEN_X + 30 + (70 - StringPixLength(WORLDTIMESTR, FONT10ARIAL)) / 2, (433 + STD_SCREEN_Y), WORLDTIMESTR);
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
@@ -3024,12 +2989,12 @@ void RenderWWWProgramTitleBar(void)
 
 	if (guiCurrentLaptopMode == LAPTOP_MODE_WWW)
 	{
-		MPrint(140, 33, pWebTitle);
+		MPrint(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, pWebTitle);
 	}
 	else
 	{
 		const INT32 iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
-		mprintf(140, 33, L"%ls  -  %ls", pWebTitle, pWebPagesTitles[iIndex]);
+		mprintf(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, L"%ls  -  %ls", pWebTitle, pWebPagesTitles[iIndex]);
 	}
 
 	BlitTitleBarIcons();
@@ -3115,12 +3080,12 @@ static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReas
 void DisplayProgramBoundingBox(BOOLEAN fMarkButtons)
 {
 	// the border for the program
-	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25, 23);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, STD_SCREEN_X + 25, STD_SCREEN_Y + 23);
 
 	// no laptop mode, no border around the program
 	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE)
 	{
-		BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
+		BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, STD_SCREEN_X + 108, STD_SCREEN_Y + 23);
 	}
 
 	if (fMarkButtons || fLoadPendingFlag)

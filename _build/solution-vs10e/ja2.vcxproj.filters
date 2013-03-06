@@ -1044,6 +1044,9 @@
     <ClCompile Include="..\..\Build\TileEngine\WorldMan.cc">
       <Filter>Source Files\Build\TileEngine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Build\UILayout.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -2134,6 +2137,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Build\Res\afxres.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build\UILayout.h">
+      <Filter>Source Files\Build</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

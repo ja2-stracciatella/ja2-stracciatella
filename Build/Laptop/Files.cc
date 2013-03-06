@@ -61,14 +61,14 @@ enum
 
 #define TOP_X														0+LAPTOP_SCREEN_UL_X
 #define TOP_Y														LAPTOP_SCREEN_UL_Y
-#define TITLE_X													140
-#define TITLE_Y													33
+#define TITLE_X													(140 + STD_SCREEN_X)
+#define TITLE_Y													(33 + STD_SCREEN_Y)
 #define FILES_TITLE_FONT								FONT14ARIAL
 #define FILES_TEXT_FONT									FONT10ARIAL//FONT12ARIAL
 #define FILES_SENDER_TEXT_X             (FILES_LIST_X + 5)
 #define MAX_FILES_LIST_LENGTH						28
-#define FILE_VIEWER_X										236
-#define FILE_VIEWER_Y                    81
+#define FILE_VIEWER_X										(236 + STD_SCREEN_X)
+#define FILE_VIEWER_Y                   ( 81 + STD_SCREEN_Y)
 #define FILE_VIEWER_W                   364
 #define FILE_VIEWER_H                   353
 #define FILE_GAP												2
@@ -76,14 +76,14 @@ enum
 #define FILE_STRING_SIZE								400
 #define MAX_FILES_PAGE									MAX_FILES_LIST_LENGTH
 #define FILES_LIST_X                    (TOP_X + 10)
-#define FILES_LIST_Y                     85
+#define FILES_LIST_Y                    (85 + STD_SCREEN_Y)
 #define FILES_LIST_W                    107
 #define FILES_LIST_H                     12
 #define LENGTH_OF_ENRICO_FILE						68
 #define MAX_FILE_MESSAGE_PAGE_SIZE			325
-#define PREVIOUS_FILE_PAGE_BUTTON_X			553
-#define PREVIOUS_FILE_PAGE_BUTTON_Y			53
-#define NEXT_FILE_PAGE_BUTTON_X					577
+#define PREVIOUS_FILE_PAGE_BUTTON_X			(553 + STD_SCREEN_X)
+#define PREVIOUS_FILE_PAGE_BUTTON_Y			(53 + STD_SCREEN_Y)
+#define NEXT_FILE_PAGE_BUTTON_X					(577 + STD_SCREEN_X)
 #define NEXT_FILE_PAGE_BUTTON_Y					PREVIOUS_FILE_PAGE_BUTTON_Y
 
 #define	FILES_COUNTER_1_WIDTH						7
@@ -288,7 +288,7 @@ void RenderFiles(void)
 	// title bar icon
 	BlitTitleBarIcons(  );
 
-	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, STD_SCREEN_X + 108, STD_SCREEN_Y + 23);
 }
 
 
@@ -743,9 +743,9 @@ static void HandleSpecialFiles(void)
 	// place pictures
 	switch (giFilesPage)
 	{
-		case 0: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/arucofilesmap.sti", 0, 300, 270); break; // Picture of country
-		case 4: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/enrico_y.sti",      0, 260, 225); break; // Kid pic
-		case 5: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/enrico_w.sti",      0, 260,  85); break; // Wedding pic
+		case 0: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/arucofilesmap.sti", 0, STD_SCREEN_X + 300, STD_SCREEN_Y + 270); break; // Picture of country
+		case 4: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/enrico_y.sti",      0, STD_SCREEN_X + 260, STD_SCREEN_Y + 225); break; // Kid pic
+		case 5: BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/enrico_w.sti",      0, STD_SCREEN_X + 260, STD_SCREEN_Y +  85); break; // Wedding pic
 	}
 }
 

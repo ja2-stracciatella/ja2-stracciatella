@@ -18,6 +18,7 @@
 #include "Types.h"
 #include "VSurface.h"
 #include "Video.h"
+#include "UILayout.h"
 
 
 struct SMKFLIC

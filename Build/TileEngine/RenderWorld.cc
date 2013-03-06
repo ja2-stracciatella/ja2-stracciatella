@@ -34,6 +34,7 @@
 #include "VSurface.h"
 #include "WCheck.h"
 #include <math.h>
+#include "UILayout.h"
 
 
 UINT16* gpZBuffer = NULL;
@@ -120,10 +121,7 @@ static const UINT8 gsGlowFrames[] =
 
 const INT16 gsVIEWPORT_START_X        = 0;
 const INT16 gsVIEWPORT_START_Y        = 0;
-const INT16 gsVIEWPORT_END_X          = SCREEN_WIDTH;
-const INT16 gsVIEWPORT_END_Y          = SCREEN_HEIGHT - 120;
 INT16       gsVIEWPORT_WINDOW_START_Y = 0;
-INT16       gsVIEWPORT_WINDOW_END_Y   = SCREEN_HEIGHT - 120;
 
 INT16 gsTopLeftWorldX;
 INT16 gsTopLeftWorldY;
@@ -183,7 +181,7 @@ INT16 gsScrollYIncrement;
 // Rendering flags (full, partial, etc.)
 static RenderFlags gRenderFlags = RENDER_FLAG_NONE;
 
-static SGPRect gClippingRect = { 0, 0, SCREEN_WIDTH, 360 };
+#define gClippingRect (g_ui.m_wordlClippingRect)
 static SGPRect gOldClipRect;
 INT16   gsRenderCenterX;
 INT16   gsRenderCenterY;

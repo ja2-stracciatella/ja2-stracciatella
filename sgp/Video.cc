@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
-
+#include "UILayout.h"
 #include "PlatformIO.h"
 
 
@@ -130,6 +130,7 @@ void InitializeVideoManager(void)
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
+  ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, g_video_flags);
 	if (!ScreenBuffer) throw std::runtime_error("Failed to set up video mode");

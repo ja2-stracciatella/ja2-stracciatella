@@ -28,6 +28,7 @@
 #include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
+#include "UILayout.h"
 
 #if defined JA2BETAVERSION && defined _DEBUG
 #	include "Campaign_Types.h"

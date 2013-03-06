@@ -29,6 +29,7 @@
 #include "Button_System.h"
 #include "ScreenIDs.h"
 #include "FileMan.h"
+#include "UILayout.h"
 
 
 //#define DEBUG_GAME_CLOCK
@@ -56,8 +57,8 @@ static MOUSE_REGION gClockScreenMaskMouseRegion;
 
 #define SECONDS_PER_COMPRESSION 1 // 1/2 minute passes every 1 second of real time
 
-#define CLOCK_X      554
-#define CLOCK_Y      (SCREEN_HEIGHT - 23)
+#define CLOCK_X      (g_ui.get_CLOCK_X())
+#define CLOCK_Y      (g_ui.get_CLOCK_Y())
 #define CLOCK_HEIGHT  13
 #define CLOCK_WIDTH   66
 #define CLOCK_FONT   COMPFONT

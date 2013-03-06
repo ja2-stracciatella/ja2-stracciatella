@@ -72,6 +72,7 @@
 #include "Map_Information.h"
 #include "Video.h"
 #include "Screens.h"
+#include "UILayout.h"
 
 
 #define MAX_ON_DUTY_SOLDIERS 6

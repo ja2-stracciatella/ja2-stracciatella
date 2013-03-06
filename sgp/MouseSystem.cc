@@ -32,6 +32,7 @@
 #include "Render_Dirty.h"
 #include "VSurface.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 //Kris:	Nov 31, 1999 -- Added support for double clicking

@@ -67,6 +67,7 @@
 #include "Button_System.h"
 #include "ScreenIDs.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 
 // various reason an assignment can be aborted before completion

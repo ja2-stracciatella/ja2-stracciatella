@@ -37,6 +37,7 @@
 #include "Isometric_Utils.h"
 #include "Scheduling.h"
 #include "Debug.h"
+#include "UILayout.h"
 
 
 // the amounts of time to wait for hover stuff

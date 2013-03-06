@@ -25,6 +25,7 @@
 #include "Button_System.h"
 #include "JAScreens.h"
 #include "Video.h"
+#include "UILayout.h"
 
 
 #define MSGBOX_DEFAULT_WIDTH      300

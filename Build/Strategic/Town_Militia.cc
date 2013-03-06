@@ -25,6 +25,7 @@
 #include "JAScreens.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 #define SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST 50

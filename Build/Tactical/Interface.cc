@@ -53,6 +53,8 @@
 #include "Video.h"
 #include "Items.h"
 
+#include "UILayout.h"
+
 
 #define ARROWS_X_OFFSET			10
 #define	ARROWS_HEIGHT				20
@@ -67,9 +69,6 @@
 BOOLEAN	gfInMovementMenu = FALSE;
 static INT32 giMenuAnchorX;
 static INT32 giMenuAnchorY;
-
-
-static const SGPBox g_progress_bar_box = { 5, 2, 630, 12 };
 
 static BOOLEAN gfProgBarActive   = FALSE;
 static UINT8   gubProgNumEnemies = 0;
@@ -1741,11 +1740,11 @@ static void CreateTopMessage(void)
 	}
 	SetFontAttributes(TINYFONT1, foreground, shadow);
 
-	const SGPBox* const bar = &g_progress_bar_box;
+	const SGPBox* const bar = &g_ui.m_progress_bar_box;
 	{
 		AutoSGPVObject bar_vo(AddVideoObjectFromFile(bar_file));
 
-		BltVideoObject(dst, bar_vo, bar_gfx, 0, 0);
+		BltVideoObject(dst, bar_vo, bar_gfx, STD_SCREEN_X, 0);
 
 		if (fDoLimitBar)
 		{

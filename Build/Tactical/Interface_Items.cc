@@ -71,6 +71,7 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "Items.h"
+#include "UILayout.h"
 
 
 #define		ITEMDESC_FONT							BLOCKFONT2
@@ -163,8 +164,8 @@ static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
 
 #define KEYRING_X      496
 #define KEYRING_Y      (INV_INTERFACE_START_Y + 106)
-#define MAP_KEYRING_X 217
-#define MAP_KEYRING_Y 271
+#define MAP_KEYRING_X (STD_SCREEN_X + 217)
+#define MAP_KEYRING_Y (STD_SCREEN_Y + 271)
 #define KEYRING_WIDTH   29
 #define KEYRING_HEIGHT  23
 #define TACTICAL_INVENTORY_KEYRING_GRAPHIC_OFFSET_X 215
@@ -224,13 +225,7 @@ static UINT16 gusOriginalAttachItem[MAX_ATTACHMENTS];
 static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
 static SOLDIERTYPE* gpAttachSoldier;
 
-struct MoneyLoc
-{
-	UINT16 x;
-	UINT16 y;
-};
-
-static const MoneyLoc gMoneyButtonLoc = { 343, INV_INTERFACE_START_Y + 11 };
+#define gMoneyButtonLoc (g_ui.m_moneyButtonLoc)
 static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
 static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
 
@@ -3922,7 +3917,7 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
-		gsKeyRingPopupInvX				= 0;
+		gsKeyRingPopupInvX				= STD_SCREEN_X + 0;
 		sKeyRingItemWidth						= MAP_KEY_RING_ROW_WIDTH;
 		sOffSetX = 40;
 		sOffSetY = 15;

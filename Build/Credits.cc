@@ -20,6 +20,7 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WordWrap.h"
+#include "UILayout.h"
 
 
 struct CRDT_NODE

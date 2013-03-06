@@ -23,7 +23,7 @@
 #include "JAScreens.h"
 #include "ScreenIDs.h"
 #include "FileMan.h"
-
+#include "UILayout.h"
 
 struct ScrollStringSt
 {
@@ -38,7 +38,7 @@ struct ScrollStringSt
 
 #define MAX_LINE_COUNT 6
 #define X_START 2
-#define Y_START 330
+#define Y_START (SCREEN_HEIGHT - 150)
 #define MAX_AGE 10000
 #define LINE_WIDTH 320
 #define MAP_LINE_WIDTH 300
@@ -575,7 +575,7 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 
 void DisplayStringsInMapScreenMessageList(void)
 {
-	SetFontDestBuffer(FRAME_BUFFER, 17, 360 + 6, 407, 360 + 101);
+	SetFontDestBuffer(FRAME_BUFFER, STD_SCREEN_X + 17, STD_SCREEN_Y + 360 + 6, STD_SCREEN_X + 407, STD_SCREEN_Y + 360 + 101);
 
 	SetFont(MAP_SCREEN_MESSAGE_FONT);
 	SetFontBackground(FONT_BLACK);
@@ -583,7 +583,7 @@ void DisplayStringsInMapScreenMessageList(void)
 
 	UINT8 ubCurrentStringIndex = gubCurrentMapMessageString;
 
-	INT16 sY = 377;
+	INT16 sY = STD_SCREEN_Y + 377;
 	UINT16 usSpacing = GetFontHeight(MAP_SCREEN_MESSAGE_FONT);
 
 	for (UINT8 ubLinesPrinted = 0; ubLinesPrinted < MAX_MESSAGES_ON_MAP_BOTTOM; ubLinesPrinted++)
@@ -598,7 +598,7 @@ void DisplayStringsInMapScreenMessageList(void)
 		if (s == NULL) break;
 
 		SetFontForeground(s->usColor);
-		MPrint(20, sY, s->pString16);
+		MPrint(STD_SCREEN_X + 20, sY, s->pString16);
 
 		sY += usSpacing;
 

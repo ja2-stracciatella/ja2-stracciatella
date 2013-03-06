@@ -36,6 +36,7 @@
 #include "Text.h"
 #include "Video.h"
 #include "Debug.h"
+#include "UILayout.h"
 
 #ifdef JA2DEMOADS
 #	include "Fade_Screen.h"

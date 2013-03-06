@@ -18,6 +18,15 @@ ja2-ENGLISH.bat.  If you have French version installed, start the game by
 running ja2-FRENCH.bat, etc.
 
 
+It is possible to change game resolution using command-line key '-res'.
+For example, to start the game in 1024x768 mode, launch ja2.exe like this:
+
+  ja2.exe -res 1024x768
+
+Any reasonable combination of width and height should be possible.  You can
+experiment and find one that suits you best.
+
+
 If you want to play the game on Linux, you will have to compile it from the
 source codes.  It is not as difficult as it sounds:
  - download source codes from https://bitbucket.org/gennady/ja2-stracciatella

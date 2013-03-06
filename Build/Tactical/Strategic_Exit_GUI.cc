@@ -33,6 +33,7 @@
 #include "ScreenIDs.h"
 #include "Render_Dirty.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 
 BOOLEAN		gfInSectorExitMenu = FALSE;

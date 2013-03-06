@@ -21,6 +21,7 @@
 #include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
+#include "UILayout.h"
 
 
 const UINT32 GlowColorsList[] = {

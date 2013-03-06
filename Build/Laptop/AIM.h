@@ -14,8 +14,8 @@ extern UINT8 AimMercArray[MAX_NUMBER_MERCS];
 #define		IMAGE_OFFSET_Y								LAPTOP_SCREEN_WEB_UL_Y//24
 
 
-#define			AIM_LOGO_TEXT_X							175
-#define			AIM_LOGO_TEXT_Y							77 + LAPTOP_SCREEN_WEB_DELTA_Y + 4
+#define			AIM_LOGO_TEXT_X							(175 + STD_SCREEN_X)
+#define			AIM_LOGO_TEXT_Y							(77 + LAPTOP_SCREEN_WEB_DELTA_Y + 4 + STD_SCREEN_Y)
 #define			AIM_LOGO_TEXT_WIDTH					360
 
 // Aim Symbol 203, 51

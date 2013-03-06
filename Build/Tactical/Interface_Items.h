@@ -6,6 +6,8 @@
 #include "MouseSystem.h"
 #include "Soldier_Control.h"
 
+#include "UILayout.h"
+
 
 // DEFINES FOR ITEM SLOT SIZES IN PIXELS
 #define		BIG_INV_SLOT_WIDTH				61
@@ -18,14 +20,6 @@
 #define		LEGS_INV_SLOT_HEIGHT			24
 #define		HEAD_INV_SLOT_WIDTH				43
 #define		HEAD_INV_SLOT_HEIGHT			24
-
-
-// USED TO SETUP REGION POSITIONS, ETC
-struct INV_REGION_DESC
-{
-	INT16			sX;
-	INT16			sY;
-};
 
 
 // Itempickup stuff

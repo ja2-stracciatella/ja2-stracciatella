@@ -10,6 +10,7 @@
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
 #include "VSurface.h"
+#include "UILayout.h"
 
 
 #define		MAX_BURST_LOCATIONS		50

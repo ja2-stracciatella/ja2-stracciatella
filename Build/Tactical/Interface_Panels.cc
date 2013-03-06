@@ -66,6 +66,7 @@
 #include "Debug.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
+#include "UILayout.h"
 
 
 // DEFINES FOR VARIOUS PANELS
@@ -98,10 +99,6 @@
 #define	SM_SELMERC_PLATE_Y       2
 #define	SM_SELMERC_PLATE_HEIGHT 65
 #define	SM_SELMERC_PLATE_WIDTH  83
-
-
-#define SM_BODYINV_X 244
-#define SM_BODYINV_Y (INV_INTERFACE_START_Y + 6)
 
 
 #define STATS_TITLE_FONT_COLOR				6
@@ -293,36 +290,6 @@ UINT8 gubHandPos;
 UINT16 gusOldItemIndex;
 UINT16 gusNewItemIndex;
 BOOLEAN gfDeductPoints;
-
-
-// ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS
-static const INV_REGION_DESC gSMInvPocketXY[] =
-{
-	{ 344, INV_INTERFACE_START_Y +   6 }, // HELMETPOS
-	{ 344, INV_INTERFACE_START_Y +  35 }, // VESTPOS
-	{ 344, INV_INTERFACE_START_Y +  95 }, // LEGPOS,
-	{ 226, INV_INTERFACE_START_Y +   6 }, // HEAD1POS
-	{ 226, INV_INTERFACE_START_Y +  30 }, // HEAD2POS
-	{ 226, INV_INTERFACE_START_Y +  84 }, // HANDPOS,
-	{ 226, INV_INTERFACE_START_Y + 108 }, // SECONDHANDPOS
-	{ 468, INV_INTERFACE_START_Y +   5 }, // BIGPOCK1
-	{ 468, INV_INTERFACE_START_Y +  29 }, // BIGPOCK2
-	{ 468, INV_INTERFACE_START_Y +  53 }, // BIGPOCK3
-	{ 468, INV_INTERFACE_START_Y +  77 }, // BIGPOCK4
-	{ 396, INV_INTERFACE_START_Y +   5 }, // SMALLPOCK1
-	{ 396, INV_INTERFACE_START_Y +  29 }, // SMALLPOCK2
-	{ 396, INV_INTERFACE_START_Y +  53 }, // SMALLPOCK3
-	{ 396, INV_INTERFACE_START_Y +  77 }, // SMALLPOCK4
-	{ 432, INV_INTERFACE_START_Y +   5 }, // SMALLPOCK5
-	{ 432, INV_INTERFACE_START_Y +  29 }, // SMALLPOCK6
-	{ 432, INV_INTERFACE_START_Y +  53 }, // SMALLPOCK7
-	{ 432, INV_INTERFACE_START_Y +  77 }  // SMALLPOCK8
-};
-
-static const INV_REGION_DESC gSMCamoXY =
-{
-	SM_BODYINV_X, SM_BODYINV_Y // X, Y location of camo region
-};
 
 
 GUIButtonRef iSMPanelButtons[NUM_SM_BUTTONS];
@@ -857,11 +824,23 @@ static void SelectedMercButtonMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
+/** Fill empty space at the bottom of the screen. */
+static void FillEmptySpaceAtBottom()
+{
+  if(g_ui.isBigScreen())
+  {
+    ColorFillVideoSurfaceArea(guiSAVEBUFFER, 640, g_ui.get_INV_INTERFACE_START_Y(),
+                              g_ui.m_screenWidth, g_ui.m_screenHeight, 0);
+  }
+}
+
 void InitializeSMPanel(void)
 {
 	guiSMPanel    = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
 	guiSMObjects  = AddVideoObjectFromFile(INTERFACEDIR "/inventory_gold_front.sti");
 	guiSMObjects2 = AddVideoObjectFromFile(INTERFACEDIR "/inv_frn.sti");
+
+  FillEmptySpaceAtBottom();
 
 	// INit viewport region
 	// Set global mouse regions
@@ -904,7 +883,7 @@ void InitializeSMPanel(void)
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, 62, dy + 2, 85, dy + 51, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback);
 
-	InitInvSlotInterface(gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
+	InitInvSlotInterface(g_ui.m_invSlotPositionTac, &g_ui.m_invCamoRegion, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
 
 	// this is important! It will disable buttons like SM_MAP_SCREEN_BUTTON when they're supposed to be disabled - the previous
@@ -2213,6 +2192,8 @@ void InitializeTEAMPanel(void)
 	guiTEAMObjects = AddVideoObjectFromFile(INTERFACEDIR "/gold_front.sti");
 	guiVEHINV      = AddVideoObjectFromFile(INTERFACEDIR "/inventor.sti");
 
+  FillEmptySpaceAtBottom();
+
 	// Create buttons
 	CreateTEAMPanelButtons();
 
@@ -3254,11 +3235,14 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if( guiCurrentScreen == MAP_SCREEN )
 		{
 			// shade the background
-			FRAME_BUFFER->ShadowRect(0, 107, 261, 359);
-			InvalidateRegion( 0, 107, 261, 359 );
+			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
+			InvalidateRegion(        STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359 );
+      InitKeyRingPopup( pSoldier, STD_SCREEN_X + 0, sStartYPosition, sWidth, sHeight );
 		}
-
-		InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
+    else
+    {
+      InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
+    }
 	}
 }
 

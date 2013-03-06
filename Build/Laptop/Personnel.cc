@@ -35,13 +35,13 @@
 #include "Soldier_Macros.h"
 
 
-#define INVENTORY_BOX_X 399
-#define INVENTORY_BOX_Y 205
+#define INVENTORY_BOX_X (399 + STD_SCREEN_X)
+#define INVENTORY_BOX_Y (205 + STD_SCREEN_Y)
 #define INVENTORY_BOX_W 171
 #define INVENTORY_BOX_H 232
 
 
-#define IMAGE_BOX_X              395
+#define IMAGE_BOX_X              (395 + STD_SCREEN_X)
 #define IMAGE_BOX_Y              LAPTOP_SCREEN_UL_Y + 24
 #define IMAGE_NAME_WIDTH         106
 #define IMAGE_FULL_NAME_OFFSET_Y 111
@@ -54,10 +54,10 @@
 #define MAX_STATS                       20
 #define PERS_FONT                      FONT10ARIAL
 #define CHAR_NAME_FONT                 FONT12ARIAL
-#define CHAR_NAME_LOC_X                432
+#define CHAR_NAME_LOC_X                (432 + STD_SCREEN_X)
 #define CHAR_NAME_LOC_WIDTH            124
-#define CHAR_NAME_Y                    177
-#define CHAR_LOC_Y                     189
+#define CHAR_NAME_Y                    (177 + STD_SCREEN_Y)
+#define CHAR_LOC_Y                     (189 + STD_SCREEN_Y)
 #define PERS_TEXT_FONT_COLOR           FONT_WHITE
 #define PERS_TEXT_FONT_ALTERNATE_COLOR FONT_YELLOW
 #define PERS_FONT_COLOR                FONT_WHITE
@@ -83,8 +83,8 @@
 
 #define SMALL_PORTRAIT_WIDTH_NO_BORDERS 48
 
-#define SMALL_PORTRAIT_START_X 141 - 10
-#define SMALL_PORTRAIT_START_Y  53
+#define SMALL_PORTRAIT_START_X (141 - 10 + STD_SCREEN_X)
+#define SMALL_PORTRAIT_START_Y (53 + STD_SCREEN_Y)
 
 #define PERS_CURR_TEAM_COST_X LAPTOP_SCREEN_UL_X + 150 - 10
 #define PERS_CURR_TEAM_COST_Y LAPTOP_SCREEN_UL_Y + 218
@@ -117,8 +117,8 @@
 #define PERS_DEPARTED_DOWN_Y LAPTOP_SCREEN_UL_Y + 237
 
 
-#define PERS_TITLE_X 140
-#define PERS_TITLE_Y  33
+#define PERS_TITLE_X (140 + STD_SCREEN_X)
+#define PERS_TITLE_Y ( 33 + STD_SCREEN_Y)
 
 #define ATM_UL_X LAPTOP_SCREEN_UL_X + 397
 #define ATM_UL_Y LAPTOP_SCREEN_UL_Y +  27
@@ -136,8 +136,8 @@ enum
 };
 
 // atm button positions
-#define ATM_DISPLAY_X      509
-#define ATM_DISPLAY_Y       58
+#define ATM_DISPLAY_X      (STD_SCREEN_X + 509)
+#define ATM_DISPLAY_Y      (STD_SCREEN_Y +  58)
 #define ATM_DISPLAY_HEIGHT  10
 #define ATM_DISPLAY_WIDTH   81
 
@@ -146,8 +146,8 @@ enum
 #define NUMBER_OF_INVENTORY_PERSONNEL 8
 #define Y_SIZE_OF_PERSONNEL_SCROLL_REGION (422 - 219)
 #define X_SIZE_OF_PERSONNEL_SCROLL_REGION (589 - 573)
-#define Y_OF_PERSONNEL_SCROLL_REGION 219
-#define X_OF_PERSONNEL_SCROLL_REGION 573
+#define Y_OF_PERSONNEL_SCROLL_REGION (STD_SCREEN_Y + 219)
+#define X_OF_PERSONNEL_SCROLL_REGION (STD_SCREEN_X + 573)
 #define SIZE_OF_PERSONNEL_CURSOR 19
 
 
@@ -199,9 +199,9 @@ static UINT8 uiCurrentInventoryIndex = 0;
 static UINT32 guiSliderPosition;
 
 
-static const INT16 pers_stat_x       = 407;
-static const INT16 pers_stat_delta_x = 407 + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET;
-static const INT16 pers_stat_data_x  = 407 + 36;
+#define pers_stat_x       (STD_SCREEN_X + 407)
+#define pers_stat_delta_x (pers_stat_x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET)
+#define pers_stat_data_x  (pers_stat_x + 36)
 static const INT16 pers_stat_y[] =
 {
 	215,
@@ -672,7 +672,7 @@ static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 	INT16 sX;
 	INT16 sY;
 
-	const INT32 y = pers_stat_y[idx];
+	const INT32 y = STD_SCREEN_Y + pers_stat_y[idx];
 	if (delta > 0)
 	{
 		swprintf(sString, lengthof(sString), L"( %+d )", delta);
@@ -715,7 +715,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 		{
 			swprintf(sString, lengthof(sString), L"( %+d )", p.bLifeDelta);
 			FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-			MPrint(sX, pers_stat_y[0], sString);
+			MPrint(sX, STD_SCREEN_Y + pers_stat_y[0], sString);
 		}
 		swprintf(sString, lengthof(sString), L"%d/%d", s.bLife, s.bLifeMax);
 	}
@@ -723,15 +723,15 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 	{
 		wcslcpy(sString, pPOWStrings[1], lengthof(sString));
 	}
-	mprintf(pers_stat_x, pers_stat_y[0], L"%ls:", str_stat_health);
+	mprintf(pers_stat_x, STD_SCREEN_Y + pers_stat_y[0], L"%ls:", str_stat_health);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	MPrint(sX, pers_stat_y[0], sString);
+	MPrint(sX, STD_SCREEN_Y + pers_stat_y[0], sString);
 
 	if  (fAmIaRobot)
 	{
 		for (INT32 i = 1; i < 11; ++i)
 		{
-			const INT32 y = pers_stat_y[i];
+			const INT32 y = STD_SCREEN_Y + pers_stat_y[i];
 			mprintf(pers_stat_x, y, L"%ls:", str_stat_list[i]);
 			const wchar_t* const na = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, na, PERS_FONT, &sX, &sY);
@@ -752,23 +752,23 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 		PrintStatWithDelta(10, p.bMedical,      p.bMedicalDelta);
 	}
 
-	PrintStat(p.usKills,   pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
-	PrintStat(p.usAssists, pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
+	PrintStat(p.usKills,   STD_SCREEN_Y + pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+	PrintStat(p.usAssists, STD_SCREEN_Y + pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
 	// Shots/hits
-	MPrint(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+	MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 	// check we have shot at least once
 	const UINT32 fired = p.usShotsFired;
 	const UINT32 hits  = (fired > 0 ? 100 * p.usShotsHit / fired : 0);
 	swprintf(sString, lengthof(sString), L"%d %%", hits);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	MPrint(sX, pers_stat_y[23], sString);
+	MPrint(sX, STD_SCREEN_Y + pers_stat_y[23], sString);
 
-	PrintStat(p.usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
-	PrintStat(p.usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
+	PrintStat(p.usBattlesFought, STD_SCREEN_Y + pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+	PrintStat(p.usTimesWounded,  STD_SCREEN_Y + pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 
 	//Display the 'Skills' text
-	MPrint(pers_stat_x, pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
+	MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
 
 	/* KM: April 16, 1999
 	 * Added support for the German version, which has potential string
@@ -806,7 +806,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 					sX = MAX(sX, iMinimumX);
 				}
 
-				MPrint(sX, pers_stat_y[19], sString);
+				MPrint(sX, STD_SCREEN_Y + pers_stat_y[19], sString);
 			}
 			else
 			{
@@ -818,7 +818,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 				//Perform the potential overrun check
 				sX = MAX(sX, iMinimumX);
 
-				MPrint(sX, pers_stat_y[19], Skill);
+				MPrint(sX, STD_SCREEN_Y + pers_stat_y[19], Skill);
 
 				if (bSkill2 != NO_SKILLTRAIT)
 				{
@@ -830,7 +830,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 					//Perform the potential overrun check
 					sX = MAX(sX, iMinimumX);
 
-					MPrint(sX, pers_stat_y[20], Skill);
+					MPrint(sX, STD_SCREEN_Y + pers_stat_y[20], Skill);
 				}
 			}
 		}
@@ -838,7 +838,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 		{
 			const wchar_t* NoSkill = pPersonnelScreenStrings[PRSNL_TXT_NOSKILLS];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, NoSkill, PERS_FONT, &sX, &sY);
-			MPrint(sX, pers_stat_y[19], NoSkill);
+			MPrint(sX, STD_SCREEN_Y + pers_stat_y[19], NoSkill);
 		}
 	}
 }
@@ -1109,7 +1109,7 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 {
 	CreateDestroyPersonnelInventoryScrollButtons();
 
-	BltVideoObject(FRAME_BUFFER, guiPersonnelInventory, 0, 397, 200);
+	BltVideoObject(FRAME_BUFFER, guiPersonnelInventory, 0, STD_SCREEN_X + 397, STD_SCREEN_Y +  200);
 
 	// render the bar for the character
 	RenderSliderBarForPersonnelInventory();
@@ -1137,8 +1137,8 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		INT16   sX;
 		INT16   sY;
 
-		const INT16 PosX = 397 + 3;
-		const INT16 PosY = 200 + 8 + item_count * 29;
+		const INT16 PosX = STD_SCREEN_X + 397 + 3;
+		const INT16 PosY = STD_SCREEN_Y +  200 + 8 + item_count * 29;
 
 		UINT16  const  item_idx = o.usItem;
 		INVTYPE const& item     = Item[item_idx];
@@ -1310,8 +1310,8 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 
 	if (gubPersonnelInfoState == PRSNL_INV && !fCreated)
 	{
-		giPersonnelInventoryButtons[0] = MakeButton(LAPTOPDIR "/personnel_inventory.sti", 1, 2, 176 + 397, 2 +   200, InventoryUpButtonCallback);
-		giPersonnelInventoryButtons[1] = MakeButton(LAPTOPDIR "/personnel_inventory.sti", 3, 4, 176 + 397, 200 + 223, InventoryDownButtonCallback);
+		giPersonnelInventoryButtons[0] = MakeButton(LAPTOPDIR "/personnel_inventory.sti", 1, 2, STD_SCREEN_X + 176 + 397, STD_SCREEN_Y +   2 + 200, InventoryUpButtonCallback);
+		giPersonnelInventoryButtons[1] = MakeButton(LAPTOPDIR "/personnel_inventory.sti", 3, 4, STD_SCREEN_X + 176 + 397, STD_SCREEN_Y + 200 + 223, InventoryDownButtonCallback);
 
 		MSYS_DefineRegion(&gMouseScrollPersonnelINV, X_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION, X_OF_PERSONNEL_SCROLL_REGION + X_SIZE_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION + Y_SIZE_OF_PERSONNEL_SCROLL_REGION, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleSliderBarClickCallback);
 
@@ -1881,34 +1881,34 @@ static void DisplayDepartedCharStats(MERCPROFILESTRUCT const& p, INT32 const iSt
 	INT8 const life = p.bLife;
 	INT8 const cur  = (iState == DEPARTED_DEAD ? 0 : life);
 	swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
-	mprintf(pers_stat_x, pers_stat_y[0], L"%ls:", str_stat_health);
+	mprintf(pers_stat_x, STD_SCREEN_Y + pers_stat_y[0], L"%ls:", str_stat_health);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	MPrint(sX, pers_stat_y[0], sString);
+	MPrint(sX, STD_SCREEN_Y + pers_stat_y[0], sString);
 
-	PrintStat(p.bAgility,     pers_stat_y[ 1], str_stat_agility);
-	PrintStat(p.bDexterity,   pers_stat_y[ 2], str_stat_dexterity);
-	PrintStat(p.bStrength,    pers_stat_y[ 3], str_stat_strength);
-	PrintStat(p.bLeadership,  pers_stat_y[ 4], str_stat_leadership);
-	PrintStat(p.bWisdom,      pers_stat_y[ 5], str_stat_wisdom);
-	PrintStat(p.bExpLevel,    pers_stat_y[ 6], str_stat_exp_level);
-	PrintStat(p.bMarksmanship,pers_stat_y[ 7], str_stat_marksmanship);
-	PrintStat(p.bMechanical,  pers_stat_y[ 8], str_stat_mechanical);
-	PrintStat(p.bExplosive,   pers_stat_y[ 9], str_stat_explosive);
-	PrintStat(p.bMedical,     pers_stat_y[10], str_stat_medical);
-	PrintStat(p.usKills,      pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
-	PrintStat(p.usAssists,    pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
+	PrintStat(p.bAgility,     STD_SCREEN_Y + pers_stat_y[ 1], str_stat_agility);
+	PrintStat(p.bDexterity,   STD_SCREEN_Y + pers_stat_y[ 2], str_stat_dexterity);
+	PrintStat(p.bStrength,    STD_SCREEN_Y + pers_stat_y[ 3], str_stat_strength);
+	PrintStat(p.bLeadership,  STD_SCREEN_Y + pers_stat_y[ 4], str_stat_leadership);
+	PrintStat(p.bWisdom,      STD_SCREEN_Y + pers_stat_y[ 5], str_stat_wisdom);
+	PrintStat(p.bExpLevel,    STD_SCREEN_Y + pers_stat_y[ 6], str_stat_exp_level);
+	PrintStat(p.bMarksmanship,STD_SCREEN_Y + pers_stat_y[ 7], str_stat_marksmanship);
+	PrintStat(p.bMechanical,  STD_SCREEN_Y + pers_stat_y[ 8], str_stat_mechanical);
+	PrintStat(p.bExplosive,   STD_SCREEN_Y + pers_stat_y[ 9], str_stat_explosive);
+	PrintStat(p.bMedical,     STD_SCREEN_Y + pers_stat_y[10], str_stat_medical);
+	PrintStat(p.usKills,      STD_SCREEN_Y + pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+	PrintStat(p.usAssists,    STD_SCREEN_Y + pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
 	// Shots/hits
-	MPrint(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+	MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 	// check we have shot at least once
 	UINT32 const fired = p.usShotsFired;
 	UINT32 const hits  = (fired > 0 ? 100 * p.usShotsHit / fired : 0);
 	swprintf(sString, lengthof(sString), L"%d %%", hits);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	MPrint(sX, pers_stat_y[23], sString);
+	MPrint(sX, STD_SCREEN_Y + pers_stat_y[23], sString);
 
-	PrintStat(p.usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
-	PrintStat(p.usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
+	PrintStat(p.usBattlesFought, STD_SCREEN_Y + pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+	PrintStat(p.usTimesWounded,  STD_SCREEN_Y + pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 }
 
 
@@ -2119,7 +2119,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 {
 	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/atmbuttons.sti", 2, 3);
 	giPersonnelATMStartButtonImage[idx] = img;
-	GUIButtonRef const btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonNoMove(img, STD_SCREEN_X + 519, STD_SCREEN_Y + y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, PERS_FONT, FONT_BLACK, FONT_BLACK);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
@@ -2406,28 +2406,28 @@ static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 					wcscpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION]);
 				}
 
-				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
+				MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				MPrint(sX, pers_stat_y[i], sString);
+				MPrint(sX, STD_SCREEN_Y + pers_stat_y[i], sString);
 			}
 			break;
 
 			case 1: // total contract time served
-				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);
+				MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);
 				//./DEF 2/4/99: total service days used to be calced as 'days -1'
 				swprintf(sString, lengthof(sString), L"%d %ls", p.usTotalDaysServed, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				MPrint(sX, pers_stat_y[i], sString);
+				MPrint(sX, STD_SCREEN_Y + pers_stat_y[i], sString);
 				break;
 
 			case 3: // cost (PRSNL_TXT_TOTAL_COST)
 			{
 				SPrintMoney(sString, p.uiTotalCostToDate);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
+				MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
 
 				// print contract cost
-				MPrint(sX, pers_stat_y[i], sString);
+				MPrint(sX, STD_SCREEN_Y + pers_stat_y[i], sString);
 
 				INT32 salary;
 				switch (s.ubWhatKindOfMercAmI)
@@ -2450,8 +2450,8 @@ static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 				i++;
 
 				// now print daily rate
-				MPrint(sX,          pers_stat_y[i + 1], sStringA);
-				MPrint(pers_stat_x, pers_stat_y[i + 1], pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
+				MPrint(sX,          STD_SCREEN_Y + pers_stat_y[i + 1], sStringA);
+				MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i + 1], pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
 				break;
 			}
 
@@ -2459,16 +2459,16 @@ static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 				//if its a merc merc, display the salary oweing
 				if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 				{
-					MPrint(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
+					MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
 					SPrintMoney(sString, p.sSalary * p.iMercMercContractLength);
 				}
 				else
 				{
-					MPrint(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
+					MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
 					SPrintMoney(sString, p.sMedicalDepositAmount);
 				}
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				MPrint(sX, pers_stat_y[i - 1], sString);
+				MPrint(sX, STD_SCREEN_Y + pers_stat_y[i - 1], sString);
 				break;
 		}
 	}

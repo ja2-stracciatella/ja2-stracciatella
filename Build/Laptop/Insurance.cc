@@ -17,6 +17,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+#include "UILayout.h"
 
 
 #define INSURANCE_TEXT_SINGLE_FILE BINARYDATADIR "/insurancesingle.edt"

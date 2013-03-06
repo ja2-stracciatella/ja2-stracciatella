@@ -157,10 +157,6 @@ enum DialogQuoteIDs
 };
 
 
-#define			DEFAULT_EXTERN_PANEL_X_POS      320
-#define			DEFAULT_EXTERN_PANEL_Y_POS      40
-
-
 enum DialogueHandler
 {
 	DIALOGUE_NO_UI                 = 0,

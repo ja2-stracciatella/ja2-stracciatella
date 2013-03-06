@@ -341,6 +341,7 @@
 		C38ACDEB16E4AA84003D6872 /* VObject_Blitters.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACDCB16E4AA84003D6872 /* VObject_Blitters.cc */; };
 		C38ACDEC16E4AA84003D6872 /* VObject.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACDCD16E4AA84003D6872 /* VObject.cc */; };
 		C38ACDED16E4AA84003D6872 /* VSurface.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACDCF16E4AA84003D6872 /* VSurface.cc */; };
+		C3F10F5E16E7388F00F79C78 /* UILayout.cc in Sources */ = {isa = PBXBuildFile; fileRef = C3F10F5C16E7388F00F79C78 /* UILayout.cc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1058,6 +1059,8 @@
 		C38ACDCF16E4AA84003D6872 /* VSurface.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VSurface.cc; sourceTree = "<group>"; };
 		C38ACDD016E4AA84003D6872 /* VSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VSurface.h; sourceTree = "<group>"; };
 		C38ACDD116E4AA84003D6872 /* WCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCheck.h; sourceTree = "<group>"; };
+		C3F10F5C16E7388F00F79C78 /* UILayout.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UILayout.cc; sourceTree = "<group>"; };
+		C3F10F5D16E7388F00F79C78 /* UILayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILayout.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1075,6 +1078,8 @@
 		342E106C16E3E46A007960D8 /* Build */ = {
 			isa = PBXGroup;
 			children = (
+				C3F10F5C16E7388F00F79C78 /* UILayout.cc */,
+				C3F10F5D16E7388F00F79C78 /* UILayout.h */,
 				C38AC9DD16E4AA66003D6872 /* AniViewScreen.cc */,
 				C38AC9DE16E4AA66003D6872 /* AniViewScreen.h */,
 				C38AC9DF16E4AA66003D6872 /* Cheats.cc */,
@@ -2261,6 +2266,7 @@
 				C38ACDEB16E4AA84003D6872 /* VObject_Blitters.cc in Sources */,
 				C38ACDEC16E4AA84003D6872 /* VObject.cc in Sources */,
 				C38ACDED16E4AA84003D6872 /* VSurface.cc in Sources */,
+				C3F10F5E16E7388F00F79C78 /* UILayout.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

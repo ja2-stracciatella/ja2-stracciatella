@@ -34,6 +34,7 @@
 #include "GameSettings.h"
 #include "Environment.h"
 #include "Debug.h"
+#include "UILayout.h"
 
 
 #define MAX_INTTILE_STACK 10

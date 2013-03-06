@@ -30,6 +30,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include <SDL.h>
+#include "UILayout.h"
 #include "GameRes.h"
 #include "Logger.h"
 
@@ -409,6 +410,34 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		{
 			VideoSetFullScreen(FALSE);
 		}
+		else if (strcmp(argv[i], "-res") == 0)
+		{
+      if(haveNextParameter)
+      {
+        int width = 0;
+        int height = 0;
+        int readFields = sscanf(argv[++i], "%dx%d", &width, &height);
+        if(readFields != 2)
+        {
+          LOG_ERROR("Invalid value for command-line key '-res'\n");
+          success = FALSE;
+        }
+        else
+        {
+          bool result = g_ui.setScreenSize(width, height);
+          if(!result)
+          {
+            LOG_ERROR("Failed to set screen resolution %d x %d\n", width, height);
+            success = FALSE;
+          }
+        }
+      }
+      else
+      {
+        LOG_ERROR("Missing value for command-line key '-res'\n");
+        success = FALSE;
+      }
+		}
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)
 		{
@@ -464,6 +493,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 			"  -help        Display this information\n"
 			"  -nosound     Turn the sound and music off\n"
 			"  -window      Start the game in a window\n"
+			"  -res WxH     Screen resolution, e.g. 800x600. Default value is 640x480\n"
 			"  -resversion  Version of the game resources (data files)\n"
 			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
 			"                 Default value is ENGLISH\n"
