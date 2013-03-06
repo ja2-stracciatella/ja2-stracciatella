@@ -525,7 +525,7 @@ void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
 
 	//Clear out the old list
 	ResetSmokeEffects();

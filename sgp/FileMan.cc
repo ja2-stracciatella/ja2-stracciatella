@@ -385,6 +385,72 @@ static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
 }
 
 
+/** Open file for reading only.
+ * When using the smart lookup:
+ *  - first try to open file normally.
+ *    It will work if the path is absolute and the file is found or path is relative to the current directory
+ *    and file is present;
+ *  - if file is not found, try to find the file relatively to 'Data' directory;
+ *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
+HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
+{
+  int         mode;
+  const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
+
+  SGP::PODObj<SGPFile> file;
+
+  int d;
+
+  {
+    d = open(filename, mode);
+    if (d < 0)
+    {
+      // failed to open file in the local directory
+      // let's try Data
+      d = OpenFileInDataDirFD(filename, mode);
+      if (d < 0)
+      {
+        // failed to open in the data dir
+        // let's try libraries
+        if (OpenFileFromLibrary(filename, &file->u.lib))
+        {
+          LOG__FILE_OPEN("Opened file (from library ): %s\n", filename);
+          return file.Release();
+        }
+      }
+      else
+      {
+        LOG__FILE_OPEN("Opened file (from data dir): %s\n", filename);
+      }
+    }
+    else
+    {
+      LOG__FILE_OPEN("Opened file (current dir  ): %s\n", filename);
+    }
+  }
+
+  if (d < 0)
+  {
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
+    throw std::runtime_error(buf);
+  }
+
+  FILE* const f = fdopen(d, fmode);
+  if (!f)
+  {
+    close(d);
+    throw std::runtime_error("Opening file failed");
+  }
+
+  file->flags  = SGPFILE_REAL;
+  file->u.file = f;
+  return file.Release();
+}
+
+
+/** Open file in various modes.
+ * When opening file for reading, smart lookup is not used. */
 HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 {
 	int         mode;
@@ -402,38 +468,9 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
 		d = open3(filename, mode, 0600);
 	}
-	else
-	{
-		d = open(filename, mode);
-		if (d < 0)
-		{
-      // failed to open file in the local directory
-      // let's try Data
-      d = OpenFileInDataDirFD(filename, mode);
-			if (d < 0)
-			{
-        // failed to open in the data dir
-        // let's try libraries
-				if (OpenFileFromLibrary(filename, &file->u.lib))
-        {
-          LOG__FILE_OPEN("Opened file (from library ): %s\n", filename);
-          return file.Release();
-        }
-
-				if (flags & FILE_OPEN_ALWAYS)
-				{
-					d = open3(filename, mode | O_CREAT, 0600);
-				}
-			}
-      else
-      {
-        LOG__FILE_OPEN("Opened file (from data dir): %s\n", filename);
-      }
-		}
-    else
-    {
-      LOG__FILE_OPEN("Opened file (current dir  ): %s\n", filename);
-    }
+	else if (flags & FILE_ACCESS_READ)
+  {
+    return SmartFileOpenRO(filename, false);
 	}
 
 	if (d < 0)

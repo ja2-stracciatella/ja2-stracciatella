@@ -19,7 +19,7 @@ try
 	SGPFILENAME zFilename;
 	sprintf(zFilename, AMBIENTDIR "/%d.bad", ubAmbientID);
 
-	AutoSGPFile hFile(FileOpen(zFilename, FILE_ACCESS_READ));
+	AutoSGPFile hFile(SmartFileOpenRO(zFilename, true));
 
 	// READ #
 	FileRead(hFile, &gsNumAmbData, sizeof(INT16));

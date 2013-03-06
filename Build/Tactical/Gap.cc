@@ -22,7 +22,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 	try
 	{
-		AutoSGPFile f(FileOpen(sFileName, FILE_ACCESS_READ));
+		AutoSGPFile f(SmartFileOpenRO(sFileName, true));
 
 		// gap file exists
 		// now read in the AUDIO_GAPs

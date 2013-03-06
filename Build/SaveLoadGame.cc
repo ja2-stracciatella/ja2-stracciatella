@@ -649,7 +649,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(zSaveGameName, true));
 	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
@@ -1406,7 +1406,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(FileOpen(pSrcFileName, FILE_ACCESS_READ));
+	AutoSGPFile hSrcFile(SmartFileOpenRO(pSrcFileName, true));
 
 #ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
@@ -2477,14 +2477,14 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( FileExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(FileOpen(zFileName1, FILE_ACCESS_READ));
+		AutoSGPFile hFile(SmartFileOpenRO(zFileName1, true));
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( FileExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(FileOpen(zFileName2, FILE_ACCESS_READ));
+		AutoSGPFile hFile(SmartFileOpenRO(zFileName2, true));
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}

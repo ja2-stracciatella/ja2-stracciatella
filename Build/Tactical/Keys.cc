@@ -106,7 +106,7 @@ try
 
 	// Load the Lock Table
 
-	AutoSGPFile hFile(FileOpen(pFileName, FILE_ACCESS_READ));
+	AutoSGPFile hFile(SmartFileOpenRO(pFileName, true));
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
 	FileRead(hFile, LockTable, uiBytesToRead);
@@ -847,7 +847,7 @@ void LoadDoorTableFromDoorTableTempFile()
 	//Get rid of the existing door table
 	TrashDoorTable();
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
 
 	//Read in the number of doors
 	FileRead(hFile, &gubMaxDoors, sizeof(UINT8));
@@ -1219,7 +1219,7 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
+	AutoSGPFile f(SmartFileOpenRO(map_name, true));
 
 	// Load the number of elements in the door status array
 	FileRead(f, &gubNumDoorStatus, sizeof(UINT8));
