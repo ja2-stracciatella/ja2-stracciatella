@@ -220,7 +220,7 @@ static void HourlyLarryUpdate(void)
 		if ( usTemptation < BAR_TEMPTATION && GetCurrentBalance() >= Item[ ALCOHOL ].usPrice )
 		{
 			if ( pSoldier->bSectorZ == 0 &&
-						( ( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_B) ||
+						( ( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_D) ||
 							( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_C) ||
 							( pSoldier->sSectorX == 5 && pSoldier->sSectorY == MAP_ROW_C) ||
 							( pSoldier->sSectorX == 6 && pSoldier->sSectorY == MAP_ROW_C) ||

@@ -1091,8 +1091,8 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	{
 		// make sure Maria and Angel are gone
 		gMercProfiles[ MARIA ].sSectorX = 0;
-		gMercProfiles[ ANGEL ].sSectorY = 0;
-		gMercProfiles[ MARIA ].sSectorX = 0;
+		gMercProfiles[ MARIA ].sSectorY = 0;
+		gMercProfiles[ ANGEL ].sSectorX = 0;
 		gMercProfiles[ ANGEL ].sSectorY = 0;
 	}
 
@@ -2132,7 +2132,10 @@ void AllMercsHaveWalkedOffSector( )
 		fEnemiesInLoadedSector = TRUE;
 	}
 
-	HandleLoyaltyImplicationsOfMercRetreat( RETREAT_TACTICAL_TRAVERSAL, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	if (fEnemiesInLoadedSector)
+	{
+		HandleLoyaltyImplicationsOfMercRetreat( RETREAT_TACTICAL_TRAVERSAL, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	}
 
 	//Setup strategic traversal information
 	if( guiAdjacentTraverseTime <= 5 )
