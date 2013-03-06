@@ -98,13 +98,9 @@ public:
    * @param screenHeight Screen height */
   UILayout(INT16 screenWidth, INT16 screenHeight);
 
-  /** Set screen width.
+  /** Set new screen size.
    * This method should be called before most of the application initialization is done. */
-  void setScreenWidth(INT16 screenWidth);
-
-  /** Set screen height.
-   * This method should be called before most of the application initialization is done. */
-  void setScreenHeight(INT16 screenHeight);
+  bool setScreenSize(INT16 width, INT16 height);
 
   /** Check if the screen is bigger than original 640x480. */
   bool isBigScreen();

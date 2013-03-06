@@ -22,26 +22,18 @@ UILayout::UILayout(INT16 screenWidth, INT16 screenHeight)
 }
 
 
-/** Set screen width.
+/** Set new screen size.
  * This method should be called before most of the application initialization is done. */
-void UILayout::setScreenWidth(INT16 screenWidth)
+bool UILayout::setScreenSize(INT16 width, INT16 height)
 {
-  if(screenWidth > MIN_INTERFACE_WIDTH)
+  if((width >= MIN_INTERFACE_WIDTH) && (height >= MIN_INTERFACE_HEIGHT))
   {
-    m_screenWidth = screenWidth;
+    m_screenWidth = width;
+    m_screenHeight = height;
     recalculatePositions();
+    return true;
   }
-}
-
-/** Set screen height.
- * This method should be called before most of the application initialization is done. */
-void UILayout::setScreenHeight(INT16 screenHeight)
-{
-  if(screenHeight > MIN_INTERFACE_HEIGHT)
-  {
-    m_screenHeight = screenHeight;
-    recalculatePositions();
-  }
+  return false;
 }
 
 
