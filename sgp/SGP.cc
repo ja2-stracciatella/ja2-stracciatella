@@ -295,8 +295,11 @@ try
 
 	InitializeStandardGamingPlatform();
 
-#if defined JA2 && defined ENGLISH
-	SetIntroType(INTRO_SPLASH);
+#if defined JA2
+  if(isEnglishVersion())
+  {
+    SetIntroType(INTRO_SPLASH);
+  }
 #endif
 
 	FastDebugMsg("Running Game");

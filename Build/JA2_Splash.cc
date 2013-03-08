@@ -5,11 +5,7 @@
 #include "LibraryDataBase.h"
 #include "MainMenuScreen.h"
 #include "Video.h"
-
-#ifndef ENGLISH
-#	include "Multi_Language_Graphic_Utils.h"
-#endif
-
+#include "GameRes.h"
 
 UINT32 guiSplashFrameFade = 10;
 UINT32 guiSplashStartTime = 0;
@@ -20,12 +16,15 @@ void InitJA2SplashScreen(void)
 {
 	InitializeJA2Clock();
 
-#ifdef ENGLISH
-	ClearMainMenu();
-#else
-	const char* const ImageFile = GetMLGFilename(MLG_SPLASH);
-  BltVideoSurfaceOnceWithStretch(FRAME_BUFFER, ImageFile);
-#endif
+  if(isEnglishVersion())
+  {
+    ClearMainMenu();
+  }
+  else
+  {
+    const char* const ImageFile = GetMLGFilename(MLG_SPLASH);
+    BltVideoSurfaceOnceWithStretch(FRAME_BUFFER, ImageFile);
+  }
 
 	InvalidateScreen();
 	RefreshScreen();
