@@ -51,6 +51,7 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WorldDef.h"
+#include "UILayout.h"
 
 
 static BOOLEAN gfErrorCatch            = FALSE;

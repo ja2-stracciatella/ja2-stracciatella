@@ -78,6 +78,7 @@
 #include "Debug.h"
 #include "Video.h"
 #include "VObject_Blitters.h"
+#include "UILayout.h"
 
 
 static BOOLEAN gfCorruptMap        = FALSE;

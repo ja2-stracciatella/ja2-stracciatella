@@ -21,6 +21,7 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "WorldDef.h"
+#include "UILayout.h"
 
 
 // defines for DisplaySpec.ubType

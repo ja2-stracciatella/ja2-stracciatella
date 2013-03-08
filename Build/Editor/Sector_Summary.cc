@@ -38,6 +38,8 @@
 #include "MemMan.h"
 #include "Soldier_Create.h"
 #include "Video.h"
+#include "UILayout.h"
+#include "GameRes.h"
 
 #define DEVINFO_DIR "../DevInfo"
 

@@ -17,6 +17,8 @@
 #include "Soldier_Create.h"
 #include "Overhead_Types.h"
 
+#include "UILayout.h"
+
 
 static void InitEditorItemStatsButtons(void)
 {

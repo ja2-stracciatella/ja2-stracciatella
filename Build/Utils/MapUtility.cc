@@ -26,6 +26,7 @@
 #include "MemMan.h"
 #include "Video.h"
 #include "Quantize.h"
+#include "UILayout.h"
 
 
 #define		MINIMAP_X_SIZE			88

@@ -9,6 +9,7 @@
 #include "Input.h"
 #include "English.h"
 #include "Button_System.h"
+#include "UILayout.h"
 
 
 GUIButtonRef iMsgBoxBgrnd;

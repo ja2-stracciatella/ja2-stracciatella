@@ -28,6 +28,7 @@
 #include "MemMan.h"
 #include "TileDat.h"
 #include "Video.h"
+#include "UILayout.h"
 
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;

@@ -34,6 +34,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "WorldDef.h"
+#include "UILayout.h"
 
 
 #define POPUP_ACTIVETYPE_NOT_YET_DETERMINED 0
