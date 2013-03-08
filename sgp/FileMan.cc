@@ -273,14 +273,14 @@ void InitializeFileManager(void)
   // Check that 'Data' directory exists inside the folder with JA2 resources
   // -----------------------------------------------------------------------
 
-  if (GetDataDirPath() == NULL)
+  if (FileMan::getDataDirPath() == NULL)
   {
     LOG_ERROR("ERROR: 'Data' directory is not found in '%s'\n", GetBinDataPath());
 		throw std::runtime_error("'Data' directory is not found.");
   }
 
-  LOG_INFO("Data directory:      '%s'\n", GetDataDirPath());
-  LOG_INFO("Tilecache directory: '%s'\n", GetTilecacheDirPath());
+  LOG_INFO("Data directory:      '%s'\n", FileMan::getDataDirPath());
+  LOG_INFO("Tilecache directory: '%s'\n", FileMan::getTilecacheDirPath());
 }
 
 
@@ -290,7 +290,7 @@ bool FileExists(char const* const filename)
 	if (!file)
 	{
 		char path[512];
-		snprintf(path, lengthof(path), "%s/%s", GetDataDirPath(), filename);
+		snprintf(path, lengthof(path), "%s/%s", FileMan::getDataDirPath(), filename);
 		file = fopen(path, "rb");
 		if (!file) return CheckIfFileExistInLibrary(filename);
 	}
@@ -306,16 +306,16 @@ bool FileExists(char const* const filename)
 static int OpenFileInDataDirFD(const char *filename, int mode)
 {
   char path[512];
-  snprintf(path, lengthof(path), "%s/%s", GetDataDirPath(), filename);
+  snprintf(path, lengthof(path), "%s/%s", FileMan::getDataDirPath(), filename);
   int d = open(path, mode);
   if (d < 0)
   {
 #if CASE_SENSITIVE_FS
     // on case-sensitive file system need to try to find another name
     char newFileName[128];
-    if(findObjectCaseInsensitive(GetDataDirPath(), filename, true, false, newFileName, sizeof(newFileName)))
+    if(findObjectCaseInsensitive(FileMan::getDataDirPath(), filename, true, false, newFileName, sizeof(newFileName)))
     {
-      snprintf(path, lengthof(path), "%s/%s", GetDataDirPath(), newFileName);
+      snprintf(path, lengthof(path), "%s/%s", FileMan::getDataDirPath(), newFileName);
       d = open(path, mode);
     }
 #endif
@@ -541,7 +541,7 @@ static void SetFileManCurrentDirectory(char const* const pcDirectory)
 }
 
 
-void MakeFileManDirectory(char const* const path)
+void FileMan::createDir(char const* const path)
 {
 	if (mkdir(path, 0755) == 0) return;
 
@@ -722,10 +722,31 @@ const char* GetBinDataPath(void)
 	return ConfigGetValue(BinDataDir);
 }
 
+/** Join two path components. */
+std::string FileMan::joinPaths(const std::string &first, const char *second)
+{
+  std::string result = first;
+  if((result.length() == 0) || (result[result.length()-1] != '/'))
+  {
+    if(second[0] != '/')
+    {
+      result += '/';
+    }
+  }
+  result += second;
+  return result;
+}
+
+/** Join two path components. */
+std::string FileMan::joinPaths(const char *first, const char *second)
+{
+  return joinPaths(std::string(first), second);
+}
+
 #if CASE_SENSITIVE_FS
 
 /** Join two path components. */
-static void joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize)
+void FileMan::joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize)
 {
   strncpy(outputBuf, first, outputBufSize);
   if(first[strlen(first) - 1] != '/')
@@ -759,11 +780,11 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
     {
       // found subdirectory; let's continue the full search
       char pathInSubdir[128];
-      joinPaths(directory, actualSubdirName, newDirectory, sizeof(newDirectory));
+      FileMan::joinPaths(directory, actualSubdirName, newDirectory, sizeof(newDirectory));
       if(findObjectCaseInsensitive(newDirectory, splitter + 1, lookForFiles, lookForSubdirs, pathInSubdir, sizeof(pathInSubdir)))
       {
         // found name in subdir
-        joinPaths(actualSubdirName, pathInSubdir, nameBuf, nameBufSize);
+        FileMan::joinPaths(actualSubdirName, pathInSubdir, nameBuf, nameBufSize);
         result = true;
       }
     }
@@ -798,61 +819,78 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
 }
 #endif
 
-static char *s_dataDir = NULL;
-static char *s_tileDir = NULL;
-static char s_dataDirBuf[256] = "";
-static char s_tileDirBuf[256] = "";
-static bool s_needToFindDataDirs = true;
 
+static std::string s_dataDir;
+static std::string s_tileDir;
+static std::string s_mapsDir;
 
 /**
- * Find actual paths to directories 'Data' and 'Data/Tilecache'.
- * On case-sensitive filesystems that might be tricky.
+ * Find actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
+ * On case-sensitive filesystems that might be tricky: if such directories
+ * exist we should use them.  If doesn't exist, then use lowercased names.
  */
 static void findDataDirs()
 {
+  static bool s_needToFindDataDirs = true;
+  if(!s_needToFindDataDirs)
+  {
+    return;
+  }
+
 #if !CASE_SENSITIVE_FS
-    snprintf(s_dataDirBuf, lengthof(s_dataDirBuf), "%s/%s",    GetBinDataPath(), BASEDATADIR);
-    snprintf(s_tileDirBuf, lengthof(s_tileDirBuf), "%s/%s/%s", GetBinDataPath(), BASEDATADIR, TILECACHEDIR);
-    s_dataDir = s_dataDirBuf;
-    s_tileDir = s_tileDirBuf;
+    s_dataDir = FileMan::joinPaths(GetBinDataPath(), BASEDATADIR);
+    s_tileDir = FileMan::joinPaths(s_dataDir, TILECACHEDIR);
+    s_mapsDir = FileMan::joinPaths(s_dataDir, MAPSDIR);
 #else
-    s_dataDir = NULL;
-    s_tileDir = NULL;
     char name[128];
     if(findObjectCaseInsensitive(GetBinDataPath(), BASEDATADIR, false, true, name, sizeof(name)))
     {
-      snprintf(s_dataDirBuf, lengthof(s_dataDirBuf), "%s/%s", GetBinDataPath(), name);
-      s_dataDir = s_dataDirBuf;
+      s_dataDir = FileMan::joinPaths(GetBinDataPath(), name);
+
+      // Tilecache dir is optional
       if(findObjectCaseInsensitive(s_dataDir, TILECACHEDIR, false, true, name, sizeof(name)))
       {
-        snprintf(s_tileDirBuf, lengthof(s_tileDirBuf), "%s/%s", s_dataDir, name);
-        s_tileDir = s_tileDirBuf;
+        s_tileDir = FileMan::joinPaths(s_dataDir, name);
+      }
+      else
+      {
+        s_tileDir = FileMan::joinPaths(s_dataDir, TILECACHEDIR);
+      }
+
+      // Maps dir is optional
+      if(findObjectCaseInsensitive(s_dataDir, MAPSDIR, false, true, name, sizeof(name)))
+      {
+        s_mapsDir = FileMan::joinPaths(s_dataDir, name);
+      }
+      else
+      {
+        s_mapsDir = FileMan::joinPaths(s_dataDir, MAPSDIR);
       }
     }
 #endif
 }
 
 /** Get path to the 'Data' directory of the game. */
-const char* GetDataDirPath()
+const char* FileMan::getDataDirPath()
 {
-  if(s_needToFindDataDirs)
-  {
-    findDataDirs();
-  }
-  return s_dataDir;
+  findDataDirs();
+  return s_dataDir.c_str();
 }
 
 /** Get path to the 'Data/Tilecache' directory of the game. */
-const char* GetTilecacheDirPath()
+const char* FileMan::getTilecacheDirPath()
 {
-  if(s_needToFindDataDirs)
-  {
-    findDataDirs();
-  }
-  return s_tileDir;
+  findDataDirs();
+  return s_tileDir.c_str();
 }
 
+
+/** Get path to the 'Data/Maps' directory of the game. */
+const char* FileMan::getMapsDirPath()
+{
+  findDataDirs();
+  return s_mapsDir.c_str();
+}
 
 /** Convert file descriptor to HWFile.
  * Raise runtime_error if not possible. */

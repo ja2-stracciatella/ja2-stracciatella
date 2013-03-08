@@ -1,6 +1,8 @@
 #ifndef FILEMAN_H
 #define FILEMAN_H
 
+#include <string>
+
 #include "AutoObj.h"
 #include "Types.h"
 
@@ -52,10 +54,6 @@ INT32 FileGetPos(HWFILE);
 UINT32 FileGetSize(HWFILE);
 
 const char* GetExecutableDirectory(void);
-
-/* Create the directory at path.  Returns true, iff the creation succeeded or
- * the directory exists already. */
-void MakeFileManDirectory(char const* path);
 
 /* Removes ALL FILES in the specified directory, but leaves the directory alone.
  * Does not affect any subdirectories! */
@@ -118,12 +116,6 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 typedef SGP::AutoObj<SGPFile, FileClose> AutoSGPFile;
 
-/** Get path to the 'Data' directory of the game. */
-const char* GetDataDirPath();
-
-/** Get path to the 'Data/Tilecache' directory of the game. */
-const char* GetTilecacheDirPath();
-
 /***
  * New file manager.
  *
@@ -146,8 +138,18 @@ public:
   static HWFILE openForReadWrite(const char *filename);
 
   /* ------------------------------------------------------------
-   * File operations with library
+   * File operations with game resources.
+   * Game resources is what located in 'Data' directory and below.
    * ------------------------------------------------------------ */
+
+  /** Get path to the 'Data' directory of the game. */
+  static const char* getDataDirPath();
+
+  /** Get path to the 'Data/Tilecache' directory of the game. */
+  static const char* getTilecacheDirPath();
+
+  /** Get path to the 'Data/Maps' directory of the game. */
+  static const char* getMapsDirPath();
 
   /** Open file in the 'Data' directory in case-insensitive manner. */
   static FILE* openForReadingInDataDir(const char *filename);
@@ -160,6 +162,24 @@ public:
    *  - if file is not found, try to find the file relatively to 'Data' directory;
    *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
   static HWFILE openForReadingSmart(const char* filename, bool useSmartLookup);
+
+  /* ------------------------------------------------------------
+   * Other operations
+   * ------------------------------------------------------------ */
+
+  /** Create directory.
+   * If directory already exists, do nothing.
+   * If failed to create, raise an exception. */
+  static void createDir(char const* path);
+
+  /** Join two path components. */
+  static void joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize);
+
+  /** Join two path components. */
+  static std::string joinPaths(const char *first, const char *second);
+
+  /** Join two path components. */
+  static std::string joinPaths(const std::string &first, const char *second);
 
 private:
   /** Private constructor to avoid instantiation. */

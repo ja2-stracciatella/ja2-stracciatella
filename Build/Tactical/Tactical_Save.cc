@@ -663,7 +663,7 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 
 void InitTacticalSave()
 {
-	MakeFileManDirectory(TEMPDIR);
+	FileMan::createDir(TEMPDIR);
 	EraseDirectory(TEMPDIR);
 }
 

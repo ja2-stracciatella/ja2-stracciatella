@@ -1345,9 +1345,11 @@ static void SaveMapLights(HWFILE);
 BOOLEAN SaveWorld(char const* const filename)
 try
 {
-	char full_filename[255];
-	sprintf(full_filename, MAPSDIR "/%s", filename);
-	AutoSGPFile f(FileMan::openForWriting(full_filename));
+  // Let's save map into Data/maps
+  std::string path = FileMan::joinPaths(FileMan::getDataDirPath(), MAPSDIR);
+  FileMan::createDir(path.c_str());
+  path = FileMan::joinPaths(path.c_str(), (const char*)filename);
+	AutoSGPFile f(FileMan::openForWriting(path.c_str()));
 
 	// Write JA2 Version ID
   FLOAT mapVersion = getMajorMapVersion();

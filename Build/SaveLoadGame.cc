@@ -275,7 +275,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 			wcslcpy(desc, GameDesc, lengthof(desc));
 		}
 
-		MakeFileManDirectory(g_savegame_dir);
+		FileMan::createDir(g_savegame_dir);
 
 		// Create the save game file
 		char savegame_name[512];

@@ -1746,7 +1746,7 @@ static void CreateGlobalSummary(void)
 
 	gfGlobalSummaryExists = FALSE;
 
-	MakeFileManDirectory(DEVINFO_DIR);
+	FileMan::createDir(DEVINFO_DIR);
 
 	// Generate a simple readme file.
 	FILE* const f = fopen(DEVINFO_DIR "/readme.txt", "w");
