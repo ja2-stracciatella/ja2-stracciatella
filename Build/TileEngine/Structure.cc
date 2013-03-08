@@ -232,7 +232,7 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
 // Loads a structure file's data as a honking chunk o' memory
 static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
 {
-	AutoSGPFile f(SmartFileOpenRO(filename, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
 
 	BYTE data[16];
 	FileRead(f, data, sizeof(data));

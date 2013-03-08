@@ -446,7 +446,7 @@ static void LoadInCurrentImpCharacter(void)
 	INT32 iProfileId = 0;
 
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(IMP_MERC_FILE, true));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(IMP_MERC_FILE, true));
 
 		// read in the profile
 		FileRead(hFile, &iProfileId, sizeof(INT32));

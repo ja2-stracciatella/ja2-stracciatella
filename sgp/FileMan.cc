@@ -383,7 +383,7 @@ static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
  *    and file is present;
  *  - if file is not found, try to find the file relatively to 'Data' directory;
  *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
+HWFILE FileMan::openForReadingSmart(const char* filename, bool useSmartLookup)
 {
   int         mode;
   const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);

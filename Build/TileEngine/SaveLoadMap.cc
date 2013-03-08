@@ -71,7 +71,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 		//Get the size of the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -431,7 +431,7 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 	if (!FileExists(zMapName)) return;
 
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
@@ -615,7 +615,7 @@ try
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 		//Get the number of elements in the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -752,7 +752,7 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 	SGP::Buffer<MODIFY_MAP> mm;
 	{
 		// Read the map temp file into a buffer
-		AutoSGPFile src(SmartFileOpenRO(map_name, true));
+		AutoSGPFile src(FileMan::openForReadingSmart(map_name, true));
 
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 

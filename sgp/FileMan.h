@@ -35,15 +35,6 @@ bool FileExists(char const* filename);
  * the file did not exist in the first place. */
 void FileDelete(char const* path);
 
-/** Open file for reading only.
- * When using the smart lookup:
- *  - first try to open file normally.
- *    It will work if the path is absolute and the file is found or path is relative to the current directory
- *    and file is present;
- *  - if file is not found, try to find the file relatively to 'Data' directory;
- *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup);
-
 void   FileClose(HWFILE);
 
 void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
@@ -160,6 +151,15 @@ public:
 
   /** Open file in the 'Data' directory in case-insensitive manner. */
   static FILE* openForReadingInDataDir(const char *filename);
+
+  /** Open file for reading only.
+   * When using the smart lookup:
+   *  - first try to open file normally.
+   *    It will work if the path is absolute and the file is found or path is relative to the current directory
+   *    and file is present;
+   *  - if file is not found, try to find the file relatively to 'Data' directory;
+   *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
+  static HWFILE openForReadingSmart(const char* filename, bool useSmartLookup);
 
 private:
   /** Private constructor to avoid instantiation. */

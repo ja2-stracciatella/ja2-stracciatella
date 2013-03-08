@@ -127,7 +127,7 @@ try
 		return NULL;
 	}
 
-	AutoSGPFile file(SmartFileOpenRO(filename, true));
+	AutoSGPFile file(FileMan::openForReadingSmart(filename, true));
 
 	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 

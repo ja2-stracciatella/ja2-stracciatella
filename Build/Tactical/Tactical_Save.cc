@@ -236,7 +236,7 @@ void LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z, 
 	// If the file doesn't exists, it's no problem
 	if (FileExists(filename))
 	{
-		AutoSGPFile f(SmartFileOpenRO(filename, true));
+		AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
 
 		FileRead(f, &l_item_count, sizeof(l_item_count));
 		if (l_item_count != 0)
@@ -699,7 +699,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 	// If the file doesn't exist, it's no problem.
 	if (!FileExists(map_name)) return;
 
-	AutoSGPFile f(SmartFileOpenRO(map_name, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
 
 	// Load the number of Rotting corpses
 	UINT32 n_corpses;

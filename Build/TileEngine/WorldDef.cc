@@ -1719,7 +1719,7 @@ try
 		SaveWorld(filename);
 	}
 
-	AutoSGPFile f(SmartFileOpenRO(szDirFilename, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(szDirFilename, true));
 
 	wchar_t str[40];
 	swprintf(str, lengthof(str), L"Analyzing map %hs", filename);
@@ -2052,7 +2052,7 @@ try
 
 	char full_filename[50];
 	sprintf(full_filename, MAPSDIR "/%s", filename);
-	AutoSGPFile f(SmartFileOpenRO(full_filename, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(full_filename, true));
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
 #ifdef JA2TESTVERSION

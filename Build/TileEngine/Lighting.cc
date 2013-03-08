@@ -2080,7 +2080,7 @@ void LightSave(LightTemplate const* const t, char const* const pFilename)
  * the file wasn't loaded. */
 static LightTemplate* LightLoad(const char* pFilename)
 {
-	AutoSGPFile hFile(SmartFileOpenRO(pFilename, true));
+	AutoSGPFile hFile(FileMan::openForReadingSmart(pFilename, true));
 
 	UINT16 n_lights;
 	FileRead(hFile, &n_lights, sizeof(n_lights));

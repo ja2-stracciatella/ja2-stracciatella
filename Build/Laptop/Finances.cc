@@ -889,7 +889,7 @@ static void GetBalanceFromDisk(void)
 	AutoSGPFile f;
 	try
 	{
-		f = SmartFileOpenRO(FINANCES_DATA_FILE, true);
+		f = FileMan::openForReadingSmart(FINANCES_DATA_FILE, true);
 	}
 	catch (...)
 	{
@@ -924,7 +924,7 @@ static void AppendFinanceToEndOfFile(void)
 // Grabs the size of the file and interprets number of pages it will take up
 static void SetLastPageInRecords(void)
 {
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	const UINT32 size = FileGetSize(f);
 
@@ -963,7 +963,7 @@ static void LoadInRecords(UINT32 const page)
 	ClearFinanceList();
 	if (page == 0) return; // check if bad page
 
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	UINT32 const size = FileGetSize(f);
 	if (size < FINANCE_HEADER_SIZE) return;
@@ -1053,7 +1053,7 @@ static INT32 GetPreviousDaysBalance(void)
 
 	if (date_in_days < 2) return 0;
 
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	INT32 balance = 0;
   // start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
@@ -1094,7 +1094,7 @@ static INT32 GetTodaysBalance(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	INT32 balance = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
@@ -1133,7 +1133,7 @@ static INT32 GetPreviousDaysIncome(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is = date_in_days - 2
@@ -1179,7 +1179,7 @@ static INT32 GetTodaysDaysIncome(void)
   const UINT32 date_in_minutes = GetWorldTotalMin();
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
@@ -1240,7 +1240,7 @@ static INT32 GetTodaysOtherDeposits(void)
   const UINT32 date_in_minutes = GetWorldTotalMin();
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	INT32 iTotalIncome = 0;
   // loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
@@ -1288,7 +1288,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
   const UINT32 iDateInMinutes = GetWorldTotalMin();
   const UINT32 date_in_days   = iDateInMinutes / (24 * 60);
 
-	AutoSGPFile f(SmartFileOpenRO(FINANCES_DATA_FILE, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(FINANCES_DATA_FILE, true));
 
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is =  date_in_days - 2
