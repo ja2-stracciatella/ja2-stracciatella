@@ -2412,7 +2412,7 @@ void	InitAnimationSurfacesPerBodytype( )
 
 void LoadAnimationStateInstructions()
 {
-	AutoSGPFile hFile(SmartFileOpenRO(ANIMFILENAME, true));
+	AutoSGPFile hFile(FileMan::openForReadingSmart(ANIMFILENAME, true));
 	FileRead(hFile, gusAnimInst, sizeof(gusAnimInst));
 }
 

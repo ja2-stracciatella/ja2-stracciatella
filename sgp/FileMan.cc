@@ -49,8 +49,21 @@ struct SGPFile
 };
 
 
+enum FileOpenFlags
+{
+	FILE_ACCESS_READ      = 1U << 0,
+	FILE_ACCESS_WRITE     = 1U << 1,
+	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
+	FILE_ACCESS_APPEND    = 1U << 2
+};
+ENUM_BITSET(FileOpenFlags)
+
 static const char* GetBinDataPath(void);
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
+
+/** Convert file descriptor to HWFile.
+ * Raise runtime_error if not possible. */
+static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode);
 
 #if CASE_SENSITIVE_FS
 /**
@@ -310,28 +323,6 @@ static int OpenFileInDataDirFD(const char *filename, int mode)
   return d;
 }
 
-/** Open file in the 'Data' directory in case-insensitive manner. */
-FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags)
-{
-	int mode;
-	const char* fmode = GetFileOpenModes(flags, &mode);
-
-  int d = OpenFileInDataDirFD(filename, mode);
-  if(d >= 0)
-  {
-    FILE* hFile = fdopen(d, fmode);
-    if (hFile == NULL)
-    {
-      close(d);
-    }
-    else
-    {
-      return hFile;
-    }
-  }
-  return NULL;
-}
-
 void FileDelete(char const* const path)
 {
 	if (unlink(path) == 0) return;
@@ -392,12 +383,10 @@ static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
  *    and file is present;
  *  - if file is not found, try to find the file relatively to 'Data' directory;
  *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
+HWFILE FileMan::openForReadingSmart(const char* filename, bool useSmartLookup)
 {
   int         mode;
   const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
-
-  SGP::PODObj<SGPFile> file;
 
   int d;
 
@@ -410,12 +399,18 @@ HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
       d = OpenFileInDataDirFD(filename, mode);
       if (d < 0)
       {
+        LibraryFile libFile;
+        memset(&libFile, 0, sizeof(libFile));
+
         // failed to open in the data dir
         // let's try libraries
-        if (OpenFileFromLibrary(filename, &file->u.lib))
+        if (OpenFileFromLibrary(filename, &libFile))
         {
           LOG__FILE_OPEN("Opened file (from library ): %s\n", filename);
-          return file.Release();
+          SGPFile *file = MALLOCZ(SGPFile);
+          file->flags = SGPFILE_NONE;
+          file->u.lib = libFile;
+          return file;
         }
       }
       else
@@ -429,67 +424,7 @@ HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
     }
   }
 
-  if (d < 0)
-  {
-    char buf[128];
-    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
-    throw std::runtime_error(buf);
-  }
-
-  FILE* const f = fdopen(d, fmode);
-  if (!f)
-  {
-    close(d);
-    throw std::runtime_error("Opening file failed");
-  }
-
-  file->flags  = SGPFILE_REAL;
-  file->u.file = f;
-  return file.Release();
-}
-
-
-/** Open file in various modes.
- * When opening file for reading, smart lookup is not used. */
-HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
-{
-	int         mode;
-	const char* fmode = GetFileOpenModes(flags, &mode);
-
-	SGP::PODObj<SGPFile> file;
-
-	int d;
-	if (flags & FILE_CREATE_ALWAYS)
-	{
-		d = open3(filename, mode | O_CREAT | O_TRUNC, 0600);
-	}
-	else if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
-	{
-		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
-		d = open3(filename, mode, 0600);
-	}
-	else if (flags & FILE_ACCESS_READ)
-  {
-    return SmartFileOpenRO(filename, false);
-	}
-
-	if (d < 0)
-  {
-    char buf[128];
-    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
-    throw std::runtime_error(buf);
-  }
-
-	FILE* const f = fdopen(d, fmode);
-	if (!f)
-	{
-		close(d);
-		throw std::runtime_error("Opening file failed");
-	}
-
-	file->flags  = SGPFILE_REAL;
-	file->u.file = f;
-	return file.Release();
+  return getSGPFileFromFD(d, filename, fmode);
 }
 
 
@@ -916,5 +851,91 @@ const char* GetTilecacheDirPath()
     findDataDirs();
   }
   return s_tileDir;
+}
+
+
+/** Convert file descriptor to HWFile.
+ * Raise runtime_error if not possible. */
+static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode)
+{
+	if (fd < 0)
+  {
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
+    throw std::runtime_error(buf);
+  }
+
+	FILE* const f = fdopen(fd, fmode);
+	if (!f)
+	{
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
+    throw std::runtime_error(buf);
+	}
+
+  SGPFile *file = MALLOCZ(SGPFile);
+	file->flags  = SGPFILE_REAL;
+	file->u.file = f;
+	return file;
+}
+
+
+/** Open file for writing.
+ * If file is missing it will be created.
+ * If file exists, it's content will be removed. */
+HWFILE FileMan::openForWriting(const char *filename)
+{
+	int mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_WRITE, &mode);
+
+	int d = open3(filename, mode | O_CREAT | O_TRUNC, 0600);
+  return getSGPFileFromFD(d, filename, fmode);
+}
+
+
+/** Open file for appending data.
+ * If file doesn't exist, it will be created. */
+HWFILE FileMan::openForAppend(const char *filename)
+{
+	int         mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_APPEND, &mode);
+
+  int d = open3(filename, mode | O_CREAT, 0600);
+  return getSGPFileFromFD(d, filename, fmode);
+}
+
+
+/** Open file for reading and writing.
+ * If file doesn't exist, it will be created. */
+HWFILE FileMan::openForReadWrite(const char *filename)
+{
+	int         mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_READWRITE, &mode);
+
+  int d = open3(filename, mode | O_CREAT, 0600);
+  return getSGPFileFromFD(d, filename, fmode);
+}
+
+
+/** Open file in the 'Data' directory in case-insensitive manner. */
+FILE* FileMan::openForReadingInDataDir(const char *filename)
+{
+	int mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
+
+  int d = OpenFileInDataDirFD(filename, mode);
+  if(d >= 0)
+  {
+    FILE* hFile = fdopen(d, fmode);
+    if (hFile == NULL)
+    {
+      close(d);
+    }
+    else
+    {
+      return hFile;
+    }
+  }
+  return NULL;
 }
 

@@ -95,6 +95,6 @@ void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek
 
 void LoadEncryptedDataFromFile(char const* const Filename, wchar_t DestString[], UINT32 const seek_chars, UINT32 const read_chars)
 {
-	AutoSGPFile File(SmartFileOpenRO(Filename, true));
+	AutoSGPFile File(FileMan::openForReadingSmart(Filename, true));
 	LoadEncryptedData(File, DestString, seek_chars, read_chars);
 }

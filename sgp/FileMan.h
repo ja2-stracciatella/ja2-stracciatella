@@ -12,17 +12,6 @@
 #endif
 
 
-enum FileOpenFlags
-{
-	FILE_ACCESS_READ      = 1U << 0,
-	FILE_ACCESS_WRITE     = 1U << 1,
-	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
-	FILE_ACCESS_APPEND    = 1U << 2,
-	FILE_CREATE_ALWAYS    = 1U << 3, // create new file. overwrite existing
-	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
-};
-ENUM_BITSET(FileOpenFlags)
-
 enum FileSeekMode
 {
 	FILE_SEEK_FROM_START,
@@ -46,18 +35,6 @@ bool FileExists(char const* filename);
  * the file did not exist in the first place. */
 void FileDelete(char const* path);
 
-/** Open file for reading only.
- * When using the smart lookup:
- *  - first try to open file normally.
- *    It will work if the path is absolute and the file is found or path is relative to the current directory
- *    and file is present;
- *  - if file is not found, try to find the file relatively to 'Data' directory;
- *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup);
-
-/** Open file in various modes.
- * When opening files for reading, smart lookup is not used. */
-HWFILE FileOpen(const char* filename, FileOpenFlags);
 void   FileClose(HWFILE);
 
 void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
@@ -147,7 +124,46 @@ const char* GetDataDirPath();
 /** Get path to the 'Data/Tilecache' directory of the game. */
 const char* GetTilecacheDirPath();
 
-/** Open file in the 'Data' directory in case-insensitive manner. */
-FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags);
+/***
+ * New file manager.
+ *
+ * This class provides clean interface for file operations. */
+class FileMan
+{
+public:
+
+  /** Open file for writing.
+   * If file is missing it will be created.
+   * If file exists, it's content will be removed. */
+  static HWFILE openForWriting(const char *filename);
+
+  /** Open file for appending data.
+   * If file doesn't exist, it will be created. */
+  static HWFILE openForAppend(const char *filename);
+
+  /** Open file for reading and writing.
+   * If file doesn't exist, it will be created. */
+  static HWFILE openForReadWrite(const char *filename);
+
+  /* ------------------------------------------------------------
+   * File operations with library
+   * ------------------------------------------------------------ */
+
+  /** Open file in the 'Data' directory in case-insensitive manner. */
+  static FILE* openForReadingInDataDir(const char *filename);
+
+  /** Open file for reading only.
+   * When using the smart lookup:
+   *  - first try to open file normally.
+   *    It will work if the path is absolute and the file is found or path is relative to the current directory
+   *    and file is present;
+   *  - if file is not found, try to find the file relatively to 'Data' directory;
+   *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
+  static HWFILE openForReadingSmart(const char* filename, bool useSmartLookup);
+
+private:
+  /** Private constructor to avoid instantiation. */
+  FileMan() {};
+};
 
 #endif

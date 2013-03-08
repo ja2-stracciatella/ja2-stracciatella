@@ -280,7 +280,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		// Create the save game file
 		char savegame_name[512];
 		CreateSavedGameFileNameFromNumber(ubSaveGameID, savegame_name);
-		AutoSGPFile f(FileOpen(savegame_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+		AutoSGPFile f(FileMan::openForWriting(savegame_name));
 		SaveGameFilePosition(ubSaveGameID, f, "Just Opened File");
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
@@ -649,7 +649,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(SmartFileOpenRO(zSaveGameName, false));
+	AutoSGPFile f(FileMan::openForReadingSmart(zSaveGameName, false));
 	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
@@ -1406,7 +1406,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(SmartFileOpenRO(pSrcFileName, true));
+	AutoSGPFile hSrcFile(FileMan::openForReadingSmart(pSrcFileName, true));
 
 #ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
@@ -1440,7 +1440,7 @@ void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 	++guiNumberOfMapTempFiles; //Increment counter:  To determine where the temp files are crashing
 #endif
 
-	AutoSGPFile hSrcFile(FileOpen(pSrcFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile hSrcFile(FileMan::openForWriting(pSrcFileName));
 
 	// Read the size of the data
 	UINT32 uiFileSize;
@@ -1723,7 +1723,7 @@ static void SaveGameFilePosition(UINT8 const slot, const HWFILE save, const char
 	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, slot);
 
 	// create the save game file
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 	const INT32 pos = FileGetPos(save);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -1749,7 +1749,7 @@ static void LoadGameFilePosition(UINT8 const slot, const HWFILE load, const char
 	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, slot);
 
 	// create the save game file
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 	const INT32 pos = FileGetPos(load);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -2174,7 +2174,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, 
 	else
 	{
 		// create the save game file
-		AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+		AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 		sprintf( zTempString, "Number Of Files: %6d.  Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
 		uiStrLen = strlen( zTempString );
@@ -2195,7 +2195,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 	sprintf(zFileName, "%s/%s.txt", g_savegame_dir, gzNameOfMapTempFile);
 
 	// create the save game file
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 	sprintf( zTempString, "%8d   %6d   %s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
 	uiStrLen = strlen( zTempString );
@@ -2477,14 +2477,14 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( FileExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zFileName1, false));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zFileName1, false));
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( FileExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zFileName2, false));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zFileName2, false));
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}

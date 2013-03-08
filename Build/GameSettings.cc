@@ -41,7 +41,7 @@ void LoadGameSettings(void)
 {
 	try
 	{
-		AutoSGPFile f(SmartFileOpenRO(GAME_SETTINGS_FILE, false));
+		AutoSGPFile f(FileMan::openForReadingSmart(GAME_SETTINGS_FILE, false));
 
 		BYTE data[76];
 		if (FileGetSize(f) != sizeof(data)) goto fail;
@@ -129,7 +129,7 @@ void SaveGameSettings(void)
 	INJ_SKIP(d, 20)
 	Assert(d == endof(data));
 
-	AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(GAME_SETTINGS_FILE));
 	FileWrite(f, data, sizeof(data));
 }
 

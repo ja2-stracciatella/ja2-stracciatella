@@ -2058,7 +2058,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		AutoSGPFile f_map;
 		try
 		{
-			f_map = SmartFileOpenRO(filename, true);
+			f_map = FileMan::openForReadingSmart(filename, true);
 		}
 		catch (...)
 		{
@@ -2518,7 +2518,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Open the original map for the sector
 	char szFilename[40];
 	sprintf(szFilename, MAPSDIR "/%ls", gszFilename);
-	AutoSGPFile hfile(SmartFileOpenRO(szFilename, true));
+	AutoSGPFile hfile(FileMan::openForReadingSmart(szFilename, true));
 	//Now fileseek directly to the file position where the number of world items are stored
 	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
 	//Now load the number of world items from the map.

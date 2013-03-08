@@ -41,7 +41,7 @@ static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zMapName));
 	FileWrite(hFile, pMap, sizeof(MODIFY_MAP));
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
@@ -71,7 +71,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 		//Get the size of the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -406,7 +406,7 @@ void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const
 
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForWriting(zMapName));
 
 	//Write the revealed array to the Revealed temp file
 	FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
@@ -431,7 +431,7 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 	if (!FileExists(zMapName)) return;
 
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
@@ -615,7 +615,7 @@ try
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 		//Get the number of elements in the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -752,7 +752,7 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 	SGP::Buffer<MODIFY_MAP> mm;
 	{
 		// Read the map temp file into a buffer
-		AutoSGPFile src(SmartFileOpenRO(map_name, true));
+		AutoSGPFile src(FileMan::openForReadingSmart(map_name, true));
 
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 
@@ -771,6 +771,6 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 		break;
 	}
 
-	AutoSGPFile dst(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile dst(FileMan::openForWriting(map_name));
 	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
 }
