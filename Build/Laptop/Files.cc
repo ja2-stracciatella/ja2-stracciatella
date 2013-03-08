@@ -383,7 +383,7 @@ static void OpenAndReadFilesFile(void)
 
 static void OpenAndWriteFilesFile(void)
 {
-	AutoSGPFile f(FileOpen(FILES_DAT_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(FILES_DAT_FILE));
 
   for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
 	{

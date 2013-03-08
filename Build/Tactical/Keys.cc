@@ -826,7 +826,7 @@ void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z
 {
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(map_name));
 	FileWriteArray(f, gubNumDoors, DoorTable);
 	// Set the sector flag indicating that there is a Door table temp file present
 	SetSectorFlag(x, y, z, SF_DOOR_TABLE_TEMP_FILES_EXISTS);
@@ -1205,7 +1205,7 @@ void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(map_name));
 	FileWriteArray(f, gubNumDoorStatus, gpDoorStatus);
 
 	// Set the flag indicating that there is a door status array

@@ -1347,7 +1347,7 @@ try
 {
 	char full_filename[255];
 	sprintf(full_filename, MAPSDIR "/%s", filename);
-	AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(full_filename));
 
 	// Write JA2 Version ID
   FLOAT mapVersion = getMajorMapVersion();

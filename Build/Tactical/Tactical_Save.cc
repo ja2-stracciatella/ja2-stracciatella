@@ -215,7 +215,7 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 	{
 		char filename[128];
 		GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
-		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+		AutoSGPFile f(FileMan::openForWriting(filename));
 		FileWriteArray(f, uiNumberOfItems, pData);
 		/* Close the file before
 		 * SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it */
@@ -672,7 +672,7 @@ static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT
 {
 	char map_name[128];
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(map_name));
 
 	// Save the number of the rotting corpses
 	UINT32 n_corpses = 0;

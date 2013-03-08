@@ -459,11 +459,7 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 	SGP::PODObj<SGPFile> file;
 
 	int d;
-	if (flags & FILE_CREATE_ALWAYS)
-	{
-		d = open3(filename, mode | O_CREAT | O_TRUNC, 0600);
-	}
-	else if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
+	if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
 	{
 		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
 		d = open3(filename, mode, 0600);
@@ -918,3 +914,27 @@ const char* GetTilecacheDirPath()
   return s_tileDir;
 }
 
+
+/** Open file for writing.
+ * If file is missing it will be created.
+ * If file exists, it's content will be removed. */
+HWFILE FileMan::openForWriting(const char *filename)
+{
+	int mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_WRITE, &mode);
+
+	int d = open3(filename, mode | O_CREAT | O_TRUNC, 0600);
+
+	FILE* const f = fdopen(d, fmode);
+	if (!f)
+	{
+		close(d);
+		throw std::runtime_error("Opening file failed");
+	}
+
+	SGP::PODObj<SGPFile> file;
+	file->flags  = SGPFILE_REAL;
+	file->u.file = f;
+	return file.Release();
+
+}

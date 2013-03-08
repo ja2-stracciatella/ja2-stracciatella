@@ -18,7 +18,6 @@ enum FileOpenFlags
 	FILE_ACCESS_WRITE     = 1U << 1,
 	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
 	FILE_ACCESS_APPEND    = 1U << 2,
-	FILE_CREATE_ALWAYS    = 1U << 3, // create new file. overwrite existing
 	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
 };
 ENUM_BITSET(FileOpenFlags)
@@ -149,5 +148,23 @@ const char* GetTilecacheDirPath();
 
 /** Open file in the 'Data' directory in case-insensitive manner. */
 FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags);
+
+/***
+ * New file manager.
+ *
+ * This class provides clean interface for file operations. */
+class FileMan
+{
+public:
+
+  /** Open file for writing.
+   * If file is missing it will be created.
+   * If file exists, it's content will be removed. */
+  static HWFILE openForWriting(const char *filename);
+
+private:
+  /** Private constructor to avoid instantiation. */
+  FileMan() {};
+};
 
 #endif

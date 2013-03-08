@@ -504,7 +504,7 @@ void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 		return;
 	}
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForWriting(zMapName));
 
 	//Save the Number of Smoke Effects
 	FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32));

@@ -2070,7 +2070,7 @@ void LightSave(LightTemplate const* const t, char const* const pFilename)
 	if (t->lights == NULL) throw std::logic_error("Tried to save invalid light template");
 
 	const char* const pName = (pFilename != NULL ? pFilename : t->name);
-	AutoSGPFile f(FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(pName));
 	FileWriteArray(f, t->n_lights, t->lights);
 	FileWriteArray(f, t->n_rays,   t->rays);
 }

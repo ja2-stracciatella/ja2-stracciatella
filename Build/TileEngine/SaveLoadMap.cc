@@ -406,7 +406,7 @@ void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const
 
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForWriting(zMapName));
 
 	//Write the revealed array to the Revealed temp file
 	FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
@@ -771,6 +771,6 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 		break;
 	}
 
-	AutoSGPFile dst(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile dst(FileMan::openForWriting(map_name));
 	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
 }

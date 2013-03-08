@@ -280,7 +280,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		// Create the save game file
 		char savegame_name[512];
 		CreateSavedGameFileNameFromNumber(ubSaveGameID, savegame_name);
-		AutoSGPFile f(FileOpen(savegame_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+		AutoSGPFile f(FileMan::openForWriting(savegame_name));
 		SaveGameFilePosition(ubSaveGameID, f, "Just Opened File");
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
@@ -1440,7 +1440,7 @@ void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 	++guiNumberOfMapTempFiles; //Increment counter:  To determine where the temp files are crashing
 #endif
 
-	AutoSGPFile hSrcFile(FileOpen(pSrcFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile hSrcFile(FileMan::openForWriting(pSrcFileName));
 
 	// Read the size of the data
 	UINT32 uiFileSize;

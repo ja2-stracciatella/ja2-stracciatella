@@ -777,7 +777,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 
 	char map_name[128];
 	GetMapTempFileName(file_flag, map_name, sSectorX, sSectorY, bSectorZ);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(map_name));
 
 	FileWrite(f, &sSectorY, 2);
 

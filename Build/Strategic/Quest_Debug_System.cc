@@ -2752,9 +2752,9 @@ void NpcRecordLoggingInit(ProfileID const npc_id, ProfileID const merc_id, UINT8
 	try
 	{
 		// Truncate when it's the first time in the game
-		static FileOpenFlags flags = FILE_ACCESS_APPEND | FILE_CREATE_ALWAYS;
-		AutoSGPFile f(FileOpen(QUEST_DEBUG_FILE, flags));
-		flags = FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS;
+    static bool firstTime = true;
+		AutoSGPFile f(firstTime ? FileMan::openForWriting(QUEST_DEBUG_FILE) : FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+    firstTime = false;
 
 		char buf[1024];
 		snprintf(buf, lengthof(buf),
