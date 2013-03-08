@@ -41,7 +41,7 @@ static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zMapName));
 	FileWrite(hFile, pMap, sizeof(MODIFY_MAP));
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );

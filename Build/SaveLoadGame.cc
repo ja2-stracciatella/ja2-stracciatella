@@ -1723,7 +1723,7 @@ static void SaveGameFilePosition(UINT8 const slot, const HWFILE save, const char
 	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, slot);
 
 	// create the save game file
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 	const INT32 pos = FileGetPos(save);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -1749,7 +1749,7 @@ static void LoadGameFilePosition(UINT8 const slot, const HWFILE load, const char
 	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, slot);
 
 	// create the save game file
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 	const INT32 pos = FileGetPos(load);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -2174,7 +2174,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, 
 	else
 	{
 		// create the save game file
-		AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+		AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 		sprintf( zTempString, "Number Of Files: %6d.  Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
 		uiStrLen = strlen( zTempString );
@@ -2195,7 +2195,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 	sprintf(zFileName, "%s/%s.txt", g_savegame_dir, gzNameOfMapTempFile);
 
 	// create the save game file
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
 
 	sprintf( zTempString, "%8d   %6d   %s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
 	uiStrLen = strlen( zTempString );

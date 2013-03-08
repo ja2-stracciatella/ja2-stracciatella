@@ -768,7 +768,7 @@ static void LoadPreviousHistoryPage(void)
 
 static void AppendHistoryToEndOfFile(void)
 {
-	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile f(FileMan::openForAppend(HISTORY_DATA_FILE));
 
 	const HistoryUnit* const h = pHistoryListHead;
 

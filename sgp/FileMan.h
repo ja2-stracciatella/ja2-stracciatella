@@ -17,8 +17,7 @@ enum FileOpenFlags
 	FILE_ACCESS_READ      = 1U << 0,
 	FILE_ACCESS_WRITE     = 1U << 1,
 	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
-	FILE_ACCESS_APPEND    = 1U << 2,
-	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
+	FILE_ACCESS_APPEND    = 1U << 2
 };
 ENUM_BITSET(FileOpenFlags)
 
@@ -161,6 +160,15 @@ public:
    * If file is missing it will be created.
    * If file exists, it's content will be removed. */
   static HWFILE openForWriting(const char *filename);
+
+  /** Open file for appending data.
+   * If file doesn't exist, it will be created. */
+  static HWFILE openForAppend(const char *filename);
+
+  /** Open file for reading and writing.
+   * If file doesn't exist, it will be created. */
+  static HWFILE openForReadWrite(const char *filename);
+
 
 private:
   /** Private constructor to avoid instantiation. */

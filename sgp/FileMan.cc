@@ -52,6 +52,10 @@ struct SGPFile
 static const char* GetBinDataPath(void);
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
 
+/** Convert file descriptor to HWFile.
+ * Raise runtime_error if not possible. */
+static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode);
+
 #if CASE_SENSITIVE_FS
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
@@ -397,8 +401,6 @@ HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
   int         mode;
   const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
 
-  SGP::PODObj<SGPFile> file;
-
   int d;
 
   {
@@ -410,12 +412,18 @@ HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
       d = OpenFileInDataDirFD(filename, mode);
       if (d < 0)
       {
+        LibraryFile libFile;
+        memset(&libFile, 0, sizeof(libFile));
+
         // failed to open in the data dir
         // let's try libraries
-        if (OpenFileFromLibrary(filename, &file->u.lib))
+        if (OpenFileFromLibrary(filename, &libFile))
         {
           LOG__FILE_OPEN("Opened file (from library ): %s\n", filename);
-          return file.Release();
+          SGPFile *file = MALLOCZ(SGPFile);
+          file->flags = SGPFILE_NONE;
+          file->u.lib = libFile;
+          return file;
         }
       }
       else
@@ -429,23 +437,7 @@ HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
     }
   }
 
-  if (d < 0)
-  {
-    char buf[128];
-    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
-    throw std::runtime_error(buf);
-  }
-
-  FILE* const f = fdopen(d, fmode);
-  if (!f)
-  {
-    close(d);
-    throw std::runtime_error("Opening file failed");
-  }
-
-  file->flags  = SGPFILE_REAL;
-  file->u.file = f;
-  return file.Release();
+  return getSGPFileFromFD(d, filename, fmode);
 }
 
 
@@ -456,12 +448,9 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 	int         mode;
 	const char* fmode = GetFileOpenModes(flags, &mode);
 
-	SGP::PODObj<SGPFile> file;
-
 	int d;
 	if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
 	{
-		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
 		d = open3(filename, mode, 0600);
 	}
 	else if (flags & FILE_ACCESS_READ)
@@ -469,23 +458,7 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
     return SmartFileOpenRO(filename, false);
 	}
 
-	if (d < 0)
-  {
-    char buf[128];
-    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
-    throw std::runtime_error(buf);
-  }
-
-	FILE* const f = fdopen(d, fmode);
-	if (!f)
-	{
-		close(d);
-		throw std::runtime_error("Opening file failed");
-	}
-
-	file->flags  = SGPFILE_REAL;
-	file->u.file = f;
-	return file.Release();
+  return getSGPFileFromFD(d, filename, fmode);
 }
 
 
@@ -915,6 +888,32 @@ const char* GetTilecacheDirPath()
 }
 
 
+/** Convert file descriptor to HWFile.
+ * Raise runtime_error if not possible. */
+static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode)
+{
+	if (fd < 0)
+  {
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
+    throw std::runtime_error(buf);
+  }
+
+	FILE* const f = fdopen(fd, fmode);
+	if (!f)
+	{
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
+    throw std::runtime_error(buf);
+	}
+
+  SGPFile *file = MALLOCZ(SGPFile);
+	file->flags  = SGPFILE_REAL;
+	file->u.file = f;
+	return file;
+}
+
+
 /** Open file for writing.
  * If file is missing it will be created.
  * If file exists, it's content will be removed. */
@@ -924,17 +923,29 @@ HWFILE FileMan::openForWriting(const char *filename)
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_WRITE, &mode);
 
 	int d = open3(filename, mode | O_CREAT | O_TRUNC, 0600);
+  return getSGPFileFromFD(d, filename, fmode);
+}
 
-	FILE* const f = fdopen(d, fmode);
-	if (!f)
-	{
-		close(d);
-		throw std::runtime_error("Opening file failed");
-	}
 
-	SGP::PODObj<SGPFile> file;
-	file->flags  = SGPFILE_REAL;
-	file->u.file = f;
-	return file.Release();
+/** Open file for appending data.
+ * If file doesn't exist, it will be created. */
+HWFILE FileMan::openForAppend(const char *filename)
+{
+	int         mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_APPEND, &mode);
 
+  int d = open3(filename, mode | O_CREAT, 0600);
+  return getSGPFileFromFD(d, filename, fmode);
+}
+
+
+/** Open file for reading and writing.
+ * If file doesn't exist, it will be created. */
+HWFILE FileMan::openForReadWrite(const char *filename)
+{
+	int         mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_READWRITE, &mode);
+
+  int d = open3(filename, mode | O_CREAT, 0600);
+  return getSGPFileFromFD(d, filename, fmode);
 }

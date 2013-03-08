@@ -821,7 +821,7 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 	char map_name[128];
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
 
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READWRITE | FILE_OPEN_ALWAYS));
+	AutoSGPFile f(FileMan::openForReadWrite(map_name));
 
 	UINT32 corpse_count;
 	if (FileGetSize(f) != 0)

@@ -876,7 +876,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 static void WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
-	AutoSGPFile hFileHandle(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS));
+	AutoSGPFile hFileHandle(FileMan::openForWriting(FINANCES_DATA_FILE));
 	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
@@ -905,7 +905,7 @@ static void GetBalanceFromDisk(void)
 // will write the current finance to disk
 static void AppendFinanceToEndOfFile(void)
 {
-	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	AutoSGPFile f(FileMan::openForAppend(FINANCES_DATA_FILE));
 
 	const FinanceUnit* const fu = pFinanceListHead;
 	BYTE  data[FINANCE_RECORD_SIZE];
