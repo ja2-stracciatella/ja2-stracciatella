@@ -140,7 +140,7 @@ static char* Slashify(const char* s)
 static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct* const lib)
 try
 {
-  FILE* hFile = OpenFileInDataDir(lib_name, FILE_ACCESS_READ);
+  FILE* hFile = FileMan::openForReadingInDataDir(lib_name);
   if (hFile == NULL)
   {
       fprintf(stderr, "ERROR: Failed to open library \"%s\"\n", lib_name);

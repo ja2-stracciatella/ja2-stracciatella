@@ -12,15 +12,6 @@
 #endif
 
 
-enum FileOpenFlags
-{
-	FILE_ACCESS_READ      = 1U << 0,
-	FILE_ACCESS_WRITE     = 1U << 1,
-	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
-	FILE_ACCESS_APPEND    = 1U << 2
-};
-ENUM_BITSET(FileOpenFlags)
-
 enum FileSeekMode
 {
 	FILE_SEEK_FROM_START,
@@ -53,9 +44,6 @@ void FileDelete(char const* path);
  *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
 HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup);
 
-/** Open file in various modes.
- * When opening files for reading, smart lookup is not used. */
-HWFILE FileOpen(const char* filename, FileOpenFlags);
 void   FileClose(HWFILE);
 
 void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
@@ -145,9 +133,6 @@ const char* GetDataDirPath();
 /** Get path to the 'Data/Tilecache' directory of the game. */
 const char* GetTilecacheDirPath();
 
-/** Open file in the 'Data' directory in case-insensitive manner. */
-FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags);
-
 /***
  * New file manager.
  *
@@ -169,6 +154,12 @@ public:
    * If file doesn't exist, it will be created. */
   static HWFILE openForReadWrite(const char *filename);
 
+  /* ------------------------------------------------------------
+   * File operations with library
+   * ------------------------------------------------------------ */
+
+  /** Open file in the 'Data' directory in case-insensitive manner. */
+  static FILE* openForReadingInDataDir(const char *filename);
 
 private:
   /** Private constructor to avoid instantiation. */

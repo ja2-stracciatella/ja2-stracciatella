@@ -49,6 +49,15 @@ struct SGPFile
 };
 
 
+enum FileOpenFlags
+{
+	FILE_ACCESS_READ      = 1U << 0,
+	FILE_ACCESS_WRITE     = 1U << 1,
+	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
+	FILE_ACCESS_APPEND    = 1U << 2
+};
+ENUM_BITSET(FileOpenFlags)
+
 static const char* GetBinDataPath(void);
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
 
@@ -314,28 +323,6 @@ static int OpenFileInDataDirFD(const char *filename, int mode)
   return d;
 }
 
-/** Open file in the 'Data' directory in case-insensitive manner. */
-FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags)
-{
-	int mode;
-	const char* fmode = GetFileOpenModes(flags, &mode);
-
-  int d = OpenFileInDataDirFD(filename, mode);
-  if(d >= 0)
-  {
-    FILE* hFile = fdopen(d, fmode);
-    if (hFile == NULL)
-    {
-      close(d);
-    }
-    else
-    {
-      return hFile;
-    }
-  }
-  return NULL;
-}
-
 void FileDelete(char const* const path)
 {
 	if (unlink(path) == 0) return;
@@ -436,27 +423,6 @@ HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup)
       LOG__FILE_OPEN("Opened file (current dir  ): %s\n", filename);
     }
   }
-
-  return getSGPFileFromFD(d, filename, fmode);
-}
-
-
-/** Open file in various modes.
- * When opening file for reading, smart lookup is not used. */
-HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
-{
-	int         mode;
-	const char* fmode = GetFileOpenModes(flags, &mode);
-
-	int d;
-	if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
-	{
-		d = open3(filename, mode, 0600);
-	}
-	else if (flags & FILE_ACCESS_READ)
-  {
-    return SmartFileOpenRO(filename, false);
-	}
 
   return getSGPFileFromFD(d, filename, fmode);
 }
@@ -949,3 +915,27 @@ HWFILE FileMan::openForReadWrite(const char *filename)
   int d = open3(filename, mode | O_CREAT, 0600);
   return getSGPFileFromFD(d, filename, fmode);
 }
+
+
+/** Open file in the 'Data' directory in case-insensitive manner. */
+FILE* FileMan::openForReadingInDataDir(const char *filename)
+{
+	int mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
+
+  int d = OpenFileInDataDirFD(filename, mode);
+  if(d >= 0)
+  {
+    FILE* hFile = fdopen(d, fmode);
+    if (hFile == NULL)
+    {
+      close(d);
+    }
+    else
+    {
+      return hFile;
+    }
+  }
+  return NULL;
+}
+
