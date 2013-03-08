@@ -58,17 +58,9 @@ UINT8 gubGlobalPathFlags = 0;
 UINT8	gubBuildingInfoToSet;
 
 // ABSOLUTE maximums
-//#ifdef JA2EDITOR
 	#define ABSMAX_SKIPLIST_LEVEL 5
 	#define ABSMAX_TRAIL_TREE (16384)
 	#define ABSMAX_PATHQ (512)
-/*
-#else
-	#define ABSMAX_SKIPLIST_LEVEL 5
-	#define ABSMAX_TRAIL_TREE (4096)
-	#define ABSMAX_PATHQ (512)
-#endif
-*/
 
 // STANDARD maximums... configurable!
 #define MAX_SKIPLIST_LEVEL 5

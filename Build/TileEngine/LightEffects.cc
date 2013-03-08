@@ -216,7 +216,7 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 		return;
 	}
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile hFile(FileMan::openForWriting(zMapName));
 
 	//Save the Number of Light Effects
 	FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32));
@@ -238,7 +238,7 @@ void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+	AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 	//Clear out the old list
 	ResetLightEffects();

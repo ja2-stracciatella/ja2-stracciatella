@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 //popupmenu.h
 //Author:  Kris Morness
 //Created:  Sept 4, 1997
@@ -62,5 +61,4 @@ enum PopupMenuID
 void InitPopupMenu(GUIButtonRef, PopupMenuID, UINT8 ubDirection);
 BOOLEAN ProcessPopupMenuIfActive(void);
 
-#endif
 #endif

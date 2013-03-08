@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Edit_Sys.h"
 #include "MouseSystem.h"
 #include "Line.h"
@@ -257,5 +255,3 @@ void ChangeLightDefault( INT8 bLightType )
 	gbDefaultLightType = bLightType;
 	ClickEditorButton( MAPINFO_PRIMETIME_LIGHT + gbDefaultLightType );
 }
-
-#endif

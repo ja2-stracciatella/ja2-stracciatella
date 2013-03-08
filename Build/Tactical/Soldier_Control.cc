@@ -4923,7 +4923,7 @@ void LoadPaletteData()
 {
 	UINT32			cnt, cnt2;
 
-	AutoSGPFile hFile(SmartFileOpenRO(PALETTEFILENAME, true));
+	AutoSGPFile hFile(FileMan::openForReadingSmart(PALETTEFILENAME, true));
 
 	// Read # of types
 	FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));

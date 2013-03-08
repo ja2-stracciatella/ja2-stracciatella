@@ -58,14 +58,13 @@
 #include "Video.h"
 #include "JAScreens.h"
 #include "UILayout.h"
+#include "GameState.h"
 
 #ifdef JA2TESTVERSION
 #	include "Scheduling.h"
 #endif
 
-#ifdef JA2EDITOR
-# include "EditScreen.h"
-#endif
+#include "EditScreen.h"
 
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
@@ -516,14 +515,12 @@ ScreenID MainGameScreenHandle(void)
 
 		if (uiNewScreen != GAME_SCREEN) return uiNewScreen;
 	}
-#ifdef JA2EDITOR
-	else if (gfIntendOnEnteringEditor)
-	{
+	else if (gfIntendOnEnteringEditor && GameState::getInstance()->isEditorMode())
+  {
 		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Aborting normal game mode and entering editor mode...");
 		SetPendingNewScreen(NO_PENDING_SCREEN);
 		return EDIT_SCREEN;
 	}
-#endif
 	else if (!gfEnteringMapScreen)
 	{
 		gfEnteringMapScreen = TRUE;

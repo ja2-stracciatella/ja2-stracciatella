@@ -215,7 +215,7 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 	{
 		char filename[128];
 		GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
-		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+		AutoSGPFile f(FileMan::openForWriting(filename));
 		FileWriteArray(f, uiNumberOfItems, pData);
 		/* Close the file before
 		 * SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it */
@@ -236,7 +236,7 @@ void LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z, 
 	// If the file doesn't exists, it's no problem
 	if (FileExists(filename))
 	{
-		AutoSGPFile f(SmartFileOpenRO(filename, true));
+		AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
 
 		FileRead(f, &l_item_count, sizeof(l_item_count));
 		if (l_item_count != 0)
@@ -663,7 +663,7 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 
 void InitTacticalSave()
 {
-	MakeFileManDirectory(TEMPDIR);
+	FileMan::createDir(TEMPDIR);
 	EraseDirectory(TEMPDIR);
 }
 
@@ -672,7 +672,7 @@ static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT
 {
 	char map_name[128];
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(map_name));
 
 	// Save the number of the rotting corpses
 	UINT32 n_corpses = 0;
@@ -699,7 +699,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 	// If the file doesn't exist, it's no problem.
 	if (!FileExists(map_name)) return;
 
-	AutoSGPFile f(SmartFileOpenRO(map_name, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
 
 	// Load the number of Rotting corpses
 	UINT32 n_corpses;
@@ -821,7 +821,7 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 	char map_name[128];
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
 
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READWRITE | FILE_OPEN_ALWAYS));
+	AutoSGPFile f(FileMan::openForReadWrite(map_name));
 
 	UINT32 corpse_count;
 	if (FileGetSize(f) != 0)

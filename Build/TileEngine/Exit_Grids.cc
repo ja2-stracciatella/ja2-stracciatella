@@ -117,8 +117,6 @@ void RemoveExitGridFromWorld(INT32 iMapIndex)
 }
 
 
-#ifdef JA2EDITOR
-
 void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 {
 	EXITGRID exitGrid;
@@ -137,8 +135,6 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 	//If these numbers aren't equal, something is wrong!
 	Assert( usNumExitGrids == usNumSaved );
 }
-
-#endif
 
 
 void LoadExitGrids(HWFILE const f)

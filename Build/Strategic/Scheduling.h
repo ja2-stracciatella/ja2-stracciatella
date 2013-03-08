@@ -94,14 +94,10 @@ BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * p
 
 BOOLEAN BumpAnyExistingMerc( INT16 sGridNo );
 
-#ifdef JA2EDITOR
-
 /* used to fix a bug in the editor where the schedules were reversed.  Because
  * only some maps were effected, this feature was required. */
 void ReverseSchedules(void);
 
 void ClearAllSchedules(void);
-
-#endif
 
 #endif

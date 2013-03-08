@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Editor_Callback_Prototypes.h"
 #include "HImage.h"
 #include "Isometric_Utils.h"
@@ -261,6 +259,3 @@ void TerrainFill( UINT32 iMapIndex )
 	Fill( sX, sY );
 
 }
-
-
-#endif

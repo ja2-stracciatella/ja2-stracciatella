@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include <cstdarg>
 
 #include "Button_System.h"
@@ -51,7 +49,9 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WorldDef.h"
-
+#include "UILayout.h"
+#include "GameState.h"
+#include "GameRes.h"
 
 static BOOLEAN gfErrorCatch            = FALSE;
 static wchar_t gzErrorCatchString[256] = L"";
@@ -1088,5 +1088,3 @@ BOOLEAN ExternalSaveMap(const wchar_t* szFilename)
 		return TRUE;
 	return FALSE;
 }
-
-#endif

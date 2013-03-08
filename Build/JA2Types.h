@@ -34,8 +34,4 @@ struct TILE_IMAGERY;
 struct VEHICLETYPE;
 struct VIDEO_OVERLAY;
 
-#ifdef JA2EDITOR
-struct SUMMARYFILE;
-#endif
-
 #endif

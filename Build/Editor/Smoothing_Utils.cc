@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "NewSmooth.h"
 #include "TileDef.h"
 #include "WorldDef.h"	//for LEVELNODE def
@@ -329,5 +327,3 @@ void RestoreWalls(UINT32 const map_idx)
 	PasteSmartWall(map_idx);                         // Paste smart wall with fake UI value
 	gubWallUIValue = save_wall_ui_value;             // Restore the real UI value
 }
-
-#endif

@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Buffer.h"
 #include "Debug.h"
 #include "Types.h"
@@ -763,5 +761,3 @@ static UINT8* CheckForDataInRowOrColumn(UINT8* pPixel, UINT16 usIncrement, UINT1
 	}
 	return( NULL );
 }
-
-#endif

@@ -14,9 +14,7 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints );
 void GenerateMapEdgepoints(void);
 
-#ifdef JA2EDITOR
 void SaveMapEdgepoints(HWFILE);
-#endif
 
 bool LoadMapEdgepoints(HWFILE);
 void TrashMapEdgepoints(void);
@@ -77,11 +75,8 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 //
 UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo );
 
-#ifdef JA2EDITOR
 void ShowMapEdgepoints(void);
 void HideMapEdgepoints(void);
-#endif
-
 
 
 #endif

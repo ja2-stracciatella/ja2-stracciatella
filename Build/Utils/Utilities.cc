@@ -15,7 +15,7 @@
 BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* const col_file)
 try
 {
-	AutoSGPFile f(SmartFileOpenRO(col_file, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(col_file, true));
 
 	BYTE data[776];
 	FileRead(f, data, sizeof(data));

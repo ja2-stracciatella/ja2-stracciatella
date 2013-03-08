@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 //sgp
 #include "Button_System.h"
 #include "Directories.h"
@@ -16,6 +14,8 @@
 #include "Soldier_Control.h"
 #include "Soldier_Create.h"
 #include "Overhead_Types.h"
+
+#include "UILayout.h"
 
 
 static void InitEditorItemStatsButtons(void)
@@ -428,5 +428,3 @@ void CreateEditorTaskbarInternal()
 	InitEditorOptionsToolbar();
 	InitEditorItemStatsButtons();
 }
-
-#endif

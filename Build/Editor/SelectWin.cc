@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include <stdexcept>
 
 #include "Button_System.h"
@@ -21,6 +19,7 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "WorldDef.h"
+#include "UILayout.h"
 
 
 // defines for DisplaySpec.ubType
@@ -1239,5 +1238,3 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 		if (count != 0) gprintf(x, y, L"%d", count);
 	}
 }
-
-#endif

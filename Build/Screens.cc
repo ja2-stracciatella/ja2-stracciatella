@@ -23,11 +23,7 @@
 
 Screens const GameScreens[] =
 {
-#ifdef JA2EDITOR
 	{ EditScreenInit,       EditScreenHandle,            EditScreenShutdown       },
-#else
-	{ NULL,                 NULL,                        NULL                     },
-#endif
 	{ NULL,                 NULL,                        NULL                     },
 	{ NULL,                 NULL,                        NULL                     },
 	{ NULL,                 ErrorScreenHandle,           NULL                     }, // Title Screen
@@ -38,13 +34,8 @@ Screens const GameScreens[] =
 	{ NULL,                 DebugScreenHandle,           NULL                     },
 	{ MapScreenInit,        MapScreenHandle,             MapScreenShutdown        },
 	{ LaptopScreenInit,     LaptopScreenHandle,          LaptopScreenShutdown     },
-#ifdef JA2EDITOR
 	{ NULL,                 LoadSaveScreenHandle,        NULL                     },
 	{ NULL,                 MapUtilScreenHandle,         NULL                     },
-#else
-	{ NULL,                 NULL,                        NULL                     },
-	{ NULL,                 NULL,                        NULL                     },
-#endif
 	{ NULL,                 FadeScreenHandle,            NULL                     },
 	{ NULL,                 MessageBoxScreenHandle,      MessageBoxScreenShutdown },
 	{ NULL,                 MainMenuScreenHandle,        NULL                     },

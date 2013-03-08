@@ -56,7 +56,7 @@
 #include "LightEffects.h"
 #include "MemMan.h"
 #include "JAScreens.h"
-
+#include "GameState.h"
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
@@ -73,9 +73,7 @@
 #define  MAP_AMBIENTLIGHTLEVEL_SAVED	0x00000080
 #define	 MAP_NPCSCHEDULES_SAVED				0x00000100
 
-#ifdef JA2EDITOR
-#	include "LoadScreen.h"
-#endif
+#include "LoadScreen.h"
 
 TileSetID giCurrentTilesetID = TILESET_INVALID;
 
@@ -287,11 +285,14 @@ void BuildTileShadeTables()
 		if (!t) continue;
 
 		// Don't create shade tables if default were already used once!
-#ifdef JA2EDITOR
-		if (!gbNewTileSurfaceLoaded[i] && !gfEditorForceShadeTableRebuild) continue;
-#else
-		if (!gbNewTileSurfaceLoaded[i]) continue;
-#endif
+    if(GameState::getInstance()->isEditorMode())
+    {
+      if (!gbNewTileSurfaceLoaded[i] && !gfEditorForceShadeTableRebuild) continue;
+    }
+    else
+    {
+      if (!gbNewTileSurfaceLoaded[i]) continue;
+    }
 
 #ifdef JA2TESTVERSION
 		++uiNumImagesReloaded;
@@ -314,14 +315,20 @@ void DestroyTileShadeTables(void)
 		if (ti == NULL) continue;
 
 		// Don't delete shade tables if default are still being used...
-#ifdef JA2EDITOR
-		if (gbNewTileSurfaceLoaded[i] || gfEditorForceShadeTableRebuild)
-#else
-		if (gbNewTileSurfaceLoaded[i])
-#endif
-		{
-			ti->vo->DestroyPalettes();
-		}
+    if(GameState::getInstance()->isEditorMode())
+    {
+      if (gbNewTileSurfaceLoaded[i] || gfEditorForceShadeTableRebuild)
+      {
+        ti->vo->DestroyPalettes();
+      }
+    }
+    else
+    {
+      if (gbNewTileSurfaceLoaded[i])
+      {
+        ti->vo->DestroyPalettes();
+      }
+    }
 	}
 }
 
@@ -1302,8 +1309,6 @@ void CompileWorldMovementCosts( )
 }
 
 
-#ifdef JA2EDITOR
-
 static bool LimitCheck(UINT8 const n, INT32 const gridno, UINT32& n_warnings, wchar_t const* const kind)
 {
 	if (n > 15)
@@ -1345,9 +1350,11 @@ static void SaveMapLights(HWFILE);
 BOOLEAN SaveWorld(char const* const filename)
 try
 {
-	char full_filename[255];
-	sprintf(full_filename, MAPSDIR "/%s", filename);
-	AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+  // Let's save map into Data/maps
+  std::string path = FileMan::joinPaths(FileMan::getDataDirPath(), MAPSDIR);
+  FileMan::createDir(path.c_str());
+  path = FileMan::joinPaths(path.c_str(), (const char*)filename);
+	AutoSGPFile f(FileMan::openForWriting(path.c_str()));
 
 	// Write JA2 Version ID
   FLOAT mapVersion = getMajorMapVersion();
@@ -1613,7 +1620,6 @@ try
 }
 catch (...) { return FALSE; }
 
-#endif
 
 
 static void OptimizeMapForShadows()
@@ -1687,8 +1693,6 @@ void InitLoadedWorld(void)
 }
 
 
-#ifdef JA2EDITOR
-
 extern double MasterStart, MasterEnd;
 extern BOOLEAN gfUpdatingNow;
 
@@ -1719,7 +1723,7 @@ try
 		SaveWorld(filename);
 	}
 
-	AutoSGPFile f(SmartFileOpenRO(szDirFilename, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(szDirFilename, true));
 
 	wchar_t str[40];
 	swprintf(str, lengthof(str), L"Analyzing map %hs", filename);
@@ -2030,8 +2034,6 @@ try
 }
 catch (...) { return FALSE; }
 
-#endif
-
 
 static void LoadMapLights(HWFILE);
 
@@ -2052,7 +2054,7 @@ try
 
 	char full_filename[50];
 	sprintf(full_filename, MAPSDIR "/%s", filename);
-	AutoSGPFile f(SmartFileOpenRO(full_filename, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(full_filename, true));
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
 #ifdef JA2TESTVERSION
@@ -2328,16 +2330,18 @@ try
 	RenderProgressBar(0, 100);
 
 	FileRead(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
-#ifdef JA2EDITOR
-	UINT8 max_room_no = 0;
-	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
-	{
-		if (max_room_no < gubWorldRoomInfo[cnt])
-			max_room_no = gubWorldRoomInfo[cnt];
-	}
-	if (max_room_no < 255) ++max_room_no;
-	gubMaxRoomNumber = max_room_no;
-#endif
+
+  if(GameState::getInstance()->isEditorMode())
+  {
+    UINT8 max_room_no = 0;
+    for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
+    {
+      if (max_room_no < gubWorldRoomInfo[cnt])
+        max_room_no = gubWorldRoomInfo[cnt];
+    }
+    if (max_room_no < 255) ++max_room_no;
+    gubMaxRoomNumber = max_room_no;
+  }
 
 	memset(gubWorldRoomHidden, TRUE, sizeof(gubWorldRoomHidden));
 
@@ -2467,9 +2471,10 @@ try
 
 	gfWorldLoaded = TRUE;
 
-#ifdef JA2EDITOR
-	strlcpy(g_filename, filename, lengthof(g_filename));
-#endif
+  if(GameState::getInstance()->isEditorMode())
+  {
+    strlcpy(g_filename, filename, lengthof(g_filename));
+  }
 
 #ifdef JA2TESTVERSION
 	uiLoadWorldTime = GetJA2Clock() - uiLoadWorldStartTime;
@@ -2488,8 +2493,6 @@ catch (...)
 }
 
 
-#ifdef JA2EDITOR
-
 void NewWorld()
 {
 	SetSelectedMan(0);
@@ -2506,8 +2509,6 @@ void NewWorld()
 	InitRoomDatabase();
 	gfWorldLoaded = TRUE;
 }
-
-#endif
 
 
 void FreeLevelNodeList(LEVELNODE** const head)
@@ -2596,9 +2597,10 @@ void TrashWorld(void)
 	TrashDoorStatusArray();
 
 	gfWorldLoaded = FALSE;
-#ifdef JA2EDITOR
-	strcpy(g_filename, "none");
-#endif
+  if(GameState::getInstance()->isEditorMode())
+  {
+    strcpy(g_filename, "none");
+  }
 }
 
 
@@ -2902,8 +2904,6 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 }
 
 
-#ifdef JA2EDITOR
-
 static void RemoveWorldWireFrameTiles()
 {
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2911,8 +2911,6 @@ static void RemoveWorldWireFrameTiles()
 		RemoveWireFrameTiles(cnt);
 	}
 }
-
-#endif
 
 
 static void RemoveWireFrameTiles(GridNo const gridno)
@@ -2938,8 +2936,6 @@ static bool IsHiddenTileMarkerThere(GridNo const gridno)
 }
 
 
-#ifdef JA2EDITOR
-
 void ReloadTileset(TileSetID const ubID)
 {
 	CHAR8	aFilename[ 255 ];
@@ -2964,8 +2960,6 @@ void ReloadTileset(TileSetID const ubID)
 	FileDelete( aFilename );
 }
 
-#endif
-
 
 BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 {
@@ -2976,8 +2970,6 @@ BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 	return FALSE;
 }
 
-
-#ifdef JA2EDITOR
 
 static void SaveMapLights(HWFILE hfile)
 {
@@ -3003,8 +2995,6 @@ static void SaveMapLights(HWFILE hfile)
 		if (!IsSoldierLight(l)) InjectLightSpriteIntoFile(hfile, l);
 	}
 }
-
-#endif
 
 
 static void LoadMapLights(HWFILE const f)

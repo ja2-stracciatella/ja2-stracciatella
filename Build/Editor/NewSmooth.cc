@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
@@ -1124,4 +1122,3 @@ void AnalyseCaveMapForStructureInfo()
 	}
 }
 
-#endif

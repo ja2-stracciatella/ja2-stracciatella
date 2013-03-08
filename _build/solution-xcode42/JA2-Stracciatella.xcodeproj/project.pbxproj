@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3414BCBC16EAA5840024378C /* GameState.cc in Sources */ = {isa = PBXBuildFile; fileRef = 3414BCBA16EAA5840024378C /* GameState.cc */; };
 		342E148416E3E927007960D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342E148316E3E927007960D8 /* Cocoa.framework */; };
 		C38ACC5716E4AA68003D6872 /* AniViewScreen.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38AC9DD16E4AA66003D6872 /* AniViewScreen.cc */; };
 		C38ACC5816E4AA68003D6872 /* Cheats.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38AC9DF16E4AA66003D6872 /* Cheats.cc */; };
@@ -357,6 +358,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3414BCBA16EAA5840024378C /* GameState.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameState.cc; sourceTree = "<group>"; };
+		3414BCBB16EAA5840024378C /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameState.h; sourceTree = "<group>"; };
 		342E148316E3E927007960D8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		342EF61B16E3E2D3007960D8 /* JA2-Stracciatella */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "JA2-Stracciatella"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C38AC9DD16E4AA66003D6872 /* AniViewScreen.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AniViewScreen.cc; sourceTree = "<group>"; };
@@ -1078,6 +1081,8 @@
 		342E106C16E3E46A007960D8 /* Build */ = {
 			isa = PBXGroup;
 			children = (
+				3414BCBA16EAA5840024378C /* GameState.cc */,
+				3414BCBB16EAA5840024378C /* GameState.h */,
 				C3F10F5C16E7388F00F79C78 /* UILayout.cc */,
 				C3F10F5D16E7388F00F79C78 /* UILayout.h */,
 				C38AC9DD16E4AA66003D6872 /* AniViewScreen.cc */,
@@ -2267,6 +2272,7 @@
 				C38ACDEC16E4AA84003D6872 /* VObject.cc in Sources */,
 				C38ACDED16E4AA84003D6872 /* VSurface.cc in Sources */,
 				C3F10F5E16E7388F00F79C78 /* UILayout.cc in Sources */,
+				3414BCBC16EAA5840024378C /* GameState.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

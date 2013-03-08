@@ -27,11 +27,10 @@
 #include "Quests.h"
 #include "MemMan.h"
 #include "ScreenIDs.h"
+#include "GameState.h"
 
 
-#ifdef JA2EDITOR
 extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
-#endif
 
 #define FOURPM 960
 
@@ -421,8 +420,6 @@ void LoadSchedulesFromSave(HWFILE const f)
 }
 
 
-#ifdef JA2EDITOR
-
 void ReverseSchedules()
 {
 	SCHEDULENODE *pReverseHead, *pPrevReverseHead, *pPrevScheduleHead;
@@ -466,8 +463,6 @@ void ClearAllSchedules()
 		}
 	}
 }
-
-#endif
 
 
 void SaveSchedules(HWFILE const f)
@@ -601,7 +596,8 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 
 	SOLDIERTYPE* const pSoldier = pSchedule->soldier;
 
-	#ifdef JA2EDITOR
+  if(GameState::getInstance()->isEditorMode())
+  {
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
@@ -625,7 +621,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 				pSchedule->usTime[ index ] % 60,
 				pSchedule->usData1[ index ]) );
 		}
-	#endif
+  }
 
 	// always assume the merc is going to wake, unless the event is a sleep
 	pSoldier->fAIFlags &= ~(AI_ASLEEP);

@@ -1,6 +1,10 @@
 JA2-Stracciatella Continued
 ---------------------------
 
+ - Map editor is now included into the game exe.
+   Start it with command-like key '-editor' or '-editorauto'.
+   Map editor requires Editor.slf to work.
+
  - Added support for high video resolutions.  For example, game can be
    started in 1024x768 mode like this: ja2.exe -res 1024x768
    Any reasonable resolution should work.

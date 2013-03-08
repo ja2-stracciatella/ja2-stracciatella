@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "PODObj.h"
 #include "Structure.h"
 #include "TileDef.h"
@@ -683,6 +681,3 @@ void DetermineUndoState()
 		}
 	}
 }
-
-
-#endif

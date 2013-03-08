@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __SUMMARY_INFO_H
 #define __SUMMARY_INFO_H
 
@@ -105,5 +104,4 @@ extern BOOLEAN gfMustForceUpdateAllMaps;
 extern BOOLEAN gfMajorUpdate;
 void ApologizeOverrideAndForceUpdateEverything(void);
 
-#endif
 #endif

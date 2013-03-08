@@ -17,9 +17,7 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
-#ifdef JA2BETAVERSION
 #include "Message.h"
-#endif
 
 
 //dynamic arrays that contain the valid gridno's for each edge
@@ -760,8 +758,6 @@ void GenerateMapEdgepoints()
 }
 
 
-#ifdef JA2EDITOR
-
 static void SaveMapEdgepoint(HWFILE const f, UINT16 const& n, UINT16 const& idx, INT16 const* const array)
 {
 	FileWrite(f, &n,   sizeof(n));
@@ -784,8 +780,6 @@ void SaveMapEdgepoints(HWFILE const f)
 	SaveMapEdgepoint(f, gus2ndSouthEdgepointArraySize, gus2ndSouthEdgepointMiddleIndex, gps2ndSouthEdgepointArray);
 	SaveMapEdgepoint(f, gus2ndWestEdgepointArraySize,  gus2ndWestEdgepointMiddleIndex,  gps2ndWestEdgepointArray);
 }
-
-#endif
 
 
 static void LoadMapEdgepoint(HWFILE const f, UINT16& n, UINT16& idx, INT16*& array)
@@ -1479,8 +1473,6 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 }
 
 
-#ifdef JA2BETAVERSION
-
 static bool ShowMapEdgepoint(UINT16 const n, INT16 const* const array, UINT16 const idx)
 {
 	INT32              n_illegal = 0;
@@ -1555,5 +1547,3 @@ void HideMapEdgepoints()
 	HideMapEdgepoint(gus2ndSouthEdgepointArraySize, gps2ndSouthEdgepointArray);
 	HideMapEdgepoint(gus2ndWestEdgepointArraySize,  gps2ndWestEdgepointArray);
 }
-
-#endif

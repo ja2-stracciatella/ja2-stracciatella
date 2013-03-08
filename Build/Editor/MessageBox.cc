@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Directories.h"
 #include "Local.h"
 #include "Video.h"
@@ -9,6 +7,7 @@
 #include "Input.h"
 #include "English.h"
 #include "Button_System.h"
+#include "UILayout.h"
 
 
 GUIButtonRef iMsgBoxBgrnd;
@@ -119,5 +118,3 @@ static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason)
 		gfMessageBoxResult = FALSE;
 	}
 }
-
-#endif

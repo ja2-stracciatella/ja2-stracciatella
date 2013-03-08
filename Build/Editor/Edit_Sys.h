@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDIT_SYS_H
 #define __EDIT_SYS_H
 
@@ -53,5 +52,4 @@ void PasteTextureCommon( UINT32 iMapIndex );
 
 void RaiseWorldLand(void);
 
-#endif
 #endif

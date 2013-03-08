@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "HImage.h"
 #include "MemMan.h"
 #include "Quantize.h"
@@ -197,5 +195,3 @@ void QuantizeImage(UINT8* const pDest, const SGPPaletteEntry* const pSrc, const 
 	// Then map image to palette
 	MapPalette(pDest, pSrc, sWidth, sHeight, g_leaf_count, pPalette);
 }
-
-#endif

@@ -47,6 +47,7 @@
 #include "Drugs_And_Alcohol.h"
 #include "Debug.h"
 #include "Items.h"
+#include "GameRes.h"
 
 
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
@@ -2466,18 +2467,21 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 		}
 		else
 		{
-#ifdef ENGLISH
-			if ( Random( 100 ) < 30 )
-			{
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_ENEMY );
-			}
-			else
-			{
-				TacticalCharacterDialogue( pSoldier, QUOTE_SEE_ENEMY );
-			}
-#else
-			TacticalCharacterDialogue( pSoldier, QUOTE_SEE_ENEMY );
-#endif
+      if(isEnglishVersion())
+      {
+        if ( Random( 100 ) < 30 )
+        {
+          DoMercBattleSound( pSoldier, BATTLE_SOUND_ENEMY );
+        }
+        else
+        {
+          TacticalCharacterDialogue( pSoldier, QUOTE_SEE_ENEMY );
+        }
+      }
+      else
+      {
+        TacticalCharacterDialogue( pSoldier, QUOTE_SEE_ENEMY );
+      }
 		}
 	}
 }

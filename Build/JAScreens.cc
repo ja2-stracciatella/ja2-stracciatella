@@ -151,19 +151,22 @@ ScreenID InitScreenHandle(void)
 
 	if ( ubCurrentScreen == 255 )
 	{
-	#ifdef ENGLISH
-		if( gfDoneWithSplashScreen )
-		{
-			ubCurrentScreen = 0;
-		}
-		else
-		{
-			SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-			return( INTRO_SCREEN );
-		}
-	#else
-		ubCurrentScreen = 0;
-	#endif
+    if(isEnglishVersion())
+    {
+      if( gfDoneWithSplashScreen )
+      {
+        ubCurrentScreen = 0;
+      }
+      else
+      {
+        SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
+        return( INTRO_SCREEN );
+      }
+    }
+    else
+    {
+      ubCurrentScreen = 0;
+    }
 	}
 
 	if ( ubCurrentScreen == 0 )

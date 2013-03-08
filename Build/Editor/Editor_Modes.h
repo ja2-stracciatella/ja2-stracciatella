@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITOR_MODES_H
 #define __EDITOR_MODES_H
 
@@ -10,5 +9,4 @@ void SetEditorSmoothingMode( UINT8 ubNewMode );
 
 void HideExitGrids(void);
 
-#endif
 #endif

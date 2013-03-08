@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITORITEMS_H
 #define __EDITORITEMS_H
 
@@ -54,5 +53,4 @@ extern INT32 giDefaultExistChance;
 
 extern ITEM_POOL* gpItemPool;
 
-#endif
 #endif

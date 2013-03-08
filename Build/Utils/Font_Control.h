@@ -21,9 +21,7 @@ extern Font gpTinyFontType1;
 extern Font gpCompFont;
 extern Font gpSmallCompFont;
 
-#if defined JA2EDITOR && defined ENGLISH
 extern Font gpHugeFont;
-#endif
 
 
 // Defines
@@ -45,12 +43,7 @@ extern Font gpHugeFont;
 #define					BLOCKFONTNARROW		gpBlockFontNarrow
 #define					FONT14HUMANIST		gp14PointHumanist
 
-#if defined JA2EDITOR && defined ENGLISH
-	#define				HUGEFONT					gpHugeFont
-#else
-	#define				HUGEFONT					gp16PointArial
-#endif
-
+#define					HUGEFONT					((GameState::getInstance()->isEditorMode() && isEnglishVersion()) ? gpHugeFont : gp16PointArial)
 
 #define					FONT_MCOLOR_BLACK				0
 #define					FONT_MCOLOR_WHITE				208

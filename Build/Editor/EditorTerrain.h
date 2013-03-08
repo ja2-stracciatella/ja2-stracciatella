@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITORTERRAIN_H
 #define __EDITORTERRAIN_H
 
@@ -26,7 +25,5 @@ void HideTerrainTileButtons(void);
 void ChooseWeightedTerrainTile(void);
 
 void TerrainFill( UINT32 iMapIndex );
-
-#endif
 
 #endif

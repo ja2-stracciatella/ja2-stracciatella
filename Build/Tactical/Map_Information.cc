@@ -20,6 +20,7 @@
 
 BOOLEAN gfWorldLoaded;
 
+struct MAPCREATE_STRUCT;
 MAPCREATE_STRUCT gMapInformation;
 
 //Current minor map version updater.
@@ -94,15 +95,11 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 }
 
 
-#ifdef JA2EDITOR
-
 void SaveMapInformation( HWFILE fp )
 {
 	gMapInformation.ubMapVersion = MINOR_MAP_VERSION;
 	FileWrite(fp, &gMapInformation, sizeof(MAPCREATE_STRUCT));
 }
-
-#endif
 
 
 void LoadMapInformation(HWFILE const f)
@@ -560,7 +557,6 @@ void ValidateAndUpdateMapVersionIfNecessary()
 	AutoCalculateItemNoOverwriteStatus() ;
 }
 
-#ifdef JA2EDITOR
 #include "Summary_Info.h"
 //This function is used to avoid conflicts between minor version updates and sector summary info.
 //By updating the summary info in conjunction with minor version updates, we can avoid these conflicts
@@ -582,4 +578,3 @@ void UpdateSummaryInfo( SUMMARYFILE *pSummary )
 		pSummary->MapInfo.sIsolatedGridNo = -1;
 	}
 }
-#endif

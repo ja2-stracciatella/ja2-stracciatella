@@ -1,6 +1,8 @@
 #ifndef FILEMAN_H
 #define FILEMAN_H
 
+#include <string>
+
 #include "AutoObj.h"
 #include "Types.h"
 
@@ -11,17 +13,6 @@
 #	include <glob.h>
 #endif
 
-
-enum FileOpenFlags
-{
-	FILE_ACCESS_READ      = 1U << 0,
-	FILE_ACCESS_WRITE     = 1U << 1,
-	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
-	FILE_ACCESS_APPEND    = 1U << 2,
-	FILE_CREATE_ALWAYS    = 1U << 3, // create new file. overwrite existing
-	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
-};
-ENUM_BITSET(FileOpenFlags)
 
 enum FileSeekMode
 {
@@ -46,18 +37,6 @@ bool FileExists(char const* filename);
  * the file did not exist in the first place. */
 void FileDelete(char const* path);
 
-/** Open file for reading only.
- * When using the smart lookup:
- *  - first try to open file normally.
- *    It will work if the path is absolute and the file is found or path is relative to the current directory
- *    and file is present;
- *  - if file is not found, try to find the file relatively to 'Data' directory;
- *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-HWFILE SmartFileOpenRO(const char* filename, bool useSmartLookup);
-
-/** Open file in various modes.
- * When opening files for reading, smart lookup is not used. */
-HWFILE FileOpen(const char* filename, FileOpenFlags);
 void   FileClose(HWFILE);
 
 void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
@@ -75,10 +54,6 @@ INT32 FileGetPos(HWFILE);
 UINT32 FileGetSize(HWFILE);
 
 const char* GetExecutableDirectory(void);
-
-/* Create the directory at path.  Returns true, iff the creation succeeded or
- * the directory exists already. */
-void MakeFileManDirectory(char const* path);
 
 /* Removes ALL FILES in the specified directory, but leaves the directory alone.
  * Does not affect any subdirectories! */
@@ -141,13 +116,74 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 typedef SGP::AutoObj<SGPFile, FileClose> AutoSGPFile;
 
-/** Get path to the 'Data' directory of the game. */
-const char* GetDataDirPath();
+/***
+ * New file manager.
+ *
+ * This class provides clean interface for file operations. */
+class FileMan
+{
+public:
 
-/** Get path to the 'Data/Tilecache' directory of the game. */
-const char* GetTilecacheDirPath();
+  /** Open file for writing.
+   * If file is missing it will be created.
+   * If file exists, it's content will be removed. */
+  static HWFILE openForWriting(const char *filename);
 
-/** Open file in the 'Data' directory in case-insensitive manner. */
-FILE* OpenFileInDataDir(const char *filename, FileOpenFlags flags);
+  /** Open file for appending data.
+   * If file doesn't exist, it will be created. */
+  static HWFILE openForAppend(const char *filename);
+
+  /** Open file for reading and writing.
+   * If file doesn't exist, it will be created. */
+  static HWFILE openForReadWrite(const char *filename);
+
+  /* ------------------------------------------------------------
+   * File operations with game resources.
+   * Game resources is what located in 'Data' directory and below.
+   * ------------------------------------------------------------ */
+
+  /** Get path to the 'Data' directory of the game. */
+  static const char* getDataDirPath();
+
+  /** Get path to the 'Data/Tilecache' directory of the game. */
+  static const char* getTilecacheDirPath();
+
+  /** Get path to the 'Data/Maps' directory of the game. */
+  static const char* getMapsDirPath();
+
+  /** Open file in the 'Data' directory in case-insensitive manner. */
+  static FILE* openForReadingInDataDir(const char *filename);
+
+  /** Open file for reading only.
+   * When using the smart lookup:
+   *  - first try to open file normally.
+   *    It will work if the path is absolute and the file is found or path is relative to the current directory
+   *    and file is present;
+   *  - if file is not found, try to find the file relatively to 'Data' directory;
+   *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
+  static HWFILE openForReadingSmart(const char* filename, bool useSmartLookup);
+
+  /* ------------------------------------------------------------
+   * Other operations
+   * ------------------------------------------------------------ */
+
+  /** Create directory.
+   * If directory already exists, do nothing.
+   * If failed to create, raise an exception. */
+  static void createDir(char const* path);
+
+  /** Join two path components. */
+  static void joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize);
+
+  /** Join two path components. */
+  static std::string joinPaths(const char *first, const char *second);
+
+  /** Join two path components. */
+  static std::string joinPaths(const std::string &first, const char *second);
+
+private:
+  /** Private constructor to avoid instantiation. */
+  FileMan() {};
+};
 
 #endif

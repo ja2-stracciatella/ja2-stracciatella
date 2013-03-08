@@ -35,6 +35,7 @@
 #include "WCheck.h"
 #include <math.h>
 #include "UILayout.h"
+#include "GameState.h"
 
 
 UINT16* gpZBuffer = NULL;
@@ -1935,9 +1936,7 @@ static void RenderDynamicWorld(void)
 	sLevelIDs[8] = RENDER_DYNAMIC_TOPMOST;
 	RenderTiles(TILES_DIRTY, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 9, sLevelIDs);
 
-#if defined JA2EDITOR
-	if (!gfEditMode && !gfAniEditMode)
-#endif
+	if (!GameState::getInstance()->isEditorMode() || (!gfEditMode && !gfAniEditMode))
 	{
 		RenderTacticalInterface();
 	}

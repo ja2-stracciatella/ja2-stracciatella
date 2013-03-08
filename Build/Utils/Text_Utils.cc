@@ -18,7 +18,7 @@ void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])
 
 static void LoadAllItemNames(void)
 {
-	AutoSGPFile File(SmartFileOpenRO(ITEMSTRINGFILENAME, true));
+	AutoSGPFile File(FileMan::openForReadingSmart(ITEMSTRINGFILENAME, true));
 #ifdef JA2DEMO
 	UINT32 i;
 	for (i = 0; i != SILVER_PLATTER; ++i)

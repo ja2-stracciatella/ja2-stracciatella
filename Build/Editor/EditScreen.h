@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef EDITSCREEN_H
 #define EDITSCREEN_H
 
@@ -46,5 +45,4 @@ void     EditScreenInit(void);
 ScreenID EditScreenHandle(void);
 void     EditScreenShutdown(void);
 
-#endif
 #endif

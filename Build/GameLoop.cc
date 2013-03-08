@@ -31,6 +31,7 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 #include "UILayout.h"
+#include "GameState.h"
 
 #ifdef JA2BETAVERSION
 #	include "PreBattle_Interface.h"
@@ -328,8 +329,8 @@ catch (std::exception const& e)
 	char const* what;
 	char const* success = "failed";
 	char const* attach  = "";
-#if defined JA2EDITOR
-	if (gfEditMode)
+
+	if (gfEditMode && GameState::getInstance()->isEditorMode())
 	{
 		what = "map";
 		if (SaveWorld("error.dat"))
@@ -339,7 +340,6 @@ catch (std::exception const& e)
 		}
 	}
 	else
-#endif
 	{
 		what = "savegame";
 		if (SaveGame(SAVE__ERROR_NUM, L"error savegame"))

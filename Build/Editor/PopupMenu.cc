@@ -8,8 +8,6 @@
 //supported.  Just remove the commented line of code (search for UNCOMMENT), and it's fixed -- it is
 //currently disabled.
 
-#ifdef JA2EDITOR
-
 #include "Button_System.h"
 #include "HImage.h"
 #include "Input.h"
@@ -34,6 +32,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "WorldDef.h"
+#include "UILayout.h"
 
 
 #define POPUP_ACTIVETYPE_NOT_YET_DETERMINED 0
@@ -509,5 +508,3 @@ BOOLEAN ProcessPopupMenuIfActive( )
 	EndFrameBufferRender( );
 	return TRUE;
 }
-
-#endif

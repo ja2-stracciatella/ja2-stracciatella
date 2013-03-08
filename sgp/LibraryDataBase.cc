@@ -66,10 +66,10 @@ static void ThrowExcOnLibLoadFailure(const char* pLibraryName)
   throw std::runtime_error("Initialising libraries failed");
 }
 
-void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, char const* extraLib)
+void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, const std::vector<std::string> &extraLibs)
 {
 	INT16			i;
-  int totalLibCount = LibCount + (extraLib ? 1 : 0);
+  int totalLibCount = LibCount + extraLibs.size();
 
 	//if all the libraries exist, set them up
   gFileDataBase.usNumberOfLibraries = totalLibCount;
@@ -88,11 +88,11 @@ void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, cha
         ThrowExcOnLibLoadFailure(LibFilenames[i]);
 			}
 		}
-    if(extraLib)
+    for (i = 0; i < extraLibs.size(); i++)
     {
-			if (!InitializeLibrary(extraLib, &libs[totalLibCount-1]))
+			if (!InitializeLibrary(extraLibs[i].c_str(), &libs[totalLibCount-1]))
 			{
-        ThrowExcOnLibLoadFailure(extraLib);
+        ThrowExcOnLibLoadFailure(extraLibs[i].c_str());
 			}
     }
 	}
@@ -140,7 +140,7 @@ static char* Slashify(const char* s)
 static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct* const lib)
 try
 {
-  FILE* hFile = OpenFileInDataDir(lib_name, FILE_ACCESS_READ);
+  FILE* hFile = FileMan::openForReadingInDataDir(lib_name);
   if (hFile == NULL)
   {
       fprintf(stderr, "ERROR: Failed to open library \"%s\"\n", lib_name);

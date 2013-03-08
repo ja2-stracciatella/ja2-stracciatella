@@ -24,13 +24,13 @@
 #include "StrategicMap.h"
 #include "Sys_Globals.h"	//for access to gfEditMode flag
 //Kris:
-#ifdef JA2EDITOR
-#	include "Editor_Undo.h" //for access to AddToUndoList( iMapIndex )
-#endif
+#include "Editor_Undo.h" //for access to AddToUndoList( iMapIndex )
+
 #include "Explosion_Control.h"
 #include "Buildings.h"
 #include "Random.h"
 #include "Tile_Animation.h"
+#include "GameState.h"
 
 
 #ifdef COUNT_PATHS
@@ -232,7 +232,7 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
 // Loads a structure file's data as a honking chunk o' memory
 static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
 {
-	AutoSGPFile f(SmartFileOpenRO(filename, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
 
 	BYTE data[16];
 	FileRead(f, data, sizeof(data));
@@ -679,14 +679,15 @@ try
 		s->sGridNo = sBaseGridNo + t->sPosRelToBase;
 		if (i != BASE_TILE)
 		{
-#if defined JA2EDITOR
+      if(GameState::getInstance()->isEditorMode())
+      {
 			/* Kris:
 			 * Added this undo code if in the editor.
 			 * It is important to save tiles effected by multitiles.  If the
 			 * structure placement fails below, it doesn't matter, because it won't
 			 * hurt the undo code. */
 			if (gfEditMode) AddToUndoList(s->sGridNo);
-#endif
+      }
 			s->sBaseGridNo = sBaseGridNo;
 		}
 		s->sCubeOffset =

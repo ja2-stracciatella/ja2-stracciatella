@@ -106,7 +106,7 @@ try
 
 	// Load the Lock Table
 
-	AutoSGPFile hFile(SmartFileOpenRO(pFileName, true));
+	AutoSGPFile hFile(FileMan::openForReadingSmart(pFileName, true));
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
 	FileRead(hFile, LockTable, uiBytesToRead);
@@ -697,8 +697,6 @@ void LoadDoorTableFromMap(HWFILE const f)
 }
 
 
-#ifdef JA2EDITOR
-
 //Saves the existing door information to the map.  Before it actually saves, it'll verify that the
 //door still exists.  Otherwise, it'll ignore it.  It is possible in the editor to delete doors in
 //many different ways, so I opted to put it in the saving routine.
@@ -715,8 +713,6 @@ void SaveDoorTableToMap( HWFILE fp )
 	}
 	FileWriteArray(fp, gubNumDoors, DoorTable);
 }
-
-#endif
 
 
 //The editor adds locks to the world.  If the gridno already exists, then the currently existing door
@@ -826,7 +822,7 @@ void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z
 {
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(map_name));
 	FileWriteArray(f, gubNumDoors, DoorTable);
 	// Set the sector flag indicating that there is a Door table temp file present
 	SetSectorFlag(x, y, z, SF_DOOR_TABLE_TEMP_FILES_EXISTS);
@@ -847,7 +843,7 @@ void LoadDoorTableFromDoorTableTempFile()
 	//Get rid of the existing door table
 	TrashDoorTable();
 
-	AutoSGPFile hFile(SmartFileOpenRO(zMapName, true));
+	AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
 
 	//Read in the number of doors
 	FileRead(hFile, &gubMaxDoors, sizeof(UINT8));
@@ -1205,7 +1201,7 @@ void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	AutoSGPFile f(FileMan::openForWriting(map_name));
 	FileWriteArray(f, gubNumDoorStatus, gpDoorStatus);
 
 	// Set the flag indicating that there is a door status array
@@ -1219,7 +1215,7 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-	AutoSGPFile f(SmartFileOpenRO(map_name, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
 
 	// Load the number of elements in the door status array
 	FileRead(f, &gubNumDoorStatus, sizeof(UINT8));

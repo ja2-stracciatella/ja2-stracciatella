@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "HImage.h"
 #include "Structure.h"
 #include "TileDef.h"
@@ -1103,4 +1101,3 @@ void RaiseWorldLand( )
 
 }
 
-#endif //JA2EDITOR

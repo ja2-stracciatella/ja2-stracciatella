@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #ifndef __EDITORMERCS_H
 #define __EDITORMERCS_H
 
@@ -126,5 +124,4 @@ void ExtractAndUpdateMercSchedule(void);
 
 void DeleteSelectedMercsItem(void);
 
-#endif
 #endif

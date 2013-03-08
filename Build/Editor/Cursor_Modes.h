@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __CURSOR_MODES_H
 #define __CURSOR_MODES_H
 
@@ -35,7 +34,5 @@ extern BOOLEAN gfCurrentSelectionWithRightButton;
 extern SGPRect gSelectRegion;
 
 void RemoveBuildingLayout(void);
-
-#endif
 
 #endif

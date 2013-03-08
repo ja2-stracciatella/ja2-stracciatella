@@ -1,6 +1,9 @@
 #ifndef _LIBRARY_DATABASE_H
 #define _LIBRARY_DATABASE_H
 
+#include <string>
+#include <vector>
+
 #include "Types.h"
 #include "FileMan.h"
 
@@ -50,7 +53,7 @@ struct LibraryFile
 };
 
 
-void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, char const* extraLib);
+void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, const std::vector<std::string> &extraLibs);
 void ShutDownFileDatabase(void);
 bool CheckIfFileExistInLibrary(char const* filename);
 

@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "TileDef.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
@@ -501,5 +499,3 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	}
 	*piNewTile = GetTileIndexFromTypeSubIndex(origType, land);
 }
-
-#endif

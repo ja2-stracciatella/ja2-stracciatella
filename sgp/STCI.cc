@@ -15,7 +15,7 @@ static SGPImage* STCILoadRGB(    UINT16 contents, HWFILE, STCIHeader const*);
 
 SGPImage* LoadSTCIFileToImage(char const* const filename, UINT16 const fContents)
 {
-	AutoSGPFile f(SmartFileOpenRO(filename, true));
+	AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
 
 	STCIHeader header;
 	FileRead(f, &header, sizeof(header));

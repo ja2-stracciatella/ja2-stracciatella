@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Directories.h"
 #include "Input.h"
 #include "MapUtility.h"
@@ -26,6 +24,7 @@
 #include "MemMan.h"
 #include "Video.h"
 #include "Quantize.h"
+#include "UILayout.h"
 
 
 #define		MINIMAP_X_SIZE			88
@@ -293,5 +292,3 @@ ScreenID MapUtilScreenHandle()
 
 	return( MAPUTILITY_SCREEN );
 }
-
-#endif

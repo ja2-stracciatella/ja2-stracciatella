@@ -31,9 +31,7 @@ extern SOLDIERINITNODE *gSoldierInitTail;
 //map file.
 void LoadSoldiersFromMap(HWFILE);
 
-#ifdef JA2EDITOR
 BOOLEAN SaveSoldiersToMap( HWFILE fp );
-#endif
 
 //For the purpose of keeping track of which soldier belongs to which placement within the game,
 //the only way we can do this properly is to save the soldier ID from the list and reconnect the

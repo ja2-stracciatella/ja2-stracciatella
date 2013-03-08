@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #ifndef __ROAD_SMOOTHING_H
 #define __ROAD_SMOOTHING_H
 
@@ -56,7 +54,5 @@ void PlaceRoadMacroAtGridNo( INT32 iMapIndex, INT32 iMacroID );
 
 void InitializeRoadMacros(void);
 
-
-#endif
 
 #endif

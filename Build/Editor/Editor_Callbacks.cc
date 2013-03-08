@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Types.h"
 #include "Button_System.h"
 #include "EditorDefines.h"
@@ -1324,6 +1322,3 @@ void ItemStatsDeleteCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		ExecuteItemStatsCmd( ITEMSTATS_DELETE );
 }
-
-
-#endif

@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Button_System.h"
 #include "Cursor_Modes.h"
 #include "Directories.h"
@@ -28,6 +26,7 @@
 #include "MemMan.h"
 #include "TileDat.h"
 #include "Video.h"
+#include "UILayout.h"
 
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
@@ -720,7 +719,3 @@ void ExtractAndUpdateBuildingInfo()
 	SetInputFieldStringWith16BitString( 1, str );
 	SetActiveField( 0 );
 }
-
-
-
-#endif
