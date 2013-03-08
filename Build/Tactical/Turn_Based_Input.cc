@@ -1180,7 +1180,7 @@ static void ToggleViewAllMercs(void);
 static void ToggleWireFrame(void);
 static void ToggleZBuffer(void);
 
-#ifdef JA2BETAVERSION
+#ifdef JA2EDITOR
 static void ToggleMapEdgepoints(void);
 #endif
 
@@ -1606,7 +1606,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'd': AdvanceToNextDay(); break;
 #endif
 
-#ifdef JA2BETAVERSION
+#ifdef JA2EDITOR
 		case 'e': ToggleMapEdgepoints(); break;
 #endif
 
@@ -3190,14 +3190,13 @@ static void EscapeUILock(void)
 	UIHandleLUIEndLock( NULL );
 }
 
-#ifdef JA2BETAVERSION
+#ifdef JA2EDITOR
 
 #include "Map_Edgepoints.h"
 
 
 static void ToggleMapEdgepoints(void)
 {
-	#ifdef JA2EDITOR
 		static BOOLEAN fToggleEdgepointDisplay = FALSE;
 		if( fToggleEdgepointDisplay ^= TRUE )
 		{ //Show edgepoints
@@ -3208,7 +3207,6 @@ static void ToggleMapEdgepoints(void)
 			HideMapEdgepoints();
 		}
 		SetRenderFlags( RENDER_FLAG_FULL );
-	#endif
 }
 #endif
 

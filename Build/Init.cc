@@ -37,7 +37,7 @@
 #include "Shading.h"
 #include "VSurface.h"
 
-#if defined JA2BETAVERSION && defined JA2EDITOR
+#if defined JA2BETAVERSION || defined JA2EDITOR
 #	include "EditScreen.h"
 #	include "JAScreens.h"
 #endif
@@ -98,8 +98,7 @@ try
 
 	InitMercPopupBox( );
 
-#ifdef JA2BETAVERSION
-	#ifdef JA2EDITOR
+#ifdef JA2EDITOR
 
 	//UNCOMMENT NEXT LINE TO ALLOW FORCE UPDATES...
 	//LoadGlobalSummary();
@@ -107,15 +106,15 @@ try
 	{
 		ApologizeOverrideAndForceUpdateEverything();
 	}
-	#endif
 #endif
 
 	switch (g_game_mode)
 	{
 #if defined JA2BETAVERSION
 		case GAME_MODE_MAP_UTILITY: return MAPUTILITY_SCREEN;
+#endif
 
-#	if defined JA2EDITOR
+#if defined JA2EDITOR
 		case GAME_MODE_EDITOR:
 			DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -editor commandline argument...");
 			gfAutoLoadA9 = FALSE;
@@ -132,7 +131,6 @@ editor:
 			gfIntendOnEnteringEditor = TRUE;
 			gGameOptions.fGunNut     = TRUE;
 			return GAME_SCREEN;
-#	endif
 #endif
 
 		default: return INIT_SCREEN;

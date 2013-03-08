@@ -17,7 +17,7 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
-#ifdef JA2BETAVERSION
+#if defined JA2BETAVERSION || defined JA2EDITOR
 #include "Message.h"
 #endif
 
@@ -1479,7 +1479,7 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 }
 
 
-#ifdef JA2BETAVERSION
+#ifdef JA2EDITOR
 
 static bool ShowMapEdgepoint(UINT16 const n, INT16 const* const array, UINT16 const idx)
 {

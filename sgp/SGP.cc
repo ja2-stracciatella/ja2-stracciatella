@@ -452,7 +452,8 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		{
 			g_game_mode = GAME_MODE_MAP_UTILITY;
 		}
-#	if defined JA2EDITOR
+#endif
+#if defined JA2EDITOR
 		else if (strcmp(argv[i], "-editor") == 0)
 		{
 			g_game_mode = GAME_MODE_EDITOR;
@@ -461,7 +462,6 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		{
 			g_game_mode = GAME_MODE_EDITOR_AUTO;
 		}
-#	endif
 #endif
     else if (strcmp(argv[i], "-resversion") == 0)
     {
