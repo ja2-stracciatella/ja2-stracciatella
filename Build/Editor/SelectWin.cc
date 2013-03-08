@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include <stdexcept>
 
 #include "Button_System.h"
@@ -1240,5 +1238,3 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 		if (count != 0) gprintf(x, y, L"%d", count);
 	}
 }
-
-#endif

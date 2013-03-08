@@ -229,8 +229,6 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // Land Piece Layer
 // #######################################################
 
-#ifdef JA2EDITOR
-
 LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
@@ -250,8 +248,6 @@ LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
 	return n;
 }
-
-#endif
 
 
 void AddLandToHead(const UINT32 iMapIndex, const UINT16 usIndex)
@@ -273,8 +269,6 @@ void AddLandToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
 }
 
-
-#ifdef JA2EDITOR
 
 static BOOLEAN AdjustForFullTile(UINT32 iMapIndex);
 static void RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex);
@@ -509,8 +503,6 @@ void RemoveHigherLandLevels(UINT32 const map_idx, UINT32 const src_type, UINT32*
 	AdjustForFullTile(map_idx);
 }
 
-#endif
-
 
 static LEVELNODE* AddNodeToWorld(UINT32 const iMapIndex, UINT16 const usIndex, INT8 const level)
 {
@@ -674,8 +666,6 @@ static void RemoveShadowBuddy(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-#ifdef JA2EDITOR
-
 void ForceRemoveStructFromTail(UINT32 const iMapIndex)
 {
 	LEVELNODE* pPrevStruct	= NULL;
@@ -711,8 +701,6 @@ void ForceRemoveStructFromTail(UINT32 const iMapIndex)
 		pPrevStruct = pStruct;
 	}
 }
-
-#endif
 
 
 static void InternalRemoveStruct(UINT32 const map_idx, LEVELNODE** const anchor)

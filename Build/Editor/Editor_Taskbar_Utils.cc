@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include <stdarg.h>
 #include "Directories.h"
 #include "Font.h"
@@ -876,4 +874,3 @@ void ProcessEditorRendering()
 }
 
 
-#endif

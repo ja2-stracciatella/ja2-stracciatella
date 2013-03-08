@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #ifndef _JA2_LOAD_SCREEN_
 #define _JA2_LOAD_SCREEN_
 
@@ -24,4 +22,4 @@ void SetErrorCatchString(wchar_t const* fmt, ...);
 ScreenID LoadSaveScreenHandle(void);
 
 #endif
-#endif
+

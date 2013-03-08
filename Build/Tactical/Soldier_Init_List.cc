@@ -155,8 +155,6 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 }
 
 
-#ifdef JA2EDITOR
-
 //These serialization functions are assuming the passing of a valid file
 //pointer to the beginning of the save/load area, which is not necessarily at
 //the beginning of the file.  This is just a part of the whole map serialization.
@@ -198,8 +196,6 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 	}
 	return TRUE;
 }
-
-#endif
 
 
 void LoadSoldiersFromMap(HWFILE const f)

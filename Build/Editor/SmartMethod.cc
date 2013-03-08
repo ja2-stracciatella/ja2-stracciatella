@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "TileDef.h"
 #include "WorldDef.h"	//LEVELNODE def
 #include "WorldMan.h"	//ReplaceStructIndex
@@ -543,5 +541,3 @@ void PasteSmartBrokenWall( UINT32 iMapIndex )
 		//Calculate the new graphic for the window type selected.
 	}
 }
-
-#endif

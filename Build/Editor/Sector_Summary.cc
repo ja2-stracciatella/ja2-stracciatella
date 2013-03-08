@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Directories.h"
 #include "HImage.h"
 #include "LoadSaveBasicSoldierCreateStruct.h"
@@ -40,6 +38,7 @@
 #include "Video.h"
 #include "UILayout.h"
 #include "GameRes.h"
+#include "GameState.h"
 
 #define DEVINFO_DIR "../DevInfo"
 
@@ -2637,5 +2636,3 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		}
 	}
 }
-
-#endif

@@ -44,9 +44,7 @@
 #include "Environment.h"
 #include "Items.h"
 
-#ifdef JA2EDITOR
-	extern BOOLEAN gfProfileDataLoaded;
-#endif
+extern BOOLEAN gfProfileDataLoaded;
 
 
 BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
@@ -207,9 +205,7 @@ void LoadMercProfiles()
 	// Initialize mercs' status
 	StartSomeMercsOnAssignment();
 
-#ifdef JA2EDITOR
 	gfProfileDataLoaded = TRUE;
-#endif
 
 	// no better place..heh?.. will load faces for profiles that are 'extern'.....won't have soldiertype instances
 	InitalizeStaticExternalNPCFaces();

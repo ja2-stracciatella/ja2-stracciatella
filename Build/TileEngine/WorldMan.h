@@ -51,12 +51,9 @@ BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 
 // Land manipulation functions
-#ifdef JA2EDITOR
 void       RemoveLand(UINT32 map_idx, UINT16 idx);
 LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex );
-#endif
 void AddLandToHead(UINT32 iMapIndex, UINT16 usIndex);
-#ifdef JA2EDITOR
 LEVELNODE* FindTypeInLandLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
@@ -64,7 +61,6 @@ void ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex);
 void DeleteAllLandLayers(UINT32 iMapIndex);
 void InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
 void RemoveHigherLandLevels(UINT32 map_idx, UINT32 src_type, UINT32*& higher_types, UINT8& n_higher_types);
-#endif
 
 UINT8 GetTerrainType(GridNo);
 bool  Water(GridNo);
@@ -85,9 +81,7 @@ void    SetStructAframeFlags(UINT32 iMapIndex, LevelnodeFlags);
 void    RemoveStructFromLevelNode(UINT32 map_idx, LEVELNODE*);
 BOOLEAN IndexExistsInStructLayer(GridNo, UINT16 tile_index);
 
-#ifdef JA2EDITOR
 void ForceRemoveStructFromTail(UINT32 iMapIndex);
-#endif
 
 // Shadow manipulation routines
 void AddShadowToTail(UINT32 iMapIndex, UINT16 usIndex);

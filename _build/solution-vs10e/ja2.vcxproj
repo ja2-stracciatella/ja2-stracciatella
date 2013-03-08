@@ -110,6 +110,7 @@
     <ClCompile Include="..\..\Build\GameRes.cc" />
     <ClCompile Include="..\..\Build\GameScreen.cc" />
     <ClCompile Include="..\..\Build\GameSettings.cc" />
+    <ClCompile Include="..\..\Build\GameState.cc" />
     <ClCompile Include="..\..\Build\GameVersion.cc" />
     <ClCompile Include="..\..\Build\HelpScreen.cc" />
     <ClCompile Include="..\..\Build\Init.cc" />

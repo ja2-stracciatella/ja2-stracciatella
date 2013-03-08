@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __NEWSMOOTH_H
 #define __NEWSMOOTH_H
 
@@ -22,4 +21,4 @@ void AnalyseCaveMapForStructureInfo(void);
 UINT16 PickAWallPiece(UINT16 usWallPieceType);
 
 #endif
-#endif
+

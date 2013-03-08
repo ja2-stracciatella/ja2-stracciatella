@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Editor_Callback_Prototypes.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -3402,5 +3400,3 @@ static void ReloadMap(void)
 	swprintf(szFilename, lengthof(szFilename), L"%hs", g_filename);
 	ExternalLoadMap( szFilename );
 }
-
-#endif

@@ -19,9 +19,7 @@ BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid );
 void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid );
 void RemoveExitGridFromWorld( INT32 iMapIndex );
 
-#ifdef JA2EDITOR
 void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids );
-#endif
 
 void LoadExitGrids(HWFILE);
 

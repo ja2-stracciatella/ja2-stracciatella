@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Directories.h"
 #include "Input.h"
 #include "MapUtility.h"
@@ -294,5 +292,3 @@ ScreenID MapUtilScreenHandle()
 
 	return( MAPUTILITY_SCREEN );
 }
-
-#endif

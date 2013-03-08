@@ -8,6 +8,7 @@
 #include "Multi_Language_Graphic_Utils.h"
 #include "Text.h"
 #include "TranslationTable.h"
+#include "GameState.h"
 
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;
@@ -172,28 +173,29 @@ static const char* gGameLibaries[] =
   "demoads.slf",
 # endif
 #endif
-
-#ifdef JA2EDITOR
-  "editor.slf"
-#endif
 };
 
 void InitGameResources(void)
 {
-  const char* extraLib = NULL;
+  std::vector<std::string> extraLibs;
 
 #ifndef JA2DEMO
   switch(s_gameVersion)
   {
-  case GV_DUTCH:        extraLib = "dutch.slf";        break;
-  case GV_GERMAN:       extraLib = "german.slf";       break;
-  case GV_ITALIAN:      extraLib = "italian.slf";      break;
-  case GV_POLISH:       extraLib = "polish.slf";       break;
-  case GV_RUSSIAN:      extraLib = "russian.slf";      break;
+  case GV_DUTCH:        extraLibs.push_back("dutch.slf");       break;
+  case GV_GERMAN:       extraLibs.push_back("german.slf");      break;
+  case GV_ITALIAN:      extraLibs.push_back("italian.slf");     break;
+  case GV_POLISH:       extraLibs.push_back("polish.slf");      break;
+  case GV_RUSSIAN:      extraLibs.push_back("russian.slf");     break;
   }
 #endif
 
-  InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries), extraLib);
+  if(GameState::getInstance()->isEditorMode())
+  {
+    extraLibs.push_back("editor.slf");
+  }
+
+  InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries), extraLibs);
 }
 
 

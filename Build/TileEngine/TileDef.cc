@@ -165,8 +165,6 @@ void DeallocateTileDatabase( )
 }
 
 
-#ifdef JA2EDITOR
-
 void SetLandIndex(INT32 const iMapIndex, UINT16 const usIndex, UINT32 const uiNewType)
 {
 	UINT8  ubLastHighLevel;
@@ -183,8 +181,6 @@ void SetLandIndex(INT32 const iMapIndex, UINT16 const usIndex, UINT32 const uiNe
 		AddLandToHead(iMapIndex, usIndex);
 	}
 }
-
-#endif
 
 
 bool GetTypeLandLevel(UINT32 const map_idx, UINT32 const new_type, UINT8* const out_level)
@@ -208,8 +204,6 @@ UINT16 GetSubIndexFromTileIndex(const UINT16 usTileIndex)
 }
 
 
-#ifdef JA2EDITOR
-
 UINT16 GetTypeSubIndexFromTileIndex(UINT32 const uiCheckType, UINT16 const usIndex)
 {
 	// Tile database is zero-based, Type indecies are 1-based!
@@ -220,7 +214,6 @@ UINT16 GetTypeSubIndexFromTileIndex(UINT32 const uiCheckType, UINT16 const usInd
 	return usIndex - gTileTypeStartIndex[uiCheckType] + 1;
 }
 
-#endif
 
 
 UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex)

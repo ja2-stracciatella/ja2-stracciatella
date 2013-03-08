@@ -88,6 +88,8 @@
 #include "Button_System.h"
 #include "Items.h"
 #include "GameRes.h"
+#include "GameState.h"
+
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
@@ -1180,9 +1182,7 @@ static void ToggleViewAllMercs(void);
 static void ToggleWireFrame(void);
 static void ToggleZBuffer(void);
 
-#ifdef JA2EDITOR
 static void ToggleMapEdgepoints(void);
-#endif
 
 
 static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
@@ -1500,7 +1500,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 
-#if defined JA2TESTVERSION && defined JA2EDITOR
+#if defined JA2TESTVERSION
 		case SDLK_F9:
 			*new_event                 = I_ENTER_EDIT_MODE;
 			gfMercResetUponEditorEntry = TRUE;
@@ -1606,9 +1606,12 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'd': AdvanceToNextDay(); break;
 #endif
 
-#ifdef JA2EDITOR
-		case 'e': ToggleMapEdgepoints(); break;
-#endif
+  case 'e':
+    if(GameState::getInstance()->isEditorMode())
+    {
+      ToggleMapEdgepoints();
+    }
+    break;
 
 		case 'f':
 			if (INFORMATION_CHEAT_LEVEL())
@@ -1960,12 +1963,13 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F8:  TestMeanWhile( 7); break;
 		case SDLK_F10: TestMeanWhile( 9); break;
 
-#ifdef JA2EDITOR
 		case SDLK_F9:
-			*new_event                 = I_ENTER_EDIT_MODE;
-			gfMercResetUponEditorEntry = FALSE;
+      if(GameState::getInstance()->isEditorMode())
+      {
+        *new_event                 = I_ENTER_EDIT_MODE;
+        gfMercResetUponEditorEntry = FALSE;
+      }
 			break;
-#endif
 
 		case SDLK_F11:
 			if (SOLDIERTYPE* const sel = GetSelectedMan())
@@ -3190,8 +3194,6 @@ static void EscapeUILock(void)
 	UIHandleLUIEndLock( NULL );
 }
 
-#ifdef JA2EDITOR
-
 #include "Map_Edgepoints.h"
 
 
@@ -3208,7 +3210,6 @@ static void ToggleMapEdgepoints(void)
 		}
 		SetRenderFlags( RENDER_FLAG_FULL );
 }
-#endif
 
 
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )

@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Directories.h"
 #include "Local.h"
 #include "Video.h"
@@ -120,5 +118,3 @@ static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason)
 		gfMessageBoxResult = FALSE;
 	}
 }
-
-#endif

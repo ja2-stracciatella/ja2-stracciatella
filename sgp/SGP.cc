@@ -33,6 +33,7 @@
 #include "UILayout.h"
 #include "GameRes.h"
 #include "Logger.h"
+#include "GameState.h"
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -450,19 +451,17 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		}
 		else if (strcmp(argv[i], "-domaps") == 0)
 		{
-			g_game_mode = GAME_MODE_MAP_UTILITY;
+      GameState::setMode(GAME_MODE_MAP_UTILITY);
 		}
 #endif
-#if defined JA2EDITOR
 		else if (strcmp(argv[i], "-editor") == 0)
 		{
-			g_game_mode = GAME_MODE_EDITOR;
+      GameState::getInstance()->setEditorMode(false);
 		}
 		else if (strcmp(argv[i], "-editorauto") == 0)
 		{
-			g_game_mode = GAME_MODE_EDITOR_AUTO;
+      GameState::getInstance()->setEditorMode(true);
 		}
-#endif
     else if (strcmp(argv[i], "-resversion") == 0)
     {
       if(haveNextParameter)
@@ -489,9 +488,8 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 	{
 		fprintf(stderr,
 			"Usage: %s [options]\n"
-#if defined JA2BETAVERSION && defined JA2EDITOR
-			"  -editor      Start the map editor\n"
-#endif
+			"  -editor      Start the map editor (Editor.slf is necessary)\n"
+			"  -editorauto  Start the map editor and load sector A9 (Editor.slf is necessary)\n"
 			"  -fullscreen  Start the game in fullscreen mode\n"
 			"  -help        Display this information\n"
 			"  -nosound     Turn the sound and music off\n"

@@ -7,6 +7,7 @@
 #include "Font_Control.h"
 #include "MemMan.h"
 #include "GameRes.h"
+#include "GameState.h"
 
 
 Font gp10PointArial;
@@ -26,9 +27,7 @@ Font gpSmallCompFont;
 Font gpSmallFontType1;
 Font gpTinyFontType1;
 
-#if defined JA2EDITOR
 Font gpHugeFont;
-#endif
 
 
 static void CreateFontPaletteTables(Font);
@@ -54,12 +53,10 @@ void InitializeFonts(void)
 	M(gpSmallFontType1,        FONTSDIR "/smallfont1.sti");
 	M(gpTinyFontType1,         FONTSDIR "/tinyfont1.sti");
 
-#if defined JA2EDITOR
-  if(isEnglishVersion())
+  if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
   {
     M(gpHugeFont, FONTSDIR "/hugefont.sti");
   }
-#endif
 #undef M
 
 	// Set default for font system
@@ -86,12 +83,10 @@ void ShutdownFonts(void)
 	UnloadFont(gpSmallFontType1);
 	UnloadFont(gpTinyFontType1);
 
-#if defined JA2EDITOR
-  if(isEnglishVersion())
+  if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
   {
     UnloadFont(gpHugeFont);
   }
-#endif
 }
 
 

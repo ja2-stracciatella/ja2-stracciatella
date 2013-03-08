@@ -1047,6 +1047,9 @@
     <ClCompile Include="..\..\Build\UILayout.cc">
       <Filter>Source Files\Build</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Build\GameState.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">

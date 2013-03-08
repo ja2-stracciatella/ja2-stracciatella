@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITOR_CALLBACK_PROTOTYPES_H
 #define __EDITOR_CALLBACK_PROTOTYPES_H
 
@@ -154,5 +153,4 @@ void BtnEraseCallback(GUI_BUTTON *btn,INT32 reason);
 
 
 
-#endif
 #endif

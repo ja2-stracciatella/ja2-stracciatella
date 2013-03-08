@@ -141,10 +141,6 @@ ifdef JA2BETAVERSION
 CFLAGS += -DJA2BETAVERSION -DSGP_DEBUG -DFORCE_ASSERTS_ON -DSGP_VIDEO_DEBUGGING
 endif
 
-ifdef JA2EDITOR
-CFLAGS += -DJA2EDITOR
-endif
-
 CCFLAGS += $(CFLAGS)
 CCFLAGS += -std=gnu99
 CCFLAGS += -Werror-implicit-function-declaration
@@ -164,7 +160,6 @@ SRCS += Build/AniViewScreen.cc
 SRCS += Build/Credits.cc
 SRCS += Build/UILayout.cc
 
-ifdef JA2EDITOR
 SRCS += Build/Editor/Cursor_Modes.cc
 SRCS += Build/Editor/EditScreen.cc
 SRCS += Build/Editor/Edit_Sys.cc
@@ -189,13 +184,13 @@ SRCS += Build/Editor/SelectWin.cc
 SRCS += Build/Editor/SmartMethod.cc
 SRCS += Build/Editor/Smooth.cc
 SRCS += Build/Editor/Smoothing_Utils.cc
-endif
 
 SRCS += Build/Cheats.cc
 SRCS += Build/Fade_Screen.cc
 SRCS += Build/GameInitOptionsScreen.cc
 SRCS += Build/GameLoop.cc
 SRCS += Build/GameRes.cc
+SRCS += Build/GameState.cc
 SRCS += Build/GameScreen.cc
 SRCS += Build/GameSettings.cc
 SRCS += Build/GameVersion.cc

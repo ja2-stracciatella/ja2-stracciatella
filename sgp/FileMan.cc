@@ -848,7 +848,7 @@ static void findDataDirs()
       s_dataDir = FileMan::joinPaths(GetBinDataPath(), name);
 
       // Tilecache dir is optional
-      if(findObjectCaseInsensitive(s_dataDir, TILECACHEDIR, false, true, name, sizeof(name)))
+      if(findObjectCaseInsensitive(s_dataDir.c_str(), TILECACHEDIR, false, true, name, sizeof(name)))
       {
         s_tileDir = FileMan::joinPaths(s_dataDir, name);
       }
@@ -858,7 +858,7 @@ static void findDataDirs()
       }
 
       // Maps dir is optional
-      if(findObjectCaseInsensitive(s_dataDir, MAPSDIR, false, true, name, sizeof(name)))
+      if(findObjectCaseInsensitive(s_dataDir.c_str(), MAPSDIR, false, true, name, sizeof(name)))
       {
         s_mapsDir = FileMan::joinPaths(s_dataDir, name);
       }

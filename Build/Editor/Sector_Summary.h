@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __SECTOR_SUMMARY_H
 #define __SECTOR_SUMMARY_H
 
@@ -22,5 +21,4 @@ void AutoLoadMap(void);
 
 BOOLEAN HandleSummaryInput(InputAtom*);
 
-#endif
 #endif

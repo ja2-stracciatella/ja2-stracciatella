@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __MESSAGEBOX_H
 #define __MESSAGEBOX_H
 
@@ -39,5 +38,4 @@ void RemoveMessageBox(void);
 //		...
 //	}
 
-#endif
 #endif

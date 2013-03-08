@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITORDEFINES_H
 #define __EDITORDEFINES_H
 
@@ -253,5 +252,4 @@ extern BOOLEAN gfShowItemStatsPanel;
 #define	MERCPANEL_X						177
 #define MERCPANEL_Y						361
 
-#endif
 #endif

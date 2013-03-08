@@ -39,16 +39,15 @@
 #include "Button_System.h"
 #include "Video.h"
 #include "UILayout.h"
+#include "GameState.h"
 
 #ifdef JA2DEMO
 #	include "Message.h"
 #	include "Text.h"
 #endif
 
-#ifdef JA2EDITOR
 #include "Soldier_Init_List.h"
 extern SOLDIERINITNODE *gpSelected;
-#endif
 
 // OK, these are values that are calculated in InitRenderParams( ) with normal view settings.
 // These would be different if we change ANYTHING about the game worlkd map sizes...
@@ -793,13 +792,11 @@ static void RenderOverheadOverlays(void)
 			0;
 		marker->CurrentShade(shade);
 
-#ifdef JA2EDITOR
-		if (gfEditMode && gpSelected && gpSelected->pSoldier == &s)
+		if (gfEditMode && GameState::getInstance()->isEditorMode() && gpSelected && gpSelected->pSoldier == &s)
 		{ //editor:  show the selected edited merc as the yellow one.
 			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 0);
 		}
 		else
-#endif
 		{
 			UINT16 const region =
 				!gfTacticalPlacementGUIActive                                ? s.bTeam :

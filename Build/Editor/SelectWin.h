@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef _SELECTION_WIN_H_
 #define _SELECTION_WIN_H_
 
@@ -100,5 +99,4 @@ extern INT32				iNumRoomsSelected;
 
 extern INT32 iDrawMode;
 
-#endif
 #endif

@@ -5,9 +5,7 @@
 #include "GameLoop.h"
 
 
-#ifdef JA2EDITOR
 char g_filename[200];
-#endif
 
 char    gubErrorText[200];
 BOOLEAN gfEditMode             = FALSE;

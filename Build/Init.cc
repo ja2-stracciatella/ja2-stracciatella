@@ -36,14 +36,10 @@
 #include "Vehicles.h"
 #include "Shading.h"
 #include "VSurface.h"
+#include "GameState.h"
 
-#if defined JA2BETAVERSION || defined JA2EDITOR
-#	include "EditScreen.h"
-#	include "JAScreens.h"
-#endif
-
-
-GameMode g_game_mode = GAME_MODE_GAME;
+#include "EditScreen.h"
+#include "JAScreens.h"
 
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
@@ -98,23 +94,22 @@ try
 
 	InitMercPopupBox( );
 
-#ifdef JA2EDITOR
+  if(GameState::getInstance()->isEditorMode())
+  {
+    //UNCOMMENT NEXT LINE TO ALLOW FORCE UPDATES...
+    //LoadGlobalSummary();
+    if( gfMustForceUpdateAllMaps )
+    {
+      ApologizeOverrideAndForceUpdateEverything();
+    }
+  }
 
-	//UNCOMMENT NEXT LINE TO ALLOW FORCE UPDATES...
-	//LoadGlobalSummary();
-	if( gfMustForceUpdateAllMaps )
-	{
-		ApologizeOverrideAndForceUpdateEverything();
-	}
-#endif
-
-	switch (g_game_mode)
+	switch (GameState::getInstance()->getMode())
 	{
 #if defined JA2BETAVERSION
 		case GAME_MODE_MAP_UTILITY: return MAPUTILITY_SCREEN;
 #endif
 
-#if defined JA2EDITOR
 		case GAME_MODE_EDITOR:
 			DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -editor commandline argument...");
 			gfAutoLoadA9 = FALSE;
@@ -131,7 +126,6 @@ editor:
 			gfIntendOnEnteringEditor = TRUE;
 			gGameOptions.fGunNut     = TRUE;
 			return GAME_SCREEN;
-#endif
 
 		default: return INIT_SCREEN;
 	}

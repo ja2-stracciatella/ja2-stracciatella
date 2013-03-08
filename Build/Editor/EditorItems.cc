@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "HImage.h"
 #include "Handle_Items.h"
 #include "Edit_Sys.h"
@@ -1460,5 +1458,3 @@ void DisplayItemStatistics()
 	wchar_t const* const item_name  = ItemNames[eInfo.pusItemIndex[idx]];
 	DisplayWrappedString(2, 401, 97, 2, SMALLCOMPFONT, foreground, item_name, FONT_BLACK, CENTER_JUSTIFIED);
 }
-
-#endif

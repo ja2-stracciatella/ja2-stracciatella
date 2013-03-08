@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITOR_UNDO_H
 #define __EDITOR_UNDO_H
 
@@ -16,5 +15,4 @@ void DetermineUndoState(void);
 // Undo command flags
 #define MAX_UNDO_COMMAND_LENGTH		10
 
-#endif
 #endif

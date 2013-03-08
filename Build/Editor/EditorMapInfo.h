@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITORMAPINFO_H
 #define __EDITORMAPINFO_H
 
@@ -26,4 +25,4 @@ void ChangeLightDefault( INT8 bLightType );
 extern INT8 gbDefaultLightType;
 
 #endif
-#endif
+

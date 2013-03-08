@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __EDITOR_TASKBAR_UTILS_H
 #define __EDITOR_TASKBAR_UTILS_H
 
@@ -66,5 +65,4 @@ extern SGPVObject* guiKeyImage;
 extern SGPVSurface* guiMercInvPanelBuffers[9];
 extern SGPVSurface* guiMercTempBuffer;
 
-#endif
 #endif

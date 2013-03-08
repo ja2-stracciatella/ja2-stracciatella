@@ -241,12 +241,10 @@ void DestroyTileShadeTables(void);
 
 void TrashWorld(void);
 
-#ifdef JA2EDITOR
 /* Deletes everything then re-creates the world with simple ground tiles */
 void NewWorld(void);
 
 BOOLEAN SaveWorld(const char *puiFilename);
-#endif
 
 void LoadWorld(char const* filename);
 void CompileWorldMovementCosts(void);
@@ -258,10 +256,7 @@ void LoadMapTileset(TileSetID);
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 
-
-#ifdef JA2EDITOR
 void ReloadTileset(TileSetID);
-#endif
 
 bool FloorAtGridNo(UINT32 map_idx);
 BOOLEAN DoorAtGridNo( UINT32 iMapIndex );

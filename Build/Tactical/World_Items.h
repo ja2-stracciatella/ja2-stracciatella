@@ -60,9 +60,7 @@ INT32 FindWorldItem( UINT16 usItem );
 
 void LoadWorldItemsFromMap(HWFILE);
 
-#ifdef JA2EDITOR
 void SaveWorldItemsToMap( HWFILE fp );
-#endif
 
 void TrashWorldItems(void);
 

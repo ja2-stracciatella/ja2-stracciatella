@@ -3,7 +3,6 @@
 
 #include "JA2Types.h"
 
-
 extern UINT8 gubMinorMapVersion;
 
 enum //for use with MAPCREATE_STRUCT.ubEditorSmoothingType
@@ -39,13 +38,10 @@ CASSERT(sizeof(MAPCREATE_STRUCT) == 100)
 
 extern MAPCREATE_STRUCT gMapInformation;
 
-#ifdef JA2EDITOR
-
 void SaveMapInformation( HWFILE fp );
 
+struct SUMMARYFILE;
 void UpdateSummaryInfo(SUMMARYFILE*);
-
-#endif
 
 void LoadMapInformation(HWFILE);
 void ValidateAndUpdateMapVersionIfNecessary(void);

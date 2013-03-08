@@ -257,8 +257,6 @@ void TrashWorldItems()
 }
 
 
-#ifdef JA2EDITOR
-
 void SaveWorldItemsToMap(HWFILE const f)
 {
 	UINT32 const n_actual_world_items = GetNumUsedWorldItems();
@@ -266,8 +264,6 @@ void SaveWorldItemsToMap(HWFILE const f)
 
 	CFOR_EACH_WORLD_ITEM(wi) FileWrite(f, wi, sizeof(WORLDITEM));
 }
-
-#endif
 
 
 static void DeleteWorldItemsBelongingToQueenIfThere(void);

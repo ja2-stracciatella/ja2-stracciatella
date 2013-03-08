@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Button_System.h"
 #include "Cursor_Modes.h"
 #include "Directories.h"
@@ -721,7 +719,3 @@ void ExtractAndUpdateBuildingInfo()
 	SetInputFieldStringWith16BitString( 1, str );
 	SetActiveField( 0 );
 }
-
-
-
-#endif

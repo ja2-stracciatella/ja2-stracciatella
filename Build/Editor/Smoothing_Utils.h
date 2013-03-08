@@ -1,4 +1,3 @@
-#ifdef JA2EDITOR
 #ifndef __SMOOTHING_UTILS_H
 #define __SMOOTHING_UTILS_H
 
@@ -53,5 +52,4 @@ bool ValidDecalPlacement(UINT32 map_idx);
 
 UINT16 GetWallType(LEVELNODE const* wall, UINT32 map_idx);
 
-#endif
 #endif

@@ -1,5 +1,3 @@
-#ifdef JA2EDITOR
-
 #include "Directories.h"
 #include "Font.h"
 #include "Overhead_Types.h"
@@ -1378,4 +1376,3 @@ static void ReEvaluateAttachmentStatii(void)
 	}
 }
 
-#endif
