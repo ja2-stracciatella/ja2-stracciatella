@@ -481,6 +481,7 @@ SRCS += sgp/STCI.cc
 SRCS += sgp/Shading.cc
 SRCS += sgp/Smack_Stub.cc
 SRCS += sgp/SoundMan.cc
+SRCS += sgp/StrUtils.cc
 SRCS += sgp/TranslationTable.cc
 SRCS += sgp/VObject.cc
 SRCS += sgp/VObject_Blitters.cc

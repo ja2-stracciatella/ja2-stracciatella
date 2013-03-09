@@ -53,8 +53,6 @@ INT32 FileGetPos(HWFILE);
 
 UINT32 FileGetSize(HWFILE);
 
-const char* GetExecutableDirectory(void);
-
 /* Removes ALL FILES in the specified directory, but leaves the directory alone.
  * Does not affect any subdirectories! */
 void EraseDirectory(char const* pcDirectory);
@@ -142,14 +140,23 @@ public:
    * Game resources is what located in 'Data' directory and below.
    * ------------------------------------------------------------ */
 
+  /** Get path to the configuration folder. */
+  static const std::string& getConfigFolderPath();
+
+  /** Get path to the configuration file. */
+  static const std::string& getConfigPath();
+
+  /** Get path to the root folder of game resources. */
+  static const std::string& getGameResRootPath();
+
   /** Get path to the 'Data' directory of the game. */
-  static const char* getDataDirPath();
+  static const std::string& getDataDirPath();
 
   /** Get path to the 'Data/Tilecache' directory of the game. */
-  static const char* getTilecacheDirPath();
+  static const std::string& getTilecacheDirPath();
 
   /** Get path to the 'Data/Maps' directory of the game. */
-  static const char* getMapsDirPath();
+  static const std::string& getMapsDirPath();
 
   /** Open file in the 'Data' directory in case-insensitive manner. */
   static FILE* openForReadingInDataDir(const char *filename);

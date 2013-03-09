@@ -8,6 +8,8 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "Logger.h"
+#include "Exceptions.h"
+#include "StrUtils.h"
 
 
 #define	FILENAME_SIZE 256
@@ -62,8 +64,11 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 
 static void ThrowExcOnLibLoadFailure(const char* pLibraryName)
 {
-  FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id (%s) is to be loaded but cannot be found.\n", pLibraryName));
-  throw std::runtime_error("Initialising libraries failed");
+  std::string message = FormattedString(
+    "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s'.\n",
+    pLibraryName, FileMan::getDataDirPath().c_str(), FileMan::getGameResRootPath().c_str(), FileMan::getConfigPath().c_str());
+  FastDebugMsg(message.c_str());
+  throw LibraryFileNotFoundException(message);
 }
 
 void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, const std::vector<std::string> &extraLibs)

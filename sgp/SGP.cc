@@ -34,6 +34,7 @@
 #include "GameRes.h"
 #include "Logger.h"
 #include "GameState.h"
+#include "Exceptions.h"
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -267,11 +268,11 @@ static void MainLoop()
 }
 
 
-static int Failure(char const* const msg)
+static int Failure(char const* const msg, bool showInfoIcon=false)
 {
 	fprintf(stderr, "%s\n", msg);
 #if defined _WIN32
-	MessageBox(0, msg, APPLICATION_NAME, MB_OK | MB_ICONERROR | MB_TASKMODAL);
+	MessageBox(0, msg, APPLICATION_NAME, MB_OK | (showInfoIcon ? MB_ICONINFORMATION : MB_ICONERROR) | MB_TASKMODAL);
 #endif
 	return EXIT_FAILURE;
 }
@@ -296,6 +297,7 @@ try
 
 	InitializeStandardGamingPlatform();
 
+
 #if defined JA2
   if(isEnglishVersion())
   {
@@ -318,6 +320,10 @@ try
 catch (const std::bad_alloc&)
 {
 	return Failure("ERROR: out of memory");
+}
+catch (const LibraryFileNotFoundException& e)
+{
+	return Failure(e.what(), true);
 }
 catch (const std::exception& e)
 {

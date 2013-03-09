@@ -1050,6 +1050,9 @@
     <ClCompile Include="..\..\Build\GameState.cc">
       <Filter>Source Files\Build</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sgp\StrUtils.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -2143,6 +2146,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Build\UILayout.h">
       <Filter>Source Files\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\StrUtils.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Exceptions.h">
+      <Filter>Source Files\sgp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

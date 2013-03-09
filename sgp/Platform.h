@@ -9,8 +9,10 @@
 
 #ifdef _WIN32
 #define CASE_SENSITIVE_FS   0
+#define PATH_SEPARATOR      '\\'
 #else
 #define CASE_SENSITIVE_FS   1
+#define PATH_SEPARATOR      '/'
 #endif
 
 /* #if CASE_SENSITIVE_FS */

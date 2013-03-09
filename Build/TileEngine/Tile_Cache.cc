@@ -43,22 +43,20 @@ void InitTileCache(void)
 	}
 
 	// Look for JSD files in the tile cache directory and load any we find
-	char              jsd_file_pattern[512];
-	snprintf(jsd_file_pattern, lengthof(jsd_file_pattern), "%s/*.jsd", FileMan::getTilecacheDirPath());
+  std::string jsd_file_pattern = FileMan::joinPaths(FileMan::getTilecacheDirPath(), "*.jsd");
 
 	// Loop through and set filenames
-	SGP::FindFiles find(jsd_file_pattern);
+	SGP::FindFiles find(jsd_file_pattern.c_str());
 	for (;;)
 	{
 		char const* const find_filename = find.Next();
 		if (find_filename == NULL) break;
 
-		char filename[150];
-		sprintf(filename, "%s/%s", FileMan::getTilecacheDirPath(), find_filename);
+    std::string filename = FileMan::joinPaths(FileMan::getTilecacheDirPath(), find_filename);
 
 		TILE_CACHE_STRUCT tc;
-		GetRootName(tc.zRootName, lengthof(tc.zRootName), filename);
-		tc.pStructureFileRef = LoadStructureFile(filename);
+		GetRootName(tc.zRootName, lengthof(tc.zRootName), filename.c_str());
+		tc.pStructureFileRef = LoadStructureFile(filename.c_str());
 
 		if (strcasecmp(tc.zRootName, "l_dead1") == 0)
 		{

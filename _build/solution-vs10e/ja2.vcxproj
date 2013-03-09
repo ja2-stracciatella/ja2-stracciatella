@@ -407,6 +407,7 @@
     <ClCompile Include="..\..\sgp\Smack_Stub.cc" />
     <ClCompile Include="..\..\sgp\SoundMan.cc" />
     <ClCompile Include="..\..\sgp\STCI.cc" />
+    <ClCompile Include="..\..\sgp\StrUtils.cc" />
     <ClCompile Include="..\..\sgp\TranslationTable.cc" />
     <ClCompile Include="..\..\sgp\Video.cc" />
     <ClCompile Include="..\..\sgp\VObject.cc" />
@@ -745,6 +746,7 @@
     <ClInclude Include="..\..\sgp\Cursor_Control.h" />
     <ClInclude Include="..\..\sgp\Debug.h" />
     <ClInclude Include="..\..\sgp\English.h" />
+    <ClInclude Include="..\..\sgp\Exceptions.h" />
     <ClInclude Include="..\..\sgp\FileMan.h" />
     <ClInclude Include="..\..\sgp\Font.h" />
     <ClInclude Include="..\..\sgp\HImage.h" />
@@ -768,6 +770,7 @@
     <ClInclude Include="..\..\sgp\Smack_Stub.h" />
     <ClInclude Include="..\..\sgp\SoundMan.h" />
     <ClInclude Include="..\..\sgp\STCI.h" />
+    <ClInclude Include="..\..\sgp\StrUtils.h" />
     <ClInclude Include="..\..\sgp\Timer.h" />
     <ClInclude Include="..\..\sgp\TopicIDs.h" />
     <ClInclude Include="..\..\sgp\TranslationTable.h" />
