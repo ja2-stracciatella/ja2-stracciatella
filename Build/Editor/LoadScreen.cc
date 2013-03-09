@@ -141,7 +141,8 @@ static void LoadSaveScreenEntry(void)
 	iTopFileShown = iTotalFiles = 0;
 	try
 	{
-		SGP::FindFiles find(MAPSDIR "/*.dat");
+    std::string searchString = FileMan::joinPaths(FileMan::getMapsDirPath(), "*.dat");
+		SGP::FindFiles find(searchString.c_str());
 		for (;;)
 		{
 			char const* const filename = find.Next();
