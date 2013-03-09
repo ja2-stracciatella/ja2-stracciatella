@@ -548,7 +548,7 @@ static void DrawFaceRect(FACETYPE const& f, SGPVSurface* const buffer, const INT
 	SGPVSurface::Lock l(buffer);
 	UINT32 const uiDestPitchBYTES = l.Pitch();
 
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, x + f.usFaceWidth + 4, y + f.usFaceHeight + 4);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, f.usFaceWidth + 4, f.usFaceHeight + 4);
 
 	const UINT16 usLineColor = Get16BPPColor(colour);
 	RectangleDraw(TRUE, x - 2, y - 1, x + f.usFaceWidth + 1, y + f.usFaceHeight, usLineColor, l.Buffer<UINT16>());

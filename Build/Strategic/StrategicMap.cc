@@ -2493,7 +2493,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 					//Now, determine if this is a valid path.
 					pGroup = GetGroup( pValidSoldier->ubGroupID );
 					AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
-					UINT32 traverse_time;
+					UINT32 traverse_time = TRAVERSE_TIME_IMPOSSIBLE;
 					if( !gbWorldSectorZ )
 					{
 						traverse_time = GetSectorMvtTimeForGroup((UINT8)SECTOR(pGroup->ubSectorX, pGroup->ubSectorY), bExitDirection, pGroup);
