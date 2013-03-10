@@ -247,9 +247,9 @@ extern BOOLEAN gfMercGetItem;
 //When actually editing item statistics, this value will be set, for the purposes of rendering, input, etc.
 extern BOOLEAN gfShowItemStatsPanel;
 
-#define TASKBAR_Y (SCREEN_HEIGHT - 120)
+#define TASKBAR_Y (EDITOR_TASKBAR_POS_Y)
 
 #define	MERCPANEL_X						177
-#define MERCPANEL_Y						361
+#define MERCPANEL_Y						(EDITOR_TASKBAR_POS_Y + 1)
 
 #endif

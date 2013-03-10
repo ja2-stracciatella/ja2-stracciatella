@@ -691,7 +691,7 @@ static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 
 	sUnitSize = 128 / (INT16)(ubSize);
 
-	sTop = 364 + (sSet * 24);
+	sTop = EDITOR_TASKBAR_POS_Y + 4 + (sSet * 24);
 	sBottom = sTop + 20;
 	sLeft = 230;
 	sRight = 359;
@@ -1102,7 +1102,7 @@ static void SetupTextInputForMercProfile(void)
 		str[0] = '\0';
 	else
 		CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->ubProfile, NUM_PROFILES);
-	AddTextInputField( 200, 430, 30, 20, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 70, 30, 20, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 }
 
 
@@ -1113,31 +1113,31 @@ static void SetupTextInputForMercAttributes(void)
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bExpLevel, 100);
-	AddTextInputField( 200, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLife, 100);
-	AddTextInputField( 200, 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 30, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLifeMax, 100);
-	AddTextInputField( 200, 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 55, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMarksmanship, 100);
-	AddTextInputField( 200, 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 80, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bStrength, 100);
-	AddTextInputField( 300, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bAgility, 100);
-	AddTextInputField( 300, 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y + 30, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bDexterity, 100);
-	AddTextInputField( 300, 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y + 55, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bWisdom, 100);
-	AddTextInputField( 300, 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y + 80, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLeadership, 100);
-	AddTextInputField( 400, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bExplosive, 100);
-	AddTextInputField( 400, 390, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y + 30, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMedical, 100);
-	AddTextInputField( 400, 415, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y + 55, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMechanical, 100);
-	AddTextInputField( 400, 440, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y + 80, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMorale, 100);
-	AddTextInputField( 500, 365, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 500, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 
 	if( !gfCanEditMercs )
 		DisableAllTextFields();
@@ -1243,13 +1243,13 @@ static void SetupTextInputForMercSchedule(void)
 {
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );
-	AddTextInputField(268, 373, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 13, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 1, gCurrSchedule.usTime[0] );
-	AddTextInputField(268, 394, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 34, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 2, gCurrSchedule.usTime[1] );
-	AddTextInputField(268, 415, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 55, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 3, gCurrSchedule.usTime[2] );
-	AddTextInputField(268, 436, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 76, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 4, gCurrSchedule.usTime[3] );
 }
 
@@ -1815,49 +1815,49 @@ void UpdateMercsInfo()
 			BltVideoObject(FRAME_BUFFER, guiExclamation, 0, 188, 362);
 			BltVideoObject(FRAME_BUFFER, guiKeyImage,    0, 186, 387);
 			SetFontAttributes(SMALLCOMPFONT, FONT_YELLOW);
-			MPrint(240, 363, L" --=ORDERS=-- ");
-			MPrint(240, 419, L"--=ATTITUDE=--");
+			MPrint(240, EDITOR_TASKBAR_POS_Y +  3, L" --=ORDERS=-- ");
+			MPrint(240, EDITOR_TASKBAR_POS_Y + 59, L"--=ATTITUDE=--");
 			if( iDrawMode == DRAW_MODE_CREATURE )
 			{
 				DisplayBodyTypeInfo();
 				SetFont( SMALLCOMPFONT );
 				SetFontForeground( FONT_LTBLUE );
-				MPrint(493, 416, L"RELATIVE");
-				MPrint(480, 422, L"ATTRIBUTES");
+				MPrint(493, EDITOR_TASKBAR_POS_Y + 56, L"RELATIVE");
+				MPrint(480, EDITOR_TASKBAR_POS_Y + 62, L"ATTRIBUTES");
 			}
 			else
 			{
 				SetFontForeground( FONT_LTGREEN );
-				MPrint(480, 363, L"RELATIVE");
-				MPrint(480, 371, L"EQUIPMENT");
+				MPrint(480, EDITOR_TASKBAR_POS_Y +  3, L"RELATIVE");
+				MPrint(480, EDITOR_TASKBAR_POS_Y + 11, L"EQUIPMENT");
 				SetFontForeground( FONT_LTBLUE );
-				MPrint(530, 363, L"RELATIVE");
-				MPrint(530, 371, L"ATTRIBUTES");
+				MPrint(530, EDITOR_TASKBAR_POS_Y +  3, L"RELATIVE");
+				MPrint(530, EDITOR_TASKBAR_POS_Y + 11, L"ATTRIBUTES");
 			}
 			if( iDrawMode == DRAW_MODE_ENEMY )
 			{
 				SetFont( FONT10ARIAL );
 				SetFontForeground( FONT_YELLOW );
-				MPrint(590, 411, L"Army");
-				MPrint(590, 425, L"Admin");
-				MPrint(590, 439, L"Elite");
+				MPrint(590, EDITOR_TASKBAR_POS_Y + 51, L"Army");
+				MPrint(590, EDITOR_TASKBAR_POS_Y + 65, L"Admin");
+				MPrint(590, EDITOR_TASKBAR_POS_Y + 79, L"Elite");
 			}
 			break;
 		case MERC_ATTRIBUTEMODE:
 			SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-			MPrint(225, 370, L"Exp. Level");
-			MPrint(225, 395, L"Life");
-			MPrint(225, 420, L"LifeMax");
-			MPrint(225, 445, L"Marksmanship");
-			MPrint(325, 370, L"Strength");
-			MPrint(325, 395, L"Agility");
-			MPrint(325, 420, L"Dexterity");
-			MPrint(325, 445, L"Wisdom");
-			MPrint(425, 370, L"Leadership");
-			MPrint(425, 395, L"Explosives");
-			MPrint(425, 420, L"Medical");
-			MPrint(425, 445, L"Mechanical");
-			MPrint(525, 370, L"Morale");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 10, L"Exp. Level");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 35, L"Life");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 60, L"LifeMax");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 85, L"Marksmanship");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 10, L"Strength");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 35, L"Agility");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 60, L"Dexterity");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 85, L"Wisdom");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 10, L"Leadership");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 35, L"Explosives");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 60, L"Medical");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 85, L"Mechanical");
+			MPrint(525, EDITOR_TASKBAR_POS_Y + 10, L"Morale");
 			break;
 
 		case MERC_APPEARANCEMODE:
@@ -1867,10 +1867,10 @@ void UpdateMercsInfo()
 				dp.fVisible || dp.ubProfile != NO_PROFILE ? FONT_YELLOW : FONT_DKYELLOW;
 			SetFontAttributes(FONT10ARIAL, foreground);
 
-			MPrint(396, 364, L"Hair color:");
-			MPrint(396, 388, L"Skin color:");
-			MPrint(396, 412, L"Vest color:");
-			MPrint(396, 436, L"Pant color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y +  4, L"Hair color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y + 28, L"Skin color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y + 52, L"Vest color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y + 76, L"Pant color:");
 
 			SetFont( SMALLCOMPFONT );
 			SetFontForeground( FONT_BLACK );
@@ -1884,10 +1884,10 @@ void UpdateMercsInfo()
 			}
 			else
 			{
-				MPrint(396, 374, L"RANDOM");
-				MPrint(396, 398, L"RANDOM");
-				MPrint(396, 422, L"RANDOM");
-				MPrint(396, 446, L"RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 14, L"RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 38, L"RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 62, L"RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 86, L"RANDOM");
 				ShowEditMercPalettes( NULL ); //will display grey scale to signify random
 			}
 			DisplayBodyTypeInfo();
@@ -1904,7 +1904,7 @@ void UpdateMercsInfo()
 					L"extract the number you have typed.  A blank field will clear the profile.  The current "
 					L"number of profiles range from 0 to %d.", NUM_PROFILES);
 				SetFontShadow(FONT_NEARBLACK);
-				DisplayWrappedString(180, 370, 400, 2, FONT10ARIAL, 146, tempStr,	FONT_BLACK, LEFT_JUSTIFIED);
+				DisplayWrappedString(180, EDITOR_TASKBAR_POS_Y + 10, 400, 2, FONT10ARIAL, 146, tempStr,	FONT_BLACK, LEFT_JUSTIFIED);
 				SetFont( FONT12POINT1 );
 				if( gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE )
 				{
@@ -1915,7 +1915,7 @@ void UpdateMercsInfo()
 				{
 					SetFontForeground( FONT_WHITE );
 					ClearTaskbarRegion(240, 75, 580, 85);
-					mprintf(240, 435, L"Current Profile:  %ls", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName);
+					mprintf(240, EDITOR_TASKBAR_POS_Y + 75, L"Current Profile:  %ls", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName);
 				}
 			}
 			break;
@@ -1923,30 +1923,30 @@ void UpdateMercsInfo()
 			SetFontAttributes(FONT10ARIAL, FONT_WHITE);
 			switch( gpSelected->pSoldier->bOrders )
 			{
-				case STATIONARY:  MPrint(430, 363, L"STATIONARY");    break;
-				case ONCALL:      MPrint(430, 363, L"ON CALL");       break;
-				case ONGUARD:     MPrint(430, 363, L"ON GUARD");      break;
-				case SEEKENEMY:   MPrint(430, 363, L"SEEK ENEMY");    break;
-				case CLOSEPATROL: MPrint(430, 363, L"CLOSE PATROL");  break;
-				case FARPATROL:   MPrint(430, 363, L"FAR PATROL");    break;
-				case POINTPATROL: MPrint(430, 363, L"POINT PATROL");  break;
-				case RNDPTPATROL: MPrint(430, 363, L"RND PT PATROL"); break;
+				case STATIONARY:  MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"STATIONARY");    break;
+				case ONCALL:      MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"ON CALL");       break;
+				case ONGUARD:     MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"ON GUARD");      break;
+				case SEEKENEMY:   MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"SEEK ENEMY");    break;
+				case CLOSEPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"CLOSE PATROL");  break;
+				case FARPATROL:   MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"FAR PATROL");    break;
+				case POINTPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"POINT PATROL");  break;
+				case RNDPTPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"RND PT PATROL"); break;
 			}
 			SetFontForeground( FONT_YELLOW );
-			MPrint(186, 363, L"Action");
-			MPrint(268, 363, L"Time");
-			MPrint(309, 363, L"V");
-			MPrint(331, 363, L"GridNo 1");
-			MPrint(381, 363, L"GridNo 2");
-			MPrint(172, 376, L"1)");
-			MPrint(172, 397, L"2)");
-			MPrint(172, 418, L"3)");
-			MPrint(172, 439, L"4)");
+			MPrint(186, EDITOR_TASKBAR_POS_Y +  3, L"Action");
+			MPrint(268, EDITOR_TASKBAR_POS_Y +  3, L"Time");
+			MPrint(309, EDITOR_TASKBAR_POS_Y +  3, L"V");
+			MPrint(331, EDITOR_TASKBAR_POS_Y +  3, L"GridNo 1");
+			MPrint(381, EDITOR_TASKBAR_POS_Y +  3, L"GridNo 2");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 16, L"1)");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 37, L"2)");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 58, L"3)");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 79, L"4)");
 			if( gubScheduleInstructions )
 			{
 				wchar_t str[255];
 				const wchar_t* keyword = L"";
-				ColorFillVideoSurfaceArea( FRAME_BUFFER, 431, 388, 590, 450, Get16BPPColor( FROMRGB( 32, 45, 72 ) ) );
+				ColorFillVideoSurfaceArea( FRAME_BUFFER, 431, EDITOR_TASKBAR_POS_Y + 28, 590, EDITOR_TASKBAR_POS_Y + 90, Get16BPPColor( FROMRGB( 32, 45, 72 ) ) );
 				switch( gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] )
 				{
 					case SCHEDULE_ACTION_LOCKDOOR:   keyword = L"lock";   break;
@@ -1971,7 +1971,7 @@ void UpdateMercsInfo()
 						return;
 				}
 				wcscat(str, L"  Hit ESC to abort entering this line in the schedule.");
-				DisplayWrappedString(436, 392, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, LEFT_JUSTIFIED);
+				DisplayWrappedString(436, EDITOR_TASKBAR_POS_Y + 32, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, LEFT_JUSTIFIED);
 			}
 			break;
 	}
@@ -2244,7 +2244,7 @@ static void RenderMercInventoryPanel(void)
 	if( gbCurrSelect != -1 )
 		DrawRect( &mercRects[ gbCurrSelect ], Get16BPPColor( FROMRGB( 200,   0, 0 ) ) );
 	RenderSelectedMercsInventory();
-	InvalidateRegion( MERCPANEL_X, MERCPANEL_Y, 475, 460 );
+	InvalidateRegion( MERCPANEL_X, MERCPANEL_Y, 475, EDITOR_TASKBAR_POS_Y + 100 );
 	UpdateItemStatsPanel();
 }
 

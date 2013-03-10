@@ -30,6 +30,9 @@
 #define SM_BODYINV_X                    (244)
 #define SM_BODYINV_Y                    (INV_INTERFACE_START_Y + 6)
 
+#define EDITOR_TASKBAR_HEIGHT           (120)
+#define EDITOR_TASKBAR_POS_Y            (SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT)
+
 #define			DEFAULT_EXTERN_PANEL_X_POS      (STD_SCREEN_X + 320)
 #define			DEFAULT_EXTERN_PANEL_Y_POS      (STD_SCREEN_Y + 40)
 

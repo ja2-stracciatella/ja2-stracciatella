@@ -262,7 +262,7 @@ void CreateSummaryWindow()
 	gfDeniedSummaryCreation = FALSE;
 	gfRenderSummary = TRUE;
 	//Create all of the buttons here
-	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH - 1);
+	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT, MSYS_PRIORITY_HIGH - 1);
 
 	iSummaryButton[SUMMARY_OKAY] = CreateTextButton(L"Okay", FONT12POINT1, FONT_BLACK, FONT_BLACK, 585, 325, 50, 30, MSYS_PRIORITY_HIGH, SummaryOkayCallback);
 
@@ -900,7 +900,7 @@ void RenderSummaryWindow()
 		}
 
 		iSummaryButton[SUMMARY_BACKGROUND]->Draw();
-		InvalidateRegion(0, 0, SCREEN_WIDTH, 360);
+		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT);
 
 		SetFontAttributes(BLOCKFONT2, FONT_LTKHAKI, FONT_DKKHAKI);
 		if( !gfItemDetailsMode )

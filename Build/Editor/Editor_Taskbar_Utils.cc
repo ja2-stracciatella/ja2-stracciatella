@@ -116,11 +116,11 @@ static void InitEditorRegions()
 	 * used anymore. Any new buttons will cover this up as well. Think of it as a
 	 * barrier between the editor buttons and the game's interface panel buttons
 	 * and regions. */
-	MSYS_DefineRegion(&EditorRegion, 0, 360, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&EditorRegion, 0, EDITOR_TASKBAR_POS_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Create the regions for the terrain tile selections.
 	UINT16       x   = 261;
-	UINT16 const y   = 369;
+	UINT16 const y   = EDITOR_TASKBAR_POS_Y + 9;
 	INT32        idx =   0;
 	FOR_EACHX(MOUSE_REGION, i, TerrainTileButtonRegion, x += 42)
 	{
@@ -132,11 +132,11 @@ static void InitEditorRegions()
 	gfShowTerrainTileButtons = FALSE;
 
 	// Create the region for the items selection window.
-	MSYS_DefineRegion(&ItemsRegion, 100, 360, 540, 440, MSYS_PRIORITY_NORMAL, 0, MouseMovedInItemsRegion, MouseClickedInItemsRegion);
+	MSYS_DefineRegion(&ItemsRegion, 100, EDITOR_TASKBAR_POS_Y, 540, EDITOR_TASKBAR_POS_Y + 80, MSYS_PRIORITY_NORMAL, 0, MouseMovedInItemsRegion, MouseClickedInItemsRegion);
 	ItemsRegion.Disable();
 
 	// Create the region for the merc inventory panel.
-	MSYS_DefineRegion(&MercRegion, 175, 361, 450, 460, MSYS_PRIORITY_NORMAL, 0, MouseMovedInMercRegion, MouseClickedInMercRegion);
+	MSYS_DefineRegion(&MercRegion, 175, EDITOR_TASKBAR_POS_Y + 1, 450, EDITOR_TASKBAR_POS_Y + 80, MSYS_PRIORITY_NORMAL, 0, MouseMovedInMercRegion, MouseClickedInMercRegion);
 	MercRegion.Disable();
 }
 
@@ -428,9 +428,9 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 		ColorFillVideoSurfaceArea( ButtonDestBuffer, 0, sTop, 1, sBottom, gusEditorTaskbarHiColor );
 		sLeft++;
 	}
-	if( sTop == 360 )
+	if( sTop == EDITOR_TASKBAR_POS_Y )
 	{
-		ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, 360, sRight, 361, gusEditorTaskbarHiColor );
+		ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, EDITOR_TASKBAR_POS_Y, sRight, EDITOR_TASKBAR_POS_Y+1, gusEditorTaskbarHiColor );
 		sTop++;
 	}
 	if (sBottom == SCREEN_HEIGHT)
@@ -689,7 +689,7 @@ static void RenderSelectedItemBlownUp(void)
 	INT16 screen_x;
 	INT16 screen_y;
 	GetGridNoScreenPos(gsItemGridNo, 0, &screen_x, &screen_y);
-	if (screen_y > 340) return;
+	if (screen_y > (EDITOR_TASKBAR_POS_Y - 20)) return;
 
 	OBJECTTYPE const& o    = *gpItem;
 	INVTYPE    const& item = Item[o.usItem];
@@ -773,9 +773,9 @@ static void RenderEditorInfo(void)
 	{
 		case TASK_OPTIONS:
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
-				MPrint(260, 445, L"No map currently loaded.");
+				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, L"No map currently loaded.");
 			else
-				mprintf(260, 445, L"File:  %hs, Current Tileset:  %ls", g_filename, gTilesets[giCurrentTilesetID].zName);
+				mprintf(260, EDITOR_TASKBAR_POS_Y + 85, L"File:  %hs, Current Tileset:  %ls", g_filename, gTilesets[giCurrentTilesetID].zName);
 			break;
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )
@@ -816,7 +816,7 @@ void ProcessEditorRendering()
 	BOOLEAN fSaveBuffer = FALSE;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{
-		ClearTaskbarRegion(0, 0, SCREEN_WIDTH, 120);
+		ClearTaskbarRegion(0, 0, SCREEN_WIDTH, EDITOR_TASKBAR_HEIGHT);
 		RenderTerrainTileButtons();
 		MarkButtonsDirty();
 		gfRenderTaskbar = FALSE;
@@ -862,7 +862,7 @@ void ProcessEditorRendering()
 
 
 	if( fSaveBuffer )
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 360, SCREEN_WIDTH, 120);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, EDITOR_TASKBAR_POS_Y, SCREEN_WIDTH, EDITOR_TASKBAR_HEIGHT);
 
 	//Make sure this is TRUE at all times.
 	//It is set to false when before we save the buffer, so the buttons don't get

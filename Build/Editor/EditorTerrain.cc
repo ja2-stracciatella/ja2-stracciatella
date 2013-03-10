@@ -20,6 +20,7 @@
 #include "Editor_Taskbar_Utils.h"
 #include "Cursor_Modes.h"
 #include "English.h"
+#include "UILayout.h"
 
 
 BOOLEAN gfShowTerrainTileButtons;
@@ -89,8 +90,8 @@ void RenderTerrainTileButtons()
 		usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
 		usFillColorRed = Get16BPPColor(FROMRGB(255, 0, 0));
 
-		usY = 369;
-		usY2 = 391;
+		usY = EDITOR_TASKBAR_POS_Y + 9;
+		usY2 = EDITOR_TASKBAR_POS_Y + 31;
 
 		SetFont( SMALLCOMPFONT );
 		SetFontForeground( FONT_YELLOW );

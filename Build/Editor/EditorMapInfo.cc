@@ -50,28 +50,28 @@ void SetupTextInputForMapInfo()
 
 	//light rgb fields
 	swprintf(str, lengthof(str), L"%d", gEditorLightColor.r);
-	AddTextInputField( 10, 394, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 10, EDITOR_TASKBAR_POS_Y + 34, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gEditorLightColor.g);
-	AddTextInputField( 10, 414, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 10, EDITOR_TASKBAR_POS_Y + 54, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gEditorLightColor.b);
-	AddTextInputField( 10, 434, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 10, EDITOR_TASKBAR_POS_Y + 74, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 
 	swprintf(str, lengthof(str), L"%d", gsLightRadius);
-	AddTextInputField( 120, 394, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 120, EDITOR_TASKBAR_POS_Y + 34, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gusLightLevel);
-	AddTextInputField( 120, 414, 25, 18, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 120, EDITOR_TASKBAR_POS_Y + 54, 25, 18, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//Scroll restriction ID
 	swprintf(str, lengthof(str), L"%.d", gMapInformation.ubRestrictedScrollID);
-	AddTextInputField( 210, 420, 30, 20, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 210, EDITOR_TASKBAR_POS_Y + 60, 30, 20, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//exit grid input fields
 	swprintf(str, lengthof(str), L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
-	AddTextInputField(338, 363, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_COORDINATE);
+	AddTextInputField(338, EDITOR_TASKBAR_POS_Y +  3, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_COORDINATE);
 	swprintf(str, lengthof(str), L"%d", gExitGrid.ubGotoSectorZ);
-	AddTextInputField( 338, 383, 30, 18, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 338, EDITOR_TASKBAR_POS_Y + 23, 30, 18, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gExitGrid.usGridNo);
-	AddTextInputField( 338, 403, 40, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 338, EDITOR_TASKBAR_POS_Y + 43, 40, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 }
 
 void UpdateMapInfo()
@@ -80,41 +80,41 @@ void UpdateMapInfo()
 	SetFontShadow( FONT_NEARBLACK );
 
 	SetFontForeground( FONT_RED );
-	MPrint( 38, 399, L"R");
+	MPrint( 38, EDITOR_TASKBAR_POS_Y + 39, L"R");
 	SetFontForeground( FONT_GREEN );
-	MPrint( 38, 419, L"G");
+	MPrint( 38, EDITOR_TASKBAR_POS_Y + 59, L"G");
 	SetFontForeground( FONT_DKBLUE );
-	MPrint( 38, 439, L"B");
+	MPrint( 38, EDITOR_TASKBAR_POS_Y + 79, L"B");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint( 65, 369, L"Prime");
-	MPrint( 65, 382, L"Night");
-	MPrint( 65, 397, L"24Hrs");
+	MPrint( 65, EDITOR_TASKBAR_POS_Y +  9, L"Prime");
+	MPrint( 65, EDITOR_TASKBAR_POS_Y + 22, L"Night");
+	MPrint( 65, EDITOR_TASKBAR_POS_Y + 37, L"24Hrs");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint(148, 399, L"Radius");
+	MPrint(148, EDITOR_TASKBAR_POS_Y + 39, L"Radius");
 
 	if( !gfBasement && !gfCaves )
 		SetFontForeground( FONT_DKYELLOW );
-	MPrint(148, 414, L"Underground");
-	MPrint(148, 423, L"Light Level");
+	MPrint(148, EDITOR_TASKBAR_POS_Y + 54, L"Underground");
+	MPrint(148, EDITOR_TASKBAR_POS_Y + 63, L"Light Level");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint(230, 369, L"Outdoors");
-	MPrint(230, 384, L"Basement");
-	MPrint(230, 399, L"Caves");
+	MPrint(230, EDITOR_TASKBAR_POS_Y +  9, L"Outdoors");
+	MPrint(230, EDITOR_TASKBAR_POS_Y + 24, L"Basement");
+	MPrint(230, EDITOR_TASKBAR_POS_Y + 39, L"Caves");
 
 	SetFontForeground( FONT_ORANGE );
-	MPrint(250, 420, L"Restricted");
-	MPrint(250, 430, L"Scroll ID");
+	MPrint(250, EDITOR_TASKBAR_POS_Y + 60, L"Restricted");
+	MPrint(250, EDITOR_TASKBAR_POS_Y + 70, L"Scroll ID");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint(368, 363, L"Destination");
-	MPrint(368, 372, L"Sector");
-	MPrint(368, 383, L"Destination");
-	MPrint(368, 392, L"Bsmt. Level");
-	MPrint(378, 403, L"Dest.");
-	MPrint(378, 412, L"GridNo");
+	MPrint(368, EDITOR_TASKBAR_POS_Y +  3, L"Destination");
+	MPrint(368, EDITOR_TASKBAR_POS_Y + 12, L"Sector");
+	MPrint(368, EDITOR_TASKBAR_POS_Y + 23, L"Destination");
+	MPrint(368, EDITOR_TASKBAR_POS_Y + 32, L"Bsmt. Level");
+	MPrint(378, EDITOR_TASKBAR_POS_Y + 43, L"Dest.");
+	MPrint(378, EDITOR_TASKBAR_POS_Y + 52, L"GridNo");
 }
 
 void UpdateMapInfoFields()

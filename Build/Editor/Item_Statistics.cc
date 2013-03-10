@@ -22,6 +22,7 @@
 #include "World_Items.h"
 #include "PopupMenu.h"
 #include "Pits.h"
+#include "UILayout.h"
 
 
 GUIButtonRef giBothCheckboxButton;
@@ -448,67 +449,67 @@ void UpdateItemStatsPanel()
 	if( gpItem && iCurrentTaskbar == TASK_ITEMS &&
 			gbEditingMode != EDITING_TRIGGERS && gbEditingMode != EDITING_ACTIONITEMS )
 	{
-		MPrint(500, 366, L"Toggle hide flag");
+		MPrint(500, EDITOR_TASKBAR_POS_Y +  6, L"Toggle hide flag");
 	}
 	SetFontForeground( FONT_YELLOW );
 	switch( gbEditingMode )
 	{
 		case EDITING_NOTHING:
 			if( iCurrentTaskbar == TASK_ITEMS )
-				MPrint(520, 400, L"No item selected.");
+				MPrint(520, EDITOR_TASKBAR_POS_Y + 40, L"No item selected.");
 			else
 			{
-				MPrint(500, 390, L"Slot available for");
-				MPrint(500, 400, L"random generation.");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 30, L"Slot available for");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"random generation.");
 			}
 			return;
 		case EDITING_KEYS:
 			if( !gpEditingItemPool )
 			{
-				MPrint(500, 400, L"Keys not editable.");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"Keys not editable.");
 				return;
 			}
 			break;
 		case EDITING_OWNERSHIP:
-			MPrint(512, 384, L"ProfileID of owner");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"ProfileID of owner");
 			return;
 		case EDITING_NOT_YET_IMPLEMENTED:
-			MPrint(500, 400, L"Item class not implemented.");
+			MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"Item class not implemented.");
 			return;
 		case EDITING_DROPPABLE:
-			MPrint(500, 400, L"Slot locked as empty.");
+			MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"Slot locked as empty.");
 			return;
 		case EDITING_GUNS:
-			MPrint(512, 384, L"Status");
-			MPrint(512, 404, L"Rounds");
-			MPrint(512, 424, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Rounds");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 64, L"Trap Level");
 			break;
 		case EDITING_AMMO:
-			MPrint(512, 384, L"Quantity");
-			MPrint(512, 404, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"Quantity");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Trap Level");
 			break;
 		case EDITING_ARMOUR:
 		case EDITING_EQUIPMENT:
-			MPrint(512, 384, L"Status");
-			MPrint(512, 404, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Trap Level");
 			break;
 		case EDITING_EXPLOSIVES:
-			MPrint(512, 380, L"Status");
-			MPrint(512, 404, L"Quantity");
-			MPrint(512, 424, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 20, L"Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Quantity");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 64, L"Trap Level");
 			break;
 		case EDITING_MONEY:
-			MPrint(532, 384, L"Dollars");
+			MPrint(532, EDITOR_TASKBAR_POS_Y + 24, L"Dollars");
 			break;
 		case EDITING_ACTIONITEMS:
-			MPrint(512, 369, L"Status");
-			MPrint(512, 389, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y +  9, L"Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 29, L"Trap Level");
 			break;
 		case EDITING_TRIGGERS:
-			MPrint(512, 369, L"Trap Level");
-			MPrint(512, 389, L"Tolerance");
+			MPrint(512, EDITOR_TASKBAR_POS_Y +  9, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 29, L"Tolerance");
 			if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
-				MPrint(500, 407, L"Alarm Trigger");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 47, L"Alarm Trigger");
 			break;
 	}
 	if( gpEditingItemPool )
@@ -520,12 +521,12 @@ void UpdateItemStatsPanel()
 			SetFontForeground( FONT_ORANGE );
 		else
 			SetFontForeground( FONT_RED );
-		MPrint(512, 444, L"Exist Chance");
-		MPrint(587, 366, L"B");
-		MPrint(609, 366, L"R");
-		MPrint(630, 366, L"S");
+		MPrint(512, EDITOR_TASKBAR_POS_Y + 84, L"Exist Chance");
+		MPrint(587, EDITOR_TASKBAR_POS_Y +  6, L"B");
+		MPrint(609, EDITOR_TASKBAR_POS_Y +  6, L"R");
+		MPrint(630, EDITOR_TASKBAR_POS_Y +  6, L"S");
 	}
-	InvalidateRegion( 477, 362, 161, 97 );
+	InvalidateRegion( 477, EDITOR_TASKBAR_POS_Y +  2, 161, 97 );
 }
 
 
@@ -578,7 +579,7 @@ static void BothModesCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 
 static GUIButtonRef MakeRadioButton(INT16 const x, GUI_CALLBACK const click, wchar_t const* const help)
 {
-	GUIButtonRef const b = CreateCheckBoxButton(x, 365, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const b = CreateCheckBoxButton(x, EDITOR_TASKBAR_POS_Y +  5, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, click);
 	b->SetFastHelpText(help);
 	return b;
 }
@@ -634,21 +635,21 @@ static void SetupGunGUI()
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->bGunStatus);
-	AddTextInputField(485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
 	swprintf(str, lengthof(str), L"%d", gpItem->ubGunShotsLeft);
-	AddTextInputField(485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField(485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 60, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT);
 	if (gpEditingItemPool)
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField(485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
+		AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
 	}
 
 	/* Attachments are a dynamic part of guns. None, some, or all attachments
 	 * could be available for a particular weapon. Show only the ones that we can
 	 * apply to this gun. */
-	INT16 y = 383;
+	INT16 y = EDITOR_TASKBAR_POS_Y + 23;
 	FOR_EACH(AttachmentInfo, i, g_weapon_attachment)
 	{
 		if (MakeAttachmentButton(*i, 570, y, 60, ToggleWeaponAttachment)) y += 14;
@@ -706,13 +707,13 @@ static void SetupAmmoGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
-	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
 
@@ -783,16 +784,16 @@ static void SetupArmourGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
-	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
-	MakeAttachmentButton(g_ceramic_attachment, 558, 375, 72, ToggleItemAttachment);
+	MakeAttachmentButton(g_ceramic_attachment, 558, EDITOR_TASKBAR_POS_Y + 15, 72, ToggleItemAttachment);
 }
 
 
@@ -832,13 +833,13 @@ static void SetupEquipGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
-	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
 
@@ -879,22 +880,22 @@ static void SetupExplosivesGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
-	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
-	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	if( Item[ gpItem->usItem ].ubPerPocket == 1 )
 	{
 		DisableTextField( 2 );
 	}
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField( 485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 60, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
-	MakeAttachmentButton(g_detonator_attachment, 570, 375, 60, ToggleItemAttachment);
+	MakeAttachmentButton(g_detonator_attachment, 570, EDITOR_TASKBAR_POS_Y + 15, 60, ToggleItemAttachment);
 }
 
 
@@ -946,11 +947,11 @@ static void SetupMoneyGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->uiMoneyAmount);
-	AddTextInputField( 485, 380, 45, 15, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 45, 15, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
 
@@ -989,8 +990,8 @@ static void SetupOwnershipGUI(void)
 {
 	wchar_t str[20];
 	swprintf(str, lengthof(str), L"%d", gpItem->ubOwnerProfile);
-	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	giOwnershipGroupButton = CreateTextButton(gszCivGroupNames[gpItem->ubOwnerCivGroup], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 485, 415, 80, 25, MSYS_PRIORITY_NORMAL, OwnershipGroupButtonCallback);
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	giOwnershipGroupButton = CreateTextButton(gszCivGroupNames[gpItem->ubOwnerCivGroup], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 485, EDITOR_TASKBAR_POS_Y + 55, 80, 25, MSYS_PRIORITY_NORMAL, OwnershipGroupButtonCallback);
 }
 
 
@@ -1035,7 +1036,7 @@ static void SetupKeysGUI(void)
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
 
@@ -1062,16 +1063,16 @@ static void SetupActionItemsGUI(void)
 	wchar_t str[4];
 	const wchar_t* pStr;
 	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
-	AddTextInputField( 485, 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y +  5, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField( 485, 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 25, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	pStr = GetActionItemName( gpItem );
-	guiActionItemButton = CreateTextButton(pStr, FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 510, 410, 100, 20, MSYS_PRIORITY_NORMAL, ActionItemCallback);
+	guiActionItemButton = CreateTextButton(pStr, FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 510, EDITOR_TASKBAR_POS_Y + 50, 100, 20, MSYS_PRIORITY_NORMAL, ActionItemCallback);
 }
 
 
@@ -1126,16 +1127,16 @@ static void SetupTriggersGUI(void)
 {
 	wchar_t str[4];
 	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
-	AddTextInputField( 485, 365, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y +  5, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->ubTolerance);
-	AddTextInputField( 485, 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 25, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
-		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
+		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 		if (gpItem->bFrequency >= PANIC_FREQUENCY_3)
 		{
-			giAlarmTriggerButton = CreateCheckBoxButton(485, 405, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback);
+			giAlarmTriggerButton = CreateCheckBoxButton(485, EDITOR_TASKBAR_POS_Y + 45, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback);
 			giAlarmTriggerButton->SetFastHelpText(L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
 			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
 				giAlarmTriggerButton->uiFlags |= BUTTON_CLICKED_ON;
