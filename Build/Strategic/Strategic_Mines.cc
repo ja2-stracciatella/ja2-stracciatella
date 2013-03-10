@@ -831,8 +831,8 @@ void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
 		case MINE_GRUMM:    break;
 		case MINE_CAMBRIA:  break;
 		case MINE_ALMA:     break;
-		case MINE_DRASSEN:  y = 135; break;
-		case MINE_CHITZENA: y = 117; break;
+		case MINE_DRASSEN:  y = STD_SCREEN_Y + 135; break;
+		case MINE_CHITZENA: y = STD_SCREEN_Y + 117; break;
 
 		case MINE_SAN_MONA: // There's no head miner in San Mona, this is an error!
 		default:
