@@ -768,8 +768,8 @@ void DisplayWayPoints(void)
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
-		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)ScrnX;
-		sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)ScrnY;
+		sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)ScrnX;
+		sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)ScrnY;
 
 		// Adjust for tiles height factor!
 		sScreenY -= gpWorldLevelData[sGridNo].sHeight;
@@ -2819,8 +2819,8 @@ static void RenderCurrentSchedule(void)
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
-		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)ScrnX;
-		sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)ScrnY;
+		sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)ScrnX;
+		sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)ScrnY;
 
 		// Adjust for tiles height factor!
 		sScreenY -= gpWorldLevelData[ iMapIndex ].sHeight;

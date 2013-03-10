@@ -186,8 +186,8 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 		return( FALSE );
 	}
 
-	sOffsetX = gViewportRegion.MouseXPos - ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ); // + gsRenderWorldOffsetX;
-	sOffsetY = gViewportRegion.MouseYPos - ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + 10;// + gsRenderWorldOffsetY;
+	sOffsetX = gViewportRegion.MouseXPos - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
+	sOffsetY = gViewportRegion.MouseYPos - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
 
 	// OK, Let's offset by a value if our interfac level is changed!
 	if ( gsInterfaceLevel != 0 )
@@ -381,8 +381,8 @@ INT16 sDeltaScreenX, sDeltaScreenY;
 
 	FromCellToScreenCoordinates(sDeltaCellX, sDeltaCellY, &sDeltaScreenX, &sDeltaScreenY);
 
-	*sScreenX=(((gsVIEWPORT_END_X-gsVIEWPORT_START_X)/2)+sDeltaScreenX);
-	*sScreenY=(((gsVIEWPORT_END_Y-gsVIEWPORT_START_Y)/2)+sDeltaScreenY);
+	*sScreenX=((g_ui.m_tacticalMapCenterX)+sDeltaScreenX);
+	*sScreenY=((g_ui.m_tacticalMapCenterY)+sDeltaScreenY);
 }
 
 

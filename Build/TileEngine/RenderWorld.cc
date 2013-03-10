@@ -120,11 +120,6 @@ static const UINT8 gsGlowFrames[] =
 };
 
 
-// Viewport is the area of the screen which displays tactical map.
-const INT16 gsVIEWPORT_START_X        = 0;
-const INT16 gsVIEWPORT_START_Y        = 0;
-INT16       gsVIEWPORT_WINDOW_START_Y = 0;
-
 INT16 gsTopLeftWorldX;                                  /**< Top left corner of the visible portion of the map (in map coordiantes). */
 INT16 gsTopLeftWorldY;                                  /**< Top left corner of the visible portion of the map (in map coordiantes). */
 INT16 gsBottomRightWorldX;                              /**< Bottom right corner of the visible portion of the map (in map coordiantes). */
@@ -658,8 +653,8 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									float dTempY_S;
 									FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
-									sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-									sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - sTileHeight;
+									sXPos = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
+									sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S - sTileHeight;
 
 									// Adjust for offset position on screen
 									sXPos -= gsRenderWorldOffsetX;
@@ -711,8 +706,8 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									float dTempY_S;
 									FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
-									sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-									sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S;
+									sXPos = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
+									sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S;
 
 									// Adjust for offset position on screen
 									sXPos -= gsRenderWorldOffsetX;
@@ -1010,8 +1005,8 @@ zlevel_topmost:
 								float dTempY_S;
 								FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
-								sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-								sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - sTileHeight;
+								sXPos = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
+								sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S - sTileHeight;
 
 								// Adjust for offset position on screen
 								sXPos -= gsRenderWorldOffsetX;
@@ -2304,11 +2299,8 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	sScreenCenterX -=  0;
 	sScreenCenterY -= 10;
 
-	const INT16 sX_S = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2;
-	const INT16 sY_S = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2;
-
-  // GTr:
-  //   (sX_S, sY_S) - center of the map area on the screen in pixels.  For 640x480 it is (320, 180)
+	const INT16 sX_S = g_ui.m_tacticalMapCenterX;
+	const INT16 sY_S = g_ui.m_tacticalMapCenterY;
 
 	// Get corners in screen coords
 	// TOP LEFT
@@ -2316,9 +2308,9 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	const INT16 sTopLeftWorldY = sScreenCenterY - sY_S;
 
 	const INT16 sTopRightWorldX = sScreenCenterX + sX_S;
-	const INT16 sTopRightWorldY = sScreenCenterY - sY_S;
+	// const INT16 sTopRightWorldY = sScreenCenterY - sY_S;
 
-	const INT16 sBottomLeftWorldX = sScreenCenterX - sX_S;
+	// const INT16 sBottomLeftWorldX = sScreenCenterX - sX_S;
 	const INT16 sBottomLeftWorldY = sScreenCenterY + sY_S;
 
 	const INT16 sBottomRightWorldX = sScreenCenterX + sX_S;
@@ -4640,8 +4632,8 @@ static void CorrectRenderCenter(INT16 sRenderX, INT16 sRenderY, INT16* pSNewX, I
 	sScreenY += 10;
 
 	// Adjust to viewport start!
-	sScreenX -= (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2;
-	sScreenY -= (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2;
+	sScreenX -= g_ui.m_tacticalMapCenterX;
+	sScreenY -= g_ui.m_tacticalMapCenterY;
 
 	//Make sure these coordinates are multiples of scroll steps
 	const UINT  speed   = ScrollSpeed();
@@ -4652,8 +4644,8 @@ static void CorrectRenderCenter(INT16 sRenderX, INT16 sRenderY, INT16* pSNewX, I
 	sScreenY = sScreenY / speed_y * speed_y;
 
 	// Adjust back
-	sScreenX += (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2;
-	sScreenY += (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2;
+	sScreenX += g_ui.m_tacticalMapCenterX;
+	sScreenY += g_ui.m_tacticalMapCenterY;
 
 	*pSNewX = sScreenX;
 	*pSNewY = sScreenY;
@@ -5622,8 +5614,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP THREE - determine starting point in world coords
 	// a) Determine where in screen coords to start rendering
-	gsStartPointX_S = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 - (sLeft - VIEWPORT_XOFFSET_S);
-	gsStartPointY_S = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 - (sTop  - VIEWPORT_YOFFSET_S);
+	gsStartPointX_S = g_ui.m_tacticalMapCenterX - (sLeft - VIEWPORT_XOFFSET_S);
+	gsStartPointY_S = g_ui.m_tacticalMapCenterY - (sTop  - VIEWPORT_YOFFSET_S);
 
 
 	// b) Convert these distances into world distances
@@ -5676,8 +5668,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 		// STEP THREE - determine starting point in world coords
 	// a) Determine where in screen coords to start rendering
-	gsLStartPointX_S = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 - (sLeft - LARGER_VIEWPORT_XOFFSET_S);
-	gsLStartPointY_S = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 - (sTop  - LARGER_VIEWPORT_YOFFSET_S);
+	gsLStartPointX_S = g_ui.m_tacticalMapCenterX - (sLeft - LARGER_VIEWPORT_XOFFSET_S);
+	gsLStartPointY_S = g_ui.m_tacticalMapCenterY - (sTop  - LARGER_VIEWPORT_YOFFSET_S);
 
 
 	// b) Convert these distances into world distances

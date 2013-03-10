@@ -258,8 +258,8 @@ void RenderRadarScreen()
 
 			// Get corners in screen coords
 			// TOP LEFT
-			INT16 const sX_S = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2;
-			INT16 const sY_S = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2;
+			INT16 const sX_S = g_ui.m_tacticalMapCenterX;
+			INT16 const sY_S = g_ui.m_tacticalMapCenterY;
 
 			INT16 const sTopLeftWorldX     = sScreenCenterX - sX_S;
 			INT16 const sTopLeftWorldY     = sScreenCenterY - sY_S;
@@ -366,8 +366,8 @@ static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY)
 	sScreenY = (INT16) ( sRadarY / gdScaleY );
 
 	// Adjust to viewport start!
-	sScreenX -= ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 );
-	sScreenY -= ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 );
+	sScreenX -= ( g_ui.m_tacticalMapCenterX );
+	sScreenY -= ( g_ui.m_tacticalMapCenterY );
 
 	//Make sure these coordinates are multiples of scroll steps
 	sNumXSteps = sScreenX  / SCROLL_X_STEP;
@@ -377,8 +377,8 @@ static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY)
 	sScreenY = ( sNumYSteps * SCROLL_Y_STEP );
 
 	// Adjust back
-	sScreenX += ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X  ) /2 );
-	sScreenY += ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y  ) /2 );
+	sScreenX += ( g_ui.m_tacticalMapCenterX );
+	sScreenY += ( g_ui.m_tacticalMapCenterY );
 
 	// Subtract world center
 	//sScreenX += gsCX;

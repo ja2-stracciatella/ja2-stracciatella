@@ -16,6 +16,9 @@
 #define SCREEN_WIDTH                    (g_ui.m_screenWidth)
 #define INV_INTERFACE_START_Y           (g_ui.get_INV_INTERFACE_START_Y())
 #define INTERFACE_START_Y               (g_ui.get_INTERFACE_START_Y())
+#define gsVIEWPORT_START_X              (g_ui.m_VIEWPORT_START_X)
+#define gsVIEWPORT_START_Y              (g_ui.m_VIEWPORT_START_Y)
+#define gsVIEWPORT_WINDOW_START_Y       (g_ui.m_VIEWPORT_WINDOW_START_Y)
 #define gsVIEWPORT_END_X                (g_ui.m_VIEWPORT_END_X)
 #define gsVIEWPORT_END_Y                (g_ui.m_VIEWPORT_END_Y)
 #define gsVIEWPORT_WINDOW_END_Y         (g_ui.m_VIEWPORT_WINDOW_END_Y)
@@ -77,9 +80,16 @@ public:
   MoneyLoc              m_moneyButtonLoc;
 
   /** Viewport coordiantes.
-   * Viewport - is the area of the screen where tactical map is displayed. */
+   * Viewport is the area of the screen where tactical map is displayed.
+   * For 640x480 it is (320, 180) */
+  INT16                 m_VIEWPORT_START_X;
+  INT16                 m_VIEWPORT_START_Y;
+  INT16                 m_VIEWPORT_WINDOW_START_Y;
+
   INT16                 m_VIEWPORT_END_X;
   INT16                 m_VIEWPORT_END_Y;
+  INT16                 m_tacticalMapCenterX;                           /**< Center of the tactical map (for 640x480 it is (320, 180)). */
+  INT16                 m_tacticalMapCenterY;                           /**< Center of the tactical map (for 640x480 it is (320, 180)). */
 
   INT16                 m_VIEWPORT_WINDOW_END_Y;
 

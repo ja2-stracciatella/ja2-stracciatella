@@ -67,10 +67,6 @@ extern INT16 gsScrollYIncrement;
 extern INT16 gsRenderHeight;
 
 
-extern const INT16 gsVIEWPORT_START_X;
-extern const INT16 gsVIEWPORT_START_Y;
-extern INT16       gsVIEWPORT_WINDOW_START_Y;
-
 extern INT16 gsRenderCenterX;
 extern INT16 gsRenderCenterY;
 extern INT16 gsRenderWorldOffsetX;

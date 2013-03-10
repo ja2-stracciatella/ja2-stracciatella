@@ -108,9 +108,14 @@ void UILayout::recalculatePositions()
   m_progress_bar_box.set(STD_SCREEN_X + 5, 2, MIN_INTERFACE_WIDTH - 10, 12);
   m_moneyButtonLoc.set(343, startInvY + 11);
 
+  m_VIEWPORT_START_X            = 0;
+  m_VIEWPORT_START_Y            = 0;
+  m_VIEWPORT_WINDOW_START_Y     = 0;
   m_VIEWPORT_END_X              = m_screenWidth;
   m_VIEWPORT_END_Y              = m_screenHeight - 120;
   m_VIEWPORT_WINDOW_END_Y       = m_screenHeight - 120;
+  m_tacticalMapCenterX          = (m_VIEWPORT_END_X - m_VIEWPORT_START_X) / 2;
+  m_tacticalMapCenterY          = (m_VIEWPORT_END_Y - m_VIEWPORT_START_Y) / 2;
 
   m_wordlClippingRect.set(0, 0, m_screenWidth, m_screenHeight - 120);
 

@@ -271,8 +271,8 @@ static void GetLevelNodeScreenRect(LEVELNODE const& n, SGPRect& rect, INT16 cons
 		pTrav = &te->hTileSurface->SubregionProperties(te->usRegionIndex);
 	}
 
-	INT16 sScreenX = ((gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2) + (INT16)sTempX_S;
-	INT16 sScreenY = ((gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2) + (INT16)sTempY_S;
+	INT16 sScreenX = (g_ui.m_tacticalMapCenterX) + (INT16)sTempX_S;
+	INT16 sScreenY = (g_ui.m_tacticalMapCenterY) + (INT16)sTempY_S;
 
 	// Adjust for offset position on screen
 	sScreenX -= gsRenderWorldOffsetX;

@@ -380,8 +380,8 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX,
 	FLOAT dTempY_S;
 	FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
-	INT16 sMercScreenX = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-	INT16 sMercScreenY = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S;
+	INT16 sMercScreenX = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
+	INT16 sMercScreenY = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S;
 
 	// Adjust starting screen coordinates
 	sMercScreenX -= gsRenderWorldOffsetX;
@@ -546,8 +546,8 @@ void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
-		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)dTempX_S;
-		sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S;
+		sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)dTempX_S;
+		sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)dTempY_S;
 
 		// Adjust starting screen coordinates
 		sScreenX	-= gsRenderWorldOffsetX;

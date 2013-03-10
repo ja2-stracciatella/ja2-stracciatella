@@ -164,8 +164,8 @@ void RenderAccumulatedBurstLocations( )
 			// Calculate guy's position
 			FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
-			sXPos = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)dTempX_S;
-			sYPos = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S - gpWorldLevelData[ sGridNo ].sHeight;
+			sXPos = ( g_ui.m_tacticalMapCenterX ) + (INT16)dTempX_S;
+			sYPos = ( g_ui.m_tacticalMapCenterY ) + (INT16)dTempY_S - gpWorldLevelData[ sGridNo ].sHeight;
 
 			// Adjust for offset position on screen
 			sXPos -= gsRenderWorldOffsetX;

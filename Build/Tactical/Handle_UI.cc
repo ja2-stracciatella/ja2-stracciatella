@@ -3992,8 +3992,8 @@ static void GetGridNoScreenXY(INT16 sGridNo, INT16* pScreenX, INT16* pScreenY)
 
 	FromCellToScreenCoordinates( sOffsetX, sOffsetY, &sTempX_S, &sTempY_S );
 
-	sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)sTempX_S;
-	sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)sTempY_S;
+	sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)sTempX_S;
+	sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)sTempY_S;
 
 	// Adjust for offset position on screen
 	sScreenX -= gsRenderWorldOffsetX;
