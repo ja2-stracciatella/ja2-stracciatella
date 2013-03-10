@@ -482,6 +482,18 @@ void DetermineItemsScrolling()
 static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* pusQuantity);
 
 
+static void drawItemWithOutline(INT16 min_idx, INT16 end_idx, INT16 scroll_idx, INT16 itemIndex, INT16 const outline)
+{
+  if (min_idx <= itemIndex && itemIndex < end_idx)
+  {
+    INT16   const  x    = (itemIndex / 2 - scroll_idx) * 60 + 110;
+    INT16   const  y    = EDITOR_TASKBAR_POS_Y + (itemIndex % 2) * 40;
+    INVTYPE const& item = Item[eInfo.pusItemIndex[itemIndex]];
+    DrawItemCentered(item, FRAME_BUFFER, x, y + 2, outline);
+  }
+}
+
+
 void RenderEditorItemsInfo()
 {
 	if (!eInfo.fActive) return;
@@ -505,22 +517,8 @@ void RenderEditorItemsInfo()
 	// Draw the hilighted and selected items if applicable.
 	if (eInfo.pusItemIndex)
 	{
-		INT16 const highlighted = eInfo.sHilitedItemIndex;
-		if (min_idx <= highlighted && highlighted < end_idx)
-		{
-			INT16   const  x    = (highlighted / 2 - scroll_idx) * 60 + 110;
-			INT16   const  y    = EDITOR_TASKBAR_POS_Y + (highlighted % 2) * 40;
-			INVTYPE const& item = Item[eInfo.pusItemIndex[highlighted]];
-			DrawItemCentered(item, FRAME_BUFFER, x, y + 2, Get16BPPColor(FROMRGB(250, 250, 0)));
-		}
-		INT16 const selected = eInfo.sSelItemIndex;
-		if (min_idx <= selected && selected < end_idx)
-		{
-			INT16   const  x    = (selected / 2 - scroll_idx) * 60 + 110;
-			INT16   const  y    = EDITOR_TASKBAR_POS_Y + selected % 2 * 40;
-			INVTYPE const& item = Item[eInfo.pusItemIndex[selected]];
-			DrawItemCentered(item, FRAME_BUFFER, x, y + 2, Get16BPPColor(FROMRGB(250, 0, 0)));
-		}
+    drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sHilitedItemIndex, Get16BPPColor(FROMRGB(250, 250, 0)));
+    drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sSelItemIndex,     Get16BPPColor(FROMRGB(250, 0, 0)));
 	}
 
 	// Draw the numbers of each visible item that currently resides in the world.
