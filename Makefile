@@ -88,6 +88,7 @@ CFLAGS += -I Build/Utils
 CFLAGS += -I Build/TileEngine
 CFLAGS += -I Build/TacticalAI
 CFLAGS += -I sgp
+CFLAGS += -I _build/lib-MicroIni/include
 
 #CFLAGS += -Wall
 #CFLAGS += -W
@@ -98,6 +99,7 @@ CFLAGS += -Wunused-variable
 CFLAGS += -Wwrite-strings
 
 CFLAGS += -DJA2
+CFLAGS += -DMICROINI_STATIC
 
 
 ifdef WITH_DEMO
@@ -488,6 +490,11 @@ SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
 
+SRCS += _build/lib-MicroIni/src/MicroIni/File.cpp
+SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp
+SRCS += _build/lib-MicroIni/src/MicroIni/Section.cpp
+SRCS += _build/lib-MicroIni/src/MicroIni/Value.cpp
+
 LNGS :=
 LNGS += Build/Utils/_DutchText.cc
 LNGS += Build/Utils/_EnglishText.cc
@@ -499,11 +506,11 @@ LNGS += Build/Utils/_RussianText.cc
 
 SRCS += $(LNGS)
 
-OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
+OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))
 DEPS = $(OBJS:.o=.d)
 
 .SUFFIXES:
-.SUFFIXES: .c .cc .d .o
+.SUFFIXES: .c .cc .cpp .d .o
 
 Q ?= @
 
@@ -520,6 +527,10 @@ $(BINARY): $(OBJS)
 	$(Q)$(CC) $(CCFLAGS) -c -MMD -o $@ $<
 
 .cc.o:
+	@echo '===> CXX $<'
+	$(Q)$(CXX) $(CXXFLAGS) -c -MMD -o $@ $<
+
+.cpp.o:
 	@echo '===> CXX $<'
 	$(Q)$(CXX) $(CXXFLAGS) -c -MMD -o $@ $<
 

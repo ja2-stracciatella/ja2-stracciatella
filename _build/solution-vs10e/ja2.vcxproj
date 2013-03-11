@@ -50,8 +50,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JA2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JA2;MICROINI_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -413,6 +413,13 @@
     <ClCompile Include="..\..\sgp\VObject.cc" />
     <ClCompile Include="..\..\sgp\VObject_Blitters.cc" />
     <ClCompile Include="..\..\sgp\VSurface.cc" />
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\File.cpp" />
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\Line.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\line_microini</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\line_microini</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\Section.cpp" />
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\Value.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h" />
@@ -781,10 +788,20 @@
     <ClInclude Include="..\..\sgp\VObject_Blitters.h" />
     <ClInclude Include="..\..\sgp\VSurface.h" />
     <ClInclude Include="..\..\sgp\WCheck.h" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Config.hpp" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Container.hpp" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\File.hpp" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Line.hpp" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\MicroIni.hpp" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Properties.hpp" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Section.hpp" />
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Value.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Build\Libraries.inc" />
     <None Include="..\..\Build\Res\jagged3.ico" />
+    <None Include="..\lib-MicroIni\include\MicroIni\Container.inl" />
+    <None Include="..\lib-MicroIni\include\MicroIni\Value.inl" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\lib-SDL-devel-1.2.15-VC\lib\x86\SDL.lib" />
