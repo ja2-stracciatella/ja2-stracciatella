@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "Config.h"
 #include "Directories.h"
 #include "FileMan.h"
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "PODObj.h"
 #include "Logger.h"
+#include "MicroIni/MicroIni.hpp"
 
 #if _WIN32
 #include <shlobj.h>
@@ -157,7 +157,7 @@ static std::string s_configFolderPath;
 static std::string s_configPath;
 static std::string s_gameResRootPath;
 
-static void TellAboutDataDir(const char* ConfigFile)
+static void WriteDefaultConfigFile(const char* ConfigFile)
 {
 	FILE* const IniFile = fopen(ConfigFile, "a");
 	if (IniFile != NULL)
@@ -264,18 +264,16 @@ void InitializeFileManager(void)
 // 	SetBinDataDirFromBundle();
 // #endif
 
-  ConfigEntry* BinDataDir = ConfigRegisterKey("data_dir");
-
   s_configPath = FileMan::joinPaths(s_configFolderPath, "ja2.ini");
-	if (ConfigParseFile(s_configPath.c_str()))
-	{
-		fprintf(stderr, "WARNING: Could not open configuration file (\"%s\").\n", s_configPath.c_str());
-    // create default config and read it again
-    TellAboutDataDir(s_configPath.c_str());
-    ConfigParseFile(s_configPath.c_str());
+  MicroIni::File configFile;
+  if(!configFile.load(s_configPath) || !configFile[""].has("data_dir"))
+  {
+    LOG_WARNING("WARNING: Could not open configuration file (\"%s\").\n", s_configPath.c_str());
+    WriteDefaultConfigFile(s_configPath.c_str());
+    configFile.load(s_configPath);
   }
 
-  s_gameResRootPath = ConfigGetValue(BinDataDir);
+  s_gameResRootPath = configFile[""]["data_dir"];
 
   findDataDirs();
 
