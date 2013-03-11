@@ -43,6 +43,9 @@
     <Filter Include="Libraries">
       <UniqueIdentifier>{792ca79f-e946-4e60-8a0e-8dc28d53b168}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\MicroIni">
+      <UniqueIdentifier>{9cd0f503-019e-4f91-b869-fce081118da2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Build\AniViewScreen.cc">
@@ -121,9 +124,6 @@
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgp\Button_System.cc">
-      <Filter>Source Files\sgp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sgp\Config.cc">
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgp\Container.cc">
@@ -1053,6 +1053,18 @@
     <ClCompile Include="..\..\sgp\StrUtils.cc">
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\File.cpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\Line.cpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\Section.cpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-MicroIni\src\MicroIni\Value.cpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -1158,9 +1170,6 @@
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sgp\Button_System.h">
-      <Filter>Source Files\sgp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sgp\Config.h">
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sgp\Container.h">
@@ -2153,6 +2162,30 @@
     <ClInclude Include="..\..\sgp\Exceptions.h">
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Config.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Container.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\File.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Line.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\MicroIni.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Properties.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Section.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-MicroIni\include\MicroIni\Value.hpp">
+      <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Build\Libraries.inc">
@@ -2160,6 +2193,12 @@
     </None>
     <None Include="..\..\Build\Res\jagged3.ico">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\lib-MicroIni\include\MicroIni\Container.inl">
+      <Filter>Libraries\MicroIni</Filter>
+    </None>
+    <None Include="..\lib-MicroIni\include\MicroIni\Value.inl">
+      <Filter>Libraries\MicroIni</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
