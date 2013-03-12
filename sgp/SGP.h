@@ -6,4 +6,7 @@
 
 extern BOOLEAN		gfProgramIsRunning; // Turn this to FALSE to exit program
 
+/** Check if shutdown in progress. */
+bool isShutdownInProgress();
+
 #endif

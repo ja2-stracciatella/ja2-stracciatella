@@ -336,18 +336,24 @@ catch (...)
 	return Failure("ERROR: caught unhandled unknown exception");
 }
 
+static bool s_shutdownInProgress = FALSE;
+
+
+/** Check if shutdown in progress. */
+bool isShutdownInProgress()
+{
+  return s_shutdownInProgress;
+}
 
 static void SGPExit(void)
 {
-	static BOOLEAN fAlreadyExiting = FALSE;
-
 	// helps prevent heap crashes when multiple assertions occur and call us
-	if ( fAlreadyExiting )
+	if ( s_shutdownInProgress )
 	{
 		return;
 	}
 
-	fAlreadyExiting = TRUE;
+	s_shutdownInProgress = true;
 	gfProgramIsRunning = FALSE;
 
 	ShutdownStandardGamingPlatform();
