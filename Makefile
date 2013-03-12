@@ -564,21 +564,40 @@ fix-permissions:
 	chmod +x _build/solution-vs10e/Debug/exe/SDL.dll
 	chmod +x _build/solution-vs10e/Release/exe/SDL.dll
 
-RELEASE_BASE_DIR := "release-win-mingw-cross"
-RELEASE_NAME := "ja2-$(GAME_VERSION)"
-RELEASE := $(RELEASE_BASE_DIR)/$(RELEASE_NAME)
-RELEASE_ZIP := $(RELEASE_BASE_DIR)/$(RELEASE_NAME).zip
+WIN_RELEASE_BASE_DIR := "release-win-mingw-cross"
+WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win"
+WIN_RELEASE := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME)
+WIN_RELEASE_ZIP := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME).zip
+
+MAC_RELEASE_BASE_DIR := "release-mac"
+MAC_RELEASE_NAME := "ja2-$(GAME_VERSION)-macos"
+MAC_RELEASE := $(MAC_RELEASE_BASE_DIR)/$(MAC_RELEASE_NAME)
+MAC_RELEASE_ZIP := $(MAC_RELEASE_BASE_DIR)/$(MAC_RELEASE_NAME).zip
 
 build-win-release-on-linux:
-	-rm -rf $(RELEASE) $(RELEASE_ZIP)
-	mkdir -p $(RELEASE)
+	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
+	mkdir -p $(WIN_RELEASE)
 	make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
-	mv ./ja2 $(RELEASE)/ja2.exe
-	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(RELEASE)
-	cp _build/distr-files-win/*.bat $(RELEASE)
-	cp _build/distr-files-win/*.txt $(RELEASE)
-	cp Changelog $(RELEASE)/Changelog.txt
-	cd $(RELEASE_BASE_DIR) && zip -r $(RELEASE_NAME).zip $(RELEASE_NAME)
+	mv ./ja2 $(WIN_RELEASE)/ja2.exe
+	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(WIN_RELEASE)
+	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
+	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
+	cp Changelog $(WIN_RELEASE)/Changelog.txt
+	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
+
+# Building release on MAC
+# Using static linking with SDL since it is quite difficult for
+# end users to setup the library.  LGPL allows static linking
+# if we provide source codes for our application.
+build-release-on-mac:
+	-rm -rf $(MAC_RELEASE) $(MAC_RELEASE_ZIP)
+	mkdir -p $(MAC_RELEASE)
+	make "CFLAGS_SDL=$(shell $(SDL_CONFIG) --cflags)" "LDFLAGS_SDL=$(shell $(SDL_CONFIG) --static-libs)"
+	mv ./ja2 $(MAC_RELEASE)/ja2
+	cp _build/distr-files-mac/*.command $(MAC_RELEASE)
+	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
+	cp Changelog $(MAC_RELEASE)/Changelog.txt
+	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
 
 build-on-win:
 	PATH=/cygdrive/c/MinGW/bin:$$PATH make all USE_MINGW=1 MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
