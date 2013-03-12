@@ -440,7 +440,7 @@ struct LanguageRes
 extern const LanguageRes* g_langRes;
 
 /* -------------------------------------------------------------------------------------------- */
-/* below are defines that helps to keep original source code in tact
+/* below are defines that helps to keep original source code in tact                            */
 /* -------------------------------------------------------------------------------------------- */
 
 #define AmmoCaliber                                         (g_langRes->AmmoCaliber)
