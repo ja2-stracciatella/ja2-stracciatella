@@ -17,6 +17,7 @@ extern SGPVSurface* g_back_buffer;
 extern SGPVSurface* g_frame_buffer;
 extern SGPVSurface* g_mouse_buffer;
 
+extern void FreeSDLSurface(SDL_Surface *surface);
 
 class SGPVSurface
 {
@@ -55,7 +56,7 @@ class SGPVSurface
 		friend void BltStretchVideoSurface(SGPVSurface* dst, SGPVSurface const* src, SGPBox const* src_rect, SGPBox const* dst_rect);
 
 	private:
-		SGP::AutoObj<SDL_Surface, SDL_FreeSurface> surface_;
+		SGP::AutoObj<SDL_Surface, FreeSDLSurface>  surface_;
 		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits

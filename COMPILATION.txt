@@ -57,8 +57,8 @@ Build release for distribution
     $ make build-win-release-on-linux
 
 
-Build project on Mac OS 10.6
-----------------------------
+Build project on Mac OS 10.6 - 10.8
+-----------------------------------
 
   Install Xcode and Xcode command line tools.
 
@@ -67,7 +67,15 @@ Build project on Mac OS 10.6
     $ curl -O http://www.libsdl.org/release/SDL-1.2.15.tar.gz
     $ tar -xzf SDL-1.2.15.tar.gz
     $ cd SDL-1.2.15
-    $ ./configure
+
+    On Mac OS 10.6 execute:
+
+      $ ./configure
+
+    On Mac OS 10.7 - 10.8:
+
+      $ ./configure --without-x
+
     $ make
     $ sudo make install
 
@@ -75,34 +83,6 @@ Build project on Mac OS 10.6
 
     $ make clean
     $ make all
-
-
-Build project on Mac OS 10.7, 10.8
-----------------------------------
-
-  Install Xcode and Xcode command line tools.
-
-  Install Mercurial (http://mercurial.selenic.com/downloads)
-
-  Install Autoconf (only for Mac OS 10.8)
-
-    Mac OS X Mountain Lion doesn't include autoconf anymore.
-    Let's install homebrew package manager and then autoconf.
-
-      $ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
-      $ brew install autoconf
-
-  Get latest SDL 1.2 source codes from the developer's repository.
-
-    $ hg clone -u SDL-1.2 http://hg.libsdl.org/SDL SDL-1.2
-
-  Compile and install SDL library.
-
-    $ cd SDL-1.2
-    $ ./autogen.sh
-    $ ./configure --without-x
-    $ make
-    $ sudo make install
 
 
 Build project on Windows using Visual Studio 2010 Express
