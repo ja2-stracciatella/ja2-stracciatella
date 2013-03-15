@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		3414BCBC16EAA5840024378C /* GameState.cc in Sources */ = {isa = PBXBuildFile; fileRef = 3414BCBA16EAA5840024378C /* GameState.cc */; };
 		342E148416E3E927007960D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342E148316E3E927007960D8 /* Cocoa.framework */; };
+		348691D516F3C5C1005AB7FE /* StrUtils.cc in Sources */ = {isa = PBXBuildFile; fileRef = 348691D416F3C5C1005AB7FE /* StrUtils.cc */; };
+		3486923716F3C71B005AB7FE /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3486922A16F3C71B005AB7FE /* File.cpp */; };
+		3486923A16F3C71B005AB7FE /* Line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3486922D16F3C71B005AB7FE /* Line.cpp */; };
+		3486923D16F3C71B005AB7FE /* Section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3486923016F3C71B005AB7FE /* Section.cpp */; };
+		3486924016F3C71B005AB7FE /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3486923316F3C71B005AB7FE /* Value.cpp */; };
 		C38ACC5716E4AA68003D6872 /* AniViewScreen.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38AC9DD16E4AA66003D6872 /* AniViewScreen.cc */; };
 		C38ACC5816E4AA68003D6872 /* Cheats.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38AC9DF16E4AA66003D6872 /* Cheats.cc */; };
 		C38ACC5916E4AA68003D6872 /* Credits.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38AC9E116E4AA66003D6872 /* Credits.cc */; };
@@ -316,7 +321,6 @@
 		C38ACD8716E4AA68003D6872 /* WordWrap.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC5516E4AA68003D6872 /* WordWrap.cc */; };
 		C38ACDD216E4AA84003D6872 /* Button_Sound_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD8B16E4AA84003D6872 /* Button_Sound_Control.cc */; };
 		C38ACDD316E4AA84003D6872 /* Button_System.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD8D16E4AA84003D6872 /* Button_System.cc */; };
-		C38ACDD416E4AA84003D6872 /* Config.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD8F16E4AA84003D6872 /* Config.cc */; };
 		C38ACDD516E4AA84003D6872 /* Container.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD9116E4AA84003D6872 /* Container.cc */; };
 		C38ACDD616E4AA84003D6872 /* Cursor_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD9316E4AA84003D6872 /* Cursor_Control.cc */; };
 		C38ACDD716E4AA84003D6872 /* Debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD9516E4AA84003D6872 /* Debug.cc */; };
@@ -362,6 +366,22 @@
 		3414BCBB16EAA5840024378C /* GameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameState.h; sourceTree = "<group>"; };
 		342E148316E3E927007960D8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		342EF61B16E3E2D3007960D8 /* JA2-Stracciatella */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "JA2-Stracciatella"; sourceTree = BUILT_PRODUCTS_DIR; };
+		348691D316F3C575005AB7FE /* StrUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrUtils.h; sourceTree = "<group>"; };
+		348691D416F3C5C1005AB7FE /* StrUtils.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrUtils.cc; sourceTree = "<group>"; };
+		3486921A16F3C71B005AB7FE /* Config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Config.hpp; path = include/MicroIni/Config.hpp; sourceTree = "<group>"; };
+		3486921B16F3C71B005AB7FE /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Container.hpp; path = include/MicroIni/Container.hpp; sourceTree = "<group>"; };
+		3486921C16F3C71B005AB7FE /* Container.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Container.inl; path = include/MicroIni/Container.inl; sourceTree = "<group>"; };
+		3486921D16F3C71B005AB7FE /* File.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = File.hpp; path = include/MicroIni/File.hpp; sourceTree = "<group>"; };
+		3486921E16F3C71B005AB7FE /* Line.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Line.hpp; path = include/MicroIni/Line.hpp; sourceTree = "<group>"; };
+		3486921F16F3C71B005AB7FE /* MicroIni.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MicroIni.hpp; path = include/MicroIni/MicroIni.hpp; sourceTree = "<group>"; };
+		3486922016F3C71B005AB7FE /* Properties.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Properties.hpp; path = include/MicroIni/Properties.hpp; sourceTree = "<group>"; };
+		3486922116F3C71B005AB7FE /* Section.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Section.hpp; path = include/MicroIni/Section.hpp; sourceTree = "<group>"; };
+		3486922216F3C71B005AB7FE /* Value.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Value.hpp; path = include/MicroIni/Value.hpp; sourceTree = "<group>"; };
+		3486922316F3C71B005AB7FE /* Value.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Value.inl; path = include/MicroIni/Value.inl; sourceTree = "<group>"; };
+		3486922A16F3C71B005AB7FE /* File.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = File.cpp; path = src/MicroIni/File.cpp; sourceTree = "<group>"; };
+		3486922D16F3C71B005AB7FE /* Line.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Line.cpp; path = src/MicroIni/Line.cpp; sourceTree = "<group>"; };
+		3486923016F3C71B005AB7FE /* Section.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Section.cpp; path = src/MicroIni/Section.cpp; sourceTree = "<group>"; };
+		3486923316F3C71B005AB7FE /* Value.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Value.cpp; path = src/MicroIni/Value.cpp; sourceTree = "<group>"; };
 		C38AC9DD16E4AA66003D6872 /* AniViewScreen.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AniViewScreen.cc; sourceTree = "<group>"; };
 		C38AC9DE16E4AA66003D6872 /* AniViewScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AniViewScreen.h; sourceTree = "<group>"; };
 		C38AC9DF16E4AA66003D6872 /* Cheats.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cheats.cc; sourceTree = "<group>"; };
@@ -995,8 +1015,6 @@
 		C38ACD8C16E4AA84003D6872 /* Button_Sound_Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button_Sound_Control.h; sourceTree = "<group>"; };
 		C38ACD8D16E4AA84003D6872 /* Button_System.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Button_System.cc; sourceTree = "<group>"; };
 		C38ACD8E16E4AA84003D6872 /* Button_System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button_System.h; sourceTree = "<group>"; };
-		C38ACD8F16E4AA84003D6872 /* Config.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cc; sourceTree = "<group>"; };
-		C38ACD9016E4AA84003D6872 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		C38ACD9116E4AA84003D6872 /* Container.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Container.cc; sourceTree = "<group>"; };
 		C38ACD9216E4AA84003D6872 /* Container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Container.h; sourceTree = "<group>"; };
 		C38ACD9316E4AA84003D6872 /* Cursor_Control.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cursor_Control.cc; sourceTree = "<group>"; };
@@ -1158,6 +1176,8 @@
 		342E141816E3E485007960D8 /* sgp */ = {
 			isa = PBXGroup;
 			children = (
+				348691D416F3C5C1005AB7FE /* StrUtils.cc */,
+				348691D316F3C575005AB7FE /* StrUtils.h */,
 				C38ACD8816E4AA84003D6872 /* AutoObj.h */,
 				C38ACD8916E4AA84003D6872 /* AutoPtr.h */,
 				C38ACD8A16E4AA84003D6872 /* Buffer.h */,
@@ -1165,8 +1185,6 @@
 				C38ACD8C16E4AA84003D6872 /* Button_Sound_Control.h */,
 				C38ACD8D16E4AA84003D6872 /* Button_System.cc */,
 				C38ACD8E16E4AA84003D6872 /* Button_System.h */,
-				C38ACD8F16E4AA84003D6872 /* Config.cc */,
-				C38ACD9016E4AA84003D6872 /* Config.h */,
 				C38ACD9116E4AA84003D6872 /* Container.cc */,
 				C38ACD9216E4AA84003D6872 /* Container.h */,
 				C38ACD9316E4AA84003D6872 /* Cursor_Control.cc */,
@@ -1240,6 +1258,7 @@
 		342EF61016E3E2D2007960D8 = {
 			isa = PBXGroup;
 			children = (
+				3486924316F3D5AF005AB7FE /* Libraries */,
 				342E148316E3E927007960D8 /* Cocoa.framework */,
 				342EF61E16E3E2D3007960D8 /* JA2-Stracciatella */,
 				342EF61C16E3E2D3007960D8 /* Products */,
@@ -1257,11 +1276,57 @@
 		342EF61E16E3E2D3007960D8 /* JA2-Stracciatella */ = {
 			isa = PBXGroup;
 			children = (
+				34FBB47116F3BB9500AB5695 /* Libraries */,
 				342E141816E3E485007960D8 /* sgp */,
 				342E106C16E3E46A007960D8 /* Build */,
 			);
 			path = "JA2-Stracciatella";
 			sourceTree = SOURCE_ROOT;
+		};
+		348691D616F3C5E3005AB7FE /* MicroIni */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = MicroIni;
+			sourceTree = "<group>";
+		};
+		3486920D16F3C71B005AB7FE /* MicroIni */ = {
+			isa = PBXGroup;
+			children = (
+				3486922A16F3C71B005AB7FE /* File.cpp */,
+				3486922D16F3C71B005AB7FE /* Line.cpp */,
+				3486923016F3C71B005AB7FE /* Section.cpp */,
+				3486923316F3C71B005AB7FE /* Value.cpp */,
+				3486921A16F3C71B005AB7FE /* Config.hpp */,
+				3486921B16F3C71B005AB7FE /* Container.hpp */,
+				3486921C16F3C71B005AB7FE /* Container.inl */,
+				3486921D16F3C71B005AB7FE /* File.hpp */,
+				3486921E16F3C71B005AB7FE /* Line.hpp */,
+				3486921F16F3C71B005AB7FE /* MicroIni.hpp */,
+				3486922016F3C71B005AB7FE /* Properties.hpp */,
+				3486922116F3C71B005AB7FE /* Section.hpp */,
+				3486922216F3C71B005AB7FE /* Value.hpp */,
+				3486922316F3C71B005AB7FE /* Value.inl */,
+			);
+			name = MicroIni;
+			path = "../lib-MicroIni";
+			sourceTree = "<group>";
+		};
+		3486924316F3D5AF005AB7FE /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				3486920D16F3C71B005AB7FE /* MicroIni */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		34FBB47116F3BB9500AB5695 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				348691D616F3C5E3005AB7FE /* MicroIni */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
 		};
 		C38AC9E416E4AA66003D6872 /* Editor */ = {
 			isa = PBXGroup;
@@ -2245,7 +2310,6 @@
 				C38ACD8716E4AA68003D6872 /* WordWrap.cc in Sources */,
 				C38ACDD216E4AA84003D6872 /* Button_Sound_Control.cc in Sources */,
 				C38ACDD316E4AA84003D6872 /* Button_System.cc in Sources */,
-				C38ACDD416E4AA84003D6872 /* Config.cc in Sources */,
 				C38ACDD516E4AA84003D6872 /* Container.cc in Sources */,
 				C38ACDD616E4AA84003D6872 /* Cursor_Control.cc in Sources */,
 				C38ACDD716E4AA84003D6872 /* Debug.cc in Sources */,
@@ -2273,6 +2337,11 @@
 				C38ACDED16E4AA84003D6872 /* VSurface.cc in Sources */,
 				C3F10F5E16E7388F00F79C78 /* UILayout.cc in Sources */,
 				3414BCBC16EAA5840024378C /* GameState.cc in Sources */,
+				348691D516F3C5C1005AB7FE /* StrUtils.cc in Sources */,
+				3486923716F3C71B005AB7FE /* File.cpp in Sources */,
+				3486923A16F3C71B005AB7FE /* Line.cpp in Sources */,
+				3486923D16F3C71B005AB7FE /* Section.cpp in Sources */,
+				3486924016F3C71B005AB7FE /* Value.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2345,7 +2414,10 @@
 					_THREAD_SAFE,
 					"_GNU_SOURCE=1",
 				);
-				HEADER_SEARCH_PATHS = /usr/local/include/SDL;
+				HEADER_SEARCH_PATHS = (
+					"../lib-MicroIni/include",
+					/usr/local/include/SDL,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
@@ -2365,7 +2437,10 @@
 					_THREAD_SAFE,
 					"_GNU_SOURCE=1",
 				);
-				HEADER_SEARCH_PATHS = /usr/local/include/SDL;
+				HEADER_SEARCH_PATHS = (
+					"../lib-MicroIni/include",
+					/usr/local/include/SDL,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
