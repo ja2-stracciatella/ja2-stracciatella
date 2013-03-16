@@ -751,7 +751,7 @@ static void GetRGBDistribution()
 	UINT32          const  b = f.Bmask;
 
 	/* Mask the highest bit of each component. This is used for alpha blending. */
-	guiTranslucentMask = r & r >> 1 | g & g >> 1 | b & b >> 1;
+	guiTranslucentMask = (r & r >> 1) | (g & g >> 1) | (b & b >> 1);
 
 	gusRedMask   = r;
 	gusGreenMask = g;
