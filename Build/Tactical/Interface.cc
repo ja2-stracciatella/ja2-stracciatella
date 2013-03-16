@@ -280,6 +280,8 @@ void ShutdownCurrentPanel( )
 			case TEAM_PANEL:
 				ShutdownTEAMPanel( );
 				break;
+            default:
+                break;
 		}
 
 		gfPanelAllocated = FALSE;
@@ -306,6 +308,8 @@ void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s)
 	{
 		case SM_PANEL:   gSelectSMPanelToMerc = s;  break;
 		case TEAM_PANEL: SetTEAMPanelCurrentMerc(); break;
+        default:
+            break;
 	}
 }
 
@@ -316,6 +320,8 @@ void CreateCurrentTacticalPanelButtons(void)
 	{
 		case SM_PANEL:   CreateSMPanelButtons();   break;
 		case TEAM_PANEL: CreateTEAMPanelButtons(); break;
+        default:
+            break;
 	}
 }
 
@@ -345,6 +351,8 @@ void RemoveCurrentTacticalPanelButtons(void)
 	{
 		case SM_PANEL:   RemoveSMPanelButtons();   break;
 		case TEAM_PANEL: RemoveTEAMPanelButtons(); break;
+        default:
+            break;
 	}
 }
 

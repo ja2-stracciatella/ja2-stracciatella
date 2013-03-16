@@ -5924,6 +5924,8 @@ no_sub:
 		{
 			case BATTLE_SOUND_OK1:   battle_snd_id = BATTLE_SOUND_LOWMARALE_OK1;   break;
 			case BATTLE_SOUND_ATTN1: battle_snd_id = BATTLE_SOUND_LOWMARALE_ATTN1; break;
+            default:
+                break;
 		}
 	}
 

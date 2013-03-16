@@ -241,6 +241,8 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		case SAVE_LOAD_SCREEN:
 			gfRedrawSaveLoadScreen = TRUE;
 			break;
+        default:
+            break;
 	}
 
 	InitSaveGameFilePosition(ubSaveGameID);

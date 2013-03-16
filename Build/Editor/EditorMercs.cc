@@ -1432,6 +1432,8 @@ static void ChangeBodyType(INT8 const offset)
 			case JEEP:
 			case TANK_NW:
 			case TANK_NE:            s.uiStatusFlags |= SOLDIER_VEHICLE; break;
+            default:
+                break;
 		}
 		SetSoldierAnimationSurface(&s, s.usAnimState);
 	}

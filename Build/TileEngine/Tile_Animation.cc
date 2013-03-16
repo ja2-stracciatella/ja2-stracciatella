@@ -103,6 +103,8 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 		case ANI_ROOF_LEVEL:    ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);       break;
 		case ANI_ONROOF_LEVEL:  ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);     break;
 		case ANI_TOPMOST_LEVEL: ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);    break;
+        default:
+            break;
 	}
 
 	// set flags for levelnode

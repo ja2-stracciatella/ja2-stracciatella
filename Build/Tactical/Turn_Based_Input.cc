@@ -253,6 +253,8 @@ static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 
 							}
 							break;
+                        default:
+                            break;
 					}
 				}
 				if ( gfUIWaitingForUserSpeechAdvance )
@@ -277,19 +279,9 @@ static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 							fIgnoreLeftUp = FALSE;
 						}
 						break;
+                default:
+                    break;
 			}
-
-			// IF HERE, DO A CLICK-HOLD IF IN INTERVAL
-			if ( COUNTERDONE( LMOUSECLICK_DELAY_COUNTER ) && !fClickHoldIntercepted )
-			{
-				// Switch on UI mode
-				switch( gCurrentUIMode )
-				{
-
-				}
-			}
-
-
 		}
 		else
 		{
@@ -306,6 +298,8 @@ static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 							// If button has come up, change to mocve mode
 							*puiNewEvent = PADJ_ADJUST_STANCE;
 							break;
+                        default:
+                            break;
 					}
 
 					// CHECK IF WE CLICKED-HELD
@@ -339,6 +333,8 @@ static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 								}
 								break;
 							}
+                            default:
+                                break;
 						}
 
 					}
@@ -495,6 +491,8 @@ static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 													*puiNewEvent = A_CHANGE_TO_MOVE;
 													break;
 
+                                                default:
+                                                    break;
 												}
 										}
 									}
@@ -596,6 +594,8 @@ static void QueryTBRightButton(UIEventKind* const puiNewEvent)
 									fClickHoldIntercepted = TRUE;
 								}
 								break;
+                            default:
+                                break;
 						}
 					}
 				}
@@ -645,6 +645,8 @@ static void QueryTBRightButton(UIEventKind* const puiNewEvent)
 										 *puiNewEvent = M_CYCLE_MOVEMENT;
 										 break;
 									 }
+                                    default:
+                                        break;
 								}
 
 								// ATE: Added cancel of burst mode....
@@ -720,6 +722,8 @@ static void QueryTBRightButton(UIEventKind* const puiNewEvent)
 										EndMenuEvent( guiCurrentEvent );
 										fClickIntercepted = TRUE;
 										break;
+                                    default:
+                                        break;
 
 								}
 							}
@@ -999,6 +1003,8 @@ void GetTBMousePositionInput(UIEventKind* const puiNewEvent)
 				*puiNewEvent = HC_ON_TERRAIN;
 				break;
 
+            default:
+                break;
 		}
 
 		usOldMapPos = usMapPos;
@@ -1048,6 +1054,8 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 					gfPlotNewMovement = TRUE;
 				}
 				break;
+        default:
+            break;
 	}
 
 	// CHECK FOR ALT
@@ -1082,6 +1090,8 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 					fAltDown = FALSE;
 				}
 				break;
+        default:
+            break;
 	}
 
 	// Check realtime input!
@@ -2174,6 +2184,8 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 
 				HandleOpenDoorMenuKeys( &InputEvent, puiNewEvent );
 				continue;
+            default:
+                break;
 		}
 
 
@@ -2681,6 +2693,8 @@ static void ChangeSoldiersBodyType(SoldierBodyType const ubBodyType, BOOLEAN con
 				sel->inv[HANDPOS].usItem = MINIMI;
 				sel->bVehicleID = AddVehicleToList(sel->sSectorX, sel->sSectorY, sel->bSectorZ, HUMMER);
 				break;
+            default:
+                break;
 		}
 	}
 }

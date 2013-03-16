@@ -3781,6 +3781,8 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 			case NOISE_SILENT_ALARM:
 				bTellPlayer = FALSE;
 				break;
+            default:
+                break;
 		}
 
 		// if noise was made by a person

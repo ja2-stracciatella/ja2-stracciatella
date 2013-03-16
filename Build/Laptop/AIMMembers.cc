@@ -1526,6 +1526,8 @@ static BOOLEAN DeleteAimPopUpBox()
 	{
 		case AIM_VIDEO_HIRE_MERC_MODE:              EnableDisableCurrentVideoConferenceButtons(FALSE); break;
 		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE: EnableButton(giAnsweringMachineButton[1]);         break;
+        default:
+            break;
 	}
 
 	return TRUE;

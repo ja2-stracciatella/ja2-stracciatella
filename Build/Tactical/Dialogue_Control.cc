@@ -858,6 +858,8 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI: DisplayTextForSpeckVideoPopUp(                   zQuoteStr); break;
 			case DIALOGUE_EXTERNAL_NPC_UI:       DisplayTextForExternalNPC(       ubCharacterNum, zQuoteStr); break;
 			case DIALOGUE_SHOPKEEPER_UI:         InitShopKeeperSubTitledText(                     zQuoteStr); break;
+            default:
+                break;
 		}
 	}
 
@@ -869,6 +871,8 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 			case DIALOGUE_CONTACTPAGE_UI:        break;
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI: break;
 			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(f); break;
+            default:
+                break;
 		}
 	}
 }
@@ -1238,6 +1242,8 @@ void HandleDialogueEnd(FACETYPE& f)
 				}
 
 			break;
+            default:
+                break;
 		}
 	}
 
@@ -1291,9 +1297,8 @@ void HandleDialogueEnd(FACETYPE& f)
 
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
 				break;
-
-
-
+            default:
+                break;
 		}
 	}
 

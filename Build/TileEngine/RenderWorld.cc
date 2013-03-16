@@ -970,6 +970,8 @@ zlevel_topmost:
 												OneCDirection(s.bDirection);
 										}
 										break;
+                                    default:
+                                        break;
 								}
 
 								// IF we are not active, or are a placeholder for multi-tile animations do nothing
@@ -1143,6 +1145,8 @@ zlevel_topmost:
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
 								break;
 							}
+                            default:
+                                break;
 						}
 
 						// Adjust for interface level

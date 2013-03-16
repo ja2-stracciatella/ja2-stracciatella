@@ -3722,6 +3722,8 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 			ChangeSelectedMapSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 			StopTimeCompression();
 			break;
+        default:
+            break;
 	}
 	fMapPanelDirty        = TRUE;
 	fMapScreenBottomDirty = TRUE;

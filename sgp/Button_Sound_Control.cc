@@ -45,6 +45,8 @@ void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme scheme)
 			//PALEDIT_SCREEN,
 			//DEBUG_SCREEN,
 			//SEX_SCREEN,
+            default:
+                break;
 		}
 	}
 #endif

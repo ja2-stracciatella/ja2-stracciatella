@@ -770,5 +770,7 @@ static void StatAtZeroBoxCallBack(MessageBoxReturnValue const bExitValue)
 			fHasAnySlidingBarMoved = TRUE;
 			MarkButtonsDirty();
 			break;
+        default:
+            break;
 	}
 }

@@ -551,6 +551,8 @@ ScreenID HandleTacticalUI(void)
 				case ACTION_MODE:
 					ErasePath();
 					break;
+                default:
+                    break;
 			}
 
 		}

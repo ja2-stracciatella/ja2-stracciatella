@@ -297,6 +297,8 @@ void DoTaskbar(void)
 		case TASK_OPTIONS:
 			UnclickEditorButton( TAB_OPTIONS );
 			break;
+        default:
+            break;
 	}
 
 	//Setup the new tab mode
@@ -368,6 +370,8 @@ void DoTaskbar(void)
 			iDrawMode           = DRAW_MODE_NOTHING;
 			TerrainTileDrawMode = TERRAIN_TILES_NODRAW;
 			break;
+        default:
+            break;
 	}
 }
 
@@ -803,6 +807,8 @@ static void RenderEditorInfo(void)
 				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
 			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 450, 70, 60, 30);
 			break;
+        default:
+            break;
 	}
 }
 
