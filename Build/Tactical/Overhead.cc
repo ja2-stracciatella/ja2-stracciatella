@@ -5152,7 +5152,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 				// Are we in sector.....
 				if (s.bInSector)
 				{
-					if (s.bLife != 0 && s.bLife < OKLIFE || AM_AN_EPC(&s) || AM_A_ROBOT(&s))
+					if ((s.bLife != 0 && s.bLife < OKLIFE) || AM_AN_EPC(&s) || AM_A_ROBOT(&s))
 					{
 						// Captured EPCs or ROBOTS will be kiiled in capture routine....
 						if ( !fDoCapture )

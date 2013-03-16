@@ -704,8 +704,8 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 		if ( pStruct->usIndex != NO_TILE )
 		{
 			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
-			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
-					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
+			if ( (uiTileType >= FIRSTWALL && uiTileType <= LASTWALL) ||
+					 (uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR) )
 			{
 				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
@@ -726,8 +726,8 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 		if ( pStruct->usIndex != NO_TILE )
 		{
 			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
-			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
-					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
+			if ( (uiTileType >= FIRSTWALL && uiTileType <= LASTWALL) ||
+					 (uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR) )
 			{
 				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
 				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
@@ -862,25 +862,25 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 		if( y == top )
 		{
 			fFloor = FloorAtGridNo( iMapIndex - WORLD_COLS );
-			if( gfBasement && !fFloor || !gfBasement && fFloor && !GetHorizontalWall( iMapIndex - WORLD_COLS ) )
+			if( (gfBasement && !fFloor) || (!gfBasement && fFloor && !GetHorizontalWall( iMapIndex - WORLD_COLS )) )
 				BuildWallPiece( iMapIndex, EXTERIOR_TOP, 0 );
 		}
 		if( y == bottom )
 		{
 			fFloor = FloorAtGridNo( iMapIndex + WORLD_COLS );
-			if( gfBasement && !fFloor || !gfBasement && fFloor && !GetHorizontalWall( iMapIndex ) )
+			if( (gfBasement && !fFloor) || (!gfBasement && fFloor && !GetHorizontalWall( iMapIndex )) )
 				BuildWallPiece( iMapIndex, EXTERIOR_BOTTOM, 0 );
 		}
 		if( x == left )
 		{
 			fFloor = FloorAtGridNo( iMapIndex - 1 );
-			if( gfBasement && !fFloor || !gfBasement && fFloor && !GetVerticalWall( iMapIndex - 1 ) )
+			if( (gfBasement && !fFloor) || (!gfBasement && fFloor && !GetVerticalWall( iMapIndex - 1 )) )
 				BuildWallPiece( iMapIndex, EXTERIOR_LEFT, 0 );
 		}
 		if( x == right )
 		{
 			fFloor = FloorAtGridNo( iMapIndex + 1);
-			if( gfBasement && !fFloor || !gfBasement && fFloor && !GetVerticalWall( iMapIndex ) )
+			if( (gfBasement && !fFloor) || (!gfBasement && fFloor && !GetVerticalWall( iMapIndex )) )
 				BuildWallPiece( iMapIndex, EXTERIOR_RIGHT, 0 );
 		}
 	}
@@ -902,7 +902,7 @@ void RemoveBuildingSectionFromWorld( SGPRect *pSelectRegion )
 		iMapIndex = y * WORLD_COLS + x;
 		if( y == top - 1 || y == bottom + 1 || x == left - 1 || x == right + 1 )
 		{
-			if( !gfBasement && FloorAtGridNo( iMapIndex ) || gfBasement && !FloorAtGridNo( iMapIndex ) )
+			if( (!gfBasement && FloorAtGridNo( iMapIndex )) || (gfBasement && !FloorAtGridNo( iMapIndex )) )
 			{
 				RebuildRoof( iMapIndex, 0 );
 			}

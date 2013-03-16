@@ -1866,8 +1866,8 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 			{
 				//Wake up the queen now, if she hasn't woken up already.
 				WakeUpQueen();
-				if( pGroup->ubSectorX == 9 && pGroup->ubSectorY == 1 ||
-						pGroup->ubSectorX == 3 && pGroup->ubSectorY == 16 )
+				if( (pGroup->ubSectorX == 9 && pGroup->ubSectorY == 1) ||
+						(pGroup->ubSectorX == 3 && pGroup->ubSectorY == 16) )
 				{
 					SendGroupToPool( &pGroup );
 					if( !pGroup )

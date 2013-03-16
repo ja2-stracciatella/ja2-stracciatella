@@ -3627,7 +3627,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
   if ((iDefRating > 0) && (pDefender->bBreath < 100))
     iDefRating -= (iDefRating * (100 - pDefender->bBreath)) / 200;
 
-	if ( usInHand == CREATURE_QUEEN_TENTACLES && pDefender->ubBodyType == LARVAE_MONSTER || pDefender->ubBodyType == INFANT_MONSTER )
+	if ( (usInHand == CREATURE_QUEEN_TENTACLES && pDefender->ubBodyType == LARVAE_MONSTER) || pDefender->ubBodyType == INFANT_MONSTER )
 	{
 		// try to prevent queen from killing the kids, ever!
 		iDefRating += 10000;

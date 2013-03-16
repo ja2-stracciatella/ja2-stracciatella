@@ -1228,7 +1228,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 		// Handle buddy beginning to move...
 		// check new gridno, etc
 		// ATE: Added: Make check that old anim is not a moving one as well
-		if ( gAnimControl[ usNewState ].uiFlags & ANIM_MOVING && !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_MOVING ) || ( gAnimControl[ usNewState ].uiFlags & ANIM_MOVING && fForce ) )
+		if ( (gAnimControl[ usNewState ].uiFlags & ANIM_MOVING && !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_MOVING )) || ( gAnimControl[ usNewState ].uiFlags & ANIM_MOVING && fForce ) )
 		{
 			BOOLEAN fKeepMoving;
 
@@ -1976,7 +1976,7 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 		}
 
 		//JA2Gold: If the player wants the merc to cast the fake light AND it is night
-		if (s.bTeam != OUR_TEAM || gGameSettings.fOptions[TOPTION_MERC_CASTS_LIGHT] && NightTime())
+		if (s.bTeam != OUR_TEAM || (gGameSettings.fOptions[TOPTION_MERC_CASTS_LIGHT] && NightTime()))
 		{
 			MAP_ELEMENT const& m     = gpWorldLevelData[new_grid_no];
 			LEVELNODE   const& other = s.bLevel > 0 && m.pRoofHead ? *m.pRoofHead : *m.pLandHead;

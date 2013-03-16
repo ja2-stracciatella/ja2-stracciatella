@@ -131,7 +131,7 @@ ScreenID ErrorScreenHandle(void)
   {
       if( InputEvent.usEvent == KEY_DOWN )
 			{
-				if (InputEvent.usParam == SDLK_ESCAPE || InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN)
+				if (InputEvent.usParam == SDLK_ESCAPE || (InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN))
 				{ // Exit the program
 					DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "GameLoop: User pressed ESCape, TERMINATING");
 

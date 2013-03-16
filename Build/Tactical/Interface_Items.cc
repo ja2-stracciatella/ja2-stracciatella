@@ -3079,7 +3079,7 @@ void DrawItemTileCursor( )
 			}
 
 			// If we are tossing...
-			if (  sDist <= 1 && gfUIMouseOnValidCatcher == 0 || gfUIMouseOnValidCatcher == 4 )
+			if (  (sDist <= 1 && gfUIMouseOnValidCatcher == 0) || gfUIMouseOnValidCatcher == 4 )
 			{
 				gsCurrentActionPoints = AP_PICKUP_ITEM;
 			}

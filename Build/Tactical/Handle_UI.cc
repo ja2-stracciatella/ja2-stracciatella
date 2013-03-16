@@ -3026,7 +3026,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 	INT8							bReturnCode = 0;
 	BOOLEAN						fPlot;
 
-	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) || _KeyDown( SHIFT ) )
+	if ( ((gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED )) || _KeyDown( SHIFT ) )
 	{
 		fPlot = PLOT;
 	}

@@ -2345,7 +2345,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
     if((scrollType == ScrollType_Horizontal)
        && (((sTempRenderCenterX < gsRenderCenterX) && !fOutLeft)                /** moving left */
-           || (sTempRenderCenterX > gsRenderCenterX) && !fOutRight))            /** moving right */
+           || ((sTempRenderCenterX > gsRenderCenterX) && !fOutRight)))            /** moving right */
     {
       // can move
       fScrollGood = TRUE;
@@ -2353,7 +2353,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
     if((scrollType == ScrollType_Vertical)
        && (((sTempRenderCenterY < gsRenderCenterY) && !fOutTop)
-           || (sTempRenderCenterY > gsRenderCenterY) && !fOutBottom))
+           || ((sTempRenderCenterY > gsRenderCenterY) && !fOutBottom)))
     {
       // can move
       fScrollGood = TRUE;

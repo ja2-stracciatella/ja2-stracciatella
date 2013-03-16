@@ -854,7 +854,7 @@ void ProcessEditorRendering()
 			RenderSelectedItemBlownUp();
 		if( iCurrentTaskbar == TASK_MAPINFO )
 			RenderMapEntryPointsAndLights();
-		if( iDrawMode == DRAW_MODE_PLACE_ITEM && eInfo.uiItemType == TBAR_MODE_ITEM_KEYS ||
+		if( (iDrawMode == DRAW_MODE_PLACE_ITEM && eInfo.uiItemType == TBAR_MODE_ITEM_KEYS) ||
 			  iDrawMode == DRAW_MODE_DOORKEYS )
 			RenderDoorLockInfo();
 	}

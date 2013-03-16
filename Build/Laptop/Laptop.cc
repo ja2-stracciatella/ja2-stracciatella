@@ -3184,8 +3184,8 @@ static void HandleWWWSubSites(void)
 	visited = true; // Set fact we were here
 
 	//Dont show the dlownload screen when switching between these pages
-	if (guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS              && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX ||
-			guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS)
+	if ((guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS              && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX) ||
+			(guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS))
 	{
 		fFastLoadFlag = FALSE;
 		fLoadPendingFlag = FALSE;

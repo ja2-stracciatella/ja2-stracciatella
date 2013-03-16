@@ -2733,7 +2733,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 		// ADJUST BASED ON ITEM IN HAND....
 		usItem = pSoldier->inv[ HANDPOS ].usItem;
 
-		if ( !(Item[ usItem ].usItemClass == IC_GUN ) && !(Item[ usItem ].usItemClass == IC_LAUNCHER ) || usItem == ROCKET_LAUNCHER )
+		if ( (!(Item[ usItem ].usItemClass == IC_GUN ) && !(Item[ usItem ].usItemClass == IC_LAUNCHER )) || usItem == ROCKET_LAUNCHER )
 		{
 			if ( usAnimState == STANDING )
 			{
