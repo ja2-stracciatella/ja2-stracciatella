@@ -2382,7 +2382,7 @@ static void PreProcessEmail(Email* const m)
 	else
 	{
 		// more than one page
-		for (Record* i; i = GetFirstRecordOnThisPage(start, page); ++page)
+		for (Record* i; (i = GetFirstRecordOnThisPage(start, page)); ++page)
 		{
 			EmailPageInfoStruct& info = pEmailPageInfo[page];
 			info.pFirstRecord = i;

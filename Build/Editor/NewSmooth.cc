@@ -415,7 +415,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, INTERIOR_BOTTOMEND_SHADOW_INDEX);
 				AddExclusiveShadow( iMapIndex - 1, usTileIndex );
 			}
-			if ( pStruct = GetVerticalWall( iMapIndex ) ) //right corner
+			if ( (pStruct = GetVerticalWall( iMapIndex )) ) //right corner
 			{	//Special case where placing the new wall will generate a corner to the right, so replace
 				//the vertical piece with a bottomend.
 				sIndex = PickAWallPiece( EXTERIOR_BOTTOMEND );
@@ -472,7 +472,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			iMapIndex -= WORLD_COLS;
 			ubWallClass = INTERIOR_L;
 			//check for a lower left corner.
-			if( pStruct = GetVerticalWall( iMapIndex + WORLD_COLS - 1 ) )
+			if( ((pStruct = GetVerticalWall( iMapIndex + WORLD_COLS - 1 ))) )
 			{	//Replace the piece with an extended piece.
 				sIndex = PickAWallPiece( INTERIOR_EXTENDED );
 				AddToUndoList( iMapIndex + WORLD_COLS - 1 );
@@ -480,7 +480,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 				ReplaceStructIndex( iMapIndex + WORLD_COLS - 1, pStruct->usIndex, usTileIndex );
 				//NOTE:  Not yet checking for interior extended bottomend!
 			}
-			if( pStruct = GetVerticalWall( iMapIndex ) )
+			if( (pStruct = GetVerticalWall( iMapIndex )) )
 			{
 				sIndex = PickAWallPiece( INTERIOR_BOTTOMEND );
 				AddToUndoList( iMapIndex );
@@ -490,7 +490,7 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 			break;
 		case INTERIOR_BOTTOM:
 			ubWallClass = EXTERIOR_L;
-			if( pStruct = GetVerticalWall( iMapIndex ) ) //right corner
+			if( (pStruct = GetVerticalWall( iMapIndex )) ) //right corner
 			{	//Special case where placing the new wall will generate a corner to the right, so replace
 				//the vertical piece with a bottomend.
 				sIndex = PickAWallPiece( EXTERIOR_BOTTOMEND );
