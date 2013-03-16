@@ -5,6 +5,10 @@
 #include "TopicIDs.h"
 
 
+/** Flag telling to print FPS (Frames per second) counter. */
+#define DEBUG_PRINT_FPS         (0)
+
+
 #if defined ( SGP_DEBUG ) || defined ( FORCE_ASSERTS_ON )
 
 // If DEBUG_ is defined, we need to initialize all the debug macros. Otherwise all the

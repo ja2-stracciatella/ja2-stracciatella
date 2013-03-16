@@ -1,3 +1,4 @@
+#include <ctime>
 #include <stdexcept>
 
 #include "Debug.h"
@@ -534,6 +535,25 @@ static void SnapshotSmall(void);
 void RefreshScreen(void)
 {
 	if (guiVideoManagerState != VIDEO_ON) return;
+
+#if DEBUG_PRINT_FPS
+  {
+    static int32_t prevSecond = 0;
+    static int32_t fps = 0;
+
+    int32_t currentSecond = time(NULL);
+    if(currentSecond != prevSecond)
+    {
+      printf("fps: %d\n", fps);
+      fps = 0;
+      prevSecond = currentSecond;
+    }
+    else
+    {
+      fps++;
+    }
+  }
+#endif
 
 	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
 
