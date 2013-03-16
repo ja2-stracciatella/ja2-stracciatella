@@ -2432,7 +2432,7 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 
 	// if the item is imprinted (by anyone, even player's mercs), and it's Fredo repairing it
 	if ( /*( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].Info.ubImprintID == (NO_PROFILE + 1) ) && */
-		 ( gbSelectedArmsDealerID == ARMS_DEALER_FREDO ) )
+		 gbSelectedArmsDealerID == ARMS_DEALER_FREDO )
 	{
 		// then reset the imprinting!
 		RepairItem.ItemObject.ubImprintID = NO_PROFILE;

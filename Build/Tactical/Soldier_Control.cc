@@ -2710,7 +2710,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		else if ( ubSpecial == FIRE_WEAPON_BLINDED_BY_SPIT_SPECIAL )
 		{
 			// blinded!!
-			if ( (pSoldier->bBlindedCounter == 0)  )
+			if ( pSoldier->bBlindedCounter == 0 )
 			{
 				// say quote
 				if (pSoldier->uiStatusFlags & SOLDIER_PC)

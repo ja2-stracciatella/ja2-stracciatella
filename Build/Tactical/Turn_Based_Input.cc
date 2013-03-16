@@ -2050,7 +2050,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			continue;
 		}
 
-		if ( (InputEvent.usEvent == KEY_DOWN ) )
+		if ( InputEvent.usEvent == KEY_DOWN )
 		{
 			if (g_ui_message_overlay != NULL)
 			{

@@ -235,7 +235,7 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 		  switch( InputEvent.usParam )
 			{
 				case SDLK_RETURN:
-					if(( InputEvent.usEvent == KEY_UP ) )
+					if(InputEvent.usEvent == KEY_UP)
 					{
 						// return hit, check to see if current player activation string is a valid one
 						ProcessPlayerInputActivationString( );

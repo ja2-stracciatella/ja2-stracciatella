@@ -2008,7 +2008,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		}
 		iDamage = BulletImpact(pFirer, &tgt, ubHitLocation, iImpact, sHitBy, &ubSpecial);
 		// handle hit here...
-		if( ( pFirer->bTeam == 0 ) )
+		if( pFirer->bTeam == 0 )
 		{
 			gMercProfiles[ pFirer->ubProfile ].usShotsHit++;
 		}

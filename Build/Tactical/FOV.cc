@@ -190,7 +190,7 @@ static INT32 GetFreeSlantRoof(void)
 
 	for(uiCount=0; uiCount < guiNumSlantRoofs; uiCount++)
 	{
-		if(( gSlantRoofData[uiCount].fAllocated==FALSE ) )
+		if( gSlantRoofData[uiCount].fAllocated==FALSE  )
 			return( (INT32)uiCount );
 	}
 

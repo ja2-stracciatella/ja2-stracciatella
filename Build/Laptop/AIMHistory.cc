@@ -409,11 +409,11 @@ static void DisableAimHistoryButton(void)
 {
 	if (gfExitingAimHistory) return;
 
-	if( (gubCurPageNum == 0 ) )
+	if( gubCurPageNum == 0  )
 	{
 		guiHistoryMenuButton[0]->uiFlags |= BUTTON_CLICKED_ON;
 	}
-	else if(  ( gubCurPageNum == 5) )
+	else if(   gubCurPageNum == 5 )
 	{
 		guiHistoryMenuButton[AIM_HISTORY_MENU_BUTTON_AMOUNT - 1]->uiFlags |= BUTTON_CLICKED_ON;
 	}
