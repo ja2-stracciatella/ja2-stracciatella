@@ -337,7 +337,7 @@ void BuildSelectedListFromAToB( INT8 bA, INT8 bB )
 
 	// run through list and set all intermediaries to true
 
-	for( bStart; bStart <= bEnd; bStart++ )
+	for( ; bStart <= bEnd; bStart++ )
 	{
 		SetEntryInSelectedCharacterList( bStart );
 	}
