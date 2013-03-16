@@ -186,8 +186,8 @@ static RenderFlags gRenderFlags = RENDER_FLAG_NONE;
 static SGPRect gOldClipRect;
 INT16   gsRenderCenterX;
 INT16   gsRenderCenterY;
-INT16   gsRenderWorldOffsetX = -1;
-INT16   gsRenderWorldOffsetY = -1;
+INT16   gsRenderWorldOffsetX = 0;
+INT16   gsRenderWorldOffsetY = 10;
 
 
 struct RenderFXType
@@ -5655,11 +5655,6 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 		gsStartPointY_S -= sOffsetY_S;
 	}
 	gsStartPointX_S -= sOffsetX_S;
-
-
-	// Set globals for render offset
-	if (gsRenderWorldOffsetX == -1) gsRenderWorldOffsetX = sOffsetX_S;
-	if (gsRenderWorldOffsetY == -1) gsRenderWorldOffsetY = sOffsetY_S;
 
 	/////////////////////////////////////////
 	//ATE: CALCULATE LARGER OFFSET VALUES
