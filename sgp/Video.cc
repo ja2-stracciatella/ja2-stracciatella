@@ -21,6 +21,7 @@
 #include <stdarg.h>
 #include "UILayout.h"
 #include "PlatformIO.h"
+#include "PlatformSDL.h"
 
 
 #define BUFFER_READY      0x00
@@ -532,6 +533,36 @@ static void TakeScreenshot()
 static void SnapshotSmall(void);
 
 
+static inline int16_t maxFunc(int16_t a, int16_t b)
+{
+  return (a > b) ? a : b;
+}
+
+/** @brief Join two rectangles.
+ *
+ * Add rectangle `newRect` to rectangle `result`, so `result` will
+ * contain inside itself the original rectangle and new one. */
+static void joinInRectangle(SDL_Rect &result, const SDL_Rect &newRect)
+{
+  if((newRect.w != 0) && (newRect.h != 0))
+  {
+    if((result.w == 0) && (result.h == 0))
+    {
+      // special case: empty rectangle
+      result = newRect;
+    }
+    else
+    {
+      int16_t X2 = maxFunc(result.x + result.w, newRect.x + newRect.w);
+      int16_t Y2 = maxFunc(result.y + result.h, newRect.y + newRect.h);
+      result.x = MIN(result.x, newRect.x);
+      result.y = MIN(result.y, newRect.y);
+      result.w = X2 - result.x;
+      result.h = Y2 - result.y;
+    }
+  }
+}
+
 void RefreshScreen(void)
 {
 	if (guiVideoManagerState != VIDEO_ON) return;
@@ -619,6 +650,10 @@ void RefreshScreen(void)
 		gfPrintFrameBuffer = FALSE;
 	}
 
+#if EXPENSIVE_SDL_UPDATE_RECT
+  SDL_Rect combinedRect = {0, 0, 0, 0};
+#endif
+
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 	SDL_Rect src;
@@ -630,8 +665,15 @@ void RefreshScreen(void)
 	dst.x = MousePos.iX - gsMouseCursorXOffset;
 	dst.y = MousePos.iY - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
-	SDL_UpdateRects(ScreenBuffer, 1, &dst);
-	SDL_UpdateRects(ScreenBuffer, 1, &MouseBackground);
+
+#if EXPENSIVE_SDL_UPDATE_RECT
+  joinInRectangle(combinedRect, dst);
+  joinInRectangle(combinedRect, MouseBackground);
+#else
+  SDL_UpdateRects(ScreenBuffer, 1, &dst);
+  SDL_UpdateRects(ScreenBuffer, 1, &MouseBackground);
+#endif
+
 	MouseBackground = dst;
 
 	if (gfForceFullScreenRefresh)
@@ -640,7 +682,14 @@ void RefreshScreen(void)
 	}
 	else
 	{
+#if EXPENSIVE_SDL_UPDATE_RECT
+    for(int i = 0; i < guiDirtyRegionCount; i++)
+    {
+      joinInRectangle(combinedRect, DirtyRegions[i]);
+    }
+#else
 		SDL_UpdateRects(ScreenBuffer, guiDirtyRegionCount, DirtyRegions);
+#endif
 
 		for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
 		{
@@ -652,9 +701,20 @@ void RefreshScreen(void)
 					continue;
 				}
 			}
+#if EXPENSIVE_SDL_UPDATE_RECT
+      joinInRectangle(combinedRect, *r);
+#else
 			SDL_UpdateRects(ScreenBuffer, 1, r);
+#endif
 		}
 	}
+
+#if EXPENSIVE_SDL_UPDATE_RECT
+  if((combinedRect.w != 0) && (combinedRect.h != 0))
+  {
+    SDL_UpdateRects(ScreenBuffer, 1, &combinedRect);
+  }
+#endif
 
 	gfForceFullScreenRefresh = FALSE;
 	guiDirtyRegionCount = 0;
