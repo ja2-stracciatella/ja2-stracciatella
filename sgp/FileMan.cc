@@ -526,7 +526,7 @@ UINT32 FileGetSize(const HWFILE f)
 		{
 			throw std::runtime_error("Getting file size failed");
 		}
-		return sb.st_size;
+		return (UINT32)sb.st_size;
 	}
 	else
 	{

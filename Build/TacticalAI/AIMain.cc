@@ -1167,7 +1167,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 					ActionDone(pSoldier);
 				}
 
-				//*** TRICK- TAKE INTO ACCOUNT PAUSED FOR NO TIME ( FOR NOW )
+				// *** TRICK- TAKE INTO ACCOUNT PAUSED FOR NO TIME ( FOR NOW )
 				if (pSoldier->fNoAPToFinishMove)
 				//if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL && pSoldier->fNoAPToFinishMove)
 				{
