@@ -165,6 +165,7 @@ void ReplacePath(char* const buf, size_t const size, char const* path, char cons
 				break;
 
 			case '/':
+			case '\\':
 				base    = i + 1;
 				old_ext = 0;
 				break;
