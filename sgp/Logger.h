@@ -43,13 +43,5 @@ enum
 #endif
 
 /************************************************************
- * Special logging (independent of general logging)
- ***********************************************************/
-
-/* If you are interested in some specific logs - uncomment values of the
- * relevant macroses. */
-#define LOG__FILE_OPEN                  /* printf */
-
-/************************************************************
  *
  ***********************************************************/

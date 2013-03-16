@@ -407,7 +407,9 @@ HWFILE FileMan::openForReadingSmart(const char* filename, bool useSmartLookup)
         // let's try libraries
         if (OpenFileFromLibrary(filename, &libFile))
         {
-          LOG__FILE_OPEN("Opened file (from library ): %s\n", filename);
+#if DEBUG_PRINT_OPENING_FILES
+          LOG_INFO("Opened file (from library ): %s\n", filename);
+#endif
           SGPFile *file = MALLOCZ(SGPFile);
           file->flags = SGPFILE_NONE;
           file->u.lib = libFile;
@@ -416,12 +418,16 @@ HWFILE FileMan::openForReadingSmart(const char* filename, bool useSmartLookup)
       }
       else
       {
-        LOG__FILE_OPEN("Opened file (from data dir): %s\n", filename);
+#if DEBUG_PRINT_OPENING_FILES
+        LOG_INFO("Opened file (from data dir): %s\n", filename);
+#endif
       }
     }
     else
     {
-      LOG__FILE_OPEN("Opened file (current dir  ): %s\n", filename);
+#if DEBUG_PRINT_OPENING_FILES
+      LOG_INFO("Opened file (current dir  ): %s\n", filename);
+#endif
     }
   }
 
