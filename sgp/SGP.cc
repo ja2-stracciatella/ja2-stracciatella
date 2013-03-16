@@ -35,6 +35,7 @@
 #include "Logger.h"
 #include "GameState.h"
 #include "Exceptions.h"
+#include "Timer.h"
 
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -49,6 +50,13 @@
 #ifdef JA2
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif
+
+
+/**
+ * Number of milliseconds for one game cycle.
+ * 25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen
+ * is updated on every cycle). */
+#define MS_PER_GAME_CYCLE               (25)
 
 
 static BOOLEAN gfApplicationActive;
@@ -256,8 +264,22 @@ static void MainLoop()
 		{
 			if (gfApplicationActive)
 			{
+        UINT32 gameCycleMS = GetClock();
+#if DEBUG_PRINT_GAME_CYCLE_TIME
+        UINT32 totalGameCycleMS = gameCycleMS;
+#endif
 				GameLoop();
-				SDL_Delay(1); // XXX HACK0001
+        gameCycleMS = GetClock() - gameCycleMS;
+
+        if(gameCycleMS < MS_PER_GAME_CYCLE)
+        {
+          SDL_Delay(MS_PER_GAME_CYCLE - gameCycleMS);
+        }
+
+#if DEBUG_PRINT_GAME_CYCLE_TIME
+        totalGameCycleMS = GetClock() - totalGameCycleMS;
+        printf("game cycle: %4d %4d\n", gameCycleMS, totalGameCycleMS);
+#endif
 			}
 			else
 			{
