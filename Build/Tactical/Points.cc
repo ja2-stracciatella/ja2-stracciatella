@@ -1675,16 +1675,6 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 	{
 		SOLDIERTYPE const* const tgt = FindSoldier(gridno, FIND_SOLDIER_GRIDNO);
 		if (tgt) gridno = tgt->sGridNo; // On a guy, get his gridno
-
-		if (add_turning_cost)
-		{ // Get a direction and see if we need to turn
-			UINT8 const direction = GetDirectionFromGridNo(gridno, &s);
-			if (direction != s.bDirection) /* ap += GetAPsToLook(&s) */;
-		}
-	}
-	else
-	{ // Assume we need to add cost!
-		// ap += GetAPsToLook(&s);
 	}
 
 	// if attacking a new target (or if the specific target is uncertain)
