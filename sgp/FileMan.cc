@@ -757,8 +757,6 @@ std::string FileMan::joinPaths(const char *first, const char *second)
   return joinPaths(std::string(first), second);
 }
 
-#if CASE_SENSITIVE_FS
-
 /** Join two path components. */
 void FileMan::joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize)
 {
@@ -769,6 +767,8 @@ void FileMan::joinPaths(const char *first, const char *second, char *outputBuf, 
   }
   strncat(outputBuf, second, outputBufSize);
 }
+
+#if CASE_SENSITIVE_FS
 
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.

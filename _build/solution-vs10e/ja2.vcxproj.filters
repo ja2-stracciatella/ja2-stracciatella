@@ -46,6 +46,9 @@
     <Filter Include="Libraries\MicroIni">
       <UniqueIdentifier>{9cd0f503-019e-4f91-b869-fce081118da2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\gtest">
+      <UniqueIdentifier>{f09dd230-2d9f-444f-8bcf-d0ccb2d5f4bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Build\AniViewScreen.cc">
@@ -1064,6 +1067,33 @@
     </ClCompile>
     <ClCompile Include="..\lib-MicroIni\src\MicroIni\Value.cpp">
       <Filter>Libraries\MicroIni</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-gtest\src\gtest.cc">
+      <Filter>Libraries\gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-gtest\src\gtest-death-test.cc">
+      <Filter>Libraries\gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-gtest\src\gtest-filepath.cc">
+      <Filter>Libraries\gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-gtest\src\gtest-port.cc">
+      <Filter>Libraries\gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-gtest\src\gtest-printers.cc">
+      <Filter>Libraries\gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-gtest\src\gtest-test-part.cc">
+      <Filter>Libraries\gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-gtest\src\gtest-typed-test.cc">
+      <Filter>Libraries\gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\FileMan_unittest.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\SGPStrings_unittest.cc">
+      <Filter>Source Files\sgp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2185,6 +2215,9 @@
     </ClInclude>
     <ClInclude Include="..\lib-MicroIni\include\MicroIni\Value.hpp">
       <Filter>Libraries\MicroIni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-gtest\src\gtest-internal-inl.h">
+      <Filter>Libraries\gtest</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
