@@ -151,7 +151,7 @@ static inline UINT32 Corpse2ID(const ROTTING_CORPSE* const c)
 {
 	Assert(gRottingCorpse <= c && c < endof(gRottingCorpse));
 	Assert(c->fActivated);
-	return c - gRottingCorpse;
+	return (UINT32)(c - gRottingCorpse);
 }
 
 static inline ROTTING_CORPSE* ID2Corpse(const UINT32 id)

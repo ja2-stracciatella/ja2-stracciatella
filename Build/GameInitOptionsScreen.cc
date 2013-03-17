@@ -258,7 +258,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 
 static void MakeCheckBoxes(GUIButtonRef* const btns, size_t const n, INT16 const x, INT16 y, GUI_CALLBACK const click, size_t const def)
 {
-	for (size_t i = 0; i != n; y += GIO_GAP_BN_SETTINGS, ++i)
+	for (INT32 i = 0; i != n; y += GIO_GAP_BN_SETTINGS, ++i)
 	{
 		GUIButtonRef const b = CreateCheckBoxButton(x, y, INTERFACEDIR "/optionscheck.sti", MSYS_PRIORITY_HIGH + 10, click);
 		btns[i] = b;

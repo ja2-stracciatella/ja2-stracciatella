@@ -672,7 +672,7 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f)
 
 static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* const s)
 {
-	UINT32 const size = s ? (wcslen(s->pString16) + 1) * sizeof(*s->pString16) : 0;
+	UINT32 const size = s ? ((UINT32)wcslen(s->pString16) + 1) * sizeof(*s->pString16) : 0;
 	FileWrite(f, &size, sizeof(size));
 
 	if (!s) return;

@@ -291,7 +291,7 @@ void InitTacticalPlacementGUI()
 			s->ubStrategicInsertionCode = (UINT8)s->usStrategicInsertionData;
 		}
 
-		size_t const   i = giPlacements++;
+		UINT32 const   i = giPlacements++;
 		MERCPLACEMENT& m = gMercPlacement[i];
 		m.pSoldier                 = s;
 		m.ubStrategicInsertionCode = s->ubStrategicInsertionCode;

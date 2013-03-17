@@ -155,7 +155,7 @@ void EnterAimArchives()
 
 	INT16 x       = AIM_ALUMNI_PAGE1_X;
 	INT16 const y = AIM_ALUMNI_PAGE1_Y;
-	for (size_t i = 0; i < 3; ++i)
+	for (INT32 i = 0; i < 3; ++i)
 	{
 		GUIButtonRef const btn = CreateIconAndTextButton(
 			guiAlumniPageButtonImage, AimAlumniText[i], AIM_ALUMNI_PAGE_FONT,
@@ -233,10 +233,10 @@ void RenderAimArchives()
 	DrawTextToScreen(AimAlumniText[AIM_ALUMNI_ALUMNI], AIM_ALUMNI_TITLE_X, AIM_ALUMNI_TITLE_Y, AIM_ALUMNI_TITLE_WIDTH, AIM_ALUMNI_TITLE_FONT, AIM_ALUMNI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	// Draw the mug shot border and face
-	size_t const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
-	size_t const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
-	size_t       face_idx = start;
-	for (size_t i = 0; i != n_faces; ++i, ++face_idx)
+	INT32 const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
+	INT32 const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	INT32       face_idx = start;
+	for (INT32 i = 0; i != n_faces; ++i, ++face_idx)
 	{
 		INT32 const x = i % AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_X + AIM_ALUMNI_START_GRID_X;
 		INT32 const y = i / AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_Y + AIM_ALUMNI_START_GRID_Y;
@@ -378,9 +378,9 @@ static void InitAlumniFaceRegions(void)
 	if (gfFaceMouseRegionsActive) return;
 	gfFaceMouseRegionsActive = TRUE;
 
-	size_t const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
-	size_t const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
-	size_t       face_idx = start;
+	INT32 const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
+	INT32 const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	INT32       face_idx = start;
 	UINT16 const w        = AIM_ALUMNI_ALUMNI_FACE_WIDTH;
 	UINT16 const h        = AIM_ALUMNI_ALUMNI_FACE_HEIGHT;
 	for (size_t i = 0; i != n_faces; ++i, ++face_idx)

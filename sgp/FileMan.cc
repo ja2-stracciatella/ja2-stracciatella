@@ -455,7 +455,7 @@ extern UINT32 uiTotalFileReadTime;
 extern UINT32 uiTotalFileReadCalls;
 #endif
 
-void FileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
+void FileRead(HWFILE const f, void* const pDest, size_t const uiBytesToRead)
 {
 #ifdef JA2TESTVERSION
 	const UINT32 uiStartTime = GetJA2Clock();
@@ -468,7 +468,7 @@ void FileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
 	}
 	else
 	{
-		ret = LoadDataFromLibrary(&f->u.lib, pDest, uiBytesToRead);
+		ret = LoadDataFromLibrary(&f->u.lib, pDest, (UINT32)uiBytesToRead);
 	}
 
 #ifdef JA2TESTVERSION
@@ -481,7 +481,7 @@ void FileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
 }
 
 
-void FileWrite(HWFILE const f, void const* const pDest, UINT32 const uiBytesToWrite)
+void FileWrite(HWFILE const f, void const* const pDest, size_t const uiBytesToWrite)
 {
 	if (!(f->flags & SGPFILE_REAL)) throw std::logic_error("Tried to write to library file");
 	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
@@ -513,7 +513,7 @@ void FileSeek(HWFILE const f, INT32 distance, FileSeekMode const how)
 
 INT32 FileGetPos(const HWFILE f)
 {
-	return f->flags & SGPFILE_REAL ? ftell(f->u.file) : f->u.lib.uiFilePosInFile;
+	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : f->u.lib.uiFilePosInFile;
 }
 
 
@@ -780,7 +780,7 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
   // if name contains directories, than we have to find actual case-sensitive name of the directory
   // and only then look for a file
   const char *splitter = strstr(name, "/");
-  int dirNameLen = splitter - name;
+  int dirNameLen = (int)(splitter - name);
   if(splitter && (dirNameLen > 0) && splitter[1] != 0)
   {
     // we have directory in the name

@@ -293,7 +293,7 @@ void EnterFloristOrderForm()
 	guiFlowerOrderGalleryButton = MakeButton(sOrderFormText[FLORIST_ORDER_GALLERY], FLOWER_ORDER_GALLERY_BUTTON_X, FLOWER_ORDER_GALLERY_BUTTON_Y, BtnFlowerOrderGalleryButtonCallback);
 
 	// The check box mouse regions
-	for (size_t i = 0; i < lengthof(g_order_check_box_pos); ++i)
+	for (UINT32 i = 0; i < lengthof(g_order_check_box_pos); ++i)
 	{
 		MOUSE_REGION*   const r  = &gSelectedFloristCheckBoxRegion[i];
 		SGPPoint const* const xy = &g_order_check_box_pos[i];

@@ -42,7 +42,7 @@ class SGPVObject
 		// Set the current object shade table
 		void CurrentShade(size_t idx);
 
-		size_t SubregionCount() const { return subregion_count_; }
+		UINT16 SubregionCount() const { return subregion_count_; }
 
 		ETRLEObject const& SubregionProperties(size_t idx) const;
 

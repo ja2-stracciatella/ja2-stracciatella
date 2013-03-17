@@ -285,7 +285,7 @@ UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, 
 		s->uiTimeMin +
 		Random(s->uiTimeMax - s->uiTimeMin);
 
-	return s - pSampleList;
+	return (UINT32)(s - pSampleList);
 }
 
 
@@ -539,7 +539,7 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 {
 	SNDDBG("SMPL \"%s\" from %uHz to %uHz\n", s->pName, s->uiSpeed, s->uiSpeed / 2);
 
-	size_t const n_samples = s->n_samples / 2;
+	UINT32 const n_samples = s->n_samples / 2;
 	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
 	if (ndata == NULL) return FALSE;
 	void*  const odata     = s->pData;

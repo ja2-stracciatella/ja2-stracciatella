@@ -2440,7 +2440,7 @@ static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, con
 
 	wchar_t		pTempString[MAIL_STRING_SIZE];
 	INT32			iCurLocInSourceString=0;
-	INT32			iLengthOfSourceString = wcslen( pFinishedString );		//Get the length of the source string
+	INT32			iLengthOfSourceString = (INT32)wcslen( pFinishedString );		//Get the length of the source string
 	BOOLEAN		fReplacingMercName = TRUE;
 
 	//Copy the original string over to the temp string
@@ -2496,7 +2496,7 @@ static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, con
 		// if there is a substring
 		if( pSubString != NULL )
 		{
-			INT32 iLength = pSubString - &pTempString[iCurLocInSourceString];
+			INT32 iLength = (INT32)(pSubString - &pTempString[iCurLocInSourceString]);
 
 			//Copy the part of the source string upto the keyword
 			wcsncat( pFinishedString, &pTempString[ iCurLocInSourceString ], iLength );

@@ -2113,7 +2113,7 @@ void DirtyTopMessage( )
 static UINT32 CalcUIMessageDuration(const wchar_t* wString)
 {
 	// base + X per letter
-	return( 1000 + 50 * wcslen( wString ) );
+	return( 1000 + 50 * (UINT32)wcslen( wString ) );
 }
 
 

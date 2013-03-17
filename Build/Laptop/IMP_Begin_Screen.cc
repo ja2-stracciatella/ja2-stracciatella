@@ -110,8 +110,8 @@ void EnterIMPBeginScreen( void )
 	{
 	  wcscpy( pFullNameString, pFullName );
 	  wcscpy( pNickNameString, pNickName );
-		uiFullNameCharacterPosition = wcslen( pFullNameString );
-    uiNickNameCharacterPosition = wcslen( pNickNameString );
+		uiFullNameCharacterPosition = (UINT32)wcslen( pFullNameString );
+    uiNickNameCharacterPosition = (UINT32)wcslen( pNickNameString );
 	  uiFullNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pFullNameString, FONT14ARIAL );
     uiNickNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pNickNameString, FONT14ARIAL );
 

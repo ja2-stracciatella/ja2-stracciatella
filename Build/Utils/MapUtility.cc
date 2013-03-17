@@ -260,7 +260,7 @@ ScreenID MapUtilScreenHandle()
 		}
 
 		// Remove extension
-		for ( cnt = strlen( zFilename )-1; cnt >=0; cnt-- )
+		for ( cnt = (INT32)strlen( zFilename )-1; cnt >=0; cnt-- )
 		{
 			if ( zFilename[ cnt ] == '.' )
 			{

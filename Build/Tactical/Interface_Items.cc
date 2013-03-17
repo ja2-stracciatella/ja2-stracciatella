@@ -679,7 +679,7 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 	MSYS_DefineRegion(&gSMInvCamoRegion, x, y, x + CAMO_REGION_WIDTH, y + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCamoCallback, INVClickCamoCallback);
 
 	// Add regions for inventory slots
-	for (size_t i = 0; i != NUM_INV_SLOTS; ++i)
+	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
 	{ // Set inventory pocket coordinates from the table passed in
 		INT16       const  x = pRegionDesc[i].sX;
 		INT16       const  y = pRegionDesc[i].sY;
@@ -5356,7 +5356,7 @@ void LoadInterfaceItemsGraphics()
 
 	/* Build a sawtooth black-white-black colour gradient */
 	size_t const length = lengthof(us16BPPItemCyclePlacedItemColors);
-	for (size_t i = 0; i != length / 2; ++i)
+	for (INT32 i = 0; i != length / 2; ++i)
 	{
 		UINT32 const l = 25 * (i + 1);
 		UINT16 const c = Get16BPPColor(FROMRGB(l, l, l));

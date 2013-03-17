@@ -39,8 +39,8 @@ void FileDelete(char const* path);
 
 void   FileClose(HWFILE);
 
-void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
-void FileWrite(HWFILE, void const* pDest, UINT32 uiBytesToWrite);
+void FileRead( HWFILE, void*       pDest, size_t uiBytesToRead);
+void FileWrite(HWFILE, void const* pDest, size_t uiBytesToWrite);
 
 template<typename T, typename U> static inline void FileWriteArray(HWFILE const f, T const& n, U const* const data)
 {

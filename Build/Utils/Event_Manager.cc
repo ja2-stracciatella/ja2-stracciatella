@@ -85,7 +85,7 @@ BOOLEAN FreeEvent(EVENT* pEvent)
 
 UINT32 EventQueueSize(EventQueueID ubQueueID)
 {
-	return GetQueue(ubQueueID)->Size();
+	return (UINT32)GetQueue(ubQueueID)->Size();
 }
 
 
