@@ -180,13 +180,13 @@ public:
   static void createDir(char const* path);
 
   /** Join two path components. */
-  static void joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize);
-
-  /** Join two path components. */
   static std::string joinPaths(const char *first, const char *second);
 
   /** Join two path components. */
   static std::string joinPaths(const std::string &first, const char *second);
+
+  /** Join two path components. */
+  static std::string joinPaths(const std::string &first, const std::string &second);
 
 private:
   /** Private constructor to avoid instantiation. */

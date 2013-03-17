@@ -74,8 +74,8 @@ static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode);
 #if CASE_SENSITIVE_FS
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
- * @return true when found, copy found name into fileNameBuf. */
-static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, char *nameBuf, int nameBufSize);
+ * @return true when found, return the found name using foundName. */
+static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
 #endif
 
 /** Get file open modes from our enumeration.
@@ -285,6 +285,7 @@ void InitializeFileManager(void)
 }
 
 
+// TODO: need better name?
 bool FileExists(char const* const filename)
 {
 	FILE* file = fopen(filename, "rb");
@@ -306,18 +307,17 @@ bool FileExists(char const* const filename)
  * Return file descriptor or -1 if file is not found. */
 static int OpenFileInDataDirFD(const char *filename, int mode)
 {
-  char path[512];
-  snprintf(path, lengthof(path), "%s/%s", FileMan::getDataDirPath().c_str(), filename);
-  int d = open(path, mode);
+  std::string path = FileMan::joinPaths(FileMan::getDataDirPath(), filename);
+  int d = open(path.c_str(), mode);
   if (d < 0)
   {
 #if CASE_SENSITIVE_FS
     // on case-sensitive file system need to try to find another name
-    char newFileName[128];
-    if(findObjectCaseInsensitive(FileMan::getDataDirPath().c_str(), filename, true, false, newFileName, sizeof(newFileName)))
+    std::string newFileName;
+    if(findObjectCaseInsensitive(FileMan::getDataDirPath().c_str(), filename, true, false, newFileName))
     {
-      snprintf(path, lengthof(path), "%s/%s", FileMan::getDataDirPath().c_str(), newFileName);
-      d = open(path, mode);
+      path = FileMan::joinPaths(FileMan::getDataDirPath(), newFileName);
+      d = open(path.c_str(), mode);
     }
 #endif
   }
@@ -752,28 +752,23 @@ std::string FileMan::joinPaths(const std::string &first, const char *second)
 }
 
 /** Join two path components. */
-std::string FileMan::joinPaths(const char *first, const char *second)
+std::string FileMan::joinPaths(const std::string &first, const std::string &second)
 {
-  return joinPaths(std::string(first), second);
+  return joinPaths(first, second.c_str());
 }
 
 /** Join two path components. */
-void FileMan::joinPaths(const char *first, const char *second, char *outputBuf, int outputBufSize)
+std::string FileMan::joinPaths(const char *first, const char *second)
 {
-  strncpy(outputBuf, first, outputBufSize);
-  if(first[strlen(first) - 1] != PATH_SEPARATOR)
-  {
-    strncat(outputBuf, "/", outputBufSize);
-  }
-  strncat(outputBuf, second, outputBufSize);
+  return joinPaths(std::string(first), second);
 }
 
 #if CASE_SENSITIVE_FS
 
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
- * @return true when found, copy found name into fileNameBuf. */
-static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, char *nameBuf, int nameBufSize)
+ * @return true when found, return the found name using foundName. */
+static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
 {
   bool result = false;
 
@@ -786,19 +781,19 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
     // we have directory in the name
     // let's find its correct name first
     char newDirectory[128];
-    char actualSubdirName[128];
+    std::string actualSubdirName;
     strncpy(newDirectory, name, sizeof(newDirectory));
     newDirectory[dirNameLen] = 0;
 
-    if(findObjectCaseInsensitive(directory, newDirectory, false, true, actualSubdirName, sizeof(actualSubdirName)))
+    if(findObjectCaseInsensitive(directory, newDirectory, false, true, actualSubdirName))
     {
       // found subdirectory; let's continue the full search
-      char pathInSubdir[128];
-      FileMan::joinPaths(directory, actualSubdirName, newDirectory, sizeof(newDirectory));
-      if(findObjectCaseInsensitive(newDirectory, splitter + 1, lookForFiles, lookForSubdirs, pathInSubdir, sizeof(pathInSubdir)))
+      std::string pathInSubdir;
+      std::string newDirectory = FileMan::joinPaths(directory, actualSubdirName.c_str());
+      if(findObjectCaseInsensitive(newDirectory.c_str(), splitter + 1, lookForFiles, lookForSubdirs, pathInSubdir))
       {
         // found name in subdir
-        FileMan::joinPaths(actualSubdirName, pathInSubdir, nameBuf, nameBufSize);
+        foundName = FileMan::joinPaths(actualSubdirName, pathInSubdir);
         result = true;
       }
     }
@@ -818,9 +813,7 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
         if((entry->d_type & objectTypes)
            && !strcasecmp(name, entry->d_name))
         {
-          // found
-          strncpy(nameBuf, entry->d_name, nameBufSize);
-          nameBuf[nameBufSize - 1] = 0;
+          foundName = entry->d_name;
           result = true;
         }
       }
@@ -849,18 +842,18 @@ static void findDataDirs()
 
     // need to find precise names of the directories
 
-    char name[128];
-    if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name, sizeof(name)))
+    std::string name;
+    if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
     {
       s_dataDir = FileMan::joinPaths(s_gameResRootPath, name);
     }
 
-    if(findObjectCaseInsensitive(s_dataDir.c_str(), TILECACHEDIR, false, true, name, sizeof(name)))
+    if(findObjectCaseInsensitive(s_dataDir.c_str(), TILECACHEDIR, false, true, name))
     {
       s_tileDir = FileMan::joinPaths(s_dataDir, name);
     }
 
-    if(findObjectCaseInsensitive(s_dataDir.c_str(), MAPSDIR, false, true, name, sizeof(name)))
+    if(findObjectCaseInsensitive(s_dataDir.c_str(), MAPSDIR, false, true, name))
     {
       s_mapsDir = FileMan::joinPaths(s_dataDir, name);
     }
