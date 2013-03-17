@@ -499,7 +499,7 @@ static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	for (UINT8 ubLoop = 0; ubLoop < NUM_WORLD_DIRECTIONS; ++ubLoop)
 	{
 		sTempGridNo = NewGridNo( sGridNo, DirectionInc( ubLoop ) );
-		if ( sTempGridNo != sGridNo );
+		if ( sTempGridNo != sGridNo )
 		{
 			const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
 			if (tgt != NULL && tgt != pSoldier && tgt->bTeam == pSoldier->bTeam)
