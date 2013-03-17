@@ -50,8 +50,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JA2;MICROINI_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -66,8 +66,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JA2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -390,6 +390,7 @@
     <ClCompile Include="..\..\sgp\Cursor_Control.cc" />
     <ClCompile Include="..\..\sgp\Debug.cc" />
     <ClCompile Include="..\..\sgp\FileMan.cc" />
+    <ClCompile Include="..\..\sgp\FileMan_unittest.cc" />
     <ClCompile Include="..\..\sgp\Font.cc" />
     <ClCompile Include="..\..\sgp\HImage.cc" />
     <ClCompile Include="..\..\sgp\ImpTGA.cc" />
@@ -402,6 +403,7 @@
     <ClCompile Include="..\..\sgp\Random.cc" />
     <ClCompile Include="..\..\sgp\SGP.cc" />
     <ClCompile Include="..\..\sgp\SGPStrings.cc" />
+    <ClCompile Include="..\..\sgp\SGPStrings_unittest.cc" />
     <ClCompile Include="..\..\sgp\Shading.cc" />
     <ClCompile Include="..\..\sgp\Smack_Stub.cc" />
     <ClCompile Include="..\..\sgp\SoundMan.cc" />
@@ -412,6 +414,13 @@
     <ClCompile Include="..\..\sgp\VObject.cc" />
     <ClCompile Include="..\..\sgp\VObject_Blitters.cc" />
     <ClCompile Include="..\..\sgp\VSurface.cc" />
+    <ClCompile Include="..\lib-gtest\src\gtest-death-test.cc" />
+    <ClCompile Include="..\lib-gtest\src\gtest-filepath.cc" />
+    <ClCompile Include="..\lib-gtest\src\gtest-port.cc" />
+    <ClCompile Include="..\lib-gtest\src\gtest-printers.cc" />
+    <ClCompile Include="..\lib-gtest\src\gtest-test-part.cc" />
+    <ClCompile Include="..\lib-gtest\src\gtest-typed-test.cc" />
+    <ClCompile Include="..\lib-gtest\src\gtest.cc" />
     <ClCompile Include="..\lib-MicroIni\src\MicroIni\File.cpp" />
     <ClCompile Include="..\lib-MicroIni\src\MicroIni\Line.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\line_microini</ObjectFileName>
@@ -786,6 +795,7 @@
     <ClInclude Include="..\..\sgp\VObject_Blitters.h" />
     <ClInclude Include="..\..\sgp\VSurface.h" />
     <ClInclude Include="..\..\sgp\WCheck.h" />
+    <ClInclude Include="..\lib-gtest\src\gtest-internal-inl.h" />
     <ClInclude Include="..\lib-MicroIni\include\MicroIni\Config.hpp" />
     <ClInclude Include="..\lib-MicroIni\include\MicroIni\Container.hpp" />
     <ClInclude Include="..\lib-MicroIni\include\MicroIni\File.hpp" />
