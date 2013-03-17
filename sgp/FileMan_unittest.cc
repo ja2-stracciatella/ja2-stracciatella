@@ -8,25 +8,27 @@ TEST(FileManTest, joinPaths)
   {
     char buf[256];
 
-    // ~~~ unix separators
+    // ~~~ platform-specific separators
 
     FileMan::joinPaths("foo", "bar", buf, 256);
-    EXPECT_STREQ(buf, "foo/bar");
+    EXPECT_STREQ(buf, "foo" PATH_SEPARATOR_STR "bar");
 
-    FileMan::joinPaths("foo/", "bar", buf, 256);
-    EXPECT_STREQ(buf, "foo/bar");
-
-    // // XXX FAILS
-    // FileMan::joinPaths("foo", "/bar", buf, 256);
-    // EXPECT_STREQ(buf, "foo/bar");
+    FileMan::joinPaths("foo" PATH_SEPARATOR_STR, "bar", buf, 256);
+    EXPECT_STREQ(buf, "foo" PATH_SEPARATOR_STR "bar");
 
     // // XXX FAILS
-    // FileMan::joinPaths("foo/", "/bar", buf, 256);
-    // EXPECT_STREQ(buf, "foo/bar");
+    // FileMan::joinPaths("foo", PATH_SEPARATOR_STR "bar", buf, 256);
+    // EXPECT_STREQ(buf, "foo" PATH_SEPARATOR_STR "bar");
 
+    // // XXX FAILS
+    // FileMan::joinPaths("foo/", PATH_SEPARATOR_STR "bar", buf, 256);
+    // EXPECT_STREQ(buf, "foo" PATH_SEPARATOR_STR "bar");
+
+    // ~~~ unix separators
     // ~~~ win separators
 
     // hmm... what do we really want from the library?
+    // should the library consider / to be the separator when it is compiled for windows?
 
   }
 
@@ -34,26 +36,27 @@ TEST(FileManTest, joinPaths)
   {
     std::string result;
 
-    // ~~~ unix separators
+    // ~~~ platform-specific separators
 
     result = FileMan::joinPaths("foo", "bar");
-    EXPECT_STREQ(result.c_str(), "foo/bar");
+    EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
-    result = FileMan::joinPaths("foo/", "bar");
-    EXPECT_STREQ(result.c_str(), "foo/bar");
-
-    // // XXX FAILS
-    // result = FileMan::joinPaths("foo", "/bar");
-    // EXPECT_STREQ(result.c_str(), "foo/bar");
+    result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, "bar");
+    EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
     // // XXX FAILS
-    // result = FileMan::joinPaths("foo/", "/bar");
-    // EXPECT_STREQ(result.c_str(), "foo/bar");
+    // result = FileMan::joinPaths("foo", PATH_SEPARATOR_STR "bar");
+    // EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
+    // // XXX FAILS
+    // result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, PATH_SEPARATOR_STR "bar");
+    // EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
+
+    // ~~~ unix separators
     // ~~~ win separators
 
     // hmm... what do we really want from the library?
-
+    // should the library consider / to be the separator when it is compiled for windows?
   }
 
 }
