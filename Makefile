@@ -7,6 +7,10 @@ CONFIG ?= config.default
 -include $(CONFIG)
 
 
+# By default build the project with unit tests.
+# If you want to build without them, use make WITH_UNITTESTS=0
+WITH_UNITTESTS ?= 1
+
 BINARY    ?= ja2
 PREFIX    ?= /usr/local
 MANPREFIX ?= $(PREFIX)
@@ -504,6 +508,21 @@ LNGS += Build/Utils/_PolishText.cc
 LNGS += Build/Utils/_RussianText.cc
 
 SRCS += $(LNGS)
+
+ifeq "$(WITH_UNITTESTS)" "1"
+CFLAGS += -D WITH_UNITTESTS
+CFLAGS += -I _build/lib-gtest/include
+CFLAGS += -I _build/lib-gtest
+SRCS += _build/lib-gtest/src/gtest.cc
+SRCS += _build/lib-gtest/src/gtest-death-test.cc
+SRCS += _build/lib-gtest/src/gtest-filepath.cc
+SRCS += _build/lib-gtest/src/gtest-port.cc
+SRCS += _build/lib-gtest/src/gtest-printers.cc
+SRCS += _build/lib-gtest/src/gtest-test-part.cc
+SRCS += _build/lib-gtest/src/gtest-typed-test.cc
+SRCS += sgp/FileMan_unittest.cc
+SRCS += sgp/SGPStrings_unittest.cc
+endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))
 DEPS = $(OBJS:.o=.d)

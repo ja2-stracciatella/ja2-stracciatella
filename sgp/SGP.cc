@@ -37,6 +37,10 @@
 #include "Exceptions.h"
 #include "Timer.h"
 
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+#endif
+
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
@@ -62,7 +66,6 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 static BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
 static BOOLEAN gfGameInitialized = FALSE;
-
 
 #if 0 // XXX TODO
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
@@ -300,7 +303,8 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 }
 
 
-static BOOLEAN ParseParameters(int argc, char* const argv[]);
+static BOOLEAN ParseParameters(int argc, char* const argv[],
+                               bool *doUnitTests);
 
 
 int main(int argc, char* argv[])
@@ -315,7 +319,16 @@ try
 
   setGameVersion(GV_ENGLISH);
 
-	if (!ParseParameters(argc, argv)) return EXIT_FAILURE;
+  bool doUnitTests = false;
+	if (!ParseParameters(argc, argv, &doUnitTests)) return EXIT_FAILURE;
+
+#ifdef WITH_UNITTESTS
+  if(doUnitTests)
+  {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+  }
+#endif
 
 	InitializeStandardGamingPlatform();
 
@@ -426,7 +439,8 @@ static BOOLEAN setResourceVersion(const char *version)
   return true;
 }
 
-static BOOLEAN ParseParameters(int argc, char* const argv[])
+static BOOLEAN ParseParameters(int argc, char* const argv[],
+                               bool *doUnitTests)
 {
 	const char* const name = *argv;
 	if (name == NULL) return TRUE; // argv does not even contain the program name
@@ -448,6 +462,13 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 		{
 			VideoSetFullScreen(FALSE);
 		}
+#ifdef WITH_UNITTESTS
+    else if (strcmp(argv[i], "-unittests") == 0)
+    {
+      *doUnitTests = true;
+      return true;
+    }
+#endif
 		else if (strcmp(argv[i], "-res") == 0)
 		{
       if(haveNextParameter)
@@ -522,6 +543,11 @@ static BOOLEAN ParseParameters(int argc, char* const argv[])
 	{
 		fprintf(stderr,
 			"Usage: %s [options]\n"
+#ifdef WITH_UNITTESTS
+      "  -unittests   Perform unit tests\n"
+      "                 ja2.exe -unittests [gtest options]\n"
+      "                 E.g. ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2\n"
+#endif
 			"  -editor      Start the map editor (Editor.slf is necessary)\n"
 			"  -editorauto  Start the map editor and load sector A9 (Editor.slf is necessary)\n"
 			"  -fullscreen  Start the game in fullscreen mode\n"
