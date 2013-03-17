@@ -499,7 +499,7 @@ static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	for (UINT8 ubLoop = 0; ubLoop < NUM_WORLD_DIRECTIONS; ++ubLoop)
 	{
 		sTempGridNo = NewGridNo( sGridNo, DirectionInc( ubLoop ) );
-		if ( sTempGridNo != sGridNo );
+		if ( sTempGridNo != sGridNo )
 		{
 			const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
 			if (tgt != NULL && tgt != pSoldier && tgt->bTeam == pSoldier->bTeam)
@@ -2081,7 +2081,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 			if (room == NO_ROOM) continue;
 
 			if ((fInRing  && room == BOXING_RING) ||
-					(!fInRing && room != BOXING_RING) && LegalNPCDestination(pSoldier, sGridNo, IGNORE_PATH, NOWATER, 0))
+					((!fInRing && room != BOXING_RING) && LegalNPCDestination(pSoldier, sGridNo, IGNORE_PATH, NOWATER, 0)))
 			{
 				iDistance = abs( sXOffset ) + abs( sYOffset );
 				if (iDistance < iClosestDistance && WhoIsThere2(sGridNo, 0) == NULL)

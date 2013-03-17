@@ -258,6 +258,8 @@ void DisplayInsuranceDefaults()
 		case LAPTOP_MODE_INSURANCE_CONTRACT:
 			usPosY = INSURANCE_TOP_RED_BAR_Y1;
 			break;
+        default:
+            break;
 	}
 
 	BltVideoObject(FRAME_BUFFER, guiInsuranceBigRedLineImage, 0, INSURANCE_TOP_RED_BAR_X, INSURANCE_BOTTOM_RED_BAR_Y);

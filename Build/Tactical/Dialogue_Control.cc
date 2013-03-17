@@ -858,6 +858,8 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI: DisplayTextForSpeckVideoPopUp(                   zQuoteStr); break;
 			case DIALOGUE_EXTERNAL_NPC_UI:       DisplayTextForExternalNPC(       ubCharacterNum, zQuoteStr); break;
 			case DIALOGUE_SHOPKEEPER_UI:         InitShopKeeperSubTitledText(                     zQuoteStr); break;
+            default:
+                break;
 		}
 	}
 
@@ -869,6 +871,8 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 			case DIALOGUE_CONTACTPAGE_UI:        break;
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI: break;
 			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(f); break;
+            default:
+                break;
 		}
 	}
 }
@@ -1238,6 +1242,8 @@ void HandleDialogueEnd(FACETYPE& f)
 				}
 
 			break;
+            default:
+                break;
 		}
 	}
 
@@ -1291,9 +1297,8 @@ void HandleDialogueEnd(FACETYPE& f)
 
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
 				break;
-
-
-
+            default:
+                break;
 		}
 	}
 
@@ -1372,7 +1377,7 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 
 /* Let Red talk, if he is in the list and the quote is QUOTE_AIR_RAID.  Choose
  * somebody else otherwise */
-static void ChooseRedIfPresentAndAirRaid(SOLDIERTYPE*const*const mercs_in_sector, size_t merc_count, UINT16 quote)
+static void ChooseRedIfPresentAndAirRaid(SOLDIERTYPE*const*const mercs_in_sector, UINT32 merc_count, UINT16 quote)
 {
 	if (merc_count == 0) return;
 
@@ -1397,7 +1402,7 @@ talk:
 void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
-	size_t       n_mercs = 0;
+	INT32       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{ // Add guy if he's a candidate
@@ -1444,7 +1449,7 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z, UINT16 const quote_id)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
-	size_t       n_mercs = 0;
+	INT32       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{ // Add guy if he's a candidate
@@ -1466,7 +1471,7 @@ void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z,
 void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UINT16 const quote_id)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
-	size_t       n_mercs = 0;
+	INT32       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{ // Add guy if he's a candidate
@@ -1497,7 +1502,7 @@ void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UI
 void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, UINT16 const quote_id, INT8 const sex)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
-	size_t       n_mercs = 0;
+	INT32       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
@@ -1578,7 +1583,7 @@ static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 UINT32 FindDelayForString(const wchar_t* const sString)
 {
-	return( wcslen( sString ) * TEXT_DELAY_MODIFIER );
+	return( (UINT32)wcslen( sString ) * TEXT_DELAY_MODIFIER );
 }
 
 void BeginLoggingForBleedMeToos( BOOLEAN fStart )

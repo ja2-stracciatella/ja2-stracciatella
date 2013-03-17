@@ -670,12 +670,12 @@ static void DisableAimPolicyButton(void)
 {
 	if (gfExitingAimPolicy || !gfAimPolicyMenuBarLoaded) return;
 
-	if( (gubCurPageNum == AIM_POLICY_TOC_PAGE ) )
+	if( gubCurPageNum == AIM_POLICY_TOC_PAGE  )
 	{
 		guiPoliciesMenuButton[0]->uiFlags |= BUTTON_CLICKED_ON;
 		guiPoliciesMenuButton[2]->uiFlags |= BUTTON_CLICKED_ON;
 	}
-	else if(  ( gubCurPageNum == AIM_POLICY_LAST_PAGE ) )
+	else if(   gubCurPageNum == AIM_POLICY_LAST_PAGE  )
 	{
 		guiPoliciesMenuButton[3]->uiFlags |= BUTTON_CLICKED_ON;
 	}

@@ -1866,8 +1866,8 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 			{
 				//Wake up the queen now, if she hasn't woken up already.
 				WakeUpQueen();
-				if( pGroup->ubSectorX == 9 && pGroup->ubSectorY == 1 ||
-						pGroup->ubSectorX == 3 && pGroup->ubSectorY == 16 )
+				if( (pGroup->ubSectorX == 9 && pGroup->ubSectorY == 1) ||
+						(pGroup->ubSectorX == 3 && pGroup->ubSectorY == 16) )
 				{
 					SendGroupToPool( &pGroup );
 					if( !pGroup )
@@ -3158,6 +3158,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		//when we finally go down there, otherwise she will end up in the wrong spot, possibly inside
 		//the walls.
 		if( !gubFact[ FACT_QUEEN_DEAD ] && gMercProfiles[ QUEEN ].bSectorZ == 1 )
+        {
 		if( gbWorldSectorZ != 1 || gWorldSectorX != 16 || gWorldSectorY != 3 )
 		{ //We aren't in the basement sector
 			gMercProfiles[ QUEEN ].fUseProfileInsertionInfo = FALSE;
@@ -3174,6 +3175,7 @@ void LoadStrategicAI(HWFILE const hFile)
 				break;
 			}
 		}
+        }
 	}
 	if( ubSAIVersion < 25 )
 	{

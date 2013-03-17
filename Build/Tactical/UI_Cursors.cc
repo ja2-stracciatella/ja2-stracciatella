@@ -149,6 +149,8 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 		case TINCANCURS:  cursor = HandleTinCanCursor(    s, tgt_grid_no,            cursor_flags); break;
 		case REFUELCURS:  cursor = HandleRefuelCursor(    s, tgt_grid_no,            cursor_flags); break;
 		case INVALIDCURS: cursor = INVALID_ACTION_UICURSOR; break;
+        default:
+            break;
 	}
 
 	return cursor;

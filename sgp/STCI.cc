@@ -64,7 +64,7 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 				// colour distribution of the file is different from hardware!  We have to change it!
 				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!");
 				// Convert the image to the current hardware's specifications
-				size_t  const size = header->usWidth * header->usHeight;
+				UINT32  const size = header->usWidth * header->usHeight;
 				UINT16* const data = (UINT16*)(UINT8*)img->pImageData;
 				if (gusRedMask == 0x7C00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
 				{

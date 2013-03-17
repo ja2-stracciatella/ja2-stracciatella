@@ -2189,7 +2189,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 			 }
 
 
-	if ((pPastNode->uiSectorId==pNextNode->uiSectorId))
+	if (pPastNode->uiSectorId==pNextNode->uiSectorId)
 				{
 				 if (pPastNode->uiSectorId+WORLD_MAP_X==pNode->uiSectorId)
 				 {

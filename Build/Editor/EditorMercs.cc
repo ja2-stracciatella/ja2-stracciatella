@@ -1432,6 +1432,8 @@ static void ChangeBodyType(INT8 const offset)
 			case JEEP:
 			case TANK_NW:
 			case TANK_NE:            s.uiStatusFlags |= SOLDIER_VEHICLE; break;
+            default:
+                break;
 		}
 		SetSoldierAnimationSurface(&s, s.usAnimState);
 	}
@@ -1584,10 +1586,10 @@ void SetMercEditingMode( UINT8 ubNewMode )
 	{
 		//attempt to weed out conditions where we select a team that matches the currently
 		//selected merc.  We don't want to deselect him in this case.
-		if( gpSelected->pSoldier->bTeam == ENEMY_TEAM && iDrawMode == DRAW_MODE_ENEMY ||
-				gpSelected->pSoldier->bTeam == CREATURE_TEAM && iDrawMode == DRAW_MODE_CREATURE ||
-				gpSelected->pSoldier->bTeam == MILITIA_TEAM && iDrawMode == DRAW_MODE_REBEL ||
-				gpSelected->pSoldier->bTeam == CIV_TEAM && iDrawMode == DRAW_MODE_CIVILIAN )
+		if( (gpSelected->pSoldier->bTeam == ENEMY_TEAM && iDrawMode == DRAW_MODE_ENEMY) ||
+				(gpSelected->pSoldier->bTeam == CREATURE_TEAM && iDrawMode == DRAW_MODE_CREATURE) ||
+				(gpSelected->pSoldier->bTeam == MILITIA_TEAM && iDrawMode == DRAW_MODE_REBEL) ||
+				(gpSelected->pSoldier->bTeam == CIV_TEAM && iDrawMode == DRAW_MODE_CIVILIAN) )
 		{	//Same team, so don't deselect merc.  Instead, keep the previous editing mode
 			//because we are still editing this merc.
 			gubCurrMercMode = gubPrevMercMode;
@@ -1620,8 +1622,8 @@ void SetMercEditingMode( UINT8 ubNewMode )
 		UnclickEditorButton( MERCS_DETAILEDCHECKBOX );
 	//Now we are setting up the button states for the new mode, as well as show the
 	//applicable buttons for the detailed placement modes.
-	if( gubCurrMercMode == MERC_APPEARANCEMODE && iDrawMode == DRAW_MODE_CREATURE ||
-			gubCurrMercMode == MERC_SCHEDULEMODE && iDrawMode != DRAW_MODE_CIVILIAN )
+	if( (gubCurrMercMode == MERC_APPEARANCEMODE && iDrawMode == DRAW_MODE_CREATURE) ||
+			(gubCurrMercMode == MERC_SCHEDULEMODE && iDrawMode != DRAW_MODE_CIVILIAN) )
 	{
 		gubCurrMercMode = MERC_GENERALMODE;
 	}

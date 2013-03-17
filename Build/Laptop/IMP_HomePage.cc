@@ -235,7 +235,7 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 		  switch( InputEvent.usParam )
 			{
 				case SDLK_RETURN:
-					if(( InputEvent.usEvent == KEY_UP ) )
+					if(InputEvent.usEvent == KEY_UP)
 					{
 						// return hit, check to see if current player activation string is a valid one
 						ProcessPlayerInputActivationString( );
@@ -293,9 +293,9 @@ static void HandleTextEvent(const InputAtom* Inp)
 	  default:
 		{
 			wchar_t Char = Inp->Char;
-			if (Char >= 'A' && Char <= 'Z' ||
-					Char >= 'a' && Char <= 'z' ||
-					Char >= '0' && Char <= '9' ||
+			if ((Char >= 'A' && Char <= 'Z') ||
+					(Char >= 'a' && Char <= 'z') ||
+					(Char >= '0' && Char <= '9') ||
 					Char == '_' || Char == '.')
 			{
 				// if the current string position is at max or great, do nothing

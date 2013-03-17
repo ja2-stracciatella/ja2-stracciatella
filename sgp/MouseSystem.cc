@@ -665,9 +665,9 @@ void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
 }
 
 
-static size_t GetNumberOfLinesInHeight(const wchar_t* String)
+static UINT32 GetNumberOfLinesInHeight(const wchar_t* String)
 {
-	size_t Lines = 1;
+	UINT32 Lines = 1;
 	for (const wchar_t* i = String; *i != L'\0'; i++)
 	{
 		if (*i == L'\n') Lines++;
@@ -676,7 +676,7 @@ static size_t GetNumberOfLinesInHeight(const wchar_t* String)
 }
 
 
-static size_t GetWidthOfString(const wchar_t* String);
+static UINT32 GetWidthOfString(const wchar_t* String);
 static void DisplayHelpTokenizedString(const wchar_t* text, INT16 sx, INT16 sy);
 
 
@@ -717,12 +717,12 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 }
 
 
-static size_t GetWidthOfString(wchar_t const* const str)
+static UINT32 GetWidthOfString(wchar_t const* const str)
 {
 	Font const bold_font   = FONT10ARIALBOLD;
 	Font const normal_font = FONT10ARIAL;
-	size_t     max_w       = 0;
-	size_t     w           = 0;
+	UINT32     max_w       = 0;
+	UINT32     w           = 0;
 	for (wchar_t const* i = str;; ++i)
 	{
 		wchar_t c = *i;

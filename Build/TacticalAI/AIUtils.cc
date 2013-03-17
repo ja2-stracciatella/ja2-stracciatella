@@ -877,7 +877,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 		}
 
 		sDistToEnemy = PythSpacesAway( pSoldier->sGridNo, sGridNo );
-		if (sDistToEnemy < sDistToClosestEnemy );
+		if (sDistToEnemy < sDistToClosestEnemy )
 		{
 			sClosestEnemy = sGridNo;
 			bClosestLevel = bLevel;

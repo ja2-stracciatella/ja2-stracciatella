@@ -1,3 +1,4 @@
+#include "Strategic.h"
 #include "MapScreen.h"
 #include "Types.h"
 #include "Squads.h"

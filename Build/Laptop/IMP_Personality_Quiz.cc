@@ -642,7 +642,7 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 		  case( 3 ):
 
 				// is this question # 6 ..if so, need longer answer box
-				if( ( giCurrentPersonalityQuizQuestion == 5) )
+				if( giCurrentPersonalityQuizQuestion == 5 )
 				{
 					// render longer frame
 					RenderQtnShort2IndentFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
@@ -706,7 +706,7 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 		  case( 5 ):
 
 				// special case?..longer frame needed if so
-				 if( ( giCurrentPersonalityQuizQuestion == 19) )
+				 if(  giCurrentPersonalityQuizQuestion == 19 )
 				 {
 					  // render longer frame
 					  RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );

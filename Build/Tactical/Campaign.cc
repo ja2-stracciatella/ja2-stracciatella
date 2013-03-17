@@ -322,6 +322,8 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 						// Base usChance is 'bCurrentRating', these can drop to 0
 						usChance = bCurrentRating + (*psStatGainPtr / usSubpointsPerPoint);
 						break;
+                    default:
+                        break;
 				}
       }
       else
@@ -479,6 +481,8 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 		pbStatDeltaPtr = &p.bLeadershipDelta;
     pbStatPtr      = &p.bLeadership;
 		break;
+        default:
+            break;
 	}
 
 
@@ -553,6 +557,8 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 			puiStatTimerPtr = &( pSoldier->uiChangeLeadershipTime);
 			usIncreaseValue = LDR_INCREASE;
 			break;
+            default:
+                break;
 		}
 	}
 
@@ -883,6 +889,8 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier
       psStatGainPtr = &p.sLeadershipGain;
       pbStatPtr     = &p.bLeadership;
 			break;
+            default:
+                break;
 		}
 
 
@@ -935,6 +943,8 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier
 			case LDRAMT:
 				pbSoldierStatPtr = &( pSoldier->bLeadership);
 				break;
+                default:
+                    break;
 			}
 		}
 

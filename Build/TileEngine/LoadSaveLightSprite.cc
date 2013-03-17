@@ -38,10 +38,10 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 	{
 		// power only valid lights
 		if (gfEditMode ||
-				!gfCaves && (
+				(!gfCaves && (
 					flags & light_time ||
 					!(flags & (LIGHT_PRIMETIME | LIGHT_NIGHTTIME))
-				))
+				)))
 		{
 			LightSpritePower(l, TRUE);
 		}

@@ -134,8 +134,8 @@ LEVELNODE* GetVerticalWall(UINT32 const map_idx)
 		if (i->usIndex == NO_TILE) continue;
 
 		UINT32 const tile_type = GetTileType(i->usIndex);
-		if (FIRSTWALL <= tile_type && tile_type <= LASTWALL ||
-				FIRSTDOOR <= tile_type && tile_type <= LASTDOOR)
+		if ((FIRSTWALL <= tile_type && tile_type <= LASTWALL) ||
+				(FIRSTDOOR <= tile_type && tile_type <= LASTDOOR))
 		{
 			UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
 			if (wall_orientation != INSIDE_TOP_RIGHT && wall_orientation != OUTSIDE_TOP_RIGHT) continue;
@@ -153,8 +153,8 @@ LEVELNODE* GetHorizontalWall(UINT32 const map_idx)
 		if (i->usIndex == NO_TILE) continue;
 
 		UINT32 const tile_type = GetTileType(i->usIndex);
-		if (FIRSTWALL <= tile_type && tile_type <= LASTWALL ||
-				FIRSTDOOR <= tile_type && tile_type <= LASTDOOR)
+		if ((FIRSTWALL <= tile_type && tile_type <= LASTWALL) ||
+				(FIRSTDOOR <= tile_type && tile_type <= LASTDOOR))
 		{
 			UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
 			if (wall_orientation != INSIDE_TOP_LEFT && wall_orientation != OUTSIDE_TOP_LEFT) continue;

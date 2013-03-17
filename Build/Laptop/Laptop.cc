@@ -736,6 +736,8 @@ static void RenderLaptop(void)
 		case LAPTOP_MODE_WWW:                      DrawDeskTopBackground();   break;
 
 		case LAPTOP_MODE_BROKEN_LINK:              RenderBrokenLink();        break;
+        default:
+            break;
 	}
 
 	if (guiCurrentLaptopMode >= LAPTOP_MODE_WWW)
@@ -925,6 +927,8 @@ do_nothing:
 		case LAPTOP_MODE_EMAIL:                    EnterEmail();             break;
 
 		case LAPTOP_MODE_BROKEN_LINK:              EnterBrokenLink();        break;
+        default:
+            break;
 	}
 
 	// first time using webbrowser in this laptop session
@@ -975,6 +979,8 @@ static void HandleLapTopHandles(void)
 		case LAPTOP_MODE_PERSONNEL:                HandlePersonnel();         break;
 		case LAPTOP_MODE_FILES:                    HandleFiles();             break;
 		case LAPTOP_MODE_EMAIL:                    HandleEmail();             break;
+        default:
+            break;
 	}
 }
 
@@ -2049,6 +2055,8 @@ static void PostButtonRendering(void)
 	switch (guiCurrentLaptopMode)
 	{
 		case LAPTOP_MODE_AIM_MEMBERS: RenderAIMMembersTopLevel(); break;
+        default:
+            break;
 	}
 }
 
@@ -2058,6 +2066,8 @@ static void ShouldNewMailBeDisplayed(void)
 	switch (guiCurrentLaptopMode)
 	{
 		case LAPTOP_MODE_AIM_MEMBERS: DisableNewMailMessage(); break;
+        default:
+            break;
 	}
 }
 
@@ -3184,8 +3194,8 @@ static void HandleWWWSubSites(void)
 	visited = true; // Set fact we were here
 
 	//Dont show the dlownload screen when switching between these pages
-	if (guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS              && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX ||
-			guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS)
+	if ((guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS              && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX) ||
+			(guiCurrentLaptopMode == LAPTOP_MODE_AIM_MEMBERS_FACIAL_INDEX && guiPreviousLaptopMode == LAPTOP_MODE_AIM_MEMBERS))
 	{
 		fFastLoadFlag = FALSE;
 		fLoadPendingFlag = FALSE;

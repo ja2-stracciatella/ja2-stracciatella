@@ -299,7 +299,7 @@ try
 	}
 	else if ( ubNPC < FIRST_RPC || (ubNPC < FIRST_NPC && gMercProfiles[ ubNPC ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) )
 	{
-		sprintf(zFileName, NPCDATADIR "/000.npc", ubNPC);
+		sprintf(zFileName, NPCDATADIR "/000.npc");
 	}
 	else
 	{

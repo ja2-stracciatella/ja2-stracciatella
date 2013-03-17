@@ -612,8 +612,8 @@ static void RenderItemDetails(void)
 				{
 					if( gpWorldItemsSummaryArray[ i ].o.usItem == index )
 					{
-						if( gubSummaryItemMode == ITEMMODE_SCIFI && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_REALISTIC_ONLY) ||
-								gubSummaryItemMode == ITEMMODE_REAL && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY) )
+						if( (gubSummaryItemMode == ITEMMODE_SCIFI && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_REALISTIC_ONLY)) ||
+								(gubSummaryItemMode == ITEMMODE_REAL && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY)) )
 						{
 							pItem = &gpWorldItemsSummaryArray[ i ].o;
 							if( !pItem->bFrequency )
@@ -650,8 +650,8 @@ static void RenderItemDetails(void)
 				}
 				if( gpWorldItemsSummaryArray[ i ].o.usItem == index )
 				{
-					if( gubSummaryItemMode == ITEMMODE_SCIFI && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_REALISTIC_ONLY) ||
-						  gubSummaryItemMode == ITEMMODE_REAL  && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY) )
+					if( (gubSummaryItemMode == ITEMMODE_SCIFI && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_REALISTIC_ONLY)) ||
+						  (gubSummaryItemMode == ITEMMODE_REAL  && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY)) )
 					{
 						pItem = &gpWorldItemsSummaryArray[ i ].o;
 						uiExistChance += (100 - gpWorldItemsSummaryArray[ i ].ubNonExistChance) * pItem->ubNumberOfObjects;
@@ -933,7 +933,7 @@ void RenderSummaryWindow()
 				SetFontForeground( FONT_LTRED );
 				MPrint( 10, 65, L"Do you wish to regenerate info for ALL these maps at this time (y/n)?" );
 			}
-			else if( !gsSelSectorX && !gsSectorX || gfTempFile )
+			else if( (!gsSelSectorX && !gsSectorX) || gfTempFile )
 			{
 				DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				SetFontForeground( FONT_LTRED );
@@ -1635,7 +1635,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 {
 	if( !gfSummaryWindowActive )
 		return FALSE;
-	if( !HandleTextInput( pEvent ) && pEvent->usEvent == KEY_DOWN || pEvent->usEvent == KEY_REPEAT )
+	if( (!HandleTextInput( pEvent ) && pEvent->usEvent == KEY_DOWN) || pEvent->usEvent == KEY_REPEAT )
 	{
 		switch( pEvent->usParam )
 		{

@@ -1293,10 +1293,10 @@ UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 	if (curr->usInputType != INPUTTYPE_24HOURCLOCK)
 		return 0xffff; //illegal!
 	//First validate the hours 00-23
-	if (curr->szString[0] == '2' && curr->szString[1] >= '0' && //20-23
-			curr->szString[1] <='3' ||
-			curr->szString[0] >= '0' && curr->szString[0] <= '1' && // 00-19
-			curr->szString[1] >= '0' && curr->szString[1] <= '9')
+	if ((curr->szString[0] == '2' && curr->szString[1] >= '0' && //20-23
+			curr->szString[1] <='3') ||
+			(curr->szString[0] >= '0' && curr->szString[0] <= '1' && // 00-19
+			curr->szString[1] >= '0' && curr->szString[1] <= '9'))
 	{ //Next, validate the colon, and the minutes 00-59
 		if (curr->szString[2] == ':' &&	curr->szString[5] == 0   && //	:
 				curr->szString[3] >= '0' && curr->szString[3] <= '5' && // 0-5

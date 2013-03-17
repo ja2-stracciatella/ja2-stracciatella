@@ -187,6 +187,8 @@ void InitGameResources(void)
   case GV_ITALIAN:      extraLibs.push_back("italian.slf");     break;
   case GV_POLISH:       extraLibs.push_back("polish.slf");      break;
   case GV_RUSSIAN:      extraLibs.push_back("russian.slf");     break;
+      default:
+          break;
   }
 #endif
 
@@ -246,6 +248,8 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     case MLG_TOSTATS:            return LAPTOPDIR "/tostats.sti";
     case MLG_WARNING:            return LAPTOPDIR "/warning.sti";
     case MLG_YOURAD13:           return LAPTOPDIR "/yourad_13.sti";
+        default:
+            break;
     }
   }
   else if(s_gameVersion == GV_GERMAN)
@@ -285,6 +289,8 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     case MLG_TOSTATS:            return "german"  "/tostats_german.sti";
     case MLG_WARNING:            return "german"  "/warning_german.sti";
     case MLG_YOURAD13:           return "german"  "/yourad_13_german.sti";
+        default:
+            break;
   }
   }
   else if(s_gameVersion == GV_DUTCH)
@@ -324,6 +330,8 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     case MLG_TOSTATS:            return STI("dutch",   "tostats");
     case MLG_WARNING:            return STI("dutch",   "warning");
     case MLG_YOURAD13:           return STI("dutch",   "yourad_13");
+        default:
+            break;
     }
   }
   else if(s_gameVersion == GV_ITALIAN)
@@ -363,6 +371,8 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     case MLG_TOSTATS:            return STI("italian", "tostats");
     case MLG_WARNING:            return STI("italian", "warning");
     case MLG_YOURAD13:           return STI("italian", "yourad_13");
+        default:
+            break;
     }
   }
   else if(s_gameVersion == GV_POLISH)
@@ -402,6 +412,8 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     case MLG_TOSTATS:            return STI("polish",  "tostats");
     case MLG_WARNING:            return STI("polish",  "warning");
     case MLG_YOURAD13:           return STI("polish",  "yourad_13");
+        default:
+            break;
     }
   }
   else if(s_gameVersion == GV_RUSSIAN)
@@ -441,6 +453,8 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     case MLG_TOSTATS:            return STI("russian", "tostats");
     case MLG_WARNING:            return STI("russian", "warning");
     case MLG_YOURAD13:           return STI("russian", "yourad_13");
+        default:
+            break;
     }
   }
 

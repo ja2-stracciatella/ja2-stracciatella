@@ -195,6 +195,8 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 								}
 
 								break;
+                            default:
+                                break;
 							}
 						}
 				}
@@ -274,6 +276,8 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 							}
 							break;
 						}
+                        default:
+                            break;
 					}
 				}
 			}
@@ -327,6 +331,8 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 								// If button has come up, change to mocve mode
 								*puiNewEvent = PADJ_ADJUST_STANCE;
 								break;
+                            default:
+                                break;
 						}
 
 						// CHECK IF WE CLICKED-HELD
@@ -357,6 +363,8 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 										gfRTClickLeftHoldIntercepted = TRUE;
 									}
 									break;
+                                default:
+                                    break;
 							}
 						}
 						//else
@@ -678,6 +686,8 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 															*puiNewEvent = A_CHANGE_TO_MOVE;
 															break;
 
+                                                        default:
+                                                            break;
 													}
 												}
 
@@ -787,6 +797,8 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 									}
 									fClickHoldIntercepted = TRUE;
 								}
+                            default:
+                                break;
 						}
 
 						// ATE: Added cancel of burst mode....
@@ -845,6 +857,8 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 	  							}
   								break;
 								}
+                                default:
+                                    break;
               }
 						}
 					}
@@ -886,6 +900,8 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 														 // OK, now we wish to run!
 														 gfUIAllMoveOn = 2;
 													}
+                                                default:
+                                                    break;
 											}
 										}
 
@@ -923,6 +939,8 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 												gfUIAllMoveOn = FALSE;
 												gfUICanBeginAllMoveCycle = TRUE;
 											}
+                                        default:
+                                            break;
 
 									}
 								}
@@ -987,6 +1005,8 @@ static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 											*puiNewEvent = A_CHANGE_TO_MOVE;
 											break;
 
+                                        default:
+                                            break;
 									}
 								}
 							}
@@ -1265,6 +1285,8 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 				}
 				break;
 			}
+            default:
+                break;
 		}
 
 		usOldMapPos = usMapPos;

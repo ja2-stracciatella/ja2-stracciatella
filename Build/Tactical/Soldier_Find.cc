@@ -172,7 +172,7 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 			if (!gGameSettings.fOptions[TOPTION_SMART_CURSOR] && IsOnOurTeam(s))
 			{
 				// ATE: NOT if we are in action or comfirm action mode
-				if (gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE || gUIActionModeChangeDueToMouseOver)
+				if ((gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE) || gUIActionModeChangeDueToMouseOver)
 				{
 					in_screen_rect = false;
 				}

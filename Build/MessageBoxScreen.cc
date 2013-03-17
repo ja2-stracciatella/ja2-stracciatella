@@ -407,7 +407,7 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 		GetMousePos(&pPosition);
 
 		if (pPosition.iX > MessageBoxRestrictedCursorRegion.iRight ||
-				pPosition.iX > MessageBoxRestrictedCursorRegion.iLeft && pPosition.iY < MessageBoxRestrictedCursorRegion.iTop && pPosition.iY > MessageBoxRestrictedCursorRegion.iBottom)
+				(pPosition.iX > MessageBoxRestrictedCursorRegion.iLeft && pPosition.iY < MessageBoxRestrictedCursorRegion.iTop && pPosition.iY > MessageBoxRestrictedCursorRegion.iBottom))
 		{
 			SimulateMouseMovement(pOldMousePosition.iX, pOldMousePosition.iY);
 		}
@@ -435,6 +435,8 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 		case MAP_SCREEN:
 			fMapPanelDirty = TRUE;
 			break;
+        default:
+            break;
 	}
 
 	if (gfFadeInitialized)
@@ -558,6 +560,8 @@ ScreenID MessageBoxScreenHandle(void)
 					case '4': gMsgBox.bHandled = MSG_BOX_RETURN_4; break;
 				}
 				break;
+            default:
+                break;
 		}
 	}
 
@@ -608,5 +612,7 @@ static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const msg, Mess
 		case MAP_SCREEN:         DoMapMessageBoxWithRect(         MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, centering_rect); break;
 		case OPTIONS_SCREEN:     DoOptionsMessageBoxWithRect(                             msg, screen, flags, callback, centering_rect); break;
 		case SAVE_LOAD_SCREEN:   DoSaveLoadMessageBoxWithRect(                            msg, screen, flags, callback, centering_rect); break;
+        default:
+            break;
 	}
 }

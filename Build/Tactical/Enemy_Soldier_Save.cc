@@ -267,10 +267,6 @@ no_add:
 		ubStrategicAdmins = ubStrategicAdmins > ubNumAdmins ? ubStrategicAdmins - ubNumAdmins : 0;
 		AddSoldierInitListEnemyDefenceSoldiers(ubStrategicAdmins, ubStrategicTroops, ubStrategicElites);
 	}
-	if (ubStrategicCreatures > ubNumCreatures)
-	{
-		ubStrategicCreatures; // Not sure if this will ever happen.  If so, needs to be handled.
-	}
 }
 
 
@@ -493,10 +489,6 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 		ubStrategicElites = ubStrategicElites > ubNumElites ? ubStrategicElites - ubNumElites : 0;
 		ubStrategicAdmins = ubStrategicAdmins > ubNumAdmins ? ubStrategicAdmins - ubNumAdmins : 0;
 		AddSoldierInitListEnemyDefenceSoldiers(ubStrategicAdmins, ubStrategicTroops, ubStrategicElites);
-	}
-	if (ubStrategicCreatures > ubNumCreatures)
-	{
-		ubStrategicCreatures; // not sure if this will ever happen.  If so, needs to be handled.
 	}
 }
 

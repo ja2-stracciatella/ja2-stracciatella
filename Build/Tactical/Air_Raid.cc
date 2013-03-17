@@ -308,7 +308,7 @@ BOOLEAN BeginAirRaid( )
 static INT16 PickLocationNearAnyMercInSector(void)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
-	size_t num_mercs = 0;
+	INT32 num_mercs = 0;
 	const SOLDIERTYPE* mercs_in_sector[20];
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{

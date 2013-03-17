@@ -92,6 +92,8 @@ static void RenderPanel(void)
 	{
 		case SM_PANEL:   RenderSMPanel(&fInterfacePanelDirty);  break;
 		case TEAM_PANEL: RenderTEAMPanel(fInterfacePanelDirty); break;
+        default:
+            break;
 	}
 }
 
@@ -481,6 +483,8 @@ void RenderTopmostTacticalInterface()
 		case OPENDOOR_MENU_MODE:
 			RenderOpenDoorMenu();
 			break;
+        default:
+            break;
 	}
 
 	if (gfInTalkPanel) RenderTalkingMenu();

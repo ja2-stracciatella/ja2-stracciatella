@@ -74,7 +74,7 @@ static void ThrowExcOnLibLoadFailure(const char* pLibraryName)
 void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, const std::vector<std::string> &extraLibs)
 {
 	INT16			i;
-  int totalLibCount = LibCount + extraLibs.size();
+  int totalLibCount = LibCount + (UINT32)extraLibs.size();
 
 	//if all the libraries exist, set them up
   gFileDataBase.usNumberOfLibraries = totalLibCount;

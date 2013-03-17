@@ -60,7 +60,7 @@ void InitTileCache(void)
 
 		if (strcasecmp(tc.zRootName, "l_dead1") == 0)
 		{
-			giDefaultStructIndex = gpTileCacheStructInfo.Size();
+			giDefaultStructIndex = (INT32)gpTileCacheStructInfo.Size();
 		}
 
 		gpTileCacheStructInfo.PushBack(tc);

@@ -374,15 +374,15 @@ try
 		}
 		AddLandToHead(map_idx, idx);
 	}
-	else if (FIRSTWALLDECAL <= use_obj_idx && use_obj_idx <= LASTWALLDECAL ||
-			FIFTHWALLDECAL <= use_obj_idx && use_obj_idx <= EIGTHWALLDECAL)
+	else if ((FIRSTWALLDECAL <= use_obj_idx && use_obj_idx <= LASTWALLDECAL) ||
+			((FIFTHWALLDECAL <= use_obj_idx && use_obj_idx <= EIGTHWALLDECAL)))
 	{ // Plop a decal here
 		RemoveAllStructsOfTypeRange(map_idx, FIRSTWALLDECAL, LASTWALLDECAL);
 		RemoveAllStructsOfTypeRange(map_idx, FIFTHWALLDECAL, EIGTHWALLDECAL);
 		AddStructToTail(map_idx, idx);
 	}
-	else if (FIRSTISTRUCT <= use_obj_idx && use_obj_idx <= LASTISTRUCT ||
-			FIFTHISTRUCT <= use_obj_idx && use_obj_idx <= EIGHTISTRUCT)
+	else if ((FIRSTISTRUCT <= use_obj_idx && use_obj_idx <= LASTISTRUCT) ||
+			((FIFTHISTRUCT <= use_obj_idx && use_obj_idx <= EIGHTISTRUCT)))
 	{
 		AddStructToHead(map_idx, idx);
 	}

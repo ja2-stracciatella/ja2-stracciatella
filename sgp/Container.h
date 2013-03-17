@@ -37,8 +37,8 @@ namespace SGP
 	template<typename T> class Queue
 	{
 		public:
-			Queue(size_t const n_elements) :
-				queue_(CreateQueue(n_elements, sizeof(T)))
+			Queue(UINT32 const n_elements) :
+				queue_(CreateQueue(n_elements, (UINT32)sizeof(T)))
 			{}
 
 			~Queue() { DeleteQueue(queue_); }
@@ -83,15 +83,15 @@ namespace SGP
 	template<typename T> class List
 	{
 		public:
-			List(size_t const n_elements) :
+			List(UINT32 const n_elements) :
 				list_(CreateList(n_elements, sizeof(T)))
 			{}
 
 			~List() { DeleteList(list_); }
 
-			size_t Size() const { return ListSize(list_); }
+			UINT32 Size() const { return ListSize(list_); }
 
-			void Add(T const& data, size_t const pos)
+			void Add(T const& data, UINT32 const pos)
 			{
 				HLIST l = AddtoList(list_, &data, pos);
 				/* XXX cannot distinguish between invalid pos and failed memory
@@ -100,14 +100,14 @@ namespace SGP
 				list_ = l;
 			}
 
-			T Remove(size_t const pos)
+			T Remove(UINT32 const pos)
 			{
 				T data;
 				RemfromList(list_, &data, pos);
 				return data;
 			}
 
-			T Peek(size_t const pos)
+			T Peek(UINT32 const pos)
 			{
 				T data;
 				PeekList(list_, &data, pos);

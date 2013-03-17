@@ -3170,7 +3170,7 @@ static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// mvt callback handler for assignment region
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		const size_t line = pRegion - gVehicleMenuRegion;
+		const INT32 line = (INT32)(pRegion - gVehicleMenuRegion);
 		HighLightBoxLine(ghVehicleBox, line);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )

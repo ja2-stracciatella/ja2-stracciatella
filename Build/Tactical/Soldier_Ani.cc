@@ -1481,7 +1481,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 												if ( pAnimDef->sAnimID == RANDOM_ANIM_SOUND )
 												{
 													if (pSoldier->ubBodyType != COW ||
-															Random(2) != 0 && (!(gTacticalStatus.uiFlags & INCOMBAT) || pSoldier->bVisible != -1 || Random(100) < 10))
+															(Random(2) != 0 && (!(gTacticalStatus.uiFlags & INCOMBAT) || pSoldier->bVisible != -1 || Random(100) < 10)))
 													{
 														PlayLocationJA2SampleFromFile(pSoldier->sGridNo, pAnimDef->zSoundFile, MIDVOLUME, 1);
 													}

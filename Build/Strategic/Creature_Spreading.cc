@@ -456,7 +456,7 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 	{ //we are within the "safe" habitated area of the creature's area of influence.  The chance of
 		//increasing the population inside this sector depends on how deep we are within the sector.
 		if( node->pLevel->ubNumCreatures < MAX_STRATEGIC_TEAM_SIZE ||
-			  node->pLevel->ubNumCreatures < 32 && node->pLevel->ubCreatureHabitat == QUEEN_LAIR )
+			  (node->pLevel->ubNumCreatures < 32 && node->pLevel->ubCreatureHabitat == QUEEN_LAIR) )
 		{ //there is ALWAYS a chance to habitate an interior sector, though the chances are slim for
 			//highly occupied sectors.  This chance is modified by the type of area we are in.
 			INT32 iAbsoluteMaxPopulation;
@@ -515,8 +515,8 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 			//the ratio of current population to the max population.
 			iChanceToPopulate = 100 - node->pLevel->ubNumCreatures * 100 / iMaxPopulation;
 
-			if( !node->pLevel->ubNumCreatures || iChanceToPopulate > (INT32)Random( 100 )
-					&& iMaxPopulation > node->pLevel->ubNumCreatures )
+			if( !node->pLevel->ubNumCreatures || (iChanceToPopulate > (INT32)Random( 100 )
+					&& iMaxPopulation > node->pLevel->ubNumCreatures) )
 			{
 				AddCreatureToNode( node );
 				return TRUE;
@@ -1408,13 +1408,13 @@ bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* c
 	switch (lair_id)
 	{
 		case 1: // Drassen
-			if (x == 13 && y == 6 && z == 3 ||
-					x == 13 && y == 7 && z == 3 ||
-					x == 13 && y == 7 && z == 2 ||
-					x == 13 && y == 6 && z == 2 ||
-					x == 13 && y == 5 && z == 2 ||
-					x == 13 && y == 5 && z == 1 ||
-					x == 13 && y == 4 && z == 1)
+			if ((x == 13 && y == 6 && z == 3) ||
+					(x == 13 && y == 7 && z == 3) ||
+					(x == 13 && y == 7 && z == 2) ||
+					(x == 13 && y == 6 && z == 2) ||
+					(x == 13 && y == 5 && z == 2) ||
+					(x == 13 && y == 5 && z == 1) ||
+					(x == 13 && y == 4 && z == 1))
 			{
 				*sector_x          = 13;
 				*sector_y          = 4;
@@ -1425,12 +1425,12 @@ bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* c
 			break;
 
 		case 3: // Cambria
-			if (x == 8 && y == 9 && z == 3 ||
-					x == 8 && y == 8 && z == 3 ||
-					x == 8 && y == 8 && z == 2 ||
-					x == 9 && y == 8 && z == 2 ||
-					x == 9 && y == 8 && z == 1 ||
-					x == 8 && y == 8 && z == 1)
+			if ((x == 8 && y == 9 && z == 3) ||
+					(x == 8 && y == 8 && z == 3) ||
+					(x == 8 && y == 8 && z == 2) ||
+					(x == 9 && y == 8 && z == 2) ||
+					(x == 9 && y == 8 && z == 1) ||
+					(x == 8 && y == 8 && z == 1))
 			{
 				*sector_x          = 8;
 				*sector_y          = 8;
@@ -1441,12 +1441,12 @@ bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* c
 			break;
 
 		case 2: // Alma
-			if (x == 13 && y == 11 && z == 3 ||
-					x == 13 && y == 10 && z == 3 ||
-					x == 13 && y == 10 && z == 2 ||
-					x == 14 && y == 10 && z == 2 ||
-					x == 14 && y == 10 && z == 1 ||
-					x == 14 && y ==  9 && z == 1)
+			if ((x == 13 && y == 11 && z == 3) ||
+					(x == 13 && y == 10 && z == 3) ||
+					(x == 13 && y == 10 && z == 2) ||
+					(x == 14 && y == 10 && z == 2) ||
+					(x == 14 && y == 10 && z == 1) ||
+					(x == 14 && y ==  9 && z == 1))
 			{
 				*sector_x          = 14;
 				*sector_y          = 9;
@@ -1457,13 +1457,13 @@ bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* c
 			break;
 
 		case 4: // Grumm
-			if (x == 4 && y == 7 && z == 3 ||
-					x == 4 && y == 8 && z == 3 ||
-					x == 3 && y == 8 && z == 2 ||
-					x == 3 && y == 8 && z == 2 ||
-					x == 3 && y == 9 && z == 2 ||
-					x == 3 && y == 9 && z == 1 ||
-					x == 3 && y == 8 && z == 1)
+			if ((x == 4 && y == 7 && z == 3) ||
+					(x == 4 && y == 8 && z == 3) ||
+					(x == 3 && y == 8 && z == 2) ||
+					(x == 3 && y == 8 && z == 2) ||
+					(x == 3 && y == 9 && z == 2) ||
+					(x == 3 && y == 9 && z == 1) ||
+					(x == 3 && y == 8 && z == 1))
 			{
 				*sector_x          = 3;
 				*sector_y          = 8;

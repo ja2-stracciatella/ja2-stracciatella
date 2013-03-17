@@ -176,7 +176,7 @@ void ReplacePath(char* const buf, size_t const size, char const* path, char cons
 					base = filename;
 					path = "";
 				}
-				int const n = (old_ext ? old_ext : i) - base;
+				int const n = (int)((old_ext ? old_ext : i) - base);
 				snprintf(buf, size, "%s%.*s%s", path, n, base, ext);
 				return;
 		}

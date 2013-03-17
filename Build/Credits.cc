@@ -215,7 +215,7 @@ try
 	guiGapBetweenCreditNodes    = CRDT_SPACE_BN_NODES;
 	guiGapTillReadNextCredit    = CRDT_SPACE_BN_NODES;
 
-	for (size_t i = 0; i != lengthof(gCrdtMouseRegions); ++i)
+	for (INT32 i = 0; i != lengthof(gCrdtMouseRegions); ++i)
 	{
 		// Make a mouse region
 		MOUSE_REGION* const  r = &gCrdtMouseRegions[i];

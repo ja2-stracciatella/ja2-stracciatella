@@ -597,6 +597,8 @@ void ClearEditorItemsInfo()
 			eInfo.sSaveSelKeysIndex = eInfo.sSelItemIndex;
 			eInfo.sSaveKeysScrollIndex = eInfo.sScrollIndex;
 			break;
+        default:
+            break;
 	}
 }
 

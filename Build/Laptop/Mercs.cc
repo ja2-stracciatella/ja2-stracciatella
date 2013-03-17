@@ -1105,7 +1105,7 @@ static void HandleTalkingSpeck(void)
 //			guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 			//def:
 
-			if( gfJustEnteredMercSite && gubArrivedFromMercSubSite != MERC_CAME_FROM_OTHER_PAGE || gfFirstTimeIntoMERCSiteSinceEnteringLaptop )
+			if( (gfJustEnteredMercSite && gubArrivedFromMercSubSite != MERC_CAME_FROM_OTHER_PAGE) || gfFirstTimeIntoMERCSiteSinceEnteringLaptop )
 			{
 				gfFirstTimeIntoMERCSiteSinceEnteringLaptop = FALSE;
 				GetSpeckConditionalOpening( FALSE );

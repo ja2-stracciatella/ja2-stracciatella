@@ -283,6 +283,8 @@ try
 				case LAPTOP_SCREEN:
 					ExitLaptop();
 					break;
+                default:
+                    break;
 			}
 		}
 

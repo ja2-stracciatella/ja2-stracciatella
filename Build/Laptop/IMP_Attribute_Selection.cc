@@ -515,7 +515,7 @@ static void CreateSlideRegionMouseRegions()
 {
 	/* Create the mouse regions on the sliding area, that, if the player clicks
 	 * on, the bar will automatically jump to */
-	for (size_t i = 0; i != lengthof(pSliderRegions); ++i)
+	for (UINT32 i = 0; i != lengthof(pSliderRegions); ++i)
 	{
 		MOUSE_REGION& r = pSliderRegions[i];
 		UINT16 const  x = LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X;
@@ -770,5 +770,7 @@ static void StatAtZeroBoxCallBack(MessageBoxReturnValue const bExitValue)
 			fHasAnySlidingBarMoved = TRUE;
 			MarkButtonsDirty();
 			break;
+        default:
+            break;
 	}
 }

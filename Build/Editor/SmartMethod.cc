@@ -294,20 +294,20 @@ void PasteSmartWall( UINT32 iMapIndex )
 	}
 	//*D* See above documentation
 	//Evaluate left adjacent tile
-	if( usWallType = GetVerticalWallType( iMapIndex - 1 ) )
+	if( (usWallType = GetVerticalWallType( iMapIndex - 1 )) )
 		usNumH[ usWallType - FIRSTWALL ]++;
-	if( usWallType = GetHorizontalWallType( iMapIndex - 1 ) )
+	if( (usWallType = GetHorizontalWallType( iMapIndex - 1 )) )
 		usNumH[ usWallType - FIRSTWALL ]++;
 	//Evaluate right adjacent tile
-	if( usWallType = GetHorizontalWallType( iMapIndex + 1 ) )
+	if( (usWallType = GetHorizontalWallType( iMapIndex + 1 )) )
 		usNumH[ usWallType - FIRSTWALL ]++;
 	//Evaluate upper adjacent tile
-	if( usWallType = GetVerticalWallType( iMapIndex - WORLD_COLS ) )
+	if( (usWallType = GetVerticalWallType( iMapIndex - WORLD_COLS )) )
 		usNumV[ usWallType - FIRSTWALL ]++;
-	if( usWallType = GetHorizontalWallType( iMapIndex - WORLD_COLS ) )
+	if( (usWallType = GetHorizontalWallType( iMapIndex - WORLD_COLS )) )
 		usNumV[ usWallType - FIRSTWALL ]++;
 	//Evaluate lower adjacent tile
-	if( usWallType = GetVerticalWallType( iMapIndex + WORLD_COLS ) )
+	if( (usWallType = GetVerticalWallType( iMapIndex + WORLD_COLS )) )
 		usNumV[ usWallType - FIRSTWALL ]++;
 	//*E* See above documentation
 	if( usNumV[gubWallUIValue - FIRSTWALL] | usNumH[gubWallUIValue - FIRSTWALL] )
@@ -448,7 +448,7 @@ void PasteSmartDoor( UINT32 iMapIndex )
 	UINT16 usDoorType;
 	UINT16 usIndex;
 
-	if( pWall = GetVerticalWall( iMapIndex ) )
+	if( (pWall = GetVerticalWall( iMapIndex )) )
 	{
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartDoorIndex( usWallOrientation );
@@ -457,7 +457,7 @@ void PasteSmartDoor( UINT32 iMapIndex )
 		UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usDoorType, usIndex);
 		ReplaceStructIndex( iMapIndex, pWall->usIndex, usTileIndex );
 	}
-	if( pWall = GetHorizontalWall( iMapIndex ) )
+	if( (pWall = GetHorizontalWall( iMapIndex )) )
 	{
 		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
 		usIndex = CalcSmartDoorIndex( usWallOrientation );

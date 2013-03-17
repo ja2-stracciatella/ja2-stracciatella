@@ -733,7 +733,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 							{
 								fMultiStructSpecialFlag = ( ( pStructure->fFlags & STRUCTURE_SPECIAL ) != 0 );
 
-								if ( ( bMultiStructSpecialFlag == fMultiStructSpecialFlag ) )
+								if ( bMultiStructSpecialFlag == fMultiStructSpecialFlag )
 								{
 									// If we just damaged it, use same damage value....
 									ExplosiveDamageGridNo(sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, owner, bLevel);

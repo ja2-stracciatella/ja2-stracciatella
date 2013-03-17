@@ -682,10 +682,10 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	//Set music
 	SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
-	if( gfTacticalTraversal && pInitiatingBattleGroup == gpTacticalTraversalGroup ||
-			pInitiatingBattleGroup && !pInitiatingBattleGroup->fPlayer &&
+	if( (gfTacticalTraversal && pInitiatingBattleGroup == gpTacticalTraversalGroup) ||
+			(pInitiatingBattleGroup && !pInitiatingBattleGroup->fPlayer &&
 			pInitiatingBattleGroup->ubSectorX == gWorldSectorX &&
-		  pInitiatingBattleGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
+		  pInitiatingBattleGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ) )
 	{	// At least say quote....
 		if ( ubNumMercs > 0 )
 		{
@@ -1182,13 +1182,13 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	/* First check if the group arriving is going to queue another battle.
 	 * NOTE: We can't have more than one battle ongoing at a time. */
 	if (exception_queue ||
-			check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) && (x != gWorldSectorX || y != gWorldSectorY || gbWorldSectorZ > 0) ||
+			(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) && (x != gWorldSectorX || y != gWorldSectorY || gbWorldSectorZ > 0)) ||
 			AreInMeanwhile() ||
 			/* KM: Aug 11, 1999 -- Patch fix: Added additional checks to prevent a 2nd
 			 * battle in the case where the player is involved in a potential battle
 			 * with bloodcats/civilians */
-			check_for_battle && HostileCiviliansPresent() ||
-			check_for_battle && HostileBloodcatsPresent())
+			(check_for_battle && HostileCiviliansPresent()) ||
+			(check_for_battle && HostileBloodcatsPresent()))
 	{ /* Queue battle! Delay arrival by a random value ranging from 3-5 minutes,
 		 * so it doesn't get the player too suspicious after it happens to him a few
 		 * times, which, by the way, is a rare occurrence. */
@@ -3722,6 +3722,8 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 			ChangeSelectedMapSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 			StopTimeCompression();
 			break;
+        default:
+            break;
 	}
 	fMapPanelDirty        = TRUE;
 	fMapScreenBottomDirty = TRUE;
