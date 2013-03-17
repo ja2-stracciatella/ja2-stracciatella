@@ -1042,11 +1042,9 @@ static BOOLEAN ExtractFilenameFromFields(void)
 static BOOLEAN ValidFilename(void)
 {
 	const wchar_t* pDest;
-	if( gzFilename[0] != '\0' );
+	if( gzFilename[0] != '\0' )
 	{
 		pDest = wcsstr( gzFilename, L".dat" );
-		if( !pDest )
-			pDest = wcsstr(gzFilename, L".dat");
 		if( pDest && pDest != gzFilename && pDest[4] == '\0' )
 			return TRUE;
 	}
