@@ -537,6 +537,7 @@ SRCS += _build/lib-gtest/src/gtest-typed-test.cc
 SRCS += sgp/FileMan_unittest.cc
 SRCS += sgp/SGPStrings_unittest.cc
 SRCS += sgp/UTF8String_unittest.cc
+SRCS += sgp/wchar_unittest.cc
 endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))

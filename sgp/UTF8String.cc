@@ -18,6 +18,20 @@ UTF8String::UTF8String(const char *utf8Encoded) throw (InvalidEncodingException)
   }
 }
 
+/** Create object from existing UTF-8 encoded string. */
+UTF8String::UTF8String(const uint8_t *utf8Encoded) throw (InvalidEncodingException)
+{
+  std::string value((const char*)utf8Encoded);
+  if(utf8::is_valid(value.begin(), value.end()))
+  {
+    m_encoded = value;
+  }
+  else
+  {
+    throw InvalidEncodingException("Invalid UTF-8 encoding");
+  }
+}
+
 /** Create object from UTF-16 encoded string. */
 UTF8String::UTF8String(const uint16_t *utf16Encoded) throw (InvalidEncodingException)
 {
@@ -73,6 +87,24 @@ std::vector<uint32_t> UTF8String::getUTF32() const
   utf8::utf8to32(m_encoded.begin(), m_encoded.end(), back_inserter(words));
   return words;
 }
+
+#ifdef WCHAR_SUPPORT
+
+/** Get wchar_t string.
+ * @return Pointer to the internal buffer. */
+const wchar_t * UTF8String::getWCHAR()
+{
+  m_wcharBuffer.clear();
+#if _WIN32
+  utf8::utf8to16(m_encoded.begin(), m_encoded.end(), back_inserter(m_wcharBuffer));
+#else
+  utf8::utf8to32(m_encoded.begin(), m_encoded.end(), back_inserter(m_wcharBuffer));
+#endif
+  m_wcharBuffer.push_back(0);
+  return m_wcharBuffer.data();
+}
+
+#endif
 
 
 /** Get number of characters in the string. */

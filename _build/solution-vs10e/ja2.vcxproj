@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -50,7 +50,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -66,7 +66,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -410,10 +410,13 @@
     <ClCompile Include="..\..\sgp\STCI.cc" />
     <ClCompile Include="..\..\sgp\StrUtils.cc" />
     <ClCompile Include="..\..\sgp\TranslationTable.cc" />
+    <ClCompile Include="..\..\sgp\UTF8String.cc" />
+    <ClCompile Include="..\..\sgp\UTF8String_unittest.cc" />
     <ClCompile Include="..\..\sgp\Video.cc" />
     <ClCompile Include="..\..\sgp\VObject.cc" />
     <ClCompile Include="..\..\sgp\VObject_Blitters.cc" />
     <ClCompile Include="..\..\sgp\VSurface.cc" />
+    <ClCompile Include="..\..\sgp\wchar_unittest.cc" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\operations.cpp" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\path.cpp" />
@@ -783,6 +786,10 @@
     <ClInclude Include="..\..\sgp\MemMan.h" />
     <ClInclude Include="..\..\sgp\MouseSystem.h" />
     <ClInclude Include="..\..\sgp\PCX.h" />
+    <ClInclude Include="..\..\sgp\Platform.h" />
+    <ClInclude Include="..\..\sgp\PlatformIO.h" />
+    <ClInclude Include="..\..\sgp\PlatformSDL.h" />
+    <ClInclude Include="..\..\sgp\PlatformStrings.h" />
     <ClInclude Include="..\..\sgp\PODObj.h" />
     <ClInclude Include="..\..\sgp\Rad.h" />
     <ClInclude Include="..\..\sgp\Random.h" />
@@ -798,6 +805,7 @@
     <ClInclude Include="..\..\sgp\TopicIDs.h" />
     <ClInclude Include="..\..\sgp\TranslationTable.h" />
     <ClInclude Include="..\..\sgp\Types.h" />
+    <ClInclude Include="..\..\sgp\UTF8String.h" />
     <ClInclude Include="..\..\sgp\Vector.h" />
     <ClInclude Include="..\..\sgp\Video.h" />
     <ClInclude Include="..\..\sgp\VObject.h" />

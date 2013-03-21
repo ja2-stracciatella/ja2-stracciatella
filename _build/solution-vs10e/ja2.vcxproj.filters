@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -1131,6 +1131,15 @@
     <ClCompile Include="..\lib-boost\libs\system\src\error_code.cpp">
       <Filter>Libraries\boost\system</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sgp\UTF8String.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\UTF8String_unittest.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\wchar_unittest.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -2260,6 +2269,21 @@
     </ClInclude>
     <ClInclude Include="..\lib-boost\libs\system\src\local_free_on_destruction.hpp">
       <Filter>Libraries\boost\system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\Platform.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\PlatformIO.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\PlatformSDL.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\PlatformStrings.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\UTF8String.h">
+      <Filter>Source Files\sgp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

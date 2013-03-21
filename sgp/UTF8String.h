@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+/** Supporting wchar_t so far. */
+#define WCHAR_SUPPORT
+
 
 class InvalidEncodingException;
 
@@ -33,6 +36,10 @@ protected:
 };
 
 
+#if defined(_MSC_VER)
+#pragma warning( disable : 4290 )   /* disable Visual Studio warnings of unsupported throw specification */
+#endif
+
 /**
  * @brief UTF-8 encoded string.
  *
@@ -46,6 +53,9 @@ class UTF8String
 public:
   /** Create object from existing UTF-8 encoded string. */
   UTF8String(const char *utf8Encoded) throw (InvalidEncodingException);
+
+  /** Create object from existing UTF-8 encoded string. */
+  UTF8String(const uint8_t *utf8Encoded) throw (InvalidEncodingException);
 
   /** Create object from UTF-16 encoded string. */
   UTF8String(const uint16_t *utf16Encoded) throw (InvalidEncodingException);
@@ -62,6 +72,14 @@ public:
   /** Get UTF-32 encoded string. */
   std::vector<uint32_t> getUTF32() const;
 
+#ifdef WCHAR_SUPPORT
+
+  /** Get wchar_t string.
+   * @return Pointer to the internal buffer. */
+  const wchar_t * getWCHAR();
+
+#endif
+
   /** Get number of characters in the string. */
   size_t getNumCharacters() const;
 
@@ -72,5 +90,10 @@ public:
 protected:
   /** UTF-8 encoded string. */
   std::string m_encoded;
+
+#ifdef WCHAR_SUPPORT
+  /** Buffer for storing wchar_t copy of the string. */
+  std::vector<wchar_t> m_wcharBuffer;
+#endif
 };
 
