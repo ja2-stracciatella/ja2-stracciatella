@@ -141,16 +141,12 @@ static void LoadSaveScreenEntry(void)
 	iTopFileShown = iTotalFiles = 0;
 	try
 	{
-    std::string searchString = FileMan::joinPaths(FileMan::getMapsDirPath(), "*.dat");
-		SGP::FindFiles find(searchString.c_str());
-		for (;;)
-		{
-			char const* const filename = find.Next();
-			if (filename == NULL) break;
-
-			FileList = AddToFDlgList(FileList, filename);
+    std::vector<std::string> files = FindFilesInDir(FileMan::getMapsDirPath(), ".dat", true, true, true);
+    for (std::vector<std::string>::const_iterator it(files.begin()); it != files.end(); ++it)
+    {
+			FileList = AddToFDlgList(FileList, it->c_str());
 			++iTotalFiles;
-		}
+    }
 	}
 	catch (...) { /* XXX ignore */ }
 

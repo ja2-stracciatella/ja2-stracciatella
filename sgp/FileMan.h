@@ -58,33 +58,6 @@ UINT32 FileGetSize(HWFILE);
  * Does not affect any subdirectories! */
 void EraseDirectory(char const* pcDirectory);
 
-
-namespace SGP
-{
-	class FindFiles
-	{
-		public:
-			/* Search for files designated by pattern.  No match causes Next() to return
-			 * 0 the first time it is called. */
-			FindFiles(char const* pattern);
-			~FindFiles();
-
-			/* Get the next filename.  Returns 0, iff there are no more files. */
-			char const* Next();
-
-		private:
-#ifdef _WIN32
-			HANDLE          find_handle_;
-			WIN32_FIND_DATA find_data_;
-			bool            first_done_;
-#else
-			size_t index_;
-			glob_t glob_data_;
-#endif
-	};
-}
-
-
 enum FileAttributes
 {
 	FILE_ATTR_NONE      = 0,
@@ -198,10 +171,23 @@ private:
  * Find all files with the given extension in the given directory.
  * @param dirPath Path to the directory
  * @param extension Extension with dot (e.g. ".txt")
- * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems. * * @return List of paths (dir + filename). */
+ * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
+ * @param returnOnlyNames When True, return only names (without the director path)
+ * @param sortResults When True, sort found paths.
+ * @return List of paths (dir + filename). */
 std::vector<std::string>
 FindFilesInDir(const std::string &dirPath,
                const std::string &ext,
-               bool caseIncensitive);
+               bool caseIncensitive,
+               bool returnOnlyNames,
+               bool sortResults = false);
+
+/**
+ * Find all files in a directory.
+ * @param dirPath Path to the directory
+ * @param sortResults When True, sort found paths.
+ * @return List of paths (dir + filename). */
+std::vector<std::string>
+FindAllFilesInDir(const std::string &dirPath, bool sortResults = false);
 
 #endif

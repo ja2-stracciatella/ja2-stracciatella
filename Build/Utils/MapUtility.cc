@@ -79,15 +79,12 @@ ScreenID MapUtilScreenHandle()
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		try
 		{
-			SGP::FindFiles find(MAPSDIR "/*.dat");
-			for (;;)
-			{
-				const char* const filename = find.Next();
-				if (filename == NULL) break;
-
-				FileList = AddToFDlgList(FileList, filename);
+      std::vector<std::string> files = FindFilesInDir(MAPSDIR, ".dat", true, true, true);
+      for (std::vector<std::string>::const_iterator it(files.begin()); it != files.end(); ++it)
+      {
+        FileList = AddToFDlgList(FileList, it->c_str());
 				++sFiles;
-			}
+      }
 		}
 		catch (...) { /* XXX ignore */ }
 

@@ -2,6 +2,7 @@
 
 #include "FileMan.h"
 #include "boost/filesystem.hpp"
+#include "boost/filesystem/fstream.hpp"
 
 TEST(FileManTest, joinPaths)
 {
@@ -43,42 +44,72 @@ TEST(FileManTest, joinPaths)
 }
 
 
-TEST(FileManTest, FindFiles)
-{
-  {
-    SGP::FindFiles find("_unittests/find-files/*.txt");
-    std::vector<std::string> results;
-    for (;;)
-    {
-      const char * fileName = find.Next();
-      if (fileName == NULL) break;
-      results.push_back(std::string(fileName));
-    }
-#if CASE_SENSITIVE_FS
-    EXPECT_EQ(results.size(), 1);
-    EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
-#else
-    EXPECT_EQ(results.size(), 2);
-    EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
-    EXPECT_STREQ(results[1].c_str(), "uppercase-ext.TXT");
-#endif
-  }
-}
-
-
 TEST(FileManTest, FindFilesWithBoost)
 {
-  std::vector<std::string> results = FindFilesInDir("_unittests/find-files", ".txt", false);
+  std::vector<std::string> results = FindFilesInDir("_unittests/find-files", ".txt", false, false);
   ASSERT_EQ(results.size(), 1);
   EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/lowercase-ext.txt");
 
-  results = FindFilesInDir("_unittests/find-files", ".TXT", false);
+  results = FindFilesInDir("_unittests/find-files", ".TXT", false, false);
   ASSERT_EQ(results.size(), 1);
   EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/uppercase-ext.TXT");
 
-  results = FindFilesInDir("_unittests/find-files", ".tXt", true);
+  results = FindFilesInDir("_unittests/find-files", ".TXT", false, true);
+  ASSERT_EQ(results.size(), 1);
+  EXPECT_STREQ(results[0].c_str(), "uppercase-ext.TXT");
+
+  results = FindFilesInDir("_unittests/find-files", ".tXt", true, false);
   std::sort(results.begin(), results.end());
   ASSERT_EQ(results.size(), 2);
   EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/lowercase-ext.txt");
   EXPECT_STREQ(results[1].c_str(), "_unittests/find-files/uppercase-ext.TXT");
+
+  results = FindFilesInDir("_unittests/find-files", ".tXt", true, false, true);
+  ASSERT_EQ(results.size(), 2);
+  EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/lowercase-ext.txt");
+  EXPECT_STREQ(results[1].c_str(), "_unittests/find-files/uppercase-ext.TXT");
+
+  results = FindFilesInDir("_unittests/find-files", ".tXt", true, true, true);
+  ASSERT_EQ(results.size(), 2);
+  EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
+  EXPECT_STREQ(results[1].c_str(), "uppercase-ext.TXT");
+
+  results = FindAllFilesInDir("_unittests/find-files", true);
+  ASSERT_EQ(results.size(), 3);
+  EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/file-without-extension");
+  EXPECT_STREQ(results[1].c_str(), "_unittests/find-files/lowercase-ext.txt");
+  EXPECT_STREQ(results[2].c_str(), "_unittests/find-files/uppercase-ext.TXT");
+}
+
+
+TEST(FileManTest, RemoveAllFilesInDir)
+{
+  boost::filesystem::path tmpDir = boost::filesystem::temp_directory_path();
+  tmpDir /= boost::filesystem::unique_path();
+  boost::filesystem::path subDir = tmpDir / "subdir";
+  ASSERT_EQ(boost::filesystem::create_directory(tmpDir), true);
+  ASSERT_EQ(boost::filesystem::create_directory(subDir), true);
+
+  boost::filesystem::path pathA = tmpDir / "foo.txt";
+  boost::filesystem::path pathB = tmpDir / "bar.txt";
+
+  boost::filesystem::ofstream fileA(pathA);
+  boost::filesystem::ofstream fileB(pathB);
+
+  fileA << "foo";
+  fileB << "bar";
+
+  fileA.close();
+  fileB.close();
+
+  std::vector<std::string> results = FindAllFilesInDir(tmpDir.string(), true);
+  ASSERT_EQ(results.size(), 2);
+
+  EraseDirectory(tmpDir.c_str());
+
+  // check that the subdirectory is still there
+  ASSERT_EQ(boost::filesystem::is_directory(subDir), true);
+
+  results = FindAllFilesInDir(tmpDir.string(), true);
+  ASSERT_EQ(results.size(), 0);
 }

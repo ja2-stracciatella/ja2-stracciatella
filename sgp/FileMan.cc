@@ -85,76 +85,6 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
  * @return file mode for fopen call and posix mode using parameter 'posixMode' */
 static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode);
 
-SGP::FindFiles::FindFiles(char const* const pattern) :
-#ifdef _WIN32
-	first_done_()
-#else
-	index_()
-#endif
-{
-#ifdef _WIN32
-	HANDLE const h = FindFirstFile(pattern, &find_data_);
-	if (h != INVALID_HANDLE_VALUE)
-	{
-		find_handle_ = h;
-		return;
-	}
-	else if (GetLastError() == ERROR_FILE_NOT_FOUND)
-	{
-		find_handle_ = 0;
-		return;
-	}
-#else
-	glob_t* const g = &glob_data_;
-	switch (glob(pattern, GLOB_NOSORT, 0, g))
-	{
-		case 0:
-		case GLOB_NOMATCH:
-			return;
-
-		default:
-			globfree(g);
-			break;
-	}
-#endif
-	throw std::runtime_error("Failed to start file search");
-}
-
-
-SGP::FindFiles::~FindFiles()
-{
-#ifdef _WIN32
-	if (find_handle_) FindClose(find_handle_);
-#else
-	globfree(&glob_data_);
-#endif
-}
-
-
-char const* SGP::FindFiles::Next()
-{
-#ifdef _WIN32
-	if (!first_done_)
-	{
-		first_done_ = true;
-		// No match?
-		if (!find_handle_) return 0;
-	}
-	else if (!FindNextFile(find_handle_, &find_data_))
-	{
-		if (GetLastError() == ERROR_NO_MORE_FILES) return 0;
-		throw std::runtime_error("Failed to get next file in file search");
-	}
-	return find_data_.cFileName;
-#else
-	if (index_ >= glob_data_.gl_pathc) return 0;
-	char const* const path  = glob_data_.gl_pathv[index_++];
-	char const* const start = strrchr(path, PATH_SEPARATOR);
-	return start ? start + 1 : path;
-#endif
-}
-
-
 static std::string s_configFolderPath;
 static std::string s_configPath;
 static std::string s_gameResRootPath;
@@ -564,24 +494,18 @@ void FileMan::createDir(char const* const path)
 }
 
 
-void EraseDirectory(char const* const path)
+void EraseDirectory(char const* const dirPath)
 {
-	char pattern[512];
-	snprintf(pattern, lengthof(pattern), "%s/*", path);
-
-	SGP::FindFiles find(pattern);
-	while (char const* const find_filename = find.Next())
-	{
-		char filename[512];
-		snprintf(filename, lengthof(filename), "%s/%s", path, find_filename);
-
+  std::vector<std::string> paths = FindAllFilesInDir(dirPath);
+  for (std::vector<std::string>::const_iterator it(paths.begin()); it != paths.end(); ++it)
+  {
 		try
 		{
-			FileDelete(filename);
+			FileDelete(it->c_str());
 		}
 		catch (...)
 		{
-			const FileAttributes attr = FileGetAttributes(filename);
+			const FileAttributes attr = FileGetAttributes(it->c_str());
 			if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY) continue;
 			throw;
 		}
@@ -974,7 +898,9 @@ FILE* FileMan::openForReadingInDataDir(const char *filename)
 std::vector<std::string>
 FindFilesInDir(const std::string &dirPath,
                const std::string &ext,
-               bool caseIncensitive)
+               bool caseIncensitive,
+               bool returnOnlyNames,
+               bool sortResults)
 {
   std::string ext_copy = ext;
   if(caseIncensitive)
@@ -996,9 +922,43 @@ FindFilesInDir(const std::string &dirPath,
       }
       if(file_ext.compare(ext_copy) == 0)
       {
-        paths.push_back(it->path().string());
+        if(returnOnlyNames)
+        {
+          paths.push_back(it->path().filename().string());
+        }
+        else
+        {
+          paths.push_back(it->path().string());
+        }
       }
     }
+  }
+  if(sortResults)
+  {
+    std::sort(paths.begin(), paths.end());
+  }
+  return paths;
+}
+
+/**
+ * Find all files in a directory.
+ * @return List of paths (dir + filename). */
+std::vector<std::string>
+FindAllFilesInDir(const std::string &dirPath, bool sortResults)
+{
+  std::vector<std::string> paths;
+  boost::filesystem::path path(dirPath);
+  boost::filesystem::directory_iterator end;
+  for(boost::filesystem::directory_iterator it(path); it != end; it++)
+  {
+    if(boost::filesystem::is_regular_file(it->status()))
+    {
+      paths.push_back(it->path().string());
+    }
+  }
+  if(sortResults)
+  {
+    std::sort(paths.begin(), paths.end());
   }
   return paths;
 }
