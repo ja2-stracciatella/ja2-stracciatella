@@ -105,7 +105,7 @@ TEST(FileManTest, RemoveAllFilesInDir)
   std::vector<std::string> results = FindAllFilesInDir(tmpDir.string(), true);
   ASSERT_EQ(results.size(), 2);
 
-  EraseDirectory(tmpDir.c_str());
+  EraseDirectory(tmpDir.string().c_str());
 
   // check that the subdirectory is still there
   ASSERT_EQ(boost::filesystem::is_directory(subDir), true);
