@@ -13,6 +13,8 @@
 #include "Logger.h"
 #include "MicroIni/MicroIni.hpp"
 
+#include "boost/filesystem.hpp"
+
 #if _WIN32
 #include <shlobj.h>
 #else
@@ -964,3 +966,39 @@ FILE* FileMan::openForReadingInDataDir(const char *filename)
   return NULL;
 }
 
+/**
+ * Find all files with the given extension in the given directory.
+ * @param dirPath Path to the directory
+ * @param extension Extension with dot (e.g. ".txt")
+ * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems. * * @return List of paths (dir + filename). */
+std::vector<std::string>
+FindFilesInDir(const std::string &dirPath,
+               const std::string &ext,
+               bool caseIncensitive)
+{
+  std::string ext_copy = ext;
+  if(caseIncensitive)
+  {
+    std::transform(ext_copy.begin(), ext_copy.end(), ext_copy.begin(), ::tolower);
+  }
+
+  std::vector<std::string> paths;
+  boost::filesystem::path path(dirPath);
+  boost::filesystem::directory_iterator end;
+  for(boost::filesystem::directory_iterator it(path); it != end; it++)
+  {
+    if(boost::filesystem::is_regular_file(it->status()))
+    {
+      std::string file_ext = it->path().extension().string();
+      if(caseIncensitive)
+      {
+        std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), ::tolower);
+      }
+      if(file_ext.compare(ext_copy) == 0)
+      {
+        paths.push_back(it->path().string());
+      }
+    }
+  }
+  return paths;
+}

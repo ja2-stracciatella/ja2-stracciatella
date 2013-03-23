@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "FileMan.h"
+#include "boost/filesystem.hpp"
 
 TEST(FileManTest, joinPaths)
 {
@@ -62,4 +63,22 @@ TEST(FileManTest, FindFiles)
     EXPECT_STREQ(results[1].c_str(), "uppercase-ext.TXT");
 #endif
   }
+}
+
+
+TEST(FileManTest, FindFilesWithBoost)
+{
+  std::vector<std::string> results = FindFilesInDir("_unittests/find-files", ".txt", false);
+  ASSERT_EQ(results.size(), 1);
+  EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/lowercase-ext.txt");
+
+  results = FindFilesInDir("_unittests/find-files", ".TXT", false);
+  ASSERT_EQ(results.size(), 1);
+  EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/uppercase-ext.TXT");
+
+  results = FindFilesInDir("_unittests/find-files", ".tXt", true);
+  std::sort(results.begin(), results.end());
+  ASSERT_EQ(results.size(), 2);
+  EXPECT_STREQ(results[0].c_str(), "_unittests/find-files/lowercase-ext.txt");
+  EXPECT_STREQ(results[1].c_str(), "_unittests/find-files/uppercase-ext.TXT");
 }

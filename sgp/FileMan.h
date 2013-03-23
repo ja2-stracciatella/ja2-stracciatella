@@ -2,6 +2,7 @@
 #define FILEMAN_H
 
 #include <string>
+#include <vector>
 
 #include "AutoObj.h"
 #include "Types.h"
@@ -192,5 +193,15 @@ private:
   /** Private constructor to avoid instantiation. */
   FileMan() {};
 };
+
+/**
+ * Find all files with the given extension in the given directory.
+ * @param dirPath Path to the directory
+ * @param extension Extension with dot (e.g. ".txt")
+ * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems. * * @return List of paths (dir + filename). */
+std::vector<std::string>
+FindFilesInDir(const std::string &dirPath,
+               const std::string &ext,
+               bool caseIncensitive);
 
 #endif
