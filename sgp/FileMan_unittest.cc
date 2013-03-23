@@ -40,3 +40,26 @@ TEST(FileManTest, joinPaths)
   }
 
 }
+
+
+TEST(FileManTest, FindFiles)
+{
+  {
+    SGP::FindFiles find("_unittests/find-files/*.txt");
+    std::vector<std::string> results;
+    for (;;)
+    {
+      const char * fileName = find.Next();
+      if (fileName == NULL) break;
+      results.push_back(std::string(fileName));
+    }
+#if CASE_SENSITIVE_FS
+    EXPECT_EQ(results.size(), 1);
+    EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
+#else
+    EXPECT_EQ(results.size(), 2);
+    EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
+    EXPECT_STREQ(results[1].c_str(), "uppercase-ext.TXT");
+#endif
+  }
+}
