@@ -103,7 +103,7 @@ ScreenID MapUtilScreenHandle()
 	//OK, we are here, now loop through files
 	if ( sCurFile == sFiles || FListNode== NULL )
 	{
-    gfProgramIsRunning = FALSE;
+    requestGameExit();
 		return( MAPUTILITY_SCREEN );
 	}
 
@@ -282,7 +282,7 @@ ScreenID MapUtilScreenHandle()
   {
 		if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
       { // Exit the program
-        gfProgramIsRunning = FALSE;
+        requestGameExit();
       }
 	}
 

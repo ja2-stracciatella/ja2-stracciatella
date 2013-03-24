@@ -3,10 +3,8 @@
 
 #include "Types.h"
 
-
-extern BOOLEAN		gfProgramIsRunning; // Turn this to FALSE to exit program
-
-/** Check if shutdown in progress. */
-bool isShutdownInProgress();
+/** Request game exit.
+ * Call this function if you want to exit the game. */
+void requestGameExit();
 
 #endif

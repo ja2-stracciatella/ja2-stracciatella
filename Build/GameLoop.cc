@@ -392,7 +392,7 @@ void HandleShortCutExitState()
 		case EDIT_SCREEN:
 		case ERROR_SCREEN:
 			// Do not prompt if error or editor
-			gfProgramIsRunning = FALSE;
+			requestGameExit();
 			break;
 
 		case LAPTOP_SCREEN:
@@ -427,7 +427,7 @@ void EndGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 		SetMusicMode( MUSIC_MAIN_MENU );
 		FadeOutNextFrame( );
 #else
-		gfProgramIsRunning = FALSE;
+		requestGameExit();
 #endif
 	}
 
