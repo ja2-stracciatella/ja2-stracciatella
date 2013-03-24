@@ -318,7 +318,7 @@ void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 	switch (ubPriority)
 	{
 		case MSG_DEBUG:
-#if defined _DEBUG && !defined JA2DEMO
+#if defined _DEBUG
 			usColor = DEBUG_COLOR;
 			break;
 #else
@@ -412,7 +412,7 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 #endif
 
 		case MSG_DEBUG:
-#if defined _DEBUG && !defined JA2DEMO
+#if defined _DEBUG
 		{
 			wchar_t DestStringA[512];
 			wcscpy(DestStringA, msg);
@@ -508,7 +508,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 			return;
 
 		case MSG_DEBUG:
-#if defined _DEBUG && !defined JA2DEMO
+#if defined _DEBUG
 			wcscpy(DestStringA, DestString);
 			swprintf(DestString, lengthof(DestString), L"Debug: %ls", DestStringA);
 			usColor = DEBUG_COLOR;

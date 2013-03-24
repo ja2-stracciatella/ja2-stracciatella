@@ -93,9 +93,7 @@
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
-#	ifndef JA2DEMO
-#		include "MapScreen.h"
-#	endif
+#	include "MapScreen.h"
 #endif
 
 #ifdef JA2BETAVERSION
@@ -1650,7 +1648,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 
 		case 'o': if (CHEATER_CHEAT_LEVEL()) CreatePlayerControlledMonster(); break;
 
-#if defined JA2TESTVERSION && !defined JA2DEMO
+#if defined JA2TESTVERSION
 		// Display player's highest progress percentage
 		case 'p': DumpSectorDifficultyInfo(); break;
 #endif

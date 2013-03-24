@@ -42,7 +42,7 @@ void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset );
 #endif
 
 
-#if defined ( JA2TESTVERSION ) || defined ( JA2DEMO )
+#if defined ( JA2TESTVERSION )
  void DemoHiringOfMercs(void);
 #endif
 

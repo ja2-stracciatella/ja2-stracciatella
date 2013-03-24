@@ -225,11 +225,7 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     case MLG_SPLASH:             return INTERFACEDIR "/splash.sti";
     case MLG_STATSBOX:           return LAPTOPDIR "/statsbox.sti";
     case MLG_STOREPLAQUE:        return LAPTOPDIR "/bobbystoreplaque.sti";
-# if defined JA2DEMO
-    case MLG_TITLETEXT:          return INTERFACEDIR "/titletext.sti";
-# else
     case MLG_TITLETEXT:          return LOADSCREENSDIR "/titletext.sti";
-# endif
     case MLG_TOALUMNI:           return LAPTOPDIR "/toalumni.sti";
     case MLG_TOMUGSHOTS:         return LAPTOPDIR "/tomugshots.sti";
     case MLG_TOSTATS:            return LAPTOPDIR "/tostats.sti";

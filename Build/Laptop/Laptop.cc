@@ -2884,7 +2884,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			ShouldTheHelpScreenComeUp(HELP_SCREEN_LAPTOP, TRUE);
 			break;
 
-#if defined JA2TESTVERSION || defined JA2DEMO
+#if defined JA2TESTVERSION
 		case 'w':
 			DemoHiringOfMercs();
 			break;
