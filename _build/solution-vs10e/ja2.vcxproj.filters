@@ -49,6 +49,15 @@
     <Filter Include="Libraries\gtest">
       <UniqueIdentifier>{f09dd230-2d9f-444f-8bcf-d0ccb2d5f4bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\boost">
+      <UniqueIdentifier>{716d68f3-733d-4df5-bfcb-7f31ebe1011c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\boost\filesystem">
+      <UniqueIdentifier>{70da8c60-5f47-4220-89a2-5542bd3e4679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\boost\system">
+      <UniqueIdentifier>{af43e454-70f8-498c-a8c3-e947b0dbbcb5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Build\AniViewScreen.cc">
@@ -1094,6 +1103,33 @@
     </ClCompile>
     <ClCompile Include="..\..\sgp\SGPStrings_unittest.cc">
       <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\operations.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\path.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\path_traits.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\portability.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\unique_path.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\utf8_codecvt_facet.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\filesystem\src\windows_file_codecvt.cpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-boost\libs\system\src\error_code.cpp">
+      <Filter>Libraries\boost\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2218,6 +2254,12 @@
     </ClInclude>
     <ClInclude Include="..\lib-gtest\src\gtest-internal-inl.h">
       <Filter>Libraries\gtest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-boost\libs\filesystem\src\windows_file_codecvt.hpp">
+      <Filter>Libraries\boost\filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-boost\libs\system\src\local_free_on_destruction.hpp">
+      <Filter>Libraries\boost\system</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

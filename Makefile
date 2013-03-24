@@ -93,6 +93,7 @@ CFLAGS += -I Build/TileEngine
 CFLAGS += -I Build/TacticalAI
 CFLAGS += -I sgp
 CFLAGS += -I _build/lib-MicroIni/include
+CFLAGS += -I _build/lib-boost
 
 #CFLAGS += -Wall
 #CFLAGS += -W
@@ -497,6 +498,17 @@ SRCS += _build/lib-MicroIni/src/MicroIni/File.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Section.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Value.cpp
+
+SRCS += _build/lib-boost/libs/system/src/error_code.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/codecvt_error_category.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/operations.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/path.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/path_traits.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/portability.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/unique_path.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/utf8_codecvt_facet.cpp
+SRCS += _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
+
 
 LNGS :=
 LNGS += Build/Utils/_DutchText.cc

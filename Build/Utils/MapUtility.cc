@@ -25,6 +25,7 @@
 #include "Video.h"
 #include "Quantize.h"
 #include "UILayout.h"
+#include <boost/foreach.hpp>
 
 
 #define		MINIMAP_X_SIZE			88
@@ -79,15 +80,12 @@ ScreenID MapUtilScreenHandle()
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		try
 		{
-			SGP::FindFiles find(MAPSDIR "/*.dat");
-			for (;;)
-			{
-				const char* const filename = find.Next();
-				if (filename == NULL) break;
-
-				FileList = AddToFDlgList(FileList, filename);
+      std::vector<std::string> files = FindFilesInDir(MAPSDIR, ".dat", true, true, true);
+      BOOST_FOREACH(const std::string &file, files)
+      {
+        FileList = AddToFDlgList(FileList, file.c_str());
 				++sFiles;
-			}
+      }
 		}
 		catch (...) { /* XXX ignore */ }
 
