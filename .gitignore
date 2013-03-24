@@ -1,5 +1,8 @@
 *.d
+*.exe
+*.ilk
 *.o
+*.pdb
 *~
 .DS_Store
 .cproject
@@ -10,7 +13,6 @@ _build/solution-vs10e/Debug
 _build/solution-vs10e/Release
 ja2
 ja2-last-strac
-ja2.exe
 libgcc_s_dw2-1.dll
 libstdc++-6.dll
 release-*
