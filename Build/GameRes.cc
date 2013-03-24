@@ -162,11 +162,6 @@ static const char* gGameLibaries[] =
   "intro.slf",
 #endif
 
-#if defined JA2DEMO
-# if defined JA2DEMOADS
-  "demoads.slf",
-# endif
-#endif
 };
 
 void InitGameResources(void)

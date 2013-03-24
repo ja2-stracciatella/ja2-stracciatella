@@ -2673,10 +2673,6 @@ static bool HandleKeyESC()
 		return true;
 	}
 
-#if defined JA2DEMO
-	HandleLeavingOfMapScreenDuringDemo();
-	return true;
-#else
 	if (gfInChangeArrivalSectorMode)
 	{
 		CancelChangeArrivalSectorMode();
@@ -2786,7 +2782,6 @@ static bool HandleKeyESC()
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
 	}
 	return false;
-#endif
 }
 
 

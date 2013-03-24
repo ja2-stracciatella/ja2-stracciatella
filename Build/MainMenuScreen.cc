@@ -164,15 +164,7 @@ static void HandleMainMenuScreen(void)
 	{
 		case QUIT:
 			gfMainMenuScreenExit = TRUE;
-
-#if defined JA2DEMOADS
-			// Goto ad pages
-			SetPendingNewScreen(DEMO_EXIT_SCREEN);
-			SetMusicMode(MUSIC_MAIN_MENU);
-			FadeOutNextFrame();
-#else
 			requestGameExit();
-#endif
 			break;
 
 		case LOAD_GAME:
@@ -204,21 +196,13 @@ void InitMainMenu(void)
 {
 	CreateDestroyMainMenuButtons(TRUE);
 
-#if defined JA2DEMO
-#	define GFX_DIR INTERFACEDIR
-#else
 #	define GFX_DIR LOADSCREENSDIR
-#endif
 	guiMainMenuBackGroundImage = AddVideoObjectFromFile(GFX_DIR "/mainmenubackground.sti");
 	guiJa2LogoImage            = AddVideoObjectFromFile(GFX_DIR "/ja2logo.sti");
 #undef GFX_DIR
 
 	// If there are no saved games, disable the button
 	if (!AreThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
-
-#if defined JA2DEMO
-	DisableButton(iMenuButtons[CREDITS]);
-#endif
 
 	gbHandledMainMenu = 0;
 	fInitialRender    = TRUE;
@@ -331,11 +315,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 		const char* const filename = GetMLGFilename(MLG_TITLETEXT);
 
 		INT32 Slot;
-#if defined JA2DEMO
-		Slot = 17;
-#else
 		Slot = 0;
-#endif
 		iMenuImages[NEW_GAME]    = LoadButtonImage(filename, Slot, Slot, Slot + 1, Slot + 2, -1);
 		iMenuImages[LOAD_GAME]   = UseLoadedButtonImage(iMenuImages[NEW_GAME],  6,  3,  4,  5, -1);
 		iMenuImages[PREFERENCES] = UseLoadedButtonImage(iMenuImages[NEW_GAME],  7,  7,  8,  9, -1);
