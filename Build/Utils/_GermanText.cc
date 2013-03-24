@@ -1,5 +1,8 @@
-#include "Text.h"
+﻿#include "Text.h"
 
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+#endif
 
 /*
 ******************************************************************************************************
@@ -3713,3 +3716,21 @@ LanguageRes g_LanguageResGerman = {
   s_ger_zNewTacticalMessages,
   s_ger_str_iron_man_mode_warning,
 };
+
+#ifdef WITH_UNITTESTS
+#define ARR_SIZE(x) (sizeof(x)/sizeof(x[0]))
+TEST(WideStringEncodingTest, GermanTextFile)
+{
+  // This test checks that the wide string literals in this file are correctly
+  // interpreted by the compiler.  Visual Studio requires BOM (byte-order mark)
+  // to correctly identify file encoding.  Failed test means that the compiler
+  // cannot correctly interpret the string literals.
+  const wchar_t str[] = L"тест";
+  ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
+  EXPECT_EQ(str[0], 0x0442);
+  EXPECT_EQ(str[1], 0x0435);
+  EXPECT_EQ(str[2], 0x0441);
+  EXPECT_EQ(str[3], 0x0442);
+  EXPECT_EQ(str[4], 0x00);
+}
+#endif
