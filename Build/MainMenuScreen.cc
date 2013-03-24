@@ -175,7 +175,7 @@ static void HandleMainMenuScreen(void)
 			SetMusicMode(MUSIC_MAIN_MENU);
 			FadeOutNextFrame();
 #else
-			gfProgramIsRunning = FALSE;
+			requestGameExit();
 #endif
 			break;
 

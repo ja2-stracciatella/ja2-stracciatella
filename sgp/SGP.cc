@@ -63,82 +63,11 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 #define MS_PER_GAME_CYCLE               (25)
 
 
-static BOOLEAN gfApplicationActive;
-BOOLEAN gfProgramIsRunning;
 static BOOLEAN gfGameInitialized = FALSE;
-
-#if 0 // XXX TODO
-INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
-{
-	static BOOLEAN fRestore = FALSE;
-
-	switch(Message)
-  {
-    case WM_ACTIVATEAPP:
-      switch(wParam)
-      {
-        case TRUE: // We are restarting DirectDraw
-					if (fRestore)
-          {
-#ifdef JA2
-	          RestoreVideoManager();
-
-						// unpause the JA2 Global clock
-            if ( !gfPauseDueToPlayerGamePause )
-            {
-						  PauseTime( FALSE );
-            }
-#endif
-            gfApplicationActive = TRUE;
-          }
-          break;
-        case FALSE: // We are suspending direct draw
-#ifdef JA2
-						// pause the JA2 Global clock
-						PauseTime( TRUE );
-						SuspendVideoManager();
-#endif
-
-          gfApplicationActive = FALSE;
-          fRestore = TRUE;
-          break;
-      }
-      break;
-
-    case WM_CREATE:
-			break;
-
-    case WM_DESTROY:
-			ShutdownStandardGamingPlatform();
-      ShowCursor(TRUE);
-      PostQuitMessage(0);
-      break;
-
-		case WM_SETFOCUS:
-      RestoreCursorClipRect( );
-			break;
-
-		case WM_KILLFOCUS:
-			// Set a flag to restore surfaces once a WM_ACTIVEATEAPP is received
-			fRestore = TRUE;
-			break;
-
-    default
-    : return DefWindowProc(hWindow, Message, wParam, lParam);
-  }
-  return 0L;
-}
-#endif
-
-
-static void SGPExit(void);
 
 
 static void InitializeStandardGamingPlatform(void)
 {
-	// now required by all (even JA2) in order to call ShutdownSGP
-	atexit(SGPExit);
-
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_EnableUNICODE(SDL_ENABLE);
 
@@ -192,11 +121,11 @@ static void InitializeStandardGamingPlatform(void)
 }
 
 
-static void ShutdownStandardGamingPlatform(void)
+/** Deinitialize the game an exit. */
+static void deinitGameAndExit()
 {
-	// Shut down the different components of the SGP
+	FastDebugMsg("Exiting Game");
 
-	// TEST
 	SoundServiceStreams();
 
 	if (gfGameInitialized)
@@ -224,16 +153,30 @@ static void ShutdownStandardGamingPlatform(void)
 #endif
 
   ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
+
+  SDL_Quit();
+
+  exit(0);
 }
 
 
+/** Request game exit.
+ * Call this function if you want to exit the game. */
+void requestGameExit()
+{
+  SDL_Event event;
+  event.type = SDL_QUIT;
+  SDL_PushEvent(&event);
+}
+
 static void MainLoop()
 {
-	gfApplicationActive = TRUE;
-	gfProgramIsRunning  = TRUE;
+	BOOLEAN s_doGameCycles = TRUE;
 
-  while (gfProgramIsRunning)
+  while (true)
   {
+    // cycle until SDL_Quit is received
+
 		SDL_Event event;
 		if (SDL_PollEvent(&event))
 		{
@@ -242,7 +185,7 @@ static void MainLoop()
 				case SDL_ACTIVEEVENT:
 					if (event.active.state & SDL_APPACTIVE)
 					{
-						gfApplicationActive = (event.active.gain != 0);
+						s_doGameCycles = (event.active.gain != 0);
 						break;
 					}
 					break;
@@ -259,13 +202,13 @@ static void MainLoop()
 					break;
 
 				case SDL_QUIT:
-					gfProgramIsRunning = FALSE;
+          deinitGameAndExit();
 					break;
 			}
 		}
 		else
 		{
-			if (gfApplicationActive)
+			if (s_doGameCycles)
 			{
         UINT32 gameCycleMS = GetClock();
 #if DEBUG_PRINT_GAME_CYCLE_TIME
@@ -347,9 +290,6 @@ try
 	 * themselves */
 	MainLoop();
 
-	FastDebugMsg("Exiting Game");
-
-	// SGPExit() will be called next through the atexit() mechanism
 	return EXIT_SUCCESS;
 }
 catch (const std::bad_alloc&)
@@ -369,29 +309,6 @@ catch (const std::exception& e)
 catch (...)
 {
 	return Failure("ERROR: caught unhandled unknown exception");
-}
-
-static bool s_shutdownInProgress = FALSE;
-
-
-/** Check if shutdown in progress. */
-bool isShutdownInProgress()
-{
-  return s_shutdownInProgress;
-}
-
-static void SGPExit(void)
-{
-	// helps prevent heap crashes when multiple assertions occur and call us
-	if ( s_shutdownInProgress )
-	{
-		return;
-	}
-
-	s_shutdownInProgress = true;
-	gfProgramIsRunning = FALSE;
-
-	ShutdownStandardGamingPlatform();
 }
 
 

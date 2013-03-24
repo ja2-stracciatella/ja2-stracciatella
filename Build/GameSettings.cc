@@ -202,7 +202,7 @@ void CDromEjectionErrorMessageBoxCallBack(MessageBoxReturnValue const bExitValue
 		}
 
  		//quit the game
-		gfProgramIsRunning = FALSE;
+		requestGameExit();
 	}
 }
 

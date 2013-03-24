@@ -12,21 +12,6 @@
 
 static SGPVSurface* gpVSurfaceHead = 0;
 
-void FreeSDLSurface(SDL_Surface *surface)
-{
-  if(isShutdownInProgress())
-  {
-    // Not freeing video surface if shutdown is in progress.
-    // That causes crash on Mac OS X when exiting the game from
-    // full screen mode. Bug #18 (Crash on exiting full screen mode on Mac OS)
-  }
-  else
-  {
-    SDL_FreeSurface(surface);
-  }
-}
-
-
 
 SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	p16BPPPalette(),

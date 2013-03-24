@@ -1814,7 +1814,7 @@ static ScreenID PerformSelectedAction(void)
 			break;
 
 		case ACTION_QUIT_GAME:
-			gfProgramIsRunning = FALSE;
+			requestGameExit();
 		case ACTION_EXIT_EDITOR:
 			if( EditModeShutdown( ) )
 			{

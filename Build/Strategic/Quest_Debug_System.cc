@@ -1121,7 +1121,7 @@ static void GetUserInput(void)
 					if( Event.usKeyState & ALT_DOWN )
 					{
 						gfQuestDebugExit = TRUE;
-						gfProgramIsRunning = FALSE;
+						requestGameExit();
 					}
 					break;
 
