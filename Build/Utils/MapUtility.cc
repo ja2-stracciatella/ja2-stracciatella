@@ -25,6 +25,7 @@
 #include "Video.h"
 #include "Quantize.h"
 #include "UILayout.h"
+#include <boost/foreach.hpp>
 
 
 #define		MINIMAP_X_SIZE			88
@@ -80,9 +81,9 @@ ScreenID MapUtilScreenHandle()
 		try
 		{
       std::vector<std::string> files = FindFilesInDir(MAPSDIR, ".dat", true, true, true);
-      for (std::vector<std::string>::const_iterator it(files.begin()); it != files.end(); ++it)
+      BOOST_FOREACH(const std::string &file, files)
       {
-        FileList = AddToFDlgList(FileList, it->c_str());
+        FileList = AddToFDlgList(FileList, file.c_str());
 				++sFiles;
       }
 		}

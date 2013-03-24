@@ -52,6 +52,7 @@
 #include "UILayout.h"
 #include "GameState.h"
 #include "GameRes.h"
+#include <boost/foreach.hpp>
 
 static BOOLEAN gfErrorCatch            = FALSE;
 static wchar_t gzErrorCatchString[256] = L"";
@@ -142,9 +143,9 @@ static void LoadSaveScreenEntry(void)
 	try
 	{
     std::vector<std::string> files = FindFilesInDir(FileMan::getMapsDirPath(), ".dat", true, true, true);
-    for (std::vector<std::string>::const_iterator it(files.begin()); it != files.end(); ++it)
+    BOOST_FOREACH(const std::string &file, files)
     {
-			FileList = AddToFDlgList(FileList, it->c_str());
+			FileList = AddToFDlgList(FileList, file.c_str());
 			++iTotalFiles;
     }
 	}

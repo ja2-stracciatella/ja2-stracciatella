@@ -12,6 +12,7 @@
 #include "FileMan.h"
 #include "MemMan.h"
 #include "Vector.h"
+#include <boost/foreach.hpp>
 
 
 struct TILE_CACHE_STRUCT
@@ -45,11 +46,11 @@ void InitTileCache(void)
 	// Look for JSD files in the tile cache directory and load any we find
   std::vector<std::string> jsdFiles = FindFilesInDir(FileMan::getTilecacheDirPath(), ".jsd", true, false);
 
-  for (std::vector<std::string>::const_iterator it(jsdFiles.begin()); it != jsdFiles.end(); ++it)
+  BOOST_FOREACH(const std::string &file, jsdFiles)
   {
 		TILE_CACHE_STRUCT tc;
-		GetRootName(tc.zRootName, lengthof(tc.zRootName), it->c_str());
-		tc.pStructureFileRef = LoadStructureFile(it->c_str());
+		GetRootName(tc.zRootName, lengthof(tc.zRootName), file.c_str());
+		tc.pStructureFileRef = LoadStructureFile(file.c_str());
 
 		if (strcasecmp(tc.zRootName, "l_dead1") == 0)
 		{
