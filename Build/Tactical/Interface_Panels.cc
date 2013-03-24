@@ -969,9 +969,7 @@ void CreateSMPanelButtons(void)
 
 	iBurstButtonImages[WM_NORMAL]     = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],     7,  7);
 	iBurstButtonImages[WM_BURST]      = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],    17, 17);
-#ifndef JA2DEMO
 	iBurstButtonImages[WM_ATTACHED]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES],    26, 26);
-#endif
 
 	iSMPanelImages[STANCE_IMAGES]     = LoadButtonImage(INTERFACEDIR "/invadd-ons.sti", 0, 0, -1, 2, -1);
 
@@ -1023,9 +1021,7 @@ void RemoveSMPanelButtons(void)
 
 	UnloadButtonImage(iBurstButtonImages[WM_NORMAL]);
 	UnloadButtonImage(iBurstButtonImages[WM_BURST]);
-#ifndef JA2DEMO
 	UnloadButtonImage(iBurstButtonImages[WM_ATTACHED]);
-#endif
 }
 
 

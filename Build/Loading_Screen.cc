@@ -98,9 +98,7 @@ LoadingScreenID GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
 				case COASTAL_ROAD:
 					return night ? LOADINGSCREEN_NIGHTTROPICAL : LOADINGSCREEN_DAYTROPICAL;
 				default:
-#ifndef JA2DEMO
 					Assert(false);
-#endif
 					return night ? LOADINGSCREEN_NIGHTGENERIC : LOADINGSCREEN_DAYGENERIC;
 			}
 

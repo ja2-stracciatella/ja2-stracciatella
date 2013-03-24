@@ -44,10 +44,8 @@ void HandleHourlyUpdate()
 	// hourly update of team assignments
 	UpdateAssignments();
 
-	#ifndef JA2DEMO
 	// hourly update of hated/liked mercs
 	UpdateBuddyAndHatedCounters();
-	#endif
 
 	// update morale!
 	HourlyMoraleUpdate();

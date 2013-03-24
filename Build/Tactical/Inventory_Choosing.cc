@@ -1805,8 +1805,6 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 			return;
 	}
 
-#ifndef JA2DEMO
-
 	// decide if the creature will drop any REAL bodyparts
 	if (Random(100) < uiChanceToDrop)
 	{
@@ -1829,9 +1827,6 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 	{
 		CreateItem( (UINT16)(fBloodcat ? BLOODCAT_PELT : CREATURE_PART_ORGAN), (INT8) (80 + Random(21)), &(pSoldier->inv[BIGPOCK3POS]) );
 	}
-
-#endif
-
 }
 
 void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )

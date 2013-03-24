@@ -138,9 +138,7 @@ FLOAT getMajorMapVersion()
 static const char* gGameLibaries[] =
 {
   "data.slf",
-#ifndef JA2DEMO
   "ambient.slf",
-#endif
   "anims.slf",
   "battlesnds.slf",
   "bigitems.slf",
@@ -149,9 +147,7 @@ static const char* gGameLibaries[] =
   "faces.slf",
   "fonts.slf",
   "interface.slf",
-#ifndef JA2DEMO
   "laptop.slf",
-#endif
   "maps.slf",
   "mercedt.slf",
   "music.slf",
@@ -161,9 +157,7 @@ static const char* gGameLibaries[] =
   "sounds.slf",
   "speech.slf",
   "tilesets.slf",
-#ifndef JA2DEMO
   "loadscreens.slf",
-#endif
 #if 0 // XXX the intro videos are not needed right now, because there is no way to play them
   "intro.slf",
 #endif
@@ -179,7 +173,6 @@ void InitGameResources(void)
 {
   std::vector<std::string> extraLibs;
 
-#ifndef JA2DEMO
   switch(s_gameVersion)
   {
   case GV_DUTCH:        extraLibs.push_back("dutch.slf");       break;
@@ -190,7 +183,6 @@ void InitGameResources(void)
       default:
           break;
   }
-#endif
 
   if(GameState::getInstance()->isEditorMode())
   {

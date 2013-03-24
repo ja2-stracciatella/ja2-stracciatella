@@ -3190,9 +3190,7 @@ static void TestMeanWhile(INT32 iID)
 		y = 16;
 	}
 
-#ifndef JA2DEMO
 	ScheduleMeanwhileEvent(x, y, 0, iID, QUEEN, 10);
-#endif
 }
 
 
@@ -3310,7 +3308,6 @@ static void TestCapture()
 
 void PopupAssignmentMenuInTactical(void)
 {
-#ifndef JA2DEMO
 	// do something
 	fShowAssignmentMenu = TRUE;
 	CreateDestroyAssignmentPopUpBoxes( );
@@ -3319,5 +3316,4 @@ void PopupAssignmentMenuInTactical(void)
 	DetermineWhichAssignmentMenusCanBeShown( );
 	fFirstClickInAssignmentScreenMask = TRUE;
 	gfIgnoreScrolling = TRUE;
-#endif
 }

@@ -2329,14 +2329,12 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 	}
 
 
-#ifndef JA2DEMO	// don't halve the gun/silencer prices in the demo...
 	// Tony specializes in guns, weapons, and ammo, so make others pay much less for that kind of stuff
 	if ( DoesItemAppearInDealerInventoryList( ARMS_DEALER_TONY, usItemIndex, TRUE ) )
 	{
 		// others pay only 1/2 of that value!
 		usValueToThisDealer /= 2;
 	}
-#endif
 
 
 	// minimum bet $1 !

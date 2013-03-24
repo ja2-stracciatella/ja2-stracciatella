@@ -135,7 +135,6 @@ void LoadMercProfiles()
 			 * profile ID */
 			p.ubFaceIndex = i;
 
-#ifndef JA2DEMO
 			if (!gGameOptions.fGunNut)
 			{
 				// CJC: replace guns in profile if they aren't available
@@ -161,7 +160,6 @@ void LoadMercProfiles()
 					}
 				}
 			}
-#endif
 
 			/* Calculate inital attractiveness for the merc's initial gun and armour.
 			 * Calculate the optional gear cost. */
@@ -193,9 +191,7 @@ void LoadMercProfiles()
 		}
 	}
 
-#ifndef JA2DEMO
 	DecideActiveTerrorists();
-#endif
 
 	// Initialize mercs' status
 	StartSomeMercsOnAssignment();

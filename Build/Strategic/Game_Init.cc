@@ -171,7 +171,6 @@ static void InitNPCs(void)
 			p.bSectorZ = 0;
 		}
 
-#ifndef JA2DEMO
 		{ // add Gabby in random location
 			MERCPROFILESTRUCT& p = gMercProfiles[GABBY];
 			switch( Random( 2 ) )
@@ -195,7 +194,6 @@ static void InitNPCs(void)
 			// use alternate map in this sector
 			SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
 		}
-#endif
 	}
 	else
 	{ //not scifi, so use alternate map in Tixa's b1 level that doesn't have the stairs going down to the caves.

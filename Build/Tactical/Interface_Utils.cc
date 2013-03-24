@@ -57,7 +57,6 @@ static SGPVObject* guiBrownBackgroundForTeamPanel; // backgrounds for breath max
 // Load in the portraits for the car faces that will be use in mapscreen
 void LoadCarPortraitValues(void)
 {
-#ifndef JA2DEMO
 	// the car portrait file names
 	static char const* const pbCarPortraitFileNames[] =
 	{
@@ -72,7 +71,6 @@ void LoadCarPortraitValues(void)
 	{
 		giCarPortraits[i] = AddVideoObjectFromFile(pbCarPortraitFileNames[i]);
 	}
-#endif
 }
 
 

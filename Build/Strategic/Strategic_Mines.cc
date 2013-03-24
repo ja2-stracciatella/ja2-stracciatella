@@ -570,7 +570,6 @@ void PostEventsForMineProduction(void)
 
 void HandleIncomeFromMines( void )
 {
-#ifndef JA2DEMO
 	INT32 iIncome = 0;
 	// mine each mine, check if we own it and such
 	for (INT8 bCounter = 0; bCounter < MAX_NUMBER_OF_MINES; ++bCounter)
@@ -582,7 +581,6 @@ void HandleIncomeFromMines( void )
 	{
 		AddTransactionToPlayersBook(DEPOSIT_FROM_SILVER_MINE, 0, GetWorldTotalMin(), iIncome);
 	}
-#endif
 }
 
 

@@ -180,7 +180,6 @@ void ShutdownDialogueControl()
 
 void InitalizeStaticExternalNPCFaces( void )
 {
-#ifndef JA2DEMO
 	INT32 iCounter = 0;
 	// go and grab all external NPC faces that are needed for the game who won't exist as soldiertypes
 
@@ -192,7 +191,6 @@ void InitalizeStaticExternalNPCFaces( void )
 	{
 		uiExternalStaticNPCFaces[iCounter] = &InitFace(g_external_face_profile_ids[iCounter], 0, FACE_FORCE_SMALL);
 	}
-#endif
 }
 
 

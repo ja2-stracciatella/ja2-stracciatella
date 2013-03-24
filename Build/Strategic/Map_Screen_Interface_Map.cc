@@ -262,7 +262,6 @@ INT32 iZoomY = 0;
 
 // map shading colors
 
-#ifndef JA2DEMO
 enum{
 	MAP_SHADE_BLACK =0,
 	MAP_SHADE_LT_GREEN,
@@ -272,7 +271,6 @@ enum{
 };
 // the big map .pcx
 static SGPVSurface* guiBIGMAP;
-#endif
 
 // orta .sti icon
 static SGPVObject* guiORTAICON;
@@ -281,10 +279,8 @@ static SGPVObject* guiTIXAICON;
 // boxes for characters on the map
 static SGPVObject* guiCHARICONS;
 
-#ifndef JA2DEMO
 // the merc arrival sector landing zone icon
 static SGPVObject* guiBULLSEYE;
-#endif
 
 
 // the max allowable towns militia in a sector
@@ -471,10 +467,8 @@ BOOLEAN gfMilitiaPopupCreated = FALSE;
 INT32 giAnimateRouteBaseTime = 0;
 INT32 giPotHeliPathBaseTime = 0;
 
-#ifndef JA2DEMO
 // sam and mine icons
 static SGPVObject* guiSAMICON;
-#endif
 
 // helicopter icon
 static SGPVObject* guiHelicopterIcon;
@@ -966,7 +960,6 @@ static void ShowTeamAndVehicles()
 }
 
 
-#ifndef JA2DEMO
 static void ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor);
 
 
@@ -1108,12 +1101,10 @@ static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColo
 		map->p16BPPPalette = org_pal;
 	}
 }
-#endif
 
 
 void InitializePalettesForMap(void)
 {
-#ifndef JA2DEMO
 	AutoSGPVSurface uiTempMap(AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx"));
 
 	SGPPaletteEntry const* const pal = uiTempMap->GetPalette();
@@ -1122,7 +1113,6 @@ void InitializePalettesForMap(void)
 	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
 	pMapLTGreenPalette = Create16BPPPaletteShaded(pal,   0, 400, 0, TRUE);
 	pMapDKGreenPalette = Create16BPPPaletteShaded(pal,   0, 200, 0, TRUE);
-#endif
 }
 
 
@@ -3694,11 +3684,9 @@ static void DropAPersonInASector(UINT8 const type, UINT8 const sector)
 
 void LoadMapScreenInterfaceMapGraphics()
 {
-#ifndef JA2DEMO
 	guiBIGMAP                      = AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx");
 	guiBULLSEYE                    = AddVideoObjectFromFile(INTERFACEDIR "/bullseye.sti");
 	guiSAMICON                     = AddVideoObjectFromFile(INTERFACEDIR "/sam.sti");
-#endif
 	guiCHARBETWEENSECTORICONS      = AddVideoObjectFromFile(INTERFACEDIR "/merc_between_sector_icons.sti");
 	guiCHARBETWEENSECTORICONSCLOSE = AddVideoObjectFromFile(INTERFACEDIR "/merc_mvt_green_arrows.sti");
 	guiCHARICONS                   = AddVideoObjectFromFile(INTERFACEDIR "/boxes.sti");
@@ -3720,11 +3708,9 @@ void LoadMapScreenInterfaceMapGraphics()
 
 void DeleteMapScreenInterfaceMapGraphics()
 {
-#ifndef JA2DEMO
 	DeleteVideoSurface(guiBIGMAP);
 	DeleteVideoObject(guiBULLSEYE);
 	DeleteVideoObject(guiSAMICON);
-#endif
 	DeleteVideoObject(guiCHARBETWEENSECTORICONS);
 	DeleteVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
 	DeleteVideoObject(guiCHARICONS);
@@ -4677,9 +4663,7 @@ static void ShowSAMSitesOnStrategicMap()
 		INT16 const sec_x  = SECTORX(sector);
 		INT16 const sec_y  = SECTORY(sector);
 
-#ifndef JA2DEMO
 		DrawSite(sec_x, sec_y, guiSAMICON);
-#endif
 
 		if (fShowAircraftFlag)
 		{ // write "SAM Site" centered underneath
@@ -4863,14 +4847,12 @@ static void DrawTixa(void)
 
 static void DrawBullseye(void)
 {
-#ifndef JA2DEMO
 	INT16 sX, sY;
 
 	GetScreenXYFromMapXY(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), &sX, &sY);
 	sY -= 2;
 
 	BltVideoObject(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
-#endif
 }
 
 

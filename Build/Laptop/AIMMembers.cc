@@ -3047,13 +3047,11 @@ void DemoHiringOfMercs()
 {
 	ProfileID const MercID[] = { IVAN, SHADOW, VICKY, isGermanVersion() ? FOX : GASKET, isGermanVersion() ? BUBBA : DR_Q };
 
-#ifndef JA2DEMO
 	static bool was_called_before = false;
 	if (was_called_before) return;
 	was_called_before = true;
 
 	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE) return;
-#endif
 
 	FOR_EACH(ProfileID const, i, MercID)
 	{

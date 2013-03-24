@@ -4209,11 +4209,9 @@ void SetEnemyPresence( )
 	// Check if we previously had no enemys present and we are in a virgin secotr ( no enemys spotted yet )
 	if ( !gTacticalStatus.fEnemyInSector && gTacticalStatus.fVirginSector )
 	{
-#ifndef JA2DEMO
 		// If we have a guy selected, say quote!
 		// For now, display ono status message
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ENEMY_IN_SECTOR_STR ] );
-#endif
 
 		// Change music modes..
 

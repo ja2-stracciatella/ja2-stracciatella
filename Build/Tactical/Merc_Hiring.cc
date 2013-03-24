@@ -107,7 +107,6 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		return MERC_HIRE_FAILED;
 	}
 
-#ifndef JA2DEMO // ATE: Insert for demo, not using the heli sequence
 	if (DidGameJustStart())
 	{
 		// OK, CHECK FOR FIRST GUY, GIVE HIM SPECIAL ITEM!
@@ -127,7 +126,6 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		// Set insertion for first time in chopper
 		h.ubInsertionCode = INSERTION_CODE_CHOPPER;
 	}
-#endif
 
 	// Record how long the merc will be gone for
 	p.bMercStatus = (UINT8)h.iTotalContractLength;
@@ -304,7 +302,6 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	}
 
 
-#ifndef JA2DEMO
 	if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
 	{
 		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
@@ -329,7 +326,6 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 			DialogueEvent::Add(new DialogueEventUnsetArrivesFlag());
 		}
 	}
-#endif
 
 	//record how long the merc will be gone for
 	p.bMercStatus = (UINT8)s.iTotalContractLength;

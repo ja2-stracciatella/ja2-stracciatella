@@ -405,15 +405,11 @@ static INT8 gbCompatibleAmmo[NUM_INV_SLOTS];
 INT8						gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 static UINT16 us16BPPItemCyclePlacedItemColors[20];
 static SGPVObject* guiBodyInvVO[4][2];
-#ifndef JA2DEMO
 static SGPVObject* guiGoldKeyVO;
-#endif
 INT8						gbCompatibleApplyItem = FALSE;
 
 
-#ifndef JA2DEMO
 static SGPVObject* guiMapInvSecondHandBlockout;
-#endif
 static SGPVObject* guiSecItemHiddenVO;
 static SGPVObject* guiGUNSM;
 static SGPVObject* guiP1ITEMS;
@@ -668,10 +664,8 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 	guiBodyInvVO[3][0] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female.sti");
 	guiBodyInvVO[3][1] = AddVideoObjectFromFile(INTERFACEDIR "/inventory_figure_female_h.sti");
 
-#ifndef JA2DEMO
 	// Add gold key graphic
 	guiGoldKeyVO = AddVideoObjectFromFile(INTERFACEDIR "/gold_key_button.sti");
-#endif
 
 	// Add camo region
 	UINT16 const x = pCamoRegion->sX;
@@ -765,9 +759,7 @@ void ShutdownInvSlotInterface()
 		FOR_EACH(SGPVObject*, k, *i) DeleteVideoObject(*k);
 	}
 
-#ifndef JA2DEMO
 	DeleteVideoObject(guiGoldKeyVO);
-#endif
 
 	FOR_EACH(MOUSE_REGION, i, gSMInvRegion)
 	{
@@ -873,7 +865,6 @@ void HandleRenderInvSlots(SOLDIERTYPE const& s, DirtyLevel const dirty_level)
 		INVRenderINVPanelItem(s, i, dirty_level);
 	}
 
-#ifndef JA2DEMO
 	if (KeyExistsInKeyRing(s, ANYKEY))
 	{
 		// blit gold key here?
@@ -892,7 +883,6 @@ void HandleRenderInvSlots(SOLDIERTYPE const& s, DirtyLevel const dirty_level)
 		BltVideoObject(guiSAVEBUFFER, guiGoldKeyVO, 0, x, y);
 		RestoreExternBackgroundRect(x, y, KEYRING_WIDTH, KEYRING_HEIGHT);
 	}
-#endif
 }
 
 
@@ -5341,9 +5331,7 @@ void SetItemPointer(OBJECTTYPE* const o, SOLDIERTYPE* const s)
 
 void LoadInterfaceItemsGraphics()
 {
-#ifndef JA2DEMO
 	guiMapInvSecondHandBlockout = AddVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
-#endif
 	guiSecItemHiddenVO          = AddVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
 	guiGUNSM                    = AddVideoObjectFromFile(INTERFACEDIR "/mdguns.sti");    // interface gun pictures
 	guiP1ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
@@ -5364,9 +5352,7 @@ void LoadInterfaceItemsGraphics()
 
 void DeleteInterfaceItemsGraphics()
 {
-#ifndef JA2DEMO
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
-#endif
 	DeleteVideoObject(guiSecItemHiddenVO);
 	DeleteVideoObject(guiGUNSM);
 	DeleteVideoObject(guiP1ITEMS);

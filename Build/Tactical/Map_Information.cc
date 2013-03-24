@@ -406,12 +406,10 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion < 14 )
 	{
 		gMapInformation.ubMapVersion++;
-		#ifndef JA2DEMO
 			if( !gfCaves && !gfBasement )
 			{
 				ReplaceObsoleteRoads();
 			}
-		#endif
 	}
 	if( gMapInformation.ubMapVersion < 15 )
 	{ //Do nothing.  The object layer was expanded from 1 byte to 2 bytes, effecting the

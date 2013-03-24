@@ -391,9 +391,7 @@ static SGPVObject* guiCHARINFO;
 static SGPVObject* guiSleepIcon;
 static SGPVObject* guiMAPINV;
 static SGPVObject* guiULICONS;
-#ifndef JA2DEMO
 static SGPVObject* guiNewMailIcons;
-#endif
 
 
 // misc mouse regions
@@ -408,13 +406,11 @@ static MOUSE_REGION gTrashCanRegion;
 struct CharacterRegions
 {
 	MOUSE_REGION name;
-#ifndef JA2DEMO
 	MOUSE_REGION assignment;
 	MOUSE_REGION sleep;
 	MOUSE_REGION location;
 	MOUSE_REGION destination;
 	MOUSE_REGION contract;
-#endif
 };
 
 static CharacterRegions g_character_regions[MAX_CHARACTER_COUNT];
@@ -2909,10 +2905,8 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 		case SDLK_HOME: ChangeCurrentMapscreenMessageIndex(0); break;
 		case SDLK_END:  MoveToEndOfMapScreenMessageList();     break;
 
-#if !defined JA2DEMO
 		case SDLK_INSERT: GoUpOneLevelInMap();   break;
 		case SDLK_DELETE: GoDownOneLevelInMap(); break;
-#endif
 
 		case SDLK_RETURN: RequestToggleMercInventoryPanel(); break;
 
@@ -2929,7 +2923,6 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 		case SDLK_F12: new_event = MAP_EVENT_VIEWAI; break;
 #endif
 
-#if !defined JA2DEMO
 		case '+':
 		case '=':
 			if (!CommonTimeCompressionChecks()) RequestIncreaseInTimeCompression();
@@ -2950,7 +2943,6 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 				if (!CommonTimeCompressionChecks()) RequestToggleTimeCompression();
 			}
 			break;
-#endif
 
 #if defined JA2TESTVERSION
 		case '?':
@@ -2974,7 +2966,6 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 			break;
 		}
 
-#if !defined JA2DEMO
 		case 'a':
 			if (gfPreBattleInterfaceActive)
 			{ // Activate autoresolve in prebattle interface.
@@ -2987,7 +2978,6 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 			break;
 
 		case 'c': RequestContractMenu(); break;
-#endif
 
 		case 'e':
 			// Activate enter sector in prebattle interface.
@@ -3003,7 +2993,6 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 			ShouldTheHelpScreenComeUp(HELP_SCREEN_MAPSCREEN, TRUE);
 			break;
 
-#if !defined JA2DEMO
 		case 'i':
 			// Only handle border button keyboard equivalents if the button is visible
 			if (!fShowMapInventoryPool) ToggleItemsFilter();
@@ -3015,7 +3004,6 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 			// Only handle border button keyboard equivalents if the button is visible
 			if (!fShowMapInventoryPool) ToggleShowMinesMode();
 			break;
-#endif
 
 		case 'o': RequestTriggerExitFromMapscreen(MAP_EXIT_TO_OPTIONS); break;
 
@@ -3023,16 +3011,13 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 			if (gfPreBattleInterfaceActive) ActivatePreBattleRetreatAction();
 			break;
 
-#if !defined JA2DEMO
 		case 't':
 			// Only handle border button keyboard equivalents if the button is visible
 			if (!fShowMapInventoryPool) ToggleShowTeamsMode();
 			break;
-#endif
 
 		case 'v': DisplayGameSettings(); break;
 
-#if !defined JA2DEMO
 		case 'w':
 			// Only handle border button keyboard equivalents if the button is visible
 			if (!fShowMapInventoryPool) ToggleShowTownsMode();
@@ -3042,7 +3027,6 @@ static void HandleModNone(UINT32 const key, MapEvent& new_event)
 			// Only handle border button keyboard equivalents if the button is visible
 			if (!fShowMapInventoryPool) ToggleShowMilitiaMode();
 			break;
-#endif
 	}
 }
 
@@ -3097,7 +3081,6 @@ static void HandleModCtrl(UINT const key)
 			break;
 #endif
 
-#if !defined JA2DEMO
 		case 'a':
 			if (CHEATER_CHEAT_LEVEL())
 			{
@@ -3108,7 +3091,6 @@ static void HandleModCtrl(UINT const key)
 				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
 			}
 			break;
-#endif
 
 #if defined JA2TESTVERSION
 		case 'f':
@@ -3127,7 +3109,7 @@ static void HandleModCtrl(UINT const key)
 		}
 #endif
 
-#if !defined JA2DEMO && defined JA2TESTVERSION
+#if defined JA2TESTVERSION
 		case 'i': fDisableJustForIan = !fDisableJustForIan; break;
 #endif
 
@@ -3159,9 +3141,7 @@ static void HandleModCtrl(UINT const key)
 			RequestTriggerExitFromMapscreen(MAP_EXIT_TO_SAVE);
 			break;
 
-#if !defined JA2DEMO
 		case 't': if (CHEATER_CHEAT_LEVEL()) Teleport(); break;
-#endif
 
 #if defined SGP_VIDEO_DEBUGGING
 		case 'v':
@@ -3172,7 +3152,6 @@ static void HandleModCtrl(UINT const key)
 			break;
 #endif
 
-#if !defined JA2DEMO
 		case 'z':
 			if (CHEATER_CHEAT_LEVEL())
 			{
@@ -3183,7 +3162,6 @@ static void HandleModCtrl(UINT const key)
 				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
 			}
 			break;
-#endif
 	}
 }
 
@@ -3236,7 +3214,6 @@ static void HandleModAlt(UINT32 const key)
 		}
 #endif
 
-#if !defined JA2DEMO
 		case 'a':
 			if (giHighLine != -1)
 			{
@@ -3255,7 +3232,6 @@ static void HandleModAlt(UINT32 const key)
 				fShowAssignmentMenu = TRUE;
 			}
 			break;
-#endif
 
 #if defined JA2TESTVERSION
 		case 'd':
@@ -3285,7 +3261,7 @@ static void HandleModAlt(UINT32 const key)
 			break;
 #endif
 
-#if !defined JA2DEMO && defined JA2TESTVERSION
+#if defined JA2TESTVERSION
 #if 0 // XXX was commented out
 		case 'i':
 			if (fAlt)
@@ -3608,7 +3584,6 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	UnLockPauseState( );
 	UpdatePausedStatesDueToTimeCompression( );
 
-#ifndef JA2DEMO
 	if( !gfDontStartTransitionFromLaptop )
 	{
 		//Load a tiny graphic of the on screen and draw it to the buffer.
@@ -3619,7 +3594,6 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		EndFrameBufferRender( );
 		RefreshScreen();
 	}
-#endif
 
 	//Kris:  Removes the pre battle interface, but only if it exists.
 	//		   It is internally considered.
@@ -3689,7 +3663,6 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 
 static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary)
 {
-#ifndef JA2DEMO
 	INT16												sScreenX, sScreenY;
 
 	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
@@ -3752,7 +3725,6 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 	}
 
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
-#endif
 }
 
 
@@ -3762,7 +3734,6 @@ static void DestinationPlottingCompleted(void);
 
 static void PollLeftButtonInMapView(MapEvent& new_event)
 {
-#ifndef JA2DEMO
 	static BOOLEAN	fLBBeenPressedInMapView = FALSE;
   INT16 sMapX, sMapY;
 
@@ -3859,7 +3830,6 @@ static void PollLeftButtonInMapView(MapEvent& new_event)
 	}
 
 	fJustFinishedPlotting = FALSE;
-#endif
 }
 
 
@@ -3868,7 +3838,6 @@ static void HandleMilitiaRedistributionClick(void);
 
 static void PollRightButtonInMapView(MapEvent& new_event)
 {
-#ifndef JA2DEMO
 	static BOOLEAN	fRBBeenPressedInMapView = FALSE;
   INT16 sMapX, sMapY;
 
@@ -3979,7 +3948,6 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 			}
 		}
 	}
-#endif
 }
 
 
@@ -4748,14 +4716,12 @@ static void CreateMouseRegionsForTeamList(void)
 		const UINT16 w = NAME_WIDTH;
 		CharacterRegions& r = g_character_regions[i];
 		MakeRegion(&r.name,        i, NAME_X,           y, w,                    TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // name region
-#ifndef JA2DEMO
 		MakeRegion(&r.assignment,  i, ASSIGN_X,         y, ASSIGN_WIDTH,         TeamListAssignmentRegionMvtCallBack,  TeamListAssignmentRegionBtnCallBack,  pMapScreenMouseRegionHelpText[1]); // assignment region
 		MakeRegion(&r.sleep,       i, SLEEP_X,          y, SLEEP_WIDTH,          TeamListSleepRegionMvtCallBack,       TeamListSleepRegionBtnCallBack,       pMapScreenMouseRegionHelpText[5]); // sleep region
 		// same function as name regions, so uses the same callbacks
 		MakeRegion(&r.location,    i, LOC_X,            y, LOC_WIDTH,            TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // location region
 		MakeRegion(&r.destination, i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack, pMapScreenMouseRegionHelpText[2]); // destination region
 		MakeRegion(&r.contract,    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, TeamListContractRegionMvtCallBack,    TeamListContractRegionBtnCallBack,    pMapScreenMouseRegionHelpText[3]); // contract region
-#endif
 	}
 }
 
@@ -4767,13 +4733,11 @@ static void DestroyMouseRegionsForTeamList(void)
 	{
 		CharacterRegions& r = g_character_regions[i];
 	  MSYS_RemoveRegion(&r.name);
-#ifndef JA2DEMO
 		MSYS_RemoveRegion(&r.assignment);
 		MSYS_RemoveRegion(&r.sleep);
 		MSYS_RemoveRegion(&r.location);
 		MSYS_RemoveRegion(&r.destination);
 		MSYS_RemoveRegion(&r.contract);
-#endif
 	}
 }
 
@@ -5897,19 +5861,16 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 		{
 			// disable regions in all team list columns
 			r.name.Disable();
-#ifndef JA2DEMO
 			r.assignment.Disable();
 			r.sleep.Disable();
 			r.location.Disable();
 			r.destination.Disable();
 			r.contract.Disable();
-#endif
 		}
 		else
 		{
 			// always enable Name and Location regions
 			r.name.Enable();
-#ifndef JA2DEMO
 			r.location.Enable();
 
 			// valid character.  If it's a vehicle, however
@@ -5959,7 +5920,6 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 			// destination region is always enabled for all valid character slots.
 			// if the character can't move at this time, then the region handler must be able to tell the player why not
 			r.destination.Enable();
-#endif
 		}
 	}
 }
@@ -6732,10 +6692,8 @@ void HandlePreloadOfMapGraphics(void)
 
 	HandleLoadOfMapBottomGraphics( );
 
-#ifndef JA2DEMO
 	//Kris:  Added this because I need to blink the icons button.
 	guiNewMailIcons             = AddVideoObjectFromFile(INTERFACEDIR "/newemail.sti");
-#endif
 
 	// graphic for pool inventory
 	LoadInventoryPoolGraphic( );
@@ -6761,10 +6719,8 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiMAPINV);
 	DeleteVideoObject(guiULICONS);
 
-#ifndef JA2DEMO
 	//Kris:  Remove the email icons.
 	DeleteVideoObject(guiNewMailIcons);
-#endif
 
 	// remove inventory pool graphic
 	RemoveInventoryPoolGraphic();
@@ -7277,7 +7233,6 @@ static void DisplayIconsForMercsAsleep(void)
 //       mapscreen and we have new email to read.
 static void CheckForAndRenderNewMailOverlay(void)
 {
-#ifndef JA2DEMO
 	if( fNewMailFlag )
 	{
 		if( GetJA2Clock() % 1000 < 667 )
@@ -7306,7 +7261,6 @@ static void CheckForAndRenderNewMailOverlay(void)
 			MarkAButtonDirty( guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] );
 		}
 	}
-#endif
 }
 
 
