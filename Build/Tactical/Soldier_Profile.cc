@@ -121,13 +121,8 @@ void LoadMercProfiles()
 	{ AutoSGPFile f(FileMan::openForReadingSmart(BINARYDATADIR "/prof.dat", true));
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
-#ifdef JA2DEMO
-			BYTE data[696];
-			FileRead(f, data, sizeof(data));
-#else
 			BYTE data[716];
 			JA2EncryptedFileRead(f, data, sizeof(data));
-#endif
 			MERCPROFILESTRUCT& p = GetProfile(i);
 			ExtractMercProfileUTF16(data, p);
 
@@ -712,10 +707,6 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 			SwapObjs( &(pNewSoldier->inv[ bSlot ]), &(pNewSoldier->inv[ HANDPOS ]) );
 		}
 	}
-
-#ifdef JA2DEMO
-	HandleEndDemoInCreatureLevel( );
-#endif
 
 	if ( ubCharNum == IRA )
 	{

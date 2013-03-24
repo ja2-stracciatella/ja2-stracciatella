@@ -2545,13 +2545,6 @@ static void StartBombMessageBox(SOLDIERTYPE* const s, INT16 const gridno)
 	OBJECTTYPE const& o = s->inv[HANDPOS];
 	if (o.usItem == REMOTETRIGGER)
 	{
-#ifdef JA2DEMO
-		if (GetRoom(s->sGridNo) == 31)
-		{
-			SetOffBombsByFrequency(s, FIRST_MAP_PLACED_FREQUENCY + 4);
-			DoMercBattleSound(s, BATTLE_SOUND_OK1);
-		}
-#else
 		PlayJA2Sample(USE_STATUE_REMOTE, HIGHVOLUME, 1, MIDDLEPAN);
 
 		// Check what sector we are in....
@@ -2563,7 +2556,6 @@ static void StartBombMessageBox(SOLDIERTYPE* const s, INT16 const gridno)
 			ChangeO3SectorStatue(FALSE); // Open statue
 			DoMercBattleSound(s, BATTLE_SOUND_OK1);
 		}
-#endif
 		else
 		{
 			DoMercBattleSound(s, BATTLE_SOUND_CURSE1);

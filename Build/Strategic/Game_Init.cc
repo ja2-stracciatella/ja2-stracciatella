@@ -355,24 +355,6 @@ void InitNewGame()
 	ClearTacticalMessageQueue();
 	FreeGlobalMessageList(); // Clear mapscreen messages
 
-#ifdef JA2DEMO
-	InitStrategicLayer();
-	DemoHiringOfMercs();
-
-	// Setup initial money
-	AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 20500);
-
-  if(isGermanVersion())
-  {
-    // The different mercs are slightly more expensive. This adds that difference
-    AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 1075);
-  }
-
-	SetCurrentWorldSector(1, 16, 0);
-	SetLaptopExitScreen(MAP_SCREEN);
-	FadeInGameScreen();
-	EnterTacticalScreen();
-#else
 	if (gubScreenCount == 0)
 	{ // Our first time, go into laptop
 		InitLaptopAndLaptopScreens();
@@ -415,7 +397,6 @@ void InitNewGame()
 	{
 		gubScreenCount = 2;
 	}
-#endif
 }
 
 

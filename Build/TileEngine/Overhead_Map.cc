@@ -41,10 +41,6 @@
 #include "UILayout.h"
 #include "GameState.h"
 
-#ifdef JA2DEMO
-#	include "Message.h"
-#	include "Text.h"
-#endif
 
 #include "Soldier_Init_List.h"
 extern SOLDIERINITNODE *gpSelected;
@@ -382,14 +378,6 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
 
 void GoIntoOverheadMap( )
 {
-#ifdef JA2DEMO
-	if (gfCaves)
-	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, str_overhead_map_disabled);
-		return;
-	}
-#endif
-
 	gfInOverheadMap = TRUE;
 
 	MSYS_DefineRegion(&OverheadBackgroundRegion, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);

@@ -463,11 +463,6 @@ extern BOOLEAN gfMilitiaPopupCreated;
 void CancelMapUIMessage( void );
 
 
-#ifdef JA2DEMO
-static void DisplayExitToTacticalGlowDuringDemo(void);
-#endif
-
-
 
 // the tries to select a mapscreen character by his soldier ID
 void SetInfoChar(SOLDIERTYPE const* const s)
@@ -2114,10 +2109,6 @@ try
 		GlowItem( );
 	}
 
-
-#ifdef JA2DEMO
-	DisplayExitToTacticalGlowDuringDemo( );
-#endif
 
 	RenderButtonsFastHelp();
 
@@ -4754,12 +4745,7 @@ static void CreateMouseRegionsForTeamList(void)
 	{
 		const UINT16 y = Y_START + i * (Y_SIZE + 2) + (i >= FIRST_VEHICLE ? 6 : 0);
 
-#ifdef JA2DEMO
-		// name region across the whole width of the team panel
-		const UINT16 w = 240;
-#else
 		const UINT16 w = NAME_WIDTH;
-#endif
 		CharacterRegions& r = g_character_regions[i];
 		MakeRegion(&r.name,        i, NAME_X,           y, w,                    TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // name region
 #ifndef JA2DEMO
@@ -4813,9 +4799,6 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 #if 0 // XXX was commented out
 		if (bSelectedDestChar != -1 || fPlotForHelicopter)
 		{
@@ -4830,7 +4813,6 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
 		RequestContractMenu();
-#endif
 	}
 }
 
@@ -7291,39 +7273,6 @@ static void DisplayIconsForMercsAsleep(void)
 	}
 }
 
-#ifdef JA2DEMO
-
-static void DisplayExitToTacticalGlowDuringDemo(void)
-{
-  static INT32 iColorNum=10;
-  static BOOLEAN fDelta=FALSE;
-
-	// if not ready to change glow phase yet, leave
-	if ( !gfGlowTimerExpired )
-		return;
-
-
-	// change direction of glow?
-	if((iColorNum==0)||(iColorNum==10))
-	{
-	 fDelta=!fDelta;
-	}
-
-	// increment color
-	if(!fDelta)
-		iColorNum++;
-	else
-		iColorNum--;
-
-	UINT16 usColor = GlowColor(iColorNum);
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, l.Buffer<UINT16>());
-	InvalidateRegion(495, 408, 529+1, 442+1);
-}
-
-#endif
-
 //Kris:  Added this function to blink the email icon on top of the laptop button whenever we are in
 //       mapscreen and we have new email to read.
 static void CheckForAndRenderNewMailOverlay(void)
@@ -8823,11 +8772,3 @@ void SetMapCursorItem()
 	gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 	fMapInventoryItem = TRUE;
 }
-
-
-#ifdef JA2DEMO
-void DisabledInDemo(void)
-{
-	DoMapMessageBox(MSG_BOX_BASIC_STYLE, str_disabled_in_demo, MAP_SCREEN, MSG_BOX_FLAG_OK, MSYS_NO_CALLBACK);
-}
-#endif

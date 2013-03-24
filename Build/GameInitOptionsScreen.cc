@@ -313,25 +313,12 @@ static void EnterGIOScreen()
 		MakeCheckBoxes(guiGameSaveToggles, lengthof(guiGameSaveToggles), x, y, BtnGameSaveTogglesCallback, def);
 	}
 
-	// If it's the demo, make sure the default is for additional guns
-#ifdef JA2DEMO
-	gGameOptions.fGunNut = TRUE;
-#endif
-
 	{ // Check box to toggle Gun options
 		INT16  const x   = GIO_GUN_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX;
 		INT16  const y   = GIO_GUN_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 		size_t const def = gGameOptions.fGunNut ? GIO_GUN_NUT : GIO_REDUCED_GUNS;
 		MakeCheckBoxes(guiGunOptionToggles, lengthof(guiGunOptionToggles), x, y, BtnGunOptionsTogglesCallback, def);
 	}
-
-	// If it's the demo, make sure to disable the buttons
-#ifdef JA2DEMO
-	guiGunOptionToggles[GIO_GUN_NUT     ]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
-	guiGunOptionToggles[GIO_REDUCED_GUNS]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
-	DisableButton(guiGunOptionToggles[GIO_GUN_NUT]);
-	DisableButton(guiGunOptionToggles[GIO_REDUCED_GUNS]);
-#endif
 
 #if 0 // JA2 Gold: no more timed turns
 	{ // Check box to toggle the timed turn option
@@ -506,14 +493,6 @@ static void RenderGIOScreen(void)
 	usPosY += 20;
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-//if its the demo, make sure to Display the text for the additional guns
-#ifdef JA2DEMO
-	//Shadow the area around the additional guns
-	FRAME_BUFFER->ShadowRect(336, 105, 580, 218); //358
-
-	//Display the text indicatting that the option is disabled for the demo
-	DisplayWrappedString(440, GIO_GUN_SETTINGS_Y - GIO_GAP_BN_SETTINGS, 150, 2, GIO_TOGGLE_TEXT_FONT, 162, str_disabled_for_the_demo, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-#endif
 }
 
 

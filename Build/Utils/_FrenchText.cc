@@ -2917,72 +2917,6 @@ static const wchar_t *s_fr_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
 	L"Vous ne pouvez plus entraîner de milice à %ls.",
 };
 
-#ifdef JA2DEMOADS
-static const wchar_t *s_fr_gpDemoString[gpDemoString_SIZE] =
-{
-	//0-9
-	L"LE MEILLEUR DE LA STRATEGIE.",
-	L"LE MEILLEUR DU JEU DE ROLES.",
-	L"Une intrigue évolutive",
-	L"Un scénario complexe",
-	L"Des combats dantesques",
-	L"Eclairage dynamique",
-	L"Interaction avec les autres personnages",
-	L"Des tactiques évoluées (attaque de nuit, furtivité)",
-	L"Créez votre propre mercenaire",
-	L"Des quêtes passionnantes",
-	L"Des véhicules à conduire",
-	//10-19
-	L"Plus de 150 personnages",
-	L"Des centaines d'objets",
-	L"Plus de 250 secteurs différents",
-	L"Des explosions ébouriffantes",
-	L"De nouvelles manœuvres tactiques",
-	L"Des tonnes d'animation",
-	L"Plus de 9000 lignes de dialogue",
-	L"Une superbe bande originale de Kevin Manthei",
-	L"Une stratégie globale",
-	L"Des raids aériens",
-	//20-29
-	L"Entraînez votre propre milice",
-	L"Plusieurs types de jeu disponibles",
-	L"Des champs de vision réalistes",
-	L"Des graphismes de haut niveau",
-	L"Achetez, vendez et échangez",
-	L"Une IA sans pitié",
-	L"Le meilleur du combat tactique",
-	L"Option SF",
-	L"Une horloge de 24 heures",
-	L"Bien plus de 60 heures de jeu",
-	//30-34
-	L"Plusieurs niveaux de difficulté",
-	L"Des modèles balistiques étudiés",
-	L"Un moteur puissant",
-	L"Un environnement interactif",
-	L"Et tellement plus...",
-	//35 on are BOLD
-	L"",
-	L"",
-	L"\"L'un des jeux les plus prenants de cette fin de siècle\"",
-	L"PC Gamer",
-	L"Commandez-le dès maintenant sur WWW.JAGGEDALLIANCE2.COM !",
-};
-
-static const wchar_t *s_fr_gpDemoIntroString[gpDemoIntroString_SIZE] =
-{
-	L"Vous êtes sur le point de goûter au meilleur de la stratégie, du jeu de rôles et du combat tactique :",
-	//Point 1 (uses one string)
-	L"Contrôlez une équipe de mercenaires possédant tous leur personnalité (ici, pas d'unités identiques à l'infini).",
-	//Point 2 (uses one string)
-	L"Utilisez toutes les ficelles du combat tactique, faites-les courir, ramper, grimper et sauter, se battre au corps-à-corps et bien plus encore.",
-	//Point 3 (uses one string)
-	L"Jouez avec le feu ! Des gadgets cools, des armes dévastatrices, des explosions ébouriffantes.",
-	//Additional comment
-	L"(et ce n'est qu'un début)",
-	//Introduction/instructions
-	L"Bienvenue à Demoville... (appuyez sur une touche)",
-};
-#endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 static const wchar_t *s_fr_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
@@ -3586,20 +3520,6 @@ static const wchar_t s_fr_str_ceramic_plates_smashed[] = L"%ls's ceramic plates 
 
 static const wchar_t s_fr_str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
 
-#ifdef JA2DEMO
-static const wchar_t s_fr_str_disabled_for_the_demo[]    = L"Désactivé pour la démo";
-/* informs player this option/button has been disabled in the demo */
-static const wchar_t s_fr_str_disabled_in_demo[]         = L"Désolé. Cette option n'est pas disponible.";
-static const wchar_t s_fr_str_go_see_gabby[]             = L"Il n'y a plus rien à faire ici. Allez donc voir Gabby.";
-static const wchar_t s_fr_str_too_bad_you_killed_gabby[] = L"Dommage de l'avoir tué...";
-/* For the demo, the sector exit interface, you'll be able to split your teams
- * up, but the demo has this feature disabled.  This string is fast help text
- * that appears over "single" button. */
-static const wchar_t s_fr_str_strategic_exit_gui_demo[]  = L"Impossible de séparer l'équipe dans la démo.";
-/* The overhead map is a map of the entire sector, which you can go into
- * anytime, except in the demo. */
-static const wchar_t s_fr_str_overhead_map_disabled[]    = L"Carte désactivée dans la démo.";
-#endif
 
 static const wchar_t s_fr_str_stat_health[]       = L"Santé";
 static const wchar_t s_fr_str_stat_agility[]      = L"Agilité";
@@ -3851,20 +3771,6 @@ LanguageRes g_LanguageResFrench = {
   s_fr_sRepairsDoneString,
   s_fr_str_ceramic_plates_smashed,
   s_fr_str_arrival_rerouted,
-
-#ifdef JA2DEMO
-  s_fr_str_disabled_for_the_demo,
-  s_fr_str_disabled_in_demo,
-  s_fr_str_go_see_gabby,
-  s_fr_str_too_bad_you_killed_gabby,
-  s_fr_str_strategic_exit_gui_demo,
-  s_fr_str_overhead_map_disabled,
-#endif
-
-#ifdef JA2DEMOADS
-  s_fr_gpDemoString,
-  s_fr_gpDemoIntroString,
-#endif
 
   s_fr_str_stat_health,
   s_fr_str_stat_agility,

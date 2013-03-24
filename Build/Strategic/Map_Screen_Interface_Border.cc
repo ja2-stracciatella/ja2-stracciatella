@@ -25,27 +25,15 @@
 #include "UILayout.h"
 
 
-#ifdef JA2DEMO
-#	define MAP_BORDER_FILE INTERFACEDIR "/mapborder0225.sti"
-#	define BTN_TOWN_X      (STD_SCREEN_X + 272)
-#	define BTN_MINE_X      (STD_SCREEN_X + 315)
-#	define BTN_TEAMS_X     (STD_SCREEN_X + 358)
-#	define BTN_MILITIA_X   (STD_SCREEN_X + 401)
-#	define BTN_AIR_X       (STD_SCREEN_X + 444)
-#	define BTN_ITEM_X      (STD_SCREEN_X + 546)
+#define MAP_BORDER_FILE INTERFACEDIR "/mbs.sti"
+#define BTN_TOWN_X      (STD_SCREEN_X + 299)
+#define BTN_MINE_X      (STD_SCREEN_X + 342)
+#define BTN_TEAMS_X     (STD_SCREEN_X + 385)
+#define BTN_MILITIA_X   (STD_SCREEN_X + 428)
+#define BTN_AIR_X       (STD_SCREEN_X + 471)
+#define BTN_ITEM_X      (STD_SCREEN_X + 514)
 
-#	define MAP_LEVEL_MARKER_X    (STD_SCREEN_X + 485)
-#else
-#	define MAP_BORDER_FILE INTERFACEDIR "/mbs.sti"
-#	define BTN_TOWN_X      (STD_SCREEN_X + 299)
-#	define BTN_MINE_X      (STD_SCREEN_X + 342)
-#	define BTN_TEAMS_X     (STD_SCREEN_X + 385)
-#	define BTN_MILITIA_X   (STD_SCREEN_X + 428)
-#	define BTN_AIR_X       (STD_SCREEN_X + 471)
-#	define BTN_ITEM_X      (STD_SCREEN_X + 514)
-
-#	define MAP_LEVEL_MARKER_X    (STD_SCREEN_X + 565)
-#endif
+#define MAP_LEVEL_MARKER_X    (STD_SCREEN_X + 565)
 #define MAP_LEVEL_MARKER_Y     (STD_SCREEN_Y + 323)
 #define MAP_LEVEL_MARKER_DELTA   8
 #define MAP_LEVEL_MARKER_WIDTH  55
@@ -382,16 +370,12 @@ static void BtnMilitiaCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowMilitiaMode( );
 	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
-#endif
 	}
 }
 
@@ -400,16 +384,12 @@ static void BtnTeamCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowTeamsMode();
 	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
-#endif
 	}
 }
 
@@ -418,16 +398,12 @@ static void BtnTownCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowTownsMode();
 	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
-#endif
 	}
 }
 
@@ -436,16 +412,12 @@ static void BtnMineCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		CommonBtnCallbackBtnDownChecks();
 		ToggleShowMinesMode();
 	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
-#endif
 	}
 }
 
@@ -454,9 +426,6 @@ static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason)
 {
   if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
   {
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		CommonBtnCallbackBtnDownChecks();
 
 		ToggleAirspaceMode();
@@ -464,7 +433,6 @@ static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason)
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
-#endif
 	}
 }
 
@@ -473,9 +441,6 @@ static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason)
 {
   if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
   {
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		CommonBtnCallbackBtnDownChecks();
 
 		ToggleItemsFilter();
@@ -483,7 +448,6 @@ static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason)
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
-#endif
 	}
 }
 
@@ -995,11 +959,7 @@ static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP ) )
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		JumpToLevel( iCounter );
-#endif
 	}
 }
 

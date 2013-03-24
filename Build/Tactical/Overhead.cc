@@ -97,11 +97,6 @@
 #include "Strategic_Status.h"
 #include "PreBattle_Interface.h"
 
-#ifdef JA2DEMO
-#	include "Fade_Screen.h"
-#endif
-
-
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10
 
@@ -4512,14 +4507,6 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 	{
 		if ( ! (gTacticalStatus.fEnemyInSector) )
 		{
-		// ATE: For demo, we may be dead....
-#ifdef JA2DEMO
-			if ( CheckForLosingEndOfBattle( ) )
-			{
-				SetMusicMode( MUSIC_TACTICAL_DEATH );
-			}
-#endif
-
 			return( FALSE );
 		}
 	}
@@ -4650,17 +4637,6 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			// Exit mode!
 			ExitCombatMode();
 		}
-
-#ifdef JA2DEMO
-		if (gbWorldSectorZ == 0)
-		{
-			SetFactTrue( FACT_TOP_LEVEL_CLEARED );
-		}
-		else if (gbWorldSectorZ == 1)
-		{
-			SetFactTrue( FACT_BOTTOM_LEVEL_CLEARED );
-		}
-#endif
 
 		if ( gTacticalStatus.bBoxingState == NOT_BOXING ) // if boxing don't do any of this stuff
 		{
@@ -6081,14 +6057,7 @@ static void DoneFadeOutDueToDeath(void)
 static void EndBattleWithUnconsciousGuysCallback(MessageBoxReturnValue const bExitValue)
 {
 	// Enter mapscreen.....
-#ifdef JA2DEMO
-
-	// Fade screen
-	gFadeOutDoneCallback = DoneFadeOutDueToDeath;
-	FadeOutGameScreen( );
-#else
 	CheckAndHandleUnloadingOfCurrentWorld();
-#endif
 }
 
 
@@ -6128,41 +6097,6 @@ void InitializeTacticalStatusAtBattleStart(void)
 		s->ubMiscSoldierFlags = 0;
 	}
 }
-
-
-#ifdef JA2DEMO
-static void DemoEndOKCallback(MessageBoxReturnValue const bExitCode)
-{
-	// Check if gabby is alive...
-	if ( gMercProfiles[ GABBY ].bLife == 0 )
-	{
-		// Bring up dialogue box...
-		DoMessageBox(MSG_BOX_BASIC_STYLE, str_too_bad_you_killed_gabby, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-	}
-}
-
-
-void HandleEndDemoInCreatureLevel(void)
-{
-	if ( gbWorldSectorZ == 1 )
-	{
-		// Is dynamo recruited?
-		if (FindSoldierByProfileIDOnPlayerTeam(DYNAMO) && NumCapableEnemyInSector() == 0)
-		{
-			// Bring up dialogue box...
-			DoMessageBox(MSG_BOX_BASIC_STYLE, str_go_see_gabby, GAME_SCREEN, MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL);
-		}
-	}
-	else if ( gbWorldSectorZ == 2 )
-	{
-		if ( NumCapableEnemyInSector( ) == 0 )
-		{
-			// Bring up dialogue box...
-			DoMessageBox(MSG_BOX_BASIC_STYLE, str_go_see_gabby, GAME_SCREEN, MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL);
-		}
-	}
-}
-#endif
 
 
 static void DeathTimerCallback(void)

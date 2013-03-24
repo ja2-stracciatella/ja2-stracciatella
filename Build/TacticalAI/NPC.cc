@@ -1504,11 +1504,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			if (p.ubLastDateSpokenTo > 0)
 			{
 				uiDay = GetWorldDay();
-#ifdef JA2DEMO
-				if (p.ubLastDateSpokenTo == 199)
-#else
 				if (uiDay > p.ubLastDateSpokenTo)
-#endif
 				{
 					NPCConsiderTalking( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
 					if (pQuotePtr != NULL)

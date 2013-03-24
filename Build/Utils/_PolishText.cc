@@ -2918,72 +2918,6 @@ static const wchar_t *s_pl_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
 	L"Nie możesz już dłużej szkolić samoobrony w mieście %ls.",
 };
 
-#ifdef JA2DEMOADS
-static const wchar_t *s_pl_gpDemoString[gpDemoString_SIZE] =
-{
-	//0-9
-	L"NAJLEPSZA GRA STRATEGICZNA.",
-	L"NAJLEPSZA GRA ROLE-PLAYING.",
-	L"Nieliniowy scenariusz gry",
-	L"Absolutnie nowy pomysł",
-	L"Wspaniałe strzelaniny",
-	L"Dynamiczne oświetlenie",
-	L"Rozmowy z postaciami",
-	L"Nocne akcje",
-	L"Kreowanie własnego najemnika",
-	L"Ambitne i wciągające misje",
-	L"Sterowanie pojazdami",
-	//10-19
-	L"Ponad 150 różnych postaci",
-	L"Setki ciekawych przedmiotów",
-	L"Ponad 250 różnych plenerów",
-	L"Efektowne eksplozje",
-	L"Nowe taktyczne manewry",
-	L"Tony animacji",
-	L"Ponad 9000 kwestii dialogowych",
-	L"Niesamowity podkład muzyczny Kevina Manthei",
-	L"Globalna strategia",
-	L"Naloty",
-	//20-29
-	L"Szkolenie oddziałów samoobrony",
-	L"Możliwość dostosowania scenariusza gry",
-	L"Realistyczne tereny",
-	L"Efektowna grafika high-color",
-	L"Kupno, sprzedaż i handel",
-	L"Bezwzględny przeciwnik AI",
-	L"Świetna walka taktyczna",
-	L"Opcjonalny element S-F",
-	L"24 godzinny zegar",
-	L"Minimum 60 godzin gry",
-	//30-34
-	L"Różne poziomy trudności",
-	L"Realistycznie opracowana balistyka",
-	L"Wierne odwzorowanie zasad fizyki",
-	L"W pełni interaktywny interfejs",
-	L"I wiele, wiele więcej...",
-	//35 on are BOLD
-	L"",
-	L"",
-	L"Jedna z najbardziej pomysłowych gier 1998 roku",
-	L"PC Gamer",
-	L"Zamów już dzisiaj na stronie WWW.TOPWARE.PL !",
-};
-
-static const wchar_t *s_pl_gpDemoIntroString[gpDemoIntroString_SIZE] =
-{
-	L"Za chwilę spróbujesz najlepszej strategii, role-playing i najwspanialszej walki taktycznej:",
-	//Point 1 (uses one string)
-	L"Kontrola nad grupą najemników o bogatej osobowości   (żadnych nudnych i zbędnych postaci).",
-	//Point 2 (uses one string)
-	L"Sprawdź wspaniałe manewry taktyczne, począwszy od biegu do czołgania się, wspinania się, skakania, walki wręcz i wielu innych.",
-	//Point 3 (uses one string)
-	L"Igraj z ogniem! Fajne zabawki, śmiercionośna broń, efektowne eksplozje.",
-	//Additional comment
-	L"(a to dopiero początek...)",
-	//Introduction/instructions
-	L"Witamy w Demoville... (naciśnij dowolny klawisz)",
-};
-#endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 static const wchar_t *s_pl_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
@@ -3589,20 +3523,6 @@ static const wchar_t s_pl_str_ceramic_plates_smashed[] = L"%ls's ceramic plates 
 
 static const wchar_t s_pl_str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
 
-#ifdef JA2DEMO
-static const wchar_t s_pl_str_disabled_for_the_demo[]    = L"Nie działa w wersji demo";
-/* informs player this option/button has been disabled in the demo */
-static const wchar_t s_pl_str_disabled_in_demo[]         = L"Przykro nam, ale ta opcja jest wyłączona w wersji demo.";
-static const wchar_t s_pl_str_go_see_gabby[]             = L"Tu już wszystko załatwione. Może czas spotkać się z Gabby'm.";
-static const wchar_t s_pl_str_too_bad_you_killed_gabby[] = L"Nie trzeba było go zabijać.";
-/* For the demo, the sector exit interface, you'll be able to split your teams
- * up, but the demo has this feature disabled.  This string is fast help text
- * that appears over "single" button. */
-static const wchar_t s_pl_str_strategic_exit_gui_demo[]  = L"W pełnej wersji gry będzie można dzielić oddziały,\nale w wersji demo jest to niemożliwe.";
-/* The overhead map is a map of the entire sector, which you can go into
- * anytime, except in the demo. */
-static const wchar_t s_pl_str_overhead_map_disabled[]    = L"Ogólna mapa sektora jest niedostępna w wersji demo.";
-#endif
 
 static const wchar_t s_pl_str_stat_health[]       = L"Zdrowie";
 static const wchar_t s_pl_str_stat_agility[]      = L"Zwinność";
@@ -3854,20 +3774,6 @@ LanguageRes g_LanguageResPolish = {
   s_pl_sRepairsDoneString,
   s_pl_str_ceramic_plates_smashed,
   s_pl_str_arrival_rerouted,
-
-#ifdef JA2DEMO
-  s_pl_str_disabled_for_the_demo,
-  s_pl_str_disabled_in_demo,
-  s_pl_str_go_see_gabby,
-  s_pl_str_too_bad_you_killed_gabby,
-  s_pl_str_strategic_exit_gui_demo,
-  s_pl_str_overhead_map_disabled,
-#endif
-
-#ifdef JA2DEMOADS
-  s_pl_gpDemoString,
-  s_pl_gpDemoIntroString,
-#endif
 
   s_pl_str_stat_health,
   s_pl_str_stat_agility,

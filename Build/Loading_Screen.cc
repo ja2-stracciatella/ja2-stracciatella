@@ -112,9 +112,6 @@ LoadingScreenID GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
 				case SEC_J9:	// Tixa prison dungeon
 				case SEC_K4:	// Orta weapons plant
 				case SEC_O3:  // Meduna
-#ifdef JA2DEMO
-				case SEC_P1:  // Demoville dungeon
-#endif
 				case SEC_P3:  // Meduna
 					return LOADINGSCREEN_BASEMENT;
 				default:			// Rest are mines
@@ -138,14 +135,6 @@ void DisplayLoadScreenWithID(LoadingScreenID const id)
 	char const* filename;
 	switch (id)
 	{
-#ifdef JA2DEMO
-		case LOADINGSCREEN_NOTHING:       filename = INTERFACEDIR "/loadscreen1.sti";        break;
-		case LOADINGSCREEN_NIGHTGENERIC:  filename = INTERFACEDIR "/loadscreen2.sti";        break;
-		case LOADINGSCREEN_HELI:          filename = INTERFACEDIR "/loadscreen1.sti";        break;
-		case LOADINGSCREEN_BASEMENT:      filename = INTERFACEDIR "/loadscreen4.sti";        break;
-		case LOADINGSCREEN_CAVE:          filename = INTERFACEDIR "/loadscreen5.sti";        break;
-		default:                          filename = INTERFACEDIR "/loadscreen1.sti";        break;
-#else
 		case LOADINGSCREEN_NOTHING:       filename = LOADSCREENSDIR "/ls_heli.sti";          break;
 		case LOADINGSCREEN_DAYGENERIC:    filename = LOADSCREENSDIR "/ls_daygeneric.sti";    break;
 		case LOADINGSCREEN_DAYTOWN1:      filename = LOADSCREENSDIR "/ls_daytown1.sti";      break;
@@ -190,7 +179,6 @@ void DisplayLoadScreenWithID(LoadingScreenID const id)
 		case LOADINGSCREEN_DAYBALIME:     filename = LOADSCREENSDIR "/ls_daybalime.sti" ;    break;
 		case LOADINGSCREEN_NIGHTBALIME:   filename = LOADSCREENSDIR "/ls_nightbalime.sti";   break;
 		default:                          filename = LOADSCREENSDIR "/ls_heli.sti";          break;
-#endif
 	}
 
 	try

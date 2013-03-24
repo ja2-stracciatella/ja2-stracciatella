@@ -5,11 +5,7 @@
 #include "JA2Types.h"
 
 
-#ifdef JA2DEMO
-#	define MAX_ANIMATIONS 300
-#else
-#	define MAX_ANIMATIONS 320
-#endif
+#define MAX_ANIMATIONS 320
 #define MAX_FRAMES_PER_ANIM							100
 #define	MAX_RANDOM_ANIMS_PER_BODYTYPE		7
 

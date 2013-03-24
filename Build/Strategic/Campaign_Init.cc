@@ -240,18 +240,6 @@ void BuildUndergroundSectorInfoList()
 	//G4_B3
 	curr = NewUndergroundNode( 4, 7, 3 );
 	curr->ubAdjacentSectors |= SOUTH_ADJACENT_SECTOR;
-
-#ifdef JA2DEMO
-	curr = NewUndergroundNode(1, 16, 1);
-	switch (gGameOptions.ubDifficultyLevel)
-	{
-		case DIF_LEVEL_EASY:   curr->ubNumTroops =  8; break;
-		case DIF_LEVEL_MEDIUM: curr->ubNumTroops = 11; break;
-		case DIF_LEVEL_HARD:   curr->ubNumTroops = 15; break;
-	}
-	curr = NewUndergroundNode(1, 16, 2);
-	curr->ubNumCreatures = 2 + gGameOptions.ubDifficultyLevel * 2 + Random(2);
-#endif
 }
 
 //This is the function that is called only once, when the player begins a new game.  This will calculate

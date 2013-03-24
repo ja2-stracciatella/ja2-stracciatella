@@ -319,16 +319,12 @@ static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		// redraw region
 		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LAPTOP);
-#endif
 	}
 }
 
@@ -383,13 +379,9 @@ static void CompressModeClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if( iReason & ( MSYS_CALLBACK_REASON_RBUTTON_UP | MSYS_CALLBACK_REASON_LBUTTON_UP ) )
   {
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		if (CommonTimeCompressionChecks()) return;
 
 		RequestToggleTimeCompression();
-#endif
 	}
 }
 
@@ -398,9 +390,6 @@ static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		if (CommonTimeCompressionChecks()) return;
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
@@ -413,7 +402,6 @@ static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		CommonTimeCompressionChecks();
-#endif
 	}
 }
 
@@ -422,9 +410,6 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
   if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-#ifdef JA2DEMO
-		DisabledInDemo();
-#else
 		if (CommonTimeCompressionChecks()) return;
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
@@ -437,7 +422,6 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		CommonTimeCompressionChecks();
-#endif
 	}
 }
 
@@ -1061,14 +1045,6 @@ bool AnyUsableRealMercenariesOnTeam()
 
 
 
-#ifdef JA2DEMO
-void HandleLeavingOfMapScreenDuringDemo( void )
-{
-	SetPendingNewScreen( GAME_SCREEN );
-}
-#endif
-
-
 void RequestTriggerExitFromMapscreen(ExitToWhere const bExitToWhere)
 {
 	Assert( ( bExitToWhere >= MAP_EXIT_TO_LAPTOP ) && ( bExitToWhere <= MAP_EXIT_TO_SAVE ) );
@@ -1218,13 +1194,7 @@ void HandleExitsFromMapScreen( void )
 				break;
 
 			case MAP_EXIT_TO_TACTICAL:
-				#ifdef JA2DEMO
-					HandleLeavingOfMapScreenDuringDemo( );
-					gfDontStartTransitionFromLaptop = TRUE;
-				#else
-					SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
-				#endif
-
+				SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
 				break;
 
 			case MAP_EXIT_TO_OPTIONS:

@@ -808,12 +808,8 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 		{
 			if (in_map)
 			{
-#ifdef JA2DEMO
-				hatch_out = true;
-#else
 				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
 				RestoreExternBackgroundRect(14, 218, 102, 24);
-#endif
 			}
 			else
 			{

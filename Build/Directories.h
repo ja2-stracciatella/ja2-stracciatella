@@ -7,9 +7,6 @@
 #define BIGITEMSDIR    "bigitems"
 #define BINARYDATADIR  "binarydata"
 #define CURSORSDIR     "cursors"
-#ifdef JA2DEMOADS
-#define DEMOADSDIR     "demoads"
-#endif
 #define EDITORDIR      "editor"
 #define FACESDIR       "faces"
 #define FONTSDIR       "fonts"

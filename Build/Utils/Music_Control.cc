@@ -10,12 +10,6 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 
-#ifdef JA2DEMO
-#	include "Fade_Screen.h"
-#	include "Overhead.h"
-#endif
-
-
 static UINT32  uiMusicHandle   = NO_SAMPLE;
 static UINT32  uiMusicVolume   = 50;
 static BOOLEAN fMusicPlaying   = FALSE;
@@ -43,19 +37,11 @@ const char* const szMusicList[]=
 	MUSICDIR "/menumix1.wav",
 	MUSICDIR "/nothing a.wav",
 	MUSICDIR "/nothing b.wav",
-#ifdef JA2DEMO
-	MUSICDIR "/nothing a.wav",
-	MUSICDIR "/nothing b.wav",
-	MUSICDIR "/tensor b.wav",
-	MUSICDIR "/tensor b.wav",
-	MUSICDIR "/tensor b.wav",
-#else
 	MUSICDIR "/nothing c.wav",
 	MUSICDIR "/nothing d.wav",
 	MUSICDIR "/tensor a.wav",
 	MUSICDIR "/tensor b.wav",
 	MUSICDIR "/tensor c.wav",
-#endif
 	MUSICDIR "/triumph.wav",
 	MUSICDIR "/death.wav",
 	MUSICDIR "/battle a.wav",
@@ -253,28 +239,13 @@ void MusicPoll(void)
 			{
 				if ( gbDeathSongCount == 1 && guiCurrentScreen == GAME_SCREEN )
 				{
-#ifdef JA2DEMO
-					gFadeOutDoneCallback = DoneFadeOutDueToEndMusic;
-					FadeOutGameScreen( );
-#else
 					CheckAndHandleUnloadingOfCurrentWorld();
-#endif
 				}
 
-#ifdef JA2DEMO
-				if ( gbVictorySongCount == 1 && guiCurrentScreen == GAME_SCREEN )
-				{
-						// Bring up dialogue...
-						HandleEndDemoInCreatureLevel( );
-
-						SetMusicMode( MUSIC_TACTICAL_NOTHING );
-				}
-#else
 				if ( gbVictorySongCount == 1 )
 				{
 						SetMusicMode( MUSIC_TACTICAL_NOTHING );
 				}
-#endif
 			}
 			else
 			{
@@ -311,20 +282,6 @@ void SetMusicMode(UINT8 ubMusicMode)
 		// Save previous mode...
 		bPreviousMode = gubOldMusicMode;
 	}
-
-#ifdef JA2DEMO
-	// ATE: Short circuit normal music modes and
-	// If we a\were told to play tense mode,
-	// change to nothing until we have set
-	// the flag indicating that we can....
-	if ( ubMusicMode == MUSIC_TACTICAL_ENEMYPRESENT && !gfForceMusicToTense )
-	{
-		ubMusicMode = MUSIC_TACTICAL_NOTHING;
-	}
-
-	gfForceMusicToTense = FALSE;
-
-#endif
 
 	// if different, start a new music song
 	if ( gubOldMusicMode != ubMusicMode )

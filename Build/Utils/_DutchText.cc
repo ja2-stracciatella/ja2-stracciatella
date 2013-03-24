@@ -2932,72 +2932,6 @@ static const wchar_t *s_dut_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] 
 	L"Je kunt de militie in %ls niet meer trainen.",
 };
 
-#ifdef JA2DEMOADS
-static const wchar_t *s_dut_gpDemoString[gpDemoString_SIZE] =
-{
-	//0-9
-	L"HET BESTE VAN STRATEGIESPELEN.",
-	L"HET BESTE VAN ROLLENSPELEN.",
-	L"Volledig niet-lineair spel",
-	L"Geweldig nieuw verhaal",
-	L"Verzengende vuurgevechten",
-	L"Dynamische verlichting",
-	L"NPC interactie",
-	L"Geheime en nachtstrategieën",
-	L"Maak eigen huurlingen",
-	L"Uitdagende en creatieve missies",
-	L"Bestuurbare voertuigen",
-	//10-19
-	L"Meer dan 150 personen",
-	L"Honderden gave items",
-	L"Meer dan 250 unieke locaties",
-	L"Geweldige explosies",
-	L"Nieuwe tactische manoeuvres",
-	L"Stapels animaties",
-	L"Meer dan 9000 dialoogregels",
-	L"Verbazingwekkende muziek door Kevin Manthei",
-	L"Allesomvattende strategie",
-	L"Worstel je door luchtaanvallen",
-	//20-29
-	L"Train je eigen milities",
-	L"Aanpasbaar spelelement",
-	L"Realistische kijkhoeken",
-	L"Spectaculaire high-color afbeeldingen",
-	L"Koop, verkoop en handel",
-	L"Meedogenloze AI-vijanden",
-	L"Ultramoderne tactische gevechten",
-	L"Optioneel SF-element",
-	L"24-uurs klok",
-	L"Meer dan 60 uur spelen",
-	//30-34
-	L"Meerdere moeilijkheidsgraden",
-	L"Realistische ballistische modellen",
-	L"Echte natuurkundige besturing",
-	L"Volledig interactieve omgeving",
-	L"En veel meer...",
-	//35 on are BOLD
-	L"",
-	L"",
-	L"\"One of 1998's most imaginative games\"",
-	L"PC Gamer",
-	L"Plaats vandaag nog je bestelling op WWW.JAGGEDALLIANCE2.COM !",
-};
-
-static const wchar_t *s_dut_gpDemoIntroString[gpDemoIntroString_SIZE] =
-{
-	L"Je gaat een idee krijgen van het beste op het gebied van strategie, rollenspelen, en tactische gevechten:",
-	//Point 1 (uses one string)
-	L"Bestuur een team van huurlingen met echte persoonlijkheden     (geen saaie teamleden dus).",
-	//Point 2 (uses one string)
-	L"Kijk eens naar de gave tactische manoeuvres, rennen, kruipen, klimmen, springen, man-tot-man-gevechten en veel meer.",
-	//Point 3 (uses one string)
-	L"Speel met vuur! Gave speeltjes, killerwapens, geweldige explosies.",
-	//Additional comment
-	L"(en dit is nog maar het begin)",
-	//Introduction/instructions
-	L"Welkom in Demoville... (druk op een toets om door te gaan)",
-};
-#endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 static const wchar_t *s_dut_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
@@ -3601,20 +3535,6 @@ static const wchar_t s_dut_str_ceramic_plates_smashed[] = L"%ls's ceramic plates
 
 static const wchar_t s_dut_str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
 
-#ifdef JA2DEMO
-static const wchar_t s_dut_str_disabled_for_the_demo[]    = L"Niet mogelijk bij Demo";
-/* informs player this option/button has been disabled in the demo */
-static const wchar_t s_dut_str_disabled_in_demo[]         = L"Sorry. Optie niet mogelijk in deze demo.";
-static const wchar_t s_dut_str_go_see_gabby[]             = L"Je bent hier klaar. Misschien moet je eens naar Gabby gaan.";
-static const wchar_t s_dut_str_too_bad_you_killed_gabby[] = L"Jammer dat je hem gedood hebt.";
-/* For the demo, the sector exit interface, you'll be able to split your teams
- * up, but the demo has this feature disabled.  This string is fast help text
- * that appears over "single" button. */
-static const wchar_t s_dut_str_strategic_exit_gui_demo[]  = L"In het volledige spel is het mogelijk je\nteam te splitsen, echter niet in de demo.";
-/* The overhead map is a map of the entire sector, which you can go into
- * anytime, except in the demo. */
-static const wchar_t s_dut_str_overhead_map_disabled[]    = L"Overzichtkaart niet mogelijk in demo.";
-#endif
 
 static const wchar_t s_dut_str_stat_health[]       = L"Gezondheid";
 static const wchar_t s_dut_str_stat_agility[]      = L"Beweeglijkheid";
@@ -3866,20 +3786,6 @@ LanguageRes g_LanguageResDutch = {
   s_dut_sRepairsDoneString,
   s_dut_str_ceramic_plates_smashed,
   s_dut_str_arrival_rerouted,
-
-#ifdef JA2DEMO
-  s_dut_str_disabled_for_the_demo,
-  s_dut_str_disabled_in_demo,
-  s_dut_str_go_see_gabby,
-  s_dut_str_too_bad_you_killed_gabby,
-  s_dut_str_strategic_exit_gui_demo,
-  s_dut_str_overhead_map_disabled,
-#endif
-
-#ifdef JA2DEMOADS
-  s_dut_gpDemoString,
-  s_dut_gpDemoIntroString,
-#endif
 
   s_dut_str_stat_health,
   s_dut_str_stat_agility,

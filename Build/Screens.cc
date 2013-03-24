@@ -45,11 +45,7 @@ Screens const GameScreens[] =
 	{ ShopKeeperScreenInit, ShopKeeperScreenHandle,      ShopKeeperScreenShutdown },
 	{ NULL,                 SexScreenHandle,             NULL                     },
 	{ NULL,                 GameInitOptionsScreenHandle, NULL                     },
-#ifdef JA2DEMOADS
-	{ NULL,                 DemoExitScreenHandle,        NULL                     },
-#else
 	{ NULL,                 NULL,                        NULL                     },
-#endif
 	{ NULL,                 IntroScreenHandle,           NULL                     },
 	{ NULL,                 CreditScreenHandle,          NULL                     },
 #ifdef JA2BETAVERSION

@@ -85,11 +85,7 @@ static CursorFileData CursorFileDatabase[] =
 	SCURSOR(CURSORSDIR "/cur_x.sti"),
 	SCURSOR(CURSORSDIR "/can_01.sti"),
 	SCURSOR(CURSORSDIR "/can_02.sti"),
-#ifdef JA2DEMO
-	SCURSOR(CURSORSDIR "/cursor.sti"),
-#else
 	SCURSOR(CURSORSDIR "/cur_swit.sti"),
-#endif
 	SCURSOR(CURSORSDIR "/bullseye.sti"),
 	SCURSOR(CURSORSDIR "/deadleap.sti"),
 	SCURSOR(CURSORSDIR "/can_01.sti"),

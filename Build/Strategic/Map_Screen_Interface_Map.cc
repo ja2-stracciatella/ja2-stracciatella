@@ -607,9 +607,6 @@ static void ShowTownText(void);
 
 void DrawMap(void)
 {
-#ifdef JA2DEMO
-	BltVideoObjectOnce(guiSAVEBUFFER, INTERFACEDIR "/map_1.sti", 0, 290, 26);
-#else
 	if (!iCurrentMapSectorZ)
 	{
 		if (fZoomFlag)
@@ -738,7 +735,6 @@ void DrawMap(void)
 	if (fShowItemsFlag) ShowItemsOnMap();
 
 	DisplayLevelString();
-#endif
 }
 
 

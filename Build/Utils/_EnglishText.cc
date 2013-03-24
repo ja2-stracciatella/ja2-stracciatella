@@ -2914,72 +2914,6 @@ static const wchar_t *s_eng_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] 
 	L"You cannot train the militia in %ls any further.",
 };
 
-#ifdef JA2DEMOADS
-static const wchar_t *s_eng_gpDemoString[gpDemoString_SIZE] =
-{
-	//0-9
-	L"THE BEST OF STRATEGY.",
-	L"THE BEST OF ROLE-PLAYING.",
-	L"Totally nonlinear gameplay",
-	L"Vast new story",
-	L"Blistering firefights",
-	L"Dynamic lighting",
-	L"NPC interaction",
-	L"Stealth and night tactics",
-	L"Create a custom merc",
-	L"Challenging and creative quests",
-	L"Controllable vehicles",
-	//10-19
-	L"Over 150 personalities",
-	L"Hundreds of cool items",
-	L"Over 250 unique locations",
-	L"Awesome explosions",
-	L"New tactical maneuvers",
-	L"Tons of animation",
-	L"Over 9000 lines of dialogue",
-	L"Amazing musical score by Kevin Manthei",
-	L"Global strategy",
-	L"Battle through air strikes",
-	//20-29
-	L"Train your own militia",
-	L"Customizable gameplay",
-	L"Realistic line-of-sight",
-	L"Spectacular high-color graphics",
-	L"Buy, sell, and trade",
-	L"Ruthless enemy AI",
-	L"State of the art tactical combat",
-	L"Optional Sci-Fi element",
-	L"24 hour clock",
-	L"Well over 60 hours of gameplay",
-	//30-34
-	L"Multiple difficulty settings",
-	L"Realistic ballistics modeling",
-	L"Genuine physics engine",
-	L"Fully interactive environment",
-	L"And much more...",
-	//35 on are BOLD
-	L"",
-	L"",
-	L"\"One of 1998's most imaginative games\"",
-	L"PC Gamer",
-	L"Place your order at WWW.JAGGEDALLIANCE2.COM today!",
-};
-
-static const wchar_t *s_eng_gpDemoIntroString[gpDemoIntroString_SIZE] =
-{
-	L"You're about to get a taste of the best of strategy, the best of role-playing, and the best of tactical combat:",
-	//Point 1 (uses one string)
-	L"Control a team of mercs rich with personality           (no boring expendable units here).",
-	//Point 2 (uses one string)
-	L"Check out the cool array of tactical maneuvers, from running to crawling, climbing to jumping, hand to hand combat and more.",
-	//Point 3 (uses one string)
-	L"Play with fire!  Cool toys, killer weapons, awesome explosions.",
-	//Additional comment
-	L"(and this is just the beginning)",
-	//Introduction/instructions
-	L"Welcome to Demoville... (press a key to continue)",
-};
-#endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 static const wchar_t *s_eng_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
@@ -3583,21 +3517,6 @@ static const wchar_t s_eng_str_ceramic_plates_smashed[] = L"%ls's ceramic plates
 
 static const wchar_t s_eng_str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied.";
 
-#ifdef JA2DEMO
-static const wchar_t s_eng_str_disabled_for_the_demo[]    = L"Disabled for Demo";
-/* informs player this option/button has been disabled in the demo */
-static const wchar_t s_eng_str_disabled_in_demo[]         = L"Sorry. This option has been disabled in this demo.";
-static const wchar_t s_eng_str_go_see_gabby[]             = L"You're all done down here. Maybe you should go see Gabby.";
-static const wchar_t s_eng_str_too_bad_you_killed_gabby[] = L"Too bad you killed him.";
-/* For the demo, the sector exit interface, you'll be able to split your teams
- * up, but the demo has this feature disabled.  This string is fast help text
- * that appears over "single" button. */
-static const wchar_t s_eng_str_strategic_exit_gui_demo[]  = L"In the full game, you'll be able to separate\nyour team, but not in the demo.";
-/* The overhead map is a map of the entire sector, which you can go into
- * anytime, except in the demo. */
-static const wchar_t s_eng_str_overhead_map_disabled[]    = L"Overhead map disabled for Demo.";
-#endif
-
 static const wchar_t s_eng_str_stat_health[]       = L"Health";
 static const wchar_t s_eng_str_stat_agility[]      = L"Agility";
 static const wchar_t s_eng_str_stat_dexterity[]    = L"Dexterity";
@@ -3861,20 +3780,6 @@ LanguageRes g_LanguageResEnglish = {
   s_eng_sRepairsDoneString,
   s_eng_str_ceramic_plates_smashed,
   s_eng_str_arrival_rerouted,
-
-#ifdef JA2DEMO
-  s_eng_str_disabled_for_the_demo,
-  s_eng_str_disabled_in_demo,
-  s_eng_str_go_see_gabby,
-  s_eng_str_too_bad_you_killed_gabby,
-  s_eng_str_strategic_exit_gui_demo,
-  s_eng_str_overhead_map_disabled,
-#endif
-
-#ifdef JA2DEMOADS
-  s_eng_gpDemoString,
-  s_eng_gpDemoIntroString,
-#endif
 
   s_eng_str_stat_health,
   s_eng_str_stat_agility,

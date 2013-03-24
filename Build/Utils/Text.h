@@ -403,20 +403,6 @@ struct LanguageRes
   const StrPointer  str_ceramic_plates_smashed;
   const StrPointer  str_arrival_rerouted;
 
-#ifdef JA2DEMO
-  const StrPointer  str_disabled_for_the_demo;
-  const StrPointer  str_disabled_in_demo;
-  const StrPointer  str_go_see_gabby;
-  const StrPointer  str_too_bad_you_killed_gabby;
-  const StrPointer  str_strategic_exit_gui_demo;
-  const StrPointer  str_overhead_map_disabled;
-#endif
-
-#ifdef JA2DEMOADS
-  const StrPointer *gpDemoString;
-  const StrPointer *gpDemoIntroString;
-#endif
-
   const StrPointer  str_stat_health;
   const StrPointer  str_stat_agility;
   const StrPointer  str_stat_dexterity;
@@ -647,20 +633,6 @@ extern const LanguageRes* g_langRes;
 #define sRepairsDoneString                                  (g_langRes->sRepairsDoneString)
 #define str_ceramic_plates_smashed                          (g_langRes->str_ceramic_plates_smashed)
 #define str_arrival_rerouted                                (g_langRes->str_arrival_rerouted)
-
-#ifdef JA2DEMO
-#define str_disabled_for_the_demo                           (g_langRes->str_disabled_for_the_demo)
-#define str_disabled_in_demo                                (g_langRes->str_disabled_in_demo)
-#define str_go_see_gabby                                    (g_langRes->str_go_see_gabby)
-#define str_too_bad_you_killed_gabby                        (g_langRes->str_too_bad_you_killed_gabby)
-#define str_strategic_exit_gui_demo                         (g_langRes->str_strategic_exit_gui_demo)
-#define str_overhead_map_disabled                           (g_langRes->str_overhead_map_disabled)
-#endif
-
-#ifdef JA2DEMOADS
-#define gpDemoString                                        (g_langRes->gpDemoString)
-#define gpDemoIntroString                                   (g_langRes->gpDemoIntroString)
-#endif
 
 #define str_stat_health                                     (g_langRes->str_stat_health)
 #define str_stat_agility                                    (g_langRes->str_stat_agility)

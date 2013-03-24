@@ -33,9 +33,4 @@ void EnableFPSOverlay(BOOLEAN fEnable);
 extern BOOLEAN gfExitDebugScreen;
 extern INT8    gCurDebugPage;
 
-#ifdef JA2DEMOADS
-void DoDemoIntroduction(void);
-ScreenID DemoExitScreenHandle(void);
-#endif
-
 #endif

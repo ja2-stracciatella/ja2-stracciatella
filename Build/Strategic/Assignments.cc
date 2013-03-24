@@ -332,14 +332,9 @@ static bool AreAssignmentConditionsMet(SOLDIERTYPE const& s, AssignmentCondition
 
 static BOOLEAN BasicCanCharacterDoctor(const SOLDIERTYPE* const s)
 {
-#ifdef JA2DEMO
-	// this assignment is no go in the demo
-	return FALSE;
-#else
 	return
 		s->bMedical > 0 &&
 		AreAssignmentConditionsMet(*s, AC_UNDERGROUND);
-#endif
 }
 
 
@@ -537,11 +532,6 @@ static BOOLEAN CanCharacterRepairButDoesntHaveARepairkit(const SOLDIERTYPE* cons
 // check that character is alive, oklife, has repair skill, and equipment, etc.
 static BOOLEAN CanCharacterRepair(SOLDIERTYPE const* const pSoldier)
 {
-	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return FALSE;
-	#endif
-
 	if (!BasicCanCharacterRepair(pSoldier)) return FALSE;
 
 	// make sure he has a toolkit
@@ -567,15 +557,10 @@ static BOOLEAN CanCharacterRepair(SOLDIERTYPE const* const pSoldier)
 // can character be set to patient?
 static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 {
-#ifdef JA2DEMO
-	// this assignment is no go in the demo
-	return FALSE;
-#else
 	return
 		s->bLife > 0 &&
 		s->bLife != s->bLifeMax &&
 		AreAssignmentConditionsMet(*s, AC_UNCONSCIOUS | AC_EPC | AC_UNDERGROUND);
-#endif
 }
 
 
@@ -592,16 +577,11 @@ static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 {
 	// is the character capable of training a town?
 	// they must be alive/conscious and in the sector with the town
-#ifdef JA2DEMO
-	// this assignment is no go in the demo
-	return FALSE;
-#else
 	return
 		s->bLeadership > 0 &&
 		CanSectorContainMilita(s->sSectorX, s->sSectorY, s->bSectorZ) &&
 		NumEnemiesInAnySector(s->sSectorX, s->sSectorY, s->bSectorZ) == 0 &&
 		AreAssignmentConditionsMet(*s, AC_NONE);
-#endif
 }
 
 
@@ -685,10 +665,6 @@ static INT8 GetTrainingStatValue(const SOLDIERTYPE* const s, const INT8 stat)
 static BOOLEAN CanCharacterTrainStat(const SOLDIERTYPE* const s, INT8 bStat, const BOOLEAN fTrainSelf, const BOOLEAN fTrainTeammate)
 {
 	// is the character capable of training this stat? either self or as trainer
-#ifdef JA2DEMO
-	// this assignment is no go in the demo
-	return FALSE;
-#else
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
 	if (!AreAssignmentConditionsMet(*s, AC_NONE)) return FALSE;
 
@@ -697,7 +673,6 @@ static BOOLEAN CanCharacterTrainStat(const SOLDIERTYPE* const s, INT8 bStat, con
 		stat_val != 0 &&
 		(!fTrainTeammate || stat_val >= MIN_RATING_TO_TEACH) &&
 		(!fTrainSelf     || stat_val <  TRAINING_RATING_CAP);
-#endif
 }
 
 
@@ -713,12 +688,7 @@ static BOOLEAN CanCharacterOnDuty(const SOLDIERTYPE* const s)
 static BOOLEAN CanCharacterPractise(const SOLDIERTYPE* const s)
 {
 	// can character practise right now?
-#ifdef JA2DEMO
-	// this assignment is no go in the demo
-	return FALSE;
-#else
 	return AreAssignmentConditionsMet(*s, AC_NONE);
-#endif
 }
 
 
@@ -758,10 +728,6 @@ static BOOLEAN CanCharacterBeTrainedByOther(SOLDIERTYPE const* const pSoldier)
 // Can character sleep right now?
 static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 {
-#ifdef JA2DEMO // This assignment is no go in the demo
-	return false;
-#else
-
 	if (!AreAssignmentConditionsMet(s, AC_IMPASSABLE | AC_COMBAT | AC_EPC | AC_IN_HELI_IN_HOSTILE_SECTOR | AC_MOVING | AC_UNDERGROUND)) return false;
 
 	wchar_t const* why;
@@ -819,7 +785,6 @@ cannot_sleep:
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, 0);
 	}
 	return false;
-#endif
 }
 
 
@@ -854,9 +819,6 @@ static BOOLEAN CanCharacterBeAwakened(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhy
 // put character in vehicle?
 static bool CanCharacterVehicle(SOLDIERTYPE const& s)
 { // Can character enter/leave vehicle?
-#ifdef JA2DEMO
-	return false; // This assignment is no go in the demo
-#else
 	return
 		fInMapMode && // Strictly for visual reasons - we don't want them just vanishing if in tactical
 		AnyAccessibleVehiclesInSoldiersSector(s) &&
@@ -867,7 +829,6 @@ static bool CanCharacterVehicle(SOLDIERTYPE const& s)
 			s.bSectorZ != gbWorldSectorZ
 		) &&
 		AreAssignmentConditionsMet(s, AC_EPC | AC_MECHANICAL);
-#endif
 }
 
 
@@ -951,11 +912,6 @@ static void UpdatePatientsWhoAreDoneHealing();
 void UpdateAssignments()
 {
 	INT8 sX,sY, bZ;
-
-	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return;
-	#endif
 
 	// init sectors with soldiers list
 	InitSectorsWithSoldiersList( );

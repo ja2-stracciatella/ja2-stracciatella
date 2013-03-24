@@ -23,10 +23,6 @@
 
 void HandleMinuteUpdate()
 {
-	#ifdef JA2DEMO
-	// hourly update of hated/liked mercs
-	UpdateBuddyAndHatedCounters();
-	#endif
 }
 
 

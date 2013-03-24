@@ -356,10 +356,6 @@ UINT8        NumCapableEnemyInSector();
 SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* target);
 SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* target);
 
-#ifdef JA2DEMO
-void HandleEndDemoInCreatureLevel(void);
-#endif
-
 UINT NumberOfMercsOnPlayerTeam(void);
 
 void InitializeTacticalStatusAtBattleStart(void);

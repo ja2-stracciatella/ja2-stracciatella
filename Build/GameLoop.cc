@@ -37,10 +37,6 @@
 #	include "PreBattle_Interface.h"
 #endif
 
-#ifdef JA2DEMOADS
-#	include "Fade_Screen.h"
-#endif
-
 
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
@@ -422,13 +418,7 @@ void EndGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-#ifdef JA2DEMOADS
-		guiPendingScreen = DEMO_EXIT_SCREEN;
-		SetMusicMode( MUSIC_MAIN_MENU );
-		FadeOutNextFrame( );
-#else
 		requestGameExit();
-#endif
 	}
 
 	//If we are in the tactical placement gui, we need this flag set so the interface is updated.

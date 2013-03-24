@@ -297,10 +297,6 @@ void BeginLoadScreen( )
 	UINT32 uiTimeRange;
 	INT32 iLastShadePercentage;
 
-#ifdef JA2DEMOADS
-	DoDemoIntroduction();
-#endif
-
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
 	if( guiCurrentScreen == MAP_SCREEN && !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && !AreInMeanwhile() )
@@ -1054,22 +1050,6 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 		}
 	}
 
-#ifdef JA2DEMO
-	// special stuff to make NPCs talk as if the next day, after going down
-	// into mines
-	if (bNewSectorZ > 0)
-	{
-		if ( gMercProfiles[ GABBY ].ubLastDateSpokenTo != 0 )
-		{
-			gMercProfiles[ GABBY ].ubLastDateSpokenTo = 199;
-		}
-		if ( gMercProfiles[ JAKE ].ubLastDateSpokenTo != 0 )
-		{
-			gMercProfiles[ JAKE ].ubLastDateSpokenTo = 199;
-		}
-	}
-#endif
-
 	if (gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS &&
 			CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, 0)    &&
 			GetTownIdForSector(sector) != BLANK_SECTOR       &&
@@ -1520,9 +1500,6 @@ static void InitializeStrategicMapSectorTownNames(void)
 
 void GetSectorIDString(INT16 const x, INT16 const y, INT8 const z, wchar_t* const buf, size_t const length, BOOLEAN const detailed)
 {
-#ifdef JA2DEMO
-	wcslcpy(buf, L"Demoville", length);
-#else
 	if (x <= 0 || y <= 0 || z < 0) /* Empty? */
 	{
 		//swprintf(buf, L"%ls", pErrorStrings);
@@ -1625,7 +1602,6 @@ plain_sector:;
 	{ // Append "Mine"
 		swprintf(buf + n, length - n, L" %ls", pwMineStrings[0]);
 	}
-#endif
 }
 
 
@@ -2637,10 +2613,6 @@ void SetupNewStrategicGame()
 	// Hourly update of all sorts of things
 	AddPeriodStrategicEvent(EVENT_HOURLY_UPDATE,       60, 0);
 	AddPeriodStrategicEvent(EVENT_QUARTER_HOUR_UPDATE, 15, 0);
-
-#ifdef JA2DEMO
-	AddPeriodStrategicEventWithOffset(EVENT_MINUTE_UPDATE, 60, 475, 0);
-#endif
 
 	// Clear any possible battle locator.
 	gfBlitBattleSectorLocator = FALSE;

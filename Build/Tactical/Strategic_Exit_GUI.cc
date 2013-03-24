@@ -331,10 +331,6 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	gExitDialog.SingleRegion.AllowDisabledRegionFastHelp(TRUE);
 
 
-#ifdef JA2DEMO
-	gExitDialog.SingleRegion.SetFastHelpText(str_strategic_exit_gui_demo);
-#endif
-
 	MSYS_DefineRegion( &(gExitDialog.AllRegion), (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 57), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 57 + 12), MSYS_PRIORITY_HIGHEST,
 																			CURSOR_NORMAL, AllRegionMoveCallback, AllRegionCallback );
 	gExitDialog.AllRegion.AllowDisabledRegionFastHelp(TRUE);

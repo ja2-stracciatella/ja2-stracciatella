@@ -2974,72 +2974,6 @@ static const wchar_t *s_rus_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] 
 	L"%ls: невозможно продолжить подготовку ополчения.",
 };
 
-#ifdef JA2DEMOADS
-static const wchar_t *s_rus_gpDemoString[gpDemoString_SIZE] =
-{
-	//0-9
-	L"ЛУЧШАЯ СТРАТЕГИЯ",
-	L"ЛУЧШАЯ РПГ.",
-	L"Нелинейный геймплей",
-	L"Пространный сюжет",
-	L"Горячие перестрелки",
-	L"Динамическое освещение",
-	L"Взаимодействие с NPC",
-	L"Тайные и ночные бои",
-	L"Создание собственного наемника",
-	L"Захватывающие и необычные квесты",
-	L"Управляемые машины",
-	//10-19
-	L"Более 150 персонажей",
-	L"Сотни клевых предметов",
-	L"Больше 250 разных локаций",
-	L"Ошеломляющие взрывы",
-	L"Новые тактики боя",
-	L"Масса анимации",
-	L"Более 9000 строк диалогов",
-	L"Потрясающая музыка Кевина Мантея",
-	L"Глобальная стратегия",
-	L"Прекрасно выдержанный игровой баланс",
-	//20-29
-	L"Создайте свое ополчение",
-	L"Широкие возможности настройки",
-	L"Реалистичное поле зрения",
-	L"Красочная многоцветная графика",
-	L"Покупайте, продавайте, меняйтесь",
-	L"Безжалостный АИ противников",
-	L"Тактика как искусство",
-	L"Опциональные элементы фантастики",
-	L"Круглосуточная игра",
-	L"Более 60 часов прохождения",
-	//30-34
-	L"Множество уровней сложности",
-	L"Реалистичное моделирование баллистики",
-	L"Оригинальная физическая модель",
-	L"Полное интерактивное окружение",
-	L"И даже больше...",
-	//35 on are BOLD
-	L"",
-	L"",
-	L"\"Одна из самых образных игр 1998 года\"",
-	L"PC Gamer",
-	L"Закажите игру в Буке Сегодня! buka@dol.ru",
-};
-
-static const wchar_t *s_rus_gpDemoIntroString[gpDemoIntroString_SIZE] =
-{
-	L"Сейчас вы узнаете, что такое настоящая стратегия, тактика и ролевая игра:",
-	//Point 1 (uses one string)
-	L"Управляйте командой наемников, каждый из которых - личность (никакого пушечного мяса).",
-	//Point 2 (uses one string)
-	L"Испробуйте широкий спектр тактических маневров, от бега до ползания, от прыжков до лазания по крышам, рукопашная и конечно...",
-	//Point 3 (uses one string)
-	L"Игра с огнем! Крутые игрушки, оружие убийства, мощные взрывы.",
-	//Additional comment
-	L"(и это всего лишь начало)",
-	//Introduction/instructions
-	L"Добро пожаловать в Демовилль (нажмите любую клавишу)",
-};
-#endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 static const wchar_t *s_rus_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
@@ -3646,20 +3580,6 @@ static const wchar_t s_rus_str_ceramic_plates_smashed[] = L"%ls: в бронеж
 
 static const wchar_t s_rus_str_arrival_rerouted[] = L"Место высадки новоприбывших наемников перенесено в сектор %ls; ранее заданный сектор %ls захвачен врагом.";
 
-#ifdef JA2DEMO
-static const wchar_t s_rus_str_disabled_for_the_demo[]    = L"Отключено в демо-версии";
-/* informs player this option/button has been disabled in the demo */
-static const wchar_t s_rus_str_disabled_in_demo[]         = L"Извините. В демо версии это отключено.";
-static const wchar_t s_rus_str_go_see_gabby[]             = L"С этим покончено. Может, стоит повидаться с Габби?";
-static const wchar_t s_rus_str_too_bad_you_killed_gabby[] = L"Жаль правда, что вы убили его.";
-/* For the demo, the sector exit interface, you'll be able to split your teams
- * up, but the demo has this feature disabled.  This string is fast help text
- * that appears over "single" button. */
-static const wchar_t s_rus_str_strategic_exit_gui_demo[]  = L"В полной игре вы сможете разделять\nкоманду, но не в демо версии.";
-/* The overhead map is a map of the entire sector, which you can go into
- * anytime, except in the demo. */
-static const wchar_t s_rus_str_overhead_map_disabled[]    = L"Общая карта в демо-версии отсутствует.";
-#endif
 
 static const wchar_t s_rus_str_stat_health[]       = L"Здоровье";
 static const wchar_t s_rus_str_stat_agility[]      = L"Проворность";
@@ -3921,20 +3841,6 @@ LanguageRes g_LanguageResRussian = {
   s_rus_str_ceramic_plates_smashed,
   s_rus_str_arrival_rerouted,
 
-#ifdef JA2DEMO
-  s_rus_str_disabled_for_the_demo,
-  s_rus_str_disabled_in_demo,
-  s_rus_str_go_see_gabby,
-  s_rus_str_too_bad_you_killed_gabby,
-  s_rus_str_strategic_exit_gui_demo,
-  s_rus_str_overhead_map_disabled,
-#endif
-
-#ifdef JA2DEMOADS
-  s_rus_gpDemoString,
-  s_rus_gpDemoIntroString,
-#endif
-
   s_rus_str_stat_health,
   s_rus_str_stat_agility,
   s_rus_str_stat_dexterity,
@@ -4163,20 +4069,6 @@ LanguageRes g_LanguageResRussianGold = {
   s_rus_sRepairsDoneString,
   s_rus_str_ceramic_plates_smashed,
   s_rus_str_arrival_rerouted,
-
-#ifdef JA2DEMO
-  s_rus_str_disabled_for_the_demo,
-  s_rus_str_disabled_in_demo,
-  s_rus_str_go_see_gabby,
-  s_rus_str_too_bad_you_killed_gabby,
-  s_rus_str_strategic_exit_gui_demo,
-  s_rus_str_overhead_map_disabled,
-#endif
-
-#ifdef JA2DEMOADS
-  s_rus_gpDemoString,
-  s_rus_gpDemoIntroString,
-#endif
 
   s_rus_str_stat_health,
   s_rus_str_stat_agility,

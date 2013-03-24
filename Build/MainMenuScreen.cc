@@ -27,10 +27,6 @@
 #include "WordWrap.h"
 #include "UILayout.h"
 
-#ifdef JA2DEMOADS
-#	include "Fade_Screen.h"
-#endif
-
 
 //#define TESTFOREIGNFONTS
 

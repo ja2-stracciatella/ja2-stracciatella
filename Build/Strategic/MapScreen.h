@@ -120,8 +120,4 @@ void SetMapCursorItem();
 void DumpSectorDifficultyInfo(void);
 #endif
 
-#ifdef JA2DEMO
-void DisabledInDemo(void);
-#endif
-
 #endif

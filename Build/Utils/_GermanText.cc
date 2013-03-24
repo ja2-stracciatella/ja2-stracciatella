@@ -2748,72 +2748,6 @@ static const wchar_t *s_ger_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] 
 	L"Sie können die Miliz in %ls nicht mehr trainieren.",
 };
 
-#ifdef JA2DEMOADS
-static const wchar_t *s_ger_gpDemoString[gpDemoString_SIZE] =
-{
-	//0-9
-	L"UNÜBERTROFFENE STRATEGIE.",
-	L"UNÜBERTROFFENES ROLLENSPIEL.",
-	L"Nicht-lineare Spielhandlung",
-	L"Umfassende neue Story",
-	L"Heiße Gefechte",
-	L"Dynamisches Lighting",
-	L"NPC-Interaktion",
-	L"Geheimstrategien und Nachtmanöver",
-	L"Kreieren Sie Ihre eigenen Söldner",
-	L"Herausfordernde und kreative Einsätze",
-	L"Steuerbare Fahrzeuge",
-	//10-19
-	L"Über 150 Charaktere",
-	L"Hunderte von abgefahrenen Gegenständen",
-	L"Über 250 einzigartige Locations",
-	L"Furchterregende Explosionen",
-	L"Brandneue taktische Manöver",
-	L"Tonnenweise Animationen",
-	L"Über 9000 Zeilen Dialoge",
-	L"Fantastische Musik von Kevin Manthei",
-	L"Globale Strategie",
-	L"Kämpfe unter Luftangriffen",
-	//20-29
-	L"Bilden Sie Ihre eigene Miliz aus",
-	L"Individuell einstellbares Gameplay",
-	L"Realistische Line-of-sight",
-	L"Spektakuläre High-color Grafiken",
-	L"Kaufen, verkaufen, tauschen...",
-	L"Gegner mit gnadenloser AI",
-	L"Modernste Kampftechniken",
-	L"Optionales Sci-Fi-Element",
-	L"Realistische Tagesabläufe",
-	L"Über 60 Stunden Spiel unter Hochspannung",
-	//30-34
-	L"Auswählbare Schwierigkeitsgrade",
-	L"Realistische Ballistik",
-	L"Einzigartige physikalische Engine",
-	L"Komplett interaktives Spielumfeld",
-	L"Und vieles mehr...",
-	//35 on are BOLD
-	L"",
-	L"",
-	L"\"Eines der besten Spiele des Jahres\"",
-	L"PC Gamer",
-	L"Bestellen Sie noch heute unter WWW.JA2.DE!",
-};
-
-static const wchar_t *s_ger_gpDemoIntroString[gpDemoIntroString_SIZE] =
-{
-	L"Gleich werden Sie noch nie dagewesene Strategien, unübertroffenes Rollenspiel und überwältigende Kampftechniken erleben:",
-	//Point 1 (uses one string)
-	L"Führen Sie ein Team von Söldnern mit einzigartigen Persönlichkeiten (hier gibt's keine langweiligen stereotypen Einheiten).",
-	//Point 2 (uses one string)
-	L"Testen Sie die Vielfalt der taktischen Manöver, rennen Sie, kriechen Sie, klettern Sie, springen Sie, führen Sie Nahkämpfe und, und, und...",
-	//Point 3 (uses one string)
-	L"Spielen Sie mit dem Feuer! Cooles Spielzeug, tödliche Waffen, atemberaubende Explosionen.",
-	//Additional comment
-	L"(und das ist nur der Anfang)",
-	//Introduction/instructions
-	L"Willkommen in Demoville... (weiter mit beliebiger Taste)",
-};
-#endif
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 static const wchar_t *s_ger_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
@@ -3407,20 +3341,6 @@ static const wchar_t s_ger_str_ceramic_plates_smashed[] = L"%lss Keramikplatten 
 
 static const wchar_t s_ger_str_arrival_rerouted[] = L"Die Ankunft neuer Rekruten wurde nach Sektor %ls umgeleitet, da der geplante Ankunftsort in Sektor %ls vom Feind besetzt ist.";
 
-#ifdef JA2DEMO
-static const wchar_t s_ger_str_disabled_for_the_demo[]    = L"Option nicht verfügbar";
-/* informs player this option/button has been disabled in the demo */
-static const wchar_t s_ger_str_disabled_in_demo[]         = L"Sorry. Diese Option gibt es in der Demo nicht.";
-static const wchar_t s_ger_str_go_see_gabby[]             = L"Hier unten sind Sie fertig. Vielleicht sollten Sie mit Gabby reden.";
-static const wchar_t s_ger_str_too_bad_you_killed_gabby[] = L"Vielleicht hätten Sie ihn besser nicht getötet.";
-/* For the demo, the sector exit interface, you'll be able to split your teams
- * up, but the demo has this feature disabled. This string is fast help text
- * that appears over "single" button. */
-static const wchar_t s_ger_str_strategic_exit_gui_demo[]  = L"In der Vollversion können Sie Ihr Team\naufteilen, aber nicht in der Demo.";
-/* The overhead map is a map of the entire sector, which you can go into
- * anytime, except in the demo. */
-static const wchar_t s_ger_str_overhead_map_disabled[]    = L"Overhead-Karte steht in der Demo nicht zur Verfügung.";
-#endif
 
 static const wchar_t s_ger_str_stat_health[]       = L"Gesundheit";
 static const wchar_t s_ger_str_stat_agility[]      = L"Beweglichkeit";
@@ -3683,20 +3603,6 @@ LanguageRes g_LanguageResGerman = {
   s_ger_sRepairsDoneString,
   s_ger_str_ceramic_plates_smashed,
   s_ger_str_arrival_rerouted,
-
-#ifdef JA2DEMO
-  s_ger_str_disabled_for_the_demo,
-  s_ger_str_disabled_in_demo,
-  s_ger_str_go_see_gabby,
-  s_ger_str_too_bad_you_killed_gabby,
-  s_ger_str_strategic_exit_gui_demo,
-  s_ger_str_overhead_map_disabled,
-#endif
-
-#ifdef JA2DEMOADS
-  s_ger_gpDemoString,
-  s_ger_gpDemoIntroString,
-#endif
 
   s_ger_str_stat_health,
   s_ger_str_stat_agility,
