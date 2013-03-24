@@ -616,14 +616,18 @@ build-win-release-on-linux:
 	cp Changelog $(WIN_RELEASE)/Changelog.txt
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
 
-# Building release on MAC
-# Using static linking with SDL since it is quite difficult for
-# end users to setup the library.  LGPL allows static linking
-# if we provide source codes for our application.
+# Building i386 release on MAC
+# 
+# Using precompiled static SDL library since it is quite difficult for
+# end users to setup the library.  LGPL allows static linking if we
+# provide source codes for our application.
+MACOS_SDL_STATIC=./_build/lib-SDL-devel-1.2.15-macos-i386
+MACOS_STATIC_CFLAGS_SDL=-arch i386 -I$(MACOS_SDL_STATIC)/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+MACOS_STATIC_LDFLAGS_SDL=$(MACOS_SDL_STATIC)/lib/libSDLmain.a $(MACOS_SDL_STATIC)/lib/libSDL.a  -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit
 build-release-on-mac:
 	-rm -rf $(MAC_RELEASE) $(MAC_RELEASE_ZIP)
 	mkdir -p $(MAC_RELEASE)
-	make "CFLAGS_SDL=$(shell $(SDL_CONFIG) --cflags)" "LDFLAGS_SDL=$(shell $(SDL_CONFIG) --static-libs)"
+	make "CFLAGS_SDL=$(MACOS_STATIC_CFLAGS_SDL)" "LDFLAGS_SDL=$(MACOS_STATIC_LDFLAGS_SDL)"
 	mv ./ja2 $(MAC_RELEASE)/ja2
 	cp _build/distr-files-mac/*.command $(MAC_RELEASE)
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
