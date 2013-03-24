@@ -37,20 +37,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\exe\</OutDir>
+    <OutDir>$(SolutionDir)\..\..\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(Configuration)\obj\</IntDir>
+    <TargetName>$(ProjectName)-vs10e-$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\exe\</OutDir>
+    <OutDir>$(SolutionDir)\..\..\</OutDir>
     <IntDir>$(Configuration)\obj\</IntDir>
+    <TargetName>$(ProjectName)-vs10e-$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -58,6 +60,7 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
+      <OutputFile>$(SolutionDir)\..\..\$(ProjectName)-vs10e-$(Configuration).exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -66,14 +69,15 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
+      <OutputFile>$(SolutionDir)\..\..\$(ProjectName)-vs10e-$(Configuration).exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -410,10 +414,13 @@
     <ClCompile Include="..\..\sgp\STCI.cc" />
     <ClCompile Include="..\..\sgp\StrUtils.cc" />
     <ClCompile Include="..\..\sgp\TranslationTable.cc" />
+    <ClCompile Include="..\..\sgp\UTF8String.cc" />
+    <ClCompile Include="..\..\sgp\UTF8String_unittest.cc" />
     <ClCompile Include="..\..\sgp\Video.cc" />
     <ClCompile Include="..\..\sgp\VObject.cc" />
     <ClCompile Include="..\..\sgp\VObject_Blitters.cc" />
     <ClCompile Include="..\..\sgp\VSurface.cc" />
+    <ClCompile Include="..\..\sgp\wchar_unittest.cc" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\operations.cpp" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\path.cpp" />
@@ -783,6 +790,10 @@
     <ClInclude Include="..\..\sgp\MemMan.h" />
     <ClInclude Include="..\..\sgp\MouseSystem.h" />
     <ClInclude Include="..\..\sgp\PCX.h" />
+    <ClInclude Include="..\..\sgp\Platform.h" />
+    <ClInclude Include="..\..\sgp\PlatformIO.h" />
+    <ClInclude Include="..\..\sgp\PlatformSDL.h" />
+    <ClInclude Include="..\..\sgp\PlatformStrings.h" />
     <ClInclude Include="..\..\sgp\PODObj.h" />
     <ClInclude Include="..\..\sgp\Rad.h" />
     <ClInclude Include="..\..\sgp\Random.h" />
@@ -798,6 +809,7 @@
     <ClInclude Include="..\..\sgp\TopicIDs.h" />
     <ClInclude Include="..\..\sgp\TranslationTable.h" />
     <ClInclude Include="..\..\sgp\Types.h" />
+    <ClInclude Include="..\..\sgp\UTF8String.h" />
     <ClInclude Include="..\..\sgp\Vector.h" />
     <ClInclude Include="..\..\sgp\Video.h" />
     <ClInclude Include="..\..\sgp\VObject.h" />

@@ -94,6 +94,7 @@ CFLAGS += -I Build/TacticalAI
 CFLAGS += -I sgp
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
+CFLAGS += -I _build/lib-utf8cpp/source
 
 #CFLAGS += -Wall
 #CFLAGS += -W
@@ -489,6 +490,7 @@ SRCS += sgp/Smack_Stub.cc
 SRCS += sgp/SoundMan.cc
 SRCS += sgp/StrUtils.cc
 SRCS += sgp/TranslationTable.cc
+SRCS += sgp/UTF8String.cc
 SRCS += sgp/VObject.cc
 SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
@@ -534,6 +536,8 @@ SRCS += _build/lib-gtest/src/gtest-test-part.cc
 SRCS += _build/lib-gtest/src/gtest-typed-test.cc
 SRCS += sgp/FileMan_unittest.cc
 SRCS += sgp/SGPStrings_unittest.cc
+SRCS += sgp/UTF8String_unittest.cc
+SRCS += sgp/wchar_unittest.cc
 endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))
