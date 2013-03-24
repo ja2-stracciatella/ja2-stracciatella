@@ -620,6 +620,7 @@ build-win-release-on-linux:
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
 	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
 	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
+	cp -r _unittests $(WIN_RELEASE)
 	cp Changelog $(WIN_RELEASE)/Changelog.txt
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
 
@@ -638,6 +639,7 @@ build-release-on-mac:
 	mv ./ja2 $(MAC_RELEASE)/ja2
 	cp _build/distr-files-mac/*.command $(MAC_RELEASE)
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
+	cp -r _unittests $(MAC_RELEASE)
 	cp Changelog $(MAC_RELEASE)/Changelog.txt
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
 
