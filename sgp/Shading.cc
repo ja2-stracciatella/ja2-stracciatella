@@ -5,7 +5,7 @@
 UINT16 IntensityTable[65536];
 UINT16 ShadeTable[65536];
 UINT16 White16BPPPalette[256];
-static float guiShadePercent = 0.48;
+static float guiShadePercent = 0.48f;
 
 
 /* Builds a 16-bit color shading table. This function should be called only

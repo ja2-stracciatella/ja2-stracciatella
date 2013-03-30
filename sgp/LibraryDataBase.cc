@@ -165,7 +165,9 @@ try
 
 		// check to see if the file is not longer than it should be
 		if (strlen(DirEntry.sFileName) + 1 >= FILENAME_SIZE)
+    {
 			FastDebugMsg(String("\n*******InitializeLibrary():  Warning!:  '%s' from the library '%s' has name whose size (%d) is bigger then it should be (%s)", DirEntry.sFileName, lib->sLibraryPath, strlen(DirEntry.sFileName) + 1, FILENAME_SIZE));
+    }
 
 		FileHeaderStruct* const fh = &fhs[used_entries++];
 
@@ -397,12 +399,11 @@ static BOOLEAN IsLibraryOpened(INT16 const sLibraryID)
 static int CompareDirEntryFileNames(const void* key, const void* member);
 
 
+#if 1 // XXX TODO UNIMPLEMENTED
+#else
 BOOLEAN GetLibraryFileTime(LibraryFile const* const f, SGP_FILETIME* const pLastWriteTime)
 try
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED
-#else
 	LibraryHeaderStruct const* const lib = f->lib;
 	if (!lib) return FALSE;
 
@@ -465,9 +466,9 @@ try
 	pAllEntries = NULL;
 
 	return( TRUE );
-#endif
 }
 catch (...) { return FALSE; }
+#endif
 
 
 static int CompareDirEntryFileNames(const void* key, const void* member)

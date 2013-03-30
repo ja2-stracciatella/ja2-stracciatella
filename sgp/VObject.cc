@@ -29,7 +29,6 @@ static SGPVObject* gpVObjectHead = 0;
 SGPVObject::SGPVObject(SGPImage const* const img) :
 	flags_(),
 	palette16_(),
-	pShades(),
 	current_shade_(),
 	ppZStripInfo(),
 #ifdef SGP_VIDEO_DEBUGGING
@@ -38,6 +37,8 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 #endif
 	next_(gpVObjectHead)
 {
+  memset(&pShades[0], 0, sizeof(pShades));
+
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
 	{
 		throw std::runtime_error("Image for video object creation must be TRLE compressed");

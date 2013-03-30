@@ -160,7 +160,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, real const d
 	o->InitialForce.x          = SCALE_VERT_VAL_TO_HORZ(xForce);
 	o->InitialForce.y          = SCALE_VERT_VAL_TO_HORZ(yForce);
 	o->InitialForce.z          = zForce;
-	o->InitialForce            = VMultScalar(&o->InitialForce, 1.5 / TIME_MULTI);
+	o->InitialForce            = VMultScalar(&o->InitialForce, (float)(1.5 / TIME_MULTI));
 	o->sGridNo                 = MAPROWCOLTOPOS(((INT16)yPos / CELL_Y_SIZE), ((INT16)xPos / CELL_X_SIZE));
 	o->pNode                   = 0;
 	o->pShadow                 = 0;

@@ -9,7 +9,7 @@ void KillPreBattleInterface(void);
 void RenderPreBattleInterface(void);
 
 extern BOOLEAN gfPreBattleInterfaceActive;
-extern BOOLEAN gfDisplayPotentialRetreatPaths;
+extern bool    gfDisplayPotentialRetreatPaths;
 extern BOOLEAN gfAutomaticallyStartAutoResolve;
 extern BOOLEAN fDisableMapInterfaceDueToBattle;
 

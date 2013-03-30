@@ -1,6 +1,7 @@
 #include "GameRes.h"
 
 #include <locale.h>
+#include <stdexcept>
 
 #include "Directories.h"
 #include "LibraryDataBase.h"
@@ -10,6 +11,7 @@
 #include "TranslationTable.h"
 #include "GameState.h"
 #include "EncodingCorrectors.h"
+#include "StrUtils.h"
 
 
 extern LanguageRes g_LanguageResDutch;
@@ -434,5 +436,5 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
     }
   }
 
-  abort();
+  throw std::runtime_error(FormattedString("Multilanguage resource %d is not found", id));
 }

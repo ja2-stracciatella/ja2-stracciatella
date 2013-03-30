@@ -834,7 +834,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	}
 
 	bool    StateBefore = b->Clicked();
-	BOOLEAN StateAfter  = TRUE; // XXX HACK000E
+	bool    StateAfter  = true; // XXX HACK000E
 
 	if (b->uiFlags & BUTTON_NEWTOGGLE)
 	{

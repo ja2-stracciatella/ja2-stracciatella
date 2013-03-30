@@ -162,7 +162,7 @@ static INT32 giNumberOfVehiclesInSectorMoving = 0;
 
 // the list of soldiers that are moving
 static SOLDIERTYPE* pSoldierMovingList[MAX_CHARACTER_COUNT];
-static BOOLEAN      fSoldierIsMoving[MAX_CHARACTER_COUNT];
+static bool         fSoldierIsMoving[MAX_CHARACTER_COUNT];
 
 static SOLDIERTYPE* pUpdateSoldierBox[SIZE_OF_UPDATE_BOX];
 
@@ -1932,7 +1932,7 @@ static void SelectSoldierForMovement(SOLDIERTYPE const& s)
 	{
 		if (pSoldierMovingList[i] != &s) continue;
 		// Turn the selected soldier on
-		fSoldierIsMoving[i] = TRUE;
+		fSoldierIsMoving[i] = true;
 		break;
 	}
 }
@@ -1944,7 +1944,7 @@ static void DeselectSoldierForMovement(SOLDIERTYPE const& s)
 	{
 		if (pSoldierMovingList[i] != &s) continue;
 		// Turn the selected soldier off
-		fSoldierIsMoving[i] = FALSE;
+		fSoldierIsMoving[i] = false;
 		break;
 	}
 }
@@ -2120,7 +2120,7 @@ static void AddSoldierToMovingLists(SOLDIERTYPE& s)
 		if (slot) continue;
 		// Found a free slot
 		slot                = &s;
-		fSoldierIsMoving[i] = FALSE;
+		fSoldierIsMoving[i] = false;
 		++giNumberOfSoldiersInSectorMoving;
 		return;
 	}
@@ -2176,7 +2176,7 @@ static void InitializeMovingLists()
 	for (INT32 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
 		pSoldierMovingList[i] = 0;
-		fSoldierIsMoving[i]   = FALSE;
+		fSoldierIsMoving[i]   = false;
 	}
 
 	// Init the squads
@@ -2802,7 +2802,7 @@ static void SelectAllOtherSoldiersInList(void)
 		{
 			if ( CanMoveBoxSoldierMoveStrategically( pSoldierMovingList[ iCounter ], FALSE ) )
 			{
-				fSoldierIsMoving[ iCounter ] = TRUE;
+				fSoldierIsMoving[ iCounter ] = true;
 			}
 			else
 			{
@@ -2827,7 +2827,7 @@ static void DeselectAllOtherSoldiersInList(void)
 	{
 		if( ( pSoldierMovingList[ iCounter ] ->bAssignment >= ON_DUTY ) && ( pSoldierMovingList[ iCounter ] ->bAssignment != VEHICLE ) )
 		{
-			fSoldierIsMoving[ iCounter ] = FALSE;
+			fSoldierIsMoving[ iCounter ] = false;
 		}
 	}
 }

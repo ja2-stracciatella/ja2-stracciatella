@@ -377,7 +377,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 	{
 		if ( pSoldier->bTeam == ENEMY_TEAM && pSoldier->bAlertStatus == STATUS_RED )
 		{
-			switch( pSoldier->bAction )
+			// switch( pSoldier->bAction )
 			{
 				/*
 				case AI_ACTION_MOVE_TO_CLIMB:
@@ -385,7 +385,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 					pSoldier->usUIMovementMode = DetermineMovementMode( pSoldier, pSoldier->bAction );
 					fSet = TRUE;
 					break;*/
-				default:
+				// default:
 					if ( PreRandom( 5 - SoldierDifficultyLevel( pSoldier ) ) == 0 )
 					{
 						INT16 sClosestNoise = (INT16) MostImportantNoiseHeard( pSoldier, NULL, NULL, NULL );
@@ -400,7 +400,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 						pSoldier->usUIMovementMode = DetermineMovementMode( pSoldier, pSoldier->bAction );
 						fSet = TRUE;
 					}
-					break;
+					// break;
 			}
 
 		}

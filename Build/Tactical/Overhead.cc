@@ -1160,15 +1160,15 @@ void ExecuteOverhead(void)
 
 								static const float gdRadiansForAngle[] =
 								{
-									PI,
-									PI * 3 / 4,
-									PI     / 2,
-									PI     / 4,
+									(float)PI,
+									(float)(PI * 3 / 4),
+									(float)(PI     / 2),
+									(float)(PI     / 4),
 
 									0,
-									-PI     / 4,
-									-PI     / 2,
-									-PI * 3 / 4,
+									(float)(-PI     / 4),
+									(float)(-PI     / 2),
+									(float)(-PI * 3 / 4),
 								};
 								const float dAngle = gdRadiansForAngle[pSoldier->bMovementDirection];
 

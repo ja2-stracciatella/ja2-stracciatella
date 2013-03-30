@@ -95,7 +95,7 @@ enum //GraphicIDs for the panel
 //The height of each row
 #define ROW_HEIGHT				10
 
-BOOLEAN gfDisplayPotentialRetreatPaths = FALSE;
+bool gfDisplayPotentialRetreatPaths = false;
 
 GROUP *gpBattleGroup = NULL;
 
@@ -285,7 +285,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		// Reset the help text for mouse regions
 		gMapStatusBarsRegion.SetFastHelpText(L"");
 
-		gfDisplayPotentialRetreatPaths = FALSE;
+		gfDisplayPotentialRetreatPaths = false;
 
 		gpBattleGroup = battle_group;
 
@@ -760,7 +760,7 @@ void KillPreBattleInterface()
 	fTeamPanelDirty = TRUE;
 	fMapScreenBottomDirty = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
-	gfDisplayPotentialRetreatPaths = FALSE;
+	gfDisplayPotentialRetreatPaths = false;
 
 	//Enable the options button when the auto resolve  screen comes up
 	EnableDisAbleMapScreenOptionsButton( TRUE );

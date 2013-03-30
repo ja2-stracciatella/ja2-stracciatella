@@ -2146,7 +2146,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
      }
 
 		// FIRST, add up "startup" additional costs - such as intermediate animations, etc.
-		switch(pSold->usAnimState)
+		// switch(pSold->usAnimState)
 		{
 			//case START_AID   :
 			//case GIVING_AID  :	sAnimCost = AP_STOP_FIRST_AID;
