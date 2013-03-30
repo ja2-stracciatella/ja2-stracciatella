@@ -595,7 +595,11 @@ fix-permissions:
 	chmod +x _build/solution-vs10e/Release/exe/SDL.dll
 
 WIN_RELEASE_BASE_DIR := "release-win-mingw-cross"
+ifdef BETA
+WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win-beta"
+else
 WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win"
+endif
 WIN_RELEASE := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME)
 WIN_RELEASE_ZIP := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME).zip
 
@@ -604,14 +608,18 @@ MAC_RELEASE_NAME := "ja2-$(GAME_VERSION)-macos"
 MAC_RELEASE := $(MAC_RELEASE_BASE_DIR)/$(MAC_RELEASE_NAME)
 MAC_RELEASE_ZIP := $(MAC_RELEASE_BASE_DIR)/$(MAC_RELEASE_NAME).zip
 
+build-beta-win-release-on-linux:
+	make BETA=1 build-win-release-on-linux
+
 build-win-release-on-linux:
 	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
 	mkdir -p $(WIN_RELEASE)
-	make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
+	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
 	mv ./ja2 $(WIN_RELEASE)/ja2.exe
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(WIN_RELEASE)
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
 	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
+	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
 	cp Changelog $(WIN_RELEASE)/Changelog.txt
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
 

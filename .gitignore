@@ -14,8 +14,8 @@ _build/solution-vs10e/Debug
 _build/solution-vs10e/Release
 ja2
 ja2-last-strac
-libgcc_s_dw2-1.dll
-libstdc++-6.dll
+/libgcc_s_dw2-1.dll
+/libstdc++-6.dll
 release-*
 stderr.txt
 stdout.txt

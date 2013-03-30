@@ -30,8 +30,8 @@
 
 #endif
 
-#if _WIN32
-  #define mkdir(path, mode)                         _mkdir(path)
+#ifdef _WIN32
+  #define mkdir(path, mode)                         mkdir(path)
 #endif
 
 /**************************************************************
