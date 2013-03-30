@@ -196,7 +196,6 @@ WEAPONTYPE const Weapon[] =
   /* unused            */      NOWEAPON(0),
   /* unused            */      NOWEAPON(0),
 };
-CASSERT(lengthof(Weapon) == MAX_WEAPONS)
 
 
 
@@ -4128,3 +4127,14 @@ static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECT
 
   return( FALSE );
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(Weapons, asserts)
+{
+  EXPECT_EQ(lengthof(Weapon), MAX_WEAPONS);
+}
+
+#endif

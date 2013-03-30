@@ -4847,3 +4847,16 @@ static void ReinitializeUnvisitedGarrisons(void)
 		}
 	}
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(StrategicAI, asserts)
+{
+  EXPECT_EQ(sizeof(ARMY_COMPOSITION), 20);
+  EXPECT_EQ(sizeof(PATROL_GROUP), 20);
+  EXPECT_EQ(sizeof(GARRISON_GROUP), 14);
+}
+
+#endif

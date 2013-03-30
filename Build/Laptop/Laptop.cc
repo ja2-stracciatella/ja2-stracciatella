@@ -3650,3 +3650,16 @@ void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHe
 	const wchar_t* help = (fClearHelpText ? L"" : gzLaptopHelpText[uiHelpTextID]);
 	pRegion->SetFastHelpText(help);
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(Laptop, asserts)
+{
+  EXPECT_EQ(sizeof(LIFE_INSURANCE_PAYOUT), 8);
+  EXPECT_EQ(sizeof(BobbyRayPurchaseStruct), 8);
+  EXPECT_EQ(sizeof(BobbyRayOrderStruct), 84);
+}
+
+#endif

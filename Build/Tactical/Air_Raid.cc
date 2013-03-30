@@ -121,7 +121,6 @@ struct AIR_RAID_SAVE_STRUCT
 
 	UINT8					ubFiller[ 32 ]; // XXX HACK000B
 };
-CASSERT(sizeof(AIR_RAID_SAVE_STRUCT) == 132)
 
 
 // END SERIALIZATION
@@ -1349,3 +1348,15 @@ void EndAirRaid( )
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Ending Air Raid." );
 
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(AirRaid, asserts)
+{
+  EXPECT_EQ(sizeof(AIR_RAID_SAVE_STRUCT), 132);
+  EXPECT_EQ(sizeof(AIR_RAID_DEFINITION), 24);
+}
+
+#endif

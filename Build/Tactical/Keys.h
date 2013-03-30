@@ -34,7 +34,6 @@ struct LOCK
 	UINT8		ubSmashDifficulty;										// difficulty to smash such a lock
 	UINT8		ubFiller; // XXX HACK000B
 };
-CASSERT(sizeof(LOCK) == 46)
 
 // Defines below for the perceived value of the door
 #define DOOR_PERCEIVED_UNKNOWN		0
@@ -59,7 +58,6 @@ struct DOOR
 	INT8			bLockDamage;					// Damage to the lock
 	INT8			bPadding[4];					// extra bytes // XXX HACK000B
 };
-CASSERT(sizeof(DOOR) == 14)
 
 
 enum DoorTrapTypes
@@ -101,7 +99,6 @@ struct DOOR_STATUS
 	UINT8		ubFlags;
 
 };
-CASSERT(sizeof(DOOR_STATUS) == 4)
 
 
 // This is the number of different types of doors we can have

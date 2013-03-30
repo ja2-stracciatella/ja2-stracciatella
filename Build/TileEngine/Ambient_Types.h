@@ -20,7 +20,6 @@ struct AMBIENTDATA_STRUCT
 	SGPFILENAME		zFilename;
 	UINT32				uiVol;
 };
-CASSERT(sizeof(AMBIENTDATA_STRUCT) == 116)
 
 
 #endif

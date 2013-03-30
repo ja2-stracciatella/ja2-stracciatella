@@ -49,7 +49,6 @@ static const UINT8 g_traverse_we[][17] =
 	/* P */ { E, G, G, G, G, G, G, G, G, G, G, G, G, E, E, E, E }
 	/*        ^------------------ always E -------------------^ */
 };
-CASSERT(lengthof(g_traverse_we) == 16)
 
 static const UINT8 g_traverse_ns[][16] =
 {
@@ -72,7 +71,6 @@ static const UINT8 g_traverse_ns[][16] =
 	/* OP */ { G, G, X, G, G, G, G, G, G, G, G, G, G, E, E, E },
 	/*  P */ { E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E }  // always E
 };
-CASSERT(lengthof(g_traverse_ns) == 17)
 
 static const UINT8 g_traverse_through[][16] =
 {
@@ -94,7 +92,6 @@ static const UINT8 g_traverse_through[][16] =
 	/* O */ { G , G , X , X , G , G , G , T , T , G , G , G , G , E , E , E  },
 	/* P */ { G , G , X , G , G , G , G , G , G , G , G , G , G , E , E , E  }
 };
-CASSERT(lengthof(g_traverse_through) == 16)
 
 static const UINT8 g_travel_rating[][16] =
 {
@@ -116,7 +113,6 @@ static const UINT8 g_travel_rating[][16] =
 	/* O */ {  0,  0, 90, 90,  0,  0,  0,  5,  5,  0,  0,  0,  0,  0,  0,  0 },
 	/* P */ {  0,  0,100,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }
 };
-CASSERT(lengthof(g_travel_rating) == 16)
 
 #undef A
 #undef AR
@@ -198,3 +194,17 @@ bool SectorIsPassable(INT16 const sSector)
 	const UINT8 t = SectorInfo[sSector].ubTraversability[THROUGH_STRATEGIC_MOVE];
 	return t != GROUNDBARRIER && t != EDGEOFWORLD;
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(StrategicMovementCostsTest, asserts)
+{
+  EXPECT_EQ(lengthof(g_traverse_we), 16);
+  EXPECT_EQ(lengthof(g_traverse_ns), 17);
+  EXPECT_EQ(lengthof(g_traverse_through), 16);
+  EXPECT_EQ(lengthof(g_travel_rating), 16);
+}
+
+#endif

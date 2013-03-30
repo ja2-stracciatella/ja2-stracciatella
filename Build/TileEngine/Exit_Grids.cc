@@ -359,3 +359,14 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 
 	return sLowestGridNo;
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(ExitGrids, asserts)
+{
+  EXPECT_EQ(sizeof(EXITGRID), 6);
+}
+
+#endif

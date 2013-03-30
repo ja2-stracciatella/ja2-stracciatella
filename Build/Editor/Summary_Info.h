@@ -16,7 +16,6 @@ struct TEAMSUMMARY
 	UINT8 ubBadA, ubPoorA, ubAvgA, ubGoodA, ubGreatA; //attributes
 	UINT8 ubBadE, ubPoorE, ubAvgE, ubGoodE, ubGreatE; //equipment
 }; //15 bytes
-CASSERT(sizeof(TEAMSUMMARY) == 15)
 
 struct SUMMARYFILE
 {
@@ -92,7 +91,6 @@ struct SUMMARYFILE
 	//																//-----
 	//																		400 total bytes
 };
-CASSERT(sizeof(SUMMARYFILE) == 408)
 
 
 extern BOOLEAN gfAutoLoadA9;

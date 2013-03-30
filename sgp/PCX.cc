@@ -26,7 +26,6 @@ struct PcxHeader
 	UINT16 usPaletteType;
 	UINT8  ubFiller[58];
 };
-CASSERT(sizeof(PcxHeader) == 128)
 
 
 static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 w, UINT16 h);
@@ -102,3 +101,14 @@ static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 const w, UINT16
 		}
 	}
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(PCX, asserts)
+{
+  EXPECT_EQ(sizeof(PcxHeader), 128);
+}
+
+#endif

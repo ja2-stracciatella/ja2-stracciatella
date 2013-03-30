@@ -576,3 +576,14 @@ void UpdateSummaryInfo( SUMMARYFILE *pSummary )
 		pSummary->MapInfo.sIsolatedGridNo = -1;
 	}
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(MapInformation, asserts)
+{
+  EXPECT_EQ(sizeof(MAPCREATE_STRUCT), 100);
+}
+
+#endif

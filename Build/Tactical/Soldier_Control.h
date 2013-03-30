@@ -270,7 +270,6 @@ struct KEY_ON_RING
 	UINT8			ubKeyID;
 	UINT8			ubNumber;
 };
-CASSERT(sizeof(KEY_ON_RING) == 2)
 
 
 struct THROW_PARAMS

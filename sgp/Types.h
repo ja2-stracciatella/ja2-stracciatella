@@ -23,9 +23,6 @@
 #endif
 
 
-#define CASSERT(x)
-
-
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))
 #define endof(a) ((a) + lengthof(a))
 
@@ -133,7 +130,6 @@ struct SGPPoint
 
 struct SDL_Color;
 typedef SDL_Color SGPPaletteEntry;
-CASSERT(sizeof(SGPPaletteEntry) == 4);
 
 
 typedef UINT32 COLORVAL;

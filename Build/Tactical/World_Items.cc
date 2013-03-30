@@ -476,3 +476,15 @@ void RefreshWorldItemsIntoItemPools(const WORLDITEM* const items, const INT32 it
 		AddItemToPool(i->sGridNo, &o, static_cast<Visibility>(i->bVisible), i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
 	}
 }
+
+
+#ifdef WITH_UNITTESTS
+#undef FAIL
+#include "gtest/gtest.h"
+
+TEST(WorldItems, asserts)
+{
+  EXPECT_EQ(sizeof(WORLDITEM), 52);
+}
+
+#endif

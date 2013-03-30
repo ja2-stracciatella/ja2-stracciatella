@@ -127,7 +127,6 @@ struct ARMS_DEALER_STATUS
 
 	UINT8		ubPadding[ 8 ]; // XXX HACK000B
 };
-CASSERT(sizeof(ARMS_DEALER_STATUS) == 20)
 
 
 struct SPECIAL_ITEM_INFO
@@ -144,7 +143,6 @@ struct SPECIAL_ITEM_INFO
 
 	UINT8		ubPadding[2];					// filler // XXX HACK000B
 };
-CASSERT(sizeof(SPECIAL_ITEM_INFO) == 16)
 
 
 struct DEALER_SPECIAL_ITEM
@@ -162,7 +160,6 @@ struct DEALER_SPECIAL_ITEM
 
 	UINT8		ubPadding[6];					// filler // XXX HACK000B
 };
-CASSERT(sizeof(DEALER_SPECIAL_ITEM) == 28)
 
 
 struct DEALER_ITEM_HEADER

@@ -101,7 +101,6 @@ struct STRATEGIC_STATUS
 
 	INT8 bPadding[70]; // XXX HACK000B
 };
-CASSERT(sizeof(STRATEGIC_STATUS) == 192)
 
 
 void InitStrategicStatus(void);

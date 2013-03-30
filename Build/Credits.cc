@@ -129,7 +129,6 @@ static CreditFace gCreditFaces[] =
 	M(585, 196, 39, 49, 593, 218, 593, 228, 3500)  // Joey
 #undef M
 };
-CASSERT(lengthof(gCreditFaces) == NUM_PEOPLE_IN_CREDITS)
 
 
 static MOUSE_REGION gCrdtMouseRegions[NUM_PEOPLE_IN_CREDITS];
@@ -573,3 +572,14 @@ static void HandleCreditEyeBlinking()
 		}
 	}
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(Credits, asserts)
+{
+  EXPECT_EQ(lengthof(gCreditFaces), NUM_PEOPLE_IN_CREDITS);
+}
+
+#endif

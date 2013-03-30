@@ -383,3 +383,14 @@ UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex )
 
 	return( ubSoldierClass );
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(StrategicStatus, asserts)
+{
+  EXPECT_EQ(sizeof(STRATEGIC_STATUS), 192);
+}
+
+#endif

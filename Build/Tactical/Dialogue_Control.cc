@@ -75,7 +75,6 @@ const ProfileID g_external_face_profile_ids[] =
 	CALVIN,
 	CARL
 };
-CASSERT(lengthof(g_external_face_profile_ids) == NUMBER_OF_EXTERNAL_NPC_FACES)
 
 
 static UINT8 const gubMercValidPrecedentQuoteID[] =
@@ -1721,3 +1720,15 @@ void DeleteDialogueControlGraphics()
 	DeleteVideoObject(guiCOMPANEL);
 	DeleteVideoObject(guiCOMPANELB);
 }
+
+
+#ifdef WITH_UNITTESTS
+#undef FAIL
+#include "gtest/gtest.h"
+
+TEST(DialogueControl, asserts)
+{
+  EXPECT_EQ(lengthof(g_external_face_profile_ids), NUMBER_OF_EXTERNAL_NPC_FACES);
+}
+
+#endif

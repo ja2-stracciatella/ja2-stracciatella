@@ -103,7 +103,6 @@ struct ARMY_COMPOSITION
 	INT8 bStartPopulation;
 	INT8 bPadding[10]; // XXX HACK000B
 };
-CASSERT(sizeof(ARMY_COMPOSITION) == 20)
 
 //Defines the patrol groups -- movement groups.
 struct PATROL_GROUP
@@ -117,7 +116,6 @@ struct PATROL_GROUP
 	UINT8 ubPendingGroupID;
 	INT8  bPadding[10]; // XXX HACK000B
 };
-CASSERT(sizeof(PATROL_GROUP) == 20)
 
 
 //Defines all stationary defence forces.
@@ -129,7 +127,6 @@ struct GARRISON_GROUP
 	UINT8 ubPendingGroupID;
 	INT8 bPadding[10]; // XXX HACK000B
 };
-CASSERT(sizeof(GARRISON_GROUP) == 14)
 
 #if defined JA2BETAVERSION
 void ValidatePlayersAreInOneGroupOnly(void);

@@ -3490,7 +3490,6 @@ static UINT8 const g_encryption_array[][NEW_ROTATION_ARRAY_SIZE] =
 		71,142,46,234,237,200,4
 	}
 };
-CASSERT(lengthof(g_encryption_array) == BASE_NUMBER_OF_ROTATION_ARRAYS * 12)
 
 
 static UINT8 const* GetRotationArray()
@@ -3498,3 +3497,14 @@ static UINT8 const* GetRotationArray()
 	Assert(guiJA2EncryptionSet < lengthof(g_encryption_array));
 	return g_encryption_array[guiJA2EncryptionSet];
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(TacticalSave, asserts)
+{
+  EXPECT_EQ(lengthof(g_encryption_array), BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
+}
+
+#endif

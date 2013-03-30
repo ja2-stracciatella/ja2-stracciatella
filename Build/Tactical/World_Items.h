@@ -31,7 +31,6 @@ struct WORLDITEM
 	//This check is only performed the first time a map is loaded.  Later, it is entirely skipped.
 	UINT8					ubNonExistChance;
 };
-CASSERT(sizeof(WORLDITEM) == 52)
 
 
 extern WORLDITEM		*gWorldItems;

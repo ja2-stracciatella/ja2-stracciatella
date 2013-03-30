@@ -338,7 +338,6 @@ static const UINT8 gubMaxActionPoints[] =
 	AP_VEHICLE_MAXIMUM, // ICECREAMTRUCK
 	AP_VEHICLE_MAXIMUM  // JEEP
 };
-CASSERT(lengthof(gubMaxActionPoints) == TOTALBODYTYPES)
 
 
 INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
@@ -9067,3 +9066,16 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE* const s)
 	n.ubMaxLights         = 5;
 	n.ubNaturalShadeLevel = 5;
 }
+
+
+#ifdef WITH_UNITTESTS
+#undef FAIL
+#include "gtest/gtest.h"
+
+TEST(SoldierControl, asserts)
+{
+  EXPECT_EQ(lengthof(gubMaxActionPoints), TOTALBODYTYPES);
+  EXPECT_EQ(sizeof(KEY_ON_RING), 2);
+}
+
+#endif

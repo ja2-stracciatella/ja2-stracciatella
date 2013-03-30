@@ -61,7 +61,6 @@ struct NewBobbyRayOrderStruct
 
 	UINT8		ubFiller[7]; // XXX HACK000B
 };
-CASSERT(sizeof(NewBobbyRayOrderStruct) == 104)
 
 
 extern	NewBobbyRayOrderStruct	*gpNewBobbyrShipments;

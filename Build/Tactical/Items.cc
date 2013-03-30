@@ -450,7 +450,6 @@ const INVTYPE Item[] =
 	{	IC_NONE,				0,			INVALIDCURS,	0,		0,		0,	0,		   0,	0,		/* nothing! */				0,		0,			0},
 	{	IC_NONE,				0,			INVALIDCURS,	0,		0,		0,	0,		   0,	0,		/* nothing! */				0,		0,			0},
 };
-CASSERT(lengthof(Item) == MAXITEMS)
 
 
 struct AttachmentInfoStruct
@@ -4542,3 +4541,16 @@ void DumpItemsList( void )
   fclose(FDump);
 }
 #endif // JA2TESTVERSION
+
+
+#ifdef WITH_UNITTESTS
+#undef FAIL
+#include "gtest/gtest.h"
+
+TEST(Items, asserts)
+{
+  EXPECT_EQ(sizeof(OBJECTTYPE), 36);
+  EXPECT_EQ(lengthof(Item), MAXITEMS);
+}
+
+#endif

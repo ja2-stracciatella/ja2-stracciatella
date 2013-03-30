@@ -94,7 +94,6 @@ static wchar_t const* const gEventName[] =
 	L"MERC Merc went up level email delay",
 	L".",
 };
-CASSERT(lengthof(gEventName) == NUMBER_OF_EVENT_TYPES)
 
 #endif
 
@@ -565,3 +564,16 @@ void LoadStrategicEventsFromSavedGame(HWFILE const f)
 		anchor  = &sev->next;
 	}
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(GameEvents, asserts)
+{
+#ifdef JA2TESTVERSION
+  EXPECT_EQ(lengthof(gEventNameXX), NUMBER_OF_EVENT_TYPES);
+#endif
+}
+
+#endif

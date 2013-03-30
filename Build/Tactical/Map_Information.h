@@ -33,7 +33,6 @@ struct MAPCREATE_STRUCT
 	INT16 sIsolatedGridNo;
 	INT8 bPadding[83];	//I'm sure lots of map info will be added // XXX HACK000B
 }; //99 bytes
-CASSERT(sizeof(MAPCREATE_STRUCT) == 100)
 
 
 extern MAPCREATE_STRUCT gMapInformation;

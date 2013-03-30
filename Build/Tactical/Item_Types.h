@@ -134,7 +134,6 @@ struct OBJECTTYPE
 	UINT8		ubWeight;
 	UINT8		fUsed;				// flags for whether the item is used or not
 };
-CASSERT(sizeof(OBJECTTYPE) == 36)
 
 
 // SUBTYPES

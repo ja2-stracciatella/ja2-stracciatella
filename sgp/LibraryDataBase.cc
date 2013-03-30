@@ -33,7 +33,6 @@ struct LIBHEADER
 	BOOLEAN	fContainsSubDirectories;
 	INT32   iReserved;
 };
-CASSERT(sizeof(LIBHEADER) == 532)
 
 
 struct DIRENTRY
@@ -46,7 +45,6 @@ struct DIRENTRY
 	SGP_FILETIME sFileTime;
 	UINT16       usReserved2;
 };
-CASSERT(sizeof(DIRENTRY) == 280)
 
 
 struct DatabaseManagerHeaderStruct
@@ -488,3 +486,15 @@ static int CompareDirEntryFileNames(const void* key, const void* member)
 	const DIRENTRY* const TempDirEntry = (const DIRENTRY*)member;
 	return strcasecmp(sSearchKey, TempDirEntry->sFileName);
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(LibraryDatabase, asserts)
+{
+  EXPECT_EQ(sizeof(LIBHEADER), 532);
+  EXPECT_EQ(sizeof(DIRENTRY), 280);
+}
+
+#endif

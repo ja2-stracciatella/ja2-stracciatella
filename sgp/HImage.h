@@ -45,14 +45,12 @@ struct AuxObjectData
 	UINT8		fFlags;
 	UINT8		ubUnused[6]; // XXX HACK000B
 };
-CASSERT(sizeof(AuxObjectData) == 16)
 
 struct RelTileLoc
 {
 	INT8		bTileOffsetX;
 	INT8		bTileOffsetY;
 }; // relative tile location
-CASSERT(sizeof(RelTileLoc) == 2)
 
 // TRLE subimage structure, mirroring that of ST(C)I
 struct ETRLEObject
@@ -64,7 +62,6 @@ struct ETRLEObject
 	UINT16			usHeight;
 	UINT16			usWidth;
 };
-CASSERT(sizeof(ETRLEObject) == 16)
 
 struct ETRLEData
 {

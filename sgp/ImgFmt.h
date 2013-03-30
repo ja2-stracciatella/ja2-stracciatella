@@ -63,7 +63,6 @@ struct STCIHeader
 	UINT32	uiAppDataSize;
 	UINT8		cUnused[12]; // XXX HACK000B
 };
-CASSERT(sizeof(STCIHeader) == 64)
 
 
 struct STCISubImage
@@ -75,7 +74,6 @@ struct STCISubImage
 	UINT16			usHeight;
 	UINT16			usWidth;
 };
-CASSERT(sizeof(STCISubImage) == 16)
 
 struct STCIPaletteElement
 {
@@ -83,6 +81,5 @@ struct STCIPaletteElement
 	UINT8				ubGreen;
 	UINT8				ubBlue;
 };
-CASSERT(sizeof(STCIPaletteElement) == 3)
 
 #endif

@@ -2526,3 +2526,16 @@ UINT32 CalculateMinutesClosedBetween(ArmsDealerID const ubArmsDealer, UINT32 uiS
 
 	return ( uiMinutesClosed );
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(ArmsDealerInit, asserts)
+{
+  EXPECT_EQ(sizeof(ARMS_DEALER_STATUS), 20);
+  EXPECT_EQ(sizeof(SPECIAL_ITEM_INFO), 16);
+  EXPECT_EQ(sizeof(DEALER_SPECIAL_ITEM), 28);
+}
+
+#endif

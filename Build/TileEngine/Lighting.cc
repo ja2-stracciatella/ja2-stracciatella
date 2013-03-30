@@ -56,7 +56,6 @@ struct LIGHT_NODE
 	UINT8 uiFlags;
 	UINT8 ubLight;
 };
-CASSERT(sizeof(LIGHT_NODE) == 6)
 
 
 struct LightTemplate
@@ -2405,3 +2404,15 @@ const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 {
 	return l->light_template->name;
 }
+
+
+#ifdef WITH_UNITTESTS
+#undef FAIL
+#include "gtest/gtest.h"
+
+TEST(Lighting, asserts)
+{
+  EXPECT_EQ(sizeof(LIGHT_NODE), 6);
+}
+
+#endif

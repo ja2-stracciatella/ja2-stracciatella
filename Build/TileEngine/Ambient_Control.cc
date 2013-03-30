@@ -78,3 +78,14 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 	const UINT32                    vol = CalculateSoundEffectsVolume(a->uiVol);
 	return SoundPlayRandom(a->zFilename, a->uiMinTime, a->uiMaxTime, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(AmbientControl, asserts)
+{
+  EXPECT_EQ(sizeof(AMBIENTDATA_STRUCT), 116);
+}
+
+#endif

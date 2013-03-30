@@ -223,7 +223,6 @@ static const RenderFXType RenderFX[] =
 	{ TRUE,  FALSE, TRUE,  FALSE, TRUE,  FALSE, FALSE, FALSE }, // DYNAMIC ONROOF
 	{ TRUE,  FALSE, TRUE,  FALSE, TRUE,  FALSE, FALSE, FALSE }  // DYNAMIC TOPMOST
 };
-CASSERT(lengthof(RenderFX) == NUM_RENDER_FX_TYPES)
 
 
 static const UINT8 RenderFXStartIndex[] =
@@ -246,7 +245,6 @@ static const UINT8 RenderFXStartIndex[] =
 	ONROOF_START_INDEX,  // DYNAMIC ONROOF
 	TOPMOST_START_INDEX, // DYNAMIC TOPMOST
 };
-CASSERT(lengthof(RenderFXStartIndex) == NUM_RENDER_FX_TYPES)
 
 
 static RenderLayerFlags const g_render_fx_layer_flags[] =
@@ -269,7 +267,6 @@ static RenderLayerFlags const g_render_fx_layer_flags[] =
 	TILES_DYNAMIC_ONROOF,
 	TILES_DYNAMIC_TOPMOST
 };
-CASSERT(lengthof(g_render_fx_layer_flags) == NUM_RENDER_FX_TYPES)
 
 
 #ifdef _DEBUG
@@ -5870,6 +5867,20 @@ void RenderFOVDebug(void)
 void RenderCoverDebug(void)
 {
 	RenderCoverDebugInfo(gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS);
+}
+
+#endif
+
+
+#ifdef WITH_UNITTESTS
+#undef FAIL
+#include "gtest/gtest.h"
+
+TEST(RenderWorld, asserts)
+{
+  EXPECT_EQ(lengthof(RenderFX), NUM_RENDER_FX_TYPES);
+  EXPECT_EQ(lengthof(RenderFXStartIndex), NUM_RENDER_FX_TYPES);
+  EXPECT_EQ(lengthof(g_render_fx_layer_flags), NUM_RENDER_FX_TYPES);
 }
 
 #endif

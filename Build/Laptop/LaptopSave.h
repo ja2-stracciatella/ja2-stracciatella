@@ -24,7 +24,6 @@ struct LIFE_INSURANCE_PAYOUT
 	UINT8		ubMercID;
 	INT32		iPayOutPrice;
 };
-CASSERT(sizeof(LIFE_INSURANCE_PAYOUT) == 8)
 
 
 struct LAST_HIRED_MERC_STRUCT
@@ -43,7 +42,6 @@ struct BobbyRayPurchaseStruct
 	UINT16	usBobbyItemIndex;						//Item number in the BobbyRayInventory structure
 	BOOLEAN	fUsed;											//Indicates wether or not the item is from the used inventory or the regular inventory
 };
-CASSERT(sizeof(BobbyRayPurchaseStruct) == 8)
 
 
 struct BobbyRayOrderStruct
@@ -52,7 +50,6 @@ struct BobbyRayOrderStruct
 	BobbyRayPurchaseStruct BobbyRayPurchase[ MAX_PURCHASE_AMOUNT ];
 	UINT8	ubNumberPurchases;
 };
-CASSERT(sizeof(BobbyRayOrderStruct) == 84)
 
 
 //used when the player goes to bobby rays when it is still down

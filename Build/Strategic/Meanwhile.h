@@ -36,7 +36,6 @@ struct MEANWHILE_DEFINITION
 	UINT8				ubMeanwhileID;
 	UINT8				ubNPCNumber;
 };
-CASSERT(sizeof(MEANWHILE_DEFINITION) == 8)
 
 
 void ScheduleMeanwhileEvent(INT16 x, INT16 y, UINT16 trigger_event, UINT8 meanwhile_id, UINT8 npc_profile, UINT32 time);

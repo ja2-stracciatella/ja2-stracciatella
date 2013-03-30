@@ -40,7 +40,6 @@ struct CONTRACT_NEWAL_LIST_NODE
 	UINT8 ubProfileID;
 	UINT8 ubFiller[3]; // XXX HACK000B
 };
-CASSERT(sizeof(CONTRACT_NEWAL_LIST_NODE) == 4)
 
 
 static SOLDIERTYPE* pLeaveSoldier = NULL;
@@ -1037,3 +1036,14 @@ static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier)
 	return( FALSE );
 
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(MercContract, asserts)
+{
+  EXPECT_EQ(sizeof(CONTRACT_NEWAL_LIST_NODE), 4);
+}
+
+#endif

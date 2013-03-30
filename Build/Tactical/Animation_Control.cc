@@ -354,7 +354,6 @@ const ANIMCONTROLTYPE gAnimControl[NUMANIMATIONSTATES] =
 	M("END OPEN LOCKED DOOR",            100, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_FASTTURN | ANIM_NORESTART | ANIM_NONINTERRUPT | ANIM_MIN_EFFORT,                                                   S, S), //CRIPPLE END OPEN LOCKED DOOR
 	M("CROUCH PICK LOCK",                 70, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_FASTTURN | ANIM_NORESTART | ANIM_LOWER_WEAPON | ANIM_LIGHT_EFFORT,                                                 C, C)  //CROUCH PICK LOCK
 };
-CASSERT(lengthof(gAnimControl) == NUMANIMATIONSTATES)
 
 #undef M
 #undef P
@@ -2842,3 +2841,14 @@ UINT16 GetSoldierAnimationSurface(SOLDIERTYPE const* const pSoldier)
 
 	return( usAnimSurface );
 }
+
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(AnimationControl, asserts)
+{
+  EXPECT_EQ(lengthof(gAnimControl), NUMANIMATIONSTATES);
+}
+
+#endif

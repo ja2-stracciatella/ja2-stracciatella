@@ -216,7 +216,6 @@ static TeamInfo const g_default_team_info[] =
 	{ 32,                 1, false, FROMRGB(255, 255, 255) }, // Civilians
 	{ NUM_PLANNING_MERCS, 0, true,  FROMRGB(  0,   0, 255) }  // Planning soldiers
 };
-CASSERT(lengthof(g_default_team_info) == MAXTEAMS)
 
 
 UINT8         gubWaitingForAllMercsToExitCode  = 0;
@@ -6295,3 +6294,15 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo con
 
 	DialogueEvent::Add(new CharacterDialogueEventSignalItemLocatorStart(s, location));
 }
+
+
+#ifdef WITH_UNITTESTS
+#undef FAIL
+#include "gtest/gtest.h"
+
+TEST(Overhead, asserts)
+{
+  EXPECT_EQ(lengthof(g_default_team_info), MAXTEAMS);
+}
+
+#endif
