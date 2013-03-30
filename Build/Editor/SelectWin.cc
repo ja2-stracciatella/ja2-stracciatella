@@ -457,10 +457,10 @@ void InitJA2SelectionWindow( void )
 
 	// River banks and cliffs (the "river" button on the "terrain" toolbar)
 	InitDisplayGfxAllFromTileData(&BanksList[0], ANIOSTRUCT);
-	InitDisplayGfxAllFromTileData(&BanksList[0], FIRSTCLIFF);
-	InitDisplayGfxAllFromTileData(&BanksList[0], FIRSTCLIFFHANG);
-	InitDisplayGfxAllFromTileData(&BanksList[0], FIRSTROAD);
-	InitDisplayGfxAllFromTileData(&BanksList[0], FENCESTRUCT);
+	InitDisplayGfxAllFromTileData(&BanksList[1], FIRSTCLIFF);
+	InitDisplayGfxAllFromTileData(&BanksList[2], FIRSTCLIFFHANG);
+	InitDisplayGfxAllFromTileData(&BanksList[3], FIRSTROAD);
+	InitDisplayGfxAllFromTileData(&BanksList[4], FENCESTRUCT);
 
 	InitDisplayGfxAllFromTileData(&RoadsList[0], FIRSTROAD);
 
