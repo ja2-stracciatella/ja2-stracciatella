@@ -1,10 +1,19 @@
 JA2-Stracciatella Continued
 ---------------------------
 
+ - Fixed bug #28 (Map editor doesn't work in Russian (not gold) version)
+
  - Saved games are now compatible between Windows and unix platforms (Linux,
    Mac OS X).  Saves made on Windows can be loaded on Linux and vise versa.
    All new saves are done in Windows format.  Old unix saves can still be
    loaded.
+
+ - Fixed bug #5  (Russian language is broken in VS build)
+ - Fixed bug #26 (Dead bodies are not visible again)
+ - Fixed bug #23 (Dead bodies are not visible)
+ - Fixed bug #22 (Incorrect body position on non-standard resolutions)
+ - Fixed bug #21 (Game is really slow on Mac OS X)
+ - Fixed bug #18 (Crash on exiting full screen mode on Mac OS)
 
  - Map editor is now included into the game exe.
    Start it with command-like key '-editor' or '-editorauto'.

@@ -53,7 +53,7 @@ struct LibraryFile
 };
 
 
-void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, const std::vector<std::string> &extraLibs);
+void InitializeFileDatabase(const std::vector<std::string> &libraries);
 void ShutDownFileDatabase(void);
 bool CheckIfFileExistInLibrary(char const* filename);
 

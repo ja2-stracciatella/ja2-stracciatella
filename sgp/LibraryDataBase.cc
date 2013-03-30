@@ -69,35 +69,25 @@ static void ThrowExcOnLibLoadFailure(const char* pLibraryName)
   throw LibraryFileNotFoundException(message);
 }
 
-void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount, const std::vector<std::string> &extraLibs)
+void InitializeFileDatabase(const std::vector<std::string> &libraries)
 {
-	INT16			i;
-  int totalLibCount = LibCount + (UINT32)extraLibs.size();
-
 	//if all the libraries exist, set them up
-  gFileDataBase.usNumberOfLibraries = totalLibCount;
+  gFileDataBase.usNumberOfLibraries = libraries.size();
 
 	//allocate memory for the each of the library headers
-	if (totalLibCount > 0)
+	if (libraries.size() > 0)
 	{
-		LibraryHeaderStruct* const libs = MALLOCNZ(LibraryHeaderStruct, totalLibCount);
+		LibraryHeaderStruct* const libs = MALLOCNZ(LibraryHeaderStruct, libraries.size());
 		gFileDataBase.pLibraries = libs;
 
 		//Load up each library
-		for (i = 0; i < LibCount; i++)
+		for (int i = 0; i < libraries.size(); i++)
 		{
-			if (!InitializeLibrary(LibFilenames[i], &libs[i]))
+			if (!InitializeLibrary(libraries[i].c_str(), &libs[i]))
 			{
-        ThrowExcOnLibLoadFailure(LibFilenames[i]);
+        ThrowExcOnLibLoadFailure(libraries[i].c_str());
 			}
 		}
-    for (i = 0; i < extraLibs.size(); i++)
-    {
-			if (!InitializeLibrary(extraLibs[i].c_str(), &libs[totalLibCount-1]))
-			{
-        ThrowExcOnLibLoadFailure(extraLibs[i].c_str());
-			}
-    }
 	}
 }
 

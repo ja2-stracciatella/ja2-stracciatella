@@ -133,56 +133,51 @@ FLOAT getMajorMapVersion()
 }
 
 
-static const char* gGameLibaries[] =
-{
-  "data.slf",
-  "ambient.slf",
-  "anims.slf",
-  "battlesnds.slf",
-  "bigitems.slf",
-  "binarydata.slf",
-  "cursors.slf",
-  "faces.slf",
-  "fonts.slf",
-  "interface.slf",
-  "laptop.slf",
-  "maps.slf",
-  "mercedt.slf",
-  "music.slf",
-  "npc_speech.slf",
-  "npcdata.slf",
-  "radarmaps.slf",
-  "sounds.slf",
-  "speech.slf",
-  "tilesets.slf",
-  "loadscreens.slf",
-#if 0 // XXX the intro videos are not needed right now, because there is no way to play them
-  "intro.slf",
-#endif
-
-};
-
 void InitGameResources(void)
 {
-  std::vector<std::string> extraLibs;
+  std::vector<std::string> libraries;
+  libraries.push_back("data.slf");
+  libraries.push_back("ambient.slf");
+  libraries.push_back("anims.slf");
+  libraries.push_back("battlesnds.slf");
+  libraries.push_back("bigitems.slf");
+  libraries.push_back("binarydata.slf");
+  libraries.push_back("cursors.slf");
+  libraries.push_back("faces.slf");
+  libraries.push_back("fonts.slf");
+  libraries.push_back("interface.slf");
+  libraries.push_back("laptop.slf");
+  libraries.push_back("maps.slf");
+  libraries.push_back("mercedt.slf");
+  libraries.push_back("music.slf");
+  libraries.push_back("npc_speech.slf");
+  libraries.push_back("npcdata.slf");
+  libraries.push_back("radarmaps.slf");
+  libraries.push_back("sounds.slf");
+  libraries.push_back("speech.slf");
+  libraries.push_back("tilesets.slf");
+  libraries.push_back("loadscreens.slf");
+#if 0 // XXX the intro videos are not needed right now); because there is no way to play them
+  libraries.push_back("intro.slf");
+#endif
 
   switch(s_gameVersion)
   {
-  case GV_DUTCH:        extraLibs.push_back("dutch.slf");       break;
-  case GV_GERMAN:       extraLibs.push_back("german.slf");      break;
-  case GV_ITALIAN:      extraLibs.push_back("italian.slf");     break;
-  case GV_POLISH:       extraLibs.push_back("polish.slf");      break;
-  case GV_RUSSIAN:      extraLibs.push_back("russian.slf");     break;
+  case GV_DUTCH:        libraries.push_back("dutch.slf");       break;
+  case GV_GERMAN:       libraries.push_back("german.slf");      break;
+  case GV_ITALIAN:      libraries.push_back("italian.slf");     break;
+  case GV_POLISH:       libraries.push_back("polish.slf");      break;
+  case GV_RUSSIAN:      libraries.push_back("russian.slf");     break;
       default:
           break;
   }
 
   if(GameState::getInstance()->isEditorMode())
   {
-    extraLibs.push_back("editor.slf");
+    libraries.push_back("editor.slf");
   }
 
-  InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries), extraLibs);
+  InitializeFileDatabase(libraries);
 }
 
 
