@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "Debug.h"
 #include "FileMan.h"
 #include "LoadSaveData.h"
@@ -5,17 +7,14 @@
 #include "Overhead.h"
 
 
-void ExtractTacticalStatusTypeFromFile(HWFILE const f)
+void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 {
-#ifdef _WIN32 // XXX HACK000A
-	BYTE data[316];
-#else
-	BYTE data[360];
-#endif
-	FileRead(f, data, sizeof(data));
+  UINT32 dataSize = stracLinuxFormat ? TACTICAL_STATUS_TYPE_SIZE_STRAC_LINUX : TACTICAL_STATUS_TYPE_SIZE;
+  std::vector<BYTE> data(dataSize);
+	FileRead(f, data.data(), dataSize);
 
 	TacticalStatusType* const s = &gTacticalStatus;
-	const BYTE* d = data;
+	const BYTE* d = data.data();
 	EXTR_U32(d, s->uiFlags)
 	FOR_EACH(TacticalTeamType, t, s->Team)
 	{
@@ -64,15 +63,19 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f)
 	EXTR_U16(d, s->usTactialTurnLimitCounter)
 	EXTR_BOOL(d, s->fInTopMessage)
 	EXTR_U8(d, s->ubTopMessageType)
-#ifdef _WIN32 // XXX HACK000A
-	EXTR_SKIP(d, 40)
-#else
-	EXTR_SKIP(d, 82)
-#endif
+  if(stracLinuxFormat)
+  {
+    EXTR_SKIP(d, 82);
+  }
+  else
+  {
+    EXTR_SKIP(d, 40);
+  }
 	EXTR_U16(d, s->usTactialTurnLimitMax)
-#ifndef _WIN32 // XXX HACK000A
-	EXTR_SKIP(d, 2)
-#endif
+  if(stracLinuxFormat)
+  {
+    EXTR_SKIP(d, 2);
+  }
 	EXTR_U32(d, s->uiTactialTurnLimitClock)
 	EXTR_BOOL(d, s->fTactialTurnLimitStartedBeep)
 	EXTR_I8(d, s->bBoxingState)
@@ -135,11 +138,7 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f)
 
 void InjectTacticalStatusTypeIntoFile(HWFILE const f)
 {
-#ifdef _WIN32 // XXX HACK000A
 	BYTE data[316];
-#else
-	BYTE data[360];
-#endif
 	BYTE*                     d = data;
 	TacticalStatusType* const s = &gTacticalStatus;
 	INJ_U32(d, s->uiFlags)
@@ -190,15 +189,8 @@ void InjectTacticalStatusTypeIntoFile(HWFILE const f)
 	INJ_U16(d, s->usTactialTurnLimitCounter)
 	INJ_BOOL(d, s->fInTopMessage)
 	INJ_U8(d, s->ubTopMessageType)
-#ifdef _WIN32 // XXX HACK000A
 	INJ_SKIP(d, 40)
-#else
-	INJ_SKIP(d, 82)
-#endif
 	INJ_U16(d, s->usTactialTurnLimitMax)
-#ifndef _WIN32 // XXX HACK000A
-	INJ_SKIP(d, 2)
-#endif
 	INJ_U32(d, s->uiTactialTurnLimitClock)
 	INJ_BOOL(d, s->fTactialTurnLimitStartedBeep)
 	INJ_I8(d, s->bBoxingState)

@@ -3,6 +3,7 @@
 /* Game resources */
 
 #include "Types.h"
+#include "IEncodingCorrector.h"
 
 /** List of supported game versions (localizations). */
 enum GameVersion {
@@ -62,8 +63,10 @@ void setGameVersion(GameVersion ver);
 /** Initialize game resources for the current version. */
 void InitGameResources(void);
 
-/** Correct character during loading from data files. */
-wchar_t correctCharOnLoadFromDataFiles(wchar_t c);
+/**
+ * Get encoding corrector for strings in data files.
+ * @return NULL when no encoding corrector is required */
+const IEncodingCorrector* getDataFilesEncodingCorrector();
 
 /** Check if this is English version of the game. */
 bool isEnglishVersion();

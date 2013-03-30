@@ -104,6 +104,8 @@
 #include "BobbyRMailOrder.h"
 #include "Mercs.h"
 #include "UILayout.h"
+#include "UTF8String.h"
+#include "GameRes.h"
 
 static const char g_quicksave_name[] = "QuickSave";
 static const char g_savegame_name[]  = "SaveGame";
@@ -321,19 +323,15 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		header.uiRandom = Random(RAND_MAX);
 
 		// Save the savegame header
-#ifdef _WIN32 // XXX HACK000A
 		BYTE  data[432];
-#else
-		BYTE  data[688];
-#endif
 		BYTE* d = data;
 		INJ_U32(   d, header.uiSavedGameVersion)
 		INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
-#ifdef _WIN32 // XXX HACK000A
-		INJ_WSTR16(d, header.sSavedGameDesc, lengthof(header.sSavedGameDesc))
-#else
-		INJ_WSTR32(d, header.sSavedGameDesc, lengthof(header.sSavedGameDesc))
-#endif
+    {
+      DataWriter writer(d);
+      writer.writeStringAsUTF16(header.sSavedGameDesc, lengthof(header.sSavedGameDesc));
+      d += writer.getConsumed();
+    }
 		INJ_SKIP(  d, 4)
 		INJ_U32(   d, header.uiDay)
 		INJ_U8(    d, header.ubHour)
@@ -551,23 +549,27 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 }
 
 
-void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h)
+/** Parse binary data and fill SAVED_GAME_HEADER structure.
+ * @param data Data to be parsed.
+ * @param h Header structure to be filled.
+ * @param stracLinuxFormat Flag, telling to use "Stracciatella Linux" format. */
+void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinuxFormat)
 {
-#ifdef _WIN32 // XXX HACK000A
-	BYTE data[432];
-#else
-	BYTE data[688];
-#endif
-	FileRead(f, data, sizeof(data));
-
 	BYTE const* d = data;
-	EXTR_U32(   d, h.uiSavedGameVersion)
-	EXTR_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber))
-#ifdef _WIN32 // XXX HACK000A
-	EXTR_WSTR16(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
-#else
-	EXTR_WSTR32(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
-#endif
+	EXTR_U32(   d, h.uiSavedGameVersion);
+  EXTR_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber));
+  if(stracLinuxFormat)
+  {
+    DataReader reader(d);
+    reader.readUTF32(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
+    d += reader.getConsumed();
+  }
+  else
+  {
+    DataReader reader(d);
+    reader.readUTF16(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
+    d += reader.getConsumed();
+  }
 	EXTR_SKIP(  d, 4)
 	EXTR_U32(   d, h.uiDay)
 	EXTR_U8(    d, h.ubHour)
@@ -588,15 +590,70 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h)
 	Assert(d == endof(data));
 }
 
+/** @brief Check if SAVED_GAME_HEADER structure contains valid data.
+ * This function does only a basic check.  It might not detect all problems. */
+bool isValidSavedGameHeader(SAVED_GAME_HEADER& h)
+{
+  if((h.sSectorX == 0) && (h.sSectorY == 0) && (h.bSectorZ == -1))
+  {
+    // Special case: sector N/A at the game start
+    if((h.uiDay == 0)
+       || (h.iCurrentBalance < 0))
+    {
+      // invalid for sure
+      return false;
+    }
+  }
+  else
+  {
+    if((h.uiDay == 0)
+       || (h.sSectorX <= 0) || (h.sSectorX > 16)
+       || (h.sSectorY <= 0) || (h.sSectorY > 16)
+       || (h.bSectorZ  < 0) || (h.bSectorZ > 3)
+       || (h.iCurrentBalance < 0))
+    {
+      // invalid for sure
+      return false;
+    }
+  }
+  return true;
+}
+
+
+void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *stracLinuxFormat)
+{
+  // first try Strac Linux format
+  try
+  {
+    BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN];
+    FileRead(f, data, sizeof(data));
+    ParseSavedGameHeader(data, h, true);
+    if(isValidSavedGameHeader(h))
+    {
+      *stracLinuxFormat = true;
+      return;
+    }
+  }
+  catch (...) {}
+
+  {
+    // trying vanilla format
+    BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE];
+    FileSeek(f, 0, FILE_SEEK_FROM_START);
+    FileRead(f, data, sizeof(data));
+    ParseSavedGameHeader(data, h, false);
+    *stracLinuxFormat = false;
+  }
+}
 
 static void HandleOldBobbyRMailOrders(void);
 static void LoadGeneralInfo(HWFILE, UINT32 savegame_version);
 static void LoadMeanwhileDefsFromSaveGameFile(HWFILE, UINT32 savegame_version);
 static void LoadOppListInfoFromSavedGame(HWFILE);
 static void LoadPreRandomNumbersFromSaveGameFile(HWFILE);
-static void LoadSavedMercProfiles(HWFILE, UINT32 savegame_version);
-static void LoadSoldierStructure(HWFILE, UINT32 savegame_version);
-static void LoadTacticalStatusFromSavedGame(HWFILE);
+static void LoadSavedMercProfiles(HWFILE, UINT32 savegame_version, bool stracLinuxFormat);
+static void LoadSoldierStructure(HWFILE, UINT32 savegame_version, bool stracLinuxFormat);
+static void LoadTacticalStatusFromSavedGame(HWFILE, bool stracLinuxFormat);
 static void LoadWatchedLocsFromSavedGame(HWFILE);
 static void TruncateStrategicGroupSizes(void);
 static void UpdateMercMercContractInfo(void);
@@ -655,7 +712,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
-	ExtractSavedGameHeaderFromFile(f, SaveGameHeader);
+  bool stracLinuxFormat;
+	ExtractSavedGameHeaderFromFile(f, SaveGameHeader, &stracLinuxFormat);
 	LoadGameFilePosition(save_slot_id, f, "Save Game Header");
 
 	CalcJA2EncryptionSet(SaveGameHeader);
@@ -675,7 +733,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 #endif
 
 	//Load the gtactical status structure plus the current sector x,y,z
-	LoadTacticalStatusFromSavedGame(f);
+	LoadTacticalStatusFromSavedGame(f, stracLinuxFormat);
 	LoadGameFilePosition(save_slot_id, f, "Tactical Status");
 
 	//This gets reset by the above function
@@ -756,11 +814,11 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	LoadGameFilePosition(save_slot_id, f, "Laptop Info");
 
 	BAR(0, L"Merc Profiles...");
-	LoadSavedMercProfiles(f, version);
+	LoadSavedMercProfiles(f, version, stracLinuxFormat);
 	LoadGameFilePosition(save_slot_id, f, "Merc Profiles");
 
 	BAR(30, L"Soldier Structure...");
-	LoadSoldierStructure(f, version);
+	LoadSoldierStructure(f, version, stracLinuxFormat);
 	LoadGameFilePosition(save_slot_id, f, "Soldier Structure");
 
 	BAR(1, L"Finances Data File...");
@@ -808,7 +866,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	LoadGameFilePosition(save_slot_id, f, "OppList Info");
 
 	BAR(1, L"MapScreen Messages...");
-	LoadMapScreenMessagesFromSaveGameFile(f);
+	LoadMapScreenMessagesFromSaveGameFile(f, stracLinuxFormat);
 	LoadGameFilePosition(save_slot_id, f, "MapScreen Messages");
 
 	BAR(1, L"NPC Info...");
@@ -1228,31 +1286,29 @@ static void SaveMercProfiles(HWFILE const f)
 		JA2EncryptedFileWrite : NewJA2EncryptedFileWrite;
 	FOR_EACH(MERCPROFILESTRUCT, i, gMercProfiles)
 	{
-#ifdef _WIN32 // XXX HACK000A
 		BYTE data[716];
-#else
-		BYTE data[796];
-#endif
 		InjectMercProfile(data, *i);
 		writer(f, data, sizeof(data));
 	}
 }
 
 
-static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version)
+static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version, bool stracLinuxFormat)
 {
 	// Loop through all the profiles to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
 		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
 	FOR_EACH(MERCPROFILESTRUCT, i, gMercProfiles)
 	{
-#ifdef _WIN32 // XXX HACK000A
-		BYTE data[716];
-#else
-		BYTE data[796];
-#endif
-		reader(f, data, sizeof(data));
-		ExtractMercProfile(data, *i);
+    UINT32 checksum;
+    UINT32 dataSize = stracLinuxFormat ? MERC_PROFILE_SIZE_STRAC_LINUX : MERC_PROFILE_SIZE;
+    std::vector<BYTE> data(dataSize);
+    reader(f, data.data(), dataSize);
+    ExtractMercProfile(data.data(), *i, stracLinuxFormat, &checksum, false);
+    if (checksum != SoldierProfileChecksum(*i))
+    {
+      throw std::runtime_error("Merc profile checksum mismatch");
+    }
 	}
 }
 
@@ -1271,11 +1327,7 @@ static void SaveSoldierStructure(HWFILE const f)
 		if (!s.bActive) continue;
 
 		// Save the soldier structure
-#ifdef _WIN32 // XXX HACK000A
 		BYTE data[2328];
-#else
-		BYTE data[2352];
-#endif
 		InjectSoldierType(data, &s);
 		writer(f, data, sizeof(data));
 
@@ -1291,7 +1343,7 @@ static void SaveSoldierStructure(HWFILE const f)
 }
 
 
-static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
+static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool stracLinuxFormat)
 {
 	// Loop through all the soldier and delete them all
 	FOR_EACH_SOLDIER(i) TacticalRemoveSoldier(*i);
@@ -1310,15 +1362,20 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 		FileRead(f, &active, 1);
 		if (!active) continue;
 
-#ifdef _WIN32 // XXX HACK000A
-		BYTE Data[2328];
-#else
-		BYTE Data[2352];
-#endif
 		//Read in the saved soldier info into a Temp structure
-		reader(f, Data, sizeof(Data));
 		SOLDIERTYPE SavedSoldierInfo;
-		ExtractSoldierType(Data, &SavedSoldierInfo);
+    if(stracLinuxFormat)
+    {
+      BYTE Data[2352];
+      reader(f, Data, sizeof(Data));
+      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat);
+    }
+    else
+    {
+      BYTE Data[2328];
+      reader(f, Data, sizeof(Data));
+      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat);
+    }
 
 		SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
 		Assert(s->ubID == i);
@@ -1479,9 +1536,9 @@ static void SaveTacticalStatusToSavedGame(HWFILE const f)
 }
 
 
-static void LoadTacticalStatusFromSavedGame(HWFILE const f)
+static void LoadTacticalStatusFromSavedGame(HWFILE const f, bool stracLinuxFormat)
 {
-	ExtractTacticalStatusTypeFromFile(f);
+	ExtractTacticalStatusTypeFromFile(f, stracLinuxFormat);
 
 	// Load the current sector location
 	BYTE data[5];

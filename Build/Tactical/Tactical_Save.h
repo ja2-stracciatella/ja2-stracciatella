@@ -21,7 +21,7 @@ void SaveMapTempFilesToSavedGameFile(HWFILE);
 void SaveCurrentSectorsInformationToTempItemFile(void);
 
 //Loads the Currents Sectors information ( world Items, rotting corpses, ... ) from the temporary file used to store the sectores items
-void LoadCurrentSectorsInformationFromTempItemsFile(void);
+void LoadCurrentSectorsInformationFromTempItemsFile();
 
 // Loads a World Item array from that sectors temp item file
 void LoadWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32* item_count, WORLDITEM** items);

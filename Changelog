@@ -1,6 +1,11 @@
 JA2-Stracciatella Continued
 ---------------------------
 
+ - Saved games are now compatible between Windows and unix platforms (Linux,
+   Mac OS X).  Saves made on Windows can be loaded on Linux and vise versa.
+   All new saves are done in Windows format.  Old unix saves can still be
+   loaded.
+
  - Map editor is now included into the game exe.
    Start it with command-like key '-editor' or '-editorauto'.
    Map editor requires Editor.slf to work.

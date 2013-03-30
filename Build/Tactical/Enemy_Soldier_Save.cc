@@ -180,7 +180,7 @@ void LoadEnemySoldiersFromTempFile()
 	for (INT32 i = 0; i < slots; ++i)
 	{
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
+		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
@@ -420,7 +420,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	for (INT32 i = 0; i != slots; ++i)
 	{
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
+		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
@@ -568,7 +568,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	for (INT32 i = 0; i != slots; ++i)
 	{
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
+		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
@@ -892,7 +892,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	for (INT32 i = 0; i != slots; ++i)
 	{
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
+		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
 		// Increment the current type of soldier
 		switch (tempDetailedPlacement.ubSoldierClass)
 		{

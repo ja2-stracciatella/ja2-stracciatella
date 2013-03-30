@@ -34,7 +34,7 @@ static UINT32 MercChecksum(SOLDIERTYPE const& s)
 }
 
 
-void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
+void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool stracLinuxFormat)
 {
 	memset(s, 0, sizeof(*s));
 
@@ -74,21 +74,29 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 	EXTR_U8(d, s->ubAttackingHand)
 	EXTR_SKIP(d, 2)
 	EXTR_I16(d, s->sWeightCarriedAtTurnStart)
-#ifdef _WIN32 // XXX HACK000A
-	EXTR_WSTR16(d, s->name, lengthof(s->name))
-#else
-	EXTR_SKIP(d, 2)
-	EXTR_WSTR32(d, s->name, lengthof(s->name))
-#endif
+  if(stracLinuxFormat)
+  {
+    EXTR_SKIP(d, 2)
+    DataReader reader(d);
+    reader.readUTF32(s->name, lengthof(s->name));
+    d += reader.getConsumed();
+  }
+  else
+  {
+    DataReader reader(d);
+    reader.readUTF16(s->name, lengthof(s->name));
+    d += reader.getConsumed();
+  }
 	EXTR_I8(d, s->bVisible)
 	EXTR_I8(d, s->bActive)
 	EXTR_I8(d, s->bTeam)
 	EXTR_U8(d, s->ubGroupID)
 	EXTR_BOOL(d, s->fBetweenSectors)
 	EXTR_U8(d, s->ubMovementNoiseHeard)
-#ifndef _WIN32 // XXX HACK000A
-	EXTR_SKIP(d, 2)
-#endif
+  if(stracLinuxFormat)
+  {
+    EXTR_SKIP(d, 2)
+  }
 	EXTR_FLOAT(d, s->dXPos)
 	EXTR_FLOAT(d, s->dYPos)
 	EXTR_SKIP(d, 8)
@@ -525,11 +533,14 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 	EXTR_I32(d, s->uiTimeSinceLastBleedGrunt)
 	EXTR_SOLDIER(d, s->next_to_previous_attacker)
 	EXTR_SKIP(d, 39)
-#ifdef _WIN32 // XXX HACK000A
-	Assert(d == data + 2328);
-#else
-	Assert(d == data + 2352);
-#endif
+  if(stracLinuxFormat)
+  {
+    Assert(d == data + 2352);
+  }
+  else
+  {
+    Assert(d == data + 2328);
+  }
 
 	if (checksum != MercChecksum(*s))
 	{
@@ -576,21 +587,17 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_U8(d, s->ubAttackingHand)
 	INJ_SKIP(d, 2)
 	INJ_I16(d, s->sWeightCarriedAtTurnStart)
-#ifdef _WIN32 // XXX HACK000A
-	INJ_WSTR16(d, s->name, lengthof(s->name))
-#else
-	INJ_SKIP(d, 2)
-	INJ_WSTR32(d, s->name, lengthof(s->name))
-#endif
+  {
+    DataWriter writer(d);
+    writer.writeStringAsUTF16(s->name, lengthof(s->name));
+    d += writer.getConsumed();
+  }
 	INJ_I8(d, s->bVisible)
 	INJ_I8(d, s->bActive)
 	INJ_I8(d, s->bTeam)
 	INJ_U8(d, s->ubGroupID)
 	INJ_BOOL(d, s->fBetweenSectors)
 	INJ_U8(d, s->ubMovementNoiseHeard)
-#ifndef _WIN32 // XXX HACK000A
-	INJ_SKIP(d, 2)
-#endif
 	INJ_FLOAT(d, s->dXPos)
 	INJ_FLOAT(d, s->dYPos)
 	INJ_SKIP(d, 8)
@@ -1027,9 +1034,5 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I32(d, s->uiTimeSinceLastBleedGrunt)
 	INJ_SOLDIER(d, s->next_to_previous_attacker)
 	INJ_SKIP(d, 39)
-#ifdef _WIN32 // XXX HACK000A
 	Assert(d == data + 2328);
-#else
-	Assert(d == data + 2352);
-#endif
 }

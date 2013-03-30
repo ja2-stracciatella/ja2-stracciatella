@@ -641,17 +641,32 @@ static void PlayNewMessageSound(void)
 }
 
 
-static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f)
+static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLinuxFormat)
 {
 	UINT32 size;
 	FileRead(f, &size, sizeof(size));
 	if (size == 0) return 0;
-	size_t const len = size / sizeof(wchar_t);
-
-	SGP::Buffer<wchar_t> str(len);
-	FileRead(f, str, len * sizeof(*str));
 
 	SGP::PODObj<ScrollStringSt> s;
+  {
+    SGP::Buffer<uint8_t> data(size);
+    FileRead(f, data, size);
+    DataReader reader(data);
+    if(stracLinuxFormat)
+    {
+      size_t const len = size / 4;
+      SGP::Buffer<wchar_t> str(len);
+      reader.readUTF32(str, len);
+      s->pString16 = str.Release();
+    }
+    else
+    {
+      size_t const len = size / 2;
+      SGP::Buffer<wchar_t> str(len);
+      reader.readUTF16(str, len);
+      s->pString16 = str.Release();
+    }
+  }
 
 	BYTE data[28];
 	FileRead(f, data, sizeof(data));
@@ -665,7 +680,6 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f)
 	EXTR_SKIP(d, 1)
 	Assert(d == endof(data));
 
-	s->pString16 = str.Release();
 	return s.Release();
 }
 
@@ -710,7 +724,7 @@ void SaveMapScreenMessagesToSaveGameFile(HWFILE const hFile)
 }
 
 
-void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile)
+void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFormat)
 {
 	// clear tactical message queue
 	ClearTacticalMessageQueue();
@@ -731,7 +745,7 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile)
 	//Loopthrough all the messages
 	FOR_EACH(ScrollStringSt*, i, gMapScreenMessageList)
 	{
-		ScrollStringSt* const s = ExtractScrollStringFromFile(hFile);
+		ScrollStringSt* const s = ExtractScrollStringFromFile(hFile, stracLinuxFormat);
 
 		ScrollStringSt* const old = *i;
 		if (old)

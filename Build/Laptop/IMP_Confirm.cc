@@ -445,18 +445,9 @@ static void LoadInCurrentImpCharacter(void)
 {
 	INT32 iProfileId = 0;
 
-	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(IMP_MERC_FILE, true));
-
-		// read in the profile
-		FileRead(hFile, &iProfileId, sizeof(INT32));
-
-		// read in the portrait
-		FileRead(hFile, &iPortraitNumber, sizeof(INT32));
-
-		// read in the profile
-		ExtractMercProfileFromFile(hFile, gMercProfiles[iProfileId]);
-	}
+  MERCPROFILESTRUCT p;
+  ExtractImpProfileFromFile(IMP_MERC_FILE, &iProfileId, &iPortraitNumber, p);
+  gMercProfiles[iProfileId] = p;
 
 	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
 	{

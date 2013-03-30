@@ -43,6 +43,7 @@
 #include "Campaign_Types.h"
 #include "MemMan.h"
 #include "Debug.h"
+#include "GameRes.h"
 
 
 #define NUM_NPC_QUOTE_RECORDS  50

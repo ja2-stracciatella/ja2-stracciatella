@@ -184,6 +184,7 @@
     <ClCompile Include="..\..\Build\MessageBoxScreen.cc" />
     <ClCompile Include="..\..\Build\Options_Screen.cc" />
     <ClCompile Include="..\..\Build\SaveLoadGame.cc" />
+    <ClCompile Include="..\..\Build\SaveLoadGame_unittest.cc" />
     <ClCompile Include="..\..\Build\SaveLoadScreen.cc" />
     <ClCompile Include="..\..\Build\Screens.cc" />
     <ClCompile Include="..\..\Build\Strategic\AI_Viewer.cc" />
@@ -278,6 +279,7 @@
     <ClCompile Include="..\..\Build\Tactical\LoadSaveBasicSoldierCreateStruct.cc" />
     <ClCompile Include="..\..\Build\Tactical\LoadSaveBullet.cc" />
     <ClCompile Include="..\..\Build\Tactical\LoadSaveMercProfile.cc" />
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveMercProfile_unittest.cc" />
     <ClCompile Include="..\..\Build\Tactical\LoadSaveObjectType.cc" />
     <ClCompile Include="..\..\Build\Tactical\LoadSaveRottingCorpse.cc" />
     <ClCompile Include="..\..\Build\Tactical\LoadSaveSoldierCreate.cc" />
@@ -388,11 +390,13 @@
     <ClCompile Include="..\..\Build\Utils\_ItalianText.cc" />
     <ClCompile Include="..\..\Build\Utils\_PolishText.cc" />
     <ClCompile Include="..\..\Build\Utils\_RussianText.cc" />
+    <ClCompile Include="..\..\Build\VanillaDataStructures_unittest.cc" />
     <ClCompile Include="..\..\sgp\Button_Sound_Control.cc" />
     <ClCompile Include="..\..\sgp\Button_System.cc" />
     <ClCompile Include="..\..\sgp\Container.cc" />
     <ClCompile Include="..\..\sgp\Cursor_Control.cc" />
     <ClCompile Include="..\..\sgp\Debug.cc" />
+    <ClCompile Include="..\..\sgp\EncodingCorrectors.cc" />
     <ClCompile Include="..\..\sgp\FileMan.cc" />
     <ClCompile Include="..\..\sgp\FileMan_unittest.cc" />
     <ClCompile Include="..\..\sgp\Font.cc" />
@@ -401,6 +405,8 @@
     <ClCompile Include="..\..\sgp\Input.cc" />
     <ClCompile Include="..\..\sgp\LibraryDataBase.cc" />
     <ClCompile Include="..\..\sgp\Line.cc" />
+    <ClCompile Include="..\..\sgp\LoadSaveData.cc" />
+    <ClCompile Include="..\..\sgp\LoadSaveData_unittest.cc" />
     <ClCompile Include="..\..\sgp\MemMan.cc" />
     <ClCompile Include="..\..\sgp\MouseSystem.cc" />
     <ClCompile Include="..\..\sgp\PCX.cc" />
@@ -775,11 +781,13 @@
     <ClInclude Include="..\..\sgp\Container.h" />
     <ClInclude Include="..\..\sgp\Cursor_Control.h" />
     <ClInclude Include="..\..\sgp\Debug.h" />
+    <ClInclude Include="..\..\sgp\EncodingCorrectors.h" />
     <ClInclude Include="..\..\sgp\English.h" />
     <ClInclude Include="..\..\sgp\Exceptions.h" />
     <ClInclude Include="..\..\sgp\FileMan.h" />
     <ClInclude Include="..\..\sgp\Font.h" />
     <ClInclude Include="..\..\sgp\HImage.h" />
+    <ClInclude Include="..\..\sgp\IEncodingCorrector.h" />
     <ClInclude Include="..\..\sgp\ImgFmt.h" />
     <ClInclude Include="..\..\sgp\ImpTGA.h" />
     <ClInclude Include="..\..\sgp\Input.h" />

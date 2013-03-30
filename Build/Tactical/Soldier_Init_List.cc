@@ -190,7 +190,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 		{
 			if( !curr->pDetailedPlacement )
 				return FALSE;
-			InjectSoldierCreateIntoFileUTF16(fp, curr->pDetailedPlacement);
+			InjectSoldierCreateIntoFile(fp, curr->pDetailedPlacement);
 		}
 		curr = curr->next;
 	}
@@ -198,7 +198,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 }
 
 
-void LoadSoldiersFromMap(HWFILE const f)
+void LoadSoldiersFromMap(HWFILE const f, bool stracLinuxFormat)
 {
 	UINT8 const n_individuals = gMapInformation.ubNumIndividuals;
 
@@ -231,7 +231,7 @@ void LoadSoldiersFromMap(HWFILE const f)
 		{ /* Add the static detailed placement information in the same newly created
 			 * node as the basic placement. */
 			SOLDIERCREATE_STRUCT* const sc = MALLOC(SOLDIERCREATE_STRUCT);
-			ExtractSoldierCreateFromFileUTF16(f, sc);
+			ExtractSoldierCreateFromFile(f, sc, stracLinuxFormat);
 
 			if (sc->ubProfile != NO_PROFILE)
 			{

@@ -932,8 +932,9 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 
 		try
 		{
+      bool stracLinuxFormat;
 			AutoSGPFile f(FileMan::openForReadingSmart(zSavedGameName, false));
-			ExtractSavedGameHeaderFromFile(f, *header);
+			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
 			endof(header->zGameVersionNumber)[-1] =  '\0';
 			endof(header->sSavedGameDesc)[-1]     = L'\0';
 			return TRUE;

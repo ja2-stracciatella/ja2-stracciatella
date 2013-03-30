@@ -22,6 +22,7 @@
 #include "SGP.h"
 #include "SaveLoadGame.h"
 #include	"Text.h"
+#include "GameRes.h"
 
 
 #define				GAME_SETTINGS_FILE		"../Ja2.set"

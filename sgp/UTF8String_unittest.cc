@@ -1,6 +1,13 @@
-﻿#include "gtest/gtest.h"
+﻿// -*-coding: utf-8-with-signature-unix;-*-
+
+#include "gtest/gtest.h"
 
 #include "UTF8String.h"
+
+// Disable Visual Studio Warning
+#if defined(_MSC_VER)
+#pragma warning( disable : 4566 )       /* example: character represented by universal-character-name '\u03BF' cannot be represented in the current code page */
+#endif
 
 #define ARR_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
@@ -8,45 +15,54 @@
 static uint8_t   u8a_testEnglish[] = {0x74, 0x65, 0x73, 0x74, 0};
 static uint16_t u16a_testEnglish[] = {0x0074, 0x0065, 0x0073, 0x0074, 0};
 static uint32_t u32a_testEnglish[] = {0x00000074, 0x00000065, 0x00000073, 0x00000074, 0};
-static std::vector<uint16_t>u16v_testEnglish(u16a_testEnglish, u16a_testEnglish + ARR_SIZE(u16a_testEnglish) - 1);
-static std::vector<uint32_t>u32v_testEnglish(u32a_testEnglish, u32a_testEnglish + ARR_SIZE(u32a_testEnglish) - 1);
+static std::vector<uint16_t>u16v_testEnglish(u16a_testEnglish, u16a_testEnglish + ARR_SIZE(u16a_testEnglish));
+static std::vector<uint32_t>u32v_testEnglish(u32a_testEnglish, u32a_testEnglish + ARR_SIZE(u32a_testEnglish));
 
 // Russian word "test" (тест)
 static uint8_t   u8a_testRussian[] = {0xd1, 0x82, 0xd0, 0xb5, 0xd1, 0x81, 0xd1, 0x82, 0};
 static uint16_t u16a_testRussian[] = {0x0442, 0x0435, 0x0441, 0x0442, 0};
 static uint32_t u32a_testRussian[] = {0x00000442, 0x00000435, 0x00000441, 0x00000442, 0};
-static std::vector<uint16_t>u16v_testRussian(u16a_testRussian, u16a_testRussian + ARR_SIZE(u16a_testRussian) - 1);
-static std::vector<uint32_t>u32v_testRussian(u32a_testRussian, u32a_testRussian + ARR_SIZE(u32a_testRussian) - 1);
+static std::vector<uint16_t>u16v_testRussian(u16a_testRussian, u16a_testRussian + ARR_SIZE(u16a_testRussian));
+static std::vector<uint32_t>u32v_testRussian(u32a_testRussian, u32a_testRussian + ARR_SIZE(u32a_testRussian));
 
 // Chinese (simplified) word "test" (测试)
 static uint8_t   u8a_testChinese[] = {0xe6, 0xb5, 0x8b, 0xe8, 0xaf, 0x95, 0};
 static uint16_t u16a_testChinese[] = {0x6d4b, 0x8bd5, 0};
 static uint32_t u32a_testChinese[] = {0x00006d4b, 0x00008bd5, 0};
-static std::vector<uint16_t>u16v_testChinese(u16a_testChinese, u16a_testChinese + ARR_SIZE(u16a_testChinese) - 1);
-static std::vector<uint32_t>u32v_testChinese(u32a_testChinese, u32a_testChinese + ARR_SIZE(u32a_testChinese) - 1);
+static std::vector<uint16_t>u16v_testChinese(u16a_testChinese, u16a_testChinese + ARR_SIZE(u16a_testChinese));
+static std::vector<uint32_t>u32v_testChinese(u32a_testChinese, u32a_testChinese + ARR_SIZE(u32a_testChinese));
 
 // Greek word "test" (δοκιμή)
 static uint8_t   u8a_testGreek[] = {0xce, 0xb4, 0xce, 0xbf, 0xce, 0xba, 0xce, 0xb9, 0xce, 0xbc, 0xce, 0xae, 0};
 static uint16_t u16a_testGreek[] = {0x03b4, 0x03bf, 0x03ba, 0x03b9, 0x03bc, 0x03ae, 0};
 static uint32_t u32a_testGreek[] = {0x000003b4, 0x000003bf, 0x000003ba, 0x000003b9, 0x000003bc, 0x000003ae, 0};
-static std::vector<uint16_t>u16v_testGreek(u16a_testGreek, u16a_testGreek + ARR_SIZE(u16a_testGreek) - 1);
-static std::vector<uint32_t>u32v_testGreek(u32a_testGreek, u32a_testGreek + ARR_SIZE(u32a_testGreek) - 1);
+static std::vector<uint16_t>u16v_testGreek(u16a_testGreek, u16a_testGreek + ARR_SIZE(u16a_testGreek));
+static std::vector<uint32_t>u32v_testGreek(u32a_testGreek, u32a_testGreek + ARR_SIZE(u32a_testGreek));
 
 
-TEST(UTF8StringTest, Basics)
+TEST(UTF8StringTest, EmptyString)
 {
   UTF8String empty("");
   EXPECT_EQ(empty.getNumCharacters(), 0);
   EXPECT_EQ(empty.getNumBytes(), 0);
 #ifdef WCHAR_SUPPORT
-  EXPECT_STREQ(empty.getWCHAR(), L"");
+  EXPECT_STREQ(empty.getWCHAR().data(), L"");
 #endif
 
+  // arrays of code points should contain one element - trailing zero
+  ASSERT_EQ(empty.getUTF16().size(), 1);
+  ASSERT_EQ(empty.getUTF32().size(), 1);
+  EXPECT_EQ(empty.getUTF16()[0], 0);
+  EXPECT_EQ(empty.getUTF32()[0], 0);
+}
+
+TEST(UTF8StringTest, Basics)
+{
   UTF8String foo("foo");
   EXPECT_EQ(foo.getNumCharacters(), 3);
   EXPECT_EQ(foo.getNumBytes(), 3);
 #ifdef WCHAR_SUPPORT
-  EXPECT_STREQ(foo.getWCHAR(), L"foo");
+  EXPECT_STREQ(foo.getWCHAR().data(), L"foo");
 #endif
 
   UTF8String testEnglish1( u8a_testEnglish);
@@ -61,9 +77,9 @@ TEST(UTF8StringTest, Basics)
   EXPECT_EQ(testEnglish1.getUTF16(), u16v_testEnglish);
   EXPECT_EQ(testEnglish1.getUTF32(), u32v_testEnglish);
 #ifdef WCHAR_SUPPORT
-  EXPECT_STREQ(testEnglish1.getWCHAR(), L"test");
-  EXPECT_STREQ(testEnglish2.getWCHAR(), L"test");
-  EXPECT_STREQ(testEnglish3.getWCHAR(), L"test");
+  EXPECT_STREQ(testEnglish1.getWCHAR().data(), L"test");
+  EXPECT_STREQ(testEnglish2.getWCHAR().data(), L"test");
+  EXPECT_STREQ(testEnglish3.getWCHAR().data(), L"test");
 #endif
 }
 
@@ -82,9 +98,9 @@ TEST(UTF8StringTest, Russian)
   EXPECT_EQ(testRussian1.getUTF16(), u16v_testRussian);
   EXPECT_EQ(testRussian1.getUTF32(), u32v_testRussian);
 #ifdef WCHAR_SUPPORT
-  EXPECT_STREQ(testRussian1.getWCHAR(), L"тест");
-  EXPECT_STREQ(testRussian2.getWCHAR(), L"тест");
-  EXPECT_STREQ(testRussian3.getWCHAR(), L"тест");
+  EXPECT_STREQ(testRussian1.getWCHAR().data(), L"тест");
+  EXPECT_STREQ(testRussian2.getWCHAR().data(), L"тест");
+  EXPECT_STREQ(testRussian3.getWCHAR().data(), L"тест");
 #endif
 }
 
@@ -103,9 +119,9 @@ TEST(UTF8StringTest, Chinese)
   EXPECT_EQ(testChinese1.getUTF16(), u16v_testChinese);
   EXPECT_EQ(testChinese1.getUTF32(), u32v_testChinese);
 #ifdef WCHAR_SUPPORT
-  EXPECT_STREQ(testChinese1.getWCHAR(), L"测试");
-  EXPECT_STREQ(testChinese2.getWCHAR(), L"测试");
-  EXPECT_STREQ(testChinese3.getWCHAR(), L"测试");
+  EXPECT_STREQ(testChinese1.getWCHAR().data(), L"测试");
+  EXPECT_STREQ(testChinese2.getWCHAR().data(), L"测试");
+  EXPECT_STREQ(testChinese3.getWCHAR().data(), L"测试");
 #endif
 }
 
@@ -124,9 +140,9 @@ TEST(UTF8StringTest, Greek)
   EXPECT_EQ(testGreek1.getUTF16(), u16v_testGreek);
   EXPECT_EQ(testGreek1.getUTF32(), u32v_testGreek);
 #ifdef WCHAR_SUPPORT
-  EXPECT_STREQ(testGreek1.getWCHAR(), L"δοκιμή");
-  EXPECT_STREQ(testGreek2.getWCHAR(), L"δοκιμή");
-  EXPECT_STREQ(testGreek3.getWCHAR(), L"δοκιμή");
+  EXPECT_STREQ(testGreek1.getWCHAR().data(), L"δοκιμή");
+  EXPECT_STREQ(testGreek2.getWCHAR().data(), L"δοκιμή");
+  EXPECT_STREQ(testGreek3.getWCHAR().data(), L"δοκιμή");
 #endif
 }
 

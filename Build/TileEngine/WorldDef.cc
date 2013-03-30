@@ -57,6 +57,7 @@
 #include "MemMan.h"
 #include "JAScreens.h"
 #include "GameState.h"
+#include "GameRes.h"
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
@@ -1892,7 +1893,7 @@ try
 			SOLDIERCREATE_STRUCT priority;
 			if (basic.fDetailedPlacement)
 			{ //skip static priority placement
-				ExtractSoldierCreateFromFileUTF16(f, &priority);
+				ExtractSoldierCreateFromFile(f, &priority, false);
 
 				if (priority.ubProfile != NO_PROFILE)
 					++pTeam->ubProfile;
@@ -2401,7 +2402,7 @@ try
 	{
 		SetRelativeStartAndEndPercentage(0, 86, 87, L"Loading placements...");
 		RenderProgressBar(0, 0);
-		LoadSoldiersFromMap(f);
+		LoadSoldiersFromMap(f, false);
 	}
 	if (uiFlags & MAP_EXITGRIDS_SAVED)
 	{

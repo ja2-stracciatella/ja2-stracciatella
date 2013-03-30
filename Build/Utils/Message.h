@@ -48,7 +48,7 @@ void ClearDisplayedListOfTacticalStrings( void );
 // clear ALL strings in the tactical Message Queue
 void ClearTacticalMessageQueue( void );
 
-void LoadMapScreenMessagesFromSaveGameFile(HWFILE);
+void LoadMapScreenMessagesFromSaveGameFile(HWFILE, bool stracLinuxFormat);
 void SaveMapScreenMessagesToSaveGameFile(HWFILE);
 
 // use these if you are not Kris

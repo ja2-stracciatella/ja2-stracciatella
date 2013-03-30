@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -1138,6 +1138,24 @@
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgp\wchar_unittest.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\SaveLoadGame_unittest.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\VanillaDataStructures_unittest.cc">
+      <Filter>Source Files\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build\Tactical\LoadSaveMercProfile_unittest.cc">
+      <Filter>Source Files\Build\Tactical</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\LoadSaveData_unittest.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\EncodingCorrectors.cc">
+      <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgp\LoadSaveData.cc">
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2283,6 +2301,12 @@
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sgp\UTF8String.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\EncodingCorrectors.h">
+      <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sgp\IEncodingCorrector.h">
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
   </ItemGroup>

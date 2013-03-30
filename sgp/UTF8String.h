@@ -66,17 +66,19 @@ public:
   /** Get UTF-8 encoded string. */
   const char* getUTF8() const;
 
-  /** Get UTF-16 encoded string. */
+  /** Get UTF-16 encoded string.
+   * @return Array of code points including trailing 0x0000. */
   std::vector<uint16_t> getUTF16() const;
 
-  /** Get UTF-32 encoded string. */
+  /** Get UTF-32 encoded string.
+   * @return Array of code points including trailing 0x00000000. */
   std::vector<uint32_t> getUTF32() const;
 
 #ifdef WCHAR_SUPPORT
 
-  /** Get wchar_t string.
-   * @return Pointer to the internal buffer. */
-  const wchar_t * getWCHAR();
+/** Get wchar_t string.
+ * @return Reference to the internal array of wchar_t characters.  The array includes trailing zero. */
+  const std::vector<wchar_t>& getWCHAR();
 
 #endif
 

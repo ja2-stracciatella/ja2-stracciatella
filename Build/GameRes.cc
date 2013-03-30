@@ -9,6 +9,8 @@
 #include "Text.h"
 #include "TranslationTable.h"
 #include "GameState.h"
+#include "EncodingCorrectors.h"
+
 
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;
@@ -110,22 +112,18 @@ bool isRussianGoldVersion()
 }
 
 
-/** Correct character during loading from data files. */
-wchar_t correctCharOnLoadFromDataFiles(wchar_t c)
+/**
+ * Get encoding corrector for strings in data files.
+ * @return NULL when no encoding corrector is required */
+const IEncodingCorrector* getDataFilesEncodingCorrector()
 {
+  static RussianEncodingCorrector s_russianFixer;
   if(isRussianVersion() || isRussianGoldVersion())
   {
-    /* The Russian data files are incorrectly encoded. The original texts seem to
-     * be encoded in CP1251, but then they were converted from CP1252 (!) to
-     * UTF-16 to store them in the data files. Undo this damage here. */
-    if (0xC0 <= c && c <= 0xFF)
-    {
-      c += 0x350;
-    }
+    return &s_russianFixer;
   }
-  return c;
+  return NULL;
 }
-
 
 /** Get major map version. */
 FLOAT getMajorMapVersion()

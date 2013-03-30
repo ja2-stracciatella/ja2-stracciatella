@@ -43,6 +43,7 @@
 #include "Personnel.h"
 #include "Environment.h"
 #include "Items.h"
+#include "GameRes.h"
 
 extern BOOLEAN gfProfileDataLoaded;
 
@@ -119,12 +120,10 @@ static void StartSomeMercsOnAssignment(void);
 void LoadMercProfiles()
 {
 	{ AutoSGPFile f(FileMan::openForReadingSmart(BINARYDATADIR "/prof.dat", true));
+    LoadRawMercProfiles(f, NUM_PROFILES, gMercProfiles, getDataFilesEncodingCorrector());
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
-			BYTE data[716];
-			JA2EncryptedFileRead(f, data, sizeof(data));
-			MERCPROFILESTRUCT& p = GetProfile(i);
-			ExtractMercProfileUTF16(data, p);
+			MERCPROFILESTRUCT& p = gMercProfiles[i];
 
 			// If the dialogue exists for the merc, allow the merc to be hired
 			p.bMercStatus = FileExists(GetDialogueDataFilename(i, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE;

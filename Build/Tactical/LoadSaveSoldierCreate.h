@@ -4,10 +4,7 @@
 #include "Soldier_Create.h"
 
 
-void ExtractSoldierCreateFromFileUTF16(HWFILE, SOLDIERCREATE_STRUCT*);
-void ExtractSoldierCreateFromFile(HWFILE, SOLDIERCREATE_STRUCT*);
-
-void InjectSoldierCreateIntoFileUTF16(HWFILE, SOLDIERCREATE_STRUCT const*);
+void ExtractSoldierCreateFromFile(HWFILE, SOLDIERCREATE_STRUCT*, bool stracLinuxFormat);
 void InjectSoldierCreateIntoFile(HWFILE, SOLDIERCREATE_STRUCT const*);
 
 #endif

@@ -72,27 +72,31 @@ const char* UTF8String::getUTF8() const
 }
 
 
-/** Get UTF-16 encoded string. */
+/** Get UTF-16 encoded string.
+ * @return Array of code points including trailing 0x0000. */
 std::vector<uint16_t> UTF8String::getUTF16() const
 {
-  std::vector<uint16_t> words;
-  utf8::utf8to16(m_encoded.begin(), m_encoded.end(), back_inserter(words));
-  return words;
+  std::vector<uint16_t> code_points;
+  utf8::utf8to16(m_encoded.begin(), m_encoded.end(), back_inserter(code_points));
+  code_points.push_back(0);
+  return code_points;
 }
 
-/** Get UTF-32 encoded string. */
+/** Get UTF-32 encoded string.
+ * @return Array of code points including trailing 0x00000000. */
 std::vector<uint32_t> UTF8String::getUTF32() const
 {
-  std::vector<uint32_t> words;
-  utf8::utf8to32(m_encoded.begin(), m_encoded.end(), back_inserter(words));
-  return words;
+  std::vector<uint32_t> code_points;
+  utf8::utf8to32(m_encoded.begin(), m_encoded.end(), back_inserter(code_points));
+  code_points.push_back(0);
+  return code_points;
 }
 
 #ifdef WCHAR_SUPPORT
 
 /** Get wchar_t string.
- * @return Pointer to the internal buffer. */
-const wchar_t * UTF8String::getWCHAR()
+ * @return Reference to the internal array of wchar_t characters.  The array includes trailing zero. */
+const std::vector<wchar_t>& UTF8String::getWCHAR()
 {
   m_wcharBuffer.clear();
 #if _WIN32
@@ -101,7 +105,7 @@ const wchar_t * UTF8String::getWCHAR()
   utf8::utf8to32(m_encoded.begin(), m_encoded.end(), back_inserter(m_wcharBuffer));
 #endif
   m_wcharBuffer.push_back(0);
-  return m_wcharBuffer.data();
+  return m_wcharBuffer;
 }
 
 #endif

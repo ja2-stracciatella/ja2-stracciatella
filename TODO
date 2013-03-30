@@ -1,5 +1,5 @@
 GTr:
-
+- (#41) replace all CASSERT with unit tests
 - check VS warnings C4390: ';' : empty controlled statement found; is this the intent?
 
 
@@ -8,7 +8,6 @@ TODO0021
 
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal distribution, which would be a rather complex task with pregenerated randoms
 - HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
-- HACK000A Clean up system specific hacks, especially wrt. wchar_t
 - HACK000B Remove unused fields which are only kept for savegame compatibility
 - HACK000C Workaround for code trying to access non-existent buttons
 - HACK000D SDL_BlitSurface() sometimes returns with the direction flag set on x86, which violates the ABI.  Remove the "cld" hack once SDL is fixed.
