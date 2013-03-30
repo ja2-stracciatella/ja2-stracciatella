@@ -1304,7 +1304,7 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
     UINT32 dataSize = stracLinuxFormat ? MERC_PROFILE_SIZE_STRAC_LINUX : MERC_PROFILE_SIZE;
     std::vector<BYTE> data(dataSize);
     reader(f, data.data(), dataSize);
-    ExtractMercProfile(data.data(), *i, stracLinuxFormat, &checksum, false);
+    ExtractMercProfile(data.data(), *i, stracLinuxFormat, &checksum, NULL);
     if (checksum != SoldierProfileChecksum(*i))
     {
       throw std::runtime_error("Merc profile checksum mismatch");
