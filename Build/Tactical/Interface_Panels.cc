@@ -3593,10 +3593,15 @@ static void ConfirmationToDepositMoneyToPlayersAccount(MessageBoxReturnValue con
 		//add the money to the players account
 		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), gpItemPointer->uiMoneyAmount );
 
+		EndItemPointer( );
+		// remove contents of the moving item because object still is money and usable
+		// you could add endlessly money to your bank account if not reset properly
+		memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+		SetSkiCursor( CURSOR_NORMAL );
 		// dirty shopkeeper
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 
-		EndItemPointer( );
+
 	}
 }
 

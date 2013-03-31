@@ -38,6 +38,8 @@ JA2-Stracciatella Continued
 JA2-Stracciatella
 -----------------
 
+03d197da4e9fa3f53ebc306c20b03dec57155696  Fix Shopkeeper Money bug (did not disappear if transfered directly to bank)
+
 (r7072) Fix a vanilla glitch: When scrolling back in an email, the email delete window was not redrawn properly.
 (r7071) Fix a glitch in r4977: The yes/no buttons in the email delete window could not be clicked, when the email had more than one page.
 (r7070) Fix a vanilla bug: Darren used the wrong quote for the first fight on a day, if there were fights on previous days.
