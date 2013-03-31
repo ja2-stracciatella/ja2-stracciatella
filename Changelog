@@ -1,6 +1,7 @@
 JA2-Stracciatella Continued
 ---------------------------
 
+ - Fixed bug #6  (Question mark instead of comma in Russian version)
  - Fixed bug #31 (Only fences in banks and cliffs section)
  - Fixed bug #28 (Map editor doesn't work in Russian (not gold) version)
 

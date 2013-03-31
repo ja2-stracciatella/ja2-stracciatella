@@ -348,8 +348,8 @@ public:
     m_table[L'\''] =  85;
     m_table[L'<'] =  86;
     m_table[L'>'] =  87;
-    m_table[L';'] =  88,
-      m_table[L'.'] =  89;
+    m_table[L','] =  88;
+    m_table[L'.'] =  89;
     m_table[L'?'] =  90;
     m_table[L'/'] =  91;
     m_table[L' '] =  92;
@@ -516,7 +516,7 @@ public:
     m_table[L')'] =   9;
     m_table[L'*'] =  10;
     m_table[L'+'] =  11;
-    m_table[L';'] =  12,
+    m_table[L','] =  12;
     m_table[L'-'] =  13;
     m_table[L'.'] =  14;
     m_table[L'/'] =  15;
@@ -664,7 +664,7 @@ public:
     m_table[0x044C] = 156; // CYRILLIC SMALL LETTER SOFT SIGN
     m_table[0x044D] = 157; // CYRILLIC SMALL LETTER E
     m_table[0x044E] = 158; // CYRILLIC SMALL LETTER YU
-    m_table[0x044F] = 159;  // CYRILLIC SMALL LETTER YA
+    m_table[0x044F] = 159; // CYRILLIC SMALL LETTER YA
   }
 };
 
@@ -767,7 +767,7 @@ public:
     m_table[L'\''] =  85;
     m_table[L'<'] =  86;
     m_table[L'>'] =  87;
-    m_table[L';'] =  88,
+    m_table[L','] =  88,
     m_table[L'.'] =  89;
     m_table[L'?'] =  90;
     m_table[L'/'] =  91;
