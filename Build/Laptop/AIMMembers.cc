@@ -2712,10 +2712,11 @@ static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN const fEnable)
 	if (fCreated == fEnable) return;
 	fCreated = fEnable;
 
+	//HB: typo missing "!"
 	// Enable/disable buttons behind the acknowlegde button
-	for (INT8 i = 0; i != 3; ++i) EnableButton(giContractLengthButton[i], fEnable);
-	for (INT8 i = 0; i != 2; ++i) EnableButton(giBuyEquipmentButton[i],   fEnable);
-	for (INT8 i = 0; i != 2; ++i) EnableButton(giAuthorizeButton[i],      fEnable);
+	for (INT8 i = 0; i != 3; ++i) EnableButton(giContractLengthButton[i], !fEnable);
+	for (INT8 i = 0; i != 2; ++i) EnableButton(giBuyEquipmentButton[i],   !fEnable);
+	for (INT8 i = 0; i != 2; ++i) EnableButton(giAuthorizeButton[i],      !fEnable);
 }
 
 
