@@ -1,3 +1,4 @@
+
 #include "Assignments.h"
 #include "Auto_Resolve.h"
 #include "Directories.h"
@@ -2911,11 +2912,12 @@ static BOOLEAN HandleRemoveMenu(const INT8 remove_char)
 		if (remove_char == -1) return FALSE;
 		const SOLDIERTYPE* const s = gCharactersList[remove_char].merc;
 		if (s->bLife != 0 && s->bAssignment != ASSIGNMENT_POW) return FALSE;
+
+		bSelectedAssignChar = remove_char;
 	}
 
 	// dead guy handle menu stuff
-	bSelectedAssignChar = remove_char;
-	fShowRemoveMenu     = fShowAssignmentMenu | fShowContractMenu;
+	fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
 	CreateDestroyMouseRegionsForRemoveMenu();
 	return TRUE;
 }
