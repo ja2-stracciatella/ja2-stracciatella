@@ -704,7 +704,7 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 						pSoldier->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
 						TriggerEndOfBoxingRecord( pSoldier );
 					}
-					else if ( CountPeopleInBoxingRing() == 0 )
+					else if ( CountPeopleInBoxingRing() == 0 && (gTacticalStatus.bBoxingState == DISQUALIFIED))
 					{
 						// Probably disqualified by jumping out of ring; the player
 						// character then didn't trigger the end of boxing record
