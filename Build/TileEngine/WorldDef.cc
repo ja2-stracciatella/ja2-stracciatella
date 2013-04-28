@@ -111,6 +111,12 @@ INT16		gsRecompileAreaBottom = 0;
 #endif
 
 
+/** Check if the grid number is valid. */
+static BOOLEAN isValidGridNo(INT32 gridNo)
+{
+  return (gridNo >= 0) && (gridNo < WORLD_MAX);
+}
+
 BOOLEAN DoorAtGridNo(const UINT32 iMapIndex)
 {
 	return FindStructure(iMapIndex, STRUCTURE_ANYDOOR) != NULL;
@@ -400,6 +406,11 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 	BOOLEAN					fStructuresOnRoof;
 
 	UINT8			ubDirLoop;
+
+  if(!isValidGridNo(usGridNo))
+  {
+    return;
+  }
 
 /*
 */
@@ -1088,7 +1099,7 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
 			// times 2 for 2 levels, times 2 for UINT16s
 //			memset( &(gubWorldMovementCosts[usGridNo]), 0, MAXDIR * 2 * 2 );
-			if (usGridNo < WORLD_MAX)
+			if (isValidGridNo(usGridNo))
 			{
 				for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 				{
@@ -1106,13 +1117,7 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 		for( sGridX = sCentreGridX - LOCAL_RADIUS - 1; sGridX < sCentreGridX + LOCAL_RADIUS + 1; sGridX++ )
 		{
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-			if (usGridNo < WORLD_MAX)
-			{
-        if(usGridNo >= 0)
-        {
-				  CompileTileMovementCosts( usGridNo );
-        }
-			}
+      CompileTileMovementCosts( usGridNo );
 		}
 	}
 }
@@ -1145,7 +1150,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 				usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
 				// times 2 for 2 levels, times 2 for UINT16s
 	//			memset( &(gubWorldMovementCosts[usGridNo]), 0, MAXDIR * 2 * 2 );
-				if (usGridNo < WORLD_MAX)
+        if (isValidGridNo(usGridNo))
 				{
 					for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 					{
@@ -1163,10 +1168,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 			for( sGridX = sCentreGridX - bRadius - 1; sGridX < sCentreGridX + bRadius + 1; sGridX++ )
 			{
 				usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-				if (usGridNo < WORLD_MAX)
-				{
-					CompileTileMovementCosts( usGridNo );
-				}
+        CompileTileMovementCosts( usGridNo );
 			}
 		}
 	}
@@ -1179,7 +1181,7 @@ void AddTileToRecompileArea( INT16 sGridNo )
 	INT16 sCheckY;
 
 	// Set flag to wipe and recompile MPs in this tile
-	if (sGridNo < 0 || sGridNo >= WORLD_MAX)
+	if (!isValidGridNo(sGridNo))
 	{
 		return;
 	}
@@ -1224,7 +1226,7 @@ void RecompileLocalMovementCostsInAreaWithFlags( void )
 		for( sGridX = gsRecompileAreaLeft; sGridX < gsRecompileAreaRight; sGridX++ )
 		{
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-			if ( usGridNo < WORLD_MAX && gpWorldLevelData[ usGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_RECALCULATE_MOVEMENT )
+			if ( isValidGridNo(usGridNo) && gpWorldLevelData[ usGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_RECALCULATE_MOVEMENT )
 			{
 				// wipe MPs in this tile!
 				for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
@@ -1243,10 +1245,7 @@ void RecompileLocalMovementCostsInAreaWithFlags( void )
 		for( sGridX = gsRecompileAreaLeft; sGridX <= gsRecompileAreaRight; sGridX++ )
 		{
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-			if (usGridNo < WORLD_MAX)
-			{
-				CompileTileMovementCosts( usGridNo );
-			}
+      CompileTileMovementCosts( usGridNo );
 		}
 	}
 }
