@@ -52,7 +52,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -69,7 +69,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -450,6 +450,7 @@
     </ClCompile>
     <ClCompile Include="..\lib-MicroIni\src\MicroIni\Section.cpp" />
     <ClCompile Include="..\lib-MicroIni\src\MicroIni\Value.cpp" />
+    <ClCompile Include="..\lib-slog\slog\slog.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h" />
@@ -835,6 +836,7 @@
     <ClInclude Include="..\lib-MicroIni\include\MicroIni\Properties.hpp" />
     <ClInclude Include="..\lib-MicroIni\include\MicroIni\Section.hpp" />
     <ClInclude Include="..\lib-MicroIni\include\MicroIni\Value.hpp" />
+    <ClInclude Include="..\lib-slog\slog\slog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Build\Libraries.inc" />

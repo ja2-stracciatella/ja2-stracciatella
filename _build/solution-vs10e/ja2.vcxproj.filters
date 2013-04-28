@@ -58,6 +58,9 @@
     <Filter Include="Libraries\boost\system">
       <UniqueIdentifier>{af43e454-70f8-498c-a8c3-e947b0dbbcb5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\slog">
+      <UniqueIdentifier>{cce1b641-703b-40ad-ac9d-5d87bf87cffc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Build\AniViewScreen.cc">
@@ -1157,6 +1160,9 @@
     </ClCompile>
     <ClCompile Include="..\..\sgp\LoadSaveData.cc">
       <Filter>Source Files\sgp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-slog\slog\slog.c">
+      <Filter>Libraries\slog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2308,6 +2314,9 @@
     </ClInclude>
     <ClInclude Include="..\..\sgp\IEncodingCorrector.h">
       <Filter>Source Files\sgp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-slog\slog\slog.h">
+      <Filter>Libraries\slog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

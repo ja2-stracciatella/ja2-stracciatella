@@ -95,6 +95,7 @@ CFLAGS += -I sgp
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
 CFLAGS += -I _build/lib-utf8cpp/source
+CFLAGS += -I _build/lib-slog
 
 #CFLAGS += -Wall
 #CFLAGS += -W
@@ -502,6 +503,7 @@ SRCS += _build/lib-boost/libs/filesystem/src/unique_path.cpp
 SRCS += _build/lib-boost/libs/filesystem/src/utf8_codecvt_facet.cpp
 SRCS += _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
 
+SRCS += _build/lib-slog/slog/slog.c
 
 LNGS :=
 LNGS += Build/Utils/_DutchText.cc
@@ -625,7 +627,7 @@ build-win-release-on-linux:
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
 
 # Building i386 release on MAC
-# 
+#
 # Using precompiled static SDL library since it is quite difficult for
 # end users to setup the library.  LGPL allows static linking if we
 # provide source codes for our application.

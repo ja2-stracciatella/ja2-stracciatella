@@ -12,6 +12,8 @@
 #include <exception>
 #include <new>
 
+#include "slog/slog.h"
+
 #include "Button_System.h"
 #include "Debug.h"
 #include "FileMan.h"
@@ -247,7 +249,8 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 
 
 static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               bool *doUnitTests);
+                               bool *doUnitTests,
+                               bool *showDebugMessages);
 
 
 int main(int argc, char* argv[])
@@ -260,10 +263,20 @@ try
 	}
 #endif
 
+  // init logging
+  SLOG_Init(SLOG_STDERR, NULL);
+  SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
+
   setGameVersion(GV_ENGLISH);
 
   bool doUnitTests = false;
-	if (!ParseParameters(argc, argv, &doUnitTests)) return EXIT_FAILURE;
+  bool showDebugMessages = false;
+	if (!ParseParameters(argc, argv, &doUnitTests, &showDebugMessages)) return EXIT_FAILURE;
+
+  if(showDebugMessages)
+  {
+    SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
+  }
 
 #ifdef WITH_UNITTESTS
   if(doUnitTests)
@@ -289,6 +302,8 @@ try
 	 * are available. All we need to do is attend to the gaming mechanics
 	 * themselves */
 	MainLoop();
+
+  SLOG_Deinit();
 
 	return EXIT_SUCCESS;
 }
@@ -357,7 +372,8 @@ static BOOLEAN setResourceVersion(const char *version)
 }
 
 static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               bool *doUnitTests)
+                               bool *doUnitTests,
+                               bool *showDebugMessages)
 {
 	const char* const name = *argv;
 	if (name == NULL) return TRUE; // argv does not even contain the program name
@@ -386,6 +402,11 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
       return true;
     }
 #endif
+    else if (strcmp(argv[i], "-debug") == 0)
+    {
+      *showDebugMessages = true;
+      return true;
+    }
 		else if (strcmp(argv[i], "-res") == 0)
 		{
       if(haveNextParameter)
@@ -460,6 +481,16 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 	{
 		fprintf(stderr,
 			"Usage: %s [options]\n"
+			"\n"
+			"  -res WxH     Screen resolution, e.g. 800x600. Default value is 640x480\n"
+			"\n"
+			"  -resversion  Version of the game resources (data files)\n"
+			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
+			"                 Default value is ENGLISH\n"
+			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
+			"                 RUSSIAN_GOLD is for Gold release\n"
+			"\n"
+			"  -debug       Show debug messages\n"
 #ifdef WITH_UNITTESTS
       "  -unittests   Perform unit tests\n"
       "                 ja2.exe -unittests [gtest options]\n"
@@ -471,12 +502,6 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 			"  -help        Display this information\n"
 			"  -nosound     Turn the sound and music off\n"
 			"  -window      Start the game in a window\n"
-			"  -res WxH     Screen resolution, e.g. 800x600. Default value is 640x480\n"
-			"  -resversion  Version of the game resources (data files)\n"
-			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
-			"                 Default value is ENGLISH\n"
-			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
-			"                 RUSSIAN_GOLD is for Gold release\n"
             ,
 			name
 		);
