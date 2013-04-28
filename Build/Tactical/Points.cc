@@ -1663,7 +1663,7 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 
 	// Make sure the guy's actually got a throwable item in his hand
 	UINT16 const in_hand = s.inv[HANDPOS].usItem;
-	if (!(Item[in_hand].usItemClass & IC_GRENADE))
+	if (!Item[in_hand].usItemClass & IC_GRENADE)
 	{
 #ifdef JA2TESTVERSION
 		ScreenMsg(MSG_FONT_YELLOW, MSG_DEBUG, L"MinAPsToThrow - Called when in-hand item is %s", in_hand);

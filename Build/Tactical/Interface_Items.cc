@@ -1056,7 +1056,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 		return( fFound );
 	}
 
-	if ( !(Item[ pTestObject->usItem ].fFlags & ITEM_HIDDEN_ADDON) )
+	if ( (! Item[ pTestObject->usItem ].fFlags & ITEM_HIDDEN_ADDON) )
 	{
 		// First test attachments, which almost any type of item can have....
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
