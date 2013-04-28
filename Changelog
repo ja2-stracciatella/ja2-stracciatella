@@ -3,7 +3,7 @@ JA2-Stracciatella Continued
 
  - Fixed bug #48 (Unnamed civilians disappear)
  - Fixed crashes on Mac OS X
- - On Linux and Mac OS X, SHIFT can be used of ALT to move backward
+ - On Linux and Mac OS X, SHIFT can be used instead of ALT to move backward
 
  - Fixed bug #6  (Question mark instead of comma in Russian version)
  - Fixed bug #31 (Only fences in banks and cliffs section)
