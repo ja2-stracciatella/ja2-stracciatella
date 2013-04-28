@@ -612,7 +612,13 @@ void AddSoldierInitListTeamToWorld(INT8 const team)
 	for (SOLDIERINITNODE* i = gSoldierInitHead; i && !i->pSoldier; i = i->next)
 	{
 		if (i->pBasicPlacement->bTeam != team) continue;
-		if (!AddPlacementToWorld(i))
+
+		/* mgl: Missing civilians Fix
+		 * AddPlacementToWorld() returns false for people (civilians) who have a profile
+		 * but are not currently in the sector of the loaded map. It doesn't mean that
+		 * there isn't any remaining slot for them in this case.
+		 */
+		if (!AddPlacementToWorld(i) && i->pBasicPlacement->bTeam != CIV_TEAM)
 		{ /* If it fails to create the soldier, it is likely that it is because the
 			 * slots in the tactical engine are already full. Besides, the strategic
 			 * AI shouldn't be trying to fill a map with more than the maximum
