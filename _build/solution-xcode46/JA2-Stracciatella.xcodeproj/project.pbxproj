@@ -8,6 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		342E148416E3E927007960D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342E148316E3E927007960D8 /* Cocoa.framework */; };
+		34C6E5DD172C5F4200102B2C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5DB172C5F4200102B2C /* AudioToolbox.framework */; };
+		34C6E5DE172C5F4200102B2C /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5DC172C5F4200102B2C /* AudioUnit.framework */; };
+		34C6E5E0172C5F5B00102B2C /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5DF172C5F5B00102B2C /* IOKit.framework */; };
+		34C6E5E2172C5F7300102B2C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5E1172C5F7300102B2C /* OpenGL.framework */; };
+		34C6E5E4172C5F8E00102B2C /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5E3172C5F8E00102B2C /* ApplicationServices.framework */; };
+		34C6E5E6172C5FA500102B2C /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5E5172C5FA500102B2C /* Carbon.framework */; };
+		34C6E5E8172C607600102B2C /* LoadSaveData.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34C6E5E7172C607600102B2C /* LoadSaveData.cc */; };
+		34C6EDC0172C619300102B2C /* UTF8String.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDBE172C619300102B2C /* UTF8String.cc */; };
+		34C6EDCB172C62BE00102B2C /* codecvt_error_category.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC2172C62BE00102B2C /* codecvt_error_category.cpp */; };
+		34C6EDCC172C62BE00102B2C /* operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC3172C62BE00102B2C /* operations.cpp */; };
+		34C6EDCD172C62BE00102B2C /* path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC4172C62BE00102B2C /* path.cpp */; };
+		34C6EDCE172C62BE00102B2C /* path_traits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC5172C62BE00102B2C /* path_traits.cpp */; };
+		34C6EDCF172C62BE00102B2C /* portability.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC6172C62BE00102B2C /* portability.cpp */; };
+		34C6EDD0172C62BE00102B2C /* unique_path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC7172C62BE00102B2C /* unique_path.cpp */; };
+		34C6EDD1172C62BE00102B2C /* utf8_codecvt_facet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC8172C62BE00102B2C /* utf8_codecvt_facet.cpp */; };
+		34C6EDD2172C62BE00102B2C /* windows_file_codecvt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC9172C62BE00102B2C /* windows_file_codecvt.cpp */; };
+		34C6EDD6172C632100102B2C /* error_code.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDD5172C632100102B2C /* error_code.cpp */; };
+		34C6EDD8172C638400102B2C /* EncodingCorrectors.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDD7172C638400102B2C /* EncodingCorrectors.cc */; };
 		C3494B9016F5461700BFE667 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3494B8316F5461700BFE667 /* File.cpp */; };
 		C3494B9316F5461700BFE667 /* Line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3494B8616F5461700BFE667 /* Line.cpp */; };
 		C3494B9616F5461700BFE667 /* Section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3494B8916F5461700BFE667 /* Section.cpp */; };
@@ -364,6 +382,26 @@
 /* Begin PBXFileReference section */
 		342E148316E3E927007960D8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		342EF61B16E3E2D3007960D8 /* JA2-Stracciatella */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "JA2-Stracciatella"; sourceTree = BUILT_PRODUCTS_DIR; };
+		34C6E5DB172C5F4200102B2C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		34C6E5DC172C5F4200102B2C /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		34C6E5DF172C5F5B00102B2C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		34C6E5E1172C5F7300102B2C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		34C6E5E3172C5F8E00102B2C /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		34C6E5E5172C5FA500102B2C /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		34C6E5E7172C607600102B2C /* LoadSaveData.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoadSaveData.cc; sourceTree = "<group>"; };
+		34C6EDBE172C619300102B2C /* UTF8String.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UTF8String.cc; sourceTree = "<group>"; };
+		34C6EDBF172C619300102B2C /* UTF8String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UTF8String.h; sourceTree = "<group>"; };
+		34C6EDC2172C62BE00102B2C /* codecvt_error_category.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = codecvt_error_category.cpp; path = ../libs/filesystem/src/codecvt_error_category.cpp; sourceTree = "<group>"; };
+		34C6EDC3172C62BE00102B2C /* operations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = operations.cpp; path = ../libs/filesystem/src/operations.cpp; sourceTree = "<group>"; };
+		34C6EDC4172C62BE00102B2C /* path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = path.cpp; path = ../libs/filesystem/src/path.cpp; sourceTree = "<group>"; };
+		34C6EDC5172C62BE00102B2C /* path_traits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = path_traits.cpp; path = ../libs/filesystem/src/path_traits.cpp; sourceTree = "<group>"; };
+		34C6EDC6172C62BE00102B2C /* portability.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = portability.cpp; path = ../libs/filesystem/src/portability.cpp; sourceTree = "<group>"; };
+		34C6EDC7172C62BE00102B2C /* unique_path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unique_path.cpp; path = ../libs/filesystem/src/unique_path.cpp; sourceTree = "<group>"; };
+		34C6EDC8172C62BE00102B2C /* utf8_codecvt_facet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8_codecvt_facet.cpp; path = ../libs/filesystem/src/utf8_codecvt_facet.cpp; sourceTree = "<group>"; };
+		34C6EDC9172C62BE00102B2C /* windows_file_codecvt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = windows_file_codecvt.cpp; path = ../libs/filesystem/src/windows_file_codecvt.cpp; sourceTree = "<group>"; };
+		34C6EDCA172C62BE00102B2C /* windows_file_codecvt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = windows_file_codecvt.hpp; path = ../libs/filesystem/src/windows_file_codecvt.hpp; sourceTree = "<group>"; };
+		34C6EDD5172C632100102B2C /* error_code.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = error_code.cpp; path = ../libs/system/src/error_code.cpp; sourceTree = "<group>"; };
+		34C6EDD7172C638400102B2C /* EncodingCorrectors.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EncodingCorrectors.cc; sourceTree = "<group>"; };
 		C3494B7316F5461700BFE667 /* Config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Config.hpp; path = include/MicroIni/Config.hpp; sourceTree = "<group>"; };
 		C3494B7416F5461700BFE667 /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Container.hpp; path = include/MicroIni/Container.hpp; sourceTree = "<group>"; };
 		C3494B7516F5461700BFE667 /* Container.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Container.inl; path = include/MicroIni/Container.inl; sourceTree = "<group>"; };
@@ -1089,6 +1127,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34C6E5E6172C5FA500102B2C /* Carbon.framework in Frameworks */,
+				34C6E5E4172C5F8E00102B2C /* ApplicationServices.framework in Frameworks */,
+				34C6E5E2172C5F7300102B2C /* OpenGL.framework in Frameworks */,
+				34C6E5E0172C5F5B00102B2C /* IOKit.framework in Frameworks */,
+				34C6E5DD172C5F4200102B2C /* AudioToolbox.framework in Frameworks */,
+				34C6E5DE172C5F4200102B2C /* AudioUnit.framework in Frameworks */,
 				342E148416E3E927007960D8 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1176,6 +1220,10 @@
 		342E141816E3E485007960D8 /* sgp */ = {
 			isa = PBXGroup;
 			children = (
+				34C6EDD7172C638400102B2C /* EncodingCorrectors.cc */,
+				34C6EDBE172C619300102B2C /* UTF8String.cc */,
+				34C6EDBF172C619300102B2C /* UTF8String.h */,
+				34C6E5E7172C607600102B2C /* LoadSaveData.cc */,
 				C3494B9C16F547DE00BFE667 /* StrUtils.cc */,
 				C3494B9D16F547DE00BFE667 /* StrUtils.h */,
 				C38ACD8816E4AA84003D6872 /* AutoObj.h */,
@@ -1258,6 +1306,12 @@
 		342EF61016E3E2D2007960D8 = {
 			isa = PBXGroup;
 			children = (
+				34C6E5E5172C5FA500102B2C /* Carbon.framework */,
+				34C6E5E3172C5F8E00102B2C /* ApplicationServices.framework */,
+				34C6E5E1172C5F7300102B2C /* OpenGL.framework */,
+				34C6E5DF172C5F5B00102B2C /* IOKit.framework */,
+				34C6E5DB172C5F4200102B2C /* AudioToolbox.framework */,
+				34C6E5DC172C5F4200102B2C /* AudioUnit.framework */,
 				C3494B9F16F5484A00BFE667 /* Libraries */,
 				342E148316E3E927007960D8 /* Cocoa.framework */,
 				342EF61E16E3E2D3007960D8 /* JA2-Stracciatella */,
@@ -1281,6 +1335,40 @@
 			);
 			path = "JA2-Stracciatella";
 			sourceTree = SOURCE_ROOT;
+		};
+		34C6E5EB172C60A000102B2C /* boost */ = {
+			isa = PBXGroup;
+			children = (
+				34C6EDD4172C630E00102B2C /* system */,
+				34C6EDD3172C62FF00102B2C /* filesystem */,
+			);
+			name = boost;
+			path = "../lib-boost/boost";
+			sourceTree = "<group>";
+		};
+		34C6EDD3172C62FF00102B2C /* filesystem */ = {
+			isa = PBXGroup;
+			children = (
+				34C6EDC2172C62BE00102B2C /* codecvt_error_category.cpp */,
+				34C6EDC3172C62BE00102B2C /* operations.cpp */,
+				34C6EDC4172C62BE00102B2C /* path.cpp */,
+				34C6EDC5172C62BE00102B2C /* path_traits.cpp */,
+				34C6EDC6172C62BE00102B2C /* portability.cpp */,
+				34C6EDC7172C62BE00102B2C /* unique_path.cpp */,
+				34C6EDC8172C62BE00102B2C /* utf8_codecvt_facet.cpp */,
+				34C6EDC9172C62BE00102B2C /* windows_file_codecvt.cpp */,
+				34C6EDCA172C62BE00102B2C /* windows_file_codecvt.hpp */,
+			);
+			name = filesystem;
+			sourceTree = "<group>";
+		};
+		34C6EDD4172C630E00102B2C /* system */ = {
+			isa = PBXGroup;
+			children = (
+				34C6EDD5172C632100102B2C /* error_code.cpp */,
+			);
+			name = system;
+			sourceTree = "<group>";
 		};
 		C3494B6616F5461700BFE667 /* MicroIni */ = {
 			isa = PBXGroup;
@@ -1307,6 +1395,7 @@
 		C3494B9F16F5484A00BFE667 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				34C6E5EB172C60A000102B2C /* boost */,
 				C3494B6616F5461700BFE667 /* MicroIni */,
 			);
 			name = Libraries;
@@ -2326,6 +2415,18 @@
 				C3494B9616F5461700BFE667 /* Section.cpp in Sources */,
 				C3494B9916F5461700BFE667 /* Value.cpp in Sources */,
 				C3494B9E16F547DE00BFE667 /* StrUtils.cc in Sources */,
+				34C6E5E8172C607600102B2C /* LoadSaveData.cc in Sources */,
+				34C6EDC0172C619300102B2C /* UTF8String.cc in Sources */,
+				34C6EDCB172C62BE00102B2C /* codecvt_error_category.cpp in Sources */,
+				34C6EDCC172C62BE00102B2C /* operations.cpp in Sources */,
+				34C6EDCD172C62BE00102B2C /* path.cpp in Sources */,
+				34C6EDCE172C62BE00102B2C /* path_traits.cpp in Sources */,
+				34C6EDCF172C62BE00102B2C /* portability.cpp in Sources */,
+				34C6EDD0172C62BE00102B2C /* unique_path.cpp in Sources */,
+				34C6EDD1172C62BE00102B2C /* utf8_codecvt_facet.cpp in Sources */,
+				34C6EDD2172C62BE00102B2C /* windows_file_codecvt.cpp in Sources */,
+				34C6EDD6172C632100102B2C /* error_code.cpp in Sources */,
+				34C6EDD8172C638400102B2C /* EncodingCorrectors.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2402,21 +2503,25 @@
 		342EF62616E3E2D3007960D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					JA2,
 					_THREAD_SAFE,
 					"_GNU_SOURCE=1",
 				);
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include/SDL,
 					"../lib-MicroIni/include",
+					"../lib-SDL-devel-1.2.15-macos-i386/include/SDL",
+					../../sgp,
+					"../lib-boost",
+					"../lib-utf8cpp/source",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
+					"../lib-SDL-devel-1.2.15-macos-i386/lib",
 				);
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "libSDL.a libSDLmain.a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
@@ -2425,21 +2530,25 @@
 		342EF62716E3E2D3007960D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					JA2,
 					_THREAD_SAFE,
 					"_GNU_SOURCE=1",
 				);
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include/SDL,
 					"../lib-MicroIni/include",
+					"../lib-SDL-devel-1.2.15-macos-i386/include/SDL",
+					../../sgp,
+					"../lib-boost",
+					"../lib-utf8cpp/source",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/lib,
+					"../lib-SDL-devel-1.2.15-macos-i386/lib",
 				);
-				PRELINK_LIBS = "";
+				PRELINK_LIBS = "libSDL.a libSDLmain.a";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
