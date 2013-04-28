@@ -22,6 +22,7 @@
 #include "UILayout.h"
 #include "PlatformIO.h"
 #include "PlatformSDL.h"
+#include "Font.h"
 
 
 #define BUFFER_READY      0x00
@@ -78,6 +79,9 @@ static SDL_Surface* ScreenBuffer;
 static Uint32       g_video_flags = SDL_SWSURFACE | SDL_HWPALETTE;
 
 
+static void RecreateBackBuffer();
+static void DeletePrimaryVideoSurfaces(void);
+
 void VideoSetFullScreen(const BOOLEAN enable)
 {
 	if (enable)
@@ -118,7 +122,10 @@ void VideoToggleFullScreen(void)
 	if (!new_scr) return;
 
 	g_video_flags = new_vflags;
+
 	ScreenBuffer  = new_scr;
+  RecreateBackBuffer();
+
 	SDL_BlitSurface(tmp, 0, new_scr, 0);
 	SDL_UpdateRect(new_scr, 0, 0, 0, 0);
 }
@@ -722,27 +729,6 @@ void RefreshScreen(void)
 }
 
 
-SDL_Surface* GetBackBufferObject(void)
-{
-	if (!ScreenBuffer) throw std::logic_error("Tried to access screen surface before its creation");
-	return ScreenBuffer;
-}
-
-
-SDL_Surface* GetFrameBufferObject(void)
-{
-	if (!FrameBuffer) throw std::logic_error("Tried to access frame surface before its creation");
-	return FrameBuffer;
-}
-
-
-SDL_Surface* GetMouseBufferObject(void)
-{
-	if (!MouseCursor) throw std::logic_error("Tried to access mouse surface before its creation");
-	return MouseCursor;
-}
-
-
 static void GetRGBDistribution()
 {
 	SDL_PixelFormat const& f = *ScreenBuffer->format;
@@ -887,4 +873,72 @@ static void RefreshMovieCache(void)
 	PauseTime(FALSE);
 
 	giNumFrames = 0;
+}
+
+
+static void RecreateBackBuffer()
+{
+  // ScreenBuffer should not be automatically removed because it was created
+  // with SDL_SetVideoMode.  So, using SGPVSurface instead of SGPVSurfaceAuto
+  SGPVSurface* newBackbuffer = new SGPVSurface(ScreenBuffer);
+
+  if(g_back_buffer != NULL)
+  {
+    ReplaceFontBackBuffer(g_back_buffer, newBackbuffer);
+
+    delete g_back_buffer;
+    g_back_buffer = NULL;
+  }
+
+	g_back_buffer  = newBackbuffer;
+}
+
+static void SetPrimaryVideoSurfaces(void)
+{
+	// Delete surfaces if they exist
+	DeletePrimaryVideoSurfaces();
+
+  RecreateBackBuffer();
+
+	g_mouse_buffer = new SGPVSurfaceAuto(MouseCursor);
+	g_frame_buffer = new SGPVSurfaceAuto(FrameBuffer);
+}
+
+static void DeletePrimaryVideoSurfaces(void)
+{
+	delete g_back_buffer;
+	g_back_buffer = NULL;
+
+	delete g_frame_buffer;
+	g_frame_buffer = NULL;
+
+	delete g_mouse_buffer;
+	g_mouse_buffer = NULL;
+}
+
+SGPVSurface* gpVSurfaceHead = 0;
+
+void InitializeVideoSurfaceManager(void)
+{
+	//Shouldn't be calling this if the video surface manager already exists.
+	//Call shutdown first...
+	Assert(gpVSurfaceHead == NULL);
+	gpVSurfaceHead = NULL;
+
+	// Create primary and backbuffer from globals
+	SetPrimaryVideoSurfaces();
+}
+
+
+void ShutdownVideoSurfaceManager(void)
+{
+  DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Shutting down the Video Surface manager");
+
+	// Delete primary viedeo surfaces
+	DeletePrimaryVideoSurfaces();
+
+	while (gpVSurfaceHead)
+	{
+		delete gpVSurfaceHead;
+	}
 }

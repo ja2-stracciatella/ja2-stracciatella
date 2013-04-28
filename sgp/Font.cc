@@ -226,6 +226,19 @@ void SetFontDestBuffer(SGPVSurface* const dst)
 	SetFontDestBuffer(dst, 0, 0, dst->Width(), dst->Height());
 }
 
+/** Replace backbuffer if it is used by the font system. */
+void ReplaceFontBackBuffer(SGPVSurface* oldBackbuffer, SGPVSurface* newBackbuffer)
+{
+  if(FontDestBuffer == oldBackbuffer)
+  {
+    FontDestBuffer = newBackbuffer;
+  }
+
+  if(SaveFontDestBuffer == oldBackbuffer)
+  {
+    SaveFontDestBuffer = newBackbuffer;
+  }
+}
 
 void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font const font, INT16* psNewX, INT16* psNewY)
 {
@@ -329,10 +342,5 @@ void mprintf_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32
 void InitializeFontManager(void)
 {
 	FontDefault    = 0;
-	FontDestBuffer = BACKBUFFER;
-
-	FontDestRegion.iLeft   = 0;
-	FontDestRegion.iTop    = 0;
-	FontDestRegion.iRight  = SCREEN_WIDTH;
-	FontDestRegion.iBottom = SCREEN_HEIGHT;
+  SetFontDestBuffer(BACKBUFFER);
 }

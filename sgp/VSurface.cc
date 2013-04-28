@@ -10,7 +10,7 @@
 #include "SGP.h"
 
 
-static SGPVSurface* gpVSurfaceHead = 0;
+extern SGPVSurface* gpVSurfaceHead;
 
 
 SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
@@ -121,6 +121,24 @@ void SGPVSurface::Fill(const UINT16 colour)
 	SDL_FillRect(surface_, NULL, colour);
 }
 
+SGPVSurfaceAuto::SGPVSurfaceAuto(UINT16 w, UINT16 h, UINT8 bpp)
+  : SGPVSurface(w, h, bpp)
+{
+}
+
+SGPVSurfaceAuto::SGPVSurfaceAuto(SDL_Surface* surface)
+  : SGPVSurface(surface)
+{
+}
+
+SGPVSurfaceAuto::~SGPVSurfaceAuto()
+{
+  if(surface_)
+  {
+    SDL_FreeSurface(surface_);
+  }
+}
+
 
 static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* const filter_table)
 {
@@ -166,55 +184,26 @@ static void DeletePrimaryVideoSurfaces(void);
 
 
 SGPVSurface* g_back_buffer;
-SGPVSurface* g_frame_buffer;
-SGPVSurface* g_mouse_buffer;
-
-
-static void SetPrimaryVideoSurfaces(void);
-
-
-void InitializeVideoSurfaceManager(void)
-{
-	//Shouldn't be calling this if the video surface manager already exists.
-	//Call shutdown first...
-	Assert(gpVSurfaceHead == NULL);
-	gpVSurfaceHead = NULL;
-
-	// Create primary and backbuffer from globals
-	SetPrimaryVideoSurfaces();
-}
-
-
-void ShutdownVideoSurfaceManager(void)
-{
-  DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Shutting down the Video Surface manager");
-
-	// Delete primary viedeo surfaces
-	DeletePrimaryVideoSurfaces();
-
-	while (gpVSurfaceHead)
-	{
-		delete gpVSurfaceHead;
-	}
-}
+SGPVSurfaceAuto* g_frame_buffer;
+SGPVSurfaceAuto* g_mouse_buffer;
 
 
 #undef AddVideoSurface
 #undef AddVideoSurfaceFromFile
 
 
-SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
+SGPVSurfaceAuto* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 {
-	SGPVSurface* const vs = new SGPVSurface(Width, Height, BitDepth);
+	SGPVSurfaceAuto* const vs = new SGPVSurfaceAuto(Width, Height, BitDepth);
 	return vs;
 }
 
 
-SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
+SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 {
 	AutoSGPImage img(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
 
-	SGPVSurface* const vs = new SGPVSurface(img->usWidth, img->usHeight, img->ubBitDepth);
+	SGPVSurfaceAuto* const vs = new SGPVSurfaceAuto(img->usWidth, img->usHeight, img->ubBitDepth);
 
 	UINT8 const dst_bpp = vs->BPP();
 	UINT32      buffer_bpp;
@@ -261,38 +250,6 @@ static void RecordVSurface(SGPVSurface* const vs, char const* const Filename, UI
 #else
 #	define RECORD(cs, name) ((void)0)
 #endif
-
-
-static void SetPrimaryVideoSurfaces(void)
-{
-	// Delete surfaces if they exist
-	DeletePrimaryVideoSurfaces();
-
-#ifdef JA2
-	g_back_buffer  = new SGPVSurface(GetBackBufferObject());
-	RECORD(g_back_buffer, "<BACKBUFFER>");
-	g_mouse_buffer = new SGPVSurface(GetMouseBufferObject());
-	RECORD(g_mouse_buffer, "<MOUSE_BUFFER>");
-#endif
-	g_frame_buffer = new SGPVSurface(GetFrameBufferObject());
-	RECORD(g_frame_buffer, "<FRAME_BUFFER>");
-}
-
-#undef RECORD
-
-
-static void DeletePrimaryVideoSurfaces(void)
-{
-	delete g_back_buffer;
-	g_back_buffer = NULL;
-
-	delete g_frame_buffer;
-	g_frame_buffer = NULL;
-
-	delete g_mouse_buffer;
-	g_mouse_buffer = NULL;
-}
-
 
 void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 const DestX, INT32 const DestY, SGPBox const* const src_rect)
 {
@@ -461,14 +418,14 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 
 void BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, INT32 const x, INT32 const y)
 {
-	AutoSGPVSurface src(AddVideoSurfaceFromFile(filename));
+	SGP::AutoPtr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
 	BltVideoSurface(dst, src, x, y, NULL);
 }
 
 /** Draw image on the video surface stretching the image if necessary. */
 void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const filename)
 {
-	AutoSGPVSurface src(AddVideoSurfaceFromFile(filename));
+	SGP::AutoPtr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
   FillVideoSurfaceWithStretch(dst, src);
 }
 

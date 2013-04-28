@@ -15,9 +15,6 @@ void         SuspendVideoManager(void);
 BOOLEAN      RestoreVideoManager(void);
 void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 void         InvalidateScreen(void);
-SDL_Surface* GetBackBufferObject(void);
-SDL_Surface* GetFrameBufferObject(void);
-SDL_Surface* GetMouseBufferObject(void);
 void         GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBitMask, UINT32* BlueBitMask);
 void         EndFrameBufferRender(void);
 void         PrintScreen(void);
@@ -33,5 +30,11 @@ void VideoCaptureToggle(void);
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 
 void RefreshScreen(void);
+
+// Creates a list to contain video Surfaces
+void InitializeVideoSurfaceManager(void);
+
+// Deletes any video Surface placed into list
+void ShutdownVideoSurfaceManager(void);
 
 #endif

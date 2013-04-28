@@ -12,18 +12,25 @@
 #define FRAME_BUFFER g_frame_buffer
 #define MOUSE_BUFFER g_mouse_buffer
 
+class SGPVSurface;
+class SGPVSurfaceAuto;
+class SGPVSurface;
 
 extern SGPVSurface* g_back_buffer;
-extern SGPVSurface* g_frame_buffer;
-extern SGPVSurface* g_mouse_buffer;
+extern SGPVSurfaceAuto* g_frame_buffer;
+extern SGPVSurfaceAuto* g_mouse_buffer;
 
+/** Utility wrapper around SDL_Surface. */
 class SGPVSurface
 {
 	public:
-		SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
 		SGPVSurface(SDL_Surface*);
 
-		~SGPVSurface();
+  protected:
+    SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
+
+	public:
+		virtual ~SGPVSurface();
 
 		UINT16 Width()  const { return surface_->w; }
 		UINT16 Height() const { return surface_->h; }
@@ -53,8 +60,8 @@ class SGPVSurface
 		 * If the 2 images are not 16 Bpp, it returns false. */
 		friend void BltStretchVideoSurface(SGPVSurface* dst, SGPVSurface const* src, SGPBox const* src_rect, SGPBox const* dst_rect);
 
-	private:
-		SGP::AutoObj<SDL_Surface, SDL_FreeSurface> surface_;
+	protected:
+		SDL_Surface*                               surface_;
 		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
@@ -119,15 +126,21 @@ class SGPVSurface
 		};
 };
 
+/**
+ * Utility wrapper around SDL_Surface which automatically
+ * frees SDL_Surface when the object is destroyed. */
+class SGPVSurfaceAuto : public SGPVSurface
+{
+	public:
+    SGPVSurfaceAuto(UINT16 w, UINT16 h, UINT8 bpp);
+    SGPVSurfaceAuto(SDL_Surface*);
 
-// Creates a list to contain video Surfaces
-void InitializeVideoSurfaceManager(void);
+		virtual ~SGPVSurfaceAuto();
+};
 
-// Deletes any video Surface placed into list
-void ShutdownVideoSurfaceManager(void);
 
-SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
-SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
+SGPVSurfaceAuto* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
+SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* Filename);
 
 // Creates and adds a video Surface to list
 #ifdef SGP_VIDEO_DEBUGGING
@@ -158,7 +171,5 @@ void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const fi
 
 /** Fill video surface with another one with stretch. */
 void FillVideoSurfaceWithStretch(SGPVSurface* const dst, SGPVSurface* const src);
-
-typedef SGP::AutoPtr<SGPVSurface> AutoSGPVSurface;
 
 #endif
