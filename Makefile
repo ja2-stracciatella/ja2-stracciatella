@@ -146,7 +146,7 @@ CCFLAGS += -Wmissing-prototypes
 
 CXXFLAGS += $(CFLAGS)
 
-LDFLAGS += -lm
+LDFLAGS += -lm -lpthread
 
 ifdef WITH_ZLIB
 LDFLAGS += -lz
