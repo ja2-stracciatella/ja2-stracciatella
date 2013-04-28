@@ -1061,7 +1061,11 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 	{
 			case MOVE_MODE:
 
-				if ( _KeyDown( ALT )   )
+#if defined(__APPLE__) || defined(__LINUX__)
+				if ( _KeyDown( ALT ) || _KeyDown( SHIFT )  )
+#else
+				if ( _KeyDown( ALT ) )
+#endif
 				{
 					if (!fAltDown)
 					{
@@ -1076,7 +1080,11 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 					fAltDown = TRUE;
 
 				}
-				if ( !(_KeyDown( ALT ) ) && fAltDown )
+#if defined(__APPLE__) || defined(__LINUX__)
+				if ( !(_KeyDown( ALT ) || _KeyDown( SHIFT )) && fAltDown )
+#else
+        if ( !_KeyDown( ALT ) && fAltDown )
+#endif
 				{
 					if (GetSelectedMan() != NULL)
 					{
