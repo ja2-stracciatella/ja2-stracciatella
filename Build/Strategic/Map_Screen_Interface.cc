@@ -186,8 +186,6 @@ MapScreenCharacterSt gCharactersList[ MAX_CHARACTER_COUNT+1];
 
 MOUSE_REGION	gMapStatusBarsRegion;
 
-static SGPPoint const MovePosition = { 450, 100 };
-
 static UpdateBoxReason iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
 
@@ -2307,6 +2305,8 @@ static void AddStringsToMoveBox(PopUpBox*);
 
 static void CreatePopUpBoxForMovementBox(void)
 {
+  SGPPoint const MovePosition = { STD_SCREEN_X + 450, STD_SCREEN_Y + 100 };
+
 	// create the pop up box and mouse regions for movement list
 	PopUpBox* const box = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
 	ghMoveBox = box;
