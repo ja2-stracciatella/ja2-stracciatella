@@ -1298,7 +1298,7 @@ static void DisplayOnScreenNumber(BOOLEAN display)
 	// Start at 1 - don't diplay it for the quicksave
 	for (INT8 bLoopNum = 1; bLoopNum < NUM_SAVE_GAMES; ++bLoopNum)
 	{
-		const UINT16 usPosX = 6;
+		const UINT16 usPosX = STD_SCREEN_X + 6;
 		const UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * bLoopNum;
 
 		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, usPosX, usPosY + SLG_DATE_OFFSET_Y, 10, 10);
