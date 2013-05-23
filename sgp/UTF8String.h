@@ -63,6 +63,11 @@ public:
   /** Create object from UTF-32 encoded string. */
   UTF8String(const uint32_t *utf32Encoded) throw (InvalidEncodingException);
 
+#ifdef WCHAR_SUPPORT
+  /** Create string from wchar. */
+  UTF8String(const wchar_t *string);
+#endif
+
   /** Get UTF-8 encoded string. */
   const char* getUTF8() const;
 
@@ -97,5 +102,11 @@ protected:
   /** Buffer for storing wchar_t copy of the string. */
   std::vector<wchar_t> m_wcharBuffer;
 #endif
+
+  /** Append UTF16 encoded data to the string. */
+  void append(const uint16_t *utf16Encoded) throw (InvalidEncodingException);
+
+  /** Append UTF32 encoded data to the string. */
+  void append(const uint32_t *utf32Encoded) throw (InvalidEncodingException);
 };
 

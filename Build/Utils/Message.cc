@@ -27,7 +27,7 @@
 
 struct ScrollStringSt
 {
-	wchar_t*        pString16;
+	wchar_t*        pString;
 	VIDEO_OVERLAY* video_overlay;
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
@@ -75,8 +75,8 @@ static UINT32  uiStartOfPauseTime = 0;
 static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
 	ScrollStringSt* const i = MALLOC(ScrollStringSt);
-	i->pString16             = MALLOCN(wchar_t, wcslen(pString) + 1);
-	wcscpy(i->pString16, pString);
+	i->pString              = MALLOCN(wchar_t, wcslen(pString) + 1);
+	wcscpy(i->pString, pString);
 	i->video_overlay         = NULL;
 	i->usColor               = usColor;
 	i->fBeginningOfNewString = fStartOfNewString;
@@ -120,7 +120,7 @@ void ClearDisplayedListOfTacticalStrings(void)
 		if (gpDisplayList[cnt] != NULL)
 		{
 			RemoveStringVideoOverlay(gpDisplayList[cnt]);
-			MemFree(gpDisplayList[cnt]->pString16);
+			MemFree(gpDisplayList[cnt]->pString);
 			MemFree(gpDisplayList[cnt]);
 			gpDisplayList[cnt] = NULL;
 		}
@@ -178,7 +178,7 @@ void ScrollString(void)
 			if (suiTimer - gpDisplayList[cnt]->uiTimeOfLastUpdate > (UINT32)(iMaxAge - 1000 * iNumberOfMessagesOnQueue))
 			{
 				RemoveStringVideoOverlay(gpDisplayList[cnt]);
-				MemFree(gpDisplayList[cnt]->pString16);
+				MemFree(gpDisplayList[cnt]->pString);
 				MemFree(gpDisplayList[cnt]);
 				gpDisplayList[cnt] = NULL;
 			}
@@ -207,7 +207,7 @@ void ScrollString(void)
 
 			// now add in the new string
 			gpDisplayList[0] = pStringS;
-			pStringS->video_overlay = RegisterVideoOverlay(BlitString, X_START, Y_START, TINYFONT1, pStringS->usColor, FONT_MCOLOR_BLACK, pStringS->pString16);
+			pStringS->video_overlay = RegisterVideoOverlay(BlitString, X_START, Y_START, TINYFONT1, pStringS->usColor, FONT_MCOLOR_BLACK, pStringS->pString);
 			if (pStringS->fBeginningOfNewString)
 			{
 				iNumberOfNewStrings++;
@@ -554,7 +554,7 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 	ScrollStringSt* const old = gMapScreenMessageList[gubEndOfMapScreenMessageList];
 	if (old != NULL)
 	{
-		MemFree(old->pString16);
+		MemFree(old->pString);
 		MemFree(old);
 	}
 
@@ -598,7 +598,7 @@ void DisplayStringsInMapScreenMessageList(void)
 		if (s == NULL) break;
 
 		SetFontForeground(s->usColor);
-		MPrint(STD_SCREEN_X + 20, sY, s->pString16);
+		MPrint(STD_SCREEN_X + 20, sY, s->pString);
 
 		sY += usSpacing;
 
@@ -657,14 +657,14 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
       size_t const len = size / 4;
       SGP::Buffer<wchar_t> str(len);
       reader.readUTF32(str, len);
-      s->pString16 = str.Release();
+      s->pString = str.Release();
     }
     else
     {
       size_t const len = size / 2;
       SGP::Buffer<wchar_t> str(len);
       reader.readUTF16(str, len);
-      s->pString16 = str.Release();
+      s->pString = str.Release();
     }
   }
 
@@ -686,11 +686,13 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 
 static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* const s)
 {
-	UINT32 const size = s ? ((UINT32)wcslen(s->pString16) + 1) * sizeof(*s->pString16) : 0;
-	FileWrite(f, &size, sizeof(size));
+  UTF8String str(s->pString);
+  std::vector<uint16_t> utf16data = str.getUTF16();
+  UINT32 const size = 2 * utf16data.size();
+  FileWrite(f, &size, sizeof(size));
 
 	if (!s) return;
-	FileWrite(f, s->pString16, size);
+	FileWrite(f, utf16data.data(), size);
 
 	BYTE data[28];
 	BYTE* d = data;
@@ -750,7 +752,7 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFo
 		ScrollStringSt* const old = *i;
 		if (old)
 		{
-			MemFree(old->pString16);
+			MemFree(old->pString);
 			MemFree(old);
 		}
 
@@ -782,7 +784,7 @@ void ClearTacticalMessageQueue(void)
 	{
 		ScrollStringSt* del = i;
 		i = i->pNext;
-		MemFree(del->pString16);
+		MemFree(del->pString);
 		MemFree(del);
 	}
 
@@ -808,7 +810,7 @@ void FreeGlobalMessageList(void)
 		ScrollStringSt* const s = *i;
 		if (s != NULL)
 		{
-			MemFree(s->pString16);
+			MemFree(s->pString);
 			MemFree(s);
 			*i = NULL;
 		}

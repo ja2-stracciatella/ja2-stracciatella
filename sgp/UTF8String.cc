@@ -35,34 +35,30 @@ UTF8String::UTF8String(const uint8_t *utf8Encoded) throw (InvalidEncodingExcepti
 /** Create object from UTF-16 encoded string. */
 UTF8String::UTF8String(const uint16_t *utf16Encoded) throw (InvalidEncodingException)
 {
-  const uint16_t *zeroSearch = utf16Encoded;
-  while(*zeroSearch) zeroSearch++;
   m_encoded = "";
-  try
-  {
-    utf8::utf16to8(utf16Encoded, zeroSearch, back_inserter(m_encoded));
-  }
-  catch(utf8::invalid_utf16 &x)
-  {
-    throw InvalidEncodingException(x.what());
-  }
+  append(utf16Encoded);
 }
 
 /** Create object from UTF-32 encoded string. */
 UTF8String::UTF8String(const uint32_t *utf32Encoded) throw (InvalidEncodingException)
 {
-  const uint32_t *zeroSearch = utf32Encoded;
-  while(*zeroSearch) zeroSearch++;
   m_encoded = "";
-  try
-  {
-    utf8::utf32to8(utf32Encoded, zeroSearch, back_inserter(m_encoded));
-  }
-  catch(utf8::invalid_code_point &x)
-  {
-    throw InvalidEncodingException(x.what());
-  }
+  append(utf32Encoded);
 }
+
+
+#ifdef WCHAR_SUPPORT
+/** Create string from wchar. */
+UTF8String::UTF8String(const wchar_t *string)
+{
+  m_encoded = "";
+#if _WIN32
+  append((const uint16_t *)string);
+#else
+  append((const uint32_t *)string);
+#endif
+}
+#endif
 
 
 /** Get UTF-8 encoded string. */
@@ -126,7 +122,32 @@ size_t UTF8String::getNumBytes() const
 }
 
 
-// protected:
-//   /** UTF-8 encoded string. */
-//   std::string m_encoded;
-// };
+/** Append UTF16 encoded data to the string. */
+void UTF8String::append(const uint16_t *utf16Encoded) throw (InvalidEncodingException)
+{
+  const uint16_t *zeroSearch = utf16Encoded;
+  while(*zeroSearch) zeroSearch++;
+  try
+  {
+    utf8::utf16to8(utf16Encoded, zeroSearch, back_inserter(m_encoded));
+  }
+  catch(utf8::invalid_utf16 &x)
+  {
+    throw InvalidEncodingException(x.what());
+  }
+}
+
+/** Append UTF32 encoded data to the string. */
+void UTF8String::append(const uint32_t *utf32Encoded) throw (InvalidEncodingException)
+{
+  const uint32_t *zeroSearch = utf32Encoded;
+  while(*zeroSearch) zeroSearch++;
+  try
+  {
+    utf8::utf32to8(utf32Encoded, zeroSearch, back_inserter(m_encoded));
+  }
+  catch(utf8::invalid_code_point &x)
+  {
+    throw InvalidEncodingException(x.what());
+  }
+}

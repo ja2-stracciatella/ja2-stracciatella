@@ -147,6 +147,17 @@ TEST(UTF8StringTest, Greek)
 }
 
 
+#ifdef WCHAR_SUPPORT
+TEST(UTF8StringTest, WcharConstructor)
+{
+  UTF8String eng(L"test");
+  UTF8String rus(L"тест");
+  EXPECT_STREQ(eng.getWCHAR().data(), L"test");
+  EXPECT_STREQ(rus.getWCHAR().data(), L"тест");
+}
+#endif
+
+
 TEST(UTF8StringTest, GarbageInExceptionOut)
 {
   const uint8_t  garbage8 [] = {0x3e, 0x3e, 0x59, 0xfb, 0x2d, 0x68, 0xf7, 0xfb,  0x77, 0x15, 0x1c, 0x22, 0xc9, 0xc6, 0x77, 0xb8};
