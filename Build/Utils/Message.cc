@@ -686,12 +686,17 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 
 static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* const s)
 {
+  if(!s)
+  {
+    UINT32 const size = 0;
+    FileWrite(f, &size, sizeof(size));
+    return;
+  }
+
   UTF8String str(s->pString);
   std::vector<uint16_t> utf16data = str.getUTF16();
   UINT32 const size = 2 * utf16data.size();
   FileWrite(f, &size, sizeof(size));
-
-	if (!s) return;
 	FileWrite(f, utf16data.data(), size);
 
 	BYTE data[28];
