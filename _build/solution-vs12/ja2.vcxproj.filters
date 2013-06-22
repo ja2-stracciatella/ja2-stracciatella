@@ -67,6 +67,12 @@
     <Filter Include="Source Files\src\policy">
       <UniqueIdentifier>{0ec9b230-403b-4767-b23f-1d592c419faa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\src\internals">
+      <UniqueIdentifier>{bd584977-d5cc-4276-bf76-60866c3c064d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\content">
+      <UniqueIdentifier>{5e8637ef-70f9-4f1c-a1f9-c2190fd1b7ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Build\AniViewScreen.cc">
@@ -1110,9 +1116,6 @@
     <ClCompile Include="..\..\sgp\FileMan_unittest.cc">
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sgp\SGPStrings_unittest.cc">
-      <Filter>Source Files\sgp</Filter>
-    </ClCompile>
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp">
       <Filter>Libraries\boost\filesystem</Filter>
     </ClCompile>
@@ -1172,6 +1175,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\policy\DefaultGamePolicy.cc">
       <Filter>Source Files\src\policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Soldier.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\content\npcs.cc">
+      <Filter>Source Files\src\content</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\internals\enums.cc">
+      <Filter>Source Files\src\internals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2332,6 +2344,18 @@
     </ClInclude>
     <ClInclude Include="..\..\src\policy\GamePolicy.h">
       <Filter>Source Files\src\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GameInstance.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Soldier.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\content\npcs.h">
+      <Filter>Source Files\src\content</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\internals\enums.h">
+      <Filter>Source Files\src\internals</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
