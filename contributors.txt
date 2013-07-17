@@ -1,0 +1,17 @@
+Primal author of the project
+----------------------------
+  Tron
+
+Contributors (sorted alphabetically)
+------------------------------------
+  Gennady Trafimenkov
+  Misanthropos from The Bear's Pit Forum
+  Oliver Jankowski
+  Peinthor Rene
+  mgl from The Bear's Pit Forum
+  sunshine from The Bear's Pit Forum
+  wolf (committer to the original Tron's svn repository)
+
+
+(*) If you think you belong to this list and want to be included,
+    please send a note to the project maintainer.
