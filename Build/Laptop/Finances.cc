@@ -572,14 +572,14 @@ static void DrawSummaryText(void)
 
 	// yesterdays income
 	SPrintMoneyNoDollarOnZero(pString, GetPreviousDaysIncome());
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, YESTERDAYS_INCOME, pString);
 
 	SetFontForeground( FONT_BLACK );
 
 	// yesterdays other
 	SPrintMoneyNoDollarOnZero(pString, GetYesterdaysOtherDeposits());
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, YESTERDAYS_OTHER, pString);
 
 	SetFontForeground( FONT_RED );
@@ -593,7 +593,7 @@ static void DrawSummaryText(void)
 	}
 
 	SPrintMoneyNoDollarOnZero(pString, iBalance);
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, YESTERDAYS_DEBITS, pString);
 
 	SetFontForeground( FONT_BLACK );
@@ -608,21 +608,21 @@ static void DrawSummaryText(void)
 	}
 
 	SPrintMoneyNoDollarOnZero(pString, iBalance);
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, YESTERDAYS_BALANCE, pString);
 
 	SetFontForeground( FONT_BLACK );
 
 	// todays income
 	SPrintMoneyNoDollarOnZero(pString, GetTodaysDaysIncome());
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_INCOME, pString);
 
 	SetFontForeground( FONT_BLACK );
 
 	// todays other
 	SPrintMoneyNoDollarOnZero(pString, GetTodaysOtherDeposits());
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_OTHER, pString);
 
 	SetFontForeground( FONT_RED );
@@ -637,7 +637,7 @@ static void DrawSummaryText(void)
 	}
 
 	SPrintMoneyNoDollarOnZero(pString, iBalance);
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_DEBITS, pString);
 
 	SetFontForeground( FONT_BLACK );
@@ -651,14 +651,14 @@ static void DrawSummaryText(void)
 	}
 
 	SPrintMoneyNoDollarOnZero(pString, iBalance);
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_CURRENT_BALANCE, pString);
 
   SetFontForeground( FONT_BLACK );
 
 	// todays forcast income
 	SPrintMoneyNoDollarOnZero(pString, GetProjectedTotalDailyIncome());
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_CURRENT_FORCAST_INCOME, pString);
 
 	SetFontForeground( FONT_BLACK );
@@ -673,7 +673,7 @@ static void DrawSummaryText(void)
 	}
 
 	SPrintMoneyNoDollarOnZero(pString, iBalance);
-	FindFontRightCoordinates(0,0,580,0,pString,FINANCE_TEXT_FONT, &usX, &usY);
+	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_CURRENT_FORCAST_BALANCE, pString);
 
   SetFontForeground( FONT_BLACK );

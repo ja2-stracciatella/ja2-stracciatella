@@ -988,8 +988,8 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		if (giFilesPage == 0 && clause == 4)
 		{
 			AutoSGPVObject vo(LoadBigPortrait(GetProfile(info.profile_id)));
-			BltVideoObject(    FRAME_BUFFER, vo,                               0, FILE_VIEWER_X + 30, y + 76);
-			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/interceptborder.sti", 0, FILE_VIEWER_X + 25, y + 71);
+			BltVideoObject(    FRAME_BUFFER, vo,                               0, FILE_VIEWER_X + 30, FILE_VIEWER_Y + 136);
+			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/interceptborder.sti", 0, FILE_VIEWER_X + 25, FILE_VIEWER_Y + 131);
 		}
 
 		Font const font = giFilesPage == 0 && clause == 0 ?
