@@ -132,7 +132,7 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 	EXTR_U16(d, s->sCreatureTenseQuoteDelay)
 	EXTR_SKIP(d, 2)
 	EXTR_U32(d, s->uiCreatureTenseQuoteLastUpdate)
-	Assert(d == endof(data));
+	Assert(d == (data.data() + dataSize));
 }
 
 

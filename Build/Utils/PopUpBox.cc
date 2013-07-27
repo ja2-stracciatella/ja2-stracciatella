@@ -9,7 +9,7 @@
 #include "Video.h"
 #include "MemMan.h"
 #include "VSurface.h"
-
+#include "UILayout.h"
 
 #define MAX_POPUP_BOX_COUNT 20
 
