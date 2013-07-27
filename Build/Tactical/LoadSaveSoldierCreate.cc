@@ -4,6 +4,38 @@
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 
+#include "slog/slog.h"
+#define TAG "LoadSave"
+
+
+UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
+{
+	return
+		s->bLife            *  7 +
+		s->bLifeMax         *  8 -
+		s->bAgility         *  2 +
+		s->bDexterity       *  1 +
+		s->bExpLevel        *  5 -
+		s->bMarksmanship    *  9 +
+		s->bMedical         * 10 +
+		s->bMechanical      *  3 +
+		s->bExplosive       *  4 +
+		s->bLeadership      *  5 +
+		s->bStrength        *  7 +
+		s->bWisdom          * 11 +
+		s->bMorale          *  7 +
+		s->bAIMorale        *  3 -
+		s->bBodyType        *  7 +
+		4                   *  6 +
+		s->sSectorX         *  7 -
+		s->ubSoldierClass   *  4 +
+		s->bTeam            *  7 +
+		s->bDirection       *  5 +
+		s->fOnRoof          * 17 +
+		s->sInsertionGridNo *  1 +
+		3;
+}
+
 
 static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* const c, bool stracLinuxFormat)
 {
@@ -95,6 +127,31 @@ void ExtractSoldierCreateFromFile(HWFILE const f, SOLDIERCREATE_STRUCT* const c,
     BYTE data[1040];
     FileRead(f, data, sizeof(data));
     ExtractSoldierCreate(data, c, stracLinuxFormat);
+  }
+}
+
+/**
+ * Load SOLDIERCREATE_STRUCT structure and checksum from the file and guess the
+ * format the structure was saved in (vanilla windows format or stracciatella linux format). */
+void ExtractSoldierCreateFromFileWithChecksumAndGuess(HWFILE f, SOLDIERCREATE_STRUCT* c, UINT16 *checksum)
+{
+  // First trying to load the windows format.
+  // If checksum doesn't match, trying to load linux format.
+
+  const INT32 pos = FileGetPos(f);
+  ExtractSoldierCreateFromFile(f, c, false);
+  FileRead(f, checksum, 2);
+
+  UINT16 const fresh_checksum = CalcSoldierCreateCheckSum(c);
+  if(*checksum != fresh_checksum)
+  {
+    SLOGI(TAG, "trying SOLDIERCREATE_STRUCT in linux format");
+
+    // trying linux format
+    // not validating the checksum - it will be the job of the caller
+    FileSeek(f, pos, FILE_SEEK_FROM_START);
+    ExtractSoldierCreateFromFile(f, c, true);
+    FileRead(f, checksum, 2);
   }
 }
 

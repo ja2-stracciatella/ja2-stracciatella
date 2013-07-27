@@ -1892,6 +1892,9 @@ try
 			SOLDIERCREATE_STRUCT priority;
 			if (basic.fDetailedPlacement)
 			{ //skip static priority placement
+
+        // Always use windows format because here we are loading a map
+        // file, not a user save
 				ExtractSoldierCreateFromFile(f, &priority, false);
 
 				if (priority.ubProfile != NO_PROFILE)

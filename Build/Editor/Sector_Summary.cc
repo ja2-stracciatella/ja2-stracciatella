@@ -2557,6 +2557,9 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		ExtractBasicSoldierCreateStructFromFile(hfile, basic);
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
+
+      // Always use windows format because here we are loading a map
+      // file, not a user save
 			ExtractSoldierCreateFromFile(hfile, &priority, false);
 		}
 		else
@@ -2606,6 +2609,9 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		ExtractBasicSoldierCreateStructFromFile(hfile, basic);
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
+
+      // Always use windows format because here we are loading a map
+      // file, not a user save
 			ExtractSoldierCreateFromFile(hfile, &priority, false);
 		}
 		else

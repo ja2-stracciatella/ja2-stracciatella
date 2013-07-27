@@ -39,35 +39,6 @@ static void RemoveTempFile(INT16 const x, INT16 const y, INT8 const z, SectorFla
 }
 
 
-static UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
-{
-	return
-		s->bLife            *  7 +
-		s->bLifeMax         *  8 -
-		s->bAgility         *  2 +
-		s->bDexterity       *  1 +
-		s->bExpLevel        *  5 -
-		s->bMarksmanship    *  9 +
-		s->bMedical         * 10 +
-		s->bMechanical      *  3 +
-		s->bExplosive       *  4 +
-		s->bLeadership      *  5 +
-		s->bStrength        *  7 +
-		s->bWisdom          * 11 +
-		s->bMorale          *  7 +
-		s->bAIMorale        *  3 -
-		s->bBodyType        *  7 +
-		4                   *  6 +
-		s->sSectorX         *  7 -
-		s->ubSoldierClass   *  4 +
-		s->bTeam            *  7 +
-		s->bDirection       *  5 +
-		s->fOnRoof          * 17 +
-		s->sInsertionGridNo *  1 +
-		3;
-}
-
-
 // OLD SAVE METHOD:  This is the old way of loading the enemies and civilians
 void LoadEnemySoldiersFromTempFile()
 {
@@ -180,7 +151,8 @@ void LoadEnemySoldiersFromTempFile()
 	for (INT32 i = 0; i < slots; ++i)
 	{
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
+    UINT16 saved_checksum;
+		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
@@ -214,8 +186,6 @@ void LoadEnemySoldiersFromTempFile()
 			bp->bPatrolCnt         = dp->bPatrolCnt;
 			memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
 
-			UINT16 saved_checksum;
-			FileRead(f, &saved_checksum, 2);
 			// Verify the checksum equation (anti-hack) -- see save
 			UINT16 const checksum = CalcSoldierCreateCheckSum(dp);
 			if (saved_checksum != checksum)
@@ -419,8 +389,9 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	for (INT32 i = 0; i != slots; ++i)
 	{
+    UINT16 saved_checksum;
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
+		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
@@ -451,8 +422,6 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			bp->bPatrolCnt          = dp->bPatrolCnt;
 			memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
 
-			UINT16 saved_checksum;
-			FileRead(f, &saved_checksum, 2);
 			// verify the checksum equation (anti-hack) -- see save
 			UINT16 const checksum = CalcSoldierCreateCheckSum(dp);
 			if (saved_checksum != checksum)
@@ -568,7 +537,8 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	for (INT32 i = 0; i != slots; ++i)
 	{
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
+    UINT16 saved_checksum;
+		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
@@ -602,8 +572,6 @@ void NewWayOfLoadingCiviliansFromTempFile()
 			bp->bPatrolCnt         = dp->bPatrolCnt;
 			memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
 
-			UINT16 saved_checksum;
-			FileRead(f, &saved_checksum, 2);
 			// Verify the checksum equation (anti-hack) -- see save
 			UINT16 const checksum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 			if (saved_checksum != checksum)
@@ -891,8 +859,9 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 
 	for (INT32 i = 0; i != slots; ++i)
 	{
+    UINT16 saved_checksum;
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement, false);
+		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		// Increment the current type of soldier
 		switch (tempDetailedPlacement.ubSoldierClass)
 		{
@@ -901,9 +870,6 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 			case SOLDIER_CLASS_ADMINISTRATOR: ++*n_admins;    break;
 			case SOLDIER_CLASS_CREATURE:      ++*n_creatures; break;
 		}
-
-		// Skip checksum
-		FileSeek(f, 2, FILE_SEEK_FROM_CURRENT);
 	}
 
 	UINT8 saved_sector_id;
