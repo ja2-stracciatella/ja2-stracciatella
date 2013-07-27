@@ -679,9 +679,10 @@ void EndAIDeadlock()
 		gTacticalStatus.ubAttackBusyCount = 0;
 
 		EndAIGuysTurn(s);
-		StartPlayerTeamTurn(TRUE, FALSE);
 		return;
 	}
+
+	StartPlayerTeamTurn(TRUE, FALSE);
 }
 
 
