@@ -175,6 +175,11 @@
 #define     PLAYER_INFO_FACE_END_X			(STD_SCREEN_X + 60)
 #define     PLAYER_INFO_FACE_END_Y			(STD_SCREEN_Y + 76)
 
+#define     PLAYER_INFO_HAND_START_X    (STD_SCREEN_X + 4)
+#define     PLAYER_INFO_HAND_START_Y    (STD_SCREEN_Y + 81)
+#define     PLAYER_INFO_HAND_END_X      (STD_SCREEN_X + 62)
+#define     PLAYER_INFO_HAND_END_Y      (STD_SCREEN_Y + 103)
+
 #define     INV_BODY_X (STD_SCREEN_X + 71)
 #define     INV_BODY_Y (STD_SCREEN_Y + 116)
 
@@ -1575,8 +1580,13 @@ try
 		// set up regions
 		MSYS_DefineRegion( &gMapViewRegion, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y,MAP_VIEW_START_X + MAP_VIEW_WIDTH+MAP_GRID_X-1, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT-1 + 8, MSYS_PRIORITY_HIGH - 3,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
-		MSYS_DefineRegion( &gCharInfoHandRegion, ((INT16)( 4 )), ((INT16)( 81 )) ,((INT16)(62)), ((INT16)(103)), MSYS_PRIORITY_HIGH,
-							 MSYS_NO_CURSOR, ItemRegionMvtCallback , ItemRegionBtnCallback );
+
+		MSYS_DefineRegion( &gCharInfoHandRegion,
+                       PLAYER_INFO_HAND_START_X, PLAYER_INFO_HAND_START_Y,
+                       PLAYER_INFO_HAND_END_X, PLAYER_INFO_HAND_END_Y,
+                       MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
+                       ItemRegionMvtCallback , ItemRegionBtnCallback );
+
 		MSYS_DefineRegion( &gCharInfoFaceRegion, (INT16) PLAYER_INFO_FACE_START_X, (INT16) PLAYER_INFO_FACE_START_Y, (INT16) PLAYER_INFO_FACE_END_X, (INT16) PLAYER_INFO_FACE_END_Y, MSYS_PRIORITY_HIGH,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FaceRegionBtnCallback );
 
