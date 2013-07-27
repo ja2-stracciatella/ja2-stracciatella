@@ -801,7 +801,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 			if (in_map)
 			{
 				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
-				RestoreExternBackgroundRect(14, 218, 102, 24);
+				RestoreExternBackgroundRect(STD_SCREEN_X + 14, STD_SCREEN_Y + 218, 102, 24);
 			}
 			else
 			{
