@@ -776,9 +776,19 @@ void ExecuteOverhead(void)
 							HandleNextTileWaiting(pSoldier);
 						}
 
+            // Handle situation when Darrent goes through the ring to give money.
+            // He jumps out of the ring right beside the player.
+            // Sutiation when he walks to the player is handled the usual way.
+            if((pSoldier->ubProfile == DARREN)
+               && (pSoldier->sFinalDestination == pSoldier->sGridNo)
+               && (pSoldier->usAnimState == STANDING)
+               && (pSoldier->ubPendingAction == MERC_GIVEITEM))
+            {
+              soldier->handlePendingAction(gTacticalStatus.uiFlags & INCOMBAT);
+            }
 						// Update world data with new position, etc
 						// Determine gameworld cells corrds of guy
-						if (gAnimControl[pSoldier->usAnimState].uiFlags & (ANIM_MOVING | ANIM_SPECIALMOVE) && !(pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE))
+						else if (gAnimControl[pSoldier->usAnimState].uiFlags & (ANIM_MOVING | ANIM_SPECIALMOVE) && !(pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE))
 						{
 							fKeepMoving = TRUE;
 
