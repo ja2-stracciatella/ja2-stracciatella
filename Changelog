@@ -1,49 +1,5 @@
-JA2-Stracciatella Continued
----------------------------
-
- - Fixed bug #48 (Unnamed civilians disappear)
- - Fixed crashes on Mac OS X
- - On Linux and Mac OS X, SHIFT can be used instead of ALT to move backward
-
- - Fixed bug #6  (Question mark instead of comma in Russian version)
- - Fixed bug #31 (Only fences in banks and cliffs section)
- - Fixed bug #28 (Map editor doesn't work in Russian (not gold) version)
-
- - Saved games are now compatible between Windows and unix platforms (Linux,
-   Mac OS X).  Saves made on Windows can be loaded on Linux and vise versa.
-   All new saves are done in Windows format.  Old unix saves can still be
-   loaded.
-
- - Fixed bug #5  (Russian language is broken in VS build)
- - Fixed bug #26 (Dead bodies are not visible again)
- - Fixed bug #23 (Dead bodies are not visible)
- - Fixed bug #22 (Incorrect body position on non-standard resolutions)
- - Fixed bug #21 (Game is really slow on Mac OS X)
- - Fixed bug #18 (Crash on exiting full screen mode on Mac OS)
-
- - Map editor is now included into the game exe.
-   Start it with command-like key '-editor' or '-editorauto'.
-   Map editor requires Editor.slf to work.
-
- - Added support for high video resolutions.  For example, game can be
-   started in 1024x768 mode like this: ja2.exe -res 1024x768
-   Any reasonable resolution should work.
-
- - Added compilation instructions for building the project on Linux,
-   Windows, Mac OS 10.6 - 10.8, cross building on Linux for Windows.
-
- - Added solution files for Visual Studio 10 Express, Xcode 4.2, 4.6
-
- - Single exe can now work with many versions (localizations) of the game.
-   There is no need anymore to compile binary for every version of the game.
-
- - There is no need anymore to lower-case game resources on Linux.
-
-
 JA2-Stracciatella
 -----------------
-
-03d197da4e9fa3f53ebc306c20b03dec57155696  Fix Shopkeeper Money bug (did not disappear if transfered directly to bank)
 
 (r7072) Fix a vanilla glitch: When scrolling back in an email, the email delete window was not redrawn properly.
 (r7071) Fix a glitch in r4977: The yes/no buttons in the email delete window could not be clicked, when the email had more than one page.
