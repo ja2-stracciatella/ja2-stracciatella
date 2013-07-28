@@ -8,6 +8,17 @@ stable platform for mod development.
 
 ## Latest news
 
+### 2013-07-28, versioin 0.12.189 has been released
+
+- Fixed issue #59 (Inventory won't open on strategic screen if using a non-default resolution)
+- Fixed issue #58 (Game crashing while entering some sectors)
+- Fixed issue #57 (Deadlock leads to player turn without reseting the AP)
+- Fixed issue #56 (laptop mode has problems with high resolutions)
+- Fixed issue #53 (crash when saving the game)
+- Fixed issue #52 (High res glitch with merc move menu)
+- Fixed issue #51 (Broken text log after loading a saved game)
+- Fixed issue #47 (High res glitch on loading game)
+
 ### 2013-04-29, version 0.12.175 has been released
 
 - On Linux and Mac OS X, SHIFT can be used instead of ALT to move backward
@@ -18,19 +29,6 @@ stable platform for mod development.
 - Fixed issue #48 (Unnamed civilians disappear)
 - Fixed issue #44 (Ring fight bug prize money and invitation not triggered)
 - Fixed issue #6  (Question mark instead of comma in Russian version)
-
-
-
-### 2013-03-24, version 0.12.159 has been released
-
-- Saved games are now compatible between Windows and unix platforms (Linux,
-  Mac OS X).  Saves made on Windows can be loaded on Linux and vise versa.
-  All new saves are done in Windows format.  Old unix saves can still be
-  loaded.
-
-- Fixed issue #31 (Only fences in banks and cliffs section)
-- Fixed issue #28 (Map editor doesn't work in Russian (not gold) version)
-- Fixed issue #5  (Russian language is broken in VS build)
 
 You can see the full list of changes in files changes.md and Changelog (for the original project).
 

@@ -2,8 +2,10 @@
 
 ## v0.12.XXX
 
-- Fixed issue #58 (Game crashing while entering some sectors)
+## v0.12.189
+
 - Fixed issue #59 (Inventory won't open on strategic screen if using a non-default resolution)
+- Fixed issue #58 (Game crashing while entering some sectors)
 - Fixed issue #57 (Deadlock leads to player turn without reseting the AP)
 - Fixed issue #56 (laptop mode has problems with high resolutions)
 - Fixed issue #53 (crash when saving the game)
