@@ -83,15 +83,16 @@ CFLAGS += -g
 endif
 
 CFLAGS += -I Build
-CFLAGS += -I Build/Tactical
-CFLAGS += -I Build/Strategic
 CFLAGS += -I Build/Editor
-CFLAGS += -I Build/Res
 CFLAGS += -I Build/Laptop
-CFLAGS += -I Build/Utils
-CFLAGS += -I Build/TileEngine
+CFLAGS += -I Build/Res
+CFLAGS += -I Build/Strategic
+CFLAGS += -I Build/Tactical
 CFLAGS += -I Build/TacticalAI
+CFLAGS += -I Build/TileEngine
+CFLAGS += -I Build/Utils
 CFLAGS += -I sgp
+CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
 CFLAGS += -I _build/lib-utf8cpp/source
@@ -192,6 +193,7 @@ SRCS += Build/GameState.cc
 SRCS += Build/GameScreen.cc
 SRCS += Build/GameSettings.cc
 SRCS += Build/GameVersion.cc
+
 SRCS += Build/HelpScreen.cc
 SRCS += Build/Init.cc
 SRCS += Build/Intro.cc
@@ -487,6 +489,9 @@ SRCS += sgp/VObject.cc
 SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
+
+SRCS += src/content/npcs.cc
+SRCS += src/internals/enums.cc
 
 SRCS += _build/lib-MicroIni/src/MicroIni/File.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp
