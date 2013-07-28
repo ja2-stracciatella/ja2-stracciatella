@@ -86,6 +86,8 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include "Soldier.h"
+
 #if defined JA2BETAVERSION
 #	include "Strategic_AI.h"
 #endif
@@ -913,6 +915,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 
 	CHECKV(usNewState < NUMANIMATIONSTATES);
 
+  SoldierSP soldier = GetSoldier(pSoldier);
 
 	///////////////////////////////////////////////////////////////////////
 	//			DO SOME CHECKS ON OUR NEW ANIMATION!
@@ -1680,7 +1683,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 					GetMan(pSoldier->uiPendingActionData4).uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
 					break;
 			}
-			pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+      soldier->removePendingAction();
 		}
 		else
 		{
@@ -7276,6 +7279,8 @@ void GivingSoldierCancelServices( SOLDIERTYPE *pSoldier )
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy )
 {
+  SoldierSP soldier = GetSoldier(pSoldier);
+
 	// If we are a 'specialmove... ignore...
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 	{
@@ -7331,9 +7336,9 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 		// OK, if we are stopped at our destination, cancel pending action...
 		if ( fFromSightingEnemy )
 		{
-			if ( pSoldier->ubPendingAction != NO_PENDING_ACTION && pSoldier->sGridNo == pSoldier->sFinalDestination )
+			if ( soldier->hasPendingAction() && pSoldier->sGridNo == pSoldier->sFinalDestination )
 			{
-				pSoldier->ubPendingAction = NO_PENDING_ACTION;
+        soldier->removePendingAction();
 			}
 
 			// Stop pending animation....
@@ -7367,11 +7372,11 @@ void EVENT_StopMerc(SOLDIERTYPE* const s)
 // Halt event is used to stop a merc - networking should check / adjust to gridno?
 void EVENT_StopMerc(SOLDIERTYPE* const s, GridNo const grid_no, INT8 const direction)
 {
+  SoldierSP soldier = GetSoldier(s);
+
 	if (!s->fDelayedMovement)
-	{ // Cancel pending events
-		s->usPendingAnimation = NO_PENDING_ANIMATION;
-		s->ubPendingDirection = NO_PENDING_DIRECTION;
-		s->ubPendingAction    = NO_PENDING_ACTION;
+	{
+    soldier->removePendingAnimation();
 	}
 
 	s->bEndDoorOpenCode          = 0;
@@ -8402,13 +8407,13 @@ void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 {
 	UINT16 usNewGridNo;
+  SoldierSP soldier = GetSoldier(pSoldier);
 
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bDirection)));
 	usNewGridNo = NewGridNo(usNewGridNo,       DirectionInc(OppositeDirection(bDirection)));
 
-	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+  soldier->removePendingAction();
 
 	// Set path....
 	pSoldier->usPathDataSize = 0;
@@ -8427,13 +8432,13 @@ static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
 	UINT16 usNewGridNo;
+  SoldierSP soldier = GetSoldier(pSoldier);
 
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bDirection)));
 	//usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
 
-	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+  soldier->removePendingAction();
 
 	// Set path....
 	pSoldier->usPathDataSize = 0;
@@ -8488,6 +8493,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 		INT16 sActionGridNo, sGridNo, sAdjustedGridNo;
 		UINT8	ubDirection;
 
+    SoldierSP soldier = GetSoldier(pSoldier);
 
 		// OK, find an adjacent gridno....
 		sGridNo = pTarget->sGridNo;
@@ -8496,11 +8502,9 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		if ( sActionGridNo != -1 )
 		{
-			// SEND PENDING ACTION
-			pSoldier->ubPendingAction = MERC_STEAL;
+      soldier->setPendingAction(MERC_STEAL);
 			pSoldier->sPendingActionData2  = pTarget->sGridNo;
 			pSoldier->bPendingActionData3  = ubDirection;
-			pSoldier->ubPendingActionAnimCount = 0;
 
 			// CHECK IF WE ARE AT THIS GRIDNO NOW
 			if ( pSoldier->sGridNo != sActionGridNo )
@@ -8769,6 +8773,8 @@ static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* const s)
 
 void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 {
+  SoldierSP soldier = GetSoldier(pSoldier);
+
 	// Are we an AI guy?
 	if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM && pSoldier->bTeam != OUR_TEAM )
 	{
@@ -8778,7 +8784,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 			pSoldier->usPendingAnimation	= NO_PENDING_ANIMATION;
 			pSoldier->fTurningFromPronePosition = FALSE;
 			pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
-			pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+      soldier->removePendingAction();
 			pSoldier->bEndDoorOpenCode	 = 0;
 
 			// if this guy isn't under direct AI control, WHO GIVES A FLYING FLICK?

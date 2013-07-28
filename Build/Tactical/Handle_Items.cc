@@ -67,6 +67,7 @@
 #include "Debug.h"
 #include "UILayout.h"
 
+#include "Soldier.h"
 
 #define					NUM_ITEMS_LISTED			8
 #define					NUM_ITEM_FLASH_SLOTS	50
@@ -185,8 +186,9 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
 ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const UINT16 usHandItem, const BOOLEAN fFromUI)
 {
-	// Remove any previous actions
-	s->ubPendingAction = NO_PENDING_ACTION;
+  SoldierSP soldier = GetSoldier(s);
+
+  soldier->removePendingAction();
 
 	// here is where we would set a different value if the weapon mode is on
 	// "attached weapon"
@@ -486,11 +488,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sGotLocation && fGotAdjacent)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction          = MERC_PUNCH;
+			soldier->setPendingAction(MERC_PUNCH);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sGotLocation, s->usUIMovementMode, FALSE, TRUE);
@@ -536,13 +536,11 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction = MERC_GIVEAID;
+			soldier->setPendingAction(MERC_GIVEAID);
 			if      (fHadToUseCursorPos) s->sPendingActionData2 = usMapPos;
 			else if (tgt != NULL)        s->sPendingActionData2 = tgt->sGridNo;
 			else                         s->sPendingActionData2 = usGridNo;
 			s->bPendingActionData3      = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -572,11 +570,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction          = MERC_CUTFFENCE;
+			soldier->setPendingAction(MERC_CUTFFENCE);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -622,11 +618,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction          = MERC_REPAIR;
+			soldier->setPendingAction(MERC_REPAIR);
 			s->sPendingActionData2      = fVehicle ? sVehicleGridNo : sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -670,12 +664,10 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction      = MERC_FUEL_VEHICLE;
+			soldier->setPendingAction(MERC_FUEL_VEHICLE);
 			s->sPendingActionData2  = sAdjustedGridNo;
 			s->sPendingActionData2  = sVehicleGridNo;
 			s->bPendingActionData3  = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -705,11 +697,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction          = MERC_TAKEBLOOD;
+			soldier->setPendingAction(MERC_TAKEBLOOD);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -745,11 +735,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction          = MERC_ATTACH_CAN;
+			soldier->setPendingAction(MERC_ATTACH_CAN);
 			s->sPendingActionData2      = usGridNo;
 			s->bPendingActionData3      = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -804,9 +792,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 
 		if (s->sGridNo != usGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction          = MERC_DROPBOMB;
-			s->ubPendingActionAnimCount = 0;
+			soldier->setPendingAction(MERC_DROPBOMB);
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, usGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -851,11 +837,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		// CHECK IF WE ARE AT THIS GRIDNO NOW
 		if (s->sGridNo != sActionGridNo)
 		{
-			// SEND PENDING ACTION
-			s->ubPendingAction          = MERC_KNIFEATTACK;
+			soldier->setPendingAction(MERC_KNIFEATTACK);
 			s->sPendingActionData2      = sAdjustedGridNo;
 			s->bPendingActionData3      = ubDirection;
-			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
 			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
@@ -1098,15 +1082,15 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 	INT16 sActionGridNo, sAdjustedGridNo;
 	UINT8	ubDirection;
 
-	 // Remove any previous actions
-	 pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+  SoldierSP soldier = GetSoldier(pSoldier);
+
+  soldier->removePendingAction();
 
 	 // See if we can get there to stab
 	 sActionGridNo =  FindAdjacentGridEx( pSoldier, pTargetSoldier->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 	 if ( sActionGridNo != -1 )
 	 {
-			// SEND PENDING ACTION
-			pSoldier->ubPendingAction = MERC_GIVEITEM;
+     soldier->setPendingAction(MERC_GIVEITEM);
 
 			pSoldier->bPendingActionData5 = bInvPos;
 			// Copy temp object
@@ -1117,7 +1101,6 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 			pSoldier->sPendingActionData2  = pTargetSoldier->sGridNo;
 			pSoldier->bPendingActionData3  = ubDirection;
 			pSoldier->uiPendingActionData4 = pTargetSoldier->ubID;
-			pSoldier->ubPendingActionAnimCount = 0;
 
 			// Set soldier as engaged!
 			pSoldier->uiStatusFlags |= SOLDIER_ENGAGEDINACTION;
@@ -1152,19 +1135,17 @@ void SoldierDropItem(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj)
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {
 	INT16							sActionGridNo;
+  SoldierSP soldier = GetSoldier(pSoldier);
 
-	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+  soldier->removePendingAction();
 
 	sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, sGridNo );
 
-	// SET PENDING ACTIONS!
-	pSoldier->ubPendingAction = MERC_PICKUPITEM;
+  soldier->setPendingAction(MERC_PICKUPITEM);
 	pSoldier->uiPendingActionData1 = iItemIndex;
 	pSoldier->sPendingActionData2  = sActionGridNo;
 	pSoldier->uiPendingActionData4 = sGridNo;
 	pSoldier->bPendingActionData3  = bZLevel;
-	pSoldier->ubPendingActionAnimCount = 0;
 
 	// Deduct points!
 	//sAPCost = GetAPsToPickupItem( pSoldier, sGridNo );

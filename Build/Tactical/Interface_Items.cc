@@ -73,6 +73,7 @@
 #include "Items.h"
 #include "UILayout.h"
 
+#include "Soldier.h"
 
 #define		ITEMDESC_FONT							BLOCKFONT2
 #define		ITEMDESC_FONTSHADOW2			32
@@ -3396,8 +3397,9 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 							// CHECK IF WE ARE AT THIS GRIDNO NOW
 							if ( gpItemPointerSoldier->sGridNo != sActionGridNo )
 							{
-								// SEND PENDING ACTION
-								gpItemPointerSoldier->ubPendingAction = MERC_RELOADROBOT;
+                SoldierSP soldier = GetSoldier(gpItemPointerSoldier);
+
+                soldier->setPendingAction(MERC_RELOADROBOT);
 
 								// WALK UP TO DEST FIRST
 								EVENT_InternalGetNewSoldierPath( gpItemPointerSoldier, sActionGridNo, gpItemPointerSoldier->usUIMovementMode, FALSE, FALSE );

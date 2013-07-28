@@ -64,6 +64,7 @@
 #include "Items.h"
 #include "Shading.h"
 
+#include "Soldier.h"
 
 #define		NO_JUMP											0
 #define		MAX_ANIFRAMES_PER_FLASH			2
@@ -108,6 +109,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	BOOLEAN				bOKFireWeapon;
 	BOOLEAN				bWeaponJammed;
   UINT16        usUIMovementMode;
+
+  SoldierSP soldier = GetSoldier(pSoldier);
 
   do
   {
@@ -1548,7 +1551,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						// DROP ITEM
 						HandleSoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, (INT16)(pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
 						// EVENT HAS BEEN HANDLED
-						pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+						soldier->removePendingAction();
 
 					//}
 					//else
@@ -1566,7 +1569,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						SoldierHandleInteractiveObject(*pSoldier);
 
 						// EVENT HAS BEEN HANDLED
-						pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+						soldier->removePendingAction();
 
 					//}
 					//else
@@ -1580,7 +1583,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if (pSoldier->bAction == AI_ACTION_UNLOCK_DOOR || (pSoldier->bAction == AI_ACTION_LOCK_DOOR && !(pSoldier->fAIFlags & AI_LOCK_DOOR_INCLUDES_CLOSE) ) )
 						{
 							// EVENT HAS BEEN HANDLED
-							pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+							soldier->removePendingAction();
 
 							// do nothing here
 						}
@@ -1606,7 +1609,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
               }
 
 							// EVENT HAS BEEN HANDLED
-							pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+							soldier->removePendingAction();
 
 						}
 

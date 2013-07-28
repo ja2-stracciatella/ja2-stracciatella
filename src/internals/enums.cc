@@ -1,7 +1,7 @@
 #include "internals/enums.h"
 
-#include "Build/Tactical/Animation_Control.h"
-#include "Build/Tactical/Soldier_Control.h"
+#include "Tactical/Animation_Control.h"
+#include "Tactical/Soldier_Control.h"
 
 /** Return approach name or NULL if not found. */
 const char* Internals::getApproachName(enum Approach approach)

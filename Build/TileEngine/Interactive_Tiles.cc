@@ -36,6 +36,7 @@
 #include "Debug.h"
 #include "UILayout.h"
 
+#include "Soldier.h"
 
 #define MAX_INTTILE_STACK 10
 
@@ -83,12 +84,13 @@ void StartInteractiveObject(GridNo const gridno, STRUCTURE const& structure, SOL
 	if (s.usAnimState == BEGIN_OPENSTRUCT)          return;
 	if (s.usAnimState == BEGIN_OPENSTRUCT_CROUCHED) return;
 
+  SoldierSP soldier = GetSoldier(&s);
+
 	// Add soldier event for opening door/struct
-	s.ubPendingAction          = structure.fFlags & STRUCTURE_ANYDOOR ? MERC_OPENDOOR : MERC_OPENSTRUCT;
+  soldier->setPendingAction(structure.fFlags & STRUCTURE_ANYDOOR ? MERC_OPENDOOR : MERC_OPENSTRUCT);
 	s.uiPendingActionData1     = structure.usStructureID;
 	s.sPendingActionData2      = gridno;
 	s.bPendingActionData3      = direction;
-	s.ubPendingActionAnimCount = 0;
 }
 
 

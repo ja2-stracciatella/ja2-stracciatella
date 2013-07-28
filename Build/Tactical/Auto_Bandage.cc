@@ -36,6 +36,7 @@
 #include "Button_System.h"
 #include "UILayout.h"
 
+#include "Soldier.h"
 
 // max number of merc faces per row in autobandage box
 #define NUMBER_MERC_FACES_AUTOBANDAGE_BOX 4
@@ -155,11 +156,12 @@ void HandleAutoBandagePending( )
 		// Do any guys have pending actions...?
 		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
+      boost::shared_ptr<const Soldier> soldier = GetSoldier(s);
 			if (s->sSectorX == gWorldSectorX &&
 					s->sSectorY == gWorldSectorY &&
 					s->bSectorZ == gbWorldSectorZ &&
 					!s->fBetweenSectors &&
-					s->ubPendingAction != NO_PENDING_ACTION)
+          soldier->hasPendingAction())
 			{
 				return;
 			}
