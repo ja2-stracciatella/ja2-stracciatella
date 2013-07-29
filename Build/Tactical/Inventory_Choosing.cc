@@ -11,6 +11,8 @@
 #include "Map_Screen_Interface_Map.h"
 #include "Debug.h"
 
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #define ENEMYAMMODROPRATE       50      // % of time enemies drop ammunition
 #define ENEMYGRENADEDROPRATE    25      // % of time enemies drop grenades
@@ -691,6 +693,8 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 		}
 		// don't allow it to be lower than marksmanship, we don't want it to affect their chances of hitting
 		bStatus = (INT8)MAX( pp->bMarksmanship, bStatus );
+
+    bStatus = (INT8)MAX( bStatus, GGP->enemy_weapon_minimal_status);
 
 		CreateItem( usGunIndex, bStatus, &(pp->Inv[ HANDPOS ]) );
 		pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;

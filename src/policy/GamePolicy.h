@@ -13,4 +13,6 @@ public:
 
   /* Battle */
   bool f_drop_everything;               /**< Enemy drop all equipment. */
+
+  int8_t enemy_weapon_minimal_status;   /**< Minimal status of the enemy weapon (0 - 100). */
 };
