@@ -61,6 +61,8 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 UINT8			gubScreenCount=0;
 
@@ -373,9 +375,9 @@ void InitNewGame()
 		INT32 starting_cash;
 		switch (gGameOptions.ubDifficultyLevel)
 		{
-			case DIF_LEVEL_EASY:   starting_cash = 45000; break;
-			case DIF_LEVEL_MEDIUM: starting_cash = 35000; break;
-			case DIF_LEVEL_HARD:   starting_cash = 30000; break;
+			case DIF_LEVEL_EASY:   starting_cash = GGP->starting_cash_easy; break;
+			case DIF_LEVEL_MEDIUM: starting_cash = GGP->starting_cash_medium; break;
+			case DIF_LEVEL_HARD:   starting_cash = GGP->starting_cash_hard; break;
 			default: throw std::logic_error("invalid difficulty level");
 		}
 		AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, now, starting_cash);
