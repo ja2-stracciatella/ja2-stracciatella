@@ -1,4 +1,4 @@
-This file contains only small part of the source codes.
+This folder contains only a small part of the source codes.
 For historical reasons most of the source codes are located in
 folders:
   - Build

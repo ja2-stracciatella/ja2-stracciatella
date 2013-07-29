@@ -19,12 +19,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -41,26 +43,26 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(Configuration)\obj\</IntDir>
-    <TargetName>$(ProjectName)-vs10e-$(Configuration)</TargetName>
+    <TargetName>$(ProjectName)-vs12-$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\..\..\</OutDir>
     <IntDir>$(Configuration)\obj\</IntDir>
-    <TargetName>$(ProjectName)-vs10e-$(Configuration)</TargetName>
+    <TargetName>$(ProjectName)-vs12-$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <SubSystem>Console</SubSystem>
-      <OutputFile>$(SolutionDir)\..\..\$(ProjectName)-vs10e-$(Configuration).exe</OutputFile>
+      <OutputFile>$(SolutionDir)\..\..\$(ProjectName)-vs12-$(Configuration).exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -70,14 +72,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <OutputFile>$(SolutionDir)\..\..\$(ProjectName)-vs10e-$(Configuration).exe</OutputFile>
+      <OutputFile>$(SolutionDir)\..\..\$(ProjectName)-vs12-$(Configuration).exe</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -826,7 +828,6 @@
     <ClInclude Include="..\..\sgp\VObject_Blitters.h" />
     <ClInclude Include="..\..\sgp\VSurface.h" />
     <ClInclude Include="..\..\sgp\WCheck.h" />
-    <ClInclude Include="..\..\src\GameInstance.h" />
     <ClInclude Include="..\..\src\policy\DefaultGamePolicy.h" />
     <ClInclude Include="..\..\src\policy\GamePolicy.h" />
     <ClInclude Include="..\lib-boost\libs\filesystem\src\windows_file_codecvt.hpp" />

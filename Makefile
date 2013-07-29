@@ -493,6 +493,7 @@ SRCS += sgp/Video.cc
 SRCS += src/Soldier.cc
 SRCS += src/content/npcs.cc
 SRCS += src/internals/enums.cc
+SRCS += src/policy/DefaultGamePolicy.cc
 
 SRCS += _build/lib-MicroIni/src/MicroIni/File.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp

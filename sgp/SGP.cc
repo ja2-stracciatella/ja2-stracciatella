@@ -39,6 +39,9 @@
 #include "Exceptions.h"
 #include "Timer.h"
 
+#include "GameInstance.h"
+#include "policy/DefaultGamePolicy.h"
+
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 #endif
@@ -247,6 +250,12 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 	return EXIT_FAILURE;
 }
 
+////////////////////////////////////////////////////////////
+
+static DefaultGamePolicy g_gamePolicy;
+const GamePolicy *GGP = &g_gamePolicy;
+
+////////////////////////////////////////////////////////////
 
 static BOOLEAN ParseParameters(int argc, char* const argv[],
                                bool *doUnitTests,

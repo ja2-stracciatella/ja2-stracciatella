@@ -62,10 +62,10 @@
       <UniqueIdentifier>{cce1b641-703b-40ad-ac9d-5d87bf87cffc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\src">
-      <UniqueIdentifier>{f46d17d2-4b62-412c-91da-d3ffb29bb45e}</UniqueIdentifier>
+      <UniqueIdentifier>{4942264e-f602-4760-b739-cd77be987a2f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\src\policy">
-      <UniqueIdentifier>{0385b796-5aca-46f6-b959-be931946f5e7}</UniqueIdentifier>
+      <UniqueIdentifier>{0ec9b230-403b-4767-b23f-1d592c419faa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2332,9 +2332,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\policy\GamePolicy.h">
       <Filter>Source Files\src\policy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\GameInstance.h">
-      <Filter>Source Files\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
