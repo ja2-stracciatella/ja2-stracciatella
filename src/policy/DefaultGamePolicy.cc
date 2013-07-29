@@ -10,6 +10,7 @@ DefaultGamePolicy::DefaultGamePolicy()
   starting_cash_hard    = 30000;
 
   f_drop_everything     = false;
+  f_all_dropped_visible = false;
 
   enemy_weapon_minimal_status   = 0;
 }

@@ -728,7 +728,8 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 				  if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
 				  {
 					  ReduceAmmoDroppedByNonPlayerSoldiers(s, *pObj);
-					  AddItemToPool(s.sGridNo, pObj, bVisible, s.bLevel, usItemFlags, -1);
+            Visibility vis = GGP->f_all_dropped_visible ? VISIBLE : bVisible;
+					  AddItemToPool(s.sGridNo, pObj, vis, s.bLevel, usItemFlags, -1);
 				  }
 			  }
 		  }
