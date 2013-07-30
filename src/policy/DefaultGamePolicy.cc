@@ -1,5 +1,6 @@
 #include "DefaultGamePolicy.h"
 
+#include "Build/Tactical/Item_Types.h"
 
 DefaultGamePolicy::DefaultGamePolicy()
 {
@@ -13,4 +14,8 @@ DefaultGamePolicy::DefaultGamePolicy()
   f_all_dropped_visible = false;
 
   enemy_weapon_minimal_status   = 0;
+
+  // imp_extra_equipment.push_back(ExtraItem(AKM));
+  // imp_extra_equipment.push_back(ExtraItem(CLIP762W_30_AP, 4));
+  // imp_extra_equipment.push_back(ExtraItem(CLIP762W_30_HP, 4));
 }

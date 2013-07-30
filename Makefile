@@ -82,6 +82,7 @@ ifdef WITH_DEBUGINFO
 CFLAGS += -g
 endif
 
+CFLAGS += -I .
 CFLAGS += -I Build
 CFLAGS += -I Build/Editor
 CFLAGS += -I Build/Laptop

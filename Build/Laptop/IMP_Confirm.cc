@@ -28,6 +28,11 @@
 #include "Font_Control.h"
 #include "FileMan.h"
 
+#include <boost/foreach.hpp>
+
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
+#include "slog/slog.h"
 
 #define IMP_MERC_FILE "imp.dat"
 
@@ -369,6 +374,13 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 	{
 		MakeProfileInvItemAnySlot(p, CAMOUFLAGEKIT, 100, 1);
 	}
+
+  // giving extra weapon
+  BOOST_FOREACH(const GamePolicy::ExtraItem &item, GGP->imp_extra_equipment)
+  {
+    SLOGI("IMP", "giving extra equipment %d (%d)", item.item, item.count);
+    MakeProfileInvItemAnySlot(p, item.item, 100, item.count);
+  }
 }
 
 
