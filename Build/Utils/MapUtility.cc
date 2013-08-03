@@ -27,6 +27,8 @@
 #include "UILayout.h"
 #include <boost/foreach.hpp>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define		MINIMAP_X_SIZE			88
 #define		MINIMAP_Y_SIZE			44
@@ -80,7 +82,7 @@ ScreenID MapUtilScreenHandle()
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		try
 		{
-      std::vector<std::string> files = FindFilesInDir(MAPSDIR, ".dat", true, true, true);
+      std::vector<std::string> files = GCM->getAllMaps();
       BOOST_FOREACH(const std::string &file, files)
       {
         FileList = AddToFDlgList(FileList, file.c_str());

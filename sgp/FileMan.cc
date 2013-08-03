@@ -15,6 +15,9 @@
 
 #include "boost/filesystem.hpp"
 
+#include "slog/slog.h"
+#define TAG "FileMan"
+
 #if _WIN32
 #include <shlobj.h>
 #else
@@ -63,7 +66,6 @@ ENUM_BITSET(FileOpenFlags)
 
 static std::string s_dataDir;
 static std::string s_tileDir;
-static std::string s_mapsDir;
 
 
 static void findDataDirs();
@@ -261,6 +263,11 @@ static int OpenFileInDataDirFD(const char *filename, int mode)
   return d;
 }
 
+void FileDelete(const std::string &path)
+{
+  FileDelete(path.c_str());
+}
+
 void FileDelete(char const* const path)
 {
 	if (unlink(path) == 0) return;
@@ -313,6 +320,10 @@ static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
   return cMode;
 }
 
+HWFILE FileMan::openForReadingSmart(const std::string& filename, bool useSmartLookup)
+{
+  return openForReadingSmart(filename.c_str(), useSmartLookup);
+}
 
 /** Open file for reading only.
  * When using the smart lookup:
@@ -551,14 +562,17 @@ FileAttributes FileGetAttributes(const char* const filename)
 }
 
 
+BOOLEAN FileClearAttributes(const std::string &filename)
+{
+  return FileClearAttributes(filename.c_str());
+}
+
 BOOLEAN FileClearAttributes(const char* const filename)
 {
 #if 1 // XXX TODO
-#	if defined WITH_FIXMES
-	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\")\n", __FILE__, __LINE__, __func__, filename);
-#	endif
+  SLOGW(TAG, "ignoring %s(\"%s\")", __func__, filename);
 	return FALSE;
-	UNIMPLEMENTED
+	// UNIMPLEMENTED
 #else
 	return SetFileAttributes(filename, FILE_ATTRIBUTE_NORMAL);
 #endif
@@ -767,7 +781,6 @@ static void findDataDirs()
 {
     s_dataDir = FileMan::joinPaths(s_gameResRootPath, BASEDATADIR);
     s_tileDir = FileMan::joinPaths(s_dataDir, TILECACHEDIR);
-    s_mapsDir = FileMan::joinPaths(s_dataDir, MAPSDIR);
 
 #if CASE_SENSITIVE_FS
 
@@ -782,11 +795,6 @@ static void findDataDirs()
     if(findObjectCaseInsensitive(s_dataDir.c_str(), TILECACHEDIR, false, true, name))
     {
       s_tileDir = FileMan::joinPaths(s_dataDir, name);
-    }
-
-    if(findObjectCaseInsensitive(s_dataDir.c_str(), MAPSDIR, false, true, name))
-    {
-      s_mapsDir = FileMan::joinPaths(s_dataDir, name);
     }
 #endif
 }
@@ -803,12 +811,6 @@ const std::string& FileMan::getTilecacheDirPath()
   return s_tileDir;
 }
 
-
-/** Get path to the 'Data/Maps' directory of the game. */
-const std::string& FileMan::getMapsDirPath()
-{
-  return s_mapsDir;
-}
 
 /** Convert file descriptor to HWFile.
  * Raise runtime_error if not possible. */

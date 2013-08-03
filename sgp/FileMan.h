@@ -38,6 +38,7 @@ bool FileExists(const std::string &filename);
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */
 void FileDelete(char const* path);
+void FileDelete(const std::string &path);
 
 void   FileClose(HWFILE);
 
@@ -70,6 +71,8 @@ ENUM_BITSET(FileAttributes)
 
 FileAttributes FileGetAttributes(const char* filename);
 BOOLEAN        FileClearAttributes(const char* filename);
+BOOLEAN FileClearAttributes(const std::string &filename);
+
 
 BOOLEAN GetFileManFileTime(HWFILE hFile, SGP_FILETIME* pCreationTime, SGP_FILETIME* pLastAccessedTime, SGP_FILETIME* pLastWriteTime);
 
@@ -130,9 +133,6 @@ public:
   /** Get path to the 'Data/Tilecache' directory of the game. */
   static const std::string& getTilecacheDirPath();
 
-  /** Get path to the 'Data/Maps' directory of the game. */
-  static const std::string& getMapsDirPath();
-
   /** Open file in the 'Data' directory in case-insensitive manner. */
   static FILE* openForReadingInDataDir(const char *filename);
 
@@ -144,6 +144,8 @@ public:
    *  - if file is not found, try to find the file relatively to 'Data' directory;
    *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
   static HWFILE openForReadingSmart(const char* filename, bool useSmartLookup);
+
+  static HWFILE openForReadingSmart(const std::string& filename, bool useSmartLookup);
 
   /* ------------------------------------------------------------
    * Other operations

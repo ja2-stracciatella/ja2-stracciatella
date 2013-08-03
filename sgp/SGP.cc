@@ -40,6 +40,7 @@
 #include "Timer.h"
 
 #include "GameInstance.h"
+#include "DefaultContentManager.h"
 #include "policy/DefaultGamePolicy.h"
 
 #ifdef WITH_UNITTESTS
@@ -253,7 +254,10 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 ////////////////////////////////////////////////////////////
 
 static DefaultGamePolicy g_gamePolicy;
+static DefaultContentManager g_contentManager;
+
 const GamePolicy *GGP = &g_gamePolicy;
+const ContentManager *GCM = &g_contentManager;
 
 ////////////////////////////////////////////////////////////
 

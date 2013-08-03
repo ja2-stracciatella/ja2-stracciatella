@@ -491,6 +491,7 @@ SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
 
+SRCS += src/DefaultContentManager.cc
 SRCS += src/Soldier.cc
 SRCS += src/content/npcs.cc
 SRCS += src/internals/enums.cc

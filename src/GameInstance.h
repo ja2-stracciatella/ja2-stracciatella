@@ -1,5 +1,6 @@
 #pragma once
 
+class ContentManager;
 class GamePolicy;
 
 /**
@@ -8,3 +9,6 @@ class GamePolicy;
  * It should be used if the application code doesn't already have an
  * instance of the game policy. */
 extern const GamePolicy *GGP;
+
+/** Global instance of the content manager. */
+extern const ContentManager *GCM;

@@ -14,7 +14,6 @@
 #define INTRODIR       "intro"
 #define LAPTOPDIR      "laptop"
 #define LOADSCREENSDIR "loadscreens"
-#define MAPSDIR        "maps"
 #define MERCEDTDIR     "mercedt"
 #define MUSICDIR       "music"
 #define NPC_SPEECHDIR  "npc_speech"

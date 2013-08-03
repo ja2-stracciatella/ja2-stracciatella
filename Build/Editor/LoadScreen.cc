@@ -54,6 +54,9 @@
 #include "GameRes.h"
 #include <boost/foreach.hpp>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 static BOOLEAN gfErrorCatch            = FALSE;
 static wchar_t gzErrorCatchString[256] = L"";
 
@@ -100,7 +103,7 @@ static BOOLEAN fEnteringLoadSaveScreen = TRUE;
 
 static MOUSE_REGION BlanketRegion;
 
-static char gszCurrFilename[80];
+static std::string gMapFileForRemoval;
 
 enum{
 	IOSTATUS_NONE,
@@ -142,7 +145,7 @@ static void LoadSaveScreenEntry(void)
 	iTopFileShown = iTotalFiles = 0;
 	try
 	{
-    std::vector<std::string> files = FindFilesInDir(FileMan::getMapsDirPath(), ".dat", true, true, true);
+    std::vector<std::string> files = GCM->getAllMaps();
     BOOST_FOREACH(const std::string &file, files)
     {
 			FileList = AddToFDlgList(FileList, file.c_str());
@@ -197,7 +200,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 			}
 			if( curr )
 			{
-				FileDelete( gszCurrFilename );
+				FileDelete(gMapFileForRemoval);
 
 				//File is deleted so redo the text fields so they show the
 				//next file in the list.
@@ -349,8 +352,8 @@ ScreenID LoadSaveScreenHandle(void)
 
 		case DIALOG_DELETE:
 		{
-			sprintf(gszCurrFilename, MAPSDIR "/%ls", gzFilename);
-			const UINT32 attr = FileGetAttributes(gszCurrFilename);
+      gMapFileForRemoval = GCM->getMapPath(gzFilename);
+			const UINT32 attr = FileGetAttributes(gMapFileForRemoval.c_str());
 			if (attr != FILE_ATTR_ERROR)
 			{
 				wchar_t str[40];
@@ -367,6 +370,7 @@ ScreenID LoadSaveScreenHandle(void)
 		}
 
 		case DIALOG_SAVE:
+    {
 			if( !ExtractFilenameFromFields() )
 			{
 				CreateMessageBox( L" Illegal filename.  Try another filename? " );
@@ -374,12 +378,12 @@ ScreenID LoadSaveScreenHandle(void)
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-			sprintf(gszCurrFilename, MAPSDIR "/%ls", gzFilename);
-			if ( FileExists( gszCurrFilename ) )
+      std::string filename(GCM->getMapPath(gzFilename));
+			if ( FileExists(filename.c_str()) )
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = FALSE;
-				const UINT32 attr = FileGetAttributes(gszCurrFilename);
+				const UINT32 attr = FileGetAttributes(filename.c_str());
 				if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_READONLY)
 				{
 					gfReadOnly = TRUE;
@@ -393,6 +397,7 @@ ScreenID LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			gbCurrentFileIOStatus = INITIATE_MAP_SAVE;
 			return LOADSAVE_SCREEN ;
+    }
 		case DIALOG_LOAD:
 			if( !ExtractFilenameFromFields() )
 			{
