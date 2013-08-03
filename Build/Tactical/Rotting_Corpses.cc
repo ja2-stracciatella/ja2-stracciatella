@@ -42,6 +42,7 @@
 #include "Interface.h"
 #include "MemMan.h"
 
+#include "FileMan.h"
 
 #define CORPSE_WARNING_MAX 5
 #define CORPSE_WARNING_DIST 5
@@ -506,13 +507,12 @@ try
 
 	// Get root filename... this removes path and extension
 	// Used to find struct data for this corpse...
-	char zFilename[150];
-	GetRootName(zFilename, lengthof(zFilename), AniParams.zCachedFile);
+  std::string zFilename(FileMan::getFileNameWithoutExt(AniParams.zCachedFile));
 
 	// Add structure data.....
 	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, ani->sCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
 
-	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename);
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename.c_str());
 	if (pStructureFileRef != NULL)
 	{
 		const UINT16                  usStructIndex   = GetCorpseStructIndex(pCorpseDef, TRUE);
@@ -1096,11 +1096,10 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	cnt3 = 0;
 
 	// Get root filename... this removes path and extension
-	// USed to find struct data fo rthis corpse...
-	char zFilename[150];
-	GetRootName(zFilename, lengthof(zFilename), zCorpseFilenames[pDef->ubType]);
+	// Used to find struct data for this corpse...
+  std::string zFilename(FileMan::getFileNameWithoutExt(zCorpseFilenames[pDef->ubType]));
 
-	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename );
+	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename.c_str() );
 
 	sSweetGridNo = pDef->sGridNo;
 

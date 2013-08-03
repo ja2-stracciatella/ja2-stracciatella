@@ -17,6 +17,9 @@
 #include "MemMan.h"
 #include "Tile_Cache.h"
 
+#include "slog/slog.h"
+#define TAG "Tiles"
+
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
@@ -30,20 +33,19 @@ try
 
 	// Load structure data, if any.
 	// Start by hacking the image filename into that for the structure data
-	SGPFILENAME cStructureFilename;
-	ReplacePath(cStructureFilename, lengthof(cStructureFilename), 0, cFilename, "." STRUCTURE_FILE_EXTENSION);
+  std::string cStructureFilename(FileMan::replaceExtension(cFilename, ".jsd"));
 
 	AutoStructureFileRef pStructureFileRef;
 	if (FileExists( cStructureFilename ))
 	{
-		pStructureFileRef = LoadStructureFile( cStructureFilename );
+    SLOGD(TAG, "loading tile %s", cStructureFilename.c_str());
+
+		pStructureFileRef = LoadStructureFile( cStructureFilename.c_str() );
 
 		if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
 		{
 			throw std::runtime_error("Structure file error");
 		}
-
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
 
 		AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0);
 	}
@@ -119,11 +121,10 @@ void SetRaisedObjectFlag(char const* const filename, TILE_IMAGERY* const t)
 	if (DEBRISWOOD != t->fType && t->fType != DEBRISWEEDS && t->fType != DEBRIS2MISC && t->fType != ANOTHERDEBRIS) return;
 
 	// Loop through array of RAISED objecttype imagery and set global value
-	char rootfile[128];
-	GetRootName(rootfile, lengthof(rootfile), filename);
+  std::string rootfile(FileMan::getFileNameWithoutExt(filename));
 	for (char const (*i)[9] = RaisedObjectFiles; i != endof(RaisedObjectFiles); ++i)
 	{
-		if (strcasecmp(*i, rootfile) != 0) continue;
+		if (strcasecmp(*i, rootfile.c_str()) != 0) continue;
 		t->bRaisedObjectType = TRUE;
 		return;
 	}

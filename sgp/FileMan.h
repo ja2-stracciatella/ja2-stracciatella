@@ -33,6 +33,7 @@ void InitializeFileManager(void);
 
 /* Checks if a file exists. */
 bool FileExists(char const* filename);
+bool FileExists(const std::string &filename);
 
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */
@@ -161,6 +162,16 @@ public:
 
   /** Join two path components. */
   static std::string joinPaths(const std::string &first, const std::string &second);
+
+  /** Replace extension of a file. */
+  static std::string replaceExtension(const std::string &path, const char *newExtensionWithDot);
+
+  /** Get filename from the path. */
+  static std::string getFileName(const std::string &path);
+
+  /** Get filename from the path without extension. */
+  static std::string getFileNameWithoutExt(const char *path);
+  static std::string getFileNameWithoutExt(const std::string &path);
 
 private:
   /** Private constructor to avoid instantiation. */

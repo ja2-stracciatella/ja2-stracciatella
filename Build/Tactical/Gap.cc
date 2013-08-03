@@ -6,6 +6,8 @@
 #include "SoundMan.h"
 #include "Sound_Control.h"
 
+#include "slog/slog.h"
+#define TAG "GAP"
 
 static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 {
@@ -17,12 +19,11 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("File is %s", szSoundEffects[uiSampleNum]));
 
 	// strip .wav and change to .gap
-	char sFileName[256];
-	ReplacePath(sFileName, lengthof(sFileName), 0, zSoundFile, ".gap");
+  std::string sFileName(FileMan::replaceExtension(std::string(zSoundFile), ".gap"));
 
 	try
 	{
-		AutoSGPFile f(FileMan::openForReadingSmart(sFileName, true));
+		AutoSGPFile f(FileMan::openForReadingSmart(sFileName.c_str(), true));
 
 		// gap file exists
 		// now read in the AUDIO_GAPs
@@ -54,7 +55,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Start %d and Ends %d", start, end));
 			}
 
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap List Started From File %s", sFileName));
+      SLOGD(TAG, "gap list started from file %s", sFileName.c_str());
 
 			MemFree(data);
 			return;

@@ -532,7 +532,6 @@ SRCS += Build/Tactical/LoadSaveMercProfile_unittest.cc
 SRCS += Build/VanillaDataStructures_unittest.cc
 SRCS += sgp/FileMan_unittest.cc
 SRCS += sgp/LoadSaveData_unittest.cc
-SRCS += sgp/SGPStrings_unittest.cc
 SRCS += sgp/UTF8String_unittest.cc
 SRCS += sgp/wchar_unittest.cc
 endif

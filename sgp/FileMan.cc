@@ -217,6 +217,11 @@ void InitializeFileManager(void)
 }
 
 
+bool FileExists(const std::string &filename)
+{
+  return FileExists(filename.c_str());
+}
+
 // TODO: need better name?
 bool FileExists(char const* const filename)
 {
@@ -961,4 +966,30 @@ FindAllFilesInDir(const std::string &dirPath, bool sortResults)
     std::sort(paths.begin(), paths.end());
   }
   return paths;
+}
+
+/** Replace extension of a file. */
+std::string FileMan::replaceExtension(const std::string &_path, const char *newExtensionWithDot)
+{
+  boost::filesystem::path path(_path);
+  boost::filesystem::path foo = boost::filesystem::path(newExtensionWithDot);
+  return path.replace_extension(newExtensionWithDot).string();
+}
+
+/** Get filename from the path. */
+std::string FileMan::getFileName(const std::string &_path)
+{
+  boost::filesystem::path path(_path);
+  return path.filename().string();
+}
+
+/** Get filename from the path without extension. */
+std::string FileMan::getFileNameWithoutExt(const char *path)
+{
+  return replaceExtension(getFileName(path), "");
+}
+
+std::string FileMan::getFileNameWithoutExt(const std::string &path)
+{
+  return getFileNameWithoutExt(path.c_str());
 }
