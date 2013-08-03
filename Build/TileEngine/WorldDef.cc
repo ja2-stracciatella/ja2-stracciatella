@@ -1716,16 +1716,13 @@ try
 		ubLevel     >= 4 ? "_a" : ""
 	);
 
-  std::string mapFileName(GCM->getMapPath(filename));
-
 	if (gfMajorUpdate)
 	{
 		LoadWorld(filename);
-		FileClearAttributes(mapFileName.c_str());
 		SaveWorld(filename);
 	}
 
-	AutoSGPFile f(FileMan::openForReadingSmart(mapFileName, true));
+	AutoSGPFile f(GCM->openMapForReading(filename));
 
 	wchar_t str[40];
 	swprintf(str, lengthof(str), L"Analyzing map %hs", filename);
@@ -2057,7 +2054,7 @@ try
 	gfBasement = FALSE;
 	gfCaves    = FALSE;
 
-	AutoSGPFile f(FileMan::openForReadingSmart(GCM->getMapPath(filename), true));
+	AutoSGPFile f(GCM->openMapForReading(filename));
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
 #ifdef JA2TESTVERSION
@@ -2957,8 +2954,7 @@ void ReloadTileset(TileSetID const ubID)
 	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	// Delete file
-  std::string fileToDelete(GCM->getMapPath(TEMP_FILE_FOR_TILESET_CHANGE));
-	FileDelete(fileToDelete.c_str());
+	FileDelete(GCM->getMapPath(TEMP_FILE_FOR_TILESET_CHANGE).c_str());
 }
 
 

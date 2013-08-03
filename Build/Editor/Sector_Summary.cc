@@ -2028,7 +2028,6 @@ static void CalculateOverrideStatus(void)
     filename = GCM->getMapPath(gszFilename);
   }
 
-  // XXX: need to get only name without directory
 	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%hs", FileMan::getFileName(filename).c_str());
 
 	const UINT32 attr = FileGetAttributes(filename.c_str());
@@ -2064,16 +2063,13 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		char filename[40];
 		sprintf(filename, "%c%d%s.dat", 'A' + y, x + 1, suffix);
 
-    std::string fullName(GCM->getMapPath(filename));
-
 		AutoSGPFile f_map;
 		try
 		{
-			f_map = FileMan::openForReadingSmart(fullName, true);
+			f_map = GCM->openMapForReading(filename);
 		}
 		catch (...)
 		{
-			FileDelete(fullName);
 			return FALSE;
 		}
 
@@ -2527,7 +2523,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector
-	AutoSGPFile hfile(FileMan::openForReadingSmart(GCM->getMapPath(gszFilename), true));
+	AutoSGPFile hfile(GCM->openMapForReading(gszFilename));
 	//Now fileseek directly to the file position where the number of world items are stored
 	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
 	//Now load the number of world items from the map.

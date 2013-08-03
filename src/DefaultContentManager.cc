@@ -32,6 +32,17 @@ std::string DefaultContentManager::getMapPath(const wchar_t *mapName) const
   return getMapPath(str.getUTF8());
 }
 
+/** Open map for reading. */
+SGPFile* DefaultContentManager::openMapForReading(const std::string& mapName) const
+{
+  return FileMan::openForReadingSmart(getMapPath(mapName.c_str()), true);
+}
+
+SGPFile* DefaultContentManager::openMapForReading(const wchar_t *mapName) const
+{
+  return FileMan::openForReadingSmart(getMapPath(mapName), true);
+}
+
 /** Get directory for storing new map file. */
 std::string DefaultContentManager::getNewMapFolder() const
 {

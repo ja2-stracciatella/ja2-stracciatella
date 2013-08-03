@@ -1,5 +1,7 @@
 #pragma once
 
+struct SGPFile;
+
 class ContentManager
 {
 public:
@@ -14,6 +16,10 @@ public:
 
   /** Get all available maps. */
   virtual std::vector<std::string> getAllMaps() const = 0;
+
+  /** Open map for reading. */
+  virtual SGPFile* openMapForReading(const std::string& mapName) const = 0;
+  virtual SGPFile* openMapForReading(const wchar_t *mapName) const = 0;
 
   /* /\** */
   /*  * Get location of the game executable file. */
