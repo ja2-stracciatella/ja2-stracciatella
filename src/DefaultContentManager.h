@@ -23,7 +23,11 @@ public:
   /** Get all available maps. */
   virtual std::vector<std::string> getAllMaps() const;
 
-  virtual void initGameResources();
+  /** Get all available tilecache. */
+  virtual std::vector<std::string> getAllTilecache() const;
+
+  virtual void initGameResources(const std::string &configFolder, const std::string &configPath,
+                                 const std::string &gameResRootPath, std::string &dataDir, std::string &tileDir);
 
   /* XXX: is openForReadingSmart to generic? */
   virtual SGPFile* openForReadingSmart(const char* filename, bool useSmartLookup) const;
@@ -33,6 +37,24 @@ public:
   virtual bool doesGameResExists(char const* filename) const;
   virtual bool doesGameResExists(const std::string &filename) const;
 
+  /** Get folder for screenshots. */
+  virtual std::string getScreenshotFolder() const;
+
+  /** Get folder for video capture. */
+  virtual std::string getVideoCaptureFolder() const;
+
 protected:
   std::string m_dataDir;
+  std::string m_tileDir;
+  std::string m_configFolder;
+  std::string m_gameResRootPath;
+};
+
+class LibraryFileNotFoundException : public std::runtime_error
+{
+public:
+  LibraryFileNotFoundException(const std::string& what_arg)
+    :std::runtime_error(what_arg)
+  {
+  }
 };

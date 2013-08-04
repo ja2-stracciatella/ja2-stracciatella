@@ -1,13 +1,23 @@
 #include "DefaultContentManager.h"
 
+#include <stdexcept>
+
+#include "Build/Directories.h"
 #include "Build/GameRes.h"
+
+// XXX
+#include "Build/GameState.h"
+
 #include "sgp/FileMan.h"
 #include "sgp/LibraryDataBase.h"
 #include "sgp/MemMan.h"
+#include "sgp/StrUtils.h"
 #include "sgp/UTF8String.h"
 
 #include "slog/slog.h"
 #define TAG "DefaultCM"
+
+#define BASEDATADIR    "data"
 
 #define MAPSDIR        "maps"
 
@@ -51,7 +61,7 @@ SGPFile* DefaultContentManager::openMapForReading(const wchar_t *mapName) const
 /** Get directory for storing new map file. */
 std::string DefaultContentManager::getNewMapFolder() const
 {
-  return FileMan::joinPaths(FileMan::getDataDirPath(), MAPSDIR);
+  return FileMan::joinPaths(m_dataDir, MAPSDIR);
 }
 
 /** Get all available maps. */
@@ -60,10 +70,59 @@ std::vector<std::string> DefaultContentManager::getAllMaps() const
   return FindFilesInDir(MAPSDIR, ".dat", true, true, true);
 }
 
-void DefaultContentManager::initGameResources()
+/** Get all available tilecache. */
+std::vector<std::string> DefaultContentManager::getAllTilecache() const
 {
-  m_dataDir = FileMan::getDataDirPath();
-  InitGameResources(m_dataDir);
+  return FindFilesInDir(m_tileDir, ".jsd", true, false);
+}
+
+void DefaultContentManager::initGameResources(const std::string &configFolder, const std::string &configPath, const std::string &gameResRootPath, std::string &dataDir, std::string &tileDir)
+{
+  /** Find actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
+   * On case-sensitive filesystems that might be tricky: if such directories
+   * exist we should use them.  If doesn't exist, then use lowercased names.
+   */
+
+  m_configFolder = configFolder;
+  m_gameResRootPath = gameResRootPath;
+
+  dataDir = FileMan::joinPaths(gameResRootPath, BASEDATADIR);
+  tileDir = FileMan::joinPaths(dataDir, TILECACHEDIR);
+
+#if CASE_SENSITIVE_FS
+
+  // need to find precise names of the directories
+
+  std::string name;
+  if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
+  {
+    dataDir = FileMan::joinPaths(s_gameResRootPath, name);
+  }
+
+  if(findObjectCaseInsensitive(dataDir.c_str(), TILECACHEDIR, false, true, name))
+  {
+    tileDir = FileMan::joinPaths(dataDir, name);
+  }
+#endif
+
+  m_dataDir = dataDir;
+  m_tileDir = tileDir;
+  std::vector<std::string> libraries = GetResourceLibraries(m_dataDir);
+
+  // XXX
+  if(GameState::getInstance()->isEditorMode())
+  {
+    libraries.push_back("editor.slf");
+  }
+
+  const char *failedLib = InitializeFileDatabase(dataDir, libraries);
+  if(failedLib)
+  {
+    std::string message = FormattedString(
+      "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s'.\n",
+      failedLib, m_dataDir.c_str(), m_gameResRootPath.c_str(), configPath.c_str());
+    throw LibraryFileNotFoundException(message);
+  }
 }
 
 /** Open file for reading only.
@@ -155,3 +214,12 @@ bool DefaultContentManager::doesGameResExists(const std::string &filename) const
   return doesGameResExists(filename.c_str());
 }
 
+std::string DefaultContentManager::getScreenshotFolder() const
+{
+  return m_configFolder;
+}
+
+std::string DefaultContentManager::getVideoCaptureFolder() const
+{
+  return m_configFolder;
+}

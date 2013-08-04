@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 /* Game resources */
 
@@ -62,8 +63,8 @@ char const* GetMLGFilename(MultiLanguageGraphic);
 /** Choose game version. */
 void setGameVersion(GameVersion ver);
 
-/** Initialize game resources for the current version. */
-void InitGameResources(const std::string &dataDir);
+/** Get list of resource libraries. */
+std::vector<std::string> GetResourceLibraries(const std::string &dataDir);
 
 /**
  * Get encoding corrector for strings in data files.

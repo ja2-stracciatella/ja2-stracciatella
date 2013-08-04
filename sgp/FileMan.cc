@@ -11,7 +11,6 @@
 #include "MemMan.h"
 #include "PODObj.h"
 #include "Logger.h"
-#include "MicroIni/MicroIni.hpp"
 
 #include "boost/filesystem.hpp"
 
@@ -34,7 +33,6 @@
 #include <dirent.h>
 #endif
 
-#define BASEDATADIR    "data"
 #define LOCAL_CURRENT_DIR "tmp"
 
 enum FileOpenFlags
@@ -47,11 +45,7 @@ enum FileOpenFlags
 ENUM_BITSET(FileOpenFlags)
 
 
-static std::string s_dataDir;
-static std::string s_tileDir;
-
-
-static void findDataDirs();
+static void findDataDirs(std::string &dataDir, std::string &tileDir);
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
 
 #if CASE_SENSITIVE_FS
@@ -65,27 +59,6 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
  * Abort program if conversion is not found.
  * @return file mode for fopen call and posix mode using parameter 'posixMode' */
 static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode);
-
-static std::string s_configFolderPath;
-static std::string s_configPath;
-static std::string s_gameResRootPath;
-
-static void WriteDefaultConfigFile(const char* ConfigFile)
-{
-	FILE* const IniFile = fopen(ConfigFile, "a");
-	if (IniFile != NULL)
-	{
-		fprintf(IniFile, "#Tells ja2-stracciatella where the binary datafiles are located\n");
-#ifdef _WIN32
-    fprintf(IniFile, "data_dir = C:\\Program Files\\Jagged Alliance 2");
-#else
-    fprintf(IniFile, "data_dir = /some/place/where/the/data/is");
-#endif
-		fclose(IniFile);
-		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
-	}
-}
-
 
 #if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 
@@ -120,8 +93,8 @@ void SetBinDataDirFromBundle(void)
 
 #endif
 
-
-void InitializeFileManager(void)
+/** Find config folder and switch into it. */
+std::string FileMan::findConfigFolderAndSwitchIntoIt()
 {
 #ifdef _WIN32
 	char home[MAX_PATH];
@@ -144,14 +117,14 @@ void InitializeFileManager(void)
 #endif
 
 #ifdef _WIN32
-  s_configFolderPath = FileMan::joinPaths(home, "JA2");
+  std::string configFolderPath = FileMan::joinPaths(home, "JA2");
 #else
-  s_configFolderPath = FileMan::joinPaths(home, ".ja2");
+  std::string configFolderPath = FileMan::joinPaths(home, ".ja2");
 #endif
 
-	if (mkdir(s_configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
+	if (mkdir(configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-    LOG_ERROR("Unable to create directory '%s'\n", s_configFolderPath.c_str());
+    LOG_ERROR("Unable to create directory '%s'\n", configFolderPath.c_str());
 		throw std::runtime_error("Unable to local directory");
 	}
 
@@ -159,7 +132,7 @@ void InitializeFileManager(void)
   // Temporary files will be created in this directory.
   // ----------------------------------------------------------------------------
 
-  std::string tmpPath = FileMan::joinPaths(s_configFolderPath, LOCAL_CURRENT_DIR);
+  std::string tmpPath = FileMan::joinPaths(configFolderPath, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
     LOG_ERROR("Unable to create tmp directory '%s'\n", tmpPath.c_str());
@@ -170,31 +143,7 @@ void InitializeFileManager(void)
     SetFileManCurrentDirectory(tmpPath.c_str());
   }
 
-  // Get directory with JA2 resources
-  // --------------------------------------------
-
-// #if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
-// 	SetBinDataDirFromBundle();
-// #endif
-
-  s_configPath = FileMan::joinPaths(s_configFolderPath, "ja2.ini");
-  MicroIni::File configFile;
-  if(!configFile.load(s_configPath) || !configFile[""].has("data_dir"))
-  {
-    LOG_WARNING("WARNING: Could not open configuration file (\"%s\").\n", s_configPath.c_str());
-    WriteDefaultConfigFile(s_configPath.c_str());
-    configFile.load(s_configPath);
-  }
-
-  s_gameResRootPath = configFile[""]["data_dir"];
-
-  findDataDirs();
-
-  LOG_INFO("Configuration file:            '%s'\n", s_configPath.c_str());
-  LOG_INFO("Root game resources directory: '%s'\n", s_gameResRootPath.c_str());
-  LOG_INFO("Data directory:                '%s'\n", s_dataDir.c_str());
-  LOG_INFO("Tilecache directory:           '%s'\n", s_tileDir.c_str());
-  LOG_INFO("------------------------------------------------------------------------------\n");
+  return configFolderPath;
 }
 
 
@@ -428,19 +377,6 @@ void EraseDirectory(char const* const dirPath)
 }
 
 
-/** Get path to the configuration folder. */
-const std::string& FileMan::getConfigFolderPath()
-{
-	return s_configFolderPath;
-}
-
-
-/** Get path to the configuration file. */
-const std::string& FileMan::getConfigPath()
-{
-  return s_configPath;
-}
-
 FileAttributes FileGetAttributes(const char* const filename)
 {
 	FileAttributes attr = FILE_ATTR_NONE;
@@ -575,11 +511,6 @@ static UINT32 GetFreeSpaceOnHardDrive(const char* const pzDriveLetter)
 }
 
 
-const std::string& FileMan::getGameResRootPath(void)
-{
-  return s_gameResRootPath;
-}
-
 /** Join two path components. */
 std::string FileMan::joinPaths(const std::string &first, const char *second)
 {
@@ -612,7 +543,7 @@ std::string FileMan::joinPaths(const char *first, const char *second)
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
  * @return true when found, return the found name using foundName. */
-static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
+static bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
 {
   bool result = false;
 
@@ -669,46 +600,6 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
   return result;
 }
 #endif
-
-
-/**
- * Find actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
- * On case-sensitive filesystems that might be tricky: if such directories
- * exist we should use them.  If doesn't exist, then use lowercased names.
- */
-static void findDataDirs()
-{
-    s_dataDir = FileMan::joinPaths(s_gameResRootPath, BASEDATADIR);
-    s_tileDir = FileMan::joinPaths(s_dataDir, TILECACHEDIR);
-
-#if CASE_SENSITIVE_FS
-
-    // need to find precise names of the directories
-
-    std::string name;
-    if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
-    {
-      s_dataDir = FileMan::joinPaths(s_gameResRootPath, name);
-    }
-
-    if(findObjectCaseInsensitive(s_dataDir.c_str(), TILECACHEDIR, false, true, name))
-    {
-      s_tileDir = FileMan::joinPaths(s_dataDir, name);
-    }
-#endif
-}
-
-/** Get path to the 'Data' directory of the game. */
-const std::string& FileMan::getDataDirPath()
-{
-  return s_dataDir;
-}
-
-/** Get path to the 'Data/Tilecache' directory of the game. */
-const std::string& FileMan::getTilecacheDirPath()
-{
-  return s_tileDir;
-}
 
 
 /** Convert file descriptor to HWFile.

@@ -36,12 +36,13 @@
 #include "GameRes.h"
 #include "Logger.h"
 #include "GameState.h"
-#include "Exceptions.h"
 #include "Timer.h"
 
 #include "GameInstance.h"
 #include "DefaultContentManager.h"
 #include "policy/DefaultGamePolicy.h"
+
+#include "MicroIni/MicroIni.hpp"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -72,7 +73,10 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 static BOOLEAN gfGameInitialized = FALSE;
 
 
-static void InitializeStandardGamingPlatform(ContentManager &cm)
+static std::string findRootGameResFolder(const std::string &configPath);
+static void WriteDefaultConfigFile(const char* ConfigFile);
+
+static void InitializeStandardGamingPlatform(DefaultContentManager &cm)
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_EnableUNICODE(SDL_ENABLE);
@@ -87,8 +91,21 @@ static void InitializeStandardGamingPlatform(ContentManager &cm)
 	// Initialize the Memory Manager
 	InitializeMemoryManager();
 
-	FastDebugMsg("Initializing File Manager");
-	InitializeFileManager();
+  FastDebugMsg("Initializing Game Resources");
+  std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
+  std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
+  std::string gameResRootPath = findRootGameResFolder(configPath);
+
+  std::string dataDir;
+  std::string tileDir;
+  cm.initGameResources(configFolderPath, configPath, gameResRootPath, dataDir, tileDir);
+
+  LOG_INFO("------------------------------------------------------------------------------\n");
+  LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
+  LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
+  LOG_INFO("Data directory:                '%s'\n", dataDir.c_str());
+  LOG_INFO("Tilecache directory:           '%s'\n", tileDir.c_str());
+  LOG_INFO("------------------------------------------------------------------------------\n");
 
 	FastDebugMsg("Initializing Video Manager");
 	InitializeVideoManager();
@@ -98,8 +115,6 @@ static void InitializeStandardGamingPlatform(ContentManager &cm)
 
 	FastDebugMsg("Initializing Video Surface Manager");
 	InitializeVideoSurfaceManager();
-
-  cm.initGameResources();
 
 #ifdef JA2
 	InitJA2SplashScreen();
@@ -520,4 +535,33 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 		);
 	}
 	return success;
+}
+
+static std::string findRootGameResFolder(const std::string &configPath)
+{
+  MicroIni::File configFile;
+  if(!configFile.load(configPath) || !configFile[""].has("data_dir"))
+  {
+    LOG_WARNING("WARNING: Could not open configuration file (\"%s\").\n", configPath.c_str());
+    WriteDefaultConfigFile(configPath.c_str());
+    configFile.load(configPath);
+  }
+
+  return configFile[""]["data_dir"];
+}
+
+static void WriteDefaultConfigFile(const char* ConfigFile)
+{
+	FILE* const IniFile = fopen(ConfigFile, "a");
+	if (IniFile != NULL)
+	{
+		fprintf(IniFile, "#Tells ja2-stracciatella where the binary datafiles are located\n");
+#ifdef _WIN32
+    fprintf(IniFile, "data_dir = C:\\Program Files\\Jagged Alliance 2");
+#else
+    fprintf(IniFile, "data_dir = /some/place/where/the/data/is");
+#endif
+		fclose(IniFile);
+		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
+	}
 }

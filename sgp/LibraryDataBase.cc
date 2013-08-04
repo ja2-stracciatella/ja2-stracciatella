@@ -8,8 +8,9 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "Logger.h"
-#include "Exceptions.h"
 #include "StrUtils.h"
+
+#include "GameInstance.h"
 
 #include "slog/slog.h"
 #define TAG "LibDB"
@@ -63,16 +64,9 @@ static DatabaseManagerHeaderStruct gFileDataBase;
 static BOOLEAN InitializeLibrary(const std::string &dataDir, const char* pLibraryName, LibraryHeaderStruct* pLibHeader);
 
 
-static void ThrowExcOnLibLoadFailure(const std::string &dataDir, const char* pLibraryName)
-{
-  std::string message = FormattedString(
-    "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s'.\n",
-    pLibraryName, dataDir.c_str(), FileMan::getGameResRootPath().c_str(), FileMan::getConfigPath().c_str());
-  FastDebugMsg(message.c_str());
-  throw LibraryFileNotFoundException(message);
-}
-
-void InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries)
+/** Initialize file database.
+ * @return NULL when successful, otherwise the name of failed library. */
+const char* InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries)
 {
 	//if all the libraries exist, set them up
   gFileDataBase.usNumberOfLibraries = libraries.size();
@@ -88,10 +82,11 @@ void InitializeFileDatabase(const std::string &dataDir, const std::vector<std::s
 		{
 			if (!InitializeLibrary(dataDir, libraries[i].c_str(), &libs[i]))
 			{
-        ThrowExcOnLibLoadFailure(dataDir, libraries[i].c_str());
+        return libraries[i].c_str();
 			}
 		}
 	}
+  return NULL;
 }
 
 
@@ -241,13 +236,6 @@ static BOOLEAN IsLibraryOpened(INT16 sLibraryID);
 static LibraryHeaderStruct* GetLibraryFromFileName(const std::string &filename)
 {
   bool hasDirectoryInPath = filename.find('/') != std::string::npos;
-
-  static int d = 0;
-
-  if(!strcmp(filename.c_str(), "radarmaps/D5.sti"))
-  {
-	  d++;
-  }
 
 	// Loop through all the libraries to check which library the file is in
 	LibraryHeaderStruct* best_match = 0;

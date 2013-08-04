@@ -134,8 +134,8 @@ FLOAT getMajorMapVersion()
   return (s_gameVersion == GV_RUSSIAN) ? 6.00 : 5.00;
 }
 
-
-void InitGameResources(const std::string &dataDir)
+/** Get list of resource libraries. */
+std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 {
   std::vector<std::string> libraries;
   libraries.push_back("data.slf");
@@ -173,13 +173,7 @@ void InitGameResources(const std::string &dataDir)
       default:
           break;
   }
-
-  if(GameState::getInstance()->isEditorMode())
-  {
-    libraries.push_back("editor.slf");
-  }
-
-  InitializeFileDatabase(dataDir, libraries);
+  return libraries;
 }
 
 

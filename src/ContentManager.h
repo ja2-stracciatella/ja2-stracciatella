@@ -17,11 +17,12 @@ public:
   /** Get all available maps. */
   virtual std::vector<std::string> getAllMaps() const = 0;
 
+  /** Get all available tilecache. */
+  virtual std::vector<std::string> getAllTilecache() const = 0;
+
   /** Open map for reading. */
   virtual SGPFile* openMapForReading(const std::string& mapName) const = 0;
   virtual SGPFile* openMapForReading(const wchar_t *mapName) const = 0;
-
-  virtual void initGameResources() = 0;
 
   /* XXX: is openForReadingSmart to generic? */
 
@@ -31,6 +32,12 @@ public:
   /* Checks if a game resource exists. */
   virtual bool doesGameResExists(char const* filename) const = 0;
   virtual bool doesGameResExists(const std::string &filename) const = 0;
+
+  /** Get folder for screenshots. */
+  virtual std::string getScreenshotFolder() const = 0;
+
+  /** Get folder for video capture. */
+  virtual std::string getVideoCaptureFolder() const = 0;
 
   /* /\** */
   /*  * Get location of the game executable file. */

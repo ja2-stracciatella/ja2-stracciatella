@@ -14,6 +14,8 @@
 #include "Vector.h"
 #include <boost/foreach.hpp>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 struct TILE_CACHE_STRUCT
 {
@@ -44,7 +46,7 @@ void InitTileCache(void)
 	}
 
 	// Look for JSD files in the tile cache directory and load any we find
-  std::vector<std::string> jsdFiles = FindFilesInDir(FileMan::getTilecacheDirPath(), ".jsd", true, false);
+  std::vector<std::string> jsdFiles = GCM->getAllTilecache();
 
   BOOST_FOREACH(const std::string &file, jsdFiles)
   {

@@ -14,8 +14,6 @@
 #	include <glob.h>
 #endif
 
-void InitializeFileManager(void);
-
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */
 void FileDelete(char const* path);
@@ -77,6 +75,9 @@ class FileMan
 {
 public:
 
+  /** Find config folder and switch into it. */
+  static std::string findConfigFolderAndSwitchIntoIt();
+
   /** Open file for writing.
    * If file is missing it will be created.
    * If file exists, it's content will be removed. */
@@ -90,29 +91,14 @@ public:
    * If file doesn't exist, it will be created. */
   static SGPFile* openForReadWrite(const char *filename);
 
-  /* ------------------------------------------------------------
-   * File operations with game resources.
-   * Game resources is what located in 'Data' directory and below.
-   * ------------------------------------------------------------ */
-
-  /** Get path to the configuration folder. */
-  static const std::string& getConfigFolderPath();
-
-  /** Get path to the configuration file. */
-  static const std::string& getConfigPath();
-
-  /** Get path to the root folder of game resources. */
-  static const std::string& getGameResRootPath();
-
-  /* XXX: ContentManager should keep this */
-  /** Get path to the 'Data' directory of the game. */
-  static const std::string& getDataDirPath();
-
-  /** Get path to the 'Data/Tilecache' directory of the game. */
-  static const std::string& getTilecacheDirPath();
+#if CASE_SENSITIVE_FS
+  /** Find an object (file or subdirectory) in the given directory in case-independent manner.
+   * @return true when found, return the found name using foundName. */
+  static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
+#endif
 
   /** Open file in the 'Data' directory in case-insensitive manner. */
-  static FILE* openForReadingCaseInsensitive(const std::string &dataDir, const char *filename);
+  static FILE* openForReadingCaseInsensitive(const std::string &folderPath, const char *filename);
 
   /* ------------------------------------------------------------
    * Other operations

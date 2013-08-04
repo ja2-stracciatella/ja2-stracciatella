@@ -37,7 +37,10 @@ struct LibraryHeaderStruct
 };
 
 
-void InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries);
+/** Initialize file database.
+ * @return NULL when successful, otherwise the name of failed library. */
+const char* InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries);
+
 void ShutDownFileDatabase(void);
 
 /** Check if file exists in the library.
