@@ -236,9 +236,8 @@ try
 		}
 
 		// Adjust for tileset position
-		char adjusted_filename[128];
-		sprintf(adjusted_filename, TILESETSDIR "/%d/%s", tileset_to_add, filename);
-		AddTileSurface(adjusted_filename, i, tileset_to_add);
+		std::string adjusted_filename(GCM->getTilesetResourceName(tileset_to_add, filename));
+		AddTileSurface(adjusted_filename.c_str(), i, tileset_to_add);
 	}
 }
 catch (...)

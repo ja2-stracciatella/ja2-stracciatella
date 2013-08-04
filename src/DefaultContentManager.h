@@ -16,6 +16,12 @@ public:
   /** Get radar map resource name. */
   virtual std::string getRadarMapResourceName(const std::string &mapName) const;
 
+  /** Get tileset resource name. */
+  virtual std::string getTilesetResourceName(int number, std::string fileName) const;
+
+  /** Get tileset db resource name. */
+  virtual std::string getTilesetDBResName() const;
+
   /** Open map for reading. */
   virtual SGPFile* openMapForReading(const std::string& mapName) const;
   virtual SGPFile* openMapForReading(const wchar_t *mapName) const;

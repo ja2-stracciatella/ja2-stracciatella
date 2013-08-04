@@ -21,6 +21,7 @@
 
 #define MAPSDIR        "maps"
 #define RADARMAPSDIR   "radarmaps"
+#define TILESETSDIR    "tilesets"
 
 #define DEBUG_PRINT_OPENING_FILES               (1)             /**< Flag telling to print names of the opening files. */
 
@@ -46,6 +47,19 @@ std::string DefaultContentManager::getRadarMapResourceName(const std::string &ma
   SLOGD(TAG, "map file %s", result.c_str());
 
   return result;
+}
+
+/** Get tileset resource name. */
+std::string DefaultContentManager::getTilesetResourceName(int number, std::string fileName) const
+{
+  return FormattedString("%s/%d/%s", TILESETSDIR, number, fileName.c_str());
+}
+
+
+/** Get tileset db resource name. */
+std::string DefaultContentManager::getTilesetDBResName() const
+{
+  return BINARYDATADIR "/ja2set.dat";
 }
 
 std::string DefaultContentManager::getMapPath(const wchar_t *mapName) const

@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "Directories.h"
 #include "FileMan.h"
 #include "LibraryDataBase.h"
 #include "MemMan.h"

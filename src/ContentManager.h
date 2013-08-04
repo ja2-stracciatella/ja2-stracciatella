@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 struct SGPFile;
 
 class ContentManager
@@ -13,6 +16,12 @@ public:
 
   /** Get radar map resource name. */
   virtual std::string getRadarMapResourceName(const std::string &mapName) const = 0;
+
+  /** Get tileset resource name. */
+  virtual std::string getTilesetResourceName(int number, std::string fileName) const = 0;
+
+  /** Get tileset db resource name. */
+  virtual std::string getTilesetDBResName() const = 0;
 
   /** Get directory for storing new map file. */
   virtual std::string getNewMapFolder() const = 0;
@@ -28,6 +37,9 @@ public:
   virtual SGPFile* openMapForReading(const wchar_t *mapName) const = 0;
 
   /* XXX: is openForReadingSmart to generic? */
+  /* XXX: rename to openGameResourceForReading */
+  /* XXX: when useSmartLookup == false, use something else  */
+  /* ja2set.dat */
 
   virtual SGPFile* openForReadingSmart(const char* filename, bool useSmartLookup) const = 0;
   virtual SGPFile* openForReadingSmart(const std::string& filename, bool useSmartLookup) const = 0;

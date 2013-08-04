@@ -22,7 +22,7 @@ static void SetTilesetTwoTerrainValues(void);
 void InitEngineTilesets(void)
 try
 {
-	AutoSGPFile f(GCM->openForReadingSmart(BINARYDATADIR "/ja2set.dat", true));
+	AutoSGPFile f(GCM->openForReadingSmart(GCM->getTilesetDBResName(), true));
 
 	// READ # TILESETS and compare
 	UINT8 ubNumSets;
