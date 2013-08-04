@@ -379,7 +379,7 @@ ScreenID LoadSaveScreenHandle(void)
 				return LOADSAVE_SCREEN;
 			}
       std::string filename(GCM->getMapPath(gzFilename));
-			if ( FileExists(filename.c_str()) )
+			if ( GCM->doesGameResExists(filename.c_str()) )
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = FALSE;

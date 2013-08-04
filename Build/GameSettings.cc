@@ -24,6 +24,8 @@
 #include	"Text.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define				GAME_SETTINGS_FILE		"../Ja2.set"
 
@@ -42,7 +44,7 @@ void LoadGameSettings(void)
 {
 	try
 	{
-		AutoSGPFile f(FileMan::openForReadingSmart(GAME_SETTINGS_FILE, false));
+		AutoSGPFile f(GCM->openForReadingSmart(GAME_SETTINGS_FILE, false));
 
 		BYTE data[76];
 		if (FileGetSize(f) != sizeof(data)) goto fail;

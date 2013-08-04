@@ -428,6 +428,7 @@
     <ClCompile Include="..\..\sgp\VSurface.cc" />
     <ClCompile Include="..\..\sgp\wchar_unittest.cc" />
     <ClCompile Include="..\..\src\content\npcs.cc" />
+    <ClCompile Include="..\..\src\DefaultContentManager.cc" />
     <ClCompile Include="..\..\src\internals\enums.cc" />
     <ClCompile Include="..\..\src\policy\DefaultGamePolicy.cc" />
     <ClCompile Include="..\..\src\Soldier.cc" />
@@ -829,7 +830,9 @@
     <ClInclude Include="..\..\sgp\VObject_Blitters.h" />
     <ClInclude Include="..\..\sgp\VSurface.h" />
     <ClInclude Include="..\..\sgp\WCheck.h" />
+    <ClInclude Include="..\..\src\ContentManager.h" />
     <ClInclude Include="..\..\src\content\npcs.h" />
+    <ClInclude Include="..\..\src\DefaultContentManager.h" />
     <ClInclude Include="..\..\src\GameInstance.h" />
     <ClInclude Include="..\..\src\internals\enums.h" />
     <ClInclude Include="..\..\src\policy\DefaultGamePolicy.h" />

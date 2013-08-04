@@ -1185,6 +1185,9 @@
     <ClCompile Include="..\..\src\internals\enums.cc">
       <Filter>Source Files\src\internals</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\DefaultContentManager.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -2356,6 +2359,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\internals\enums.h">
       <Filter>Source Files\src\internals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ContentManager.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\DefaultContentManager.h">
+      <Filter>Source Files\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

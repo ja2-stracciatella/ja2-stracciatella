@@ -45,6 +45,9 @@
 #include "Items.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 extern BOOLEAN gfProfileDataLoaded;
 
 
@@ -119,14 +122,14 @@ static void StartSomeMercsOnAssignment(void);
 
 void LoadMercProfiles()
 {
-	{ AutoSGPFile f(FileMan::openForReadingSmart(BINARYDATADIR "/prof.dat", true));
+	{ AutoSGPFile f(GCM->openForReadingSmart(BINARYDATADIR "/prof.dat", true));
     LoadRawMercProfiles(f, NUM_PROFILES, gMercProfiles, getDataFilesEncodingCorrector());
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
 			MERCPROFILESTRUCT& p = gMercProfiles[i];
 
 			// If the dialogue exists for the merc, allow the merc to be hired
-			p.bMercStatus = FileExists(GetDialogueDataFilename(i, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE;
+			p.bMercStatus = GCM->doesGameResExists(GetDialogueDataFilename(i, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE;
 
 			p.sMedicalDepositAmount = p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0;
 

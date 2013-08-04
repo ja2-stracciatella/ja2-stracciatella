@@ -33,6 +33,8 @@
 #include "UILayout.h"
 #include "GameState.h"
 
+#include "sgp/FileMan.h"
+
 #ifdef JA2BETAVERSION
 #	include "PreBattle_Interface.h"
 #endif

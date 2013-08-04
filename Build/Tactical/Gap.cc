@@ -6,6 +6,9 @@
 #include "SoundMan.h"
 #include "Sound_Control.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 #include "slog/slog.h"
 #define TAG "GAP"
 
@@ -23,7 +26,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 	try
 	{
-		AutoSGPFile f(FileMan::openForReadingSmart(sFileName.c_str(), true));
+		AutoSGPFile f(GCM->openForReadingSmart(sFileName.c_str(), true));
 
 		// gap file exists
 		// now read in the AUDIO_GAPs

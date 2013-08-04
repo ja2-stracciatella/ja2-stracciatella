@@ -13,6 +13,8 @@
 #include "Points.h"
 #include "Debug_Control.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 // Defines for Anim inst reading, taken from orig Jagged
 #define	ANIMFILENAME					BINARYDATADIR "/ja2bin.dat"
@@ -2411,7 +2413,7 @@ void	InitAnimationSurfacesPerBodytype( )
 
 void LoadAnimationStateInstructions()
 {
-	AutoSGPFile hFile(FileMan::openForReadingSmart(ANIMFILENAME, true));
+	AutoSGPFile hFile(GCM->openForReadingSmart(ANIMFILENAME, true));
 	FileRead(hFile, gusAnimInst, sizeof(gusAnimInst));
 }
 

@@ -37,23 +37,6 @@
 #define BASEDATADIR    "data"
 #define LOCAL_CURRENT_DIR "tmp"
 
-enum SGPFileFlags
-{
-	SGPFILE_NONE = 0U,
-	SGPFILE_REAL = 1U << 0
-};
-
-struct SGPFile
-{
-	SGPFileFlags flags;
-	union
-	{
-		FILE*       file;
-		LibraryFile lib;
-	} u;
-};
-
-
 enum FileOpenFlags
 {
 	FILE_ACCESS_READ      = 1U << 0,
@@ -70,10 +53,6 @@ static std::string s_tileDir;
 
 static void findDataDirs();
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
-
-/** Convert file descriptor to HWFile.
- * Raise runtime_error if not possible. */
-static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode);
 
 #if CASE_SENSITIVE_FS
 /**
@@ -219,43 +198,20 @@ void InitializeFileManager(void)
 }
 
 
-bool FileExists(const std::string &filename)
+/** Open file in the given folder in case-insensitive manner.
+ * @return file descriptor or -1 if file is not found. */
+int FileMan::openFileCaseInsensitive(const std::string &folderPath, const char *filename, int mode)
 {
-  return FileExists(filename.c_str());
-}
-
-// TODO: need better name?
-bool FileExists(char const* const filename)
-{
-	FILE* file = fopen(filename, "rb");
-	if (!file)
-	{
-		char path[512];
-		snprintf(path, lengthof(path), "%s/%s", FileMan::getDataDirPath().c_str(), filename);
-		file = fopen(path, "rb");
-		if (!file) return CheckIfFileExistInLibrary(filename);
-	}
-
-	fclose(file);
-	return true;
-}
-
-/**
- * Open file in the Data directory.
- *
- * Return file descriptor or -1 if file is not found. */
-static int OpenFileInDataDirFD(const char *filename, int mode)
-{
-  std::string path = FileMan::joinPaths(FileMan::getDataDirPath(), filename);
+  std::string path = FileMan::joinPaths(folderPath, filename);
   int d = open(path.c_str(), mode);
   if (d < 0)
   {
 #if CASE_SENSITIVE_FS
     // on case-sensitive file system need to try to find another name
     std::string newFileName;
-    if(findObjectCaseInsensitive(FileMan::getDataDirPath().c_str(), filename, true, false, newFileName))
+    if(findObjectCaseInsensitive(folderPath.c_str(), filename, true, false, newFileName))
     {
-      path = FileMan::joinPaths(FileMan::getDataDirPath(), newFileName);
+      path = FileMan::joinPaths(folderPath, newFileName);
       d = open(path.c_str(), mode);
     }
 #endif
@@ -295,6 +251,12 @@ void FileDelete(char const* const path)
 }
 
 
+/** Get file open modes from reading. */
+const char* GetFileOpenModeForReading(int *posixMode)
+{
+  return GetFileOpenModes(FILE_ACCESS_READ, posixMode);
+}
+
 /** Get file open modes from our enumeration.
  * Abort program if conversion is not found.
  * @return file mode for fopen call and posix mode using parameter 'posixMode' */
@@ -320,70 +282,7 @@ static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
   return cMode;
 }
 
-HWFILE FileMan::openForReadingSmart(const std::string& filename, bool useSmartLookup)
-{
-  return openForReadingSmart(filename.c_str(), useSmartLookup);
-}
-
-/** Open file for reading only.
- * When using the smart lookup:
- *  - first try to open file normally.
- *    It will work if the path is absolute and the file is found or path is relative to the current directory
- *    and file is present;
- *  - if file is not found, try to find the file relatively to 'Data' directory;
- *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-HWFILE FileMan::openForReadingSmart(const char* filename, bool useSmartLookup)
-{
-  int         mode;
-  const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
-
-  int d;
-
-  {
-    d = open(filename, mode);
-    if ((d < 0) && useSmartLookup)
-    {
-      // failed to open file in the local directory
-      // let's try Data
-      d = OpenFileInDataDirFD(filename, mode);
-      if (d < 0)
-      {
-        LibraryFile libFile;
-        memset(&libFile, 0, sizeof(libFile));
-
-        // failed to open in the data dir
-        // let's try libraries
-        if (OpenFileFromLibrary(filename, &libFile))
-        {
-#if DEBUG_PRINT_OPENING_FILES
-          LOG_INFO("Opened file (from library ): %s\n", filename);
-#endif
-          SGPFile *file = MALLOCZ(SGPFile);
-          file->flags = SGPFILE_NONE;
-          file->u.lib = libFile;
-          return file;
-        }
-      }
-      else
-      {
-#if DEBUG_PRINT_OPENING_FILES
-        LOG_INFO("Opened file (from data dir): %s\n", filename);
-#endif
-      }
-    }
-    else
-    {
-#if DEBUG_PRINT_OPENING_FILES
-      LOG_INFO("Opened file (current dir  ): %s\n", filename);
-#endif
-    }
-  }
-
-  return getSGPFileFromFD(d, filename, fmode);
-}
-
-
-void FileClose(const HWFILE f)
+void FileClose(SGPFile* f)
 {
 	if (f->flags & SGPFILE_REAL)
 	{
@@ -403,7 +302,7 @@ extern UINT32 uiTotalFileReadTime;
 extern UINT32 uiTotalFileReadCalls;
 #endif
 
-void FileRead(HWFILE const f, void* const pDest, size_t const uiBytesToRead)
+void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 {
 #ifdef JA2TESTVERSION
 	const UINT32 uiStartTime = GetJA2Clock();
@@ -429,14 +328,14 @@ void FileRead(HWFILE const f, void* const pDest, size_t const uiBytesToRead)
 }
 
 
-void FileWrite(HWFILE const f, void const* const pDest, size_t const uiBytesToWrite)
+void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesToWrite)
 {
 	if (!(f->flags & SGPFILE_REAL)) throw std::logic_error("Tried to write to library file");
 	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
 }
 
 
-void FileSeek(HWFILE const f, INT32 distance, FileSeekMode const how)
+void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 {
 	bool success;
 	if (f->flags & SGPFILE_REAL)
@@ -459,13 +358,13 @@ void FileSeek(HWFILE const f, INT32 distance, FileSeekMode const how)
 }
 
 
-INT32 FileGetPos(const HWFILE f)
+INT32 FileGetPos(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : f->u.lib.uiFilePosInFile;
 }
 
 
-UINT32 FileGetSize(const HWFILE f)
+UINT32 FileGetSize(const SGPFile* f)
 {
 	if (f->flags & SGPFILE_REAL)
 	{
@@ -579,7 +478,7 @@ BOOLEAN FileClearAttributes(const char* const filename)
 }
 
 
-BOOLEAN GetFileManFileTime(const HWFILE f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
+BOOLEAN GetFileManFileTime(const SGPFile* f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED;
@@ -629,7 +528,7 @@ INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FI
 }
 
 
-FILE* GetRealFileHandleFromFileManFileHandle(const HWFILE f)
+FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? f->u.file : f->u.lib.lib->hLibraryHandle;
 }
@@ -814,7 +713,7 @@ const std::string& FileMan::getTilecacheDirPath()
 
 /** Convert file descriptor to HWFile.
  * Raise runtime_error if not possible. */
-static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode)
+SGPFile* FileMan::getSGPFileFromFD(int fd, const char *filename, const char *fmode)
 {
 	if (fd < 0)
   {
@@ -841,7 +740,7 @@ static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode)
 /** Open file for writing.
  * If file is missing it will be created.
  * If file exists, it's content will be removed. */
-HWFILE FileMan::openForWriting(const char *filename)
+SGPFile* FileMan::openForWriting(const char *filename)
 {
 	int mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_WRITE, &mode);
@@ -853,7 +752,7 @@ HWFILE FileMan::openForWriting(const char *filename)
 
 /** Open file for appending data.
  * If file doesn't exist, it will be created. */
-HWFILE FileMan::openForAppend(const char *filename)
+SGPFile* FileMan::openForAppend(const char *filename)
 {
 	int         mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_APPEND, &mode);
@@ -865,7 +764,7 @@ HWFILE FileMan::openForAppend(const char *filename)
 
 /** Open file for reading and writing.
  * If file doesn't exist, it will be created. */
-HWFILE FileMan::openForReadWrite(const char *filename)
+SGPFile* FileMan::openForReadWrite(const char *filename)
 {
 	int         mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_READWRITE, &mode);
@@ -874,14 +773,13 @@ HWFILE FileMan::openForReadWrite(const char *filename)
   return getSGPFileFromFD(d, filename, fmode);
 }
 
-
-/** Open file in the 'Data' directory in case-insensitive manner. */
-FILE* FileMan::openForReadingInDataDir(const char *filename)
+/** Open file for reading.  Look file in folderPath in case-insensitive manner. */
+FILE* FileMan::openForReadingCaseInsensitive(const std::string &folderPath, const char *filename)
 {
 	int mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
 
-  int d = OpenFileInDataDirFD(filename, mode);
+  int d = openFileCaseInsensitive(folderPath, filename, mode);
   if(d >= 0)
   {
     FILE* hFile = fdopen(d, fmode);
@@ -994,4 +892,22 @@ std::string FileMan::getFileNameWithoutExt(const char *path)
 std::string FileMan::getFileNameWithoutExt(const std::string &path)
 {
   return getFileNameWithoutExt(path.c_str());
+}
+
+int FileMan::openFileForReading(const char *filename, int mode)
+{
+  return open(filename, mode);
+}
+
+/** Replace all \ with / */
+void FileMan::slashifyPath(std::string &path)
+{
+  int len = path.size();
+  for(int i = 0; i < len; i++)
+  {
+    if(path[i] == '\\')
+    {
+      path[i] = '/';
+    }
+  }
 }

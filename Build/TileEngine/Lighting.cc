@@ -44,6 +44,8 @@
 #include "PathAI.h"
 #include "MemMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 
@@ -2079,7 +2081,7 @@ void LightSave(LightTemplate const* const t, char const* const pFilename)
  * the file wasn't loaded. */
 static LightTemplate* LightLoad(const char* pFilename)
 {
-	AutoSGPFile hFile(FileMan::openForReadingSmart(pFilename, true));
+	AutoSGPFile hFile(GCM->openForReadingSmart(pFilename, true));
 
 	UINT16 n_lights;
 	FileRead(hFile, &n_lights, sizeof(n_lights));

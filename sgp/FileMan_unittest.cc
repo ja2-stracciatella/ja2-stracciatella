@@ -177,3 +177,10 @@ TEST(FileManTest, ReplaceExtension)
   EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".bin").c_str(),  "c:\\a\\foo.bin");
   EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin").c_str(),   "c:\\a\\foo.bin");
 }
+
+TEST(FileManTest, SlashifyPath)
+{
+  std::string test("foo\\bar\\baz");
+  FileMan::slashifyPath(test);
+  EXPECT_STREQ(test.c_str(), "foo/bar/baz");
+}

@@ -8,6 +8,8 @@
 #include "SoundMan.h"
 #include "Debug.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;
@@ -19,7 +21,7 @@ try
 	SGPFILENAME zFilename;
 	sprintf(zFilename, AMBIENTDIR "/%d.bad", ubAmbientID);
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(zFilename, true));
+	AutoSGPFile hFile(GCM->openForReadingSmart(zFilename, true));
 
 	// READ #
 	FileRead(hFile, &gsNumAmbData, sizeof(INT16));

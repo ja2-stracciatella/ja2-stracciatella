@@ -21,6 +21,17 @@ public:
   virtual SGPFile* openMapForReading(const std::string& mapName) const = 0;
   virtual SGPFile* openMapForReading(const wchar_t *mapName) const = 0;
 
+  virtual void initGameResources() = 0;
+
+  /* XXX: is openForReadingSmart to generic? */
+
+  virtual SGPFile* openForReadingSmart(const char* filename, bool useSmartLookup) const = 0;
+  virtual SGPFile* openForReadingSmart(const std::string& filename, bool useSmartLookup) const = 0;
+
+  /* Checks if a game resource exists. */
+  virtual bool doesGameResExists(char const* filename) const = 0;
+  virtual bool doesGameResExists(const std::string &filename) const = 0;
+
   /* /\** */
   /*  * Get location of the game executable file. */
   /*  *\/ */

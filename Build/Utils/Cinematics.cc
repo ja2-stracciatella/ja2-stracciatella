@@ -20,6 +20,8 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 struct SMKFLIC
 {
@@ -127,7 +129,7 @@ try
 		return NULL;
 	}
 
-	AutoSGPFile file(FileMan::openForReadingSmart(filename, true));
+	AutoSGPFile file(GCM->openForReadingSmart(filename, true));
 
 	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 

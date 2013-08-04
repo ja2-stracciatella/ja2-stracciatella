@@ -17,6 +17,9 @@
 #include "MemMan.h"
 #include "Tile_Cache.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 #include "slog/slog.h"
 #define TAG "Tiles"
 
@@ -36,7 +39,7 @@ try
   std::string cStructureFilename(FileMan::replaceExtension(cFilename, ".jsd"));
 
 	AutoStructureFileRef pStructureFileRef;
-	if (FileExists( cStructureFilename ))
+	if (GCM->doesGameResExists( cStructureFilename ))
 	{
     SLOGD(TAG, "loading tile %s", cStructureFilename.c_str());
 

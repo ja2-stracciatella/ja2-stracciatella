@@ -45,6 +45,8 @@
 #include "Debug.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define NUM_NPC_QUOTE_RECORDS  50
 #define NUM_CIVQUOTE_SECTORS   20
@@ -324,7 +326,7 @@ try
 
 	}
 
-	AutoSGPFile f(FileMan::openForReadingSmart(zFileName, true));
+	AutoSGPFile f(GCM->openForReadingSmart(zFileName, true));
 	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
 catch (...) { return 0; }
@@ -466,7 +468,7 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 		sprintf(buf, NPCDATADIR "/%c%d.npc", 'A' + gsCivQuoteSector[idx][1] - 1, gsCivQuoteSector[idx][0]);
 		filename = buf;
 	}
-	AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
+	AutoSGPFile f(GCM->openForReadingSmart(filename, true));
 	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
 

@@ -37,6 +37,8 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 static DOOR_STATUS* gpDoorStatus     = NULL;
 static UINT8        gubNumDoorStatus = 0;
@@ -106,7 +108,7 @@ try
 
 	// Load the Lock Table
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(pFileName, true));
+	AutoSGPFile hFile(GCM->openForReadingSmart(pFileName, true));
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
 	FileRead(hFile, LockTable, uiBytesToRead);
@@ -838,12 +840,12 @@ void LoadDoorTableFromDoorTableTempFile()
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!FileExists(zMapName)) return;
+	if (!GCM->doesGameResExists(zMapName)) return;
 
 	//Get rid of the existing door table
 	TrashDoorTable();
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
+	AutoSGPFile hFile(GCM->openForReadingSmart(zMapName, true));
 
 	//Read in the number of doors
 	FileRead(hFile, &gubMaxDoors, sizeof(UINT8));
@@ -1215,7 +1217,7 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openForReadingSmart(map_name, true));
 
 	// Load the number of elements in the door status array
 	FileRead(f, &gubNumDoorStatus, sizeof(UINT8));

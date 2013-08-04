@@ -72,7 +72,7 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 static BOOLEAN gfGameInitialized = FALSE;
 
 
-static void InitializeStandardGamingPlatform(void)
+static void InitializeStandardGamingPlatform(ContentManager &cm)
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_EnableUNICODE(SDL_ENABLE);
@@ -99,7 +99,7 @@ static void InitializeStandardGamingPlatform(void)
 	FastDebugMsg("Initializing Video Surface Manager");
 	InitializeVideoSurfaceManager();
 
-  InitGameResources();
+  cm.initGameResources();
 
 #ifdef JA2
 	InitJA2SplashScreen();
@@ -277,7 +277,7 @@ try
 #endif
 
   // init logging
-  SLOG_Init(SLOG_STDERR, NULL);
+  SLOG_Init(SLOG_STDERR, "ja2.log");
   SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
   setGameVersion(GV_ENGLISH);
@@ -299,7 +299,7 @@ try
   }
 #endif
 
-	InitializeStandardGamingPlatform();
+	InitializeStandardGamingPlatform(g_contentManager);
 
 
 #if defined JA2

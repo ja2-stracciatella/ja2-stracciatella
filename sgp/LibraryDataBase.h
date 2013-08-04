@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "Types.h"
-#include "FileMan.h"
-
+#include "sgp/SGPFile.h"
+#include "sgp/Types.h"
 
 #define	REAL_FILE_LIBRARY_ID					1022
 
@@ -30,34 +29,25 @@ struct FileHeaderStruct
 
 struct LibraryHeaderStruct
 {
-	char* sLibraryPath;
+  std::string sLibraryPath;
 	FILE* hLibraryHandle;
 	UINT16	usNumberOfEntries;
 	INT32		iNumFilesOpen;
 	FileHeaderStruct *pFileHeader;
-
-//
-//	Temp:	Total memory used for each library ( all memory allocated
-//
-	#ifdef JA2TESTVERSION
-		UINT32	uiTotalMemoryAllocatedForLibrary;
-	#endif
 };
 
 
-struct LibraryFile
-{
-	UINT32                  uiFilePosInFile; // current position in the file
-	LibraryHeaderStruct*    lib;
-	const FileHeaderStruct* pFileHeader;
-};
-
-
-void InitializeFileDatabase(const std::vector<std::string> &libraries);
+void InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries);
 void ShutDownFileDatabase(void);
-bool CheckIfFileExistInLibrary(char const* filename);
 
-BOOLEAN OpenFileFromLibrary(const char* filename, LibraryFile*);
+/** Check if file exists in the library.
+ * Name of the file should use / (not \\). */
+bool CheckIfFileExistInLibrary(const std::string &filename);
+
+/** Find file in the library.
+ * Name of the file should use / not \\. */
+BOOLEAN FindFileInTheLibrarry(const std::string &filename, LibraryFile*);
+
 /* Close an individual file that is contained in the library */
 void    CloseLibraryFile(LibraryFile*);
 BOOLEAN LoadDataFromLibrary(LibraryFile*, void* pData, UINT32 uiBytesToRead);

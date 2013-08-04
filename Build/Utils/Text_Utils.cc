@@ -5,6 +5,8 @@
 #include "GameSettings.h"
 #include "Encrypted_File.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define ITEMSTRINGFILENAME BINARYDATADIR "/itemdesc.edt"
 
@@ -18,7 +20,7 @@ void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])
 
 static void LoadAllItemNames(void)
 {
-	AutoSGPFile File(FileMan::openForReadingSmart(ITEMSTRINGFILENAME, true));
+	AutoSGPFile File(GCM->openForReadingSmart(ITEMSTRINGFILENAME, true));
 	for (UINT32 i = 0; i < MAXITEMS; i++)
 	{
 		UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * i;

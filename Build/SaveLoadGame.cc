@@ -107,6 +107,9 @@
 #include "UTF8String.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 static const char g_quicksave_name[] = "QuickSave";
 static const char g_savegame_name[]  = "SaveGame";
 static const char g_savegame_ext[]   = "sav";
@@ -709,7 +712,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(FileMan::openForReadingSmart(zSaveGameName, false));
+	AutoSGPFile f(GCM->openForReadingSmart(zSaveGameName, false));
 	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
@@ -1466,7 +1469,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(FileMan::openForReadingSmart(pSrcFileName, true));
+	AutoSGPFile hSrcFile(GCM->openForReadingSmart(pSrcFileName, true));
 
 #ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
@@ -2535,16 +2538,16 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	char zFileName2[256];
 	sprintf(zFileName2, "%s/Auto%02d.%s", g_savegame_dir, 1, g_savegame_ext);
 
-	if( FileExists( zFileName1 ) )
+	if( GCM->doesGameResExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(zFileName1, false));
+		AutoSGPFile hFile(GCM->openForReadingSmart(zFileName1, false));
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
-	if( FileExists( zFileName2 ) )
+	if( GCM->doesGameResExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(zFileName2, false));
+		AutoSGPFile hFile(GCM->openForReadingSmart(zFileName2, false));
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}

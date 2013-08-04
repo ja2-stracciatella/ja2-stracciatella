@@ -16,6 +16,8 @@
 #include "FileMan.h"
 #include "MemMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define EMPTY_SLOT		-1
 #define TO_INIT				0
@@ -547,7 +549,7 @@ void InitAnimationSystem()
 		{
 			const char* Filename = gAnimStructureDatabase[cnt1][cnt2].Filename;
 
-			if (FileExists(Filename))
+			if (GCM->doesGameResExists(Filename))
 			{
 				STRUCTURE_FILE_REF* pStructureFileRef = LoadStructureFile(Filename);
 				gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef = pStructureFileRef;
@@ -760,7 +762,7 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 static void LoadAnimationProfiles(void)
 try
 {
-	AutoSGPFile f(FileMan::openForReadingSmart(ANIMPROFILEFILENAME, true));
+	AutoSGPFile f(GCM->openForReadingSmart(ANIMPROFILEFILENAME, true));
 
 	FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles));
 

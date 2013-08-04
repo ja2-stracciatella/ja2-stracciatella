@@ -135,7 +135,7 @@ FLOAT getMajorMapVersion()
 }
 
 
-void InitGameResources(void)
+void InitGameResources(const std::string &dataDir)
 {
   std::vector<std::string> libraries;
   libraries.push_back("data.slf");
@@ -179,7 +179,7 @@ void InitGameResources(void)
     libraries.push_back("editor.slf");
   }
 
-  InitializeFileDatabase(libraries);
+  InitializeFileDatabase(dataDir, libraries);
 }
 
 

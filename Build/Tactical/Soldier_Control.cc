@@ -86,6 +86,8 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 #include "Soldier.h"
 
 #if defined JA2BETAVERSION
@@ -4925,7 +4927,7 @@ void LoadPaletteData()
 {
 	UINT32			cnt, cnt2;
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(PALETTEFILENAME, true));
+	AutoSGPFile hFile(GCM->openForReadingSmart(PALETTEFILENAME, true));
 
 	// Read # of types
 	FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));
@@ -5963,13 +5965,13 @@ no_sub:
 	SGPFILENAME filename;
 	sprintf(filename, BATTLESNDSDIR "/%s_%s.wav", basename, battle_snd->zName);
 
-	if (!FileExists(filename))
+	if (!GCM->doesGameResExists(filename))
 	{
 		if (battle_snd_id == BATTLE_SOUND_DIE1)
 		{
 			// The "die" sound filenames differs between profiles and languages
 			sprintf(filename, BATTLESNDSDIR "/%s_dying.wav", basename);
-			if (FileExists(filename)) goto file_exists;
+			if (GCM->doesGameResExists(filename)) goto file_exists;
 		}
 
 		if (s->ubProfile == NO_PROFILE) return FALSE;

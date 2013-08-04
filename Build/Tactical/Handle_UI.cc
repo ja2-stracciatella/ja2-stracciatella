@@ -74,6 +74,8 @@
 #include "Screens.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 #include "Soldier.h"
 
 #define MAX_ON_DUTY_SOLDIERS 6
@@ -1012,7 +1014,7 @@ ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 	}
 	else
 	{
-		if( FileExists( "../AutoSave.pls" ) && CanGameBeSaved() )
+		if( GCM->doesGameResExists( "../AutoSave.pls" ) && CanGameBeSaved() )
 		{
 			//Save the game
 			guiPreviousOptionScreen = guiCurrentScreen;

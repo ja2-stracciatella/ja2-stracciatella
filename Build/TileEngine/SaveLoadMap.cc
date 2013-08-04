@@ -21,6 +21,8 @@
 #include "Smell.h"
 #include "MemMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define			NUM_REVEALED_BYTES			3200
 
@@ -66,12 +68,12 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!FileExists(zMapName)) return;
+	if (!GCM->doesGameResExists(zMapName)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
+		AutoSGPFile hFile(GCM->openForReadingSmart(zMapName, true));
 
 		//Get the size of the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -428,10 +430,10 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!FileExists(zMapName)) return;
+	if (!GCM->doesGameResExists(zMapName)) return;
 
 	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
+		AutoSGPFile hFile(GCM->openForReadingSmart(zMapName, true));
 
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
@@ -615,7 +617,7 @@ try
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
+		AutoSGPFile hFile(GCM->openForReadingSmart(zMapName, true));
 
 		//Get the number of elements in the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -746,13 +748,13 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 	GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, map_name, usSectorX, usSectorY, bSectorZ);
 
 	// If the file doesn't exists, it's no problem.
-	if (!FileExists(map_name)) return;
+	if (!GCM->doesGameResExists(map_name)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> mm;
 	{
 		// Read the map temp file into a buffer
-		AutoSGPFile src(FileMan::openForReadingSmart(map_name, true));
+		AutoSGPFile src(GCM->openForReadingSmart(map_name, true));
 
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 

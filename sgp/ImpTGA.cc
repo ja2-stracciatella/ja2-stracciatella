@@ -9,6 +9,8 @@
 #include "MemMan.h"
 #include "Debug.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 static SGPImage* ReadRLEColMapImage(   HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 static SGPImage* ReadRLERGBImage(      HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
@@ -20,7 +22,7 @@ SGPImage* LoadTGAFileToImage(char const* const filename, UINT16 const fContents)
 {
 	UINT8		uiImgID, uiColMap, uiType;
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(filename, true));
+	AutoSGPFile hFile(GCM->openForReadingSmart(filename, true));
 
 	FileRead(hFile, &uiImgID,  sizeof(UINT8));
 	FileRead(hFile, &uiColMap, sizeof(UINT8));
