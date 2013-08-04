@@ -13,6 +13,9 @@ public:
   virtual std::string getMapPath(const char *mapName) const;
   virtual std::string getMapPath(const wchar_t *mapName) const;
 
+  /** Get radar map resource name. */
+  virtual std::string getRadarMapResourceName(const std::string &mapName) const;
+
   /** Open map for reading. */
   virtual SGPFile* openMapForReading(const std::string& mapName) const;
   virtual SGPFile* openMapForReading(const wchar_t *mapName) const;

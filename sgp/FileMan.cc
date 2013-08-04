@@ -33,6 +33,8 @@
 #include <dirent.h>
 #endif
 
+// XXX: remove FileMan class and make it into a namespace
+
 #define LOCAL_CURRENT_DIR "tmp"
 
 enum FileOpenFlags
@@ -45,7 +47,6 @@ enum FileOpenFlags
 ENUM_BITSET(FileOpenFlags)
 
 
-static void findDataDirs(std::string &dataDir, std::string &tileDir);
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
 
 #if CASE_SENSITIVE_FS

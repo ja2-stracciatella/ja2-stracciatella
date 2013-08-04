@@ -35,6 +35,9 @@
 
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 extern INT32 iCurrentMapSectorZ;
 
 // the squad list font
@@ -84,9 +87,7 @@ void LoadRadarScreenBitmap(const char* const filename)
 	ClearOutRadarMapImage();
 
 	// Grab the Map image
-  std::string image_filename(
-    FileMan::replaceExtension(
-      FileMan::joinPaths(RADARMAPSDIR, FileMan::getFileName(filename)), ".sti"));
+  std::string image_filename(GCM->getRadarMapResourceName(FileMan::replaceExtension(FileMan::getFileName(filename), ".sti")));
 
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename.c_str());
 	gusRadarImage = radar;

@@ -18,7 +18,6 @@
 #define MUSICDIR       "music"
 #define NPC_SPEECHDIR  "npc_speech"
 #define NPCDATADIR     "npcdata"
-#define RADARMAPSDIR   "radarmaps"
 #define SOUNDSDIR      "sounds"
 #define SPEECHDIR      "speech"
 #define STSOUNDSDIR    "stsounds"

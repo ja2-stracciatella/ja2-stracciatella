@@ -11,6 +11,9 @@ public:
   virtual std::string getMapPath(const char *mapName) const = 0;
   virtual std::string getMapPath(const wchar_t *mapName) const = 0;
 
+  /** Get radar map resource name. */
+  virtual std::string getRadarMapResourceName(const std::string &mapName) const = 0;
+
   /** Get directory for storing new map file. */
   virtual std::string getNewMapFolder() const = 0;
 

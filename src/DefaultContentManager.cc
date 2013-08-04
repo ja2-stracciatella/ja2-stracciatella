@@ -20,6 +20,7 @@
 #define BASEDATADIR    "data"
 
 #define MAPSDIR        "maps"
+#define RADARMAPSDIR   "radarmaps"
 
 #define DEBUG_PRINT_OPENING_FILES               (1)             /**< Flag telling to print names of the opening files. */
 
@@ -27,6 +28,18 @@
 std::string DefaultContentManager::getMapPath(const char *mapName) const
 {
   std::string result = MAPSDIR;
+  result += "/";
+  result += mapName;
+
+  SLOGD(TAG, "map file %s", result.c_str());
+
+  return result;
+}
+
+/** Get radar map resource name. */
+std::string DefaultContentManager::getRadarMapResourceName(const std::string &mapName) const
+{
+  std::string result = RADARMAPSDIR;
   result += "/";
   result += mapName;
 
