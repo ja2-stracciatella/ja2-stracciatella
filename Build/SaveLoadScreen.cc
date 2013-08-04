@@ -935,7 +935,7 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 		try
 		{
       bool stracLinuxFormat;
-			AutoSGPFile f(GCM->openForReadingSmart(zSavedGameName, false));
+			AutoSGPFile f(GCM->openUserPrivateFileForReading(zSavedGameName));
 			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
 			endof(header->zGameVersionNumber)[-1] =  '\0';
 			endof(header->sSavedGameDesc)[-1]     = L'\0';

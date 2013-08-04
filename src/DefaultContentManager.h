@@ -42,6 +42,9 @@ public:
   virtual SGPFile* openForReadingSmart(const char* filename, bool useSmartLookup) const;
   virtual SGPFile* openForReadingSmart(const std::string& filename, bool useSmartLookup) const;
 
+  /** Open user's private file (e.g. saved game, settings) for reading. */
+  virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const;
+
   /* Checks if a game resource exists. */
   virtual bool doesGameResExists(char const* filename) const;
   virtual bool doesGameResExists(const std::string &filename) const;

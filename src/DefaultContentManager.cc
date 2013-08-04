@@ -214,6 +214,15 @@ SGPFile* DefaultContentManager::openForReadingSmart(const char* filename, bool u
   return FileMan::getSGPFileFromFD(d, filename, fmode);
 }
 
+/** Open user's private file (e.g. saved game, settings) for reading. */
+SGPFile* DefaultContentManager::openUserPrivateFileForReading(const std::string& filename) const
+{
+  int         mode;
+  const char* fmode = GetFileOpenModeForReading(&mode);
+
+  int d = FileMan::openFileForReading(filename.c_str(), mode);
+  return FileMan::getSGPFileFromFD(d, filename.c_str(), fmode);
+}
 
 SGPFile* DefaultContentManager::openForReadingSmart(const std::string& filename, bool useSmartLookup) const
 {

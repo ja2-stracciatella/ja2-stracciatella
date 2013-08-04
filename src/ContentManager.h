@@ -36,6 +36,9 @@ public:
   virtual SGPFile* openMapForReading(const std::string& mapName) const = 0;
   virtual SGPFile* openMapForReading(const wchar_t *mapName) const = 0;
 
+  /** Open user's private file (e.g. saved game, settings) for reading. */
+  virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const = 0;
+
   /* XXX: is openForReadingSmart to generic? */
   /* XXX: rename to openGameResourceForReading */
   /* XXX: when useSmartLookup == false, use something else  */

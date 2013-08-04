@@ -712,7 +712,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(GCM->openForReadingSmart(zSaveGameName, false));
+	AutoSGPFile f(GCM->openUserPrivateFileForReading(std::string(zSaveGameName)));
 	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
@@ -2540,14 +2540,14 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( GCM->doesGameResExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(GCM->openForReadingSmart(zFileName1, false));
+		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName1)));
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( GCM->doesGameResExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(GCM->openForReadingSmart(zFileName2, false));
+		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName2)));
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}
