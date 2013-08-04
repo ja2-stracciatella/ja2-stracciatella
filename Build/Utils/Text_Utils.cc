@@ -20,7 +20,7 @@ void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])
 
 static void LoadAllItemNames(void)
 {
-	AutoSGPFile File(GCM->openForReadingSmart(ITEMSTRINGFILENAME, true));
+	AutoSGPFile File(GCM->openGameResForReading(ITEMSTRINGFILENAME));
 	for (UINT32 i = 0; i < MAXITEMS; i++)
 	{
 		UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * i;

@@ -39,13 +39,9 @@ public:
   /** Open user's private file (e.g. saved game, settings) for reading. */
   virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const = 0;
 
-  /* XXX: is openForReadingSmart to generic? */
-  /* XXX: rename to openGameResourceForReading */
-  /* XXX: when useSmartLookup == false, use something else  */
-  /* ja2set.dat */
-
-  virtual SGPFile* openForReadingSmart(const char* filename, bool useSmartLookup) const = 0;
-  virtual SGPFile* openForReadingSmart(const std::string& filename, bool useSmartLookup) const = 0;
+  /* Open a game resource file for reading. */
+  virtual SGPFile* openGameResForReading(const char* filename) const = 0;
+  virtual SGPFile* openGameResForReading(const std::string& filename) const = 0;
 
   /* Checks if a game resource exists. */
   virtual bool doesGameResExists(char const* filename) const = 0;

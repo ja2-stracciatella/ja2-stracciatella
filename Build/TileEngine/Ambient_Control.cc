@@ -21,7 +21,7 @@ try
 	SGPFILENAME zFilename;
 	sprintf(zFilename, AMBIENTDIR "/%d.bad", ubAmbientID);
 
-	AutoSGPFile hFile(GCM->openForReadingSmart(zFilename, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(zFilename));
 
 	// READ #
 	FileRead(hFile, &gsNumAmbData, sizeof(INT16));

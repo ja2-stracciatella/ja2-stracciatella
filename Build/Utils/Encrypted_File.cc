@@ -98,6 +98,6 @@ void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek
 
 void LoadEncryptedDataFromFile(char const* const Filename, wchar_t DestString[], UINT32 const seek_chars, UINT32 const read_chars)
 {
-	AutoSGPFile File(GCM->openForReadingSmart(Filename, true));
+	AutoSGPFile File(GCM->openGameResForReading(Filename));
 	LoadEncryptedData(File, DestString, seek_chars, read_chars);
 }

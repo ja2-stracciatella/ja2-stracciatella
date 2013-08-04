@@ -77,12 +77,12 @@ std::string DefaultContentManager::getMapPath(const wchar_t *mapName) const
 /** Open map for reading. */
 SGPFile* DefaultContentManager::openMapForReading(const std::string& mapName) const
 {
-  return openForReadingSmart(getMapPath(mapName.c_str()), true);
+  return openGameResForReading(getMapPath(mapName.c_str()));
 }
 
 SGPFile* DefaultContentManager::openMapForReading(const wchar_t *mapName) const
 {
-  return openForReadingSmart(getMapPath(mapName), true);
+  return openGameResForReading(getMapPath(mapName));
 }
 
 /** Get directory for storing new map file. */
@@ -152,14 +152,14 @@ void DefaultContentManager::initGameResources(const std::string &configFolder, c
   }
 }
 
-/** Open file for reading only.
- * When using the smart lookup:
- *  - first try to open file normally.
- *    It will work if the path is absolute and the file is found or path is relative to the current directory
- *    and file is present;
- *  - if file is not found, try to find the file relatively to 'Data' directory;
- *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-SGPFile* DefaultContentManager::openForReadingSmart(const char* filename, bool useSmartLookup) const
+/* Open a game resource file for reading.
+ *
+ * First trying to open the file normally. It will work if the path is absolute
+ * and the file is found or path is relative to the current directory (game
+ * settings directory) and file is present.
+ * If file is not found, try to find it relatively to 'Data' directory.
+ * If file is not found, try to find the file in libraries located in 'Data' directory; */
+SGPFile* DefaultContentManager::openGameResForReading(const char* filename) const
 {
   int         mode;
   const char* fmode = GetFileOpenModeForReading(&mode);
@@ -168,7 +168,7 @@ SGPFile* DefaultContentManager::openForReadingSmart(const char* filename, bool u
 
   {
     d = FileMan::openFileForReading(filename, mode);
-    if ((d < 0) && useSmartLookup)
+    if (d < 0)
     {
       // failed to open file in the local directory
       // let's try Data
@@ -224,9 +224,9 @@ SGPFile* DefaultContentManager::openUserPrivateFileForReading(const std::string&
   return FileMan::getSGPFileFromFD(d, filename.c_str(), fmode);
 }
 
-SGPFile* DefaultContentManager::openForReadingSmart(const std::string& filename, bool useSmartLookup) const
+SGPFile* DefaultContentManager::openGameResForReading(const std::string& filename) const
 {
-  return openForReadingSmart(filename.c_str(), useSmartLookup);
+  return openGameResForReading(filename.c_str());
 }
 
 /* Checks if a game resource exists. */

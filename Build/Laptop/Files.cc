@@ -359,7 +359,7 @@ static void OpenAndReadFilesFile(void)
 	AutoSGPFile f;
 	try
 	{
-		f = GCM->openForReadingSmart(FILES_DAT_FILE, true);
+		f = GCM->openGameResForReading(FILES_DAT_FILE);
 	}
 	catch (...) { return; /* XXX TODO0019 ignore */ }
 
@@ -653,7 +653,7 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 {
 	FileString*  head   = 0;
 	FileString** anchor = &head;
-	AutoSGPFile f(GCM->openForReadingSmart(filename, true));
+	AutoSGPFile f(GCM->openGameResForReading(filename));
 	for (; n != 0; ++offset, --n)
 	{
 		wchar_t str[FILE_STRING_SIZE];

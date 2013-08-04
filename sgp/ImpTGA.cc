@@ -22,7 +22,7 @@ SGPImage* LoadTGAFileToImage(char const* const filename, UINT16 const fContents)
 {
 	UINT8		uiImgID, uiColMap, uiType;
 
-	AutoSGPFile hFile(GCM->openForReadingSmart(filename, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(filename));
 
 	FileRead(hFile, &uiImgID,  sizeof(UINT8));
 	FileRead(hFile, &uiColMap, sizeof(UINT8));

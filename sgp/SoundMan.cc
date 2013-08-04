@@ -720,7 +720,7 @@ try
 {
 	Assert(pFilename != NULL);
 
-	AutoSGPFile hFile(GCM->openForReadingSmart(pFilename, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
 
 	UINT32 uiSize = FileGetSize(hFile);
 
@@ -1160,7 +1160,7 @@ static UINT32 SoundGetUniqueID(void)
 static BOOLEAN SoundPlayStreamed(const char* pFilename)
 try
 {
-	AutoSGPFile hDisk(GCM->openForReadingSmart(pFilename, true));
+	AutoSGPFile hDisk(GCM->openGameResForReading(pFilename));
 	return FileGetSize(hDisk) >= guiSoundCacheThreshold;
 }
 catch (...) { return FALSE; }

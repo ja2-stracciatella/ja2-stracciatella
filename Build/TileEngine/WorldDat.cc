@@ -22,7 +22,7 @@ static void SetTilesetTwoTerrainValues(void);
 void InitEngineTilesets(void)
 try
 {
-	AutoSGPFile f(GCM->openForReadingSmart(GCM->getTilesetDBResName(), true));
+	AutoSGPFile f(GCM->openGameResForReading(GCM->getTilesetDBResName()));
 
 	// READ # TILESETS and compare
 	UINT8 ubNumSets;

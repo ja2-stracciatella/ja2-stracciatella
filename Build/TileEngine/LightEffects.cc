@@ -240,7 +240,7 @@ void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(GCM->openForReadingSmart(zMapName, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
 
 	//Clear out the old list
 	ResetLightEffects();

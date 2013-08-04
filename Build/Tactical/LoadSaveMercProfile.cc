@@ -227,7 +227,7 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
  * If saved checksum is not correct, exception will be thrown. */
 void ExtractImpProfileFromFile(const char *fileName, INT32 *iProfileId, INT32 *iPortraitNumber, MERCPROFILESTRUCT& p)
 {
-  AutoSGPFile hFile(GCM->openForReadingSmart(fileName, true));
+  AutoSGPFile hFile(GCM->openGameResForReading(fileName));
   UINT32 fileSize = FileGetSize(hFile);
 
   // read in the profile

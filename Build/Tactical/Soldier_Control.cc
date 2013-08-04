@@ -4927,7 +4927,7 @@ void LoadPaletteData()
 {
 	UINT32			cnt, cnt2;
 
-	AutoSGPFile hFile(GCM->openForReadingSmart(PALETTEFILENAME, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(PALETTEFILENAME));
 
 	// Read # of types
 	FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));

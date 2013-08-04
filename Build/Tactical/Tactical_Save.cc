@@ -238,7 +238,7 @@ void LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z, 
 	// If the file doesn't exists, it's no problem
 	if (GCM->doesGameResExists(filename))
 	{
-		AutoSGPFile f(GCM->openForReadingSmart(filename, true));
+		AutoSGPFile f(GCM->openGameResForReading(filename));
 
 		FileRead(f, &l_item_count, sizeof(l_item_count));
 		if (l_item_count != 0)
@@ -701,7 +701,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 	// If the file doesn't exist, it's no problem.
 	if (!GCM->doesGameResExists(map_name)) return;
 
-	AutoSGPFile f(GCM->openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	// Load the number of Rotting corpses
 	UINT32 n_corpses;

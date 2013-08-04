@@ -1469,7 +1469,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(GCM->openForReadingSmart(pSrcFileName, true));
+	AutoSGPFile hSrcFile(GCM->openGameResForReading(pSrcFileName));
 
 #ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing

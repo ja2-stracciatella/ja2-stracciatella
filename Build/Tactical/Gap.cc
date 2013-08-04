@@ -26,7 +26,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 	try
 	{
-		AutoSGPFile f(GCM->openForReadingSmart(sFileName.c_str(), true));
+		AutoSGPFile f(GCM->openGameResForReading(sFileName));
 
 		// gap file exists
 		// now read in the AUDIO_GAPs

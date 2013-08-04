@@ -38,9 +38,9 @@ public:
   virtual void initGameResources(const std::string &configFolder, const std::string &configPath,
                                  const std::string &gameResRootPath, std::string &dataDir, std::string &tileDir);
 
-  /* XXX: is openForReadingSmart to generic? */
-  virtual SGPFile* openForReadingSmart(const char* filename, bool useSmartLookup) const;
-  virtual SGPFile* openForReadingSmart(const std::string& filename, bool useSmartLookup) const;
+  /* Open a game resource file for reading. */
+  virtual SGPFile* openGameResForReading(const char* filename) const;
+  virtual SGPFile* openGameResForReading(const std::string& filename) const;
 
   /** Open user's private file (e.g. saved game, settings) for reading. */
   virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const;

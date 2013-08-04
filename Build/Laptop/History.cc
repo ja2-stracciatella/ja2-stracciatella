@@ -352,7 +352,7 @@ static void OpenAndReadHistoryFile(void)
 {
 	ClearHistoryList();
 
-	AutoSGPFile f(GCM->openForReadingSmart(HISTORY_DATA_FILE, true));
+	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
 
 	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	while (entry_count-- > 0)
@@ -701,7 +701,7 @@ try
 	// check if bad page
 	if (uiPage == 0) return FALSE;
 
-	AutoSGPFile f(GCM->openForReadingSmart(HISTORY_DATA_FILE, true));
+	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
 
 	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
@@ -844,7 +844,7 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 
 static INT32 GetNumberOfHistoryPages(void)
 {
-	AutoSGPFile f(GCM->openForReadingSmart(HISTORY_DATA_FILE, true));
+	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
 
 	const UINT32 uiFileSize = FileGetSize(f);
 

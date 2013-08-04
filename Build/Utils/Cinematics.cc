@@ -129,7 +129,7 @@ try
 		return NULL;
 	}
 
-	AutoSGPFile file(GCM->openForReadingSmart(filename, true));
+	AutoSGPFile file(GCM->openGameResForReading(filename));
 
 	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
