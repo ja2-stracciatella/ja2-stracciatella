@@ -9,6 +9,9 @@ class DefaultContentManager : public ContentManager
 {
 public:
 
+  DefaultContentManager(const std::string &configFolder, const std::string &configPath,
+                        const std::string &gameResRootPath);
+
   /** Get map file path. */
   virtual std::string getMapPath(const char *mapName) const;
   virtual std::string getMapPath(const wchar_t *mapName) const;
@@ -35,9 +38,6 @@ public:
   /** Get all available tilecache. */
   virtual std::vector<std::string> getAllTilecache() const;
 
-  virtual void initGameResources(const std::string &configFolder, const std::string &configPath,
-                                 const std::string &gameResRootPath, std::string &dataDir, std::string &tileDir);
-
   /* Open a game resource file for reading. */
   virtual SGPFile* openGameResForReading(const char* filename) const;
   virtual SGPFile* openGameResForReading(const std::string& filename) const;
@@ -54,6 +54,9 @@ public:
 
   /** Get folder for video capture. */
   virtual std::string getVideoCaptureFolder() const;
+
+  const std::string& getDataDir() { return m_dataDir; }
+  const std::string& getTileDir() { return m_tileDir; }
 
 protected:
   std::string m_dataDir;

@@ -76,72 +76,6 @@ static BOOLEAN gfGameInitialized = FALSE;
 static std::string findRootGameResFolder(const std::string &configPath);
 static void WriteDefaultConfigFile(const char* ConfigFile);
 
-static void InitializeStandardGamingPlatform(DefaultContentManager &cm)
-{
-	SDL_Init(SDL_INIT_VIDEO);
-	SDL_EnableUNICODE(SDL_ENABLE);
-
-#ifdef SGP_DEBUG
-	// Initialize the Debug Manager - success doesn't matter
-	InitializeDebugManager();
-#endif
-
-  // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
-	FastDebugMsg("Initializing Memory Manager");
-	// Initialize the Memory Manager
-	InitializeMemoryManager();
-
-  FastDebugMsg("Initializing Game Resources");
-  std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
-  std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
-  std::string gameResRootPath = findRootGameResFolder(configPath);
-
-  std::string dataDir;
-  std::string tileDir;
-  cm.initGameResources(configFolderPath, configPath, gameResRootPath, dataDir, tileDir);
-
-  LOG_INFO("------------------------------------------------------------------------------\n");
-  LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
-  LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-  LOG_INFO("Data directory:                '%s'\n", dataDir.c_str());
-  LOG_INFO("Tilecache directory:           '%s'\n", tileDir.c_str());
-  LOG_INFO("------------------------------------------------------------------------------\n");
-
-	FastDebugMsg("Initializing Video Manager");
-	InitializeVideoManager();
-
-	FastDebugMsg("Initializing Video Object Manager");
-	InitializeVideoObjectManager();
-
-	FastDebugMsg("Initializing Video Surface Manager");
-	InitializeVideoSurfaceManager();
-
-#ifdef JA2
-	InitJA2SplashScreen();
-#endif
-
-	// Initialize Font Manager
-	FastDebugMsg("Initializing the Font Manager");
-	// Init the manager and copy the TransTable stuff into it.
-	InitializeFontManager();
-
-	FastDebugMsg("Initializing Sound Manager");
-#ifndef UTIL
-	InitializeSoundManager();
-#endif
-
-	FastDebugMsg("Initializing Random");
-  // Initialize random number generator
-  InitializeRandom(); // no Shutdown
-
-	FastDebugMsg("Initializing Game Manager");
-	// Initialize the Game
-	InitializeGame();
-
-	gfGameInitialized = TRUE;
-}
-
-
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
@@ -269,10 +203,9 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 ////////////////////////////////////////////////////////////
 
 static DefaultGamePolicy g_gamePolicy;
-static DefaultContentManager g_contentManager;
 
 const GamePolicy *GGP = &g_gamePolicy;
-const ContentManager *GCM = &g_contentManager;
+const ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 
@@ -314,8 +247,70 @@ try
   }
 #endif
 
-	InitializeStandardGamingPlatform(g_contentManager);
+  ////////////////////////////////////////////////////////////
 
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_EnableUNICODE(SDL_ENABLE);
+
+#ifdef SGP_DEBUG
+	// Initialize the Debug Manager - success doesn't matter
+	InitializeDebugManager();
+#endif
+
+  // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
+	FastDebugMsg("Initializing Memory Manager");
+	InitializeMemoryManager();
+
+  FastDebugMsg("Initializing Game Resources");
+  std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
+  std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
+  std::string gameResRootPath = findRootGameResFolder(configPath);
+
+  DefaultContentManager *cm = new DefaultContentManager(configFolderPath, configPath, gameResRootPath);
+
+  LOG_INFO("------------------------------------------------------------------------------\n");
+  LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
+  LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
+  LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
+  LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
+  LOG_INFO("------------------------------------------------------------------------------\n");
+
+  GCM = cm;
+
+	FastDebugMsg("Initializing Video Manager");
+	InitializeVideoManager();
+
+	FastDebugMsg("Initializing Video Object Manager");
+	InitializeVideoObjectManager();
+
+	FastDebugMsg("Initializing Video Surface Manager");
+	InitializeVideoSurfaceManager();
+
+#ifdef JA2
+	InitJA2SplashScreen();
+#endif
+
+	// Initialize Font Manager
+	FastDebugMsg("Initializing the Font Manager");
+	// Init the manager and copy the TransTable stuff into it.
+	InitializeFontManager();
+
+	FastDebugMsg("Initializing Sound Manager");
+#ifndef UTIL
+	InitializeSoundManager();
+#endif
+
+	FastDebugMsg("Initializing Random");
+  // Initialize random number generator
+  InitializeRandom(); // no Shutdown
+
+	FastDebugMsg("Initializing Game Manager");
+	// Initialize the Game
+	InitializeGame();
+
+	gfGameInitialized = TRUE;
+
+  //////////////////////////////////////////////////////////// 
 
 #if defined JA2
   if(isEnglishVersion())
@@ -332,6 +327,9 @@ try
 	MainLoop();
 
   SLOG_Deinit();
+
+  delete cm;
+  GCM = NULL;
 
 	return EXIT_SUCCESS;
 }

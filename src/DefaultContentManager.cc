@@ -23,7 +23,56 @@
 #define RADARMAPSDIR   "radarmaps"
 #define TILESETSDIR    "tilesets"
 
-#define DEBUG_PRINT_OPENING_FILES               (1)             /**< Flag telling to print names of the opening files. */
+#define PRINT_OPENING_FILES (0)
+
+DefaultContentManager::DefaultContentManager(const std::string &configFolder, const std::string &configPath,
+                                             const std::string &gameResRootPath)
+{
+  /*
+   * Searching actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
+   * On case-sensitive filesystems that might be tricky: if such directories
+   * exist we should use them.  If doesn't exist, then use lowercased names.
+   */
+
+  m_configFolder = configFolder;
+  m_gameResRootPath = gameResRootPath;
+
+  m_dataDir = FileMan::joinPaths(gameResRootPath, BASEDATADIR);
+  m_tileDir = FileMan::joinPaths(m_dataDir, TILECACHEDIR);
+
+#if CASE_SENSITIVE_FS
+
+  // need to find precise names of the directories
+
+  std::string name;
+  if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
+  {
+    m_dataDir = FileMan::joinPaths(s_gameResRootPath, name);
+  }
+
+  if(findObjectCaseInsensitive(m_dataDir.c_str(), TILECACHEDIR, false, true, name))
+  {
+    m_tileDir = FileMan::joinPaths(m_dataDir, name);
+  }
+#endif
+
+  std::vector<std::string> libraries = GetResourceLibraries(m_dataDir);
+
+  // XXX
+  if(GameState::getInstance()->isEditorMode())
+  {
+    libraries.push_back("editor.slf");
+  }
+
+  const char *failedLib = InitializeFileDatabase(m_dataDir, libraries);
+  if(failedLib)
+  {
+    std::string message = FormattedString(
+      "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s'.\n",
+      failedLib, m_dataDir.c_str(), m_gameResRootPath.c_str(), configPath.c_str());
+    throw LibraryFileNotFoundException(message);
+  }
+}
 
 /** Get map file path. */
 std::string DefaultContentManager::getMapPath(const char *mapName) const
@@ -103,55 +152,6 @@ std::vector<std::string> DefaultContentManager::getAllTilecache() const
   return FindFilesInDir(m_tileDir, ".jsd", true, false);
 }
 
-void DefaultContentManager::initGameResources(const std::string &configFolder, const std::string &configPath, const std::string &gameResRootPath, std::string &dataDir, std::string &tileDir)
-{
-  /** Find actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
-   * On case-sensitive filesystems that might be tricky: if such directories
-   * exist we should use them.  If doesn't exist, then use lowercased names.
-   */
-
-  m_configFolder = configFolder;
-  m_gameResRootPath = gameResRootPath;
-
-  dataDir = FileMan::joinPaths(gameResRootPath, BASEDATADIR);
-  tileDir = FileMan::joinPaths(dataDir, TILECACHEDIR);
-
-#if CASE_SENSITIVE_FS
-
-  // need to find precise names of the directories
-
-  std::string name;
-  if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
-  {
-    dataDir = FileMan::joinPaths(s_gameResRootPath, name);
-  }
-
-  if(findObjectCaseInsensitive(dataDir.c_str(), TILECACHEDIR, false, true, name))
-  {
-    tileDir = FileMan::joinPaths(dataDir, name);
-  }
-#endif
-
-  m_dataDir = dataDir;
-  m_tileDir = tileDir;
-  std::vector<std::string> libraries = GetResourceLibraries(m_dataDir);
-
-  // XXX
-  if(GameState::getInstance()->isEditorMode())
-  {
-    libraries.push_back("editor.slf");
-  }
-
-  const char *failedLib = InitializeFileDatabase(dataDir, libraries);
-  if(failedLib)
-  {
-    std::string message = FormattedString(
-      "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s'.\n",
-      failedLib, m_dataDir.c_str(), m_gameResRootPath.c_str(), configPath.c_str());
-    throw LibraryFileNotFoundException(message);
-  }
-}
-
 /* Open a game resource file for reading.
  *
  * First trying to open the file normally. It will work if the path is absolute
@@ -187,7 +187,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
         FileMan::slashifyPath(_filename);
         if (FindFileInTheLibrarry(_filename, &libFile))
         {
-#if DEBUG_PRINT_OPENING_FILES
+#if PRINT_OPENING_FILES
           SLOGD(TAG, "Opened file (from library ): %s", filename);
 #endif
           SGPFile *file = MALLOCZ(SGPFile);
@@ -198,14 +198,14 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
       }
       else
       {
-#if DEBUG_PRINT_OPENING_FILES
+#if PRINT_OPENING_FILES
         SLOGD(TAG, "Opened file (from data dir): %s", filename);
 #endif
       }
     }
     else
     {
-#if DEBUG_PRINT_OPENING_FILES
+#if PRINT_OPENING_FILES
       SLOGD(TAG, "Opened file (current dir  ): %s", filename);
 #endif
     }
