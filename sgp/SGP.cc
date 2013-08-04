@@ -40,6 +40,7 @@
 
 #include "GameInstance.h"
 #include "DefaultContentManager.h"
+#include "ModPackContentManager.h"
 #include "policy/DefaultGamePolicy.h"
 
 #include "MicroIni/MicroIni.hpp"
@@ -62,6 +63,8 @@
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif
 
+
+#define WITH_MODS (1)
 
 /**
  * Number of milliseconds for one game cycle.
@@ -209,14 +212,34 @@ const ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 
-static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               bool *doUnitTests,
-                               bool *showDebugMessages);
+struct CommandLineParams
+{
+  CommandLineParams()
+  {
+#ifdef WITH_MODS
+    useMod = false;
+#endif
+    doUnitTests = false;
+    showDebugMessages = false;
+  }
 
+#ifdef WITH_MODS
+  bool useMod;
+  std::string modName;
+#endif
+
+  bool doUnitTests;
+  bool showDebugMessages;
+};
+
+static BOOLEAN ParseParameters(int argc, char* const argv[],
+                               CommandLineParams *params);
 
 int main(int argc, char* argv[])
 try
 {
+  std::string exeFolder = FileMan::getParentPath(argv[0], true);
+
 #if defined BROKEN_SWPRINTF
 	if (setlocale(LC_CTYPE, "UTF-8") == NULL)
 	{
@@ -230,17 +253,16 @@ try
 
   setGameVersion(GV_ENGLISH);
 
-  bool doUnitTests = false;
-  bool showDebugMessages = false;
-	if (!ParseParameters(argc, argv, &doUnitTests, &showDebugMessages)) return EXIT_FAILURE;
+  CommandLineParams params;
+	if (!ParseParameters(argc, argv, &params)) return EXIT_FAILURE;
 
-  if(showDebugMessages)
+  if(params.showDebugMessages)
   {
     SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
   }
 
 #ifdef WITH_UNITTESTS
-  if(doUnitTests)
+  if(params.doUnitTests)
   {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
@@ -266,14 +288,35 @@ try
   std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
   std::string gameResRootPath = findRootGameResFolder(configPath);
 
-  DefaultContentManager *cm = new DefaultContentManager(configFolderPath, configPath, gameResRootPath);
+  DefaultContentManager *cm;
 
-  LOG_INFO("------------------------------------------------------------------------------\n");
-  LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
-  LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-  LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
-  LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
-  LOG_INFO("------------------------------------------------------------------------------\n");
+#ifdef WITH_MODS
+  if(params.useMod)
+  {
+    std::string modName = params.modName;
+    std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(exeFolder, "mods"), modName), "data");
+    cm = new ModPackContentManager(modName, modResFolder, configFolderPath, configPath, gameResRootPath);
+    LOG_INFO("------------------------------------------------------------------------------\n");
+    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
+    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
+    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
+    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
+    LOG_INFO("------------------------------------------------------------------------------\n");
+    LOG_INFO("MOD name:                      '%s'\n", modName.c_str());
+    LOG_INFO("MOD resource directory:        '%s'\n", modResFolder.c_str());
+    LOG_INFO("------------------------------------------------------------------------------\n");
+  }
+  else
+#endif
+  {
+    cm = new DefaultContentManager(configFolderPath, configPath, gameResRootPath);
+    LOG_INFO("------------------------------------------------------------------------------\n");
+    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
+    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
+    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
+    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
+    LOG_INFO("------------------------------------------------------------------------------\n");
+  }
 
   GCM = cm;
 
@@ -310,7 +353,7 @@ try
 
 	gfGameInitialized = TRUE;
 
-  //////////////////////////////////////////////////////////// 
+  ////////////////////////////////////////////////////////////
 
 #if defined JA2
   if(isEnglishVersion())
@@ -398,8 +441,7 @@ static BOOLEAN setResourceVersion(const char *version)
 }
 
 static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               bool *doUnitTests,
-                               bool *showDebugMessages)
+                               CommandLineParams *params)
 {
 	const char* const name = *argv;
 	if (name == NULL) return TRUE; // argv does not even contain the program name
@@ -424,13 +466,13 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 #ifdef WITH_UNITTESTS
     else if (strcmp(argv[i], "-unittests") == 0)
     {
-      *doUnitTests = true;
+      params->doUnitTests = true;
       return true;
     }
 #endif
     else if (strcmp(argv[i], "-debug") == 0)
     {
-      *showDebugMessages = true;
+      params->showDebugMessages = true;
       return true;
     }
 		else if (strcmp(argv[i], "-res") == 0)
@@ -461,6 +503,21 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
         success = FALSE;
       }
 		}
+#ifdef WITH_MODS
+    else if (strcmp(argv[i], "-mod") == 0)
+    {
+      if(haveNextParameter)
+      {
+        params->useMod = true;
+        params->modName = argv[++i];
+      }
+      else
+      {
+        LOG_ERROR("Missing value for command-line key '-res'\n");
+        success = FALSE;
+      }
+    }
+#endif
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)
 		{
@@ -515,6 +572,10 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 			"                 Default value is ENGLISH\n"
 			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
 			"                 RUSSIAN_GOLD is for Gold release\n"
+#ifdef WITH_MODS
+      "\n"
+      "  -mod NAME    MOD name (see folder mods for options, e.g. 'from-russia-with-love')\n"
+#endif
 			"\n"
 			"  -debug       Show debug messages\n"
 #ifdef WITH_UNITTESTS

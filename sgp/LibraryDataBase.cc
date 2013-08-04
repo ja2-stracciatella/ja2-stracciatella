@@ -171,7 +171,7 @@ try
 		fh->uiFileOffset = DirEntry.uiOffset;
 		fh->uiFileLength = DirEntry.uiLength;
 
-    SLOGD(TAG, "found in %s: %s", lib_name, fh->pFileName);
+    // SLOGD(TAG, "found in %s: %s", lib_name, fh->pFileName);
 	}
 
 	if (used_entries != count_entries)
