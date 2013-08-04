@@ -45,12 +45,12 @@ DefaultContentManager::DefaultContentManager(const std::string &configFolder, co
   // need to find precise names of the directories
 
   std::string name;
-  if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
+  if(FileMan::findObjectCaseInsensitive(m_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
   {
-    m_dataDir = FileMan::joinPaths(s_gameResRootPath, name);
+    m_dataDir = FileMan::joinPaths(m_gameResRootPath, name);
   }
 
-  if(findObjectCaseInsensitive(m_dataDir.c_str(), TILECACHEDIR, false, true, name))
+  if(FileMan::findObjectCaseInsensitive(m_dataDir.c_str(), TILECACHEDIR, false, true, name))
   {
     m_tileDir = FileMan::joinPaths(m_dataDir, name);
   }

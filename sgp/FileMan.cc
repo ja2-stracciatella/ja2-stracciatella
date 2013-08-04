@@ -543,7 +543,7 @@ std::string FileMan::joinPaths(const char *first, const char *second)
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
  * @return true when found, return the found name using foundName. */
-static bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
+bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
 {
   bool result = false;
 
