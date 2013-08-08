@@ -7,9 +7,6 @@
 #include "Tactical_Save.h"
 #include "UTF8String.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-
 /** Calculates soldier profile checksum. */
 UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)
 {
@@ -225,9 +222,8 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 
 /** Extract IMP merc profile from file.
  * If saved checksum is not correct, exception will be thrown. */
-void ExtractImpProfileFromFile(const char *fileName, INT32 *iProfileId, INT32 *iPortraitNumber, MERCPROFILESTRUCT& p)
+void ExtractImpProfileFromFile(SGPFile *hFile, INT32 *iProfileId, INT32 *iPortraitNumber, MERCPROFILESTRUCT& p)
 {
-  AutoSGPFile hFile(GCM->openGameResForReading(fileName));
   UINT32 fileSize = FileGetSize(hFile);
 
   // read in the profile

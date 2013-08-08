@@ -18,7 +18,7 @@ UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p);
 
 /** Extract IMP merc profile from file.
  * If saved checksum is not correct, exception will be thrown. */
-void ExtractImpProfileFromFile(const char *fileName, INT32 *iProfileId, INT32 *iPortraitNumber, MERCPROFILESTRUCT& p);
+void ExtractImpProfileFromFile(SGPFile *file, INT32 *iProfileId, INT32 *iPortraitNumber, MERCPROFILESTRUCT& p);
 
 void InjectMercProfile(BYTE* Dst, MERCPROFILESTRUCT const&);
 void InjectMercProfileIntoFile(HWFILE, MERCPROFILESTRUCT const&);

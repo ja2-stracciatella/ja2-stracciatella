@@ -91,6 +91,9 @@ public:
    * If file doesn't exist, it will be created. */
   static SGPFile* openForReadWrite(const char *filename);
 
+  /** Open file for reading. */
+  static SGPFile* openForReading(const char *filename);
+
 #if CASE_SENSITIVE_FS
   /** Find an object (file or subdirectory) in the given directory in case-independent manner.
    * @return true when found, return the found name using foundName. */

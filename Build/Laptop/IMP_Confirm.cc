@@ -30,6 +30,7 @@
 
 #include <boost/foreach.hpp>
 
+#include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 #include "slog/slog.h"
@@ -458,7 +459,8 @@ static void LoadInCurrentImpCharacter(void)
 	INT32 iProfileId = 0;
 
   MERCPROFILESTRUCT p;
-  ExtractImpProfileFromFile(IMP_MERC_FILE, &iProfileId, &iPortraitNumber, p);
+  AutoSGPFile hFile(GCM->openGameResForReading(IMP_MERC_FILE));
+  ExtractImpProfileFromFile(hFile, &iProfileId, &iPortraitNumber, p);
   gMercProfiles[iProfileId] = p;
 
 	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
