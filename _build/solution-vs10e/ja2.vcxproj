@@ -430,6 +430,7 @@
     <ClCompile Include="..\..\src\content\npcs.cc" />
     <ClCompile Include="..\..\src\DefaultContentManager.cc" />
     <ClCompile Include="..\..\src\internals\enums.cc" />
+    <ClCompile Include="..\..\src\ModPackContentManager.cc" />
     <ClCompile Include="..\..\src\policy\DefaultGamePolicy.cc" />
     <ClCompile Include="..\..\src\Soldier.cc" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp" />
@@ -835,6 +836,7 @@
     <ClInclude Include="..\..\src\DefaultContentManager.h" />
     <ClInclude Include="..\..\src\GameInstance.h" />
     <ClInclude Include="..\..\src\internals\enums.h" />
+    <ClInclude Include="..\..\src\ModPackContentManager.h" />
     <ClInclude Include="..\..\src\policy\DefaultGamePolicy.h" />
     <ClInclude Include="..\..\src\policy\GamePolicy.h" />
     <ClInclude Include="..\..\src\Soldier.h" />

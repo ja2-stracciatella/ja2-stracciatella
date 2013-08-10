@@ -1188,6 +1188,9 @@
     <ClCompile Include="..\..\src\DefaultContentManager.cc">
       <Filter>Source Files\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ModPackContentManager.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -2364,6 +2367,9 @@
       <Filter>Source Files\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\DefaultContentManager.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ModPackContentManager.h">
       <Filter>Source Files\src</Filter>
     </ClInclude>
   </ItemGroup>
