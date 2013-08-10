@@ -9,7 +9,6 @@
 #include "Options_Screen.h"
 #include "Overhead.h"
 #include "GameVersion.h"
-#include "LibraryDataBase.h"
 #include "HelpScreen.h"
 #include "Meanwhile.h"
 #include "Cheats.h"

@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 #include "Directories.h"
-#include "LibraryDataBase.h"
 #include "Logger.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Text.h"

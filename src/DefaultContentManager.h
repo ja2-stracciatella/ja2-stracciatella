@@ -6,12 +6,16 @@
 
 #include "ContentManager.h"
 
+class LibraryDB;
+
 class DefaultContentManager : public ContentManager
 {
 public:
 
   DefaultContentManager(const std::string &configFolder, const std::string &configPath,
                         const std::string &gameResRootPath);
+
+  ~DefaultContentManager();
 
   /** Get map file path. */
   virtual std::string getMapPath(const char *mapName) const;
@@ -64,6 +68,8 @@ protected:
   std::string m_tileDir;
   std::string m_configFolder;
   std::string m_gameResRootPath;
+
+  LibraryDB *m_libraryDB;
 };
 
 class LibraryFileNotFoundException : public std::runtime_error

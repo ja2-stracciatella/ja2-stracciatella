@@ -64,13 +64,24 @@ DefaultContentManager::DefaultContentManager(const std::string &configFolder, co
     libraries.push_back("editor.slf");
   }
 
-  const char *failedLib = InitializeFileDatabase(m_dataDir, libraries);
+  m_libraryDB = new LibraryDB();
+
+  const char *failedLib = m_libraryDB->InitializeFileDatabase(m_dataDir, libraries);
   if(failedLib)
   {
     std::string message = FormattedString(
       "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s'.\n",
       failedLib, m_dataDir.c_str(), m_gameResRootPath.c_str(), configPath.c_str());
     throw LibraryFileNotFoundException(message);
+  }
+}
+
+DefaultContentManager::~DefaultContentManager()
+{
+  if(m_libraryDB)
+  {
+    m_libraryDB->ShutDownFileDatabase();
+    delete m_libraryDB;
   }
 }
 
@@ -185,7 +196,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
         // XXX: the whole LibraryDataBase thing requires refactoring
         std::string _filename(filename);
         FileMan::slashifyPath(_filename);
-        if (FindFileInTheLibrarry(_filename, &libFile))
+        if (m_libraryDB->FindFileInTheLibrarry(_filename, &libFile))
         {
 #if PRINT_OPENING_FILES
           SLOGD(TAG, "Opened file (from library ): %s", filename);
@@ -238,7 +249,7 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 		char path[512];
 		snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
 		file = fopen(path, "rb");
-		if (!file) return CheckIfFileExistInLibrary(filename);
+		if (!file) return m_libraryDB->CheckIfFileExistInLibrary(filename);
 	}
 
 	fclose(file);

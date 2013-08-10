@@ -15,7 +15,6 @@
 #include "MapScreen.h"
 #include "Game_Clock.h"
 #include "Overhead.h"
-#include "LibraryDataBase.h"
 #include "Map_Screen_Interface.h"
 #include "Tactical_Save.h"
 #include "Interface.h"
@@ -127,10 +126,6 @@ void    ShutdownGame(void)
 
 	//Save the general save game settings to disk
 	SaveGameSettings();
-
-
-	 //shutdown the file database manager
-	 ShutDownFileDatabase( );
 
 	InitTacticalSave();
 }

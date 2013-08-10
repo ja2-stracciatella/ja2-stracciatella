@@ -36,20 +36,31 @@ struct LibraryHeaderStruct
 	FileHeaderStruct *pFileHeader;
 };
 
+class LibraryDB
+{
+public:
+  /** Initialize file database.
+   * @return NULL when successful, otherwise the name of failed library. */
+  const char* InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries);
 
-/** Initialize file database.
- * @return NULL when successful, otherwise the name of failed library. */
-const char* InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries);
+  /* Find library which can contain the given file.
+   * File name should use / (not \\). */
+  LibraryHeaderStruct* GetLibraryFromFileName(const std::string &filename);
 
-void ShutDownFileDatabase(void);
+  /** Find file in the library.
+   * Name of the file should use / not \\. */
+  BOOLEAN FindFileInTheLibrarry(const std::string &filename, LibraryFile* f);
 
-/** Check if file exists in the library.
- * Name of the file should use / (not \\). */
-bool CheckIfFileExistInLibrary(const std::string &filename);
+  /** Check if file exists in the library.
+   * Name of the file should use / (not \\). */
+  bool CheckIfFileExistInLibrary(const std::string &filename);
 
-/** Find file in the library.
- * Name of the file should use / not \\. */
-BOOLEAN FindFileInTheLibrarry(const std::string &filename, LibraryFile*);
+  void ShutDownFileDatabase();
+
+protected:
+  std::vector<LibraryHeaderStruct> m_libraries;
+};
+
 
 /* Close an individual file that is contained in the library */
 void    CloseLibraryFile(LibraryFile*);
