@@ -274,6 +274,12 @@ try
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_EnableUNICODE(SDL_ENABLE);
 
+  // restore output to the console (on windows when built with MINGW)
+#ifdef __MINGW32__
+  freopen("CON", "w", stdout);
+  freopen("CON", "w", stderr);
+#endif
+
 #ifdef SGP_DEBUG
 	// Initialize the Debug Manager - success doesn't matter
 	InitializeDebugManager();

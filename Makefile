@@ -72,6 +72,8 @@ CXX=$(MINGW_PREFIX)-g++
 CPP=$(MINGW_PREFIX)-cpp
 RANLIB=$(MINGW_PREFIX)-ranlib
 
+CFLAGS += -mwindows -mconsole
+
 endif
 
 ############################################################
