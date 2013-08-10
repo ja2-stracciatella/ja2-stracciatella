@@ -63,6 +63,9 @@ public:
   const std::string& getDataDir() { return m_dataDir; }
   const std::string& getTileDir() { return m_tileDir; }
 
+  /** Get folder for saved games. */
+  virtual std::string getSavedGamesFolder() const;
+
 protected:
   std::string m_dataDir;
   std::string m_tileDir;

@@ -270,3 +270,9 @@ std::string DefaultContentManager::getVideoCaptureFolder() const
 {
   return m_configFolder;
 }
+
+/** Get folder for saved games. */
+std::string DefaultContentManager::getSavedGamesFolder() const
+{
+  return FileMan::joinPaths(m_configFolder, "SavedGames");
+}

@@ -301,6 +301,7 @@ try
     LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
     LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
     LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
+    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
     LOG_INFO("------------------------------------------------------------------------------\n");
     LOG_INFO("MOD name:                      '%s'\n", modName.c_str());
     LOG_INFO("MOD resource directory:        '%s'\n", modResFolder.c_str());
@@ -315,6 +316,7 @@ try
     LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
     LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
     LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
+    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
     LOG_INFO("------------------------------------------------------------------------------\n");
   }
 

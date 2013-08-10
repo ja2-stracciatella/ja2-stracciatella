@@ -46,3 +46,10 @@ SGPFile* ModPackContentManager::openGameResForReading(const std::string& filenam
 {
   return openGameResForReading(filename.c_str());
 }
+
+/** Get folder for saved games. */
+std::string ModPackContentManager::getSavedGamesFolder() const
+{
+  std::string folderName = std::string("SavedGames-") + m_modName;
+  return FileMan::joinPaths(m_configFolder, folderName);
+}

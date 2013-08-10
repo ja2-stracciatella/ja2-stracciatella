@@ -53,6 +53,9 @@ public:
   /** Get folder for video capture. */
   virtual std::string getVideoCaptureFolder() const = 0;
 
+  /** Get folder for saved games. */
+  virtual std::string getSavedGamesFolder() const = 0;
+
   /* /\** */
   /*  * Get location of the game executable file. */
   /*  *\/ */

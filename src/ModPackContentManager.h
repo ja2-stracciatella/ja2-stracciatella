@@ -16,6 +16,9 @@ public:
   virtual SGPFile* openGameResForReading(const char* filename) const;
   virtual SGPFile* openGameResForReading(const std::string& filename) const;
 
+  /** Get folder for saved games. */
+  std::string getSavedGamesFolder() const;
+
 protected:
   std::string m_modName;
   std::string m_modResFolder;
