@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ContentManager.h"
+#include "StringEncodingTypes.h"
 
 class LibraryDB;
 
@@ -65,6 +66,21 @@ public:
 
   /** Get folder for saved games. */
   virtual std::string getSavedGamesFolder() const;
+
+  /** Load encrypted string from game resource file. */
+  virtual void loadEncryptedString(const char *fileName, wchar_t* DestString, uint32_t seek_chars, uint32_t read_chars) const;
+
+  virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const;
+
+  /** Load dialogue quote from file. */
+  virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number) const;
+  UTF8String* loadDialogQuoteFromFile(STRING_ENC_TYPE encType, const char* filename, int quote_number) const;
+
+  void loadEncryptedString(STRING_ENC_TYPE encType, const char *fileName, wchar_t* DestString, uint32_t seek_chars, uint32_t read_chars) const;
+  void loadEncryptedString(STRING_ENC_TYPE encType, SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const;
+
+  /** Load all dialogue quotes for a character. */
+  void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<UTF8String*> &quotes) const;
 
 protected:
   std::string m_dataDir;

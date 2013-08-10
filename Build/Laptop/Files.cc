@@ -12,7 +12,6 @@
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "Cursors.h"
 #include "Text.h"
 #include "Button_System.h"
@@ -657,7 +656,7 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 	for (; n != 0; ++offset, --n)
 	{
 		wchar_t str[FILE_STRING_SIZE];
-		LoadEncryptedData(f, str, lengthof(str) * offset, lengthof(str));
+		GCM->loadEncryptedString(f, str, lengthof(str) * offset, lengthof(str));
 
 		FileString* const fs = MALLOC(FileString);
 		fs->Next    = 0;

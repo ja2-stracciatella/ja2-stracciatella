@@ -98,8 +98,9 @@ CFLAGS += -I sgp
 CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
-CFLAGS += -I _build/lib-utf8cpp/source
+CFLAGS += -I _build/lib-rapidjson
 CFLAGS += -I _build/lib-slog
+CFLAGS += -I _build/lib-utf8cpp/source
 
 #CFLAGS += -Wall
 #CFLAGS += -W
@@ -442,7 +443,6 @@ SRCS += Build/Utils/Animated_ProgressBar.cc
 SRCS += Build/Utils/Cinematics.cc
 SRCS += Build/Utils/Cursors.cc
 SRCS += Build/Utils/Debug_Control.cc
-SRCS += Build/Utils/Encrypted_File.cc
 SRCS += Build/Utils/Event_Manager.cc
 SRCS += Build/Utils/Event_Pump.cc
 SRCS += Build/Utils/Font_Control.cc
@@ -494,6 +494,7 @@ SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
 
 SRCS += src/DefaultContentManager.cc
+SRCS += src/JsonUtility.cc
 SRCS += src/ModPackContentManager.cc
 SRCS += src/Soldier.cc
 SRCS += src/content/npcs.cc

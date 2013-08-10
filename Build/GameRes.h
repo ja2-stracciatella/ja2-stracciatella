@@ -8,6 +8,8 @@
 #include "Types.h"
 #include "IEncodingCorrector.h"
 
+#include "StringEncodingTypes.h"
+
 /** List of supported game versions (localizations). */
 enum GameVersion {
   GV_DUTCH,
@@ -94,3 +96,6 @@ wchar_t getZeroGlyphChar();
 /*************************************************************
  *
  ************************************************************/
+
+/** Get current string encoding type. */
+STRING_ENC_TYPE getStringEncType();

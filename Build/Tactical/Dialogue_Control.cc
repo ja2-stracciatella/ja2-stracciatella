@@ -7,7 +7,6 @@
 #include "MapScreen.h"
 #include "MessageBoxScreen.h"
 #include "Soldier_Control.h"
-#include "Encrypted_File.h"
 #include "Faces.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -53,7 +52,10 @@
 #include "GameRes.h"
 #include "UILayout.h"
 
-#define DIALOGUESIZE 240
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "sgp/UTF8String.h"
+
 #define   QUOTE_MESSAGE_SIZE		520
 
 #define		DIALOGUE_DEFAULT_SUBTITLE_WIDTH		200
@@ -704,7 +706,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 
 
 static void    CreateTalkingUI(DialogueHandler, FACETYPE&, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
+static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
 
 
 // execute specific character dialogue
@@ -810,7 +812,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	CHECKF(face != NULL);
 
 	wchar_t gzQuoteStr[QUOTE_MESSAGE_SIZE];
-  if (!GetDialogue(ubCharacterNum, usQuoteNum, DIALOGUESIZE, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
+  if (!GetDialogue(ubCharacterNum, usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
   {
     return( FALSE );
   }
@@ -958,18 +960,22 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 	return( zFileName );
 }
 
-
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
+static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
 {
-   // first things first  - grab the text (if player has SUBTITLE PREFERENCE ON)
+   // first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
 			const char* pFilename = GetDialogueDataFilename(ubCharacterNum, 0, FALSE);
-			bool success;
+			bool success = false;
 			try
 			{
-				LoadEncryptedDataFromFile(pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize);
-				success = zDialogueText[0] != L'\0';
+        UTF8String* quote = GCM->loadDialogQuoteFromFile(pFilename, usQuoteNum);
+        if(quote)
+        {
+          wcsncpy(zDialogueText, quote->getWCHAR().data(), Length);
+          delete quote;
+          success = zDialogueText[0] != L'\0';
+        }
 			}
 			catch (...) { success = false; }
 			if (!success)

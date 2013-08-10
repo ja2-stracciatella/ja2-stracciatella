@@ -7,7 +7,6 @@
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "Cursors.h"
 #include "Soldier_Profile.h"
 #include "IMP_Compile_Character.h"
@@ -26,6 +25,8 @@
 #include "Font_Control.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define MAX_MESSAGES_PAGE 18 // max number of messages per page
 
@@ -509,7 +510,7 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 
 static void LoadEMailText(wchar_t buf[], UINT32 entry)
 {
-	LoadEncryptedDataFromFile(BINARYDATADIR "/email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
+	GCM->loadEncryptedString(BINARYDATADIR "/email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
 }
 
 
@@ -1874,7 +1875,7 @@ ENUM_BITSET(PhysicalBits)
 
 static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)
 {
-	LoadEncryptedDataFromFile(BINARYDATADIR "/impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
+	GCM->loadEncryptedString(BINARYDATADIR "/impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
 }
 
 

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <stdint.h>
 #include <string>
 #include <vector>
 
 struct SGPFile;
+class UTF8String;
 
 class ContentManager
 {
@@ -56,8 +58,16 @@ public:
   /** Get folder for saved games. */
   virtual std::string getSavedGamesFolder() const = 0;
 
+  /** Load encrypted string from game resource file. */
+  virtual void loadEncryptedString(const char *fileName, wchar_t* DestString, uint32_t seek_chars, uint32_t read_chars) const = 0;
+
+  virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const = 0;
+
+  /** Load dialogue quote from file. */
+  virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number) const = 0;
+
   /* /\** */
-  /*  * Get location of the game executable file. */
+  /*  * get location of the game executable file. */
   /*  *\/ */
   /* virtual std::string getExeLocation() = 0; */
 };

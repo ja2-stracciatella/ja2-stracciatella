@@ -6,7 +6,6 @@
 #include "Soldier_Find.h"
 #include "StrategicMap.h"
 #include "Timer_Control.h"
-#include "Encrypted_File.h"
 #include "MessageBoxScreen.h"
 #include "Queen_Command.h"
 #include "Overhead.h"
@@ -30,6 +29,8 @@
 #include "FileMan.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define CIV_QUOTE_TEXT_SIZE 160
 
@@ -139,7 +140,7 @@ try
 		sprintf(zFileName, NPCDATADIR "/civ%02d.edt", ubCivQuoteID);
 	}
 
-	LoadEncryptedDataFromFile(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
+	GCM->loadEncryptedString(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
 	return zQuote[0] != L'\0';
 }
 catch (...) { return FALSE; }

@@ -9,7 +9,6 @@
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Interface_Items.h"
-#include "Encrypted_File.h"
 #include "Text.h"
 #include "Store_Inventory.h"
 #include "LaptopSave.h"
@@ -23,6 +22,8 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #ifdef JA2BETAVERSION
 #	include "Debug.h"
@@ -875,7 +876,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 		//Display Items Name
 		wchar_t sText[BOBBYR_ITEM_DESC_NAME_SIZE];
 		uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;
-		LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+		GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 		ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_PIC_WIDTH - 6, BOBBYR_ITEM_NAME_TEXT_FONT);
 		DrawTextToScreen(sText, BOBBYR_ITEM_NAME_X, usPosY + BOBBYR_ITEM_NAME_Y_OFFSET, 0, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
@@ -908,7 +909,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 		//Display Items description
 		wchar_t sText[BOBBYR_ITEM_DESC_INFO_SIZE];
 		uiStartLoc += BOBBYR_ITEM_DESC_NAME_SIZE;
-		LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_INFO_SIZE);
+		GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_INFO_SIZE);
 		DisplayWrappedString(BOBBYR_ITEM_DESC_START_X, usPosY, BOBBYR_ITEM_DESC_START_WIDTH, 2, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 }

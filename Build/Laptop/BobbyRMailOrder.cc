@@ -9,7 +9,6 @@
 #include "VObject.h"
 #include "WordWrap.h"
 #include "Cursors.h"
-#include "Encrypted_File.h"
 #include "BobbyRGuns.h"
 #include "Finances.h"
 #include "Game_Clock.h"
@@ -33,6 +32,8 @@
 #include "FileMan.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 struct BobbyROrderLocationStruct
 {
@@ -855,11 +856,11 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			if( pBobbyRayPurchase[i].fUsed )
 			{
 				wchar_t	sBack[BOBBYR_ITEM_DESC_NAME_SIZE];
-				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				GCM->loadEncryptedString(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 				swprintf(sText, lengthof(sText), L"* %ls", sBack);
 			}
 			else
-				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 
 			ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 

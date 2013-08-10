@@ -50,10 +50,10 @@
 #include "SoundMan.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
-#include "Encrypted_File.h"
 #include "Strategic_Town_Loyalty.h"
-#include "GameRes.h"
 
+#include "Build/GameRes.h"
+#include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
@@ -873,8 +873,8 @@ static void UpdateMercInfo(void)
 static void LoadMercBioInfo(UINT8 const ubIndex, wchar_t* const pInfoString, wchar_t* const pAddInfo)
 {
 	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
-	LoadEncryptedDataFromFile(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO);
-	LoadEncryptedDataFromFile(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
+	GCM->loadEncryptedString(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO);
+	GCM->loadEncryptedString(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
 }
 
 

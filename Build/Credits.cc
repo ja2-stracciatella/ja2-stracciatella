@@ -2,7 +2,6 @@
 #include "Cursors.h"
 #include "Debug.h"
 #include "Directories.h"
-#include "Encrypted_File.h"
 #include "English.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -22,6 +21,8 @@
 #include "WordWrap.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 struct CRDT_NODE
 {
@@ -450,7 +451,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 	const UINT32 pos = CREDITS_LINESIZE * guiCurrentCreditRecord++;
 	try
 	{
-		LoadEncryptedDataFromFile(CRDT_NAME_OF_CREDIT_FILE, text, pos, CREDITS_LINESIZE);
+		GCM->loadEncryptedString(CRDT_NAME_OF_CREDIT_FILE, text, pos, CREDITS_LINESIZE);
 	}
 	catch (...) // XXX fishy, should check file size beforehand
 	{

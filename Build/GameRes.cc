@@ -431,3 +431,20 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 
   throw std::runtime_error(FormattedString("Multilanguage resource %d is not found", id));
 }
+
+STRING_ENC_TYPE getStringEncType()
+{
+  if(isRussianVersion() || isRussianGoldVersion())
+  {
+    return SE_RUSSIAN;
+  }
+  else if(isPolishVersion())
+  {
+    return SE_POLISH;
+  }
+  else if(isEnglishVersion())
+  {
+    return SE_ENGLISH;
+  }
+  return SE_NORMAL;
+}
