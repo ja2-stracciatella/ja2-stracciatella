@@ -54,6 +54,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "MercProfile.h"
 #include "sgp/UTF8String.h"
 
 #define   QUOTE_MESSAGE_SIZE		520
@@ -877,7 +878,7 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 }
 
 
-const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile)
+const char* GetDialogueDataFilename(const MercProfile &profile, UINT16 usQuoteNum, BOOLEAN fWavFile)
 {
 	static char zFileName[164];
 	UINT8		ubFileNumID;
@@ -889,30 +890,29 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		if ( fWavFile )
 		{
 			// build name of wav file (characternum + quotenum)
-			sprintf(zFileName, NPC_SPEECHDIR "/d_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+			sprintf(zFileName, NPC_SPEECHDIR "/d_%03d_%03d.wav", profile.getNum(), usQuoteNum);
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/d_%03d.edt", ubCharacterNum);
+			sprintf(zFileName, NPCDATADIR "/d_%03d.edt", profile.getNum());
 		}
 	}
-	else if ( ubCharacterNum >= FIRST_RPC &&
-			( !( gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
-			|| ProfileCurrentlyTalkingInDialoguePanel( ubCharacterNum )
-			|| (gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_FORCENPCQUOTE) )
-			)
+	else if ( profile.getNum() >= FIRST_RPC
+            && ( !profile.isRecruited()
+                 || ProfileCurrentlyTalkingInDialoguePanel( profile.getNum() )
+                 || profile.isForcedNPCQuote()))
 	{
-		ubFileNumID = ubCharacterNum;
+		ubFileNumID = profile.getNum();
 
 		// ATE: If we are merc profile ID #151-154, all use 151's data....
-		if (ubCharacterNum >= HERVE && ubCharacterNum <= CARLO)
+		if (profile.getNum() >= HERVE && profile.getNum() <= CARLO)
 		{
 			ubFileNumID = HERVE;
 		}
 
 		// If we are character #155, check fact!
-		if ( ubCharacterNum == MANNY && !gubFact[FACT_MANNY_IS_BARTENDER] )
+		if ( profile.getNum() == MANNY && !gubFact[FACT_MANNY_IS_BARTENDER] )
 		{
 			ubFileNumID = MANNY;
 		}
@@ -934,26 +934,26 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		{
       if(isRussianVersion() || isRussianGoldVersion())
       {
-        if (ubCharacterNum >= FIRST_RPC && gMercProfiles[ubCharacterNum].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
+        if (profile.getNum() >= FIRST_RPC && profile.isRecruited())
         {
-          sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+          sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", profile.getNum(), usQuoteNum);
         }
         else
         {
           // build name of wav file (characternum + quotenum)
-          sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+          sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
         }
       }
       else
       {
         // build name of wav file (characternum + quotenum)
-				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
       }
 		}
 		else
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, MERCEDTDIR "/%03d.edt", ubCharacterNum);
+			sprintf(zFileName, MERCEDTDIR "/%03d.edt", profile.getNum());
 		}
 	}
 
@@ -965,7 +965,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDi
    // first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
-			const char* pFilename = GetDialogueDataFilename(ubCharacterNum, 0, FALSE);
+     const char* pFilename = GetDialogueDataFilename(MercProfile(ubCharacterNum), 0, FALSE);
 			bool success = false;
 			try
 			{
@@ -988,7 +988,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDi
    }
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-	const char* pFilename = GetDialogueDataFilename(ubCharacterNum, usQuoteNum, TRUE);
+   const char* pFilename = GetDialogueDataFilename(MercProfile(ubCharacterNum), usQuoteNum, TRUE);
 	strcpy( zSoundString, pFilename );
  return(TRUE);
 }
