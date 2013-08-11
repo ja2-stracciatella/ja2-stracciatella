@@ -167,7 +167,7 @@ void ReducePointsForFatigue(const SOLDIERTYPE* s, UINT16* pusPoints)
 }
 
 
-INT32 GetSkillCheckPenaltyForFatigue( SOLDIERTYPE *pSoldier, INT32 iSkill )
+INT32 GetSkillCheckPenaltyForFatigue( const SOLDIERTYPE *pSoldier, INT32 iSkill )
 {
 	// use only half the full effect of fatigue for skill checks
 	return( ( (iSkill * GetPenaltyForFatigue( pSoldier ) ) / 100) / 2 );
@@ -450,7 +450,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 }
 
 
-INT8 CalcTrapDetectLevel( SOLDIERTYPE * pSoldier, BOOLEAN fExamining )
+INT8 CalcTrapDetectLevel( const SOLDIERTYPE * pSoldier, BOOLEAN fExamining )
 {
 	// return the level of trap which the guy is able to detect
 

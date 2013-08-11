@@ -1027,7 +1027,7 @@ INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem)
 	return( NO_SLOT );
 }
 
-INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem )
+INT8 FindUsableObj( const SOLDIERTYPE * pSoldier, UINT16 usItem )
 {
 	INT8 bLoop;
 
@@ -1060,7 +1060,7 @@ static INT8 FindObjExcludingSlot(const SOLDIERTYPE* pSoldier, UINT16 usItem, INT
 	return( NO_SLOT );
 }
 
-INT8 FindExactObj( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
+INT8 FindExactObj( const SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 {
 	INT8 bLoop;
 
@@ -1128,7 +1128,7 @@ INT8 FindObjClass(const SOLDIERTYPE* const pSoldier, const UINT32 usItemClass)
 }
 
 
-INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
+INT8 FindAIUsableObjClass( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 {
 	// finds the first object of the specified class which does NOT have
 	// the "unusable by AI" flag set.
@@ -1154,7 +1154,7 @@ INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 	return( NO_SLOT );
 }
 
-INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper )
+INT8 FindAIUsableObjClassWithin( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper )
 {
 	INT8 bLoop;
 
@@ -1175,7 +1175,7 @@ INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, IN
 	return( NO_SLOT );
 }
 
-INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
+INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 {
 	INT8	bLoop;
 
@@ -1197,7 +1197,7 @@ INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 }
 
 
-static BOOLEAN GLGrenadeInSlot(SOLDIERTYPE* pSoldier, INT8 bSlot)
+static BOOLEAN GLGrenadeInSlot(const SOLDIERTYPE* pSoldier, INT8 bSlot)
 {
 	switch (pSoldier->inv[bSlot].usItem)
 	{
@@ -1212,7 +1212,7 @@ static BOOLEAN GLGrenadeInSlot(SOLDIERTYPE* pSoldier, INT8 bSlot)
 }
 
 // for grenade launchers
-INT8 FindGLGrenade( SOLDIERTYPE * pSoldier )
+INT8 FindGLGrenade( const SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 
@@ -1226,7 +1226,7 @@ INT8 FindGLGrenade( SOLDIERTYPE * pSoldier )
 	return( NO_SLOT );
 }
 
-INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier )
+INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 {
 	INT8 bLoop;
 	BOOLEAN fCheckForFlares = FALSE;
@@ -1292,7 +1292,7 @@ INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClas
 	return( ITEM_NOT_FOUND );
 }
 
-INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
+INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 {
 	INT8	bLoop;
 
@@ -2202,7 +2202,7 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 */
 
 
-INT8 FindAmmo(SOLDIERTYPE const* const s, AmmoKind const calibre, UINT8 const mag_size, INT8 const exclude_slot)
+INT8 FindAmmo(const SOLDIERTYPE* s, AmmoKind const calibre, UINT8 const mag_size, INT8 const exclude_slot)
 {
 	for (INT8 slot = HANDPOS; slot != NUM_INV_SLOTS; ++slot)
 	{
@@ -2218,9 +2218,9 @@ INT8 FindAmmo(SOLDIERTYPE const* const s, AmmoKind const calibre, UINT8 const ma
 }
 
 
-INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot )
+INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot )
 {
-	OBJECTTYPE *	pObj;
+	const OBJECTTYPE *	pObj;
 	INT8					bSlot;
 
 	if (pSoldier == NULL)

@@ -2266,7 +2266,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 		if ( AM_A_ROBOT( pSoldier ) )
 		{
-			SOLDIERTYPE * pSoldier2;
+			const SOLDIERTYPE * pSoldier2;
 
 			pSoldier2 = GetRobotController( pSoldier );
 			if ( pSoldier2 )

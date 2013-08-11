@@ -76,7 +76,7 @@ MoraleEvent gbMoraleEvent[NUM_MORALE_EVENTS] =
 BOOLEAN gfSomeoneSaidMoraleQuote = FALSE;
 
 
-INT8 GetMoraleModifier( SOLDIERTYPE * pSoldier )
+INT8 GetMoraleModifier( const SOLDIERTYPE * pSoldier )
 {
 	if (pSoldier->uiStatusFlags & SOLDIER_PC)
 	{

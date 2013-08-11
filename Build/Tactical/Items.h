@@ -13,19 +13,19 @@ extern UINT8 SlotToPocket[7];
 BOOLEAN WeaponInHand(const SOLDIERTYPE* pSoldier);
 
 INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
-INT8 FindAmmo(SOLDIERTYPE const*, AmmoKind, UINT8 ubMagSize, INT8 bExcludeSlot);
+INT8 FindAmmo(const SOLDIERTYPE*, AmmoKind, UINT8 ubMagSize, INT8 bExcludeSlot);
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
 INT8 FindObjClass(const SOLDIERTYPE* s, UINT32 usItemClass);
-extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
-extern INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
-extern INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );
-extern INT8 FindExactObj( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
+extern INT8 FindAIUsableObjClass( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
+extern INT8 FindAIUsableObjClassWithin( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
+extern INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );
+extern INT8 FindExactObj( const SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
 INT8 FindObjInObjRange(const SOLDIERTYPE* s, UINT16 usItem1, UINT16 usItem2);
-extern INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon );
-extern INT8 FindGLGrenade( SOLDIERTYPE * pSoldier );
-extern INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier );
-extern INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
+extern INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon );
+extern INT8 FindGLGrenade( const SOLDIERTYPE * pSoldier );
+extern INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier );
+extern INT8 FindUsableObj( const SOLDIERTYPE * pSoldier, UINT16 usItem );
 
 extern void DeleteObj(OBJECTTYPE * pObj );
 extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
@@ -123,7 +123,7 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem );
 BOOLEAN IsMedicalKitItem(const OBJECTTYPE* pObject);
 
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier );
-INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot );
+INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot );
 
 void SwapHandItems( SOLDIERTYPE * pSoldier );
 

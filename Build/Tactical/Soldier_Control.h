@@ -1014,7 +1014,7 @@ void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet );
 
 void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier );
 void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pSoldier );
-SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier );
+const SOLDIERTYPE *GetRobotController( const SOLDIERTYPE *pSoldier );
 BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* pSoldier);
 BOOLEAN ControllingRobot(const SOLDIERTYPE* s);
 

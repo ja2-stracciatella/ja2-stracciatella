@@ -8719,7 +8719,7 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 }
 
 
-SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier )
+const SOLDIERTYPE *GetRobotController( const SOLDIERTYPE *pSoldier )
 {
 	return pSoldier->robot_remote_holder;
 }
