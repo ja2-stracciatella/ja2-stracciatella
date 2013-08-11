@@ -38,12 +38,13 @@
 #include "GameState.h"
 #include "Timer.h"
 
-#include "GameInstance.h"
 #include "DefaultContentManager.h"
+#include "GameInstance.h"
+#include "JsonUtility.h"
+#include "MicroIni/MicroIni.hpp"
 #include "ModPackContentManager.h"
 #include "policy/DefaultGamePolicy.h"
-
-#include "MicroIni/MicroIni.hpp"
+#include "sgp/UTF8String.h"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -78,6 +79,10 @@ static BOOLEAN gfGameInitialized = FALSE;
 
 static std::string findRootGameResFolder(const std::string &configPath);
 static void WriteDefaultConfigFile(const char* ConfigFile);
+
+static void convertDialogQuotesToJson(const DefaultContentManager *cm,
+                                      STRING_ENC_TYPE encType,
+                                      const char *dialogFile, const char *outputFile);
 
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
@@ -363,6 +368,13 @@ try
 
   ////////////////////////////////////////////////////////////
 
+  // some data convertion
+  // convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/051.edt", FileMan::joinPaths(exeFolder, "051.edt.json").c_str());
+  // convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/052.edt", FileMan::joinPaths(exeFolder, "052.edt.json").c_str());
+  // convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/055.edt", FileMan::joinPaths(exeFolder, "055.edt.json").c_str());
+
+  ////////////////////////////////////////////////////////////
+
 #if defined JA2
   if(isEnglishVersion())
   {
@@ -632,3 +644,27 @@ static void WriteDefaultConfigFile(const char* ConfigFile)
 		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////
+// some data convertion
+////////////////////////////////////////////////////////////////////////////
+
+static void convertDialogQuotesToJson(const DefaultContentManager *cm,
+                                      STRING_ENC_TYPE encType,
+                                      const char *dialogFile, const char *outputFile)
+{
+  std::vector<UTF8String*> quotes;
+  std::vector<std::string> quotes_str;
+  cm->loadAllDialogQuotes(encType, dialogFile, quotes);
+  for(int i = 0; i < quotes.size(); i++)
+  {
+    quotes_str.push_back(std::string(quotes[i]->getUTF8()));
+    delete quotes[i];
+    quotes[i] = NULL;
+  }
+  JsonUtility::writeToFile(outputFile, quotes_str);
+}
+
+////////////////////////////////////////////////////////////////////////////
+//
+////////////////////////////////////////////////////////////////////////////
