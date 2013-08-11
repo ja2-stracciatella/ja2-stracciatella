@@ -817,16 +817,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
     return( FALSE );
   }
 
-	if( bUIHandlerID == DIALOGUE_EXTERNAL_NPC_UI )
-	{
-		// external NPC
-		SetFaceTalking(*face, zSoundString, gzQuoteStr);
-	}
-	else
-	{
-		// start "talking" system (portrait animation and start wav sample)
-		SetFaceTalking(*face, zSoundString, gzQuoteStr);
-	}
+  SetFaceTalking(*face, zSoundString, gzQuoteStr);
 	CreateTalkingUI(bUIHandlerID, *face, ubCharacterNum, gzQuoteStr);
 
 	// Set global handleer ID value, used when face desides it's done...
