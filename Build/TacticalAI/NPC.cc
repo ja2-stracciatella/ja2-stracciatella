@@ -2333,7 +2333,7 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 						if (!MayExecute()) return true;
 
 						SOLDIERTYPE const& s = soldier_;
-						ExecuteCharacterDialogue(s.ubProfile, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO, s.face, DIALOGUE_TACTICAL_UI, TRUE);
+						ExecuteCharacterDialogue(s.ubProfile, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO, s.face, DIALOGUE_TACTICAL_UI, TRUE, false);
 
 						// Setup face with data!
 						FACETYPE& f = *gpCurrentTalkingFace;

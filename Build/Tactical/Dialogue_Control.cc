@@ -126,7 +126,6 @@ BOOLEAN			gfFacePanelActive = FALSE;
 static UINT32         guiScreenIDUsedWhenUICreated;
 static MOUSE_REGION   gTextBoxMouseRegion;
 static MOUSE_REGION   gFacePopupMouseRegion;
-static BOOLEAN        gfUseAlternateDialogueFile = FALSE;
 
 MercPopUpBox* g_dialogue_box;
 
@@ -652,7 +651,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 				gTacticalStatus.ubLastQuoteSaid       = quote_;
 				gTacticalStatus.ubLastQuoteProfileNUm = character_;
 
-				ExecuteCharacterDialogue(character_, quote_, face, dialogue_handler_, from_soldier_);
+				ExecuteCharacterDialogue(character_, quote_, face, dialogue_handler_, from_soldier_, false);
 
 				s = FindSoldierByProfileID(character_);
 				if (s && s->bTeam == OUR_TEAM)
@@ -691,10 +690,8 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 			{
 				if (!MayExecute()) return true;
 
-				gfUseAlternateDialogueFile = TRUE;
 				SOLDIERTYPE const& s = soldier_;
-				ExecuteCharacterDialogue(s.ubProfile, quote_, s.face, handler_, TRUE);
-				gfUseAlternateDialogueFile = FALSE;
+				ExecuteCharacterDialogue(s.ubProfile, quote_, s.face, handler_, TRUE, true);
 				return false;
 			}
 
@@ -708,11 +705,11 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 
 
 static void    CreateTalkingUI(DialogueHandler, FACETYPE&, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString, bool useAlternateDialogueFile);
 
 
 // execute specific character dialogue
-BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier)
+BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, bool useAlternateDialogueFile)
 {
 	gpCurrentTalkingFace = face;
 	gubCurrentTalkingID  = ubCharacterNum;
@@ -814,7 +811,8 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	CHECKF(face != NULL);
 
 	wchar_t gzQuoteStr[QUOTE_MESSAGE_SIZE];
-  if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
+  if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr), zSoundString,
+        useAlternateDialogueFile))
   {
     return( FALSE );
   }
@@ -878,14 +876,14 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 	}
 }
 
-static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString, bool useAlternateDialogueFile)
 {
    // first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
      const char* pFilename = Content::GetDialogueTextFilename(
        profile,
-       gfUseAlternateDialogueFile,
+       useAlternateDialogueFile,
        ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()));
 
 			bool success = false;
@@ -911,7 +909,7 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
    const char* pFilename = Content::GetDialogueVoiceFilename(
-     profile, usQuoteNum, gfUseAlternateDialogueFile,
+     profile, usQuoteNum, useAlternateDialogueFile,
      ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
      isRussianVersion() || isRussianGoldVersion());
 

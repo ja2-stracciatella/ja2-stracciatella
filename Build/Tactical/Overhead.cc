@@ -6192,7 +6192,7 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo con
 				SlideToLocation(location_);
 
 				SOLDIERTYPE& s = soldier_;
-				ExecuteCharacterDialogue(s.ubProfile, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), s.face, DIALOGUE_TACTICAL_UI, TRUE);
+				ExecuteCharacterDialogue(s.ubProfile, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), s.face, DIALOGUE_TACTICAL_UI, TRUE, false);
 
 				return false;
 			}
