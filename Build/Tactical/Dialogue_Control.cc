@@ -884,8 +884,7 @@ const char* GetDialogueDataFilename(const MercProfile &profile, UINT16 usQuoteNu
   return Content::GetDialogueDataFilename(profile, usQuoteNum, fWavFile,
                                           gfUseAlternateDialogueFile,
                                           ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
-                                          isRussianVersion() || isRussianGoldVersion(),
-                                          gubFact[FACT_MANNY_IS_BARTENDER]);
+                                          isRussianVersion() || isRussianGoldVersion());
 }
 
 static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)

@@ -10,8 +10,7 @@
 const char* Content::GetDialogueDataFilename(const MercProfile &profile, uint16_t usQuoteNum, bool fWavFile,
                                              bool useAlternateDialogueFile,
                                              bool isCurrentlyTalking,
-                                             bool isRussianVersion,
-                                             bool mannyIsBartender)
+                                             bool isRussianVersion)
 {
 	static char zFileName[164];
 	uint8_t		ubFileNumID;
@@ -43,13 +42,6 @@ const char* Content::GetDialogueDataFilename(const MercProfile &profile, uint16_
 		{
 			ubFileNumID = HERVE;
 		}
-
-		// If we are character #155, check fact!
-		if ( profile.getNum() == MANNY && !mannyIsBartender )
-		{
-			ubFileNumID = MANNY;
-		}
-
 
 		if ( fWavFile )
 		{
