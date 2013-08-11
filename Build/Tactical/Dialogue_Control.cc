@@ -708,7 +708,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 
 
 static void    CreateTalkingUI(DialogueHandler, FACETYPE&, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
 
 
 // execute specific character dialogue
@@ -814,7 +814,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	CHECKF(face != NULL);
 
 	wchar_t gzQuoteStr[QUOTE_MESSAGE_SIZE];
-  if (!GetDialogue(ubCharacterNum, usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
+  if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
   {
     return( FALSE );
   }
@@ -878,21 +878,16 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 	}
 }
 
-
-const char* GetDialogueDataFilename(const MercProfile &profile, UINT16 usQuoteNum, BOOLEAN fWavFile)
-{
-  return Content::GetDialogueDataFilename(profile, usQuoteNum, fWavFile,
-                                          gfUseAlternateDialogueFile,
-                                          ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
-                                          isRussianVersion() || isRussianGoldVersion());
-}
-
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
 {
    // first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
-     const char* pFilename = GetDialogueDataFilename(MercProfile(ubCharacterNum), 0, FALSE);
+     const char* pFilename = Content::GetDialogueTextFilename(
+       profile,
+       gfUseAlternateDialogueFile,
+       ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()));
+
 			bool success = false;
 			try
 			{
@@ -915,7 +910,11 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDi
    }
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-   const char* pFilename = GetDialogueDataFilename(MercProfile(ubCharacterNum), usQuoteNum, TRUE);
+   const char* pFilename = Content::GetDialogueVoiceFilename(
+     profile, usQuoteNum, gfUseAlternateDialogueFile,
+     ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
+     isRussianVersion() || isRussianGoldVersion());
+
 	strcpy( zSoundString, pFilename );
  return(TRUE);
 }

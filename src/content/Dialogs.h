@@ -6,8 +6,12 @@ class MercProfile;
 
 namespace Content
 {
-  const char* GetDialogueDataFilename(const MercProfile &profile, uint16_t usQuoteNum, bool fWavFile,
+  const char* GetDialogueTextFilename(const MercProfile &profile,
                                       bool useAlternateDialogueFile,
-                                      bool isCurrentlyTalking,
-                                      bool isRussianVersion);
+                                      bool isCurrentlyTalking);
+
+  const char* GetDialogueVoiceFilename(const MercProfile &profile, uint16_t usQuoteNum,
+                                       bool useAlternateDialogueFile,
+                                       bool isCurrentlyTalking,
+                                       bool isRussianVersion);
 }

@@ -47,6 +47,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "content/Mercs.h"
 
 extern BOOLEAN gfProfileDataLoaded;
 
@@ -129,7 +130,7 @@ void LoadMercProfiles()
 			MERCPROFILESTRUCT& p = gMercProfiles[i];
 
 			// If the dialogue exists for the merc, allow the merc to be hired
-			p.bMercStatus = GCM->doesGameResExists(GetDialogueDataFilename(i, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE;
+			p.bMercStatus = Content::canMercBeHired(GCM, i) ? 0 : MERC_HAS_NO_TEXT_FILE;
 
 			p.sMedicalDepositAmount = p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0;
 

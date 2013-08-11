@@ -194,9 +194,6 @@ void HandleDialogue(void);
 void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber );
 void HandleImportantMercQuoteLocked(SOLDIERTYPE*, UINT16 quote);
 
-
-const char* GetDialogueDataFilename(const MercProfile &profile, UINT16 usQuoteNum, BOOLEAN fWavFile);
-
 // A higher level function used for tactical quotes
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);
 
