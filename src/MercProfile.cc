@@ -1,7 +1,7 @@
 #include "MercProfile.h"
 
-#include "Soldier_Profile.h"
-#include "Soldier_Profile_Type.h"
+#include "Build/Tactical/Soldier_Profile.h"
+#include "Build/Tactical/Soldier_Profile_Type.h"
 
 MercProfile::MercProfile(uint16_t profileNum)
   :m_profileNum(profileNum),

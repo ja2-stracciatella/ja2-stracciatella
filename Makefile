@@ -498,6 +498,7 @@ SRCS += src/JsonUtility.cc
 SRCS += src/MercProfile.cc
 SRCS += src/ModPackContentManager.cc
 SRCS += src/Soldier.cc
+SRCS += src/content/Dialogs.cc
 SRCS += src/content/npcs.cc
 SRCS += src/internals/enums.cc
 SRCS += src/policy/DefaultGamePolicy.cc

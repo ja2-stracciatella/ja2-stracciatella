@@ -55,6 +55,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "MercProfile.h"
+#include "content/Dialogs.h"
 #include "sgp/UTF8String.h"
 
 #define   QUOTE_MESSAGE_SIZE		520
@@ -880,84 +881,11 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 
 const char* GetDialogueDataFilename(const MercProfile &profile, UINT16 usQuoteNum, BOOLEAN fWavFile)
 {
-	static char zFileName[164];
-	UINT8		ubFileNumID;
-
-	// Are we an NPC OR an RPC that has not been recruited?
-	// ATE: Did the || clause here to allow ANY RPC that talks while the talking menu is up to use an npc quote file
-	if ( gfUseAlternateDialogueFile )
-	{
-		if ( fWavFile )
-		{
-			// build name of wav file (characternum + quotenum)
-			sprintf(zFileName, NPC_SPEECHDIR "/d_%03d_%03d.wav", profile.getNum(), usQuoteNum);
-		}
-		else
-		{
-			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/d_%03d.edt", profile.getNum());
-		}
-	}
-	else if ( profile.getNum() >= FIRST_RPC
-            && ( !profile.isRecruited()
-                 || ProfileCurrentlyTalkingInDialoguePanel( profile.getNum() )
-                 || profile.isForcedNPCQuote()))
-	{
-		ubFileNumID = profile.getNum();
-
-		// ATE: If we are merc profile ID #151-154, all use 151's data....
-		if (profile.getNum() >= HERVE && profile.getNum() <= CARLO)
-		{
-			ubFileNumID = HERVE;
-		}
-
-		// If we are character #155, check fact!
-		if ( profile.getNum() == MANNY && !gubFact[FACT_MANNY_IS_BARTENDER] )
-		{
-			ubFileNumID = MANNY;
-		}
-
-
-		if ( fWavFile )
-		{
-			sprintf(zFileName, NPC_SPEECHDIR "/%03d_%03d.wav", ubFileNumID, usQuoteNum);
-		}
-		else
-		{
-		// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/%03d.edt", ubFileNumID);
-		}
-	}
-	else
-	{
-		if ( fWavFile )
-		{
-      if(isRussianVersion() || isRussianGoldVersion())
-      {
-        if (profile.getNum() >= FIRST_RPC && profile.isRecruited())
-        {
-          sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", profile.getNum(), usQuoteNum);
-        }
-        else
-        {
-          // build name of wav file (characternum + quotenum)
-          sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
-        }
-      }
-      else
-      {
-        // build name of wav file (characternum + quotenum)
-				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
-      }
-		}
-		else
-		{
-			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, MERCEDTDIR "/%03d.edt", profile.getNum());
-		}
-	}
-
-	return( zFileName );
+  return Content::GetDialogueDataFilename(profile, usQuoteNum, fWavFile,
+                                          gfUseAlternateDialogueFile,
+                                          ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
+                                          isRussianVersion() || isRussianGoldVersion(),
+                                          gubFact[FACT_MANNY_IS_BARTENDER]);
 }
 
 static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
