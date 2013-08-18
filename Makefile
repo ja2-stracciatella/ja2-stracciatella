@@ -23,7 +23,7 @@ INSTALL_DATA    ?= $(INSTALL) -m 444
 
 
 BUILD_NUMBER := $(strip $(shell git log 8287b98.. --oneline | wc -l))
-GAME_VERSION := v0.12.$(BUILD_NUMBER)
+GAME_VERSION := v0.12.$(BUILD_NUMBER)-experimental
 CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
 
 
