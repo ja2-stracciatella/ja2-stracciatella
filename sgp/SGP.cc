@@ -213,7 +213,7 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 static DefaultGamePolicy g_gamePolicy;
 
 const GamePolicy *GGP = &g_gamePolicy;
-const ContentManager *GCM = NULL;
+ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 

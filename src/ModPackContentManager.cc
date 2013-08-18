@@ -1,10 +1,8 @@
 #include "ModPackContentManager.h"
 
+#include "JsonUtility.h"
 #include "sgp/FileMan.h"
-// #include "sgp/LibraryDataBase.h"
-// #include "sgp/MemMan.h"
-// #include "sgp/StrUtils.h"
-// #include "sgp/UTF8String.h"
+#include "sgp/UTF8String.h"
 
 #include "slog/slog.h"
 #define TAG "ModPackCM"
@@ -19,6 +17,19 @@ ModPackContentManager::ModPackContentManager(const std::string &modName,
 {
   m_modName = modName;
   m_modResFolder = modResFolder;
+}
+
+/* Checks if a game resource exists. */
+bool ModPackContentManager::doesGameResExists(char const* fileName) const
+{
+  if(FileMan::checkFileExistance(m_modResFolder.c_str(), fileName))
+  {
+    return true;
+  }
+  else
+  {
+    return DefaultContentManager::doesGameResExists(fileName);
+  }
 }
 
 /* Open a game resource file for reading.
@@ -52,4 +63,32 @@ std::string ModPackContentManager::getSavedGamesFolder() const
 {
   std::string folderName = std::string("SavedGames-") + m_modName;
   return FileMan::joinPaths(m_configFolder, folderName);
+}
+
+/** Load dialogue quote from file. */
+UTF8String* ModPackContentManager::loadDialogQuoteFromFile(const char* filename, int quote_number)
+{
+  std::string jsonFileName = std::string(filename) + ".json";
+  std::map<std::string, std::vector<std::string> >::iterator it = m_dialogQuotesMap.find(jsonFileName);
+  if(it != m_dialogQuotesMap.end())
+  {
+    SLOGD(TAG, "cached quote %d %s", quote_number, jsonFileName.c_str());
+    return new UTF8String(it->second[quote_number].c_str());
+  }
+  else
+  {
+    if(doesGameResExists(jsonFileName.c_str()))
+    {
+      AutoSGPFile f(openGameResForReading(jsonFileName));
+      std::string jsonQuotes = FileMan::fileReadText(f);
+      std::vector<std::string> quotes;
+      JsonUtility::parseJsonToListStrings(jsonQuotes.c_str(), quotes);
+      m_dialogQuotesMap[jsonFileName] = quotes;
+      return new UTF8String(quotes[quote_number].c_str());
+    }
+    else
+    {
+      return DefaultContentManager::loadDialogQuoteFromFile(filename, quote_number);
+    }
+  }
 }

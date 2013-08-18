@@ -26,3 +26,20 @@ bool JsonUtility::writeToFile(const char *name, const std::vector<std::string> &
   }
   return false;
 }
+
+/** Parse json to a list of strings. */
+bool JsonUtility::parseJsonToListStrings(const char* jsonData, std::vector<std::string> &strings)
+{
+  rapidjson::Document document;
+  if (document.Parse<0>(jsonData).HasParseError())
+  {
+    return false;
+  }
+
+  const rapidjson::Value& a = document;
+  for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+  {
+    strings.push_back(a[i].GetString());
+  }
+  return true;
+}

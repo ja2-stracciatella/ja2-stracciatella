@@ -495,6 +495,7 @@ SRCS += sgp/Video.cc
 
 SRCS += src/DefaultContentManager.cc
 SRCS += src/JsonUtility.cc
+SRCS += src/JsonUtility_unittests.cc
 SRCS += src/MercProfile.cc
 SRCS += src/ModPackContentManager.cc
 SRCS += src/Soldier.cc

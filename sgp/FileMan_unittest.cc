@@ -125,6 +125,19 @@ TEST(FileManTest, RemoveAllFilesInDir)
   ASSERT_EQ(results.size(), 0);
 }
 
+TEST(FileManTest, ReadTextFile)
+{
+  boost::filesystem::path tmpDir = boost::filesystem::temp_directory_path();
+  boost::filesystem::path pathA = tmpDir / "foo.txt";
+
+  boost::filesystem::ofstream fileA(pathA);
+  fileA << "foo bar baz";
+  fileA.close();
+
+  SGPFile* forReading = FileMan::openForReading(pathA.string().c_str());
+  std::string content = FileMan::fileReadText(forReading);
+  ASSERT_STREQ(content.c_str(), "foo bar baz");
+}
 
 TEST(FileManTest, GetFileName)
 {

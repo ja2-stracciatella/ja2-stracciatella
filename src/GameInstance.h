@@ -11,4 +11,4 @@ class GamePolicy;
 extern const GamePolicy *GGP;
 
 /** Global instance of the content manager. */
-extern const ContentManager *GCM;
+extern ContentManager *GCM;

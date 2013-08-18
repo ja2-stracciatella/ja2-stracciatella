@@ -94,6 +94,9 @@ public:
   /** Open file for reading. */
   static SGPFile* openForReading(const char *filename);
 
+  /** Read the whole file as text. */
+  static std::string fileReadText(SGPFile*);
+
 #if CASE_SENSITIVE_FS
   /** Find an object (file or subdirectory) in the given directory in case-independent manner.
    * @return true when found, return the found name using foundName. */
@@ -146,6 +149,9 @@ public:
 
   /** Replace all \ with / */
   static void slashifyPath(std::string &path);
+
+  /** Check file existance. */
+  static bool checkFileExistance(const char *folder, const char *fileName);
 
 private:
   /** Private constructor to avoid instantiation. */

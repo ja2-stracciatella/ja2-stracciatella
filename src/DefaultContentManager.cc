@@ -383,7 +383,7 @@ void DefaultContentManager::loadEncryptedString(SGPFile* const File, wchar_t* De
 }
 
 /** Load dialogue quote from file. */
-UTF8String* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number) const
+UTF8String* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
 {
   AutoSGPFile File(openGameResForReading(fileName));
 

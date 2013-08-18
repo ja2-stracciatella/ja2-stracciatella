@@ -823,3 +823,23 @@ void FileMan::slashifyPath(std::string &path)
     }
   }
 }
+
+/** Read the whole file as text. */
+std::string FileMan::fileReadText(SGPFile* file)
+{
+  uint32_t size = FileGetSize(file);
+  char *data = new char[size+1];
+  FileRead(file, data, size);
+  data[size] = 0;
+  std::string result(data);
+  delete[] data;
+  return result;
+}
+
+/** Check file existance. */
+bool FileMan::checkFileExistance(const char *folder, const char *fileName)
+{
+  boost::filesystem::path path(folder);
+  path /= fileName;
+  return boost::filesystem::exists(path);
+}
