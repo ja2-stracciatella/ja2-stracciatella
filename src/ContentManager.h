@@ -4,8 +4,12 @@
 #include <string>
 #include <vector>
 
-struct SGPFile;
 class UTF8String;
+struct AmmoTypeModel;
+struct CalibreModel;
+struct MagazineModel;
+struct SGPFile;
+struct WeaponModel;
 
 class ContentManager
 {
@@ -65,6 +69,13 @@ public:
 
   /** Load dialogue quote from file. */
   virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number) = 0;
+
+  /** Get weapons with the give index. */
+  virtual const WeaponModel* getWeapon(uint16_t index) = 0;
+  virtual const MagazineModel* getMagazine(uint16_t index) = 0;
+
+  virtual const CalibreModel* getCalibre(uint8_t index) = 0;
+  virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
 
   /* /\** */
   /*  * get location of the game executable file. */

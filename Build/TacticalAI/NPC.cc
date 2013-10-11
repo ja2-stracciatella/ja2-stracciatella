@@ -47,6 +47,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "WeaponModels.h"
 
 #define NUM_NPC_QUOTE_RECORDS  50
 #define NUM_CIVQUOTE_SECTORS   20
@@ -547,7 +548,7 @@ static INT32 CalcThreateningEffectiveness(UINT8 const ubMerc)
 
 	UINT16 const item_idx = s->inv[HANDPOS].usItem;
 	INT32 deadliness =
-		Item[item_idx].usItemClass & IC_WEAPON ? Weapon[item_idx].ubDeadliness :
+		Item[item_idx].usItemClass & IC_WEAPON ? GCM->getWeapon(item_idx)->ubDeadliness :
 		0;
 
 	if (deadliness == 0) deadliness = -30; // penalize!
@@ -763,7 +764,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 	UINT16 item_to_consider = o->usItem;
 	if (Item[item_to_consider].usItemClass == IC_GUN && item_to_consider != ROCKET_LAUNCHER)
 	{
-		UINT8 const weapon_class = Weapon[item_to_consider].ubWeaponClass;
+		UINT8 const weapon_class = GCM->getWeapon(item_to_consider)->ubWeaponClass;
 		if (weapon_class == RIFLECLASS || weapon_class == MGCLASS)
 		{
 			item_to_consider = ANY_RIFLE; // treat all rifles the same

@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "Build/Directories.h"
+#include "Build/Tactical/Weapons.h"
 
 // XXX: GameRes.h should be integrated to ContentManager
 #include "Build/GameRes.h"
@@ -15,6 +16,16 @@
 #include "sgp/MemMan.h"
 #include "sgp/StrUtils.h"
 #include "sgp/UTF8String.h"
+
+#include "AmmoTypeModel.h"
+#include "CalibreModel.h"
+#include "JsonObject.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
+
+#include "boost/foreach.hpp"
+
+#include "rapidjson/document.h"
 
 #include "slog/slog.h"
 #define TAG "DefaultCM"
@@ -118,8 +129,13 @@ static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wcha
   MemFree(Str);
 }
 
-DefaultContentManager::DefaultContentManager(const std::string &configFolder, const std::string &configPath,
-                                             const std::string &gameResRootPath)
+DefaultContentManager::DefaultContentManager(const std::string &configFolder,
+                                             const std::string &configPath,
+                                             const std::string &gameResRootPath,
+                                             const std::string &externalizedDataPath
+  )
+  :m_weapons(MAX_WEAPONS),
+   m_magazines(MAX_AMMO)
 {
   /*
    * Searching actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
@@ -129,9 +145,11 @@ DefaultContentManager::DefaultContentManager(const std::string &configFolder, co
 
   m_configFolder = configFolder;
   m_gameResRootPath = gameResRootPath;
+  m_externalizedDataPath = externalizedDataPath;
 
   m_dataDir = FileMan::joinPaths(gameResRootPath, BASEDATADIR);
   m_tileDir = FileMan::joinPaths(m_dataDir, TILECACHEDIR);
+
 
 #if CASE_SENSITIVE_FS
 
@@ -176,6 +194,32 @@ DefaultContentManager::~DefaultContentManager()
     m_libraryDB->ShutDownFileDatabase();
     delete m_libraryDB;
   }
+
+  BOOST_FOREACH(const WeaponModel* weapon, m_weapons)
+  {
+    delete weapon;
+  }
+  m_weapons.clear();
+
+  BOOST_FOREACH(const MagazineModel* magazine, m_magazines)
+  {
+    delete magazine;
+  }
+  m_magazines.clear();
+
+  BOOST_FOREACH(const CalibreModel* calibre, m_calibres)
+  {
+    delete calibre;
+  }
+  m_calibres.clear();
+  m_calibreMap.clear();
+
+  BOOST_FOREACH(const AmmoTypeModel* ammoType, m_ammoTypes)
+  {
+    delete ammoType;
+  }
+  m_ammoTypes.clear();
+  m_ammoTypeMap.clear();
 }
 
 /** Get map file path. */
@@ -268,8 +312,12 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
   int         mode;
   const char* fmode = GetFileOpenModeForReading(&mode);
 
-  int d;
-
+  int d = FileMan::openFileCaseInsensitive(m_externalizedDataPath, filename, mode);
+  if (d >= 0)
+  {
+    return FileMan::getSGPFileFromFD(d, filename, fmode);
+  }
+  else
   {
     d = FileMan::openFileForReading(filename, mode);
     if (d < 0)
@@ -336,17 +384,24 @@ SGPFile* DefaultContentManager::openGameResForReading(const std::string& filenam
 /* Checks if a game resource exists. */
 bool DefaultContentManager::doesGameResExists(char const* filename) const
 {
-	FILE* file = fopen(filename, "rb");
-	if (!file)
-	{
-		char path[512];
-		snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
-		file = fopen(path, "rb");
-		if (!file) return m_libraryDB->CheckIfFileExistInLibrary(filename);
-	}
+  if(FileMan::checkFileExistance(m_externalizedDataPath.c_str(), filename))
+  {
+    return true;
+  }
+  else
+  {
+    FILE* file = fopen(filename, "rb");
+    if (!file)
+    {
+      char path[512];
+      snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
+      file = fopen(path, "rb");
+      if (!file) return m_libraryDB->CheckIfFileExistInLibrary(filename);
+    }
 
-	fclose(file);
-	return true;
+    fclose(file);
+    return true;
+  }
 }
 
 bool DefaultContentManager::doesGameResExists(const std::string &filename) const
@@ -405,4 +460,193 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const c
     LoadEncryptedData(encType, File, quote, i * DIALOGUESIZE, DIALOGUESIZE);
     quotes.push_back(new UTF8String(quote));
   }
+}
+
+/** Get weapons with the give index. */
+const WeaponModel* DefaultContentManager::getWeapon(uint16_t index)
+{
+  return m_weapons[index];
+}
+
+const MagazineModel* DefaultContentManager::getMagazine(uint16_t index)
+{
+  return m_magazines[index];
+}
+
+const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
+{
+  return m_calibres[index];
+}
+
+const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
+{
+  return m_ammoTypes[index];
+}
+
+bool DefaultContentManager::loadWeapons()
+{
+  AutoSGPFile f(openGameResForReading("weapons.json"));
+  std::string jsonData = FileMan::fileReadText(f);
+
+  rapidjson::Document document;
+  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  {
+    SLOGE(TAG, "Failed to parse weapons.json");
+    return false;
+  }
+  else
+  {
+    if(document.IsArray()) {
+      const rapidjson::Value& a = document;
+      for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+      {
+        JsonObjectReader obj(a[i]);
+        WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
+        SLOGD(TAG, "Loaded weapon %d %s", w->index, w->internalName);
+
+        if((w->index < 0) || (w->index > MAX_WEAPONS))
+        {
+          SLOGE(TAG, "Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
+          return false;
+        }
+
+        // if(m_weapons.size() <= w->index)
+        // {
+        //   m_weapons.resize(w->index + 1);
+        // }
+
+        m_weapons[w->index] = w;
+      }
+    }
+  }
+
+  return true;
+}
+
+bool DefaultContentManager::loadMagazines()
+{
+  AutoSGPFile f(openGameResForReading("magazines.json"));
+  std::string jsonData = FileMan::fileReadText(f);
+
+  rapidjson::Document document;
+  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  {
+    SLOGE(TAG, "Failed to parse magazines.json");
+    return false;
+  }
+  else
+  {
+    if(document.IsArray()) {
+      const rapidjson::Value& a = document;
+      for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+      {
+        JsonObjectReader obj(a[i]);
+        MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
+        SLOGD(TAG, "Loaded magazine %d %s", mag->index, mag->internalName.c_str());
+
+        if(mag->index >= MAX_AMMO)
+        {
+          SLOGE(TAG, "Magazine index must be in the interval %d - %d", 0, MAX_AMMO - 1);
+          return false;
+        }
+
+        if((mag->itemIndex < FIRST_AMMO) || (mag->itemIndex > LAST_AMMO))
+        {
+          SLOGE(TAG, "Magazine item index must be in the interval %d - %d", FIRST_AMMO, LAST_AMMO);
+          return false;
+        }
+
+        m_magazines[mag->index] = mag;
+      }
+    }
+  }
+
+  return true;
+}
+
+bool DefaultContentManager::loadCalibres()
+{
+  AutoSGPFile f(openGameResForReading("calibres.json"));
+  std::string jsonData = FileMan::fileReadText(f);
+
+  rapidjson::Document document;
+  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  {
+    SLOGE(TAG, "Failed to parse calibres.json");
+    return false;
+  }
+  else
+  {
+    if(document.IsArray()) {
+      const rapidjson::Value& a = document;
+      for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+      {
+        JsonObjectReader obj(a[i]);
+        CalibreModel *calibre = CalibreModel::deserialize(obj);
+        SLOGD(TAG, "Loaded calibre %d %s", calibre->index, calibre->internalName.c_str());
+
+        if(m_calibres.size() <= calibre->index)
+        {
+          m_calibres.resize(calibre->index + 1);
+        }
+
+        m_calibres[calibre->index] = calibre;
+      }
+    }
+  }
+
+  BOOST_FOREACH(const CalibreModel* calibre, m_calibres)
+  {
+    m_calibreMap.insert(std::make_pair(std::string(calibre->internalName), calibre));
+  }
+
+  return true;
+}
+
+bool DefaultContentManager::loadAmmoTypes()
+{
+  AutoSGPFile f(openGameResForReading("ammo_types.json"));
+  std::string jsonData = FileMan::fileReadText(f);
+
+  rapidjson::Document document;
+  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  {
+    SLOGE(TAG, "Failed to parse ammo_types.json");
+    return false;
+  }
+  else
+  {
+    if(document.IsArray()) {
+      const rapidjson::Value& a = document;
+      for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+      {
+        JsonObjectReader obj(a[i]);
+        AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
+        SLOGD(TAG, "Loaded ammo type %d %s", ammoType->index, ammoType->internalName.c_str());
+
+        if(m_ammoTypes.size() <= ammoType->index)
+        {
+          m_ammoTypes.resize(ammoType->index + 1);
+        }
+
+        m_ammoTypes[ammoType->index] = ammoType;
+      }
+    }
+  }
+
+  BOOST_FOREACH(const AmmoTypeModel* ammoType, m_ammoTypes)
+  {
+    m_ammoTypeMap.insert(std::make_pair(std::string(ammoType->internalName), ammoType));
+  }
+
+  return true;
+}
+
+/** Load the game data. */
+bool DefaultContentManager::loadGameData()
+{
+  return loadCalibres()
+    && loadAmmoTypes()
+    && loadMagazines()
+    && loadWeapons();
 }

@@ -29,6 +29,9 @@
 #include "Soldier_Ani.h"
 #include "Rotting_Corpses.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -3227,7 +3230,7 @@ bCanAttack = FALSE;
  }
 
  // NB a desire of 4 or more is only achievable by brave/aggressive guys with high morale
- if ( pSoldier->bActionPoints == pSoldier->bInitialActionPoints && ubBestAttackAction == AI_ACTION_FIRE_GUN && (pSoldier->bShock == 0) && (pSoldier->bLife >= pSoldier->bLifeMax / 2) && BestAttack.ubChanceToReallyHit < 30 && ( PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) > Weapon[ pSoldier->inv[ BestAttack.bWeaponIn ].usItem ].usRange / CELL_X_SIZE ) && RangeChangeDesire( pSoldier ) >= 4 )
+ if ( pSoldier->bActionPoints == pSoldier->bInitialActionPoints && ubBestAttackAction == AI_ACTION_FIRE_GUN && (pSoldier->bShock == 0) && (pSoldier->bLife >= pSoldier->bLifeMax / 2) && BestAttack.ubChanceToReallyHit < 30 && ( PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) > GCM->getWeapon( pSoldier->inv[ BestAttack.bWeaponIn].usItem)->usRange / CELL_X_SIZE ) && RangeChangeDesire( pSoldier ) >= 4 )
  {
 	 // okay, really got to wonder about this... could taking cover be an option?
 	 if (ubCanMove && pSoldier->bOrders != STATIONARY && !gfHiddenInterrupt &&

@@ -493,14 +493,18 @@ SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
 
+SRCS += src/AmmoTypeModel.cc
+SRCS += src/CalibreModel.cc
 SRCS += src/DefaultContentManager.cc
 SRCS += src/JsonUtility.cc
 SRCS += src/JsonUtility_unittests.cc
+SRCS += src/MagazineModel.cc
 SRCS += src/MercProfile.cc
 SRCS += src/ModPackContentManager.cc
 SRCS += src/Soldier.cc
+SRCS += src/WeaponModels.cc
 SRCS += src/content/Dialogs.cc
-SRCS += src/content/Mercs.cc
+SRCS += src/content/ContentMercs.cc
 SRCS += src/content/npcs.cc
 SRCS += src/internals/enums.cc
 SRCS += src/policy/DefaultGamePolicy.cc
@@ -639,6 +643,7 @@ build-win-release-on-linux:
 	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
 	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
 	cp -r _unittests $(WIN_RELEASE)
+	cp -r externalized $(WIN_RELEASE)
 	cp Changelog $(WIN_RELEASE)/Changelog.txt
 	cp changes.md $(WIN_RELEASE)/changes.md
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
@@ -659,6 +664,7 @@ build-release-on-mac:
 	cp _build/distr-files-mac/*.command $(MAC_RELEASE)
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
 	cp -r _unittests $(MAC_RELEASE)
+	cp -r externalized $(MAC_RELEASE)
 	cp Changelog $(MAC_RELEASE)/Changelog.txt
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)

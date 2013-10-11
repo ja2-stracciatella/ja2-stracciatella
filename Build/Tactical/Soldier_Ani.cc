@@ -66,6 +66,10 @@
 
 #include "Soldier.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
+
 #define		NO_JUMP											0
 #define		MAX_ANIFRAMES_PER_FLASH			2
 //#define		TIME_FOR_RANDOM_ANIM_CHECK	10
@@ -636,7 +640,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// FIRST CHECK IF WE'VE REACHED MAX FOR GUN
 					fStop = FALSE;
 
-					if ( pSoldier->bDoBurst > Weapon[ pSoldier->usAttackingWeapon ].ubShotsPerBurst )
+					if ( pSoldier->bDoBurst > GCM->getWeapon( pSoldier->usAttackingWeapon )->ubShotsPerBurst )
 					{
 						fStop = TRUE;
 					}
@@ -1360,7 +1364,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						// CHECK IF GUN
 						if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN )
 						{
-							if ( Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubWeaponClass != HANDGUNCLASS )
+							if ( GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubWeaponClass != HANDGUNCLASS )
 							{
 								// RAISE
 								ChangeSoldierState( pSoldier, RAISE_RIFLE, 0 , FALSE );
@@ -1984,7 +1988,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						if ( usItem != NOTHING )
 						{
-							SoundID const usSoundID = Weapon[usItem].sLocknLoadSound;
+							SoundID const usSoundID = GCM->getWeapon(usItem)->sLocknLoadSound;
 							if (usSoundID != NO_SOUND)
 							{
 								PlayLocationJA2Sample(pSoldier->sGridNo, usSoundID, HIGHVOLUME, 1);
@@ -1995,7 +1999,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 709:
 					// Knife throw sound...
-					PlayLocationJA2Sample(pSoldier->sGridNo, Weapon[THROWING_KNIFE].sSound, HIGHVOLUME, 1);
+					PlayLocationJA2Sample(pSoldier->sGridNo, GCM->getWeapon(THROWING_KNIFE)->sound, HIGHVOLUME, 1);
 					break;
 
 				case 710:
@@ -2549,7 +2553,7 @@ static BOOLEAN ShouldMercSayHappyWithGunQuote(SOLDIERTYPE* pSoldier)
     if ( Item[ pSoldier->usAttackingWeapon ].usItemClass & IC_GUN )
     {
   		// Is our weapon powerfull enough?
-		  if ( Weapon[ pSoldier->usAttackingWeapon ].ubDeadliness > MIN_DEADLINESS_FOR_LIKE_GUN_QUOTE )
+		  if ( GCM->getWeapon( pSoldier->usAttackingWeapon )->ubDeadliness > MIN_DEADLINESS_FOR_LIKE_GUN_QUOTE )
 		  {
 			  // 20 % chance?
 			  if ( Random( 100 ) < 20 )

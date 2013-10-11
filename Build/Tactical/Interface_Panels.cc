@@ -68,6 +68,9 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 // DEFINES FOR VARIOUS PANELS
 #define	SM_ITEMDESC_START_X					214
@@ -3686,7 +3689,7 @@ void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvP
 	else
 	{
 		// as a minimum
-		if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_WEAPON) && Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubShotsPerBurst == 0 )
+		if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_WEAPON) && GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubShotsPerBurst == 0 )
 		{
 			pSoldier->bDoBurst		= FALSE;
 			pSoldier->bWeaponMode = WM_NORMAL;

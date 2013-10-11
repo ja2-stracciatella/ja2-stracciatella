@@ -25,7 +25,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -53,7 +53,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog;$(ProjectDir)\..\lib-rapidjson</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog;$(ProjectDir)\..\lib-rapidjson</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -365,7 +365,6 @@
     <ClCompile Include="..\..\Build\Utils\Cinematics.cc" />
     <ClCompile Include="..\..\Build\Utils\Cursors.cc" />
     <ClCompile Include="..\..\Build\Utils\Debug_Control.cc" />
-    <ClCompile Include="..\..\Build\Utils\Encrypted_File.cc" />
     <ClCompile Include="..\..\Build\Utils\Event_Manager.cc" />
     <ClCompile Include="..\..\Build\Utils\Event_Pump.cc" />
     <ClCompile Include="..\..\Build\Utils\Font_Control.cc" />
@@ -427,12 +426,21 @@
     <ClCompile Include="..\..\sgp\VObject_Blitters.cc" />
     <ClCompile Include="..\..\sgp\VSurface.cc" />
     <ClCompile Include="..\..\sgp\wchar_unittest.cc" />
+    <ClCompile Include="..\..\src\AmmoTypeModel.cc" />
+    <ClCompile Include="..\..\src\CalibreModel.cc" />
+    <ClCompile Include="..\..\src\content\ContentMercs.cc" />
+    <ClCompile Include="..\..\src\content\Dialogs.cc" />
     <ClCompile Include="..\..\src\content\npcs.cc" />
     <ClCompile Include="..\..\src\DefaultContentManager.cc" />
     <ClCompile Include="..\..\src\internals\enums.cc" />
+    <ClCompile Include="..\..\src\JsonUtility.cc" />
+    <ClCompile Include="..\..\src\JsonUtility_unittests.cc" />
+    <ClCompile Include="..\..\src\MagazineModel.cc" />
+    <ClCompile Include="..\..\src\MercProfile.cc" />
     <ClCompile Include="..\..\src\ModPackContentManager.cc" />
     <ClCompile Include="..\..\src\policy\DefaultGamePolicy.cc" />
     <ClCompile Include="..\..\src\Soldier.cc" />
+    <ClCompile Include="..\..\src\WeaponModels.cc" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\operations.cpp" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\path.cpp" />
@@ -760,7 +768,6 @@
     <ClInclude Include="..\..\Build\Utils\Cinematics.h" />
     <ClInclude Include="..\..\Build\Utils\Cursors.h" />
     <ClInclude Include="..\..\Build\Utils\Debug_Control.h" />
-    <ClInclude Include="..\..\Build\Utils\Encrypted_File.h" />
     <ClInclude Include="..\..\Build\Utils\Event_Manager.h" />
     <ClInclude Include="..\..\Build\Utils\Event_Pump.h" />
     <ClInclude Include="..\..\Build\Utils\Font_Control.h" />
@@ -831,15 +838,25 @@
     <ClInclude Include="..\..\sgp\VObject_Blitters.h" />
     <ClInclude Include="..\..\sgp\VSurface.h" />
     <ClInclude Include="..\..\sgp\WCheck.h" />
+    <ClInclude Include="..\..\src\AmmoTypeModel.h" />
+    <ClInclude Include="..\..\src\CalibreModel.h" />
     <ClInclude Include="..\..\src\ContentManager.h" />
+    <ClInclude Include="..\..\src\content\ContentMercs.h" />
+    <ClInclude Include="..\..\src\content\Dialogs.h" />
     <ClInclude Include="..\..\src\content\npcs.h" />
     <ClInclude Include="..\..\src\DefaultContentManager.h" />
     <ClInclude Include="..\..\src\GameInstance.h" />
     <ClInclude Include="..\..\src\internals\enums.h" />
+    <ClInclude Include="..\..\src\JsonObject.h" />
+    <ClInclude Include="..\..\src\JsonUtility.h" />
+    <ClInclude Include="..\..\src\MagazineModel.h" />
+    <ClInclude Include="..\..\src\MercProfile.h" />
     <ClInclude Include="..\..\src\ModPackContentManager.h" />
     <ClInclude Include="..\..\src\policy\DefaultGamePolicy.h" />
     <ClInclude Include="..\..\src\policy\GamePolicy.h" />
     <ClInclude Include="..\..\src\Soldier.h" />
+    <ClInclude Include="..\..\src\StringEncodingTypes.h" />
+    <ClInclude Include="..\..\src\WeaponModels.h" />
     <ClInclude Include="..\lib-boost\libs\filesystem\src\windows_file_codecvt.hpp" />
     <ClInclude Include="..\lib-boost\libs\system\src\local_free_on_destruction.hpp" />
     <ClInclude Include="..\lib-gtest\src\gtest-internal-inl.h" />

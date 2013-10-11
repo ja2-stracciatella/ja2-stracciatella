@@ -21,6 +21,10 @@
 #include "Environment.h"
 #include "WorldMan.h"
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 //
 // CJC DG->JA2 conversion notes
@@ -435,7 +439,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 	if ( EXPLOSIVE_GUN( usInHand ) )
 	{
-		iTossRange = Weapon[ usInHand ].usRange / CELL_X_SIZE;
+		iTossRange = GCM->getWeapon( usInHand )->usRange / CELL_X_SIZE;
 	}
 	else
 	{
@@ -1290,7 +1294,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
      continue;          // next merc
 
 	 // if this opponent is outside the range of our tentacles
-	 if ( GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, pOpponent->sGridNo ) > Weapon[ CREATURE_QUEEN_TENTACLES].usRange )
+	 if ( GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, pOpponent->sGridNo ) > GCM->getWeapon( CREATURE_QUEEN_TENTACLES)->usRange )
 	 {
 		continue; // next merc
 	 }
@@ -1450,7 +1454,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
  // calculate distance to target, obtain his gun's maximum range rating
 
  iRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, pOpponent->sGridNo );
- iMaxRange = Weapon[pSoldier->inv[HANDPOS].usItem].usRange;
+ iMaxRange = GCM->getWeapon(pSoldier->inv[HANDPOS].usItem)->usRange;
 
  // bullet loses speed and penetrating power, 50% loss per maximum range
  iPowerLost = ((50 * iRange) / iMaxRange);
@@ -1458,7 +1462,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
  // up to 50% extra impact for making particularly accurate successful shots
  ubBonus = ubChanceToHit / 4;       // /4 is really /2 and /2 again
 
- iDamage = (Weapon[pSoldier->inv[HANDPOS].usItem].ubImpact *
+ iDamage = (GCM->getWeapon(pSoldier->inv[HANDPOS].usItem)->ubImpact *
 					(100 - iPowerLost + ubBonus)) / 100;
 
  //NumMessage("Pre-protection damage: ",damage);
@@ -1638,7 +1642,7 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 
 	if (fBladeAttack)
 	{
-		iImpact = Weapon[ pSoldier->usAttackingWeapon ].ubImpact;
+		iImpact = GCM->getWeapon( pSoldier->usAttackingWeapon )->ubImpact;
 		iImpact += EffectiveStrength( pSoldier ) / 20; // 0 to 5 for strength, adjusted by damage taken
 	}
 	else
@@ -1646,7 +1650,7 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 		// NB martial artists don't get a bonus for using brass knuckles!
 		if (pSoldier->usAttackingWeapon && !( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) ) )
 		{
-			iImpact = Weapon[ pSoldier->usAttackingWeapon ].ubImpact;
+			iImpact = GCM->getWeapon( pSoldier->usAttackingWeapon )->ubImpact;
 		}
 		else
 		{
@@ -1686,8 +1690,8 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 static INT8 TryToReload(SOLDIERTYPE* const s)
 {
 	OBJECTTYPE&       hand   = s->inv[HANDPOS];
-	WEAPONTYPE const& weapon = Weapon[hand.usItem];
-	INT8       const  slot   = FindAmmo(s, weapon.ubCalibre, weapon.ubMagSize, NO_SLOT);
+	const WEAPONTYPE * weapon = GCM->getWeapon(hand.usItem);
+	INT8       const  slot   = FindAmmo(s, weapon->calibre, weapon->ubMagSize, NO_SLOT);
 	return slot != NO_SLOT && ReloadGun(s, &hand, &s->inv[slot]) ?
 		TRUE : NOSHOOT_NOAMMO;
 }

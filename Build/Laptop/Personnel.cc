@@ -34,6 +34,11 @@
 #include "EMail.h"
 #include "Soldier_Macros.h"
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 #define INVENTORY_BOX_X (399 + STD_SCREEN_X)
 #define INVENTORY_BOX_Y (205 + STD_SCREEN_Y)
@@ -1160,7 +1165,7 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		{
 			INT32 total_ammo = 0;
 			for (INT32 i = 0; i < o_count; ++i) total_ammo += o.ubShotsLeft[i];
-			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * Magazine[item.ubClassIndex].ubMagSize);
+			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * GCM->getMagazine(item.ubClassIndex)->capacity);
 		}
 		else
 		{
@@ -1172,7 +1177,7 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 
 		if (item.usItemClass & IC_GUN)
 		{
-			wcslcpy(sString, AmmoCaliber[Weapon[item.ubClassIndex].ubCalibre], lengthof(sString));
+			wcslcpy(sString, GCM->getWeapon(item.ubClassIndex)->calibre->getName(), lengthof(sString));
 			ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
 			MPrint(PosX + 65, PosY + 15, sString);
 		}

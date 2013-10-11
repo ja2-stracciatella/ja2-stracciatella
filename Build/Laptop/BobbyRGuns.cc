@@ -22,8 +22,11 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
+#include "CalibreModel.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 #ifdef JA2BETAVERSION
 #	include "Debug.h"
@@ -817,7 +820,7 @@ static UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_DAMAGE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%4d", Weapon[ usIndex ].ubImpact);
+	swprintf(sTemp, lengthof(sTemp), L"%4d", GCM->getWeapon( usIndex )->ubImpact);
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -829,7 +832,7 @@ static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_RANGE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", Weapon[ usIndex ].usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
+	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", GCM->getWeapon( usIndex )->usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -841,7 +844,7 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_MAGAZINE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", Weapon[usIndex].ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
+	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", GCM->getWeapon(usIndex)->ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -855,8 +858,8 @@ static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_CALIBRE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	// ammo or gun?
-	AmmoKind const calibre = item->usItemClass == IC_AMMO ? Magazine[item->ubClassIndex].ubCalibre : Weapon[item->ubClassIndex].ubCalibre;
-	wcslcpy(zTemp, BobbyRayAmmoCaliber[calibre], lengthof(zTemp));
+  const CalibreModel *calibre = item->usItemClass == IC_AMMO ? GCM->getMagazine(item->ubClassIndex)->calibre : GCM->getWeapon(item->ubClassIndex)->calibre;
+	wcslcpy(zTemp, BobbyRayAmmoCaliber[calibre->index], lengthof(zTemp));
 
 	ReduceStringLength(zTemp, lengthof(zTemp), BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
 	DrawTextToScreen(zTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1367,7 +1370,7 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const ammo)
 {
 	UINT8	         n_items = 0;
-	AmmoKind const calibre = Magazine[ammo->ubClassIndex].ubCalibre;
+  const CalibreModel *calibre = GCM->getMagazine(ammo->ubClassIndex)->calibre;
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Loop through all the pockets on the merc
@@ -1377,7 +1380,7 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const
 			// If there is a weapon here
 			if (Item[o.usItem].usItemClass != IC_GUN) continue;
 			// If the weapon uses the same kind of ammo as the one passed in
-			if (Weapon[o.usItem].ubCalibre != calibre) continue;
+			if (!GCM->getWeapon(o.usItem)->matches(calibre)) continue;
 
 			++n_items;
 		}

@@ -12,7 +12,8 @@ public:
   ModPackContentManager(const std::string &modName,
                         const std::string &modResFolder,
                         const std::string &configFolder, const std::string &configPath,
-                        const std::string &gameResRootPath);
+                        const std::string &gameResRootPath,
+                        const std::string &externalizedDataPath);
 
   /* Checks if a game resource exists. */
   virtual bool doesGameResExists(char const* fileName) const;

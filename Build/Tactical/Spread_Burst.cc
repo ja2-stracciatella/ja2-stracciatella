@@ -12,6 +12,9 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 #define		MAX_BURST_LOCATIONS		50
 
@@ -72,7 +75,7 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 	// OK, using the # of locations, spread them evenly between our current weapon shots per burst value
 
 	// Get shots per burst
-	ubShotsPerBurst = Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubShotsPerBurst;
+	ubShotsPerBurst = GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubShotsPerBurst;
 
 	// Use # gridnos accululated and # burst shots to determine accululator
 	dStep = gbNumBurstLocations / (FLOAT)ubShotsPerBurst;
@@ -104,7 +107,7 @@ void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pT
 	// OK, using the # of locations, spread them evenly between our current weapon shots per burst value
 
 	// Get shots per burst
-	ubShotsPerBurst = Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubShotsPerBurst;
+	ubShotsPerBurst = GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubShotsPerBurst;
 
 	// Use # gridnos accululated and # burst shots to determine accululator
 	//dStep = gbNumBurstLocations / (FLOAT)ubShotsPerBurst;

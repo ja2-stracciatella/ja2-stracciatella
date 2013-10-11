@@ -65,7 +65,11 @@
 #	include "Soldier_Create.h"
 #endif
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
 #include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 #include "policy/GamePolicy.h"
 
 #define		SKI_BUTTON_FONT										MILITARYFONT1//FONT14ARIAL
@@ -2636,7 +2640,7 @@ static FLOAT ItemConditionModifier(UINT16 usItemIndex, INT8 bStatus)
 	if( Item[ usItemIndex ].usItemClass == IC_AMMO )
 	{
 		// # bullets left / max magazine capacity
-		dConditionModifier = ( bStatus / (FLOAT) Magazine[ Item[ usItemIndex ].ubClassIndex ].ubMagSize );
+		dConditionModifier = ( bStatus / (FLOAT) GCM->getMagazine(Item[usItemIndex].ubClassIndex)->capacity);
 	}
 	else	// non-ammo
 	{
@@ -4152,7 +4156,7 @@ static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const& o)
 	if (highlighted_item.usItemClass == IC_AMMO)
 	{
 		if (o_item.usItemClass == IC_GUN &&
-				Weapon[o.usItem].ubCalibre == Magazine[highlighted_item.ubClassIndex].ubCalibre)
+				GCM->getWeapon(o.usItem)->matches(GCM->getMagazine(highlighted_item.ubClassIndex)->calibre))
 		{
 			return true;
 		}
@@ -4160,7 +4164,7 @@ static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const& o)
 	else if (highlighted_item.usItemClass == IC_GUN)
 	{
 		if (o_item.usItemClass == IC_AMMO &&
-				Weapon[highlighted_o.usItem].ubCalibre == Magazine[o_item.ubClassIndex].ubCalibre)
+				GCM->getWeapon(highlighted_o.usItem)->matches(GCM->getMagazine(o_item.ubClassIndex)->calibre))
 		{
 			return true;
 		}

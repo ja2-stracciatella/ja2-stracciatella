@@ -73,8 +73,12 @@
 #include "Items.h"
 #include "UILayout.h"
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
 #include "GameInstance.h"
+#include "MagazineModel.h"
 #include "Soldier.h"
+#include "WeaponModels.h"
 #include "policy/GamePolicy.h"
 
 #define		ITEMDESC_FONT							BLOCKFONT2
@@ -490,7 +494,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (Weapon[usItem].ubImpact >= EXCEPTIONAL_DAMAGE)
+	if (GCM->getWeapon(usItem)->ubImpact >= EXCEPTIONAL_DAMAGE)
 	{
 		zTemp = g_langRes->Message[STR_HIGH_DAMAGE];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -508,7 +512,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (Weapon[usItem].ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || usItem == G11)
+	if (GCM->getWeapon(usItem)->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || usItem == G11)
 	{
 		zTemp = g_langRes->Message[STR_FAST_BURST];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -517,7 +521,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (Weapon[usItem].ubMagSize > EXCEPTIONAL_MAGAZINE)
+	if (GCM->getWeapon(usItem)->ubMagSize > EXCEPTIONAL_MAGAZINE)
 	{
 		zTemp = g_langRes->Message[STR_LARGE_AMMO_CAPACITY];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -589,7 +593,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (Weapon[usItem].ubImpact <= BAD_DAMAGE)
+	if (GCM->getWeapon(usItem)->ubImpact <= BAD_DAMAGE)
 	{
 		zTemp = g_langRes->Message[STR_LOW_DAMAGE];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
@@ -607,7 +611,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (Weapon[usItem].ubShotsPerBurst == 0)
+	if (GCM->getWeapon(usItem)->ubShotsPerBurst == 0)
 	{
 		zTemp = g_langRes->Message[STR_NO_BURST];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
@@ -616,7 +620,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (Weapon[usItem].ubMagSize < BAD_MAGAZINE)
+	if (GCM->getWeapon(usItem)->ubMagSize < BAD_MAGAZINE)
 	{
 		zTemp = g_langRes->Message[STR_SMALL_AMMO_CAPACITY];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
@@ -889,31 +893,23 @@ void HandleRenderInvSlots(SOLDIERTYPE const& s, DirtyLevel const dirty_level)
 }
 
 
-static BOOLEAN CompatibleAmmoForGun(const OBJECTTYPE* pTryObject, const OBJECTTYPE* pTestObject)
+static bool CompatibleAmmoForGun(const OBJECTTYPE* pTryObject, const OBJECTTYPE* pTestObject)
 {
 	if ( ( Item[ pTryObject->usItem ].usItemClass & IC_AMMO ) )
 	{
-		// CHECK
-		if (Weapon[ pTestObject->usItem ].ubCalibre == Magazine[Item[pTryObject->usItem].ubClassIndex].ubCalibre )
-		{
-			return( TRUE );
-		}
+    return GCM->getWeapon( pTestObject->usItem )->matches(GCM->getMagazine(Item[pTryObject->usItem].ubClassIndex)->calibre);
 	}
-	return( FALSE );
+	return false;
 }
 
 
-static BOOLEAN CompatibleGunForAmmo(const OBJECTTYPE* pTryObject, const OBJECTTYPE* pTestObject)
+static bool CompatibleGunForAmmo(const OBJECTTYPE* pTryObject, const OBJECTTYPE* pTestObject)
 {
 	if ( ( Item[ pTryObject->usItem ].usItemClass & IC_GUN ) )
 	{
-		// CHECK
-		if (Weapon[ pTryObject->usItem ].ubCalibre == Magazine[Item[pTestObject->usItem].ubClassIndex].ubCalibre )
-		{
-			return( TRUE );
-		}
+    return GCM->getWeapon( pTryObject->usItem )->matches(GCM->getMagazine(Item[pTestObject->usItem].ubClassIndex)->calibre);
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -1801,7 +1797,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	if (Item[o->usItem].usItemClass & IC_GUN && o->usItem != ROCKET_LAUNCHER)
 	{
 		wchar_t	pStr[10];
-		swprintf(pStr, lengthof(pStr), L"%d/%d", o->ubGunShotsLeft, Weapon[o->usItem].ubMagSize);
+		swprintf(pStr, lengthof(pStr), L"%d/%d", o->ubGunShotsLeft, GCM->getWeapon(o->usItem)->ubMagSize);
 
 		INT32 img;
 		switch (o->ubGunAmmoType)
@@ -2314,12 +2310,12 @@ void RenderItemDescriptionBox(void)
 			BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 		}
 
-		WEAPONTYPE const& w = Weapon[obj.usItem];
-		if (w.ubShotsPerBurst > 0)
+		const WEAPONTYPE * w = GCM->getWeapon(obj.usItem);
+		if (w->ubShotsPerBurst > 0)
 		{
 			INT32       x = in_map ? MAP_BULLET_BURST_X : BULLET_BURST_X;
 			INT32 const y = in_map ? MAP_BULLET_BURST_Y : BULLET_BURST_Y;
-			for (INT32 i = w.ubShotsPerBurst; i != 0; --i)
+			for (INT32 i = w->ubShotsPerBurst; i != 0; --i)
 			{
 				BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 				x += BULLET_WIDTH + 1;
@@ -2355,13 +2351,13 @@ void RenderItemDescriptionBox(void)
 	if (ITEM_PROS_AND_CONS(obj.usItem))
 	{
 		{
-			WEAPONTYPE const& w = Weapon[obj.usItem];
+			const WEAPONTYPE * w = GCM->getWeapon(obj.usItem);
 			size_t            n = 0;
-			if (w.ubCalibre != NOAMMO)
+			if (w->calibre->index != NOAMMO)
 			{
-				n += swprintf(pStr, lengthof(pStr), L"%ls ", AmmoCaliber[w.ubCalibre]);
+				n += swprintf(pStr, lengthof(pStr), L"%ls ", w->calibre->getName());
 			}
-			n += swprintf(pStr + n, lengthof(pStr) - n, L"%ls", WeaponType[w.ubWeaponType]);
+			n += swprintf(pStr + n, lengthof(pStr) - n, L"%ls", WeaponType[w->ubWeaponType]);
 			if (wchar_t const* const imprint = GetObjectImprint(obj))
 			{ // Add name noting imprint
 				n += swprintf(pStr + n, lengthof(pStr) - n, L" (%ls)", imprint);
@@ -2430,8 +2426,8 @@ void RenderItemDescriptionBox(void)
 		}
 		MPrint(dx + ids[1].sX, dy + ids[1].sY, gWeaponStatsDesc[1]); // status
 
-		WEAPONTYPE const& w = Weapon[obj.usItem];
-		if (w.ubShotsPerBurst > 0)
+    const WEAPONTYPE * w = GCM->getWeapon(obj.usItem);
+    if (w->ubShotsPerBurst > 0)
 		{
 			MPrint(dx + ids[7].sX, dy + ids[7].sY, gWeaponStatsDesc[6]); // = (sic)
 		}
@@ -2459,8 +2455,8 @@ void RenderItemDescriptionBox(void)
 
 		if (!(item.usItemClass & IC_LAUNCHER) && obj.usItem != ROCKET_LAUNCHER)
 		{ // Damage
-			HighlightIf(w.ubImpact >= EXCEPTIONAL_DAMAGE);
-			swprintf(pStr, lengthof(pStr), L"%2d", w.ubImpact);
+			HighlightIf(w->ubImpact >= EXCEPTIONAL_DAMAGE);
+			swprintf(pStr, lengthof(pStr), L"%2d", w->ubImpact);
 			FindFontRightCoordinates(dx + ids[3].sX + ids[3].sValDx, dy + ids[3].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -2473,9 +2469,9 @@ void RenderItemDescriptionBox(void)
 		FindFontRightCoordinates(dx + ids[4].sX + ids[4].sValDx, dy + ids[4].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
-		if (w.ubShotsPerBurst > 0)
+		if (w->ubShotsPerBurst > 0)
 		{
-			HighlightIf(w.ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || obj.usItem == G11);
+			HighlightIf(w->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || obj.usItem == G11);
 			swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, obj));
 			FindFontRightCoordinates(dx + ids[5].sX + ids[5].sValDx, dy + ids[5].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
@@ -2578,7 +2574,7 @@ void RenderItemDescriptionBox(void)
 
 		if (item.usItemClass & IC_AMMO)
 		{ // Ammo - print amount
-			swprintf(pStr, lengthof(pStr), L"%d/%d", obj.ubShotsLeft[0], Magazine[item.ubClassIndex].ubMagSize);
+			swprintf(pStr, lengthof(pStr), L"%d/%d", obj.ubShotsLeft[0], GCM->getMagazine(item.ubClassIndex)->capacity);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -3246,7 +3242,7 @@ static bool IsValidAmmoToReloadRobot(SOLDIERTYPE const& s, OBJECTTYPE const& amm
 	OBJECTTYPE const& weapon = s.inv[HANDPOS];
 	if (!CompatibleAmmoForGun(&ammo, &weapon))
 	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], AmmoCaliber[Weapon[weapon.usItem].ubCalibre]);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], GCM->getWeapon(weapon.usItem)->calibre->getName());
 		return false;
 	}
 	return true;
@@ -5190,10 +5186,10 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 		size_t n = swprintf(dst, length, L"%ls", ItemNames[usItem]);
 		if (!gGameOptions.fGunNut && Item[usItem].usItemClass == IC_GUN)
 		{
-			AmmoKind const calibre = Weapon[usItem].ubCalibre;
-			if (calibre != NOAMMO && calibre != AMMOROCKET)
+			const CalibreModel * calibre = GCM->getWeapon(usItem)->calibre;
+			if (calibre->showInHelpText)
 			{
-				n += swprintf(dst + n, length - n, L" (%ls)", AmmoCaliber[calibre]);
+				n += swprintf(dst + n, length - n, L" (%ls)", AmmoCaliber[calibre->index]);
 			}
 		}
 

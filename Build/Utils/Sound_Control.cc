@@ -16,341 +16,297 @@ static UINT32 guiSoundEffectsVolume = MIDVOLUME;
 
 static char const* const szSoundEffects[NUM_SAMPLES] =
 {
-		SOUNDSDIR "/ricochet 01.wav",
-		SOUNDSDIR "/ricochet 02.wav",
-		SOUNDSDIR "/ricochet 01.wav",
-		SOUNDSDIR "/ricochet 02.wav",
-		SOUNDSDIR "/ricochet 01.wav",
-		SOUNDSDIR "/ricochet 02.wav",
-		SOUNDSDIR "/ricochet 01.wav",
-		SOUNDSDIR "/ricochet 02.wav",
-		SOUNDSDIR "/dirt impact 01.wav",
-		SOUNDSDIR "/dirt impact 01.wav",
-		SOUNDSDIR "/knife hit ground.wav",
-		SOUNDSDIR "/fall to knees 01.wav",
-		SOUNDSDIR "/fall to knees 02.wav",
-		SOUNDSDIR "/knees to dirt 01.wav",
-		SOUNDSDIR "/knees to dirt 02.wav",
-		SOUNDSDIR "/knees to dirt 03.wav",
-		SOUNDSDIR "/heavy fall 01.wav",
-		SOUNDSDIR "/body_splat.wav",
-		SOUNDSDIR "/glass_break1.wav",
-		SOUNDSDIR "/glass_break2.wav",
-
-		SOUNDSDIR "/door open 01.wav",
-		SOUNDSDIR "/door open 02.wav",
-		SOUNDSDIR "/door open 03.wav",
-		SOUNDSDIR "/door close 01.wav",
-		SOUNDSDIR "/door close 02.wav",
-		SOUNDSDIR "/unlock lock.wav",
-		SOUNDSDIR "/kickin lock.wav",
-		SOUNDSDIR "/break lock.wav",
-		SOUNDSDIR "/picking lock.wav",
-
-		SOUNDSDIR "/garage door open.wav",
-		SOUNDSDIR "/garage door close.wav",
-		SOUNDSDIR "/elevator door open.wav",
-		SOUNDSDIR "/elevator door close.wav",
-		SOUNDSDIR "/high tech door open.wav",
-		SOUNDSDIR "/high tech door close.wav",
-		SOUNDSDIR "/curtains door open.wav",
-		SOUNDSDIR "/curtains door close.wav",
-		SOUNDSDIR "/metal door open.wav",
-		SOUNDSDIR "/metal door close.wav",
-
-		SOUNDSDIR "/ftp gravel 01.wav",
-		SOUNDSDIR "/ftp gravel 02.wav",
-		SOUNDSDIR "/ftp gravel 03.wav",
-		SOUNDSDIR "/ftp gravel 04.wav",
-		SOUNDSDIR "/ftp gritty 01.wav",
-		SOUNDSDIR "/ftp gritty 02.wav",
-		SOUNDSDIR "/ftp gritty 03.wav",
-		SOUNDSDIR "/ftp gritty 04.wav",
-		SOUNDSDIR "/ftp leaves 01.wav",
-		SOUNDSDIR "/ftp leaves 02.wav",
-		SOUNDSDIR "/ftp leaves 03.wav",
-		SOUNDSDIR "/ftp leaves 04.wav",
-
-		SOUNDSDIR "/crawling 01.wav",
-		SOUNDSDIR "/crawling 02.wav",
-		SOUNDSDIR "/crawling 03.wav",
-		SOUNDSDIR "/crawling 04.wav",
-		SOUNDSDIR "/beep2.wav",
-		SOUNDSDIR "/endturn.wav",
-		SOUNDSDIR "/ja2 death hit.wav",
-		SOUNDSDIR "/doorcr_b.wav",
-		SOUNDSDIR "/head exploding 01.wav",
-		SOUNDSDIR "/body exploding.wav",
-		SOUNDSDIR "/explode1.wav",
-		SOUNDSDIR "/crow exploding.wav",
-		SOUNDSDIR "/small explosion 01.wav",
-
-		SOUNDSDIR "/heli1.wav",
-		SOUNDSDIR "/bullet impact 01.wav",
-		SOUNDSDIR "/bullet impact 02.wav",
-		SOUNDSDIR "/bullet impact 02.wav",
-
-		STSOUNDSDIR "/blah.wav",									// CREATURE ATTACK
-
-		SOUNDSDIR "/step into water.wav",
-		SOUNDSDIR "/splash from shallow to deep.wav",
-
-		SOUNDSDIR "/cow hit.wav",																	// COW HIT
-		SOUNDSDIR "/cow die.wav",																	// COW DIE
-
-		// THREE COMPUTER VOICE SOUNDS FOR RG
-		SOUNDSDIR "/line 02 fx.wav",
-		SOUNDSDIR "/line 01 fx.wav",
-		SOUNDSDIR "/line 03 fx.wav",
-
-		SOUNDSDIR "/cave collapsing.wav",														// CAVE_COLLAPSE
-
-
-		SOUNDSDIR "/raid whistle.wav",															// RAID
-		SOUNDSDIR "/raid ambient.wav",
-		SOUNDSDIR "/raid dive.wav",
-		SOUNDSDIR "/raid dive.wav",
-		SOUNDSDIR "/raid whistle.wav",															// RAID
-
-		// VEHICLES
-		SOUNDSDIR "/driving 01.wav",																// DRIVING
-		SOUNDSDIR "/engine start.wav",															// ON
-		SOUNDSDIR "/engine off.wav",																// OFF
-		SOUNDSDIR "/into vehicle.wav",															// INTO
-
-
-		SOUNDSDIR "/weapons/dry fire 1.wav",											// Dry fire sound ( for gun jam )
-
-		// IMPACTS
-		SOUNDSDIR "/wood impact 01a.wav",													 // S_WOOD_IMPACT1
-		SOUNDSDIR "/wood impact 01b.wav",
-		SOUNDSDIR "/wood impact 01a.wav",
-		SOUNDSDIR "/porcelain impact.wav",
-		SOUNDSDIR "/tire impact 01.wav",
-		SOUNDSDIR "/stone impact 01.wav",
-		SOUNDSDIR "/water impact 01.wav",
-		SOUNDSDIR "/veg impact 01.wav",
-		SOUNDSDIR "/metal hit 01.wav",															 // S_METAL_HIT1
-		SOUNDSDIR "/metal hit 01.wav",
-		SOUNDSDIR "/metal hit 01.wav",
-
-		SOUNDSDIR "/slap_impact.wav",
-
-		// FIREARM RELOAD
-		SOUNDSDIR "/weapons/revolver reload.wav",										// REVOLVER
-		SOUNDSDIR "/weapons/pistol reload.wav",											// PISTOL
-		SOUNDSDIR "/weapons/smg reload.wav",												// SMG
-		SOUNDSDIR "/weapons/rifle reload.wav",											// RIFLE
-		SOUNDSDIR "/weapons/shotgun reload.wav",										// SHOTGUN
-		SOUNDSDIR "/weapons/lmg reload.wav",												// LMG
-
-		// FIREARM LOCKNLOAD
-		SOUNDSDIR "/weapons/revolver lnl.wav",											// REVOLVER
-		SOUNDSDIR "/weapons/pistol lnl.wav",												// PISTOL
-		SOUNDSDIR "/weapons/smg lnl.wav",														// SMG
-		SOUNDSDIR "/weapons/rifle lnl.wav",													// RIFLE
-		SOUNDSDIR "/weapons/shotgun lnl.wav",												// SHOTGUN
-		SOUNDSDIR "/weapons/lmg lnl.wav",														// LMG
-
-		// ROCKET LAUCNHER
-		SOUNDSDIR "/weapons/small rocket launcher.wav",							// SMALL ROCKET LUANCHER
-		SOUNDSDIR "/weapons/mortar fire 01.wav",										// GRENADE LAUNCHER
-		SOUNDSDIR "/weapons/mortar fire 01.wav",										// UNDERSLUNG GRENADE LAUNCHER
-		SOUNDSDIR "/weapons/rocket launcher.wav",
-		SOUNDSDIR "/weapons/mortar fire 01.wav",
-
-		// FIREARMS
-		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_GLOCK17				9mm
-		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_GLOCK18				9mm
-		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_BERETTA92			9mm
-		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_BERETTA93			9mm
-		SOUNDSDIR "/weapons/38 caliber.wav",												//	S_SWSPECIAL			.38
-		SOUNDSDIR "/weapons/357 single shot.wav",										//	S_BARRACUDA			.357
-		SOUNDSDIR "/weapons/357 single shot.wav",										//	S_DESERTEAGLE		.357
-		SOUNDSDIR "/weapons/45 caliber single shot.wav",						//	S_M1911					.45
-		SOUNDSDIR "/weapons/9mm single shot.wav",										//	S_MP5K					9mm
-		SOUNDSDIR "/weapons/45 caliber single shot.wav",						//	S_MAC10					.45
-		SOUNDSDIR "/weapons/45 caliber single shot.wav",						//	S_THOMPSON			.45
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_COMMANDO			5.56
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_MP53					5.56?
-		SOUNDSDIR "/weapons/5,45 single shot.wav",									//	S_AKSU74				5.45
-		SOUNDSDIR "/weapons/5,7 single shot.wav",									//	S_P90						5.7
-		SOUNDSDIR "/weapons/7,62 wp single shot.wav",							//	S_TYPE85				7.62 WP
-		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_SKS						7.62 WP
-		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_DRAGUNOV			7.62 WP
-		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_M24						7.62 NATO
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_AUG						5.56mm
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_G41						5.56mm
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_RUGERMINI			5.56mm
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_C7						5.56mm
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_FAMAS					5.56mm
-		SOUNDSDIR "/weapons/5,45 single shot.wav",									//	S_AK74					5.45mm
-		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_AKM						7.62mm WP
-		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_M14						7.62mm NATO
-		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_FNFAL					7.62mm NATO
-		SOUNDSDIR "/weapons/7,62 nato single shot.wav",							//	S_G3A3					7.62mm NATO
-		SOUNDSDIR "/weapons/4,7 single shot.wav",										//	S_G11						4.7mm
-		SOUNDSDIR "/weapons/shotgun single shot.wav",								//	S_M870					SHOTGUN
-		SOUNDSDIR "/weapons/shotgun single shot.wav",								//	S_SPAS					SHOTGUN
-		SOUNDSDIR "/weapons/shotgun single shot.wav",								//	S_CAWS					SHOTGUN
-		SOUNDSDIR "/weapons/5,56 single shot.wav",									//	S_FNMINI				5.56mm
-		SOUNDSDIR "/weapons/5,45 single shot.wav",									//	S_RPK74					5.45mm
-		SOUNDSDIR "/weapons/7,62 wp single shot.wav",								//	S_21E						7.62mm
-		SOUNDSDIR "/weapons/knife throw swoosh.wav",												//	KNIFE THROW
-		SOUNDSDIR "/weapons/tank_cannon.wav",
-		SOUNDSDIR "/weapons/bursttype1.wav",
-		SOUNDSDIR "/weapons/automag single.wav",
-
-		SOUNDSDIR "/weapons/silencer 02.wav",
-		SOUNDSDIR "/weapons/silencer 03.wav",
-
-		SOUNDSDIR "/swoosh 01.wav",
-		SOUNDSDIR "/swoosh 03.wav",
-		SOUNDSDIR "/swoosh 05.wav",
-		SOUNDSDIR "/swoosh 06.wav",
-		SOUNDSDIR "/swoosh 11.wav",
-		SOUNDSDIR "/swoosh 14.wav",
-
-		// CREATURE_SOUNDS
-		SOUNDSDIR "/adult fall 01.wav",
-		SOUNDSDIR "/adult step 01.wav",
-		SOUNDSDIR "/adult step 02.wav",
-		SOUNDSDIR "/adult swipe 01.wav",
-		SOUNDSDIR "/eating_flesh 01.wav",
-		SOUNDSDIR "/adult crippled.wav",
-		SOUNDSDIR "/adult dying part 1.wav",
-		SOUNDSDIR "/adult dying part 2.wav",
-		SOUNDSDIR "/adult lunge 01.wav",
-		SOUNDSDIR "/adult smells threat.wav",
-		SOUNDSDIR "/adult smells prey.wav",
-		SOUNDSDIR "/adult spit.wav",
-
-		// BABY
-		SOUNDSDIR "/baby dying 01.wav",
-		SOUNDSDIR "/baby dragging 01.wav",
-		SOUNDSDIR "/baby shriek 01.wav",
-		SOUNDSDIR "/baby spitting 01.wav",
-
-		// LARVAE
-		SOUNDSDIR "/larvae movement 01.wav",
-		SOUNDSDIR "/larvae rupture 01.wav",
-
-		//QUEEN
-		SOUNDSDIR "/queen shriek 01.wav",
-		SOUNDSDIR "/queen dying 01.wav",
-		SOUNDSDIR "/queen enraged attack.wav",
-		SOUNDSDIR "/queen rupturing.wav",
-		SOUNDSDIR "/queen crippled.wav",
-		SOUNDSDIR "/queen smells threat.wav",
-		SOUNDSDIR "/queen whip attack.wav",
-
-		SOUNDSDIR "/rock hit 01.wav",
-		SOUNDSDIR "/rock hit 02.wav",
-
-		SOUNDSDIR "/scratch.wav",
-		SOUNDSDIR "/armpit.wav",
-		SOUNDSDIR "/cracking back.wav",
-
-		SOUNDSDIR "/weapons/auto resolve composite 02 (8-22).wav",							//  The FF sound in autoresolve interface
-
-		SOUNDSDIR "/email alert 01.wav",
-		SOUNDSDIR "/entering text 02.wav",
-		SOUNDSDIR "/removing text 02.wav",
-		SOUNDSDIR "/computer beep 01 in.wav",
-		SOUNDSDIR "/computer beep 01 out.wav",
-		SOUNDSDIR "/computer switch 01 in.wav",
-		SOUNDSDIR "/computer switch 01 out.wav",
-		SOUNDSDIR "/very small switch 01 in.wav",
-		SOUNDSDIR "/very small switch 01 out.wav",
-		SOUNDSDIR "/very small switch 02 in.wav",
-		SOUNDSDIR "/very small switch 02 out.wav",
-		SOUNDSDIR "/small switch 01 in.wav",
-		SOUNDSDIR "/small switch 01 out.wav",
-		SOUNDSDIR "/small switch 02 in.wav",
-		SOUNDSDIR "/small switch 02 out.wav",
-		SOUNDSDIR "/small switch 03 in.wav",
-		SOUNDSDIR "/small switch 03 out.wav",
-		SOUNDSDIR "/big switch 03 in.wav",
-		SOUNDSDIR "/big switch 03 out.wav",
-		SOUNDSDIR "/alarm.wav",
-		SOUNDSDIR "/fight bell.wav",
-		SOUNDSDIR "/helicopter crash sequence.wav",
-		SOUNDSDIR "/attachment.wav",
-		SOUNDSDIR "/ceramic armour insert.wav",
-		SOUNDSDIR "/detonator beep.wav",
-		SOUNDSDIR "/grab roof.wav",
-		SOUNDSDIR "/land on roof.wav",
-		SOUNDSDIR "/branch snap 01.wav",
-		SOUNDSDIR "/branch snap 02.wav",
-		SOUNDSDIR "/indoor bump 01.wav",
-
-		SOUNDSDIR "/fridge door open.wav",
-		SOUNDSDIR "/fridge door close.wav",
-
-		SOUNDSDIR "/fire 03 loop.wav",
-		SOUNDSDIR "/glass_crack.wav",
-		SOUNDSDIR "/spit ricochet.wav",
-		SOUNDSDIR "/tiger hit.wav",
-		SOUNDSDIR "/bloodcat dying 02.wav",
-		SOUNDSDIR "/slap.wav",
-		SOUNDSDIR "/robot beep.wav",
-		SOUNDSDIR "/electricity.wav",
-		SOUNDSDIR "/swimming 01.wav",
-		SOUNDSDIR "/swimming 02.wav",
-		SOUNDSDIR "/key failure.wav",
-		SOUNDSDIR "/target cursor.wav",
-		SOUNDSDIR "/statue open.wav",
-		SOUNDSDIR "/remote activate.wav",
-		SOUNDSDIR "/wirecutters.wav",
-		SOUNDSDIR "/drink from canteen.wav",
-		SOUNDSDIR "/bloodcat attack.wav",
-		SOUNDSDIR "/bloodcat loud roar.wav",
-		SOUNDSDIR "/robot greeting.wav",
-		SOUNDSDIR "/robot death.wav",
-		SOUNDSDIR "/gas grenade explode.wav",
-		SOUNDSDIR "/air escaping.wav",
-		SOUNDSDIR "/drawer open.wav",
-		SOUNDSDIR "/drawer close.wav",
-		SOUNDSDIR "/locker door open.wav",
-		SOUNDSDIR "/locker door close.wav",
-		SOUNDSDIR "/wooden box open.wav",
-		SOUNDSDIR "/wooden box close.wav",
-		SOUNDSDIR "/robot stop moving.wav",
-		SOUNDSDIR "/water movement 01.wav",
-		SOUNDSDIR "/water movement 02.wav",
-		SOUNDSDIR "/water movement 03.wav",
-		SOUNDSDIR "/water movement 04.wav",
-		SOUNDSDIR "/prone to crouch.wav",
-		SOUNDSDIR "/crouch to prone.wav",
-		SOUNDSDIR "/crouch to stand.wav",
-		SOUNDSDIR "/stand to crouch.wav",
-		SOUNDSDIR "/picking something up.wav",
-		SOUNDSDIR "/cow falling.wav",
-		SOUNDSDIR "/bloodcat_growl_01.wav",
-		SOUNDSDIR "/bloodcat_growl_02.wav",
-		SOUNDSDIR "/bloodcat_growl_03.wav",
-		SOUNDSDIR "/bloodcat_growl_04.wav",
-		SOUNDSDIR "/spit ricochet.wav",
-		SOUNDSDIR "/adult crippled.wav",
-		SOUNDSDIR "/death disintegration.wav",
-		SOUNDSDIR "/queen ambience.wav",
-		SOUNDSDIR "/alien impact.wav",
-		SOUNDSDIR "/crow pecking flesh 01.wav",
-		SOUNDSDIR "/crow fly.wav",
-		SOUNDSDIR "/slap 02.wav",
-		SOUNDSDIR "/setting up mortar.wav",
-		SOUNDSDIR "/mortar whistle.wav",
-		SOUNDSDIR "/load mortar.wav",
-		SOUNDSDIR "/tank turret a.wav",
-		SOUNDSDIR "/tank turret b.wav",
-		SOUNDSDIR "/cow falling b.wav",
-		SOUNDSDIR "/stab into flesh.wav",
-		SOUNDSDIR "/explosion 10.wav",
-		SOUNDSDIR "/explosion 12.wav",
-		SOUNDSDIR "/drink from canteen male.wav",
-		SOUNDSDIR "/x ray activated.wav",
-		SOUNDSDIR "/catch object.wav",
-		SOUNDSDIR "/fence open.wav",
+    SOUNDSDIR "/ricochet 01.wav",                               // 0
+    SOUNDSDIR "/ricochet 02.wav",                               // 1
+    SOUNDSDIR "/ricochet 01.wav",                               // 2
+    SOUNDSDIR "/ricochet 02.wav",                               // 3
+    SOUNDSDIR "/ricochet 01.wav",                               // 4
+    SOUNDSDIR "/ricochet 02.wav",                               // 5
+    SOUNDSDIR "/ricochet 01.wav",                               // 6
+    SOUNDSDIR "/ricochet 02.wav",                               // 7
+    SOUNDSDIR "/dirt impact 01.wav",                            // 8
+    SOUNDSDIR "/dirt impact 01.wav",                            // 9
+    SOUNDSDIR "/knife hit ground.wav",                          // 10
+    SOUNDSDIR "/fall to knees 01.wav",                          // 11
+    SOUNDSDIR "/fall to knees 02.wav",                          // 12
+    SOUNDSDIR "/knees to dirt 01.wav",                          // 13
+    SOUNDSDIR "/knees to dirt 02.wav",                          // 14
+    SOUNDSDIR "/knees to dirt 03.wav",                          // 15
+    SOUNDSDIR "/heavy fall 01.wav",                             // 16
+    SOUNDSDIR "/body_splat.wav",                                // 17
+    SOUNDSDIR "/glass_break1.wav",                              // 18
+    SOUNDSDIR "/glass_break2.wav",                              // 19
+    SOUNDSDIR "/door open 01.wav",                              // 20
+    SOUNDSDIR "/door open 02.wav",                              // 21
+    SOUNDSDIR "/door open 03.wav",                              // 22
+    SOUNDSDIR "/door close 01.wav",                             // 23
+    SOUNDSDIR "/door close 02.wav",                             // 24
+    SOUNDSDIR "/unlock lock.wav",                               // 25
+    SOUNDSDIR "/kickin lock.wav",                               // 26
+    SOUNDSDIR "/break lock.wav",                                // 27
+    SOUNDSDIR "/picking lock.wav",                              // 28
+    SOUNDSDIR "/garage door open.wav",                          // 29
+    SOUNDSDIR "/garage door close.wav",                         // 30
+    SOUNDSDIR "/elevator door open.wav",                        // 31
+    SOUNDSDIR "/elevator door close.wav",                       // 32
+    SOUNDSDIR "/high tech door open.wav",                       // 33
+    SOUNDSDIR "/high tech door close.wav",                      // 34
+    SOUNDSDIR "/curtains door open.wav",                        // 35
+    SOUNDSDIR "/curtains door close.wav",                       // 36
+    SOUNDSDIR "/metal door open.wav",                           // 37
+    SOUNDSDIR "/metal door close.wav",                          // 38
+    SOUNDSDIR "/ftp gravel 01.wav",                             // 39
+    SOUNDSDIR "/ftp gravel 02.wav",                             // 40
+    SOUNDSDIR "/ftp gravel 03.wav",                             // 41
+    SOUNDSDIR "/ftp gravel 04.wav",                             // 42
+    SOUNDSDIR "/ftp gritty 01.wav",                             // 43
+    SOUNDSDIR "/ftp gritty 02.wav",                             // 44
+    SOUNDSDIR "/ftp gritty 03.wav",                             // 45
+    SOUNDSDIR "/ftp gritty 04.wav",                             // 46
+    SOUNDSDIR "/ftp leaves 01.wav",                             // 47
+    SOUNDSDIR "/ftp leaves 02.wav",                             // 48
+    SOUNDSDIR "/ftp leaves 03.wav",                             // 49
+    SOUNDSDIR "/ftp leaves 04.wav",                             // 50
+    SOUNDSDIR "/crawling 01.wav",                               // 51
+    SOUNDSDIR "/crawling 02.wav",                               // 52
+    SOUNDSDIR "/crawling 03.wav",                               // 53
+    SOUNDSDIR "/crawling 04.wav",                               // 54
+    SOUNDSDIR "/beep2.wav",                                     // 55
+    SOUNDSDIR "/endturn.wav",                                   // 56
+    SOUNDSDIR "/ja2 death hit.wav",                             // 57
+    SOUNDSDIR "/doorcr_b.wav",                                  // 58
+    SOUNDSDIR "/head exploding 01.wav",                         // 59
+    SOUNDSDIR "/body exploding.wav",                            // 60
+    SOUNDSDIR "/explode1.wav",                                  // 61
+    SOUNDSDIR "/crow exploding.wav",                            // 62
+    SOUNDSDIR "/small explosion 01.wav",                        // 63
+    SOUNDSDIR "/heli1.wav",                                     // 64
+    SOUNDSDIR "/bullet impact 01.wav",                          // 65
+    SOUNDSDIR "/bullet impact 02.wav",                          // 66
+    SOUNDSDIR "/bullet impact 02.wav",                          // 67
+    STSOUNDSDIR "/blah.wav",                                    // 68  URE ATTACK
+    SOUNDSDIR "/step into water.wav",                           // 69
+    SOUNDSDIR "/splash from shallow to deep.wav",               // 70
+    SOUNDSDIR "/cow hit.wav",                                   // 71  COW HIT
+    SOUNDSDIR "/cow die.wav",                                   // 72  COW DIE
+    SOUNDSDIR "/line 02 fx.wav",                                // 73
+    SOUNDSDIR "/line 01 fx.wav",                                // 74
+    SOUNDSDIR "/line 03 fx.wav",                                // 75
+    SOUNDSDIR "/cave collapsing.wav",                           // 76  CAVE_COLLAPSE
+    SOUNDSDIR "/raid whistle.wav",                              // 77  RAID
+    SOUNDSDIR "/raid ambient.wav",                              // 78
+    SOUNDSDIR "/raid dive.wav",                                 // 79
+    SOUNDSDIR "/raid dive.wav",                                 // 80
+    SOUNDSDIR "/raid whistle.wav",                              // 81  RAID
+    SOUNDSDIR "/driving 01.wav",                                // 82  DRIVING
+    SOUNDSDIR "/engine start.wav",                              // 83  ON
+    SOUNDSDIR "/engine off.wav",                                // 84  OFF
+    SOUNDSDIR "/into vehicle.wav",                              // 85  INTO
+    SOUNDSDIR "/weapons/dry fire 1.wav",                        // 86  Dry fire sound ( for gun jam )
+    SOUNDSDIR "/wood impact 01a.wav",                           // 87  S_WOOD_IMPACT1
+    SOUNDSDIR "/wood impact 01b.wav",                           // 88
+    SOUNDSDIR "/wood impact 01a.wav",                           // 89
+    SOUNDSDIR "/porcelain impact.wav",                          // 90
+    SOUNDSDIR "/tire impact 01.wav",                            // 91
+    SOUNDSDIR "/stone impact 01.wav",                           // 92
+    SOUNDSDIR "/water impact 01.wav",                           // 93
+    SOUNDSDIR "/veg impact 01.wav",                             // 94
+    SOUNDSDIR "/metal hit 01.wav",                              // 95  S_METAL_HIT1
+    SOUNDSDIR "/metal hit 01.wav",                              // 96
+    SOUNDSDIR "/metal hit 01.wav",                              // 97
+    SOUNDSDIR "/slap_impact.wav",                               // 98
+    SOUNDSDIR "/weapons/revolver reload.wav",                   // 99  REVOLVER
+    SOUNDSDIR "/weapons/pistol reload.wav",                     // 100  PISTOL
+    SOUNDSDIR "/weapons/smg reload.wav",                        // 101  SMG
+    SOUNDSDIR "/weapons/rifle reload.wav",                      // 102  RIFLE
+    SOUNDSDIR "/weapons/shotgun reload.wav",                    // 103  SHOTGUN
+    SOUNDSDIR "/weapons/lmg reload.wav",                        // 104  LMG
+    SOUNDSDIR "/weapons/revolver lnl.wav",                      // 105  REVOLVER
+    SOUNDSDIR "/weapons/pistol lnl.wav",                        // 106  PISTOL
+    SOUNDSDIR "/weapons/smg lnl.wav",                           // 107  SMG
+    SOUNDSDIR "/weapons/rifle lnl.wav",                         // 108  RIFLE
+    SOUNDSDIR "/weapons/shotgun lnl.wav",                       // 109  SHOTGUN
+    SOUNDSDIR "/weapons/lmg lnl.wav",                           // 110  LMG
+    NULL,                                                       // 111
+    NULL,                                                       // 112
+    NULL,                                                       // 113
+    NULL,                                                       // 114
+    NULL,                                                       // 115
+    NULL,                                                       // 116
+    NULL,                                                       // 117
+    NULL,                                                       // 118
+    NULL,                                                       // 119
+    NULL,                                                       // 120
+    NULL,                                                       // 121
+    NULL,                                                       // 122
+    NULL,                                                       // 123
+    NULL,                                                       // 124
+    NULL,                                                       // 125
+    NULL,                                                       // 126
+    NULL,                                                       // 127
+    NULL,                                                       // 128
+    NULL,                                                       // 129
+    NULL,                                                       // 130
+    NULL,                                                       // 131
+    NULL,                                                       // 132
+    NULL,                                                       // 133
+    NULL,                                                       // 134
+    NULL,                                                       // 135
+    NULL,                                                       // 136
+    NULL,                                                       // 137
+    NULL,                                                       // 138
+    NULL,                                                       // 139
+    NULL,                                                       // 140
+    NULL,                                                       // 141
+    NULL,                                                       // 142
+    NULL,                                                       // 143
+    NULL,                                                       // 144
+    NULL,                                                       // 145
+    NULL,                                                       // 146
+    NULL,                                                       // 147
+    NULL,                                                       // 148
+    NULL,                                                       // 149
+    NULL,                                                       // 150
+    NULL,                                                       // 151
+    NULL,                                                       // 152
+    NULL,                                                       // 153
+    NULL,                                                       // 154
+    NULL,                                                       // 155
+    SOUNDSDIR "/weapons/silencer 02.wav",                       // 156
+    SOUNDSDIR "/weapons/silencer 03.wav",                       // 157
+    SOUNDSDIR "/swoosh 01.wav",                                 // 158
+    SOUNDSDIR "/swoosh 03.wav",                                 // 159
+    SOUNDSDIR "/swoosh 05.wav",                                 // 160
+    SOUNDSDIR "/swoosh 06.wav",                                 // 161
+    SOUNDSDIR "/swoosh 11.wav",                                 // 162
+    SOUNDSDIR "/swoosh 14.wav",                                 // 163
+    SOUNDSDIR "/adult fall 01.wav",                             // 164
+    SOUNDSDIR "/adult step 01.wav",                             // 165
+    SOUNDSDIR "/adult step 02.wav",                             // 166
+    SOUNDSDIR "/adult swipe 01.wav",                            // 167
+    SOUNDSDIR "/eating_flesh 01.wav",                           // 168
+    SOUNDSDIR "/adult crippled.wav",                            // 169
+    SOUNDSDIR "/adult dying part 1.wav",                        // 170
+    SOUNDSDIR "/adult dying part 2.wav",                        // 171
+    SOUNDSDIR "/adult lunge 01.wav",                            // 172
+    SOUNDSDIR "/adult smells threat.wav",                       // 173
+    SOUNDSDIR "/adult smells prey.wav",                         // 174
+    SOUNDSDIR "/adult spit.wav",                                // 175
+    SOUNDSDIR "/baby dying 01.wav",                             // 176
+    SOUNDSDIR "/baby dragging 01.wav",                          // 177
+    SOUNDSDIR "/baby shriek 01.wav",                            // 178
+    SOUNDSDIR "/baby spitting 01.wav",                          // 179
+    SOUNDSDIR "/larvae movement 01.wav",                        // 180
+    SOUNDSDIR "/larvae rupture 01.wav",                         // 181
+    SOUNDSDIR "/queen shriek 01.wav",                           // 182
+    SOUNDSDIR "/queen dying 01.wav",                            // 183
+    SOUNDSDIR "/queen enraged attack.wav",                      // 184
+    SOUNDSDIR "/queen rupturing.wav",                           // 185
+    SOUNDSDIR "/queen crippled.wav",                            // 186
+    SOUNDSDIR "/queen smells threat.wav",                       // 187
+    SOUNDSDIR "/queen whip attack.wav",                         // 188
+    SOUNDSDIR "/rock hit 01.wav",                               // 189
+    SOUNDSDIR "/rock hit 02.wav",                               // 190
+    SOUNDSDIR "/scratch.wav",                                   // 191
+    SOUNDSDIR "/armpit.wav",                                    // 192
+    SOUNDSDIR "/cracking back.wav",                             // 193
+    SOUNDSDIR "/weapons/auto resolve composite 02 (8-22).wav",  // 194  The FF sound in autoresolve interface
+    SOUNDSDIR "/email alert 01.wav",                            // 195
+    SOUNDSDIR "/entering text 02.wav",                          // 196
+    SOUNDSDIR "/removing text 02.wav",                          // 197
+    SOUNDSDIR "/computer beep 01 in.wav",                       // 198
+    SOUNDSDIR "/computer beep 01 out.wav",                      // 199
+    SOUNDSDIR "/computer switch 01 in.wav",                     // 200
+    SOUNDSDIR "/computer switch 01 out.wav",                    // 201
+    SOUNDSDIR "/very small switch 01 in.wav",                   // 202
+    SOUNDSDIR "/very small switch 01 out.wav",                  // 203
+    SOUNDSDIR "/very small switch 02 in.wav",                   // 204
+    SOUNDSDIR "/very small switch 02 out.wav",                  // 205
+    SOUNDSDIR "/small switch 01 in.wav",                        // 206
+    SOUNDSDIR "/small switch 01 out.wav",                       // 207
+    SOUNDSDIR "/small switch 02 in.wav",                        // 208
+    SOUNDSDIR "/small switch 02 out.wav",                       // 209
+    SOUNDSDIR "/small switch 03 in.wav",                        // 210
+    SOUNDSDIR "/small switch 03 out.wav",                       // 211
+    SOUNDSDIR "/big switch 03 in.wav",                          // 212
+    SOUNDSDIR "/big switch 03 out.wav",                         // 213
+    SOUNDSDIR "/alarm.wav",                                     // 214
+    SOUNDSDIR "/fight bell.wav",                                // 215
+    SOUNDSDIR "/helicopter crash sequence.wav",                 // 216
+    SOUNDSDIR "/attachment.wav",                                // 217
+    SOUNDSDIR "/ceramic armour insert.wav",                     // 218
+    SOUNDSDIR "/detonator beep.wav",                            // 219
+    SOUNDSDIR "/grab roof.wav",                                 // 220
+    SOUNDSDIR "/land on roof.wav",                              // 221
+    SOUNDSDIR "/branch snap 01.wav",                            // 222
+    SOUNDSDIR "/branch snap 02.wav",                            // 223
+    SOUNDSDIR "/indoor bump 01.wav",                            // 224
+    SOUNDSDIR "/fridge door open.wav",                          // 225
+    SOUNDSDIR "/fridge door close.wav",                         // 226
+    SOUNDSDIR "/fire 03 loop.wav",                              // 227
+    SOUNDSDIR "/glass_crack.wav",                               // 228
+    SOUNDSDIR "/spit ricochet.wav",                             // 229
+    SOUNDSDIR "/tiger hit.wav",                                 // 230
+    SOUNDSDIR "/bloodcat dying 02.wav",                         // 231
+    SOUNDSDIR "/slap.wav",                                      // 232
+    SOUNDSDIR "/robot beep.wav",                                // 233
+    SOUNDSDIR "/electricity.wav",                               // 234
+    SOUNDSDIR "/swimming 01.wav",                               // 235
+    SOUNDSDIR "/swimming 02.wav",                               // 236
+    SOUNDSDIR "/key failure.wav",                               // 237
+    SOUNDSDIR "/target cursor.wav",                             // 238
+    SOUNDSDIR "/statue open.wav",                               // 239
+    SOUNDSDIR "/remote activate.wav",                           // 240
+    SOUNDSDIR "/wirecutters.wav",                               // 241
+    SOUNDSDIR "/drink from canteen.wav",                        // 242
+    SOUNDSDIR "/bloodcat attack.wav",                           // 243
+    SOUNDSDIR "/bloodcat loud roar.wav",                        // 244
+    SOUNDSDIR "/robot greeting.wav",                            // 245
+    SOUNDSDIR "/robot death.wav",                               // 246
+    SOUNDSDIR "/gas grenade explode.wav",                       // 247
+    SOUNDSDIR "/air escaping.wav",                              // 248
+    SOUNDSDIR "/drawer open.wav",                               // 249
+    SOUNDSDIR "/drawer close.wav",                              // 250
+    SOUNDSDIR "/locker door open.wav",                          // 251
+    SOUNDSDIR "/locker door close.wav",                         // 252
+    SOUNDSDIR "/wooden box open.wav",                           // 253
+    SOUNDSDIR "/wooden box close.wav",                          // 254
+    SOUNDSDIR "/robot stop moving.wav",                         // 255
+    SOUNDSDIR "/water movement 01.wav",                         // 256
+    SOUNDSDIR "/water movement 02.wav",                         // 257
+    SOUNDSDIR "/water movement 03.wav",                         // 258
+    SOUNDSDIR "/water movement 04.wav",                         // 259
+    SOUNDSDIR "/prone to crouch.wav",                           // 260
+    SOUNDSDIR "/crouch to prone.wav",                           // 261
+    SOUNDSDIR "/crouch to stand.wav",                           // 262
+    SOUNDSDIR "/stand to crouch.wav",                           // 263
+    SOUNDSDIR "/picking something up.wav",                      // 264
+    SOUNDSDIR "/cow falling.wav",                               // 265
+    SOUNDSDIR "/bloodcat_growl_01.wav",                         // 266
+    SOUNDSDIR "/bloodcat_growl_02.wav",                         // 267
+    SOUNDSDIR "/bloodcat_growl_03.wav",                         // 268
+    SOUNDSDIR "/bloodcat_growl_04.wav",                         // 269
+    SOUNDSDIR "/spit ricochet.wav",                             // 270
+    SOUNDSDIR "/adult crippled.wav",                            // 271
+    SOUNDSDIR "/death disintegration.wav",                      // 272
+    SOUNDSDIR "/queen ambience.wav",                            // 273
+    SOUNDSDIR "/alien impact.wav",                              // 274
+    SOUNDSDIR "/crow pecking flesh 01.wav",                     // 275
+    SOUNDSDIR "/crow fly.wav",                                  // 276
+    SOUNDSDIR "/slap 02.wav",                                   // 277
+    SOUNDSDIR "/setting up mortar.wav",                         // 278
+    SOUNDSDIR "/mortar whistle.wav",                            // 279
+    SOUNDSDIR "/load mortar.wav",                               // 280
+    SOUNDSDIR "/tank turret a.wav",                             // 281
+    SOUNDSDIR "/tank turret b.wav",                             // 282
+    SOUNDSDIR "/cow falling b.wav",                             // 283
+    SOUNDSDIR "/stab into flesh.wav",                           // 284
+    SOUNDSDIR "/explosion 10.wav",                              // 285
+    SOUNDSDIR "/explosion 12.wav",                              // 286
+    SOUNDSDIR "/drink from canteen male.wav",                   // 287
+    SOUNDSDIR "/x ray activated.wav",                           // 288
+    SOUNDSDIR "/catch object.wav",                              // 289
+    SOUNDSDIR "/fence open.wav",                                // 290
 };
 
 static char const* const szAmbientEffects[NUM_AMBIENTS] =
@@ -396,10 +352,32 @@ void ShutdownJA2Sound(void)
 }
 
 
+const char * getSoundSample(SoundID soundId)
+{
+  if(soundId == -1) {
+    return "";
+  }
+  else
+  {
+    return szSoundEffects[soundId];
+  }
+}
+
 UINT32 PlayJA2Sample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
 	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlay(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
+}
+
+
+UINT32 PlayJA2Sample(const char *sample, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
+{
+  if((sample != NULL) && strcmp(sample, ""))
+  {
+    UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
+    return SoundPlay(sample, vol, uiPan, ubLoops, NULL, NULL);
+  }
+  return SOUND_ERROR;
 }
 
 
@@ -454,6 +432,20 @@ UINT32 PlayLocationJA2Sample(UINT16 const grid_no, SoundID const idx, UINT32 con
 	UINT32 const vol = SoundVolume(base_vol, grid_no);
 	UINT32 const pan = SoundDir(grid_no);
 	return PlayJA2Sample(idx, vol, loops, pan);
+}
+
+
+UINT32 PlayLocationJA2Sample(UINT16 const grid_no, const char * sample, UINT32 const base_vol, UINT32 const loops)
+{
+	UINT32 const vol = SoundVolume(base_vol, grid_no);
+	UINT32 const pan = SoundDir(grid_no);
+	return PlayJA2Sample(sample, vol, loops, pan);
+}
+
+
+UINT32 PlayLocationJA2Sample(UINT16 const grid_no, const std::string &sample, UINT32 const base_vol, UINT32 const loops)
+{
+  return PlayLocationJA2Sample(grid_no, sample.c_str(), base_vol, loops);
 }
 
 

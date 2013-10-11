@@ -14,6 +14,10 @@
 #include "MemMan.h"
 #include "Items.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 // To reduce memory fragmentation from frequent MemRealloc(), we allocate memory for more than one special slot each
 // time we run out of space.  Odds are that if we need one, we'll need another soon.
@@ -738,7 +742,7 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 		case IC_NONE: return 0;
 
 		case IC_GUN:
-			switch(  Weapon[ Item[ usItem ].ubClassIndex ].ubWeaponClass )
+			switch(  GCM->getWeapon(Item[usItem].ubClassIndex)->ubWeaponClass )
 			{
 				case HANDGUNCLASS: return ARMS_DEALER_HANDGUNCLASS;
 
@@ -1392,7 +1396,7 @@ static void AddAmmoToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 	}
 
 
-	ubMagCapacity = Magazine[ Item[ usItemIndex ].ubClassIndex ].ubMagSize;
+	ubMagCapacity = GCM->getMagazine( Item[ usItemIndex ].ubClassIndex )->capacity;
 
 	if ( ubShotsLeft >= ubMagCapacity )
 	{

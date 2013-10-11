@@ -11,9 +11,11 @@
 
 ModPackContentManager::ModPackContentManager(const std::string &modName,
                                              const std::string &modResFolder,
-                                             const std::string &configFolder, const std::string &configPath,
-                                             const std::string &gameResRootPath)
-  :DefaultContentManager(configFolder, configPath, gameResRootPath)
+                                             const std::string &configFolder,
+                                             const std::string &configPath,
+                                             const std::string &gameResRootPath,
+                                             const std::string &externalizedDataPath)
+  :DefaultContentManager(configFolder, configPath, gameResRootPath, externalizedDataPath)
 {
   m_modName = modName;
   m_modResFolder = modResFolder;

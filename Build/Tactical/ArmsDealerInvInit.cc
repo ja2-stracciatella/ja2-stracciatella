@@ -13,6 +13,11 @@
 #include "Random.h"
 #include "Items.h"
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 struct ITEM_SORT_ENTRY
 {
@@ -1022,14 +1027,14 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 	if (item1.usItemClass == IC_AMMO && item2.usItemClass == IC_AMMO)
 	{
 		// AMMO is sorted by caliber first
-		AmmoKind const calibre1 = Magazine[item1.ubClassIndex].ubCalibre;
-		AmmoKind const calibre2 = Magazine[item2.ubClassIndex].ubCalibre;
+		uint16_t calibre1 = GCM->getMagazine(item1.ubClassIndex)->calibre->index;
+		uint16_t calibre2 = GCM->getMagazine(item2.ubClassIndex)->calibre->index;
 		if (calibre1 > calibre2) return -1;
 		if (calibre1 < calibre2) return  1;
 
 		// the same caliber - compare size of magazine
-		UINT8 const mag_size1 = Magazine[item1.ubClassIndex].ubMagSize;
-		UINT8 const mag_size2 = Magazine[item2.ubClassIndex].ubMagSize;
+		UINT8 const mag_size1 = GCM->getMagazine(item1.ubClassIndex)->capacity;
+		UINT8 const mag_size2 = GCM->getMagazine(item2.ubClassIndex)->capacity;
 		if (mag_size1 > mag_size2) return -1;
 		if (mag_size1 < mag_size2) return  1;
 	}
@@ -1073,7 +1078,7 @@ static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 
 	// If it's not a weapon, set no weapon class, as this won't be needed
 	UINT8 const weapon_class = usItemIndex < MAX_WEAPONS ?
-		Weapon[usItemIndex].ubWeaponClass : NOGUNCLASS;
+		GCM->getWeapon(usItemIndex)->ubWeaponClass : NOGUNCLASS;
 
 	// search table until end-of-list marker is encountered
 	for (UINT8 category = 0;; ++category)

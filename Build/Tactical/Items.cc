@@ -41,6 +41,12 @@
 #include "MemMan.h"
 #include "Debug.h"
 
+#include "AmmoTypeModel.h"
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 #define ANY_MAGSIZE 255
 
@@ -1490,16 +1496,13 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 }
 
 //Determines if it is possible to equip this weapon with this ammo.
-BOOLEAN ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
+bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
 {
 	if (Item[usItem].usItemClass == IC_GUN && Item[usAmmoType].usItemClass == IC_AMMO)
 	{
-		if (Weapon[usItem].ubCalibre == Magazine[Item[usAmmoType].ubClassIndex].ubCalibre)
-		{
-			return( TRUE );
-		}
+    return GCM->getWeapon(usItem)->matches(GCM->getMagazine(Item[usAmmoType].ubClassIndex)->calibre);
 	}
-	return( FALSE );
+	return false;
 }
 
 
@@ -1808,7 +1811,7 @@ void CleanUpStack(OBJECTTYPE* const o, OBJECTTYPE* const cursor_o)
 	}
 
 	INT8 const max_points = item.usItemClass & IC_AMMO ?
-		Magazine[item.ubClassIndex].ubMagSize : 100;
+		GCM->getMagazine(item.ubClassIndex)->capacity : 100;
 
 	if (cursor_o && cursor_o->usItem == o->usItem)
 	{
@@ -1923,8 +1926,8 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	{
 		fEmptyGun = (pGun->ubGunShotsLeft == 0);
 		fReloadingWithStack = (pAmmo->ubNumberOfObjects > 1);
-		fSameAmmoType = ( pGun->ubGunAmmoType == Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType );
-		fSameMagazineSize = ( Magazine[ Item[ pAmmo->usItem ].ubClassIndex ].ubMagSize == Weapon[pGun->usItem].ubMagSize );
+		fSameAmmoType = ( pGun->ubGunAmmoType == GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)->ammoType->index );
+		fSameMagazineSize = ( GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)->capacity == GCM->getWeapon(pGun->usItem)->ubMagSize );
 
 		if (fEmptyGun)
 		{
@@ -1983,7 +1986,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], Weapon[pGun->usItem].ubMagSize - pGun->ubGunShotsLeft );
+				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft );
 			}
 			else
 			{
@@ -1991,16 +1994,16 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			}
 
 		}
-		else if (Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize > Weapon[pGun->usItem].ubMagSize)
+		else if (GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)->capacity > GCM->getWeapon(pGun->usItem)->ubMagSize)
 		{
 			usNewAmmoItem = pAmmo->usItem - 1;
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], Weapon[pGun->usItem].ubMagSize - pGun->ubGunShotsLeft );
+				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], Weapon[pGun->usItem].ubMagSize );
+				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize );
 			}
 		}
 		else // mag is smaller than weapon mag
@@ -2008,11 +2011,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = pAmmo->usItem + 1;
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], Weapon[pGun->usItem].ubMagSize - pGun->ubGunShotsLeft );
+				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft );
 			}
 			else
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], Weapon[pGun->usItem].ubMagSize );
+				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize );
 			}
 		}
 
@@ -2022,13 +2025,13 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 			case RELOAD_PLACE:
 				pGun->ubGunShotsLeft = ubBulletsToMove;
-				pGun->ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				pGun->ubGunAmmoType = GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)->ammoType->index;
 				pGun->usGunAmmoItem = usNewAmmoItem;
 				break;
 
 			case RELOAD_SWAP:
 				pGun->ubGunShotsLeft = ubBulletsToMove;
-				pGun->ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				pGun->ubGunAmmoType = GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)->ammoType->index;
 				pGun->usGunAmmoItem = usNewAmmoItem;
 				if (fReloadingWithStack)
 				{
@@ -2066,7 +2069,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 				}
 				// place first ammo in gun
 				pGun->ubGunShotsLeft = ubBulletsToMove;
-				pGun->ubGunAmmoType = Magazine[Item[pAmmo->usItem].ubClassIndex].ubAmmoType;
+				pGun->ubGunAmmoType = GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)->ammoType->index;
 				pGun->usGunAmmoItem = usNewAmmoItem;
 
 				break;
@@ -2096,7 +2099,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	if ( pSoldier->bVisible != -1 )
 	{
 		// Play some effects!
-		SoundID const usReloadSound = Weapon[pGun->usItem].sReloadSound;
+		SoundID const usReloadSound = GCM->getWeapon(pGun->usItem)->sReloadSound;
 		if (usReloadSound != NO_SOUND && !IsAutoResolveActive())
 		{
 			PlayJA2Sample(usReloadSound, HIGHVOLUME, 1, MIDDLEPAN);
@@ -2139,7 +2142,7 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 		//pWeapon->usGunAmmoItem		= 0; // leaving the ammo item the same for auto-reloading purposes
 
 		// Play some effects!
-		SoundID const usReloadSound = Weapon[pWeapon->usItem].sReloadSound;
+		SoundID const usReloadSound = GCM->getWeapon(pWeapon->usItem)->sReloadSound;
 		if (usReloadSound != NO_SOUND)
 		{
 			PlayJA2Sample(usReloadSound, HIGHVOLUME, 1, MIDDLEPAN);
@@ -2202,16 +2205,16 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 */
 
 
-INT8 FindAmmo(const SOLDIERTYPE* s, AmmoKind const calibre, UINT8 const mag_size, INT8 const exclude_slot)
+INT8 FindAmmo(const SOLDIERTYPE* s, const CalibreModel * calibre, UINT8 const mag_size, INT8 const exclude_slot)
 {
 	for (INT8 slot = HANDPOS; slot != NUM_INV_SLOTS; ++slot)
 	{
 		if (slot == exclude_slot) continue;
 		INVTYPE const& item = Item[s->inv[slot].usItem];
 		if (item.usItemClass != IC_AMMO) continue;
-		MAGTYPE const& m = Magazine[item.ubClassIndex];
-		if (m.ubCalibre != calibre) continue;
-		if (m.ubMagSize != mag_size && mag_size != ANY_MAGSIZE) continue;
+    const MagazineModel * m = GCM->getMagazine(item.ubClassIndex);
+		if (m->calibre->index != calibre->index) continue;
+		if (m->capacity != mag_size && mag_size != ANY_MAGSIZE) continue;
 		return slot;
 	}
 	return NO_SLOT;
@@ -2238,7 +2241,7 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 			return( bSlot );
 		}
 		// look for any ammo that matches which is of the same calibre and magazine size
-		bSlot = FindAmmo( pSoldier, Weapon[pObj->usItem].ubCalibre, Weapon[pObj->usItem].ubMagSize, bExcludeSlot );
+		bSlot = FindAmmo( pSoldier, GCM->getWeapon(pObj->usItem)->calibre, GCM->getWeapon(pObj->usItem)->ubMagSize, bExcludeSlot );
 		if (bSlot != NO_SLOT)
 		{
 			return( bSlot );
@@ -2246,7 +2249,7 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 		else
 		{
 			// look for any ammo that matches which is of the same calibre (different size okay)
-			return( FindAmmo( pSoldier, Weapon[pObj->usItem].ubCalibre, ANY_MAGSIZE, bExcludeSlot ) );
+			return( FindAmmo( pSoldier, GCM->getWeapon(pObj->usItem)->calibre, ANY_MAGSIZE, bExcludeSlot ) );
 		}
 	}
 	else
@@ -2494,7 +2497,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 			// transfer points...
 			INVTYPE const& tgt_item = Item[target.usItem];
 			UINT8   const  limit    =
-				tgt_item.usItemClass == IC_AMMO ? Magazine[tgt_item.ubClassIndex].ubMagSize :
+				tgt_item.usItemClass == IC_AMMO ? GCM->getMagazine(tgt_item.ubClassIndex)->capacity :
 				100;
 
 			// count down through # of attaching items and add to status of item in position 0
@@ -2846,7 +2849,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 				case IC_GUN:
 					if (Item[pObj->usItem].usItemClass == IC_AMMO)
 					{
-						if (Weapon[pInSlot->usItem].ubCalibre == Magazine[Item[pObj->usItem].ubClassIndex].ubCalibre)
+						if (GCM->getWeapon(pInSlot->usItem)->matches(GCM->getMagazine(Item[pObj->usItem].ubClassIndex)->calibre))
 						{
 							// reload...
 							return( ReloadGun( pSoldier, pInSlot, pObj ) );
@@ -3331,13 +3334,13 @@ UINT16 DefaultMagazine(UINT16 const gun)
 		throw std::logic_error("Tried to get default ammo for item which is not a gun");
 	}
 
-	WEAPONTYPE const& w = Weapon[gun];
+	const WEAPONTYPE * w = GCM->getWeapon(gun);
 	for (UINT16 i = 0;; ++i)
 	{
-		MAGTYPE const& mag = Magazine[i];
-		if (mag.ubCalibre == NOAMMO)      break;
-		if (mag.ubCalibre != w.ubCalibre) continue;
-		if (mag.ubMagSize != w.ubMagSize) continue;
+    const MagazineModel *mag = GCM->getMagazine(i);
+		if (mag->calibre->index == NOAMMO)      break;
+		if (mag->calibre->index != w->calibre->index) continue;
+		if (mag->capacity != w->ubMagSize) continue;
 		return MagazineClassIndexToItemType(i);
 	}
 
@@ -3345,17 +3348,17 @@ UINT16 DefaultMagazine(UINT16 const gun)
 }
 
 
-static UINT16 FindReplacementMagazine(AmmoKind const calibre, UINT8 const mag_size, UINT8 const ammo_type)
+static UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
 {
 	UINT16 default_mag = NOTHING;
 	for (UINT8 i = 0;; i++)
 	{
-		MAGTYPE const& mag = Magazine[i];
-		if (mag.ubCalibre == NOAMMO)   break;
-		if (mag.ubCalibre != calibre)  continue;
-		if (mag.ubMagSize != mag_size) continue;
+    const MagazineModel *mag = GCM->getMagazine(i);
+		if (mag->calibre->index == NOAMMO)   break;
+		if (mag->calibre->index != calibre->index)  continue;
+		if (mag->capacity != mag_size) continue;
 
-		if (mag.ubAmmoType == ammo_type) return MagazineClassIndexToItemType(i);
+		if (mag->ammoType->index == ammo_type) return MagazineClassIndexToItemType(i);
 
 		if (default_mag == NOTHING)
 		{ // Store this one to use if all else fails
@@ -3368,12 +3371,12 @@ static UINT16 FindReplacementMagazine(AmmoKind const calibre, UINT8 const mag_si
 
 UINT16 FindReplacementMagazineIfNecessary(UINT16 const old_gun_id, UINT16 const old_ammo_id, UINT16 const new_gun_id)
 {
-	WEAPONTYPE const& old_gun = Weapon[old_gun_id];
-	MAGTYPE    const& old_mag = Magazine[Item[old_ammo_id].ubClassIndex];
-	if (old_mag.ubCalibre != old_gun.ubCalibre) return NOTHING;
-	if (old_mag.ubMagSize != old_gun.ubMagSize) return NOTHING;
-	WEAPONTYPE const& new_gun = Weapon[new_gun_id];
-	return FindReplacementMagazine(new_gun.ubCalibre, new_gun.ubMagSize, old_mag.ubAmmoType);
+	const WEAPONTYPE * old_gun = GCM->getWeapon(old_gun_id);
+  const MagazineModel * old_mag = GCM->getMagazine(Item[old_ammo_id].ubClassIndex);
+	if (old_mag->calibre->index != old_gun->calibre->index) return NOTHING;
+	if (old_mag->capacity != old_gun->ubMagSize) return NOTHING;
+	const WEAPONTYPE * new_gun = GCM->getWeapon(new_gun_id);
+	return FindReplacementMagazine(new_gun->calibre, new_gun->ubMagSize, old_mag->ammoType->index);
 }
 
 
@@ -3395,14 +3398,14 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 		return( 0 );
 	}
 
-	WEAPONTYPE const* const pWeapon = &Weapon[usItem];
+	const WEAPONTYPE * pWeapon = GCM->getWeapon(usItem);
 
 	// find & store all possible mag types that fit this gun
 	usLoop = 0;
-	while ( Magazine[ usLoop ].ubCalibre != NOAMMO )
+	while ( GCM->getMagazine(usLoop)->calibre->index != NOAMMO )
 	{
-		if (Magazine[usLoop].ubCalibre == pWeapon->ubCalibre &&
-				Magazine[usLoop].ubMagSize == pWeapon->ubMagSize)
+		if (GCM->getMagazine(usLoop)->calibre->index &&
+				GCM->getMagazine(usLoop)->capacity == pWeapon->ubMagSize)
 		{
 			// store it! (make sure array is big enough)
 			Assert(usPossibleMagCnt < MAX_AMMO_TYPES_PER_GUN);
@@ -3452,9 +3455,9 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 	pObj->ubImprintID = NO_PROFILE;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 
-	if (Weapon[ usItem ].ubWeaponClass == MONSTERCLASS)
+	if (GCM->getWeapon( usItem )->ubWeaponClass == MONSTERCLASS)
 	{
-		pObj->ubGunShotsLeft = Weapon[ usItem ].ubMagSize;
+		pObj->ubGunShotsLeft = GCM->getWeapon( usItem )->ubMagSize;
 		pObj->ubGunAmmoType = AMMO_MONSTER;
 	}
 	else if ( EXPLOSIVE_GUN( usItem ) )
@@ -3475,9 +3478,9 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 	{
 		usAmmo = DefaultMagazine( usItem );
 		pObj->usGunAmmoItem = usAmmo;
-		pObj->ubGunAmmoType = Magazine[ Item[ usAmmo ].ubClassIndex].ubAmmoType;
+		pObj->ubGunAmmoType = GCM->getMagazine(Item[usAmmo].ubClassIndex)->ammoType->index;
 		pObj->bGunAmmoStatus = 100;
-		pObj->ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
+		pObj->ubGunShotsLeft = GCM->getMagazine(Item[usAmmo].ubClassIndex)->capacity;
 		/*
 		if (usItem == CAWS)
 		{
@@ -3493,7 +3496,7 @@ static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 {
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
-	pObj->ubShotsLeft[0] = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
+	pObj->ubShotsLeft[0] = GCM->getMagazine(Item[usItem].ubClassIndex)->capacity;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 }
 
@@ -4423,7 +4426,7 @@ bool ItemIsCool(OBJECTTYPE const& o)
 	INVTYPE const& item = Item[o.usItem];
 	if (item.usItemClass & IC_WEAPON)
 	{
-		if (Weapon[o.usItem].ubDeadliness >= 30) return true;
+		if (GCM->getWeapon(o.usItem)->ubDeadliness >= 30) return true;
 	}
 	else if (item.usItemClass & IC_ARMOUR)
 	{

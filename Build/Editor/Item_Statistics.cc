@@ -24,6 +24,9 @@
 #include "Pits.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 GUIButtonRef giBothCheckboxButton;
 GUIButtonRef giRealisticCheckboxButton;
@@ -683,9 +686,9 @@ static void ExtractAndUpdateGunGUI(void)
 	//Update the ammo
 	i = GetNumericStrictValueFromField( 2 );
 	if( i == -1 )
-		i = Random( 1 + Weapon[ gpItem->usItem ].ubMagSize );
+		i = Random( 1 + GCM->getWeapon( gpItem->usItem )->ubMagSize );
 	else
-		i = MIN( i, Weapon[ gpItem->usItem ].ubMagSize );
+		i = MIN( i, GCM->getWeapon( gpItem->usItem )->ubMagSize );
 	gpItem->ubGunShotsLeft = (UINT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	//Update the trap level

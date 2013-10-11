@@ -19,6 +19,9 @@
 #include "Lighting.h"
 #include "Soldier_Create.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 //
 // CJC's DG->JA2 conversion notes
@@ -1930,7 +1933,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 			if ( Item[ pEnemy->inv[HANDPOS].usItem ].usItemClass & IC_WEAPON )
 			{
 				// ADD the deadliness of the item(weapon) he's holding (0-50)
-				iThreatValue += Weapon[pEnemy->inv[HANDPOS].usItem].ubDeadliness;
+				iThreatValue += GCM->getWeapon(pEnemy->inv[HANDPOS].usItem)->ubDeadliness;
 			}
 		}
 

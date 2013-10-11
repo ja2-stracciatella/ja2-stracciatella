@@ -27,6 +27,10 @@
 #	include "Message.h"
 #endif
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 //Global dynamic array of all of the items in a loaded map.
 WORLDITEM *		gWorldItems = NULL;
@@ -314,7 +318,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 					{
 						// everything else can be the same? no.
 						INT8 const ammo     = o.ubGunShotsLeft;
-						INT8       new_ammo = Weapon[replacement].ubMagSize * ammo / Weapon[o.usItem].ubMagSize;
+						INT8       new_ammo = GCM->getWeapon(replacement)->ubMagSize * ammo / GCM->getWeapon(o.usItem)->ubMagSize;
 						if (new_ammo == 0 && ammo > 0) new_ammo = 1;
 						o.usItem         = replacement;
 						o.ubGunShotsLeft = new_ammo;
@@ -326,8 +330,8 @@ void LoadWorldItemsFromMap(HWFILE const f)
 					if (replacement != NOTHING)
 					{
 						// Go through status values and scale up/down
-						UINT8 const mag_size     = Magazine[item.ubClassIndex].ubMagSize;
-						UINT8 const new_mag_size = Magazine[Item[replacement].ubClassIndex].ubMagSize;
+						UINT8 const mag_size     = GCM->getMagazine(item.ubClassIndex)->capacity;
+						UINT8 const new_mag_size = GCM->getMagazine(Item[replacement].ubClassIndex)->capacity;
 						for (UINT8 i = 0; i != o.ubNumberOfObjects; ++i)
 						{
 							o.bStatus[i] = o.bStatus[i] * new_mag_size / mag_size;

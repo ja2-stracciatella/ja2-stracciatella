@@ -27,6 +27,10 @@
 #include "Interface_Items.h"
 #include "Debug.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno, const INT8 bDir, const INT8 bLevel)
 {
@@ -954,7 +958,7 @@ UINT8 BaseAPsToShootOrStab(INT8 const bAPs, INT8 const bAimSkill, OBJECTTYPE con
 	// Shots per turn rating is for max. aimSkill(100), drops down to 1/2 at = 0
 	// DIVIDE BY 4 AT THE END HERE BECAUSE THE SHOTS PER TURN IS NOW QUADRUPLED!
 	// NB need to define shots per turn for ALL Weapons then.
-	sBottom = ( ( 50 + (bAimSkill / 2) ) * Weapon[o.usItem ].ubShotsPer4Turns ) / 4;
+	sBottom = ( ( 50 + (bAimSkill / 2) ) * GCM->getWeapon(o.usItem )->ubShotsPer4Turns ) / 4;
 
 	INT8 const bAttachPos = FindAttachment(&o, SPRING_AND_BOLT_UPGRADE);
 	if ( bAttachPos != -1 )
@@ -1352,7 +1356,7 @@ INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
 		// always standard AP cost
 		return( AP_RELOAD_GUN );
 	}
-	if ( Weapon[pGun->usItem].ubMagSize == Magazine[Item[pAmmo->usItem].ubClassIndex].ubMagSize )
+	if ( GCM->getWeapon(pGun->usItem)->isSameMagCapacity(GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)))
 	{
 		// normal situation
 		return( AP_RELOAD_GUN );
@@ -1591,7 +1595,7 @@ INT16 GetAPsToReadyWeapon(const SOLDIERTYPE* const pSoldier, const UINT16 usAnim
 		// CHECK FOR RIFLE
 		if ( Item[ usItem ].usItemClass == IC_GUN )
 		{
-			return( Weapon[ usItem ].ubReadyTime );
+			return( GCM->getWeapon( usItem )->ubReadyTime );
 		}
 	}
 

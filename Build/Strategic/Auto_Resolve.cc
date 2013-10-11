@@ -66,11 +66,14 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "UILayout.h"
+#include "WeaponModels.h"
 
 #ifdef JA2BETAVERSION
 #	include "Cheats.h"
 #endif
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 //#define INVULNERABILITY
 
@@ -291,6 +294,14 @@ static void PlayAutoResolveSample(SoundID const usNum, UINT32 const ubVolume, UI
 	if( gpAR->fSound )
 	{
 		PlayJA2Sample(usNum, ubVolume, ubLoops, uiPan);
+	}
+}
+
+static void PlayAutoResolveSample(const std::string &sample, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
+{
+	if( gpAR->fSound )
+	{
+		PlayJA2Sample(sample.c_str(), ubVolume, ubLoops, uiPan);
 	}
 }
 
@@ -3222,20 +3233,20 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 			pAttacker->bWeaponSlot = (INT8)i;
 			if( gpAR->fUnlimitedAmmo )
 			{
-				PlayAutoResolveSample(Weapon[pItem->usItem].sSound, 50, 1, MIDDLEPAN);
+				PlayAutoResolveSample(GCM->getWeapon(pItem->usItem)->sound, 50, 1, MIDDLEPAN);
 				return TRUE;
 			}
 			if( !pItem->ubGunShotsLeft )
 			{
 				AutoReload( pSoldier );
-				if (pItem->ubGunShotsLeft && Weapon[pItem->usItem].sLocknLoadSound != NO_SOUND)
+				if (pItem->ubGunShotsLeft && GCM->getWeapon(pItem->usItem)->sLocknLoadSound != NO_SOUND)
 				{
-					PlayAutoResolveSample(Weapon[pItem->usItem].sLocknLoadSound, 50, 1, MIDDLEPAN);
+					PlayAutoResolveSample(GCM->getWeapon(pItem->usItem)->sLocknLoadSound, 50, 1, MIDDLEPAN);
 				}
 			}
 			if( pItem->ubGunShotsLeft )
 			{
-				PlayAutoResolveSample(Weapon[pItem->usItem].sSound, 50, 1, MIDDLEPAN);
+				PlayAutoResolveSample(GCM->getWeapon(pItem->usItem)->sound, 50, 1, MIDDLEPAN);
 				if( pAttacker->uiFlags & CELL_MERC )
 				{
 					gMercProfiles[ pAttacker->pSoldier->ubProfile ].usShotsFired++;
@@ -3383,7 +3394,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 	//Attacker hits
 	if( !fMelee )
 	{
-		ubImpact = Weapon[ pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ].usItem ].ubImpact;
+		ubImpact = GCM->getWeapon(pAttacker->pSoldier->inv[pAttacker->bWeaponSlot].usItem)->ubImpact;
 		iRandom = PreRandom( 100 );
 		if( iRandom < 15 )
 			ubLocation = AIM_SHOT_HEAD;

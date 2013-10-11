@@ -504,9 +504,6 @@
     <ClCompile Include="..\..\Build\Utils\Debug_Control.cc">
       <Filter>Source Files\Build\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Build\Utils\Encrypted_File.cc">
-      <Filter>Source Files\Build\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Build\Utils\Event_Manager.cc">
       <Filter>Source Files\Build\Utils</Filter>
     </ClCompile>
@@ -1191,6 +1188,30 @@
     <ClCompile Include="..\..\src\ModPackContentManager.cc">
       <Filter>Source Files\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\AmmoTypeModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CalibreModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\JsonUtility.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MagazineModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\WeaponModels.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MercProfile.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\content\Dialogs.cc">
+      <Filter>Source Files\src\content</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\content\ContentMercs.cc">
+      <Filter>Source Files\src\content</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -1677,9 +1698,6 @@
       <Filter>Source Files\Build\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Build\Utils\Debug_Control.h">
-      <Filter>Source Files\Build\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Build\Utils\Encrypted_File.h">
       <Filter>Source Files\Build\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Build\Utils\Event_Manager.h">
@@ -2371,6 +2389,33 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ModPackContentManager.h">
       <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\AmmoTypeModel.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CalibreModel.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\JsonObject.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\JsonUtility.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MagazineModel.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\WeaponModels.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MercProfile.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\content\Dialogs.h">
+      <Filter>Source Files\src\content</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\content\ContentMercs.h">
+      <Filter>Source Files\src\content</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@
 #include "JA2Types.h"
 #include "Weapons.h"
 
+struct CalibreModel;
 
 void DamageObj(OBJECTTYPE* pObj, INT8 bAmount);
 
@@ -13,7 +14,7 @@ extern UINT8 SlotToPocket[7];
 BOOLEAN WeaponInHand(const SOLDIERTYPE* pSoldier);
 
 INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
-INT8 FindAmmo(const SOLDIERTYPE*, AmmoKind, UINT8 ubMagSize, INT8 bExcludeSlot);
+INT8 FindAmmo(const SOLDIERTYPE*, const CalibreModel *, UINT8 ubMagSize, INT8 bExcludeSlot);
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
 INT8 FindObjClass(const SOLDIERTYPE* s, UINT32 usItemClass);
@@ -108,7 +109,7 @@ bool ItemHasAttachments(OBJECTTYPE const&);
 BOOLEAN ValidItemAttachment(const OBJECTTYPE* pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment);
 
 //Determines if it is possible to equip this weapon with this ammo.
-BOOLEAN ValidAmmoType( UINT16 usItem, UINT16 usAmmoType );
+bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType );
 
 // Determine if it is possible to add this attachment to the item
 bool ValidAttachment(UINT16 attachment, UINT16 item);

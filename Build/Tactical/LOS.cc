@@ -33,6 +33,10 @@
 #include "Smell.h"
 #include "Text.h"
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
 #define		STEPS_FOR_BULLET_MOVE_SMALL_TRAILS		5
@@ -3231,7 +3235,7 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 		}
 		else
 		{
-			pBullet->usClockTicksPerUpdate = Weapon[ pFirer->usAttackingWeapon ].ubBulletSpeed / 10;
+			pBullet->usClockTicksPerUpdate = GCM->getWeapon( pFirer->usAttackingWeapon )->ubBulletSpeed / 10;
 		}
 
 		HandleBulletSpecialFlags(pBullet);
@@ -3298,7 +3302,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 	ubShots = 1;
 
 	// Check if we have spit as a weapon!
-	if ( Weapon[ usHandItem ].ubCalibre == AMMOMONST )
+	if ( GCM->getWeapon( usHandItem )->calibre->monsterWeapon )
 	{
 		usBulletFlags |= BULLET_FLAG_CREATURE_SPIT;
 	}
@@ -3324,7 +3328,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		ubSpreadIndex = 2;
 	}
 
-	ubImpact = Weapon[ usHandItem ].ubImpact;
+	ubImpact = GCM->getWeapon( usHandItem )->ubImpact;
 //	if (!fFake)
 	{
 		if (fBuckshot)

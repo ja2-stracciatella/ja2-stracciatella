@@ -32,6 +32,11 @@
 #include "Items.h"
 #include "MemMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
+
 
 #define NUMBER_TRIGGERS			27
 #define PRESSURE_ACTION_ID	(NUMBER_TRIGGERS - 1)
@@ -778,7 +783,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 	INVTYPE const* const item = &Item[obj.usItem];
 	if (item->usItemClass == IC_AMMO)
 	{
-		UINT8 const mag_size = Magazine[item->ubClassIndex].ubMagSize;
+		UINT8 const mag_size = GCM->getMagazine(item->ubClassIndex)->capacity;
 		obj.ubShotsLeft[0] = Random(2) ? mag_size : Random(mag_size);
 	}
 	else
@@ -787,7 +792,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 	}
 	if (item->usItemClass & IC_GUN)
 	{
-		obj.ubGunShotsLeft = obj.usItem == ROCKET_LAUNCHER ? 1 : Random(Weapon[obj.usItem].ubMagSize);
+		obj.ubGunShotsLeft = obj.usItem == ROCKET_LAUNCHER ? 1 : Random(GCM->getWeapon(obj.usItem)->ubMagSize);
 	}
 
 	for (ITEM_POOL* ip = GetItemPool(sGridNo, 0); Assert(ip), ip; ip = ip->pNext)

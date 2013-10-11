@@ -18,6 +18,9 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
 
 #define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )
 #define			LIFE_BAR										FROMRGB( 200, 0, 0 )
@@ -211,7 +214,7 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 	}
 	else if (item.usItemClass & IC_AMMO)
 	{
-		value = 100 * o.ubShotsLeft[ubStatus] / Magazine[item.ubClassIndex].ubMagSize;
+		value = 100 * o.ubShotsLeft[ubStatus] / GCM->getMagazine(item.ubClassIndex)->capacity;
 		if (value > 100) value = 100;
 	}
 	else if (item.usItemClass & IC_KEY)

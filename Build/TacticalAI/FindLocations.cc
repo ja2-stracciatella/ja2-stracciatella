@@ -30,6 +30,9 @@
 #include "Debug.h"
 #include "PathAIDebug.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 #ifdef _DEBUG
 	INT16 gsCoverValue[WORLD_MAX];
@@ -1690,7 +1693,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 						if (item.usItemClass == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{ // Maybe this gun has ammo (adjust for whether it is better than ours!)
 							if (!IsGunUsable(o, s)) continue;
-							temp_value = o.ubGunShotsLeft * Weapon[o.usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
+							temp_value = o.ubGunShotsLeft * GCM->getWeapon(o.usItem)->ubDeadliness / GCM->getWeapon(usItem)->ubDeadliness;
 						}
 						else
 						{
@@ -1729,17 +1732,17 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 						if (!(item.usItemClass & IC_WEAPON))                 continue;
 						if (o.bStatus[0] < MINIMUM_REQUIRED_STATUS)          continue;
 						if (item.usItemClass & IC_GUN && !IsGunUsable(o, s)) continue;
-						WEAPONTYPE const& new_wpn = Weapon[o.usItem];
+						const WEAPONTYPE * new_wpn = GCM->getWeapon(o.usItem);
 						OBJECTTYPE const& in_hand = s.inv[HANDPOS];
 						if (Item[in_hand.usItem].usItemClass & IC_WEAPON)
 						{
-							WEAPONTYPE const& cur_wpn = Weapon[in_hand.usItem];
-							if (new_wpn.ubDeadliness <= cur_wpn.ubDeadliness) continue;
-							temp_value = 100 * new_wpn.ubDeadliness / cur_wpn.ubDeadliness;
+							const WEAPONTYPE * cur_wpn = GCM->getWeapon(in_hand.usItem);
+							if (new_wpn->ubDeadliness <= cur_wpn->ubDeadliness) continue;
+							temp_value = 100 * new_wpn->ubDeadliness / cur_wpn->ubDeadliness;
 						}
 						else
 						{
-							temp_value = 200 + new_wpn.ubDeadliness;
+							temp_value = 200 + new_wpn->ubDeadliness;
 						}
 						break;
 					}

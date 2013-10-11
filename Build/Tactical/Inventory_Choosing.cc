@@ -11,7 +11,10 @@
 #include "Map_Screen_Interface_Map.h"
 #include "Debug.h"
 
+#include "AmmoTypeModel.h"
+#include "ContentManager.h"
 #include "GameInstance.h"
+#include "MagazineModel.h"
 #include "policy/GamePolicy.h"
 
 #define ENEMYAMMODROPRATE       50      // % of time enemies drop ammunition
@@ -615,7 +618,7 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 
 		// check default ammo first...
 		usAmmoIndex = DefaultMagazine( usGunIndex );
-		switch( Magazine[ Item[ usAmmoIndex ].ubClassIndex ].ubAmmoType )
+		switch( GCM->getMagazine(Item[ usAmmoIndex ].ubClassIndex)->ammoType->index )
 		{
 			case AMMO_AP:
 			case AMMO_SUPER_AP:
