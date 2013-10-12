@@ -431,6 +431,7 @@
     <ClCompile Include="..\..\src\content\ContentMercs.cc" />
     <ClCompile Include="..\..\src\content\Dialogs.cc" />
     <ClCompile Include="..\..\src\content\npcs.cc" />
+    <ClCompile Include="..\..\src\DealerInventory.cc" />
     <ClCompile Include="..\..\src\DefaultContentManager.cc" />
     <ClCompile Include="..\..\src\internals\enums.cc" />
     <ClCompile Include="..\..\src\ItemModel.cc" />
@@ -440,6 +441,7 @@
     <ClCompile Include="..\..\src\MercProfile.cc" />
     <ClCompile Include="..\..\src\ModPackContentManager.cc" />
     <ClCompile Include="..\..\src\policy\DefaultGamePolicy.cc" />
+    <ClCompile Include="..\..\src\policy\DefaultIMPPolicy.cc" />
     <ClCompile Include="..\..\src\Soldier.cc" />
     <ClCompile Include="..\..\src\WeaponModels.cc" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp" />
@@ -845,6 +847,7 @@
     <ClInclude Include="..\..\src\content\ContentMercs.h" />
     <ClInclude Include="..\..\src\content\Dialogs.h" />
     <ClInclude Include="..\..\src\content\npcs.h" />
+    <ClInclude Include="..\..\src\DealerInventory.h" />
     <ClInclude Include="..\..\src\DefaultContentManager.h" />
     <ClInclude Include="..\..\src\GameInstance.h" />
     <ClInclude Include="..\..\src\internals\enums.h" />
@@ -855,7 +858,9 @@
     <ClInclude Include="..\..\src\MercProfile.h" />
     <ClInclude Include="..\..\src\ModPackContentManager.h" />
     <ClInclude Include="..\..\src\policy\DefaultGamePolicy.h" />
+    <ClInclude Include="..\..\src\policy\DefaultIMPPolicy.h" />
     <ClInclude Include="..\..\src\policy\GamePolicy.h" />
+    <ClInclude Include="..\..\src\policy\IMPPolicy.h" />
     <ClInclude Include="..\..\src\Soldier.h" />
     <ClInclude Include="..\..\src\StringEncodingTypes.h" />
     <ClInclude Include="..\..\src\WeaponModels.h" />

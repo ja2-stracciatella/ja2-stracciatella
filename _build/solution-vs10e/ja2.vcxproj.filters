@@ -1218,6 +1218,12 @@
     <ClCompile Include="..\..\src\ItemModel.cc">
       <Filter>Source Files\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\DealerInventory.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\policy\DefaultIMPPolicy.cc">
+      <Filter>Source Files\src\policy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -2428,6 +2434,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ItemModel.h">
       <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\DealerInventory.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policy\DefaultIMPPolicy.h">
+      <Filter>Source Files\src\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policy\IMPPolicy.h">
+      <Filter>Source Files\src\policy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
