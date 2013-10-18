@@ -150,7 +150,7 @@ static bool KeyExistsInInventory(SOLDIERTYPE const& s, UINT8 const key_id)
 {
 	CFOR_EACH_SOLDIER_INV_SLOT(i, s)
 	{
-		if (Item[i->usItem].usItemClass != IC_KEY)    continue;
+		if (GCM->getItem(i->usItem)->getItemClass() != IC_KEY)    continue;
 		if (i->ubKeyID != key_id && key_id != ANYKEY) continue;
 		return true;
 	}
@@ -652,7 +652,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 		// Not sure if this makes sense, but the explosive is small.
 		// Double the damage here as we are damaging a lock rather than a person
-		pDoor->bLockDamage += Explosive[Item[SHAPED_CHARGE].ubClassIndex].ubDamage * 2;
+		pDoor->bLockDamage += Explosive[GCM->getItem(SHAPED_CHARGE)->getClassIndex()].ubDamage * 2;
 		if (pDoor->bLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty )
 		{
 			// succeeded! door can never be locked again, so remove from door list...

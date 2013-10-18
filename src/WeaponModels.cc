@@ -1,6 +1,7 @@
 #include "WeaponModels.h"
 
 #include "Build/Tactical/Points.h"
+#include "Build/Tactical/Items.h"
 #include "Build/Utils/Sound_Control.h"
 
 #include "CalibreModel.h"
@@ -11,11 +12,11 @@
 #define TAG "Weapons"
 
 
-WeaponModel::WeaponModel(uint16_t index, const char* internalName, const char* internalType)
+WeaponModel::WeaponModel(uint32_t itemClass, uint8_t cursor, uint16_t itemIndex, const char* internalName, const char* internalType)
   :sound(NO_WEAPON_SOUND_STR),
-   burstSound(NO_WEAPON_SOUND_STR)
+   burstSound(NO_WEAPON_SOUND_STR),
+   ItemModel(itemIndex, itemClass, itemIndex, (ItemCursor)cursor)
 {
-  this->index = index;
   strncpy(this->internalName, internalName, sizeof(this->internalName));
   strncpy(this->internalType, internalType, sizeof(this->internalType));
   ubWeaponClass        = NOGUNCLASS;
@@ -36,68 +37,56 @@ WeaponModel::WeaponModel(uint16_t index, const char* internalName, const char* i
   sLocknLoadSound      = NO_WEAPON_SOUND;
 }
 
-WeaponModel::WeaponModel(uint16_t index,
-                         const char* internalName, const char* internalType,
-                         uint8_t  WeaponClass,
-                         const CalibreModel *calibre,
-                         uint8_t  ReadyTime,
-                         uint8_t  ShotsPer4Turns,
-                         uint8_t  ShotsPerBurst,
-                         uint8_t  BurstPenalty,
-                         uint8_t  BulletSpeed,
-                         uint8_t  Impact,
-                         uint8_t  Deadliness,
-                         uint8_t  MagSize,
-                         uint16_t Range,
-                         uint16_t ReloadDelay,
-                         uint8_t  AttackVolume,
-                         uint8_t  HitVolume,
-                         const char * Sound_,
-                         const char * BurstSound_,
-                         SoundID  ReloadSound,
-                         SoundID  LocknLoadSound)
-  :sound(Sound_),
-   burstSound(BurstSound_)
-{
-  this->index = index;
-  strncpy(this->internalName, internalName, sizeof(this->internalName));
-  strncpy(this->internalType, internalType, sizeof(this->internalType));
-  ubWeaponClass        = WeaponClass;
-  this->calibre        = calibre;
-  ubReadyTime          = ReadyTime;
-  ubShotsPer4Turns     = ShotsPer4Turns;
-  ubShotsPerBurst      = ShotsPerBurst;
-  ubBurstPenalty       = BurstPenalty;
-  ubBulletSpeed        = BulletSpeed;
-  ubImpact             = Impact;
-  ubDeadliness         = Deadliness;
-  ubMagSize            = MagSize;
-  usRange              = Range;
-  usReloadDelay        = ReloadDelay;
-  ubAttackVolume       = AttackVolume;
-  ubHitVolume          = HitVolume;
-  sReloadSound         = ReloadSound;
-  sLocknLoadSound      = LocknLoadSound;
-}
-
 void WeaponModel::serializeTo(JsonObject &obj) const
 {
-  obj.AddMember("index",                index);
+  if(usItemClass & IC_THROWN)
+  {
+    obj.AddMember("thrown", true);
+  }
+
+  obj.AddMember("itemIndex",            itemIndex);
   obj.AddMember("internalName",         internalName);
   obj.AddMember("internalType",         internalType);
+
+  obj.AddMember("ubGraphicType", getGraphicType());
+  obj.AddMember("ubGraphicNum", getGraphicNum());
+  obj.AddMember("ubWeight", getWeight());
+  obj.AddMember("ubPerPocket", getPerPocket());
+  obj.AddMember("usPrice", getPrice());
+  obj.AddMember("ubCoolness", getCoolness());
+  obj.AddMember("bReliability", getReliability());
+  obj.AddMember("bRepairEase", getRepairEase());
+
+  if(isInBigGunList())
+  {
+    obj.AddMember("standardReplacement", standardReplacement);
+  }
+}
+
+void WeaponModel::serializeAttachments(JsonObject &obj) const
+{
+  obj.addOptionalBool("attachment_Silencer",                 attachSilencer);
+  obj.addOptionalBool("attachment_SniperScope",              attachSniperScope);
+  obj.addOptionalBool("attachment_LaserScope",               attachLaserScope);
+  obj.addOptionalBool("attachment_Bipod",                    attachBipod);
+  obj.addOptionalBool("attachment_Duckbill",                 attachDuckbill);
+  obj.addOptionalBool("attachment_UnderGLauncher",           attachUnderGLauncher);
+  obj.addOptionalBool("attachment_SpringAndBoltUpgrade",     attachSpringAndBoltUpgrade);
+  obj.addOptionalBool("attachment_GunBarrelExtender",        attachGunBarrelExtender);
 }
 
 WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
                                       const std::map<std::string, const CalibreModel*> &calibreMap)
 {
-  int index = obj.GetInt("index");
+  WeaponModel *wep = NULL;
+  int itemIndex = obj.GetInt("itemIndex");
   const char *internalName = obj.GetString("internalName");
   const char *internalType = obj.GetString("internalType");
 
   if(!strcmp(internalType, "NOWEAPON"))
   {
     uint16_t Range           = obj.GetInt("usRange");
-    return new NoWeapon(index, internalName, Range);
+    wep = new NoWeapon(itemIndex, internalName, Range);
   }
   else if(!strcmp(internalType, "PISTOL"))
   {
@@ -118,7 +107,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new Pistol(index, internalName,
+    wep = new Pistol(itemIndex, internalName,
                       calibre,
                       BulletSpeed,
                       Impact,
@@ -150,7 +139,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new MPistol(index, internalName,
+    wep = new MPistol(itemIndex, internalName,
                        calibre,
                        BulletSpeed,
                        Impact,
@@ -185,7 +174,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new SMG(index, internalName,
+    wep = new SMG(itemIndex, internalName,
                    calibre,
                    BulletSpeed,
                    Impact,
@@ -220,7 +209,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new SniperRifle(index, internalName,
+    wep = new SniperRifle(itemIndex, internalName,
                            calibre,
                            BulletSpeed,
                            Impact,
@@ -252,7 +241,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new Rifle(index, internalName,
+    wep = new Rifle(itemIndex, internalName,
                      calibre,
                      BulletSpeed,
                      Impact,
@@ -284,7 +273,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new AssaultRifle(index, internalName,
+    wep = new AssaultRifle(itemIndex, internalName,
                             calibre,
                             BulletSpeed,
                             Impact,
@@ -319,7 +308,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new Shotgun(index, internalName,
+    wep = new Shotgun(itemIndex, internalName,
                        calibre,
                        BulletSpeed,
                        Impact,
@@ -354,7 +343,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new LMG(index, internalName,
+    wep = new LMG(itemIndex, internalName,
                    calibre,
                    BulletSpeed,
                    Impact,
@@ -389,7 +378,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new Blade(index, internalName,
+    wep = new Blade(itemIndex, internalName,
                      Impact,
                      ShotsPer4Turns,
                      Deadliness,
@@ -416,7 +405,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new ThrowingBlade(index, internalName,
+    wep = new ThrowingBlade(itemIndex, internalName,
                              Impact,
                              ShotsPer4Turns,
                              Deadliness,
@@ -443,7 +432,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new PunchWeapon(index, internalName,
+    wep = new PunchWeapon(itemIndex, internalName,
                            Impact,
                            ShotsPer4Turns,
                            Deadliness,
@@ -469,7 +458,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new Launcher(index, internalName,
+    wep = new Launcher(itemIndex, internalName,
                         BulletSpeed,
                         ReadyTime,
                         ShotsPer4Turns,
@@ -498,7 +487,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new LAW(index, internalName,
+    wep = new LAW(itemIndex, internalName,
                    BulletSpeed,
                    ReadyTime,
                    ShotsPer4Turns,
@@ -527,7 +516,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new Cannon(index, internalName,
+    wep = new Cannon(itemIndex, internalName,
                       BulletSpeed,
                       ReadyTime,
                       ShotsPer4Turns,
@@ -556,7 +545,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
     // const char * BurstSound  = obj.GetString("BurstSound");
     // SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
     // SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
-    return new MonsterSpit(index, internalName,
+    wep = new MonsterSpit(itemIndex, internalName,
                            calibre,
                            Impact,
                            ShotsPer4Turns,
@@ -568,14 +557,55 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
                            Sound);
   }
 
-  SLOGE(TAG, "Weapon type '%s' is not found", internalType);
-  return NULL;
+  if(!wep)
+  {
+    SLOGE(TAG, "Weapon type '%s' is not found", internalType);
+  }
+
+  wep->ubGraphicType    = obj.GetInt("ubGraphicType");
+  wep->ubGraphicNum     = obj.GetInt("ubGraphicNum");
+  wep->ubWeight         = obj.GetInt("ubWeight");
+  wep->ubPerPocket      = obj.GetInt("ubPerPocket");
+  wep->usPrice          = obj.GetInt("usPrice");
+  wep->ubCoolness       = obj.GetInt("ubCoolness");
+  wep->bReliability     = obj.GetInt("bReliability");
+  wep->bRepairEase      = obj.GetInt("bRepairEase");
+
+  wep->attachSilencer               = obj.getOptionalBool("attachment_Silencer");
+  wep->attachSniperScope            = obj.getOptionalBool("attachment_SniperScope");
+  wep->attachLaserScope             = obj.getOptionalBool("attachment_LaserScope");
+  wep->attachBipod                  = obj.getOptionalBool("attachment_Bipod");
+  wep->attachDuckbill               = obj.getOptionalBool("attachment_Duckbill");
+  wep->attachUnderGLauncher         = obj.getOptionalBool("attachment_UnderGLauncher");
+  wep->attachSpringAndBoltUpgrade   = obj.getOptionalBool("attachment_SpringAndBoltUpgrade");
+  wep->attachGunBarrelExtender      = obj.getOptionalBool("attachment_GunBarrelExtender");
+
+  if(obj.getOptionalBool("thrown"))
+  {
+    wep->usItemClass = IC_THROWN;
+  }
+
+  wep->fFlags |= wep->deserializeFlags(obj);
+
+  const char *replacement = obj.getOptionalString("standardReplacement");
+  if(replacement)
+  {
+    wep->standardReplacement = replacement;
+  }
+
+  return wep;
 }
 
 
 bool WeaponModel::matches(const CalibreModel *calibre) const
 {
   return this->calibre->index == calibre->index;
+}
+
+bool WeaponModel::matches(const MagazineModel *mag) const
+{
+  return (this->calibre->index == mag->calibre->index)
+    && (ubMagSize == mag->capacity);
 }
 
 bool WeaponModel::isSameMagCapacity(const MagazineModel *mag) const
@@ -593,12 +623,31 @@ bool WeaponModel::hasBurstSound() const
   return burstSound.compare(NO_WEAPON_SOUND_STR) != 0;
 }
 
+/** Check if the given attachment can be attached to the item. */
+bool WeaponModel::canBeAttached(uint16_t attachment) const
+{
+  return (attachSilencer && (attachment == SILENCER))
+    || (attachSniperScope && (attachment == SNIPERSCOPE))
+    || (attachLaserScope && (attachment == LASERSCOPE))
+    || (attachBipod && (attachment == BIPOD))
+    || (attachDuckbill && (attachment == DUCKBILL))
+    || (attachUnderGLauncher && (attachment == UNDER_GLAUNCHER))
+    || (attachSpringAndBoltUpgrade && (attachment == SPRING_AND_BOLT_UPGRADE))
+    || (attachGunBarrelExtender && (attachment == GUN_BARREL_EXTENDER));
+}
+
+/** Get standard replacement gun name. */
+const std::string & WeaponModel::getStandardReplacement() const
+{
+  return standardReplacement;
+}
+
 ////////////////////////////////////////////////////////////
 //
-//////////////////////////////////////////////////////////// 
+////////////////////////////////////////////////////////////
 
-NoWeapon::NoWeapon(uint16_t index, const char * internalName, uint16_t Range)
-  :WeaponModel(index, internalName, "NOWEAPON")
+NoWeapon::NoWeapon(uint16_t itemIndex, const char * internalName, uint16_t Range)
+  :WeaponModel(IC_NONE, PUNCHCURS, itemIndex, internalName, "NOWEAPON")
 {
 }
 
@@ -606,10 +655,12 @@ void NoWeapon::serializeTo(JsonObject &obj) const
 {
   WeaponModel::serializeTo(obj);
   obj.AddMember("usRange", usRange);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
 
-Pistol::Pistol(uint16_t index, const char * internalName,
+Pistol::Pistol(uint16_t itemIndex, const char * internalName,
                const CalibreModel *calibre,
                uint8_t BulletSpeed,
                uint8_t Impact,
@@ -621,7 +672,7 @@ Pistol::Pistol(uint16_t index, const char * internalName,
                uint8_t AttackVolume,
                uint8_t HitVolume,
                const char * Sound)
-  :WeaponModel(index, internalName, "PISTOL")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "PISTOL")
 {
   ubWeaponClass        = HANDGUNCLASS;
   this->calibre        = calibre;
@@ -654,9 +705,11 @@ void Pistol::serializeTo(JsonObject &obj) const
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-MPistol::MPistol(uint16_t index, const char * internalName,
+MPistol::MPistol(uint16_t itemIndex, const char * internalName,
                  const CalibreModel *calibre,
                  uint8_t BulletSpeed,
                  uint8_t Impact,
@@ -671,7 +724,7 @@ MPistol::MPistol(uint16_t index, const char * internalName,
                  uint8_t HitVolume,
                  const char * Sound,
                  const char * BurstSound)
-  :WeaponModel(index, internalName, "M_PISTOL")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "M_PISTOL")
 {
   ubWeaponClass        = HANDGUNCLASS;
   this->calibre        = calibre;
@@ -710,9 +763,11 @@ void MPistol::serializeTo(JsonObject &obj) const
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
   obj.AddMember("BurstSound",           burstSound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-SMG::SMG(uint16_t index, const char * internalName,
+SMG::SMG(uint16_t itemIndex, const char * internalName,
          const CalibreModel *calibre,
          uint8_t BulletSpeed,
          uint8_t Impact,
@@ -727,7 +782,7 @@ SMG::SMG(uint16_t index, const char * internalName,
          uint8_t HitVolume,
          const char * Sound,
          const char * BurstSound)
-  :WeaponModel(index, internalName, "SMG")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "SMG")
 {
   ubWeaponClass        = SMGCLASS;
   this->calibre        = calibre;
@@ -766,9 +821,11 @@ void SMG::serializeTo(JsonObject &obj) const
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
   obj.AddMember("BurstSound",           burstSound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-SniperRifle::SniperRifle(uint16_t index, const char * internalName,
+SniperRifle::SniperRifle(uint16_t itemIndex, const char * internalName,
                          const CalibreModel *calibre,
                          uint8_t BulletSpeed,
                          uint8_t Impact,
@@ -780,7 +837,7 @@ SniperRifle::SniperRifle(uint16_t index, const char * internalName,
                          uint8_t AttackVolume,
                          uint8_t HitVolume,
                          const char * Sound)
-  :WeaponModel(index, internalName, "SN_RIFLE")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "SN_RIFLE")
 {
   ubWeaponClass        = RIFLECLASS;
   this->calibre        = calibre;
@@ -813,9 +870,11 @@ void SniperRifle::serializeTo(JsonObject &obj) const
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-Rifle::Rifle(uint16_t index, const char * internalName,
+Rifle::Rifle(uint16_t itemIndex, const char * internalName,
              const CalibreModel *calibre,
              uint8_t BulletSpeed,
              uint8_t Impact,
@@ -827,7 +886,7 @@ Rifle::Rifle(uint16_t index, const char * internalName,
              uint8_t AttackVolume,
              uint8_t HitVolume,
              const char * Sound)
-  :WeaponModel(index, internalName, "RIFLE")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "RIFLE")
 {
   ubWeaponClass        = RIFLECLASS;
   this->calibre        = calibre;
@@ -860,9 +919,11 @@ void Rifle::serializeTo(JsonObject &obj) const
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-AssaultRifle::AssaultRifle(uint16_t index, const char * internalName,
+AssaultRifle::AssaultRifle(uint16_t itemIndex, const char * internalName,
                            const CalibreModel *calibre,
                            uint8_t BulletSpeed,
                            uint8_t Impact,
@@ -877,7 +938,7 @@ AssaultRifle::AssaultRifle(uint16_t index, const char * internalName,
                            uint8_t HitVolume,
                            const char * Sound,
                            const char * BurstSound)
-  :WeaponModel(index, internalName, "ASRIFLE")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "ASRIFLE")
 {
   ubWeaponClass        = RIFLECLASS;
   this->calibre        = calibre;
@@ -916,9 +977,11 @@ void AssaultRifle::serializeTo(JsonObject &obj) const
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
   obj.AddMember("BurstSound",           burstSound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-Shotgun::Shotgun(uint16_t index, const char * internalName,
+Shotgun::Shotgun(uint16_t itemIndex, const char * internalName,
                  const CalibreModel *calibre,
                  uint8_t BulletSpeed,
                  uint8_t Impact,
@@ -933,7 +996,7 @@ Shotgun::Shotgun(uint16_t index, const char * internalName,
                  uint8_t HitVolume,
                  const char * Sound,
                  const char * BurstSound)
-  :WeaponModel(index, internalName, "SHOTGUN")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "SHOTGUN")
 {
   ubWeaponClass        = SHOTGUNCLASS;
   this->calibre        = calibre;
@@ -972,9 +1035,11 @@ void Shotgun::serializeTo(JsonObject &obj) const
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
   obj.AddMember("BurstSound",           burstSound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-LMG::LMG(uint16_t index, const char * internalName,
+LMG::LMG(uint16_t itemIndex, const char * internalName,
          const CalibreModel *calibre,
          uint8_t BulletSpeed,
          uint8_t Impact,
@@ -989,7 +1054,7 @@ LMG::LMG(uint16_t index, const char * internalName,
          uint8_t HitVolume,
          const char * Sound,
          const char * BurstSound)
-  :WeaponModel(index, internalName, "LMG")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "LMG")
 {
   ubWeaponClass        = MGCLASS;
   this->calibre        = calibre;
@@ -1028,16 +1093,18 @@ void LMG::serializeTo(JsonObject &obj) const
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
   obj.AddMember("BurstSound",           burstSound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-Blade::Blade(uint16_t index, const char * internalName,
+Blade::Blade(uint16_t itemIndex, const char * internalName,
              uint8_t Impact,
              uint8_t ShotsPer4Turns,
              uint8_t Deadliness,
              uint16_t Range,
              uint8_t AttackVolume,
              const char * Sound)
-  :WeaponModel(index, internalName, "BLADE")
+  :WeaponModel(IC_BLADE, KNIFECURS, itemIndex, internalName, "BLADE")
 {
   ubWeaponClass        = KNIFECLASS;
   ubReadyTime          = AP_READY_KNIFE;
@@ -1059,16 +1126,18 @@ void Blade::serializeTo(JsonObject &obj) const
   obj.AddMember("usRange",              usRange);
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-ThrowingBlade::ThrowingBlade(uint16_t index, const char * internalName,
+ThrowingBlade::ThrowingBlade(uint16_t itemIndex, const char * internalName,
                              uint8_t Impact,
                              uint8_t ShotsPer4Turns,
                              uint8_t Deadliness,
                              uint16_t Range,
                              uint8_t AttackVolume,
                              const char * Sound)
-  :WeaponModel(index, internalName, "THROWINGBLADE")
+  :WeaponModel(IC_THROWING_KNIFE, TOSSCURS, itemIndex, internalName, "THROWINGBLADE")
 {
   ubWeaponClass        = KNIFECLASS;
   ubReadyTime          = AP_READY_KNIFE;
@@ -1090,15 +1159,17 @@ void ThrowingBlade::serializeTo(JsonObject &obj) const
   obj.AddMember("usRange",              usRange);
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-PunchWeapon::PunchWeapon(uint16_t index, const char * internalName,
+PunchWeapon::PunchWeapon(uint16_t itemIndex, const char * internalName,
                          uint8_t Impact,
                          uint8_t ShotsPer4Turns,
                          uint8_t Deadliness,
                          uint8_t AttackVolume,
                          const char * Sound)
-  :WeaponModel(index, internalName, "PUNCHWEAPON")
+  :WeaponModel(IC_PUNCH, PUNCHCURS, itemIndex, internalName, "PUNCHWEAPON")
 {
   ubWeaponClass        = KNIFECLASS;
   ubShotsPer4Turns     = ShotsPer4Turns;
@@ -1119,9 +1190,11 @@ void PunchWeapon::serializeTo(JsonObject &obj) const
   obj.AddMember("ubDeadliness",         ubDeadliness);
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-Launcher::Launcher(uint16_t index, const char * internalName,
+Launcher::Launcher(uint16_t itemIndex, const char * internalName,
                    uint8_t BulletSpeed,
                    uint8_t ReadyTime,
                    uint8_t ShotsPer4Turns,
@@ -1130,7 +1203,7 @@ Launcher::Launcher(uint16_t index, const char * internalName,
                    uint8_t AttackVolume,
                    uint8_t HitVolume,
                    const char * Sound)
-  :WeaponModel(index, internalName, "LAUNCHER")
+  :WeaponModel(IC_LAUNCHER, INVALIDCURS, itemIndex, internalName, "LAUNCHER")
 {
   ubWeaponClass        = RIFLECLASS;
   ubReadyTime          = ReadyTime;
@@ -1156,9 +1229,11 @@ void Launcher::serializeTo(JsonObject &obj) const
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-LAW::LAW(uint16_t index, const char * internalName,
+LAW::LAW(uint16_t itemIndex, const char * internalName,
          uint8_t BulletSpeed,
          uint8_t ReadyTime,
          uint8_t ShotsPer4Turns,
@@ -1167,7 +1242,7 @@ LAW::LAW(uint16_t index, const char * internalName,
          uint8_t AttackVolume,
          uint8_t HitVolume,
          const char * Sound)
-  :WeaponModel(index, internalName, "LAW")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "LAW")
 {
   ubWeaponClass        = RIFLECLASS;
   ubReadyTime          = ReadyTime;
@@ -1194,9 +1269,11 @@ void LAW::serializeTo(JsonObject &obj) const
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-Cannon::Cannon(uint16_t index, const char * internalName,
+Cannon::Cannon(uint16_t itemIndex, const char * internalName,
                uint8_t BulletSpeed,
                uint8_t ReadyTime,
                uint8_t ShotsPer4Turns,
@@ -1205,7 +1282,7 @@ Cannon::Cannon(uint16_t index, const char * internalName,
                uint8_t AttackVolume,
                uint8_t HitVolume,
                const char * Sound)
-  :WeaponModel(index, internalName, "CANNON")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "CANNON")
 {
   ubWeaponClass        = RIFLECLASS;
   ubReadyTime          = ReadyTime;
@@ -1232,9 +1309,11 @@ void Cannon::serializeTo(JsonObject &obj) const
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }
 
-MonsterSpit::MonsterSpit(uint16_t index, const char * internalName,
+MonsterSpit::MonsterSpit(uint16_t itemIndex, const char * internalName,
                          const CalibreModel *calibre,
                          uint8_t Impact,
                          uint8_t ShotsPer4Turns,
@@ -1244,7 +1323,7 @@ MonsterSpit::MonsterSpit(uint16_t index, const char * internalName,
                          uint8_t AttackVolume,
                          uint8_t HitVolume,
                          const char * Sound)
-  :WeaponModel(index, internalName, "MONSTSPIT")
+  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "MONSTSPIT")
 {
   ubWeaponClass        = MONSTERCLASS;
   this->calibre        = calibre;
@@ -1273,4 +1352,6 @@ void MonsterSpit::serializeTo(JsonObject &obj) const
   obj.AddMember("ubAttackVolume",       ubAttackVolume);
   obj.AddMember("ubHitVolume",          ubHitVolume);
   obj.AddMember("Sound",                sound);
+  serializeAttachments(obj);
+  serializeFlags(obj);
 }

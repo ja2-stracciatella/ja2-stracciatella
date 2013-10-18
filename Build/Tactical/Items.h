@@ -1,11 +1,15 @@
 #ifndef ITEMS_H
 #define ITEMS_H
 
+#include <vector>
+
 #include "Item_Types.h"
 #include "JA2Types.h"
 #include "Weapons.h"
 
 struct CalibreModel;
+struct ItemModel;
+struct WeaponModel;
 
 void DamageObj(OBJECTTYPE* pObj, INT8 bAmount);
 
@@ -138,9 +142,7 @@ INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUp
 BOOLEAN ApplyCamo(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN* pfGoodAPs);
 
 BOOLEAN ItemIsLegal( UINT16 usItemIndex );
-BOOLEAN ExtendedGunListGun( UINT16 usGun );
-UINT16 StandardGunListReplacement( UINT16 usGun );
-UINT16 FindReplacementMagazineIfNecessary(UINT16 old_gun_id, UINT16 old_ammo_id, UINT16 new_gun_id);
+UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 const old_ammo_id, const WeaponModel *new_gun);
 
 BOOLEAN DamageItemOnGround(OBJECTTYPE* pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, SOLDIERTYPE* owner);
 
@@ -169,9 +171,10 @@ void CleanUpStack(OBJECTTYPE* pObj, OBJECTTYPE* pCursorObj);
 void StackObjs(OBJECTTYPE* pSourceObj, OBJECTTYPE* pTargetObj, UINT8 ubNumberToCopy);
 bool ItemIsCool(OBJECTTYPE const&);
 
-UINT16 StandardGunListAmmoReplacement(UINT16 usAmmo);
-
 bool HasObjectImprint(OBJECTTYPE const&);
+
+/** Fill the vector with all hardcoded item models. */
+void createAllHardcodedItemModels(std::vector<const ItemModel*> &items);
 
 #ifdef JA2TESTVERSION
 void DumpItemsList(void);

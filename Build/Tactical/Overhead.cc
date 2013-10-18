@@ -97,6 +97,8 @@
 #include "Strategic_Status.h"
 #include "PreBattle_Interface.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 #include "Soldier.h"
 
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
@@ -1540,14 +1542,14 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						if (!(pSoldier->fHitByGasFlags & HIT_BY_TEARGAS) && bPosOfMask == NO_SLOT)
 						{
 							// check for gas mask
-							pExplosive = &Explosive[Item[TEARGAS_GRENADE].ubClassIndex];
+							pExplosive = &Explosive[GCM->getItem(TEARGAS_GRENADE)->getClassIndex()];
 						}
 					}
 					if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_MUSTARDGAS)
 					{
 						if (!(pSoldier->fHitByGasFlags & HIT_BY_MUSTARDGAS) && bPosOfMask == NO_SLOT)
 						{
-							pExplosive = &Explosive[Item[MUSTARD_GRENADE].ubClassIndex];
+							pExplosive = &Explosive[GCM->getItem(MUSTARD_GRENADE)->getClassIndex()];
 						}
 					}
 				}
@@ -1555,7 +1557,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					if (!(pSoldier->fHitByGasFlags & HIT_BY_CREATUREGAS)) // gas mask doesn't help vs creaturegas
 					{
-						pExplosive = &Explosive[Item[SMALL_CREATURE_GAS].ubClassIndex];
+						pExplosive = &Explosive[GCM->getItem(SMALL_CREATURE_GAS)->getClassIndex()];
 					}
 				}
 				if (pExplosive)
@@ -5363,7 +5365,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		if ( ( pSoldier->usAttackingWeapon != NOTHING && pSoldier->usAttackingWeapon != BRASS_KNUCKLES ) || !( pSoldier->uiStatusFlags & SOLDIER_BOXER ) )
 		{
 			// someone's cheating!
-			if ( (Item[ pSoldier->usAttackingWeapon ].usItemClass == IC_BLADE || Item[ pSoldier->usAttackingWeapon ].usItemClass == IC_PUNCH) && (pTarget->uiStatusFlags & SOLDIER_BOXER) )
+			if ( (GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_BLADE || GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_PUNCH) && (pTarget->uiStatusFlags & SOLDIER_BOXER) )
 			{
 				// knife or brass knuckles disqualify the player!
 				BoxingPlayerDisqualified( pSoldier, BAD_ATTACK );
@@ -5473,7 +5475,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 				// ATE: Depending on personality, fire back.....
 
 				// Do we have a gun in a\hand?
-				if ( Item[ pTarget->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN )
+				if ( GCM->getItem(pTarget->inv[ HANDPOS ].usItem)->getItemClass() == IC_GUN )
 				{
 					// Toggle burst capable...
 					if ( !pTarget->bDoBurst )
@@ -5527,7 +5529,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 	if (fCalledByAttacker)
 	{
-		if (pSoldier && Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN)
+		if (pSoldier && GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isGun())
 		{
 			if (pSoldier->bBulletsLeft > 0)
 			{

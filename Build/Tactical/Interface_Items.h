@@ -8,6 +8,8 @@
 
 #include "UILayout.h"
 
+struct ItemModel;
+
 
 // DEFINES FOR ITEM SLOT SIZES IN PIXELS
 #define		BIG_INV_SLOT_WIDTH				61
@@ -98,9 +100,9 @@ void EndItemPointer(void);
 void DrawItemFreeCursor(void);
 void DrawItemTileCursor(void);
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
-SGPVObject const& GetInterfaceGraphicForItem(INVTYPE const&);
-UINT16            GetTileGraphicForItem(INVTYPE const&);
-SGPVObject*       LoadTileGraphicForItem(INVTYPE const&);
+SGPVObject const& GetInterfaceGraphicForItem(const ItemModel *item);
+UINT16            GetTileGraphicForItem(const ItemModel *item);
+SGPVObject*       LoadTileGraphicForItem(const ItemModel *item);
 
 void GetHelpTextForItem(wchar_t* buf, size_t length, OBJECTTYPE const&);
 

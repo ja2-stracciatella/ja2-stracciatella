@@ -416,7 +416,7 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const u
 
 
 	// if it fits into a small pocket
-	if (Item[usItem].ubPerPocket != 0)
+	if (GCM->getItem(usItem)->getPerPocket() != 0)
 	{
 		// check small pockets first
 		for (uiPos = SMALLPOCK1POS; uiPos <= SMALLPOCK8POS; uiPos++)

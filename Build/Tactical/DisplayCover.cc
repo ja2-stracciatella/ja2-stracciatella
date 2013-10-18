@@ -423,7 +423,7 @@ void DisplayRangeToTarget(SOLDIERTYPE const* const s, INT16 const sTargetGridNo)
 	//if the target is out of the mercs gun range or knife
 	if (!InRange(s, sTargetGridNo))
 	{
-		UINT16 const item_class = Item[s->inv[HANDPOS].usItem].usItemClass;
+		UINT16 const item_class = GCM->getItem(s->inv[HANDPOS].usItem)->getItemClass();
 		if (item_class == IC_GUN ||
 				item_class == IC_THROWING_KNIFE)
 		{

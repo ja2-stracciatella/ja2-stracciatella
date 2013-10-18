@@ -392,11 +392,11 @@ static void UpdateOldVersionMap(void)
 				for ( i = 0; i < NUM_INV_SLOTS; i++ )
 				{
 					pItem = &curr->pDetailedPlacement->Inv[ i ];
-					if( Item[ pItem->usItem ].usItemClass & IC_AMMO )
+					if( GCM->getItem(pItem->usItem)->isAmmo() )
 					{
 						for( cnt = 0; cnt < pItem->ubNumberOfObjects; cnt++ )
 						{
-							pItem->ubShotsLeft[ cnt ] = Magazine[ Item[ pItem->usItem ].ubClassIndex ].ubMagSize;
+							pItem->ubShotsLeft[ cnt ] = Magazine[ GCM->getItem(pItem->usItem)->getClassIndex() ].ubMagSize;
 						}
 					}
 				}

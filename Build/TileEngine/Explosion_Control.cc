@@ -59,6 +59,9 @@
 #include "Items.h"
 #include "Soldier_Macros.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
 
@@ -120,7 +123,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const BOOLEAN fLocate, const INT8 bLevel)
 {
 	// Double check that we are using an explosive!
-	if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) )
+	if ( !( GCM->getItem(usItem)->isExplosive() ) )
 	{
 		return;
 	}
@@ -143,7 +146,7 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 	if (e == NULL) return;
 
 	e->owner         = owner;
-	e->ubTypeID      = Explosive[Item[usItem].ubClassIndex].ubAnimationID;
+	e->ubTypeID      = Explosive[GCM->getItem(usItem)->getClassIndex()].ubAnimationID;
 	e->usItem        = usItem;
 	e->sX            = sX;
 	e->sY            = sY;
@@ -1014,7 +1017,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 	// OK, here we:
 	// Get explosive data from table
-	EXPLOSIVETYPE const* const pExplosive = &Explosive[Item[usItem].ubClassIndex];
+	EXPLOSIVETYPE const* const pExplosive = &Explosive[GCM->getItem(usItem)->getClassIndex()];
 
 	uiRoll = PreRandom( 100 );
 
@@ -1061,7 +1064,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 		// damage structures
 		if ( uiDist <= __max( 1, (UINT32) (pExplosive->ubDamage / 30) ) )
 		{
-			if ( Item[ usItem ].usItemClass & IC_GRENADE )
+			if ( GCM->getItem(usItem)->isGrenade() )
 			{
 				sStructDmgAmt = sWoundAmt / 3;
 			}
@@ -1739,7 +1742,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 	if ( fSubsequent != BLOOD_SPREAD_EFFECT )
 	{
-		MakeNoise(NULL, sGridNo, bLevel, Explosive[Item[usItem].ubClassIndex].ubVolume, NOISE_EXPLOSION);
+		MakeNoise(NULL, sGridNo, bLevel, Explosive[GCM->getItem(usItem)->getClassIndex()].ubVolume, NOISE_EXPLOSION);
 	}
 }
 
@@ -2507,7 +2510,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 						uiTimeStamp += BOMB_QUEUE_DELAY;
 					}
 
-					if (o.usBombItem != NOTHING && Item[o.usBombItem].usItemClass & IC_EXPLOSV)
+					if (o.usBombItem != NOTHING && GCM->getItem(o.usBombItem)->isExplosive())
 					{
 						fFoundMine = TRUE;
 					}

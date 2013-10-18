@@ -548,7 +548,7 @@ static INT32 CalcThreateningEffectiveness(UINT8 const ubMerc)
 
 	UINT16 const item_idx = s->inv[HANDPOS].usItem;
 	INT32 deadliness =
-		Item[item_idx].usItemClass & IC_WEAPON ? GCM->getWeapon(item_idx)->ubDeadliness :
+		GCM->getItem(item_idx)->isWeapon() ? GCM->getWeapon(item_idx)->ubDeadliness :
 		0;
 
 	if (deadliness == 0) deadliness = -30; // penalize!
@@ -762,7 +762,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 	UINT8 const ubTalkDesire = CalcDesireToTalk(ubNPC, ubMerc, APPROACH_GIVINGITEM);
 
 	UINT16 item_to_consider = o->usItem;
-	if (Item[item_to_consider].usItemClass == IC_GUN && item_to_consider != ROCKET_LAUNCHER)
+	if (GCM->getItem(item_to_consider)->getItemClass() == IC_GUN && item_to_consider != ROCKET_LAUNCHER)
 	{
 		UINT8 const weapon_class = GCM->getWeapon(item_to_consider)->ubWeaponClass;
 		if (weapon_class == RIFLECLASS || weapon_class == MGCLASS)
@@ -873,11 +873,11 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 			case ANGEL:
 				if (item_to_consider == MONEY && q.sActionData == NPC_ACTION_ANGEL_GIVEN_CASH)
 				{
-					if (o->uiMoneyAmount < Item[LEATHER_JACKET_W_KEVLAR].usPrice)
+					if (o->uiMoneyAmount < GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice())
 					{ // refuse, bet too low - record 8
 						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 8);
 					}
-					else if (o->uiMoneyAmount > Item[LEATHER_JACKET_W_KEVLAR].usPrice)
+					else if (o->uiMoneyAmount > GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice())
 					{ // refuse, bet too high - record 9
 						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 9);
 					}

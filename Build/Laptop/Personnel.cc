@@ -1146,13 +1146,13 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		const INT16 PosY = STD_SCREEN_Y +  200 + 8 + item_count * 29;
 
 		UINT16  const  item_idx = o.usItem;
-		INVTYPE const& item     = Item[item_idx];
+		const ItemModel * item = GCM->getItem(item_idx);
 
 		SGPVObject  const& gfx   = GetInterfaceGraphicForItem(item);
-		ETRLEObject const& pTrav = gfx.SubregionProperties(item.ubGraphicNum);
+		ETRLEObject const& pTrav = gfx.SubregionProperties(item->getGraphicNum());
 		INT16       const  cen_x = PosX + abs(57 - pTrav.usWidth)  / 2 - pTrav.sOffsetX;
 		INT16       const  cen_y = PosY + abs(22 - pTrav.usHeight) / 2 - pTrav.sOffsetY;
-		BltVideoObjectOutline(FRAME_BUFFER, &gfx, item.ubGraphicNum, cen_x, cen_y, SGP_TRANSPARENT);
+		BltVideoObjectOutline(FRAME_BUFFER, &gfx, item->getGraphicNum(), cen_x, cen_y, SGP_TRANSPARENT);
 
 		SetFontDestBuffer(FRAME_BUFFER);
 
@@ -1161,11 +1161,11 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		MPrint(PosX + 65, PosY + 3, sString);
 
 		// condition
-		if (item.usItemClass & IC_AMMO)
+		if (item->isAmmo())
 		{
 			INT32 total_ammo = 0;
 			for (INT32 i = 0; i < o_count; ++i) total_ammo += o.ubShotsLeft[i];
-			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * GCM->getMagazine(item.ubClassIndex)->capacity);
+			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * item->asAmmo()->capacity);
 		}
 		else
 		{
@@ -1175,9 +1175,9 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		FindFontRightCoordinates(PosX + 65, PosY + 15, 171 - 75, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
 		MPrint(sX, sY, sString);
 
-		if (item.usItemClass & IC_GUN)
+		if (item->isGun())
 		{
-			wcslcpy(sString, GCM->getWeapon(item.ubClassIndex)->calibre->getName(), lengthof(sString));
+			wcslcpy(sString, item->asWeapon()->calibre->getName(), lengthof(sString));
 			ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
 			MPrint(PosX + 65, PosY + 15, sString);
 		}
@@ -2263,7 +2263,7 @@ static INT32 GetFundsOnMerc(SOLDIERTYPE const& s)
 	// run through grunts pockets and count all the spare change
 	CFOR_EACH_SOLDIER_INV_SLOT(i, s)
 	{
-		if (Item[i->usItem].usItemClass == IC_MONEY)
+		if (GCM->getItem(i->usItem)->getItemClass() == IC_MONEY)
 		{
 			iCurrentAmount += i->uiMoneyAmount;
 		}

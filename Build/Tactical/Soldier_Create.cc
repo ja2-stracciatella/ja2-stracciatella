@@ -43,6 +43,9 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 // THESE 3 DIFFICULTY FACTORS MUST ALWAYS ADD UP TO 100% EXACTLY!!!
 #define DIFF_FACTOR_PLAYER_PROGRESS			50
@@ -295,7 +298,7 @@ try
 		for (INT32 i = BIGPOCK1POS; i <= BIGPOCK4POS; ++i)
 		{
 			OBJECTTYPE& o = s->inv[i];
-			if (!(Item[o.usItem].usItemClass & IC_FACE)) continue;
+			if (!(GCM->getItem(o.usItem)->isFace())) continue;
 
 			if (!second_face_item)
 			{ /* Don't check for compatibility, automatically assume there are no head
@@ -1928,7 +1931,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 
 static BOOLEAN TryToAttach(SOLDIERTYPE* const s, OBJECTTYPE* const o)
 {
-	if (!(Item[o->usItem].fFlags & ITEM_ATTACHMENT)) return FALSE;
+	if (!(GCM->getItem(o->usItem)->getFlags() & ITEM_ATTACHMENT)) return FALSE;
 
 	// try to find the appropriate item to attach to!
 	for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
@@ -1956,7 +1959,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 			if (item != NOTHING)
 			{
 				UINT8 const count = p.bInvNumber[i];
-				if (Item[item].usItemClass == IC_KEY)
+				if (GCM->getItem(item)->getItemClass() == IC_KEY)
 				{
 					/* Since keys depend on 2 values, they pretty much have to be
 					 * hardcoded.  if a case isn't handled here it's better to not give

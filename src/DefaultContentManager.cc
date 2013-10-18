@@ -3,6 +3,8 @@
 #include <stdexcept>
 
 #include "Build/Directories.h"
+#include "Build/Strategic/Strategic_Status.h"
+#include "Build/Tactical/Items.h"
 #include "Build/Tactical/Weapons.h"
 
 // XXX: GameRes.h should be integrated to ContentManager
@@ -20,6 +22,7 @@
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
 #include "JsonObject.h"
+#include "JsonUtility.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
@@ -134,8 +137,8 @@ DefaultContentManager::DefaultContentManager(const std::string &configFolder,
                                              const std::string &gameResRootPath,
                                              const std::string &externalizedDataPath
   )
-  :m_weapons(MAX_WEAPONS),
-   m_magazines(MAX_AMMO)
+  :mNormalGunChoice(ARMY_GUN_LEVELS),
+   mExtendedGunChoice(ARMY_GUN_LEVELS)
 {
   /*
    * Searching actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
@@ -195,17 +198,14 @@ DefaultContentManager::~DefaultContentManager()
     delete m_libraryDB;
   }
 
-  BOOST_FOREACH(const WeaponModel* weapon, m_weapons)
+  BOOST_FOREACH(const ItemModel* item, m_items)
   {
-    delete weapon;
+    delete item;
   }
-  m_weapons.clear();
-
-  BOOST_FOREACH(const MagazineModel* magazine, m_magazines)
-  {
-    delete magazine;
-  }
+  m_items.clear();
+  m_magazineMap.clear();
   m_magazines.clear();
+  m_weaponMap.clear();
 
   BOOST_FOREACH(const CalibreModel* calibre, m_calibres)
   {
@@ -463,14 +463,39 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const c
 }
 
 /** Get weapons with the give index. */
-const WeaponModel* DefaultContentManager::getWeapon(uint16_t index)
+const WeaponModel* DefaultContentManager::getWeapon(uint16_t itemIndex)
 {
-  return m_weapons[index];
+  return getItem(itemIndex)->asWeapon();
 }
 
-const MagazineModel* DefaultContentManager::getMagazine(uint16_t index)
+const WeaponModel* DefaultContentManager::getWeaponByName(const std::string &internalName)
 {
-  return m_magazines[index];
+  if(m_weaponMap.find(internalName) == m_weaponMap.end())
+  {
+    SLOGE(TAG, "weapon '%s' is not found", internalName.c_str());
+    throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()));
+  }
+  return m_weaponMap[internalName];
+}
+
+const MagazineModel* DefaultContentManager::getMagazineByName(const std::string &internalName)
+{
+  if(m_magazineMap.find(internalName) == m_magazineMap.end())
+  {
+    SLOGE(TAG, "magazine '%s' is not found", internalName.c_str());
+    throw std::runtime_error(FormattedString("magazine '%s' is not found", internalName.c_str()));
+  }
+  return m_magazineMap[internalName];
+}
+
+const MagazineModel* DefaultContentManager::getMagazineByItemIndex(uint16_t itemIndex)
+{
+  return getItem(itemIndex)->asAmmo();
+}
+
+const std::vector<const MagazineModel*>& DefaultContentManager::getMagazines() const
+{
+  return m_magazines;
 }
 
 const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
@@ -502,20 +527,16 @@ bool DefaultContentManager::loadWeapons()
       {
         JsonObjectReader obj(a[i]);
         WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
-        SLOGD(TAG, "Loaded weapon %d %s", w->index, w->internalName);
+        SLOGD(TAG, "Loaded weapon %d %s", w->getItemIndex(), w->internalName);
 
-        if((w->index < 0) || (w->index > MAX_WEAPONS))
+        if((w->getItemIndex() < 0) || (w->getItemIndex() > MAX_WEAPONS))
         {
           SLOGE(TAG, "Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
           return false;
         }
 
-        // if(m_weapons.size() <= w->index)
-        // {
-        //   m_weapons.resize(w->index + 1);
-        // }
-
-        m_weapons[w->index] = w;
+        m_items[w->getItemIndex()] = w;
+        m_weaponMap.insert(std::make_pair(std::string(w->internalName), w));
       }
     }
   }
@@ -542,21 +563,17 @@ bool DefaultContentManager::loadMagazines()
       {
         JsonObjectReader obj(a[i]);
         MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
-        SLOGD(TAG, "Loaded magazine %d %s", mag->index, mag->internalName.c_str());
+        SLOGD(TAG, "Loaded magazine %d %s", mag->getItemIndex(), mag->internalName.c_str());
 
-        if(mag->index >= MAX_AMMO)
-        {
-          SLOGE(TAG, "Magazine index must be in the interval %d - %d", 0, MAX_AMMO - 1);
-          return false;
-        }
-
-        if((mag->itemIndex < FIRST_AMMO) || (mag->itemIndex > LAST_AMMO))
+        if((mag->getItemIndex() < FIRST_AMMO) || (mag->getItemIndex() > LAST_AMMO))
         {
           SLOGE(TAG, "Magazine item index must be in the interval %d - %d", FIRST_AMMO, LAST_AMMO);
           return false;
         }
 
-        m_magazines[mag->index] = mag;
+        m_magazines.push_back(mag);
+        m_items[mag->getItemIndex()] = mag;
+        m_magazineMap.insert(std::make_pair(std::string(mag->internalName), mag));
       }
     }
   }
@@ -642,11 +659,68 @@ bool DefaultContentManager::loadAmmoTypes()
   return true;
 }
 
+bool DefaultContentManager::readWeaponTable(
+  const char *fileName,
+  std::vector<std::vector<const WeaponModel*> > & weaponTable)
+{
+  AutoSGPFile f(openGameResForReading(fileName));
+  std::string jsonData = FileMan::fileReadText(f);
+
+  rapidjson::Document document;
+  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  {
+    SLOGE(TAG, "Failed to parse %s", fileName);
+    return false;
+  }
+
+  if(document.IsArray())
+  {
+    const rapidjson::Value& a = document;
+    for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+    {
+      std::vector<std::string> weaponNames;
+      if(JsonUtility::parseListStrings(a[i], weaponNames))
+      {
+        BOOST_FOREACH(const std::string &weapon, weaponNames)
+        {
+          weaponTable[i].push_back(getWeaponByName(weapon));
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+const std::vector<std::vector<const WeaponModel*> > & DefaultContentManager::getNormalGunChoice() const
+{
+  return mNormalGunChoice;
+}
+
+const std::vector<std::vector<const WeaponModel*> > & DefaultContentManager::getExtendedGunChoice() const
+{
+  return mExtendedGunChoice;
+}
+
+bool DefaultContentManager::loadArmyGunChoice()
+{
+  return readWeaponTable("army-gun-choice-normal.json", mNormalGunChoice)
+    && readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
+}
+
 /** Load the game data. */
 bool DefaultContentManager::loadGameData()
 {
+  createAllHardcodedItemModels(m_items);
+
   return loadCalibres()
     && loadAmmoTypes()
     && loadMagazines()
-    && loadWeapons();
+    && loadWeapons()
+    && loadArmyGunChoice();
+}
+
+const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex)
+{
+  return m_items[itemIndex];
 }

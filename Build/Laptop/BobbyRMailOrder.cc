@@ -838,7 +838,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIRST_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//weight
-			swprintf( sTemp, lengthof(sTemp), L"%3.1f", GetWeightBasedOnMetricOption( Item[ pBobbyRayPurchase[i].usItemIndex ].ubWeight ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased );
+			swprintf( sTemp, lengthof(sTemp), L"%3.1f", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased );
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_SECOND_COLUMN_X - 2, usPosY, BOBBYR_GRID_SECOND_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//Display Items Name
@@ -1632,7 +1632,7 @@ static UINT32 CalcCostFromWeightOfPackage(UINT8 ubTypeOfService)
 		if( BobbyRayPurchases[ i ].ubNumberPurchased )
 		{
 			//add the current weight to the total
-			uiTotalWeight += Item[ BobbyRayPurchases[ i ].usItemIndex ].ubWeight * BobbyRayPurchases[ i ].ubNumberPurchased;
+			uiTotalWeight += GCM->getItem(BobbyRayPurchases[ i ].usItemIndex)->getWeight() * BobbyRayPurchases[ i ].ubNumberPurchased;
 		}
 	}
 */
@@ -1910,7 +1910,7 @@ static UINT32 CalcPackageTotalWeight()
 	{
 		BobbyRayPurchaseStruct const& p = *i;
 		if (p.ubNumberPurchased == 0) continue;
-		mass += Item[p.usItemIndex].ubWeight * p.ubNumberPurchased;
+		mass += GCM->getItem(p.usItemIndex)->getWeight() * p.ubNumberPurchased;
 	}
 	return mass;
 }

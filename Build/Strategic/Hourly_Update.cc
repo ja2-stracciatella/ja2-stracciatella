@@ -20,6 +20,9 @@
 #include "Dialogue_Control.h"
 #include "ScreenIDs.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 void HandleMinuteUpdate()
 {
@@ -211,7 +214,7 @@ static void HourlyLarryUpdate(void)
 
 		// check to see if we're in a bar sector, if we are, we have access to alcohol
 		// which may be better than anything we've got...
-		if ( usTemptation < BAR_TEMPTATION && GetCurrentBalance() >= Item[ ALCOHOL ].usPrice )
+		if ( usTemptation < BAR_TEMPTATION && GetCurrentBalance() >= GCM->getItem(ALCOHOL)->getPrice() )
 		{
 			if ( pSoldier->bSectorZ == 0 &&
 						( ( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_D) ||
@@ -239,7 +242,7 @@ static void HourlyLarryUpdate(void)
 					if ( fBar )
 					{
 						// take $ from player's account
-						usCashAmount = Item[ ALCOHOL ].usPrice;
+						usCashAmount = GCM->getItem(ALCOHOL)->getPrice();
 						AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, pSoldier->ubProfile, GetWorldTotalMin() , -( usCashAmount ) );
 						// give Larry some booze and set slot etc values appropriately
 						bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, SMALLPOCK8POS );
@@ -270,7 +273,7 @@ static void HourlyLarryUpdate(void)
 				if ( fBar )
 				{
 					// take $ from player's account
-					usCashAmount = Item[ ALCOHOL ].usPrice;
+					usCashAmount = GCM->getItem(ALCOHOL)->getPrice();
 					AddTransactionToPlayersBook ( TRANSFER_FUNDS_TO_MERC, pSoldier->ubProfile, GetWorldTotalMin() , -( usCashAmount ) );
 					// give Larry some booze and set slot etc values appropriately
 					bBoozeSlot = FindEmptySlotWithin( pSoldier, HANDPOS, SMALLPOCK8POS );

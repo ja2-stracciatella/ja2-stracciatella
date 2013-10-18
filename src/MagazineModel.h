@@ -4,19 +4,23 @@
 #include <stdint.h>
 #include <string>
 
-struct AmmoTypeModel;
-struct CalibreModel;
+#include "ItemModel.h"
+
 class JsonObject;
 class JsonObjectReader;
+struct AmmoTypeModel;
+struct CalibreModel;
 
-struct MagazineModel
+struct MagazineModel : ItemModel
 {
-  MagazineModel(uint16_t index,
-                uint16_t itemIndex,
+  MagazineModel(uint16_t itemIndex,
                 const char* internalName,
                 const CalibreModel *calibre,
                 uint16_t capacity,
-                const AmmoTypeModel *ammoType);
+                const AmmoTypeModel *ammoType
+    );
+
+  virtual const MagazineModel* asAmmo() const   { return this; }
 
   virtual void serializeTo(JsonObject &obj) const;
 
@@ -24,9 +28,12 @@ struct MagazineModel
                                     const std::map<std::string, const CalibreModel*> &calibreMap,
                                     const std::map<std::string, const AmmoTypeModel*> &ammoTypeMap);
 
-  const uint16_t index;
-  const uint16_t itemIndex;
+
+  /** Get standard replacement ammo name. */
+  virtual const std::string & getStandardReplacement() const;
+
   const std::string internalName;
+  std::string standardReplacement;
   const CalibreModel *calibre;
   const uint16_t capacity;
   const AmmoTypeModel *ammoType;

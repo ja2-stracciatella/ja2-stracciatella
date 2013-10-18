@@ -207,17 +207,17 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 {
 	INT16 value;
 	// Adjust for ammo, other things
-	INVTYPE const& item = Item[o.usItem];
+	const ItemModel * item = GCM->getItem(o.usItem);
 	if (ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1)
 	{
 		value = o.bAttachStatus[ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1];
 	}
-	else if (item.usItemClass & IC_AMMO)
+	else if (item->isAmmo())
 	{
-		value = 100 * o.ubShotsLeft[ubStatus] / GCM->getMagazine(item.ubClassIndex)->capacity;
+		value = 100 * o.ubShotsLeft[ubStatus] / item->asAmmo()->capacity;
 		if (value > 100) value = 100;
 	}
-	else if (item.usItemClass & IC_KEY)
+	else if (item->isKey())
 	{
 		value = 100;
 	}

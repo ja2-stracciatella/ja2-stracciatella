@@ -675,13 +675,13 @@ static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, UINT16
 	}
 
 	// items normally not sold at shops are unsuitable
-	if ( Item[ usItemIndex ].fFlags & ITEM_NOT_BUYABLE )
+	if ( GCM->getItem(usItemIndex)->getFlags() & ITEM_NOT_BUYABLE )
 	{
 		return(ITEM_SUITABILITY_NONE);
 	}
 
 
-	ubItemCoolness = Item[ usItemIndex ].ubCoolness;
+	ubItemCoolness = GCM->getItem(usItemIndex)->getCoolness();
 
 	if (ubItemCoolness == 0)
 	{
@@ -796,7 +796,7 @@ UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, UINT16 const usIte
 	// Bobby Ray has an easier time getting resupplied than the local dealers do
 	BOOLEAN const fBobbyRay = bArmsDealer == ARMS_DEALER_BOBBYR;
 
-	ubItemCoolness = Item[ usItemIndex ].ubCoolness;
+	ubItemCoolness = GCM->getItem(usItemIndex)->getCoolness();
 
 	switch (GetCurrentSuitabilityForItem( bArmsDealer, usItemIndex ) )
 	{
@@ -1020,21 +1020,21 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 	if (category1 < category2) return -1;
 	if (category1 > category2) return  1;
 
-	INVTYPE const& item1 = Item[item_index1];
-	INVTYPE const& item2 = Item[item_index2];
+	const ItemModel * item1 = GCM->getItem(item_index1);
+	const ItemModel * item2 = GCM->getItem(item_index2);
 
 	// the same category
-	if (item1.usItemClass == IC_AMMO && item2.usItemClass == IC_AMMO)
+	if (item1->getItemClass() == IC_AMMO && item2->getItemClass() == IC_AMMO)
 	{
 		// AMMO is sorted by caliber first
-		uint16_t calibre1 = GCM->getMagazine(item1.ubClassIndex)->calibre->index;
-		uint16_t calibre2 = GCM->getMagazine(item2.ubClassIndex)->calibre->index;
+		uint16_t calibre1 = item1->asAmmo()->calibre->index;
+		uint16_t calibre2 = item2->asAmmo()->calibre->index;
 		if (calibre1 > calibre2) return -1;
 		if (calibre1 < calibre2) return  1;
 
 		// the same caliber - compare size of magazine
-		UINT8 const mag_size1 = GCM->getMagazine(item1.ubClassIndex)->capacity;
-		UINT8 const mag_size2 = GCM->getMagazine(item2.ubClassIndex)->capacity;
+		UINT8 const mag_size1 = item1->asAmmo()->capacity;
+		UINT8 const mag_size2 = item2->asAmmo()->capacity;
 		if (mag_size1 > mag_size2) return -1;
 		if (mag_size1 < mag_size2) return  1;
 	}
@@ -1042,16 +1042,16 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 	{
 		// items other than ammo are compared on coolness first
 		// higher coolness first
-		UINT8 const coolness1 = item1.ubCoolness;
-		UINT8 const coolness2 = item2.ubCoolness;
+		UINT8 const coolness1 = item1->getCoolness();
+		UINT8 const coolness2 = item2->getCoolness();
 		if (coolness1 > coolness2) return -1;
 		if (coolness1 < coolness2) return  1;
 	}
 
 	// the same coolness/caliber - compare base prices then
 	// higher price first
-	UINT16 const price1 = item1.usPrice;
-	UINT16 const price2 = item2.usPrice;
+	UINT16 const price1 = item1->getPrice();
+	UINT16 const price2 = item2->getPrice();
 	if (price1 > price2) return -1;
 	if (price1 < price2) return  1;
 
@@ -1074,7 +1074,7 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 
 static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 {
-	UINT32 const item_class = Item[usItemIndex].usItemClass;
+	UINT32 const item_class = GCM->getItem(usItemIndex)->getItemClass();
 
 	// If it's not a weapon, set no weapon class, as this won't be needed
 	UINT8 const weapon_class = usItemIndex < MAX_WEAPONS ?
@@ -1101,7 +1101,7 @@ static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
-	if ( !( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) )
+	if ( !( GCM->getItem(usItemIndex)->getFlags() & ITEM_DAMAGEABLE ) )
 		return(FALSE);
 
 	// certain items, although they're damagable, shouldn't be sold in a used condition

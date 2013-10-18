@@ -812,7 +812,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 {
 	UINT16            ap_cost = 0;
 	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
-	switch (Item[in_hand.usItem].usItemClass)
+	switch (GCM->getItem(in_hand.usItem)->getItemClass())
 	{
 		case IC_GUN:
 		case IC_LAUNCHER:
@@ -914,7 +914,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add
 		if (attach_slot != NO_SLOT) item = UNDER_GLAUNCHER;
 	}
 
-	switch (Item[item].usItemClass)
+	switch (GCM->getItem(item)->getItemClass())
 	{
 		case IC_BLADE:
 		case IC_GUN:
@@ -931,7 +931,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add
 
 static INT8 CalcAimSkill(SOLDIERTYPE const& s, UINT16 const weapon)
 {
-	switch (Item[weapon].usItemClass)
+	switch (GCM->getItem(weapon)->getItemClass())
 	{
 		case IC_GUN:
 		case IC_LAUNCHER:
@@ -997,7 +997,7 @@ void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo gr
 
 	// Do we need to ready weapon?
 	*charge_raise =
-		Item[s->inv[HANDPOS].usItem].usItemClass != IC_THROWING_KNIFE &&
+		GCM->getItem(s->inv[HANDPOS].usItem)->getItemClass() != IC_THROWING_KNIFE &&
 		!(gAnimControl[s->usAnimState].uiFlags & (ANIM_FIREREADY | ANIM_FIRE));
 }
 
@@ -1015,7 +1015,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 
 	UINT8	ap_cost = AP_MIN_AIM_ATTACK;
 
-	if (Item[item].usItemClass == IC_THROWING_KNIFE ||
+	if (GCM->getItem(item)->getItemClass() == IC_THROWING_KNIFE ||
 			item                   == ROCKET_LAUNCHER)
 	{ // Do we need to stand up?
 		ap_cost += GetAPsToChangeStance(&s, ANIM_STAND);
@@ -1035,7 +1035,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 
 	if (adding_turning_cost)
 	{
-		if (Item[item].usItemClass == IC_THROWING_KNIFE)
+		if (GCM->getItem(item)->getItemClass() == IC_THROWING_KNIFE)
 		{
 			ap_cost += AP_LOOK_STANDING;
 		}
@@ -1250,13 +1250,13 @@ BOOLEAN EnoughAmmo(SOLDIERTYPE* const s, BOOLEAN const fDisplay, INT8 const inv_
 	// hack... they turn empty afterwards anyways
 	if (item_idx == ROCKET_LAUNCHER) return TRUE;
 
-	INVTYPE const& item = Item[item_idx];
-	if (item.usItemClass == IC_LAUNCHER || item_idx == TANK_CANNON)
+	const ItemModel * item = GCM->getItem(item_idx);
+	if (item->getItemClass() == IC_LAUNCHER || item_idx == TANK_CANNON)
 	{
 		if (FindAttachmentByClass(&o, IC_GRENADE) != ITEM_NOT_FOUND) return TRUE;
 		if (FindAttachmentByClass(&o, IC_BOMB)    != ITEM_NOT_FOUND) return TRUE;
 	}
-	else if (item.usItemClass == IC_GUN)
+	else if (item->getItemClass() == IC_GUN)
 	{
 		if (o.ubGunShotsLeft != 0) return TRUE;
 	}
@@ -1287,7 +1287,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 		if ( pObj->usItem == TANK_CANNON )
 		{
 		}
-		else if ( Item[ pObj->usItem ].usItemClass == IC_GUN && pObj->usItem != TANK_CANNON )
+		else if ( GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN && pObj->usItem != TANK_CANNON )
 		{
 			if ( pSoldier->usAttackingWeapon == pObj->usItem)
 			{
@@ -1302,7 +1302,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 				// firing an attachment?
 			}
 		}
-		else if ( Item[ pObj->usItem ].usItemClass == IC_LAUNCHER || pObj->usItem == TANK_CANNON )
+		else if ( GCM->getItem(pObj->usItem)->getItemClass() == IC_LAUNCHER || pObj->usItem == TANK_CANNON )
 		{
 			INT8 bAttachPos;
 
@@ -1351,12 +1351,12 @@ UINT16 GetAPsToGiveItem(SOLDIERTYPE* const s, UINT16 const usMapPos)
 
 INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
 {
-	if (Item[ pGun->usItem ].usItemClass == IC_LAUNCHER)
+	if (GCM->getItem(pGun->usItem)->getItemClass() == IC_LAUNCHER)
 	{
 		// always standard AP cost
 		return( AP_RELOAD_GUN );
 	}
-	if ( GCM->getWeapon(pGun->usItem)->isSameMagCapacity(GCM->getMagazine(Item[pAmmo->usItem].ubClassIndex)))
+	if ( GCM->getWeapon(pGun->usItem)->isSameMagCapacity(GCM->getItem(pAmmo->usItem)->asAmmo()))
 	{
 		// normal situation
 		return( AP_RELOAD_GUN );
@@ -1378,7 +1378,7 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	CHECKF( pSoldier );
 	pObj = &(pSoldier->inv[HANDPOS]);
 
-	if (Item[pObj->usItem].usItemClass == IC_GUN || Item[pObj->usItem].usItemClass == IC_LAUNCHER)
+	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN || GCM->getItem(pObj->usItem)->getItemClass() == IC_LAUNCHER)
 	{
 		bSlot = FindAmmoToReload( pSoldier, HANDPOS, NO_SLOT );
 		if (bSlot != NO_SLOT)
@@ -1593,7 +1593,7 @@ INT16 GetAPsToReadyWeapon(const SOLDIERTYPE* const pSoldier, const UINT16 usAnim
 	else
 	{
 		// CHECK FOR RIFLE
-		if ( Item[ usItem ].usItemClass == IC_GUN )
+		if ( GCM->getItem(usItem)->getItemClass() == IC_GUN )
 		{
 			return( GCM->getWeapon( usItem )->ubReadyTime );
 		}
@@ -1667,7 +1667,7 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 
 	// Make sure the guy's actually got a throwable item in his hand
 	UINT16 const in_hand = s.inv[HANDPOS].usItem;
-	if (!Item[in_hand].usItemClass & IC_GRENADE)
+	if (!GCM->getItem(in_hand)->isGrenade())
 	{
 #ifdef JA2TESTVERSION
 		ScreenMsg(MSG_FONT_YELLOW, MSG_DEBUG, L"MinAPsToThrow - Called when in-hand item is %s", in_hand);

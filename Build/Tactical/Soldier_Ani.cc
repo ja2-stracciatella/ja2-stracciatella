@@ -1362,7 +1362,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->inv[ HANDPOS ].usItem != NOTHING )
 					{
 						// CHECK IF GUN
-						if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN )
+						if ( GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->getItemClass() == IC_GUN )
 						{
 							if ( GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubWeaponClass != HANDGUNCLASS )
 							{
@@ -1404,9 +1404,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 								if ( usItem != NOTHING )
 								{
-									if ( Item[ usItem ].usItemClass == IC_GUN )
+									if ( GCM->getItem(usItem)->getItemClass() == IC_GUN )
 									{
-										if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+										if ( (GCM->getItem(usItem)->isTwoHanded()) )
 										{
 											// Set to rifle
 											ubRandomHandIndex = RANDOM_ANIM_RIFLEINHAND;
@@ -2550,7 +2550,7 @@ static BOOLEAN ShouldMercSayHappyWithGunQuote(SOLDIERTYPE* pSoldier)
 		}
 
     // is it a gun?
-    if ( Item[ pSoldier->usAttackingWeapon ].usItemClass & IC_GUN )
+    if ( GCM->getItem(pSoldier->usAttackingWeapon)->isGun())
     {
   		// Is our weapon powerfull enough?
 		  if ( GCM->getWeapon( pSoldier->usAttackingWeapon )->ubDeadliness > MIN_DEADLINESS_FOR_LIKE_GUN_QUOTE )
@@ -3231,7 +3231,7 @@ static BOOLEAN CheckForImproperFireGunEnd(SOLDIERTYPE* pSoldier)
 	if ( pSoldier->inv[ HANDPOS ].bGunAmmoStatus < 0 || pSoldier->inv[ HANDPOS ].ubGunShotsLeft == 0 )
 	{
 		// If we have 2 pistols, donot go back!
-		if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass != IC_GUN )
+		if ( GCM->getItem(pSoldier->inv[ SECONDHANDPOS ].usItem)->getItemClass() != IC_GUN )
 		{
 			// OK, put gun down....
 			InternalSoldierReadyWeapon( pSoldier, pSoldier->bDirection, TRUE );

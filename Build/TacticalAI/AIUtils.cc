@@ -83,7 +83,7 @@ INT8 OKToAttack(const SOLDIERTYPE * pSoldier, int target)
 
 	// JUST PUT THIS IN ON JULY 13 TO TRY AND FIX OUT-OF-AMMO SITUATIONS
 
-	if ( Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN)
+	if ( GCM->getItem(pSoldier->inv[HANDPOS].usItem)->getItemClass() == IC_GUN)
 	{
 		if ( pSoldier->inv[HANDPOS].usItem == TANK_CANNON )
 		{
@@ -98,7 +98,7 @@ INT8 OKToAttack(const SOLDIERTYPE * pSoldier, int target)
 			return(NOSHOOT_NOAMMO);
 		}
 	}
-	else if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_LAUNCHER)
+	else if (GCM->getItem(pSoldier->inv[HANDPOS].usItem)->getItemClass() == IC_LAUNCHER)
 	{
 		if ( FindLaunchable( pSoldier, pSoldier->inv[HANDPOS].usItem ) == NO_SLOT )
 		{
@@ -1930,7 +1930,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 			// ADD 1/5 of man's marksmanship skill (0-20)
 			iThreatValue += (pEnemy->bMarksmanship / 5);
 
-			if ( Item[ pEnemy->inv[HANDPOS].usItem ].usItemClass & IC_WEAPON )
+			if ( GCM->getItem(pEnemy->inv[HANDPOS].usItem)->isWeapon() )
 			{
 				// ADD the deadliness of the item(weapon) he's holding (0-50)
 				iThreatValue += GCM->getWeapon(pEnemy->inv[HANDPOS].usItem)->ubDeadliness;
@@ -2093,7 +2093,7 @@ bool FindBetterSpotForItem(SOLDIERTYPE& s, INT8 const slot)
 	if (item == NOTHING) return true; // That's just fine
 
 	INT8 new_slot;
-	if (Item[item].ubPerPocket != 0)
+	if (GCM->getItem(item)->getPerPocket() != 0)
 	{ // Try a small pocket first
 		new_slot = FindEmptySlotWithin(&s, SMALLPOCK1POS, SMALLPOCK8POS);
 		if (new_slot == NO_SLOT) goto try_big_pocket;

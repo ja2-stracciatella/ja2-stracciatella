@@ -439,7 +439,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 		if ( usItem != NOTHING )
 		{
 			// Check if it's a gun
-			if ( Item[ usItem ].usItemClass & IC_GUN )
+			if ( GCM->getItem(usItem)->isGun())
 			{
 				if ( GCM->getWeapon( usItem )->ubDeadliness > bBestGun )
 				{
@@ -448,11 +448,11 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 			}
 
 			// If it's armour
-			if ( Item[ usItem ].usItemClass & IC_ARMOUR )
+			if ( GCM->getItem(usItem)->isArmour() )
 			{
-				if ( Armour[ Item[ usItem ].ubClassIndex ].ubProtection > bBestArmour )
+				if ( Armour[ GCM->getItem(usItem)->getClassIndex() ].ubProtection > bBestArmour )
 				{
-					bBestArmour = Armour[ Item[ usItem ].ubClassIndex ].ubProtection;
+					bBestArmour = Armour[ GCM->getItem(usItem)->getClassIndex() ].ubProtection;
 				}
 			}
 		}

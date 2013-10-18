@@ -354,7 +354,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 
 	SetupGameTypeFlags();
 
-	if( Item[ gpItem->usItem ].usItemClass == IC_MONEY )
+	if( GCM->getItem(gpItem->usItem)->getItemClass() == IC_MONEY )
 	{
 		gbEditingMode = EDITING_MONEY;
 		SetupMoneyGUI();
@@ -377,7 +377,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 		SetupOwnershipGUI();
 		HideEditorButton( ITEMSTATS_HIDDEN_BTN );
 	}
-	else switch( Item[ gpItem->usItem ].usItemClass )
+	else switch( GCM->getItem(gpItem->usItem)->getItemClass() )
 	{
 		case IC_GUN:
 			gbEditingMode = EDITING_GUNS;
@@ -733,9 +733,9 @@ static void ExtractAndUpdateAmmoGUI(void)
 	//Update the number of clips
 	i = GetNumericStrictValueFromField( 1 );
 	if( i == -1 )
-		i = 1 + Random( Item[ gpItem->usItem ].ubPerPocket );
+		i = 1 + Random( GCM->getItem(gpItem->usItem )->getPerPocket() );
 	else
-		i = MAX( 1, MIN( i, Item[ gpItem->usItem ].ubPerPocket ) );
+		i = MAX( 1, MIN( i, GCM->getItem(gpItem->usItem )->getPerPocket() ) );
 	gpItem->ubNumberOfObjects = (UINT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	CreateItems( gpItem->usItem, 100, gpItem->ubNumberOfObjects, gpItem );
@@ -886,7 +886,7 @@ static void SetupExplosivesGUI(void)
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	if( Item[ gpItem->usItem ].ubPerPocket == 1 )
+	if( GCM->getItem(gpItem->usItem )->getPerPocket() == 1 )
 	{
 		DisableTextField( 2 );
 	}
@@ -920,13 +920,13 @@ static void ExtractAndUpdateExplosivesGUI(void)
 	gpItem->bStatus[0] = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the quantity
-	if( Item[ gpItem->usItem ].ubPerPocket > 1 )
+	if( GCM->getItem(gpItem->usItem )->getPerPocket() > 1 )
 	{
 		i = GetNumericStrictValueFromField( 2 );
 		if( i == -1 )
-			i = 1 + Random( Item[ gpItem->usItem ].ubPerPocket );
+			i = 1 + Random( GCM->getItem(gpItem->usItem )->getPerPocket() );
 		else
-			i = MAX( 1, MIN( i, Item[ gpItem->usItem ].ubPerPocket ) );
+			i = MAX( 1, MIN( i, GCM->getItem(gpItem->usItem )->getPerPocket() ) );
 		gpItem->ubNumberOfObjects = (UINT8)i;
 		SetInputFieldStringWithNumericStrictValue( 2, i );
 		CreateItems( gpItem->usItem, gpItem->bStatus[0], gpItem->ubNumberOfObjects, gpItem );

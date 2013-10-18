@@ -496,6 +496,7 @@ SRCS += sgp/Video.cc
 SRCS += src/AmmoTypeModel.cc
 SRCS += src/CalibreModel.cc
 SRCS += src/DefaultContentManager.cc
+SRCS += src/ItemModel.cc
 SRCS += src/JsonUtility.cc
 SRCS += src/JsonUtility_unittests.cc
 SRCS += src/MagazineModel.cc
@@ -503,8 +504,8 @@ SRCS += src/MercProfile.cc
 SRCS += src/ModPackContentManager.cc
 SRCS += src/Soldier.cc
 SRCS += src/WeaponModels.cc
-SRCS += src/content/Dialogs.cc
 SRCS += src/content/ContentMercs.cc
+SRCS += src/content/Dialogs.cc
 SRCS += src/content/npcs.cc
 SRCS += src/internals/enums.cc
 SRCS += src/policy/DefaultGamePolicy.cc
@@ -668,6 +669,9 @@ build-release-on-mac:
 	cp Changelog $(MAC_RELEASE)/Changelog.txt
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
+
+build-on-mac:
+	make "CFLAGS_SDL=$(MACOS_STATIC_CFLAGS_SDL)" "LDFLAGS_SDL=$(MACOS_STATIC_LDFLAGS_SDL)"
 
 build-on-win:
 	PATH=/cygdrive/c/MinGW/bin:$$PATH make all USE_MINGW=1 MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32

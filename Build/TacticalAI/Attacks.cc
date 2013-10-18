@@ -94,7 +94,7 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 		return;
 	}
 	// if there's only one in payload pocket (only/last grenade, or any shell)
-	if ((Item[ pSoldier->inv[bPayloadPocket].usItem ].ubPerPocket == 1) || (pSoldier->inv[bPayloadPocket].ubNumberOfObjects == 1))
+	if ((GCM->getItem(pSoldier->inv[bPayloadPocket].usItem )->getPerPocket() == 1) || (pSoldier->inv[bPayloadPocket].ubNumberOfObjects == 1))
 	{
 		DeleteObj(&(pSoldier->inv[bPayloadPocket]));
 	}
@@ -275,7 +275,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
      continue;          // next opponent
 
 	// really limit knife throwing so it doesn't look wrong
-	 if ( Item[ pSoldier->usAttackingWeapon ].usItemClass == IC_THROWING_KNIFE && (ubChanceToReallyHit < 30 || ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > CalcMaxTossRange( pSoldier, THROWING_KNIFE, FALSE ) / 2 ) ) )
+	 if ( GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_THROWING_KNIFE && (ubChanceToReallyHit < 30 || ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > CalcMaxTossRange( pSoldier, THROWING_KNIFE, FALSE ) / 2 ) ) )
 		continue; // don't bother... next opponent
 
    // calculate this opponent's threat value (factor in my cover from him)
@@ -454,7 +454,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		{
 			return;	// no shells, can't fire the MORTAR
 		}
-		ubSafetyMargin = Explosive[ Item[ MORTAR_SHELL ].ubClassIndex ].ubRadius;
+		ubSafetyMargin = Explosive[ GCM->getItem(MORTAR_SHELL)->getClassIndex() ].ubRadius;
   }
 	// if he's got a GL in his hand, make sure he has some type of GRENADE avail.
 	else if (usInHand == GLAUNCHER)
@@ -465,7 +465,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		{
 			return;	// no grenades, can't fire the GLAUNCHER
 		}
-		ubSafetyMargin = Explosive[ Item[ pSoldier->inv[ bPayloadPocket ].usItem ].ubClassIndex ].ubRadius;
+		ubSafetyMargin = Explosive[ GCM->getItem(pSoldier->inv[ bPayloadPocket ].usItem)->getClassIndex() ].ubRadius;
 		usGrenade = pSoldier->inv[ bPayloadPocket ].usItem;
 	}
 	else if (usInHand == ROCKET_LAUNCHER)
@@ -473,7 +473,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		// put in hand
 		bPayloadPocket = HANDPOS;
 		// as C1
-		ubSafetyMargin = Explosive[ Item[ C1 ].ubClassIndex ].ubRadius;
+		ubSafetyMargin = Explosive[ GCM->getItem(C1)->getClassIndex() ].ubRadius;
 	}
 	else if (usInHand == TANK_CANNON)
 	{
@@ -482,14 +482,14 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		{
 			return;	// no grenades, can't fire the GLAUNCHER
 		}
-		ubSafetyMargin = Explosive[ Item[ TANK_SHELL ].ubClassIndex ].ubRadius;
+		ubSafetyMargin = Explosive[ GCM->getItem(TANK_SHELL)->getClassIndex() ].ubRadius;
 
 	}
 	else
 	{
 		// else it's a plain old grenade, now in his hand
 		bPayloadPocket = HANDPOS;
-		ubSafetyMargin = Explosive[ Item[ pSoldier->inv[ bPayloadPocket ].usItem ].ubClassIndex ].ubRadius;
+		ubSafetyMargin = Explosive[ GCM->getItem(pSoldier->inv[ bPayloadPocket ].usItem)->getClassIndex() ].ubRadius;
 		usGrenade = pSoldier->inv[ bPayloadPocket ].usItem;
 
 		if (usGrenade == BREAK_LIGHT)
@@ -1442,7 +1442,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	}
 	*/
 
-	if ( Item[ pSoldier->inv[pSoldier->ubAttackingHand].usItem ].usItemClass & IC_THROWING_KNIFE )
+	if ( GCM->getItem(pSoldier->inv[pSoldier->ubAttackingHand].usItem)->isThrowingKnife() )
 	{
 		ubAmmoType = AMMO_KNIFE;
 	}
@@ -1470,7 +1470,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
  // if opponent is wearing a helmet
  if (pOpponent->inv[HELMETPOS].usItem)
  {
-   iHeadProt += (INT32) Armour[Item[pOpponent->inv[HELMETPOS].usItem].ubClassIndex].ubProtection *
+   iHeadProt += (INT32) Armour[GCM->getItem(pOpponent->inv[HELMETPOS].usItem)->getClassIndex()].ubProtection *
 					(INT32) pOpponent->inv[HELMETPOS].bStatus[0] / 100;
 	}
 
@@ -1480,7 +1480,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 		// monster spit and knives ignore kevlar vests
 		if (pOpponent->inv[VESTPOS].usItem)
 		{
-			iTorsoProt += (INT32) Armour[Item[pOpponent->inv[VESTPOS].usItem].ubClassIndex].ubProtection *
+			iTorsoProt += (INT32) Armour[GCM->getItem(pOpponent->inv[VESTPOS].usItem)->getClassIndex()].ubProtection *
 						(INT32) pOpponent->inv[VESTPOS].bStatus[0] / 100;
 		}
 	}
@@ -1489,7 +1489,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	bPlatePos = FindAttachment( &(pOpponent->inv[VESTPOS]), CERAMIC_PLATES );
 	if (bPlatePos != -1)
 	{
-		iTorsoProt += (INT32) Armour[Item[pOpponent->inv[VESTPOS].usAttachItem[bPlatePos]].ubClassIndex].ubProtection *
+		iTorsoProt += (INT32) Armour[GCM->getItem(pOpponent->inv[VESTPOS].usAttachItem[bPlatePos])->getClassIndex()].ubProtection *
 						(INT32) pOpponent->inv[VESTPOS].bAttachStatus[bPlatePos] / 100;
 	}
 
@@ -1499,7 +1499,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	{	// monster spit and knives ignore kevlar leggings
 		if (pOpponent->inv[LEGPOS].usItem)
 		{
-			iLegProt += (INT32) Armour[Item[pOpponent->inv[LEGPOS].usItem].ubClassIndex].ubProtection *
+			iLegProt += (INT32) Armour[GCM->getItem(pOpponent->inv[LEGPOS].usItem)->getClassIndex()].ubProtection *
 						(INT32) pOpponent->inv[LEGPOS].bStatus[0] / 100;
 		}
 	}
@@ -1544,7 +1544,7 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 			case CREATURE_OLD_MALE_SPIT: gas = SMALL_CREATURE_GAS;      break;
 			default:                     gas = VERY_SMALL_CREATURE_GAS; break;
 		}
-		const EXPLOSIVETYPE* const e = &Explosive[Item[gas].ubClassIndex];
+		const EXPLOSIVETYPE* const e = &Explosive[GCM->getItem(gas)->getClassIndex()];
 		iDamage += e->ubDamage * NumMercsCloseTo(pOpponent->sGridNo, e->ubRadius) * 3 / 2;
   }
 
@@ -1570,10 +1570,10 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 			// too high
 			return( 5 );
 		case ROCKET_LAUNCHER:
-			ubExplosiveIndex = Item[ C1 ].ubClassIndex;
+			ubExplosiveIndex = GCM->getItem(C1)->getClassIndex();
 			break;
 		default:
-			ubExplosiveIndex = Item[ pSoldier->inv[ubItemPos].usItem ].ubClassIndex;
+			ubExplosiveIndex = GCM->getItem(pSoldier->inv[ubItemPos].usItem)->getClassIndex();
 			break;
 	}
 
@@ -1724,11 +1724,11 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 		{
 			RearrangePocket( pSoldier, HANDPOS, bWeaponIn, FOREVER );
 			// look for another weapon if this one is 1-handed
-			if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN) && !(Item[ pSoldier->inv[ HANDPOS ].usItem ].fFlags & ITEM_TWO_HANDED ) )
+			if ( (GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->getItemClass() == IC_GUN) && !(GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->isTwoHanded() ) )
 			{
 				// look for another pistol/SMG if available
 				bWeaponIn = FindAIUsableObjClassWithin( pSoldier, IC_WEAPON, BIGPOCK1POS, SMALLPOCK8POS );
-				if (bWeaponIn != NO_SLOT && (Item[ pSoldier->inv[ bWeaponIn ].usItem ].usItemClass == IC_GUN) && !(Item[ pSoldier->inv[ bWeaponIn ].usItem ].fFlags & ITEM_TWO_HANDED ) )
+				if (bWeaponIn != NO_SLOT && (GCM->getItem(pSoldier->inv[ bWeaponIn ].usItem)->getItemClass() == IC_GUN) && !(GCM->getItem(pSoldier->inv[ bWeaponIn ].usItem)->isTwoHanded() ) )
 				{
 					RearrangePocket( pSoldier, SECONDHANDPOS, bWeaponIn, FOREVER );
 				}

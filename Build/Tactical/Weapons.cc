@@ -179,7 +179,7 @@ static const UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
 UINT16 GunRange(OBJECTTYPE const& o)
 {
 	// return a minimal value of 1 tile
-	if (!(Item[o.usItem].usItemClass & IC_WEAPON)) return CELL_X_SIZE;
+	if (!(GCM->getItem(o.usItem)->isWeapon())) return CELL_X_SIZE;
 
 	INT8   const attach_pos = FindAttachment(&o, GUN_BARREL_EXTENDER);
 	UINT16       range      = GCM->getWeapon(o.usItem)->usRange;
@@ -195,14 +195,14 @@ INT8 EffectiveArmour(OBJECTTYPE const* const o)
 {
 	if (!o) return 0;
 
-	INVTYPE const& item = Item[o->usItem];
-	if (item.usItemClass != IC_ARMOUR) return 0;
+	const ItemModel * item = GCM->getItem(o->usItem);
+	if (item->getItemClass() != IC_ARMOUR) return 0;
 
-	INT32       armour_val = Armour[item.ubClassIndex].ubProtection * o->bStatus[0] / 100;
+	INT32       armour_val = Armour[item->getClassIndex()].ubProtection * o->bStatus[0] / 100;
 	INT8  const plate_pos  = FindAttachment(o, CERAMIC_PLATES);
 	if (plate_pos != ITEM_NOT_FOUND)
 	{
-		armour_val += Armour[Item[CERAMIC_PLATES].ubClassIndex].ubProtection * o->bAttachStatus[plate_pos] / 100;
+		armour_val += Armour[GCM->getItem(CERAMIC_PLATES)->getClassIndex()].ubProtection * o->bAttachStatus[plate_pos] / 100;
 	}
 	return armour_val;
 }
@@ -216,7 +216,7 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 	{
 		iVest = EffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = 65 * iVest / ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection + Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection );
+		iVest = 65 * iVest / ( Armour[ GCM->getItem(SPECTRA_VEST_18)->getClassIndex() ].ubProtection + Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection );
 	}
 	else
 	{
@@ -227,7 +227,7 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 	{
 		iHelmet = EffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = 15 * iHelmet / Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection;
+		iHelmet = 15 * iHelmet / Armour[ GCM->getItem(SPECTRA_HELMET_18)->getClassIndex() ].ubProtection;
 	}
 	else
 	{
@@ -238,7 +238,7 @@ INT8 ArmourPercent(const SOLDIERTYPE* pSoldier)
 	{
 		iLeg = EffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = 25 * iLeg / Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection;
+		iLeg = 25 * iLeg / Armour[ GCM->getItem(SPECTRA_LEGGINGS_18)->getClassIndex() ].ubProtection;
 	}
 	else
 	{
@@ -253,11 +253,11 @@ static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 	INT32		iValue;
 	INT8		bPlate;
 
-	if (pObj == NULL || Item[pObj->usItem].usItemClass != IC_ARMOUR)
+	if (pObj == NULL || GCM->getItem(pObj->usItem)->getItemClass() != IC_ARMOUR)
 	{
 		return( 0 );
 	}
-	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
+	iValue = Armour[ GCM->getItem(pObj->usItem)->getClassIndex() ].ubProtection;
 	iValue = iValue * pObj->bStatus[0] / 100;
 	if ( pObj->usItem == FLAK_JACKET || pObj->usItem == FLAK_JACKET_18 || pObj->usItem == FLAK_JACKET_Y )
 	{
@@ -270,7 +270,7 @@ static INT8 ExplosiveEffectiveArmour(OBJECTTYPE* pObj)
 	{
 		INT32 iValue2;
 
-		iValue2 = Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection;
+		iValue2 = Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection;
 		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
 
 		iValue += iValue2;
@@ -287,7 +287,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = __min( 65, 65 * iVest / ( Armour[ Item[ SPECTRA_VEST_18 ].ubClassIndex ].ubProtection + Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection) );
+		iVest = __min( 65, 65 * iVest / ( Armour[ GCM->getItem(SPECTRA_VEST_18)->getClassIndex() ].ubProtection + Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection) );
 	}
 	else
 	{
@@ -298,7 +298,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = __min( 15, 15 * iHelmet / Armour[ Item[ SPECTRA_HELMET_18 ].ubClassIndex ].ubProtection );
+		iHelmet = __min( 15, 15 * iHelmet / Armour[ GCM->getItem(SPECTRA_HELMET_18)->getClassIndex() ].ubProtection );
 	}
 	else
 	{
@@ -309,7 +309,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = __min( 25, 25 * iLeg / Armour[ Item[ SPECTRA_LEGGINGS_18 ].ubClassIndex ].ubProtection );
+		iLeg = __min( 25, 25 * iLeg / Armour[ GCM->getItem(SPECTRA_LEGGINGS_18)->getClassIndex() ].ubProtection );
 	}
 	else
 	{
@@ -352,7 +352,7 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
   // should jams apply to enemies?
 	if (pSoldier->uiStatusFlags & SOLDIER_PC)
 	{
-		if ( Item[pSoldier->usAttackingWeapon].usItemClass == IC_GUN && !EXPLOSIVE_GUN( pSoldier->usAttackingWeapon ) )
+		if ( GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_GUN && !EXPLOSIVE_GUN( pSoldier->usAttackingWeapon ) )
 		{
 			pObj = &(pSoldier->inv[pSoldier->ubAttackingHand]);
   			if (pObj->bGunAmmoStatus > 0)
@@ -363,11 +363,11 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 				// CJC: removed reliability from formula...
 
 				// jams can happen to unreliable guns "earlier" than normal or reliable ones.
-				//iChance = iChance - Item[pObj->usItem].bReliability * 2;
+				//iChance = iChance - GCM->getItem(pObj->usItem)->getReliability() * 2;
 
 				// decrease the chance of a jam by 20% per point of reliability;
 				// increased by 20% per negative point...
-				//iChance = iChance * (10 - Item[pObj->usItem].bReliability * 2) / 10;
+				//iChance = iChance * (10 - GCM->getItem(pObj->usItem)->getReliability() * 2) / 10;
 
 				if (pSoldier->bDoBurst > 1)
 				{
@@ -400,7 +400,7 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 			else if (pObj->bGunAmmoStatus < 0)
 			{
 				// try to unjam gun
-				iResult = SkillCheck( pSoldier, UNJAM_GUN_CHECK, (INT8) (Item[pObj->usItem].bReliability * 4) );
+				iResult = SkillCheck( pSoldier, UNJAM_GUN_CHECK, (INT8) (GCM->getItem(pObj->usItem)->getReliability() * 4) );
 				if (iResult > 0)
 				{
 					// yay! unjammed the gun
@@ -482,7 +482,7 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	// SET ATTACKER TO NOBODY, WILL GET SET EVENTUALLY
 	pSoldier->opponent = NULL;
 
-	switch( Item[ pSoldier->usAttackingWeapon ].usItemClass )
+	switch( GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() )
 	{
 		case IC_THROWING_KNIFE:
 		case IC_GUN:
@@ -739,7 +739,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 		//PLAY SOUND
 		// ( For throwing knife.. it's earlier in the animation
-		if ( GCM->getWeapon( usItemNum )->hasSound() && Item[ usItemNum ].usItemClass != IC_THROWING_KNIFE )
+		if ( GCM->getWeapon( usItemNum )->hasSound() && GCM->getItem(usItemNum)->getItemClass() != IC_THROWING_KNIFE )
 		{
 			// Switch on silencer...
 			if( FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT )
@@ -756,7 +756,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 
 	// CALC CHANCE TO HIT
-	if ( Item[ usItemNum ].usItemClass == IC_THROWING_KNIFE )
+	if ( GCM->getItem(usItemNum)->getItemClass() == IC_THROWING_KNIFE )
 	{
 	  uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, pSoldier->bAimShotLocation );
 	}
@@ -788,7 +788,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	GetTargetWorldPositions( pSoldier, sTargetGridNo, &dTargetX, &dTargetY, &dTargetZ );
 
 	// Some things we don't do for knives...
-	if ( Item[ usItemNum ].usItemClass != IC_THROWING_KNIFE )
+	if ( GCM->getItem(usItemNum)->getItemClass() != IC_THROWING_KNIFE )
 	{
 		// Deduct AMMO!
 		DeductAmmo( pSoldier, pSoldier->ubAttackingHand );
@@ -922,7 +922,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 	ubVolume = GCM->getWeapon( pSoldier->usAttackingWeapon )->ubAttackVolume;
 
-	if ( Item[ usItemNum ].usItemClass == IC_THROWING_KNIFE )
+	if ( GCM->getItem(usItemNum)->getItemClass() == IC_THROWING_KNIFE )
 	{
 		// Here, remove the knife...	or (for now) rocket launcher
 		RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
@@ -971,7 +971,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	}
 
 	// CJC: since jamming is no longer affected by reliability, increase chance of status going down for really unreliabile guns
-	uiDepreciateTest = BASIC_DEPRECIATE_CHANCE + 3 * Item[ usItemNum ].bReliability;
+	uiDepreciateTest = BASIC_DEPRECIATE_CHANCE + 3 * GCM->getItem(usItemNum)->getReliability();
 
 	if ( !PreRandom( uiDepreciateTest ) && ( pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[0] > 1) )
 	{
@@ -1455,7 +1455,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	{
 		if (pObj->usAttachItem[ bAttachPos ] != NOTHING)
 		{
-			if ( Item[ pObj->usAttachItem[ bAttachPos ] ].usItemClass & IC_EXPLOSV )
+			if ( GCM->getItem(pObj->usAttachItem[ bAttachPos ])->isExplosive() )
 			{
 				break;
 			}
@@ -1516,7 +1516,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	#endif
 
 
-	if ( Item[ usItemNum ].usItemClass == IC_LAUNCHER )
+	if ( GCM->getItem(usItemNum)->getItemClass() == IC_LAUNCHER )
 	{
 		// Preserve gridno!
 		//pSoldier->sLastTarget = sTargetGridNo;
@@ -1747,7 +1747,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 		case KNIFECLASS:
 
 			// When it hits the ground, leave on map...
-			if ( Item[ usWeaponIndex ].usItemClass == IC_THROWING_KNIFE )
+			if ( GCM->getItem(usWeaponIndex)->getItemClass() == IC_THROWING_KNIFE )
 			{
 				OBJECTTYPE		Object;
 
@@ -2010,12 +2010,12 @@ BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 	 usInHand = pSoldier->inv[HANDPOS].usItem;
 
-	 if ( Item[ usInHand ].usItemClass == IC_GUN || Item[ usInHand ].usItemClass == IC_THROWING_KNIFE  )
+	 if ( GCM->getItem(usInHand)->getItemClass() == IC_GUN || GCM->getItem(usInHand)->getItemClass() == IC_THROWING_KNIFE  )
 	 {
 		 // Determine range
 		 sRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
 
-		 if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
+		 if ( GCM->getItem(usInHand)->getItemClass() == IC_THROWING_KNIFE )
 		 {
 			 // NB CalcMaxTossRange returns range in tiles, not in world units
 		 	 if ( sRange <= CalcMaxTossRange( pSoldier, THROWING_KNIFE, TRUE ) * CELL_X_SIZE )
@@ -2137,7 +2137,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		}
 	}
 
-	if ( !(Item[ usInHand ].fFlags & ITEM_TWO_HANDED) )
+	if ( !(GCM->getItem(usInHand)->isTwoHanded()) )
 	{
 		// SMGs are treated as pistols for these purpose except there is a -5 penalty;
 		if (GCM->getWeapon(usInHand)->ubWeaponClass == SMGCLASS)
@@ -2250,7 +2250,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if (pSoldier->bShock)
 		iChance -= (pSoldier->bShock * AIM_PENALTY_PER_SHOCK);
 
-	if ( Item[ usInHand ].usItemClass == IC_GUN )
+	if ( GCM->getItem(usInHand)->getItemClass() == IC_GUN )
 	{
 		bAttachPos = FindAttachment( pInHand, GUN_BARREL_EXTENDER );
 		if ( bAttachPos != ITEM_NOT_FOUND )
@@ -2762,7 +2762,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 				if (bPlatePos != -1)
 				{
 					// bullet got through jacket; apply ceramic plate armour
-					iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usAttachItem[bPlatePos]].ubClassIndex, &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType );
+					iTotalProtection += ArmourProtection( pTarget, GCM->getItem(pArmour->usAttachItem[bPlatePos])->getClassIndex(), &(pArmour->bAttachStatus[bPlatePos]), iImpact, ubAmmoType );
 					if ( pArmour->bAttachStatus[bPlatePos] < USABLE )
 					{
 						// destroy plates!
@@ -2781,7 +2781,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 			// if the plate didn't stop the bullet...
 			if ( iImpact > iTotalProtection )
 			{
-				iTotalProtection += ArmourProtection( pTarget, Item[pArmour->usItem].ubClassIndex, &(pArmour->bStatus[0]), iImpact, ubAmmoType );
+				iTotalProtection += ArmourProtection( pTarget, GCM->getItem(pArmour->usItem)->getClassIndex(), &(pArmour->bStatus[0]), iImpact, ubAmmoType );
 				if ( pArmour->bStatus[ 0 ] < USABLE )
 				{
 					DeleteObj( pArmour );
@@ -2803,7 +2803,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	// in MoveBullet.
 
 	// Set a few things up:
-	if ( Item[ pFirer->usAttackingWeapon ].usItemClass == IC_THROWING_KNIFE )
+	if ( GCM->getItem(pFirer->usAttackingWeapon)->getItemClass() == IC_THROWING_KNIFE )
 	{
 		ubAmmoType = AMMO_KNIFE;
 	}
@@ -3287,7 +3287,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 	}
 	else
 	{
-		if ( Item[ usInHand ].usItemClass != IC_PUNCH )
+		if ( GCM->getItem(usInHand)->getItemClass() != IC_PUNCH )
 		{
 			return(0);
 		}
@@ -3470,7 +3470,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 	{
 		if (ubMode == HTH_MODE_STAB)
 		{
-			if (Item[pDefender->inv[HANDPOS].usItem].usItemClass == IC_BLADE)
+			if (GCM->getItem(pDefender->inv[HANDPOS].usItem)->getItemClass() == IC_BLADE)
 			{
 				// good with knives, got one, so we're good at parrying
 				iDefRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS(pDefender, KNIFING);
@@ -3487,7 +3487,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		}
 		else
 		{	// punch/hand-to-hand/martial arts attack/steal
-			if (Item[pDefender->inv[HANDPOS].usItem].usItemClass == IC_BLADE && ubMode != HTH_MODE_STEAL)
+			if (GCM->getItem(pDefender->inv[HANDPOS].usItem)->getItemClass() == IC_BLADE && ubMode != HTH_MODE_STEAL)
 			{
 				// with our knife, we get some bonus at defending from HTH attacks
 				iDefRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS(pDefender, KNIFING) / 2;
@@ -3579,7 +3579,7 @@ bool IsGunBurstCapable(SOLDIERTYPE const* const s, UINT8 const inv_pos)
 {
 	UINT16 const item = s->inv[inv_pos].usItem;
 	return
-		Item[item].usItemClass & IC_WEAPON &&
+		GCM->getItem(item)->isWeapon() &&
 		GCM->getWeapon(item)->ubShotsPerBurst > 0;
 }
 
@@ -3604,28 +3604,28 @@ INT32 CalcMaxTossRange(const SOLDIERTYPE* pSoldier, UINT16 usItem, BOOLEAN fArme
 		usItem = usSubItem;
 	}
 
-	if ( Item[ usItem ].usItemClass == IC_LAUNCHER && fArmed )
+	if ( GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER && fArmed )
 	{
 		// this function returns range in tiles so, stupidly, we have to divide by 10 here
 		iRange = GCM->getWeapon(usItem)->usRange / CELL_X_SIZE;
 	}
 	else
 	{
-		if ( Item[ usItem ].fFlags & ITEM_UNAERODYNAMIC )
+		if ( GCM->getItem(usItem)->getFlags() & ITEM_UNAERODYNAMIC )
 		{
 			iRange = 1;
 		}
-		else if ( Item[ usItem ].usItemClass == IC_GRENADE )
+		else if ( GCM->getItem(usItem)->getItemClass() == IC_GRENADE )
 		{
 			// start with the range based on the soldier's strength and the item's weight
 			INT32 iThrowingStrength = ( EffectiveStrength( pSoldier ) * 2 + 100 ) / 3;
-			iRange = 2 + ( iThrowingStrength / __min( ( 3 + (Item[usItem].ubWeight) / 3 ), 4 ) );
+			iRange = 2 + ( iThrowingStrength / __min( ( 3 + (GCM->getItem(usItem)->getWeight()) / 3 ), 4 ) );
 		}
 		else
 		{	// not as aerodynamic!
 
 			// start with the range based on the soldier's strength and the item's weight
-			iRange = 2 + ( ( EffectiveStrength( pSoldier ) / ( 5 + Item[usItem].ubWeight) ) );
+			iRange = 2 + ( ( EffectiveStrength( pSoldier ) / ( 5 + GCM->getItem(usItem)->getWeight()) ) );
 		}
 
 		// adjust for thrower's remaining breath (lose up to 1/2 of range)
@@ -3670,7 +3670,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	#endif
 */
 
-	if ( Item[ usHandItem ].usItemClass != IC_LAUNCHER && pSoldier->bWeaponMode != WM_ATTACHED )
+	if ( GCM->getItem(usHandItem)->getItemClass() != IC_LAUNCHER && pSoldier->bWeaponMode != WM_ATTACHED )
 	{
 		// PHYSICALLY THROWN arced projectile (ie. grenade)
 		// for lack of anything better, base throwing accuracy on dex & marskmanship
@@ -3774,7 +3774,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 			 (3 * pSoldier->bLifeMax);
 
 		// for mechanically-fired projectiles, reduce penalty in half
-		if ( Item[ usHandItem ].usItemClass == IC_LAUNCHER )
+		if ( GCM->getItem(usHandItem)->getItemClass() == IC_LAUNCHER )
 		{
 			bPenalty /= 2;
 		}
@@ -3790,7 +3790,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 		bPenalty = (iChance * (100 - pSoldier->bBreath)) / 200;
 
 		// for mechanically-fired projectiles, reduce penalty in half
-		if ( Item[ usHandItem ].usItemClass == IC_LAUNCHER )
+		if ( GCM->getItem(usHandItem)->getItemClass() == IC_LAUNCHER )
 			bPenalty /= 2;
 
 		// reduce breath penalty due to merc's dexterity (he can compensate!)
@@ -3798,7 +3798,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	}
 
 	// if iChance exists, but it's a mechanical item being used
-	if ((iChance > 0) && (Item[ usHandItem ].usItemClass == IC_LAUNCHER ))
+	if ((iChance > 0) && (GCM->getItem(usHandItem)->getItemClass() == IC_LAUNCHER ))
 		// reduce iChance to hit DIRECTLY by the item's working condition
 		iChance = (iChance * WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].bStatus[0])) / 100;
 

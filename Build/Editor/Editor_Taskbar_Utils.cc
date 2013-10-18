@@ -46,6 +46,9 @@
 #include "Video.h"
 #include "VSurface.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 //editor icon storage vars
 INT32	giEditMercDirectionIcons[2];
@@ -696,16 +699,16 @@ static void RenderSelectedItemBlownUp(void)
 	if (screen_y > (EDITOR_TASKBAR_POS_Y - 20)) return;
 
 	OBJECTTYPE const& o    = *gpItem;
-	INVTYPE    const& item = Item[o.usItem];
+	const ItemModel * item = GCM->getItem(o.usItem);
 	INT16             x;
 	INT16             y;
 
 	// Display the enlarged item graphic
 	SGPVObject  const& vo = GetInterfaceGraphicForItem(item);
-	ETRLEObject const& e  = vo.SubregionProperties(item.ubGraphicNum);
+	ETRLEObject const& e  = vo.SubregionProperties(item->getGraphicNum());
 	x = screen_x - e.sOffsetX + (40 - e.usWidth)  / 2;
 	y = screen_y - e.sOffsetY + (20 - e.usHeight) / 2;
-	BltVideoObjectOutline(FRAME_BUFFER, &vo, item.ubGraphicNum, x, y, Get16BPPColor(FROMRGB(0, 140, 170)));
+	BltVideoObjectOutline(FRAME_BUFFER, &vo, item->getGraphicNum(), x, y, Get16BPPColor(FROMRGB(0, 140, 170)));
 
 	// Display the item name above it
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
@@ -715,7 +718,7 @@ static void RenderSelectedItemBlownUp(void)
 	{
 		item_name = BuildTriggerName(o, buf, lengthof(buf));
 	}
-	else if (item.usItemClass == IC_KEY)
+	else if (item->getItemClass() == IC_KEY)
 	{
 		swprintf(buf, lengthof(buf), L"%hs", LockTable[o.ubKeyID].ubEditorName);
 		item_name = buf;

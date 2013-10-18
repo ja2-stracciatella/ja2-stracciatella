@@ -431,11 +431,11 @@ static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, INT32 const rea
 
 static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
 static UINT32 CalculateTotalPurchasePrice();
-static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INVTYPE* const items[]);
+static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const ItemModel* const items[]);
 static void DisableBobbyRButtons(void);
 static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static void DisplayBigItemImage(const INVTYPE* item, UINT16 PosY);
+static void DisplayBigItemImage(const ItemModel* item, UINT16 PosY);
 static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
@@ -480,7 +480,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 
 	}
 
-	const INVTYPE* items[BOBBYR_NUM_WEAPONS_ON_PAGE];
+	const ItemModel* items[BOBBYR_NUM_WEAPONS_ON_PAGE];
 	for(i=gusCurWeaponIndex; ((i<=gusLastItemIndex) && (ubCount < 4)); i++)
 	{
 		if( uiItemClass == BOBBYR_USED_ITEMS )
@@ -503,12 +503,12 @@ void DisplayItemInfo(UINT32 uiItemClass)
 		}
 
 		// skip items that aren't of the right item class
-		const INVTYPE* const item = &Item[usItemIndex];
-		if (!(item->usItemClass & uiItemClass)) continue;
+		const ItemModel * item = GCM->getItem(usItemIndex);
+		if (!(item->getItemClass() & uiItemClass)) continue;
 
 		items[ubCount] = item;
 
-		switch (item->usItemClass)
+		switch (item->getItemClass())
 		{
 			case IC_GUN:
 			case IC_LAUNCHER:
@@ -697,11 +697,11 @@ static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UI
 }
 
 
-static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
+static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	AutoSGPVObject uiImage(LoadTileGraphicForItem(*item));
+	AutoSGPVObject uiImage(LoadTileGraphicForItem(item));
 
 	//center picture in frame
 	ETRLEObject const& pTrav   = uiImage->SubregionProperties(0);
@@ -775,7 +775,7 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 	usPosY += usFontHeight + 2;
 
 
-	swprintf(sTemp, lengthof(sTemp), L"%3.2f %ls", GetWeightBasedOnMetricOption(Item[usIndex].ubWeight) / 10.0f, GetWeightUnitString());
+	swprintf(sTemp, lengthof(sTemp), L"%3.2f %ls", GetWeightBasedOnMetricOption(GCM->getItem(usIndex)->getWeight()) / 10.0f, GetWeightUnitString());
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_STOCK_TEXT_X, usPosY, BOBBYR_ITEM_COST_TEXT_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 
@@ -853,12 +853,12 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 
 static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
-	const INVTYPE* const item = &Item[usIndex];
+	const ItemModel * item = GCM->getItem(usIndex);
 	wchar_t	zTemp[128];
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_CALIBRE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	// ammo or gun?
-  const CalibreModel *calibre = item->usItemClass == IC_AMMO ? GCM->getMagazine(item->ubClassIndex)->calibre : GCM->getWeapon(item->ubClassIndex)->calibre;
+  const CalibreModel *calibre = item->getItemClass() == IC_AMMO ? item->asAmmo()->calibre : item->asWeapon()->calibre;
 	wcslcpy(zTemp, BobbyRayAmmoCaliber[calibre->index], lengthof(zTemp));
 
 	ReduceStringLength(zTemp, lengthof(zTemp), BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
@@ -934,7 +934,7 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 		//If we have some of the inventory on hand
 		if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand != 0 )
 		{
-			if( Item[ LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex ].usItemClass & uiClassMask )
+			if( GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex)->getItemClass() & uiClassMask )
 			{
 				ubNumItems++;
 
@@ -1012,11 +1012,11 @@ static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 }
 
 
-static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* ammo);
+static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const ItemModel* ammo);
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const INVTYPE* const items[])
+static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const ItemModel* const items[])
 {
 	if (gfBigImageMouseRegionCreated) return;
 
@@ -1039,8 +1039,8 @@ static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const 
 		MSYS_SetRegionUserData(&r, 0, i);
 
 		// Specify the help text only if the items is ammo
-		INVTYPE const* const item = items[i];
-		if (item->usItemClass != IC_AMMO) continue;
+		ItemModel const* const item = items[i];
+		if (item->getItemClass() != IC_AMMO) continue;
 		// And only if the user has an item that can use the particular type of ammo
 		UINT8 const n_guns = CheckPlayersInventoryForGunMatchingGivenAmmoID(item);
 		if (n_guns == 0) continue;
@@ -1316,10 +1316,10 @@ UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
 	DOUBLE value;
 	if( fUsed )
-		value = Item[ LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].usItemIndex ].usPrice *
+		value = GCM->getItem(LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].usItemIndex)->getPrice() *
 								( .5 + .5 * ( LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].ubItemQuality ) / 100 ) + .5;
 	else
-		value = Item[ LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].usItemIndex ].usPrice;
+		value = GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].usItemIndex)->getPrice();
 
 	return( (UINT16) value);
 }
@@ -1357,7 +1357,7 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 	UINT16 inv_idx = 0;
 	for (UINT16 i = gusFirstItemIndex; i <= gusLastItemIndex; ++i)
 	{
-		if (!(Item[pInv[i].usItemIndex].usItemClass & item_class)) continue;
+		if (!(GCM->getItem(pInv[i].usItemIndex)->getItemClass() & item_class)) continue;
 		// If we have some of the inventory on hand
 		if (pInv[i].ubQtyOnHand == 0) continue;
 
@@ -1367,10 +1367,10 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 }
 
 
-static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const ammo)
+static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(ItemModel const* const ammo)
 {
 	UINT8	         n_items = 0;
-  const CalibreModel *calibre = GCM->getMagazine(ammo->ubClassIndex)->calibre;
+  const CalibreModel *calibre = ammo->asAmmo()->calibre;
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Loop through all the pockets on the merc
@@ -1378,7 +1378,7 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const
 		{
 			OBJECTTYPE const& o = *i;
 			// If there is a weapon here
-			if (Item[o.usItem].usItemClass != IC_GUN) continue;
+			if (GCM->getItem(o.usItem)->getItemClass() != IC_GUN) continue;
 			// If the weapon uses the same kind of ammo as the one passed in
 			if (!GCM->getWeapon(o.usItem)->matches(calibre)) continue;
 

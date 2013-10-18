@@ -87,10 +87,19 @@ public:
 
   /** Get weapons with the give index. */
   virtual const WeaponModel* getWeapon(uint16_t index);
-  virtual const MagazineModel* getMagazine(uint16_t index);
+  virtual const WeaponModel* getWeaponByName(const std::string &internalName);
+
+  virtual const MagazineModel* getMagazineByName(const std::string &internalName);
+  virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex);
+  virtual const std::vector<const MagazineModel*>& getMagazines() const;
 
   virtual const CalibreModel* getCalibre(uint8_t index);
   virtual const AmmoTypeModel* getAmmoType(uint8_t index);
+
+  virtual const ItemModel* getItem(uint16_t index);
+
+  virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const;
+  virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const;
 
 protected:
   std::string m_dataDir;
@@ -99,16 +108,20 @@ protected:
   std::string m_gameResRootPath;
   std::string m_externalizedDataPath;
 
-  std::vector<WeaponModel*> m_weapons;
-  std::vector<MagazineModel*> m_magazines;
+  std::vector<const ItemModel*> m_items;
+  std::vector<const MagazineModel*> m_magazines;
 
   std::vector<const CalibreModel*> m_calibres;
   std::vector<AmmoTypeModel*> m_ammoTypes;
 
   /** Mapping of calibre names to objects. */
-  std::map<std::string, const CalibreModel*> m_calibreMap;
-
   std::map<std::string, const AmmoTypeModel*> m_ammoTypeMap;
+  std::map<std::string, const CalibreModel*> m_calibreMap;
+  std::map<std::string, const MagazineModel*> m_magazineMap;
+  std::map<std::string, const WeaponModel*> m_weaponMap;
+
+  std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
+  std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
 
   LibraryDB *m_libraryDB;
 
@@ -116,6 +129,12 @@ protected:
   bool loadMagazines();
   bool loadCalibres();
   bool loadAmmoTypes();
+  bool loadArmyGunChoice();
+
+  bool readWeaponTable(
+    const char *fileName,
+    std::vector<std::vector<const WeaponModel*> > & weaponTable);
+
 };
 
 class LibraryFileNotFoundException : public std::runtime_error

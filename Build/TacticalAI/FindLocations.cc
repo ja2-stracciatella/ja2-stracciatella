@@ -1586,7 +1586,7 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 
 static bool IsGunUsable(OBJECTTYPE const& o, SOLDIERTYPE const& s)
 {
-	Assert(Item[o.usItem].usItemClass & IC_GUN);
+	Assert(GCM->getItem(o.usItem)->isGun());
 	return
 		o.bGunAmmoStatus >  0 &&
 		o.ubGunShotsLeft != 0 &&
@@ -1684,13 +1684,13 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 			for (ITEM_POOL const* pItemPool = GetItemPool(grid_no, s.bLevel); pItemPool; pItemPool = pItemPool->pNext)
 			{
 				OBJECTTYPE const& o    = GetWorldItem(pItemPool->iItemIndex).o;
-				INVTYPE    const& item = Item[o.usItem];
+				const ItemModel * item = GCM->getItem(o.usItem);
 				INT32             temp_value;
 				switch (reason)
 				{
 					case SEARCH_AMMO:
 						// We are looking for ammo to match the gun in usItem
-						if (item.usItemClass == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
+						if (item->getItemClass() == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{ // Maybe this gun has ammo (adjust for whether it is better than ours!)
 							if (!IsGunUsable(o, s)) continue;
 							temp_value = o.ubGunShotsLeft * GCM->getWeapon(o.usItem)->ubDeadliness / GCM->getWeapon(usItem)->ubDeadliness;
@@ -1703,10 +1703,10 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 						break;
 
 					default:
-						if (item.usItemClass == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
+						if (item->getItemClass() == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
 							InvSlotPos pos;
-							switch (Armour[item.ubClassIndex].ubArmourClass)
+							switch (Armour[item->getClassIndex()].ubArmourClass)
 							{
 								case ARMOURCLASS_HELMET:   pos = HELMETPOS; break;
 								case ARMOURCLASS_VEST:     pos = VESTPOS;   break;
@@ -1729,12 +1729,12 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 
 					case SEARCH_WEAPONS:
 					{
-						if (!(item.usItemClass & IC_WEAPON))                 continue;
+						if (!(item->isWeapon()))                 continue;
 						if (o.bStatus[0] < MINIMUM_REQUIRED_STATUS)          continue;
-						if (item.usItemClass & IC_GUN && !IsGunUsable(o, s)) continue;
+						if (item->isGun()&& !IsGunUsable(o, s)) continue;
 						const WEAPONTYPE * new_wpn = GCM->getWeapon(o.usItem);
 						OBJECTTYPE const& in_hand = s.inv[HANDPOS];
-						if (Item[in_hand.usItem].usItemClass & IC_WEAPON)
+						if (GCM->getItem(in_hand.usItem)->isWeapon())
 						{
 							const WEAPONTYPE * cur_wpn = GCM->getWeapon(in_hand.usItem);
 							if (new_wpn->ubDeadliness <= cur_wpn->ubDeadliness) continue;
@@ -1768,7 +1768,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 
 	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
 	DebugAI(String("%d decides to pick up %ls", s.ubID, ItemNames[o.usItem]));
-	if (Item[o.usItem].usItemClass == IC_GUN &&
+	if (GCM->getItem(o.usItem)->getItemClass() == IC_GUN &&
 			!FindBetterSpotForItem(s, HANDPOS))
 	{
 		if (s.bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)

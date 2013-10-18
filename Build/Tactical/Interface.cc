@@ -55,6 +55,9 @@
 
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 #define ARROWS_X_OFFSET			10
 #define	ARROWS_HEIGHT				20
@@ -451,7 +454,7 @@ void PopupMovementMenu(UI_EVENT* const ev)
 			action_image = WIRECUTACTIONC_IMAGES;
 			action_text  = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 		}
-		else switch (Item[item].usItemClass)
+		else switch (GCM->getItem(item)->getItemClass())
 		{
 			case IC_PUNCH:
 				action_image = PUNCHACTIONC_IMAGES;

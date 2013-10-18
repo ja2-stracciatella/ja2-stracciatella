@@ -2040,7 +2040,7 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
   // get cursor
 	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 
-	if ( !(gTacticalStatus.uiFlags & INCOMBAT) && pTargetSoldier && Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_WEAPON )
+	if ( !(gTacticalStatus.uiFlags & INCOMBAT) && pTargetSoldier && GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->isWeapon() )
 	{
 		if ( NPCFirstDraw( pSoldier, pTargetSoldier ) )
 		{
@@ -2198,7 +2198,7 @@ static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 	{
 		// If this is one of our own guys.....pop up requiester...
 		if ((tgt->bTeam == OUR_TEAM || tgt->bTeam == MILITIA_TEAM)    &&
-				Item[sel->inv[HANDPOS].usItem].usItemClass != IC_MEDKIT      &&
+				GCM->getItem(sel->inv[HANDPOS].usItem)->getItemClass() != IC_MEDKIT      &&
 				sel->inv[HANDPOS].usItem                   != GAS_CAN        &&
 				gTacticalStatus.ubLastRequesterTargetID    != tgt->ubProfile &&
 				tgt != sel)
@@ -3376,7 +3376,7 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 	if (map_pos == NOWHERE) return false;
 
 	OBJECTTYPE const& o           = s->inv[HANDPOS];
-	INVTYPE    const& item        = Item[o.usItem];
+	const ItemModel * item = GCM->getItem(o.usItem);
 	ItemCursor const  item_cursor = GetActionModeCursor(s);
 
 	if (item_cursor == INVALIDCURS) return false;
@@ -3405,7 +3405,7 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 		if (!NewOKDestination(s, map_pos, TRUE, s->bLevel)) return false;
 	}
 
-	if (tgt == s && item.usItemClass != IC_MEDKIT) return false;
+	if (tgt == s && item->getItemClass() != IC_MEDKIT) return false;
 
 	if (HasObjectImprint(o) && s->ubProfile != o.ubImprintID)
 	{ // Access denied
@@ -3414,9 +3414,9 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 		return false;
 	}
 
-	if (item.usItemClass == IC_PUNCH) return tgt;
+	if (item->getItemClass() == IC_PUNCH) return tgt;
 
-	if (item.usItemClass == IC_MEDKIT)
+	if (item->getItemClass() == IC_MEDKIT)
 	{ // If a guy's here, check if he needs medical help!
 		if (!tgt) return false;
 

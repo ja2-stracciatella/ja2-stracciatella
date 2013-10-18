@@ -3228,7 +3228,7 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 	{
 		pItem = &pSoldier->inv[ i ];
 
-		if( Item[ pItem->usItem ].usItemClass == IC_GUN )
+		if( GCM->getItem(pItem->usItem)->getItemClass() == IC_GUN )
 		{
 			pAttacker->bWeaponSlot = (INT8)i;
 			if( gpAR->fUnlimitedAmmo )
@@ -3275,7 +3275,7 @@ static BOOLEAN TargetHasLoadedGun(SOLDIERTYPE* pSoldier)
 {
 	CFOR_EACH_SOLDIER_INV_SLOT(pItem, *pSoldier)
 	{
-		if( Item[ pItem->usItem ].usItemClass == IC_GUN )
+		if( GCM->getItem(pItem->usItem)->getItemClass() == IC_GUN )
 		{
 			if( gpAR->fUnlimitedAmmo )
 			{
@@ -3432,7 +3432,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 		if( pAttacker->bWeaponSlot != -1 )
 		{
 			pItem = &pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ];
-			if( Item[ pItem->usItem ].usItemClass & IC_WEAPON )
+			if( GCM->getItem(pItem->usItem)->isWeapon() )
 				pAttacker->pSoldier->usAttackingWeapon = pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ].usItem;
 		}
 

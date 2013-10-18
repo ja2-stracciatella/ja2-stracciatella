@@ -3229,7 +3229,7 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 		  gMercProfiles[ pFirer->ubProfile ].usShotsFired++;
 		}
 
-		if ( Item[ pFirer->usAttackingWeapon ].usItemClass == IC_THROWING_KNIFE )
+		if ( GCM->getItem(pFirer->usAttackingWeapon)->getItemClass() == IC_THROWING_KNIFE )
 		{
 			pBullet->usClockTicksPerUpdate = 30;
 		}
@@ -3306,7 +3306,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 	{
 		usBulletFlags |= BULLET_FLAG_CREATURE_SPIT;
 	}
-	else if ( Item[ usHandItem ].usItemClass == IC_THROWING_KNIFE )
+	else if ( GCM->getItem(usHandItem)->getItemClass() == IC_THROWING_KNIFE )
 	{
 		usBulletFlags |= BULLET_FLAG_KNIFE;
 	}
@@ -3488,8 +3488,8 @@ static INT8 ChanceToGetThrough(SOLDIERTYPE* const pFirer, const GridNo end_pos, 
 {
 	UINT16  weapon = pFirer->usAttackingWeapon;
 	BOOLEAN buck_shot;
-	if (Item[weapon].usItemClass == IC_GUN ||
-			Item[weapon].usItemClass == IC_THROWING_KNIFE)
+	if (GCM->getItem(weapon)->getItemClass() == IC_GUN ||
+			GCM->getItem(weapon)->getItemClass() == IC_THROWING_KNIFE)
 	{
 		// if shotgun, shotgun would have to be in main hand
 		buck_shot =

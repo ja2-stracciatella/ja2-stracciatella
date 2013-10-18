@@ -1,0 +1,13 @@
+[
+        [ "SW38",         "BARRACUDA",    "DESERTEAGLE", "GLOCK_17", "M1911"        ],
+        [ "GLOCK_18",     "BERETTA_93R",  "BERETTA_92F", "M870"                     ],
+        [ "TYPE85",       "THOMPSON",     "MP53",        "MP5K",     "SPAS15"       ],
+        [ "MINI14",       "SKS"                                                     ],
+        [ "MAC10",        "AKSU74",       "COMMANDO"                                ],
+        [ "AKM",          "G3A3",         "G41",         "AK74"                     ],
+        [ "DRAGUNOV",     "M24"                                                     ],
+        [ "FAMAS",        "M14",          "AUG",         "C7"                       ],
+        [ "FNFAL"                                                                   ],
+        [ "MINIMI",       "RPK74",        "HK21E"                                   ],
+        [ "ROCKET_RIFLE", "ROCKET_RIFLE", "RPK74",       "HK21E"                    ]
+]

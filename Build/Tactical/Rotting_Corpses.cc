@@ -43,6 +43,7 @@
 #include "MemMan.h"
 
 #include "FileMan.h"
+#include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
@@ -725,7 +726,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
             || GGP->f_drop_everything)
 			  {
 				  // and make sure that it really is a droppable item type
-				  if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
+				  if ( !(GCM->getItem(pObj->usItem)->getFlags() & ITEM_DEFAULT_UNDROPPABLE) )
 				  {
 					  ReduceAmmoDroppedByNonPlayerSoldiers(s, *pObj);
             Visibility vis = GGP->f_all_dropped_visible ? VISIBLE : bVisible;
@@ -1343,7 +1344,7 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE const& s, OBJECTTYPE& o)
 {
 	if (s.bTeam == OUR_TEAM) return;
-	if (Item[o.usItem].usItemClass != IC_AMMO) return;
+	if (GCM->getItem(o.usItem)->getItemClass() != IC_AMMO) return;
 
 	/* Don't drop all the clips, just a random # of them between 1 and how
 	 * many there are */

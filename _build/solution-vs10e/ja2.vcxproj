@@ -433,6 +433,7 @@
     <ClCompile Include="..\..\src\content\npcs.cc" />
     <ClCompile Include="..\..\src\DefaultContentManager.cc" />
     <ClCompile Include="..\..\src\internals\enums.cc" />
+    <ClCompile Include="..\..\src\ItemModel.cc" />
     <ClCompile Include="..\..\src\JsonUtility.cc" />
     <ClCompile Include="..\..\src\JsonUtility_unittests.cc" />
     <ClCompile Include="..\..\src\MagazineModel.cc" />
@@ -847,6 +848,7 @@
     <ClInclude Include="..\..\src\DefaultContentManager.h" />
     <ClInclude Include="..\..\src\GameInstance.h" />
     <ClInclude Include="..\..\src\internals\enums.h" />
+    <ClInclude Include="..\..\src\ItemModel.h" />
     <ClInclude Include="..\..\src\JsonObject.h" />
     <ClInclude Include="..\..\src\JsonUtility.h" />
     <ClInclude Include="..\..\src\MagazineModel.h" />

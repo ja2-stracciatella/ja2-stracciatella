@@ -216,23 +216,8 @@ struct OBJECTTYPE
 
 #define EXPLOSIVE_GUN( x ) ( x == ROCKET_LAUNCHER || x == TANK_CANNON )
 
-struct INVTYPE
-{
-	UINT32     usItemClass;
-	UINT8      ubClassIndex;
-	ItemCursor ubCursor;
-	UINT8      ubGraphicType;
-	UINT8      ubGraphicNum;
-	UINT8      ubWeight; //2 units per kilogram; roughly 1 unit per pound
-	UINT8      ubPerPocket;
-	UINT16     usPrice;
-	UINT8      ubCoolness;
-	INT8       bReliability;
-	INT8       bRepairEase;
-	UINT16     fFlags;
-};
-
 #define FIRST_WEAPON 1
+#define LAST_WEAPON 70
 #define FIRST_AMMO 71
 #define LAST_AMMO 130
 #define MAX_AMMO (LAST_AMMO - FIRST_AMMO + 1)
@@ -629,8 +614,5 @@ enum ITEMDEFINE
 
 #define FIRST_HEAD_ITEM EXTENDEDEAR
 #define LAST_HEAD_ITEM SUNGOGGLES
-
-
-extern const INVTYPE Item[];
 
 #endif

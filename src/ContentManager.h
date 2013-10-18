@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "ItemModel.h"
+
 class UTF8String;
 struct AmmoTypeModel;
 struct CalibreModel;
@@ -72,10 +74,19 @@ public:
 
   /** Get weapons with the give index. */
   virtual const WeaponModel* getWeapon(uint16_t index) = 0;
-  virtual const MagazineModel* getMagazine(uint16_t index) = 0;
+  virtual const WeaponModel* getWeaponByName(const std::string &internalName) = 0;
+
+  virtual const MagazineModel* getMagazineByName(const std::string &internalName) = 0;
+  virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) = 0;
+  virtual const std::vector<const MagazineModel*>& getMagazines() const = 0;
 
   virtual const CalibreModel* getCalibre(uint8_t index) = 0;
   virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
+
+  virtual const ItemModel* getItem(uint16_t index) = 0;
+
+  virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const = 0;
+  virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const = 0;
 
   /* /\** */
   /*  * get location of the game executable file. */

@@ -67,6 +67,8 @@
 #include "Debug.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 #include "Soldier.h"
 
 #define					NUM_ITEMS_LISTED			8
@@ -222,14 +224,14 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	if (s->bLife < OKLIFE)          return ITEM_HANDLE_UNCONSCIOUS;
 	if (!HandItemWorks(s, HANDPOS)) return ITEM_HANDLE_BROKEN;
 
-	const INVTYPE* const item = &Item[usHandItem];
+	const ItemModel * item = GCM->getItem(usHandItem);
 
 	if (fFromUI                                      &&
 			s->bTeam == OUR_TEAM                      &&
 			tgt                                          &&
 			(tgt->bTeam == OUR_TEAM || tgt->bNeutral) &&
 			tgt->ubBodyType != CROW                      &&
-			item->usItemClass != IC_MEDKIT               &&
+			item->getItemClass() != IC_MEDKIT               &&
 			s->ubProfile != NO_PROFILE)
 	{
 		// nice mercs won't shoot other nice guys or neutral civilians
@@ -268,7 +270,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	// Check HAND ITEM
-	if (item->usItemClass == IC_GUN || item->usItemClass == IC_THROWING_KNIFE)
+	if (item->getItemClass() == IC_GUN || item->getItemClass() == IC_THROWING_KNIFE)
 	{
 		// WEAPONS
 		if (usHandItem == ROCKET_RIFLE || usHandItem == AUTO_ROCKET_RIFLE)
@@ -317,7 +319,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		}
 
 		// IF we are not a throwing knife, check for ammo, reloading...
-		if (item->usItemClass != IC_THROWING_KNIFE)
+		if (item->getItemClass() != IC_THROWING_KNIFE)
 		{
 			// CHECK FOR AMMO!
 			if (!EnoughAmmo(s, fFromUI, HANDPOS))
@@ -399,7 +401,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 			s->bTargetLevel = gsInterfaceLevel;
 		}
 
-		if (item->usItemClass != IC_THROWING_KNIFE)
+		if (item->getItemClass() != IC_THROWING_KNIFE)
 		{
 			// If doing spread, set down the first gridno.....
 			if (!s->fDoSpread || s->sSpreadLocations[0] == 0)
@@ -440,7 +442,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	//TRY PUNCHING
-	if (item->usItemClass == IC_PUNCH)
+	if (item->getItemClass() == IC_PUNCH)
 	{
 		INT16 sGotLocation = NOWHERE;
 		UINT8 ubDirection;
@@ -507,7 +509,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	//USING THE MEDKIT
-	if (item->usItemClass == IC_MEDKIT)
+	if (item->getItemClass() == IC_MEDKIT)
 	{
 		// ATE: AI CANNOT GO THROUGH HERE!
 		const INT16 usMapPos = (gTacticalStatus.fAutoBandageMode ? usGridNo : GetMouseMapPos());
@@ -753,7 +755,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	// Check for remote detonator cursor....
-	if (item->ubCursor == REMOTECURS)
+	if (item->getCursor() == REMOTECURS)
 	{
 		const INT16 sAPCost = AP_USE_REMOTE;
 		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
@@ -776,10 +778,10 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 
 	BOOLEAN fDropBomb = FALSE;
 	// Check for mine.. anything without a detonator.....
-	if (item->ubCursor == BOMBCURS) fDropBomb = TRUE;
+	if (item->getCursor() == BOMBCURS) fDropBomb = TRUE;
 
 	// Check for a bomb like a mine, that uses a pressure detonator
-	if (item->ubCursor == INVALIDCURS &&
+	if (item->getCursor() == INVALIDCURS &&
 			IsDetonatorAttached(&s->inv[s->ubAttackingHand]))
 	{
 		fDropBomb = TRUE;
@@ -808,7 +810,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	//USING THE BLADE
-	if (item->usItemClass == IC_BLADE)
+	if (item->getItemClass() == IC_BLADE)
 	{
 		UINT8 ubDirection;
 		INT16 sAdjustedGridNo;
@@ -862,7 +864,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		return ITEM_HANDLE_OK;
 	}
 
-	if (item->usItemClass == IC_TENTACLES)
+	if (item->getItemClass() == IC_TENTACLES)
 	{
 		gTacticalStatus.ubAttackBusyCount++;
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount));
@@ -874,7 +876,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	// THIS IS IF WE WERE FROM THE UI
-	if (item->usItemClass == IC_GRENADE || item->usItemClass == IC_LAUNCHER || item->usItemClass == IC_THROWN)
+	if (item->getItemClass() == IC_GRENADE || item->getItemClass() == IC_LAUNCHER || item->getItemClass() == IC_THROWN)
 	{
 		// Get gridno - either soldier's position or the gridno
 		const INT16 sTargetGridNo = (tgt != NULL ? tgt->sGridNo : usGridNo);
@@ -918,7 +920,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		s->bTargetLevel      = bLevel;
 
 		// Look at the cursor, if toss cursor...
-		if (item->ubCursor == TOSSCURS)
+		if (item->getCursor() == TOSSCURS)
 		{
 			s->sTargetGridNo = sTargetGridNo;
 			s->target        = WhoIsThere2(sTargetGridNo, s->bTargetLevel);
@@ -941,7 +943,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	}
 
 	// CHECK FOR BOMB....
-	if (item->ubCursor == INVALIDCURS)
+	if (item->getCursor() == INVALIDCURS)
 	{
 		// Found detonator...
 		OBJECTTYPE& obj = s->inv[usHandItem];
@@ -1398,7 +1400,7 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 }
 
 
-static LEVELNODE* AddItemGraphicToWorld(INVTYPE const& item, INT16 const sGridNo, UINT8 const ubLevel)
+static LEVELNODE* AddItemGraphicToWorld(const ItemModel *item, INT16 const sGridNo, UINT8 const ubLevel)
 {
 	LEVELNODE		*pNode;
 
@@ -1480,7 +1482,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 		case DEEP_WATER:
 		case LOW_WATER:
 		case MED_WATER:
-			if (Item[pObject->usItem].fFlags & ITEM_SINKS) return -1;
+			if (GCM->getItem(pObject->usItem)->getFlags() & ITEM_SINKS) return -1;
 			break;
 	}
 
@@ -1619,7 +1621,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 
 	ITEM_POOL* item_pool = GetItemPool(sNewGridNo, ubLevel);
 
-	LEVELNODE* const pNode = AddItemGraphicToWorld(Item[pObject->usItem], sNewGridNo, ubLevel);
+	LEVELNODE* const pNode = AddItemGraphicToWorld(GCM->getItem(pObject->usItem), sNewGridNo, ubLevel);
 	new_item->pLevelNode = pNode;
 
 	if (item_pool != NULL)
@@ -2636,7 +2638,7 @@ static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot)
 	// if the item can be damaged, than we must check that it's in good enough
 	// shape to be usable, and doesn't break during use.
 	// Exception: land mines.  You can bury them broken, they just won't blow!
-	if ( (Item[ pObj->usItem ].fFlags & ITEM_DAMAGEABLE) && (pObj->usItem != MINE) && (Item[ pObj->usItem ].usItemClass != IC_MEDKIT) && pObj->usItem != GAS_CAN )
+	if ( (GCM->getItem(pObj->usItem)->getFlags() & ITEM_DAMAGEABLE) && (pObj->usItem != MINE) && (GCM->getItem(pObj->usItem)->getItemClass() != IC_MEDKIT) && pObj->usItem != GAS_CAN )
 	{
 		// if it's still usable, check whether it breaks
 		if ( pObj->bStatus[0] >= USABLE)
@@ -2668,10 +2670,10 @@ static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot)
 		}
 	}
 
-	if ( fItemWorks && bSlot == HANDPOS && Item[ pObj->usItem ].usItemClass == IC_GUN )
+	if ( fItemWorks && bSlot == HANDPOS && GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN )
 	{
 		// are we using two guns at once?
-		if ( Item[ pSoldier->inv[SECONDHANDPOS].usItem ].usItemClass == IC_GUN &&
+		if ( GCM->getItem(pSoldier->inv[SECONDHANDPOS].usItem)->getItemClass() == IC_GUN &&
 			pSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE &&
 			pSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0)
 		{

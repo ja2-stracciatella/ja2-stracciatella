@@ -39,6 +39,9 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];
 
@@ -1070,7 +1073,7 @@ void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
 
 UINT8 GetVehicleArmourType(const UINT8 vehicle_id)
 {
-	return Item[g_vehicle_type_info[pVehicleList[vehicle_id].ubVehicleType].armour_type].ubClassIndex;
+	return GCM->getItem(g_vehicle_type_info[pVehicleList[vehicle_id].ubVehicleType].armour_type)->getClassIndex();
 }
 
 

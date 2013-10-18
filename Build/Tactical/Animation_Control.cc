@@ -2711,9 +2711,9 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 		// Default it to the 1 ( ie: no rifle )
 		if ( usItem != NOTHING )
 		{
-			if ( ( Item[ usItem ].usItemClass == IC_GUN || Item[ usItem ].usItemClass == IC_LAUNCHER ) && usItem != ROCKET_LAUNCHER )
+			if ( ( GCM->getItem(usItem)->getItemClass() == IC_GUN || GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER ) && usItem != ROCKET_LAUNCHER )
 			{
-				if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+				if ( (GCM->getItem(usItem)->isTwoHanded()) )
 				{
 					ubWaterHandIndex = 0;
 				}
@@ -2734,7 +2734,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 		// ADJUST BASED ON ITEM IN HAND....
 		usItem = pSoldier->inv[ HANDPOS ].usItem;
 
-		if ( (!(Item[ usItem ].usItemClass == IC_GUN ) && !(Item[ usItem ].usItemClass == IC_LAUNCHER )) || usItem == ROCKET_LAUNCHER )
+		if ( (!(GCM->getItem(usItem)->getItemClass() == IC_GUN ) && !(GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER )) || usItem == ROCKET_LAUNCHER )
 		{
 			if ( usAnimState == STANDING )
 			{
@@ -2755,9 +2755,9 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 		else
 		{
 			// CHECK FOR HANDGUN
-			if ( ( Item[ usItem ].usItemClass == IC_GUN || Item[ usItem ].usItemClass == IC_LAUNCHER ) && usItem != ROCKET_LAUNCHER )
+			if ( ( GCM->getItem(usItem)->getItemClass() == IC_GUN || GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER ) && usItem != ROCKET_LAUNCHER )
 			{
-				if ( !(Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+				if ( !(GCM->getItem(usItem)->isTwoHanded()) )
 				{
 					usAltAnimSurface = gubAnimSurfaceItemSubIndex[pSoldier->ubBodyType][usAnimState];
 					if ( usAltAnimSurface != INVALID_ANIMATION )
@@ -2770,7 +2770,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 					if ( gDoubleHandledSub.usAnimState == usAnimState )
 					{
 						// Do we carry two pistols...
-						if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass == IC_GUN )
+						if ( GCM->getItem(pSoldier->inv[ SECONDHANDPOS ].usItem)->getItemClass() == IC_GUN )
 						{
 							usAnimSurface = gDoubleHandledSub.usAnimationSurfaces[ pSoldier->ubBodyType ];
 							fAdjustedForItem	= TRUE;

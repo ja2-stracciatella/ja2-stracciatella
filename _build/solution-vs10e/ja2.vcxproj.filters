@@ -1215,6 +1215,9 @@
     <ClCompile Include="..\..\src\WeaponModels.cc">
       <Filter>Source Files\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ItemModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Build\AniViewScreen.h">
@@ -2421,6 +2424,9 @@
       <Filter>Source Files\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\WeaponModels.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ItemModel.h">
       <Filter>Source Files\src</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,9 @@
 #include "Soldier_Add.h"
 #include "Debug.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 #define CAN_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER && s->ubBodyType != INFANT_MONSTER)
 #define CAN_LISTEN_TO_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER)
@@ -1093,7 +1096,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 
 	if (bWeaponIn != NO_SLOT)
 	{
-		if (Item[pSoldier->inv[bWeaponIn].usItem].usItemClass == IC_GUN && pSoldier->inv[bWeaponIn].bGunStatus >= USABLE)
+		if (GCM->getItem(pSoldier->inv[bWeaponIn].usItem)->getItemClass() == IC_GUN && pSoldier->inv[bWeaponIn].bGunStatus >= USABLE)
 		{
 			if (pSoldier->inv[bWeaponIn].ubGunShotsLeft > 0)
 			{

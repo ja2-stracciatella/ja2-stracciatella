@@ -36,10 +36,19 @@ bool JsonUtility::parseJsonToListStrings(const char* jsonData, std::vector<std::
     return false;
   }
 
-  const rapidjson::Value& a = document;
-  for (rapidjson::SizeType i = 0; i < a.Size(); i++)
-  {
-    strings.push_back(a[i].GetString());
-  }
-  return true;
+  return parseListStrings(document, strings);
 }
+
+/** Parse value as list of strings. */
+bool JsonUtility::parseListStrings(const rapidjson::Value &value, std::vector<std::string> &strings)
+{
+  if(value.IsArray()) {
+    for (rapidjson::SizeType i = 0; i < value.Size(); i++)
+    {
+      strings.push_back(value[i].GetString());
+    }
+    return true;
+  }
+  return false;
+}
+

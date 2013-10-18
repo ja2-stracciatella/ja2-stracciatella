@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "rapidjson/document.h"
 
 class JsonObject
@@ -20,6 +22,14 @@ public:
   void AddMember(const char *name, const std::string &value)
   {
     m_value.AddMember(name, value.c_str(), m_alloc);
+  }
+
+  void addOptionalBool(const char *name, bool value)
+  {
+    if(value)
+    {
+      AddMember(name, value);
+    }
   }
 
   rapidjson::Value& getValue()
@@ -53,6 +63,30 @@ public:
   bool GetBool(const char *name) const
   {
     return m_value[name].GetBool();
+  }
+
+  bool getOptionalBool(const char *name) const
+  {
+    if(m_value.HasMember(name))
+    {
+      return m_value[name].GetBool();
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  const char * getOptionalString(const char *name) const
+  {
+    if(m_value.HasMember(name))
+    {
+      return m_value[name].GetString();
+    }
+    else
+    {
+      return NULL;
+    }
   }
 
 protected:
