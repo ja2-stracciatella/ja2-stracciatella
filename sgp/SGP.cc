@@ -71,42 +71,15 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#include "JsonObject.h"
-#include "MagazineModel.h"
-#include "WeaponModels.h"
-#include "Weapons.h"
-#include "rapidjson/document.h"
-#include "rapidjson/filestream.h"
-#include "rapidjson/prettywriter.h"
-#include "stdio.h"
-#include <boost/foreach.hpp>
-
-// /** Read weapons from json. */
-// bool readWeaponsFromJson(const char *fileName)
-// {
-//   AutoSGPFile f(FileMan::openForReadWrite(fileName));
-//   std::string jsonData = FileMan::fileReadText(f);
-
-//   rapidjson::Document document;
-//   if (document.Parse<0>(jsonData.c_str()).HasParseError())
-//   {
-//     return false;
-//   }
-
-//   if(document.IsArray()) {
-//     const rapidjson::Value& a = document;
-//     for (rapidjson::SizeType i = 0; i < a.Size(); i++)
-//     {
-//       const rapidjson::Value& item = a[i];
-//       // printf("%s\n", item["internalName"].GetString());
-//       // strings.push_back(a[i].GetString());
-//       JsonObjectReader obj(item);
-//       WeaponModel *w = WeaponModel::deserialize(obj);
-//     }
-//   }
-//   return true;
-
-// }
+// #include "JsonObject.h"
+// #include "MagazineModel.h"
+// #include "WeaponModels.h"
+// #include "Weapons.h"
+// #include "rapidjson/document.h"
+// #include "rapidjson/filestream.h"
+// #include "rapidjson/prettywriter.h"
+// #include "stdio.h"
+// #include <boost/foreach.hpp>
 
 // bool writeWeaponsToJson(const char *name/*, const struct WEAPONTYPE *weapon*/, int weaponCount)
 // {

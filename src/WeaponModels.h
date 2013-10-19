@@ -47,6 +47,8 @@ struct WeaponModel : WEAPONTYPE, ItemModel
   /** Get standard replacement gun name. */
   virtual const std::string & getStandardReplacement() const;
 
+  int getRateOfFire() const;
+
   std::string sound;
   std::string burstSound;
   std::string standardReplacement;
@@ -58,6 +60,7 @@ struct WeaponModel : WEAPONTYPE, ItemModel
   bool attachUnderGLauncher;
   bool attachSpringAndBoltUpgrade;
   bool attachGunBarrelExtender;
+  int m_rateOfFire;
 
 protected:
   void serializeAttachments(JsonObject &obj) const;

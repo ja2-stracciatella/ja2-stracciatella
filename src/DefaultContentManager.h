@@ -105,6 +105,8 @@ public:
   virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const;
 
   virtual const DealerInventory* getDealerInventory(int dealerId) const;
+  virtual const DealerInventory* getBobbyRayNewInventory() const;
+  virtual const DealerInventory* getBobbyRayUsedInventory() const;
 
 protected:
   std::string m_dataDir;
@@ -130,6 +132,8 @@ protected:
   std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
 
   std::vector<const DealerInventory*> m_dealersInventory;
+  const DealerInventory *m_bobbyRayNewInventory;
+  const DealerInventory *m_bobbyRayUsedInventory;
 
   LibraryDB *m_libraryDB;
 

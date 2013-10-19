@@ -24,6 +24,7 @@
 #include "Items.h"
 
 #include "ContentManager.h"
+#include "DealerInventory.h"
 #include "GameInstance.h"
 
 
@@ -439,8 +440,9 @@ static void InitBobbyRayNewInventory(void)
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
 	for( i = 0; i < MAXITEMS; i++ )
 	{
+    const ItemModel *item = GCM->getItem(i);
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
-		if( ( StoreInventory[ i ][ BOBBY_RAY_NEW ] != 0) && !( GCM->getItem(i)->getFlags() & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
+		if( (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) != 0) && !(item->getFlags() & ITEM_NOT_BUYABLE) && ItemIsLegal( i ) )
 		{
 			LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = i;
 			usBobbyrIndex++;
@@ -472,10 +474,11 @@ static void InitBobbyRayUsedInventory(void)
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
 	for( i = 0; i < MAXITEMS; i++ )
 	{
+    const ItemModel *item = GCM->getItem(i);
+
 		//if Bobby Ray sells this, it can be sold, and it's allowed into this game (some depend on e.g. gun-nut option)
-		if( ( StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( GCM->getItem(i)->getFlags() & ITEM_NOT_BUYABLE ) && ItemIsLegal( i ) )
+		if( (GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) != 0) && !(item->getFlags() & ITEM_NOT_BUYABLE) && ItemIsLegal( i ) )
 		{
-			if( (StoreInventory[ i ][ BOBBY_RAY_USED ] != 0) && !( GCM->getItem(i)->getFlags() & ITEM_NOT_BUYABLE )  && ItemIsLegal( i ))
 			// in case his store inventory list is wrong, make sure this category of item can be sold used
 			if ( CanDealerItemBeSoldUsed( i ) )
 			{
@@ -518,11 +521,12 @@ void DailyUpdateOfBobbyRaysNewInventory()
 	{
 		// the index is NOT the item #, get that from the table
 		usItemIndex = LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex;
+    const ItemModel *item = GCM->getItem(usItemIndex);
 
 		Assert(usItemIndex < MAXITEMS);
 
 		// make sure this item is still sellable in the latest version of the store inventory
-		if ( StoreInventory[ usItemIndex ][ BOBBY_RAY_NEW ] == 0 )
+		if (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) == 0 )
 		{
 			continue;
 		}
@@ -531,7 +535,7 @@ void DailyUpdateOfBobbyRaysNewInventory()
 		if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnOrder == 0)
 		{
 			//if the qty on hand is half the desired amount or fewer
-			if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand <= (StoreInventory[ usItemIndex ][ BOBBY_RAY_NEW ] / 2 ) )
+			if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand <= (GCM->getBobbyRayNewInventory()->getMaxItemAmount(item) / 2 ) )
 			{
 				// remember value of the "previously eligible" flag
 				fPrevElig = LaptopSaveInfo.BobbyRayInventory[ i ].fPreviouslyEligible;
@@ -588,7 +592,7 @@ void DailyUpdateOfBobbyRaysUsedInventory()
 				Assert(usItemIndex < MAXITEMS);
 
 				// make sure this item is still sellable in the latest version of the store inventory
-				if ( StoreInventory[ usItemIndex ][ BOBBY_RAY_USED ] == 0 )
+				if (GCM->getBobbyRayUsedInventory()->getMaxItemAmount(GCM->getItem(usItemIndex)) == 0 )
 				{
 					continue;
 				}
@@ -625,10 +629,12 @@ static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, 
 {
 	UINT8	ubItemsOrdered = 0;
 
+  const DealerInventory *inv = ubBobbyRayNewUsed ? GCM->getBobbyRayUsedInventory() : GCM->getBobbyRayNewInventory();
+  const ItemModel *item = GCM->getItem(usItemIndex);
 
 	Assert(usItemIndex < MAXITEMS);
 	// formulas below will fail if there are more items already in stock than optimal
-	Assert(ubCurrentlyOnHand <= StoreInventory[ usItemIndex ][ ubBobbyRayNewUsed ]);
+	Assert(ubCurrentlyOnHand <= inv->getMaxItemAmount(item));
 	Assert(ubBobbyRayNewUsed < BOBBY_RAY_LISTS);
 
 
@@ -637,7 +643,7 @@ static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, 
 	{
 		if (ubBobbyRayNewUsed == BOBBY_RAY_NEW)
 		{
-			ubItemsOrdered = HowManyItemsToReorder(StoreInventory[ usItemIndex ][ ubBobbyRayNewUsed ], ubCurrentlyOnHand);
+			ubItemsOrdered = HowManyItemsToReorder(inv->getMaxItemAmount(item), ubCurrentlyOnHand);
 		}
 		else
 		{

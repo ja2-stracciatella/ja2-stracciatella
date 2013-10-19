@@ -36,6 +36,8 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t cursor, uint16_t itemIndex,
   sLocknLoadSound      = NO_WEAPON_SOUND;
 }
 
+#include "Store_Inventory.h"
+
 void WeaponModel::serializeTo(JsonObject &obj) const
 {
   if(usItemClass & IC_THROWN)
@@ -55,6 +57,7 @@ void WeaponModel::serializeTo(JsonObject &obj) const
   obj.AddMember("ubCoolness", getCoolness());
   obj.AddMember("bReliability", getReliability());
   obj.AddMember("bRepairEase", getRepairEase());
+  obj.AddMember("rateOfFire", m_rateOfFire);
 
   if(isInBigGunList())
   {
@@ -569,6 +572,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
   wep->ubCoolness       = obj.GetInt("ubCoolness");
   wep->bReliability     = obj.GetInt("bReliability");
   wep->bRepairEase      = obj.GetInt("bRepairEase");
+  wep->m_rateOfFire     = obj.GetInt("rateOfFire");
 
   wep->attachSilencer               = obj.getOptionalBool("attachment_Silencer");
   wep->attachSniperScope            = obj.getOptionalBool("attachment_SniperScope");
@@ -639,6 +643,11 @@ bool WeaponModel::canBeAttached(uint16_t attachment) const
 const std::string & WeaponModel::getStandardReplacement() const
 {
   return standardReplacement;
+}
+
+int WeaponModel::getRateOfFire() const
+{
+  return m_rateOfFire;
 }
 
 ////////////////////////////////////////////////////////////

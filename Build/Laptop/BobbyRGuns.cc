@@ -32,6 +32,7 @@
 #	include "Debug.h"
 #endif
 
+#include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
@@ -803,10 +804,7 @@ static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_ROF], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	if( WeaponROF[ usIndex ] == -1 )
-		swprintf(sTemp, lengthof(sTemp), L"? %ls", pMessageStrings[ MSG_RPM ] );
-	else
-		swprintf(sTemp, lengthof(sTemp), L"%3d/%ls", WeaponROF[ usIndex ], pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
+  swprintf(sTemp, lengthof(sTemp), L"%3d/%ls", GCM->getWeapon(usIndex)->getRateOfFire(), pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
 
 
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);

@@ -23,10 +23,6 @@ enum
 	BOBBY_RAY_LISTS,
 };
 
-extern	UINT8 StoreInventory[MAXITEMS][BOBBY_RAY_LISTS];
-extern	INT16 WeaponROF[ MAX_WEAPONS ];
-
-
 void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed );
 
 #endif

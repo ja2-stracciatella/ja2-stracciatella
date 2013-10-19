@@ -228,6 +228,19 @@ DefaultContentManager::~DefaultContentManager()
   {
     if(inv) delete inv;
   }
+
+  delete m_bobbyRayNewInventory;
+  delete m_bobbyRayUsedInventory;
+}
+
+const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
+{
+  return m_bobbyRayNewInventory;
+}
+
+const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
+{
+  return m_bobbyRayUsedInventory;
 }
 
 /** Get map file path. */
@@ -775,6 +788,8 @@ bool DefaultContentManager::loadDealerInventory()
   m_dealersInventory[ARMS_DEALER_DEVIN]         = new DealerInventory(readJsonDataFile("dealer-inventory-devin.json"), this);
   m_dealersInventory[ARMS_DEALER_ELGIN]         = new DealerInventory(readJsonDataFile("dealer-inventory-elgin.json"), this);
   m_dealersInventory[ARMS_DEALER_MANNY]         = new DealerInventory(readJsonDataFile("dealer-inventory-manny.json"), this);
+  m_bobbyRayNewInventory        = new DealerInventory(readJsonDataFile("bobby-ray-inventory-new.json"), this);
+  m_bobbyRayUsedInventory       = new DealerInventory(readJsonDataFile("bobby-ray-inventory-used.json"), this);
   return true;
 }
 
