@@ -510,6 +510,7 @@ SRCS += src/content/Dialogs.cc
 SRCS += src/content/npcs.cc
 SRCS += src/internals/enums.cc
 SRCS += src/policy/DefaultGamePolicy.cc
+SRCS += src/policy/DefaultIMPPolicy.cc
 
 SRCS += _build/lib-MicroIni/src/MicroIni/File.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp

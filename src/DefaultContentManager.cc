@@ -27,9 +27,9 @@
 #include "JsonUtility.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include "policy/DefaultIMPPolicy.h"
 
 #include "boost/foreach.hpp"
-#include "boost/smart_ptr.hpp"
 
 #include "slog/slog.h"
 #define TAG "DefaultCM"
@@ -231,6 +231,7 @@ DefaultContentManager::~DefaultContentManager()
 
   delete m_bobbyRayNewInventory;
   delete m_bobbyRayUsedInventory;
+  delete m_impPolicy;
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -746,12 +747,15 @@ bool DefaultContentManager::loadGameData()
     m_itemMap.insert(std::make_pair(item->getInternalName(), item));
   }
 
-  loadDealerInventory();
+  loadAllDealersInventory();
+
+  boost::shared_ptr<rapidjson::Document> imp_json(readJsonDataFile("imp.json"));
+  m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
 
   return result;
 }
 
-rapidjson::Document * DefaultContentManager::readJsonDataFile(const char *fileName) const
+rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileName) const
 {
   AutoSGPFile f(openGameResForReading(fileName));
   std::string jsonData = FileMan::fileReadText(f);
@@ -767,29 +771,35 @@ rapidjson::Document * DefaultContentManager::readJsonDataFile(const char *fileNa
   return document;
 }
 
-bool DefaultContentManager::loadDealerInventory()
+const DealerInventory * DefaultContentManager::loadDealerInventory(const char *fileName)
 {
-  m_dealersInventory[ARMS_DEALER_TONY]          = new DealerInventory(readJsonDataFile("dealer-inventory-tony.json"), this);
-  m_dealersInventory[ARMS_DEALER_FRANK]         = new DealerInventory(readJsonDataFile("dealer-inventory-frank.json"), this);
-  m_dealersInventory[ARMS_DEALER_MICKY]         = new DealerInventory(readJsonDataFile("dealer-inventory-micky.json"), this);
-  m_dealersInventory[ARMS_DEALER_ARNIE]         = new DealerInventory(readJsonDataFile("dealer-inventory-arnie.json"), this);
-  m_dealersInventory[ARMS_DEALER_PERKO]         = new DealerInventory(readJsonDataFile("dealer-inventory-perko.json"), this);
-  m_dealersInventory[ARMS_DEALER_KEITH]         = new DealerInventory(readJsonDataFile("dealer-inventory-keith.json"), this);
-  m_dealersInventory[ARMS_DEALER_BAR_BRO_1]     = new DealerInventory(readJsonDataFile("dealer-inventory-herve-santos.json"), this);
-  m_dealersInventory[ARMS_DEALER_BAR_BRO_2]     = new DealerInventory(readJsonDataFile("dealer-inventory-peter-santos.json"), this);
-  m_dealersInventory[ARMS_DEALER_BAR_BRO_3]     = new DealerInventory(readJsonDataFile("dealer-inventory-alberto-santos.json"), this);
-  m_dealersInventory[ARMS_DEALER_BAR_BRO_4]     = new DealerInventory(readJsonDataFile("dealer-inventory-carlo-santos.json"), this);
-  m_dealersInventory[ARMS_DEALER_JAKE]          = new DealerInventory(readJsonDataFile("dealer-inventory-jake.json"), this);
-  m_dealersInventory[ARMS_DEALER_FRANZ]         = new DealerInventory(readJsonDataFile("dealer-inventory-franz.json"), this);
-  m_dealersInventory[ARMS_DEALER_HOWARD]        = new DealerInventory(readJsonDataFile("dealer-inventory-howard.json"), this);
-  m_dealersInventory[ARMS_DEALER_SAM]           = new DealerInventory(readJsonDataFile("dealer-inventory-sam.json"), this);
-  m_dealersInventory[ARMS_DEALER_FREDO]         = new DealerInventory(readJsonDataFile("dealer-inventory-fredo.json"), this);
-  m_dealersInventory[ARMS_DEALER_GABBY]         = new DealerInventory(readJsonDataFile("dealer-inventory-gabby.json"), this);
-  m_dealersInventory[ARMS_DEALER_DEVIN]         = new DealerInventory(readJsonDataFile("dealer-inventory-devin.json"), this);
-  m_dealersInventory[ARMS_DEALER_ELGIN]         = new DealerInventory(readJsonDataFile("dealer-inventory-elgin.json"), this);
-  m_dealersInventory[ARMS_DEALER_MANNY]         = new DealerInventory(readJsonDataFile("dealer-inventory-manny.json"), this);
-  m_bobbyRayNewInventory        = new DealerInventory(readJsonDataFile("bobby-ray-inventory-new.json"), this);
-  m_bobbyRayUsedInventory       = new DealerInventory(readJsonDataFile("bobby-ray-inventory-used.json"), this);
+  boost::shared_ptr<rapidjson::Document> json(readJsonDataFile(fileName));
+  return new DealerInventory(json.get(), this);
+}
+
+bool DefaultContentManager::loadAllDealersInventory()
+{
+  m_dealersInventory[ARMS_DEALER_TONY]          = loadDealerInventory("dealer-inventory-tony.json");
+  m_dealersInventory[ARMS_DEALER_FRANK]         = loadDealerInventory("dealer-inventory-frank.json");
+  m_dealersInventory[ARMS_DEALER_MICKY]         = loadDealerInventory("dealer-inventory-micky.json");
+  m_dealersInventory[ARMS_DEALER_ARNIE]         = loadDealerInventory("dealer-inventory-arnie.json");
+  m_dealersInventory[ARMS_DEALER_PERKO]         = loadDealerInventory("dealer-inventory-perko.json");
+  m_dealersInventory[ARMS_DEALER_KEITH]         = loadDealerInventory("dealer-inventory-keith.json");
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_1]     = loadDealerInventory("dealer-inventory-herve-santos.json");
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_2]     = loadDealerInventory("dealer-inventory-peter-santos.json");
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_3]     = loadDealerInventory("dealer-inventory-alberto-santos.json");
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_4]     = loadDealerInventory("dealer-inventory-carlo-santos.json");
+  m_dealersInventory[ARMS_DEALER_JAKE]          = loadDealerInventory("dealer-inventory-jake.json");
+  m_dealersInventory[ARMS_DEALER_FRANZ]         = loadDealerInventory("dealer-inventory-franz.json");
+  m_dealersInventory[ARMS_DEALER_HOWARD]        = loadDealerInventory("dealer-inventory-howard.json");
+  m_dealersInventory[ARMS_DEALER_SAM]           = loadDealerInventory("dealer-inventory-sam.json");
+  m_dealersInventory[ARMS_DEALER_FREDO]         = loadDealerInventory("dealer-inventory-fredo.json");
+  m_dealersInventory[ARMS_DEALER_GABBY]         = loadDealerInventory("dealer-inventory-gabby.json");
+  m_dealersInventory[ARMS_DEALER_DEVIN]         = loadDealerInventory("dealer-inventory-devin.json");
+  m_dealersInventory[ARMS_DEALER_ELGIN]         = loadDealerInventory("dealer-inventory-elgin.json");
+  m_dealersInventory[ARMS_DEALER_MANNY]         = loadDealerInventory("dealer-inventory-manny.json");
+  m_bobbyRayNewInventory                        = loadDealerInventory("bobby-ray-inventory-new.json");
+  m_bobbyRayUsedInventory                       = loadDealerInventory("bobby-ray-inventory-used.json");
   return true;
 }
 
@@ -812,4 +822,9 @@ const ItemModel* DefaultContentManager::getItemByName(const std::string &interna
 const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) const
 {
   return m_dealersInventory[dealerId];
+}
+
+const IMPPolicy* DefaultContentManager::getIMPPolicy() const
+{
+  return m_impPolicy;
 }

@@ -33,6 +33,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
+#include "policy/IMPPolicy.h"
 #include "slog/slog.h"
 
 #define IMP_MERC_FILE "imp.dat"
@@ -278,32 +279,29 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
 
-	// STANDARD EQUIPMENT
+  BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getInventory())
+  {
+		MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+  }
 
-
-
-	// kevlar vest, leggings, & helmet
-	MakeProfileInvItemThisSlot(p, VESTPOS, FLAK_JACKET, 100, 1);
 	if ( PreRandom( 100 ) < (UINT32) p.bWisdom )
 	{
 		MakeProfileInvItemThisSlot(p, HELMETPOS, STEEL_HELMET, 100, 1);
 	}
 
-	// canteen
-	MakeProfileInvItemThisSlot(p, SMALLPOCK4POS, CANTEEN, 100, 1);
-
-
 	if (p.bMarksmanship >= 80)
 	{
-		// good shooters get a better & matching ammo
-		MakeProfileInvItemThisSlot(p, HANDPOS, MP5K, 100, 1);
-		MakeProfileInvItemThisSlot(p, SMALLPOCK1POS, CLIP9_30, 100, 2);
+    BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getGoodShooterItems())
+    {
+      MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+    }
 	}
 	else
 	{
-		// Automatic pistol, with matching ammo
-		MakeProfileInvItemThisSlot(p, HANDPOS, BERETTA_93R, 100, 1);
-		MakeProfileInvItemThisSlot(p, SMALLPOCK1POS, CLIP9_15, 100, 3);
+    BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getNormalShooterItems())
+    {
+      MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+    }
 	}
 
 
@@ -375,13 +373,6 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 	{
 		MakeProfileInvItemAnySlot(p, CAMOUFLAGEKIT, 100, 1);
 	}
-
-  // giving extra weapon
-  BOOST_FOREACH(const GamePolicy::ExtraItem &item, GGP->imp_extra_equipment)
-  {
-    SLOGI("IMP", "giving extra equipment %d (%d)", item.item, item.count);
-    MakeProfileInvItemAnySlot(p, item.item, 100, item.count);
-  }
 }
 
 

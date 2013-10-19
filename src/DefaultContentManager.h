@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "boost/smart_ptr.hpp"
 #include "rapidjson/document.h"
 
 #include "ContentManager.h"
@@ -108,6 +109,8 @@ public:
   virtual const DealerInventory* getBobbyRayNewInventory() const;
   virtual const DealerInventory* getBobbyRayUsedInventory() const;
 
+  virtual const IMPPolicy* getIMPPolicy() const;
+
 protected:
   std::string m_dataDir;
   std::string m_tileDir;
@@ -134,6 +137,7 @@ protected:
   std::vector<const DealerInventory*> m_dealersInventory;
   const DealerInventory *m_bobbyRayNewInventory;
   const DealerInventory *m_bobbyRayUsedInventory;
+  const IMPPolicy *m_impPolicy;
 
   LibraryDB *m_libraryDB;
 
@@ -143,13 +147,14 @@ protected:
   bool loadAmmoTypes();
   bool loadArmyGunChoice();
 
-  bool loadDealerInventory();
+  const DealerInventory * loadDealerInventory(const char *fileName);
+  bool loadAllDealersInventory();
 
   bool readWeaponTable(
     const char *fileName,
     std::vector<std::vector<const WeaponModel*> > & weaponTable);
 
-  rapidjson::Document * readJsonDataFile(const char *fileName) const;
+  rapidjson::Document* readJsonDataFile(const char *fileName) const;
 };
 
 class LibraryFileNotFoundException : public std::runtime_error

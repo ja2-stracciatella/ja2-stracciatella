@@ -10,6 +10,7 @@
 #include "ItemSystem.h"
 
 class DealerInventory;
+class IMPPolicy;
 class UTF8String;
 struct AmmoTypeModel;
 struct CalibreModel;
@@ -95,6 +96,8 @@ public:
   virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
   virtual const DealerInventory* getBobbyRayNewInventory() const = 0;
   virtual const DealerInventory* getBobbyRayUsedInventory() const = 0;
+
+  virtual const IMPPolicy* getIMPPolicy() const = 0;
 
   /* /\** */
   /*  * get location of the game executable file. */
