@@ -32,7 +32,6 @@ struct MagazineModel : ItemModel
   /** Get standard replacement ammo name. */
   virtual const std::string & getStandardReplacement() const;
 
-  const std::string internalName;
   std::string standardReplacement;
   const CalibreModel *calibre;
   const uint16_t capacity;

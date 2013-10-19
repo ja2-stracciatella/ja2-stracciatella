@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "Build/Tactical/Item_Types.h"
 
 class JsonObject;
@@ -9,10 +11,16 @@ struct WeaponModel;
 
 struct ItemModel
 {
-  ItemModel(uint16_t itemIndex, uint32_t usItemClass, uint8_t classIndex=0, ItemCursor cursor=INVALIDCURS);
+  ItemModel(
+    uint16_t itemIndex,
+    const char* internalName,
+    uint32_t usItemClass,
+    uint8_t classIndex=0,
+    ItemCursor cursor=INVALIDCURS);
 
   ItemModel(
     uint16_t   itemIndex,
+    const char* internalName,
     uint32_t   usItemClass,
     uint8_t    ubClassIndex,
     ItemCursor ubCursor,
@@ -25,6 +33,8 @@ struct ItemModel
     int8_t     bReliability,
     int8_t     bRepairEase,
     uint16_t   fFlags);
+
+  const virtual std::string& getInternalName() const;
 
   virtual uint16_t        getItemIndex() const;
   virtual uint32_t        getItemClass() const;
@@ -71,6 +81,7 @@ struct ItemModel
 
 protected:
   uint16_t   itemIndex;
+  std::string internalName;
   uint32_t   usItemClass;
   uint8_t    ubClassIndex;
   ItemCursor ubCursor;

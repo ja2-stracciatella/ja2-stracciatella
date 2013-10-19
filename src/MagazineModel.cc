@@ -9,8 +9,7 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
                              const CalibreModel *calibre_,
                              uint16_t capacity_,
                              const AmmoTypeModel *ammoType_)
-  :ItemModel(itemIndex_, IC_AMMO, 0, INVALIDCURS),
-     internalName(internalName_),
+  :ItemModel(itemIndex_, internalName_, IC_AMMO, 0, INVALIDCURS),
      calibre(calibre_), capacity(capacity_), ammoType(ammoType_)
 {
 }

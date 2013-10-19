@@ -5,9 +5,14 @@
 #include "WeaponModels.h"
 
 
-ItemModel::ItemModel(uint16_t itemIndex, uint32_t usItemClass, uint8_t classIndex, ItemCursor cursor)
+ItemModel::ItemModel(uint16_t itemIndex,
+                     const char* internalName,
+                     uint32_t usItemClass,
+                     uint8_t classIndex,
+                     ItemCursor cursor)
 {
   this->itemIndex             = itemIndex;
+  this->internalName          = internalName;
   this->usItemClass           = usItemClass;
   this->ubClassIndex          = classIndex;
   this->ubCursor              = cursor;
@@ -23,6 +28,7 @@ ItemModel::ItemModel(uint16_t itemIndex, uint32_t usItemClass, uint8_t classInde
 }
 
 ItemModel::ItemModel(uint16_t   itemIndex,
+                     const char* internalName,
                      uint32_t   usItemClass,
                      uint8_t    ubClassIndex,
                      ItemCursor ubCursor,
@@ -37,6 +43,7 @@ ItemModel::ItemModel(uint16_t   itemIndex,
                      uint16_t   fFlags)
 {
   this->itemIndex             = itemIndex;
+  this->internalName          = internalName;
   this->usItemClass           = usItemClass;
   this->ubClassIndex          = ubClassIndex;
   this->ubCursor              = ubCursor;
@@ -50,6 +57,8 @@ ItemModel::ItemModel(uint16_t   itemIndex,
   this->bRepairEase           = bRepairEase;
   this->fFlags                = fFlags;
 }
+
+const std::string& ItemModel::getInternalName() const  { return internalName;          }
 
 uint16_t        ItemModel::getItemIndex() const        { return itemIndex;             }
 uint32_t        ItemModel::getItemClass() const        { return usItemClass;           }

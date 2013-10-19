@@ -527,7 +527,7 @@ bool DefaultContentManager::loadWeapons()
       {
         JsonObjectReader obj(a[i]);
         WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
-        SLOGD(TAG, "Loaded weapon %d %s", w->getItemIndex(), w->internalName);
+        SLOGD(TAG, "Loaded weapon %d %s", w->getItemIndex(), w->getInternalName().c_str());
 
         if((w->getItemIndex() < 0) || (w->getItemIndex() > MAX_WEAPONS))
         {
@@ -536,7 +536,7 @@ bool DefaultContentManager::loadWeapons()
         }
 
         m_items[w->getItemIndex()] = w;
-        m_weaponMap.insert(std::make_pair(std::string(w->internalName), w));
+        m_weaponMap.insert(std::make_pair(w->getInternalName(), w));
       }
     }
   }
@@ -563,7 +563,7 @@ bool DefaultContentManager::loadMagazines()
       {
         JsonObjectReader obj(a[i]);
         MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
-        SLOGD(TAG, "Loaded magazine %d %s", mag->getItemIndex(), mag->internalName.c_str());
+        SLOGD(TAG, "Loaded magazine %d %s", mag->getItemIndex(), mag->getInternalName().c_str());
 
         if((mag->getItemIndex() < FIRST_AMMO) || (mag->getItemIndex() > LAST_AMMO))
         {
@@ -573,7 +573,7 @@ bool DefaultContentManager::loadMagazines()
 
         m_magazines.push_back(mag);
         m_items[mag->getItemIndex()] = mag;
-        m_magazineMap.insert(std::make_pair(std::string(mag->internalName), mag));
+        m_magazineMap.insert(std::make_pair(mag->getInternalName(), mag));
       }
     }
   }

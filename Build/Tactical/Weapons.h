@@ -141,7 +141,6 @@ enum
 
 struct WEAPONTYPE
 {
-  char     internalName[40];
   char     internalType[20];
 	UINT8    ubWeaponClass;    // handgun/shotgun/rifle/knife
 	UINT8    ubWeaponType;     // exact type (for display purposes)

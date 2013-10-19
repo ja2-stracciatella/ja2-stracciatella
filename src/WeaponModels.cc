@@ -15,9 +15,8 @@
 WeaponModel::WeaponModel(uint32_t itemClass, uint8_t cursor, uint16_t itemIndex, const char* internalName, const char* internalType)
   :sound(NO_WEAPON_SOUND_STR),
    burstSound(NO_WEAPON_SOUND_STR),
-   ItemModel(itemIndex, itemClass, itemIndex, (ItemCursor)cursor)
+   ItemModel(itemIndex, internalName, itemClass, itemIndex, (ItemCursor)cursor)
 {
-  strncpy(this->internalName, internalName, sizeof(this->internalName));
   strncpy(this->internalType, internalType, sizeof(this->internalType));
   ubWeaponClass        = NOGUNCLASS;
   calibre              = CalibreModel::getNoCalibreObject();
