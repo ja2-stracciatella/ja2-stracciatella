@@ -2,20 +2,16 @@
 
 #include "Build/Tactical/Item_Types.h"
 
-DefaultGamePolicy::DefaultGamePolicy()
+DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
-  f_draw_item_shadow = true;
+  f_draw_item_shadow    = (*json)["draw_item_shadow"].GetBool();
 
-  starting_cash_easy    = 45000;
-  starting_cash_medium  = 35000;
-  starting_cash_hard    = 30000;
+  starting_cash_easy    = (*json)["starting_cash_easy"].GetInt();
+  starting_cash_medium  = (*json)["starting_cash_medium"].GetInt();
+  starting_cash_hard    = (*json)["starting_cash_hard"].GetInt();
 
-  f_drop_everything     = false;
-  f_all_dropped_visible = false;
+  f_drop_everything     = (*json)["drop_everything"].GetBool();
+  f_all_dropped_visible = (*json)["all_drops_visible"].GetBool();
 
-  enemy_weapon_minimal_status   = 0;
-
-  // imp_extra_equipment.push_back(ExtraItem(AKM));
-  // imp_extra_equipment.push_back(ExtraItem(CLIP762W_30_AP, 4));
-  // imp_extra_equipment.push_back(ExtraItem(CLIP762W_30_HP, 4));
+  enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
 }

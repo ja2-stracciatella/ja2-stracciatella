@@ -43,7 +43,6 @@
 #include "JsonUtility.h"
 #include "MicroIni/MicroIni.hpp"
 #include "ModPackContentManager.h"
-#include "policy/DefaultGamePolicy.h"
 #include "sgp/UTF8String.h"
 
 #ifdef WITH_UNITTESTS
@@ -285,9 +284,6 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 
 ////////////////////////////////////////////////////////////
 
-static DefaultGamePolicy g_gamePolicy;
-
-const GamePolicy *GGP = &g_gamePolicy;
 ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////

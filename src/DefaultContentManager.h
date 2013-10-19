@@ -109,6 +109,7 @@ public:
   virtual const DealerInventory* getBobbyRayNewInventory() const;
   virtual const DealerInventory* getBobbyRayUsedInventory() const;
 
+  virtual const GamePolicy* getGamePolicy() const;
   virtual const IMPPolicy* getIMPPolicy() const;
 
 protected:
@@ -138,6 +139,7 @@ protected:
   const DealerInventory *m_bobbyRayNewInventory;
   const DealerInventory *m_bobbyRayUsedInventory;
   const IMPPolicy *m_impPolicy;
+  const GamePolicy *m_gamePolicy;
 
   LibraryDB *m_libraryDB;
 

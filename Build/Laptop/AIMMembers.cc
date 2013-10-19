@@ -897,7 +897,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		INT16       const  sCenX    = x + abs(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  sCenY    = y + abs(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
-    if(GGP->f_draw_item_shadow)
+    if(GCM->getGamePolicy()->f_draw_item_shadow)
     {
       // Blt the shadow of the item
       BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), sCenX - 2, sCenY + 2);

@@ -2,8 +2,10 @@
 
 #include "GamePolicy.h"
 
+#include "rapidjson/document.h"
+
 class DefaultGamePolicy : public GamePolicy
 {
 public:
-  DefaultGamePolicy();
+  DefaultGamePolicy(rapidjson::Document *json);
 };

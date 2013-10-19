@@ -27,6 +27,7 @@
 #include "JsonUtility.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
 
 #include "boost/foreach.hpp"
@@ -232,6 +233,7 @@ DefaultContentManager::~DefaultContentManager()
   delete m_bobbyRayNewInventory;
   delete m_bobbyRayUsedInventory;
   delete m_impPolicy;
+  delete m_gamePolicy;
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -749,6 +751,9 @@ bool DefaultContentManager::loadGameData()
 
   loadAllDealersInventory();
 
+  boost::shared_ptr<rapidjson::Document> game_json(readJsonDataFile("game.json"));
+  m_gamePolicy = new DefaultGamePolicy(game_json.get());
+
   boost::shared_ptr<rapidjson::Document> imp_json(readJsonDataFile("imp.json"));
   m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
 
@@ -827,4 +832,9 @@ const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) c
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const
 {
   return m_impPolicy;
+}
+
+const GamePolicy* DefaultContentManager::getGamePolicy() const
+{
+  return m_gamePolicy;
 }
