@@ -4,6 +4,7 @@
 
 #include "Build/Directories.h"
 #include "Build/Strategic/Strategic_Status.h"
+#include "Build/Tactical/Arms_Dealer.h"
 #include "Build/Tactical/Items.h"
 #include "Build/Tactical/Weapons.h"
 
@@ -21,14 +22,14 @@
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
+#include "DealerInventory.h"
 #include "JsonObject.h"
 #include "JsonUtility.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
 #include "boost/foreach.hpp"
-
-#include "rapidjson/document.h"
+#include "boost/smart_ptr.hpp"
 
 #include "slog/slog.h"
 #define TAG "DefaultCM"
@@ -138,7 +139,8 @@ DefaultContentManager::DefaultContentManager(const std::string &configFolder,
                                              const std::string &externalizedDataPath
   )
   :mNormalGunChoice(ARMY_GUN_LEVELS),
-   mExtendedGunChoice(ARMY_GUN_LEVELS)
+   mExtendedGunChoice(ARMY_GUN_LEVELS),
+   m_dealersInventory(NUM_ARMS_DEALERS)
 {
   /*
    * Searching actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
@@ -206,6 +208,7 @@ DefaultContentManager::~DefaultContentManager()
   m_magazineMap.clear();
   m_magazines.clear();
   m_weaponMap.clear();
+  m_itemMap.clear();
 
   BOOST_FOREACH(const CalibreModel* calibre, m_calibres)
   {
@@ -220,6 +223,11 @@ DefaultContentManager::~DefaultContentManager()
   }
   m_ammoTypes.clear();
   m_ammoTypeMap.clear();
+
+  BOOST_FOREACH(const DealerInventory* inv, m_dealersInventory)
+  {
+    if(inv) delete inv;
+  }
 }
 
 /** Get map file path. */
@@ -470,12 +478,13 @@ const WeaponModel* DefaultContentManager::getWeapon(uint16_t itemIndex)
 
 const WeaponModel* DefaultContentManager::getWeaponByName(const std::string &internalName)
 {
-  if(m_weaponMap.find(internalName) == m_weaponMap.end())
+  std::map<std::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
+  if(it == m_weaponMap.end())
   {
     SLOGE(TAG, "weapon '%s' is not found", internalName.c_str());
     throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()));
   }
-  return m_weaponMap[internalName];
+  return it->second;//m_weaponMap[internalName];
 }
 
 const MagazineModel* DefaultContentManager::getMagazineByName(const std::string &internalName)
@@ -713,14 +722,79 @@ bool DefaultContentManager::loadGameData()
 {
   createAllHardcodedItemModels(m_items);
 
-  return loadCalibres()
+  bool result = loadCalibres()
     && loadAmmoTypes()
     && loadMagazines()
     && loadWeapons()
     && loadArmyGunChoice();
+
+  BOOST_FOREACH(const ItemModel *item, m_items)
+  {
+    m_itemMap.insert(std::make_pair(item->getInternalName(), item));
+  }
+
+  loadDealerInventory();
+
+  return result;
 }
 
-const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex)
+rapidjson::Document * DefaultContentManager::readJsonDataFile(const char *fileName) const
+{
+  AutoSGPFile f(openGameResForReading(fileName));
+  std::string jsonData = FileMan::fileReadText(f);
+
+  rapidjson::Document *document = new rapidjson::Document();
+  if (document->Parse<0>(jsonData.c_str()).HasParseError())
+  {
+    SLOGE(TAG, "Failed to parse '%s'", fileName);
+    delete document;
+    throw std::runtime_error(FormattedString("Failed to parse '%s'", fileName));
+  }
+
+  return document;
+}
+
+bool DefaultContentManager::loadDealerInventory()
+{
+  m_dealersInventory[ARMS_DEALER_TONY]          = new DealerInventory(readJsonDataFile("dealer-inventory-tony.json"), this);
+  m_dealersInventory[ARMS_DEALER_FRANK]         = new DealerInventory(readJsonDataFile("dealer-inventory-frank.json"), this);
+  m_dealersInventory[ARMS_DEALER_MICKY]         = new DealerInventory(readJsonDataFile("dealer-inventory-micky.json"), this);
+  m_dealersInventory[ARMS_DEALER_ARNIE]         = new DealerInventory(readJsonDataFile("dealer-inventory-arnie.json"), this);
+  m_dealersInventory[ARMS_DEALER_PERKO]         = new DealerInventory(readJsonDataFile("dealer-inventory-perko.json"), this);
+  m_dealersInventory[ARMS_DEALER_KEITH]         = new DealerInventory(readJsonDataFile("dealer-inventory-keith.json"), this);
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_1]     = new DealerInventory(readJsonDataFile("dealer-inventory-herve-santos.json"), this);
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_2]     = new DealerInventory(readJsonDataFile("dealer-inventory-peter-santos.json"), this);
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_3]     = new DealerInventory(readJsonDataFile("dealer-inventory-alberto-santos.json"), this);
+  m_dealersInventory[ARMS_DEALER_BAR_BRO_4]     = new DealerInventory(readJsonDataFile("dealer-inventory-carlo-santos.json"), this);
+  m_dealersInventory[ARMS_DEALER_JAKE]          = new DealerInventory(readJsonDataFile("dealer-inventory-jake.json"), this);
+  m_dealersInventory[ARMS_DEALER_FRANZ]         = new DealerInventory(readJsonDataFile("dealer-inventory-franz.json"), this);
+  m_dealersInventory[ARMS_DEALER_HOWARD]        = new DealerInventory(readJsonDataFile("dealer-inventory-howard.json"), this);
+  m_dealersInventory[ARMS_DEALER_SAM]           = new DealerInventory(readJsonDataFile("dealer-inventory-sam.json"), this);
+  m_dealersInventory[ARMS_DEALER_FREDO]         = new DealerInventory(readJsonDataFile("dealer-inventory-fredo.json"), this);
+  m_dealersInventory[ARMS_DEALER_GABBY]         = new DealerInventory(readJsonDataFile("dealer-inventory-gabby.json"), this);
+  m_dealersInventory[ARMS_DEALER_DEVIN]         = new DealerInventory(readJsonDataFile("dealer-inventory-devin.json"), this);
+  m_dealersInventory[ARMS_DEALER_ELGIN]         = new DealerInventory(readJsonDataFile("dealer-inventory-elgin.json"), this);
+  m_dealersInventory[ARMS_DEALER_MANNY]         = new DealerInventory(readJsonDataFile("dealer-inventory-manny.json"), this);
+  return true;
+}
+
+const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
 {
   return m_items[itemIndex];
+}
+
+const ItemModel* DefaultContentManager::getItemByName(const std::string &internalName) const
+{
+  std::map<std::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
+  if(it == m_itemMap.end())
+  {
+    SLOGE(TAG, "item '%s' is not found", internalName.c_str());
+    throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()));
+  }
+  return it->second;
+}
+
+const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) const
+{
+  return m_dealersInventory[dealerId];
 }

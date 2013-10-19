@@ -4,8 +4,12 @@
 #include <string>
 #include <vector>
 
+/* XXX */
 #include "ItemModel.h"
 
+#include "ItemSystem.h"
+
+class DealerInventory;
 class UTF8String;
 struct AmmoTypeModel;
 struct CalibreModel;
@@ -13,7 +17,7 @@ struct MagazineModel;
 struct SGPFile;
 struct WeaponModel;
 
-class ContentManager
+class ContentManager : public ItemSystem
 {
 public:
   virtual ~ContentManager() {};
@@ -83,10 +87,12 @@ public:
   virtual const CalibreModel* getCalibre(uint8_t index) = 0;
   virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
 
-  virtual const ItemModel* getItem(uint16_t index) = 0;
+  virtual const ItemModel* getItem(uint16_t index) const = 0;
 
   virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const = 0;
   virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const = 0;
+
+  virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
 
   /* /\** */
   /*  * get location of the game executable file. */

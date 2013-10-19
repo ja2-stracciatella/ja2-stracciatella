@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "rapidjson/document.h"
+
 #include "ContentManager.h"
 #include "StringEncodingTypes.h"
 
@@ -96,10 +98,13 @@ public:
   virtual const CalibreModel* getCalibre(uint8_t index);
   virtual const AmmoTypeModel* getAmmoType(uint8_t index);
 
-  virtual const ItemModel* getItem(uint16_t index);
+  virtual const ItemModel* getItem(uint16_t index) const;
+  virtual const ItemModel* getItemByName(const std::string &internalName) const;
 
   virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const;
   virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const;
+
+  virtual const DealerInventory* getDealerInventory(int dealerId) const;
 
 protected:
   std::string m_dataDir;
@@ -119,9 +124,12 @@ protected:
   std::map<std::string, const CalibreModel*> m_calibreMap;
   std::map<std::string, const MagazineModel*> m_magazineMap;
   std::map<std::string, const WeaponModel*> m_weaponMap;
+  std::map<std::string, const ItemModel*> m_itemMap;
 
   std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
   std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
+
+  std::vector<const DealerInventory*> m_dealersInventory;
 
   LibraryDB *m_libraryDB;
 
@@ -131,10 +139,13 @@ protected:
   bool loadAmmoTypes();
   bool loadArmyGunChoice();
 
+  bool loadDealerInventory();
+
   bool readWeaponTable(
     const char *fileName,
     std::vector<std::vector<const WeaponModel*> > & weaponTable);
 
+  rapidjson::Document * readJsonDataFile(const char *fileName) const;
 };
 
 class LibraryFileNotFoundException : public std::runtime_error

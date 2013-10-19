@@ -938,7 +938,7 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 }
 
 
-static BOOLEAN DoesItemAppearInDealerInventoryList(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer);
+static bool DoesItemAppearInDealerInventoryList(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer);
 
 
 BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
@@ -2202,31 +2202,10 @@ static BOOLEAN IsItemInfoSpecial(SPECIAL_ITEM_INFO* pSpclItemInfo)
 }
 
 
-static BOOLEAN DoesItemAppearInDealerInventoryList(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
+static bool DoesItemAppearInDealerInventoryList(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
 {
-	UINT16 usCnt;
-
-	// the others will buy only things that appear in their own "for sale" inventory lists
-	DEALER_POSSIBLE_INV const* const pDealerInv = GetPointerToDealersPossibleInventory(ubArmsDealer);
-
-	// loop through the dealers' possible inventory and see if the item exists there
-	usCnt = 0;
-	while( pDealerInv[ usCnt ].sItemIndex != LAST_DEALER_ITEM )
-	{
-		//if the initial dealer inv contains the required item, the dealer can sell the item
-		if( pDealerInv[ usCnt ].sItemIndex == usItemIndex )
-		{
-			// if optimal quantity listed is 0, it means dealer won't sell it himself, but will buy it from the player!
-			if ( ( pDealerInv[ usCnt ].ubOptimalNumber > 0 ) || fPurchaseFromPlayer )
-			{
-				return( TRUE );
-			}
-		}
-
-		usCnt++;
-	}
-
-	return( FALSE );
+  int maxAmount = GetDealersMaxItemAmount(ubArmsDealer, usItemIndex);
+  return (maxAmount > 0) || fPurchaseFromPlayer;
 }
 
 

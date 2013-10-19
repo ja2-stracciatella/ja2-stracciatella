@@ -495,6 +495,7 @@ SRCS += sgp/Video.cc
 
 SRCS += src/AmmoTypeModel.cc
 SRCS += src/CalibreModel.cc
+SRCS += src/DealerInventory.cc
 SRCS += src/DefaultContentManager.cc
 SRCS += src/ItemModel.cc
 SRCS += src/JsonUtility.cc

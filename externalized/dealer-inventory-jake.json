@@ -1,0 +1,57 @@
+{
+        "FIRSTAIDKIT": 4,
+        "MEDICKIT": 3,
+
+        "SW38": 1,
+        "CLIP38_6": 5,
+
+        "JAR": 3,
+        "CANTEEN": 2,
+        "BEER": 6,
+
+        "CROWBAR": 1,
+        "WIRECUTTERS": 1,
+
+        "COMBAT_KNIFE": 1,
+        "THROWING_KNIFE": 1,
+        "BRASS_KNUCKLES": 1,
+        "MACHETE": 1,
+
+        "BREAK_LIGHT": 5,
+
+        "BIPOD": 1,
+
+        "TSHIRT": 6,
+        "CIGARS": 3,
+        "PORNOS": 1,
+
+        "LOCKSMITHKIT": 1,
+
+        "TSHIRT_DEIDRANNA": 2,
+        "XRAY_BULB": 1,
+
+        "GLOCK_17": 1,
+        "GLOCK_18": 1,
+        "BERETTA_92F": 1,
+        "BERETTA_93R": 1,
+        "BARRACUDA": 1,
+        "DESERTEAGLE": 1,
+        "M1911": 1,
+
+        "DISCARDED_LAW": 1,
+
+        "STEEL_HELMET": 1,
+
+        "TOOLKIT": 1,
+
+        "WINE": 1,
+        "ALCOHOL": 1,
+
+        "GOLDWATCH": 1,
+        "GOLFCLUBS": 1,
+        "WALKMAN": 1,
+        "PORTABLETV": 1,
+
+        "COMPOUND18": 1,
+        "CERAMIC_PLATES": 1
+}
