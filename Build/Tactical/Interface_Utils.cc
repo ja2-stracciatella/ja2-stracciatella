@@ -18,6 +18,9 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
 
 #define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )
 #define			LIFE_BAR										FROMRGB( 200, 0, 0 )
@@ -204,17 +207,17 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 {
 	INT16 value;
 	// Adjust for ammo, other things
-	INVTYPE const& item = Item[o.usItem];
+	const ItemModel * item = GCM->getItem(o.usItem);
 	if (ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1)
 	{
 		value = o.bAttachStatus[ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1];
 	}
-	else if (item.usItemClass & IC_AMMO)
+	else if (item->isAmmo())
 	{
-		value = 100 * o.ubShotsLeft[ubStatus] / Magazine[item.ubClassIndex].ubMagSize;
+		value = 100 * o.ubShotsLeft[ubStatus] / item->asAmmo()->capacity;
 		if (value > 100) value = 100;
 	}
-	else if (item.usItemClass & IC_KEY)
+	else if (item->isKey())
 	{
 		value = 100;
 	}

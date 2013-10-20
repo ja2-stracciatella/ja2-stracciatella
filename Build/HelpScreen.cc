@@ -1,5 +1,4 @@
 #include "Directories.h"
-#include "Encrypted_File.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Interface.h"
@@ -31,6 +30,9 @@
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "VSurface.h"
 #include "UILayout.h"
+
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #ifdef JA2BETAVERSION
 #	include "Debug.h"
@@ -1264,7 +1266,7 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 
 static void GetHelpScreenText(const UINT32 uiRecordToGet, wchar_t* const pText)
 {
-	LoadEncryptedDataFromFile(BINARYDATADIR "/help.edt", pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
+	GCM->loadEncryptedString(BINARYDATADIR "/help.edt", pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
 }
 
 

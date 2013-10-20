@@ -4,6 +4,8 @@
 #include "Faces.h"
 #include "GameScreen.h"
 
+#include "MercProfile.h"
+
 // An enumeration for dialog quotes
 enum DialogQuoteIDs
 {
@@ -192,9 +194,6 @@ void HandleDialogue(void);
 void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber );
 void HandleImportantMercQuoteLocked(SOLDIERTYPE*, UINT16 quote);
 
-
-const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile);
-
 // A higher level function used for tactical quotes
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);
 
@@ -206,7 +205,7 @@ void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, 
 
 void CharacterDialogueUsingAlternateFile(SOLDIERTYPE&, UINT16 quote, DialogueHandler);
 
-BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier);
+BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, bool useAlternateDialogueFile);
 
 // Called when a face stops talking...
 void HandleDialogueEnd(FACETYPE&);

@@ -107,11 +107,12 @@
 #include "UTF8String.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 static const char g_quicksave_name[] = "QuickSave";
 static const char g_savegame_name[]  = "SaveGame";
 static const char g_savegame_ext[]   = "sav";
-static const char g_savegame_dir[]   = "../SavedGames";
-
 
 //Global variable used
 #ifdef JA2BETAVERSION
@@ -279,7 +280,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 			wcslcpy(desc, GameDesc, lengthof(desc));
 		}
 
-		FileMan::createDir(g_savegame_dir);
+		FileMan::createDir(GCM->getSavedGamesFolder().c_str());
 
 		// Create the save game file
 		char savegame_name[512];
@@ -709,7 +710,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(FileMan::openForReadingSmart(zSaveGameName, false));
+	AutoSGPFile f(GCM->openUserPrivateFileForReading(std::string(zSaveGameName)));
 	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
@@ -1466,7 +1467,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(FileMan::openForReadingSmart(pSrcFileName, true));
+	AutoSGPFile hSrcFile(GCM->openGameResForReading(pSrcFileName));
 
 #ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
@@ -1671,7 +1672,7 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 
 void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
 {
-	char const* const dir = g_savegame_dir;
+  std::string dir = GCM->getSavedGamesFolder();
 	char const* const ext = g_savegame_ext;
 
 	switch (ubSaveGameID)
@@ -1683,27 +1684,27 @@ void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzN
 			if (gfUseConsecutiveQuickSaveSlots &&
 					guiCurrentQuickSaveNumber != 0)
 			{
-				sprintf(pzNewFileName, "%s/%s%02d.%s", dir, quick, guiCurrentQuickSaveNumber, ext);
+				sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), quick, guiCurrentQuickSaveNumber, ext);
 			}
 			else
 #endif
 			{
-				sprintf(pzNewFileName, "%s/%s.%s", dir, quick, ext);
+				sprintf(pzNewFileName, "%s/%s.%s", dir.c_str(), quick, ext);
 			}
 			break;
 		}
 
 		case SAVE__END_TURN_NUM:
-			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir, guiLastSaveGameNum, ext);
+			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir.c_str(), guiLastSaveGameNum, ext);
 			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
 			break;
 
 		case SAVE__ERROR_NUM:
-			sprintf(pzNewFileName, "%s/error.%s", dir, ext);
+			sprintf(pzNewFileName, "%s/error.%s", dir.c_str(), ext);
 			break;
 
 		default:
-			sprintf(pzNewFileName, "%s/%s%02d.%s", dir, g_savegame_name, ubSaveGameID, ext);
+			sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), g_savegame_name, ubSaveGameID, ext);
 			break;
 	}
 }
@@ -1769,7 +1770,7 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 static void InitSaveGameFilePosition(UINT8 const slot)
 {
 	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, slot);
+	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
 	FileDelete( zFileName );
 }
 
@@ -1780,7 +1781,7 @@ static void SaveGameFilePosition(UINT8 const slot, const HWFILE save, const char
 	UINT32	uiStrLen=0;
 	CHAR8		zFileName[128];
 
-	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, slot);
+	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
 
 	// create the save game file
 	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
@@ -1795,7 +1796,7 @@ static void SaveGameFilePosition(UINT8 const slot, const HWFILE save, const char
 static void InitLoadGameFilePosition(UINT8 const slot)
 {
 	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, slot);
+	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
 	FileDelete( zFileName );
 }
 
@@ -1806,7 +1807,7 @@ static void LoadGameFilePosition(UINT8 const slot, const HWFILE load, const char
 	UINT32	uiStrLen=0;
 
 	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, slot);
+	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
 
 	// create the save game file
 	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
@@ -2222,7 +2223,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, 
 	//strcpy( gzNameOfMapTempFile, pNameOfFile);
 	sprintf( gzNameOfMapTempFile, "%s%d", pNameOfFile, ubSaveGameID );
 
-	sprintf(zFileName, "%s/%s.txt", g_savegame_dir, gzNameOfMapTempFile);
+	sprintf(zFileName, "%s/%s.txt", GCM->getSavedGamesFolder().c_str(), gzNameOfMapTempFile);
 
 	if( fInit )
 	{
@@ -2252,7 +2253,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 	guiSizeOfTempFiles += uiSizeOfFile;
 
-	sprintf(zFileName, "%s/%s.txt", g_savegame_dir, gzNameOfMapTempFile);
+	sprintf(zFileName, "%s/%s.txt", GCM->getSavedGamesFolder().c_str(), gzNameOfMapTempFile);
 
 	// create the save game file
 	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
@@ -2531,20 +2532,20 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	//The name of the file
 	char zFileName1[256];
-	sprintf(zFileName1, "%s/Auto%02d.%s", g_savegame_dir, 0, g_savegame_ext);
+	sprintf(zFileName1, "%s/Auto%02d.%s", GCM->getSavedGamesFolder().c_str(), 0, g_savegame_ext);
 	char zFileName2[256];
-	sprintf(zFileName2, "%s/Auto%02d.%s", g_savegame_dir, 1, g_savegame_ext);
+	sprintf(zFileName2, "%s/Auto%02d.%s", GCM->getSavedGamesFolder().c_str(), 1, g_savegame_ext);
 
-	if( FileExists( zFileName1 ) )
+	if( GCM->doesGameResExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(zFileName1, false));
+		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName1)));
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
-	if( FileExists( zFileName2 ) )
+	if( GCM->doesGameResExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(FileMan::openForReadingSmart(zFileName2, false));
+		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName2)));
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}

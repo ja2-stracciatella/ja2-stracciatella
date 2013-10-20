@@ -50,9 +50,12 @@
 #include "SoundMan.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
-#include "Encrypted_File.h"
 #include "Strategic_Town_Loyalty.h"
-#include "GameRes.h"
+
+#include "Build/GameRes.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #define	MERCBIOSFILENAME		BINARYDATADIR "/aimbios.edt"
 
@@ -870,8 +873,8 @@ static void UpdateMercInfo(void)
 static void LoadMercBioInfo(UINT8 const ubIndex, wchar_t* const pInfoString, wchar_t* const pAddInfo)
 {
 	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
-	LoadEncryptedDataFromFile(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO);
-	LoadEncryptedDataFromFile(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
+	GCM->loadEncryptedString(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO);
+	GCM->loadEncryptedString(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
 }
 
 
@@ -888,16 +891,20 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		UINT16 const usItem = p.inv[i];
 		if (usItem == NOTHING) continue;
 
-		INVTYPE     const& item     = Item[usItem];
+		const ItemModel * item = GCM->getItem(usItem);
 		SGPVObject  const& item_vo  = GetInterfaceGraphicForItem(item);
-		ETRLEObject const& e        = item_vo.SubregionProperties(item.ubGraphicNum);
+		ETRLEObject const& e        = item_vo.SubregionProperties(item->getGraphicNum());
 		INT16       const  sCenX    = x + abs(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  sCenY    = y + abs(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
-		// Blt the shadow of the item
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
+    if(GCM->getGamePolicy()->f_draw_item_shadow)
+    {
+      // Blt the shadow of the item
+      BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), sCenX - 2, sCenY + 2);
+    }
+
 		// Blt the item
-		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX,     sCenY, SGP_TRANSPARENT);
+		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item->getGraphicNum(), sCenX,     sCenY, SGP_TRANSPARENT);
 
 		/* If there are more then 1 piece of equipment in the current slot, display
 		 * how many there are */

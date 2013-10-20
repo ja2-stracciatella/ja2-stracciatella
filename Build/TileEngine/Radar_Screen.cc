@@ -33,6 +33,10 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include "FileMan.h"
+
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 extern INT32 iCurrentMapSectorZ;
 
@@ -83,9 +87,9 @@ void LoadRadarScreenBitmap(const char* const filename)
 	ClearOutRadarMapImage();
 
 	// Grab the Map image
-	SGPFILENAME image_filename;
-	ReplacePath(image_filename, lengthof(image_filename), RADARMAPSDIR "/", filename, ".sti");
-	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
+  std::string image_filename(GCM->getRadarMapResourceName(FileMan::replaceExtension(FileMan::getFileName(filename), ".sti")));
+
+	SGPVObject* const radar = AddVideoObjectFromFile(image_filename.c_str());
 	gusRadarImage = radar;
 
 	// ATE: Add a shade table!

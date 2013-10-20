@@ -44,6 +44,9 @@
 #include "Items.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 //#ifdef JA2BETAVERSION
 
@@ -2460,7 +2463,7 @@ static void AddItemToGridNo(INT32 iGridNo)
 	gsQdsEnteringGridNo = (INT16)iGridNo;
 
 
-	if( Item[ gItemListBox.sCurSelectedItem ].usItemClass == IC_KEY )
+	if( GCM->getItem(gItemListBox.sCurSelectedItem)->getItemClass() == IC_KEY )
 	{
 		gfAddKeyNextPass = TRUE;
 //		swprintf( zTemp, L"Please enter the Key ID" );

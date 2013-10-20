@@ -13,6 +13,12 @@
 #include "Random.h"
 #include "Items.h"
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "DealerInventory.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 struct ITEM_SORT_ENTRY
 {
@@ -52,605 +58,9 @@ static ITEM_SORT_ENTRY const DealerItemSortInfo[] =
 };
 
 
-//
-// Setup the inventory arrays for each of the arms dealers
-//
-//	The arrays are composed of pairs of numbers
-//		The first is the item index
-//		The second is the amount of the items the dealer will try to keep in his inventory
-
-
-// Tony ( Weapons only )
-static DEALER_POSSIBLE_INV const gTonyInventory[] =
-{
-	//Rare guns/ammo that Tony will buy although he won't ever sell them
-	{	ROCKET_RIFLE,					0 },
-	{	AUTO_ROCKET_RIFLE,		0 },
-	{ AUTOMAG_III,					0 },
-//	{ FLAMETHROWER,					0 },
-
-
-	//Weapons
-	{ GLOCK_17,							1 },		/* Glock 17        */
-	{ GLOCK_18,							1 },		/* Glock 18        */
-	{ BERETTA_92F,					1 },		/* Beretta 92F     */
-	{ BERETTA_93R,					1 },		/* Beretta 93R     */
-	{ SW38,									1 },		/* .38 S&W Special */
-	{ BARRACUDA,						1 },		/* .357 Barracuda  */
-	{ DESERTEAGLE,					1 },		/* .357 DesertEagle*/
-	{ M1911,								1 },		/* .45 M1911			 */
-	{ MP5K,									1 },		/* H&K MP5K      	 */
-	{ MAC10,								1 },		/* .45 MAC-10	     */
-
-	{ THOMPSON,							1 },		/* Thompson M1A1   */
-	{ COMMANDO,							1 },		/* Colt Commando   */
-	{ MP53,									1 },		/* H&K MP53		 		 */
-	{ AKSU74,								1 },		/* AKSU-74         */
-	{ TYPE85,								1 },		/* Type-85         */
-	{ SKS,									1 },		/* SKS             */
-	{ DRAGUNOV,							1 },		/* Dragunov        */
-	{ M24,									1 },		/* M24             */
-	{ AUG,									1 },		/* Steyr AUG       */
-
-	{ G41,									1 },		/* H&K G41         */
-	{ MINI14,								1 },		/* Ruger Mini-14   */
-	{ C7,										1 },		/* C-7             */
-	{ FAMAS,								1 },		/* FA-MAS          */
-	{ AK74,									1 },		/* AK-74           */
-	{ AKM,									1 },		/* AKM             */
-	{ M14,									1 },		/* M-14            */
-	{ G3A3,									1 },		/* H&K G3A3        */
-	{ FNFAL,								1 },		/* FN-FAL          */
-
-	{ MINIMI,								1 },
-	{ RPK74,								1 },
-	{ HK21E,								1 },
-
-	{ M870,									1 },		/* Remington M870  */
-	{ SPAS15,								1 },		/* SPAS-15         */
-
-	{ GLAUNCHER,						1 },		/* grenade launcher*/
-	{ UNDER_GLAUNCHER,			1 },		/* underslung g.l. */
-	{ ROCKET_LAUNCHER,			1 },		/* rocket Launcher */
-	{ MORTAR,								1 },
-
-	// SAP guns
-	{ G11,									1 },
-	{ CAWS,									1 },
-	{ P90,									1 },
-
-	{ DART_GUN,							1 },
-
-
-	//Ammo
-	{ CLIP9_15,							8 },
-	{ CLIP9_30,							6 },
-	{ CLIP9_15_AP,					3 },		/* CLIP9_15_AP */
-	{ CLIP9_30_AP,				  3 },		/* CLIP9_30_AP */
-	{ CLIP9_15_HP,				  3 },		/* CLIP9_15_HP */
-	{ CLIP9_30_HP,				  3 },		/* CLIP9_30_HP */
-
-	{ CLIP38_6,							10},		/* CLIP38_6 */
-	{ CLIP38_6_AP,				  5 },		/* CLIP38_6_AP */
-	{ CLIP38_6_HP,				  5 },		/* CLIP38_6_HP */
-
-	{ CLIP45_7,							6 },		/* CLIP45_7 */				// 70
-
-	{ CLIP45_30,					  8 },		/* CLIP45_30 */
-	{ CLIP45_7_AP,					3 },		/* CLIP45_7_AP */
-	{ CLIP45_30_AP,					3 },		/* CLIP45_30_AP */
-	{ CLIP45_7_HP,					3 },		/* CLIP45_7_HP */
-	{ CLIP45_30_HP,					3 },		/* CLIP45_30_HP */
-
-	{ CLIP357_6,					  6 },		/* CLIP357_6 */
-	{ CLIP357_9,					  5 },		/* CLIP357_9 */
-	{ CLIP357_6_AP,				  3 },		/* CLIP357_6_AP */
-	{ CLIP357_9_AP,					3 },		/* CLIP357_9_AP */
-	{ CLIP357_6_HP,					3 },		/* CLIP357_6_HP */			//80
-	{ CLIP357_9_HP,					3 },		/* CLIP357_9_HP */
-
-	{ CLIP545_30_AP,				6 },		/* CLIP545_30_AP */
-	{ CLIP545_30_HP,				3 },		/* CLIP545_30_HP */
-
-	{ CLIP556_30_AP,				6 },		/* CLIP556_30_AP */
-	{ CLIP556_30_HP,				3 },		/* CLIP556_30_HP */
-
-	{ CLIP762W_10_AP,				6 },		/* CLIP762W_10_AP */
-	{ CLIP762W_30_AP,				5 },		/* CLIP762W_30_AP */
-	{ CLIP762W_10_HP,				3 },		/* CLIP762W_10_HP */
-	{ CLIP762W_30_HP,				3 },		/* CLIP762W_30_HP */
-
-	{ CLIP762N_5_AP,				8 },		/* CLIP762N_5_AP */			//90
-	{ CLIP762N_20_AP,				5 },		/* CLIP762N_20_AP */
-	{ CLIP762N_5_HP,				3 },		/* CLIP762N_5_HP */
-	{ CLIP762N_20_HP,				3 },		/* CLIP762N_20_HP */
-
-	{ CLIP47_50_SAP,				5 },		/* CLIP47_50_SAP */
-
-	{ CLIP57_50_AP,					6 },		/* CLIP57_50_AP */
-	{ CLIP57_50_HP,					3 },		/* CLIP57_50_HP */
-
-	{ CLIP12G_7,						9 },		/* CLIP12G_7 */
-	{ CLIP12G_7_BUCKSHOT,   9 },		/* CLIP12G_7_BUCKSHOT */
-
-	{ CLIPCAWS_10_SAP,			5 },		/* CLIPCAWS_10_SAP */
-	{ CLIPCAWS_10_FLECH,		3 },		/* CLIPCAWS_10_FLECH */			//100
-
-	{ CLIPROCKET_AP,				3 },
-	{ CLIPROCKET_HE,				1 },
-	{ CLIPROCKET_HEAT,			1 },
-
-	{ CLIPDART_SLEEP,				5	},
-
-//	{ CLIPFLAME,						5	},
-
-	// "launchables" (New! From McCain!) - these are basically ammo
-	{ GL_HE_GRENADE,				2 },
-	{ GL_TEARGAS_GRENADE,		2 },
-	{ GL_STUN_GRENADE,			2 },
-	{ GL_SMOKE_GRENADE,			2 },
-	{	MORTAR_SHELL,					1 },
-
-	// knives
-	{	COMBAT_KNIFE,					3 },
-	{	THROWING_KNIFE,				6 },
-	{	BRASS_KNUCKLES,				1 },
-	{	MACHETE,							1 },
-
-	// attachments
-	{ SILENCER,							3 },
-	{ SNIPERSCOPE,					3 },
-	{ LASERSCOPE,						1 },
-	{ BIPOD,								3 },
-	{ DUCKBILL,							2 },
-
-/*
-	// grenades
-	{ STUN_GRENADE,					5 },
-	{ TEARGAS_GRENADE,			5 },
-	{ MUSTARD_GRENADE,			5 },
-	{ MINI_GRENADE,					5 },
-	{ HAND_GRENADE,					5 },
-	{ SMOKE_GRENADE,				5 },
-*/
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Devin		( Explosives )
-static DEALER_POSSIBLE_INV const gDevinInventory[] =
-{
-	{	STUN_GRENADE,							3 },
-	{	TEARGAS_GRENADE,					3 },
-	{	MUSTARD_GRENADE,					2 },
-	{	MINI_GRENADE,							3 },
-	{	HAND_GRENADE,							2 },
-	{ SMOKE_GRENADE,						3 },
-
-	{	GL_HE_GRENADE,						2 },
-	{	GL_TEARGAS_GRENADE,				2 },
-	{	GL_STUN_GRENADE,					2 },
-	{	GL_SMOKE_GRENADE,					2 },
-	{	MORTAR_SHELL,							1 },
-
-	{	CLIPROCKET_AP,						1 },
-	{ CLIPROCKET_HE,						1 },
-	{ CLIPROCKET_HEAT,					1 },
-
-	{ DETONATOR,								10},
-	{ REMDETONATOR,							5 },
-	{ REMOTEBOMBTRIGGER,				5 },
-
-	{	MINE,											6 },
-	{	RDX,											5 },
-	{	TNT,											5 },
-	{	C1,												4 },
-	{	HMX,											3 },
-	{	C4,												2 },
-
-	{	SHAPED_CHARGE,						5 },
-
-//	{	TRIP_FLARE,								2 },
-//	{	TRIP_KLAXON,							2 },
-
-	{ GLAUNCHER,								1 },		/* grenade launcher*/
-	{ UNDER_GLAUNCHER,					1 },		/* underslung g.l. */
-	{ ROCKET_LAUNCHER,					1 },		/* rocket Launcher */
-	{ MORTAR,										1 },
-
-	{	METALDETECTOR,						2 },
-	{	WIRECUTTERS,							1 },
-	{	DUCT_TAPE,								1 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Franz	(Expensive pawn shop )
-static DEALER_POSSIBLE_INV const gFranzInventory[] =
-{
-	{ NIGHTGOGGLES,							3 },
-
-	{ LASERSCOPE,								3 },
-	{ METALDETECTOR,						2 },
-	{ EXTENDEDEAR,							2 },
-
-	{	DART_GUN,									1 },
-
-	{ KEVLAR_VEST,							1	},
-	{ KEVLAR_LEGGINGS,					1 },
-	{ KEVLAR_HELMET,						1	},
-	{ KEVLAR2_VEST,							1 },
-	{	SPECTRA_VEST,							1 },
-	{	SPECTRA_LEGGINGS,					1 },
-	{	SPECTRA_HELMET,						1 },
-
-	{ CERAMIC_PLATES,						1 },
-
-	{	CAMOUFLAGEKIT,						1 },
-
-	{ VIDEO_CAMERA,							1 },		// for robot quest
-
-	{ LAME_BOY,									1 },
-	{ FUMBLE_PAK,								1 },
-
-	{ GOLDWATCH,								1 },
-	{ GOLFCLUBS,								1 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Keith		( Cheap Pawn Shop )
-static DEALER_POSSIBLE_INV const gKeithInventory[] =
-{
-	{ FIRSTAIDKIT,			5 },
-
-	// WARNING: Keith must not carry any guns, it would conflict with his story/quest
-
-	{	COMBAT_KNIFE,			2 },
-	{ THROWING_KNIFE,		3 },
-	{	BRASS_KNUCKLES,		1 },
-	{	MACHETE,					1 },
-
-	{ SUNGOGGLES,				3 },
-	{ FLAK_JACKET,			2	},
-	{ STEEL_HELMET,			3 },
-	{ LEATHER_JACKET,		1 },
-
-	{ CANTEEN,					5 },
-	{ CROWBAR,					1 },
-	{ JAR,							6 },
-
-	{	TOOLKIT,					1 },
-	{	GASMASK,					1 },
-
-	{ SILVER_PLATTER,		1 },
-
-	{ WALKMAN,					1 },
-	{ PORTABLETV,				1 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Sam		( Hardware )
-static DEALER_POSSIBLE_INV const gSamInventory[] =
-{
-	{ FIRSTAIDKIT,			3 },
-
-	{ LOCKSMITHKIT,			4 },
-	{ TOOLKIT,					3 },
-
-	{ CANTEEN,					5 },
-
-	{ CROWBAR,					3 },
-	{ WIRECUTTERS,			3 },
-
-	{ DUCKBILL,					3 },
-	{ JAR,							12},
-	{	BREAK_LIGHT,			12},		// flares
-
-	{	METALDETECTOR,		1 },
-
-	{ VIDEO_CAMERA,			1 },
-
-	{ QUICK_GLUE,				3 },
-	{ COPPER_WIRE,			5 },
-	{ BATTERIES,				10 },
-
-	{ CLIP9_15,					5 },
-	{ CLIP9_30,					5 },
-	{ CLIP38_6,					5 },
-	{ CLIP45_7,					5 },
-	{ CLIP45_30,				5 },
-	{ CLIP357_6,				5 },
-	{ CLIP357_9,				5 },
-	{ CLIP12G_7,					9 },
-	{ CLIP12G_7_BUCKSHOT,  9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Jake			( Junk )
-static DEALER_POSSIBLE_INV const gJakeInventory[] =
-{
-	{ FIRSTAIDKIT,			4 },
-	{ MEDICKIT,					3 },
-
-	{ SW38,							1 },
-	{ CLIP38_6,					5 },
-
-	{ JAR,							3 },
-	{ CANTEEN,					2 },
-	{ BEER,							6 },
-
-	{ CROWBAR,					1 },
-	{ WIRECUTTERS,			1 },
-
-	{ COMBAT_KNIFE,			1 },
-	{ THROWING_KNIFE,		1 },
-	{	BRASS_KNUCKLES,		1 },
-	{ MACHETE,					1 },
-
-	{	BREAK_LIGHT,			5 },		// flares
-
-	{	BIPOD,						1 },
-
-	{ TSHIRT,						6 },
-	{ CIGARS,						3 },
-	{ PORNOS,						1 },
-
-	{ LOCKSMITHKIT,			1 },
-
-	// "new" items, presumed unsafe for demo
-	{ TSHIRT_DEIDRANNA,	2 },
-	{	XRAY_BULB,				1 },
-
-	// additional stuff possible in real game
-	{ GLOCK_17,					1 },		/* Glock 17        */
-	{ GLOCK_18,					1 },		/* Glock 18        */
-	{ BERETTA_92F,			1 },		/* Beretta 92F     */
-	{ BERETTA_93R,			1 },		/* Beretta 93R     */
-	{ BARRACUDA,				1 },		/* .357 Barracuda  */
-	{ DESERTEAGLE,			1 },		/* .357 DesertEagle*/
-	{ M1911,						1 },		/* .45 M1911			 */
-
-	{ DISCARDED_LAW,		1 },
-
-	{ STEEL_HELMET,			1 },
-
-	{ TOOLKIT,					1 },
-
-	{ WINE,							1 },
-	{ ALCOHOL,					1 },
-
-	{ GOLDWATCH,				1 },
-	{ GOLFCLUBS,				1 },
-	{ WALKMAN,					1 },
-	{ PORTABLETV,				1 },
-
-	// stuff a real pawn shop wouldn't have, but it does make him a bit more useful
-	{ COMPOUND18,				1 },
-	{ CERAMIC_PLATES,		1 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Howard		( Pharmaceuticals )
-static DEALER_POSSIBLE_INV const gHowardInventory[] =
-{
-	{ FIRSTAIDKIT,				10},
-	{ MEDICKIT,						5 },
-	{ ADRENALINE_BOOSTER,	5 },
-	{ REGEN_BOOSTER,			5 },
-
-	{ ALCOHOL,						3 },
-	{	COMBAT_KNIFE,				2 },
-
-	{	CLIPDART_SLEEP,			5 },
-
-	{	CHEWING_GUM,				3 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Gabby			( Creature parts and Blood )
-static DEALER_POSSIBLE_INV const gGabbyInventory[] =
-{
-	{ JAR,											12 },
-	{ JAR_ELIXIR,								3 },
-	// buys these, but can't supply them (player is the only source)
-	{	JAR_CREATURE_BLOOD,				0 },
-	{ JAR_QUEEN_CREATURE_BLOOD, 0 },
-	{ BLOODCAT_CLAWS,						0 },
-	{ BLOODCAT_TEETH,						0 },
-	{ BLOODCAT_PELT,						0 },
-	{ CREATURE_PART_CLAWS,			0 },
-	{ CREATURE_PART_FLESH,			0 },
-	{ CREATURE_PART_ORGAN,			0 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Frank  ( Alcohol )
-static DEALER_POSSIBLE_INV const gFrankInventory[] =
-{
-	{ BEER,							12 },
-	{ WINE,							6 },
-	{ ALCOHOL,					9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Elgin  ( Alcohol )
-static DEALER_POSSIBLE_INV const gElginInventory[] =
-{
-	{ BEER,							12 },
-	{ WINE,							6 },
-	{ ALCOHOL,					9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Manny  ( Alcohol )
-static DEALER_POSSIBLE_INV const gMannyInventory[] =
-{
-	{ BEER,							12 },
-	{ WINE,							6 },
-	{ ALCOHOL,					9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Herve Santos		( Alcohol )
-static DEALER_POSSIBLE_INV const gHerveInventory[] =
-{
-	{ BEER,							12 },
-	{ WINE,							6 },
-	{ ALCOHOL,					9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Peter Santos ( Alcohol )
-static DEALER_POSSIBLE_INV const gPeterInventory[] =
-{
-	{ BEER,							12 },
-	{ WINE,							6 },
-	{ ALCOHOL,					9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Alberto Santos		( Alcohol )
-static DEALER_POSSIBLE_INV const gAlbertoInventory[] =
-{
-	{ BEER,							12 },
-	{ WINE,							6 },
-	{ ALCOHOL,					9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Carlo Santos		( Alcohol )
-static DEALER_POSSIBLE_INV const gCarloInventory[] =
-{
-	{ BEER,							12 },
-	{ WINE,							6 },
-	{ ALCOHOL,					9 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Micky	( BUYS Animal / Creature parts )
-static DEALER_POSSIBLE_INV const gMickyInventory[] =
-{
-	// ONLY BUYS THIS STUFF, DOESN'T SELL IT
-	{ BLOODCAT_CLAWS,	0 },
-	{ BLOODCAT_TEETH,	0 },
-	{ BLOODCAT_PELT,		0 },
-	{ CREATURE_PART_CLAWS,	0 },
-	{ CREATURE_PART_FLESH,	0 },
-	{ CREATURE_PART_ORGAN,	0 },
-	{ JAR_QUEEN_CREATURE_BLOOD, 0 },
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Arnie		( Weapons REPAIR )
-static DEALER_POSSIBLE_INV const gArnieInventory[] =
-{
-	// NO INVENTORY
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Perko			( REPAIR)
-static DEALER_POSSIBLE_INV const gPerkoInventory[] =
-{
-	// NO INVENTORY
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-// Fredo			( Electronics REPAIR)
-static DEALER_POSSIBLE_INV const gFredoInventory[] =
-{
-	// NO INVENTORY
-
-	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
-};
-
-
-static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV const*, UINT16 usItemIndex);
-
-
 INT8 GetDealersMaxItemAmount(ArmsDealerID const ubDealerID, UINT16 const usItemIndex)
 {
-	return GetMaxItemAmount(GetPointerToDealersPossibleInventory(ubDealerID), usItemIndex);
-}
-
-
-static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV const* const pInv, UINT16 const usItemIndex)
-{
-	UINT16	usCnt=0;
-
-	//loop through the array until a the LAST_DEALER_ITEM is hit
-	while( pInv[ usCnt ].sItemIndex != LAST_DEALER_ITEM )
-	{
-		//if this item is the one we want
-		if( pInv[ usCnt ].sItemIndex == usItemIndex )
-			return( pInv[ usCnt ].ubOptimalNumber );
-
-		// move to the next item
-		usCnt++;
-	}
-
-	return( NO_DEALER_ITEM );
-}
-
-
-DEALER_POSSIBLE_INV const* GetPointerToDealersPossibleInventory(ArmsDealerID const ubArmsDealerID)
-{
-	switch (ubArmsDealerID)
-	{
-		case ARMS_DEALER_TONY:      return gTonyInventory;
-		case ARMS_DEALER_FRANK:     return gFrankInventory;
-		case ARMS_DEALER_MICKY:     return gMickyInventory;
-		case ARMS_DEALER_ARNIE:     return gArnieInventory;
-		case ARMS_DEALER_PERKO:     return gPerkoInventory;
-		case ARMS_DEALER_KEITH:     return gKeithInventory;
-		case ARMS_DEALER_BAR_BRO_1: return gHerveInventory;
-		case ARMS_DEALER_BAR_BRO_2: return gPeterInventory;
-		case ARMS_DEALER_BAR_BRO_3: return gAlbertoInventory;
-		case ARMS_DEALER_BAR_BRO_4: return gCarloInventory;
-		case ARMS_DEALER_JAKE:      return gJakeInventory;
-		case ARMS_DEALER_FRANZ:     return gFranzInventory;
-		case ARMS_DEALER_HOWARD:    return gHowardInventory;
-		case ARMS_DEALER_SAM:       return gSamInventory;
-		case ARMS_DEALER_FREDO:     return gFredoInventory;
-		case ARMS_DEALER_GABBY:     return gGabbyInventory;
-		case ARMS_DEALER_DEVIN:     return gDevinInventory;
-		case ARMS_DEALER_ELGIN:     return gElginInventory;
-		case ARMS_DEALER_MANNY:     return gMannyInventory;
-		default: throw std::logic_error("Invalid arms dealer ID");
-	}
+  return GCM->getDealerInventory(ubDealerID)->getMaxItemAmount(GCM->getItem(usItemIndex));
 }
 
 
@@ -670,13 +80,13 @@ static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, UINT16
 	}
 
 	// items normally not sold at shops are unsuitable
-	if ( Item[ usItemIndex ].fFlags & ITEM_NOT_BUYABLE )
+	if ( GCM->getItem(usItemIndex)->getFlags() & ITEM_NOT_BUYABLE )
 	{
 		return(ITEM_SUITABILITY_NONE);
 	}
 
 
-	ubItemCoolness = Item[ usItemIndex ].ubCoolness;
+	ubItemCoolness = GCM->getItem(usItemIndex)->getCoolness();
 
 	if (ubItemCoolness == 0)
 	{
@@ -791,7 +201,7 @@ UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, UINT16 const usIte
 	// Bobby Ray has an easier time getting resupplied than the local dealers do
 	BOOLEAN const fBobbyRay = bArmsDealer == ARMS_DEALER_BOBBYR;
 
-	ubItemCoolness = Item[ usItemIndex ].ubCoolness;
+	ubItemCoolness = GCM->getItem(usItemIndex)->getCoolness();
 
 	switch (GetCurrentSuitabilityForItem( bArmsDealer, usItemIndex ) )
 	{
@@ -1015,21 +425,21 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 	if (category1 < category2) return -1;
 	if (category1 > category2) return  1;
 
-	INVTYPE const& item1 = Item[item_index1];
-	INVTYPE const& item2 = Item[item_index2];
+	const ItemModel * item1 = GCM->getItem(item_index1);
+	const ItemModel * item2 = GCM->getItem(item_index2);
 
 	// the same category
-	if (item1.usItemClass == IC_AMMO && item2.usItemClass == IC_AMMO)
+	if (item1->getItemClass() == IC_AMMO && item2->getItemClass() == IC_AMMO)
 	{
 		// AMMO is sorted by caliber first
-		AmmoKind const calibre1 = Magazine[item1.ubClassIndex].ubCalibre;
-		AmmoKind const calibre2 = Magazine[item2.ubClassIndex].ubCalibre;
+		uint16_t calibre1 = item1->asAmmo()->calibre->index;
+		uint16_t calibre2 = item2->asAmmo()->calibre->index;
 		if (calibre1 > calibre2) return -1;
 		if (calibre1 < calibre2) return  1;
 
 		// the same caliber - compare size of magazine
-		UINT8 const mag_size1 = Magazine[item1.ubClassIndex].ubMagSize;
-		UINT8 const mag_size2 = Magazine[item2.ubClassIndex].ubMagSize;
+		UINT8 const mag_size1 = item1->asAmmo()->capacity;
+		UINT8 const mag_size2 = item2->asAmmo()->capacity;
 		if (mag_size1 > mag_size2) return -1;
 		if (mag_size1 < mag_size2) return  1;
 	}
@@ -1037,16 +447,16 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 	{
 		// items other than ammo are compared on coolness first
 		// higher coolness first
-		UINT8 const coolness1 = item1.ubCoolness;
-		UINT8 const coolness2 = item2.ubCoolness;
+		UINT8 const coolness1 = item1->getCoolness();
+		UINT8 const coolness2 = item2->getCoolness();
 		if (coolness1 > coolness2) return -1;
 		if (coolness1 < coolness2) return  1;
 	}
 
 	// the same coolness/caliber - compare base prices then
 	// higher price first
-	UINT16 const price1 = item1.usPrice;
-	UINT16 const price2 = item2.usPrice;
+	UINT16 const price1 = item1->getPrice();
+	UINT16 const price2 = item2->getPrice();
 	if (price1 > price2) return -1;
 	if (price1 < price2) return  1;
 
@@ -1069,11 +479,11 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 
 static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 {
-	UINT32 const item_class = Item[usItemIndex].usItemClass;
+	UINT32 const item_class = GCM->getItem(usItemIndex)->getItemClass();
 
 	// If it's not a weapon, set no weapon class, as this won't be needed
 	UINT8 const weapon_class = usItemIndex < MAX_WEAPONS ?
-		Weapon[usItemIndex].ubWeaponClass : NOGUNCLASS;
+		GCM->getWeapon(usItemIndex)->ubWeaponClass : NOGUNCLASS;
 
 	// search table until end-of-list marker is encountered
 	for (UINT8 category = 0;; ++category)
@@ -1096,7 +506,7 @@ static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 
 BOOLEAN CanDealerItemBeSoldUsed( UINT16 usItemIndex )
 {
-	if ( !( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) )
+	if ( !( GCM->getItem(usItemIndex)->getFlags() & ITEM_DAMAGEABLE ) )
 		return(FALSE);
 
 	// certain items, although they're damagable, shouldn't be sold in a used condition

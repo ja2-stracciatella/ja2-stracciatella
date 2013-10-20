@@ -1,9 +1,14 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 /* Game resources */
 
 #include "Types.h"
 #include "IEncodingCorrector.h"
+
+#include "StringEncodingTypes.h"
 
 /** List of supported game versions (localizations). */
 enum GameVersion {
@@ -60,8 +65,8 @@ char const* GetMLGFilename(MultiLanguageGraphic);
 /** Choose game version. */
 void setGameVersion(GameVersion ver);
 
-/** Initialize game resources for the current version. */
-void InitGameResources(void);
+/** Get list of resource libraries. */
+std::vector<std::string> GetResourceLibraries(const std::string &dataDir);
 
 /**
  * Get encoding corrector for strings in data files.
@@ -91,3 +96,6 @@ wchar_t getZeroGlyphChar();
 /*************************************************************
  *
  ************************************************************/
+
+/** Get current string encoding type. */
+STRING_ENC_TYPE getStringEncType();

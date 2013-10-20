@@ -11,7 +11,6 @@
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "Cursors.h"
 #include "Soldier_Profile.h"
 #include "StrategicMap.h"
@@ -24,6 +23,8 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define HISTORY_QUEST_TEXT_SIZE 80
 
@@ -350,7 +351,7 @@ static void OpenAndReadHistoryFile(void)
 {
 	ClearHistoryList();
 
-	AutoSGPFile f(FileMan::openForReadingSmart(HISTORY_DATA_FILE, true));
+	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
 
 	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	while (entry_count-- > 0)
@@ -699,7 +700,7 @@ try
 	// check if bad page
 	if (uiPage == 0) return FALSE;
 
-	AutoSGPFile f(FileMan::openForReadingSmart(HISTORY_DATA_FILE, true));
+	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
 
 	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
@@ -815,14 +816,14 @@ UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 static void GetQuestStartedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
+	GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
 }
 
 
 static void GetQuestEndedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
+	GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
 }
 
 
@@ -842,7 +843,7 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 
 static INT32 GetNumberOfHistoryPages(void)
 {
-	AutoSGPFile f(FileMan::openForReadingSmart(HISTORY_DATA_FILE, true));
+	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
 
 	const UINT32 uiFileSize = FileGetSize(f);
 

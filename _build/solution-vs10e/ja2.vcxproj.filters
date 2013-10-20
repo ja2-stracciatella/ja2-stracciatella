@@ -61,6 +61,18 @@
     <Filter Include="Libraries\slog">
       <UniqueIdentifier>{cce1b641-703b-40ad-ac9d-5d87bf87cffc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\src">
+      <UniqueIdentifier>{f46d17d2-4b62-412c-91da-d3ffb29bb45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\policy">
+      <UniqueIdentifier>{0385b796-5aca-46f6-b959-be931946f5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\internals">
+      <UniqueIdentifier>{b6bfcb4d-9253-4f97-9a82-84a32089d042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\content">
+      <UniqueIdentifier>{3cb53e3c-50ba-4aa9-b89c-4aaf77b1c60e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Build\AniViewScreen.cc">
@@ -490,9 +502,6 @@
       <Filter>Source Files\Build\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Build\Utils\Debug_Control.cc">
-      <Filter>Source Files\Build\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build\Utils\Encrypted_File.cc">
       <Filter>Source Files\Build\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Build\Utils\Event_Manager.cc">
@@ -1104,9 +1113,6 @@
     <ClCompile Include="..\..\sgp\FileMan_unittest.cc">
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sgp\SGPStrings_unittest.cc">
-      <Filter>Source Files\sgp</Filter>
-    </ClCompile>
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp">
       <Filter>Libraries\boost\filesystem</Filter>
     </ClCompile>
@@ -1163,6 +1169,60 @@
     </ClCompile>
     <ClCompile Include="..\lib-slog\slog\slog.c">
       <Filter>Libraries\slog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\policy\DefaultGamePolicy.cc">
+      <Filter>Source Files\src\policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Soldier.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\internals\enums.cc">
+      <Filter>Source Files\src\internals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\content\npcs.cc">
+      <Filter>Source Files\src\content</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\DefaultContentManager.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ModPackContentManager.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\content\ContentMercs.cc">
+      <Filter>Source Files\src\content</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\content\Dialogs.cc">
+      <Filter>Source Files\src\content</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\AmmoTypeModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CalibreModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\JsonUtility.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\JsonUtility_unittests.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MagazineModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MercProfile.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\WeaponModels.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ItemModel.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\DealerInventory.cc">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\policy\DefaultIMPPolicy.cc">
+      <Filter>Source Files\src\policy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1650,9 +1710,6 @@
       <Filter>Source Files\Build\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Build\Utils\Debug_Control.h">
-      <Filter>Source Files\Build\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Build\Utils\Encrypted_File.h">
       <Filter>Source Files\Build\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Build\Utils\Event_Manager.h">
@@ -2317,6 +2374,75 @@
     </ClInclude>
     <ClInclude Include="..\lib-slog\slog\slog.h">
       <Filter>Libraries\slog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policy\DefaultGamePolicy.h">
+      <Filter>Source Files\src\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policy\GamePolicy.h">
+      <Filter>Source Files\src\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GameInstance.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Soldier.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\internals\enums.h">
+      <Filter>Source Files\src\internals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\content\npcs.h">
+      <Filter>Source Files\src\content</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ContentManager.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\DefaultContentManager.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ModPackContentManager.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\content\ContentMercs.h">
+      <Filter>Source Files\src\content</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\content\Dialogs.h">
+      <Filter>Source Files\src\content</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\AmmoTypeModel.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CalibreModel.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\JsonObject.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\JsonUtility.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MagazineModel.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MercProfile.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\StringEncodingTypes.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\WeaponModels.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ItemModel.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\DealerInventory.h">
+      <Filter>Source Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policy\DefaultIMPPolicy.h">
+      <Filter>Source Files\src\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\policy\IMPPolicy.h">
+      <Filter>Source Files\src\policy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

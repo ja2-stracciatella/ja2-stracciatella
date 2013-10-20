@@ -37,6 +37,9 @@
 #include "Finances.h"
 #include "Quests.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 #define		NUM_DAYS_TILL_UNPAID_RPC_QUITS				3
 
@@ -436,20 +439,20 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 		if ( usItem != NOTHING )
 		{
 			// Check if it's a gun
-			if ( Item[ usItem ].usItemClass & IC_GUN )
+			if ( GCM->getItem(usItem)->isGun())
 			{
-				if ( Weapon[ usItem ].ubDeadliness > bBestGun )
+				if ( GCM->getWeapon( usItem )->ubDeadliness > bBestGun )
 				{
-					bBestGun = Weapon[ usItem ].ubDeadliness;
+					bBestGun = GCM->getWeapon( usItem )->ubDeadliness;
 				}
 			}
 
 			// If it's armour
-			if ( Item[ usItem ].usItemClass & IC_ARMOUR )
+			if ( GCM->getItem(usItem)->isArmour() )
 			{
-				if ( Armour[ Item[ usItem ].ubClassIndex ].ubProtection > bBestArmour )
+				if ( Armour[ GCM->getItem(usItem)->getClassIndex() ].ubProtection > bBestArmour )
 				{
-					bBestArmour = Armour[ Item[ usItem ].ubClassIndex ].ubProtection;
+					bBestArmour = Armour[ GCM->getItem(usItem)->getClassIndex() ].ubProtection;
 				}
 			}
 		}

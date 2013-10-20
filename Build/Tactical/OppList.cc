@@ -49,6 +49,9 @@
 #include "Items.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 
@@ -3252,7 +3255,7 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 	//100%  Qty: 2
 	//100%  Attach:
 	//100%
-	if (Item[o->usItem].usItemClass == IC_AMMO)
+	if (GCM->getItem(o->usItem)->getItemClass() == IC_AMMO)
 	{
 		if (o->ubNumberOfObjects > 1)
 		{

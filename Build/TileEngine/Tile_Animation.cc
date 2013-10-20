@@ -22,6 +22,9 @@
 #include "SmokeEffects.h"
 #include "MemMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 static ANITILE* pAniTileHead = NULL;
 
@@ -315,7 +318,7 @@ void UpdateAniTiles( )
                 Assert(pNode->uiFlags & ANITILE_EXPLOSION);
                 const EXPLOSIONTYPE* const e    = pNode->v.explosion;
 								const UINT16               item = e->usItem;
-                const UINT8 ubExpType = Explosive[Item[item].ubClassIndex].ubType;
+                const UINT8 ubExpType = Explosive[GCM->getItem(item)->getClassIndex()].ubType;
 
                 if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
                      ubExpType == EXPLOSV_SMOKE )
@@ -326,7 +329,7 @@ void UpdateAniTiles( )
                 }
                 else
                 {
-									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, e->owner, FALSE, e->bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, Explosive[GCM->getItem(item)->getClassIndex()].ubRadius, item, e->owner, FALSE, e->bLevel, NULL);
                 }
 								// Forfait any other animations this frame....
 								return;

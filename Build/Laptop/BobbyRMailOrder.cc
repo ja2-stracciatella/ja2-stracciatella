@@ -9,7 +9,6 @@
 #include "VObject.h"
 #include "WordWrap.h"
 #include "Cursors.h"
-#include "Encrypted_File.h"
 #include "BobbyRGuns.h"
 #include "Finances.h"
 #include "Game_Clock.h"
@@ -33,6 +32,8 @@
 #include "FileMan.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 struct BobbyROrderLocationStruct
 {
@@ -837,7 +838,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIRST_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//weight
-			swprintf( sTemp, lengthof(sTemp), L"%3.1f", GetWeightBasedOnMetricOption( Item[ pBobbyRayPurchase[i].usItemIndex ].ubWeight ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased );
+			swprintf( sTemp, lengthof(sTemp), L"%3.1f", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased );
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_SECOND_COLUMN_X - 2, usPosY, BOBBYR_GRID_SECOND_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//Display Items Name
@@ -855,11 +856,11 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			if( pBobbyRayPurchase[i].fUsed )
 			{
 				wchar_t	sBack[BOBBYR_ITEM_DESC_NAME_SIZE];
-				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				GCM->loadEncryptedString(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 				swprintf(sText, lengthof(sText), L"* %ls", sBack);
 			}
 			else
-				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 
 			ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 
@@ -1631,7 +1632,7 @@ static UINT32 CalcCostFromWeightOfPackage(UINT8 ubTypeOfService)
 		if( BobbyRayPurchases[ i ].ubNumberPurchased )
 		{
 			//add the current weight to the total
-			uiTotalWeight += Item[ BobbyRayPurchases[ i ].usItemIndex ].ubWeight * BobbyRayPurchases[ i ].ubNumberPurchased;
+			uiTotalWeight += GCM->getItem(BobbyRayPurchases[ i ].usItemIndex)->getWeight() * BobbyRayPurchases[ i ].ubNumberPurchased;
 		}
 	}
 */
@@ -1909,7 +1910,7 @@ static UINT32 CalcPackageTotalWeight()
 	{
 		BobbyRayPurchaseStruct const& p = *i;
 		if (p.ubNumberPurchased == 0) continue;
-		mass += Item[p.usItemIndex].ubWeight * p.ubNumberPurchased;
+		mass += GCM->getItem(p.usItemIndex)->getWeight() * p.ubNumberPurchased;
 	}
 	return mass;
 }

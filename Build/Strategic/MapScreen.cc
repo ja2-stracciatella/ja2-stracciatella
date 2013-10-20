@@ -93,6 +93,10 @@
 #include "JAScreens.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
+
 #ifdef JA2TESTVERSION
 #	include "Map_Information.h"
 #	include "Soldier_Create.h"
@@ -2028,7 +2032,7 @@ try
 	{
 		// unmark done button
 		if (gpItemDescObject->usItem == MONEY ||
-				Item[gpItemDescObject->usItem].usItemClass & IC_GUN)
+				GCM->getItem(gpItemDescObject->usItem)->isGun())
 		{
 			MapscreenMarkButtonsDirty();
 		}

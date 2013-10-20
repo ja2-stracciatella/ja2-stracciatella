@@ -70,6 +70,9 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 // various reason an assignment can be aborted before completion
 enum AssignmentAbortReason
@@ -438,7 +441,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// jammed gun?
-			if (Item[i->usItem].usItemClass == IC_GUN && i->bGunAmmoStatus < 0)
+			if (GCM->getItem(i->usItem)->getItemClass() == IC_GUN && i->bGunAmmoStatus < 0)
 			{
 				return( TRUE );
 			}
@@ -490,7 +493,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 				for (INT8 bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; ++bPocket)
 				{
 					// the object a weapon? and jammed?
-					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
+					if ( ( GCM->getItem(pOtherSoldier->inv[ bPocket ].usItem)->getItemClass() == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
 					{
 						return( TRUE );
 					}
@@ -1738,7 +1741,7 @@ static void DoActualRepair(SOLDIERTYPE* pSoldier, UINT16 usItem, INT8* pbStatus,
 	UINT16	usDamagePts, usPtsFixed;
 
 	// get item's repair ease, for each + point is 10% easier, each - point is 10% harder to repair
-	sRepairCostAdj = 100 - ( 10 * Item[ usItem ].bRepairEase );
+	sRepairCostAdj = 100 - ( 10 * GCM->getItem(usItem)->getRepairEase() );
 
 	// make sure it ain't somehow gone too low!
 	if (sRepairCostAdj < 10)
@@ -1747,7 +1750,7 @@ static void DoActualRepair(SOLDIERTYPE* pSoldier, UINT16 usItem, INT8* pbStatus,
 	}
 
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
-	if ( ( Item[ usItem ].fFlags & ITEM_ELECTRONIC ) && ( !( HAS_SKILL_TRAIT( pSoldier, ELECTRONICS ) ) ) )
+	if ( ( GCM->getItem(usItem)->getFlags() & ITEM_ELECTRONIC ) && ( !( HAS_SKILL_TRAIT( pSoldier, ELECTRONICS ) ) ) )
 	{
 		sRepairCostAdj *= 2;
 	}
@@ -1979,7 +1982,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE& s)
 // can item be repaired?
 static bool IsItemRepairable(UINT16 const item_id, INT8 const status)
 {
-	return status < 100 && Item[item_id].fFlags & ITEM_REPAIRABLE;
+	return status < 100 && GCM->getItem(item_id)->getFlags() & ITEM_REPAIRABLE;
 }
 
 
@@ -7352,7 +7355,7 @@ static BOOLEAN UnjamGunsOnSoldier(SOLDIERTYPE* pOwnerSoldier, SOLDIERTYPE* pRepa
 	for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
 	{
 		// the object a weapon? and jammed?
-		if ( ( Item[ pOwnerSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
+		if ( ( GCM->getItem(pOwnerSoldier->inv[ bPocket ].usItem)->getItemClass() == IC_GUN ) && ( pOwnerSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
 		{
 			if ( *pubRepairPtsLeft >= REPAIR_COST_PER_JAM )
 			{

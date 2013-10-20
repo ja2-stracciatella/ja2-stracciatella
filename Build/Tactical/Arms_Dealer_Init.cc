@@ -14,6 +14,10 @@
 #include "MemMan.h"
 #include "Items.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 // To reduce memory fragmentation from frequent MemRealloc(), we allocate memory for more than one special slot each
 // time we run out of space.  Odds are that if we need one, we'll need another soon.
@@ -733,12 +737,12 @@ void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID const ubArmsDealer, UINT16 const
 
 static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 {
-	switch( Item[ usItem ].usItemClass )
+	switch( GCM->getItem(usItem)->getItemClass() )
 	{
 		case IC_NONE: return 0;
 
 		case IC_GUN:
-			switch(  Weapon[ Item[ usItem ].ubClassIndex ].ubWeaponClass )
+			switch(  GCM->getItem(usItem)->asWeapon()->ubWeaponClass )
 			{
 				case HANDGUNCLASS: return ARMS_DEALER_HANDGUNCLASS;
 
@@ -830,7 +834,7 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 			return( 0 );
 
 		default:
-			AssertMsg( FALSE, String( "GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.", Item[ usItem ].usItemClass, usItem ) );
+			AssertMsg( FALSE, String( "GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.", GCM->getItem(usItem)->getItemClass(), usItem ) );
 			break;
 	}
 	return( 0 );
@@ -934,7 +938,7 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 }
 
 
-static BOOLEAN DoesItemAppearInDealerInventoryList(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer);
+static bool DoesItemAppearInDealerInventoryList(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer);
 
 
 BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
@@ -995,7 +999,7 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 {
 	UINT32 uiFlags;
 
-	uiFlags = Item[ usItemIndex ].fFlags;
+	uiFlags = GCM->getItem(usItemIndex)->getFlags();
 
 	// can't repair anything that's not repairable!
 	if ( !( uiFlags & ITEM_REPAIRABLE ) )
@@ -1130,7 +1134,7 @@ static UINT8 DetermineDealerItemCondition(ArmsDealerID const ubArmsDealer, UINT1
 	UINT8 ubCondition = 100;
 
 	// if it's a damagable item, and not a liquid (those are always sold full)
-	if ( ( Item[ usItemIndex ].fFlags & ITEM_DAMAGEABLE ) && !ItemContainsLiquid( usItemIndex ) )
+	if ( ( GCM->getItem(usItemIndex)->getFlags() & ITEM_DAMAGEABLE ) && !ItemContainsLiquid( usItemIndex ) )
 	{
 		// if he ONLY has used items, or 50% of the time if he carries both used & new items
 		if ( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_ONLY_USED_ITEMS ) ||
@@ -1292,7 +1296,7 @@ void AddObjectToArmsDealerInventory(ArmsDealerID const ubArmsDealer, OBJECTTYPE*
 
 
 	// split up all the components of an objecttype and add them as seperate items into the dealer's inventory
-	switch ( Item [ pObject->usItem ].usItemClass )
+	switch ( GCM->getItem(pObject->usItem)->getItemClass() )
 	{
 		case IC_GUN:
 			// add the gun (keeps the object's status and imprintID)
@@ -1303,7 +1307,7 @@ void AddObjectToArmsDealerInventory(ArmsDealerID const ubArmsDealer, OBJECTTYPE*
 			if( pObject->usGunAmmoItem != NONE)
 			{
 				// if it's regular ammo
-				if( Item[ pObject->usGunAmmoItem ].usItemClass == IC_AMMO )
+				if( GCM->getItem(pObject->usGunAmmoItem)->getItemClass() == IC_AMMO )
 				{
 					// and there are some remaining
 					if ( pObject->ubGunShotsLeft > 0 )
@@ -1355,7 +1359,7 @@ void AddObjectToArmsDealerInventory(ArmsDealerID const ubArmsDealer, OBJECTTYPE*
 		{
 // ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
 			// If the attachment is detachable
-			if (! (Item[ pObject->usAttachItem[ubCnt] ].fFlags & ITEM_INSEPARABLE ) )
+			if (! (GCM->getItem(pObject->usAttachItem[ubCnt])->getFlags() & ITEM_INSEPARABLE ) )
 			{
 				// add this particular attachment (they can't be imprinted, or themselves have attachments!)
 				SetSpecialItemInfoToDefaults( &SpclItemInfo );
@@ -1380,7 +1384,7 @@ static void AddAmmoToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 
 
 	// Ammo only, please!!!
-	if (Item [ usItemIndex ].usItemClass != IC_AMMO )
+	if (GCM->getItem(usItemIndex)->getItemClass() != IC_AMMO )
 	{
 		Assert(0);
 		return;
@@ -1392,7 +1396,7 @@ static void AddAmmoToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 	}
 
 
-	ubMagCapacity = Magazine[ Item[ usItemIndex ].ubClassIndex ].ubMagSize;
+	ubMagCapacity = GCM->getItem(usItemIndex)->asAmmo()->capacity;
 
 	if ( ubShotsLeft >= ubMagCapacity )
 	{
@@ -1793,7 +1797,7 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 	}
 
 	// if it's a gun
-	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
+	if (GCM->getItem(pObject->usItem)->getItemClass() == IC_GUN )
 	{
 		// Empty out the bullets put in by CreateItem().  We now sell all guns empty of bullets.  This is so that we don't
 		// have to keep track of #bullets in a gun throughout dealer inventory.  Without this, players could "reload" guns
@@ -1832,7 +1836,7 @@ void GiveObjectToArmsDealerForRepair(ArmsDealerID const ubArmsDealer, OBJECTTYPE
 		if ( pObject->usAttachItem[ ubCnt ] != NONE )
 		{
 			// If the attachment is detachable
-			if (! (Item[ pObject->usAttachItem[ubCnt] ].fFlags & ITEM_INSEPARABLE ) )
+			if (! (GCM->getItem(pObject->usAttachItem[ubCnt])->getFlags() & ITEM_INSEPARABLE ) )
 			{
 				Assert( 0 );
 			}
@@ -1841,13 +1845,13 @@ void GiveObjectToArmsDealerForRepair(ArmsDealerID const ubArmsDealer, OBJECTTYPE
 */
 
 	//		e) If a gun, stripped of any non-ammo-class GunAmmoItems, and bullets
-	if (Item [ pObject->usItem ].usItemClass == IC_GUN )
+	if (GCM->getItem(pObject->usItem)->getItemClass() == IC_GUN )
 	{
 		// if any GunAmmoItem is specified
 		if( pObject->usGunAmmoItem != NONE)
 		{
 			// it better be regular ammo, and empty
-			Assert( Item[ pObject->usGunAmmoItem ].usItemClass == IC_AMMO );
+			Assert( GCM->getItem(pObject->usGunAmmoItem)->getItemClass() == IC_AMMO );
 			Assert( pObject->ubGunShotsLeft == 0 );
 		}
 	}
@@ -2015,7 +2019,7 @@ static UINT32 CalculateSimpleItemRepairTime(ArmsDealerID const ubArmsDealer, UIN
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
 	// for dealers, this means anyone but Fredo the Electronics guy takes twice as long (but doesn't charge double)
 	// (Mind you, current he's the ONLY one who CAN repair Electronics at all!  Oh well.)
-	if( ( Item[ usItemIndex ].fFlags & ITEM_ELECTRONIC ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
+	if( ( GCM->getItem(usItemIndex)->getFlags() & ITEM_ELECTRONIC ) && ( ubArmsDealer != ARMS_DEALER_FREDO ) )
 	{
 		uiTimeToRepair *= 2;
 	}
@@ -2063,10 +2067,10 @@ static UINT32 CalculateSimpleItemRepairCost(ArmsDealerID const ubArmsDealer, UIN
 
 	// figure out the full value of the item, modified by this dealer's personal Sell (i.e. repair cost) modifier
 	// don't use CalcShopKeeperItemPrice - we want FULL value!!!
-	uiItemCost = (UINT32)(Item[usItemIndex].usPrice * ArmsDealerInfo[ubArmsDealer].u.repair.cost);
+	uiItemCost = (UINT32)(GCM->getItem(usItemIndex)->getPrice() * ArmsDealerInfo[ubArmsDealer].u.repair.cost);
 
 	// get item's repair ease, for each + point is 10% easier, each - point is 10% harder to repair
-	sRepairCostAdj = 100 - ( 10 * Item[ usItemIndex ].bRepairEase );
+	sRepairCostAdj = 100 - ( 10 * GCM->getItem(usItemIndex)->getRepairEase() );
 
 	// make sure it ain't somehow gone too low!
 	if (sRepairCostAdj < 10)
@@ -2129,7 +2133,7 @@ void SetSpecialItemInfoFromObject(SPECIAL_ITEM_INFO* pSpclItemInfo, const OBJECT
 	memset(pSpclItemInfo, 0, sizeof( SPECIAL_ITEM_INFO ) );
 
 
-	if( Item[ pObject->usItem ].usItemClass == IC_AMMO )
+	if( GCM->getItem(pObject->usItem)->getItemClass() == IC_AMMO )
 	{
 		// ammo condition is always 100, don't use status, which holds the #bullets
 		pSpclItemInfo->bItemCondition = 100;
@@ -2140,7 +2144,7 @@ void SetSpecialItemInfoFromObject(SPECIAL_ITEM_INFO* pSpclItemInfo, const OBJECT
 	}
 
 	// only guns currently have imprintID properly initialized...
-	if ( Item[ pObject->usItem ].usItemClass == IC_GUN)
+	if ( GCM->getItem(pObject->usItem)->getItemClass() == IC_GUN)
 	{
 		pSpclItemInfo->ubImprintID = pObject->ubImprintID;
 	}
@@ -2198,31 +2202,10 @@ static BOOLEAN IsItemInfoSpecial(SPECIAL_ITEM_INFO* pSpclItemInfo)
 }
 
 
-static BOOLEAN DoesItemAppearInDealerInventoryList(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
+static bool DoesItemAppearInDealerInventoryList(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
 {
-	UINT16 usCnt;
-
-	// the others will buy only things that appear in their own "for sale" inventory lists
-	DEALER_POSSIBLE_INV const* const pDealerInv = GetPointerToDealersPossibleInventory(ubArmsDealer);
-
-	// loop through the dealers' possible inventory and see if the item exists there
-	usCnt = 0;
-	while( pDealerInv[ usCnt ].sItemIndex != LAST_DEALER_ITEM )
-	{
-		//if the initial dealer inv contains the required item, the dealer can sell the item
-		if( pDealerInv[ usCnt ].sItemIndex == usItemIndex )
-		{
-			// if optimal quantity listed is 0, it means dealer won't sell it himself, but will buy it from the player!
-			if ( ( pDealerInv[ usCnt ].ubOptimalNumber > 0 ) || fPurchaseFromPlayer )
-			{
-				return( TRUE );
-			}
-		}
-
-		usCnt++;
-	}
-
-	return( FALSE );
+  int maxAmount = GetDealersMaxItemAmount(ubArmsDealer, usItemIndex);
+  return (maxAmount > 0) || fPurchaseFromPlayer;
 }
 
 
@@ -2234,7 +2217,7 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 	UINT16 usValueToThisDealer;
 
 
-	usBasePrice = Item[ usItemIndex ].usPrice;
+	usBasePrice = GCM->getItem(usItemIndex)->getPrice();
 
 	if ( usBasePrice == 0 )
 	{
@@ -2279,7 +2262,7 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 		return( 0 );
 	}
 
-	if ( ( ubArmsDealer == ARMS_DEALER_KEITH ) && ( Item [ usItemIndex].usItemClass & ( IC_GUN | IC_LAUNCHER ) ) )
+	if ( ( ubArmsDealer == ARMS_DEALER_KEITH ) && ( GCM->getItem(usItemIndex)->getItemClass() & ( IC_GUN | IC_LAUNCHER ) ) )
 	{
 		// Keith won't buy guns until the Hillbillies are vanquished
 		if (!CheckFact(FACT_HILLBILLIES_KILLED, KEITH))
@@ -2352,7 +2335,7 @@ BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )
 	// basically any item type with nothing unique about it besides its status can be stacked in dealer's inventory boxes...
 	// NOTE: This test is only applied to items already KNOWN to be perfect - special items are obviously not-stackable
 
-	if ( Item[ usItemIndex ].usItemClass == IC_GUN )
+	if ( GCM->getItem(usItemIndex)->getItemClass() == IC_GUN )
 	{
 		return( FALSE );
 	}

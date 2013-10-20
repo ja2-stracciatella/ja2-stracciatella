@@ -1,10 +1,15 @@
 #ifndef ITEMS_H
 #define ITEMS_H
 
+#include <vector>
+
 #include "Item_Types.h"
 #include "JA2Types.h"
 #include "Weapons.h"
 
+struct CalibreModel;
+struct ItemModel;
+struct WeaponModel;
 
 void DamageObj(OBJECTTYPE* pObj, INT8 bAmount);
 
@@ -13,19 +18,19 @@ extern UINT8 SlotToPocket[7];
 BOOLEAN WeaponInHand(const SOLDIERTYPE* pSoldier);
 
 INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
-INT8 FindAmmo(SOLDIERTYPE const*, AmmoKind, UINT8 ubMagSize, INT8 bExcludeSlot);
+INT8 FindAmmo(const SOLDIERTYPE*, const CalibreModel *, UINT8 ubMagSize, INT8 bExcludeSlot);
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
 INT8 FindObjClass(const SOLDIERTYPE* s, UINT32 usItemClass);
-extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
-extern INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
-extern INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );
-extern INT8 FindExactObj( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
+extern INT8 FindAIUsableObjClass( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
+extern INT8 FindAIUsableObjClassWithin( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
+extern INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );
+extern INT8 FindExactObj( const SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
 INT8 FindObjInObjRange(const SOLDIERTYPE* s, UINT16 usItem1, UINT16 usItem2);
-extern INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon );
-extern INT8 FindGLGrenade( SOLDIERTYPE * pSoldier );
-extern INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier );
-extern INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
+extern INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon );
+extern INT8 FindGLGrenade( const SOLDIERTYPE * pSoldier );
+extern INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier );
+extern INT8 FindUsableObj( const SOLDIERTYPE * pSoldier, UINT16 usItem );
 
 extern void DeleteObj(OBJECTTYPE * pObj );
 extern void SwapObjs( OBJECTTYPE * pObj1, OBJECTTYPE * pObj2 );
@@ -108,7 +113,7 @@ bool ItemHasAttachments(OBJECTTYPE const&);
 BOOLEAN ValidItemAttachment(const OBJECTTYPE* pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment);
 
 //Determines if it is possible to equip this weapon with this ammo.
-BOOLEAN ValidAmmoType( UINT16 usItem, UINT16 usAmmoType );
+bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType );
 
 // Determine if it is possible to add this attachment to the item
 bool ValidAttachment(UINT16 attachment, UINT16 item);
@@ -123,7 +128,7 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem );
 BOOLEAN IsMedicalKitItem(const OBJECTTYPE* pObject);
 
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier );
-INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot );
+INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot );
 
 void SwapHandItems( SOLDIERTYPE * pSoldier );
 
@@ -137,9 +142,7 @@ INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUp
 BOOLEAN ApplyCamo(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN* pfGoodAPs);
 
 BOOLEAN ItemIsLegal( UINT16 usItemIndex );
-BOOLEAN ExtendedGunListGun( UINT16 usGun );
-UINT16 StandardGunListReplacement( UINT16 usGun );
-UINT16 FindReplacementMagazineIfNecessary(UINT16 old_gun_id, UINT16 old_ammo_id, UINT16 new_gun_id);
+UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 const old_ammo_id, const WeaponModel *new_gun);
 
 BOOLEAN DamageItemOnGround(OBJECTTYPE* pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, SOLDIERTYPE* owner);
 
@@ -168,9 +171,10 @@ void CleanUpStack(OBJECTTYPE* pObj, OBJECTTYPE* pCursorObj);
 void StackObjs(OBJECTTYPE* pSourceObj, OBJECTTYPE* pTargetObj, UINT8 ubNumberToCopy);
 bool ItemIsCool(OBJECTTYPE const&);
 
-UINT16 StandardGunListAmmoReplacement(UINT16 usAmmo);
-
 bool HasObjectImprint(OBJECTTYPE const&);
+
+/** Fill the vector with all hardcoded item models. */
+void createAllHardcodedItemModels(std::vector<const ItemModel*> &items);
 
 #ifdef JA2TESTVERSION
 void DumpItemsList(void);

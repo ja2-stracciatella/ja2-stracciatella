@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 #include "Directories.h"
-#include "LibraryDataBase.h"
 #include "Logger.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Text.h"
@@ -134,8 +133,8 @@ FLOAT getMajorMapVersion()
   return (s_gameVersion == GV_RUSSIAN) ? 6.00 : 5.00;
 }
 
-
-void InitGameResources(void)
+/** Get list of resource libraries. */
+std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 {
   std::vector<std::string> libraries;
   libraries.push_back("data.slf");
@@ -173,13 +172,7 @@ void InitGameResources(void)
       default:
           break;
   }
-
-  if(GameState::getInstance()->isEditorMode())
-  {
-    libraries.push_back("editor.slf");
-  }
-
-  InitializeFileDatabase(libraries);
+  return libraries;
 }
 
 
@@ -437,4 +430,21 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
   }
 
   throw std::runtime_error(FormattedString("Multilanguage resource %d is not found", id));
+}
+
+STRING_ENC_TYPE getStringEncType()
+{
+  if(isRussianVersion() || isRussianGoldVersion())
+  {
+    return SE_RUSSIAN;
+  }
+  else if(isPolishVersion())
+  {
+    return SE_POLISH;
+  }
+  else if(isEnglishVersion())
+  {
+    return SE_ENGLISH;
+  }
+  return SE_NORMAL;
 }

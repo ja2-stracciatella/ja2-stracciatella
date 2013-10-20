@@ -6,7 +6,6 @@
 #include "VObject.h"
 #include "Timer_Control.h"
 #include "WordWrap.h"
-#include "Encrypted_File.h"
 #include "EMail.h"
 #include "Game_Clock.h"
 #include "Text.h"
@@ -17,6 +16,8 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
 
@@ -440,7 +441,7 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void LoadAIMText(wchar_t buf[], UINT32 entry)
 {
-	LoadEncryptedDataFromFile(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+	GCM->loadEncryptedString(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
 }
 
 

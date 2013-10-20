@@ -24,6 +24,9 @@
 #include "PlatformSDL.h"
 #include "Font.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 #define BUFFER_READY      0x00
 #define BUFFER_DIRTY      0x02
@@ -481,7 +484,7 @@ static void WriteTGAHeader(FILE* const f)
 /* Create a file for a screenshot, which is guaranteed not to exist yet. */
 static FILE* CreateScreenshotFile(void)
 {
-  const char* const exec_dir = FileMan::getConfigFolderPath().c_str();
+  const char* const exec_dir = GCM->getScreenshotFolder().c_str();
 	do
 	{
 		char filename[2048];
@@ -845,7 +848,7 @@ static void RefreshMovieCache(void)
 
 	PauseTime(TRUE);
 
-	const char* ExecDir = FileMan::getConfigFolderPath().c_str();
+	const char* ExecDir = GCM->getVideoCaptureFolder().c_str();
 
 	for (INT32 cnt = 0; cnt < giNumFrames; cnt++)
 	{

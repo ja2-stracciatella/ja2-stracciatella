@@ -14,10 +14,12 @@
 #include "Vector.h"
 #include <boost/foreach.hpp>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 struct TILE_CACHE_STRUCT
 {
-	char zRootName[30];
+  std::string rootName;
 	STRUCTURE_FILE_REF* pStructureFileRef;
 };
 
@@ -44,15 +46,15 @@ void InitTileCache(void)
 	}
 
 	// Look for JSD files in the tile cache directory and load any we find
-  std::vector<std::string> jsdFiles = FindFilesInDir(FileMan::getTilecacheDirPath(), ".jsd", true, false);
+  std::vector<std::string> jsdFiles = GCM->getAllTilecache();
 
   BOOST_FOREACH(const std::string &file, jsdFiles)
   {
 		TILE_CACHE_STRUCT tc;
-		GetRootName(tc.zRootName, lengthof(tc.zRootName), file.c_str());
+    tc.rootName = FileMan::getFileNameWithoutExt(file);
 		tc.pStructureFileRef = LoadStructureFile(file.c_str());
 
-		if (strcasecmp(tc.zRootName, "l_dead1") == 0)
+		if (strcasecmp(tc.rootName.c_str(), "l_dead1") == 0)
 		{
 			giDefaultStructIndex = (INT32)gpTileCacheStructInfo.Size();
 		}
@@ -144,9 +146,8 @@ INT32 GetCachedTile(const char* const filename)
 	strcpy(tce->zName, filename);
 	tce->sHits = 1;
 
-	char root_name[30];
-	GetRootName(root_name, lengthof(root_name), filename);
-	STRUCTURE_FILE_REF* const sfr = GetCachedTileStructureRefFromFilename(root_name);
+  std::string root_name(FileMan::getFileNameWithoutExt(filename));
+	STRUCTURE_FILE_REF* const sfr = GetCachedTileStructureRefFromFilename(root_name.c_str());
 	tce->struct_file_ref = sfr;
 	if (sfr) AddZStripInfoToVObject(tce->pImagery->vo, sfr, TRUE, 0);
 
@@ -188,7 +189,7 @@ STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(char const* const file
 	for (size_t i = 0; i != n; ++i)
 	{
 		TILE_CACHE_STRUCT& t = gpTileCacheStructInfo[i];
-		if (strcasecmp(t.zRootName, filename) == 0) return t.pStructureFileRef;
+		if (strcasecmp(t.rootName.c_str(), filename) == 0) return t.pStructureFileRef;
 	}
 	return 0;
 }
@@ -223,11 +224,4 @@ void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex )
 			DeleteStructureFromWorld( pNode->pStructureData );
 		}
 	}
-}
-
-
-void GetRootName(char* const pDestStr, size_t const n, char const* const pSrcStr)
-{
-	// Remove path and extension
-	ReplacePath(pDestStr, n, "", pSrcStr, "");
 }

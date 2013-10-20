@@ -33,6 +33,10 @@
 #include "Smell.h"
 #include "Text.h"
 
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
 #define		STEPS_FOR_BULLET_MOVE_SMALL_TRAILS		5
@@ -1675,7 +1679,7 @@ INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16
 	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
 }
 
-INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware )
+INT32 SoldierToBodyPartLineOfSightTest( const SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware )
 {
 	FLOAT			dStartZPos, dEndZPos;
 	BOOLEAN		fOk;
@@ -3225,13 +3229,13 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 		  gMercProfiles[ pFirer->ubProfile ].usShotsFired++;
 		}
 
-		if ( Item[ pFirer->usAttackingWeapon ].usItemClass == IC_THROWING_KNIFE )
+		if ( GCM->getItem(pFirer->usAttackingWeapon)->getItemClass() == IC_THROWING_KNIFE )
 		{
 			pBullet->usClockTicksPerUpdate = 30;
 		}
 		else
 		{
-			pBullet->usClockTicksPerUpdate = Weapon[ pFirer->usAttackingWeapon ].ubBulletSpeed / 10;
+			pBullet->usClockTicksPerUpdate = GCM->getWeapon( pFirer->usAttackingWeapon )->ubBulletSpeed / 10;
 		}
 
 		HandleBulletSpecialFlags(pBullet);
@@ -3298,11 +3302,11 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 	ubShots = 1;
 
 	// Check if we have spit as a weapon!
-	if ( Weapon[ usHandItem ].ubCalibre == AMMOMONST )
+	if ( GCM->getWeapon( usHandItem )->calibre->monsterWeapon )
 	{
 		usBulletFlags |= BULLET_FLAG_CREATURE_SPIT;
 	}
-	else if ( Item[ usHandItem ].usItemClass == IC_THROWING_KNIFE )
+	else if ( GCM->getItem(usHandItem)->getItemClass() == IC_THROWING_KNIFE )
 	{
 		usBulletFlags |= BULLET_FLAG_KNIFE;
 	}
@@ -3324,7 +3328,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		ubSpreadIndex = 2;
 	}
 
-	ubImpact = Weapon[ usHandItem ].ubImpact;
+	ubImpact = GCM->getWeapon( usHandItem )->ubImpact;
 //	if (!fFake)
 	{
 		if (fBuckshot)
@@ -3484,8 +3488,8 @@ static INT8 ChanceToGetThrough(SOLDIERTYPE* const pFirer, const GridNo end_pos, 
 {
 	UINT16  weapon = pFirer->usAttackingWeapon;
 	BOOLEAN buck_shot;
-	if (Item[weapon].usItemClass == IC_GUN ||
-			Item[weapon].usItemClass == IC_THROWING_KNIFE)
+	if (GCM->getItem(weapon)->getItemClass() == IC_GUN ||
+			GCM->getItem(weapon)->getItemClass() == IC_THROWING_KNIFE)
 	{
 		// if shotgun, shotgun would have to be in main hand
 		buck_shot =

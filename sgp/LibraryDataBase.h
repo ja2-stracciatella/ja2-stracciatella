@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "Types.h"
-#include "FileMan.h"
-
+#include "sgp/SGPFile.h"
+#include "sgp/Types.h"
 
 #define	REAL_FILE_LIBRARY_ID					1022
 
@@ -30,34 +29,39 @@ struct FileHeaderStruct
 
 struct LibraryHeaderStruct
 {
-	char* sLibraryPath;
+  std::string sLibraryPath;
 	FILE* hLibraryHandle;
 	UINT16	usNumberOfEntries;
 	INT32		iNumFilesOpen;
 	FileHeaderStruct *pFileHeader;
-
-//
-//	Temp:	Total memory used for each library ( all memory allocated
-//
-	#ifdef JA2TESTVERSION
-		UINT32	uiTotalMemoryAllocatedForLibrary;
-	#endif
 };
 
-
-struct LibraryFile
+class LibraryDB
 {
-	UINT32                  uiFilePosInFile; // current position in the file
-	LibraryHeaderStruct*    lib;
-	const FileHeaderStruct* pFileHeader;
+public:
+  /** Initialize file database.
+   * @return NULL when successful, otherwise the name of failed library. */
+  const char* InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libraries);
+
+  /* Find library which can contain the given file.
+   * File name should use / (not \\). */
+  LibraryHeaderStruct* GetLibraryFromFileName(const std::string &filename);
+
+  /** Find file in the library.
+   * Name of the file should use / not \\. */
+  BOOLEAN FindFileInTheLibrarry(const std::string &filename, LibraryFile* f);
+
+  /** Check if file exists in the library.
+   * Name of the file should use / (not \\). */
+  bool CheckIfFileExistInLibrary(const std::string &filename);
+
+  void ShutDownFileDatabase();
+
+protected:
+  std::vector<LibraryHeaderStruct> m_libraries;
 };
 
 
-void InitializeFileDatabase(const std::vector<std::string> &libraries);
-void ShutDownFileDatabase(void);
-bool CheckIfFileExistInLibrary(char const* filename);
-
-BOOLEAN OpenFileFromLibrary(const char* filename, LibraryFile*);
 /* Close an individual file that is contained in the library */
 void    CloseLibraryFile(LibraryFile*);
 BOOLEAN LoadDataFromLibrary(LibraryFile*, void* pData, UINT32 uiBytesToRead);

@@ -124,3 +124,76 @@ TEST(FileManTest, RemoveAllFilesInDir)
   results = FindAllFilesInDir(tmpDir.string(), true);
   ASSERT_EQ(results.size(), 0);
 }
+
+TEST(FileManTest, ReadTextFile)
+{
+  boost::filesystem::path tmpDir = boost::filesystem::temp_directory_path();
+  boost::filesystem::path pathA = tmpDir / "foo.txt";
+
+  boost::filesystem::ofstream fileA(pathA);
+  fileA << "foo bar baz";
+  fileA.close();
+
+  SGPFile* forReading = FileMan::openForReading(pathA.string().c_str());
+  std::string content = FileMan::fileReadText(forReading);
+  ASSERT_STREQ(content.c_str(), "foo bar baz");
+}
+
+TEST(FileManTest, GetFileName)
+{
+  EXPECT_STREQ(FileMan::getFileName("foo.txt").c_str(),        "foo.txt");
+  EXPECT_STREQ(FileMan::getFileName("/a/foo.txt").c_str(),     "foo.txt");
+  EXPECT_STREQ(FileMan::getFileName("../a/foo.txt").c_str(),   "foo.txt");
+
+  EXPECT_STREQ(FileMan::getFileNameWithoutExt("foo.txt").c_str(),       "foo");
+  EXPECT_STREQ(FileMan::getFileNameWithoutExt("/a/foo.txt").c_str(),    "foo");
+  EXPECT_STREQ(FileMan::getFileNameWithoutExt("../a/foo.txt").c_str(),  "foo");
+}
+
+#ifdef __WINDOWS__
+TEST(FileManTest, GetFileNameWin)
+{
+  // This tests fail on Linux.
+  // Which is might be correct or not correct (depending on your point of view)
+  EXPECT_STREQ(FileMan::getFileName("c:\\foo.txt").c_str(),    "foo.txt");
+  EXPECT_STREQ(FileMan::getFileName("c:\\b\\foo.txt").c_str(), "foo.txt");
+
+  EXPECT_STREQ(FileMan::getFileNameWithoutExt("c:\\foo.txt").c_str(),     "foo");
+  EXPECT_STREQ(FileMan::getFileNameWithoutExt("c:\\b\\foo.txt").c_str(),  "foo");
+}
+#endif
+
+TEST(FileManTest, ReplaceExtension)
+{
+  EXPECT_STREQ(FileMan::replaceExtension("foo.txt", "").c_str(),        "foo");
+  EXPECT_STREQ(FileMan::replaceExtension("foo.txt", ".").c_str(),       "foo.");
+  EXPECT_STREQ(FileMan::replaceExtension("foo.txt", ".bin").c_str(),    "foo.bin");
+  EXPECT_STREQ(FileMan::replaceExtension("foo.txt", "bin").c_str(),     "foo.bin");
+
+  EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", "").c_str(),        "foo.bar");
+  EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", ".").c_str(),       "foo.bar.");
+  EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", ".bin").c_str(),    "foo.bar.bin");
+  EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", "bin").c_str(),     "foo.bar.bin");
+
+  EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", "").c_str(),        "c:/a/foo");
+  EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", ".").c_str(),       "c:/a/foo.");
+  EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", ".bin").c_str(),    "c:/a/foo.bin");
+  EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", "bin").c_str(),     "c:/a/foo.bin");
+
+  EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", "").c_str(),          "/a/foo");
+  EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", ".").c_str(),         "/a/foo.");
+  EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", ".bin").c_str(),      "/a/foo.bin");
+  EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", "bin").c_str(),       "/a/foo.bin");
+
+  EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", "").c_str(),      "c:\\a\\foo");
+  EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".").c_str(),     "c:\\a\\foo.");
+  EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".bin").c_str(),  "c:\\a\\foo.bin");
+  EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin").c_str(),   "c:\\a\\foo.bin");
+}
+
+TEST(FileManTest, SlashifyPath)
+{
+  std::string test("foo\\bar\\baz");
+  FileMan::slashifyPath(test);
+  EXPECT_STREQ(test.c_str(), "foo/bar/baz");
+}

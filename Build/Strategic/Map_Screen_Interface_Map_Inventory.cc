@@ -42,6 +42,9 @@
 #include "ShopKeeper_Interface.h"
 #include "ArmsDealerInvInit.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 // status bar colors
 #define DESC_STATUS_BAR FROMRGB( 201, 172,  133 )
@@ -909,7 +912,7 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 
 	// if there is something there, swap it, if they are of the same type and stackable then add to the count
 
-	ubSlotLimit = Item[pItemPtr -> usItem].ubPerPocket;
+	ubSlotLimit = GCM->getItem(pItemPtr -> usItem)->getPerPocket();
 
 	if (pInventorySlot->ubNumberOfObjects == 0)
 	{

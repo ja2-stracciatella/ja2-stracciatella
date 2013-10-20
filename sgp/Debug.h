@@ -7,7 +7,6 @@
 
 #define DEBUG_PRINT_FPS                         (0)             /**< Flag telling to print FPS (Frames per second) counter. */
 #define DEBUG_PRINT_GAME_CYCLE_TIME             (0)             /**< Flag telling to print how much time every game cycle takes. */
-#define DEBUG_PRINT_OPENING_FILES               (0)             /**< Flag telling to print names of the opening files. */
 
 
 #if defined ( SGP_DEBUG ) || defined ( FORCE_ASSERTS_ON )

@@ -86,6 +86,11 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "Soldier.h"
+#include "WeaponModels.h"
+
 #if defined JA2BETAVERSION
 #	include "Strategic_AI.h"
 #endif
@@ -894,8 +899,8 @@ static bool IsRifle(UINT16 const item_id)
 	return
 		item_id != NOTHING                  &&
 		item_id != ROCKET_LAUNCHER          &&
-		Item[item_id].usItemClass == IC_GUN &&
-		Item[item_id].fFlags & ITEM_TWO_HANDED;
+		GCM->getItem(item_id)->getItemClass() == IC_GUN &&
+		GCM->getItem(item_id)->isTwoHanded();
 }
 
 
@@ -913,6 +918,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 
 	CHECKV(usNewState < NUMANIMATIONSTATES);
 
+  SoldierSP soldier = GetSoldier(pSoldier);
 
 	///////////////////////////////////////////////////////////////////////
 	//			DO SOME CHECKS ON OUR NEW ANIMATION!
@@ -1680,7 +1686,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 					GetMan(pSoldier->uiPendingActionData4).uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
 					break;
 			}
-			pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+      soldier->removePendingAction();
 		}
 		else
 		{
@@ -2120,13 +2126,13 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	//pSoldier->sLastTarget = sTargetGridNo;
 	pSoldier->target = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 
-	if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN)
+	if (GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isGun())
   {
 	  if (pSoldier->bDoBurst)
 	  {
 		  // Set the TOTAL number of bullets to be fired
 		  // Can't shoot more bullets than we have in our magazine!
-		  pSoldier->bBulletsLeft = __min( Weapon[pSoldier->inv[ pSoldier->ubAttackingHand ].usItem].ubShotsPerBurst, pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft );
+		  pSoldier->bBulletsLeft = __min( GCM->getWeapon(pSoldier->inv[ pSoldier->ubAttackingHand].usItem)->ubShotsPerBurst, pSoldier->inv[ pSoldier->ubAttackingHand ].ubGunShotsLeft );
 	  }
 	  else if ( IsValidSecondHandShot( pSoldier ) )
 	  {
@@ -2311,7 +2317,7 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 				}
 
 				// ATE: Made distence away long for psitols such that they never use this....
-				//if ( !(Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+				//if ( !(GCM->getItem(usItem)->isTwoHanded()) )
 				//{
 				//	fDoLowShot = FALSE;
 				//}
@@ -2494,7 +2500,7 @@ UINT16 PickSoldierReadyAnimation(SOLDIERTYPE* pSoldier, BOOLEAN fEndReady)
 	}
 
 	// Check if we have a gun.....
-	if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass != IC_GUN && pSoldier->inv[ HANDPOS ].usItem != GLAUNCHER )
+	if ( GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->getItemClass() != IC_GUN && pSoldier->inv[ HANDPOS ].usItem != GLAUNCHER )
 	{
 		return( INVALID_ANIMATION );
 	}
@@ -2684,11 +2690,11 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
   {
 		ubReason = TAKE_DAMAGE_OBJECT;
   }
-	else if ( Item[ usWeaponIndex ].usItemClass & IC_TENTACLES )
+	else if ( GCM->getItem(usWeaponIndex)->isTentacles() )
 	{
 		ubReason = TAKE_DAMAGE_TENTACLES;
 	}
-	else if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) )
+	else if ( GCM->getItem(usWeaponIndex)->getItemClass() & ( IC_GUN | IC_THROWING_KNIFE ) )
 	{
 		if ( ubSpecial == FIRE_WEAPON_SLEEP_DART_SPECIAL )
 		{
@@ -2727,12 +2733,12 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		sBreathLoss += BP_GET_HIT;
 		ubReason = TAKE_DAMAGE_GUNFIRE;
 	}
-	else if ( Item[ usWeaponIndex ].usItemClass & IC_BLADE )
+	else if ( GCM->getItem(usWeaponIndex)->isBlade() )
 	{
 		sBreathLoss = BP_GET_HIT;
 		ubReason = TAKE_DAMAGE_BLADE;
 	}
-	else if ( Item[ usWeaponIndex ].usItemClass & IC_PUNCH )
+	else if ( GCM->getItem(usWeaponIndex)->isPunch() )
 	{
 		// damage from hand-to-hand is 1/4 normal, 3/4 breath.. the sDamage value
 		// is actually how much breath we'll take away
@@ -2745,7 +2751,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		}
 		ubReason = TAKE_DAMAGE_HANDTOHAND;
 	}
-	else if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV )
+	else if ( GCM->getItem(usWeaponIndex)->isExplosive() )
 	{
 		if ( usWeaponIndex == STRUCTURE_EXPLOSION )
 		{
@@ -2770,7 +2776,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		// attckers intended target, and here we want to use thier actual target....
 
 		// ATE: If it's from GUNFIRE damage, keep in mind bullets...
-		if ( Item[ usWeaponIndex ].usItemClass & IC_GUN )
+		if ( GCM->getItem(usWeaponIndex)->isGun())
 		{
 			pNewSoldier = FreeUpAttackerGivenTarget(pSoldier);
 		}
@@ -2835,7 +2841,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	}
 
 
-	if ( Item[ usWeaponIndex ].usItemClass & IC_BLADE )
+	if ( GCM->getItem(usWeaponIndex)->isBlade() )
   {
 	  PlayLocationJA2Sample(pSoldier->sGridNo, KNIFE_IMPACT, MIDVOLUME, 1);
   }
@@ -3006,19 +3012,19 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 
 
 	// SWITCH IN TYPE OF WEAPON
-	if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) )
+	if ( GCM->getItem(usWeaponIndex)->getItemClass() & ( IC_GUN | IC_THROWING_KNIFE ) )
 	{
 		SoldierGotHitGunFire(pSoldier, bDirection, att, ubSpecial);
 	}
-	if ( Item[ usWeaponIndex ].usItemClass & IC_BLADE )
+	if ( GCM->getItem(usWeaponIndex)->isBlade() )
 	{
 		SoldierGotHitBlade(pSoldier);
 	}
-	if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || Item[ usWeaponIndex ].usItemClass & IC_TENTACLES )
+	if ( GCM->getItem(usWeaponIndex)->isExplosive() || GCM->getItem(usWeaponIndex)->isTentacles() )
 	{
 		SoldierGotHitExplosion(pSoldier, usWeaponIndex, bDirection, sRange);
 	}
-	if ( Item[ usWeaponIndex ].usItemClass & IC_PUNCH )
+	if ( GCM->getItem(usWeaponIndex)->isPunch() )
 	{
 		SoldierGotHitPunch(pSoldier);
 	}
@@ -3246,7 +3252,7 @@ static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const UINT16 usW
 
 	if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 	{
-		if ( Explosive[ Item[ usWeaponIndex ].ubClassIndex ].ubRadius >= 3 && pSoldier->bLife == 0 && gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
+		if ( Explosive[ GCM->getItem(usWeaponIndex)->getClassIndex() ].ubRadius >= 3 && pSoldier->bLife == 0 && gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
 		{
 			if ( sRange >= 2 && sRange <= 4 )
 			{
@@ -4922,7 +4928,7 @@ void LoadPaletteData()
 {
 	UINT32			cnt, cnt2;
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(PALETTEFILENAME, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(PALETTEFILENAME));
 
 	// Read # of types
 	FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));
@@ -5960,13 +5966,13 @@ no_sub:
 	SGPFILENAME filename;
 	sprintf(filename, BATTLESNDSDIR "/%s_%s.wav", basename, battle_snd->zName);
 
-	if (!FileExists(filename))
+	if (!GCM->doesGameResExists(filename))
 	{
 		if (battle_snd_id == BATTLE_SOUND_DIE1)
 		{
 			// The "die" sound filenames differs between profiles and languages
 			sprintf(filename, BATTLESNDSDIR "/%s_dying.wav", basename);
-			if (FileExists(filename)) goto file_exists;
+			if (GCM->doesGameResExists(filename)) goto file_exists;
 		}
 
 		if (s->ubProfile == NO_PROFILE) return FALSE;
@@ -7276,6 +7282,8 @@ void GivingSoldierCancelServices( SOLDIERTYPE *pSoldier )
 
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy )
 {
+  SoldierSP soldier = GetSoldier(pSoldier);
+
 	// If we are a 'specialmove... ignore...
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_SPECIALMOVE ) )
 	{
@@ -7331,9 +7339,9 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 		// OK, if we are stopped at our destination, cancel pending action...
 		if ( fFromSightingEnemy )
 		{
-			if ( pSoldier->ubPendingAction != NO_PENDING_ACTION && pSoldier->sGridNo == pSoldier->sFinalDestination )
+			if ( soldier->hasPendingAction() && pSoldier->sGridNo == pSoldier->sFinalDestination )
 			{
-				pSoldier->ubPendingAction = NO_PENDING_ACTION;
+        soldier->removePendingAction();
 			}
 
 			// Stop pending animation....
@@ -7367,11 +7375,11 @@ void EVENT_StopMerc(SOLDIERTYPE* const s)
 // Halt event is used to stop a merc - networking should check / adjust to gridno?
 void EVENT_StopMerc(SOLDIERTYPE* const s, GridNo const grid_no, INT8 const direction)
 {
+  SoldierSP soldier = GetSoldier(s);
+
 	if (!s->fDelayedMovement)
-	{ // Cancel pending events
-		s->usPendingAnimation = NO_PENDING_ANIMATION;
-		s->ubPendingDirection = NO_PENDING_DIRECTION;
-		s->ubPendingAction    = NO_PENDING_ACTION;
+	{
+    soldier->removePendingAnimation();
 	}
 
 	s->bEndDoorOpenCode          = 0;
@@ -7420,7 +7428,7 @@ void ReLoadSoldierAnimationDueToHandItemChange(SOLDIERTYPE* const s, UINT16 cons
 
 	// Shutoff burst....
 	// ( we could be on, then change gun that does not have burst )
-	if (Item[usNewItem].usItemClass & IC_WEAPON && Weapon[usNewItem].ubShotsPerBurst == 0)
+	if (GCM->getItem(usNewItem)->isWeapon() && GCM->getWeapon(usNewItem)->ubShotsPerBurst == 0)
 	{
 		s->bDoBurst    = FALSE;
 		s->bWeaponMode = WM_NORMAL;
@@ -7776,7 +7784,7 @@ static BOOLEAN SoldierCarriesTwoHandedWeapon(SOLDIERTYPE* pSoldier)
 
 	usItem = pSoldier->inv[ HANDPOS ].usItem;
 
-	if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+	if ( usItem != NOTHING && (GCM->getItem(usItem)->isTwoHanded()) )
 	{
 		return( TRUE );
 	}
@@ -8402,13 +8410,13 @@ void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 {
 	UINT16 usNewGridNo;
+  SoldierSP soldier = GetSoldier(pSoldier);
 
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bDirection)));
 	usNewGridNo = NewGridNo(usNewGridNo,       DirectionInc(OppositeDirection(bDirection)));
 
-	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+  soldier->removePendingAction();
 
 	// Set path....
 	pSoldier->usPathDataSize = 0;
@@ -8427,13 +8435,13 @@ static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
 	UINT16 usNewGridNo;
+  SoldierSP soldier = GetSoldier(pSoldier);
 
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bDirection)));
 	//usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
 
-	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+  soldier->removePendingAction();
 
 	// Set path....
 	pSoldier->usPathDataSize = 0;
@@ -8488,6 +8496,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 		INT16 sActionGridNo, sGridNo, sAdjustedGridNo;
 		UINT8	ubDirection;
 
+    SoldierSP soldier = GetSoldier(pSoldier);
 
 		// OK, find an adjacent gridno....
 		sGridNo = pTarget->sGridNo;
@@ -8496,11 +8505,9 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 		if ( sActionGridNo != -1 )
 		{
-			// SEND PENDING ACTION
-			pSoldier->ubPendingAction = MERC_STEAL;
+      soldier->setPendingAction(MERC_STEAL);
 			pSoldier->sPendingActionData2  = pTarget->sGridNo;
 			pSoldier->bPendingActionData3  = ubDirection;
-			pSoldier->ubPendingActionAnimCount = 0;
 
 			// CHECK IF WE ARE AT THIS GRIDNO NOW
 			if ( pSoldier->sGridNo != sActionGridNo )
@@ -8617,10 +8624,10 @@ bool IsValidSecondHandShot(SOLDIERTYPE const* const s)
 {
 	OBJECTTYPE const& o = s->inv[SECONDHANDPOS];
 	return
-		Item[o.usItem].usItemClass == IC_GUN               &&
-		!(Item[o.usItem].fFlags & ITEM_TWO_HANDED)         &&
+		GCM->getItem(o.usItem)->getItemClass() == IC_GUN               &&
+		!(GCM->getItem(o.usItem)->isTwoHanded())         &&
 		!s->bDoBurst                                       &&
-		Item[s->inv[HANDPOS].usItem].usItemClass == IC_GUN &&
+		GCM->getItem(s->inv[HANDPOS].usItem)->getItemClass() == IC_GUN &&
 		o.bGunStatus >= USABLE                             &&
 		o.ubGunShotsLeft > 0;
 }
@@ -8632,9 +8639,9 @@ bool IsValidSecondHandShotForReloadingPurposes(SOLDIERTYPE const* const s)
 	 * out! */
 	OBJECTTYPE const& o = s->inv[SECONDHANDPOS];
 	return
-		Item[o.usItem].usItemClass == IC_GUN               &&
+		GCM->getItem(o.usItem)->getItemClass() == IC_GUN               &&
 		!s->bDoBurst                                       &&
-		Item[s->inv[HANDPOS].usItem].usItemClass == IC_GUN &&
+		GCM->getItem(s->inv[HANDPOS].usItem)->getItemClass() == IC_GUN &&
 		o.bGunStatus >= USABLE;
 }
 
@@ -8713,7 +8720,7 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 }
 
 
-SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier )
+const SOLDIERTYPE *GetRobotController( const SOLDIERTYPE *pSoldier )
 {
 	return pSoldier->robot_remote_holder;
 }
@@ -8769,6 +8776,8 @@ static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* const s)
 
 void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 {
+  SoldierSP soldier = GetSoldier(pSoldier);
+
 	// Are we an AI guy?
 	if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM && pSoldier->bTeam != OUR_TEAM )
 	{
@@ -8778,7 +8787,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 			pSoldier->usPendingAnimation	= NO_PENDING_ANIMATION;
 			pSoldier->fTurningFromPronePosition = FALSE;
 			pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
-			pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+      soldier->removePendingAction();
 			pSoldier->bEndDoorOpenCode	 = 0;
 
 			// if this guy isn't under direct AI control, WHO GIVES A FLYING FLICK?

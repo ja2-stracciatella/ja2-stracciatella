@@ -5,9 +5,9 @@
 
 
 void ReducePointsForFatigue(const SOLDIERTYPE* s, UINT16* pusPoints);
-extern INT32 GetSkillCheckPenaltyForFatigue( SOLDIERTYPE *pSoldier, INT32 iSkill );
+extern INT32 GetSkillCheckPenaltyForFatigue( const SOLDIERTYPE *pSoldier, INT32 iSkill );
 extern INT32 SkillCheck( SOLDIERTYPE *pSoldier, INT8 bReason, INT8 bDifficulty );
-extern INT8 CalcTrapDetectLevel( SOLDIERTYPE *pSoldier, BOOLEAN fExamining );
+extern INT8 CalcTrapDetectLevel( const SOLDIERTYPE *pSoldier, BOOLEAN fExamining );
 
 
 INT8 EffectiveStrength(    const SOLDIERTYPE* s);

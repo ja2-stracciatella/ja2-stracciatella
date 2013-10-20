@@ -42,6 +42,10 @@
 #include "Interface.h"
 #include "MemMan.h"
 
+#include "FileMan.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #define CORPSE_WARNING_MAX 5
 #define CORPSE_WARNING_DIST 5
@@ -506,13 +510,12 @@ try
 
 	// Get root filename... this removes path and extension
 	// Used to find struct data for this corpse...
-	char zFilename[150];
-	GetRootName(zFilename, lengthof(zFilename), AniParams.zCachedFile);
+  std::string zFilename(FileMan::getFileNameWithoutExt(AniParams.zCachedFile));
 
 	// Add structure data.....
 	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, ani->sCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
 
-	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename);
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename.c_str());
 	if (pStructureFileRef != NULL)
 	{
 		const UINT16                  usStructIndex   = GetCorpseStructIndex(pCorpseDef, TRUE);
@@ -718,13 +721,16 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 		  if ( pObj->usItem != NOTHING )
 		  {
 			  // Check if it's supposed to be dropped
-			  if (!(pObj->fFlags & OBJECT_UNDROPPABLE) || s.bTeam == OUR_TEAM)
+			  if (!(pObj->fFlags & OBJECT_UNDROPPABLE)
+            || (s.bTeam == OUR_TEAM)
+            || GCM->getGamePolicy()->f_drop_everything)
 			  {
 				  // and make sure that it really is a droppable item type
-				  if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
+				  if ( !(GCM->getItem(pObj->usItem)->getFlags() & ITEM_DEFAULT_UNDROPPABLE) )
 				  {
 					  ReduceAmmoDroppedByNonPlayerSoldiers(s, *pObj);
-					  AddItemToPool(s.sGridNo, pObj, bVisible, s.bLevel, usItemFlags, -1);
+            Visibility vis = GCM->getGamePolicy()->f_all_dropped_visible ? VISIBLE : bVisible;
+					  AddItemToPool(s.sGridNo, pObj, vis, s.bLevel, usItemFlags, -1);
 				  }
 			  }
 		  }
@@ -1096,11 +1102,10 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	cnt3 = 0;
 
 	// Get root filename... this removes path and extension
-	// USed to find struct data fo rthis corpse...
-	char zFilename[150];
-	GetRootName(zFilename, lengthof(zFilename), zCorpseFilenames[pDef->ubType]);
+	// Used to find struct data for this corpse...
+  std::string zFilename(FileMan::getFileNameWithoutExt(zCorpseFilenames[pDef->ubType]));
 
-	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename );
+	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename.c_str() );
 
 	sSweetGridNo = pDef->sGridNo;
 
@@ -1339,7 +1344,7 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE const& s, OBJECTTYPE& o)
 {
 	if (s.bTeam == OUR_TEAM) return;
-	if (Item[o.usItem].usItemClass != IC_AMMO) return;
+	if (GCM->getItem(o.usItem)->getItemClass() != IC_AMMO) return;
 
 	/* Don't drop all the clips, just a random # of them between 1 and how
 	 * many there are */

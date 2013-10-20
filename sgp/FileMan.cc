@@ -5,15 +5,16 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "Directories.h"
 #include "FileMan.h"
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "PODObj.h"
 #include "Logger.h"
-#include "MicroIni/MicroIni.hpp"
 
 #include "boost/filesystem.hpp"
+
+#include "slog/slog.h"
+#define TAG "FileMan"
 
 #if _WIN32
 #include <shlobj.h>
@@ -31,25 +32,9 @@
 #include <dirent.h>
 #endif
 
-#define BASEDATADIR    "data"
+// XXX: remove FileMan class and make it into a namespace
+
 #define LOCAL_CURRENT_DIR "tmp"
-
-enum SGPFileFlags
-{
-	SGPFILE_NONE = 0U,
-	SGPFILE_REAL = 1U << 0
-};
-
-struct SGPFile
-{
-	SGPFileFlags flags;
-	union
-	{
-		FILE*       file;
-		LibraryFile lib;
-	} u;
-};
-
 
 enum FileOpenFlags
 {
@@ -61,17 +46,7 @@ enum FileOpenFlags
 ENUM_BITSET(FileOpenFlags)
 
 
-static std::string s_dataDir;
-static std::string s_tileDir;
-static std::string s_mapsDir;
-
-
-static void findDataDirs();
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
-
-/** Convert file descriptor to HWFile.
- * Raise runtime_error if not possible. */
-static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode);
 
 #if CASE_SENSITIVE_FS
 /**
@@ -84,27 +59,6 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
  * Abort program if conversion is not found.
  * @return file mode for fopen call and posix mode using parameter 'posixMode' */
 static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode);
-
-static std::string s_configFolderPath;
-static std::string s_configPath;
-static std::string s_gameResRootPath;
-
-static void WriteDefaultConfigFile(const char* ConfigFile)
-{
-	FILE* const IniFile = fopen(ConfigFile, "a");
-	if (IniFile != NULL)
-	{
-		fprintf(IniFile, "#Tells ja2-stracciatella where the binary datafiles are located\n");
-#ifdef _WIN32
-    fprintf(IniFile, "data_dir = C:\\Program Files\\Jagged Alliance 2");
-#else
-    fprintf(IniFile, "data_dir = /some/place/where/the/data/is");
-#endif
-		fclose(IniFile);
-		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
-	}
-}
-
 
 #if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 
@@ -139,8 +93,8 @@ void SetBinDataDirFromBundle(void)
 
 #endif
 
-
-void InitializeFileManager(void)
+/** Find config folder and switch into it. */
+std::string FileMan::findConfigFolderAndSwitchIntoIt()
 {
 #ifdef _WIN32
 	char home[MAX_PATH];
@@ -163,14 +117,14 @@ void InitializeFileManager(void)
 #endif
 
 #ifdef _WIN32
-  s_configFolderPath = FileMan::joinPaths(home, "JA2");
+  std::string configFolderPath = FileMan::joinPaths(home, "JA2");
 #else
-  s_configFolderPath = FileMan::joinPaths(home, ".ja2");
+  std::string configFolderPath = FileMan::joinPaths(home, ".ja2");
 #endif
 
-	if (mkdir(s_configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
+	if (mkdir(configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-    LOG_ERROR("Unable to create directory '%s'\n", s_configFolderPath.c_str());
+    LOG_ERROR("Unable to create directory '%s'\n", configFolderPath.c_str());
 		throw std::runtime_error("Unable to local directory");
 	}
 
@@ -178,7 +132,7 @@ void InitializeFileManager(void)
   // Temporary files will be created in this directory.
   // ----------------------------------------------------------------------------
 
-  std::string tmpPath = FileMan::joinPaths(s_configFolderPath, LOCAL_CURRENT_DIR);
+  std::string tmpPath = FileMan::joinPaths(configFolderPath, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
     LOG_ERROR("Unable to create tmp directory '%s'\n", tmpPath.c_str());
@@ -189,71 +143,34 @@ void InitializeFileManager(void)
     SetFileManCurrentDirectory(tmpPath.c_str());
   }
 
-  // Get directory with JA2 resources
-  // --------------------------------------------
-
-// #if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
-// 	SetBinDataDirFromBundle();
-// #endif
-
-  s_configPath = FileMan::joinPaths(s_configFolderPath, "ja2.ini");
-  MicroIni::File configFile;
-  if(!configFile.load(s_configPath) || !configFile[""].has("data_dir"))
-  {
-    LOG_WARNING("WARNING: Could not open configuration file (\"%s\").\n", s_configPath.c_str());
-    WriteDefaultConfigFile(s_configPath.c_str());
-    configFile.load(s_configPath);
-  }
-
-  s_gameResRootPath = configFile[""]["data_dir"];
-
-  findDataDirs();
-
-  LOG_INFO("Configuration file:            '%s'\n", s_configPath.c_str());
-  LOG_INFO("Root game resources directory: '%s'\n", s_gameResRootPath.c_str());
-  LOG_INFO("Data directory:                '%s'\n", s_dataDir.c_str());
-  LOG_INFO("Tilecache directory:           '%s'\n", s_tileDir.c_str());
-  LOG_INFO("------------------------------------------------------------------------------\n");
+  return configFolderPath;
 }
 
 
-// TODO: need better name?
-bool FileExists(char const* const filename)
+/** Open file in the given folder in case-insensitive manner.
+ * @return file descriptor or -1 if file is not found. */
+int FileMan::openFileCaseInsensitive(const std::string &folderPath, const char *filename, int mode)
 {
-	FILE* file = fopen(filename, "rb");
-	if (!file)
-	{
-		char path[512];
-		snprintf(path, lengthof(path), "%s/%s", FileMan::getDataDirPath().c_str(), filename);
-		file = fopen(path, "rb");
-		if (!file) return CheckIfFileExistInLibrary(filename);
-	}
-
-	fclose(file);
-	return true;
-}
-
-/**
- * Open file in the Data directory.
- *
- * Return file descriptor or -1 if file is not found. */
-static int OpenFileInDataDirFD(const char *filename, int mode)
-{
-  std::string path = FileMan::joinPaths(FileMan::getDataDirPath(), filename);
+  std::string path = FileMan::joinPaths(folderPath, filename);
   int d = open(path.c_str(), mode);
   if (d < 0)
   {
 #if CASE_SENSITIVE_FS
     // on case-sensitive file system need to try to find another name
     std::string newFileName;
-    if(findObjectCaseInsensitive(FileMan::getDataDirPath().c_str(), filename, true, false, newFileName))
+    if(findObjectCaseInsensitive(folderPath.c_str(), filename, true, false, newFileName))
     {
-      path = FileMan::joinPaths(FileMan::getDataDirPath(), newFileName);
+      path = FileMan::joinPaths(folderPath, newFileName);
       d = open(path.c_str(), mode);
     }
 #endif
   }
   return d;
+}
+
+void FileDelete(const std::string &path)
+{
+  FileDelete(path.c_str());
 }
 
 void FileDelete(char const* const path)
@@ -283,6 +200,12 @@ void FileDelete(char const* const path)
 }
 
 
+/** Get file open modes from reading. */
+const char* GetFileOpenModeForReading(int *posixMode)
+{
+  return GetFileOpenModes(FILE_ACCESS_READ, posixMode);
+}
+
 /** Get file open modes from our enumeration.
  * Abort program if conversion is not found.
  * @return file mode for fopen call and posix mode using parameter 'posixMode' */
@@ -308,66 +231,7 @@ static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
   return cMode;
 }
 
-
-/** Open file for reading only.
- * When using the smart lookup:
- *  - first try to open file normally.
- *    It will work if the path is absolute and the file is found or path is relative to the current directory
- *    and file is present;
- *  - if file is not found, try to find the file relatively to 'Data' directory;
- *  - if file is not found, try to find the file in libraries located in 'Data' directory; */
-HWFILE FileMan::openForReadingSmart(const char* filename, bool useSmartLookup)
-{
-  int         mode;
-  const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
-
-  int d;
-
-  {
-    d = open(filename, mode);
-    if ((d < 0) && useSmartLookup)
-    {
-      // failed to open file in the local directory
-      // let's try Data
-      d = OpenFileInDataDirFD(filename, mode);
-      if (d < 0)
-      {
-        LibraryFile libFile;
-        memset(&libFile, 0, sizeof(libFile));
-
-        // failed to open in the data dir
-        // let's try libraries
-        if (OpenFileFromLibrary(filename, &libFile))
-        {
-#if DEBUG_PRINT_OPENING_FILES
-          LOG_INFO("Opened file (from library ): %s\n", filename);
-#endif
-          SGPFile *file = MALLOCZ(SGPFile);
-          file->flags = SGPFILE_NONE;
-          file->u.lib = libFile;
-          return file;
-        }
-      }
-      else
-      {
-#if DEBUG_PRINT_OPENING_FILES
-        LOG_INFO("Opened file (from data dir): %s\n", filename);
-#endif
-      }
-    }
-    else
-    {
-#if DEBUG_PRINT_OPENING_FILES
-      LOG_INFO("Opened file (current dir  ): %s\n", filename);
-#endif
-    }
-  }
-
-  return getSGPFileFromFD(d, filename, fmode);
-}
-
-
-void FileClose(const HWFILE f)
+void FileClose(SGPFile* f)
 {
 	if (f->flags & SGPFILE_REAL)
 	{
@@ -387,7 +251,7 @@ extern UINT32 uiTotalFileReadTime;
 extern UINT32 uiTotalFileReadCalls;
 #endif
 
-void FileRead(HWFILE const f, void* const pDest, size_t const uiBytesToRead)
+void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 {
 #ifdef JA2TESTVERSION
 	const UINT32 uiStartTime = GetJA2Clock();
@@ -413,14 +277,14 @@ void FileRead(HWFILE const f, void* const pDest, size_t const uiBytesToRead)
 }
 
 
-void FileWrite(HWFILE const f, void const* const pDest, size_t const uiBytesToWrite)
+void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesToWrite)
 {
 	if (!(f->flags & SGPFILE_REAL)) throw std::logic_error("Tried to write to library file");
 	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
 }
 
 
-void FileSeek(HWFILE const f, INT32 distance, FileSeekMode const how)
+void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 {
 	bool success;
 	if (f->flags & SGPFILE_REAL)
@@ -443,13 +307,13 @@ void FileSeek(HWFILE const f, INT32 distance, FileSeekMode const how)
 }
 
 
-INT32 FileGetPos(const HWFILE f)
+INT32 FileGetPos(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : f->u.lib.uiFilePosInFile;
 }
 
 
-UINT32 FileGetSize(const HWFILE f)
+UINT32 FileGetSize(const SGPFile* f)
 {
 	if (f->flags & SGPFILE_REAL)
 	{
@@ -513,19 +377,6 @@ void EraseDirectory(char const* const dirPath)
 }
 
 
-/** Get path to the configuration folder. */
-const std::string& FileMan::getConfigFolderPath()
-{
-	return s_configFolderPath;
-}
-
-
-/** Get path to the configuration file. */
-const std::string& FileMan::getConfigPath()
-{
-  return s_configPath;
-}
-
 FileAttributes FileGetAttributes(const char* const filename)
 {
 	FileAttributes attr = FILE_ATTR_NONE;
@@ -546,21 +397,24 @@ FileAttributes FileGetAttributes(const char* const filename)
 }
 
 
+BOOLEAN FileClearAttributes(const std::string &filename)
+{
+  return FileClearAttributes(filename.c_str());
+}
+
 BOOLEAN FileClearAttributes(const char* const filename)
 {
 #if 1 // XXX TODO
-#	if defined WITH_FIXMES
-	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\")\n", __FILE__, __LINE__, __func__, filename);
-#	endif
+  SLOGW(TAG, "ignoring %s(\"%s\")", __func__, filename);
 	return FALSE;
-	UNIMPLEMENTED
+	// UNIMPLEMENTED
 #else
 	return SetFileAttributes(filename, FILE_ATTRIBUTE_NORMAL);
 #endif
 }
 
 
-BOOLEAN GetFileManFileTime(const HWFILE f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
+BOOLEAN GetFileManFileTime(const SGPFile* f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED;
@@ -610,7 +464,7 @@ INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FI
 }
 
 
-FILE* GetRealFileHandleFromFileManFileHandle(const HWFILE f)
+FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? f->u.file : f->u.lib.lib->hLibraryHandle;
 }
@@ -657,11 +511,6 @@ static UINT32 GetFreeSpaceOnHardDrive(const char* const pzDriveLetter)
 }
 
 
-const std::string& FileMan::getGameResRootPath(void)
-{
-  return s_gameResRootPath;
-}
-
 /** Join two path components. */
 std::string FileMan::joinPaths(const std::string &first, const char *second)
 {
@@ -694,7 +543,7 @@ std::string FileMan::joinPaths(const char *first, const char *second)
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
  * @return true when found, return the found name using foundName. */
-static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
+bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
 {
   bool result = false;
 
@@ -753,61 +602,9 @@ static bool findObjectCaseInsensitive(const char *directory, const char *name, b
 #endif
 
 
-/**
- * Find actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
- * On case-sensitive filesystems that might be tricky: if such directories
- * exist we should use them.  If doesn't exist, then use lowercased names.
- */
-static void findDataDirs()
-{
-    s_dataDir = FileMan::joinPaths(s_gameResRootPath, BASEDATADIR);
-    s_tileDir = FileMan::joinPaths(s_dataDir, TILECACHEDIR);
-    s_mapsDir = FileMan::joinPaths(s_dataDir, MAPSDIR);
-
-#if CASE_SENSITIVE_FS
-
-    // need to find precise names of the directories
-
-    std::string name;
-    if(findObjectCaseInsensitive(s_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
-    {
-      s_dataDir = FileMan::joinPaths(s_gameResRootPath, name);
-    }
-
-    if(findObjectCaseInsensitive(s_dataDir.c_str(), TILECACHEDIR, false, true, name))
-    {
-      s_tileDir = FileMan::joinPaths(s_dataDir, name);
-    }
-
-    if(findObjectCaseInsensitive(s_dataDir.c_str(), MAPSDIR, false, true, name))
-    {
-      s_mapsDir = FileMan::joinPaths(s_dataDir, name);
-    }
-#endif
-}
-
-/** Get path to the 'Data' directory of the game. */
-const std::string& FileMan::getDataDirPath()
-{
-  return s_dataDir;
-}
-
-/** Get path to the 'Data/Tilecache' directory of the game. */
-const std::string& FileMan::getTilecacheDirPath()
-{
-  return s_tileDir;
-}
-
-
-/** Get path to the 'Data/Maps' directory of the game. */
-const std::string& FileMan::getMapsDirPath()
-{
-  return s_mapsDir;
-}
-
 /** Convert file descriptor to HWFile.
  * Raise runtime_error if not possible. */
-static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode)
+SGPFile* FileMan::getSGPFileFromFD(int fd, const char *filename, const char *fmode)
 {
 	if (fd < 0)
   {
@@ -834,7 +631,7 @@ static HWFILE getSGPFileFromFD(int fd, const char *filename, const char *fmode)
 /** Open file for writing.
  * If file is missing it will be created.
  * If file exists, it's content will be removed. */
-HWFILE FileMan::openForWriting(const char *filename)
+SGPFile* FileMan::openForWriting(const char *filename)
 {
 	int mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_WRITE, &mode);
@@ -846,7 +643,7 @@ HWFILE FileMan::openForWriting(const char *filename)
 
 /** Open file for appending data.
  * If file doesn't exist, it will be created. */
-HWFILE FileMan::openForAppend(const char *filename)
+SGPFile* FileMan::openForAppend(const char *filename)
 {
 	int         mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_APPEND, &mode);
@@ -858,7 +655,7 @@ HWFILE FileMan::openForAppend(const char *filename)
 
 /** Open file for reading and writing.
  * If file doesn't exist, it will be created. */
-HWFILE FileMan::openForReadWrite(const char *filename)
+SGPFile* FileMan::openForReadWrite(const char *filename)
 {
 	int         mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_READWRITE, &mode);
@@ -867,14 +664,22 @@ HWFILE FileMan::openForReadWrite(const char *filename)
   return getSGPFileFromFD(d, filename, fmode);
 }
 
+/** Open file for reading. */
+SGPFile* FileMan::openForReading(const char *filename)
+{
+	int         mode;
+	const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
+  int d = open3(filename, mode, 0600);
+  return getSGPFileFromFD(d, filename, fmode);
+}
 
-/** Open file in the 'Data' directory in case-insensitive manner. */
-FILE* FileMan::openForReadingInDataDir(const char *filename)
+/** Open file for reading.  Look file in folderPath in case-insensitive manner. */
+FILE* FileMan::openForReadingCaseInsensitive(const std::string &folderPath, const char *filename)
 {
 	int mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
 
-  int d = OpenFileInDataDirFD(filename, mode);
+  int d = openFileCaseInsensitive(folderPath, filename, mode);
   if(d >= 0)
   {
     FILE* hFile = fdopen(d, fmode);
@@ -961,4 +766,80 @@ FindAllFilesInDir(const std::string &dirPath, bool sortResults)
     std::sort(paths.begin(), paths.end());
   }
   return paths;
+}
+
+/** Replace extension of a file. */
+std::string FileMan::replaceExtension(const std::string &_path, const char *newExtensionWithDot)
+{
+  boost::filesystem::path path(_path);
+  boost::filesystem::path foo = boost::filesystem::path(newExtensionWithDot);
+  return path.replace_extension(newExtensionWithDot).string();
+}
+
+/** Get parent path (e.g. directory path from the full path). */
+std::string FileMan::getParentPath(const std::string &_path, bool absolute)
+{
+  boost::filesystem::path path(_path);
+  boost::filesystem::path parent = path.parent_path();
+  if(absolute)
+  {
+    parent = boost::filesystem::absolute(parent);
+  }
+  return parent.string();
+}
+
+/** Get filename from the path. */
+std::string FileMan::getFileName(const std::string &_path)
+{
+  boost::filesystem::path path(_path);
+  return path.filename().string();
+}
+
+/** Get filename from the path without extension. */
+std::string FileMan::getFileNameWithoutExt(const char *path)
+{
+  return replaceExtension(getFileName(path), "");
+}
+
+std::string FileMan::getFileNameWithoutExt(const std::string &path)
+{
+  return getFileNameWithoutExt(path.c_str());
+}
+
+int FileMan::openFileForReading(const char *filename, int mode)
+{
+  return open(filename, mode);
+}
+
+/** Replace all \ with / */
+void FileMan::slashifyPath(std::string &path)
+{
+  int len = path.size();
+  for(int i = 0; i < len; i++)
+  {
+    if(path[i] == '\\')
+    {
+      path[i] = '/';
+    }
+  }
+}
+
+/** Read the whole file as text. */
+std::string FileMan::fileReadText(SGPFile* file)
+{
+  uint32_t size = FileGetSize(file);
+  char *data = new char[size+1];
+  FileRead(file, data, size);
+  data[size] = 0;
+  std::string result(data);
+  delete[] data;
+  return result;
+}
+
+/** Check file existance. */
+bool FileMan::checkFileExistance(const char *folder, const char *fileName)
+{
+  boost::filesystem::path path(folder);
+  path /= fileName;
+  return boost::filesystem::exists(path);
 }

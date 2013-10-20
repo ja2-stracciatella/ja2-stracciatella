@@ -1,0 +1,138 @@
+[
+    {
+        "index": 0,
+        "internalName": "NOAMMO",
+        "burstSoundString": "",
+        "showInHelpText": false,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 1,
+        "internalName": "AMMO38",
+        "burstSoundString": "",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 156
+    },
+    {
+        "index": 2,
+        "internalName": "AMMO9",
+        "burstSoundString": "9mm burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 156
+    },
+    {
+        "index": 3,
+        "internalName": "AMMO45",
+        "burstSoundString": "45 caliber burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 4,
+        "internalName": "AMMO357",
+        "burstSoundString": "",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 5,
+        "internalName": "AMMO12G",
+        "burstSoundString": "",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 6,
+        "internalName": "AMMOCAWS",
+        "burstSoundString": "shotgun burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 7,
+        "internalName": "AMMO545",
+        "burstSoundString": "5,45 burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 8,
+        "internalName": "AMMO556",
+        "burstSoundString": "5,56 burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 9,
+        "internalName": "AMMO762N",
+        "burstSoundString": "7,62 nato burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 10,
+        "internalName": "AMMO762W",
+        "burstSoundString": "7,62 wp burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 11,
+        "internalName": "AMMO47",
+        "burstSoundString": "4,7 caliber burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 12,
+        "internalName": "AMMO57",
+        "burstSoundString": "5,7 burst ",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 156
+    },
+    {
+        "index": 13,
+        "internalName": "AMMOMONST",
+        "burstSoundString": "",
+        "showInHelpText": true,
+        "monsterWeapon": true,
+        "silencerSound": 157
+    },
+    {
+        "index": 14,
+        "internalName": "AMMOROCKET",
+        "burstSoundString": "rl automatic ",
+        "showInHelpText": false,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 15,
+        "internalName": "AMMODART",
+        "burstSoundString": "",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    },
+    {
+        "index": 16,
+        "internalName": "AMMOFLAME",
+        "burstSoundString": "",
+        "showInHelpText": true,
+        "monsterWeapon": false,
+        "silencerSound": 157
+    }
+]

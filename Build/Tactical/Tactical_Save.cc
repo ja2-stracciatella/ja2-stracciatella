@@ -51,6 +51,8 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
@@ -234,9 +236,9 @@ void LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z, 
 	UINT32                 l_item_count;
 	SGP::Buffer<WORLDITEM> l_items;
 	// If the file doesn't exists, it's no problem
-	if (FileExists(filename))
+	if (GCM->doesGameResExists(filename))
 	{
-		AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
+		AutoSGPFile f(GCM->openGameResForReading(filename));
 
 		FileRead(f, &l_item_count, sizeof(l_item_count));
 		if (l_item_count != 0)
@@ -697,9 +699,9 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, x, y, z);
 
 	// If the file doesn't exist, it's no problem.
-	if (!FileExists(map_name)) return;
+	if (!GCM->doesGameResExists(map_name)) return;
 
-	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	// Load the number of Rotting corpses
 	UINT32 n_corpses;

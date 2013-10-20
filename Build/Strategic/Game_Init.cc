@@ -61,6 +61,9 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 UINT8			gubScreenCount=0;
 
@@ -373,9 +376,9 @@ void InitNewGame()
 		INT32 starting_cash;
 		switch (gGameOptions.ubDifficultyLevel)
 		{
-			case DIF_LEVEL_EASY:   starting_cash = 45000; break;
-			case DIF_LEVEL_MEDIUM: starting_cash = 35000; break;
-			case DIF_LEVEL_HARD:   starting_cash = 30000; break;
+			case DIF_LEVEL_EASY:   starting_cash = GCM->getGamePolicy()->starting_cash_easy; break;
+			case DIF_LEVEL_MEDIUM: starting_cash = GCM->getGamePolicy()->starting_cash_medium; break;
+			case DIF_LEVEL_HARD:   starting_cash = GCM->getGamePolicy()->starting_cash_hard; break;
 			default: throw std::logic_error("invalid difficulty level");
 		}
 		AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, now, starting_cash);
@@ -406,164 +409,6 @@ BOOLEAN AnyMercsHired( )
 	}
 	return FALSE;
 }
-
-
-static BOOLEAN QuickGameMemberHireMerc(UINT8 ubCurrentSoldier);
-static void QuickSetupOfMercProfileItems(UINT32 uiCount, UINT8 ubProfileIndex);
-
-
-static void QuickStartGame(void)
-{
-	INT32		cnt;
-	UINT16	usVal;
-	UINT8 ub1 = 0, ub2 = 0;
-
-	for ( cnt = 0; cnt < 3; cnt++ )
-	{
-		if ( cnt == 0 )
-		{
-			usVal = (UINT16)Random( 40 );
-
-			QuickSetupOfMercProfileItems( cnt, (UINT8)usVal );
-			QuickGameMemberHireMerc( (UINT8)usVal );
-		}
-		else if ( cnt == 1 )
-		{
-			do
-			{
-				usVal = (UINT16)Random( 40 );
-			}
-			while( usVal != ub1 );
-
-			QuickSetupOfMercProfileItems( cnt, (UINT8)usVal );
-			QuickGameMemberHireMerc( (UINT8)usVal );
-		}
-		else if ( cnt == 2 )
-		{
-			do
-			{
-				usVal = (UINT16)Random( 40 );
-			}
-			while( usVal != ub1 && usVal != ub2 );
-
-			QuickSetupOfMercProfileItems( cnt, (UINT8)usVal );
-			QuickGameMemberHireMerc( (UINT8)usVal );
-		}
-
-	}
-}
-
-
-static void GiveItemN(MERCPROFILESTRUCT& p, const UINT pos, const UINT16 item_id, const UINT8 status, const UINT8 count)
-{
-	p.inv[pos]        = item_id;
-	p.bInvStatus[pos] = status;
-	p.bInvNumber[pos] = count;
-}
-
-
-static void GiveItem(MERCPROFILESTRUCT& p, const UINT pos, const UINT16 item_id)
-{
-	GiveItemN(p, pos, item_id, 100, 1);
-}
-
-
-// TEMP FUNCTION!
-static void QuickSetupOfMercProfileItems(const UINT32 uiCount, const UINT8 ubProfileIndex)
-{
-	MERCPROFILESTRUCT& p = GetProfile(ubProfileIndex);
-	// Quickly give some guys we hire some items
-	switch (uiCount)
-	{
-		case 0:
-			p.bSkillTrait = MARTIALARTS;
-
-			//GiveItemN(p, HANDPOS, HAND_GRENADE, 100, 3);
-			GiveItem(p, HANDPOS,       C7);
-			GiveItem(p, BIGPOCK1POS,   CAWS);
-			GiveItem(p, BIGPOCK3POS,   MEDICKIT);
-			GiveItem(p, BIGPOCK4POS,   SHAPED_CHARGE);
-			GiveItem(p, SMALLPOCK3POS, KEY_2);
-			GiveItem(p, SMALLPOCK5POS, LOCKSMITHKIT);
-
-			// TEMP!
-			// make carman's opinion of us high!
-			GetProfile(CARMEN).bMercOpinion[ubProfileIndex] = 25;
-			break;
-
-		case 1:
-			GiveItem(p, HANDPOS,       CAWS);
-			GiveItem(p, SMALLPOCK3POS, KEY_1);
-			break;
-
-		case 2:
-			GiveItem(p, HANDPOS,       GLOCK_17);
-			GiveItem(p, SECONDHANDPOS, SW38);
-			GiveItem(p, SMALLPOCK1POS, SILENCER);
-			GiveItem(p, SMALLPOCK2POS, SNIPERSCOPE);
-			GiveItem(p, SMALLPOCK3POS, LASERSCOPE);
-			GiveItem(p, SMALLPOCK5POS, BIPOD);
-			GiveItem(p, SMALLPOCK6POS, LOCKSMITHKIT);
-			break;
-
-		default:
-			p.inv[HANDPOS]        = Random(30);
-			p.bInvNumber[HANDPOS] = 1;
-			break;
-	}
-
-	GiveItem( p, HELMETPOS,     KEVLAR_HELMET);
-	GiveItem( p, VESTPOS,       KEVLAR_VEST);
-	GiveItemN(p, BIGPOCK2POS,   RDX,           10, 1);
-	GiveItemN(p, SMALLPOCK4POS, HAND_GRENADE, 100, 4);
-
-	// Give special items to some NPCs
-	//GiveItem(GetProfile(CARMEN), SMALLPOCK4POS, TERRORIST_INFO);
-}
-
-
-static BOOLEAN QuickGameMemberHireMerc(UINT8 ubCurrentSoldier)
-{
-	MERC_HIRE_STRUCT HireMercStruct;
-
-	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
-
-	HireMercStruct.ubProfileID = ubCurrentSoldier;
-
-	HireMercStruct.sSectorX                  = SECTORX(g_merc_arrive_sector);
-	HireMercStruct.sSectorY                  = SECTORY(g_merc_arrive_sector);
-	HireMercStruct.fUseLandingZoneForArrival = TRUE;
-
-	HireMercStruct.fCopyProfileItemsOver =	TRUE;
-	HireMercStruct.ubInsertionCode				= INSERTION_CODE_CHOPPER;
-
-	HireMercStruct.iTotalContractLength = 7;
-
-	//specify when the merc should arrive
-	HireMercStruct.uiTimeTillMercArrives = 0;
-
-	//if we succesfully hired the merc
-	if (!HireMerc(HireMercStruct))
-	{
-		return(FALSE);
-	}
-
-	//add an entry in the finacial page for the hiring of the merc
-	AddTransactionToPlayersBook(HIRED_MERC, ubCurrentSoldier, GetWorldTotalMin(), -(INT32) gMercProfiles[ubCurrentSoldier].uiWeeklySalary );
-
-	if( gMercProfiles[ ubCurrentSoldier ].bMedicalDeposit )
-	{
-		//add an entry in the finacial page for the medical deposit
-		AddTransactionToPlayersBook(MEDICAL_DEPOSIT, ubCurrentSoldier, GetWorldTotalMin(), -(gMercProfiles[ubCurrentSoldier].sMedicalDepositAmount) );
-	}
-
-	//add an entry in the history page for the hiring of the merc
-	AddHistoryToPlayersLog( HISTORY_HIRED_MERC_FROM_AIM, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
-
-	return(TRUE);
-}
-
-
 
 
 //This function is called when the game is REstarted.  Things that need to be reinited are placed in here

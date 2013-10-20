@@ -2,7 +2,6 @@
 #include "JA2_Splash.h"
 #include "VSurface.h"
 #include "Timer_Control.h"
-#include "LibraryDataBase.h"
 #include "MainMenuScreen.h"
 #include "Video.h"
 #include "GameRes.h"

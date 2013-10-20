@@ -27,6 +27,8 @@
 #include "UILayout.h"
 #include <boost/foreach.hpp>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define		MINIMAP_X_SIZE			88
 #define		MINIMAP_Y_SIZE			44
@@ -56,7 +58,6 @@ ScreenID MapUtilScreenHandle()
 
 	UINT32					bR, bG, bB, bAvR, bAvG, bAvB;
 	INT16						s16BPPSrc, sDest16BPPColor;
-	INT32						cnt;
 
 	INT16 sX1, sX2, sY1, sY2, sTop, sBottom, sLeft, sRight;
 
@@ -80,7 +81,7 @@ ScreenID MapUtilScreenHandle()
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		try
 		{
-      std::vector<std::string> files = FindFilesInDir(MAPSDIR, ".dat", true, true, true);
+      std::vector<std::string> files = GCM->getAllMaps();
       BOOST_FOREACH(const std::string &file, files)
       {
         FileList = AddToFDlgList(FileList, file.c_str());
@@ -257,17 +258,8 @@ ScreenID MapUtilScreenHandle()
 			}
 		}
 
-		// Remove extension
-		for ( cnt = (INT32)strlen( zFilename )-1; cnt >=0; cnt-- )
-		{
-			if ( zFilename[ cnt ] == '.' )
-			{
-				zFilename[ cnt ] = '\0';
-			}
-		}
-
-		sprintf(zFilename2, RADARMAPSDIR "/%s.sti", zFilename);
-		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
+		std::string zFilename2(GCM->getRadarMapResourceName(FileMan::replaceExtension(zFilename, ".sti")));
+		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2.c_str(), CONVERT_ETRLE_COMPRESS, 0 );
 	}
 
 	SetFontAttributes(TINYFONT1, FONT_MCOLOR_DKGRAY);

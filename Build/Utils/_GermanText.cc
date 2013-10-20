@@ -99,59 +99,6 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 */
 
-// Different weapon calibres
-// CAWS is Close Assault Weapon System and should probably be left as it is
-// NATO is the North Atlantic Treaty Organization
-// WP is Warsaw Pact
-// cal is an abbreviation for calibre
-static StrPointer s_ger_AmmoCaliber[AmmoCaliber_SIZE] =
-{
-	L"0",
-	L".38 Kal",
-	L"9mm",
-	L".45 Kal",
-	L".357 Kal",
-	L"12 Kal",
-	L"CAWS",
-	L"5.45mm",
-	L"5.56mm",
-	L"7.62mm NATO",
-	L"7.62mm WP",
-	L"4.7mm",
-	L"5.7mm",
-	L"Monster",
-	L"Rakete",
-	L"",
-	L"",
-};
-
-// This BobbyRayAmmoCaliber is virtually the same as AmmoCaliber however the bobby version doesnt have as much room for the words.
-//
-// Different weapon calibres
-// CAWS is Close Assault Weapon System and should probably be left as it is
-// NATO is the North Atlantic Treaty Organization
-// WP is Warsaw Pact
-// cal is an abbreviation for calibre
-static StrPointer s_ger_BobbyRayAmmoCaliber[BobbyRayAmmoCaliber_SIZE] =
-{
-	L"0",
-	L".38 Kal",
-	L"9mm",
-	L".45 Kal",
-	L".357 Kal",
-	L"12 Kal",
-	L"CAWS",
-	L"5.45mm",
-	L"5.56mm",
-	L"7.62mm N.",
-	L"7.62mm WP",
-	L"4.7mm",
-	L"5.7mm",
-	L"Monster",
-	L"Rakete",
-	L"", // dart
-};
-
 static StrPointer s_ger_WeaponType[WeaponType_SIZE] =
 {
 	L"Andere",
@@ -3398,8 +3345,6 @@ static const wchar_t s_ger_str_iron_man_mode_warning[] = L"You have chosen IRON 
 /** German language resources. */
 LanguageRes g_LanguageResGerman = {
 
-  s_ger_AmmoCaliber,
-  s_ger_BobbyRayAmmoCaliber,
   s_ger_WeaponType,
 
   s_ger_Message,

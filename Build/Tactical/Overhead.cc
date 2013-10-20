@@ -97,6 +97,10 @@
 #include "Strategic_Status.h"
 #include "PreBattle_Interface.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "Soldier.h"
+
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10
 
@@ -589,6 +593,7 @@ void ExecuteOverhead(void)
 		for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
 		{
 			SOLDIERTYPE* pSoldier = MercSlots[cnt];
+      SoldierSP soldier = GetSoldier(pSoldier);
 
 			// Syncronize for upcoming soldier counters
 			SYNCTIMECOUNTER();
@@ -773,9 +778,19 @@ void ExecuteOverhead(void)
 							HandleNextTileWaiting(pSoldier);
 						}
 
+            // Handle situation when Darrent goes through the ring to give money.
+            // He jumps out of the ring right beside the player.
+            // Sutiation when he walks to the player is handled the usual way.
+            if((pSoldier->ubProfile == DARREN)
+               && (pSoldier->sFinalDestination == pSoldier->sGridNo)
+               && (pSoldier->usAnimState == STANDING)
+               && (pSoldier->ubPendingAction == MERC_GIVEITEM))
+            {
+              soldier->handlePendingAction(gTacticalStatus.uiFlags & INCOMBAT);
+            }
 						// Update world data with new position, etc
 						// Determine gameworld cells corrds of guy
-						if (gAnimControl[pSoldier->usAnimState].uiFlags & (ANIM_MOVING | ANIM_SPECIALMOVE) && !(pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE))
+						else if (gAnimControl[pSoldier->usAnimState].uiFlags & (ANIM_MOVING | ANIM_SPECIALMOVE) && !(pSoldier->uiStatusFlags & SOLDIER_PAUSEANIMOVE))
 						{
 							fKeepMoving = TRUE;
 
@@ -880,7 +895,7 @@ void ExecuteOverhead(void)
 											}
 										}
 									}
-									else if (pSoldier->ubPendingAction != NO_PENDING_ACTION)
+									else if (soldier->hasPendingAction())
 									{
 										DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("We are inside the IF PENDING Animation with soldier #%d", pSoldier->ubID));
 
@@ -913,114 +928,10 @@ void ExecuteOverhead(void)
 											}
 										}
 
-										if (pSoldier->ubPendingAction == MERC_PICKUPITEM)
-										{
-											const INT16 sGridNo = pSoldier->sPendingActionData2;
-											if (sGridNo == pSoldier->sGridNo)
-											{
-												// OK, now, if in realtime
-												if (!(gTacticalStatus.uiFlags & INCOMBAT))
-												{
-													// If the two gridnos are not the same, check to see if we can
-													// now go into it
-													if (sGridNo != (INT16)pSoldier->uiPendingActionData4)
-													{
-														if (NewOKDestination(pSoldier, (INT16)pSoldier->uiPendingActionData4, TRUE, pSoldier->bLevel))
-														{
-															// GOTO NEW TILE!
-															SoldierPickupItem(pSoldier, pSoldier->uiPendingActionData1, (INT16)pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3);
-															continue;
-														}
-													}
-												}
-
-												PickPickupAnimation(pSoldier, pSoldier->uiPendingActionData1, (INT16)pSoldier->uiPendingActionData4, pSoldier->bPendingActionData3);
-											}
-											else
-											{
-												SoldierGotoStationaryStance(pSoldier);
-											}
-										}
-										else if (pSoldier->ubPendingAction == MERC_PUNCH)
-										{
-											// for the benefit of the AI
-											pSoldier->bAction = AI_ACTION_KNIFE_STAB;
-
-											EVENT_SoldierBeginPunchAttack(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_TALK)
-										{
-											PlayerSoldierStartTalking(pSoldier, (UINT8)pSoldier->uiPendingActionData1, TRUE);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_DROPBOMB)
-										{
-											EVENT_SoldierBeginDropBomb(pSoldier);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_STEAL)
-										{
-											//pSoldier->bDesiredDirection = pSoldier->bPendingActionData3;
-											EVENT_SetSoldierDesiredDirection(pSoldier, pSoldier->bPendingActionData3);
-
-											EVENT_InitNewSoldierAnim(pSoldier, STEAL_ITEM, 0, FALSE);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_KNIFEATTACK)
-										{
-											// for the benefit of the AI
-											pSoldier->bAction = AI_ACTION_KNIFE_STAB;
-
-											EVENT_SoldierBeginBladeAttack(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_GIVEAID)
-										{
-											EVENT_SoldierBeginFirstAid(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_REPAIR)
-										{
-											EVENT_SoldierBeginRepair(*pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_FUEL_VEHICLE)
-										{
-											EVENT_SoldierBeginRefuel(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_RELOADROBOT)
-										{
-											EVENT_SoldierBeginReloadRobot(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3, (INT8)pSoldier->uiPendingActionData1);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_TAKEBLOOD)
-										{
-											EVENT_SoldierBeginTakeBlood( pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3 );
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_ATTACH_CAN)
-										{
-											EVENT_SoldierBeginAttachCan(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_ENTER_VEHICLE)
-										{
-											EVENT_SoldierEnterVehicle(*pSoldier, pSoldier->sPendingActionData2);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-											continue;
-										}
-										else if (pSoldier->ubPendingAction == MERC_CUTFFENCE)
-										{
-											EVENT_SoldierBeginCutFence(pSoldier, pSoldier->sPendingActionData2, pSoldier->bPendingActionData3);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
-										else if (pSoldier->ubPendingAction == MERC_GIVEITEM)
-										{
-											EVENT_SoldierBeginGiveItem(pSoldier);
-											pSoldier->ubPendingAction = NO_PENDING_ACTION;
-										}
+                    if(soldier->handlePendingAction(gTacticalStatus.uiFlags & INCOMBAT))
+                    {
+                      continue;
+                    }
 
 										if (fNoAPsForPendingAction)
 										{
@@ -1309,10 +1220,10 @@ void ExecuteOverhead(void)
 
 static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE& s)
 {
+  SoldierSP soldier = GetSoldier(&s);
+
 	HaltMoveForSoldierOutOfPoints(s);
-	s.usPendingAnimation = NO_PENDING_ANIMATION;
-	s.ubPendingDirection = NO_PENDING_DIRECTION;
-	s.ubPendingAction    = NO_PENDING_ACTION;
+  soldier->removePendingAnimation();
 
 	UnMarkMovementReserved(s);
 
@@ -1631,14 +1542,14 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						if (!(pSoldier->fHitByGasFlags & HIT_BY_TEARGAS) && bPosOfMask == NO_SLOT)
 						{
 							// check for gas mask
-							pExplosive = &Explosive[Item[TEARGAS_GRENADE].ubClassIndex];
+							pExplosive = &Explosive[GCM->getItem(TEARGAS_GRENADE)->getClassIndex()];
 						}
 					}
 					if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_MUSTARDGAS)
 					{
 						if (!(pSoldier->fHitByGasFlags & HIT_BY_MUSTARDGAS) && bPosOfMask == NO_SLOT)
 						{
-							pExplosive = &Explosive[Item[MUSTARD_GRENADE].ubClassIndex];
+							pExplosive = &Explosive[GCM->getItem(MUSTARD_GRENADE)->getClassIndex()];
 						}
 					}
 				}
@@ -1646,7 +1557,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					if (!(pSoldier->fHitByGasFlags & HIT_BY_CREATUREGAS)) // gas mask doesn't help vs creaturegas
 					{
-						pExplosive = &Explosive[Item[SMALL_CREATURE_GAS].ubClassIndex];
+						pExplosive = &Explosive[GCM->getItem(SMALL_CREATURE_GAS)->getClassIndex()];
 					}
 				}
 				if (pExplosive)
@@ -1894,6 +1805,8 @@ static void HandleJohnArrival(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 {
+  SoldierSP soldier = GetSoldier(pSoldier);
+
 	// ATE; Handle bad guys, as they fade, to cancel it if
 	// too long...
 	// ONLY if fading IN!
@@ -2012,7 +1925,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		// ATE: Cancel only if our final destination
 		if (pSoldier->sGridNo == pSoldier->sFinalDestination)
 		{
-			pSoldier->ubPendingAction = NO_PENDING_ACTION;
+			soldier->removePendingAction();
 		}
 
 		// this flag is set only to halt the currently moving guy; reset it now
@@ -4145,6 +4058,7 @@ void ExitCombatMode( )
 
 	FOR_EACH_SOLDIER(pSoldier)
 	{
+    SoldierSP soldier = GetSoldier(pSoldier);
 		if ( pSoldier->bInSector )
 		{
 			// Reset some flags
@@ -4154,10 +4068,7 @@ void ExitCombatMode( )
 				SoldierGotoStationaryStance( pSoldier );
 			}
 
-			//Cancel pending events
-			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-			pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
-			pSoldier->ubPendingAction    = NO_PENDING_ACTION;
+      soldier->removePendingAnimation();
 
 			// Reset moved flag
 			pSoldier->bMoved = FALSE;
@@ -5454,7 +5365,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		if ( ( pSoldier->usAttackingWeapon != NOTHING && pSoldier->usAttackingWeapon != BRASS_KNUCKLES ) || !( pSoldier->uiStatusFlags & SOLDIER_BOXER ) )
 		{
 			// someone's cheating!
-			if ( (Item[ pSoldier->usAttackingWeapon ].usItemClass == IC_BLADE || Item[ pSoldier->usAttackingWeapon ].usItemClass == IC_PUNCH) && (pTarget->uiStatusFlags & SOLDIER_BOXER) )
+			if ( (GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_BLADE || GCM->getItem(pSoldier->usAttackingWeapon)->getItemClass() == IC_PUNCH) && (pTarget->uiStatusFlags & SOLDIER_BOXER) )
 			{
 				// knife or brass knuckles disqualify the player!
 				BoxingPlayerDisqualified( pSoldier, BAD_ATTACK );
@@ -5564,7 +5475,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 				// ATE: Depending on personality, fire back.....
 
 				// Do we have a gun in a\hand?
-				if ( Item[ pTarget->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN )
+				if ( GCM->getItem(pTarget->inv[ HANDPOS ].usItem)->getItemClass() == IC_GUN )
 				{
 					// Toggle burst capable...
 					if ( !pTarget->bDoBurst )
@@ -5618,7 +5529,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 	if (fCalledByAttacker)
 	{
-		if (pSoldier && Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN)
+		if (pSoldier && GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isGun())
 		{
 			if (pSoldier->bBulletsLeft > 0)
 			{
@@ -6283,7 +6194,7 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo con
 				SlideToLocation(location_);
 
 				SOLDIERTYPE& s = soldier_;
-				ExecuteCharacterDialogue(s.ubProfile, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), s.face, DIALOGUE_TACTICAL_UI, TRUE);
+				ExecuteCharacterDialogue(s.ubProfile, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), s.face, DIALOGUE_TACTICAL_UI, TRUE, false);
 
 				return false;
 			}

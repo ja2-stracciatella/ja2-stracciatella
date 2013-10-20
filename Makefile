@@ -72,6 +72,8 @@ CXX=$(MINGW_PREFIX)-g++
 CPP=$(MINGW_PREFIX)-cpp
 RANLIB=$(MINGW_PREFIX)-ranlib
 
+CFLAGS += -mwindows -mconsole
+
 endif
 
 ############################################################
@@ -82,20 +84,23 @@ ifdef WITH_DEBUGINFO
 CFLAGS += -g
 endif
 
+CFLAGS += -I .
 CFLAGS += -I Build
-CFLAGS += -I Build/Tactical
-CFLAGS += -I Build/Strategic
 CFLAGS += -I Build/Editor
-CFLAGS += -I Build/Res
 CFLAGS += -I Build/Laptop
-CFLAGS += -I Build/Utils
-CFLAGS += -I Build/TileEngine
+CFLAGS += -I Build/Res
+CFLAGS += -I Build/Strategic
+CFLAGS += -I Build/Tactical
 CFLAGS += -I Build/TacticalAI
+CFLAGS += -I Build/TileEngine
+CFLAGS += -I Build/Utils
 CFLAGS += -I sgp
+CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
-CFLAGS += -I _build/lib-utf8cpp/source
+CFLAGS += -I _build/lib-rapidjson
 CFLAGS += -I _build/lib-slog
+CFLAGS += -I _build/lib-utf8cpp/source
 
 #CFLAGS += -Wall
 #CFLAGS += -W
@@ -192,6 +197,7 @@ SRCS += Build/GameState.cc
 SRCS += Build/GameScreen.cc
 SRCS += Build/GameSettings.cc
 SRCS += Build/GameVersion.cc
+
 SRCS += Build/HelpScreen.cc
 SRCS += Build/Init.cc
 SRCS += Build/Intro.cc
@@ -437,7 +443,6 @@ SRCS += Build/Utils/Animated_ProgressBar.cc
 SRCS += Build/Utils/Cinematics.cc
 SRCS += Build/Utils/Cursors.cc
 SRCS += Build/Utils/Debug_Control.cc
-SRCS += Build/Utils/Encrypted_File.cc
 SRCS += Build/Utils/Event_Manager.cc
 SRCS += Build/Utils/Event_Pump.cc
 SRCS += Build/Utils/Font_Control.cc
@@ -488,6 +493,25 @@ SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
 
+SRCS += src/AmmoTypeModel.cc
+SRCS += src/CalibreModel.cc
+SRCS += src/DealerInventory.cc
+SRCS += src/DefaultContentManager.cc
+SRCS += src/ItemModel.cc
+SRCS += src/JsonUtility.cc
+SRCS += src/JsonUtility_unittests.cc
+SRCS += src/MagazineModel.cc
+SRCS += src/MercProfile.cc
+SRCS += src/ModPackContentManager.cc
+SRCS += src/Soldier.cc
+SRCS += src/WeaponModels.cc
+SRCS += src/content/ContentMercs.cc
+SRCS += src/content/Dialogs.cc
+SRCS += src/content/npcs.cc
+SRCS += src/internals/enums.cc
+SRCS += src/policy/DefaultGamePolicy.cc
+SRCS += src/policy/DefaultIMPPolicy.cc
+
 SRCS += _build/lib-MicroIni/src/MicroIni/File.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Section.cpp
@@ -532,7 +556,6 @@ SRCS += Build/Tactical/LoadSaveMercProfile_unittest.cc
 SRCS += Build/VanillaDataStructures_unittest.cc
 SRCS += sgp/FileMan_unittest.cc
 SRCS += sgp/LoadSaveData_unittest.cc
-SRCS += sgp/SGPStrings_unittest.cc
 SRCS += sgp/UTF8String_unittest.cc
 SRCS += sgp/wchar_unittest.cc
 endif
@@ -623,6 +646,7 @@ build-win-release-on-linux:
 	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
 	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
 	cp -r _unittests $(WIN_RELEASE)
+	cp -r externalized $(WIN_RELEASE)
 	cp Changelog $(WIN_RELEASE)/Changelog.txt
 	cp changes.md $(WIN_RELEASE)/changes.md
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
@@ -643,9 +667,13 @@ build-release-on-mac:
 	cp _build/distr-files-mac/*.command $(MAC_RELEASE)
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
 	cp -r _unittests $(MAC_RELEASE)
+	cp -r externalized $(MAC_RELEASE)
 	cp Changelog $(MAC_RELEASE)/Changelog.txt
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
+
+build-on-mac:
+	make "CFLAGS_SDL=$(MACOS_STATIC_CFLAGS_SDL)" "LDFLAGS_SDL=$(MACOS_STATIC_LDFLAGS_SDL)"
 
 build-on-win:
 	PATH=/cygdrive/c/MinGW/bin:$$PATH make all USE_MINGW=1 MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32

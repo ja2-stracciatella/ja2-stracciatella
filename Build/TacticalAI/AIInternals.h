@@ -163,12 +163,12 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier);
 INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
 void NPCDoesAct(SOLDIERTYPE *pSoldier);
-INT8 OKToAttack(SOLDIERTYPE *ptr, int target);
+INT8 OKToAttack(const SOLDIERTYPE *ptr, int target);
 BOOLEAN NeedToRadioAboutPanicTrigger( void );
 INT8 PointPatrolAI(SOLDIERTYPE *pSoldier);
 void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier );
 INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier);
-INT32 RangeChangeDesire( SOLDIERTYPE * pSoldier );
+INT32 RangeChangeDesire( const SOLDIERTYPE * pSoldier );
 UINT16 RealtimeDelay( SOLDIERTYPE * pSoldier );
 void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 bPermanent);
 void RTHandleAI( SOLDIERTYPE * pSoldier );

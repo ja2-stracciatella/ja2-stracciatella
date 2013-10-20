@@ -64,6 +64,11 @@
 #include "Items.h"
 #include "Shading.h"
 
+#include "Soldier.h"
+
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 #define		NO_JUMP											0
 #define		MAX_ANIFRAMES_PER_FLASH			2
@@ -108,6 +113,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	BOOLEAN				bOKFireWeapon;
 	BOOLEAN				bWeaponJammed;
   UINT16        usUIMovementMode;
+
+  SoldierSP soldier = GetSoldier(pSoldier);
 
   do
   {
@@ -633,7 +640,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// FIRST CHECK IF WE'VE REACHED MAX FOR GUN
 					fStop = FALSE;
 
-					if ( pSoldier->bDoBurst > Weapon[ pSoldier->usAttackingWeapon ].ubShotsPerBurst )
+					if ( pSoldier->bDoBurst > GCM->getWeapon( pSoldier->usAttackingWeapon )->ubShotsPerBurst )
 					{
 						fStop = TRUE;
 					}
@@ -1355,9 +1362,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					if ( pSoldier->inv[ HANDPOS ].usItem != NOTHING )
 					{
 						// CHECK IF GUN
-						if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN )
+						if ( GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->getItemClass() == IC_GUN )
 						{
-							if ( Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubWeaponClass != HANDGUNCLASS )
+							if ( GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubWeaponClass != HANDGUNCLASS )
 							{
 								// RAISE
 								ChangeSoldierState( pSoldier, RAISE_RIFLE, 0 , FALSE );
@@ -1397,9 +1404,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 								if ( usItem != NOTHING )
 								{
-									if ( Item[ usItem ].usItemClass == IC_GUN )
+									if ( GCM->getItem(usItem)->getItemClass() == IC_GUN )
 									{
-										if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
+										if ( (GCM->getItem(usItem)->isTwoHanded()) )
 										{
 											// Set to rifle
 											ubRandomHandIndex = RANDOM_ANIM_RIFLEINHAND;
@@ -1548,7 +1555,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						// DROP ITEM
 						HandleSoldierPickupItem( pSoldier, pSoldier->uiPendingActionData1, (INT16)(pSoldier->uiPendingActionData4 ), pSoldier->bPendingActionData3 );
 						// EVENT HAS BEEN HANDLED
-						pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+						soldier->removePendingAction();
 
 					//}
 					//else
@@ -1566,7 +1573,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						SoldierHandleInteractiveObject(*pSoldier);
 
 						// EVENT HAS BEEN HANDLED
-						pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+						soldier->removePendingAction();
 
 					//}
 					//else
@@ -1580,7 +1587,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if (pSoldier->bAction == AI_ACTION_UNLOCK_DOOR || (pSoldier->bAction == AI_ACTION_LOCK_DOOR && !(pSoldier->fAIFlags & AI_LOCK_DOOR_INCLUDES_CLOSE) ) )
 						{
 							// EVENT HAS BEEN HANDLED
-							pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+							soldier->removePendingAction();
 
 							// do nothing here
 						}
@@ -1606,7 +1613,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
               }
 
 							// EVENT HAS BEEN HANDLED
-							pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+							soldier->removePendingAction();
 
 						}
 
@@ -1981,7 +1988,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						if ( usItem != NOTHING )
 						{
-							SoundID const usSoundID = Weapon[usItem].sLocknLoadSound;
+							SoundID const usSoundID = GCM->getWeapon(usItem)->sLocknLoadSound;
 							if (usSoundID != NO_SOUND)
 							{
 								PlayLocationJA2Sample(pSoldier->sGridNo, usSoundID, HIGHVOLUME, 1);
@@ -1992,7 +1999,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 709:
 					// Knife throw sound...
-					PlayLocationJA2Sample(pSoldier->sGridNo, Weapon[THROWING_KNIFE].sSound, HIGHVOLUME, 1);
+					PlayLocationJA2Sample(pSoldier->sGridNo, GCM->getWeapon(THROWING_KNIFE)->sound, HIGHVOLUME, 1);
 					break;
 
 				case 710:
@@ -2543,10 +2550,10 @@ static BOOLEAN ShouldMercSayHappyWithGunQuote(SOLDIERTYPE* pSoldier)
 		}
 
     // is it a gun?
-    if ( Item[ pSoldier->usAttackingWeapon ].usItemClass & IC_GUN )
+    if ( GCM->getItem(pSoldier->usAttackingWeapon)->isGun())
     {
   		// Is our weapon powerfull enough?
-		  if ( Weapon[ pSoldier->usAttackingWeapon ].ubDeadliness > MIN_DEADLINESS_FOR_LIKE_GUN_QUOTE )
+		  if ( GCM->getWeapon( pSoldier->usAttackingWeapon )->ubDeadliness > MIN_DEADLINESS_FOR_LIKE_GUN_QUOTE )
 		  {
 			  // 20 % chance?
 			  if ( Random( 100 ) < 20 )
@@ -3224,7 +3231,7 @@ static BOOLEAN CheckForImproperFireGunEnd(SOLDIERTYPE* pSoldier)
 	if ( pSoldier->inv[ HANDPOS ].bGunAmmoStatus < 0 || pSoldier->inv[ HANDPOS ].ubGunShotsLeft == 0 )
 	{
 		// If we have 2 pistols, donot go back!
-		if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass != IC_GUN )
+		if ( GCM->getItem(pSoldier->inv[ SECONDHANDPOS ].usItem)->getItemClass() != IC_GUN )
 		{
 			// OK, put gun down....
 			InternalSoldierReadyWeapon( pSoldier, pSoldier->bDirection, TRUE );

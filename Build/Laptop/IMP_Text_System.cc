@@ -3,7 +3,6 @@
 #include "Text.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "IMP_Text_System.h"
 #include "CharProfile.h"
 #include "Laptop.h"
@@ -13,6 +12,8 @@
 #include "IMP_MainPage.h"
 #include "Font_Control.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define IMP_SEEK_AMOUNT (5 * 80)
 
@@ -43,7 +44,7 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
 	}
 
 	wchar_t sString[IMP_SEEK_AMOUNT];
-	LoadEncryptedDataFromFile(BINARYDATADIR "/imptext.edt", sString, sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
+	GCM->loadEncryptedString(BINARYDATADIR "/imptext.edt", sString, sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
 	DisplayWrappedString(sStartX, sStartY, sLineLength, 2, font, ubColor, sString, FONT_BLACK, uiFlags);
 
 	// reset shadow

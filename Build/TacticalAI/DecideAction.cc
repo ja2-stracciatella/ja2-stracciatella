@@ -29,6 +29,9 @@
 #include "Soldier_Ani.h"
 #include "Rotting_Corpses.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -2970,7 +2973,7 @@ bCanAttack = FALSE;
 		 }
 
 		 // now it better be a gun, or the guy can't shoot (but has other attack(s))
-		 if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_GUN && pSoldier->inv[HANDPOS].bGunStatus >= USABLE)
+		 if (GCM->getItem(pSoldier->inv[HANDPOS].usItem)->getItemClass() == IC_GUN && pSoldier->inv[HANDPOS].bGunStatus >= USABLE)
 		 {
 			 // get the minimum cost to attack the same target with this gun
 			 ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,DONTADDTURNCOST);
@@ -3096,7 +3099,7 @@ bCanAttack = FALSE;
 		 if (pSoldier->bActionPoints >= ubMinAPCost)
 			{
 				// NB throwing knife in hand now
-	 		 if ( Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass & IC_THROWING_KNIFE )
+	 		 if ( GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isThrowingKnife() )
 			 {
 				 // throwing knife code works like shooting
 
@@ -3157,7 +3160,7 @@ bCanAttack = FALSE;
 	 if (BestStab.ubPossible && ((BestStab.iAttackValue > BestAttack.iAttackValue) || (ubBestAttackAction == AI_ACTION_NONE)))
 	 {
 		BestAttack.iAttackValue = BestStab.iAttackValue;
-		if ( Item[ pSoldier->inv[BestStab.bWeaponIn].usItem ].usItemClass & IC_THROWING_KNIFE )
+		if ( GCM->getItem(pSoldier->inv[BestStab.bWeaponIn].usItem)->isThrowingKnife() )
 		{
 			ubBestAttackAction = AI_ACTION_THROW_KNIFE;
 		}
@@ -3227,7 +3230,7 @@ bCanAttack = FALSE;
  }
 
  // NB a desire of 4 or more is only achievable by brave/aggressive guys with high morale
- if ( pSoldier->bActionPoints == pSoldier->bInitialActionPoints && ubBestAttackAction == AI_ACTION_FIRE_GUN && (pSoldier->bShock == 0) && (pSoldier->bLife >= pSoldier->bLifeMax / 2) && BestAttack.ubChanceToReallyHit < 30 && ( PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) > Weapon[ pSoldier->inv[ BestAttack.bWeaponIn ].usItem ].usRange / CELL_X_SIZE ) && RangeChangeDesire( pSoldier ) >= 4 )
+ if ( pSoldier->bActionPoints == pSoldier->bInitialActionPoints && ubBestAttackAction == AI_ACTION_FIRE_GUN && (pSoldier->bShock == 0) && (pSoldier->bLife >= pSoldier->bLifeMax / 2) && BestAttack.ubChanceToReallyHit < 30 && ( PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) > GCM->getWeapon( pSoldier->inv[ BestAttack.bWeaponIn].usItem)->usRange / CELL_X_SIZE ) && RangeChangeDesire( pSoldier ) >= 4 )
  {
 	 // okay, really got to wonder about this... could taking cover be an option?
 	 if (ubCanMove && pSoldier->bOrders != STATIONARY && !gfHiddenInterrupt &&

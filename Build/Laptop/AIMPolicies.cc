@@ -6,12 +6,14 @@
 #include "AIM.h"
 #include "VObject.h"
 #include "WordWrap.h"
-#include "Encrypted_File.h"
 #include "Text.h"
 #include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 
 #define	NUM_AIM_POLICY_PAGES				11
@@ -390,7 +392,7 @@ static void ExitAimPolicyMenuBar()
 
 static void LoadAIMPolicyText(wchar_t* Text, UINT32 Offset)
 {
-	LoadEncryptedDataFromFile(AIMPOLICYFILE, Text, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE);
+	GCM->loadEncryptedString(AIMPOLICYFILE, Text, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE);
 }
 
 

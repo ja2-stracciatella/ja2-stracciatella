@@ -23,6 +23,8 @@
 #include "FileMan.h"
 #include "SaveLoadGame.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define		NUM_SMOKE_EFFECT_SLOTS					25
 
@@ -177,7 +179,7 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
     case LARGE_CREATURE_GAS:
 			bSmokeEffectType	=	CREATURE_SMOKE_EFFECT;
 			ubDuration				= 3;
-			ubStartRadius			= Explosive[ Item[ LARGE_CREATURE_GAS ].ubClassIndex ].ubRadius;
+			ubStartRadius			= Explosive[ GCM->getItem(LARGE_CREATURE_GAS)->getClassIndex() ].ubRadius;
 			break;
 
     case VERY_SMALL_CREATURE_GAS:
@@ -402,7 +404,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 						// cloud expands by 1 every turn outdoors, and every other turn indoors
 
 						// ATE: If radius is < maximun, increase radius, otherwise keep at max
-						if ( pSmoke->ubRadius < Explosive[ Item[ pSmoke->usItem ].ubClassIndex ].ubRadius )
+						if ( pSmoke->ubRadius < Explosive[ GCM->getItem(pSmoke->usItem)->getClassIndex() ].ubRadius )
 						{
 							pSmoke->ubRadius++;
 						}
@@ -525,7 +527,7 @@ void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
 
 	//Clear out the old list
 	ResetSmokeEffects();

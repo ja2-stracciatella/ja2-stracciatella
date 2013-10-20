@@ -16,6 +16,8 @@
 #include "FileMan.h"
 #include "SaveLoadGame.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define		NUM_LIGHT_EFFECT_SLOTS					25
 
@@ -238,7 +240,7 @@ void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
 
 	//Clear out the old list
 	ResetLightEffects();

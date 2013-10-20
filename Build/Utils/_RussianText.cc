@@ -100,60 +100,6 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 */
 
-// Different weapon calibres
-// CAWS is Close Assault Weapon System and should probably be left as it is
-// NATO is the North Atlantic Treaty Organization
-// WP is Warsaw Pact
-// cal is an abbreviation for calibre
-static StrPointer s_rus_AmmoCaliber[AmmoCaliber_SIZE] =
-{
-	L"0",
-	L",38 кал",
-	L"9мм",
-	L",45 кал",
-	L",357 кал",
-	L"12 кал",
-	L"CAWS",
-	L"5,45мм",
-	L"5,56мм",
-	L"7,62мм НАТО",
-	L"7,62мм ВД",
-	L"4,7мм",
-	L"5,7мм",
-	L"Монстр",
-	L"Ракета",
-	L"", // дротик
-	L"", // пламя
-};
-
-// This BobbyRayAmmoCaliber is virtually the same as AmmoCaliber however the bobby version doesnt have as much room for the words.
-//
-// Different weapon calibres
-// CAWS is Close Assault Weapon System and should probably be left as it is
-// NATO is the North Atlantic Treaty Organization
-// WP is Warsaw Pact
-// cal is an abbreviation for calibre
-static StrPointer s_rus_BobbyRayAmmoCaliber[BobbyRayAmmoCaliber_SIZE] =
-{
-	L"0",
-	L",38 кал",
-	L"9мм",
-	L",45 кал",
-	L",357 кал",
-	L"12 кал",
-	L"CAWS",
-	L"5,45мм",
-	L"5,56мм",
-	L"7,62 НА",
-	L"7,62 ВД",
-	L"4,7мм",
-	L"5.7мм",
-	L"Монстр",
-	L"Ракета",
-	L"", // дротик
-};
-
-
 static StrPointer s_rus_WeaponType[WeaponType_SIZE] =
 {
 	L"Другое",
@@ -3635,8 +3581,6 @@ static const wchar_t s_rus_str_iron_man_mode_warning[] = L"Вы выбрали �
 /** Russian language resources. */
 LanguageRes g_LanguageResRussian = {
 
-  s_rus_AmmoCaliber,
-  s_rus_BobbyRayAmmoCaliber,
   s_rus_WeaponType,
 
   s_rus_Message,
@@ -3864,8 +3808,6 @@ LanguageRes g_LanguageResRussian = {
 /** Russian Gold language resources. */
 LanguageRes g_LanguageResRussianGold = {
 
-  s_rus_AmmoCaliber,
-  s_rus_BobbyRayAmmoCaliber,
   s_rus_WeaponType,
 
   s_rus_Message,

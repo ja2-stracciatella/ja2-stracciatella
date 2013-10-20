@@ -45,6 +45,11 @@
 #include "Items.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "content/ContentMercs.h"
+#include "WeaponModels.h"
+
 extern BOOLEAN gfProfileDataLoaded;
 
 
@@ -119,14 +124,14 @@ static void StartSomeMercsOnAssignment(void);
 
 void LoadMercProfiles()
 {
-	{ AutoSGPFile f(FileMan::openForReadingSmart(BINARYDATADIR "/prof.dat", true));
+	{ AutoSGPFile f(GCM->openGameResForReading(BINARYDATADIR "/prof.dat"));
     LoadRawMercProfiles(f, NUM_PROFILES, gMercProfiles, getDataFilesEncodingCorrector());
 		for (UINT32 i = 0; i != NUM_PROFILES; ++i)
 		{
 			MERCPROFILESTRUCT& p = gMercProfiles[i];
 
 			// If the dialogue exists for the merc, allow the merc to be hired
-			p.bMercStatus = FileExists(GetDialogueDataFilename(i, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE;
+			p.bMercStatus = Content::canMercBeHired(GCM, i) ? 0 : MERC_HAS_NO_TEXT_FILE;
 
 			p.sMedicalDepositAmount = p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0;
 
@@ -139,20 +144,20 @@ void LoadMercProfiles()
 				// CJC: replace guns in profile if they aren't available
 				FOR_EACH(UINT16, k, p.inv)
 				{
-					UINT16 const item = *k;
-					if (!(Item[item].usItemClass & IC_GUN) || !ExtendedGunListGun(item)) continue;
+          const ItemModel *item = GCM->getItem(*k);
+					if (!item->isGun() || !item->isInBigGunList()) continue;
 
-					UINT16 const new_gun = StandardGunListReplacement(item);
-					if (new_gun == NOTHING) continue;
+          const WeaponModel *oldWeapon = item->asWeapon();
+          const WeaponModel *newWeapon = GCM->getWeaponByName(oldWeapon->getStandardReplacement());
 
-					*k = new_gun;
+					*k = newWeapon->getItemIndex();
 
 					// Search through inventory and replace ammo accordingly
 					FOR_EACH(UINT16, l, p.inv)
 					{
 						UINT16 const ammo = *l;
-						if (!(Item[ammo].usItemClass & IC_AMMO)) continue;
-						UINT16 const new_ammo = FindReplacementMagazineIfNecessary(item, ammo, new_gun);
+						if (!(GCM->getItem(ammo)->isAmmo())) continue;
+						UINT16 const new_ammo = FindReplacementMagazineIfNecessary(oldWeapon, ammo, newWeapon);
 						if (new_ammo == NOTHING) continue;
 						// Found a new magazine, replace
 						*l = new_ammo;
@@ -169,12 +174,12 @@ void LoadMercProfiles()
 			{
 				UINT16 const item_id = *k;
 				if (item_id == NOTHING) continue;
-				INVTYPE const& item = Item[item_id];
+				const ItemModel * item = GCM->getItem(item_id);
 
-				if (item.usItemClass & IC_GUN)    p.bMainGunAttractiveness = Weapon[item_id].ubDeadliness;
-				if (item.usItemClass & IC_ARMOUR) p.bArmourAttractiveness  = Armour[item.ubClassIndex].ubProtection;
+				if (item->isGun())    p.bMainGunAttractiveness = GCM->getWeapon(item_id)->ubDeadliness;
+				if (item->isArmour()) p.bArmourAttractiveness  = Armour[item->getClassIndex()].ubProtection;
 
-				p.usOptionalGearCost += item.usPrice;
+				p.usOptionalGearCost += item->getPrice();
 			}
 
 			// These variables to get loaded in
@@ -690,7 +695,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 		bSlot = FindObjClass( pNewSoldier, IC_WEAPON );
 		if ( bSlot != NO_SLOT )
 		{
-			if ( Item[ pNewSoldier->inv[ bSlot ].usItem ].fFlags & ITEM_TWO_HANDED )
+			if ( GCM->getItem(pNewSoldier->inv[ bSlot ].usItem)->isTwoHanded() )
 			{
 				if ( bSlot != SECONDHANDPOS && pNewSoldier->inv[ SECONDHANDPOS ].usItem != NOTHING )
 				{

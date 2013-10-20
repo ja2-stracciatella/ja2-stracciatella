@@ -87,6 +87,9 @@
 #include "UILayout.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525, 13524 };
 static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
@@ -4129,7 +4132,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[BOXING_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_BUY_LEATHER_KEVLAR_VEST:
-			swprintf(zTemp2, lengthof(zTemp2), L"$%d", Item[LEATHER_JACKET_W_KEVLAR].usPrice);
+			swprintf(zTemp2, lengthof(zTemp2), L"$%d", GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice());
 			swprintf( zTemp, lengthof(zTemp), TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2 );
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;

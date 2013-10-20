@@ -5,6 +5,8 @@
 #include "JA2Types.h"
 #include "Sound_Control.h"
 
+struct CalibreModel;
+
 
 #define MAXCHANCETOHIT 99
 #define BAD_DODGE_POSITION_PENALTY 20
@@ -50,21 +52,6 @@ enum
 	NUM_WEAPON_CLASSES
 };
 
-// exact gun types
-enum
-{
-	NOT_GUN = 0,
-	GUN_PISTOL,
-	GUN_M_PISTOL,
-	GUN_SMG,
-	GUN_RIFLE,
-	GUN_SN_RIFLE,
-	GUN_AS_RIFLE,
-	GUN_LMG,
-	GUN_SHOTGUN
-};
-
-
 // ARMOUR CLASSES
 enum
 {
@@ -74,29 +61,6 @@ enum
 	ARMOURCLASS_PLATE,
 	ARMOURCLASS_MONST,
 	ARMOURCLASS_VEHICLE
-};
-
-// Warning: There is a table in weapons.c that indexes using these enumberations...
-// BurstSndStrings[]....
-enum AmmoKind
-{
-	NOAMMO = 0,
-	AMMO38,
-	AMMO9,
-	AMMO45,
-	AMMO357,
-	AMMO12G,
-	AMMOCAWS,
-	AMMO545,
-	AMMO556,
-	AMMO762N,
-	AMMO762W,
-	AMMO47,
-	AMMO57,
-	AMMOMONST,
-	AMMOROCKET,
-	AMMODART,
-	AMMOFLAME,
 };
 
 enum
@@ -175,36 +139,6 @@ enum
 #define AIM_PENALTY_BLIND						80
 #define AIM_PENALTY_FIRING_UP				25
 
-struct WEAPONTYPE
-{
-	UINT8    ubWeaponClass;    // handgun/shotgun/rifle/knife
-	UINT8    ubWeaponType;     // exact type (for display purposes)
-	AmmoKind ubCalibre;        // type of ammunition needed
-	UINT8    ubReadyTime;      // APs to ready/unready weapon
-	UINT8    ubShotsPer4Turns; // maximum (mechanical) firing rate
-	UINT8    ubShotsPerBurst;
-	UINT8    ubBurstPenalty;   // % penalty per shot after first
-	UINT8    ubBulletSpeed;    // bullet's travelling speed
-	UINT8    ubImpact;         // weapon's max damage impact (size & speed)
-	UINT8    ubDeadliness;     // comparative ratings of guns
-	UINT8    ubMagSize;
-	UINT16   usRange;
-	UINT16   usReloadDelay;               /**< not used */
-	UINT8    ubAttackVolume;
-	UINT8    ubHitVolume;
-	SoundID  sSound;
-	SoundID  sBurstSound;
-	SoundID  sReloadSound;
-	SoundID  sLocknLoadSound;
-};
-
-struct MAGTYPE
-{
-	AmmoKind ubCalibre;
-	UINT8    ubMagSize;
-	UINT8    ubAmmoType;
-};
-
 struct ARMOURTYPE
 {
 	UINT8	ubArmourClass;
@@ -225,9 +159,7 @@ struct EXPLOSIVETYPE
 
 //GLOBALS
 
-extern WEAPONTYPE    const Weapon[];
 extern ARMOURTYPE    const Armour[];
-extern MAGTYPE       const Magazine[];
 extern EXPLOSIVETYPE const Explosive[];
 
 INT8 EffectiveArmour(const OBJECTTYPE* pObj);

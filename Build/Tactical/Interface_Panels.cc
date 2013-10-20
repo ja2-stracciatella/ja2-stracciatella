@@ -68,6 +68,9 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "WeaponModels.h"
 
 // DEFINES FOR VARIOUS PANELS
 #define	SM_ITEMDESC_START_X					214
@@ -3543,7 +3546,7 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if( gpItemPointer != NULL )
 		{
 			//and the item is money
-			if( Item[ gpItemPointer->usItem ].usItemClass == IC_MONEY )
+			if( GCM->getItem(gpItemPointer->usItem)->getItemClass() == IC_MONEY )
 			{
 				wchar_t	zText[512];
 				wchar_t	zMoney[64];
@@ -3686,7 +3689,7 @@ void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvP
 	else
 	{
 		// as a minimum
-		if ( (Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_WEAPON) && Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubShotsPerBurst == 0 )
+		if ( (GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->isWeapon()) && GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubShotsPerBurst == 0 )
 		{
 			pSoldier->bDoBurst		= FALSE;
 			pSoldier->bWeaponMode = WM_NORMAL;

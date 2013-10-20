@@ -18,16 +18,7 @@
 #define DEALER_SELLING		1
 
 
-struct DEALER_POSSIBLE_INV
-{
-	INT16		sItemIndex;
-	UINT8		ubOptimalNumber;
-};
-
-
 INT8 GetDealersMaxItemAmount(ArmsDealerID, UINT16 usItemIndex);
-
-DEALER_POSSIBLE_INV const* GetPointerToDealersPossibleInventory(ArmsDealerID);
 
 UINT8   ChanceOfItemTransaction(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed);
 BOOLEAN ItemTransactionOccurs(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed);

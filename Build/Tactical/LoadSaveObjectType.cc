@@ -2,6 +2,9 @@
 #include "LoadSaveObjectType.h"
 #include "LoadSaveData.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 const BYTE* ExtractObject(const BYTE* const data, OBJECTTYPE* const o)
 {
@@ -9,7 +12,7 @@ const BYTE* ExtractObject(const BYTE* const data, OBJECTTYPE* const o)
 	EXTR_U16(d, o->usItem)
 	EXTR_U8(d, o->ubNumberOfObjects)
 	EXTR_SKIP(d, 1)
-	switch (Item[o->usItem].usItemClass)
+	switch (GCM->getItem(o->usItem)->getItemClass())
 	{
 		case IC_AMMO:
 			EXTR_U8A(d, o->ubShotsLeft, lengthof(o->ubShotsLeft))
@@ -105,7 +108,7 @@ BYTE* InjectObject(BYTE* const data, const OBJECTTYPE* const o)
 	INJ_U16(d, o->usItem)
 	INJ_U8(d, o->ubNumberOfObjects)
 	INJ_SKIP(d, 1)
-	switch (Item[o->usItem].usItemClass)
+	switch (GCM->getItem(o->usItem)->getItemClass())
 	{
 		case IC_AMMO:
 			INJ_U8A(d, o->ubShotsLeft, lengthof(o->ubShotsLeft))

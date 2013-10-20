@@ -11,11 +11,13 @@
 #include "Debug.h"
 #include "VSurface.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* const col_file)
 try
 {
-	AutoSGPFile f(FileMan::openForReadingSmart(col_file, true));
+	AutoSGPFile f(GCM->openGameResForReading(col_file));
 
 	BYTE data[776];
 	FileRead(f, data, sizeof(data));

@@ -7,7 +7,6 @@
 #include "MapScreen.h"
 #include "MessageBoxScreen.h"
 #include "Soldier_Control.h"
-#include "Encrypted_File.h"
 #include "Faces.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -53,7 +52,12 @@
 #include "GameRes.h"
 #include "UILayout.h"
 
-#define DIALOGUESIZE 240
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MercProfile.h"
+#include "content/Dialogs.h"
+#include "sgp/UTF8String.h"
+
 #define   QUOTE_MESSAGE_SIZE		520
 
 #define		DIALOGUE_DEFAULT_SUBTITLE_WIDTH		200
@@ -122,7 +126,6 @@ BOOLEAN			gfFacePanelActive = FALSE;
 static UINT32         guiScreenIDUsedWhenUICreated;
 static MOUSE_REGION   gTextBoxMouseRegion;
 static MOUSE_REGION   gFacePopupMouseRegion;
-static BOOLEAN        gfUseAlternateDialogueFile = FALSE;
 
 MercPopUpBox* g_dialogue_box;
 
@@ -648,7 +651,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 				gTacticalStatus.ubLastQuoteSaid       = quote_;
 				gTacticalStatus.ubLastQuoteProfileNUm = character_;
 
-				ExecuteCharacterDialogue(character_, quote_, face, dialogue_handler_, from_soldier_);
+				ExecuteCharacterDialogue(character_, quote_, face, dialogue_handler_, from_soldier_, false);
 
 				s = FindSoldierByProfileID(character_);
 				if (s && s->bTeam == OUR_TEAM)
@@ -687,10 +690,8 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 			{
 				if (!MayExecute()) return true;
 
-				gfUseAlternateDialogueFile = TRUE;
 				SOLDIERTYPE const& s = soldier_;
-				ExecuteCharacterDialogue(s.ubProfile, quote_, s.face, handler_, TRUE);
-				gfUseAlternateDialogueFile = FALSE;
+				ExecuteCharacterDialogue(s.ubProfile, quote_, s.face, handler_, TRUE, true);
 				return false;
 			}
 
@@ -704,11 +705,11 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 
 
 static void    CreateTalkingUI(DialogueHandler, FACETYPE&, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString, bool useAlternateDialogueFile);
 
 
 // execute specific character dialogue
-BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier)
+BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, bool useAlternateDialogueFile)
 {
 	gpCurrentTalkingFace = face;
 	gubCurrentTalkingID  = ubCharacterNum;
@@ -810,21 +811,13 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	CHECKF(face != NULL);
 
 	wchar_t gzQuoteStr[QUOTE_MESSAGE_SIZE];
-  if (!GetDialogue(ubCharacterNum, usQuoteNum, DIALOGUESIZE, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
+  if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr), zSoundString,
+        useAlternateDialogueFile))
   {
     return( FALSE );
   }
 
-	if( bUIHandlerID == DIALOGUE_EXTERNAL_NPC_UI )
-	{
-		// external NPC
-		SetFaceTalking(*face, zSoundString, gzQuoteStr);
-	}
-	else
-	{
-		// start "talking" system (portrait animation and start wav sample)
-		SetFaceTalking(*face, zSoundString, gzQuoteStr);
-	}
+  SetFaceTalking(*face, zSoundString, gzQuoteStr);
 	CreateTalkingUI(bUIHandlerID, *face, ubCharacterNum, gzQuoteStr);
 
 	// Set global handleer ID value, used when face desides it's done...
@@ -874,102 +867,26 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 	}
 }
 
-
-const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile)
+static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString, bool useAlternateDialogueFile)
 {
-	static char zFileName[164];
-	UINT8		ubFileNumID;
-
-	// Are we an NPC OR an RPC that has not been recruited?
-	// ATE: Did the || clause here to allow ANY RPC that talks while the talking menu is up to use an npc quote file
-	if ( gfUseAlternateDialogueFile )
-	{
-		if ( fWavFile )
-		{
-			// build name of wav file (characternum + quotenum)
-			sprintf(zFileName, NPC_SPEECHDIR "/d_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
-		}
-		else
-		{
-			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/d_%03d.edt", ubCharacterNum);
-		}
-	}
-	else if ( ubCharacterNum >= FIRST_RPC &&
-			( !( gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
-			|| ProfileCurrentlyTalkingInDialoguePanel( ubCharacterNum )
-			|| (gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_FORCENPCQUOTE) )
-			)
-	{
-		ubFileNumID = ubCharacterNum;
-
-		// ATE: If we are merc profile ID #151-154, all use 151's data....
-		if (ubCharacterNum >= HERVE && ubCharacterNum <= CARLO)
-		{
-			ubFileNumID = HERVE;
-		}
-
-		// If we are character #155, check fact!
-		if ( ubCharacterNum == MANNY && !gubFact[FACT_MANNY_IS_BARTENDER] )
-		{
-			ubFileNumID = MANNY;
-		}
-
-
-		if ( fWavFile )
-		{
-			sprintf(zFileName, NPC_SPEECHDIR "/%03d_%03d.wav", ubFileNumID, usQuoteNum);
-		}
-		else
-		{
-		// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/%03d.edt", ubFileNumID);
-		}
-	}
-	else
-	{
-		if ( fWavFile )
-		{
-      if(isRussianVersion() || isRussianGoldVersion())
-      {
-        if (ubCharacterNum >= FIRST_RPC && gMercProfiles[ubCharacterNum].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
-        {
-          sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
-        }
-        else
-        {
-          // build name of wav file (characternum + quotenum)
-          sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", ubCharacterNum, usQuoteNum);
-        }
-      }
-      else
-      {
-        // build name of wav file (characternum + quotenum)
-				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", ubCharacterNum, usQuoteNum);
-      }
-		}
-		else
-		{
-			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, MERCEDTDIR "/%03d.edt", ubCharacterNum);
-		}
-	}
-
-	return( zFileName );
-}
-
-
-static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString)
-{
-   // first things first  - grab the text (if player has SUBTITLE PREFERENCE ON)
+   // first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
-			const char* pFilename = GetDialogueDataFilename(ubCharacterNum, 0, FALSE);
-			bool success;
+     const char* pFilename = Content::GetDialogueTextFilename(
+       profile,
+       useAlternateDialogueFile,
+       ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()));
+
+			bool success = false;
 			try
 			{
-				LoadEncryptedDataFromFile(pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize);
-				success = zDialogueText[0] != L'\0';
+        UTF8String* quote = GCM->loadDialogQuoteFromFile(pFilename, usQuoteNum);
+        if(quote)
+        {
+          wcsncpy(zDialogueText, quote->getWCHAR().data(), Length);
+          delete quote;
+          success = zDialogueText[0] != L'\0';
+        }
 			}
 			catch (...) { success = false; }
 			if (!success)
@@ -982,7 +899,11 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
    }
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-	const char* pFilename = GetDialogueDataFilename(ubCharacterNum, usQuoteNum, TRUE);
+   const char* pFilename = Content::GetDialogueVoiceFilename(
+     profile, usQuoteNum, useAlternateDialogueFile,
+     ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
+     isRussianVersion() || isRussianGoldVersion());
+
 	strcpy( zSoundString, pFilename );
  return(TRUE);
 }

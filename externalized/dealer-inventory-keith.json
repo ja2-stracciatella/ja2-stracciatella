@@ -1,0 +1,25 @@
+{
+        "FIRSTAIDKIT": 5,
+
+        "COMBAT_KNIFE": 2,
+        "THROWING_KNIFE": 3,
+        "BRASS_KNUCKLES": 1,
+        "MACHETE": 1,
+
+        "SUNGOGGLES": 3,
+        "FLAK_JACKET": 2,
+        "STEEL_HELMET": 3,
+        "LEATHER_JACKET": 1,
+
+        "CANTEEN": 5,
+        "CROWBAR": 1,
+        "JAR": 6,
+
+        "TOOLKIT": 1,
+        "GASMASK": 1,
+
+        "SILVER_PLATTER": 1,
+
+        "WALKMAN": 1,
+        "PORTABLETV": 1
+}

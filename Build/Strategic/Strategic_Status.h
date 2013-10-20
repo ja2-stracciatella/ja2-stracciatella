@@ -78,7 +78,7 @@ struct STRATEGIC_STATUS
 
 	UINT8			ubHighestProgress;			// the highest level of progress player has attained thus far in the game (0-100)
 
-	UINT8			ubStandardArmyGunIndex[ARMY_GUN_LEVELS];		// type of gun in each group that Queen's army is using this game
+	UINT8			notUsedGunIndeces[ARMY_GUN_LEVELS];
 	BOOLEAN		fWeaponDroppedAlready[MAX_WEAPONS];				// flag that tracks whether this weapon type has been dropped before
 
 	UINT8			ubMercDeaths;						// how many soldiers have bit it while in the player's employ (0-100)

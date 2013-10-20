@@ -37,6 +37,8 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 static DOOR_STATUS* gpDoorStatus     = NULL;
 static UINT8        gubNumDoorStatus = 0;
@@ -106,7 +108,7 @@ try
 
 	// Load the Lock Table
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(pFileName, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(pFileName));
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
 	FileRead(hFile, LockTable, uiBytesToRead);
@@ -148,7 +150,7 @@ static bool KeyExistsInInventory(SOLDIERTYPE const& s, UINT8 const key_id)
 {
 	CFOR_EACH_SOLDIER_INV_SLOT(i, s)
 	{
-		if (Item[i->usItem].usItemClass != IC_KEY)    continue;
+		if (GCM->getItem(i->usItem)->getItemClass() != IC_KEY)    continue;
 		if (i->ubKeyID != key_id && key_id != ANYKEY) continue;
 		return true;
 	}
@@ -650,7 +652,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 		// Not sure if this makes sense, but the explosive is small.
 		// Double the damage here as we are damaging a lock rather than a person
-		pDoor->bLockDamage += Explosive[Item[SHAPED_CHARGE].ubClassIndex].ubDamage * 2;
+		pDoor->bLockDamage += Explosive[GCM->getItem(SHAPED_CHARGE)->getClassIndex()].ubDamage * 2;
 		if (pDoor->bLockDamage > LockTable[ pDoor->ubLockID ].ubSmashDifficulty )
 		{
 			// succeeded! door can never be locked again, so remove from door list...
@@ -838,12 +840,12 @@ void LoadDoorTableFromDoorTableTempFile()
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!FileExists(zMapName)) return;
+	if (!GCM->doesGameResExists(zMapName)) return;
 
 	//Get rid of the existing door table
 	TrashDoorTable();
 
-	AutoSGPFile hFile(FileMan::openForReadingSmart(zMapName, true));
+	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
 
 	//Read in the number of doors
 	FileRead(hFile, &gubMaxDoors, sizeof(UINT8));
@@ -1215,7 +1217,7 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	// Load the number of elements in the door status array
 	FileRead(f, &gubNumDoorStatus, sizeof(UINT8));

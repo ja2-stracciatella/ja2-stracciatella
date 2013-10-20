@@ -40,6 +40,9 @@
 #include "Campaign.h"
 #include "SkillCheck.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 #define NO_TEST_OBJECT												0
 #define TEST_OBJECT_NO_COLLISIONS							1
@@ -134,7 +137,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, real const d
 
 	o->Obj = *pGameObj;
 
-	FLOAT mass = CALCULATE_OBJECT_MASS(Item[pGameObj->usItem].ubWeight);
+	FLOAT mass = CALCULATE_OBJECT_MASS(GCM->getItem(pGameObj->usItem)->getWeight());
 	if (mass == 0) mass = 10;
 
 	// OK, mass determines the smoothness of the physics integration
@@ -379,7 +382,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 			else
 			{
 				// If we are in water, and we are a sinkable item...
-				if ( !pObject->fInWater || !( Item[ pObject->Obj.usItem ].fFlags & ITEM_SINKS ) )
+				if ( !pObject->fInWater || !( GCM->getItem(pObject->Obj.usItem)->getFlags() & ITEM_SINKS ) )
 				{
 					if ( pObject->fDropItem )
 					{
@@ -403,7 +406,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 			{
 				MakeNoise(pObject->owner, pObject->sGridNo, 0, 9 + PreRandom(9), NOISE_ROCK_IMPACT);
 			}
-			else if ( Item[ pObject->Obj.usItem ].usItemClass & IC_GRENADE )
+			else if ( GCM->getItem(pObject->Obj.usItem)->isGrenade() )
 			{
 				MakeNoise(pObject->owner, pObject->sGridNo, 0, 9 + PreRandom(9), NOISE_GRENADE_IMPACT);
 			}
@@ -1138,7 +1141,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 				  }
 
 				  // Now get graphic index
-				  INT16 const sTileIndex = GetTileGraphicForItem(Item[pObject->Obj.usItem]);
+				  INT16 const sTileIndex = GetTileGraphicForItem(GCM->getItem(pObject->Obj.usItem));
 				  //sTileIndex = BULLETTILE1;
 
 				  // Set new gridno, add
@@ -2146,7 +2149,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
   // ATE: Make sure number of objects is 1...
   pObj->ubNumberOfObjects = 1;
 
-	if ( Item[ pObj->usItem ].usItemClass & IC_GRENADE  )
+	if ( GCM->getItem(pObj->usItem)->isGrenade()  )
 	{
 		fCheckForDuds = TRUE;
 	}
@@ -2156,7 +2159,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 		fCheckForDuds = TRUE;
 	}
 
-	if ( Item[ pObj->usItem ].usItemClass & IC_THROWN  )
+	if ( GCM->getItem(pObj->usItem)->isThrown()  )
 	{
 		AddItemToPool( pObject->sGridNo, pObj, INVISIBLE, bLevel, usFlags, 0 );
 	}
@@ -2222,7 +2225,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 			// Add a light effect...
 			NewLightEffect( pObject->sGridNo, LIGHT_FLARE_MARK_1 );
 		}
-		else if ( Item[ pObject->Obj.usItem ].usItemClass & IC_GRENADE  )
+		else if ( GCM->getItem(pObject->Obj.usItem)->isGrenade()  )
 		{
 /* ARM: Removed.  Rewards even missed throws, and pulling a pin doesn't really teach anything about explosives
 			if (pObject->owner->bTeam == OUR_TEAM && gTacticalStatus.uiFlags & INCOMBAT)

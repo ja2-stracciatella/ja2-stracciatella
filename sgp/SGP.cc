@@ -12,8 +12,6 @@
 #include <exception>
 #include <new>
 
-#include "slog/slog.h"
-
 #include "Button_System.h"
 #include "Debug.h"
 #include "FileMan.h"
@@ -36,8 +34,18 @@
 #include "GameRes.h"
 #include "Logger.h"
 #include "GameState.h"
-#include "Exceptions.h"
 #include "Timer.h"
+
+#include "DefaultContentManager.h"
+#include "GameInstance.h"
+#include "JsonUtility.h"
+#include "MicroIni/MicroIni.hpp"
+#include "ModPackContentManager.h"
+#include "policy/GamePolicy.h"
+#include "sgp/UTF8String.h"
+
+#include "slog/slog.h"
+#define TAG "SGP"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -58,70 +66,93 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif
 
 
-/**
- * Number of milliseconds for one game cycle.
- * 25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen
- * is updated on every cycle). */
-#define MS_PER_GAME_CYCLE               (25)
+#define WITH_MODS (1)
 
+////////////////////////////////////////////////////////////////////////////
+//
+////////////////////////////////////////////////////////////////////////////
+
+// #include "JsonObject.h"
+// #include "MagazineModel.h"
+// #include "WeaponModels.h"
+// #include "Weapons.h"
+// #include "rapidjson/document.h"
+// #include "rapidjson/filestream.h"
+// #include "rapidjson/prettywriter.h"
+// #include "stdio.h"
+// #include <boost/foreach.hpp>
+
+// bool writeWeaponsToJson(const char *name/*, const struct WEAPONTYPE *weapon*/, int weaponCount)
+// {
+//   FILE *f = fopen(name, "wt");
+//   if(f)
+//   {
+//     rapidjson::FileStream os(f);
+//     rapidjson::PrettyWriter<rapidjson::FileStream> writer(os);
+
+//     rapidjson::Document document;
+//     document.SetArray();
+//     rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+//     for(int i = 0; i < weaponCount; i++)
+//     {
+//       // printf("%d\n", i);
+//       const WeaponModel *w = GCM->getWeapon(i);
+//       JsonObject obj(allocator);
+//       w->serializeTo(obj);
+//       document.PushBack(obj.getValue(), allocator);
+//     }
+
+//     document.Accept(writer);
+
+//     fputs("\n", f);
+//     return fclose(f) == 0;
+//   }
+//   return false;
+// }
+
+// bool writeMagazinesToJson(const char *name)
+// {
+//   FILE *f = fopen(name, "wt");
+//   if(f)
+//   {
+//     rapidjson::FileStream os(f);
+//     rapidjson::PrettyWriter<rapidjson::FileStream> writer(os);
+
+//     rapidjson::Document document;
+//     document.SetArray();
+//     rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+//     const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+//     BOOST_FOREACH(const MagazineModel* mag, magazines)
+//     {
+//       JsonObject obj(allocator);
+//       mag->serializeTo(obj);
+//       document.PushBack(obj.getValue(), allocator);
+//     }
+
+//     document.Accept(writer);
+
+//     fputs("\n", f);
+//     return fclose(f) == 0;
+//   }
+//   return false;
+// }
+
+////////////////////////////////////////////////////////////////////////////
+//
+////////////////////////////////////////////////////////////////////////////
 
 static BOOLEAN gfGameInitialized = FALSE;
 
 
-static void InitializeStandardGamingPlatform(void)
-{
-	SDL_Init(SDL_INIT_VIDEO);
-	SDL_EnableUNICODE(SDL_ENABLE);
+static bool getResourceVersion(const char *versionName, GameVersion *version);
+static std::string findRootGameResFolder(const std::string &configPath);
+static void WriteDefaultConfigFile(const char* ConfigFile);
 
-#ifdef SGP_DEBUG
-	// Initialize the Debug Manager - success doesn't matter
-	InitializeDebugManager();
-#endif
-
-  // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
-	FastDebugMsg("Initializing Memory Manager");
-	// Initialize the Memory Manager
-	InitializeMemoryManager();
-
-	FastDebugMsg("Initializing File Manager");
-	InitializeFileManager();
-
-	FastDebugMsg("Initializing Video Manager");
-	InitializeVideoManager();
-
-	FastDebugMsg("Initializing Video Object Manager");
-	InitializeVideoObjectManager();
-
-	FastDebugMsg("Initializing Video Surface Manager");
-	InitializeVideoSurfaceManager();
-
-  InitGameResources();
-
-#ifdef JA2
-	InitJA2SplashScreen();
-#endif
-
-	// Initialize Font Manager
-	FastDebugMsg("Initializing the Font Manager");
-	// Init the manager and copy the TransTable stuff into it.
-	InitializeFontManager();
-
-	FastDebugMsg("Initializing Sound Manager");
-#ifndef UTIL
-	InitializeSoundManager();
-#endif
-
-	FastDebugMsg("Initializing Random");
-  // Initialize random number generator
-  InitializeRandom(); // no Shutdown
-
-	FastDebugMsg("Initializing Game Manager");
-	// Initialize the Game
-	InitializeGame();
-
-	gfGameInitialized = TRUE;
-}
-
+static void convertDialogQuotesToJson(const DefaultContentManager *cm,
+                                      STRING_ENC_TYPE encType,
+                                      const char *dialogFile, const char *outputFile);
 
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
@@ -171,7 +202,7 @@ void requestGameExit()
   SDL_PushEvent(&event);
 }
 
-static void MainLoop()
+static void MainLoop(int msPerGameCycle)
 {
 	BOOLEAN s_doGameCycles = TRUE;
 
@@ -219,9 +250,9 @@ static void MainLoop()
 				GameLoop();
         gameCycleMS = GetClock() - gameCycleMS;
 
-        if(gameCycleMS < MS_PER_GAME_CYCLE)
+        if(gameCycleMS < msPerGameCycle)
         {
-          SDL_Delay(MS_PER_GAME_CYCLE - gameCycleMS);
+          SDL_Delay(msPerGameCycle - gameCycleMS);
         }
 
 #if DEBUG_PRINT_GAME_CYCLE_TIME
@@ -247,15 +278,44 @@ static int Failure(char const* const msg, bool showInfoIcon=false)
 	return EXIT_FAILURE;
 }
 
+////////////////////////////////////////////////////////////
+
+ContentManager *GCM = NULL;
+
+////////////////////////////////////////////////////////////
+
+struct CommandLineParams
+{
+  CommandLineParams()
+  {
+#ifdef WITH_MODS
+    useMod = false;
+#endif
+    doUnitTests = false;
+    showDebugMessages = false;
+    resourceVersionGiven = false;
+  }
+
+#ifdef WITH_MODS
+  bool useMod;
+  std::string modName;
+#endif
+
+  bool resourceVersionGiven;
+  std::string resourceVersion;
+
+  bool doUnitTests;
+  bool showDebugMessages;
+};
 
 static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               bool *doUnitTests,
-                               bool *showDebugMessages);
-
+                               CommandLineParams *params);
 
 int main(int argc, char* argv[])
 try
 {
+  std::string exeFolder = FileMan::getParentPath(argv[0], true);
+
 #if defined BROKEN_SWPRINTF
 	if (setlocale(LC_CTYPE, "UTF-8") == NULL)
 	{
@@ -264,46 +324,180 @@ try
 #endif
 
   // init logging
-  SLOG_Init(SLOG_STDERR, NULL);
+  SLOG_Init(SLOG_STDERR, "ja2.log");
   SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
   setGameVersion(GV_ENGLISH);
 
-  bool doUnitTests = false;
-  bool showDebugMessages = false;
-	if (!ParseParameters(argc, argv, &doUnitTests, &showDebugMessages)) return EXIT_FAILURE;
+  CommandLineParams params;
+	if (!ParseParameters(argc, argv, &params)) return EXIT_FAILURE;
 
-  if(showDebugMessages)
+  if(params.showDebugMessages)
   {
     SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
   }
 
 #ifdef WITH_UNITTESTS
-  if(doUnitTests)
+  if(params.doUnitTests)
   {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
   }
 #endif
 
-	InitializeStandardGamingPlatform();
-
-
-#if defined JA2
-  if(isEnglishVersion())
+  GameVersion version = GV_ENGLISH;
+  if(params.resourceVersionGiven)
   {
-    SetIntroType(INTRO_SPLASH);
+    if(!getResourceVersion(params.resourceVersion.c_str(), &version))
+    {
+      SLOGE(TAG, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
+      return EXIT_FAILURE;
+    }
   }
+  setGameVersion(version);
+
+  ////////////////////////////////////////////////////////////
+
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_EnableUNICODE(SDL_ENABLE);
+
+  // restore output to the console (on windows when built with MINGW)
+#ifdef __MINGW32__
+  freopen("CON", "w", stdout);
+  freopen("CON", "w", stderr);
 #endif
 
-	FastDebugMsg("Running Game");
+#ifdef SGP_DEBUG
+	// Initialize the Debug Manager - success doesn't matter
+	InitializeDebugManager();
+#endif
 
-	/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
-	 * are available. All we need to do is attend to the gaming mechanics
-	 * themselves */
-	MainLoop();
+  // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
+	FastDebugMsg("Initializing Memory Manager");
+	InitializeMemoryManager();
+
+  FastDebugMsg("Initializing Game Resources");
+  std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
+  std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
+  std::string gameResRootPath = findRootGameResFolder(configPath);
+
+  std::string externalizedDataPath = FileMan::joinPaths(exeFolder, "externalized");
+
+  DefaultContentManager *cm;
+
+#ifdef WITH_MODS
+  if(params.useMod)
+  {
+    std::string modName = params.modName;
+    std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(exeFolder, "mods"), modName), "data");
+    cm = new ModPackContentManager(version,
+                                   modName, modResFolder, configFolderPath,
+                                   configPath, gameResRootPath,
+                                   externalizedDataPath);
+    LOG_INFO("------------------------------------------------------------------------------\n");
+    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
+    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
+    LOG_INFO("Externalized data directory:   '%s'\n", cm->getExternalizedDataDir().c_str());
+    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
+    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
+    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
+    LOG_INFO("------------------------------------------------------------------------------\n");
+    LOG_INFO("MOD name:                      '%s'\n", modName.c_str());
+    LOG_INFO("MOD resource directory:        '%s'\n", modResFolder.c_str());
+    LOG_INFO("------------------------------------------------------------------------------\n");
+  }
+  else
+#endif
+  {
+    cm = new DefaultContentManager(version,
+                                   configFolderPath, configPath,
+                                   gameResRootPath, externalizedDataPath);
+    LOG_INFO("------------------------------------------------------------------------------\n");
+    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
+    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
+    LOG_INFO("Externalized data directory:   '%s'\n", cm->getExternalizedDataDir().c_str());
+    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
+    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
+    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
+    LOG_INFO("------------------------------------------------------------------------------\n");
+  }
+
+  if(!cm->loadGameData())
+  {
+    LOG_INFO("Failed to load the game data.\n");
+  }
+  else
+  {
+
+    GCM = cm;
+
+    FastDebugMsg("Initializing Video Manager");
+    InitializeVideoManager();
+
+    FastDebugMsg("Initializing Video Object Manager");
+    InitializeVideoObjectManager();
+
+    FastDebugMsg("Initializing Video Surface Manager");
+    InitializeVideoSurfaceManager();
+
+#ifdef JA2
+    InitJA2SplashScreen();
+#endif
+
+    // Initialize Font Manager
+    FastDebugMsg("Initializing the Font Manager");
+    // Init the manager and copy the TransTable stuff into it.
+    InitializeFontManager();
+
+    FastDebugMsg("Initializing Sound Manager");
+#ifndef UTIL
+    InitializeSoundManager();
+#endif
+
+    FastDebugMsg("Initializing Random");
+    // Initialize random number generator
+    InitializeRandom(); // no Shutdown
+
+    FastDebugMsg("Initializing Game Manager");
+    // Initialize the Game
+    InitializeGame();
+
+    gfGameInitialized = TRUE;
+
+    ////////////////////////////////////////////////////////////
+
+    // some data convertion
+    // convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/051.edt", FileMan::joinPaths(exeFolder, "051.edt.json").c_str());
+    // convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/052.edt", FileMan::joinPaths(exeFolder, "052.edt.json").c_str());
+    // convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/055.edt", FileMan::joinPaths(exeFolder, "055.edt.json").c_str());
+
+    // writeWeaponsToJson(FileMan::joinPaths(exeFolder, "externalized/weapons.json").c_str(), MAX_WEAPONS+1);
+    // writeMagazinesToJson(FileMan::joinPaths(exeFolder, "externalized/magazines.json").c_str());
+
+    // readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon.json").c_str());
+    // readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon2.json").c_str());
+
+    ////////////////////////////////////////////////////////////
+
+#if defined JA2
+    if(isEnglishVersion())
+    {
+      SetIntroType(INTRO_SPLASH);
+    }
+#endif
+
+    FastDebugMsg("Running Game");
+
+    /* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
+     * are available. All we need to do is attend to the gaming mechanics
+     * themselves */
+    MainLoop(GCM->getGamePolicy()->ms_per_game_cycle);
+  }
 
   SLOG_Deinit();
+
+  delete cm;
+  GCM = NULL;
 
 	return EXIT_SUCCESS;
 }
@@ -328,52 +522,49 @@ catch (...)
 
 
 /** Set game resources version. */
-static BOOLEAN setResourceVersion(const char *version)
+static bool getResourceVersion(const char *versionName, GameVersion *version)
 {
-  if(strcasecmp(version, "ENGLISH") == 0)
+  if(strcasecmp(versionName, "ENGLISH") == 0)
   {
-    setGameVersion(GV_ENGLISH);
+    *version = GV_ENGLISH;
   }
-  else if(strcasecmp(version, "DUTCH") == 0)
+  else if(strcasecmp(versionName, "DUTCH") == 0)
   {
-    setGameVersion(GV_DUTCH);
+    *version = GV_DUTCH;
   }
-  else if(strcasecmp(version, "FRENCH") == 0)
+  else if(strcasecmp(versionName, "FRENCH") == 0)
   {
-    setGameVersion(GV_FRENCH);
+    *version = GV_FRENCH;
   }
-  else if(strcasecmp(version, "GERMAN") == 0)
+  else if(strcasecmp(versionName, "GERMAN") == 0)
   {
-    setGameVersion(GV_GERMAN);
+    *version = GV_GERMAN;
   }
-  else if(strcasecmp(version, "ITALIAN") == 0)
+  else if(strcasecmp(versionName, "ITALIAN") == 0)
   {
-    setGameVersion(GV_ITALIAN);
+    *version = GV_ITALIAN;
   }
-  else if(strcasecmp(version, "POLISH") == 0)
+  else if(strcasecmp(versionName, "POLISH") == 0)
   {
-    setGameVersion(GV_POLISH);
+    *version = GV_POLISH;
   }
-  else if(strcasecmp(version, "RUSSIAN") == 0)
+  else if(strcasecmp(versionName, "RUSSIAN") == 0)
   {
-    setGameVersion(GV_RUSSIAN);
+    *version = GV_RUSSIAN;
   }
-  else if(strcasecmp(version, "RUSSIAN_GOLD") == 0)
+  else if(strcasecmp(versionName, "RUSSIAN_GOLD") == 0)
   {
-    setGameVersion(GV_RUSSIAN_GOLD);
+    *version = GV_RUSSIAN_GOLD;
   }
   else
   {
-    LOG_ERROR("Unknown version of the game: %s\n", version);
     return false;
   }
-  LOG_INFO("Game version: %s\n", version);
   return true;
 }
 
 static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               bool *doUnitTests,
-                               bool *showDebugMessages)
+                               CommandLineParams *params)
 {
 	const char* const name = *argv;
 	if (name == NULL) return TRUE; // argv does not even contain the program name
@@ -398,13 +589,13 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 #ifdef WITH_UNITTESTS
     else if (strcmp(argv[i], "-unittests") == 0)
     {
-      *doUnitTests = true;
+      params->doUnitTests = true;
       return true;
     }
 #endif
     else if (strcmp(argv[i], "-debug") == 0)
     {
-      *showDebugMessages = true;
+      params->showDebugMessages = true;
       return true;
     }
 		else if (strcmp(argv[i], "-res") == 0)
@@ -435,6 +626,21 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
         success = FALSE;
       }
 		}
+#ifdef WITH_MODS
+    else if (strcmp(argv[i], "-mod") == 0)
+    {
+      if(haveNextParameter)
+      {
+        params->useMod = true;
+        params->modName = argv[++i];
+      }
+      else
+      {
+        LOG_ERROR("Missing value for command-line key '-res'\n");
+        success = FALSE;
+      }
+    }
+#endif
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)
 		{
@@ -459,7 +665,8 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
     {
       if(haveNextParameter)
       {
-        success = setResourceVersion(argv[++i]);
+        params->resourceVersionGiven = true;
+        params->resourceVersion = argv[++i];
       }
       else
       {
@@ -489,6 +696,10 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 			"                 Default value is ENGLISH\n"
 			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
 			"                 RUSSIAN_GOLD is for Gold release\n"
+#ifdef WITH_MODS
+      "\n"
+      "  -mod NAME    MOD name (see folder mods for options, e.g. 'from-russia-with-love')\n"
+#endif
 			"\n"
 			"  -debug       Show debug messages\n"
 #ifdef WITH_UNITTESTS
@@ -508,3 +719,56 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 	}
 	return success;
 }
+
+static std::string findRootGameResFolder(const std::string &configPath)
+{
+  MicroIni::File configFile;
+  if(!configFile.load(configPath) || !configFile[""].has("data_dir"))
+  {
+    LOG_WARNING("WARNING: Could not open configuration file (\"%s\").\n", configPath.c_str());
+    WriteDefaultConfigFile(configPath.c_str());
+    configFile.load(configPath);
+  }
+
+  return configFile[""]["data_dir"];
+}
+
+static void WriteDefaultConfigFile(const char* ConfigFile)
+{
+	FILE* const IniFile = fopen(ConfigFile, "a");
+	if (IniFile != NULL)
+	{
+		fprintf(IniFile, "#Tells ja2-stracciatella where the binary datafiles are located\n");
+#ifdef _WIN32
+    fprintf(IniFile, "data_dir = C:\\Program Files\\Jagged Alliance 2");
+#else
+    fprintf(IniFile, "data_dir = /some/place/where/the/data/is");
+#endif
+		fclose(IniFile);
+		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////
+// some data convertion
+////////////////////////////////////////////////////////////////////////////
+
+static void convertDialogQuotesToJson(const DefaultContentManager *cm,
+                                      STRING_ENC_TYPE encType,
+                                      const char *dialogFile, const char *outputFile)
+{
+  std::vector<UTF8String*> quotes;
+  std::vector<std::string> quotes_str;
+  cm->loadAllDialogQuotes(encType, dialogFile, quotes);
+  for(int i = 0; i < quotes.size(); i++)
+  {
+    quotes_str.push_back(std::string(quotes[i]->getUTF8()));
+    delete quotes[i];
+    quotes[i] = NULL;
+  }
+  JsonUtility::writeToFile(outputFile, quotes_str);
+}
+
+////////////////////////////////////////////////////////////////////////////
+//
+////////////////////////////////////////////////////////////////////////////

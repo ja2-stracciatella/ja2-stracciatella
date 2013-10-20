@@ -22,6 +22,8 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
 BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;
@@ -51,7 +53,7 @@ void LoadEnemySoldiersFromTempFile()
 	// STEP ONE: Set up the temp file to read from.
 	char map_name[128];
 	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	/* STEP TWO: Determine whether or not we should use this data.  Because it
 	 * is the demo, it is automatically used. */
@@ -304,7 +306,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	// STEP ONE:  Set up the temp file to read from.
 	char map_name[128];
 	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	/* STEP TWO:  Determine whether or not we should use this data.  Because it
 	 * is the demo, it is automatically used. */
@@ -473,7 +475,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	// STEP ONE: Set up the temp file to read from.
 	char map_name[128];
 	GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	/* STEP TWO:  Determine whether or not we should use this data.  Because it
 	 * is the demo, it is automatically used. */
@@ -809,7 +811,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	// STEP ONE: Set up the temp file to read from.
 	char map_name[128];
 	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForReadingSmart(map_name, true));
+	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	/* STEP TWO: Determine whether or not we should use this data.  Because it
 	 * is the demo, it is automatically used. */

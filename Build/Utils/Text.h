@@ -11,8 +11,6 @@ extern void LoadAllExternalText( void );
 extern const wchar_t * GetWeightUnitString( void );
 extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 
-#define AmmoCaliber_SIZE 17
-#define BobbyRayAmmoCaliber_SIZE 16
 #define WeaponType_SIZE 9
 #define TeamTurnString_SIZE 5
 #define Message_SIZE 59
@@ -197,8 +195,6 @@ typedef const wchar_t *   StrPointer;
 
 struct LanguageRes
 {
-  const StrPointer *AmmoCaliber;
-  const StrPointer *BobbyRayAmmoCaliber;
   const StrPointer *WeaponType;
 
   const StrPointer *Message;
@@ -429,8 +425,6 @@ extern const LanguageRes* g_langRes;
 /* below are defines that helps to keep original source code in tact                            */
 /* -------------------------------------------------------------------------------------------- */
 
-#define AmmoCaliber                                         (g_langRes->AmmoCaliber)
-#define BobbyRayAmmoCaliber                                 (g_langRes->BobbyRayAmmoCaliber)
 #define WeaponType                                          (g_langRes->WeaponType)
 
 #define TeamTurnString                                      (g_langRes->TeamTurnString)

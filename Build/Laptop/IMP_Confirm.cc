@@ -28,6 +28,13 @@
 #include "Font_Control.h"
 #include "FileMan.h"
 
+#include <boost/foreach.hpp>
+
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
+#include "policy/IMPPolicy.h"
+#include "slog/slog.h"
 
 #define IMP_MERC_FILE "imp.dat"
 
@@ -272,32 +279,29 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
 
-	// STANDARD EQUIPMENT
+  BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getInventory())
+  {
+		MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+  }
 
-
-
-	// kevlar vest, leggings, & helmet
-	MakeProfileInvItemThisSlot(p, VESTPOS, FLAK_JACKET, 100, 1);
 	if ( PreRandom( 100 ) < (UINT32) p.bWisdom )
 	{
 		MakeProfileInvItemThisSlot(p, HELMETPOS, STEEL_HELMET, 100, 1);
 	}
 
-	// canteen
-	MakeProfileInvItemThisSlot(p, SMALLPOCK4POS, CANTEEN, 100, 1);
-
-
 	if (p.bMarksmanship >= 80)
 	{
-		// good shooters get a better & matching ammo
-		MakeProfileInvItemThisSlot(p, HANDPOS, MP5K, 100, 1);
-		MakeProfileInvItemThisSlot(p, SMALLPOCK1POS, CLIP9_30, 100, 2);
+    BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getGoodShooterItems())
+    {
+      MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+    }
 	}
 	else
 	{
-		// Automatic pistol, with matching ammo
-		MakeProfileInvItemThisSlot(p, HANDPOS, BERETTA_93R, 100, 1);
-		MakeProfileInvItemThisSlot(p, SMALLPOCK1POS, CLIP9_15, 100, 3);
+    BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getNormalShooterItems())
+    {
+      MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+    }
 	}
 
 
@@ -403,7 +407,7 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const u
 
 
 	// if it fits into a small pocket
-	if (Item[usItem].ubPerPocket != 0)
+	if (GCM->getItem(usItem)->getPerPocket() != 0)
 	{
 		// check small pockets first
 		for (uiPos = SMALLPOCK1POS; uiPos <= SMALLPOCK8POS; uiPos++)
@@ -446,7 +450,8 @@ static void LoadInCurrentImpCharacter(void)
 	INT32 iProfileId = 0;
 
   MERCPROFILESTRUCT p;
-  ExtractImpProfileFromFile(IMP_MERC_FILE, &iProfileId, &iPortraitNumber, p);
+  AutoSGPFile hFile(GCM->openGameResForReading(IMP_MERC_FILE));
+  ExtractImpProfileFromFile(hFile, &iProfileId, &iPortraitNumber, p);
   gMercProfiles[iProfileId] = p;
 
 	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )

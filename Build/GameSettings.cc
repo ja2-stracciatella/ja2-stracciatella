@@ -9,7 +9,6 @@
 #include "Options_Screen.h"
 #include "Overhead.h"
 #include "GameVersion.h"
-#include "LibraryDataBase.h"
 #include "HelpScreen.h"
 #include "Meanwhile.h"
 #include "Cheats.h"
@@ -24,6 +23,8 @@
 #include	"Text.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define				GAME_SETTINGS_FILE		"../Ja2.set"
 
@@ -42,7 +43,7 @@ void LoadGameSettings(void)
 {
 	try
 	{
-		AutoSGPFile f(FileMan::openForReadingSmart(GAME_SETTINGS_FILE, false));
+		AutoSGPFile f(GCM->openUserPrivateFileForReading(GAME_SETTINGS_FILE));
 
 		BYTE data[76];
 		if (FileGetSize(f) != sizeof(data)) goto fail;

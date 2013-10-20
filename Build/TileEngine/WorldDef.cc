@@ -59,6 +59,9 @@
 #include "GameState.h"
 #include "GameRes.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
 #define  SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b )
@@ -233,9 +236,8 @@ try
 		}
 
 		// Adjust for tileset position
-		char adjusted_filename[128];
-		sprintf(adjusted_filename, TILESETSDIR "/%d/%s", tileset_to_add, filename);
-		AddTileSurface(adjusted_filename, i, tileset_to_add);
+		std::string adjusted_filename(GCM->getTilesetResourceName(tileset_to_add, filename));
+		AddTileSurface(adjusted_filename.c_str(), i, tileset_to_add);
 	}
 }
 catch (...)
@@ -1351,7 +1353,7 @@ BOOLEAN SaveWorld(char const* const filename)
 try
 {
   // Let's save map into Data/maps
-  std::string path = FileMan::joinPaths(FileMan::getDataDirPath(), MAPSDIR);
+  std::string path = GCM->getNewMapFolder();
   FileMan::createDir(path.c_str());
   path = FileMan::joinPaths(path.c_str(), (const char*)filename);
 	AutoSGPFile f(FileMan::openForWriting(path.c_str()));
@@ -1713,17 +1715,13 @@ try
 		ubLevel     >= 4 ? "_a" : ""
 	);
 
-	char szDirFilename[50];
-	sprintf(szDirFilename, MAPSDIR "/%s", filename);
-
 	if (gfMajorUpdate)
 	{
 		LoadWorld(filename);
-		FileClearAttributes(szDirFilename);
 		SaveWorld(filename);
 	}
 
-	AutoSGPFile f(FileMan::openForReadingSmart(szDirFilename, true));
+	AutoSGPFile f(GCM->openMapForReading(filename));
 
 	wchar_t str[40];
 	swprintf(str, lengthof(str), L"Analyzing map %hs", filename);
@@ -2055,9 +2053,7 @@ try
 	gfBasement = FALSE;
 	gfCaves    = FALSE;
 
-	char full_filename[50];
-	sprintf(full_filename, MAPSDIR "/%s", filename);
-	AutoSGPFile f(FileMan::openForReadingSmart(full_filename, true));
+	AutoSGPFile f(GCM->openMapForReading(filename));
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
 #ifdef JA2TESTVERSION
@@ -2941,7 +2937,6 @@ static bool IsHiddenTileMarkerThere(GridNo const gridno)
 
 void ReloadTileset(TileSetID const ubID)
 {
-	CHAR8	aFilename[ 255 ];
 	TileSetID const iCurrTilesetID = giCurrentTilesetID;
 
 	// Set gloabal
@@ -2958,9 +2953,7 @@ void ReloadTileset(TileSetID const ubID)
 	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	// Delete file
-	sprintf(aFilename, MAPSDIR "/%s", TEMP_FILE_FOR_TILESET_CHANGE);
-
-	FileDelete( aFilename );
+	FileDelete(GCM->getMapPath(TEMP_FILE_FOR_TILESET_CHANGE).c_str());
 }
 
 

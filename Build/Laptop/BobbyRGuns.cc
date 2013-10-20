@@ -9,7 +9,6 @@
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Interface_Items.h"
-#include "Encrypted_File.h"
 #include "Text.h"
 #include "Store_Inventory.h"
 #include "LaptopSave.h"
@@ -23,11 +22,21 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
+#include "sgp/UTF8String.h"
+
+#include "CalibreModel.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
 
 #ifdef JA2BETAVERSION
 #	include "Debug.h"
 #endif
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #define		BOBBYR_GRID_PIC_WIDTH							118
 #define		BOBBYR_GRID_PIC_HEIGHT						69
@@ -425,11 +434,11 @@ static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, INT32 const rea
 
 static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
 static UINT32 CalculateTotalPurchasePrice();
-static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INVTYPE* const items[]);
+static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const ItemModel* const items[]);
 static void DisableBobbyRButtons(void);
 static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static void DisplayBigItemImage(const INVTYPE* item, UINT16 PosY);
+static void DisplayBigItemImage(const ItemModel* item, UINT16 PosY);
 static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
@@ -474,7 +483,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 
 	}
 
-	const INVTYPE* items[BOBBYR_NUM_WEAPONS_ON_PAGE];
+	const ItemModel* items[BOBBYR_NUM_WEAPONS_ON_PAGE];
 	for(i=gusCurWeaponIndex; ((i<=gusLastItemIndex) && (ubCount < 4)); i++)
 	{
 		if( uiItemClass == BOBBYR_USED_ITEMS )
@@ -497,12 +506,12 @@ void DisplayItemInfo(UINT32 uiItemClass)
 		}
 
 		// skip items that aren't of the right item class
-		const INVTYPE* const item = &Item[usItemIndex];
-		if (!(item->usItemClass & uiItemClass)) continue;
+		const ItemModel * item = GCM->getItem(usItemIndex);
+		if (!(item->getItemClass() & uiItemClass)) continue;
 
 		items[ubCount] = item;
 
-		switch (item->usItemClass)
+		switch (item->getItemClass())
 		{
 			case IC_GUN:
 			case IC_LAUNCHER:
@@ -691,11 +700,11 @@ static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UI
 }
 
 
-static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
+static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	AutoSGPVObject uiImage(LoadTileGraphicForItem(*item));
+	AutoSGPVObject uiImage(LoadTileGraphicForItem(item));
 
 	//center picture in frame
 	ETRLEObject const& pTrav   = uiImage->SubregionProperties(0);
@@ -703,8 +712,11 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 	INT16       const  sCenX   = PosX + abs(int(BOBBYR_GRID_PIC_WIDTH - usWidth)) / 2 - pTrav.sOffsetX;
 	INT16       const  sCenY   = PosY + 8;
 
-	//blt the shadow of the item
-	BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
+  if(GCM->getGamePolicy()->f_draw_item_shadow)
+  {
+    //blt the shadow of the item
+    BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
+  }
 
 	BltVideoObject(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
 }
@@ -766,7 +778,7 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 	usPosY += usFontHeight + 2;
 
 
-	swprintf(sTemp, lengthof(sTemp), L"%3.2f %ls", GetWeightBasedOnMetricOption(Item[usIndex].ubWeight) / 10.0f, GetWeightUnitString());
+	swprintf(sTemp, lengthof(sTemp), L"%3.2f %ls", GetWeightBasedOnMetricOption(GCM->getItem(usIndex)->getWeight()) / 10.0f, GetWeightUnitString());
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_STOCK_TEXT_X, usPosY, BOBBYR_ITEM_COST_TEXT_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 
@@ -794,10 +806,7 @@ static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_ROF], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	if( WeaponROF[ usIndex ] == -1 )
-		swprintf(sTemp, lengthof(sTemp), L"? %ls", pMessageStrings[ MSG_RPM ] );
-	else
-		swprintf(sTemp, lengthof(sTemp), L"%3d/%ls", WeaponROF[ usIndex ], pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
+  swprintf(sTemp, lengthof(sTemp), L"%3d/%ls", GCM->getWeapon(usIndex)->getRateOfFire(), pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
 
 
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -811,7 +820,7 @@ static UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_DAMAGE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%4d", Weapon[ usIndex ].ubImpact);
+	swprintf(sTemp, lengthof(sTemp), L"%4d", GCM->getWeapon( usIndex )->ubImpact);
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -823,7 +832,7 @@ static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_RANGE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", Weapon[ usIndex ].usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
+	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", GCM->getWeapon( usIndex )->usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -835,7 +844,7 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 	wchar_t	sTemp[20];
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_MAGAZINE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", Weapon[usIndex].ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
+	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", GCM->getWeapon(usIndex)->ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -844,13 +853,13 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 
 static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
-	const INVTYPE* const item = &Item[usIndex];
+	const ItemModel * item = GCM->getItem(usIndex);
 	wchar_t	zTemp[128];
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_CALIBRE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	// ammo or gun?
-	AmmoKind const calibre = item->usItemClass == IC_AMMO ? Magazine[item->ubClassIndex].ubCalibre : Weapon[item->ubClassIndex].ubCalibre;
-	wcslcpy(zTemp, BobbyRayAmmoCaliber[calibre], lengthof(zTemp));
+  const CalibreModel *calibre = item->getItemClass() == IC_AMMO ? item->asAmmo()->calibre : item->asWeapon()->calibre;
+	wcslcpy(zTemp, &GCM->getCalibreNameForBobbyRay(calibre->index)->getWCHAR()[0], lengthof(zTemp));
 
 	ReduceStringLength(zTemp, lengthof(zTemp), BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
 	DrawTextToScreen(zTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -870,7 +879,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 		//Display Items Name
 		wchar_t sText[BOBBYR_ITEM_DESC_NAME_SIZE];
 		uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;
-		LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+		GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 		ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_PIC_WIDTH - 6, BOBBYR_ITEM_NAME_TEXT_FONT);
 		DrawTextToScreen(sText, BOBBYR_ITEM_NAME_X, usPosY + BOBBYR_ITEM_NAME_Y_OFFSET, 0, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
@@ -903,7 +912,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 		//Display Items description
 		wchar_t sText[BOBBYR_ITEM_DESC_INFO_SIZE];
 		uiStartLoc += BOBBYR_ITEM_DESC_NAME_SIZE;
-		LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_INFO_SIZE);
+		GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_INFO_SIZE);
 		DisplayWrappedString(BOBBYR_ITEM_DESC_START_X, usPosY, BOBBYR_ITEM_DESC_START_WIDTH, 2, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 }
@@ -925,7 +934,7 @@ void SetFirstLastPagesForNew( UINT32 uiClassMask )
 		//If we have some of the inventory on hand
 		if( LaptopSaveInfo.BobbyRayInventory[ i ].ubQtyOnHand != 0 )
 		{
-			if( Item[ LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex ].usItemClass & uiClassMask )
+			if( GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ i ].usItemIndex)->getItemClass() & uiClassMask )
 			{
 				ubNumItems++;
 
@@ -1003,11 +1012,11 @@ static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 }
 
 
-static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* ammo);
+static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const ItemModel* ammo);
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const INVTYPE* const items[])
+static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const ItemModel* const items[])
 {
 	if (gfBigImageMouseRegionCreated) return;
 
@@ -1030,8 +1039,8 @@ static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const 
 		MSYS_SetRegionUserData(&r, 0, i);
 
 		// Specify the help text only if the items is ammo
-		INVTYPE const* const item = items[i];
-		if (item->usItemClass != IC_AMMO) continue;
+		ItemModel const* const item = items[i];
+		if (item->getItemClass() != IC_AMMO) continue;
 		// And only if the user has an item that can use the particular type of ammo
 		UINT8 const n_guns = CheckPlayersInventoryForGunMatchingGivenAmmoID(item);
 		if (n_guns == 0) continue;
@@ -1307,10 +1316,10 @@ UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
 	DOUBLE value;
 	if( fUsed )
-		value = Item[ LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].usItemIndex ].usPrice *
+		value = GCM->getItem(LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].usItemIndex)->getPrice() *
 								( .5 + .5 * ( LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].ubItemQuality ) / 100 ) + .5;
 	else
-		value = Item[ LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].usItemIndex ].usPrice;
+		value = GCM->getItem(LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].usItemIndex)->getPrice();
 
 	return( (UINT16) value);
 }
@@ -1348,7 +1357,7 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 	UINT16 inv_idx = 0;
 	for (UINT16 i = gusFirstItemIndex; i <= gusLastItemIndex; ++i)
 	{
-		if (!(Item[pInv[i].usItemIndex].usItemClass & item_class)) continue;
+		if (!(GCM->getItem(pInv[i].usItemIndex)->getItemClass() & item_class)) continue;
 		// If we have some of the inventory on hand
 		if (pInv[i].ubQtyOnHand == 0) continue;
 
@@ -1358,10 +1367,10 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 }
 
 
-static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const ammo)
+static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(ItemModel const* const ammo)
 {
 	UINT8	         n_items = 0;
-	AmmoKind const calibre = Magazine[ammo->ubClassIndex].ubCalibre;
+  const CalibreModel *calibre = ammo->asAmmo()->calibre;
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		// Loop through all the pockets on the merc
@@ -1369,9 +1378,9 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const
 		{
 			OBJECTTYPE const& o = *i;
 			// If there is a weapon here
-			if (Item[o.usItem].usItemClass != IC_GUN) continue;
+			if (GCM->getItem(o.usItem)->getItemClass() != IC_GUN) continue;
 			// If the weapon uses the same kind of ammo as the one passed in
-			if (Weapon[o.usItem].ubCalibre != calibre) continue;
+			if (!GCM->getWeapon(o.usItem)->matches(calibre)) continue;
 
 			++n_items;
 		}

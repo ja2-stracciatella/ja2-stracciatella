@@ -48,6 +48,8 @@
 #include "Soldier_Init_List.h"
 #endif
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #define		SAVE_LOAD_TITLE_FONT								FONT14ARIAL
 #define		SAVE_LOAD_TITLE_COLOR								FONT_MCOLOR_WHITE
@@ -933,7 +935,7 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 		try
 		{
       bool stracLinuxFormat;
-			AutoSGPFile f(FileMan::openForReadingSmart(zSavedGameName, false));
+			AutoSGPFile f(GCM->openUserPrivateFileForReading(zSavedGameName));
 			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
 			endof(header->zGameVersionNumber)[-1] =  '\0';
 			endof(header->sSavedGameDesc)[-1]     = L'\0';
@@ -1500,7 +1502,7 @@ bool AreThereAnySavedGameFiles()
 	{
 		char filename[512];
 		CreateSavedGameFileNameFromNumber(i, filename);
-		if (FileExists(filename)) return true;
+		if (GCM->doesGameResExists(filename)) return true;
 	}
 	return false;
 }

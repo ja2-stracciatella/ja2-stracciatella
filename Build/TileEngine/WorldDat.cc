@@ -6,6 +6,8 @@
 #include "Tile_Surface.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 // THIS FILE CONTAINS DEFINITIONS FOR TILESET FILES
 
@@ -20,7 +22,7 @@ static void SetTilesetTwoTerrainValues(void);
 void InitEngineTilesets(void)
 try
 {
-	AutoSGPFile f(FileMan::openForReadingSmart(BINARYDATADIR "/ja2set.dat", true));
+	AutoSGPFile f(GCM->openGameResForReading(GCM->getTilesetDBResName()));
 
 	// READ # TILESETS and compare
 	UINT8 ubNumSets;

@@ -12,7 +12,6 @@
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
-#include "Encrypted_File.h"
 #include "Cursors.h"
 #include "Text.h"
 #include "Button_System.h"
@@ -21,6 +20,8 @@
 #include "Font_Control.h"
 #include "FileMan.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 struct FilesUnit
 {
@@ -357,7 +358,7 @@ static void OpenAndReadFilesFile(void)
 	AutoSGPFile f;
 	try
 	{
-		f = FileMan::openForReadingSmart(FILES_DAT_FILE, true);
+		f = GCM->openGameResForReading(FILES_DAT_FILE);
 	}
 	catch (...) { return; /* XXX TODO0019 ignore */ }
 
@@ -651,11 +652,11 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 {
 	FileString*  head   = 0;
 	FileString** anchor = &head;
-	AutoSGPFile f(FileMan::openForReadingSmart(filename, true));
+	AutoSGPFile f(GCM->openGameResForReading(filename));
 	for (; n != 0; ++offset, --n)
 	{
 		wchar_t str[FILE_STRING_SIZE];
-		LoadEncryptedData(f, str, lengthof(str) * offset, lengthof(str));
+		GCM->loadEncryptedString(f, str, lengthof(str) * offset, lengthof(str));
 
 		FileString* const fs = MALLOC(FileString);
 		fs->Next    = 0;

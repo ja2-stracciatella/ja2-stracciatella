@@ -30,7 +30,10 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 {
 	// depending on extension of filename, use different image readers
 	const char* const dot = strstr(filename, ".");
-	if (!dot) throw std::logic_error("Tried to load image with no extension");
+	if (!dot)
+  {
+    throw std::logic_error("Tried to load image with no extension");
+  }
 	const char* const ext = dot + 1;
 
 	return

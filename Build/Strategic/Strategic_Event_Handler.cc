@@ -25,6 +25,9 @@
 #include "History.h"
 #include "BobbyRMailOrder.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 
 #define		MEDUNA_ITEM_DROP_OFF_GRIDNO			10959
 #define		MEDUNA_ITEM_DROP_OFF_SECTOR_X		3
@@ -158,7 +161,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		OBJECTTYPE Object;
 		CreateItem(usItem, purchase->bItemQuality, &Object);
 
-		if (Item[usItem].usItemClass == IC_GUN)
+		if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
 		{
 			/* Empty out the bullets put in by CreateItem().  We now sell all guns
 			 * empty of bullets.  This is done for BobbyR simply to be consistent with
@@ -250,7 +253,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 			while (ubItemsDelivered)
 			{
 				// treat 0s as 1s :-)
-				const UINT8 ubTempNumItems = __min(ubItemsDelivered, __max(1, Item[usItem].ubPerPocket));
+				const UINT8 ubTempNumItems = __min(ubItemsDelivered, __max(1, GCM->getItem(usItem)->getPerPocket()));
 				CreateItems(usItem, purchase->bItemQuality, ubTempNumItems, &Object);
 
 				// stack as many as possible
@@ -1059,7 +1062,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 		while ( ubItemsDelivered )
 		{
 			// treat 0s as 1s :-)
-			ubTempNumItems = __min( ubItemsDelivered, __max( 1, Item[ usItem ].ubPerPocket ) );
+			ubTempNumItems = __min( ubItemsDelivered, __max( 1, GCM->getItem(usItem )->getPerPocket() ) );
 			CreateItems( usItem, gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &Object );
 
 			// stack as many as possible

@@ -41,6 +41,8 @@
 #include "UILayout.h"
 #include "GameState.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #include "Soldier_Init_List.h"
 extern SOLDIERINITNODE *gpSelected;
@@ -102,17 +104,16 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 			use_tileset = GENERIC_1;
 		}
 
-		char adjusted_file[128];
-		sprintf(adjusted_file, TILESETSDIR "/%d/t/%s", use_tileset, filename);
+		std::string adjusted_file(GCM->getTilesetResourceName(use_tileset, std::string("t/") + filename));
 		SGPVObject* vo;
 		try
 		{
-			vo = AddVideoObjectFromFile(adjusted_file);
+			vo = AddVideoObjectFromFile(adjusted_file.c_str());
 		}
 		catch (...)
 		{
 			// Load one we know about
-			vo = AddVideoObjectFromFile(TILESETSDIR "/0/t/grass.sti");
+			vo = AddVideoObjectFromFile(GCM->getTilesetResourceName(0, std::string("t/") + "grass.sti").c_str());
 		}
 
 		gSmTileSurf[i].vo = vo;
