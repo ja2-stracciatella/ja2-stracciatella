@@ -1,7 +1,7 @@
 #include "WeaponModels.h"
 
-#include "Build/Tactical/Points.h"
 #include "Build/Tactical/Items.h"
+#include "Build/Tactical/Points.h"
 #include "Build/Utils/Sound_Control.h"
 
 #include "CalibreModel.h"
@@ -11,13 +11,28 @@
 #include "slog/slog.h"
 #define TAG "Weapons"
 
+// exact gun types
+// used as an index in WeaponType[] string array
+enum
+{
+	NOT_GUN = 0,
+	GUN_PISTOL,
+	GUN_M_PISTOL,
+	GUN_SMG,
+	GUN_RIFLE,
+	GUN_SN_RIFLE,
+	GUN_AS_RIFLE,
+	GUN_LMG,
+	GUN_SHOTGUN
+};
 
-WeaponModel::WeaponModel(uint32_t itemClass, uint8_t cursor, uint16_t itemIndex, const char* internalName, const char* internalType)
+WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor, uint16_t itemIndex, const char* internalName, const char* internalType)
   :sound(NO_WEAPON_SOUND_STR),
    burstSound(NO_WEAPON_SOUND_STR),
    ItemModel(itemIndex, internalName, itemClass, itemIndex, (ItemCursor)cursor)
 {
   strncpy(this->internalType, internalType, sizeof(this->internalType));
+  ubWeaponType         = weaponType;
   ubWeaponClass        = NOGUNCLASS;
   calibre              = CalibreModel::getNoCalibreObject();
   ubReadyTime          = 0;
@@ -35,8 +50,6 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t cursor, uint16_t itemIndex,
   sReloadSound         = NO_WEAPON_SOUND;
   sLocknLoadSound      = NO_WEAPON_SOUND;
 }
-
-#include "Store_Inventory.h"
 
 void WeaponModel::serializeTo(JsonObject &obj) const
 {
@@ -655,7 +668,7 @@ int WeaponModel::getRateOfFire() const
 ////////////////////////////////////////////////////////////
 
 NoWeapon::NoWeapon(uint16_t itemIndex, const char * internalName, uint16_t Range)
-  :WeaponModel(IC_NONE, PUNCHCURS, itemIndex, internalName, "NOWEAPON")
+  :WeaponModel(IC_NONE, NOT_GUN, PUNCHCURS, itemIndex, internalName, "NOWEAPON")
 {
 }
 
@@ -680,7 +693,7 @@ Pistol::Pistol(uint16_t itemIndex, const char * internalName,
                uint8_t AttackVolume,
                uint8_t HitVolume,
                const char * Sound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "PISTOL")
+  :WeaponModel(IC_GUN, GUN_PISTOL, TARGETCURS, itemIndex, internalName, "PISTOL")
 {
   ubWeaponClass        = HANDGUNCLASS;
   this->calibre        = calibre;
@@ -732,7 +745,7 @@ MPistol::MPistol(uint16_t itemIndex, const char * internalName,
                  uint8_t HitVolume,
                  const char * Sound,
                  const char * BurstSound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "M_PISTOL")
+  :WeaponModel(IC_GUN, GUN_M_PISTOL, TARGETCURS, itemIndex, internalName, "M_PISTOL")
 {
   ubWeaponClass        = HANDGUNCLASS;
   this->calibre        = calibre;
@@ -790,7 +803,7 @@ SMG::SMG(uint16_t itemIndex, const char * internalName,
          uint8_t HitVolume,
          const char * Sound,
          const char * BurstSound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "SMG")
+  :WeaponModel(IC_GUN, GUN_SMG, TARGETCURS, itemIndex, internalName, "SMG")
 {
   ubWeaponClass        = SMGCLASS;
   this->calibre        = calibre;
@@ -845,7 +858,7 @@ SniperRifle::SniperRifle(uint16_t itemIndex, const char * internalName,
                          uint8_t AttackVolume,
                          uint8_t HitVolume,
                          const char * Sound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "SN_RIFLE")
+  :WeaponModel(IC_GUN, GUN_SN_RIFLE, TARGETCURS, itemIndex, internalName, "SN_RIFLE")
 {
   ubWeaponClass        = RIFLECLASS;
   this->calibre        = calibre;
@@ -894,7 +907,7 @@ Rifle::Rifle(uint16_t itemIndex, const char * internalName,
              uint8_t AttackVolume,
              uint8_t HitVolume,
              const char * Sound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "RIFLE")
+  :WeaponModel(IC_GUN, GUN_RIFLE, TARGETCURS, itemIndex, internalName, "RIFLE")
 {
   ubWeaponClass        = RIFLECLASS;
   this->calibre        = calibre;
@@ -946,7 +959,7 @@ AssaultRifle::AssaultRifle(uint16_t itemIndex, const char * internalName,
                            uint8_t HitVolume,
                            const char * Sound,
                            const char * BurstSound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "ASRIFLE")
+  :WeaponModel(IC_GUN, GUN_AS_RIFLE, TARGETCURS, itemIndex, internalName, "ASRIFLE")
 {
   ubWeaponClass        = RIFLECLASS;
   this->calibre        = calibre;
@@ -1004,7 +1017,7 @@ Shotgun::Shotgun(uint16_t itemIndex, const char * internalName,
                  uint8_t HitVolume,
                  const char * Sound,
                  const char * BurstSound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "SHOTGUN")
+  :WeaponModel(IC_GUN, GUN_SHOTGUN, TARGETCURS, itemIndex, internalName, "SHOTGUN")
 {
   ubWeaponClass        = SHOTGUNCLASS;
   this->calibre        = calibre;
@@ -1062,7 +1075,7 @@ LMG::LMG(uint16_t itemIndex, const char * internalName,
          uint8_t HitVolume,
          const char * Sound,
          const char * BurstSound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "LMG")
+  :WeaponModel(IC_GUN, GUN_LMG, TARGETCURS, itemIndex, internalName, "LMG")
 {
   ubWeaponClass        = MGCLASS;
   this->calibre        = calibre;
@@ -1112,7 +1125,7 @@ Blade::Blade(uint16_t itemIndex, const char * internalName,
              uint16_t Range,
              uint8_t AttackVolume,
              const char * Sound)
-  :WeaponModel(IC_BLADE, KNIFECURS, itemIndex, internalName, "BLADE")
+  :WeaponModel(IC_BLADE, NOT_GUN, KNIFECURS, itemIndex, internalName, "BLADE")
 {
   ubWeaponClass        = KNIFECLASS;
   ubReadyTime          = AP_READY_KNIFE;
@@ -1145,7 +1158,7 @@ ThrowingBlade::ThrowingBlade(uint16_t itemIndex, const char * internalName,
                              uint16_t Range,
                              uint8_t AttackVolume,
                              const char * Sound)
-  :WeaponModel(IC_THROWING_KNIFE, TOSSCURS, itemIndex, internalName, "THROWINGBLADE")
+  :WeaponModel(IC_THROWING_KNIFE, NOT_GUN, TOSSCURS, itemIndex, internalName, "THROWINGBLADE")
 {
   ubWeaponClass        = KNIFECLASS;
   ubReadyTime          = AP_READY_KNIFE;
@@ -1177,7 +1190,7 @@ PunchWeapon::PunchWeapon(uint16_t itemIndex, const char * internalName,
                          uint8_t Deadliness,
                          uint8_t AttackVolume,
                          const char * Sound)
-  :WeaponModel(IC_PUNCH, PUNCHCURS, itemIndex, internalName, "PUNCHWEAPON")
+  :WeaponModel(IC_PUNCH, NOT_GUN, PUNCHCURS, itemIndex, internalName, "PUNCHWEAPON")
 {
   ubWeaponClass        = KNIFECLASS;
   ubShotsPer4Turns     = ShotsPer4Turns;
@@ -1211,7 +1224,7 @@ Launcher::Launcher(uint16_t itemIndex, const char * internalName,
                    uint8_t AttackVolume,
                    uint8_t HitVolume,
                    const char * Sound)
-  :WeaponModel(IC_LAUNCHER, INVALIDCURS, itemIndex, internalName, "LAUNCHER")
+  :WeaponModel(IC_LAUNCHER, NOT_GUN, INVALIDCURS, itemIndex, internalName, "LAUNCHER")
 {
   ubWeaponClass        = RIFLECLASS;
   ubReadyTime          = ReadyTime;
@@ -1250,7 +1263,7 @@ LAW::LAW(uint16_t itemIndex, const char * internalName,
          uint8_t AttackVolume,
          uint8_t HitVolume,
          const char * Sound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "LAW")
+  :WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName, "LAW")
 {
   ubWeaponClass        = RIFLECLASS;
   ubReadyTime          = ReadyTime;
@@ -1290,7 +1303,7 @@ Cannon::Cannon(uint16_t itemIndex, const char * internalName,
                uint8_t AttackVolume,
                uint8_t HitVolume,
                const char * Sound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "CANNON")
+  :WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName, "CANNON")
 {
   ubWeaponClass        = RIFLECLASS;
   ubReadyTime          = ReadyTime;
@@ -1331,7 +1344,7 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, const char * internalName,
                          uint8_t AttackVolume,
                          uint8_t HitVolume,
                          const char * Sound)
-  :WeaponModel(IC_GUN, TARGETCURS, itemIndex, internalName, "MONSTSPIT")
+  :WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName, "MONSTSPIT")
 {
   ubWeaponClass        = MONSTERCLASS;
   this->calibre        = calibre;

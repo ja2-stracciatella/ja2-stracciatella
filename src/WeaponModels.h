@@ -22,6 +22,7 @@ struct MagazineModel;
 struct WeaponModel : ItemModel
 {
   WeaponModel(uint32_t itemClass,
+              uint8_t weaponType,
               uint8_t cursor,
               uint16_t itemIndex,
               const char* internalName,
