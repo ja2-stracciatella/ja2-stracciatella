@@ -4,6 +4,8 @@
 
 DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
+  tactical_hotkey_j     = (*json)["tactical_hotkey_j"].GetBool();
+
   f_draw_item_shadow    = (*json)["draw_item_shadow"].GetBool();
 
   ms_per_game_cycle     = (*json)["ms_per_game_cycle"].GetInt();

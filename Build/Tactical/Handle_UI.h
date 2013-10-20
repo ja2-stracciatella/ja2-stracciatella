@@ -312,4 +312,6 @@ void HandleTacticalUILoseCursorFromOtherScreen(void);
 
 void SetInterfaceHeightLevel(void);
 
+void ClimbUpOrDown();
+
 #endif

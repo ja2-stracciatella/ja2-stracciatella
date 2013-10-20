@@ -14,3 +14,7 @@ Settings in game.json
         is updated on every cycle).
 
         Decrising this value will increase speed of the game (enemy movement, bullets speed, etc).
+
+  tactical_hotkey_j
+
+        Enables 'j' hotkey for climbing up/down.

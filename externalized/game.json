@@ -1,4 +1,6 @@
 {
+        "tactical_hotkey_j": false,
+
         "draw_item_shadow": true,
 
         "ms_per_game_cycle":    25,

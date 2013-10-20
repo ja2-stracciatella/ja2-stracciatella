@@ -90,7 +90,10 @@
 #include "GameRes.h"
 #include "GameState.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
 #include "Soldier.h"
+#include "policy/GamePolicy.h"
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
@@ -1361,6 +1364,12 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case 'g': HandlePlayerTogglingLightEffects(TRUE);                      break;
 		case 'h': ShouldTheHelpScreenComeUp(HELP_SCREEN_TACTICAL, TRUE);       break;
 		case 'i': ToggleItemGlow(!gGameSettings.fOptions[TOPTION_GLOW_ITEMS]); break;
+    case 'j':
+      if(GCM->getGamePolicy()->tactical_hotkey_j)
+      {
+        ClimbUpOrDown();
+      }
+      break;
 		case 'k': BeginKeyPanelFromKeyShortcut();                              break;
 
 		case 'l':
