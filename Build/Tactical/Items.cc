@@ -2912,7 +2912,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
 		throw std::logic_error("Tried to get default ammo for item which is not a gun");
 	}
 
-	const WEAPONTYPE * w = GCM->getWeapon(gun);
+	const WeaponModel * w = GCM->getWeapon(gun);
   const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
   BOOST_FOREACH(const MagazineModel* mag, magazines)
   {

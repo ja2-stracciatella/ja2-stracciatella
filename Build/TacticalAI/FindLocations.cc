@@ -1732,11 +1732,11 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 						if (!(item->isWeapon()))                 continue;
 						if (o.bStatus[0] < MINIMUM_REQUIRED_STATUS)          continue;
 						if (item->isGun()&& !IsGunUsable(o, s)) continue;
-						const WEAPONTYPE * new_wpn = GCM->getWeapon(o.usItem);
+						const WeaponModel * new_wpn = GCM->getWeapon(o.usItem);
 						OBJECTTYPE const& in_hand = s.inv[HANDPOS];
 						if (GCM->getItem(in_hand.usItem)->isWeapon())
 						{
-							const WEAPONTYPE * cur_wpn = GCM->getWeapon(in_hand.usItem);
+							const WeaponModel * cur_wpn = GCM->getWeapon(in_hand.usItem);
 							if (new_wpn->ubDeadliness <= cur_wpn->ubDeadliness) continue;
 							temp_value = 100 * new_wpn->ubDeadliness / cur_wpn->ubDeadliness;
 						}

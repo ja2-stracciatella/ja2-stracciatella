@@ -1690,7 +1690,7 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 static INT8 TryToReload(SOLDIERTYPE* const s)
 {
 	OBJECTTYPE&       hand   = s->inv[HANDPOS];
-	const WEAPONTYPE * weapon = GCM->getWeapon(hand.usItem);
+	const WeaponModel * weapon = GCM->getWeapon(hand.usItem);
 	INT8       const  slot   = FindAmmo(s, weapon->calibre, weapon->ubMagSize, NO_SLOT);
 	return slot != NO_SLOT && ReloadGun(s, &hand, &s->inv[slot]) ?
 		TRUE : NOSHOOT_NOAMMO;

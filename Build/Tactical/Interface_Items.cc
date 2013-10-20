@@ -2310,7 +2310,7 @@ void RenderItemDescriptionBox(void)
 			BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 		}
 
-		const WEAPONTYPE * w = GCM->getWeapon(obj.usItem);
+		const WeaponModel * w = GCM->getWeapon(obj.usItem);
 		if (w->ubShotsPerBurst > 0)
 		{
 			INT32       x = in_map ? MAP_BULLET_BURST_X : BULLET_BURST_X;
@@ -2351,7 +2351,7 @@ void RenderItemDescriptionBox(void)
 	if (ITEM_PROS_AND_CONS(obj.usItem))
 	{
 		{
-			const WEAPONTYPE * w = GCM->getWeapon(obj.usItem);
+			const WeaponModel * w = GCM->getWeapon(obj.usItem);
 			size_t            n = 0;
 			if (w->calibre->index != NOAMMO)
 			{
@@ -2426,7 +2426,7 @@ void RenderItemDescriptionBox(void)
 		}
 		MPrint(dx + ids[1].sX, dy + ids[1].sY, gWeaponStatsDesc[1]); // status
 
-    const WEAPONTYPE * w = GCM->getWeapon(obj.usItem);
+    const WeaponModel * w = GCM->getWeapon(obj.usItem);
     if (w->ubShotsPerBurst > 0)
 		{
 			MPrint(dx + ids[7].sX, dy + ids[7].sY, gWeaponStatsDesc[6]); // = (sic)

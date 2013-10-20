@@ -19,7 +19,7 @@ struct MagazineModel;
 #define NO_WEAPON_SOUND ((SoundID)-1)
 #define NO_WEAPON_SOUND_STR ("")
 
-struct WeaponModel : WEAPONTYPE, ItemModel
+struct WeaponModel : ItemModel
 {
   WeaponModel(uint32_t itemClass,
               uint8_t cursor,
@@ -61,6 +61,25 @@ struct WeaponModel : WEAPONTYPE, ItemModel
   bool attachSpringAndBoltUpgrade;
   bool attachGunBarrelExtender;
   int m_rateOfFire;
+
+  char     internalType[20];
+	UINT8    ubWeaponClass;    // handgun/shotgun/rifle/knife
+	UINT8    ubWeaponType;     // exact type (for display purposes)
+	const CalibreModel *calibre;  // type of ammunition needed
+	UINT8    ubReadyTime;      // APs to ready/unready weapon
+	UINT8    ubShotsPer4Turns; // maximum (mechanical) firing rate
+	UINT8    ubShotsPerBurst;
+	UINT8    ubBurstPenalty;   // % penalty per shot after first
+	UINT8    ubBulletSpeed;    // bullet's travelling speed
+	UINT8    ubImpact;         // weapon's max damage impact (size & speed)
+	UINT8    ubDeadliness;     // comparative ratings of guns
+	UINT8    ubMagSize;
+	UINT16   usRange;
+	UINT16   usReloadDelay;
+	UINT8    ubAttackVolume;
+	UINT8    ubHitVolume;
+	SoundID  sReloadSound;
+	SoundID  sLocknLoadSound;
 
 protected:
   void serializeAttachments(JsonObject &obj) const;
