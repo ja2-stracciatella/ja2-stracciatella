@@ -134,12 +134,14 @@ static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wcha
   MemFree(Str);
 }
 
-DefaultContentManager::DefaultContentManager(const std::string &configFolder,
+DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
+                                             const std::string &configFolder,
                                              const std::string &configPath,
                                              const std::string &gameResRootPath,
                                              const std::string &externalizedDataPath
   )
-  :mNormalGunChoice(ARMY_GUN_LEVELS),
+  :m_gameVersion(gameVersion),
+   mNormalGunChoice(ARMY_GUN_LEVELS),
    mExtendedGunChoice(ARMY_GUN_LEVELS),
    m_dealersInventory(NUM_ARMS_DEALERS)
 {
@@ -234,6 +236,9 @@ DefaultContentManager::~DefaultContentManager()
   delete m_bobbyRayUsedInventory;
   delete m_impPolicy;
   delete m_gamePolicy;
+
+  BOOST_FOREACH(const UTF8String *str, m_calibreNames)                  { delete str; }
+  BOOST_FOREACH(const UTF8String *str, m_calibreNamesBobbyRay)          { delete str; }
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -528,6 +533,16 @@ const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
   return m_calibres[index];
 }
 
+const UTF8String* DefaultContentManager::getCalibreName(uint8_t index) const
+{
+  return m_calibreNames[index];
+}
+
+const UTF8String* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
+{
+  return m_calibreNamesBobbyRay[index];
+}
+
 const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 {
   return m_ammoTypes[index];
@@ -733,6 +748,36 @@ bool DefaultContentManager::loadArmyGunChoice()
     && readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
 }
 
+void DefaultContentManager::loadStringRes(const char *name, std::vector<const UTF8String*> &strings) const
+{
+  std::string fullName(name);
+
+  switch(m_gameVersion)
+  {
+  case GV_DUTCH:        fullName += "-dut";   break;
+  case GV_ENGLISH:      fullName += "-eng";   break;
+  case GV_FRENCH:       fullName += "-fr";    break;
+  case GV_GERMAN:       fullName += "-ger";   break;
+  case GV_ITALIAN:      fullName += "-it";    break;
+  case GV_POLISH:       fullName += "-pl";    break;
+  case GV_RUSSIAN:
+  case GV_RUSSIAN_GOLD: fullName += "-rus";   break;
+  default:
+  {
+    throw std::runtime_error(FormattedString("unknown game version %d", m_gameVersion));
+  }
+  }
+
+  fullName += ".json";
+  boost::shared_ptr<rapidjson::Document> json(readJsonDataFile(fullName.c_str()));
+  std::vector<std::string> utf8_encoded;
+  JsonUtility::parseListStrings(*json, utf8_encoded);
+  BOOST_FOREACH(const std::string &str, utf8_encoded)
+  {
+    strings.push_back(new UTF8String(str.c_str()));
+  }
+}
+
 /** Load the game data. */
 bool DefaultContentManager::loadGameData()
 {
@@ -756,6 +801,9 @@ bool DefaultContentManager::loadGameData()
 
   boost::shared_ptr<rapidjson::Document> imp_json(readJsonDataFile("imp.json"));
   m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
+
+  loadStringRes("strings/ammo-calibre", m_calibreNames);
+  loadStringRes("strings/ammo-calibre-bobbyray", m_calibreNamesBobbyRay);
 
   return result;
 }

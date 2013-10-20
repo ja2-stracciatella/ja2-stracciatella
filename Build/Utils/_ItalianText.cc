@@ -100,60 +100,6 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 */
 
-// Different weapon calibres
-// CAWS is Close Assault Weapon System and should probably be left as it is
-// NATO is the North Atlantic Treaty Organization
-// WP is Warsaw Pact
-// cal is an abbreviation for calibre
-static StrPointer s_it_AmmoCaliber[AmmoCaliber_SIZE] =
-{
-	L"0",
-	L"cal .38",
-	L"9 mm",
-	L"cal .45",
-	L"cal .357",
-	L"cal fisso 12",
-	L"CAW",
-	L"5.45 mm",
-	L"5.56 mm",
-	L"7.62 mm NATO",
-	L"7.62 mm WP",
-	L"4.7 mm",
-	L"5.7 mm",
-	L"Mostro",
-	L"Missile",
-	L"", // dart
-	L"", // flame
-};
-
-// This BobbyRayAmmoCaliber is virtually the same as AmmoCaliber however the bobby version doesnt have as much room for the words.
-//
-// Different weapon calibres
-// CAWS is Close Assault Weapon System and should probably be left as it is
-// NATO is the North Atlantic Treaty Organization
-// WP is Warsaw Pact
-// cal is an abbreviation for calibre
-static StrPointer s_it_BobbyRayAmmoCaliber[BobbyRayAmmoCaliber_SIZE] =
-{
-	L"0",
-	L"cal .38",
-	L"9 mm",
-	L"cal .45",
-	L"cal .357",
-	L"cal fisso 12",
-	L"CAWS",
-	L"5.45 mm",
-	L"5.56 mm",
-	L"7.62 mm N.",
-	L"7.62 mm WP",
-	L"4.7 mm",
-	L"5.7 mm",
-	L"Mostro",
-	L"Missile",
-	L"", // dart
-};
-
-
 static StrPointer s_it_WeaponType[WeaponType_SIZE] =
 {
 	L"Altro",
@@ -3573,8 +3519,6 @@ extern const wchar_t *g_eng_str_iron_man_mode_warning;
 /** Italian language resources. */
 LanguageRes g_LanguageResItalian = {
 
-  s_it_AmmoCaliber,
-  s_it_BobbyRayAmmoCaliber,
   s_it_WeaponType,
 
   s_it_Message,

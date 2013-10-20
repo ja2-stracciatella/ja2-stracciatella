@@ -12,8 +12,6 @@
 #include <exception>
 #include <new>
 
-#include "slog/slog.h"
-
 #include "Button_System.h"
 #include "Debug.h"
 #include "FileMan.h"
@@ -44,6 +42,9 @@
 #include "MicroIni/MicroIni.hpp"
 #include "ModPackContentManager.h"
 #include "sgp/UTF8String.h"
+
+#include "slog/slog.h"
+#define TAG "SGP"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -151,6 +152,7 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 static BOOLEAN gfGameInitialized = FALSE;
 
 
+static bool getResourceVersion(const char *versionName, GameVersion *version);
 static std::string findRootGameResFolder(const std::string &configPath);
 static void WriteDefaultConfigFile(const char* ConfigFile);
 
@@ -297,12 +299,16 @@ struct CommandLineParams
 #endif
     doUnitTests = false;
     showDebugMessages = false;
+    resourceVersionGiven = false;
   }
 
 #ifdef WITH_MODS
   bool useMod;
   std::string modName;
 #endif
+
+  bool resourceVersionGiven;
+  std::string resourceVersion;
 
   bool doUnitTests;
   bool showDebugMessages;
@@ -345,6 +351,17 @@ try
   }
 #endif
 
+  GameVersion version = GV_ENGLISH;
+  if(params.resourceVersionGiven)
+  {
+    if(!getResourceVersion(params.resourceVersion.c_str(), &version))
+    {
+      SLOGE(TAG, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
+      return EXIT_FAILURE;
+    }
+  }
+  setGameVersion(version);
+
   ////////////////////////////////////////////////////////////
 
 	SDL_Init(SDL_INIT_VIDEO);
@@ -379,7 +396,8 @@ try
   {
     std::string modName = params.modName;
     std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(exeFolder, "mods"), modName), "data");
-    cm = new ModPackContentManager(modName, modResFolder, configFolderPath,
+    cm = new ModPackContentManager(version,
+                                   modName, modResFolder, configFolderPath,
                                    configPath, gameResRootPath,
                                    externalizedDataPath);
     LOG_INFO("------------------------------------------------------------------------------\n");
@@ -397,7 +415,8 @@ try
   else
 #endif
   {
-    cm = new DefaultContentManager(configFolderPath, configPath,
+    cm = new DefaultContentManager(version,
+                                   configFolderPath, configPath,
                                    gameResRootPath, externalizedDataPath);
     LOG_INFO("------------------------------------------------------------------------------\n");
     LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
@@ -509,46 +528,44 @@ catch (...)
 
 
 /** Set game resources version. */
-static BOOLEAN setResourceVersion(const char *version)
+static bool getResourceVersion(const char *versionName, GameVersion *version)
 {
-  if(strcasecmp(version, "ENGLISH") == 0)
+  if(strcasecmp(versionName, "ENGLISH") == 0)
   {
-    setGameVersion(GV_ENGLISH);
+    *version = GV_ENGLISH;
   }
-  else if(strcasecmp(version, "DUTCH") == 0)
+  else if(strcasecmp(versionName, "DUTCH") == 0)
   {
-    setGameVersion(GV_DUTCH);
+    *version = GV_DUTCH;
   }
-  else if(strcasecmp(version, "FRENCH") == 0)
+  else if(strcasecmp(versionName, "FRENCH") == 0)
   {
-    setGameVersion(GV_FRENCH);
+    *version = GV_FRENCH;
   }
-  else if(strcasecmp(version, "GERMAN") == 0)
+  else if(strcasecmp(versionName, "GERMAN") == 0)
   {
-    setGameVersion(GV_GERMAN);
+    *version = GV_GERMAN;
   }
-  else if(strcasecmp(version, "ITALIAN") == 0)
+  else if(strcasecmp(versionName, "ITALIAN") == 0)
   {
-    setGameVersion(GV_ITALIAN);
+    *version = GV_ITALIAN;
   }
-  else if(strcasecmp(version, "POLISH") == 0)
+  else if(strcasecmp(versionName, "POLISH") == 0)
   {
-    setGameVersion(GV_POLISH);
+    *version = GV_POLISH;
   }
-  else if(strcasecmp(version, "RUSSIAN") == 0)
+  else if(strcasecmp(versionName, "RUSSIAN") == 0)
   {
-    setGameVersion(GV_RUSSIAN);
+    *version = GV_RUSSIAN;
   }
-  else if(strcasecmp(version, "RUSSIAN_GOLD") == 0)
+  else if(strcasecmp(versionName, "RUSSIAN_GOLD") == 0)
   {
-    setGameVersion(GV_RUSSIAN_GOLD);
+    *version = GV_RUSSIAN_GOLD;
   }
   else
   {
-    LOG_ERROR("Unknown version of the game: %s\n", version);
     return false;
   }
-  LOG_INFO("Game version: %s\n", version);
   return true;
 }
 
@@ -654,7 +671,8 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
     {
       if(haveNextParameter)
       {
-        success = setResourceVersion(argv[++i]);
+        params->resourceVersionGiven = true;
+        params->resourceVersion = argv[++i];
       }
       else
       {

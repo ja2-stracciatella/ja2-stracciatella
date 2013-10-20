@@ -83,7 +83,7 @@ public:
 
 /** Get wchar_t string.
  * @return Reference to the internal array of wchar_t characters.  The array includes trailing zero. */
-  const std::vector<wchar_t>& getWCHAR();
+  const std::vector<wchar_t>& getWCHAR() const;
 
 #endif
 
@@ -99,6 +99,8 @@ protected:
   std::string m_encoded;
 
 #ifdef WCHAR_SUPPORT
+  void rebuildBufferWCHAR();
+
   /** Buffer for storing wchar_t copy of the string. */
   std::vector<wchar_t> m_wcharBuffer;
 #endif

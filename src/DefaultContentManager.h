@@ -5,19 +5,24 @@
 #include <string>
 #include <vector>
 
+#include "Build/GameRes.h"
+
+#include "ContentManager.h"
+#include "IGameDataLoader.h"
+#include "StringEncodingTypes.h"
+
 #include "boost/smart_ptr.hpp"
 #include "rapidjson/document.h"
 
-#include "ContentManager.h"
-#include "StringEncodingTypes.h"
-
 class LibraryDB;
 
-class DefaultContentManager : public ContentManager
+class DefaultContentManager : public ContentManager, public IGameDataLoader
 {
 public:
 
-  DefaultContentManager(const std::string &configFolder, const std::string &configPath,
+  DefaultContentManager(GameVersion gameVersion,
+                        const std::string &configFolder,
+                        const std::string &configPath,
                         const std::string &gameResRootPath,
                         const std::string &externalizedDataPath);
 
@@ -97,6 +102,9 @@ public:
   virtual const std::vector<const MagazineModel*>& getMagazines() const;
 
   virtual const CalibreModel* getCalibre(uint8_t index);
+  virtual const UTF8String* getCalibreName(uint8_t index) const;
+  virtual const UTF8String* getCalibreNameForBobbyRay(uint8_t index) const;
+
   virtual const AmmoTypeModel* getAmmoType(uint8_t index);
 
   virtual const ItemModel* getItem(uint16_t index) const;
@@ -119,10 +127,15 @@ protected:
   std::string m_gameResRootPath;
   std::string m_externalizedDataPath;
 
+  const GameVersion m_gameVersion;
+
   std::vector<const ItemModel*> m_items;
   std::vector<const MagazineModel*> m_magazines;
 
   std::vector<const CalibreModel*> m_calibres;
+  std::vector<const UTF8String*> m_calibreNames;
+  std::vector<const UTF8String*> m_calibreNamesBobbyRay;
+
   std::vector<AmmoTypeModel*> m_ammoTypes;
 
   /** Mapping of calibre names to objects. */
@@ -151,6 +164,7 @@ protected:
 
   const DealerInventory * loadDealerInventory(const char *fileName);
   bool loadAllDealersInventory();
+  void loadStringRes(const char *name, std::vector<const UTF8String*> &strings) const;
 
   bool readWeaponTable(
     const char *fileName,

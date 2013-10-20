@@ -5189,7 +5189,7 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 			const CalibreModel * calibre = GCM->getWeapon(usItem)->calibre;
 			if (calibre->showInHelpText)
 			{
-				n += swprintf(dst + n, length - n, L" (%ls)", AmmoCaliber[calibre->index]);
+				n += swprintf(dst + n, length - n, L" (%ls)", calibre->getName());
 			}
 		}
 

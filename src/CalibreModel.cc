@@ -4,8 +4,12 @@
 
 #include "Build/Utils/Text.h"
 #include "sgp/StrUtils.h"
+#include "sgp/UTF8String.h"
 
 #include "JsonObject.h"
+
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 CalibreModel::CalibreModel(uint16_t index_,
                            const char* internalName_,
@@ -45,7 +49,7 @@ CalibreModel* CalibreModel::deserialize(JsonObjectReader &obj)
 
 const wchar_t* CalibreModel::getName() const
 {
-  return AmmoCaliber[index];
+  return &GCM->getCalibreName(index)->getWCHAR()[0];
 }
 
 const CalibreModel* CalibreModel::getNoCalibreObject()
