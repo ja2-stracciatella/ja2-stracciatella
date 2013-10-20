@@ -8,7 +8,9 @@
 class GamePolicy
 {
 public:
-  bool f_draw_item_shadow;                      /**< Draw shadows from the inventory items. */
+  bool f_draw_item_shadow;              /**< Draw shadows from the inventory items. */
+
+  int32_t ms_per_game_cycle;            /**< Milliseconds per game cycle. */
 
   int32_t starting_cash_easy;
   int32_t starting_cash_medium;

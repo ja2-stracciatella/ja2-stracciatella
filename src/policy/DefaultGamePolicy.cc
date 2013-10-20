@@ -6,6 +6,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
   f_draw_item_shadow    = (*json)["draw_item_shadow"].GetBool();
 
+  ms_per_game_cycle     = (*json)["ms_per_game_cycle"].GetInt();
+
   starting_cash_easy    = (*json)["starting_cash_easy"].GetInt();
   starting_cash_medium  = (*json)["starting_cash_medium"].GetInt();
   starting_cash_hard    = (*json)["starting_cash_hard"].GetInt();

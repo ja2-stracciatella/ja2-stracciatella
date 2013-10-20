@@ -41,6 +41,7 @@
 #include "JsonUtility.h"
 #include "MicroIni/MicroIni.hpp"
 #include "ModPackContentManager.h"
+#include "policy/GamePolicy.h"
 #include "sgp/UTF8String.h"
 
 #include "slog/slog.h"
@@ -142,13 +143,6 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 //
 ////////////////////////////////////////////////////////////////////////////
 
-/**
- * Number of milliseconds for one game cycle.
- * 25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen
- * is updated on every cycle). */
-#define MS_PER_GAME_CYCLE               (25)
-
-
 static BOOLEAN gfGameInitialized = FALSE;
 
 
@@ -208,7 +202,7 @@ void requestGameExit()
   SDL_PushEvent(&event);
 }
 
-static void MainLoop()
+static void MainLoop(int msPerGameCycle)
 {
 	BOOLEAN s_doGameCycles = TRUE;
 
@@ -256,9 +250,9 @@ static void MainLoop()
 				GameLoop();
         gameCycleMS = GetClock() - gameCycleMS;
 
-        if(gameCycleMS < MS_PER_GAME_CYCLE)
+        if(gameCycleMS < msPerGameCycle)
         {
-          SDL_Delay(MS_PER_GAME_CYCLE - gameCycleMS);
+          SDL_Delay(msPerGameCycle - gameCycleMS);
         }
 
 #if DEBUG_PRINT_GAME_CYCLE_TIME
@@ -497,7 +491,7 @@ try
     /* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
      * are available. All we need to do is attend to the gaming mechanics
      * themselves */
-    MainLoop();
+    MainLoop(GCM->getGamePolicy()->ms_per_game_cycle);
   }
 
   SLOG_Deinit();
