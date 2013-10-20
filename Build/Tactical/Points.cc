@@ -32,6 +32,10 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
+#include "slog/slog.h"
+#define TAG "Points"
+
+
 INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno, const INT8 bDir, const INT8 bLevel)
 {
 		INT16	sAPCost = 0;
@@ -1667,11 +1671,12 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 
 	// Make sure the guy's actually got a throwable item in his hand
 	UINT16 const in_hand = s.inv[HANDPOS].usItem;
-	if (!GCM->getItem(in_hand)->isGrenade())
+  const ItemModel *item = GCM->getItem(in_hand);
+  // Gennady: This is a very strange piece of code.
+  //          Be very careful with it.
+	if (!item->getItemClass() & IC_GRENADE)
 	{
-#ifdef JA2TESTVERSION
-		ScreenMsg(MSG_FONT_YELLOW, MSG_DEBUG, L"MinAPsToThrow - Called when in-hand item is %s", in_hand);
-#endif
+    SLOGI(TAG, "MinAPsToThrow - Called when in-hand item is %s", item->getInternalName().c_str());
 		return 0;
 	}
 
