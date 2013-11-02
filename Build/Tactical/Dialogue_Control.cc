@@ -932,6 +932,7 @@ static void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, cons
 static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
 	INT16									sLeft;
+  INT16 sTop;
 
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
@@ -946,14 +947,19 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{
-  	sLeft			 = ( gsExternPanelXPosition + 97 );
+    // on the map screen dialog can be in any place requested
+    sLeft = gsExternPanelXPosition + 97;
+    sTop = gsExternPanelYPosition;
 	}
   else
   {
-	  sLeft			 = ( 110 );
+    // on the tactical screen show message always in the same position (corner
+    // of the screen)
+    sLeft = 110;
+    sTop = 20;
   }
 
-	ExecuteTacticalTextBox( sLeft, gsExternPanelYPosition, gTalkPanel.zQuoteStr );
+	ExecuteTacticalTextBox( sLeft, sTop, gTalkPanel.zQuoteStr );
 }
 
 
