@@ -139,17 +139,10 @@
 #define		FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS			75
 #define		FLOWER_ORDER_NAME_FIELD_NUM_CHARS							35
 
-
-static SGPPoint const g_order_check_box_pos[]=
-{
-	{ FLOWER_ORDER_CHECK_BOX_0_X, FLOWER_ORDER_CHECK_BOX_0_Y },
-	{ FLOWER_ORDER_CHECK_BOX_1_X, FLOWER_ORDER_CHECK_BOX_1_Y },
-	{ FLOWER_ORDER_CHECK_BOX_2_X, FLOWER_ORDER_CHECK_BOX_2_Y },
-	{ FLOWER_ORDER_CHECK_BOX_3_X, FLOWER_ORDER_CHECK_BOX_3_Y },
-	{ FLOWER_ORDER_CHECK_BOX_4_X, FLOWER_ORDER_CHECK_BOX_4_Y },
-	{ FLOWER_ORDER_CHECK_BOX_5_X, FLOWER_ORDER_CHECK_BOX_5_Y }
-};
-
+// Checkbox positions.
+// They will be initialized at run time when we know
+// the screen size.
+static SGPPoint g_order_check_box_pos[6];
 
 struct FlowerOrderLocationStruct
 {
@@ -273,6 +266,14 @@ static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 void EnterFloristOrderForm()
 {
 	InitFloristDefaults();
+
+  // runtime initialization of the checkbox positions
+  g_order_check_box_pos[0].set(FLOWER_ORDER_CHECK_BOX_0_X, FLOWER_ORDER_CHECK_BOX_0_Y);
+  g_order_check_box_pos[1].set(FLOWER_ORDER_CHECK_BOX_1_X, FLOWER_ORDER_CHECK_BOX_1_Y);
+  g_order_check_box_pos[2].set(FLOWER_ORDER_CHECK_BOX_2_X, FLOWER_ORDER_CHECK_BOX_2_Y);
+  g_order_check_box_pos[3].set(FLOWER_ORDER_CHECK_BOX_3_X, FLOWER_ORDER_CHECK_BOX_3_Y);
+  g_order_check_box_pos[4].set(FLOWER_ORDER_CHECK_BOX_4_X, FLOWER_ORDER_CHECK_BOX_4_Y);
+  g_order_check_box_pos[5].set(FLOWER_ORDER_CHECK_BOX_5_X, FLOWER_ORDER_CHECK_BOX_5_Y);
 
 	guiDeliveryLocation               = AddVideoObjectFromFile(LAPTOPDIR "/deliverylocation.sti");
 	guiFlowerFrame                    = AddVideoObjectFromFile(LAPTOPDIR "/flowerframe.sti");
