@@ -743,7 +743,7 @@ static void RenderGender(void)
 static void Print8CharacterOnlyString(void)
 {
 	SetFontAttributes(FONT12ARIAL, FONT_BLACK, NO_SHADOW);
-	MPrint(430, LAPTOP_SCREEN_WEB_DELTA_Y + 228, pIMPBeginScreenStrings);
+	MPrint(STD_SCREEN_X + 430, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 228, pIMPBeginScreenStrings);
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
