@@ -8,4 +8,11 @@ class DefaultGamePolicy : public GamePolicy
 {
 public:
   DefaultGamePolicy(rapidjson::Document *json);
+
+  /** Check if a hotkey is enabled. */
+  virtual bool isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, uint32_t key) const;
+
+private:
+  bool map_hotkey_ctrl_i;
+  bool tactical_hotkey_j;
 };

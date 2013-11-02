@@ -1365,7 +1365,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case 'h': ShouldTheHelpScreenComeUp(HELP_SCREEN_TACTICAL, TRUE);       break;
 		case 'i': ToggleItemGlow(!gGameSettings.fOptions[TOPTION_GLOW_ITEMS]); break;
     case 'j':
-      if(GCM->getGamePolicy()->tactical_hotkey_j)
+      if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_None, 'j'))
       {
         ClimbUpOrDown();
       }

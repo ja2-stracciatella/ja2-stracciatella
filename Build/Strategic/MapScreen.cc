@@ -95,6 +95,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 
 #ifdef JA2TESTVERSION
@@ -2355,6 +2356,27 @@ static void StartChangeSectorArrivalMode(void);
 static void StartConfirmMapMoveMode(INT16 sMapY);
 
 
+static void OpenSectorInventory()
+{
+  if(!fShowMapInventoryPool)
+  {
+    fShowMapInventoryPool = TRUE;
+    CreateDestroyMapInventoryPoolButtons( TRUE );
+  }
+}
+
+static void ToggleSectorInventory()
+{
+  if(!fShowMapInventoryPool)
+  {
+    OpenSectorInventory();
+  }
+  else
+  {
+    CancelSectorInventoryDisplayIfOn(FALSE);
+  }
+}
+
 // Drawing the Map
 static UINT32 HandleMapUI(void)
 {
@@ -2500,8 +2522,7 @@ static UINT32 HandleMapUI(void)
 					if ( !fShowMapInventoryPool )
 					{
 						// start it up ( NOTE: for the item OWNER'S sector, regardless of which sector player clicks )
-						fShowMapInventoryPool = TRUE;
-						CreateDestroyMapInventoryPoolButtons( TRUE );
+            OpenSectorInventory();
 					}
 
 					return( MAP_SCREEN );
@@ -2592,8 +2613,7 @@ static UINT32 HandleMapUI(void)
 					// show sector inventory for this clicked sector
 					ChangeSelectedMapSector( sMapX, sMapY, ( INT8 ) iCurrentMapSectorZ );
 
-					fShowMapInventoryPool = TRUE;
-					CreateDestroyMapInventoryPoolButtons( TRUE );
+          OpenSectorInventory();
 
 					return( MAP_SCREEN );
 				}
@@ -3121,6 +3141,13 @@ static void HandleModCtrl(UINT const key)
 #if defined JA2TESTVERSION
 		case 'i': fDisableJustForIan = !fDisableJustForIan; break;
 #endif
+
+  case 'i':
+    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Map, HKMOD_CTRL, 'i'))
+    {
+      ToggleSectorInventory();
+    }
+    break;
 
 		case 'l':
 			// go to LOAD screen
