@@ -13,7 +13,11 @@ Settings in game.json
         25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen
         is updated on every cycle).
 
-        Decrising this value will increase speed of the game (enemy movement, bullets speed, etc).
+        Decreasing this value will increase speed of the game (enemy movement, bullets speed, etc).
+
+  map_hotkey_ctrl_i
+
+        Enables Ctrl-i hotkey, which opens and closes sector inventory screen.
 
   tactical_hotkey_j
 
