@@ -376,20 +376,20 @@ static void RenderTacticalPlacementGUI()
 		for (INT32 i = 0; i != giPlacements; ++i)
 		{ // Render the mercs
 			MERCPLACEMENT const& m = gMercPlacement[i];
-			INT32         const  x =  95 + i / 2 * 54;
-			INT32         const  y = 371 + i % 2 * 51;
+			INT32         const  x = STD_SCREEN_X +  95 + i / 2 * 54;
+			INT32         const  y = STD_SCREEN_Y + 371 + i % 2 * 51;
 			ColorFillVideoSurfaceArea(buf, x + 36, y + 2, x + 44, y + 30, 0);
-			BltVideoObject(buf, giMercPanelImage, 0, STD_SCREEN_X + x,     STD_SCREEN_Y + y);
-			BltVideoObject(buf, m.uiVObjectID,    0, STD_SCREEN_X + x + 2, STD_SCREEN_Y + y + 2);
+			BltVideoObject(buf, giMercPanelImage, 0, x,     y);
+			BltVideoObject(buf, m.uiVObjectID,    0, x + 2, y + 2);
 
 			SOLDIERTYPE const& s = *m.pSoldier;
 			if (s.bLife == 0) continue;
 
-			DrawBar(buf, STD_SCREEN_X + x + 36, STD_SCREEN_Y + y + 29, s.bLifeMax   * 27 / 100, FROMRGB(107, 107,  57), FROMRGB(222, 181, 115)); // Yellow one for bleeding
-			DrawBar(buf, STD_SCREEN_X + x + 36, STD_SCREEN_Y + y + 29, s.bBleeding  * 27 / 100, FROMRGB(156,  57,  57), FROMRGB(222, 132, 132)); // Pink one for bandaged
-			DrawBar(buf, STD_SCREEN_X + x + 36, STD_SCREEN_Y + y + 29, s.bLife      * 27 / 100, FROMRGB(107,   8,   8), FROMRGB(206,   0,   0)); // Red one for actual health
-			DrawBar(buf, STD_SCREEN_X + x + 39, STD_SCREEN_Y + y + 29, s.bBreathMax * 27 / 100, FROMRGB(  8,   8, 132), FROMRGB(  8,   8, 107)); // Breath bar
-			DrawBar(buf, STD_SCREEN_X + x + 42, STD_SCREEN_Y + y + 29, s.bMorale    * 27 / 100, FROMRGB(  8, 156,   8), FROMRGB(  8, 107,   8)); // Morale bar
+			DrawBar(buf, x + 36, y + 29, s.bLifeMax   * 27 / 100, FROMRGB(107, 107,  57), FROMRGB(222, 181, 115)); // Yellow one for bleeding
+			DrawBar(buf, x + 36, y + 29, s.bBleeding  * 27 / 100, FROMRGB(156,  57,  57), FROMRGB(222, 132, 132)); // Pink one for bandaged
+			DrawBar(buf, x + 36, y + 29, s.bLife      * 27 / 100, FROMRGB(107,   8,   8), FROMRGB(206,   0,   0)); // Red one for actual health
+			DrawBar(buf, x + 39, y + 29, s.bBreathMax * 27 / 100, FROMRGB(  8,   8, 132), FROMRGB(  8,   8, 107)); // Breath bar
+			DrawBar(buf, x + 42, y + 29, s.bMorale    * 27 / 100, FROMRGB(  8, 156,   8), FROMRGB(  8, 107,   8)); // Morale bar
 		}
 
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
