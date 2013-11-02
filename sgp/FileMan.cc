@@ -631,12 +631,17 @@ SGPFile* FileMan::getSGPFileFromFD(int fd, const char *filename, const char *fmo
 /** Open file for writing.
  * If file is missing it will be created.
  * If file exists, it's content will be removed. */
-SGPFile* FileMan::openForWriting(const char *filename)
+SGPFile* FileMan::openForWriting(const char *filename, bool truncate)
 {
 	int mode;
 	const char* fmode = GetFileOpenModes(FILE_ACCESS_WRITE, &mode);
 
-	int d = open3(filename, mode | O_CREAT | O_TRUNC, 0600);
+  if(truncate)
+  {
+    mode |= O_TRUNC;
+  }
+
+	int d = open3(filename, mode | O_CREAT, 0600);
   return getSGPFileFromFD(d, filename, fmode);
 }
 

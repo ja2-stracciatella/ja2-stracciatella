@@ -878,7 +878,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 static void WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
-	AutoSGPFile hFileHandle(FileMan::openForWriting(FINANCES_DATA_FILE));
+	AutoSGPFile hFileHandle(FileMan::openForWriting(FINANCES_DATA_FILE, false));
 	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 

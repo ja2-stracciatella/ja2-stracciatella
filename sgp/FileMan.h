@@ -81,7 +81,7 @@ public:
   /** Open file for writing.
    * If file is missing it will be created.
    * If file exists, it's content will be removed. */
-  static SGPFile* openForWriting(const char *filename);
+  static SGPFile* openForWriting(const char *filename, bool truncate=true);
 
   /** Open file for appending data.
    * If file doesn't exist, it will be created. */
