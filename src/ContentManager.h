@@ -104,8 +104,5 @@ public:
   virtual const GamePolicy* getGamePolicy() const = 0;
   virtual const IMPPolicy* getIMPPolicy() const = 0;
 
-  /* /\** */
-  /*  * get location of the game executable file. */
-  /*  *\/ */
-  /* virtual std::string getExeLocation() = 0; */
+  virtual const UTF8String* getNewString(int stringId) const = 0;
 };

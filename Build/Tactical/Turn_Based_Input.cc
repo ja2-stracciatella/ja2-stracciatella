@@ -116,6 +116,7 @@ const SOLDIERTYPE* gUITargetSoldier = NULL;
 
 static void QueryTBLeftButton(UIEventKind*);
 static void QueryTBRightButton(UIEventKind*);
+static void SwitchHeadGear(bool dayGear);
 
 
 void GetTBMouseButtonInput(UIEventKind* const puiNewEvent)
@@ -1589,6 +1590,13 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 		}
 #endif
 
+  case 'n':
+    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n'))
+    {
+      SwitchHeadGear(false);
+    }
+    break;
+
 		case SDLK_F1:
 		case SDLK_F2:
 		case SDLK_F3:
@@ -1663,6 +1671,13 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 				LeaveTacticalScreen(SAVE_LOAD_SCREEN);
 			}
 			break;
+
+  case 'n':
+    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n'))
+    {
+      SwitchHeadGear(true);
+    }
+    break;
 
 		case 'o': if (CHEATER_CHEAT_LEVEL()) CreatePlayerControlledMonster(); break;
 
@@ -2767,6 +2782,45 @@ static void SetBurstMode(void)
 	if (sel != NULL) ChangeWeaponMode(sel);
 }
 
+static void SwitchHeadGear(bool dayGear)
+{
+  // SOLDIERTYPE* const sel = GetSelectedMan();
+  // if (sel != NULL)
+  // {
+  //   OBJECTTYPE object;
+  //   CreateItem(NIGHTGOGGLES, 100, &object);
+  //   AutoPlaceObject(sel, &object, TRUE);
+
+  //   CreateItem(UVGOGGLES,    100, &object);
+  //   AutoPlaceObject(sel, &object, TRUE);
+
+  //   CreateItem(SUNGOGGLES,   100, &object);
+  //   AutoPlaceObject(sel, &object, TRUE);
+  // }
+
+  SOLDIERTYPE* const selectedSoldier = GetSelectedMan();
+  if (selectedSoldier == NULL) return;
+
+  FOR_EACH_IN_SQUAD(k, selectedSoldier->bAssignment)
+  {
+    SOLDIERTYPE* s = *k;
+
+    if(s == NULL) continue;
+    if(s->bAssignment == ASSIGNMENT_DEAD) continue;
+    if(s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+    SoldierSP sel = GetSoldier(s);
+
+    if(dayGear)
+    {
+      sel->putDayHeadGear();
+    }
+    else
+    {
+      sel->putNightHeadGear();
+    }
+  }
+}
 
 static void ObliterateSector()
 {

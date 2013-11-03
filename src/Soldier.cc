@@ -1,11 +1,21 @@
 #include "Soldier.h"
 
-#include "Tactical/Animation_Control.h"
-#include "Tactical/Handle_Items.h"
-#include "Tactical/Overhead.h"
-#include "Tactical/Soldier_Control.h"
-#include "Tactical/Soldier_Functions.h"
-#include "TacticalAI/AI.h"
+#include "Build/Tactical/Animation_Control.h"
+#include "Build/Tactical/Handle_Items.h"
+#include "Build/Tactical/Interface.h"
+#include "Build/Tactical/Items.h"
+#include "Build/Tactical/Overhead.h"
+#include "Build/Tactical/Soldier_Control.h"
+#include "Build/Tactical/Soldier_Functions.h"
+#include "Build/TacticalAI/AI.h"
+#include "Build/Utils/Font_Control.h"
+#include "Build/Utils/Message.h"
+#include "Build/Utils/Text.h"
+#include "sgp/UTF8String.h"
+
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "content/NewStrings.h"
 #include "content/npcs.h"
 #include "internals/enums.h"
 
@@ -189,4 +199,177 @@ bool Soldier::handlePendingAction(bool inCombat)
     removePendingAction();
   }
   return false;
+}
+
+int8_t Soldier::getFreeHeadSlot() const
+{
+	if(mSoldier->inv[HEAD1POS].usItem == NONE)
+  {
+    return HEAD1POS;
+  }
+	if(mSoldier->inv[HEAD2POS].usItem == NONE)
+  {
+    return HEAD2POS;
+  }
+  return NO_SLOT;
+}
+
+int8_t Soldier::getFreePocket() const
+{
+	if(mSoldier->inv[SMALLPOCK1POS].usItem == NONE)  return SMALLPOCK1POS;
+	if(mSoldier->inv[SMALLPOCK2POS].usItem == NONE)  return SMALLPOCK2POS;
+	if(mSoldier->inv[SMALLPOCK3POS].usItem == NONE)  return SMALLPOCK3POS;
+	if(mSoldier->inv[SMALLPOCK4POS].usItem == NONE)  return SMALLPOCK4POS;
+	if(mSoldier->inv[SMALLPOCK5POS].usItem == NONE)  return SMALLPOCK5POS;
+	if(mSoldier->inv[SMALLPOCK6POS].usItem == NONE)  return SMALLPOCK6POS;
+	if(mSoldier->inv[SMALLPOCK7POS].usItem == NONE)  return SMALLPOCK7POS;
+	if(mSoldier->inv[SMALLPOCK8POS].usItem == NONE)  return SMALLPOCK8POS;
+	if(mSoldier->inv[BIGPOCK1POS].usItem == NONE)    return BIGPOCK1POS;
+	if(mSoldier->inv[BIGPOCK2POS].usItem == NONE)    return BIGPOCK2POS;
+	if(mSoldier->inv[BIGPOCK3POS].usItem == NONE)    return BIGPOCK3POS;
+	if(mSoldier->inv[BIGPOCK4POS].usItem == NONE)    return BIGPOCK4POS;
+  return NO_SLOT;
+}
+
+
+/** Swap inventory slots. */
+void Soldier::swapInventorySlots(int8_t firstSlot, int8_t secondSlot)
+{
+  SwapObjs( &(mSoldier->inv[firstSlot]), &(mSoldier->inv[secondSlot]) );
+}
+
+static bool isHeadPosition(int8_t pos)
+{
+  return (pos == HEAD1POS) || (pos == HEAD2POS);
+}
+
+static void showGearEquipMessage(const SOLDIERTYPE* s, uint16_t usItem)
+{
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+            GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM)->getWCHAR().data(),
+            s->name, ItemNames[usItem]);
+}
+
+static void showGearRemoveMessage(const SOLDIERTYPE* s, uint16_t usItem)
+{
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+            GCM->getNewString(NS_SOLDIER_REMOVES_ITEM)->getWCHAR().data(),
+            s->name, ItemNames[usItem]);
+}
+
+void Soldier::putNightHeadGear()
+{
+  int8_t nightGogglesPos = FindObj(mSoldier, NIGHTGOGGLES);
+  int8_t uvGogglesPos    = FindObj(mSoldier, UVGOGGLES);
+  int8_t sunGogglesPos   = FindObj(mSoldier, SUNGOGGLES);
+  int8_t freeHeadSlot    = getFreeHeadSlot();
+  bool gasMaskEquiped    = IsWearingHeadGear(*mSoldier, GASMASK);
+
+
+  if(isHeadPosition(uvGogglesPos))
+  {
+    // already wearing the best gear; nothing to do
+  }
+  else if((uvGogglesPos != NO_SLOT) && !gasMaskEquiped)
+  {
+    int8_t swapPos = NO_SLOT;
+
+    // have UV googles somewhere in the inventory
+    // need to equip it
+    if(isHeadPosition(nightGogglesPos))
+    {
+      swapPos = nightGogglesPos;
+    }
+    else if(isHeadPosition(sunGogglesPos))
+    {
+      swapPos = sunGogglesPos;
+    }
+    else if(freeHeadSlot != NO_SLOT)
+    {
+      swapPos = freeHeadSlot;
+    }
+
+    if(swapPos != NO_SLOT)
+    {
+      showGearEquipMessage(mSoldier, UVGOGGLES);
+      swapInventorySlots(uvGogglesPos, swapPos);
+    }
+  }
+  else if(isHeadPosition(nightGogglesPos))
+  {
+    // already wearing; nothing to do
+  }
+  else if((nightGogglesPos != NO_SLOT)  && !gasMaskEquiped)
+  {
+    int8_t swapPos = NO_SLOT;
+
+    // have night goggles somewhere in the inventory
+    // need to equip it
+    if(isHeadPosition(sunGogglesPos))
+    {
+      swapPos = sunGogglesPos;
+    }
+    else if(freeHeadSlot != NO_SLOT)
+    {
+      swapPos = freeHeadSlot;
+    }
+
+    if(swapPos != NO_SLOT)
+    {
+      showGearEquipMessage(mSoldier, NIGHTGOGGLES);
+      swapInventorySlots(nightGogglesPos, swapPos);
+    }
+  }
+
+  DirtyMercPanelInterface(mSoldier, DIRTYLEVEL2);
+}
+
+void Soldier::putDayHeadGear()
+{
+  int8_t uvGogglesPos    = FindObj(mSoldier, UVGOGGLES);
+  int8_t sunGogglesPos   = FindObj(mSoldier, SUNGOGGLES);
+  int8_t freeHeadSlot    = getFreeHeadSlot();
+  bool gasMaskEquiped    = IsWearingHeadGear(*mSoldier, GASMASK);
+
+  uint16_t item = NIGHTGOGGLES;
+  int8_t itemPos = FindObj(mSoldier, NIGHTGOGGLES);
+
+  if(isHeadPosition(uvGogglesPos))
+  {
+    itemPos = uvGogglesPos;
+    item = UVGOGGLES;
+  }
+
+  if(isHeadPosition(itemPos))
+  {
+    // night googles equiped
+
+    if(sunGogglesPos != NO_SLOT)
+    {
+      showGearEquipMessage(mSoldier, SUNGOGGLES);
+      swapInventorySlots(itemPos, sunGogglesPos);
+    }
+    else
+    {
+      // need to put the goggles into the inventory
+      int8_t freeSlot = getFreePocket();
+      if(freeSlot != NO_SLOT)
+      {
+        showGearRemoveMessage(mSoldier, item);
+        swapInventorySlots(itemPos, freeSlot);
+      }
+    }
+  }
+  else if((sunGogglesPos != NO_SLOT)
+          && !isHeadPosition(sunGogglesPos)
+          && !gasMaskEquiped
+          && (freeHeadSlot != NO_SLOT))
+  {
+    // have sun goggles somewhere in the inventory and
+    // can equip them
+    showGearEquipMessage(mSoldier, SUNGOGGLES);
+    swapInventorySlots(sunGogglesPos, freeHeadSlot);
+  }
+
+  DirtyMercPanelInterface(mSoldier, DIRTYLEVEL2);
 }

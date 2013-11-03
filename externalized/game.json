@@ -1,6 +1,8 @@
 {
         "map_hotkey_ctrl_i": false,
         "tactical_hotkey_j": false,
+        "tactical_hotkey_shift_n": false,
+        "tactical_hotkey_ctrl_n": false,
 
         "draw_item_shadow": true,
 
