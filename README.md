@@ -8,7 +8,27 @@ stable platform for mod development.
 
 ## Latest news
 
-### 2013-07-28, versioin 0.12.189 has been released
+### 2013-11-04, version 0.12.258 has been released
+
+- some hardcoded data has been externalized, weapon characteristics for
+  example.  See files in 'externalized' directory.  This make
+  JA2-Stracciatella more suitable for mod development.
+- some hotkeys have been added.  They are not enabled by default.  See
+  externalized/game.json and externalized/readme.txt for details.
+- Fixed issue #63 (Holding a two handed item, the second hand graphic is not remove in map inventory)
+- Fixed issue #70 (Bug during imp creation)
+- Fixed issue #77 (Graphical glitch when placing mercs before battle)
+- Fixed issue #79 (Small issue in sector inventory)
+- Fixed issue #82 (Hotkey requests)
+- Fixed issue #85 (Another issue in sector inventory)
+- Fixed issue #90 (Flower Service Buttons Not Selectable)
+- Fixed issue #91 (Financial History Reset)
+- Fixed issue #92 (NPC's speech text is in the wrong place)
+- Fixed issue #103 (small typo in \externalized\readme.txt)
+- Fixed issue #104 (Alt+o cheat is not working)
+- Fixed issue #105 (Dissonance with externalized data)
+
+### 2013-07-28, version 0.12.189 has been released
 
 - Fixed issue #59 (Inventory won't open on strategic screen if using a non-default resolution)
 - Fixed issue #58 (Game crashing while entering some sectors)
