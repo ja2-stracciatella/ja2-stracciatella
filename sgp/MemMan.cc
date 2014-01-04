@@ -6,6 +6,7 @@
 //    29may97:ARM - Fix & improve MemDebugCounter handling, logging of
 //                    MemAlloc/MemFree, and reporting of any errors
 #include <stdexcept>
+#include <new> // std::bad_alloc
 
 #include "Types.h"
 #include <stdlib.h>
