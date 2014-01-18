@@ -8,6 +8,13 @@ stable platform for mod development.
 
 ## Latest news
 
+### 2014-01-18, version 0.12.265
+
+- Fixed issue #111 Bug with externalized dealer inventory.
+- Fixed issue #112 Another bug with externalized dealer inventory (Jake)
+- Fixed issue #108 More documentation in externalized\readme.txt
+- Fixed issue #113 JsonUtility_unittests.cc should not be compiled when WITH_UNITTESTS=0
+
 ### 2013-11-04, version 0.12.258 has been released
 
 - some hardcoded data has been externalized, weapon characteristics for
