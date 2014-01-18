@@ -85,6 +85,21 @@ Build project on Mac OS 10.6 - 10.8
     $ make all
 
 
+Build project on Mac OS 10.9
+----------------------------
+
+  At the moment there are two unresolved issues:
+    - SDL library doesn't compile
+    - Google Testing Framework doesn't compile
+
+  A quick solution:
+
+    $ make build-on-mac10.9
+
+  which compiles the project without unit tests and using the
+  static SDL library included into the project.
+
+
 Build project on Windows using Visual Studio 2010 Express
 ---------------------------------------------------------
 

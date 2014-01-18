@@ -672,6 +672,12 @@ build-release-on-mac:
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
 
+# Temporary solution for building the game on Mac OS X 10.9
+#  - using the static SDL library
+#  - not compiling unit tests
+build-on-mac10.9:
+	make "CFLAGS_SDL=$(MACOS_STATIC_CFLAGS_SDL)" "LDFLAGS_SDL=$(MACOS_STATIC_LDFLAGS_SDL)" WITH_UNITTESTS=0
+
 build-on-mac:
 	make "CFLAGS_SDL=$(MACOS_STATIC_CFLAGS_SDL)" "LDFLAGS_SDL=$(MACOS_STATIC_LDFLAGS_SDL)"
 
