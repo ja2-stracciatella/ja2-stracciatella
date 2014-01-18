@@ -499,7 +499,6 @@ SRCS += src/DealerInventory.cc
 SRCS += src/DefaultContentManager.cc
 SRCS += src/ItemModel.cc
 SRCS += src/JsonUtility.cc
-SRCS += src/JsonUtility_unittests.cc
 SRCS += src/MagazineModel.cc
 SRCS += src/MercProfile.cc
 SRCS += src/ModPackContentManager.cc
@@ -558,6 +557,7 @@ SRCS += sgp/FileMan_unittest.cc
 SRCS += sgp/LoadSaveData_unittest.cc
 SRCS += sgp/UTF8String_unittest.cc
 SRCS += sgp/wchar_unittest.cc
+SRCS += src/JsonUtility_unittests.cc
 endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))
