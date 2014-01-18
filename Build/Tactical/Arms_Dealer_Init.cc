@@ -15,6 +15,7 @@
 #include "Items.h"
 
 #include "ContentManager.h"
+#include "DealerInventory.h"
 #include "GameInstance.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
@@ -2204,8 +2205,15 @@ static BOOLEAN IsItemInfoSpecial(SPECIAL_ITEM_INFO* pSpclItemInfo)
 
 static bool DoesItemAppearInDealerInventoryList(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
 {
-  int maxAmount = GetDealersMaxItemAmount(ubArmsDealer, usItemIndex);
-  return (maxAmount > 0) || fPurchaseFromPlayer;
+  if(GCM->getDealerInventory(ubArmsDealer)->hasItem(GCM->getItem(usItemIndex)))
+  {
+    int maxAmount = GetDealersMaxItemAmount(ubArmsDealer, usItemIndex);
+    return (maxAmount > 0) || fPurchaseFromPlayer;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 

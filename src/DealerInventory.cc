@@ -22,6 +22,12 @@ DealerInventory::DealerInventory(rapidjson::Document *json, const ItemSystem *it
   }
 }
 
+bool DealerInventory::hasItem(const ItemModel *item) const
+{
+  std::map<const ItemModel*, int>::const_iterator it = m_inventory.find(item);
+  return it != m_inventory.end();
+}
+
 int DealerInventory::getMaxItemAmount(const ItemModel *item) const
 {
   std::map<const ItemModel*, int>::const_iterator it = m_inventory.find(item);
