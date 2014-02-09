@@ -1158,7 +1158,7 @@ ThrowingBlade::ThrowingBlade(uint16_t itemIndex, const char * internalName,
                              uint16_t Range,
                              uint8_t AttackVolume,
                              const char * Sound)
-  :WeaponModel(IC_THROWING_KNIFE, NOT_GUN, TOSSCURS, itemIndex, internalName, "THROWINGBLADE")
+  :WeaponModel(IC_THROWING_KNIFE, NOT_GUN, TARGETCURS, itemIndex, internalName, "THROWINGBLADE")
 {
   ubWeaponClass        = KNIFECLASS;
   ubReadyTime          = AP_READY_KNIFE;
@@ -1224,7 +1224,7 @@ Launcher::Launcher(uint16_t itemIndex, const char * internalName,
                    uint8_t AttackVolume,
                    uint8_t HitVolume,
                    const char * Sound)
-  :WeaponModel(IC_LAUNCHER, NOT_GUN, INVALIDCURS, itemIndex, internalName, "LAUNCHER")
+  :WeaponModel(IC_LAUNCHER, NOT_GUN, TRAJECTORYCURS, itemIndex, internalName, "LAUNCHER")
 {
   ubWeaponClass        = RIFLECLASS;
   ubReadyTime          = ReadyTime;
