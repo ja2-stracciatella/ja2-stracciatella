@@ -1738,7 +1738,7 @@ try
 		fOneFrame = FALSE;
 	}
 
-	if (!fShownAssignmentMenu && !fShowAssignmentMenu)
+	if (!fShownAssignmentMenu && !fShowAssignmentMenu && !fShownContractMenu)
 	{
 		bSelectedAssignChar = -1;
 	}
