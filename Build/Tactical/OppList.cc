@@ -2857,8 +2857,6 @@ static void GPrintStat(INT32 const x, INT32 const y, wchar_t const* const header
 }
 
 
-extern UINT32 guiNumBackSaves;
-
 void DebugSoldierPage1()
 {
 	INT32 const h = LINE_HEIGHT;
@@ -2906,8 +2904,6 @@ void DebugSoldierPage1()
 	{
 		SetFont(LARGEFONT1);
 		gprintf(0, 0, L"DEBUG LAND PAGE ONE");
-
-		GPrintStat(200, h, L"Num dirty rects:", guiNumBackSaves);
 	}
 }
 

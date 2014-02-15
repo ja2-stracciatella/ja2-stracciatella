@@ -14,6 +14,10 @@
 #include "Debug.h"
 #include "UILayout.h"
 
+#include <vector>
+
+#include "slog/slog.h"
+#define TAG "Render"
 
 #define BACKGROUND_BUFFERS 500
 
@@ -38,8 +42,8 @@ struct BACKGROUND_SAVE
 };
 
 
-static BACKGROUND_SAVE gBackSaves[BACKGROUND_BUFFERS];
-UINT32 guiNumBackSaves=0;
+static std::vector<BACKGROUND_SAVE*> gBackSaves;
+static UINT32 guiNumBackSaves=0;
 
 static VIDEO_OVERLAY* gVideoOverlays;
 
@@ -101,16 +105,22 @@ static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 {
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (!b->fAllocated && !b->fFilled) return b;
 	}
 
-	if (guiNumBackSaves < BACKGROUND_BUFFERS)
+	if (guiNumBackSaves == gBackSaves.size())
 	{
-		return &gBackSaves[guiNumBackSaves++];
+    // out of back saves capacity
+    // let's add some more
+    const int increment = 100;
+    SLOGI(TAG, "Increasing background slots to %d", gBackSaves.size() + increment);
+    for(int i = 0; i < increment; i++) {
+      gBackSaves.push_back(new BACKGROUND_SAVE());
+    }
 	}
 
-	throw std::runtime_error("Out of background save slots");
+  return gBackSaves[guiNumBackSaves++];
 }
 
 
@@ -118,7 +128,7 @@ static void RecountBackgrounds(void)
 {
 	for (INT32 i = guiNumBackSaves - 1; i >= 0; --i)
 	{
-		const BACKGROUND_SAVE* const b = &gBackSaves[i];
+		const BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (b->fAllocated || b->fFilled)
 		{
 			guiNumBackSaves = (UINT32)(i + 1);
@@ -129,7 +139,6 @@ static void RecountBackgrounds(void)
 
 
 BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLeft, INT16 sTop, INT16 const usWidth, INT16 const usHeight)
-try
 {
 	const INT32 ClipX1 = gDirtyClipRect.iLeft;
 	const INT32 ClipY1 = gDirtyClipRect.iTop;
@@ -180,7 +189,6 @@ try
 
 	return b;
 }
-catch (...) { return NO_BGND_RECT; }
 
 
 void RegisterBackgroundRectSingleFilled(INT16 const x, INT16 const y, INT16 const w, INT16 const h)
@@ -204,7 +212,7 @@ void RestoreBackgroundRects(void)
 
 		for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 		{
-			const BACKGROUND_SAVE* const b = &gBackSaves[i];
+			const BACKGROUND_SAVE* const b = gBackSaves[i];
 			if (!b->fFilled || b->fDisabled) continue;
 
 			if (b->pSaveArea != NULL)
@@ -232,7 +240,7 @@ void EmptyBackgroundRects(void)
 {
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (b->fFilled)
 		{
 			b->fFilled = FALSE;
@@ -279,7 +287,7 @@ void SaveBackgroundRects(void)
 
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (!b->fAllocated || b->fDisabled) continue;
 
 		if (b->pSaveArea != NULL)
@@ -337,7 +345,7 @@ void FreeBackgroundRectType(BackgroundFlags const uiFlags)
 {
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (b->uiFlags & uiFlags) FreeBackgroundRectNow(b);
 	}
 
@@ -356,7 +364,7 @@ void InvalidateBackgroundRects(void)
 {
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		gBackSaves[i].fFilled = FALSE;
+		gBackSaves[i]->fFilled = FALSE;
 	}
 }
 
@@ -365,7 +373,7 @@ void ShutdownBackgroundRects(void)
 {
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (b->fAllocated) FreeBackgroundRectNow(b);
 	}
 
