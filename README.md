@@ -8,6 +8,14 @@ stable platform for mod development.
 
 ## Latest news
 
+### 2014-02-16, version 0.12.275
+
+- Fixed issue  #66: Bug when distributing skill points during IMP creation
+- Fixed issue #114: Crash when dismissing Dead Soldier
+- Fixed issue #116: SIGSEGV when trying to scroll the screen while displaying line of sight
+- Fixed issue #117: Glitchy rendering of moving mercs while displaying LOS
+- Fixed issue #118: Mortar and Grenade Launcher not working
+
 ### 2014-01-18, version 0.12.265
 
 - Fixed issue #111 Bug with externalized dealer inventory.
