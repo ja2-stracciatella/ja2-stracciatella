@@ -124,20 +124,6 @@ static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 }
 
 
-static void RecountBackgrounds(void)
-{
-	for (INT32 i = guiNumBackSaves - 1; i >= 0; --i)
-	{
-		const BACKGROUND_SAVE* const b = gBackSaves[i];
-		if (b->fAllocated || b->fFilled)
-		{
-			guiNumBackSaves = (UINT32)(i + 1);
-			break;
-		}
-	}
-}
-
-
 BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLeft, INT16 sTop, INT16 const usWidth, INT16 const usHeight)
 {
 	const INT32 ClipX1 = gDirtyClipRect.iLeft;
@@ -254,8 +240,6 @@ void EmptyBackgroundRects(void)
 				b->fFreeMemory = FALSE;
 				b->fFilled     = FALSE;
 				b->pSaveArea   = NULL;
-
-				RecountBackgrounds();
 			}
 		}
 
@@ -272,8 +256,6 @@ void EmptyBackgroundRects(void)
 			b->fFilled        = FALSE;
 			b->pSaveArea      = NULL;
 			b->fPendingDelete = FALSE;
-
-			RecountBackgrounds();
 		}
 	}
 }
@@ -313,7 +295,6 @@ void FreeBackgroundRect(BACKGROUND_SAVE* const b)
 	if (b == NULL) return;
 
 	b->fAllocated = FALSE;
-	RecountBackgrounds();
 }
 
 
@@ -348,8 +329,6 @@ void FreeBackgroundRectType(BackgroundFlags const uiFlags)
 		BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (b->uiFlags & uiFlags) FreeBackgroundRectNow(b);
 	}
-
-	RecountBackgrounds();
 }
 
 
@@ -376,8 +355,6 @@ void ShutdownBackgroundRects(void)
 		BACKGROUND_SAVE* const b = gBackSaves[i];
 		if (b->fAllocated) FreeBackgroundRectNow(b);
 	}
-
-	RecountBackgrounds();
 }
 
 
