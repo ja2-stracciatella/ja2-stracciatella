@@ -624,9 +624,8 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		// get value of attribute
 		const INT32 iCurrentAttributeValue = GetCurrentAttributeValue(iAttribute);
-
-		// set the new attribute value based on position of mouse click
-		INT32 iNewAttributeValue = (sX - SKILL_SLIDE_START_X) * 50 / BASE_SKILL_PIXEL_UNIT_SIZE;
+		// set the new attribute value based on position of mouse click, include screen resolution
+		INT32 iNewAttributeValue = (sX - (SKILL_SLIDE_START_X + STD_SCREEN_X)) * 50 / BASE_SKILL_PIXEL_UNIT_SIZE;
 
 		// too high, reset to 85
 		if (iNewAttributeValue > 85) iNewAttributeValue = 85;
