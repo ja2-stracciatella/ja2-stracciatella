@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Tactical/Soldier_Profile.h"
-#include "TacticalAI/NPC.h"
+#include "Build/Tactical/Soldier_Profile.h"
+#include "Build/TacticalAI/NPC.h"
 
 namespace Internals
 {

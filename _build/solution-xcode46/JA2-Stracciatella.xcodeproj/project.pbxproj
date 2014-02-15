@@ -8,6 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		342E148416E3E927007960D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342E148316E3E927007960D8 /* Cocoa.framework */; };
+		34ACDCFD18AF5802003DF7B8 /* AmmoTypeModel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCCD18AF5802003DF7B8 /* AmmoTypeModel.cc */; };
+		34ACDCFE18AF5802003DF7B8 /* CalibreModel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCCF18AF5802003DF7B8 /* CalibreModel.cc */; };
+		34ACDCFF18AF5802003DF7B8 /* ContentMercs.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCD218AF5802003DF7B8 /* ContentMercs.cc */; };
+		34ACDD0018AF5802003DF7B8 /* Dialogs.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCD418AF5802003DF7B8 /* Dialogs.cc */; };
+		34ACDD0118AF5802003DF7B8 /* npcs.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCD718AF5802003DF7B8 /* npcs.cc */; };
+		34ACDD0218AF5802003DF7B8 /* DealerInventory.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCDA18AF5802003DF7B8 /* DealerInventory.cc */; };
+		34ACDD0318AF5802003DF7B8 /* DefaultContentManager.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCDC18AF5802003DF7B8 /* DefaultContentManager.cc */; };
+		34ACDD0418AF5802003DF7B8 /* enums.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCE118AF5802003DF7B8 /* enums.cc */; };
+		34ACDD0518AF5802003DF7B8 /* ItemModel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCE318AF5802003DF7B8 /* ItemModel.cc */; };
+		34ACDD0618AF5802003DF7B8 /* JsonUtility.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCE718AF5802003DF7B8 /* JsonUtility.cc */; };
+		34ACDD0818AF5802003DF7B8 /* MagazineModel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCEA18AF5802003DF7B8 /* MagazineModel.cc */; };
+		34ACDD0918AF5802003DF7B8 /* MercProfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCEC18AF5802003DF7B8 /* MercProfile.cc */; };
+		34ACDD0A18AF5802003DF7B8 /* ModPackContentManager.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCEE18AF5802003DF7B8 /* ModPackContentManager.cc */; };
+		34ACDD0B18AF5802003DF7B8 /* DefaultGamePolicy.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCF118AF5802003DF7B8 /* DefaultGamePolicy.cc */; };
+		34ACDD0C18AF5802003DF7B8 /* DefaultIMPPolicy.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCF318AF5802003DF7B8 /* DefaultIMPPolicy.cc */; };
+		34ACDD0D18AF5802003DF7B8 /* Soldier.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCF818AF5802003DF7B8 /* Soldier.cc */; };
+		34ACDD0E18AF5802003DF7B8 /* WeaponModels.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDCFB18AF5802003DF7B8 /* WeaponModels.cc */; };
+		34ACDD2818AF5A37003DF7B8 /* slog.c in Sources */ = {isa = PBXBuildFile; fileRef = 34ACDD2318AF5A37003DF7B8 /* slog.c */; };
 		34C6E5DD172C5F4200102B2C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5DB172C5F4200102B2C /* AudioToolbox.framework */; };
 		34C6E5DE172C5F4200102B2C /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5DC172C5F4200102B2C /* AudioUnit.framework */; };
 		34C6E5E0172C5F5B00102B2C /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C6E5DF172C5F5B00102B2C /* IOKit.framework */; };
@@ -317,7 +335,6 @@
 		C38ACD7216E4AA68003D6872 /* Cinematics.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2A16E4AA68003D6872 /* Cinematics.cc */; };
 		C38ACD7316E4AA68003D6872 /* Cursors.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2C16E4AA68003D6872 /* Cursors.cc */; };
 		C38ACD7416E4AA68003D6872 /* Debug_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2E16E4AA68003D6872 /* Debug_Control.cc */; };
-		C38ACD7516E4AA68003D6872 /* Encrypted_File.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC3016E4AA68003D6872 /* Encrypted_File.cc */; };
 		C38ACD7616E4AA68003D6872 /* Event_Manager.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC3216E4AA68003D6872 /* Event_Manager.cc */; };
 		C38ACD7716E4AA68003D6872 /* Event_Pump.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC3416E4AA68003D6872 /* Event_Pump.cc */; };
 		C38ACD7816E4AA68003D6872 /* Font_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC3616E4AA68003D6872 /* Font_Control.cc */; };
@@ -382,6 +399,55 @@
 /* Begin PBXFileReference section */
 		342E148316E3E927007960D8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		342EF61B16E3E2D3007960D8 /* JA2-Stracciatella */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "JA2-Stracciatella"; sourceTree = BUILT_PRODUCTS_DIR; };
+		34ACDCCD18AF5802003DF7B8 /* AmmoTypeModel.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AmmoTypeModel.cc; sourceTree = "<group>"; };
+		34ACDCCE18AF5802003DF7B8 /* AmmoTypeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AmmoTypeModel.h; sourceTree = "<group>"; };
+		34ACDCCF18AF5802003DF7B8 /* CalibreModel.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalibreModel.cc; sourceTree = "<group>"; };
+		34ACDCD018AF5802003DF7B8 /* CalibreModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalibreModel.h; sourceTree = "<group>"; };
+		34ACDCD218AF5802003DF7B8 /* ContentMercs.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ContentMercs.cc; sourceTree = "<group>"; };
+		34ACDCD318AF5802003DF7B8 /* ContentMercs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentMercs.h; sourceTree = "<group>"; };
+		34ACDCD418AF5802003DF7B8 /* Dialogs.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dialogs.cc; sourceTree = "<group>"; };
+		34ACDCD518AF5802003DF7B8 /* Dialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dialogs.h; sourceTree = "<group>"; };
+		34ACDCD618AF5802003DF7B8 /* NewStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewStrings.h; sourceTree = "<group>"; };
+		34ACDCD718AF5802003DF7B8 /* npcs.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npcs.cc; sourceTree = "<group>"; };
+		34ACDCD818AF5802003DF7B8 /* npcs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npcs.h; sourceTree = "<group>"; };
+		34ACDCD918AF5802003DF7B8 /* ContentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentManager.h; sourceTree = "<group>"; };
+		34ACDCDA18AF5802003DF7B8 /* DealerInventory.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DealerInventory.cc; sourceTree = "<group>"; };
+		34ACDCDB18AF5802003DF7B8 /* DealerInventory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DealerInventory.h; sourceTree = "<group>"; };
+		34ACDCDC18AF5802003DF7B8 /* DefaultContentManager.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DefaultContentManager.cc; sourceTree = "<group>"; };
+		34ACDCDD18AF5802003DF7B8 /* DefaultContentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultContentManager.h; sourceTree = "<group>"; };
+		34ACDCDE18AF5802003DF7B8 /* GameInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInstance.h; sourceTree = "<group>"; };
+		34ACDCDF18AF5802003DF7B8 /* IGameDataLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGameDataLoader.h; sourceTree = "<group>"; };
+		34ACDCE118AF5802003DF7B8 /* enums.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enums.cc; sourceTree = "<group>"; };
+		34ACDCE218AF5802003DF7B8 /* enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = enums.h; sourceTree = "<group>"; };
+		34ACDCE318AF5802003DF7B8 /* ItemModel.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemModel.cc; sourceTree = "<group>"; };
+		34ACDCE418AF5802003DF7B8 /* ItemModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemModel.h; sourceTree = "<group>"; };
+		34ACDCE518AF5802003DF7B8 /* ItemSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemSystem.h; sourceTree = "<group>"; };
+		34ACDCE618AF5802003DF7B8 /* JsonObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonObject.h; sourceTree = "<group>"; };
+		34ACDCE718AF5802003DF7B8 /* JsonUtility.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JsonUtility.cc; sourceTree = "<group>"; };
+		34ACDCE818AF5802003DF7B8 /* JsonUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonUtility.h; sourceTree = "<group>"; };
+		34ACDCEA18AF5802003DF7B8 /* MagazineModel.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MagazineModel.cc; sourceTree = "<group>"; };
+		34ACDCEB18AF5802003DF7B8 /* MagazineModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagazineModel.h; sourceTree = "<group>"; };
+		34ACDCEC18AF5802003DF7B8 /* MercProfile.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MercProfile.cc; sourceTree = "<group>"; };
+		34ACDCED18AF5802003DF7B8 /* MercProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MercProfile.h; sourceTree = "<group>"; };
+		34ACDCEE18AF5802003DF7B8 /* ModPackContentManager.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModPackContentManager.cc; sourceTree = "<group>"; };
+		34ACDCEF18AF5802003DF7B8 /* ModPackContentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModPackContentManager.h; sourceTree = "<group>"; };
+		34ACDCF118AF5802003DF7B8 /* DefaultGamePolicy.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DefaultGamePolicy.cc; sourceTree = "<group>"; };
+		34ACDCF218AF5802003DF7B8 /* DefaultGamePolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultGamePolicy.h; sourceTree = "<group>"; };
+		34ACDCF318AF5802003DF7B8 /* DefaultIMPPolicy.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DefaultIMPPolicy.cc; sourceTree = "<group>"; };
+		34ACDCF418AF5802003DF7B8 /* DefaultIMPPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultIMPPolicy.h; sourceTree = "<group>"; };
+		34ACDCF518AF5802003DF7B8 /* GamePolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GamePolicy.h; sourceTree = "<group>"; };
+		34ACDCF618AF5802003DF7B8 /* IMPPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMPPolicy.h; sourceTree = "<group>"; };
+		34ACDCF718AF5802003DF7B8 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		34ACDCF818AF5802003DF7B8 /* Soldier.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Soldier.cc; sourceTree = "<group>"; };
+		34ACDCF918AF5802003DF7B8 /* Soldier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Soldier.h; sourceTree = "<group>"; };
+		34ACDCFA18AF5802003DF7B8 /* StringEncodingTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringEncodingTypes.h; sourceTree = "<group>"; };
+		34ACDCFB18AF5802003DF7B8 /* WeaponModels.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WeaponModels.cc; sourceTree = "<group>"; };
+		34ACDCFC18AF5802003DF7B8 /* WeaponModels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeaponModels.h; sourceTree = "<group>"; };
+		34ACDD1018AF5A37003DF7B8 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		34ACDD2018AF5A37003DF7B8 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		34ACDD2118AF5A37003DF7B8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		34ACDD2318AF5A37003DF7B8 /* slog.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = slog.c; sourceTree = "<group>"; };
+		34ACDD2418AF5A37003DF7B8 /* slog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = slog.h; sourceTree = "<group>"; };
 		34C6E5DB172C5F4200102B2C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		34C6E5DC172C5F4200102B2C /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		34C6E5DF172C5F5B00102B2C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -1005,8 +1071,6 @@
 		C38ACC2D16E4AA68003D6872 /* Cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cursors.h; sourceTree = "<group>"; };
 		C38ACC2E16E4AA68003D6872 /* Debug_Control.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Debug_Control.cc; sourceTree = "<group>"; };
 		C38ACC2F16E4AA68003D6872 /* Debug_Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug_Control.h; sourceTree = "<group>"; };
-		C38ACC3016E4AA68003D6872 /* Encrypted_File.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Encrypted_File.cc; sourceTree = "<group>"; };
-		C38ACC3116E4AA68003D6872 /* Encrypted_File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encrypted_File.h; sourceTree = "<group>"; };
 		C38ACC3216E4AA68003D6872 /* Event_Manager.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event_Manager.cc; sourceTree = "<group>"; };
 		C38ACC3316E4AA68003D6872 /* Event_Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event_Manager.h; sourceTree = "<group>"; };
 		C38ACC3416E4AA68003D6872 /* Event_Pump.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event_Pump.cc; sourceTree = "<group>"; };
@@ -1330,11 +1394,110 @@
 		342EF61E16E3E2D3007960D8 /* JA2-Stracciatella */ = {
 			isa = PBXGroup;
 			children = (
+				34ACDD0F18AF5A37003DF7B8 /* lib-slog */,
+				34ACDCCC18AF5802003DF7B8 /* src */,
 				342E141816E3E485007960D8 /* sgp */,
 				342E106C16E3E46A007960D8 /* Build */,
 			);
 			path = "JA2-Stracciatella";
 			sourceTree = SOURCE_ROOT;
+		};
+		34ACDCCC18AF5802003DF7B8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				34ACDCCD18AF5802003DF7B8 /* AmmoTypeModel.cc */,
+				34ACDCCE18AF5802003DF7B8 /* AmmoTypeModel.h */,
+				34ACDCCF18AF5802003DF7B8 /* CalibreModel.cc */,
+				34ACDCD018AF5802003DF7B8 /* CalibreModel.h */,
+				34ACDCD118AF5802003DF7B8 /* content */,
+				34ACDCD918AF5802003DF7B8 /* ContentManager.h */,
+				34ACDCDA18AF5802003DF7B8 /* DealerInventory.cc */,
+				34ACDCDB18AF5802003DF7B8 /* DealerInventory.h */,
+				34ACDCDC18AF5802003DF7B8 /* DefaultContentManager.cc */,
+				34ACDCDD18AF5802003DF7B8 /* DefaultContentManager.h */,
+				34ACDCDE18AF5802003DF7B8 /* GameInstance.h */,
+				34ACDCDF18AF5802003DF7B8 /* IGameDataLoader.h */,
+				34ACDCE018AF5802003DF7B8 /* internals */,
+				34ACDCE318AF5802003DF7B8 /* ItemModel.cc */,
+				34ACDCE418AF5802003DF7B8 /* ItemModel.h */,
+				34ACDCE518AF5802003DF7B8 /* ItemSystem.h */,
+				34ACDCE618AF5802003DF7B8 /* JsonObject.h */,
+				34ACDCE718AF5802003DF7B8 /* JsonUtility.cc */,
+				34ACDCE818AF5802003DF7B8 /* JsonUtility.h */,
+				34ACDCEA18AF5802003DF7B8 /* MagazineModel.cc */,
+				34ACDCEB18AF5802003DF7B8 /* MagazineModel.h */,
+				34ACDCEC18AF5802003DF7B8 /* MercProfile.cc */,
+				34ACDCED18AF5802003DF7B8 /* MercProfile.h */,
+				34ACDCEE18AF5802003DF7B8 /* ModPackContentManager.cc */,
+				34ACDCEF18AF5802003DF7B8 /* ModPackContentManager.h */,
+				34ACDCF018AF5802003DF7B8 /* policy */,
+				34ACDCF718AF5802003DF7B8 /* readme.txt */,
+				34ACDCF818AF5802003DF7B8 /* Soldier.cc */,
+				34ACDCF918AF5802003DF7B8 /* Soldier.h */,
+				34ACDCFA18AF5802003DF7B8 /* StringEncodingTypes.h */,
+				34ACDCFB18AF5802003DF7B8 /* WeaponModels.cc */,
+				34ACDCFC18AF5802003DF7B8 /* WeaponModels.h */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+		34ACDCD118AF5802003DF7B8 /* content */ = {
+			isa = PBXGroup;
+			children = (
+				34ACDCD218AF5802003DF7B8 /* ContentMercs.cc */,
+				34ACDCD318AF5802003DF7B8 /* ContentMercs.h */,
+				34ACDCD418AF5802003DF7B8 /* Dialogs.cc */,
+				34ACDCD518AF5802003DF7B8 /* Dialogs.h */,
+				34ACDCD618AF5802003DF7B8 /* NewStrings.h */,
+				34ACDCD718AF5802003DF7B8 /* npcs.cc */,
+				34ACDCD818AF5802003DF7B8 /* npcs.h */,
+			);
+			path = content;
+			sourceTree = "<group>";
+		};
+		34ACDCE018AF5802003DF7B8 /* internals */ = {
+			isa = PBXGroup;
+			children = (
+				34ACDCE118AF5802003DF7B8 /* enums.cc */,
+				34ACDCE218AF5802003DF7B8 /* enums.h */,
+			);
+			path = internals;
+			sourceTree = "<group>";
+		};
+		34ACDCF018AF5802003DF7B8 /* policy */ = {
+			isa = PBXGroup;
+			children = (
+				34ACDCF118AF5802003DF7B8 /* DefaultGamePolicy.cc */,
+				34ACDCF218AF5802003DF7B8 /* DefaultGamePolicy.h */,
+				34ACDCF318AF5802003DF7B8 /* DefaultIMPPolicy.cc */,
+				34ACDCF418AF5802003DF7B8 /* DefaultIMPPolicy.h */,
+				34ACDCF518AF5802003DF7B8 /* GamePolicy.h */,
+				34ACDCF618AF5802003DF7B8 /* IMPPolicy.h */,
+			);
+			path = policy;
+			sourceTree = "<group>";
+		};
+		34ACDD0F18AF5A37003DF7B8 /* lib-slog */ = {
+			isa = PBXGroup;
+			children = (
+				34ACDD1018AF5A37003DF7B8 /* .gitignore */,
+				34ACDD2018AF5A37003DF7B8 /* LICENSE.txt */,
+				34ACDD2118AF5A37003DF7B8 /* README.md */,
+				34ACDD2218AF5A37003DF7B8 /* slog */,
+			);
+			name = "lib-slog";
+			path = "../lib-slog";
+			sourceTree = SOURCE_ROOT;
+		};
+		34ACDD2218AF5A37003DF7B8 /* slog */ = {
+			isa = PBXGroup;
+			children = (
+				34ACDD2318AF5A37003DF7B8 /* slog.c */,
+				34ACDD2418AF5A37003DF7B8 /* slog.h */,
+			);
+			path = slog;
+			sourceTree = "<group>";
 		};
 		34C6E5EB172C60A000102B2C /* boost */ = {
 			isa = PBXGroup;
@@ -1983,8 +2146,6 @@
 				C38ACC2D16E4AA68003D6872 /* Cursors.h */,
 				C38ACC2E16E4AA68003D6872 /* Debug_Control.cc */,
 				C38ACC2F16E4AA68003D6872 /* Debug_Control.h */,
-				C38ACC3016E4AA68003D6872 /* Encrypted_File.cc */,
-				C38ACC3116E4AA68003D6872 /* Encrypted_File.h */,
 				C38ACC3216E4AA68003D6872 /* Event_Manager.cc */,
 				C38ACC3316E4AA68003D6872 /* Event_Manager.h */,
 				C38ACC3416E4AA68003D6872 /* Event_Pump.cc */,
@@ -2080,6 +2241,7 @@
 				C38ACC5816E4AA68003D6872 /* Cheats.cc in Sources */,
 				C38ACC5916E4AA68003D6872 /* Credits.cc in Sources */,
 				C38ACC5A16E4AA68003D6872 /* Cursor_Modes.cc in Sources */,
+				34ACDD0E18AF5802003DF7B8 /* WeaponModels.cc in Sources */,
 				C38ACC5B16E4AA68003D6872 /* Edit_Sys.cc in Sources */,
 				C38ACC5C16E4AA68003D6872 /* Editor_Callbacks.cc in Sources */,
 				C38ACC5D16E4AA68003D6872 /* Editor_Modes.cc in Sources */,
@@ -2124,6 +2286,7 @@
 				C38ACC8416E4AA68003D6872 /* AIMPolicies.cc in Sources */,
 				C38ACC8516E4AA68003D6872 /* AIMSort.cc in Sources */,
 				C38ACC8616E4AA68003D6872 /* BobbyR.cc in Sources */,
+				34ACDCFF18AF5802003DF7B8 /* ContentMercs.cc in Sources */,
 				C38ACC8716E4AA68003D6872 /* BobbyRAmmo.cc in Sources */,
 				C38ACC8816E4AA68003D6872 /* BobbyRArmour.cc in Sources */,
 				C38ACC8916E4AA68003D6872 /* BobbyRGuns.cc in Sources */,
@@ -2167,6 +2330,7 @@
 				C38ACCAF16E4AA68003D6872 /* Mercs.cc in Sources */,
 				C38ACCB016E4AA68003D6872 /* Mercs_Account.cc in Sources */,
 				C38ACCB116E4AA68003D6872 /* Mercs_Files.cc in Sources */,
+				34ACDD2818AF5A37003DF7B8 /* slog.c in Sources */,
 				C38ACCB216E4AA68003D6872 /* Mercs_No_Account.cc in Sources */,
 				C38ACCB316E4AA68003D6872 /* Personnel.cc in Sources */,
 				C38ACCB416E4AA68003D6872 /* Store_Inventory.cc in Sources */,
@@ -2177,6 +2341,7 @@
 				C38ACCB916E4AA68003D6872 /* MercPortrait.cc in Sources */,
 				C38ACCBA16E4AA68003D6872 /* MessageBoxScreen.cc in Sources */,
 				C38ACCBB16E4AA68003D6872 /* Options_Screen.cc in Sources */,
+				34ACDD0918AF5802003DF7B8 /* MercProfile.cc in Sources */,
 				C38ACCBC16E4AA68003D6872 /* SaveLoadGame.cc in Sources */,
 				C38ACCBD16E4AA68003D6872 /* SaveLoadScreen.cc in Sources */,
 				C38ACCBE16E4AA68003D6872 /* Screens.cc in Sources */,
@@ -2188,6 +2353,7 @@
 				C38ACCC416E4AA68003D6872 /* Game_Clock.cc in Sources */,
 				C38ACCC516E4AA68003D6872 /* Game_Event_Hook.cc in Sources */,
 				C38ACCC616E4AA68003D6872 /* Game_Events.cc in Sources */,
+				34ACDD0618AF5802003DF7B8 /* JsonUtility.cc in Sources */,
 				C38ACCC716E4AA68003D6872 /* Game_Init.cc in Sources */,
 				C38ACCC816E4AA68003D6872 /* Hourly_Update.cc in Sources */,
 				C38ACCC916E4AA68003D6872 /* LoadSaveSectorInfo.cc in Sources */,
@@ -2214,6 +2380,7 @@
 				C38ACCDE16E4AA68003D6872 /* Strategic_AI.cc in Sources */,
 				C38ACCDF16E4AA68003D6872 /* Strategic_Event_Handler.cc in Sources */,
 				C38ACCE016E4AA68003D6872 /* Strategic_Merc_Handler.cc in Sources */,
+				34ACDD0318AF5802003DF7B8 /* DefaultContentManager.cc in Sources */,
 				C38ACCE116E4AA68003D6872 /* Strategic_Mines.cc in Sources */,
 				C38ACCE216E4AA68003D6872 /* Strategic_Movement.cc in Sources */,
 				C38ACCE316E4AA68003D6872 /* Strategic_Movement_Costs.cc in Sources */,
@@ -2222,6 +2389,7 @@
 				C38ACCE616E4AA68003D6872 /* Strategic_Town_Loyalty.cc in Sources */,
 				C38ACCE716E4AA68003D6872 /* Strategic_Turns.cc in Sources */,
 				C38ACCE816E4AA68003D6872 /* StrategicMap.cc in Sources */,
+				34ACDD0118AF5802003DF7B8 /* npcs.cc in Sources */,
 				C38ACCE916E4AA68003D6872 /* Town_Militia.cc in Sources */,
 				C38ACCEA16E4AA68003D6872 /* Sys_Globals.cc in Sources */,
 				C38ACCEB16E4AA68003D6872 /* Air_Raid.cc in Sources */,
@@ -2230,6 +2398,7 @@
 				C38ACCEE16E4AA68003D6872 /* Animation_Data.cc in Sources */,
 				C38ACCEF16E4AA68003D6872 /* Arms_Dealer_Init.cc in Sources */,
 				C38ACCF016E4AA68003D6872 /* ArmsDealerInvInit.cc in Sources */,
+				34ACDD0A18AF5802003DF7B8 /* ModPackContentManager.cc in Sources */,
 				C38ACCF116E4AA68003D6872 /* Auto_Bandage.cc in Sources */,
 				C38ACCF216E4AA68003D6872 /* Boxing.cc in Sources */,
 				C38ACCF316E4AA68003D6872 /* Bullets.cc in Sources */,
@@ -2247,6 +2416,7 @@
 				C38ACCFF16E4AA68003D6872 /* Handle_Items.cc in Sources */,
 				C38ACD0016E4AA68003D6872 /* Handle_UI.cc in Sources */,
 				C38ACD0116E4AA68003D6872 /* Interface.cc in Sources */,
+				34ACDCFE18AF5802003DF7B8 /* CalibreModel.cc in Sources */,
 				C38ACD0216E4AA68003D6872 /* Interface_Control.cc in Sources */,
 				C38ACD0316E4AA68003D6872 /* Interface_Cursors.cc in Sources */,
 				C38ACD0416E4AA68003D6872 /* Interface_Dialogue.cc in Sources */,
@@ -2261,6 +2431,7 @@
 				C38ACD0D16E4AA68003D6872 /* LoadSaveMercProfile.cc in Sources */,
 				C38ACD0E16E4AA68003D6872 /* LoadSaveObjectType.cc in Sources */,
 				C38ACD0F16E4AA68003D6872 /* LoadSaveRottingCorpse.cc in Sources */,
+				34ACDD0D18AF5802003DF7B8 /* Soldier.cc in Sources */,
 				C38ACD1016E4AA68003D6872 /* LoadSaveSoldierCreate.cc in Sources */,
 				C38ACD1116E4AA68003D6872 /* LoadSaveSoldierType.cc in Sources */,
 				C38ACD1216E4AA68003D6872 /* LoadSaveVehicleType.cc in Sources */,
@@ -2314,6 +2485,7 @@
 				C38ACD4216E4AA68003D6872 /* Realtime.cc in Sources */,
 				C38ACD4316E4AA68003D6872 /* Ambient_Control.cc in Sources */,
 				C38ACD4416E4AA68003D6872 /* Buildings.cc in Sources */,
+				34ACDD0818AF5802003DF7B8 /* MagazineModel.cc in Sources */,
 				C38ACD4516E4AA68003D6872 /* Environment.cc in Sources */,
 				C38ACD4616E4AA68003D6872 /* Exit_Grids.cc in Sources */,
 				C38ACD4716E4AA68003D6872 /* Explosion_Control.cc in Sources */,
@@ -2323,6 +2495,7 @@
 				C38ACD4B16E4AA68003D6872 /* LightEffects.cc in Sources */,
 				C38ACD4C16E4AA68003D6872 /* Lighting.cc in Sources */,
 				C38ACD4D16E4AA68003D6872 /* LoadSaveExplosionType.cc in Sources */,
+				34ACDD0B18AF5802003DF7B8 /* DefaultGamePolicy.cc in Sources */,
 				C38ACD4E16E4AA68003D6872 /* LoadSaveLightEffect.cc in Sources */,
 				C38ACD4F16E4AA68003D6872 /* LoadSaveLightSprite.cc in Sources */,
 				C38ACD5016E4AA68003D6872 /* LoadSaveRealObject.cc in Sources */,
@@ -2335,6 +2508,7 @@
 				C38ACD5716E4AA68003D6872 /* Radar_Screen.cc in Sources */,
 				C38ACD5816E4AA68003D6872 /* Render_Dirty.cc in Sources */,
 				C38ACD5916E4AA68003D6872 /* Render_Fun.cc in Sources */,
+				34ACDD0C18AF5802003DF7B8 /* DefaultIMPPolicy.cc in Sources */,
 				C38ACD5A16E4AA68003D6872 /* RenderWorld.cc in Sources */,
 				C38ACD5B16E4AA68003D6872 /* SaveLoadMap.cc in Sources */,
 				C38ACD5C16E4AA68003D6872 /* Simple_Render_Utils.cc in Sources */,
@@ -2344,6 +2518,7 @@
 				C38ACD6016E4AA68003D6872 /* SysUtil.cc in Sources */,
 				C38ACD6116E4AA68003D6872 /* Tactical_Placement_GUI.cc in Sources */,
 				C38ACD6216E4AA68003D6872 /* Tile_Animation.cc in Sources */,
+				34ACDD0518AF5802003DF7B8 /* ItemModel.cc in Sources */,
 				C38ACD6316E4AA68003D6872 /* Tile_Cache.cc in Sources */,
 				C38ACD6416E4AA68003D6872 /* Tile_Surface.cc in Sources */,
 				C38ACD6516E4AA68003D6872 /* TileDat.cc in Sources */,
@@ -2352,6 +2527,7 @@
 				C38ACD6816E4AA68003D6872 /* WorldDef.cc in Sources */,
 				C38ACD6916E4AA68003D6872 /* WorldMan.cc in Sources */,
 				C38ACD6A16E4AA68003D6872 /* _DutchText.cc in Sources */,
+				34ACDD0418AF5802003DF7B8 /* enums.cc in Sources */,
 				C38ACD6B16E4AA68003D6872 /* _EnglishText.cc in Sources */,
 				C38ACD6C16E4AA68003D6872 /* _FrenchText.cc in Sources */,
 				C38ACD6D16E4AA68003D6872 /* _GermanText.cc in Sources */,
@@ -2362,7 +2538,6 @@
 				C38ACD7216E4AA68003D6872 /* Cinematics.cc in Sources */,
 				C38ACD7316E4AA68003D6872 /* Cursors.cc in Sources */,
 				C38ACD7416E4AA68003D6872 /* Debug_Control.cc in Sources */,
-				C38ACD7516E4AA68003D6872 /* Encrypted_File.cc in Sources */,
 				C38ACD7616E4AA68003D6872 /* Event_Manager.cc in Sources */,
 				C38ACD7716E4AA68003D6872 /* Event_Pump.cc in Sources */,
 				C38ACD7816E4AA68003D6872 /* Font_Control.cc in Sources */,
@@ -2374,6 +2549,7 @@
 				C38ACD7E16E4AA68003D6872 /* Quantize.cc in Sources */,
 				C38ACD7F16E4AA68003D6872 /* Slider.cc in Sources */,
 				C38ACD8016E4AA68003D6872 /* Sound_Control.cc in Sources */,
+				34ACDD0218AF5802003DF7B8 /* DealerInventory.cc in Sources */,
 				C38ACD8116E4AA68003D6872 /* STIConvert.cc in Sources */,
 				C38ACD8216E4AA68003D6872 /* Text.cc in Sources */,
 				C38ACD8316E4AA68003D6872 /* Text_Input.cc in Sources */,
@@ -2396,7 +2572,9 @@
 				C38ACDDF16E4AA84003D6872 /* MemMan.cc in Sources */,
 				C38ACDE016E4AA84003D6872 /* MouseSystem.cc in Sources */,
 				C38ACDE116E4AA84003D6872 /* PCX.cc in Sources */,
+				34ACDD0018AF5802003DF7B8 /* Dialogs.cc in Sources */,
 				C38ACDE216E4AA84003D6872 /* Random.cc in Sources */,
+				34ACDCFD18AF5802003DF7B8 /* AmmoTypeModel.cc in Sources */,
 				C38ACDE316E4AA84003D6872 /* SGP.cc in Sources */,
 				C38ACDE416E4AA84003D6872 /* SGPStrings.cc in Sources */,
 				C38ACDE516E4AA84003D6872 /* Shading.cc in Sources */,
@@ -2504,6 +2682,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/../..";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					JA2,
 					_THREAD_SAFE,
@@ -2515,6 +2694,10 @@
 					../../sgp,
 					"../lib-boost",
 					"../lib-utf8cpp/source",
+					../..,
+					"../lib-rapidjson",
+					"../lib-slog",
+					../../src,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2531,6 +2714,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/../..";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					JA2,
 					_THREAD_SAFE,
@@ -2542,6 +2726,10 @@
 					../../sgp,
 					"../lib-boost",
 					"../lib-utf8cpp/source",
+					../..,
+					"../lib-rapidjson",
+					"../lib-slog",
+					../../src,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

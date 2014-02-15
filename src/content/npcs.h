@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Tactical/Soldier_Profile.h"
+#include "Build/Tactical/Soldier_Profile.h"
 
 namespace Content
 {
