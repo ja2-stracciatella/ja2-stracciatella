@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4F286266-3557-43ED-A489-887BC3474B75</string>
+	<key>IDESourceControlProjectName</key>
+	<string>JA2-Stracciatella</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>6B272FBF-3DE7-4C05-A56C-36055D979181</key>
+		<string>ssh://bitbucket.org/gennady/ja2-stracciatella</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>_build/solution-xcode46/JA2-Stracciatella.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>6B272FBF-3DE7-4C05-A56C-36055D979181</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://bitbucket.org/gennady/ja2-stracciatella</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>6B272FBF-3DE7-4C05-A56C-36055D979181</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6B272FBF-3DE7-4C05-A56C-36055D979181</string>
+			<key>IDESourceControlWCCName</key>
+			<string>strac</string>
+		</dict>
+	</array>
+</dict>
+</plist>
