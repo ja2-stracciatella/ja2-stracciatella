@@ -8,6 +8,14 @@ stable platform for mod development.
 
 ## Latest news
 
+### 2014-xx-xx, version 0.12.xxx
+
+- Shift is no longer used as replacement for Alt (Option) on Linux and Mac OS X
+  Now to move backward use:
+    - Option + Left button mouse (LBM) on Mac OS X
+    - Alt + LBM or Alt + Meta (WinKey) + LBM on Linux, depending on your desktop environment
+  This fixes issue #123 and reverts changes made for issue #40.
+
 ### 2014-02-16, version 0.12.275
 
 - Fixed issue  #66: Bug when distributing skill points during IMP creation
