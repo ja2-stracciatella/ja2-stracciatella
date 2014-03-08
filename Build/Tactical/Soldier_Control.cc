@@ -9050,6 +9050,8 @@ static void EnableDisableSoldierLightEffects(BOOLEAN const enable_lights)
 	{
 		if (!s->bInSector)     continue;
 		if (s->bLife < OKLIFE) continue;
+                // att: NO Soldier Lights if in a VEHICLE 
+                if (s->bAssignment == VEHICLE) continue;
 
 		if (enable_lights)
 		{ // Add the light around the merc
