@@ -556,7 +556,7 @@
         "internalName": "CLIP12G_7",
         "calibre": "AMMO12G",
         "capacity": 7,
-        "ammoType": "AMMO_BUCKSHOT",
+        "ammoType": "AMMO_REGULAR",
         "ubGraphicType": 2,
         "ubGraphicNum": 22,
         "ubWeight": 5,
@@ -564,14 +564,15 @@
         "usPrice": 20,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "dontUseAsDefaultMagazine": true
     },
     {
         "itemIndex": 108,
         "internalName": "CLIP12G_7_BUCKSHOT",
         "calibre": "AMMO12G",
         "capacity": 7,
-        "ammoType": "AMMO_REGULAR",
+        "ammoType": "AMMO_BUCKSHOT",
         "ubGraphicType": 2,
         "ubGraphicNum": 4,
         "ubWeight": 5,
@@ -586,7 +587,7 @@
         "internalName": "CLIPCAWS_10_SAP",
         "calibre": "AMMOCAWS",
         "capacity": 10,
-        "ammoType": "AMMO_BUCKSHOT",
+        "ammoType": "AMMO_SUPER_AP",
         "ubGraphicType": 1,
         "ubGraphicNum": 0,
         "ubWeight": 10,
@@ -594,14 +595,15 @@
         "usPrice": 300,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "dontUseAsDefaultMagazine": true
     },
     {
         "itemIndex": 110,
         "internalName": "CLIPCAWS_10_FLECH",
         "calibre": "AMMOCAWS",
         "capacity": 10,
-        "ammoType": "AMMO_SUPER_AP",
+        "ammoType": "AMMO_BUCKSHOT",
         "ubGraphicType": 1,
         "ubGraphicNum": 1,
         "ubWeight": 10,

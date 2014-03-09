@@ -13,10 +13,9 @@ ModPackContentManager::ModPackContentManager(GameVersion gameVersion,
                                              const std::string &modName,
                                              const std::string &modResFolder,
                                              const std::string &configFolder,
-                                             const std::string &configPath,
                                              const std::string &gameResRootPath,
                                              const std::string &externalizedDataPath)
-  :DefaultContentManager(gameVersion, configFolder, configPath, gameResRootPath, externalizedDataPath)
+  :DefaultContentManager(gameVersion, configFolder, gameResRootPath, externalizedDataPath)
 {
   m_modName = modName;
   m_modResFolder = modResFolder;

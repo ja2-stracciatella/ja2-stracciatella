@@ -2917,6 +2917,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
   BOOST_FOREACH(const MagazineModel* mag, magazines)
   {
 		if (mag->calibre->index == NOAMMO)      break;
+    if (mag->dontUseAsDefaultMagazine) continue;
 		if (mag->calibre->index != w->calibre->index) continue;
 		if (mag->capacity != w->ubMagSize) continue;
 		return mag->getItemIndex();
@@ -2926,7 +2927,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
 }
 
 
-static UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
+UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
 {
 	UINT16 default_mag = NOTHING;
   const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
@@ -4106,16 +4107,3 @@ void DumpItemsList( void )
   fclose(FDump);
 }
 #endif // JA2TESTVERSION
-
-
-#ifdef WITH_UNITTESTS
-#undef FAIL
-#include "gtest/gtest.h"
-
-TEST(Items, asserts)
-{
-  EXPECT_EQ(sizeof(OBJECTTYPE), 36);
-//  EXPECT_EQ(lengthof(Item), MAXITEMS);
-}
-
-#endif

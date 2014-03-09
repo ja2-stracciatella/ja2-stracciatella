@@ -8,8 +8,9 @@ stable platform for mod development.
 
 ## Latest news
 
-### 2014-xx-xx, version 0.12.xxx
+### 2014-xx-xx, version 0.12.xxx (not released yet)
 
+- Fixed issues #120, #124 (incorrect ammo type for CAWS and SPAS-15)
 - Shift is no longer used as replacement for Alt (Option) on Linux and Mac OS X
   Now to move backward use:
     - Option + Left button mouse (LBM) on Mac OS X

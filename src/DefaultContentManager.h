@@ -22,11 +22,16 @@ public:
 
   DefaultContentManager(GameVersion gameVersion,
                         const std::string &configFolder,
-                        const std::string &configPath,
                         const std::string &gameResRootPath,
                         const std::string &externalizedDataPath);
 
   ~DefaultContentManager();
+
+  /** Get list of game resources. */
+  virtual std::vector<std::string> getListOfGameResources() const;
+
+  /** Initialize game resources. */
+  virtual void initGameResouces(const std::string &configPath, const std::vector<std::string> &libraries);
 
   /** Load the game data. */
   bool loadGameData();

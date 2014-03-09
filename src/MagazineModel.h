@@ -17,7 +17,8 @@ struct MagazineModel : ItemModel
                 const char* internalName,
                 const CalibreModel *calibre,
                 uint16_t capacity,
-                const AmmoTypeModel *ammoType
+                const AmmoTypeModel *ammoType,
+                bool dontUseAsDefaultMagazine
     );
 
   virtual const MagazineModel* asAmmo() const   { return this; }
@@ -36,4 +37,6 @@ struct MagazineModel : ItemModel
   const CalibreModel *calibre;
   const uint16_t capacity;
   const AmmoTypeModel *ammoType;
+  const bool dontUseAsDefaultMagazine;
+
 };
