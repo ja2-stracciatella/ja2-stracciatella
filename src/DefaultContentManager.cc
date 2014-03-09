@@ -136,7 +136,6 @@ static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wcha
 
 DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
                                              const std::string &configFolder,
-                                             const std::string &configPath,
                                              const std::string &gameResRootPath,
                                              const std::string &externalizedDataPath
   )
@@ -175,6 +174,12 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
   }
 #endif
 
+  m_libraryDB = new LibraryDB();
+}
+
+/** Get list of game resources. */
+std::vector<std::string> DefaultContentManager::getListOfGameResources() const
+{
   std::vector<std::string> libraries = GetResourceLibraries(m_dataDir);
 
   // XXX
@@ -183,8 +188,11 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
     libraries.push_back("editor.slf");
   }
 
-  m_libraryDB = new LibraryDB();
+  return libraries;
+}
 
+void DefaultContentManager::initGameResouces(const std::string &configPath, const std::vector<std::string> &libraries)
+{
   const char *failedLib = m_libraryDB->InitializeFileDatabase(m_dataDir, libraries);
   if(failedLib)
   {

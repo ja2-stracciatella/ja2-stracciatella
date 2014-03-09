@@ -557,7 +557,9 @@ SRCS += sgp/FileMan_unittest.cc
 SRCS += sgp/LoadSaveData_unittest.cc
 SRCS += sgp/UTF8String_unittest.cc
 SRCS += sgp/wchar_unittest.cc
+SRCS += src/DefaultContentManagerUT.cc
 SRCS += src/JsonUtility_unittests.cc
+SRCS += src/VanillaWeapons_unittests.cc
 endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))

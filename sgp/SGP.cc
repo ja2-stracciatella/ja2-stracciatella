@@ -403,8 +403,7 @@ try
     std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(exeFolder, "mods"), modName), "data");
     cm = new ModPackContentManager(version,
                                    modName, modResFolder, configFolderPath,
-                                   configPath, gameResRootPath,
-                                   externalizedDataPath);
+                                   gameResRootPath, externalizedDataPath);
     LOG_INFO("------------------------------------------------------------------------------\n");
     LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
     LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
@@ -421,7 +420,7 @@ try
 #endif
   {
     cm = new DefaultContentManager(version,
-                                   configFolderPath, configPath,
+                                   configFolderPath,
                                    gameResRootPath, externalizedDataPath);
     LOG_INFO("------------------------------------------------------------------------------\n");
     LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
@@ -432,6 +431,9 @@ try
     LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
     LOG_INFO("------------------------------------------------------------------------------\n");
   }
+
+  std::vector<std::string> libraries = cm->getListOfGameResources();
+  cm->initGameResouces(configPath, libraries);
 
   if(!cm->loadGameData())
   {

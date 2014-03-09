@@ -12,7 +12,7 @@ public:
   ModPackContentManager(GameVersion gameVersion,
                         const std::string &modName,
                         const std::string &modResFolder,
-                        const std::string &configFolder, const std::string &configPath,
+                        const std::string &configFolder,
                         const std::string &gameResRootPath,
                         const std::string &externalizedDataPath);
 
