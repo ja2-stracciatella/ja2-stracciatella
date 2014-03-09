@@ -564,7 +564,8 @@
         "usPrice": 20,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "dontUseAsDefaultMagazine": true
     },
     {
         "itemIndex": 108,
@@ -594,7 +595,8 @@
         "usPrice": 300,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "dontUseAsDefaultMagazine": true
     },
     {
         "itemIndex": 110,
