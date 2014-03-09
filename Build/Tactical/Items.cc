@@ -2926,7 +2926,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
 }
 
 
-static UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
+UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
 {
 	UINT16 default_mag = NOTHING;
   const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
@@ -4106,58 +4106,3 @@ void DumpItemsList( void )
   fclose(FDump);
 }
 #endif // JA2TESTVERSION
-
-
-#ifdef WITH_UNITTESTS
-#undef FAIL
-#include "gtest/gtest.h"
-
-TEST(Items, asserts)
-{
-  EXPECT_EQ(sizeof(OBJECTTYPE), 36);
-//  EXPECT_EQ(lengthof(Item), MAXITEMS);
-}
-
-TEST(Items, bug120_cawsAmmo)
-{
-  // test SAP clip parameters
-  EXPECT_EQ(Item[CLIPCAWS_10_SAP].usItemClass,                          IC_AMMO);
-  EXPECT_EQ(Magazine[Item[CLIPCAWS_10_SAP].ubClassIndex].ubCalibre,     AMMOCAWS);
-  EXPECT_EQ(Magazine[Item[CLIPCAWS_10_SAP].ubClassIndex].ubAmmoType,    AMMO_SUPER_AP);
-
-  // test FLECH clip parameters
-  EXPECT_EQ(Item[CLIPCAWS_10_FLECH].usItemClass,                        IC_AMMO);
-  EXPECT_EQ(Magazine[Item[CLIPCAWS_10_FLECH].ubClassIndex].ubCalibre,   AMMOCAWS);
-  EXPECT_EQ(Magazine[Item[CLIPCAWS_10_FLECH].ubClassIndex].ubAmmoType,  AMMO_BUCKSHOT);
-}
-
-TEST(Items, bug120_12gAmmo)
-{
-  // test SAP clip parameters
-  EXPECT_EQ(Item[CLIP12G_7].usItemClass,                                IC_AMMO);
-  EXPECT_EQ(Magazine[Item[CLIP12G_7].ubClassIndex].ubCalibre,           AMMO12G);
-  EXPECT_EQ(Magazine[Item[CLIP12G_7].ubClassIndex].ubAmmoType,          AMMO_REGULAR);
-
-  // test FLECH clip parameters
-  EXPECT_EQ(Item[CLIP12G_7_BUCKSHOT].usItemClass,                       IC_AMMO);
-  EXPECT_EQ(Magazine[Item[CLIP12G_7_BUCKSHOT].ubClassIndex].ubCalibre,  AMMO12G);
-  EXPECT_EQ(Magazine[Item[CLIP12G_7_BUCKSHOT].ubClassIndex].ubAmmoType, AMMO_BUCKSHOT);
-}
-
-TEST(Items, bug120_cawsDefaultMag)
-{
-  EXPECT_EQ(DefaultMagazine(CAWS), CLIPCAWS_10_FLECH);
-
-  EXPECT_EQ(FindReplacementMagazine(AMMOCAWS, 10, AMMO_BUCKSHOT), CLIPCAWS_10_FLECH);
-  EXPECT_EQ(FindReplacementMagazine(AMMOCAWS, 10, AMMO_SUPER_AP), CLIPCAWS_10_SAP);
-}
-
-TEST(Items, bug120_spas15DefaultMag)
-{
-  EXPECT_EQ(DefaultMagazine(SPAS15), CLIP12G_7_BUCKSHOT);
-
-  EXPECT_EQ(FindReplacementMagazine(AMMO12G, 7, AMMO_BUCKSHOT), CLIP12G_7_BUCKSHOT);
-  EXPECT_EQ(FindReplacementMagazine(AMMO12G, 7, AMMO_REGULAR),  CLIP12G_7);
-}
-
-#endif
