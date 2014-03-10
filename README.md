@@ -10,6 +10,7 @@ stable platform for mod development.
 
 ### 2014-xx-xx, version 0.12.xxx (not released yet)
 
+- Fixed issue #129 (SegFault on loading a SavedGame)
 - Fixed issue #128 (Segmentation fault on entering sector with enemies)
 - Fixed issues #120, #124 (incorrect ammo type for CAWS and SPAS-15)
 - Shift is no longer used as replacement for Alt (Option) on Linux and Mac OS X
