@@ -1143,6 +1143,8 @@ void RenderSMPanel(DirtyLevel* const dirty_level)
 	// ATE: Don't do anything if we are in stack popup and are refreshing stuff
 	if ((InItemStackPopup() || InKeyRingPopup()) && *dirty_level == DIRTYLEVEL1) return;
 
+	if (!gpSMCurrentMerc) return;
+
 	SOLDIERTYPE& s = *gpSMCurrentMerc;
 
 	if (gfCheckForMouseOverItem && GetJA2Clock() - guiMouseOverItemTime > 100)
