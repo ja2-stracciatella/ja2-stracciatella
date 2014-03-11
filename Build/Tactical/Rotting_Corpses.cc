@@ -761,6 +761,10 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	}
 
 	// Set type
+        // att: this is a workaround to prevent segaults
+        // one has to dig deeper into the underlying data
+        // to find out what is going wrong with a corpse
+        // falling from a roof
         if (ubType == SMERC_FALL) ubType = SMERC_BCK;
 	Corpse.ubType	= ubType;
 	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
