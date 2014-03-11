@@ -761,7 +761,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	}
 
 	// Set type
-        // att: this is a workaround to prevent segaults
+        // att: this is a workaround to prevent segfaults
         // one has to dig deeper into the underlying data
         // to find out what is going wrong with a corpse
         // falling from a roof
