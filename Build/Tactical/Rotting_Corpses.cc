@@ -761,6 +761,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	}
 
 	// Set type
+        if (ubType == SMERC_FALL) ubType = SMERC_BCK;
 	Corpse.ubType	= ubType;
 	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
 
