@@ -766,7 +766,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
         // to find out what is going wrong with a corpse
         // falling from a roof
         // For now just if its only bDirection 0 (others might work)
-        if (Corbse.bDirection == 0) {
+        if (Corpse.bDirection == 0) {
           if (ubType == SMERC_FALL)  ubType = SMERC_BCK;
           if (ubType == SMERC_FALLF) ubType = SMERC_FWD;
         }
