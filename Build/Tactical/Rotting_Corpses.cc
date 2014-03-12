@@ -765,8 +765,11 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
         // one has to dig deeper into the underlying data
         // to find out what is going wrong with a corpse
         // falling from a roof
-        if (ubType == SMERC_FALL)  ubType = SMERC_BCK;
-        if (ubType == SMERC_FALLF) ubType = SMERC_FWD;
+        // For now just if its only bDirection 0 (others might work)
+        if (Corbse.bDirection == 0) {
+          if (ubType == SMERC_FALL)  ubType = SMERC_BCK;
+          if (ubType == SMERC_FALLF) ubType = SMERC_FWD;
+        }
 
 	Corpse.ubType	= ubType;
 	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
