@@ -775,6 +775,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
           case FMERC_FALL:
           case FMERC_FALLF:
               // now use the corresponding definiton of a merc falling normal
+              // same offset for all body types
             ubType = ubType - (SMERC_FALL - SMERC_BCK);
             break;
             }
