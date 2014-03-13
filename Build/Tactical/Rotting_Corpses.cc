@@ -767,8 +767,17 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
         // falling from a roof
         // For now just if its only bDirection 0 (others might work)
         if (Corpse.bDirection == 0) {
-          if (ubType == SMERC_FALL)  ubType = SMERC_BCK;
-          if (ubType == SMERC_FALLF) ubType = SMERC_FWD;
+          switch (ubType) {
+          case SMERC_FALL:
+          case SMERC_FALLF:
+          case MMERC_FALL:
+          case MMERC_FALLF:
+          case FMERC_FALL:
+          case FMERC_FALLF:
+              // now use the corresponding definiton of a merc falling normal
+            ubType = ubType - (SMERC_FALL - SMERC_BCK);
+            break;
+            }
         }
 
 	Corpse.ubType	= ubType;
