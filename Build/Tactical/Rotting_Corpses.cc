@@ -190,14 +190,14 @@ static const char* const	zNoBloodCorpseFilenames[NUM_CORPSES] =
 
 UINT8		gb4DirectionsFrom8[8] =
 {
-	7,		// NORTH
+	0,		// NORTH
 	0,		// NE
 	0,		// E
 	0,		// SE
 	1,		// S
 	0,		// SW,
 	2,		// W,
-	0			// NW
+	0		// NW
 };
 
 
@@ -761,26 +761,6 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	}
 
 	// Set type
-        // att: this is a workaround to prevent segfaults
-        // one has to dig deeper into the underlying data
-        // to find out what is going wrong with a corpse
-        // falling from a roof
-        // For now just if its only bDirection 0 (others might work)
-        if (Corpse.bDirection == 0) {
-          switch (ubType) {
-          case SMERC_FALL:
-          case SMERC_FALLF:
-          case MMERC_FALL:
-          case MMERC_FALLF:
-          case FMERC_FALL:
-          case FMERC_FALLF:
-              // now use the corresponding definiton of a merc falling normal
-              // same offset for all body types
-            ubType = ubType - (SMERC_FALL - SMERC_BCK);
-            break;
-            }
-        }
-
 	Corpse.ubType	= ubType;
 	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
 
