@@ -775,7 +775,8 @@ static void ExitShopKeeperInterface(void)
 //		gfExitSKIDueToMessageBox = FALSE;
 	}
 
-	if( InItemDescriptionBox( ) && pShopKeeperItemDescObject != NULL )
+        // ItemDescriptionBox should be cleared in either case 
+	if( InItemDescriptionBox( ) || pShopKeeperItemDescObject != NULL )
 	{
 		DeleteItemDescriptionBox( );
 	}
