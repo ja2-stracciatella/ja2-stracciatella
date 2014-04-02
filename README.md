@@ -55,10 +55,15 @@ Original Jagged Alliance source codes were released by Strategy First Inc. in
 2004 under Source Code License Agreement ("SFI-SCLA").  You can find the
 license in file *SFI Source Code license agreement.txt*.
 
-## How to contribute
+## Development
+
+[![Build Status](https://travis-ci.org/gennady/ja2-stracciatella.svg?branch=test_travis)](https://travis-ci.org/gennady/ja2-stracciatella)
+
+### How to contribute
 
 1. Fork it
 2. Create a branch (git checkout -b my_feature_branch)
 3. Commit your changes (git commit -am "description of your changes")
 4. Push to the branch (git push origin my_feature_branch)
 5. Create a pull requst from your branch into master
+

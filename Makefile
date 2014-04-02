@@ -22,7 +22,13 @@ INSTALL_MAN     ?= $(INSTALL) -m 444
 INSTALL_DATA    ?= $(INSTALL) -m 444
 
 
+ifdef SKIP_BUILD_NUMBER_CALC
+BUILD_NUMBER := "XXXXXX"
+else
+# Calculate number of commits since 8287b98.  It will be the
+# build number.
 BUILD_NUMBER := $(strip $(shell git log 8287b98.. --oneline | wc -l))
+endif
 GAME_VERSION := v0.12.$(BUILD_NUMBER)
 CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
 

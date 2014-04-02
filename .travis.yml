@@ -1,0 +1,19 @@
+language: cpp
+
+compiler:
+  - gcc
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install make g++ libsdl1.2-dev -y
+
+script: make SKIP_BUILD_NUMBER_CALC=1 clean && make SKIP_BUILD_NUMBER_CALC=1 all
+
+after_script: ./ja2 -unittests
+
+notifications:
+  recipients:
+    - gennady.trafimenkov@gmail.com
+  email:
+    on_success: change
+    on_failure: always
