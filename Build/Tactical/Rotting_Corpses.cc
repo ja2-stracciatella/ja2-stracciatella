@@ -190,14 +190,14 @@ static const char* const	zNoBloodCorpseFilenames[NUM_CORPSES] =
 
 UINT8		gb4DirectionsFrom8[8] =
 {
-	7,		// NORTH
+	0,		// NORTH
 	0,		// NE
 	0,		// E
 	0,		// SE
 	1,		// S
 	0,		// SW,
 	2,		// W,
-	0			// NW
+	0		// NW
 };
 
 
