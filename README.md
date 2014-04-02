@@ -36,33 +36,29 @@ You can see the full list of changes in files changes.md and Changelog (for the 
 
 The original project was run by Tron since 2006.  He did an amazing job of
 cleaning up JA2 sources and making them portable.  The work was massive too -
-there are over *7000 commits* in the [original svn
-repository](svn://tron.homeunix.org/ja2/trunk).  Unfortunately, the work on
-the project ceased in 2010.
-
-See the following resources if you want to learn more:
-
- * [Original project homepage](http://tron.homeunix.org/ja2)
-
- * [JA2-Stracciatella Q&A](http://www.ja-galaxy-forum.com/board/ubbthreads.php/topics/186601/JA2_Stracciatella_Q_A.html)
+there are over *7000 commits* in the original svn repository
+svn://tron.homeunix.org/ja2/trunk.  Unfortunately, the work on the project
+ceased in 2010.  The [original project homepage](http://tron.homeunix.org/ja2)
+is no longer available.  Some history can be found in [JA2-Stracciatella
+Q&A](http://www.ja-galaxy-forum.com/board/ubbthreads.php/topics/186601/JA2_Stracciatella_Q_A.html)
 
 ## License
 
-### New work
-
-Unless specified explicitly in the commit message, all changes since `commit 8287b98` are released to the public domain.
-
-### Libraries
-
-All libraries in `_build/lib-*` have their own licenses.
-
-### Tron's changes
+Unless specified explicitly in the commit message, all changes since `commit
+8287b98` are released to the public domain.  All libraries in `_build/lib-*`
+have their own licenses.
 
 It is not known under which license Tron released his changes.  All we know,
 the source codes were publicly available in his svn repository.
 
-### Original source codes
+Original Jagged Alliance source codes were released by Strategy First Inc. in
+2004 under Source Code License Agreement ("SFI-SCLA").  You can find the
+license in file *SFI Source Code license agreement.txt*.
 
-Jagged Alliance source codes were released by Strategy First Inc. in 2004
-under Source Code License Agreement ("SFI-SCLA").  You can find the license in
-file *SFI Source Code license agreement.txt*.
+## How to contribute
+
+1. Fork it
+2. Create a branch (git checkout -b my_feature_branch)
+3. Commit your changes (git commit -am "description of your changes")
+4. Push to the branch (git push origin my_feature_branch)
+5. Create a pull requst from your branch into master
