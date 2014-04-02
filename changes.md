@@ -1,6 +1,39 @@
 # History of changes
 
-## v0.12.XXX
+## v0.12.275
+
+- Fixed issue  #66: Bug when distributing skill points during IMP creation
+- Fixed issue #114: Crash when dismissing Dead Soldier
+- Fixed issue #116: SIGSEGV when trying to scroll the screen while displaying line of sight
+- Fixed issue #117: Glitchy rendering of moving mercs while displaying LOS
+- Fixed issue #118: Mortar and Grenade Launcher not working
+
+## v0.12.265
+
+- Fixed issue #111 Bug with externalized dealer inventory.
+- Fixed issue #112 Another bug with externalized dealer inventory (Jake)
+- Fixed issue #108 More documentation in externalized\readme.txt
+- Fixed issue #113 JsonUtility_unittests.cc should not be compiled when WITH_UNITTESTS=0
+
+## v0.12.258
+
+- some hardcoded data has been externalized, weapon characteristics for
+  example.  See files in 'externalized' directory.  This make
+  JA2-Stracciatella more suitable for mod development.
+- some hotkeys have been added.  They are not enabled by default.  See
+  externalized/game.json and externalized/readme.txt for details.
+- Fixed issue #63 (Holding a two handed item, the second hand graphic is not remove in map inventory)
+- Fixed issue #70 (Bug during imp creation)
+- Fixed issue #77 (Graphical glitch when placing mercs before battle)
+- Fixed issue #79 (Small issue in sector inventory)
+- Fixed issue #82 (Hotkey requests)
+- Fixed issue #85 (Another issue in sector inventory)
+- Fixed issue #90 (Flower Service Buttons Not Selectable)
+- Fixed issue #91 (Financial History Reset)
+- Fixed issue #92 (NPC's speech text is in the wrong place)
+- Fixed issue #103 (small typo in \externalized\readme.txt)
+- Fixed issue #104 (Alt+o cheat is not working)
+- Fixed issue #105 (Dissonance with externalized data)
 
 ## v0.12.189
 

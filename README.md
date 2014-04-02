@@ -10,6 +10,9 @@ stable platform for mod development.
 
 ### 2014-xx-xx, version 0.12.xxx (not released yet)
 
+- Fixed issue #131 (Unhandled exception with fall-from-roof animation)
+- Fixed crash on leaving shop interface without closing attachment panel
+  https://bitbucket.org/misanthropos/ja2-stracciatella/issue/1
 - Fixed issue #129 (SegFault on loading a SavedGame)
 - Fixed issue #128 (Segmentation fault on entering sector with enemies)
 - Fixed issues #120, #124 (incorrect ammo type for CAWS and SPAS-15)
@@ -26,55 +29,6 @@ stable platform for mod development.
 - Fixed issue #116: SIGSEGV when trying to scroll the screen while displaying line of sight
 - Fixed issue #117: Glitchy rendering of moving mercs while displaying LOS
 - Fixed issue #118: Mortar and Grenade Launcher not working
-
-### 2014-01-18, version 0.12.265
-
-- Fixed issue #111 Bug with externalized dealer inventory.
-- Fixed issue #112 Another bug with externalized dealer inventory (Jake)
-- Fixed issue #108 More documentation in externalized\readme.txt
-- Fixed issue #113 JsonUtility_unittests.cc should not be compiled when WITH_UNITTESTS=0
-
-### 2013-11-04, version 0.12.258 has been released
-
-- some hardcoded data has been externalized, weapon characteristics for
-  example.  See files in 'externalized' directory.  This make
-  JA2-Stracciatella more suitable for mod development.
-- some hotkeys have been added.  They are not enabled by default.  See
-  externalized/game.json and externalized/readme.txt for details.
-- Fixed issue #63 (Holding a two handed item, the second hand graphic is not remove in map inventory)
-- Fixed issue #70 (Bug during imp creation)
-- Fixed issue #77 (Graphical glitch when placing mercs before battle)
-- Fixed issue #79 (Small issue in sector inventory)
-- Fixed issue #82 (Hotkey requests)
-- Fixed issue #85 (Another issue in sector inventory)
-- Fixed issue #90 (Flower Service Buttons Not Selectable)
-- Fixed issue #91 (Financial History Reset)
-- Fixed issue #92 (NPC's speech text is in the wrong place)
-- Fixed issue #103 (small typo in \externalized\readme.txt)
-- Fixed issue #104 (Alt+o cheat is not working)
-- Fixed issue #105 (Dissonance with externalized data)
-
-### 2013-07-28, version 0.12.189 has been released
-
-- Fixed issue #59 (Inventory won't open on strategic screen if using a non-default resolution)
-- Fixed issue #58 (Game crashing while entering some sectors)
-- Fixed issue #57 (Deadlock leads to player turn without reseting the AP)
-- Fixed issue #56 (laptop mode has problems with high resolutions)
-- Fixed issue #53 (crash when saving the game)
-- Fixed issue #52 (High res glitch with merc move menu)
-- Fixed issue #51 (Broken text log after loading a saved game)
-- Fixed issue #47 (High res glitch on loading game)
-
-### 2013-04-29, version 0.12.175 has been released
-
-- On Linux and Mac OS X, SHIFT can be used instead of ALT to move backward
-
-- Fixed crashes on Mac OS X
-
-- Fixed issue #50 (Linking ja2 fails on Ubuntu 13.04)
-- Fixed issue #48 (Unnamed civilians disappear)
-- Fixed issue #44 (Ring fight bug prize money and invitation not triggered)
-- Fixed issue #6  (Question mark instead of comma in Russian version)
 
 You can see the full list of changes in files changes.md and Changelog (for the original project).
 
