@@ -61,7 +61,7 @@ license in file *SFI Source Code license agreement.txt*.
 
 ## Development
 
-[![Build Status](https://travis-ci.org/gennady/ja2-stracciatella.svg?branch=test_travis)](https://travis-ci.org/gennady/ja2-stracciatella)
+[![Build Status](https://travis-ci.org/gennady/ja2-stracciatella.svg?branch=master)](https://travis-ci.org/gennady/ja2-stracciatella)
 
 ### How to contribute
 
