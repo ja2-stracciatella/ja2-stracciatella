@@ -1,6 +1,8 @@
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 
+#include "boost/filesystem.hpp"
+
 #include "sgp/FileMan.h"
 
 #include "DefaultContentManager.h"
@@ -13,7 +15,7 @@
 TEST(TempFiles, createFile)
 {
   DefaultContentManager * cm = createDefaultCMForTesting();
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   FileMan::createDir(TMPDIR);
 
   {
@@ -24,14 +26,14 @@ TEST(TempFiles, createFile)
   ASSERT_EQ(results.size(), 1);
   EXPECT_STREQ(results[0].c_str(), TMPDIR PS "foo.txt");
 
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   delete cm;
 }
 
 TEST(TempFiles, writeToFile)
 {
   DefaultContentManager * cm = createDefaultCMForTesting();
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   FileMan::createDir(TMPDIR);
 
   {
@@ -53,14 +55,14 @@ TEST(TempFiles, writeToFile)
 
   // // void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   delete cm;
 }
 
 TEST(TempFiles, writeAndRead)
 {
   DefaultContentManager * cm = createDefaultCMForTesting();
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   FileMan::createDir(TMPDIR);
 
   {
@@ -76,14 +78,14 @@ TEST(TempFiles, writeAndRead)
     ASSERT_STREQ(buf, "hello");
   }
 
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   delete cm;
 }
 
 TEST(TempFiles, append)
 {
   DefaultContentManager * cm = createDefaultCMForTesting();
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   FileMan::createDir(TMPDIR);
 
   {
@@ -101,14 +103,14 @@ TEST(TempFiles, append)
     ASSERT_EQ(FileGetSize(file), 10);
   }
 
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   delete cm;
 }
 
 TEST(TempFiles, deleteFile)
 {
   DefaultContentManager * cm = createDefaultCMForTesting();
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   FileMan::createDir(TMPDIR);
 
   {
@@ -123,7 +125,7 @@ TEST(TempFiles, deleteFile)
   results = FindFilesInDir(TMPDIR, ".txt", false, false);
   ASSERT_EQ(results.size(), 0);
 
-  EraseDirectory(TMPDIR);
+  boost::filesystem::remove_all(TMPDIR);
   delete cm;
 }
 
