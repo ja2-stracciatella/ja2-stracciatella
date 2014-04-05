@@ -276,7 +276,7 @@ static void RenderCharFullName(void)
 	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
 	swprintf(sString, lengthof(sString), pIMPFinishStrings, pFullName);
   FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
-	MPrint(sX, LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);
+	MPrint(sX, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);
 }
 
 
