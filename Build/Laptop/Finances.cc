@@ -250,7 +250,7 @@ INT32 GetProjectedTotalDailyIncome( void )
 void GameInitFinances()
 {
   // initialize finances on game start up
-	FileDelete(FINANCES_DATA_FILE);
+	GCM->deleteTempFile(NEWTMP_FINANCES_DATA_FILE);
 	GetBalanceFromDisk( );
 }
 
@@ -878,7 +878,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 static void WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
-	AutoSGPFile hFileHandle(FileMan::openForWriting(FINANCES_DATA_FILE, false));
+	AutoSGPFile hFileHandle(GCM->openTempFileForWriting(NEWTMP_FINANCES_DATA_FILE, false));
 	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
@@ -891,7 +891,7 @@ static void GetBalanceFromDisk(void)
 	AutoSGPFile f;
 	try
 	{
-		f = GCM->openGameResForReading(FINANCES_DATA_FILE);
+		f = GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE);
 	}
 	catch (...)
 	{
@@ -907,7 +907,7 @@ static void GetBalanceFromDisk(void)
 // will write the current finance to disk
 static void AppendFinanceToEndOfFile(void)
 {
-	AutoSGPFile f(FileMan::openForAppend(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForAppend(NEWTMP_FINANCES_DATA_FILE));
 
 	const FinanceUnit* const fu = pFinanceListHead;
 	BYTE  data[FINANCE_RECORD_SIZE];
@@ -926,7 +926,7 @@ static void AppendFinanceToEndOfFile(void)
 // Grabs the size of the file and interprets number of pages it will take up
 static void SetLastPageInRecords(void)
 {
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	const UINT32 size = FileGetSize(f);
 
@@ -965,7 +965,7 @@ static void LoadInRecords(UINT32 const page)
 	ClearFinanceList();
 	if (page == 0) return; // check if bad page
 
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	UINT32 const size = FileGetSize(f);
 	if (size < FINANCE_HEADER_SIZE) return;
@@ -1055,7 +1055,7 @@ static INT32 GetPreviousDaysBalance(void)
 
 	if (date_in_days < 2) return 0;
 
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 balance = 0;
   // start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
@@ -1096,7 +1096,7 @@ static INT32 GetTodaysBalance(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 balance = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
@@ -1135,7 +1135,7 @@ static INT32 GetPreviousDaysIncome(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is = date_in_days - 2
@@ -1181,7 +1181,7 @@ static INT32 GetTodaysDaysIncome(void)
   const UINT32 date_in_minutes = GetWorldTotalMin();
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
@@ -1242,7 +1242,7 @@ static INT32 GetTodaysOtherDeposits(void)
   const UINT32 date_in_minutes = GetWorldTotalMin();
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 iTotalIncome = 0;
   // loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
@@ -1290,7 +1290,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
   const UINT32 iDateInMinutes = GetWorldTotalMin();
   const UINT32 date_in_days   = iDateInMinutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openGameResForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is =  date_in_days - 2

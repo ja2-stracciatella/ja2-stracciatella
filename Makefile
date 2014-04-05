@@ -564,6 +564,7 @@ SRCS += sgp/LoadSaveData_unittest.cc
 SRCS += sgp/UTF8String_unittest.cc
 SRCS += sgp/wchar_unittest.cc
 SRCS += src/DefaultContentManagerUT.cc
+SRCS += src/DefaultContentManager_unittests.cc
 SRCS += src/JsonUtility_unittests.cc
 SRCS += src/VanillaWeapons_unittests.cc
 endif

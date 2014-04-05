@@ -105,4 +105,16 @@ public:
   virtual const IMPPolicy* getIMPPolicy() const = 0;
 
   virtual const UTF8String* getNewString(int stringId) const = 0;
+
+  /** Open temporary file for writing. */
+  virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const = 0;
+
+  /** Open temporary file for reading. */
+  virtual SGPFile* openTempFileForReading(const char* filename) const = 0;
+
+  /** Open temporary file for appending. */
+  virtual SGPFile* openTempFileForAppend(const char* filename) const = 0;
+
+  /** Delete temporary file. */
+  virtual void deleteTempFile(const char* filename) const = 0;
 };

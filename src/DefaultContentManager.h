@@ -66,6 +66,18 @@ public:
   virtual SGPFile* openGameResForReading(const char* filename) const;
   virtual SGPFile* openGameResForReading(const std::string& filename) const;
 
+  /** Open temporary file for writing. */
+  virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const;
+
+  /** Open temporary file for reading. */
+  virtual SGPFile* openTempFileForReading(const char* filename) const;
+
+  /** Open temporary file for appending. */
+  virtual SGPFile* openTempFileForAppend(const char* filename) const;
+
+  /** Delete temporary file. */
+  virtual void deleteTempFile(const char* filename) const;
+
   /** Open user's private file (e.g. saved game, settings) for reading. */
   virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const;
 

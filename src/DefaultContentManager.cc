@@ -45,6 +45,11 @@
 
 #define DIALOGUESIZE 240
 
+// XXX: Issue #135
+// We need a safe way to create temporary directories - unique and random for every process
+// Boost probably provides this functionality
+#define NEW_TEMP_DIR "temp"
+
 static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wchar_t* DestString, UINT32 const seek_chars, UINT32 const read_chars)
 {
 	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
@@ -341,6 +346,39 @@ std::vector<std::string> DefaultContentManager::getAllMaps() const
 std::vector<std::string> DefaultContentManager::getAllTilecache() const
 {
   return FindFilesInDir(m_tileDir, ".jsd", true, false);
+}
+
+/** Open temporary file for writing. */
+SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, bool truncate) const
+{
+  std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	return FileMan::openForWriting(path.c_str(), truncate);
+}
+
+/** Open temporary file for appending. */
+SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) const
+{
+  std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+  return FileMan::openForAppend(path.c_str());
+}
+
+/* Open temporary file for reading. */
+SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) const
+{
+  std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+
+  int         mode;
+  const char* fmode = GetFileOpenModeForReading(&mode);
+
+  int d = FileMan::openFileForReading(path.c_str(), mode);
+  return FileMan::getSGPFileFromFD(d, path.c_str(), fmode);
+}
+
+/** Delete temporary file. */
+void DefaultContentManager::deleteTempFile(const char* filename) const
+{
+  std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+  FileDelete(path);
 }
 
 /* Open a game resource file for reading.

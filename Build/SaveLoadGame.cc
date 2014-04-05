@@ -150,6 +150,8 @@ ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A wa
 
 extern		UINT32		guiCurrentUniqueSoldierId;
 
+static void SaveTempFileToSavedGame(const char* fileName, HWFILE const hFile);
+static void LoadTempFileFromSavedGame(const char* tempFileName, HWFILE const hFile);
 
 static BYTE const* ExtractGameOptions(BYTE const* const data, GAME_OPTIONS& g)
 {
@@ -376,7 +378,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		SaveSoldierStructure(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Soldier Structure");
 
-		SaveFilesToSavedGame(FINANCES_DATA_FILE, f);
+		SaveTempFileToSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
 		SaveGameFilePosition(ubSaveGameID, f, "Finances Data File");
 
 		SaveFilesToSavedGame(HISTORY_DATA_FILE, f);
@@ -824,7 +826,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	LoadGameFilePosition(save_slot_id, f, "Soldier Structure");
 
 	BAR(1, L"Finances Data File...");
-	LoadFilesFromSavedGame(FINANCES_DATA_FILE, f);
+	LoadTempFileFromSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
 	LoadGameFilePosition(save_slot_id, f, "Finances Data File");
 
 	BAR(1, L"History File...");
@@ -1465,16 +1467,14 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 #endif
 
 
-void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
+static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(GCM->openGameResForReading(pSrcFileName));
-
 #ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
 #endif
 
 	//Get the file size of the source data file
-	UINT32 uiFileSize = FileGetSize( hSrcFile );
+	UINT32 uiFileSize = FileGetSize( fileToSave );
 
 	// Write the the size of the file to the saved game file
 	FileWrite(hFile, &uiFileSize, sizeof(UINT32));
@@ -1483,7 +1483,7 @@ void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 
 	// Read the saource file into the buffer
 	SGP::Buffer<UINT8> pData(uiFileSize);
-	FileRead(hSrcFile, pData, uiFileSize);
+	FileRead(fileToSave, pData, uiFileSize);
 
 	// Write the buffer to the saved game file
 	FileWrite(hFile, pData, uiFileSize);
@@ -1494,14 +1494,24 @@ void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 #endif
 }
 
+static void SaveTempFileToSavedGame(const char* fileName, HWFILE const hFile)
+{
+	AutoSGPFile fileToSave(GCM->openTempFileForReading(fileName));
+  SaveFileToSavedGame(fileToSave, hFile);
+}
 
-void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
+void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
+{
+	AutoSGPFile hSrcFile(GCM->openGameResForReading(pSrcFileName));
+  SaveFileToSavedGame(hSrcFile, hFile);
+}
+
+
+static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 {
 #ifdef JA2BETAVERSION
 	++guiNumberOfMapTempFiles; //Increment counter:  To determine where the temp files are crashing
 #endif
-
-	AutoSGPFile hSrcFile(FileMan::openForWriting(pSrcFileName));
 
 	// Read the size of the data
 	UINT32 uiFileSize;
@@ -1514,13 +1524,24 @@ void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 	FileRead(hFile, pData, uiFileSize);
 
 	// Write the buffer to the new file
-	FileWrite(hSrcFile, pData, uiFileSize);
+	FileWrite(fileToWrite, pData, uiFileSize);
 
 #ifdef JA2BETAVERSION
 	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
 #endif
 }
 
+void LoadTempFileFromSavedGame(const char* tempFileName, HWFILE const hFile)
+{
+	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(tempFileName, true));
+  LoadFileFromSavedGame(fileToWrite, hFile);
+}
+
+void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
+{
+	AutoSGPFile hSrcFile(FileMan::openForWriting(pSrcFileName));
+  LoadFileFromSavedGame(hSrcFile, hFile);
+}
 
 static void SaveTacticalStatusToSavedGame(HWFILE const f)
 {
