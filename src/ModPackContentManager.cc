@@ -21,6 +21,10 @@ ModPackContentManager::ModPackContentManager(GameVersion gameVersion,
   m_modResFolder = modResFolder;
 }
 
+ModPackContentManager::~ModPackContentManager()
+{
+}
+
 /* Checks if a game resource exists. */
 bool ModPackContentManager::doesGameResExists(char const* fileName) const
 {

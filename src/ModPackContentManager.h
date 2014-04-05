@@ -16,6 +16,8 @@ public:
                         const std::string &gameResRootPath,
                         const std::string &externalizedDataPath);
 
+  virtual ~ModPackContentManager();
+
   /* Checks if a game resource exists. */
   virtual bool doesGameResExists(char const* fileName) const;
 

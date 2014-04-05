@@ -25,7 +25,7 @@ public:
                         const std::string &gameResRootPath,
                         const std::string &externalizedDataPath);
 
-  ~DefaultContentManager();
+  virtual ~DefaultContentManager();
 
   /** Get list of game resources. */
   virtual std::vector<std::string> getListOfGameResources() const;

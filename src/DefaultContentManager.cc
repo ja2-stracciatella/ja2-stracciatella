@@ -175,6 +175,11 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 #endif
 
   m_libraryDB = new LibraryDB();
+
+  m_bobbyRayNewInventory = NULL;
+  m_bobbyRayUsedInventory = NULL;
+  m_impPolicy = NULL;
+  m_gamePolicy = NULL;
 }
 
 /** Get list of game resources. */
