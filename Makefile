@@ -100,7 +100,10 @@ CFLAGS += -I Build/Tactical
 CFLAGS += -I Build/TacticalAI
 CFLAGS += -I Build/TileEngine
 CFLAGS += -I Build/Utils
+
 CFLAGS += -I sgp
+CFLAGS += -I sgp/smacker
+
 CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
@@ -168,6 +171,8 @@ SRCS :=
 SRCS += Build/AniViewScreen.cc
 SRCS += Build/Credits.cc
 SRCS += Build/UILayout.cc
+
+
 
 SRCS += Build/Editor/Cursor_Modes.cc
 SRCS += Build/Editor/EditScreen.cc
@@ -490,6 +495,9 @@ SRCS += sgp/SGPStrings.cc
 SRCS += sgp/STCI.cc
 SRCS += sgp/Shading.cc
 SRCS += sgp/Smack_Stub.cc
+SRCS += sgp/smacker/smacker.c
+SRCS += sgp/smacker/smk_hufftree.c
+SRCS += sgp/smacker/smk_bitstream.c
 SRCS += sgp/SoundMan.cc
 SRCS += sgp/StrUtils.cc
 SRCS += sgp/TranslationTable.cc
@@ -498,6 +506,8 @@ SRCS += sgp/VObject.cc
 SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
+
+
 
 SRCS += src/AmmoTypeModel.cc
 SRCS += src/CalibreModel.cc
@@ -583,7 +593,8 @@ all: $(BINARY)
 
 $(BINARY): $(OBJS)
 	@echo '===> LD $@'
-	$(Q)$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
+	$(Q)\
+	$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 .c.o:
 	@echo '===> CC $<'
