@@ -46,9 +46,6 @@ union smk_read_t
 	unsigned char *ram;
 };
 
-//typedef union  smk_read_t fp;
-
-
 /* a few defines as return codes from smk_next() */
 #define SMK_DONE	0x00
 #define SMK_MORE	0x01

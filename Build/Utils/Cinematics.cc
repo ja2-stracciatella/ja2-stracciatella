@@ -13,10 +13,12 @@
 #include "Intro.h"
 #include "Local.h"
 //#include "Smack.h" // XXX
+
 #include "Smack_Stub.h" // XXX
 #include "SoundMan.h"
 #include "Types.h"
 #include "VSurface.h"
+#include "HImage.h"
 #include "Video.h"
 #include "UILayout.h"
 
@@ -52,17 +54,21 @@ BOOLEAN SmkPollFlics(void)
 		if (!(i->uiFlags & SMK_FLIC_PLAYING)) continue;
 		fFlicStatus = TRUE;
 
-		Smack* const smk = i->SmackHandle;
+                Smack* const smk = i->SmackHandle;
+
 		if (SmackWait(smk)) continue;
 
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
-			SmackToBuffer(smk, i->uiLeft, i->uiTop, l.Pitch(), smk->Height, l.Buffer<UINT16>(), guiSmackPixelFormat);
-			SmackDoFrame(smk);
+                  SmackToBuffer(smk, i->uiLeft, i->uiTop, l.Pitch(), smk->Height, l.Buffer<UINT16>(), guiSmackPixelFormat);
+		  SmackDoFrame(smk);
+                  //SGPVSurface::~Lock l(FRAME_BUFFER);
 		}
 
 		// Check to see if the flic is done the last frame
+                //printf ("smk->FrameNum %u\n", smk->FrameNum);
 		if (smk->FrameNum == smk->Frames - 1)
 		{
+                  
 			if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
 		}
 		else
@@ -134,7 +140,8 @@ try
 	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
 	// Allocate a Smacker buffer for video decompression
-	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+
+        sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	if (sf->SmackBuffer == NULL)
 	{
 		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");

@@ -454,7 +454,7 @@ try
     InitializeVideoSurfaceManager();
 
 #ifdef JA2
-    InitJA2SplashScreen();
+     InitJA2SplashScreen();
 #endif
 
     // Initialize Font Manager

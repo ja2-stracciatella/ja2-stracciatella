@@ -3,6 +3,10 @@
 
 #include "Types.h"
 
+extern "C" {
+#include "smacker.h"
+}
+
 enum
 {
 	SMACKBUFFER555 = 0x80000000,
@@ -31,6 +35,7 @@ enum
 
 struct Smack
 {
+  smk Smacker; //object type from libsmacker
   UINT32 Height;
   UINT32 Frames;
   UINT32 FrameNum;
@@ -44,7 +49,7 @@ void SmackNextFrame(Smack* Smk);
 UINT32 SmackWait(Smack* Smk);
 void SmackClose(Smack* Smk);
 
-void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, const void* Buf, UINT32 Flags);
+void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight,  void* Buf, UINT32 Flags);
 
 SmackBuf* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
 void SmackBufferClose(SmackBuf* SBuf);

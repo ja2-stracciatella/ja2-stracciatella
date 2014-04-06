@@ -130,6 +130,7 @@ struct smk_t
 	} *audio[7];
 };
 
+
 /* An fread wrapper: consumes N bytes, or returns -1
 	on failure (when size doesn't match expected) */
 static char smk_read_file(void *buf, const size_t size, FILE *fp)
