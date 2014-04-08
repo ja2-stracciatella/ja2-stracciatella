@@ -46,3 +46,127 @@ Questions/comments:
 * by website: http://libsmacker.sourceforge.net
 
 Enjoy!
+
+
+added from  http://libsmacker.sourceforge.net:
+
+---
+Technical
+---------
+
+libsmacker is coded almost directly from this reference document: Smacker on multimedia.cx. The library supports all features of both v2 and v4 files, except that Bink Audio Compression (lossy perceptual coding) is unsupported. For most use cases of libsmacker, this is not a serious limitation.
+
+If you need to make some Smacker files, RAD Game Tools provides a compressor within The RAD Video Tools application (Windows only). libsmacker does not and will not support compression. Be sure to uncheck "Use Bink Audio Compression" or you will generate unplayable files. RAD Video Tools is $10 donationware.
+
+---
+Usage
+-----
+
+Here is some usage info for libsmacker. First, you need to be able to include the library within your project.
+
+    Directly compiling into a project: simply checkout smacker.c and smacker.h, and compile them along with the rest of your program. This method is preferred where you cannot install a third-party library on the system, or where none is provided by your distribution's packager.
+    Using a shared object: Use #include "smacker.h" at the top of your source. Link against the libsmacker library by adding -lsmacker to your gcc linking step.
+
+All work is done using a special new typedef, "smk". Most functions in libsmacker accept an smk to operate on.
+
+Sample code:
+
+#include "smacker.h"
+
+...
+
+/* file meta-info */
+unsigned int w,h,f,cur_frame;
+/* microseconds per frame */
+float usf;
+
+/* arrays for audio track metadata */
+unsigned char   a_trackmask, a_channels[7], a_depth[7];
+unsigned long   a_rate[7];
+
+unsigned char *palette_data;
+unsigned char *image_data;
+
+smk s;
+
+s = smk_open_file("example.smk",SMK_MODE_DISK);
+if (s != NULL)
+{
+/* print some info about the file */
+    smk_info_all(s, NULL, &f, &usf);
+    smk_info_video(s, &w, &h, NULL);
+    smk_info_audio(s, &a_trackmask, a_channels, a_depth, a_rate);
+
+    printf("Opened file %s\nWidth: %d\nHeight: %d\nFrames: %d\nFPS: %lf\n", argv[1], w, h, f, 1000000.0 / usf);
+
+    /* process first frame */
+    smk->first(s);
+
+    /* get frame number */
+    smk_info_all(s, &cur_frame, NULL, NULL);
+
+    printf(" -> Frame %d...",smk_info_cur_frame(s));
+
+    /* Retrieve the palette and image */
+    palette_data = smk_get_palette(s);
+    image_data = smk_get_frame(s);
+
+    /* write out a bmp (see driver.c) */
+    dump_bmp(palette_data,image_data,w,h);
+
+    /* Get the audio chunk for this frame from track 0 */
+    printf("Audio info for track 0: bit-depth %u, channels %u, rate %u\n",
+	    a_depth[0],
+		a_channels[0],
+		a_rate[0] );
+
+    audio_data = smk_get_audio(s,0);
+
+    printf(" done.\n");
+
+    /* Advance to next frame */
+    smk_next(s);
+
+...
+
+    /* Close file */
+    smk_close(s);
+}
+
+---
+Here is a function reference.
+-----------------------------
+
+    smk smk_open_file(const char* filename, unsigned char mode);
+    Opens a .smk file from disk. If any errors occur, the error will be printed to stderr, and NULL is returned. Otherwise, a pointer to the new smk structure is returned.
+    "MODE" takes one of two defined options: SMK_MODE_DISK streams the file from disk, while SMK_MODE_MEMORY reads it all into RAM at open.
+    smk smk_open_memory(const unsigned char* buffer, unsigned long size);
+    Opens a .smk file from a memory buffer. Returns a pointer to the new smk structure, or NULL on error.
+    "SIZE" should be the size of the passed memory chunk. You may free the buffer after initialization.
+    void smk_close(smk s);
+    Closes an SMK file and frees all associated memory. Don't forget to call this, or you will leak memory!
+    char smk_enable_all(smk object, unsigned char mask);
+    char smk_enable_video(smk object, unsigned char enable);
+    char smk_enable_audio(smk object, unsigned char track, unsigned char enable);
+    Enables / disables processing types. May be used to save performance. enable_video and enable_audio take a 0 or 1 to disable/enable processing.
+    enable_all takes a mask value to switch multiple tracks in one pass. Refer to the #define parameters in smacker.h to construct a valid trackmask.
+    Typically, you would enable Video and at least one of the Audio tracks.
+    char smk_info_all(smk object, unsigned long *frame, unsigned long *frame_count, double *usf);
+    char smk_info_video(smk object, unsigned long *w, unsigned long *h, unsigned char *y_scale_mode);
+    char smk_info_audio(smk object, unsigned char *track_mask, unsigned char channels[7], unsigned char bitdepth[7], unsigned long audio_rate[7]);
+    "Get Info" type operations, returning multiple data items at once. Pass pointers to these functions, and they will be filled with values from the file. Pass NULL if you aren't interested in a parameter. Returns 0 on success, -1 on error.
+    unsigned char * smk_get_palette(smk s);
+    Returns a pointer to the most recently unpacked palette buffer. This buffer is 768 bytes long, and stores color values in RGB codes from 0 to 255.
+    unsigned char * smk_get_video(smk s);
+    Returns a pointer to the most recently unpacked video buffer. This buffer is w * h bytes long, and stores indexes into the palette buffer.
+    unsigned char * smk_get_audio(smk s, unsigned char tracknum);
+    Returns a pointer to an audio buffer for tracknum. Use the metadata to determine how to handle this: it's either unsigned 8 bit or signed 16, and stereo is interleaved (left channel first).
+    unsigned long smk_get_audio_size(smk s, unsigned char tracknum);
+    Returns the length of the current audio buffer for tracknum.
+    char smk_first(smk);
+    Rewinds to frame 0, triggering an unpack of palette / image / audio data for the first frame. Convenience defines are used to signify return codes: SMK_MORE indicates more frames to come, SMK_LAST indicates we are at the last frame, and SMK_DONE indicates an attempt to seek past end of file (note that framebuffer will remain unchanged if SMK_DONE is returned)
+    char smk_next(smk);
+    Advances one frame, triggering an unpack of palette / image / audio data for the next frame. Convenience defines are used to signify return codes: SMK_MORE indicates more frames to come, SMK_LAST indicates we are at the last frame, and SMK_DONE indicates an attempt to seek past end of file (note that framebuffer will remain unchanged if SMK_DONE is returned).
+    NOTE: if the smk file contains a ring frame, SMK_DONE will never be returned: the file will loop back to frame 2 automatically.
+    char smk_seek_keyframe(smk, unsigned int);
+    Seeks to the nearest keyframe before (or at) the requested frame. Some SMK files do not contain keyframes: in this case, smk_seek_keyframe will rewind playback to frame 0.

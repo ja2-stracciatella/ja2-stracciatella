@@ -29,7 +29,8 @@ struct SMKFLIC
 {
 	HWFILE    hFileHandle;
 	Smack*    SmackHandle;
-	SmackBuf* SmackBuffer;
+  //SmackBuf* SmackBuffer;
+        SDL_Surface*    SmackBuffer;
 	UINT32    uiFlags;
 	UINT32    uiLeft;
 	UINT32    uiTop;
@@ -55,6 +56,7 @@ BOOLEAN SmkPollFlics(void)
 		fFlicStatus = TRUE;
 
                 Smack* const smk = i->SmackHandle;
+
 
 		if (SmackWait(smk)) continue;
 
@@ -140,14 +142,14 @@ try
 	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
 	// Allocate a Smacker buffer for video decompression
-
+        /*
         sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	if (sf->SmackBuffer == NULL)
 	{
 		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
 		return NULL;
 	}
-
+        */
 	sf->SmackHandle = SmackOpen((char*)f, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
 	if (!sf->SmackHandle)
 	{
@@ -168,7 +170,7 @@ catch (...) { return 0; }
 void SmkCloseFlic(SMKFLIC* const sf)
 {
 	FileClose(sf->hFileHandle);
-	SmackBufferClose(sf->SmackBuffer);
+	//SmackBufferClose(sf->SmackBuffer);
 	SmackClose(sf->SmackHandle);
 	memset(sf, 0, sizeof(*sf));
 }

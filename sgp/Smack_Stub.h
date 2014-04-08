@@ -49,10 +49,10 @@ void SmackNextFrame(Smack* Smk);
 UINT32 SmackWait(Smack* Smk);
 void SmackClose(Smack* Smk);
 
-void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight,  void* Buf, UINT32 Flags);
+void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, void* Buf, UINT32 Flags);
 
-SmackBuf* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
-void SmackBufferClose(SmackBuf* SBuf);
+//SDL_Surface* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
+//void SmackBufferClose(SmackBuf* SBuf);
 
 UINT32 SmackUseMMX(UINT32 Flag);
 
