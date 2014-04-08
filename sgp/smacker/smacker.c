@@ -214,6 +214,7 @@ smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned long s
 
 	/* safe malloc the structure */
 	smk_malloc (s,sizeof (struct smk_t));
+        s->source.file.fp = fp.file;
 	/* safe malloc the structure components */
 	smk_malloc(s->video,sizeof(struct smk_video_t));
 
@@ -407,6 +408,8 @@ smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned long s
 			}
 		}
 	}
+
+        // assign fp to s object
 
 	return s;
 

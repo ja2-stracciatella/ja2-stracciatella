@@ -62,8 +62,7 @@ BOOLEAN SmkPollFlics(void)
 
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
                   SmackToBuffer(smk, i->uiLeft, i->uiTop, l.Pitch(), smk->Height, l.Buffer<UINT16>(), guiSmackPixelFormat);
-		  SmackDoFrame(smk);
-                  //SGPVSurface::~Lock l(FRAME_BUFFER);
+		  //SmackDoFrame(smk);
 		}
 
 		// Check to see if the flic is done the last frame
@@ -170,8 +169,9 @@ catch (...) { return 0; }
 void SmkCloseFlic(SMKFLIC* const sf)
 {
 	FileClose(sf->hFileHandle);
-	//SmackBufferClose(sf->SmackBuffer);
-	SmackClose(sf->SmackHandle);
+	//not needed anymore: SmackBufferClose(sf->SmackBuffer);
+        //if SMK_MODE_DISK no need to close filehandle anymore
+	//SmackClose(sf->SmackHandle);
 	memset(sf, 0, sizeof(*sf));
 }
 

@@ -1,11 +1,12 @@
 #include <strings.h>
 #include "Smack_Stub.h"
+#include "Sound_Control.h"
 extern "C" {
 #include "smacker/smacker.h"
 
 }
 
-Smack* SmackOpen(const char* Name, UINT32 Flags, UINT32 ExtraBuf)
+Smack* SmackOpen(const char* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 {
   Smack* flickhandle;
   unsigned long frame;
@@ -17,24 +18,27 @@ Smack* SmackOpen(const char* Name, UINT32 Flags, UINT32 ExtraBuf)
   unsigned char scale;
   union smk_read_t fp;
 
-  fp.file = (FILE*)Name;
+  fp.file = (FILE*)FileHandle;
   flickhandle = (Smack*)malloc (sizeof (Smack)); 
 
   // open file with given filehandle
-  flickhandle->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_MEMORY);
+  flickhandle->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_DISK);
+
+
   if ( ! flickhandle->Smacker ) return NULL;
   
   status = smk_info_video (flickhandle->Smacker, &width, &height, &scale);
   status = smk_info_all   (flickhandle->Smacker, &frame, &framecount, &usf);
 
-  printf ("Smackerinfo -- Width: %lu Height: %lu Frames: %lu Framecount: %lu Frames/Second: %f Scale: %d \n", width, height, framecount, frame, usf/1000, scale);
+  // printf ("Smackerinfo -- Width: %lu Height: %lu Frames: %lu Framecount: %lu Frames/Second: %f Scale: %d \n", width, height, framecount, frame, usf/1000, scale);
 
   flickhandle->Frames=framecount;
   flickhandle->FrameNum=frame;
   flickhandle->Height=height;
 
-  smk_enable_all(flickhandle->Smacker,SMK_VIDEO_TRACK|SMK_AUDIO_TRACK_0);
-  //smk_enable_video (flickhandle->Smacker, SMK_VIDEO_TRACK);
+  //smk_enable_all(flickhandle->Smacker,SMK_VIDEO_TRACK|SMK_AUDIO_TRACK_0);
+  smk_enable_video (flickhandle->Smacker, 1);
+  smk_enable_audio (flickhandle->Smacker, 0, 1);
   smk_first(flickhandle->Smacker);
   return flickhandle;
 
@@ -43,7 +47,12 @@ Smack* SmackOpen(const char* Name, UINT32 Flags, UINT32 ExtraBuf)
 
 UINT32 SmackDoFrame(Smack* Smk)
 {
-  
+  // play sound sample
+  char* soundsample;
+
+  soundsample = (char*) smk_get_audio(Smk->Smacker,0);
+
+  PlayJA2Sample (soundsample, 255, 0,0);
   return 0;
 }
 
@@ -69,6 +78,7 @@ void SmackClose(Smack* Smk)
   smk_close (Smk->Smacker);
 }
 
+// stolen from driver.c (which was part of libsmacker-1.0)
 void dump_bmp(unsigned char *pal, unsigned char *image_data, unsigned int w, unsigned int h, unsigned int framenum)
 {
         int             i;
@@ -139,7 +149,13 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
       // get rbg offset of palette
       color = &smackpal[p[0]*3] ;
       // convert from rbg to rbg565 0=red 1=green 2=blue
-      pixel = (color[0]>>3)<<11 | (color[1]>>2)<<5 | color[2]>>3;
+      if (Flags == SMACKBUFFER565) {
+        pixel = (color[0]>>3)<<11 | (color[1]>>2)<<5 | color[2]>>3;
+      }
+      else {
+        pixel = (color[0]>>3)<<10 | (color[1]>>2)<<5 | color[2]>>3;
+      }
+      
       buf[j+i*Pitch/2]=pixel;
       p++;
     }
