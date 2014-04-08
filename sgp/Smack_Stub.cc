@@ -139,7 +139,7 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
       // get rbg offset of palette
       color = &smackpal[p[0]*3] ;
       // convert from rbg to rbg565 0=red 1=green 2=blue
-      pixel = (color[0]>>3)<<11 | (color[1]>>4)<<5 | color[2]>>3;
+      pixel = (color[0]>>3)<<11 | (color[1]>>2)<<5 | color[2]>>3;
       buf[j+i*Pitch/2]=pixel;
       p++;
     }
