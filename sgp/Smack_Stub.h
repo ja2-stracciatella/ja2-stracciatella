@@ -2,10 +2,16 @@
 #define SMACK_STUB_H
 
 #include "Types.h"
-
+#include "SDL.h"
 extern "C" {
 #include "smacker.h"
 }
+
+enum
+  {
+    DISABLE = 0,
+    ENABLE
+  };
 
 enum
 {
@@ -36,6 +42,7 @@ enum
 struct Smack
 {
   smk Smacker; //object type from libsmacker
+  SDL_AudioSpec smkaudiotrack;
   UINT32 Height;
   UINT32 Frames;
   UINT32 FrameNum;
@@ -45,7 +52,8 @@ typedef void SmackBuf;
 
 Smack* SmackOpen(const char* Name, UINT32 Flags, UINT32 ExtraBuf);
 UINT32 SmackDoFrame(Smack* Smk);
-void SmackNextFrame(Smack* Smk);
+CHAR8 SmackNextFrame(Smack* Smk);
+//CHAR8* SmackGetAudio (Smack* Smk);
 UINT32 SmackWait(Smack* Smk);
 void SmackClose(Smack* Smk);
 

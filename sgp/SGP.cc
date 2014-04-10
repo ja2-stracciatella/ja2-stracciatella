@@ -453,19 +453,21 @@ try
     FastDebugMsg("Initializing Video Surface Manager");
     InitializeVideoSurfaceManager();
 
+
 #ifdef JA2
      InitJA2SplashScreen();
+#endif
+
+
+FastDebugMsg("Initializing Sound Manager");
+#ifndef UTIL
+    InitializeSoundManager();
 #endif
 
     // Initialize Font Manager
     FastDebugMsg("Initializing the Font Manager");
     // Init the manager and copy the TransTable stuff into it.
     InitializeFontManager();
-
-    FastDebugMsg("Initializing Sound Manager");
-#ifndef UTIL
-    InitializeSoundManager();
-#endif
 
     FastDebugMsg("Initializing Random");
     // Initialize random number generator

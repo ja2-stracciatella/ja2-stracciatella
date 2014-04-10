@@ -28,8 +28,9 @@
 struct SMKFLIC
 {
 	HWFILE    hFileHandle;
-	Smack*    SmackHandle;
+	Smack*    SmackerObject;
   //SmackBuf* SmackBuffer;
+        CHAR8     SmackerStatus;
         SDL_Surface*    SmackBuffer;
 	UINT32    uiFlags;
 	UINT32    uiLeft;
@@ -55,26 +56,27 @@ BOOLEAN SmkPollFlics(void)
 		if (!(i->uiFlags & SMK_FLIC_PLAYING)) continue;
 		fFlicStatus = TRUE;
 
-                Smack* const smk = i->SmackHandle;
+                Smack* const smkobj = i->SmackerObject;
 
 
-		if (SmackWait(smk)) continue;
+		if (SmackWait(smkobj)) continue;
 
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
-                  SmackToBuffer(smk, i->uiLeft, i->uiTop, l.Pitch(), smk->Height, l.Buffer<UINT16>(), guiSmackPixelFormat);
-		  //SmackDoFrame(smk);
+                  SmackToBuffer(smkobj, i->uiLeft, i->uiTop, l.Pitch(), smkobj->Height, l.Buffer<UINT16>(), guiSmackPixelFormat);
+		  SmackDoFrame(smkobj);
 		}
 
 		// Check to see if the flic is done the last frame
                 //printf ("smk->FrameNum %u\n", smk->FrameNum);
-		if (smk->FrameNum == smk->Frames - 1)
+		// if (smk->FrameNum == smk->Frames - 1)
+                if (i->SmackerStatus == SMK_LAST )
 		{
                   
 			if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
 		}
 		else
 		{
-			SmackNextFrame(smk);
+			i->SmackerStatus = SmackNextFrame(smkobj);
 		}
 	}
 
@@ -149,8 +151,8 @@ try
 		return NULL;
 	}
         */
-	sf->SmackHandle = SmackOpen((char*)f, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
-	if (!sf->SmackHandle)
+	sf->SmackerObject = SmackOpen((char*)f, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
+	if (!sf->SmackerObject)
 	{
 		FastDebugMsg("SMK ERROR: Smacker won't open the SMK file");
 		return NULL;
