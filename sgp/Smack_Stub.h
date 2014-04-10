@@ -53,7 +53,7 @@ typedef void SmackBuf;
 Smack* SmackOpen(const char* Name, UINT32 Flags, UINT32 ExtraBuf);
 UINT32 SmackDoFrame(Smack* Smk);
 CHAR8 SmackNextFrame(Smack* Smk);
-//CHAR8* SmackGetAudio (Smack* Smk);
+
 UINT32 SmackWait(Smack* Smk);
 void SmackClose(Smack* Smk);
 

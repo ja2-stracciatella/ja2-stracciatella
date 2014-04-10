@@ -8,11 +8,10 @@ extern "C" {
 }
 
 
-CHAR8* SmackGetAudio (Smack* Smk) {
+UINT32 SmackGetAudio (Smack* Smk, char* audiobuffer) {
 
   smk smkobj=Smk->Smacker;
 
-  char* audiobuffer;
   unsigned long audiolength, smacklength, bufmax = 0;
   unsigned char* smackaudio;
   const unsigned char track=0;
@@ -21,10 +20,8 @@ CHAR8* SmackGetAudio (Smack* Smk) {
   ///Smk->smkaudiotrack.channels
   ///Smk->smkaudiotrack.format=AUDIO_S16;
   
-  bufmax = ( (Smk->Frames) / 30 *  Smk->smkaudiotrack.freq * 16 *  Smk->smkaudiotrack.channels);
-  audiobuffer= (char*) malloc( bufmax );
 
-  if (! audiobuffer ) return NULL;
+  if (! audiobuffer ) return 0;
   
   audiolength=0;
   // disable video
@@ -34,7 +31,7 @@ CHAR8* SmackGetAudio (Smack* Smk) {
   do {
     smackaudio = smk_get_audio (smkobj, track);
     smacklength = smk_get_audio_size (smkobj, track);
-    memcpy (audiobuffer+audiolength, smackaudio, smacklength);
+    //memcpy (&audiobuffer+audiolength, smackaudio, smacklength);
     audiolength += smacklength;
   } while (  smk_next(smkobj) == SMK_MORE  );
 
@@ -43,13 +40,12 @@ CHAR8* SmackGetAudio (Smack* Smk) {
   
   // disable audio
   smk_enable_audio (smkobj,  track, DISABLE);
-  return audiobuffer;
+  return audiolength;
 }
 
 
 Smack* SmackOpen(const char* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 {
-  UINT8 i;
   Smack* flickinfo;
   unsigned long frame;
   unsigned long framecount;
@@ -65,6 +61,7 @@ Smack* SmackOpen(const char* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   unsigned long   a_rate[7];
   const unsigned char track = 0;
   char* audiobuffer;
+  UINT32 audiolength, audiosamples;
 
   fp.file = (FILE*)FileHandle;
   flickinfo = (Smack*)malloc (sizeof (Smack)); 
@@ -76,32 +73,27 @@ Smack* SmackOpen(const char* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   status = smk_info_video (flickinfo->Smacker, &width, &height, &scale);
   status = smk_info_all   (flickinfo->Smacker, &frame, &framecount, &usf);
 
-  printf ("Smackerinfo -- Width: %lu Height: %lu Frames: %lu Framecount: %lu Frames/Second: %f Scale: %d \n", width, height, framecount, frame, usf/1000, scale);
   status = smk_info_audio(flickinfo->Smacker, &a_trackmask, a_channels, a_depth, a_rate);
   
-  for (i = 0; i<8; i++) {
-  printf ("Smackerinfo -- Audio TrackMask: %u Channels: %u Depth: %d Rate: %lu\n", a_trackmask, a_channels[i], a_depth[i], a_rate[i]);
-  }
-
   flickinfo->smkaudiotrack.freq=a_rate[track];
   flickinfo->smkaudiotrack.channels=a_channels[track];
   flickinfo->smkaudiotrack.format=AUDIO_S16;
-
   flickinfo->smkaudiotrack.samples = 2048;  /* 1024.. Good low-latency value for callback */
-  //flickinfo->smkaudiotrack.callback = fill_smk_audio;
   flickinfo->smkaudiotrack.userdata = NULL;
-
-  /* Open the audio device, forcing the desired format */
-  /* if ( SDL_OpenAudio( &flickinfo->smkaudiotrack , NULL) < 0 ) {
-    fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
-    exit(1);
-    } */
-
   flickinfo->Frames=framecount;
   flickinfo->FrameNum=frame;
   flickinfo->Height=height;
 
-  audiobuffer = SmackGetAudio (flickinfo);
+  printf ("Smackerinfo -- Width: %lu Height: %lu Frames: %lu Framecount: %lu Frames/Second: %f Scale: %d, \nAudio Freq: %d Channels %d\n ", width, height, framecount, frame, usf/1000, scale, 
+          flickinfo->smkaudiotrack.freq, 
+          flickinfo->smkaudiotrack.channels
+          );
+
+  audiosamples = ( ((flickinfo->Frames) / usf/1000) *  flickinfo->smkaudiotrack.freq * 16 *  flickinfo->smkaudiotrack.channels);
+  audiobuffer = (char*) malloc( audiosamples );
+  if ( ! audiobuffer ) return NULL;
+  audiolength = SmackGetAudio (flickinfo, audiobuffer);
+  //if ( audiolength > 0 ) SoundPlayFromBuffer( audiobuffer, audiolength, MAXVOLUME/4, 0, 1, NULL, NULL);
 
   smk_enable_video (flickinfo->Smacker, ENABLE);
   smk_first(flickinfo->Smacker);
@@ -216,7 +208,7 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
   p=smackframe;
   // for now hardcoded without taking sdl into account. 
   // need to find a way to blit it later
-  for (i =0; i < 480; i++) {
+  for (i =0; i < DestHeight ; i++) {
     for (j = 0; j <640; j++) {
       // get rbg offset of palette
       color = &smackpal[p[0]*3] ;
