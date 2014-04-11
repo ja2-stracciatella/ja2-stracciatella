@@ -7,40 +7,37 @@ extern "C" {
 
 }
 
-
-UINT32 SmackGetAudio (Smack* Smk, char* audiobuffer) {
-
-  smk smkobj=Smk->Smacker;
-
-  unsigned long audiolength, smacklength, bufmax = 0;
-  unsigned char* smackaudio;
-  const unsigned char track=0;
-
-  ///Smk->smkaudiotrack.freq
-  ///Smk->smkaudiotrack.channels
-  ///Smk->smkaudiotrack.format=AUDIO_S16;
-  
+// read all smackaudio and convert it to 22050Hz on the fly (44100 originally)
+UINT32 SmackGetAudio (const smk SmkObj, char* audiobuffer) 
+{
+  unsigned long audiolen = 0,  smacklen = 0;
+  const unsigned char track = 0; // only track0
+  UINT16 i;
+  //char *paudio =  audiobuffer;
+  INT16 *paudio = (INT16*) audiobuffer;
+  //unsigned char *smackaudio;
+  INT16 *smackaudio;
 
   if (! audiobuffer ) return 0;
-  
-  audiolength=0;
-  // disable video
-  smk_enable_video(smkobj, DISABLE);
-  smk_enable_audio(smkobj,  track, ENABLE);
-  smk_first(smkobj);
+ 
+  // disable video - enable audio
+  smk_enable_video(SmkObj, DISABLE);
+  smk_enable_audio(SmkObj, track, ENABLE);
+  //smk_first(SmkObj); //wtf? why does it not work here? -> smacklen gets totally confused
+  // AND: There is a HalfSampleRate in SoundMan.... 
   do {
-    smackaudio = smk_get_audio (smkobj, track);
-    smacklength = smk_get_audio_size (smkobj, track);
-    //memcpy (&audiobuffer+audiolength, smackaudio, smacklength);
-    audiolength += smacklength;
-  } while (  smk_next(smkobj) == SMK_MORE  );
+    smackaudio = (INT16*) smk_get_audio (SmkObj, track);
+    smacklen = smk_get_audio_size (SmkObj, track);
+    for (i = 0; i < smacklen/2; i+=4 )
+      {
+        *paudio++ = ((smackaudio[ i ]+smackaudio[i+2])>>1);
+        *paudio++ = ((smackaudio[i+1]+smackaudio[i+3])>>1);
+      }
+    audiolen += smacklen/4;
+  } while (  smk_next(SmkObj) != SMK_LAST  );
 
-  printf ("Frame: %d of %d --- smacklength %lu copied, length now %lu max: %lu\n", Smk->FrameNum, Smk->Frames, smacklength, audiolength, bufmax);
-  printf ("read %lu bytes info audiobuffer\n", audiolength);
-  
-  // disable audio
-  smk_enable_audio (smkobj,  track, DISABLE);
-  return audiolength;
+  smk_enable_audio (SmkObj,  track, DISABLE);
+  return audiolen;
 }
 
 
@@ -61,7 +58,7 @@ Smack* SmackOpen(const char* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   unsigned long   a_rate[7];
   const unsigned char track = 0;
   char* audiobuffer;
-  UINT32 audiolength, audiosamples;
+  UINT32 audiolen, audiosamples;
 
   fp.file = (FILE*)FileHandle;
   flickinfo = (Smack*)malloc (sizeof (Smack)); 
@@ -83,17 +80,15 @@ Smack* SmackOpen(const char* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   flickinfo->Frames=framecount;
   flickinfo->FrameNum=frame;
   flickinfo->Height=height;
+  flickinfo->FramesPerSecond = usf;
 
-  printf ("Smackerinfo -- Width: %lu Height: %lu Frames: %lu Framecount: %lu Frames/Second: %f Scale: %d, \nAudio Freq: %d Channels %d\n ", width, height, framecount, frame, usf/1000, scale, 
-          flickinfo->smkaudiotrack.freq, 
-          flickinfo->smkaudiotrack.channels
-          );
-
-  audiosamples = ( ((flickinfo->Frames) / usf/1000) *  flickinfo->smkaudiotrack.freq * 16 *  flickinfo->smkaudiotrack.channels);
+  audiosamples = ( ((flickinfo->Frames) / (usf/1000)) *  flickinfo->smkaudiotrack.freq * 16 *  flickinfo->smkaudiotrack.channels);
   audiobuffer = (char*) malloc( audiosamples );
+  smk_first(flickinfo->Smacker);
   if ( ! audiobuffer ) return NULL;
-  audiolength = SmackGetAudio (flickinfo, audiobuffer);
-  //if ( audiolength > 0 ) SoundPlayFromBuffer( audiobuffer, audiolength, MAXVOLUME/4, 0, 1, NULL, NULL);
+  flickinfo->audiobuffer = audiobuffer;
+  audiolen = SmackGetAudio (flickinfo->Smacker, audiobuffer);
+  if ( audiolen > 0 ) SoundPlayFromBuffer( audiobuffer, audiolen, MAXVOLUME/4, 0, 1, NULL, NULL);
 
   smk_enable_video (flickinfo->Smacker, ENABLE);
   smk_first(flickinfo->Smacker);
@@ -103,17 +98,8 @@ Smack* SmackOpen(const char* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 
 UINT32 SmackDoFrame(Smack* Smk)
 {
-  // play sound sample
-  char* soundsample;
-  UINT32 vol;
-
-  soundsample = (char*) smk_get_audio(Smk->Smacker,0);
-
-  if( soundsample != NULL) {
-      vol = CalculateSoundEffectsVolume(90);
-      return 0;// PlaySound(soundsample, vol, 0, 0, NULL, NULL);
-    }
-  return SOUND_ERROR;
+  SDL_Delay(1000/Smk->FramesPerSecond);
+  return 0;
 }
 
 
@@ -201,8 +187,6 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
 
   smackframe = smk_get_video(Smk->Smacker);
   smackpal = smk_get_palette (Smk->Smacker);
-
-  //printf ("got audiobuffer length: %lu\n", audiolength);
   // dump_bmp (smackpal, smackframe, 640, 480, Smk->FrameNum);
   buf=(UINT16*)Buf;
   p=smackframe;
@@ -210,16 +194,15 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
   // need to find a way to blit it later
   for (i =0; i < DestHeight ; i++) {
     for (j = 0; j <640; j++) {
-      // get rbg offset of palette
+      // get rgb offset of palette
       color = &smackpal[p[0]*3] ;
-      // convert from rbg to rbg565 0=red 1=green 2=blue
+      // convert from rbg to rgb565 0=red 1=green 2=blue
       if (Flags == SMACKBUFFER565) {
         pixel = (color[0]>>3)<<11 | (color[1]>>2)<<5 | color[2]>>3;
       }
       else {
         pixel = (color[0]>>3)<<10 | (color[1]>>2)<<5 | color[2]>>3;
       }
-      
       buf[(j+Top)+(i+Left)*Pitch/2]=pixel;
       p++;
     }

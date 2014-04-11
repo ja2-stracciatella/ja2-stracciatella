@@ -41,11 +41,13 @@ enum
 
 struct Smack
 {
-  smk Smacker; //object type from libsmacker
+  smk Smacker; //object pointer type from libsmacker
   SDL_AudioSpec smkaudiotrack;
+  char* audiobuffer;
   UINT32 Height;
   UINT32 Frames;
   UINT32 FrameNum;
+  UINT32 FramesPerSecond;
 };
 
 typedef void SmackBuf;

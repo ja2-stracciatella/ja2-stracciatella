@@ -775,7 +775,7 @@ static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned
 			/* check for overflow condition */
 			if (j + k > 768 || i + k > 768)
 			{
-				fprintf(stderr,"libsmacker::palette_render(s,p,size) - ERROR: overflow, 0x80 attempt to copy %d bytes from %d to %d\n",k,j,i);
+                          //fprintf(stderr,"libsmacker::palette_render(s,p,size) - ERROR: overflow, 0x80 attempt to copy %d bytes from %d to %d\n",k,j,i);
 				goto error;
 			}
 

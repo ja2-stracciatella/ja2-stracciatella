@@ -215,7 +215,7 @@ UINT32 SoundPlayFromBuffer(const char* pbuffer, UINT32 samples, UINT32 volume, U
 
   SAMPLETAG* bufferinfo = (SAMPLETAG*)malloc (sizeof (SAMPLETAG));
   
-  bufferinfo->uiSpeed=44100;
+  bufferinfo->uiSpeed=22050;
   bufferinfo->pData = (PTR)pbuffer;
   bufferinfo->n_samples = samples;
   bufferinfo->uiFlags = SAMPLE_16BIT | SAMPLE_STEREO;

@@ -29,7 +29,6 @@ struct SMKFLIC
 {
 	HWFILE    hFileHandle;
 	Smack*    SmackerObject;
-  //SmackBuf* SmackBuffer;
         CHAR8     SmackerStatus;
         SDL_Surface*    SmackBuffer;
 	UINT32    uiFlags;
@@ -71,8 +70,7 @@ BOOLEAN SmkPollFlics(void)
 		// if (smk->FrameNum == smk->Frames - 1)
                 if (i->SmackerStatus == SMK_LAST )
 		{
-                  
-			if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
+                  if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
 		}
 		else
 		{
@@ -173,8 +171,12 @@ void SmkCloseFlic(SMKFLIC* const sf)
 	FileClose(sf->hFileHandle);
 	//not needed anymore: SmackBufferClose(sf->SmackBuffer);
         //if SMK_MODE_DISK no need to close filehandle anymore
-	//SmackClose(sf->SmackHandle);
+        SoundStopAll();
+        // not nice to do it here really... 
+        free (sf->SmackerObject->audiobuffer);
 	memset(sf, 0, sizeof(*sf));
+
+
 }
 
 
