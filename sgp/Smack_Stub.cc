@@ -1,4 +1,6 @@
-#include <strings.h>
+#if !defined(_MSC_VER)
+  #include <strings.h>
+#endif
 #include "Smack_Stub.h"
 #include "Sound_Control.h"
 #include "SoundMan.h"

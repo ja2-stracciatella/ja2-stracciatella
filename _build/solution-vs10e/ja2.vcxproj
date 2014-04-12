@@ -53,7 +53,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog;$(ProjectDir)\..\lib-rapidjson</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\sgp\smacker;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog;$(ProjectDir)\..\lib-rapidjson</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog;$(ProjectDir)\..\lib-rapidjson</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..;$(ProjectDir)\..\..\src;$(ProjectDir)\..\..\Build\Editor;$(ProjectDir)\..\..\Build\Laptop;$(ProjectDir)\..\..\Build\Strategic;$(ProjectDir)\..\..\Build\Tactical;$(ProjectDir)\..\..\Build\TacticalAI;$(ProjectDir)\..\..\Build\TileEngine;$(ProjectDir)\..\..\Build\Utils;$(ProjectDir)\..\..\sgp;$(ProjectDir)\..\..\sgp\smacker;$(ProjectDir)\..\..\Build;$(ProjectDir)\..\lib-boost;$(ProjectDir)\..\lib-gtest;$(ProjectDir)\..\lib-gtest\include;$(ProjectDir)\..\lib-MicroIni\include;$(ProjectDir)\..\lib-SDL-devel-1.2.15-VC\include;$(ProjectDir)\..\lib-utf8cpp\source;$(ProjectDir)\..\lib-slog;$(ProjectDir)\..\lib-rapidjson</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>JA2;MICROINI_STATIC;WITH_UNITTESTS;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -414,6 +414,9 @@
     <ClCompile Include="..\..\sgp\SGP.cc" />
     <ClCompile Include="..\..\sgp\SGPStrings.cc" />
     <ClCompile Include="..\..\sgp\Shading.cc" />
+    <ClCompile Include="..\..\sgp\smacker\smacker.c" />
+    <ClCompile Include="..\..\sgp\smacker\smk_bitstream.c" />
+    <ClCompile Include="..\..\sgp\smacker\smk_hufftree.c" />
     <ClCompile Include="..\..\sgp\Smack_Stub.cc" />
     <ClCompile Include="..\..\sgp\SoundMan.cc" />
     <ClCompile Include="..\..\sgp\STCI.cc" />
@@ -826,6 +829,10 @@
     <ClInclude Include="..\..\sgp\SGPStrings.h" />
     <ClInclude Include="..\..\sgp\Shading.h" />
     <ClInclude Include="..\..\sgp\Smack.h" />
+    <ClInclude Include="..\..\sgp\smacker\smacker.h" />
+    <ClInclude Include="..\..\sgp\smacker\smk_bitstream.h" />
+    <ClInclude Include="..\..\sgp\smacker\smk_hufftree.h" />
+    <ClInclude Include="..\..\sgp\smacker\smk_malloc.h" />
     <ClInclude Include="..\..\sgp\Smack_Stub.h" />
     <ClInclude Include="..\..\sgp\SoundMan.h" />
     <ClInclude Include="..\..\sgp\STCI.h" />
@@ -880,6 +887,7 @@
   <ItemGroup>
     <None Include="..\..\Build\Libraries.inc" />
     <None Include="..\..\Build\Res\jagged3.ico" />
+    <None Include="..\..\sgp\smacker\README" />
     <None Include="..\lib-MicroIni\include\MicroIni\Container.inl" />
     <None Include="..\lib-MicroIni\include\MicroIni\Value.inl" />
   </ItemGroup>
