@@ -181,29 +181,29 @@ void dump_bmp(unsigned char *pal, unsigned char *image_data, unsigned int w, uns
 
 void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, void* Buf, UINT32 Flags)
 {
-  unsigned char* smackframe, *p;
+  unsigned char* smackframe, *pframe;
   unsigned char* smackpal;
   UINT16 i,j,pixel,*buf;
-  UINT8 *color;
+  UINT8 *rgb;
   UINT32 halfpitch = Pitch / 2;
   smackframe = smk_get_video(Smk->Smacker);
   smackpal = smk_get_palette (Smk->Smacker);
   // dump_bmp (smackpal, smackframe, 640, 480, Smk->FrameNum);
   buf=(UINT16*)Buf;
-  p=smackframe;
+  pframe=smackframe;
   // for now hardcoded without taking sdl into account. 
   // need to find a way to blit it later
   if (Flags == SMACKBUFFER565) 
     {
+      buf+=Left + Top*halfpitch;
       for (i =0; i < DestHeight ; i++) {
         for (j = 0; j <640; j++) {
           // get rgb offset of palette
-          color = &smackpal[p[0]*3] ;
+          rgb = &smackpal[*pframe++*3] ;
           // convert from rbg to rgb565 0=red 1=green 2=blue
-          pixel = (color[0]>>3)<<11 | (color[1]>>2)<<5 | color[2]>>3;
-        buf[(j+Top)+(i+Left)*halfpitch]=pixel;
-        p++;
+          *buf++ = (rgb[0]>>3)<<11 | (rgb[1]>>2)<<5 | rgb[2]>>3;
         }
+        buf+=halfpitch-640;
       }
     }
   else 
@@ -211,11 +211,11 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
       for (i =0; i < DestHeight ; i++) {
         for (j = 0; j <640; j++) {
           // get rgb offset of palette
-          color = &smackpal[p[0]*3] ;
+          rgb = &smackpal[pframe[0]*3] ;
           // convert from rbg to rgb555 0=red 1=green 2=blue
-          pixel = (color[0]>>3)<<10 | (color[1]>>2)<<5 | color[2]>>3;
+          //pixel = (rgb[0]>>3)<<10 | (rgb[1]>>2)<<5 | rgb[2]>>3;
           buf[(j+Top)+(i+Left)*halfpitch]=pixel;
-          p++;
+          pframe++;
         }
       }
     }

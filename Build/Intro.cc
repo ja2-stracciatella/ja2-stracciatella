@@ -372,7 +372,7 @@ static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay)
 	if( iIndexOfFlicToPlay != -1 )
 	{
 		//start playing a flic
-		gpSmackFlic = SmkPlayFlic( gpzSmackerFileNames[ iIndexOfFlicToPlay ], STD_SCREEN_Y, STD_SCREEN_X , TRUE );
+		gpSmackFlic = SmkPlayFlic( gpzSmackerFileNames[ iIndexOfFlicToPlay ], STD_SCREEN_X, STD_SCREEN_Y , TRUE );
 
 		if( gpSmackFlic != NULL )
 		{
