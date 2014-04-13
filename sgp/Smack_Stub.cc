@@ -113,7 +113,7 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 UINT32 SmackDoFrame(Smack* Smk)
 {
   // wait for FPS milliseconds
-  SDL_Delay(1000/(Smk->FramesPerSecond/1000));
+  SDL_Delay(Smk->FramesPerSecond/1000/2);
   return 0;
 }
 
