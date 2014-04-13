@@ -29,6 +29,7 @@
 #ifndef SMACKER_H
 #define SMACKER_H
 
+//#include "Types.h"
 /* fp error handling */
 #include <errno.h>
 /* memset */

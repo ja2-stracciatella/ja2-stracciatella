@@ -20,7 +20,7 @@ void InitializeSoundManager(void);
 void ShutdownSoundManager(void);
 
 
-UINT32 SoundPlayFromBuffer(const char* pbuffer, UINT32 samples, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
+UINT32 SoundPlayFromBuffer(const char* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
 /* Starts a sample playing. If the sample is not loaded in the cache, it will

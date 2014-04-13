@@ -41,21 +41,31 @@ template<typename T> static inline void Swap(T& a, T& b)
 }
 
 
-typedef int32_t     INT;
-typedef int32_t     INT32;
-typedef uint32_t    UINT;
-typedef uint32_t    UINT32;
-
 // integers
+
+
 typedef uint8_t         UINT8;
 typedef int8_t          INT8;
 typedef uint16_t        UINT16;
 typedef int16_t         INT16;
+
+typedef int32_t     INT;
+typedef int32_t     INT32;
+typedef uint32_t    UINT;
+typedef uint32_t    UINT32;
+typedef int64_t         INT64;
+typedef uint64_t        UINT64;
+typedef long          LONG32;
+typedef unsigned long ULONG32;
+
+
 // floats
 typedef float           FLOAT;
 typedef double          DOUBLE;
+
 // strings
-typedef char			      CHAR8;
+typedef char		CHAR8;
+typedef unsigned char   UCHAR8;
 
 // other
 typedef unsigned char		BOOLEAN;

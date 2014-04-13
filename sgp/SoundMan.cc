@@ -210,20 +210,21 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 }
 
 
-UINT32 SoundPlayFromBuffer(const char* pbuffer, UINT32 samples, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
+UINT32 SoundPlayFromBuffer(const char* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-
-  SAMPLETAG* bufferinfo = (SAMPLETAG*)malloc (sizeof (SAMPLETAG));
+  SAMPLETAG* buffertag = (SAMPLETAG*)malloc (sizeof (SAMPLETAG));
   
-  bufferinfo->uiSpeed=22050;
-  bufferinfo->pData = (PTR)pbuffer;
-  bufferinfo->n_samples = samples;
-  bufferinfo->uiFlags = SAMPLE_16BIT | SAMPLE_STEREO;
+  //buffertag->pName = NULL;
+  buffertag->uiSpeed=22050;
+  buffertag->n_samples = size;
+  buffertag->pData = (PTR)pbuffer;
+  buffertag->uiFlags =  SAMPLE_16BIT | SAMPLE_STEREO;
+  buffertag->uiCacheHits = 0;
 
-  	SOUNDTAG* const channel = SoundGetFreeChannel();
-	if (channel == NULL) return SOUND_ERROR;
+  SOUNDTAG* const channel = SoundGetFreeChannel();
+  if (channel == NULL) return SOUND_ERROR;
 
-	return SoundStartSample(bufferinfo, channel, volume, pan, loop, end_callback, data);
+  return SoundStartSample(buffertag, channel, volume, pan, loop, end_callback, data);
 }
 
 
