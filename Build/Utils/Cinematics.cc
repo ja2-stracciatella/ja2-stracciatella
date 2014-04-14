@@ -60,6 +60,8 @@ BOOLEAN SmkPollFlics(void)
 
 		if (SmackWait(smkobj)) continue;
 
+                //if (SmackSkipFrames(smkobj)) continue;
+
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
                   SmackToBuffer(smkobj, i->uiLeft, i->uiTop, l.Pitch(), smkobj->Height, l.Buffer<UINT16>(), guiSmackPixelFormat);
 		  SmackDoFrame(smkobj);

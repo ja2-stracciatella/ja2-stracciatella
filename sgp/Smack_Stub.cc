@@ -107,17 +107,30 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 
 UINT32 SmackDoFrame(Smack* Smk)
 {
+  UINT32 i=0;
   // wait for FPS milliseconds
   UINT32 millisecondspassed = SDL_GetTicks() - Smk->LastTick;
   UINT32 delay = 0;
   if (  Smk->FramesPerSecond/1000 > millisecondspassed ) {
     delay = Smk->FramesPerSecond/1000-millisecondspassed;
+    Smk->SkipFrames=0;
     //printf ("Ticks %u  Delay: %u ", millisecondspassed, delay);
   } 
   else
     {
-    Smk->VideoDelayed=TRUE;
-    return TRUE;
+      Smk->SkipFrames = millisecondspassed / (Smk->FramesPerSecond/1000);
+      while (Smk->SkipFrames > 0) {
+        SmackNextFrame(Smk);
+        Smk->SkipFrames--;
+        i++;
+      }
+      millisecondspassed = SDL_GetTicks() - Smk->LastTick;
+      if (  i*(Smk->FramesPerSecond/1000) > millisecondspassed ) 
+        {
+          delay = i*(Smk->FramesPerSecond/1000)-millisecondspassed;
+        }
+      else delay = millisecondspassed- i*(Smk->FramesPerSecond/1000);
+      //printf ("Skip Delay %u\n", delay);
     }
   SDL_Delay(delay);
   Smk->LastTick = SDL_GetTicks();
@@ -134,15 +147,22 @@ CHAR8 SmackNextFrame(Smack* Smk)
   return smkstatus;
 }
 
+UINT32 SmackSkipFrames (Smack* Smk)
+{
+  return 0;
+  if  (Smk->SkipFrames > 0)
+  {
+    while (Smk->SkipFrames > 0) { 
+      SmackNextFrame(Smk);
+      Smk->SkipFrames--;
+    }
+  }
+  return 0;
+}
+
 
 UINT32 SmackWait(Smack* Smk)
 {
- if (Smk->VideoDelayed) {
-    Smk->VideoDelayed=FALSE;
-    Smk->LastTick=SDL_GetTicks();
-    SmackNextFrame(Smk);
-    return (TRUE);
-  }
   return 0;
 }
 

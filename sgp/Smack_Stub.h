@@ -50,7 +50,7 @@ struct Smack
   UINT32 FrameNum;
   UINT32 FramesPerSecond;
   UINT32 LastTick;
-  BOOLEAN VideoDelayed;
+  UINT16 SkipFrames;
 };
 
 
@@ -61,6 +61,7 @@ UINT32 SmackDoFrame(Smack* Smk);
 CHAR8 SmackNextFrame(Smack* Smk);
 
 UINT32 SmackWait(Smack* Smk);
+UINT32 SmackSkipFrames (Smack* Smk);
 void SmackClose(Smack* Smk);
 
 void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, void* Buf, UINT32 Flags);
