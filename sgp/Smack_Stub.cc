@@ -9,18 +9,16 @@ extern "C" {
 #include "smacker/smacker.h"
 }
 
-BOOLEAN CheckSmkStatus(CHAR8 smkstatus) {
+BOOLEAN SmackCheckStatus(CHAR8 smkstatus) {
   if (smkstatus <0) {
-    printf ("SmackStatus failed!\n");
+    printf ("SmackLibrary returned an error!\n");
     return TRUE;
   }
   return FALSE;
 }
 
-#define CHECKSMACKSTATUS (status < 0) 
-
 // read all smackaudio and convert it to 22050Hz on the fly (44100 originally)
-UINT32 SmackGetAudio (const smk SmkObj, const CHAR8* audiobuffer) 
+UINT32 SmackGetAudio (const smk SmkObj, const ULONG32 Frames, const CHAR8* audiobuffer) 
 {
   UINT32 audiolen = 0,  smacklen = 0;
   UINT16 i, index;
@@ -32,11 +30,10 @@ UINT32 SmackGetAudio (const smk SmkObj, const CHAR8* audiobuffer)
  
   // disable video - enable audio
   status = smk_enable_video(SmkObj, DISABLE);
-  CheckSmkStatus(status);
+  SmackCheckStatus(status);
   status = smk_enable_audio(SmkObj, track, ENABLE);
-  CheckSmkStatus(status);
-  //smk_first(SmkObj); //wtf? why does it not work here? -> smacklen gets totally confused
-  // AND: There is a HalfSampleRate in SoundMan.... 
+  SmackCheckStatus(status);
+  smk_first (SmkObj);
   do {
     smackaudio = (INT16*) smk_get_audio (SmkObj, track);
     smacklen = smk_get_audio_size (SmkObj, track);
@@ -57,6 +54,40 @@ UINT32 SmackGetAudio (const smk SmkObj, const CHAR8* audiobuffer)
 }
 
 
+UINT32 SmackGetInfo ( Smack* object ) 
+{
+  //smk smackinfo = object->Smacker;
+  /*  ULONG32 frame, framecount,  width, height;
+  UCHAR8 scale;
+  DOUBLE usf;
+  CHAR8 smkstatus; */
+  //union smk_read_t fp;
+  /* arrays for audio track metadata */
+  /*
+  UCHAR8  a_trackmask, a_channels[7], a_depth[7];
+  ULONG32   a_rate[7];
+
+  smackinfo = object->Smacker;
+
+  smkstatus = smk_info_video (smackinfo->Smacker, &width, &height, &scale);
+  smkstatus = smk_info_all   (smackinfo->Smacker, &frame, &framecount, &usf);
+
+  smkstatus = smk_info_audio(smackinfo->Smacker,  &a_trackmask, a_channels, a_depth, a_rate);
+
+  
+  smackinfo->smkaudiotrack.freq=a_rate[track];
+  smackinfo->smkaudiotrack.channels=a_channels[track];
+  smackinfo->smkaudiotrack.format=AUDIO_S16;
+  smackinfo->smkaudiotrack.samples = 1024; 
+  smackinfo->smkaudiotrack.userdata = NULL;
+  smackinfo->Frames=framecount;
+  smackinfo->FrameNum=frame;
+  smackinfo->Height=height;
+  smackinfo->FramesPerSecond = usf;
+  */
+  return 0;
+}
+
 Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 {
   Smack* flickinfo;
@@ -67,7 +98,7 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   CHAR8 smkstatus;
   union smk_read_t fp;
   /* arrays for audio track metadata */
-  UCHAR8  a_trackmask, a_channels[7], a_depth[7];
+  UCHAR8    a_depth[7], a_channels[7];
   ULONG32   a_rate[7];
   const CHAR8 track = 0;
   CHAR8* audiobuffer;
@@ -78,34 +109,35 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 
   // open file with given filehandle
   flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_DISK);
+  //flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_MEMORY);
   if ( ! flickinfo->Smacker ) return NULL;
-  
+
+  SmackGetInfo (flickinfo);
+
   smkstatus = smk_info_video (flickinfo->Smacker, &width, &height, &scale);
+  SmackCheckStatus(smkstatus);
   smkstatus = smk_info_all   (flickinfo->Smacker, &frame, &framecount, &usf);
+  SmackCheckStatus(smkstatus);
+  smkstatus = smk_info_audio(flickinfo->Smacker,  NULL, a_channels, a_depth, a_rate);
+  SmackCheckStatus(smkstatus);
 
-  smkstatus = smk_info_audio(flickinfo->Smacker,  &a_trackmask, a_channels, a_depth, a_rate);
-
-  
-  flickinfo->smkaudiotrack.freq=a_rate[track];
-  flickinfo->smkaudiotrack.channels=a_channels[track];
-  flickinfo->smkaudiotrack.format=AUDIO_S16;
-  flickinfo->smkaudiotrack.samples = 1024;  /* 1024.. Good low-latency value for callback */
-  flickinfo->smkaudiotrack.userdata = NULL;
   flickinfo->Frames=framecount;
   flickinfo->FrameNum=frame;
   flickinfo->Height=height;
   flickinfo->FramesPerSecond = usf;
-
-  audiosamples = ( ((flickinfo->Frames) * (usf/1000) / 1000) *  flickinfo->smkaudiotrack.freq * 16 *  flickinfo->smkaudiotrack.channels);
+  // calculate needed memory
+  audiosamples = ( (flickinfo->Frames / (usf/1000) * (a_rate[track]/2) * 16 *  a_channels[track]));
+  //printf ("Malloc Audio: %luMb FPS: %f channels: %d depth: %d\n", audiosamples/1024/1024, usf/1000, a_channels[track], a_depth[track] );
   audiobuffer = (CHAR8*) malloc( audiosamples );
-  if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
+  //if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
   if ( ! audiobuffer ) return NULL;
   flickinfo->audiobuffer = audiobuffer;
-  audiolen = SmackGetAudio (flickinfo->Smacker, audiobuffer);
-  if ( audiolen > 0 ) SoundPlayFromBuffer( audiobuffer, audiolen, MAXVOLUME/4, 64, 1, NULL, NULL);
+  audiolen = SmackGetAudio (flickinfo->Smacker, framecount, audiobuffer);
+  if ( audiolen > 0 ) SoundPlayFromBuffer( audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
   smk_enable_video (flickinfo->Smacker, ENABLE);
   if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
   smk_first(flickinfo->Smacker);
+  flickinfo->LastTick = SDL_GetTicks();
   return flickinfo;
 }
 
@@ -113,7 +145,14 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
 UINT32 SmackDoFrame(Smack* Smk)
 {
   // wait for FPS milliseconds
-  SDL_Delay(Smk->FramesPerSecond/1000/2);
+  UINT32 millisecondspassed = SDL_GetTicks() - Smk->LastTick;
+  UINT32 delay = 0;
+  if (  Smk->FramesPerSecond/1000 > millisecondspassed ) {
+    delay = Smk->FramesPerSecond/1000-millisecondspassed;
+    //printf ("Ticks %u  Delay: %u ", millisecondspassed, delay);
+  }
+  SDL_Delay(delay);
+  Smk->LastTick = SDL_GetTicks();
   return 0;
 }
 
@@ -132,7 +171,8 @@ CHAR8 SmackNextFrame(Smack* Smk)
 
 UINT32 SmackWait(Smack* Smk)
 {
-	return 0;
+
+  return 0;
 }
 
 
