@@ -50,7 +50,9 @@ struct Smack
   UINT32 FrameNum;
   UINT32 FramesPerSecond;
   UINT32 LastTick;
+  BOOLEAN VideoDelayed;
 };
+
 
 typedef void SmackBuf;
 

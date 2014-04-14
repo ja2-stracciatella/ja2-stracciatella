@@ -24,16 +24,8 @@ UINT32 SmackGetAudio (const smk SmkObj, const ULONG32 Frames, const CHAR8* audio
   UINT16 i, index;
   INT16 *smackaudio, *paudio = (INT16*) audiobuffer;
   const CHAR8 track = 0; // only track0
-  CHAR8 status = 0;
 
   if (! audiobuffer ) return 0;
- 
-  // disable video - enable audio
-  status = smk_enable_video(SmkObj, DISABLE);
-  SmackCheckStatus(status);
-  status = smk_enable_audio(SmkObj, track, ENABLE);
-  SmackCheckStatus(status);
-  smk_first (SmkObj);
   do {
     smackaudio = (INT16*) smk_get_audio (SmkObj, track);
     smacklen = smk_get_audio_size (SmkObj, track);
@@ -51,41 +43,6 @@ UINT32 SmackGetAudio (const smk SmkObj, const ULONG32 Frames, const CHAR8* audio
 
   smk_enable_audio (SmkObj,  track, DISABLE);
   return audiolen;
-}
-
-
-UINT32 SmackGetInfo ( Smack* object ) 
-{
-  //smk smackinfo = object->Smacker;
-  /*  ULONG32 frame, framecount,  width, height;
-  UCHAR8 scale;
-  DOUBLE usf;
-  CHAR8 smkstatus; */
-  //union smk_read_t fp;
-  /* arrays for audio track metadata */
-  /*
-  UCHAR8  a_trackmask, a_channels[7], a_depth[7];
-  ULONG32   a_rate[7];
-
-  smackinfo = object->Smacker;
-
-  smkstatus = smk_info_video (smackinfo->Smacker, &width, &height, &scale);
-  smkstatus = smk_info_all   (smackinfo->Smacker, &frame, &framecount, &usf);
-
-  smkstatus = smk_info_audio(smackinfo->Smacker,  &a_trackmask, a_channels, a_depth, a_rate);
-
-  
-  smackinfo->smkaudiotrack.freq=a_rate[track];
-  smackinfo->smkaudiotrack.channels=a_channels[track];
-  smackinfo->smkaudiotrack.format=AUDIO_S16;
-  smackinfo->smkaudiotrack.samples = 1024; 
-  smackinfo->smkaudiotrack.userdata = NULL;
-  smackinfo->Frames=framecount;
-  smackinfo->FrameNum=frame;
-  smackinfo->Height=height;
-  smackinfo->FramesPerSecond = usf;
-  */
-  return 0;
 }
 
 Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
@@ -112,8 +69,6 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   //flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_MEMORY);
   if ( ! flickinfo->Smacker ) return NULL;
 
-  SmackGetInfo (flickinfo);
-
   smkstatus = smk_info_video (flickinfo->Smacker, &width, &height, &scale);
   SmackCheckStatus(smkstatus);
   smkstatus = smk_info_all   (flickinfo->Smacker, &frame, &framecount, &usf);
@@ -129,7 +84,12 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   audiosamples = ( (flickinfo->Frames / (usf/1000) * (a_rate[track]/2) * 16 *  a_channels[track]));
   //printf ("Malloc Audio: %luMb FPS: %f channels: %d depth: %d\n", audiosamples/1024/1024, usf/1000, a_channels[track], a_depth[track] );
   audiobuffer = (CHAR8*) malloc( audiosamples );
-  //if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
+  smkstatus = smk_enable_video(flickinfo->Smacker, DISABLE);
+  SmackCheckStatus(smkstatus);
+  smkstatus = smk_enable_audio(flickinfo->Smacker, track, ENABLE);
+  SmackCheckStatus(smkstatus);
+
+  if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
   if ( ! audiobuffer ) return NULL;
   flickinfo->audiobuffer = audiobuffer;
   audiolen = SmackGetAudio (flickinfo->Smacker, framecount, audiobuffer);
@@ -150,28 +110,36 @@ UINT32 SmackDoFrame(Smack* Smk)
   if (  Smk->FramesPerSecond/1000 > millisecondspassed ) {
     delay = Smk->FramesPerSecond/1000-millisecondspassed;
     //printf ("Ticks %u  Delay: %u ", millisecondspassed, delay);
-  }
+  } 
+  else
+    {
+    Smk->VideoDelayed=TRUE;
+    return TRUE;
+    }
   SDL_Delay(delay);
   Smk->LastTick = SDL_GetTicks();
   return 0;
 }
 
 
+
 CHAR8 SmackNextFrame(Smack* Smk)
 {
-  ULONG32 cur_frame; 
   CHAR8 smkstatus;
   smkstatus = smk_next(Smk->Smacker);
-  smk_info_all(Smk->Smacker, &cur_frame, NULL, NULL);
-  //printf ("Frame: %d cur_frame: %lu\n", Smk->FrameNum, cur_frame);
-  Smk->FrameNum = cur_frame;
+  SmackCheckStatus(smkstatus);
   return smkstatus;
 }
 
 
 UINT32 SmackWait(Smack* Smk)
 {
-
+ if (Smk->VideoDelayed) {
+    Smk->VideoDelayed=FALSE;
+    Smk->LastTick=SDL_GetTicks();
+    SmackNextFrame(Smk);
+    return (TRUE);
+  }
   return 0;
 }
 
