@@ -775,8 +775,12 @@ static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned
 			/* check for overflow condition */
 			if (j + k > 768 || i + k > 768)
 			{
+                          // spits out some overflow messages while playing
+                          // cinematics
+                          // but does not seem to have negative side effects
+                          // except maybe at the very end (white heads in crowd)
                           //fprintf(stderr,"libsmacker::palette_render(s,p,size) - ERROR: overflow, 0x80 attempt to copy %d bytes from %d to %d\n",k,j,i);
-				goto error;
+                          goto error;
 			}
 
 			/* if prev palette exists, copy... else memset black */

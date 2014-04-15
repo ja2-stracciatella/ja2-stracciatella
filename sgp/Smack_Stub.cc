@@ -17,32 +17,38 @@ BOOLEAN SmackCheckStatus(CHAR8 smkstatus) {
   return FALSE;
 }
 
+void SmackPrintFlickInfo(ULONG32 width, ULONG32 height, UCHAR8 scale, ULONG32 framecount, 
+                    DOUBLE usf, UCHAR8 a_channels, UCHAR8 a_depth, UCHAR8 a_rate)
+{
+  printf ("Video -- Frames: %lu Width: %lu Height: %lu Scale: %d \n", framecount, width, height, scale);
+  printf ("Audio -- FPS: %2.2f  Channels: %d Depth: %d Rate %d\n", usf/1000, a_channels, a_depth, a_rate);
+}
+
 // read all smackaudio and convert it to 22050Hz on the fly (44100 originally)
-UINT32 SmackGetAudio (const smk SmkObj, const ULONG32 Frames, const CHAR8* audiobuffer) 
+UINT32 SmackGetAudio (const smk SmkObj, const CHAR8* audiobuffer) 
 {
   UINT32 audiolen = 0,  smacklen = 0;
   UINT16 i, index;
   INT16 *smackaudio, *paudio = (INT16*) audiobuffer;
-  const CHAR8 track = 0; // only track0
+  const CHAR8 track0 = 0; // only track0
+  smk_enable_audio (SmkObj,  track0, ENABLE);
 
   if (! audiobuffer ) return 0;
   do {
-    smackaudio = (INT16*) smk_get_audio (SmkObj, track);
-    smacklen = smk_get_audio_size (SmkObj, track);
-    smacklen = smk_get_audio_size (SmkObj, track);
-    index = 0; i = smacklen/8;
-    while  ( i > 0 )
+    smackaudio = (INT16*) smk_get_audio (SmkObj, track0);
+    smacklen = smk_get_audio_size (SmkObj, track0);
+    smacklen = smk_get_audio_size (SmkObj, track0);
+    index = 0; 
+    for  ( i = 0 ; i < smacklen/8; i++ )
       {
-        *paudio++ = ((smackaudio[ index   ] +smackaudio[index+2])>>1);
-        *paudio++ = ((smackaudio[ index +1] +smackaudio[index+3])>>1);
+        *paudio++ = ((smackaudio[ index   ] +smackaudio[index+2]) / 2 );
+        *paudio++ = ((smackaudio[ index +1] +smackaudio[index+3]) / 2 );
         index += 4;
-        i--;
       } 
-    audiolen += smacklen/4;
-    //printf ("Restlen i: %u from smacklen/8: %u\n", i, smacklen/8);
-  } while (  smk_next(SmkObj) != SMK_DONE  );
-
-  smk_enable_audio (SmkObj,  track, DISABLE);
+    //audiolen += smacklen/4;
+    audiolen += i*2;
+   } while (  smk_next(SmkObj) != SMK_DONE  );
+  smk_enable_audio (SmkObj,  track0, DISABLE);
   return audiolen;
 }
 
@@ -58,8 +64,7 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   /* arrays for audio track metadata */
   UCHAR8    a_depth[7], a_channels[7];
   ULONG32   a_rate[7];
-  const CHAR8 track = 0;
-  CHAR8* audiobuffer;
+  const CHAR8 track0 = 0;
   ULONG32 audiolen, audiosamples;
 
   fp.file = (FILE*)FileHandle;
@@ -76,26 +81,30 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   SmackCheckStatus(smkstatus);
   smkstatus = smk_info_audio(flickinfo->Smacker,  NULL, a_channels, a_depth, a_rate);
   SmackCheckStatus(smkstatus);
+
+  #ifdef JA2TESTVERSION
+  SmackPrintFlickInfo(width, height, scale, framecount, usf, a_channels[0], a_depth[0], a_rate[0]);
+  #endif
+
   smkstatus = smk_enable_video(flickinfo->Smacker, DISABLE);
   SmackCheckStatus(smkstatus);
-  smkstatus = smk_enable_audio(flickinfo->Smacker, track, ENABLE);
+  smkstatus = smk_enable_audio(flickinfo->Smacker, track0, ENABLE);
   SmackCheckStatus(smkstatus);
   
   if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
 
   flickinfo->Frames=framecount;
-  flickinfo->FrameNum=frame;
+  //flickinfo->FrameNum=frame;
   flickinfo->Height=height;
+  flickinfo->Width=width;
   flickinfo->FramesPerSecond = usf;
-  // calculate needed memory
-  audiosamples = ( (flickinfo->Frames / (usf/1000) * (a_rate[track]/2) * 16 *  a_channels[track]));
-  //printf ("Malloc Audio: %luMb FPS: %f channels: %d depth: %d\n", audiosamples/1024/1024, usf/1000, a_channels[track], a_depth[track] );
-  audiobuffer = (CHAR8*) malloc( audiosamples );
-
-  if ( ! audiobuffer ) return NULL;
-  flickinfo->audiobuffer = audiobuffer;
-  audiolen = SmackGetAudio (flickinfo->Smacker, framecount, audiobuffer);
-  if ( audiolen > 0 ) SoundPlayFromBuffer( audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
+  // calculated audio memory for downsampling 44100->22050
+  audiosamples = ( ((flickinfo->Frames) * (1/(usf/1000)) * (a_rate[track0]/2) * 16 *  a_channels[track0]));
+  //printf ("Malloc Audio: %luKb FPS: %f channels: %d depth: %d\n", audiosamples/1024, usf/1000, a_channels[track0], a_depth[track0] );
+  flickinfo->audiobuffer = (CHAR8*) malloc( audiosamples );
+  if ( ! flickinfo->audiobuffer ) return NULL;
+  audiolen = SmackGetAudio (flickinfo->Smacker, flickinfo->audiobuffer);
+  if ( audiolen > 0 ) SoundPlayFromBuffer( flickinfo->audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
   smk_enable_video (flickinfo->Smacker, ENABLE);
   if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
   smk_first(flickinfo->Smacker);
@@ -109,28 +118,43 @@ UINT32 SmackDoFrame(Smack* Smk)
 {
   UINT32 i=0;
   // wait for FPS milliseconds
-  UINT32 millisecondspassed = SDL_GetTicks() - Smk->LastTick;
-  UINT32 delay = 0;
-  if (  Smk->FramesPerSecond/1000 > millisecondspassed ) {
-    delay = Smk->FramesPerSecond/1000-millisecondspassed;
-    Smk->SkipFrames=0;
-    //printf ("Ticks %u  Delay: %u ", millisecondspassed, delay);
+  UINT16 millisecondspassed = SDL_GetTicks() - Smk->LastTick;
+  UINT16 skiptime;
+  UINT16 delay, skipframes = 0;
+  DOUBLE framerate = Smk->FramesPerSecond/1000;
+
+  if (  framerate > millisecondspassed ) {
+    delay = framerate-millisecondspassed;
+#ifdef JA2TESTVERSION
+    printf ("Ticks %u  Delay: %u ", millisecondspassed, delay);
+#endif
   } 
-  else
+  else // video is delayed - so skip frames according to delay but take fps into account
     {
-      Smk->SkipFrames = millisecondspassed / (Smk->FramesPerSecond/1000);
-      while (Smk->SkipFrames > 0) {
+      skipframes = millisecondspassed / (UINT16)framerate;
+      delay = millisecondspassed % (UINT16)framerate;
+      //bigskiptime:
+      skiptime = SDL_GetTicks();
+      millisecondspassed = skiptime - Smk->LastTick;
+       while (skipframes > 0) {
         SmackNextFrame(Smk);
-        Smk->SkipFrames--;
+        skipframes--;
         i++;
       }
-      millisecondspassed = SDL_GetTicks() - Smk->LastTick;
-      if (  i*(Smk->FramesPerSecond/1000) > millisecondspassed ) 
-        {
-          delay = i*(Smk->FramesPerSecond/1000)-millisecondspassed;
-        }
-      else delay = millisecondspassed- i*(Smk->FramesPerSecond/1000);
-      //printf ("Skip Delay %u\n", delay);
+      skiptime = SDL_GetTicks() - skiptime;
+      if (skiptime+delay <= i*framerate) {
+        delay =  i*(framerate)-skiptime-delay ;
+      }
+      else { delay =  0; 
+        //Smk->LastTick = SDL_GetTicks(); 
+        //skipframes = skiptime+delay / (UINT16)framerate;
+        //delay = (skiptime+delay) % (UINT16)framerate;
+        //i=0;
+        //goto bigskiptime; // skiptime was big.. so just go on skipping frames
+      }
+#ifdef JA2TESTVERSION
+      printf ("Skipframes: %d Delay: %d\n", skipframes,delay);
+#endif
     }
   SDL_Delay(delay);
   Smk->LastTick = SDL_GetTicks();
@@ -143,23 +167,11 @@ CHAR8 SmackNextFrame(Smack* Smk)
 {
   CHAR8 smkstatus;
   smkstatus = smk_next(Smk->Smacker);
+#ifdef JA2TESTVERSION
   SmackCheckStatus(smkstatus);
+#endif
   return smkstatus;
 }
-
-UINT32 SmackSkipFrames (Smack* Smk)
-{
-  return 0;
-  if  (Smk->SkipFrames > 0)
-  {
-    while (Smk->SkipFrames > 0) { 
-      SmackNextFrame(Smk);
-      Smk->SkipFrames--;
-    }
-  }
-  return 0;
-}
-
 
 UINT32 SmackWait(Smack* Smk)
 {
@@ -170,6 +182,8 @@ UINT32 SmackWait(Smack* Smk)
 void SmackClose(Smack* Smk)
 {
   smk_close (Smk->Smacker);
+  free (Smk->audiobuffer);
+  free(Smk);
 }
 
 // stolen from driver.c (which was part of libsmacker-1.0)
@@ -224,7 +238,7 @@ void dump_bmp(unsigned char *pal, unsigned char *image_data, unsigned int w, uns
         fclose(fp);
 }
 
-void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, void* Buf, UINT32 Flags)
+void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, UINT32 DestWidth, void* Buf, UINT32 Flags)
 {
   unsigned char* smackframe, *pframe;
   unsigned char* smackpal;
@@ -242,13 +256,13 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
     {
       buf+=Left + Top*halfpitch;
       for (i =0; i < DestHeight ; i++) {
-        for (j = 0; j <640; j++) {
+        for (j = 0; j <DestWidth; j++) {
           // get rgb offset of palette
           rgb = &smackpal[*pframe++*3] ;
           // convert from rbg to rgb565 0=red 1=green 2=blue
           *buf++ = (rgb[0]>>3)<<11 | (rgb[1]>>2)<<5 | rgb[2]>>3;
         }
-        buf+=halfpitch-640;
+        buf+=halfpitch-DestWidth;
       }
     }
   else 

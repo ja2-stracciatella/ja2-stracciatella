@@ -46,13 +46,11 @@ struct Smack
   //union smk_read_t fp;
   char* audiobuffer;
   UINT32 Height;
+  UINT32 Width;
   UINT32 Frames;
-  UINT32 FrameNum;
   UINT32 FramesPerSecond;
   UINT32 LastTick;
-  UINT16 SkipFrames;
 };
-
 
 typedef void SmackBuf;
 
@@ -64,7 +62,7 @@ UINT32 SmackWait(Smack* Smk);
 UINT32 SmackSkipFrames (Smack* Smk);
 void SmackClose(Smack* Smk);
 
-void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, void* Buf, UINT32 Flags);
+void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, UINT32 DestWidth, void* Buf, UINT32 Flags);
 
 //SDL_Surface* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
 //void SmackBufferClose(SmackBuf* SBuf);
