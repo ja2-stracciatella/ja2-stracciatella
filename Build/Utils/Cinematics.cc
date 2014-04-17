@@ -170,15 +170,10 @@ catch (...) { return 0; }
 
 void SmkCloseFlic(SMKFLIC* const sf)
 {
-	FileClose(sf->hFileHandle);
-	//not needed anymore: SmackBufferClose(sf->SmackBuffer);
-        //if SMK_MODE_DISK no need to close filehandle anymore
-        SoundStopAll();
-        // not nice to do it here really... 
-        free (sf->SmackerObject->audiobuffer);
-	memset(sf, 0, sizeof(*sf));
-
-
+  SmackClose(sf->SmackerObject);
+  //FileClose(sf->hFileHandle);
+  // reenable for blitting SmackBufferClose(sf->SmackBuffer);
+  memset(sf, 0, sizeof(*sf));
 }
 
 

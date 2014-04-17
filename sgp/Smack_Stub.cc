@@ -38,7 +38,7 @@ void SmackPrintFlickInfo(ULONG32 width, ULONG32 height, UCHAR8 scale, ULONG32 fr
 // read all smackaudio and convert it to 22050Hz on the fly (44100 originally)
 UINT32 SmackGetAudio (const smk SmkObj, const INT16* audiobuffer) 
 {
-  UINT32 audiolen = 0,  smacklen = 0;
+  UINT32 n_samples = 0,  smacklen = 0;
   UINT32 i, index;
   INT16 *smackaudio, *paudio = (INT16*) audiobuffer;
   if (! audiobuffer ) return 0;
@@ -54,10 +54,10 @@ UINT32 SmackGetAudio (const smk SmkObj, const INT16* audiobuffer)
         *paudio++ = ((smackaudio[ index +1] +smackaudio[index+3]) / 2 );
         index += 4;
       } 
-    audiolen += i;
+    n_samples += i;
   } while (  smk_next(SmkObj) != SMK_DONE  );
   SmkAudioSwitch  (SmkObj, DISABLE);
-  return audiolen;
+  return n_samples;
 }
 
 void SmackWriteAudio (INT16* abuffer, UINT32 size)
@@ -80,11 +80,12 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   UCHAR8    a_depth[7], a_channels[7];
   ULONG32   a_rate[7];
   ULONG32 audiolen, audiosamples;
+  INT16* audiobuffer;
 
   fp.file = (FILE*)FileHandle;
   flickinfo = (Smack*)malloc (sizeof (Smack)); 
 
-  // open file with given filehandle DISK/MEMORY mode
+  //open file with given filehandle DISK/MEMORY mode
   flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_DISK);
   //flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_MEMORY);
   if ( ! flickinfo->Smacker ) return NULL;
@@ -107,12 +108,13 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   flickinfo->Width=width;
   flickinfo->FramesPerSecond = usf;
   // calculated audio memory for downsampling 44100->22050
-  audiosamples = ( (flickinfo->Frames / (usf/1000)) * (a_rate[SMKTRACK]/2) * 8 *  a_channels[SMKTRACK]);
-  flickinfo->audiobuffer = (INT16*) malloc( audiosamples );
-  if ( ! flickinfo->audiobuffer ) return NULL;
-  audiolen = SmackGetAudio (flickinfo->Smacker, flickinfo->audiobuffer);
-  //SmackWriteAudio( flickinfo->audiobuffer, audiolen);
-  if ( audiolen > 0 ) SoundPlayFromBuffer( flickinfo->audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
+  audiosamples = ( (flickinfo->Frames / (usf/1000)) * (a_rate[SMKTRACK]/2) * 16 *  a_channels[SMKTRACK]);
+  audiobuffer = (INT16*) malloc( audiosamples );
+  if ( ! audiobuffer ) return NULL;
+  audiolen = SmackGetAudio (flickinfo->Smacker, audiobuffer);
+  //SmackWriteAudio( audiobuffer, audiolen);
+  // shoot and forget... audiobuffer should be freed by SoundMan
+  if ( audiolen > 0 ) flickinfo->SoundTag = SoundPlayFromBuffer( audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
   SmkVideoSwitch  (flickinfo->Smacker, ENABLE);
   if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
   smk_first(flickinfo->Smacker);
@@ -188,9 +190,8 @@ UINT32 SmackWait(Smack* Smk)
 
 void SmackClose(Smack* Smk)
 {
-  smk_close (Smk->Smacker);
-  free (Smk->audiobuffer);
-  free(Smk);
+  if ( ! SoundStop(Smk->SoundTag) ) printf ("Error in SmackClose SoundStop\n");
+  smk_close (Smk->Smacker); // closes and frees Smacker Object and file
 }
 
 // stolen from driver.c (which was part of libsmacker-1.0)
@@ -287,7 +288,7 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
     }
 }
 
-// not needed
+// not needed for now... 
 /*
 SDL_Surface* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH)
 {

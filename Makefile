@@ -87,7 +87,7 @@ endif
 ############################################################
 
 ifdef WITH_DEBUGINFO
-CFLAGS += -g
+CFLAGS += -ggdb
 endif
 
 CFLAGS += -I .
