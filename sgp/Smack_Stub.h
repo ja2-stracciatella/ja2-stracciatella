@@ -44,7 +44,7 @@ struct Smack
   smk Smacker; //object pointer type for libsmacker
   //SDL_AudioSpec smkaudiotrack;
   //union smk_read_t fp;
-  char* audiobuffer;
+  INT16* audiobuffer;
   UINT32 Height;
   UINT32 Width;
   UINT32 Frames;
