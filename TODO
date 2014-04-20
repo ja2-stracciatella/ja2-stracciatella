@@ -1,6 +1,5 @@
 Misan:
 - use SDL_Surface instead of FRAME_BUFFER for smacker flicks for blitting
-- load smacker flics from STI files
 
 GTr:
 - (#41) replace all CASSERT with unit tests

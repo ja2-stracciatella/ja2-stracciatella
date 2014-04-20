@@ -42,6 +42,7 @@ enum
 struct Smack
 {
   smk Smacker; //object pointer type for libsmacker
+  UCHAR8* SmackerInMemory;
   UINT32 SoundTag; // for soundman
   UINT32 Height;
   UINT32 Width;
@@ -52,7 +53,7 @@ struct Smack
 
 typedef void SmackBuf;
 
-Smack* SmackOpen(const char* Name, UINT32 Flags, UINT32 ExtraBuf);
+Smack* SmackOpen(SGPFile* fhandle, UINT32 Flags, UINT32 ExtraFlag);
 UINT32 SmackDoFrame(Smack* Smk);
 CHAR8 SmackNextFrame(Smack* Smk);
 

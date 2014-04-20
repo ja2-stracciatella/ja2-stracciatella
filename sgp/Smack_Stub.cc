@@ -5,6 +5,8 @@
 #include "Smack_Stub.h"
 #include "Sound_Control.h"
 #include "SoundMan.h"
+#include "FileMan.h"
+
 extern "C" {
 #include "smacker/smacker.h"
 }
@@ -67,7 +69,19 @@ void SmackWriteAudio (INT16* abuffer, UINT32 size)
   fclose(fp);
 }
 
-Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
+UCHAR8* SmackToMemory (SGPFile* File) 
+{
+  UCHAR8* smacktomemory;
+  UINT32 FileSize=FileGetSize(File);
+
+  smacktomemory = (UCHAR8*) malloc (FileSize);
+  if (! smacktomemory) return NULL;
+  FileRead (File, smacktomemory, FileSize);
+  return smacktomemory;
+}
+
+
+Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 {
   Smack* flickinfo;
   // smacklib info types
@@ -75,18 +89,22 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   UCHAR8 scale;
   DOUBLE usf;
   CHAR8 smkstatus;
-  union smk_read_t fp;
   /* arrays for audio track metadata */
   UCHAR8    a_depth[7], a_channels[7];
   ULONG32   a_rate[7];
   ULONG32 audiolen, audiosamples;
   INT16* audiobuffer;
-
-  fp.file = (FILE*)FileHandle;
+UCHAR8* smackloaded;
+UINT32 smacksize = FileGetSize(FileHandle);
   flickinfo = (Smack*)malloc (sizeof (Smack)); 
+  if ( ! flickinfo ) return NULL;
 
+  smackloaded = SmackToMemory (FileHandle);
+  if (! smackloaded) return NULL;
+  flickinfo->SmackerInMemory = smackloaded;
+  flickinfo->Smacker = smk_open_memory (smackloaded, smacksize);
   //open file with given filehandle DISK/MEMORY mode
-  flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_DISK);
+  //flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_DISK);
   //flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_MEMORY);
   if ( ! flickinfo->Smacker ) return NULL;
 
@@ -112,7 +130,7 @@ Smack* SmackOpen(const CHAR8* FileHandle, UINT32 Flags, UINT32 ExtraBuf)
   audiobuffer = (INT16*) malloc( audiosamples );
   if ( ! audiobuffer ) return NULL;
   audiolen = SmackGetAudio (flickinfo->Smacker, audiobuffer);
-  //SmackWriteAudio( audiobuffer, audiolen);
+  //SmackWriteAudio( audiobuffer, audiolen); // are getting right audio data?
   // shoot and forget... audiobuffer should be freed by SoundMan
   if ( audiolen > 0 ) flickinfo->SoundTag = SoundPlayFromBuffer( audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
   SmkVideoSwitch  (flickinfo->Smacker, ENABLE);
@@ -155,6 +173,7 @@ UINT32 SmackDoFrame(Smack* Smk)
         delay =  i*(framerate)-skiptime-delay ;
       }
       else { delay =  0; 
+      // need to find a nice way to compensate for lagging video
         //Smk->LastTick = SDL_GetTicks(); 
         //skipframes = skiptime+delay / (UINT16)framerate;
         //delay = (skiptime+delay) % (UINT16)framerate;
@@ -191,6 +210,7 @@ UINT32 SmackWait(Smack* Smk)
 void SmackClose(Smack* Smk)
 {
   if ( ! SoundStop(Smk->SoundTag) ) printf ("Error in SmackClose SoundStop\n");
+  free (Smk->SmackerInMemory);
   smk_close (Smk->Smacker); // closes and frees Smacker Object and file
 }
 

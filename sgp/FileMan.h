@@ -14,13 +14,19 @@
 #	include <glob.h>
 #endif
 
+
+
+
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */
 void FileDelete(char const* path);
 void FileDelete(const std::string &path);
 
+
 void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);
+
 void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
+
 
 template<typename T, typename U> static inline void FileWriteArray(SGPFile* const f, T const& n, U const* const data)
 {
@@ -28,9 +34,9 @@ template<typename T, typename U> static inline void FileWriteArray(SGPFile* cons
 	if (n != 0) FileWrite(f, data, sizeof(*data) * n);
 }
 
+
 void  FileSeek(SGPFile*, INT32 distance, FileSeekMode);
 INT32 FileGetPos(const SGPFile*);
-
 UINT32 FileGetSize(const SGPFile*);
 
 /* Removes ALL FILES in the specified directory, but leaves the directory alone.

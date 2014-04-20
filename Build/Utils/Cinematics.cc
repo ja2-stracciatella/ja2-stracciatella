@@ -140,8 +140,9 @@ try
 
 	AutoSGPFile file(GCM->openGameResForReading(filename));
 
-	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
+	//FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
+        //printf("File Size: %u\n", FileGetSize(file));
 	// Allocate a Smacker buffer for video decompression
         /*
         sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
@@ -151,7 +152,7 @@ try
 		return NULL;
 	}
         */
-	sf->SmackerObject = SmackOpen((char*)f, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
+	sf->SmackerObject = SmackOpen( file , SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
 	if (!sf->SmackerObject)
 	{
 		FastDebugMsg("SMK ERROR: Smacker won't open the SMK file");
