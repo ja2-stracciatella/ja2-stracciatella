@@ -66,6 +66,7 @@ enum
 
 static INT32 giCurrentIntroBeingPlayed = SMKINTRO_NO_VIDEO;
 
+
 static char const* const gpzSmackerFileNames[] =
 {
 	//begining of the game
@@ -157,8 +158,10 @@ static void EnterIntroScreen(void)
 	//get the index opf the first video to watch
 	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );
 
+
 	if( iFirstVideoID != -1 )
 	{
+
 		StartPlayingIntroFlic( iFirstVideoID );
 
 		guiIntroExitScreen = INTRO_SCREEN;
@@ -369,7 +372,7 @@ static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay)
 	if( iIndexOfFlicToPlay != -1 )
 	{
 		//start playing a flic
-		gpSmackFlic = SmkPlayFlic( gpzSmackerFileNames[ iIndexOfFlicToPlay ], 0, 0, TRUE );
+		gpSmackFlic = SmkPlayFlic( gpzSmackerFileNames[ iIndexOfFlicToPlay ], STD_SCREEN_X, STD_SCREEN_Y , TRUE );
 
 		if( gpSmackFlic != NULL )
 		{

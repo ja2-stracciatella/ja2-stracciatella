@@ -158,9 +158,7 @@ std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
   libraries.push_back("speech.slf");
   libraries.push_back("tilesets.slf");
   libraries.push_back("loadscreens.slf");
-#if 0 // XXX the intro videos are not needed right now); because there is no way to play them
   libraries.push_back("intro.slf");
-#endif
 
   switch(s_gameVersion)
   {

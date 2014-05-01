@@ -37,6 +37,7 @@
 #include "Video.h"
 #include "Debug.h"
 #include "UILayout.h"
+#include "Timer.h"
 
 
 #define MAX_DEBUG_PAGES 4
@@ -140,6 +141,7 @@ ScreenID ErrorScreenHandle(void)
 
 ScreenID InitScreenHandle(void)
 {
+  static UINT32 splashDisplayedMoment = 0;
 	static UINT8					ubCurrentScreen = 255;
 
 	if ( ubCurrentScreen == 255 )
@@ -192,7 +194,7 @@ ScreenID InitScreenHandle(void)
 		//ATE: Set to true to reset before going into main screen!
 
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-
+    splashDisplayedMoment = GetClock();
 		return( INIT_SCREEN );
 	}
 
@@ -204,8 +206,13 @@ ScreenID InitScreenHandle(void)
 
 	if ( ubCurrentScreen == 2 )
 	{
-		InitMainMenu( );
-		ubCurrentScreen = 3;
+    // wait 3 seconds since the splash displayed and then switch
+    // to the main menu
+    if((GetClock() - splashDisplayedMoment) >= 3000)
+    {
+      InitMainMenu( );
+      ubCurrentScreen = 3;
+    }
 		return( INIT_SCREEN );
 	}
 

@@ -2,6 +2,16 @@
 #define SMACK_STUB_H
 
 #include "Types.h"
+#include "SDL.h"
+extern "C" {
+#include "smacker.h"
+}
+
+enum
+  {
+    DISABLE = 0,
+    ENABLE
+  };
 
 enum
 {
@@ -31,23 +41,30 @@ enum
 
 struct Smack
 {
+  smk Smacker; //object pointer type for libsmacker
+  unsigned char* SmackerInMemory;
+  UINT32 SoundTag; // for soundman
   UINT32 Height;
+  UINT32 Width;
   UINT32 Frames;
-  UINT32 FrameNum;
+  UINT32 FramesPerSecond;
+  UINT32 LastTick;
 };
 
 typedef void SmackBuf;
 
-Smack* SmackOpen(const char* Name, UINT32 Flags, UINT32 ExtraBuf);
+Smack* SmackOpen(SGPFile* fhandle, UINT32 Flags, UINT32 ExtraFlag);
 UINT32 SmackDoFrame(Smack* Smk);
-void SmackNextFrame(Smack* Smk);
+CHAR8 SmackNextFrame(Smack* Smk);
+
 UINT32 SmackWait(Smack* Smk);
+UINT32 SmackSkipFrames (Smack* Smk);
 void SmackClose(Smack* Smk);
 
-void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, const void* Buf, UINT32 Flags);
+void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, UINT32 DestWidth, void* Buf, UINT32 Flags);
 
-SmackBuf* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
-void SmackBufferClose(SmackBuf* SBuf);
+//SDL_Surface* SmackBufferOpen(UINT32 BlitType, UINT32 Width, UINT32 Height, UINT32 ZoomW, UINT32 ZoomH);
+//void SmackBufferClose(SmackBuf* SBuf);
 
 UINT32 SmackUseMMX(UINT32 Flag);
 

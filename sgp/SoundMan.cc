@@ -209,6 +209,36 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 	return SoundStartSample(sample, channel, volume, pan, loop, end_callback, data);
 }
 
+static SAMPLETAG* SoundGetEmptySample(void);
+static BOOLEAN    SoundCleanCache(void);
+static SAMPLETAG* SoundGetEmptySample(void);
+static size_t GetSampleSize(const SAMPLETAG* const s);
+
+UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
+{
+
+  //SoundCleanCache();
+  SAMPLETAG* buffertag = SoundGetEmptySample();
+  if (buffertag == NULL)
+    {
+      SoundCleanCache();
+      buffertag = SoundGetEmptySample();
+    }
+  sprintf(buffertag->pName, "SmackBuff %p - SampleSize %u", pbuffer, size); 
+  buffertag->uiSpeed=22050;
+  buffertag->n_samples = size;
+  buffertag->pData = pbuffer;
+  buffertag->uiFlags =  SAMPLE_16BIT | SAMPLE_STEREO | SAMPLE_ALLOCATED;
+  buffertag->uiPanMax        = 64;
+  buffertag->uiMaxInstances  = 1;
+  guiSoundMemoryUsed += size * GetSampleSize(buffertag);
+
+  SOUNDTAG* const channel = SoundGetFreeChannel();
+  if (channel == NULL) return SOUND_ERROR;
+
+  return SoundStartSample(buffertag, channel, volume, pan, loop, end_callback, data);
+}
+
 
 static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
@@ -300,7 +330,7 @@ BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 	if (!fSoundSystemInit) return FALSE;
 
 	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-	return channel != NULL && channel->State != CHANNEL_FREE;
+	return channel != NULL &&  channel->State != CHANNEL_FREE;
 }
 
 
@@ -529,7 +559,6 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 	return NULL;
 }
 
-
 static size_t GetSampleSize(const SAMPLETAG* const s)
 {
 	return
@@ -706,8 +735,7 @@ static void LoadDVIADPCM(SAMPLETAG* const s, HWFILE const file, UINT16 const blo
 }
 
 
-static BOOLEAN    SoundCleanCache(void);
-static SAMPLETAG* SoundGetEmptySample(void);
+
 
 
 /* Loads a sound file from disk into the cache, allocating memory and a slot

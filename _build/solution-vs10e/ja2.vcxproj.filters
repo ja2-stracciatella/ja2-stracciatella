@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -72,6 +72,9 @@
     </Filter>
     <Filter Include="Source Files\src\content">
       <UniqueIdentifier>{3cb53e3c-50ba-4aa9-b89c-4aaf77b1c60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\smacker">
+      <UniqueIdentifier>{58342c9b-f443-44a0-90f3-91216e4f152c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1223,6 +1226,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\policy\DefaultIMPPolicy.cc">
       <Filter>Source Files\src\policy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-smacker\libsmacker\smk_bitstream.c">
+      <Filter>Libraries\smacker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-smacker\libsmacker\smk_hufftree.c">
+      <Filter>Libraries\smacker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib-smacker\libsmacker\smacker.c">
+      <Filter>Libraries\smacker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2443,6 +2455,18 @@
     </ClInclude>
     <ClInclude Include="..\..\src\policy\IMPPolicy.h">
       <Filter>Source Files\src\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-smacker\libsmacker\smacker.h">
+      <Filter>Libraries\smacker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-smacker\libsmacker\smk_bitstream.h">
+      <Filter>Libraries\smacker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-smacker\libsmacker\smk_hufftree.h">
+      <Filter>Libraries\smacker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib-smacker\libsmacker\smk_malloc.h">
+      <Filter>Libraries\smacker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

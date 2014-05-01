@@ -19,6 +19,10 @@ void InitializeSoundManager(void);
  * releases the sound hardware. */
 void ShutdownSoundManager(void);
 
+
+UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
+
+
 /* Starts a sample playing. If the sample is not loaded in the cache, it will
  * be found and loaded.
  *
