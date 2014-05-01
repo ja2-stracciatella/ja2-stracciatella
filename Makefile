@@ -102,13 +102,13 @@ CFLAGS += -I Build/TileEngine
 CFLAGS += -I Build/Utils
 
 CFLAGS += -I sgp
-CFLAGS += -I sgp/smacker
 
 CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
 CFLAGS += -I _build/lib-rapidjson
 CFLAGS += -I _build/lib-slog
+CFLAGS += -I _build/lib-smacker/libsmacker
 CFLAGS += -I _build/lib-utf8cpp/source
 
 #CFLAGS += -Wall
@@ -495,9 +495,6 @@ SRCS += sgp/SGPStrings.cc
 SRCS += sgp/STCI.cc
 SRCS += sgp/Shading.cc
 SRCS += sgp/Smack_Stub.cc
-SRCS += sgp/smacker/smacker.c
-SRCS += sgp/smacker/smk_hufftree.c
-SRCS += sgp/smacker/smk_bitstream.c
 SRCS += sgp/SoundMan.cc
 SRCS += sgp/StrUtils.cc
 SRCS += sgp/TranslationTable.cc
@@ -543,6 +540,10 @@ SRCS += _build/lib-boost/libs/filesystem/src/utf8_codecvt_facet.cpp
 SRCS += _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
 
 SRCS += _build/lib-slog/slog/slog.c
+
+SRCS += _build/lib-smacker/libsmacker/smacker.c
+SRCS += _build/lib-smacker/libsmacker/smk_hufftree.c
+SRCS += _build/lib-smacker/libsmacker/smk_bitstream.c
 
 LNGS :=
 LNGS += Build/Utils/_DutchText.cc

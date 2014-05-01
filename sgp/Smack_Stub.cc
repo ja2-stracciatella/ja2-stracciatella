@@ -8,7 +8,7 @@
 #include "FileMan.h"
 
 extern "C" {
-#include "smacker/smacker.h"
+#include "smacker.h"
 }
 
 #define SMKTRACK 0
