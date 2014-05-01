@@ -28,7 +28,7 @@ struct smk_bit_t
 
 /* BITSTREAM Functions */
 /* Initialize a bitstream */
-struct smk_bit_t *smk_bs_init(unsigned char *, unsigned long);
+struct smk_bit_t *smk_bs_init(unsigned char *, const unsigned long);
 
 /* Align the bitstream to next-byte boundary. */
 /* As it turns out, this isn't needed. */

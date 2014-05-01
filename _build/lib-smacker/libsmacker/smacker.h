@@ -70,9 +70,9 @@ union smk_read_t
 
 /* OPEN OPERATIONS */
 /* open an smk (from a file) */
-smk smk_open_file(const char *filename, unsigned char mode);
+smk smk_open_file(const char *filename, const unsigned char mode);
 /* read an smk (from a memory buffer) */
-smk smk_open_memory(const unsigned char *buffer, unsigned long size);
+smk smk_open_memory(const unsigned char *buffer, const unsigned long size);
 
 smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned long size, const unsigned char process_mode);
 
@@ -81,23 +81,23 @@ smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned long s
 void smk_close(smk object);
 
 /* GET FILE INFO OPERATIONS */
-char smk_info_all(smk object, unsigned long *frame, unsigned long *frame_count, double *usf);
-char smk_info_video(smk object, unsigned long *w, unsigned long *h, unsigned char *y_scale_mode);
-char smk_info_audio(smk object, unsigned char *track_mask, unsigned char channels[7], unsigned char bitdepth[7], unsigned long audio_rate[7]);
+char smk_info_all(const smk object, unsigned long *frame, unsigned long *frame_count, double *usf);
+char smk_info_video(const smk object, unsigned long *w, unsigned long *h, unsigned char *y_scale_mode);
+char smk_info_audio(const smk object, unsigned char *track_mask, unsigned char channels[7], unsigned char bitdepth[7], unsigned long audio_rate[7]);
 
 /* ENABLE/DISABLE Switches */
-char smk_enable_all(smk object, unsigned char mask);
-char smk_enable_video(smk object, unsigned char enable);
-char smk_enable_audio(smk object, unsigned char track, unsigned char enable);
+char smk_enable_all(smk object, const unsigned char mask);
+char smk_enable_video(smk object, const unsigned char enable);
+char smk_enable_audio(smk object, const unsigned char track, const unsigned char enable);
 
 /* Retrieve palette */
-unsigned char * smk_get_palette(smk object);
+unsigned char * smk_get_palette(const smk object);
 /* Retrieve video frame, as a buffer of size w*h */
-unsigned char * smk_get_video(smk object);
+unsigned char * smk_get_video(const smk object);
 /* Retrieve decoded audio chunk, track N */
-unsigned char * smk_get_audio(smk object, unsigned char track);
+unsigned char * smk_get_audio(const smk object, const unsigned char track);
 /* Get size of currently pointed decoded audio chunk, track N */
-unsigned long smk_get_audio_size(smk object, unsigned char track);
+unsigned long smk_get_audio_size(const smk object, const unsigned char track);
 
 /* rewind to first frame and unpack */
 char smk_first(smk object);
