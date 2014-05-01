@@ -216,58 +216,6 @@ void SmackClose(Smack* Smk)
   smk_close (Smk->Smacker); // closes and frees Smacker Object and file
 }
 
-// stolen from driver.c (which was part of libsmacker-1.0)
-void dump_bmp(unsigned char *pal, unsigned char *image_data, unsigned int w, unsigned int h, unsigned int framenum)
-{
-        int             i;
-        FILE           *fp;
-        char            filename  [128];
-        unsigned int    temp;
-        sprintf(filename, "/tmp/out_%04u.bmp", framenum);
-        fp = fopen(filename, "wb");
-        fwrite("BM", 2, 1, fp);
-        temp = 1078 + (w * h);
-        fwrite(&temp, 4, 1, fp);
-        temp = 0;
-        fwrite(&temp, 4, 1, fp);
-        temp = 1078;
-        fwrite(&temp, 4, 1, fp);
-        temp = 40;
-        fwrite(&temp, 4, 1, fp);
-        fwrite(&w, 4, 1, fp);
-        fwrite(&h, 4, 1, fp);
-        temp = 1;
-        fwrite(&temp, 2, 1, fp);
-        temp = 8;
-        fwrite(&temp, 4, 1, fp);
-        temp = 0;
-        fwrite(&temp, 2, 1, fp);
-        temp = w * h;
-        fwrite(&temp, 4, 1, fp);
-        temp = 0;
-        fwrite(&temp, 4, 1, fp);
-        fwrite(&temp, 4, 1, fp);
-        temp = 256;
-        fwrite(&temp, 4, 1, fp);
-        temp = 256;
-        fwrite(&temp, 4, 1, fp);
-        temp = 0;
-        for (i = 0; i < 256; i++)
-        {
-                fwrite(&pal[(i * 3) + 2], 1, 1, fp);
-                fwrite(&pal[(i * 3) + 1], 1, 1, fp);
-                fwrite(&pal[(i * 3)], 1, 1, fp);
-                fwrite(&temp, 1, 1, fp);
-        }
-
-        for (i = h - 1; i >= 0; i--)
-        {
-                fwrite(&image_data[i * w], w, 1, fp);
-        }
-
-        fclose(fp);
-}
-
 void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, UINT32 DestWidth, void* Buf, UINT32 Flags)
 {
   unsigned char* smackframe, *pframe;
