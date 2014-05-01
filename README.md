@@ -8,8 +8,9 @@ stable platform for mod development.
 
 ## Latest news
 
-### 2014-xx-xx, version 0.12.xxx (not released yet)
+### 2014-05-01, version 0.12.352
 
+- In-game video is playable now. Thanks to Misanthropos and Greg Kennedy (author of libsmacker library)
 - Fixed issue   #1 (Double amount of money on new game start)
 - Fixed issue #121 (Misplaced text after IMP creation)
 - Fixed issue #134 (On high res subtotal is not displayed correctly)
