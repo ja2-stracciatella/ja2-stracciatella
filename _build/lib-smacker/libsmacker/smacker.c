@@ -130,11 +130,6 @@ struct smk_t
 	} *audio[7];
 };
 
-union smk_read_t
-{
-	FILE *file;
-	unsigned char *ram;
-};
 
 /* An fread wrapper: consumes N bytes, or returns -1
 	on failure (when size doesn't match expected) */
@@ -342,7 +337,7 @@ smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned long s
 
 	/* FrameSizes and Keyframe marker are stored together. */
 	smk_malloc(s->keyframe,(s->f + s->ring_frame));
-	smk_malloc(s->chunk_size,(s->f + s->ring_frame) * 4);
+	smk_malloc(s->chunk_size,(s->f + s->ring_frame) * sizeof(unsigned long));
 
 	for (temp_u = 0; temp_u < (s->f + s->ring_frame); temp_u ++)
 	{

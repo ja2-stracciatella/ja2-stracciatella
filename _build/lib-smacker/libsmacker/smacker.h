@@ -29,8 +29,17 @@
 #ifndef SMACKER_H
 #define SMACKER_H
 
+#include <stdio.h>
+
 /* forward-declaration for an struct */
 typedef struct smk_t *smk;
+
+
+union smk_read_t
+{
+	FILE *file;
+	unsigned char *ram;
+};
 
 /* a few defines as return codes from smk_next() */
 #define SMK_DONE	0x00
@@ -64,6 +73,8 @@ typedef struct smk_t *smk;
 smk smk_open_file(const char *filename, unsigned char mode);
 /* read an smk (from a memory buffer) */
 smk smk_open_memory(const unsigned char *buffer, unsigned long size);
+
+smk smk_open_generic(const unsigned char m, union smk_read_t fp, unsigned long size, const unsigned char process_mode);
 
 /* CLOSE OPERATIONS */
 /* close out an smk file and clean up memory */
