@@ -87,7 +87,7 @@ endif
 ############################################################
 
 ifdef WITH_DEBUGINFO
-CFLAGS += -ggdb
+CFLAGS += -g
 endif
 
 CFLAGS += -I .
@@ -100,9 +100,7 @@ CFLAGS += -I Build/Tactical
 CFLAGS += -I Build/TacticalAI
 CFLAGS += -I Build/TileEngine
 CFLAGS += -I Build/Utils
-
 CFLAGS += -I sgp
-
 CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
 CFLAGS += -I _build/lib-boost
@@ -171,8 +169,6 @@ SRCS :=
 SRCS += Build/AniViewScreen.cc
 SRCS += Build/Credits.cc
 SRCS += Build/UILayout.cc
-
-
 
 SRCS += Build/Editor/Cursor_Modes.cc
 SRCS += Build/Editor/EditScreen.cc
@@ -504,8 +500,6 @@ SRCS += sgp/VObject_Blitters.cc
 SRCS += sgp/VSurface.cc
 SRCS += sgp/Video.cc
 
-
-
 SRCS += src/AmmoTypeModel.cc
 SRCS += src/CalibreModel.cc
 SRCS += src/DealerInventory.cc
@@ -594,8 +588,7 @@ all: $(BINARY)
 
 $(BINARY): $(OBJS)
 	@echo '===> LD $@'
-	$(Q)\
-	$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
+	$(Q)$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 .c.o:
 	@echo '===> CC $<'

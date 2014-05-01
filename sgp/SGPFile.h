@@ -45,6 +45,4 @@ enum FileSeekMode
 
 extern void FileClose(SGPFile*);
 
-
 typedef SGP::AutoObj<SGPFile, FileClose> AutoSGPFile;
-
