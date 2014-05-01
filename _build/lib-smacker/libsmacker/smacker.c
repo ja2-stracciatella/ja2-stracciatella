@@ -1152,7 +1152,7 @@ static char smk_render_audio(struct smk_audio_t *s, unsigned char *p, unsigned l
 			}
 			else
 			{
-				((unsigned char *)t)[1] = unpack;
+				((unsigned char *)t)[1] = (unsigned char)unpack;
 			}
 		}
 		smk_bs_safe_read_8(bs,unpack);
@@ -1163,7 +1163,7 @@ static char smk_render_audio(struct smk_audio_t *s, unsigned char *p, unsigned l
 		}
 		else
 		{
-			((unsigned char *)t)[0] = unpack;
+			((unsigned char *)t)[0] = (unsigned char)unpack;
 		}
 
 		/* All set: let's read some DATA! */
