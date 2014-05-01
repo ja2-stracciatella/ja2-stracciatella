@@ -13,7 +13,6 @@ extern "C" {
 
 #define SMKTRACK 0
 
-typedef unsigned long ULONG32;
 typedef unsigned char   UCHAR8;
 
 BOOLEAN SmackCheckStatus(CHAR8 smkstatus) {
@@ -33,7 +32,7 @@ BOOLEAN SmkAudioSwitch (smk SmkObj, BOOLEAN sw) {
   return SmackCheckStatus (smk_enable_audio (SmkObj, SMKTRACK, sw));
 }
 
-void SmackPrintFlickInfo(ULONG32 width, ULONG32 height, UCHAR8 scale, ULONG32 framecount, 
+void SmackPrintFlickInfo(unsigned long width, unsigned long height, UCHAR8 scale, unsigned long framecount, 
                     DOUBLE usf, UCHAR8 a_channels, UCHAR8 a_depth, UCHAR8 a_rate)
 {
   printf ("Video -- Frames: %lu Width: %lu Height: %lu Scale: %d \n", framecount, width, height, scale);
@@ -88,14 +87,14 @@ Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 {
   Smack* flickinfo;
   // smacklib info types
-  ULONG32 frame, framecount,  width, height;
+  unsigned long frame, framecount,  width, height;
   UCHAR8 scale;
   DOUBLE usf;
   CHAR8 smkstatus;
   /* arrays for audio track metadata */
   UCHAR8    a_depth[7], a_channels[7];
-  ULONG32   a_rate[7];
-  ULONG32 audiolen, audiosamples;
+  unsigned long   a_rate[7];
+  unsigned long audiolen, audiosamples;
   INT16* audiobuffer;
 UCHAR8* smackloaded;
 UINT32 smacksize = FileGetSize(FileHandle);
