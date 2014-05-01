@@ -44,7 +44,7 @@ struct smk_t
 
 	unsigned long	f;
 	/* does file contain a ring frame? */
-	unsigned char ring_frame;
+	unsigned char	ring_frame;
 
 	/* Index of current frame */
 	unsigned long	cur_frame;
@@ -765,6 +765,12 @@ static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned
 	i = 0; /* index into NEW palette */
 	j = 0; /* Index into OLD palette */
 
+	/* If old palette exists already, copy it first */
+	if (s->palette)
+	{
+		memcpy(t,s->palette, 3 * 256 );
+	}
+
 	while ( (i < 768) && (size > 0) ) /* looping index into NEW palette */
 	{
 		if ((*p) & 0x80)
@@ -782,10 +788,10 @@ static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned
 			}
 
 			/* if prev palette exists, copy... else memset black */
-			if (s->palette)
+			/*if (s->palette)
 			{
 				memcpy(&t[i],&s->palette[j],k);
-			}
+			} */
 			/* smkmalloc already set t to 0 */
 			/* else
 			{
@@ -837,7 +843,7 @@ static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned
 				fprintf(stderr,"libsmacker::palette_render - ERROR: 0x3F ran out of bytes for copy, size=%d\n",size);
 				goto error;
 			}
-			t[i++] = palmap[*p];
+			t[i++] = palmap[(*p) & 0x3F];
 			p++; size --;
 			/* To be extremely correct we should blow up if (*p) exceeds 0x3F, but
 				I can't be bothered, so just mask it */

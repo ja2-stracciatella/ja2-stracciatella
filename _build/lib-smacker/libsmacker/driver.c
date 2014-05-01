@@ -15,7 +15,7 @@
 void
 dump_bmp(unsigned char *pal, unsigned char *image_data, unsigned int w, unsigned int h, unsigned int framenum)
 {
-	int		i         , j;
+	int		i;
 	FILE           *fp;
 	char		filename  [128];
 	unsigned int	temp;
@@ -80,7 +80,7 @@ main(int argc, char *argv[])
 		printf("Usage: %s file.smk\n", argv[0]);
 		return -1;
 	}
-	//s = smk_open(argv[1], SMK_MODE_DISK);
+	/* s = smk_open(argv[1], SMK_MODE_DISK); */
 	s = smk_open_file(argv[1], SMK_MODE_MEMORY);
 	if (s == NULL)
 	{
