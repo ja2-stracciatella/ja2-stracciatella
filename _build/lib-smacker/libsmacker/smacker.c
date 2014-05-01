@@ -732,7 +732,7 @@ error:
 }
 
 /* Decompresses a palette-frame. */
-static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned short size)
+static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned long size)
 {
 	unsigned short i,j,k;
 	unsigned char *t= NULL;
@@ -835,7 +835,7 @@ static char smk_render_palette(struct smk_video_t *s, unsigned char *p, unsigned
 		{
 			if (size < 3)
 			{
-				fprintf(stderr,"libsmacker::palette_render - ERROR: 0x3F ran out of bytes for copy, size=%d\n",size);
+				fprintf(stderr,"libsmacker::palette_render - ERROR: 0x3F ran out of bytes for copy, size=%ld\n",size);
 				goto error;
 			}
 			t[i++] = palmap[(*p) & 0x3F];
