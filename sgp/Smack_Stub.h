@@ -42,7 +42,7 @@ enum
 struct Smack
 {
   smk Smacker; //object pointer type for libsmacker
-  UCHAR8* SmackerInMemory;
+  unsigned char* SmackerInMemory;
   UINT32 SoundTag; // for soundman
   UINT32 Height;
   UINT32 Width;

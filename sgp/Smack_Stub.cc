@@ -13,6 +13,9 @@ extern "C" {
 
 #define SMKTRACK 0
 
+typedef unsigned long ULONG32;
+typedef unsigned char   UCHAR8;
+
 BOOLEAN SmackCheckStatus(CHAR8 smkstatus) {
   if (smkstatus <0) {
     printf ("SmackLibrary returned an error!\n");
