@@ -650,6 +650,7 @@ MAC_RELEASE_ZIP := $(MAC_RELEASE_BASE_DIR)/$(MAC_RELEASE_NAME).zip
 build-beta-win-release-on-linux:
 	make BETA=1 build-win-release-on-linux
 
+# sudo apt-get install gcc-mingw-w64 g++-mingw-w64
 build-win-release-on-linux:
 	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
 	mkdir -p $(WIN_RELEASE)
