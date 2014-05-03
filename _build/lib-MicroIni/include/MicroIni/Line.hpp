@@ -27,7 +27,7 @@ class MICROINI_API Line : public std::pair<std::string, Value>
 
         /// Set line's name.
         void setName(const std::string& name);
-        
+
         /// Get line's Value.
         const Value& getValue() const;
 

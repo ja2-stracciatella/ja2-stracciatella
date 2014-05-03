@@ -44,17 +44,17 @@ void Line::setValue(const Value& value)
 
 Line Blank()
 {
-	return Line("", "");
+    return Line("", "");
 }
 
 Line Comment(const std::string& comment)
 {
-	return Line(";", comment);
+    return Line(";", comment);
 }
 
 Line Property(const std::string& name, const Value& value)
 {
-	return Line(name, value);
+    return Line(name, value);
 }
 
 } // namespace MicroIni
