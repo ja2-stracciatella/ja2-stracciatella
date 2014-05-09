@@ -2,6 +2,7 @@
 
 #include "SaveLoadGame.h"
 #include "FileMan.h"
+#include "src/TestUtils.h"
 
 const uint8_t s_savedGameHeaderVanilla[] = {
   0x63,0x00,0x00,0x00,0x42,0x75,0x69,0x6c,0x64,0x20,0x30,0x34,0x2e,0x31,0x32,0x2e,
@@ -175,7 +176,7 @@ TEST(SaveLoadGameTest, parseHeaderLinux)
 
   {
     SAVED_GAME_HEADER header;
-    AutoSGPFile f(FileMan::openForReading("_unittests/saves/strac-linux/SaveGame01.sav"));
+    AutoSGPFile f(OpenTestResourceForReading("_unittests/saves/strac-linux/SaveGame01.sav"));
     ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
     ASSERT_EQ(stracLinuxFormat, true);
     ASSERT_EQ(isValidSavedGameHeader(header), true);
@@ -204,7 +205,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
 
   {
     SAVED_GAME_HEADER header;
-    AutoSGPFile f(FileMan::openForReading("_unittests/saves/strac-win/SaveGame09.sav"));
+    AutoSGPFile f(OpenTestResourceForReading("_unittests/saves/strac-win/SaveGame09.sav"));
     ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
     ASSERT_EQ(stracLinuxFormat, false);
     ASSERT_EQ(isValidSavedGameHeader(header), true);
@@ -228,7 +229,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
 
   {
     SAVED_GAME_HEADER header;
-    AutoSGPFile f(FileMan::openForReading("_unittests/saves/vanilla-russian/SaveGame06.sav"));
+    AutoSGPFile f(OpenTestResourceForReading("_unittests/saves/vanilla-russian/SaveGame06.sav"));
     ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
     ASSERT_EQ(stracLinuxFormat, false);
     ASSERT_EQ(isValidSavedGameHeader(header), true);
@@ -257,7 +258,7 @@ TEST(SaveLoadGameTest, parseHeaderMac)
 
   {
     SAVED_GAME_HEADER header;
-    AutoSGPFile f(FileMan::openForReading("_unittests/saves/strac-macos/SaveGame09.sav"));
+    AutoSGPFile f(OpenTestResourceForReading("_unittests/saves/strac-macos/SaveGame09.sav"));
     ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
     ASSERT_EQ(stracLinuxFormat, true);
     ASSERT_EQ(isValidSavedGameHeader(header), true);

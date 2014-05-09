@@ -1,15 +1,18 @@
 #include "DefaultContentManagerUT.h"
 
 #include "GameRes.h"
+#include "sgp/FileMan.h"
 
 #include "src/DefaultContentManager.h"
+#include "src/TestUtils.h"
 
 /** Create DefaultContentManager for usage in unit testing. */
 DefaultContentManager * createDefaultCMForTesting()
 {
-  std::string configFolderPath = "_unittests";
-  std::string gameResRootPath = "_unittests";
-  std::string externalizedDataPath = "externalized";
+  std::string extraDataDir = GetExtraDataDir();
+  std::string configFolderPath = FileMan::joinPaths(extraDataDir, "_unittests");
+  std::string gameResRootPath = FileMan::joinPaths(extraDataDir, "_unittests");
+  std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
 
   DefaultContentManager *cm;
 

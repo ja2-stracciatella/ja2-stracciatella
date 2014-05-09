@@ -4,6 +4,9 @@
 
 #include "LoadSaveData.h"
 
+#include "src/TestUtils.h"
+
+
 TEST(LoadSaveData, integers)
 {
   char buf[100];
@@ -160,8 +163,8 @@ TEST(LoadSaveData, floatAndDoubleFormat)
   // as on Windows.  Otherwise, there will be problems with
   // loading saved games made on Windows.
 
-  const char *floatsPath = "_unittests/datatypes/floats.bin";
-  const char *doublesPath = "_unittests/datatypes/doubles.bin";
+  std::string floatsPath = FileMan::joinPaths(GetExtraDataDir(), "_unittests/datatypes/floats.bin");
+  std::string doublesPath = FileMan::joinPaths(GetExtraDataDir(), "_unittests/datatypes/doubles.bin");
 
   // // Test data were previously written with the following code.
   // {
@@ -192,7 +195,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 
   {
     char buf[100];
-    FILE *floats = fopen(floatsPath, "rb");
+    FILE *floats = fopen(floatsPath.c_str(), "rb");
     fread(buf, sizeof(float), 5, floats);
     fclose(floats);
     float f;
@@ -207,7 +210,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 
   {
     char buf[100];
-    FILE *doubles = fopen(doublesPath, "rb");
+    FILE *doubles = fopen(doublesPath.c_str(), "rb");
     fread(buf, sizeof(double), 5, doubles);
     fclose(doubles);
     double d;

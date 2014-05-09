@@ -94,6 +94,9 @@ public:
   /** Open file for reading. */
   static SGPFile* openForReading(const char *filename);
 
+  /** Open file for reading. */
+  static SGPFile* openForReading(const std::string &filename);
+
   /** Read the whole file as text. */
   static std::string fileReadText(SGPFile*);
 

@@ -678,6 +678,12 @@ SGPFile* FileMan::openForReading(const char *filename)
   return getSGPFileFromFD(d, filename, fmode);
 }
 
+/** Open file for reading. */
+SGPFile* FileMan::openForReading(const std::string &filename)
+{
+  return openForReading(filename.c_str());
+}
+
 /** Open file for reading.  Look file in folderPath in case-insensitive manner. */
 FILE* FileMan::openForReadingCaseInsensitive(const std::string &folderPath, const char *filename)
 {

@@ -571,6 +571,7 @@ SRCS += src/DefaultContentManagerUT.cc
 SRCS += src/DefaultContentManager_unittests.cc
 SRCS += src/JsonUtility_unittests.cc
 SRCS += src/VanillaWeapons_unittests.cc
+SRCS += src/TestUtils.cc
 endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))
@@ -738,22 +739,27 @@ build-debian-package: build-source-archive
 # Build Debian packages and the Windows release in
 # a totally controlled environment using Vagrant (http://www.vagrantup.com)
 build-releases:
-	$(MAKE) build-releases-on-box1
-	$(MAKE) build-releases-on-box2
+	$(MAKE) build-release-on-box1
+	$(MAKE) build-release-on-box2
+	$(MAKE) build-release-on-box3
 
-build-releases-on-box1:
+build-release-on-box1:
 	$(MAKE) clean
 	cd _build/buildbox1 && vagrant up
 	cd _build/buildbox1 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
 	cd _build/buildbox1 && vagrant ssh -c "sudo shutdown -h now"
 
-build-releases-on-box2:
+build-release-on-box2:
 	$(MAKE) clean
 	cd _build/buildbox2 && vagrant up
 	cd _build/buildbox2 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
-	$(MAKE) clean
-	cd _build/buildbox2 && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
 	cd _build/buildbox2 && vagrant ssh -c "sudo shutdown -h now"
+
+build-release-on-box3:
+	$(MAKE) clean
+	cd _build/buildbox3 && vagrant up
+	cd _build/buildbox3 && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
+	cd _build/buildbox3 && vagrant ssh -c "sudo shutdown -h now"
 
 
 # How to

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -443,6 +443,7 @@
     <ClCompile Include="..\..\src\policy\DefaultGamePolicy.cc" />
     <ClCompile Include="..\..\src\policy\DefaultIMPPolicy.cc" />
     <ClCompile Include="..\..\src\Soldier.cc" />
+    <ClCompile Include="..\..\src\TestUtils.cc" />
     <ClCompile Include="..\..\src\WeaponModels.cc" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\codecvt_error_category.cpp" />
     <ClCompile Include="..\lib-boost\libs\filesystem\src\operations.cpp" />
@@ -866,6 +867,7 @@
     <ClInclude Include="..\..\src\policy\IMPPolicy.h" />
     <ClInclude Include="..\..\src\Soldier.h" />
     <ClInclude Include="..\..\src\StringEncodingTypes.h" />
+    <ClInclude Include="..\..\src\TestUtils.h" />
     <ClInclude Include="..\..\src\WeaponModels.h" />
     <ClInclude Include="..\lib-boost\libs\filesystem\src\windows_file_codecvt.hpp" />
     <ClInclude Include="..\lib-boost\libs\system\src\local_free_on_destruction.hpp" />
