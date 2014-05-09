@@ -1,4 +1,10 @@
-ja2-stracciatella (0.14.xx-1) UNRELEASED; urgency=low
+ja2-stracciatella (0.14.01-2) UNRELEASED; urgency=low
+
+  * Modifications to avoid lintian warnings.
+
+ -- Gennady Trafimenkov <gennady.trafimenkov@gmail.com>  Sat, 10 May 2014 00:00:38 +0400
+
+ja2-stracciatella (0.14.01-1) UNRELEASED; urgency=low
 
   * Initial release.
 
