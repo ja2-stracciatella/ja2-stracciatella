@@ -228,25 +228,23 @@ void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 Des
   // dump_bmp (smackpal, smackframe, 640, 480, Smk->FrameNum);
   buf=(UINT16*)Buf;
   pframe=smackframe;
-  // for now hardcoded without taking sdl into account. 
-  // need to find a way to blit it later
+  // hardcoded copy to frambuffer without taking sdl methods into account. 
+  // maybe need to find a way to blit it later
   if (Flags == SMACKBUFFER565) 
     {
       buf+=Left + Top*halfpitch;
       for (i =0; i < DestHeight ; i++) {
         for (j = 0; j <DestWidth; j++) {
-          // get rgb offset of palette
           rgb = &smackpal[*pframe++*3] ;
-          // convert from rbg to rgb565 0=red 1=green 2=blue
           *buf++ = (rgb[0]>>3)<<11 | (rgb[1]>>2)<<5 | rgb[2]>>3;
         }
         buf+=halfpitch-DestWidth;
       }
     }
-  else 
+  else // SMACKBUFFER555
     {
       for (i =0; i < DestHeight ; i++) {
-        for (j = 0; j <640; j++) {
+        for (j = 0; j < DestWidth; j++) {
           // get rgb offset of palette
           rgb = &smackpal[pframe[0]*3] ;
           // convert from rbg to rgb555 0=red 1=green 2=blue
