@@ -1,0 +1,55 @@
+.\" Manpage for ja2.
+.\" Contact gennady.trafimenkov@gmail.com to correct errors or typos.
+.TH ja2 6 "04 May 2014" "1.0" "ja2 man page"
+.SH NAME
+ja2 \- JA2 Stracciatella
+.SH SYNOPSIS
+ja2 [OPTIONS]
+.SH DESCRIPTION
+JA2 Stracciatella is a cross-platform implementation of Jagged Alliance 2 game.
+This is only the game engine.  Game resources from the original JA2 are required to play the game.
+.TP
+When you first start the game, file \fB~/.ja2/ja2.ini\fR is created.  You should edit this file, so that \fBdata_dir\fR points to the directory with game resources from the original JA2 game.
+.SH OPTIONS
+.TP
+\fB\-res WxH\fR
+Screen resolution, e.g. 800x600. Default value is 640x480
+.TP
+\fB\-resversion VERSION\fR
+Version of the game resources.
+Possible values are: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD.
+Default value is ENGLISH.
+RUSSIAN is for BUKA Agonia Vlasty release.
+RUSSIAN_GOLD is for Gold release.
+.TP
+\fB\-mod NAME\fR
+Start one of the game modifications, bundled into the game.
+NAME is the name of modification, e.g. 'from-russia-with-love'. See folder mods for possible options
+.TP
+\fB\-debug\fR
+Show debug messages
+.TP
+\fB\-unittests\fR
+Perform unit tests.
+ja2 -unittests [gtest options]
+E.g. ja2 -unittests --gtest_output="xml:report.xml" --gtest_repeat=2
+.TP
+\fB\-editor\fR
+Start the map editor (Editor.slf is necessary)
+.TP
+\fB\-editorauto\fR
+Start the map editor and load sector A9 (Editor.slf is necessary)
+.TP
+\fB\-fullscreen\fR
+Start the game in the fullscreen mode
+.TP
+\fB\-help\fR
+Display this information
+.TP
+\fB\-nosound\fR
+Turn the sound and music off
+.TP
+\fB\-window\fR
+Start the game in a window
+.SH AUTHOR
+Gennady Trafimenkov (gennady.trafimenkov@gmail.com)

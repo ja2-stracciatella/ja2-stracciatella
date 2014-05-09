@@ -8,10 +8,15 @@ Building project on Linux using GCC
 
     $ sudo apt-get install gcc g++ libsdl1.2-dev
 
-  To compile the project:
+  If you want to run the game from the directory with source codes:
 
-    $ make clean
-    $ make all
+    $ make
+
+  If you want to install the game to some other directory, e.g. /usr/local:
+
+    $ ./configure
+    $ make
+    $ sudo make install
 
 
 Build project for Windows on Linux using MinGW (cross build)
@@ -27,81 +32,26 @@ Build project for Windows on Linux using MinGW (cross build)
     $ make clean
     $ make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
 
-Build project on Windows using MinGW
-------------------------------------
+
+Build project on Windows
+---------------------------------------------------------
+
+  Open file _build\solution-vs10e\ja2.sln with Visual Studio 2010 Express
+  and build the project.
+
+  or
 
   Install Cygwin enviroment (www.cygwin.com).
+  Install MinGW from http://sourceforge.net/projects/mingw to folder c:\MinGW
 
-  Install MinGW from http://sourceforge.net/projects/mingw
+  From the Cygwin shell, execute:
 
-  To compile the project from the Cygwin shell, execute:
-
-    $ make clean LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
-    $ PATH=/cygdrive/c/MinGW/bin:$PATH make USE_MINGW=1 MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
-
-  We suppose that MinGW is installed into c:\MinGW.  If not, change the command accordingly.
-
-  You may need to copy following files to the current directory (where ja2.exe is), so it can
-  start:
-     C:\MinGW\bin\libgcc_s_dw2-1.dll
-     C:\MinGW\bin\libstdc++-6.dll
-     _build\lib-SDL-devel-1.2.15-VC\lib\x86\SDL.dll
+    $ make build-on-win
 
 
-Build release for distribution
-------------------------------
-
-  On Linux:
-
-    $ make clean
-    $ make build-win-release-on-linux
-
-
-Build project on Mac OS 10.6 - 10.8
------------------------------------
+Build project on Mac OS
+-----------------------
 
   Install Xcode and Xcode command line tools.
 
-  Install SDL library by compiling it from the source codes.
-
-    $ curl -O http://www.libsdl.org/release/SDL-1.2.15.tar.gz
-    $ tar -xzf SDL-1.2.15.tar.gz
-    $ cd SDL-1.2.15
-
-    On Mac OS 10.6 execute:
-
-      $ ./configure
-
-    On Mac OS 10.7 - 10.8:
-
-      $ ./configure --without-x
-
-    $ make
-    $ sudo make install
-
-  Build the project:
-
-    $ make clean
-    $ make all
-
-
-Build project on Mac OS 10.9
-----------------------------
-
-  At the moment there are two unresolved issues:
-    - SDL library doesn't compile
-    - Google Testing Framework doesn't compile
-
-  A quick solution:
-
-    $ make build-on-mac10.9
-
-  which compiles the project without unit tests and using the
-  static SDL library included into the project.
-
-
-Build project on Windows using Visual Studio 2010 Express
----------------------------------------------------------
-
-  Open solution file _build\solution-vs10e\ja2.sln and build the project.
-
+  $ make build-on-mac

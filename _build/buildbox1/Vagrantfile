@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# This box is for buidling:
+#   1) i368 debian package
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "hashicorp/precise32"
+
+  config.vm.provision :shell, :path => "bootstrap.sh"
+
+  config.vm.synced_folder "../..", "/home/vagrant/strac"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "strac_buildbox_u1204_x32"
+    vb.cpus = 2
+  #   vb.gui = true
+    vb.customize ["modifyvm", :id, "--memory", "512"]
+  end
+
+end

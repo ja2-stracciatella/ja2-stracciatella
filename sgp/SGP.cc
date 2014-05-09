@@ -5,6 +5,8 @@
 #	define BROKEN_SWPRINTF
 #endif
 
+#include "../ja2config.h"
+
 #if defined BROKEN_SWPRINTF
 #	include <locale.h>
 #endif
@@ -392,7 +394,14 @@ try
   std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
   std::string gameResRootPath = findRootGameResFolder(configPath);
 
-  std::string externalizedDataPath = FileMan::joinPaths(exeFolder, "externalized");
+  std::string extraDataDir = EXTRA_DATA_DIR;
+  if(extraDataDir.empty())
+  {
+    // use location of the exe file
+    extraDataDir = exeFolder;
+  }
+
+  std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
 
   DefaultContentManager *cm;
 
@@ -400,14 +409,14 @@ try
   if(params.useMod)
   {
     std::string modName = params.modName;
-    std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(exeFolder, "mods"), modName), "data");
+    std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
     cm = new ModPackContentManager(version,
                                    modName, modResFolder, configFolderPath,
                                    gameResRootPath, externalizedDataPath);
     LOG_INFO("------------------------------------------------------------------------------\n");
     LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
     LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-    LOG_INFO("Externalized data directory:   '%s'\n", cm->getExternalizedDataDir().c_str());
+    LOG_INFO("Extra data directory:          '%s'\n", extraDataDir.c_str());
     LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
     LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
     LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
@@ -425,7 +434,7 @@ try
     LOG_INFO("------------------------------------------------------------------------------\n");
     LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
     LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-    LOG_INFO("Externalized data directory:   '%s'\n", cm->getExternalizedDataDir().c_str());
+    LOG_INFO("Extra data directory:          '%s'\n", extraDataDir.c_str());
     LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
     LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
     LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
@@ -709,14 +718,16 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 			"\n"
 			"  -res WxH     Screen resolution, e.g. 800x600. Default value is 640x480\n"
 			"\n"
-			"  -resversion  Version of the game resources (data files)\n"
+			"  -resversion  Version of the game resources.\n"
 			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
 			"                 Default value is ENGLISH\n"
 			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
 			"                 RUSSIAN_GOLD is for Gold release\n"
 #ifdef WITH_MODS
       "\n"
-      "  -mod NAME    MOD name (see folder mods for options, e.g. 'from-russia-with-love')\n"
+      "  -mod NAME    Start one of the game modifications, bundled into the game.\n"
+      "               NAME is the name of modification, e.g. 'from-russia-with-love'.\n"
+      "               See folder mods for possible options\n"
 #endif
 			"\n"
 			"  -debug       Show debug messages\n"
@@ -729,9 +740,9 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
       "  -no3btnmouse Disable 3-button mouse support.  Moving backward with Option + Left\n"
       "               mouse button will not work\n"
 #endif
-			"  -editor      Start the map editor (Editor.slf is necessary)\n"
-			"  -editorauto  Start the map editor and load sector A9 (Editor.slf is necessary)\n"
-			"  -fullscreen  Start the game in fullscreen mode\n"
+			"  -editor      Start the map editor (Editor.slf is required)\n"
+			"  -editorauto  Start the map editor and load sector A9 (Editor.slf is required)\n"
+			"  -fullscreen  Start the game in the fullscreen mode\n"
 			"  -help        Display this information\n"
 			"  -nosound     Turn the sound and music off\n"
 			"  -window      Start the game in a window\n"

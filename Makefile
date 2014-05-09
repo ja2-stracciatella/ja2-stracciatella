@@ -3,33 +3,28 @@
 # Please update COMPILATION.txt if necessary after changing this file.
 #
 
-CONFIG ?= config.default
--include $(CONFIG)
+-include Makefile.config
+# Makefile.config can be empty.  In this case application is build
+# to be executed from the current directory.
+#
+# Or Makefile.config may contain the following values:
+#   BINARY_DIR
+#   MANPAGE_DIR
+#   FULL_PATH_EXTRA_DATA_DIR
+#   INSTALLABLE                := "yes"
+# In this case application can be installed.
 
 
 # By default build the project with unit tests.
 # If you want to build without them, use make WITH_UNITTESTS=0
 WITH_UNITTESTS ?= 1
 
+WITH_LPTHREAD ?= 1
+
 BINARY    ?= ja2
-PREFIX    ?= /usr/local
-MANPREFIX ?= $(PREFIX)
 
-
-INSTALL         ?= install
-INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
-INSTALL_MAN     ?= $(INSTALL) -m 444
-INSTALL_DATA    ?= $(INSTALL) -m 444
-
-
-ifdef SKIP_BUILD_NUMBER_CALC
-BUILD_NUMBER := "XXXXXX"
-else
-# Calculate number of commits since 8287b98.  It will be the
-# build number.
-BUILD_NUMBER := $(strip $(shell git log 8287b98.. --oneline | wc -l))
-endif
-GAME_VERSION := v0.12.$(BUILD_NUMBER)
+VERSION := 0.14.xx
+GAME_VERSION := v$(VERSION)
 CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
 
 
@@ -159,7 +154,11 @@ CCFLAGS += -Wmissing-prototypes
 
 CXXFLAGS += $(CFLAGS)
 
-LDFLAGS += -lm -lpthread
+LDFLAGS += -lm
+
+ifdef WITH_LPHTREAD
+LDFLAGS += -lpthread
+endif
 
 ifdef WITH_ZLIB
 LDFLAGS += -lz
@@ -607,19 +606,36 @@ clean distclean:
 	$(Q)rm -fr $(DEPS) $(OBJS) $(BINARY)
 
 install: $(BINARY)
-	@echo '===> INSTALL'
-	$(Q)$(INSTALL) -d $(PREFIX)/bin $(MANPREFIX)/man/man6 $(PREFIX)/share/applications $(PREFIX)/share/pixmaps
-	$(Q)$(INSTALL_PROGRAM) $(BINARY) $(PREFIX)/bin
-	$(Q)$(INSTALL_MAN) ja2.6 $(MANPREFIX)/man/man6
-	$(Q)$(INSTALL_DATA) ja2-stracciatella.desktop $(PREFIX)/share/applications
-	$(Q)$(INSTALL_DATA) Build/Res/jagged3.ico $(PREFIX)/share/pixmaps/jagged2.ico
+	test -z "$(INSTALLABLE)" || install -d $(BINARY_DIR)
+	test -z "$(INSTALLABLE)" || install -d $(MANPAGE_DIR)
+	test -z "$(INSTALLABLE)" || install -d $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || install -m 555 $(BINARY) $(BINARY_DIR)
+	test -z "$(INSTALLABLE)" || cp -r externalized $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -r mods         $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -r _unittests   $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || install -m 444 ja2_manpage $(MANPAGE_DIR)/ja2.6
+
+	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
+	@test -n "$(INSTALLABLE)" || echo "This build doesn't support installation."
+	@test -n "$(INSTALLABLE)" || echo "You can run the game right from this directory, like this: ./$(BINARY)"
+	@test -n "$(INSTALLABLE)" || echo "If you want a local installation, do:"
+	@test -n "$(INSTALLABLE)" || echo "  ./configure"
+	@test -n "$(INSTALLABLE)" || echo "  make"
+	@test -n "$(INSTALLABLE)" || echo "  sudo make install"
+	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
 
 deinstall:
-	@echo '===> DEINSTALL'
-	$(Q)rm $(PREFIX)/bin/$(BINARY)
-	$(Q)rm $(MANPREFIX)/man/man6/ja2.6
-	$(Q)rm $(PREFIX)/share/applications/ja2-stracciatella.desktop
-	$(Q)rm $(PREFIX)/share/pixmaps/jagged2.ico
+	test -z "$(INSTALLABLE)" || rm $(MANPAGE_DIR)/ja2.6
+	test -z "$(INSTALLABLE)" || rm $(BINARY_DIR)/$(BINARY)
+	test -z "$(INSTALLABLE)" || test -d $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || rm -rf $(FULL_PATH_EXTRA_DATA_DIR)/externalized
+	test -z "$(INSTALLABLE)" || rm -rf $(FULL_PATH_EXTRA_DATA_DIR)/mods
+	test -z "$(INSTALLABLE)" || rm -rf $(FULL_PATH_EXTRA_DATA_DIR)/_unittests
+	test -z "$(INSTALLABLE)" || rmdir $(FULL_PATH_EXTRA_DATA_DIR)
+
+	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
+	@test -n "$(INSTALLABLE)" || echo "This build doesn't support deinstallation"
+	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
 
 rebuild-tags:
 	-rm TAGS
@@ -647,6 +663,8 @@ MAC_RELEASE_NAME := "ja2-$(GAME_VERSION)-macos"
 MAC_RELEASE := $(MAC_RELEASE_BASE_DIR)/$(MAC_RELEASE_NAME)
 MAC_RELEASE_ZIP := $(MAC_RELEASE_BASE_DIR)/$(MAC_RELEASE_NAME).zip
 
+SRC_RELEASE_BASE_DIR := "release-src"
+
 build-beta-win-release-on-linux:
 	make BETA=1 build-win-release-on-linux
 
@@ -654,7 +672,7 @@ build-beta-win-release-on-linux:
 build-win-release-on-linux:
 	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
 	mkdir -p $(WIN_RELEASE)
-	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
+	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITHOUT_LPHTREAD=0
 	mv ./ja2 $(WIN_RELEASE)/ja2.exe
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(WIN_RELEASE)
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
@@ -696,7 +714,46 @@ build-on-win:
 	cp /cygdrive/c/MinGW/bin/libgcc_s_dw2-1.dll .
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll .
 
+SOURCE_DIR_NAME := ja2-stracciatella_$(VERSION)
+build-source-archive:
+	mkdir -p $(SRC_RELEASE_BASE_DIR)
+	git archive HEAD --prefix=$(SOURCE_DIR_NAME)/ | gzip >$(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz
 
+DEB_PKG_BUILD_FOLDER ?= _deb
+
+# sudo apt-get install pbuilder
+build-debian-package: build-source-archive
+	-rm -rf $(DEB_PKG_BUILD_FOLDER)
+	mkdir $(DEB_PKG_BUILD_FOLDER)
+	cp $(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME).orig.tar.gz
+	cd $(DEB_PKG_BUILD_FOLDER) && tar -xzf $(SOURCE_DIR_NAME).orig.tar.gz
+	cp -r _build/deb-package/debian $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)
+	cd $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME) && debuild -us -uc
+	mkdir -p release-deb-packages
+	cp $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)-*.deb release-deb-packages
+# To debug build issues, go to $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME) directory and try:
+# $ fakeroot debian/rules clean
+# $ fakeroot debian/rules binary
+
+# Build Debian packages and the Windows release in
+# a totally controlled environment using Vagrant (http://www.vagrantup.com)
+build-releases:
+	$(MAKE) build-releases-on-box1
+	$(MAKE) build-releases-on-box2
+
+build-releases-on-box1:
+	$(MAKE) clean
+	cd _build/buildbox1 && vagrant up
+	cd _build/buildbox1 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	cd _build/buildbox1 && vagrant ssh -c "sudo shutdown -h now"
+
+build-releases-on-box2:
+	$(MAKE) clean
+	cd _build/buildbox2 && vagrant up
+	cd _build/buildbox2 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	$(MAKE) clean
+	cd _build/buildbox2 && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
+	cd _build/buildbox2 && vagrant ssh -c "sudo shutdown -h now"
 
 
 # How to
@@ -713,4 +770,26 @@ build-on-win:
 #  (gdb) run
 #  (gdb) backtrace
 #
+#
+# Check man page
+# --------------
+#  man ./ja2_manpage
+#
+#
+# Build releases for distribution
+#--------------------------------
+#
+#  Windows release on Linux:
+#
+#    $ make clean
+#    $ make build-win-release-on-linux
+#
+#  On Mac:
+#    $ make clean
+#    $ make build-release-on-mac
+#
+#  Debian packages:
+#
+#    For the current architecture:
+#      $ make build-debian-package
 #
