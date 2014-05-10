@@ -739,27 +739,27 @@ build-debian-package: build-source-archive
 # Build Debian packages and the Windows release in
 # a totally controlled environment using Vagrant (http://www.vagrantup.com)
 build-releases:
-	$(MAKE) build-release-on-box1
-	$(MAKE) build-release-on-box2
-	$(MAKE) build-release-on-box3
+	$(MAKE) build-deb-package-on-u1204_i386
+	$(MAKE) build-deb-package-on-u1204_amd64
+	$(MAKE) build-win-release-on-u1204_amd64_win
 
-build-release-on-box1:
+build-deb-package-on-u1204_i386:
 	$(MAKE) clean
-	cd _build/buildbox1 && vagrant up
-	cd _build/buildbox1 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
-	cd _build/buildbox1 && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1204_i386 && vagrant up
+	cd _build/buildboxes/u1204_i386 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	cd _build/buildboxes/u1204_i386 && vagrant ssh -c "sudo shutdown -h now"
 
-build-release-on-box2:
+build-deb-package-on-u1204_amd64:
 	$(MAKE) clean
-	cd _build/buildbox2 && vagrant up
-	cd _build/buildbox2 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
-	cd _build/buildbox2 && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1204_amd64 && vagrant up
+	cd _build/buildboxes/u1204_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	cd _build/buildboxes/u1204_amd64 && vagrant ssh -c "sudo shutdown -h now"
 
-build-release-on-box3:
+build-win-release-on-u1204_amd64_win:
 	$(MAKE) clean
-	cd _build/buildbox3 && vagrant up
-	cd _build/buildbox3 && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
-	cd _build/buildbox3 && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1204_amd64_win && vagrant up
+	cd _build/buildboxes/u1204_amd64_win && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
+	cd _build/buildboxes/u1204_amd64_win && vagrant ssh -c "sudo shutdown -h now"
 
 # Check compilation on different operation systems
 check-compilation:

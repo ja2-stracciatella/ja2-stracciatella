@@ -12,10 +12,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :path => "bootstrap.sh"
 
-  config.vm.synced_folder "../..", "/home/vagrant/strac"
+  config.vm.synced_folder "../../..", "/home/vagrant/strac"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "strac_buildbox_u1204_x64_win"
+    vb.name = "strac_buildbox_u1204_amd64_win"
     vb.cpus = 2
   #   vb.gui = true
     vb.customize ["modifyvm", :id, "--memory", "512"]
