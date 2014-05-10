@@ -156,7 +156,7 @@ CXXFLAGS += $(CFLAGS)
 
 LDFLAGS += -lm
 
-ifdef WITH_LPHTREAD
+ifeq "$(WITH_LPTHREAD)" "1"
 LDFLAGS += -lpthread
 endif
 
@@ -673,7 +673,7 @@ build-beta-win-release-on-linux:
 build-win-release-on-linux:
 	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
 	mkdir -p $(WIN_RELEASE)
-	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITHOUT_LPHTREAD=0
+	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITH_LPTHREAD=0
 	mv ./ja2 $(WIN_RELEASE)/ja2.exe
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(WIN_RELEASE)
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
@@ -760,6 +760,16 @@ build-release-on-box3:
 	cd _build/buildbox3 && vagrant up
 	cd _build/buildbox3 && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
 	cd _build/buildbox3 && vagrant ssh -c "sudo shutdown -h now"
+
+# Check compilation on different operation systems
+check-compilation:
+	$(MAKE) check-compilation-on-u1404
+
+check-compilation-on-u1404:
+	$(MAKE) clean
+	cd _build/buildboxes/u1404_amd64 && vagrant up
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac -j2"
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "sudo shutdown -h now"
 
 
 # How to
