@@ -1,7 +1,7 @@
 Here you can find compilation instructions for different platforms.
 
-Building project on Linux using GCC
------------------------------------
+Buil on Linux using GCC
+-----------------------
 
   Install GCC C/C++ compiler and SDL development library.  On Ubuntu it can be
   done like this:
@@ -19,8 +19,8 @@ Building project on Linux using GCC
     $ sudo make install
 
 
-Build project for Windows on Linux using MinGW (cross build)
------------------------------------------------------------
+Build for Windows on Linux using MinGW (cross build)
+----------------------------------------------------
 
   Install GCC C/C++ compiler and MinGW.
   On Ubuntu it can be done like this:
@@ -33,8 +33,9 @@ Build project for Windows on Linux using MinGW (cross build)
     $ make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
 
 
-Build project on Windows
----------------------------------------------------------
+Build on Windows
+----------------
+
 
   Open file _build\solution-vs10e\ja2.sln with Visual Studio 2010 Express
   and build the project.
@@ -49,9 +50,17 @@ Build project on Windows
     $ make build-on-win
 
 
-Build project on Mac OS
------------------------
+Build on Mac OS
+---------------
 
   Install Xcode and Xcode command line tools.
 
   $ make build-on-mac
+
+
+Build on FreeBSD 10
+-------------------
+
+  # pkg install gmake
+  # pkg install `pkg search sdl | grep '^sdl-1.2'`
+  $ gmake CXX=c++
