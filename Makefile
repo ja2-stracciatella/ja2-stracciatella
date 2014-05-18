@@ -765,6 +765,7 @@ build-win-release-on-u1204_amd64_win:
 check-compilation:
 	$(MAKE) check-compilation-on-u1404
 	$(MAKE) check-compilation-on-freebsd10
+	$(MAKE) check-compilation-on-openbsd55
 
 check-compilation-on-u1404:
 	$(MAKE) clean
@@ -785,6 +786,18 @@ check-compilation-on-freebsd10:
 	scp -F /tmp/strac-freebsd10-ssh-config -r * default:/usr/home/vagrant/strac
 	ssh -F /tmp/strac-freebsd10-ssh-config default "gmake CXX=c++ -C /usr/home/vagrant/strac -j2"
 	ssh -F /tmp/strac-freebsd10-ssh-config default "sudo shutdown -p now"
+
+check-compilation-on-openbsd55:
+	$(MAKE) clean
+	cd _build/buildboxes/openbsd-5.5 && vagrant up
+	cd _build/buildboxes/openbsd-5.5 && vagrant ssh-config >/tmp/strac-openbsd55-ssh-config
+	scp -F /tmp/strac-openbsd55-ssh-config _build/buildboxes/openbsd-5.5/bootstrap.sh default:/home/vagrant
+	ssh -F /tmp/strac-openbsd55-ssh-config default "/home/vagrant/bootstrap.sh"
+	ssh -F /tmp/strac-openbsd55-ssh-config default "rm -rf /home/vagrant/strac"
+	ssh -F /tmp/strac-openbsd55-ssh-config default "mkdir /home/vagrant/strac"
+	scp -F /tmp/strac-openbsd55-ssh-config -r * default:/home/vagrant/strac
+	ssh -F /tmp/strac-openbsd55-ssh-config default "gmake CC=egcc CXX=eg++ -C /home/vagrant/strac -j2"
+	ssh -F /tmp/strac-openbsd55-ssh-config default "sudo shutdown -hp now"
 
 
 # How to
