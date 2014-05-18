@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "chef/freebsd-10.0"
+
+  # Disable synced folders because FreeBSD doens't support VirtualBox's shared folders.
+  # Provisioning won't work also because of this.
+
+  # config.vm.provision :shell, :path => "bootstrap.sh"
+  # config.vm.synced_folder "../../..", "/home/vagrant/strac"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  # config.vm.synced_folder ".", "/vagrant", :nfs => true, id: "vagrant-root"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "strac_buildbox_freebsd-10.0"
+    vb.cpus = 2
+  #   vb.gui = true
+    vb.customize ["modifyvm", :id, "--memory", "512"]
+  end
+
+end

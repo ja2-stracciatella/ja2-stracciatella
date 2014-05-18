@@ -764,12 +764,27 @@ build-win-release-on-u1204_amd64_win:
 # Check compilation on different operation systems
 check-compilation:
 	$(MAKE) check-compilation-on-u1404
+	$(MAKE) check-compilation-on-freebsd10
 
 check-compilation-on-u1404:
 	$(MAKE) clean
 	cd _build/buildboxes/u1404_amd64 && vagrant up
 	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac -j2"
 	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "sudo shutdown -h now"
+
+# VirtualBox shared folder cannot be mounted on FreeBSD guest system,
+# so we need to copy sources to the box over ssh before compiling them
+check-compilation-on-freebsd10:
+	$(MAKE) clean
+	cd _build/buildboxes/freebsd-10.0 && vagrant up
+	cd _build/buildboxes/freebsd-10.0 && vagrant ssh-config >/tmp/strac-freebsd10-ssh-config
+	scp -F /tmp/strac-freebsd10-ssh-config _build/buildboxes/freebsd-10.0/bootstrap.sh default:/usr/home/vagrant
+	ssh -F /tmp/strac-freebsd10-ssh-config default "/usr/home/vagrant/bootstrap.sh"
+	ssh -F /tmp/strac-freebsd10-ssh-config default "rm -rf /usr/home/vagrant/strac"
+	ssh -F /tmp/strac-freebsd10-ssh-config default "mkdir /usr/home/vagrant/strac"
+	scp -F /tmp/strac-freebsd10-ssh-config -r * default:/usr/home/vagrant/strac
+	ssh -F /tmp/strac-freebsd10-ssh-config default "gmake CXX=c++ -C /usr/home/vagrant/strac -j2"
+	ssh -F /tmp/strac-freebsd10-ssh-config default "sudo shutdown -p now"
 
 
 # How to
