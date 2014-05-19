@@ -611,9 +611,9 @@ install: $(BINARY)
 	test -z "$(INSTALLABLE)" || install -d $(MANPAGE_DIR)
 	test -z "$(INSTALLABLE)" || install -d $(FULL_PATH_EXTRA_DATA_DIR)
 	test -z "$(INSTALLABLE)" || install -m 555 $(BINARY) $(BINARY_DIR)
-	test -z "$(INSTALLABLE)" || cp -r externalized $(FULL_PATH_EXTRA_DATA_DIR)
-	test -z "$(INSTALLABLE)" || cp -r mods         $(FULL_PATH_EXTRA_DATA_DIR)
-	test -z "$(INSTALLABLE)" || cp -r _unittests   $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -R externalized $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -R mods         $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -R _unittests   $(FULL_PATH_EXTRA_DATA_DIR)
 	test -z "$(INSTALLABLE)" || install -m 444 ja2_manpage $(MANPAGE_DIR)/ja2.6
 
 	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
@@ -679,8 +679,8 @@ build-win-release-on-linux:
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
 	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
 	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
-	cp -r _unittests $(WIN_RELEASE)
-	cp -r externalized $(WIN_RELEASE)
+	cp -R _unittests $(WIN_RELEASE)
+	cp -R externalized $(WIN_RELEASE)
 	cp Changelog $(WIN_RELEASE)/Changelog.txt
 	cp changes.md $(WIN_RELEASE)/changes.md
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
@@ -700,8 +700,8 @@ build-release-on-mac:
 	mv ./ja2 $(MAC_RELEASE)/ja2
 	cp _build/distr-files-mac/*.command $(MAC_RELEASE)
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
-	cp -r _unittests $(MAC_RELEASE)
-	cp -r externalized $(MAC_RELEASE)
+	cp -R _unittests $(MAC_RELEASE)
+	cp -R externalized $(MAC_RELEASE)
 	cp Changelog $(MAC_RELEASE)/Changelog.txt
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
@@ -728,7 +728,7 @@ build-debian-package: build-source-archive
 	mkdir $(DEB_PKG_BUILD_FOLDER)
 	cp $(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME).orig.tar.gz
 	cd $(DEB_PKG_BUILD_FOLDER) && tar -xzf $(SOURCE_DIR_NAME).orig.tar.gz
-	cp -r _build/deb-package/debian $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)
+	cp -R _build/deb-package/debian $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)
 	cd $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME) && debuild -us -uc
 	mkdir -p release-deb-packages
 	cp $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)-*.deb release-deb-packages
