@@ -22,15 +22,15 @@ Buil on Linux using GCC
 Build for Windows on Linux using MinGW (cross build)
 ----------------------------------------------------
 
-  Install GCC C/C++ compiler and MinGW.
-  On Ubuntu it can be done like this:
-
-    $ sudo apt-get install gcc g++ mingw32
-
-  To compile the project:
-
+  Ubuntu 12.04 i386:
+    $ sudo apt-get install gcc-mingw32
     $ make clean
-    $ make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32
+    $ make USE_MINGW=1 MINGW_PREFIX=i586-mingw32msvc LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITH_LPTHREAD=0
+
+  Ubuntu 12.04 x64:
+    $ sudo apt-get install gcc-mingw-w64 g++-mingw-w64
+    $ make clean
+    $ make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITH_LPTHREAD=0
 
 
 Build on Windows
