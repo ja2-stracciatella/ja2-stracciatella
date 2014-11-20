@@ -1086,7 +1086,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	if (sector == SEC_P3)
 	{
 		// heal up Elliot if he's been hurt
-		if ( gMercProfiles[ ELLIOT ].bLife < gMercProfiles[ ELLIOT ].bLifeMax )
+		if ( gMercProfiles[ ELLIOT ].bMercStatus != MERC_IS_DEAD )
 		{
 			gMercProfiles[ ELLIOT ].bLife = gMercProfiles[ ELLIOT ].bLifeMax;
 		}
