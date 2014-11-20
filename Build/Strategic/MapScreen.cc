@@ -153,7 +153,7 @@
 #define MAP_BG_WIDTH      (640 - 261)
 
 #define MAP_ARMOR_LABEL_X (STD_SCREEN_X + 208)
-#define MAP_ARMOR_LABEL_Y (STD_SCREEN_Y + 180)
+#define MAP_ARMOR_LABEL_Y (STD_SCREEN_Y + 179)
 #define MAP_ARMOR_X       (STD_SCREEN_X + 209)
 #define MAP_ARMOR_Y       (STD_SCREEN_Y + 188)
 #define MAP_ARMOR_W        28
