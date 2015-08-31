@@ -102,13 +102,13 @@ UINT32 smacksize = FileGetSize(FileHandle);
   if ( ! flickinfo ) return NULL;
 
   smackloaded = SmackToMemory (FileHandle);
-  if (! smackloaded) return NULL;
+  if (! smackloaded) { free(flickinfo); return NULL; }
   flickinfo->SmackerInMemory = smackloaded;
   flickinfo->Smacker = smk_open_memory (smackloaded, smacksize);
   //open file with given filehandle DISK/MEMORY mode
   //flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_DISK);
   //flickinfo->Smacker = smk_open_generic(1, fp, 0, SMK_MODE_MEMORY);
-  if ( ! flickinfo->Smacker ) return NULL;
+  if ( ! flickinfo->Smacker ) { free(flickinfo); return NULL; }
 
   smkstatus = smk_info_video (flickinfo->Smacker, &width, &height, &scale);
   SmackCheckStatus(smkstatus);
@@ -130,11 +130,12 @@ UINT32 smacksize = FileGetSize(FileHandle);
   // calculated audio memory for downsampling 44100->22050
   audiosamples = ( (flickinfo->Frames / (usf/1000)) * (a_rate[SMKTRACK]/2) * 16 *  a_channels[SMKTRACK]);
   audiobuffer = (INT16*) malloc( audiosamples );
-  if ( ! audiobuffer ) return NULL;
+  if ( ! audiobuffer ) { free(flickinfo); return NULL; }
   audiolen = SmackGetAudio (flickinfo->Smacker, audiobuffer);
   //SmackWriteAudio( audiobuffer, audiolen); // are getting right audio data?
   // shoot and forget... audiobuffer should be freed by SoundMan
   if ( audiolen > 0 ) flickinfo->SoundTag = SoundPlayFromBuffer( audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
+  else free(audiobuffer), audiobuffer = NULL;
   SmkVideoSwitch  (flickinfo->Smacker, ENABLE);
   if ( (smk_first(flickinfo->Smacker) < 0)) { printf ("First Failed!"); return NULL; }
   smk_first(flickinfo->Smacker);
