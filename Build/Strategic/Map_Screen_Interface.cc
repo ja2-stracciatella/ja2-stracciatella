@@ -3429,8 +3429,6 @@ void DisplaySoldierUpdateBox( )
 		DisplayWrappedString(iX, iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + 3, iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[STR_LATE_49], FONT_BLACK, CENTER_JUSTIFIED);
 	}
 
-	iCounter = 0;
-
 	// now wrap the border
 	for( iCounter = 0; iCounter < iNumberHigh ; iCounter++ )
 	{
