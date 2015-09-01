@@ -188,7 +188,6 @@ void ChooseWeightedTerrainTile()
 		return;
 	}
 	sRandomNum = rand() % usTotalWeight;
-	x = NUM_TERRAIN_TILE_REGIONS;
 	for( x = 0; x < NUM_TERRAIN_TILE_REGIONS; x++ )
 	{
 		usWeight = ubTerrainTileButtonWeight[ x ];
