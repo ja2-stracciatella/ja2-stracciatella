@@ -919,8 +919,6 @@ static BOOLEAN PixelateVideoMercImage(BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY,
 		}
 		uiLastTime = GetJA2Clock();
 	}
-	else
-		i=i;
 
 	i=j=0;
 	DestColor = pBuffer[ (j*uiPitch) + i ];

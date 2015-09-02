@@ -943,7 +943,7 @@ static BOOLEAN RemoveFromSelectionList(DisplayList* pNode)
 			if (--pSelList[iIndex].sCount <= 0)
 			{
 				// Squash the list to remove old entry
-				for ( iIndex = iIndex; iIndex < ((*pNumSelList) - 1); iIndex++ )
+				for ( ; iIndex < ((*pNumSelList) - 1); iIndex++ )
 					pSelList[ iIndex ] = pSelList[ iIndex + 1 ];
 
 				(*pNumSelList)--;

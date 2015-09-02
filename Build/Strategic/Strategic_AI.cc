@@ -425,11 +425,6 @@ static INT32 GarrisonReinforcementsRequested(INT32 iGarrisonID, UINT8* pubExtraR
 
 	iReinforcementsRequested = MIN( MAX_STRATEGIC_TEAM_SIZE, iReinforcementsRequested );
 
-	if( iReinforcementsRequested + *pubExtraReinforcements + iExistingForces > MAX_STRATEGIC_TEAM_SIZE )
-	{
-		iExistingForces = iExistingForces;
-	}
-
 	return iReinforcementsRequested;
 }
 

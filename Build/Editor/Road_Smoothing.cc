@@ -376,10 +376,6 @@ void InitializeRoadMacros()
 	end = sizeof( gRoadMacros ) / 4;
 	for( i = 0; i < end; i++ )
 	{
-		if( i >= sizeof( gRoadMacros ) / sizeof( MACROSTRUCT ) )
-		{
-			i = i;
-		}
 		if( gRoadMacros[ i ].sMacroID == sMacro )
 		{
 			gsRoadMacroStartIndex[ sMacro ] = i;
