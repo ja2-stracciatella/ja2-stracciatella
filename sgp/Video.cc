@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <ctime>
 #include <stdexcept>
 
@@ -543,11 +544,6 @@ static void TakeScreenshot()
 static void SnapshotSmall(void);
 
 
-static inline int16_t maxFunc(int16_t a, int16_t b)
-{
-  return (a > b) ? a : b;
-}
-
 /** @brief Join two rectangles.
  *
  * Add rectangle `newRect` to rectangle `result`, so `result` will
@@ -563,10 +559,10 @@ static void joinInRectangle(SDL_Rect &result, const SDL_Rect &newRect)
     }
     else
     {
-      int16_t X2 = maxFunc(result.x + result.w, newRect.x + newRect.w);
-      int16_t Y2 = maxFunc(result.y + result.h, newRect.y + newRect.h);
-      result.x = MIN(result.x, newRect.x);
-      result.y = MIN(result.y, newRect.y);
+      int16_t X2 = std::max(result.x + result.w, newRect.x + newRect.w);
+      int16_t Y2 = std::max(result.y + result.h, newRect.y + newRect.h);
+      result.x = std::min(result.x, newRect.x);
+      result.y = std::min(result.y, newRect.y);
       result.w = X2 - result.x;
       result.h = Y2 - result.y;
     }
