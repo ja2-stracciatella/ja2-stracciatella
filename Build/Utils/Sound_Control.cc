@@ -435,17 +435,11 @@ UINT32 PlayLocationJA2Sample(UINT16 const grid_no, SoundID const idx, UINT32 con
 }
 
 
-UINT32 PlayLocationJA2Sample(UINT16 const grid_no, const char * sample, UINT32 const base_vol, UINT32 const loops)
+UINT32 PlayLocationJA2Sample(UINT16 const grid_no, const std::string &sample, UINT32 const base_vol, UINT32 const loops)
 {
 	UINT32 const vol = SoundVolume(base_vol, grid_no);
 	UINT32 const pan = SoundDir(grid_no);
-	return PlayJA2Sample(sample, vol, loops, pan);
-}
-
-
-UINT32 PlayLocationJA2Sample(UINT16 const grid_no, const std::string &sample, UINT32 const base_vol, UINT32 const loops)
-{
-  return PlayLocationJA2Sample(grid_no, sample.c_str(), base_vol, loops);
+	return PlayJA2Sample(sample.c_str(), vol, loops, pan);
 }
 
 
