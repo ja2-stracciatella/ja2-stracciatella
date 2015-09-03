@@ -24,6 +24,7 @@
 #include "Debug.h"
 #include "Font_Control.h"
 #include "Text.h"
+#include "Soldier_Profile_Type.h"
 
 
 BOOLEAN fReDrawCharProfile = FALSE;
@@ -51,8 +52,8 @@ INT32 iMechanical = 55;
 BOOLEAN fCharacterIsMale = TRUE;
 
 // name and nick name
-wchar_t pFullName[ 32 ];
-wchar_t pNickName[ 32 ];
+wchar_t pFullName[NAME_LENGTH];
+wchar_t pNickName[NICKNAME_LENGTH];
 
 // skills
 INT32 iSkillA = 0;

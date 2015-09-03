@@ -44,8 +44,6 @@
 #define MALE_BOX_WIDTH 24 - 2
 #define MALE_BOX_HEIGHT 24 - 2
 #define FEMALE_BOX_X  2 + 302 + LAPTOP_SCREEN_UL_X
-#define MAX_FULL_NAME 29
-#define MAX_NICK_NAME 8
 #define FULL_NAME_REGION_WIDTH 230
 #define NICK_NAME_REGION_WIDTH 100
 
@@ -64,8 +62,8 @@ enum{
 };
 
 // beginning character stats
-wchar_t pFullNameString[128];
-wchar_t pNickNameString[128];
+wchar_t pFullNameString[NAME_LENGTH];
+wchar_t pNickNameString[NICKNAME_LENGTH];
 
 
 // positions in name strings
@@ -383,8 +381,8 @@ static void HandleBeginScreenTextEvent(InputAtom const& a)
 	 * either put char to screen or delete it */
 	switch (ubTextEnterMode)
 	{
-		case FULL_NAME_MODE: EnterKey(a, pFullNameString, MAX_FULL_NAME, uiFullNameCharacterPosition, FULL_NAME_REGION_WIDTH, uiFullNameCursorPosition); break;
-		case NICK_NAME_MODE: EnterKey(a, pNickNameString, MAX_NICK_NAME, uiNickNameCharacterPosition, NICK_NAME_REGION_WIDTH, uiNickNameCursorPosition); break;
+		case FULL_NAME_MODE: EnterKey(a, pFullNameString, NAME_LENGTH, uiFullNameCharacterPosition, FULL_NAME_REGION_WIDTH, uiFullNameCursorPosition); break;
+		case NICK_NAME_MODE: EnterKey(a, pNickNameString, NICKNAME_LENGTH, uiNickNameCharacterPosition, NICK_NAME_REGION_WIDTH, uiNickNameCursorPosition); break;
 	}
 }
 
@@ -512,13 +510,13 @@ static void DisplayNickNameStringCursor(void)
 static void DisplayPlayerNameStrings(void)
 {
 	// player gone too far, move back
-	if (uiFullNameCharacterPosition > MAX_FULL_NAME)
+	if (uiFullNameCharacterPosition >= NAME_LENGTH)
 	{
-		uiFullNameCharacterPosition = MAX_FULL_NAME;
+		uiFullNameCharacterPosition = NAME_LENGTH;
 	}
-	if (uiNickNameCharacterPosition > MAX_NICK_NAME)
+	if (uiNickNameCharacterPosition >= NICKNAME_LENGTH)
 	{
-		uiNickNameCharacterPosition = MAX_NICK_NAME;
+		uiNickNameCharacterPosition = NICKNAME_LENGTH;
 	}
 
 	// restore background
@@ -560,7 +558,7 @@ static void CopyFirstNameIntoNickName(void)
 {
 	// this procedure will copy the characters first name in to the nickname for the character
 	UINT32 iCounter=0;
-  while( ( pFullNameString[ iCounter ] != L' ' ) && ( iCounter < 20) && ( pFullNameString[ iCounter ] != 0 ) )
+  while( ( pFullNameString[ iCounter ] != L' ' ) && ( iCounter < NICKNAME_LENGTH) && ( pFullNameString[ iCounter ] != 0 ) )
 	{
 		// copy charcters into nick name
 		pNickNameString[ iCounter ] = pFullNameString[ iCounter ];
