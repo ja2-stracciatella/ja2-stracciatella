@@ -485,11 +485,11 @@ static void WriteTGAHeader(FILE* const f)
 /* Create a file for a screenshot, which is guaranteed not to exist yet. */
 static FILE* CreateScreenshotFile(void)
 {
-  const char* const exec_dir = GCM->getScreenshotFolder().c_str();
+	const std::string exec_dir = GCM->getScreenshotFolder();
 	do
 	{
 		char filename[2048];
-		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir, guiPrintFrameBufferIndex++);
+		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir.c_str(), guiPrintFrameBufferIndex++);
 #ifndef _WIN32
 #	define O_BINARY 0
 #endif
@@ -844,12 +844,12 @@ static void RefreshMovieCache(void)
 
 	PauseTime(TRUE);
 
-	const char* ExecDir = GCM->getVideoCaptureFolder().c_str();
+	const std::string exec_dir = GCM->getVideoCaptureFolder();
 
 	for (INT32 cnt = 0; cnt < giNumFrames; cnt++)
 	{
 		CHAR8 cFilename[2048];
-		sprintf(cFilename, "%s/JA%5.5d.TGA", ExecDir, uiPicNum++);
+		sprintf(cFilename, "%s/JA%5.5d.TGA", exec_dir.c_str(), uiPicNum++);
 
 		FILE* disk = fopen(cFilename, "wb");
 		if (disk == NULL) return;
