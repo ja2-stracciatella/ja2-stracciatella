@@ -323,5 +323,5 @@ static void BuildListFile(void)
 			return;
 		}
 	}
-
+	fclose(infoFile);
 }
