@@ -469,7 +469,6 @@ SRCS += Build/Utils/Utilities.cc
 SRCS += Build/Utils/WordWrap.cc
 SRCS += sgp/Button_Sound_Control.cc
 SRCS += sgp/Button_System.cc
-SRCS += sgp/Container.cc
 SRCS += sgp/Cursor_Control.cc
 SRCS += sgp/Debug.cc
 SRCS += sgp/EncodingCorrectors.cc

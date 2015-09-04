@@ -1,3 +1,5 @@
+#include <queue>
+
 #include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -48,7 +50,6 @@
 #include "JAScreens.h"
 #include "Video.h"
 #include "SoundMan.h"
-#include "Container.h"
 #include "GameRes.h"
 #include "UILayout.h"
 
@@ -64,8 +65,7 @@
 #define		TEXT_DELAY_MODIFIER			60
 
 
-typedef SGP::Queue<DialogueEvent*> DialogueQueue;
-
+typedef std::queue<DialogueEvent*>DialogueQueue;
 
 BOOLEAN fExternFacesLoaded = FALSE;
 
@@ -107,8 +107,7 @@ static UINT16 const gusStopTimeQuoteList[] =
 
 
 // QUEUE UP DIALOG!
-#define		INITIAL_Q_SIZE				10
-static DialogueQueue* ghDialogueQ;
+static DialogueQueue ghDialogueQ;
 FACETYPE	*gpCurrentTalkingFace	= NULL;
 static ProfileID       gubCurrentTalkingID = NO_PROFILE;
 static DialogueHandler gbUIHandlerID;
@@ -157,7 +156,6 @@ BOOLEAN DialogueActive( )
 
 void InitalizeDialogueControl()
 {
-	ghDialogueQ         = new DialogueQueue(INITIAL_Q_SIZE);
 	giNPCReferenceCount = 0;
   gsExternPanelXPosition = DEFAULT_EXTERN_PANEL_X_POS;
   gsExternPanelYPosition = DEFAULT_EXTERN_PANEL_Y_POS;
@@ -165,12 +163,7 @@ void InitalizeDialogueControl()
 
 void ShutdownDialogueControl()
 {
-	if (ghDialogueQ != NULL)
-	{
-		delete ghDialogueQ;
-		ghDialogueQ = NULL;
-		gfWaitingForTriggerTimer = FALSE;
-	}
+	EmptyDialogueQueue();
 
 	// shutdown external static NPC faces
 	ShutdownStaticExternalNPCFaces();
@@ -208,12 +201,8 @@ void ShutdownStaticExternalNPCFaces()
 
 void EmptyDialogueQueue()
 {
-	// If we have anything left in the queue, remove!
-	if (ghDialogueQ != NULL)
-	{
-		delete ghDialogueQ;
-		ghDialogueQ = new DialogueQueue(INITIAL_Q_SIZE);
-	}
+	while(!ghDialogueQ.empty())
+		ghDialogueQ.pop();
 
 	gfWaitingForTriggerTimer = FALSE;
 }
@@ -221,7 +210,7 @@ void EmptyDialogueQueue()
 
 BOOLEAN DialogueQueueIsEmpty( )
 {
-	return ghDialogueQ && ghDialogueQ->IsEmpty();
+	return ghDialogueQ.empty();
 }
 
 
@@ -268,7 +257,7 @@ void HandleDialogue()
 	// we don't want to just delay action of some events, we want to pause the whole queue, regardless of the event
 	if (gfDialogueQueuePaused) return;
 
-	bool const empty = ghDialogueQ->IsEmpty();
+	bool const empty = ghDialogueQ.empty();
 
 	if (empty && gpCurrentTalkingFace == NULL)
 	{
@@ -454,16 +443,13 @@ void HandleDialogue()
 	}
 
 	// If here, pick current one from queue and play
-	DialogueEvent* const d = ghDialogueQ->Remove();
+	DialogueEvent*const d = ghDialogueQ.front();
 
 	// If we are in auto bandage, ignore any quotes!
-	if (!gTacticalStatus.fAutoBandageMode && d->Execute())
-	{
-		ghDialogueQ->Add(d);
-	}
-	else
+	if (gTacticalStatus.fAutoBandageMode || !d->Execute())
 	{
 		delete d;
+		ghDialogueQ.pop();
 	}
 }
 
@@ -472,7 +458,7 @@ void DialogueEvent::Add(DialogueEvent* const d)
 {
 	try
 	{
-		ghDialogueQ->Add(d);
+		ghDialogueQ.push(d);
 	}
 	catch (...)
 	{

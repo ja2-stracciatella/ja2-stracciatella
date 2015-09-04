@@ -355,7 +355,6 @@
 		C38ACD8716E4AA68003D6872 /* WordWrap.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC5516E4AA68003D6872 /* WordWrap.cc */; };
 		C38ACDD216E4AA84003D6872 /* Button_Sound_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD8B16E4AA84003D6872 /* Button_Sound_Control.cc */; };
 		C38ACDD316E4AA84003D6872 /* Button_System.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD8D16E4AA84003D6872 /* Button_System.cc */; };
-		C38ACDD516E4AA84003D6872 /* Container.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD9116E4AA84003D6872 /* Container.cc */; };
 		C38ACDD616E4AA84003D6872 /* Cursor_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD9316E4AA84003D6872 /* Cursor_Control.cc */; };
 		C38ACDD716E4AA84003D6872 /* Debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD9516E4AA84003D6872 /* Debug.cc */; };
 		C38ACDD816E4AA84003D6872 /* FileMan.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACD9816E4AA84003D6872 /* FileMan.cc */; };
@@ -1115,8 +1114,6 @@
 		C38ACD8C16E4AA84003D6872 /* Button_Sound_Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button_Sound_Control.h; sourceTree = "<group>"; };
 		C38ACD8D16E4AA84003D6872 /* Button_System.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Button_System.cc; sourceTree = "<group>"; };
 		C38ACD8E16E4AA84003D6872 /* Button_System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button_System.h; sourceTree = "<group>"; };
-		C38ACD9116E4AA84003D6872 /* Container.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Container.cc; sourceTree = "<group>"; };
-		C38ACD9216E4AA84003D6872 /* Container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Container.h; sourceTree = "<group>"; };
 		C38ACD9316E4AA84003D6872 /* Cursor_Control.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cursor_Control.cc; sourceTree = "<group>"; };
 		C38ACD9416E4AA84003D6872 /* Cursor_Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cursor_Control.h; sourceTree = "<group>"; };
 		C38ACD9516E4AA84003D6872 /* Debug.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Debug.cc; sourceTree = "<group>"; };
@@ -1296,8 +1293,6 @@
 				C38ACD8C16E4AA84003D6872 /* Button_Sound_Control.h */,
 				C38ACD8D16E4AA84003D6872 /* Button_System.cc */,
 				C38ACD8E16E4AA84003D6872 /* Button_System.h */,
-				C38ACD9116E4AA84003D6872 /* Container.cc */,
-				C38ACD9216E4AA84003D6872 /* Container.h */,
 				C38ACD9316E4AA84003D6872 /* Cursor_Control.cc */,
 				C38ACD9416E4AA84003D6872 /* Cursor_Control.h */,
 				C38ACD9516E4AA84003D6872 /* Debug.cc */,
@@ -2557,7 +2552,6 @@
 				C38ACD8716E4AA68003D6872 /* WordWrap.cc in Sources */,
 				C38ACDD216E4AA84003D6872 /* Button_Sound_Control.cc in Sources */,
 				C38ACDD316E4AA84003D6872 /* Button_System.cc in Sources */,
-				C38ACDD516E4AA84003D6872 /* Container.cc in Sources */,
 				C38ACDD616E4AA84003D6872 /* Cursor_Control.cc in Sources */,
 				C38ACDD716E4AA84003D6872 /* Debug.cc in Sources */,
 				C38ACDD816E4AA84003D6872 /* FileMan.cc in Sources */,

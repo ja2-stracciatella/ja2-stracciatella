@@ -156,9 +156,6 @@
     <ClCompile Include="..\..\sgp\Button_System.cc">
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sgp\Container.cc">
-      <Filter>Source Files\sgp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sgp\Cursor_Control.cc">
       <Filter>Source Files\sgp</Filter>
     </ClCompile>
@@ -1344,9 +1341,6 @@
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sgp\Button_System.h">
-      <Filter>Source Files\sgp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sgp\Container.h">
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sgp\Cursor_Control.h">
