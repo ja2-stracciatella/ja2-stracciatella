@@ -202,7 +202,7 @@ static LEVELNODE* GetHorizontalFence(UINT32 const map_idx)
 		if (GetTileType(i->usIndex) != FENCESTRUCT) continue;
 
 		UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
-		if (wall_orientation != INSIDE_TOP_LEFT || wall_orientation != OUTSIDE_TOP_LEFT) continue;
+		if (wall_orientation != INSIDE_TOP_LEFT && wall_orientation != OUTSIDE_TOP_LEFT) continue;
 		return i;
 	}
 	return 0;
