@@ -540,7 +540,7 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
 	wchar_t pSubject[MAIL_STRING_SIZE];
 	LoadEMailText(pSubject, iMessageOffset);
 	ReplaceMercNameAndAmountWithProperData(pSubject, pTempEmail);
-	wcscpy(pTempEmail->pSubject, pSubject); // XXX potential buffer overflow
+	swprintf(pTempEmail->pSubject, lengthof(pTempEmail->pSubject), L" %ls", pSubject);
 
 	// place into list
 	Email* pEmail = pEmailList;
