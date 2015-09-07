@@ -839,7 +839,6 @@
     <ClInclude Include="..\..\sgp\TranslationTable.h" />
     <ClInclude Include="..\..\sgp\Types.h" />
     <ClInclude Include="..\..\sgp\UTF8String.h" />
-    <ClInclude Include="..\..\sgp\Vector.h" />
     <ClInclude Include="..\..\sgp\Video.h" />
     <ClInclude Include="..\..\sgp\VObject.h" />
     <ClInclude Include="..\..\sgp\VObject_Blitters.h" />

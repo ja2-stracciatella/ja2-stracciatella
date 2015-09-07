@@ -1170,7 +1170,6 @@
 		C38ACDC516E4AA84003D6872 /* TranslationTable.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TranslationTable.cc; sourceTree = "<group>"; };
 		C38ACDC616E4AA84003D6872 /* TranslationTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslationTable.h; sourceTree = "<group>"; };
 		C38ACDC716E4AA84003D6872 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
-		C38ACDC816E4AA84003D6872 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		C38ACDC916E4AA84003D6872 /* Video.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Video.cc; sourceTree = "<group>"; };
 		C38ACDCA16E4AA84003D6872 /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
 		C38ACDCB16E4AA84003D6872 /* VObject_Blitters.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VObject_Blitters.cc; sourceTree = "<group>"; };
@@ -1352,7 +1351,6 @@
 				C38ACDC516E4AA84003D6872 /* TranslationTable.cc */,
 				C38ACDC616E4AA84003D6872 /* TranslationTable.h */,
 				C38ACDC716E4AA84003D6872 /* Types.h */,
-				C38ACDC816E4AA84003D6872 /* Vector.h */,
 				C38ACDC916E4AA84003D6872 /* Video.cc */,
 				C38ACDCA16E4AA84003D6872 /* Video.h */,
 				C38ACDCB16E4AA84003D6872 /* VObject_Blitters.cc */,

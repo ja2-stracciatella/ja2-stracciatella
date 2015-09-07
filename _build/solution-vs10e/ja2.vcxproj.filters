@@ -1436,9 +1436,6 @@
     <ClInclude Include="..\..\sgp\Types.h">
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sgp\Vector.h">
-      <Filter>Source Files\sgp</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\sgp\Video.h">
       <Filter>Source Files\sgp</Filter>
     </ClInclude>
