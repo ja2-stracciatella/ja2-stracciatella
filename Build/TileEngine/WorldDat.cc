@@ -48,6 +48,7 @@ try
 		//Read name
 		char zName[32];
 		FileRead(f, &zName, sizeof(zName));
+		zName[sizeof(zName) - 1] = '\0';
 		swprintf(ts->zName, lengthof(ts->zName), L"%hs", zName);
 
 		// Read ambience value
