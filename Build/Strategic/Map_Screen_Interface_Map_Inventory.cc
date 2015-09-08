@@ -231,7 +231,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 
 	// the name
 	const SGPBox* const name_box = &g_sector_inv_name_box;
-	wchar_t sString[64];
+	wchar_t sString[SIZE_SHORT_ITEM_NAME];
 	wcscpy(sString, ShortItemNames[item->o.usItem]);
 	ReduceStringLength(sString, lengthof(sString), name_box->w, MAP_IVEN_FONT);
 
