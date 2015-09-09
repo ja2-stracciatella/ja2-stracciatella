@@ -158,7 +158,7 @@ static void BuildLayout(INT32 iMapIndex, INT32 iOffset)
 	BUILDINGLAYOUTNODE *curr;
 	//First, validate the gridno
 	iMapIndex += iOffset;
-	if( iMapIndex < 0 && iMapIndex >= WORLD_COLS*WORLD_ROWS )
+	if (iMapIndex < 0 || iMapIndex >= WORLD_COLS*WORLD_ROWS)
 		return;
 	//Now, check if there is a building here
 	if( !BuildingAtGridNo( iMapIndex ) )
@@ -423,7 +423,7 @@ static void ReplaceRoof(INT32 iMapIndex, UINT16 usRoofType)
 {
 	ROOFNODE *curr;
 	//First, validate the gridno
-	if( iMapIndex < 0 && iMapIndex >= WORLD_COLS*WORLD_ROWS )
+	if (iMapIndex < 0 || iMapIndex >= WORLD_COLS*WORLD_ROWS)
 		return;
 	//Now, check if there is a floor here
 	if( !FloorAtGridNo( iMapIndex ) )
