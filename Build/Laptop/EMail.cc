@@ -738,7 +738,7 @@ static void DrawEmailSummary(INT32 y, const Email* e)
 
 	SetFont(font);
 
-	wchar_t pTempSubject[320];
+	wchar_t pTempSubject[MAIL_STRING_SIZE];
 	wcscpy(pTempSubject, e->pSubject);
 	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, font);
 	MPrint(SUBJECT_X, y + 4, pTempSubject);
