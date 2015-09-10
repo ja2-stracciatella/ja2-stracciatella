@@ -1905,8 +1905,8 @@ try
 					if (priority.ubScheduleID) ++pSummary->ubCivSchedules;
 					switch (priority.bBodyType)
 					{
-						case COW:      ++pSummary->ubCivCows;
-						case BLOODCAT: ++pSummary->ubCivBloodcats;
+						case COW:      ++pSummary->ubCivCows; break;
+						case BLOODCAT: ++pSummary->ubCivBloodcats; break;
 					}
 				}
 			}
