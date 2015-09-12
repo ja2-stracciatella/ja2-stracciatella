@@ -5,15 +5,10 @@
 *.pdb
 *~
 .DS_Store
-.cproject
-.project
 .vagrant
 .~lock.*#
 /libgcc_s_dw2-1.dll
 /libstdc++-6.dll
-JA2-Stracciatella
-SDL.dll
-TAGS
 _build/solution-vs10e/Debug
 _build/solution-vs10e/Release
 _build/solution-xcode46/JA2-Stracciatella.xcodeproj/project.xcworkspace/xcshareddata
@@ -21,7 +16,10 @@ _deb
 ja2
 ja2-last-strac
 ja2-mod-*.bat
+JA2-Stracciatella
 ja2.log
 release-*
+SDL.dll
 stderr.txt
 stdout.txt
+TAGS
