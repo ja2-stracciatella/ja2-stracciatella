@@ -576,7 +576,7 @@ static void DisplayCompressMode(void)
 		abort(); // XXX HACK000E
 	}
 
-	RestoreExternBackgroundRect( STD_SCREEN_X + 489, STD_SCREEN_Y + 456, 522 - 489, 467 - 454 );
+	RestoreExternBackgroundRect( STD_SCREEN_X + 489, STD_SCREEN_Y + 457, 522 - 489, 467 - 454 );
 	SetFontDestBuffer(FRAME_BUFFER);
 
 	if( GetJA2Clock() - guiCompressionStringBaseTime >= PAUSE_GAME_TIMER )
@@ -599,7 +599,7 @@ static void DisplayCompressMode(void)
 	}
 
 	SetFontAttributes(COMPFONT, usColor);
-	FindFontCenterCoordinates(STD_SCREEN_X + 489, STD_SCREEN_Y + 456, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);
+	FindFontCenterCoordinates(STD_SCREEN_X + 489, STD_SCREEN_Y + 457, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);
 	MPrint(sX, sY, Time);
 }
 
@@ -965,9 +965,9 @@ void CreateDestroyMouseRegionMasksForTimeCompressionButtons()
 	if (disabled && !created)
 	{
 		// Mask over compress more, compress less and paus game buttons.
-		MSYS_DefineRegion(&gTimeCompressionMask[0], STD_SCREEN_X + 528, STD_SCREEN_Y + 456, 528 + 13, 456 + 14, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
-		MSYS_DefineRegion(&gTimeCompressionMask[1], STD_SCREEN_X + 466, STD_SCREEN_Y + 456, 466 + 13, 456 + 14, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
-		MSYS_DefineRegion(&gTimeCompressionMask[2], STD_SCREEN_X + 487, STD_SCREEN_Y + 456, 487 + 35, 456 + 11, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
+		MSYS_DefineRegion(&gTimeCompressionMask[0], STD_SCREEN_X + 528, STD_SCREEN_Y + 457, 528 + 13, 457 + 14, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
+		MSYS_DefineRegion(&gTimeCompressionMask[1], STD_SCREEN_X + 466, STD_SCREEN_Y + 457, 466 + 13, 457 + 14, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
+		MSYS_DefineRegion(&gTimeCompressionMask[2], STD_SCREEN_X + 487, STD_SCREEN_Y + 457, 487 + 35, 457 + 11, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressMaskClickCallback);
 		created = true;
 	}
 	else if (!disabled && created)

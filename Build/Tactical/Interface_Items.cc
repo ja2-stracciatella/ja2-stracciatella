@@ -145,7 +145,7 @@ static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
 #define		ITEM_PROS_AND_CONS( usItem ) ( ( GCM->getItem(usItem)->isGun()) )
 
 #define		ITEMDESC_AMMO_TEXT_X	3
-#define		ITEMDESC_AMMO_TEXT_Y	1
+#define		ITEMDESC_AMMO_TEXT_Y	2
 #define		ITEMDESC_AMMO_TEXT_WIDTH 31
 
 #define		ITEM_BAR_HEIGHT					20

@@ -3995,6 +3995,8 @@ void CreateDestroyMilitiaSectorButtons()
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
 			b->SpecifyGeneralTextAttributes(0, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
+			b->SpecifyTextSubOffsets(0, 0, TRUE);
+			b->fShiftText = FALSE;
 			b->SetFastHelpText(pMilitiaButtonsHelpText[i]);
 		}
 
