@@ -3,6 +3,8 @@
 #include <locale.h>
 #include <stdexcept>
 
+#include "sgp/FileMan.h"
+
 #include "Directories.h"
 #include "Logger.h"
 #include "Multi_Language_Graphic_Utils.h"
@@ -136,40 +138,13 @@ FLOAT getMajorMapVersion()
 /** Get list of resource libraries. */
 std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 {
-  std::vector<std::string> libraries;
-  libraries.push_back("data.slf");
-  libraries.push_back("ambient.slf");
-  libraries.push_back("anims.slf");
-  libraries.push_back("battlesnds.slf");
-  libraries.push_back("bigitems.slf");
-  libraries.push_back("binarydata.slf");
-  libraries.push_back("cursors.slf");
-  libraries.push_back("faces.slf");
-  libraries.push_back("fonts.slf");
-  libraries.push_back("interface.slf");
-  libraries.push_back("laptop.slf");
-  libraries.push_back("maps.slf");
-  libraries.push_back("mercedt.slf");
-  libraries.push_back("music.slf");
-  libraries.push_back("npc_speech.slf");
-  libraries.push_back("npcdata.slf");
-  libraries.push_back("radarmaps.slf");
-  libraries.push_back("sounds.slf");
-  libraries.push_back("speech.slf");
-  libraries.push_back("tilesets.slf");
-  libraries.push_back("loadscreens.slf");
-  libraries.push_back("intro.slf");
+  std::vector<std::string> libraries = FindFilesInDir(dataDir, ".slf", true, true);
 
-  switch(s_gameVersion)
-  {
-  case GV_DUTCH:        libraries.push_back("dutch.slf");       break;
-  case GV_GERMAN:       libraries.push_back("german.slf");      break;
-  case GV_ITALIAN:      libraries.push_back("italian.slf");     break;
-  case GV_POLISH:       libraries.push_back("polish.slf");      break;
-  case GV_RUSSIAN:      libraries.push_back("russian.slf");     break;
-      default:
-          break;
-  }
+  // for (int i = 0; i < libraries.size(); i++)
+  // {
+  //   LOG_WARNING("%s\n", libraries[i].c_str());
+  // }
+
   return libraries;
 }
 

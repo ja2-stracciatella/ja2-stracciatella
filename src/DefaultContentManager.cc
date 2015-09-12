@@ -191,13 +191,6 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 std::vector<std::string> DefaultContentManager::getListOfGameResources() const
 {
   std::vector<std::string> libraries = GetResourceLibraries(m_dataDir);
-
-  // XXX
-  if(GameState::getInstance()->isEditorMode())
-  {
-    libraries.push_back("editor.slf");
-  }
-
   return libraries;
 }
 
