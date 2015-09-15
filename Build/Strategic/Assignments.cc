@@ -4168,7 +4168,7 @@ static void CreateDestroyMouseRegionsForSquadMenu()
 		INT32  const  w    = area.w;
 		INT32  const  h    = GetLineSpace(ghSquadBox) + GetFontHeight(GetBoxFont(ghSquadBox));
 
-		UINT32 i;
+		INT32 i;
 		for (i = 0; i < GetNumberOfLinesOfTextInBox(ghSquadBox) - 1; ++i)
 		{
 			// add mouse region for each line of text
