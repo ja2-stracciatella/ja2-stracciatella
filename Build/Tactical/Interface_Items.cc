@@ -233,8 +233,8 @@ static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
 static SOLDIERTYPE* gpAttachSoldier;
 
 #define gMoneyButtonLoc (g_ui.m_moneyButtonLoc)
+#define gMapMoneyButtonLoc (g_ui.m_MoneyButtonLocMap)
 static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
-static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
 
 
 // number of keys on keyring, temp for now
