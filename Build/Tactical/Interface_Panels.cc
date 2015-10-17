@@ -76,7 +76,7 @@
 #define	SM_ITEMDESC_START_X					214
 #define	SM_ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y
 #define	SM_ITEMDESC_HEIGHT					128
-#define	SM_ITEMDESC_WIDTH					358
+#define	SM_ITEMDESC_WIDTH					314
 
 // SINGLE MERC SCREEN
 
@@ -1773,8 +1773,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if ( !InItemStackPopup( )  )
 			{
-				//InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, SM_ITEMDESC_WIDTH, SM_ITEMDESC_HEIGHT );
-				InitItemStackPopup(gpSMCurrentMerc, (UINT8)uiHandPos, 216, INV_INTERFACE_START_Y, 314, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
+				InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, INV_INTERFACE_START_Y, SM_ITEMDESC_WIDTH, SCREEN_HEIGHT - INV_INTERFACE_START_Y );
 			}
 		}
 		else
