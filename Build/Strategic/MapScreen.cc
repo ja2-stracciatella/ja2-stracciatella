@@ -4094,7 +4094,7 @@ static void BltCharInvPanel(void)
 	FindFontRightCoordinates(MAP_CAMO_X, MAP_CAMO_Y, MAP_CAMO_W, MAP_CAMO_H, sString, BLOCKFONT2, &usX, &usY);
 	MPrint(usX, usY, sString);
 
-	if( InKeyRingPopup( ) )
+	if( InKeyRingPopup() || InItemStackPopup() )
 	{
 		// shade the background
 		guiSAVEBUFFER->ShadowRect(PLAYER_INFO_X, PLAYER_INFO_Y, PLAYER_INFO_X + 261,  PLAYER_INFO_Y + (359 - 107));
