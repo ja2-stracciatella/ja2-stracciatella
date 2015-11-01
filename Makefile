@@ -799,6 +799,30 @@ check-compilation-on-openbsd55:
 	ssh -F /tmp/strac-openbsd55-ssh-config default "gmake CC=egcc CXX=eg++ -C /home/vagrant/strac -j2"
 	ssh -F /tmp/strac-openbsd55-ssh-config default "sudo shutdown -hp now"
 
+rebuild-contributors-list:
+	git log --pretty=format:'%an <%ae>' | \
+		sed "s/Gennady <gennady@aspire.(none)>/Gennady Trafimenkov <gennady.trafimenkov@gmail.com>/g" | \
+		sed "s/Peinthor Rene <rp@regalis.localdomain>/Peinthor Rene <peinthor@gmail.com>/g" | \
+		sed "s/tron <tron@5e31c081-6ce3-0310-bb30-f584a8092234>//g" | \
+		sed "s/wolf <wolf@5e31c081-6ce3-0310-bb30-f584a8092234>/wolf (committer to the original Tron's svn repository)/g" | \
+		sort | uniq >/tmp/contributors.txt
+	echo "Oliver Jankowski"                                 >>/tmp/contributors.txt
+	echo "mgl from The Bear's Pit Forum"                    >>/tmp/contributors.txt
+	echo "sunshine from The Bear's Pit Forum"               >>/tmp/contributors.txt
+	echo "JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)"  >>/tmp/contributors.txt
+	echo "Primal author of the project"                             >contributors.txt
+	echo "----------------------------"                             >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo "Tron"                                                     >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo "Contributors (sorted alphabetically)"                     >>contributors.txt
+	echo "------------------------------------"                     >>contributors.txt
+	cat /tmp/contributors.txt | sort >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo "(*) Please fill free to send update for this list to the project maintainer." >>contributors.txt
+
 
 # How to
 # ========================================
