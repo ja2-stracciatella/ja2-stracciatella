@@ -107,6 +107,7 @@
 
 #define		ITEM_STATS_WIDTH					26
 #define		ITEM_STATS_HEIGHT					8
+#define		MAX_STACK_POPUP_WIDTH					6
 
 #define		ITEMDESC_START_X					214
 #define		ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y
@@ -3715,6 +3716,8 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 {
 	SGPRect					aRect;
 	UINT8						ubLimit;
+	UINT8						ubCols;
+	UINT8						ubRows;
 	INT32						cnt;
 
 	// Set some globals
@@ -3734,13 +3737,14 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 	// Return if #objects not >1
 	if (ubLimit < 1) return;
 
-	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+	if( ubLimit > MAX_STACK_POPUP_WIDTH )
 	{
-    if ( ubLimit > 6 )
-    {
-      ubLimit = 6;
-    }
-  }
+    ubCols = MAX_STACK_POPUP_WIDTH;
+		ubRows = ubLimit / MAX_STACK_POPUP_WIDTH;
+  } else {
+		ubCols = ubLimit;
+		ubRows = 0;
+	}
 
 	// Load graphics
 	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.sti");
@@ -3748,16 +3752,17 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 	// Get size
 	ETRLEObject const& pTrav        = guiItemPopupBoxes->SubregionProperties(0);
 	UINT16      const  usPopupWidth = pTrav.usWidth;
+	UINT16      const  usPopupHeight = pTrav.usHeight;
 
 	// Get Width, Height
-	INT16 gsItemPopupWidth = ubLimit * usPopupWidth;
-	INT16 gsItemPopupHeight = pTrav.usHeight;
+	INT16 gsItemPopupWidth = ubCols * usPopupWidth;
+	INT16 gsItemPopupHeight = ubRows * usPopupHeight;
 	gubNumItemPopups = ubLimit;
 
 	// Calculate X,Y, first center
 	MOUSE_REGION const& r = gSMInvRegion[ubPosition];
 	INT16 sCenX = r.X() - (gsItemPopupWidth / 2 + r.W() / 2);
-	INT16 sCenY	= r.Y();
+	INT16 sCenY	= r.Y()- (gsItemPopupHeight / 2 + r.H() / 2);
 
 	// Limit it to window for item desc
 	if ( sCenX < gsItemPopupInvX )
@@ -3766,13 +3771,25 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 	}
 	if ( ( sCenX + gsItemPopupWidth ) > ( gsItemPopupInvX + gsItemPopupInvWidth ) )
 	{
-		sCenX = gsItemPopupInvX;
+		sCenX = gsItemPopupInvX + gsItemPopupInvWidth - gsItemPopupWidth;
+	}
+	if ( sCenY < gsItemPopupInvY )
+	{
+		sCenY = gsItemPopupInvY;
+	}
+	if ( sCenY + gsItemPopupHeight > ( gsItemPopupInvY + gsItemPopupInvHeight ) )
+	{
+		sCenY = gsItemPopupInvY + gsItemPopupInvHeight - gsItemPopupHeight;
 	}
 
   // Cap it at 0....
   if ( sCenX < 0 )
   {
     sCenX = 0;
+  }
+	if ( sCenY < 0 )
+  {
+    sCenY = 0;
   }
 
 	// Set
@@ -3781,8 +3798,11 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 
 	for ( cnt = 0; cnt < gubNumItemPopups; cnt++ )
 	{
+		UINT32 row = cnt / MAX_STACK_POPUP_WIDTH;
+		UINT32 col = cnt % MAX_STACK_POPUP_WIDTH;
+
 		// Build a mouse region here that is over any others.....
-		MSYS_DefineRegion(&gItemPopupRegions[cnt], sCenX + cnt * usPopupWidth, sCenY, sCenX + (cnt + 1) * usPopupWidth, sCenY + gsItemPopupHeight, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback);
+		MSYS_DefineRegion(&gItemPopupRegions[cnt], sCenX + col * usPopupWidth, sCenY + row * usPopupHeight, sCenX + (col + 1) * usPopupWidth, sCenY + (row+1) * usPopupHeight, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupRegionCallback);
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
 
 		//OK, for each item, set dirty text if applicable!
@@ -3847,21 +3867,25 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
 	ETRLEObject const& pTrav  = guiItemPopupBoxes->SubregionProperties(0);
 	UINT32      const  usWidth = pTrav.usWidth;
+	UINT32      const  usHeight = pTrav.usHeight;
 
 	for (UINT32 cnt = 0; cnt < gubNumItemPopups; cnt++)
 	{
-		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + cnt * usWidth, gsItemPopupY);
+		UINT32 row = cnt / MAX_STACK_POPUP_WIDTH;
+		UINT32 col = cnt % MAX_STACK_POPUP_WIDTH;
+
+		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + col * usWidth, gsItemPopupY + row * usHeight);
 
 		if ( cnt < gpItemPopupObject->ubNumberOfObjects )
 		{
-			INT16 sX = gsItemPopupX + cnt * usWidth + 11;
-			INT16 sY = gsItemPopupY + 3;
+			INT16 sX = gsItemPopupX + col * usWidth + 11;
+			INT16 sY = gsItemPopupY + row * usHeight + 3;
 
 			INVRenderItem(FRAME_BUFFER, NULL, *gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, SGP_TRANSPARENT);
 
 			// Do status bar here...
-			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
-			INT16 sNewY = gsItemPopupY + INV_BAR_DY + 3;
+			INT16 sNewX = gsItemPopupX + col * usWidth + 7;
+			INT16 sNewY = gsItemPopupY + row * usHeight + INV_BAR_DY + 3;
 			DrawItemUIBarEx(*gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
 		}
 	}
