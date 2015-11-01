@@ -7,7 +7,7 @@ Tron
 Contributors (sorted alphabetically)
 ------------------------------------
 
-Czcibor <foo@foo.com>
+Agatae (https://bitbucket.org/Agatae)
 Gennady Trafimenkov <gennady.trafimenkov@gmail.com>
 JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)
 mgl from The Bear's Pit Forum

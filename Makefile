@@ -801,6 +801,7 @@ check-compilation-on-openbsd55:
 
 rebuild-contributors-list:
 	git log --pretty=format:'%an <%ae>' | \
+		sed "s|Czcibor <foo@foo.com>|Agatae (https://bitbucket.org/Agatae)|g" | \
 		sed "s/Gennady <gennady@aspire.(none)>/Gennady Trafimenkov <gennady.trafimenkov@gmail.com>/g" | \
 		sed "s/Peinthor Rene <rp@regalis.localdomain>/Peinthor Rene <peinthor@gmail.com>/g" | \
 		sed "s/tron <tron@5e31c081-6ce3-0310-bb30-f584a8092234>//g" | \
