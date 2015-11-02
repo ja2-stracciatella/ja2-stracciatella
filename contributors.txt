@@ -24,4 +24,4 @@ sunshine from The Bear's Pit Forum
 wolf (committer to the original Tron's svn repository)
 
 
-(*) Please fill free to send update for this list to the project maintainer.
+(*) Please feel free to send update for this list to the project maintainer.
