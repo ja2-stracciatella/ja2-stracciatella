@@ -41,7 +41,6 @@ void AddEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, 
 
 	// Add event to queue
 	GetQueue(ubQueueID).push_back(pEvent);
-	MemFree(pEvent);
 }
 
 
