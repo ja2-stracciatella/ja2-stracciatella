@@ -2,40 +2,55 @@
 
 This is continuation of venerable JA2-Stracciatella project.
 
-The goal of the project is to make Jagged Alliance 2 available on a wide
-range of platforms, improve its stability, fix bugs and provide a
-stable platform for mod development.
+The goal of the project was to make Jagged Alliance 2 available on a wide range of platforms, improve its stability, fix bugs and provide a stable platform for mod development.  At the moment the goal mostly to fix bugs.
+
+## How to start the game
+
+1. Install original Jagged Alliance 2 game on your computer.  Data files from the original game will be used by JA2-Stracciatella
+
+2. [Download JA2-Stracciatella](https://bitbucket.org/gennady/ja2-stracciatella/downloads) or [compile](COMPILATION.md) it from the source codes.
+
+3. Start the game the first time.  It will create the configuration file %USERPROFILE%\Documents\JA2\ja2.ini on Windows or ~/.ja2/ja2.ini on Unix-like systems.
+
+4. Edit the configuration file and set parameter data_dir to point on the directory where the original game was installed on step 1.  For example, D:\games\ja2\ (on Windows) or /home/user/games/ja2-installed (on Linux).
+
+5. If you installed not English version of the original game, but one of the localized varieties (e.g. French or Russian), you need to start ja2.exe with parameter telling which version of the game you are using.  For example: ```ja2.exe -resversion FRENCH```
+
+Supported localizations are DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD.  RUSSIAN is for BUKA Agonia Vlasty release, RUSSIAN_GOLD is for Gold release.
+
+If you downloaded precompiled version of JA2-Stracciatella, the archive may already contain set of bat files for each supported localizations.
+
+Run ```ja2.exe -help``` for list of available options.
 
 ## Latest news
 
-### 2014-05-01, version 0.12.352
+- Fall 2015, the project is still alive.  Some pull requests were merged.
+- 2014-05-01, version 0.12.352 has been released
+- 2014-02-16, version 0.12.275 has been released
 
-- In-game video is playable now. Thanks to Misanthropos and Greg Kennedy (author of libsmacker library)
-- Fixed issue   #1 (Double amount of money on new game start)
-- Fixed issue #121 (Misplaced text after IMP creation)
-- Fixed issue #134 (On high res subtotal is not displayed correctly)
-- Fixed issue #127 (Bobby Rays prices not getting updated)
-- Fixed issue #131 (Unhandled exception with fall-from-roof animation)
-- Fixed crash on leaving shop interface without closing attachment panel
-  https://bitbucket.org/misanthropos/ja2-stracciatella/issue/1
-- Fixed issue #129 (SegFault on loading a SavedGame)
-- Fixed issue #128 (Segmentation fault on entering sector with enemies)
-- Fixed issues #120, #124 (incorrect ammo type for CAWS and SPAS-15)
-- Shift is no longer used as replacement for Alt (Option) on Linux and Mac OS X
-  Now to move backward use:
-    - Option + Left button mouse (LBM) on Mac OS X
-    - Alt + LBM or Alt + Meta (WinKey) + LBM on Linux, depending on your desktop environment
-  This fixes issue #123 and reverts changes made for issue #40.
+## Development
 
-### 2014-02-16, version 0.12.275
+The project is developed on [bitbucket](https://bitbucket.org/gennady/ja2-stracciatella).  Pull request with bug fixes are very welcome.
 
-- Fixed issue  #66: Bug when distributing skill points during IMP creation
-- Fixed issue #114: Crash when dismissing Dead Soldier
-- Fixed issue #116: SIGSEGV when trying to scroll the screen while displaying line of sight
-- Fixed issue #117: Glitchy rendering of moving mercs while displaying LOS
-- Fixed issue #118: Mortar and Grenade Launcher not working
+[![Build Status](https://travis-ci.org/gennady/ja2-stracciatella.svg?branch=master)](https://travis-ci.org/gennady/ja2-stracciatella)
 
-You can see the full list of changes in files changes.md and Changelog (for the original project).
+### How to contribute
+
+The best way to contribute is to make a pull request with a bug fix.  Please see list of open issues [here](https://bitbucket.org/gennady/ja2-stracciatella/issues?status=new&status=open).
+
+The second best way is to file a bug report if you encounter a bug.
+
+### How to make a pull request
+
+1. Fork the project
+2. Create a branch (git checkout -b my_feature_branch)
+3. Commit your changes (git commit -am "description of your changes")
+4. Push to the branch (git push origin my_feature_branch)
+5. Create a pull requst from your branch into master
+
+Please don't reformat the code for the sake of it, because it will make the merge process harder.  Instead use the following settings in your editor:
+- display tab as 2 spaces
+- indent with spaces
 
 ## History of the Project
 
@@ -59,16 +74,3 @@ the source codes were publicly available in his svn repository.
 Original Jagged Alliance source codes were released by Strategy First Inc. in
 2004 under Source Code License Agreement ("SFI-SCLA").  You can find the
 license in file *SFI Source Code license agreement.txt*.
-
-## Development
-
-[![Build Status](https://travis-ci.org/gennady/ja2-stracciatella.svg?branch=master)](https://travis-ci.org/gennady/ja2-stracciatella)
-
-### How to contribute
-
-1. Fork it
-2. Create a branch (git checkout -b my_feature_branch)
-3. Commit your changes (git commit -am "description of your changes")
-4. Push to the branch (git push origin my_feature_branch)
-5. Create a pull requst from your branch into master
-
