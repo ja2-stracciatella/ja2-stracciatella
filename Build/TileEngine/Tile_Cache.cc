@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <vector>
 
 #include "Directories.h"
 #include "HImage.h"
@@ -11,7 +12,6 @@
 #include "Tile_Cache.h"
 #include "FileMan.h"
 #include "MemMan.h"
-#include "Vector.h"
 #include <boost/foreach.hpp>
 
 #include "ContentManager.h"
@@ -30,7 +30,7 @@ static INT32  giDefaultStructIndex      = -1;
 
 
 TILE_CACHE_ELEMENT*                   gpTileCache;
-static SGP::Vector<TILE_CACHE_STRUCT> gpTileCacheStructInfo;
+static std::vector<TILE_CACHE_STRUCT> gpTileCacheStructInfo;
 
 
 void InitTileCache(void)
@@ -56,10 +56,10 @@ void InitTileCache(void)
 
 		if (strcasecmp(tc.rootName.c_str(), "l_dead1") == 0)
 		{
-			giDefaultStructIndex = (INT32)gpTileCacheStructInfo.Size();
+			giDefaultStructIndex = (INT32)gpTileCacheStructInfo.size();
 		}
 
-		gpTileCacheStructInfo.PushBack(tc);
+		gpTileCacheStructInfo.push_back(tc);
 	}
 }
 
@@ -82,7 +82,7 @@ void DeleteTileCache( )
 		MemFree( gpTileCache );
 	}
 
-	gpTileCacheStructInfo.Reserve(0);
+	gpTileCacheStructInfo.clear();
 
 	guiCurTileCacheSize = 0;
 }
@@ -185,7 +185,7 @@ static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 const idx)
 
 STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(char const* const filename)
 {
-	size_t const n = gpTileCacheStructInfo.Size();
+	size_t const n = gpTileCacheStructInfo.size();
 	for (size_t i = 0; i != n; ++i)
 	{
 		TILE_CACHE_STRUCT& t = gpTileCacheStructInfo[i];

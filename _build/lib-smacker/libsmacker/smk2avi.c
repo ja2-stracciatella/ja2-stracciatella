@@ -29,7 +29,7 @@ void process(const char *fn)
 	FILE *fp;
 	smk s;
 	char outfile[256];
-	unsigned char b[4];
+	unsigned char b[5];
 
 	int		i,j,k;
 	unsigned long temp_u;

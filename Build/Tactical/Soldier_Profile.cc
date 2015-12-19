@@ -130,6 +130,14 @@ void LoadMercProfiles()
 		{
 			MERCPROFILESTRUCT& p = gMercProfiles[i];
 
+      // // dumping std inventory
+      // printf("%03d/%ls\n", i, p.zNickname);
+      // FOR_EACH(UINT16, k, p.inv)
+      // {
+      //   const ItemModel *item = GCM->getItem(*k);
+      //   printf("  %s\n", item->getInternalName().c_str());
+      // }
+
 			// If the dialogue exists for the merc, allow the merc to be hired
 			p.bMercStatus = Content::canMercBeHired(GCM, i) ? 0 : MERC_HAS_NO_TEXT_FILE;
 

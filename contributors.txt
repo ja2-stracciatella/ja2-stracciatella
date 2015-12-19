@@ -1,17 +1,27 @@
 Primal author of the project
 ----------------------------
-  Tron
+
+Tron
+
 
 Contributors (sorted alphabetically)
 ------------------------------------
-  Gennady Trafimenkov
-  Misanthropos from The Bear's Pit Forum
-  Oliver Jankowski
-  Peinthor Rene
-  mgl from The Bear's Pit Forum
-  sunshine from The Bear's Pit Forum
-  wolf (committer to the original Tron's svn repository)
+
+Agatae (https://bitbucket.org/Agatae)
+Gennady Trafimenkov <gennady.trafimenkov@gmail.com>
+JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)
+mgl from The Bear's Pit Forum
+Misanthropos <misanthropos@gmx.net>
+Nils R <ml@hxgn.net>
+Oliver Jankowski
+Peinthor Rene <peinthor@gmail.com>
+Rinne <thomas.rinsch@arcor.de>
+rk <rk@razlaw.name>
+sam <bg9zzxik@gmail.com>
+Stefan Lau <github@stefanlau.com>
+stefan <stefan@stefan.wg>
+sunshine from The Bear's Pit Forum
+wolf (committer to the original Tron's svn repository)
 
 
-(*) If you think you belong to this list and want to be included,
-    please send a note to the project maintainer.
+(*) Please feel free to send update for this list to the project maintainer.

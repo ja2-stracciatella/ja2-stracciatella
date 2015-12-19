@@ -81,6 +81,7 @@ public:
 
   SGPBox                m_progress_bar_box;
   MoneyLoc              m_moneyButtonLoc;
+  MoneyLoc              m_MoneyButtonLocMap;
 
   /** Viewport coordiantes.
    * Viewport is the area of the screen where tactical map is displayed.

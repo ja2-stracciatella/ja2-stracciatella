@@ -4350,7 +4350,6 @@ static void EnableDisableDealersInventoryPageButtons(void)
 static void EnableDisableEvaluateAndTransactionButtons(void)
 {
 	UINT8	ubCnt;
-	BOOLEAN	fItemsHere=FALSE;
 	BOOLEAN	fItemEvaluated=FALSE;
 	UINT32	uiArmsDealerTotalCost = CalculateTotalArmsDealerCost();
 	UINT32	uiPlayersOfferAreaTotalCost = CalculateTotalPlayersValue();
@@ -4365,8 +4364,6 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 		//if there is an item here
 		if (o->fActive)
 		{
-			fItemsHere = TRUE;
-
 			//if the item has value
 			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 			{

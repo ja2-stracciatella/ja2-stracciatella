@@ -32,6 +32,7 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
    ItemModel(itemIndex, internalName, itemClass, itemIndex, (ItemCursor)cursor)
 {
   strncpy(this->internalType, internalType, sizeof(this->internalType));
+  this->internalType[sizeof(this->internalType) - 1] = '\0';
   ubWeaponType         = weaponType;
   ubWeaponClass        = NOGUNCLASS;
   calibre              = CalibreModel::getNoCalibreObject();

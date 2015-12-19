@@ -335,7 +335,7 @@ BUILDING * FindBuilding( INT16 sGridNo )
 {
 	UINT8					ubBuildingID;
 
-	if (sGridNo <= 0 || sGridNo > WORLD_MAX)
+	if (sGridNo <= 0 || sGridNo >= WORLD_MAX)
 	{
 		return( NULL );
 	}

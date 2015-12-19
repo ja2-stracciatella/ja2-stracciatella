@@ -469,7 +469,6 @@ SRCS += Build/Utils/Utilities.cc
 SRCS += Build/Utils/WordWrap.cc
 SRCS += sgp/Button_Sound_Control.cc
 SRCS += sgp/Button_System.cc
-SRCS += sgp/Container.cc
 SRCS += sgp/Cursor_Control.cc
 SRCS += sgp/Debug.cc
 SRCS += sgp/EncodingCorrectors.cc
@@ -611,9 +610,9 @@ install: $(BINARY)
 	test -z "$(INSTALLABLE)" || install -d $(MANPAGE_DIR)
 	test -z "$(INSTALLABLE)" || install -d $(FULL_PATH_EXTRA_DATA_DIR)
 	test -z "$(INSTALLABLE)" || install -m 555 $(BINARY) $(BINARY_DIR)
-	test -z "$(INSTALLABLE)" || cp -r externalized $(FULL_PATH_EXTRA_DATA_DIR)
-	test -z "$(INSTALLABLE)" || cp -r mods         $(FULL_PATH_EXTRA_DATA_DIR)
-	test -z "$(INSTALLABLE)" || cp -r _unittests   $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -R externalized $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -R mods         $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp -R _unittests   $(FULL_PATH_EXTRA_DATA_DIR)
 	test -z "$(INSTALLABLE)" || install -m 444 ja2_manpage $(MANPAGE_DIR)/ja2.6
 
 	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
@@ -679,8 +678,8 @@ build-win-release-on-linux:
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
 	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
 	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
-	cp -r _unittests $(WIN_RELEASE)
-	cp -r externalized $(WIN_RELEASE)
+	cp -R _unittests $(WIN_RELEASE)
+	cp -R externalized $(WIN_RELEASE)
 	cp Changelog $(WIN_RELEASE)/Changelog.txt
 	cp changes.md $(WIN_RELEASE)/changes.md
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
@@ -700,8 +699,8 @@ build-release-on-mac:
 	mv ./ja2 $(MAC_RELEASE)/ja2
 	cp _build/distr-files-mac/*.command $(MAC_RELEASE)
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
-	cp -r _unittests $(MAC_RELEASE)
-	cp -r externalized $(MAC_RELEASE)
+	cp -R _unittests $(MAC_RELEASE)
+	cp -R externalized $(MAC_RELEASE)
 	cp Changelog $(MAC_RELEASE)/Changelog.txt
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
@@ -728,7 +727,7 @@ build-debian-package: build-source-archive
 	mkdir $(DEB_PKG_BUILD_FOLDER)
 	cp $(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME).orig.tar.gz
 	cd $(DEB_PKG_BUILD_FOLDER) && tar -xzf $(SOURCE_DIR_NAME).orig.tar.gz
-	cp -r _build/deb-package/debian $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)
+	cp -R _build/deb-package/debian $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)
 	cd $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME) && debuild -us -uc
 	mkdir -p release-deb-packages
 	cp $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME)-*.deb release-deb-packages
@@ -798,6 +797,32 @@ check-compilation-on-openbsd55:
 	scp -F /tmp/strac-openbsd55-ssh-config -r * default:/home/vagrant/strac
 	ssh -F /tmp/strac-openbsd55-ssh-config default "gmake CC=egcc CXX=eg++ -C /home/vagrant/strac -j2"
 	ssh -F /tmp/strac-openbsd55-ssh-config default "sudo shutdown -hp now"
+
+rebuild-contributors-list:
+	git log --pretty=format:'%an <%ae>' | \
+		sed "s/Gennady <gennady@aspire.(none)>/Gennady Trafimenkov <gennady.trafimenkov@gmail.com>/g" | \
+		sed "s/Peinthor Rene <rp@regalis.localdomain>/Peinthor Rene <peinthor@gmail.com>/g" | \
+		sed "s/tron <tron@5e31c081-6ce3-0310-bb30-f584a8092234>//g" | \
+		sed "s/wolf <wolf@5e31c081-6ce3-0310-bb30-f584a8092234>/wolf (committer to the original Tron's svn repository)/g" | \
+		sed "s|Czcibor <foo@foo.com>|Agatae (https://bitbucket.org/Agatae)|g" | \
+		sed "s|Czcibór <foo@foo.com>|Agatae (https://bitbucket.org/Agatae)|g" | \
+		sort | uniq >/tmp/contributors.txt
+	echo "Oliver Jankowski"                                 >>/tmp/contributors.txt
+	echo "mgl from The Bear's Pit Forum"                    >>/tmp/contributors.txt
+	echo "sunshine from The Bear's Pit Forum"               >>/tmp/contributors.txt
+	echo "JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)"  >>/tmp/contributors.txt
+	echo "Primal author of the project"                             >contributors.txt
+	echo "----------------------------"                             >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo "Tron"                                                     >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo "Contributors (sorted alphabetically)"                     >>contributors.txt
+	echo "------------------------------------"                     >>contributors.txt
+	cat /tmp/contributors.txt | sort >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo ""                                                         >>contributors.txt
+	echo "(*) Please feel free to send update for this list to the project maintainer." >>contributors.txt
 
 
 # How to

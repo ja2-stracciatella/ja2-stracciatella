@@ -279,7 +279,9 @@ struct smk_huff_big_t *smk_huff_big_build(struct smk_bit_t* bs)
 
 	/* Done with 8-bit hufftrees, free them. */
 	smk_huff_free(hi8);
+	hi8 = NULL;
 	smk_huff_free(low8);
+	low8 = NULL;
 
 	/* Check final end tag. */
 	smk_bs_safe_read_1(bs,bit);

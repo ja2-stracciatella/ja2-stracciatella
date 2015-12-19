@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <ctime>
 #include <stdexcept>
 
@@ -484,11 +485,11 @@ static void WriteTGAHeader(FILE* const f)
 /* Create a file for a screenshot, which is guaranteed not to exist yet. */
 static FILE* CreateScreenshotFile(void)
 {
-  const char* const exec_dir = GCM->getScreenshotFolder().c_str();
+	const std::string exec_dir = GCM->getScreenshotFolder();
 	do
 	{
 		char filename[2048];
-		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir, guiPrintFrameBufferIndex++);
+		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir.c_str(), guiPrintFrameBufferIndex++);
 #ifndef _WIN32
 #	define O_BINARY 0
 #endif
@@ -543,11 +544,6 @@ static void TakeScreenshot()
 static void SnapshotSmall(void);
 
 
-static inline int16_t maxFunc(int16_t a, int16_t b)
-{
-  return (a > b) ? a : b;
-}
-
 /** @brief Join two rectangles.
  *
  * Add rectangle `newRect` to rectangle `result`, so `result` will
@@ -563,10 +559,10 @@ static void joinInRectangle(SDL_Rect &result, const SDL_Rect &newRect)
     }
     else
     {
-      int16_t X2 = maxFunc(result.x + result.w, newRect.x + newRect.w);
-      int16_t Y2 = maxFunc(result.y + result.h, newRect.y + newRect.h);
-      result.x = MIN(result.x, newRect.x);
-      result.y = MIN(result.y, newRect.y);
+      int16_t X2 = std::max(result.x + result.w, newRect.x + newRect.w);
+      int16_t Y2 = std::max(result.y + result.h, newRect.y + newRect.h);
+      result.x = std::min(result.x, newRect.x);
+      result.y = std::min(result.y, newRect.y);
       result.w = X2 - result.x;
       result.h = Y2 - result.y;
     }
@@ -848,12 +844,12 @@ static void RefreshMovieCache(void)
 
 	PauseTime(TRUE);
 
-	const char* ExecDir = GCM->getVideoCaptureFolder().c_str();
+	const std::string exec_dir = GCM->getVideoCaptureFolder();
 
 	for (INT32 cnt = 0; cnt < giNumFrames; cnt++)
 	{
 		CHAR8 cFilename[2048];
-		sprintf(cFilename, "%s/JA%5.5d.TGA", ExecDir, uiPicNum++);
+		sprintf(cFilename, "%s/JA%5.5d.TGA", exec_dir.c_str(), uiPicNum++);
 
 		FILE* disk = fopen(cFilename, "wb");
 		if (disk == NULL) return;

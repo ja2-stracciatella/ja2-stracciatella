@@ -122,6 +122,7 @@ void HandleContractRenewalSequence( )
 			// Stop and clear any on list...
 			ubNumContractRenewals = 0;
 			gfContractRenewalSquenceOn = FALSE;
+			UnLockPauseState();
 		}
 
 		// Get soldier - if there is none, adavance to next

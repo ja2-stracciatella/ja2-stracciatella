@@ -237,8 +237,6 @@ static void DisplayHiredMercs(void)
 			else
 				ubFontColor = MERC_ACCOUNT_DYNAMIC_TEXT_COLOR;
 
-			uiContractCharge = 0;
-
 			//Display Mercs Name
 			DrawTextToScreen(p.zName, MERC_AC_FIRST_COLUMN_X + 5, usPosY, MERC_AC_FIRST_COLUMN_WIDTH, MERC_ACCOUNT_DYNAMIC_TEXT_FONT, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 

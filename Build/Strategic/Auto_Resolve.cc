@@ -1035,7 +1035,7 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 	if ( pVictim->bLife == 0 )
 		return 0;
 
-	// calculate wound-dressing skill (3x medical,  2x equip,1x level, 1x dex)
+	// calculate wound-dressing skill (3x medical, 2x equip, 10x level, 1x dex)
 	uiDressSkill = ( ( 3 * EffectiveMedical( pSoldier ) ) +		// medical knowledge
 									( 2 * sStatus) + 													// state of medical kit
 									(10 * EffectiveExpLevel( pSoldier ) ) +		// battle injury experience

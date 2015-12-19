@@ -456,6 +456,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 					break;
 				case IC_MISC:
 					bMiscClass = 0;
+					break;
 				case IC_BOMB:
 					bBombClass = 0;
 					break;

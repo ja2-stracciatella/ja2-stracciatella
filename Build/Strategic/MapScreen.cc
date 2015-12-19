@@ -153,7 +153,7 @@
 #define MAP_BG_WIDTH      (640 - 261)
 
 #define MAP_ARMOR_LABEL_X (STD_SCREEN_X + 208)
-#define MAP_ARMOR_LABEL_Y (STD_SCREEN_Y + 180)
+#define MAP_ARMOR_LABEL_Y (STD_SCREEN_Y + 179)
 #define MAP_ARMOR_X       (STD_SCREEN_X + 209)
 #define MAP_ARMOR_Y       (STD_SCREEN_Y + 188)
 #define MAP_ARMOR_W        28
@@ -1607,6 +1607,8 @@ try
 
 		giMapContractButton = QuickCreateButtonImg(INTERFACEDIR "/contractbutton.sti", 0, 1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		giMapContractButton->SpecifyGeneralTextAttributes(pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
+		giMapContractButton->SpecifyTextSubOffsets(0, 0, TRUE);
+		giMapContractButton->SpecifyHilitedTextColors(FONT_MCOLOR_WHITE, DEFAULT_SHADOW);
 		giMapContractButton->SetFastHelpText(pMapScreenMouseRegionHelpText[3]);
 
 		CreateMouseRegionForPauseOfClock();
@@ -4092,7 +4094,7 @@ static void BltCharInvPanel(void)
 	FindFontRightCoordinates(MAP_CAMO_X, MAP_CAMO_Y, MAP_CAMO_W, MAP_CAMO_H, sString, BLOCKFONT2, &usX, &usY);
 	MPrint(usX, usY, sString);
 
-	if( InKeyRingPopup( ) )
+	if( InKeyRingPopup() || InItemStackPopup() )
 	{
 		// shade the background
 		guiSAVEBUFFER->ShadowRect(PLAYER_INFO_X, PLAYER_INFO_Y, PLAYER_INFO_X + 261,  PLAYER_INFO_Y + (359 - 107));

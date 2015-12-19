@@ -1,40 +1,32 @@
-#include "Container.h"
+#include <stdexcept>
+#include <vector>
+
 #include "WCheck.h"
 #include "Event_Manager.h"
 #include "Timer_Control.h"
 #include "MemMan.h"
 
+typedef std::vector<EVENT*>EventList;
 
-typedef SGP::List<EVENT*> EventList;
-
-
-static EventList* hEventQueue       = NULL;
-static EventList* hDelayEventQueue  = NULL;
-static EventList* hDemandEventQueue = NULL;
-
-
-#define QUEUE_RESIZE		20
+static EventList hEventQueue;
+static EventList hDelayEventQueue;
+static EventList hDemandEventQueue;
 
 
 void InitializeEventManager(void)
 {
-	hEventQueue       = new EventList(QUEUE_RESIZE);
-	hDelayEventQueue  = new EventList(QUEUE_RESIZE);
-	/* Events on this queue are only processed when specifically called for by
-	 * code */
-	hDemandEventQueue = new EventList(QUEUE_RESIZE);
 }
 
 
 void ShutdownEventManager(void)
 {
-	delete hEventQueue;
-	delete hDelayEventQueue;
-	delete hDemandEventQueue;
+	hEventQueue.clear();
+	hDelayEventQueue.clear();
+	hDemandEventQueue.clear();
 }
 
 
-static EventList* GetQueue(EventQueueID ubQueueID);
+static EventList& GetQueue(EventQueueID ubQueueID);
 
 
 void AddEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, UINT32 const uiDataSize, EventQueueID const ubQueueID)
@@ -48,15 +40,17 @@ void AddEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, 
 	memcpy(pEvent->Data, pEventData, uiDataSize);
 
 	// Add event to queue
-	EventList* const hQueue = GetQueue(ubQueueID);
-	hQueue->Add(pEvent, hQueue->Size());
+	GetQueue(ubQueueID).push_back(pEvent);
 }
 
 
 EVENT* RemoveEvent(UINT32 uiIndex, EventQueueID ubQueueID)
 try
 {
-	return GetQueue(ubQueueID)->Remove(uiIndex);
+	EventList& queue = GetQueue(ubQueueID);
+	EVENT* ret = queue[uiIndex];
+	queue.erase(queue.begin() + uiIndex);
+	return ret;
 }
 catch (const std::exception&)
 {
@@ -67,7 +61,7 @@ catch (const std::exception&)
 EVENT* PeekEvent(UINT32 uiIndex, EventQueueID ubQueueID)
 try
 {
-	return GetQueue(ubQueueID)->Peek(uiIndex);
+	return GetQueue(ubQueueID)[uiIndex];
 }
 catch (const std::exception&)
 {
@@ -85,11 +79,11 @@ BOOLEAN FreeEvent(EVENT* pEvent)
 
 UINT32 EventQueueSize(EventQueueID ubQueueID)
 {
-	return (UINT32)GetQueue(ubQueueID)->Size();
+	return (UINT32)GetQueue(ubQueueID).size();
 }
 
 
-static EventList* GetQueue(EventQueueID const ubQueueID)
+static EventList& GetQueue(EventQueueID const ubQueueID)
 {
 	switch (ubQueueID)
 	{

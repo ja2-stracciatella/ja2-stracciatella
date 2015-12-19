@@ -1696,9 +1696,6 @@ static void DisplaySelectedNPC(void)
 	{
 		usPosY = usFontHeight * ( gpActiveListBox->sCurSelectedItem - gpActiveListBox->usItemDisplayedOnTopOfList ) + gpActiveListBox->usScrollPosY + 2;
 
-		if( usPosY > 424 )
-			usPosY = usPosY;
-
 		//display the name in the list
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, gpActiveListBox->usScrollPosX, usPosY - 1, gpActiveListBox->usScrollPosX+gpActiveListBox->usScrollWidth,	usPosY+usFontHeight - 1, Get16BPPColor( FROMRGB( 255, 255, 255 ) ) );
 

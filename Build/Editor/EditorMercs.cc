@@ -669,7 +669,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 
 	if( pSoldier )
 	{
-		if( !strlen( pSoldier->VestPal ) )
+		if (!strlen(pSoldier->PantsPal))
 			ubPaletteRep = 0xff;
 		else
 			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->PantsPal);

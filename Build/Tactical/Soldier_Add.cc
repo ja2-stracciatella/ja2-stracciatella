@@ -1003,6 +1003,7 @@ static void InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculate_d
 			gridno = FindGridNoFromSweetSpot(s, s->sInsertionGridNo, 7);
 			if (gridno == NOWHERE)
 			{ // ATE: Error condition - if nowhere use insertion gridno!
+				// FIXME: calculate_direction is left uninitialized
 				gridno = s->sInsertionGridNo;
 			}
 			else

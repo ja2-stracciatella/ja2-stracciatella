@@ -425,11 +425,6 @@ static INT32 GarrisonReinforcementsRequested(INT32 iGarrisonID, UINT8* pubExtraR
 
 	iReinforcementsRequested = MIN( MAX_STRATEGIC_TEAM_SIZE, iReinforcementsRequested );
 
-	if( iReinforcementsRequested + *pubExtraReinforcements + iExistingForces > MAX_STRATEGIC_TEAM_SIZE )
-	{
-		iExistingForces = iExistingForces;
-	}
-
 	return iReinforcementsRequested;
 }
 
@@ -3105,6 +3100,7 @@ void LoadStrategicAI(HWFILE const hFile)
 				SectorInfo[ SEC_N5	].bBloodCatPlacements = 18;
 				SectorInfo[ SEC_I16	].bBloodCats = 19;
 				SectorInfo[ SEC_N5	].bBloodCats = 18;
+				break;
 			case DIF_LEVEL_HARD: //100%
 				SectorInfo[ SEC_I16	].bBloodCatPlacements = 26;
 				SectorInfo[ SEC_N5	].bBloodCatPlacements = 25;
