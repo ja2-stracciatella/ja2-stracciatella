@@ -123,6 +123,7 @@ static void QueryTBRightButton(UIEventKind*);
 static void QueryTBMiddleButton(UIEventKind*);
 static void SwitchHeadGear(bool dayGear);
 
+void HandleTBReload( void );
 
 void GetTBMouseButtonInput(UIEventKind* const puiNewEvent)
 {
@@ -1966,6 +1967,10 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 				SOLDIERTYPE* const sel = GetSelectedMan();
 				if (sel) ReloadWeapon(sel, sel->ubAttackingHand);
 			}
+			else
+			{
+				if (GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_ALT, 'r')) HandleTBReload();
+			}
 			break;
 
 		case 's':
@@ -3412,3 +3417,13 @@ void PopupAssignmentMenuInTactical(void)
 	fFirstClickInAssignmentScreenMask = TRUE;
 	gfIgnoreScrolling = TRUE;
 }
+
+void HandleTBReload( void )
+{
+	SOLDIERTYPE* const pSelectedSoldier = GetSelectedMan();
+	if (pSelectedSoldier)
+	{
+		AutoReload( pSelectedSoldier );
+	}
+}
+

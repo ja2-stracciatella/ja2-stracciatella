@@ -62,5 +62,10 @@
 
     //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
-    "middle_mouse_look": true
+    "middle_mouse_look": true,
+
+    //  Press 'alt+r' to reload
+    //  vanilla_setting: false
+    "tactical_hotkey_alt_r": true
+
 }
