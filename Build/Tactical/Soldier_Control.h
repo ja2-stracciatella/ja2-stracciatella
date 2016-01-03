@@ -914,6 +914,7 @@ void SetSoldierHeight(SOLDIERTYPE*, FLOAT new_height);
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbDownRoof(SOLDIERTYPE*);
 void BeginSoldierClimbFence(SOLDIERTYPE*);
+void BeginSoldierClimbWindow(SOLDIERTYPE*);
 
 BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierGetup( SOLDIERTYPE *pSoldier );

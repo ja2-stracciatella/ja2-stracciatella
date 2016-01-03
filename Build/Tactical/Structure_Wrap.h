@@ -4,6 +4,7 @@
 
 BOOLEAN	IsTreePresentAtGridno( INT16 sGridNo );
 BOOLEAN	IsFencePresentAtGridno( INT16 sGridNo );
+BOOLEAN	IsJumpableWindowPresentAtGridNo( INT32 sGridNo, INT8 direction2);
 BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo );
 
 BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo );

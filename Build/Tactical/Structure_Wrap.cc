@@ -32,6 +32,34 @@ BOOLEAN	IsRoofPresentAtGridno( INT16 sGridNo )
 }
 
 
+BOOLEAN	IsJumpableWindowPresentAtGridNo( INT32 sGridNo, INT8 bStartingDir)
+{
+	STRUCTURE const* pStructure = FindStructure( sGridNo, STRUCTURE_WALLNWINDOW );
+	const BOOLEAN fIntactWindowsAlso = false; // TODO
+
+	if ( pStructure )
+	{
+		if (!(pStructure->fFlags & STRUCTURE_WALLNWINDOW) || (pStructure->fFlags & STRUCTURE_SPECIAL)) return false;
+
+		switch(bStartingDir)
+		{
+			case SOUTH:
+			case NORTH:
+				if (pStructure->ubWallOrientation != OUTSIDE_TOP_LEFT   && pStructure->ubWallOrientation != INSIDE_TOP_LEFT ) return false;
+				break;
+			case EAST:
+			case WEST:
+				if (pStructure->ubWallOrientation != OUTSIDE_TOP_RIGHT  && pStructure->ubWallOrientation != INSIDE_TOP_RIGHT ) return false;
+				break;
+		}
+
+		// XXX left out 1.13 prison window check, hope STRUCTURE_OPEN is enough
+		if ( fIntactWindowsAlso || ( pStructure->fFlags & STRUCTURE_OPEN ) ) return true;
+	}
+
+	return( FALSE );
+}
+
 BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
 {
 	STRUCTURE * pStructure;

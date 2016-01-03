@@ -306,8 +306,7 @@ INT16 GetAPsToReadyWeapon(const SOLDIERTYPE* pSoldier, UINT16 usAnimState);
 
 INT8 GetAPsToClimbRoof( SOLDIERTYPE *pSoldier, BOOLEAN fClimbDown );
 
-INT8 GetAPsToJumpFence( SOLDIERTYPE *pSoldier );
-INT8 GetBPsToJumpFence( SOLDIERTYPE *pSoldier );
+INT8 GetAPsToJumpFence( const SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToCutFence( SOLDIERTYPE *pSoldier );
 INT8 GetAPsToBeginFirstAid( SOLDIERTYPE *pSoldier );

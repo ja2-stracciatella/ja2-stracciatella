@@ -72,4 +72,8 @@
     //  vanilla_setting: false
     "tactical_hotkey_ctrl_q": true,
 
+    //  Press 'shift+j' to climb throug open window
+    //  vanilla_setting: false
+    "tactical_hotkey_shift_j": false
+
 }

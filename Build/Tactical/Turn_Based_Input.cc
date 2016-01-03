@@ -125,6 +125,7 @@ static void SwitchHeadGear(bool dayGear);
 
 void HandleTBReload( void );
 void HandleTBSwapHands( void );
+void HandleTBClimbWindow( void );
 
 void GetTBMouseButtonInput(UIEventKind* const puiNewEvent)
 {
@@ -1636,6 +1637,13 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 				*new_event = M_ON_TERRAIN;
 			}
 			break;
+
+	case 'j':
+		if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'j'))
+		{
+			HandleTBClimbWindow();
+		}
+		break;
 
 #ifdef JA2BETAVERSION
 		case 'l':
@@ -3448,5 +3456,20 @@ void HandleTBSwapHands()
 		else SwapHandItems( pSoldier );
 		ReLoadSoldierAnimationDueToHandItemChange(pSoldier, usOldItem, pSoldier->inv[HANDPOS].usItem);
 		fInterfacePanelDirty = DIRTYLEVEL2;
+	}
+}
+
+void HandleTBClimbWindow()
+{
+	SOLDIERTYPE* const pSelectedSoldier = GetSelectedMan();
+	if (pSelectedSoldier && !AM_A_ROBOT(pSelectedSoldier))
+	{
+		if ( IsFacingClimableWindow( pSelectedSoldier ) )
+		{
+			if (EnoughPoints(pSelectedSoldier, GetAPsToJumpFence( pSelectedSoldier ), BP_JUMPFENCE, FALSE))
+			{
+				BeginSoldierClimbWindow(pSelectedSoldier);
+			}
+		}
 	}
 }

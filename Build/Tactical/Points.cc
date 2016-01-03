@@ -1712,3 +1712,8 @@ INT8 GetAPsToJumpOver(const SOLDIERTYPE* pSoldier)
 {
 	return(  GetAPsToChangeStance( pSoldier, ANIM_STAND ) + AP_JUMP_OVER );
 }
+
+INT8 GetAPsToJumpFence(const SOLDIERTYPE* pSoldier)
+{
+	return(  GetAPsToChangeStance( pSoldier, ANIM_STAND ) + AP_JUMPFENCE );
+}

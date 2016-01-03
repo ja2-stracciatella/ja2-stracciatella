@@ -15,6 +15,7 @@ public:
 private:
   bool map_hotkey_ctrl_i;
   bool tactical_hotkey_j;
+  bool tactical_hotkey_shift_j;
   bool tactical_hotkey_shift_n;
   bool tactical_hotkey_ctrl_n;
   bool tactical_hotkey_ctrl_q;
