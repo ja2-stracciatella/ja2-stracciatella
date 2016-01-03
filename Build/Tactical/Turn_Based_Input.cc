@@ -124,6 +124,7 @@ static void QueryTBMiddleButton(UIEventKind*);
 static void SwitchHeadGear(bool dayGear);
 
 void HandleTBReload( void );
+void HandleTBSwapHands( void );
 
 void GetTBMouseButtonInput(UIEventKind* const puiNewEvent)
 {
@@ -1745,6 +1746,12 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'p': DumpSectorDifficultyInfo(); break;
 #endif
 
+		case 'q':
+			if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'q'))
+			{
+				HandleTBSwapHands();
+			}
+			break;
 		case 's':
 			if (!fDisableMapInterfaceDueToBattle && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 			{
@@ -3427,3 +3434,19 @@ void HandleTBReload( void )
 	}
 }
 
+void HandleTBSwapHands()
+{
+	SOLDIERTYPE* const pSoldier = GetSelectedMan();
+	if (pSoldier && !AM_A_ROBOT(pSoldier))
+	{
+		UINT16 usOldItem = pSoldier->inv[HANDPOS].usItem;
+		if(pSoldier->inv[SECONDHANDPOS].usItem==NOTHING)
+		{
+			pSoldier->inv[SECONDHANDPOS]=pSoldier->inv[HANDPOS];
+			memset(&pSoldier->inv[HANDPOS], 0, sizeof(OBJECTTYPE));
+		}
+		else SwapHandItems( pSoldier );
+		ReLoadSoldierAnimationDueToHandItemChange(pSoldier, usOldItem, pSoldier->inv[HANDPOS].usItem);
+		fInterfacePanelDirty = DIRTYLEVEL2;
+	}
+}

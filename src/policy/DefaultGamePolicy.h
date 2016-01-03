@@ -17,5 +17,6 @@ private:
   bool tactical_hotkey_j;
   bool tactical_hotkey_shift_n;
   bool tactical_hotkey_ctrl_n;
+  bool tactical_hotkey_ctrl_q;
   bool tactical_hotkey_alt_r;
 };
