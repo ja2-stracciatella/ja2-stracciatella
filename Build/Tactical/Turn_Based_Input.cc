@@ -120,6 +120,7 @@ const SOLDIERTYPE* gUITargetSoldier = NULL;
 
 static void QueryTBLeftButton(UIEventKind*);
 static void QueryTBRightButton(UIEventKind*);
+static void QueryTBMiddleButton(UIEventKind*);
 static void SwitchHeadGear(bool dayGear);
 
 
@@ -127,8 +128,63 @@ void GetTBMouseButtonInput(UIEventKind* const puiNewEvent)
 {
 	 QueryTBLeftButton( puiNewEvent );
 	 QueryTBRightButton( puiNewEvent );
+	 QueryTBMiddleButton( puiNewEvent );
 }
 
+
+static void QueryTBMiddleButton(UIEventKind* const puiNewEvent)
+{
+//	static BOOLEAN	fClickHoldIntercepted = FALSE;
+//	static BOOLEAN	fClickIntercepted = FALSE;
+
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
+
+	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+	{
+
+		// MIDDLE MOUSE BUTTON
+		if ( gViewportRegion.ButtonState & MSYS_MIDDLE_BUTTON )
+		{
+			if ( !fMiddleButtonDown )
+			{
+				fMiddleButtonDown = TRUE;
+				RESETCOUNTER( MMOUSECLICK_DELAY_COUNTER );
+			}
+		}
+
+		if ( fMiddleButtonDown )
+		{
+			if ( gpItemPointer == NULL )
+			{
+				// Switch on UI mode
+				switch( gCurrentUIMode )
+				{
+					case IDLE_MODE:
+					case MOVE_MODE:
+					case ACTION_MODE:
+					case CONFIRM_MOVE_MODE:
+					case HANDCURSOR_MODE:
+					case TALKCURSOR_MODE:
+					case CONFIRM_ACTION_MODE:
+					case LOOKCURSOR_MODE:
+					case MENU_MODE:
+					default:
+						if (GCM->getGamePolicy()->middle_mouse_look) *puiNewEvent = LC_ON_TERRAIN;
+						break;
+				}
+			}
+		}
+			// Reset flag
+			fMiddleButtonDown = FALSE;
+//			fClickHoldIntercepted = FALSE;
+//			fClickIntercepted = FALSE;
+
+			// Reset counter
+			RESETCOUNTER( MMOUSECLICK_DELAY_COUNTER );
+
+	}
+}
 
 static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 {

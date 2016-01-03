@@ -288,6 +288,7 @@ extern GridNo          gfUIOverItemPoolGridNo;
 extern INT16           gsCurrentActionPoints;
 extern BOOLEAN         fRightButtonDown;
 extern BOOLEAN         fLeftButtonDown;
+extern BOOLEAN         fMiddleButtonDown;
 extern BOOLEAN         fIgnoreLeftUp;
 extern BOOLEAN         gfIgnoreOnSelectedGuy;
 extern BOOLEAN         gUIActionModeChangeDueToMouseOver;

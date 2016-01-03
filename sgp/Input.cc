@@ -23,9 +23,11 @@ static UINT32 guiSingleClickTimer;
 
 static UINT32 guiLeftButtonRepeatTimer;
 static UINT32 guiRightButtonRepeatTimer;
+static UINT32 guiMiddleButtonRepeatTimer;
 
 BOOLEAN gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfMiddleButtonState;// TRUE = Pressed, FALSE = Not Pressed
 UINT16  gusMouseXPos;       // X position of the mouse on screen
 UINT16  gusMouseYPos;       // y position of the mouse on screen
 
@@ -156,6 +158,12 @@ right_button:
 			gfRightButtonState = TRUE;
 			QueueMouseEvent(RIGHT_BUTTON_DOWN);
 			break;
+
+		case SDL_BUTTON_MIDDLE:
+			guiMiddleButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
+			gfMiddleButtonState = TRUE;
+			QueueMouseEvent(MIDDLE_BUTTON_DOWN);
+			break;
 	}
 }
 
@@ -192,6 +200,12 @@ right_button:
 			guiRightButtonRepeatTimer = 0;
 			gfRightButtonState = FALSE;
 			QueueMouseEvent(RIGHT_BUTTON_UP);
+			break;
+
+		case SDL_BUTTON_MIDDLE:
+			guiMiddleButtonRepeatTimer = 0;
+			gfMiddleButtonState = FALSE;
+			QueueMouseEvent(MIDDLE_BUTTON_UP);
 			break;
 	}
 }
@@ -480,5 +494,19 @@ static void HandleSingleClicksAndButtonRepeats(void)
 	else
 	{
 		guiRightButtonRepeatTimer = 0;
+	}
+
+	// Is there a MIDDLE mouse button repeat
+	if (gfMiddleButtonState)
+	{
+		if ((guiMiddleButtonRepeatTimer > 0)&&(guiMiddleButtonRepeatTimer <= uiTimer))
+		{
+			QueueMouseEvent(MIDDLE_BUTTON_REPEAT);
+			guiMiddleButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+		}
+	}
+	else
+	{
+		guiMiddleButtonRepeatTimer = 0;
 	}
 }

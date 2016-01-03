@@ -41,7 +41,9 @@ public:
   int8_t enemy_weapon_minimal_status;   /**< Minimal status of the enemy weapon (0 - 100). */
 
   bool gui_extras;                      /* graphical user interface cosmetic mod */
- 
+
+  bool middle_mouse_look;               // Look cursor with middle mouse button
+
   ////////////////////////////////////////////////////////////
   //
   ////////////////////////////////////////////////////////////

@@ -6,8 +6,9 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
   map_hotkey_ctrl_i     = (*json)["map_hotkey_ctrl_i"].GetBool();
   tactical_hotkey_j     = (*json)["tactical_hotkey_j"].GetBool();
-  tactical_hotkey_shift_n       = (*json)["tactical_hotkey_shift_n"].GetBool();
-  tactical_hotkey_ctrl_n        = (*json)["tactical_hotkey_ctrl_n"].GetBool();
+  tactical_hotkey_shift_n   = (*json)["tactical_hotkey_shift_n"].GetBool();
+  tactical_hotkey_ctrl_n    = (*json)["tactical_hotkey_ctrl_n"].GetBool();
+  middle_mouse_look         = (*json)["middle_mouse_look"].GetBool();
 
   f_draw_item_shadow    = (*json)["draw_item_shadow"].GetBool();
 
