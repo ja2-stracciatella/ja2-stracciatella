@@ -55,6 +55,12 @@
     //  vanilla value: 0
     "enemy_weapon_minimal_status": 0,
 
+    //  Make the AI a bit smarter and let it target heads and legs sometimes
+    //  vanilla values: false, 0, 0
+    "mod_ai_a": false,
+    "threshold_cth_head": 67,
+    "threshold_cth_legs": 67,
+
     //  Enables extra GUI features. Currently includes:
     //  - Progress Bars for the Mercs Stats in Tractical Mode
     //  vanilla_setting: false

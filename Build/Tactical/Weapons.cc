@@ -549,6 +549,9 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 		pSoldier->opponent = pTargetSoldier;
 		dTargetX = (FLOAT) CenterX( pTargetSoldier->sGridNo );
 		dTargetY = (FLOAT) CenterY( pTargetSoldier->sGridNo );
+
+		INT8 const bAimShotLocation = pSoldier->bAimShotLocation;
+
 		if (pSoldier->bAimShotLocation == AIM_SHOT_RANDOM)
 		{
 			uiRoll = PreRandom( 100 );
@@ -578,6 +581,28 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 				}
 			}
 
+		}
+
+		if(GCM->getGamePolicy()->mod_ai_a && bAimShotLocation == AIM_SHOT_RANDOM)
+		{
+			UINT32 const threshold_cth_head = GCM->getGamePolicy()->threshold_cth_head;
+			UINT32 const threshold_cth_legs = GCM->getGamePolicy()->threshold_cth_legs;
+			UINT32 const cth_aim_shot_head = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_HEAD );
+			UINT32 const cth_aim_shot_torso = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_TORSO );
+			UINT32 const cth_aim_shot_legs = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_LEGS );
+
+			pSoldier->bAimShotLocation = AIM_SHOT_TORSO; // default
+
+			if( cth_aim_shot_legs >= threshold_cth_legs || cth_aim_shot_legs > cth_aim_shot_torso )
+			{
+				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+			}
+
+			if( cth_aim_shot_head >= threshold_cth_head ||   // good enough, override
+				((cth_aim_shot_head+5) >= cth_aim_shot_torso)) // close enough
+			{
+				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+			}
 		}
 
 		switch( pSoldier->bAimShotLocation )

@@ -32,6 +32,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "policy/GamePolicy.h"
 
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -1622,7 +1623,15 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
   ////////////////////////////////////////////////////////////////////////////
   // WHEN IN THE LIGHT, GET OUT OF THERE!
   ////////////////////////////////////////////////////////////////////////////
-  if ( ubCanMove && InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel ) && pSoldier->bOrders != STATIONARY )
+	bool in_light_at_night = InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel );
+
+	if(GCM->getGamePolicy()->mod_ai_a && (gbWorldSectorZ == 0))
+	{
+		SECTORINFO const* const pSector = &SectorInfo[ (gWorldSectorY - 1) * 16 + gWorldSectorX - 1 ];
+		in_light_at_night = !(((pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites) == 0) && (pSector->ubNumCreatures != 0));
+	}
+
+  if ( ubCanMove && in_light_at_night && pSoldier->bOrders != STATIONARY )
 	{
 		pSoldier->usActionData = FindNearbyDarkerSpot( pSoldier );
 		if ( pSoldier->usActionData != NOWHERE )
@@ -2067,7 +2076,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 								else if ( gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_PRONE )
 								{
 									// maybe go prone
-									if ( PreRandom( 2 ) == 0 && InternalIsValidStance( pSoldier, ubOpponentDir, ANIM_PRONE ) )
+									if ( ( PreRandom( 2 ) == 0 || gamepolicy( mod_ai_a ) ) && InternalIsValidStance( pSoldier, ubOpponentDir, ANIM_PRONE ) )
 									{
 										pSoldier->usActionData = ANIM_PRONE;
 										pSoldier->bNextAction = AI_ACTION_END_TURN;

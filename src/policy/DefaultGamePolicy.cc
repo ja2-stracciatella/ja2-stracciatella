@@ -29,6 +29,10 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
   enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
 
+  mod_ai_a                  = (*json)["mod_ai_a"].GetBool();
+  threshold_cth_head        = (*json)["threshold_cth_head"].GetInt();
+  threshold_cth_legs        = (*json)["threshold_cth_legs"].GetInt();
+
   pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
   critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();
