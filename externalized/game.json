@@ -74,6 +74,24 @@
 
     //  Press 'shift+j' to climb throug open window
     //  vanilla_setting: false
-    "tactical_hotkey_shift_j": false
+    "tactical_hotkey_shift_j": false,
 
+    //  Packages never stolen, no need for bribes
+    //  vanilla_setting: false
+    "pablo_wont_steal": false,
+
+    //  Min/max chance to hit and headshot damage multiplier
+    //  vanilla_setting: 1, 99, 1.5
+    "chance_to_hit_minimum": 1,
+    "chance_to_hit_maximum": 99,
+    "tactical_head_damage_multiplier": 1.5,
+
+    //  IMP attribute point defaults
+    //  Zero attribute point bonus is what you receive for setting a skill to 0
+    //  Unspecified bonus is your initial pool of points to distribute
+    //  vanilla_setting: 85, 35, 15, 40
+    "IMP_MAX_ATTRIBUTE_POINTS": 85,
+    "IMP_MIN_ATTRIBUTE_POINTS": 35,
+    "IMP_ZERO_ATTRIBUTE_POINTS_BONUS": 15,
+    "IMP_BONUS_ATTRIBUTE_POINTS": 40
 }

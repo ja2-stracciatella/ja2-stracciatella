@@ -27,6 +27,17 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   gui_extras            = (*json)["gui_extras"].GetBool();
 
   enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
+
+  pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
+
+  critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();
+  chance_to_hit_maximum     = (*json)["chance_to_hit_maximum"].GetInt();
+  chance_to_hit_minimum     = (*json)["chance_to_hit_minimum"].GetInt();
+
+  imp_attribute_max         = (*json)["IMP_MAX_ATTRIBUTE_POINTS"].GetInt();
+  imp_attribute_min         = (*json)["IMP_MIN_ATTRIBUTE_POINTS"].GetInt();
+  imp_attribute_bonus       = (*json)["IMP_BONUS_ATTRIBUTE_POINTS"].GetInt();
+  imp_attribute_zero_bonus  = (*json)["IMP_ZERO_ATTRIBUTE_POINTS_BONUS"].GetInt();
 }
 
 /** Check if a hotkey is enabled. */

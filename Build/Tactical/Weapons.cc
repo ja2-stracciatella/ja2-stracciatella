@@ -49,9 +49,7 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "slog/slog.h"
-
-#define MINCHANCETOHIT          1
-#define MAXCHANCETOHIT          99
+#include "policy/GamePolicy.h"
 
 // NB this is arbitrary, chances in DG ranged from 1 in 6 to 1 in 20
 #define BASIC_DEPRECIATE_CHANCE	15
@@ -66,7 +64,6 @@
 // bonus to hit with working laser scope
 #define LASERSCOPE_BONUS				20
 
-#define HEAD_DAMAGE_ADJUSTMENT( x ) ((x * 3) / 2)
 #define LEGS_DAMAGE_ADJUSTMENT( x ) (x / 2)
 
 #define CRITICAL_HIT_THRESHOLD 30
@@ -321,11 +318,14 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 
 static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32* piNewImpact, INT32* piImpactForCrits)
 {
+	UINT32 critical_damage_to_head = (GCM->getGamePolicy()->critical_damage_head_multiplier)*iImpact;
+//	UINT32 critical_damage_to_legs = (GCM->getGamePolicy()->critical_damage_legs_multiplier)*iImpact;
+
 	switch( ubHitLocation )
 	{
 		case AIM_SHOT_HEAD:
-			// 1.5x damage from successful hits to the head!
-			*piImpactForCrits = HEAD_DAMAGE_ADJUSTMENT( iImpact );
+			// vanilla was: 1.5x damage from successful hits to the head!
+			*piImpactForCrits = critical_damage_to_head;
 			*piNewImpact = *piImpactForCrits;
 			break;
 		case AIM_SHOT_LEGS:
