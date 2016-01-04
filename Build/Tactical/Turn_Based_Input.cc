@@ -1592,7 +1592,7 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 #endif
 
   case 'n':
-    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n'))
+    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n'))
     {
       SwitchHeadGear(false);
     }
@@ -1675,7 +1675,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			break;
 
   case 'n':
-    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n'))
+    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n'))
     {
       SwitchHeadGear(true);
     }
