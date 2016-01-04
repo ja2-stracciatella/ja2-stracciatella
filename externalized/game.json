@@ -76,6 +76,10 @@
     //  vanilla_setting: false
     "tactical_hotkey_shift_j": false,
 
+    //  Press d in realtime mode to manually start turn based mode
+    //  vanilla_setting: false
+    "can_enter_turnbased": false,
+
     //  Packages never stolen, no need for bribes
     //  vanilla_setting: false
     "pablo_wont_steal": false,

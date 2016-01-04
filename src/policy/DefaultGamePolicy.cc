@@ -12,6 +12,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   tactical_hotkey_ctrl_q    = (*json)["tactical_hotkey_ctrl_q"].GetBool();
   tactical_hotkey_alt_r     = (*json)["tactical_hotkey_alt_r"].GetBool();
   middle_mouse_look         = (*json)["middle_mouse_look"].GetBool();
+  can_enter_turnbased       = (*json)["can_enter_turnbased"].GetBool();
 
   f_draw_item_shadow    = (*json)["draw_item_shadow"].GetBool();
 

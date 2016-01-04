@@ -1392,6 +1392,12 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			{
 				*new_event = I_ENDTURN;
 			}
+
+			if (GCM->getGamePolicy()->can_enter_turnbased)
+			{
+				gTacticalStatus.uiFlags |= TURNBASED;
+				gTacticalStatus.uiFlags |= INCOMBAT;
+			}
 			break;
 
 		case 'e':

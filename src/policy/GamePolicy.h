@@ -44,6 +44,7 @@ public:
   bool gui_extras;                      /* graphical user interface cosmetic mod */
 
   bool middle_mouse_look;               // Look cursor with middle mouse button
+  bool can_enter_turnbased;             // 'd' can start turnbased if in real-time
 
   bool pablo_wont_steal;                // Packages not stolen
 
