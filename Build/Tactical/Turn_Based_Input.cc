@@ -90,6 +90,7 @@
 #include "Items.h"
 #include "GameRes.h"
 #include "GameState.h"
+#include "Game_Init.h"
 
 #include "slog/slog.h"
 #include "ContentManager.h"
@@ -2211,6 +2212,14 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
     {
 			HandleShortCutExitState( );
     }
+
+		if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == 'l') && ( InputEvent.usKeyState & CTRL_DOWN ) && gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD)
+		{
+			gfSaveGame              = FALSE;
+			gfCameDirectlyFromGame  = TRUE;
+			guiPreviousOptionScreen = SAVE_LOAD_SCREEN;
+			LeaveTacticalScreen( SAVE_LOAD_SCREEN );
+		}
 
 		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_ESCAPE)
 		{
