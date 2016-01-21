@@ -927,6 +927,17 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	{
 		// Here, remove the knife...	or (for now) rocket launcher
 		RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+		if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+		{
+			INT8 slot=FindObj(pSoldier, BLOODY_THROWING_KNIFE);
+			if(slot==NO_SLOT) slot=FindObj(pSoldier, THROWING_KNIFE);
+			if(slot!=NO_SLOT)
+			{
+				OBJECTTYPE *item=&pSoldier->inv[slot];
+				CreateItem(item->usItem, item->bStatus[0], &pSoldier->inv[HANDPOS]);
+				RemoveObjs(item, 1);
+			}
+		}
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 	else if ( usItemNum == ROCKET_LAUNCHER)
@@ -1427,7 +1438,19 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 	// OK, goto throw animation
 	HandleSoldierThrowItem( pSoldier, pSoldier->sTargetGridNo );
 
+	UINT16 const thrown_item=pSoldier->inv[HANDPOS].usItem;
 	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+	if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+	{
+		INT8 const slot=FindObj(pSoldier, thrown_item);
+		if(slot!=NO_SLOT)
+		{
+			OBJECTTYPE *item=&pSoldier->inv[slot];
+			CreateItem(item->usItem, item->bStatus[0], &pSoldier->inv[HANDPOS]);
+			RemoveObjs(item, 1);
+		}
+		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+	}
 }
 
 
