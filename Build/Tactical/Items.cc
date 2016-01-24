@@ -435,6 +435,7 @@ static MergeInfo const Merge[] =
 	{BEER,						BEER,									BEER,										COMBINE_POINTS},
 	{WINE,						WINE,									WINE,										COMBINE_POINTS},
 	{ALCOHOL,					ALCOHOL,							ALCOHOL,								COMBINE_POINTS},
+	{CANTEEN,					CANTEEN,							CANTEEN,								COMBINE_POINTS},
 
 	{COMPOUND18,			FLAK_JACKET,							FLAK_JACKET_18,							TREAT_ARMOUR},
 	{COMPOUND18,			KEVLAR_VEST,							KEVLAR_VEST_18,							TREAT_ARMOUR},
