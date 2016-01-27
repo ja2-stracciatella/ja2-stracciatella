@@ -49,6 +49,8 @@ public:
   bool mod_ai_a;                        // Enable AI mod "a"
   int8_t threshold_cth_head;            // threshold AI always take head shots, increase game difficulty
   int8_t threshold_cth_legs;            // threshold AI switch to leg shots from torso
+  int8_t enemy_elite_minimum_level;     // increase challenge: minimum experience level for enemy elite soldier
+  int8_t enemy_elite_maximum_level;     // maximum experience level for enemy elite soldier
 
   bool pablo_wont_steal;                // Packages not stolen
 

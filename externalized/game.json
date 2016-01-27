@@ -61,6 +61,11 @@
     "threshold_cth_head": 67,
     "threshold_cth_legs": 67,
 
+    //  How much variation should there be in elite soldier xp level?
+    //  vanilla_setting: 6, 10
+    "enemy_elite_minimum_level": 6,
+    "enemy_elite_maximum_level": 10,
+
     //  Enables extra GUI features. Currently includes:
     //  - Progress Bars for the Mercs Stats in Tractical Mode
     //  vanilla_setting: false

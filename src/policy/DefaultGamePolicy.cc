@@ -32,6 +32,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   mod_ai_a                  = (*json)["mod_ai_a"].GetBool();
   threshold_cth_head        = (*json)["threshold_cth_head"].GetInt();
   threshold_cth_legs        = (*json)["threshold_cth_legs"].GetInt();
+  enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();
+  enemy_elite_maximum_level = (*json)["enemy_elite_maximum_level"].GetInt();
 
   pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 

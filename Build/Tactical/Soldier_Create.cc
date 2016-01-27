@@ -45,6 +45,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 
 // THESE 3 DIFFICULTY FACTORS MUST ALWAYS ADD UP TO 100% EXACTLY!!!
@@ -1254,6 +1255,8 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 			break;
 		case SOLDIER_CLASS_ELITE:
 			pp->bExpLevel = (INT8) 6 + bExpLevelModifier;
+			if(pp->bExpLevel<GCM->getGamePolicy()->enemy_elite_minimum_level) pp->bExpLevel=GCM->getGamePolicy()->enemy_elite_minimum_level;
+			if(pp->bExpLevel>GCM->getGamePolicy()->enemy_elite_maximum_level) pp->bExpLevel=GCM->getGamePolicy()->enemy_elite_maximum_level;
 			break;
 		case SOLDIER_CLASS_GREEN_MILITIA:
 			pp->bExpLevel = (INT8) 2 + bExpLevelModifier;
@@ -1336,6 +1339,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	pp->bWisdom				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
 	pp->bMorale				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
 
+	if(ubSoldierClass==SOLDIER_CLASS_ELITE && pp->bExpLevel>GCM->getGamePolicy()->enemy_elite_maximum_level)
 	// CJC: now calculate the REAL experience level if in the really upper end
 	ReduceHighExpLevels( &( pp->bExpLevel ) );
 
