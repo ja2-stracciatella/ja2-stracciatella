@@ -18,6 +18,8 @@ enum HotkeyModifier
   HKMOD_SHIFT
 };
 
+#define gamepolicy(element) (GCM->getGamePolicy()->element)
+
 class GamePolicy
 {
 public:
