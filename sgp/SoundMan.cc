@@ -1017,6 +1017,8 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 
 static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
+    SDL_memset(stream, 0, len);
+
 	UINT16* Stream = (UINT16*)stream;
 
 	// XXX TODO proper mixing, mainly clipping

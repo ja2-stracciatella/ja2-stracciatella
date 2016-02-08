@@ -211,16 +211,17 @@ static void MainLoop(int msPerGameCycle)
 		{
 			switch (event.type)
 			{
-				case SDL_ACTIVEEVENT:
-					if (event.active.state & SDL_APPACTIVE)
-					{
-						s_doGameCycles = (event.active.gain != 0);
-						break;
-					}
+				case SDL_APP_WILLENTERBACKGROUND:
+					s_doGameCycles = false;
+					break;
+
+				case SDL_APP_WILLENTERFOREGROUND:
+					s_doGameCycles = true;
 					break;
 
 				case SDL_KEYDOWN: KeyDown(&event.key.keysym); break;
 				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
+				case SDL_TEXTINPUT: TextInput(&event.text); break;
 
 				case SDL_MOUSEBUTTONDOWN: MouseButtonDown(&event.button); break;
 				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
@@ -230,9 +231,9 @@ static void MainLoop(int msPerGameCycle)
 					gusMouseYPos = event.motion.y;
 					break;
 
-				case SDL_QUIT:
-          deinitGameAndExit();
-					break;
+				case SDL_MOUSEWHEEL: MouseWheelScroll(&event.wheel); break;
+
+				case SDL_QUIT: deinitGameAndExit(); break;
 			}
 		}
 		else
@@ -343,7 +344,6 @@ try
   ////////////////////////////////////////////////////////////
 
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_EnableUNICODE(SDL_ENABLE);
 
 #ifdef __APPLE__
   // Enable 3-button mouse support if the user haven't instructed

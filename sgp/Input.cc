@@ -11,7 +11,7 @@
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.
 
-BOOLEAN gfKeyState[SDLK_LAST]; // TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfKeyState[SDL_SCANCODE_TO_KEYCODE(SDL_NUM_SCANCODES)]; // TRUE = Pressed, FALSE = Not Pressed
 static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
@@ -49,7 +49,7 @@ static void QueueMouseEvent(UINT16 ubInputEvent)
 }
 
 
-static void QueueKeyEvent(UINT16 ubInputEvent, SDLKey Key, SDLMod Mod, wchar_t Char)
+static void QueueKeyEvent(UINT16 ubInputEvent, SDL_Keycode Key, SDL_Keymod Mod, wchar_t Char)
 {
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == lengthof(gEventQueue)) return;
@@ -123,8 +123,8 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 #if defined WITH_MAEMO
 			/* If the menu button (mapped to F4) is pressed, then treat the event as
 			 * right click */
-			const Uint8* const key_state = SDL_GetKeyState(NULL);
-			g_down_right = key_state[SDLK_F4];
+			const Uint8* const key_state = SDL_GetKeyboardState(NULL);
+			g_down_right = key_state[SDL_SCANCODE_F4];
 			if (g_down_right) goto right_button;
 #endif
 			guiLeftButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
@@ -141,9 +141,6 @@ right_button:
 			gfRightButtonState = TRUE;
 			QueueMouseEvent(RIGHT_BUTTON_DOWN);
 			break;
-
-		case SDL_BUTTON_WHEELUP:   QueueMouseEvent(MOUSE_WHEEL_UP);   break;
-		case SDL_BUTTON_WHEELDOWN: QueueMouseEvent(MOUSE_WHEEL_DOWN); break;
 	}
 }
 
@@ -184,11 +181,23 @@ right_button:
 	}
 }
 
+void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv) {
+    if (WheelEv->y > 0)
+    {
+    	QueueMouseEvent(MOUSE_WHEEL_UP);
+    }
+    else
+    {
+        QueueMouseEvent(MOUSE_WHEEL_DOWN);
+    }
+}
 
-static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
+
+
+static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 {
-	SDLKey       key = key_sym->sym;
-	SDLMod const mod = key_sym->mod;
+	SDL_Keycode      key = key_sym->sym;
+	SDL_Keymod const mod = (SDL_Keymod) key_sym->mod;
 	bool   const num = mod & KMOD_NUM;
 	switch (key)
 	{
@@ -197,19 +206,19 @@ static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
 		case SDLK_F4: return;
 #endif
 
-		case SDLK_KP0:         key = num ? SDLK_0      : SDLK_INSERT;   break;
-		case SDLK_KP1:         key = num ? SDLK_1      : SDLK_END;      break;
-		case SDLK_KP2:         key = num ? SDLK_2      : SDLK_DOWN;     break;
-		case SDLK_KP3:         key = num ? SDLK_3      : SDLK_PAGEDOWN; break;
-		case SDLK_KP4:         key = num ? SDLK_4      : SDLK_LEFT;     break;
-		case SDLK_KP5:
+		case SDLK_KP_0:         key = num ? SDLK_0      : SDLK_INSERT;   break;
+		case SDLK_KP_1:         key = num ? SDLK_1      : SDLK_END;      break;
+		case SDLK_KP_2:         key = num ? SDLK_2      : SDLK_DOWN;     break;
+		case SDLK_KP_3:         key = num ? SDLK_3      : SDLK_PAGEDOWN; break;
+		case SDLK_KP_4:         key = num ? SDLK_4      : SDLK_LEFT;     break;
+		case SDLK_KP_5:
 			if (!num) return;
 			key = SDLK_5;
 			break;
-		case SDLK_KP6:         key = num ? SDLK_6      : SDLK_RIGHT;    break;
-		case SDLK_KP7:         key = num ? SDLK_7      : SDLK_HOME;     break;
-		case SDLK_KP8:         key = num ? SDLK_8      : SDLK_UP;       break;
-		case SDLK_KP9:         key = num ? SDLK_9      : SDLK_PAGEUP;   break;
+		case SDLK_KP_6:         key = num ? SDLK_6      : SDLK_RIGHT;    break;
+		case SDLK_KP_7:         key = num ? SDLK_7      : SDLK_HOME;     break;
+		case SDLK_KP_8:         key = num ? SDLK_8      : SDLK_UP;       break;
+		case SDLK_KP_9:         key = num ? SDLK_9      : SDLK_PAGEUP;   break;
 		case SDLK_KP_PERIOD:   key = num ? SDLK_PERIOD : SDLK_DELETE;   break;
 		case SDLK_KP_DIVIDE:   key = SDLK_SLASH;                        break;
 		case SDLK_KP_MULTIPLY: key = SDLK_ASTERISK;                     break;
@@ -234,11 +243,10 @@ static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
 		event_type = KEY_UP;
 	}
 	key_state = pressed;
-	QueueKeyEvent(event_type, key, mod, key_sym->unicode);
 }
 
 
-void KeyDown(const SDL_keysym* KeySym)
+void KeyDown(const SDL_Keysym* KeySym)
 {
 	switch (KeySym->sym)
 	{
@@ -257,8 +265,8 @@ void KeyDown(const SDL_keysym* KeySym)
 			_KeyDown(ALT) = TRUE;
 			break;
 
-		case SDLK_PRINT:
-		case SDLK_SCROLLOCK:
+		case SDLK_PRINTSCREEN:
+		case SDLK_SCROLLLOCK:
 			break;
 
 		default:
@@ -268,7 +276,7 @@ void KeyDown(const SDL_keysym* KeySym)
 }
 
 
-void KeyUp(const SDL_keysym* KeySym)
+void KeyUp(const SDL_Keysym* KeySym)
 {
 	switch (KeySym->sym)
 	{
@@ -287,15 +295,16 @@ void KeyUp(const SDL_keysym* KeySym)
 			_KeyDown(ALT) = FALSE;
 			break;
 
-		case SDLK_PRINT:
+		case SDLK_PRINTSCREEN:
 			if (KeySym->mod & KMOD_CTRL) VideoCaptureToggle(); else PrintScreen();
 			break;
 
-		case SDLK_SCROLLOCK:
-			SDL_WM_GrabInput
+		case SDLK_SCROLLLOCK:
+			SDL_SetWindowGrab
 			(
-				SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_OFF ?
-					SDL_GRAB_ON : SDL_GRAB_OFF
+			    GAME_WINDOW,
+				SDL_GetWindowGrab(GAME_WINDOW) == SDL_FALSE ?
+					SDL_TRUE : SDL_FALSE
 			);
 			break;
 
@@ -311,6 +320,11 @@ void KeyUp(const SDL_keysym* KeySym)
 			KeyChange(KeySym, false);
 			break;
 	}
+}
+
+void TextInput(const SDL_TextInputEvent* TextEv) {
+    // SELAUX: HANDLE TEXT INPUT SOMEHOW
+	// QueueKeyEvent(event_type, key, mod, key_sym->unicode);
 }
 
 
@@ -389,7 +403,7 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 
 #if 1
 	FIXME
-	SDL_WarpMouse(uiNewXPos, uiNewYPos);
+	SDL_WarpMouseInWindow(GAME_WINDOW, uiNewXPos, uiNewYPos);
 #else
 	// Adjust coords based on our resolution
 	FLOAT flNewXPos = (FLOAT)uiNewXPos / SCREEN_WIDTH  * 65536;

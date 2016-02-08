@@ -127,7 +127,7 @@ static size_t GetPaletteColors(const NODE* const pTree, SGPPaletteEntry* const p
 		dst->r      = pTree->nRedSum   / pTree->nPixelCount;
 		dst->g      = pTree->nGreenSum / pTree->nPixelCount;
 		dst->b      = pTree->nBlueSum  / pTree->nPixelCount;
-		dst->unused = 0;
+		dst->a      = 0;
 	}
 	else
 	{

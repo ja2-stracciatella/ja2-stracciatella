@@ -32,7 +32,7 @@ extern "C"
 {
 #endif
 
-#define NUMBER_OF_TOPICS  61
+#define NUMBER_OF_TOPICS  62
 #define TAG_LENGTH        15
 
 typedef enum
@@ -70,6 +70,7 @@ typedef enum
   DEBUG_TAG_SGP,
   DEBUG_TAG_STCI,
   DEBUG_TAG_CONTAINER,
+  DEBUG_TAG_VIDEO,
   DEBUG_TAG_VSURFACE,
   DEBUG_TAG_SOUND,
   DEBUG_TAG_MEMORY,

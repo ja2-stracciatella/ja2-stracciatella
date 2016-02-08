@@ -41,9 +41,11 @@ extern BOOLEAN			DequeueEvent(InputAtom *Event);
 
 void MouseButtonDown(const SDL_MouseButtonEvent*);
 void MouseButtonUp(const SDL_MouseButtonEvent*);
+void MouseWheelScroll(const SDL_MouseWheelEvent*);
 
-void KeyDown(const SDL_keysym*);
-void KeyUp(  const SDL_keysym*);
+void KeyDown(const SDL_Keysym*);
+void KeyUp(  const SDL_Keysym*);
+void TextInput(  const SDL_TextInputEvent*);
 
 extern void					GetMousePos(SGPPoint *Point);
 
@@ -61,7 +63,7 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 void DequeueAllKeyBoardEvents(void);
 
 
-extern BOOLEAN gfKeyState[SDLK_LAST]; // TRUE = Pressed, FALSE = Not Pressed
+extern BOOLEAN gfKeyState[SDL_SCANCODE_TO_KEYCODE(SDL_NUM_SCANCODES)]; // TRUE = Pressed, FALSE = Not Pressed
 
 extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen

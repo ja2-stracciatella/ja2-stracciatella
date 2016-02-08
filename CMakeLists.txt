@@ -64,10 +64,12 @@ if (WITH_SOUND_DEBUG)
 endif()
 
 if (NOT (LOCAL_SDL_LIB STREQUAL ""))
-    message( STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-    set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    set(SDL2_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
 endif()
-find_package(SDL REQUIRED)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+find_package(SDL2 REQUIRED)
 
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
@@ -95,7 +97,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-utf8cpp/source
-    ${SDL_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -121,7 +123,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
+target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
 
 macro(copy_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD

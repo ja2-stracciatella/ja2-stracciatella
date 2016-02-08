@@ -28,13 +28,13 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	switch (bpp)
 	{
 		case 8:
-			s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, 0, 0, 0, 0);
+			s = SDL_CreateRGBSurface(0, w, h, bpp, 0, 0, 0, 0);
 			break;
 
 		case 16:
 		{
-			SDL_PixelFormat const* f = SDL_GetVideoSurface()->format;
-			s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, f->Rmask, f->Gmask, f->Bmask, 0);
+			SDL_PixelFormat const* f = SDL_AllocFormat(SDL_PIXELFORMAT_RGB565);
+			s = SDL_CreateRGBSurface(0, w, h, bpp, f->Rmask, f->Gmask, f->Bmask, f->Amask);
 			break;
 		}
 
@@ -112,7 +112,7 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 
 		default: abort(); // HACK000E
 	}
-	SDL_SetColorKey(surface_, SDL_SRCCOLORKEY, colour_key);
+	SDL_SetColorKey(surface_, SDL_TRUE, colour_key);
 }
 
 
@@ -370,9 +370,10 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 	UINT const dx     = src_rect->w;
 	UINT const dy     = src_rect->h;
 	UINT py = 0;
-	if (ssurface->flags & SDL_SRCCOLORKEY)
+	if (ssurface->flags & SDL_TRUE)
 	{
-		const UINT16 key = ssurface->format->colorkey;
+//		const UINT16 key = ssurface->format->colorkey;
+        const UINT16 key = 0;
 		for (UINT iy = 0; iy < height; ++iy)
 		{
 			const UINT16* s = os;

@@ -114,7 +114,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 			palette[i].r      = pSTCIPalette[i].ubRed;
 			palette[i].g      = pSTCIPalette[i].ubGreen;
 			palette[i].b      = pSTCIPalette[i].ubBlue;
-			palette[i].unused = 0;
+			palette[i].a      = 0;
 		}
 
 		img->fFlags |= IMAGE_PALETTE;
