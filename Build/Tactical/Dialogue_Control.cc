@@ -449,7 +449,7 @@ void HandleDialogue()
 	if (gTacticalStatus.fAutoBandageMode || !d->Execute())
 	{
 		delete d;
-		ghDialogueQ.pop();
+		if(!ghDialogueQ.empty()) ghDialogueQ.pop();
 	}
 }
 
