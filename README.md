@@ -24,19 +24,20 @@ Run ```ja2.exe -help``` for list of available options.
 
 ## Latest news
 
+- February 2016, another push and migration from bitbucket to github
 - Fall 2015, the project is still alive.  Some pull requests were merged.
 - 2014-05-01, version 0.12.352 has been released
 - 2014-02-16, version 0.12.275 has been released
 
 ## Development
 
-The project is developed on [bitbucket](https://bitbucket.org/gennady/ja2-stracciatella).  Pull requests with bug fixes are very welcome.
+The project is developed on [github](https://github.com/ja2-stracciatella/ja2-stracciatella).  Pull requests with bug fixes are very welcome.
 
 [![Build Status](https://travis-ci.org/gennady/ja2-stracciatella.svg?branch=master)](https://travis-ci.org/gennady/ja2-stracciatella)
 
 ### How to contribute
 
-The best way to contribute is to make a pull request with a bug fix.  Please see list of open issues [here](https://bitbucket.org/gennady/ja2-stracciatella/issues?status=new&status=open).
+The best way to contribute is to make a pull request with a bug fix.  Please see list of open issues [here](https://github.com/ja2-stracciatella/ja2-stracciatella/issues).
 
 The second best way is to file a bug report if you encounter a bug.
 
