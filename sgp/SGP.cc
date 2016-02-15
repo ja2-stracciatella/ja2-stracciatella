@@ -227,8 +227,7 @@ static void MainLoop(int msPerGameCycle)
 				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
 
 				case SDL_MOUSEMOTION:
-					gusMouseXPos = event.motion.x;
-					gusMouseYPos = event.motion.y;
+					SetSafeMousePosition(event.motion.x, event.motion.y);
 					break;
 
 				case SDL_MOUSEWHEEL: MouseWheelScroll(&event.wheel); break;

@@ -68,6 +68,16 @@ static void QueueKeyEvent(UINT16 ubInputEvent, SDL_Keycode Key, SDL_Keymod Mod, 
 	gusTailIndex = (gusTailIndex + 1) % lengthof(gEventQueue);
 }
 
+void SetSafeMousePosition(int x, int y) {
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
+	if (x > SCREEN_WIDTH) x = SCREEN_WIDTH;
+	if (y > SCREEN_HEIGHT) y = SCREEN_HEIGHT;
+
+	gusMouseXPos = x;
+	gusMouseYPos = y;
+}
+
 
 BOOLEAN DequeueSpecificEvent(InputAtom* Event, UINT32 uiMaskFlags)
 {
@@ -103,8 +113,7 @@ BOOLEAN DequeueEvent(InputAtom* Event)
 
 static void UpdateMousePos(const SDL_MouseButtonEvent* BtnEv)
 {
-	gusMouseXPos = BtnEv->x;
-	gusMouseYPos = BtnEv->y;
+	SetSafeMousePosition(BtnEv->x, BtnEv->y);
 }
 
 
@@ -330,11 +339,8 @@ void TextInput(const SDL_TextInputEvent* TextEv) {
 
 void GetMousePos(SGPPoint* Point)
 {
-	int x;
-	int y;
-	SDL_GetMouseState(&x, &y);
-	Point->iX = x;
-	Point->iY = y;
+	Point->iX = gusMouseXPos;
+	Point->iY = gusMouseYPos;
 }
 
 
@@ -391,26 +397,27 @@ BOOLEAN IsCursorRestricted(void)
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos )
 {
-	// Wizardry NOTE: This function currently doesn't quite work right for in any Windows resolution other than 640x480.
-	// mouse_event() uses your current Windows resolution to calculate the resulting x,y coordinates.  So in order to get
-	// the right coordinates, you'd have to find out the current Windows resolution through a system call, and then do:
-	//		uiNewXPos = uiNewXPos * SCREEN_WIDTH  / WinScreenResX;
-	//		uiNewYPos = uiNewYPos * SCREEN_HEIGHT / WinScreenResY;
-	//
-	// JA2 doesn't have this problem, 'cause they use DirectDraw calls that change the Windows resolution properly.
-	//
-	// Alex Meduna, Dec. 3, 1997
+	int windowWidth, windowHeight;
+	SDL_GetWindowSize(GAME_WINDOW, &windowWidth, &windowHeight);
 
-#if 1
-	FIXME
-	SDL_WarpMouseInWindow(GAME_WINDOW, uiNewXPos, uiNewYPos);
-#else
-	// Adjust coords based on our resolution
-	FLOAT flNewXPos = (FLOAT)uiNewXPos / SCREEN_WIDTH  * 65536;
-	FLOAT flNewYPos = (FLOAT)uiNewYPos / SCREEN_HEIGHT * 65536;
+	double windowWidthD = windowWidth;
+	double windowHeightD = windowHeight;
+	double screenWidthD = SCREEN_WIDTH;
+	double screenHeightD = SCREEN_HEIGHT;
 
-	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, (UINT32)flNewXPos, (UINT32)flNewYPos, 0, 0);
-#endif
+	double scaleFactorX = windowWidthD / screenWidthD;
+	double scaleFactorY = windowHeightD / screenHeightD;
+	double scaleFactor = windowWidth > windowHeight ? scaleFactorY : scaleFactorX;
+
+	double scaledWindowWidth = scaleFactor * screenWidthD;
+	double scaledWindowHeight = scaleFactor * screenHeightD;
+
+	double paddingX = (windowWidthD - scaledWindowWidth) / 2.0;
+	double paddingY = (windowHeight - scaledWindowHeight) / 2.0;
+	int windowPositionX = paddingX + (double)uiNewXPos * scaledWindowWidth / screenWidthD;
+	int windowPositionY = paddingY + (double)uiNewYPos * scaledWindowHeight / screenHeightD;
+
+	SDL_WarpMouseInWindow(GAME_WINDOW, windowPositionX, windowPositionY);
 }
 
 
