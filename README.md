@@ -33,7 +33,7 @@ Run ```ja2.exe -help``` for list of available options.
 
 The project is developed on [github](https://github.com/ja2-stracciatella/ja2-stracciatella).  Pull requests with bug fixes are very welcome.
 
-[![Build Status](https://travis-ci.org/gennady/ja2-stracciatella.svg?branch=master)](https://travis-ci.org/gennady/ja2-stracciatella)
+[![Build Status](https://travis-ci.org/ja2-stracciatella/ja2-stracciatella.svg?branch=master)](https://travis-ci.org/ja2-stracciatella/ja2-stracciatella)
 
 ### How to contribute
 
