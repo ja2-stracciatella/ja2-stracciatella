@@ -190,7 +190,8 @@ right_button:
 	}
 }
 
-void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv) {
+void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
+{
     if (WheelEv->y > 0)
     {
     	QueueMouseEvent(MOUSE_WHEEL_UP);
