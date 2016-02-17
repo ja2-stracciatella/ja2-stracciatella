@@ -235,7 +235,7 @@ void RenderRadarScreen()
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 
-		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH - 1, RADAR_WINDOW_HEIGHT - 1);
+		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH, RADAR_WINDOW_HEIGHT);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 		// Cycle fFlash variable
@@ -280,11 +280,21 @@ void RenderRadarScreen()
 
 			INT16 const sRadarTLX = sTopLeftWorldX     * gdScaleX - sRadarCX + sX       + sWidth  / 2;
 			INT16 const sRadarTLY = sTopLeftWorldY     * gdScaleY - sRadarCY + gsRadarY + sHeight / 2;
-			INT16 const sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX       + sWidth  / 2;
-			INT16 const sRadarBRY = sBottomRightWorldY * gdScaleY - sRadarCY + gsRadarY + sHeight / 2;
+			INT16 sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX       + sWidth  / 2;
+			INT16 sRadarBRY = sBottomRightWorldY * gdScaleY - sRadarCY + gsRadarY + sHeight / 2;
+
+			if(sRadarBRX >= RADAR_WINDOW_X + RADAR_WINDOW_WIDTH)
+			{
+				sRadarBRX = RADAR_WINDOW_X + RADAR_WINDOW_WIDTH - 1;
+			}
+			
+			if(sRadarBRY >= gsRadarY + RADAR_WINDOW_HEIGHT)
+			{
+				sRadarBRY = gsRadarY + RADAR_WINDOW_HEIGHT - 1;
+			}
 
 			UINT16 const line_colour = Get16BPPColor(FROMRGB(0, 255, 0));
-			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, line_colour, pDestBuf);
+			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY, line_colour, pDestBuf);
 
 			// Re-render radar
 			FOR_EACH_MERC(i)
