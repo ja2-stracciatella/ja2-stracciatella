@@ -8,7 +8,7 @@ The goal of the project was to make Jagged Alliance 2 available on a wide range 
 
 1. Install original Jagged Alliance 2 game on your computer.  Data files from the original game will be used by JA2-Stracciatella
 
-2. [Download JA2-Stracciatella](https://bitbucket.org/gennady/ja2-stracciatella/downloads) or [compile](COMPILATION.md) it from the source codes.
+2. [Download JA2-Stracciatella](https://github.com/ja2-stracciatella/ja2-stracciatella/releases) or [compile](COMPILATION.md) it from the source codes.
 
 3. Start the game the first time.  It will create the configuration file %USERPROFILE%\Documents\JA2\ja2.ini on Windows or ~/.ja2/ja2.ini on Unix-like systems.
 
