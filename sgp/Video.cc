@@ -211,6 +211,7 @@ void InitializeVideoManager(void)
 
 void ShutdownVideoManager(void)
 {
+	SLOGD(DEBUG_TAG_VIDEO, "Shutting down the video manager");
 	/* Toggle the state of the video manager to indicate to the refresh thread
 	 * that it needs to shut itself down */
 
@@ -887,6 +888,8 @@ void InitializeVideoSurfaceManager(void)
 
 void ShutdownVideoSurfaceManager(void)
 {
+  SLOGD(DEBUG_TAG_VIDEO, "Shutting down the Video Surface manager");
+
 	// Delete primary viedeo surfaces
 	DeletePrimaryVideoSurfaces();
 
