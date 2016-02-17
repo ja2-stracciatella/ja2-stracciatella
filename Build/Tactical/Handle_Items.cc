@@ -2308,6 +2308,10 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	// Get items from pending data
 
 	// Get objectype and delete
+	if (!pSoldier->pTempObject) {
+		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Attempted to give nonexisting item." );
+		return;
+	}
 	TempObject = *pSoldier->pTempObject;
 	MemFree( pSoldier->pTempObject );
 	pSoldier->pTempObject = NULL;
