@@ -77,7 +77,7 @@ struct CRDT_NODE
 #define		CRDT_NODE_DELAY_AMOUNT					25
 #define		CRDT_SPACE_BN_SECTIONS					50
 #define		CRDT_SPACE_BN_NODES							12
-#define		CRDT_START_POS_Y       					(SCREEN_HEIGHT - 10 - STD_SCREEN_Y ) //XX
+#define		CRDT_START_POS_Y       					(SCREEN_HEIGHT - 10 - STD_SCREEN_Y )
 
 #define		CRDT_EYE_WIDTH									30
 #define		CRDT_EYE_HEIGHT									12
@@ -396,7 +396,7 @@ static void HandleCreditNodes(void)
 	}
 
 	const CRDT_NODE* const head = g_credits_head;
-	if (head->sPosY + head->sHeightOfString < 0)	//XX
+	if (head->sPosY + head->sHeightOfString < 0)
 	{
 		DeleteFirstNode();
 	}
