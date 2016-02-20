@@ -1,3 +1,4 @@
+#include "UTF8String.h"
 #include "Types.h"
 #include "Input.h"
 #include "MemMan.h"
@@ -253,6 +254,8 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 		event_type = KEY_UP;
 	}
 	key_state = pressed;
+
+	QueueKeyEvent(event_type, key, mod, '\0');
 }
 
 
@@ -333,8 +336,8 @@ void KeyUp(const SDL_Keysym* KeySym)
 }
 
 void TextInput(const SDL_TextInputEvent* TextEv) {
-    // SELAUX: HANDLE TEXT INPUT SOMEHOW
-	// QueueKeyEvent(event_type, key, mod, key_sym->unicode);
+	UTF8String utf8String = UTF8String(TextEv->text);
+	QueueKeyEvent(KEY_DOWN, SDLK_UNKNOWN, KMOD_NONE, utf8String.getUTF16()[0]);
 }
 
 
