@@ -45,6 +45,11 @@
 
 #define MAX_NUM_FRAMES    25
 
+#define RED_MASK 0xF800
+#define GREEN_MASK 0x07E0
+#define BLUE_MASK 0x001F
+#define ALPHA_MASK 0
+
 
 static BOOLEAN gfVideoCapture = FALSE;
 static UINT32  guiFramePeriod = 1000 / 15;
@@ -145,19 +150,15 @@ void InitializeVideoManager(void)
 
   ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  Uint32 Rmask = 0xF800;
-  Uint32 Gmask = 0x07E0;
-  Uint32 Bmask = 0x001F;
-  Uint32 Amask = 0;
 	ScreenBuffer = SDL_CreateRGBSurface(
-           0,
-           SCREEN_WIDTH,
-           SCREEN_HEIGHT,
-           PIXEL_DEPTH,
-             Rmask,
-             Gmask,
-             Bmask,
-             Amask
+	           0,
+	           SCREEN_WIDTH,
+	           SCREEN_HEIGHT,
+	           PIXEL_DEPTH,
+             RED_MASK,
+             GREEN_MASK,
+             BLUE_MASK,
+             ALPHA_MASK
   );
 
   if (ScreenBuffer == NULL) {
@@ -166,7 +167,7 @@ void InitializeVideoManager(void)
 
 	FrameBuffer = SDL_CreateRGBSurface(
 		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
-		Rmask, Gmask, Bmask, Amask
+		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
 
 	if (FrameBuffer == NULL)
@@ -176,7 +177,7 @@ void InitializeVideoManager(void)
 
 	MouseCursor = SDL_CreateRGBSurface(
 		0, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
-		Rmask, Gmask, Bmask, Amask
+		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
 	SDL_SetColorKey(MouseCursor, SDL_TRUE, 0);
 
@@ -329,7 +330,7 @@ void InvalidateScreen(void)
 static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
 	SDL_Surface* Frame  = FrameBuffer;
-	SDL_Surface* Source = ScreenBuffer; // Primary
+	SDL_Surface* Source = SDL_CreateRGBSurface(0, ScreenBuffer->w, ScreenBuffer->h, PIXEL_DEPTH, RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK);
 	SDL_Surface* Dest   = ScreenBuffer; // Back
 	SDL_Rect     SrcRect;
 	SDL_Rect     DstRect;
@@ -338,6 +339,8 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 
 	const UINT16 usWidth  = SCREEN_WIDTH;
 	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
+
+	SDL_BlitSurface(ScreenBuffer, NULL, Source, NULL);
 
 	if (sScrollXIncrement < 0)
 	{
@@ -436,6 +439,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	r.h = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 	SDL_RenderCopy(GameRenderer, screenTexture, &r, &r);
 
+	SDL_FreeSurface(Source);
 	SDL_DestroyTexture(screenTexture);
 }
 
