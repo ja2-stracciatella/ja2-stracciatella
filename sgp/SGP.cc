@@ -585,11 +585,21 @@ static bool getResourceVersion(const char *versionName, GameVersion *version)
   return true;
 }
 
-static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               CommandLineParams *params)
+static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *params)
 {
 	const char* const name = *argv;
 	if (name == NULL) return TRUE; // argv does not even contain the program name
+
+#ifdef WITH_UNITTESTS
+  for(int i = 1; i < argc; i++)
+  {
+    if (strcmp(argv[i], "-unittests") == 0)
+    {
+      params->doUnitTests = true;
+      return true;
+    }
+  }
+#endif
 
 	BOOLEAN success = TRUE;
   for(int i = 1; i < argc; i++)
@@ -608,22 +618,13 @@ static BOOLEAN ParseParameters(int argc, char* const argv[],
 		{
 			VideoSetFullScreen(FALSE);
 		}
-#ifdef WITH_UNITTESTS
-    else if (strcmp(argv[i], "-unittests") == 0)
-    {
-      params->doUnitTests = true;
-      return true;
-    }
-#endif
     else if (strcmp(argv[i], "-debug") == 0)
     {
       params->showDebugMessages = true;
-      return true;
     }
     else if (strcmp(argv[i], "-no3btnmouse") == 0)
     {
       params->no3btnmouse = true;
-      return true;
     }
 		else if (strcmp(argv[i], "-res") == 0)
 		{
