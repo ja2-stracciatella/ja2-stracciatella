@@ -67,6 +67,31 @@ ifdef USE_MINGW
 endif
 
 ############################################################
+# Boost Library settings.
+# Project can be built with local Boost library (from _build/lib-boost)
+# or system installed Boost library.
+############################################################
+# using local Boost library
+SRCS_BOOST :=
+ifdef LOCAL_BOOST_LIB
+	CFLAGS += -I _build/lib-boost
+	SRCS_BOOST += _build/lib-boost/libs/system/src/error_code.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/codecvt_error_category.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/operations.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/path.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/path_traits.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/portability.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/unique_path.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/utf8_codecvt_facet.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
+endif
+
+ifndef LOCAL_BOOST_LIB
+	CFLAGS += -I /usr/include/boost
+	LDFLAGS += -L /usr/lib/ -lboost_filesystem -lboost_system -lboost_regex
+endif
+
+############################################################
 # Debug build?
 ############################################################
 ifdef WITH_DEBUGINFO
@@ -86,7 +111,6 @@ CFLAGS += -I Build/Utils
 CFLAGS += -I sgp
 CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
-CFLAGS += -I _build/lib-boost
 CFLAGS += -I _build/lib-rapidjson
 CFLAGS += -I _build/lib-slog
 CFLAGS += -I _build/lib-smacker/libsmacker
@@ -152,6 +176,7 @@ ifdef WITH_ZLIB
 endif
 
 SRCS :=
+SRCS += $(SRCS_BOOST)
 SRCS += Build/AniViewScreen.cc
 SRCS += Build/Credits.cc
 SRCS += Build/UILayout.cc
@@ -512,16 +537,6 @@ SRCS += _build/lib-MicroIni/src/MicroIni/File.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Section.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Value.cpp
-
-SRCS += _build/lib-boost/libs/system/src/error_code.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/codecvt_error_category.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/operations.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/path.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/path_traits.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/portability.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/unique_path.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/utf8_codecvt_facet.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
 
 SRCS += _build/lib-slog/slog/slog.c
 
