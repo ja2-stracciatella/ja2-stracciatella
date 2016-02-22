@@ -14,46 +14,38 @@
 #   INSTALLABLE                := "yes"
 # In this case application can be installed.
 
-
 # By default build the project with unit tests.
 # If you want to build without them, use make WITH_UNITTESTS=0
 WITH_UNITTESTS ?= 1
-
 WITH_LPTHREAD ?= 1
 
 BINARY    ?= ja2
-
 VERSION := 0.15.x
 GAME_VERSION := v$(VERSION)
 ICON_THEME = hicolor
 
 CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
 
-
 ############################################################
 # SDL Library settings.
 # Project can be built with local SDL library (from _build/lib-SDL-devel-*)
 # or system installed SDL library.
 ############################################################
-
-
+# using local SDL library
 ifdef LOCAL_SDL_LIB
-CFLAGS_SDL= -I./$(LOCAL_SDL_LIB)/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main
-LDFLAGS_SDL=-L./$(LOCAL_SDL_LIB)/lib -lmingw32 -lSDLmain -lSDL -mwindows
+	CFLAGS_SDL= -I./$(LOCAL_SDL_LIB)/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main
+	LDFLAGS_SDL=-L./$(LOCAL_SDL_LIB)/lib -lmingw32 -lSDLmain -lSDL -mwindows
 endif
-
-ifndef LOCAL_SDL_LIB
 
 # using system SDL library
-
-SDL_CONFIG  ?= sdl-config
-ifndef CFLAGS_SDL
-CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
-endif
-ifndef LDFLAGS_SDL
-LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
-endif
-
+ifndef LOCAL_SDL_LIB
+	SDL_CONFIG  ?= sdl-config
+	ifndef CFLAGS_SDL
+		CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
+	endif
+	ifndef LDFLAGS_SDL
+		LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
+	endif
 endif
 
 CFLAGS += $(CFLAGS_SDL)
@@ -63,28 +55,22 @@ LDFLAGS += $(LDFLAGS_SDL)
 # MinGW settings for building on Windows and for
 # cross-building on Linux
 ############################################################
-
 ifdef USE_MINGW
-
-ifndef MINGW_PREFIX
-$(error MINGW_PREFIX is not specified.  Examples: MINGW_PREFIX=i586-mingw32msvc (on Linux), MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 (on Windows))
-endif
-
-CC=$(MINGW_PREFIX)-gcc
-CXX=$(MINGW_PREFIX)-g++
-CPP=$(MINGW_PREFIX)-cpp
-RANLIB=$(MINGW_PREFIX)-ranlib
-
-CFLAGS += -mwindows -mconsole
-
+	ifndef MINGW_PREFIX
+		$(error MINGW_PREFIX is not specified.  Examples: MINGW_PREFIX=i586-mingw32msvc (on Linux), MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 (on Windows))
+	endif
+	CC=$(MINGW_PREFIX)-gcc
+	CXX=$(MINGW_PREFIX)-g++
+	CPP=$(MINGW_PREFIX)-cpp
+	RANLIB=$(MINGW_PREFIX)-ranlib
+	CFLAGS += -mwindows -mconsole
 endif
 
 ############################################################
-#
+# Debug build?
 ############################################################
-
 ifdef WITH_DEBUGINFO
-CFLAGS += -g
+	CFLAGS += -g
 endif
 
 CFLAGS += -I .
@@ -118,7 +104,6 @@ CFLAGS += -Wunused-function
 CFLAGS += -DJA2
 CFLAGS += -DMICROINI_STATIC
 
-
 ifdef WITH_FIXMES
   CFLAGS += -DWITH_FIXMES
 endif
@@ -141,12 +126,12 @@ endif
 ifdef JA2TESTVERSION
   CFLAGS += -DJA2TESTVERSION
   ifndef JA2BETAVERSION
-	JA2BETAVERSION := yes
+		JA2BETAVERSION := yes
   endif
 endif
 
 ifdef JA2BETAVERSION
-CFLAGS += -DJA2BETAVERSION -DSGP_DEBUG -DFORCE_ASSERTS_ON -DSGP_VIDEO_DEBUGGING
+	CFLAGS += -DJA2BETAVERSION -DSGP_DEBUG -DFORCE_ASSERTS_ON -DSGP_VIDEO_DEBUGGING
 endif
 
 CCFLAGS += $(CFLAGS)
@@ -156,21 +141,45 @@ CCFLAGS += -Wimplicit-int
 CCFLAGS += -Wmissing-prototypes
 
 CXXFLAGS += $(CFLAGS)
-
 LDFLAGS += -lm
 
 ifeq "$(WITH_LPTHREAD)" "1"
-LDFLAGS += -lpthread
+	LDFLAGS += -lpthread
 endif
 
 ifdef WITH_ZLIB
-LDFLAGS += -lz
+	LDFLAGS += -lz
 endif
 
 SRCS :=
 SRCS += Build/AniViewScreen.cc
 SRCS += Build/Credits.cc
 SRCS += Build/UILayout.cc
+SRCS += Build/Cheats.cc
+SRCS += Build/Fade_Screen.cc
+SRCS += Build/GameInitOptionsScreen.cc
+SRCS += Build/GameLoop.cc
+SRCS += Build/GameRes.cc
+SRCS += Build/GameState.cc
+SRCS += Build/GameScreen.cc
+SRCS += Build/GameSettings.cc
+SRCS += Build/GameVersion.cc
+SRCS += Build/HelpScreen.cc
+SRCS += Build/Init.cc
+SRCS += Build/Intro.cc
+SRCS += Build/JA2_Splash.cc
+SRCS += Build/JAScreens.cc
+SRCS += Build/LoadSaveEMail.cc
+SRCS += Build/LoadSaveTacticalStatusType.cc
+SRCS += Build/Loading_Screen.cc
+SRCS += Build/MainMenuScreen.cc
+SRCS += Build/MercPortrait.cc
+SRCS += Build/MessageBoxScreen.cc
+SRCS += Build/Options_Screen.cc
+SRCS += Build/SaveLoadGame.cc
+SRCS += Build/SaveLoadScreen.cc
+SRCS += Build/Screens.cc
+SRCS += Build/Sys_Globals.cc
 
 SRCS += Build/Editor/Cursor_Modes.cc
 SRCS += Build/Editor/EditScreen.cc
@@ -197,21 +206,6 @@ SRCS += Build/Editor/SmartMethod.cc
 SRCS += Build/Editor/Smooth.cc
 SRCS += Build/Editor/Smoothing_Utils.cc
 
-SRCS += Build/Cheats.cc
-SRCS += Build/Fade_Screen.cc
-SRCS += Build/GameInitOptionsScreen.cc
-SRCS += Build/GameLoop.cc
-SRCS += Build/GameRes.cc
-SRCS += Build/GameState.cc
-SRCS += Build/GameScreen.cc
-SRCS += Build/GameSettings.cc
-SRCS += Build/GameVersion.cc
-
-SRCS += Build/HelpScreen.cc
-SRCS += Build/Init.cc
-SRCS += Build/Intro.cc
-SRCS += Build/JA2_Splash.cc
-SRCS += Build/JAScreens.cc
 SRCS += Build/Laptop/AIM.cc
 SRCS += Build/Laptop/AIMArchives.cc
 SRCS += Build/Laptop/AIMFacialIndex.cc
@@ -267,16 +261,7 @@ SRCS += Build/Laptop/Mercs_Files.cc
 SRCS += Build/Laptop/Mercs_No_Account.cc
 SRCS += Build/Laptop/Personnel.cc
 SRCS += Build/Laptop/Store_Inventory.cc
-SRCS += Build/LoadSaveEMail.cc
-SRCS += Build/LoadSaveTacticalStatusType.cc
-SRCS += Build/Loading_Screen.cc
-SRCS += Build/MainMenuScreen.cc
-SRCS += Build/MercPortrait.cc
-SRCS += Build/MessageBoxScreen.cc
-SRCS += Build/Options_Screen.cc
-SRCS += Build/SaveLoadGame.cc
-SRCS += Build/SaveLoadScreen.cc
-SRCS += Build/Screens.cc
+
 SRCS += Build/Strategic/AI_Viewer.cc
 SRCS += Build/Strategic/Assignments.cc
 SRCS += Build/Strategic/Auto_Resolve.cc
@@ -320,7 +305,7 @@ SRCS += Build/Strategic/Strategic_Status.cc
 SRCS += Build/Strategic/Strategic_Town_Loyalty.cc
 SRCS += Build/Strategic/Strategic_Turns.cc
 SRCS += Build/Strategic/Town_Militia.cc
-SRCS += Build/Sys_Globals.cc
+
 SRCS += Build/Tactical/Air_Raid.cc
 SRCS += Build/Tactical/Animation_Cache.cc
 SRCS += Build/Tactical/Animation_Control.cc
@@ -396,6 +381,7 @@ SRCS += Build/Tactical/UI_Cursors.cc
 SRCS += Build/Tactical/Vehicles.cc
 SRCS += Build/Tactical/Weapons.cc
 SRCS += Build/Tactical/World_Items.cc
+
 SRCS += Build/TacticalAI/AIList.cc
 SRCS += Build/TacticalAI/AIMain.cc
 SRCS += Build/TacticalAI/AIUtils.cc
@@ -409,6 +395,7 @@ SRCS += Build/TacticalAI/Movement.cc
 SRCS += Build/TacticalAI/NPC.cc
 SRCS += Build/TacticalAI/PanicButtons.cc
 SRCS += Build/TacticalAI/Realtime.cc
+
 SRCS += Build/TileEngine/Ambient_Control.cc
 SRCS += Build/TileEngine/Buildings.cc
 SRCS += Build/TileEngine/Environment.cc
@@ -448,6 +435,7 @@ SRCS += Build/TileEngine/Tile_Surface.cc
 SRCS += Build/TileEngine/WorldDat.cc
 SRCS += Build/TileEngine/WorldDef.cc
 SRCS += Build/TileEngine/WorldMan.cc
+
 SRCS += Build/Utils/Animated_ProgressBar.cc
 SRCS += Build/Utils/Cinematics.cc
 SRCS += Build/Utils/Cursors.cc
@@ -470,6 +458,7 @@ SRCS += Build/Utils/Text_Utils.cc
 SRCS += Build/Utils/Timer_Control.cc
 SRCS += Build/Utils/Utilities.cc
 SRCS += Build/Utils/WordWrap.cc
+
 SRCS += sgp/Button_Sound_Control.cc
 SRCS += sgp/Button_System.cc
 SRCS += sgp/Cursor_Control.cc
@@ -548,32 +537,31 @@ LNGS += Build/Utils/_GermanText.cc
 LNGS += Build/Utils/_ItalianText.cc
 LNGS += Build/Utils/_PolishText.cc
 LNGS += Build/Utils/_RussianText.cc
-
 SRCS += $(LNGS)
 
 ifeq "$(WITH_UNITTESTS)" "1"
-CFLAGS += -D WITH_UNITTESTS
-CFLAGS += -I _build/lib-gtest/include
-CFLAGS += -I _build/lib-gtest
-SRCS += _build/lib-gtest/src/gtest.cc
-SRCS += _build/lib-gtest/src/gtest-death-test.cc
-SRCS += _build/lib-gtest/src/gtest-filepath.cc
-SRCS += _build/lib-gtest/src/gtest-port.cc
-SRCS += _build/lib-gtest/src/gtest-printers.cc
-SRCS += _build/lib-gtest/src/gtest-test-part.cc
-SRCS += _build/lib-gtest/src/gtest-typed-test.cc
-SRCS += Build/SaveLoadGame_unittest.cc
-SRCS += Build/Tactical/LoadSaveMercProfile_unittest.cc
-SRCS += Build/VanillaDataStructures_unittest.cc
-SRCS += sgp/FileMan_unittest.cc
-SRCS += sgp/LoadSaveData_unittest.cc
-SRCS += sgp/UTF8String_unittest.cc
-SRCS += sgp/wchar_unittest.cc
-SRCS += src/DefaultContentManagerUT.cc
-SRCS += src/DefaultContentManager_unittests.cc
-SRCS += src/JsonUtility_unittests.cc
-SRCS += src/VanillaWeapons_unittests.cc
-SRCS += src/TestUtils.cc
+	CFLAGS += -D WITH_UNITTESTS
+	CFLAGS += -I _build/lib-gtest/include
+	CFLAGS += -I _build/lib-gtest
+	SRCS += _build/lib-gtest/src/gtest.cc
+	SRCS += _build/lib-gtest/src/gtest-death-test.cc
+	SRCS += _build/lib-gtest/src/gtest-filepath.cc
+	SRCS += _build/lib-gtest/src/gtest-port.cc
+	SRCS += _build/lib-gtest/src/gtest-printers.cc
+	SRCS += _build/lib-gtest/src/gtest-test-part.cc
+	SRCS += _build/lib-gtest/src/gtest-typed-test.cc
+	SRCS += Build/SaveLoadGame_unittest.cc
+	SRCS += Build/Tactical/LoadSaveMercProfile_unittest.cc
+	SRCS += Build/VanillaDataStructures_unittest.cc
+	SRCS += sgp/FileMan_unittest.cc
+	SRCS += sgp/LoadSaveData_unittest.cc
+	SRCS += sgp/UTF8String_unittest.cc
+	SRCS += sgp/wchar_unittest.cc
+	SRCS += src/DefaultContentManagerUT.cc
+	SRCS += src/DefaultContentManager_unittests.cc
+	SRCS += src/JsonUtility_unittests.cc
+	SRCS += src/VanillaWeapons_unittests.cc
+	SRCS += src/TestUtils.cc
 endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))
@@ -662,9 +650,9 @@ fix-permissions:
 
 WIN_RELEASE_BASE_DIR := "release-win-mingw-cross"
 ifdef BETA
-WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win-beta"
+	WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win-beta"
 else
-WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win"
+	WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win"
 endif
 WIN_RELEASE := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME)
 WIN_RELEASE_ZIP := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME).zip
@@ -679,7 +667,8 @@ SRC_RELEASE_BASE_DIR := "release-src"
 build-beta-win-release-on-linux:
 	make BETA=1 build-win-release-on-linux
 
-# sudo apt-get install gcc-mingw-w64 g++-mingw-w64
+# build windows release on linux. Make sure to have installed:
+# gcc-mingw-w64 g++-mingw-w64
 build-win-release-on-linux:
 	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
 	mkdir -p $(WIN_RELEASE)
@@ -726,6 +715,7 @@ build-on-win:
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll .
 
 SOURCE_DIR_NAME := ja2-stracciatella_$(VERSION)
+
 build-source-archive:
 	mkdir -p $(SRC_RELEASE_BASE_DIR)
 	git archive HEAD --prefix=$(SOURCE_DIR_NAME)/ | gzip >$(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz
