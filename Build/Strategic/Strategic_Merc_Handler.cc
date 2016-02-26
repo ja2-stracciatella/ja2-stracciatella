@@ -385,9 +385,8 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 		{
 			//Send the merc home
 
-			InterruptTime( );
+			InterruptTime();
 			PauseGame();
-			LockPauseState(LOCK_PAUSE_09);
 
 			// Say quote for wishing to leave
 			TacticalCharacterDialogue( pSoldier, QUOTE_NOT_GETTING_PAID );
@@ -399,9 +398,8 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 	}
 	else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC )
 	{
-		InterruptTime( );
+		InterruptTime();
 		PauseGame();
-		LockPauseState(LOCK_PAUSE_10);
 
 		TacticalCharacterDialogue( pSoldier, QUOTE_AIM_SEEN_MIKE );
 

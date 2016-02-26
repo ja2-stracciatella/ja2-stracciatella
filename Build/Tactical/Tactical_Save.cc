@@ -743,6 +743,9 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 			def.sGridNo = gMapInformation.sWestGridNo;
 		}
 
+		/* Don't add a corpse on an invalid gridno */
+		if (def.sGridNo >= WORLD_MAX || def.sGridNo < 0) continue;
+
 		/* ATE: Don't place corpses if not loading a savegame, in town, indoors and
 		 * the corpse is too old */
 		if (maybe_dont_add &&
