@@ -5151,18 +5151,13 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				case( ASSIGN_MENU_REPAIR ):
 					if( CanCharacterRepair( pSoldier ) )
 					{
-
 						fShowSquadMenu = FALSE;
 						fShowTrainingMenu = FALSE;
 						fShowVehicleMenu = FALSE;
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
-
-						if( pSoldier -> bSectorZ ==0 )
-						{
-							fShowRepairMenu = TRUE;
-							DisplayRepairMenu(*pSoldier);
-						}
+						fShowRepairMenu = TRUE;
+						DisplayRepairMenu(*pSoldier);
 					}
 					else if( CanCharacterRepairButDoesntHaveARepairkit( pSoldier ) )
 					{
