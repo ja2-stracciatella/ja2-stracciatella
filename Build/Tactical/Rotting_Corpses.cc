@@ -41,6 +41,7 @@
 #include "QArray.h"
 #include "Interface.h"
 #include "MemMan.h"
+#include "WorldMan.h"
 
 #include "FileMan.h"
 #include "ContentManager.h"
@@ -1156,7 +1157,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 		{
 			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
 			if ( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) &&
-				gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
+				gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REACHABLE && !Water(sGridNo) )
 			{
 				// Go on sweet stop
 				if ( NewOKDestination( &soldier, sGridNo, TRUE, soldier.bLevel ) )
