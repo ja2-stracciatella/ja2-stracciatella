@@ -680,7 +680,7 @@ build-win-release-on-linux:
 	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
 	cp -R _unittests $(WIN_RELEASE)
 	cp -R externalized $(WIN_RELEASE)
-	cp Changelog $(WIN_RELEASE)/Changelog.txt
+	cp docs/archeology/Changelog $(WIN_RELEASE)/Changelog.txt
 	cp changes.md $(WIN_RELEASE)/changes.md
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
 
@@ -701,7 +701,7 @@ build-release-on-mac:
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
 	cp -R _unittests $(MAC_RELEASE)
 	cp -R externalized $(MAC_RELEASE)
-	cp Changelog $(MAC_RELEASE)/Changelog.txt
+	cp docs/archeology/Changelog $(MAC_RELEASE)/Changelog.txt
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
 
