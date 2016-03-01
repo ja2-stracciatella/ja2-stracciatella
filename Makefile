@@ -690,7 +690,7 @@ build-win-release-on-linux:
 # end users to setup the library.  LGPL allows static linking if we
 # provide source codes for our application.
 MACOS_SDL_STATIC=./_build/lib-SDL-devel-1.2.15-macos-i386
-MACOS_STATIC_CFLAGS_SDL=-arch i386 -I$(MACOS_SDL_STATIC)/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+MACOS_STATIC_CFLAGS_SDL=-arch i386 -mmacosx-version-min=10.5 -I$(MACOS_SDL_STATIC)/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 MACOS_STATIC_LDFLAGS_SDL=$(MACOS_SDL_STATIC)/lib/libSDLmain.a $(MACOS_SDL_STATIC)/lib/libSDL.a  -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit
 build-release-on-mac:
 	-rm -rf $(MAC_RELEASE) $(MAC_RELEASE_ZIP)
