@@ -64,10 +64,10 @@ struct CRDT_NODE
 #define		CRDT_END_OF_SECTION							'}'
 
 
-#define		CRDT_NAME_LOC_X										375
-#define		CRDT_NAME_LOC_Y										420
-#define		CRDT_NAME_TITLE_LOC_Y							435
-#define		CRDT_NAME_FUNNY_LOC_Y							450
+#define		CRDT_NAME_LOC_X										(375 + STD_SCREEN_X)
+#define		CRDT_NAME_LOC_Y										(420 + STD_SCREEN_Y)
+#define		CRDT_NAME_TITLE_LOC_Y							(435 + STD_SCREEN_Y)
+#define		CRDT_NAME_FUNNY_LOC_Y							(450 + STD_SCREEN_Y)
 #define		CRDT_NAME_LOC_WIDTH								260
 #define		CRDT_NAME_LOC_HEIGHT							( CRDT_NAME_FUNNY_LOC_Y - CRDT_NAME_LOC_Y + GetFontHeight( CRDT_NAME_FONT ) )
 
@@ -75,7 +75,7 @@ struct CRDT_NODE
 
 
 #define		CRDT_WIDTH_OF_TEXT_AREA					210
-#define		CRDT_TEXT_START_LOC							10
+#define		CRDT_TEXT_START_LOC							(10 + STD_SCREEN_X)
 
 
 #define		CRDT_SCROLL_PIXEL_AMOUNT				1
@@ -84,7 +84,7 @@ struct CRDT_NODE
 #define		CRDT_SPACE_BN_SECTIONS					50
 #define		CRDT_SPACE_BN_NODES							12
 
-#define CRDT_START_POS_Y        (SCREEN_HEIGHT - 1)
+#define CRDT_START_POS_Y        (SCREEN_HEIGHT - 1 - STD_SCREEN_Y)
 
 #define		CRDT_EYE_WIDTH									30
 #define		CRDT_EYE_HEIGHT									12
@@ -220,8 +220,8 @@ try
 		// Make a mouse region
 		MOUSE_REGION* const  r = &gCrdtMouseRegions[i];
 		CreditFace    const& f = gCreditFaces[i];
-		UINT16        const  x = f.sX;
-		UINT16        const  y = f.sY;
+		UINT16        const  x = f.sX + STD_SCREEN_X;
+		UINT16        const  y = f.sY + STD_SCREEN_Y;
 		UINT16        const  w = f.sWidth;
 		UINT16        const  h = f.sHeight;
 		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
@@ -293,7 +293,7 @@ static void HandleCreditScreen(void)
 
 static void RenderCreditScreen(void)
 {
-  BltVideoObject(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
+  BltVideoObject(FRAME_BUFFER, guiCreditBackGroundImage, 0, STD_SCREEN_X, STD_SCREEN_Y);
 	InvalidateScreen();
 }
 
@@ -419,14 +419,16 @@ static void DisplayCreditNode(const CRDT_NODE* const pCurrent)
 	INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
 	INT16 h = pCurrent->sHeightOfString;
 	/* Clip to the screen area */
-	if (y < 0)
+	if (y < STD_SCREEN_Y)
 	{
-		h += y;
-		y = 0;
+		//upper limit of screen
+		h += (y - STD_SCREEN_Y);
+		y = STD_SCREEN_Y;
 	}
-	else if (y + h > SCREEN_HEIGHT)
+	else if (y + h > (SCREEN_HEIGHT - STD_SCREEN_Y))
 	{
-		h = SCREEN_HEIGHT - y;
+		//lower limit of the screen
+		h = SCREEN_HEIGHT - STD_SCREEN_Y - y;
 	}
 	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, y, CRDT_WIDTH_OF_TEXT_AREA, h);
 
@@ -557,8 +559,8 @@ static void HandleCreditEyeBlinking()
 		UINT32 const now = GetJA2Clock();
 		if (now - f.uiLastBlinkTime > f.sBlinkFreq)
 		{
-			INT32 const x = f.sEyeX;
-			INT32 const y = f.sEyeY;
+			INT32 const x = f.sEyeX + STD_SCREEN_X;
+			INT32 const y = f.sEyeY + STD_SCREEN_Y;
 			BltVideoObject(FRAME_BUFFER, guiCreditFaces, gfx, x, y);
 			InvalidateRegion(x, y, x + CRDT_EYE_WIDTH, y + CRDT_EYE_HEIGHT);
 
@@ -567,7 +569,7 @@ static void HandleCreditEyeBlinking()
 		}
 		else if (now > f.uiEyesClosedTime)
 		{
-			RestoreExternBackgroundRect(f.sEyeX, f.sEyeY, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT);
+			RestoreExternBackgroundRect(f.sEyeX + STD_SCREEN_X, f.sEyeY + STD_SCREEN_Y, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT);
 
 			f.uiEyesClosedTime = 0;
 		}
