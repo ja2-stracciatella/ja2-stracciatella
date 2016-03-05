@@ -2890,21 +2890,6 @@ UINT16 UseKitPoints(OBJECTTYPE& o, UINT16 const original_points, SOLDIERTYPE con
 	return original_points - points;
 }
 
-
-static UINT16 MagazineClassIndexToItemType(UINT16 const mag_idx)
-{
-	/* Note: if any ammo items in the item table are separated from the main
-	 * group, this function will have to be rewritten to scan the item table for
-	 * an item with item class ammo, which has class index mag_idx */
-	for (UINT16 i = FIRST_AMMO; i != MAXITEMS; ++i)
-	{
-		if (GCM->getItem(i)->getClassIndex() != mag_idx) continue;
-		return i;
-	}
-	return NOTHING;
-}
-
-
 UINT16 DefaultMagazine(UINT16 const gun)
 {
 	if (!(GCM->getItem(gun)->isGun()))

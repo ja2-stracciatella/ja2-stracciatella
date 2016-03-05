@@ -305,53 +305,6 @@ static void PlayAutoResolveSample(const std::string &sample, UINT32 const ubVolu
 	}
 }
 
-
-static void EliminateAllMercs(void)
-{
-	SOLDIERCELL *pAttacker = NULL;
-	if( gpAR )
-	{
-		FOR_EACH_AR_ENEMY(i)
-		{
-			if (i->pSoldier->bLife == 0) continue;
-			pAttacker = i;
-			break;
-		}
-		if( pAttacker )
-		{
-			INT32 iNum = 0;
-			FOR_EACH_AR_MERC(i)
-			{
-				SOLDIERTYPE& s = *i->pSoldier;
-				if (s.bLife == 0) continue;
-
-				s.bLife           = 1;
-				i->usNextHit[0]   = 250 * ++iNum;
-				i->usHitDamage[0] = 100;
-				i->pAttacker[0]   = pAttacker;
-			}
-		}
-	}
-}
-
-
-static void EliminateAllFriendlies(void)
-{
-	if( gpAR )
-	{
-		FOR_EACH_AR_MERC(i)
-		{
-			i->pSoldier->bLife = 0;
-		}
-		gpAR->ubAliveMercs = 0;
-		FOR_EACH_AR_CIV(i)
-		{
-			i->pSoldier->bLife = 0;
-		}
-		gpAR->ubAliveCivs = 0;
-	}
-}
-
 void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 {
 	SECTORINFO *pSector;

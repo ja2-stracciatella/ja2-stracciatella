@@ -1187,7 +1187,6 @@ static void RefreshSoldier(void);
 static void SetBurstMode(void);
 static void TeleportSelectedSoldier(void);
 static void TestCapture();
-static void TestMeanWhile(INT32 iID);
 static void ToggleCliffDebug();
 static void ToggleTreeTops(void);
 static void ToggleViewAllItems(void);
@@ -3223,37 +3222,6 @@ static void HandleSelectMercSlot(UINT8 const ubPanelSlot, bool const force_selec
 		gfPlotNewMovement = TRUE;
 	}
 }
-
-
-static void TestMeanWhile(INT32 iID)
-{
-	INT16 x;
-	INT16 y;
-	if ( iID == INTERROGATION )
-	{
-		x =  7;
-		y = 14;
-
-		// Loop through our mercs and set gridnos once some found.....
-		FOR_EACH_IN_TEAM(s, OUR_TEAM)
-		{
-			if (s->bInSector)
-			{
-				ChangeSoldiersAssignment(s, ASSIGNMENT_POW);
-				s->sSectorX = 7;
-				s->sSectorY = 14;
-			}
-		}
-	}
-	else
-	{
-		x =  3;
-		y = 16;
-	}
-
-	ScheduleMeanwhileEvent(x, y, 0, iID, QUEEN, 10);
-}
-
 
 static void EscapeUILock(void)
 {

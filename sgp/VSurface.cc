@@ -179,10 +179,6 @@ void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1,
 	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, IntensityTable);
 }
 
-
-static void DeletePrimaryVideoSurfaces(void);
-
-
 SGPVSurface* g_back_buffer;
 SGPVSurfaceAuto* g_frame_buffer;
 SGPVSurfaceAuto* g_mouse_buffer;

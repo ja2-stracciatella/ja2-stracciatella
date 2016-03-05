@@ -64,46 +64,6 @@ void CreateACharacterFromPlayerEnteredStats(void)
 	SelectMercFace();
 }
 
-
-static BOOLEAN DoesCharacterHaveAnAttitude(void)
-{
-	// simply checks if caracter has an attitude other than normal
-	switch (iAttitude)
-	{
-		case ATT_LONER:
-		case ATT_PESSIMIST:
-		case ATT_ARROGANT:
-		case ATT_BIG_SHOT:
-		case ATT_ASSHOLE:
-		case ATT_COWARD:
-			return TRUE;
-
-		default:
-			return FALSE;
-	}
-}
-
-
-static BOOLEAN DoesCharacterHaveAPersoanlity(void)
-{
-	// only one we can get is PSYCHO, and that is not much of a penalty
-	return( FALSE );
-	/*
-	// simply checks if caracter has a personality other than normal
-  if( iPersonality != NO_PERSONALITYTRAIT )
-	{
-		// yep
-	  return ( TRUE );
-	}
-	else
-	{
-		// nope
-		return ( FALSE );
-	}
-	*/
-}
-
-
 static void CreatePlayerAttitude(void)
 {
   // this function will 'roll a die' and decide if any attitude does exists

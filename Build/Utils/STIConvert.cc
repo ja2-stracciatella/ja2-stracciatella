@@ -46,16 +46,6 @@
 
 //#define JA2_OBJECT_DATA_SIZE	16
 
-
-static void ConvertRGBDistribution555To565(UINT16* p16BPPData, UINT32 uiNumberOfPixels)
-{
-	for (UINT16* Px = p16BPPData; Px != p16BPPData + uiNumberOfPixels; ++Px)
-	{
-		*Px = ((*Px << 1) & ~0x003F) | (*Px & 0x001F);
-	}
-}
-
-
 static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, STCISubImage** ppSubImageBuffer, UINT16* pusNumberOfSubImages, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, UINT32 fFlags);
 
 
