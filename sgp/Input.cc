@@ -118,7 +118,7 @@ static void UpdateMousePos(const SDL_MouseButtonEvent* BtnEv)
 }
 
 
-#if defined WITH_MAEMO
+#if defined(WITH_MAEMO) || defined __APPLE__
 static BOOLEAN g_down_right;
 #endif
 
@@ -137,6 +137,11 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 			g_down_right = key_state[SDL_SCANCODE_F4];
 			if (g_down_right) goto right_button;
 #endif
+#if defined(__APPLE__)
+			const Uint8* const key_state = SDL_GetKeyboardState(NULL);
+			g_down_right = key_state[SDL_SCANCODE_LGUI] || key_state[SDL_SCANCODE_RGUI];
+			if (g_down_right) goto right_button;
+#endif
 			guiLeftButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfLeftButtonState = TRUE;
 			QueueMouseEvent(LEFT_BUTTON_DOWN);
@@ -144,7 +149,7 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 		}
 
 		case SDL_BUTTON_RIGHT:
-#if defined WITH_MAEMO
+#if defined(WITH_MAEMO) || defined(__APPLE__)
 right_button:
 #endif
 			guiRightButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
@@ -162,7 +167,7 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 	{
 		case SDL_BUTTON_LEFT:
 		{
-#if defined WITH_MAEMO
+#if defined(WITH_MAEMO) || defined(__APPLE__)
 			if (g_down_right) goto right_button;
 #endif
 			guiLeftButtonRepeatTimer = 0;
@@ -181,7 +186,7 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 		}
 
 		case SDL_BUTTON_RIGHT:
-#if defined WITH_MAEMO
+#if defined WITH_MAEMO || defined(__APPLE__)
 right_button:
 #endif
 			guiRightButtonRepeatTimer = 0;

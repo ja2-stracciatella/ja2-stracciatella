@@ -278,7 +278,6 @@ struct CommandLineParams
     doUnitTests = false;
     showDebugMessages = false;
     resourceVersionGiven = false;
-    no3btnmouse = false;
   }
 
   bool useMod;
@@ -289,7 +288,6 @@ struct CommandLineParams
 
   bool doUnitTests;
   bool showDebugMessages;
-  bool no3btnmouse;
 };
 
 static BOOLEAN ParseParameters(int argc, char* const argv[],
@@ -343,15 +341,6 @@ try
   ////////////////////////////////////////////////////////////
 
 	SDL_Init(SDL_INIT_VIDEO);
-
-#ifdef __APPLE__
-  // Enable 3-button mouse support if the user haven't instructed
-  // otherwise
-  if(!params.no3btnmouse)
-  {
-    SDL_putenv(const_cast<char*>("SDL_HAS3BUTTONMOUSE=1"));
-  }
-#endif
 
   // restore output to the console (on windows when built with MINGW)
 #ifdef __MINGW32__
@@ -602,10 +591,6 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
       params->showDebugMessages = true;
       GameState::getInstance()->setDebugging(true);
     }
-    else if (strcmp(argv[i], "-no3btnmouse") == 0)
-    {
-      params->no3btnmouse = true;
-    }
 		else if (strcmp(argv[i], "-res") == 0)
 		{
       if(haveNextParameter)
@@ -712,10 +697,6 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
       "  -unittests   Perform unit tests\n"
       "                 ja2.exe -unittests [gtest options]\n"
       "                 E.g. ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2\n"
-#endif
-#ifdef __APPLE__
-      "  -no3btnmouse Disable 3-button mouse support.  Moving backward with Option + Left\n"
-      "               mouse button will not work\n"
 #endif
 			"  -editor      Start the map editor (Editor.slf is required)\n"
 			"  -editorauto  Start the map editor and load sector A9 (Editor.slf is required)\n"
