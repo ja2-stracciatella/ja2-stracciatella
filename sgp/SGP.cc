@@ -635,7 +635,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
         int readFields = sscanf(argv[++i], "%dx%d", &width, &height);
         if(readFields != 2)
         {
-          LOG_ERROR("Invalid value for command-line key '-res'\n");
+          SLOGE(DEBUG_TAG_SGP, "Invalid value for command-line key '-res'");
           success = FALSE;
         }
         else
@@ -643,14 +643,14 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
           bool result = g_ui.setScreenSize(width, height);
           if(!result)
           {
-            LOG_ERROR("Failed to set screen resolution %d x %d\n", width, height);
+            SLOGE(DEBUG_TAG_SGP, "Failed to set screen resolution %d x %d", width, height);
             success = FALSE;
           }
         }
       }
       else
       {
-        LOG_ERROR("Missing value for command-line key '-res'\n");
+        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-res'");
         success = FALSE;
       }
 		}
@@ -664,7 +664,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
       }
       else
       {
-        LOG_ERROR("Missing value for command-line key '-res'\n");
+        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-res'");
         success = FALSE;
       }
     }
@@ -698,7 +698,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
       }
       else
       {
-        LOG_ERROR("Missing value for command-line key '-resversion'\n");
+        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-resversion'");
         success = FALSE;
       }
     }
