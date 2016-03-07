@@ -128,7 +128,6 @@ static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY);
 static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY);
 static void HeliCharacterDialogue(UINT16 usQuoteNum);
 static void PaySkyriderBill(void);
-static void ReFuelHelicopter(void);
 static void StartHoverTime(void);
 static RefuelSite const* FindClosestRefuelSite(bool must_be_available);
 static void LandHelicopter(void);
@@ -285,7 +284,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 
 		if( CheckForArrivalAtRefuelPoint( ) )
 		{
-			ReFuelHelicopter( );
+			LandHelicopter();
 		}
 	}
 	return( FALSE );
@@ -344,12 +343,6 @@ static INT32 DistanceToNearestRefuelPoint(VEHICLETYPE const& heli)
 	INT16 const dest     = NearestRefuelPoint(false).sector;
 	INT32 const distance = FindStratPath(start, dest, *GetGroup(heli.ubMovementGroup), FALSE);
 	return distance;
-}
-
-static void ReFuelHelicopter(void)
-{
-	// land, pay the man, and refuel
-	LandHelicopter( );
 }
 
 // how much will it cost for helicopter to travel through this sector?
@@ -1517,7 +1510,7 @@ static void MakeHeliReturnToBase(void)
 	// if already at a refueling point
 	if (CheckForArrivalAtRefuelPoint())
 	{
-		ReFuelHelicopter();
+		LandHelicopter();
 	}
 	else
 	{
