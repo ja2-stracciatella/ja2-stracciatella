@@ -596,7 +596,7 @@ bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name,
     }
   }
 
-  // LOG_INFO("XXXXX Looking for %s/[ %s ] : %s\n", directory, name, result ? "success" : "failure");
+  // SLOGI("FileMan","XXXXX Looking for %s/[ %s ] : %s\n", directory, name, result ? "success" : "failure");
   return result;
 }
 #endif

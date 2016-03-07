@@ -30,12 +30,6 @@ enum
 #define LOG_WARNING                     /* empty function name */
 #endif
 
-#if LOG_LEVEL >= LOGLEVEL_INFO
-#define LOG_INFO                        printf
-#else
-#define LOG_INFO                        /* empty function name */
-#endif
-
 #if LOG_LEVEL >= LOGLEVEL_DEBUG
 #define LOG_DEBUG                       printf
 #else

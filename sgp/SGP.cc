@@ -413,17 +413,17 @@ try
     cm = new ModPackContentManager(version,
                                    modName, modResFolder, configFolderPath,
                                    gameResRootPath, externalizedDataPath);
-    LOG_INFO("------------------------------------------------------------------------------\n");
-    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
-    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-    LOG_INFO("Extra data directory:          '%s'\n", extraDataDir.c_str());
-    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
-    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
-    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
-    LOG_INFO("------------------------------------------------------------------------------\n");
-    LOG_INFO("MOD name:                      '%s'\n", modName.c_str());
-    LOG_INFO("MOD resource directory:        '%s'\n", modResFolder.c_str());
-    LOG_INFO("------------------------------------------------------------------------------\n");
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Tilecache directory:           '%s'", cm->getTileDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+    SLOGI(DEBUG_TAG_SGP,"MOD name:                      '%s'", modName.c_str());
+    SLOGI(DEBUG_TAG_SGP,"MOD resource directory:        '%s'", modResFolder.c_str());
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
   else
 #endif
@@ -431,14 +431,14 @@ try
     cm = new DefaultContentManager(version,
                                    configFolderPath,
                                    gameResRootPath, externalizedDataPath);
-    LOG_INFO("------------------------------------------------------------------------------\n");
-    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
-    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-    LOG_INFO("Extra data directory:          '%s'\n", extraDataDir.c_str());
-    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
-    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
-    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
-    LOG_INFO("------------------------------------------------------------------------------\n");
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Tilecache directory:           '%s'", cm->getTileDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
 
   std::vector<std::string> libraries = cm->getListOfGameResources();
@@ -446,7 +446,7 @@ try
 
   if(!cm->loadGameData())
   {
-    LOG_INFO("Failed to load the game data.\n");
+    SLOGI(DEBUG_TAG_SGP,"Failed to load the game data.");
   }
   else
   {
