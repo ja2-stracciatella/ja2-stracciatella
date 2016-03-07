@@ -64,10 +64,6 @@ INT32 iHelicopterVehicleId = -1;
 // total owed to player
 INT32 iTotalAccumulatedCostByPlayer = 0;
 
-#ifdef JA2TESTVERSION
-BOOLEAN	fSAMSitesDisabledFromAttackingPlayer = FALSE;
-#endif
-
 // helicopter destroyed
 BOOLEAN fHelicopterDestroyed = FALSE;
 
@@ -1097,11 +1093,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 		return( FALSE );
 	}
 
-#ifdef JA2TESTVERSION
-	if (fSAMSitesDisabledFromAttackingPlayer) return FALSE;
-#endif
 	// Hostile airspace controlled by a working SAM site, so SAM site fires a SAM at Skyrider!!!
-
 	// calc chance that chopper will be shot down
 	ubChance = bSAMCondition;
 

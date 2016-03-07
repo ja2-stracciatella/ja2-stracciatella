@@ -114,10 +114,6 @@ extern BOOLEAN gfSkyriderSaidCongratsOnTakingSAM;
 extern UINT8 gubPlayerProgressSkyriderLastCommentedOn;
 BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier );
 
-#ifdef JA2TESTVERSION
-extern BOOLEAN	fSAMSitesDisabledFromAttackingPlayer;
-#endif
-
 // have pilot say different stuff
 void HelicopterDialogue( UINT8 ubDialogueCondition );
 

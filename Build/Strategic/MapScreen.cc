@@ -3387,13 +3387,6 @@ static void HandleModAlt(UINT32 const key)
 #endif
 
 		case 'x': HandleShortCutExitState(); break;
-
-#if defined JA2TESTVERSION
-		case 'y':
-			// Toggle SAM sites disable
-			fSAMSitesDisabledFromAttackingPlayer = !fSAMSitesDisabledFromAttackingPlayer;
-			break;
-#endif
 	}
 }
 
