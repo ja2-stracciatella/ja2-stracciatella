@@ -210,7 +210,6 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 	VEHICLETYPE const& v = GetHelicopter();
 	endOfHelicoptersPath = (!v.pMercPath || !v.pMercPath->pNext);
 
-
 	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
 	if (HandleSAMSiteAttackOfHelicopterInSector(sX, sY))
 	{
