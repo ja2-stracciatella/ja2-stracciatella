@@ -383,16 +383,11 @@ BOOLEAN IsHelicopterPilotAvailable( void )
 	if (iHelicopterVehicleId == -1) return FALSE;
 
 	// owe any money to skyrider?
-	if( gMercProfiles[ SKYRIDER ].iBalance < 0 )
-	{
-		return( FALSE );
-	}
+	if( gMercProfiles[ SKYRIDER ].iBalance < 0 ) return( FALSE );
 
 	// Drassen too disloyal to wanna help player?
-	if ( CheckFact( FACT_LOYALTY_LOW, SKYRIDER ) )
-	{
-		return ( FALSE );
-	}
+	if ( CheckFact( FACT_LOYALTY_LOW, SKYRIDER ) ) return ( FALSE );
+
 	return( TRUE );
 }
 
