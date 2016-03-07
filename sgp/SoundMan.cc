@@ -17,6 +17,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 
 // Uncomment this to disable the startup of sound hardware
@@ -77,6 +78,7 @@ enum
 #define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
 #define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
 
+#define DEBUG_TAG_SOUND		"Sound"
 
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
@@ -195,7 +197,7 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 
 		//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("\n*******\nSoundPlay():  ERROR:  trying to play %s which is bigger then the 'guiSoundCacheThreshold', use SoundPlayStreamedFile() instead\n", pFilename));
 
-		FastDebugMsg(String("SoundPlay: ERROR: Trying to play %s sound is too lardge to load into cache, use SoundPlayStreamedFile() instead\n", pFilename));
+		SLOGE(DEBUG_TAG_SOUND, "Trying to play %s sound is too large to load into cache, use SoundPlayStreamedFile() instead\n", pFilename));
 		return SOUND_ERROR;
 	}
 #endif
@@ -268,7 +270,7 @@ try
 	FILE* hRealFileHandle = GetRealFileHandleFromFileManFileHandle(hFile);
 	if (hRealFileHandle == NULL)
 	{
-		FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()\n", pFilename ) );
+		SLOGE(DEBUG_TAG_SOUND, "SoundPlayStreamedFile(): Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()", pFilename );
 		return SOUND_ERROR;
 	}
 
@@ -290,7 +292,7 @@ try
 }
 catch (...)
 {
-	FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Failed to play '%s'\n", pFilename));
+	SLOGE(DEBUG_TAG_SOUND, "SoundPlayStreamedFile(): Failed to play '%s'", pFilename);
 	return SOUND_ERROR;
 }
 
@@ -837,7 +839,7 @@ try
 		if (!SoundCleanCache())
 		{
 			SNDDBG("Not enough memory. Size: %u, Used: %u, Max: %u\n", uiSize, guiSoundMemoryUsed, guiSoundMemoryLimit);
-			FastDebugMsg(String("SoundLoadDisk:  ERROR:  trying to play %s, not enough memory\n", pFilename));
+			SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: trying to play %s, not enough memory\n", pFilename);
 			return NULL;
 		}
 	}
@@ -853,7 +855,7 @@ try
 	// if we still don't have a sample slot
 	if (s == NULL)
 	{
-		FastDebugMsg(String("SoundLoadDisk:  ERROR: Trying to play %s, sound channels are full\n", pFilename));
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: Trying to play %s, sound channels are full\n", pFilename);
 		return NULL;
 	}
 

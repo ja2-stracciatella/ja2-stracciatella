@@ -42,6 +42,7 @@ struct SMKFLIC
 #define SMK_FLIC_PLAYING   0x00000002 // Flic is playing
 #define SMK_FLIC_AUTOCLOSE 0x00000008 // Close when done
 
+#define DEBUG_TAG_SMK				"smacker"
 
 static SMKFLIC SmkList[4];
 static UINT32  guiSmackPixelFormat = SMACKBUFFER565;
@@ -134,7 +135,7 @@ try
 	SMKFLIC* const sf = SmkGetFreeFlic();
 	if (!sf)
 	{
-		FastDebugMsg("SMK ERROR: Out of flic slots, cannot open another");
+		SLOGE(DEBUG_TAG_SMK, "Out of flic slots, cannot open another");
 		return NULL;
 	}
 
@@ -148,14 +149,14 @@ try
         sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	if (sf->SmackBuffer == NULL)
 	{
-		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
+		SLOGE(DEBUG_TAG_SMK, "Can't allocate a Smacker decompression buffer");
 		return NULL;
 	}
         */
 	sf->SmackerObject = SmackOpen( file , SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
 	if (!sf->SmackerObject)
 	{
-		FastDebugMsg("SMK ERROR: Smacker won't open the SMK file");
+		SLOGE(DEBUG_TAG_SMK, "Smacker won't open the SMK file");
 		return NULL;
 	}
 

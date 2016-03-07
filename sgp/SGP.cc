@@ -47,7 +47,7 @@
 #include "sgp/UTF8String.h"
 
 #include "slog/slog.h"
-#define TAG "SGP"
+#define DEBUG_TAG_SGP "SGP"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -159,7 +159,7 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
-	FastDebugMsg("Exiting Game");
+	SLOGD(DEBUG_TAG_SGP, "Exiting Game");
 
 	SoundServiceStreams();
 
@@ -354,7 +354,7 @@ try
   {
     if(!getResourceVersion(params.resourceVersion.c_str(), &version))
     {
-      SLOGE(TAG, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
+      SLOGE(DEBUG_TAG_SGP, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
       return EXIT_FAILURE;
     }
   }
@@ -386,10 +386,10 @@ try
 #endif
 
   // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
-	FastDebugMsg("Initializing Memory Manager");
+	SLOGD(DEBUG_TAG_SGP, "Initializing Memory Manager");
 	InitializeMemoryManager();
 
-  FastDebugMsg("Initializing Game Resources");
+  SLOGD(DEBUG_TAG_SGP, "Initializing Game Resources");
   std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
   std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
   std::string gameResRootPath = findRootGameResFolder(configPath);
@@ -453,13 +453,13 @@ try
 
     GCM = cm;
 
-    FastDebugMsg("Initializing Video Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Video Manager");
     InitializeVideoManager();
 
-    FastDebugMsg("Initializing Video Object Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Video Object Manager");
     InitializeVideoObjectManager();
 
-    FastDebugMsg("Initializing Video Surface Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Video Surface Manager");
     InitializeVideoSurfaceManager();
 
 #ifdef JA2
@@ -467,20 +467,20 @@ try
 #endif
 
     // Initialize Font Manager
-    FastDebugMsg("Initializing the Font Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing the Font Manager");
     // Init the manager and copy the TransTable stuff into it.
     InitializeFontManager();
 
-    FastDebugMsg("Initializing Sound Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Sound Manager");
 #ifndef UTIL
     InitializeSoundManager();
 #endif
 
-    FastDebugMsg("Initializing Random");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Random");
     // Initialize random number generator
     InitializeRandom(); // no Shutdown
 
-    FastDebugMsg("Initializing Game Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Game Manager");
     // Initialize the Game
     InitializeGame();
 
@@ -508,7 +508,7 @@ try
     }
 #endif
 
-    FastDebugMsg("Running Game");
+    SLOGD(DEBUG_TAG_SGP, "Running Game");
 
     /* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
      * are available. All we need to do is attend to the gaming mechanics

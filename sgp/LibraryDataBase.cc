@@ -317,7 +317,7 @@ static BOOLEAN CloseLibrary(LibraryHeaderStruct *lib)
 	//if there are any open files, loop through the library and close down whatever file is still open
 	if (lib->iNumFilesOpen)
 	{
-		FastDebugMsg(String("CloseLibrary():  ERROR:  %s library still has %d open files.", lib->sLibraryPath.c_str(), lib->iNumFilesOpen));
+		SLOGE("LibraryDatabase", "CloseLibrary(): %s library still has %d open files.", lib->sLibraryPath.c_str(), lib->iNumFilesOpen);
 	}
 
 	//Free up the memory used for each file name
