@@ -123,7 +123,6 @@ UINT8 gubPlayerProgressSkyriderLastCommentedOn = 0;
 
 static BOOLEAN CheckForArrivalAtRefuelPoint(void);
 static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies);
-static BOOLEAN EndOfHelicoptersPath(void);
 static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY);
 static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY);
 static void HeliCharacterDialogue(UINT16 usQuoteNum);
@@ -206,6 +205,11 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 {
 	UINT8 ubNumEnemies;
+	BOOLEAN endOfHelicoptersPath;
+
+	VEHICLETYPE const& v = GetHelicopter();
+	endOfHelicoptersPath = (!v.pMercPath || !v.pMercPath->pNext);
+
 
 	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
 	if (HandleSAMSiteAttackOfHelicopterInSector(sX, sY))
@@ -227,7 +231,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 			if (DoesSkyriderNoticeEnemiesInSector(ubNumEnemies))
 			{
 				// if just passing through (different quotes are used below if it's his final destination)
-				if( !EndOfHelicoptersPath( ) )
+				if( !endOfHelicoptersPath )
 				{
 					// stop time compression and inform player that there are enemies in the sector below
 					StopTimeCompression();
@@ -255,7 +259,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 	}
 
 	// check if heli has any real path left
-	if( EndOfHelicoptersPath( ) )
+	if( endOfHelicoptersPath )
 	{
 		// start hovering
 		StartHoverTime( );
@@ -1181,13 +1185,6 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 	}
 	// still flying
 	return( FALSE );
-}
-
-// are we at the end of the path for the heli?
-static BOOLEAN EndOfHelicoptersPath(void)
-{
-	VEHICLETYPE const& v = GetHelicopter();
-	return !v.pMercPath || !v.pMercPath->pNext;
 }
 
 // check if helicopter can take off?
