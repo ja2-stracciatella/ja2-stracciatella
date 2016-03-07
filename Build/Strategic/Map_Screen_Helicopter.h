@@ -176,7 +176,7 @@ BOOLEAN CanHelicopterTakeOff( void );
 
 void InitializeHelicopter( void );
 
-bool IsSkyriderIsFlyingInSector(INT16 x, INT16 y);
+bool IsSkyriderFlyingInSector(INT16 x, INT16 y);
 
 bool IsGroupTheHelicopterGroup(GROUP const&);
 

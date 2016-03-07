@@ -4560,7 +4560,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	if ( uiSectorFlags & SF_SKYRIDER_NOTICED_ENEMIES_HERE )
 	{
 		// and Skyrider is still in this sector, flying
-		if( IsSkyriderIsFlyingInSector( sSectorX, sSectorY ) )
+		if( IsSkyriderFlyingInSector( sSectorX, sSectorY ) )
 		{
 			// player remains aware of them as long as Skyrider remains in the sector
 			return KNOWS_THEYRE_THERE;
