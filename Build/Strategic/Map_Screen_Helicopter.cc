@@ -118,7 +118,6 @@ BOOLEAN gfSkyriderSaidCongratsOnTakingSAM = FALSE;
 UINT8 gubPlayerProgressSkyriderLastCommentedOn = 0;
 
 static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies);
-static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY);
 static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY);
 static void HeliCharacterDialogue(UINT16 usQuoteNum);
 static void PaySkyriderBill(void);
@@ -249,7 +248,8 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 	if (!fHeliReturnStraightToBase)
 	{
 		// charge cost for flying another sector
-		iTotalAccumulatedCostByPlayer += GetCostOfPassageForHelicopter( sX, sY );
+		INT32 iCost = (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyAirControlled) ? COST_AIRSPACE_SAFE : COST_AIRSPACE_UNSAFE;
+		iTotalAccumulatedCostByPlayer += iCost;
 	}
 
 	// check if heli has any real path left
@@ -333,24 +333,6 @@ static RefuelSite const* FindClosestRefuelSite(bool const must_be_available)
 		closest_site      = &r;
 	}
 	return closest_site;
-}
-
-// how much will it cost for helicopter to travel through this sector?
-static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY)
-{
-	// check if sector is air controlled or not, if so, then normal cost, otherwise increase the cost
-	INT32 iCost = 0;
-
-	// if they don't control it
-	if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyAirControlled)
-	{
-		iCost = COST_AIRSPACE_SAFE;
-	}
-	else
-	{
-		iCost = COST_AIRSPACE_UNSAFE;
-	}
-	return( iCost );
 }
 
 // helicopter shot down, kill all on board
