@@ -14,7 +14,7 @@
 #include "StrUtils.h"
 
 #include "slog/slog.h"
-#define DEBUG_TAG_RESSOURCES    "Ressources"
+#define DEBUG_TAG_RESOURCES    "Resources"
 
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;
@@ -73,7 +73,7 @@ void setGameVersion(GameVersion ver)
   case GV_RUSSIAN_GOLD: setResources(&g_LanguageResRussianGold,       g_rusGold_TranslationTable); break;
   default:
   {
-    SLOGW(DEBUG_TAG_RESSOURCES, "Unknown version. Using ENGLISH by defaul");
+    SLOGW(DEBUG_TAG_RESOURCES, "Unknown version. Using ENGLISH by defaul");
     s_gameVersion = GV_ENGLISH;
     setResources(&g_LanguageResEnglish, g_en_TranslationTable);
   }
@@ -143,7 +143,7 @@ std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 
   // for (int i = 0; i < libraries.size(); i++)
   // {
-  //   SLOGW(DEBUG_TAG_RESSOURCES, "%s", libraries[i].c_str());
+  //   SLOGW(DEBUG_TAG_RESOURCES, "%s", libraries[i].c_str());
   // }
 
   return libraries;
