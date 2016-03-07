@@ -390,15 +390,6 @@ static const GARRISON_GROUP gOrigGarrisonGroup[] =
 
 #undef M
 
-
-//Records any decisions that I deem important enough into an automatically appending AI log file called
-//"Strategic Decisions.txt" in the JA2\Data directory.  This also records the time that each log entry
-//was made.
-#ifdef JA2BETAVERSION
-static void LogStrategicMsg(const char* str, ...); //doesn't use the time stamp
-#endif
-
-
 extern INT16 sWorldSectorLocationOfFirstBattle;
 
 
@@ -3244,14 +3235,9 @@ void LoadStrategicAI(HWFILE const hFile)
 			}
 		}
 	}
-
-	#ifdef JA2BETAVERSION
-		LogStrategicMsg( "" );
-		LogStrategicMsg( "-------------------------------------------------" );
-		LogStrategicMsg( "Restoring saved game at Day %02d, %02d:%02d ", GetWorldDay(), GetWorldHour(), GetWorldMinutesInDay()%60 );
-		LogStrategicMsg( "-------------------------------------------------" );
-		LogStrategicMsg( "" );
-	#endif
+	SLOGD(DEBUG_TAG, "-------------------------------------------------" );
+	SLOGD(DEBUG_TAG, "Restoring saved game at Day %02d, %02d:%02d ", GetWorldDay(), GetWorldHour(), GetWorldMinutesInDay()%60 );
+	SLOGD(DEBUG_TAG, "-------------------------------------------------" );
 
 	//Update the version number to the most current.
 	gubSAIVersion = SAI_VERSION;
@@ -3626,36 +3612,6 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 }
 
 #ifdef JA2BETAVERSION
-
-static void LogStrategicMsg(const char* str, ...)
-{
-	va_list argptr;
-
-	FILE *fp;
-
-	fp = fopen( "Strategic Decisions.txt", "a" );
-	if( !fp )
-		return;
-
-	va_start(argptr, str );
-	char string[512];
-	vsprintf( string, str, argptr);
-	va_end(argptr);
-
-	fprintf( fp, "%s\n", string );
-
-	if( gfDisplayStrategicAILogs )
-	{
-		ScreenMsg(FONT_LTKHAKI, MSG_DIALOG, L"%hs", string);
-	}
-	if( guiCurrentScreen == AIVIEWER_SCREEN )
-	{
-		DebugMsg(TOPIC_JA2SAI, DBG_LEVEL_1, string);
-	}
-
-	fclose( fp );
-}
-
 static void ClearStrategicLog(void)
 {
 	FILE *fp;
