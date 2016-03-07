@@ -130,7 +130,6 @@ struct GARRISON_GROUP
 
 #if defined JA2BETAVERSION
 void ValidatePlayersAreInOneGroupOnly(void);
-void SAIReportError(const wchar_t* wErrorString);
 #endif
 
 #endif

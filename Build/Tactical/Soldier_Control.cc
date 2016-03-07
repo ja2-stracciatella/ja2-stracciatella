@@ -8938,13 +8938,13 @@ void DebugValidateSoldierData( )
 					!(s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER)))
 			{
 				// This is bad!
-				swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is alive but has a zero group ID.", s->ubID);
+				SLOGE( "Soldier Data", "Error: Soldier %d is alive but has a zero group ID.", s->ubID);
 				fProblemDetected = TRUE;
 			}
 			else if (s->ubGroupID != 0 && GetGroup(s->ubGroupID) == NULL)
 			{
 				// This is bad!
-				swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d has an invalid group ID of %d.", s->ubID, s->ubGroupID);
+				SLOGE( "Soldier Data", "Error: Soldier %d has an invalid group ID of %d.", s->ubID, s->ubGroupID);
 				fProblemDetected = TRUE;
 			}
 		}
@@ -8953,7 +8953,7 @@ void DebugValidateSoldierData( )
 			if (s->ubGroupID != 0 && s->uiStatusFlags & SOLDIER_DEAD)
 			{
 				// Dead guys should have 0 group IDs
-				//swprintf(sString, L"GroupID Error: Soldier %d is dead but has a non-zero group ID.", s->ubID);
+				//SLOGE( "Soldier Data", "Error: Soldier %d is dead but has a non-zero group ID.", s->ubID);
 				//fProblemDetected = TRUE;
 			}
 		}
@@ -8966,23 +8966,15 @@ void DebugValidateSoldierData( )
 					s->bSectorZ <  0 ||  3 <  s->bSectorZ
 				))
 		{
-			swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is located at %d/%d/%d.", s->ubID, s->sSectorX, s->sSectorY, s->bSectorZ);
+			SLOGE( "Soldier Data", "Error: Soldier %d is located at %d/%d/%d.", s->ubID, s->sSectorX, s->sSectorY, s->bSectorZ);
 			fProblemDetected = TRUE;
 		}
 
 		if (fProblemDetected)
 		{
-			SAIReportError(sString);
-/*
-			if ( guiCurrentScreen == MAP_SCREEN )
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-			else
-				DoMessageBox( MSG_BOX_BASIC_STYLE, sString, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, NULL, NULL );
-*/
 			break;
 		}
 	}
-
 
 	// also do this
 	ValidatePlayersAreInOneGroupOnly();
