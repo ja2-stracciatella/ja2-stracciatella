@@ -183,9 +183,7 @@ void HandleAnimationOfSectors( void );
 // check and handle skyrider monologue
 void CheckAndHandleSkyriderMonologues( void );
 
-void HandleHelicopterOnGroundGraphic( void );
-
-void HandleHelicopterOnGroundSkyriderProfile( void );
+void HandleHelicopterOnGround( BOOLEAN handleGraphicToo );
 
 // will a sam site under the players control shoot down an airraid?
 //BOOLEAN WillAirRaidBeStopped( INT16 sSectorX, INT16 sSectorY );

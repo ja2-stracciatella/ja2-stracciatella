@@ -435,8 +435,7 @@ static void LandHelicopter(void)
 
 	// reset fact that we might have returned straight here
 	fHeliReturnStraightToBase = FALSE;
-	HandleHelicopterOnGroundGraphic( );
-	HandleHelicopterOnGroundSkyriderProfile( );
+	HandleHelicopterOnGround(true);
 
 	// if we'll be unable to take off again (because there are enemies in the sector, or we owe pilot money)
 	if (!CanHelicopterFly())
@@ -458,8 +457,7 @@ void TakeOffHelicopter( void )
 
 	// no longer hovering
 	fHoveringHelicopter = FALSE;
-	HandleHelicopterOnGroundGraphic( );
-	HandleHelicopterOnGroundSkyriderProfile( );
+	HandleHelicopterOnGround(true);
 }
 
 // start the heli hover time
@@ -1015,7 +1013,7 @@ void HandleAnimationOfSectors( void )
 	}
 }
 
-void HandleHelicopterOnGroundGraphic(void)
+void HandleHelicopterOnGround(BOOLEAN handleGraphicToo)
 {
 	// No worries if underground
 	if (gbWorldSectorZ != 0) return;
@@ -1029,7 +1027,10 @@ void HandleHelicopterOnGroundGraphic(void)
 		// YES, so find out if the chopper is landed here
 		if (IsHelicopterOnGroundAtRefuelingSite(r))
 		{
-			AddHelicopterToMaps(true, r);
+			if(handleGraphicToo)
+			{
+				AddHelicopterToMaps(true, r);
+			}
 			// ATE: Add Skyrider too
 			// ATE: only if hired
 			if (iHelicopterVehicleId != -1)
@@ -1041,7 +1042,10 @@ void HandleHelicopterOnGroundGraphic(void)
 		}
 		else
 		{
-			AddHelicopterToMaps(false, r);
+			if(handleGraphicToo)
+			{
+				AddHelicopterToMaps(false, r);
+			}
 			// ATE: Remove Skyrider
 			if (iHelicopterVehicleId != -1)
 			{
@@ -1055,49 +1059,9 @@ void HandleHelicopterOnGroundGraphic(void)
 				if (s && s->bTeam != OUR_TEAM) TacticalRemoveSoldier(*s);
 			}
 		}
-
-		InvalidateWorldRedundency();
-		break;
-	}
-}
-
-void HandleHelicopterOnGroundSkyriderProfile(void)
-{
-	// No worries if underground
-	if (gbWorldSectorZ != 0) return;
-
-	for (UINT8 site = 0; site != NUMBER_OF_REFUEL_SITES; ++site)
-	{
-		RefuelSite const& r = g_refuel_site[site];
-		// is this refueling site sector the loaded sector?
-		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) != r.sector) continue;
-
-		// YES, so find out if the chopper is landed here
-		if (IsHelicopterOnGroundAtRefuelingSite(r))
+		if(handleGraphicToo)
 		{
-			// ATE: Add Skyrider too
-			// ATE: only if hired
-			if (iHelicopterVehicleId != -1)
-			{
-				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-				p.sSectorX = gWorldSectorX;
-				p.sSectorY = gWorldSectorY;
-			}
-		}
-		else
-		{
-			// ATE: Remove Skyrider
-			if (iHelicopterVehicleId != -1)
-			{
-				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-				p.sSectorX = 0;
-				p.sSectorY = 0;
-
-				// See if we can find him and remove him if so
-				// ATE: Don't do this if buddy is on our team!
-				SOLDIERTYPE* const s = FindSoldierByProfileID(SKYRIDER);
-				if (s && s->bTeam != OUR_TEAM) TacticalRemoveSoldier(*s);
-			}
+			InvalidateWorldRedundency();
 		}
 		break;
 	}
