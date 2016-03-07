@@ -23,14 +23,6 @@
 // Uncomment this to disable the startup of sound hardware
 //#define SOUND_DISABLE
 
-
-#ifdef WITH_SOUND_DEBUG
-#	define SNDDBG(fmt, ...) (void)fprintf(stderr, ">>>> SND: " fmt, __VA_ARGS__)
-#else
-#	define SNDDBG(fmt, ...) (void)0
-#endif
-
-
 /*
  * from\to FREE PLAY STOP DEAD
  *    FREE       M
