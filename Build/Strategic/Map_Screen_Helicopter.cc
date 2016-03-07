@@ -263,7 +263,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 		{
 			// if he has passengers, or he's not going straight to base, tell player he's arrived
 			// (i.e. don't say anything nor stop time compression if he's empty and just returning to base)
-			if ( ( GetNumberOfPassengersInHelicopter() > 0 ) || !fHeliReturnStraightToBase )
+			if ( ( GetNumberInVehicle(v) > 0 ) || !fHeliReturnStraightToBase )
 			{
 				// arrived at destination
 				HeliCharacterDialogue(ARRIVED_IN_NON_HOSTILE_SECTOR);
@@ -592,11 +592,6 @@ static void HeliCharacterDialogue(UINT16 const usQuoteNum)
 	// ARM: we could just return, but since various flags are often being set it's safer to honk so it gets fixed right!
 	Assert(iHelicopterVehicleId != -1);
 	SkyriderDialogue(usQuoteNum);
-}
-
-INT32 GetNumberOfPassengersInHelicopter( void )
-{
-	return GetNumberInVehicle(GetHelicopter());
 }
 
 bool IsRefuelSiteInSector(INT16 const sector)
@@ -1138,7 +1133,7 @@ BOOLEAN CanHelicopterTakeOff( void )
 
 	VEHICLETYPE const& v = GetHelicopter();
 	// grab location
-	INT16 const sHelicopterSector = v.sSectorX + v.sSectorY * MAP_WORLD_X;
+	INT16 const sHelicopterSector = CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY);
 	// if it's not in enemy control, we can take off
 	if (!StrategicMap[sHelicopterSector].fEnemyControlled)
 	{

@@ -153,9 +153,6 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY );
 // set up helic, if it doesn't have a mvt group
 void SetUpHelicopterForMovement( void );
 
-// number of passengers in helicopter
-INT32 GetNumberOfPassengersInHelicopter( void );
-
 // skyrider talking to player
 void SkyRiderTalk( UINT16 usQuoteNum );
 

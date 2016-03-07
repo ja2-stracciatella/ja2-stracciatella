@@ -7910,7 +7910,7 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 	{
 		// if not warned already, and chopper empty, but mercs are in this sector
 		if ( !gfSkyriderEmptyHelpGiven &&
-			 ( GetNumberOfPassengersInHelicopter() == 0 ) &&
+			 ( GetNumberInVehicle(GetHelicopter()) == 0 ) &&
 			 ( PlayerMercsInHelicopterSector() > 0 ) )
 		{
 			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pSkyriderText[2], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
