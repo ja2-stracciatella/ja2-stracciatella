@@ -121,7 +121,6 @@ UINT8 gubHelicopterHitsTaken = 0;
 BOOLEAN gfSkyriderSaidCongratsOnTakingSAM = FALSE;
 UINT8 gubPlayerProgressSkyriderLastCommentedOn = 0;
 
-static BOOLEAN CheckForArrivalAtRefuelPoint(void);
 static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies);
 static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY);
 static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY);
@@ -285,7 +284,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 			StopTimeCompression();
 		}
 
-		if( CheckForArrivalAtRefuelPoint( ) )
+		if( IsRefuelSiteInSector( CALCULATE_STRATEGIC_INDEX(sX, sY) ) )
 		{
 			LandHelicopter();
 		}
@@ -336,16 +335,6 @@ static RefuelSite const* FindClosestRefuelSite(bool const must_be_available)
 		closest_site      = &r;
 	}
 	return closest_site;
-}
-
-// How far to nearest refuel point from this sector?
-static INT32 DistanceToNearestRefuelPoint(VEHICLETYPE const& heli)
-{
-	// Don't notify player during these checks!
-	INT16 const start    = CALCULATE_STRATEGIC_INDEX(heli.sSectorX, heli.sSectorY);
-	INT16 const dest     = NearestRefuelPoint(false).sector;
-	INT32 const distance = FindStratPath(start, dest, *GetGroup(heli.ubMovementGroup), FALSE);
-	return distance;
 }
 
 // how much will it cost for helicopter to travel through this sector?
@@ -573,22 +562,6 @@ INT32 DistanceOfIntendedHelicopterPath( void )
 		}
 	}
 	return( iLength );
-}
-
-static BOOLEAN CheckForArrivalAtRefuelPoint(void)
-{
-	VEHICLETYPE const& v = GetHelicopter();
-	// check if this is our final destination
-	if (GetLengthOfPath(v.pMercPath) > 0) return FALSE;
-
-	// check if we're at a refuel site
-	if (DistanceToNearestRefuelPoint(v) > 0)
-	{
-		// not at a refuel point
-		return( FALSE );
-	}
-	// we are at a refuel site
-	return( TRUE );
 }
 
 void SetUpHelicopterForMovement( void )
@@ -1467,8 +1440,12 @@ void PayOffSkyriderDebtIfAny( )
 
 static void MakeHeliReturnToBase(void)
 {
+	VEHICLETYPE& v = GetHelicopter();
+	INT16 sectorID;
+
+	sectorID = CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY);
 	// if already at a refueling point
-	if (CheckForArrivalAtRefuelPoint())
+	if ( IsRefuelSiteInSector( sectorID ) )
 	{
 		LandHelicopter();
 	}
@@ -1477,10 +1454,9 @@ static void MakeHeliReturnToBase(void)
 		// choose destination (closest refueling sector)
 		RefuelSite const& refuel_site = NearestRefuelPoint(true);
 
-		VEHICLETYPE& v = GetHelicopter();
 		ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
 		GROUP& g = *GetGroup(v.ubMovementGroup);
-		v.pMercPath = BuildAStrategicPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), refuel_site.sector, g, FALSE);
+		v.pMercPath = BuildAStrategicPath( sectorID, refuel_site.sector, g, FALSE);
 		RebuildWayPointsForGroupPath(v.pMercPath, g);
 
 		fHeliReturnStraightToBase = TRUE;
