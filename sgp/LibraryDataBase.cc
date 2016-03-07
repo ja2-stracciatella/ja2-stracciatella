@@ -6,7 +6,6 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "Debug.h"
-#include "Logger.h"
 #include "StrUtils.h"
 
 #include "slog/slog.h"

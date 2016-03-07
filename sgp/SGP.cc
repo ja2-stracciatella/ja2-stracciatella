@@ -34,7 +34,6 @@
 #include <SDL.h>
 #include "UILayout.h"
 #include "GameRes.h"
-#include "Logger.h"
 #include "GameState.h"
 #include "Timer.h"
 

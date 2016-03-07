@@ -9,7 +9,6 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "PODObj.h"
-#include "Logger.h"
 
 #include "boost/filesystem.hpp"
 
@@ -124,7 +123,7 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
 
 	if (mkdir(configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-	  SLOGE(DEBUG_TAG_SGP, "Unable to create directory '%s'", configFolderPath.c_str());
+	  SLOGE(TAG, "Unable to create directory '%s'", configFolderPath.c_str());
 	  throw std::runtime_error("Unable to create local directory");
 	}
 
@@ -135,7 +134,7 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
   std::string tmpPath = FileMan::joinPaths(configFolderPath, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-	  SLOGE(DEBUG_TAG_SGP, "Unable to create tmp directory '%s'", tmpPath.c_str());
+	  SLOGE(TAG, "Unable to create tmp directory '%s'", tmpPath.c_str());
 	  throw std::runtime_error("Unable to create tmp directory");
 	}
   else
