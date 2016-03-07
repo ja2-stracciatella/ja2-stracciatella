@@ -24,6 +24,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 struct SMKFLIC
 {
