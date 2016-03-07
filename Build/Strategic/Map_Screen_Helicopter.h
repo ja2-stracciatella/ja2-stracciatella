@@ -8,14 +8,11 @@
 #include "Strategic_Movement.h"
 #include "Vehicles.h"
 
-
 // costs of flying through sectors
 #define COST_AIRSPACE_SAFE    100
 #define COST_AIRSPACE_UNSAFE  1000		// VERY dangerous
-
 #define MIN_PROGRESS_FOR_SKYRIDER_QUOTE_DOING_WELL 25	// scale of 0-100
 #define MIN_REGRESS_FOR_SKYRIDER_QUOTE_DOING_BADLY 10	// scale of 0-100
-
 
 // skyrider quotes
 #define OWED_MONEY_TO_SKYRIDER 11
@@ -25,7 +22,6 @@
 #define SKYRIDER_SAYS_HI 23
 #define SPIEL_ABOUT_OTHER_SAM_SITES 24
 #define SECOND_HALF_OF_SPIEL_ABOUT_OTHER_SAM_SITES 25
-
 #define SPIEL_ABOUT_ESTONI_AIRSPACE 26
 #define CONFIRM_DESTINATION 27
 //#define DESTINATION_TOO_FAR 28		// unused
@@ -46,7 +42,6 @@
 #define HELI_TOOK_MAJOR_DAMAGE 53
 #define HELI_GOING_DOWN 54
 
-
 enum
 {
 	DRASSEN_REFUELING_SITE = 0,
@@ -62,7 +57,6 @@ enum{
 	SAM_SITE_FOUR,				// near Meduna
 	NUMBER_OF_SAM_SITES,
 };
-
 
 // helicopter vehicle id value
 extern INT32 iHelicopterVehicleId;
@@ -97,10 +91,6 @@ extern BOOLEAN fHeliReturnStraightToBase;
 // is the heli in the air?
 extern BOOLEAN fHelicopterIsAirBorne;
 
-
-// total owed to player
-//extern INT32 iTotalAccumlatedCostByPlayer;
-
 // time started hovering
 extern UINT32 uiStartHoverTime;
 
@@ -115,22 +105,18 @@ extern BOOLEAN fShowEstoniRefuelHighLight;
 extern BOOLEAN fShowOtherSAMHighLight;
 extern BOOLEAN fShowDrassenSAMHighLight;
 extern BOOLEAN fShowCambriaHospitalHighLight;
-
 extern INT32 iTotalAccumulatedCostByPlayer;
 extern UINT32 guiTimeOfLastSkyriderMonologue;
 extern BOOLEAN fSkyRiderSetUp;
 extern BOOLEAN fRefuelingSiteAvailable[ NUMBER_OF_REFUEL_SITES ];
-
 extern UINT8 gubHelicopterHitsTaken;
 extern BOOLEAN gfSkyriderSaidCongratsOnTakingSAM;
 extern UINT8 gubPlayerProgressSkyriderLastCommentedOn;
-
 BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier );
 
 #ifdef JA2TESTVERSION
 extern BOOLEAN	fSAMSitesDisabledFromAttackingPlayer;
 #endif
-
 
 // have pilot say different stuff
 void HelicopterDialogue( UINT8 ubDialogueCondition );
@@ -184,9 +170,6 @@ void HandleAnimationOfSectors( void );
 void CheckAndHandleSkyriderMonologues( void );
 
 void HandleHelicopterOnGround( BOOLEAN handleGraphicToo );
-
-// will a sam site under the players control shoot down an airraid?
-//BOOLEAN WillAirRaidBeStopped( INT16 sSectorX, INT16 sSectorY );
 
 // is the helicopter capable of taking off for the player?
 BOOLEAN CanHelicopterTakeOff( void );
