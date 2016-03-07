@@ -71,7 +71,7 @@ static inline VEHICLETYPE& GetHelicopter(void)
 
 static inline bool IsHelicopter(VEHICLETYPE const& v)
 {
-	return VEHICLE2ID(v) == iHelicopterVehicleId;
+	return (INT32)VEHICLE2ID(v) == iHelicopterVehicleId;
 }
 
 static inline bool InHelicopter(SOLDIERTYPE const& s)
