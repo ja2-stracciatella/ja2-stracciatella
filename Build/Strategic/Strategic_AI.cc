@@ -885,12 +885,6 @@ void SAIReportError(const wchar_t* wErrorString)
 }
 #endif
 
-
-#ifdef JA2BETAVERSION
-static void ClearStrategicLog(void);
-#endif
-
-
 void InitStrategicAI()
 {
 	gfExtraElites                      = FALSE;
@@ -905,9 +899,6 @@ void InitStrategicAI()
 	gusPlayerBattleVictories           = 0;
 	gfUseAlternateQueenPosition        = FALSE;
 
-#ifdef JA2BETAVERSION
-	ClearStrategicLog();
-#endif
 	// 475 is 7:55am in minutes since midnight, the time the game starts on day 1
 	UINT32      evaluate_time = 475;
 	UINT8 const difficulty    = gGameOptions.ubDifficultyLevel;
@@ -3610,21 +3601,6 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			break;
 	}
 }
-
-#ifdef JA2BETAVERSION
-static void ClearStrategicLog(void)
-{
-	FILE *fp;
-	fp = fopen( "Strategic Decisions.txt", "w" );
-	if( !fp )
-		return;
-
-	fprintf( fp, "STRATEGIC LOG\n" );
-
-	fclose( fp );
-}
-#endif
-
 
 static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSectorY);
 
