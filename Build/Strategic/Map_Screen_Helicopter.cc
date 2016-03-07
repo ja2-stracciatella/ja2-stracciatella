@@ -1257,9 +1257,9 @@ bool IsSkyriderIsFlyingInSector(INT16 const x, INT16 const y)
 	if (iHelicopterVehicleId == -1) return false;
 	if (!CanHelicopterFly())        return false;
 	if (!fHelicopterIsAirBorne)     return false;
-	GROUP const& g = *GetGroup(GetHelicopter().ubMovementGroup);
+	VEHICLETYPE const& v = GetHelicopter();
 	// the right sector?
-	return x == g.ubSectorX && y == g.ubSectorY;
+	return x == v.sSectorX && y == v.sSectorY;
 }
 
 bool IsGroupTheHelicopterGroup(GROUP const& g)
