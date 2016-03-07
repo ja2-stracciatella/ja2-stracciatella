@@ -269,16 +269,6 @@ static void MainLoop(int msPerGameCycle)
   }
 }
 
-
-static int Failure(char const* const msg, bool showInfoIcon=false)
-{
-	fprintf(stderr, "%s\n", msg);
-#if defined _WIN32
-	MessageBox(0, msg, APPLICATION_NAME, MB_OK | (showInfoIcon ? MB_ICONINFORMATION : MB_ICONERROR) | MB_TASKMODAL);
-#endif
-	return EXIT_FAILURE;
-}
-
 ////////////////////////////////////////////////////////////
 
 ContentManager *GCM = NULL;
@@ -524,21 +514,23 @@ try
 }
 catch (const std::bad_alloc&)
 {
-	return Failure("ERROR: out of memory");
+  SLOGE(DEBUG_TAG_SGP, "out of memory");
+  return EXIT_FAILURE;
 }
 catch (const LibraryFileNotFoundException& e)
 {
-	return Failure(e.what(), true);
+  SLOGE(DEBUG_TAG_SGP, "%s", e.what());
+  return EXIT_FAILURE;
 }
 catch (const std::exception& e)
 {
-	char msg[2048];
-	snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception:\n%s", e.what());
-	return Failure(msg);
+  SLOGE(DEBUG_TAG_SGP, "caught unhandled exception:\n%s", e.what());
+  return EXIT_FAILURE;
 }
 catch (...)
 {
-	return Failure("ERROR: caught unhandled unknown exception");
+  SLOGE(DEBUG_TAG_SGP, "caught unhandled unknown exception");
+  return EXIT_FAILURE;
 }
 
 
