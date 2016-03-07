@@ -18,12 +18,6 @@ enum
 /** Current log level. */
 #define LOG_LEVEL       (LOGLEVEL_INFO)
 
-#if LOG_LEVEL >= LOGLEVEL_WARNING
-#define LOG_WARNING                     printf
-#else
-#define LOG_WARNING                     /* empty function name */
-#endif
-
 /************************************************************
  *
  ***********************************************************/

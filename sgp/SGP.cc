@@ -759,7 +759,7 @@ static std::string findRootGameResFolder(const std::string &configPath)
   MicroIni::File configFile;
   if(!configFile.load(configPath) || !configFile[""].has("data_dir"))
   {
-    LOG_WARNING("WARNING: Could not open configuration file (\"%s\").\n", configPath.c_str());
+    SLOGW(DEBUG_TAG_SGP, "Could not open configuration file (\"%s\").", configPath.c_str());
     WriteDefaultConfigFile(configPath.c_str());
     configFile.load(configPath);
   }
