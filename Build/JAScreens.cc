@@ -38,8 +38,9 @@
 #include "Debug.h"
 #include "UILayout.h"
 #include "Timer.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_JA2SCREENS	"JA2 Screens"
 #define MAX_DEBUG_PAGES 4
 
 
@@ -113,7 +114,7 @@ ScreenID ErrorScreenHandle(void)
 
 	if ( !fFirstTime )
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String( "Runtime Error: %s ", gubErrorText ) );
+		SLOGE(DEBUG_TAG_JA2SCREENS, "Runtime Error: %s ", gubErrorText );
 		fFirstTime = TRUE;
 	}
 
@@ -123,18 +124,15 @@ ScreenID ErrorScreenHandle(void)
 	// Check for esc
 	while (DequeueEvent(&InputEvent))
   {
-      if( InputEvent.usEvent == KEY_DOWN )
-			{
-				if (InputEvent.usParam == SDLK_ESCAPE || (InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN))
-				{ // Exit the program
-					DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "GameLoop: User pressed ESCape, TERMINATING");
-
-					// handle shortcut exit
-					HandleShortCutExitState( );
-				}
+    if( InputEvent.usEvent == KEY_DOWN )
+		{
+			if (InputEvent.usParam == SDLK_ESCAPE || (InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN))
+			{ // Exit the program
+				// handle shortcut exit
+				HandleShortCutExitState( );
 			}
+		}
 	}
-
 	return( ERROR_SCREEN );
 }
 
