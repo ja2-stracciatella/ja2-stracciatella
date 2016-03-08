@@ -48,6 +48,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
+
+#define DEBUG_TAG_AI "AI"
 
 #define NUM_NPC_QUOTE_RECORDS  50
 #define NUM_CIVQUOTE_SECTORS   20
@@ -1625,7 +1628,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String("Handling trigger %ls/%d at %ld", gMercProfiles[ubNPC].zNickname, approach_record, GetJA2Clock()));
+					SLOGD(DEBUG_TAG_AI, "Handling trigger %ls/%d at %ld", gMercProfiles[ubNPC].zNickname, approach_record, GetJA2Clock());
 					NPCConsiderTalking(ubNPC, ubMerc, bApproach, approach_record, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				default:
@@ -2203,7 +2206,7 @@ void TriggerNPCRecord(UINT8 const ubTriggerNPC, UINT8 const record)
 	}
 	else
 	{ // don't do anything
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("WARNING: trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record));
+		SLOGW(DEBUG_TAG_AI, "trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record);
 	}
 }
 
@@ -2223,7 +2226,7 @@ void TriggerNPCRecordImmediately(UINT8 const ubTriggerNPC, UINT8 const record)
 	}
 	else
 	{ // don't do anything
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("WARNING: trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record));
+		SLOGW(DEBUG_TAG_AI, "trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record);
 	}
 }
 

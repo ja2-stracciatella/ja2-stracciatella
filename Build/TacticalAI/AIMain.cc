@@ -40,8 +40,9 @@
 #include "Quests.h"
 #include "Queen_Command.h"
 #include "Debug.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_AI	"AI"
 #define AI_DELAY 100
 
 
@@ -76,7 +77,7 @@ void DebugAI(const char* szOutput)
 	// Send regular debug msg AND AI debug message
 	FILE *		DebugFile;
 
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, szOutput );
+	SLOGD(DEBUG_TAG_AI, szOutput );
 	if ((DebugFile = fopen("aidebug.txt", "a+")) != NULL)
 	{
 		fputs( szOutput, DebugFile );
@@ -358,7 +359,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 				if ( guiNumBullets == 0 )
 				{
 					// abort attack!
-					//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(">>>>>> Attack busy count lobotomized due to new situation for %d", pSoldier->ubID ) );
+					SLOGD(DEBUG_TAG_AI, "Attack busy count lobotomized due to new situation for %d", pSoldier->ubID );
 					//gTacticalStatus.ubAttackBusyCount = 0;
 					fProcessNewSituation = TRUE;
 				}
@@ -368,7 +369,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 				if ( guiNumObjectSlots == 0 )
 				{
 					// abort attack!
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String(">>>>>> Attack busy count lobotomized due to new situation for %d", pSoldier->ubID ) );
+					SLOGD(DEBUG_TAG_AI, "Attack busy count lobotomized due to new situation for %d", pSoldier->ubID);
 					gTacticalStatus.ubAttackBusyCount = 0;
 					fProcessNewSituation = TRUE;
 				}
@@ -413,10 +414,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		// might have been in 'was' state; no longer so...
 		pSoldier->bNewSituation = NOT_NEW_SITUATION;
 	}
-
-#ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,String( ".... HANDLING AI FOR %d",pSoldier->ubID));
-#endif
+	SLOGD(DEBUG_TAG_AI, "handling AI for %d",pSoldier->ubID);
 
 /*********
 	Start of new overall AI system
@@ -534,9 +532,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 				}
 
 				// reached destination
-				#ifdef TESTAI
-					DebugMsg( TOPIC_JA2AI, DBG_LEVEL_0, String("OPPONENT %d REACHES DEST - ACTION DONE",pSoldier->ubID ) );
-				#endif
+				SLOGD(DEBUG_TAG_AI, "Opponent %d reaches dest - action done",pSoldier->ubID);
 
 				if ( pSoldier->sGridNo == pSoldier->sFinalDestination )
 				{
@@ -580,10 +576,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 					else
 					{
 						// OK, we have a move to finish...
-						#ifdef TESTAI
-							DebugMsg( TOPIC_JA2AI, DBG_LEVEL_0, String("GONNA TRY TO CONTINUE PATH FOR %d", pSoldier->ubID ) );
-						#endif
-
+						SLOGD(DEBUG_TAG_AI, "going to try to continue path for %d", pSoldier->ubID);
 						SoldierTriesToContinueAlongPath(pSoldier);
 					}
 				}
@@ -673,9 +666,8 @@ void EndAIDeadlock()
 		}
 #endif
 
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Number of bullets in the air is %ld", guiNumBullets));
-
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from deadlock break");
+		SLOGD(DEBUG_TAG_AI, "Number of bullets in the air is %ld", guiNumBullets);
+		SLOGD(DEBUG_TAG_AI, "Setting attack busy count to 0 from deadlock break");
 		gTacticalStatus.ubAttackBusyCount = 0;
 
 		EndAIGuysTurn(s);
@@ -778,9 +770,7 @@ void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 /*
 	if (pSoldier->bActionInProgress)
 	{
-#ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_0, String( "FreeUpNPCFromAttacking for %d", pSoldier->ubID ) );
-#endif
+		SLOGD(DEBUG_TAG_AI, "FreeUpNPCFromAttacking for %d", pSoldier->ubID);
 		if (pSoldier->bAction == AI_ACTION_FIRE_GUN)
 		{
 			if (pSoldier->bDoBurst)
@@ -835,12 +825,9 @@ void FreeUpNPCFromTurning(SOLDIERTYPE* pSoldier)
 	// if NPC is in the process of changing facing, mark him as being done!
  if ((pSoldier->bAction == AI_ACTION_CHANGE_FACING) && pSoldier->bActionInProgress)
   {
-#ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
-						String("FREEUPNPCFROMTURNING: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->bDirection) );
-#endif
-
-	 ActionDone(pSoldier);
+		SLOGD(DEBUG_TAG_AI, "FreeUpNPCFromTurning: our action %d, desdir %d dir %d",
+					pSoldier->bAction, pSoldier->bDesiredDirection, pSoldier->bDirection);
+		ActionDone(pSoldier);
   }
 }
 
@@ -887,17 +874,15 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 	{
 		if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 		{
-#ifdef TESTAI
-			DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
-						String("Cancelling actiondone: our action %d, desdir %d dir %d",pSoldier->bAction,pSoldier->bDesiredDirection,pSoldier->bDirection) );
-#endif
+			SLOGD(DEBUG_TAG_AI, "Cancelling actiondone: our action %d, desdir %d dir %d",
+						pSoldier->bAction, pSoldier->bDesiredDirection, pSoldier->bDirection);
 		}
 
 		// If doing an attack, reset attack busy count and # of bullets
 		//if ( gTacticalStatus.ubAttackBusyCount )
 		//{
 		//	gTacticalStatus.ubAttackBusyCount = 0;
-		//	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to Action Done");
+		//	SLOGD(DEBUG_TAG_AI, "Setting attack busy count to 0 due to Action Done");
 		//	pSoldier->bBulletsLeft = 0;
 		//}
 
@@ -1162,9 +1147,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 				//(IC?) if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL && ( pSoldier->usPathIndex == pSoldier->usPathDataSize ) )
 				//(old?) if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL && ( pSoldier->usActionData == pSoldier->sGridNo ) )
 				{
-	#ifdef TESTAI
-					DebugMsg( TOPIC_JA2AI, DBG_LEVEL_0, String("OPPONENT %d REACHES DEST - ACTION DONE",pSoldier->ubID ) );
-	#endif
+				SLOGD(DEBUG_TAG_AI, "OPPONENT %d REACHES DEST - ACTION DONE",pSoldier->ubID);
 					ActionDone(pSoldier);
 				}
 
@@ -1173,11 +1156,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 				//if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL && pSoldier->fNoAPToFinishMove)
 				{
 					// OK, we have a move to finish...
-
-	#ifdef TESTAI
-					DebugMsg( TOPIC_JA2AI, DBG_LEVEL_0, String("GONNA TRY TO CONTINUE PATH FOR %d", pSoldier->ubID ) );
-	#endif
-
+					SLOGD(DEBUG_TAG_AI, "GONNA TRY TO CONTINUE PATH FOR %d", pSoldier->ubID);
 					SoldierTriesToContinueAlongPath(pSoldier);
 
 					// since we just gave up on our action due to running out of points, better end our turn
@@ -1479,7 +1458,8 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				RESETTIMECOUNTER( pSoldier->AICounter, pSoldier->usActionData );
 				if (pSoldier->ubProfile != NO_PROFILE)
 				{
-					//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "%s waiting %d from %d", pSoldier->name, pSoldier->AICounter, GetJA2Clock() ) );
+					SLOGD(DEBUG_TAG_AI, "%s waiting %d from %d",
+								pSoldier->name, pSoldier->AICounter, GetJA2Clock());
 				}
 			}
 			ActionDone( pSoldier );
@@ -2204,7 +2184,7 @@ void SetNewSituation( SOLDIERTYPE * pSoldier )
 
       if ( gTacticalStatus.ubAttackBusyCount != 0 )
       {
-		    DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("BBBBBB bNewSituation is set for %d when ABC !=0.", pSoldier->ubID ) );
+		    SLOGD(DEBUG_TAG_AI, "bNewSituation is set for %d when ABC !=0.", pSoldier->ubID);
       }
 
 			if ( !(gTacticalStatus.uiFlags & INCOMBAT) || (gTacticalStatus.uiFlags & REALTIME) )

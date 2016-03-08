@@ -12,6 +12,9 @@
 #include "Soldier_Macros.h"
 #include "Render_Fun.h"
 #include "Debug.h"
+#include "slog/slog.h"
+
+#define DEBUG_TAG_AI "AI"
 
 
 //
@@ -719,10 +722,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	else
 	{
 		CancelAIAction(pSoldier);
-#ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
-						String("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID) );
-#endif
+		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	}
 
 	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
@@ -736,18 +736,12 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		NewDest(pSoldier,usNewGridNo);
 		// maybe we didn't actually start the action last turn...
 		pSoldier->bActionInProgress = TRUE;
-#ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
-						String("Soldier (%d) continues along path",pSoldier->ubID) );
-#endif
+		SLOGD(DEBUG_TAG_AI, "Soldier (%d) continues along path",pSoldier->ubID);
 	}
 	else
 	 {
 		CancelAIAction(pSoldier);
-#ifdef TESTAI
-		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
-						String("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID) );
-#endif
+		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	 }
 }
 
