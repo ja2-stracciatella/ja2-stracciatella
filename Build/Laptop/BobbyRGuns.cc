@@ -1126,11 +1126,7 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static UINT8 GetNextPurchaseNumber(void);
-
-#ifdef JA2BETAVERSION
 static void ReportBobbyROrderError(UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQtyOnHand, UINT8 ubNumPurchasing);
-#endif
-
 
 static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 {
