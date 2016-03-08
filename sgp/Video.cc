@@ -140,8 +140,6 @@ static void GetRGBDistribution();
 
 void InitializeVideoManager(void)
 {
-	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
-
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
   ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -181,8 +179,6 @@ void InitializeVideoManager(void)
 
 void ShutdownVideoManager(void)
 {
-	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager");
-
 	/* Toggle the state of the video manager to indicate to the refresh thread
 	 * that it needs to shut itself down */
 
@@ -931,8 +927,6 @@ void InitializeVideoSurfaceManager(void)
 
 void ShutdownVideoSurfaceManager(void)
 {
-  DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Shutting down the Video Surface manager");
-
 	// Delete primary viedeo surfaces
 	DeletePrimaryVideoSurfaces();
 

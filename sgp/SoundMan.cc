@@ -183,12 +183,6 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 	if (SoundPlayStreamed(pFilename))
 	{
 		//Trying to play a sound which is bigger then the 'guiSoundCacheThreshold'
-
-		// This line was causing a page fault in the Wiz 8 project, so
-		// I changed it to the second line, which works OK. -- DB
-
-		//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("\n*******\nSoundPlay():  ERROR:  trying to play %s which is bigger then the 'guiSoundCacheThreshold', use SoundPlayStreamedFile() instead\n", pFilename));
-
 		SLOGE(DEBUG_TAG_SOUND, "Trying to play %s sound is too large to load into cache, use SoundPlayStreamedFile() instead", pFilename));
 		return SOUND_ERROR;
 	}
@@ -1220,9 +1214,7 @@ static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 
 
 	if (channel->hMSSStream == NULL)
 	{
-		char AILString[200];
-		sprintf(AILString, "Stream Error: %s", AIL_last_error());
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, AILString);
+		SLOGE(DEBUG_TAG_SOUND,"Stream Error: %s", AIL_last_error());
 		return SOUND_ERROR;
 	}
 
