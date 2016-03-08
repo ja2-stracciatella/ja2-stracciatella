@@ -37,6 +37,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
+#include "slog/slog.h"
+
+#define		DEBUG_TAG_BOBBYRAY								"Bobby Ray"
 
 #define		BOBBYR_GRID_PIC_WIDTH							118
 #define		BOBBYR_GRID_PIC_HEIGHT						69
@@ -1171,10 +1174,7 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 		else
 		{
 			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, BobbyRText[ BOBBYR_MORE_NO_MORE_IN_STOCK ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-
-			#ifdef JA2BETAVERSION
-				ReportBobbyROrderError( usItemNumber, ubPurchaseNumber, LaptopSaveInfo.BobbyRayUsedInventory[ usItemNumber ].ubQtyOnHand, BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased );
-			#endif
+			ReportBobbyROrderError( usItemNumber, ubPurchaseNumber, LaptopSaveInfo.BobbyRayUsedInventory[ usItemNumber ].ubQtyOnHand, BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased );
 		}
 	}
 	//else the player is on a any other page except the used page
@@ -1212,10 +1212,7 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 		else
 		{
 			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, BobbyRText[ BOBBYR_MORE_NO_MORE_IN_STOCK ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-
-			#ifdef JA2BETAVERSION
-				ReportBobbyROrderError( usItemNumber, ubPurchaseNumber, LaptopSaveInfo.BobbyRayInventory[ usItemNumber ].ubQtyOnHand, BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased );
-			#endif
+			ReportBobbyROrderError( usItemNumber, ubPurchaseNumber, LaptopSaveInfo.BobbyRayInventory[ usItemNumber ].ubQtyOnHand, BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased );
 		}
 	}
 }
@@ -1388,14 +1385,12 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(ItemModel const* con
 	return n_items;
 }
 
-
-#ifdef JA2BETAVERSION
 static void ReportBobbyROrderError(UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQtyOnHand, UINT8 ubNumPurchasing)
 {
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "**** Bobby Rays Ordering Error ****");
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("usItemNumber = %d", usItemNumber ) );
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ubPurchaseNum = %d", ubPurchaseNum ) );
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ubQtyOnHand = %d", ubQtyOnHand ) );
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ubNumPurchasing = %d", ubNumPurchasing ) );
+	SLOGE(DEBUG_TAG_BOBBYRAY, "**** Bobby Rays Ordering Error ****\n\
+														usItemNumber = %d\n\
+														ubPurchaseNum = %d\n\
+														ubQtyOnHand = %d\n\
+														ubNumPurchasing = %d",
+				usItemNumber, ubPurchaseNum, ubQtyOnHand, ubNumPurchasing);
 }
-#endif
