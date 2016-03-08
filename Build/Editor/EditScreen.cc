@@ -77,6 +77,7 @@
 #include "Video.h"
 #include "VObject_Blitters.h"
 #include "UILayout.h"
+#include "slog/slog.h"
 
 
 static BOOLEAN gfCorruptMap        = FALSE;
@@ -208,8 +209,7 @@ static void EditModeInit(void)
 {
 	UINT32 x;
 
-	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Entering editor mode...");
-
+	SLOGI(DEBUG_TAG_EDITOR, "Entering editor mode...");
 
 	gfRealGunNut = gGameOptions.fGunNut;
 	gGameOptions.fGunNut = TRUE;
@@ -344,7 +344,7 @@ static void EditModeInit(void)
 	}
 	else
 	{
-		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Creating summary window...");
+		SLOGD(DEBUG_TAG_EDITOR, "Creating summary window...");
 		CreateSummaryWindow();
 		gfNeedToInitGame = TRUE;
 	}
@@ -359,7 +359,7 @@ static void EditModeInit(void)
 
 	gfIntendOnEnteringEditor = FALSE;
 
-	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Finished entering editor mode...");
+	SLOGD(DEBUG_TAG_EDITOR, "Finished entering editor mode...");
 }
 
 
@@ -2457,7 +2457,7 @@ try
 		if (!l)
 		{
 			// Can't create sprite
-			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light sprite of radius %d", radius));
+			SLOGW(DEBUG_TAG_EDITOR, "PlaceLight: Can't create light sprite of radius %d", radius);
 			return FALSE;
 		}
 	}
