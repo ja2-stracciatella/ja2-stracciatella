@@ -14,13 +14,6 @@
 #include "Debug.h"
 #include "slog/slog.h"
 
-#undef _DEBUG // XXX TODO
-
-#ifdef _DEBUG
-//#	define DEBUG_MEM_LEAKS // turns on tracking of every MemAlloc and MemFree!
-#endif
-
-
 #ifdef JA2
 #	include "MouseSystem.h"
 #	include "MessageBoxScreen.h"
