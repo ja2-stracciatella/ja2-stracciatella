@@ -158,36 +158,42 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
-	SLOGD(DEBUG_TAG_SGP, "Exiting Game");
-
-	SoundServiceStreams();
-
-	if (gfGameInitialized)
-	{
-		ShutdownGame();
-	}
-
-	ShutdownButtonSystem();
-	MSYS_Shutdown();
+  SLOGD(DEBUG_TAG_SGP, "Deinitializing Game");
+  SoundServiceStreams();
+  if (gfGameInitialized)
+  {
+    ShutdownGame();
+  }
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Button System");
+  ShutdownButtonSystem();
+  MSYS_Shutdown();
 
 #ifndef UTIL
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Sound Manager");
   ShutdownSoundManager();
 #endif
 
 #ifdef SGP_VIDEO_DEBUGGING
-	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
+  SLOGD(DEBUG_TAG_SGP, "Dumping Video Info");
+  PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
 #endif
 
-	ShutdownVideoSurfaceManager();
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Surface Manager");
+  ShutdownVideoSurfaceManager();
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Object Manager");
   ShutdownVideoObjectManager();
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Manager");
   ShutdownVideoManager();
 
 #ifdef EXTREME_MEMORY_DEBUGGING
-	DumpMemoryInfoIntoFile( "ExtremeMemoryDump.txt", FALSE );
+  SLOGD(DEBUG_TAG_SGP, "Dumping Memory Debug Info");
+  DumpMemoryInfoIntoFile( "ExtremeMemoryDump.txt", FALSE );
 #endif
 
+  SLOGD(DEBUG_TAG_SGP, "Shutting Doen Memory Manager");
   ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
 
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down SDL");
   SDL_Quit();
 
   exit(0);
