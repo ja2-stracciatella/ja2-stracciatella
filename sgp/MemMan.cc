@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include "MemMan.h"
 #include "Debug.h"
-#include "slog/slog.h"
 
 #ifdef JA2
 #	include "MouseSystem.h"
