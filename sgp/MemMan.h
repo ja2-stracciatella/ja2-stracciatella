@@ -27,17 +27,6 @@ PTR  MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum);
 void MemFreeXDebug(PTR ptr, const char* szCodeString, INT32 iLineNum);
 PTR  MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLineNum);
 #else
-#	if defined _DEBUG && 0 // XXX TODO
-/* This is another debug feature.  Not as sophistocated, but definately not the
- * pig the extreme system is.  This system reports all memory
- * allocations/deallocations in the debug output. */
-#		define MemAlloc(size)        MemAllocReal((size), __FILE__, __LINE__)
-#		define MemFree(ptr)          MemFreeReal((ptr), __FILE__, __LINE__)
-#		define MemRealloc(ptr, size) MemReallocReal((ptr), (size), __FILE__, __LINE__)
-PTR  MemAllocReal(UINT32 size, const char*, INT32);
-void MemFreeReal(PTR ptr, const char*, INT32);
-PTR  MemReallocReal(PTR ptr, UINT32 size, const char*, INT32);
-#	else
 // Release build version
 #		include <stdlib.h>
 #		define MemAlloc(size)        XMalloc((size))
@@ -46,7 +35,6 @@ PTR  MemReallocReal(PTR ptr, UINT32 size, const char*, INT32);
 void* XMalloc(size_t size);
 void* XRealloc(void* ptr, size_t size);
 #	endif
-#endif
 
 static inline void* MallocZ(const size_t n)
 {
