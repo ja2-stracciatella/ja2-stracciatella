@@ -46,8 +46,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_QUESTS	"Quest System"
 //#ifdef JA2BETAVERSION
 
 
@@ -2767,7 +2768,7 @@ void NpcRecordLoggingInit(ProfileID const npc_id, ProfileID const merc_id, UINT8
 	}
 	catch (...)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE));
+		SLOGE(DEBUG_TAG_QUESTS, "FAILED to write to %s", QUEST_DEBUG_FILE);
 	}
 }
 
@@ -2794,7 +2795,7 @@ void NpcRecordLogging(Approach const approach, char const* const fmt, ...)
 	}
 	catch (...)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE));
+		SLOGE(DEBUG_TAG_QUESTS, "FAILED to write to %s", QUEST_DEBUG_FILE);
 	}
 }
 

@@ -105,7 +105,9 @@
 #include "ScreenIDs.h"
 #include "Items.h"
 #include "UILayout.h"
+#include "slog/slog.h"
 
+#define DEBUG_TAG_SMAP	"Strategic Map"
 
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS	200
@@ -1414,11 +1416,8 @@ check_entry:
 		case INSERTION_CODE_PRIMARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestPrimaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-#ifdef JA2BETAVERSION
-			char str[256];
-			sprintf(str, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.", s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
-#endif
+			SLOGD(DEBUG_TAG_SMAP, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
 				ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %ls -- substituting entrypoint.", s.name);
@@ -1431,11 +1430,8 @@ check_entry:
 		case INSERTION_CODE_SECONDARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestSecondaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-#ifdef JA2BETAVERSION
-			char str[256];
-			sprintf(str, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.", s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
-#endif
+			SLOGD(DEBUG_TAG_SMAP, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
 				ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepoint search failed for %ls -- substituting entrypoint.", s.name);
@@ -1464,14 +1460,14 @@ check_entry:
 			return;
 
 		default:
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Improper insertion code %d given to UpdateMercsInSector", s.ubStrategicInsertionCode));
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion code %d given to UpdateMercsInSector", s.ubStrategicInsertionCode);
 			goto place_in_center;
 	}
 
 	// If no insertion direction exists, this is bad!
 	if (gridno == -1)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Insertion gridno for direction %d not added to map sector %d %d", s.ubStrategicInsertionCode, x, y));
+		SLOGW(DEBUG_TAG_SMAP, "Insertion gridno for direction %d not added to map sector %d %d", s.ubStrategicInsertionCode, x, y);
 place_in_center:
 		gridno = WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2;
 	}
@@ -1628,10 +1624,7 @@ static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 cons
 		case WEST:  s.ubStrategicInsertionCode = INSERTION_CODE_EAST;  break;
 
 		default: // Wrong direction given
-#ifdef JA2BETAVERSION
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction));
-			ScreenMsg(FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
-#endif
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
 			s.ubStrategicInsertionCode = INSERTION_CODE_WEST;
 			break;
 	}
@@ -1667,10 +1660,7 @@ static UINT8 GetInsertionDataFromAdjacentMoveDirection(UINT8 ubTacticalDirection
 			break;
 		default:
 			// Wrong direction given!
-			#ifdef JA2BETAVERSION
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion direction %d given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection ) );
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection );
-			#endif
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion direction %d given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
 
@@ -1708,15 +1698,10 @@ static UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection(UINT8 ubTactical
 			break;
 		default:
 			// Wrong direction given!
-			#ifdef JA2BETAVERSION
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection ) );
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection );
-			#endif
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
-
 	return( ubDirection );
-
 }
 
 
@@ -1777,7 +1762,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	else
 	{
 		// OK, no jump code here given...
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper jump code %d given to JumpIntoAdjacentSector", ubJumpCode ) );
+		SLOGD(DEBUG_TAG_SMAP, "Improper jump code %d given to JumpIntoAdjacentSector", ubJumpCode);
 	}
 
 	Assert( pValidSoldier );
@@ -2277,11 +2262,7 @@ static void DoneFadeOutAdjacentSector(void)
 			}
 			else
 			{
-#ifdef JA2BETAVERSION
-				char str[256];
-				sprintf(str, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
-#endif
+				SLOGW(DEBUG_TAG_SMAP, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
 			}
 		}
 		SetActionToDoOnceMercsGetToLocation(WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum);

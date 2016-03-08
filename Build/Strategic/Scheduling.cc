@@ -28,8 +28,9 @@
 #include "MemMan.h"
 #include "ScreenIDs.h"
 #include "GameState.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_SCHEDULER	"Scheduler"
 extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 
 #define FOURPM 960
@@ -600,7 +601,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
   {
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+				SLOGD(DEBUG_TAG_SCHEDULER, "Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
 				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->name,
 				pSoldier->ubID,
@@ -608,18 +609,18 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 				guiMin,
 				pSchedule->usTime[ index ] / 60,
 				pSchedule->usTime[ index ] % 60,
-				pSchedule->usData1[ index ]) );
+				pSchedule->usData1[ index ]);
 		}
 		else
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Autoprocessing schedule action %ls for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+			SLOGD(DEBUG_TAG_SCHEDULER, "Autoprocessing schedule action %ls for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
 				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->ubID,
 				GetWorldHour(),
 				guiMin,
 				pSchedule->usTime[ index ] / 60,
 				pSchedule->usTime[ index ] % 60,
-				pSchedule->usData1[ index ]) );
+				pSchedule->usData1[ index ]);
 		}
   }
 
