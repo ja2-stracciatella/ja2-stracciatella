@@ -1,23 +1,6 @@
 #include "Types.h"
 #include "Debug_Control.h"
 
-#ifdef _PHYSICSSUBSYSTEM_DEBUG
-
-void PhysicsDbgMessage( CHAR8 *strMessage)
-{
-  FILE      *OutFile;
-
-	if ((OutFile = fopen("PhysicsDebug.txt", "a+")) != NULL)
-	{
-	  fprintf(OutFile, "%s\n", strMessage);
-		fclose(OutFile);
-	}
-}
-
-#endif
-
-
-
 #ifdef _AISUBSYSTEM_DEBUG
 
 void AiDbgMessage( CHAR8 *strMessage)

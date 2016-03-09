@@ -178,7 +178,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, real const d
 		o->EndedWithCollisionPosition.z += h;
 	}
 
-	PhysicsDebugMsg("NewPhysics Object");
+	SLOGD(DEBUG_TAG_PHYSICS, "NewPhysics Object");
 	return o;
 }
 
@@ -478,10 +478,15 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 
   if ( pObject->fPotentialForDebug )
   {
-	  PhysicsDebugMsg(String("Object %d: Force		%f %f %f",  REALOBJ2ID(pObject), pObject->Force.x, pObject->Force.y, pObject->Force.z));
-	  PhysicsDebugMsg(String("Object %d: Velocity %f %f %f",  REALOBJ2ID(pObject), pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z));
-	  PhysicsDebugMsg(String("Object %d: Position %f %f %f",  REALOBJ2ID(pObject), pObject->Position.x, pObject->Position.y, pObject->Position.z));
-	  PhysicsDebugMsg(String("Object %d: Delta Pos %f %f %f", REALOBJ2ID(pObject), pObject->OldPosition.x - pObject->Position.x, pObject->OldPosition.y - pObject->Position.y, pObject->OldPosition.z - pObject->Position.z));
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Force		%f %f %f",  REALOBJ2ID(pObject),
+					pObject->Force.x, pObject->Force.y, pObject->Force.z);
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Velocity %f %f %f",  REALOBJ2ID(pObject),
+					pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z);
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Position %f %f %f",  REALOBJ2ID(pObject),
+					pObject->Position.x, pObject->Position.y, pObject->Position.z);
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Delta Pos %f %f %f", REALOBJ2ID(pObject),
+					pObject->OldPosition.x - pObject->Position.x, pObject->OldPosition.y - pObject->Position.y,
+					pObject->OldPosition.z - pObject->Position.z);
   }
 
   if ( pObject->Obj.usItem == MORTAR_SHELL && !pObject->fTestObject && pObject->ubActionCode == THROW_ARM_ITEM )
@@ -833,7 +838,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 			if ( !pObject->fTestObject )
 			{
 				// Break window!
-				PhysicsDebugMsg(String("Object %d: Collision Window", REALOBJ2ID(pObject)));
+				SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Window", REALOBJ2ID(pObject));
 
 				sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
 
@@ -1035,10 +1040,13 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
         if ( pObject->fPotentialForDebug )
         {
-				  PhysicsDebugMsg(String("Object %d: Collision %d",                REALOBJ2ID(pObject), iCollisionCode));
-				  PhysicsDebugMsg(String("Object %d: Collision Normal %f %f %f",   REALOBJ2ID(pObject), vTemp.x, vTemp.y, vTemp.z));
-				  PhysicsDebugMsg(String("Object %d: Collision OldPos %f %f %f",   REALOBJ2ID(pObject), pObject->Position.x, pObject->Position.y, pObject->Position.z));
-				  PhysicsDebugMsg(String("Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject), pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z));
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision %d", REALOBJ2ID(pObject), iCollisionCode);
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Normal %f %f %f", REALOBJ2ID(pObject),
+								vTemp.x, vTemp.y, vTemp.z);
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision OldPos %f %f %f", REALOBJ2ID(pObject),
+								pObject->Position.x, pObject->Position.y, pObject->Position.z);
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject),
+								pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z);
         }
 		}
 		else
@@ -1194,7 +1202,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 
     if ( pObject->fPotentialForDebug )
     {
-			PhysicsDebugMsg(String("Object %d: uiNumTilesMoved: %d", REALOBJ2ID(pObject), pObject->uiNumTilesMoved));
+			SLOGD(DEBUG_TAG_PHYSICS, "Object %d: uiNumTilesMoved: %d", REALOBJ2ID(pObject), pObject->uiNumTilesMoved);
     }
 	}
 
