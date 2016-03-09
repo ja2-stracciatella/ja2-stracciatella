@@ -1012,9 +1012,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		{
 			SLOGD(DEBUG_TAG_AI, "Found Cover: current %ld, best %ld, %d%%Better %ld",
 						iCurrentCoverValue, iBestCoverValue, *piPercentBetter);
-#ifdef BETAVERSION
-			SnuggleDebug(pSoldier,"Found Cover");
-#endif
 			return((INT16)sBestCover);       // return the gridno of that cover
 		}
 	}
