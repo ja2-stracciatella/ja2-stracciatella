@@ -561,10 +561,7 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 	////////////////////////////////////////////////////////////////////////////
 	// DO NOTHING: Not enough points left to move, so save them for next turn
 	////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
-	AINameMessage(pSoldier,"- DOES NOTHING (YELLOW)",1000);
-#endif
+	SLOGD(DEBUG_TAG_AI, "%s - DOES NOTHING (YELLOW)", pSoldier->name);
 
 	// by default, if everything else fails, just stands in place without turning
 	pSoldier->usActionData = NOWHERE;
@@ -686,9 +683,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 
 				if ((INT16) PreRandom(100) < iChance)
 				{
-					#ifdef DEBUGDECISIONS
-						AINameMessage(pSoldier,"decides to call an alert!",1000);
-					#endif
+					SLOGD(DEBUG_TAG_AI, "%s decides to call an alert!", pSoldier->name);
 					pSoldier->usActionData = CALL_1_PREY;
 					return(AI_ACTION_CREATURE_CALL);
 				}
@@ -837,13 +832,9 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
 
-#ifdef DEBUGDECISIONS
- AINameMessage(ptr,"- DOES NOTHING (RED)",1000);
-#endif
-
- pSoldier->usActionData = NOWHERE;
-
- return(AI_ACTION_NONE);
+	SLOGD(DEBUG_TAG_AI, "%s - DOES NOTHING (RED)", pSoldier->name);
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 
@@ -1350,15 +1341,10 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(pSoldier,"- DOES NOTHING (BLACK)",1000);
-#endif
-
- // by default, if everything else fails, just stand in place and wait
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
-
+	SLOGD(DEBUG_TAG_AI, "%s - DOES NOTHING (BLACK)", pSoldier->name);
+	// by default, if everything else fails, just stand in place and wait
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 

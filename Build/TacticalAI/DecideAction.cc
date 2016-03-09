@@ -1229,14 +1229,10 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 #ifdef DEBUGDECISIONS
      AINumMessage("Chance to radio yellow alert = ",iChance);
 #endif
-
-     if ((INT16)PreRandom(100) < iChance)
+			if ((INT16)PreRandom(100) < iChance)
       {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a YELLOW alert!",1000);
-#endif
-
-       return(AI_ACTION_YELLOW_ALERT);
+				SLOGD(DEBUG_TAG_AI, "%s decides to radio a YELLOW alert!", pSoldier->name);
+				return(AI_ACTION_YELLOW_ALERT);
       }
     }
   }
@@ -1453,15 +1449,12 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
  // SWITCH TO GREEN: determine if soldier acts as if nothing at all was wrong
  ////////////////////////////////////////////////////////////////////////////
- if ((INT16)PreRandom(100) < 50)
+	if ((INT16)PreRandom(100) < 50)
   {
-#ifdef DEBUGDECISIONS
-   AINameMessage(pSoldier,"ignores noise completely and BYPASSES to GREEN!",1000);
-#endif
-
-   // Skip YELLOW until new situation, 15% extra chance to do GREEN actions
-   pSoldier->bBypassToGreen = 15;
-   return(DecideActionGreen(pSoldier));
+		SLOGD(DEBUG_TAG_AI, "%s ignores noise completely and BYPASSES to GREEN!", pSoldier->name);
+		// Skip YELLOW until new situation, 15% extra chance to do GREEN actions
+		pSoldier->bBypassToGreen = 15;
+		return(DecideActionGreen(pSoldier));
   }
 
 
@@ -1484,14 +1477,10 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(pSoldier,"- DOES NOTHING (YELLOW)",1000);
-#endif
-
- // by default, if everything else fails, just stands in place without turning
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
+	SLOGD(DEBUG_TAG_AI, "%s - DOES NOTHING (YELLOW)", pSoldier->name);
+	// by default, if everything else fails, just stands in place without turning
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 
@@ -1807,17 +1796,13 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				 (gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				 (gTacticalStatus.ubSpottersCalledForBy == NOBODY))
       {
-       // then call for spotters!  Uses up the rest of his turn (whatever
-       // that may be), but from now on, BLACK AI NPC may radio sightings!
-       gTacticalStatus.ubSpottersCalledForBy = pSoldier->ubID;
-       pSoldier->bActionPoints = 0;
-
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"calls for spotters!",1000);
-#endif
-
-       pSoldier->usActionData = NOWHERE;
-       return(AI_ACTION_NONE);
+				// then call for spotters!  Uses up the rest of his turn (whatever
+				// that may be), but from now on, BLACK AI NPC may radio sightings!
+				gTacticalStatus.ubSpottersCalledForBy = pSoldier->ubID;
+				pSoldier->bActionPoints = 0;
+				SLOGD(DEBUG_TAG_AI, "%s calls for spotters!", pSoldier->name);
+				pSoldier->usActionData = NOWHERE;
+				return(AI_ACTION_NONE);
       }
     }
   }
@@ -1939,11 +1924,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
      if ((INT16) PreRandom(100) < iChance)
       {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a RED alert!",1000);
-#endif
-
-       return(AI_ACTION_RED_ALERT);
+				SLOGD(DEBUG_TAG_AI, "%s decides to radio a RED alert!", pSoldier->name);
+				return(AI_ACTION_RED_ALERT);
       }
     }
   }
@@ -2102,10 +2084,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						}
 
 					 // mark SEEKING as impossible for next time through while loop
-		#ifdef DEBUGDECISIONS
-					 AINameMessage(pSoldier,"couldn't SEEK...",1000);
-		#endif
-					 bSeekPts = -99;
+						SLOGD(DEBUG_TAG_AI, "%s couldn't SEEK...", pSoldier->name);
+						bSeekPts = -99;
 					}
 
 				 // if WATCHING is possible and at least as desirable as anything else
@@ -2191,11 +2171,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						}
 
 				 // mark SEEKING as impossible for next time through while loop
-		#ifdef DEBUGDECISIONS
-					 AINameMessage(pSoldier,"couldn't HELP...",1000);
-		#endif
-
-					 bHelpPts = -99;
+						SLOGD(DEBUG_TAG_AI, "%s couldn't HELP...", pSoldier->name);
+						bHelpPts = -99;
 					}
 
 
@@ -2243,11 +2220,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						}
 
 					 // mark HIDING as impossible for next time through while loop
-		#ifdef DEBUGDECISIONS
-					 AINameMessage(pSoldier,"couldn't HIDE...",1000);
-		#endif
-
-					 bHidePts = -99;
+						SLOGD(DEBUG_TAG_AI, "%s couldn't HIDE...", pSoldier->name);
+						bHidePts = -99;
 					}
 				}
 			}
@@ -2459,9 +2433,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			pSoldier->bBleeding = __max( 0, pSoldier->bBleeding - pSoldier->bActionPoints );
 			return( AI_ACTION_NONE ); // will end-turn/wait depending on whether we're in TB or realtime
 		}
-#ifdef DEBUGDECISIONS
-		AINameMessage(ptr,"- chose to SKIP all RED actions, BYPASSES to GREEN!",1000);
-#endif
+		SLOGD(DEBUG_TAG_AI, "%s chose to SKIP all RED actions, BYPASSES to GREEN!", pSoldier->name);
 
 		// Skip RED until new situation/next turn, 30% extra chance to do GREEN actions
 		pSoldier->bBypassToGreen = 30;
@@ -2521,13 +2493,9 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(ptr,"- DOES NOTHING (RED)",1000);
-#endif
-
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
+	SLOGD(DEBUG_TAG_AI, "%s does nothing (RED)", pSoldier->name);
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 
@@ -3542,16 +3510,13 @@ bCanAttack = FALSE;
      AINumMessage("Chance to radio for SPOTTING = ",iChance);
 #endif
 
-     if ((INT16)PreRandom(100) < iChance)
-     {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a RED for SPOTTING!",1000);
-#endif
-
-       return(AI_ACTION_RED_ALERT);
-     }
-   }
- }
+			if ((INT16)PreRandom(100) < iChance)
+			{
+				SLOGD(DEBUG_TAG_AI, "%s decides to radio a RED for SPOTTING!", pSoldier->name);
+				return(AI_ACTION_RED_ALERT);
+			}
+		}
+	}
 
 
  ////////////////////////////////////////////////////////////////////////////
@@ -3717,13 +3682,10 @@ bCanAttack = FALSE;
      AINumMessage("Chance to radio RED alert = ",iChance);
 #endif
 
-     if ((INT16) PreRandom(100) < iChance)
+			if ((INT16) PreRandom(100) < iChance)
       {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a RED alert!",1000);
-#endif
-
-       return(AI_ACTION_RED_ALERT);
+				SLOGD(DEBUG_TAG_AI, "%s decides to radio a RED alert!", pSoldier->name);
+				return(AI_ACTION_RED_ALERT);
       }
     }
   }
@@ -3737,15 +3699,10 @@ bCanAttack = FALSE;
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(pSoldier,"- DOES NOTHING (BLACK)",1000);
-#endif
-
- // by default, if everything else fails, just stand in place and wait
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
-
+	SLOGD(DEBUG_TAG_AI, "%s does nothing (BLACK)", pSoldier->name);
+	// by default, if everything else fails, just stand in place and wait
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 INT8 DecideAction(SOLDIERTYPE *pSoldier)
