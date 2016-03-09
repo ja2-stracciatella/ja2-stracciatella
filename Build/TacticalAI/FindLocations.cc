@@ -751,10 +751,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 	iCurrentCoverValue -= (iCurrentCoverValue / 10) * NumberOfTeamMatesAdjacent( pSoldier, pSoldier->sGridNo );
 
-#ifdef DEBUGCOVER
-//	AINumMessage("Search Range = ",iSearchRange);
-#endif
-
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
