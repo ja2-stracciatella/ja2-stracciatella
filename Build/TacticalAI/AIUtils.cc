@@ -1998,11 +1998,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 	if (iThreatValue > 250)
 	{
 		sprintf(tempstr,"CalcManThreatValue: WARNING - %d has a very high threat value of %d",pEnemy->ubID,iThreatValue);
-
-#ifdef TESTVERSION
 		PopMessage(tempstr);
-#endif
-
 	}
 #endif
 

@@ -4556,11 +4556,7 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 			pSoldier->guynum,ExtMen[pSoldier->guynum].name,pSoldier->newOppCnt,
 			LastCallerText[ExtMen[pSoldier->guynum].lastCaller],
 			LastCaller2Text[ExtMen[pSoldier->guynum].lastCaller2]);
-
-#ifdef TESTVERSION	// make this ERROR/BETA again when it's fixed!
-		PopMessage(tempstr);
-#endif
-
+			PopMessage(tempstr);
 #endif
 
 		if (pSoldier->uiStatusFlags & SOLDIER_PC)

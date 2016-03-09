@@ -49,9 +49,6 @@
 //
 
 #define DEADLOCK_DELAY							15000
-
-//#define TESTAI
-
 #define AI_LIMIT_PER_UPDATE		1
 
 BOOLEAN gfTurnBasedAI;
@@ -975,15 +972,13 @@ INT16 ActionInProgress(SOLDIERTYPE *pSoldier)
 
 
  // this here should never happen, but it seems to (turns sometimes hang!)
- if ((pSoldier->bAction == AI_ACTION_CHANGE_FACING) && (pSoldier->bDesiredDirection != pSoldier->usActionData))
+	if ((pSoldier->bAction == AI_ACTION_CHANGE_FACING) && (pSoldier->bDesiredDirection != pSoldier->usActionData))
   {
-#ifdef TESTVERSION
-   PopMessage("ActionInProgress: WARNING - CONTINUING FACING CHANGE...");
-#endif
+		SLOGD(DEBUG_TAG_AI, "ActionInProgress: WARNING - CONTINUING FACING CHANGE...");
 
-   // don't try to pay any more APs for this, it was paid for once already!
-   pSoldier->bDesiredDirection = (INT8) pSoldier->usActionData;   // turn to face direction in actionData
-   return(TRUE);
+		// don't try to pay any more APs for this, it was paid for once already!
+		pSoldier->bDesiredDirection = (INT8) pSoldier->usActionData;   // turn to face direction in actionData
+		return(TRUE);
   }
 
 
@@ -1687,16 +1682,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
         }
 			}
 
-#ifdef TESTVERSION
-			if (pSoldier->bAction == AI_ACTION_KNIFE_MOVE)
-			{
-				sprintf(tempstr,"TEST MSG: %s is about to go stab %s. MAKE SURE HE DOES!",
-					pSoldier->name,
-				ExtMen[WhoIsThere(pSoldier->usActionData)].name);
-
-				SimulMessage(tempstr,3000,NODECRYPT);
-			}
-#endif
 			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, pSoldier->bTargetLevel, pSoldier->inv[HANDPOS].usItem, FALSE);
 			if ( iRetCode != ITEM_HANDLE_OK)
 			{
@@ -2079,10 +2064,6 @@ static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 					if ((pFriend->bAlertStatus == STATUS_YELLOW) &&
 						(pSoldier->bAlertStatus < STATUS_YELLOW))
 					{
-					#ifdef TESTVERSION
-						sprintf(tempstr,"TEST MSG: %s sees %s listening, goes to YELLOW ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
-						PopMessage(tempstr);
-					#endif
 						pSoldier->bAlertStatus = STATUS_YELLOW;    // also get suspicious
 						SetNewSituation( pSoldier );
 						pSoldier->sNoiseGridno = pFriend->sGridNo;  // pretend FRIEND made noise
