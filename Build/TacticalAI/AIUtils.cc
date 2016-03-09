@@ -1869,11 +1869,8 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
      (pSoldier->bAttitude == BRAVESOLO || pSoldier->bAttitude == BRAVEAID))
   bMoraleCategory = MORALE_WORRIED;
 
-
-#ifdef DEBUGDECISIONS
- DebugAI( String( "Morale = %d (category %d), sOutTotalThreat %d, sTheirTotalThreat %d\n",
-		morale,bMoraleCategory,sOutTotalThreat,sTheirTotalThreat ) );
-#endif
+	SLOGD(DEBUG_TAG_AI, "Morale = %d (category %d), iOurTotalThreat %d, iTheirTotalThreat %d",
+				sMorale, bMoraleCategory, iOurTotalThreat, iTheirTotalThreat);
 
  return(bMoraleCategory);
 }

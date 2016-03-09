@@ -429,7 +429,7 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 	CommonEnterCombatModeCode( );
 
 	SetSoldierAsUnderAiControl( pActingSoldier );
-	DebugAI( String( "Giving AI control to %d", pActingSoldier->ubID ) );
+	SLOGD(DEBUG_TAG_AI, "Giving AI control to %d", pActingSoldier->ubID);
 	pActingSoldier->fTurnInProgress = TRUE;
 	gTacticalStatus.uiTimeSinceMercAIStart = GetJA2Clock();
 
@@ -1382,7 +1382,7 @@ void AddToIntList(SOLDIERTYPE* const s, const BOOLEAN fGainControl, const BOOLEA
 		// turn off AI control flag if they lost control
 		if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 		{
-			DebugAI(String("Taking away AI control from %d", s->ubID));
+			SLOGD(DEBUG_TAG_AI, "Taking away AI control from %d", s->ubID);
 			s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 		}
 	}

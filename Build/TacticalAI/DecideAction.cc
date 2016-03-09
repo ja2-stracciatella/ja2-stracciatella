@@ -3331,11 +3331,8 @@ bCanAttack = FALSE;
      case AGGRESSIVE:		iOffense += 20; break;
 		 case ATTACKSLAYONLY:iOffense += 30; break;
    }
-
-#ifdef DEBUGDECISIONS
-   DebugAI( String( "%s - CHOICE: iOffense = %d, iDefense = %d\n",
-				   pSoldier->name,iOffense,iDefense ) );
-#endif
+		SLOGD(DEBUG_TAG_AI, "%s - CHOICE: iOffense = %d, iDefense = %d\n",
+				   pSoldier->name,iOffense,iDefense);
 
    // if his defensive instincts win out, forget all about the attack
    if (iDefense > iOffense)
@@ -3542,15 +3539,10 @@ bCanAttack = FALSE;
 			pSoldier->usActionData = BestAttack.sTarget;
 			pSoldier->bTargetLevel = BestAttack.bTargetLevel;
 
-#ifdef DEBUGDECISIONS
-			DebugAI(String("%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
-				pSoldier->ubID,pSoldier->name,
+			SLOGD(DEBUG_TAG_AI, "%d(%s) %s %d(%s)",
+				pSoldier->ubID, pSoldier->name,
 				ubBestAttackAction == AI_ACTION_FIRE_GUN ? "SHOOTS" : (ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE ? "TOSSES AT" : "STABS"),
-				BestAttack.opponent->ubID, BestAttack.opponent->name,
-				BestAttack.target, BestAttack.aimTime
-			));
-#endif
-
+				BestAttack.opponent->ubID, BestAttack.opponent->name );
 			return(ubBestAttackAction);
 		}
 
@@ -3593,16 +3585,12 @@ bCanAttack = FALSE;
  // IF A LOCATION WITH BETTER COVER IS AVAILABLE & REACHABLE, GO FOR IT!
  ////////////////////////////////////////////////////////////////////////////
 
- if (sBestCover != NOWHERE)
+	if (sBestCover != NOWHERE)
   {
-#ifdef DEBUGDECISIONS
-   DebugAI( String( "%s - TAKING COVER at gridno %d (%d%% better)\n",
-   		pSoldier->name,sBestCover,iCoverPercentBetter) ) ;
-#endif
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"AI %d taking cover, morale %d, from %d to %d", pSoldier->ubID, pSoldier->bAIMorale, pSoldier->sGridNo, sBestCover );
-   pSoldier->usActionData = sBestCover;
-
-   return(AI_ACTION_TAKE_COVER);
+		SLOGD(DEBUG_TAG_AI, "%s - taking cover at gridno %d (%d%% better)",
+   		pSoldier->name, sBestCover, iCoverPercentBetter);
+		pSoldier->usActionData = sBestCover;
+		return(AI_ACTION_TAKE_COVER);
   }
 
 
@@ -3952,13 +3940,9 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 		}
 	}
-
-#ifdef DEBUGDECISIONS
- DebugAI( String( "DecideAction: selected action %d, actionData %d\n\n",action,pSoldier->usActionData) );
-#endif
-
-
- return(bAction);
+	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+				bAction, pSoldier->usActionData);
+	return(bAction);
 }
 
 

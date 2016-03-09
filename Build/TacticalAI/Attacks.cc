@@ -148,10 +148,6 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 	 if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpponent->ubProfile != SLAY)
      continue;  // next opponent
 
-#ifdef DEBUGATTACKS
-   DebugAI( String( "%s sees %s at gridno %d\n",pSoldier->name,ExtMen[pOpponent->ubID].name,pOpponent->sGridNo ) );
-#endif
-
    // calculate minimum action points required to shoot at this opponent
    ubMinAPcost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
    //NumMessage("MinAPcost to shoot this opponent = ",ubMinAPcost);
@@ -296,10 +292,6 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 	 {
 		 iAttackValue /= 2;
 	 }
-
-#ifdef DEBUGATTACKS
-   DebugAI( String( "CalcBestShot: best AttackValue vs %d = %d\n",uiLoop,iAttackValue ) );
-#endif
 
    // if we can hurt the guy, OR probably not, but at least it's our best
    // chance to actually hit him and maybe scare him, knock him down, etc.
@@ -1002,9 +994,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				// unlike SHOOTing and STABbing, find strictly the highest attackValue
 				if (iAttackValue > pBestThrow->iAttackValue)
 				{
-#ifdef DEBUGATTACKS
-					DebugAI(String("CalcBestThrow: new best attackValue vs %d = %d\n", opponents[ubLoop]->ubID, iAttackValue));
-#endif
+					SLOGD(DEBUG_TAG_AI, "CalcBestThrow: new best attackValue vs %d = %d\n", opponents[ubLoop]->ubID, iAttackValue);
 
 					// OOOF!  That was a lot of work!  But we've got a new best target!
 					pBestThrow->ubPossible           = TRUE;
@@ -1016,8 +1006,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					pBestThrow->ubAPCost            = ubMinAPcost + ubMaxPossibleAimTime;
 					pBestThrow->bTargetLevel				= bOpponentLevel[ubLoop];
 
-					//sprintf(tempstr,"new best THROW AttackValue = %d at grid #%d",iAttackValue/100000,gridno);
-					//PopMessage(tempstr);
 				}
 			}
 		}
@@ -1080,25 +1068,21 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		// if this merc is inactive, at base, on assignment, or dead
 		if (!pOpponent->bLife) continue; // next merc
 
-   // if this man is neutral / on the same side, he's not an opponent
-   if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide) )
-     continue;          // next merc
+		// if this man is neutral / on the same side, he's not an opponent
+		if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide) )
+			continue;          // next merc
 
-   // if this opponent is not currently in sight (ignore known but unseen!)
+		// if this opponent is not currently in sight (ignore known but unseen!)
    	if (pSoldier->bOppList[pOpponent->ubID] != SEEN_CURRENTLY)
-     continue;          // next merc
+			continue;          // next merc
 
-	 // if this opponent is not on the same level
-	 if (pSoldier->bLevel != pOpponent->bLevel)
-     continue;          // next merc
+		// if this opponent is not on the same level
+		if (pSoldier->bLevel != pOpponent->bLevel)
+			continue;          // next merc
 
 		// Special stuff for Carmen the bounty hunter
 		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpponent->ubProfile != SLAY)
 			continue;  // next opponent
-
-#ifdef DEBUGATTACKS
-   DebugAI( String( "%s can see %s\n",pSoldier->name,ExtMen[pOpponent->ubID].name ) );
-#endif
 
    // calculate minimum action points required to stab at this opponent
 	 ubMinAPCost = CalcTotalAPsToAttack( pSoldier,pOpponent->sGridNo,ADDTURNCOST, 0 );
@@ -1214,10 +1198,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
    iAttackValue = ( iEstDamage * iBestHitRate * ubChanceToReallyHit * iThreatValue) / 1000;
    //NumMessage("STAB AttackValue = ",iAttackValue / 1000);
 
-#ifdef DEBUGATTACKS
-       DebugAI( String( "CalcBestStab: best AttackValue vs %d = %d\n",ubLoop,iAttackValue ) );
-#endif
-
    // if we can hurt the guy, OR probably not, but at least it's our best
    // chance to actually hit him and maybe scare him, knock him down, etc.
    if ((iAttackValue > 0) || (ubChanceToReallyHit > pBestStab->ubChanceToReallyHit))
@@ -1299,10 +1279,6 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 		continue; // next merc
 	 }
 
-#ifdef DEBUGATTACKS
-   DebugAI( String( "%s can see %s\n",pSoldier->name,ExtMen[pOpponent->ubID].name ) );
-#endif
-
    // calculate minimum action points required to stab at this opponent
 	 ubMinAPCost = CalcTotalAPsToAttack( pSoldier,pOpponent->sGridNo,ADDTURNCOST, 0 );
    //ubMinAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
@@ -1380,10 +1356,6 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
    // normal value before division should be about 5 million...
    iAttackValue = ( iEstDamage * iBestHitRate * ubChanceToReallyHit * iThreatValue) / 1000;
    //NumMessage("STAB AttackValue = ",iAttackValue / 1000);
-
-#ifdef DEBUGATTACKS
-       DebugAI( String( "CalcBestStab: best AttackValue vs %d = %d\n",ubLoop,iAttackValue ) );
-#endif
 
    // if we can hurt the guy, OR probably not, but at least it's our best
    // chance to actually hit him and maybe scare him, knock him down, etc.

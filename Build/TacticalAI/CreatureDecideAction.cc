@@ -1309,17 +1309,12 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 		{
 			pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 		}
-
-#ifdef DEBUGDECISIONS
-		DebugAI( String( "%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
-			pSoldier->ubID,pSoldier->name,
+		SLOGD(DEBUG_TAG_AI, "%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
+					pSoldier->ubID, pSoldier->name,
 			(ubBestAttackAction == AI_ACTION_FIRE_GUN)?"SHOOTS":((ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE)?"TOSSES AT":"STABS"),
-			BestAttack.ubOpponent,ExtMen[BestAttack.ubOpponent].name,
-			BestAttack.target,BestAttack.aimTime) ) ;
-#endif
-
+			BestAttack.opponent, BestAttack.opponent->name,
+			BestAttack.sTarget, BestAttack.ubAimTime);
 		return(ubBestAttackAction);
-
 	}
  }
 
@@ -1449,11 +1444,8 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 			bAction = CreatureDecideActionBlack(pSoldier);
 			break;
 	}
-
-#ifdef DEBUGDECISIONS
-	DebugAI( String( "DecideAction: selected action %d, actionData %d\n\n",action,pSoldier->usActionData ) );
-#endif
-
+	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+				bAction, pSoldier->usActionData);
 	return(bAction);
 }
 

@@ -90,6 +90,7 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
 
 #if defined JA2BETAVERSION
 #	include "Strategic_AI.h"
@@ -8024,10 +8025,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 
 		if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
 		{
-			#ifdef TESTAICONTROL
-				DebugAI( String("Ending turn for %d because of error from HandleItem", pSoldier->ubID ) );
-			#endif
-
+			SLOGD(DEBUG_TAG_AI, "Ending turn for %d because of error from HandleItem", pSoldier->ubID);
 			EndAIGuysTurn(*pSoldier);
 		}
 	}

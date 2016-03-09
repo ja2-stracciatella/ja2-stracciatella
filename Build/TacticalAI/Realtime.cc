@@ -28,10 +28,8 @@ static INT8 RTPlayerDecideAction(SOLDIERTYPE* pSoldier)
 	{
 		bAction = DecideAction( pSoldier );
 	}
-
-	#ifdef DEBUGDECISIONS
-		DebugAI( String( "DecideAction: selected action %d, actionData %d\n\n",action,pSoldier->usActionData ) );
-	#endif
+	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+				bAction, pSoldier->usActionData);
 
 	return(bAction);
 }

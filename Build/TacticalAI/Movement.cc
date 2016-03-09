@@ -12,10 +12,6 @@
 #include "Soldier_Macros.h"
 #include "Render_Fun.h"
 #include "Debug.h"
-#include "slog/slog.h"
-
-#define DEBUG_TAG_AI "AI"
-
 
 //
 // CJC's DG->JA2 conversion notes
@@ -117,9 +113,8 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 	// have occupied the destination gridno in the meantime!)
 	if (LegalNPCDestination(pSoldier,sGridno,ENSURE_PATH,WATEROK,0))
 	{
-#ifdef DEBUGDECISIONS
-		DebugAI( String( "%d CONTINUES MOVEMENT to gridno %d...\n",pSoldier->ubID,gridno ) );
-#endif
+		SLOGD(DEBUG_TAG_AI, "%d continues movement to gridno %d...",
+					pSoldier->ubID, sGridno);
 
 		pSoldier->bPathStored = TRUE;	// optimization - Ian
 
@@ -755,14 +750,12 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE& s)
 	AdjustNoAPToFinishMove(&s, TRUE);
 
 	// We'll keep his action intact though
-	DebugAI(String("NO AP TO FINISH MOVE for %d (%d APs left)", s.ubID, s.bActionPoints));
+	SLOGD(DEBUG_TAG_AI, "NO AP TO FINISH MOVE for %d (%d APs left)", s.ubID, s.bActionPoints);
 
 	// If this dude is under AI right now, then pass the baton to someone else
 	if (s.uiStatusFlags & SOLDIER_UNDERAICONTROL)
 	{
-#ifdef TESTAICONTROL
-		DebugAI(String("Ending turn for %d because out of APs for movement", s.ubID));
-#endif
+		SLOGD(DEBUG_TAG_AI, "Ending turn for %d because out of APs for movement", s.ubID);
 		EndAIGuysTurn(s);
 	}
 }
