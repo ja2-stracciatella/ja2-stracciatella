@@ -82,16 +82,6 @@ void InitAI(void)
 		//init the panic system
 		InitPanicSystem();
 	}
-
-#ifdef JA2TESTVERSION
-	// Clear the AI debug txt file to prevent it from getting huge
-	FILE* const DebugFile = fopen("aidebug.txt", "w");
-	if (DebugFile != NULL)
-	{
-		fputs( "\n", DebugFile );
-		fclose( DebugFile );
-	}
-#endif
 }
 
 
