@@ -14,20 +14,6 @@
 
 void LiveMessage(const char *strMessage);
 
-
-#ifdef _ANIMSUBSYSTEM_DEBUG
-
-#define AnimDebugMsg(c)				AnimDbgMessage( (c) )
-
-extern	void		AnimDbgMessage( CHAR8 *Str);
-
-#else
-
-#define AnimDebugMsg(c) (void)0
-
-#endif
-
-
 #ifdef _PHYSICSSUBSYSTEM_DEBUG
 
 #define PhysicsDebugMsg(c)				PhysicsDbgMessage( (c) )

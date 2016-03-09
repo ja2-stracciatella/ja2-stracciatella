@@ -5,8 +5,9 @@
 #include "Animation_Control.h"
 #include "Debug_Control.h"
 #include "MemMan.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_ANIMCACHE	"Animation Cache"
 #define EMPTY_CACHE_ENTRY		65000
 
 static const UINT32 guiCacheSize = MIN_CACHE_SIZE;
@@ -17,10 +18,10 @@ void InitAnimationCache(UINT16 const usSoldierID, AnimationSurfaceCacheType* con
 	UINT32 cnt;
 
 	// Allocate entries
-	AnimDebugMsg( String( "*** Initializing anim cache surface for soldier %d", usSoldierID ) );
+	SLOGD(DEBUG_TAG_ANIMCACHE, "Initializing anim cache surface for soldier %d", usSoldierID);
 	pAnimCache->usCachedSurfaces = MALLOCN(UINT16, guiCacheSize);
 
-	AnimDebugMsg( String( "*** Initializing anim cache hit counter for soldier %d", usSoldierID ) );
+	SLOGD(DEBUG_TAG_ANIMCACHE, "Initializing anim cache hit counter for soldier %d", usSoldierID);
 	pAnimCache->sCacheHits = MALLOCN(INT16, guiCacheSize);
 
 	// Zero entries
@@ -41,13 +42,13 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 	// Allocate entries
 	if ( pAnimCache->usCachedSurfaces!= NULL )
 	{
-		AnimDebugMsg( String( "*** Removing Anim Cache surface for soldier %d", usSoldierID ) );
+		SLOGD(DEBUG_TAG_ANIMCACHE, "Removing Anim Cache surface for soldier %d", usSoldierID);
 		MemFree( pAnimCache->usCachedSurfaces );
 	}
 
 	if ( pAnimCache->sCacheHits != NULL )
 	{
-		AnimDebugMsg( String( "*** Removing Anim Cache hit counter for soldier %d", usSoldierID ) );
+		SLOGD(DEBUG_TAG_ANIMCACHE, "Removing Anim Cache hit counter for soldier %d", usSoldierID);
 		MemFree( pAnimCache->sCacheHits );
 	}
 }
@@ -66,7 +67,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 		if ( pAnimCache->usCachedSurfaces[ cnt ] == usSurfaceIndex )
 		{
 			 // Found surface, return
-			 AnimDebugMsg( String( "Anim Cache: Hit %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
+			 SLOGD(DEBUG_TAG_ANIMCACHE, "Anim Cache: Hit %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
 			 pAnimCache->sCacheHits[cnt]++;
 			 return;
 		}
@@ -75,7 +76,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 	// Check if max size has been reached
 	if ( pAnimCache->ubCacheSize == guiCacheSize )
 	{
-		AnimDebugMsg( String( "Anim Cache: Determining Bump Candidate ( Soldier %d )", usSoldierID ) );
+		SLOGD(DEBUG_TAG_ANIMCACHE, "Anim Cache: Determining Bump Candidate ( Soldier %d )", usSoldierID);
 
 		// Determine exisiting surface used by merc
 		usCurrentAnimSurface = DetermineSoldierAnimationSurface(&GetMan(usSoldierID), usCurrentAnimation);
@@ -85,24 +86,24 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 		// Loop through and pick one with lowest cache hits
 		for ( cnt = 0; cnt < pAnimCache->ubCacheSize; cnt++ )
 		{
-			 AnimDebugMsg( String( "Anim Cache: Slot %d Hits %d ( Soldier %d )", cnt, pAnimCache->sCacheHits[ cnt ], usSoldierID ) );
+			SLOGD(DEBUG_TAG_ANIMCACHE, "Anim Cache: Slot %d Hits %d ( Soldier %d )", cnt, pAnimCache->sCacheHits[ cnt ], usSoldierID);
 
-			 if ( pAnimCache->usCachedSurfaces[ cnt ] == usCurrentAnimSurface )
-			 {
-				AnimDebugMsg( String( "Anim Cache: REJECTING Slot %d EXISTING ANIM SURFACE ( Soldier %d )", cnt, usSoldierID ) );
-			 }
-			 else
-			 {
-				 if ( pAnimCache->sCacheHits[ cnt ] < sMostHits )
-				 {
-						sMostHits = pAnimCache->sCacheHits[ cnt ];
-						ubLowestIndex = cnt;
-				 }
-			 }
+			if ( pAnimCache->usCachedSurfaces[ cnt ] == usCurrentAnimSurface )
+			{
+				SLOGD(DEBUG_TAG_ANIMCACHE, "Anim Cache: REJECTING Slot %d EXISTING ANIM SURFACE ( Soldier %d )", cnt, usSoldierID);
+			}
+			else
+			{
+				if ( pAnimCache->sCacheHits[ cnt ] < sMostHits )
+				{
+					sMostHits = pAnimCache->sCacheHits[ cnt ];
+					ubLowestIndex = cnt;
+				}
+			}
 		}
 
 		// Bump off lowest index
-		AnimDebugMsg( String( "Anim Cache: Bumping %d ( Soldier %d )", ubLowestIndex, usSoldierID ) );
+		SLOGD(DEBUG_TAG_ANIMCACHE, "Anim Cache: Bumping %d ( Soldier %d )", ubLowestIndex, usSoldierID);
 		UnLoadAnimationSurface( usSoldierID, pAnimCache->usCachedSurfaces[ ubLowestIndex ] );
 
 		// Decrement
@@ -118,7 +119,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 	{
 		if ( pAnimCache->usCachedSurfaces[ cnt ] == EMPTY_CACHE_ENTRY )
 		{
-			AnimDebugMsg( String( "Anim Cache: Loading Surface %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
+			SLOGD(DEBUG_TAG_ANIMCACHE, "Anim Cache: Loading Surface %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
 
 			// Insert here
 			LoadAnimationSurface(usSoldierID, usSurfaceIndex, usCurrentAnimation);
