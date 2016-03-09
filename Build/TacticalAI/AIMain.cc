@@ -33,7 +33,6 @@
 #include "Soldier_Macros.h"
 #include "Bullets.h"
 #include "Physics.h"
-#include "Debug_Control.h"
 #include "Interface_Panels.h"
 #include "Sound_Control.h"
 #include "Civ_Quotes.h"
@@ -431,7 +430,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			)
 		{
       // ATE: Display message that deadlock occured...
-      LiveMessage( "Breaking Deadlock" );
+      SLOGI(DEBUG_TAG_AI, "Breaking Deadlock");
 
 #ifdef JA2TESTVERSION
 			// display deadlock message

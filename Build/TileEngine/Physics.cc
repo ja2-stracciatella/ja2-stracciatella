@@ -19,7 +19,6 @@
 #include "Interface.h"
 #include "Interface_Items.h"
 #include "Explosion_Control.h"
-#include "Debug_Control.h"
 #include "Tile_Animation.h"
 #include "Message.h"
 #include "Weapons.h"

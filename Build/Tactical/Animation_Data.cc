@@ -11,7 +11,6 @@
 #include "Animation_Control.h"
 #include "Soldier_Control.h"
 #include "Sys_Globals.h"
-#include "Debug_Control.h"
 #include "WorldDef.h"
 #include "FileMan.h"
 #include "MemMan.h"

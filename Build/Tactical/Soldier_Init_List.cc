@@ -25,7 +25,6 @@
 #include "Meanwhile.h"
 #include "Strategic_AI.h"
 #include "Map_Screen_Interface_Map.h"
-#include "Debug_Control.h"
 #include "Inventory_Choosing.h"
 #include "Campaign_Types.h"
 #include "AI.h"
@@ -40,6 +39,9 @@
 #	include "ScreenIDs.h"
 #endif
 
+#include "slog/slog.h"
+
+#define DEBUG_TAG_SOLDIERLIST	"Solder Init List"
 
 BOOLEAN gfOriginalList = TRUE;
 
@@ -581,7 +583,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 	}
 	else
 	{
-		LiveMessage("Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
+		SLOGD(DEBUG_TAG_SOLDIERLIST, "Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
 		return false;
 	}
 }

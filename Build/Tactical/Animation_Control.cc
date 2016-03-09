@@ -11,8 +11,6 @@
 #include "WorldMan.h"
 #include "Rotting_Corpses.h"
 #include "Points.h"
-#include "Debug_Control.h"
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "slog/slog.h"
