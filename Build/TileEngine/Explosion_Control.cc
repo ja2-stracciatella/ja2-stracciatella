@@ -61,8 +61,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_EXPLOSION	"Explosion Control"
 extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
 
 
@@ -140,7 +141,7 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 
 
 	gTacticalStatus.ubAttackBusyCount++;
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount ) );
+	SLOGD(DEBUG_TAG_EXPLOSION, "Incrementing Attack: Explosion gone off, Count now %d", gTacticalStatus.ubAttackBusyCount);
 
 	EXPLOSIONTYPE* const e = GetFreeExplosion();
 	if (e == NULL) return;
@@ -342,9 +343,7 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 		STRUCTURE* const base = FindBaseStructure(attached);
 		if (!base)
 		{ // Error!
-#ifdef JA2BETAVERSION
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", grid_no);
-#endif
+			SLOGW(DEBUG_TAG_EXPLOSION, "Problems removing structure attached to wall at %d", grid_no);
 			break;
 		}
 
@@ -785,7 +784,7 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 
 	 // Increment attack counter...
 	 gTacticalStatus.ubAttackBusyCount++;
-	 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion dishing out damage, Count now %d", gTacticalStatus.ubAttackBusyCount ) );
+	 SLOGD(DEBUG_TAG_EXPLOSION, "Incrementing Attack: Explosion dishing out damage, Count now %d", gTacticalStatus.ubAttackBusyCount);
 
 	 sNewWoundAmt = sWoundAmt - __min( sWoundAmt, 35 ) * ArmourVersusExplosivesPercent( pSoldier ) / 100;
 	 if ( sNewWoundAmt < 0 )
@@ -1612,7 +1611,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
      {
        uiTempSpot = uiNewSpot;
 
-			 //DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
+			 SLOGD(DEBUG_TAG_EXPLOSION, "Explosion affects %d", uiNewSpot);
        // ok, do what we do here...
 				if (ExpAffect(sGridNo, uiNewSpot, cnt / 2, usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 			 {
@@ -1652,7 +1651,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 						  if ( ubKeepGoing )
 							{
 								// ok, do what we do here
-								//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
+								SLOGD(DEBUG_TAG_EXPLOSION, "Explosion affects %d", uiNewSpot);
 								if (ExpAffect(sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 								{
 									fRecompileMovement = TRUE;

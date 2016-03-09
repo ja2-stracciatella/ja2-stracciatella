@@ -10,6 +10,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
+
+#define DEBUG_TAG_AMBIENT	"Ambient Control"
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;
@@ -61,7 +64,7 @@ void HandleNewSectorAmbience( UINT8 ubAmbientID )
 		}
 		else
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Cannot load Ambient data for tileset");
+			SLOGW(DEBUG_TAG_AMBIENT, "Cannot load Ambient data for tileset");
 		}
 	}
 }

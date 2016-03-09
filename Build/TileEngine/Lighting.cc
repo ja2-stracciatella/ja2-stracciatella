@@ -46,7 +46,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
+#define DEBUG_TAG_LIGHTING	"Lighting"
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 
 
@@ -1084,7 +1086,7 @@ BOOLEAN fInsertNodes=FALSE;
 	 if((XDelta==0) && (YDelta==0))
 		 return(FALSE);
 
-	//DebugMsg(TOPIC_GAME, DBG_LEVEL_0, String("Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY));
+	SLOGD(DEBUG_TAG_LIGHTING, "Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY);
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
 	if (fInsertNodes) usCurNode = t->n_rays;
 

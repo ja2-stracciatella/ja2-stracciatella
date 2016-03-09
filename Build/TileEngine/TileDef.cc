@@ -11,7 +11,9 @@
 #include "PathAI.h"
 #include "Tile_Surface.h"
 #include "MemMan.h"
+#include "slog/slog.h"
 
+#define DEBUG_TAG_TILEDEF "TileDef"
 
 // GLobals
 TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];
@@ -59,7 +61,7 @@ void CreateTileDatabase()
 			NumRegions = gNumTilesPerType[cnt1];
 		}
 
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Type: %s Size: %d Index: %d", gTileSurfaceName[cnt1], gNumTilesPerType[cnt1], gTileDatabaseSize));
+		SLOGD(DEBUG_TAG_TILEDEF, "Type: %s Size: %d Index: %d", gTileSurfaceName[cnt1], gNumTilesPerType[cnt1], gTileDatabaseSize);
 
 		UINT32 cnt2;
 		for (cnt2 = 0; cnt2 < NumRegions; ++cnt2)
@@ -138,9 +140,9 @@ void CreateTileDatabase()
 	}
 
 	//Calculate mem usgae
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Database Sizes: %d vs %d", gTileDatabaseSize, NUMBEROFTILES));
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Database Types: %d", NUMBEROFTILETYPES));
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Database Item Mem:		%d", gTileDatabaseSize * sizeof(TILE_ELEMENT)));
+	SLOGD(DEBUG_TAG_TILEDEF, "Database Sizes: %d vs %d", gTileDatabaseSize, NUMBEROFTILES);
+	SLOGD(DEBUG_TAG_TILEDEF, "Database Types: %d", NUMBEROFTILETYPES);
+	SLOGD(DEBUG_TAG_TILEDEF, "Database Item Mem: %d", gTileDatabaseSize * sizeof(TILE_ELEMENT));
 }
 
 

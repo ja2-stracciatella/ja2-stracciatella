@@ -42,7 +42,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
+#define DEBUG_TAG_PHYSICS	"Physics"
 
 #define NO_TEST_OBJECT												0
 #define TEST_OBJECT_NO_COLLISIONS							1
@@ -416,7 +418,6 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 				PlayLocationJA2Sample(pObject->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 			}
 
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off");
 			ReduceAttackBusyCount(pObject->owner, FALSE);
 
 			// ATE: Handle end of animation...
