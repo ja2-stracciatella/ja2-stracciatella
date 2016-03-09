@@ -8,7 +8,9 @@
 #include "Weapons.h"
 #include "OppList.h"
 #include "Debug.h"
+#include "slog/slog.h"
 
+#define DEBUG_TAG_EVENTPUMP "Event Pump"
 
 static void AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
 
@@ -17,12 +19,12 @@ void AddGameEvent(GameEvent const uiEvent, UINT16 const usDelay, PTR const pEven
 {
 	if (usDelay == DEMAND_EVENT_DELAY)
 	{
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
+		SLOGD(DEBUG_TAG_EVENTPUMP, "AddGameEvent: Sending Local #%d", uiEvent);
 		AddGameEventToQueue(uiEvent, 0, pEventData, DEMAND_EVENT_QUEUE);
 	}
 	else
 	{
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
+		SLOGD(DEBUG_TAG_EVENTPUMP, "AddGameEvent: Sending Local #%d", uiEvent);
 		AddGameEventToQueue(uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE);
 	}
 }
@@ -164,7 +166,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
+				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
 				break;
 			}
 
@@ -174,7 +176,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				break;
 			}
 			// Call soldier function
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: GetNewPath");
+			SLOGD(DEBUG_TAG_EVENTPUMP, "GetNewPath");
 			EVENT_GetNewSoldierPath(pSoldier, SGetNewPath.sDestGridNo, SGetNewPath.usMovementAnim);
 			break;
 		}
@@ -188,7 +190,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
+				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
 				break;
 			}
 
@@ -199,7 +201,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			}
 
 			// Call soldier function
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection));
+			SLOGD(DEBUG_TAG_EVENTPUMP, "SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection);
 			EVENT_SetSoldierDesiredDirection(pSoldier, SSetDesiredDirection.usDesiredDirection);
 			break;
 		}
@@ -215,7 +217,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				pSoldier = NULL;
 				break;
 				// Handle Error?
-				// DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
+				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
 			}
 
 			// check for error
@@ -225,7 +227,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			}
 
 			// Call soldier function
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Begin Fire Weapon");
+			SLOGD(DEBUG_TAG_EVENTPUMP, "Begin Fire Weapon");
 			pSoldier->sTargetGridNo    = SBeginFireWeapon.sTargetGridNo;
 			pSoldier->bTargetLevel     = SBeginFireWeapon.bTargetLevel;
 			pSoldier->bTargetCubeLevel = SBeginFireWeapon.bTargetCubeLevel;
@@ -242,7 +244,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Soldier ID");
+				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
 				break;
 			}
 
@@ -254,7 +256,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 
 			// Call soldier function
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: FireWeapon");
+			SLOGD(DEBUG_TAG_EVENTPUMP, "FireWeapon");
 			pSoldier->sTargetGridNo    = SFireWeapon.sTargetGridNo;
 			pSoldier->bTargetLevel     = SFireWeapon.bTargetLevel;
 			pSoldier->bTargetCubeLevel = SFireWeapon.bTargetCubeLevel;
@@ -266,7 +268,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 		{
 			EV_S_WEAPONHIT SWeaponHit;
 			memcpy(&SWeaponHit, pEvent->Data, pEvent->uiDataSize);
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: WeaponHit %d Damage", SWeaponHit.sDamage));
+			SLOGD(DEBUG_TAG_EVENTPUMP, "WeaponHit %d Damage", SWeaponHit.sDamage);
 			WeaponHit(&GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, &GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
 			break;
 		}
@@ -275,13 +277,15 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 		{
 			EV_S_NOISE SNoise;
 			memcpy(&SNoise, pEvent->Data, pEvent->uiDataSize);
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: Noise from %d at %d/%d, type %d volume %d", SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubNoiseType, SNoise.ubVolume));
+			SLOGD(DEBUG_TAG_EVENTPUMP, "Noise from %d at %d/%d, type %d volume %d",
+						SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel,
+						SNoise.ubNoiseType, SNoise.ubVolume);
 			OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubVolume, static_cast<NoiseKind>(SNoise.ubNoiseType));
 			break;
 		}
 
 		default:
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Event Received");
+			SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Event Received");
 			return FALSE;
 	}
 
