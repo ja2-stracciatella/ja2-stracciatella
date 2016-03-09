@@ -130,60 +130,40 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		}
 		else
 		{
-#ifdef BETAVERSION
-			sprintf(tempstr,"TryToResumeMovement: ERROR - NewDest failed for %s, action CANCELED",pSoldier->name);
-			PopMessage(tempstr);
-			SaveGame(ERROR_SAVE);
-#endif
-
+			SLOGE(DEBUG_TAG_AI, "TryToResumeMovement: NewDest failed for %s, action CANCELED",
+						pSoldier->name);
 			// must work even for escorted civs, can't just set the flag
 			CancelAIAction(pSoldier);
 		}
-
   }
- else
+	else
   {
 		// don't black-list anything here, this situation can come up quite
 		// legally if another soldier gets in the way between turns
-
-#ifdef BETAVERSION
-		sprintf(tempstr,"TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",pSoldier->ubID,gridno);
-
-#ifdef DEBUGDECISIONS
-		AIPopMessage(tempstr);
-#endif
-
-#endif
-
+		SLOGD(DEBUG_TAG_AI, "TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",
+					pSoldier->ubID, sGridno);
 		CancelAIAction(pSoldier);
 	}
-
 	return(ubSuccess);
 }
 
 
 static INT16 NextPatrolPoint(SOLDIERTYPE* pSoldier)
 {
- // patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
- if ((pSoldier->bPatrolCnt < 1) || (pSoldier->bPatrolCnt >= MAXPATROLGRIDS))
+	// patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
+	if ((pSoldier->bPatrolCnt < 1) || (pSoldier->bPatrolCnt >= MAXPATROLGRIDS))
   {
-#ifdef BETAVERSION
-   sprintf(tempstr,"NextPatrolPoint: ERROR: Invalid patrol count = %d for %s",pSoldier->bPatrolCnt,pSoldier->name);
-   PopMessage(tempstr);
-#endif
-
-   return(NOWHERE);
+		SLOGE(DEBUG_TAG_AI, "NextPatrolPoint: Invalid patrol count = %d for %s",
+					pSoldier->bPatrolCnt, pSoldier->name);
+		return(NOWHERE);
   }
+	pSoldier->bNextPatrolPnt++;
 
+	// if there are no more patrol points, return back to the first one
+	if (pSoldier->bNextPatrolPnt > pSoldier->bPatrolCnt)
+		pSoldier->bNextPatrolPnt = 1;   // ZERO is not used!
 
- pSoldier->bNextPatrolPnt++;
-
-
- // if there are no more patrol points, return back to the first one
- if (pSoldier->bNextPatrolPnt > pSoldier->bPatrolCnt)
-	pSoldier->bNextPatrolPnt = 1;   // ZERO is not used!
-
- return(pSoldier->usPatrolGrid[pSoldier->bNextPatrolPnt]);
+	return(pSoldier->usPatrolGrid[pSoldier->bNextPatrolPnt]);
 }
 
 
@@ -253,14 +233,10 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
      return(FALSE);
   }
 
-
- // passed all tests - start moving towards next patrol point
-#ifdef DEBUGDECISIONS
- sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
- AIPopMessage(tempstr);
-#endif
-
- return(TRUE);
+	// passed all tests - start moving towards next patrol point
+	SLOGD(DEBUG_TAG_AI, "%s - POINT PATROL to grid %d",
+				pSoldier->name, pSoldier->usActionData);
+	return(TRUE);
 }
 
 INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
@@ -342,11 +318,8 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 
 	// passed all tests - start moving towards next patrol point
-#ifdef DEBUGDECISIONS
-	sprintf(tempstr,"%s - POINT PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
-	AIPopMessage(tempstr);
-#endif
-
+	SLOGD(DEBUG_TAG_AI, "%s - POINT PATROL to grid %d",
+				pSoldier->name, pSoldier->usActionData);
 	return(TRUE);
 }
 
@@ -396,10 +369,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		pSoldier->usUIMovementMode = WALKING;
 	}
 
-#ifdef DEBUGDECISIONS
-	sprintf(tempstr,"%s wants to go towards %d (has range %d)",pSoldier->name,sDesGrid,usMaxDist);
-	AIPopMessage(tempstr);
-#endif
+	SLOGD(DEBUG_TAG_AI, "%s wants to go towards %d (has range %d)",
+				pSoldier->name, sDesGrid, usMaxDist);
 
 	// if soldier is ALREADY at the desired destination, quit right away
 	if (sDesGrid == pSoldier->sGridNo)
@@ -442,9 +413,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// first step: try to find an OK destination at or near the desired gridno
 	if (!LegalNPCDestination(pSoldier,sDesGrid,ENSURE_PATH,NOWATER,fPathFlags))
 	{
-#ifdef DEBUGDECISIONS
-		AIPopMessage("destination Grid # itself not valid, looking around it");
-#endif
+		SLOGD(DEBUG_TAG_AI, "destination Grid # itself not valid, looking around it");
 		if ( CREATURE_OR_BLOODCAT( pSoldier ) )
 		{
 			// we tried to get close, failed; abort!
@@ -632,14 +601,11 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 
 
  // if it turned out we couldn't go even 1 tile towards the desired gridno
- if (sGoToGrid == pSoldier->sGridNo)
+	if (sGoToGrid == pSoldier->sGridNo)
   {
-#ifdef DEBUGDECISIONS
-   sprintf(tempstr,"%s will go NOWHERE, path doesn't meet criteria",pSoldier->name);
-   AIPopMessage(tempstr);
-#endif
-
-   return(NOWHERE);             // then go nowhere
+		SLOGD(DEBUG_TAG_AI, "%s will go NOWHERE, path doesn't meet criteria",
+					pSoldier->name);
+		return(NOWHERE);             // then go nowhere
   }
  else
   {

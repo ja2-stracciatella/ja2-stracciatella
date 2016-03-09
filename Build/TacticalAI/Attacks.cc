@@ -1709,15 +1709,11 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 			bCanAttack = CanNPCAttack( pSoldier );
 		}
 	}
-
-#ifdef DEBUGDECISIONS
 	if (bCanAttack != TRUE) // if for any reason we can't attack right now
 	{
-		sprintf(tempstr,"%s can't attack! (not OKToAttack, Reason code = %d)",pSoldier->name,bCanAttack);
-		AIPopMessage(tempstr);
+		SLOGD(DEBUG_TAG_AI, "%s can't attack! (not OKToAttack, Reason code = %d)",
+					pSoldier->name, bCanAttack);
 	}
-#endif
-
 	return( bCanAttack );
 }
 

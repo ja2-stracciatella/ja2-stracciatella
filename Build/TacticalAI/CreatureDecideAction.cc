@@ -216,11 +216,8 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 
 			if (pSoldier->usActionData != NOWHERE)
 			{
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
-
+				SLOGD(DEBUG_TAG_AI, "%s - SEEKING NEAREST UNGASSED LAND at grid %d",
+							pSoldier->name, pSoldier->usActionData);
 				return(AI_ACTION_LEAVE_WATER_GAS);
 			}
 		}
@@ -284,11 +281,8 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 
 			if (pSoldier->usActionData != NOWHERE)
 			{
-	#ifdef DEBUGDECISIONS
-			 sprintf(tempstr,"%s - RANDOM PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
-			 AIPopMessage(tempstr);
-	#endif
-
+				SLOGD(DEBUG_TAG_AI, "%s - RANDOM PATROL to grid %d",
+							pSoldier->name, pSoldier->usActionData);
 				if (!gfTurnBasedAI)
 				{
 					// pause at the end of the walk!
@@ -346,11 +340,8 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 			{
 				if (RandomFriendWithin(pSoldier))
 				{
-		#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - SEEK FRIEND at grid %d",pSoldier->name,pSoldier->usActionData);
-				 AIPopMessage(tempstr);
-		#endif
-
+					SLOGD(DEBUG_TAG_AI, "%s - SEEK FRIEND at grid %d",
+								pSoldier->name, pSoldier->usActionData);
 					if (!gfTurnBasedAI)
 					{
 						// pause at the end of the walk!
@@ -399,13 +390,11 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 					{
 						pSoldier->usActionData = (UINT16)PreRandom(8);
 					}
-				} while (pSoldier->usActionData == pSoldier->bDirection);
+				}
+				while (pSoldier->usActionData == pSoldier->bDirection);
 
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - TURNS to face direction %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
-
+				SLOGD(DEBUG_TAG_AI, "%s - TURNS to face direction %d",
+							pSoldier->name, pSoldier->usActionData);
 				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->usActionData ) )
 
 				//InternalIsValidStance( pSoldier, (INT8) pSoldier->usActionData, ANIM_STAND ) )
@@ -488,10 +477,8 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 			if ((INT16)PreRandom(100) < iChance)
 			{
 				pSoldier->usActionData = ubNoiseDir;
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - TURNS TOWARDS NOISE to face direction %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
+				SLOGD(DEBUG_TAG_AI, "%s - TURNS TOWARDS NOISE to face direction %d",
+							pSoldier->name, pSoldier->usActionData);
 				//if ( InternalIsValidStance( pSoldier, (INT8) pSoldier->usActionData, ANIM_STAND ) )
 				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->usActionData ) )
 				{
@@ -556,12 +543,8 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 
 			if (pSoldier->usActionData != NOWHERE)
 			{
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - INVESTIGATING NOISE at grid %d, moving to %d",
-					pSoldier->name,sNoiseGridNo,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
-
+				SLOGD(DEBUG_TAG_AI, "%s - INVESTIGATING NOISE at grid %d, moving to %d",
+							pSoldier->name, sNoiseGridNo, pSoldier->usActionData);
 				return(AI_ACTION_SEEK_NOISE);
 			}
 		}
@@ -632,11 +615,8 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 
    if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
+			SLOGD(DEBUG_TAG_AI, "%s - SEEKING NEAREST UNGASSED LAND at grid %d",
+						pSoldier->name, pSoldier->usActionData);
      return(AI_ACTION_LEAVE_WATER_GAS);
     }
   }
@@ -675,15 +655,12 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
  ////////////////////////////////////////////////////////////////////////
 
  // if our breath is running a bit low, and we're not in water or under fire
- if ((pSoldier->bBreath < 25) /*&& !bInWater*/ && !pSoldier->bUnderFire)
+	if ((pSoldier->bBreath < 25) /*&& !bInWater*/ && !pSoldier->bUnderFire)
   {
-#ifdef DEBUGDECISIONS
-   sprintf(tempstr,"%s RESTS (STATUS RED), breath = %d",pSoldier->name,pSoldier->bBreath);
-   AIPopMessage(tempstr);
-#endif
-
-   pSoldier->usActionData = NOWHERE;
-   return(AI_ACTION_NONE);
+		SLOGD(DEBUG_TAG_AI, "%s RESTS (STATUS RED), breath = %d",
+					pSoldier->name, pSoldier->bBreath);
+		pSoldier->usActionData = NOWHERE;
+		return(AI_ACTION_NONE);
   }
 
 	////////////////////////////////////////////////////////////////////////////
@@ -752,11 +729,8 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 
 				if (pSoldier->usActionData != NOWHERE)
 				{
-					#ifdef DEBUGDECISIONS
-						sprintf(tempstr,"%s - SEEKING FRIEND at %d, MOVING to %d",
-						pSoldier->name,sClosestFriend,pSoldier->usActionData);
-						AIPopMessage(tempstr);
-					#endif
+					SLOGD(DEBUG_TAG_AI, "%s - SEEKING FRIEND at %d, MOVING to %d",
+								pSoldier->name, pSoldier->ubCaller, pSoldier->usActionData);
 					return(AI_ACTION_SEEK_FRIEND);
 				}
 			}
@@ -777,13 +751,8 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 			// if it's possible
 			if (pSoldier->usActionData != NOWHERE)
 			{
-				#ifdef DEBUGDECISIONS
-					// do it!
-					sprintf(tempstr,"%s - SEEKING OPPONENT at grid %d, MOVING to %d",
-					pSoldier->name,sClosestDisturbance,pSoldier->usActionData);
-					AIPopMessage(tempstr);
-				#endif
-
+				SLOGD(DEBUG_TAG_AI, "%s - SEEKING OPPONENT at grid %d, MOVING to %d",
+							pSoldier->name, sClosestDisturbance, pSoldier->usActionData);
 				return(AI_ACTION_SEEK_OPPONENT);
 			}
 		}
@@ -848,14 +817,10 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 				 //if ( (INT16)PreRandom(100) < iChance && InternalIsValidStance( pSoldier, ubOpponentDir, ANIM_STAND ) )
 				 if ( (INT16)PreRandom(100) < iChance && ValidCreatureTurn( pSoldier, ubOpponentDir ) )
 				 {
-					 pSoldier->usActionData = ubOpponentDir;
-
-		#ifdef DEBUGDECISIONS
-					 sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->usActionData);
-					 AIPopMessage(tempstr);
-		#endif
-
-					 return(AI_ACTION_CHANGE_FACING);
+						pSoldier->usActionData = ubOpponentDir;
+						SLOGD(DEBUG_TAG_AI, "%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",
+									pSoldier->name, pSoldier->usActionData);
+						return(AI_ACTION_CHANGE_FACING);
 					}
 				}
 			}
@@ -993,15 +958,11 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 
      if (pSoldier->usActionData != NOWHERE)
       {
-#ifdef DEBUGDECISIONS
-       sprintf(tempstr,"%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",pSoldier->name,pSoldier->bBreath,pSoldier->usActionData);
-       AIPopMessage(tempstr);
-#endif
-
-       return(AI_ACTION_RUN_AWAY);
+				SLOGD(DEBUG_TAG_AI, "%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",
+							pSoldier->name, pSoldier->bBreath, pSoldier->usActionData);
+				return(AI_ACTION_RUN_AWAY);
       }
     }
-
   }
 
 
@@ -1016,12 +977,9 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 
    if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
-     return(AI_ACTION_LEAVE_WATER_GAS);
+			SLOGD(DEBUG_TAG_AI, "%s - SEEKING NEAREST UNGASSED LAND at grid %d",
+						pSoldier->name, pSoldier->usActionData);
+			return(AI_ACTION_LEAVE_WATER_GAS);
     }
 	}
 
@@ -1363,17 +1321,13 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 					const INT8 bDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestOpponent);
 
 				 // if we're not facing towards him
-				 if (pSoldier->bDirection != bDirection && ValidCreatureTurn( pSoldier, bDirection ) )
-				 {
-					 pSoldier->usActionData = bDirection;
-
-					#ifdef DEBUGDECISIONS
-					 sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->usActionData);
-					 AIPopMessage(tempstr);
-					#endif
-
-					 return(AI_ACTION_CHANGE_FACING);
-				 }
+					if (pSoldier->bDirection != bDirection && ValidCreatureTurn( pSoldier, bDirection ) )
+					{
+						pSoldier->usActionData = bDirection;
+						SLOGD(DEBUG_TAG_AI, "%s - TURNS to face CLOSEST OPPONENT in direction %d",
+									pSoldier->name, pSoldier->usActionData);
+						return(AI_ACTION_CHANGE_FACING);
+					}
 				}
 		 }
 	 }
@@ -1417,30 +1371,22 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 	switch (pSoldier->bAlertStatus)
 	{
 		case STATUS_GREEN:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = GREEN");
-			#endif
+			SLOGD(DEBUG_TAG_AI, "AlertStatus = GREEN");
 			bAction = CreatureDecideActionGreen(pSoldier);
 			break;
 
 		case STATUS_YELLOW:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = YELLOW");
-			#endif
+			SLOGD(DEBUG_TAG_AI, "AlertStatus = YELLOW");
 			bAction = CreatureDecideActionYellow(pSoldier);
 		break;
 
 		case STATUS_RED:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = RED");
-			#endif
+			SLOGD(DEBUG_TAG_AI, "AlertStatus = RED");
 			bAction = CreatureDecideActionRed(pSoldier, TRUE);
 			break;
 
 		case STATUS_BLACK:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = BLACK");
-			#endif
+			SLOGD(DEBUG_TAG_AI, "AlertStatus = BLACK");
 			bAction = CreatureDecideActionBlack(pSoldier);
 			break;
 	}

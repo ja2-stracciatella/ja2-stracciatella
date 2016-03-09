@@ -2047,11 +2047,8 @@ static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 				// if my friend is in battle or something is clearly happening there
 				if ((pFriend->bAlertStatus >= STATUS_RED) || pFriend->bUnderFire || (pFriend->bLife < OKLIFE))
 				{
-				#ifdef DEBUGDECISIONS
-					sprintf(tempstr,"%s sees %s on alert, goes to RED ALERT!",pSoldier->name,ExtMen[pFriend->ubID].name);
-					AIPopMessage(tempstr);
-				#endif
-
+					SLOGD(DEBUG_TAG_AI, "%s sees %s on alert, goes to RED ALERT!",
+								pSoldier->name, pFriend->name);
 					pSoldier->bAlertStatus = STATUS_RED;
 					CheckForChangingOrders(pSoldier);
 					SetNewSituation( pSoldier );

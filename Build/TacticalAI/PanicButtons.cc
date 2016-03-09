@@ -327,13 +327,8 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 						{
 							pSoldier->usActionData = sPanicTriggerGridNo;
 							pSoldier->bPathStored = TRUE;
-
-#ifdef DEBUGDECISIONS
-							sprintf(tempstr,"%s - GETTING CLOSER to PANIC TRIGGER at grid %d (Trigger at %d)",
-								pSoldier->name,pSoldier->usActionData,PanicTriggerGridno);
-							AIPopMessage(tempstr);
-#endif
-
+							SLOGD(DEBUG_TAG_AI, "%s - getting closer to panic trigger at grid %d (Trigger at %d)",
+										pSoldier->name, pSoldier->usActionData, sPanicTriggerGridNo);
 							return(AI_ACTION_GET_CLOSER);
 						}
 						else       // Oh oh, the chosen one can't get to the trigger!
