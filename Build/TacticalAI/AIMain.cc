@@ -993,10 +993,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
  // If man is inactive/at base/dead/unconscious
  if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
   {
-#ifdef DEBUGDECISIONS
-   AINumMessage("HandleManAI - Unavailable man, skipping guy#",pSoldier->ubID);
-#endif
-
    NPCDoesNothing(pSoldier);
    return;
   }
@@ -1004,10 +1000,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 	if (IsOnCivTeam(pSoldier) && pSoldier->service &&
      (pSoldier->bNeutral || MedicsMissionIsEscort(pSoldier)))
   {
-#ifdef DEBUGDECISIONS
-   AINumMessage("HandleManAI - Civilian is being serviced, skipping guy#",pSoldier->ubID);
-#endif
-
    NPCDoesNothing(pSoldier);
    return;
   }
@@ -1026,20 +1018,12 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
    if ((pSoldier->bBreath < OKBREATH) || (pSoldier->bActionPoints < (AP_GET_UP + AP_ROLL_OVER))
        || pSoldier->service)
     {
-#ifdef DEBUGDECISIONS
-     AINumMessage("HandleManAI - CAN'T GET UP, skipping guy #",pSoldier->ubID);
-#endif
-
      NPCDoesNothing(pSoldier);
      return;
     }
    else
     {
      // wait until he gets up first, only then worry about deciding his AI
-#ifdef DEBUGBUSY
-     AINumMessage("HandleManAI - About to get up, skipping guy#",pSoldier->ubID);
-#endif
-
      return;
     }
   }
@@ -1048,20 +1032,12 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
  // if NPC's has been forced to stop by an opponent's interrupt or similar
  if (pSoldier->forcedToStop)
   {
-#ifdef DEBUGBUSY
-   AINumMessage("HandleManAI - Forced to stop, skipping guy #",pSoldier->ubID);
-#endif
-
    return;
   }
 
  // if we are still in the midst in an uninterruptable animation
  if (!AnimControl[anim].interruptable)
   {
-#ifdef DEBUGBUSY
-   AINumMessage("HandleManAI - uninterruptable animation, skipping guy #",pSoldier->ubID);
-#endif
-
    return;      // wait a while, let the animation finish first
   }
 
@@ -1109,10 +1085,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
    // if action should remain in progress
 		if (ActionInProgress(pSoldier))
 		{
-			#ifdef DEBUGBUSY
-				AINumMessage("Busy with action, skipping guy#",pSoldier->ubID);
-			#endif
-
 			// let it continue
 			return;
 		}
@@ -1268,9 +1240,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 		}
 		else
 		{
-			#ifdef DEBUGDECISIONS
-				AINumMessage("HandleManAI - Not enough APs, skipping guy#",pSoldier->ubID);
-			#endif
 			HaltMoveForSoldierOutOfPoints(*pSoldier);
 			return;
 		}
@@ -1360,8 +1329,6 @@ static void AIDecideRadioAnimation(SOLDIERTYPE* pSoldier)
 
 INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 {
-	//NumMessage("ExecuteAction - Guy#",pSoldier->ubID);
-
 	// in most cases, merc will change location, or may cause damage to opponents,
 	// so a new cover check will be necessary.  Exceptions handled individually.
 	SkipCoverCheck = FALSE;
@@ -1417,12 +1384,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 /*
 			if (!StartTurn(pSoldier,pSoldier->usActionData,FASTTURN))
 			{
-#ifdef BETAVERSION
-				sprintf(tempstr,"ERROR: %s tried TURN to direction %d, StartTurn failed, action %d CANCELED",
-						pSoldier->name,pSoldier->usActionData,pSoldier->bAction);
-				PopMessage(tempstr);
-#endif
-
 				// ZAP NPC's remaining action points so this isn't likely to repeat
 				pSoldier->bActionPoints = 0;
 
@@ -1614,18 +1575,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			// make sure it worked (check that pSoldier->sDestination == pSoldier->usActionData)
 			if (pSoldier->sFinalDestination != pSoldier->usActionData)
 			{
-#ifdef BETAVERSION
-				// this should NEVER happen, indicates AI picked an illegal spot!
-				sprintf(tempstr,"ExecuteAction: ERROR - %s tried MOVE to gridno %d, NewDest failed, action %d CANCELED",
-					pSoldier->name,pSoldier->usActionData,pSoldier->bAction);
-
-				PopMessage(tempstr);
-
-				sprintf(tempstr,"BLACK-LISTING gridno %d for %s",pSoldier->usActionData,pSoldier->name);
-				PopMessage(tempstr);
-
-				SaveGame(ERROR_SAVE);
-#endif
 				// temporarily black list this gridno to stop enemy from going there
 				pSoldier->sBlackList = (INT16) pSoldier->usActionData;
 
@@ -1901,9 +1850,6 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			break;
 
 		default:
-#ifdef BETAVERSION
-			NumMessage("ExecuteAction - Illegal action type = ",pSoldier->bAction);
-#endif
 			return(FALSE);
 	}
 
@@ -2047,8 +1993,6 @@ static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 				// if my friend is in battle or something is clearly happening there
 				if ((pFriend->bAlertStatus >= STATUS_RED) || pFriend->bUnderFire || (pFriend->bLife < OKLIFE))
 				{
-					SLOGD(DEBUG_TAG_AI, "%s sees %s on alert, goes to RED ALERT!",
-								pSoldier->name, pFriend->name);
 					pSoldier->bAlertStatus = STATUS_RED;
 					CheckForChangingOrders(pSoldier);
 					SetNewSituation( pSoldier );

@@ -20,10 +20,6 @@ void MakeClosestEnemyChosenOne()
 
 	if ( ! (gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE) )
 	{
-#ifdef BETAVERSION
-		PopMessage("MakeClosestEnemyChosenOne: ERROR - Panic Trigger is NOWHERE");
-#endif
-
 		return;
 	}
 
@@ -142,8 +138,6 @@ void MakeClosestEnemyChosenOne()
 				closest_enemy = pSoldier;
 			}
 		}
-		//else
-		//NameMessage(pSoldier,"can't get there...");
 	}
 
 	// if we found have an eligible enemy, make him our "chosen one"
@@ -327,8 +321,6 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 						{
 							pSoldier->usActionData = sPanicTriggerGridNo;
 							pSoldier->bPathStored = TRUE;
-							SLOGD(DEBUG_TAG_AI, "%s - getting closer to panic trigger at grid %d (Trigger at %d)",
-										pSoldier->name, pSoldier->usActionData, sPanicTriggerGridNo);
 							return(AI_ACTION_GET_CLOSER);
 						}
 						else       // Oh oh, the chosen one can't get to the trigger!

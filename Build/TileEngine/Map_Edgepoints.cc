@@ -1266,13 +1266,10 @@ static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
@@ -1342,13 +1339,10 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can

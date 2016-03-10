@@ -357,17 +357,10 @@ INT16 DirectionInc(INT16 sDirection)
 {
  if ((sDirection < 0) || (sDirection > 7))
   {
-
-//#ifdef BETAVERSION
-//   NumMessage("DirectionInc: Invalid direction received, = ",direction);
-//#endif
-
    //direction = random(8);	// replace garbage with random direction
 	 sDirection = 1;
   }
-
-
- return(DirIncrementer[sDirection]);
+	return(DirIncrementer[sDirection]);
 }
 
 

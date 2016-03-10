@@ -914,10 +914,6 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		// ALEX
 		if (gWhoThrewRock == NULL)
 		{
-#ifdef BETAVERSION
-			NumMessage("StandardInterruptConditions: ERROR - pOpponent is NULL, don't know who threw rock, guynum = ", pSoldier->guynum);
-#endif
-
 			return(FALSE);
 		}
   }
@@ -1270,9 +1266,6 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 
 	if (bPoints >= AUTOMATIC_INTERRUPT)
 	{
-#ifdef BETAVERSION
-		NumMessage("CalcInterruptDuelPts: ERROR - Invalid bInterruptDuelPts calculated for soldier ",pSoldier->guynum);
-#endif
 		bPoints = AUTOMATIC_INTERRUPT - 1;	// hack it to one less than max so its legal
 	}
 

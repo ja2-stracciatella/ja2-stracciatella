@@ -2366,8 +2366,6 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		iChance -= iPenalty;
 	}
 
-	//NumMessage("EFFECTIVE RANGE = ",range);
-
 	// ADJUST FOR RANGE
 	// bonus if range is less than normal range, penalty if it's more
 	//iChance += (NORMAL_RANGE - iRange) / (CELL_X_SIZE / 5);	// 5% per tile
@@ -2824,11 +2822,9 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	// plus/minus up to 25% due to "random" factors (major organs hit or missed,
 	// lucky lighter in breast pocket, divine intervention on behalf of "Rev"...)
 	iFluke = PreRandom(51) - 25;		// gives (0 to 50 -25) -> -25% to +25%
-	//NumMessage("Fluke = ",fluke);
 
 	// up to 50% extra impact for making particularly accurate successful shots
 	iBonus = sHitBy / 2;
-	//NumMessage("Bonus = ",bonus);
 
 	iOrigImpact = iOrigImpact * (100 + iFluke + iBonus) / 100;
 
@@ -3279,9 +3275,6 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		// safety check
 		if (GCM->getWeapon(usInHand)->ubWeaponClass != KNIFECLASS)
 		 {
-			#ifdef BETAVERSION
-			NumMessage("CalcChanceToStab: ERROR - Attacker isn't holding a knife, usInHand = ",usInHand);
-			#endif
 			return(0);
 		 }
 	}
@@ -3502,13 +3495,8 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 
   if (iDefRating < 1)
     iDefRating = 1;
-
-
-  //NumMessage("CalcChanceToStab - Attacker's Rating = ",iAttRating);
-  //NumMessage("CalcChanceToStab - Defender's Rating = ",iDefRating);
-
   // calculate chance to hit by comparing the 2 opponent's ratings
-//  iChance = (100 * iAttRating) / (iAttRating + iDefRating);
+	//  iChance = (100 * iAttRating) / (iAttRating + iDefRating);
 
 
 	if (ubMode == HTH_MODE_STEAL)
@@ -3541,9 +3529,6 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		if (iChance > MAXCHANCETOHIT)
 			iChance = MAXCHANCETOHIT;
 	}
-
-  //NumMessage("ChanceToStab = ",chance);
-
   return (iChance);
 }
 
@@ -3659,17 +3644,6 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 		usHandItem = pSoldier->inv[HANDPOS].usItem;
 	}
 
-/*
-	// CJC: Grenade Launchers don't fire in a straight line!
-	#ifdef BETAVERSION
-	if (usHandItem == GLAUNCHER)
-	{
-		PopMessage("CalcThrownChanceToHit: DOESN'T WORK ON GLAUNCHERs!");
-		return(0);
-	}
-	#endif
-*/
-
 	if ( GCM->getItem(usHandItem)->getItemClass() != IC_LAUNCHER && pSoldier->bWeaponMode != WM_ATTACHED )
 	{
 		// PHYSICALLY THROWN arced projectile (ie. grenade)
@@ -3726,15 +3700,11 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	// calculate actual range (in world units)
 	iRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
 
-	//NumMessage("ACTUAL RANGE = ",range);
-
 	if (IsWearingHeadGear(*pSoldier, SUNGOGGLES))
 	{
 		// decrease effective range by 10% when using sungoggles (w or w/o scope)
 		iRange -= iRange / 10;	//basically, +1% to hit per every 2 squares
 	}
-
-	//NumMessage("EFFECTIVE RANGE = ",range);
 
 	// ADJUST FOR RANGE
 
@@ -3745,8 +3715,6 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	else
 	{
 		iMaxRange = CalcMaxTossRange( pSoldier, usHandItem , TRUE ) * CELL_X_SIZE;
-
-		//NumMessage("MAX RANGE = ",maxRange);
 
 		// bonus if range is less than 1/2 maximum range, penalty if it's more
 
@@ -3810,9 +3778,6 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 		if (iChance > MAXCHANCETOHIT)
 			iChance = MAXCHANCETOHIT;
 	}
-
-
-	//NumMessage("ThrownChanceToHit = ",iChance);
 	return (iChance);
 }
 

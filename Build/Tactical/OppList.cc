@@ -1367,17 +1367,11 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
  /*
  if (ptr->guynum >= NOBODY)
   {
-#ifdef BETAVERSION
-   NumMessage("ManLooksForMan: ERROR - ptr->guynum = ",ptr->guynum);
-#endif
    return(success);
   }
 
  if (oppPtr->guynum >= NOBODY)
   {
-#ifdef BETAVERSION
-   NumMessage("ManLooksForMan: ERROR - oppPtr->guynum = ",oppPtr->guynum);
-#endif
    return(success);
   }
 
@@ -2008,8 +2002,6 @@ static void DecideTrueVisibility(SOLDIERTYPE* pSoldier)
 static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 {
 	INT8 bOldOppList;
-
-	//NumMessage("OtherTeamsLookForMan, guy#",oppPtr->guynum);
 
 	// if the guy we're looking for is NOT on our team AND is currently visible
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
@@ -3443,10 +3435,6 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 		iStealthSkill += 25 * NUM_SKILL_TRAITS(pSoldier, STEALTHY);
 	}
 
-
- //NumMessage("Base Stealth = ",stealthSkill);
-
-
 	ubBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
 	ubEffLife = pSoldier->bLife + (ubBandaged / 2);
 
@@ -3487,7 +3475,6 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 		ubStealthSkill -= 10;	// 10% penalty
 	}
 */
- //NumMessage("Modified Stealth = ",stealthSkill);
 
 	iStealthSkill = __max( iStealthSkill, 0 );
 
@@ -3671,18 +3658,12 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 				!noise_maker->bInSector ||
         noise_maker->uiStatusFlags & SOLDIER_DEAD)
 		{
-#ifdef BETAVERSION
-			NumMessage("ProcessNoise: ERROR - Noisemaker is inactive/not in sector/dead, Guy #", noise_maker->ubID);
-#endif
 			return;
 		}
 
 		// if he's out of life, and this isn't just his "dying scream" which is OK
 		if (noise_maker->bLife == 0 && ubNoiseType != NOISE_SCREAM)
 		{
-#ifdef BETAVERSION
-			NumMessage("ProcessNoise: ERROR - Noisemaker is lifeless, Guy #", noise_maker->ubID);
-#endif
 			return;
 		}
 	}
@@ -3695,7 +3676,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 	// if we have now somehow obtained a valid terrain type
 	if ((ubSourceTerrType >= FLAT_GROUND) || (ubSourceTerrType <= DEEP_WATER))
 	{
-		//NumMessage("Source Terrain Type = ",ubSourceTerrType);
 		bCheckTerrain = TRUE;
 	}
 	// else give up trying to get terrain type, just assume sound isn't muffled
@@ -3947,7 +3927,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 			}
 			else
 			{
-       //NameMessage(pSoldier," can't hear this noise",2500);
 			 ubEffVolume = 0;
 			}
 		}
@@ -4033,9 +4012,6 @@ static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridN
 		}
 	}
 
-	//sprintf(tempstr,"CalcEffVolume BY %s for gridno %d, baseVolume = %d",pSoldier->name,gridno,baseVolume);
-	//PopMessage(tempstr);
-
 	// adjust default noise volume by listener's hearing capability
 	iEffVolume = (INT32) ubBaseVolume + (INT32) DecideHearing( pSoldier );
 
@@ -4047,12 +4023,6 @@ static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridN
  // calculate the distance (in adjusted pixels) between the source of the
  // noise (gridno) and the location of the would-be listener (pSoldier->gridno)
  iDistance = (INT32) PythSpacesAway( pSoldier->sGridNo, sGridNo );
- /*
- distance = AdjPixelsAway(pSoldier->x,pSoldier->y,CenterX(sGridNo),CenterY(sGridNo));
-
-	distance /= 15;      // divide by 15 to convert from adj. pixels to tiles
-	*/
-	//NumMessage("Distance = ",distance);
 
  // effective volume fades over distance beyond 1 tile away
  iEffVolume -= (iDistance - 1);
@@ -4134,16 +4104,12 @@ static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridN
 			if (((ubTerrType1 == FLAT_FLOOR) && (ubTerrType2 != FLAT_FLOOR)) ||
 				((ubTerrType1 != FLAT_FLOOR) && (ubTerrType2 == FLAT_FLOOR)))
 			{
-				//PopMessage("Sound is muffled by wall(s)");
-
 				// sound is muffled, reduce the effective volume of the noise
 				iEffVolume -= 5;
 			}
 		}
 
 	}
-
-	//NumMessage("effVolume = ",ubEffVolume);
 	if (iEffVolume > 0)
 	{
 		return( (UINT8) iEffVolume );
@@ -4551,14 +4517,6 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 	// if any new opponents were seen earlier and not yet radioed
 	if (pSoldier->bNewOppCnt)
 	{
-#ifdef BETAVERSION
-		sprintf(tempstr,"VerifyAndDecayOpplist: WARNING - %d(%ls) still has %d NEW OPPONENTS - lastCaller %ls/%ls",
-			pSoldier->guynum,ExtMen[pSoldier->guynum].name,pSoldier->newOppCnt,
-			LastCallerText[ExtMen[pSoldier->guynum].lastCaller],
-			LastCaller2Text[ExtMen[pSoldier->guynum].lastCaller2]);
-			PopMessage(tempstr);
-#endif
-
 		if (pSoldier->uiStatusFlags & SOLDIER_PC)
 		{
 			RadioSightings(pSoldier,EVERYBODY,pSoldier->bTeam);
@@ -4771,8 +4729,6 @@ void DecayPublicOpplist(INT8 bTeam)
 {
 	INT8 bNoPubliclyKnownOpponents = TRUE;
 	INT8 *pbPublOL;
-
-	//NumMessage("Decay for team #",team);
 
 	// decay the team's public noise volume, forget public noise gridno if <= 0
 	// used to be -1 per turn but that's not fast enough!

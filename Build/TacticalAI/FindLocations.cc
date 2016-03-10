@@ -48,42 +48,29 @@ INT8	gubAIPathCosts[19][19];
 
 static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale)
 {
- INT32 iValueChange,iScaleSum,iPercentBetter;//,loopCnt,tempInt;
+	INT32 iValueChange,iScaleSum,iPercentBetter;//,loopCnt,tempInt;
 
- // calcalate how much better the new cover would be than the current cover
- iValueChange = iNewValue - iOldValue;
+	// calcalate how much better the new cover would be than the current cover
+	iValueChange = iNewValue - iOldValue;
 
-
- // here, the change in cover HAS to be an improvement over current cover
- if (iValueChange <= 0)
-  {
-#ifdef BETAVERSION
-   sprintf(tempstr,"CalcPercentBetter: ERROR - invalid valueChange = %d",valueChange);
-   PopMessage(tempstr);
-#endif
-
-   return(NOWHERE);
+	// here, the change in cover HAS to be an improvement over current cover
+	if (iValueChange <= 0)
+	{
+		return(NOWHERE);
   }
+	
+	iScaleSum = iOldScale + iNewScale;
 
-
- iScaleSum = iOldScale + iNewScale;
-
- // here, the change in cover HAS to be an improvement over current cover
- if (iScaleSum <= 0)
-  {
-#ifdef BETAVERSION
-   sprintf(tempstr,"CalcPercentBetter: ERROR - invalid scaleSum = %d",iScaleSum);
-   PopMessage(tempstr);
-#endif
-
-   return(NOWHERE);
+	// here, the change in cover HAS to be an improvement over current cover
+	if (iScaleSum <= 0)
+	{
+		return(NOWHERE);
   }
 	iPercentBetter = (iValueChange * 100) / iScaleSum;
 	SLOGD(DEBUG_TAG_AI, "CalcPercentBetter: %%Better %ld, old %ld, new %ld, change %ld\noldScale %ld, newScale %ld, scaleSum %ld",
 				iPercentBetter, iOldValue, iNewValue, iValueChange, iOldScale,
 				iNewScale, iScaleSum);
-
- return(iPercentBetter);
+	return(iPercentBetter);
 }
 
 
@@ -570,8 +557,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	}
 #endif
 
-	//NameMessage(pSoldier,"looking for some cover...");
-
 	// BUILD A LIST OF THREATENING GRID #s FROM PERSONAL & PUBLIC opplists
 
 	pusLastLoc = &(gsLastKnownOppLoc[pSoldier->ubID][0]);
@@ -616,7 +601,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// action points left (rounded down) tiles away, since minimum
 		// cost to move per tile is 1 points.
 		iMaxMoveTilesLeft = __max( 0, pSoldier->bActionPoints - MinAPsToStartMovement( pSoldier, usMovementMode ) );
-		//NumMessage("In BLACK, maximum tiles to move left = ",maxMoveTilesLeft);
 
 		// if we can't go as far as the usual full search range
 		if (iMaxMoveTilesLeft < iSearchRange)
@@ -698,12 +682,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// if the opponent is no threat at all for some reason
 		if (Threat[uiThreatCnt].iValue == -999)
 		{
-			//NameMessage(pOpponent,"is thought to be no threat");
 			continue;          // check next opponent
 		}
-
-		//NameMessage(pOpponent,"added to the list of threats");
-		//NumMessage("His/Her threat value = ",threatValue[uiThreatCnt]);
 
 		Threat[uiThreatCnt].pOpponent		= pOpponent;
 		Threat[uiThreatCnt].sGridNo			= sThreatLoc;
@@ -716,9 +696,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		if (iThreatRange < iClosestThreatRange)
 		{
 			iClosestThreatRange = iThreatRange;
-			//NumMessage("New Closest Threat Range = ",iClosestThreatRange);
 //			sClosestThreatGridNo = sThreatLoc;
-			//NumMessage("Closest Threat Gridno = ",sClosestThreatGridNo);
 		}
 
 		uiThreatCnt++;
@@ -727,7 +705,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	// if no known opponents were found to threaten us, can't worry about cover
 	if (!uiThreatCnt)
 	{
-		//NameMessage(pSoldier,"has no threats - WON'T take cover");
 		return(sBestCover);
 	}
 
@@ -745,23 +722,17 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			// add this opponent's cover value to our current total cover value
 			iCurrentCoverValue += CalcCoverValue(pSoldier,pSoldier->sGridNo,iMyThreatValue,pSoldier->bActionPoints,uiLoop,Threat[uiLoop].iOrigRange,morale,&iCurrentScale);
 		}
-		//sprintf(tempstr,"iCurrentCoverValue after opponent %d is now %d",iLoop,iCurrentCoverValue);
-		//PopMessage(tempstr);
 	}
 
 	iCurrentCoverValue -= (iCurrentCoverValue / 10) * NumberOfTeamMatesAdjacent( pSoldier, pSoldier->sGridNo );
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	//NumMessage("sMaxDown = ",sMaxDown);
 
 	iRoamRange = RoamingRange(pSoldier,&sOrigin);
 
@@ -837,8 +808,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				continue;
 			}
 
-			//NumMessage("Testing gridno #",sGridNo);
-
 			// if we are limited to staying/returning near our place of origin
 			if (iDistFromOrigin != -1)
 			{
@@ -888,7 +857,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				// must be able to afford the APs to get to this cover this turn
 				if (iPathCost > pSoldier->bActionPoints)
 				{
-					//NumMessage("In BLACK, and can't afford to get there, cost = ",iPathCost);
 					continue;      // skip on to the next potential grid
 				}
 			}
@@ -911,9 +879,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 						(pSoldier->bActionPoints - iPathCost),
 						uiLoop,iThreatRange,morale,&iCoverScale);
 				}
-
-				//sprintf(tempstr,"iCoverValue after opponent %d is now %d",iLoop,iCoverValue);
-				//PopMessage(tempstr);
 			}
 
 			// reduce cover for each person adjacent to this gridno who is on our team,
@@ -1089,7 +1054,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 		if (iThreatRange < iClosestThreatRange)
 		{
 			iClosestThreatRange = iThreatRange;
-			//NumMessage("New Closest Threat Range = ",iClosestThreatRange);
 		}
 
 		// remember this threat's gridno
@@ -1100,7 +1064,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	// if no known opponents were found to threaten us, can't worry about them
 	if (!uiThreatCnt)
 	{
-		//NameMessage(pSoldier,"has no known threats - WON'T run away");
 		return( sBestSpot );
 	}
 
@@ -1160,20 +1123,14 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	#else
 	gubNPCAPBudget = 	__min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
 	#endif
-	//NumMessage("Search Range = ",iSearchRange);
-	//NumMessage("gubNPCAPBudget = ",gubNPCAPBudget);
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	//NumMessage("sMaxDown = ",sMaxDown);
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
@@ -1208,7 +1165,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 		{
 			// calculate the next potential gridno
 			sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-			//NumMessage("Testing gridno #",gridno);
 			if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
 			{
 				continue;
@@ -1248,7 +1204,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 			}
 
 			// OK, this place shows potential.  How useful is it as cover?
-			//NumMessage("Promising seems gridno #",gridno);
 
 			iSpotClosestThreatRange = 1500;
 
@@ -1287,10 +1242,8 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 			{
 				// remember it instead
 				iClosestThreatRange = iSpotClosestThreatRange;
-				//NumMessage("New best range = ",iClosestThreatRange);
 				sBestSpot = sGridNo;
 				bBestEscapeDirection = bEscapeDirection;
-				//NumMessage("New best grid = ",bestSpot);
 			}
 		}
 
@@ -1314,25 +1267,17 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
 	INT32 iSearchRange;
 
-	//NameMessage(pSoldier,"looking for nearest reachable land");
-
 	// start with a small search area, and expand it if we're unsuccessful
 	// this should almost never need to search farther than 5 or 10 squares...
 	for (iSearchRange = 5; iSearchRange <= 25; iSearchRange += 5)
 	{
-		//NumMessage("Trying iSearchRange = ", iSearchRange);
-
 		// determine maximum horizontal limits
 		sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
-		//NumMessage("sMaxLeft = ",sMaxLeft);
 		sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-		//NumMessage("sMaxRight = ",sMaxRight);
 
 		// determine maximum vertical limits
 		sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
-		//NumMessage("sMaxUp = ",sMaxUp);
 		sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-		//NumMessage("sMaxDown = ",sMaxDown);
 
 		// Call FindBestPath to set flags in all locations that we can
 		// walk into within range.  We have to set some things up first...
@@ -1368,7 +1313,6 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 			{
 				// calculate the next potential gridno
 				sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-				//NumMessage("Testing gridno #",gridno);
 				if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
 				{
 					continue;
@@ -1400,10 +1344,7 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 				{
 					// remember it instead
 					sShortestPath = sPathCost;
-					//NumMessage("New shortest route = ",shortestPath);
-
 					sClosestLand = sGridNo;
-					//NumMessage("New closest land at grid = ",closestLand);
 				}
 			}
 		}
@@ -1412,8 +1353,6 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 		if (sClosestLand != NOWHERE)  // quit now, no need to look any farther
 			break;
 	}
-
-	//NumMessage("closestLand = ",closestLand);
 	return(sClosestLand);
 }
 
@@ -1437,15 +1376,11 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 	{
 		// determine maximum horizontal limits
 		sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
-		//NumMessage("sMaxLeft = ",sMaxLeft);
 		sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-		//NumMessage("sMaxRight = ",sMaxRight);
 
 		// determine maximum vertical limits
 		sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
-		//NumMessage("sMaxUp = ",sMaxUp);
 		sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-		//NumMessage("sMaxDown = ",sMaxDown);
 
 		// Call FindBestPath to set flags in all locations that we can
 		// walk into within range.  We have to set some things up first...
@@ -1481,7 +1416,6 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 			{
 				// calculate the next potential gridno
 				sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-				//NumMessage("Testing gridno #",gridno);
 				if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
 				{
 					continue;
@@ -1532,10 +1466,7 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 				{
 					// remember it instead
 					iBestSpotValue = iSpotValue;
-					//NumMessage("New shortest route = ",shortestPath);
-
 					sClosestSpot = sGridNo;
-					//NumMessage("New closest land at grid = ",closestLand);
 				}
 			}
 		}
@@ -1775,15 +1706,11 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	//NumMessage("sMaxDown = ",sMaxDown);
 	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
@@ -1946,13 +1873,10 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// reset the "reachable" flags in the region we're looking at
@@ -2026,9 +1950,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	if (pSoldier->bTeam == OUR_TEAM && !fInRing)
 	{
@@ -2038,7 +1960,6 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
@@ -2079,13 +2000,10 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (sStartGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((sStartGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (sStartGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((sStartGridNo / MAXROW) + 1));
 
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
@@ -2110,7 +2028,5 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 			}
 		}
 	}
-
 	return( sClosestSpot );
-
 }

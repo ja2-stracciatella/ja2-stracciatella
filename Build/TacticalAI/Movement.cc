@@ -26,10 +26,6 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 	if ((sGridno < 0) || (sGridno >= GRIDSIZE))
   {
-#ifdef BETAVERSION
-   NumMessage("LegalNPC->sDestination: ERROR - rcvd invalid gridno ",gridno);
-#endif
-
    return(FALSE);
   }
 
@@ -38,7 +34,6 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 	{
 		return( FALSE );
 	}
-
 
 	// skip mercs if turnbased and adjacent AND not doing an IGNORE_PATH check (which is used almost exclusively by GoAsFarAsPossibleTowards)
 	fSkipTilesWithMercs = (gfTurnBasedAI && ubPathMode != IGNORE_PATH && SpacesAway( pSoldier->sGridNo, sGridno ) == 1 );
@@ -90,10 +85,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 															// *** NOTE: movement mode hardcoded to WALKING !!!!!
 			case ENSURE_PATH_COST:	return PlotPath(pSoldier, sGridno, FALSE, FALSE, WALKING, 0);
 
-      default              :
-#ifdef BETAVERSION
-			     NumMessage("LegalNPC->sDestination: ERROR - illegal pathMode = ",ubPathMode);
-#endif
+      default:
 			     return(FALSE);
      }
    }
@@ -130,8 +122,6 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 		}
 		else
 		{
-			SLOGE(DEBUG_TAG_AI, "TryToResumeMovement: NewDest failed for %s, action CANCELED",
-						pSoldier->name);
 			// must work even for escorted civs, can't just set the flag
 			CancelAIAction(pSoldier);
 		}
@@ -140,8 +130,6 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
   {
 		// don't black-list anything here, this situation can come up quite
 		// legally if another soldier gets in the way between turns
-		SLOGD(DEBUG_TAG_AI, "TryToResumeMovement: %d can't continue to gridno %d, no longer legal!",
-					pSoldier->ubID, sGridno);
 		CancelAIAction(pSoldier);
 	}
 	return(ubSuccess);
@@ -153,8 +141,6 @@ static INT16 NextPatrolPoint(SOLDIERTYPE* pSoldier)
 	// patrol slot 0 is UNUSED, so max patrolCnt is actually only 9
 	if ((pSoldier->bPatrolCnt < 1) || (pSoldier->bPatrolCnt >= MAXPATROLGRIDS))
   {
-		SLOGE(DEBUG_TAG_AI, "NextPatrolPoint: Invalid patrol count = %d for %s",
-					pSoldier->bPatrolCnt, pSoldier->name);
 		return(NOWHERE);
   }
 	pSoldier->bNextPatrolPnt++;
@@ -189,9 +175,6 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
    // if we're back where we started, then ALL other patrol points are junk!
    if (pSoldier->sGridNo == sPatrolPoint)
     {
-#ifdef BETAVERSION
-     NumMessage("PROBLEM WITH SCENARIO: All other patrol points are invalid for guynum ",pSoldier->ubID);
-#endif
      // force change of orders & an abort
      sPatrolPoint = NOWHERE;
     }
@@ -200,10 +183,6 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
  // if we don't have a legal patrol point
  if (sPatrolPoint == NOWHERE)
   {
-#ifdef BETAVERSION
-   NumMessage("PointPatrolAI: ERROR - no legal patrol point for %d",pSoldier->ubID);
-#endif
-
    // over-ride orders to something safer
    pSoldier->bOrders = FARPATROL;
    return(FALSE);
@@ -234,8 +213,6 @@ INT8 PointPatrolAI(SOLDIERTYPE *pSoldier)
   }
 
 	// passed all tests - start moving towards next patrol point
-	SLOGD(DEBUG_TAG_AI, "%s - POINT PATROL to grid %d",
-				pSoldier->name, pSoldier->usActionData);
 	return(TRUE);
 }
 
@@ -284,10 +261,6 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 	// if we don't have a legal patrol point
 	if (sPatrolPoint == NOWHERE)
 	{
-#ifdef BETAVERSION
-		NumMessage("PointPatrolAI: ERROR - no legal patrol point for %d",pSoldier->ubID);
-#endif
-
 		// over-ride orders to something safer
 		pSoldier->bOrders = FARPATROL;
 		return(FALSE);
@@ -368,9 +341,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	{
 		pSoldier->usUIMovementMode = WALKING;
 	}
-
-	SLOGD(DEBUG_TAG_AI, "%s wants to go towards %d (has range %d)",
-				pSoldier->name, sDesGrid, usMaxDist);
 
 	// if soldier is ALREADY at the desired destination, quit right away
 	if (sDesGrid == pSoldier->sGridNo)
@@ -456,21 +426,12 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 				if (LegalNPCDestination(pSoldier,sTempDest,ENSURE_PATH,NOWATER,0))
 				{
 					fFound = TRUE;            // found a spot
-
-#ifdef DEBUGDECISIONS
-					AINumMessage("Found a spot!  ubDirection = ",ubDirection + 1);
-#endif
-
 					break;                   // stop checking in other directions
 				}
 			}
 
 			if (!fFound)
 			{
-#ifdef DEBUGDECISIONS
-				AINumMessage("Couldn't find OK destination around grid #",sDesGrid);
-#endif
-
 				return(NOWHERE);
 			}
 
@@ -480,13 +441,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	}
 
  // HAVE FOUND AN OK destination AND PLOTTED A VALID BEST PATH TO IT
-
-
-#ifdef DEBUGDECISIONS
- AINumMessage("Chosen legal destination is gridno ",sDesGrid);
- AINumMessage("Tracing along path, pathRouteToGo = ",pSoldier->pathRouteToGo);
-#endif
-
  sGoToGrid = pSoldier->sGridNo;      // start back where soldier is standing now
  sAPCost = 0;		      // initialize path cost counter
 
@@ -499,17 +453,10 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 
 	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->usPathingData[sLoop] + 1) ) );
 	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->usPathingData[sLoop]) ) );
-   //NumMessage("sTempDest = ",sTempDest);
 
    // this should NEVER be out of bounds
    if (sTempDest == sGoToGrid)
     {
-#ifdef BETAVERSION
-     sprintf(tempstr,"GoAsFarAsPossibleTowards: ERROR - gridno along valid route is invalid!  guynum %d, sTempDest = %d",pSoldier->ubID,sTempDest);
-     PopMessage(tempstr);
-     SaveGame(ERROR_SAVE);
-#endif
-
      break;           // quit here, sGoToGrid is where we are going
     }
 
@@ -603,8 +550,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
  // if it turned out we couldn't go even 1 tile towards the desired gridno
 	if (sGoToGrid == pSoldier->sGridNo)
   {
-		SLOGD(DEBUG_TAG_AI, "%s will go NOWHERE, path doesn't meet criteria",
-					pSoldier->name);
 		return(NOWHERE);             // then go nowhere
   }
  else

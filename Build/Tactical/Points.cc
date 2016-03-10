@@ -533,9 +533,6 @@ static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
  INT16 sBreathFactor = 100;
  UINT8 ubBandaged;
 
-
- //NumMessage("BEFORE adjustments, BREATH PTS = ",breathPts);
-
  // in real time, there IS no AP cost, (only breath cost)
  /*
  if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )

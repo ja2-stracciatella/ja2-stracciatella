@@ -161,15 +161,10 @@ static void BuildSightDir(UINT32 dir, UINT32* One, UINT32* Two, UINT32* Three, U
 		  *Four = SOUTHWEST;
 		  *Five = NORTHEAST;
 		  break;
-#ifdef BETAVERSION
   default:
-    NumMessage("BuildSightDir:  Invalid 'dir' value, = ",dir);
-#endif
+		break;
  }
 }
-
-//#if 0
-
 
 #define		NUM_SLANT_ROOF_SLOTS					200
 
@@ -331,9 +326,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 	MercLooksForDoors(*pSoldier);
 
   dir = pSoldier->bDirection;
-
- //NumMessage("good old reveal",dir);
-
   // a gassed merc can only see 1 tile away due to blurred vision
 	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 	{

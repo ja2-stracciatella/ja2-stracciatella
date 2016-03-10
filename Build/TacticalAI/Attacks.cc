@@ -52,9 +52,6 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 		bPayloadPocket = FindObj( pSoldier, MORTAR_SHELL );
 		if (bPayloadPocket == NO_SLOT)
 		{
-#ifdef BETAVERSION
-			NumMessage("LoadWeaponIfNeeded: ERROR - no mortar shells found to load MORTAR!  Guynum",pSoldier->ubID);
-#endif
 			return;	// no shells, can't fire the MORTAR
 		}
 	}
@@ -64,9 +61,6 @@ void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier)
 		bPayloadPocket = FindGLGrenade( pSoldier );
 		if (bPayloadPocket == NO_SLOT)
 		{
-#ifdef BETAVERSION
-			NumMessage("LoadWeaponIfNeeded: ERROR - no grenades found to load GLAUNCHER!  Guynum",pSoldier->ubID);
-#endif
 			return;	// no grenades, can't fire the GLAUNCHER
 		}
 	}
@@ -150,7 +144,6 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 
    // calculate minimum action points required to shoot at this opponent
    ubMinAPcost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
-   //NumMessage("MinAPcost to shoot this opponent = ",ubMinAPcost);
 
    // if we don't have enough APs left to shoot even a snap-shot at this guy
    if (ubMinAPcost > pSoldier->bActionPoints)
@@ -161,8 +154,6 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 		ubChanceToGetThrough = AISoldierToSoldierChanceToGetThrough( pSoldier, pOpponent );
 
 //   ubChanceToGetThrough = ChanceToGetThrough(pSoldier,pOpponent->sGridNo,NOTFAKE,ACTUAL,TESTWALLS,9999,M9PISTOL,NOT_FOR_LOS);
-
-   //NumMessage("Chance to get through = ",ubChanceToGetThrough);
 
    // if we can't possibly get through all the cover
    if (ubChanceToGetThrough == 0)
@@ -237,17 +228,10 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
     {
      //HandleMyMouseCursor(KEYBOARDALSO);
 
-     //NumMessage("ubAimTime = ",ubAimTime);
-
      ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier,pOpponent->sGridNo,ubAimTime, AIM_SHOT_TORSO);
     // ExtMen[pOpponent->ubID].haveStats = TRUE;
-     //NumMessage("chance to Hit = ",ubChanceToHit);
-
-     //sprintf(tempstr,"Vs. %s, at AimTime %d, ubChanceToHit = %d",ExtMen[pOpponent->ubID].name,ubAimTime,ubChanceToHit);
-     //PopMessage(tempstr);
 
      iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubAimTime);
-     //NumMessage("hitRate = ",iHitRate);
 
      // if aiming for this amount of time produces a better hit rate
      if (iHitRate > iBestHitRate)
@@ -279,13 +263,11 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 
    // estimate the damage this shot would do to this opponent
    iEstDamage = EstimateShotDamage(pSoldier,pOpponent,ubBestChanceToHit);
-   //NumMessage("SHOT EstDamage = ",iEstDamage);
 
    // calculate the combined "attack value" for this opponent
    // highest possible value before division should be about 1.8 billion...
    // normal value before division should be about 5 million...
    iAttackValue = (iEstDamage * iBestHitRate * ubChanceToReallyHit * iThreatValue) / 1000;
-   //NumMessage("SHOT AttackValue = ",iAttackValue / 1000);
 
 	 // special stuff for assassins to ignore militia more
    if ( pSoldier->ubProfile >= JIM && pSoldier->ubProfile <= TYRONE && pOpponent->bTeam == MILITIA_TEAM )
@@ -516,8 +498,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		ubFriendCnt++;
 	}
 
-	//NumMessage("ubFriendCnt = ",ubFriendCnt);
-
 	// make a list of tiles one's CURRENTLY SEEN opponents are positioned in
 	FOR_EACH_MERC(i)
 	{
@@ -653,9 +633,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		ubOpponentCnt++;
   }
 
-	//NumMessage("ubOpponentCnt = ",ubOpponentCnt);
-
-
 	// this is try to minimize enemies wasting their (limited) toss attacks, with the exception of break lights
 	if (usGrenade != BREAK_LIGHT)
 	{
@@ -695,16 +672,12 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		// determine maximum horizontal limits
 		//bMaxLeft  = MIN(ubSearchRange,(sOpponentTile[ubLoop] % MAXCOL));
 		bMaxLeft = ubSearchRange;
-		//NumMessage("bMaxLeft = ",bMaxLeft);
 		//bMaxRight = MIN(ubSearchRange,MAXCOL - ((sOpponentTile[ubLoop] % MAXCOL) + 1));
 		bMaxRight = ubSearchRange;
-		//NumMessage("bMaxRight = ",bMaxRight);
 
 		// determine maximum vertical limits
 		bMaxUp	 = ubSearchRange;
-		//NumMessage("bMaxUp = ",bMaxUp);
 		bMaxDown = ubSearchRange;
-		//NumMessage("bMaxDown = ",bMaxDown);
 
 		// evaluate every tile for its opponent-damaging potential
 		for (bYOffset = -bMaxUp; bYOffset <= bMaxDown; bYOffset++)
@@ -715,14 +688,10 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 				// calculate the next potential gridno near this opponent
 				sGridNo = sOpponentTile[ubLoop] + bXOffset + (MAXCOL * bYOffset);
-				//NumMessage("Testing gridno #",sGridNo);
 
 				// this shouldn't ever happen
 				if ((sGridNo < 0) || (sGridNo >= GRIDSIZE))
 				{
-					#ifdef BETAVERSION
-						NumMessage("CalcBestThrow: ERROR - invalid gridno being tested ",sGridNo);
-					#endif
 					continue;
 				}
 
@@ -782,7 +751,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 				// calculate minimum action points required to throw at this gridno
 				ubMinAPcost = MinAPsToAttack(pSoldier,sGridNo,ADDTURNCOST);
-				//NumMessage("MinAPcost to throw at this gridno = ",ubMinAPcost);
 
 				// if we don't have enough APs left to throw even without aiming
 				if (ubMinAPcost > pSoldier->bActionPoints)
@@ -795,7 +763,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				{
 					if ( (bFriendLevel[ubLoop2] == bOpponentLevel[ubLoop]) && ( PythSpacesAway(sFriendTile[ubLoop2],sGridNo) <= ubSafetyMargin ) )
 					{
-						//NumMessage("Friend too close: at gridno",sFriendTile[ubLoop2]);
 						fFriendsNearby = TRUE;
 						break;       // don't bother checking any other friends
 					}
@@ -824,14 +791,12 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 						// estimate how much damage this tossed item would do to him
 						iEstDamage = EstimateThrowDamage(pSoldier, bPayloadPocket, opponents[ubLoop2], sGridNo);
-						//NumMessage("THROW EstDamage = ",iEstDamage);
 
 						if (usOppDist)
 						{
 							// reduce the estimated damage for his distance from gridno
 							// use 100% at range 0, 80% at range 1, and 60% at range 2, etc.
 							iEstDamage = (iEstDamage * (100 - (20 * usOppDist))) / 100;
-							//NumMessage("THROW reduced usEstDamage = ",usEstDamage);
 						}
 						else
 						{
@@ -902,7 +867,8 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 				else
 				{
-					ubChanceToGetThrough = 100 * CalculateLaunchItemChanceToGetThrough( pSoldier, &(pSoldier->inv[ HANDPOS ] ), sGridNo, bOpponentLevel[ubLoop], 0, &sEndGridNo, TRUE, &bEndLevel, FALSE );				//NumMessage("Chance to get through = ",ubChanceToGetThrough);
+					ubChanceToGetThrough = 100 * CalculateLaunchItemChanceToGetThrough( pSoldier, &(pSoldier->inv[ HANDPOS ] ),
+																					sGridNo, bOpponentLevel[ubLoop], 0, &sEndGridNo, TRUE, &bEndLevel, FALSE );
 					// if we can't possibly get through all the cover
 					if (ubChanceToGetThrough == 0 )
 					{
@@ -928,9 +894,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					}
 				}
 
-				//NumMessage("Total Threat Value = ",iTotalThreatValue);
-				//NumMessage("Opps in Range = ",ubOppsInRange);
-
 				// this is try to minimize enemies wasting their (few) mortar shells or LAWs
 				// they won't use them on less than 2 targets as long as half life left
 				if ((usInHand == MORTAR || usInHand == ROCKET_LAUNCHER) && (ubOppsInRange < 2) &&
@@ -941,7 +904,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 				// calculate the maximum possible aiming time
 				ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
-				//NumMessage("Max Possible Aim Time = ",ubMaxPossibleAimTime);
 
 				// calc next attack's minimum AP cost (excludes readying & turning)
 
@@ -976,7 +938,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 
 				iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubMaxPossibleAimTime);
-				//NumMessage("iHitRate = ",iHitRate);
 
 				// calculate chance to REALLY hit: throw accurately AND get past cover
 				ubChanceToReallyHit = (ubChanceToHit * ubChanceToGetThrough) / 100;
@@ -989,7 +950,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				// maximum possible attack value here should be about 140 million
 				// typical attack value here should be about 500 thousand
 				iAttackValue = (iHitRate * ubChanceToReallyHit * iTotalThreatValue) / 1000;
-				//NumMessage("THROW AttackValue = ",iAttackValue / 1000);
 
 				// unlike SHOOTing and STABbing, find strictly the highest attackValue
 				if (iAttackValue > pBestThrow->iAttackValue)
@@ -1088,7 +1048,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 	 ubMinAPCost = CalcTotalAPsToAttack( pSoldier,pOpponent->sGridNo,ADDTURNCOST, 0 );
 
    //ubMinAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
-   //NumMessage("MinAPcost to stab this opponent = ",ubMinAPCost);
 
    // Human: if I don't have enough APs left to get there & stab at this guy, skip 'im.
 	 // Monster:  I'll do an extra check later on to see if I can reach the guy this turn.
@@ -1113,8 +1072,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
    // calc next attack's minimum stabbing cost (excludes movement & turning)
 	 ubRawAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
-   //NumMessage("ubRawAPCost to stab this opponent = ",ubRawAPCost);
-
 
    // determine if this is a surprise stab (must be next to opponent & unseen)
    fSurpriseStab = FALSE;        // assume it is not a surprise stab
@@ -1136,15 +1093,11 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
    // calculate the maximum possible aiming time
    ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
-   //NumMessage("Max Possible Aim Time = ",ubMaxPossibleAimTime);
 
    // consider the various aiming times
    for (ubAimTime = AP_MIN_AIM_ATTACK; ubAimTime <= ubMaxPossibleAimTime; ubAimTime++)
     {
      //HandleMyMouseCursor(KEYBOARDALSO);
-
-     //NumMessage("ubAimTime = ",ubAimTime);
-
      if (!fSurpriseStab)
       {
 				if (fBladeAttack)
@@ -1158,13 +1111,8 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
       }
      else
        ubChanceToHit = MAXCHANCETOHIT;
-     //NumMessage("chance to Hit = ",ubChanceToHit);
-
-     //sprintf(tempstr,"Vs. %s, at AimTime %d, ubChanceToHit = %d",ExtMen[pOpponent->ubID].name,ubAimTime,ubChanceToHit);
-     //PopMessage(tempstr);
 
      iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubAimTime);
-     //NumMessage("hitRate = ",iHitRate);
 
      // if aiming for this amount of time produces a better hit rate
      if (iHitRate > iBestHitRate)
@@ -1190,13 +1138,11 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
    // estimate the damage this stab would do to this opponent
    iEstDamage = EstimateStabDamage(pSoldier,pOpponent,ubBestChanceToHit, fBladeAttack );
-   //NumMessage("STAB EstDamage = ", iEstDamage);
 
    // calculate the combined "attack value" for this opponent
    // highest possible value before division should be about 1 billion...
    // normal value before division should be about 5 million...
    iAttackValue = ( iEstDamage * iBestHitRate * ubChanceToReallyHit * iThreatValue) / 1000;
-   //NumMessage("STAB AttackValue = ",iAttackValue / 1000);
 
    // if we can hurt the guy, OR probably not, but at least it's our best
    // chance to actually hit him and maybe scare him, knock him down, etc.
@@ -1282,12 +1228,10 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
    // calculate minimum action points required to stab at this opponent
 	 ubMinAPCost = CalcTotalAPsToAttack( pSoldier,pOpponent->sGridNo,ADDTURNCOST, 0 );
    //ubMinAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo,ADDTURNCOST);
-   //NumMessage("MinAPcost to stab this opponent = ",ubMinAPCost);
 
 
    // calc next attack's minimum stabbing cost (excludes movement & turning)
 	 ubRawAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
-   //NumMessage("ubRawAPCost to stab this opponent = ",ubRawAPCost);
 
    // determine if this is a surprise stab (for tentacles, enemy must not see us, no dist limit)
    fSurpriseStab = FALSE;        // assume it is not a surprise stab
@@ -1304,28 +1248,19 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
    //ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
 	 ubMaxPossibleAimTime = 0;
-   //NumMessage("Max Possible Aim Time = ",ubMaxPossibleAimTime);
 
    // consider the various aiming times
    for (ubAimTime = AP_MIN_AIM_ATTACK; ubAimTime <= ubMaxPossibleAimTime; ubAimTime++)
     {
      //HandleMyMouseCursor(KEYBOARDALSO);
-
-     //NumMessage("ubAimTime = ",ubAimTime);
-
      if (!fSurpriseStab)
       {
 				ubChanceToHit = (UINT8) CalcChanceToStab(pSoldier,pOpponent,ubAimTime);
       }
      else
        ubChanceToHit = MAXCHANCETOHIT;
-     //NumMessage("chance to Hit = ",ubChanceToHit);
-
-     //sprintf(tempstr,"Vs. %s, at AimTime %d, ubChanceToHit = %d",ExtMen[pOpponent->ubID].name,ubAimTime,ubChanceToHit);
-     //PopMessage(tempstr);
 
      iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubAimTime);
-     //NumMessage("hitRate = ",iHitRate);
 
      // if aiming for this amount of time produces a better hit rate
      if (iHitRate > iBestHitRate)
@@ -1349,13 +1284,11 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
    // estimate the damage this stab would do to this opponent
    iEstDamage = EstimateStabDamage(pSoldier,pOpponent,ubBestChanceToHit, TRUE );
-   //NumMessage("STAB EstDamage = ", iEstDamage);
 
    // calculate the combined "attack value" for this opponent
    // highest possible value before division should be about 1 billion...
    // normal value before division should be about 5 million...
    iAttackValue = ( iEstDamage * iBestHitRate * ubChanceToReallyHit * iThreatValue) / 1000;
-   //NumMessage("STAB AttackValue = ",iAttackValue / 1000);
 
    // if we can hurt the guy, OR probably not, but at least it's our best
    // chance to actually hit him and maybe scare him, knock him down, etc.
@@ -1437,8 +1370,6 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
  iDamage = (GCM->getWeapon(pSoldier->inv[HANDPOS].usItem)->ubImpact *
 					(100 - iPowerLost + ubBonus)) / 100;
 
- //NumMessage("Pre-protection damage: ",damage);
-
  // if opponent is wearing a helmet
  if (pOpponent->inv[HELMETPOS].usItem)
  {
@@ -1496,8 +1427,6 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	}
 
 	iDamage -= iTotalProt;
- //NumMessage("After-protection damage: ",damage);
-
 	if (ubAmmoType == AMMO_HP)
 	{
 		// increase after-armour damage
@@ -1570,7 +1499,6 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 		{
 			// take condition of the gas mask into account - it could be leaking
 			iBreathDamage = (iBreathDamage * (100 - pOpponent->inv[bSlot].bStatus[0])) / 100;
-			//NumMessage("damage after GAS MASK: ",iBreathDamage);
 		}
 
   }
@@ -1708,11 +1636,6 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 			// might need to reload
 			bCanAttack = CanNPCAttack( pSoldier );
 		}
-	}
-	if (bCanAttack != TRUE) // if for any reason we can't attack right now
-	{
-		SLOGD(DEBUG_TAG_AI, "%s can't attack! (not OKToAttack, Reason code = %d)",
-					pSoldier->name, bCanAttack);
 	}
 	return( bCanAttack );
 }

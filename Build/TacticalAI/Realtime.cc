@@ -105,9 +105,6 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 		// if action should remain in progress
 		if (ActionInProgress(pSoldier))
 		{
-			#ifdef DEBUGBUSY
-				AINumMessage("Busy with action, skipping guy#",pSoldier->ubID);
-			#endif
 			// let it continue
 			return;
     }
