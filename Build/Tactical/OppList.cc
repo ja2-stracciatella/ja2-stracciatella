@@ -1,5 +1,5 @@
 #include "Font.h"
-//#include "AI.h"
+#include "AI.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"
 #include "Event_Pump.h"
@@ -52,7 +52,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-
+#define DEBUG_TAG_OPPLIST	"OppList"
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 
 
@@ -714,11 +714,8 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 
 		s.bNewOppCnt = 0;
 
-		// Temporary for opplist synching - disable random order radioing
-#ifndef RECORDOPPLIST
 		// If this soldier's NOT on our team (MAY be under our control, though!)
 		if (!IsOnOurTeam(s)) OurTeamRadiosRandomlyAbout(&s); // radio about him only
-#endif
 
 		/* All non-humans under our control would now radio, if they were allowed to
 		 * radio automatically (but they're not). So just nuke new opp cnt. */
@@ -735,12 +732,8 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 			if (them.uiStatusFlags & SOLDIER_PC)
 			{
 				// Temporary for opplist synching - disable random order radioing
-#ifdef RECORDOPPLIST
-				// Do our own team, too, since we've bypassed random radioing
-#else
 				// Exclude our own team, we've already done them, randomly
 				if (them.bTeam != OUR_TEAM)
-#endif
 					RadioSightings(&them, &s, them.bTeam);
 			}
 			else if (gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM)
@@ -1284,11 +1277,6 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 	// don't use UpdatePersonal() here, because we're changing to a *lower*
 	// opplist value (which UpdatePersonal ignores) and we're not updating
 	// the lastKnown gridno at all, we're keeping it at its previous value
-	 /*
-#ifdef RECORDOPPLIST
-   fprintf(OpplistFile,"ManLooksForMan: changing personalOpplist to %d for guynum %d, opp %d\n",SEEN_THIS_TURN,ptr->guynum,oppPtr->guynum);
-#endif
-	 */
 
 	*pPersOL = SEEN_THIS_TURN;
 
@@ -1315,12 +1303,6 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 		{
 #ifdef TESTOPPLIST
 			DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String( "TeamNoLongerSeesMan: ID %d(%ls) to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
-#endif
-
-
-#ifdef RECORDOPPLIST
-			fprintf(OpplistFile,"TeamNoLongerSeesMan returns TRUE for team %d, opp %d\n",ptr->team,oppPtr->guynum);
-			fprintf(OpplistFile,"ManLooksForMan: changing publicOpplist to %d for team %d, opp %d\n",SEEN_THIS_TURN,ptr->team,oppPtr->guynum);
 #endif
 
 			// don't use UpdatePublic() here, because we're changing to a *lower*
@@ -1510,20 +1492,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 			DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("FAILED LINEOFSIGHT: ID %d (%ls)to ID %d Personally %d, public %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID,*pPersOL,*pbPublOL) );
 #endif
  }
-
-
-
-/*
-#ifdef RECORDOPPLIST
- fprintf(OpplistFile,"MLFM: %s by %2d(g%4d,x%3d,y%3d,%s) at %2d(g%4d,x%3d,y%3d,%s), aware %d, dA=%d,dV=%d, desDir=%d, %s\n",
-		(success) ? "SCS" : "FLR",
-		ptr->guynum,fromGridno,fromX,fromY,(ptrProjected)?"PROJ":"REG.",
-		oppPtr->guynum,toGridno,toX,toY,(oppPtrProjected)?"PROJ":"REG.",
-		aware,distAway,distVisible,ptr->desdir,
-		LastCaller2Text[caller]);
-#endif
-*/
-
+ 
  // if soldier seen personally LAST time could not be seen THIS time
  if (!bSuccess && (*pPersOL == SEEN_CURRENTLY))
  {
@@ -2226,16 +2195,6 @@ static void UpdatePublic(const UINT8 ubTeam, SOLDIERTYPE* const s, const INT8 bN
 
 static void UpdatePersonal(SOLDIERTYPE* pSoldier, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel)
 {
-	/*
-#ifdef RECORDOPPLIST
- fprintf(OpplistFile,"UpdatePersonal - for %d about %d to %d (was %d) at g%d\n",
-		ptr->guynum,guynum,newOpplist,ptr->opplist[guynum],gridno);
-#endif
-
-	*/
-
-
-
  // if new opplist is more up-to-date, or we are just wiping it for some reason
  if ((gubKnowledgeValue[pSoldier->bOppList[ubID] - OLDEST_HEARD_VALUE][bNewOpplist - OLDEST_HEARD_VALUE] > 0) ||
      (bNewOpplist == NOT_HEARD_OR_SEEN))
@@ -2615,10 +2574,6 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
    // if we personally don't know a thing about this opponent
    if (*pPersOL == NOT_HEARD_OR_SEEN)
     {
-#ifdef RECORDOPPLIST
-     //fprintf(OpplistFile,"not heard or seen\n");
-#endif
-
 #ifdef TESTOPPLIST
 			DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, "RS: not heard or seen");
 #endif
@@ -2630,10 +2585,6 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
    if ((!gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pPersOL - OLDEST_HEARD_VALUE]) &&
        (*pbPublOL != *pPersOL))
     {
-#ifdef RECORDOPPLIST
-     //fprintf(OpplistFile,"no new knowledge (per %d, pub %d)\n",*pPersOL,*pbPublOL);
-#endif
-
 #ifdef TESTOPPLIST
 		 	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 			  String("RS: no new knowledge per %d pub %d",*pPersOL,*pbPublOL) );
@@ -2643,11 +2594,6 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 		 continue;                          // skip to the next opponent
     }
-
-#ifdef RECORDOPPLIST
-   //fprintf(OpplistFile,"made it!\n");
-#endif
-
 #ifdef TESTOPPLIST
 		DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, "RS: made it!");
 #endif
@@ -2757,10 +2703,6 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
    // IF WE'RE HERE, OUR PERSONAL INFORMATION IS AT LEAST AS UP-TO-DATE
    // AS THE PUBLIC KNOWLEDGE, SO WE WILL REPLACE THE PUBLIC KNOWLEDGE
-#ifdef RECORDOPPLIST
-   fprintf(OpplistFile,"UpdatePublic (RadioSightings) for team %d about %d\n",ptr->team,oppPtr->guynum);
-#endif
-
 
 #ifdef TESTOPPLIST
 	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
@@ -3635,11 +3577,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 	UINT8 ubNoiseDir        = (UINT8)-1; // XXX HACK000E probably ubLoudestNoiseDir should be used
 	UINT8 ubLoudestNoiseDir = (UINT8)-1; // XXX HACK000E
 
-#ifdef RECORDOPPLIST
-	fprintf(OpplistFile,"PN: nType=%s, nMaker=%d, g=%d, bVol=%d\n",
-		NoiseTypeStr[noiseType], SOLDIER2ID(noise_maker), sGridNo, baseVolume);
-#endif
-
 	// if the base volume itself was negligible
 	if (!ubBaseVolume)
 		return;
@@ -3898,12 +3835,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 			// Can the listener hear noise of that volume given his circumstances?
 			ubEffVolume = CalcEffVolume(pSoldier,sGridNo,bLevel,ubNoiseType,ubBaseVolume,bCheckTerrain,pSoldier->bOverTerrainType,ubSourceTerrType);
 
-#ifdef RECORDOPPLIST
-			fprintf(OpplistFile,"PN: guy %d - effVol=%d,chkTer=%d,pSoldier->tType=%d,srcTType=%d\n",
-		     bLoop,effVolume,bCheckTerrain,pSoldier->terrtype,ubSourceTerrType);
-#endif
-
-
 			if (ubEffVolume > 0)
 			{
 				// ALL RIGHT!  Passed all the tests, this listener hears this noise!!!
@@ -3979,10 +3910,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 			{
 				if (bHeard)
 				{
-#ifdef RECORDOPPLIST
-					fprintf(OpplistFile, "UpdatePublic (ProcessNoise/heard) for team %d about %d\n", team, source->ubID);
-#endif
-
 					// mark noise maker as having been PUBLICLY heard THIS TURN
 					UpdatePublic(bTeam, source, HEARD_THIS_TURN, sGridNo, bLevel);
 				}
@@ -4208,14 +4135,6 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 				}
 			}
 		}
-
-#ifdef RECORDOPPLIST
-		fprintf(OpplistFile,"HN: %s by %2d(g%4d,x%3d,y%3d) at %2d(g%4d,x%3d,y%3d), hTT=%d\n",
-			(bSourceSeen) ? "SCS" : "FLR",
-			pSoldier->guynum,pSoldier->sGridNo,pSoldier->sX,pSoldier->sY,
-			SOLDIER2ID(noise_maker), sGridNo, sNoiseX, sNoiseY,
-			bHadToTurn);
-#endif
 	}
 
 	// if noise is made by a person
@@ -4784,10 +4703,6 @@ void DecayPublicOpplist(INT8 bTeam)
 			// if it's been longer than the maximum we care to remember
 			if ((*pbPublOL > OLDEST_SEEN_VALUE) || (*pbPublOL < OLDEST_HEARD_VALUE))
 			{
-#ifdef RECORDOPPLIST
-				fprintf(OpplistFile,"UpdatePublic (DecayPublicOpplist) for team %d about %d\n",team,pSoldier->guynum);
-#endif
-
 				// forget about him,
 				// and also forget where he was last seen (it's been too long)
 				// this is mainly so POINT_PATROL guys don't SEEK_OPPONENTs forever
