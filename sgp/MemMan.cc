@@ -144,13 +144,13 @@ PTR MemAllocReal(size_t uiSize, const char* pcFile, INT32 iLine)
 	}
 
 	if (!fMemManagerInit)
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile));
+		SLOGW(DEBUG_TAG_MEMORY, "MemAlloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile);
 
 
 	PTR ptr = _malloc_dbg(uiSize, _NORMAL_BLOCK, pcFile, iLine);
 	if (!ptr)
 	{
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc failed: %d bytes (line %d file %s)", uiSize, iLine, pcFile));
+		SLOGE(DEBUG_TAG_MEMORY, "MemAlloc failed: %d bytes (line %d file %s)", uiSize, iLine, pcFile);
 		throw std::bad_alloc();
 	}
 
@@ -159,7 +159,7 @@ PTR MemAllocReal(size_t uiSize, const char* pcFile, INT32 iLine)
 	MemDebugCounter++;
 
 #ifdef DEBUG_MEM_LEAKS
-	DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAlloc %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile));
+	SLOGD(DEBUG_TAG_MEMORY, "MemAlloc %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile);
 #endif
 
 	return ptr;
@@ -169,7 +169,7 @@ PTR MemAllocReal(size_t uiSize, const char* pcFile, INT32 iLine)
 void MemFreeReal(PTR ptr, const char* pcFile, INT32 iLine)
 {
 	if (!fMemManagerInit)
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile));
+		SLOGW(DEBUG_TAG_MEMORY, "MemFree: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile);
 
 	if (ptr != NULL)
 	{
@@ -179,18 +179,18 @@ void MemFreeReal(PTR ptr, const char* pcFile, INT32 iLine)
 		_free_dbg(ptr, _NORMAL_BLOCK);
 
 #ifdef DEBUG_MEM_LEAKS
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemFree  %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile));
+		SLOGD(DEBUG_TAG_MEMORY, "MemFree  %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile);
 #endif
 	}
 	else
 	{
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemFree ERROR: NULL ptr received (line %d file %s)", iLine, pcFile));
+		SLOGE(DEBUG_TAG_MEMORY, "MemFree ERROR: NULL ptr received (line %d file %s)", iLine, pcFile);
 	}
 
 	/* count even a NULL ptr as a MemFree, not because it's really a memory leak,
 	 * but because it is still an error of some sort (nobody should ever be
 	 * freeing NULL pointers), and this will help in tracking it down if the
-	 * above DebugMsg is not noticed. */
+	 * above SLOG is not noticed. */
 	MemDebugCounter--;
 }
 
@@ -198,7 +198,7 @@ void MemFreeReal(PTR ptr, const char* pcFile, INT32 iLine)
 PTR MemReallocReal(PTR ptr, UINT32 uiSize, const char* pcFile, INT32 iLine)
 {
 	if (!fMemManagerInit)
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemRealloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile));
+		SLOGW(DEBUG_TAG_MEMORY, "MemRealloc: Warning -- Memory manager not initialized -- Line %d in %s", iLine, pcFile);
 
 	UINT32 uiOldSize = 0;
 	if (ptr != NULL)
@@ -213,7 +213,7 @@ PTR MemReallocReal(PTR ptr, UINT32 uiSize, const char* pcFile, INT32 iLine)
 	PTR ptrNew = _realloc_dbg(ptr, uiSize, _NORMAL_BLOCK, pcFile, iLine);
 	if (ptrNew == NULL)
 	{
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemReAlloc failed: ptr %d, %d -> %d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile));
+		SLOGE(DEBUG_TAG_MEMORY, "MemReAlloc failed: ptr %d, %d -> %d bytes (line %d file %s)", ptr, uiOldSize, uiSize, iLine, pcFile);
 		if (uiSize != 0)
 		{
 			// ptr is left untouched, so undo the math above
@@ -225,7 +225,7 @@ PTR MemReallocReal(PTR ptr, UINT32 uiSize, const char* pcFile, INT32 iLine)
 	}
 
 #ifdef DEBUG_MEM_LEAKS
-	DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew));
+	SLOGD(DEBUG_TAG_MEMORY, "MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew);
 #endif
 	guiMemTotal   += uiSize;
 	guiMemAlloced += uiSize;

@@ -35,24 +35,6 @@ BOOLEAN InitializeDebugManager(void)
 	return(TRUE);
 }
 
-
-void DebugMsg(TopicID uiTopicId, DebugLevel uiDebugLevel, const char* strMessage)
-{
-	fprintf(stderr, "%s\n", strMessage);
-
-//add _NO_DEBUG_TXT to your SGP preprocessor definitions to avoid this f**king huge file from
-//slowly growing behind the scenes!!!!
-#ifndef _NO_DEBUG_TXT
-	FILE* OutFile = fopen(gpcDebugLogFileName, "a+");
-	if (OutFile != NULL)
-	{
-		fprintf(OutFile, "%s\n", strMessage);
-		fclose(OutFile);
-	}
-#endif
-}
-
-
 static void _DebugRecordToFile(BOOLEAN gfState)
 {
 	gfRecordToFile = gfState;

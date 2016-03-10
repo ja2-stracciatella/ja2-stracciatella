@@ -60,18 +60,9 @@ enum DebugLevel
 	DBG_LEVEL_3  // nitty gritty detail
 };
 
-extern void DebugMsg(TopicID TopicId, DebugLevel uiDebugLevel, const char* Str);
 extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
 
 const char* String(const char* fmt, ...);
-
-#else
-
-//*******************************************************************************************
-// Release Mode
-//*******************************************************************************************
-
-#define DebugMsg(a, b, c)
 
 #endif
 
