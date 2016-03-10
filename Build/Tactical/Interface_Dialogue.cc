@@ -1116,7 +1116,6 @@ static void CalculatePopupTextOrientation(INT16 sWidth, INT16 sHeight)
 
 	}
 	// If we don't have anything here... our viewport/box is too BIG! ( which should never happen
-	//DebugMsg
 }
 
 

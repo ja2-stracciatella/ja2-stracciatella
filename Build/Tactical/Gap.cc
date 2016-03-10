@@ -10,7 +10,7 @@
 #include "GameInstance.h"
 
 #include "slog/slog.h"
-#define TAG "GAP"
+#define DEBUG_TAG_GAP "Gap"
 
 static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 {
@@ -19,7 +19,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	 * will then allocate and load in the AUDIO_GAP information, while counting
 	 * the number of elements loaded */
 
-	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("File is %s", szSoundEffects[uiSampleNum]));
+	SLOGD(DEBUG_TAG_GAP, "File is %s", zSoundFile);
 
 	// strip .wav and change to .gap
   std::string sFileName(FileMan::replaceExtension(std::string(zSoundFile), ".gap"));
@@ -55,10 +55,10 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 				gaps[i].start = start;
 				gaps[i].end   = end;
 
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Start %d and Ends %d", start, end));
+				SLOGD(DEBUG_TAG_GAP, "Gap Start %d and Ends %d", start, end);
 			}
 
-      SLOGD(TAG, "gap list started from file %s", sFileName.c_str());
+      SLOGD(DEBUG_TAG_GAP, "gap list started from file %s", sFileName.c_str());
 
 			MemFree(data);
 			return;
@@ -77,7 +77,7 @@ void AudioGapListDone(AudioGapList* pGapList)
 	MemFree(pGapList->gaps);
 	pGapList->gaps = NULL;
 	pGapList->end  = NULL;
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Audio Gap List Deleted");
+	SLOGD(DEBUG_TAG_GAP, "Audio Gap List Deleted");
 }
 
 
@@ -101,7 +101,7 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	if (i == NULL) return FALSE;
 
 	const UINT32 time = SoundGetPosition(uiSampleNum);
-	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Sound Sample Time is %d", time));
+	SLOGD(DEBUG_TAG_GAP, "Sound Sample Time is %d", time);
 
 	// Check to see if we have fallen behind.  If so, catch up
 	const AUDIO_GAP* const end = pGapList->end;
@@ -114,7 +114,7 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	if (i->start < time && time < i->end)
 	{
 		// we are within the time frame
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Started at %d", time));
+		SLOGD(DEBUG_TAG_GAP, "Gap Started at %d", time);
 		return TRUE;
 	}
 	else

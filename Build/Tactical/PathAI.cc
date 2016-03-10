@@ -35,7 +35,6 @@
 #include "GameSettings.h"
 #include "Buildings.h"
 
-
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
 
@@ -49,6 +48,11 @@
 extern INT16 gsCoverValue[WORLD_MAX];
 BOOLEAN gfDisplayCoverValues = TRUE;
 static BOOLEAN gfDrawPathPoints = FALSE;
+#endif
+
+#ifdef PATHAI_SKIPLIST_DEBUG
+	#include "slog/slog.h"
+	#define DEBUG_TAG_PATHAI	"Path AI"
 #endif
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;
@@ -879,8 +883,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 		if ( trailCostUsed[curLoc] == gubGlobalPathCount && trailCost[curLoc] < curCost)
 			goto NEXTDIR;
-
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "PATHAI %d", curLoc ) );
 
 		if (fContinuousTurnNeeded)
 		{
@@ -1739,7 +1741,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zTempString );
+						SLOGD(DEBUG_TAG_PATHAI, zTempString );
 
 
 						zTempString[0] = '\0';
@@ -1756,7 +1758,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zTempString );
+						SLOGD(DEBUG_TAG_PATHAI, zTempString );
 
 						zTempString[0] = '\0';
 						bTemp = pQueueHead->bLevel;
@@ -1778,8 +1780,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zTempString );
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "------" );
+						SLOGD(DEBUG_TAG_PATHAI, zTempString );
+						SLOGD(DEBUG_TAG_PATHAI, "------" );
 					}
 #endif
 

@@ -754,11 +754,6 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 		{
 			continue;
 		}
-
-		if (!AddRottingCorpse(&def))
-		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Failed to add a corpse to GridNo # %d", def.sGridNo));
-		}
 	}
 
 	// Check to see if we have to start decomposing the corpses
