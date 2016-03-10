@@ -201,15 +201,6 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 		{
 			// Send this guy into stationary stance
 			EVENT_StopMerc(&s);
-
-			if (s.bTeam == OUR_TEAM)
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[DOOR_IS_BUSY]);
-			}
-			else
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Trying to open door and door is busy: %d", s.ubID));
-			}
 			return;
 		}
 	}

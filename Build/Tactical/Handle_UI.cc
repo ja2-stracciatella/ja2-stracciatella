@@ -413,8 +413,6 @@ ScreenID HandleTacticalUI(void)
 
 				// Decrease global busy  counter...
 				gTacticalStatus.ubAttackBusyCount = 0;
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to ending AI lock");
-
 				guiPendingOverrideEvent = LU_ENDUILOCK;
 				UIHandleLUIEndLock( NULL );
 			}

@@ -41,8 +41,9 @@
 #include "Auto_Resolve.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Quests.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_MERCHIRE		"Merc Hiring"
 #define	MIN_FLIGHT_PREP_TIME	6
 
 #ifdef JA2TESTVERSION
@@ -103,7 +104,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s == NULL)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
+		SLOGW(DEBUG_TAG_MERCHIRE, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
 		return MERC_HIRE_FAILED;
 	}
 

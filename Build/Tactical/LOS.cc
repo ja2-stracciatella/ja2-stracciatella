@@ -37,6 +37,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
+
+#define		DEBUG_TAG_LOS		"Line of Sight"
 
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
 #define		STEPS_FOR_BULLET_MOVE_SMALL_TRAILS		5
@@ -3359,7 +3362,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		BULLET* const pBullet = CreateBullet(pFirer, fFake, usBulletFlags);
 		if (pBullet == NULL)
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Failed to create bullet");
+			SLOGW(DEBUG_TAG_LOS, "Failed to create bullet");
 			return FALSE;
 		}
 		pBullet->sHitBy	= sHitBy;
@@ -4179,7 +4182,7 @@ void MoveBullet(BULLET* const pBullet)
 												RemoveBullet(pBullet);
 
 												CorpseHit( (INT16)pBullet->sGridNo, pStructure->usStructureID );
-												DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., CORPSE HIT");
+												SLOGD(DEBUG_TAG_LOS, "Reducing attacker busy count..., CORPSE HIT");
 
 												FreeUpAttacker(pBullet->pFirer);
 												return;

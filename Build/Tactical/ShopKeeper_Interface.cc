@@ -2219,9 +2219,6 @@ static void DetermineArmsDealersSellingInventory(void)
 	BOOLEAN fAddSpecialItem;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
-
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "DEF: DetermineArmsDealer");
-
 	//if there is an old inventory, delete it
 	if( gpTempDealersInventory )
 	{

@@ -16,8 +16,9 @@
 #include "Campaign.h"
 #include "MapScreen.h"
 #include "Soldier_Macros.h"
+#include "slog/slog.h"
 
-
+#define DEBUG_TAG_MORALE	"Morale"
 #define MORALE_MOD_MAX 50		// morale *mod* range is -50 to 50, if you change this, check the decay formulas!
 
 #define	DRUG_EFFECT_MORALE_MOD			150
@@ -419,11 +420,13 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 	// Those that do need it have Asserts on a case by case basis below
 	if (pSoldier == NULL)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Handling morale event %d at X=%d, Y=%d,Z=%d", bMoraleEvent, sMapX, sMapY, bMapZ ) );
+		SLOGD(DEBUG_TAG_MORALE, "Handling morale event %d at X=%d, Y=%d,Z=%d",
+					bMoraleEvent, sMapX, sMapY, bMapZ);
 	}
 	else
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Handling morale event %d for %ls at X=%d, Y=%d, Z=%d", bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ ) );
+		SLOGD(DEBUG_TAG_MORALE, "Handling morale event %d for %ls at X=%d, Y=%d, Z=%d",
+					bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ);
 	}
 
 

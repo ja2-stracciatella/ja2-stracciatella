@@ -1661,8 +1661,6 @@ void EndUIMessage( )
 			}
 		}
 
-//		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Removing Overlay message");
-
 		RemoveVideoOverlay(g_ui_message_overlay);
 		g_ui_message_overlay = NULL;
 

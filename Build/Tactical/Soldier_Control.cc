@@ -96,7 +96,7 @@
 #	include "Strategic_AI.h"
 #endif
 
-
+#define		DEBUG_TAG_SOLDIERCTL	"Soldier Control"
 #define		PALETTEFILENAME							BINARYDATADIR "/ja2pal.dat"
 
 #define		LOW_MORALE_BATTLE_SND_THREASHOLD	35
@@ -735,7 +735,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 		pSoldier->light = l;
 		if (l == NULL)
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
+			SLOGD(DEBUG_TAG_SOLDIERCTL, "Soldier: Failed loading light");
 			return FALSE;
 		}
 
@@ -858,7 +858,10 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 	if ( usOldAniState != usNewState && ( uiOldAnimFlags & ANIM_HITSTART ) && !( uiNewAnimFlags & ANIM_HITFINISH ) && !( uiNewAnimFlags & ANIM_IGNOREHITFINISH ) && !(pSoldier->uiStatusFlags & SOLDIER_TURNINGFROMHIT ) )
 	{
 		// Release attacker
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Releasesoldierattacker, normal hit animation ended NEW: %hs ( %d ) OLD: %hs ( %d )", gAnimControl[usNewState].zAnimStr, usNewState, gAnimControl[usOldAniState].zAnimStr, pSoldier->usOldAniState));
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Releasesoldierattacker, normal hit animation ended\n\
+																NEW: %hs ( %d ) OLD: %hs ( %d )",
+					gAnimControl[usNewState].zAnimStr, usNewState,
+					gAnimControl[usOldAniState].zAnimStr, pSoldier->usOldAniState);
 		ReleaseSoldiersAttacker( pSoldier );
 
 		//FREEUP GETTING HIT FLAG
@@ -879,7 +882,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 	if ( ( uiOldAnimFlags & ANIM_HITWHENDOWN ) && ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) || pSoldier->bLife != 0 ) )
 	{
 		// Release attacker
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, animation of kill on the ground ended");
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Releasesoldierattacker, animation of kill on the ground ended");
 		ReleaseSoldiersAttacker( pSoldier );
 
 		//FREEUP GETTING HIT FLAG
@@ -1249,7 +1252,9 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 			{
 				if ( usNewState != SWATTING  )
 				{
-					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Handling New gridNo for %d: Old %hs, New %hs", pSoldier->ubID, gAnimControl[pSoldier->usAnimState].zAnimStr, gAnimControl[usNewState].zAnimStr));
+					SLOGD(DEBUG_TAG_SOLDIERCTL, "Handling New gridNo for %d: Old %hs, New %hs",
+								pSoldier->ubID, gAnimControl[pSoldier->usAnimState].zAnimStr,
+								gAnimControl[usNewState].zAnimStr);
 
 					if ( !( gAnimControl[ usNewState ].uiFlags & ANIM_SPECIALMOVE ) )
 					{
@@ -2117,7 +2122,8 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Starting attack, attack count now %d",
+					gTacticalStatus.ubAttackBusyCount);
 	//}
 
 	// Set soldier's target gridno
@@ -2149,7 +2155,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 		  pSoldier->bBulletsLeft *= NUM_BUCKSHOT_PELLETS;
 	  }
   }
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack, bullets left %d", pSoldier->bBulletsLeft) );
+	SLOGD(DEBUG_TAG_SOLDIERCTL, "Starting attack, bullets left %d", pSoldier->bBulletsLeft);
 
 	// Change to fire animation
 	SoldierReadyWeapon(pSoldier, sTargetGridNo, FALSE);
@@ -2298,7 +2304,7 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 			{
 				// Increment the number of people busy doing stuff because of an attack
 				//gTacticalStatus.ubAttackBusyCount++;
-				//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack with 2 guns, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+				//SLOGD(DEBUG_TAG_SOLDIERCTL, "Starting attack with 2 guns, attack count now %d", gTacticalStatus.ubAttackBusyCount);
 
 				return( SHOOT_DUAL_STAND );
 			}
@@ -2379,7 +2385,7 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 			{
 				// Increment the number of people busy doing stuff because of an attack
 				//gTacticalStatus.ubAttackBusyCount++;
-				//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack with 2 guns, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+				//SLOGD(DEBUG_TAG_SOLDIERCTL, "Starting attack with 2 guns, attack count now %d", gTacticalStatus.ubAttackBusyCount);
 
 				return( SHOOT_DUAL_CROUCH );
 			}
@@ -2643,7 +2649,8 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		case SHOOT_MORTAR:
 		case THROW_ITEM:
 		case LOB_ITEM:
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %hs ENDED BY HIT ANIMATION, Now %d", gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount));
+			SLOGD(DEBUG_TAG_SOLDIERCTL, "Freeing up attacker - ATTACK ANIMATION %hs ENDED BY HIT ANIMATION, Now %d",
+						gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount);
 			ReduceAttackBusyCount(pSoldier, FALSE);
 			break;
 	}
@@ -2664,7 +2671,8 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	{
 		// Increment the number of people busy doing stuff because of an attack (busy doing hit anim!)
 		gTacticalStatus.ubAttackBusyCount++;
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Person got hit, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Person got hit, attack count now %d",
+					gTacticalStatus.ubAttackBusyCount);
 	}
 
 	// ATE; Save hit location info...( for later anim determination stuff )
@@ -2765,7 +2773,8 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	}
 	else
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Control: Weapon class not handled in SoldierGotHit( ) %d", usWeaponIndex ) );
+		SLOGW(DEBUG_TAG_SOLDIERCTL, "Soldier Control: Weapon class not handled in SoldierGotHit( ) %d",
+					usWeaponIndex);
 	}
 
 
@@ -2790,7 +2799,8 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		{
 			pSoldier = pNewSoldier;
 		}
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Tried to free up attacker, attack count now %d",
+					gTacticalStatus.ubAttackBusyCount);
 	}
 
 
@@ -2894,7 +2904,8 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 			case FALLOFF_FORWARD_STOP:       state = FALLOFF_FORWARD_TWITCHNB;   break;
 
 			default:
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Control: Death state %d has no death hit", pSoldier->usAnimState ) );
+				SLOGD(DEBUG_TAG_SOLDIERCTL, "Death state %d has no death hit",
+							pSoldier->usAnimState);
 				return;
 		}
 		ChangeSoldierState(pSoldier, state, 0, FALSE);
@@ -3201,7 +3212,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 bDire
 	// IF HERE AND GUY IS DEAD, RETURN!
 	if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker,Dead soldier hit");
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Releasesoldierattacker, Dead soldier hit");
 		ReleaseSoldiersAttacker( pSoldier );
 		return;
 	}
@@ -3529,7 +3540,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	if ( fContinue )
 	{
 		// Debug messages
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Soldier %d: Get new path", pSoldier->ubID ) );
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Soldier %d: Get new path", pSoldier->ubID);
 
 		// Set final destination
 		pSoldier->sFinalDestination = sDestGridNo;
@@ -4355,7 +4366,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 				pSoldier->uiStatusFlags &= (~SOLDIER_TURNINGFROMHIT );
 
 				// Release attacker
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, turning from hit animation ended");
+				SLOGD(DEBUG_TAG_SOLDIERCTL, "Releasesoldierattacker, turning from hit animation ended");
 				ReleaseSoldiersAttacker( pSoldier );
 
 				//FREEUP GETTING HIT FLAG
@@ -5079,9 +5090,8 @@ static UINT16 GetNewSoldierStateFromNewStance(SOLDIERTYPE* pSoldier, UINT8 ubDes
 		default:
 
 			// Cannot get here unless ub desired stance is bogus
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "GetNewSoldierStateFromNewStance bogus ubDesiredStance value %d", ubDesiredStance ) );
+			SLOGD(DEBUG_TAG_SOLDIERCTL, "GetNewSoldierStateFromNewStance bogus ubDesiredStance value %d", ubDesiredStance);
 			usNewState = pSoldier->usAnimState;
-
 	}
 
 	return( usNewState );
@@ -5361,7 +5371,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 	{
     if ( pSoldier->bLife >= OKLIFE )
     {
-    	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Freeing up attacker from electricity damage");
+    	SLOGD(DEBUG_TAG_SOLDIERCTL, "Freeing up attacker from electricity damage");
 		  ReleaseSoldiersAttacker( pSoldier );
     }
 	}
@@ -6273,8 +6283,6 @@ void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLE
 
 	// OK, set new position
 	EVENT_SetSoldierPositionXY(pSoldier, dXPos, dYPos, SSP_NO_DEST | SSP_NO_FINAL_DEST);
-
-//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("X: %f Y: %f", dXPos, dYPos ) );
 }
 
 
@@ -6472,7 +6480,9 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 
 			for ( cnt = 0; cnt < ubNumToFree; cnt++ )
 			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker of %d (attacker is %d) - releasesoldierattacker num to free is %d", pSoldier->ubID, SOLDIER2ID(pSoldier->attacker), ubNumToFree));
+				SLOGD(DEBUG_TAG_SOLDIERCTL, "Freeing up attacker of %d (attacker is %d)\n\
+																		releasesoldierattacker num to free is %d",
+							pSoldier->ubID, SOLDIER2ID(pSoldier->attacker), ubNumToFree);
 				ReduceAttackBusyCount(pSoldier->attacker, FALSE);
 			}
 
@@ -6594,7 +6604,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
-	  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Begin blade attack: ATB  %d", gTacticalStatus.ubAttackBusyCount) );
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Begin blade attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
 
 	//}
 
@@ -6746,7 +6756,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
-	  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Begin HTH attack: ATB  %d", gTacticalStatus.ubAttackBusyCount) );
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Begin HTH attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
 
 	//}
 
@@ -6858,7 +6868,7 @@ void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 		gTacticalStatus.ubAttackBusyCount++;
 	//}
 	pSoldier->bBulletsLeft = 1;
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting knifethrow attack, bullets left %d", pSoldier->bBulletsLeft) );
+	SLOGD(DEBUG_TAG_SOLDIERCTL, "Starting knifethrow attack, bullets left %d", pSoldier->bBulletsLeft);
 
 	EVENT_InitNewSoldierAnim( pSoldier, THROW_KNIFE, 0 , FALSE );
 
@@ -7301,7 +7311,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
 		// Decrement attack counter...
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something");
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Reducing attacker busy count..., ending throw because saw something");
 		ReduceAttackBusyCount(pSoldier, FALSE);
 
 		// ATE: Goto stationary stance......
@@ -7333,7 +7343,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 			// after turn is done - so set flag here to tell it not to...
 			pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
 
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something");
+			SLOGD(DEBUG_TAG_SOLDIERCTL, "Reducing attacker busy count..., ending fire because saw something");
 			ReduceAttackBusyCount(pSoldier, FALSE);
 		}
 
@@ -7406,7 +7416,7 @@ void EVENT_StopMerc(SOLDIERTYPE* const s, GridNo const grid_no, INT8 const direc
 	{
 		s->fTurningToShoot = FALSE;
 		// Release attacker
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something");
+		SLOGD(DEBUG_TAG_SOLDIERCTL, "Reducing attacker busy count..., ending fire because saw something");
 		ReduceAttackBusyCount(s, FALSE);
 	}
 
@@ -8459,7 +8469,7 @@ void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
   // Robot's don't cower!
   if ( pSoldier->ubBodyType == ROBOTNOWEAPON )
   {
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "ERROR: Robot was told to cower!");
+		SLOGW(DEBUG_TAG_SOLDIERCTL, "Robot was told to cower!");
     return;
   }
 
@@ -8523,7 +8533,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 			gTacticalStatus.ubAttackBusyCount++;
 			// reset attacking item (hand)
 			pSoldier->usAttackingWeapon = 0;
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting STEAL attack, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+			SLOGD(DEBUG_TAG_SOLDIERCTL, "Starting STEAL attack, attack count now %d", gTacticalStatus.ubAttackBusyCount);
 
 			SetUIBusy(pSoldier);
 		}
@@ -8799,7 +8809,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 			    // things that can happen - 1 of them is that sLastTarget will get unset
 			    // after turn is done - so set flag here to tell it not to...
 			    pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
-			    DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION");
+			    SLOGD(DEBUG_TAG_SOLDIERCTL, "Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION");
 					ReduceAttackBusyCount(pSoldier, FALSE);
         }
 
@@ -8812,7 +8822,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 		      pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
 		      // Decrement attack counter...
-		      DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION");
+					SLOGD(DEBUG_TAG_SOLDIERCTL, "Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION");
 					ReduceAttackBusyCount(pSoldier, FALSE);
 	      }
 			}

@@ -31,8 +31,9 @@
 #include "SoundMan.h"
 #include "Debug.h"
 #include "FileMan.h"
+#include	"slog/slog.h"
 
-
+#define		DEBUG_TAG_AIRRAID											"Air Raid"
 #define		SCRIPT_DELAY													10
 #define		AIR_RAID_SAY_QUOTE_TIME								3000
 #define		AIR_RAID_DIVE_INTERVAL								10000
@@ -512,7 +513,8 @@ static void AirRaidLookForDive(void)
 			{
 				// Free up attacker...
 				FreeUpAttacker(gpRaidSoldier);
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker AIR RAID NO DIVE, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+				SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID NO DIVE, attack count now %d",
+							gTacticalStatus.ubAttackBusyCount);
 			}
 		}
 	}
@@ -597,7 +599,8 @@ static void BeginDive()
 
 	// Increment attacker bust count....
 	gTacticalStatus.ubAttackBusyCount++;
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack BEGIN DIVE %d", gTacticalStatus.ubAttackBusyCount) );
+	SLOGD(DEBUG_TAG_AIRRAID, "Starting attack BEGIN DIVE %d",
+				gTacticalStatus.ubAttackBusyCount);
 
 	// Pick location...
 	gsDiveTargetLocation = PickLocationNearAnyMercInSector( );
@@ -759,7 +762,8 @@ static void DoDive(void)
 					{
 						// Increase attacker busy...
 						//gTacticalStatus.ubAttackBusyCount++;
-						//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack AIR RAID ( fire gun ), attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+						//SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID ( fire gun ), attack count now %d",
+						//			gTacticalStatus.ubAttackBusyCount);
 
 						// INcrement bullet fired...
 						gpRaidSoldier->bBulletsLeft++;
@@ -793,7 +797,8 @@ static void DoDive(void)
 					{
 						// Increase attacker busy...
 						//gTacticalStatus.ubAttackBusyCount++;
-						//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack AIR RAID ( second one ), attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+						//SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID ( second one ), attack count now %d",
+						//			gTacticalStatus.ubAttackBusyCount);
 
 						// INcrement bullet fired...
 						gpRaidSoldier->bBulletsLeft++;
@@ -812,10 +817,10 @@ static void DoDive(void)
 				{
 					// Free up attacker...
 					FreeUpAttacker(gpRaidSoldier);
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker AIR RAID DIVE DONE FOR THIS TURN, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+					SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID DIVE DONE FOR THIS TURN, attack count now %d",
+								gTacticalStatus.ubAttackBusyCount);
 				}
 			}
-
 		}
 	}
 }
@@ -934,7 +939,8 @@ static void DoBombing(void)
 							fLocate = TRUE;
 							// Increase attacker busy...
 							gTacticalStatus.ubAttackBusyCount++;
-							DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack AIR RAID ( bombs away ), attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+							SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID ( bombs away ), attack count now %d",
+										gTacticalStatus.ubAttackBusyCount);
 						}
 
 						// Drop bombs...
@@ -949,10 +955,10 @@ static void DoBombing(void)
 					{
 						// Free up attacker...
 						FreeUpAttacker(gpRaidSoldier);
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker AIR RAID BOMB ATTACK DONE FOR THIS TURN, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+						SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID BOMB ATTACK DONE FOR THIS TURN, attack count now %d",
+									gTacticalStatus.ubAttackBusyCount);
 					}
 				}
-
 			}
 		}
 	}
@@ -1081,7 +1087,8 @@ void HandleAirRaid( )
 					{
 						// Free up attacker...
 						FreeUpAttacker(gpRaidSoldier);
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+						SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d",
+									gTacticalStatus.ubAttackBusyCount);
 					}
 
 					gubAirRaidMode = AIR_RAID_LOOK_FOR_DIVE;
@@ -1096,7 +1103,8 @@ void HandleAirRaid( )
 					{
 						// Free up attacker...
 						FreeUpAttacker(gpRaidSoldier);
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+						SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d",
+									gTacticalStatus.ubAttackBusyCount);
 					}
 
 					gubAirRaidMode = AIR_RAID_LOOK_FOR_DIVE;
@@ -1161,7 +1169,8 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 
 	// Increment attacker bust count....
 	gTacticalStatus.ubAttackBusyCount++;
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack AIR RAID, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+	SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID, attack count now %d",
+				gTacticalStatus.ubAttackBusyCount);
 
 	AddTopMessage(AIR_RAID_TURN_MESSAGE);
 

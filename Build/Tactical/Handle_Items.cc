@@ -70,7 +70,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
+#include "slog/slog.h"
 
+#define					DEBUG_TAG_HANDLEITEMS	"Handle Items"
 #define					NUM_ITEMS_LISTED			8
 #define					NUM_ITEM_FLASH_SLOTS	50
 #define					MIN_LOB_RANGE					6
@@ -214,7 +216,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	// ATE: If in realtime, set attacker count to 0...
 	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to no combat");
+		SLOGD(DEBUG_TAG_HANDLEITEMS, "Setting attack busy count to 0 due to no combat");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
@@ -867,7 +869,8 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	if (item->getItemClass() == IC_TENTACLES)
 	{
 		gTacticalStatus.ubAttackBusyCount++;
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount));
+		SLOGD(DEBUG_TAG_HANDLEITEMS, "Starting swipe attack, incrementing a.b.c in HandleItems to %d",
+					gTacticalStatus.ubAttackBusyCount);
 		const INT16 sAPCost = CalcTotalAPsToAttack(s, sGridNo, FALSE, s->bAimTime);
 		DeductPoints(s, sAPCost, 0);
 		EVENT_InitNewSoldierAnim(s, QUEEN_SWIPE, 0, FALSE);
