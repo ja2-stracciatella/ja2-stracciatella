@@ -3668,7 +3668,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 		// tell player about noise if enemies are present
 		BOOLEAN bTellPlayer = gTacticalStatus.fEnemyInSector && ( !(gTacticalStatus.uiFlags & INCOMBAT) || (gTacticalStatus.ubCurrentTeam) );
 
-#ifndef TESTNOISE
 		switch (ubNoiseType)
 		{
 			case NOISE_GUNFIRE:
@@ -3730,7 +3729,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 				bTellPlayer = FALSE;
 			}
 		}
-#endif
 
 		// refresh flags for this new team
 		BOOLEAN bHeard = FALSE;
