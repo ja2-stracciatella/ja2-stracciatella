@@ -568,11 +568,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		 pSoldier->usPathDataSize = sLoop + 1;
 	 }
 
-#ifdef DEBUGDECISIONS
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%d to %d with %d APs left", pSoldier->ubID, sGoToGrid, pSoldier->bActionPoints );
- #endif
-
-
+		SLOGD(DEBUG_TAG_AI, "%d to %d with %d APs left", pSoldier->ubID,
+					sGoToGrid, pSoldier->bActionPoints );
 		return( sGoToGrid );
   }
 }
