@@ -58,10 +58,6 @@
 
 static const BOOLEAN gbShowEnemies = FALSE; // XXX seems to be a debug switch
 
-
-//#define TESTOPPLIST
-
-
 // for ManLooksForMan()
 #define MANLOOKSFOROTHERTEAMS   0
 #define OTHERTEAMSLOOKFORMAN    1
@@ -1225,11 +1221,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
 static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 {
-#ifdef TESTOPPLIST
- DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-	   String("MANLOOKSFOROTHERTEAMS ID %d(%ls) team %d side %d",pSoldier->ubID,pSoldier->name,pSoldier->bTeam,pSoldier->bSide));
-#endif
-
+	SLOGD(DEBUG_TAG_OPPLIST, "MANLOOKSFOROTHERTEAMS ID %d(%ls) team %d side %d",
+				pSoldier->ubID, pSoldier->name, pSoldier->bTeam, pSoldier->bSide);
 
   // one soldier (pSoldier) looks for every soldier on another team (pOpponent)
 	FOR_EACH_MERC(i)
@@ -1301,9 +1294,8 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 		// THIS MUST HAPPEN EVEN FOR ENEMIES, TO MAKE THEIR PUBLIC opplist DECAY!
 		if (TeamNoLongerSeesMan(pSoldier->bTeam, pOpponent, pSoldier, 0))
 		{
-#ifdef TESTOPPLIST
-			DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String( "TeamNoLongerSeesMan: ID %d(%ls) to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
-#endif
+			SLOGD(DEBUG_TAG_OPPLIST, "TeamNoLongerSeesMan: ID %d(%ls) to ID %d",
+						pSoldier->ubID, pSoldier->name, pOpponent->ubID);
 
 			// don't use UpdatePublic() here, because we're changing to a *lower*
 			// opplist value (which UpdatePublic ignores) and we're not updating
@@ -1321,10 +1313,9 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 			}
 		}
 	}
-#ifdef TESTOPPLIST
 	else
-		DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("ManLooksForMan: ID %d(%ls) to ID %d Personally seen, public %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID,*pbPublOL) );
-#endif
+		SLOGD(DEBUG_TAG_OPPLIST, "ManLooksForMan: ID %d(%ls) to ID %d Personally seen, public %d",
+					pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pbPublOL);
 
 	// if we had only seen the guy for an instant and now lost sight of him
 	if (gbSeenOpponents[pSoldier->ubID][pOpponent->ubID] == -1)
@@ -1362,12 +1353,9 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
  // if we're somehow looking while inactive, at base, dead or dying
  if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
  {
-#ifdef TESTOPPLIST
-	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			String("ERROR: ManLooksForMan - WE are inactive/dead etc ID %d(%ls)to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
-#endif
-
-   return(FALSE);
+		SLOGE(DEBUG_TAG_OPPLIST, "ManLooksForMan - WE are inactive/dead etc ID %d(%ls)to ID %d",
+					pSoldier->ubID, pSoldier->name, pOpponent->ubID);
+		return(FALSE);
   }
 
 
@@ -1375,24 +1363,18 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
  // if we're somehow looking for a guy who is inactive, at base, or already dead
  if (!pOpponent->bActive || !pOpponent->bInSector || pOpponent->bLife <= 0 || pOpponent->sGridNo == NOWHERE )
  {
-#ifdef TESTOPPLIST
-	 DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			String("ERROR: ManLooksForMan - TARGET is inactive etc ID %d(%ls)to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
-#endif
-
-   return(FALSE);
+		SLOGE(DEBUG_TAG_OPPLIST, "ManLooksForMan - TARGET is inactive etc ID %d(%ls)to ID %d",
+					pSoldier->ubID, pSoldier->name, pOpponent->ubID);
+		return(FALSE);
  }
 
 
  // if he's looking for a guy who is on the same team
  if (pSoldier->bTeam == pOpponent->bTeam)
   {
-#ifdef TESTOPPLIST
-	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			String("ERROR: ManLooksForMan - SAME TEAM ID %d(%ls)to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
-#endif
-
-   return(FALSE);
+		SLOGE(DEBUG_TAG_OPPLIST, "ManLooksForMan - SAME TEAM ID %d(%ls)to ID %d",
+					pSoldier->ubID, pSoldier->name, pOpponent->ubID);
+		return(FALSE);
   }
 
 	if (pSoldier->bLife < OKLIFE || pSoldier->fMercAsleep)
@@ -1470,12 +1452,9 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
   }
 
  // calculate how many spaces away soldier is (using Pythagoras' theorem)
- sDistAway = PythSpacesAway(pSoldier->sGridNo,pOpponent->sGridNo);
-
-#ifdef TESTOPPLIST
-	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String( "MANLOOKSFORMAN: ID %d(%ls) to ID %d: sDistAway %d sDistVisible %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID,sDistAway,sDistVisible) );
-#endif
-
+	sDistAway = PythSpacesAway(pSoldier->sGridNo,pOpponent->sGridNo);
+	SLOGD(DEBUG_TAG_OPPLIST, "MANLOOKSFORMAN: ID %d(%ls) to ID %d: sDistAway %d sDistVisible %d",
+				pSoldier->ubID, pSoldier->name, pOpponent->ubID, sDistAway, sDistVisible);
 
  // if we see close enough to see the soldier
  if (sDistAway <= sDistVisible)
@@ -1487,10 +1466,9 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 			ManSeesMan(*pSoldier, *pOpponent, ubCaller);
 			bSuccess = TRUE;
     }
-#ifdef TESTOPPLIST
 	 else
-			DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("FAILED LINEOFSIGHT: ID %d (%ls)to ID %d Personally %d, public %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID,*pPersOL,*pbPublOL) );
-#endif
+			SLOGD(DEBUG_TAG_OPPLIST, "FAILED LINEOFSIGHT: ID %d (%ls)to ID %d Personally %d, public %d",
+						pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pPersOL, *pbPublOL);
  }
  
  // if soldier seen personally LAST time could not be seen THIS time
@@ -1502,27 +1480,19 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
  {
 	if (!bSuccess)
 	{
-#ifdef TESTOPPLIST
-		DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("NO LONGER VISIBLE ID %d (%ls)to ID %d Personally %d, public %d success: %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID,*pPersOL,*pbPublOL,bSuccess) );
-#endif
+		SLOGD(DEBUG_TAG_OPPLIST, "NO LONGER VISIBLE ID %d (%ls)to ID %d Personally %d, public %d success: %d",
+					pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pPersOL, *pbPublOL, bSuccess);
 
 
 		// we didn't see the opponent, but since we didn't last time, we should be
 		//if (*pbPublOL)
 			//pOpponent->bVisible = TRUE;
 	}
-#ifdef TESTOPPLIST
 	else
-		DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("COOL. STILL VISIBLE ID %d (%ls)to ID %d Personally %d, public %d success: %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID,*pPersOL,*pbPublOL,bSuccess) );
-#endif
-
-
-
-}
-
-
-
- return(bSuccess);
+		SLOGD(DEBUG_TAG_OPPLIST, "COOL. STILL VISIBLE ID %d (%ls)to ID %d Personally %d, public %d success: %d",
+					pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pPersOL, *pbPublOL, bSuccess);
+	}
+	return(bSuccess);
 }
 
 
@@ -1794,10 +1764,8 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 				s.bSide != opponent.bSide)
 		{
 			AddOneOpponent(&s);
-
-#ifdef TESTOPPLIST
-			DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("ManSeesMan: ID %d(%ls) to ID %d NEW TO ME", s.ubID, s.name, opponent.ubID));
-#endif
+			SLOGD(DEBUG_TAG_OPPLIST, "ManSeesMan: ID %d(%ls) to ID %d NEW TO ME",
+						s.ubID, s.name, opponent.ubID);
 
 			// if we also haven't seen him earlier this turn
 			if (s.bOppList[opponent.ubID] != SEEN_THIS_TURN)
@@ -1849,12 +1817,11 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 			}
 		}
 	}
-#ifdef TESTOPPLIST
 	else
 	{
-		DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("ManSeesMan: ID %d(%ls) to ID %d ALREADYSEENCURRENTLY", s.ubID, s.name, opponent.ubID));
+		SLOGD(DEBUG_TAG_OPPLIST, "ManSeesMan: ID %d(%ls) to ID %d ALREADYSEENCURRENTLY",
+					s.ubID, s.name, opponent.ubID);
 	}
-#endif
 	// Remember that the soldier is currently seen and his new location
 	UpdatePersonal(&s, opponent.ubID, SEEN_CURRENTLY, opp_gridno, opp_level);
 
@@ -1927,10 +1894,8 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 				opponent.pLevelNode->ubShadeLevel = opponent.ubFadeLevel;
 			}
 		}
-
-#ifdef TESTOPPLIST
-		DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("!!! ID %d (%ls) MAKING %d VISIBLE", s.ubID, s.name, opponent. ubID));
-#endif
+		SLOGD(DEBUG_TAG_OPPLIST, "ID %d (%ls) MAKING %d VISIBLE",
+					s.ubID, s.name, opponent.ubID);
 
 		if (do_locate)
 		{
@@ -1982,12 +1947,8 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 		// assume he's no longer visible, until one of our mercs sees him again
 		pOpponent->bVisible = 0;
 	}
-
-#ifdef TESTOPPLIST
-	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			String("OTHERTEAMSLOOKFORMAN ID %d(%ls) team %d side %d",pOpponent->ubID,pOpponent->name,pOpponent->bTeam,pOpponent->bSide ));
-#endif
-
+		SLOGD(DEBUG_TAG_OPPLIST, "OTHERTEAMSLOOKFORMAN ID %d(%ls) team %d side %d",
+					pOpponent->ubID, pOpponent->name, pOpponent->bTeam, pOpponent->bSide);
 
 	// all soldiers not on oppPtr's team now look for him
 	FOR_EACH_MERC(i)
@@ -2509,10 +2470,8 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
  BOOLEAN	fContactSeen;
  BOOLEAN fSawCreatureForFirstTime = FALSE;
 
-
-#ifdef TESTOPPLIST
-	DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("RADIO SIGHTINGS: for %d about %d", pSoldier->ubID, SOLDIER2ID(about)));
-#endif
+	SLOGD(DEBUG_TAG_OPPLIST, "RADIO SIGHTINGS: for %d about %d",
+				pSoldier->ubID, SOLDIER2ID(about));
 
 	gTacticalStatus.Team[pSoldier->bTeam].last_merc_to_radio = pSoldier;
 
@@ -2540,65 +2499,41 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
  for (iLoop = start; iLoop < end; iLoop++,pOpponent++,pPersOL++,pbPublOL++)
   {
 	  fContactSeen = FALSE;
-
-#ifdef TESTOPPLIST
-	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			 String("RS: checking %d",pOpponent->ubID) );
-#endif
+		SLOGD(DEBUG_TAG_OPPLIST, "RS: checking %d", pOpponent->ubID);
 
 
    // make sure this merc is active, here & still alive (unconscious OK)
    if (!pOpponent->bActive || !pOpponent->bInSector || !pOpponent->bLife)
     {
-#ifdef TESTOPPLIST
-		DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			String("RS: inactive/notInSector/life %d",pOpponent->ubID) );
-#endif
-
-
-     continue;                          // skip to the next merc
+			SLOGD(DEBUG_TAG_OPPLIST, "RS: inactive/notInSector/life %d",
+						pOpponent->ubID);
+			continue;                          // skip to the next merc
     }
 
    // if these two mercs are on the same SIDE, then they're NOT opponents
    // NEW: Apr. 21 '96: must allow ALL non-humans to get radioed about
    if ((pSoldier->bSide == pOpponent->bSide) && (pOpponent->uiStatusFlags & SOLDIER_PC))
     {
-#ifdef TESTOPPLIST
-		 	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			 String("RS: same side %d",pSoldier->bSide) );
-#endif
-
-     continue;                          // skip to the next merc
+			SLOGD(DEBUG_TAG_OPPLIST, "RS: same side %d", pSoldier->bSide);
+			continue;                          // skip to the next merc
     }
 
    // if we personally don't know a thing about this opponent
    if (*pPersOL == NOT_HEARD_OR_SEEN)
     {
-#ifdef TESTOPPLIST
-			DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, "RS: not heard or seen");
-#endif
-
-     continue;                          // skip to the next opponent
+			SLOGD(DEBUG_TAG_OPPLIST, "RS: not heard or seen");
+			continue;                          // skip to the next opponent
     }
 
 	 // if personal knowledge is NOT more up to date and NOT the same as public
    if ((!gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pPersOL - OLDEST_HEARD_VALUE]) &&
        (*pbPublOL != *pPersOL))
     {
-#ifdef TESTOPPLIST
-		 	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			  String("RS: no new knowledge per %d pub %d",*pPersOL,*pbPublOL) );
-#endif
-
-
-
-		 continue;                          // skip to the next opponent
+		  SLOGD(DEBUG_TAG_OPPLIST, "RS: no new knowledge per %d pub %d",
+						*pPersOL, *pbPublOL);
+			continue;                          // skip to the next opponent
     }
-#ifdef TESTOPPLIST
-		DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, "RS: made it!");
-#endif
-
-
+		SLOGD(DEBUG_TAG_OPPLIST, "RS: made it!");
 
    // if it's our merc, and he currently sees this opponent
 		if (IsOnOurTeam(*pSoldier)              &&
@@ -2703,12 +2638,8 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
    // IF WE'RE HERE, OUR PERSONAL INFORMATION IS AT LEAST AS UP-TO-DATE
    // AS THE PUBLIC KNOWLEDGE, SO WE WILL REPLACE THE PUBLIC KNOWLEDGE
-
-#ifdef TESTOPPLIST
-	DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			 String("...............UPDATE PUBLIC: soldier %d SEEING soldier %d",pSoldier->ubID,pOpponent->ubID) );
-#endif
-
+		SLOGD(DEBUG_TAG_OPPLIST, "UPDATE PUBLIC: soldier %d SEEING soldier %d",
+					pSoldier->ubID, pOpponent->ubID);
 		UpdatePublic(ubTeamToRadioTo, pOpponent, *pPersOL, gsLastKnownOppLoc[pSoldier->ubID][pOpponent->ubID], gbLastKnownOppLevel[pSoldier->ubID][pOpponent->ubID]);
   }
 
