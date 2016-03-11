@@ -53,7 +53,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
+#define	DEBUG_TAG_TACTSAVE	"Tactical Save"
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
 
@@ -753,6 +755,10 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 				GetWorldTotalMin() - def.uiTimeOfDeath >= 30)
 		{
 			continue;
+		}
+		if (!AddRottingCorpse(&def))
+		{
+			SLOGD(DEBUG_TAG_TACTSAVE, "Failed to add a corpse to GridNo # %d", def.sGridNo);
 		}
 	}
 
