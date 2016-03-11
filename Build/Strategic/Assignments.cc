@@ -2026,7 +2026,7 @@ static void RestCharacter(SOLDIERTYPE* pSoldier)
 }
 
 
-static void FatigueCharacter(SOLDIERTYPE& s)
+void FatigueCharacter(SOLDIERTYPE& s)
 {
 	if (IsMechanical(s))                 return;
 	if (IsCharacterInTransit(s))         return;

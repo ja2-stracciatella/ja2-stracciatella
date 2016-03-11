@@ -58,6 +58,7 @@
 #include "FileMan.h"
 #include "Items.h"
 #include "Soldier_Macros.h"
+#include "Morale.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -2117,8 +2118,6 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			pObj->fFlags &= (~OBJECT_DISABLED_BOMB);
 			break;
 		case ACTION_ITEM_SEX:
-			// JA2Gold: Disable brothel sex
-			/*
 			if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 			{
 				OBJECTTYPE DoorCloser;
@@ -2126,7 +2125,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				INT16		sDoorSpot;
 				UINT8		ubDirection;
 
-				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
+				SOLDIERTYPE* tgt = WhoIsThere2(sGridNo, 0);
 				if (tgt != NULL)
 					if (tgt->bTeam == OUR_TEAM)
 					{
@@ -2179,10 +2178,10 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 									TeleportSoldier(*tgt, sTeleportSpot, false);
 
 									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-									FatigueCharacter(tgt);
-									FatigueCharacter(tgt);
-									FatigueCharacter(tgt);
-									FatigueCharacter(tgt);
+									FatigueCharacter(*tgt);
+									FatigueCharacter(*tgt);
+									FatigueCharacter(*tgt);
+									FatigueCharacter(*tgt);
 									DirtyMercPanelInterface(tgt, DIRTYLEVEL1);
 								}
 							}
@@ -2191,7 +2190,6 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 						break;
 					}
 			}
-			*/
 			break;
 		case ACTION_ITEM_REVEAL_ROOM:
 			{
