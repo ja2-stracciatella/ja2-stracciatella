@@ -385,10 +385,8 @@ BOOLEAN IsHelicopterPilotAvailable( void )
 	// owe any money to skyrider?
 	if( gMercProfiles[ SKYRIDER ].iBalance < 0 ) return( FALSE );
 
-	// Drassen too disloyal to wanna help player?
-	if ( CheckFact( FACT_LOYALTY_LOW, SKYRIDER ) ) return ( FALSE );
-
-	return( TRUE );
+	// last case: Drassen too disloyal to wanna help player? if not, return true
+	return ( !CheckFact( FACT_LOYALTY_LOW, SKYRIDER ) );
 }
 
 // land the helicopter here
