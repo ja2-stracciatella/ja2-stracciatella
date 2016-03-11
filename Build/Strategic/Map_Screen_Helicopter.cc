@@ -248,7 +248,11 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 	if (!fHeliReturnStraightToBase)
 	{
 		// charge cost for flying another sector
-		INT32 iCost = (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyAirControlled) ? COST_AIRSPACE_SAFE : COST_AIRSPACE_UNSAFE;
+		INT32 iCost;
+		if( !StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyAirControlled)
+			iCost = COST_AIRSPACE_SAFE;
+		else
+			iCost = COST_AIRSPACE_UNSAFE;
 		iTotalAccumulatedCostByPlayer += iCost;
 	}
 
