@@ -1817,8 +1817,8 @@ void UpdateMercsInfo()
 			break;
 		case MERC_BASICMODE:
 		case MERC_GENERALMODE:
-			BltVideoObject(FRAME_BUFFER, guiExclamation, 0, 188, 362);
-			BltVideoObject(FRAME_BUFFER, guiKeyImage,    0, 186, 387);
+			BltVideoObject(FRAME_BUFFER, guiExclamation, 0, 188, EDITOR_TASKBAR_POS_Y + 3);
+			BltVideoObject(FRAME_BUFFER, guiKeyImage,    0, 186, EDITOR_TASKBAR_POS_Y + 28);
 			SetFontAttributes(SMALLCOMPFONT, FONT_YELLOW);
 			MPrint(240, EDITOR_TASKBAR_POS_Y +  3, L" --=ORDERS=-- ");
 			MPrint(240, EDITOR_TASKBAR_POS_Y + 59, L"--=ATTITUDE=--");
