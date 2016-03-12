@@ -403,6 +403,10 @@ static void HandleCreditNodes(void)
 		i->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
 	}
 
+	// Restore Background below text
+	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, SCREEN_HEIGHT - STD_SCREEN_Y, CRDT_WIDTH_OF_TEXT_AREA, STD_SCREEN_Y);
+	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, 0, CRDT_WIDTH_OF_TEXT_AREA, STD_SCREEN_Y);
+
 	const CRDT_NODE* const head = g_credits_head;
 	if (head->sPosY + head->sHeightOfString < 0)
 	{
