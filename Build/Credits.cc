@@ -132,6 +132,7 @@ static CreditFace gCreditFaces[] =
 };
 
 
+static MOUSE_REGION gCrdtBackgroundRegion;
 static MOUSE_REGION gCrdtMouseRegions[NUM_PEOPLE_IN_CREDITS];
 
 static BOOLEAN g_credits_active;
@@ -215,6 +216,8 @@ try
 	guiGapBetweenCreditNodes    = CRDT_SPACE_BN_NODES;
 	guiGapTillReadNextCredit    = CRDT_SPACE_BN_NODES;
 
+
+	MSYS_DefineRegion(&gCrdtBackgroundRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	for (INT32 i = 0; i != lengthof(gCrdtMouseRegions); ++i)
 	{
 		// Make a mouse region
@@ -224,7 +227,7 @@ try
 		UINT16        const  y = f.sY + STD_SCREEN_Y;
 		UINT16        const  w = f.sWidth;
 		UINT16        const  h = f.sHeight;
-		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
 		MSYS_SetRegionUserData(r, 0, i);
 	}
 
@@ -253,6 +256,7 @@ static void ExitCreditScreen(void)
 
 	while (g_credits_head != NULL) DeleteFirstNode();
 
+	MSYS_RemoveRegion( &gCrdtBackgroundRegion );
 	for (size_t i = 0; i != lengthof(gCrdtMouseRegions); ++i)
 	{
 		MSYS_RemoveRegion(&gCrdtMouseRegions[i]);
@@ -402,6 +406,10 @@ static void HandleCreditNodes(void)
 		DisplayCreditNode(i);
 		i->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
 	}
+
+	// Restore Background below text
+	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, SCREEN_HEIGHT - STD_SCREEN_Y, CRDT_WIDTH_OF_TEXT_AREA, STD_SCREEN_Y);
+	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, 0, CRDT_WIDTH_OF_TEXT_AREA, STD_SCREEN_Y);
 
 	const CRDT_NODE* const head = g_credits_head;
 	if (head->sPosY + head->sHeightOfString < 0)
