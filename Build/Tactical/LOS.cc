@@ -217,26 +217,6 @@ static FLOAT Distance2D(FLOAT dDeltaX, FLOAT dDeltaY)
 	return( (FLOAT) sqrt( (DOUBLE) (dDeltaX * dDeltaX + dDeltaY * dDeltaY )));
 }
 
-
-//#define DEBUGLOS
-
-#if defined( JA2BETAVERSION ) && defined( DEBUGLOS )
-static void DebugLOS(const char* const szOutput)
-{
-	FILE *		DebugFile;
-
-	if ((DebugFile = fopen("losdebug.txt", "a+")) != NULL)
-	{
-		fputs( szOutput, DebugFile );
-		fputs( "\n", DebugFile );
-		fclose( DebugFile );
-	}
-
-}
-#else
-#define DebugLOS( a )
-#endif
-
 enum LocationCode
 {
 	LOC_OTHER,
@@ -2481,14 +2461,14 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 	FIXEDPT					qWindowBottomHeight;
 	FIXEDPT					qWindowTopHeight;
 
-	DebugLOS( "Starting CalcChanceToGetThrough" );
+	SLOGD(DEBUG_TAG_LOS, "Starting CalcChanceToGetThrough" );
 
 	do
 	{
 		// check a particular tile
 		// retrieve values from world for this particular tile
 		iGridNo = pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS;
-		DebugLOS( String( "CTGT now at %ld", iGridNo ) );
+		SLOGD(DEBUG_TAG_LOS, "CTGT now at %ld", iGridNo);
 		pMapElement = &(gpWorldLevelData[ iGridNo ] );
 		qLandHeight = INT32_TO_FIXEDPT( CONVERT_PIXELS_TO_HEIGHTUNITS( pMapElement->sHeight ) );
 		qWallHeight = gqStandardWallHeight + qLandHeight;
@@ -2727,8 +2707,8 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				pBullet->bLOSIndexX = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrX );
 				pBullet->bLOSIndexY = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrY );
 
-				DebugLOS( String( "  CTGT at %ld %ld after traversing empty tile", pBullet->bLOSIndexX, pBullet->bLOSIndexY ) );
-
+				SLOGD(DEBUG_TAG_LOS, "CTGT at %ld %ld after traversing empty tile",
+							pBullet->bLOSIndexX, pBullet->bLOSIndexY);
 			}
 			else
 			{
@@ -2840,7 +2820,8 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				}
 				while( (pBullet->bLOSIndexX == bOldLOSIndexX) && (pBullet->bLOSIndexY == bOldLOSIndexY) && (pBullet->iCurrCubesZ == iOldCubesZ));
 
-				DebugLOS( String( "  CTGT at %ld %ld %ld after moving in nonempty tile from %ld %ld %ld", pBullet->bLOSIndexX, pBullet->bLOSIndexY, pBullet->iCurrCubesZ, bOldLOSIndexX, bOldLOSIndexY, iOldCubesZ ) );
+				SLOGD(DEBUG_TAG_LOS, "CTGT at %ld %ld %ld after moving in nonempty tile from %ld %ld %ld",
+							pBullet->bLOSIndexX, pBullet->bLOSIndexY, pBullet->iCurrCubesZ, bOldLOSIndexX, bOldLOSIndexY, iOldCubesZ);
 				pBullet->iCurrTileX = FIXEDPT_TO_INT32( pBullet->qCurrX ) / CELL_X_SIZE;
 				pBullet->iCurrTileY = FIXEDPT_TO_INT32( pBullet->qCurrY ) / CELL_Y_SIZE;
 			}
