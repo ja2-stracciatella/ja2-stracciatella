@@ -2742,64 +2742,6 @@ static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 }
 
-
-void NpcRecordLoggingInit(ProfileID const npc_id, ProfileID const merc_id, UINT8 const quote_id, Approach const approach)
-{
-	// If the NPC log button is turned off, ignore
-	if (!gfNpcLogButton) return;
-	// If the approach is NPC_INITIATING_CONV, return
-	if (approach == NPC_INITIATING_CONV) return;
-
-	try
-	{
-		// Truncate when it's the first time in the game
-    static bool firstTime = true;
-		AutoSGPFile f(firstTime ? FileMan::openForWriting(QUEST_DEBUG_FILE) : FileMan::openForAppend(QUEST_DEBUG_FILE));
-    firstTime = false;
-
-		char buf[1024];
-		snprintf(buf, lengthof(buf),
-			"\n"
-			"\n"
-			"New Approach for NPC ID: %d '%ls' against Merc: %d '%ls'\n"
-			"\tTesting Record #: %d\n",
-			npc_id, GetProfile(npc_id).zNickname, merc_id, GetProfile(merc_id).zNickname, quote_id);
-		FileWrite(f, buf, strlen(buf));
-	}
-	catch (...)
-	{
-		SLOGE(DEBUG_TAG_QUESTS, "FAILED to write to %s", QUEST_DEBUG_FILE);
-	}
-}
-
-
-void NpcRecordLogging(Approach const approach, char const* const fmt, ...)
-{
-	// If the NPC log button is turned off, ignore
-	if (!gfNpcLogButton) return;
-	// If the approach is NPC_INITIATING_CONV, return
-	if (approach == NPC_INITIATING_CONV) return;
-
-  char    tmp_buf[1024];
-  va_list ap;
-	va_start(ap, fmt);
-	vsnprintf(tmp_buf, lengthof(tmp_buf), fmt, ap);
-	va_end(ap);
-
-	try
-	{
-		AutoSGPFile f(FileMan::openForAppend(QUEST_DEBUG_FILE));
-		char buf[1024];
-		snprintf(buf, lengthof(buf), "\t\t%s\n", tmp_buf);
-		FileWrite(f, buf, strlen(buf));
-	}
-	catch (...)
-	{
-		SLOGE(DEBUG_TAG_QUESTS, "FAILED to write to %s", QUEST_DEBUG_FILE);
-	}
-}
-
-
 static void EnableQDSButtons(void)
 {
 	{ bool const enable = gNpcListBox.sCurSelectedItem != -1;
