@@ -417,6 +417,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 				PlayLocationJA2Sample(pObject->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 			}
 
+			SLOGD(DEBUG_TAG_PHYSICS, "Reducing Attack Busy Count of %d", pObject->owner->ubID);
 			ReduceAttackBusyCount(pObject->owner, FALSE);
 
 			// ATE: Handle end of animation...

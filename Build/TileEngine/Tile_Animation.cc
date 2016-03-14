@@ -24,7 +24,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
+#define	DEBUG_TAG_TILEANIM	"Tile Animation"
 
 static ANITILE* pAniTileHead = NULL;
 
@@ -225,6 +227,7 @@ void DeleteAniTile(ANITILE* const a)
 			}
 
 			// Freeup attacker from explosion
+			SLOGD(DEBUG_TAG_TILEANIM, "Reducing Attack Busy Count of %d", owner->ubID); 
 			ReduceAttackBusyCount(owner, FALSE);
 		}
 
