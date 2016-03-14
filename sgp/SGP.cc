@@ -151,6 +151,9 @@ static BOOLEAN gfGameInitialized = FALSE;
 static bool getResourceVersion(const char *versionName, GameVersion *version);
 static std::string findRootGameResFolder(const std::string &configPath);
 static void WriteDefaultConfigFile(const char* ConfigFile);
+static void convertDialogQuotesToJson(const DefaultContentManager *cm,
+				      STRING_ENC_TYPE encType,
+				      const char *dialogFile, const char *outputFile);
 
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
@@ -777,4 +780,20 @@ static void WriteDefaultConfigFile(const char* ConfigFile)
 		fclose(IniFile);
 		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
 	}
+}
+
+static void convertDialogQuotesToJson(const DefaultContentManager *cm,
+                                      STRING_ENC_TYPE encType,
+                                      const char *dialogFile, const char *outputFile)
+{
+  std::vector<UTF8String*> quotes;
+  std::vector<std::string> quotes_str;
+  cm->loadAllDialogQuotes(encType, dialogFile, quotes);
+  for(int i = 0; i < quotes.size(); i++)
+  {
+    quotes_str.push_back(std::string(quotes[i]->getUTF8()));
+    delete quotes[i];
+    quotes[i] = NULL;
+  }
+  JsonUtility::writeToFile(outputFile, quotes_str);
 }
