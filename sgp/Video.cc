@@ -540,8 +540,30 @@ static void TakeScreenshot()
 	fclose(f);
 }
 
-
 static void SnapshotSmall(void);
+
+#if EXPENSIVE_SDL_UPDATE_RECT
+static void joinInRectangle(SDL_Rect &result, const SDL_Rect &newRect)
+{
+  if((newRect.w != 0) && (newRect.h != 0))
+  {
+    if((result.w == 0) && (result.h == 0))
+    {
+      // special case: empty rectangle
+      result = newRect;
+    }
+    else
+    {
+      int16_t X2 = std::max(result.x + result.w, newRect.x + newRect.w);
+      int16_t Y2 = std::max(result.y + result.h, newRect.y + newRect.h);
+      result.x = std::min(result.x, newRect.x);
+      result.y = std::min(result.y, newRect.y);
+      result.w = X2 - result.x;
+      result.h = Y2 - result.y;
+    }
+  }
+}
+#endif
 
 void RefreshScreen(void)
 {
