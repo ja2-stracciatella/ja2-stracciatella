@@ -46,31 +46,6 @@ static void _DebugRecordToDebugger(BOOLEAN gfState)
 	gfRecordToDebugger = gfState;
 }
 
-
-void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFile)
-{
-	char ubOutputString[512];
-	sprintf(ubOutputString, "{ %ld } %s [Line %d in %s]\n", GetClock(), pString, uiLineNum, pSourceFile);
-
-	if (gfRecordToDebugger)
-	{
-		fputs(ubOutputString, stderr);
-	}
-
-#ifndef _NO_DEBUG_TXT
-	if (gfRecordToFile)
-	{
-		FILE* DebugFile = fopen(gpcDebugLogFileName, "a+");
-		if (DebugFile != NULL)
-		{
-			fputs(ubOutputString, DebugFile);
-			fclose(DebugFile);
-		}
-	}
-#endif
-}
-
-
 void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile)
 {
 	char ubOutputString[512];

@@ -52,16 +52,6 @@ BOOLEAN	InitializeDebugManager(void);
 // These are the debug macros (the ones the use will use). The user should never call
 // the actual debug functions directly
 
-enum DebugLevel
-{
-	DBG_LEVEL_0,
-	DBG_LEVEL_1, // for basic stuff
-	DBG_LEVEL_2, // for ordinary, I usually want to see them, messages
-	DBG_LEVEL_3  // nitty gritty detail
-};
-
-extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
-
 const char* String(const char* fmt, ...);
 
 #endif
