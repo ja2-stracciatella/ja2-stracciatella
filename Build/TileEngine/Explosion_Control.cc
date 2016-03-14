@@ -1818,6 +1818,25 @@ static void DelayedBillyTriggerToBlockOnExit(void)
 	}
 }
 
+static void BillyBlocksDoorCallback(void)
+{
+	TriggerNPCRecord( BILLY, 6 );
+}
+
+static BOOLEAN HookerInRoom(UINT8 ubRoom)
+{
+	FOR_EACH_IN_TEAM(s, CIV_TEAM)
+	{
+		if (!s->bInSector)                 continue;
+		if (s->bLife < OKLIFE)             continue;
+		if (!s->bNeutral)                  continue;
+		if (s->ubBodyType != MINICIV)      continue;
+		if (GetRoom(s->sGridNo) != ubRoom) continue;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 {
 	STRUCTURE * pStructure;
