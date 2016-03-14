@@ -2926,7 +2926,7 @@ UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_siz
 
 		if (default_mag == NOTHING)
 		{ // Store this one to use if all else fails
-			default_mag = mag->getItemIndex(); // XXX MagazineClassIndexToItemType(i);
+			default_mag = mag->getItemIndex();
 		}
 	}
 	return default_mag;
