@@ -46,14 +46,6 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
-
-#define DEBUG_TAG_QUESTS	"Quest System"
-//#ifdef JA2BETAVERSION
-
-
-#define QUEST_DEBUG_FILE "QuestDebugRecordLog.txt"
-
 
 #define		QUEST_DBS_FONT_TITLE								FONT14ARIAL
 #define		QUEST_DBS_COLOR_TITLE								FONT_MCOLOR_LTGREEN
@@ -3204,5 +3196,3 @@ static void GetDebugLocationString(const UINT16 usProfileID, wchar_t* const pzTe
 		GetShortSectorString( gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY, pzText, Length);
 	}
 }
-
-//#endif
