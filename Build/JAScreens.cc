@@ -474,6 +474,7 @@ ScreenID SexScreenHandle(void)
 	{
 		// Load face....
 		guiSMILY = AddVideoObjectFromFile(INTERFACEDIR "/luckysmile.sti");
+		PlayJA2StreamingSampleFromFile(SOUNDSDIR "/sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 
 		// Init screen
 		bCurFrame = 0;
@@ -492,7 +493,6 @@ ScreenID SexScreenHandle(void)
 	// if we are animation smile...
 	if ( ubCurrentScreen == 1 )
 	{
-		PlayJA2StreamingSampleFromFile(SOUNDSDIR "/sex.wav", HIGHVOLUME, 1, MIDDLEPAN, NULL);
 		if ( ( uiTime - uiTimeOfLastUpdate ) > SMILY_DELAY )
 		{
 			uiTimeOfLastUpdate = uiTime;
