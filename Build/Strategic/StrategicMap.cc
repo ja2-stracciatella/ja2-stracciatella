@@ -703,7 +703,7 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 			gfGotoSectorTransition = FALSE;
 		}
 
-		HandleHelicopterOnGroundGraphic();
+		HandleHelicopterOnGround(true);
 
 		ResetMilitia();
 		AllTeamsLookForAll(TRUE);
@@ -742,7 +742,7 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 
 		gTacticalStatus.uiTimeSinceLastInTactical = GetWorldTotalMin();
 		InitializeTacticalStatusAtBattleStart();
-	  HandleHelicopterOnGroundSkyriderProfile();
+	  HandleHelicopterOnGround(false);
 	}
 
 	EnterSector(x, y, z);
@@ -761,7 +761,7 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 	SetSectorFlag(x, y, z, SF_ALREADY_LOADED);
 
 	// Check for helicopter being on the ground in this sector
-	HandleHelicopterOnGroundGraphic();
+	HandleHelicopterOnGround(true);
 
 	if (!loading_savegame)
 	{
