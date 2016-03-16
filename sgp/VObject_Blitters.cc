@@ -352,116 +352,64 @@ BlitDone:
 	Blits every second pixel ("Translucents").
 
 **********************************************************************************************/
-void Blt8BPPDataTo16BPPBufferTransZTranslucent( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
+void Blt8BPPDataTo16BPPBufferTransZTranslucent( UINT16* const buf, UINT32 const uiDestPitchBYTES, UINT16* const zbuf, UINT16 const zval, HVOBJECT const hSrcVObject, INT32 const iX, INT32 const iY, UINT16 const usIndex )
 {
-UINT32 LineSkip;
-UINT8	 *DestPtr, *ZPtr;
-UINT32 uiLineFlag;
 
 	// Assertions
-	Assert( hSrcVObject != NULL );
-	Assert( pBuffer != NULL );
+	Assert( hSrcVObject );
+	Assert( buf );
 
 	// Get Offsets from Index into structure
-	ETRLEObject const& pTrav    = hSrcVObject->SubregionProperties(usIndex);
-	UINT32      const  usHeight = pTrav.usHeight;
-	UINT32      const  usWidth  = pTrav.usWidth;
+	ETRLEObject const& e    	= hSrcVObject->SubregionProperties(usIndex);
+	UINT32      			 height = e.usHeight;
+	UINT32      const  width  = e.usWidth;
 
 	// Add to start position of dest buffer
-	INT32 const iTempX = iX + pTrav.sOffsetX;
-	INT32 const iTempY = iY + pTrav.sOffsetY;
+	INT32 const x = iX + e.sOffsetX;
+	INT32 const y = iY + e.sOffsetY;
 
 	// Validations
-	CHECKV(iTempX >= 0);
-	CHECKV(iTempY >= 0);
+	CHECKV(x >= 0);
+	CHECKV(y >= 0);
 
-	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
-	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
-	//UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
-	LineSkip=(uiDestPitchBYTES-(usWidth*2));
-	uiLineFlag=(iTempY&1);
+	UINT32	const	 pitch			= uiDestPitchBYTES / 2;
+	UINT8 	const* src				= hSrcVObject->PixData(e);
+	UINT16	 		 * dst				= buf + pitch * y + x;
+	UINT16			 * zdst  			= zbuf + pitch * y + x;
+	UINT16	const* const pal 	= hSrcVObject->CurrentShade();
+	UINT32 				 line_skip	= pitch - width;
+	UINT32	const translucent_mask = guiTranslucentMask;
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	(void)usHeight;
-	UNIMPLEMENTED
-#else
-	__asm {
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *src++;
 
-		mov		esi, SrcPtr
-		mov		edi, DestPtr
-		xor		eax, eax
-		mov		ebx, ZPtr
-		xor		ecx, ecx
-//		mov		edx, p16BPPPalette
-
-BlitDispatch:
-
-		mov		cl, [esi]
-		inc		esi
-		or		cl, cl
-		js		BlitTransparent
-		jz		BlitDoneLine
-
-//BlitNonTransLoop:
-
-BlitNTL4:
-		mov		ax, [ebx]
-		cmp		ax, usZValue
-		ja		BlitNTL5
-
-		mov		ax, usZValue
-		mov		[ebx], ax
-
-		xor		eax, eax
-		mov		edx, p16BPPPalette
-		mov		al, [esi]
-		mov		ax, [edx+eax*2]
-		shr		eax, 1
-		and		eax, guiTranslucentMask
-
-		xor		edx, edx
-		mov		dx, [edi]
-		shr		edx, 1
-		and		edx, guiTranslucentMask
-
-		add		eax, edx
-		mov		[edi], ax
-
-BlitNTL5:
-		inc		esi
-		add		edi, 2
-		add		ebx, 2
-		dec		cl
-		jnz		BlitNTL4
-
-		jmp		BlitDispatch
-
-
-BlitTransparent:
-
-		and		ecx, 07fH
-//		shl		ecx, 1
-		add   ecx, ecx
-		add		edi, ecx
-		add		ebx, ecx
-		jmp		BlitDispatch
-
-
-BlitDoneLine:
-
-		dec		usHeight
-		jz		BlitDone
-		add		edi, LineSkip
-		add		ebx, LineSkip
-		xor		uiLineFlag, 1
-		jmp		BlitDispatch
-
-
-BlitDone:
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data 		&= 0x7F;
+				dst 	+= data;
+				zdst	+= data;
+			}
+			else
+			{
+				do
+				{
+					if (*zdst > zval) continue;
+					*zdst = zval;
+					*dst =
+						((pal[*src] >> 1) & translucent_mask) +
+						((*dst      >> 1) & translucent_mask);
+				}
+				while (++src, ++dst, ++zdst, --data > 0);
+			}
+		}
+		dst 	+= line_skip;
+		zdst	+= line_skip;
 	}
-#endif
+	while (--height > 0);
 }
 
 
