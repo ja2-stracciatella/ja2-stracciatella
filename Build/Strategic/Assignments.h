@@ -143,6 +143,8 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 // Handle assignment done
 void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo );
 
+void FatigueCharacter(SOLDIERTYPE& s);
+
 extern PopUpBox* ghAssignmentBox;
 extern PopUpBox* ghEpcBox;
 extern PopUpBox* ghSquadBox;
