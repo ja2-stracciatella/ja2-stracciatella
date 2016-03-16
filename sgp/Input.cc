@@ -356,20 +356,6 @@ void FreeMouseCursor(void)
 	fCursorWasClipped = FALSE;
 }
 
-
-void RestoreCursorClipRect(void)
-{
-#if 1 // XXX TODO0000
-	UNIMPLEMENTED
-#else
-	if (fCursorWasClipped)
-	{
-		ClipCursor(&gCursorClipRect);
-	}
-#endif
-}
-
-
 void GetRestrictedClipCursor(SGPRect* pRectangle)
 {
 #if 1 // XXX TODO0000
