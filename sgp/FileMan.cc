@@ -13,7 +13,6 @@
 #include "boost/filesystem.hpp"
 
 #include "slog/slog.h"
-#define TAG "FileMan"
 
 #if _WIN32
 #include <shlobj.h>
@@ -134,7 +133,7 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
   std::string tmpPath = FileMan::joinPaths(configFolderPath, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-	  SLOGE(TAG, "Unable to create tmp directory '%s'", tmpPath.c_str());
+	  SLOGE(DEBUG_TAG_FILEMAN, "Unable to create tmp directory '%s'", tmpPath.c_str());
 	  throw std::runtime_error("Unable to create tmp directory");
 	}
   else
@@ -404,7 +403,7 @@ BOOLEAN FileClearAttributes(const std::string &filename)
 BOOLEAN FileClearAttributes(const char* const filename)
 {
 #if 1 // XXX TODO
-  SLOGW(TAG, "ignoring %s(\"%s\")", __func__, filename);
+  SLOGW(DEBUG_TAG_FILEMAN, "ignoring %s(\"%s\")", __func__, filename);
 	return FALSE;
 	// UNIMPLEMENTED
 #else
