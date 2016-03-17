@@ -23,8 +23,6 @@
 #include "MemMan.h"
 #include "Types.h"
 #include "slog/slog.h"
-#define DEBUG_TAG_CONTAINER "Container"
-
 
 struct ListHeader
 {

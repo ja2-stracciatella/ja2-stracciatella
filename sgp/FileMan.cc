@@ -122,7 +122,7 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
 
 	if (mkdir(configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-	  SLOGE(TAG, "Unable to create directory '%s'", configFolderPath.c_str());
+	  SLOGE(DEBUG_TAG_FILEMAN, "Unable to create directory '%s'", configFolderPath.c_str());
 	  throw std::runtime_error("Unable to create local directory");
 	}
 

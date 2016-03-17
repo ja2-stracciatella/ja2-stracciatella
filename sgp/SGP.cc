@@ -46,7 +46,6 @@
 #include "sgp/UTF8String.h"
 
 #include "slog/slog.h"
-#define DEBUG_TAG_SGP "SGP"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"

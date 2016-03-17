@@ -13,7 +13,6 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "slog/slog.h"
-#define DEBUG_TAG_MEMORY	"Memory Manager"
 
 #ifdef JA2
 #	include "MouseSystem.h"

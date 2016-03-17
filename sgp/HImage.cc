@@ -12,7 +12,6 @@
 #include "MemMan.h"
 
 #include "slog/slog.h"
-#define	DEBUG_TAG_HIMAGE	"HImage"
 
 // This is the color substituted to keep a 24bpp -> 16bpp color
 // from going transparent (0x0000) -- DB

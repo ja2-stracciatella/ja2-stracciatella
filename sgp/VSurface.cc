@@ -9,8 +9,6 @@
 #include "Video.h"
 #include "SGP.h"
 #include "slog/slog.h"
-#define DEBUG_TAG_VSURFACE	"VSurface"
-
 
 extern SGPVSurface* gpVSurfaceHead;
 

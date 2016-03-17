@@ -13,9 +13,6 @@
 #include "GameRes.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_FONT	"Font"
-
-
 typedef UINT8 GlyphIdx;
 
 

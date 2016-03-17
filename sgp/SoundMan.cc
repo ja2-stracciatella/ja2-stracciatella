@@ -70,8 +70,6 @@ enum
 #define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
 #define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
 
-#define DEBUG_TAG_SOUND		"Sound"
-
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
 struct SAMPLETAG

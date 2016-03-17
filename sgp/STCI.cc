@@ -11,8 +11,6 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "slog/slog.h"
-#define DEBUG_TAG_STCI	"STCI"
-
 
 static SGPImage* STCILoadIndexed(UINT16 contents, HWFILE, STCIHeader const*);
 static SGPImage* STCILoadRGB(    UINT16 contents, HWFILE, STCIHeader const*);
