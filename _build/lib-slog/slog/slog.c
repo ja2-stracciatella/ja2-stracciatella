@@ -62,7 +62,7 @@ static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
 {
   "Game Loop",
   "Strategic Map",
-  "AI"
+  "AI",
   "Scheduler",
   "Path AI",
   "Animation Ctl",
