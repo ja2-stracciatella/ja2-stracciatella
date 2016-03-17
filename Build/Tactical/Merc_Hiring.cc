@@ -43,7 +43,6 @@
 #include "Quests.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_MERCHIRE		"Merc Hiring"
 #define	MIN_FLIGHT_PREP_TIME	6
 
 #ifdef JA2TESTVERSION

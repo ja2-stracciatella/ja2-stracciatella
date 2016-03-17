@@ -47,9 +47,6 @@
 #include "WeaponModels.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_AI 			"AI"
-#define DEBUG_TAG_QUESTS	"Quest System"
-
 #define NUM_NPC_QUOTE_RECORDS  50
 #define NUM_CIVQUOTE_SECTORS   20
 #define MINERS_CIV_QUOTE_INDEX 16

@@ -50,7 +50,6 @@
 #include "WeaponModels.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_WEAPONS				"Weapons"
 #define MINCHANCETOHIT          1
 #define MAXCHANCETOHIT          99
 

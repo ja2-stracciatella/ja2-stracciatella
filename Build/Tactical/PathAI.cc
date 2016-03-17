@@ -52,7 +52,6 @@ static BOOLEAN gfDrawPathPoints = FALSE;
 
 #ifdef PATHAI_SKIPLIST_DEBUG
 	#include "slog/slog.h"
-	#define DEBUG_TAG_PATHAI	"Path AI"
 #endif
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;

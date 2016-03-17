@@ -39,8 +39,6 @@
 #include "WeaponModels.h"
 #include "slog/slog.h"
 
-#define		DEBUG_TAG_LOS		"Line of Sight"
-
 #define		STEPS_FOR_BULLET_MOVE_TRAILS					10
 #define		STEPS_FOR_BULLET_MOVE_SMALL_TRAILS		5
 #define		STEPS_FOR_BULLET_MOVE_FIRE_TRAILS			5

@@ -102,7 +102,6 @@
 #include "Soldier.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_OVERHEAD	"Overhead"
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10
 

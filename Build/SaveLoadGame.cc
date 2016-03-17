@@ -111,8 +111,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_SAVELOAD "Save/Load Game"
-
 static const char g_quicksave_name[] = "QuickSave";
 static const char g_savegame_name[]  = "SaveGame";
 static const char g_savegame_ext[]   = "sav";

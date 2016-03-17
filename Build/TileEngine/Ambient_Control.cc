@@ -12,8 +12,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_AMBIENT	"Ambient Control"
-
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;
 

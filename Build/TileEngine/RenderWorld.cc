@@ -38,8 +38,6 @@
 #include "GameState.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_RENDERWORLD	"Render World"
-
 UINT16* gpZBuffer = NULL;
 
 static INT16 gsCurrentGlowFrame     = 0;

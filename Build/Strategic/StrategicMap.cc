@@ -107,8 +107,6 @@
 #include "UILayout.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_SMAP	"Strategic Map"
-
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS	200
 

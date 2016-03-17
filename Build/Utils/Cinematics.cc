@@ -43,8 +43,6 @@ struct SMKFLIC
 #define SMK_FLIC_PLAYING   0x00000002 // Flic is playing
 #define SMK_FLIC_AUTOCLOSE 0x00000008 // Close when done
 
-#define DEBUG_TAG_SMK				"smacker"
-
 static SMKFLIC SmkList[4];
 static UINT32  guiSmackPixelFormat = SMACKBUFFER565;
 

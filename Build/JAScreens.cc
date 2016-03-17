@@ -40,7 +40,6 @@
 #include "Timer.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_JA2SCREENS	"JA2 Screens"
 #define MAX_DEBUG_PAGES 4
 
 

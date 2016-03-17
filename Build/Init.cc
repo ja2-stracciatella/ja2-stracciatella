@@ -42,8 +42,6 @@
 #include "JAScreens.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_INIT "Init"
-
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
 

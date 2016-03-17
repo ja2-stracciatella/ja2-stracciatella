@@ -73,8 +73,6 @@
 #include "WeaponModels.h"
 #include "slog/slog.h"
 
-#define		DEBUG_TAG_INTERFACE	"Interface"
-
 // DEFINES FOR VARIOUS PANELS
 #define	SM_ITEMDESC_START_X					214
 #define	SM_ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y

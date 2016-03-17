@@ -33,7 +33,6 @@
 #include "FileMan.h"
 #include	"slog/slog.h"
 
-#define		DEBUG_TAG_AIRRAID											"Air Raid"
 #define		SCRIPT_DELAY													10
 #define		AIR_RAID_SAY_QUOTE_TIME								3000
 #define		AIR_RAID_DIVE_INTERVAL								10000

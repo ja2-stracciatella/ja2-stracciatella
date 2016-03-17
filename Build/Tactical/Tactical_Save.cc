@@ -55,7 +55,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define	DEBUG_TAG_TACTSAVE	"Tactical Save"
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
 

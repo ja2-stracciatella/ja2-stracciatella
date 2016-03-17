@@ -6,7 +6,6 @@
 #include "MemMan.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_ANIMCACHE	"Animation Cache"
 #define EMPTY_CACHE_ENTRY		65000
 
 static const UINT32 guiCacheSize = MIN_CACHE_SIZE;

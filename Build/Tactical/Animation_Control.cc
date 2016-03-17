@@ -15,8 +15,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_ANIMCTRL	"Animation Control"
-
 // Defines for Anim inst reading, taken from orig Jagged
 #define	ANIMFILENAME					BINARYDATADIR "/ja2bin.dat"
 

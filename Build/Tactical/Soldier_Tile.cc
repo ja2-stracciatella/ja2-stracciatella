@@ -37,7 +37,6 @@
 #include "NPC.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_SOLDIERTILE		"Soldier Tile"
 #define NEXT_TILE_CHECK_DELAY		700
 
 #ifdef JA2BETAVERSION

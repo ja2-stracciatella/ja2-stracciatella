@@ -41,8 +41,6 @@
 
 #include "slog/slog.h"
 
-#define DEBUG_TAG_SOLDIERLIST	"Solder Init List"
-
 BOOLEAN gfOriginalList = TRUE;
 
 SOLDIERINITNODE *gSoldierInitHead = NULL;

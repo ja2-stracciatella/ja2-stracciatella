@@ -96,7 +96,6 @@
 #	include "Strategic_AI.h"
 #endif
 
-#define		DEBUG_TAG_SOLDIERCTL	"Soldier Control"
 #define		PALETTEFILENAME							BINARYDATADIR "/ja2pal.dat"
 
 #define		LOW_MORALE_BATTLE_SND_THREASHOLD	35

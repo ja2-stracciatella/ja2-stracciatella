@@ -10,8 +10,6 @@
 #include "Debug.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_EVENTPUMP "Event Pump"
-
 static void AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
 
 

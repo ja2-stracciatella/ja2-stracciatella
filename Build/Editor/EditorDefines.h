@@ -6,8 +6,6 @@
 #include "Types.h"
 #include "Button_Defines.h"
 
-#define DEBUG_TAG_EDITOR	"Editor"
-
 enum ToolbarMode
 {
 	TBAR_MODE_NONE,

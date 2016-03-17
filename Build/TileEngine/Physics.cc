@@ -43,8 +43,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_PHYSICS	"Physics"
-
 #define NO_TEST_OBJECT												0
 #define TEST_OBJECT_NO_COLLISIONS							1
 #define TEST_OBJECT_ANY_COLLISION							2

@@ -67,7 +67,6 @@
 #include "EditScreen.h"
 #include "slog/slog.h"
 
-#define	DEBUG_TAG_GAMESCREEN	"Game Screen"
 #define	ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
 BOOLEAN		gfTacticalDoHeliRun = FALSE;

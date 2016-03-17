@@ -13,8 +13,6 @@
 #include "MemMan.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_TILEDEF "TileDef"
-
 // GLobals
 TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];
 static UINT16 gTileDatabaseSize;

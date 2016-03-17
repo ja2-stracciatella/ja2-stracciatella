@@ -39,8 +39,6 @@
 #include "policy/GamePolicy.h"
 #include "slog/slog.h"
 
-#define		DEBUG_TAG_BOBBYRAY								"Bobby Ray"
-
 #define		BOBBYR_GRID_PIC_WIDTH							118
 #define		BOBBYR_GRID_PIC_HEIGHT						69
 

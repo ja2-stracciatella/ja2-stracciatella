@@ -72,7 +72,6 @@
 #include "Soldier.h"
 #include "slog/slog.h"
 
-#define					DEBUG_TAG_HANDLEITEMS	"Handle Items"
 #define					NUM_ITEMS_LISTED			8
 #define					NUM_ITEM_FLASH_SLOTS	50
 #define					MIN_LOB_RANGE					6

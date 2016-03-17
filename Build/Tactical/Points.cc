@@ -33,8 +33,6 @@
 #include "WeaponModels.h"
 
 #include "slog/slog.h"
-#define DEBUG_TAG_POINTS "Points"
-
 
 INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno, const INT8 bDir, const INT8 bLevel)
 {

@@ -38,8 +38,6 @@
 #	include "PreBattle_Interface.h"
 #endif
 
-#define DEBUG_TAG_GAMELOOP	"Game Loop"
-
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
 

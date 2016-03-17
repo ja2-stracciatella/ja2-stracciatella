@@ -41,8 +41,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_KEYS	"Keys"
-
 static DOOR_STATUS* gpDoorStatus     = NULL;
 static UINT8        gubNumDoorStatus = 0;
 

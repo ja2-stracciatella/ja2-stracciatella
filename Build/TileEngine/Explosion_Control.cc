@@ -63,7 +63,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_EXPLOSION	"Explosion Control"
 extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
 
 

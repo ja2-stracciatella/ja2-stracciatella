@@ -14,7 +14,6 @@
 #include "StrUtils.h"
 
 #include "slog/slog.h"
-#define DEBUG_TAG_RESOURCES    "Resources"
 
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;

@@ -48,7 +48,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_LIGHTING	"Lighting"
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 
 

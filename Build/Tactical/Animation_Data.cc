@@ -19,7 +19,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_ANIMDATA	"Animation Data"
 #define EMPTY_SLOT		-1
 #define TO_INIT				0
 

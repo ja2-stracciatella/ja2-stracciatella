@@ -30,7 +30,6 @@
 #include "GameState.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_SCHEDULER	"Scheduler"
 extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 
 #define FOURPM 960

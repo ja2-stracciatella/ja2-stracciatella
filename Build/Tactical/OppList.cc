@@ -52,7 +52,6 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#define DEBUG_TAG_OPPLIST	"OppList"
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 
 

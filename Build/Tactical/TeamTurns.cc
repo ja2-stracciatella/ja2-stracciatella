@@ -42,7 +42,6 @@
 #include "Items.h"
 #include "slog/slog.h"
 
-#define	DEBUG_TAG_TEAMTURN	"Team Turns"
 static SOLDIERTYPE* gOutOfTurnOrder[MAXMERCS];
 UINT8 gubOutOfTurnPersons = 0;
 

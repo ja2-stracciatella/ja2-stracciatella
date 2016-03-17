@@ -5,8 +5,6 @@
 #include "WorldDef.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_AI	"AI"
-
 extern INT8	gubAIPathCosts[19][19];
 #define AI_PATHCOST_RADIUS 9
 

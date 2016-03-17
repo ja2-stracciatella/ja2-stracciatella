@@ -18,7 +18,6 @@
 #include "Soldier_Macros.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_MORALE	"Morale"
 #define MORALE_MOD_MAX 50		// morale *mod* range is -50 to 50, if you change this, check the decay formulas!
 
 #define	DRUG_EFFECT_MORALE_MOD			150

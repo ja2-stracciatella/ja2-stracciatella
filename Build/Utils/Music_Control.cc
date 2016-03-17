@@ -11,8 +11,6 @@
 #include "ScreenIDs.h"
 #include "slog/slog.h"
 
-#define DEBUG_TAG_MUSICCTL "Music Control"
-
 static UINT32  uiMusicHandle   = NO_SAMPLE;
 static UINT32  uiMusicVolume   = 50;
 static BOOLEAN fMusicPlaying   = FALSE;

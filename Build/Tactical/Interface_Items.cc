@@ -82,7 +82,6 @@
 #include "policy/GamePolicy.h"
 #include "slog/slog.h"
 
-#define 	DEBUG_TAG_INTERFACE				"Interface"
 #define		ITEMDESC_FONT							BLOCKFONT2
 #define		ITEMDESC_FONTSHADOW2			32
 

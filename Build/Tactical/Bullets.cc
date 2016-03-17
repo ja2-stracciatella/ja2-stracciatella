@@ -16,7 +16,6 @@
 #include "Debug.h"
 #include "slog/slog.h"
 
-#define 	DEBUG_TAG_BULLETS 	"Bullets"
 #define		NUM_BULLET_SLOTS		50
 
 

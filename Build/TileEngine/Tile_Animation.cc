@@ -26,8 +26,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define	DEBUG_TAG_TILEANIM	"Tile Animation"
-
 static ANITILE* pAniTileHead = NULL;
 
 

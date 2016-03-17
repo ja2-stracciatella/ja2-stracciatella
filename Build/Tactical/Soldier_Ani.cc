@@ -71,7 +71,6 @@
 #include "WeaponModels.h"
 #include "slog/slog.h"
 
-#define		DEBUG_TAG_SOLDIERANI				"Soldier Ani"
 #define		NO_JUMP											0
 #define		MAX_ANIFRAMES_PER_FLASH			2
 //#define		TIME_FOR_RANDOM_ANIM_CHECK	10

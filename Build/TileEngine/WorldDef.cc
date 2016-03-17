@@ -63,7 +63,6 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define	DEBUG_TAG_WORLDDEF	"World Def"
 #define SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
 #define SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b )

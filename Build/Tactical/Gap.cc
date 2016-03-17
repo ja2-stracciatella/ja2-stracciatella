@@ -10,7 +10,6 @@
 #include "GameInstance.h"
 
 #include "slog/slog.h"
-#define DEBUG_TAG_GAP "Gap"
 
 static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 {
