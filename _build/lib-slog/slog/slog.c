@@ -53,6 +53,71 @@ static FILE *s_logFile = NULL;  /**< File for logging. */
 
 static SLOGLevel s_consoleLevel = SLOG_INFO;
 static SLOGLevel s_fileLevel = SLOG_DEBUG;
+static int gDebugFlags;
+
+static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
+{
+  "Game Loop",
+  "Strategic Map",
+  "AI"
+  "Scheduler",
+  "Path AI",
+  "Animation Ctl",
+  "Gap",
+  "Weapons",
+  "Soldier List",
+  "Animation Data",
+  "Overhead",
+  "Soldier Tile",
+  "Keys",
+  "Animation Cache",
+  "Points",
+  "Morale",
+  "Merc Hire",
+  "Opp List",
+  "Lighting",
+  "Render World",
+  "Tile Def",
+  "Explosion",
+  "Physics",
+  "Ambient",
+  "Save/Load",
+  "Music Control",
+  "Smacker",
+  "Event Pump",
+  "Quests",
+  "Editor",
+  "Resources",
+  "JA2 Screens",
+  "Init",
+  "Font",
+  "SGP",
+  "STCI",
+  "Container",
+  "VSurface",
+  "Sound",
+  "Memory Manager",
+  "Game Screen",
+  "Bobby Ray",
+  "Strategic AI",
+  "Air Raid",
+  "Bullets",
+  "Handle Items",
+  "Interface",
+  "Line of Sight",
+  "Tactical Save",
+  "Soldier Anim",
+  "Soldier Ctrl",
+  "Team Turns",
+  "World Def",
+  "Tile Animation",
+  "Himage",
+  "Library DB",
+  "File Man",
+  "Mod Pack",
+  "Default CM",
+  "Soldier"
+};
 
 /************************************************************
  * Function implementation
@@ -117,8 +182,9 @@ static const char* getLevelName(SLOGLevel level)
   return "";
 }
 
-void SLOG_LogMessage(SLOGLevel level, const char *tag, const char *format, ...)
+void SLOG_LogMessage(SLOGLevel level, SLOGTopics tag, const char *format, ...)
 {
+  if ( !(gDebugFlags & (1 << tag))) return;
   int logToConsole = (s_consoleFD != 0) && (level >= s_consoleLevel);
   int logToFile = (s_logFile != NULL) && (level >= s_fileLevel);
 
@@ -137,7 +203,7 @@ void SLOG_LogMessage(SLOGLevel level, const char *tag, const char *format, ...)
     size += snprintf(buf + size, sizeof(buf) - size, "%4d/%02d/%02d %02d:%02d:%02d %-7s [%-16s] ",
                      localTime->tm_year + 1900, localTime->tm_mon, localTime->tm_mday,
                      localTime->tm_hour, localTime->tm_min, localTime->tm_sec,
-                     getLevelName(level), tag);
+                     getLevelName(level), SLOGTags[tag]);
 
     /* print message */
     va_start(args, format);

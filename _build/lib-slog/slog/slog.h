@@ -32,6 +32,73 @@ extern "C"
 {
 #endif
 
+#define NUMBER_OF_TOPICS  59
+#define TAG_LENGTH        15
+
+typedef enum
+{
+  DEBUG_TAG_GAMELOOP,
+  DEBUG_TAG_SMAP,
+  DEBUG_TAG_AI,
+  DEBUG_TAG_SCHEDULER,
+  DEBUG_TAG_PATHAI,
+  DEBUG_TAG_ANIMCTRL,
+  DEBUG_TAG_GAP,
+  DEBUG_TAG_WEAPONS,
+  DEBUG_TAG_SOLDIERLIST,
+  DEBUG_TAG_ANIMDATA,
+  DEBUG_TAG_OVERHEAD,
+  DEBUG_TAG_SOLDIERTILE,
+  DEBUG_TAG_KEYS,
+  DEBUG_TAG_ANIMCACHE,
+  DEBUG_TAG_POINTS,
+  DEBUG_TAG_MORALE,
+  DEBUG_TAG_MERCHIRE,
+  DEBUG_TAG_OPPLIST,
+  DEBUG_TAG_LIGHTING,
+  DEBUG_TAG_RENDERWORLD,
+  DEBUG_TAG_TILEDEF,
+  DEBUG_TAG_EXPLOSION,
+  DEBUG_TAG_PHYSICS,
+  DEBUG_TAG_AMBIENT,
+  DEBUG_TAG_SAVELOAD,
+  DEBUG_TAG_MUSICCTL,
+  DEBUG_TAG_SMK,
+  DEBUG_TAG_EVENTPUMP,
+  DEBUG_TAG_QUESTS,
+  DEBUG_TAG_EDITOR,
+  DEBUG_TAG_RESOURCES,
+  DEBUG_TAG_JA2SCREENS,
+  DEBUG_TAG_INIT,
+  DEBUG_TAG_FONT,
+  DEBUG_TAG_SGP,
+  DEBUG_TAG_STCI,
+  DEBUG_TAG_CONTAINER,
+  DEBUG_TAG_VSURFACE,
+  DEBUG_TAG_SOUND,
+  DEBUG_TAG_MEMORY,
+  DEBUG_TAG_GAMESCREEN,
+  DEBUG_TAG_BOBBYRAY,
+  DEBUG_TAG_SAI,
+  DEBUG_TAG_AIRRAID,
+  DEBUG_TAG_BULLETS,
+  DEBUG_TAG_HANDLEITEMS,
+  DEBUG_TAG_INTERFACE,
+  DEBUG_TAG_LOS,
+  DEBUG_TAG_TACTSAVE,
+  DEBUG_TAG_SOLDIERANI,
+  DEBUG_TAG_SOLDIERCTL,
+  DEBUG_TAG_TEAMTURN,
+  DEBUG_TAG_WORLDDEF,
+  DEBUG_TAG_TILEANIM,
+  DEBUG_TAG_HIMAGE,
+  DEBUG_TAG_LIBDB,
+  DEBUG_TAG_FILEMAN,
+  DEBUG_TAG_MODPACK,
+  DEBUG_TAG_DEFAULTCM,
+  DEBUG_TAG_SOLDIER
+}
+SLOGTopics;
 
 /** @brief Console logging destinations. */
 typedef enum
@@ -52,7 +119,6 @@ typedef enum
   SLOG_ERROR
 }
 SLOGLevel;
-
 
 /** @brief Library initialization.
  *
@@ -84,7 +150,7 @@ void SLOG_SetLevel(SLOGLevel console, SLOGLevel file);
    * @param level  Severity level of the message.
    * @param tag    Tag of the message, e.g. subsystem name.
    * @param format Format string (the same as for printf) */
-  void SLOG_LogMessage(SLOGLevel level, const char *tag, const char *format, ...);
+  void SLOG_LogMessage(SLOGLevel level, SLOGTopics topic, const char *format, ...);
 
 
   /** Print debug message macro. */
