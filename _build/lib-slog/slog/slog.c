@@ -53,7 +53,10 @@ static FILE *s_logFile = NULL;  /**< File for logging. */
 
 static SLOGLevel s_consoleLevel = SLOG_INFO;
 static SLOGLevel s_fileLevel = SLOG_DEBUG;
-static int gDebugFlags;
+
+/* gDebugFlags contains one flag per topic to enable (1) or disable (0) logging
+ * default is all on for now. Watch the variable width when adding more topics! */
+static long long gDebugFlags = 0xFFFFFFFFFFFFFFFF;
 
 static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
 {
