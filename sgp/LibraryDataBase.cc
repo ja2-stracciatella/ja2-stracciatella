@@ -9,8 +9,6 @@
 #include "StrUtils.h"
 
 #include "slog/slog.h"
-#define TAG "LibDB"
-
 
 #define	FILENAME_SIZE 256
 
@@ -129,7 +127,7 @@ try
 		// check to see if the file is not longer than it should be
 		if (strlen(DirEntry.sFileName) + 1 >= FILENAME_SIZE)
     {
-      SLOGW(TAG, "'%s' from the library '%s' has too long name", DirEntry.sFileName, lib->sLibraryPath.c_str());
+      SLOGW(DEBUG_TAG_LIBDB, "'%s' from the library '%s' has too long name", DirEntry.sFileName, lib->sLibraryPath.c_str());
     }
 
 		FileHeaderStruct* const fh = &fhs[used_entries++];
@@ -139,7 +137,7 @@ try
 		fh->uiFileOffset = DirEntry.uiOffset;
 		fh->uiFileLength = DirEntry.uiLength;
 
-    // SLOGD(TAG, "found in %s: %s", lib_name, fh->pFileName);
+    // SLOGD(DEBUG_TAG_LIBDB, "found in %s: %s", lib_name, fh->pFileName);
 	}
 
 	if (used_entries != count_entries)
@@ -316,7 +314,7 @@ static BOOLEAN CloseLibrary(LibraryHeaderStruct *lib)
 	//if there are any open files, loop through the library and close down whatever file is still open
 	if (lib->iNumFilesOpen)
 	{
-		SLOGE("LibraryDatabase", "CloseLibrary(): %s library still has %d open files.", lib->sLibraryPath.c_str(), lib->iNumFilesOpen);
+		SLOGE(DEBUG_TAG_LIBDB, "CloseLibrary(): %s library still has %d open files.", lib->sLibraryPath.c_str(), lib->iNumFilesOpen);
 	}
 
 	//Free up the memory used for each file name
