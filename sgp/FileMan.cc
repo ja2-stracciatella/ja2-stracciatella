@@ -476,7 +476,7 @@ static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter);
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
   using namespace boost::filesystem;
-  space_info si = space(".");
+  space_info si = space(current_path());
   if (si.available == -1)
   {
     /* something is wrong, tell everyone no space available */
