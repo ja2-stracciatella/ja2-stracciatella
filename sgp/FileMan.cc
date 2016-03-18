@@ -475,41 +475,18 @@ static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter);
 
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
-#if 1 // XXX TODO
-	FIXME
-	return 1024 * 1024 * 1024; // XXX TODO return an arbitrary number for now
-#else
-	//get the drive letter from the exec dir
-  STRING512 zDrive;
-	_splitpath(GetExecutableDirectory(), zDrive, NULL, NULL, NULL);
-
-	sprintf(zDrive, "%s\\", zDrive);
-	return GetFreeSpaceOnHardDrive(zDrive);
-#endif
+  using namespace boost::filesystem;
+  space_info si = space(".");
+  if (si.available == -1)
+  {
+    /* something is wrong, tell everyone no space available */
+    return 0;
+  }
+  else
+  {
+    return si.available;
+  }
 }
-
-
-static UINT32 GetFreeSpaceOnHardDrive(const char* const pzDriveLetter)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED
-#else
-	UINT32 uiSectorsPerCluster     = 0;
-	UINT32 uiBytesPerSector        = 0;
-	UINT32 uiNumberOfFreeClusters  = 0;
-	UINT32 uiTotalNumberOfClusters = 0;
-	if (!GetDiskFreeSpace(pzDriveLetter, &uiSectorsPerCluster, &uiBytesPerSector, &uiNumberOfFreeClusters, &uiTotalNumberOfClusters))
-	{
-		const UINT32 uiLastError = GetLastError();
-		char zString[1024];
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
-		return TRUE;
-	}
-
-	return uiBytesPerSector * uiNumberOfFreeClusters * uiSectorsPerCluster;
-#endif
-}
-
 
 /** Join two path components. */
 std::string FileMan::joinPaths(const std::string &first, const char *second)
