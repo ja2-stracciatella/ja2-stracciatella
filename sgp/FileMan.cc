@@ -404,13 +404,10 @@ BOOLEAN FileClearAttributes(const std::string &filename)
 
 BOOLEAN FileClearAttributes(const char* const filename)
 {
-#if 1 // XXX TODO
-  SLOGW(TAG, "ignoring %s(\"%s\")", __func__, filename);
-	return FALSE;
-	// UNIMPLEMENTED
-#else
-	return SetFileAttributes(filename, FILE_ATTRIBUTE_NORMAL);
-#endif
+  using namespace boost::filesystem;
+  
+  permissions(filename, ( add_perms | owner_read | owner_write | group_read | group_write ));
+  return true;
 }
 
 
