@@ -183,13 +183,7 @@ static void deinitGameAndExit()
   ShutdownVideoObjectManager();
   SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Manager");
   ShutdownVideoManager();
-
-#ifdef EXTREME_MEMORY_DEBUGGING
-  SLOGD(DEBUG_TAG_SGP, "Dumping Memory Debug Info");
-  DumpMemoryInfoIntoFile( "ExtremeMemoryDump.txt", FALSE );
-#endif
-
-  SLOGD(DEBUG_TAG_SGP, "Shutting Doen Memory Manager");
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Memory Manager");
   ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
 
   SLOGD(DEBUG_TAG_SGP, "Shutting Down SDL");
