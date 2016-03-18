@@ -469,10 +469,6 @@ FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 	return f->flags & SGPFILE_REAL ? f->u.file : f->u.lib.lib->hLibraryHandle;
 }
 
-
-static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter);
-
-
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
   using namespace boost::filesystem;
