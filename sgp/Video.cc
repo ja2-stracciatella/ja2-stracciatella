@@ -378,9 +378,6 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	}
 
 	SDL_BlitSurface(Source, &SrcRect, Dest, &DstRect);
-#if defined __GNUC__ && defined i386
-		__asm__ __volatile__("cld"); // XXX HACK000D
-#endif
 
 #ifdef SCROLL_TEST
 	SDL_FillRect(Dest, NULL, 0);
