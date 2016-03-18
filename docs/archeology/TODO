@@ -14,7 +14,6 @@ TODO0021
 - HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
 - HACK000B Remove unused fields which are only kept for savegame compatibility
 - HACK000C Workaround for code trying to access non-existent buttons
-- HACK000D SDL_BlitSurface() sometimes returns with the direction flag set on x86, which violates the ABI.  Remove the "cld" hack once SDL is fixed.
 - HACK000E uninitialised variables
 - HACK000F Investigate whether this workaround, when loading a map containing underflow fillers, is correct
 - HACK0010 workaround for maps with overlapping objects: F6, K13, H15 are currently known

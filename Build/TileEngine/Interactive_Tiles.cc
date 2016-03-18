@@ -586,7 +586,6 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 
 	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
 
-#if 1 // XXX TODO
 	do
 	{
 		for (;;)
@@ -607,118 +606,6 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 		if (iStartPos >= iTestPos) break;
 	}
 	while (--usHeight > 0);
-#else
-	__asm {
-
-		mov		esi, SrcPtr
-		mov		edi, iStartPos
-		xor		eax, eax
-		xor		ebx, ebx
-		xor		ecx, ecx
-
-BlitDispatch:
-
-		mov		cl, [esi]
-		inc		esi
-		or		cl, cl
-		js		BlitTransparent
-		jz		BlitDoneLine
-
-//BlitNonTransLoop:
-
-		clc
-		rcr		cl, 1
-		jnc		BlitNTL2
-
-		inc		esi
-
-		// Check
-		cmp		edi, iTestPos
-		je		BlitFound
-		add		edi, 1
-
-
-BlitNTL2:
-		clc
-		rcr		cl, 1
-		jnc		BlitNTL3
-
-		add		esi, 2
-
-		// Check
-		cmp		edi, iTestPos
-		je		BlitFound
-		add		edi, 1
-
-		// Check
-		cmp		edi, iTestPos
-		je		BlitFound
-		add		edi, 1
-
-
-BlitNTL3:
-
-		or		cl, cl
-		jz		BlitDispatch
-
-		xor		ebx, ebx
-
-BlitNTL4:
-
-		add		esi, 4
-
-		// Check
-		cmp		edi, iTestPos
-		je		BlitFound
-		add		edi, 1
-
-		// Check
-		cmp		edi, iTestPos
-		je		BlitFound
-		add		edi, 1
-
-		// Check
-		cmp		edi, iTestPos
-		je		BlitFound
-		add		edi, 1
-
-		// Check
-		cmp		edi, iTestPos
-		je		BlitFound
-		add		edi, 1
-
-		dec		cl
-		jnz		BlitNTL4
-
-		jmp		BlitDispatch
-
-BlitTransparent:
-
-		and		ecx, 07fH
-//		shl		ecx, 1
-		add		edi, ecx
-		jmp		BlitDispatch
-
-
-BlitDoneLine:
-
-// Here check if we have passed!
-		cmp		edi, iTestPos
-		jge		BlitDone
-
-		dec		usHeight
-		jz		BlitDone
-		jmp		BlitDispatch
-
-
-BlitFound:
-
-		mov		fDataFound, 1
-
-BlitDone:
-	}
-#endif
-
 	return(fDataFound);
 
 }
