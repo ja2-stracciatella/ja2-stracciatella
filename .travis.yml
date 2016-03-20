@@ -11,7 +11,7 @@ compiler:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install cmake make g++ libsdl1.2-dev -y
+  - sudo apt-get install cmake make g++ libsdl1.2-dev libfltk1.3-dev libx11-dev -y
   - sudo apt-get install libboost-all-dev -y
 
 script:
