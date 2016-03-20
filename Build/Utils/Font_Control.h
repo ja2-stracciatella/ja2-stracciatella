@@ -4,24 +4,24 @@
 #include "Types.h"
 
 
-extern Font gp10PointArial;
-extern Font gp10PointArialBold;
-extern Font gp12PointArial;
-extern Font gp12PointArialFixedFont;
-extern Font gp12PointFont1;
-extern Font gp14PointArial;
-extern Font gp14PointHumanist;
-extern Font gp16PointArial;
-extern Font gpBlockFontNarrow;
-extern Font gpBlockyFont;
-extern Font gpBlockyFont2;
-extern Font gpLargeFontType1;
-extern Font gpSmallFontType1;
-extern Font gpTinyFontType1;
-extern Font gpCompFont;
-extern Font gpSmallCompFont;
+extern SGPFont gp10PointArial;
+extern SGPFont gp10PointArialBold;
+extern SGPFont gp12PointArial;
+extern SGPFont gp12PointArialFixedFont;
+extern SGPFont gp12PointFont1;
+extern SGPFont gp14PointArial;
+extern SGPFont gp14PointHumanist;
+extern SGPFont gp16PointArial;
+extern SGPFont gpBlockFontNarrow;
+extern SGPFont gpBlockyFont;
+extern SGPFont gpBlockyFont2;
+extern SGPFont gpLargeFontType1;
+extern SGPFont gpSmallFontType1;
+extern SGPFont gpTinyFontType1;
+extern SGPFont gpCompFont;
+extern SGPFont gpSmallCompFont;
 
-extern Font gpHugeFont;
+extern SGPFont gpHugeFont;
 
 
 // Defines
@@ -106,6 +106,6 @@ enum FontShade
 	FONT_SHADE_RED      = 6
 };
 
-void SetFontShade(Font, FontShade);
+void SetFontShade(SGPFont, FontShade);
 
 #endif

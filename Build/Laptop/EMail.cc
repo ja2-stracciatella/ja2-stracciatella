@@ -731,7 +731,7 @@ static void PlaceMessagesinPages(void)
 static void DrawEmailSummary(INT32 y, const Email* e)
 {
 	const BOOLEAN read = e->fRead;
-	const Font    font = read ? MESSAGE_FONT : FONT10ARIALBOLD;
+	const SGPFont font = read ? MESSAGE_FONT : FONT10ARIALBOLD;
 
   // will draw the icon for letter in mail list depending if the mail has been read or not
 	BltVideoObject(FRAME_BUFFER, guiEmailIndicator, read ? 0 : 1, INDIC_X, y + 2);
@@ -939,7 +939,7 @@ static Record* GetFirstRecordOnThisPage(Record* const RecordList, INT32 const iP
 	CurrentRecord = RecordList;
 
 	// while we are not on the current page
-	Font const font = MESSAGE_FONT;
+	SGPFont const font = MESSAGE_FONT;
 	while( iCurrentPage < iPage )
 	{
 		// build record list to this point

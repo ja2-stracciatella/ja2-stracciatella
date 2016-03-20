@@ -778,7 +778,7 @@ void RenderAIMMembers()
 }
 
 
-void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
+void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, SGPFont const font, UINT8 ubColor)
 {
 	wchar_t		sStr[10];
 	swprintf(sStr, lengthof(sStr), L"%d", iNumber);
@@ -786,7 +786,7 @@ void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLo
 }
 
 
-static void DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
+static void DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, SGPFont const font, UINT8 ubColor)
 {
 	wchar_t		sStr[10];
 	SPrintMoney(sStr, iNumber);
@@ -920,7 +920,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		UINT16  const        tx        = x - 1;
 		UINT16  const        ty        = AIM_MEMBER_WEAPON_NAME_Y;
 		UINT16  const        tw        = AIM_MEMBER_WEAPON_NAME_WIDTH;
-		Font    const        tf        = AIM_M_WEAPON_TEXT_FONT;
+		SGPFont const        tf        = AIM_M_WEAPON_TEXT_FONT;
 		UINT8   const        tc        = AIM_M_WEAPON_TEXT_COLOR;
 		UINT8   const        tb        = FONT_MCOLOR_BLACK;
 		if (DisplayWrappedString(tx, ty, tw, 2, tf, tc, item_name, tb, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT) / GetFontHeight(tf) == 1)

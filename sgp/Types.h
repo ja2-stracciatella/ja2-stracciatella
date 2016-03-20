@@ -141,7 +141,7 @@ struct SGPImage;
 
 class SGPVObject;
 typedef SGPVObject* HVOBJECT;
-typedef SGPVObject* Font;
+typedef SGPVObject* SGPFont;
 
 class SGPVSurface;
 
