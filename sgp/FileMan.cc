@@ -411,53 +411,29 @@ BOOLEAN FileClearAttributes(const char* const filename)
 }
 
 
-BOOLEAN GetFileManFileTime(const SGPFile* f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
+BOOLEAN GetFileManFileTime(const char* fileName, time_t* const pLastWriteTime)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED;
-  return FALSE;
-#else
-	//Initialize the passed in variables
-	memset(pCreationTime,     0, sizeof(*pCreationTime));
-	memset(pLastAccessedTime, 0, sizeof(*pLastAccessedTime));
-	memset(pLastWriteTime,    0, sizeof(*pLastWriteTime));
-
-	if (f->flags & SGPFILE_REAL)
-	{
-		const HANDLE hRealFile = f->u.file;
-
-		//Gets the UTC file time for the 'real' file
-		SGP_FILETIME sCreationUtcFileTime;
-		SGP_FILETIME sLastAccessedUtcFileTime;
-		SGP_FILETIME sLastWriteUtcFileTime;
-		GetFileTime(hRealFile, &sCreationUtcFileTime, &sLastAccessedUtcFileTime, &sLastWriteUtcFileTime);
-
-		//converts the creation UTC file time to the current time used for the file
-		FileTimeToLocalFileTime(&sCreationUtcFileTime, pCreationTime);
-
-		//converts the accessed UTC file time to the current time used for the file
-		FileTimeToLocalFileTime(&sLastAccessedUtcFileTime, pLastAccessedTime);
-
-		//converts the write UTC file time to the current time used for the file
-		FileTimeToLocalFileTime(&sLastWriteUtcFileTime, pLastWriteTime);
-		return TRUE;
-	}
-	else
-	{
-		return GetLibraryFileTime(&f->u.lib, pLastWriteTime);
-	}
-#endif
+  using namespace boost::filesystem;
+  *pLastWriteTime = last_write_time(fileName);
+  if(*pLastWriteTime == -1)
+  {
+    return FALSE;
+  }
+  return TRUE;
 }
 
 
-INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FILETIME* const pSecondFileTime)
+INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* const pSecondFileTime)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED;
+  if ( *pFirstFileTime < *pSecondFileTime )
+  {
+    return -1;
+  }
+  if ( *pFirstFileTime > *pSecondFileTime )
+  {
+    return 1;
+  }
   return 0;
-#else
-	return CompareFileTime(pFirstFileTime, pSecondFileTime);
-#endif
 }
 
 
