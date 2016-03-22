@@ -29,7 +29,6 @@ TODO0021
 - TODO000A Memory leak?
 - TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
 - TODO000F Only half of the data gets saved/loaded
-- TODO0011 gubAnimCrawlSpeeds[] is only declared, gubAnimCrawlingSpeeds[] is never referenced, looks like a typo
 - TODO0012 Is this fix for the infinite loop when throwing right?
 - TODO0013 Code and comment disagree
 - TODO0014 Properly resolve the bReverse mess
