@@ -139,7 +139,7 @@ void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16
 	SetFontBackground(background);
 	if (flags & MARK_DIRTY)
 	{
-		GPrintDirty(x, y, str);
+		GDirtyPrint(x, y, str);
 	}
 	else
 	{
