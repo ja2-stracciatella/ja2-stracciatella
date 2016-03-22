@@ -415,25 +415,6 @@ void GDirtyPrintF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
 	GDirtyPrint(x, y, str);
 }
 
-
-void GPrintDirty(INT16 const x, INT16 const y, wchar_t const* const str) // XXX TODO0017
-{
-	MPrint(x, y, str);
-	GDirty(x, y, str);
-}
-
-
-void GPrintDirtyF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
-{
-	wchar_t	str[512];
-	va_list ap;
-	va_start(ap, fmt);
-	vswprintf(str, lengthof(str), fmt, ap);
-	va_end(ap);
-	GDirtyPrint(x, y, str);
-}
-
-
 void GPrintInvalidate(INT16 const x, INT16 const y, wchar_t const* const str)
 {
 	MPrint(x, y, str);
