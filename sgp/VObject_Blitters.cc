@@ -1224,7 +1224,7 @@ BlitNonTransLoop:								// blit non-transparent pixels
           {
             *ZPtr = usZValue;
             px = *SrcPtr++;
-            if (px == 254)
+            if (px != 254)
               *(UINT16*)DestPtr = p16BPPPalette[px];
               
             else
@@ -1234,7 +1234,7 @@ BlitNonTransLoop:								// blit non-transparent pixels
           DestPtr += 2;
           ZPtr += 2;
         }
-        while ( --PxCount > 0 );
+        while ( --px > 0 );
         SrcPtr += Unblitted;
       }
     }
