@@ -3214,7 +3214,7 @@ ScreenID EditScreenHandle(void)
 
 	if( gfWorldLoaded && gMapInformation.ubMapVersion <= 7 && !gfCorruptMap )
 	{
-		ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted.  Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+		SLOGE(DEBUG_TAG_EDITOR, "Map data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
 		gfCorruptMap = TRUE;
 	}
 	if( gfWorldLoaded && gubScheduleID > 40 && !gfCorruptSchedules )
@@ -3222,7 +3222,7 @@ ScreenID EditScreenHandle(void)
 		OptimizeSchedules();
 		if( gubScheduleID > 32 )
 		{
-			ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Schedule data has just been corrupted.  Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+			SLOGE(DEBUG_TAG_EDITOR, "Schedule data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
 			gfCorruptSchedules = TRUE;
 		}
 	}
