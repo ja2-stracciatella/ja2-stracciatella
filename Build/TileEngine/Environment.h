@@ -1,6 +1,7 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 
+#include "Types.h"
 
 //Make sure you use 24 for end time hours and 0 for start time hours if
 //midnight is the hour you wish to use.
