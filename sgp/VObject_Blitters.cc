@@ -1313,6 +1313,10 @@ void Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitch
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
+	UINT8 px, PxCount;
+	UINT32 Unblitted;
+	INT32 LSCount;
+
   while (TopSkip)
   {
     px = *SrcPtr++;
