@@ -1,8 +1,6 @@
 #ifndef __DEBUG_MANAGER_
 #define __DEBUG_MANAGER_
 
-#include "Types.h"
-#include "TopicIDs.h"
 #include "slog/slog.h"
 
 
@@ -11,8 +9,6 @@
 
 #define Assert(a)       (a) ? (void)0 : SLOGW(DEBUG_TAG_ASSERTS, "Assertion failed in %s, line %d", __FILE__, __LINE__)
 #define AssertMsg(a, b) (a) ? (void)0 : SLOGW(DEBUG_TAG_ASSERTS, "Assertion failed in %s, line %d:\n%s", __FILE__, __LINE__, b)
-
-BOOLEAN	InitializeDebugManager(void);
 
 const char* String(const char* fmt, ...);
 

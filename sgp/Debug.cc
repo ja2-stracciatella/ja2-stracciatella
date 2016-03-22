@@ -1,8 +1,6 @@
 #include "Debug.h"
-
-#include <SDL.h>
 #include <stdarg.h>
-#include "Timer.h"
+#include "Types.h"
 
 const char* String(const char* const fmt, ...)
 {
