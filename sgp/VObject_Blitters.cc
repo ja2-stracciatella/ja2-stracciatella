@@ -735,7 +735,7 @@ void Blt8BPPDataTo16BPPBufferTransShadow(UINT16* pBuffer, UINT32 uiDestPitchBYTE
 
 	// Get Offsets from Index into structure
 	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(usIndex);
-	UINT32      const  usHeight = pTrav.usHeight;
+	UINT32      			 usHeight = pTrav.usHeight;
 	UINT32      const  usWidth  = pTrav.usWidth;
 
 	// Add to start position of dest buffer
@@ -750,75 +750,40 @@ void Blt8BPPDataTo16BPPBufferTransShadow(UINT16* pBuffer, UINT32 uiDestPitchBYTE
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	(void)usHeight;
-	UNIMPLEMENTED
-#else
-	__asm {
+	do
+	{
+		for (;;)
+		{
+			UINT8 data = *SrcPtr++;
 
-		mov		esi, SrcPtr
-		mov		edi, DestPtr
-		mov		edx, p16BPPPalette
-		xor		eax, eax
-		xor		ecx, ecx
+			if (data == 0) break;
+			if (data & 0x80)
+			{
+				data &= 0x7F;
+				DestPtr += 2 * data;
+			}
+			else
+			{
+				do
+				{
+					UINT8 px = *SrcPtr++;
 
-BlitDispatch:
-
-		mov		cl, [esi]
-		inc		esi
-		or		cl, cl
-		js		BlitTransparent
-		jz		BlitDoneLine
-
-//BlitNonTransLoop:
-
-BlitNTL4:
-
-		xor		eax, eax
-		mov		al, [esi]
-		cmp		al, 254
-		jne		BlitNTL6
-
-		mov		ax, [edi]
-		mov		ax, ShadeTable[eax*2]
-		mov		[edi], ax
-		jmp		BlitNTL5
-
-
-BlitNTL6:
-		mov		ax, [edx+eax*2]
-		mov		[edi], ax
-
-BlitNTL5:
-		inc		esi
-		add		edi, 2
-		dec		cl
-		jnz		BlitNTL4
-
-		jmp		BlitDispatch
-
-
-BlitTransparent:
-
-		and		ecx, 07fH
-//		shl		ecx, 1
-		add   ecx, ecx
-		add		edi, ecx
-		jmp		BlitDispatch
-
-
-BlitDoneLine:
-
-		dec		usHeight
-		jz		BlitDone
-		add		edi, LineSkip
-		jmp		BlitDispatch
-
-
-BlitDone:
+					if (px == 254)
+					{
+						*(UINT16*)DestPtr = ShadeTable[2 * (*(UINT16*)DestPtr)];
+					}
+					else
+					{
+						*(UINT16*)DestPtr = p16BPPPalette[2 * px];
+					}
+					DestPtr += 2;
+				}
+				while (--data > 0);
+			}
+		}
+		DestPtr += LineSkip;
 	}
-#endif
+	while (--usHeight > 0);
 }
 
 
