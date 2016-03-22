@@ -155,16 +155,16 @@ void SLOG_SetLevel(SLOGLevel console, SLOGLevel file);
 
 
   /** Print debug message macro. */
-  #define SLOGD(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_DEBUG, TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGD(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_DEBUG, TAG, FORMAT "\n", ##__VA_ARGS__)
 
   /** Print info message macro. */
-  #define SLOGI(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_INFO,  TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGI(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_INFO,  TAG, FORMAT "\n", ##__VA_ARGS__)
 
   /** Print warning message macro. */
-  #define SLOGW(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_WARNING, TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGW(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_WARNING, TAG, FORMAT "\n", ##__VA_ARGS__)
 
   /** Print error message macro. */
-  #define SLOGE(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_ERROR, TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGE(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_ERROR, TAG, FORMAT "\n", ##__VA_ARGS__)
 
 #else
 
