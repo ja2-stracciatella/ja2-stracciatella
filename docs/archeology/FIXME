@@ -8,7 +8,6 @@ BlitMineText(): code duplication
 BtnHelpScreenDontShowHelpAgainCallback(): empty
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
-CenterX(): use %
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
 ContractBoxGlow(): empty
 ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
