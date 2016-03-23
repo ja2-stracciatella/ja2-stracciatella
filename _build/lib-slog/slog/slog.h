@@ -32,7 +32,7 @@ extern "C"
 {
 #endif
 
-#define NUMBER_OF_TOPICS  62
+#define NUMBER_OF_TOPICS  64
 #define TAG_LENGTH        15
 
 typedef enum
@@ -98,7 +98,9 @@ typedef enum
   DEBUG_TAG_DEFAULTCM,
   DEBUG_TAG_SOLDIER,
   DEBUG_TAG_ASSERTS,
-  DEBUG_TAG_QUEENCMD
+  DEBUG_TAG_QUEENCMD,
+  DEBUG_TAG_NPC,
+  DEBUG_TAG_CAMPAIGN
 }
 SLOGTopics;
 

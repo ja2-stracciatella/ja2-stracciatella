@@ -121,7 +121,9 @@ static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
   "Default CM",
   "Soldier",
   "Asserts",
-  "Queen Command"
+  "Queen Command",
+  "NPC",
+  "Campaign"
 };
 
 /************************************************************
