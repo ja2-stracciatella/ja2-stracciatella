@@ -10,7 +10,6 @@ CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 CenterX(): use %
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
-ConfirmActionCancel(): overkill
 ContractBoxGlow(): empty
 ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
 CorpseHit(): empty
