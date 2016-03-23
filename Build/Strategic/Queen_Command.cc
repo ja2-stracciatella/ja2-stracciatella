@@ -892,22 +892,19 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		else
 		{ //basement level (UNDERGROUND_SECTORINFO)
 			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-			#ifdef JA2BETAVERSION
 			UINT32 ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-			#endif
 			if( pSector )
 			{
 				switch( pSoldier->ubSoldierClass )
 				{
 					case SOLDIER_CLASS_ADMINISTRATOR:
-						#ifdef JA2BETAVERSION
 						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumAdmins != pSector->ubAdminsInBattle ||
 								!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
 								pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
-							DoScreenIndependantMessageBox( L"Underground sector admin counters are bad.  What were the last 2-3 things to die, and how?  Save game and send to KM with info!!!", MSG_BOX_FLAG_OK, NULL );
+							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
+																				 Please save game and file a bug.");
 						}
-						#endif
 						if( pSector->ubNumAdmins )
 						{
 							pSector->ubNumAdmins--;
@@ -918,14 +915,13 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						}
 						break;
 					case SOLDIER_CLASS_ARMY:
-						#ifdef JA2BETAVERSION
 						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumTroops != pSector->ubTroopsInBattle ||
 								!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
 								pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
-							DoScreenIndependantMessageBox( L"Underground sector troop counters are bad.  What were the last 2-3 things to die, and how?  Save game and send to KM with info!!!", MSG_BOX_FLAG_OK, NULL );
+							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
+																				 Please save game and file a bug.");
 						}
-						#endif
 						if( pSector->ubNumTroops )
 						{
 							pSector->ubNumTroops--;
@@ -936,14 +932,13 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						}
 						break;
 					case SOLDIER_CLASS_ELITE:
-						#ifdef JA2BETAVERSION
 						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumElites != pSector->ubElitesInBattle ||
 								!pSector->ubNumElites || !pSector->ubElitesInBattle ||
 								pSector->ubNumElites > 100 || pSector->ubElitesInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
-							DoScreenIndependantMessageBox( L"Underground sector elite counters are bad.  What were the last 2-3 things to die, and how?  Save game and send to KM with info!!!", MSG_BOX_FLAG_OK, NULL );
+							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
+																				 Please save game and file a bug.");
 						}
-						#endif
 						if( pSector->ubNumElites )
 						{
 							pSector->ubNumElites--;
@@ -954,14 +949,13 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						}
 						break;
 					case SOLDIER_CLASS_CREATURE:
-						#ifdef JA2BETAVERSION
 						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle ||
 								!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
 								pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 						{
-							DoScreenIndependantMessageBox( L"Underground sector creature counters are bad.  What were the last 2-3 things to die, and how?  Save game and send to KM with info!!!", MSG_BOX_FLAG_OK, NULL );
+							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
+																				 Please save game and file a bug.");
 						}
-						#endif
 						if( pSector->ubNumCreatures )
 						{
 							pSector->ubNumCreatures--;
