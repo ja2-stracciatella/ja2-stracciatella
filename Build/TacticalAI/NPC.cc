@@ -161,10 +161,8 @@ static NPCQuoteInfo* gpNPCQuoteInfoArray[NUM_PROFILES];
 static NPCQuoteInfo* gpBackupNPCQuoteInfoArray[NUM_PROFILES];
 static NPCQuoteInfo* gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS];
 
-#ifdef JA2TESTVERSION
 // Warning: cheap hack approaching
 static BOOLEAN gfTriedToLoadQuoteInfoArray[NUM_PROFILES];
-#endif
 
 INT8 const gbFirstApproachFlags[] = { 0x01, 0x02, 0x04, 0x08 };
 
@@ -383,18 +381,15 @@ static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 	if (load_file)
 	{
 		q = LoadQuoteFile(ubNPC);
-#ifdef JA2TESTVERSION
 		if (!q)
 		{
 			if (!gfTriedToLoadQuoteInfoArray[ubNPC]) // don't report the error a second time
 			{
-
-				ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"ERROR: NPC.C - NPC needs NPC file: %d.", ubNPC );
+				SLOGE(DEBUG_TAG_NPC, "NPC needs NPC file: %d.", ubNPC );
 				gfTriedToLoadQuoteInfoArray[ubNPC] = TRUE;
 			}
 			// error message at this point!
 		}
-#endif
 	}
 
 	return q;

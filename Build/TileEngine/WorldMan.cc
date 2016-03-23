@@ -1131,7 +1131,8 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* co
 	bool const success = AddStructureToWorld(sGridNo, s->bLevel, sr, n);
 	if (!success)
 	{
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"FAILED: add struct info for merc %d (%ls), at %d direction %d", s->ubID, s->name, sGridNo, s->bDirection);
+		SLOGD(DEBUG_TAG_WORLDDEF, "add struct info for merc %d (%ls), at %d direction %d failed",
+					s->ubID, s->name, sGridNo, s->bDirection);
 	}
 
 	// Turn on if we are multi-tiled

@@ -41,8 +41,6 @@
 #include "Vehicles.h"
 #include "slog/slog.h"
 #include "JAScreens.h"
-#include "ScreenIDs.h"
-#include "MessageBoxScreen.h"
 
 #ifdef JA2BETAVERSION
 	extern BOOLEAN gfClearCreatureQuest;

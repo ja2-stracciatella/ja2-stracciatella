@@ -26,6 +26,7 @@
 #include "StrategicMap.h"
 #include "Town_Militia.h"
 #include "EMail.h"
+#include "slog/slog.h"
 
 
 #ifdef JA2TESTVERSION
@@ -371,7 +372,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	if (sSubPointChange != 0)
 	{
 		// debug message
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls's %ls changed by %d", p.zNickname, wDebugStatStrings[ubStat], sSubPointChange);
+		SLOGD(DEBUG_TAG_CAMPAIGN, "%s's %s changed by %d", p.zNickname, wDebugStatStrings[ubStat], sSubPointChange);
 	}
 #endif
 
@@ -1304,7 +1305,7 @@ void HourlyProgressUpdate(void)
 		gStrategicStatus.ubHighestProgress = ubCurrentProgress;
 
 		// debug message
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
+		SLOGD(DEBUG_TAG_CAMPAIGN, "New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
 	}
 }
 

@@ -1407,7 +1407,7 @@ static void HandleKeyboardShortcuts(void)
 
 				case SDLK_F4:
 					MusicPlay( giMusicID );
-					ScreenMsg( FONT_YELLOW, MSG_DEBUG, L"%ls", szMusicList[giMusicID] );
+					SLOGD(DEBUG_TAG_EDITOR, "%s", szMusicList[giMusicID]);
 					giMusicID++;
 					if( giMusicID >= NUM_MUSIC )
 						giMusicID = 0;

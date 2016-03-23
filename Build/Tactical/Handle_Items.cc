@@ -2311,7 +2311,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 	// Get objectype and delete
 	if (!pSoldier->pTempObject) {
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Attempted to give nonexisting item." );
+		SLOGD(DEBUG_TAG_HANDLEITEMS, "Attempted to give nonexisting item.");
 		return;
 	}
 	TempObject = *pSoldier->pTempObject;
