@@ -646,14 +646,14 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 	if (a->hVideoObject != NULL)
 	{
 		// just increment usage counter ( below )
-		SLOGD(DEBUG_TAG_ANIMDATA, "Surface Database: Hit %d", usSurfaceIndex);
+		SLOGD(DEBUG_TAG_ANIMATIONS, "Surface Database: Hit %d", usSurfaceIndex);
 	}
 	else
 	{
 		try
 		{
 			// Load into memory
-			SLOGD(DEBUG_TAG_ANIMDATA, "Surface Database: Loading %d", usSurfaceIndex);
+			SLOGD(DEBUG_TAG_ANIMATIONS, "Surface Database: Loading %d", usSurfaceIndex);
 
 			AutoSGPImage   hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
 			AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
@@ -691,12 +691,12 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 			// Determine if we have a problem with #frames + directions ( ie mismatch )
 			if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->SubregionCount())
 			{
-				SLOGW(DEBUG_TAG_ANIMDATA, "Surface Database: Surface %d has #frames mismatch.", usSurfaceIndex);
+				SLOGW(DEBUG_TAG_ANIMATIONS, "Surface Database: Surface %d has #frames mismatch.", usSurfaceIndex);
 			}
 		}
 		catch (...)
 		{
-			SLOGE(DEBUG_TAG_ANIMDATA, "Could not load animation file: %s", a->Filename);
+			SLOGE(DEBUG_TAG_ANIMATIONS, "Could not load animation file: %s", a->Filename);
 			throw;
 		}
 	}
@@ -704,7 +704,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 	// Increment usage count only if history for soldier is not yet set
 	if (gbAnimUsageHistory[usSurfaceIndex][usSoldierID] == 0)
 	{
-		SLOGD(DEBUG_TAG_ANIMDATA, "Surface Database: Incrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
+		SLOGD(DEBUG_TAG_ANIMATIONS, "Surface Database: Incrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
 		// Increment usage count
 		++a->bUsageCount;
 		// Set history for particular sodlier
@@ -720,18 +720,18 @@ void UnLoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInde
 	if (*in_use <= 0)
 	{
 		// Return warning that we have not actually loaded the surface previously
-		SLOGW(DEBUG_TAG_ANIMDATA, "Surface Database: Soldier has tried to unlock surface that he has not locked.");
+		SLOGW(DEBUG_TAG_ANIMATIONS, "Surface Database: Soldier has tried to unlock surface that he has not locked.");
 		return;
 	}
 	*in_use = 0; // Set history for particular sodlier
 
-	SLOGD(DEBUG_TAG_ANIMDATA, "Surface Database: Decrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
+	SLOGD(DEBUG_TAG_ANIMATIONS, "Surface Database: Decrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
 
 	AnimationSurfaceType* const a         = &gAnimSurfaceDatabase[usSurfaceIndex];
 	INT8*                 const use_count = &a->bUsageCount;
 	--*use_count;
 
-	SLOGD(DEBUG_TAG_ANIMDATA, "Surface Database: MercUsage: %d, Global Uasage: %d", *in_use, *use_count);
+	SLOGD(DEBUG_TAG_ANIMATIONS, "Surface Database: MercUsage: %d, Global Uasage: %d", *in_use, *use_count);
 
 	Assert(*use_count >= 0);
 	if (*use_count < 0) *use_count = 0;
@@ -739,7 +739,7 @@ void UnLoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInde
 	// Delete if count reched zero
 	if (*use_count == 0)
 	{
-		SLOGD(DEBUG_TAG_ANIMDATA, "Surface Database: Unloading Surface: %d", usSurfaceIndex);
+		SLOGD(DEBUG_TAG_ANIMATIONS, "Surface Database: Unloading Surface: %d", usSurfaceIndex);
 		SGPVObject** const vo = &a->hVideoObject;
 		CHECKV(*vo != NULL);
 		DeleteVideoObject(*vo);
@@ -792,7 +792,7 @@ try
 }
 catch (...)
 {
-	SLOGE(DEBUG_TAG_ANIMDATA, "Problems initializing Animation Profiles");
+	SLOGE(DEBUG_TAG_ANIMATIONS, "Problems initializing Animation Profiles");
 	throw;
 }
 

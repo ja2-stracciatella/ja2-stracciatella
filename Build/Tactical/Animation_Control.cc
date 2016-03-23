@@ -2834,7 +2834,7 @@ UINT16 GetSoldierAnimationSurface(SOLDIERTYPE const* const pSoldier)
 		// Ensure that it's loaded!
 		if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
 		{
-			SLOGW(DEBUG_TAG_ANIMCTRL, "Animation Surface for Body %d, animation %hs, surface %d not loaded.",
+			SLOGW(DEBUG_TAG_ANIMATIONS, "Animation Surface for Body %d, animation %hs, surface %d not loaded.",
 						pSoldier->ubBodyType, gAnimControl[pSoldier->usAnimState].zAnimStr, usAnimSurface);
     	usAnimSurface = INVALID_ANIMATION_SURFACE;
 		}
