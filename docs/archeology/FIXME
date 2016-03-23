@@ -36,7 +36,6 @@ ExecuteGameEvent(): code duplication
 Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FindValidInsertionCode(): MARK_DIRTY necessary?
-GetCostOfPassageForHelicopter(): callers
 GetDialogueDataFilename(): checking for MANNY does nothing
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
 GetNumberOfPastMercsOnPlayersTeam(): callers
