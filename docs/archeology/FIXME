@@ -18,7 +18,6 @@ CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecideActionBlack(): bCanAttack != TRUE && bCanAttack != FALSE strange
-DecideActionRed(): bInDeepWater is not just deep water (Water())
 DisplayAllDealersCash(): MARK_DIRTY necessary?
 DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
