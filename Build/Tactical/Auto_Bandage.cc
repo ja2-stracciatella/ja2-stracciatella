@@ -316,8 +316,6 @@ void AutoBandage( BOOLEAN fStart )
 			s->auto_bandaging_medic = NULL;
 		}
 
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Begin auto bandage." );
-
 		// build a mask
 		MSYS_DefineRegion(&gAutoBandageRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
@@ -368,8 +366,6 @@ void AutoBandage( BOOLEAN fStart )
 		WarpGameTime( guiAutoBandageSeconds, WARPTIME_NO_PROCESSING_OF_EVENTS );
 
 		DestroyTerminateAutoBandageButton( );
-
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"End auto bandage." );
 
 		// build a mask
 		MSYS_RemoveRegion( &gAutoBandageRegion );
