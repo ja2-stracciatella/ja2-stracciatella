@@ -39,6 +39,7 @@
 #include "MemMan.h"
 #include "FileMan.h"
 #include "Vehicles.h"
+#include "slog/slog.h"
 
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"
@@ -454,9 +455,8 @@ void PrepareEnemyForSectorBattle()
 	UINT8 const n_stationary_enemies = total_admins + total_troops + total_elites;
 	if (n_stationary_enemies > 32)
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_RED, MSG_ERROR, L"The total stationary enemy forces in sector %c%d is %d. (max %d)", y + 'A' - 1, x, total_admins + total_troops + total_elites, 32);
-#endif
+		SLOGE(DEBUG_TAG_QUEENCMD,"The total stationary enemy forces in sector %c%d is %d. (max %d)",
+					y + 'A' - 1, x, total_admins + total_troops + total_elites, 32);
 		total_admins = MIN(total_admins, 32);
 		total_troops = MIN(total_troops, 32 - total_admins);
 		total_elites = MIN(total_elites, 32 - total_admins + total_troops);
@@ -481,11 +481,10 @@ void PrepareEnemyForSectorBattle()
 	//Test:  All slots should be free at this point!
 	if (n_slots != gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1)
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_RED, MSG_ERROR, L"All enemy slots should be free at this point.  Only %d of %d are available.\nTrying to add %d admins, %d troops, and %d elites.",
-				n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1 ,
-				total_admins, total_troops, total_elites);
-#endif
+		SLOGE(DEBUG_TAG_QUEENCMD, "All enemy slots should be free at this point.  Only %d of %d are available.\n\
+															 Trying to add %d admins, %d troops, and %d elites.",
+					n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1,
+					total_admins, total_troops, total_elites);
 	}
 	/* Subtract the total number of stationary enemies from the available slots,
 	 * as stationary forces take precendence in combat. The mobile forces that
@@ -1126,9 +1125,8 @@ void AddPossiblePendingEnemiesToBattle()
 
 static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites)
 {
-#ifdef JA2TESTVERSION
-	ScreenMsg(FONT_RED, MSG_INTERFACE, L"Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)", n_admins, n_troops, n_elites);
-#endif
+	SLOGD(DEBUG_TAG_QUEENCMD, "Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)",
+				n_admins, n_troops, n_elites);
 
 	UINT8 desired_direction;
 	switch (strategic_insertion_code)
