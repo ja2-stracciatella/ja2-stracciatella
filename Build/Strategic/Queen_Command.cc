@@ -40,12 +40,11 @@
 #include "FileMan.h"
 #include "Vehicles.h"
 #include "slog/slog.h"
+#include "JAScreens.h"
+#include "ScreenIDs.h"
+#include "MessageBoxScreen.h"
 
 #ifdef JA2BETAVERSION
-#	include "JAScreens.h"
-#	include "ScreenIDs.h"
-#	include "MessageBoxScreen.h"
-
 	extern BOOLEAN gfClearCreatureQuest;
 #endif
 
@@ -781,9 +780,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		if( !gbWorldSectorZ || IsAutoResolveActive() )
 		{ //ground level (SECTORINFO)
 			SECTORINFO *pSector;
-			#ifdef JA2BETAVERSION
 			UINT32 ubTotalEnemies;
-			#endif
 
 			if( !IsAutoResolveActive() )
 			{
@@ -794,9 +791,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				pSector = &SectorInfo[ GetAutoResolveSectorID() ];
 			}
 
-			#ifdef JA2BETAVERSION
-				ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
-			#endif
+			ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 
 			switch( pSoldier->ubSoldierClass )
 			{
