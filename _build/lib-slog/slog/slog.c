@@ -120,7 +120,8 @@ static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
   "Mod Pack",
   "Default CM",
   "Soldier",
-  "Asserts"
+  "Asserts",
+  "Queen Command"
 };
 
 /************************************************************
