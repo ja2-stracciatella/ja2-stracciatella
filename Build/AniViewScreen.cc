@@ -89,25 +89,25 @@ ScreenID AniEditScreenHandle(void)
 	EndFrameBufferRender( );
 
 	SetFont( LARGEFONT1 );
-	GPrintDirty( 0,  0, L"SOLDIER ANIMATION VIEWER");
-	GPrintDirtyF(0, 20, L"Current Animation: %hs %hs", gAnimControl[usStartAnim].zAnimStr, gAnimSurfaceDatabase[pSoldier->usAnimSurface].Filename);
+	GDirtyPrint( 0,  0, L"SOLDIER ANIMATION VIEWER");
+	GDirtyPrintF(0, 20, L"Current Animation: %hs %hs", gAnimControl[usStartAnim].zAnimStr, gAnimSurfaceDatabase[pSoldier->usAnimSurface].Filename);
 
 	switch( ubStartHeight )
 	{
-		case ANIM_STAND:  GPrintDirty(0, 40, L"Current Stance: STAND");  break;
-		case ANIM_CROUCH: GPrintDirty(0, 40, L"Current Stance: CROUCH"); break;
-		case ANIM_PRONE:  GPrintDirty(0, 40, L"Current Stance: PRONE");  break;
+		case ANIM_STAND:  GDirtyPrint(0, 40, L"Current Stance: STAND");  break;
+		case ANIM_CROUCH: GDirtyPrint(0, 40, L"Current Stance: CROUCH"); break;
+		case ANIM_PRONE:  GDirtyPrint(0, 40, L"Current Stance: PRONE");  break;
 	}
 
 	if ( fToggle )
 	{
-		GPrintDirty(0, 60,L"FORCE ON");
+		GDirtyPrint(0, 60,L"FORCE ON");
 	}
 
 	if ( fToggle2 )
 	{
-		GPrintDirty( 0, 70, L"LOADED ORDER ON");
-		GPrintDirtyF(0, 90, L"LOADED ORDER : %hs", gAnimControl[pusStates[ubCurLoadedState]].zAnimStr);
+		GDirtyPrint( 0, 70, L"LOADED ORDER ON");
+		GDirtyPrintF(0, 90, L"LOADED ORDER : %hs", gAnimControl[pusStates[ubCurLoadedState]].zAnimStr);
 	}
 
 	if (DequeueEvent(&InputEvent))

@@ -72,9 +72,6 @@ void             RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE*);
 void GDirtyPrint(INT16 x, INT16 y, wchar_t const* str);
 void GDirtyPrintF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
-void GPrintDirty(INT16 x, INT16 y, wchar_t const* str);
-void GPrintDirtyF(INT16 x, INT16 y, wchar_t const* fmt, ...);
-
 void GPrintInvalidate(INT16 x, INT16 y, wchar_t const* str);
 void GPrintInvalidateF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
