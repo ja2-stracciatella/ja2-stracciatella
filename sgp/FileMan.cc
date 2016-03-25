@@ -137,6 +137,11 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
   return configFolderPath;
 }
 
+std::string FileMan::findConfigFile(std::string configFolder)
+{
+	return FileMan::joinPaths(configFolder, "ja2.ini");
+}
+
 
 /** Open file in the given folder in case-insensitive manner.
  * @return file descriptor or -1 if file is not found. */

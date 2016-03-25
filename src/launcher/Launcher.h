@@ -5,10 +5,14 @@
 
 class Launcher : public StracciatellaLauncher {
 public:
+    Launcher(std::string exePath);
+
     void show();
     int writeIniFile();
     int readFromIniOrDefaults();
 private:
+    std::string exePath;
+
     void populateChoices();
     void enablePredefinedResolutions();
     void enableCustomResolutions();
