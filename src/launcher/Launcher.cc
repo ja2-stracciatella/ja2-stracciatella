@@ -2,8 +2,12 @@
 #include "FL/Fl_Native_File_Chooser.H"
 #include <boost/foreach.hpp>
 #include <MicroIni/MicroIni.hpp>
+#include "slog/slog.h"
 
+#include "FileMan.h"
 #include "Launcher.h"
+
+#define LAUNCHER_TOPIC "Launcher"
 
 #define GAME_SECTION ""
 #define LAUNCHER_SECTION "launcher"
@@ -34,8 +38,12 @@ const char* predefinedVersions[] = {
         "RUSSIAN_GOLD"
 };
 
-const char* getJa2Directory() {
-    return "/home/stefan/.ja2/ja2.ini";
+std::string getJa2Directory() {
+    return FileMan::findConfigFile(FileMan::findConfigFolderAndSwitchIntoIt());
+}
+
+Launcher::Launcher(const std::string exePath) : StracciatellaLauncher() {
+    this->exePath = exePath;
 }
 
 void Launcher::show() {
@@ -52,6 +60,7 @@ void Launcher::show() {
 }
 
 int Launcher::writeIniFile() {
+    const std::string configPath = getJa2Directory();
     MicroIni::File file;
 
     file[GAME_SECTION][DATA_DIR_KEY] = dataDirectoryInput->value();
@@ -67,19 +76,25 @@ int Launcher::writeIniFile() {
     file[LAUNCHER_SECTION][FULLSCREEN_KEY] = fullscreenCheckbox->value() == 1 ? "true" : "false";
     file[LAUNCHER_SECTION][PLAY_SOUNDS_KEY] = playSoundsCheckbox->value() == 1 ? "true" : "false";
 
-    if(!file.save(getJa2Directory())) {
+    if(!file.save(configPath)) {
+        SLOGW(LAUNCHER_TOPIC, "Failed writing to file\" %s", configPath.c_str());
         return 1;
     }
+    SLOGD(LAUNCHER_TOPIC, "Succeeded writing to file %s", configPath.c_str());
 
     return 0;
 }
 
 int Launcher::readFromIniOrDefaults() {
+    const std::string configPath = getJa2Directory();
     MicroIni::File file;
     bool failedToRead = false;
 
-    if(!file.load(getJa2Directory())) {
+    if(!file.load(configPath)) {
         failedToRead = true;
+        SLOGW(LAUNCHER_TOPIC, "Failed reading from file %s", configPath.c_str());
+    } else {
+        SLOGD(LAUNCHER_TOPIC, "Succeeded reading from file %s", configPath.c_str());
     }
 
 
@@ -186,7 +201,8 @@ void Launcher::selectCustomResolution(Fl_Widget* btn, void* userdata) {
 }
 
 void Launcher::startExecutable(bool asEditor) {
-    std::string cmd("./ja2");
+    std::string cmd(this->exePath);
+
     cmd += std::string(" -resversion ") + std::string(gameVersionInput->value());
 
     cmd += std::string(" -res ");
