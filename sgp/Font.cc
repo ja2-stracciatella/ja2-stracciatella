@@ -17,7 +17,7 @@ typedef UINT8 GlyphIdx;
 
 
 // Destination printing parameters
-Font                FontDefault      = 0;
+SGPFont             FontDefault      = 0;
 static SGPVSurface* FontDestBuffer;
 static SGPRect      FontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16       FontForeground16 = 0;
@@ -25,7 +25,7 @@ static UINT16       FontBackground16 = 0;
 static UINT16       FontShadow16     = DEFAULT_SHADOW;
 
 // Temp, for saving printing parameters
-static Font         SaveFontDefault      = 0;
+static SGPFont      SaveFontDefault      = 0;
 static SGPVSurface* SaveFontDestBuffer   = NULL;
 static SGPRect      SaveFontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16       SaveFontForeground16 = 0;
@@ -84,9 +84,9 @@ void SetFontBackground(UINT8 ubBackground)
 
 
 /* Loads a font from an ETRLE file */
-Font LoadFontFile(const char *filename)
+SGPFont LoadFontFile(const char *filename)
 {
-	Font const font = AddVideoObjectFromFile(filename);
+	SGPFont const font = AddVideoObjectFromFile(filename);
 	if (!FontDefault) FontDefault = font;
 	return font;
 }
@@ -94,7 +94,7 @@ Font LoadFontFile(const char *filename)
 
 /* Deletes the video object of a particular font. Frees up the memory and
  * resources allocated for it. */
-void UnloadFont(Font const font)
+void UnloadFont(SGPFont const font)
 {
 	Assert(font);
 	DeleteVideoObject(font);
@@ -111,7 +111,7 @@ static UINT32 GetWidth(HVOBJECT const hSrcVObject, GlyphIdx const ssIndex)
 
 
 /* Returns the length of a string in pixels, depending on the font given. */
-INT16 StringPixLength(wchar_t const* const string, Font const font)
+INT16 StringPixLength(wchar_t const* const string, SGPFont const font)
 {
 	if (!string) return 0;
 
@@ -158,7 +158,7 @@ static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 
 
 /* Returns the height of the first character in a font. */
-UINT16 GetFontHeight(Font const font)
+UINT16 GetFontHeight(SGPFont const font)
 {
 	return GetHeight(font, 0);
 }
@@ -185,21 +185,21 @@ static GlyphIdx GetGlyphIndex(wchar_t const c)
 }
 
 
-UINT32 GetCharWidth(HVOBJECT Font, wchar_t c)
+UINT32 GetCharWidth(HVOBJECT SGPFont, wchar_t c)
 {
-	return GetWidth(Font, GetGlyphIndex(c));
+	return GetWidth(SGPFont, GetGlyphIndex(c));
 }
 
 
 /* Sets the current font number. */
-void SetFont(Font const font)
+void SetFont(SGPFont const font)
 {
 	Assert(font);
 	FontDefault = font;
 }
 
 
-void SetFontAttributes(Font const font, UINT8 const foreground, UINT8 const shadow, UINT8 const background)
+void SetFontAttributes(SGPFont const font, UINT8 const foreground, UINT8 const shadow, UINT8 const background)
 {
 	SetFont(font);
 	SetFontForeground(foreground);
@@ -240,7 +240,7 @@ void ReplaceFontBackBuffer(SGPVSurface* oldBackbuffer, SGPVSurface* newBackbuffe
   }
 }
 
-void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font const font, INT16* psNewX, INT16* psNewY)
+void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, SGPFont const font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to right justify the text
 	INT16 xp = sWidth - StringPixLength(pStr, font) + sLeft;
@@ -251,7 +251,7 @@ void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeig
 }
 
 
-void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font const font, INT16* psNewX, INT16* psNewY)
+void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, SGPFont const font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to center the text
 	INT16 xp = (sWidth - StringPixLength(pStr, font) + 1) / 2 + sLeft;
@@ -273,7 +273,7 @@ void gprintf(INT32 x, INT32 const y, wchar_t const* fmt, ...)
 	SGPVSurface::Lock l(FontDestBuffer);
 	UINT16* const buf   = l.Buffer<UINT16>();
 	UINT32  const pitch = l.Pitch();
-	Font    const font  = FontDefault;
+	SGPFont const font  = FontDefault;
 	for (wchar_t const* i = string; *i != L'\0'; ++i)
 	{
 		GlyphIdx const glyph = GetGlyphIndex(*i);
@@ -286,7 +286,7 @@ void gprintf(INT32 x, INT32 const y, wchar_t const* fmt, ...)
 UINT32 MPrintChar(INT32 const x, INT32 const y, wchar_t const c)
 {
 	GlyphIdx const glyph = GetGlyphIndex(c);
-	Font     const font  = FontDefault;
+	SGPFont  const font  = FontDefault;
 	{ SGPVSurface::Lock l(FontDestBuffer);
 		Blt8BPPDataTo16BPPBufferMonoShadowClip(l.Buffer<UINT16>(), l.Pitch(), font, x, y, glyph, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 	}
@@ -296,7 +296,7 @@ UINT32 MPrintChar(INT32 const x, INT32 const y, wchar_t const c)
 
 void MPrintBuffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 x, INT32 const y, wchar_t const* str)
 {
-	Font const font = FontDefault;
+	SGPFont const font = FontDefault;
 	for (; *str != L'\0'; ++str)
 	{
 		GlyphIdx const glyph = GetGlyphIndex(*str);

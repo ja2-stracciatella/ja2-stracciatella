@@ -116,7 +116,7 @@ INT16 GetActiveFieldID(void);
 //under no circumstances would a user want a different color for each field.  It follows the Win95 convention
 //that all text input boxes are exactly the same color scheme.  However, these colors can be set at anytime,
 //but will effect all of the colors.
-void SetTextInputFont(Font);
+void SetTextInputFont(SGPFont);
 void Set16BPPTextFieldColor( UINT16 usTextFieldColor );
 void SetTextInputRegularColors( UINT8 ubForeColor, UINT8 ubShadowColor );
 void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ubBackColor );

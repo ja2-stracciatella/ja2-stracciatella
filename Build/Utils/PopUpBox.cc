@@ -44,7 +44,7 @@ struct PopUpBox
 	UINT32 uiBoxMinWidth;
 	BOOLEAN fUpdated;
 	BOOLEAN fShowBox;
-	Font    font;
+	SGPFont font;
 
 	PopUpString* Text[MAX_POPUP_BOX_STRING_COUNT];
 	PopUpString* pSecondColumnString[MAX_POPUP_BOX_STRING_COUNT];
@@ -241,7 +241,7 @@ UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox* const box)
 }
 
 
-void SetBoxFont(PopUpBox* const box, Font const font)
+void SetBoxFont(PopUpBox* const box, SGPFont const font)
 {
 	box->font     = font;
 	box->fUpdated = FALSE;
@@ -254,7 +254,7 @@ void SetBoxSecondColumnMinimumOffset(PopUpBox* const box, const UINT32 uiWidth)
 }
 
 
-Font GetBoxFont(const PopUpBox* const box)
+SGPFont GetBoxFont(const PopUpBox* const box)
 {
 	return box->font;
 }
@@ -536,7 +536,7 @@ static void DrawBox(const PopUpBox* const box)
 
 static void DrawBoxText(const PopUpBox* const box)
 {
-	Font  const font = box->font;
+	SGPFont const font = box->font;
 	INT32 const tlx  = box->pos.x + box->uiLeftMargin;
 	INT32 const tly  = box->pos.y + box->uiTopMargin;
 	INT32 const brx  = box->pos.x + box->pos.w - box->uiRightMargin;
@@ -635,7 +635,7 @@ static void DrawBoxText(const PopUpBox* const box)
 
 void ResizeBoxToText(PopUpBox* const box)
 {
-	Font const font = box->font;
+	SGPFont const font = box->font;
 	UINT32 max_lw = 0; // width of left  column
 	UINT32 max_rw = 0; // width of right column
 	UINT i;

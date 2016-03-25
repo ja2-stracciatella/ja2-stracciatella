@@ -146,8 +146,8 @@ static CRDT_NODE* g_credits_tail;
 static INT32 giCurrentlySelectedFace;
 
 
-static Font  guiCreditScreenActiveFont;  // the font that is used
-static Font  guiCreditScreenTitleFont;   // the font that is used
+static SGPFont guiCreditScreenActiveFont;  // the font that is used
+static SGPFont guiCreditScreenTitleFont;   // the font that is used
 static UINT8 gubCreditScreenActiveColor; // color of the font
 static UINT8 gubCreditScreenTitleColor;  // color of a Title node
 
@@ -347,7 +347,7 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	CRDT_NODE* const pNodeToAdd = MALLOCZ(CRDT_NODE);
 
 	//Determine the font and the color to use
-	Font  uiFontToUse;
+	SGPFont  uiFontToUse;
 	UINT8 uiColorToUse;
 	if (uiFlags & CRDT_FLAG__TITLE)
 	{

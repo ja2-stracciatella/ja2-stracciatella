@@ -719,14 +719,14 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 
 static UINT32 GetWidthOfString(wchar_t const* const str)
 {
-	Font const bold_font   = FONT10ARIALBOLD;
-	Font const normal_font = FONT10ARIAL;
+	SGPFont const bold_font   = FONT10ARIALBOLD;
+	SGPFont const normal_font = FONT10ARIAL;
 	UINT32     max_w       = 0;
 	UINT32     w           = 0;
 	for (wchar_t const* i = str;; ++i)
 	{
 		wchar_t c = *i;
-		Font    font;
+		SGPFont font;
 		switch (c)
 		{
 			case L'\0':
@@ -753,15 +753,15 @@ static UINT32 GetWidthOfString(wchar_t const* const str)
 
 static void DisplayHelpTokenizedString(wchar_t const* const text, INT16 const sx, INT16 const sy)
 {
-	Font  const bold_font   = FONT10ARIALBOLD;
-	Font  const normal_font = FONT10ARIAL;
-	INT32 const h           = GetFontHeight(normal_font) + 1;
-	INT32       x           = sx;
-	INT32       y           = sy;
+	SGPFont const bold_font   = FONT10ARIALBOLD;
+	SGPFont const normal_font = FONT10ARIAL;
+	INT32   const h           = GetFontHeight(normal_font) + 1;
+	INT32         x           = sx;
+	INT32         y           = sy;
 	for (wchar_t const* i = text;; ++i)
 	{
 		wchar_t c = *i;
-		Font    font;
+		SGPFont font;
 		UINT8   foreground;
 		switch (c)
 		{

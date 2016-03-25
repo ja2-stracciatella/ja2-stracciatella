@@ -463,7 +463,7 @@ try
 catch (...) { return 0; }
 
 
-VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, Font const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, SGPFont const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
 {
 	INT16          const w = StringPixLength(text, font);
 	INT16          const h = GetFontHeight(font);

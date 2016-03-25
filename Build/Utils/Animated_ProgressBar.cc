@@ -34,9 +34,9 @@ struct PROGRESSBAR
 	UINT16 usPanelLeft, usPanelTop, usPanelRight, usPanelBottom;
 	UINT16 usColor, usLtColor, usDkColor;
 	wchar_t *swzTitle;
-	Font             usTitleFont;
+	SGPFont usTitleFont;
 	UINT8 ubTitleFontForeColor, ubTitleFontShadowColor;
-	Font    usMsgFont;
+	SGPFont usMsgFont;
 	UINT8 ubMsgFontForeColor, ubMsgFontShadowColor;
 	UINT32 fill_colour;
 	double rStart, rEnd;
@@ -111,7 +111,7 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 
 //Assigning a title for the panel will automatically position the text horizontally centered on the
 //panel and vertically centered from the top of the panel, to the top of the progress bar.
-void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, Font const font, UINT8 ubForeColor, UINT8 ubShadowColor)
+void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, SGPFont const font, UINT8 ubForeColor, UINT8 ubShadowColor)
 {
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
@@ -135,7 +135,7 @@ void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, Font const font, U
 
 //Unless you set up the attributes, any text you pass to SetRelativeStartAndEndPercentage will
 //default to FONT12POINT1 in a black color.
-void SetProgressBarMsgAttributes(UINT32 ubID, Font const font, UINT8 ubForeColor, UINT8 ubShadowColor)
+void SetProgressBarMsgAttributes(UINT32 ubID, SGPFont const font, UINT8 ubForeColor, UINT8 ubShadowColor)
 {
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
@@ -195,7 +195,7 @@ void SetRelativeStartAndEndPercentage(UINT8 const id, UINT32 const uiRelStartPer
 		wchar_t const* const title = bar->swzTitle;
 		if (title)
 		{ // Draw title
-			Font  const font = bar->usTitleFont;
+			SGPFont  const font = bar->usTitleFont;
 			INT32 const x    = (r + l - StringPixLength(title, font)) / 2; // Center
 			SetFontAttributes(font, bar->ubTitleFontForeColor, bar->ubTitleFontShadowColor);
 			MPrint(x, t + 3, title);
@@ -206,7 +206,7 @@ void SetRelativeStartAndEndPercentage(UINT8 const id, UINT32 const uiRelStartPer
 	{ // Draw message
 		INT32 const x    = bar->pos.x;
 		INT32 const y    = bar->pos.y + bar->pos.h;
-		Font  const font = bar->usMsgFont;
+		SGPFont  const font = bar->usMsgFont;
 		if (bar->flags & PROGRESS_USE_SAVEBUFFER)
 		{
 			UINT16 const h = GetFontHeight(font);
