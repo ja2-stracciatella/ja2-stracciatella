@@ -987,7 +987,7 @@ void GetTBMousePositionInput(UIEventKind* const puiNewEvent)
 					}
 					else
 					{
-						if ( ConfirmActionCancel( usMapPos, usOldMapPos ) )
+						if ( usMapPos != usOldMapPos )
 						{
 							// Switch event out of confirm mode
 							*puiNewEvent = CA_END_CONFIRM_ACTION;
@@ -3191,13 +3191,6 @@ BOOLEAN HandleUIReloading(SOLDIERTYPE* pSoldier)
 
 	return( FALSE );
 }
-
-
-BOOLEAN ConfirmActionCancel(UINT16 const usMapPos, UINT16 const usOldMapPos)
-{
-	return usMapPos != usOldMapPos;
-}
-
 
 static void ChangeCurrentSquad(INT32 iSquad)
 {

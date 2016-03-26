@@ -128,7 +128,6 @@ static ScreenID UIHandleILOSDebug(UI_EVENT*);
 static ScreenID UIHandleILevelNodeDebug(UI_EVENT*);
 
 static ScreenID UIHandleIETOnTerrain(UI_EVENT*);
-static ScreenID UIHandleIETEndTurn(UI_EVENT*);
 
 static ScreenID UIHandleMOnTerrain(UI_EVENT*);
 static ScreenID UIHandleMChangeToAction(UI_EVENT*);
@@ -222,7 +221,6 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 	M(UIEVENT_SINGLEEVENT, DONT_CHANGEMODE,     UIHandleILevelNodeDebug       ),
 
 	M(0,                   ENEMYS_TURN_MODE,    UIHandleIETOnTerrain          ),
-	M(UIEVENT_SINGLEEVENT, MOVE_MODE,           UIHandleIETEndTurn            ),
 
 	M(0,                   MOVE_MODE,           UIHandleMOnTerrain            ),
 	M(UIEVENT_SINGLEEVENT, ACTION_MODE,         UIHandleMChangeToAction       ),
@@ -2797,13 +2795,6 @@ void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance)
 	InternalGivingSoldierCancelServices(s, FALSE);
 	//gfPlotNewMovement   = TRUE;
 }
-
-
-static ScreenID UIHandleIETEndTurn(UI_EVENT* pUIEvent)
-{
-	return( GAME_SCREEN );
-}
-
 
 MouseMoveState GetCursorMovementFlags()
 {
