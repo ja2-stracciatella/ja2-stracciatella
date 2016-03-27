@@ -87,7 +87,7 @@ struct GAME_OPTIONS
 	BOOLEAN	fSciFi;
 	UINT8		ubDifficultyLevel;
 	BOOLEAN	fTurnTimeLimit;
-	BOOLEAN	fIronManMode;
+	UINT8	fIronManMode;
 };
 
 //This structure will contain general Ja2 settings  NOT individual game settings.
