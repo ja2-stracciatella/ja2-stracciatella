@@ -22,7 +22,7 @@ BOOLEAN gfNoScroll = FALSE;
 struct TextInputColors
 {
 	//internal values that contain all of the colors for the text editing fields.
-	Font    usFont;
+	SGPFont usFont;
 	UINT16 usTextFieldColor;
 	UINT8 ubForeColor, ubShadowColor;
 	UINT8 ubHiForeColor, ubHiShadowColor, ubHiBackColor;
@@ -542,7 +542,7 @@ static void SelectPrevField(void)
 //under no circumstances would a user want a different color for each field.  It follows the Win95 convention
 //that all text input boxes are exactly the same color scheme.  However, these colors can be set at anytime,
 //but will effect all of the colors.
-void SetTextInputFont(Font const font)
+void SetTextInputFont(SGPFont const font)
 {
 	pColors->usFont = font;
 }
@@ -888,7 +888,7 @@ static void SetActiveFieldMouse(MOUSE_REGION const* const r)
 
 static size_t CalculateCursorPos(INT32 const click_x)
 {
-	Font           const font     = pColors->usFont;
+	SGPFont const font     = pColors->usFont;
 	wchar_t const* const str      = gpActive->szString;
 	INT32                char_pos = 0;
 	size_t               i;
@@ -979,7 +979,7 @@ static void RenderActiveTextField(void)
 	RenderBackgroundField(n);
 
 	TextInputColors const& clrs  = *pColors;
-	Font            const  font  = clrs.usFont;
+	SGPFont         const  font  = clrs.usFont;
 	UINT16          const  h     = GetFontHeight(font);
 	INT32           const  y     = n->region.RegionTopLeftY + (n->region.RegionBottomRightY - n->region.RegionTopLeftY - h) / 2;
 	wchar_t const*  const  str   = n->szString;

@@ -827,7 +827,7 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 
 static void PrintConfined(INT32 const x, INT32 const y, INT32 const max_w, wchar_t const* const str)
 {
-	Font  font  = BLOCKFONT;
+	SGPFont  font  = BLOCKFONT;
 	INT32 w     = StringPixLength(str, font);
 	if (w >= max_w)
 	{

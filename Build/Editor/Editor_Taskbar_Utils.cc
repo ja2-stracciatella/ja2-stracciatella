@@ -457,7 +457,7 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 //This is a new function which duplicates the older "yellow info boxes" that
 //are common throughout the editor.  This draws the yellow box with the indentation
 //look.
-void DrawEditorInfoBox(const wchar_t* str, Font const font, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
+void DrawEditorInfoBox(const wchar_t* str, SGPFont const font, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
 {
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;

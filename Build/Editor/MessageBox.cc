@@ -24,7 +24,7 @@ static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason);
 
 void CreateMessageBox(wchar_t const* const msg)
 {
-	Font  const font   = gpLargeFontType1;
+	SGPFont  const font   = gpLargeFontType1;
 	INT16       w      = StringPixLength(msg, font) + 10;
 	INT16 const h      = 96;
 	if (w > 600) w = 600;

@@ -20,11 +20,11 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 
 //Assigning a title for the panel will automatically position the text horizontally centered on the
 //panel and vertically centered from the top of the panel, to the top of the progress bar.
-void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, Font, UINT8 ubForeColor, UINT8 ubShadowColor);
+void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, SGPFont, UINT8 ubForeColor, UINT8 ubShadowColor);
 
 //Unless you set up the attributes, any text you pass to SetRelativeStartAndEndPercentage will
 //default to FONT12POINT1 in a black color.
-void SetProgressBarMsgAttributes(UINT32 ubID, Font, UINT8 ubForeColor, UINT8 ubShadowColor);
+void SetProgressBarMsgAttributes(UINT32 ubID, SGPFont, UINT8 ubForeColor, UINT8 ubShadowColor);
 
 
 //When finished, the progress bar needs to be removed.

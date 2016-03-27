@@ -32,7 +32,7 @@ struct VIDEO_OVERLAY
 	BOOLEAN          fDeletionPending;
 	BACKGROUND_SAVE* background;
 	UINT16*          pSaveArea;
-	Font             uiFontID;
+	SGPFont          uiFontID;
 	INT16            sX;
 	INT16            sY;
 	UINT8            ubFontBack;
@@ -72,16 +72,13 @@ void             RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE*);
 void GDirtyPrint(INT16 x, INT16 y, wchar_t const* str);
 void GDirtyPrintF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
-void GPrintDirty(INT16 x, INT16 y, wchar_t const* str);
-void GPrintDirtyF(INT16 x, INT16 y, wchar_t const* fmt, ...);
-
 void GPrintInvalidate(INT16 x, INT16 y, wchar_t const* str);
 void GPrintInvalidateF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
 
 // VIDEO OVERLAY STUFF
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, INT16 w, INT16 h);
-VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, Font font, UINT8 foreground, UINT8 background, wchar_t const* text);
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT8 foreground, UINT8 background, wchar_t const* text);
 void ExecuteVideoOverlays(void);
 void SaveVideoOverlaysArea(SGPVSurface* src);
 
