@@ -311,7 +311,7 @@ static void EnterGIOScreen()
 		INT16  const x   = GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TOGGLE_BOX;
 		INT16  const y   = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
 		size_t def;
-		switch (gGameOptions.fIronManMode) {
+		switch (gGameOptions.ubGameSaveMode) {
 		  	case GIO_CAN_SAVE:   	def = GIO_CAN_SAVE; break;
 			default:
 			case GIO_IRON_MAN: 	def = GIO_IRON_MAN;  break;
@@ -742,7 +742,7 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 	gGameOptions.fTurnTimeLimit = GetCurrentTimedTurnsButtonSetting();
 #endif
 	// JA2Gold: iron man
-	gGameOptions.fIronManMode = GetCurrentGameSaveButtonSetting();
+	gGameOptions.ubGameSaveMode = GetCurrentGameSaveButtonSetting();
 
 	gubGIOExitScreen = INTRO_SCREEN;
 

@@ -160,7 +160,7 @@ static BYTE const* ExtractGameOptions(BYTE const* const data, GAME_OPTIONS& g)
 	EXTR_BOOL( d, g.fSciFi)
 	EXTR_U8(   d, g.ubDifficultyLevel)
 	EXTR_BOOL( d, g.fTurnTimeLimit)
-	EXTR_BOOL( d, g.fIronManMode)
+	EXTR_BOOL( d, g.ubGameSaveMode)
 	EXTR_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -174,7 +174,7 @@ static BYTE* InjectGameOptions(BYTE* const data, GAME_OPTIONS const& g)
 	INJ_BOOL( d, g.fSciFi)
 	INJ_U8(   d, g.ubDifficultyLevel)
 	INJ_BOOL( d, g.fTurnTimeLimit)
-	INJ_BOOL( d, g.fIronManMode)
+	INJ_BOOL( d, g.ubGameSaveMode)
 	INJ_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;

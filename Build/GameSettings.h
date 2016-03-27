@@ -80,6 +80,14 @@ enum
 	DIF_LEVEL_FOUR,
 };
 
+//Enums for the difficulty levels
+enum
+{
+	DIF_CAN_SAVE,
+	DIF_IRON_MAN,
+	DIF_DEAD_IS_DEAD,
+};
+
 
 struct GAME_OPTIONS
 {
@@ -87,7 +95,7 @@ struct GAME_OPTIONS
 	BOOLEAN	fSciFi;
 	UINT8		ubDifficultyLevel;
 	BOOLEAN	fTurnTimeLimit;
-	UINT8	fIronManMode;
+	UINT8	ubGameSaveMode;
 };
 
 //This structure will contain general Ja2 settings  NOT individual game settings.
