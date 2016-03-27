@@ -120,6 +120,7 @@ enum
 {
 	GIO_CAN_SAVE,
 	GIO_IRON_MAN,
+	GIO_DEAD_IS_DEAD,
 
 	NUM_SAVE_OPTIONS,
 };
@@ -309,7 +310,13 @@ static void EnterGIOScreen()
 	{ // JA2Gold: iron man buttons
 		INT16  const x   = GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TOGGLE_BOX;
 		INT16  const y   = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-		size_t const def = gGameOptions.fIronManMode ? GIO_IRON_MAN : GIO_CAN_SAVE;
+		size_t def;
+		switch (gGameOptions.fIronManMode) {
+		  	case GIO_CAN_SAVE:   	def = GIO_CAN_SAVE; break;
+			default:
+			case GIO_IRON_MAN: 	def = GIO_IRON_MAN;  break;
+			case GIO_DEAD_IS_DEAD:  def = GIO_DEAD_IS_DEAD; break;
+		}
 		MakeCheckBoxes(guiGameSaveToggles, lengthof(guiGameSaveToggles), x, y, BtnGameSaveTogglesCallback, def);
 	}
 
