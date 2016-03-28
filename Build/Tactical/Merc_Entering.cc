@@ -37,7 +37,7 @@
 #define		MAX_HELI_SCRIPT			30
 #define		ME_SCRIPT_DELAY			100
 #define		NUM_PER_HELI_RUN		6
-#define		REPEAT_HELI_MOVEAWAY		( STD_SCREEN_X / 8 )
+#define		REPEAT_HELI_MOVEAWAY		( (STD_SCREEN_X) / 7 )
 enum HeliStateEnums
 {
 	HELI_APPROACH,
