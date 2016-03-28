@@ -119,7 +119,8 @@ static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
   "NPC",
   "Campaign",
   "Loyalty",
-  "Auto Resolve"
+  "Auto Resolve",
+  "Corpses"
 };
 
 /************************************************************
