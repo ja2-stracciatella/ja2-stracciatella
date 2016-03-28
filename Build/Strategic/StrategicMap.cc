@@ -409,11 +409,11 @@ static void EndLoadScreen(void)
 		swprintf(str, lengthof(str), L"%c%d_b%d ENTER SECTOR TIME:  %d.%02d seconds.",
 							'A' + gWorldSectorY - 1, gWorldSectorX, gbWorldSectorZ, uiSeconds, uiHundreths );
 	}
-	ScreenMsg( FONT_YELLOW, MSG_TESTVERSION, str );
+	SLOGD(DEBUG_TAG_SMAP, str );
 	if( fStartNewFile )
 	{ //start new file
 		fp = fopen( "TimeResults.txt", "w" );
-		ScreenMsg(FONT_YELLOW, MSG_TESTVERSION, L"See TimeResults.txt for more detailed timings.");
+		SLOGD(DEBUG_TAG_SMAP, "See TimeResults.txt for more detailed timings.");
 		fStartNewFile = FALSE;
 	}
 	else

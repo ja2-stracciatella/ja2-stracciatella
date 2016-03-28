@@ -3116,10 +3116,14 @@ static void HandleModCtrl(UINT const key)
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				gfAutoAmbush ^= 1;
-				wchar_t const* const msg = gfAutoAmbush ?
-					L"Enemy ambush test mode enabled." :
-					L"Enemy ambush test mode disabled.";
-				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+				if(gfAutoAmbush)
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode enabled.");
+				}
+				else
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode disabled.");
+				}
 			}
 			break;
 
@@ -3131,7 +3135,7 @@ static void HandleModCtrl(UINT const key)
 			{
 				s->sBreathRed = 10000;
 				s->bBreath    = 100;
-				ScreenMsg(FONT_MCOLOR_RED, MSG_TESTVERSION, L"Vehicle refueled");
+				SLOGD(DEBUG_TAG_SMAP, "Vehicle refueled");
 
 				fTeamPanelDirty = TRUE;
 				fCharacterInfoPanelDirty = TRUE;
@@ -3194,10 +3198,14 @@ static void HandleModCtrl(UINT const key)
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				gfAutoAIAware ^= 1;
-				wchar_t const* const msg = gfAutoAIAware ?
-					L"Strategic AI awareness maxed." :
-					L"Strategic AI awareness normal.";
-				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+				if(gfAutoAIAware)
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness maxed.");
+				}
+				else
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness normal.");
+				}
 			}
 			break;
 	}
@@ -8160,24 +8168,26 @@ void DumpSectorDifficultyInfo(void)
 {
 	// NOTE: This operates on the selected map sector!
 	wchar_t wSectorName[ 128 ];
-
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel]);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Player Kills = %d", gStrategicStatus.usPlayerKills );
-
 	GetSectorIDString(sSelMapX, sSelMapY, (INT8)iCurrentMapSectorZ, wSectorName, lengthof(wSectorName), TRUE);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"SECTOR: %ls", wSectorName );
 
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Pyth. Distance From Meduna (0-20) = %d", GetPythDistanceFromPalace( sSelMapX, sSelMapY ) );
+	SLOGD(DEBUG_TAG_SMAP, "Playing Difficulty: %ls\tHighest Progress (0-100) = %d%%\n\
+												 Player Kills = %d\tSECTOR: %ls\n\
+												 Pyth. Distance From Meduna (0-20) = %d",
+												 gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel],
+												 HighestPlayerProgressPercentage(),
+												 gStrategicStatus.usPlayerKills,
+												 wSectorName, GetPythDistanceFromPalace( sSelMapX, sSelMapY ));
 
 	if ( ( gWorldSectorX == sSelMapX ) && ( gWorldSectorY == sSelMapY ) && ( gbWorldSectorZ == iCurrentMapSectorZ ) )
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Enemy Difficulty Factor (0 to 100) = %d%%", CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) );
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Avg Regular Enemy Exp. Level (2-6) = %d", 2 + ( CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) / 20 ) );
+		SLOGD(DEBUG_TAG_SMAP, "Enemy Difficulty Factor (0 to 100) = %d%%\n\
+													 Avg Regular Enemy Exp. Level (2-6) = %d",
+													CalcDifficultyModifier( SOLDIER_CLASS_ARMY),
+													2 + ( CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) / 20));
 	}
 	else
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"--Must load sector to calculate difficulty--" );
+		SLOGD(DEBUG_TAG_SMAP, "Must load sector to calculate difficulty");
 	}
 }
 #endif

@@ -50,9 +50,7 @@ BOOLEAN gfDisplayCoverValues = TRUE;
 static BOOLEAN gfDrawPathPoints = FALSE;
 #endif
 
-#ifdef PATHAI_SKIPLIST_DEBUG
-	#include "slog/slog.h"
-#endif
+#include "slog/slog.h"
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;
 BOOLEAN gfRecalculatingExistingPathCost = FALSE;
@@ -546,16 +544,12 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 	if (iOrigination < 0 || iOrigination > WORLD_MAX)
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
-		#endif
+		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
-		#endif
+		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (s->bLevel != ubLevel)

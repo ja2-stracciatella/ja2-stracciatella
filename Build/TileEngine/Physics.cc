@@ -1316,10 +1316,7 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 	{
 		(*pdMagForce) = dForce;
 	}
-
-#ifdef JA2TESTVERSION
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Number of integration: %d", iNumChecks );
-#endif
+	SLOGD(DEBUG_TAG_PHYSICS, "Number of integration: %d", iNumChecks );
 
 	return( vForce );
 }
@@ -1641,7 +1638,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 	if ( sInterGridNo != NOWHERE )
 	{
 		 // IF so, adjust target height, gridno....
-		 ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Through a window!" );
+		 SLOGD(DEBUG_TAG_PHYSICS, "Through a window!" );
 
 		 fThroughIntermediateGridNo = TRUE;
 	}
@@ -1873,9 +1870,7 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 		}
 
 		// Adjust position, force, angle
-#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Throw miss by: %d", bMissBy );
-#endif
+		SLOGD(DEBUG_TAG_PHYSICS, "Throw miss by: %d", bMissBy );
 
     // Default to max radius...
     bMaxRadius = 5;
@@ -2066,9 +2061,7 @@ static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 	// base it on...? CC? Dexterity?
 	ubChanceToCatch = 50 + EffectiveDexterity(pObject->target) / 2;
 
-#ifdef JA2TESTVERSION
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Chance To Catch: %d", ubChanceToCatch );
-#endif
+	SLOGD(DEBUG_TAG_PHYSICS, "Chance To Catch: %d", ubChanceToCatch );
 
 	pObject->fCatchCheckDone = TRUE;
 

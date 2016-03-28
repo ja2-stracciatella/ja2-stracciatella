@@ -1918,9 +1918,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			else
 			{
 				// error message here
-				#ifdef JA2BETAVERSION
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Action item to toggle door in gridno %d but there is none!", sGridNo );
-				#endif
+				SLOGW(DEBUG_TAG_HANDLEITEMS, "Action item to toggle door in gridno %d but there is none!", sGridNo );
 			}
 			break;
 		case ACTION_ITEM_UNLOCK_DOOR:

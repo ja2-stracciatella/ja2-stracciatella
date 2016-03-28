@@ -1502,13 +1502,13 @@ void ShowMapEdgepoints()
 
 	if (n_illegal1 == 0 && n_illegal2 == 0)
 	{
-		ScreenMsg(0, MSG_TESTVERSION, L"Showing display of map edgepoints");
+		SLOGD(DEBUG_TAG_SMAP, "Showing display of map edgepoints");
 	}
 	else
 	{
-		ScreenMsg(0, MSG_TESTVERSION, L"Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
+		SLOGD(DEBUG_TAG_SMAP, "Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
 	}
-	ScreenMsg(0, MSG_TESTVERSION, L"N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
+	SLOGD(DEBUG_TAG_SMAP, "N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
 			gus1stNorthEdgepointArraySize, gus2ndNorthEdgepointArraySize,
 			gus1stEastEdgepointArraySize,  gus2ndEastEdgepointArraySize,
 			gus1stSouthEdgepointArraySize, gus2ndSouthEdgepointArraySize,
@@ -1529,7 +1529,7 @@ static void HideMapEdgepoint(UINT16 const n, INT16 const* const array)
 
 void HideMapEdgepoints()
 {
-	ScreenMsg(0, MSG_TESTVERSION, L"Removing display of map edgepoints");
+	SLOGD(DEBUG_TAG_SMAP, "Removing display of map edgepoints");
 
 	HideMapEdgepoint(gus1stNorthEdgepointArraySize, gps1stNorthEdgepointArray);
 	HideMapEdgepoint(gus1stEastEdgepointArraySize,  gps1stEastEdgepointArray);

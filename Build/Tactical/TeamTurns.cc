@@ -650,9 +650,7 @@ static void StartInterrupt(void)
 
 		gTacticalStatus.ubCurrentTeam  = pSoldier->bTeam;
 
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Interrupt ( could be hidden )" );
-		#endif
+		SLOGD(DEBUG_TAG_TEAMTURN, "Interrupt ( could be hidden )" );
 
 		StartNPCAI(*pSoldier);
 	}

@@ -109,9 +109,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 	STRUCTURE* const structure = FindStructure(grid_no, STRUCTURE_OPENABLE);
 	if (!structure)
 	{
-#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle struct that does not exist at %d.", grid_no);
-#endif
+		SLOGW(DEBUG_TAG_TILES, "Told to handle struct that does not exist at %d.", grid_no);
 		return;
 	}
 

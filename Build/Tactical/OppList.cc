@@ -3651,12 +3651,10 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 					break;
 
 				default:
-					/*
 					if (noise_maker->bVisible == TRUE && bTeam == OUR_TEAM)
 					{
-						ScreenMsg(MSG_FONT_YELLOW, MSG_TESTVERSION, L"Handling noise from person not currently seen in player's public opplist");
+						SLOGD(DEBUG_TAG_OPPLIST, "Handling noise from person not currently seen in player's public opplist");
 					}
-					*/
 					break;
 			}
 

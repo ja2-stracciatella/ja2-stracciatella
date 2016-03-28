@@ -1789,7 +1789,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 				INT8   level;
 				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], map_pos, 0, 0, &grid_no, TRUE, &level, TRUE);
 			}
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Physics 100 times: %d", GetJA2Clock() - start);
+			SLOGD(DEBUG_TAG_TEAMTURN, "Physics 100 times: %d", GetJA2Clock() - start);
 		}
 #endif
 
@@ -2816,9 +2816,7 @@ static void SwitchHeadGear(bool dayGear)
 
 static void ObliterateSector()
 {
-#ifdef JA2BETAVERSION
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Obliterating Sector!");
-#endif
+	SLOGD(DEBUG_TAG_TEAMTURN, "Obliterating Sector!");
 	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		if (s->bNeutral || s->bSide == OUR_TEAM) continue;
@@ -2862,18 +2860,16 @@ static void CreateNextCivType(void)
 
 static void ToggleCliffDebug()
 {
-	wchar_t const* msg;
 	gTacticalStatus.uiFlags ^= DEBUGCLIFFS;
 	if (gTacticalStatus.uiFlags & DEBUGCLIFFS)
 	{
-		msg = L"Cliff debug ON.";
+		SLOGD(DEBUG_TAG_TEAMTURN, "Cliff debug ON.");
 	}
 	else
 	{
 		SetRenderFlags(RENDER_FLAG_FULL);
-		msg = L"Cliff debug OFF.";
+		SLOGD(DEBUG_TAG_TEAMTURN, "Cliff debug OFF.");
 	}
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, msg);
 }
 
 

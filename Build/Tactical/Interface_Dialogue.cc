@@ -3990,7 +3990,7 @@ add_log:
 				}
 				break;
 			default:
-				ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"No code support for NPC action %d", usActionCode );
+				SLOGW(DEBUG_TAG_INTERFACE, "No code support for NPC action %d", usActionCode );
 				break;
 		}
 	}
