@@ -297,8 +297,7 @@ BOOLEAN BeginAirRaid( )
 		// Determine how many dives this one will be....
 		gbMaxDives				= (INT8)( gAirRaidDef.bIntensity + Random( gAirRaidDef.bIntensity - 1 ) );
 
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Begin Air Raid." );
-
+		SLOGD(DEBUG_TAG_AIRRAID, "Begin Air Raid." );
 
 	return(TRUE);
 }
@@ -1352,9 +1351,7 @@ void EndAirRaid( )
 		//Simply reinsert the event, but the time is now.
 		//AddStrategicEvent( EVENT_GROUP_ARRIVAL, GetWorldTotalMin(), pGroup->ubGroupID );
 	}
-
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Ending Air Raid." );
-
+	SLOGD(DEBUG_TAG_AIRRAID, "Ending Air Raid." );
 }
 
 

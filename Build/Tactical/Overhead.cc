@@ -911,9 +911,7 @@ void ExecuteOverhead(void)
 											STRUCTURE* const pStructure = FindStructure(sGridNo, STRUCTURE_OPENABLE);
 											if (pStructure == NULL)
 											{
-#ifdef JA2BETAVERSION
-												ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Told to open struct at %d and none was found", sGridNo);
-#endif
+												SLOGW(DEBUG_TAG_OVERHEAD, "Told to open struct at %d and none was found", sGridNo);
 												fKeepMoving = FALSE;
 											}
 											else
@@ -995,9 +993,7 @@ void ExecuteOverhead(void)
 										// ATE: Pop up warning....
 										if (pSoldier->usPathDataSize != MAX_PATH_LIST_SIZE)
 										{
-#ifdef JA2BETAVERSION
-											ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %ls ( %d ) did not make merc get to dest .", pSoldier->name, pSoldier->ubID);
-#endif
+											SLOGD(DEBUG_TAG_OVERHEAD, "Path for %ls ( %d ) did not make merc get to dest.", pSoldier->name, pSoldier->ubID);
 										}
 
 										// In case this is an AI person with the path-stored flag set,
@@ -5428,12 +5424,10 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 
 		if ( pTarget->ubCivilianGroup && ( (pTarget->bTeam == OUR_TEAM) || pTarget->bNeutral ) )
 		{
-#ifdef JA2TESTVERSION
 			if (pTarget->uiStatusFlags & SOLDIER_PC)
 			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%ls is changing teams", pTarget->name);
+				SLOGD(DEBUG_TAG_OVERHEAD, "%ls is changing teams", pTarget->name);
 			}
-#endif
 			// member of a civ group, either recruited or neutral, so should
 			// change sides individually or all together
 
@@ -5887,9 +5881,7 @@ void RemoveManFromTeam(const INT8 bTeam)
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
 	if (!IsTeamActive(bTeam))
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[bTeam].bMenInSector);
-#endif
+		SLOGD(DEBUG_TAG_OVERHEAD, "Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[bTeam].bMenInSector);
 		return;
 	}
 	--gTacticalStatus.Team[bTeam].bMenInSector;

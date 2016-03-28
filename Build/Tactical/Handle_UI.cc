@@ -924,11 +924,11 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 
 			if( bReturnCode == MERC_HIRE_FAILED )
 			{
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Merc hire failed:  Either already hired or dislikes you." );
+				SLOGD(DEBUG_TAG_MERCHIRE, "Merc hire failed:  Either already hired or dislikes you." );
 			}
 			else if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
 			{
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Can't hire more than 20 mercs." );
+				SLOGD(DEBUG_TAG_MERCHIRE, "Can't hire more than 20 mercs." );
 			}
 			else
 			{

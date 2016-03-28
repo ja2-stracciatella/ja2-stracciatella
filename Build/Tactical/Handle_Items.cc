@@ -1472,7 +1472,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	if (*psGridNo == NOWHERE)
 	{
 		// Display warning.....
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Item %d was given invalid grid location %d for item pool. Please Report.", pObject->usItem, *psGridNo);
+		SLOGE(DEBUG_TAG_HANDLEITEMS, "Item %d was given invalid grid location %d for item pool. Please Report.", pObject->usItem, *psGridNo);
     *psGridNo = gMapInformation.sCenterGridNo;
 		//return -1;
 	}

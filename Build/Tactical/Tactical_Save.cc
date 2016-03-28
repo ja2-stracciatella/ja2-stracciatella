@@ -292,7 +292,7 @@ void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const b
 		{
 			wi->usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 			// Display warning.....
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", wi->o.usItem, ItemNames[wi->o.usItem]);
+			SLOGW(DEBUG_TAG_TACTSAVE, "Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", wi->o.usItem, ItemNames[wi->o.usItem]);
 		}
 	}
 
@@ -1179,17 +1179,14 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 cons
 		MemFree(pTotalSectorList);
 	}
 
-#ifdef JA2BETAVERSION
 	if (check_consistency)
 	{
 		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMapX, sMapY, bMapZ);
 		if (uiItemCount != uiReported)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"SynchronizeItemTempFile()  Error!  Reported %d, should be %d", uiReported, uiItemCount);
+			SLOGW(DEBUG_TAG_TACTSAVE, "SynchronizeItemTempFile() Reported %d, should be %d", uiReported, uiItemCount);
 		}
 	}
-#endif
-
 	SetNumberOfVisibleWorldItemsInSectorStructureForSector(sMapX, sMapY, bMapZ, uiItemCount);
 }
 

@@ -4196,7 +4196,7 @@ BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 		if (ani_frame >= as.hVideoObject->SubregionCount())
 		{
 			// Debug msg here....
-			//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Soldier Animation: Wrong Number of frames per number of objects: %d vs %d, %hs", as.uiNumFramesPerDir, as.hVideoObject->SubregionCount(), gAnimControl[s->usAnimState].zAnimStr);
+			SLOGW(DEBUG_TAG_SOLDIER, "Wrong Number of frames per number of objects: %d vs %d, %hs", as.uiNumFramesPerDir, as.hVideoObject->SubregionCount(), gAnimControl[s->usAnimState].zAnimStr);
 			ani_frame = 0;
 		}
 	}
@@ -7693,7 +7693,7 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 
       // Something gone funny here....
       usAnimState = pSoldier->usAnimState;
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Wrong desired stance given: %d, %d.", bNewStance, pSoldier->usAnimState );
+			SLOGW(DEBUG_TAG_SOLDIER, "Wrong desired stance given: %d, %d.", bNewStance, pSoldier->usAnimState );
 	}
 
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier,  usAnimState );

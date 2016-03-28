@@ -2622,7 +2622,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 	if ( usAnimSurface == INVALID_ANIMATION	)
 	{
 		// WE SHOULD NOT BE USING THIS ANIMATION
-		ScreenMsg(FONT_MCOLOR_RED, MSG_BETAVERSION, L"Invalid Animation File for Body %d, animation %hs.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
+		SLOGW(DEBUG_TAG_ANIMATIONS, "Invalid Animation File for Body %d, animation %hs.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
 		// Set index to FOUND_INVALID_ANIMATION
 		gubAnimSurfaceIndex[pSoldier->ubBodyType][usAnimState] = FOUND_INVALID_ANIMATION;
 		return( INVALID_ANIMATION_SURFACE );

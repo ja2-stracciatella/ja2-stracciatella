@@ -1907,9 +1907,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						else
 						{
 							// IF we are here - something is wrong - we should have a death animation here
-#ifdef JA2BETAVERSION
-							ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"Soldier Ani: GOTO Stance not chained properly: %d %d %d", ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState);
-#endif
+							SLOGD(DEBUG_TAG_SOLDIER, "Soldier Ani: GOTO Stance not chained properly: %d %d %d", ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState);
 							SoldierGotoStationaryStance(pSoldier);
 							return TRUE;
 						}

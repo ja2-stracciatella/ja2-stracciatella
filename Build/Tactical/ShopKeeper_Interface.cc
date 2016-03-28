@@ -1808,9 +1808,7 @@ void EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer )
 
 	if( gbSelectedArmsDealerID == -1 )
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to find Arms Dealer ID From Merc ID #%d", ubArmsDealer );
-		#endif
+		SLOGW(DEBUG_TAG_INTERFACE, "Failed to find Arms Dealer ID From Merc ID #%d", ubArmsDealer );
 		gfSKIScreenExit = TRUE;
 	}
 
@@ -4748,9 +4746,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 				}
 				else
 				{
-					#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to add repair item to ArmsDealerOfferArea.  AM-0");
-					#endif
+					SLOGW(DEBUG_TAG_INTERFACE, "Failed to add repair item to ArmsDealerOfferArea.");
 					return;
 				}
 			}
@@ -4849,9 +4845,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 				break;
 
 			default:
-				#ifdef JA2BETAVERSION
-					ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Invalid evaluation result of %d.  AM-0", uiEvalResult );
-				#endif
+				SLOGW(DEBUG_TAG_INTERFACE, "Invalid evaluation result of %d.", uiEvalResult );
 				break;
 		}
 

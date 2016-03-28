@@ -4982,14 +4982,10 @@ INT8 GetWatchedLocPoints( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
 	bLoc = FindWatchedLoc( ubID, sGridNo, bLevel );
 	if (bLoc != -1)
 	{
-		#ifdef JA2BETAVERSION
-			/*
-			if (gubWatchedLocPoints[ ubID ][ bLoc ] > 1)
-			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Soldier %d getting %d points for interrupt in watched location", ubID, gubWatchedLocPoints[ ubID ][ bLoc ] - 1 );
-			}
-			*/
-		#endif
+		if (gubWatchedLocPoints[ ubID ][ bLoc ] > 1)
+		{
+			SLOGD(DEBUG_TAG_OPPLIST, "Soldier %d getting %d points for interrupt in watched location", ubID, gubWatchedLocPoints[ ubID ][ bLoc ] - 1 );
+		}
 		// one loc point is worth nothing, so return number minus 1
 
 		// experiment with 1 loc point being worth 1 point

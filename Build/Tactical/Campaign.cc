@@ -76,7 +76,7 @@ void StatChange(SOLDIERTYPE& s, StatKind const stat, UINT16 const n_chances, Sta
 
 	if (s.bAssignment == ASSIGNMENT_POW)
 	{
-		ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"ERROR: StatChange: %ls improving stats while POW! stat %d", s.name, stat);
+		SLOGE(DEBUG_TAG_CAMPAIGN, "StatChange: %ls improving stats while POW! stat %d", s.name, stat);
 		return;
 	}
 
@@ -202,8 +202,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
       break;
 
     default:
-			// BETA message
-      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"ERROR: ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
+      SLOGE(DEBUG_TAG_CAMPAIGN, "ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
       return;
   }
 
@@ -1031,8 +1030,7 @@ static UINT16 SubpointsPerPoint(StatKind const ubStat, INT8 const bExpLevel)
       break;
 
     default:
-			// BETA message
-      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"SubpointsPerPoint: ERROR - Unknown ubStat %d", ubStat);
+      SLOGE(DEBUG_TAG_CAMPAIGN, "SubpointsPerPoint: Unknown ubStat %d", ubStat);
       return(100);
   }
 
