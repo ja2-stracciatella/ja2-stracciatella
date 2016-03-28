@@ -143,9 +143,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 		if ( pSoldier->bTeam != gTacticalStatus.ubCurrentTeam )
 		{
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"Turning off AI flag for %d because trying to act out of turn", pSoldier->ubID );
-			#endif
+			SLOGE(DEBUG_TAG_AI, "Turning off AI flag for %d because trying to act out of turn", pSoldier->ubID );
 			pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 			return;
 		}
@@ -1697,10 +1695,10 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			{
 				HandleInitialRedAlert(pSoldier->bTeam);
 			}
-			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Debug: AI radios your position!" );
+			SLOGD(DEBUG_TAG_AI, "AI radios your position!" );
 			// DROP THROUGH HERE!
 		case AI_ACTION_YELLOW_ALERT:          // tell friends opponent(s) heard
-			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Debug: AI radios about a noise!" );
+			SLOGD(DEBUG_TAG_AI, "Debug: AI radios about a noise!" );
 			DeductPoints(pSoldier,AP_RADIO,BP_RADIO);// pay for it!
 			RadioSightings(pSoldier,EVERYBODY,pSoldier->bTeam);      // about everybody
 			// action completed immediately, cancel it right away

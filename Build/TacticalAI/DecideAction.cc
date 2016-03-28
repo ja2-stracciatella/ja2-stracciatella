@@ -176,7 +176,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 							}
 							else
 							{
-								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+								SLOGW(DEBUG_TAG_AI, "Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
 								fDoUseDoor = FALSE;
 							}
 						}
@@ -296,7 +296,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 									else
 									{
 										// WTF?  Warning time!
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+										SLOGW(DEBUG_TAG_AI, "Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
 										fDoUseDoor = FALSE;
 									}
 								}
@@ -391,9 +391,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 
 					if (pSoldier->usActionData == NOWHERE)
 					{
-#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Civilian could not find path to map edge!" );
-#endif
+						SLOGD(DEBUG_TAG_AI, "Civilian could not find path to map edge!" );
 						DoneScheduleAction( pSoldier );
 						return( AI_ACTION_NONE );
 					}
