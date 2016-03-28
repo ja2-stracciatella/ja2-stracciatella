@@ -203,7 +203,9 @@ void EndTurn( UINT8 ubNextTeam )
 		{
 			s->bMoved = TRUE;
 			// Cancel merc movement if continue path was not used
-			if ( CheckForMercContMove(s)) {
+			const INT16 sAPCost = PtsToMoveDirection(s, guiPathingData[0]);
+			if (EnoughPoints(s, sAPCost, 0, FALSE)) 
+			{
 			  s->sFinalDestination=s->sGridNo;
 			  s->fNoAPToFinishMove = 0;
 			}
