@@ -677,7 +677,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Gun jammed!" );
 							}
 
-							SLOGD(DEBUG_TAG_SOLDIERANI, "Freeing up attacker - aborting start of attack due to burst gun jam");
+							SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - aborting start of attack due to burst gun jam");
 							FreeUpAttacker(pSoldier);
 						}
 						else if ( bWeaponJammed == 255 )
@@ -696,7 +696,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						pSoldier->bDoBurst = 1;
 
 						// ATE; Reduce it due to animation being stopped...
-						SLOGD(DEBUG_TAG_SOLDIERANI, "Freeing up attacker - Burst animation ended");
+						SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - Burst animation ended");
 						ReduceAttackBusyCount(pSoldier, FALSE);
 
 
@@ -1060,7 +1060,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					if ( bOKFireWeapon == FALSE )
 					{
-						SLOGD(DEBUG_TAG_SOLDIERANI, "Fire Weapon: Gun Cannot fire, code 470");
+						SLOGD(DEBUG_TAG_SOLDIER, "Fire Weapon: Gun Cannot fire, code 470");
 
 						// OK, SKIP x # OF FRAMES
 						// Skip 3 frames, ( a third ia added at the end of switch.. ) For a total of 4
@@ -1072,7 +1072,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						PlayLocationJA2Sample(pSoldier->sGridNo, S_DRYFIRE1, MIDVOLUME, 1);
 
 						// Free-up!
-						SLOGD(DEBUG_TAG_SOLDIERANI, "Freeing up attacker - gun failed to fire");
+						SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - gun failed to fire");
 						FreeUpAttacker(pSoldier);
 					}
 					else if ( bOKFireWeapon == 255 )
@@ -1290,7 +1290,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CODE: FORCE FREE ATTACKER
 					// Release attacker
-					SLOGD(DEBUG_TAG_SOLDIERANI, "Releasesoldierattacker, code 480");
+					SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 480");
 
 					ReleaseSoldiersAttacker( pSoldier );
 
@@ -1561,7 +1561,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//}
 					//else
 					//{
-					//	 SLOGD(DEBUG_TAG_SOLDIERANI, "CODE 493 Error, Pickup item action called but not setup" );
+					//	 SLOGD(DEBUG_TAG_SOLDIER, "CODE 493 Error, Pickup item action called but not setup" );
 					//}
 					break;
 
@@ -1579,7 +1579,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//}
 					//else
 					//{
-					//	 SLOGD(DEBUG_TAG_SOLDIERANI, "CODE 494 Error, OPen door action called but not setup" );
+					//	 SLOGD(DEBUG_TAG_SOLDIER, "CODE 494 Error, OPen door action called but not setup" );
 					//}
 					break;
 
@@ -1666,7 +1666,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 								default:
 									// IF we are here - something is wrong - we should have a death animation here
-									SLOGD(DEBUG_TAG_SOLDIERANI, "Death sequence needed for animation %d", pSoldier->usAnimState);
+									SLOGD(DEBUG_TAG_SOLDIER, "Death sequence needed for animation %d", pSoldier->usAnimState);
 									return TRUE;
 							}
 							ChangeSoldierState(pSoldier, state, 0, FALSE);
@@ -1692,7 +1692,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								gfPotentialTeamChangeDuringDeath = TRUE;
 
 								// Release attacker
-								SLOGD(DEBUG_TAG_SOLDIERANI, "Releasesoldierattacker, code 497 = check for death");
+								SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 497 = check for death");
 								ReleaseSoldiersAttacker( pSoldier );
 
 								// ATE: OK - the above call can potentially
@@ -1780,7 +1780,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if (pSoldier->fChangingStanceDueToSuppression)
 						{
 							pSoldier->fChangingStanceDueToSuppression = FALSE;
-							SLOGD(DEBUG_TAG_SOLDIERANI, "Freeing up attacker - end of suppression stance change");
+							SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - end of suppression stance change");
 							ReduceAttackBusyCount(pSoldier->suppressor, FALSE);
 						}
 
@@ -2211,14 +2211,14 @@ no_cry:
 				case 753:
 
 					// code: freeup attcker
-					SLOGD(DEBUG_TAG_SOLDIERANI, "Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )",
+					SLOGD(DEBUG_TAG_SOLDIER, "Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )",
 								gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState);
 					ReduceAttackBusyCount(pSoldier, FALSE);
 
           // ATE: Here, reduce again if creaturequeen tentical attack...
           if ( pSoldier->usAnimState == QUEEN_SWIPE )
           {
-					  SLOGD(DEBUG_TAG_SOLDIERANI, "Reducing attacker busy count for end of queen swipe");
+					  SLOGD(DEBUG_TAG_SOLDIER, "Reducing attacker busy count for end of queen swipe");
 					  ReduceAttackBusyCount(pSoldier, FALSE);
           }
 					break;
@@ -2258,7 +2258,7 @@ no_cry:
 
 					// INcrement attacker busy count....
 					gTacticalStatus.ubAttackBusyCount++;
-					SLOGD(DEBUG_TAG_SOLDIERANI, "Incrementing attacker busy count..., CODE FROM ANIMATION %hs ( %d ) : Count now %d",
+					SLOGD(DEBUG_TAG_SOLDIER, "Incrementing attacker busy count..., CODE FROM ANIMATION %hs ( %d ) : Count now %d",
 								gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount);
 					break;
 
@@ -2962,7 +2962,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
       if ( !pSoldier->fDoingExternalDeath )
       {
 			  // Release attacker
-				SLOGD(DEBUG_TAG_SOLDIERANI, "Releasesoldierattacker, code 497 = handle soldier death");
+				SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 497 = handle soldier death");
 			  ReleaseSoldiersAttacker( pSoldier );
       }
 		}
@@ -2979,7 +2979,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		// If we are here - something funny has heppende
 		// We either have played a death animation when we are not dead, or we are calling
 		// this ani code in an animation which is not a death animation
-		SLOGD(DEBUG_TAG_SOLDIERANI, "Death animation called when not dead..." );
+		SLOGD(DEBUG_TAG_SOLDIER, "Death animation called when not dead..." );
 	}
 
 	return( fBuddyJustDead );
@@ -2991,7 +2991,7 @@ void HandlePlayerTeamMemberDeathAfterSkullAnimation(SOLDIERTYPE* pSoldier)
 	// Release attacker
   if ( !pSoldier->fDoingExternalDeath )
   {
-	  SLOGD(DEBUG_TAG_SOLDIERANI, "Releasesoldierattacker, code 497 = handle soldier death");
+	  SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 497 = handle soldier death");
 	  ReleaseSoldiersAttacker( pSoldier );
   }
 
@@ -3021,7 +3021,7 @@ void CheckForAndHandleSoldierDeath(SOLDIERTYPE* pSoldier, BOOLEAN* pfMadeCorpse)
 
 		default:
 			// IF we are here - something is wrong - we should have an animation stop here
-			SLOGW(DEBUG_TAG_SOLDIERANI, "CODE 440 Error, Death STOP not handled" );
+			SLOGW(DEBUG_TAG_SOLDIER, "CODE 440 Error, Death STOP not handled" );
 			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);
@@ -3161,7 +3161,7 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 
 			default:
 				// We have missed something here - send debug msg
-				SLOGW(DEBUG_TAG_SOLDIERANI, "Generic hit not chained");
+				SLOGW(DEBUG_TAG_SOLDIER, "Generic hit not chained");
 				return;
 		}
 	}
@@ -3203,7 +3203,7 @@ BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 			case BLOODCAT_HIT:               state = BLOODCAT_DYING;        break;
 
 			default:
-				SLOGD(DEBUG_TAG_SOLDIERANI, "Death state %d has no death hit", pSoldier->usAnimState);
+				SLOGD(DEBUG_TAG_SOLDIER, "Death state %d has no death hit", pSoldier->usAnimState);
 				{
 					BOOLEAN fMadeCorpse;
 					CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
@@ -3388,7 +3388,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
-			SLOGD(DEBUG_TAG_SOLDIERANI, "unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
+			SLOGD(DEBUG_TAG_SOLDIER, "unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
 
 	}
 	// OTHERWISE, GOTO APPROPRIATE STOPANIMATION!
@@ -3420,7 +3420,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
-			SLOGW(DEBUG_TAG_SOLDIERANI, "unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
+			SLOGW(DEBUG_TAG_SOLDIER, "unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
 			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);

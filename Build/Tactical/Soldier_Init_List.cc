@@ -581,7 +581,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_SOLDIERLIST, "Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
+		SLOGD(DEBUG_TAG_SOLDIER, "Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
 		return false;
 	}
 }

@@ -51,8 +51,8 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
 		// provide more info!!
-		SLOGD(DEBUG_TAG_SOLDIERTILE, "Soldier path size %d, index %d", pSoldier->usPathDataSize, pSoldier->usPathIndex);
-		SLOGD(DEBUG_TAG_SOLDIERTILE, "Who is at blocked gridno: %d", SOLDIER2ID(WhoIsThere2(usNewGridNo, pSoldier->bLevel)));
+		SLOGD(DEBUG_TAG_SOLDIER, "Soldier path size %d, index %d", pSoldier->usPathDataSize, pSoldier->usPathIndex);
+		SLOGD(DEBUG_TAG_SOLDIER, "Who is at blocked gridno: %d", SOLDIER2ID(WhoIsThere2(usNewGridNo, pSoldier->bLevel)));
 
 		UINT16 usTemp = NO_TILE; // XXX HACK000E
 		for ( uiLoop = 0; uiLoop < pSoldier->usPathDataSize; uiLoop++ )
@@ -60,16 +60,16 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 			if ( uiLoop > pSoldier->usPathIndex )
 			{
 				usTemp = NewGridNo( usTemp, DirectionInc( (UINT8)pSoldier->usPathingData[ uiLoop ] ) );
-				SLOGD(DEBUG_TAG_SOLDIERTILE, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
 			}
 			else if ( uiLoop == pSoldier->usPathIndex )
 			{
 				usTemp = usNewGridNo;
-				SLOGD(DEBUG_TAG_SOLDIERTILE, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
 			}
 			else
 			{
-				SLOGD(DEBUG_TAG_SOLDIERTILE, "Soldier path[%d]: %d", uiLoop, pSoldier->usPathingData[uiLoop]);
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d", uiLoop, pSoldier->usPathingData[uiLoop]);
 			}
 		}
 	}
