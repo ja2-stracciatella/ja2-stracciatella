@@ -583,7 +583,7 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 
 	if (!ApplyMapChangesToMapTempFile::IsActive())
 	{
-		ScreenMsg(FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Called AddExitGridToMapTempFile() without holding ApplyMapChangesToMapTempFile");
+		SLOGD(DEBUG_TAG_SAVELOAD, "Called AddExitGridToMapTempFile() without holding ApplyMapChangesToMapTempFile");
 		return;
 	}
 
@@ -703,7 +703,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 	if( pStructure == NULL )
 	{
-//		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"SetOpenableStructStatusFromMapTempFile( %d, %d ) failed to find the openable struct.  DF 1.", uiMapIndex, fOpened );
+		SLOGD(DEBUG_TAG_SAVELOAD, "SetOpenableStructStatusFromMapTempFile( %d, %d ) failed to find the openable struct.", uiMapIndex, fOpened );
 		return;
 	}
 
