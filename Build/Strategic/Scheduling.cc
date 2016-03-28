@@ -65,7 +65,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 		OptimizeSchedules();
 		if( gubScheduleID > 32 )
 		{
-			AssertMsg( 0, "TOO MANY SCHEDULES POSTED!!!" );
+			SLOGW(DEBUG_TAG_SCHEDULER, "too many Schedules posted." );
 		}
 	}
 }
@@ -122,7 +122,7 @@ void DeleteSchedule( UINT8 ubScheduleID )
 
 	if (!gpScheduleList)
 	{
-		//ScreenMsg( 0, MSG_BETAVERSION, L"Attempting to delete schedule that doesn't exist -- KM : 2" );
+		SLOGW(DEBUG_TAG_SCHEDULER, "Attempting to delete schedule that doesn't exist");
 		return;
 	}
 
@@ -164,18 +164,14 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	pSchedule = GetSchedule( ubScheduleID );
 	if( !pSchedule )
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Schedule ID of %d not found.", ubScheduleID );
-		#endif
+		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback:  Schedule ID of %d not found.", ubScheduleID );
 		return;
 	}
 	//Attempt to access the soldier involved
 	SOLDIERTYPE* const pSoldier = pSchedule->soldier;
 	if (pSoldier == NULL)
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Illegal NULL soldier.");
-#endif
+		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback:  Illegal NULL soldier.");
 		return;
 	}
 
@@ -188,9 +184,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 
 	if ( !pSoldier->bActive )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Schedule callback:  Soldier isn't active.  Name is %ls.", pSoldier->name);
-#endif
+		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback:  Soldier isn't active.  Name is %ls.", pSoldier->name);
 	}
 
 	//Okay, now we have good pointers to the soldier and the schedule.
@@ -198,9 +192,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	fAutoProcess = FALSE;
 	if( guiCurrentScreen != GAME_SCREEN )
 	{
-		#ifdef JA2TESTVERSION
-			//ScreenMsg( FONT_RED, MSG_TESTVERSION, L"Schedule callback occurred outside of tactical -- Auto processing!" );
-		#endif
+		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback occurred outside of tactical -- Auto processing!" );
 		fAutoProcess = TRUE;
 	}
 	else
@@ -209,18 +201,14 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 		{
 			if( pSchedule->usTime[ iScheduleIndex ] == GetWorldMinutesInDay() )
 			{
-				#ifdef JA2TESTVERSION
-					//ScreenMsg( FONT_RED, MSG_TESTVERSION, L"Processing schedule on time -- AI processing!" );
-				#endif
+				SLOGD(DEBUG_TAG_SCHEDULER, "Processing schedule on time -- AI processing!" );
 				break;
 			}
 		}
 		if( iScheduleIndex == MAX_SCHEDULE_ACTIONS )
 		{
 			fAutoProcess = TRUE;
-			#ifdef JA2TESTVERSION
-				//ScreenMsg( FONT_RED, MSG_TESTVERSION, L"Possible timewarp causing schedule callback to occur late -- Auto processing!" );
-			#endif
+			SLOGD(DEBUG_TAG_SCHEDULER, "Possible timewarp causing schedule callback to occur late -- Auto processing!" );
 		}
 	}
 	if ( fAutoProcess )

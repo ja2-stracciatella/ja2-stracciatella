@@ -1388,7 +1388,7 @@ check_entry:
 				}
 				else
 				{
-					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls has NO entrypoints -- using precise center of map for %ls.", sector, s.name);
+					SLOGD(DEBUG_TAG_SMAP, "Sector %ls has NO entrypoints -- using precise center of map for %ls.", sector, s.name);
 					goto place_in_center;
 				}
 				wchar_t const* no_entry = 0;
@@ -1402,7 +1402,7 @@ check_entry:
 				}
 				if (no_entry)
 				{
-					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a %ls entrypoint -- substituting %ls entrypoint for %ls.", sector, no_entry, entry, s.name);
+					SLOGD(DEBUG_TAG_SMAP, "Sector %ls doesn't have a %ls entrypoint -- substituting %ls entrypoint for %ls.", sector, no_entry, entry, s.name);
 				}
 			}
 			break;

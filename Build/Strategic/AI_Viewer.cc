@@ -232,7 +232,7 @@ static BOOLEAN CreateAIViewer(void)
 			!FileExists("devtools/icons.sti")  ||
 			!FileExists("devtools/smcheckbox.sti"))
 	{
-		ScreenMsg( FONT_WHITE, MSG_BETAVERSION, L"AIViewer missing data.  Aborted." );
+		SLOGW(DEBUG_TAG_SAI, "AIViewer missing data.  Aborted.");
 		gfExitViewer = FALSE;
 		gfViewerEntry = TRUE;
 		return FALSE;
