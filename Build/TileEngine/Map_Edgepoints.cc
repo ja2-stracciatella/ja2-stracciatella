@@ -852,7 +852,7 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 			usArraySize = gus1stWestEdgepointArraySize;
 			break;
 		default:
-			AssertMsg( 0, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
+			SLOGE(DEBUG_TAG_ASSERTS, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
 			break;
 	}
 	if( !usArraySize )
@@ -894,7 +894,7 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 			break;
 
 		default:
-			AssertMsg(0, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
+			SLOGE(DEBUG_TAG_ASSERTS, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
 			psArray     = NULL;
 			usArraySize = 0;
 			break;
@@ -912,19 +912,19 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 		{
 			if (gbWorldSectorZ)
 			{
-				AssertMsg(0, String("Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+				SLOGE(DEBUG_TAG_ASSERTS, "Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints.", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
 			}
 			else
 			{
-				AssertMsg(0, String("Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)", gWorldSectorY + 'A' - 1, gWorldSectorX));
+				SLOGE(DEBUG_TAG_ASSERTS, "Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints.", gWorldSectorY + 'A' - 1, gWorldSectorX);
 			}
 		}
 		else switch (ubStrategicInsertionCode)
 		{
-			case INSERTION_CODE_NORTH: AssertMsg(0, "This map doesn't have any north mapedgepoints.  Possibly because there is no north entry point. (LC : 1)"); break;
-			case INSERTION_CODE_EAST:  AssertMsg(0, "This map doesn't have any east mapedgepoints.  Possibly because there is no east entry point. (LC : 1)");   break;
-			case INSERTION_CODE_SOUTH: AssertMsg(0, "This map doesn't have any south mapedgepoints.  Possibly because there is no south entry point. (LC : 1)"); break;
-			case INSERTION_CODE_WEST:  AssertMsg(0, "This map doesn't have any west mapedgepoints.  Possibly because there is no west entry point.  NOTE:  Teleportation always uses the west entrypoint.  Some maps shouldn't have west entrypoints. (LC : 1)"); break;
+			case INSERTION_CODE_NORTH: SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any north mapedgepoints.  Possibly because there is no north entry point."); break;
+			case INSERTION_CODE_EAST:  SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any east mapedgepoints.  Possibly because there is no east entry point.");   break;
+			case INSERTION_CODE_SOUTH: SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any south mapedgepoints.  Possibly because there is no south entry point."); break;
+			case INSERTION_CODE_WEST:  SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any west mapedgepoints.  Possibly because there is no west entry point. NOTE: Teleportation always uses the west entrypoint. Some maps shouldn't have west entrypoints."); break;
 		}
 	}
 #endif
@@ -1021,7 +1021,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 
 	if( gsReservedIndex >= 20 )
 	{ //Everything is reserved.
-		AssertMsg( 0, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
+		SLOGE(DEBUG_TAG_ASSERTS, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
 	{
@@ -1140,7 +1140,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 
 	if( gsReservedIndex >= 20 )
 	{ //Everything is reserved.
-		AssertMsg( 0, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
+		SLOGE(DEBUG_TAG_ASSERTS, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
 	{

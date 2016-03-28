@@ -1462,7 +1462,7 @@ static void PrintEnemyPopTable(void)
 				case PURSUIT:					ubEnemyType = ENEMY_TYPE_ASSAULT;					break;
 
 				default:
-					AssertMsg( 0, String( "Unknown moving group intention %d", pGroup->pEnemyGroup->ubIntention ) );
+					SLOGE(DEBUG_TAG_ASSERTS, "Unknown moving group intention %d", pGroup->pEnemyGroup->ubIntention);
 					continue;
 			}
 

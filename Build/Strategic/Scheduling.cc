@@ -916,7 +916,7 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 		OptimizeSchedules();
 		if( gubScheduleID == 255 )
 		{
-			AssertMsg( 0, "TOO MANY SCHEDULES POSTED!!!" );
+			SLOGE(DEBUG_TAG_ASSERTS, "Too many schedules posted" );
 		}
 	}
 

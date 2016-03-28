@@ -1673,7 +1673,7 @@ static void CreateAutoResolveInterface(void)
 		}
 		else
 		{
-			AssertMsg(0, "Attempting to illegally create a militia soldier.");
+			SLOGE(DEBUG_TAG_ASSERTS, "Attempting to illegally create a militia soldier.");
 			s   = 0;
 			idx = 0;
 		}
@@ -3173,8 +3173,8 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 		}
 		if( !IsBattleOver() )
 		{
-			AssertMsg( 0, String("***Please send PRIOR save and screenshot of this message***  iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
-				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence) );
+			SLOGE(DEBUG_TAG_ASSERTS, "Please send PRIOR save and screenshot of this message. iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
+				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence);
 		}
 	}
 	else
@@ -3202,7 +3202,7 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 			iAvailableTargets--;
 		}
 	}
-	AssertMsg( 0, "Error in ChooseTarget logic for choosing enemy target." );
+	SLOGE(DEBUG_TAG_ASSERTS, "Error in ChooseTarget logic for choosing enemy target." );
 	return NULL;
 }
 
@@ -4097,7 +4097,7 @@ static void ProcessBattleFrame(void)
 				}
 			}
 			else
-				AssertMsg( 0, "Logic error in ProcessBattleFrame()" );
+				SLOGE(DEBUG_TAG_ASSERTS, "Logic error in ProcessBattleFrame()" );
 			//Apply damage and play miss/hit sounds if delay between firing and hit has expired.
 			if( !(pAttacker->uiFlags & CELL_RETREATED ) )
 			{

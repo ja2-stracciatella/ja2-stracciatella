@@ -920,7 +920,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 	}
 	else
 	{
-		AssertMsg(0, "ERROR!!	Flag not is Switch statement");
+		SLOGE(DEBUG_TAG_ASSERTS, "Flag not is Switch statement");
 	}
 
 	//Create an array of objects from the mercs inventory

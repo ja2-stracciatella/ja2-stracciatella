@@ -619,7 +619,7 @@ static INT32 ChooseHairColor(SOLDIERTYPE* pSoldier, INT32 skin)
 			}
 			break;
 		default:
-			AssertMsg( 0, "Skin type not accounted for." );
+			SLOGE(DEBUG_TAG_ASSERTS, "Skin type not accounted for." );
 			break;
 	}
 	if( pSoldier->ubBodyType == CRIPPLECIV )
@@ -656,7 +656,7 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 			SET_PALETTEREP_ID( pSoldier->SkinPal,  "BLACKSKIN" );
 			break;
 		default:
-			AssertMsg( 0, "Skin type not accounted for." );
+			SLOGE(DEBUG_TAG_ASSERTS, "Skin type not accounted for." );
 			break;
 	}
 
@@ -669,7 +669,7 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 		case WHITEHEAD: SET_PALETTEREP_ID( pSoldier->HeadPal, "WHITEHEAD" ); break;
 		case BLONDEHEAD:SET_PALETTEREP_ID( pSoldier->HeadPal, "BLONDHEAD" ); break;
 		case REDHEAD:   SET_PALETTEREP_ID( pSoldier->HeadPal, "REDHEAD"   ); break;
-		default:  AssertMsg( 0, "Hair type not accounted for.");						 break;
+		default:  SLOGE(DEBUG_TAG_ASSERTS, "Hair type not accounted for.");						 break;
 	}
 
 	// OK, After skin, hair we could have a forced color scheme.. use here if so

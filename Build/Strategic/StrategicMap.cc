@@ -1607,7 +1607,7 @@ static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 cons
 			EXITGRID ExitGrid;
 			if (!GetExitGrid(additional_data, &ExitGrid))
 			{
-				AssertMsg(0, "No valid Exit grid can be found when one was expected: SetInsertionDataFromAdjacentMoveDirection.");
+				SLOGE(DEBUG_TAG_ASSERTS, "No valid Exit grid can be found when one was expected: SetInsertionDataFromAdjacentMoveDirection.");
 			}
 			s.ubStrategicInsertionCode        = INSERTION_CODE_GRIDNO;
 			s.usStrategicInsertionData        = ExitGrid.usGridNo;
@@ -1808,7 +1808,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		// Take directions from exit grid info!
 		if ( !GetExitGrid( sAdditionalData, &ExitGrid ) )
 		{
-			AssertMsg( 0, String( "Told to use exit grid at %d but one does not exist", sAdditionalData ) );
+			SLOGE(DEBUG_TAG_ASSERTS, "Told to use exit grid at %d but one does not exist", sAdditionalData);
 		}
 
 		gsAdjacentSectorX				= ExitGrid.ubGotoSectorX;
@@ -1840,7 +1840,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 					}
 					else
 					{
-						AssertMsg(0, "Failed to get good exit location for adjacentmove");
+						SLOGE(DEBUG_TAG_ASSERTS, 	"Failed to get good exit location for adjacentmove");
 					}
 
 					EVENT_GetNewSoldierPath( curr->pSoldier, sGridNo, WALKING );
@@ -1859,7 +1859,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 						}
 						else
 						{
-							AssertMsg(0, "Failed to get good exit location for adjacentmove");
+							SLOGE(DEBUG_TAG_ASSERTS, "Failed to get good exit location for adjacentmove");
 						}
 
 						// Don't worry about walk off screen, just stay at gridno...

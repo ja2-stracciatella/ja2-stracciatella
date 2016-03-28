@@ -111,7 +111,7 @@ static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 			gMapInformation.sSouthGridNo == -1 &&
 			gMapInformation.sWestGridNo == -1 )
 	{
-		AssertMsg( 0, "Map has no entry points at all.  Can't generate edge points.  LC:1" );
+		SLOGE(DEBUG_TAG_ASSERTS, "Map has no entry points at all.  Can't generate edge points." );
 	}
 	if( gMapInformation.sNorthGridNo	!= -1 && !gps1stNorthEdgepointArray	||
 			gMapInformation.sEastGridNo		!= -1 && !gps1stEastEdgepointArray		||
@@ -128,19 +128,19 @@ static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 		{
 			case INSERTION_CODE_NORTH:
 				if( !gps1stNorthEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 			case INSERTION_CODE_EAST:
 				if( !gps1stEastEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 			case INSERTION_CODE_SOUTH:
 				if( !gps1stSouthEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 			case INSERTION_CODE_WEST:
 				if( !gps1stWestEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 		}
 		return;
@@ -167,7 +167,7 @@ static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 	}
 	else
 	{
-		AssertMsg( 0, "No maps edgepoints at all! KM, LC : 1" );
+		SLOGE(DEBUG_TAG_ASSERTS, "No maps edgepoints at all!" );
 	}
 }
 

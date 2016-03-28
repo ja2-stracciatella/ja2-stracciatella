@@ -3687,7 +3687,7 @@ static void RequestHighPriorityGarrisonReinforcements(INT32 iGarrisonID, UINT8 u
 				}
 				else
 				{
-					AssertMsg( 0, "Strategic AI group transfer error.  KM : 0" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Strategic AI group transfer error." );
 					return;
 				}
 			}

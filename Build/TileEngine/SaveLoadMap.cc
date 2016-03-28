@@ -220,7 +220,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 				break;
 
 			default:
-				AssertMsg( 0, "ERROR!  Map Type not in switch when loading map changes from temp file");
+				SLOGE(DEBUG_TAG_ASSERTS, "Map Type not in switch when loading map changes from temp file");
 				break;
 		}
 

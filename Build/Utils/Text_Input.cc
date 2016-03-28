@@ -354,7 +354,7 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText
 	}
 	else
 	{
-		AssertMsg(0, String("Attempting to illegally set text into user field %d", curr->ubID));
+		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to illegally set text into user field %d", curr->ubID);
 	}
 }
 
@@ -377,7 +377,7 @@ void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
 	}
 	else
 	{
-		AssertMsg(0, String("Attempting to illegally set text into user field %d", curr->ubID));
+		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to illegally set text into user field %d", curr->ubID);
 	}
 }
 
