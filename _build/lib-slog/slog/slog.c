@@ -30,6 +30,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 #if defined(_MSC_VER)
   /* Visual Studio */
@@ -228,6 +229,10 @@ void SLOG_LogMessage(SLOGLevel level, SLOGTopics tag, const char *format, ...)
     {
       fputs(buf, s_logFile);
       fflush(s_logFile);
+    }
+    if (tag == DEBUG_TAG_ASSERTS)
+    {
+      abort();
     }
   }
 }
