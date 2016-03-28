@@ -3527,7 +3527,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			}
 			break;
 		default:
-			ScreenMsg( FONT_RED, MSG_DEBUG, L"QueenAI failed to handle action code %d.", usActionCode );
+			SLOGD(DEBUG_TAG_SAI, "QueenAI failed to handle action code %d.", usActionCode );
 			break;
 	}
 }

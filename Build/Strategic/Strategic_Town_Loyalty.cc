@@ -30,7 +30,7 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "FileMan.h"
-
+#include "slog/slog.h"
 
 // the max loyalty rating for any given town
 #define MAX_LOYALTY_VALUE 100
@@ -492,7 +492,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 			iLoyaltyChange /= 100;
 
 			// debug message
-			ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"You're being blamed for a death you didn't cause!");
+			SLOGD(DEBUG_TAG_LOYALTY, "You're being blamed for a death you didn't cause!");
 		}
 	}
 
@@ -505,7 +505,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 			fIncrement = FALSE;
 
 			// debug message
-			ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Civilian killed by friendly forces.");
+			SLOGD(DEBUG_TAG_LOYALTY, "Civilian killed by friendly forces.");
 			break;
 
 		case ENEMY_TEAM:
@@ -516,7 +516,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				fIncrement = TRUE;
 
 				// debug message
-				ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Enemy soldiers murdered a civilian. Town loyalty increases");
+				SLOGD(DEBUG_TAG_LOYALTY, "Enemy soldiers murdered a civilian. Town loyalty increases");
 			}
 			else
 			{
@@ -528,7 +528,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				fIncrement = FALSE;
 
 				// debug message
-				ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Town holds you responsible for murder by enemy.");
+				SLOGD(DEBUG_TAG_LOYALTY, "Town holds you responsible for murder by enemy.");
 			}
 			break;
 
@@ -544,7 +544,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				fIncrement = FALSE;
 
 				// debug message
-				ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Town holds you responsible for murder by rebels.");
+				SLOGD(DEBUG_TAG_LOYALTY, "Town holds you responsible for murder by rebels.");
 			}
 			break;
 
@@ -704,7 +704,7 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 			--uiNewTotal;
 			wi->fExists = FALSE;
 
-			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
+			SLOGD(DEBUG_TAG_LOYALTY, "%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
 		}
 
 		// only save if something was stolen
@@ -723,7 +723,7 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 			if (wi->bVisible != VISIBLE) continue;
 			if (Random(100) >= ubChance) continue;
 
-			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
+			SLOGD(DEBUG_TAG_LOYALTY, "%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
 			RemoveItemFromPool(wi);
 		}
 	}

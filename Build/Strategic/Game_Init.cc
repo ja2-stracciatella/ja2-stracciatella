@@ -95,10 +95,7 @@ static void InitNPCs(void)
 				p.bSectorZ = 0;
 				break;
 		}
-
-#ifdef JA2TESTVERSION
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"Skyrider in %c %d", 'A' + p.sSectorY - 1, p.sSectorX);
-#endif
+		SLOGD(DEBUG_TAG_INIT, "Skyrider in %c %d", 'A' + p.sSectorY - 1, p.sSectorX);
 		// use alternate map, with Skyrider's shack, in this sector
 		SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
 	}
@@ -153,10 +150,7 @@ static void InitNPCs(void)
 				p.bSectorZ = 0;
 				break;
 		}
-
-#ifdef JA2TESTVERSION
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
-#endif
+		SLOGD(DEBUG_TAG_INIT, "%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
 
 		// use alternate map in this sector
 		//SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
@@ -189,10 +183,7 @@ static void InitNPCs(void)
 					p.bSectorZ = 0;
 					break;
 			}
-
-#ifdef JA2TESTVERSION
-			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
-#endif
+			SLOGD(DEBUG_TAG_INIT, "%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
 
 			// use alternate map in this sector
 			SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;

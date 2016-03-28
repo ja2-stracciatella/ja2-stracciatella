@@ -942,7 +942,7 @@ void PrepareLoadedSector()
 		CalculateNonPersistantPBIInfo();
 	}
 
-	ScreenMsg( FONT_YELLOW, MSG_DEBUG, L"Current Time is: %d", GetWorldTotalMin() );
+	SLOGD(DEBUG_TAG_SMAP, "Current Time is: %d", GetWorldTotalMin() );
 
 	AllTeamsLookForAll( TRUE );
 }
