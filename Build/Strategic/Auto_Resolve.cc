@@ -74,6 +74,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 //#define INVULNERABILITY
 
@@ -544,9 +545,7 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 			break;
 		default:
 			//shouldn't happen
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Autoresolving with entering enemy sector code %d -- illegal KM:1", gubEnemyEncounterCode );
-			#endif
+			SLOGE(DEBUG_TAG_AUTORESOLVE, "Autoresolving with entering enemy sector code %d -- illegal", gubEnemyEncounterCode );
 			break;
 	}
 }
@@ -1874,9 +1873,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			case SOLDIER_CLASS_REG_MILITIA:   current_rank = REGULAR_MILITIA; break;
 			case SOLDIER_CLASS_ELITE_MILITIA: current_rank = ELITE_MILITIA;   break;
 			default:
-#ifdef JA2BETAVERSION
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
-#endif
+				SLOGE(DEBUG_TAG_AUTORESOLVE, "Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
 				break;
 		}
 		if (delete_for_good)

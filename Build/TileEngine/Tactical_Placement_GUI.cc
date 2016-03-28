@@ -659,7 +659,7 @@ static void KillTacticalPlacementGUI(void)
 	#ifdef JA2BETAVERSION
 	if( gfChangedEntrySide )
 	{
-		ScreenMsg( FONT_RED, MSG_ERROR, L"Substituted different entry side due to invalid entry points or map edgepoints.  KM, LC : 1" );
+		SLOGE(DEBUG_TAG_INTERFACE, "Substituted different entry side due to invalid entry points or map edgepoints.");
 	}
 	#endif
 }

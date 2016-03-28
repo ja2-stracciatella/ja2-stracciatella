@@ -4322,13 +4322,10 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const 
 		volume < 12 ? 2 : // 8-11: loud noise
 		3;                // 12+:  very loud noise
 
-#ifdef JA2BETAVERSION
 	if (noise_maker && s->bTeam == OUR_TEAM && s->bTeam == noise_maker->bTeam)
 	{
-		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"ERROR! TAKE SCREEN CAPTURE AND TELL CAMFIELD NOW!");
-		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d", s->name, s->ubID, noise_maker->name, noise_maker->ubID, sGridNo, level, noise_type);
+		SLOGE(DEBUG_TAG_OPPLIST, "%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d", s->name, s->ubID, noise_maker->name, noise_maker->ubID, sGridNo, level, noise_type);
 	}
-#endif
 
 	/* display a message about a noise, e.g. Sidney hears a loud splash from/to?
 	 * the north. */

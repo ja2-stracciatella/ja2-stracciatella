@@ -1298,9 +1298,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 		}
 		if( !fQueen )
 		{
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Couldn't place the queen." );
-			#endif
+			SLOGE(DEBUG_TAG_SOLDIER, "Couldn't place the queen.");
 		}
 	}
 

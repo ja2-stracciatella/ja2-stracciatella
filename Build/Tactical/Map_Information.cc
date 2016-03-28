@@ -330,9 +330,7 @@ static void UpdateOldVersionMap(void)
 	{
 		if( gfEditMode )
 		{
-			#ifdef JA2TESTVERSION
-				ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Currently loaded map is corrupt!  Allowing the map to load anyway!" );
-			#endif
+			SLOGE(DEBUG_TAG_SAVELOAD, "Currently loaded map is corrupt! Allowing the map to load anyway!" );
 		}
 		else
 		{

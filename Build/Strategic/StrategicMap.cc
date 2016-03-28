@@ -920,10 +920,8 @@ void PrepareLoadedSector()
 		}
 		else
 		{
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Ambush aborted in sector %c%d -- no center point in map.  LC:1",
+			SLOGE(DEBUG_TAG_SMAP, "Ambush aborted in sector %c%d -- no center point in map.",
 					gWorldSectorY + 'A' - 1, gWorldSectorX );
-			#endif
 		}
 	}
 
@@ -1418,7 +1416,7 @@ check_entry:
 						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				SLOGE(DEBUG_TAG_SMAP, "Main edgepoint search failed for %ls -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1432,7 +1430,7 @@ check_entry:
 						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				SLOGE(DEBUG_TAG_SMAP, "Isolated edgepoint search failed for %ls -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}

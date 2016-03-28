@@ -970,9 +970,7 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 				break;
 
 			default:
-				#ifdef JA2BETAVERSION
-					ScreenMsg( FONT_RED, MSG_ERROR, L"Attempting to check if mine is clear but mine index is invalid (%d).", ubMineIndex );
-				#endif
+				SLOGE(DEBUG_TAG_SMAP, "Attempting to check if mine is clear but mine index is invalid (%d).", ubMineIndex );
 				break;
 		}
 	}
@@ -1158,9 +1156,7 @@ BOOLEAN PrepareCreaturesForBattle()
 			ubAdultFemalePercentage = 20;
 			break;
 		default:
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Invalid creature habitat ID of %d for PrepareCreaturesForBattle.  Ignoring...", ubCreatureHabitat );
-			#endif
+			SLOGE(DEBUG_TAG_SMAP, "Invalid creature habitat ID of %d for PrepareCreaturesForBattle.  Ignoring...", ubCreatureHabitat );
 			return FALSE;
 	}
 
@@ -1336,9 +1332,7 @@ void LoadCreatureDirectives(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 		case 3:		InitLairAlma();			break;
 		case 4:		InitLairGrumm();		break;
 		default:
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Invalid restoration of creature lair ID of %d.  Save game potentially hosed.", giLairID );
-			#endif
+			SLOGE(DEBUG_TAG_SMAP, "Invalid restoration of creature lair ID of %d.  Save game potentially hosed.", giLairID );
 			break;
 	}
 }

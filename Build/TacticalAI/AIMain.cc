@@ -391,9 +391,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 #else
 
 			// If we are in beta version, also report message!
-#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"Aborting AI deadlock for %d. Please sent DEBUG.TXT file and SAVE.", pSoldier->ubID );
-#endif
+			SLOGE(DEBUG_TAG_AI, "Aborting AI deadlock for %d. Please sent LOG file and SAVE.", pSoldier->ubID );
 			// just abort
 			EndAIDeadlock();
 			if ( !(pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
@@ -1506,7 +1504,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					// Check if we were told to move by NPC stuff
 					if ( pSoldier->sAbsoluteFinalDestination != NOWHERE && !(gTacticalStatus.uiFlags & INCOMBAT) )
 					{
-						//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"AI %ls failed to get path for dialogue-related move!", pSoldier->name);
+						SLOGE(DEBUG_TAG_AI, "AI %ls failed to get path for dialogue-related move!", pSoldier->name);
 
 						// Are we close enough?
 						if ( !ACTING_ON_SCHEDULE( pSoldier ) && SpacesAway( pSoldier->sGridNo, pSoldier->sAbsoluteFinalDestination ) < 4 )
@@ -1927,9 +1925,7 @@ void HandleInitialRedAlert(INT8 bTeam)
 {
 	if (!gTacticalStatus.Team[bTeam].bAwareOfOpposition)
  {
-	#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Enemies on team %d prompted to go on RED ALERT!", bTeam );
-	#endif
+	SLOGE(DEBUG_TAG_AI, "Enemies on team %d prompted to go on RED ALERT!", bTeam );
  }
 
 	// if there is a stealth mission in progress here, and a panic trigger exists
