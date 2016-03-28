@@ -118,7 +118,8 @@ static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
   "Queen Command",
   "NPC",
   "Campaign",
-  "Loyalty"
+  "Loyalty",
+  "Auto Resolve"
 };
 
 /************************************************************
