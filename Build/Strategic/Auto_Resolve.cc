@@ -67,6 +67,7 @@
 #include "Debug.h"
 #include "UILayout.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
 
 #ifdef JA2BETAVERSION
 #	include "Cheats.h"
@@ -75,6 +76,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#define DEBUG_TAG_AUTORESOLVE "Auto Resolve"
 //#define INVULNERABILITY
 
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
@@ -1934,7 +1936,11 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		{	/* Get rid of any extra enemies that could be here. It is possible for the
 			 * number of total enemies to exceed 32, but autoresolve can only process
 			 * 32. We basically cheat by eliminating the rest of them. */
-			EliminateAllEnemies(x, y);
+			if(NumEnemiesInSector(x , y)
+			{
+				SLOGI(DEBUG_TAG_AUTORESOLVE, "Eliminating remaining enemies after Autoresolve in (%d,%d)", x, y);
+				EliminateAllEnemies(x, y);
+			}
 		}
 		else
 		{ // The enemy won, so repoll movement.
