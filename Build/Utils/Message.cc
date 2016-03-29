@@ -501,12 +501,6 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 			BeginUIMessage(TRUE, DestString);
 			return;
 
-		case MSG_ERROR:
-			swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %ls", DestString);
-			BeginUIMessage(FALSE, DestStringA);
-			WriteMessageToFile(DestStringA);
-			return;
-
 		case MSG_DEBUG:
 #if defined _DEBUG
 			wcscpy(DestStringA, DestString);
