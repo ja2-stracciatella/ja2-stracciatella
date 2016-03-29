@@ -139,6 +139,11 @@ void SLOG_Deinit(void);
 /** @brief Set logging level for console and file logging. */
 void SLOG_SetLevel(SLOGLevel console, SLOGLevel file);
 
+/** @brief enable logging for a specific SLOGTopic */
+void SLOG_EnableTopic (SLOGTopics topic);
+
+/** @brief disable logging for a specific SLOGTopic */
+void SLOG_DisableTopic (SLOGTopics topic);
 
 #ifndef SLOG_DISABLED
 

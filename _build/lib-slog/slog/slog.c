@@ -172,6 +172,15 @@ void SLOG_SetLevel(SLOGLevel console, SLOGLevel file)
   s_fileLevel = file;
 }
 
+void SLOG_EnableTopic (SLOGTopics topic)
+{
+  gDebugFlags |= (1 << topic);
+}
+
+void SLOG_DisableTopic (SLOGTopics topic)
+{
+  gDebugFlags &= ~(1 << topic);
+}
 
 /** Get level name for including into the log. */
 static const char* getLevelName(SLOGLevel level)
