@@ -57,7 +57,7 @@ static SLOGLevel s_fileLevel = SLOG_DEBUG;
 
 /* gDebugFlags contains one flag per topic to enable (1) or disable (0) logging
  * default is all on for now. Watch the variable width when adding more topics! */
-static long long gDebugFlags = 0xFFFFFFFFFFFFFFFF;
+static long long gDebugFlags;
 
 static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
 {
@@ -131,6 +131,7 @@ void SLOG_Init(SLOGConsole console, const char *logFile)
 {
   if(!s_initialized)
   {
+    gDebugFlags = 0xFFFFFFFFFFFFFFFF;
     switch(console)
     {
     case SLOG_STDOUT:
