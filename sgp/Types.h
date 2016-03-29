@@ -13,7 +13,7 @@
 
 #ifdef WITH_FIXMES
   #define FIXME \
-	  fprintf(stderr, "===> %s:%d: %s() FIXME\n", __FILE__, __LINE__, __func__);
+	SLOGE(DEBUG_TAG_FIXME, "===> %s:%d: %s() FIXME", __FILE__, __LINE__, __func__);
 #else
   #define FIXME (void)0;
 #endif
