@@ -3147,7 +3147,7 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			dy = wp->y - pGroup->ubSectorY;
 			if( dx && dy )
 			{ //Can't move diagonally!
-				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector %c%d to sector %c%d for group at sector %c%d -- KM:0",
+				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector %c%d to sector %c%d for group at sector %c%d",
 					pGroup->ubSectorY + 'A', pGroup->ubSectorX, wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSectorX = ubOrigX;
 				pGroup->ubSectorY = ubOrigY;
@@ -3155,7 +3155,7 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			}
 			if( !dx && !dy ) //Can't move to position currently at!
 			{
-				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process same waypoint at %c%d for group at %c%d -- KM:0",
+				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process same waypoint at %c%d for group at %c%d",
 					wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSectorX = ubOrigX;
 				pGroup->ubSectorY = ubOrigY;
@@ -3177,13 +3177,6 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			else if( dy <= -1 )
 			{
 				dy = -1;
-			}
-			else
-			{
-				Assert( 0 );
-				pGroup->ubSectorX = ubOrigX;
-				pGroup->ubSectorY = ubOrigY;
-				return TRUE;
 			}
 			//Advance the sector value
 			pGroup->ubSectorX = (UINT8)( dx + pGroup->ubSectorX );
