@@ -10,27 +10,27 @@
 #include "GameState.h"
 
 
-Font gp10PointArial;
-Font gp10PointArialBold;
-Font gp12PointArial;
-Font gp12PointArialFixedFont;
-Font gp12PointFont1;
-Font gp14PointArial;
-Font gp14PointHumanist;
-Font gp16PointArial;
-Font gpBlockFontNarrow;
-Font gpBlockyFont;
-Font gpBlockyFont2;
-Font gpCompFont;
-Font gpLargeFontType1;
-Font gpSmallCompFont;
-Font gpSmallFontType1;
-Font gpTinyFontType1;
+SGPFont gp10PointArial;
+SGPFont gp10PointArialBold;
+SGPFont gp12PointArial;
+SGPFont gp12PointArialFixedFont;
+SGPFont gp12PointFont1;
+SGPFont gp14PointArial;
+SGPFont gp14PointHumanist;
+SGPFont gp16PointArial;
+SGPFont gpBlockFontNarrow;
+SGPFont gpBlockyFont;
+SGPFont gpBlockyFont2;
+SGPFont gpCompFont;
+SGPFont gpLargeFontType1;
+SGPFont gpSmallCompFont;
+SGPFont gpSmallFontType1;
+SGPFont gpTinyFontType1;
 
-Font gpHugeFont;
+SGPFont gpHugeFont;
 
 
-static void CreateFontPaletteTables(Font);
+static void CreateFontPaletteTables(SGPFont);
 
 
 void InitializeFonts(void)
@@ -91,14 +91,14 @@ void ShutdownFonts(void)
 
 
 // Set shades for fonts
-void SetFontShade(Font const font, FontShade const shade)
+void SetFontShade(SGPFont const font, FontShade const shade)
 {
 	CHECKV(0 <= shade && shade < 16);
 	font->CurrentShade(shade);
 }
 
 
-static void CreateFontPaletteTables(Font const f)
+static void CreateFontPaletteTables(SGPFont const f)
 {
 	const SGPPaletteEntry* const pal = f->Palette();
 	f->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pal, 255,   0,   0, TRUE);

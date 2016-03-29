@@ -596,7 +596,7 @@ GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 ylo
 }
 
 
-GUIButtonRef CreateTextButton(const wchar_t *string, Font const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateTextButton(const wchar_t *string, SGPFont const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
@@ -664,7 +664,7 @@ GUIButtonRef QuickCreateButtonImg(char const* const gfx, INT32 const off_normal,
 }
 
 
-GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, Font const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, SGPFont const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
 {
 	GUIButtonRef const b = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	CopyButtonText(b, string);
@@ -677,7 +677,7 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* co
 }
 
 
-GUIButtonRef CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
+GUIButtonRef CreateLabel(const wchar_t* text, SGPFont const font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
 	GUIButtonRef const btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
@@ -720,7 +720,7 @@ void GUI_BUTTON::SpecifyTextJustification(Justification const j)
 }
 
 
-void GUI_BUTTON::SpecifyGeneralTextAttributes(wchar_t const* const string, Font const font, INT16 const fore_colour, INT16 const shadow_colour)
+void GUI_BUTTON::SpecifyGeneralTextAttributes(wchar_t const* const string, SGPFont const font, INT16 const fore_colour, INT16 const shadow_colour)
 {
 	SpecifyText(string);
 	usFont        = font;

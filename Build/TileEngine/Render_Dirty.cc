@@ -414,25 +414,6 @@ void GDirtyPrintF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
 	GDirtyPrint(x, y, str);
 }
 
-
-void GPrintDirty(INT16 const x, INT16 const y, wchar_t const* const str) // XXX TODO0017
-{
-	MPrint(x, y, str);
-	GDirty(x, y, str);
-}
-
-
-void GPrintDirtyF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
-{
-	wchar_t	str[512];
-	va_list ap;
-	va_start(ap, fmt);
-	vswprintf(str, lengthof(str), fmt, ap);
-	va_end(ap);
-	GDirtyPrint(x, y, str);
-}
-
-
 void GPrintInvalidate(INT16 const x, INT16 const y, wchar_t const* const str)
 {
 	MPrint(x, y, str);
@@ -481,7 +462,7 @@ try
 catch (...) { return 0; }
 
 
-VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, Font const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, SGPFont const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
 {
 	INT16          const w = StringPixLength(text, font);
 	INT16          const h = GetFontHeight(font);

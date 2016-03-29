@@ -669,10 +669,9 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
 // Returns the (center ) cell coordinates in X
 INT16 CenterX( INT16 sGridNo )
 {
-	INT16 sYPos, sXPos;
+	INT16 sXPos;
 
-	sYPos = sGridNo / WORLD_COLS;
-	sXPos = ( sGridNo - ( sYPos * WORLD_COLS ) );
+	sXPos = sGridNo % WORLD_COLS;
 
 	return( ( sXPos * CELL_X_SIZE ) + ( CELL_X_SIZE / 2 ) );
 }

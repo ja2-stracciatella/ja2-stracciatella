@@ -1520,7 +1520,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
  // determine if we happen to be in water (in which case we're in BIG trouble!)
  bInWater = Water( pSoldier->sGridNo );
- bInDeepWater = Water( pSoldier->sGridNo );
+ bInDeepWater = DeepWater( pSoldier->sGridNo );
 
  // check if standing in tear gas without a gas mask on
  bInGas = InGasOrSmoke( pSoldier, pSoldier->sGridNo );

@@ -544,7 +544,7 @@ static void DisplayFormattedText(void)
 }
 
 
-static FileString const* GetFirstStringOnThisPage(FileString const* RecordList, Font const font, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidth* WidthList)
+static FileString const* GetFirstStringOnThisPage(FileString const* RecordList, SGPFont const font, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidth* WidthList)
 {
 	// get the first record on this page - build pages up until this point
 	FileString const* CurrentRecord = NULL;
@@ -710,7 +710,7 @@ static void HandleSpecialFiles(void)
 	// Move through list and display
 	for (INT32 y = 0; i; clause++, i = i->Next)
 	{
-		Font const font = giFilesPage == 0 && clause == 0 ?
+		SGPFont const font = giFilesPage == 0 && clause == 0 ?
 			FILES_TITLE_FONT : FILES_TEXT_FONT;
 
 		/* Based on the record we are at, selected X start position and the width to
@@ -993,7 +993,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/interceptborder.sti", 0, FILE_VIEWER_X + 25, FILE_VIEWER_Y + 131);
 		}
 
-		Font const font = giFilesPage == 0 && clause == 0 ?
+		SGPFont const font = giFilesPage == 0 && clause == 0 ?
 			FILES_TITLE_FONT : FILES_TEXT_FONT;
 
 		/* Based on the record we are at, selected X start position and the width to

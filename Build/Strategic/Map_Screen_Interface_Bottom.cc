@@ -361,7 +361,7 @@ static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 static void DrawNameOfLoadedSector()
 {
 	SetFontDestBuffer(FRAME_BUFFER);
-	Font const font = COMPFONT;
+	SGPFont const font = COMPFONT;
 	SetFontAttributes(font, 183);
 
 	wchar_t buf[128];

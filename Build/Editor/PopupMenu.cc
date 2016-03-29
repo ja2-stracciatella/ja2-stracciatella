@@ -52,7 +52,7 @@ struct CurrentPopupMenuInformation
 	UINT8       ubMaxEntriesPerColumn;
 	UINT8       ubColumnWidth[MAX_COLUMNS];
 	UINT8       ubActiveType;
-	Font        usFont;
+	SGPFont     usFont;
 	BOOLEAN     fActive;
 	BOOLEAN     fUseKeyboardInfoUntilMouseMoves;
 	UINT16      usLeft; // popup region coords.
@@ -280,7 +280,7 @@ static void RenderPopupMenu(void)
 	}
 
 	// Set up the text attributes.
-	Font const font = p.usFont;
+	SGPFont const font = p.usFont;
 	SetFont(font);
 	SetFontBackground(FONT_MCOLOR_BLACK);
 
