@@ -3,9 +3,7 @@
 
 #include "Types.h"
 
-
 extern UINT8 gubCurrentMapMessageString;
-extern BOOLEAN fDisableJustForIan;
 
 #define		MSG_INTERFACE				0
 #define		MSG_DIALOG					1

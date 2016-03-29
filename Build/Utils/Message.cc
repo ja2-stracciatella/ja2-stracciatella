@@ -66,8 +66,6 @@ static ScrollStringSt* gpDisplayList[MAX_LINE_COUNT];
 static ScrollStringSt* gMapScreenMessageList[256];
 static ScrollStringSt* pStringS = NULL;
 
-BOOLEAN fDisableJustForIan = FALSE;
-
 static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
 
@@ -304,17 +302,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 // new screen message
 void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 {
-	if (fDisableJustForIan)
-	{
-		switch (ubPriority)
-		{
-			case MSG_BETAVERSION:
-			case MSG_TESTVERSION:
-			case MSG_DEBUG:
-				return;
-		}
-	}
-
 	switch (ubPriority)
 	{
 		case MSG_DEBUG:
@@ -383,7 +370,6 @@ static void WriteMessageToFile(const wchar_t* pString);
 static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t* const fmt, ...)
 {
 	if (giTimeCompressMode > TIME_COMPRESS_X1) return;
-	if (fDisableJustForIan && priority != MSG_ERROR && priority != MSG_INTERFACE) return;
 
 	va_list ap;
 	va_start(ap, fmt);
@@ -453,17 +439,6 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 // this function sets up the string into several single line structures
 void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 {
-	if (fDisableJustForIan)
-	{
-		switch (ubPriority)
-		{
-			case MSG_BETAVERSION:
-			case MSG_TESTVERSION:
-			case MSG_DEBUG:
-				return;
-		}
-	}
-
 	wchar_t DestStringA[512];
 
 	va_list argptr;

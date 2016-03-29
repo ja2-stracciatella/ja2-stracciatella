@@ -3144,10 +3144,6 @@ static void HandleModCtrl(UINT const key)
 		}
 #endif
 
-#if defined JA2TESTVERSION
-		case 'i': fDisableJustForIan = !fDisableJustForIan; break;
-#endif
-
   case 'i':
     if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Map, HKMOD_CTRL, 'i'))
     {
