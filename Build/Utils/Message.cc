@@ -302,17 +302,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 // new screen message
 void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 {
-	switch (ubPriority)
-	{
-		case MSG_DEBUG:
-#if defined _DEBUG
-			usColor = DEBUG_COLOR;
-			break;
-#else
-			return;
-#endif
-	}
-
 	va_list argptr;
 	va_start(argptr, pStringA);
 	wchar_t DestString[512];
@@ -363,20 +352,6 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 
 	switch (priority)
 	{
-		case MSG_DEBUG:
-#if defined _DEBUG
-		{
-			wchar_t DestStringA[512];
-			wcscpy(DestStringA, msg);
-			swprintf(msg, lengthof(msg), L"Debug: %ls", DestStringA);
-			WriteMessageToFile(DestStringA);
-			colour = DEBUG_COLOR;
-			break;
-		}
-#else
-			return;
-#endif
-
 		case MSG_DIALOG:    colour = DIALOGUE_COLOR;  break;
 		case MSG_INTERFACE: colour = INTERFACE_COLOR; break;
 	}
@@ -405,7 +380,10 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 // this function sets up the string into several single line structures
 void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 {
+
+#if defined _DEBUG
 	wchar_t DestStringA[512];
+#endif
 
 	va_list argptr;
 	va_start(argptr, pStringA);
