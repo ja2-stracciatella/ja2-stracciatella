@@ -319,14 +319,6 @@ void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 #else
 			return;
 #endif
-
-		case MSG_TESTVERSION:
-#if defined JA2TESTVERSION
-			usColor = TESTVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
 	}
 
 	va_list argptr;
@@ -388,15 +380,6 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 			return;
 #endif
 
-		case MSG_TESTVERSION:
-#if defined JA2TESTVERSION
-			WriteMessageToFile(msg);
-			colour = TESTVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-
 		case MSG_DEBUG:
 #if defined _DEBUG
 		{
@@ -453,15 +436,6 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 #if defined JA2BETAVERSION || defined JA2TESTVERSION
 			WriteMessageToFile(DestString);
 			usColor = BETAVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-
-		case MSG_TESTVERSION:
-#if defined JA2TESTVERSION
-			WriteMessageToFile(DestString);
-			usColor = TESTVERSION_COLOR;
 			break;
 #else
 			return;
