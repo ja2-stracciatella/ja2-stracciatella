@@ -242,7 +242,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			// if we have enough APs to activate it now
 			if (pSoldier->bActionPoints >= AP_USE_REMOTE)
 			{
-				SLOGD(DEBUG_TAG_AI, "%s is activating his detonator",pSoldier->name);
+				SLOGD(DEBUG_TAG_AI, "%ls is activating his detonator",pSoldier->name);
 				// blow up all the PANIC bombs!
 				return(AI_ACTION_USE_DETONATOR);
 			}

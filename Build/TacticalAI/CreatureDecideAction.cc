@@ -656,7 +656,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 			{
 				if ((INT16) PreRandom(100) < iChance)
 				{
-					SLOGD(DEBUG_TAG_AI, "%s decides to call an alert!", pSoldier->name);
+					SLOGD(DEBUG_TAG_AI, "%ls decides to call an alert!", pSoldier->name);
 					pSoldier->usActionData = CALL_1_PREY;
 					return(AI_ACTION_CREATURE_CALL);
 				}
