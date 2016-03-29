@@ -5014,7 +5014,7 @@ void SetInterfaceHeightLevel( )
 		sGridNo = gMapInformation.sWestGridNo;
 	else
 	{
-		Assert(0);
+		SLOGE(DEBUG_TAG_ASSERTS, "SetInterfaceHeightLevel: MapInformation seems corrupted");
 		return;
 	}
 

@@ -135,7 +135,7 @@ void InitializeMines( void )
 			ubMineProductionIncreases = 20;
 			break;
 		default:
-			Assert( 0 );
+			SLOGE(DEBUG_TAG_ASSERTS, "Invalid Difficulty level");
 			return;
 	}
 

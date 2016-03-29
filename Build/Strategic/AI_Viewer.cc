@@ -501,7 +501,7 @@ static void RenderMovingGroupsAndMercs(void)
 					case ASSAULT:					ubIconType = ICON_TYPE_ASSAULT;				ubFontColor = FONT_LTBLUE;	break;
 
 					default:
-						Assert(0);
+						SLOGE(DEBUG_TAG_ASSERTS, "Enemy moving group with invalid intention");
 						return;
 				}
 			}

@@ -631,7 +631,7 @@ static void AddVisibleToSoldierToEachGridNo(void)
 
 			else
 			{
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "AddVisibleToSoldierToEachGridNo: invalid VisibleToSoldier");
 			}
 		}
 	}
@@ -684,7 +684,7 @@ void RemoveVisibleGridNoAtSelectedGridNo()
 
 			else
 			{
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "RemoveVisibleGridNoAtSelectedGridNo: invalid VisibleToSoldier");
 			}
 		}
 	}

@@ -1481,7 +1481,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 			case GUI_BUTTON::TEXT_LEFT:    bJustified = LEFT_JUSTIFIED;    break;
 			case GUI_BUTTON::TEXT_RIGHT:   bJustified = RIGHT_JUSTIFIED;   break;
 			case GUI_BUTTON::TEXT_CENTER:  bJustified = CENTER_JUSTIFIED;  break;
-			default:                       Assert(0);                      break;
+			default:                       SLOGE(DEBUG_TAG_ASSERTS, "DrawTextOnButton: invalid text alignment"); break;
 		}
 		if (b->bTextXOffset == -1)
 		{

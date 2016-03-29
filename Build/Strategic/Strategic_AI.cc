@@ -3340,7 +3340,7 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 							}
 							else
 							{
-								Assert( 0 );
+								SLOGE(DEBUG_TAG_ASSERTS, "EvolveQueenPriorityPhase: more promotions than soldiers");
 							}
 							pSector->ubNumElites++;
 						}
@@ -4438,7 +4438,7 @@ static void RemoveSoldiersFromGarrisonBasedOnComposition(INT32 iGarrisonID, UINT
 		}
 		else
 		{
-			Assert( 0 );
+			SLOGE(DEBUG_TAG_ASSERTS, "RemoveSoldiersFromGarrisonBasedOnComposition: trying to eliminate more troops than present");
 		}
 		ubNumTroops--;
 	}
@@ -4456,7 +4456,7 @@ static void RemoveSoldiersFromGarrisonBasedOnComposition(INT32 iGarrisonID, UINT
 		}
 		else
 		{
-			Assert( 0 );
+			SLOGE(DEBUG_TAG_ASSERTS, "RemoveSoldiersFromGarrisonBasedOnComposition: trying to eliminate more elites than present");
 		}
 		ubNumElites--;
 	}

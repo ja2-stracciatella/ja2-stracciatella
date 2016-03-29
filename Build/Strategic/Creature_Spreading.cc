@@ -486,7 +486,7 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 					iAbsoluteMaxPopulation = 10;
 					break;
 				default:
-					Assert( 0 );
+					SLOGE(DEBUG_TAG_ASSERTS, "PlaceNewCreature: invalid habitat type");
 					return FALSE;
 			}
 
@@ -682,7 +682,7 @@ static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fOverrideTest)
 					ubSectorID = SEC_H13;
 				break;
 			default:
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "ChooseTownSectorToAttack: invalid SectorID");
 				return;
 		}
 	}

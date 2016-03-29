@@ -1108,7 +1108,7 @@ void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 co
 		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:  prefix = "l";  break;
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:     prefix = "c";  break;
 
-		default: Assert(0); return;
+		default: SLOGE(DEBUG_TAG_ASSERTS, "GetMapTempFileName: invalid Type"); return;
 	}
 	sprintf(pMapName, TEMPDIR "/%s_%s", prefix, zTempName);
 }

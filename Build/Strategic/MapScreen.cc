@@ -7136,7 +7136,7 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 				break;
 
 			default:
-				Assert(0);
+				SLOGE(DEBUG_TAG_ASSERTS, "Invalid sorting mode for Merc List");
 				return;
 		}
 	}
@@ -8509,7 +8509,7 @@ static void RestorePreviousPaths(void)
 			else
 			{
 				// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "RestorePreviousPaths: invalid pSoldier: %d", pSoldier->ubID);
 				continue;
 			}
 

@@ -1299,7 +1299,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 		else
 		{
-			Assert(0);
+			SLOGE(DEBUG_TAG_ASSERTS, "GroupArrivedAtSector: group arrives in sector where it already has been");
 			return;
 		}
 
@@ -1752,7 +1752,6 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
 			pGroup->ubSectorX, pGroup->ubSectorY, wp->x, wp->y );
 	}
-	AssertMsg(dx != 0 || dy != 0, String("Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y));
 	//Clip dx/dy value so that the move is for only one sector.
 	if( dx >= 1 )
 	{
@@ -1776,7 +1775,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 	else
 	{
-		Assert( 0 );
+		SLOGE(DEBUG_TAG_ASSERTS, "InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y);
 		return;
 	}
 	//All conditions for moving to the next waypoint are now good.

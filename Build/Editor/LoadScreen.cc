@@ -258,7 +258,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 		RemoveFileDialog();
 		return EDIT_SCREEN ;
 	}
-	Assert( 0 );
+	SLOGE(DEBUG_TAG_ASSERTS, "ProcessLoadSaveScreenMessageBoxResult: none of the global flags set");
 	return LOADSAVE_SCREEN;
 }
 
