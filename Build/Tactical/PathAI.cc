@@ -375,7 +375,7 @@ BOOLEAN gfEstimatePath = FALSE;
 BOOLEAN	gfPathAroundObstacles = TRUE;
 
 static UINT32 guiPlottedPath[256];
-UINT32 guiPathingData[256];
+UINT8 guiPathingData[256];
 static INT32 giPathDataSize;
 static INT32 giPlotCnt;
 
