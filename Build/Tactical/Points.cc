@@ -1138,7 +1138,7 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_t
 INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
 {
  // look around all 8 directions and return lowest terrain cost
- INT32	cnt;
+ UINT8	cnt;
  INT16	sLowest=127;
  INT16	sGridno,sCost;
 
@@ -1149,10 +1149,10 @@ INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
 
  for (cnt=0; cnt <= 7; cnt++)
   {
-    sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc((INT16) cnt));
+    sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc(cnt));
     if (sGridno != pSoldier->sGridNo)
 		{
-       if ( (sCost=ActionPointCost( pSoldier, sGridno, (UINT8)cnt , pSoldier->usUIMovementMode ) ) < sLowest )
+       if ( (sCost=ActionPointCost( pSoldier, sGridno, cnt , pSoldier->usUIMovementMode ) ) < sLowest )
 			 {
 					sLowest = sCost;
 			 }

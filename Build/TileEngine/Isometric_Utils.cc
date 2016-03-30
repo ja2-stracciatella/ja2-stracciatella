@@ -732,12 +732,12 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 
 BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const out_direction)
 {
-	INT32			cnt;
+	UINT8			cnt;
 	INT16			sNewGridNo, sOtherSideOfFence;
 	BOOLEAN		fFound = FALSE;
 	UINT8			bMinNumTurns = 100;
 	INT8			bNumTurns;
-	INT8			bMinDirection = 0;
+	UINT8			bMinDirection = 0;
 
 	GridNo const sGridNo = pSoldier->sGridNo;
 	// IF there is a fence in this gridno, return false!
@@ -751,8 +751,8 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const ou
 	for ( cnt = 0; cnt < 8; cnt+= 2 )
 	{
 		// go out *2* tiles
-		sNewGridNo = NewGridNo( (UINT16)sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
-		sOtherSideOfFence = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
+		sNewGridNo = NewGridNo( (UINT16)sGridNo, DirectionInc( cnt ) );
+		sOtherSideOfFence = NewGridNo( (UINT16)sNewGridNo, DirectionInc( cnt ) );
 
 		if ( NewOKDestination( pSoldier, sOtherSideOfFence, TRUE, 0 ) )
 		{
@@ -770,7 +770,7 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const ou
 				if ( bNumTurns < bMinNumTurns )
 				{
 					bMinNumTurns = bNumTurns;
-					bMinDirection = (INT8)cnt;
+					bMinDirection = cnt;
 				}
 			}
 		}

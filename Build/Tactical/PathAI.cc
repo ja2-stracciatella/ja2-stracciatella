@@ -2136,7 +2136,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 
 
      // We should reduce points for starting to run if first tile is a fence...
-		 sTestGridno  = NewGridNo(pSold->sGridNo,(INT16) DirectionInc( (UINT16)guiPathingData[0]));
+		 sTestGridno  = NewGridNo(pSold->sGridNo, DirectionInc( guiPathingData[0]));
      if ( gubWorldMovementCosts[ sTestGridno ][ (INT8)guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
      {
 	    if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
@@ -2174,7 +2174,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 			sExtraCostSwat = 0;
 			sExtraCostCrawl = 0;
 
-			sTempGrid  = NewGridNo(sTempGrid,(INT16) DirectionInc( (UINT16)guiPathingData[iCnt]));
+			sTempGrid  = NewGridNo(sTempGrid, DirectionInc( guiPathingData[iCnt]));
 
 			// Get switch value...
 			sSwitchValue = gubWorldMovementCosts[ sTempGrid ][ (INT8)guiPathingData[iCnt] ][ pSold->bLevel];

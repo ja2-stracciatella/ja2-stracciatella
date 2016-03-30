@@ -627,7 +627,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 				fDirChecked[usDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				const UINT16 usDest = NewGridNo(chosen->sGridNo, DirectionInc((INT16)(usDirection + 1)));
+				const UINT16 usDest = NewGridNo(chosen->sGridNo, DirectionInc( usDirection + 1 ));
 
 				// if that's out of bounds, ignore it & check next direction
 				if (usDest == chosen->sGridNo) continue;

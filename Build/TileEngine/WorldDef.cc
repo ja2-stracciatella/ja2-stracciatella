@@ -1640,7 +1640,7 @@ static void OptimizeMapForShadows()
 		if (!IsTreePresentAtGridno(cnt)) continue;
 
 		// Check for a structure a footprint away
-		for (INT8 const* dir = bDirectionsForShadowSearch;; ++dir)
+		for (UINT8 const* dir = bDirectionsForShadowSearch;; ++dir)
 		{
 			if (dir == endof(bDirectionsForShadowSearch))
 			{ // We're full of structures

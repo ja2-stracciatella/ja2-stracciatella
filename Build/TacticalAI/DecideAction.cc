@@ -1810,7 +1810,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				const UINT8 ubOpponentDir = GetDirectionFromGridNo(BestThrow.sTarget, pSoldier);
 
 				// Get new gridno!
-				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
+				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( ubOpponentDir ) );
 
 				if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 				{
@@ -3049,7 +3049,7 @@ bCanAttack = FALSE;
 				ubOpponentDir = (UINT8)GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
 
 				// Get new gridno!
-				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
+				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( ubOpponentDir ) );
 
 				if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubOpponentDir, pSoldier->usAnimState ) )
 				{
