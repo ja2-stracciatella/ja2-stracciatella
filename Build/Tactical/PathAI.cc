@@ -379,18 +379,6 @@ UINT8 guiPathingData[256];
 static INT32 giPathDataSize;
 static INT32 giPlotCnt;
 
-static INT32 dirDelta[8]=
-{
-	-MAPWIDTH,        //N
-	1-MAPWIDTH,       //NE
-	1,                //E
-	1+MAPWIDTH,       //SE
-	MAPWIDTH,         //S
-	MAPWIDTH-1,       //SW
-	-1,               //W
-	-MAPWIDTH-1       //NW
-};
-
 #define LOOPING_CLOCKWISE 0
 #define LOOPING_COUNTERCLOCKWISE 1
 #define LOOPING_REVERSE 2
@@ -993,7 +981,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 #endif
 
-			newLoc = curLoc + dirDelta[iCnt];
+			newLoc = curLoc + DirIncrementer[iCnt];
 
 
 			if ( fVisitSpotsOnlyOnce && trailCostUsed[newLoc] == gubGlobalPathCount )
@@ -1101,11 +1089,11 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 							break;
 						case TRAVELCOST_DOOR_CLOSED_N:
 							fDoorIsObstacleIfClosed = TRUE;
-							iDoorGridNo = newLoc + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_CLOSED_W:
 							fDoorIsObstacleIfClosed = TRUE;
-							iDoorGridNo = newLoc + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_HERE:
 							fDoorIsObstacleIfClosed = FALSE;
@@ -1113,59 +1101,59 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 							break;
 						case TRAVELCOST_DOOR_OPEN_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NE:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHEAST ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHEAST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_E:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ EAST ];
+							iDoorGridNo = newLoc + DirIncrementer[ EAST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_SE:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTHEAST ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTHEAST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_S:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_SW:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTHWEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTHWEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NW:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHWEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHWEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_N_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTH ] + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTH ] + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NW_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHWEST ] + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHWEST ] + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NE_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHEAST ] + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHEAST ] + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_W_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ WEST ] + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ WEST ] + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_SW_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTHWEST ] + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTHWEST ] + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NW_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHWEST ] + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHWEST ] + DirIncrementer[ WEST ];
 							break;
 						default:
 							break;
@@ -2542,12 +2530,12 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 				break;
 			case TRAVELCOST_DOOR_CLOSED_N:
 				fDoorIsObstacleIfClosed = TRUE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTH ];
 				ubReplacementCost = TRAVELCOST_DOOR;
 				break;
 			case TRAVELCOST_DOOR_CLOSED_W:
 				fDoorIsObstacleIfClosed = TRUE;
-				iDoorGridNo = iGridNo + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ WEST ];
 				ubReplacementCost = TRAVELCOST_DOOR;
 				break;
 			case TRAVELCOST_DOOR_OPEN_HERE:
@@ -2556,59 +2544,59 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 				break;
 			case TRAVELCOST_DOOR_OPEN_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NE:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHEAST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHEAST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_E:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ EAST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ EAST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_SE:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTHEAST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTHEAST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_S:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_SW:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTHWEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTHWEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ WEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NW:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHWEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHWEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_N_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTH ] + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTH ] + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NW_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHWEST ] + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHWEST ] + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NE_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHEAST ] + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHEAST ] + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_W_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ WEST ] + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ WEST ] + DirIncrementer[ WEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_SW_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTHWEST ] + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTHWEST ] + DirIncrementer[ WEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NW_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHWEST ] + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHWEST ] + DirIncrementer[ WEST ];
 				break;
 			default:
 				break;
