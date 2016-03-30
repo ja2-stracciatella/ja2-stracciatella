@@ -26,10 +26,10 @@
 #include "Soldier_Macros.h"
 
 #ifdef _DEBUG
-#       include "Font.h"
-#       include "Font_Control.h"
-#       include "Timer_Control.h"
-#       include "Video.h"
+  #include "Font.h"
+  #include "Font_Control.h"
+  #include "Timer_Control.h"
+  #include "Video.h"
 #endif
 
 /* view directions */
