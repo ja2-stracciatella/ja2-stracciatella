@@ -95,7 +95,7 @@ struct path_t
 struct trail_t
 {
 	INT16 nextLink;
-	INT8	stepDir;
+	UINT8	stepDir;
 	INT8	fFlags;
 	INT16	sGridNo;
 };
@@ -1836,7 +1836,7 @@ ENDOFLOOP:
 
 			for (iCnt=0; z && (iCnt < MAX_PATH_LIST_SIZE); iCnt++)
 		  {
-			  s->usPathingData[iCnt] = (INT16) trailTree[z].stepDir;
+			  s->usPathingData[iCnt] = trailTree[z].stepDir;
 
 			  z = trailTree[z].nextLink;
 		  }
