@@ -6109,8 +6109,8 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 			// ATE: Make this more usefull...
 			if ( fDoForwards )
 			{
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, ( -1 * DirectionInc(bNewDirection ) ) );
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, ( -1 * DirectionInc( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
 				EVENT_SetSoldierDesiredDirection(pSoldier, OppositeDirection(bNewDirection));
 				pSoldier->fTurningUntilDone = TRUE;
 				pSoldier->usPendingAnimation = FALLFORWARD_ROOF;
@@ -6125,8 +6125,8 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 			else
 			{
 
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, ( -1 * DirectionInc( bNewDirection ) ) );
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, ( -1 * DirectionInc( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
 				EVENT_SetSoldierDesiredDirection( pSoldier, bNewDirection );
 				pSoldier->fTurningUntilDone = TRUE;
 				pSoldier->usPendingAnimation = FALLOFF;
