@@ -90,10 +90,13 @@
 #include "GameRes.h"
 #include "GameState.h"
 
+#include "slog/slog.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "policy/GamePolicy.h"
+
+#define DEBUG_CONSOLE_TOPIC "Debug Console"
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
@@ -1463,7 +1466,12 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 
-		case 'y': if (INFORMATION_CHEAT_LEVEL()) *new_event = I_LOSDEBUG; break;
+		case 'y':
+      if (INFORMATION_CHEAT_LEVEL()) {
+        SLOGD(DEBUG_CONSOLE_TOPIC, "Entering LOS Debug Mode");
+        *new_event = I_LOSDEBUG;
+      }
+      break;
 		case 'z': if (!gpItemPointer) HandleStealthChangeFromUIKeys();    break;
 
 		case SDLK_INSERT: GoIntoOverheadMap(); break;
@@ -1528,6 +1536,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F11:
 			if (DEBUG_CHEAT_LEVEL())
 			{
+        SLOGD(DEBUG_CONSOLE_TOPIC, "Entering Quest Debug Mode");
 				gsQdsEnteringGridNo = GetMouseMapPos();
 				LeaveTacticalScreen(QUEST_DEBUG_SCREEN);
 			}
@@ -1641,7 +1650,8 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'f':
 			if (INFORMATION_CHEAT_LEVEL())
 			{ // Toggle frame rate display
-				gbFPSDisplay = !gbFPSDisplay;
+        SLOGD(DEBUG_CONSOLE_TOPIC, "Toggle FPS Overlay");
+        gbFPSDisplay = !gbFPSDisplay;
 				EnableFPSOverlay(gbFPSDisplay);
 				if (!gbFPSDisplay) SetRenderFlags(RENDER_FLAG_FULL);
 			}
@@ -1729,7 +1739,10 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			}
 			break;
 
-		case 'z': if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer(); break;
+		case 'z':
+      SLOGD(DEBUG_CONSOLE_TOPIC, "Toggling ZBuffer");
+      if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer();
+      break;
 
 		case SDLK_PAGEUP:
 			// Try to go up towards ground level
@@ -1863,7 +1876,8 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case 'm':
 			if (INFORMATION_CHEAT_LEVEL())
 			{
-				*new_event = I_LEVELNODEDEBUG;
+        SLOGD(DEBUG_CONSOLE_TOPIC, "Entering Level Node Debug Mode");
+        *new_event = I_LEVELNODEDEBUG;
 				CountLevelNodes();
 			}
 			break;
@@ -1872,7 +1886,8 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			if (INFORMATION_CHEAT_LEVEL() && gUIFullTarget)
 			{
 				static UINT16 gQuoteNum = 0;
-				TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
+        SLOGD(DEBUG_CONSOLE_TOPIC, "Playing Quote %d", gQuoteNum);
+        TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
 			}
 			break;
 
@@ -2317,7 +2332,8 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			{
 				if ( INFORMATION_CHEAT_LEVEL( ) )
 				{
-					*puiNewEvent = I_SOLDIERDEBUG;
+          SLOGD(DEBUG_CONSOLE_TOPIC, "Entering Soldier and Land Debug Mode");
+          *puiNewEvent = I_SOLDIERDEBUG;
 				}
 			}
 		}
