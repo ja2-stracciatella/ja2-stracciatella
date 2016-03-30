@@ -1162,7 +1162,7 @@ INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
 }
 
 
-INT8 PtsToMoveDirection(const SOLDIERTYPE* const pSoldier, const INT8 bDirection)
+INT8 PtsToMoveDirection(const SOLDIERTYPE* const pSoldier, const UINT8 bDirection)
 {
 	INT16	sGridno,sCost;
 	INT8	bOverTerrainType;

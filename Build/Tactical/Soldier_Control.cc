@@ -7536,7 +7536,7 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 	// get a path to dest...
 	if ( FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) )
 	{
-		sAPCost = PtsToMoveDirection( pSoldier, (UINT8)guiPathingData[ 0 ] );
+		sAPCost = PtsToMoveDirection( pSoldier, guiPathingData[ 0 ] );
 
 		if (EnoughPoints(pSoldier, sAPCost, 0, pSoldier->bTeam == OUR_TEAM))
 		{
