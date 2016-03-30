@@ -537,14 +537,9 @@ static void TakeScreenshot()
 	fclose(f);
 }
 
-
 static void SnapshotSmall(void);
 
-
-/** @brief Join two rectangles.
- *
- * Add rectangle `newRect` to rectangle `result`, so `result` will
- * contain inside itself the original rectangle and new one. */
+#if EXPENSIVE_SDL_UPDATE_RECT
 static void joinInRectangle(SDL_Rect &result, const SDL_Rect &newRect)
 {
   if((newRect.w != 0) && (newRect.h != 0))
@@ -565,6 +560,7 @@ static void joinInRectangle(SDL_Rect &result, const SDL_Rect &newRect)
     }
   }
 }
+#endif
 
 void RefreshScreen(void)
 {

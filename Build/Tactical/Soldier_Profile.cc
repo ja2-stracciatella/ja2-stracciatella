@@ -923,20 +923,6 @@ void UpdateSoldierPointerDataIntoProfile()
 	}
 }
 
-
-static BOOLEAN MercIsHot(SOLDIERTYPE* pSoldier)
-{
-	if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == HEAT_INTOLERANT )
-	{
-		if ( SectorTemperature( GetWorldMinutesInDay(), pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) > 0 )
-		{
-			return( TRUE );
-		}
-	}
-	return( FALSE );
-}
-
-
 SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 {
 	const ProfileID src_id = s->ubProfile;

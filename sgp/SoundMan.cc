@@ -177,7 +177,6 @@ void ShutdownSoundManager(void)
 
 static SOUNDTAG*  SoundGetFreeChannel(void);
 static SAMPLETAG* SoundLoadSample(const char* pFilename);
-static BOOLEAN    SoundPlayStreamed(const char* pFilename);
 static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
@@ -238,10 +237,6 @@ UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pa
 
   return SoundStartSample(buffertag, channel, volume, pan, loop, end_callback, data);
 }
-
-
-static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
-
 
 UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 try
@@ -1202,55 +1197,6 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	return uiSoundID;
 }
 
-
-/* Starts up a stream on the specified channel. Override parameters are passed
- * in through the structure pointer pParms. Any entry with a value of 0xffffffff
- * will be filled in by the system.
- *
- * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
-static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
-{
-#if 1 // XXX TODO
-	FIXME
-	return SOUND_ERROR;
-#else
-	if (!fSoundSystemInit) return SOUND_ERROR;
-
-	channel->hMSSStream = AIL_open_stream(hSoundDriver, pFilename, SOUND_DEFAULT_STREAM)
-	if (channel->hMSSStream == NULL)
-	{
-		SoundCleanCache();
-		channel->hMSSStream = AIL_open_stream(hSoundDriver, pFilename, SOUND_DEFAULT_STREAM);
-	}
-
-	if (channel->hMSSStream == NULL)
-	{
-		char AILString[200];
-		sprintf(AILString, "Stream Error: %s", AIL_last_error());
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, AILString);
-		return SOUND_ERROR;
-	}
-
-	AIL_set_stream_volume(    channel->hMSSStream, volume);
-	AIL_set_stream_loop_count(channel->hMSSStream, loop);
-	AIL_set_stream_pan(       channel->hMSSStream, pan);
-
-	AIL_start_stream(channel->hMSSStream);
-
-	UINT32 uiSoundID=SoundGetUniqueID();
-	channel->uiSoundID = uiSoundID;
-
-	channel->EOSCallback   = end_callback;
-	channel->pCallbackData = data;
-
-	channel->uiTimeStamp  = GetClock();
-	channel->uiFadeVolume = SoundGetVolumeIndex(uiChannel);
-
-	return uiSoundID;
-#endif
-}
-
-
 /* Returns a unique ID number with every call. Basically it's just a 32-bit
  * static value that is incremented each time. */
 static UINT32 SoundGetUniqueID(void)
@@ -1261,21 +1207,6 @@ static UINT32 SoundGetUniqueID(void)
 
 	return uiNextID++;
 }
-
-
-/* Returns TRUE/FALSE whether a sound file should be played as a streamed
- * sample, or loaded into the cache. The decision is based on the size of the
- * file compared to the guiSoundCacheThreshold.
- *
- * Returns: TRUE if it should be streamed, FALSE if loaded. */
-static BOOLEAN SoundPlayStreamed(const char* pFilename)
-try
-{
-	AutoSGPFile hDisk(GCM->openGameResForReading(pFilename));
-	return FileGetSize(hDisk) >= guiSoundCacheThreshold;
-}
-catch (...) { return FALSE; }
-
 
 /* Stops a sound referred to by its channel.  This function is the only one
  * that should be deallocating sample handles. The random sounds have to have
