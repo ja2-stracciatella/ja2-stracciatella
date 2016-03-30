@@ -1953,6 +1953,12 @@ void RemoveGroup(GROUP& g)
 	}
 
 	RemoveGroupFromList(&g);
+	
+	/* safety check: if this group is the BattleGroup, invalid the pointer */
+	if(gpBattleGroup == &g)
+	{
+		gpBattleGroup = 0;
+	}
 }
 
 

@@ -3295,7 +3295,7 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 {
  INT32	iStealthSkill, iRoll;
  UINT8	ubMaxVolume, ubVolume, ubBandaged, ubEffLife;
- INT8		bInWater = FALSE;
+ INT8		bInWater = Water( pSoldier->sGridNo );
 
 	if ( pSoldier->bTeam == ENEMY_TEAM )
 	{
@@ -3332,7 +3332,7 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 	}
 
 	// if sneaker is moving through water
-	if (Water( pSoldier->sGridNo ) )
+	if ( bInWater )
 	{
 		iStealthSkill -= 10; // 10% penalty
 	}
