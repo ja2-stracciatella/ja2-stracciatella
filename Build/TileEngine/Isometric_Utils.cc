@@ -353,7 +353,7 @@ INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
 }
 
 
-INT16 DirectionInc(INT8 sDirection)
+INT16 DirectionInc(UINT8 sDirection)
 {
  if ((sDirection < 0) || (sDirection > 7))
   {
