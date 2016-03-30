@@ -30,13 +30,14 @@
 #include "Dialogue_Control.h"
 #include "Music_Control.h"
 #include "SoundMan.h"
+#include "UILayout.h"
 
 
 #define		MAX_MERC_IN_HELI		20
 #define		MAX_HELI_SCRIPT			30
-#define		ME_SCRIPT_DELAY				100
+#define		ME_SCRIPT_DELAY			100
 #define		NUM_PER_HELI_RUN		6
-
+#define		REPEAT_HELI_MOVEAWAY		( (STD_SCREEN_X) / 7 )
 enum HeliStateEnums
 {
 	HELI_APPROACH,
@@ -357,6 +358,7 @@ static UINT32 guiHeliLastUpdate;
 static INT8   gbCurDrop;
 static INT8   gbExitCount;
 static INT8   gbHeliRound;
+static UINT8  gubMoveAwayRepeated = 0;
 
 static BOOLEAN fFadingHeliIn = FALSE;
 static BOOLEAN fFadingHeliOut = FALSE;
@@ -664,7 +666,12 @@ void HandleHeliDrop( )
 					break;
 
 				case HELI_MOVELARGERY:
-
+					// Repeat some frames on higher resolutions to avoid the heli shadow from disappearing mid screen
+					if (gubMoveAwayRepeated < REPEAT_HELI_MOVEAWAY)
+					{
+					  gubMoveAwayRepeated++;
+					  gsHeliScript--;
+					}
 					gpHeli->sRelativeY += 6;
 					break;
 

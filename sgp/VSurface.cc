@@ -312,9 +312,6 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 		dstrect.x = iDestX;
 		dstrect.y = iDestY;
 		SDL_BlitSurface(src->surface_, src_rect, dst->surface_, &dstrect);
-#if defined __GNUC__ && defined i386
-		__asm__ __volatile__("cld"); // XXX HACK000D
-#endif
 	}
 	else if (src_bpp < dst_bpp)
 	{

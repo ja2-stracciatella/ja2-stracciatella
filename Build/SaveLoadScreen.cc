@@ -776,7 +776,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 		SLG_SELECTED_SLOT_GRAPHICS_NUMBER : SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gfx, bx, by);
 
-	Font  font = SAVE_LOAD_NORMAL_FONT;
+	SGPFont  font = SAVE_LOAD_NORMAL_FONT;
 	UINT8 foreground;
 	UINT8 shadow;
 	if (entry_idx == 0 && gfSaveGame)

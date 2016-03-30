@@ -3130,7 +3130,7 @@ void DisplayDistancesForHelicopter()
 
 	// show # of passengers aboard the chopper
 	MPrint(x, y, pHelicopterEtaStrings[6]);
-	swprintf(sString, lengthof(sString), L"%d", GetNumberOfPassengersInHelicopter());
+	swprintf(sString, lengthof(sString), L"%d", GetNumberInVehicle(GetHelicopter()));
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 
@@ -3261,7 +3261,7 @@ void DisplayPositionOfHelicopter( void )
 			BltVideoObject(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
 			SetFontAttributes(MAP_MVT_ICON_FONT, FONT_WHITE);
-			mprintf(x + 5, y + 1,  L"%d", GetNumberOfPassengersInHelicopter());
+			mprintf(x + 5, y + 1,  L"%d", GetNumberInVehicle(v));
 
 			InvalidateRegion( x, y, x + HELI_ICON_WIDTH, y + HELI_ICON_HEIGHT );
 
@@ -4560,7 +4560,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	if ( uiSectorFlags & SF_SKYRIDER_NOTICED_ENEMIES_HERE )
 	{
 		// and Skyrider is still in this sector, flying
-		if( IsSkyriderIsFlyingInSector( sSectorX, sSectorY ) )
+		if( IsSkyriderFlyingInSector( sSectorX, sSectorY ) )
 		{
 			// player remains aware of them as long as Skyrider remains in the sector
 			return KNOWS_THEYRE_THERE;

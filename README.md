@@ -4,11 +4,13 @@ This is continuation of venerable JA2-Stracciatella project.
 
 The goal of the project was to make Jagged Alliance 2 available on a wide range of platforms, improve its stability, fix bugs and provide a stable platform for mod development.  At the moment the goal mostly to fix bugs.
 
+Official Homepage: http://ja2-stracciatella.github.io/
+
 ## How to start the game
 
 1. Install original Jagged Alliance 2 game on your computer.  Data files from the original game will be used by JA2-Stracciatella
 
-2. [Download JA2-Stracciatella](https://github.com/ja2-stracciatella/ja2-stracciatella/releases) or [compile](COMPILATION.md) it from the source codes.
+2. [Download JA2-Stracciatella](http://ja2-stracciatella.github.io/download/) or [compile](COMPILATION.md) it from the cloned git repository.
 
 3. Start the game the first time.  It will create the configuration file %USERPROFILE%\Documents\JA2\ja2.ini on Windows or ~/.ja2/ja2.ini on Unix-like systems.
 
@@ -21,13 +23,6 @@ Supported localizations are DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUS
 If you downloaded precompiled version of JA2-Stracciatella, the archive may already contain set of bat files for each supported localizations.
 
 Run ```ja2.exe -help``` for list of available options.
-
-## Latest news
-
-- February 2016, another push and migration from bitbucket to github
-- Fall 2015, the project is still alive.  Some pull requests were merged.
-- 2014-05-01, version 0.12.352 has been released
-- 2014-02-16, version 0.12.275 has been released
 
 ## Development
 

@@ -1004,12 +1004,10 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 	}
 	// special conditions go here
 	// can't have two of the same attachment on an item
-	/*
 	if (FindAttachment( pObj, usAttachment ) != ITEM_NOT_FOUND)
 	{
 		fSameItem = TRUE;
 	}
-	*/
 
 	// special code for items which won't attach if X is present
 	switch( usAttachment )

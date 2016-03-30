@@ -618,6 +618,84 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 	return TRUE;
 }
 
+static BOOLEAN DoubleSampleRate(SAMPLETAG* const s)
+{
+	UINT8 bitcount = s->uiFlags & SAMPLE_16BIT ? 16 : 8;
+
+	SNDDBG("SMPL \"%s\" %dbit from %uHz to %uHz\n", s->pName, bitcount, s->uiSpeed, s->uiSpeed * 2);
+
+	UINT32 const n_samples = s->n_samples * 2;
+	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
+	if (ndata == NULL) return FALSE;
+	void*  const odata     = s->pData;
+	if (bitcount == 16)
+	{
+		INT16*       const dst = (INT16*)ndata;
+		const INT16* const src = (const INT16*)odata;
+		if (s->uiFlags & SAMPLE_STEREO)
+		{
+			for (size_t i = 0; i < s->n_samples; ++i)
+			{
+				INT16 i1c1 = src[2 * i + 0];
+				INT16 i1c2 = src[2 * i + 1];
+				INT16 i2c1 = i != s->n_samples-1 ? src[2 * i + 2] : i1c1;
+				INT16 i2c2 = i != s->n_samples-1 ? src[2 * i + 3] : i1c2;
+
+				dst[4 * i + 0] = i1c1;
+				dst[4 * i + 1] = i1c2;
+				dst[4 * i + 2] = (i1c1 + i2c1) / 2;
+				dst[4 * i + 3] = (i1c2 + i2c2) / 2;
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < s->n_samples; ++i)
+			{
+				INT16 i1 = src[i];
+				INT16 i2 = i != s->n_samples-1 ? src[i+1] : i1;
+				dst[i*2] = i1;
+				dst[i*2+1] = (i1 + i2) / 2;
+			}
+		}
+	}
+	else
+	{
+		UINT8*       const dst = (UINT8*)ndata;
+		const UINT8* const src = (const UINT8*)odata;
+		if (s->uiFlags & SAMPLE_STEREO)
+		{
+			for (size_t i = 0; i < s->n_samples; ++i)
+			{
+				UINT8 i1c1 = src[2 * i + 0];
+				UINT8 i1c2 = src[2 * i + 1];
+				UINT8 i2c1 = i != s->n_samples-1 ? src[2 * i + 2] : i1c1;
+				UINT8 i2c2 = i != s->n_samples-1 ? src[2 * i + 3] : i1c2;
+
+				dst[4 * i + 0] = i1c1;
+				dst[4 * i + 1] = i1c2;
+				dst[4 * i + 2] = (i1c1 + i2c1) / 2;
+				dst[4 * i + 3] = (i1c2 + i2c2) / 2;
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < s->n_samples; ++i)
+			{
+				UINT8 i1 = src[i];
+				UINT8 i2 = i != s->n_samples-1 ? src[i+1] : i1;
+				dst[i*2] = i1;
+				dst[i*2+1] = (i1 + i2) / 2;
+			}
+		}
+	}
+	s->pData = ndata;
+	free(odata);
+
+	s->n_samples  = n_samples;
+	s->uiSpeed   *= 2;
+	return TRUE;
+}
+
 
 #define FOURCC(a, b, c, d) ((UINT8)(d) << 24 | (UINT8)(c) << 16 | (UINT8)(b) << 8 | (UINT8)(a))
 
@@ -853,6 +931,11 @@ try
 sound_loaded:
 	strcpy(s->pName, pFilename);
 	if (s->uiSpeed == 44100 && !HalfSampleRate(s))
+	{
+		free(s->pData);
+		return NULL;
+	}
+	if (s->uiSpeed == 11025 && !DoubleSampleRate(s))
 	{
 		free(s->pData);
 		return NULL;

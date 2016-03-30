@@ -21,7 +21,7 @@
 #define		FONT_FCOLOR_PURPLE		160
 
 
-extern Font FontDefault;
+extern SGPFont FontDefault;
 
 
 void SetFontColors(UINT16 usColors);
@@ -50,23 +50,23 @@ void SetFontDestBuffer(SGPVSurface* dst);
 /** Replace backbuffer if it is used by the font system. */
 void ReplaceFontBackBuffer(SGPVSurface* oldBackbuffer, SGPVSurface* newBackbuffer);
 
-void SetFont(Font);
+void SetFont(SGPFont);
 
-void SetFontAttributes(Font, UINT8 foreground, UINT8 shadow = DEFAULT_SHADOW, UINT8 background = 0);
+void SetFontAttributes(SGPFont, UINT8 foreground, UINT8 shadow = DEFAULT_SHADOW, UINT8 background = 0);
 
-Font   LoadFontFile(const char* filename);
-UINT16 GetFontHeight(Font);
-void   InitializeFontManager(void);
-void   UnloadFont(Font);
+SGPFont LoadFontFile(const char* filename);
+UINT16  GetFontHeight(SGPFont);
+void    InitializeFontManager(void);
+void    UnloadFont(SGPFont);
 
-UINT32 GetCharWidth(HVOBJECT Font, wchar_t c);
+UINT32 GetCharWidth(HVOBJECT SGPFont, wchar_t c);
 
-INT16 StringPixLength(const wchar_t* string, Font);
+INT16 StringPixLength(const wchar_t* string, SGPFont);
 extern void SaveFontSettings(void);
 extern void RestoreFontSettings(void);
 
-void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font, INT16* psNewX, INT16* psNewY);
-void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font, INT16* psNewX, INT16* psNewY);
+void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, SGPFont, INT16* psNewX, INT16* psNewY);
+void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, SGPFont, INT16* psNewX, INT16* psNewY);
 
 bool IsPrintableChar(wchar_t);
 

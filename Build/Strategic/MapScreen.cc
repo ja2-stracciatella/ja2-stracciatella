@@ -714,7 +714,7 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 }
 
 
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font);
+static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont);
 
 
 static void PrintStat(UINT32 const change_time, UINT16 const stat_gone_up_bit, INT8 const stat_val, INT16 const x, INT16 const y)
@@ -749,8 +749,8 @@ static void DrawCharStats(SOLDIERTYPE const& s)
 }
 
 
-static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, Font);
-static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font);
+static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, SGPFont);
+static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont);
 
 
 static void DrawCharHealth(SOLDIERTYPE const& s)
@@ -2183,7 +2183,7 @@ try
 catch (...) { return ERROR_SCREEN; /* XXX TODO001A originally returned FALSE */ }
 
 
-static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, Font const font)
+static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, SGPFont const font)
 {
 	// draw monochrome string
 	SetFont(font);
@@ -2191,7 +2191,7 @@ static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, Font cons
 }
 
 
-static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font const font)
+static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont const font)
 {
 	INT16 cx;
 	INT16 cy;
@@ -2200,7 +2200,7 @@ static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w,
 }
 
 
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font const font)
+static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont const font)
 {
 	INT16 rx;
 	INT16 ry;
@@ -3387,13 +3387,6 @@ static void HandleModAlt(UINT32 const key)
 #endif
 
 		case 'x': HandleShortCutExitState(); break;
-
-#if defined JA2TESTVERSION
-		case 'y':
-			// Toggle SAM sites disable
-			fSAMSitesDisabledFromAttackingPlayer = !fSAMSitesDisabledFromAttackingPlayer;
-			break;
-#endif
 	}
 }
 
@@ -7917,7 +7910,7 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 	{
 		// if not warned already, and chopper empty, but mercs are in this sector
 		if ( !gfSkyriderEmptyHelpGiven &&
-			 ( GetNumberOfPassengersInHelicopter() == 0 ) &&
+			 ( GetNumberInVehicle(GetHelicopter()) == 0 ) &&
 			 ( PlayerMercsInHelicopterSector() > 0 ) )
 		{
 			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pSkyriderText[2], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);

@@ -181,11 +181,6 @@ static void deinitGameAndExit()
 	ShutdownVideoSurfaceManager();
   ShutdownVideoObjectManager();
   ShutdownVideoManager();
-
-#ifdef EXTREME_MEMORY_DEBUGGING
-	DumpMemoryInfoIntoFile( "ExtremeMemoryDump.txt", FALSE );
-#endif
-
   ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
 
   SDL_Quit();
