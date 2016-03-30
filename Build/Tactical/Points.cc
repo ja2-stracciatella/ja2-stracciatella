@@ -1168,7 +1168,7 @@ INT8 PtsToMoveDirection(const SOLDIERTYPE* const pSoldier, const INT8 bDirection
 	INT8	bOverTerrainType;
 	UINT16	usMoveModeToUse;
 
-  sGridno = NewGridNo( pSoldier->sGridNo, DirectionInc((INT16) bDirection ) );
+  sGridno = NewGridNo( pSoldier->sGridNo, DirectionInc( bDirection ) );
 
 	usMoveModeToUse = pSoldier->usUIMovementMode;
 
