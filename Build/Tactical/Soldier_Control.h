@@ -364,7 +364,7 @@ struct SOLDIERTYPE
 	FLOAT											  dYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
-	INT8												bDirection;
+	UINT8												bDirection;
 	INT16												sHeightAdjustment;
 	INT16												sDesiredHeight;
 	INT16												sTempNewGridNo;					// New grid no for advanced animations
