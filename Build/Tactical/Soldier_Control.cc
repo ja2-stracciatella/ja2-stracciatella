@@ -6062,7 +6062,7 @@ BOOLEAN DoMercBattleSound(SOLDIERTYPE* const s, BattleSound const battle_snd_id)
 BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 {
 	// Check if we are near a lower level
-	INT8							bNewDirection;
+	UINT8							bNewDirection;
 	BOOLEAN						fReturnVal = FALSE;
 	INT16							sNewGridNo;
 	// Default to true

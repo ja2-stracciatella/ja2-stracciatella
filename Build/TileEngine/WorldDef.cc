@@ -1626,7 +1626,7 @@ catch (...) { return FALSE; }
 
 static void OptimizeMapForShadows()
 {
-	INT8 const bDirectionsForShadowSearch[] =
+	UINT8 const bDirectionsForShadowSearch[] =
 	{
 		WEST,
 		SOUTHWEST,

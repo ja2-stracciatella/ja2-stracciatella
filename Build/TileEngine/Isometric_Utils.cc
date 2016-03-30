@@ -543,7 +543,7 @@ static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
 }
 
 
-bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
+bool FindHigherLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 {
 	if (s->bLevel > 0) return false;
 
@@ -579,7 +579,7 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 }
 
 
-bool FindLowerLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
+bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 {
 	if (s->bLevel == 0) return false;
 
@@ -730,7 +730,7 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 }
 
 
-BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const out_direction)
+BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const out_direction)
 {
 	UINT8			cnt;
 	INT16			sNewGridNo, sOtherSideOfFence;

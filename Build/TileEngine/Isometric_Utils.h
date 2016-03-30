@@ -76,8 +76,8 @@ BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRec
 INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest);
 INT16 SpacesAway(INT16 sOrigin, INT16 sDest);
 INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest);
-bool FindHigherLevel(SOLDIERTYPE const*, INT8* out_direction = 0);
-bool FindLowerLevel(SOLDIERTYPE const*, INT8* out_direction = 0);
+bool FindHigherLevel(SOLDIERTYPE const*, UINT8* out_direction = 0);
+bool FindLowerLevel(SOLDIERTYPE const*, UINT8* out_direction = 0);
 
 INT16 QuickestDirection(INT16 origin, INT16 dest);
 INT16 ExtQuickestDirection(INT16 origin, INT16 dest);
@@ -89,7 +89,7 @@ INT16 CenterX( INT16 sGridno );
 // Returns the (center ) cell coordinates in Y
 INT16 CenterY( INT16 sGridno );
 
-BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const*, INT8* out_direction = 0);
+BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const*, UINT8* out_direction = 0);
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
 INT16 RandomGridNo(void);

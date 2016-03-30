@@ -4948,7 +4948,7 @@ void ClimbUpOrDown()
   SOLDIERTYPE* const s = GetSelectedMan();
   if (s)
   {
-    INT8 direction;
+    UINT8 direction;
     if (FindHigherLevel(s, &direction))
     {
       BeginSoldierClimbUpRoof(s);
