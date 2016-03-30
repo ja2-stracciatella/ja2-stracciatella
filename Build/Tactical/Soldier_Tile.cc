@@ -228,7 +228,7 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 							// Is the next tile blocked too?
 							sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( guiPathingData[ 0 ] ) );
 
-							return( TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel ) );
+							return( TileIsClear( pSoldier, guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel ) );
 						}
 						else
 						{
@@ -560,7 +560,7 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 					// Is the next tile blocked too?
 					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( guiPathingData[ 0 ] ) );
 
-					bPathBlocked = TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel );
+					bPathBlocked = TileIsClear( pSoldier, guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel );
 
 					if ( bPathBlocked == MOVE_TILE_STATIONARY_BLOCKED )
 					{
@@ -578,7 +578,7 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 						// Is the next tile in this new path blocked too?
 						sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( guiPathingData[ 0 ] ) );
 
-						bPathBlocked = TileIsClear( pSoldier, (UINT8)guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel );
+						bPathBlocked = TileIsClear( pSoldier, guiPathingData[ 0 ], sNewGridNo, pSoldier->bLevel );
 
 						// now working with a path which does not go through people
 						pSoldier->ubDelayedMovementFlags &= (~DELAYED_MOVEMENT_FLAG_PATH_THROUGH_PEOPLE);
