@@ -611,60 +611,6 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 	}
 }
 
-
-// handle loyalty adjustment for dmg inflicted on a building
-static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sPointsDmg)
-{
-	// find this soldier's team and decrement the loyalty rating for them and for the people who police the sector
-	// more penalty for the people who did it, a lesser one for those who should have stopped it
-	INT16 sLoyaltyValue = 0;
-	INT16 sPolicingLoyalty = 0;
-
-	// hurt loyalty for damaging the building
-	sLoyaltyValue = sPointsDmg * MULTIPLIER_FOR_DAMAGING_A_BUILDING;
-
-	// penalty for not preventing the action
-	sPolicingLoyalty = sPointsDmg * MULTIPLIER_FOR_NOT_PREVENTING_BUILDING_DAMAGE;
-
-	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
-
-	// penalize the side that did it
-	if( pSoldier->bTeam == OUR_TEAM )
-	{
-		DecrementTownLoyalty( bTownId, sLoyaltyValue );
-	}
-	else if( pSoldier->bTeam == ENEMY_TEAM )
-	{
-		// enemy damaged sector, it's their fault
-		IncrementTownLoyalty( bTownId, sLoyaltyValue );
-	}
-	else if ( pSoldier->ubCivilianGroup == REBEL_CIV_GROUP )
-	{
-		// the rebels did it...are they on our side
-		if (!CheckFact(FACT_REBELS_HATE_PLAYER, 0))
-		{
-			sLoyaltyValue /= DIVISOR_FOR_REBEL_BUILDING_DMG;
-
-			// decrement loyalty value for rebels on our side dmging town
-			DecrementTownLoyalty( bTownId, sLoyaltyValue );
-		}
-	}
-
-
-	// penalize the side that should have stopped it
-	if (StrategicMap[pSoldier->sSectorX + pSoldier->sSectorY * MAP_WORLD_X].fEnemyControlled)
-	{
-		// enemy should have prevented it, let them suffer a little
-		IncrementTownLoyalty( bTownId, sPolicingLoyalty );
-	}
-	else
-	{
-		// we should have prevented it, we shall suffer
-		DecrementTownLoyalty( bTownId, sPolicingLoyalty );
-	}
-}
-
-
 void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16 const sSectorZ, UINT8 const ubChance)
 {
 	/* Stealing should fail anyway 'cause there shouldn't be a temp file for

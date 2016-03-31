@@ -296,35 +296,6 @@ static TEXTINPUTNODE* GetTextInputField(UINT8 const id)
 	return 0;
 }
 
-
-/* Remove the specified field from the existing fields.  If it doesn't exist,
- * then there will be an assertion failure. */
-static void RemoveTextInputField(UINT8 const id)
-{
-	TEXTINPUTNODE* const n = GetTextInputField(id);
-	AssertMsg(n, "Attempt to remove a text input field that doesn't exist.  Check your IDs.");
-	if (!n) return;
-
-	if (n == gpActive) SelectNextField();
-	TEXTINPUTNODE* const prev = n->prev;
-	TEXTINPUTNODE* const next = n->next;
-	*(next ? &next->prev : &gpTextInputTail) = prev;
-	*(prev ? &prev->next : &gpTextInputHead) = next;
-	if (n->szString)
-	{
-		MemFree(n->szString);
-		n->szString = 0;
-		MSYS_RemoveRegion(&n->region);
-	}
-	MemFree(n);
-	if (!gpTextInputHead)
-	{
-		gfTextInputMode = FALSE;
-		gfEditingText   = FALSE;
-	}
-}
-
-
 //Returns the gpActive field ID number.  It'll return -1 if no field is active.
 INT16 GetActiveFieldID()
 {
@@ -564,16 +535,6 @@ void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ub
 	pColors->ubHiForeColor = ubForeColor;
 	pColors->ubHiShadowColor = ubShadowColor;
 	pColors->ubHiBackColor = ubBackColor;
-}
-
-
-// optional color setups
-static void SetDisabledTextFieldColors(UINT8 ubForeColor, UINT8 ubShadowColor, UINT16 usTextFieldColor)
-{
-	pColors->fUseDisabledAutoShade = FALSE;
-	pColors->ubDisabledForeColor = ubForeColor;
-	pColors->ubDisabledShadowColor = ubShadowColor;
-	pColors->usDisabledTextFieldColor = usTextFieldColor;
 }
 
 void SetBevelColors( UINT16 usBrighterColor, UINT16 usDarkerColor )
@@ -1094,17 +1055,6 @@ void RenderAllTextFields()
 	}
 }
 
-
-static void EnableTextField(UINT8 const id)
-{
-	TEXTINPUTNODE* const n = GetTextInputField(id);
-	if (!n || n->fEnabled) return;
-	if (!gpActive) gpActive = n;
-	n->region.Enable();
-	n->fEnabled = TRUE;
-}
-
-
 void DisableTextField(UINT8 const id)
 {
 	TEXTINPUTNODE* const n = GetTextInputField(id);
@@ -1189,61 +1139,6 @@ void KillClipboard()
 		MemFree( szClipboard );
 		szClipboard = NULL;
 	}
-}
-
-
-static void ExecuteCopyCommand(void)
-{
-	UINT8 ubCount;
-	UINT8 ubStart, ubEnd;
-	if( !gpActive || !gpActive->szString )
-		return;
-	//Delete the current contents in the clipboard
-	KillClipboard();
-	//Calculate the start and end of the hilight
-	if (gubStartHilite != gubCursorPos)
-	{
-		if (gubStartHilite < gubCursorPos)
-		{
-			ubStart = gubStartHilite;
-			ubEnd = gubCursorPos;
-		}
-		else
-		{
-			ubStart = gubCursorPos;
-			ubEnd = gubStartHilite;
-		}
-		ubCount = (UINT8)(ubEnd - ubStart);
-		szClipboard = MALLOCN(UINT16, ubCount + 1);
-		for( ubCount = ubStart; ubCount < ubEnd; ubCount++ )
-		{
-			szClipboard[ ubCount-ubStart ] = gpActive->szString[ ubCount ];
-		}
-		szClipboard[ ubCount-ubStart ] = L'\0';
-	}
-}
-
-
-static void ExecutePasteCommand(void)
-{
-	UINT8 ubCount;
-	if( !gpActive || !szClipboard )
-		return;
-	DeleteHilitedText();
-
-	ubCount = 0;
-	while( szClipboard[ ubCount ] )
-	{
-		AddChar( szClipboard[ ubCount ] );
-		ubCount++;
-	}
-}
-
-
-static void ExecuteCutCommand(void)
-{
-	ExecuteCopyCommand();
-	DeleteHilitedText();
 }
 
 //Saves the current text input mode, then removes it and activates the previous text input mode,

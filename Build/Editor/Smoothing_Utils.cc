@@ -248,13 +248,6 @@ static void ChangeWall(LEVELNODE const* const wall, UINT32 const map_idx, UINT16
 	ReplaceStructIndex(map_idx, wall->usIndex, tile_idx);
 }
 
-
-static void ChangeHorizontalWall(UINT32 const map_idx, UINT16 const new_piece)
-{
-	ChangeWall(GetHorizontalWall(map_idx), map_idx, new_piece);
-}
-
-
 void ChangeVerticalWall(UINT32 const map_idx, UINT16 const new_piece)
 {
 	ChangeWall(GetVerticalWall(map_idx), map_idx, new_piece);

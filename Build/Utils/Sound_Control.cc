@@ -410,15 +410,6 @@ UINT32 PlayJA2Ambient(AmbientSoundID const usNum, UINT32 const ubVolume, UINT32 
 	return SoundPlay(szAmbientEffects[usNum], vol, MIDDLEPAN, ubLoops, NULL, NULL);
 }
 
-
-static UINT32 PlayJA2AmbientRandom(AmbientSoundID const usNum, UINT32 const uiTimeMin, UINT32 const uiTimeMax)
-{
-	char const* const filename = szAmbientEffects[usNum];
-	UINT32      const vol      = AmbientVols[usNum];
-	return SoundPlayRandom(filename, uiTimeMin, uiTimeMax, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
-}
-
-
 UINT32 PlayLocationJA2SampleFromFile(UINT16 const grid_no, char const* const filename, UINT32 const base_vol, UINT32 const loops)
 {
 	UINT32 const vol = SoundVolume(base_vol, grid_no);

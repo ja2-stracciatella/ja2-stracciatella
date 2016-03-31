@@ -164,24 +164,6 @@ AIR_RAID_POS	ubXYTragetInvFromDirection[ ] =
 	{ -1, -1 }
 };
 
-
-static void ScheduleAirRaid(AIR_RAID_DEFINITION* pAirRaidDef)
-{
-	// Make sure only one is cheduled...
-	if ( gfAirRaidScheduled )
-	{
-		return;
-	}
-
-	// Copy definiaiotn structure into global struct....
-	gAirRaidDef = *pAirRaidDef;
-
-	AddSameDayStrategicEvent( EVENT_BEGIN_AIR_RAID, ( GetWorldMinutesInDay() + pAirRaidDef->ubNumMinsFromCurrentTime ), 0 );
-
-	gfAirRaidScheduled = TRUE;
-}
-
-
 BOOLEAN BeginAirRaid( )
 {
 	BOOLEAN fOK = FALSE;

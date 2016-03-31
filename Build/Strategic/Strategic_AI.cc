@@ -4014,42 +4014,6 @@ static void MassFortifyTowns(void)
 	}
 }
 
-
-static void RenderAIViewerGarrisonInfo(INT32 x, INT32 y, SECTORINFO* pSector)
-{
-	if( pSector->ubGarrisonID != NO_GARRISON )
-	{
-		INT32 iDesired, iSurplus;
-		iDesired = gArmyComp[ gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bDesiredPopulation;
-		iSurplus = pSector->ubNumTroops + pSector->ubNumAdmins + pSector->ubNumElites - iDesired;
-		SetFontForeground( FONT_WHITE );
-		if( iSurplus >= 0 )
-		{
-			mprintf( x, y, L"%d desired, %d surplus troops", iDesired, iSurplus );
-		}
-		else
-		{
-			mprintf( x, y, L"%d desired, %d reinforcements requested", iDesired, -iSurplus );
-		}
-		if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
-		{
-			GROUP *pGroup;
-			pGroup = GetGroup( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID );
-			mprintf( x, y+10, L"%d reinforcements on route from group %d in %c%d", pGroup->ubGroupSize, pGroup->ubGroupID,
-				pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
-		}
-		else
-		{
-			MPrint(x, y + 10, L"No pending reinforcements for this sector.");
-		}
-	}
-	else
-	{
-		SetFontForeground( FONT_GRAY2 );
-		MPrint(x, y, L"No garrison information for this sector.");
-	}
-}
-
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID )
 {
 	switch( ubSectorID )
