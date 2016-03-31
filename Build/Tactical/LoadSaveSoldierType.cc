@@ -6,7 +6,7 @@
 #include "LoadSaveSoldierType.h"
 #include "Overhead.h"
 #include "Tactical_Save.h"
-
+#include "Types.h"
 
 static UINT32 MercChecksum(SOLDIERTYPE const& s)
 {
@@ -34,7 +34,7 @@ static UINT32 MercChecksum(SOLDIERTYPE const& s)
 }
 
 
-void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool stracLinuxFormat)
+void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool stracLinuxFormat, UINT32 uiSavedGameVersion)
 {
 	memset(s, 0, sizeof(*s));
 
@@ -211,9 +211,28 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I16(d, s->sFinalDestination)
 	EXTR_I8(d, s->bLevel)
 	EXTR_SKIP(d, 3)
-	EXTR_U16A(d, s->usPathingData, lengthof(s->usPathingData))
-	EXTR_U16(d, s->usPathDataSize)
-	EXTR_U16(d, s->usPathIndex)
+
+	/* if savegame version < 100, pathing stuff takes up more space */
+	if (uiSavedGameVersion < 100)
+	{
+		UINT8 cnt = 0;
+		while (cnt < lengthof(s->usPathingData))
+		{
+			s->usPathingData[cnt] = (UINT8)*d;
+			d += 2;
+			cnt++;
+		}
+		s->usPathDataSize = (UINT8)*d;
+		d += 2;
+		s->usPathIndex = (UINT8)*d;
+		d += 2;
+	}
+	else
+	{
+		EXTR_U8A(d, s->usPathingData, lengthof(s->usPathingData))
+		EXTR_U8(d, s->usPathDataSize)
+		EXTR_U8(d, s->usPathIndex)
+	}
 	EXTR_I16(d, s->sBlackList)
 	EXTR_I8(d, s->bAimTime)
 	EXTR_I8(d, s->bShownAimTime)
@@ -712,9 +731,9 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I16(d, s->sFinalDestination)
 	INJ_I8(d, s->bLevel)
 	INJ_SKIP(d, 3)
-	INJ_U16A(d, s->usPathingData, lengthof(s->usPathingData))
-	INJ_U16(d, s->usPathDataSize)
-	INJ_U16(d, s->usPathIndex)
+	INJ_U8A(d, s->usPathingData, lengthof(s->usPathingData))
+	INJ_U8(d, s->usPathDataSize)
+	INJ_U8(d, s->usPathIndex)
 	INJ_I16(d, s->sBlackList)
 	INJ_I8(d, s->bAimTime)
 	INJ_I8(d, s->bShownAimTime)
