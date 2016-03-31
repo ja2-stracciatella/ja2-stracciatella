@@ -1,5 +1,5 @@
 #include "Font.h"
-//#include "AI.h"
+#include "Debug_Pages.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"
 #include "Event_Pump.h"
@@ -2815,95 +2815,47 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 
 
-#define COLOR1 FONT_MCOLOR_BLACK<<8 | FONT_MCOLOR_LTGREEN
-#define COLOR2 FONT_MCOLOR_BLACK<<8 | FONT_MCOLOR_LTGRAY2
-
-#define DEBUG_FONT FONT14ARIAL
-#define DEBUG_SCREEN_OFFSET_Y 20
-#define DEBUG_SCREEN_OFFSET_X 10
-#define LINE_HEIGHT 15
-#define PAGE_START_Y DEBUG_SCREEN_OFFSET_Y + LINE_HEIGHT
-#define FIRST_COLUMN DEBUG_SCREEN_OFFSET_X
-#define SECOND_COLUMN 300
-#define LABEL_WIDTH 150
-
-#define MPageHeader(...) SetFont(DEBUG_FONT); SetFontColors(COLOR1); mprintf(FIRST_COLUMN, DEBUG_SCREEN_OFFSET_Y, __VA_ARGS__);
-
-static void MHeader(INT32 const x, INT32 const y, wchar_t const* const str)
-{
-  SetFontColors(COLOR1);
-  MPrint(x, y, str);
-  SetFontColors(COLOR2);
-}
-
-
-static void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val)
-{
-  MHeader(x, y, header);
-  mprintf(x+LABEL_WIDTH, y, L"%d", val);
-}
-
-
-static void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, wchar_t const* const val)
-{
-  MHeader(x, y, header);
-  mprintf(x+LABEL_WIDTH, y, L"%ls", val);
-}
-
-
-static void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, void const* const val)
-{
-  MHeader(x, y, header);
-  mprintf(x+LABEL_WIDTH, y, L"%p", val);
-}
-
-static void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val, INT32 const effective_val)
-{
-  MHeader(x, y, header);
-  mprintf(x+LABEL_WIDTH, y, L"%d ( %d )", val, effective_val);
-}
-
 void DebugSoldierPage1()
 {
-  INT32 const h = LINE_HEIGHT;
+  INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
 		MPageHeader(L"DEBUG SOLDIER PAGE ONE, GRIDNO %d", s->sGridNo);
 
-    INT32 y = PAGE_START_Y;
+    INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(FIRST_COLUMN, y += h, L"ID:",   s->ubID);
-		MPrintStat(FIRST_COLUMN, y += h, L"TEAM:", s->bTeam);
-		MPrintStat(FIRST_COLUMN, y += h, L"SIDE:", s->bSide);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:",   s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"TEAM:", s->bTeam);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"SIDE:", s->bSide);
 
-		MHeader(FIRST_COLUMN, y +=  h, L"STATUS FLAGS:");
-		mprintf(FIRST_COLUMN+LABEL_WIDTH, y,       L"%x", s->uiStatusFlags);
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y +=  h, L"STATUS FLAGS:");
+		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y,       L"%x", s->uiStatusFlags);
 
-		MPrintStat(FIRST_COLUMN, y += h, L"HUMAN:",    gTacticalStatus.Team[s->bTeam].bHuman);
-		MPrintStat(FIRST_COLUMN, y += h, L"APs:",      s->bActionPoints);
-		MPrintStat(FIRST_COLUMN, y += h, L"Breath:",   s->bBreath);
-		MPrintStat(FIRST_COLUMN, y += h, L"Life:",     s->bLife);
-		MPrintStat(FIRST_COLUMN, y += h, L"LifeMax:",  s->bLifeMax);
-		MPrintStat(FIRST_COLUMN, y += h, L"Bleeding:", s->bBleeding);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"HUMAN:",    gTacticalStatus.Team[s->bTeam].bHuman);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"APs:",      s->bActionPoints);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Breath:",   s->bBreath);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Life:",     s->bLife);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"LifeMax:",  s->bLifeMax);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Bleeding:", s->bBleeding);
 
-		y = PAGE_START_Y;
+		y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(SECOND_COLUMN, y += h, L"Agility:",               s->bAgility,      EffectiveAgility(s));
-		MPrintStat(SECOND_COLUMN, y += h, L"Dexterity:",             s->bDexterity,    EffectiveDexterity(s));
-		MPrintStat(SECOND_COLUMN, y += h, L"Strength:",              s->bStrength);
-		MPrintStat(SECOND_COLUMN, y += h, L"Wisdom:",                s->bWisdom,       EffectiveWisdom(s));
-		MPrintStat(SECOND_COLUMN, y += h, L"Exp Lvl:",               s->bExpLevel,     EffectiveExpLevel(s));
-		MPrintStat(SECOND_COLUMN, y += h, L"Mrksmnship",             s->bMarksmanship, EffectiveMarksmanship(s));
-		MPrintStat(SECOND_COLUMN, y += h, L"Mechanical:",            s->bMechanical);
-		MPrintStat(SECOND_COLUMN, y += h, L"Explosive:",             s->bExplosive);
-		MPrintStat(SECOND_COLUMN, y += h, L"Medical:",               s->bMedical);
-		MPrintStat(SECOND_COLUMN, y += h, L"Drug Effects:",          s->bDrugEffect[0]);
-		MPrintStat(SECOND_COLUMN, y += h, L"Drug Side Effects:",     s->bDrugSideEffect[0]);
-		MPrintStat(SECOND_COLUMN, y += h, L"Booze Effects:",         s->bDrugEffect[1]);
-		MPrintStat(SECOND_COLUMN, y += h, L"Hangover Side Effects:", s->bDrugSideEffect[1]);
-		MPrintStat(SECOND_COLUMN, y += h, L"AI has Keys:",           s->bHasKeys);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Agility:",               s->bAgility,      EffectiveAgility(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Dexterity:",             s->bDexterity,    EffectiveDexterity(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Strength:",              s->bStrength);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Wisdom:",                s->bWisdom,       EffectiveWisdom(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Exp Lvl:",               s->bExpLevel,     EffectiveExpLevel(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Mrksmnship",             s->bMarksmanship, EffectiveMarksmanship(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Mechanical:",            s->bMechanical);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Explosive:",             s->bExplosive);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Medical:",               s->bMedical);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Drug Effects:",          s->bDrugEffect[0]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Drug Side Effects:",     s->bDrugSideEffect[0]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Booze Effects:",         s->bDrugEffect[1]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Hangover Side Effects:", s->bDrugSideEffect[1]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"AI has Keys:",           s->bHasKeys);
 	}
 	else if (GetMouseMapPos() != NOWHERE)
 	{
@@ -2925,18 +2877,18 @@ void DebugSoldierPage2()
 		"NORTH"
 	};
 
-	INT32 const h = LINE_HEIGHT;
+	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
 		MPageHeader(L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", s->sGridNo);
 
-		INT32 y = PAGE_START_Y;
+		INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(FIRST_COLUMN, y += h, L"ID:", s->ubID);
-		MPrintStat(FIRST_COLUMN, y += h, L"Body Type:", s->ubBodyType);
-		MPrintStat(FIRST_COLUMN, y += h, L"Opp Cnt:", s->bOppCnt);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:", s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Body Type:", s->ubBodyType);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Opp Cnt:", s->bOppCnt);
 
 		wchar_t const* opp_header;
 		INT8    const* opp_list = s->bOppList;
@@ -2949,43 +2901,43 @@ void DebugSoldierPage2()
 		{
 			opp_header = L"OppList A:";
 		}
-		MHeader(FIRST_COLUMN, y += h, opp_header);
-		mprintf(FIRST_COLUMN+LABEL_WIDTH, y, L"%d %d %d %d %d %d %d %d",
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, opp_header);
+		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d %d %d %d %d %d",
 			opp_list[0], opp_list[1], opp_list[2], opp_list[3],
 			opp_list[4], opp_list[5], opp_list[6], opp_list[7]
 		);
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Visible:",     s->bVisible);
-		MPrintStat(FIRST_COLUMN, y += h, L"Direction:",   gzDirectionStr[s->bDirection]);
-		MPrintStat(FIRST_COLUMN, y += h, L"DesDirection", gzDirectionStr[s->bDesiredDirection]);
-		MPrintStat(FIRST_COLUMN, y += h, L"GridNo:",      s->sGridNo);
-		MPrintStat(FIRST_COLUMN, y += h, L"Dest:",        s->sFinalDestination);
-		MPrintStat(FIRST_COLUMN, y += h, L"Path Size:",   s->usPathDataSize);
-		MPrintStat(FIRST_COLUMN, y += h, L"Path Index:",  s->usPathIndex);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Visible:",     s->bVisible);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Direction:",   gzDirectionStr[s->bDirection]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"DesDirection", gzDirectionStr[s->bDesiredDirection]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"GridNo:",      s->sGridNo);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Dest:",        s->sFinalDestination);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Size:",   s->usPathDataSize);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Index:",  s->usPathIndex);
 
-		MHeader(FIRST_COLUMN, y += h, L"First 3 Steps:");
-		mprintf(FIRST_COLUMN+LABEL_WIDTH, y, L"%d %d %d",
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"First 3 Steps:");
+		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
 			s->usPathingData[0],
 			s->usPathingData[1],
 			s->usPathingData[2]
 		);
 
-		MHeader(FIRST_COLUMN, y += h, L"Next 3 Steps:");
-		mprintf(FIRST_COLUMN+LABEL_WIDTH, y, L"%d %d %d",
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Next 3 Steps:");
+		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
 			s->usPathingData[s->usPathIndex],
 			s->usPathingData[s->usPathIndex + 1],
 			s->usPathingData[s->usPathIndex + 2]
 		);
 
-		MPrintStat(FIRST_COLUMN, y += h, L"FlashInd:",    s->fFlashLocator);
-		MPrintStat(FIRST_COLUMN, y += h, L"ShowInd:",     s->fShowLocator);
-		MPrintStat(FIRST_COLUMN, y += h, L"Main hand:",   ShortItemNames[s->inv[HANDPOS].usItem]);
-		MPrintStat(FIRST_COLUMN, y += h, L"Second hand:", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"FlashInd:",    s->fFlashLocator);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ShowInd:",     s->fShowLocator);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Main hand:",   ShortItemNames[s->inv[HANDPOS].usItem]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Second hand:", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
 
 		const GridNo map_pos = GetMouseMapPos();
 		if (map_pos != NOWHERE)
 		{
-			MPrintStat(FIRST_COLUMN, y += h, L"CurrGridNo:", map_pos);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"CurrGridNo:", map_pos);
 		}
 	}
 	else
@@ -2995,56 +2947,54 @@ void DebugSoldierPage2()
 
 		MPageHeader(L"DEBUG LAND PAGE TWO");
 
-		INT32                    y  = PAGE_START_Y;
+		INT32                    y  = DEBUG_PAGE_START_Y;
 		MAP_ELEMENT const* const me = &gpWorldLevelData[map_pos];
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Land Raised:", me->sHeight);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Raised:", me->sHeight);
 
 		LEVELNODE const* const land_head = me->pLandHead;
-		MPrintStat(FIRST_COLUMN, y += h, L"Land Node:", land_head);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Node:", land_head);
 		if (land_head != NULL)
 		{
 			UINT16 const idx = land_head->usIndex;
-			MPrintStat(FIRST_COLUMN, y += h, L"Land Node:", idx);
-			MPrintStat(FIRST_COLUMN, y += h, L"Full Land:", gTileDatabase[idx].ubFullTile);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Node:", idx);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Full Land:", gTileDatabase[idx].ubFullTile);
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Land St Node:", me->pLandStart);
-		MPrintStat(FIRST_COLUMN, y += h, L"GRIDNO:",       map_pos);
-
-		SetFontColors(COLOR2);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land St Node:", me->pLandStart);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"GRIDNO:",       map_pos);
 
 		if (me->uiFlags & MAPELEMENT_MOVEMENT_RESERVED)
 		{
-			mprintf(  FIRST_COLUMN+LABEL_WIDTH, y += h, L"Merc: %d",  me->ubReservedSoldierID);
-			MPrint( FIRST_COLUMN, y,      L"RESERVED MOVEMENT FLAG ON:");
+			mprintf(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Merc: %d",  me->ubReservedSoldierID);
+			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      L"RESERVED MOVEMENT FLAG ON:");
 		}
 
 		LEVELNODE const* const node = GetCurInteractiveTile();
 		if (node != NULL)
 		{
-			mprintf(  FIRST_COLUMN+LABEL_WIDTH, y += h, L"Tile: %d", node->usIndex);
-			MPrint( FIRST_COLUMN, y,      L"ON INT TILE");
+			mprintf(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Tile: %d", node->usIndex);
+			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      L"ON INT TILE");
 		}
 
 		if (me->uiFlags & MAPELEMENT_REVEALED)
 		{
-			MPrint(FIRST_COLUMN, y += h, L"REVEALED");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, L"REVEALED");
 		}
 
 		if (me->uiFlags & MAPELEMENT_RAISE_LAND_START)
 		{
-			MPrint(FIRST_COLUMN, y += h, L"Land Raise Start");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Raise Start");
 		}
 
 		if (me->uiFlags & MAPELEMENT_RAISE_LAND_END)
 		{
-			MPrint(FIRST_COLUMN, y += h, L"Raise Land End");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Raise Land End");
 		}
 
 		if (gubWorldRoomInfo[map_pos] != NO_ROOM)
 		{
-			MPrintStat(FIRST_COLUMN, y += h, L"Room Number", gubWorldRoomInfo[map_pos]);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Room Number", gubWorldRoomInfo[map_pos]);
 		}
 
 		if (me->ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT)
@@ -3065,96 +3015,96 @@ void DebugSoldierPage3()
 		"BLACK"
 	};
 
-	INT32 const h = LINE_HEIGHT;
+	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
     MPageHeader(L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", s->sGridNo);
 
-		INT32 y = PAGE_START_Y;
+		INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(FIRST_COLUMN, y += h, L"ID:",     s->ubID);
-		MPrintStat(FIRST_COLUMN, y += h, L"Action:", gzActionStr[s->bAction]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:",     s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Action:", gzActionStr[s->bAction]);
 
 		if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
-      MPrintStat(FIRST_COLUMN, y += h, L"Alert:", gzAlertStr[s->bAlertStatus]);
+      MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Alert:", gzAlertStr[s->bAlertStatus]);
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Action Data:", s->usActionData);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Action Data:", s->usActionData);
 
     if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
-      MPrintStat(FIRST_COLUMN, y += h, L"AIMorale", s->bAIMorale);
+      MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"AIMorale", s->bAIMorale);
 		}
 		else
 		{
-      MPrintStat(FIRST_COLUMN, y += h, L"Morale", s->bMorale);
+      MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Morale", s->bMorale);
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Delayed Movement:", s->fDelayedMovement);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Delayed Movement:", s->fDelayedMovement);
 
 		if (gubWatchedLocPoints[s->ubID][0] > 0)
 		{
-			mprintf(FIRST_COLUMN, y += h, L"Watch %d/%d for %d pts",
+			mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Watch %d/%d for %d pts",
 				gsWatchedLoc[s->ubID][0],
 				gbWatchedLocLevel[s->ubID][0],
 				gubWatchedLocPoints[s->ubID][0]
 			);
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"ActionInProg:", s->bActionInProgress);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ActionInProg:", s->bActionInProgress);
 
 		if (gubWatchedLocPoints[s->ubID][1] > 0)
 		{
-			mprintf(FIRST_COLUMN+LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
 				gsWatchedLoc[s->ubID][1],
 				gbWatchedLocLevel[s->ubID][1],
 				gubWatchedLocPoints[s->ubID][1]
 			);
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Last Action:", gzActionStr[s->bLastAction]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Last Action:", gzActionStr[s->bLastAction]);
 
 		if (gubWatchedLocPoints[s->ubID][2] > 0)
 		{
-			mprintf(FIRST_COLUMN+LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
 				gsWatchedLoc[s->ubID][2],
 				gbWatchedLocLevel[s->ubID][2],
 				gubWatchedLocPoints[s->ubID][2]
 			);
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Animation:",   gAnimControl[s->usAnimState].zAnimStr);
-		MPrintStat(FIRST_COLUMN, y += h, L"Getting Hit:", s->fGettingHit);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Animation:",   gAnimControl[s->usAnimState].zAnimStr);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Getting Hit:", s->fGettingHit);
 
 		if (s->ubCivilianGroup != 0)
 		{
-      MPrintStat(FIRST_COLUMN, y += h, L"Civ group", s->ubCivilianGroup);
+      MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Civ group", s->ubCivilianGroup);
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Suppress pts:",       s->ubSuppressionPoints);
-		MPrintStat(FIRST_COLUMN, y += h, L"Attacker ID:",        SOLDIER2ID(s->attacker));
-		MPrintStat(FIRST_COLUMN, y += h, L"EndAINotCalled:",     s->fTurnInProgress);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Suppress pts:",       s->ubSuppressionPoints);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Attacker ID:",        SOLDIER2ID(s->attacker));
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"EndAINotCalled:",     s->fTurnInProgress);
 
-    y = PAGE_START_Y;
+    y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(SECOND_COLUMN, y += h, L"PrevAnimation:",      gAnimControl[s->usOldAniState].zAnimStr);
-		MPrintStat(SECOND_COLUMN, y += h, L"PrevAniCode:",        gusAnimInst[s->usOldAniState][s->sOldAniCode]);
-		MPrintStat(SECOND_COLUMN, y += h, L"GridNo:",             s->sGridNo);
-		MPrintStat(SECOND_COLUMN, y += h, L"AniCode:",            gusAnimInst[s->usAnimState][s->usAniCode]);
-		MPrintStat(SECOND_COLUMN, y += h, L"No APS To fin Move:", s->fNoAPToFinishMove);
-		MPrintStat(SECOND_COLUMN, y += h, L"Bullets out:",        s->bBulletsLeft);
-		MPrintStat(SECOND_COLUMN, y += h, L"Anim non-int:",       s->fInNonintAnim);
-		MPrintStat(SECOND_COLUMN, y += h, L"RT Anim non-int:",    s->fRTInNonintAnim);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"PrevAnimation:",      gAnimControl[s->usOldAniState].zAnimStr);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"PrevAniCode:",        gusAnimInst[s->usOldAniState][s->sOldAniCode]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"GridNo:",             s->sGridNo);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"AniCode:",            gusAnimInst[s->usAnimState][s->usAniCode]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"No APS To fin Move:", s->fNoAPToFinishMove);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Bullets out:",        s->bBulletsLeft);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Anim non-int:",       s->fInNonintAnim);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"RT Anim non-int:",    s->fRTInNonintAnim);
 
 		// OPIONION OF SELECTED MERC
 		const SOLDIERTYPE* const sel = GetSelectedMan();
 		if (sel != NULL &&
 				sel->ubProfile < FIRST_NPC && s->ubProfile != NO_PROFILE)
 		{
-			MPrintStat(SECOND_COLUMN, y += h, L"NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
+			MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
 		}
 	}
 	else
@@ -3164,40 +3114,40 @@ void DebugSoldierPage3()
 
     MPageHeader(L"DEBUG LAND PAGE THREE");
 
-		INT32 y = PAGE_START_Y;
+		INT32 y = DEBUG_PAGE_START_Y;
 
 		// OK, display door information here.....
 		DOOR_STATUS const* const door = GetDoorStatus(map_pos);
 		if (door == NULL)
 		{
-			MHeader(FIRST_COLUMN, y += h, L"No Door Status");
+			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"No Door Status");
 		}
 		else
 		{
-			MPrintStat(FIRST_COLUMN, y += h, L"Door Status Found:", map_pos);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Door Status Found:", map_pos);
 
 			wchar_t const* const door_state =
 				door->ubFlags & DOOR_OPEN ? L"OPEN" : L"CLOSED";
-			MPrintStat(FIRST_COLUMN, y += h, L"Actual Status:", door_state);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Actual Status:", door_state);
 
 			wchar_t const* const perceived_state =
 				door->ubFlags & DOOR_PERCEIVED_NOTSET ? L"NOT SET" :
 				door->ubFlags & DOOR_PERCEIVED_OPEN   ? L"OPEN"    :
 				                                        L"CLOSED";
-			MPrintStat(FIRST_COLUMN, y += h, L"Perceived Status:", perceived_state);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Perceived Status:", perceived_state);
 		}
 
 		//Find struct data and se what it says......
 		STRUCTURE const* const structure = FindStructure(map_pos, STRUCTURE_ANYDOOR);
 		if (structure == NULL)
 		{
-			MHeader(FIRST_COLUMN, y += h, L"No Door Struct Data");
+			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"No Door Struct Data");
 		}
 		else
 		{
 			wchar_t const* const structure_state =
 				structure->fFlags & STRUCTURE_OPEN ? L"OPEN" : L"CLOSED";
-			MPrintStat(FIRST_COLUMN, y += h, L"State:", structure_state);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"State:", structure_state);
 		}
 	}
 }
@@ -3234,11 +3184,11 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 				wcscat(str, temp);
 			}
 			wcscat(str, L")");
-			mprintf(SECOND_COLUMN, y, str);
+			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, str);
 		}
 		else
 		{
-			mprintf(SECOND_COLUMN, y, L"%d rounds", o->bStatus[0]);
+			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d rounds", o->bStatus[0]);
 		}
 	}
 	else
@@ -3264,11 +3214,11 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 
 		if (o->ubNumberOfObjects > 1)
 		{ //everything
-			mprintf(SECOND_COLUMN, y, L"%d%%  Qty:  %d%ls", o->bStatus[0], o->ubNumberOfObjects, attachments);
+			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d%%  Qty:  %d%ls", o->bStatus[0], o->ubNumberOfObjects, attachments);
 		}
 		else
 		{ //condition and attachments
-			mprintf(SECOND_COLUMN, y, L"%d%%%ls", o->bStatus[0], attachments);
+			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d%%%ls", o->bStatus[0], attachments);
 		}
 	}
 }
@@ -3276,9 +3226,9 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 
 static void PrintItem(INT32 const y, wchar_t const* const header, OBJECTTYPE const* o)
 {
-	MHeader(FIRST_COLUMN, y, header);
+	MHeader(DEBUG_PAGE_FIRST_COLUMN, y, header);
 	if (!o->usItem) return;
-	mprintf(FIRST_COLUMN+LABEL_WIDTH, y, L"%ls", ShortItemNames[o->usItem]);
+	mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%ls", ShortItemNames[o->usItem]);
 	WriteQuantityAndAttachments(o, y);
 }
 
@@ -3287,15 +3237,15 @@ void DebugSoldierPage4()
 {
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 
-  INT32 const h = LINE_HEIGHT;
+  INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 
 	if (s != NULL)
 	{
 		MPageHeader(L"DEBUG SOLDIER PAGE FOUR, GRIDNO %d", s->sGridNo);
 
-    INT32 y = PAGE_START_Y;
+    INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(FIRST_COLUMN, y += h, L"Exp. Level:", s->bExpLevel);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Exp. Level:", s->bExpLevel);
 		wchar_t const* sclass;
 		switch (s->ubSoldierClass)
 		{
@@ -3310,7 +3260,7 @@ void DebugSoldierPage4()
 			/* don't care (don't write anything) */
 			default:                            sclass = NULL;               break;
 		}
-		if (sclass) mprintf(SECOND_COLUMN, y, L"%ls", sclass);
+		if (sclass) mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%ls", sclass);
 
 		if (s->bTeam != OUR_TEAM)
 		{
@@ -3342,7 +3292,7 @@ void DebugSoldierPage4()
 			y += h;
 			if (node)
 			{
-				mprintf(FIRST_COLUMN, y, L"%ls, %ls, REL EQUIP: %d, REL ATTR: %d",
+				mprintf(DEBUG_PAGE_FIRST_COLUMN, y, L"%ls, %ls, REL EQUIP: %d, REL ATTR: %d",
 					orders, attitude,
 					node->pBasicPlacement->bRelativeEquipmentLevel,
 					node->pBasicPlacement->bRelativeAttributeLevel
@@ -3350,11 +3300,11 @@ void DebugSoldierPage4()
 			}
 			else
 			{
-				mprintf(FIRST_COLUMN, y, L"%ls, %ls", orders, attitude);
+				mprintf(DEBUG_PAGE_FIRST_COLUMN, y, L"%ls, %ls", orders, attitude);
 			}
 		}
 
-		MPrintStat(FIRST_COLUMN, y += h, L"ID:", s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:", s->ubID);
 
 		PrintItem(y += h, L"HELMETPOS:",     &s->inv[HELMETPOS]);
 		PrintItem(y += h, L"VESTPOS:",       &s->inv[VESTPOS]);
