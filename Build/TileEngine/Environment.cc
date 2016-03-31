@@ -123,10 +123,6 @@ BOOLEAN		gfDoLighting		 = FALSE;
 UINT8		gubDesertTemperature = 0;
 UINT8		gubGlobalTemperature = 0;
 
-
-static void EnvDoLightning(void);
-
-
 // polled by the game to handle time/atmosphere changes from gamescreen
 void EnvironmentController( BOOLEAN fCheckForLights )
 {
@@ -375,78 +371,6 @@ void ForecastDayEvents( )
 	}
 
 }
-
-
-static void EnvEnableTOD(void)
-{
-	fTimeOfDayControls=TRUE;
-}
-
-
-static void EnvDisableTOD(void)
-{
-	fTimeOfDayControls=FALSE;
-}
-
-
-static void EnvDoLightning(void)
-{
-static UINT32 uiCount=0, uiIndex=0, uiStrike=0, uiFrameNext=1000;
-static UINT8 ubLevel=0, ubLastLevel=0;
-
-  if ( gfPauseDueToPlayerGamePause )
-  {
-    return;
-  }
-
-	uiCount++;
-	if(uiCount >= (uiFrameNext+10))
-	{
-		uiCount=0;
-		uiIndex=0;
-		ubLevel=0;
-		ubLastLevel=0;
-
-		uiStrike=Random(3);
-		uiFrameNext=1000+Random(1000);
-	}
-	else if(uiCount >= uiFrameNext)
-	{
-		if(uiCount == uiFrameNext)
-		{
-			//EnvStopCrickets();
-			PlayJA2Ambient(Random(2) == 0 ? LIGHTNING_1 : LIGHTNING_2, HIGHVOLUME, 1);
-		}
-
-		while(uiCount > ((UINT32)ubLightningTable[uiStrike][uiIndex][0] + uiFrameNext))
-			uiIndex++;
-
-		ubLastLevel=ubLevel;
-		ubLevel=ubLightningTable[uiStrike][uiIndex][1];
-
-    // ATE: Don't modify if scrolling!
-	  if (!gfScrollPending && !g_scroll_inertia)
-	  {
- 		  if(ubLastLevel!=ubLevel)
-		  {
-			  if(ubLevel > ubLastLevel)
-			  {
-					LightAddBaseLevel(ubLevel - ubLastLevel);
-				  if(ubLevel > 0)
-					  RenderSetShadows(TRUE);
-			  }
-			  else
-			  {
-				  LightSubtractBaseLevel(ubLastLevel - ubLevel);
-				  if(ubLevel > 0)
-					  RenderSetShadows(TRUE);
-			  }
-			  SetRenderFlags(RENDER_FLAG_FULL);
-		  }
-    }
-	}
-}
-
 
 UINT8 GetTimeOfDayAmbientLightLevel()
 {

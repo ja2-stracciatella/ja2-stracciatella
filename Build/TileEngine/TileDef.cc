@@ -272,55 +272,6 @@ bool AnyHeigherLand(UINT32 const map_idx, UINT32 const src_type, UINT8* const ou
 	return found;
 }
 
-
-static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLevel)
-{
-	LEVELNODE		*pLand		 = NULL;
-	UINT8					level = 0;
-	UINT8					ubSrcTypeLevel;
-  TILE_ELEMENT		TileElem;
-
-	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
-
-	UINT8 ubSrcLogHeight = GetTileTypeLogicalHeight(uiSrcType);
-
-	GetTypeLandLevel( iMapIndex, uiSrcType, &ubSrcTypeLevel );
-
-	// Look through all objects and Search for type
-	while( pLand != NULL )
-	{
-		// Get type and height
-		const UINT32 fTileType = GetTileType(pLand->usIndex);
-
-		if (GetTileTypeLogicalHeight(fTileType) < ubSrcLogHeight)
-		{
-			*pubLastLevel = level;
-			return( TRUE );
-		}
-
-		// Get tile element
-		TileElem = gTileDatabase[ pLand->usIndex ];
-
-		// Get full tile flag
-		if ( TileElem.ubFullTile && fTileType != uiSrcType )
-		{
-			return( FALSE );
-		}
-
-
-		// Advance to next
-		pLand = pLand->pNext;
-
-		level++;
-
-	}
-
-	// Could not find it, return FALSE
-	return( FALSE );
-
-}
-
-
 UINT16 GetWallOrientation(UINT16 usIndex)
 {
 	Assert(usIndex < lengthof(gTileDatabase));

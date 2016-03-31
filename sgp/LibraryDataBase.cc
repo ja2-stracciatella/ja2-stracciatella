@@ -343,10 +343,6 @@ static BOOLEAN IsLibraryOpened(const LibraryHeaderStruct *lib)
 	return lib->hLibraryHandle != NULL;
 }
 
-
-static int CompareDirEntryFileNames(const void* key, const void* member);
-
-
 #if 1 // XXX TODO UNIMPLEMENTED
 #else
 BOOLEAN GetLibraryFileTime(LibraryFile const* const f, SGP_FILETIME* const pLastWriteTime)
@@ -417,15 +413,6 @@ try
 }
 catch (...) { return FALSE; }
 #endif
-
-
-static int CompareDirEntryFileNames(const void* key, const void* member)
-{
-	const char*     const sSearchKey   = (const char*)key;
-	const DIRENTRY* const TempDirEntry = (const DIRENTRY*)member;
-	return strcasecmp(sSearchKey, TempDirEntry->sFileName);
-}
-
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"

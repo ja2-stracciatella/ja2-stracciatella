@@ -149,10 +149,9 @@ static BOOLEAN gfGameInitialized = FALSE;
 static bool getResourceVersion(const char *versionName, GameVersion *version);
 static std::string findRootGameResFolder(const std::string &configPath);
 static void WriteDefaultConfigFile(const char* ConfigFile);
-
 static void convertDialogQuotesToJson(const DefaultContentManager *cm,
-                                      STRING_ENC_TYPE encType,
-                                      const char *dialogFile, const char *outputFile);
+				      STRING_ENC_TYPE encType,
+				      const char *dialogFile, const char *outputFile);
 
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
@@ -773,10 +772,6 @@ static void WriteDefaultConfigFile(const char* ConfigFile)
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////
-// some data convertion
-////////////////////////////////////////////////////////////////////////////
-
 static void convertDialogQuotesToJson(const DefaultContentManager *cm,
                                       STRING_ENC_TYPE encType,
                                       const char *dialogFile, const char *outputFile)
@@ -792,7 +787,3 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
   }
   JsonUtility::writeToFile(outputFile, quotes_str);
 }
-
-////////////////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////////////////

@@ -283,38 +283,6 @@ void RenderClock(void)
 	MPrint(x, y, str);
 }
 
-
-static void ToggleSuperCompression(void)
-{
-	static UINT32 uiOldTimeCompressMode = 0;
-
-	// Display message
-	if ( gTacticalStatus.uiFlags & INCOMBAT )
-	{
-		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Cannot toggle compression in Combat Mode."  );
-		return;
-	}
-
-	fSuperCompression = !fSuperCompression;
-
-	if ( fSuperCompression )
-	{
-		uiOldTimeCompressMode = giTimeCompressMode;
-		giTimeCompressMode		= TIME_SUPER_COMPRESS;
-		guiGameSecondsPerRealSecond = giTimeCompressSpeeds[ giTimeCompressMode ] * SECONDS_PER_COMPRESSION;
-
-		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Time compression ON."  );
-	}
-	else
-	{
-		giTimeCompressMode		= uiOldTimeCompressMode;
-		guiGameSecondsPerRealSecond = giTimeCompressSpeeds[ giTimeCompressMode ] * SECONDS_PER_COMPRESSION;
-
-		//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, L"Time compression OFF."  );
-	}
-}
-
-
 bool DidGameJustStart()
 {
 	return gTacticalStatus.fDidGameJustStart;
@@ -622,12 +590,6 @@ void PauseTimeForInterupt()
 //real second, but how many times per second the clock is updated.  This rate will break up the actual
 //time slices per second into smaller chunks.  This is useful for animating strategic movement under
 //fast time compression, so objects don't warp around.
-static void SetClockResolutionToDefault(void)
-{
-	gubClockResolution = 1;
-}
-
-
 //Valid range is 0 - 60 times per second.
 static void SetClockResolutionPerSecond(UINT8 ubNumTimesPerSecond)
 {

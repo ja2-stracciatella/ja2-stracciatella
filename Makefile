@@ -111,6 +111,7 @@ CFLAGS += -Wreturn-type
 CFLAGS += -Wunused-label
 CFLAGS += -Wunused-variable
 CFLAGS += -Wwrite-strings
+CFLAGS += -Wunused-function
 
 CFLAGS += -DJA2
 CFLAGS += -DMICROINI_STATIC

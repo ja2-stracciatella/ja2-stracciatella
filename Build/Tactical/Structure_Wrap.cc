@@ -303,21 +303,6 @@ SOLDIERTYPE* GetRefuelableStructAtGridNo(INT16 sGridNo)
 	return tgt != NULL && tgt->uiStatusFlags & SOLDIER_VEHICLE ? tgt : NULL;
 }
 
-
-static BOOLEAN IsCutWireFenceAtGridNo(INT16 sGridNo)
-{
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_WIREFENCE );
-	if (pStructure != NULL && (pStructure->ubWallOrientation != NO_ORIENTATION) && (pStructure->fFlags & STRUCTURE_OPEN) )
-	{
-		return( TRUE );
-	}
-	return( FALSE );
-}
-
-
-
 INT16 FindDoorAtGridNoOrAdjacent( INT16 sGridNo )
 {
 	STRUCTURE * pStructure;

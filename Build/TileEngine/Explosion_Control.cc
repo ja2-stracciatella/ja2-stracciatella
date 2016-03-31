@@ -1817,12 +1817,10 @@ static void DelayedBillyTriggerToBlockOnExit(void)
 	}
 }
 
-
 static void BillyBlocksDoorCallback(void)
 {
 	TriggerNPCRecord( BILLY, 6 );
 }
-
 
 static BOOLEAN HookerInRoom(UINT8 ubRoom)
 {
@@ -1837,7 +1835,6 @@ static BOOLEAN HookerInRoom(UINT8 ubRoom)
 	}
 	return FALSE;
 }
-
 
 static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 {

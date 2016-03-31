@@ -444,38 +444,6 @@ static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 	InjectMercProfileIntoFile(hFile, gMercProfiles[iProfileId]);
 }
 
-
-static void LoadInCurrentImpCharacter(void)
-{
-	INT32 iProfileId = 0;
-
-  MERCPROFILESTRUCT p;
-  AutoSGPFile hFile(GCM->openGameResForReading(IMP_MERC_FILE));
-  ExtractImpProfileFromFile(hFile, &iProfileId, &iPortraitNumber, p);
-  gMercProfiles[iProfileId] = p;
-
-	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
-	{
-		// not enough
-		return;
-	}
-
-
-	// charge the player
-	// is the character male?
-	fCharacterIsMale = ( gMercProfiles[ iProfileId ].bSex == MALE );
-	fLoadingCharacterForPreviousImpProfile = TRUE;
-	AddTransactionToPlayersBook(IMP_PROFILE,0, GetWorldTotalMin( ), - ( COST_OF_PROFILE ) );
-  AddHistoryToPlayersLog( HISTORY_CHARACTER_GENERATED, 0,GetWorldTotalMin( ), -1, -1 );
-	LaptopSaveInfo.iVoiceId = iProfileId - PLAYER_GENERATED_CHARACTER_ID;
-	AddCharacterToPlayersTeam( );
-	AddFutureDayStrategicEvent( EVENT_DAY2_ADD_EMAIL_FROM_IMP, 60 * 7, 0, 2 );
-	LaptopSaveInfo.fIMPCompletedFlag = TRUE;
-	fPausedReDrawScreenFlag = TRUE;
-	fLoadingCharacterForPreviousImpProfile = FALSE;
-}
-
-
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
 {
   // ATE: Check boundary conditions!

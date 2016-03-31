@@ -176,10 +176,6 @@ static BOOLEAN MusicFadeIn(void)
 	return(FALSE);
 }
 
-
-static void DoneFadeOutDueToEndMusic(void);
-
-
 void MusicPoll(void)
 {
 	INT32 iVol;
@@ -422,12 +418,4 @@ static void MusicStopCallback(void* pData)
 void SetMusicFadeSpeed( INT8 bFadeSpeed )
 {
 	gbFadeSpeed = bFadeSpeed;
-}
-
-
-static void DoneFadeOutDueToEndMusic(void)
-{
-	// Quit game....
-	InternalLeaveTacticalScreen( MAINMENU_SCREEN );
-	//SetPendingNewScreen( MAINMENU_SCREEN );
 }
