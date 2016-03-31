@@ -8,6 +8,7 @@
 #include "VSurface.h"
 #include "Input.h"
 #include "Font.h"
+#include "Debug_Pages.h"
 #include "MouseSystem.h"
 #include "Screens.h"
 #include "Font_Control.h"
@@ -428,29 +429,25 @@ void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage )
 
 static void DefaultDebugPage1(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE ONE" );
+	MPageHeader(L"DEBUG PAGE ONE");
 }
 
 
 static void DefaultDebugPage2(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE TWO" );
+  MPageHeader(L"DEBUG PAGE TWO");
 }
 
 
 static void DefaultDebugPage3(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE THREE" );
+  MPageHeader(L"DEBUG PAGE THREE");
 }
 
 
 static void DefaultDebugPage4(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE FOUR" );
+  MPageHeader(L"DEBUG PAGE FOUR");
 }
 
 
