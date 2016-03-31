@@ -455,7 +455,7 @@ static void RestorePathAIToDefaults(void)
 INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags)
 {
 	INT32 iDestination = sDestination, iOrigination;
-	INT32 iCnt=-1, iStructIndex;
+	INT8 iCnt=-1, iStructIndex;
 	INT32 iLoopStart = 0, iLoopEnd = 0;
 	INT8	bLoopState = LOOPING_CLOCKWISE;
 	//BOOLEAN fLoopForwards = FALSE;
@@ -1592,7 +1592,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 				//make new path to current location
 				trailTree[trailTreeNdx].nextLink	= sCurPathNdx;
-				trailTree[trailTreeNdx].stepDir	= (INT8) iCnt;
+				trailTree[trailTreeNdx].stepDir	= (UINT8) iCnt;
 				if ( bLoopState == LOOPING_REVERSE )
 				{
 					trailTree[trailTreeNdx].fFlags = STEP_BACKWARDS;
@@ -1842,7 +1842,7 @@ ENDOFLOOP:
 		  }
 
 			s->usPathIndex = 0;
-		  s->usPathDataSize  = (UINT16) iCnt;
+		  s->usPathDataSize  = (UINT8) iCnt;
 
 		}
 		else if (bCopy == NO_COPYROUTE)
@@ -1858,7 +1858,7 @@ ENDOFLOOP:
 			  z = trailTree[z].nextLink;
 		  }
 
-		  giPathDataSize = (UINT16) iCnt;
+		  giPathDataSize = (UINT8) iCnt;
 
 		}
 
