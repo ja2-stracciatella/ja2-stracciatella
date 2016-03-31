@@ -91,10 +91,10 @@ void DisplayFrameRate( )
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
 		// FRAME RATE
-		SetVideoOverlayTextF(g_fps_overlay, L"%ld", __min(uiFPS, 1000));
+		SetVideoOverlayTextF(g_fps_overlay, L"FPS: %ld", __min(uiFPS, 1000));
 
 		// TIMER COUNTER
-		SetVideoOverlayTextF(g_counter_period_overlay, L"%ld", __min(giTimerDiag, 1000));
+		SetVideoOverlayTextF(g_counter_period_overlay, L"Game Loop Time: %ld", __min(giTimerDiag, 1000));
 	}
 }
 
