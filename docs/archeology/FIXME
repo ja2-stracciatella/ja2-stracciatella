@@ -48,7 +48,6 @@ HandleCompatibleAmmoUI(): if (gbCompatibleAmmo[cnt]) gbCompatibleAmmo[cnt] = FAL
 HandleDefiniteUnloadingOfWorld(): use enum
 HandleFaceHilights(): overdraw?
 HandleHighLightedText(): MARK_DIRTY necessary?
-HandleLeftClickCursor(): if ()s without decision
 HandleMinuteUpdate(): empty
 HandleMinuteUpdate(): remove?
 HandleMoraleEventForSoldier(): callers

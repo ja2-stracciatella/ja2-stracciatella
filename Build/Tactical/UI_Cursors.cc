@@ -956,44 +956,23 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 	switch( ubItemCursor )
 	{
 		case TARGETCURS:
+			pSoldier->bShownAimTime				= REFINE_AIM_1;
 
-			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
-			{
-				pSoldier->bShownAimTime				= REFINE_AIM_1;
-			}
-			else
-			{
-				pSoldier->bShownAimTime				= REFINE_AIM_1;
-			}
 			// Reset counter
 			RESETCOUNTER( TARGETREFINE );
 			break;
 
 		case PUNCHCURS:
+			pSoldier->bShownAimTime				= REFINE_PUNCH_1;
 
-			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
-			{
-				pSoldier->bShownAimTime				= REFINE_PUNCH_1;
-			}
-			else
-			{
-				pSoldier->bShownAimTime				= REFINE_PUNCH_1;
-			}
 			// Reset counter
 			RESETCOUNTER( NONGUNTARGETREFINE );
 			break;
 
 
 		case KNIFECURS:
+			pSoldier->bShownAimTime				= REFINE_KNIFE_1;
 
-			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
-			{
-				pSoldier->bShownAimTime				= REFINE_KNIFE_1;
-			}
-			else
-			{
-				pSoldier->bShownAimTime				= REFINE_KNIFE_1;
-			}
 			// Reset counter
 			RESETCOUNTER( NONGUNTARGETREFINE );
 			break;
@@ -1002,7 +981,6 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 			// GOTO DIRECTLY TO USING ITEM
 			guiPendingOverrideEvent = CA_MERC_SHOOT;
 	}
-
 }
 
 

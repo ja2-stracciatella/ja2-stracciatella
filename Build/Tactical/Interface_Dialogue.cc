@@ -4471,13 +4471,6 @@ static void DoneFadeOutActionBasement(void)
 
 }
 
-
-static void DoneFadeOutActionSex(void)
-{
-	SetPendingNewScreen( SEX_SCREEN );
-}
-
-
 static void DoneFadeInActionBasement(void)
 {
 	// Start conversation, etc

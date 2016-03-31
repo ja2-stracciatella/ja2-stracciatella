@@ -1466,39 +1466,6 @@ DOUBLE Temp;
    }
 }
 
-
-// Creates an square light, taking two radii.
-static void LightGenerateSquare(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
-{
-INT16 iX, iY;
-
-	for(iX=0-iA; iX <= 0+iA; iX++)
-		LightCastRay(t, 0, 0, iX, (INT16)(0-iB), iIntensity, 1);
-
-	for(iX=0-iA; iX <= 0+iA; iX++)
-		LightCastRay(t, 0, 0, iX, (INT16)(0+iB), iIntensity, 1);
-
-	for(iY=0-iB; iY <= 0+iB; iY++)
-		LightCastRay(t, 0, 0, (INT16)(0-iA), iY, iIntensity, 1);
-
-	for(iY=0-iB; iY <= 0+iB; iY++)
-		LightCastRay(t, 0, 0, (INT16)(0+iA), iY, iIntensity, 1);
-
-
-	/*for(iY=0-iB; iY <= 0+iB; iY++)
-		LightCastRay(t, 0, iY, (INT16)(0+iA), iY, iIntensity, 1);
-
-	for(iY=0+iB; iY >= 0-iB; iY--)
-		LightCastRay(t, 0, iY, (INT16)(0-iA), iY, iIntensity, 1);
-
-	for(iX=0-iA; iX <= 0+iA; iX++)
-		LightCastRay(t, iX, 0, iX, (INT16)(0+iB), iIntensity, 1);
-
-	for(iX=0+iA; iX >= 0-iA; iX--)
-		LightCastRay(t, iX, 0, iX, (INT16)(0-iB), iIntensity, 1); */
-}
-
-
 /****************************************************************************************
 	LightSetBaseLevel
 
@@ -1583,39 +1550,6 @@ LightTemplate* LightCreateOmni(const UINT8 ubIntensity, const INT16 iRadius)
 
 	return t;
 }
-
-
-// Creates a square light
-static LightTemplate* LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
-{
-	LightTemplate* const t = LightGetFree();
-
-	LightGenerateSquare(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
-
-	char usName[14];
-	sprintf(usName, "LTS%d-%d.LHT", iRadius1, iRadius2);
-	t->name = MALLOCN(char, strlen(usName) + 1);
-	strcpy(t->name, usName);
-
-	return t;
-}
-
-
-// Creates an elliptical light (two separate radii)
-static LightTemplate* LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
-{
-	LightTemplate* const t = LightGetFree();
-
-	LightGenerateElliptical(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
-
-	char usName[14];
-	sprintf(usName, "LTE%d-%d.LHT", iRadius1, iRadius2);
-	t->name = MALLOCN(char, strlen(usName) + 1);
-	strcpy(t->name, usName);
-
-	return t;
-}
-
 
 // Renders a light template at the specified X,Y coordinates.
 static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX, INT16 iTileY, LEVELNODE* pStruct)
@@ -1722,76 +1656,6 @@ BOOLEAN fOnlyWalls;
 	return(TRUE);
 }
 
-
-static BOOLEAN LightRevealWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, const INT16 sSrcY)
-{
-	Assert(gpWorldLevelData != NULL);
-
-	const UINT32 uiTile = MAPROWCOLTOPOS(sY, sX);
-
-	// IF A FENCE, RETURN FALSE
-	if (IsFencePresentAtGridno(uiTile)) return FALSE;
-
-	LEVELNODE* const head = gpWorldLevelData[uiTile].pStructHead;
-
-	BOOLEAN fDoRightWalls = (sX >= sSrcX);
-	BOOLEAN fDoLeftWalls  = (sY >= sSrcY);
-
-	for (const LEVELNODE* i = head; i != NULL; i = i->pNext)
-	{
-		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
-
-		const TILE_ELEMENT* const TileElem = &gTileDatabase[i->usIndex];
-		switch(TileElem->usWallOrientation)
-		{
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-				if (!fDoRightWalls) fDoLeftWalls = FALSE;
-				break;
-
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
-				if (!fDoLeftWalls) fDoRightWalls = FALSE;
-				break;
-		}
-	}
-
-	BOOLEAN fHitWall  = FALSE;
-	BOOLEAN fRerender = FALSE;
-	for (LEVELNODE* i = head; i != NULL; i = i->pNext)
-	{
-		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
-
-		const TILE_ELEMENT* const TileElem = &gTileDatabase[i->usIndex];
-		switch (TileElem->usWallOrientation)
-		{
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-				fHitWall = TRUE;
-				if (fDoRightWalls && sX >= sSrcX)
-				{
-					i->uiFlags |= LEVELNODE_REVEAL;
-					fRerender   = TRUE;
-				}
-				break;
-
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
-				fHitWall = TRUE;
-				if (fDoLeftWalls && sY >= sSrcY)
-				{
-					i->uiFlags |= LEVELNODE_REVEAL;
-					fRerender   = TRUE;
-				}
-				break;
-		}
-	}
-
-	if (fRerender) SetRenderFlags(RENDER_FLAG_FULL);
-	return fHitWall;
-}
-
-
 static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, const INT16 sSrcY)
 {
 	Assert(gpWorldLevelData != NULL);
@@ -1855,99 +1719,6 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 	if (fRerender) SetRenderFlags(RENDER_FLAG_FULL);
 	return fHitWall;
 }
-
-
-// Tags walls as being translucent using a light template.
-static BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
-{
-	LightTemplate* const t = &g_light_templates[0];
-	if (t->lights == NULL) return FALSE;
-
-	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
-	{
-		const UINT16 usNodeIndex = t->rays[uiCount];
-		if (!(usNodeIndex & LIGHT_NEW_RAY))
-		{
-			const LIGHT_NODE* const pLight= &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
-
-			//Kris:  added map boundary checking!!!
-			if(LightRevealWall(
-				 (INT16)MIN(MAX((iX+pLight->iDX),0),WORLD_COLS-1),
-				 (INT16)MIN(MAX((iY+pLight->iDY),0),WORLD_ROWS-1),
-				 (INT16)MIN(MAX(iX,0),WORLD_COLS-1),
-				 (INT16)MIN(MAX(iY,0),WORLD_ROWS-1)
-				))
-			{
-				uiCount = LightFindNextRay(t, uiCount);
-				SetRenderFlags(RENDER_FLAG_FULL);
-			}
-		}
-	}
-
-	return(TRUE);
-}
-
-
-// Removes the green from the tiles that was drawn to show the path of the rays.
-static BOOLEAN LightHideGreen(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
-{
-LEVELNODE *pStruct, *pLand;
-UINT32 uiTile;
-BOOLEAN fRerender=FALSE, fHitWall=FALSE;
-TILE_ELEMENT *TileElem;
-
-	Assert(gpWorldLevelData!=NULL);
-
-	uiTile=MAPROWCOLTOPOS(sY, sX);
-	pStruct=gpWorldLevelData[uiTile].pStructHead;
-
-	while(pStruct!=NULL)
-	{
-		TileElem = &(gTileDatabase[pStruct->usIndex]);
-		switch(TileElem->usWallOrientation)
-		{
-			case NO_ORIENTATION:
-				break;
-
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-				fHitWall=TRUE;
-				if(sX >= sSrcX)
-				{
-					pStruct->uiFlags&=(~LEVELNODE_REVEAL);
-					fRerender=TRUE;
-				}
-				break;
-
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
-				fHitWall=TRUE;
-				if(sY >= sSrcY)
-				{
-					pStruct->uiFlags&=(~LEVELNODE_REVEAL);
-					fRerender=TRUE;
-				}
-				break;
-		}
-		pStruct=pStruct->pNext;
-	}
-
-	//if(fRerender)
-	//{
-		pLand=gpWorldLevelData[uiTile].pLandHead;
-		while(pLand!=NULL)
-		{
-			pLand->ubShadeLevel=pLand->ubNaturalShadeLevel;
-			pLand=pLand->pNext;
-		}
-
-		gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
-		SetRenderFlags(RENDER_FLAG_MARKED);
-	//}
-
-	return(fHitWall);
-}
-
 
 /****************************************************************************************
 	ApplyTranslucencyToWalls

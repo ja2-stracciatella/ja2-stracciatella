@@ -48,13 +48,6 @@ ENUM_BITSET(FileOpenFlags)
 
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
 
-#if CASE_SENSITIVE_FS
-/**
- * Find an object (file or subdirectory) in the given directory in case-independent manner.
- * @return true when found, return the found name using foundName. */
-static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
-#endif
-
 /** Get file open modes from our enumeration.
  * Abort program if conversion is not found.
  * @return file mode for fopen call and posix mode using parameter 'posixMode' */
@@ -469,10 +462,6 @@ FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 	return f->flags & SGPFILE_REAL ? f->u.file : f->u.lib.lib->hLibraryHandle;
 }
 
-
-static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter);
-
-
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
 #if 1 // XXX TODO
@@ -487,29 +476,6 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 	return GetFreeSpaceOnHardDrive(zDrive);
 #endif
 }
-
-
-static UINT32 GetFreeSpaceOnHardDrive(const char* const pzDriveLetter)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED
-#else
-	UINT32 uiSectorsPerCluster     = 0;
-	UINT32 uiBytesPerSector        = 0;
-	UINT32 uiNumberOfFreeClusters  = 0;
-	UINT32 uiTotalNumberOfClusters = 0;
-	if (!GetDiskFreeSpace(pzDriveLetter, &uiSectorsPerCluster, &uiBytesPerSector, &uiNumberOfFreeClusters, &uiTotalNumberOfClusters))
-	{
-		const UINT32 uiLastError = GetLastError();
-		char zString[1024];
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
-		return TRUE;
-	}
-
-	return uiBytesPerSector * uiNumberOfFreeClusters * uiSectorsPerCluster;
-#endif
-}
-
 
 /** Join two path components. */
 std::string FileMan::joinPaths(const std::string &first, const char *second)

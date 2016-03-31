@@ -5953,15 +5953,6 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE& s)
 	}
 }
 
-
-static void DoneFadeOutDueToDeath(void)
-{
-	// Quit game....
-	InternalLeaveTacticalScreen( MAINMENU_SCREEN );
-	//SetPendingNewScreen( MAINMENU_SCREEN );
-}
-
-
 static void EndBattleWithUnconsciousGuysCallback(MessageBoxReturnValue const bExitValue)
 {
 	// Enter mapscreen.....

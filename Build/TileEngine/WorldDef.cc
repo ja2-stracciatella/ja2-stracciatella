@@ -2602,7 +2602,6 @@ void TrashWorld(void)
   }
 }
 
-
 static void TrashMapTile(const INT16 MapTile)
 {
 	MAP_ELEMENT* const me = &gpWorldLevelData[MapTile];
@@ -2623,7 +2622,6 @@ static void TrashMapTile(const INT16 MapTile)
 		DeleteStructureFromWorld(me->pStructureHead);
 	}
 }
-
 
 void LoadMapTileset(TileSetID const id)
 {

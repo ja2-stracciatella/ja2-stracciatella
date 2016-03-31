@@ -1483,48 +1483,6 @@ UINT16 GetAPsToChangeStance(const SOLDIERTYPE* pSoldier, INT8 bDesiredHeight)
 	return( sAPCost );
 }
 
-
-static UINT16 GetBPsToChangeStance(SOLDIERTYPE* pSoldier, INT8 bDesiredHeight)
-{
-	UINT16						sBPCost = 0;
-	INT8							bCurrentHeight;
-
-	bCurrentHeight = gAnimControl[ pSoldier->usAnimState ].ubEndHeight;
-
-	if ( bCurrentHeight == bDesiredHeight )
-	{
-		sBPCost = 0;
-	}
-
-	if ( bCurrentHeight == ANIM_STAND && bDesiredHeight == ANIM_PRONE )
-	{
-		sBPCost = BP_CROUCH + BP_PRONE;
-	}
-	if ( bCurrentHeight == ANIM_STAND && bDesiredHeight == ANIM_CROUCH )
-	{
-		sBPCost = BP_CROUCH;
-	}
-	if ( bCurrentHeight == ANIM_CROUCH && bDesiredHeight == ANIM_PRONE )
-	{
-		sBPCost = BP_PRONE;
-	}
-	if ( bCurrentHeight == ANIM_CROUCH && bDesiredHeight == ANIM_STAND )
-	{
-		sBPCost = BP_CROUCH;
-	}
-	if ( bCurrentHeight == ANIM_PRONE && bDesiredHeight == ANIM_STAND )
-	{
-		sBPCost = BP_PRONE + BP_CROUCH;
-	}
-	if ( bCurrentHeight == ANIM_PRONE && bDesiredHeight == ANIM_CROUCH )
-	{
-		sBPCost = BP_PRONE;
-	}
-
-	return( sBPCost );
-}
-
-
 UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier)
 {
 	// Set # of APs
@@ -1620,20 +1578,6 @@ INT8 GetAPsToClimbRoof( SOLDIERTYPE *pSoldier, BOOLEAN fClimbDown )
 		return( (INT8)( AP_CLIMBOFFROOF + GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) ) );
 	}
 }
-
-
-static INT16 GetBPsToClimbRoof(SOLDIERTYPE* pSoldier, BOOLEAN fClimbDown)
-{
-	if ( !fClimbDown )
-	{
-		return( BP_CLIMBROOF );
-	}
-	else
-	{
-		return( BP_CLIMBOFFROOF );
-	}
-}
-
 
 INT8 GetAPsToCutFence( SOLDIERTYPE *pSoldier )
 {
@@ -1753,13 +1697,6 @@ INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 }
 
-
-static INT8 GetBPsToStealItem(SOLDIERTYPE* pSoldier)
-{
-	return( BP_STEAL_ITEM );
-}
-
-
 INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 {
 	UINT16 sAPCost = PlotPath(pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
@@ -1774,23 +1711,6 @@ INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 	return( (INT8)sAPCost );
 
 }
-
-
-static INT8 GetAPsToUseCan(SOLDIERTYPE* pSoldier, INT16 usMapPos)
-{
-	UINT16 sAPCost = PlotPath(pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-	// If point cost is zero, return 0
-	if ( sAPCost != 0 )
-	{
-		// ADD APS TO PICKUP
-		sAPCost += AP_ATTACH_CAN;
-	}
-
-	return( (INT8)sAPCost );
-
-}
-
 
 INT8 GetAPsToJumpOver(const SOLDIERTYPE* pSoldier)
 {
