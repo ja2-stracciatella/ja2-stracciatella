@@ -1925,17 +1925,17 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case 't': if (CHEATER_CHEAT_LEVEL()) TeleportSelectedSoldier(); break;
 		case 'u': if (CHEATER_CHEAT_LEVEL()) RefreshSoldier();          break;
 
-#ifdef JA2TESTVERSION
 		case 'v':
 		{
-			gfDoVideoScroll ^= TRUE;
-			wchar_t const* const msg =
-				gfDoVideoScroll ? L"Video Scroll ON" :
-				L"Video Scroll OFF";
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+      if (DEBUG_CHEAT_LEVEL()) {
+        gfDoVideoScroll ^= TRUE;
+        wchar_t const *const msg =
+                gfDoVideoScroll ? L"Video Scroll ON" :
+                L"Video Scroll OFF";
+        ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+      }
 			break;
 		}
-#endif
 
 		case 'w':
 			if (CHEATER_CHEAT_LEVEL())
