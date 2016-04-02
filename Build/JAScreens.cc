@@ -13,6 +13,7 @@
 #include "Screens.h"
 #include "Font_Control.h"
 #include "SysUtil.h"
+#include "RenderWorld.h"
 #include "WorldDef.h"
 #include "EditScreen.h"
 #include "Timer_Control.h"
@@ -338,6 +339,7 @@ static BOOLEAN CheckForAndExitTacticalDebug(void)
 	{
 		FirstTime = TRUE;
 		gfExitDebugScreen = FALSE;
+    gfDoVideoScroll = TRUE;
 		FreeBackgroundRect( guiBackgroundRect );
 		guiBackgroundRect = NO_BGND_RECT;
 		SetRenderHook(NULL);
@@ -369,6 +371,7 @@ ScreenID DebugScreenHandle(void)
 
 	if ( FirstTime )
 	{
+    gfDoVideoScroll = FALSE;
 		FirstTime = FALSE;
 
 		SetRenderHook(DebugRenderHook);
