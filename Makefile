@@ -625,6 +625,8 @@ install: $(BINARY)
 	@test -n "$(INSTALLABLE)" || echo "  sudo make install"
 	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
 
+uninstall: deinstall
+
 deinstall:
 	test -z "$(INSTALLABLE)" || rm $(MANPAGE_DIR)/ja2.6
 	test -z "$(INSTALLABLE)" || rm $(BINARY_DIR)/$(BINARY)
