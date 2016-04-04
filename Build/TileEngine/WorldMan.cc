@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Debug_Pages.h"
 #include "Animation_Data.h"
 #include "Environment.h"
 #include "Font.h"
@@ -28,14 +29,14 @@ static UINT32 guiLNCount[9];
 static const wchar_t gzLevelString[][15] =
 {
 	L"",
-	L"Land    %d",
-	L"Object  %d",
-	L"Struct  %d",
-	L"Shadow  %d",
-	L"Merc    %d",
-	L"Roof    %d",
-	L"Onroof  %d",
-	L"Topmost %d",
+	L"Land",
+	L"Object",
+	L"Struct",
+	L"Shadow",
+	L"Merc",
+	L"Roof",
+	L"Onroof",
+	L"Topmost",
 };
 
 
@@ -75,19 +76,19 @@ void CountLevelNodes(void)
 }
 
 
-#define LINE_HEIGHT 20
 void DebugLevelNodePage(void)
 {
-	SetFont(LARGEFONT1);
-	gprintf(0, 0, L"DEBUG LEVELNODES PAGE 1 OF 1");
+	MPageHeader(L"DEBUG LEVELNODES PAGE 1 OF 1");
+  INT32 y = DEBUG_PAGE_START_Y;
+  INT32 h = DEBUG_PAGE_LINE_HEIGHT;
 
 	for (UINT32 uiLoop = 1; uiLoop < 9; uiLoop++)
 	{
-		gprintf(0, LINE_HEIGHT * (uiLoop + 1), gzLevelString[uiLoop], guiLNCount[uiLoop]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, gzLevelString[uiLoop], guiLNCount[uiLoop]);
 	}
-	gprintf(0, LINE_HEIGHT * 12, L"%d land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX);
-	gprintf(0, LINE_HEIGHT * 13, L"Total # levelnodes %d, %d bytes each", guiLNCount[0], sizeof(LEVELNODE));
-	gprintf(0, LINE_HEIGHT * 14, L"Total memory for levelnodes %d", guiLNCount[0] * sizeof(LEVELNODE));
+	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"%d land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX);
+  mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total # levelnodes %d, %d bytes each", guiLNCount[0], sizeof(LEVELNODE));
+  mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total memory for levelnodes %d", guiLNCount[0] * sizeof(LEVELNODE));
 }
 
 

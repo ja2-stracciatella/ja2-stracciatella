@@ -9,6 +9,7 @@
 #include "SysUtil.h"
 #include "Event_Pump.h"
 #include "Font_Control.h"
+#include "Debug_Pages.h"
 #include "Timer_Control.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
@@ -118,11 +119,27 @@ void MainGameScreenInit(void)
 
 	// Init Video Overlays
 	// FIRST, FRAMERATE
-	g_fps_overlay = RegisterVideoOverlay(BlitMFont, 0, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"90");
+	g_fps_overlay = RegisterVideoOverlay(
+          BlitMFont,
+          DEBUG_PAGE_SCREEN_OFFSET_X,
+          DEBUG_PAGE_SCREEN_OFFSET_Y,
+          DEBUG_PAGE_FONT,
+          DEBUG_PAGE_TEXT_COLOR,
+          0,
+          L"90"
+  );
 	EnableVideoOverlay(false, g_fps_overlay);
 
 	// SECOND, PERIOD COUNTER
-	g_counter_period_overlay = RegisterVideoOverlay(BlitMFont, 30, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"Levelnodes: 100000");
+	g_counter_period_overlay = RegisterVideoOverlay(
+          BlitMFont,
+          DEBUG_PAGE_SCREEN_OFFSET_X,
+          DEBUG_PAGE_SCREEN_OFFSET_Y+DEBUG_PAGE_LINE_HEIGHT,
+          DEBUG_PAGE_FONT,
+          DEBUG_PAGE_TEXT_COLOR,
+          0,
+          L"Levelnodes: 100000"
+  );
 	EnableVideoOverlay(false, g_counter_period_overlay);
 }
 

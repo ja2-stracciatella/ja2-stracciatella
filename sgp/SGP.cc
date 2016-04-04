@@ -15,6 +15,7 @@
 #include <new>
 
 #include "Button_System.h"
+#include "Cheats.h"
 #include "Debug.h"
 #include "FileMan.h"
 #include "Font.h"
@@ -615,6 +616,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
     else if (strcmp(argv[i], "-debug") == 0)
     {
       params->showDebugMessages = true;
+      GameState::getInstance()->setDebugging(true);
     }
     else if (strcmp(argv[i], "-no3btnmouse") == 0)
     {
