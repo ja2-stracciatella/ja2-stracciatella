@@ -212,27 +212,19 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I8(d, s->bLevel)
 	EXTR_SKIP(d, 3)
 
-	/* if savegame version < 100, pathing stuff takes up more space */
-	if (uiSavedGameVersion < 100)
+	/* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
+	UINT8 cnt = 0;
+	while (cnt < lengthof(s->usPathingData))
 	{
-		UINT8 cnt = 0;
-		while (cnt < lengthof(s->usPathingData))
-		{
-			s->usPathingData[cnt] = (UINT8)*d;
-			d += 2;
-			cnt++;
-		}
-		s->usPathDataSize = (UINT8)*d;
+		s->usPathingData[cnt] = (UINT8)*d;
 		d += 2;
-		s->usPathIndex = (UINT8)*d;
-		d += 2;
+		cnt++;
 	}
-	else
-	{
-		EXTR_U8A(d, s->usPathingData, lengthof(s->usPathingData))
-		EXTR_U8(d, s->usPathDataSize)
-		EXTR_U8(d, s->usPathIndex)
-	}
+	s->usPathDataSize = (UINT8)*d;
+	d += 2;
+	s->usPathIndex = (UINT8)*d;
+	d += 2;
+
 	EXTR_I16(d, s->sBlackList)
 	EXTR_I8(d, s->bAimTime)
 	EXTR_I8(d, s->bShownAimTime)
@@ -731,9 +723,20 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I16(d, s->sFinalDestination)
 	INJ_I8(d, s->bLevel)
 	INJ_SKIP(d, 3)
-	INJ_U8A(d, s->usPathingData, lengthof(s->usPathingData))
-	INJ_U8(d, s->usPathDataSize)
-	INJ_U8(d, s->usPathIndex)
+	
+	/* convert pathing data to 16 bit for the savegame for compability reasons */
+	UINT8 cnt = 0;
+	while (cnt < lengthof(s->usPathingData))
+	{
+		*d = (UINT16)s->usPathingData[cnt];
+		d += 2;
+		cnt++;
+	}
+	*d = (UINT16)s->usPathDataSize;
+	d += 2;
+	*d = (UINT16)s->usPathIndex;
+	d += 2;
+
 	INJ_I16(d, s->sBlackList)
 	INJ_I8(d, s->bAimTime)
 	INJ_I8(d, s->bShownAimTime)

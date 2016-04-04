@@ -1331,7 +1331,7 @@ static void SaveSoldierStructure(HWFILE const f)
 		if (!s.bActive) continue;
 
 		// Save the soldier structure
-		BYTE data[2296];
+		BYTE data[2328];
 		InjectSoldierType(data, &s);
 		writer(f, data, sizeof(data));
 
@@ -1376,18 +1376,9 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
     }
     else
     {
-			if(savegame_version < 100)
-			{
-				BYTE Data[2328];
-				reader(f, Data, sizeof(Data));
-				ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
-			}
-			else
-			{
-				BYTE Data[2296];
-				reader(f, Data, sizeof(Data));
-				ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
-			}
+			BYTE Data[2328];
+			reader(f, Data, sizeof(Data));
+			ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
     }
 
 		SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
