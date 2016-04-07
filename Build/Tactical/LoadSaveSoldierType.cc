@@ -214,6 +214,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 
 	/* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
 	UINT8 cnt = 0;
+	d++;
 	while (cnt < lengthof(s->usPathingData))
 	{
 		s->usPathingData[cnt] = (UINT8)*d;
@@ -223,7 +224,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	s->usPathDataSize = (UINT8)*d;
 	d += 2;
 	s->usPathIndex = (UINT8)*d;
-	d += 2;
+	d++;
 
 	EXTR_I16(d, s->sBlackList)
 	EXTR_I8(d, s->bAimTime)
