@@ -67,6 +67,7 @@
 #include "Debug.h"
 #include "UILayout.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
 
 #ifdef JA2BETAVERSION
 #	include "Cheats.h"
@@ -75,6 +76,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#define DEBUG_TAG_AUTORESOLVE "Auto Resolve"
 //#define INVULNERABILITY
 
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
@@ -305,53 +307,6 @@ static void PlayAutoResolveSample(const std::string &sample, UINT32 const ubVolu
 	}
 }
 
-
-static void EliminateAllMercs(void)
-{
-	SOLDIERCELL *pAttacker = NULL;
-	if( gpAR )
-	{
-		FOR_EACH_AR_ENEMY(i)
-		{
-			if (i->pSoldier->bLife == 0) continue;
-			pAttacker = i;
-			break;
-		}
-		if( pAttacker )
-		{
-			INT32 iNum = 0;
-			FOR_EACH_AR_MERC(i)
-			{
-				SOLDIERTYPE& s = *i->pSoldier;
-				if (s.bLife == 0) continue;
-
-				s.bLife           = 1;
-				i->usNextHit[0]   = 250 * ++iNum;
-				i->usHitDamage[0] = 100;
-				i->pAttacker[0]   = pAttacker;
-			}
-		}
-	}
-}
-
-
-static void EliminateAllFriendlies(void)
-{
-	if( gpAR )
-	{
-		FOR_EACH_AR_MERC(i)
-		{
-			i->pSoldier->bLife = 0;
-		}
-		gpAR->ubAliveMercs = 0;
-		FOR_EACH_AR_CIV(i)
-		{
-			i->pSoldier->bLife = 0;
-		}
-		gpAR->ubAliveCivs = 0;
-	}
-}
-
 void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 {
 	SECTORINFO *pSector;
@@ -397,7 +352,6 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 			if (g.ubSectorX != ubSectorX) continue;
 			if (g.ubSectorY != ubSectorY) continue;
 			RemoveGroupFromStrategicAILists(g);
-			if (gpBattleGroup == &g) gpBattleGroup = 0;
 			RemoveGroup(g);
 		}
 		if( gpBattleGroup )
@@ -1935,7 +1889,11 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		{	/* Get rid of any extra enemies that could be here. It is possible for the
 			 * number of total enemies to exceed 32, but autoresolve can only process
 			 * 32. We basically cheat by eliminating the rest of them. */
-			EliminateAllEnemies(x, y);
+			if(NumEnemiesInSector(x , y))
+			{
+				SLOGI(DEBUG_TAG_AUTORESOLVE, "Eliminating remaining enemies after Autoresolve in (%d,%d)", x, y);
+				EliminateAllEnemies(x, y);
+			}
 		}
 		else
 		{ // The enemy won, so repoll movement.

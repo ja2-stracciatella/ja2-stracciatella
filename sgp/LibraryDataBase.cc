@@ -353,7 +353,6 @@ static int CompareDirEntryFileNames(const void* key, const void* member)
 	return strcasecmp(sSearchKey, TempDirEntry->sFileName);
 }
 
-
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 

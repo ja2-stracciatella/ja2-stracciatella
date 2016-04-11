@@ -1004,12 +1004,10 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 	}
 	// special conditions go here
 	// can't have two of the same attachment on an item
-	/*
 	if (FindAttachment( pObj, usAttachment ) != ITEM_NOT_FOUND)
 	{
 		fSameItem = TRUE;
 	}
-	*/
 
 	// special code for items which won't attach if X is present
 	switch( usAttachment )
@@ -2890,21 +2888,6 @@ UINT16 UseKitPoints(OBJECTTYPE& o, UINT16 const original_points, SOLDIERTYPE con
 	return original_points - points;
 }
 
-
-static UINT16 MagazineClassIndexToItemType(UINT16 const mag_idx)
-{
-	/* Note: if any ammo items in the item table are separated from the main
-	 * group, this function will have to be rewritten to scan the item table for
-	 * an item with item class ammo, which has class index mag_idx */
-	for (UINT16 i = FIRST_AMMO; i != MAXITEMS; ++i)
-	{
-		if (GCM->getItem(i)->getClassIndex() != mag_idx) continue;
-		return i;
-	}
-	return NOTHING;
-}
-
-
 UINT16 DefaultMagazine(UINT16 const gun)
 {
 	if (!(GCM->getItem(gun)->isGun()))
@@ -2941,7 +2924,7 @@ UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_siz
 
 		if (default_mag == NOTHING)
 		{ // Store this one to use if all else fails
-			default_mag = mag->getItemIndex(); // XXX MagazineClassIndexToItemType(i);
+			default_mag = mag->getItemIndex();
 		}
 	}
 	return default_mag;

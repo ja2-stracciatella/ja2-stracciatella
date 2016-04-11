@@ -2277,10 +2277,6 @@ void InitRenderParams(UINT8 ubRestrictionID)
 	gusYellowItemOutlineColor = Get16BPPColor(FROMRGB(255, 255,   0));
 }
 
-
-static void CorrectRenderCenter(INT16 sRenderX, INT16 sRenderY, INT16* pSNewX, INT16* pSNewY);
-
-
 /** This function checks whether the render screen can be moved to new position. */
 static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOLEAN fForceAdjust, BOOLEAN fCheckOnly,
                               ScrollType scrollType)
@@ -2322,7 +2318,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
   // Checking if screen shows areas outside of the map
 	BOOLEAN fOutLeft   = (gsTLX > sTopLeftWorldX);
 	BOOLEAN fOutRight  = (gsTRX < sTopRightWorldX);
-	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY);            /* top of the screen is above top of the map */
+	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY + 62);       /* top of the screen is above top of the map (with padding for headshots) */
 	BOOLEAN fOutBottom = (gsBLY < sBottomLeftWorldY);          /* bottom of the screen is below bottom if the map */
 
   int mapHeight = gsBLY - gsTLY;
@@ -3524,38 +3520,6 @@ BlitNonTransLoop: // blit non-transparent pixels
 	}
 	while (--BlitHeight > 0);
 }
-
-
-static void CorrectRenderCenter(INT16 sRenderX, INT16 sRenderY, INT16* pSNewX, INT16* pSNewY)
-{
-	// Use radar scale values to get screen values, then convert ot map values, rounding to nearest middle tile
-	INT16 sScreenX = sRenderX;
-	INT16 sScreenY = sRenderY;
-
-	// Adjust for offsets!
-	sScreenX +=  0;
-	sScreenY += 10;
-
-	// Adjust to viewport start!
-	sScreenX -= g_ui.m_tacticalMapCenterX;
-	sScreenY -= g_ui.m_tacticalMapCenterY;
-
-	//Make sure these coordinates are multiples of scroll steps
-	const UINT  speed   = ScrollSpeed();
-	const INT16 speed_x = speed;
-	const INT16 speed_y = speed / 2;
-
-	sScreenX = sScreenX / speed_x * speed_x;
-	sScreenY = sScreenY / speed_y * speed_y;
-
-	// Adjust back
-	sScreenX += g_ui.m_tacticalMapCenterX;
-	sScreenY += g_ui.m_tacticalMapCenterY;
-
-	*pSNewX = sScreenX;
-	*pSNewY = sScreenY;
-}
-
 
 /* Blitter Specs
  * 1) 8 to 16 bpp

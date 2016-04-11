@@ -1272,7 +1272,7 @@ void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 				}
 				else
 				{
-					if ( ConfirmActionCancel( usMapPos, usOldMapPos ) )
+					if ( usMapPos != usOldMapPos )
 					{
 						// Switch event out of confirm mode
 						*puiNewEvent = CA_END_CONFIRM_ACTION;

@@ -48,13 +48,6 @@ ENUM_BITSET(FileOpenFlags)
 
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
 
-#if CASE_SENSITIVE_FS
-/**
- * Find an object (file or subdirectory) in the given directory in case-independent manner.
- * @return true when found, return the found name using foundName. */
-static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
-#endif
-
 /** Get file open modes from our enumeration.
  * Abort program if conversion is not found.
  * @return file mode for fopen call and posix mode using parameter 'posixMode' */

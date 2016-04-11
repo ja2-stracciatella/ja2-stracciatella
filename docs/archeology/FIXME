@@ -8,9 +8,7 @@ BlitMineText(): code duplication
 BtnHelpScreenDontShowHelpAgainCallback(): empty
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
-CenterX(): use %
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
-ConfirmActionCancel(): overkill
 ContractBoxGlow(): empty
 ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
 CorpseHit(): empty
@@ -19,7 +17,6 @@ CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecideActionBlack(): bCanAttack != TRUE && bCanAttack != FALSE strange
-DecideActionRed(): bInDeepWater is not just deep water (Water())
 DisplayAllDealersCash(): MARK_DIRTY necessary?
 DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
@@ -31,7 +28,6 @@ DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
 DropSmell(): ubOldSmell == ubSmell case has no effect
-ET_ENDENEMYS_TURN: unused
 EVENT_SoldierGotHit(): arguments for parameter ubHitLocation inconsistent
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
@@ -40,7 +36,6 @@ ExecuteGameEvent(): code duplication
 Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FindValidInsertionCode(): MARK_DIRTY necessary?
-GetCostOfPassageForHelicopter(): callers
 GetDialogueDataFilename(): checking for MANNY does nothing
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
 GetNumberOfPastMercsOnPlayersTeam(): callers
@@ -53,7 +48,6 @@ HandleCompatibleAmmoUI(): if (gbCompatibleAmmo[cnt]) gbCompatibleAmmo[cnt] = FAL
 HandleDefiniteUnloadingOfWorld(): use enum
 HandleFaceHilights(): overdraw?
 HandleHighLightedText(): MARK_DIRTY necessary?
-HandleLeftClickCursor(): if ()s without decision
 HandleMinuteUpdate(): empty
 HandleMinuteUpdate(): remove?
 HandleMoraleEventForSoldier(): callers
