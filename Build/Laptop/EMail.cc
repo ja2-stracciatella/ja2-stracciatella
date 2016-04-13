@@ -1917,7 +1917,7 @@ static void HandleIMPCharProfileResultsMessage(void)
 		// have to place players name into string for first record
 		if (i == 0)
 		{
-			wchar_t zTemp[NAME_LENGTH];
+			wchar_t zTemp[NAME_LENGTH + 1];
 			swprintf(zTemp, lengthof(zTemp), L" %ls", imp.zName);
 			wcscat(pString, zTemp);
 		}
