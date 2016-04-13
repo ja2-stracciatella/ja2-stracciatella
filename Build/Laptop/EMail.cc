@@ -53,7 +53,7 @@ struct Page
 
 struct Record
 {
-	wchar_t pRecord[640];
+	wchar_t pRecord[MAIL_STRING_SIZE + 1];
 	Record* Next;
 };
 
@@ -1612,8 +1612,9 @@ static void ClearOutEmailMessageRecordsList(void)
 }
 
 
-static void AddEmailRecordToList(const wchar_t* const text)
+static void AddEmailRecordToList(wchar_t* const text)
 {
+	text[MAIL_STRING_SIZE] = 0;
 	Record* const e = MALLOC(Record);
 	e->Next = NULL;
 	wcscpy(e->pRecord, text);
@@ -1916,7 +1917,7 @@ static void HandleIMPCharProfileResultsMessage(void)
 		// have to place players name into string for first record
 		if (i == 0)
 		{
-			wchar_t zTemp[512];
+			wchar_t zTemp[NAME_LENGTH + 1];
 			swprintf(zTemp, lengthof(zTemp), L" %ls", imp.zName);
 			wcscat(pString, zTemp);
 		}
