@@ -47,6 +47,7 @@ fi
 # writing Makefile.config
 echo "# configuration options"                                  >Makefile.config
 echo "BINARY_DIR               := $PREFIX/bin"                  >>Makefile.config
+echo "SHARED_DIR               := $PREFIX/share"                >>Makefile.config
 echo "MANPAGE_DIR              := $PREFIX/share/man/man6"       >>Makefile.config
 echo "FULL_PATH_EXTRA_DATA_DIR := $PREFIX/share/ja2"            >>Makefile.config
 echo "INSTALLABLE              := yes"                          >>Makefile.config
