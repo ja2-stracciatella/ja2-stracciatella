@@ -3397,7 +3397,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	UINT16	usAnimState;
 	UINT16	usMoveAnimState = usMovementAnim;
 	INT16							sMercGridNo;
-	UINT16						usPathingData[ MAX_PATH_LIST_SIZE ];
+	UINT8						usPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT8							ubPathingMaxDirection;
 	BOOLEAN						fAdvancePath = TRUE;
 	UINT8							fFlags = 0;
@@ -3478,7 +3478,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 			{
 				memcpy( usPathingData, pSoldier->usPathingData, sizeof( usPathingData ) );
 				ubPathingMaxDirection = (UINT8)usPathingData[ MAX_PATH_LIST_SIZE -1 ];
-				memcpy( &(pSoldier->usPathingData[1]), usPathingData, sizeof( usPathingData ) - sizeof( UINT16 ) );
+				memcpy( &(pSoldier->usPathingData[1]), usPathingData, sizeof( usPathingData ) - sizeof( usPathingData[0] ) );
 
 				// If we have reach the max, go back one sFinalDest....
 				if ( pSoldier->usPathDataSize == MAX_PATH_LIST_SIZE )
