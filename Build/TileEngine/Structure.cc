@@ -18,6 +18,7 @@
 #include "Isometric_Utils.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "Debug_Pages.h"
 #include "LOS.h"
 #include "Smell.h"
 #include "SaveLoadMap.h"
@@ -1239,73 +1240,164 @@ void DebugStructurePage1()
 		L"Outside right"
 	};
 
-	SetFont(LARGEFONT1);
-	gprintf(0, 0, L"DEBUG STRUCTURES PAGE 1 OF 1");
-
 	GridNo const grid_no = GetMouseMapPos();
-	if (grid_no == NOWHERE) return;
+	if (grid_no == NOWHERE) {
+    MPageHeader(L"DEBUG STRUCTURES PAGE ONE");
+  } else {
+    MPageHeader(L"DEBUG STRUCTURES PAGE ONE, GRIDNO %d", grid_no);
+  }
 
-	gprintf(320, 0, L"Building %d", gubBuildingInfo[grid_no]);
+  INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
+  INT32 y = DEBUG_PAGE_START_Y;
+
+  MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Building:", gubBuildingInfo[grid_no]);
+
+
+  bool might_have_structures = GridNoOnVisibleWorldTile(grid_no);
+  INT8 n_structures = 0;
+  if (might_have_structures) {
+    for (STRUCTURE* i = gpWorldLevelData[grid_no].pStructureHead; i; i = i->pNext)
+    {
+      ++n_structures;
+    }
+  }
+  MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Number of structures:", n_structures);
+
+  if (!might_have_structures) return;
+
+  MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Movement Costs:");
+  mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"N %d NE %d E %d SE %d S %d SW %d W %d NW %d",
+          gubWorldMovementCosts[grid_no][NORTH    ][gsInterfaceLevel],
+          gubWorldMovementCosts[grid_no][NORTHEAST][gsInterfaceLevel],
+          gubWorldMovementCosts[grid_no][EAST     ][gsInterfaceLevel],
+          gubWorldMovementCosts[grid_no][SOUTHEAST][gsInterfaceLevel],
+          gubWorldMovementCosts[grid_no][SOUTH    ][gsInterfaceLevel],
+          gubWorldMovementCosts[grid_no][SOUTHWEST][gsInterfaceLevel],
+          gubWorldMovementCosts[grid_no][WEST     ][gsInterfaceLevel],
+          gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]);
+  MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Ground smell:");
+  mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d of strength %d",
+          SMELL_TYPE(gpWorldLevelData[grid_no].ubSmellInfo),
+          SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo));
 
 	INT16 const desired_level = gsInterfaceLevel == I_GROUND_LEVEL ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF;
 	for (STRUCTURE* s = gpWorldLevelData[grid_no].pStructureHead; s; s = s->pNext)
 	{
 		if (s->sCubeOffset != desired_level) continue;
 
-		if (s->fFlags & STRUCTURE_GENERIC)
+    y += h;
+
+    MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure ID:", s->usStructureID);
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Type:");
+    if (s->fFlags & STRUCTURE_GENERIC)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Generic structure %x #%d", s->fFlags, s->pDBStructureRef->pDBStructure->usStructureNumber);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Generic structure no %d", s->fFlags, s->pDBStructureRef->pDBStructure->usStructureNumber);
 		}
 		else if (s->fFlags & STRUCTURE_TREE)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Tree");
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Tree");
 		}
+    else if (s->fFlags & STRUCTURE_FENCE)
+    {
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Fence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+    }
+    else if (s->fFlags & STRUCTURE_WIREFENCE)
+    {
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wirefence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+    }
 		else if (s->fFlags & STRUCTURE_WALL)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Wall with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wall with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
 		else if (s->fFlags & STRUCTURE_WALLNWINDOW)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Wall with window");
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wall with window with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
 		else if (s->fFlags & STRUCTURE_VEHICLE)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Vehicle %d", s->pDBStructureRef->pDBStructure->usStructureNumber);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Vehicle %d", s->pDBStructureRef->pDBStructure->usStructureNumber);
 		}
 		else if (s->fFlags & STRUCTURE_NORMAL_ROOF)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Roof");
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Roof");
 		}
 		else if (s->fFlags & STRUCTURE_SLANTED_ROOF)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Slanted roof");
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Slanted roof");
 		}
+    else if (s->fFlags & STRUCTURE_TALL_ROOF)
+    {
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Tall roof");
+    }
+    else if (s->fFlags & STRUCTURE_SWITCH)
+    {
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Switch");
+    }
+    else if (s->fFlags & STRUCTURE_CORPSE)
+    {
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Corpse");
+    }
+    else if (s->fFlags & STRUCTURE_PERSON)
+    {
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Person");
+    }
+    else if (s->fFlags & STRUCTURE_CAVEWALL)
+    {
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Cave wall");
+    }
 		else if (s->fFlags & STRUCTURE_DOOR)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Door with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Door with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
 		else if (s->fFlags & STRUCTURE_SLIDINGDOOR)
 		{
 			wchar_t const* const state = s->fFlags & STRUCTURE_OPEN ? L"Open" : L"Closed";
-			gprintf(0, LINE_HEIGHT * 1, L"%ls sliding door with orientation %ls", state, WallOrientationString[s->ubWallOrientation]);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%ls sliding door with orientation %ls", state, WallOrientationString[s->ubWallOrientation]);
 		}
 		else if (s->fFlags & STRUCTURE_DDOOR_LEFT)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"DDoorLft with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"DDoorLft with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
 		else if (s->fFlags & STRUCTURE_DDOOR_RIGHT)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"DDoorRt with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"DDoorRt with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
 		else
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"UNKNOWN STRUCTURE! (0x%X)", s->fFlags);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Unknown Structure");
 		}
 
-		INT8             const height = StructureHeight(s);
+    MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Flags:");
+    wchar_t flagString[256];
+    swprintf(flagString, lengthof(flagString), L"");
+    if (s->fFlags & STRUCTURE_MOBILE) {
+      wcscat(flagString, L"MOB ");
+    }
+    if (s->fFlags & STRUCTURE_PASSABLE) {
+      wcscat(flagString, L"PAS ");
+    }
+    if (s->fFlags & STRUCTURE_EXPLOSIVE) {
+      wcscat(flagString, L"EXP ");
+    }
+    if (s->fFlags & STRUCTURE_TRANSPARENT) {
+      wcscat(flagString, L"TRA ");
+    }
+    if (s->fFlags & STRUCTURE_HASITEMONTOP) {
+      wcscat(flagString, L"HIT ");
+    }
+    if (s->fFlags & STRUCTURE_SPECIAL) {
+      wcscat(flagString, L"SPE ");
+    }
+    if (s->fFlags & STRUCTURE_LIGHTSOURCE) {
+      wcscat(flagString, L"LIG ");
+    }
+    mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, flagString);
+
+    INT8             const height = StructureHeight(s);
 		STRUCTURE const* const base   = FindBaseStructure(s);
 		UINT8            const armour = gubMaterialArmour[s->pDBStructureRef->pDBStructure->ubArmour];
-		gprintf(0, LINE_HEIGHT * 2, L"Structure height %d, cube offset %d, armour %d, HP %d", height, s->sCubeOffset, armour, base->ubHitPoints);
+    MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure info:");
+    mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Structure height %d, cube offset %d, armour %d, HP %d", height, s->sCubeOffset, armour, base->ubHitPoints);
 
 		UINT8 dens0;
 		UINT8 dens1;
@@ -1313,77 +1405,50 @@ void DebugStructurePage1()
 		UINT8 dens3;
 		if (StructureDensity(s, &dens0, &dens1, &dens2, &dens3))
 		{
-			gprintf(0, LINE_HEIGHT * 3, L"Structure fill %d%%/%d%%/%d%%/%d%% density %d", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity);
+      MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure fill:");
+      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L" %d%%/%d%%/%d%%/%d%% density %d", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity);
 		}
-
-#ifndef LOS_DEBUG
-		gprintf(0, LINE_HEIGHT * 4, L"Structure ID %d", s->usStructureID);
-#endif
-
-		INT8 n_structures = 0;
-		for (STRUCTURE const* i = gpWorldLevelData[grid_no].pStructureHead; i; i = i->pNext)
-		{
-			++n_structures;
-		}
-		gprintf(0, LINE_HEIGHT * 12, L"Number of structures = %d", n_structures);
-		break;
 	}
 
 #ifdef LOS_DEBUG
 	LOSResults const& los = gLOSTestResults;
 	if (los.fLOSTestPerformed)
 	{
-		gprintf(0, LINE_HEIGHT * 4, L"LOS from (%7d,%7d,%7d)", los.iStartX, los.iStartY, los.iStartZ);
-		gprintf(0, LINE_HEIGHT * 5, L"to (%7d,%7d,%7d)", los.iEndX, los.iEndY, los.iEndZ);
+		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"LOS from (%7d,%7d,%7d)", los.iStartX, los.iStartY, los.iStartZ);
+		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"to (%7d,%7d,%7d)", los.iEndX, los.iEndY, los.iEndZ);
 		if (los.fOutOfRange)
 		{
-			gprintf(0, LINE_HEIGHT * 6, L"is out of range");
+			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"is out of range");
 		}
 		else if (los.fLOSClear)
 		{
-			gprintf(0, LINE_HEIGHT * 6, L"is clear!");
+			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"is clear!");
 		}
 		else
 		{
-			gprintf(0, LINE_HEIGHT * 6, L"is blocked at (%7d,%7d,%7d)!", los.iStoppedX, los.iStoppedY, los.iStoppedZ);
-			gprintf(0, LINE_HEIGHT * 10, L"Blocked at cube level %d", los.iCurrCubesZ);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"is blocked at (%7d,%7d,%7d)!", los.iStoppedX, los.iStoppedY, los.iStoppedZ);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Blocked at cube level %d", los.iCurrCubesZ);
 		}
-		gprintf(0, LINE_HEIGHT * 7, L"Passed through %d tree bits!", los.ubTreeSpotsHit);
-		gprintf(0, LINE_HEIGHT * 8, L"Maximum range was %7d", los.iMaxDistance);
-		gprintf(0, LINE_HEIGHT * 9, L"actual range was %7d", los.iDistance);
+		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Passed through %d tree bits!", los.ubTreeSpotsHit);
+		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Maximum range was %7d", los.iMaxDistance);
+		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"actual range was %7d", los.iDistance);
 		if (los.ubChanceToGetThrough <= 100)
 		{
-			gprintf(0, LINE_HEIGHT * 11, L"Chance to get through was %d", los.ubChanceToGetThrough);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Chance to get through was %d", los.ubChanceToGetThrough);
 		}
 	}
 #endif
 
-	gprintf(0, LINE_HEIGHT * 13, L"N %d NE %d E %d SE %d",
-			gubWorldMovementCosts[grid_no][NORTH    ][gsInterfaceLevel],
-			gubWorldMovementCosts[grid_no][NORTHEAST][gsInterfaceLevel],
-			gubWorldMovementCosts[grid_no][EAST     ][gsInterfaceLevel],
-			gubWorldMovementCosts[grid_no][SOUTHEAST][gsInterfaceLevel]);
-	gprintf(0, LINE_HEIGHT * 14, L"S %d SW %d W %d NW %d",
-			gubWorldMovementCosts[grid_no][SOUTH    ][gsInterfaceLevel],
-			gubWorldMovementCosts[grid_no][SOUTHWEST][gsInterfaceLevel],
-			gubWorldMovementCosts[grid_no][WEST     ][gsInterfaceLevel],
-			gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]);
-	gprintf(0, LINE_HEIGHT * 15, L"Ground smell %d strength %d",
-			SMELL_TYPE(gpWorldLevelData[grid_no].ubSmellInfo),
-			SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo));
-
 #ifdef COUNT_PATHS
 	if (guiTotalPathChecks > 0)
 	{
-		gprintf(0, LINE_HEIGHT * 16,
+		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h,
 				L"Total %ld, %%succ %3ld | %%failed %3ld | %%unsucc %3ld",
 				guiTotalPathChecks,
 				100 * guiSuccessfulPathChecks   / guiTotalPathChecks,
 				100 * guiFailedPathChecks       / guiTotalPathChecks,
 				100 * guiUnsuccessfulPathChecks / guiTotalPathChecks);
 	}
-#else
-	gprintf(0, LINE_HEIGHT * 16, L"Adj soldiers %d", gpWorldLevelData[grid_no].ubAdjacentSoldierCnt);
 #endif
 }
 

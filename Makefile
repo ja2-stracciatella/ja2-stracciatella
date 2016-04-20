@@ -450,6 +450,7 @@ SRCS += Build/Utils/Animated_ProgressBar.cc
 SRCS += Build/Utils/Cinematics.cc
 SRCS += Build/Utils/Cursors.cc
 SRCS += Build/Utils/Debug_Control.cc
+SRCS += Build/Utils/Debug_Pages.cc
 SRCS += Build/Utils/Event_Manager.cc
 SRCS += Build/Utils/Event_Pump.cc
 SRCS += Build/Utils/Font_Control.cc
@@ -624,6 +625,8 @@ install: $(BINARY)
 	@test -n "$(INSTALLABLE)" || echo "  make"
 	@test -n "$(INSTALLABLE)" || echo "  sudo make install"
 	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
+
+uninstall: deinstall
 
 deinstall:
 	test -z "$(INSTALLABLE)" || rm $(MANPAGE_DIR)/ja2.6
