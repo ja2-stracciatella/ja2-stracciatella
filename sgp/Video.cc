@@ -24,6 +24,7 @@
 #include "PlatformIO.h"
 #include "PlatformSDL.h"
 #include "Font.h"
+#include "Icon.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -143,6 +144,16 @@ void InitializeVideoManager(void)
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
+	SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
+		(void*)gWindowIconData.pixel_data,
+    gWindowIconData.width,
+    gWindowIconData.height,
+    gWindowIconData.bytes_per_pixel*8,
+    gWindowIconData.bytes_per_pixel*gWindowIconData.width,
+    0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+	SDL_WM_SetIcon(windowIcon, NULL);
+	SDL_FreeSurface(windowIcon);
+
   ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, g_video_flags);
