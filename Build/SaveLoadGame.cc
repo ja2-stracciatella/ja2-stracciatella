@@ -1372,13 +1372,13 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
     {
       BYTE Data[2352];
       reader(f, Data, sizeof(Data));
-      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat);
+      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
     }
     else
     {
-      BYTE Data[2328];
-      reader(f, Data, sizeof(Data));
-      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat);
+			BYTE Data[2328];
+			reader(f, Data, sizeof(Data));
+			ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
     }
 
 		SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
@@ -1419,18 +1419,18 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 			}
 		}
 
-  if(isGermanVersion())
-  {
-		// Fix neutral flags
-		if (savegame_version < 94 &&
-				s->bTeam == OUR_TEAM  &&
-				s->bNeutral           &&
-				s->bAssignment != ASSIGNMENT_POW)
+		if(isGermanVersion())
 		{
-			// turn off neutral flag
-			s->bNeutral = FALSE;
+			// Fix neutral flags
+			if (savegame_version < 94 &&
+					s->bTeam == OUR_TEAM  &&
+					s->bNeutral           &&
+					s->bAssignment != ASSIGNMENT_POW)
+			{
+				// turn off neutral flag
+				s->bNeutral = FALSE;
+			}
 		}
-  }
 		// JA2Gold: fix next-to-previous attacker value
 		if (savegame_version < 99)
 		{

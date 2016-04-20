@@ -935,7 +935,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 		// Direction to center of explosion
 	  ubDirection = OppositeDirection(pSoldier->bDirection);
-		sNewGridNo  = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
+		sNewGridNo  = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( ubDirection ) );
 
 		// Check if a person exists here and is not prone....
 		SOLDIERTYPE* const tgt = WhoIsThere2(sNewGridNo, pSoldier->bLevel);
