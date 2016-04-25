@@ -142,7 +142,6 @@ WriteSectorSummaryUpdate(): puiFilename yuck
 bBuddy[5], bHated[5]: indices 3 and 4 unused
 fButtonsPresent: once TRUE it never changes anymore
 fPotentialForDebug: ?
-fResetContractGlow: probably always TRUE
 fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
 gOpenDoorList[], gClosedDoorList[]: users, code duplication

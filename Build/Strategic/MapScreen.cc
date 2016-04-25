@@ -490,7 +490,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 
 
 	// if not glowing right now, leave
-	if (giContractHighLine == -1 || fResetContractGlow || fShowInventoryFlag)
+	if (giContractHighLine == -1 || fShowInventoryFlag)
 	{
 		iColorNum = 0;
 		fDelta = TRUE;

@@ -241,9 +241,6 @@ static MERC_LEAVE_ITEM* gpLeaveListHead[NUM_LEAVE_LIST_SLOTS];
 // holds ids of mercs who left stuff behind
 static UINT32 guiLeaveListOwnerProfileId[NUM_LEAVE_LIST_SLOTS];
 
-// flag to reset contract region glow
-BOOLEAN fResetContractGlow = FALSE;
-
 // timers for double click
 static INT32 giDblClickTimersForMoveBoxMouseRegions[MAX_POPUP_BOX_STRING_COUNT];
 
@@ -644,9 +641,6 @@ void RestoreBackgroundForContractGlowRegionList( void )
 
 		// set old to current
 		iOldContractLine = giContractHighLine;
-
-		// reset color rotation
-		fResetContractGlow = TRUE;
 	}
 }
 
@@ -673,9 +667,6 @@ void RestoreBackgroundForSleepGlowRegionList( void )
 
 		// set old to current
 		iOldSleepHighLine = giSleepHighLine;
-
-		// reset color rotation
-		fResetContractGlow = TRUE;
 	}
 }
 
