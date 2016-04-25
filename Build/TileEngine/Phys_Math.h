@@ -3,9 +3,6 @@
 
 #include "Types.h"
 
-
-//typedef float real;
-
 struct vector_3
 {
 	float x, y, z;
