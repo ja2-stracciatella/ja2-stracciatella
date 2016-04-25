@@ -481,15 +481,6 @@ void SetInfoChar(SOLDIERTYPE const* const s)
 	}
 }
 
-
-static void ContractBoxGlow(void)
-{
-/* Why not?
-	fResetContractGlow = FALSE;
-*/
-}
-
-
 static void ContractListRegionBoxGlow(UINT16 usCount)
 {
  static INT32 iColorNum =10;
@@ -1906,7 +1897,6 @@ try
 		HandleHighLightingOfLinesInTeamPanel( );
 
 		// render glow for contract region
-		ContractBoxGlow( );
 		GlowTrashCan( );
 
 		// handle changing of highlighted lines
@@ -2113,7 +2103,6 @@ try
 		HandleHighLightingOfLinesInTeamPanel( );
 
 		// render glow for contract region
-		ContractBoxGlow( );
 		GlowTrashCan( );
 
 		// handle changing of highlighted lines
