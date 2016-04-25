@@ -9,7 +9,6 @@ BtnHelpScreenDontShowHelpAgainCallback(): empty
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
-ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
 CorpseHit(): empty
 Create16BPPPaletteShaded(): callers
 CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
