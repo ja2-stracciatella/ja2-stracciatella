@@ -13,7 +13,7 @@ vector_3 VAdd( vector_3 *a, vector_3 *b )
 	return( c );
 }
 
-vector_3 VMultScalar( vector_3 *a, real b )
+vector_3 VMultScalar( vector_3 *a, float b )
 {
 	vector_3 c;
 
@@ -25,7 +25,7 @@ vector_3 VMultScalar( vector_3 *a, real b )
 }
 
 
-real VDotProduct( vector_3 *a, vector_3 *b )
+float VDotProduct( vector_3 *a, vector_3 *b )
 {
 	return ( ( a->x * b->x ) + ( a->y * b->y ) + ( a->z * b->z ) );
 }

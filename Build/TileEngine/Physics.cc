@@ -81,10 +81,10 @@ static REAL_OBJECT ObjectSlots[NUM_OBJECT_SLOTS];
 UINT32					guiNumObjectSlots = 0;
 BOOLEAN					fDampingActive = FALSE;
 //real						Kdl	= (float)0.5;					// LINEAR DAMPENING ( WIND RESISTANCE )
-real						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESISTANCE )
+float						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESISTANCE )
 
 #define					EPSILONV		0.5
-#define					EPSILONP		(real)0.01
+#define					EPSILONP		(float)0.01
 #define					EPSILONPZ		3
 
 #define					CALCULATE_OBJECT_MASS( m )	( (float)( m * 2 ) )
@@ -130,7 +130,7 @@ static void RecountObjectSlots(void)
 }
 
 
-REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, real const dLifeLength, real const xPos, real const yPos, real const zPos, real const xForce, real const yForce, real const zForce, SOLDIERTYPE* const owner, UINT8 const ubActionCode, SOLDIERTYPE* const target)
+REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const dLifeLength, float const xPos, float const yPos, float const zPos, float const xForce, float const yForce, float const zForce, SOLDIERTYPE* const owner, UINT8 const ubActionCode, SOLDIERTYPE* const target)
 {
 	REAL_OBJECT* const o = GetFreeObjectSlot();
 	memset(o, 0, sizeof(*o));
@@ -193,7 +193,7 @@ static BOOLEAN RemoveRealObject(REAL_OBJECT* const o)
 }
 
 
-static void SimulateObject(REAL_OBJECT* pObject, real deltaT);
+static void SimulateObject(REAL_OBJECT* pObject, float deltaT);
 
 
 void SimulateWorld(  )
@@ -214,7 +214,7 @@ void SimulateWorld(  )
 				// Get object
 				pObject = &( ObjectSlots[ cnt ] );
 
-				SimulateObject( pObject, (real)DELTA_T );
+				SimulateObject( pObject, (float)DELTA_T );
 			}
 		}
 	}
@@ -240,17 +240,17 @@ void RemoveAllPhysicsObjects( )
 
 
 static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject);
-static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, real DeltaTime);
-static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime);
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, float DeltaTime);
+static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime);
 static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject);
-static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime);
+static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime);
 
 
-static void SimulateObject(REAL_OBJECT* pObject, real deltaT)
+static void SimulateObject(REAL_OBJECT* pObject, float deltaT)
 {
-	real DeltaTime	 = 0;
-	real CurrentTime = 0;
-	real TargetTime = DeltaTime;
+	float DeltaTime	 = 0;
+	float CurrentTime = 0;
+	float TargetTime = DeltaTime;
 	INT32			iCollisionID;
 	BOOLEAN		fEndThisObject = FALSE;
 
@@ -315,7 +315,7 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 	// Calculate forces
 	pObject->Force = pObject->InitialForce;
 
-	pObject->Force.z -= (real)GRAVITY;
+	pObject->Force.z -= (float)GRAVITY;
 
 	// Set intial force to zero
 	pObject->InitialForce = VMultScalar( &(pObject->InitialForce ), 0 );
@@ -342,7 +342,7 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 static void HandleArmedObjectImpact(REAL_OBJECT* pObject);
 
 
-static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
+static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime)
 {
 	UINT8 bLevel = 0;
 
@@ -455,7 +455,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 }
 
 
-static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
+static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
 {
 	vector_3			vTemp;
 
@@ -500,10 +500,10 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 
 
 static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisionID);
-static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, real CoefficientOfRestitution);
+static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, float CoefficientOfRestitution);
 
 
-static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, real DeltaTime)
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, float DeltaTime)
 {
 	FLOAT					dDeltaX, dDeltaY, dDeltaZ;
 
@@ -1052,9 +1052,9 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 }
 
 
-static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, real CoefficientOfRestitution)
+static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, float CoefficientOfRestitution)
 {
-	real ImpulseNumerator, Impulse;
+	float ImpulseNumerator, Impulse;
 	vector_3			vTemp;
 
 	ImpulseNumerator = -1 * CoefficientOfRestitution * VDotProduct( pVelocity , pNormal );
@@ -1224,14 +1224,14 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo);
 
 
-static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo, real* pdMagForce)
+static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo, float* pdMagForce)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
-	real				dForce		= 20;
-	real				dRange;
-	real				dPercentDiff = 0;
-	real				dTestRange, dTestDiff;
+	float				dForce		= 20;
+	float				dRange;
+	float				dPercentDiff = 0;
+	float				dTestRange, dTestDiff;
 	INT32				iNumChecks = 0;
 
 	// Get XY from gridno
@@ -1318,14 +1318,14 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 }
 
 
-static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, const OBJECTTYPE* pItem, INT16* psGridNo)
+static float FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dForce, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
-	real				dRange;
-	real				dzDegrees = ( (float)PI/8 );
-	real				dPercentDiff = 0;
-	real				dTestRange, dTestDiff;
+	float				dRange;
+	float				dzDegrees = ( (float)PI/8 );
+	float				dPercentDiff = 0;
+	float				dTestRange, dTestDiff;
 	INT32				iNumChecks = 0;
 
 
@@ -1417,7 +1417,7 @@ static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sS
 }
 
 
-static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo)
+static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dForce, float dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;

@@ -173,7 +173,6 @@ pSoldier = pSoldier: strange
 pSoldier->pShades[16 ... 31]: unused?
 struct ETRLEData: reorder attributes
 swprintf([^,]*,[^,]*,[^,"]*[,)]: non-fixed format string
-typedef float real: remove
 ubMineType: unused?
 ubTravelRating: write-only
 wcscat(): check for overkill
