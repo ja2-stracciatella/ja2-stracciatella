@@ -2318,7 +2318,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
   // Checking if screen shows areas outside of the map
 	BOOLEAN fOutLeft   = (gsTLX > sTopLeftWorldX);
 	BOOLEAN fOutRight  = (gsTRX < sTopRightWorldX);
-	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY + 62);       /* top of the screen is above top of the map (with padding for headshots) */
+	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY);            /* top of the screen is above top of the map */
 	BOOLEAN fOutBottom = (gsBLY < sBottomLeftWorldY);          /* bottom of the screen is below bottom if the map */
 
   int mapHeight = gsBLY - gsTLY;
