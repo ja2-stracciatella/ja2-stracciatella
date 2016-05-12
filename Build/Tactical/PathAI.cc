@@ -35,6 +35,8 @@
 #include "GameSettings.h"
 #include "Buildings.h"
 
+#include "slog/slog.h"
+
 
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
@@ -50,6 +52,8 @@ extern INT16 gsCoverValue[WORLD_MAX];
 BOOLEAN gfDisplayCoverValues = TRUE;
 static BOOLEAN gfDrawPathPoints = FALSE;
 #endif
+
+#define DEBUG_TAG_PATH_AI "PathAI"
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;
 BOOLEAN gfRecalculatingExistingPathCost = FALSE;
@@ -529,25 +533,25 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	iOriginationX = iOriginationY = 0;
 	iOrigination = (INT32) s->sGridNo;
 
-	if (iOrigination < 0 || iOrigination > WORLD_MAX)
+  if (iOrigination < 0 || iOrigination > WORLD_MAX)
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
-		#endif
-		return( 0 );
+    SLOGW( DEBUG_TAG_PATH_AI, "Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
+		return 0;
 	}
-	else if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
+	if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
-		#endif
-		return( 0 );
+    SLOGW( DEBUG_TAG_PATH_AI, "Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
 	}
-	else if (s->bLevel != ubLevel)
-	{
-		// pathing to a different level... bzzzt!
-		return( 0 );
-	}
+  if (sDestination != NOWHERE && (sDestination < 0 || sDestination > WORLD_MAX))
+  {
+    SLOGW( DEBUG_TAG_PATH_AI, "Trying to calculate path from %d to off-world gridno %d", iOrigination, sDestination );
+  }
+  if (sDestination != NOWHERE && !GridNoOnVisibleWorldTile( (INT16) sDestination ) )
+  {
+    SLOGW( DEBUG_TAG_PATH_AI, "Trying to calculate path from %d to non-visible gridno %d", iOrigination, sDestination );
+  }
+
+	if (s->bLevel != ubLevel) return 0;
 
 	if ( gubGlobalPathFlags )
 	{
