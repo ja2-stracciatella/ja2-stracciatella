@@ -17,6 +17,10 @@
 * github release + tags
 
 ## Build releases for distribution
+To build all releases:
+    $ make clean
+    $ make build-releases
+
 ###  Windows release on Linux: 
  
     $ make clean 
@@ -27,7 +31,7 @@
     $ make build-release-on-mac 
  
 ### Debian packages: 
-    For the current architecture: 
+For the current architecture:
       $ make build-debian-package
 
 ## Announcements
