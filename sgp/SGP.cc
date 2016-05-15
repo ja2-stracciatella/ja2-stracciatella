@@ -199,7 +199,8 @@ static void deinitGameAndExit()
 void requestGameExit()
 {
   // If we are in Dead is Dead mode, save before exit
-  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+  {
     // Avoid us going back to the Main Menu Screen. I don't like this part but it works so far
     guiPreviousOptionScreen = gMsgBox.uiExitScreen;
     guiCurrentScreen = gMsgBox.uiExitScreen;
