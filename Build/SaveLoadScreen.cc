@@ -1473,12 +1473,17 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 
 void DoQuickSave()
 {
-	if (SaveGame(0, L"")) return;
+        // Use the Dead is Dead function if we are in DiD
+        if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+	  DoDeadIsDeadSave();
+	} else {
+	 	if (SaveGame(0, L"")) return;
 
 	if (guiPreviousOptionScreen == MAP_SCREEN)
 		DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	else
-		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
+	}
 }
 
 // Save function for Dead Is Dead
