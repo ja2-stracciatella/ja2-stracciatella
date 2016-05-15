@@ -202,16 +202,6 @@ void EndTurn( UINT8 ubNextTeam )
 		FOR_EACH_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
 			s->bMoved = TRUE;
-<<<<<<< Updated upstream
-=======
-			// Cancel merc movement if continue path was not used
-			const INT16 sAPCost = PtsToMoveDirection(s, guiPathingData[0]);
-			if (EnoughPoints(s, sAPCost, 0, FALSE)) 
-			{
-			  s->sFinalDestination=s->sGridNo;
-			  s->fNoAPToFinishMove = 0;
-			}
->>>>>>> Stashed changes
 		}
 
 		gTacticalStatus.ubCurrentTeam  = ubNextTeam;
