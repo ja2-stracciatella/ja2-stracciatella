@@ -717,7 +717,10 @@ static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue const 
 	// yes, Quit to main menu
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-	        DoDeadIsDeadSave();
+	        if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+		{
+	          DoDeadIsDeadSave();
+		}
 		gfExitOptionsAfterMessageBox = TRUE;
 		SetOptionsExitScreen( MAINMENU_SCREEN );
 
