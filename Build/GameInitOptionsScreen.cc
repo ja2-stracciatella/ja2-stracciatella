@@ -803,9 +803,14 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 	UINT8 ubIronManMode = GetCurrentGameSaveButtonSetting();
 
 	//if the user has selected IRON MAN mode
-	if (ubIronManMode)
+	if (ubIronManMode == DIF_IRON_MAN)
 	{
 		DoGioMessageBox(str_iron_man_mode_warning, ConfirmGioIronManMessageBoxCallBack);
+		return  TRUE;
+	}
+	else if (ubIronManMode == DIF_DEAD_IS_DEAD)
+	{
+	  	DoGioMessageBox(str_dead_is_dead_mode_warning, ConfirmGioIronManMessageBoxCallBack);
 		return  TRUE;
 	}
 	return FALSE;
