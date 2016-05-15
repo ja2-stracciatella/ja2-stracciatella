@@ -1481,6 +1481,17 @@ void DoQuickSave()
 		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 }
 
+// Save function for Dead Is Dead
+void DoDeadIsDeadSave()
+{
+	if (SaveGame(10, L"DiD")) return;
+
+	if (guiPreviousOptionScreen == MAP_SCREEN)
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+	else
+		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+}
+
 
 void DoQuickLoad()
 {
