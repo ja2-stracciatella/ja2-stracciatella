@@ -2980,7 +2980,8 @@ static const wchar_t *s_fr_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Annuler",
 	L"En combat",
 	L"Temps illimité",
-	L"Temps limité"
+	L"Temps limité",
+	L"Dead is Dead"
 };
 
 static const wchar_t *s_fr_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =

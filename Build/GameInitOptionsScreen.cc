@@ -192,6 +192,7 @@ static void DisplayMessageToUserAboutGameDifficulty(void);
 static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DisplayMessageToUserAboutIronManMode(void);
 static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue);
+static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue);
 
 
 ScreenID GameInitOptionsScreenHandle(void)
@@ -496,10 +497,11 @@ static void RenderGIOScreen(void)
 	usPosY += GIO_GAP_BN_SETTINGS;
 
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_IRON_MAN_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-	usPosY += 20;
-	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
+        DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	usPosY += GIO_GAP_BN_SETTINGS;
+	
+	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_DEAD_IS_DEAD_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_LOAD_PREVIOUS_SAVE], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
 
@@ -803,14 +805,14 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 	UINT8 ubIronManMode = GetCurrentGameSaveButtonSetting();
 
 	//if the user has selected IRON MAN mode
-	if (ubIronManMode == DIF_IRON_MAN)
+	if (ubIronManMode == GIO_IRON_MAN)
 	{
 		DoGioMessageBox(str_iron_man_mode_warning, ConfirmGioIronManMessageBoxCallBack);
 		return  TRUE;
 	}
-	else if (ubIronManMode == DIF_DEAD_IS_DEAD)
+	else if (ubIronManMode == GIO_DEAD_IS_DEAD)
 	{
-	  	DoGioMessageBox(str_dead_is_dead_mode_warning, ConfirmGioIronManMessageBoxCallBack);
+	  	DoGioMessageBox(str_dead_is_dead_mode_warning, ConfirmGioDeadIsDeadMessageBoxCallBack);
 		return  TRUE;
 	}
 	return FALSE;
@@ -822,6 +824,18 @@ static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue const bExi
 	if (bExitValue == MSG_BOX_RETURN_YES)
 	{
 		gubGameOptionScreenHandler = GIO_IRON_MAN_MODE;
+	}
+	else
+	{
+		SelectCheckbox(guiGameSaveToggles, *guiGameSaveToggles[GIO_CAN_SAVE]);
+	}
+}
+
+static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
+{
+	if (bExitValue == MSG_BOX_RETURN_YES)
+	{
+		gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD;
 	}
 	else
 	{

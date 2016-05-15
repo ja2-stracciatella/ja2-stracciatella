@@ -2977,7 +2977,8 @@ static const wchar_t *s_eng_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Cancel",
 	L"Extra Difficulty",
 	L"Save Anytime",
-	L"Iron Man"
+	L"Iron Man",
+	L"Dead is Dead"
 };
 
 static const wchar_t *s_eng_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
@@ -3512,6 +3513,7 @@ const wchar_t *g_eng_zNewTacticalMessages[] =
 	L"Line of Sight",
 	L"This is an IRON MAN game and you cannot save when enemies are around.",	//	@@@  new text
 	L"(Cannot save during combat)", //@@@@ new text
+	L"(Cannot load previous savegames)", // Stracciatella: New Dead is Dead game mode text
 };
 
 //@@@:  New string as of March 3, 2000.

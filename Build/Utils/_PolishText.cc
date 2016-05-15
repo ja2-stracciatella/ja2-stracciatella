@@ -2981,7 +2981,8 @@ static const wchar_t *s_pl_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Anuluj",
 	L"Dodatkowe opcje",
 	L"Nielimitowany czas",
-	L"Tury limitowane czasowo"
+	L"Tury limitowane czasowo",
+	L"Dead is Dead"
 };
 
 static const wchar_t *s_pl_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
