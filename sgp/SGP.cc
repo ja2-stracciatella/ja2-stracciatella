@@ -197,10 +197,16 @@ static void deinitGameAndExit()
  * Call this function if you want to exit the game. */
 void requestGameExit()
 {
-  	// If we are in Dead is Dead mode, save before exit
+  // If we are in Dead is Dead mode, save before exit
   if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+    // Avoid us going back to the Main Menu Screen. I don't like this part but it works so far
     guiPreviousOptionScreen = gMsgBox.uiExitScreen;
     guiCurrentScreen = gMsgBox.uiExitScreen;
+    // This is not really necessary, but inline with the general game behaviour
+    if (guiPreviousOptionScreen == LAPTOP_SCREEN)
+    {
+      guiPreviousOptionScreen = MAP_SCREEN;
+    }
     DoDeadIsDeadSave();
   }
   SDL_Event event;

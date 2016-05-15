@@ -717,6 +717,7 @@ static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue const 
 	// yes, Quit to main menu
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
+	        DoDeadIsDeadSave();
 		gfExitOptionsAfterMessageBox = TRUE;
 		SetOptionsExitScreen( MAINMENU_SCREEN );
 
