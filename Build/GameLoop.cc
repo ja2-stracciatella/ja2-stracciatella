@@ -415,13 +415,7 @@ void HandleShortCutExitState()
 void EndGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
-  if( bExitValue == MSG_BOX_RETURN_YES ) {
-	// If we are in Dead is Dead mode, save before exit
-	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
-	  guiPreviousOptionScreen = gMsgBox.uiExitScreen;
-	  guiCurrentScreen = gMsgBox.uiExitScreen;
-	  DoQuickSave();
-	}
+  if( bExitValue == MSG_BOX_RETURN_YES ) 
 	{
 		requestGameExit();
 	}
