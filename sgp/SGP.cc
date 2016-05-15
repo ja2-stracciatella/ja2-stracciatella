@@ -162,6 +162,24 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
+    // If we are in Dead is Dead mode, save before exit
+    // Does this code also fire on crash? Let's hope not!
+    if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+    {
+      //FIXME: This code is highly experimental, but so far I couldn't get it to deliver wrong results!
+      // Make sure we are always on the right screen. I'm surprised this works...
+      if (guiPreviousOptionScreen == MAINMENU_SCREEN)
+      {
+        guiPreviousOptionScreen = guiCurrentScreen;
+      }
+      // This is not really necessary, but inline with the general game behaviour
+      if (guiPreviousOptionScreen == LAPTOP_SCREEN)
+      {
+        guiPreviousOptionScreen = MAP_SCREEN;
+      }
+      DoDeadIsDeadSave();
+    }
+
 	FastDebugMsg("Exiting Game");
 
 	SoundServiceStreams();
@@ -197,19 +215,6 @@ static void deinitGameAndExit()
  * Call this function if you want to exit the game. */
 void requestGameExit()
 {
-  // If we are in Dead is Dead mode, save before exit
-  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
-  {
-    // Avoid us going back to the Main Menu Screen. I don't like this part but it works so far
-    guiPreviousOptionScreen = gMsgBox.uiExitScreen;
-    guiCurrentScreen = gMsgBox.uiExitScreen;
-    // This is not really necessary, but inline with the general game behaviour
-    if (guiPreviousOptionScreen == LAPTOP_SCREEN)
-    {
-      guiPreviousOptionScreen = MAP_SCREEN;
-    }
-    DoDeadIsDeadSave();
-  }
   SDL_Event event;
   event.type = SDL_QUIT;
   SDL_PushEvent(&event);

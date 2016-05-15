@@ -182,7 +182,7 @@ extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 #define SKI_Text_SIZE 14
 #define str_stat_list_SIZE 11
 #define str_aim_sort_list_SIZE 8
-#define zNewTacticalMessages_SIZE 6
+#define zNewTacticalMessages_SIZE 7
 
 //Weapon Name and Description size
 #define SIZE_ITEM_NAME        80
@@ -1740,6 +1740,7 @@ enum
 	TCTL_MSG__IRON_MAN_CANT_SAVE_NOW,
 	TCTL_MSG__CANNOT_SAVE_DURING_COMBAT,
 	TCTL_MSG__CANNOT_LOAD_PREVIOUS_SAVE,
+	TCTL_MSG__DEAD_IS_DEAD_CANT_SAVE_NOW,
 };
 
 #endif

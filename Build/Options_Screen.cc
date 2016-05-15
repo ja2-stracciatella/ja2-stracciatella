@@ -273,7 +273,7 @@ static void EnterOptionsScreen(void)
 	//Save game button
 	guiOptGotoSaveGameBtn = MakeButton(OPT_SAVE_BTN_X, BtnOptGotoSaveGameCallback, zOptionsText[OPT_SAVE_GAME]);
 	guiOptGotoSaveGameBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-	if( guiPreviousOptionScreen == MAINMENU_SCREEN || !CanGameBeSaved() )
+	if( guiPreviousOptionScreen == MAINMENU_SCREEN || !CanGameBeSaved() || gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD )
 	{
 		DisableButton( guiOptGotoSaveGameBtn );
 	}

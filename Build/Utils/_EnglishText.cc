@@ -3514,6 +3514,7 @@ const wchar_t *g_eng_zNewTacticalMessages[] =
 	L"This is an IRON MAN game and you cannot save when enemies are around.",	//	@@@  new text
 	L"(Cannot save during combat)", //@@@@ new text
 	L"(Cannot load previous savegames)", // Stracciatella: New Dead is Dead game mode text
+	L"This is a Dead is Dead game and you cannot save through the save screen.",
 };
 
 //@@@:  New string as of March 3, 2000.
