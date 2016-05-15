@@ -147,7 +147,7 @@ extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 #define gpDemoIntroString_SIZE 6
 #define gzMoneyWithdrawMessageText_SIZE 2
 #define zOptionsToggleText_SIZE 20
-#define gzGIOScreenText_SIZE 16
+#define gzGIOScreenText_SIZE 17
 #define pDeliveryLocationStrings_SIZE 17
 #define pPausedGameText_SIZE 3
 
@@ -1641,7 +1641,8 @@ enum
 
 	GIO_GAME_SAVE_STYLE_TEXT,
 	GIO_SAVE_ANYWHERE_TEXT,
-	GIO_IRON_MAN_TEXT
+	GIO_IRON_MAN_TEXT,
+	GIO_DEAD_IS_DEAD_TEXT,
 };
 
 
@@ -1738,6 +1739,7 @@ enum
 	TCTL_MSG__LOS,
 	TCTL_MSG__IRON_MAN_CANT_SAVE_NOW,
 	TCTL_MSG__CANNOT_SAVE_DURING_COMBAT,
+	TCTL_MSG__CANNOT_LOAD_PREVIOUS_SAVE,
 };
 
 #endif

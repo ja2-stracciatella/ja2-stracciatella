@@ -2811,7 +2811,8 @@ static const wchar_t *s_ger_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Abbrechen",
 	L"Extraschwer",
 	L"Speichern jederzeit möglich",
-	L"Iron Man"
+	L"Iron Man",
+	L"Tot ist tot"
 };
 
 static const wchar_t *s_ger_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
@@ -3336,6 +3337,7 @@ static const wchar_t* const s_ger_zNewTacticalMessages[] =
 	L"Sichtfeld",
 	L"Dies ist ein IRON MAN-Spiel, und es kann nicht gespeichert werden, wenn sich Gegner in der Nähe befinden.",
 	L"(Kann während Kampf nicht speichern)",
+	L"(Kann keine vorigen Spielstände laden)",
 };
 
 //@@@:  New string as of March 3, 2000.

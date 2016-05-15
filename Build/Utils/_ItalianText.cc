@@ -2981,7 +2981,8 @@ static const wchar_t *s_it_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Annulla",
 	L"Difficoltà extra",
 	L"Tempo illimitato",
-	L"Turni a tempo"
+	L"Turni a tempo",
+	L"Dead is Dead",
 };
 
 static const wchar_t *s_it_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =

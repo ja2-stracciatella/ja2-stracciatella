@@ -2995,7 +2995,8 @@ static const wchar_t *s_dut_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Stop",
 	L"Extra Moeilijk",
 	L"Ongelimiteerde Tijd",
-	L"Getimede Beurten"
+	L"Getimede Beurten",
+	L"Dead is Dead"
 };
 
 static const wchar_t *s_dut_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
