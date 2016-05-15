@@ -22,7 +22,6 @@
 #include "Text.h"
 #include "HelpScreen.h"
 #include "SaveLoadGame.h"
-#include "SaveLoadScreen.h"
 #include "Finances.h"
 #include "Options_Screen.h"
 #include "Debug.h"
@@ -415,7 +414,7 @@ void EndGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )
-        {
+       {
 		requestGameExit();
 	}
 
