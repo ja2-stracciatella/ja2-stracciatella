@@ -255,7 +255,7 @@ void SetMeanwhileSceneSeen(UINT8 const meanwhile_id)
 BOOLEAN	CanGameBeSaved()
 {
 	//if the iron man mode is on
-	if( gGameOptions.ubGameSaveMode )
+	if( gGameOptions.ubGameSaveMode == DIF_IRON_MAN )
 	{
 		//if we are in turn based combat
 		if( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
