@@ -3341,6 +3341,9 @@ static const wchar_t* const s_ger_zNewTacticalMessages[] =
 //@@@:  New string as of March 3, 2000.
 static const wchar_t s_ger_str_iron_man_mode_warning[] = L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?";
 
+// Stracciatella: New Dead is Dead game mode warning
+const wchar_t *s_ger_str_dead_is_dead_mode_warning = L"Sie haben den TOT IST TOT Modus ausgewählt. Diese Einstellung macht das Spiel bedeutend schwieriger, da Sie nicht in der Lage sein werden einen alten Spielstand zu laden falls Ihnen ein Fehler unterläuft. Das Spiel speichert den aktuellen Stand beim verlassen automatisch ab. Diese Einstellung wird den gesamten Spielverlauf verändern.  Sind Sie sicher dass Sie den TOT IST TOT Modus spielen wollen?";
+
 
 /** German language resources. */
 LanguageRes g_LanguageResGerman = {
@@ -3566,6 +3569,7 @@ LanguageRes g_LanguageResGerman = {
 
   s_ger_zNewTacticalMessages,
   s_ger_str_iron_man_mode_warning,
+  s_ger_str_dead_is_dead_mode_warning,
 };
 
 #ifdef WITH_UNITTESTS

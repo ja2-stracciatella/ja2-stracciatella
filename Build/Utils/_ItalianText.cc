@@ -3515,6 +3515,7 @@ static const wchar_t *s_it_str_aim_sort_list[str_aim_sort_list_SIZE] =
 
 extern const wchar_t *g_eng_zNewTacticalMessages[];
 extern const wchar_t *g_eng_str_iron_man_mode_warning;
+extern const wchar_t *g_eng_str_dead_is_dead_mode_warning;
 
 /** Italian language resources. */
 LanguageRes g_LanguageResItalian = {
@@ -3740,6 +3741,7 @@ LanguageRes g_LanguageResItalian = {
 
   g_eng_zNewTacticalMessages,
   g_eng_str_iron_man_mode_warning,
+  g_eng_str_dead_is_dead_mode_warning,
 };
 
 #ifdef WITH_UNITTESTS
