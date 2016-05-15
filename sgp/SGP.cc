@@ -201,7 +201,7 @@ void requestGameExit()
   if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
     guiPreviousOptionScreen = gMsgBox.uiExitScreen;
     guiCurrentScreen = gMsgBox.uiExitScreen;
-    DoQuickSave();
+    DoDeadIsDeadSave();
   }
   SDL_Event event;
   event.type = SDL_QUIT;

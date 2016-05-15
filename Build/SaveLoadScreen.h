@@ -21,6 +21,7 @@ ScreenID SaveLoadScreenHandle(void);
 void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 void DoQuickSave(void);
+void DoDeadIsDeadSave(void);
 void DoQuickLoad(void);
 
 bool AreThereAnySavedGameFiles();
