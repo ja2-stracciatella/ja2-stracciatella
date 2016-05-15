@@ -3338,6 +3338,7 @@ static const wchar_t* const s_ger_zNewTacticalMessages[] =
 	L"Dies ist ein IRON MAN-Spiel, und es kann nicht gespeichert werden, wenn sich Gegner in der Nähe befinden.",
 	L"(Kann während Kampf nicht speichern)",
 	L"(Kann keine vorigen Spielstände laden)",
+	L"Dies ist ein Tot ist Tot Spiel und Sie können nicht über den Spiel Speichern Dialog speichern.",
 };
 
 //@@@:  New string as of March 3, 2000.

@@ -1690,16 +1690,20 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 's':
 			if (!fDisableMapInterfaceDueToBattle && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 			{
-				if (CanGameBeSaved())
+				if (CanGameBeSaved() &&  gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD )
 				{
 					gfSaveGame              = TRUE;
 					gfCameDirectlyFromGame  = TRUE;
 					guiPreviousOptionScreen = GAME_SCREEN;
 					LeaveTacticalScreen(SAVE_LOAD_SCREEN);
 				}
-				else
+				else if ( gGameOptions.ubGameSaveMode == DIF_IRON_MAN )
 				{ // Display a message saying the player cannot save now
-					DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
+				  DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
+				}
+				else
+				{ 
+				  DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__DEAD_IS_DEAD_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
 				}
 			}
 			break;
