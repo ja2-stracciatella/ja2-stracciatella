@@ -674,6 +674,15 @@ static void LoadGameFilePosition(UINT8 slot, HWFILE load, const char* pMsg);
 
 void LoadSavedGame(UINT8 const save_slot_id)
 {
+  
+	// Save the game before if we are in Dead is Dead Mode
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+	  // The previous options screen may be the main menu if we use quicksave/load
+	  if (guiCurrentScreen != SAVE_LOAD_SCREEN) {
+	    guiPreviousOptionScreen = guiCurrentScreen;
+	  }
+	  DoDeadIsDeadSave();
+	}
 	TrashAllSoldiers();
 	RemoveAllGroups();
 
