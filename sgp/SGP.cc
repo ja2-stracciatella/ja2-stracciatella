@@ -37,6 +37,9 @@
 #include "Logger.h"
 #include "GameState.h"
 #include "Timer.h"
+#include "SaveLoadScreen.h"
+#include "Options_Screen.h"
+#include "JAScreens.h"
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
@@ -194,6 +197,12 @@ static void deinitGameAndExit()
  * Call this function if you want to exit the game. */
 void requestGameExit()
 {
+  	// If we are in Dead is Dead mode, save before exit
+  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+    guiPreviousOptionScreen = gMsgBox.uiExitScreen;
+    guiCurrentScreen = gMsgBox.uiExitScreen;
+    DoQuickSave();
+  }
   SDL_Event event;
   event.type = SDL_QUIT;
   SDL_PushEvent(&event);
