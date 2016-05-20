@@ -53,7 +53,7 @@ struct Page
 
 struct Record
 {
-	wchar_t pRecord[MAIL_STRING_SIZE + 1];
+	wchar_t pRecord[MAIL_STRING_SIZE];
 	Record* Next;
 };
 
@@ -1614,7 +1614,7 @@ static void ClearOutEmailMessageRecordsList(void)
 
 static void AddEmailRecordToList(wchar_t* const text)
 {
-	text[MAIL_STRING_SIZE] = 0;
+	text[MAIL_STRING_SIZE-1] = L'\0';
 	Record* const e = MALLOC(Record);
 	e->Next = NULL;
 	wcscpy(e->pRecord, text);
