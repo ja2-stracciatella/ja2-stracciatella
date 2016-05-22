@@ -1,5 +1,39 @@
 # History of changes
 
+## next release
+- Feature: New logo is used as application icon
+- Feature: Using the brothel in san mona is now possible (#76)
+- Feature: Allow stacked item popup to have multiple lines.
+- Feature: FreeBSD and OpenBSD build system improvements
+- Bugfix: Fix water not being taken into account for movement noise
+- Bugfix: Fix random crashes after AI-vs-AI autoresolve battles (#253)
+- Bugfix: Talon cannot be loaded with two grenades anymore (#130)
+- Bugfix: Mercs that end a turn without moving while running now leave running stance (#194)
+- Bugfix: Helicopter shadow is now rendered all the way to the screen border on high resolutions (#261)
+- Bugfix: Some interface elements were not rendered correctly in editor on high resolutions (#152)
+- Bugfix: Repair can now be used in underground sectors (#152)
+- Bugfix: Credit screen rendering was fixed for higher resolutions (#222)
+- Bugfix: Some sounds sounded different from vanilla (#78)
+- Bugfix: Broken contract button in strategic view (#80)
+- Bugfix: Clipping issue with militia map (#88)
+- Bugfix: Vertically center time compress text in its box
+- Bugfix: Armor label position in strategy merc inventory
+- Bugfix: Ammo label position in weapon detail view
+- Bugfix: Only heal up Elliot if he is not already dead (#153)
+- Bugfix: Patch from Thomas Moore to fix contract renewal interface freeze
+- Bugfix: Position cash splitting interface correctly in strategic mode (#178)
+- Bugfix: Cow is not a bloodcat
+- Bugfix: Number of bloodcats on medium difficulty was the same as on hard
+- Bugfix: Dont end up in a locked ui state when somebody leaves (#200)
+- Bugfix: Fix corpses and items appearing in water (#179)
+- Bugfix: Rare boxing crash when money is handed over (#199)
+- Bugfix: crash when loading map (#143)
+- Bugfix: End of meanwhile cutscene crash (#198)
+
+## v0.14.1
+
+- various build system changes
+
 ## v0.12.352
 
 - In-game video is playable now. Thanks to Misanthropos and Greg Kennedy (author of libsmacker library)
