@@ -1,6 +1,6 @@
 # History of changes
 
-## next release
+## 0.15.0
 - Feature: New logo is used as application icon
 - Feature: Using the brothel in san mona is now possible (#76)
 - Feature: Allow stacked item popup to have multiple lines.
