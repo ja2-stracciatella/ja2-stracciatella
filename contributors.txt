@@ -8,20 +8,25 @@ Contributors (sorted alphabetically)
 ------------------------------------
 
 Agatae (https://bitbucket.org/Agatae)
+derSteFfi <der_steffi@gmx.de>
 Gennady Trafimenkov <gennady.trafimenkov@gmail.com>
+Jaka Kranjc <smgl@lynxlynx.info>
 JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)
 mgl from The Bear's Pit Forum
 Misanthropos <misanthropos@gmx.net>
+Nils Reuße <n.reusse@hxgn.net>
 Nils R <ml@hxgn.net>
 Oliver Jankowski
 Peinthor Rene <peinthor@gmail.com>
-Rebekka Bais
-Rinne <thomas.rinsch@arcor.de>
+Rebekka Bais (Logo Design)
+RinneT <thomas.rinsch@arcor.de>
 rk <rk@razlaw.name>
 sam <bg9zzxik@gmail.com>
 Stefan Lau <github@stefanlau.com>
-stefan <stefan@stefan.wg>
+Stephan Bauroth <der_steffi@gmx.de>
 sunshine from The Bear's Pit Forum
+vancv <vanc.vaclav@gmail.com>
+vxx <no@e.mail>
 wolf (committer to the original Tron's svn repository)
 
 

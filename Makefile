@@ -824,6 +824,7 @@ rebuild-contributors-list:
 	echo "Oliver Jankowski"                                 >>/tmp/contributors.txt
 	echo "mgl from The Bear's Pit Forum"                    >>/tmp/contributors.txt
 	echo "sunshine from The Bear's Pit Forum"               >>/tmp/contributors.txt
+	echo "Rebekka Bais (Logo Design)"                       >>/tmp/contributors.txt
 	echo "JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)"  >>/tmp/contributors.txt
 	echo "Primal author of the project"                             >contributors.txt
 	echo "----------------------------"                             >>contributors.txt
