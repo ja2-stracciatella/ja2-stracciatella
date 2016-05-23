@@ -653,7 +653,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_EAST_UICURSOR;
 			}
 
-			if (gusMouseXPos < SCREEN_WIDTH - 5)
+			if (gusMouseXPos < SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)
 			{
 				gfUIShowExitEast = FALSE;
 			}
@@ -680,7 +680,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_WEST_UICURSOR;
 			}
 
-			if ( gusMouseXPos > 5 )
+			if ( gusMouseXPos > NO_PX_SHOW_EXIT_CURS )
 			{
 				gfUIShowExitWest = FALSE;
 			}
@@ -707,7 +707,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_NORTH_UICURSOR;
 			}
 
-			if ( gusMouseYPos > 5 )
+			if ( gusMouseYPos > NO_PX_SHOW_EXIT_CURS )
 			{
 				gfUIShowExitNorth = FALSE;
 			}
@@ -735,7 +735,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_SOUTH_UICURSOR;
 			}
 
-			if (gusMouseYPos < SCREEN_HEIGHT - 2)
+			if (gusMouseYPos < SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS)
 			{
 				gfUIShowExitSouth = FALSE;
 

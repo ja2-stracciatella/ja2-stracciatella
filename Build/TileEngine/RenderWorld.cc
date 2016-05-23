@@ -51,7 +51,6 @@ static INT16 gsCurrentItemGlowFrame = 0;
 #define LARGER_VIEWPORT_XOFFSET_S (VIEWPORT_XOFFSET_S * 3)
 #define LARGER_VIEWPORT_YOFFSET_S (VIEWPORT_YOFFSET_S * 5)
 
-
 enum RenderTilesFlags
 {
 	TILES_NONE                      = 0,
@@ -2114,10 +2113,10 @@ void ScrollWorld(void)
 				RESETCOUNTER(STARTSCROLL);
 			}
 
-			if (gusMouseYPos == 0)                 ScrollFlags |= SCROLL_UP;
-			if (gusMouseYPos >= SCREEN_HEIGHT - 1) ScrollFlags |= SCROLL_DOWN;
-			if (gusMouseXPos >= SCREEN_WIDTH  - 1) ScrollFlags |= SCROLL_RIGHT;
-			if (gusMouseXPos == 0)                 ScrollFlags |= SCROLL_LEFT;
+			if (gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)									ScrollFlags |= SCROLL_UP;
+			if (gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_DOWN;
+			if (gusMouseXPos >= SCREEN_WIDTH  - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_RIGHT;
+			if (gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_LEFT;
 		}
 	}
 	while (FALSE);
@@ -2410,10 +2409,10 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 		}
 		else
 		{
-			if (fOutRight  && gusMouseXPos >= SCREEN_WIDTH - 1)  gfUIShowExitEast  = TRUE;
-			if (fOutLeft   && gusMouseXPos == 0)                 gfUIShowExitWest  = TRUE;
-			if (fOutTop    && gusMouseYPos == 0)                 gfUIShowExitNorth = TRUE;
-			if (fOutBottom && gusMouseYPos >= SCREEN_HEIGHT - 1) gfUIShowExitSouth = TRUE;
+			if (gusMouseXPos >= SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)  gfUIShowExitEast  = TRUE;
+			if (gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitWest  = TRUE;
+			if (gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitNorth = TRUE;
+			if (gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) gfUIShowExitSouth = TRUE;
 		}
 	}
 
