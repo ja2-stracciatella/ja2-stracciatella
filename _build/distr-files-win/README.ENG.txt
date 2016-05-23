@@ -34,4 +34,4 @@ source codes.  It is not as difficult as it sounds:
  - follow instructions from INSTALL.txt
 
 
-WWW: https://bitbucket.org/gennady/ja2-stracciatella
+WWW: https://github.com/ja2-stracciatella/ja2-stracciatella

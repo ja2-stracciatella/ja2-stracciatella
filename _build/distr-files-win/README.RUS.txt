@@ -35,4 +35,4 @@ JA2-Stracciatella также доступна для Windows и Linux.
  - следовать инструкциям в INSTALL.txt
 
 
-WWW: https://bitbucket.org/gennady/ja2-stracciatella
+WWW: https://github.com/ja2-stracciatella/ja2-stracciatella
