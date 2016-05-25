@@ -857,21 +857,3 @@ rebuild-contributors-list:
 # --------------
 #  man ./ja2_manpage
 #
-#
-# Build releases for distribution
-#--------------------------------
-#
-#  Windows release on Linux:
-#
-#    $ make clean
-#    $ make build-win-release-on-linux
-#
-#  On Mac:
-#    $ make clean
-#    $ make build-release-on-mac
-#
-#  Debian packages:
-#
-#    For the current architecture:
-#      $ make build-debian-package
-#
