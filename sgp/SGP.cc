@@ -646,7 +646,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
       }
       else
       {
-        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-res'");
+        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-mod'");
         success = FALSE;
       }
     }
