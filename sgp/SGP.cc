@@ -67,8 +67,6 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif
 
 
-#define WITH_MODS (1)
-
 ////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////
@@ -278,19 +276,15 @@ struct CommandLineParams
 {
   CommandLineParams()
   {
-#ifdef WITH_MODS
     useMod = false;
-#endif
     doUnitTests = false;
     showDebugMessages = false;
     resourceVersionGiven = false;
     no3btnmouse = false;
   }
 
-#ifdef WITH_MODS
   bool useMod;
   std::string modName;
-#endif
 
   bool resourceVersionGiven;
   std::string resourceVersion;
@@ -393,7 +387,6 @@ try
 
   DefaultContentManager *cm;
 
-#ifdef WITH_MODS
   if(params.useMod)
   {
     std::string modName = params.modName;
@@ -414,7 +407,6 @@ try
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
   else
-#endif
   {
     cm = new DefaultContentManager(version,
                                    configFolderPath,
@@ -645,7 +637,6 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
         success = FALSE;
       }
 		}
-#ifdef WITH_MODS
     else if (strcmp(argv[i], "-mod") == 0)
     {
       if(haveNextParameter)
@@ -659,7 +650,6 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
         success = FALSE;
       }
     }
-#endif
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)
 		{
@@ -715,12 +705,10 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
 			"                 Default value is ENGLISH\n"
 			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
 			"                 RUSSIAN_GOLD is for Gold release\n"
-#ifdef WITH_MODS
       "\n"
       "  -mod NAME    Start one of the game modifications, bundled into the game.\n"
       "               NAME is the name of modification, e.g. 'from-russia-with-love'.\n"
       "               See folder mods for possible options\n"
-#endif
 			"\n"
 			"  -debug       Show debug messages\n"
 #ifdef WITH_UNITTESTS
