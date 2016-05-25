@@ -80,6 +80,7 @@
 #include "Soldier.h"
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
+#include "slog/slog.h"
 
 #define		ITEMDESC_FONT							BLOCKFONT2
 #define		ITEMDESC_FONTSHADOW2			32
@@ -3678,7 +3679,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// Increment attacker count...
 			gTacticalStatus.ubAttackBusyCount++;
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount) );
+			SLOGD(DEBUG_TAG_INTERFACE, "INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount);
 
 			// Given our gridno, throw grenate!
 			CalculateLaunchItemParamsForThrow(gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->bLevel, gsInterfaceLevel * 256 + sEndZ, gpItemPointer, 0, ubThrowActionCode, target);

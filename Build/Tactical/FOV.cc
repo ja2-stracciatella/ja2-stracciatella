@@ -151,10 +151,8 @@ static void BuildSightDir(UINT32 dir, UINT32* One, UINT32* Two, UINT32* Three, U
       *Four = SOUTHWEST;
       *Five = NORTHEAST;
       break;
-#ifdef BETAVERSION
   default:
-    NumMessage("BuildSightDir:  Invalid 'dir' value, = ",dir);
-#endif
+      break;
   }
 }
 

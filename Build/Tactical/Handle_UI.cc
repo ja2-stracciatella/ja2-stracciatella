@@ -411,8 +411,6 @@ ScreenID HandleTacticalUI(void)
 
 				// Decrease global busy  counter...
 				gTacticalStatus.ubAttackBusyCount = 0;
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to ending AI lock");
-
 				guiPendingOverrideEvent = LU_ENDUILOCK;
 				UIHandleLUIEndLock( NULL );
 			}
@@ -924,11 +922,11 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 
 			if( bReturnCode == MERC_HIRE_FAILED )
 			{
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Merc hire failed:  Either already hired or dislikes you." );
+				SLOGD(DEBUG_TAG_MERCHIRE, "Merc hire failed:  Either already hired or dislikes you." );
 			}
 			else if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
 			{
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Can't hire more than 20 mercs." );
+				SLOGD(DEBUG_TAG_MERCHIRE, "Can't hire more than 20 mercs." );
 			}
 			else
 			{
@@ -5007,7 +5005,7 @@ void SetInterfaceHeightLevel( )
 		sGridNo = gMapInformation.sWestGridNo;
 	else
 	{
-		Assert(0);
+		SLOGE(DEBUG_TAG_ASSERTS, "SetInterfaceHeightLevel: MapInformation seems corrupted");
 		return;
 	}
 

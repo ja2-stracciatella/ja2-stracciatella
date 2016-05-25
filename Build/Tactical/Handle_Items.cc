@@ -70,6 +70,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
+#include "slog/slog.h"
 
 #define					NUM_ITEMS_LISTED			8
 #define					NUM_ITEM_FLASH_SLOTS	50
@@ -214,7 +215,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	// ATE: If in realtime, set attacker count to 0...
 	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to no combat");
+		SLOGD(DEBUG_TAG_HANDLEITEMS, "Setting attack busy count to 0 due to no combat");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
@@ -867,7 +868,8 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	if (item->getItemClass() == IC_TENTACLES)
 	{
 		gTacticalStatus.ubAttackBusyCount++;
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount));
+		SLOGD(DEBUG_TAG_HANDLEITEMS, "Starting swipe attack, incrementing a.b.c in HandleItems to %d",
+					gTacticalStatus.ubAttackBusyCount);
 		const INT16 sAPCost = CalcTotalAPsToAttack(s, sGridNo, FALSE, s->bAimTime);
 		DeductPoints(s, sAPCost, 0);
 		EVENT_InitNewSoldierAnim(s, QUEEN_SWIPE, 0, FALSE);
@@ -1470,7 +1472,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	if (*psGridNo == NOWHERE)
 	{
 		// Display warning.....
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Item %d was given invalid grid location %d for item pool. Please Report.", pObject->usItem, *psGridNo);
+		SLOGE(DEBUG_TAG_HANDLEITEMS, "Item %d was given invalid grid location %d for item pool. Please Report.", pObject->usItem, *psGridNo);
     *psGridNo = gMapInformation.sCenterGridNo;
 		//return -1;
 	}
@@ -2309,7 +2311,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 	// Get objectype and delete
 	if (!pSoldier->pTempObject) {
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Attempted to give nonexisting item." );
+		SLOGD(DEBUG_TAG_HANDLEITEMS, "Attempted to give nonexisting item.");
 		return;
 	}
 	TempObject = *pSoldier->pTempObject;

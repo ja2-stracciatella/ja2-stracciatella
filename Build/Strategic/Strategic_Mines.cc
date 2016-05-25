@@ -135,7 +135,7 @@ void InitializeMines( void )
 			ubMineProductionIncreases = 20;
 			break;
 		default:
-			Assert( 0 );
+			SLOGE(DEBUG_TAG_ASSERTS, "Invalid Difficulty level");
 			return;
 	}
 
@@ -529,7 +529,7 @@ static INT32 MineAMine(INT8 bMineIndex)
 		if( iAmtExtracted > 0 )
 		{
 			// debug message
-//			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls - Mine income from %ls = $%d", WORLDTIMESTR, pTownNames[GetTownAssociatedWithMine(bMineIndex)], iAmtExtracted);
+			SLOGD(DEBUG_TAG_SMAP, "%ls - Mine income from %ls = $%d", WORLDTIMESTR, pTownNames[GetTownAssociatedWithMine(bMineIndex)], iAmtExtracted);
 
 			// if this is the first time this mine has produced income for the player in the game
 			if ( !gMineStatus[ bMineIndex ].fMineHasProducedForPlayer )
@@ -809,7 +809,7 @@ void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
 	MERCPROFILESTRUCT const& p = GetProfile(miner_data.usProfileId);
 	if (p.bLife < OKLIFE)
 	{
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"Head Miner #%ls can't talk (quote #%d)", p.zNickname, quote_type);
+		SLOGD(DEBUG_TAG_SMAP, "Head Miner #%ls can't talk (quote #%d)", p.zNickname, quote_type);
 		return;
 	}
 

@@ -176,7 +176,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 							}
 							else
 							{
-								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+								SLOGW(DEBUG_TAG_AI, "Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
 								fDoUseDoor = FALSE;
 							}
 						}
@@ -296,7 +296,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 									else
 									{
 										// WTF?  Warning time!
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+										SLOGW(DEBUG_TAG_AI, "Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
 										fDoUseDoor = FALSE;
 									}
 								}
@@ -391,9 +391,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 
 					if (pSoldier->usActionData == NOWHERE)
 					{
-#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Civilian could not find path to map edge!" );
-#endif
+						SLOGD(DEBUG_TAG_AI, "Civilian could not find path to map edge!" );
 						DoneScheduleAction( pSoldier );
 						return( AI_ACTION_NONE );
 					}
@@ -535,14 +533,7 @@ static INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE* pSoldier)
 			// if not already facing in that direction,
 			if ( pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
-
 				pSoldier->usActionData = ubDesiredMercDir;
-
-				#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST PC to face direction %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-				#endif
-
 				return( AI_ACTION_CHANGE_FACING );
 			}
 		}
@@ -590,14 +581,7 @@ static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 			// if not already facing in that direction,
 			if (pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
-
 				pSoldier->usActionData = ubDesiredMercDir;
-
-				#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST PC to face direction %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-				#endif
-
 				return( AI_ACTION_CHANGE_FACING );
 			}
 		}
@@ -857,18 +841,12 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
 
 
- if (bInWater || bInGas)
+	if (bInWater || bInGas)
   {
-   pSoldier->usActionData = FindNearestUngassedLand(pSoldier);
-
-   if (pSoldier->usActionData != NOWHERE)
+		pSoldier->usActionData = FindNearestUngassedLand(pSoldier);
+		if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
-     return(AI_ACTION_LEAVE_WATER_GAS);
+			return(AI_ACTION_LEAVE_WATER_GAS);
     }
   }
 
@@ -955,11 +933,6 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 
 		 if (pSoldier->usActionData != NOWHERE)
 			{
-	#ifdef DEBUGDECISIONS
-			 sprintf(tempstr,"%s - RANDOM PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
-			 AIPopMessage(tempstr);
-	#endif
-
 				if (!gfTurnBasedAI)
 				{
 					// wait after this...
@@ -1017,18 +990,12 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 			{
 				if ( pSoldier->usActionData == GoAsFarAsPossibleTowards( pSoldier, pSoldier->usActionData, AI_ACTION_SEEK_FRIEND ) )
 				{
-
-				#ifdef DEBUGDECISIONS
-						 sprintf(tempstr,"%s - SEEK FRIEND at grid %d",pSoldier->name,pSoldier->usActionData);
-						 AIPopMessage(tempstr);
-				#endif
-
-					 if (fCivilianOrMilitia && !gfTurnBasedAI)
-					 {
+					if (fCivilianOrMilitia && !gfTurnBasedAI)
+					{
 						// pause at the end of the walk!
 						pSoldier->bNextAction = AI_ACTION_WAIT;
 						pSoldier->usNextActionData = (UINT16) REALTIME_CIV_AI_DELAY;
-					 }
+					}
 
 				 return(AI_ACTION_SEEK_FRIEND);
 				}
@@ -1074,13 +1041,8 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 					{
 						pSoldier->usActionData = (UINT16)PreRandom(8);
 					}
-				} while (pSoldier->usActionData == pSoldier->bDirection);
-
-
-	#ifdef DEBUGDECISIONS
-			 sprintf(tempstr,"%s - TURNS to face direction %d",pSoldier->name,pSoldier->usActionData);
-			 AIPopMessage(tempstr);
-	#endif
+				}
+				while (pSoldier->usActionData == pSoldier->bDirection);
 
 				if ( InternalIsValidStance( pSoldier, (INT8) pSoldier->usActionData, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
@@ -1156,15 +1118,10 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 
  // determine the most important noise heard, and its relative value
  sNoiseGridNo = MostImportantNoiseHeard(pSoldier,&iNoiseValue, &fClimb, &fReachable);
- //NumMessage("iNoiseValue = ",iNoiseValue);
 
 	if (sNoiseGridNo == NOWHERE)
 	{
    // then we have no business being under YELLOW status any more!
-#ifdef BETAVERSION
-   NumMessage("DecideActionYellow: ERROR - No important noise known by guynum ",pSoldier->ubID);
-#endif
-
 		return(AI_ACTION_NONE);
 	}
 
@@ -1195,13 +1152,8 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 
 		 if ((INT16)PreRandom(100) < iChance && InternalIsValidStance( pSoldier, ubNoiseDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
-			 pSoldier->usActionData = ubNoiseDir;
-	#ifdef DEBUGDECISIONS
-			 sprintf(tempstr,"%s - TURNS TOWARDS NOISE to face direction %d",pSoldier->name,pSoldier->usActionData);
-			 AIPopMessage(tempstr);
-	#endif
-
-			 return(AI_ACTION_CHANGE_FACING);
+				pSoldier->usActionData = ubNoiseDir;
+				return(AI_ACTION_CHANGE_FACING);
 			}
 		}
 	}
@@ -1251,17 +1203,9 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 			 case ATTACKSLAYONLY: iChance = 0; break;
       }
 
-#ifdef DEBUGDECISIONS
-     AINumMessage("Chance to radio yellow alert = ",iChance);
-#endif
-
-     if ((INT16)PreRandom(100) < iChance)
+			if ((INT16)PreRandom(100) < iChance)
       {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a YELLOW alert!",1000);
-#endif
-
-       return(AI_ACTION_YELLOW_ALERT);
+				return(AI_ACTION_YELLOW_ALERT);
       }
     }
   }
@@ -1344,19 +1288,13 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 			{
 			 pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sNoiseGridNo,AI_ACTION_SEEK_NOISE);
 
-			 if (pSoldier->usActionData != NOWHERE)
+				if (pSoldier->usActionData != NOWHERE)
 				{
-		#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - INVESTIGATING NOISE at grid %d, moving to %d",
-					pSoldier->name,sNoiseGridNo,pSoldier->usActionData);
-				 AIPopMessage(tempstr);
-		#endif
-
-					 if (fClimb && pSoldier->usActionData == sNoiseGridNo)
-					 {
+					if (fClimb && pSoldier->usActionData == sNoiseGridNo)
+					{
 						// need to climb AND have enough APs to get there this turn
 						return( AI_ACTION_MOVE_TO_CLIMB );
-					 }
+					}
 
 				 return(AI_ACTION_SEEK_NOISE);
 				}
@@ -1411,14 +1349,8 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 
 			 if (pSoldier->usActionData != NOWHERE)
 				{
-	#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - SEEKING FRIEND at %d, MOVING to %d",
-					pSoldier->name,sClosestFriend,pSoldier->usActionData);
-				 AIPopMessage(tempstr);
-	#endif
-
-				 if (fClimb && pSoldier->usActionData == sClosestFriend)
-				 {
+					if (fClimb && pSoldier->usActionData == sClosestFriend)
+					{
 					// need to climb AND have enough APs to get there this turn
 					return( AI_ACTION_MOVE_TO_CLIMB );
 				 }
@@ -1475,12 +1407,7 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 
 			 if (pSoldier->usActionData != NOWHERE)
 				{
-	#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - TAKING COVER at grid %d",pSoldier->name,pSoldier->usActionData);
-				 AIPopMessage(tempstr);
-	#endif
-
-				 return(AI_ACTION_TAKE_COVER);
+					return(AI_ACTION_TAKE_COVER);
 				}
 			}
 		}
@@ -1489,15 +1416,11 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
  // SWITCH TO GREEN: determine if soldier acts as if nothing at all was wrong
  ////////////////////////////////////////////////////////////////////////////
- if ((INT16)PreRandom(100) < 50)
+	if ((INT16)PreRandom(100) < 50)
   {
-#ifdef DEBUGDECISIONS
-   AINameMessage(pSoldier,"ignores noise completely and BYPASSES to GREEN!",1000);
-#endif
-
-   // Skip YELLOW until new situation, 15% extra chance to do GREEN actions
-   pSoldier->bBypassToGreen = 15;
-   return(DecideActionGreen(pSoldier));
+		// Skip YELLOW until new situation, 15% extra chance to do GREEN actions
+		pSoldier->bBypassToGreen = 15;
+		return(DecideActionGreen(pSoldier));
   }
 
 
@@ -1508,11 +1431,6 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  // if not in water and not already crouched, try to crouch down first
  if (!fCivilian && !PTR_CROUCHED && IsValidStance( pSoldier, ANIM_CROUCH ) )
   {
-#ifdef DEBUGDECISIONS
-   sprintf(tempstr,"%s CROUCHES (STATUS YELLOW)",pSoldier->name);
-   AIPopMessage(tempstr);
-#endif
-
 		if (!gfTurnBasedAI || GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) <= pSoldier->bActionPoints)
 		{
 			 pSoldier->usActionData = ANIM_CROUCH;
@@ -1524,14 +1442,9 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(pSoldier,"- DOES NOTHING (YELLOW)",1000);
-#endif
-
- // by default, if everything else fails, just stands in place without turning
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
+	// by default, if everything else fails, just stands in place without turning
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 
@@ -1636,12 +1549,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
    if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
-     return(AI_ACTION_LEAVE_WATER_GAS);
+			return(AI_ACTION_LEAVE_WATER_GAS);
     }
   }
 
@@ -1850,17 +1758,12 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				 (gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				 (gTacticalStatus.ubSpottersCalledForBy == NOBODY))
       {
-       // then call for spotters!  Uses up the rest of his turn (whatever
-       // that may be), but from now on, BLACK AI NPC may radio sightings!
-       gTacticalStatus.ubSpottersCalledForBy = pSoldier->ubID;
-       pSoldier->bActionPoints = 0;
-
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"calls for spotters!",1000);
-#endif
-
-       pSoldier->usActionData = NOWHERE;
-       return(AI_ACTION_NONE);
+				// then call for spotters!  Uses up the rest of his turn (whatever
+				// that may be), but from now on, BLACK AI NPC may radio sightings!
+				gTacticalStatus.ubSpottersCalledForBy = pSoldier->ubID;
+				pSoldier->bActionPoints = 0;
+				pSoldier->usActionData = NOWHERE;
+				return(AI_ACTION_NONE);
       }
     }
   }
@@ -1871,31 +1774,19 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  ////////////////////////////////////////////////////////////////////////
 
  // if our breath is running a bit low, and we're not in water or under fire
- if ((pSoldier->bBreath < 25) && !bInWater && !pSoldier->bUnderFire)
+	if ((pSoldier->bBreath < 25) && !bInWater && !pSoldier->bUnderFire)
   {
    // if not already crouched, try to crouch down first
    if (!fCivilian && !PTR_CROUCHED && IsValidStance( pSoldier, ANIM_CROUCH ) )
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s CROUCHES, NEEDING REST (STATUS RED), breath = %d",pSoldier->name,pSoldier->bBreath);
-     AIPopMessage(tempstr);
-#endif
-
-		 if (!gfTurnBasedAI || GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) <= pSoldier->bActionPoints)
-		 {
- 			pSoldier->usActionData = ANIM_CROUCH;
-
-			return(AI_ACTION_CHANGE_STANCE);
-		 }
+			if (!gfTurnBasedAI || GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) <= pSoldier->bActionPoints)
+			{
+				pSoldier->usActionData = ANIM_CROUCH;
+				return(AI_ACTION_CHANGE_STANCE);
+			}
     }
-
-#ifdef DEBUGDECISIONS
-   sprintf(tempstr,"%s RESTS (STATUS RED), breath = %d",pSoldier->name,pSoldier->bBreath);
-   AIPopMessage(tempstr);
-#endif
-
-   pSoldier->usActionData = NOWHERE;
-   return(AI_ACTION_NONE);
+		pSoldier->usActionData = NOWHERE;
+		return(AI_ACTION_NONE);
   }
 
 
@@ -1914,11 +1805,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
    if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s RUNNING AWAY to grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
      return(AI_ACTION_RUN_AWAY);
     }
   }
@@ -1987,17 +1873,9 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				}
 			}
 
-#ifdef DEBUGDECISIONS
-     AINumMessage("Chance to radio RED alert = ",iChance);
-#endif
-
      if ((INT16) PreRandom(100) < iChance)
       {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a RED alert!",1000);
-#endif
-
-       return(AI_ACTION_RED_ALERT);
+				return(AI_ACTION_RED_ALERT);
       }
     }
   }
@@ -2117,12 +1995,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 							// if it's possible
 							if (pSoldier->usActionData != NOWHERE)
 							{
-							#ifdef DEBUGDECISIONS
 								// do it!
-								sprintf(tempstr,"%s - SEEKING OPPONENT at grid %d, MOVING to %d",
-								pSoldier->name,sClosestDisturbance,pSoldier->usActionData);
-								AIPopMessage(tempstr);
-							#endif
 								if ( fClimb && pSoldier->usActionData == sClosestDisturbance)
 								{
 									return( AI_ACTION_MOVE_TO_CLIMB );
@@ -2159,10 +2032,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						}
 
 					 // mark SEEKING as impossible for next time through while loop
-		#ifdef DEBUGDECISIONS
-					 AINameMessage(pSoldier,"couldn't SEEK...",1000);
-		#endif
-					 bSeekPts = -99;
+						bSeekPts = -99;
 					}
 
 				 // if WATCHING is possible and at least as desirable as anything else
@@ -2237,26 +2107,16 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 						 if (pSoldier->usActionData != NOWHERE)
 							{
-								#ifdef DEBUGDECISIONS
-										 sprintf(tempstr,"%s - SEEKING FRIEND at %d, MOVING to %d",
-											pSoldier->name,sClosestFriend,pSoldier->usActionData);
-										 AIPopMessage(tempstr);
-								#endif
-
 								if (fClimb && pSoldier->usActionData == sClosestFriend)
 								{
-								 return( AI_ACTION_MOVE_TO_CLIMB );
+									return( AI_ACTION_MOVE_TO_CLIMB );
 								}
 								return(AI_ACTION_SEEK_FRIEND);
 							}
 						}
 
 				 // mark SEEKING as impossible for next time through while loop
-		#ifdef DEBUGDECISIONS
-					 AINameMessage(pSoldier,"couldn't HELP...",1000);
-		#endif
-
-					 bHelpPts = -99;
+						bHelpPts = -99;
 					}
 
 
@@ -2304,11 +2164,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						}
 
 					 // mark HIDING as impossible for next time through while loop
-		#ifdef DEBUGDECISIONS
-					 AINameMessage(pSoldier,"couldn't HIDE...",1000);
-		#endif
-
-					 bHidePts = -99;
+						bHidePts = -99;
 					}
 				}
 			}
@@ -2330,11 +2186,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 				 if (pSoldier->usActionData != NOWHERE)
 					{
-		#ifdef DEBUGDECISIONS
-					 sprintf(tempstr,"%s RUNNING AWAY to grid %d",pSoldier->name,pSoldier->usActionData);
-					 AIPopMessage(tempstr);
-		#endif
-
 					 return(AI_ACTION_RUN_AWAY);
 					}
 				}
@@ -2352,14 +2203,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				{
 					if (!gfTurnBasedAI || GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) <= pSoldier->bActionPoints)
 					{
-
-		#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s CROUCHES (STATUS RED)",pSoldier->name);
-				 AIPopMessage(tempstr);
-		#endif
-
-					 pSoldier->usActionData = ANIM_CROUCH;
-					 return(AI_ACTION_CHANGE_STANCE);
+						return(AI_ACTION_CHANGE_STANCE);
 					}
 				}
 				else if ( gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_PRONE )
@@ -2370,7 +2214,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						pSoldier->usActionData = ANIM_PRONE;
 						return( AI_ACTION_CHANGE_STANCE );
 					}
-
 				}
 			 }
 		 }
@@ -2415,14 +2258,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 			 if ((INT16)PreRandom(100) < iChance && InternalIsValidStance( pSoldier, ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
-				 pSoldier->usActionData = ubOpponentDir;
-
-	#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->usActionData);
-				 AIPopMessage(tempstr);
-	#endif
-
-				 return(AI_ACTION_CHANGE_FACING);
+					pSoldier->usActionData = ubOpponentDir;
+					return(AI_ACTION_CHANGE_FACING);
 				}
 			}
 		}
@@ -2453,11 +2290,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				if ( (pSoldier->bActionPoints == pSoldier->bInitialActionPoints || (INT16)PreRandom(100) < 60) && InternalIsValidStance( pSoldier, ubOpponentDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 				{
 					pSoldier->usActionData = ubOpponentDir;
-
-					#ifdef DEBUGDECISIONS
-					sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->usActionData);
-					AIPopMessage(tempstr);
-					#endif
 
 					// limit turning a bit... if the last thing we did was also a turn, add a 60% chance of this being our last turn
 					if ( pSoldier->bLastAction == AI_ACTION_CHANGE_FACING && PreRandom( 100 ) < 60 )
@@ -2536,9 +2368,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			pSoldier->bBleeding = __max( 0, pSoldier->bBleeding - pSoldier->bActionPoints );
 			return( AI_ACTION_NONE ); // will end-turn/wait depending on whether we're in TB or realtime
 		}
-#ifdef DEBUGDECISIONS
-		AINameMessage(ptr,"- chose to SKIP all RED actions, BYPASSES to GREEN!",1000);
-#endif
 
 		// Skip RED until new situation/next turn, 30% extra chance to do GREEN actions
 		pSoldier->bBypassToGreen = 30;
@@ -2559,13 +2388,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		{
 			if (!gfTurnBasedAI || GetAPsToChangeStance( pSoldier, ANIM_CROUCH ) <= pSoldier->bActionPoints)
 			{
-
-				#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s CROUCHES (STATUS RED)",ExtMen[ptr->guynum].name);
-				AIPopMessage(tempstr);
-				#endif
-
-				pSoldier->usActionData = ANIM_CROUCH;
 				return(AI_ACTION_CHANGE_STANCE);
 			}
 		}
@@ -2603,13 +2425,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(ptr,"- DOES NOTHING (RED)",1000);
-#endif
-
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 
@@ -2754,12 +2571,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 				if (pSoldier->usActionData != NOWHERE)
 				{
-					#ifdef DEBUGDECISIONS
-						sprintf(tempstr,"%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",pSoldier->name,pSoldier->bBreath,pSoldier->usActionData);
-						AIPopMessage(tempstr);
-					#endif
-
-					return(AI_ACTION_RUN_AWAY);
+						return(AI_ACTION_RUN_AWAY);
 				}
 			}
 
@@ -2782,12 +2594,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
    if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
-     return(AI_ACTION_LEAVE_WATER_GAS);
+			return(AI_ACTION_LEAVE_WATER_GAS);
     }
 
    // couldn't find ANY land within 25 tiles(!), this should never happen...
@@ -2796,13 +2603,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
    pSoldier->usActionData = FindSpotMaxDistFromOpponents(pSoldier);
 
    if (pSoldier->usActionData != NOWHERE)
-    {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - NO LAND NEAR, RUNNING AWAY to grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
-     return(AI_ACTION_RUN_AWAY);
+		{
+			return(AI_ACTION_RUN_AWAY);
     }
 
    // GIVE UP ON LIFE!  MERCS MUST HAVE JUST CORNERED A HELPLESS ENEMY IN A
@@ -3124,8 +2926,6 @@ bCanAttack = FALSE;
 			 }
 			 else
 			 {
-				 //sprintf(tempstr,"%s - ubMinAPCost = %d",pSoldier->name,ubMinAPCost);
-				 //PopMessage(tempstr);
 					 // then look around for a worthy target (which sets BestStab.ubPossible)
 					 CalcBestStab(pSoldier,&BestStab, TRUE);
 
@@ -3240,7 +3040,7 @@ bCanAttack = FALSE;
 		 if ( ( (pSoldier->bTeam == MILITIA_TEAM) && (PreRandom( 20 ) > BestAttack.ubChanceToReallyHit) )
 		   || ( (pSoldier->bTeam != MILITIA_TEAM) && (PreRandom( 40 ) > BestAttack.ubChanceToReallyHit) ) )
 		 {
-		  //ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"AI %d allowing cover check, chance to hit is only %d, at range %d", BestAttack.ubChanceToReallyHit, PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) );
+		  SLOGD(DEBUG_TAG_AI, "AI %d allowing cover check, chance to hit is only %d, at range %d", BestAttack.ubChanceToReallyHit, PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) );
 			// maybe taking cover would be better!
 			fAllowCoverCheck = TRUE;
 			if ( PreRandom( 10 ) > BestAttack.ubChanceToReallyHit )
@@ -3331,11 +3131,8 @@ bCanAttack = FALSE;
      case AGGRESSIVE:		iOffense += 20; break;
 		 case ATTACKSLAYONLY:iOffense += 30; break;
    }
-
-#ifdef DEBUGDECISIONS
-   DebugAI( String( "%s - CHOICE: iOffense = %d, iDefense = %d\n",
-				   pSoldier->name,iOffense,iDefense ) );
-#endif
+		SLOGD(DEBUG_TAG_AI, "%s - CHOICE: iOffense = %d, iDefense = %d\n",
+				   pSoldier->name,iOffense,iDefense);
 
    // if his defensive instincts win out, forget all about the attack
    if (iDefense > iOffense)
@@ -3394,12 +3191,6 @@ bCanAttack = FALSE;
 						{
 							// we're not facing towards him, so turn first!
 							pSoldier->usActionData = bDirection;
-
-							#ifdef DEBUGDECISIONS
-								sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->usActionData);
-								AIPopMessage(tempstr);
-							#endif
-
 							return(AI_ACTION_CHANGE_FACING);
 						}
 
@@ -3542,15 +3333,10 @@ bCanAttack = FALSE;
 			pSoldier->usActionData = BestAttack.sTarget;
 			pSoldier->bTargetLevel = BestAttack.bTargetLevel;
 
-#ifdef DEBUGDECISIONS
-			DebugAI(String("%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
-				pSoldier->ubID,pSoldier->name,
+			SLOGD(DEBUG_TAG_AI, "%d(%s) %s %d(%s)",
+				pSoldier->ubID, pSoldier->name,
 				ubBestAttackAction == AI_ACTION_FIRE_GUN ? "SHOOTS" : (ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE ? "TOSSES AT" : "STABS"),
-				BestAttack.opponent->ubID, BestAttack.opponent->name,
-				BestAttack.target, BestAttack.aimTime
-			));
-#endif
-
+				BestAttack.opponent->ubID, BestAttack.opponent->name );
 			return(ubBestAttackAction);
 		}
 
@@ -3593,16 +3379,12 @@ bCanAttack = FALSE;
  // IF A LOCATION WITH BETTER COVER IS AVAILABLE & REACHABLE, GO FOR IT!
  ////////////////////////////////////////////////////////////////////////////
 
- if (sBestCover != NOWHERE)
+	if (sBestCover != NOWHERE)
   {
-#ifdef DEBUGDECISIONS
-   DebugAI( String( "%s - TAKING COVER at gridno %d (%d%% better)\n",
-   		pSoldier->name,sBestCover,iCoverPercentBetter) ) ;
-#endif
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"AI %d taking cover, morale %d, from %d to %d", pSoldier->ubID, pSoldier->bAIMorale, pSoldier->sGridNo, sBestCover );
-   pSoldier->usActionData = sBestCover;
-
-   return(AI_ACTION_TAKE_COVER);
+		SLOGD(DEBUG_TAG_AI, "%s - taking cover at gridno %d (%d%% better)",
+   		pSoldier->name, sBestCover, iCoverPercentBetter);
+		pSoldier->usActionData = sBestCover;
+		return(AI_ACTION_TAKE_COVER);
   }
 
 
@@ -3618,15 +3400,10 @@ bCanAttack = FALSE;
      // look for best place to RUN AWAY to (farthest from the closest threat)
      pSoldier->usActionData = FindSpotMaxDistFromOpponents(pSoldier);
 
-     if (pSoldier->usActionData != NOWHERE)
-     {
-#ifdef DEBUGDECISIONS
-       sprintf(tempstr,"%s - RUNNING AWAY to grid %d",pSoldier->name,pSoldier->usActionData);
-       AIPopMessage(tempstr);
-#endif
-
-       return(AI_ACTION_RUN_AWAY);
-     }
+			if (pSoldier->usActionData != NOWHERE)
+			{
+				return(AI_ACTION_RUN_AWAY);
+			}
    }
  }
 
@@ -3648,20 +3425,12 @@ bCanAttack = FALSE;
    // if I actually know something they don't
    if (iChance)
    {
-#ifdef DEBUGDECISIONS
-     AINumMessage("Chance to radio for SPOTTING = ",iChance);
-#endif
-
-     if ((INT16)PreRandom(100) < iChance)
-     {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a RED for SPOTTING!",1000);
-#endif
-
-       return(AI_ACTION_RED_ALERT);
-     }
-   }
- }
+			if ((INT16)PreRandom(100) < iChance)
+			{
+				return(AI_ACTION_RED_ALERT);
+			}
+		}
+	}
 
 
  ////////////////////////////////////////////////////////////////////////////
@@ -3700,10 +3469,6 @@ bCanAttack = FALSE;
 									pSoldier->bNextAction = AI_ACTION_CHANGE_STANCE;
 									pSoldier->usNextActionData = pSoldier->usActionData;
 									pSoldier->usActionData = bDirection;
-									#ifdef DEBUGDECISIONS
-										sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->usActionData);
-										AIPopMessage(tempstr);
-									#endif
 									return(AI_ACTION_CHANGE_FACING);
 								}
 								else if ( (pSoldier->usActionData == ANIM_PRONE) && (InternalIsValidStance( pSoldier, bDirection, ANIM_CROUCH) ) )
@@ -3751,14 +3516,8 @@ bCanAttack = FALSE;
 			 // if we're not facing towards him
 			 if ( pSoldier->bDirection != bDirection && InternalIsValidStance( pSoldier, bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			 {
-				 pSoldier->usActionData = bDirection;
-
-	#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->usActionData);
-				 AIPopMessage(tempstr);
-	#endif
-
-				 return(AI_ACTION_CHANGE_FACING);
+					pSoldier->usActionData = bDirection;
+					return(AI_ACTION_CHANGE_FACING);
 			 }
 		 }
 	 }
@@ -3829,17 +3588,9 @@ bCanAttack = FALSE;
 		 // reduce chance because we're in combat
 		 iChance /= 2;
 
-#ifdef DEBUGDECISIONS
-     AINumMessage("Chance to radio RED alert = ",iChance);
-#endif
-
-     if ((INT16) PreRandom(100) < iChance)
+			if ((INT16) PreRandom(100) < iChance)
       {
-#ifdef DEBUGDECISIONS
-       AINameMessage(pSoldier,"decides to radio a RED alert!",1000);
-#endif
-
-       return(AI_ACTION_RED_ALERT);
+				return(AI_ACTION_RED_ALERT);
       }
     }
   }
@@ -3853,15 +3604,9 @@ bCanAttack = FALSE;
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(pSoldier,"- DOES NOTHING (BLACK)",1000);
-#endif
-
- // by default, if everything else fails, just stand in place and wait
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
-
+	// by default, if everything else fails, just stand in place and wait
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 INT8 DecideAction(SOLDIERTYPE *pSoldier)
@@ -3874,8 +3619,6 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 
 	// turn off cautious flag
 	pSoldier->fAIFlags &= (~AI_CAUTIOUS);
-
- //NumMessage("DecideAction - Guy#",pSoldier->ubID);
 
 	// if status over-ride is set, bypass RED/YELLOW and go directly to GREEN!
 	if ((pSoldier->bBypassToGreen) && (pSoldier->bAlertStatus < STATUS_BLACK))
@@ -3892,9 +3635,6 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 		switch (pSoldier->bAlertStatus)
 		{
 			case STATUS_GREEN:
-#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = GREEN");
-#endif
 #ifdef AI_TIMING_TESTS
 				uiStartTime = GetJA2Clock();
 #endif
@@ -3907,9 +3647,6 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 
 			case STATUS_YELLOW:
-#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = YELLOW");
-#endif
 #ifdef AI_TIMING_TESTS
 				uiStartTime = GetJA2Clock();
 #endif
@@ -3922,9 +3659,6 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 
 			case STATUS_RED:
-#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = RED");
-#endif
 #ifdef AI_TIMING_TESTS
 				uiStartTime = GetJA2Clock();
 #endif
@@ -3937,9 +3671,6 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 
 			case STATUS_BLACK:
-#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = BLACK");
-#endif
 #ifdef AI_TIMING_TESTS
 				uiStartTime = GetJA2Clock();
 #endif
@@ -3952,13 +3683,9 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 		}
 	}
-
-#ifdef DEBUGDECISIONS
- DebugAI( String( "DecideAction: selected action %d, actionData %d\n\n",action,pSoldier->usActionData) );
-#endif
-
-
- return(bAction);
+	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+				bAction, pSoldier->usActionData);
+	return(bAction);
 }
 
 

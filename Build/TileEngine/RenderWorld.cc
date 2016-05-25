@@ -36,7 +36,7 @@
 #include <math.h>
 #include "UILayout.h"
 #include "GameState.h"
-
+#include "slog/slog.h"
 
 UINT16* gpZBuffer = NULL;
 
@@ -2254,7 +2254,7 @@ void InitRenderParams(UINT8 ubRestrictionID)
 	gsTRY += ROOF_LEVEL_HEIGHT;
 	gsCY  += ROOF_LEVEL_HEIGHT / 2;
 
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String("World Screen Width %d Height %d", gsTRX - gsTLX, gsBRY - gsTRY));
+	SLOGD(DEBUG_TAG_RENDERWORLD, "World Screen Width %d Height %d", gsTRX - gsTLX, gsBRY - gsTRY);
 
 	// Determine scale factors
 	// First scale world screen coords for VIEWPORT ratio
@@ -2526,14 +2526,14 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDest
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -2789,14 +2789,14 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuf
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -3056,14 +3056,14 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -3318,14 +3318,14 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuf
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -3584,14 +3584,14 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UI
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 

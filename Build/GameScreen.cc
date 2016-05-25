@@ -66,9 +66,9 @@
 #endif
 
 #include "EditScreen.h"
+#include "slog/slog.h"
 
-
-#define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
+#define	ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
 BOOLEAN		gfTacticalDoHeliRun = FALSE;
 
@@ -530,7 +530,7 @@ ScreenID MainGameScreenHandle(void)
 	}
 	else if (gfIntendOnEnteringEditor && GameState::getInstance()->isEditorMode())
   {
-		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Aborting normal game mode and entering editor mode...");
+		SLOGI(DEBUG_TAG_GAMESCREEN, "Aborting normal game mode and entering editor mode...");
 		SetPendingNewScreen(NO_PENDING_SCREEN);
 		return EDIT_SCREEN;
 	}

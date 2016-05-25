@@ -6,7 +6,6 @@
 #include "sgp/FileMan.h"
 
 #include "Directories.h"
-#include "Logger.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Text.h"
 #include "TranslationTable.h"
@@ -14,6 +13,7 @@
 #include "EncodingCorrectors.h"
 #include "StrUtils.h"
 
+#include "slog/slog.h"
 
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;
@@ -72,7 +72,7 @@ void setGameVersion(GameVersion ver)
   case GV_RUSSIAN_GOLD: setResources(&g_LanguageResRussianGold,       g_rusGold_TranslationTable); break;
   default:
   {
-    LOG_WARNING("Unknown version. Using ENGLISH by defaul\n");
+    SLOGW(DEBUG_TAG_RESOURCES, "Unknown version. Using ENGLISH by defaul");
     s_gameVersion = GV_ENGLISH;
     setResources(&g_LanguageResEnglish, g_en_TranslationTable);
   }
@@ -142,7 +142,7 @@ std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 
   // for (int i = 0; i < libraries.size(); i++)
   // {
-  //   LOG_WARNING("%s\n", libraries[i].c_str());
+  //   SLOGW(DEBUG_TAG_RESOURCES, "%s", libraries[i].c_str());
   // }
 
   return libraries;

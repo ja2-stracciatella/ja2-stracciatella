@@ -31,13 +31,12 @@
 #include "Font_Control.h"
 #include "UILayout.h"
 #include "GameState.h"
-
 #include "sgp/FileMan.h"
+#include "slog/slog.h"
 
 #ifdef JA2BETAVERSION
 #	include "PreBattle_Interface.h"
 #endif
-
 
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
@@ -88,8 +87,8 @@ void InitializeGame(void)
 
 	InitTacticalSave();
 
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %s", g_version_label));
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s", g_version_number));
+	SLOGI(DEBUG_TAG_GAMELOOP, "Version Label: %s", g_version_label);
+	SLOGI(DEBUG_TAG_GAMELOOP, "Version #:     %s", g_version_number);
 
 	// Initialize Game Screens.
   for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
@@ -374,6 +373,8 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen)
 
 void HandleShortCutExitState()
 {
+	SLOGI(DEBUG_TAG_GAMELOOP, "User pressed ESCape, TERMINATING");
+
 	// Use YES/NO pop up box, setup for particular screen
 	switch (guiCurrentScreen)
 	{

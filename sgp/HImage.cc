@@ -11,6 +11,7 @@
 #include "VObject.h"
 #include "MemMan.h"
 
+#include "slog/slog.h"
 
 // This is the color substituted to keep a 24bpp -> 16bpp color
 // from going transparent (0x0000) -- DB
@@ -147,17 +148,17 @@ BOOLEAN CopyImageToBuffer(SGPImage const* const img, UINT32 const fBufferType, B
 	if (img->ubBitDepth == 8 && fBufferType == BUFFER_8BPP)
 	{
 		// Default do here
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, "Copying 8 BPP Imagery.");
+		SLOGD(DEBUG_TAG_HIMAGE, "Copying 8 BPP Imagery.");
 		return Copy8BPPImageTo8BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 	else if (img->ubBitDepth == 8 && fBufferType == BUFFER_16BPP)
 	{
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Copying 8 BPP Imagery to 16BPP Buffer.");
+		SLOGD(DEBUG_TAG_HIMAGE, "Copying 8 BPP Imagery to 16BPP Buffer.");
 		return Copy8BPPImageTo16BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 	else if (img->ubBitDepth == 16 && fBufferType == BUFFER_16BPP)
 	{
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying 16 BPP Imagery.");
+		SLOGD(DEBUG_TAG_HIMAGE, "Automatically Copying 16 BPP Imagery.");
 		return Copy16BPPImageTo16BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 

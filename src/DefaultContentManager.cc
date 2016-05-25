@@ -33,7 +33,6 @@
 #include "boost/foreach.hpp"
 
 #include "slog/slog.h"
-#define TAG "DefaultCM"
 
 #define BASEDATADIR    "data"
 
@@ -270,7 +269,7 @@ std::string DefaultContentManager::getMapPath(const char *mapName) const
   result += "/";
   result += mapName;
 
-  SLOGD(TAG, "map file %s", result.c_str());
+  SLOGD(DEBUG_TAG_DEFAULTCM, "map file %s", result.c_str());
 
   return result;
 }
@@ -282,7 +281,7 @@ std::string DefaultContentManager::getRadarMapResourceName(const std::string &ma
   result += "/";
   result += mapName;
 
-  SLOGD(TAG, "map file %s", result.c_str());
+  SLOGD(DEBUG_TAG_DEFAULTCM, "map file %s", result.c_str());
 
   return result;
 }
@@ -302,7 +301,7 @@ std::string DefaultContentManager::getTilesetDBResName() const
 
 std::string DefaultContentManager::getMapPath(const wchar_t *mapName) const
 {
-  SLOGW(TAG, "converting wchar to char");
+  SLOGW(DEBUG_TAG_DEFAULTCM, "converting wchar to char");
 
   // This will not work for non-latin names.
   // But it is just a hack to make the code compile.
@@ -413,9 +412,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
         FileMan::slashifyPath(_filename);
         if (m_libraryDB->FindFileInTheLibrarry(_filename, &libFile))
         {
-#if PRINT_OPENING_FILES
-          SLOGD(TAG, "Opened file (from library ): %s", filename);
-#endif
+          SLOGD(DEBUG_TAG_DEFAULTCM, "Opened file (from library ): %s", filename);
           SGPFile *file = MALLOCZ(SGPFile);
           file->flags = SGPFILE_NONE;
           file->u.lib = libFile;
@@ -424,16 +421,12 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
       }
       else
       {
-#if PRINT_OPENING_FILES
-        SLOGD(TAG, "Opened file (from data dir): %s", filename);
-#endif
+        SLOGD(DEBUG_TAG_DEFAULTCM, "Opened file (from data dir): %s", filename);
       }
     }
     else
     {
-#if PRINT_OPENING_FILES
-      SLOGD(TAG, "Opened file (current dir  ): %s", filename);
-#endif
+      SLOGD(DEBUG_TAG_DEFAULTCM, "Opened file (current dir  ): %s", filename);
     }
   }
 
@@ -527,7 +520,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const c
   AutoSGPFile File(openGameResForReading(fileName));
   uint32_t fileSize = FileGetSize(File);
   uint32_t numQuotes = fileSize / DIALOGUESIZE / 2;
-  // SLOGI(TAG, "%d quotes in dialog %s", numQuotes, fileName);
+  // SLOGI(DEBUG_TAG_DEFAULTCM, "%d quotes in dialog %s", numQuotes, fileName);
   for(int i = 0; i < numQuotes; i++)
   {
     wchar_t quote[DIALOGUESIZE];
@@ -547,7 +540,7 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const std::string &int
   std::map<std::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
   if(it == m_weaponMap.end())
   {
-    SLOGE(TAG, "weapon '%s' is not found", internalName.c_str());
+    SLOGE(DEBUG_TAG_DEFAULTCM, "weapon '%s' is not found", internalName.c_str());
     throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()));
   }
   return it->second;//m_weaponMap[internalName];
@@ -557,7 +550,7 @@ const MagazineModel* DefaultContentManager::getMagazineByName(const std::string 
 {
   if(m_magazineMap.find(internalName) == m_magazineMap.end())
   {
-    SLOGE(TAG, "magazine '%s' is not found", internalName.c_str());
+    SLOGE(DEBUG_TAG_DEFAULTCM, "magazine '%s' is not found", internalName.c_str());
     throw std::runtime_error(FormattedString("magazine '%s' is not found", internalName.c_str()));
   }
   return m_magazineMap[internalName];
@@ -601,7 +594,7 @@ bool DefaultContentManager::loadWeapons()
   rapidjson::Document document;
   if (document.Parse<0>(jsonData.c_str()).HasParseError())
   {
-    SLOGE(TAG, "Failed to parse weapons.json");
+    SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse weapons.json");
     return false;
   }
   else
@@ -612,11 +605,11 @@ bool DefaultContentManager::loadWeapons()
       {
         JsonObjectReader obj(a[i]);
         WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
-        SLOGD(TAG, "Loaded weapon %d %s", w->getItemIndex(), w->getInternalName().c_str());
+        SLOGD(DEBUG_TAG_DEFAULTCM, "Loaded weapon %d %s", w->getItemIndex(), w->getInternalName().c_str());
 
         if((w->getItemIndex() < 0) || (w->getItemIndex() > MAX_WEAPONS))
         {
-          SLOGE(TAG, "Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
+          SLOGE(DEBUG_TAG_DEFAULTCM, "Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
           return false;
         }
 
@@ -637,7 +630,7 @@ bool DefaultContentManager::loadMagazines()
   rapidjson::Document document;
   if (document.Parse<0>(jsonData.c_str()).HasParseError())
   {
-    SLOGE(TAG, "Failed to parse magazines.json");
+    SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse magazines.json");
     return false;
   }
   else
@@ -648,11 +641,11 @@ bool DefaultContentManager::loadMagazines()
       {
         JsonObjectReader obj(a[i]);
         MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
-        SLOGD(TAG, "Loaded magazine %d %s", mag->getItemIndex(), mag->getInternalName().c_str());
+        SLOGD(DEBUG_TAG_DEFAULTCM, "Loaded magazine %d %s", mag->getItemIndex(), mag->getInternalName().c_str());
 
         if((mag->getItemIndex() < FIRST_AMMO) || (mag->getItemIndex() > LAST_AMMO))
         {
-          SLOGE(TAG, "Magazine item index must be in the interval %d - %d", FIRST_AMMO, LAST_AMMO);
+          SLOGE(DEBUG_TAG_DEFAULTCM, "Magazine item index must be in the interval %d - %d", FIRST_AMMO, LAST_AMMO);
           return false;
         }
 
@@ -674,7 +667,7 @@ bool DefaultContentManager::loadCalibres()
   rapidjson::Document document;
   if (document.Parse<0>(jsonData.c_str()).HasParseError())
   {
-    SLOGE(TAG, "Failed to parse calibres.json");
+    SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse calibres.json");
     return false;
   }
   else
@@ -685,7 +678,7 @@ bool DefaultContentManager::loadCalibres()
       {
         JsonObjectReader obj(a[i]);
         CalibreModel *calibre = CalibreModel::deserialize(obj);
-        SLOGD(TAG, "Loaded calibre %d %s", calibre->index, calibre->internalName.c_str());
+        SLOGD(DEBUG_TAG_DEFAULTCM, "Loaded calibre %d %s", calibre->index, calibre->internalName.c_str());
 
         if(m_calibres.size() <= calibre->index)
         {
@@ -713,7 +706,7 @@ bool DefaultContentManager::loadAmmoTypes()
   rapidjson::Document document;
   if (document.Parse<0>(jsonData.c_str()).HasParseError())
   {
-    SLOGE(TAG, "Failed to parse ammo_types.json");
+    SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse ammo_types.json");
     return false;
   }
   else
@@ -724,7 +717,7 @@ bool DefaultContentManager::loadAmmoTypes()
       {
         JsonObjectReader obj(a[i]);
         AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
-        SLOGD(TAG, "Loaded ammo type %d %s", ammoType->index, ammoType->internalName.c_str());
+        SLOGD(DEBUG_TAG_DEFAULTCM, "Loaded ammo type %d %s", ammoType->index, ammoType->internalName.c_str());
 
         if(m_ammoTypes.size() <= ammoType->index)
         {
@@ -754,7 +747,7 @@ bool DefaultContentManager::readWeaponTable(
   rapidjson::Document document;
   if (document.Parse<0>(jsonData.c_str()).HasParseError())
   {
-    SLOGE(TAG, "Failed to parse %s", fileName);
+    SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse %s", fileName);
     return false;
   }
 
@@ -863,7 +856,7 @@ rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileNam
   rapidjson::Document *document = new rapidjson::Document();
   if (document->Parse<0>(jsonData.c_str()).HasParseError())
   {
-    SLOGE(TAG, "Failed to parse '%s'", fileName);
+    SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse '%s'", fileName);
     delete document;
     throw std::runtime_error(FormattedString("Failed to parse '%s'", fileName));
   }
@@ -913,7 +906,7 @@ const ItemModel* DefaultContentManager::getItemByName(const std::string &interna
   std::map<std::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
   if(it == m_itemMap.end())
   {
-    SLOGE(TAG, "item '%s' is not found", internalName.c_str());
+    SLOGE(DEBUG_TAG_DEFAULTCM, "item '%s' is not found", internalName.c_str());
     throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()));
   }
   return it->second;
@@ -938,7 +931,7 @@ const UTF8String* DefaultContentManager::getNewString(int stringId) const
 {
   if(stringId >= m_newStrings.size())
   {
-    SLOGE(TAG, "new string %d is not found", stringId);
+    SLOGE(DEBUG_TAG_DEFAULTCM, "new string %d is not found", stringId);
     throw std::runtime_error(FormattedString("new string %d is not found", stringId));
   }
   else

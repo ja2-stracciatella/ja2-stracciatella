@@ -2761,7 +2761,7 @@ void FindScheduleGridNo( UINT8 ubScheduleData )
 			iMapIndex = gCurrSchedule.usData2[3];
 			break;
 		default:
-			AssertMsg( 0, "FindScheduleGridNo passed incorrect dataID." );
+			SLOGE(DEBUG_TAG_ASSERTS, "FindScheduleGridNo passed incorrect dataID." );
 			abort(); // HACK000E
 	}
 	if( iMapIndex != 0xffff )

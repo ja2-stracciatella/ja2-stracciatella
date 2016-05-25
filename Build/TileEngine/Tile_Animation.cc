@@ -24,7 +24,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-
+#include "slog/slog.h"
 
 static ANITILE* pAniTileHead = NULL;
 
@@ -225,7 +225,7 @@ void DeleteAniTile(ANITILE* const a)
 			}
 
 			// Freeup attacker from explosion
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off");
+			SLOGD(DEBUG_TAG_TILES, "Reducing Attack Busy Count of %d", owner->ubID); 
 			ReduceAttackBusyCount(owner, FALSE);
 		}
 
@@ -237,7 +237,6 @@ void DeleteAniTile(ANITILE* const a)
 			// First delete the bullet!
 			RemoveBullet(bullet);
 
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - miss finished animation");
 			FreeUpAttacker(attacker);
 		}
 	}

@@ -11,10 +11,9 @@
 #include "WorldMan.h"
 #include "Rotting_Corpses.h"
 #include "Points.h"
-#include "Debug_Control.h"
-
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 // Defines for Anim inst reading, taken from orig Jagged
 #define	ANIMFILENAME					BINARYDATADIR "/ja2bin.dat"
@@ -2621,7 +2620,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 	if ( usAnimSurface == INVALID_ANIMATION	)
 	{
 		// WE SHOULD NOT BE USING THIS ANIMATION
-		ScreenMsg(FONT_MCOLOR_RED, MSG_BETAVERSION, L"Invalid Animation File for Body %d, animation %hs.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
+		SLOGW(DEBUG_TAG_ANIMATIONS, "Invalid Animation File for Body %d, animation %hs.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
 		// Set index to FOUND_INVALID_ANIMATION
 		gubAnimSurfaceIndex[pSoldier->ubBodyType][usAnimState] = FOUND_INVALID_ANIMATION;
 		return( INVALID_ANIMATION_SURFACE );
@@ -2833,8 +2832,8 @@ UINT16 GetSoldierAnimationSurface(SOLDIERTYPE const* const pSoldier)
 		// Ensure that it's loaded!
 		if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
 		{
-			ScreenMsg(FONT_MCOLOR_RED, MSG_BETAVERSION, L"IAnimation Surface for Body %d, animation %hs, surface %d not loaded.", pSoldier->ubBodyType, gAnimControl[pSoldier->usAnimState].zAnimStr, usAnimSurface);
-			AnimDebugMsg("Surface Database: PROBLEMS!!!!!!");
+			SLOGW(DEBUG_TAG_ANIMATIONS, "Animation Surface for Body %d, animation %hs, surface %d not loaded.",
+						pSoldier->ubBodyType, gAnimControl[pSoldier->usAnimState].zAnimStr, usAnimSurface);
     	usAnimSurface = INVALID_ANIMATION_SURFACE;
 		}
 	}

@@ -451,7 +451,6 @@ SRCS += Build/TileEngine/WorldMan.cc
 SRCS += Build/Utils/Animated_ProgressBar.cc
 SRCS += Build/Utils/Cinematics.cc
 SRCS += Build/Utils/Cursors.cc
-SRCS += Build/Utils/Debug_Control.cc
 SRCS += Build/Utils/Debug_Pages.cc
 SRCS += Build/Utils/Event_Manager.cc
 SRCS += Build/Utils/Event_Pump.cc

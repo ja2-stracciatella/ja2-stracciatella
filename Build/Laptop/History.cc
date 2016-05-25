@@ -833,9 +833,7 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 {
 	if( sSectorX > 16 || sSectorY > 16 || bSectorZ > 3 || sSectorX < -1 || sSectorY < -1 || bSectorZ < 0 )
 	{
-		char zString[512];
-		sprintf( zString, "History page is pooched, please remember what you were just doing, send your latest save to dave, and tell him this number, Error #%d.", uiErrorCode );
-		AssertMsg( 0, zString );
+		SLOGE(DEBUG_TAG_ASSERTS, "History page is pooched, please remember what you were just doing, send your latest save to dave, and tell him this number, Error #%d.", uiErrorCode );
 	}
 }
 #endif

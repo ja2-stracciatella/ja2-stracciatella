@@ -394,7 +394,7 @@ void HandleDialogue()
 		{
 			f.uiFlags &= ~FACE_MODAL;
 			EndModalTactical();
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Modal Tactical Quote.");
+			SLOGD(DEBUG_TAG_INTERFACE, "Ending Modal Tactical Quote.");
 		}
 
 		if (f.uiFlags & FACE_TRIGGER_PREBATTLE_INT)
@@ -1116,7 +1116,7 @@ void HandleDialogueEnd(FACETYPE& f)
 
 		if (f.fTalking)
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"HandleDialogueEnd() face still talking." );
+			SLOGD(DEBUG_TAG_INTERFACE, "HandleDialogueEnd() face still talking." );
 			return;
 		}
 
@@ -1535,7 +1535,7 @@ static void CheckForStopTimeQuotes(UINT16 const usQuoteNum)
 	// Stop Time, game
 	EnterModalTactical(TACTICAL_MODAL_NOMOUSE);
 	gpCurrentTalkingFace->uiFlags |= FACE_MODAL;
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Starting Modal Tactical Quote.");
+	SLOGD(DEBUG_TAG_INTERFACE, "Starting Modal Tactical Quote.");
 }
 
 

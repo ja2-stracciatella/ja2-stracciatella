@@ -61,10 +61,11 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
-#define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
-#define  FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
-#define  SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b )
+#define SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
+#define FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
+#define SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b )
 
 #define TEMP_FILE_FOR_TILESET_CHANGE "jatiles34.dat"
 
@@ -2645,7 +2646,7 @@ void LoadMapTileset(TileSetID const id)
 	}
 	else
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Tileset %d has no callback function for movement costs. Using default.", id));
+		SLOGD(DEBUG_TAG_WORLDDEF, "Tileset %d has no callback function for movement costs. Using default.", id);
 		SetTilesetOneTerrainValues();
 	}
 

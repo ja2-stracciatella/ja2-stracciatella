@@ -75,7 +75,7 @@ static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 		 * created button already exists.  Placing a break point on the following
 		 * assert will allow the coder to easily isolate the case!
 		 */
-		AssertMsg(0, String("Attempting to create a button that has already been created (existing buttonID %d).", c->IDNum));
+		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to create a button that has already been created (existing buttonID %d).", c->IDNum);
 	}
 }
 
@@ -1481,7 +1481,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 			case GUI_BUTTON::TEXT_LEFT:    bJustified = LEFT_JUSTIFIED;    break;
 			case GUI_BUTTON::TEXT_RIGHT:   bJustified = RIGHT_JUSTIFIED;   break;
 			case GUI_BUTTON::TEXT_CENTER:  bJustified = CENTER_JUSTIFIED;  break;
-			default:                       Assert(0);                      break;
+			default:                       SLOGE(DEBUG_TAG_ASSERTS, "DrawTextOnButton: invalid text alignment"); break;
 		}
 		if (b->bTextXOffset == -1)
 		{

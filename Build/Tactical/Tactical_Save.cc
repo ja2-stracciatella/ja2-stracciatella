@@ -53,6 +53,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
@@ -291,7 +292,7 @@ void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const b
 		{
 			wi->usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 			// Display warning.....
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", wi->o.usItem, ItemNames[wi->o.usItem]);
+			SLOGW(DEBUG_TAG_TACTSAVE, "Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", wi->o.usItem, ItemNames[wi->o.usItem]);
 		}
 	}
 
@@ -587,9 +588,7 @@ static void SetLastTimePlayerWasInSector(void)
 		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		if (!u)
 		{
-#ifdef JA2TESTVERSION
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Failed to Set the 'uiTimeCurrentSectorWasLastLoaded' for an underground sector");
-#endif
+			SLOGW(DEBUG_TAG_TACTSAVE, "Failed to Set the 'uiTimeCurrentSectorWasLastLoaded' for an underground sector");
 			return;
 		}
 		u->uiTimeCurrentSectorWasLastLoaded = GetWorldTotalMin();
@@ -608,9 +607,7 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		if (!u)
 		{
-#ifdef JA2TESTVERSION
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Failed to Get the 'uiTimeCurrentSectorWasLastLoaded' from an underground sector");
-#endif
+			SLOGW(DEBUG_TAG_TACTSAVE, "Failed to Get the 'uiTimeCurrentSectorWasLastLoaded' from an underground sector");
 			return 0;
 		}
 		return u->uiTimeCurrentSectorWasLastLoaded;
@@ -754,10 +751,9 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 		{
 			continue;
 		}
-
 		if (!AddRottingCorpse(&def))
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Failed to add a corpse to GridNo # %d", def.sGridNo));
+			SLOGD(DEBUG_TAG_TACTSAVE, "Failed to add a corpse to GridNo # %d", def.sGridNo);
 		}
 	}
 
@@ -924,7 +920,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 	}
 	else
 	{
-		AssertMsg(0, "ERROR!!	Flag not is Switch statement");
+		SLOGE(DEBUG_TAG_ASSERTS, "Flag not is Switch statement");
 	}
 
 	//Create an array of objects from the mercs inventory
@@ -1112,7 +1108,7 @@ void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 co
 		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:  prefix = "l";  break;
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:     prefix = "c";  break;
 
-		default: Assert(0); return;
+		default: SLOGE(DEBUG_TAG_ASSERTS, "GetMapTempFileName: invalid Type"); return;
 	}
 	sprintf(pMapName, TEMPDIR "/%s_%s", prefix, zTempName);
 }
@@ -1179,17 +1175,14 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 cons
 		MemFree(pTotalSectorList);
 	}
 
-#ifdef JA2BETAVERSION
 	if (check_consistency)
 	{
 		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMapX, sMapY, bMapZ);
 		if (uiItemCount != uiReported)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"SynchronizeItemTempFile()  Error!  Reported %d, should be %d", uiReported, uiItemCount);
+			SLOGW(DEBUG_TAG_TACTSAVE, "SynchronizeItemTempFile() Reported %d, should be %d", uiReported, uiItemCount);
 		}
 	}
-#endif
-
 	SetNumberOfVisibleWorldItemsInSectorStructureForSector(sMapX, sMapY, bMapZ, uiItemCount);
 }
 

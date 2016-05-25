@@ -2750,7 +2750,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			}
 			else
 			{
-				AssertMsg( 0, String( "MoveMenuBtnCallback: Invalid regionType %d, moveBoxLine %d", iRegionType, iMoveBoxLine ) );
+				SLOGE(DEBUG_TAG_ASSERTS, "MoveMenuBtnCallback: Invalid regionType %d, moveBoxLine %d", iRegionType, iMoveBoxLine);
 				return;
 			}
 
@@ -2885,7 +2885,7 @@ static void HandleMoveoutOfSectorMovementTroops(void)
 			{
 				if ( !AddCharacterToSquad( pSoldier, ( INT8 )( iSquadNumber ) ) )
 				{
-					AssertMsg( 0, String( "HandleMoveoutOfSectorMovementTroops: AddCharacterToSquad %d failed, iCounter %d", iSquadNumber, iCounter ) );
+					SLOGE(DEBUG_TAG_ASSERTS, "HandleMoveoutOfSectorMovementTroops: AddCharacterToSquad %d failed, iCounter %d", iSquadNumber, iCounter);
 					// toggle whether he's going or not to try and recover somewhat gracefully
 					fSoldierIsMoving[ iCounter ] = !fSoldierIsMoving[ iCounter ];
 				}

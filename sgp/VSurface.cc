@@ -8,7 +8,7 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "SGP.h"
-
+#include "slog/slog.h"
 
 extern SGPVSurface* gpVSurfaceHead;
 
@@ -217,7 +217,7 @@ SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 		BOOLEAN const Ret   = CopyImageToBuffer(img, buffer_bpp, dst, pitch, vs->Height(), 0, 0, &box);
 		if (!Ret)
 		{
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying SGPImage to video surface");
+			SLOGE(DEBUG_TAG_VSURFACE, "Error Occured Copying SGPImage to video surface");
 		}
 	}
 
@@ -322,12 +322,12 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 			// Check Sizes, SRC size MUST be <= DEST size
 			if (dst->Height() < src->Height())
 			{
-				DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
+				SLOGD(DEBUG_TAG_VSURFACE, "Incompatible height size given in Video Surface blit");
 				return;
 			}
 			if (dst->Width() < src->Width())
 			{
-				DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
+				SLOGD(DEBUG_TAG_VSURFACE, "Incompatible height size given in Video Surface blit");
 				return;
 			}
 
@@ -348,7 +348,7 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 	}
 	else
 	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
+		SLOGD(DEBUG_TAG_VSURFACE, "Incompatible BPP values with src and dest Video Surfaces for blitting");
 	}
 }
 

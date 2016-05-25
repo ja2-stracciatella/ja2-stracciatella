@@ -280,12 +280,6 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	{
 		*pfClimbingNecessary = fClimbingNecessary;
 	}
-
-#ifdef DEBUGDECISIONS
-	if (sBestGridNo != NOWHERE)
-		AINumMessage("MOST IMPORTANT NOISE HEARD FROM GRID #",sBestGridNo);
-#endif
-
 	return(sBestGridNo);
 }
 
@@ -335,13 +329,5 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 			ubTotal += gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE];
 		}
 	}
-
-#ifdef DEBUGDECISIONS
-	if (ubTotal > 0)
-	{
-		AINumMessage("WHAT I KNOW THAT PUBLIC DON'T = ",ubTotal);
-	}
-#endif
-
 	return(ubTotal);
 }

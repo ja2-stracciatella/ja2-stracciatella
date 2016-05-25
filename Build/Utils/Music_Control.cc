@@ -9,6 +9,7 @@
 #include "StrategicMap.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
+#include "slog/slog.h"
 
 static UINT32  uiMusicHandle   = NO_SAMPLE;
 static UINT32  uiMusicVolume   = 50;
@@ -69,15 +70,15 @@ void MusicPlay(UINT32 uiNum)
 
 	if(uiMusicHandle!=SOUND_ERROR)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music PLay %d %d", uiMusicHandle, gubMusicMode  ) );
+		SLOGD(DEBUG_TAG_MUSICCTL, "Music PLay %d %d", uiMusicHandle, gubMusicMode);
 
-		gfMusicEnded				= FALSE;
-		fMusicPlaying=TRUE;
+		gfMusicEnded	= FALSE;
+		fMusicPlaying	= TRUE;
 		MusicFadeIn();
 		return;
 	}
 
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music PLay %d %d", uiMusicHandle, gubMusicMode  ) );
+	SLOGE(DEBUG_TAG_MUSICCTL, "Music PLay %d %d", uiMusicHandle, gubMusicMode);
 }
 
 
@@ -136,16 +137,14 @@ static BOOLEAN MusicStop(void)
 {
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music Stop %d %d", uiMusicHandle, gubMusicMode ) );
+		SLOGD(DEBUG_TAG_MUSICCTL, "Music Stop %d %d", uiMusicHandle, gubMusicMode);
 
 		SoundStop(uiMusicHandle);
-		fMusicPlaying=FALSE;
+		fMusicPlaying	= FALSE;
 		uiMusicHandle = NO_SAMPLE;
 		return(TRUE);
 	}
-
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music Stop %d %d", uiMusicHandle, gubMusicMode ) );
-
+	SLOGE(DEBUG_TAG_MUSICCTL,  "Music Stop %d %d", uiMusicHandle, gubMusicMode);
 	return(FALSE);
 }
 
@@ -228,7 +227,7 @@ void MusicPoll(void)
 		if ( gfMusicEnded )
 		{
 			// OK, based on our music mode, play another!
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music End Loop %d %d", uiMusicHandle, gubMusicMode ) );
+			SLOGD(DEBUG_TAG_MUSICCTL, "Music End Loop %d %d", uiMusicHandle, gubMusicMode);
 
 			// If we were in victory mode, change!
 			if ( gbVictorySongCount == 1 || gbDeathSongCount == 1 )
@@ -285,7 +284,7 @@ void SetMusicMode(UINT8 ubMusicMode)
 		// Set mode....
 		gubMusicMode = ubMusicMode;
 
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music New Mode %d %d", uiMusicHandle, gubMusicMode  ) );
+		SLOGD(DEBUG_TAG_MUSICCTL, "Music New Mode %d %d", uiMusicHandle, gubMusicMode);
 
 		gbVictorySongCount = 0;
 		gbDeathSongCount = 0;
@@ -321,9 +320,7 @@ static void StartMusicBasedOnMode(void)
 		bBattleModeSong = BATTLE_A_MUSIC + (INT8)Random( 2 );
 
 	}
-
-
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "StartMusicBasedOnMode() %d %d", uiMusicHandle, gubMusicMode ) );
+	SLOGD(DEBUG_TAG_MUSICCTL, "StartMusicBasedOnMode() %d %d", uiMusicHandle, gubMusicMode);
 
 	// Setup a song based on mode we're in!
 	switch( gubMusicMode )
@@ -411,7 +408,7 @@ static void StartMusicBasedOnMode(void)
 
 static void MusicStopCallback(void* pData)
 {
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music EndCallback %d %d", uiMusicHandle, gubMusicMode  ) );
+	SLOGD(DEBUG_TAG_MUSICCTL, "Music EndCallback %d %d", uiMusicHandle, gubMusicMode);
 
 	gfMusicEnded  = TRUE;
 	uiMusicHandle = NO_SAMPLE;
