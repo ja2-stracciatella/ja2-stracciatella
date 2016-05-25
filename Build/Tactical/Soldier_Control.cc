@@ -3150,12 +3150,12 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 bDire
 				{
 					if (SpacesAway(pSoldier->sGridNo, att->sGridNo) <= MAX_DISTANCE_FOR_MESSY_DEATH)
 					{
-						usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (INT8)( DirectionInc( pSoldier->bDirection ) ) );
+						usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 
 						// CHECK OK DESTINATION!
 						if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, pSoldier->bDirection, JFK_HITDEATH ) )
 						{
-							usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (INT8)( DirectionInc( pSoldier->bDirection ) ) );
+							usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( pSoldier->bDirection ) );
 
 							if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, pSoldier->bDirection, pSoldier->usAnimState ) )
 							{
@@ -3408,7 +3408,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	UINT16	usAnimState;
 	UINT16	usMoveAnimState = usMovementAnim;
 	INT16							sMercGridNo;
-	UINT16						usPathingData[ MAX_PATH_LIST_SIZE ];
+	UINT8						usPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT8							ubPathingMaxDirection;
 	BOOLEAN						fAdvancePath = TRUE;
 	UINT8							fFlags = 0;
@@ -3489,7 +3489,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 			{
 				memcpy( usPathingData, pSoldier->usPathingData, sizeof( usPathingData ) );
 				ubPathingMaxDirection = (UINT8)usPathingData[ MAX_PATH_LIST_SIZE -1 ];
-				memcpy( &(pSoldier->usPathingData[1]), usPathingData, sizeof( usPathingData ) - sizeof( UINT16 ) );
+				memcpy( &(pSoldier->usPathingData[1]), usPathingData, sizeof( usPathingData ) - sizeof( usPathingData[0] ) );
 
 				// If we have reach the max, go back one sFinalDest....
 				if ( pSoldier->usPathDataSize == MAX_PATH_LIST_SIZE )
@@ -5153,7 +5153,7 @@ static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEA
 
 void BeginSoldierClimbUpRoof(SOLDIERTYPE* const s)
 {
-	INT8 direction;
+	UINT8 direction;
 	if (!FindHigherLevel(s, &direction)) return;
 
 	if (!EnoughPoints(s, GetAPsToClimbRoof(s, FALSE), 0, TRUE)) return;
@@ -5170,7 +5170,7 @@ void BeginSoldierClimbUpRoof(SOLDIERTYPE* const s)
 
 void BeginSoldierClimbFence(SOLDIERTYPE* const s)
 {
-	INT8 direction;
+	UINT8 direction;
 	if (!FindFenceJumpDirection(s, &direction)) return;
 
 	s->sTempNewGridNo            = NewGridNo(s->sGridNo, DirectionInc(direction));
@@ -6069,7 +6069,7 @@ BOOLEAN DoMercBattleSound(SOLDIERTYPE* const s, BattleSound const battle_snd_id)
 BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 {
 	// Check if we are near a lower level
-	INT8							bNewDirection;
+	UINT8							bNewDirection;
 	BOOLEAN						fReturnVal = FALSE;
 	INT16							sNewGridNo;
 	// Default to true
@@ -6116,8 +6116,8 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 			// ATE: Make this more usefull...
 			if ( fDoForwards )
 			{
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (INT16)( -1 * DirectionInc(bNewDirection ) ) );
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
 				EVENT_SetSoldierDesiredDirection(pSoldier, OppositeDirection(bNewDirection));
 				pSoldier->fTurningUntilDone = TRUE;
 				pSoldier->usPendingAnimation = FALLFORWARD_ROOF;
@@ -6132,8 +6132,8 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 			else
 			{
 
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
-				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
+				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, DirectionInc( OppositeDirection( bNewDirection ) ) );
 				EVENT_SetSoldierDesiredDirection( pSoldier, bNewDirection );
 				pSoldier->fTurningUntilDone = TRUE;
 				pSoldier->usPendingAnimation = FALLOFF;
@@ -6152,7 +6152,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 
 void BeginSoldierClimbDownRoof(SOLDIERTYPE* const s)
 {
-	INT8 direction;
+	UINT8 direction;
 	if (!FindLowerLevel(s, &direction)) return;
 
 	if (!EnoughPoints(s, GetAPsToClimbRoof(s, TRUE), 0, TRUE)) return;
@@ -7543,7 +7543,7 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 	// get a path to dest...
 	if ( FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) )
 	{
-		sAPCost = PtsToMoveDirection( pSoldier, (UINT8)guiPathingData[ 0 ] );
+		sAPCost = PtsToMoveDirection( pSoldier, guiPathingData[ 0 ] );
 
 		if (EnoughPoints(pSoldier, sAPCost, 0, pSoldier->bTeam == OUR_TEAM))
 		{

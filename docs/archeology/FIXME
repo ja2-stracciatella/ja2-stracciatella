@@ -9,8 +9,6 @@ BtnHelpScreenDontShowHelpAgainCallback(): empty
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
-ContractBoxGlow(): empty
-ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
 CorpseHit(): empty
 Create16BPPPaletteShaded(): callers
 CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
@@ -48,7 +46,6 @@ HandleCompatibleAmmoUI(): if (gbCompatibleAmmo[cnt]) gbCompatibleAmmo[cnt] = FAL
 HandleDefiniteUnloadingOfWorld(): use enum
 HandleFaceHilights(): overdraw?
 HandleHighLightedText(): MARK_DIRTY necessary?
-HandleLeftClickCursor(): if ()s without decision
 HandleMinuteUpdate(): empty
 HandleMinuteUpdate(): remove?
 HandleMoraleEventForSoldier(): callers
@@ -144,7 +141,6 @@ WriteSectorSummaryUpdate(): puiFilename yuck
 bBuddy[5], bHated[5]: indices 3 and 4 unused
 fButtonsPresent: once TRUE it never changes anymore
 fPotentialForDebug: ?
-fResetContractGlow: probably always TRUE
 fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
 gOpenDoorList[], gClosedDoorList[]: users, code duplication
@@ -174,7 +170,6 @@ pSoldier = pSoldier: strange
 pSoldier->pShades[16 ... 31]: unused?
 struct ETRLEData: reorder attributes
 swprintf([^,]*,[^,]*,[^,"]*[,)]: non-fixed format string
-typedef float real: remove
 ubMineType: unused?
 ubTravelRating: write-only
 wcscat(): check for overkill

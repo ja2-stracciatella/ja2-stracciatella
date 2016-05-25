@@ -1627,7 +1627,7 @@ catch (...) { return FALSE; }
 
 static void OptimizeMapForShadows()
 {
-	INT8 const bDirectionsForShadowSearch[] =
+	UINT8 const bDirectionsForShadowSearch[] =
 	{
 		WEST,
 		SOUTHWEST,
@@ -1641,7 +1641,7 @@ static void OptimizeMapForShadows()
 		if (!IsTreePresentAtGridno(cnt)) continue;
 
 		// Check for a structure a footprint away
-		for (INT8 const* dir = bDirectionsForShadowSearch;; ++dir)
+		for (UINT8 const* dir = bDirectionsForShadowSearch;; ++dir)
 		{
 			if (dir == endof(bDirectionsForShadowSearch))
 			{ // We're full of structures

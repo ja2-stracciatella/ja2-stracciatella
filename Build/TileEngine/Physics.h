@@ -20,9 +20,9 @@ struct REAL_OBJECT
 	BOOLEAN			fTestEndedWithCollision;
 	BOOLEAN			fTestPositionNotSet;
 
-	real				TestZTarget;
-	real				OneOverMass;
-	real				AppliedMu;
+	float				TestZTarget;
+	float				OneOverMass;
+	float				AppliedMu;
 
 	vector_3		Position;
 	vector_3		TestTargetPosition;
@@ -33,7 +33,7 @@ struct REAL_OBJECT
 	vector_3		Force;
 	vector_3		CollisionNormal;
 	vector_3		CollisionVelocity;
-	real				CollisionElasticity;
+	float				CollisionElasticity;
 
 	INT16				sGridNo;
 	LEVELNODE		*pNode;
@@ -68,7 +68,7 @@ struct REAL_OBJECT
 
 
 // OBJECT LIST STUFF
-REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, SOLDIERTYPE* owner, UINT8 ubActionCode, SOLDIERTYPE* target);
+REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, float dLifeLength, float xPos, float yPos, float zPos, float xForce, float yForce, float zForce, SOLDIERTYPE* owner, UINT8 ubActionCode, SOLDIERTYPE* target);
 void RemoveAllPhysicsObjects(void);
 
 

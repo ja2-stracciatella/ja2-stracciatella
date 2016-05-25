@@ -241,9 +241,6 @@ static MERC_LEAVE_ITEM* gpLeaveListHead[NUM_LEAVE_LIST_SLOTS];
 // holds ids of mercs who left stuff behind
 static UINT32 guiLeaveListOwnerProfileId[NUM_LEAVE_LIST_SLOTS];
 
-// flag to reset contract region glow
-BOOLEAN fResetContractGlow = FALSE;
-
 // timers for double click
 static INT32 giDblClickTimersForMoveBoxMouseRegions[MAX_POPUP_BOX_STRING_COUNT];
 
@@ -587,7 +584,7 @@ void RestoreBackgroundForAssignmentGlowRegionList( void )
 	if( iOldAssignmentLine != giAssignHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 66, Y_START - 1, 118 + 1 - 67, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
+		RestoreExternBackgroundRect( ASSIGN_X, Y_START - 1, ASSIGN_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
@@ -612,7 +609,7 @@ void RestoreBackgroundForDestinationGlowRegionList( void )
 	if( iOldDestinationLine != giDestHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 182, Y_START - 1, 217 + 1 - 182, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
+		RestoreExternBackgroundRect( DEST_ETA_X, Y_START - 1, DEST_ETA_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
@@ -637,16 +634,13 @@ void RestoreBackgroundForContractGlowRegionList( void )
 	if( iOldContractLine != giContractHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 222, Y_START - 1, 250 + 1 - 222, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
+		RestoreExternBackgroundRect( TIME_REMAINING_X, Y_START - 1, TIME_REMAINING_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
 
 		// set old to current
 		iOldContractLine = giContractHighLine;
-
-		// reset color rotation
-		fResetContractGlow = TRUE;
 	}
 }
 
@@ -655,7 +649,7 @@ void RestoreBackgroundForSleepGlowRegionList( void )
 {
 	static INT32 iOldSleepHighLine = -1;
 
-	// will restore the background region of the destinations list after a glow has ceased
+	// will restore the background region of the sleep list after a glow has ceased
 	// ( a _LOST_MOUSE reason to the assignment region mvt callback handler )
 
 	if( fDisableDueToBattleRoster )
@@ -666,16 +660,13 @@ void RestoreBackgroundForSleepGlowRegionList( void )
 	if( iOldSleepHighLine != giSleepHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 123, Y_START - 1, 142 + 1 - 123, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
+		RestoreExternBackgroundRect( SLEEP_X, Y_START - 1, SLEEP_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
 
 		// set old to current
 		iOldSleepHighLine = giSleepHighLine;
-
-		// reset color rotation
-		fResetContractGlow = TRUE;
 	}
 }
 

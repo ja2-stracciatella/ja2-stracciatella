@@ -23,8 +23,10 @@ WITH_LPTHREAD ?= 1
 
 BINARY    ?= ja2
 
-VERSION := 0.14.xx
+VERSION := 0.15.x
 GAME_VERSION := v$(VERSION)
+ICON_THEME = hicolor
+
 CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
 
 
@@ -449,6 +451,7 @@ SRCS += Build/TileEngine/WorldMan.cc
 SRCS += Build/Utils/Animated_ProgressBar.cc
 SRCS += Build/Utils/Cinematics.cc
 SRCS += Build/Utils/Cursors.cc
+SRCS += Build/Utils/Debug_Pages.cc
 SRCS += Build/Utils/Event_Manager.cc
 SRCS += Build/Utils/Event_Pump.cc
 SRCS += Build/Utils/Font_Control.cc
@@ -609,10 +612,14 @@ install: $(BINARY)
 	test -z "$(INSTALLABLE)" || install -d $(BINARY_DIR)
 	test -z "$(INSTALLABLE)" || install -d $(MANPAGE_DIR)
 	test -z "$(INSTALLABLE)" || install -d $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || install -d $(SHARED_DIR)/applications
+	test -z "$(INSTALLABLE)" || install -d $(SHARED_DIR)/icons/$(ICON_THEME)/scalable/apps
 	test -z "$(INSTALLABLE)" || install -m 555 $(BINARY) $(BINARY_DIR)
 	test -z "$(INSTALLABLE)" || cp -R externalized $(FULL_PATH_EXTRA_DATA_DIR)
 	test -z "$(INSTALLABLE)" || cp -R mods         $(FULL_PATH_EXTRA_DATA_DIR)
 	test -z "$(INSTALLABLE)" || cp -R _unittests   $(FULL_PATH_EXTRA_DATA_DIR)
+	test -z "$(INSTALLABLE)" || cp _build/distr-files-linux/*.desktop $(SHARED_DIR)/applications
+	test -z "$(INSTALLABLE)" || cp _build/icons/logo.svg $(SHARED_DIR)/icons/$(ICON_THEME)/scalable/apps/ja2-stracciatella.svg
 	test -z "$(INSTALLABLE)" || install -m 444 ja2_manpage $(MANPAGE_DIR)/ja2.6
 
 	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
@@ -624,6 +631,8 @@ install: $(BINARY)
 	@test -n "$(INSTALLABLE)" || echo "  sudo make install"
 	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
 
+uninstall: deinstall
+
 deinstall:
 	test -z "$(INSTALLABLE)" || rm $(MANPAGE_DIR)/ja2.6
 	test -z "$(INSTALLABLE)" || rm $(BINARY_DIR)/$(BINARY)
@@ -631,6 +640,8 @@ deinstall:
 	test -z "$(INSTALLABLE)" || rm -rf $(FULL_PATH_EXTRA_DATA_DIR)/externalized
 	test -z "$(INSTALLABLE)" || rm -rf $(FULL_PATH_EXTRA_DATA_DIR)/mods
 	test -z "$(INSTALLABLE)" || rm -rf $(FULL_PATH_EXTRA_DATA_DIR)/_unittests
+	test -z "$(INSTALLABLE)" || rm -f $(SHARED_DIR)/applications/ja2-stracciatella.desktop
+	test -z "$(INSTALLABLE)" || rm -f $(SHARED_DIR)/icons/$(ICON_THEME)/scalable/apps/ja2-stracciatella.svg
 	test -z "$(INSTALLABLE)" || rmdir $(FULL_PATH_EXTRA_DATA_DIR)
 
 	@test -n "$(INSTALLABLE)" || echo "------------------------------------------------------------------------------"
@@ -678,9 +689,9 @@ build-win-release-on-linux:
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
 	cp _build/distr-files-win/*.txt $(WIN_RELEASE)
 	cp _build/distr-files-win-mingw/*.dll $(WIN_RELEASE)
+	cp _build/icons/logo.ico $(WIN_RELEASE)
 	cp -R _unittests $(WIN_RELEASE)
 	cp -R externalized $(WIN_RELEASE)
-	cp docs/archeology/Changelog $(WIN_RELEASE)/Changelog.txt
 	cp changes.md $(WIN_RELEASE)/changes.md
 	cd $(WIN_RELEASE_BASE_DIR) && zip -r $(WIN_RELEASE_NAME).zip $(WIN_RELEASE_NAME)
 
@@ -701,7 +712,7 @@ build-release-on-mac:
 	cp _build/distr-files-mac/*.txt $(MAC_RELEASE)
 	cp -R _unittests $(MAC_RELEASE)
 	cp -R externalized $(MAC_RELEASE)
-	cp docs/archeology/Changelog $(MAC_RELEASE)/Changelog.txt
+	cp _build/icons/logo.icns $(MAC_RELEASE)
 	cp changes.md $(MAC_RELEASE)/changes.md
 	cd $(MAC_RELEASE_BASE_DIR) && zip -r $(MAC_RELEASE_NAME).zip $(MAC_RELEASE_NAME)
 
@@ -810,6 +821,7 @@ rebuild-contributors-list:
 	echo "Oliver Jankowski"                                 >>/tmp/contributors.txt
 	echo "mgl from The Bear's Pit Forum"                    >>/tmp/contributors.txt
 	echo "sunshine from The Bear's Pit Forum"               >>/tmp/contributors.txt
+	echo "Rebekka Bais (Logo Design)"                       >>/tmp/contributors.txt
 	echo "JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)"  >>/tmp/contributors.txt
 	echo "Primal author of the project"                             >contributors.txt
 	echo "----------------------------"                             >>contributors.txt

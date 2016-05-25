@@ -3200,12 +3200,12 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 			const SOLDIERTYPE* const tgt = gUIFullTarget;
 			if (tgt != NULL)
 			{
-				 INT32		cnt;
+				 UINT8		cnt;
 				 INT16		sSpot;
 
 				 for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
 				 {
-						sSpot = (INT16)NewGridNo( pSoldier->sGridNo, DirectionInc( (INT8)cnt ) );
+						sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
 
             // Make sure movement costs are OK....
             if ( gubWorldMovementCosts[ sSpot ][ cnt ][ gsInterfaceLevel ] >= TRAVELCOST_BLOCKED )
@@ -4946,7 +4946,7 @@ void ClimbUpOrDown()
   SOLDIERTYPE* const s = GetSelectedMan();
   if (s)
   {
-    INT8 direction;
+    UINT8 direction;
     if (FindHigherLevel(s, &direction))
     {
       BeginSoldierClimbUpRoof(s);
@@ -5092,8 +5092,8 @@ BOOLEAN ValidQuickExchangePosition(void)
 BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath)
 {
 	INT16 sSpot, sIntSpot;
-	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	UINT8 cnt;
   UINT8 ubMovementCost;
 
 	// First check that action point cost is zero so far

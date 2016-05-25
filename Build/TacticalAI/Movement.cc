@@ -417,7 +417,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 				ubDirChecked[ubDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				sTempDest = NewGridNo(sDesGrid,DirectionInc( (INT16)(ubDirection + 1) ));
+				sTempDest = NewGridNo(sDesGrid,DirectionInc( ubDirection + 1 ));
 
 				// if that's out of bounds, ignore it & check next direction
 				if (sTempDest == sDesGrid)
@@ -451,8 +451,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
   {
    // what is the next gridno in the path?
 
-	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->usPathingData[sLoop] + 1) ) );
-	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( (INT16) (pSoldier->usPathingData[sLoop]) ) );
+	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->usPathingData[sLoop] + 1) );
+	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->usPathingData[sLoop]) );
 
    // this should NEVER be out of bounds
    if (sTempDest == sGoToGrid)
@@ -628,7 +628,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
 
 	// Find out how much it takes to move here!
 	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );

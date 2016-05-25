@@ -3081,7 +3081,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		for (iLoop = 0; iLoop < pSoldier->usPathDataSize; iLoop++)
 		{
-			sTempGridNo += (INT16)DirectionInc( pSoldier->usPathingData[ iLoop ] );
+			sTempGridNo += DirectionInc( pSoldier->usPathingData[ iLoop ] );
 		}
 
 		if (sTempGridNo == sEndGridNo)
@@ -3103,7 +3103,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 	{
 		case EAST:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
+			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, DirectionInc( NORTHEAST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
@@ -3115,7 +3115,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( NORTHEAST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -3132,7 +3132,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		case WEST:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
+			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, DirectionInc( SOUTHWEST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
@@ -3144,7 +3144,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( SOUTHWEST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -3172,7 +3172,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHWEST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( NORTHWEST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -3189,7 +3189,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		case SOUTH:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
+			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, DirectionInc( SOUTHEAST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
@@ -3201,7 +3201,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( SOUTHEAST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{

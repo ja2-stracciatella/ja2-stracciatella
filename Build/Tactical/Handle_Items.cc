@@ -888,7 +888,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		if (usHandItem == MORTAR)
 		{
 			const UINT8 ubDirection  = (UINT8)GetDirectionFromGridNo(sTargetGridNo, s);
-			const INT16 sCheckGridNo = NewGridNo((UINT16)s->sGridNo, (UINT16)DirectionInc(ubDirection));
+			const INT16 sCheckGridNo = NewGridNo((UINT16)s->sGridNo, DirectionInc(ubDirection));
 			if (!OKFallDirection(s, sCheckGridNo, s->bLevel, ubDirection, s->usAnimState))
 			{
 				return ITEM_HANDLE_NOROOM;
@@ -3067,7 +3067,7 @@ BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const 
 		if (fCheckAroundGridno)
 		{
 			// get the gridno of the next spot adjacent to lastGridno in that direction
-			sNextGridNo = NewGridNo(sGridNo, (INT16)DirectionInc((UINT8)ubDirection));
+			sNextGridNo = NewGridNo(sGridNo, DirectionInc(ubDirection));
 
 			// don't check directions that are impassable!
 			UINT8 ubMovementCost = gubWorldMovementCosts[sNextGridNo][ubDirection][s->bLevel];

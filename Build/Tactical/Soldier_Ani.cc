@@ -238,7 +238,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 		      // re-enable sight
 		      gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
 					{
-						//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
+						//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 						EVENT_SetSoldierPosition(pSoldier, pSoldier->sTempNewGridNo, SSP_NONE);
 					}
 					// Move two CC directions
@@ -408,7 +408,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 437:
 
 					// CHANGE DIRECTION AND GET-UP
-					//sGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( pSoldier->bDirection ) ) );
+					//sGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (-1 * DirectionInc( pSoldier->bDirection ) ) );
 					//ConvertGridNoToCenterCellXY(pSoldier->sGridNo, &sXPos, &sYPos);
 					//SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 
@@ -593,12 +593,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						// TRY FORWARDS...
 						// FIRST GRIDNO
-						sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+						sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 
 						if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 						{
 							// SECOND GRIDNO
-							// sNewGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+							// sNewGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( pSoldier->bDirection ) );
 
 							// if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 							{
@@ -749,8 +749,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					//CODE: BEGINHOPFENCE
 					// MOVE TWO FACGIN GRIDNOS
-					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
-					sNewGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
+					sNewGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( pSoldier->bDirection ) );
 					pSoldier->sForcastGridno = sNewGridNo;
 					break;
 
@@ -3430,7 +3430,7 @@ void KickOutWheelchair( SOLDIERTYPE *pSoldier )
 	INT16 sNewGridNo;
 
 	// Move forward one gridno....
-	sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+	sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 
 	// ATE: Make sure that the gridno is unoccupied!
 	if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->bLevel ) )

@@ -1011,7 +1011,7 @@ void ExecuteOverhead(void)
 											// that our final dest may now have people on it....
 											if (FindBestPath(pSoldier, pSoldier->sFinalDestination, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_THROUGH_PEOPLE) != 0)
 											{
-												const INT16 sNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc((UINT8)guiPathingData[0]));
+												const INT16 sNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(guiPathingData[0]));
 												SetDelayedTileWaiting(pSoldier, sNewGridNo, 1);
 											}
 
@@ -1356,10 +1356,10 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 	}
 
-	const UINT16 usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc((UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]));
+	const UINT16 usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->usPathingData[pSoldier->usPathIndex]));
 
 	// OK, check if this is a fence cost....
-	if (gubWorldMovementCosts[usNewGridNo][(UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel] == TRAVELCOST_FENCE)
+	if (gubWorldMovementCosts[usNewGridNo][pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel] == TRAVELCOST_FENCE)
 	{
 		// We have been told to jump fence....
 
@@ -1370,7 +1370,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		if (EnoughPoints(pSoldier, sAPCost, sBPCost, FALSE))
 		{
 			// ATE: Check for tile being clear....
-			const UINT16 sOverFenceGridNo = NewGridNo(usNewGridNo, DirectionInc((UINT8)pSoldier->usPathingData[pSoldier->usPathIndex + 1]));
+			const UINT16 sOverFenceGridNo = NewGridNo(usNewGridNo, DirectionInc(pSoldier->usPathingData[pSoldier->usPathIndex + 1]));
 
 			if (HandleNextTile(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex + 1], sOverFenceGridNo, pSoldier->sFinalDestination))
 			{
@@ -1398,7 +1398,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 		return FALSE;
 	}
-	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][(UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, TRUE) == TRAVELCOST_DOOR)
+	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, TRUE) == TRAVELCOST_DOOR)
 	{
 		// OK, if we are here, we have been told to get a pth through a door.
 
@@ -1413,7 +1413,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		INT16 sDoorGridNo;
 		if (bDirection == NORTH || bDirection == WEST)
 		{
-			sDoorGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc((UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]));
+			sDoorGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->usPathingData[pSoldier->usPathIndex]));
 		}
 		else if (bDirection == SOUTH || bDirection == EAST)
 		{
@@ -3758,7 +3758,7 @@ INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTY
 {
 	Assert(pTargetSoldier != NULL);
 
-	for (INT16 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
+	for (UINT8 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
 	{
 		const INT16 sSpot = NewGridNo(pSoldier->sGridNo, DirectionInc(i));
 

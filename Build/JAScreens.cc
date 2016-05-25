@@ -8,10 +8,12 @@
 #include "VSurface.h"
 #include "Input.h"
 #include "Font.h"
+#include "Debug_Pages.h"
 #include "MouseSystem.h"
 #include "Screens.h"
 #include "Font_Control.h"
 #include "SysUtil.h"
+#include "RenderWorld.h"
 #include "WorldDef.h"
 #include "EditScreen.h"
 #include "Timer_Control.h"
@@ -90,10 +92,10 @@ void DisplayFrameRate( )
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
 		// FRAME RATE
-		SetVideoOverlayTextF(g_fps_overlay, L"%ld", __min(uiFPS, 1000));
+		SetVideoOverlayTextF(g_fps_overlay, L"FPS: %ld", __min(uiFPS, 1000));
 
 		// TIMER COUNTER
-		SetVideoOverlayTextF(g_counter_period_overlay, L"%ld", __min(giTimerDiag, 1000));
+		SetVideoOverlayTextF(g_counter_period_overlay, L"Game Loop Time: %ld", __min(giTimerDiag, 1000));
 	}
 }
 
@@ -334,6 +336,7 @@ static BOOLEAN CheckForAndExitTacticalDebug(void)
 	{
 		FirstTime = TRUE;
 		gfExitDebugScreen = FALSE;
+    gfDoVideoScroll = TRUE;
 		FreeBackgroundRect( guiBackgroundRect );
 		guiBackgroundRect = NO_BGND_RECT;
 		SetRenderHook(NULL);
@@ -365,6 +368,7 @@ ScreenID DebugScreenHandle(void)
 
 	if ( FirstTime )
 	{
+    gfDoVideoScroll = FALSE;
 		FirstTime = FALSE;
 
 		SetRenderHook(DebugRenderHook);
@@ -425,29 +429,25 @@ void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage )
 
 static void DefaultDebugPage1(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE ONE" );
+	MPageHeader(L"DEBUG PAGE ONE");
 }
 
 
 static void DefaultDebugPage2(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE TWO" );
+  MPageHeader(L"DEBUG PAGE TWO");
 }
 
 
 static void DefaultDebugPage3(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE THREE" );
+  MPageHeader(L"DEBUG PAGE THREE");
 }
 
 
 static void DefaultDebugPage4(void)
 {
-	SetFont( LARGEFONT1 );
-	gprintf( 0,0,L"DEBUG PAGE FOUR" );
+  MPageHeader(L"DEBUG PAGE FOUR");
 }
 
 

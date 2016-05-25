@@ -90,10 +90,13 @@
 #include "GameRes.h"
 #include "GameState.h"
 
+#include "slog/slog.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "policy/GamePolicy.h"
+
+#define DEBUG_CONSOLE_TOPIC "Debug Console"
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
@@ -1463,7 +1466,12 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 
-		case 'y': if (INFORMATION_CHEAT_LEVEL()) *new_event = I_LOSDEBUG; break;
+		case 'y':
+      if (INFORMATION_CHEAT_LEVEL()) {
+        SLOGD(DEBUG_TAG_INTERFACE, "Entering LOS Debug Mode");
+        *new_event = I_LOSDEBUG;
+      }
+      break;
 		case 'z': if (!gpItemPointer) HandleStealthChangeFromUIKeys();    break;
 
 		case SDLK_INSERT: GoIntoOverheadMap(); break;
@@ -1528,6 +1536,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F11:
 			if (DEBUG_CHEAT_LEVEL())
 			{
+        SLOGD(DEBUG_TAG_INTERFACE, "Entering Quest Debug Mode");
 				gsQdsEnteringGridNo = GetMouseMapPos();
 				LeaveTacticalScreen(QUEST_DEBUG_SCREEN);
 			}
@@ -1641,7 +1650,8 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'f':
 			if (INFORMATION_CHEAT_LEVEL())
 			{ // Toggle frame rate display
-				gbFPSDisplay = !gbFPSDisplay;
+        SLOGD(DEBUG_TAG_INTERFACE, "Toggle FPS Overlay");
+        gbFPSDisplay = !gbFPSDisplay;
 				EnableFPSOverlay(gbFPSDisplay);
 				if (!gbFPSDisplay) SetRenderFlags(RENDER_FLAG_FULL);
 			}
@@ -1729,7 +1739,10 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			}
 			break;
 
-		case 'z': if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer(); break;
+		case 'z':
+      SLOGD(DEBUG_TAG_INTERFACE, "Toggling ZBuffer");
+      if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer();
+      break;
 
 		case SDLK_PAGEUP:
 			// Try to go up towards ground level
@@ -1788,7 +1801,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 				INT8   level;
 				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], map_pos, 0, 0, &grid_no, TRUE, &level, TRUE);
 			}
-			SLOGD(DEBUG_TAG_TEAMTURN, "Physics 100 times: %d", GetJA2Clock() - start);
+			SLOGD(DEBUG_TAG_INTERFACE, "Physics 1000 times: %d", GetJA2Clock() - start);
 		}
 #endif
 
@@ -1863,7 +1876,8 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case 'm':
 			if (INFORMATION_CHEAT_LEVEL())
 			{
-				*new_event = I_LEVELNODEDEBUG;
+        SLOGD(DEBUG_TAG_INTERFACE, "Entering Level Node Debug Mode");
+        *new_event = I_LEVELNODEDEBUG;
 				CountLevelNodes();
 			}
 			break;
@@ -1872,7 +1886,8 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			if (INFORMATION_CHEAT_LEVEL() && gUIFullTarget)
 			{
 				static UINT16 gQuoteNum = 0;
-				TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
+        SLOGD(DEBUG_TAG_INTERFACE, "Playing Quote %d", gQuoteNum);
+        TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
 			}
 			break;
 
@@ -1910,17 +1925,17 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case 't': if (CHEATER_CHEAT_LEVEL()) TeleportSelectedSoldier(); break;
 		case 'u': if (CHEATER_CHEAT_LEVEL()) RefreshSoldier();          break;
 
-#ifdef JA2TESTVERSION
 		case 'v':
 		{
-			gfDoVideoScroll ^= TRUE;
-			wchar_t const* const msg =
-				gfDoVideoScroll ? L"Video Scroll ON" :
-				L"Video Scroll OFF";
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+      if (DEBUG_CHEAT_LEVEL()) {
+        gfDoVideoScroll ^= TRUE;
+        wchar_t const *const msg =
+                gfDoVideoScroll ? L"Video Scroll ON" :
+                L"Video Scroll OFF";
+        ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+      }
 			break;
 		}
-#endif
 
 		case 'w':
 			if (CHEATER_CHEAT_LEVEL())
@@ -2317,7 +2332,8 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			{
 				if ( INFORMATION_CHEAT_LEVEL( ) )
 				{
-					*puiNewEvent = I_SOLDIERDEBUG;
+          SLOGD(DEBUG_TAG_INTERFACE, "Entering Soldier and Land Debug Mode");
+          *puiNewEvent = I_SOLDIERDEBUG;
 				}
 			}
 		}
@@ -2815,7 +2831,7 @@ static void SwitchHeadGear(bool dayGear)
 
 static void ObliterateSector()
 {
-	SLOGD(DEBUG_TAG_TEAMTURN, "Obliterating Sector!");
+	SLOGD(DEBUG_TAG_INTERFACE, "Obliterating Sector!");
 	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		if (s->bNeutral || s->bSide == OUR_TEAM) continue;
@@ -2862,12 +2878,12 @@ static void ToggleCliffDebug()
 	gTacticalStatus.uiFlags ^= DEBUGCLIFFS;
 	if (gTacticalStatus.uiFlags & DEBUGCLIFFS)
 	{
-		SLOGD(DEBUG_TAG_TEAMTURN, "Cliff debug ON.");
+		SLOGD(DEBUG_TAG_INTERFACE, "Cliff debug ON.");
 	}
 	else
 	{
 		SetRenderFlags(RENDER_FLAG_FULL);
-		SLOGD(DEBUG_TAG_TEAMTURN, "Cliff debug OFF.");
+		SLOGD(DEBUG_TAG_INTERFACE, "Cliff debug OFF.");
 	}
 }
 

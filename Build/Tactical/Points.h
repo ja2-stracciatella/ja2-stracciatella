@@ -286,7 +286,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT1
 UINT8 MinAPsToAttack(SOLDIERTYPE*, GridNo, UINT8 add_turning_cost);
 INT8  MinPtsToMove(const SOLDIERTYPE* pSoldier);
 INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode);
-INT8 PtsToMoveDirection(const SOLDIERTYPE* pSoldier, INT8 bDirection);
+INT8 PtsToMoveDirection(const SOLDIERTYPE* pSoldier, UINT8 bDirection);
 UINT8 MinAPsToShootOrStab(SOLDIERTYPE&, GridNo, bool add_turning_cost);
 BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
 void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
