@@ -2409,10 +2409,10 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 		}
 		else
 		{
-			if (gusMouseXPos >= SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)  gfUIShowExitEast  = TRUE;
-			if (gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitWest  = TRUE;
-			if (gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitNorth = TRUE;
-			if (gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) gfUIShowExitSouth = TRUE;
+			if (fOutRight  && gusMouseXPos >= SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)  gfUIShowExitEast  = TRUE;
+			if (fOutLeft   && gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitWest  = TRUE;
+			if (fOutTop    && gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitNorth = TRUE;
+			if (fOutBottom && gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) gfUIShowExitSouth = TRUE;
 		}
 	}
 
