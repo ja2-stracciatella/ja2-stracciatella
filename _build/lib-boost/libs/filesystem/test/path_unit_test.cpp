@@ -33,14 +33,7 @@
 
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>  // for imbue tests
 #include "test_codecvt.hpp"                                // for codecvt arg tests
-#include <boost/detail/lightweight_test.hpp>
-
-#ifndef BOOST_LIGHTWEIGHT_MAIN
-#  include <boost/test/prg_exec_monitor.hpp>
-#else
-#  include <boost/detail/lightweight_main.hpp>
-#endif
-
+#include <boost/detail/lightweight_test_report.hpp>
 #include <boost/smart_ptr.hpp>  // used constructor tests
 #include <boost/functional/hash.hpp>
 
@@ -132,9 +125,9 @@ namespace
                << L"\"\n" ;
   }
 
-  void check(bool ok, const char* file, int line)
+  void check(bool ok_, const char* file, int line)
   {
-    if (ok) return;
+    if (ok_) return;
 
     ++::boost::detail::test_errors();
 
@@ -219,6 +212,14 @@ namespace
     PATH_IS(x9, L"wstring");
     BOOST_TEST_EQ(x9.native().size(), 7U);
 
+    path x8nc(const_cast<char*>(s.c_str()));           // char* null terminated
+    PATH_IS(x8nc, L"string");
+    BOOST_TEST_EQ(x8nc.native().size(), 6U);
+
+    path x9nc(const_cast<wchar_t*>(ws.c_str()));       // wchar_t* null terminated
+    PATH_IS(x9nc, L"wstring");
+    BOOST_TEST_EQ(x9nc.native().size(), 7U);
+
     // non-contiguous containers
     path x10(l);                                       // std::list<char>
     PATH_IS(x10, L"string");
@@ -277,6 +278,32 @@ namespace
     x = ws.c_str();                                    // const wchar_t* null terminated
     PATH_IS(x, L"wstring");
    }
+
+  //  test_move_construction_and_assignment  -------------------------------------------//
+
+  void test_move_construction_and_assignment()
+  {
+    std::cout << "testing move_construction_and_assignment..." << std::endl;
+
+# if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+    path from("long enough to avoid small object optimization");
+    path to(std::move(from));
+    BOOST_TEST(to == "long enough to avoid small object optimization");
+    if (!from.empty())
+      cout << "Note: move construction did not result in empty source path" << endl;
+
+    path from2("long enough to avoid small object optimization");
+    path to2;
+    to2 = std::move(from2);
+    BOOST_TEST(to2 == "long enough to avoid small object optimization");
+    if (!from2.empty())
+      cout << "Note: move assignment did not result in empty rhs path" << endl;
+# else
+    std::cout << 
+      "Test skipped because compiler does not support move semantics" << std::endl;
+# endif
+
+  }
 
   //  test_appends  --------------------------------------------------------------------//
 
@@ -419,10 +446,15 @@ namespace
     path p0("abc");
 
     CHECK(p0.native().size() == 3);
+    CHECK(p0.size() == 3);
     CHECK(p0.string() == "abc");
     CHECK(p0.string().size() == 3);
     CHECK(p0.wstring() == L"abc");
     CHECK(p0.wstring().size() == 3);
+
+    p0 = "";
+    CHECK(p0.native().size() == 0);
+    CHECK(p0.size() == 0);
 
 # ifdef BOOST_WINDOWS_API
 
@@ -433,6 +465,7 @@ namespace
     CHECK(p.string() == "abc\\def/ghi");
     CHECK(p.wstring() == L"abc\\def/ghi");
 
+    CHECK(p.generic().string() == "abc/def/ghi");
     CHECK(p.generic_string() == "abc/def/ghi");
     CHECK(p.generic_wstring() == L"abc/def/ghi");
 
@@ -449,6 +482,7 @@ namespace
     CHECK(p.string() == "abc\\def/ghi");
     CHECK(p.wstring() == L"abc\\def/ghi");
 
+    CHECK(p.generic().string() == "abc\\def/ghi");
     CHECK(p.generic_string() == "abc\\def/ghi");
     CHECK(p.generic_wstring() == L"abc\\def/ghi");
 
@@ -572,10 +606,6 @@ namespace
 
     CHECK(p1 == "bar");
     CHECK(p2 == "foo");
-
-    CHECK(path("").remove_filename() == "");
-    CHECK(path("foo").remove_filename() == "");
-    CHECK(path("foo/bar").remove_filename() == "foo");
   }
 
 //  //  test_modifiers  ------------------------------------------------------------------//
@@ -614,11 +644,51 @@ namespace
     CHECK(++it == p3.end());
   }
 
+  //  test_reverse_iterators  ----------------------------------------------------------//
+
+  void test_reverse_iterators()
+  {
+    std::cout << "testing reverse_iterators..." << std::endl;
+
+    path p1;
+    CHECK(p1.rbegin() == p1.rend());
+
+    path p2("/");
+    CHECK(p2.rbegin() != p2.rend());
+    CHECK(*p2.rbegin() == "/");
+    CHECK(++p2.rbegin() == p2.rend());
+
+    path p3("foo/bar/baz");
+
+    path::reverse_iterator it(p3.rbegin());
+    CHECK(p3.rbegin() != p3.rend());
+    CHECK(*it == "baz");
+    CHECK(*++it == "bar");
+    CHECK(*++it == "foo");
+    CHECK(*--it == "bar");
+    CHECK(*--it == "baz");
+    CHECK(*++it == "bar");
+    CHECK(*++it == "foo");
+    CHECK(++it == p3.rend());
+  }
+
   //  test_modifiers  ------------------------------------------------------------------//
 
   void test_modifiers()
   {
     std::cout << "testing modifiers..." << std::endl;
+
+    CHECK(path("").remove_filename() == "");
+    CHECK(path("foo").remove_filename() == "");
+    CHECK(path("/foo").remove_filename() == "/");
+    CHECK(path("foo/bar").remove_filename() == "foo");
+    BOOST_TEST_EQ(path("foo/bar/").remove_filename(), path("foo/bar"));
+    BOOST_TEST_EQ(path(".").remove_filename(), path(""));
+    BOOST_TEST_EQ(path("./.").remove_filename(), path("."));
+    BOOST_TEST_EQ(path("/.").remove_filename(), path("/"));
+    BOOST_TEST_EQ(path("..").remove_filename(), path(""));
+    BOOST_TEST_EQ(path("../..").remove_filename(), path(".."));
+    BOOST_TEST_EQ(path("/..").remove_filename(), path("/"));
 
   }
 
@@ -825,17 +895,17 @@ namespace
   void test_overloads()
   {
     std::cout << "testing overloads..." << std::endl;
-    std::string s("hello");
+    std::string sto("hello");
     const char a[] = "goodbye";
-    path p1(s);
-    path p2(s.c_str());
+    path p1(sto);
+    path p2(sto.c_str());
     path p3(a);
     path p4("foo");
 
-    std::wstring ws(L"hello");
+    std::wstring wsto(L"hello");
     const wchar_t wa[] = L"goodbye";
-    path wp1(ws);
-    path wp2(ws.c_str());
+    path wp1(wsto);
+    path wp2(wsto.c_str());
     path wp3(wa);
     path wp4(L"foo");
   }
@@ -1036,7 +1106,7 @@ namespace
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
-int cpp_main(int, char*[])
+int test_main(int, char*[])
 {
 // document state of critical macros
 #ifdef BOOST_POSIX_API
@@ -1075,6 +1145,7 @@ int cpp_main(int, char*[])
   test_overloads();
   test_constructors();
   test_assignments();
+  test_move_construction_and_assignment();
   test_appends();
   test_concats();
   test_modifiers();
@@ -1083,6 +1154,7 @@ int cpp_main(int, char*[])
   test_inserter_and_extractor();
   test_other_non_members();
   test_iterators();
+  test_reverse_iterators();
   test_decompositions();
   test_queries();
   test_imbue_locale();
