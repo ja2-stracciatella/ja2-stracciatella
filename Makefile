@@ -687,7 +687,8 @@ build-beta-win-release-on-linux:
 build-win-release-on-linux:
 	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
 	mkdir -p $(WIN_RELEASE)
-	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITH_LPTHREAD=0
+	make clean LOCAL_BOOST_LIB=1
+	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_BOOST_LIB=1 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITH_LPTHREAD=0
 	mv ./ja2 $(WIN_RELEASE)/ja2.exe
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(WIN_RELEASE)
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
@@ -708,6 +709,7 @@ MACOS_SDL_STATIC=./_build/lib-SDL-devel-1.2.15-macos-i386
 MACOS_STATIC_CFLAGS_SDL=-arch i386 -mmacosx-version-min=10.5 -I$(MACOS_SDL_STATIC)/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 MACOS_STATIC_LDFLAGS_SDL=$(MACOS_SDL_STATIC)/lib/libSDLmain.a $(MACOS_SDL_STATIC)/lib/libSDL.a  -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit
 build-release-on-mac:
+	make clean LOCAL_BOOST_LIB=1
 	-rm -rf $(MAC_RELEASE) $(MAC_RELEASE_ZIP)
 	mkdir -p $(MAC_RELEASE)
 	make "CFLAGS_SDL=$(MACOS_STATIC_CFLAGS_SDL)" "LDFLAGS_SDL=$(MACOS_STATIC_LDFLAGS_SDL)"
@@ -739,6 +741,7 @@ DEB_PKG_BUILD_FOLDER ?= _deb
 
 # sudo apt-get install pbuilder
 build-debian-package: build-source-archive
+	make clean
 	-rm -rf $(DEB_PKG_BUILD_FOLDER)
 	mkdir $(DEB_PKG_BUILD_FOLDER)
 	cp $(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME).orig.tar.gz
@@ -754,27 +757,27 @@ build-debian-package: build-source-archive
 # Build Debian packages and the Windows release in
 # a totally controlled environment using Vagrant (http://www.vagrantup.com)
 build-releases:
-	$(MAKE) build-deb-package-on-u1204_i386
-	$(MAKE) build-deb-package-on-u1204_amd64
-	$(MAKE) build-win-release-on-u1204_amd64_win
+	$(MAKE) build-deb-package-on-u1404_amd64
+	$(MAKE) build-deb-package-on-u1404_amd64
+	$(MAKE) build-win-release-on-u1404_amd64_win
 
-build-deb-package-on-u1204_i386:
+build-deb-package-on-u1404_amd64:
 	$(MAKE) clean
-	cd _build/buildboxes/u1204_i386 && vagrant up
-	cd _build/buildboxes/u1204_i386 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
-	cd _build/buildboxes/u1204_i386 && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1404_amd64 && vagrant up
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	cd _build/buildboxes/u1404_amd64 && vagrant halt
 
-build-deb-package-on-u1204_amd64:
+build-deb-package-on-u1404_amd64:
 	$(MAKE) clean
-	cd _build/buildboxes/u1204_amd64 && vagrant up
-	cd _build/buildboxes/u1204_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
-	cd _build/buildboxes/u1204_amd64 && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1404_amd64 && vagrant up
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	cd _build/buildboxes/u1404_amd64 && vagrant halt
 
-build-win-release-on-u1204_amd64_win:
+build-win-release-on-u1404_amd64_win:
 	$(MAKE) clean
-	cd _build/buildboxes/u1204_amd64_win && vagrant up
-	cd _build/buildboxes/u1204_amd64_win && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
-	cd _build/buildboxes/u1204_amd64_win && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1404_amd64 && vagrant up
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
+	cd _build/buildboxes/u1404_amd64 && vagrant halt
 
 # Check compilation on different operation systems
 check-compilation:
