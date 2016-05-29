@@ -183,7 +183,9 @@ static GUIButtonRef guiSlgCancelBtn;
 
 // Save game Button
 static BUTTON_PICS* guiSaveLoadImage;
+static BUTTON_PICS* guiDiDLoadImage;
 static GUIButtonRef guiSlgSaveLoadBtn;
+static GUIButtonRef guiSlgDidLoadBtn;
 
 //Mouse regions for the currently selected save game
 static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
@@ -196,6 +198,7 @@ static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
 static void SaveLoadGameNumber();
+static void SwitchLoadTab();
 
 
 ScreenID SaveLoadScreenHandle()
@@ -340,6 +343,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnSlgSwitchLoadTabCallback(GUI_BUTTON* btn, INT32 reason);
 static void ClearSelectedSaveSlot(void);
 static void InitSaveGameArray(void);
 static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
@@ -406,6 +410,13 @@ static void EnterSaveLoadScreen()
 	guiSlgSaveLoadBtn = MakeButton(guiSaveLoadImage, text, SLG_SAVE_LOAD_BTN_POS_X, BtnSlgSaveLoadCallback);
 	guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
+  // Display DiD Tab Button if We are in load game
+  if (!gfSaveGame)
+  {
+    guiDiDLoadImage = UseLoadedButtonImage(guiSlgButtonImage, gfx, gfx + 3);  // FIXME: Use a proper image that doesn't screw up the screen
+    guiSlgDidLoadBtn = CreateIconAndTextButton(guiDiDLoadImage, L"DiD", OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, SLG_SAVE_LOAD_BTN_POS_X, (8 + STD_SCREEN_Y), MSYS_PRIORITY_HIGH, BtnSlgSwitchLoadTabCallback);
+  }
+  
 	UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
 	UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
 	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
@@ -496,6 +507,12 @@ static void ExitSaveLoadScreen(void)
 		RemoveButton( guiSlgSaveLoadBtn );
 		UnloadButtonImage( guiSaveLoadImage );
 	}
+	// Remove the Dead is Dead button
+	if(!gfSaveGame)
+  {
+    RemoveButton( guiSlgDidLoadBtn );
+    UnloadButtonImage( guiDiDLoadImage ); 
+  }
 
 	for(i=0; i<NUM_SAVE_GAMES; i++)
 	{
@@ -722,6 +739,12 @@ static void SaveLoadGameNumber()
 			StartFadeOutForSaveLoadScreen();
 		}
 	}
+}
+
+// Switch between normal Load game and Dead is Dead
+void SwitchLoadTab()
+{
+
 }
 
 
@@ -966,6 +989,14 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		SaveLoadGameNumber();
 	}
+}
+
+static void BtnSlgSwitchLoadTabCallback(GUI_BUTTON* btn, INT32 reason)
+{
+  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+  {
+    SwitchLoadTab();
+  }
 }
 
 
@@ -1474,17 +1505,18 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 
 void DoQuickSave()
 {
-        // Use the Dead is Dead function if we are in DiD
-        if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
-	  DoDeadIsDeadSave();
-	} else {
-	 	if (SaveGame(0, L"")) return;
+  // Use the Dead is Dead function if we are in DiD
+  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+    DoDeadIsDeadSave();
+  else
+  {
+    if (SaveGame(0, L"")) return;
 
-	if (guiPreviousOptionScreen == MAP_SCREEN)
-		DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-	else
-		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
-	}
+    if (guiPreviousOptionScreen == MAP_SCREEN)
+      DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+    else
+      DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
+  }
 }
 
 // Save function for Dead Is Dead

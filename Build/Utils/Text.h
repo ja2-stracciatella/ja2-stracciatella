@@ -417,6 +417,7 @@ struct LanguageRes
   const StrPointer *zNewTacticalMessages;
   const StrPointer  str_iron_man_mode_warning;
   const StrPointer  str_dead_is_dead_mode_warning;
+  const StrPointer  str_dead_is_dead_mode_enter_name;
 };
 
 /** Current language resources. */
@@ -647,6 +648,7 @@ extern const LanguageRes* g_langRes;
 #define zNewTacticalMessages                                (g_langRes->zNewTacticalMessages)
 #define str_iron_man_mode_warning                           (g_langRes->str_iron_man_mode_warning)
 #define str_dead_is_dead_mode_warning                       (g_langRes->str_dead_is_dead_mode_warning)
+#define str_dead_is_dead_mode_enter_name                    (g_langRes->str_dead_is_dead_mode_enter_name)
 
 /* -------------------------------------------------------------------------------------------- */
 
