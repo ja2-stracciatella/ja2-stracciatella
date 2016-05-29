@@ -3513,6 +3513,7 @@ static const wchar_t *s_pl_str_aim_sort_list[str_aim_sort_list_SIZE] =
 extern const wchar_t *g_eng_zNewTacticalMessages[];
 extern const wchar_t *g_eng_str_iron_man_mode_warning;
 extern const wchar_t *g_eng_str_dead_is_dead_mode_warning;
+extern const wchar_t *g_eng_str_dead_is_dead_mode_enter_name;
 
 /** Polish language resources. */
 LanguageRes g_LanguageResPolish = {
@@ -3739,6 +3740,7 @@ LanguageRes g_LanguageResPolish = {
   g_eng_zNewTacticalMessages,
   g_eng_str_iron_man_mode_warning,
   g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
 };
 
 #ifdef WITH_UNITTESTS

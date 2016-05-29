@@ -3522,7 +3522,7 @@ const wchar_t *g_eng_str_iron_man_mode_warning = L"You have chosen IRON MAN mode
 
 // Stracciatella: New Dead is Dead game mode warning
 const wchar_t *g_eng_str_dead_is_dead_mode_warning = L"You have chosen DEAD IS DEAD mode. This setting makes the game considerably more challenging as you will not be able to load a previous savegame if you have made a mistake. The game will save automatically on leave. This setting will affect the entire course of the game.  Are you sure want to play in DEAD IS DEAD mode?";
-
+const wchar_t *g_eng_str_dead_is_dead_mode_enter_name = L"You will now be taken to the save screen. Choose a savegame slot and name for your game. This slot will be persistent for your game and cannot be changed!";
 
 /** English language resources. */
 LanguageRes g_LanguageResEnglish = {
@@ -3749,4 +3749,5 @@ LanguageRes g_LanguageResEnglish = {
   g_eng_zNewTacticalMessages,
   g_eng_str_iron_man_mode_warning,
   g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
 };

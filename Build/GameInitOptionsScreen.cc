@@ -497,7 +497,7 @@ static void RenderGIOScreen(void)
 	usPosY += GIO_GAP_BN_SETTINGS;
 
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_IRON_MAN_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-        DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usPosY += GIO_GAP_BN_SETTINGS;
 	
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_DEAD_IS_DEAD_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -831,11 +831,17 @@ static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue const bExi
 	}
 }
 
+static void DoGioDeadIsDeadMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallback)
+{
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_OK, ReturnCallback, NULL);
+}
+
 static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if (bExitValue == MSG_BOX_RETURN_YES)
 	{
 		gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD;
+		DoGioDeadIsDeadMessageBox(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadMessageBoxCallBack);
 	}
 	else
 	{

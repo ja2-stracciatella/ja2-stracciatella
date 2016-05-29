@@ -3582,6 +3582,7 @@ static const wchar_t * s_rus_zNewTacticalMessages[] =
 static const wchar_t s_rus_str_iron_man_mode_warning[] = L"Вы выбрали режим СТАЛЬНОЙ ВОЛИ. Эта настройка сильно усложняет игру, так как вы не сможете сохраняться, когда в секторе есть враги. ЖЕЛЕЗНАЯ ВОЛЯ действует в течение всей игры. Уверены, что хотите включить этот режим?";
 
 extern const wchar_t *g_eng_str_dead_is_dead_mode_warning;
+extern const wchar_t *g_eng_str_dead_is_dead_mode_enter_name;
 
 /** Russian language resources. */
 LanguageRes g_LanguageResRussian = {
@@ -3808,6 +3809,7 @@ LanguageRes g_LanguageResRussian = {
   s_rus_zNewTacticalMessages,
   s_rus_str_iron_man_mode_warning,
   g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
 };
 
 
@@ -4036,6 +4038,7 @@ LanguageRes g_LanguageResRussianGold = {
   s_rus_zNewTacticalMessages,
   s_rus_str_iron_man_mode_warning,
   g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
 };
 
 #ifdef WITH_UNITTESTS
