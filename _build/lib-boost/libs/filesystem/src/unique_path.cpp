@@ -18,9 +18,13 @@
 #endif
 
 #include <boost/filesystem/operations.hpp>
+#include <cassert>
 
 # ifdef BOOST_POSIX_API
 #   include <fcntl.h>
+#   ifdef BOOST_HAS_UNISTD_H
+#      include <unistd.h>
+#   endif
 # else // BOOST_WINDOWS_API
 #   include <windows.h>
 #   include <wincrypt.h>
@@ -39,6 +43,33 @@ void fail(int err, boost::system::error_code* ec)
   ec->assign(err, boost::system::system_category());
   return;
 }
+
+#ifdef BOOST_WINDOWS_API
+
+int acquire_crypt_handle(HCRYPTPROV& handle)
+{
+  if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+    return 0;
+
+  int errval = ::GetLastError();
+  if (errval != NTE_BAD_KEYSET)
+    return errval;
+
+  if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_NEWKEYSET | CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+    return 0;
+
+  errval = ::GetLastError();
+  // Another thread could have attempted to create the keyset at the same time.
+  if (errval != NTE_EXISTS)
+    return errval;
+
+  if (::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+    return 0;
+
+  return ::GetLastError();
+}
+
+#endif
 
 void system_crypt_random(void* buf, std::size_t len, boost::system::error_code* ec)
 {
@@ -74,20 +105,7 @@ void system_crypt_random(void* buf, std::size_t len, boost::system::error_code* 
 # else // BOOST_WINDOWS_API
 
   HCRYPTPROV handle;
-  int errval = 0;
-
-  if (!::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, 0))
-  {
-    errval = ::GetLastError();
-    if (errval == NTE_BAD_KEYSET)
-    {
-      if (!::CryptAcquireContextW(&handle, 0, 0, PROV_RSA_FULL, CRYPT_NEWKEYSET))
-      {
-        errval = ::GetLastError();
-      }
-      else errval = 0;
-    }
-  }
+  int errval = acquire_crypt_handle(handle);
 
   if (!errval)
   {
@@ -112,9 +130,10 @@ path unique_path(const path& model, system::error_code* ec)
 {
   std::wstring s (model.wstring());  // std::string ng for MBCS encoded POSIX
   const wchar_t hex[] = L"0123456789abcdef";
-  const int n_ran = 16;
-  const int max_nibbles = 2 * n_ran;   // 4-bits per nibble
-  char ran[n_ran];
+  char ran[] = "123456789abcdef";  // init to avoid clang static analyzer message
+                                   // see ticket #8954
+  assert(sizeof(ran) == 16);
+  const int max_nibbles = 2 * sizeof(ran);   // 4-bits per nibble
 
   int nibbles_used = max_nibbles;
   for(std::wstring::size_type i=0; i < s.size(); ++i)
