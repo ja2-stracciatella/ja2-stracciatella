@@ -364,7 +364,6 @@
     <ClCompile Include="..\..\Build\Utils\Animated_ProgressBar.cc" />
     <ClCompile Include="..\..\Build\Utils\Cinematics.cc" />
     <ClCompile Include="..\..\Build\Utils\Cursors.cc" />
-    <ClCompile Include="..\..\Build\Utils\Debug_Control.cc" />
     <ClCompile Include="..\..\Build\Utils\Debug_Pages.cc" />
     <ClCompile Include="..\..\Build\Utils\Event_Manager.cc" />
     <ClCompile Include="..\..\Build\Utils\Event_Pump.cc" />
