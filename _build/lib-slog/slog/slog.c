@@ -199,9 +199,10 @@ static const char* getLevelName(SLOGLevel level)
 
 void SLOG_LogMessage(SLOGLevel level, SLOGTopics tag, const char *format, ...)
 {
-  if ( !(gDebugFlags & (1 << tag))) return;
   int logToConsole = (s_consoleFD != 0) && (level >= s_consoleLevel);
   int logToFile = (s_logFile != NULL) && (level >= s_fileLevel);
+
+  if ( !(gDebugFlags & (1 << tag))) return;
 
   if(logToConsole || logToFile)
   {
