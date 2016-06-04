@@ -2705,7 +2705,7 @@
 		342EF62616E3E2D3007960D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/../..";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					JA2,
@@ -2738,7 +2738,7 @@
 		342EF62716E3E2D3007960D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/../..";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					JA2,
