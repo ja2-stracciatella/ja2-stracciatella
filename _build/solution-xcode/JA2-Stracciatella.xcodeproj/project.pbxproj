@@ -44,6 +44,9 @@
 		34C6EDD2172C62BE00102B2C /* windows_file_codecvt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDC9172C62BE00102B2C /* windows_file_codecvt.cpp */; };
 		34C6EDD6172C632100102B2C /* error_code.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDD5172C632100102B2C /* error_code.cpp */; };
 		34C6EDD8172C638400102B2C /* EncodingCorrectors.cc in Sources */ = {isa = PBXBuildFile; fileRef = 34C6EDD7172C638400102B2C /* EncodingCorrectors.cc */; };
+		79EF43BA1D033ACA00696EB2 /* smacker.c in Sources */ = {isa = PBXBuildFile; fileRef = 79EF43B41D033ACA00696EB2 /* smacker.c */; };
+		79EF43BB1D033ACA00696EB2 /* smk_bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 79EF43B61D033ACA00696EB2 /* smk_bitstream.c */; };
+		79EF43BC1D033ACA00696EB2 /* smk_hufftree.c in Sources */ = {isa = PBXBuildFile; fileRef = 79EF43B71D033ACA00696EB2 /* smk_hufftree.c */; };
 		C3494B9016F5461700BFE667 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3494B8316F5461700BFE667 /* File.cpp */; };
 		C3494B9316F5461700BFE667 /* Line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3494B8616F5461700BFE667 /* Line.cpp */; };
 		C3494B9616F5461700BFE667 /* Section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3494B8916F5461700BFE667 /* Section.cpp */; };
@@ -334,7 +337,7 @@
 		C38ACD7116E4AA68003D6872 /* Animated_ProgressBar.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2816E4AA68003D6872 /* Animated_ProgressBar.cc */; };
 		C38ACD7216E4AA68003D6872 /* Cinematics.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2A16E4AA68003D6872 /* Cinematics.cc */; };
 		C38ACD7316E4AA68003D6872 /* Cursors.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2C16E4AA68003D6872 /* Cursors.cc */; };
-		C38ACD7416E4AA68003D6872 /* Debug_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2E16E4AA68003D6872 /* Debug_Control.cc */; };
+		C38ACD7416E4AA68003D6872 /* Debug_Pages.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC2E16E4AA68003D6872 /* Debug_Pages.cc */; };
 		C38ACD7616E4AA68003D6872 /* Event_Manager.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC3216E4AA68003D6872 /* Event_Manager.cc */; };
 		C38ACD7716E4AA68003D6872 /* Event_Pump.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC3416E4AA68003D6872 /* Event_Pump.cc */; };
 		C38ACD7816E4AA68003D6872 /* Font_Control.cc in Sources */ = {isa = PBXBuildFile; fileRef = C38ACC3616E4AA68003D6872 /* Font_Control.cc */; };
@@ -467,6 +470,11 @@
 		34C6EDCA172C62BE00102B2C /* windows_file_codecvt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = windows_file_codecvt.hpp; path = ../libs/filesystem/src/windows_file_codecvt.hpp; sourceTree = "<group>"; };
 		34C6EDD5172C632100102B2C /* error_code.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = error_code.cpp; path = ../libs/system/src/error_code.cpp; sourceTree = "<group>"; };
 		34C6EDD7172C638400102B2C /* EncodingCorrectors.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EncodingCorrectors.cc; sourceTree = "<group>"; };
+		79EF43B41D033ACA00696EB2 /* smacker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = smacker.c; path = "../../lib-smacker/libsmacker/smacker.c"; sourceTree = "<group>"; };
+		79EF43B51D033ACA00696EB2 /* smacker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smacker.h; path = "../../lib-smacker/libsmacker/smacker.h"; sourceTree = "<group>"; };
+		79EF43B61D033ACA00696EB2 /* smk_bitstream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = smk_bitstream.c; path = "../../lib-smacker/libsmacker/smk_bitstream.c"; sourceTree = "<group>"; };
+		79EF43B71D033ACA00696EB2 /* smk_hufftree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = smk_hufftree.c; path = "../../lib-smacker/libsmacker/smk_hufftree.c"; sourceTree = "<group>"; };
+		79EF43B81D033ACA00696EB2 /* smk_malloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smk_malloc.h; path = "../../lib-smacker/libsmacker/smk_malloc.h"; sourceTree = "<group>"; };
 		C3494B7316F5461700BFE667 /* Config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Config.hpp; path = include/MicroIni/Config.hpp; sourceTree = "<group>"; };
 		C3494B7416F5461700BFE667 /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Container.hpp; path = include/MicroIni/Container.hpp; sourceTree = "<group>"; };
 		C3494B7516F5461700BFE667 /* Container.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Container.inl; path = include/MicroIni/Container.inl; sourceTree = "<group>"; };
@@ -1068,8 +1076,8 @@
 		C38ACC2B16E4AA68003D6872 /* Cinematics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cinematics.h; sourceTree = "<group>"; };
 		C38ACC2C16E4AA68003D6872 /* Cursors.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cursors.cc; sourceTree = "<group>"; };
 		C38ACC2D16E4AA68003D6872 /* Cursors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cursors.h; sourceTree = "<group>"; };
-		C38ACC2E16E4AA68003D6872 /* Debug_Control.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Debug_Control.cc; sourceTree = "<group>"; };
-		C38ACC2F16E4AA68003D6872 /* Debug_Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug_Control.h; sourceTree = "<group>"; };
+		C38ACC2E16E4AA68003D6872 /* Debug_Pages.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Debug_Pages.cc; sourceTree = "<group>"; };
+		C38ACC2F16E4AA68003D6872 /* Debug_Pages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug_Pages.h; sourceTree = "<group>"; };
 		C38ACC3216E4AA68003D6872 /* Event_Manager.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event_Manager.cc; sourceTree = "<group>"; };
 		C38ACC3316E4AA68003D6872 /* Event_Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event_Manager.h; sourceTree = "<group>"; };
 		C38ACC3416E4AA68003D6872 /* Event_Pump.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event_Pump.cc; sourceTree = "<group>"; };
@@ -1387,6 +1395,7 @@
 		342EF61E16E3E2D3007960D8 /* JA2-Stracciatella */ = {
 			isa = PBXGroup;
 			children = (
+				79EF43BD1D033AD400696EB2 /* lib-smacker */,
 				34ACDD0F18AF5A37003DF7B8 /* lib-slog */,
 				34ACDCCC18AF5802003DF7B8 /* src */,
 				342E141816E3E485007960D8 /* sgp */,
@@ -1524,6 +1533,26 @@
 				34C6EDD5172C632100102B2C /* error_code.cpp */,
 			);
 			name = system;
+			sourceTree = "<group>";
+		};
+		79EF43BD1D033AD400696EB2 /* lib-smacker */ = {
+			isa = PBXGroup;
+			children = (
+				79EF43BE1D033AE100696EB2 /* libsmacker */,
+			);
+			name = "lib-smacker";
+			sourceTree = "<group>";
+		};
+		79EF43BE1D033AE100696EB2 /* libsmacker */ = {
+			isa = PBXGroup;
+			children = (
+				79EF43B41D033ACA00696EB2 /* smacker.c */,
+				79EF43B51D033ACA00696EB2 /* smacker.h */,
+				79EF43B61D033ACA00696EB2 /* smk_bitstream.c */,
+				79EF43B71D033ACA00696EB2 /* smk_hufftree.c */,
+				79EF43B81D033ACA00696EB2 /* smk_malloc.h */,
+			);
+			name = libsmacker;
 			sourceTree = "<group>";
 		};
 		C3494B6616F5461700BFE667 /* MicroIni */ = {
@@ -2137,8 +2166,8 @@
 				C38ACC2B16E4AA68003D6872 /* Cinematics.h */,
 				C38ACC2C16E4AA68003D6872 /* Cursors.cc */,
 				C38ACC2D16E4AA68003D6872 /* Cursors.h */,
-				C38ACC2E16E4AA68003D6872 /* Debug_Control.cc */,
-				C38ACC2F16E4AA68003D6872 /* Debug_Control.h */,
+				C38ACC2E16E4AA68003D6872 /* Debug_Pages.cc */,
+				C38ACC2F16E4AA68003D6872 /* Debug_Pages.h */,
 				C38ACC3216E4AA68003D6872 /* Event_Manager.cc */,
 				C38ACC3316E4AA68003D6872 /* Event_Manager.h */,
 				C38ACC3416E4AA68003D6872 /* Event_Pump.cc */,
@@ -2367,6 +2396,7 @@
 				C38ACCD816E4AA68003D6872 /* Queen_Command.cc in Sources */,
 				C38ACCD916E4AA68003D6872 /* Quest_Debug_System.cc in Sources */,
 				C38ACCDA16E4AA68003D6872 /* Quests.cc in Sources */,
+				79EF43BB1D033ACA00696EB2 /* smk_bitstream.c in Sources */,
 				C38ACCDB16E4AA68003D6872 /* QuestText.cc in Sources */,
 				C38ACCDC16E4AA68003D6872 /* Scheduling.cc in Sources */,
 				C38ACCDD16E4AA68003D6872 /* Strategic.cc in Sources */,
@@ -2461,6 +2491,7 @@
 				C38ACD3116E4AA68003D6872 /* Turn_Based_Input.cc in Sources */,
 				C38ACD3216E4AA68003D6872 /* UI_Cursors.cc in Sources */,
 				C38ACD3316E4AA68003D6872 /* Vehicles.cc in Sources */,
+				79EF43BC1D033ACA00696EB2 /* smk_hufftree.c in Sources */,
 				C38ACD3416E4AA68003D6872 /* Weapons.cc in Sources */,
 				C38ACD3516E4AA68003D6872 /* World_Items.cc in Sources */,
 				C38ACD3616E4AA68003D6872 /* AIList.cc in Sources */,
@@ -2500,6 +2531,7 @@
 				C38ACD5616E4AA68003D6872 /* Pits.cc in Sources */,
 				C38ACD5716E4AA68003D6872 /* Radar_Screen.cc in Sources */,
 				C38ACD5816E4AA68003D6872 /* Render_Dirty.cc in Sources */,
+				79EF43BA1D033ACA00696EB2 /* smacker.c in Sources */,
 				C38ACD5916E4AA68003D6872 /* Render_Fun.cc in Sources */,
 				34ACDD0C18AF5802003DF7B8 /* DefaultIMPPolicy.cc in Sources */,
 				C38ACD5A16E4AA68003D6872 /* RenderWorld.cc in Sources */,
@@ -2530,7 +2562,7 @@
 				C38ACD7116E4AA68003D6872 /* Animated_ProgressBar.cc in Sources */,
 				C38ACD7216E4AA68003D6872 /* Cinematics.cc in Sources */,
 				C38ACD7316E4AA68003D6872 /* Cursors.cc in Sources */,
-				C38ACD7416E4AA68003D6872 /* Debug_Control.cc in Sources */,
+				C38ACD7416E4AA68003D6872 /* Debug_Pages.cc in Sources */,
 				C38ACD7616E4AA68003D6872 /* Event_Manager.cc in Sources */,
 				C38ACD7716E4AA68003D6872 /* Event_Pump.cc in Sources */,
 				C38ACD7816E4AA68003D6872 /* Font_Control.cc in Sources */,
@@ -2689,6 +2721,7 @@
 					../..,
 					"../lib-rapidjson",
 					"../lib-slog",
+					"../lib-smacker/libsmacker",
 					../../src,
 				);
 				LIBRARY_SEARCH_PATHS = (
