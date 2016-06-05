@@ -597,7 +597,7 @@ add_custom_command(TARGET build-deb-package-on-u1404_i386
 
 add_custom_target(build-win-release-on-u1404_amd64)
 add_custom_command(TARGET build-win-release-on-u1404_amd64
-        COMMAND vagrant up win && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP'" win && vagrant halt win
+        COMMAND vagrant up win && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\"'" win && vagrant halt win
         WORKING_DIRECTORY ${ja2-stracciatella_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
 
 add_custom_target(build-releases)
