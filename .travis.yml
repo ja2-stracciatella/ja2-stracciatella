@@ -11,10 +11,13 @@ compiler:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install make g++ libsdl1.2-dev -y
+  - sudo apt-get install cmake make g++ libsdl1.2-dev -y
   - sudo apt-get install libboost-all-dev -y
 
-script: make SKIP_BUILD_NUMBER_CALC=1 clean && make SKIP_BUILD_NUMBER_CALC=1 all && ./ja2 -unittests
+script:
+  - mkdir ci-build && cd ci-build
+  - cmake .. && make
+  - ./ja2 -unittests
 
 addons:
   coverity_scan:
@@ -23,5 +26,5 @@ addons:
       description: "Build submitted via Travis CI"
     notification_email: github@stefanlau.com
     build_command_prepend: "make clean"
-    build_command:   "make SKIP_BUILD_NUMBER_CALC=1 all"
+    build_command:   "make"
     branch_pattern: coverity-via-travis
