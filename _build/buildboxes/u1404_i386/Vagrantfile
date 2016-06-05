@@ -2,20 +2,20 @@
 # vi: set ft=ruby :
 
 # This box is for buidling:
-#   1) amd64 debian package
+#   1) i368 debian package
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "hashicorp/precise64"
+  config.vm.box = "ubuntu/trusty32"
 
   config.vm.provision :shell, :path => "bootstrap.sh"
 
   config.vm.synced_folder "../../..", "/home/vagrant/strac"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "strac_buildbox_u1204_amd64"
+    vb.name = "strac_buildbox_u1204_i386"
     vb.cpus = 2
   #   vb.gui = true
     vb.customize ["modifyvm", :id, "--memory", "512"]

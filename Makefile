@@ -14,46 +14,38 @@
 #   INSTALLABLE                := "yes"
 # In this case application can be installed.
 
-
 # By default build the project with unit tests.
 # If you want to build without them, use make WITH_UNITTESTS=0
 WITH_UNITTESTS ?= 1
-
 WITH_LPTHREAD ?= 1
 
 BINARY    ?= ja2
-
 VERSION := 0.15.x
 GAME_VERSION := v$(VERSION)
 ICON_THEME = hicolor
 
 CFLAGS += -DGAME_VERSION=\"$(GAME_VERSION)\"
 
-
 ############################################################
 # SDL Library settings.
 # Project can be built with local SDL library (from _build/lib-SDL-devel-*)
 # or system installed SDL library.
 ############################################################
-
-
+# using local SDL library
 ifdef LOCAL_SDL_LIB
-CFLAGS_SDL= -I./$(LOCAL_SDL_LIB)/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main
-LDFLAGS_SDL=-L./$(LOCAL_SDL_LIB)/lib -lmingw32 -lSDLmain -lSDL -mwindows
+	CFLAGS_SDL= -I./$(LOCAL_SDL_LIB)/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main
+	LDFLAGS_SDL=-L./$(LOCAL_SDL_LIB)/lib -lmingw32 -lSDLmain -lSDL -mwindows
 endif
-
-ifndef LOCAL_SDL_LIB
 
 # using system SDL library
-
-SDL_CONFIG  ?= sdl-config
-ifndef CFLAGS_SDL
-CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
-endif
-ifndef LDFLAGS_SDL
-LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
-endif
-
+ifndef LOCAL_SDL_LIB
+	SDL_CONFIG  ?= sdl-config
+	ifndef CFLAGS_SDL
+		CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
+	endif
+	ifndef LDFLAGS_SDL
+		LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
+	endif
 endif
 
 CFLAGS += $(CFLAGS_SDL)
@@ -63,28 +55,47 @@ LDFLAGS += $(LDFLAGS_SDL)
 # MinGW settings for building on Windows and for
 # cross-building on Linux
 ############################################################
-
 ifdef USE_MINGW
-
-ifndef MINGW_PREFIX
-$(error MINGW_PREFIX is not specified.  Examples: MINGW_PREFIX=i586-mingw32msvc (on Linux), MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 (on Windows))
-endif
-
-CC=$(MINGW_PREFIX)-gcc
-CXX=$(MINGW_PREFIX)-g++
-CPP=$(MINGW_PREFIX)-cpp
-RANLIB=$(MINGW_PREFIX)-ranlib
-
-CFLAGS += -mwindows -mconsole
-
+	ifndef MINGW_PREFIX
+		$(error MINGW_PREFIX is not specified.  Examples: MINGW_PREFIX=i586-mingw32msvc (on Linux), MINGW_PREFIX=/cygdrive/c/MinGW/bin/mingw32 (on Windows))
+	endif
+	CC=$(MINGW_PREFIX)-gcc
+	CXX=$(MINGW_PREFIX)-g++
+	CPP=$(MINGW_PREFIX)-cpp
+	RANLIB=$(MINGW_PREFIX)-ranlib
+	CFLAGS += -mwindows -mconsole
 endif
 
 ############################################################
-#
+# Boost Library settings.
+# Project can be built with local Boost library (from _build/lib-boost)
+# or system installed Boost library.
 ############################################################
+# using local Boost library
+SRCS_BOOST :=
+ifdef LOCAL_BOOST_LIB
+	CFLAGS += -I _build/lib-boost
+	SRCS_BOOST += _build/lib-boost/libs/system/src/error_code.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/codecvt_error_category.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/operations.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/path.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/path_traits.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/portability.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/unique_path.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/utf8_codecvt_facet.cpp
+	SRCS_BOOST += _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
+endif
 
+ifndef LOCAL_BOOST_LIB
+	CFLAGS += -I /usr/include/boost
+	LDFLAGS += -L /usr/lib/ -lboost_filesystem -lboost_system -lboost_regex
+endif
+
+############################################################
+# Debug build?
+############################################################
 ifdef WITH_DEBUGINFO
-CFLAGS += -g
+	CFLAGS += -g
 endif
 
 CFLAGS += -I .
@@ -100,7 +111,6 @@ CFLAGS += -I Build/Utils
 CFLAGS += -I sgp
 CFLAGS += -I src
 CFLAGS += -I _build/lib-MicroIni/include
-CFLAGS += -I _build/lib-boost
 CFLAGS += -I _build/lib-rapidjson
 CFLAGS += -I _build/lib-slog
 CFLAGS += -I _build/lib-smacker/libsmacker
@@ -117,7 +127,6 @@ CFLAGS += -Wunused-function
 
 CFLAGS += -DJA2
 CFLAGS += -DMICROINI_STATIC
-
 
 ifdef WITH_FIXMES
   CFLAGS += -DWITH_FIXMES
@@ -141,12 +150,12 @@ endif
 ifdef JA2TESTVERSION
   CFLAGS += -DJA2TESTVERSION
   ifndef JA2BETAVERSION
-	JA2BETAVERSION := yes
+		JA2BETAVERSION := yes
   endif
 endif
 
 ifdef JA2BETAVERSION
-CFLAGS += -DJA2BETAVERSION -DSGP_DEBUG -DFORCE_ASSERTS_ON -DSGP_VIDEO_DEBUGGING
+	CFLAGS += -DJA2BETAVERSION -DSGP_DEBUG -DFORCE_ASSERTS_ON -DSGP_VIDEO_DEBUGGING
 endif
 
 CCFLAGS += $(CFLAGS)
@@ -156,21 +165,46 @@ CCFLAGS += -Wimplicit-int
 CCFLAGS += -Wmissing-prototypes
 
 CXXFLAGS += $(CFLAGS)
-
 LDFLAGS += -lm
 
 ifeq "$(WITH_LPTHREAD)" "1"
-LDFLAGS += -lpthread
+	LDFLAGS += -lpthread
 endif
 
 ifdef WITH_ZLIB
-LDFLAGS += -lz
+	LDFLAGS += -lz
 endif
 
 SRCS :=
+SRCS += $(SRCS_BOOST)
 SRCS += Build/AniViewScreen.cc
 SRCS += Build/Credits.cc
 SRCS += Build/UILayout.cc
+SRCS += Build/Cheats.cc
+SRCS += Build/Fade_Screen.cc
+SRCS += Build/GameInitOptionsScreen.cc
+SRCS += Build/GameLoop.cc
+SRCS += Build/GameRes.cc
+SRCS += Build/GameState.cc
+SRCS += Build/GameScreen.cc
+SRCS += Build/GameSettings.cc
+SRCS += Build/GameVersion.cc
+SRCS += Build/HelpScreen.cc
+SRCS += Build/Init.cc
+SRCS += Build/Intro.cc
+SRCS += Build/JA2_Splash.cc
+SRCS += Build/JAScreens.cc
+SRCS += Build/LoadSaveEMail.cc
+SRCS += Build/LoadSaveTacticalStatusType.cc
+SRCS += Build/Loading_Screen.cc
+SRCS += Build/MainMenuScreen.cc
+SRCS += Build/MercPortrait.cc
+SRCS += Build/MessageBoxScreen.cc
+SRCS += Build/Options_Screen.cc
+SRCS += Build/SaveLoadGame.cc
+SRCS += Build/SaveLoadScreen.cc
+SRCS += Build/Screens.cc
+SRCS += Build/Sys_Globals.cc
 
 SRCS += Build/Editor/Cursor_Modes.cc
 SRCS += Build/Editor/EditScreen.cc
@@ -197,21 +231,6 @@ SRCS += Build/Editor/SmartMethod.cc
 SRCS += Build/Editor/Smooth.cc
 SRCS += Build/Editor/Smoothing_Utils.cc
 
-SRCS += Build/Cheats.cc
-SRCS += Build/Fade_Screen.cc
-SRCS += Build/GameInitOptionsScreen.cc
-SRCS += Build/GameLoop.cc
-SRCS += Build/GameRes.cc
-SRCS += Build/GameState.cc
-SRCS += Build/GameScreen.cc
-SRCS += Build/GameSettings.cc
-SRCS += Build/GameVersion.cc
-
-SRCS += Build/HelpScreen.cc
-SRCS += Build/Init.cc
-SRCS += Build/Intro.cc
-SRCS += Build/JA2_Splash.cc
-SRCS += Build/JAScreens.cc
 SRCS += Build/Laptop/AIM.cc
 SRCS += Build/Laptop/AIMArchives.cc
 SRCS += Build/Laptop/AIMFacialIndex.cc
@@ -267,16 +286,7 @@ SRCS += Build/Laptop/Mercs_Files.cc
 SRCS += Build/Laptop/Mercs_No_Account.cc
 SRCS += Build/Laptop/Personnel.cc
 SRCS += Build/Laptop/Store_Inventory.cc
-SRCS += Build/LoadSaveEMail.cc
-SRCS += Build/LoadSaveTacticalStatusType.cc
-SRCS += Build/Loading_Screen.cc
-SRCS += Build/MainMenuScreen.cc
-SRCS += Build/MercPortrait.cc
-SRCS += Build/MessageBoxScreen.cc
-SRCS += Build/Options_Screen.cc
-SRCS += Build/SaveLoadGame.cc
-SRCS += Build/SaveLoadScreen.cc
-SRCS += Build/Screens.cc
+
 SRCS += Build/Strategic/AI_Viewer.cc
 SRCS += Build/Strategic/Assignments.cc
 SRCS += Build/Strategic/Auto_Resolve.cc
@@ -320,7 +330,7 @@ SRCS += Build/Strategic/Strategic_Status.cc
 SRCS += Build/Strategic/Strategic_Town_Loyalty.cc
 SRCS += Build/Strategic/Strategic_Turns.cc
 SRCS += Build/Strategic/Town_Militia.cc
-SRCS += Build/Sys_Globals.cc
+
 SRCS += Build/Tactical/Air_Raid.cc
 SRCS += Build/Tactical/Animation_Cache.cc
 SRCS += Build/Tactical/Animation_Control.cc
@@ -396,6 +406,7 @@ SRCS += Build/Tactical/UI_Cursors.cc
 SRCS += Build/Tactical/Vehicles.cc
 SRCS += Build/Tactical/Weapons.cc
 SRCS += Build/Tactical/World_Items.cc
+
 SRCS += Build/TacticalAI/AIList.cc
 SRCS += Build/TacticalAI/AIMain.cc
 SRCS += Build/TacticalAI/AIUtils.cc
@@ -409,6 +420,7 @@ SRCS += Build/TacticalAI/Movement.cc
 SRCS += Build/TacticalAI/NPC.cc
 SRCS += Build/TacticalAI/PanicButtons.cc
 SRCS += Build/TacticalAI/Realtime.cc
+
 SRCS += Build/TileEngine/Ambient_Control.cc
 SRCS += Build/TileEngine/Buildings.cc
 SRCS += Build/TileEngine/Environment.cc
@@ -448,6 +460,7 @@ SRCS += Build/TileEngine/Tile_Surface.cc
 SRCS += Build/TileEngine/WorldDat.cc
 SRCS += Build/TileEngine/WorldDef.cc
 SRCS += Build/TileEngine/WorldMan.cc
+
 SRCS += Build/Utils/Animated_ProgressBar.cc
 SRCS += Build/Utils/Cinematics.cc
 SRCS += Build/Utils/Cursors.cc
@@ -470,6 +483,7 @@ SRCS += Build/Utils/Text_Utils.cc
 SRCS += Build/Utils/Timer_Control.cc
 SRCS += Build/Utils/Utilities.cc
 SRCS += Build/Utils/WordWrap.cc
+
 SRCS += sgp/Button_Sound_Control.cc
 SRCS += sgp/Button_System.cc
 SRCS += sgp/Cursor_Control.cc
@@ -524,16 +538,6 @@ SRCS += _build/lib-MicroIni/src/MicroIni/Line.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Section.cpp
 SRCS += _build/lib-MicroIni/src/MicroIni/Value.cpp
 
-SRCS += _build/lib-boost/libs/system/src/error_code.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/codecvt_error_category.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/operations.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/path.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/path_traits.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/portability.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/unique_path.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/utf8_codecvt_facet.cpp
-SRCS += _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
-
 SRCS += _build/lib-slog/slog/slog.c
 
 SRCS += _build/lib-smacker/libsmacker/smacker.c
@@ -548,32 +552,31 @@ LNGS += Build/Utils/_GermanText.cc
 LNGS += Build/Utils/_ItalianText.cc
 LNGS += Build/Utils/_PolishText.cc
 LNGS += Build/Utils/_RussianText.cc
-
 SRCS += $(LNGS)
 
 ifeq "$(WITH_UNITTESTS)" "1"
-CFLAGS += -D WITH_UNITTESTS
-CFLAGS += -I _build/lib-gtest/include
-CFLAGS += -I _build/lib-gtest
-SRCS += _build/lib-gtest/src/gtest.cc
-SRCS += _build/lib-gtest/src/gtest-death-test.cc
-SRCS += _build/lib-gtest/src/gtest-filepath.cc
-SRCS += _build/lib-gtest/src/gtest-port.cc
-SRCS += _build/lib-gtest/src/gtest-printers.cc
-SRCS += _build/lib-gtest/src/gtest-test-part.cc
-SRCS += _build/lib-gtest/src/gtest-typed-test.cc
-SRCS += Build/SaveLoadGame_unittest.cc
-SRCS += Build/Tactical/LoadSaveMercProfile_unittest.cc
-SRCS += Build/VanillaDataStructures_unittest.cc
-SRCS += sgp/FileMan_unittest.cc
-SRCS += sgp/LoadSaveData_unittest.cc
-SRCS += sgp/UTF8String_unittest.cc
-SRCS += sgp/wchar_unittest.cc
-SRCS += src/DefaultContentManagerUT.cc
-SRCS += src/DefaultContentManager_unittests.cc
-SRCS += src/JsonUtility_unittests.cc
-SRCS += src/VanillaWeapons_unittests.cc
-SRCS += src/TestUtils.cc
+	CFLAGS += -D WITH_UNITTESTS
+	CFLAGS += -I _build/lib-gtest/include
+	CFLAGS += -I _build/lib-gtest
+	SRCS += _build/lib-gtest/src/gtest.cc
+	SRCS += _build/lib-gtest/src/gtest-death-test.cc
+	SRCS += _build/lib-gtest/src/gtest-filepath.cc
+	SRCS += _build/lib-gtest/src/gtest-port.cc
+	SRCS += _build/lib-gtest/src/gtest-printers.cc
+	SRCS += _build/lib-gtest/src/gtest-test-part.cc
+	SRCS += _build/lib-gtest/src/gtest-typed-test.cc
+	SRCS += Build/SaveLoadGame_unittest.cc
+	SRCS += Build/Tactical/LoadSaveMercProfile_unittest.cc
+	SRCS += Build/VanillaDataStructures_unittest.cc
+	SRCS += sgp/FileMan_unittest.cc
+	SRCS += sgp/LoadSaveData_unittest.cc
+	SRCS += sgp/UTF8String_unittest.cc
+	SRCS += sgp/wchar_unittest.cc
+	SRCS += src/DefaultContentManagerUT.cc
+	SRCS += src/DefaultContentManager_unittests.cc
+	SRCS += src/JsonUtility_unittests.cc
+	SRCS += src/VanillaWeapons_unittests.cc
+	SRCS += src/TestUtils.cc
 endif
 
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o) $(SRCS:.cpp=.o))
@@ -662,9 +665,9 @@ fix-permissions:
 
 WIN_RELEASE_BASE_DIR := "release-win-mingw-cross"
 ifdef BETA
-WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win-beta"
+	WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win-beta"
 else
-WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win"
+	WIN_RELEASE_NAME := "ja2-$(GAME_VERSION)-win"
 endif
 WIN_RELEASE := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME)
 WIN_RELEASE_ZIP := $(WIN_RELEASE_BASE_DIR)/$(WIN_RELEASE_NAME).zip
@@ -679,11 +682,13 @@ SRC_RELEASE_BASE_DIR := "release-src"
 build-beta-win-release-on-linux:
 	make BETA=1 build-win-release-on-linux
 
-# sudo apt-get install gcc-mingw-w64 g++-mingw-w64
+# build windows release on linux. Make sure to have installed:
+# gcc-mingw-w64 g++-mingw-w64
 build-win-release-on-linux:
 	-rm -rf $(WIN_RELEASE) $(WIN_RELEASE_ZIP)
 	mkdir -p $(WIN_RELEASE)
-	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITH_LPTHREAD=0
+	make clean LOCAL_BOOST_LIB=1
+	make USE_MINGW=1 MINGW_PREFIX=i686-w64-mingw32 LOCAL_BOOST_LIB=1 LOCAL_SDL_LIB=_build/lib-SDL-devel-1.2.15-mingw32 WITH_LPTHREAD=0
 	mv ./ja2 $(WIN_RELEASE)/ja2.exe
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll $(WIN_RELEASE)
 	cp _build/distr-files-win/*.bat $(WIN_RELEASE)
@@ -704,6 +709,7 @@ MACOS_SDL_STATIC=./_build/lib-SDL-devel-1.2.15-macos-i386
 MACOS_STATIC_CFLAGS_SDL=-arch i386 -mmacosx-version-min=10.5 -I$(MACOS_SDL_STATIC)/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 MACOS_STATIC_LDFLAGS_SDL=$(MACOS_SDL_STATIC)/lib/libSDLmain.a $(MACOS_SDL_STATIC)/lib/libSDL.a  -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit
 build-release-on-mac:
+	make clean LOCAL_BOOST_LIB=1
 	-rm -rf $(MAC_RELEASE) $(MAC_RELEASE_ZIP)
 	mkdir -p $(MAC_RELEASE)
 	make "CFLAGS_SDL=$(MACOS_STATIC_CFLAGS_SDL)" "LDFLAGS_SDL=$(MACOS_STATIC_LDFLAGS_SDL)"
@@ -726,6 +732,7 @@ build-on-win:
 	cp _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll .
 
 SOURCE_DIR_NAME := ja2-stracciatella_$(VERSION)
+
 build-source-archive:
 	mkdir -p $(SRC_RELEASE_BASE_DIR)
 	git archive HEAD --prefix=$(SOURCE_DIR_NAME)/ | gzip >$(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz
@@ -734,6 +741,7 @@ DEB_PKG_BUILD_FOLDER ?= _deb
 
 # sudo apt-get install pbuilder
 build-debian-package: build-source-archive
+	make clean
 	-rm -rf $(DEB_PKG_BUILD_FOLDER)
 	mkdir $(DEB_PKG_BUILD_FOLDER)
 	cp $(SRC_RELEASE_BASE_DIR)/$(SOURCE_DIR_NAME).tar.gz $(DEB_PKG_BUILD_FOLDER)/$(SOURCE_DIR_NAME).orig.tar.gz
@@ -749,27 +757,27 @@ build-debian-package: build-source-archive
 # Build Debian packages and the Windows release in
 # a totally controlled environment using Vagrant (http://www.vagrantup.com)
 build-releases:
-	$(MAKE) build-deb-package-on-u1204_i386
-	$(MAKE) build-deb-package-on-u1204_amd64
-	$(MAKE) build-win-release-on-u1204_amd64_win
+	$(MAKE) build-deb-package-on-u1404_amd64
+	$(MAKE) build-deb-package-on-u1404_amd64
+	$(MAKE) build-win-release-on-u1404_amd64_win
 
-build-deb-package-on-u1204_i386:
+build-deb-package-on-u1404_amd64:
 	$(MAKE) clean
-	cd _build/buildboxes/u1204_i386 && vagrant up
-	cd _build/buildboxes/u1204_i386 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
-	cd _build/buildboxes/u1204_i386 && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1404_amd64 && vagrant up
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	cd _build/buildboxes/u1404_amd64 && vagrant halt
 
-build-deb-package-on-u1204_amd64:
+build-deb-package-on-u1404_amd64:
 	$(MAKE) clean
-	cd _build/buildboxes/u1204_amd64 && vagrant up
-	cd _build/buildboxes/u1204_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
-	cd _build/buildboxes/u1204_amd64 && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1404_amd64 && vagrant up
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-debian-package DEB_PKG_BUILD_FOLDER=/home/vagrant/_deb_build_folder"
+	cd _build/buildboxes/u1404_amd64 && vagrant halt
 
-build-win-release-on-u1204_amd64_win:
+build-win-release-on-u1404_amd64_win:
 	$(MAKE) clean
-	cd _build/buildboxes/u1204_amd64_win && vagrant up
-	cd _build/buildboxes/u1204_amd64_win && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
-	cd _build/buildboxes/u1204_amd64_win && vagrant ssh -c "sudo shutdown -h now"
+	cd _build/buildboxes/u1404_amd64 && vagrant up
+	cd _build/buildboxes/u1404_amd64 && vagrant ssh -c "make -C /home/vagrant/strac build-win-release-on-linux"
+	cd _build/buildboxes/u1404_amd64 && vagrant halt
 
 # Check compilation on different operation systems
 check-compilation:
