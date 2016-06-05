@@ -1,7 +1,12 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
+
 project (ja2-stracciatella)
 set(BINARY "ja2")
-set(VERSION "0.15.x")
+
+SET(ja2-stracciatella_VERSION_MAJOR "0")
+SET(ja2-stracciatella_VERSION_MINOR "15")
+SET(ja2-stracciatella_VERSION_PATCH "x")
+set(VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
 set(GAME_VERSION "v${VERSION}")
 
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
@@ -500,10 +505,37 @@ add_custom_command(TARGET ${BINARY} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/externalized $<TARGET_FILE_DIR:${BINARY}>)
 
-if (INSTALLABLE)
+SET(CPACK_PACKAGE_VERSION_MAJOR ${ja2-stracciatella_VERSION_MAJOR})
+SET(CPACK_PACKAGE_VERSION_MINOR ${ja2-stracciatella_VERSION_MINOR})
+SET(CPACK_PACKAGE_VERSION_PATCH ${ja2-stracciatella_VERSION_PATCH})
+INCLUDE(CPack)
+
+if (UNIX AND NOT MINGW)
     INSTALL(TARGETS ${BINARY} RUNTIME DESTINATION bin)
     INSTALL(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
     INSTALL(FILES _build/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     INSTALL(FILES _build/icons/logo.svg DESTINATION share/icons/$(ICON_THEME)/scalable/apps/ja2-stracciatella.svg)
     INSTALL(FILES ja2_manpage DESTINATION share/man/man6/ja2.6)
+else()
+    INSTALL(TARGETS ${BINARY} RUNTIME DESTINATION .)
+    INSTALL(DIRECTORY externalized mods _unittests DESTINATION .)
+    INSTALL(FILES changes.md DESTINATION .)
+endif()
+
+if (MINGW)
+    file(GLOB WIN_MINGW_DIST_DLLS "_build/distr-files-win-mingw/*.dll")
+    INSTALL(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
+endif()
+
+if(WIN32 OR MINGW)
+    file(GLOB WIN_DIST_FILES "_build/distr-files-win/*")
+    INSTALL(FILES ${WIN_DIST_FILES} DESTINATION .)
+    INSTALL(FILES _build/icons/logo.ico DESTINATION .)
+    INSTALL(FILES _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll DESTINATION .)
+endif()
+
+if(APPLE)
+    file(GLOB APPLE_DIST_FILES "_build/distr-files-mac/*")
+    INSTALL(FILES ${APPLE_DIST_FILES} DESTINATION .)
+    INSTALL(FILES _build/icons/logo.icns DESTINATION .)
 endif()
