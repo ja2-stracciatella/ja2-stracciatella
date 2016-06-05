@@ -10,15 +10,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "ubuntu/trusty32"
 
-  config.vm.provision :shell, :path => "bootstrap.sh"
+  config.vm.provision :shell, :path => "../common/ubuntu-bootstrap.sh"
 
   config.vm.synced_folder "../../..", "/home/vagrant/strac"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "strac_buildbox_u1204_i386"
     vb.cpus = 2
   #   vb.gui = true
     vb.customize ["modifyvm", :id, "--memory", "512"]
+  end
+
+  config.vm.define "i386" do |i386|
   end
 
 end

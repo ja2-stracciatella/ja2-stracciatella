@@ -18,7 +18,7 @@ ja2-last-strac
 ja2-mod-*.bat
 JA2-Stracciatella
 ja2.log
-release-*
+releases
 SDL.dll
 stderr.txt
 stdout.txt

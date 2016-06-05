@@ -3,10 +3,10 @@
 apt-get update
 
 # Build dependencies
-apt-get install -y make gcc g++
+apt-get install -y cmake make gcc g++
 apt-get install -y libsdl1.2-dev libboost-all-dev
 
-# Deb Paackage
+# Deb Package
 apt-get install -y git pbuilder debhelper
 
 # Windows Cross-Compilation

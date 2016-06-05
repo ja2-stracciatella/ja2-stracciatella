@@ -1,13 +1,23 @@
 cmake_minimum_required (VERSION 2.8)
 
+## Project Setup
+
 project (ja2-stracciatella)
 set(BINARY "ja2")
+
+## Versioning
 
 SET(ja2-stracciatella_VERSION_MAJOR "0")
 SET(ja2-stracciatella_VERSION_MINOR "15")
 SET(ja2-stracciatella_VERSION_PATCH "x")
-set(VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
-set(GAME_VERSION "v${VERSION}")
+set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
+set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
+
+## Meta Information
+set(CONTACT "JA2 Stracciatella Team <no-email@ja2-stracciatella.github.io>")
+set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime.")
+
+## Options
 
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
@@ -17,12 +27,14 @@ option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 option(INSTALLABLE "Should this build be installable" OFF)
 
+## Build
+
 set(CFLAGS "${CFLAGS} -DJA2 -DGAME_VERSION=\\\"${GAME_VERSION}\\\" -DMICROINI_STATIC")
 
 if (EXTRA_DATA_DIR STREQUAL "")
     set(CFLAGS "${CFLAGS} -DEXTRA_DATA_DIR=\\\"\\\"")
 else()
-    MESSAGE( STATUS "Setting extra data dir to" ${EXTRA_DATA_DIR})
+    MESSAGE( STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
     set(CFLAGS "${CFLAGS} -DEXTRA_DATA_DIR=\\\"${EXTRA_DATA_DIR}\\\"")
 endif()
 
@@ -503,11 +515,42 @@ add_executable(${BINARY} ${SOURCES})
 target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES})
 add_custom_command(TARGET ${BINARY} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/externalized $<TARGET_FILE_DIR:${BINARY}>)
+        ${CMAKE_SOURCE_DIR}/externalized "$<TARGET_FILE_DIR:${BINARY}>/externalized")
+add_custom_command(TARGET ${BINARY} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/_unittests "$<TARGET_FILE_DIR:${BINARY}>/_unittests")
+add_custom_command(TARGET ${BINARY} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/mods "$<TARGET_FILE_DIR:${BINARY}>/mods")
+
+## Installing and Packaging
 
 SET(CPACK_PACKAGE_VERSION_MAJOR ${ja2-stracciatella_VERSION_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${ja2-stracciatella_VERSION_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${ja2-stracciatella_VERSION_PATCH})
+SET(CPACK_PACKAGE_VERSION ${ja2-stracciatella_VERSION})
+SET(CPACK_PACKAGE_CONTACT ${CONTACT})
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
+
+SET(CPACK_DEBIAN_PACKAGE_SECTION "games")
+SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
+SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+if(UNIX AND NOT MINGW)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(PACKAGE_ARCH "amd64")
+    else()
+        set(PACKAGE_ARCH "i386")
+    endif()
+elseif(MINGW)
+    SET(PACKAGE_ARCH "win-mingw")
+elseif(APPLE)
+    SET(PACKAGE_ARCH "macos")
+else()
+    SET(PACKAGE_ARCH "unknown")
+endif()
+SET(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}")
+
 INCLUDE(CPack)
 
 if (UNIX AND NOT MINGW)
@@ -539,3 +582,25 @@ if(APPLE)
     INSTALL(FILES ${APPLE_DIST_FILES} DESTINATION .)
     INSTALL(FILES _build/icons/logo.icns DESTINATION .)
 endif()
+
+## Release building
+
+add_custom_target(build-deb-package-on-u1404_amd64)
+add_custom_command(TARGET build-deb-package-on-u1404_amd64
+        COMMAND vagrant up amd64 && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB'" amd64 && vagrant halt amd64
+        WORKING_DIRECTORY ${ja2-stracciatella_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
+
+add_custom_target(build-deb-package-on-u1404_i386)
+add_custom_command(TARGET build-deb-package-on-u1404_i386
+        COMMAND vagrant up i386 && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB'" i386 && vagrant halt i386
+        WORKING_DIRECTORY ${ja2-stracciatella_SOURCE_DIR}/_build/buildboxes/u1404_i386)
+
+add_custom_target(build-win-release-on-u1404_amd64)
+add_custom_command(TARGET build-win-release-on-u1404_amd64
+        COMMAND vagrant up win && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP'" win && vagrant halt win
+        WORKING_DIRECTORY ${ja2-stracciatella_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
+
+add_custom_target(build-releases)
+ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_amd64)
+ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_i386)
+ADD_DEPENDENCIES(build-releases build-win-release-on-u1404_amd64)

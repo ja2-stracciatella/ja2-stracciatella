@@ -12,10 +12,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "../../..", "/home/vagrant/strac"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "strac_buildbox_u1404_amd64"
     vb.cpus = 2
   #   vb.gui = true
     vb.customize ["modifyvm", :id, "--memory", "512"]
+  end
+
+  config.vm.define "amd64" do |amd64|
+  end
+
+  config.vm.define "win" do |win|
   end
 
 end
