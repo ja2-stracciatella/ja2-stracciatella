@@ -5,8 +5,6 @@
 #	define BROKEN_SWPRINTF
 #endif
 
-#include "../ja2config.h"
-
 #if defined BROKEN_SWPRINTF
 #	include <locale.h>
 #endif
