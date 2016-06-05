@@ -10,6 +10,7 @@ option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
+option(INSTALLABLE "Should this build be installable" OFF)
 
 set(CFLAGS "${CFLAGS} -DJA2 -DGAME_VERSION=\\\"${GAME_VERSION}\\\" -DMICROINI_STATIC")
 
@@ -460,6 +461,7 @@ if (LOCAL_BOOST_LIB)
         _build/lib-boost/libs/filesystem/src/windows_file_codecvt.cpp
     )
 endif()
+
 if (WITH_UNITTESTS)
     MESSAGE(STATUS "Compiling with unittests" )
 
@@ -497,3 +499,11 @@ target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES})
 add_custom_command(TARGET ${BINARY} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/externalized $<TARGET_FILE_DIR:${BINARY}>)
+
+if (INSTALLABLE)
+    INSTALL(TARGETS ${BINARY} RUNTIME DESTINATION bin)
+    INSTALL(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
+    INSTALL(FILES _build/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
+    INSTALL(FILES _build/icons/logo.svg DESTINATION share/icons/$(ICON_THEME)/scalable/apps/ja2-stracciatella.svg)
+    INSTALL(FILES ja2_manpage DESTINATION share/man/man6/ja2.6)
+endif()
