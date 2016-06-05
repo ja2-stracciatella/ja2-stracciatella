@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
-project (JA2_STRACCIATELLA)
+project (ja2-stracciatella)
 set(BINARY "ja2")
 set(VERSION "0.15.x")
 set(GAME_VERSION "v${VERSION}")
@@ -37,40 +37,40 @@ if (WITH_SOUND_DEBUG)
 endif()
 
 if (NOT (LOCAL_SDL_LIB STREQUAL ""))
-    MESSAGE( STATUS "Using local SDL from " "${JA2_STRACCIATELLA_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-    set(CMAKE_PREFIX_PATH "${JA2_STRACCIATELLA_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    MESSAGE( STATUS "Using local SDL from " "${ja2-stracciatella_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    set(CMAKE_PREFIX_PATH "${ja2-stracciatella_SOURCE_DIR}/${LOCAL_SDL_LIB}")
 endif()
 find_package(SDL REQUIRED)
 
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
 else()
-    MESSAGE(STATUS "Compiling with local Boost libraries from ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-boost" )
-    set(Boost_INCLUDE_DIRS "${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-boost")
+    MESSAGE(STATUS "Compiling with local Boost libraries from ${ja2-stracciatella_SOURCE_DIR}/_build/lib-boost" )
+    set(Boost_INCLUDE_DIRS "${ja2-stracciatella_SOURCE_DIR}/_build/lib-boost")
     set(Boost_LIBRARIES "")
 endif()
 
 include_directories(
-    ${JA2_STRACCIATELLA_SOURCE_DIR}
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/Editor
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/Laptop
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/Res
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/Strategic
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/Tactical
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/TacticalAI
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/TileEngine
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/Build/Utils
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/sgp
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/src
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/src/content
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/src/internals
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/src/policy
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-MicroIni/include
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-rapidjson
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-slog
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-smacker/libsmacker
-    ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-utf8cpp/source
+    ${ja2-stracciatella_SOURCE_DIR}
+    ${ja2-stracciatella_SOURCE_DIR}/Build
+    ${ja2-stracciatella_SOURCE_DIR}/Build/Editor
+    ${ja2-stracciatella_SOURCE_DIR}/Build/Laptop
+    ${ja2-stracciatella_SOURCE_DIR}/Build/Res
+    ${ja2-stracciatella_SOURCE_DIR}/Build/Strategic
+    ${ja2-stracciatella_SOURCE_DIR}/Build/Tactical
+    ${ja2-stracciatella_SOURCE_DIR}/Build/TacticalAI
+    ${ja2-stracciatella_SOURCE_DIR}/Build/TileEngine
+    ${ja2-stracciatella_SOURCE_DIR}/Build/Utils
+    ${ja2-stracciatella_SOURCE_DIR}/sgp
+    ${ja2-stracciatella_SOURCE_DIR}/src
+    ${ja2-stracciatella_SOURCE_DIR}/src/content
+    ${ja2-stracciatella_SOURCE_DIR}/src/internals
+    ${ja2-stracciatella_SOURCE_DIR}/src/policy
+    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-MicroIni/include
+    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-rapidjson
+    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-slog
+    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-smacker/libsmacker
+    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-utf8cpp/source
     ${SDL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
@@ -467,8 +467,8 @@ if (WITH_UNITTESTS)
 
     set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
     include_directories(
-        ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-gtest/include
-        ${JA2_STRACCIATELLA_SOURCE_DIR}/_build/lib-gtest
+        ${ja2-stracciatella_SOURCE_DIR}/_build/lib-gtest/include
+        ${ja2-stracciatella_SOURCE_DIR}/_build/lib-gtest
     )
     LIST(APPEND SOURCES
         _build/lib-gtest/src/gtest.cc
