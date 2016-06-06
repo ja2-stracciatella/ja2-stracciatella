@@ -410,7 +410,7 @@ static void RenderTacticalPlacementGUI()
 		UINT16 const hatch_colour =
 			DayTime() ? 0 :                     // 6AM to 9PM is black
 			Get16BPPColor(FROMRGB(63, 31, 31)); // 9PM to 6AM is gray (black is too dark to distinguish)
-		SGPRect clip = { STD_SCREEN_X + 4, STD_SCREEN_Y + 4, STD_SCREEN_X + 636, STD_SCREEN_Y + 320 };
+		SGPRect clip = { (UINT16)(STD_SCREEN_X + 4), (UINT16)(STD_SCREEN_Y + 4), (UINT16)(STD_SCREEN_X + 636), (UINT16)(STD_SCREEN_Y + 320) };
 		if (gbCursorMercID == -1)
 		{
 			if (gfNorth) clip.iTop    = STD_SCREEN_Y +  30;
@@ -944,7 +944,7 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 
 					if( fInvalidArea )
 					{ //Report error due to invalid placement.
-						SGPBox const CenterRect = { STD_SCREEN_X + 220, STD_SCREEN_Y + 120, 200, 80 };
+						SGPBox const CenterRect = { (UINT16) (STD_SCREEN_X + 220), (UINT16) (STD_SCREEN_Y + 120), 200, 80 };
 						DoMessageBox(MSG_BOX_BASIC_STYLE, gpStrategicString[STR_TP_INACCESSIBLE_MESSAGE], guiCurrentScreen, MSG_BOX_FLAG_OK, DialogRemoved, &CenterRect);
 					}
 					else
@@ -958,7 +958,7 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 		{ //not a valid cursor location...
 			if( gbCursorMercID != - 1 )
 			{
-				SGPBox const CenterRect = { STD_SCREEN_X + 220, STD_SCREEN_Y + 120, 200, 80 };
+				SGPBox const CenterRect = { (UINT16) (STD_SCREEN_X + 220), (UINT16) (STD_SCREEN_Y + 120), 200, 80 };
 				DoMessageBox(MSG_BOX_BASIC_STYLE, gpStrategicString[STR_TP_INVALID_MESSAGE], guiCurrentScreen, MSG_BOX_FLAG_OK, DialogRemoved, &CenterRect);
 			}
 		}

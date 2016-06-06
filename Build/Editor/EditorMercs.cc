@@ -2079,7 +2079,7 @@ void DeleteSelectedMercsItem()
 // NOTE:  Step one can be skipped (when selecting an existing merc).  By setting the
 static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 {
-	INT32 iDstWidth, iDstHeight;
+	UINT16 uDstWidth, uDstHeight;
 	float rScalar, rWidthScalar, rHeightScalar;
 	BOOLEAN fUnDroppable;
 
@@ -2142,8 +2142,8 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	SGPVSurface* const uiDstID = guiMercInvPanelBuffers[gbCurrSelect];
 
 	//build the rects
-	iDstWidth = gbCurrSelect < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH;
-	iDstHeight = MERCINV_SLOT_HEIGHT;
+	uDstWidth = gbCurrSelect < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH;
+	uDstHeight = MERCINV_SLOT_HEIGHT;
 	SGPRect	SrcRect;
 	SGPRect DstRect;
 	SrcRect.iLeft = 0;
@@ -2152,8 +2152,8 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	SrcRect.iBottom = 25;
 	DstRect.iLeft = 0;
 	DstRect.iTop = 0;
-	DstRect.iRight = iDstWidth;
-	DstRect.iBottom = iDstHeight;
+	DstRect.iRight = uDstWidth;
+	DstRect.iBottom = uDstHeight;
 
 	//clear both buffers (fill with black to erase previous graphic)
 	ColorFillVideoSurfaceArea( uiSrcID, SrcRect.iLeft, SrcRect.iTop, SrcRect.iRight, SrcRect.iBottom, 0 );
@@ -2170,29 +2170,29 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 
 	//crop the source image
 	ETRLEObject const& pObject    = vo.SubregionProperties(item->getGraphicNum());
-	INT32       const  iSrcWidth  = pObject.usWidth;
-	INT32       const  iSrcHeight = pObject.usHeight;
+	UINT16      const  uSrcWidth  = pObject.usWidth;
+	UINT16      const  uSrcHeight = pObject.usHeight;
 	SGPBox      const  src_rect   =
 	{
-		SrcRect.iLeft +	pObject.sOffsetX,
-		SrcRect.iTop  +	pObject.sOffsetY,
-		iSrcWidth,
-		iSrcHeight
+		(UINT16)(SrcRect.iLeft +	pObject.sOffsetX),
+		(UINT16)(SrcRect.iTop  +	pObject.sOffsetY),
+		uSrcWidth,
+		uSrcHeight
 	};
 
 	//if the source image width is less than 30 (small slot), then modify the DstRect.
-	if( iSrcWidth < 30 )
-		iDstWidth = MERCINV_SMSLOT_WIDTH;
+	if( uSrcWidth < 30 )
+		uDstWidth = MERCINV_SMSLOT_WIDTH;
 	else
-		iDstWidth = MERCINV_LGSLOT_WIDTH;
+		uDstWidth = MERCINV_LGSLOT_WIDTH;
 
 	//compare the sizes of the cropped image to the destination buffer size, and calculate the
 	//scalar value.  It is possible to have scalars > 1.0, in which case, we change it to 1.0 and
 	//use the other value.
-	rWidthScalar =  (float)iDstWidth/(float)iSrcWidth;
+	rWidthScalar =  (float)uDstWidth/(float)uSrcWidth;
 	if( rWidthScalar > 1.0 )
 		rWidthScalar = 1.0;
-	rHeightScalar = (float)iDstHeight/(float)iSrcHeight;
+	rHeightScalar = (float)uDstHeight/(float)uSrcHeight;
 	if( rHeightScalar > 1.0 )
 		rHeightScalar = 1.0;
 
@@ -2205,24 +2205,24 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 		rScalar = MAX( rWidthScalar, rHeightScalar );
 
 	//apply the scalar to the destination width and height
-	iDstWidth = (INT32)( iSrcWidth * rScalar );
-	iDstHeight = (INT32)( iSrcHeight * rScalar );
+	uDstWidth = (UINT16)( uSrcWidth * rScalar );
+	uDstHeight = (UINT16)( uSrcHeight * rScalar );
 
 	//sometimes it is possible to scale too big, so clip if applicable
-	if( iDstWidth > MERCINV_LGSLOT_WIDTH )
-		iDstWidth = MERCINV_LGSLOT_WIDTH;
-	else if( gbCurrSelect < 3 && iDstWidth > MERCINV_SMSLOT_WIDTH )
-		iDstWidth = MERCINV_SMSLOT_WIDTH;
-	if( iDstHeight > MERCINV_SLOT_HEIGHT )
-		iDstHeight = MERCINV_SLOT_HEIGHT;
+	if( uDstWidth > MERCINV_LGSLOT_WIDTH )
+		uDstWidth = MERCINV_LGSLOT_WIDTH;
+	else if( gbCurrSelect < 3 && uDstWidth > MERCINV_SMSLOT_WIDTH )
+		uDstWidth = MERCINV_SMSLOT_WIDTH;
+	if( uDstHeight > MERCINV_SLOT_HEIGHT )
+		uDstHeight = MERCINV_SLOT_HEIGHT;
 
 	//use the new width and height values to calculate the new dest rect (center the item)
 	SGPBox const dst_rect =
 	{
-		(DstRect.iRight  - DstRect.iLeft - iDstWidth)  / 2,
-		(DstRect.iBottom - DstRect.iTop  - iDstHeight) / 2,
-		iDstWidth,
-		iDstHeight
+		(UINT16)((DstRect.iRight  - DstRect.iLeft - uDstWidth)  / 2),
+		(UINT16)((DstRect.iBottom - DstRect.iTop  - uDstHeight) / 2),
+		uDstWidth,
+		uDstHeight
 	};
 
 	//scale the item down to the smaller buffer.

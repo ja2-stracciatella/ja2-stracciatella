@@ -384,7 +384,7 @@ static void RenderAutoResolve(void);
 static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 {
 	UINT32 uiStartTime, uiCurrTime;
-	INT32 iPercentage, iFactor;
+	UINT16 uPercentage, uFactor;
 	UINT32 uiTimeRange;
 
 	PauseTime( FALSE );
@@ -392,18 +392,18 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	gpAR->fShowInterface = TRUE;
 
 	uiTimeRange = 1000;
-	iPercentage = 0;
+	uPercentage = 0;
 	uiStartTime = GetClock();
 
-	INT32 const x = gpAR->rect.x;
-	INT32 const y = gpAR->rect.y;
-	INT32 const w = gpAR->rect.w;
-	INT32 const h = gpAR->rect.h;
+	UINT16 const x = gpAR->rect.x;
+	UINT16 const y = gpAR->rect.y;
+	UINT16 const w = gpAR->rect.w;
+	UINT16 const h = gpAR->rect.h;
 
-	INT16 const sStartLeft = 59;
-	INT16 const sStartTop  = 69;
-	INT16 const sEndLeft   = x + w / 2;
-	INT16 const sEndTop    = y + h / 2;
+	UINT16 const uStartLeft = 59;
+	UINT16 const uStartTop  = 69;
+	UINT16 const uEndLeft   = x + w / 2;
+	UINT16 const uEndTop    = y + h / 2;
 
 	//save the prebattle/mapscreen interface background
 	BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
@@ -419,29 +419,29 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, x, y, w, h);
 
 	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
-	while( iPercentage < 100  )
+	while( uPercentage < 100  )
 	{
 		uiCurrTime = GetClock();
-		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-		iPercentage = MIN( iPercentage, 100 );
+		uPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
+		uPercentage = MIN( uPercentage, 100 );
 
 		//Factor the percentage so that it is modified by a gravity falling acceleration effect.
-		iFactor = (iPercentage - 50) * 2;
-		if( iPercentage < 50 )
-			iPercentage = (UINT32)(iPercentage + iPercentage * iFactor * 0.01 + 0.5);
+		uFactor = (uPercentage - 50) * 2;
+		if( uPercentage < 50 )
+			uPercentage = (UINT16)(uPercentage + uPercentage * uFactor * 0.01 + 0.5);
 		else
-			iPercentage = (UINT32)(iPercentage + (100-iPercentage) * iFactor * 0.01 + 0.05);
+			uPercentage = (UINT16)(uPercentage + (100-uPercentage) * uFactor * 0.01 + 0.05);
 
 		//Calculate the center point.
-		INT32 const iLeft = sStartLeft + (sEndLeft - sStartLeft + 1) * iPercentage / 100;
-		INT32 const iTop  = sStartTop  + (sEndTop  - sStartTop  + 1) * iPercentage / 100;
+		UINT16 const uLeft = uStartLeft + (uEndLeft - uStartLeft + 1) * uPercentage / 100;
+		UINT16 const uTop  = uStartTop  + (uEndTop  - uStartTop  + 1) * uPercentage / 100;
 
 		SGPBox const DstRect =
 		{
-			iLeft - w * iPercentage / 200,
-			iTop  - h * iPercentage / 200,
-			MAX(1, w * iPercentage / 100),
-			MAX(1, h * iPercentage / 100)
+			(UINT16)(uLeft - w * uPercentage / 200),
+			(UINT16)(uTop  - h * uPercentage / 200),
+			(UINT16)(MAX(1, w * uPercentage / 100)),
+			(UINT16)(MAX(1, h * uPercentage / 100))
 		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &gpAR->rect, &DstRect);
@@ -2682,8 +2682,8 @@ static void HandleAutoResolveInput(void)
 
 static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 {
-	INT32 cnt, cntStart;
-	INT32 xp, yp;
+	UINT8 cnt, cntStart;
+	UINT16 xp, yp;
 	const wchar_t *pStr;
 	wchar_t str[20];
 	UINT16 usColor;
@@ -2692,7 +2692,9 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	//Restore the background before drawing text.
 	xp = pCell->xp +  2;
 	yp = pCell->yp + 32;
-	SGPBox const r = { xp - gpAR->rect.x, yp - gpAR->rect.y, 46, 10 };
+	SGPBox const r = {  (UINT16)(xp - gpAR->rect.x),
+											(UINT16)(yp - gpAR->rect.y),
+											46, 10 };
 	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, xp, yp, &r);
 
 	if( pCell->pSoldier->bLife )

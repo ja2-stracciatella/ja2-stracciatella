@@ -300,7 +300,7 @@ static BOOLEAN fHardDriveLightOn = FALSE;
 static BOOLEAN fFlickerHD = FALSE;
 
 // the screens limiting rect
-static const SGPRect LaptopScreenRect = { LAPTOP_UL_X, LAPTOP_UL_Y - 5, LAPTOP_SCREEN_LR_X + 2, LAPTOP_SCREEN_LR_Y + 5 + 19 };
+static const SGPRect LaptopScreenRect = { LAPTOP_UL_X, (UINT16)(LAPTOP_UL_Y - 5), (UINT16)(LAPTOP_SCREEN_LR_X + 2), (UINT16)(LAPTOP_SCREEN_LR_Y + 5 + 19) };
 
 
 // the sub pages vistsed or not status within the web browser
@@ -1067,12 +1067,12 @@ ScreenID LaptopScreenHandle()
 			{
 				iScalePercentage = 5333;
 			}
-			const INT32 iWidth  = 12 * iScalePercentage / 100;
-			const INT32 iHeight =  9 * iScalePercentage / 100;
-			const INT32 iX      = 472 - (472 - 320) * iScalePercentage / 5333;
-			const INT32 iY      = 424 - (424 - 240) * iScalePercentage / 5333;
+			const UINT16 uWidth  = 12 * iScalePercentage / 100;
+			const UINT16 uHeight =  9 * iScalePercentage / 100;
+			const UINT16 uX      = 472 - (472 - 320) * iScalePercentage / 5333;
+			const UINT16 uY      = 424 - (424 - 240) * iScalePercentage / 5333;
 
-			SGPBox const SrcRect2 = { STD_SCREEN_X + iX - iWidth / 2, STD_SCREEN_Y + iY - iHeight / 2, iWidth, iHeight };
+			SGPBox const SrcRect2 = { (UINT16)(STD_SCREEN_X + uX - uWidth / 2), (UINT16)(STD_SCREEN_Y + uY - uHeight / 2), uWidth, uHeight };
 
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 			InvalidateScreen();
@@ -1451,12 +1451,12 @@ static void LeaveLapTopScreen(void)
 				{
 					iScalePercentage = 5333;
 				}
-				const INT32 iWidth  = 12 * iScalePercentage / 100;
-				const INT32 iHeight =  9 * iScalePercentage / 100;
-				const INT32 iX = 472 - (472 - 320) * iScalePercentage / 5333;
-				const INT32 iY = 424 - (424 - 240) * iScalePercentage / 5333;
+				const UINT16 uWidth  = 12 * iScalePercentage / 100;
+				const UINT16 uHeight =  9 * iScalePercentage / 100;
+				const UINT16 uX = 472 - (472 - 320) * iScalePercentage / 5333;
+				const UINT16 uY = 424 - (424 - 240) * iScalePercentage / 5333;
 
-				SGPBox const SrcRect2 = { STD_SCREEN_X + iX - iWidth / 2, STD_SCREEN_Y + iY - iHeight / 2, iWidth, iHeight };
+				SGPBox const SrcRect2 = { (UINT16)(STD_SCREEN_X + uX - uWidth / 2), (UINT16)(STD_SCREEN_Y + uY - uHeight / 2), uWidth, uHeight };
 
 				BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 				InvalidateScreen();

@@ -137,13 +137,13 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	// Determine position (centered in rect)
 	if (centering_rect)
 	{
-		gMsgBox.sX = centering_rect->x + (centering_rect->w  - usTextBoxWidth)  / 2;
-		gMsgBox.sY = centering_rect->y + (centering_rect->h  - usTextBoxHeight) / 2;
+		gMsgBox.uX = centering_rect->x + (centering_rect->w  - usTextBoxWidth)  / 2;
+		gMsgBox.uY = centering_rect->y + (centering_rect->h  - usTextBoxHeight) / 2;
 	}
 	else
 	{
-		gMsgBox.sX = (SCREEN_WIDTH  - usTextBoxWidth)  / 2;
-		gMsgBox.sY = (SCREEN_HEIGHT - usTextBoxHeight) / 2;
+		gMsgBox.uX = (SCREEN_WIDTH  - usTextBoxWidth)  / 2;
+		gMsgBox.uY = (SCREEN_HEIGHT - usTextBoxHeight) / 2;
 	}
 
 	if (guiCurrentScreen == GAME_SCREEN)
@@ -165,7 +165,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, PIXEL_DEPTH);
 
   //Save what we have under here...
-	SGPBox const r = { gMsgBox.sX, gMsgBox.sY, usTextBoxWidth, usTextBoxHeight };
+	SGPBox const r = { gMsgBox.uX, gMsgBox.uY, usTextBoxWidth, usTextBoxHeight };
 	BltVideoSurface(gMsgBox.uiSaveBuffer, FRAME_BUFFER, 0, 0, &r);
 
 	UINT16 const cursor = style.cursor;
@@ -174,8 +174,8 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 
 	if (!gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE])
 	{
-		UINT32 x = gMsgBox.sX + usTextBoxWidth / 2;
-		UINT32 y = gMsgBox.sY + usTextBoxHeight - 4;
+		UINT32 x = gMsgBox.uX + usTextBoxWidth / 2;
+		UINT32 y = gMsgBox.uY + usTextBoxHeight - 4;
 		if (usFlags == MSG_BOX_FLAG_OK)
 		{
 			x += 27;
@@ -192,8 +192,8 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 		FreeMouseCursor();
 	}
 
-	INT16       x = gMsgBox.sX;
-	const INT16 y = gMsgBox.sY + usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
+	UINT16       x = gMsgBox.uX;
+	const UINT16 y = gMsgBox.uY + usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
 
 	gMsgBox.iButtonImages = LoadButtonImage(style.btn_image, style.btn_off, style.btn_on);
 
@@ -208,7 +208,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 			const INT16 dx = MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
 			x += (usTextBoxWidth - (MSGBOX_SMALL_BUTTON_WIDTH + dx * 3)) / 2;
 
-			for (UINT i = 0; i < 4; ++i)
+			for (UINT8 i = 0; i < 4; ++i)
 			{
 				wchar_t text[] = { '1' + i, '\0' };
 				GUIButtonRef const btn = MakeButton(text, font_colour, shadow_colour, x + dx * i, y, NumberedMsgBoxCallback, cursor);
@@ -394,8 +394,8 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 	if ((gMsgBox.uiExitScreen != GAME_SCREEN || fRestoreBackgroundForMessageBox) && gfDontOverRideSaveBuffer)
 	{
 		// restore what we have under here...
-		BltVideoSurface(FRAME_BUFFER, gMsgBox.uiSaveBuffer, gMsgBox.sX, gMsgBox.sY, NULL);
-		InvalidateRegion(gMsgBox.sX, gMsgBox.sY, gMsgBox.sX + gMsgBox.usWidth, gMsgBox.sY + gMsgBox.usHeight);
+		BltVideoSurface(FRAME_BUFFER, gMsgBox.uiSaveBuffer, gMsgBox.uX, gMsgBox.uY, NULL);
+		InvalidateRegion(gMsgBox.uX, gMsgBox.uY, gMsgBox.uX + gMsgBox.usWidth, gMsgBox.uY + gMsgBox.usHeight);
 	}
 
 	fRestoreBackgroundForMessageBox = FALSE;
@@ -509,7 +509,7 @@ ScreenID MessageBoxScreenHandle(void)
 				break;
 		}
 
-		RenderMercPopUpBox(gMsgBox.box, gMsgBox.sX, gMsgBox.sY, FRAME_BUFFER);
+		RenderMercPopUpBox(gMsgBox.box, gMsgBox.uX, gMsgBox.uY, FRAME_BUFFER);
 		//gMsgBox.fRenderBox = FALSE;
 		// ATE: Render each frame...
 	}
@@ -597,7 +597,7 @@ void DoScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags
 // a basic box that don't care what screen we came from
 void DoLowerScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	SGPBox const centering_rect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
+	SGPBox const centering_rect = {0, (UINT16)(INV_INTERFACE_START_Y / 2), SCREEN_WIDTH, (UINT16)(INV_INTERFACE_START_Y / 2) };
 	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
 }
 

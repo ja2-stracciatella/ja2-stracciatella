@@ -2296,7 +2296,7 @@ static void AddStringsToMoveBox(PopUpBox*);
 
 static void CreatePopUpBoxForMovementBox(void)
 {
-  SGPPoint const MovePosition = { STD_SCREEN_X + 450, STD_SCREEN_Y + 100 };
+  SGPPoint const MovePosition = { (UINT16)(STD_SCREEN_X + 450), (UINT16)(STD_SCREEN_Y + 100) };
 
 	// create the pop up box and mouse regions for movement list
 	PopUpBox* const box = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);

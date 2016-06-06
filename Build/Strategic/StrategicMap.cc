@@ -340,10 +340,10 @@ void BeginLoadScreen( )
 
 			SGPBox const SrcRect =
 			{
-				536 * iPercentage / 100,
-				367 * iPercentage / 100,
-				SCREEN_WIDTH  - 541 * iPercentage / 100,
-				SCREEN_HEIGHT - 406 * iPercentage / 100
+				(UINT16) (536 * iPercentage / 100),
+				(UINT16) (367 * iPercentage / 100),
+				(UINT16) (SCREEN_WIDTH  - 541 * iPercentage / 100),
+				(UINT16) (SCREEN_HEIGHT - 406 * iPercentage / 100)
 			};
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
 			InvalidateScreen();

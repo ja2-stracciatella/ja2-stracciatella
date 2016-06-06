@@ -185,8 +185,8 @@
 #define     PLAYER_INFO_HAND_END_X      (STD_SCREEN_X + 62)
 #define     PLAYER_INFO_HAND_END_Y      (STD_SCREEN_Y + 103)
 
-#define     INV_BODY_X (STD_SCREEN_X + 71)
-#define     INV_BODY_Y (STD_SCREEN_Y + 116)
+#define     INV_BODY_X (UINT16)(STD_SCREEN_X + 71)
+#define     INV_BODY_Y (UINT16)(STD_SCREEN_Y + 116)
 
 //Text offsets
 #define Y_OFFSET 2
@@ -7233,7 +7233,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0, STD_SCREEN_X + 464, STD_SCREEN_Y + 417);
 				if (!guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->Enabled())
 				{
-					SGPRect area = { STD_SCREEN_X + 463, STD_SCREEN_Y + 417, STD_SCREEN_X + 477, STD_SCREEN_Y + 425 };
+					SGPRect area = { (UINT16)(STD_SCREEN_X + 463), (UINT16)(STD_SCREEN_Y + 417), (UINT16)(STD_SCREEN_X + 477), (UINT16)(STD_SCREEN_Y + 425) };
 
 					SGPVSurface::Lock l(FRAME_BUFFER);
 					Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &area);
