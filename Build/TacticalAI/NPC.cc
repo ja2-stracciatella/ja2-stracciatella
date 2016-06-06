@@ -1146,10 +1146,10 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 
 	pNPCQuoteInfo = &(pNPCQuoteInfoArray[ubQuoteNum]);
 
-	if (ubApproach != NPC_INITIATING_CONV)
+	if (ubApproach != NPC_INITIATING_CONV && ubMerc != NO_PROFILE)
 	{
-		SLOGD(DEBUG_TAG_QUESTS, "\nNew Approach for NPC ID: %d '%ls' against Merc: %d '%ls'\n\
-														\tTesting Record #: %d\n",
+		SLOGD(DEBUG_TAG_QUESTS, "New Approach for NPC ID: %d '%ls' against Merc: %d '%ls'\n\
+														\tTesting Record #: %d",
 					ubNPC, GetProfile(ubNPC).zNickname, ubMerc, GetProfile(ubMerc).zNickname, ubQuoteNum);
 	}
 
