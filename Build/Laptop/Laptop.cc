@@ -3643,7 +3643,7 @@ void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHe
 		case LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_FILE: pRegion = &gNewFileIconRegion; break;
 
 		default:
-			Assert(0);
+			SLOGE(DEBUG_TAG_ASSERTS, "CreateFileAndNewEmailIconFastHelpText: invalid HelpTextID");
 			return;
 	}
 

@@ -344,9 +344,7 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 	// ATE: Send warning if dropping blood nowhere
 	if (gridno == NOWHERE)
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Attempting to drop blood NOWHERE");
-#endif
+		SLOGW(DEBUG_TAG_TILES, "Attempting to drop blood NOWHERE");
 		return;
 	}
 

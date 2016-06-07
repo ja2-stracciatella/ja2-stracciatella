@@ -86,7 +86,7 @@
 #include "Files.h"
 #include "UILayout.h"
 #include "GameRes.h"
-
+#include "slog/slog.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 
@@ -274,10 +274,7 @@ static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIE
 		{
 			gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV);
 		}
-
-#ifdef JA2TESTVERSION
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Cannot initiate conversation menu.. check for face file for ID: %d.", pDestSoldier->ubProfile );
-#endif
+		SLOGD(DEBUG_TAG_INTERFACE, "Cannot initiate conversation menu.. check for face file for ID: %d.", pDestSoldier->ubProfile );
 		throw;
 	}
 
@@ -1116,7 +1113,6 @@ static void CalculatePopupTextOrientation(INT16 sWidth, INT16 sHeight)
 
 	}
 	// If we don't have anything here... our viewport/box is too BIG! ( which should never happen
-	//DebugMsg
 }
 
 
@@ -2148,9 +2144,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Vince or Willis asks about payment? for medical attention
 				if (ubTargetNPC != gpDestSoldier->ubProfile)
 				{
-					#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Inconsistency between HandleNPCDoAction and target profile IDs" );
-					#endif
+					SLOGE(DEBUG_TAG_INTERFACE, "Inconsistency between HandleNPCDoAction and target profile IDs" );
 				}
 				else
 				{
@@ -3996,7 +3990,7 @@ add_log:
 				}
 				break;
 			default:
-				ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"No code support for NPC action %d", usActionCode );
+				SLOGW(DEBUG_TAG_INTERFACE, "No code support for NPC action %d", usActionCode );
 				break;
 		}
 	}

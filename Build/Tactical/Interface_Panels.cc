@@ -71,6 +71,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
 
 // DEFINES FOR VARIOUS PANELS
 #define	SM_ITEMDESC_START_X					214
@@ -913,7 +914,7 @@ try
 }
 catch (...)
 {
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
 	throw;
 }
 
@@ -927,7 +928,7 @@ try
 }
 catch (...)
 {
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
 	throw;
 }
 
@@ -2433,7 +2434,7 @@ try
 }
 catch (...)
 {
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
 	throw;
 }
 

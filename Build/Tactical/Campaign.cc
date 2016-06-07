@@ -26,6 +26,7 @@
 #include "StrategicMap.h"
 #include "Town_Militia.h"
 #include "EMail.h"
+#include "slog/slog.h"
 
 
 #ifdef JA2TESTVERSION
@@ -75,7 +76,7 @@ void StatChange(SOLDIERTYPE& s, StatKind const stat, UINT16 const n_chances, Sta
 
 	if (s.bAssignment == ASSIGNMENT_POW)
 	{
-		ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"ERROR: StatChange: %ls improving stats while POW! stat %d", s.name, stat);
+		SLOGE(DEBUG_TAG_CAMPAIGN, "StatChange: %ls improving stats while POW! stat %d", s.name, stat);
 		return;
 	}
 
@@ -201,8 +202,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
       break;
 
     default:
-			// BETA message
-      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"ERROR: ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
+      SLOGE(DEBUG_TAG_CAMPAIGN, "ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
       return;
   }
 
@@ -371,7 +371,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	if (sSubPointChange != 0)
 	{
 		// debug message
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls's %ls changed by %d", p.zNickname, wDebugStatStrings[ubStat], sSubPointChange);
+		SLOGD(DEBUG_TAG_CAMPAIGN, "%s's %s changed by %d", p.zNickname, wDebugStatStrings[ubStat], sSubPointChange);
 	}
 #endif
 
@@ -1030,8 +1030,7 @@ static UINT16 SubpointsPerPoint(StatKind const ubStat, INT8 const bExpLevel)
       break;
 
     default:
-			// BETA message
-      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"SubpointsPerPoint: ERROR - Unknown ubStat %d", ubStat);
+      SLOGE(DEBUG_TAG_CAMPAIGN, "SubpointsPerPoint: Unknown ubStat %d", ubStat);
       return(100);
   }
 
@@ -1304,7 +1303,7 @@ void HourlyProgressUpdate(void)
 		gStrategicStatus.ubHighestProgress = ubCurrentProgress;
 
 		// debug message
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
+		SLOGD(DEBUG_TAG_CAMPAIGN, "New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
 	}
 }
 

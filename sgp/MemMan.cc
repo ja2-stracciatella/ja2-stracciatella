@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "MemMan.h"
 #include "Debug.h"
+#include "slog/slog.h"
 
 #ifdef JA2
 #	include "MouseSystem.h"
@@ -74,41 +75,13 @@ void ShutdownMemoryManager(void)
 {
 	if (MemDebugCounter != 0)
 	{
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "  >>>>> MEMORY LEAK DETECTED!!! <<<<<  ");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d memory blocks still allocated", MemDebugCounter));
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total STILL allocated", guiMemTotal));
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was allocated", guiMemAlloced));
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("%d bytes memory total was freed", guiMemFreed));
-
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, "***** WARNING - WARNING - WARNING *****");
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, " ");
-
-#if defined JA2BETAVERSION
-		FILE* fp = fopen("MemLeakInfo.txt", "a");
-		if (fp)
-		{
-			fprintf(fp, "\n\n");
-			fprintf(fp, ">>>>> MEMORY LEAK DETECTED!!! <<<<<\n");
-			fprintf(fp, "  %d bytes memory total was allocated\n", guiMemAlloced);
-			fprintf(fp, "- %d bytes memory total was freed\n", guiMemFreed);
-			fprintf(fp, "_______________________________________________\n");
-			fprintf(fp, "%d bytes memory total STILL allocated\n", guiMemTotal);
-			fprintf(fp, "%d memory blocks still allocated\n", MemDebugCounter);
-			fprintf(fp, "guiScreenExitedFrom = %ls\n", gzJA2ScreenNames[gMsgBox.uiExitScreen]);
-			fprintf(fp, "\n\n");
-			fclose(fp);
-		}
-#endif
+		SLOGE(DEBUG_TAG_MEMORY, "Memory leak detected: \n\
+					%d memory blocks still allocated\n\
+					%d bytes memory total STILL allocated\n\
+					%d bytes memory total was allocated\n\
+					%d bytes memory total was freed",
+					MemDebugCounter, guiMemTotal, guiMemAlloced, guiMemFreed);
 	}
-
 	fMemManagerInit = FALSE;
 }
 

@@ -77,6 +77,7 @@
 #include "Video.h"
 #include "VObject_Blitters.h"
 #include "UILayout.h"
+#include "slog/slog.h"
 
 
 static BOOLEAN gfCorruptMap        = FALSE;
@@ -208,8 +209,7 @@ static void EditModeInit(void)
 {
 	UINT32 x;
 
-	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Entering editor mode...");
-
+	SLOGI(DEBUG_TAG_EDITOR, "Entering editor mode...");
 
 	gfRealGunNut = gGameOptions.fGunNut;
 	gGameOptions.fGunNut = TRUE;
@@ -344,7 +344,7 @@ static void EditModeInit(void)
 	}
 	else
 	{
-		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Creating summary window...");
+		SLOGD(DEBUG_TAG_EDITOR, "Creating summary window...");
 		CreateSummaryWindow();
 		gfNeedToInitGame = TRUE;
 	}
@@ -359,7 +359,7 @@ static void EditModeInit(void)
 
 	gfIntendOnEnteringEditor = FALSE;
 
-	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Finished entering editor mode...");
+	SLOGD(DEBUG_TAG_EDITOR, "Finished entering editor mode...");
 }
 
 
@@ -1407,7 +1407,7 @@ static void HandleKeyboardShortcuts(void)
 
 				case SDLK_F4:
 					MusicPlay( giMusicID );
-					ScreenMsg( FONT_YELLOW, MSG_DEBUG, L"%ls", szMusicList[giMusicID] );
+					SLOGD(DEBUG_TAG_EDITOR, "%s", szMusicList[giMusicID]);
 					giMusicID++;
 					if( giMusicID >= NUM_MUSIC )
 						giMusicID = 0;
@@ -2457,7 +2457,7 @@ try
 		if (!l)
 		{
 			// Can't create sprite
-			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light sprite of radius %d", radius));
+			SLOGW(DEBUG_TAG_EDITOR, "PlaceLight: Can't create light sprite of radius %d", radius);
 			return FALSE;
 		}
 	}
@@ -3214,7 +3214,7 @@ ScreenID EditScreenHandle(void)
 
 	if( gfWorldLoaded && gMapInformation.ubMapVersion <= 7 && !gfCorruptMap )
 	{
-		ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Map data has just been corrupted.  Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+		SLOGE(DEBUG_TAG_EDITOR, "Map data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
 		gfCorruptMap = TRUE;
 	}
 	if( gfWorldLoaded && gubScheduleID > 40 && !gfCorruptSchedules )
@@ -3222,7 +3222,7 @@ ScreenID EditScreenHandle(void)
 		OptimizeSchedules();
 		if( gubScheduleID > 32 )
 		{
-			ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Schedule data has just been corrupted.  Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+			SLOGE(DEBUG_TAG_EDITOR, "Schedule data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
 			gfCorruptSchedules = TRUE;
 		}
 	}

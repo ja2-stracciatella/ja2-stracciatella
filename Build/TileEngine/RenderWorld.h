@@ -34,6 +34,8 @@ ENUM_BITSET(RenderFlags)
 #define ONROOF_Z_LEVEL      6
 #define TOPMOST_Z_LEVEL 32767
 
+/* number of pixels to show the exit sector cursor at the edge of the map */
+#define NO_PX_SHOW_EXIT_CURS			15
 
 enum RenderLayerFlags
 {

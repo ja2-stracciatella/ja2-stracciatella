@@ -21,8 +21,6 @@
 #include "GameInstance.h"
 
 #include "slog/slog.h"
-#define TAG "Tiles"
-
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
@@ -41,7 +39,7 @@ try
 	AutoStructureFileRef pStructureFileRef;
 	if (GCM->doesGameResExists( cStructureFilename ))
 	{
-    // SLOGD(TAG, "loading tile %s", cStructureFilename.c_str());
+    SLOGD(DEBUG_TAG_TILES, "loading tile %s", cStructureFilename.c_str());
 
 		pStructureFileRef = LoadStructureFile( cStructureFilename.c_str() );
 

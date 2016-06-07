@@ -299,7 +299,7 @@ static void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 					uiChanceToDefect = 90;
 					break;
 				default:
-					Assert( 0 );
+					SLOGE(DEBUG_TAG_ASSERTS, "HandleMilitiaDefections: invalid Rank");
 					return;
 			}
 

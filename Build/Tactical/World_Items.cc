@@ -197,10 +197,8 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 	// ATE: Check if the gridno is OK
 	if (sGridNo == NOWHERE)
 	{
-#ifdef JA2BETAVERSION
 		// Display warning.....
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Item %d was given invalid grid location %d. Please report", pObject->usItem, sGridNo);
-#endif
+		SLOGW(DEBUG_TAG_HANDLEITEMS, "Item %d was given invalid grid location %d. Please report", pObject->usItem, sGridNo);
 		return -1;
 	}
 

@@ -151,10 +151,8 @@ static void BuildSightDir(UINT32 dir, UINT32* One, UINT32* Two, UINT32* Three, U
       *Four = SOUTHWEST;
       *Five = NORTHEAST;
       break;
-#ifdef BETAVERSION
   default:
-    NumMessage("BuildSightDir:  Invalid 'dir' value, = ",dir);
-#endif
+      break;
   }
 }
 
@@ -325,7 +323,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
   BuildSightDir(dir,&Dir[0],&Dir[1],&Dir[2],&Dir[3],&Dir[4]);
   INT32 Inc[6];
   for (cnt = 0; cnt < 5; cnt++)
-    Inc[cnt] = DirectionInc( (INT16)Dir[cnt]);
+     Inc[cnt] = DirectionInc(Dir[cnt]);
 
   // create gridno increment for NOVIEW - in other words, no increment!
   Inc[5] = 0;

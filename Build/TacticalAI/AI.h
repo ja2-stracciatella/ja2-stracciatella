@@ -3,9 +3,7 @@
 
 #include "JA2Types.h"
 #include "WorldDef.h"
-
-
-#define TESTAICONTROL
+#include "slog/slog.h"
 
 extern INT8	gubAIPathCosts[19][19];
 #define AI_PATHCOST_RADIUS 9
@@ -145,12 +143,6 @@ INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier );
 INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel);
 INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance);
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck );
-
-#ifdef JA2BETAVERSION
-void DebugAI(const char* szOutput);
-#else
-#	define DebugAI(x) (void)0
-#endif
 
 INT8	DecideAction(SOLDIERTYPE *pSoldier);
 INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK);

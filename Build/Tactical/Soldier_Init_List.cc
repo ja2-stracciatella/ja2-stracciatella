@@ -25,7 +25,6 @@
 #include "Meanwhile.h"
 #include "Strategic_AI.h"
 #include "Map_Screen_Interface_Map.h"
-#include "Debug_Control.h"
 #include "Inventory_Choosing.h"
 #include "Campaign_Types.h"
 #include "AI.h"
@@ -40,6 +39,7 @@
 #	include "ScreenIDs.h"
 #endif
 
+#include "slog/slog.h"
 
 BOOLEAN gfOriginalList = TRUE;
 
@@ -581,7 +581,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 	}
 	else
 	{
-		LiveMessage("Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
+		SLOGD(DEBUG_TAG_SOLDIER, "Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
 		return false;
 	}
 }
@@ -908,7 +908,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 				ubTotalAdmin--;
 			}
 			else
-				Assert(0);
+				SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListEnemyDefenceSoldiers: something wrong with random");
 			if( AddPlacementToWorld( curr ) )
 			{
 				ubMaxNum--;
@@ -1015,7 +1015,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 					ubTotalAdmin--;
 				}
 				else
-					Assert(0);
+					SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListEnemyDefenceSoldiers: something wrong with random");
 				/* DISABLE THE OVERRIDE FOR NOW...
 				if( curr->pDetailedPlacement )
 				{ //delete the detailed placement information.
@@ -1243,7 +1243,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 					ubNumGreen--;
 				}
 				else
-					Assert(0);
+					SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListMilitia: something wrong with random");
 				curr->pBasicPlacement->bTeam = MILITIA_TEAM;
 				curr->pBasicPlacement->bOrders = STATIONARY;
 				curr->pBasicPlacement->bAttitude = (INT8) Random( MAXATTITUDES );
@@ -1298,9 +1298,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 		}
 		if( !fQueen )
 		{
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Couldn't place the queen." );
-			#endif
+			SLOGE(DEBUG_TAG_SOLDIER, "Couldn't place the queen.");
 		}
 	}
 
@@ -1393,7 +1391,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 					curr->pBasicPlacement->bBodyType = ADULTFEMALEMONSTER;
 				}
 				else
-					Assert(0);
+					SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListCreatures: something wrong with random");
 				if( curr->pDetailedPlacement )
 				{ //delete the detailed placement information.
 					MemFree( curr->pDetailedPlacement );

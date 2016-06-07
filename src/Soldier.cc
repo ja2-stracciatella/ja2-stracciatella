@@ -22,7 +22,6 @@
 #include "boost/make_shared.hpp"
 
 #include "slog/slog.h"
-#define TAG "Soldier"
 
 /** Get soldier object from the structure. */
 boost::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s)
@@ -46,7 +45,7 @@ void Soldier::removePendingAction()
 {
   if(mSoldier->ubPendingAction != NO_PENDING_ACTION)
   {
-    SLOGI(TAG, "%s: remove pending action %s",
+    SLOGI(DEBUG_TAG_SOLDIER, "%s: remove pending action %s",
           getPofileName(),
           Internals::getActionName(mSoldier->ubPendingAction));
 
@@ -69,7 +68,7 @@ bool Soldier::hasPendingAction() const
 
 void Soldier::setPendingAction(UINT8 action)
 {
-  SLOGI(TAG, "%s: set pending action %s (previous %s)",
+  SLOGI(DEBUG_TAG_SOLDIER, "%s: set pending action %s (previous %s)",
         getPofileName(),
         Internals::getActionName(action),
         Internals::getActionName(mSoldier->ubPendingAction));

@@ -852,7 +852,7 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 			usArraySize = gus1stWestEdgepointArraySize;
 			break;
 		default:
-			AssertMsg( 0, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
+			SLOGE(DEBUG_TAG_ASSERTS, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
 			break;
 	}
 	if( !usArraySize )
@@ -894,7 +894,7 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 			break;
 
 		default:
-			AssertMsg(0, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
+			SLOGE(DEBUG_TAG_ASSERTS, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
 			psArray     = NULL;
 			usArraySize = 0;
 			break;
@@ -912,19 +912,19 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 		{
 			if (gbWorldSectorZ)
 			{
-				AssertMsg(0, String("Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+				SLOGE(DEBUG_TAG_ASSERTS, "Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints.", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
 			}
 			else
 			{
-				AssertMsg(0, String("Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)", gWorldSectorY + 'A' - 1, gWorldSectorX));
+				SLOGE(DEBUG_TAG_ASSERTS, "Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints.", gWorldSectorY + 'A' - 1, gWorldSectorX);
 			}
 		}
 		else switch (ubStrategicInsertionCode)
 		{
-			case INSERTION_CODE_NORTH: AssertMsg(0, "This map doesn't have any north mapedgepoints.  Possibly because there is no north entry point. (LC : 1)"); break;
-			case INSERTION_CODE_EAST:  AssertMsg(0, "This map doesn't have any east mapedgepoints.  Possibly because there is no east entry point. (LC : 1)");   break;
-			case INSERTION_CODE_SOUTH: AssertMsg(0, "This map doesn't have any south mapedgepoints.  Possibly because there is no south entry point. (LC : 1)"); break;
-			case INSERTION_CODE_WEST:  AssertMsg(0, "This map doesn't have any west mapedgepoints.  Possibly because there is no west entry point.  NOTE:  Teleportation always uses the west entrypoint.  Some maps shouldn't have west entrypoints. (LC : 1)"); break;
+			case INSERTION_CODE_NORTH: SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any north mapedgepoints.  Possibly because there is no north entry point."); break;
+			case INSERTION_CODE_EAST:  SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any east mapedgepoints.  Possibly because there is no east entry point.");   break;
+			case INSERTION_CODE_SOUTH: SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any south mapedgepoints.  Possibly because there is no south entry point."); break;
+			case INSERTION_CODE_WEST:  SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any west mapedgepoints.  Possibly because there is no west entry point. NOTE: Teleportation always uses the west entrypoint. Some maps shouldn't have west entrypoints."); break;
 		}
 	}
 #endif
@@ -1021,7 +1021,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 
 	if( gsReservedIndex >= 20 )
 	{ //Everything is reserved.
-		AssertMsg( 0, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
+		SLOGE(DEBUG_TAG_ASSERTS, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
 	{
@@ -1140,7 +1140,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 
 	if( gsReservedIndex >= 20 )
 	{ //Everything is reserved.
-		AssertMsg( 0, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
+		SLOGE(DEBUG_TAG_ASSERTS, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
 	{
@@ -1266,13 +1266,10 @@ static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
@@ -1342,13 +1339,10 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
@@ -1508,13 +1502,13 @@ void ShowMapEdgepoints()
 
 	if (n_illegal1 == 0 && n_illegal2 == 0)
 	{
-		ScreenMsg(0, MSG_TESTVERSION, L"Showing display of map edgepoints");
+		SLOGD(DEBUG_TAG_SMAP, "Showing display of map edgepoints");
 	}
 	else
 	{
-		ScreenMsg(0, MSG_TESTVERSION, L"Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
+		SLOGD(DEBUG_TAG_SMAP, "Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
 	}
-	ScreenMsg(0, MSG_TESTVERSION, L"N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
+	SLOGD(DEBUG_TAG_SMAP, "N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
 			gus1stNorthEdgepointArraySize, gus2ndNorthEdgepointArraySize,
 			gus1stEastEdgepointArraySize,  gus2ndEastEdgepointArraySize,
 			gus1stSouthEdgepointArraySize, gus2ndSouthEdgepointArraySize,
@@ -1535,7 +1529,7 @@ static void HideMapEdgepoint(UINT16 const n, INT16 const* const array)
 
 void HideMapEdgepoints()
 {
-	ScreenMsg(0, MSG_TESTVERSION, L"Removing display of map edgepoints");
+	SLOGD(DEBUG_TAG_SMAP, "Removing display of map edgepoints");
 
 	HideMapEdgepoint(gus1stNorthEdgepointArraySize, gps1stNorthEdgepointArray);
 	HideMapEdgepoint(gus1stEastEdgepointArraySize,  gps1stEastEdgepointArray);

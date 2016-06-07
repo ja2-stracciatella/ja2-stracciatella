@@ -411,8 +411,6 @@ ScreenID HandleTacticalUI(void)
 
 				// Decrease global busy  counter...
 				gTacticalStatus.ubAttackBusyCount = 0;
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to ending AI lock");
-
 				guiPendingOverrideEvent = LU_ENDUILOCK;
 				UIHandleLUIEndLock( NULL );
 			}
@@ -653,7 +651,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_EAST_UICURSOR;
 			}
 
-			if (gusMouseXPos < SCREEN_WIDTH - 5)
+			if (gusMouseXPos < SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)
 			{
 				gfUIShowExitEast = FALSE;
 			}
@@ -680,7 +678,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_WEST_UICURSOR;
 			}
 
-			if ( gusMouseXPos > 5 )
+			if ( gusMouseXPos > NO_PX_SHOW_EXIT_CURS )
 			{
 				gfUIShowExitWest = FALSE;
 			}
@@ -707,7 +705,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_NORTH_UICURSOR;
 			}
 
-			if ( gusMouseYPos > 5 )
+			if ( gusMouseYPos > NO_PX_SHOW_EXIT_CURS )
 			{
 				gfUIShowExitNorth = FALSE;
 			}
@@ -735,7 +733,7 @@ static void SetUIMouseCursor(void)
 				guiNewUICursor = NOEXIT_SOUTH_UICURSOR;
 			}
 
-			if (gusMouseYPos < SCREEN_HEIGHT - 2)
+			if (gusMouseYPos < SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS)
 			{
 				gfUIShowExitSouth = FALSE;
 
@@ -924,11 +922,11 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 
 			if( bReturnCode == MERC_HIRE_FAILED )
 			{
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Merc hire failed:  Either already hired or dislikes you." );
+				SLOGD(DEBUG_TAG_MERCHIRE, "Merc hire failed:  Either already hired or dislikes you." );
 			}
 			else if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
 			{
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Can't hire more than 20 mercs." );
+				SLOGD(DEBUG_TAG_MERCHIRE, "Can't hire more than 20 mercs." );
 			}
 			else
 			{
@@ -3202,12 +3200,12 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 			const SOLDIERTYPE* const tgt = gUIFullTarget;
 			if (tgt != NULL)
 			{
-				 INT32		cnt;
+				 UINT8		cnt;
 				 INT16		sSpot;
 
 				 for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
 				 {
-						sSpot = (INT16)NewGridNo( pSoldier->sGridNo, DirectionInc( (INT8)cnt ) );
+						sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( cnt ) );
 
             // Make sure movement costs are OK....
             if ( gubWorldMovementCosts[ sSpot ][ cnt ][ gsInterfaceLevel ] >= TRAVELCOST_BLOCKED )
@@ -4948,7 +4946,7 @@ void ClimbUpOrDown()
   SOLDIERTYPE* const s = GetSelectedMan();
   if (s)
   {
-    INT8 direction;
+    UINT8 direction;
     if (FindHigherLevel(s, &direction))
     {
       BeginSoldierClimbUpRoof(s);
@@ -5007,7 +5005,7 @@ void SetInterfaceHeightLevel( )
 		sGridNo = gMapInformation.sWestGridNo;
 	else
 	{
-		Assert(0);
+		SLOGE(DEBUG_TAG_ASSERTS, "SetInterfaceHeightLevel: MapInformation seems corrupted");
 		return;
 	}
 
@@ -5094,8 +5092,8 @@ BOOLEAN ValidQuickExchangePosition(void)
 BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath)
 {
 	INT16 sSpot, sIntSpot;
-	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
-	INT32 cnt;
+	UINT8 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
+	UINT8 cnt;
   UINT8 ubMovementCost;
 
 	// First check that action point cost is zero so far

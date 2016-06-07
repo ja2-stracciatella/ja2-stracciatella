@@ -41,9 +41,7 @@ void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLE
 	STRUCTURE* const structure = FindStructure(grid_no, STRUCTURE_ANYDOOR);
 	if (!structure)
 	{
-#ifdef JA2TESTVERSION
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle door that does not exist at %d.", grid_no);
-#endif
+		SLOGE(DEBUG_TAG_INTERFACE, "Told to handle door that does not exist at %d.", grid_no);
 		return;
 	}
 
@@ -57,9 +55,7 @@ void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLE
 	DOOR_STATUS* const door_status = GetDoorStatus(grid_no);
 	if (!door_status)
 	{
-#ifdef JA2TESTVERSION
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to set door busy but can't get door status at %d!", grid_no);
-#endif
+		SLOGE(DEBUG_TAG_INTERFACE, "Told to set door busy but can't get door status at %d!", grid_no);
 		return;
 	}
 
@@ -201,15 +197,6 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 		{
 			// Send this guy into stationary stance
 			EVENT_StopMerc(&s);
-
-			if (s.bTeam == OUR_TEAM)
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[DOOR_IS_BUSY]);
-			}
-			else
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Trying to open door and door is busy: %d", s.ubID));
-			}
 			return;
 		}
 	}

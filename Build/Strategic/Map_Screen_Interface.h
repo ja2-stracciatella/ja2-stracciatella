@@ -234,9 +234,6 @@ extern BOOLEAN fShowMapScreenMovementList;
 // do we need to rebuild the mapscreen characterlist?
 extern BOOLEAN fReBuildCharacterList;
 
-// restore glow rotation in contract region glow boxes
-extern BOOLEAN fResetContractGlow;
-
 // init vehicle and characters list
 void InitalizeVehicleAndCharacterList( void );
 

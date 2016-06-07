@@ -2,7 +2,7 @@
 #define FADE_SCREEN_H
 
 #include "ScreenIDs.h"
-
+#include "Types.h"
 
 #define	FADE_OUT_REALFADE					5
 

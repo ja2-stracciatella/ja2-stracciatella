@@ -364,7 +364,7 @@
     <ClCompile Include="..\..\Build\Utils\Animated_ProgressBar.cc" />
     <ClCompile Include="..\..\Build\Utils\Cinematics.cc" />
     <ClCompile Include="..\..\Build\Utils\Cursors.cc" />
-    <ClCompile Include="..\..\Build\Utils\Debug_Control.cc" />
+    <ClCompile Include="..\..\Build\Utils\Debug_Pages.cc" />
     <ClCompile Include="..\..\Build\Utils\Event_Manager.cc" />
     <ClCompile Include="..\..\Build\Utils\Event_Pump.cc" />
     <ClCompile Include="..\..\Build\Utils\Font_Control.cc" />
@@ -774,6 +774,7 @@
     <ClInclude Include="..\..\Build\Utils\Cinematics.h" />
     <ClInclude Include="..\..\Build\Utils\Cursors.h" />
     <ClInclude Include="..\..\Build\Utils\Debug_Control.h" />
+    <ClInclude Include="..\..\Build\Utils\Debug_Pages.h" />
     <ClInclude Include="..\..\Build\Utils\Event_Manager.h" />
     <ClInclude Include="..\..\Build\Utils\Event_Pump.h" />
     <ClInclude Include="..\..\Build\Utils\Font_Control.h" />

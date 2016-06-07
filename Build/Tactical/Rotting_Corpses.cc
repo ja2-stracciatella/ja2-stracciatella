@@ -991,16 +991,12 @@ void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
 
 	if ( pCorpse == NULL )
 	{
-	#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Bullet hit corpse but corpse cannot be found at: %d", sBaseGridNo );
-	#endif
+		SLOGD(DEBUG_TAG_CORPSES, "Bullet hit corpse but corpse cannot be found at: %d", sBaseGridNo );
 		return;
 	}
 
 	// Twitch the bugger...
-	#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Corpse hit" );
-	#endif
+	SLOGD(DEBUG_TAG_CORPSES, "Corpse hit" );
 
 	if ( GridNoOnScreen( sBaseGridNo ) )
 	{
@@ -1041,9 +1037,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 
 	if ( pCorpse == NULL )
 	{
-	#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Vaporize corpse but corpse cannot be found at: %d", sBaseGridNo );
-	#endif
+		SLOGW(DEBUG_TAG_CORPSES, "Vaporize corpse but corpse cannot be found at: %d", sBaseGridNo );
 		return;
 	}
 

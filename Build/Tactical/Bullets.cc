@@ -14,9 +14,9 @@
 #include "GameSettings.h"
 #include "FileMan.h"
 #include "Debug.h"
+#include "slog/slog.h"
 
-
-#define		NUM_BULLET_SLOTS					50
+#define		NUM_BULLET_SLOTS		50
 
 
 static BULLET gBullets[NUM_BULLET_SLOTS];
@@ -135,7 +135,7 @@ void RemoveBullet(BULLET* b)
 
 		// decrement reference to bullet in the firer
 		b->pFirer->bBulletsLeft--;
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Ending bullet, bullets left %d", b->pFirer->bBulletsLeft));
+		SLOGD(DEBUG_TAG_BULLETS, "Ending bullet, bullets left %d", b->pFirer->bBulletsLeft);
 
 		if (b->usFlags & BULLET_FLAG_KNIFE)
 		{

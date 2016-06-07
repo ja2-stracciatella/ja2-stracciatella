@@ -824,11 +824,8 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 			break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen.  DF 0" );
-      #else
+				SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen.");
         break;
-			#endif
 	}
 
 	//if there are buttons
@@ -998,11 +995,8 @@ static void HelpScreenSpecialExitCode(void)
 			break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen.  DF 0" );
-      #else
+				SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen.");
         break;
-			#endif
 	}
 }
 
@@ -1041,11 +1035,8 @@ static void SpecialHandlerCode(void)
 			break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen:  SpecialHandlerCode().  DF 0" );
-      #else
+				SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen: SpecialHandlerCode().");
         break;
-			#endif
 	}
 }
 
@@ -1092,12 +1083,9 @@ static UINT16 RenderSpecificHelpScreen(void)
 			break;
 
 		default:
-#if defined JA2BETAVERSION
 			SetFontDestBuffer(FRAME_BUFFER);
-			AssertMsg(0, "Error in help screen:  RenderSpecificHelpScreen().  DF 0");
-#else
+			SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen: RenderSpecificHelpScreen().");
 			break;
-#endif
 	}
 
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -1143,11 +1131,8 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 		case HELP_SCREEN_LOAD_GAME:                  break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen:  DisplayCurrentScreenTitleAndFooter().  DF 0" );
-      #else
-        break;
-			#endif
+			SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen: DisplayCurrentScreenTitleAndFooter()." );
+      break;
 	}
 
 //	GetHelpScreenTextPositions( NULL, NULL, &usWidth );

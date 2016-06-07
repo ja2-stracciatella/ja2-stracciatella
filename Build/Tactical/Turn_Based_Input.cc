@@ -1468,7 +1468,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'y':
       if (INFORMATION_CHEAT_LEVEL()) {
-        SLOGD(DEBUG_CONSOLE_TOPIC, "Entering LOS Debug Mode");
+        SLOGD(DEBUG_TAG_INTERFACE, "Entering LOS Debug Mode");
         *new_event = I_LOSDEBUG;
       }
       break;
@@ -1536,7 +1536,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F11:
 			if (DEBUG_CHEAT_LEVEL())
 			{
-        SLOGD(DEBUG_CONSOLE_TOPIC, "Entering Quest Debug Mode");
+        SLOGD(DEBUG_TAG_INTERFACE, "Entering Quest Debug Mode");
 				gsQdsEnteringGridNo = GetMouseMapPos();
 				LeaveTacticalScreen(QUEST_DEBUG_SCREEN);
 			}
@@ -1650,7 +1650,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'f':
 			if (INFORMATION_CHEAT_LEVEL())
 			{ // Toggle frame rate display
-        SLOGD(DEBUG_CONSOLE_TOPIC, "Toggle FPS Overlay");
+        SLOGD(DEBUG_TAG_INTERFACE, "Toggle FPS Overlay");
         gbFPSDisplay = !gbFPSDisplay;
 				EnableFPSOverlay(gbFPSDisplay);
 				if (!gbFPSDisplay) SetRenderFlags(RENDER_FLAG_FULL);
@@ -1740,7 +1740,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			break;
 
 		case 'z':
-      SLOGD(DEBUG_CONSOLE_TOPIC, "Toggling ZBuffer");
+      SLOGD(DEBUG_TAG_INTERFACE, "Toggling ZBuffer");
       if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer();
       break;
 
@@ -1801,7 +1801,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 				INT8   level;
 				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], map_pos, 0, 0, &grid_no, TRUE, &level, TRUE);
 			}
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Physics 100 times: %d", GetJA2Clock() - start);
+			SLOGD(DEBUG_TAG_INTERFACE, "Physics 1000 times: %d", GetJA2Clock() - start);
 		}
 #endif
 
@@ -1876,7 +1876,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case 'm':
 			if (INFORMATION_CHEAT_LEVEL())
 			{
-        SLOGD(DEBUG_CONSOLE_TOPIC, "Entering Level Node Debug Mode");
+        SLOGD(DEBUG_TAG_INTERFACE, "Entering Level Node Debug Mode");
         *new_event = I_LEVELNODEDEBUG;
 				CountLevelNodes();
 			}
@@ -1886,7 +1886,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			if (INFORMATION_CHEAT_LEVEL() && gUIFullTarget)
 			{
 				static UINT16 gQuoteNum = 0;
-        SLOGD(DEBUG_CONSOLE_TOPIC, "Playing Quote %d", gQuoteNum);
+        SLOGD(DEBUG_TAG_INTERFACE, "Playing Quote %d", gQuoteNum);
         TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
 			}
 			break;
@@ -2332,7 +2332,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			{
 				if ( INFORMATION_CHEAT_LEVEL( ) )
 				{
-          SLOGD(DEBUG_CONSOLE_TOPIC, "Entering Soldier and Land Debug Mode");
+          SLOGD(DEBUG_TAG_INTERFACE, "Entering Soldier and Land Debug Mode");
           *puiNewEvent = I_SOLDIERDEBUG;
 				}
 			}
@@ -2831,9 +2831,7 @@ static void SwitchHeadGear(bool dayGear)
 
 static void ObliterateSector()
 {
-#ifdef JA2BETAVERSION
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Obliterating Sector!");
-#endif
+	SLOGD(DEBUG_TAG_INTERFACE, "Obliterating Sector!");
 	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		if (s->bNeutral || s->bSide == OUR_TEAM) continue;
@@ -2877,18 +2875,16 @@ static void CreateNextCivType(void)
 
 static void ToggleCliffDebug()
 {
-	wchar_t const* msg;
 	gTacticalStatus.uiFlags ^= DEBUGCLIFFS;
 	if (gTacticalStatus.uiFlags & DEBUGCLIFFS)
 	{
-		msg = L"Cliff debug ON.";
+		SLOGD(DEBUG_TAG_INTERFACE, "Cliff debug ON.");
 	}
 	else
 	{
 		SetRenderFlags(RENDER_FLAG_FULL);
-		msg = L"Cliff debug OFF.";
+		SLOGD(DEBUG_TAG_INTERFACE, "Cliff debug OFF.");
 	}
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, msg);
 }
 
 
