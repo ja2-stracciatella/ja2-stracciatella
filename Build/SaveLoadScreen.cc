@@ -142,11 +142,15 @@ static BOOLEAN gfDoingQuickLoad = FALSE;
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
 BOOLEAN		gfSaveGame=TRUE;
+static BOOLEAN   gfDiDTab=FALSE;
 
 static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
 static INT8 gbSelectedSaveLocation = -1;
 static INT8 gbHighLightedLocation  = -1;
+// We use this offset to differentiate between normal games and Dead is Dead. If we are in Dead is Dead, this offset is set to NUM_SAVE_GAMES
+// and simply added to counters etc. Dead is Dead games run in Slots NUM_SAVE_GAMES+1 to NUM_SAVE_GAMES+NUM_SAVE_GAMES (12 to 23 by default)
+//static INT8 gbSaveGameOffset = 0;
 
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
@@ -355,6 +359,7 @@ static void StartFadeOutForSaveLoadScreen(void);
 
 static void EnterSaveLoadScreen()
 {
+  
 	// This is a hack to get sector names, but if the underground sector is NOT loaded
 	if (!gpUndergroundSectorInfoHead)
 	{
@@ -703,8 +708,8 @@ static void SaveGameToSlotNum(void);
 
 static void SaveLoadGameNumber()
 {
-	INT8 const save_slot_id = gbSelectedSaveLocation;
-	if (save_slot_id < 0 || NUM_SAVE_GAMES <= save_slot_id) return;
+	INT8 const save_slot_id = gfDiDTab ? (gbSelectedSaveLocation + NUM_SAVE_GAMES) : gbSelectedSaveLocation;
+	if (save_slot_id < (gfDiDTab ? NUM_SAVE_GAMES : 0) || (gfDiDTab ? (2*NUM_SAVE_GAMES) : NUM_SAVE_GAMES) <= save_slot_id) return;
 
 	if (gfSaveGame)
 	{
@@ -744,7 +749,22 @@ static void SaveLoadGameNumber()
 // Switch between normal Load game and Dead is Dead
 void SwitchLoadTab()
 {
+  if (gfDiDTab)
+  {
+    gfDiDTab=FALSE;
+    //gbSaveGameOffset=0;
+  }
+  else
+  {
+    gfDiDTab=TRUE;
+    //gbSaveGameOffset=NUM_SAVE_GAMES;
+  }
+  // Redraw the save load screen
+  RenderSaveLoadScreen();
 
+  // Render the buttons
+  MarkButtonsDirty( );
+  RenderButtons();
 }
 
 
@@ -765,8 +785,8 @@ static void InitSaveGameArray(void)
 {
 	for (INT8 cnt = 0; cnt < NUM_SAVE_GAMES; ++cnt)
 	{
-		SAVED_GAME_HEADER SaveGameHeader;
-		gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt, &SaveGameHeader);
+    SAVED_GAME_HEADER SaveGameHeader;
+    gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt + NUM_SAVE_GAMES, &SaveGameHeader);
 	}
 }
 
@@ -850,7 +870,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 			header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
 			header.sInitialGameOptions       = gGameOptions;
 		}
-		else if (!LoadSavedGameHeader(entry_idx, &header))
+		else if (!LoadSavedGameHeader(gfDiDTab ? entry_idx + NUM_SAVE_GAMES : entry_idx, &header))
 		{
 			return FALSE;
 		}
@@ -951,7 +971,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const header)
 {
 	// make sure the entry is valid
-	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
+	if (gfDiDTab ? (0 + NUM_SAVE_GAMES) : 0 <= bEntry && bEntry < gfDiDTab ? (2*NUM_SAVE_GAMES) : NUM_SAVE_GAMES)
 	{
 		char zSavedGameName[512];
 		CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
@@ -1361,7 +1381,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 
 	try
 	{
-		LoadSavedGame(gbSelectedSaveLocation);
+		LoadSavedGame(gfDiDTab ? gbSelectedSaveLocation + NUM_SAVE_GAMES : gbSelectedSaveLocation);
 
 #ifdef JA2BETAVERSION
 		ValidateSoldierInitLinks(1);
@@ -1547,7 +1567,7 @@ void DoQuickLoad()
 
 bool AreThereAnySavedGameFiles()
 {
-	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
+	for (INT8 i = 0; i != (2 * NUM_SAVE_GAMES); ++i)
 	{
 		char filename[512];
 		CreateSavedGameFileNameFromNumber(i, filename);
@@ -1630,7 +1650,7 @@ static void SaveGameToSlotNum(void)
 	MarkButtonsDirty( );
 	RenderButtons();
 
-	if( !SaveGame( gbSelectedSaveLocation, gzGameDescTextField ) )
+	if( !SaveGame( gfDiDTab ? (gbSelectedSaveLocation + NUM_SAVE_GAMES) : gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
