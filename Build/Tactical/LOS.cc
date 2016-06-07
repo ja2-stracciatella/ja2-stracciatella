@@ -3836,7 +3836,7 @@ void MoveBullet(BULLET* const pBullet)
 				{
 					iAdjGridNo = iGridNo + DirIncrementer[bDir];
 
-					if ( gubWorldMovementCosts[ iAdjGridNo ][ sDesiredLevel ][ bDir ] < TRAVELCOST_BLOCKED)
+					if ( gubWorldMovementCosts[ iAdjGridNo ][ bDir ][ sDesiredLevel ] < TRAVELCOST_BLOCKED)
 					{
 						SOLDIERTYPE* const pTarget = WhoIsThere2(iAdjGridNo, sDesiredLevel);
 						if (pTarget != NULL)
