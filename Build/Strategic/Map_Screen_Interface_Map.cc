@@ -3225,10 +3225,10 @@ void DisplayPositionOfHelicopter( void )
 			}
 */
 
-			AssertMsg(minX < 640, String("DisplayPositionOfHelicopter: Invalid minX = %d", minX));
-			AssertMsg(maxX < 640, String("DisplayPositionOfHelicopter: Invalid maxX = %d", maxX));
-			AssertMsg(minY < 640, String("DisplayPositionOfHelicopter: Invalid minY = %d", minY));
-			AssertMsg(maxY < 640, String("DisplayPositionOfHelicopter: Invalid maxY = %d", maxY));
+			AssertMsg(minX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid minX = %d", minX));
+			AssertMsg(maxX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid maxX = %d", maxX));
+			AssertMsg(minY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid minY = %d", minY));
+			AssertMsg(maxY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid maxY = %d", maxY));
 
 			// IMPORTANT: Since min can easily be larger than max, we gotta cast to as signed value
 			x = ( UINT32 )( minX + flRatio * ( ( INT16 ) maxX - ( INT16 ) minX ) );
