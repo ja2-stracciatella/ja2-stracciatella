@@ -35,7 +35,6 @@
 #include <SDL.h>
 #include "UILayout.h"
 #include "GameRes.h"
-#include "Logger.h"
 #include "GameState.h"
 #include "Timer.h"
 
@@ -48,7 +47,6 @@
 #include "sgp/UTF8String.h"
 
 #include "slog/slog.h"
-#define TAG "SGP"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -68,8 +66,6 @@
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 #endif
 
-
-#define WITH_MODS (1)
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -159,31 +155,36 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
-	FastDebugMsg("Exiting Game");
-
-	SoundServiceStreams();
-
-	if (gfGameInitialized)
-	{
-		ShutdownGame();
-	}
-
-	ShutdownButtonSystem();
-	MSYS_Shutdown();
+  SLOGD(DEBUG_TAG_SGP, "Deinitializing Game");
+  SoundServiceStreams();
+  if (gfGameInitialized)
+  {
+    ShutdownGame();
+  }
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Button System");
+  ShutdownButtonSystem();
+  MSYS_Shutdown();
 
 #ifndef UTIL
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Sound Manager");
   ShutdownSoundManager();
 #endif
 
 #ifdef SGP_VIDEO_DEBUGGING
-	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
+  SLOGD(DEBUG_TAG_SGP, "Dumping Video Info");
+  PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
 #endif
 
-	ShutdownVideoSurfaceManager();
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Surface Manager");
+  ShutdownVideoSurfaceManager();
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Object Manager");
   ShutdownVideoObjectManager();
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Manager");
   ShutdownVideoManager();
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down Memory Manager");
   ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
 
+  SLOGD(DEBUG_TAG_SGP, "Shutting Down SDL");
   SDL_Quit();
 
   exit(0);
@@ -265,16 +266,6 @@ static void MainLoop(int msPerGameCycle)
   }
 }
 
-
-static int Failure(char const* const msg, bool showInfoIcon=false)
-{
-	fprintf(stderr, "%s\n", msg);
-#if defined _WIN32
-	MessageBox(0, msg, APPLICATION_NAME, MB_OK | (showInfoIcon ? MB_ICONINFORMATION : MB_ICONERROR) | MB_TASKMODAL);
-#endif
-	return EXIT_FAILURE;
-}
-
 ////////////////////////////////////////////////////////////
 
 ContentManager *GCM = NULL;
@@ -285,19 +276,15 @@ struct CommandLineParams
 {
   CommandLineParams()
   {
-#ifdef WITH_MODS
     useMod = false;
-#endif
     doUnitTests = false;
     showDebugMessages = false;
     resourceVersionGiven = false;
     no3btnmouse = false;
   }
 
-#ifdef WITH_MODS
   bool useMod;
   std::string modName;
-#endif
 
   bool resourceVersionGiven;
   std::string resourceVersion;
@@ -349,7 +336,7 @@ try
   {
     if(!getResourceVersion(params.resourceVersion.c_str(), &version))
     {
-      SLOGE(TAG, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
+      SLOGE(DEBUG_TAG_SGP, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
       return EXIT_FAILURE;
     }
   }
@@ -381,10 +368,10 @@ try
 #endif
 
   // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
-	FastDebugMsg("Initializing Memory Manager");
+	SLOGD(DEBUG_TAG_SGP, "Initializing Memory Manager");
 	InitializeMemoryManager();
 
-  FastDebugMsg("Initializing Game Resources");
+  SLOGD(DEBUG_TAG_SGP, "Initializing Game Resources");
   std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
   std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
   std::string gameResRootPath = findRootGameResFolder(configPath);
@@ -400,7 +387,6 @@ try
 
   DefaultContentManager *cm;
 
-#ifdef WITH_MODS
   if(params.useMod)
   {
     std::string modName = params.modName;
@@ -408,32 +394,31 @@ try
     cm = new ModPackContentManager(version,
                                    modName, modResFolder, configFolderPath,
                                    gameResRootPath, externalizedDataPath);
-    LOG_INFO("------------------------------------------------------------------------------\n");
-    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
-    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-    LOG_INFO("Extra data directory:          '%s'\n", extraDataDir.c_str());
-    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
-    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
-    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
-    LOG_INFO("------------------------------------------------------------------------------\n");
-    LOG_INFO("MOD name:                      '%s'\n", modName.c_str());
-    LOG_INFO("MOD resource directory:        '%s'\n", modResFolder.c_str());
-    LOG_INFO("------------------------------------------------------------------------------\n");
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Tilecache directory:           '%s'", cm->getTileDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+    SLOGI(DEBUG_TAG_SGP,"MOD name:                      '%s'", modName.c_str());
+    SLOGI(DEBUG_TAG_SGP,"MOD resource directory:        '%s'", modResFolder.c_str());
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
   else
-#endif
   {
     cm = new DefaultContentManager(version,
                                    configFolderPath,
                                    gameResRootPath, externalizedDataPath);
-    LOG_INFO("------------------------------------------------------------------------------\n");
-    LOG_INFO("Configuration file:            '%s'\n", configPath.c_str());
-    LOG_INFO("Root game resources directory: '%s'\n", gameResRootPath.c_str());
-    LOG_INFO("Extra data directory:          '%s'\n", extraDataDir.c_str());
-    LOG_INFO("Data directory:                '%s'\n", cm->getDataDir().c_str());
-    LOG_INFO("Tilecache directory:           '%s'\n", cm->getTileDir().c_str());
-    LOG_INFO("Saved games directory:         '%s'\n", cm->getSavedGamesFolder().c_str());
-    LOG_INFO("------------------------------------------------------------------------------\n");
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
+    SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Tilecache directory:           '%s'", cm->getTileDir().c_str());
+    SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+    SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
 
   std::vector<std::string> libraries = cm->getListOfGameResources();
@@ -441,20 +426,20 @@ try
 
   if(!cm->loadGameData())
   {
-    LOG_INFO("Failed to load the game data.\n");
+    SLOGI(DEBUG_TAG_SGP,"Failed to load the game data.");
   }
   else
   {
 
     GCM = cm;
 
-    FastDebugMsg("Initializing Video Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Video Manager");
     InitializeVideoManager();
 
-    FastDebugMsg("Initializing Video Object Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Video Object Manager");
     InitializeVideoObjectManager();
 
-    FastDebugMsg("Initializing Video Surface Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Video Surface Manager");
     InitializeVideoSurfaceManager();
 
 #ifdef JA2
@@ -462,20 +447,20 @@ try
 #endif
 
     // Initialize Font Manager
-    FastDebugMsg("Initializing the Font Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing the Font Manager");
     // Init the manager and copy the TransTable stuff into it.
     InitializeFontManager();
 
-    FastDebugMsg("Initializing Sound Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Sound Manager");
 #ifndef UTIL
     InitializeSoundManager();
 #endif
 
-    FastDebugMsg("Initializing Random");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Random");
     // Initialize random number generator
     InitializeRandom(); // no Shutdown
 
-    FastDebugMsg("Initializing Game Manager");
+    SLOGD(DEBUG_TAG_SGP, "Initializing Game Manager");
     // Initialize the Game
     InitializeGame();
 
@@ -503,7 +488,7 @@ try
     }
 #endif
 
-    FastDebugMsg("Running Game");
+    SLOGD(DEBUG_TAG_SGP, "Running Game");
 
     /* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
      * are available. All we need to do is attend to the gaming mechanics
@@ -520,21 +505,23 @@ try
 }
 catch (const std::bad_alloc&)
 {
-	return Failure("ERROR: out of memory");
+  SLOGE(DEBUG_TAG_SGP, "out of memory");
+  return EXIT_FAILURE;
 }
 catch (const LibraryFileNotFoundException& e)
 {
-	return Failure(e.what(), true);
+  SLOGE(DEBUG_TAG_SGP, "%s", e.what());
+  return EXIT_FAILURE;
 }
 catch (const std::exception& e)
 {
-	char msg[2048];
-	snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception:\n%s", e.what());
-	return Failure(msg);
+  SLOGE(DEBUG_TAG_SGP, "caught unhandled exception:\n%s", e.what());
+  return EXIT_FAILURE;
 }
 catch (...)
 {
-	return Failure("ERROR: caught unhandled unknown exception");
+  SLOGE(DEBUG_TAG_SGP, "caught unhandled unknown exception");
+  return EXIT_FAILURE;
 }
 
 
@@ -631,7 +618,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
         int readFields = sscanf(argv[++i], "%dx%d", &width, &height);
         if(readFields != 2)
         {
-          LOG_ERROR("Invalid value for command-line key '-res'\n");
+          SLOGE(DEBUG_TAG_SGP, "Invalid value for command-line key '-res'");
           success = FALSE;
         }
         else
@@ -639,18 +626,17 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
           bool result = g_ui.setScreenSize(width, height);
           if(!result)
           {
-            LOG_ERROR("Failed to set screen resolution %d x %d\n", width, height);
+            SLOGE(DEBUG_TAG_SGP, "Failed to set screen resolution %d x %d", width, height);
             success = FALSE;
           }
         }
       }
       else
       {
-        LOG_ERROR("Missing value for command-line key '-res'\n");
+        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-res'");
         success = FALSE;
       }
 		}
-#ifdef WITH_MODS
     else if (strcmp(argv[i], "-mod") == 0)
     {
       if(haveNextParameter)
@@ -660,11 +646,10 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
       }
       else
       {
-        LOG_ERROR("Missing value for command-line key '-res'\n");
+        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-mod'");
         success = FALSE;
       }
     }
-#endif
 #if defined JA2BETAVERSION
 		else if (strcmp(argv[i], "-quicksave") == 0)
 		{
@@ -694,7 +679,7 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
       }
       else
       {
-        LOG_ERROR("Missing value for command-line key '-resversion'\n");
+        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-resversion'");
         success = FALSE;
       }
     }
@@ -720,12 +705,10 @@ static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *
 			"                 Default value is ENGLISH\n"
 			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
 			"                 RUSSIAN_GOLD is for Gold release\n"
-#ifdef WITH_MODS
       "\n"
       "  -mod NAME    Start one of the game modifications, bundled into the game.\n"
       "               NAME is the name of modification, e.g. 'from-russia-with-love'.\n"
       "               See folder mods for possible options\n"
-#endif
 			"\n"
 			"  -debug       Show debug messages\n"
 #ifdef WITH_UNITTESTS
@@ -755,7 +738,7 @@ static std::string findRootGameResFolder(const std::string &configPath)
   MicroIni::File configFile;
   if(!configFile.load(configPath) || !configFile[""].has("data_dir"))
   {
-    LOG_WARNING("WARNING: Could not open configuration file (\"%s\").\n", configPath.c_str());
+    SLOGW(DEBUG_TAG_SGP, "Could not open configuration file (\"%s\").", configPath.c_str());
     WriteDefaultConfigFile(configPath.c_str());
     configFile.load(configPath);
   }

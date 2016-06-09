@@ -75,8 +75,8 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
-#define DEBUG_TAG_AUTORESOLVE "Auto Resolve"
 //#define INVULNERABILITY
 
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
@@ -498,9 +498,7 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 			break;
 		default:
 			//shouldn't happen
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Autoresolving with entering enemy sector code %d -- illegal KM:1", gubEnemyEncounterCode );
-			#endif
+			SLOGE(DEBUG_TAG_AUTORESOLVE, "Autoresolving with entering enemy sector code %d -- illegal", gubEnemyEncounterCode );
 			break;
 	}
 }
@@ -1628,7 +1626,7 @@ static void CreateAutoResolveInterface(void)
 		}
 		else
 		{
-			AssertMsg(0, "Attempting to illegally create a militia soldier.");
+			SLOGE(DEBUG_TAG_ASSERTS, "Attempting to illegally create a militia soldier.");
 			s   = 0;
 			idx = 0;
 		}
@@ -1828,9 +1826,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			case SOLDIER_CLASS_REG_MILITIA:   current_rank = REGULAR_MILITIA; break;
 			case SOLDIER_CLASS_ELITE_MILITIA: current_rank = ELITE_MILITIA;   break;
 			default:
-#ifdef JA2BETAVERSION
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
-#endif
+				SLOGE(DEBUG_TAG_AUTORESOLVE, "Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
 				break;
 		}
 		if (delete_for_good)
@@ -3134,8 +3130,8 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 		}
 		if( !IsBattleOver() )
 		{
-			AssertMsg( 0, String("***Please send PRIOR save and screenshot of this message***  iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
-				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence) );
+			SLOGE(DEBUG_TAG_ASSERTS, "Please send PRIOR save and screenshot of this message. iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
+				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence);
 		}
 	}
 	else
@@ -3163,7 +3159,7 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 			iAvailableTargets--;
 		}
 	}
-	AssertMsg( 0, "Error in ChooseTarget logic for choosing enemy target." );
+	SLOGE(DEBUG_TAG_ASSERTS, "Error in ChooseTarget logic for choosing enemy target." );
 	return NULL;
 }
 
@@ -4058,7 +4054,7 @@ static void ProcessBattleFrame(void)
 				}
 			}
 			else
-				AssertMsg( 0, "Logic error in ProcessBattleFrame()" );
+				SLOGE(DEBUG_TAG_ASSERTS, "Logic error in ProcessBattleFrame()" );
 			//Apply damage and play miss/hit sounds if delay between firing and hit has expired.
 			if( !(pAttacker->uiFlags & CELL_RETREATED ) )
 			{

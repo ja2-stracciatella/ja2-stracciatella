@@ -22,7 +22,7 @@
 #include "Simple_Render_Utils.h"
 #include "Road_Smoothing.h"
 #include "MemMan.h"
-
+#include "slog/slog.h"
 
 UINT16			CurrentPaste = NO_TILE;
 
@@ -886,10 +886,10 @@ void RaiseWorldLand( )
 			if (pTileElement->fType==FIRSTCLIFF)
 			{
 				fSomethingRaised = TRUE;
-				// DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Cliff found at count=%d",cnt));
+				SLOGD(DEBUG_TAG_EDITOR, "Cliff found at count=%d", cnt);
 				if( pTileElement->ubNumberOfTiles > 1 )
 				{
-					// DebugMsg(TOPIC_JA2,DBG_LEVEL_3,String("Cliff has %d children", pTileElement->ubNumberOfTiles));
+					SLOGD(DEBUG_TAG_EDITOR, "Cliff has %d children", pTileElement->ubNumberOfTiles);
 					for (ubLoop = 0; ubLoop < pTileElement->ubNumberOfTiles; ubLoop++)
 					{
 						usIndex=pStruct->usIndex;
@@ -1012,8 +1012,7 @@ void RaiseWorldLand( )
 			gpWorldLevelData[cnt+((WORLD_ROWS-1)-(cnt%WORLD_ROWS))].uiFlags|=MAPELEMENT_RAISE_LAND_START;
 			//gpWorldLevelData[cnt].uiFlags|=MAPELEMENT_RAISE_LAND_START;
 			//gpWorldLevelData[cnt-1].uiFlags|=MAPELEMENT_RAISE_LAND_START;
-			//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Land Raise start at count: %d is raised",cnt ));
-			//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Land Raise start at count: %d is raised",cnt - 1 ));
+			SLOGD(DEBUG_TAG_EDITOR, "Land Raise start at count: %d is raised (maybe count : %d)", cnt, cnt - 1 );
 		}
 	}
 
@@ -1070,7 +1069,7 @@ void RaiseWorldLand( )
 
 		if( iNumberOfRaises >= 0 )
 		{
-			//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Land Raise start at count: %d is raised",cnt ));
+			SLOGD(DEBUG_TAG_EDITOR, "Land Raise start at count: %d is raised", cnt );
 			gpWorldLevelData[cnt].sHeight=iNumberOfRaises * WORLD_CLIFF_HEIGHT;
 		}
 	}

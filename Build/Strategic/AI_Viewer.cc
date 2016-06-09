@@ -232,7 +232,7 @@ static BOOLEAN CreateAIViewer(void)
 			!FileExists("devtools/icons.sti")  ||
 			!FileExists("devtools/smcheckbox.sti"))
 	{
-		ScreenMsg( FONT_WHITE, MSG_BETAVERSION, L"AIViewer missing data.  Aborted." );
+		SLOGW(DEBUG_TAG_SAI, "AIViewer missing data.  Aborted.");
 		gfExitViewer = FALSE;
 		gfViewerEntry = TRUE;
 		return FALSE;
@@ -501,7 +501,7 @@ static void RenderMovingGroupsAndMercs(void)
 					case ASSAULT:					ubIconType = ICON_TYPE_ASSAULT;				ubFontColor = FONT_LTBLUE;	break;
 
 					default:
-						Assert(0);
+						SLOGE(DEBUG_TAG_ASSERTS, "Enemy moving group with invalid intention");
 						return;
 				}
 			}
@@ -1462,7 +1462,7 @@ static void PrintEnemyPopTable(void)
 				case PURSUIT:					ubEnemyType = ENEMY_TYPE_ASSAULT;					break;
 
 				default:
-					AssertMsg( 0, String( "Unknown moving group intention %d", pGroup->pEnemyGroup->ubIntention ) );
+					SLOGE(DEBUG_TAG_ASSERTS, "Unknown moving group intention %d", pGroup->pEnemyGroup->ubIntention);
 					continue;
 			}
 

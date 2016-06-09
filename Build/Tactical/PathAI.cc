@@ -35,7 +35,6 @@
 #include "GameSettings.h"
 #include "Buildings.h"
 
-
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
 
@@ -50,6 +49,8 @@ extern INT16 gsCoverValue[WORLD_MAX];
 BOOLEAN gfDisplayCoverValues = TRUE;
 static BOOLEAN gfDrawPathPoints = FALSE;
 #endif
+
+#include "slog/slog.h"
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;
 BOOLEAN gfRecalculatingExistingPathCost = FALSE;
@@ -95,7 +96,7 @@ struct path_t
 struct trail_t
 {
 	INT16 nextLink;
-	INT8	stepDir;
+	UINT8	stepDir;
 	INT8	fFlags;
 	INT16	sGridNo;
 };
@@ -375,21 +376,9 @@ BOOLEAN gfEstimatePath = FALSE;
 BOOLEAN	gfPathAroundObstacles = TRUE;
 
 static UINT32 guiPlottedPath[256];
-UINT32 guiPathingData[256];
+UINT8 guiPathingData[256];
 static INT32 giPathDataSize;
 static INT32 giPlotCnt;
-
-static INT32 dirDelta[8]=
-{
-	-MAPWIDTH,        //N
-	1-MAPWIDTH,       //NE
-	1,                //E
-	1+MAPWIDTH,       //SE
-	MAPWIDTH,         //S
-	MAPWIDTH-1,       //SW
-	-1,               //W
-	-MAPWIDTH-1       //NW
-};
 
 #define LOOPING_CLOCKWISE 0
 #define LOOPING_COUNTERCLOCKWISE 1
@@ -467,7 +456,7 @@ static void RestorePathAIToDefaults(void)
 INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags)
 {
 	INT32 iDestination = sDestination, iOrigination;
-	INT32 iCnt=-1, iStructIndex;
+	INT8 iCnt=-1, iStructIndex;
 	INT32 iLoopStart = 0, iLoopEnd = 0;
 	INT8	bLoopState = LOOPING_CLOCKWISE;
 	//BOOLEAN fLoopForwards = FALSE;
@@ -543,16 +532,12 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 	if (iOrigination < 0 || iOrigination > WORLD_MAX)
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
-		#endif
+		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_RED, MSG_TESTVERSION, L"ERROR!  Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
-		#endif
+		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (s->bLevel != ubLevel)
@@ -880,8 +865,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		if ( trailCostUsed[curLoc] == gubGlobalPathCount && trailCost[curLoc] < curCost)
 			goto NEXTDIR;
 
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "PATHAI %d", curLoc ) );
-
 		if (fContinuousTurnNeeded)
 		{
 			if (trailTreeNdx < 2)
@@ -993,7 +976,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 #endif
 
-			newLoc = curLoc + dirDelta[iCnt];
+			newLoc = curLoc + DirIncrementer[iCnt];
 
 
 			if ( fVisitSpotsOnlyOnce && trailCostUsed[newLoc] == gubGlobalPathCount )
@@ -1101,11 +1084,11 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 							break;
 						case TRAVELCOST_DOOR_CLOSED_N:
 							fDoorIsObstacleIfClosed = TRUE;
-							iDoorGridNo = newLoc + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_CLOSED_W:
 							fDoorIsObstacleIfClosed = TRUE;
-							iDoorGridNo = newLoc + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_HERE:
 							fDoorIsObstacleIfClosed = FALSE;
@@ -1113,59 +1096,59 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 							break;
 						case TRAVELCOST_DOOR_OPEN_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NE:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHEAST ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHEAST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_E:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ EAST ];
+							iDoorGridNo = newLoc + DirIncrementer[ EAST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_SE:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTHEAST ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTHEAST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_S:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_SW:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTHWEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTHWEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NW:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHWEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHWEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_N_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTH ] + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTH ] + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NW_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHWEST ] + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHWEST ] + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NE_N:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHEAST ] + dirDelta[ NORTH ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHEAST ] + DirIncrementer[ NORTH ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_W_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ WEST ] + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ WEST ] + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_SW_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ SOUTHWEST ] + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ SOUTHWEST ] + DirIncrementer[ WEST ];
 							break;
 						case TRAVELCOST_DOOR_OPEN_NW_W:
 							fDoorIsObstacleIfClosed = FALSE;
-							iDoorGridNo = newLoc + dirDelta[ NORTHWEST ] + dirDelta[ WEST ];
+							iDoorGridNo = newLoc + DirIncrementer[ NORTHWEST ] + DirIncrementer[ WEST ];
 							break;
 						default:
 							break;
@@ -1604,7 +1587,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 				//make new path to current location
 				trailTree[trailTreeNdx].nextLink	= sCurPathNdx;
-				trailTree[trailTreeNdx].stepDir	= (INT8) iCnt;
+				trailTree[trailTreeNdx].stepDir	= (UINT8) iCnt;
 				if ( bLoopState == LOOPING_REVERSE )
 				{
 					trailTree[trailTreeNdx].fFlags = STEP_BACKWARDS;
@@ -1739,7 +1722,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zTempString );
+						SLOGD(DEBUG_TAG_PATHAI, zTempString );
 
 
 						zTempString[0] = '\0';
@@ -1756,7 +1739,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zTempString );
+						SLOGD(DEBUG_TAG_PATHAI, zTempString );
 
 						zTempString[0] = '\0';
 						bTemp = pQueueHead->bLevel;
@@ -1778,8 +1761,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, zTempString );
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "------" );
+						SLOGD(DEBUG_TAG_PATHAI, zTempString );
+						SLOGD(DEBUG_TAG_PATHAI, "------" );
 					}
 #endif
 
@@ -1848,13 +1831,13 @@ ENDOFLOOP:
 
 			for (iCnt=0; z && (iCnt < MAX_PATH_LIST_SIZE); iCnt++)
 		  {
-			  s->usPathingData[iCnt] = (INT16) trailTree[z].stepDir;
+			  s->usPathingData[iCnt] = trailTree[z].stepDir;
 
 			  z = trailTree[z].nextLink;
 		  }
 
 			s->usPathIndex = 0;
-		  s->usPathDataSize  = (UINT16) iCnt;
+		  s->usPathDataSize  = (UINT8) iCnt;
 
 		}
 		else if (bCopy == NO_COPYROUTE)
@@ -1870,7 +1853,7 @@ ENDOFLOOP:
 			  z = trailTree[z].nextLink;
 		  }
 
-		  giPathDataSize = (UINT16) iCnt;
+		  giPathDataSize = (UINT8) iCnt;
 
 		}
 
@@ -2136,8 +2119,8 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 
 
      // We should reduce points for starting to run if first tile is a fence...
-		 sTestGridno  = NewGridNo(pSold->sGridNo,(INT16) DirectionInc( (UINT16)guiPathingData[0]));
-     if ( gubWorldMovementCosts[ sTestGridno ][ (INT8)guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
+		 sTestGridno  = NewGridNo(pSold->sGridNo, DirectionInc( guiPathingData[0]));
+     if ( gubWorldMovementCosts[ sTestGridno ][ guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
      {
 	    if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
 	    {
@@ -2174,13 +2157,13 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 			sExtraCostSwat = 0;
 			sExtraCostCrawl = 0;
 
-			sTempGrid  = NewGridNo(sTempGrid,(INT16) DirectionInc( (UINT16)guiPathingData[iCnt]));
+			sTempGrid  = NewGridNo(sTempGrid, DirectionInc( guiPathingData[iCnt]));
 
 			// Get switch value...
-			sSwitchValue = gubWorldMovementCosts[ sTempGrid ][ (INT8)guiPathingData[iCnt] ][ pSold->bLevel];
+			sSwitchValue = gubWorldMovementCosts[ sTempGrid ][ guiPathingData[iCnt] ][ pSold->bLevel];
 
 			// get the tile cost for that tile based on WALKING
-			sTileCost = TerrainActionPoints( pSold, sTempGrid, (INT8)guiPathingData[iCnt], pSold->bLevel );
+			sTileCost = TerrainActionPoints( pSold, sTempGrid, guiPathingData[iCnt], pSold->bLevel );
 
       usMovementModeToUseForAPs = usMovementMode;
 
@@ -2542,12 +2525,12 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 				break;
 			case TRAVELCOST_DOOR_CLOSED_N:
 				fDoorIsObstacleIfClosed = TRUE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTH ];
 				ubReplacementCost = TRAVELCOST_DOOR;
 				break;
 			case TRAVELCOST_DOOR_CLOSED_W:
 				fDoorIsObstacleIfClosed = TRUE;
-				iDoorGridNo = iGridNo + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ WEST ];
 				ubReplacementCost = TRAVELCOST_DOOR;
 				break;
 			case TRAVELCOST_DOOR_OPEN_HERE:
@@ -2556,59 +2539,59 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 				break;
 			case TRAVELCOST_DOOR_OPEN_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NE:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHEAST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHEAST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_E:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ EAST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ EAST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_SE:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTHEAST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTHEAST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_S:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_SW:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTHWEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTHWEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ WEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NW:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHWEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHWEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_N_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTH ] + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTH ] + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NW_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHWEST ] + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHWEST ] + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NE_N:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHEAST ] + dirDelta[ NORTH ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHEAST ] + DirIncrementer[ NORTH ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_W_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ WEST ] + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ WEST ] + DirIncrementer[ WEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_SW_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ SOUTHWEST ] + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ SOUTHWEST ] + DirIncrementer[ WEST ];
 				break;
 			case TRAVELCOST_DOOR_OPEN_NW_W:
 				fDoorIsObstacleIfClosed = FALSE;
-				iDoorGridNo = iGridNo + dirDelta[ NORTHWEST ] + dirDelta[ WEST ];
+				iDoorGridNo = iGridNo + DirIncrementer[ NORTHWEST ] + DirIncrementer[ WEST ];
 				break;
 			default:
 				break;

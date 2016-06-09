@@ -9,7 +9,6 @@
 #include "MagazineModel.h"
 
 #include "slog/slog.h"
-#define TAG "Weapons"
 
 // exact gun types
 // used as an index in WeaponType[] string array
@@ -575,7 +574,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 
   if(!wep)
   {
-    SLOGE(TAG, "Weapon type '%s' is not found", internalType);
+    SLOGE(DEBUG_TAG_WEAPONS, "Weapon type '%s' is not found", internalType);
   }
 
   wep->ubGraphicType    = obj.GetInt("ubGraphicType");

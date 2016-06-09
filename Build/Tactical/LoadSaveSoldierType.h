@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 
-void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier, bool stracLinuxFormat);
+void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier, bool stracLinuxFormat, UINT32 uiSavedGameVersion);
 
 void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier);
 

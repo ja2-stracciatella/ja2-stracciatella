@@ -48,48 +48,29 @@ INT8	gubAIPathCosts[19][19];
 
 static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale)
 {
- INT32 iValueChange,iScaleSum,iPercentBetter;//,loopCnt,tempInt;
+	INT32 iValueChange,iScaleSum,iPercentBetter;//,loopCnt,tempInt;
 
- // calcalate how much better the new cover would be than the current cover
- iValueChange = iNewValue - iOldValue;
+	// calcalate how much better the new cover would be than the current cover
+	iValueChange = iNewValue - iOldValue;
 
-
- // here, the change in cover HAS to be an improvement over current cover
- if (iValueChange <= 0)
-  {
-#ifdef BETAVERSION
-   sprintf(tempstr,"CalcPercentBetter: ERROR - invalid valueChange = %d",valueChange);
-   PopMessage(tempstr);
-#endif
-
-   return(NOWHERE);
+	// here, the change in cover HAS to be an improvement over current cover
+	if (iValueChange <= 0)
+	{
+		return(NOWHERE);
   }
+	
+	iScaleSum = iOldScale + iNewScale;
 
-
- iScaleSum = iOldScale + iNewScale;
-
- // here, the change in cover HAS to be an improvement over current cover
- if (iScaleSum <= 0)
-  {
-#ifdef BETAVERSION
-   sprintf(tempstr,"CalcPercentBetter: ERROR - invalid scaleSum = %d",iScaleSum);
-   PopMessage(tempstr);
-#endif
-
-   return(NOWHERE);
+	// here, the change in cover HAS to be an improvement over current cover
+	if (iScaleSum <= 0)
+	{
+		return(NOWHERE);
   }
-
-
-
- iPercentBetter = (iValueChange * 100) / iScaleSum;
-
-#ifdef DEBUGCOVER
- DebugAI( String( "CalcPercentBetter: %%Better %ld, old %ld, new %ld, change %ld\n\t\toldScale %ld, newScale %ld, scaleSum %ld\n",
-	iPercentBetter,iOldValue,iNewValue,iValueChange,iOldScale,iNewScale,iScaleSum ) );
-#endif
-
-
- return(iPercentBetter);
+	iPercentBetter = (iValueChange * 100) / iScaleSum;
+	SLOGD(DEBUG_TAG_AI, "CalcPercentBetter: %%Better %ld, old %ld, new %ld, change %ld\noldScale %ld, newScale %ld, scaleSum %ld",
+				iPercentBetter, iOldValue, iNewValue, iValueChange, iOldScale,
+				iNewScale, iScaleSum);
+	return(iPercentBetter);
 }
 
 
@@ -438,10 +419,8 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 			{
 				//iRangeFactor = (iRangeChange * (morale - 1)) / 4;
 				iRangeFactor = (iRangeChange * iRangeFactorMultiplier) / 2;
-
-	#ifdef DEBUGCOVER
-				DebugAI( String( "CalcCoverValue: iRangeChange %d, iRangeFactor %d\n", iRangeChange, iRangeFactor ) );
-	#endif
+				SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iRangeChange %d, iRangeFactor %d\n",
+							iRangeChange, iRangeFactor);
 
 				// aggression booster for stupider enemies
 				iMyPosValue += 100 * iRangeFactor * ( 5 - SoldierDifficultyLevel( pMe ) ) / 5 ;
@@ -480,14 +459,18 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 	iCoverValue = (iMyPosValue - iHisPosValue) / 100;
 	iCoverValue = (iCoverValue * iReductionFactor) / 100;
 
-#ifdef DEBUGCOVER
-	DebugAI( String( "CalcCoverValue: iCoverValue %d, sMyGridNo %d, sHisGrid %d, iRange %d, morale %d\n",iCoverValue,sMyGridNo,sHisGridNo,iRange,morale) );
-	DebugAI( String( "CalcCoverValue: iCertainty %d, his bOppCnt %d, my bOppCnt %d\n",Threat[uiThreatIndex].iCertainty,pHim->bOppCnt,pMe->bOppCnt) );
-	DebugAI( String( "CalcCoverValue: bHisCTGT = %d, hisThreat = %d, hisFullAPs = %d\n",bHisCTGT,Threat[uiThreatIndex].iValue,Threat[uiThreatIndex].iAPs) );
-	DebugAI( String( "CalcCoverValue: bMyCTGT = %d,  iMyThreat = %d,  iMyAPsLeft = %d\n", bMyCTGT, iMyThreat,iMyAPsLeft) );
-	DebugAI( String( "CalcCoverValue: hisPosValue = %d, myPosValue = %d\n",iHisPosValue,iMyPosValue) );
-	DebugAI( String( "CalcCoverValue: iThisScale = %d, iTotalScale = %d, iReductionFactor %d\n\n",iThisScale,*iTotalScale, iReductionFactor) );
-#endif
+	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iCoverValue %d, sMyGridNo %d, sHisGrid %d, iRange %d, morale %d",
+				iCoverValue, sMyGridNo, sHisGridNo, iRange, morale);
+	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iCertainty %d, his bOppCnt %d, my bOppCnt %d",
+				Threat[uiThreatIndex].iCertainty, pHim->bOppCnt, pMe->bOppCnt);
+	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: bHisCTGT = %d, hisThreat = %d, hisFullAPs = %d",
+				bHisCTGT, Threat[uiThreatIndex].iValue, Threat[uiThreatIndex].iAPs);
+	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: bMyCTGT = %d,  iMyThreat = %d,  iMyAPsLeft = %d",
+				bMyCTGT, iMyThreat, iMyAPsLeft);
+	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: hisPosValue = %d, myPosValue = %d",
+				iHisPosValue, iMyPosValue);
+	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iThisScale = %d, iTotalScale = %d, iReductionFactor %d",
+				iThisScale, *iTotalScale, iReductionFactor);
 
 	return( iCoverValue );
 }
@@ -574,8 +557,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	}
 #endif
 
-	//NameMessage(pSoldier,"looking for some cover...");
-
 	// BUILD A LIST OF THREATENING GRID #s FROM PERSONAL & PUBLIC opplists
 
 	pusLastLoc = &(gsLastKnownOppLoc[pSoldier->ubID][0]);
@@ -620,7 +601,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// action points left (rounded down) tiles away, since minimum
 		// cost to move per tile is 1 points.
 		iMaxMoveTilesLeft = __max( 0, pSoldier->bActionPoints - MinAPsToStartMovement( pSoldier, usMovementMode ) );
-		//NumMessage("In BLACK, maximum tiles to move left = ",maxMoveTilesLeft);
 
 		// if we can't go as far as the usual full search range
 		if (iMaxMoveTilesLeft < iSearchRange)
@@ -690,19 +670,9 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		//iThreatRange = AdjPixelsAway(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sThreatLoc),CenterY(sThreatLoc));
 		iThreatRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sThreatLoc );
 
-		//NumMessage("Threat Range = ",iThreatRange);
-
-#ifdef DEBUGCOVER
-//		DebugAI( String( "FBNC: Opponent %d believed to be at gridno %d (mine %d, public %d)\n",iLoop,sThreatLoc,*pusLastLoc,PublicLastKnownOppLoc[pSoldier->bTeam][iLoop] ) );
-#endif
-
 		// if this opponent is believed to be too far away to really be a threat
 		if (iThreatRange > iMaxThreatRange)
 		{
-#ifdef DEBUGCOVER
-//			AINameMessage(pOpponent,"is too far away to be a threat",1000);
-#endif
-
 			continue;          // check next opponent
 		}
 
@@ -712,12 +682,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// if the opponent is no threat at all for some reason
 		if (Threat[uiThreatCnt].iValue == -999)
 		{
-			//NameMessage(pOpponent,"is thought to be no threat");
 			continue;          // check next opponent
 		}
-
-		//NameMessage(pOpponent,"added to the list of threats");
-		//NumMessage("His/Her threat value = ",threatValue[uiThreatCnt]);
 
 		Threat[uiThreatCnt].pOpponent		= pOpponent;
 		Threat[uiThreatCnt].sGridNo			= sThreatLoc;
@@ -730,9 +696,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		if (iThreatRange < iClosestThreatRange)
 		{
 			iClosestThreatRange = iThreatRange;
-			//NumMessage("New Closest Threat Range = ",iClosestThreatRange);
 //			sClosestThreatGridNo = sThreatLoc;
-			//NumMessage("Closest Threat Gridno = ",sClosestThreatGridNo);
 		}
 
 		uiThreatCnt++;
@@ -741,7 +705,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	// if no known opponents were found to threaten us, can't worry about cover
 	if (!uiThreatCnt)
 	{
-		//NameMessage(pSoldier,"has no threats - WON'T take cover");
 		return(sBestCover);
 	}
 
@@ -759,27 +722,17 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			// add this opponent's cover value to our current total cover value
 			iCurrentCoverValue += CalcCoverValue(pSoldier,pSoldier->sGridNo,iMyThreatValue,pSoldier->bActionPoints,uiLoop,Threat[uiLoop].iOrigRange,morale,&iCurrentScale);
 		}
-		//sprintf(tempstr,"iCurrentCoverValue after opponent %d is now %d",iLoop,iCurrentCoverValue);
-		//PopMessage(tempstr);
 	}
 
 	iCurrentCoverValue -= (iCurrentCoverValue / 10) * NumberOfTeamMatesAdjacent( pSoldier, pSoldier->sGridNo );
 
-#ifdef DEBUGCOVER
-//	AINumMessage("Search Range = ",iSearchRange);
-#endif
-
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	//NumMessage("sMaxDown = ",sMaxDown);
 
 	iRoamRange = RoamingRange(pSoldier,&sOrigin);
 
@@ -795,18 +748,12 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// don't care how far from origin we go
 		iDistFromOrigin = -1;
 	}
-
-
-#ifdef DEBUGCOVER
-	DebugAI( String( "FBNC: iRoamRange %d, sMaxLeft %d, sMaxRight %d, sMaxUp %d, sMaxDown %d\n",iRoamRange,sMaxLeft,sMaxRight,sMaxUp,sMaxDown) );
-#endif
+	SLOGD(DEBUG_TAG_AI, "FBNC: iRoamRange %d, sMaxLeft %d, sMaxRight %d, sMaxUp %d, sMaxDown %d",
+				iRoamRange, sMaxLeft, sMaxRight, sMaxUp, sMaxDown);
 
 	// the initial cover value to beat is our current cover value
 	iBestCoverValue = iCurrentCoverValue;
-
-#ifdef DEBUGDECISIONS
-	DebugAI( String( "FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue ) );
-#endif
+	SLOGD(DEBUG_TAG_AI, "FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue);
 
 	if (pSoldier->bAlertStatus >= STATUS_RED)          // if already in battle
 	{
@@ -861,8 +808,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				continue;
 			}
 
-			//NumMessage("Testing gridno #",sGridNo);
-
 			// if we are limited to staying/returning near our place of origin
 			if (iDistFromOrigin != -1)
 			{
@@ -912,7 +857,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				// must be able to afford the APs to get to this cover this turn
 				if (iPathCost > pSoldier->bActionPoints)
 				{
-					//NumMessage("In BLACK, and can't afford to get there, cost = ",iPathCost);
 					continue;      // skip on to the next potential grid
 				}
 			}
@@ -935,9 +879,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 						(pSoldier->bActionPoints - iPathCost),
 						uiLoop,iThreatRange,morale,&iCoverScale);
 				}
-
-				//sprintf(tempstr,"iCoverValue after opponent %d is now %d",iLoop,iCoverValue);
-				//PopMessage(tempstr);
 			}
 
 			// reduce cover for each person adjacent to this gridno who is on our team,
@@ -968,14 +909,12 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 				}
 			}
 
-
-#ifdef DEBUGCOVER
 			// if there ARE multiple opponents
 			if (uiThreatCnt > 1)
 			{
-				DebugAI( String( "FBNC: Total iCoverValue at gridno %d is %d\n\n",sGridNo,iCoverValue ) );
+				SLOGD(DEBUG_TAG_AI, "FBNC: Total iCoverValue at gridno %d is %d",
+							sGridNo, iCoverValue);
 			}
-#endif
 
 #if defined( _DEBUG ) && !defined( PATHAI_VISIBLE_DEBUG )
 			if (gfDisplayCoverValues)
@@ -988,9 +927,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 			if (iCoverValue > iBestCoverValue)
 			{
-#ifdef DEBUGDECISIONS
-				DebugAI( String( "FBNC: NEW BEST iCoverValue at gridno %d is %d\n",sGridNo,iCoverValue ) );
-#endif
+				SLOGD(DEBUG_TAG_AI, "FBNC: NEW BEST iCoverValue at gridno %d is %d",
+							sGridNo, iCoverValue);
 				// remember it instead
 				sBestCover = sGridNo;
 				iBestCoverValue = iCoverValue;
@@ -1037,14 +975,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// if best cover value found was at least 5% better than our current cover
 		if (*piPercentBetter >= MIN_PERCENT_BETTER)
 		{
-#ifdef DEBUGDECISIONS
-			DebugAI( String( "Found Cover: current %ld, best %ld, %%%%Better %ld\n", iCurrentCoverValue,iBestCoverValue,*piPercentBetter ) );
-#endif
-
-#ifdef BETAVERSION
-			SnuggleDebug(pSoldier,"Found Cover");
-#endif
-
+			SLOGD(DEBUG_TAG_AI, "Found Cover: current %ld, best %ld, %d%%Better %ld",
+						iCurrentCoverValue, iBestCoverValue, *piPercentBetter);
 			return((INT16)sBestCover);       // return the gridno of that cover
 		}
 	}
@@ -1122,7 +1054,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 		if (iThreatRange < iClosestThreatRange)
 		{
 			iClosestThreatRange = iThreatRange;
-			//NumMessage("New Closest Threat Range = ",iClosestThreatRange);
 		}
 
 		// remember this threat's gridno
@@ -1133,7 +1064,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	// if no known opponents were found to threaten us, can't worry about them
 	if (!uiThreatCnt)
 	{
-		//NameMessage(pSoldier,"has no known threats - WON'T run away");
 		return( sBestSpot );
 	}
 
@@ -1193,20 +1123,14 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	#else
 	gubNPCAPBudget = 	__min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
 	#endif
-	//NumMessage("Search Range = ",iSearchRange);
-	//NumMessage("gubNPCAPBudget = ",gubNPCAPBudget);
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	//NumMessage("sMaxDown = ",sMaxDown);
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
@@ -1241,7 +1165,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 		{
 			// calculate the next potential gridno
 			sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-			//NumMessage("Testing gridno #",gridno);
 			if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
 			{
 				continue;
@@ -1281,7 +1204,6 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 			}
 
 			// OK, this place shows potential.  How useful is it as cover?
-			//NumMessage("Promising seems gridno #",gridno);
 
 			iSpotClosestThreatRange = 1500;
 
@@ -1320,10 +1242,8 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 			{
 				// remember it instead
 				iClosestThreatRange = iSpotClosestThreatRange;
-				//NumMessage("New best range = ",iClosestThreatRange);
 				sBestSpot = sGridNo;
 				bBestEscapeDirection = bEscapeDirection;
-				//NumMessage("New best grid = ",bestSpot);
 			}
 		}
 
@@ -1347,25 +1267,17 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
 	INT32 iSearchRange;
 
-	//NameMessage(pSoldier,"looking for nearest reachable land");
-
 	// start with a small search area, and expand it if we're unsuccessful
 	// this should almost never need to search farther than 5 or 10 squares...
 	for (iSearchRange = 5; iSearchRange <= 25; iSearchRange += 5)
 	{
-		//NumMessage("Trying iSearchRange = ", iSearchRange);
-
 		// determine maximum horizontal limits
 		sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
-		//NumMessage("sMaxLeft = ",sMaxLeft);
 		sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-		//NumMessage("sMaxRight = ",sMaxRight);
 
 		// determine maximum vertical limits
 		sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
-		//NumMessage("sMaxUp = ",sMaxUp);
 		sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-		//NumMessage("sMaxDown = ",sMaxDown);
 
 		// Call FindBestPath to set flags in all locations that we can
 		// walk into within range.  We have to set some things up first...
@@ -1401,7 +1313,6 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 			{
 				// calculate the next potential gridno
 				sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-				//NumMessage("Testing gridno #",gridno);
 				if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
 				{
 					continue;
@@ -1433,10 +1344,7 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 				{
 					// remember it instead
 					sShortestPath = sPathCost;
-					//NumMessage("New shortest route = ",shortestPath);
-
 					sClosestLand = sGridNo;
-					//NumMessage("New closest land at grid = ",closestLand);
 				}
 			}
 		}
@@ -1445,8 +1353,6 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 		if (sClosestLand != NOWHERE)  // quit now, no need to look any farther
 			break;
 	}
-
-	//NumMessage("closestLand = ",closestLand);
 	return(sClosestLand);
 }
 
@@ -1470,15 +1376,11 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 	{
 		// determine maximum horizontal limits
 		sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
-		//NumMessage("sMaxLeft = ",sMaxLeft);
 		sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-		//NumMessage("sMaxRight = ",sMaxRight);
 
 		// determine maximum vertical limits
 		sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
-		//NumMessage("sMaxUp = ",sMaxUp);
 		sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-		//NumMessage("sMaxDown = ",sMaxDown);
 
 		// Call FindBestPath to set flags in all locations that we can
 		// walk into within range.  We have to set some things up first...
@@ -1514,7 +1416,6 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 			{
 				// calculate the next potential gridno
 				sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-				//NumMessage("Testing gridno #",gridno);
 				if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
 				{
 					continue;
@@ -1565,10 +1466,7 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 				{
 					// remember it instead
 					iBestSpotValue = iSpotValue;
-					//NumMessage("New shortest route = ",shortestPath);
-
 					sClosestSpot = sGridNo;
-					//NumMessage("New closest land at grid = ",closestLand);
 				}
 			}
 		}
@@ -1767,7 +1665,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 	if (best_spot == NOWHERE) return AI_ACTION_NONE;
 
 	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
-	DebugAI(String("%d decides to pick up %ls", s.ubID, ItemNames[o.usItem]));
+	SLOGD(DEBUG_TAG_AI, "%d decides to pick up %ls", s.ubID, ItemNames[o.usItem]);
 	if (GCM->getItem(o.usItem)->getItemClass() == IC_GUN &&
 			!FindBetterSpotForItem(s, HANDPOS))
 	{
@@ -1777,13 +1675,13 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 		}
 		if (s.inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
 		{ // Destroy this item
-			DebugAI(String("%d decides he must drop %ls first so destroys it", s.ubID, ItemNames[s.inv[HANDPOS].usItem]));
+			SLOGD(DEBUG_TAG_AI, "%d decides he must drop %ls first so destroys it", s.ubID, ItemNames[s.inv[HANDPOS].usItem]);
 			DeleteObj(&s.inv[HANDPOS]);
 			DeductPoints(&s, AP_PICKUP_ITEM, 0);
 		}
 		else
 		{ // We want to drop this item
-			DebugAI(String("%d decides he must drop %ls first", s.ubID, ItemNames[s.inv[HANDPOS].usItem]));
+			SLOGD(DEBUG_TAG_AI, "%d decides he must drop %ls first", s.ubID, ItemNames[s.inv[HANDPOS].usItem]);
 			s.bNextAction            = AI_ACTION_PICKUP_ITEM;
 			s.usNextActionData       = best_spot;
 			s.iNextActionSpecialData = best_item_idx;
@@ -1808,15 +1706,11 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	//NumMessage("sMaxDown = ",sMaxDown);
 	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
@@ -1979,13 +1873,10 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// reset the "reachable" flags in the region we're looking at
@@ -2059,9 +1950,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	if (pSoldier->bTeam == OUR_TEAM && !fInRing)
 	{
@@ -2071,7 +1960,6 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
@@ -2112,13 +2000,10 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 
 	// determine maximum horizontal limits
 	sMaxLeft  = MIN( iSearchRange, (sStartGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
 	sMaxRight = MIN( iSearchRange, MAXCOL - ((sStartGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
 	sMaxUp   = MIN( iSearchRange, (sStartGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
 	sMaxDown = MIN( iSearchRange, MAXROW - ((sStartGridNo / MAXROW) + 1));
 
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
@@ -2143,7 +2028,5 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 			}
 		}
 	}
-
 	return( sClosestSpot );
-
 }

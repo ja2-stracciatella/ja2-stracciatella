@@ -376,7 +376,7 @@ void SetEditorSmoothingMode( UINT8 ubNewMode )
 			DisableEditorButtons( BUILDING_SMART_WALLS, BUILDING_SMART_BROKEN_WALLS );
 			break;
 		default:
-			AssertMsg( 0, "Attempting to set an illegal smoothing mode." );
+			SLOGE(DEBUG_TAG_ASSERTS, "Attempting to set an illegal smoothing mode." );
 			break;
 	}
 	gMapInformation.ubEditorSmoothingType = ubNewMode;

@@ -9,6 +9,7 @@ override_dh_auto_configure:
 	echo "# configuration options"                                  >Makefile.config
 	echo "BINARY_DIR               := $(DEBROOT)/usr/games"         >>Makefile.config
 	echo "MANPAGE_DIR              := $(DEBROOT)/usr/share/man/man6">>Makefile.config
+	echo "SHARED_DIR               := $(DEBROOT)/usr/share"         >>Makefile.config
 	echo "FULL_PATH_EXTRA_DATA_DIR := $(DEBROOT)/usr/share/ja2"     >>Makefile.config
 	echo "INSTALLABLE              := yes"                          >>Makefile.config
 

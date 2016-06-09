@@ -490,7 +490,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 						case 0:  gubCrdtJustification = LEFT_JUSTIFIED;   break;
 						case 1:  gubCrdtJustification = CENTER_JUSTIFIED; break;
 						case 2:  gubCrdtJustification = RIGHT_JUSTIFIED;  break;
-						default: Assert(0);                               break;
+						default: SLOGE(DEBUG_TAG_ASSERTS, "error parsing credits file (sub)"); break;
 					}
 					break;
 
@@ -498,7 +498,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 				case CRDT_START_OF_SECTION: flags |= CRDT_FLAG__START_SECTION; break;
 				case CRDT_END_OF_SECTION:   flags |= CRDT_FLAG__END_SECTION;   break;
 
-				default: Assert(0); break;
+				default: SLOGE(DEBUG_TAG_ASSERTS, "error parsing credits file"); break;
 			}
 
 			/* skip till the next code or end of codes */

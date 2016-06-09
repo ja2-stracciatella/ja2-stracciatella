@@ -3,18 +3,13 @@
 
 #include "Types.h"
 
-
 extern UINT8 gubCurrentMapMessageString;
-extern BOOLEAN fDisableJustForIan;
 
 #define		MSG_INTERFACE				0
 #define		MSG_DIALOG					1
 #define		MSG_CHAT						2
 #define   MSG_DEBUG						3
 #define		MSG_UI_FEEDBACK			4
-#define   MSG_ERROR						5
-#define   MSG_BETAVERSION     6
-#define   MSG_TESTVERSION     7
 #define   MSG_SKULL_UI_FEEDBACK	11
 
 

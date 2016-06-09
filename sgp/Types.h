@@ -6,20 +6,16 @@
 
 #include "Platform.h"
 #include "SGPStrings.h"
+#include "slog/slog.h"
 
-#include <stdlib.h> // for abort()
 #define UNIMPLEMENTED \
-	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
-	abort();
-
-#define UNIMPLEMENTED_NO_ABORT \
-	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__);
+	SLOGE(DEBUG_TAG_ASSERTS, "===> %s:%d: %s() is not implemented", __FILE__, __LINE__, __func__);
 
 #ifdef WITH_FIXMES
-#	define FIXME \
-	fprintf(stderr, "===> %s:%d: %s() FIXME\n", __FILE__, __LINE__, __func__);
+  #define FIXME \
+	SLOGE(DEBUG_TAG_FIXME, "===> %s:%d: %s() FIXME", __FILE__, __LINE__, __func__);
 #else
-#	define FIXME (void)0;
+  #define FIXME (void)0;
 #endif
 
 

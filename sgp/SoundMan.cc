@@ -17,18 +17,11 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 
 // Uncomment this to disable the startup of sound hardware
 //#define SOUND_DISABLE
-
-
-#ifdef WITH_SOUND_DEBUG
-#	define SNDDBG(fmt, ...) (void)fprintf(stderr, ">>>> SND: " fmt, __VA_ARGS__)
-#else
-#	define SNDDBG(fmt, ...) (void)0
-#endif
-
 
 /*
  * from\to FREE PLAY STOP DEAD
@@ -76,7 +69,6 @@ enum
 #define SOUND_DEFAULT_MEMORY (16 * 1024 * 1024) // default memory limit
 #define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
 #define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
-
 
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
@@ -188,13 +180,7 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 	if (SoundPlayStreamed(pFilename))
 	{
 		//Trying to play a sound which is bigger then the 'guiSoundCacheThreshold'
-
-		// This line was causing a page fault in the Wiz 8 project, so
-		// I changed it to the second line, which works OK. -- DB
-
-		//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("\n*******\nSoundPlay():  ERROR:  trying to play %s which is bigger then the 'guiSoundCacheThreshold', use SoundPlayStreamedFile() instead\n", pFilename));
-
-		FastDebugMsg(String("SoundPlay: ERROR: Trying to play %s sound is too lardge to load into cache, use SoundPlayStreamedFile() instead\n", pFilename));
+		SLOGE(DEBUG_TAG_SOUND, "Trying to play %s sound is too large to load into cache, use SoundPlayStreamedFile() instead", pFilename));
 		return SOUND_ERROR;
 	}
 #endif
@@ -263,7 +249,7 @@ try
 	FILE* hRealFileHandle = GetRealFileHandleFromFileManFileHandle(hFile);
 	if (hRealFileHandle == NULL)
 	{
-		FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()\n", pFilename ) );
+		SLOGE(DEBUG_TAG_SOUND, "SoundPlayStreamedFile(): Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()", pFilename );
 		return SOUND_ERROR;
 	}
 
@@ -285,14 +271,14 @@ try
 }
 catch (...)
 {
-	FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Failed to play '%s'\n", pFilename));
+	SLOGE(DEBUG_TAG_SOUND, "SoundPlayStreamedFile(): Failed to play '%s'", pFilename);
 	return SOUND_ERROR;
 }
 
 
 UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
 {
-	SNDDBG("RAND \"%s\"\n", pFilename);
+	SLOGD(DEBUG_TAG_SOUND, "playing random Sound: \"%s\"", pFilename);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -479,7 +465,7 @@ void SoundServiceStreams(void)
 		SOUNDTAG* Sound = &pSoundList[i];
 		if (Sound->State == CHANNEL_DEAD)
 		{
-			SNDDBG("DEAD channel %u file \"%s\" (refcount %u)\n", i, Sound->pSample->pName, Sound->pSample->uiInstances);
+			SLOGD(DEBUG_TAG_SOUND, "DEAD channel %u file \"%s\" (refcount %u)", i, Sound->pSample->pName, Sound->pSample->uiInstances);
 			if (Sound->EOSCallback != NULL) Sound->EOSCallback(Sound->pCallbackData);
 			assert(Sound->pSample->uiInstances != 0);
 			Sound->pSample->uiInstances--;
@@ -564,7 +550,7 @@ static size_t GetSampleSize(const SAMPLETAG* const s)
 
 static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 {
-	SNDDBG("SMPL \"%s\" from %uHz to %uHz\n", s->pName, s->uiSpeed, s->uiSpeed / 2);
+	SLOGD(DEBUG_TAG_SOUND, "halfing the sample rate of \"%s\" from %uHz to %uHz", s->pName, s->uiSpeed, s->uiSpeed / 2);
 
 	UINT32 const n_samples = s->n_samples / 2;
 	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
@@ -622,7 +608,7 @@ static BOOLEAN DoubleSampleRate(SAMPLETAG* const s)
 {
 	UINT8 bitcount = s->uiFlags & SAMPLE_16BIT ? 16 : 8;
 
-	SNDDBG("SMPL \"%s\" %dbit from %uHz to %uHz\n", s->pName, bitcount, s->uiSpeed, s->uiSpeed * 2);
+	SLOGD(DEBUG_TAG_SOUND, "doubling the sample rate of \"%s\" %dbit from %uHz to %uHz", s->pName, bitcount, s->uiSpeed, s->uiSpeed * 2);
 
 	UINT32 const n_samples = s->n_samples * 2;
 	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
@@ -831,8 +817,8 @@ try
 	{
 		if (!SoundCleanCache())
 		{
-			SNDDBG("Not enough memory. Size: %u, Used: %u, Max: %u\n", uiSize, guiSoundMemoryUsed, guiSoundMemoryLimit);
-			FastDebugMsg(String("SoundLoadDisk:  ERROR:  trying to play %s, not enough memory\n", pFilename));
+			SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: trying to play %s, not enough memory\nSize: %u, Used: %u, Max: %u",
+						pFilename, uiSize, guiSoundMemoryUsed, guiSoundMemoryLimit);
 			return NULL;
 		}
 	}
@@ -848,7 +834,7 @@ try
 	// if we still don't have a sample slot
 	if (s == NULL)
 	{
-		FastDebugMsg(String("SoundLoadDisk:  ERROR: Trying to play %s, sound channels are full\n", pFilename));
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: Trying to play %s, sound channels are full", pFilename);
 		return NULL;
 	}
 
@@ -880,7 +866,8 @@ try
 					FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT);
 					FileRead(hFile, &BlockAlign,    sizeof(BlockAlign));
 					FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample));
-					SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
+					SLOGD(DEBUG_TAG_SOUND, "loading file \"%s\" format %u channels %u rate %u bits %u to slot %u",
+								pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
 					switch (FormatTag)
 					{
 						case WAVE_FORMAT_PCM: break;
@@ -970,7 +957,7 @@ static BOOLEAN SoundCleanCache(void)
 
 	if (candidate != NULL)
 	{
-		SNDDBG("FREE sample %u \"%s\" with %u hits\n", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
+		SLOGD(DEBUG_TAG_SOUND, "freeing sample %u \"%s\" with %u hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
 		SoundFreeSample(candidate);
 		return TRUE;
 	}
@@ -1174,7 +1161,7 @@ static UINT32 SoundGetUniqueID(void);
  * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
 static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", channel - pSoundList, sample - pSampleList, sample->pName);
+	SLOGD(DEBUG_TAG_SOUND, "playing channel %u sample %u file \"%s\"", channel - pSoundList, sample - pSampleList, sample->pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -1220,7 +1207,7 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 
 	if (channel->pSample == NULL) return FALSE;
 
-	SNDDBG("STOP channel %u\n", channel - pSoundList);
+	SLOGD(DEBUG_TAG_SOUND, "stopping channel channel %u", channel - pSoundList);
 	channel->State = CHANNEL_STOP;
 	return TRUE;
 }

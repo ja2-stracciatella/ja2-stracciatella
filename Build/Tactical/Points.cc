@@ -33,8 +33,6 @@
 #include "WeaponModels.h"
 
 #include "slog/slog.h"
-#define TAG "Points"
-
 
 INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno, const INT8 bDir, const INT8 bLevel)
 {
@@ -93,11 +91,9 @@ INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno
 	 case TRAVELCOST_NONE			: return( 0 );
 
    default:
-
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Calc AP: Unrecongnized MP type %d in %d, direction %d", sSwitchValue, sGridno, bDir ) );
-			break;
-
-
+				SLOGD(DEBUG_TAG_POINTS, "Calc AP: Unrecongnized MP type %d in %d, direction %d",
+							sSwitchValue, sGridno, bDir);
+				break;
   }
 
 	if (bDir & 1)
@@ -269,7 +265,7 @@ INT16 ActionPointCost(const SOLDIERTYPE* const pSoldier, const INT16 sGridNo, co
 			default:
 
 				// Invalid movement mode
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
+				SLOGW(DEBUG_TAG_POINTS, "Invalid movement mode %d used in ActionPointCost", usMovementMode);
 				sPoints = 1;
 		}
 	}
@@ -332,7 +328,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			default:
 
 				// Invalid movement mode
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Invalid movement mode %d used in ActionPointCost", usMovementMode  ) );
+				SLOGW(DEBUG_TAG_POINTS, "Invalid movement mode %d used in ActionPointCost", usMovementMode);
 				sPoints = 1;
 		}
 	}
@@ -467,7 +463,8 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 
 	pSoldier->bActionPoints = (INT8)sNewAP;
 
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Deduct Points (%d at %d) %d %d", pSoldier->ubID, pSoldier->sGridNo, sAPCost, sBPCost  ) );
+	SLOGD(DEBUG_TAG_POINTS, "Deduct Points (%d at %d) %d %d",
+				pSoldier->ubID, pSoldier->sGridNo, sAPCost, sBPCost);
 
   if ( AM_A_ROBOT( pSoldier ) )
 	{
@@ -532,9 +529,6 @@ static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
 {
  INT16 sBreathFactor = 100;
  UINT8 ubBandaged;
-
-
- //NumMessage("BEFORE adjustments, BREATH PTS = ",breathPts);
 
  // in real time, there IS no AP cost, (only breath cost)
  /*
@@ -782,7 +776,8 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 
 	if ( !fAnimTypeFound )
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Unknown end-of-turn breath anim: %hs", gAnimControl[usAnimState].zAnimStr));
+		SLOGD(DEBUG_TAG_POINTS, "Unknown end-of-turn breath anim: %hs",
+					gAnimControl[usAnimState].zAnimStr);
 	}
 
 	return( sBreathPerAP );
@@ -1138,7 +1133,7 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_t
 INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
 {
  // look around all 8 directions and return lowest terrain cost
- INT32	cnt;
+ UINT8	cnt;
  INT16	sLowest=127;
  INT16	sGridno,sCost;
 
@@ -1149,10 +1144,10 @@ INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
 
  for (cnt=0; cnt <= 7; cnt++)
   {
-    sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc((INT16) cnt));
+    sGridno = NewGridNo(pSoldier->sGridNo,DirectionInc(cnt));
     if (sGridno != pSoldier->sGridNo)
 		{
-       if ( (sCost=ActionPointCost( pSoldier, sGridno, (UINT8)cnt , pSoldier->usUIMovementMode ) ) < sLowest )
+       if ( (sCost=ActionPointCost( pSoldier, sGridno, cnt , pSoldier->usUIMovementMode ) ) < sLowest )
 			 {
 					sLowest = sCost;
 			 }
@@ -1162,13 +1157,13 @@ INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
 }
 
 
-INT8 PtsToMoveDirection(const SOLDIERTYPE* const pSoldier, const INT8 bDirection)
+INT8 PtsToMoveDirection(const SOLDIERTYPE* const pSoldier, const UINT8 bDirection)
 {
 	INT16	sGridno,sCost;
 	INT8	bOverTerrainType;
 	UINT16	usMoveModeToUse;
 
-  sGridno = NewGridNo( pSoldier->sGridNo, DirectionInc((INT16) bDirection ) );
+  sGridno = NewGridNo( pSoldier->sGridNo, DirectionInc( bDirection ) );
 
 	usMoveModeToUse = pSoldier->usUIMovementMode;
 
@@ -1620,7 +1615,8 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
   //          Be very careful with it.
 	if (!item->getItemClass() & IC_GRENADE)
 	{
-    SLOGI(TAG, "MinAPsToThrow - Called when in-hand item is %s", item->getInternalName().c_str());
+    SLOGI(DEBUG_TAG_POINTS, "MinAPsToThrow - Called when in-hand item is %s",
+					item->getInternalName().c_str());
 		return 0;
 	}
 

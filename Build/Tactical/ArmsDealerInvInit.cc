@@ -244,7 +244,7 @@ UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, UINT16 const usIte
 			break;
 
 		default:
-			Assert(0);
+			SLOGE(DEBUG_TAG_ASSERTS, "ChanceOfItemTransaction: invalid item suitability");
 			break;
 	}
 

@@ -216,11 +216,6 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 
 			if (pSoldier->usActionData != NOWHERE)
 			{
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
-
 				return(AI_ACTION_LEAVE_WATER_GAS);
 			}
 		}
@@ -284,11 +279,6 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 
 			if (pSoldier->usActionData != NOWHERE)
 			{
-	#ifdef DEBUGDECISIONS
-			 sprintf(tempstr,"%s - RANDOM PATROL to grid %d",pSoldier->name,pSoldier->usActionData);
-			 AIPopMessage(tempstr);
-	#endif
-
 				if (!gfTurnBasedAI)
 				{
 					// pause at the end of the walk!
@@ -346,11 +336,6 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 			{
 				if (RandomFriendWithin(pSoldier))
 				{
-		#ifdef DEBUGDECISIONS
-				 sprintf(tempstr,"%s - SEEK FRIEND at grid %d",pSoldier->name,pSoldier->usActionData);
-				 AIPopMessage(tempstr);
-		#endif
-
 					if (!gfTurnBasedAI)
 					{
 						// pause at the end of the walk!
@@ -399,12 +384,8 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 					{
 						pSoldier->usActionData = (UINT16)PreRandom(8);
 					}
-				} while (pSoldier->usActionData == pSoldier->bDirection);
-
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - TURNS to face direction %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
+				}
+				while (pSoldier->usActionData == pSoldier->bDirection);
 
 				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->usActionData ) )
 
@@ -451,15 +432,10 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 
 	// determine the most important noise heard, and its relative value
 	sNoiseGridNo = MostImportantNoiseHeard(pSoldier,&iNoiseValue,&fClimb, &fReachable);
-	//NumMessage("iNoiseValue = ",iNoiseValue);
 
 	if (sNoiseGridNo == NOWHERE)
 	{
 		// then we have no business being under YELLOW status any more!
-#ifdef BETAVERSION
-		NumMessage("DecideActionYellow: ERROR - No important noise known by guynum ",pSoldier->ubID);
-#endif
-
 		return(AI_ACTION_NONE);
 	}
 
@@ -488,10 +464,6 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 			if ((INT16)PreRandom(100) < iChance)
 			{
 				pSoldier->usActionData = ubNoiseDir;
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - TURNS TOWARDS NOISE to face direction %d",pSoldier->name,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
 				//if ( InternalIsValidStance( pSoldier, (INT8) pSoldier->usActionData, ANIM_STAND ) )
 				if ( ValidCreatureTurn( pSoldier, (INT8) pSoldier->usActionData ) )
 				{
@@ -556,12 +528,6 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 
 			if (pSoldier->usActionData != NOWHERE)
 			{
-	#ifdef DEBUGDECISIONS
-				sprintf(tempstr,"%s - INVESTIGATING NOISE at grid %d, moving to %d",
-					pSoldier->name,sNoiseGridNo,pSoldier->usActionData);
-				AIPopMessage(tempstr);
-	#endif
-
 				return(AI_ACTION_SEEK_NOISE);
 			}
 		}
@@ -578,11 +544,6 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 	////////////////////////////////////////////////////////////////////////////
 	// DO NOTHING: Not enough points left to move, so save them for next turn
 	////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
-	AINameMessage(pSoldier,"- DOES NOTHING (YELLOW)",1000);
-#endif
-
 	// by default, if everything else fails, just stands in place without turning
 	pSoldier->usActionData = NOWHERE;
 	return(AI_ACTION_NONE);
@@ -632,11 +593,6 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 
    if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
      return(AI_ACTION_LEAVE_WATER_GAS);
     }
   }
@@ -675,15 +631,10 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
  ////////////////////////////////////////////////////////////////////////
 
  // if our breath is running a bit low, and we're not in water or under fire
- if ((pSoldier->bBreath < 25) /*&& !bInWater*/ && !pSoldier->bUnderFire)
+	if ((pSoldier->bBreath < 25) /*&& !bInWater*/ && !pSoldier->bUnderFire)
   {
-#ifdef DEBUGDECISIONS
-   sprintf(tempstr,"%s RESTS (STATUS RED), breath = %d",pSoldier->name,pSoldier->bBreath);
-   AIPopMessage(tempstr);
-#endif
-
-   pSoldier->usActionData = NOWHERE;
-   return(AI_ACTION_NONE);
+		pSoldier->usActionData = NOWHERE;
+		return(AI_ACTION_NONE);
   }
 
 	////////////////////////////////////////////////////////////////////////////
@@ -703,15 +654,9 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 
 			if (iChance)
 			{
-				#ifdef DEBUGDECISIONS
-					AINumMessage("Chance to call sighting = ",iChance);
-				#endif
-
 				if ((INT16) PreRandom(100) < iChance)
 				{
-					#ifdef DEBUGDECISIONS
-						AINameMessage(pSoldier,"decides to call an alert!",1000);
-					#endif
+					SLOGD(DEBUG_TAG_AI, "%ls decides to call an alert!", pSoldier->name);
 					pSoldier->usActionData = CALL_1_PREY;
 					return(AI_ACTION_CREATURE_CALL);
 				}
@@ -752,11 +697,6 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 
 				if (pSoldier->usActionData != NOWHERE)
 				{
-					#ifdef DEBUGDECISIONS
-						sprintf(tempstr,"%s - SEEKING FRIEND at %d, MOVING to %d",
-						pSoldier->name,sClosestFriend,pSoldier->usActionData);
-						AIPopMessage(tempstr);
-					#endif
 					return(AI_ACTION_SEEK_FRIEND);
 				}
 			}
@@ -777,13 +717,6 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 			// if it's possible
 			if (pSoldier->usActionData != NOWHERE)
 			{
-				#ifdef DEBUGDECISIONS
-					// do it!
-					sprintf(tempstr,"%s - SEEKING OPPONENT at grid %d, MOVING to %d",
-					pSoldier->name,sClosestDisturbance,pSoldier->usActionData);
-					AIPopMessage(tempstr);
-				#endif
-
 				return(AI_ACTION_SEEK_OPPONENT);
 			}
 		}
@@ -848,14 +781,8 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 				 //if ( (INT16)PreRandom(100) < iChance && InternalIsValidStance( pSoldier, ubOpponentDir, ANIM_STAND ) )
 				 if ( (INT16)PreRandom(100) < iChance && ValidCreatureTurn( pSoldier, ubOpponentDir ) )
 				 {
-					 pSoldier->usActionData = ubOpponentDir;
-
-		#ifdef DEBUGDECISIONS
-					 sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST ENEMY to face direction %d",pSoldier->name,pSoldier->usActionData);
-					 AIPopMessage(tempstr);
-		#endif
-
-					 return(AI_ACTION_CHANGE_FACING);
+						pSoldier->usActionData = ubOpponentDir;
+						return(AI_ACTION_CHANGE_FACING);
 					}
 				}
 			}
@@ -871,14 +798,8 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(ptr,"- DOES NOTHING (RED)",1000);
-#endif
-
- pSoldier->usActionData = NOWHERE;
-
- return(AI_ACTION_NONE);
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 
@@ -993,15 +914,9 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 
      if (pSoldier->usActionData != NOWHERE)
       {
-#ifdef DEBUGDECISIONS
-       sprintf(tempstr,"%s - GASSED or LOW ON BREATH (%d), RUNNING AWAY to grid %d",pSoldier->name,pSoldier->bBreath,pSoldier->usActionData);
-       AIPopMessage(tempstr);
-#endif
-
-       return(AI_ACTION_RUN_AWAY);
+				return(AI_ACTION_RUN_AWAY);
       }
     }
-
   }
 
 
@@ -1016,12 +931,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 
    if (pSoldier->usActionData != NOWHERE)
     {
-#ifdef DEBUGDECISIONS
-     sprintf(tempstr,"%s - SEEKING NEAREST UNGASSED LAND at grid %d",pSoldier->name,pSoldier->usActionData);
-     AIPopMessage(tempstr);
-#endif
-
-     return(AI_ACTION_LEAVE_WATER_GAS);
+			return(AI_ACTION_LEAVE_WATER_GAS);
     }
 	}
 
@@ -1219,9 +1129,6 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 		// get the minimum cost to attack with this knife
 		ubMinAPCost = MinAPsToAttack(pSoldier,pSoldier->sLastTarget,DONTADDTURNCOST);
 
-		//sprintf(tempstr,"%s - ubMinAPCost = %d",pSoldier->name,ubMinAPCost);
-		//PopMessage(tempstr);
-
 		// if we can afford the minimum AP cost to stab with this knife weapon
 		if (pSoldier->bActionPoints >= ubMinAPCost)
 		{
@@ -1309,17 +1216,12 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 		{
 			pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 		}
-
-#ifdef DEBUGDECISIONS
-		DebugAI( String( "%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
-			pSoldier->ubID,pSoldier->name,
+		SLOGD(DEBUG_TAG_AI, "%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
+					pSoldier->ubID, pSoldier->name,
 			(ubBestAttackAction == AI_ACTION_FIRE_GUN)?"SHOOTS":((ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE)?"TOSSES AT":"STABS"),
-			BestAttack.ubOpponent,ExtMen[BestAttack.ubOpponent].name,
-			BestAttack.target,BestAttack.aimTime) ) ;
-#endif
-
+			BestAttack.opponent, BestAttack.opponent->name,
+			BestAttack.sTarget, BestAttack.ubAimTime);
 		return(ubBestAttackAction);
-
 	}
  }
 
@@ -1368,17 +1270,11 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 					const INT8 bDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestOpponent);
 
 				 // if we're not facing towards him
-				 if (pSoldier->bDirection != bDirection && ValidCreatureTurn( pSoldier, bDirection ) )
-				 {
-					 pSoldier->usActionData = bDirection;
-
-					#ifdef DEBUGDECISIONS
-					 sprintf(tempstr,"%s - TURNS to face CLOSEST OPPONENT in direction %d",pSoldier->name,pSoldier->usActionData);
-					 AIPopMessage(tempstr);
-					#endif
-
-					 return(AI_ACTION_CHANGE_FACING);
-				 }
+					if (pSoldier->bDirection != bDirection && ValidCreatureTurn( pSoldier, bDirection ) )
+					{
+						pSoldier->usActionData = bDirection;
+						return(AI_ACTION_CHANGE_FACING);
+					}
 				}
 		 }
 	 }
@@ -1401,15 +1297,9 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
  // DO NOTHING: Not enough points left to move, so save them for next turn
  ////////////////////////////////////////////////////////////////////////////
-
-#ifdef DEBUGDECISIONS
- AINameMessage(pSoldier,"- DOES NOTHING (BLACK)",1000);
-#endif
-
- // by default, if everything else fails, just stand in place and wait
- pSoldier->usActionData = NOWHERE;
- return(AI_ACTION_NONE);
-
+	// by default, if everything else fails, just stand in place and wait
+	pSoldier->usActionData = NOWHERE;
+	return(AI_ACTION_NONE);
 }
 
 
@@ -1422,38 +1312,23 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 	switch (pSoldier->bAlertStatus)
 	{
 		case STATUS_GREEN:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = GREEN");
-			#endif
 			bAction = CreatureDecideActionGreen(pSoldier);
 			break;
 
 		case STATUS_YELLOW:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = YELLOW");
-			#endif
 			bAction = CreatureDecideActionYellow(pSoldier);
 		break;
 
 		case STATUS_RED:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = RED");
-			#endif
 			bAction = CreatureDecideActionRed(pSoldier, TRUE);
 			break;
 
 		case STATUS_BLACK:
-			#ifdef DEBUGDECISIONS
-				AIPopMessage("AlertStatus = BLACK");
-			#endif
 			bAction = CreatureDecideActionBlack(pSoldier);
 			break;
 	}
-
-#ifdef DEBUGDECISIONS
-	DebugAI( String( "DecideAction: selected action %d, actionData %d\n\n",action,pSoldier->usActionData ) );
-#endif
-
+	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+				bAction, pSoldier->usActionData);
 	return(bAction);
 }
 

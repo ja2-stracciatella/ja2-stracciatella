@@ -8,9 +8,7 @@
 #include "Message.h"
 #include "Text.h"
 #include "FileMan.h"
-
-
-#ifdef JA2TESTVERSION
+#include "slog/slog.h"
 
 static wchar_t const* const gEventName[] =
 {
@@ -94,8 +92,6 @@ static wchar_t const* const gEventName[] =
 	L"MERC Merc went up level email delay",
 	L".",
 };
-
-#endif
 
 STRATEGICEVENT									*gpEventList = NULL;
 
@@ -271,9 +267,7 @@ STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const event_ty
 	if (gfProcessingGameEvents && timestamp <= guiTimeStampOfCurrentlyExecutingEvent)
 	{ /* Prevent infinite loops of posting events that are the same time or
 		 * earlier than the event currently being processed */
-#ifdef JA2TESTVERSION
-		ScreenMsg(FONT_RED, MSG_DEBUG, L"%ls Event Rejected: Can't post events <= time while inside an event callback. This is a special case situation that isn't a bug.", gEventName[callback_id]);
-#endif
+		SLOGD(DEBUG_TAG_EVENTPUMP, "%ls Event Rejected: Can't post events <= time while inside an event callback. This is a special case situation that isn't a bug.", gEventName[callback_id]);
 		return 0;
 	}
 

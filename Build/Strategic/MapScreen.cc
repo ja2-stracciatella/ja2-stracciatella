@@ -188,35 +188,6 @@
 #define     INV_BODY_X (STD_SCREEN_X + 71)
 #define     INV_BODY_Y (STD_SCREEN_Y + 116)
 
-
-#define     NAME_X                (STD_SCREEN_X + 11)
-#define     NAME_WIDTH            (STD_SCREEN_X + 62 - NAME_X)
-#define     ASSIGN_X              (STD_SCREEN_X + 67)
-#define     ASSIGN_WIDTH          (STD_SCREEN_X + 118 - ASSIGN_X)
-#define			SLEEP_X								(STD_SCREEN_X + 123)
-#define			SLEEP_WIDTH						(STD_SCREEN_X + 142 - SLEEP_X)
-#define     LOC_X                 (STD_SCREEN_X + 147)
-#define     LOC_WIDTH             (STD_SCREEN_X + 179 - LOC_X)
-#define     DEST_ETA_X            (STD_SCREEN_X + 184)
-#define     DEST_ETA_WIDTH        (STD_SCREEN_X + 217 - DEST_ETA_X)
-#define     TIME_REMAINING_X      (STD_SCREEN_X + 222)
-#define     TIME_REMAINING_WIDTH  (STD_SCREEN_X + 250 - TIME_REMAINING_X)
-#define     CLOCK_Y_START         (STD_SCREEN_Y + 298)
-#define     CLOCK_ETA_X           (STD_SCREEN_X + 463 - 15 + 6 + 30)
-#define     CLOCK_HOUR_X_START    (STD_SCREEN_X + 463 + 25 + 30)
-#define     CLOCK_MIN_X_START     (STD_SCREEN_X + 463 + 45 + 30)
-
-
-// contract
-#define CONTRACT_X      (STD_SCREEN_X + 185)
-#define CONTRACT_Y      (STD_SCREEN_Y + 50)
-
-// trash can
-#define TRASH_CAN_X (STD_SCREEN_X + 176)
-#define TRASH_CAN_Y (211 + PLAYER_INFO_Y)
-#define TRASH_CAN_WIDTH 193 - 165
-#define TRASH_CAN_HEIGHT 239 - 217
-
 //Text offsets
 #define Y_OFFSET 2
 
@@ -481,15 +452,6 @@ void SetInfoChar(SOLDIERTYPE const* const s)
 	}
 }
 
-
-static void ContractBoxGlow(void)
-{
-/* Why not?
-	fResetContractGlow = FALSE;
-*/
-}
-
-
 static void ContractListRegionBoxGlow(UINT16 usCount)
 {
  static INT32 iColorNum =10;
@@ -499,7 +461,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 
 
 	// if not glowing right now, leave
-	if (giContractHighLine == -1 || fResetContractGlow || fShowInventoryFlag)
+	if (fShowInventoryFlag)
 	{
 		iColorNum = 0;
 		fDelta = TRUE;
@@ -1906,7 +1868,6 @@ try
 		HandleHighLightingOfLinesInTeamPanel( );
 
 		// render glow for contract region
-		ContractBoxGlow( );
 		GlowTrashCan( );
 
 		// handle changing of highlighted lines
@@ -2113,7 +2074,6 @@ try
 		HandleHighLightingOfLinesInTeamPanel( );
 
 		// render glow for contract region
-		ContractBoxGlow( );
 		GlowTrashCan( );
 
 		// handle changing of highlighted lines
@@ -3116,10 +3076,14 @@ static void HandleModCtrl(UINT const key)
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				gfAutoAmbush ^= 1;
-				wchar_t const* const msg = gfAutoAmbush ?
-					L"Enemy ambush test mode enabled." :
-					L"Enemy ambush test mode disabled.";
-				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+				if(gfAutoAmbush)
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode enabled.");
+				}
+				else
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode disabled.");
+				}
 			}
 			break;
 
@@ -3131,17 +3095,13 @@ static void HandleModCtrl(UINT const key)
 			{
 				s->sBreathRed = 10000;
 				s->bBreath    = 100;
-				ScreenMsg(FONT_MCOLOR_RED, MSG_TESTVERSION, L"Vehicle refueled");
+				SLOGD(DEBUG_TAG_SMAP, "Vehicle refueled");
 
 				fTeamPanelDirty = TRUE;
 				fCharacterInfoPanelDirty = TRUE;
 			}
 			break;
 		}
-#endif
-
-#if defined JA2TESTVERSION
-		case 'i': fDisableJustForIan = !fDisableJustForIan; break;
 #endif
 
   case 'i':
@@ -3194,10 +3154,14 @@ static void HandleModCtrl(UINT const key)
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				gfAutoAIAware ^= 1;
-				wchar_t const* const msg = gfAutoAIAware ?
-					L"Strategic AI awareness maxed." :
-					L"Strategic AI awareness normal.";
-				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+				if(gfAutoAIAware)
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness maxed.");
+				}
+				else
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness normal.");
+				}
 			}
 			break;
 	}
@@ -6879,10 +6843,9 @@ void TellPlayerWhyHeCantCompressTime( void )
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time, pause state locked (reason %d). OK unless permanent.", guiLockPauseStateLastReasonId );
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) If permanent, take screenshot now, send with *previous* save & describe what happened since.");
-#endif
+		SLOGW(DEBUG_TAG_SMAP, "Can't compress time, pause state locked (reason %d). OK unless permanent.\n\
+													 If permanent, take screenshot now, send with *previous* save & describe what happened since.",
+													 guiLockPauseStateLastReasonId);
 	}
 	else if (!gfAtLeastOneMercWasHired)
 	{
@@ -6901,27 +6864,19 @@ void TellPlayerWhyHeCantCompressTime( void )
 	}
 	else if ( gfContractRenewalSquenceOn )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while contract renewal sequence is on.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while contract renewal sequence is on.");
 	}
 	else if( fDisableMapInterfaceDueToBattle )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while disabled due to battle.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while disabled due to battle.");
 	}
 	else if( fDisableDueToBattleRoster )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while in battle roster.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while in battle roster.");
 	}
 	else if ( fMapInventoryItem )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while still holding an inventory item.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while still holding an inventory item.");
 	}
 	else if( fShowMapInventoryPool )
 	{
@@ -7137,7 +7092,7 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 				break;
 
 			default:
-				Assert(0);
+				SLOGE(DEBUG_TAG_ASSERTS, "Invalid sorting mode for Merc List");
 				return;
 		}
 	}
@@ -8169,24 +8124,26 @@ void DumpSectorDifficultyInfo(void)
 {
 	// NOTE: This operates on the selected map sector!
 	wchar_t wSectorName[ 128 ];
-
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel]);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Player Kills = %d", gStrategicStatus.usPlayerKills );
-
 	GetSectorIDString(sSelMapX, sSelMapY, (INT8)iCurrentMapSectorZ, wSectorName, lengthof(wSectorName), TRUE);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"SECTOR: %ls", wSectorName );
 
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Pyth. Distance From Meduna (0-20) = %d", GetPythDistanceFromPalace( sSelMapX, sSelMapY ) );
+	SLOGD(DEBUG_TAG_SMAP, "Playing Difficulty: %ls\tHighest Progress (0-100) = %d%%\n\
+												 Player Kills = %d\tSECTOR: %ls\n\
+												 Pyth. Distance From Meduna (0-20) = %d",
+												 gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel],
+												 HighestPlayerProgressPercentage(),
+												 gStrategicStatus.usPlayerKills,
+												 wSectorName, GetPythDistanceFromPalace( sSelMapX, sSelMapY ));
 
 	if ( ( gWorldSectorX == sSelMapX ) && ( gWorldSectorY == sSelMapY ) && ( gbWorldSectorZ == iCurrentMapSectorZ ) )
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Enemy Difficulty Factor (0 to 100) = %d%%", CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) );
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Avg Regular Enemy Exp. Level (2-6) = %d", 2 + ( CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) / 20 ) );
+		SLOGD(DEBUG_TAG_SMAP, "Enemy Difficulty Factor (0 to 100) = %d%%\n\
+													 Avg Regular Enemy Exp. Level (2-6) = %d",
+													CalcDifficultyModifier( SOLDIER_CLASS_ARMY),
+													2 + ( CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) / 20));
 	}
 	else
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"--Must load sector to calculate difficulty--" );
+		SLOGD(DEBUG_TAG_SMAP, "Must load sector to calculate difficulty");
 	}
 }
 #endif
@@ -8508,7 +8465,7 @@ static void RestorePreviousPaths(void)
 			else
 			{
 				// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "RestorePreviousPaths: invalid pSoldier: %d", pSoldier->ubID);
 				continue;
 			}
 

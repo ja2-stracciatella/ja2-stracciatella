@@ -4,6 +4,7 @@
 #include "Buildings.h"
 #include "Isometric_Utils.h"
 #include "PathAI.h"
+#include "AI.h"
 #include "Structure_Wrap.h"
 #include "Random.h"
 #include "Overhead.h"
@@ -11,7 +12,7 @@
 #include "StrategicMap.h"
 #include "Sys_Globals.h"
 #include "WorldMan.h"
-
+#include "slog/slog.h"
 
 #define ROOF_LOCATION_CHANCE 8
 
@@ -183,7 +184,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 			gsCoverValue[sCurrGridNo]++;
 		}
 
-		DebugAI( String( "Roof code visits %d", sCurrGridNo ) );
+		SLOGD(DEBUG_TAG_AI, "Roof code visits %d", sCurrGridNo);
 #endif
 
 		if (sCurrGridNo == sStartGridNo)

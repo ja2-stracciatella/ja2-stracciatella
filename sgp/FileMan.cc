@@ -9,12 +9,10 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "PODObj.h"
-#include "Logger.h"
 
 #include "boost/filesystem.hpp"
 
 #include "slog/slog.h"
-#define TAG "FileMan"
 
 #if _WIN32
 #include <shlobj.h>
@@ -117,8 +115,8 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
 
 	if (mkdir(configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-    LOG_ERROR("Unable to create directory '%s'\n", configFolderPath.c_str());
-		throw std::runtime_error("Unable to local directory");
+	  SLOGE(DEBUG_TAG_FILEMAN, "Unable to create directory '%s'", configFolderPath.c_str());
+	  throw std::runtime_error("Unable to create local directory");
 	}
 
   // Create another directory and set is as the current directory for the process
@@ -128,8 +126,8 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
   std::string tmpPath = FileMan::joinPaths(configFolderPath, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-    LOG_ERROR("Unable to create tmp directory '%s'\n", tmpPath.c_str());
-		throw std::runtime_error("Unable to create tmp directory");
+	  SLOGE(DEBUG_TAG_FILEMAN, "Unable to create tmp directory '%s'", tmpPath.c_str());
+	  throw std::runtime_error("Unable to create tmp directory");
 	}
   else
   {
@@ -535,7 +533,7 @@ bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name,
     }
   }
 
-  // LOG_INFO("XXXXX Looking for %s/[ %s ] : %s\n", directory, name, result ? "success" : "failure");
+  // SLOGI(DEBUG_TAG_FILEMAN,"Looking for %s/[ %s ] : %s", directory, name, result ? "success" : "failure");
   return result;
 }
 #endif

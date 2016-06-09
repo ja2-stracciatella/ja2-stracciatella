@@ -36,7 +36,7 @@
 #include <math.h>
 #include "UILayout.h"
 #include "GameState.h"
-
+#include "slog/slog.h"
 
 UINT16* gpZBuffer = NULL;
 
@@ -50,7 +50,6 @@ static INT16 gsCurrentItemGlowFrame = 0;
 #define VIEWPORT_YOFFSET_S        (WORLD_TILE_Y * 2)
 #define LARGER_VIEWPORT_XOFFSET_S (VIEWPORT_XOFFSET_S * 3)
 #define LARGER_VIEWPORT_YOFFSET_S (VIEWPORT_YOFFSET_S * 5)
-
 
 enum RenderTilesFlags
 {
@@ -2114,10 +2113,10 @@ void ScrollWorld(void)
 				RESETCOUNTER(STARTSCROLL);
 			}
 
-			if (gusMouseYPos == 0)                 ScrollFlags |= SCROLL_UP;
-			if (gusMouseYPos >= SCREEN_HEIGHT - 1) ScrollFlags |= SCROLL_DOWN;
-			if (gusMouseXPos >= SCREEN_WIDTH  - 1) ScrollFlags |= SCROLL_RIGHT;
-			if (gusMouseXPos == 0)                 ScrollFlags |= SCROLL_LEFT;
+			if (gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_UP;
+			if (gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_DOWN;
+			if (gusMouseXPos >= SCREEN_WIDTH  - NO_PX_SHOW_EXIT_CURS) ScrollFlags |= SCROLL_RIGHT;
+			if (gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 ScrollFlags |= SCROLL_LEFT;
 		}
 	}
 	while (FALSE);
@@ -2254,7 +2253,7 @@ void InitRenderParams(UINT8 ubRestrictionID)
 	gsTRY += ROOF_LEVEL_HEIGHT;
 	gsCY  += ROOF_LEVEL_HEIGHT / 2;
 
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String("World Screen Width %d Height %d", gsTRX - gsTLX, gsBRY - gsTRY));
+	SLOGD(DEBUG_TAG_RENDERWORLD, "World Screen Width %d Height %d", gsTRX - gsTLX, gsBRY - gsTRY);
 
 	// Determine scale factors
 	// First scale world screen coords for VIEWPORT ratio
@@ -2318,7 +2317,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
   // Checking if screen shows areas outside of the map
 	BOOLEAN fOutLeft   = (gsTLX > sTopLeftWorldX);
 	BOOLEAN fOutRight  = (gsTRX < sTopRightWorldX);
-	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY + 62);       /* top of the screen is above top of the map (with padding for headshots) */
+	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY);            /* top of the screen is above top of the map */
 	BOOLEAN fOutBottom = (gsBLY < sBottomLeftWorldY);          /* bottom of the screen is below bottom if the map */
 
   int mapHeight = gsBLY - gsTLY;
@@ -2410,10 +2409,10 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 		}
 		else
 		{
-			if (fOutRight  && gusMouseXPos >= SCREEN_WIDTH - 1)  gfUIShowExitEast  = TRUE;
-			if (fOutLeft   && gusMouseXPos == 0)                 gfUIShowExitWest  = TRUE;
-			if (fOutTop    && gusMouseYPos == 0)                 gfUIShowExitNorth = TRUE;
-			if (fOutBottom && gusMouseYPos >= SCREEN_HEIGHT - 1) gfUIShowExitSouth = TRUE;
+			if (fOutRight  && gusMouseXPos >= SCREEN_WIDTH - NO_PX_SHOW_EXIT_CURS)  gfUIShowExitEast  = TRUE;
+			if (fOutLeft   && gusMouseXPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitWest  = TRUE;
+			if (fOutTop    && gusMouseYPos <  NO_PX_SHOW_EXIT_CURS)                 gfUIShowExitNorth = TRUE;
+			if (fOutBottom && gusMouseYPos >= SCREEN_HEIGHT - NO_PX_SHOW_EXIT_CURS) gfUIShowExitSouth = TRUE;
 		}
 	}
 
@@ -2526,14 +2525,14 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDest
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -2789,14 +2788,14 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuf
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -3056,14 +3055,14 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[usIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -3318,14 +3317,14 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuf
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
@@ -3584,14 +3583,14 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UI
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 	// setup for the z-column blitting stuff
 	const ZStripInfo* const pZInfo = hSrcVObject->ppZStripInfo[sZIndex];
 	if (pZInfo == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_0, "Missing Z-Strip info on multi-Z object");
+		SLOGW(DEBUG_TAG_RENDERWORLD, "Missing Z-Strip info on multi-Z object");
 		return;
 	}
 
