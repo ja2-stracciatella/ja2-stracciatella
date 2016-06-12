@@ -1,0 +1,7 @@
+set(JA2_SOURCES
+    ${JA2_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/ContentMercs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Dialogs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/npcs.cc
+    PARENT_SCOPE
+)

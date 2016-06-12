@@ -1,0 +1,17 @@
+set(JA2_SOURCES
+    ${JA2_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/AIList.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/AIMain.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/AIUtils.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Attacks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/CreatureDecideAction.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/DecideAction.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/FindLocations.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Knowledge.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Medical.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Movement.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/NPC.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/PanicButtons.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Realtime.cc
+    PARENT_SCOPE
+)
