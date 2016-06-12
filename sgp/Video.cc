@@ -207,32 +207,6 @@ void SuspendVideoManager(void)
 	guiVideoManagerState = VIDEO_SUSPENDED;
 }
 
-
-BOOLEAN RestoreVideoManager(void)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED;
-  return false;
-#else
-	// Make sure the video manager is indeed suspended before moving on
-
-	if (guiVideoManagerState == VIDEO_SUSPENDED)
-	{
-		// Set the video state to VIDEO_ON
-
-		guiFrameBufferState = BUFFER_DIRTY;
-		gfForceFullScreenRefresh = TRUE;
-		guiVideoManagerState = VIDEO_ON;
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
-#endif
-}
-
-
 void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
 	if (gfForceFullScreenRefresh)

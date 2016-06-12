@@ -2546,8 +2546,8 @@ static void UpdateMercMercContractInfo(void)
 INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 {
 	BOOLEAN	fFile1Exist, fFile2Exist;
-	SGP_FILETIME	CreationTime1, LastAccessedTime1, LastWriteTime1;
-	SGP_FILETIME	CreationTime2, LastAccessedTime2, LastWriteTime2;
+	time_t	LastWriteTime1;
+	time_t	LastWriteTime2;
 
 	fFile1Exist = FALSE;
 	fFile2Exist = FALSE;
@@ -2560,15 +2560,13 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( GCM->doesGameResExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName1)));
-		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
+		GetFileManFileTime( zFileName1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( GCM->doesGameResExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName2)));
-		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
+		GetFileManFileTime( zFileName2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}
 

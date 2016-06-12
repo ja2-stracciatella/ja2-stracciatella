@@ -54,7 +54,6 @@ void RestrictMouseCursor(const SGPRect* pRectangle);
 extern void					FreeMouseCursor(void);
 extern BOOLEAN			IsCursorRestricted( void );
 extern void					GetRestrictedClipCursor( SGPRect *pRectangle );
-extern void         RestoreCursorClipRect( void );
 
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );

@@ -395,63 +395,36 @@ BOOLEAN FileClearAttributes(const std::string &filename)
 
 BOOLEAN FileClearAttributes(const char* const filename)
 {
-#if 1 // XXX TODO
-  SLOGW(DEBUG_TAG_FILEMAN, "ignoring %s(\"%s\")", __func__, filename);
-	return FALSE;
-	// UNIMPLEMENTED
-#else
-	return SetFileAttributes(filename, FILE_ATTRIBUTE_NORMAL);
-#endif
+  using namespace boost::filesystem;
+  
+  permissions(filename, ( add_perms | owner_read | owner_write | group_read | group_write ));
+  return true;
 }
 
 
-BOOLEAN GetFileManFileTime(const SGPFile* f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
+BOOLEAN GetFileManFileTime(const char* fileName, time_t* const pLastWriteTime)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED;
-  return FALSE;
-#else
-	//Initialize the passed in variables
-	memset(pCreationTime,     0, sizeof(*pCreationTime));
-	memset(pLastAccessedTime, 0, sizeof(*pLastAccessedTime));
-	memset(pLastWriteTime,    0, sizeof(*pLastWriteTime));
-
-	if (f->flags & SGPFILE_REAL)
-	{
-		const HANDLE hRealFile = f->u.file;
-
-		//Gets the UTC file time for the 'real' file
-		SGP_FILETIME sCreationUtcFileTime;
-		SGP_FILETIME sLastAccessedUtcFileTime;
-		SGP_FILETIME sLastWriteUtcFileTime;
-		GetFileTime(hRealFile, &sCreationUtcFileTime, &sLastAccessedUtcFileTime, &sLastWriteUtcFileTime);
-
-		//converts the creation UTC file time to the current time used for the file
-		FileTimeToLocalFileTime(&sCreationUtcFileTime, pCreationTime);
-
-		//converts the accessed UTC file time to the current time used for the file
-		FileTimeToLocalFileTime(&sLastAccessedUtcFileTime, pLastAccessedTime);
-
-		//converts the write UTC file time to the current time used for the file
-		FileTimeToLocalFileTime(&sLastWriteUtcFileTime, pLastWriteTime);
-		return TRUE;
-	}
-	else
-	{
-		return GetLibraryFileTime(&f->u.lib, pLastWriteTime);
-	}
-#endif
+  using namespace boost::filesystem;
+  *pLastWriteTime = last_write_time(fileName);
+  if(*pLastWriteTime == -1)
+  {
+    return FALSE;
+  }
+  return TRUE;
 }
 
 
-INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FILETIME* const pSecondFileTime)
+INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* const pSecondFileTime)
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED;
+  if ( *pFirstFileTime < *pSecondFileTime )
+  {
+    return -1;
+  }
+  if ( *pFirstFileTime > *pSecondFileTime )
+  {
+    return 1;
+  }
   return 0;
-#else
-	return CompareFileTime(pFirstFileTime, pSecondFileTime);
-#endif
 }
 
 
@@ -462,17 +435,17 @@ FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
-#if 1 // XXX TODO
-	FIXME
-	return 1024 * 1024 * 1024; // XXX TODO return an arbitrary number for now
-#else
-	//get the drive letter from the exec dir
-  STRING512 zDrive;
-	_splitpath(GetExecutableDirectory(), zDrive, NULL, NULL, NULL);
-
-	sprintf(zDrive, "%s\\", zDrive);
-	return GetFreeSpaceOnHardDrive(zDrive);
-#endif
+  using namespace boost::filesystem;
+  space_info si = space(current_path());
+  if (si.available == -1)
+  {
+    /* something is wrong, tell everyone no space available */
+    return 0;
+  }
+  else
+  {
+    return si.available;
+  }
 }
 
 /** Join two path components. */
