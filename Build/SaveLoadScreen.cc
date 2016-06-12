@@ -1548,7 +1548,7 @@ void DoQuickSave()
 // Save function for Dead Is Dead
 void DoDeadIsDeadSave()
 {
-	if (SaveGame(10, L"DiD")) return;
+	if (SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName)) return;
 
 	if (guiPreviousOptionScreen == MAP_SCREEN)
 		DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
