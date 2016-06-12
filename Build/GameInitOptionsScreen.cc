@@ -762,8 +762,14 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 	// JA2Gold: iron man
 	gGameOptions.ubGameSaveMode = GetCurrentGameSaveButtonSetting();
 
-	gubGIOExitScreen = INTRO_SCREEN;
-
+  if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
+  {
+    gubGIOExitScreen = SAVE_LOAD_SCREEN;
+  } else
+  {
+    gubGIOExitScreen = INTRO_SCREEN;
+  }
+  
 	//set the fact that we should do the intro videos
 #ifdef JA2TESTVERSION
 	if (_KeyDown(ALT))
