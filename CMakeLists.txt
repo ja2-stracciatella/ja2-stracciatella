@@ -54,40 +54,40 @@ if (WITH_SOUND_DEBUG)
 endif()
 
 if (NOT (LOCAL_SDL_LIB STREQUAL ""))
-    MESSAGE( STATUS "Using local SDL from " "${ja2-stracciatella_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-    set(CMAKE_PREFIX_PATH "${ja2-stracciatella_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    MESSAGE( STATUS "Using local SDL from " "${CMAKE_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/${LOCAL_SDL_LIB}")
 endif()
 find_package(SDL REQUIRED)
 
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
 else()
-    MESSAGE(STATUS "Compiling with local Boost libraries from ${ja2-stracciatella_SOURCE_DIR}/_build/lib-boost" )
-    set(Boost_INCLUDE_DIRS "${ja2-stracciatella_SOURCE_DIR}/_build/lib-boost")
+    MESSAGE(STATUS "Compiling with local Boost libraries from ${CMAKE_SOURCE_DIR}/_build/lib-boost" )
+    set(Boost_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/_build/lib-boost")
     set(Boost_LIBRARIES "")
 endif()
 
 include_directories(
-    ${ja2-stracciatella_SOURCE_DIR}
-    ${ja2-stracciatella_SOURCE_DIR}/Build
-    ${ja2-stracciatella_SOURCE_DIR}/Build/Editor
-    ${ja2-stracciatella_SOURCE_DIR}/Build/Laptop
-    ${ja2-stracciatella_SOURCE_DIR}/Build/Res
-    ${ja2-stracciatella_SOURCE_DIR}/Build/Strategic
-    ${ja2-stracciatella_SOURCE_DIR}/Build/Tactical
-    ${ja2-stracciatella_SOURCE_DIR}/Build/TacticalAI
-    ${ja2-stracciatella_SOURCE_DIR}/Build/TileEngine
-    ${ja2-stracciatella_SOURCE_DIR}/Build/Utils
-    ${ja2-stracciatella_SOURCE_DIR}/sgp
-    ${ja2-stracciatella_SOURCE_DIR}/src
-    ${ja2-stracciatella_SOURCE_DIR}/src/content
-    ${ja2-stracciatella_SOURCE_DIR}/src/internals
-    ${ja2-stracciatella_SOURCE_DIR}/src/policy
-    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-MicroIni/include
-    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-rapidjson
-    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-slog
-    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-smacker/libsmacker
-    ${ja2-stracciatella_SOURCE_DIR}/_build/lib-utf8cpp/source
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/Build
+    ${CMAKE_SOURCE_DIR}/Build/Editor
+    ${CMAKE_SOURCE_DIR}/Build/Laptop
+    ${CMAKE_SOURCE_DIR}/Build/Res
+    ${CMAKE_SOURCE_DIR}/Build/Strategic
+    ${CMAKE_SOURCE_DIR}/Build/Tactical
+    ${CMAKE_SOURCE_DIR}/Build/TacticalAI
+    ${CMAKE_SOURCE_DIR}/Build/TileEngine
+    ${CMAKE_SOURCE_DIR}/Build/Utils
+    ${CMAKE_SOURCE_DIR}/sgp
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/content
+    ${CMAKE_SOURCE_DIR}/src/internals
+    ${CMAKE_SOURCE_DIR}/src/policy
+    ${CMAKE_SOURCE_DIR}/_build/lib-MicroIni/include
+    ${CMAKE_SOURCE_DIR}/_build/lib-rapidjson
+    ${CMAKE_SOURCE_DIR}/_build/lib-slog
+    ${CMAKE_SOURCE_DIR}/_build/lib-smacker/libsmacker
+    ${CMAKE_SOURCE_DIR}/_build/lib-utf8cpp/source
     ${SDL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
@@ -484,8 +484,8 @@ if (WITH_UNITTESTS)
 
     set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
     include_directories(
-        ${ja2-stracciatella_SOURCE_DIR}/_build/lib-gtest/include
-        ${ja2-stracciatella_SOURCE_DIR}/_build/lib-gtest
+        ${CMAKE_SOURCE_DIR}/_build/lib-gtest/include
+        ${CMAKE_SOURCE_DIR}/_build/lib-gtest
     )
     LIST(APPEND SOURCES
         _build/lib-gtest/src/gtest.cc
@@ -596,17 +596,17 @@ add_custom_target(uninstall
 add_custom_target(build-deb-package-on-u1404_amd64)
 add_custom_command(TARGET build-deb-package-on-u1404_amd64
         COMMAND vagrant up amd64 && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB'" amd64 && vagrant halt amd64
-        WORKING_DIRECTORY ${ja2-stracciatella_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
 
 add_custom_target(build-deb-package-on-u1404_i386)
 add_custom_command(TARGET build-deb-package-on-u1404_i386
         COMMAND vagrant up i386 && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB'" i386 && vagrant halt i386
-        WORKING_DIRECTORY ${ja2-stracciatella_SOURCE_DIR}/_build/buildboxes/u1404_i386)
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/u1404_i386)
 
 add_custom_target(build-win-release-on-u1404_amd64)
 add_custom_command(TARGET build-win-release-on-u1404_amd64
         COMMAND vagrant up win && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\"'" win && vagrant halt win
-        WORKING_DIRECTORY ${ja2-stracciatella_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
 
 add_custom_target(build-releases)
 ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_amd64)
