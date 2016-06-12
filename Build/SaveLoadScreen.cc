@@ -334,7 +334,8 @@ static void LeaveSaveLoadScreen()
 	ScreenID const exit_screen =
 		gfCameDirectlyFromGame                     ? guiPreviousOptionScreen :
 		guiPreviousOptionScreen == MAINMENU_SCREEN ? MAINMENU_SCREEN         :
-		OPTIONS_SCREEN;
+		guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN ? GAME_INIT_OPTIONS_SCREEN : // Added to handle interaction during Dead is Dead game start
+		guiPreviousOptionScreen == INTRO_SCREEN ? INTRO_SCREEN : OPTIONS_SCREEN;
 	SetSaveLoadExitScreen(exit_screen);
 }
 
@@ -359,6 +360,11 @@ static void StartFadeOutForSaveLoadScreen(void);
 
 static void EnterSaveLoadScreen()
 {
+  // Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
+  if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
+  {
+    gfDiDTab = TRUE;
+  }  
   
 	// This is a hack to get sector names, but if the underground sector is NOT loaded
 	if (!gpUndergroundSectorInfoHead)
@@ -1649,8 +1655,16 @@ static void SaveGameToSlotNum(void)
 	//render the buttons
 	MarkButtonsDirty( );
 	RenderButtons();
-
-	if( !SaveGame( gfDiDTab ? (gbSelectedSaveLocation + NUM_SAVE_GAMES) : gbSelectedSaveLocation, gzGameDescTextField ) )
+  
+  // If we are selecting the Dead is Dead Savegame slot, only remember the slot, do not save
+  // Also set the INTRO_SCREEN as previous options screen. This is a hack to get the game started
+  if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
+  {
+    guiPreviousOptionScreen = INTRO_SCREEN;
+    gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
+    wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField);
+    
+  } else if( !SaveGame( gfDiDTab ? (gbSelectedSaveLocation + NUM_SAVE_GAMES) : gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}

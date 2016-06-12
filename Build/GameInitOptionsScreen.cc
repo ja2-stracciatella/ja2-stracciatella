@@ -7,6 +7,7 @@
 #include "Fade_Screen.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "Options_Screen.h"
 #include "GameInitOptionsScreen.h"
 #include "GameSettings.h"
 #include "Input.h"
@@ -872,5 +873,7 @@ static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue const b
 
 static void ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
+  // Set the Previous Option Screen to the Game Init Options Screen, so the save screen knows we are starting a new game
+  guiPreviousOptionScreen = GAME_INIT_OPTIONS_SCREEN;
   gubGameOptionScreenHandler = GIO_EXIT;
 }
