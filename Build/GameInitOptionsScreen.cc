@@ -131,7 +131,9 @@ enum
 	GIO_NOTHING,
 	GIO_CANCEL,
 	GIO_EXIT,
-	GIO_IRON_MAN_MODE
+	GIO_IRON_MAN_MODE,
+	GIO_DEAD_IS_DEAD_MODE,
+  GIO_DEAD_IS_DEAD_SAVE
 };
 
 
@@ -189,10 +191,12 @@ static void GetGIOScreenUserInput(void);
 static void RestoreGIOButtonBackGrounds(void);
 static void DoneFadeOutForExitGameInitOptionScreen(void);
 static void DisplayMessageToUserAboutGameDifficulty(void);
+static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const wchar_t, MSGBOX_CALLBACK);
 static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DisplayMessageToUserAboutIronManMode(void);
 static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue);
 static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue);
+static void ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack(MessageBoxReturnValue);
 
 
 ScreenID GameInitOptionsScreenHandle(void)
@@ -387,6 +391,11 @@ static void ExitGIOScreen()
 	gfGIOScreenEntry = TRUE;
 }
 
+static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallback)
+{
+  gubGameOptionScreenHandler = GIO_EXIT;
+  DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_OK, ReturnCallback, NULL);
+}
 
 static void HandleGIOScreen(void)
 {
@@ -413,6 +422,13 @@ static void HandleGIOScreen(void)
 			case GIO_IRON_MAN_MODE:
 				DisplayMessageToUserAboutGameDifficulty();
 				break;
+      
+      case GIO_DEAD_IS_DEAD_MODE:
+        DisplayMessageToUserAboutGameDifficulty();
+        break;
+      case GIO_DEAD_IS_DEAD_SAVE:
+        DisplayMessageToUserAboutDeadIsDeadSaveScreen(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack); 
+        break;
 		}
 
 		gubGameOptionScreenHandler = GIO_NOTHING;
@@ -775,7 +791,6 @@ static void DoGioMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallba
 	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ReturnCallback, NULL);
 }
 
-
 static void DisplayMessageToUserAboutGameDifficulty(void)
 {
 	const wchar_t* text;
@@ -793,10 +808,16 @@ static void DisplayMessageToUserAboutGameDifficulty(void)
 
 static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
-	if (bExitValue == MSG_BOX_RETURN_YES)
-	{
-		gubGameOptionScreenHandler = GIO_EXIT;
-	}
+  if (bExitValue == MSG_BOX_RETURN_YES)
+  {
+    if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
+    {
+      gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD_SAVE;
+    } else
+    {
+      gubGameOptionScreenHandler = GIO_EXIT;
+    } 
+  }
 }
 
 
@@ -831,20 +852,19 @@ static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue const bExi
 	}
 }
 
-static void DoGioDeadIsDeadMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallback)
-{
-	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_OK, ReturnCallback, NULL);
-}
-
 static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if (bExitValue == MSG_BOX_RETURN_YES)
 	{
-		gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD;
-		DoGioDeadIsDeadMessageBox(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadMessageBoxCallBack);
+		gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD_MODE;
 	}
 	else
 	{
 		SelectCheckbox(guiGameSaveToggles, *guiGameSaveToggles[GIO_CAN_SAVE]);
 	}
+}
+
+static void ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
+{
+  gubGameOptionScreenHandler = GIO_EXIT;
 }
