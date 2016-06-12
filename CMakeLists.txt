@@ -25,7 +25,6 @@ option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
-option(INSTALLABLE "Should this build be installable" OFF)
 
 ## Build
 
@@ -510,9 +509,9 @@ if (WITH_UNITTESTS)
     )
 endif()
 
-set(CMAKE_CXX_FLAGS ${CFLAGS})
-add_executable(${BINARY} ${SOURCES})
-target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
+add_executable(${BINARY} ${JA2_SOURCES})
+target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
 add_custom_command(TARGET ${BINARY} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/externalized "$<TARGET_FILE_DIR:${BINARY}>/externalized")
@@ -522,6 +521,12 @@ add_custom_command(TARGET ${BINARY} PRE_BUILD
 add_custom_command(TARGET ${BINARY} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/mods "$<TARGET_FILE_DIR:${BINARY}>/mods")
+if (MSVC)
+    STRING(REPLACE "SDLmain.lib" "SDL.dll" SDL_DLL ${SDLMAIN_LIBRARY})
+    add_custom_command(TARGET ${BINARY} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
+endif()
 
 ## Installing and Packaging
 
