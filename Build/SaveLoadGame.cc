@@ -732,6 +732,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	CalcJA2EncryptionSet(SaveGameHeader);
 
 	UINT32 const version = SaveGameHeader.uiSavedGameVersion;
+  // Load the savegame name, only relevant for Dead is Dead games
+  wcscpy(gGameSettings.sCurrentSavedGameName, SaveGameHeader.sSavedGameDesc);
 
 	/* If the player is loading up an older version of the game and the person
 	 * DOESN'T have the cheats on. */
