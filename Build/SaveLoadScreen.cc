@@ -364,6 +364,7 @@ static void EnterSaveLoadScreen()
   if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
   {
     gfDiDTab = TRUE;
+    gfSaveGame = TRUE;
   }  
   
 	// This is a hack to get sector names, but if the underground sector is NOT loaded
@@ -714,8 +715,8 @@ static void SaveGameToSlotNum(void);
 
 static void SaveLoadGameNumber()
 {
-	INT8 const save_slot_id = gfDiDTab ? (gbSelectedSaveLocation + NUM_SAVE_GAMES) : gbSelectedSaveLocation;
-	if (save_slot_id < (gfDiDTab ? NUM_SAVE_GAMES : 0) || (gfDiDTab ? (2*NUM_SAVE_GAMES) : NUM_SAVE_GAMES) <= save_slot_id) return;
+	INT8 const save_slot_id = gbSelectedSaveLocation;
+	if (save_slot_id < 0 || NUM_SAVE_GAMES <= save_slot_id) return;
 
 	if (gfSaveGame)
 	{
@@ -765,7 +766,33 @@ void SwitchLoadTab()
     gfDiDTab=TRUE;
     //gbSaveGameOffset=NUM_SAVE_GAMES;
   }
-  // Redraw the save load screen
+
+  // Reinit the savegame array and redraw the save load screen
+  InitSaveGameArray();
+  // Reinit the mouse region for selections, otherwise we can't select the save slots
+  gbSelectedSaveLocation = -1;
+  UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
+  UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
+  for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
+  {
+    // Deinitialize first
+    MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
+    // Reinitialize
+    MOUSE_REGION& r = gSelectedSaveRegion[i];
+    MSYS_DefineRegion(&r, x, y, x + SLG_SAVELOCATION_WIDTH, y + SLG_SAVELOCATION_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack);
+    MSYS_SetRegionUserData(&r, 0, i);
+
+    // Disable unused slots and select the first used slot
+    if (!gbSaveGameArray[i])
+    {  
+      r.Disable();
+    } else if(gbSelectedSaveLocation == -1)
+    {
+      gbSelectedSaveLocation = i;
+    }  
+    
+    y += SLG_GAP_BETWEEN_LOCATIONS;
+  }
   RenderSaveLoadScreen();
 
   // Render the buttons
@@ -792,7 +819,7 @@ static void InitSaveGameArray(void)
 	for (INT8 cnt = 0; cnt < NUM_SAVE_GAMES; ++cnt)
 	{
     SAVED_GAME_HEADER SaveGameHeader;
-    gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt + NUM_SAVE_GAMES, &SaveGameHeader);
+    gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt, &SaveGameHeader);
 	}
 }
 
@@ -828,7 +855,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	Font  font = SAVE_LOAD_NORMAL_FONT;
 	UINT8 foreground;
 	UINT8 shadow;
-	if (entry_idx == 0 && gfSaveGame)
+	if (entry_idx == 0 && gfSaveGame && !gfDiDTab)
 	{ // The QuickSave slot
 		FRAME_BUFFER->ShadowRect(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
 		foreground = SAVE_LOAD_QUICKSAVE_COLOR;
@@ -876,7 +903,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 			header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
 			header.sInitialGameOptions       = gGameOptions;
 		}
-		else if (!LoadSavedGameHeader(gfDiDTab ? entry_idx + NUM_SAVE_GAMES : entry_idx, &header))
+		else if (!LoadSavedGameHeader(entry_idx, &header))
 		{
 			return FALSE;
 		}
@@ -960,7 +987,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	else
 	{
 		// If this is the quick save slot
-		wchar_t const* const txt = entry_idx == 0 ?
+		wchar_t const* const txt = entry_idx == (-1 + !gfDiDTab) ? // This is a beyond-ugly hack to remove the quicksave slot from the Dead is Dead Tab
 			pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT] :
 			pMessageStrings[MSG_EMPTYSLOT];
 		DrawTextToScreen(txt, bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -977,10 +1004,10 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const header)
 {
 	// make sure the entry is valid
-	if (gfDiDTab ? (0 + NUM_SAVE_GAMES) : 0 <= bEntry && bEntry < gfDiDTab ? (2*NUM_SAVE_GAMES) : NUM_SAVE_GAMES)
+	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
 	{
 		char zSavedGameName[512];
-		CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
+		CreateSavedGameFileNameFromNumber(gfDiDTab ? (bEntry + NUM_SAVE_GAMES) : bEntry, zSavedGameName);
 
 		try
 		{
@@ -1052,7 +1079,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 */
 
 		//If we are saving and this is the quick save slot
-		if( gfSaveGame && bSelected == 0 )
+		if( gfSaveGame && bSelected == 0 && !gfDiDTab)
 		{
 			//Display a pop up telling user what the quick save slot is
 			DoSaveLoadMessageBox(pMessageStrings[MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox);
@@ -1178,7 +1205,7 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		//If we are saving and this is the quick save slot, leave
-		if( gfSaveGame && MSYS_GetRegionUserData( pRegion, 0 ) != 0 )
+		if( gfSaveGame )
 		{
 			return;
 		}
@@ -1271,7 +1298,7 @@ static UINT8 CompareSaveGameVersion(INT8 bSaveGameID)
 	SAVED_GAME_HEADER SaveGameHeader;
 
 	//Get the heade for the saved game
-	LoadSavedGameHeader( bSaveGameID, &SaveGameHeader );
+	LoadSavedGameHeader(bSaveGameID, &SaveGameHeader );
 
 	// check to see if the saved game version in the header is the same as the current version
 	if( SaveGameHeader.uiSavedGameVersion != guiSavedGameVersion )
@@ -1664,7 +1691,7 @@ static void SaveGameToSlotNum(void)
     gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
     wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField);
     
-  } else if( !SaveGame( gfDiDTab ? (gbSelectedSaveLocation + NUM_SAVE_GAMES) : gbSelectedSaveLocation, gzGameDescTextField ) )
+  } else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
