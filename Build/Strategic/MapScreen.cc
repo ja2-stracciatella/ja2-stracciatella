@@ -692,7 +692,6 @@ static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 st
 
 	if(GCM->getGamePolicy()->gui_extras)
 	{
-		SGPVSurface::Lock l(guiSAVEBUFFER);
 		ProgressBarBackgroundRect(x+1,y-2,15*progress/100,10,0x514A05,progress);
 	}
 
