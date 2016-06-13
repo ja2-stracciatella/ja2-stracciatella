@@ -1158,7 +1158,7 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 	if(GCM->getGamePolicy()->gui_extras)
 	{
 		FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
-		SGPVSurface::Lock l(guiSAVEBUFFER);
+		ProgressBarBackgroundRect(x+16,y-2,15*progress/100,10,0x514A05,progress);
 	}
 	FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
 	MPrint(usX, usY, str);
