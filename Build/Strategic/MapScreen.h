@@ -94,6 +94,7 @@ void    RememberPreviousPathForAllSelectedChars(void);
 void    MapScreenDefaultOkBoxCallback(MessageBoxReturnValue);
 void    SetUpCursorForStrategicMap(void);
 void    DrawFace(void);
+void 		DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont);
 
 extern GUIButtonRef giMapInvDoneButton;
 extern BOOLEAN      fInMapMode;

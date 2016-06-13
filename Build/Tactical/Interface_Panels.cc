@@ -1151,17 +1151,13 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 		FONT_RED;
 	SetFontForeground(fg);
 
-	wchar_t str[9];
-	swprintf(str, lengthof(str), L"%2d", stat_val);
-	INT16 usX;
-	INT16 usY;
+	wchar_t str[4];
+	swprintf(str, lengthof(str), L"%3d", stat_val);
 	if(GCM->getGamePolicy()->gui_extras)
 	{
-		FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
-		ProgressBarBackgroundRect(usX+16,usY-2,15*progress/100,10,0x514A05,progress);
+		ProgressBarBackgroundRect(x+16, y-2, 15*progress/100, 10, 0x514A05, progress);
 	}
-	FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
-	MPrint(usX, usY, str);
+	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
 }
 
 void RenderSMPanel(DirtyLevel* const dirty_level)

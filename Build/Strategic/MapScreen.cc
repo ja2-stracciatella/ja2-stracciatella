@@ -675,9 +675,6 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 	}
 }
 
-
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont);
-
 static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 stat_val, INT16 x, INT16 y, INT32 progress)
 {
 	UINT8 const colour =
@@ -687,14 +684,12 @@ static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 st
 		FONT_RED;
 	SetFontForeground(colour);
 
-	wchar_t str[16];
-	swprintf(str, lengthof(str), L"%d", stat_val);
-
+	wchar_t str[4];
+	swprintf(str, lengthof(str), L"%3d", stat_val);
 	if(GCM->getGamePolicy()->gui_extras)
 	{
 		ProgressBarBackgroundRect(x+1,y-2,15*progress/100,10,0x514A05,progress);
 	}
-
 	DrawStringRight(str, x, y, STAT_WID, STAT_HEI, CHAR_FONT);
 }
 
@@ -2164,7 +2159,7 @@ static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w,
 }
 
 
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont const font)
+void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont const font)
 {
 	INT16 rx;
 	INT16 ry;
