@@ -15,5 +15,7 @@
         "drop_everything":   false,
         "all_drops_visible": false,
 
-        "enemy_weapon_minimal_status": 0
+        "enemy_weapon_minimal_status": 0,
+
+        "gui_extras": false
 }
