@@ -66,49 +66,49 @@ if (WITH_SOUND_DEBUG)
 endif()
 
 if (NOT (LOCAL_SDL_LIB STREQUAL ""))
-    MESSAGE( STATUS "Using local SDL from " "${CMAKE_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-    set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    MESSAGE( STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
 endif()
 find_package(SDL REQUIRED)
 
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
 else()
-    MESSAGE(STATUS "Compiling with local Boost libraries from ${CMAKE_SOURCE_DIR}/_build/lib-boost" )
+    MESSAGE(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-boost" )
     add_subdirectory("_build/lib-boost")
-    set(Boost_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/_build/lib-boost")
+    set(Boost_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-boost")
     set(Boost_LIBRARIES "boost")
 endif()
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/Build
-    ${CMAKE_SOURCE_DIR}/Build/Editor
-    ${CMAKE_SOURCE_DIR}/Build/Laptop
-    ${CMAKE_SOURCE_DIR}/Build/Res
-    ${CMAKE_SOURCE_DIR}/Build/Strategic
-    ${CMAKE_SOURCE_DIR}/Build/Tactical
-    ${CMAKE_SOURCE_DIR}/Build/TacticalAI
-    ${CMAKE_SOURCE_DIR}/Build/TileEngine
-    ${CMAKE_SOURCE_DIR}/Build/Utils
-    ${CMAKE_SOURCE_DIR}/sgp
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/content
-    ${CMAKE_SOURCE_DIR}/src/internals
-    ${CMAKE_SOURCE_DIR}/src/policy
-    ${CMAKE_SOURCE_DIR}/_build/lib-MicroIni/include
-    ${CMAKE_SOURCE_DIR}/_build/lib-rapidjson
-    ${CMAKE_SOURCE_DIR}/_build/lib-slog
-    ${CMAKE_SOURCE_DIR}/_build/lib-smacker/libsmacker
-    ${CMAKE_SOURCE_DIR}/_build/lib-utf8cpp/source
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Editor
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Laptop
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Res
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Strategic
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Tactical
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/TacticalAI
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/TileEngine
+    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/sgp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/content
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/internals
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/policy
+    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-MicroIni/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson
+    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
+    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-smacker/libsmacker
+    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-utf8cpp/source
     ${SDL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
 
 set(JA2_SOURCES "")
-add_subdirectory("${CMAKE_SOURCE_DIR}/Build")
-add_subdirectory("${CMAKE_SOURCE_DIR}/sgp")
-add_subdirectory("${CMAKE_SOURCE_DIR}/src")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/sgp")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_subdirectory("_build/lib-MicroIni")
 add_subdirectory("_build/lib-slog")
 add_subdirectory("_build/lib-smacker")
@@ -121,8 +121,8 @@ if (WITH_UNITTESTS)
     set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
 
     include_directories(
-        ${CMAKE_SOURCE_DIR}/_build/lib-gtest/include
-        ${CMAKE_SOURCE_DIR}/_build/lib-gtest
+        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest
     )
 endif()
 
@@ -133,7 +133,7 @@ target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} M
 macro(copy_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
+            ${CMAKE_CURRENT_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
 endmacro()
 
 copy_dir_to_ja2_binary_after_build("externalized")
@@ -215,7 +215,7 @@ macro(add_vagrant_build_target NAME BOX VM ARGS)
     add_custom_target(${NAME})
     add_custom_command(TARGET ${NAME}
             COMMAND vagrant up ${VM} && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '${ARGS}'" ${VM} && vagrant halt ${VM}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/${BOX})
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_build/buildboxes/${BOX})
 endmacro(add_vagrant_build_target)
 
 add_vagrant_build_target(
