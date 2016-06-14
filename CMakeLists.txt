@@ -133,6 +133,16 @@ if (MSVC)
             ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
 endif()
 
+## Rebuilding contributors.txt
+
+configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/target-rebuild-contributors-list.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/target-rebuild-contributors-list.cmake"
+        IMMEDIATE @ONLY)
+
+add_custom_target(rebuild-contributors-list
+        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/target-rebuild-contributors-list.cmake)
+
 ## Installing and Packaging
 
 SET(CPACK_PACKAGE_VERSION_MAJOR ${ja2-stracciatella_VERSION_MAJOR})
