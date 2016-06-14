@@ -1,5 +1,17 @@
 cmake_minimum_required (VERSION 2.8)
 
+## Some macros
+
+macro(add_custom_templated_target NAME)
+    configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/target-${NAME}.cmake.in"
+            "${CMAKE_CURRENT_BINARY_DIR}/cmake/target-${NAME}.cmake"
+            IMMEDIATE @ONLY)
+
+    add_custom_target(${NAME}
+            COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/target-${NAME}.cmake)
+endmacro()
+
 ## Project Setup
 
 project (ja2-stracciatella)
@@ -117,31 +129,23 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
 target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
-add_custom_command(TARGET ${BINARY} PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/externalized "$<TARGET_FILE_DIR:${BINARY}>/externalized")
-add_custom_command(TARGET ${BINARY} PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/_unittests "$<TARGET_FILE_DIR:${BINARY}>/_unittests")
-add_custom_command(TARGET ${BINARY} PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/mods "$<TARGET_FILE_DIR:${BINARY}>/mods")
+
+macro(copy_dir_to_ja2_binary_after_build DIR)
+    add_custom_command(TARGET ${BINARY} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
+endmacro()
+
+copy_dir_to_ja2_binary_after_build("externalized")
+copy_dir_to_ja2_binary_after_build("_unittests")
+copy_dir_to_ja2_binary_after_build("mods")
+
 if (MSVC)
     STRING(REPLACE "SDLmain.lib" "SDL.dll" SDL_DLL ${SDLMAIN_LIBRARY})
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
 endif()
-
-## Rebuilding contributors.txt
-
-configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/target-rebuild-contributors-list.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/target-rebuild-contributors-list.cmake"
-        IMMEDIATE @ONLY)
-
-add_custom_target(rebuild-contributors-list
-        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/target-rebuild-contributors-list.cmake)
 
 ## Installing and Packaging
 
@@ -203,32 +207,42 @@ if(APPLE)
     INSTALL(FILES _build/icons/logo.icns DESTINATION .)
 endif()
 
-configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/target-uninstall.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/target-uninstall.cmake"
-        IMMEDIATE @ONLY)
-
-add_custom_target(uninstall
-        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/target-uninstall.cmake)
+add_custom_templated_target("uninstall")
 
 ## Release building
 
-add_custom_target(build-deb-package-on-u1404_amd64)
-add_custom_command(TARGET build-deb-package-on-u1404_amd64
-        COMMAND vagrant up amd64 && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB'" amd64 && vagrant halt amd64
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
+macro(add_vagrant_build_target NAME BOX VM ARGS)
+    add_custom_target(${NAME})
+    add_custom_command(TARGET ${NAME}
+            COMMAND vagrant up ${VM} && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '${ARGS}'" ${VM} && vagrant halt ${VM}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/${BOX})
+endmacro(add_vagrant_build_target)
 
-add_custom_target(build-deb-package-on-u1404_i386)
-add_custom_command(TARGET build-deb-package-on-u1404_i386
-        COMMAND vagrant up i386 && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB'" i386 && vagrant halt i386
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/u1404_i386)
+add_vagrant_build_target(
+        "build-deb-package-on-u1404_amd64"
+        "u1404_amd64"
+        "amd64"
+        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
+)
+add_vagrant_build_target(
+        "build-deb-package-on-u1404_i386"
+        "u1404_i386"
+        "i386"
+        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
+)
+add_vagrant_build_target(
+        "build-win-release-on-u1404_amd64"
+        "u1404_amd64"
+        "win"
+        "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\""
+)
 
-add_custom_target(build-win-release-on-u1404_amd64)
-add_custom_command(TARGET build-win-release-on-u1404_amd64
-        COMMAND vagrant up win && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\"'" win && vagrant halt win
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/_build/buildboxes/u1404_amd64)
 
 add_custom_target(build-releases)
 ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_amd64)
 ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_i386)
 ADD_DEPENDENCIES(build-releases build-win-release-on-u1404_amd64)
+
+## Rebuilding contributors.txt
+
+add_custom_templated_target("rebuild-contributors-list")
