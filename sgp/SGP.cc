@@ -166,17 +166,6 @@ static void deinitGameAndExit()
     // Does this code also fire on crash? Let's hope not!
     if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
     {
-      //FIXME: This code is highly experimental, but so far I couldn't get it to deliver wrong results!
-      // Make sure we are always on the right screen. I'm surprised this works...
-      if (guiPreviousOptionScreen == MAINMENU_SCREEN)
-      {
-        guiPreviousOptionScreen = guiCurrentScreen;
-      }
-      // This is not really necessary, but inline with the general game behaviour
-      if (guiPreviousOptionScreen == LAPTOP_SCREEN)
-      {
-        guiPreviousOptionScreen = MAP_SCREEN;
-      }
       DoDeadIsDeadSave();
     }
 

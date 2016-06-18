@@ -30,6 +30,7 @@
 #include "Campaign_Types.h"
 #include "Squads.h"
 #include "Random.h"
+#include "SaveLoadScreen.h"
 
 
 #define MAX_MEANWHILE_PROFILES	10
@@ -220,6 +221,9 @@ void ScheduleMeanwhileEvent(INT16 const x, INT16 const y, UINT16 const trigger_e
 void BeginMeanwhile(UINT8 ubMeanwhileID)
 {
 	INT32 cnt;
+  
+ // Save if we are in Dead is Dead Mode
+ if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)    DoDeadIsDeadSave();
 
 	// copy meanwhile data from array to structure for current
 	gCurrentMeanwhileDef = gMeanwhileDef[ubMeanwhileID];
