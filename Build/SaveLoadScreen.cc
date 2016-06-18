@@ -1586,17 +1586,22 @@ void DoDeadIsDeadSave()
  if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && guiPreviousOptionScreen != MSG_BOX_SCREEN) {
       // Save the previous option screen State to reset it after saving
       ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
+			// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
+			guiPreviousOptionScreen = guiCurrentScreen;
+      // Make sure we are always in a sane screen.
+      if (guiPreviousOptionScreen != MAP_SCREEN && guiPreviousOptionScreen != GAME_SCREEN)
+      {
+				if (tmpGuiPreviousOptionScreen == MAP_SCREEN || tmpGuiPreviousOptionScreen == GAME_SCREEN)
+				{
+        guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
+				}
+				else
+				{
+					// If all fails, go to the map screen, this (almost) guarantees the game will start
+					guiPreviousOptionScreen = MAP_SCREEN;
+				}	
+      }
 
-      // Make sure we are always on the right screen. I'm surprised this works...
-      if (guiPreviousOptionScreen == MAINMENU_SCREEN || guiPreviousOptionScreen == INTRO_SCREEN)
-      {
-        guiPreviousOptionScreen = guiCurrentScreen;
-      }
-      // This is not really necessary, but inline with the general game behaviour
-      if (guiPreviousOptionScreen == LAPTOP_SCREEN)
-      {
-        guiPreviousOptionScreen = MAP_SCREEN;
-      }
    BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
 
    // Reset the previous option screen

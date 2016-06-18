@@ -442,6 +442,7 @@ static void BeginMeanwhileCallBack(MessageBoxReturnValue const bExitValue)
 	else
 	{
 		// skipped scene!
+		gfInMeanwhile = FALSE;
 		ProcessImplicationsOfMeanwhile();
 		UnLockPauseState();
 		UnPauseGame();
