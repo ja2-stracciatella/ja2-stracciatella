@@ -43,6 +43,9 @@
 #include "FileMan.h"
 #include "Campaign_Init.h"
 #include "UILayout.h"
+#include "Handle_UI.h"
+#include "Interface_Dialogue.h"
+#include "Meanwhile.h"
 
 #if defined JA2BETAVERSION
 #include "Soldier_Init_List.h"
@@ -1575,12 +1578,36 @@ void DoQuickSave()
 // Save function for Dead Is Dead
 void DoDeadIsDeadSave()
 {
-	if (SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName)) return;
+ // Check if we are in a sane! Do not save if:
+ // - we are in an AI Turn
+ // - we are in a Dialogue
+ // - we are in Meanwhile.....
+ // - we are currently in a message box - The Messagebox would be gone without selection after loading
+ if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && guiPreviousOptionScreen != MSG_BOX_SCREEN) {
+      // Save the previous option screen State to reset it after saving
+      ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
 
-	if (guiPreviousOptionScreen == MAP_SCREEN)
-		DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-	else
-		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+      // Make sure we are always on the right screen. I'm surprised this works...
+      if (guiPreviousOptionScreen == MAINMENU_SCREEN || guiPreviousOptionScreen == INTRO_SCREEN)
+      {
+        guiPreviousOptionScreen = guiCurrentScreen;
+      }
+      // This is not really necessary, but inline with the general game behaviour
+      if (guiPreviousOptionScreen == LAPTOP_SCREEN)
+      {
+        guiPreviousOptionScreen = MAP_SCREEN;
+      }
+   BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
+
+   // Reset the previous option screen
+   guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
+   if (tmpSuccess) return;
+   
+   if (guiPreviousOptionScreen == MAP_SCREEN)
+     DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+   else
+     DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+ }
 }
 
 

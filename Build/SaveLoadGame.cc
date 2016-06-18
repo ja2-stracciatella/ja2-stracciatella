@@ -220,7 +220,9 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 	InitShutDownMapTempFileTest(TRUE, "SaveMapTempFile", ubSaveGameID);
 
 	// Place a message on the screen telling the user that we are saving the game
-	{ UINT16 actual_w;
+	if (gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD) 
+ { 
+   UINT16 actual_w;
 		UINT16 actual_h;
 		AutoMercPopUpBox const save_load_game_message_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &actual_w, &actual_h));
 		UINT16 const x = (SCREEN_WIDTH - actual_w) / 2;
