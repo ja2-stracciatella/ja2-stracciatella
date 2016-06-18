@@ -2108,6 +2108,9 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, gubPlayerProgressSkyriderLastCommentedOn)
 	EXTR_BOOL( d, gfMeanwhileTryingToStart)
 	EXTR_BOOL( d, gfInMeanwhile)
+	// Always set gfInMeanwhile to false for Dead is Dead. This must be done because it is saved as true if a Meanwhile event is in the event pipe
+	// Preventing the value to be saved in the first place leads to odd behaviour during the commencing cutscene
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) gfInMeanwhile = FALSE;
 	EXTR_SKIP( d, 1)
 	for (INT16 (* i)[NUMBER_OF_SOLDIERS_PER_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
 	{
