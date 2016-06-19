@@ -134,7 +134,7 @@ enum
 	GIO_EXIT,
 	GIO_IRON_MAN_MODE,
 	GIO_DEAD_IS_DEAD_MODE,
-  GIO_DEAD_IS_DEAD_SAVE
+	GIO_DEAD_IS_DEAD_SAVE
 };
 
 
@@ -763,13 +763,13 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 	// JA2Gold: iron man
 	gGameOptions.ubGameSaveMode = GetCurrentGameSaveButtonSetting();
 
-  if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
-  {
-    gubGIOExitScreen = SAVE_LOAD_SCREEN;
-  } else
-  {
-    gubGIOExitScreen = INTRO_SCREEN;
-  }
+	if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
+	{
+		gubGIOExitScreen = SAVE_LOAD_SCREEN;
+	} else
+	{
+		gubGIOExitScreen = INTRO_SCREEN;
+	}
   
 	//set the fact that we should do the intro videos
 #ifdef JA2TESTVERSION
@@ -797,6 +797,7 @@ static void DoGioMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallba
 {
 	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ReturnCallback, NULL);
 }
+
 
 static void DisplayMessageToUserAboutGameDifficulty(void)
 {

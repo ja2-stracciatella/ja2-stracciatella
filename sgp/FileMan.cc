@@ -283,6 +283,7 @@ void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesTo
 	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
 }
 
+
 void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 {
 	bool success;

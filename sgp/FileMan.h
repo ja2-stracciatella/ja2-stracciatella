@@ -118,7 +118,6 @@ public:
    * If failed to create, raise an exception. */
   static void createDir(char const* path);
 
-
   /** Join two path components. */
   static std::string joinPaths(const char *first, const char *second);
 
