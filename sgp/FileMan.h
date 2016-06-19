@@ -118,6 +118,7 @@ public:
    * If failed to create, raise an exception. */
   static void createDir(char const* path);
 
+
   /** Join two path components. */
   static std::string joinPaths(const char *first, const char *second);
 
@@ -155,6 +156,9 @@ public:
 
   /** Check file existance. */
   static bool checkFileExistance(const char *folder, const char *fileName);
+		
+	/** Copy a file */
+	static void copyFile(const char *from, const char *to);
 
 private:
   /** Private constructor to avoid instantiation. */

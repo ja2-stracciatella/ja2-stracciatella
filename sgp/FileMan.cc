@@ -274,7 +274,6 @@ void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesTo
 	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
 }
 
-
 void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 {
 	bool success;
@@ -817,4 +816,11 @@ bool FileMan::checkFileExistance(const char *folder, const char *fileName)
   boost::filesystem::path path(folder);
   path /= fileName;
   return boost::filesystem::exists(path);
+}
+
+void FileMan::copyFile(const char *from, const char *to)
+{
+	boost::filesystem::path fromPath(from);
+	boost::filesystem::path toPath(to);
+	boost::filesystem::copy_file(fromPath, toPath, boost::filesystem::copy_option::overwrite_if_exists);
 }

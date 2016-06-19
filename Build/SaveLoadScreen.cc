@@ -1585,16 +1585,18 @@ void DoDeadIsDeadSave()
  // - we are in Meanwhile.....
  // - we are currently in a message box - The Messagebox would be gone without selection after loading
  if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN) {
-      // Save the previous option screen State to reset it after saving
-      ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
+			// Backup old saves
+			BackupSavedGame(gGameSettings.bLastSavedGameSlot);
+			// Save the previous option screen State to reset it after saving
+			ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
 			// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
 			guiPreviousOptionScreen = guiCurrentScreen;
-      // Make sure we are always in a sane screen.
-      if (guiPreviousOptionScreen != MAP_SCREEN && guiPreviousOptionScreen != GAME_SCREEN)
-      {
+			// Make sure we are always in a sane screen.
+			if (guiPreviousOptionScreen != MAP_SCREEN && guiPreviousOptionScreen != GAME_SCREEN)
+			{
 				if (tmpGuiPreviousOptionScreen == MAP_SCREEN || tmpGuiPreviousOptionScreen == GAME_SCREEN)
 				{
-        guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
+				guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
 				}
 				else
 				{
