@@ -38,8 +38,6 @@
 #include "GameState.h"
 #include "Timer.h"
 #include "SaveLoadScreen.h"
-#include "Options_Screen.h"
-#include "JAScreens.h"
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
