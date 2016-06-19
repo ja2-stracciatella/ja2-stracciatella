@@ -46,6 +46,7 @@
 #include "Handle_UI.h"
 #include "Interface_Dialogue.h"
 #include "Meanwhile.h"
+#include "PreBattle_Interface.h"
 
 #if defined JA2BETAVERSION
 #include "Soldier_Init_List.h"
@@ -1583,7 +1584,7 @@ void DoDeadIsDeadSave()
  // - we are in a Dialogue
  // - we are in Meanwhile.....
  // - we are currently in a message box - The Messagebox would be gone without selection after loading
- if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && guiPreviousOptionScreen != MSG_BOX_SCREEN) {
+ if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN) {
       // Save the previous option screen State to reset it after saving
       ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
 			// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
