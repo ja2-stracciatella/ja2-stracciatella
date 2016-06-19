@@ -525,10 +525,10 @@ static void ExitSaveLoadScreen(void)
 	}
 	// Remove the Dead is Dead button
 	if(!gfSaveGame)
-  {
-    RemoveButton( guiSlgDidLoadBtn );
-    UnloadButtonImage( guiDiDLoadImage ); 
-  }
+	{
+		RemoveButton( guiSlgDidLoadBtn );
+		UnloadButtonImage( guiDiDLoadImage ); 
+	}
 
 	for(i=0; i<NUM_SAVE_GAMES; i++)
 	{
@@ -1302,7 +1302,7 @@ static UINT8 CompareSaveGameVersion(INT8 bSaveGameID)
 	SAVED_GAME_HEADER SaveGameHeader;
 
 	//Get the heade for the saved game
-	LoadSavedGameHeader(bSaveGameID, &SaveGameHeader );
+	LoadSavedGameHeader( bSaveGameID, &SaveGameHeader );
 
 	// check to see if the saved game version in the header is the same as the current version
 	if( SaveGameHeader.uiSavedGameVersion != guiSavedGameVersion )
