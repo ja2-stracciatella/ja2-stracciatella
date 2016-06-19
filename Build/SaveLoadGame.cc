@@ -1479,6 +1479,33 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile);
 #endif
 
+void BackupSavedGame(UINT8 const ubSaveGameID)
+{
+	std::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
+	FileMan::createDir(backupdir.c_str());
+	char zSourceSaveGameName[512];
+	char zSourceBackupSaveGameName[512];
+	char zTargetSaveGameName[512];
+	sprintf(zSourceSaveGameName, "%s%02d.%s", g_savegame_name, ubSaveGameID, g_savegame_ext);
+	for (int i = NUM_SAVE_GAME_BACKUPS - 1; i >= 0; i--)
+	{
+		if (i==0)
+		{
+			strcpy(zSourceBackupSaveGameName, zSourceSaveGameName);
+		}
+		else
+		{
+			sprintf(zSourceBackupSaveGameName, "%s.%01d", zSourceSaveGameName, i);
+		}
+		sprintf(zTargetSaveGameName, "%s.%01d", zSourceSaveGameName, i+1);
+		// Only backup existing savegames
+		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir.c_str(), zSourceBackupSaveGameName))
+		{
+			FileMan::copyFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(), 
+												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
+		}
+	}
+}
 
 static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 {
