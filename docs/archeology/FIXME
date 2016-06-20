@@ -158,7 +158,6 @@ gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
-guiMemTotal: remove
 gzFilename: wchar_t[] -> char[]?
 pMapErrorString[24]: probably never shown (function is only called when militia is in sector, which means it is a SAM site or town)
 pMapErrorString[4], pMapErrorString[17]: unused

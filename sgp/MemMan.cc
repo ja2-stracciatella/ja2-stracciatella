@@ -53,7 +53,6 @@ static const wchar_t* const gzJA2ScreenNames[] =
 #endif
 
 // debug variable for total memory currently allocated
-static size_t guiMemTotal      = 0;
 static size_t guiMemAlloced    = 0;
 static size_t guiMemFreed      = 0;
 static UINT32 MemDebugCounter  = 0;
@@ -63,7 +62,6 @@ static BOOLEAN fMemManagerInit = FALSE;
 void InitializeMemoryManager(void)
 {
 	MemDebugCounter = 0;
-	guiMemTotal     = 0;
 	guiMemAlloced   = 0;
 	guiMemFreed     = 0;
 	fMemManagerInit = TRUE;
@@ -80,7 +78,7 @@ void ShutdownMemoryManager(void)
 					%d bytes memory total STILL allocated\n\
 					%d bytes memory total was allocated\n\
 					%d bytes memory total was freed",
-					MemDebugCounter, guiMemTotal, guiMemAlloced, guiMemFreed);
+					MemDebugCounter, guiMemAlloced, guiMemFreed);
 	}
 	fMemManagerInit = FALSE;
 }
