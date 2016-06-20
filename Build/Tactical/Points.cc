@@ -246,7 +246,7 @@ INT16 ActionPointCost(const SOLDIERTYPE* const pSoldier, const INT16 sGridNo, co
 			case RUNNING:
 			case ADULTMONSTER_WALKING:
 			case BLOODCAT_RUN:
-				sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+				sPoints = (INT16)( ((DOUBLE)sTileCost) / RUNDIVISOR);	break;
 
 			case CROW_FLY:
 			case SIDE_STEP:
@@ -309,7 +309,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case RUNNING:
 			case ADULTMONSTER_WALKING:
 			case BLOODCAT_RUN:
-				sPoints = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+				sPoints = (INT16)(((DOUBLE)sTileCost) / RUNDIVISOR);	break;
 
 			case CROW_FLY:
 			case SIDE_STEP:
