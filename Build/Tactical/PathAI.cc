@@ -34,6 +34,7 @@
 #include "Keys.h"
 #include "GameSettings.h"
 #include "Buildings.h"
+#include "slog/slog.h"
 
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
@@ -1419,7 +1420,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 					case ADULTMONSTER_WALKING:
 						// save on casting
 						ubAPCost = ubAPCost * 10 / ( (UINT8) (RUNDIVISOR * 10));
-						//ubAPCost = (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) );	break;
+						//ubAPCost = (INT16)(((DOUBLE)sTileCost) / RUNDIVISOR );break;
 						break;
 					case WALKING:
 					case ROBOT_WALK:
@@ -2245,7 +2246,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 				  // so, then we must modify it for other movement styles and accumulate
 				  switch( usMovementModeToUseForAPs )
 				  {
-					  case RUNNING:		sPoints += (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) ) + sExtraCostStand;	break;
+					  case RUNNING:		sPoints += (INT16)((DOUBLE)(sTileCost) / RUNDIVISOR) + sExtraCostStand;	break;
 					  case WALKING :	sPoints += (sTileCost + WALKCOST) + sExtraCostStand;		break;
 					  case SWATTING:	sPoints += (sTileCost + SWATCOST) + sExtraCostSwat;		break;
 					  case CRAWLING:	sPoints += (sTileCost + CRAWLCOST) + sExtraCostCrawl;		break;
@@ -2270,7 +2271,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 				sPointsSwat += (sTileCost + SWATCOST) + sExtraCostSwat;
 
 				// now get cost as if RUNNING
-				sPointsRun += (INT16)(DOUBLE)( (sTileCost / RUNDIVISOR) ) + sExtraCostStand;
+				sPointsRun += (INT16)((DOUBLE)(sTileCost) / RUNDIVISOR) + sExtraCostStand;
 			}
 
 			if ( iCnt == 0 && bPlot )

@@ -206,13 +206,13 @@ static FLOAT FixedToFloat(FIXEDPT qN)
 
 static FLOAT Distance3D(FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ)
 {
-	return( (FLOAT) sqrt( (DOUBLE) (dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ) ));
+	return( (FLOAT) sqrt( (DOUBLE)(dDeltaX * dDeltaX) + (DOUBLE)(dDeltaY * dDeltaY) + (DOUBLE)(dDeltaZ * dDeltaZ)));
 }
 
 
 static FLOAT Distance2D(FLOAT dDeltaX, FLOAT dDeltaY)
 {
-	return( (FLOAT) sqrt( (DOUBLE) (dDeltaX * dDeltaX + dDeltaY * dDeltaY )));
+	return( (FLOAT) sqrt( (DOUBLE)(dDeltaX * dDeltaX) + (DOUBLE)(dDeltaY * dDeltaY) ));
 }
 
 enum LocationCode
@@ -3138,7 +3138,7 @@ static void CalculateFiringIncrements(DOUBLE ddHorizAngle, DOUBLE ddVerticAngle,
 			ddMinimumMiss = ddMaximumMiss;
 		}
 
-		ddAmountOfMiss = ( (ddMaximumMiss - ddMinimumMiss) * (DOUBLE) iMissedBy) / 100.0 + ddMinimumMiss;
+		ddAmountOfMiss = ( (ddMaximumMiss - ddMinimumMiss) * ((DOUBLE) iMissedBy)) / 100.0 + ddMinimumMiss;
 
 		// miss to the left or right
 		if (PreRandom( 2 ) )
