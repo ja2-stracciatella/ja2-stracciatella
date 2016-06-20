@@ -10,89 +10,6 @@
 #include "FileMan.h"
 #include "slog/slog.h"
 
-static wchar_t const* const gEventName[] =
-{
-	L"Null",
-	L"ChangeLightValue",
-	L"WeatherStart",
-	L"WeatherEnd",
-	L"CheckForQuests",
-	L"Ambient",
-	L"AIMResetMercAnnoyance",
-	L"BobbyRayPurchase",
-	L"DailyUpdateBobbyRayInventory",
-	L"UpdateBobbyRayInventory",
-	L"DailyUpdateOfMercSite",
-	L"Day3AddEMailFromSpeck",
-	L"DelayedHiringOfMerc",
-	L"HandleInsuredMercs",
-	L"PayLifeInsuranceForDeadMerc",
-	L"MercDailyUpdate",
-	L"MercAboutToLeaveComment",
-	L"MercContractOver",
-	L"GroupArrival",
-	L"Day2AddEMailFromIMP",
-	L"MercComplainEquipment",
-	L"HourlyUpdate",
-	L"HandleMineIncome",
-	L"SetupMineIncome",
-	L"QueuedBattle",
-	L"LeavingMercArriveInDrassen",
-	L"LeavingMercArriveInOmerta",
-	L"SetByNPCSystem",
-	L"SecondAirportAttendantArrived",
-	L"HelicopterHoverTooLong",
-	L"HelicopterHoverWayTooLong",
-	L"HelicopterDoneRefuelling",
-	L"MercLeaveEquipInOmerta",
-	L"MercLeaveEquipInDrassen",
-	L"DailyEarlyMorningEvents",
-	L"GroupAboutToArrive",
-	L"ProcessTacticalSchedule",
-	L"BeginRainStorm",
-	L"EndRainStorm",
-	L"HandleTownOpinion",
-	L"SetupTownOpinion",
-	L"DelayedDeathHandling",
-	L"BeginAirRaid",
-	L"TownLoyaltyUpdate",
-	L"Meanwhile",
-	L"BeginCreatureQuest",
-	L"CreatureSpread",
-	L"DecayCreatures",
-	L"CreatureNightPlanning",
-	L"CreatureAttack",
-	L"EvaluateQueenSituation",
-	L"CheckEnemyControlledSector",
-	L"TurnOnNightLights",
-	L"TurnOffNightLights",
-	L"TurnOnPrimeLights",
-	L"TurnOffPrimeLights",
-	L"MercAboutToLeaveComment",
-	L"ForceTimeInterupt",
-	L"EnricoEmailEvent",
-	L"InsuranceInvestigationStarted",
-	L"InsuranceInvestigationOver",
-	L"HandleMinuteUpdate",
-	L"TemperatureUpdate",
-	L"Keith going out of business",
-	L"MERC site back online",
-	L"Investigate Sector",
-	L"CheckIfMineCleared",
-	L"RemoveAssassin",
-	L"BandageBleedingMercs",
-	L"ShowUpdateMenu",
-	L"SetMenuReason",
-	L"AddSoldierToUpdateBox",
-	L"BeginContractRenewalSequence",
-	L"RPC_WHINE_ABOUT_PAY",
-	L"HaventMadeImpCharacterEmail",
-	L"Rainstorm",
-	L"Quarter Hour Update",
-	L"MERC Merc went up level email delay",
-	L".",
-};
-
 STRATEGICEVENT									*gpEventList = NULL;
 
 extern UINT32 guiGameClock;
@@ -267,7 +184,7 @@ STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const event_ty
 	if (gfProcessingGameEvents && timestamp <= guiTimeStampOfCurrentlyExecutingEvent)
 	{ /* Prevent infinite loops of posting events that are the same time or
 		 * earlier than the event currently being processed */
-		SLOGD(DEBUG_TAG_EVENTPUMP, "%ls Event Rejected: Can't post events <= time while inside an event callback. This is a special case situation that isn't a bug.", gEventName[callback_id]);
+		SLOGD(DEBUG_TAG_EVENTPUMP, "Event Rejected (id %d): Can't post events <= time while inside an event callback. This is a special case situation that isn't a bug.", callback_id);
 		return 0;
 	}
 
@@ -476,16 +393,3 @@ void LoadStrategicEventsFromSavedGame(HWFILE const f)
 		anchor  = &sev->next;
 	}
 }
-
-
-#ifdef WITH_UNITTESTS
-#include "gtest/gtest.h"
-
-TEST(GameEvents, asserts)
-{
-#ifdef JA2TESTVERSION
-  EXPECT_EQ(lengthof(gEventNameXX), NUMBER_OF_EVENT_TYPES);
-#endif
-}
-
-#endif
