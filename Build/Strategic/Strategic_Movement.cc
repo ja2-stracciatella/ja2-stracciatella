@@ -3206,7 +3206,6 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 
 bool VehicleHasFuel(SOLDIERTYPE const& s)
 {
-	Assert(s.uiStatusFlags & SOLDIER_VEHICLE);
 	return s.sBreathRed != 0;
 }
 
