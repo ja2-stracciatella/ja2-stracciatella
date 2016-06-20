@@ -130,7 +130,6 @@ TwoHandedItem(): complicated
 UseGun(): code duplication
 VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
 ValidateSkillsList(), RemoveSkillFromSkillsList(): complicated
-VehicleHasFuel(): inline
 WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 WillShopKeeperRejectObjectsFromPlayer(): complicated
 WrapString(): Make 1st parameter read-only

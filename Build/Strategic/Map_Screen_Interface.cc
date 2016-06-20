@@ -3849,7 +3849,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 		// Too damaged?
 		if (s.bLife < OKLIFE) return ME_VEHICLE_DAMAGED;
 		// Out of fuel?
-		if (!VehicleHasFuel(s)) return ME_VEHICLE_NO_GAS;
+		if (s.sBreathRed == 0) return ME_VEHICLE_NO_GAS;
 	}
 	else // Non-vehicle
 	{
