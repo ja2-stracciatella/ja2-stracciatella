@@ -76,7 +76,6 @@ void ShutdownMemoryManager(void)
 		SLOGE(DEBUG_TAG_MEMORY, "Memory leak detected: \n\
 					%d memory blocks still allocated\n\
 					%d bytes memory total STILL allocated\n\
-					%d bytes memory total was allocated\n\
 					%d bytes memory total was freed",
 					MemDebugCounter, guiMemAlloced, guiMemFreed);
 	}
