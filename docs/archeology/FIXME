@@ -152,7 +152,6 @@ gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfItemDescHelpTextOffset: once TRUE never gets FALSE again
 gfProgBarActive: once TRUE it never changes anymore
-gsRadarY: always RADAR_WINDOW_TM_Y?
 gszCivGroupNames[]: move declaration
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
