@@ -252,10 +252,6 @@ void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY );
 //group is currently IN the sector, or just left the sector, it will return FALSE.
 BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
 
-
-bool VehicleHasFuel(SOLDIERTYPE const&);
-
-
 void RandomizePatrolGroupLocation( GROUP *pGroup );
 
 void PlaceGroupInSector(GROUP&, INT16 prev_x, INT16 prev_y, INT16 next_x, INT16 next_y, INT8 z, bool check_for_battle);
