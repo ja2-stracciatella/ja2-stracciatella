@@ -68,7 +68,6 @@ LoadSavedGameHeader(): invalid use of strlen()
 LoadSavedGameWarningMessageBoxCallBack(): users
 LoadShadeTablesFromTextFile(): *scanf()
 LoadSummary(): filename yuck
-LocationOfNearestRefuelPoint(): callers
 MAPInvClickCamoCallback(): empty
 MAPInvMoveCamoCallback(): empty
 MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
