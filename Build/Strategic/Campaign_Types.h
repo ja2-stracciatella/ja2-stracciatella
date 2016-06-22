@@ -6,7 +6,7 @@
 
 
 //Macro to convert sector coordinates (1-16,1-16) to 0-255
-static inline UINT SECTOR(UINT const x, UINT const y)
+static inline UINT8 SECTOR(UINT8 const x, UINT8 const y)
 {
 	Assert(1 <= x && x <= 16);
 	Assert(1 <= y && y <= 16);

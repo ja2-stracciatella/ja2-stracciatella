@@ -511,7 +511,7 @@ void RenderEditorItemsInfo()
 
 	INT16 const scroll_idx = eInfo.sScrollIndex;
 
-	SGPBox const r = { 60 * scroll_idx, 0, 360, 80 };
+	SGPBox const r = { (UINT16)(60 * scroll_idx), 0, 360, 80 };
 	BltVideoSurface(FRAME_BUFFER, eInfo.uiBuffer, 110, EDITOR_TASKBAR_POS_Y, &r);
 
 	/* Calculate the min and max index that is currently shown.  This determines

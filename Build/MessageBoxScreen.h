@@ -57,8 +57,8 @@ struct MESSAGE_BOX_STRUCT
 	MessageBoxFlags       usFlags;
 	ScreenID              uiExitScreen;
 	MSGBOX_CALLBACK       ExitCallback;
-	INT16                 sX;
-	INT16                 sY;
+	UINT16                uX;
+	UINT16                uY;
 	SGPVSurface*          uiSaveBuffer;
 	MOUSE_REGION          BackRegion;
 	UINT16                usWidth;

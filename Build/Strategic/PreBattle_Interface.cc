@@ -686,7 +686,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	InvalidateScreen();
 	RefreshScreen();
 
-	SGPBox const PBIRect = { STD_SCREEN_X + 0, STD_SCREEN_Y + 0, 261, 359 };
+	SGPBox const PBIRect = { STD_SCREEN_X, STD_SCREEN_Y, 261, 359 };
 	while( iPercentage < 100  )
 	{
 		uiCurrTime = GetClock();
@@ -709,10 +709,10 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 
 		SGPBox const DstRect =
 		{
-			iLeft - iWidth  * iPercentage / 200,
-			iTop  - iHeight * iPercentage / 200,
-			MAX(1, iWidth  * iPercentage / 100),
-			MAX(1, iHeight * iPercentage / 100)
+			(UINT16)(iLeft - iWidth  * iPercentage / 200),
+			(UINT16)(iTop  - iHeight * iPercentage / 200),
+			(UINT16)(MAX(1, iWidth  * iPercentage / 100)),
+			(UINT16)(MAX(1, iHeight * iPercentage / 100))
 		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &PBIRect, &DstRect);

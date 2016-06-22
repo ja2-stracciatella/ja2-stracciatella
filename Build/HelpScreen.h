@@ -53,7 +53,7 @@ struct HELP_SCREEN_STRUCT
 
 	//scroll variables
 	UINT16	usTotalNumberOfPixelsInBuffer;
-	INT32		iLineAtTopOfTextBuffer;
+	UINT32	uiLineAtTopOfTextBuffer;
 	UINT16	usTotalNumberOfLinesInBuffer;
 	BOOLEAN	fForceHelpScreenToComeUp;
 };

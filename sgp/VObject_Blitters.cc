@@ -36,24 +36,24 @@ void Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(UINT16* const buf, UINT32 c
 
 	// Get offsets from index into structure.
 	ETRLEObject const& e      = hSrcVObject->SubregionProperties(usIndex);
-	INT32       const  height = e.usHeight;
-	INT32       const  width  = e.usWidth;
+	UINT16      const  height = e.usHeight;
+	UINT16      const  width  = e.usWidth;
 
 	// Add to start position of dest buffer.
-	INT32 const x = iX + e.sOffsetX;
-	INT32 const y = iY + e.sOffsetY;
+	UINT16 const x = iX + e.sOffsetX;
+	UINT16 const y = iY + e.sOffsetY;
 
 	if (!clipregion) clipregion = &ClippingRect;
 
 	/* Calculate rows hanging off each side of the screen and check if the whole
 	 * thing is clipped. */
-	INT32 const left_skip   = DoZ(clipregion->iLeft, x);
+	UINT16 const left_skip   = DoZ(clipregion->iLeft, x);
 	if (left_skip   >= width)  return;
-	INT32       top_skip    = DoZ(clipregion->iTop,  y);
+	UINT16       top_skip    = DoZ(clipregion->iTop,  y);
 	if (top_skip    >= height) return;
-	INT32 const right_skip  = DoZ(x + width,  clipregion->iRight);
+	UINT16 const right_skip  = DoZ((UINT16)(x + width),  clipregion->iRight);
 	if (right_skip  >= width)  return;
-	INT32 const bottom_skip = DoZ(y + height, clipregion->iBottom);
+	UINT16 const bottom_skip = DoZ((UINT16)(y + height), clipregion->iBottom);
 	if (bottom_skip >= height) return;
 
 	// Calculate the remaining rows and columns to blit.

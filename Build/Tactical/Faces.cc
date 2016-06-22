@@ -463,7 +463,7 @@ void SetAllAutoFacesInactive(  )
 
 static void NewEye(FACETYPE&);
 static void HandleRenderFaceAdjustments(FACETYPE&, BOOLEAN fDisplayBuffer, SGPVSurface* buffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
-static void FaceRestoreSavedBackgroundRect(FACETYPE const&, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
+static void FaceRestoreSavedBackgroundRect(FACETYPE const&, INT16 sDestLeft, INT16 sDestTop, UINT16 sSrcLeft, UINT16 sSrcTop, UINT16 sWidth, UINT16 sHeight);
 
 
 static void BlinkAutoFace(FACETYPE& f)
@@ -1258,7 +1258,7 @@ void HandleTalkingAutoFaces( )
 }
 
 
-static void FaceRestoreSavedBackgroundRect(FACETYPE const& f, INT16 const sDestLeft, INT16 const sDestTop, INT16 const sSrcLeft, INT16 const sSrcTop, INT16 const sWidth, INT16 const sHeight)
+static void FaceRestoreSavedBackgroundRect(FACETYPE const& f, INT16 const sDestLeft, INT16 const sDestTop, UINT16 const sSrcLeft, UINT16 const sSrcTop, UINT16 const sWidth, UINT16 const sHeight)
 {
 	SGPBox const r = { sSrcLeft, sSrcTop, sWidth, sHeight };
 	BltVideoSurface(f.uiAutoDisplayBuffer, f.uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);
