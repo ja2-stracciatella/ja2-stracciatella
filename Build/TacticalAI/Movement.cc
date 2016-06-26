@@ -447,7 +447,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
  // we'll only go as far along the plotted route as is within our
  // permitted roaming range, and we'll stop as soon as we're down to <= 5 APs
 
- for (sLoop = 0; sLoop < (pSoldier->ubPathDataSize - pSoldier->usPathIndex); sLoop++)
+ for (sLoop = 0; sLoop < (pSoldier->ubPathDataSize - pSoldier->ubPathIndex); sLoop++)
   {
    // what is the next gridno in the path?
 
@@ -560,7 +560,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
      pSoldier->bPathStored = TRUE;
 		 pSoldier->sFinalDestination = sGoToGrid;
 	 }
-	 else if ( pSoldier->usPathIndex == 0 )
+	 else if ( pSoldier->ubPathIndex == 0 )
 	 {
 		// we can hack this surely! -- CJC
      pSoldier->bPathStored = TRUE;
@@ -628,10 +628,10 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->ubPathIndex ] ) );
 
 	// Find out how much it takes to move here!
-	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->ubPathDataSize );
+	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[ pSoldier->ubPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->ubPathIndex, (INT8) pSoldier->ubPathDataSize );
 
 	if (pSoldier->bActionPoints >= bAPCost)
 	{

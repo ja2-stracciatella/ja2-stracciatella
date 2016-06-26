@@ -2785,7 +2785,7 @@ void DebugSoldierPage2()
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"GridNo:",      s->sGridNo);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Dest:",        s->sFinalDestination);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Size:",   s->ubPathDataSize);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Index:",  s->usPathIndex);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Index:",  s->ubPathIndex);
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"First 3 Steps:");
 		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
@@ -2796,9 +2796,9 @@ void DebugSoldierPage2()
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Next 3 Steps:");
 		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
-			s->ubPathingData[s->usPathIndex],
-			s->ubPathingData[s->usPathIndex + 1],
-			s->ubPathingData[s->usPathIndex + 2]
+			s->ubPathingData[s->ubPathIndex],
+			s->ubPathingData[s->ubPathIndex + 1],
+			s->ubPathingData[s->ubPathIndex + 2]
 		);
 
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"FlashInd:",    s->fFlashLocator);

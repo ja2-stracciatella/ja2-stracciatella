@@ -486,7 +486,7 @@ struct SOLDIERTYPE
 	// PATH STUFF
 	UINT8												ubPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT8												ubPathDataSize;
-	UINT8												usPathIndex;
+	UINT8												ubPathIndex;
 	INT16												sBlackList;
 	INT8												bAimTime;
 	INT8												bShownAimTime;

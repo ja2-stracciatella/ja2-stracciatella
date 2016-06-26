@@ -432,7 +432,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		// an old action was in progress; continue it
 		if (pSoldier->bAction >= FIRST_MOVEMENT_ACTION && pSoldier->bAction <= LAST_MOVEMENT_ACTION && !pSoldier->fDelayedMovement)
 		{
-			if (pSoldier->usPathIndex == pSoldier->ubPathDataSize)
+			if (pSoldier->ubPathIndex == pSoldier->ubPathDataSize)
 			{
 				if (pSoldier->sAbsoluteFinalDestination != NOWHERE)
 				{
@@ -1055,9 +1055,9 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 /*
 			if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL)
 			{
-				if (pSoldier->usPathIndex == pSoldier->ubPathDataSize)
+				if (pSoldier->ubPathIndex == pSoldier->ubPathDataSize)
 				//if (pSoldier->usActionData == pSoldier->sGridNo )
-				//(IC?) if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL && ( pSoldier->usPathIndex == pSoldier->ubPathDataSize ) )
+				//(IC?) if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL && ( pSoldier->ubPathIndex == pSoldier->ubPathDataSize ) )
 				//(old?) if (pSoldier->bAction == AI_ACTION_RANDOM_PATROL && ( pSoldier->usActionData == pSoldier->sGridNo ) )
 				{
 				SLOGD(DEBUG_TAG_AI, "OPPONENT %d REACHES DEST - ACTION DONE",pSoldier->ubID);

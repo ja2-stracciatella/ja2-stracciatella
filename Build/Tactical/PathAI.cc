@@ -1837,7 +1837,7 @@ ENDOFLOOP:
 			  z = trailTree[z].nextLink;
 		  }
 
-			s->usPathIndex = 0;
+			s->ubPathIndex = 0;
 		  s->ubPathDataSize  = (UINT8) iCnt;
 
 		}

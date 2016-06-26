@@ -223,7 +223,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	}
 	s->ubPathDataSize = (UINT8)*d;
 	d += 2;
-	s->usPathIndex = (UINT8)*d;
+	s->ubPathIndex = (UINT8)*d;
 	d++;
 
 	EXTR_I16(d, s->sBlackList)
@@ -735,7 +735,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	}
 	*d = (UINT16)s->ubPathDataSize;
 	d += 2;
-	*d = (UINT16)s->usPathIndex;
+	*d = (UINT16)s->ubPathIndex;
 	d += 2;
 
 	INJ_I16(d, s->sBlackList)
