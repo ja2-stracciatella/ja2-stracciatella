@@ -2,16 +2,16 @@
 
 [ -d /tmp/build ] && rm -rf /tmp/build
 mkdir /tmp/build
-cd /tmp/build && cmake -DCMAKE_BUILD_TYPE=Release $2 /home/vagrant/strac
+cd /tmp/build && cmake -DCMAKE_BUILD_TYPE=Release $2 /tmp/ja2-stracciatella
 cd /tmp/build && make $1 -j2
 
 # Save error code
 e=$?
 
-[ -d /home/vagrant/strac/releases ] || mkdir /home/vagrant/strac/releases
+[ -d /tmp/ja2-stracciatella/releases ] || mkdir /tmp/ja2-stracciatella/releases
 if test -n "$(find /tmp/build/ -maxdepth 1 -name 'ja2-stracciatella*')"
 then
-    cp /tmp/build/ja2-stracciatella* /home/vagrant/strac/releases
+    cp /tmp/build/ja2-stracciatella* /tmp/ja2-stracciatella/releases
 fi
 
 exit ${e}

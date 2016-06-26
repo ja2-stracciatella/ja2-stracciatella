@@ -1,12 +1,9 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.guest = :freebsd
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder "../../..", "/home/vagrant/strac", id: "vagrant-root", :nfs => true
+  config.vm.synced_folder "../../..", "/tmp/ja2-stracciatella", id: "vagrant-root", :nfs => true
   config.vm.box = "freebsd/FreeBSD-10.2-STABLE"
   config.ssh.shell = "sh"
   config.vm.base_mac = "080027D14C66"

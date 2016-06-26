@@ -160,7 +160,7 @@ SET(CPACK_DEBIAN_PACKAGE_SECTION "games")
 SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
 SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-if(UNIX AND NOT MINGW)
+if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
         set(PACKAGE_ARCH "amd64")
     else()
@@ -177,7 +177,7 @@ SET(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_
 
 INCLUDE(CPack)
 
-if (UNIX AND NOT MINGW)
+if (UNIX AND NOT MINGW AND NOT APPLE)
     INSTALL(TARGETS ${BINARY} RUNTIME DESTINATION bin)
     INSTALL(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
     INSTALL(FILES _build/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
@@ -214,7 +214,7 @@ add_custom_templated_target("uninstall")
 macro(add_vagrant_build_target NAME BOX VM TARGET ARGS)
     add_custom_target(${NAME})
     add_custom_command(TARGET ${NAME}
-            COMMAND vagrant up ${VM} && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build.sh '${TARGET}' '${ARGS}'" ${VM} && vagrant halt ${VM}
+            COMMAND vagrant up ${VM} && vagrant ssh -c "sh /tmp/ja2-stracciatella/_build/buildboxes/common/build.sh '${TARGET}' '${ARGS}'" ${VM} && vagrant halt ${VM}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_build/buildboxes/${BOX})
 endmacro(add_vagrant_build_target)
 
@@ -238,6 +238,13 @@ add_vagrant_build_target(
         "win"
         "package"
         "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\""
+)
+add_vagrant_build_target(
+        "build-macos-release"
+        "macos"
+        "macos"
+        "package"
+        "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=\"ZIP\""
 )
 add_vagrant_build_target(
         "check-compilation-on-freebsd10"

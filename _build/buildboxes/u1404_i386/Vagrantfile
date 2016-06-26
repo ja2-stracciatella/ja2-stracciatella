@@ -1,9 +1,3 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
-# This box is for buidling:
-#   1) i368 debian package
-
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -12,7 +6,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :path => "../common/ubuntu-bootstrap.sh"
 
-  config.vm.synced_folder "../../..", "/home/vagrant/strac"
+  config.vm.synced_folder "../../..", "/tmp/ja2-stracciatella"
 
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = 2
