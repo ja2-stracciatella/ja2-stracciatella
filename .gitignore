@@ -23,3 +23,6 @@ SDL.dll
 stderr.txt
 stdout.txt
 TAGS
+.cproject
+.project
+.idea
