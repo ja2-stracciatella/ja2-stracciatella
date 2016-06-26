@@ -211,10 +211,10 @@ add_custom_templated_target("uninstall")
 
 ## Release building
 
-macro(add_vagrant_build_target NAME BOX VM ARGS)
+macro(add_vagrant_build_target NAME BOX VM TARGET ARGS)
     add_custom_target(${NAME})
     add_custom_command(TARGET ${NAME}
-            COMMAND vagrant up ${VM} && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build-release.sh '${ARGS}'" ${VM} && vagrant halt ${VM}
+            COMMAND vagrant up ${VM} && vagrant ssh -c "sh /home/vagrant/strac/_build/buildboxes/common/build.sh '${TARGET}' '${ARGS}'" ${VM} && vagrant halt ${VM}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_build/buildboxes/${BOX})
 endmacro(add_vagrant_build_target)
 
@@ -222,19 +222,36 @@ add_vagrant_build_target(
         "build-deb-package-on-u1404_amd64"
         "u1404_amd64"
         "amd64"
+        "package"
         "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
 )
 add_vagrant_build_target(
         "build-deb-package-on-u1404_i386"
         "u1404_i386"
         "i386"
+        "package"
         "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
 )
 add_vagrant_build_target(
         "build-win-release-on-u1404_amd64"
         "u1404_amd64"
         "win"
+        "package"
         "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\""
+)
+add_vagrant_build_target(
+        "check-compilation-on-freebsd10"
+        "freebsd-10.2"
+        "freebsd"
+        "all"
+        ""
+)
+add_vagrant_build_target(
+        "check-compilation-on-openbsd59"
+        "openbsd-5.9"
+        "openbsd"
+        "all"
+        ""
 )
 
 
@@ -242,6 +259,8 @@ add_custom_target(build-releases)
 ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_amd64)
 ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_i386)
 ADD_DEPENDENCIES(build-releases build-win-release-on-u1404_amd64)
+ADD_DEPENDENCIES(build-releases check-compilation-on-freebsd10)
+ADD_DEPENDENCIES(build-releases check-compilation-on-openbsd59)
 
 ## Rebuilding contributors.txt
 
