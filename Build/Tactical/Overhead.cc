@@ -827,7 +827,7 @@ void ExecuteOverhead(void)
 								if (pSoldier->sFinalDestination == pSoldier->sGridNo)
 								{
 									// Cancel path....
-									pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
+									pSoldier->usPathIndex = pSoldier->ubPathDataSize = 0;
 
 									// Cancel reverse
 									pSoldier->bReverse = FALSE;
@@ -982,16 +982,16 @@ void ExecuteOverhead(void)
 								{
 									// Increment path....
 									pSoldier->usPathIndex++;
-									if (pSoldier->usPathIndex > pSoldier->usPathDataSize)
+									if (pSoldier->usPathIndex > pSoldier->ubPathDataSize)
 									{
-										pSoldier->usPathIndex = pSoldier->usPathDataSize;
+										pSoldier->usPathIndex = pSoldier->ubPathDataSize;
 									}
 
 									// Are we at the end?
-									if (pSoldier->usPathIndex == pSoldier->usPathDataSize)
+									if (pSoldier->usPathIndex == pSoldier->ubPathDataSize)
 									{
 										// ATE: Pop up warning....
-										if (pSoldier->usPathDataSize != MAX_PATH_LIST_SIZE)
+										if (pSoldier->ubPathDataSize != MAX_PATH_LIST_SIZE)
 										{
 											SLOGD(DEBUG_TAG_OVERHEAD, "Path for %ls ( %d ) did not make merc get to dest.", pSoldier->name, pSoldier->ubID);
 										}
@@ -1485,7 +1485,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		pSoldier->bEndDoorOpenCode = FALSE;
 		*pfKeepMoving = FALSE;
 	}
-	else if (pSoldier->usPathIndex == pSoldier->usPathDataSize && pSoldier->usPathDataSize == 0)
+	else if (pSoldier->usPathIndex == pSoldier->ubPathDataSize && pSoldier->ubPathDataSize == 0)
 	{
 		SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: No Path");
 		pSoldier->bEndDoorOpenCode = FALSE;
@@ -1934,7 +1934,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	{
 		*pfKeepMoving = FALSE;
 	}
-	else if (pSoldier->usPathIndex == pSoldier->usPathDataSize && pSoldier->usPathDataSize == 0)
+	else if (pSoldier->usPathIndex == pSoldier->ubPathDataSize && pSoldier->ubPathDataSize == 0)
 	{
 		*pfKeepMoving = FALSE;
 	}

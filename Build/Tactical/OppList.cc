@@ -2784,7 +2784,7 @@ void DebugSoldierPage2()
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"DesDirection", gzDirectionStr[s->bDesiredDirection]);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"GridNo:",      s->sGridNo);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Dest:",        s->sFinalDestination);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Size:",   s->usPathDataSize);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Size:",   s->ubPathDataSize);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Index:",  s->usPathIndex);
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"First 3 Steps:");

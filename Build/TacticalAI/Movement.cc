@@ -447,7 +447,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
  // we'll only go as far along the plotted route as is within our
  // permitted roaming range, and we'll stop as soon as we're down to <= 5 APs
 
- for (sLoop = 0; sLoop < (pSoldier->usPathDataSize - pSoldier->usPathIndex); sLoop++)
+ for (sLoop = 0; sLoop < (pSoldier->ubPathDataSize - pSoldier->usPathIndex); sLoop++)
   {
    // what is the next gridno in the path?
 
@@ -524,7 +524,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 			}
 
 		 // ATE: Direction here?
-		 sAPCost += EstimateActionPointCost( pSoldier, sTempDest, (INT8) pSoldier->ubPathingData[sLoop], pSoldier->usUIMovementMode, (INT8) sLoop, (INT8) pSoldier->usPathDataSize );
+		 sAPCost += EstimateActionPointCost( pSoldier, sTempDest, (INT8) pSoldier->ubPathingData[sLoop], pSoldier->usUIMovementMode, (INT8) sLoop, (INT8) pSoldier->ubPathDataSize );
 
 		 bAPsLeft = pSoldier->bActionPoints - sAPCost;
 	 }
@@ -565,7 +565,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 		// we can hack this surely! -- CJC
      pSoldier->bPathStored = TRUE;
 		 pSoldier->sFinalDestination = sGoToGrid;
-		 pSoldier->usPathDataSize = sLoop + 1;
+		 pSoldier->ubPathDataSize = sLoop + 1;
 	 }
 
 		SLOGD(DEBUG_TAG_AI, "%d to %d with %d APs left", pSoldier->ubID,
@@ -631,7 +631,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->usPathIndex ] ) );
 
 	// Find out how much it takes to move here!
-	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );
+	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->ubPathDataSize );
 
 	if (pSoldier->bActionPoints >= bAPCost)
 	{

@@ -1838,7 +1838,7 @@ ENDOFLOOP:
 		  }
 
 			s->usPathIndex = 0;
-		  s->usPathDataSize  = (UINT8) iCnt;
+		  s->ubPathDataSize  = (UINT8) iCnt;
 
 		}
 		else if (bCopy == NO_COPYROUTE)
@@ -2473,7 +2473,7 @@ INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode )
 {
 	// AI function for a soldier already with a path; this will return the cost of that path using the given movement mode
 
-	if ( !pSoldier->bPathStored || pSoldier->usPathDataSize == 0 )
+	if ( !pSoldier->bPathStored || pSoldier->ubPathDataSize == 0 )
 	{
 		return( 0 );
 	}
