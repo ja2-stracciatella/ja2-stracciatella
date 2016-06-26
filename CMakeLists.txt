@@ -239,13 +239,16 @@ add_vagrant_build_target(
         "package"
         "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\""
 )
-add_vagrant_build_target(
-        "build-macos-release"
-        "macos"
-        "macos"
-        "package"
-        "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=\"ZIP\""
-)
+if(APPLE)
+    # This can only be executed on macOS since it is not legally allowed to run the VM on any other OS
+    add_vagrant_build_target(
+            "build-macos-release"
+            "macos"
+            "macos"
+            "package"
+            "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=\"ZIP\""
+    )
+endif()
 add_vagrant_build_target(
         "check-compilation-on-freebsd10"
         "freebsd-10.2"
