@@ -36,6 +36,10 @@ static UINT32 MercChecksum(SOLDIERTYPE const& s)
 
 void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool stracLinuxFormat, UINT32 uiSavedGameVersion)
 {
+  UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
+  UINT16 usPathDataSize;
+  UINT16 usPathIndex;
+
 	memset(s, 0, sizeof(*s));
 
 	const BYTE* d = data;
@@ -213,18 +217,14 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_SKIP(d, 3)
 
 	/* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
-	UINT8 cnt = 0;
-	d++;
-	while (cnt < lengthof(s->usPathingData))
-	{
-		s->usPathingData[cnt] = (UINT8)*d;
-		d += 2;
-		cnt++;
-	}
-	s->usPathDataSize = (UINT8)*d;
-	d += 2;
-	s->usPathIndex = (UINT8)*d;
-	d++;
+  EXTR_U16A(d, usPathingData, lengthof(usPathingData))
+  EXTR_U16(d, usPathDataSize)
+  EXTR_U16(d, usPathIndex)
+	for (UINT8 i = 0; i < usPathDataSize; i++) {
+    s->usPathingData[i] = (UINT8)usPathingData[i];
+  }
+	s->usPathDataSize = (UINT8)usPathDataSize;
+	s->usPathIndex = (UINT8)usPathIndex;
 
 	EXTR_I16(d, s->sBlackList)
 	EXTR_I8(d, s->bAimTime)
@@ -563,6 +563,10 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 
 void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 {
+  UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
+  UINT16 usPathDataSize;
+  UINT16 usPathIndex;
+
 	BYTE* d = data;
 	INJ_U8(d, s->ubID)
 	INJ_SKIP(d, 1)
@@ -724,19 +728,16 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I16(d, s->sFinalDestination)
 	INJ_I8(d, s->bLevel)
 	INJ_SKIP(d, 3)
-	
-	/* convert pathing data to 16 bit for the savegame for compability reasons */
-	UINT8 cnt = 0;
-	while (cnt < lengthof(s->usPathingData))
-	{
-		*d = (UINT16)s->usPathingData[cnt];
-		d += 2;
-		cnt++;
-	}
-	*d = (UINT16)s->usPathDataSize;
-	d += 2;
-	*d = (UINT16)s->usPathIndex;
-	d += 2;
+
+  /* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
+  usPathDataSize = (UINT16)s->usPathDataSize;
+  usPathIndex = (UINT16)s->usPathIndex;
+  for (UINT8 i = 0; i < usPathDataSize; i++) {
+    usPathingData[i] = (UINT16)s->usPathingData[i];
+  }
+  INJ_U16A(d, usPathingData, lengthof(usPathingData))
+  INJ_U16(d, usPathDataSize)
+  INJ_U16(d, usPathIndex)
 
 	INJ_I16(d, s->sBlackList)
 	INJ_I8(d, s->bAimTime)
