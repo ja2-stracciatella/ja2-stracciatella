@@ -1832,7 +1832,7 @@ ENDOFLOOP:
 
 			for (iCnt=0; z && (iCnt < MAX_PATH_LIST_SIZE); iCnt++)
 		  {
-			  s->usPathingData[iCnt] = trailTree[z].stepDir;
+			  s->ubPathingData[iCnt] = trailTree[z].stepDir;
 
 			  z = trailTree[z].nextLink;
 		  }

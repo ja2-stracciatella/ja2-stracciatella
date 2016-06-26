@@ -215,9 +215,9 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	/* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
 	UINT8 cnt = 0;
 	d++;
-	while (cnt < lengthof(s->usPathingData))
+	while (cnt < lengthof(s->ubPathingData))
 	{
-		s->usPathingData[cnt] = (UINT8)*d;
+		s->ubPathingData[cnt] = (UINT8)*d;
 		d += 2;
 		cnt++;
 	}
@@ -727,9 +727,9 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	
 	/* convert pathing data to 16 bit for the savegame for compability reasons */
 	UINT8 cnt = 0;
-	while (cnt < lengthof(s->usPathingData))
+	while (cnt < lengthof(s->ubPathingData))
 	{
-		*d = (UINT16)s->usPathingData[cnt];
+		*d = (UINT16)s->ubPathingData[cnt];
 		d += 2;
 		cnt++;
 	}

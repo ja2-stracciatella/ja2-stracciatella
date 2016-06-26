@@ -1039,7 +1039,7 @@ void ExecuteOverhead(void)
 										{
 											// Change desired direction
 											// Just change direction
-											EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->usPathingData[pSoldier->usPathIndex], FALSE, pSoldier->usAnimState);
+											EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->ubPathingData[pSoldier->usPathIndex], FALSE, pSoldier->usAnimState);
 										}
 
 										if (gTacticalStatus.bBoxingState != NOT_BOXING &&
@@ -1356,10 +1356,10 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 	}
 
-	const UINT16 usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->usPathingData[pSoldier->usPathIndex]));
+	const UINT16 usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->ubPathingData[pSoldier->usPathIndex]));
 
 	// OK, check if this is a fence cost....
-	if (gubWorldMovementCosts[usNewGridNo][pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel] == TRAVELCOST_FENCE)
+	if (gubWorldMovementCosts[usNewGridNo][pSoldier->ubPathingData[pSoldier->usPathIndex]][pSoldier->bLevel] == TRAVELCOST_FENCE)
 	{
 		// We have been told to jump fence....
 
@@ -1370,9 +1370,9 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		if (EnoughPoints(pSoldier, sAPCost, sBPCost, FALSE))
 		{
 			// ATE: Check for tile being clear....
-			const UINT16 sOverFenceGridNo = NewGridNo(usNewGridNo, DirectionInc(pSoldier->usPathingData[pSoldier->usPathIndex + 1]));
+			const UINT16 sOverFenceGridNo = NewGridNo(usNewGridNo, DirectionInc(pSoldier->ubPathingData[pSoldier->usPathIndex + 1]));
 
-			if (HandleNextTile(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex + 1], sOverFenceGridNo, pSoldier->sFinalDestination))
+			if (HandleNextTile(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->usPathIndex + 1], sOverFenceGridNo, pSoldier->sFinalDestination))
 			{
 				// We do, adjust path data....
 				pSoldier->usPathIndex++;
@@ -1398,7 +1398,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 		return FALSE;
 	}
-	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, TRUE) == TRAVELCOST_DOOR)
+	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][pSoldier->ubPathingData[pSoldier->usPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, TRUE) == TRAVELCOST_DOOR)
 	{
 		// OK, if we are here, we have been told to get a pth through a door.
 
@@ -1407,13 +1407,13 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		// No need to check for right key ( since the path checks for that? )
 
 		// Just for now play the $&&% animation
-		const INT8 bDirection = pSoldier->usPathingData[pSoldier->usPathIndex];
+		const INT8 bDirection = pSoldier->ubPathingData[pSoldier->usPathIndex];
 
 		// OK, based on the direction, get door gridno
 		INT16 sDoorGridNo;
 		if (bDirection == NORTH || bDirection == WEST)
 		{
-			sDoorGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->usPathingData[pSoldier->usPathIndex]));
+			sDoorGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->ubPathingData[pSoldier->usPathIndex]));
 		}
 		else if (bDirection == SOUTH || bDirection == EAST)
 		{
@@ -1455,11 +1455,11 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	}
 
 	// Find out how much it takes to move here!
-	const INT16 sAPCost = ActionPointCost(    pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex], usAnimState);
-	const INT16 sBPCost = TerrainBreathPoints(pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex], usAnimState);
+	const INT16 sAPCost = ActionPointCost(    pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[pSoldier->usPathIndex], usAnimState);
+	const INT16 sBPCost = TerrainBreathPoints(pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[pSoldier->usPathIndex], usAnimState);
 
 	// CHECK IF THIS TILE IS A GOOD ONE!
-	if (!HandleNextTile(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex], usNewGridNo, pSoldier->sFinalDestination))
+	if (!HandleNextTile(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->usPathIndex], usNewGridNo, pSoldier->sFinalDestination))
 	{
 		SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: Tile %d Was blocked", usNewGridNo);
 
@@ -1655,7 +1655,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			// OK, let's check for monsters....
 			if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 			{
-				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex]))
+				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->usPathIndex]))
 				{
 					if (!pSoldier->bReverse)
 					{
@@ -1680,7 +1680,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			// OK, let's check for monsters....
 			if (pSoldier->ubBodyType == BLOODCAT)
 			{
-				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex]))
+				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->usPathIndex]))
 				{
 					if (!pSoldier->bReverse)
 					{
@@ -1695,7 +1695,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			}
 
 			// Change desired direction
-			EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->usPathingData[pSoldier->usPathIndex], fInitialMove, usAnimState);
+			EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->ubPathingData[pSoldier->usPathIndex], fInitialMove, usAnimState);
 
 			// CONTINUE
 			// IT'S SAVE TO GO AGAIN, REFRESH flag

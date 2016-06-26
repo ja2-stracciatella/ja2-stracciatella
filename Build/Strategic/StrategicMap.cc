@@ -3081,7 +3081,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		for (iLoop = 0; iLoop < pSoldier->usPathDataSize; iLoop++)
 		{
-			sTempGridNo += DirectionInc( pSoldier->usPathingData[ iLoop ] );
+			sTempGridNo += DirectionInc( pSoldier->ubPathingData[ iLoop ] );
 		}
 
 		if (sTempGridNo == sEndGridNo)
@@ -3110,7 +3110,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
@@ -3123,7 +3123,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
@@ -3139,7 +3139,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
@@ -3152,7 +3152,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
@@ -3167,7 +3167,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
@@ -3180,7 +3180,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
@@ -3196,7 +3196,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
@@ -3209,7 +3209,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
+			pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
 			pSoldier->usPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;

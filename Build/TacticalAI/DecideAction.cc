@@ -3364,7 +3364,7 @@ bCanAttack = FALSE;
 				if ( pSoldier->usActionData != NOWHERE )
 				{
 					// truncate path to 1 step
-					pSoldier->usActionData = pSoldier->sGridNo + DirectionInc( pSoldier->usPathingData[0] );
+					pSoldier->usActionData = pSoldier->sGridNo + DirectionInc( pSoldier->ubPathingData[0] );
 					pSoldier->sFinalDestination = pSoldier->usActionData;
 					pSoldier->bNextAction = AI_ACTION_END_TURN;
 					return( AI_ACTION_GET_CLOSER );

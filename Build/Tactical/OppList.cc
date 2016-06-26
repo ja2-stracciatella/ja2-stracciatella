@@ -2789,16 +2789,16 @@ void DebugSoldierPage2()
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"First 3 Steps:");
 		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
-			s->usPathingData[0],
-			s->usPathingData[1],
-			s->usPathingData[2]
+			s->ubPathingData[0],
+			s->ubPathingData[1],
+			s->ubPathingData[2]
 		);
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Next 3 Steps:");
 		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
-			s->usPathingData[s->usPathIndex],
-			s->usPathingData[s->usPathIndex + 1],
-			s->usPathingData[s->usPathIndex + 2]
+			s->ubPathingData[s->usPathIndex],
+			s->ubPathingData[s->usPathIndex + 1],
+			s->ubPathingData[s->usPathIndex + 2]
 		);
 
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"FlashInd:",    s->fFlashLocator);

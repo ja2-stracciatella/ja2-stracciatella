@@ -48,7 +48,7 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 		UINT32	uiLoop;
 		UINT16	usNewGridNo;
 
-		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->usPathIndex ] ) );
 
 		// provide more info!!
 		SLOGD(DEBUG_TAG_SOLDIER, "Soldier path size %d, index %d", pSoldier->usPathDataSize, pSoldier->usPathIndex);
@@ -59,17 +59,17 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 		{
 			if ( uiLoop > pSoldier->usPathIndex )
 			{
-				usTemp = NewGridNo( usTemp, DirectionInc( pSoldier->usPathingData[ uiLoop ] ) );
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
+				usTemp = NewGridNo( usTemp, DirectionInc( pSoldier->ubPathingData[ uiLoop ] ) );
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->ubPathingData[uiLoop], usTemp);
 			}
 			else if ( uiLoop == pSoldier->usPathIndex )
 			{
 				usTemp = usNewGridNo;
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->ubPathingData[uiLoop], usTemp);
 			}
 			else
 			{
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d", uiLoop, pSoldier->usPathingData[uiLoop]);
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d", uiLoop, pSoldier->ubPathingData[uiLoop]);
 			}
 		}
 	}

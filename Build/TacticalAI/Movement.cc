@@ -451,8 +451,8 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
   {
    // what is the next gridno in the path?
 
-	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->usPathingData[sLoop] + 1) );
-	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->usPathingData[sLoop]) );
+	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->ubPathingData[sLoop] + 1) );
+	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->ubPathingData[sLoop]) );
 
    // this should NEVER be out of bounds
    if (sTempDest == sGoToGrid)
@@ -524,7 +524,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 			}
 
 		 // ATE: Direction here?
-		 sAPCost += EstimateActionPointCost( pSoldier, sTempDest, (INT8) pSoldier->usPathingData[sLoop], pSoldier->usUIMovementMode, (INT8) sLoop, (INT8) pSoldier->usPathDataSize );
+		 sAPCost += EstimateActionPointCost( pSoldier, sTempDest, (INT8) pSoldier->ubPathingData[sLoop], pSoldier->usUIMovementMode, (INT8) sLoop, (INT8) pSoldier->usPathDataSize );
 
 		 bAPsLeft = pSoldier->bActionPoints - sAPCost;
 	 }
@@ -628,10 +628,10 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->usPathIndex ] ) );
 
 	// Find out how much it takes to move here!
-	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );
+	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );
 
 	if (pSoldier->bActionPoints >= bAPCost)
 	{

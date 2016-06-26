@@ -1162,7 +1162,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 			if ( usNewState == WALKING || usNewState == RUNNING || usNewState == SWATTING )
 			{
 				// CHECK FOR SIDEWAYS!
-				if ( pSoldier->bDirection == gPurpendicularDirection[ pSoldier->bDirection ][ pSoldier->usPathingData[ pSoldier->usPathIndex ] ] )
+				if ( pSoldier->bDirection == gPurpendicularDirection[ pSoldier->bDirection ][ pSoldier->ubPathingData[ pSoldier->usPathIndex ] ] )
 				{
 					// We are perpendicular!
 					usNewState = SIDE_STEP;
@@ -1286,7 +1286,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
           {
 						// Change desired direction
 						// Just change direction
-						EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, pSoldier->usAnimState );
+						EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->ubPathingData[ pSoldier->usPathIndex ], FALSE, pSoldier->usAnimState );
           }
 
 					//check for services
@@ -1610,13 +1610,13 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 
 				pSoldier->usPathDataSize = 0;
 				pSoldier->usPathIndex    = 0;
-				pSoldier->usPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
+				pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
 				pSoldier->usPathDataSize++;
-				pSoldier->usPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
+				pSoldier->ubPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
 				pSoldier->usPathDataSize++;
 				pSoldier->sFinalDestination = usNewGridNo;
 				// Set direction
-				EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, JUMP_OVER_BLOCKING_PERSON );
+				EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->ubPathingData[ pSoldier->usPathIndex ], FALSE, JUMP_OVER_BLOCKING_PERSON );
 			}
 			break;
 
@@ -3408,7 +3408,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	UINT16	usAnimState;
 	UINT16	usMoveAnimState = usMovementAnim;
 	INT16							sMercGridNo;
-	UINT8						usPathingData[ MAX_PATH_LIST_SIZE ];
+	UINT8						ubPathingData[ MAX_PATH_LIST_SIZE ];
 	UINT8							ubPathingMaxDirection;
 	BOOLEAN						fAdvancePath = TRUE;
 	UINT8							fFlags = 0;
@@ -3487,9 +3487,9 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 			// Add one to path data size....
 			if ( fAdvancePath )
 			{
-				memcpy( usPathingData, pSoldier->usPathingData, sizeof( usPathingData ) );
-				ubPathingMaxDirection = (UINT8)usPathingData[ MAX_PATH_LIST_SIZE -1 ];
-				memcpy( &(pSoldier->usPathingData[1]), usPathingData, sizeof( usPathingData ) - sizeof( usPathingData[0] ) );
+				memcpy( ubPathingData, pSoldier->ubPathingData, sizeof( ubPathingData ) );
+				ubPathingMaxDirection = (UINT8)ubPathingData[ MAX_PATH_LIST_SIZE -1 ];
+				memcpy( &(pSoldier->ubPathingData[1]), ubPathingData, sizeof( ubPathingData ) - sizeof( ubPathingData[0] ) );
 
 				// If we have reach the max, go back one sFinalDest....
 				if ( pSoldier->usPathDataSize == MAX_PATH_LIST_SIZE )
@@ -8425,12 +8425,12 @@ static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 	// Set path....
 	pSoldier->usPathDataSize = 0;
 	pSoldier->usPathIndex    = 0;
-	pSoldier->usPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
+	pSoldier->ubPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
 	pSoldier->usPathDataSize++;
-	pSoldier->usPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
+	pSoldier->ubPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
 	pSoldier->usPathDataSize++;
 	pSoldier->sFinalDestination = usNewGridNo;
-	EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, FLYBACK_HIT );
+	EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->ubPathingData[ pSoldier->usPathIndex ], FALSE, FLYBACK_HIT );
 
 	// Get a new direction based on direction
 	EVENT_InitNewSoldierAnim( pSoldier, FLYBACK_HIT, 0 , FALSE );
@@ -8450,10 +8450,10 @@ void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 	// Set path....
 	pSoldier->usPathDataSize = 0;
 	pSoldier->usPathIndex    = 0;
-	pSoldier->usPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
+	pSoldier->ubPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
 	pSoldier->usPathDataSize++;
 	pSoldier->sFinalDestination = usNewGridNo;
-	EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, FALLBACK_HIT_STAND );
+	EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->ubPathingData[ pSoldier->usPathIndex ], FALSE, FALLBACK_HIT_STAND );
 
 	// Get a new direction based on direction
 	EVENT_InitNewSoldierAnim( pSoldier, FALLBACK_HIT_STAND, 0 , FALSE );
