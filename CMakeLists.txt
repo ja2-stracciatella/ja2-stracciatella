@@ -256,11 +256,14 @@ add_vagrant_build_target(
 
 
 add_custom_target(build-releases)
-ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_amd64)
-ADD_DEPENDENCIES(build-releases build-deb-package-on-u1404_i386)
-ADD_DEPENDENCIES(build-releases build-win-release-on-u1404_amd64)
-ADD_DEPENDENCIES(build-releases check-compilation-on-freebsd10)
-ADD_DEPENDENCIES(build-releases check-compilation-on-openbsd59)
+add_custom_command(
+    TARGET build-releases
+    COMMAND make build-deb-package-on-u1404_amd64
+    COMMAND make build-deb-package-on-u1404_i386
+    COMMAND make build-win-release-on-u1404_amd64
+    COMMAND make check-compilation-on-freebsd10
+    COMMAND make check-compilation-on-openbsd59
+)
 
 ## Rebuilding contributors.txt
 
