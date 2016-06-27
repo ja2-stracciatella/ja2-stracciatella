@@ -50,8 +50,6 @@ extern INT32 iCurrentMapSectorZ;
 #define SUBTRACTOR_FOR_SQUAD_LIST 0
 
 
-static INT16       gsRadarX;
-static INT16       gsRadarY;
 static SGPVObject* gusRadarImage;
 BOOLEAN   fRenderRadarScreen = TRUE;
 static INT16       sSelectedSquadLine = -1;
@@ -76,9 +74,6 @@ void InitRadarScreen()
 	MOUSE_REGION* const r = &gRadarRegion;
 	MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, 0, RadarRegionMoveCallback, RadarRegionButtonCallback);
 	r->Disable();
-
-	gsRadarX = x;
-	gsRadarY = y;
 }
 
 
@@ -121,14 +116,10 @@ void MoveRadarScreen( )
 	// Remove old region
 	MSYS_RemoveRegion( &gRadarRegion );
 
-	// Add new one
-
-  gsRadarY = RADAR_WINDOW_TM_Y;
-
 	// Add region for radar
-	MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, (UINT16)(gsRadarY),
+	MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y,
 										 RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
-										 (UINT16)(gsRadarY + RADAR_WINDOW_HEIGHT),
+										 (UINT16)(RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT),
 										 MSYS_PRIORITY_HIGHEST, 0,
 										 RadarRegionMoveCallback,
 										 RadarRegionButtonCallback );
@@ -227,15 +218,15 @@ void RenderRadarScreen()
 				(guiCurrentScreen == GAME_SCREEN && gbWorldSectorZ     == 0)
 			) ? 1 : 0;
 		gusRadarImage->CurrentShade(shade);
-		BltVideoObject(guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY);
+		BltVideoObject(guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y);
 	}
 
 	// First delete what's there
-	RestoreExternBackgroundRect(RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH + 1, RADAR_WINDOW_HEIGHT + 1);
+	RestoreExternBackgroundRect(RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_WIDTH + 1, RADAR_WINDOW_HEIGHT + 1);
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 
-		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH - 1, RADAR_WINDOW_HEIGHT - 1);
+		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_WIDTH - 1, RADAR_WINDOW_HEIGHT - 1);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 		// Cycle fFlash variable
@@ -278,10 +269,10 @@ void RenderRadarScreen()
 			INT16 const sHeight = RADAR_WINDOW_HEIGHT;
 			INT16 const sX      = RADAR_WINDOW_X;
 
-			INT16 const sRadarTLX = sTopLeftWorldX     * gdScaleX - sRadarCX + sX       + sWidth  / 2;
-			INT16 const sRadarTLY = sTopLeftWorldY     * gdScaleY - sRadarCY + gsRadarY + sHeight / 2;
-			INT16 const sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX       + sWidth  / 2;
-			INT16 const sRadarBRY = sBottomRightWorldY * gdScaleY - sRadarCY + gsRadarY + sHeight / 2;
+			INT16 const sRadarTLX = sTopLeftWorldX     * gdScaleX - sRadarCX + sX      					 + sWidth  / 2;
+			INT16 const sRadarTLY = sTopLeftWorldY     * gdScaleY - sRadarCY + RADAR_WINDOW_TM_Y + sHeight / 2;
+			INT16 const sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX   					   + sWidth  / 2;
+			INT16 const sRadarBRY = sBottomRightWorldY * gdScaleY - sRadarCY + RADAR_WINDOW_TM_Y + sHeight / 2;
 
 			UINT16 const line_colour = Get16BPPColor(FROMRGB(0, 255, 0));
 			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, line_colour, pDestBuf);
@@ -310,7 +301,7 @@ void RenderRadarScreen()
 
 				// Get radar x and y postion and add starting relative to interface
 				INT16 const x = sXSoldScreen * gdScaleX + RADAR_WINDOW_X;
-				INT16 const y = sYSoldScreen * gdScaleY + gsRadarY;
+				INT16 const y = sYSoldScreen * gdScaleY + RADAR_WINDOW_TM_Y;
 
 				UINT32 const line_colour =
 					/* flash selected merc */
@@ -340,7 +331,7 @@ void RenderRadarScreen()
 
 					// Get radar x and y postion and add starting relative to interface
 					INT16  const x = sXSoldScreen * gdScaleX + RADAR_WINDOW_X;
-					INT16  const y = sYSoldScreen * gdScaleY + gsRadarY;
+					INT16  const y = sYSoldScreen * gdScaleY + RADAR_WINDOW_TM_Y;
 
 					UINT16 const line_colour = fFlashHighLightInventoryItemOnradarMap ?
 						Get16BPPColor(FROMRGB(  0, 255,   0)) :
@@ -349,7 +340,7 @@ void RenderRadarScreen()
 					RectangleDraw(TRUE, x, y, x + 1, y + 1, line_colour, pDestBuf);
 				}
 			}
-			InvalidateRegion(RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH, gsRadarY + RADAR_WINDOW_HEIGHT);
+			InvalidateRegion(RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH, RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT);
 		}
 	}
 }
@@ -475,7 +466,7 @@ static void CreateDestroyMouseRegionsForSquadList(void)
 static void RenderSquadList(void)
 {
 	INT16 const dx = RADAR_WINDOW_X;
-	INT16 const dy = gsRadarY;
+	INT16 const dy = RADAR_WINDOW_TM_Y;
 
 	RestoreExternBackgroundRect(dx, dy, RADAR_WINDOW_WIDTH, SQUAD_REGION_HEIGHT);
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, dx, dy, dx + RADAR_WINDOW_WIDTH, dy + SQUAD_REGION_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
