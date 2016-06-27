@@ -113,6 +113,13 @@ add_subdirectory("_build/lib-MicroIni")
 add_subdirectory("_build/lib-slog")
 add_subdirectory("_build/lib-smacker")
 
+foreach(FILE ${JA2_SOURCES})
+  get_filename_component(PARENT_DIR "${FILE}" PATH)
+  file(RELATIVE_PATH GROUP "${CMAKE_CURRENT_SOURCE_DIR}" "${PARENT_DIR}")
+  string(REPLACE "/" "\\" GROUP "${GROUP}")
+  source_group("${GROUP}" FILES "${FILE}")
+endforeach()
+
 if (WITH_UNITTESTS)
     MESSAGE(STATUS "Compiling with unittests" )
 
