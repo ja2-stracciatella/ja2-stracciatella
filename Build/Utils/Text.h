@@ -183,6 +183,7 @@ extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 #define str_stat_list_SIZE 11
 #define str_aim_sort_list_SIZE 8
 #define zNewTacticalMessages_SIZE 7
+#define gs_dead_is_dead_mode_tab_name_SIZE 2
 
 //Weapon Name and Description size
 #define SIZE_ITEM_NAME        80
@@ -418,6 +419,7 @@ struct LanguageRes
   const StrPointer  str_iron_man_mode_warning;
   const StrPointer  str_dead_is_dead_mode_warning;
   const StrPointer  str_dead_is_dead_mode_enter_name;
+	const StrPointer *gs_dead_is_dead_mode_tab_name;               
 };
 
 /** Current language resources. */
@@ -649,6 +651,8 @@ extern const LanguageRes* g_langRes;
 #define str_iron_man_mode_warning                           (g_langRes->str_iron_man_mode_warning)
 #define str_dead_is_dead_mode_warning                       (g_langRes->str_dead_is_dead_mode_warning)
 #define str_dead_is_dead_mode_enter_name                    (g_langRes->str_dead_is_dead_mode_enter_name)
+#define gs_dead_is_dead_mode_tab_name                       (g_langRes->gs_dead_is_dead_mode_tab_name)
+
 
 /* -------------------------------------------------------------------------------------------- */
 
