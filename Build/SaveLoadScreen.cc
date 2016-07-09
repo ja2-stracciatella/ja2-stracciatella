@@ -361,7 +361,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 
 static void MakeTab(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/atmbuttons.sti", 2, 3);
+	BUTTON_PICS* const img = LoadButtonImage( "sti/interface/loadscreentab.sti", 2, 3);
 	giLoadscreenTabButtonImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, STD_SCREEN_X + x, STD_SCREEN_Y + 8, MSYS_PRIORITY_HIGHEST - 1, click);
 	giLoadscreenTab[idx] = btn;
