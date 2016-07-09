@@ -3524,6 +3524,12 @@ const wchar_t *g_eng_str_iron_man_mode_warning = L"You have chosen IRON MAN mode
 const wchar_t *g_eng_str_dead_is_dead_mode_warning = L"You have chosen DEAD IS DEAD mode. This setting makes the game considerably more challenging as you will not be able to load a previous savegame if you have made a mistake. The game will save automatically on leave. This setting will affect the entire course of the game.  Are you sure want to play in DEAD IS DEAD mode?";
 const wchar_t *g_eng_str_dead_is_dead_mode_enter_name = L"You will now be taken to the save screen. Choose a savegame slot and name for your game. This slot will be persistent for your game and cannot be changed!";
 
+static const wchar_t *s_eng_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =
+{
+	L"Normal", 			// Normal Tab
+	L"DiD", 			// Dead is Dead Tab
+};
+
 /** English language resources. */
 LanguageRes g_LanguageResEnglish = {
 
@@ -3750,4 +3756,6 @@ LanguageRes g_LanguageResEnglish = {
   g_eng_str_iron_man_mode_warning,
   g_eng_str_dead_is_dead_mode_warning,
   g_eng_str_dead_is_dead_mode_enter_name,
+	
+	s_eng_gs_dead_is_dead_mode_tab_name,
 };

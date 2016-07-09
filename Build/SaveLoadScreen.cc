@@ -370,7 +370,8 @@ static void MakeTab(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnSlgSwitchLoadTabCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason);
 static void ClearSelectedSaveSlot(void);
 static void InitSaveGameArray(void);
 static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
@@ -381,8 +382,8 @@ static void StartFadeOutForSaveLoadScreen(void);
 
 static void CreateLoadscreenTab()
 {
-	MakeTab(0,        20, BtnSlgSwitchLoadTabCallback, gsAtmStartButtonText[0]);
-	MakeTab(1, 110, BtnSlgSwitchLoadTabCallback,    gsAtmStartButtonText[1]);
+	MakeTab(0,        20, BtnSlgNormalGameTabCallback, gs_dead_is_dead_mode_tab_name[0]);
+	MakeTab(1, 90, BtnSlgDeadIsDeadTabCallback,    gs_dead_is_dead_mode_tab_name[1]);
 	// Render the Normal Tab as selected after create
 	giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags |= BUTTON_CLICKED_ON;
 }
@@ -1080,13 +1081,29 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 }
 
-static void BtnSlgSwitchLoadTabCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason)
 {
   if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
 		btn->uiFlags |= BUTTON_CLICKED_ON;
-		giLoadscreenTab[gfDiDTab ? SLS_TAB_NORMAL : SLS_TAB_DEAD_IS_DEAD]->uiFlags       &= ~BUTTON_CLICKED_ON;
-    SwitchLoadTab();
+		giLoadscreenTab[SLS_TAB_DEAD_IS_DEAD]->uiFlags       &= ~BUTTON_CLICKED_ON;
+    if (gfDiDTab)
+    {
+			SwitchLoadTab();
+		}
+  }
+}
+
+static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason)
+{
+  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+  {
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags       &= ~BUTTON_CLICKED_ON;
+    if (!gfDiDTab)
+    {
+			SwitchLoadTab();
+		}
   }
 }
 
