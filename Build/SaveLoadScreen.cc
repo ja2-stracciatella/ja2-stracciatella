@@ -129,6 +129,14 @@ enum
 	SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE,
 };
 
+// enums for the selected Loadscreen Tab (used with giLoadscreenTab[])
+enum
+{
+	SLS_TAB_NORMAL,
+	SLS_TAB_DEAD_IS_DEAD,
+	SLS_TAB_LENGTH,
+};
+
 
 static BOOLEAN gfSaveLoadScreenEntry = TRUE;
 static BOOLEAN gfSaveLoadScreenExit	= FALSE;
@@ -191,9 +199,11 @@ static GUIButtonRef guiSlgCancelBtn;
 
 // Save game Button
 static BUTTON_PICS* guiSaveLoadImage;
-static BUTTON_PICS* guiDiDLoadImage;
 static GUIButtonRef guiSlgSaveLoadBtn;
-static GUIButtonRef guiSlgDidLoadBtn;
+
+// buttons for Tabs
+static BUTTON_PICS* giLoadscreenTabButtonImage[2];
+static GUIButtonRef giLoadscreenTab[2];
 
 //Mouse regions for the currently selected save game
 static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
@@ -349,6 +359,14 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
 }
 
+static void MakeTab(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
+{
+	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/atmbuttons.sti", 2, 3);
+	giLoadscreenTabButtonImage[idx] = img;
+	GUIButtonRef const btn = QuickCreateButtonNoMove(img, STD_SCREEN_X + x, STD_SCREEN_Y + 8, MSYS_PRIORITY_HIGHEST - 1, click);
+	giLoadscreenTab[idx] = btn;
+	btn->SpecifyGeneralTextAttributes(text, OPT_BUTTON_FONT, FONT_BLACK, DEFAULT_SHADOW);
+}
 
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
@@ -361,6 +379,22 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
 static void StartFadeOutForSaveLoadScreen(void);
 
+static void CreateLoadscreenTab()
+{
+	MakeTab(0,        20, BtnSlgSwitchLoadTabCallback, gsAtmStartButtonText[0]);
+	MakeTab(1, 110, BtnSlgSwitchLoadTabCallback,    gsAtmStartButtonText[1]);
+	// Render the Normal Tab as selected after create
+	giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags |= BUTTON_CLICKED_ON;
+}
+
+static void RemoveLoadscreenTab()
+{
+	for (int i = 0; i < SLS_TAB_LENGTH; i++)
+	{
+		RemoveButton(giLoadscreenTab[i]);
+		UnloadButtonImage(giLoadscreenTabButtonImage[i]);
+	}
+}
 
 static void EnterSaveLoadScreen()
 {
@@ -429,9 +463,8 @@ static void EnterSaveLoadScreen()
   // Display DiD Tab Button if We are in load game
   if (!gfSaveGame)
   {
-    guiDiDLoadImage = UseLoadedButtonImage(guiSlgButtonImage, gfx, gfx + 3);  // FIXME: Use a proper image that doesn't screw up the screen
-    guiSlgDidLoadBtn = CreateIconAndTextButton(guiDiDLoadImage, L"DiD", OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, SLG_SAVE_LOAD_BTN_POS_X, (8 + STD_SCREEN_Y), MSYS_PRIORITY_HIGH, BtnSlgSwitchLoadTabCallback);
-  }
+		CreateLoadscreenTab();	
+	}
   
 	UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
 	UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
@@ -526,8 +559,7 @@ static void ExitSaveLoadScreen(void)
 	// Remove the Dead is Dead button
 	if(!gfSaveGame)
 	{
-		RemoveButton( guiSlgDidLoadBtn );
-		UnloadButtonImage( guiDiDLoadImage ); 
+		RemoveLoadscreenTab();
 	}
 
 	for(i=0; i<NUM_SAVE_GAMES; i++)
@@ -1052,6 +1084,8 @@ static void BtnSlgSwitchLoadTabCallback(GUI_BUTTON* btn, INT32 reason)
 {
   if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
   {
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		giLoadscreenTab[gfDiDTab ? SLS_TAB_NORMAL : SLS_TAB_DEAD_IS_DEAD]->uiFlags       &= ~BUTTON_CLICKED_ON;
     SwitchLoadTab();
   }
 }
