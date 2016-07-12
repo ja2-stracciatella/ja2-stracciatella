@@ -14,6 +14,3 @@ add_custom_target(doc ALL "${DOXYGEN_EXECUTABLE}" "${DOXYGEN_CONFIGURED_INPUT}"
     WORKING_DIRECTORY "${DOXYGEN_INPUT_DIR}"
     COMMENT "Generating API documentation with Doxygen" VERBATIM
 )
-
-# install rules
-install(DIRECTORY "${DOXYGEN_OUTPUT_DIR}/html" DESTINATION doc)
