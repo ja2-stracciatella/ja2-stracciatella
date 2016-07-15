@@ -361,11 +361,11 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 
 static void MakeTab(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	BUTTON_PICS* const img = LoadButtonImage( "sti/interface/loadscreentab.sti", 2, 3);
+	BUTTON_PICS* const img = LoadButtonImage( "sti/interface/loadscreentab.sti", idx, idx+2);
 	giLoadscreenTabButtonImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, STD_SCREEN_X + x, STD_SCREEN_Y + 8, MSYS_PRIORITY_HIGHEST - 1, click);
 	giLoadscreenTab[idx] = btn;
-	btn->SpecifyGeneralTextAttributes(text, OPT_BUTTON_FONT, FONT_BLACK, DEFAULT_SHADOW);
+	btn->SpecifyGeneralTextAttributes(text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW);
 }
 
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
