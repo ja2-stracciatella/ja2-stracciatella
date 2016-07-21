@@ -1864,14 +1864,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							// OK, if the code is == 2, get the path and try to move....
 							if ( pSoldier->fContinueMoveAfterStanceChange == 2 )
 							{
-								pSoldier->usPathIndex++;
+								pSoldier->ubPathIndex++;
 
-								if ( pSoldier->usPathIndex > pSoldier->usPathDataSize )
+								if ( pSoldier->ubPathIndex > pSoldier->ubPathDataSize )
 								{
-									pSoldier->usPathIndex = pSoldier->usPathDataSize;
+									pSoldier->ubPathIndex = pSoldier->ubPathDataSize;
 								}
 
-								if ( pSoldier->usPathIndex == pSoldier->usPathDataSize )
+								if ( pSoldier->ubPathIndex == pSoldier->ubPathDataSize )
 								{
 									// Stop, don't do anything.....
 								}

@@ -43,33 +43,33 @@
 
 static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 {
-	if ( (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->usPathDataSize > 0) )
+	if ( (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->ubPathDataSize > 0) )
 	{
 		UINT32	uiLoop;
 		UINT16	usNewGridNo;
 
-		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->ubPathIndex ] ) );
 
 		// provide more info!!
-		SLOGD(DEBUG_TAG_SOLDIER, "Soldier path size %d, index %d", pSoldier->usPathDataSize, pSoldier->usPathIndex);
+		SLOGD(DEBUG_TAG_SOLDIER, "Soldier path size %d, index %d", pSoldier->ubPathDataSize, pSoldier->ubPathIndex);
 		SLOGD(DEBUG_TAG_SOLDIER, "Who is at blocked gridno: %d", SOLDIER2ID(WhoIsThere2(usNewGridNo, pSoldier->bLevel)));
 
 		UINT16 usTemp = NO_TILE; // XXX HACK000E
-		for ( uiLoop = 0; uiLoop < pSoldier->usPathDataSize; uiLoop++ )
+		for ( uiLoop = 0; uiLoop < pSoldier->ubPathDataSize; uiLoop++ )
 		{
-			if ( uiLoop > pSoldier->usPathIndex )
+			if ( uiLoop > pSoldier->ubPathIndex )
 			{
-				usTemp = NewGridNo( usTemp, DirectionInc( pSoldier->usPathingData[ uiLoop ] ) );
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
+				usTemp = NewGridNo( usTemp, DirectionInc( pSoldier->ubPathingData[ uiLoop ] ) );
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->ubPathingData[uiLoop], usTemp);
 			}
-			else if ( uiLoop == pSoldier->usPathIndex )
+			else if ( uiLoop == pSoldier->ubPathIndex )
 			{
 				usTemp = usNewGridNo;
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->usPathingData[uiLoop], usTemp);
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->ubPathingData[uiLoop], usTemp);
 			}
 			else
 			{
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d", uiLoop, pSoldier->usPathingData[uiLoop]);
+				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d", uiLoop, pSoldier->ubPathingData[uiLoop]);
 			}
 		}
 	}

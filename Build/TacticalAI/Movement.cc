@@ -447,12 +447,12 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
  // we'll only go as far along the plotted route as is within our
  // permitted roaming range, and we'll stop as soon as we're down to <= 5 APs
 
- for (sLoop = 0; sLoop < (pSoldier->usPathDataSize - pSoldier->usPathIndex); sLoop++)
+ for (sLoop = 0; sLoop < (pSoldier->ubPathDataSize - pSoldier->ubPathIndex); sLoop++)
   {
    // what is the next gridno in the path?
 
-	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->usPathingData[sLoop] + 1) );
-	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->usPathingData[sLoop]) );
+	 //sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->ubPathingData[sLoop] + 1) );
+	 sTempDest = NewGridNo( sGoToGrid,DirectionInc( pSoldier->ubPathingData[sLoop]) );
 
    // this should NEVER be out of bounds
    if (sTempDest == sGoToGrid)
@@ -524,7 +524,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 			}
 
 		 // ATE: Direction here?
-		 sAPCost += EstimateActionPointCost( pSoldier, sTempDest, (INT8) pSoldier->usPathingData[sLoop], pSoldier->usUIMovementMode, (INT8) sLoop, (INT8) pSoldier->usPathDataSize );
+		 sAPCost += EstimateActionPointCost( pSoldier, sTempDest, (INT8) pSoldier->ubPathingData[sLoop], pSoldier->usUIMovementMode, (INT8) sLoop, (INT8) pSoldier->ubPathDataSize );
 
 		 bAPsLeft = pSoldier->bActionPoints - sAPCost;
 	 }
@@ -560,12 +560,12 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
      pSoldier->bPathStored = TRUE;
 		 pSoldier->sFinalDestination = sGoToGrid;
 	 }
-	 else if ( pSoldier->usPathIndex == 0 )
+	 else if ( pSoldier->ubPathIndex == 0 )
 	 {
 		// we can hack this surely! -- CJC
      pSoldier->bPathStored = TRUE;
 		 pSoldier->sFinalDestination = sGoToGrid;
-		 pSoldier->usPathDataSize = sLoop + 1;
+		 pSoldier->ubPathDataSize = sLoop + 1;
 	 }
 
 		SLOGD(DEBUG_TAG_AI, "%d to %d with %d APs left", pSoldier->ubID,
@@ -628,10 +628,10 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	}
 
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
+	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->ubPathIndex ] ) );
 
 	// Find out how much it takes to move here!
-	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[ pSoldier->usPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->usPathIndex, (INT8) pSoldier->usPathDataSize );
+	bAPCost = EstimateActionPointCost( pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[ pSoldier->ubPathIndex ], pSoldier->usUIMovementMode, (INT8) pSoldier->ubPathIndex, (INT8) pSoldier->ubPathDataSize );
 
 	if (pSoldier->bActionPoints >= bAPCost)
 	{

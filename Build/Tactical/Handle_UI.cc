@@ -1696,7 +1696,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 
 				EVENT_InternalGetNewSoldierPath(sel, sDestGridNo, sel->usUIMovementMode, TRUE, sel->fNoAPToFinishMove);
 
-				if (sel->usPathDataSize > 5)
+				if (sel->ubPathDataSize > 5)
 				{
 					DoMercBattleSound(sel, BATTLE_SOUND_OK1);
 				}
