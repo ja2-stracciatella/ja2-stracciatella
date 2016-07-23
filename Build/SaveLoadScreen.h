@@ -8,6 +8,8 @@
 
 #define		NUM_SAVE_GAMES											11
 
+#define		NUM_SAVE_GAMES_TABS									2
+
 
 //This flag is used to diferentiate between loading a game and saveing a game.
 // gfSaveGame=TRUE		For saving a game
