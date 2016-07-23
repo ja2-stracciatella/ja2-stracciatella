@@ -73,7 +73,7 @@ void LoadGameSettings(void)
 		if (settings_version < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid
-		if (g.bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
+		if (g.bLastSavedGameSlot < 0 || (NUM_SAVE_GAMES * NUM_SAVE_GAMES_TABS) <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
 
 		// Make sure that at least subtitles or speech is enabled
 		if (!g.fOptions[TOPTION_SUBTITLES] && !g.fOptions[TOPTION_SPEECH])

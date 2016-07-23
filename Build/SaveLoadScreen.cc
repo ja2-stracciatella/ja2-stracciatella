@@ -147,6 +147,7 @@ static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
 //Contains the array of valid save game locations
 static BOOLEAN gbSaveGameArray[NUM_SAVE_GAMES];
+static BOOLEAN gbActiveSaveGameTabs[NUM_SAVE_GAMES_TABS];
 
 static BOOLEAN gfDoingQuickLoad = FALSE;
 
@@ -216,7 +217,7 @@ static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
 static void SaveLoadGameNumber();
-static void SwitchLoadTab();
+static void LoadTab(INT8 tabNo);
 
 
 ScreenID SaveLoadScreenHandle()
@@ -396,9 +397,66 @@ static void RemoveLoadscreenTab()
 		UnloadButtonImage(giLoadscreenTabButtonImage[i]);
 	}
 }
+// This function determines which tab to activate in the load Screen.
+// Depending on:
+// In which tab is the last save
+// Are there any saves in the tab
+// It also deactivates tabs with no saves
+static void selectActiveTab()
+{
+	INT8 const lastSaveInTab = (INT8) gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES;
+	for (INT8 i = 0; i < NUM_SAVE_GAMES_TABS; i++)
+	{
+		gfDiDTab = i; // Not strictly correct, as gfDiDTab is a boolean. This prepares the function for possible additional tabs without breaking the current Tab implementation.
+		InitSaveGameArray(); // Load the savegames for the current tab
+		// Check if the lastSavedGameSlot exists
+		
+		bool tabHasSaves = FALSE;
+		for (INT8 j = 0; j != NUM_SAVE_GAMES; ++j)
+		{
+			if (gbSaveGameArray[j])
+			{
+				tabHasSaves = TRUE;
+				break;
+			}
+		}
+		if (tabHasSaves)
+		{
+			gbActiveSaveGameTabs[i] = TRUE;
+		}
+		else
+		{
+			gbActiveSaveGameTabs[i] = FALSE;
+			DisableButton(giLoadscreenTab[i]);
+		}
+	}
+	gfDiDTab = 0;
+	InitSaveGameArray();
+	// If the lastSavedGameSlot exists, switch to the appropriate tab, otherwise select the first available save
+	if (gGameSettings.bLastSavedGameSlot != -1 && gbActiveSaveGameTabs[lastSaveInTab])
+	{
+		GUI_BUTTON* const b = ButtonList[giLoadscreenTab[lastSaveInTab].ID()];
+		b->ClickCallback(b,MSYS_CALLBACK_REASON_LBUTTON_UP);
+	}
+	else
+	{
+		// This code doesn't make sense until there are more than two tabs
+		for (int i = 1; i < NUM_SAVE_GAMES_TABS; i++)
+		{
+			if (gbActiveSaveGameTabs[i])
+			{
+				GUI_BUTTON* const b = ButtonList[giLoadscreenTab[i].ID()];
+				b->ClickCallback(b,MSYS_CALLBACK_REASON_LBUTTON_UP);
+				break;
+			}
+		}
+
+	}
+}
 
 static void EnterSaveLoadScreen()
 {
+	gfDiDTab= FALSE;
   // Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
   if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
   {
@@ -425,7 +483,7 @@ static void EnterSaveLoadScreen()
 	if (gfLoadGameUponEntry)
 	{
 		// Make sure the save is valid
-		INT8 const last_slot = gGameSettings.bLastSavedGameSlot;
+		INT8 const last_slot = gfDiDTab ? gGameSettings.bLastSavedGameSlot-NUM_SAVE_GAMES : gGameSettings.bLastSavedGameSlot;
 		if (last_slot != -1 && gbSaveGameArray[last_slot])
 		{
 			gbSelectedSaveLocation = last_slot;
@@ -460,12 +518,6 @@ static void EnterSaveLoadScreen()
 	guiSaveLoadImage  = UseLoadedButtonImage(guiSlgButtonImage, gfx, gfx + 3);
 	guiSlgSaveLoadBtn = MakeButton(guiSaveLoadImage, text, SLG_SAVE_LOAD_BTN_POS_X, BtnSlgSaveLoadCallback);
 	guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-
-  // Display DiD Tab Button if We are in load game
-  if (!gfSaveGame)
-  {
-		CreateLoadscreenTab();	
-	}
   
 	UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
 	UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
@@ -484,6 +536,13 @@ static void EnterSaveLoadScreen()
 	// Create the screen mask to enable ability to right click to cancel the save game
 	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
 
+	  // Display DiD Tab Button if We are in load game
+  if (!gfSaveGame)
+  {
+		CreateLoadscreenTab();
+		selectActiveTab();
+	}
+	
 	ClearSelectedSaveSlot();
 
 	RemoveMouseRegionForPauseOfClock();
@@ -492,7 +551,7 @@ static void EnterSaveLoadScreen()
 	gzGameDescTextField[0] = '\0';
 
 	// If the last saved game slot is ok, set the selected slot to the last saved slot
-	INT8 const last_slot = gGameSettings.bLastSavedGameSlot;
+	INT8 const last_slot = gfDiDTab ? gGameSettings.bLastSavedGameSlot-NUM_SAVE_GAMES : gGameSettings.bLastSavedGameSlot;
 	if (last_slot != -1            &&
 			gbSaveGameArray[last_slot] &&
 			(!gfSaveGame || last_slot != 0)) // If it is not the quicksave slot, and we are loading
@@ -791,50 +850,44 @@ static void SaveLoadGameNumber()
 }
 
 // Switch between normal Load game and Dead is Dead
-void SwitchLoadTab()
+void LoadTab(INT8 tabNo)
 {
-  if (gfDiDTab)
-  {
-    gfDiDTab=FALSE;
-    //gbSaveGameOffset=0;
-  }
-  else
-  {
-    gfDiDTab=TRUE;
-    //gbSaveGameOffset=NUM_SAVE_GAMES;
-  }
+	if (gfDiDTab != tabNo)
+	{
+		gfDiDTab = tabNo;
 
-  // Reinit the savegame array and redraw the save load screen
-  InitSaveGameArray();
-  // Reinit the mouse region for selections, otherwise we can't select the save slots
-  gbSelectedSaveLocation = -1;
-  UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
-  UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
-  for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
-  {
-    // Deinitialize first
-    MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
-    // Reinitialize
-    MOUSE_REGION& r = gSelectedSaveRegion[i];
-    MSYS_DefineRegion(&r, x, y, x + SLG_SAVELOCATION_WIDTH, y + SLG_SAVELOCATION_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack);
-    MSYS_SetRegionUserData(&r, 0, i);
+		// Reinit the savegame array and redraw the save load screen
+		InitSaveGameArray();
+		// Reinit the mouse region for selections, otherwise we can't select the save slots
+		gbSelectedSaveLocation = -1;
+		UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
+		UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
+		for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
+		{
+			// Deinitialize first
+			MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
+			// Reinitialize
+			MOUSE_REGION& r = gSelectedSaveRegion[i];
+			MSYS_DefineRegion(&r, x, y, x + SLG_SAVELOCATION_WIDTH, y + SLG_SAVELOCATION_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack);
+			MSYS_SetRegionUserData(&r, 0, i);
 
-    // Disable unused slots and select the first used slot
-    if (!gbSaveGameArray[i])
-    {  
-      r.Disable();
-    } else if(gbSelectedSaveLocation == -1)
-    {
-      gbSelectedSaveLocation = i;
-    }  
+			// Disable unused slots and select the first used slot
+			if (!gbSaveGameArray[i])
+			{  
+				r.Disable();
+			} else if(gbSelectedSaveLocation == -1)
+			{
+				gbSelectedSaveLocation = i;
+			}  
     
-    y += SLG_GAP_BETWEEN_LOCATIONS;
-  }
-  RenderSaveLoadScreen();
+			y += SLG_GAP_BETWEEN_LOCATIONS;
+		}
+		RenderSaveLoadScreen();
 
-  // Render the buttons
-  MarkButtonsDirty( );
-  RenderButtons();
+		// Render the buttons
+		MarkButtonsDirty( );
+		RenderButtons();
+	}
 }
 
 
@@ -1089,7 +1142,7 @@ static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason)
 		giLoadscreenTab[SLS_TAB_DEAD_IS_DEAD]->uiFlags       &= ~BUTTON_CLICKED_ON;
     if (gfDiDTab)
     {
-			SwitchLoadTab();
+			LoadTab(0);
 		}
   }
 }
@@ -1102,7 +1155,7 @@ static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason)
 		giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags       &= ~BUTTON_CLICKED_ON;
     if (!gfDiDTab)
     {
-			SwitchLoadTab();
+			LoadTab(1);
 		}
   }
 }
