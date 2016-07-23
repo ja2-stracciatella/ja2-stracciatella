@@ -569,6 +569,12 @@ static void EnterSaveLoadScreen()
 	}
 
 	EnableButton(guiSlgSaveLoadBtn, gbSelectedSaveLocation != -1);
+	// Mark all buttons dirty, required for redrawing with the Tab system
+	guiSlgCancelBtn->uiFlags |= BUTTON_DIRTY;
+	for (INT8 i = 0; i < SLS_TAB_LENGTH; i++)
+	{
+		giLoadscreenTab[i]->uiFlags |= BUTTON_DIRTY;
+	}
 
 	RenderSaveLoadScreen();
 
