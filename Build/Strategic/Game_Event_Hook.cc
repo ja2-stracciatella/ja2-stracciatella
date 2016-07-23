@@ -35,8 +35,6 @@
 #include "Laptop.h"
 #include "Campaign.h"
 #include "Debug.h"
-#include "SaveLoadScreen.h"
-#include "GameSettings.h"
 
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"
@@ -165,8 +163,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		//Whenever any group (player or enemy) arrives in a new sector during movement.
 		case EVENT_GROUP_ARRIVAL:
 			GroupArrivedAtSector(*GetGroup((UINT8)pEvent->uiParam), TRUE, FALSE);
-			  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
-    DoDeadIsDeadSave();
 			break;
 		case EVENT_MERC_COMPLAIN_EQUIPMENT:
 			MercComplainAboutEquipment( (UINT8) pEvent->uiParam );
