@@ -162,10 +162,11 @@ SET(CPACK_PACKAGE_VERSION_PATCH ${ja2-stracciatella_VERSION_PATCH})
 SET(CPACK_PACKAGE_VERSION ${ja2-stracciatella_VERSION})
 SET(CPACK_PACKAGE_CONTACT ${CONTACT})
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
+SET(CPACK_PACKAGE_DESCRIPTION ${DESCRIPTION})
 
 SET(CPACK_DEBIAN_PACKAGE_SECTION "games")
 SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
-SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libstdc++6, libgcc1, libc6")
 
 if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -230,14 +231,14 @@ add_vagrant_build_target(
         "u1404_amd64"
         "amd64"
         "package"
-        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
+        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
 )
 add_vagrant_build_target(
         "build-deb-package-on-u1404_i386"
         "u1404_i386"
         "i386"
         "package"
-        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
+        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
 )
 add_vagrant_build_target(
         "build-win-release-on-u1404_amd64"
