@@ -207,31 +207,28 @@ add_custom_templated_target("uninstall")
 
 ## Release building
 
-macro(add_vagrant_build_target NAME BOX VM TARGET ARGS)
+macro(add_vagrant_build_target NAME BOX TARGET ARGS)
     add_custom_target(${NAME})
     add_custom_command(TARGET ${NAME}
-            COMMAND vagrant up ${VM} && vagrant ssh -c "sh /tmp/ja2-stracciatella/_build/buildboxes/common/build.sh '${TARGET}' '${ARGS}'" ${VM} && vagrant halt ${VM}
+            COMMAND vagrant up && vagrant ssh -c "sh /tmp/ja2-stracciatella/_build/buildboxes/common/build.sh '${TARGET}' '${ARGS}'" && vagrant halt
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_build/buildboxes/${BOX})
 endmacro(add_vagrant_build_target)
 
 add_vagrant_build_target(
         "build-deb-package-on-u1404_amd64"
         "u1404_amd64"
-        "amd64"
         "package"
         "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
 )
 add_vagrant_build_target(
         "build-deb-package-on-u1404_i386"
         "u1404_i386"
-        "i386"
         "package"
         "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
 )
 add_vagrant_build_target(
         "build-win-release-on-u1404_amd64"
         "u1404_amd64"
-        "win"
         "package"
         "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\""
 )
@@ -240,7 +237,6 @@ if(APPLE)
     add_vagrant_build_target(
             "build-macos-release"
             "macos"
-            "macos"
             "package"
             "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=\"ZIP\""
     )
@@ -248,14 +244,12 @@ endif()
 add_vagrant_build_target(
         "check-compilation-on-freebsd10"
         "freebsd-10.2"
-        "freebsd"
         "all"
         ""
 )
 add_vagrant_build_target(
         "check-compilation-on-openbsd59"
         "openbsd-5.9"
-        "openbsd"
         "all"
         ""
 )

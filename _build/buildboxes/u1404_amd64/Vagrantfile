@@ -13,11 +13,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   vb.gui = true
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
-
-  config.vm.define "amd64" do |amd64|
-  end
-
-  config.vm.define "win" do |win|
-  end
-
 end
