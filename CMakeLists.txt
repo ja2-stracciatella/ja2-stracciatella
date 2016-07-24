@@ -80,22 +80,18 @@ else()
     set(Boost_LIBRARIES "boost")
 endif()
 
+set(JA2_INCLUDES "")
+set(JA2_SOURCES "")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/sgp")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
+add_subdirectory("_build/lib-MicroIni")
+add_subdirectory("_build/lib-slog")
+add_subdirectory("_build/lib-smacker")
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Editor
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Laptop
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Res
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Strategic
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Tactical
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/TacticalAI
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/TileEngine
-    ${CMAKE_CURRENT_SOURCE_DIR}/Build/Utils
-    ${CMAKE_CURRENT_SOURCE_DIR}/sgp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/content
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/internals
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/policy
+    ${JA2_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-MicroIni/include
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
@@ -104,14 +100,6 @@ include_directories(
     ${SDL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
-
-set(JA2_SOURCES "")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/sgp")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
-add_subdirectory("_build/lib-MicroIni")
-add_subdirectory("_build/lib-slog")
-add_subdirectory("_build/lib-smacker")
 
 foreach(FILE ${JA2_SOURCES})
   get_filename_component(PARENT_DIR "${FILE}" PATH)
