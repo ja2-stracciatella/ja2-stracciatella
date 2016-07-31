@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+add-apt-repository ppa:likemartinma/devel
 apt-get update
 
 # Build dependencies
