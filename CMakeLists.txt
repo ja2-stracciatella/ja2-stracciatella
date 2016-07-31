@@ -177,7 +177,10 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
     install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
     install(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
     install(FILES _build/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
-    install(FILES _build/icons/logo.svg DESTINATION share/icons/hicolor/scalable/apps/ja2-stracciatella.svg)
+    install(
+        FILES _build/icons/logo.svg
+        RENAME ja2-stracciatella.svg
+        DESTINATION share/icons/hicolor/scalable/apps)
     install(FILES ja2_manpage DESTINATION share/man/man6/ja2.6)
 else()
     install(TARGETS ${BINARY} RUNTIME DESTINATION .)
