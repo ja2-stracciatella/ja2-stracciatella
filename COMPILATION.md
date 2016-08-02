@@ -46,6 +46,10 @@ If you are most familiar using Visual Studio for development you can generate a 
 cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -G "Visual Studio 10" path/to/source
 ```
 
+__Note__: If you add, move or delete any files. Please make sure to reflect your changes in the `CMakeLists.txt` files,
+rerun cmake and reload your Solution before making any additional changes. Otherwise other build systems might fail
+ when trying to build your changes.
+
 ## Generate XCode Project
 
 If you are most familiar using XCode for development you can generate a project from the sources.
@@ -53,6 +57,10 @@ If you are most familiar using XCode for development you can generate a project 
 ```
 cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -G "XCode" path/to/source
 ```
+
+__Note__: If you add, move or delete any files. Please make sure to reflect your changes in the `CMakeLists.txt` files,
+rerun cmake and reload your XCode project before making any additional changes. Otherwise other build systems might fail
+ when trying to build your changes.
 
 ## Additional Options
 
