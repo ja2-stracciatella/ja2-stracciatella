@@ -127,6 +127,7 @@ void UILayout::recalculatePositions()
   m_repairPosition.set(         m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
   m_assignmentPosition.set(     m_stdScreenOffsetX + 120, m_stdScreenOffsetY + 150);
   m_squadPosition.set(          m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
+  m_versionPosition.set(        10, m_screenHeight - 15);
 }
 
 /** Get X position of tactical textbox. */
