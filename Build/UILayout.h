@@ -99,6 +99,7 @@ public:
 
   SGPRect               m_wordlClippingRect;
 
+  SGPPoint              m_versionPosition;
   SGPPoint              m_contractPosition;
   SGPPoint              m_attributePosition;
   SGPPoint              m_trainPosition;
