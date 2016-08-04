@@ -1,0 +1,17 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "../../..", "/tmp/ja2-stracciatella", id: "vagrant-root", :nfs => true, :mount_options => ['resvport']
+  config.vm.box = "AndrewDryga/vagrant-box-osx"
+  config.vm.network "private_network", ip: "192.168.50.4"
+
+  config.vm.provision :shell, :path => "./bootstrap.sh"
+
+  config.vm.provider :virtualbox do |vb|
+    vb.functional_vboxsf = false
+
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  end
+end

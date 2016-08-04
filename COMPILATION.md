@@ -1,64 +1,84 @@
-## Build on Linux using GCC
+## Dependencies
 
-Install GCC C/C++ compiler and SDL development library.  On Ubuntu it can be done like this:
+- SDL 1.2 (included for Windows and OS X)
+- boost-filesystem (included with `-DLOCAL_BOOST_LIB=ON`)
+- cmake
+- Your systems compiler
 
-```
-$ sudo apt-get install gcc g++ libsdl1.2-dev
-```
+## General Notes
 
-If you want to run the game from the directory with source codes:
-
-```
-$ make
-```
-
-If you want to install the game to some other directory, e.g. /usr/local:
+We use cmake as our build system, which is aimed at an out-of-source build. That means that you should call
+cmake from a directory that is different from the source directory. You can create a directory inside the source
+directory (`_bin` is ignored by git). Cmake only needs to be executed once unless you want to change options.
 
 ```
-$ ./configure
-$ make
-$ sudo make install
+mkdir _bin && cd _bin
+```
+
+## Build on Linux or freeBSD/openBSD
+
+```
+cmake path/to/source
+make
 ```
 
 ## Build for Windows on Linux using MinGW (cross build)
 
-```
-$ sudo apt-get install gcc-mingw-w64 g++-mingw-w64
-$ make build-win-release-on-linux:
-```
-
-## Build on Windows
-
-Open file _build\solution-vs10e\ja2.sln with Visual Studio 2010 Express and build the project.
-
-or:
-- install Cygwin enviroment (www.cygwin.com)
-- install MinGW from http://sourceforge.net/projects/mingw to folder c:\MinGW
-- from the Cygwin shell, execute: ```$ make build-on-win```
-
-
-## Build on Mac OS
-
-Install Xcode and Xcode command line tools.
+Additional requirements: MinGW compiler
 
 ```
-$ make build-on-mac
+cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake path/to/source
+make
 ```
 
-## Build on FreeBSD 10
+## Build on macOS
 
 ```
-# pkg install gmake
-# pkg install `pkg search sdl | grep '^sdl-1.2'`
-$ gmake CXX=c++
+cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake path/to/source
+make
 ```
 
-## Build on OpenBSD 5.5
+## Generate Visual Studio Solution
+
+If you are most familiar using Visual Studio for development you can generate a solution from the sources.
 
 ```
-# pkg_add sdl-1.2.15p6
-# pkg_add gmake
-# pkg_add gcc-4.6.4p7
-# pkg_add g++-4.6.4p4
-$ gmake CC=egcc CXX=eg++
+cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -G "Visual Studio 10" path/to/source
+```
+
+__Note__: If you add, move or delete any files. Please make sure to reflect your changes in the `CMakeLists.txt` files,
+rerun cmake and reload your Solution before making any additional changes. Otherwise other build systems might fail
+ when trying to build your changes.
+
+## Generate XCode Project
+
+If you are most familiar using XCode for development you can generate a project from the sources.
+
+```
+cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -G "XCode" path/to/source
+```
+
+__Note__: If you add, move or delete any files. Please make sure to reflect your changes in the `CMakeLists.txt` files,
+rerun cmake and reload your XCode project before making any additional changes. Otherwise other build systems might fail
+ when trying to build your changes.
+
+## Additional Options
+
+If you want to configure the build differently, you can pass additional options to
+cmake. The supported options are:
+
+| Switch        | Description           | Default  |
+| ------------- |-------------| -----|
+| `EXTRA_DATA_DIR` | Directory to read externalized data from. Useful for creating installable packages that have a fixed data path. | `` |
+| `LOCAL_SDL_LIB` | Use SDL library from this directory. | `` |
+| `LOCAL_BOOST_LIB` | Build with local boost lib from `_build` directory. No global boost installation required. | `OFF` |
+| `WITH_UNITTESTS` | Build with unittests | `ON` |
+| `WITH_FIXMES` | Build with fixme messages | `OFF` |
+| `WITH_MAEMO` | Build with right click mapped to F4 (menu button) | `OFF` |
+
+Example:
+
+```
+cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DWITH_FIXMES=ON path/to/source
+make
 ```

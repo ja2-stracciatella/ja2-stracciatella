@@ -28,10 +28,4 @@ experiment and find one that suits you best.
 
 JA2-Stracciatella is also available for Windows and Linux.
 
-If you want to play the game on Linux, you will have to compile it from the
-source codes.  It is not as difficult as it sounds:
- - download source codes from https://bitbucket.org/gennady/ja2-stracciatella
- - follow instructions from INSTALL.txt
-
-
-WWW: https://github.com/ja2-stracciatella/ja2-stracciatella
+WWW: https://ja2-stracciatella.github.io

@@ -33,7 +33,3 @@ endif()
 if(BUILD_DOC)
     add_subdirectory(doc)
 endif()
-
-# install rules
-install(FILES license.txt DESTINATION .)
-install(FILES readme.md DESTINATION . RENAME readme.txt)

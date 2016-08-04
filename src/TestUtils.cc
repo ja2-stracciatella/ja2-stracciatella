@@ -1,7 +1,5 @@
 #include "TestUtils.h"
 
-#include "../ja2config.h"
-
 #include "src/DefaultContentManager.h"
 
 

@@ -1,0 +1,36 @@
+file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR} *.h)
+
+set(JA2_SOURCES
+    ${JA2_SOURCES}
+    ${LOCAL_JA2_HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Cursor_Modes.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/EditScreen.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Edit_Sys.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/EditorBuildings.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/EditorItems.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/EditorMapInfo.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/EditorMercs.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/EditorTerrain.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Editor_Callbacks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Editor_Modes.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Editor_Taskbar_Creation.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Editor_Taskbar_Utils.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Editor_Undo.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Item_Statistics.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LoadScreen.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/MessageBox.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/NewSmooth.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/PopupMenu.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Road_Smoothing.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sector_Summary.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/SelectWin.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/SmartMethod.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Smooth.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Smoothing_Utils.cc
+    PARENT_SCOPE
+)
+set(JA2_INCLUDES
+    ${JA2_INCLUDES}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PARENT_SCOPE
+)
