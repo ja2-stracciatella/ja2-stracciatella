@@ -7,7 +7,7 @@
 #include "FileMan.h"
 #include "Launcher.h"
 
-#define LAUNCHER_TOPIC "Launcher"
+#define LAUNCHER_TOPIC DEBUG_TAG_LAUNCHER
 
 #define GAME_SECTION ""
 #define LAUNCHER_SECTION "launcher"
