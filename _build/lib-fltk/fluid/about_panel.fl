@@ -1,0 +1,73 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0303 
+header_name {.h} 
+code_name {.cxx}
+comment {//
+// "$Id: about_panel.fl 10420 2014-10-30 17:24:57Z AlbrechtS $"
+//
+// About dialog for the Fast Light Tool Kit (FLTK).
+//
+// Copyright 1998-2014 by Bill Spitzak and others.
+//
+// This library is free software. Distribution and use rights are outlined in
+// the file "COPYING" which should have been included with this file.  If this
+// file is missing or damaged, see the license at:
+//
+//     http://www.fltk.org/COPYING.php
+//
+// Please report all bugs and problems on the following page:
+//
+//     http://www.fltk.org/str.php
+//
+} {in_source in_header
+} 
+
+decl {void show_help(const char *name);} {public local
+} 
+
+Function {make_about_panel()} {open
+} {
+  Fl_Window about_panel {
+    label {About FLUID} open selected
+    xywh {340 195 345 180} type Double color 50 selection_color 47 hotspot
+    code0 {\#include "../src/flstring.h"} non_modal visible
+  } {
+    Fl_Box {} {
+      image {icons/fluid-96.xpm} xywh {10 10 115 120}
+    }
+    Fl_Box {} {
+      label {FLTK User
+Interface Designer
+Version x.x.x}
+      xywh {135 10 205 75} color 12 selection_color 47 labelfont 1 labelsize 18 align 21
+      code0 {char about[80]; // uses less than 60}
+      code1 {snprintf(about,sizeof(about),"FLTK User\\nInterface Designer\\nVersion %d.%d.%d",FL_MAJOR_VERSION,FL_MINOR_VERSION,FL_PATCH_VERSION);}
+      code2 {o->copy_label(about);}
+    }
+    Fl_Box {} {
+      label {Copyright 1998-2014 by
+Bill Spitzak and others}
+      xywh {135 90 200 45} align 148
+    }
+    Fl_Button {} {
+      label {View License...}
+      callback {show_help("license.html");}
+      xywh {115 145 123 25} labelcolor 136
+    }
+    Fl_Return_Button {} {
+      label Close
+      callback {((Fl_Window*)(o->parent()))->hide();}
+      xywh {250 145 83 25}
+    }
+  }
+} 
+
+data fluid_org_png {
+  comment {Embedded image for internal fluid.html web page.} public local filename {../documentation/src/fluid-org.png}
+} 
+
+comment {
+//
+// End of "$Id: about_panel.fl 10420 2014-10-30 17:24:57Z AlbrechtS $".
+//} {in_source in_header
+} 
