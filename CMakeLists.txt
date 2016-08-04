@@ -15,7 +15,8 @@ endmacro()
 ## Project Setup
 
 project(ja2-stracciatella)
-set(BINARY "ja2")
+set(JA2_BINARY "ja2")
+set(LAUNCHER_BINARY "ja2-launcher")
 set(CMAKE_CXX_STANDARD 98)
 
 ## Versioning
@@ -106,6 +107,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DENABLE_ASSERTS)
 endif()
 
+find_package(FLTK)
+
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
@@ -115,9 +118,21 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 
+set(LAUNCHER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp)
+set(LAUNCHER_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.cc
+)
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
+    ${LAUNCHER_INCLUDES}
     ${Boost_INCLUDE_DIRS}
     ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
@@ -150,13 +165,18 @@ if (WITH_UNITTESTS)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
-add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
+add_executable(${JA2_BINARY} ${JA2_SOURCES})
+target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
+
+fltk_wrap_ui(launcherUi src/launcher/StracciatellaLauncher.fl)
+add_library(launcherUi STATIC ${launcherUi_FLTK_UI_SRCS})
+add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
+target_link_libraries(${LAUNCHER_BINARY} launcherUi fltk ${Boost_LIBRARIES} ${lib-gtest} slog)
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/assets/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/${DIR} "$<TARGET_FILE_DIR:${JA2_BINARY}>/${DIR}")
 endmacro()
 
 copy_assets_dir_to_ja2_binary_after_build("externalized")
@@ -166,21 +186,21 @@ copy_assets_dir_to_ja2_binary_after_build("mods")
 get_property(STRACCIATELLA_SHARED_LIB TARGET rust-stracciatella PROPERTY IMPORTED_LOCATION)
 
 if (MSVC OR APPLE)
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            ${STRACCIATELLA_SHARED_LIB} "$<TARGET_FILE_DIR:${BINARY}>")
+            ${STRACCIATELLA_SHARED_LIB} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
 if (MSVC)
     string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
+            ${SDL_DLL} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
 if (APPLE)
-    add_custom_command(TARGET ${BINARY}
+    add_custom_command(TARGET ${JA2_BINARY}
             POST_BUILD COMMAND
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
-            "$<TARGET_FILE:${BINARY}>")
+            "$<TARGET_FILE:${JA2_BINARY}>")
 endif()
 
 
@@ -231,7 +251,7 @@ include(InstallRequiredSystemLibraries)
 include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
-    install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
+    install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION bin)
     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION ${INSTALL_LIB_DIR})
     install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
@@ -245,7 +265,7 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
         install(FILES ja2_manpage DESTINATION share/man/man6 RENAME ja2.6)
     endif()
 else()
-    install(TARGETS ${BINARY} RUNTIME DESTINATION .)
+    install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION .)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
