@@ -15,7 +15,8 @@ endmacro()
 ## Project Setup
 
 project (ja2-stracciatella)
-set(BINARY "ja2")
+set(JA2_BINARY "ja2")
+set(LAUNCHER_BINARY "ja2-launcher")
 
 ## Versioning
 
@@ -34,6 +35,7 @@ set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime."
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
+option(LOCAL_FLTK_LIB "Build with local fltk lib" OFF)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
@@ -80,6 +82,20 @@ else()
     set(Boost_LIBRARIES "boost")
 endif()
 
+if (NOT LOCAL_FLTK_LIB)
+    find_package(FLTK REQUIRED)
+else()
+    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-boost" )
+    set(FLTK_FLUID_EXECUTABLE fluid)
+    set(OPTION_BUILD_EXAMPLES OFF)
+    set(OPTION_USE_GL OFF)
+    set(OPTION_USE_SYSTEM_ZLIB OFF)
+    set(OPTION_USE_SYSTEM_LIBJPEG OFF)
+    set(OPTION_USE_SYSTEM_LIBPNG OFF)
+    add_subdirectory("_build/lib-fltk")
+    set(FLTK_LIBRARIES fltk)
+endif()
+
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
@@ -89,9 +105,21 @@ add_subdirectory("_build/lib-MicroIni")
 add_subdirectory("_build/lib-slog")
 add_subdirectory("_build/lib-smacker")
 
+set(LAUNCHER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/sgp)
+set(LAUNCHER_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/sgp/FileMan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/sgp/FileMan.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/sgp/LibraryDataBase.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/sgp/LibraryDataBase.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/sgp/MemMan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/sgp/MemMan.cc
+)
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${JA2_INCLUDES}
+    ${LAUNCHER_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-MicroIni/include
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
@@ -122,13 +150,18 @@ if (WITH_UNITTESTS)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
-add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
+add_executable(${JA2_BINARY} ${JA2_SOURCES})
+target_link_libraries(${JA2_BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
+
+fltk_wrap_ui(launcherUi src/launcher/StracciatellaLauncher.fl)
+add_library(launcherUi STATIC ${launcherUi_FLTK_UI_SRCS})
+add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
+target_link_libraries(${LAUNCHER_BINARY} launcherUi ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog)
 
 macro(copy_dir_to_ja2_binary_after_build DIR)
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
+            ${CMAKE_CURRENT_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${JA2_BINARY}>/${DIR}")
 endmacro()
 
 copy_dir_to_ja2_binary_after_build("externalized")
@@ -137,9 +170,9 @@ copy_dir_to_ja2_binary_after_build("mods")
 
 if (MSVC)
     string(REPLACE "SDLmain.lib" "SDL.dll" SDL_DLL ${SDLMAIN_LIBRARY})
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
+            ${SDL_DLL} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
 
 ## Installing and Packaging
@@ -174,7 +207,8 @@ set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_
 include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
-    install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
+    install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION bin)
+    install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION bin)
     install(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
     install(FILES _build/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
@@ -183,7 +217,8 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
         DESTINATION share/icons/hicolor/scalable/apps)
     install(FILES ja2_manpage DESTINATION share/man/man6/ja2.6)
 else()
-    install(TARGETS ${BINARY} RUNTIME DESTINATION .)
+    install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION .)
+    install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION .)
     install(DIRECTORY externalized mods _unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
 endif()

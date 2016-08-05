@@ -77,6 +77,7 @@ public:
 
   /** Find config folder and switch into it. */
   static std::string findConfigFolderAndSwitchIntoIt();
+  static std::string findConfigFile(std::string configFolder);
 
   /** Open file for writing.
    * If file is missing it will be created.

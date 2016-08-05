@@ -371,7 +371,7 @@ try
 
   SLOGD(DEBUG_TAG_SGP, "Initializing Game Resources");
   std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
-  std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
+  std::string configPath = FileMan::findConfigFile(configFolderPath);
   std::string gameResRootPath = findRootGameResFolder(configPath);
 
   std::string extraDataDir = EXTRA_DATA_DIR;
