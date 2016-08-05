@@ -171,7 +171,7 @@ target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gte
 fltk_wrap_ui(launcherUi src/launcher/StracciatellaLauncher.fl)
 add_library(launcherUi STATIC ${launcherUi_FLTK_UI_SRCS})
 add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-target_link_libraries(${LAUNCHER_BINARY} launcherUi fltk ${Boost_LIBRARIES} ${lib-gtest} slog)
+target_link_libraries(${LAUNCHER_BINARY} launcherUi ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} slog)
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
