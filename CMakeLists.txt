@@ -93,6 +93,7 @@ else()
     set(OPTION_USE_SYSTEM_LIBJPEG OFF)
     set(OPTION_USE_SYSTEM_LIBPNG OFF)
     add_subdirectory("_build/lib-fltk")
+    set(FLTK_LIBRARIES fltk)
 endif()
 
 set(JA2_INCLUDES "")
@@ -155,7 +156,7 @@ target_link_libraries(${JA2_BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtes
 fltk_wrap_ui(launcherUi src/launcher/StracciatellaLauncher.fl)
 add_library(launcherUi STATIC ${launcherUi_FLTK_UI_SRCS})
 add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-target_link_libraries(${LAUNCHER_BINARY} launcherUi fltk ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog)
+target_link_libraries(${LAUNCHER_BINARY} launcherUi ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog)
 
 macro(copy_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
