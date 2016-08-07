@@ -91,8 +91,7 @@ SDL_Window* g_game_window;
 
 static SDL_Surface* ScreenBuffer;
 static SDL_Texture* ScreenTexture;
-static Uint32       g_window_flags = SDL_WINDOW_OPENGL;
-
+static Uint32       g_window_flags = 0;
 
 static void RecreateBackBuffer();
 static void DeletePrimaryVideoSurfaces(void);
