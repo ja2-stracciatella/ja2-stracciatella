@@ -90,6 +90,7 @@ static SDL_Renderer*  GameRenderer;
 SDL_Window* g_game_window;
 
 static SDL_Surface* ScreenBuffer;
+static SDL_Texture* ScreenTexture;
 static Uint32       g_window_flags = SDL_WINDOW_OPENGL;
 
 
@@ -150,19 +151,28 @@ void InitializeVideoManager(void)
 
   ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	ScreenBuffer = SDL_CreateRGBSurface(
-	           0,
-	           SCREEN_WIDTH,
-	           SCREEN_HEIGHT,
-	           PIXEL_DEPTH,
-             RED_MASK,
-             GREEN_MASK,
-             BLUE_MASK,
-             ALPHA_MASK
+  ScreenBuffer = SDL_CreateRGBSurface(
+          0,
+          SCREEN_WIDTH,
+          SCREEN_HEIGHT,
+          PIXEL_DEPTH,
+          RED_MASK,
+          GREEN_MASK,
+          BLUE_MASK,
+          ALPHA_MASK
   );
 
   if (ScreenBuffer == NULL) {
-      SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
+    SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
+  }
+
+  ScreenTexture = SDL_CreateTexture(GameRenderer,
+                                    SDL_PIXELFORMAT_RGB565,
+                                    SDL_TEXTUREACCESS_STREAMING,
+                                    SCREEN_WIDTH, SCREEN_HEIGHT);
+
+  if (ScreenTexture == NULL) {
+    SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
   }
 
 	FrameBuffer = SDL_CreateRGBSurface(
@@ -649,10 +659,6 @@ void RefreshScreen(void)
 		gfPrintFrameBuffer = FALSE;
 	}
 
-#if EXPENSIVE_SDL_UPDATE_RECT
-	SDL_Rect combinedRect = {0, 0, 0, 0};
-#endif
-
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 	SDL_Rect src;
@@ -664,62 +670,12 @@ void RefreshScreen(void)
 	dst.x = MousePos.iX - gsMouseCursorXOffset;
 	dst.y = MousePos.iY - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
+  MouseBackground = dst;
 
-	SDL_Texture* screenTexture = SDL_CreateTextureFromSurface(GameRenderer, ScreenBuffer);
+  SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
 
-#if EXPENSIVE_SDL_UPDATE_RECT
-	joinInRectangle(combinedRect, dst);
-  joinInRectangle(combinedRect, MouseBackground);
-#else
-	SDL_RenderCopy(GameRenderer, screenTexture, &dst, &dst);
-	SDL_RenderCopy(GameRenderer, screenTexture, &MouseBackground, &MouseBackground);
-#endif
-
-	MouseBackground = dst;
-
-	if (gfForceFullScreenRefresh)
-	{
-		SDL_RenderCopy(GameRenderer, screenTexture, NULL, NULL);
-	}
-	else
-	{
-#if EXPENSIVE_SDL_UPDATE_RECT
-		for(int i = 0; i < guiDirtyRegionCount; i++)
-    {
-      joinInRectangle(combinedRect, DirtyRegions[i]);
-    }
-#else
-		for(int i = 0; i < guiDirtyRegionCount; i++)
-		{
-			SDL_RenderCopy(GameRenderer, screenTexture, &DirtyRegions[i], &DirtyRegions[i]);
-		}
-#endif
-		for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
-		{
-			SDL_Rect* r = &DirtyRegionsEx[i];
-			if (scrolling)
-			{
-				if (r->y <= gsVIEWPORT_WINDOW_END_Y && r->y + r->h <= gsVIEWPORT_WINDOW_END_Y)
-				{
-					continue;
-				}
-			}
-#if EXPENSIVE_SDL_UPDATE_RECT
-			joinInRectangle(combinedRect, *r);
-#else
-			SDL_RenderCopy(GameRenderer, screenTexture, r, r);
-#endif
-		}
-	}
-
-#if EXPENSIVE_SDL_UPDATE_RECT
-	if((combinedRect.w != 0) && (combinedRect.h != 0))
-  {
-  	SDL_RenderCopy(GameRenderer, screenTexture, &combinedRect, &combinedRect);
-  }
-#endif
-	SDL_DestroyTexture(screenTexture);
-
+  SDL_RenderClear(GameRenderer);
+  SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
 	SDL_RenderPresent(GameRenderer);
 
 	gfForceFullScreenRefresh = FALSE;
