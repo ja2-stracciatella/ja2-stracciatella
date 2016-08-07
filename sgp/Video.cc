@@ -136,8 +136,9 @@ void InitializeVideoManager(void)
                               g_window_flags);
 	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
 	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-		SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
+  SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
 			(void*)gWindowIconData.pixel_data,
 			gWindowIconData.width,
 			gWindowIconData.height,
