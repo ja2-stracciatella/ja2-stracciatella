@@ -154,7 +154,7 @@ set(CPACK_PACKAGE_DESCRIPTION ${DESCRIPTION})
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "games")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libstdc++6, libgcc1, libc6")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2, libstdc++6, libgcc1, libc6")
 
 if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
