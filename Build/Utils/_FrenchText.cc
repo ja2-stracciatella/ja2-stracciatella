@@ -2981,7 +2981,7 @@ static const wchar_t *s_fr_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"En combat",
 	L"Temps illimité",
 	L"Temps limité",
-	L"Dead is Dead"
+	L"Mort est mort"
 };
 
 static const wchar_t *s_fr_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =

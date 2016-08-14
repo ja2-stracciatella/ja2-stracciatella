@@ -316,13 +316,7 @@ static void EnterGIOScreen()
 	{ // JA2Gold: iron man buttons
 		INT16  const x   = GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TOGGLE_BOX;
 		INT16  const y   = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-		size_t def;
-		switch (gGameOptions.ubGameSaveMode) {
-		  	case GIO_CAN_SAVE:   	def = GIO_CAN_SAVE; break;
-			default:
-			case GIO_IRON_MAN: 	def = GIO_IRON_MAN;  break;
-			case GIO_DEAD_IS_DEAD:  def = GIO_DEAD_IS_DEAD; break;
-		}
+		size_t const def = gGameOptions.ubGameSaveMode ? gGameOptions.ubGameSaveMode : GIO_CAN_SAVE;
 		MakeCheckBoxes(guiGameSaveToggles, lengthof(guiGameSaveToggles), x, y, BtnGameSaveTogglesCallback, def);
 	}
 
@@ -763,7 +757,7 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 	// JA2Gold: iron man
 	gGameOptions.ubGameSaveMode = GetCurrentGameSaveButtonSetting();
 
-	if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
+	if (gGameOptions.ubGameSaveMode == GIO_DEAD_IS_DEAD)
 	{
 		gubGIOExitScreen = SAVE_LOAD_SCREEN;
 	} else
