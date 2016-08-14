@@ -161,9 +161,6 @@ static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
 static INT8 gbSelectedSaveLocation = -1;
 static INT8 gbHighLightedLocation  = -1;
-// We use this offset to differentiate between normal games and Dead is Dead. If we are in Dead is Dead, this offset is set to NUM_SAVE_GAMES
-// and simply added to counters etc. Dead is Dead games run in Slots NUM_SAVE_GAMES+1 to NUM_SAVE_GAMES+NUM_SAVE_GAMES (12 to 23 by default)
-//static INT8 gbSaveGameOffset = 0;
 
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
@@ -346,12 +343,18 @@ static void SetSaveLoadExitScreen(ScreenID const uiScreen)
 
 static void LeaveSaveLoadScreen()
 {
-	ScreenID const exit_screen =
-		gfCameDirectlyFromGame                     ? guiPreviousOptionScreen :
-		guiPreviousOptionScreen == MAINMENU_SCREEN ? MAINMENU_SCREEN         :
-		guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN ? GAME_INIT_OPTIONS_SCREEN : // Added to handle interaction during Dead is Dead game start
-		guiPreviousOptionScreen == INTRO_SCREEN ? INTRO_SCREEN : OPTIONS_SCREEN;
-	SetSaveLoadExitScreen(exit_screen);
+	if (gfCameDirectlyFromGame)
+	{
+		SetSaveLoadExitScreen(guiPreviousOptionScreen);
+	} else {
+		switch (guiPreviousOptionScreen)
+		{
+			case MAINMENU_SCREEN: SetSaveLoadExitScreen(MAINMENU_SCREEN); break;
+			case GAME_INIT_OPTIONS_SCREEN: SetSaveLoadExitScreen(GAME_INIT_OPTIONS_SCREEN); break;
+			case INTRO_SCREEN: SetSaveLoadExitScreen(INTRO_SCREEN); break;
+			default: SetSaveLoadExitScreen(OPTIONS_SCREEN);
+		}
+	}
 }
 
 
@@ -1023,11 +1026,17 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 
 			// Make a string containing the extended options
 			wchar_t options[256];
+			UINT8 gameModeText;
+			switch (header.sInitialGameOptions.ubGameSaveMode)
+			{
+				case DIF_IRON_MAN: gameModeText = GIO_IRON_MAN_TEXT; break;
+				case DIF_DEAD_IS_DEAD: gameModeText = GIO_DEAD_IS_DEAD_TEXT; break;
+				default: gameModeText = GIO_SAVE_ANYWHERE_TEXT;
+			}
 			swprintf(options, lengthof(options), L"%20ls     %22ls     %22ls     %22ls",
 				difficulty,
 				/*gzGIOScreenText[GIO_TIMED_TURN_TITLE_TEXT + header.sInitialGameOptions.fTurnTimeLimit + 1],*/
-				(header.sInitialGameOptions.ubGameSaveMode == 1) ? gzGIOScreenText[GIO_IRON_MAN_TEXT] : 
-				  (header.sInitialGameOptions.ubGameSaveMode == 2) ? gzGIOScreenText[GIO_DEAD_IS_DEAD_TEXT] : gzGIOScreenText[GIO_SAVE_ANYWHERE_TEXT],
+				gzGIOScreenText[gameModeText],
 				header.sInitialGameOptions.fGunNut      ? zSaveLoadText[SLG_ADDITIONAL_GUNS] : zSaveLoadText[SLG_NORMAL_GUNS],
 				header.sInitialGameOptions.fSciFi       ? zSaveLoadText[SLG_SCIFI]           : zSaveLoadText[SLG_REALISTIC]
 			);
@@ -1677,22 +1686,26 @@ void DoQuickSave()
 {
   // Use the Dead is Dead function if we are in DiD
   if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+	{
     DoDeadIsDeadSave();
-  else
+	} else
   {
     if (SaveGame(0, L"")) return;
 
     if (guiPreviousOptionScreen == MAP_SCREEN)
+		{
       DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-    else
+		} else
+		{
       DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
+		}
   }
 }
 
 // Save function for Dead Is Dead
 void DoDeadIsDeadSave()
 {
- // Check if we are in a sane! Do not save if:
+ // Check if we are in a sane state! Do not save if:
  // - we are in an AI Turn
  // - we are in a Dialogue
  // - we are in Meanwhile.....
@@ -1748,7 +1761,7 @@ void DoQuickLoad()
 
 bool AreThereAnySavedGameFiles()
 {
-	for (INT8 i = 0; i != (2 * NUM_SAVE_GAMES); ++i)
+	for (INT8 i = 0; i != (NUM_SAVE_GAMES_TABS * NUM_SAVE_GAMES); ++i)
 	{
 		char filename[512];
 		CreateSavedGameFileNameFromNumber(i, filename);
