@@ -161,7 +161,7 @@ static BYTE const* ExtractGameOptions(BYTE const* const data, GAME_OPTIONS& g)
 	EXTR_BOOL( d, g.fSciFi)
 	EXTR_U8(   d, g.ubDifficultyLevel)
 	EXTR_BOOL( d, g.fTurnTimeLimit)
-	EXTR_BOOL( d, g.ubGameSaveMode)
+	EXTR_U8( d, g.ubGameSaveMode)
 	EXTR_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -175,7 +175,7 @@ static BYTE* InjectGameOptions(BYTE* const data, GAME_OPTIONS const& g)
 	INJ_BOOL( d, g.fSciFi)
 	INJ_U8(   d, g.ubDifficultyLevel)
 	INJ_BOOL( d, g.fTurnTimeLimit)
-	INJ_BOOL( d, g.ubGameSaveMode)
+	INJ_U8( d, g.ubGameSaveMode)
 	INJ_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -1502,7 +1502,7 @@ void BackupSavedGame(UINT8 const ubSaveGameID)
 		// Only backup existing savegames
 		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir.c_str(), zSourceBackupSaveGameName))
 		{
-			FileMan::copyFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(), 
+			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(), 
 												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
 		}
 	}

@@ -819,9 +819,9 @@ bool FileMan::checkFileExistance(const char *folder, const char *fileName)
   return boost::filesystem::exists(path);
 }
 
-void FileMan::copyFile(const char *from, const char *to)
+void FileMan::moveFile(const char *from, const char *to)
 {
 	boost::filesystem::path fromPath(from);
 	boost::filesystem::path toPath(to);
-	boost::filesystem::copy_file(fromPath, toPath, boost::filesystem::copy_option::overwrite_if_exists);
+	boost::filesystem::rename(fromPath, toPath);
 }
