@@ -1485,8 +1485,8 @@ void BackupSavedGame(UINT8 const ubSaveGameID)
 	std::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
 	FileMan::createDir(backupdir.c_str());
 	char zSourceSaveGameName[512];
-	char zSourceBackupSaveGameName[512];
-	char zTargetSaveGameName[512];
+	char zSourceBackupSaveGameName[515];
+	char zTargetSaveGameName[515];
 	sprintf(zSourceSaveGameName, "%s%02d.%s", g_savegame_name, ubSaveGameID, g_savegame_ext);
 	for (int i = NUM_SAVE_GAME_BACKUPS - 1; i >= 0; i--)
 	{

@@ -407,7 +407,7 @@ static void RemoveLoadscreenTab()
 // It also deactivates tabs with no saves
 static void selectActiveTab()
 {
-	INT8 const lastSaveInTab = (INT8) gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES;
+	INT8 const lastSaveInTab = (INT8) (gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES);
 	for (INT8 i = 0; i < NUM_SAVE_GAMES_TABS; i++)
 	{
 		gfDiDTab = i; // Not strictly correct, as gfDiDTab is a boolean. This prepares the function for possible additional tabs without breaking the current Tab implementation.
