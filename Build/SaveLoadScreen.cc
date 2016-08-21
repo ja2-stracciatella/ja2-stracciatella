@@ -1098,9 +1098,14 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	else
 	{
 		// If this is the quick save slot
-		wchar_t const* const txt = entry_idx == (-1 + !gfDiDTab) ? // This is a beyond-ugly hack to remove the quicksave slot from the Dead is Dead Tab
-			pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT] :
-			pMessageStrings[MSG_EMPTYSLOT];
+		wchar_t txt[64];
+		if (entry_idx == 0 && !gfDiDTab)
+		{
+			swprintf(txt, lengthof(txt), L"%ls", pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT]);
+		} else
+		{
+			swprintf(txt, lengthof(txt), L"%ls", pMessageStrings[MSG_EMPTYSLOT]);
+		}
 		DrawTextToScreen(txt, bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
