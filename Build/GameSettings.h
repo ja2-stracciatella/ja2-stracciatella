@@ -120,6 +120,8 @@ void SetMeanwhileSceneSeen(UINT8 meanwhile_id);
 
 BOOLEAN CanGameBeSaved(void);
 
+void DoDeadIsDeadSaveIfNecessary(void);
+
 void CDromEjectionErrorMessageBoxCallBack(MessageBoxReturnValue);
 
 #endif

@@ -16,7 +16,6 @@
 #include "Text.h"
 #include "TeamTurns.h"
 #include "Smell.h"
-#include "SaveLoadScreen.h"
 #include "Game_Clock.h"
 #include "GameSettings.h"
 #include "Soldier_Functions.h"
@@ -149,7 +148,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
   gTacticalStatus.fKilledEnemyOnAttack = FALSE;
 
   // Save if we are in Dead is Dead mode
-  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)   DoDeadIsDeadSave();
+  DoDeadIsDeadSaveIfNecessary();
   
 	HandleTacticalUI( );
 }
@@ -185,7 +184,7 @@ void EndTurn( UINT8 ubNextTeam )
 	EndDeadlockMsg( );
 
 	// Save if we are in Dead is Dead mode
-	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)    DoDeadIsDeadSave();
+	DoDeadIsDeadSaveIfNecessary();
   
 /*
 	if ( CheckForEndOfCombatMode( FALSE ) )

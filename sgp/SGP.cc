@@ -37,7 +37,6 @@
 #include "Logger.h"
 #include "GameState.h"
 #include "Timer.h"
-#include "SaveLoadScreen.h"
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
@@ -160,13 +159,9 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
-    // If we are in Dead is Dead mode, save before exit
-    // Does this code also fire on crash? Let's hope not!
-    if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
-    {
-      DoDeadIsDeadSave();
-    }
-
+	// If we are in Dead is Dead mode, save before exit
+	// Does this code also fire on crash? Let's hope not!
+	DoDeadIsDeadSaveIfNecessary();
 	FastDebugMsg("Exiting Game");
 
 	SoundServiceStreams();
