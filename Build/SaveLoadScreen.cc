@@ -1713,26 +1713,22 @@ void DoDeadIsDeadSave()
  // - we are in a Dialogue
  // - we are in Meanwhile.....
  // - we are currently in a message box - The Messagebox would be gone without selection after loading
- if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN) {
-			// Backup old saves
-			BackupSavedGame(gGameSettings.bLastSavedGameSlot);
-			// Save the previous option screen State to reset it after saving
-			ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
-			// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
+ if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN)
+ {
+		// Backup old saves
+		BackupSavedGame(gGameSettings.bLastSavedGameSlot);
+		// Save the previous option screen State to reset it after saving
+		ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
+		// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
+		// Make sure we are always in a sane screen.
+		if (guiCurrentScreen != MAP_SCREEN && guiCurrentScreen != GAME_SCREEN && tmpGuiPreviousOptionScreen != MAP_SCREEN && tmpGuiPreviousOptionScreen != GAME_SCREEN)
+		{
+			// If all fails, go to the map screen, this (almost) guarantees the game will start
+			guiPreviousOptionScreen = MAP_SCREEN;
+		} else
+		{
 			guiPreviousOptionScreen = guiCurrentScreen;
-			// Make sure we are always in a sane screen.
-			if (guiPreviousOptionScreen != MAP_SCREEN && guiPreviousOptionScreen != GAME_SCREEN)
-			{
-				if (tmpGuiPreviousOptionScreen == MAP_SCREEN || tmpGuiPreviousOptionScreen == GAME_SCREEN)
-				{
-				guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
-				}
-				else
-				{
-					// If all fails, go to the map screen, this (almost) guarantees the game will start
-					guiPreviousOptionScreen = MAP_SCREEN;
-				}	
-      }
+		}
 
    BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
 
