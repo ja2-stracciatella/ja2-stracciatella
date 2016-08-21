@@ -400,14 +400,9 @@ static void RemoveLoadscreenTab()
 		UnloadButtonImage(giLoadscreenTabButtonImage[i]);
 	}
 }
-// This function determines which tab to activate in the load Screen.
-// Depending on:
-// In which tab is the last save
-// Are there any saves in the tab
-// It also deactivates tabs with no saves
-static void selectActiveTab()
+
+static void updateTabActiveState()
 {
-	INT8 const lastSaveInTab = (INT8) (gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES);
 	for (INT8 i = 0; i < NUM_SAVE_GAMES_TABS; i++)
 	{
 		gfDiDTab = i; // Not strictly correct, as gfDiDTab is a boolean. This prepares the function for possible additional tabs without breaking the current Tab implementation.
@@ -423,16 +418,24 @@ static void selectActiveTab()
 				break;
 			}
 		}
-		if (tabHasSaves)
+		gbActiveSaveGameTabs[i] = tabHasSaves;
+		if (!tabHasSaves)
 		{
-			gbActiveSaveGameTabs[i] = TRUE;
-		}
-		else
-		{
-			gbActiveSaveGameTabs[i] = FALSE;
 			DisableButton(giLoadscreenTab[i]);
 		}
 	}
+}
+// This function determines which tab to activate in the load Screen.
+// Depending on:
+// In which tab is the last save
+// Are there any saves in the tab
+// It also deactivates tabs with no saves
+static void selectActiveTab()
+{
+	INT8 const lastSaveInTab = (INT8) (gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES);
+
+	updateTabActiveState();
+	
 	gfDiDTab = 0;
 	InitSaveGameArray();
 	// If the lastSavedGameSlot exists, switch to the appropriate tab, otherwise select the first available save
