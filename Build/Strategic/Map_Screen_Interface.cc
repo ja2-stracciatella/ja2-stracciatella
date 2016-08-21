@@ -68,7 +68,6 @@
 #include "EMail.h"
 #include "Items.h"
 #include "UILayout.h"
-#include "SaveLoadScreen.h"
 
 
 // number of LINKED LISTS for sets of leave items (each slot holds an unlimited # of items)
@@ -1227,7 +1226,7 @@ void HandleGroupAboutToArrive( void )
 	// reblit map to change the color of the "people in motion" marker
 	fMapPanelDirty = TRUE;
 	
-	DoDeadIsDeadSave();
+	DoDeadIsDeadSaveIfNecessary();
 
 	// ARM - commented out - don't see why this is needed
 //	fTeamPanelDirty = TRUE;

@@ -281,3 +281,11 @@ BOOLEAN	CanGameBeSaved()
 		return( TRUE );
 	}
 }
+
+void DoDeadIsDeadSaveIfNecessary()
+{
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+	{
+		DoDeadIsDeadSave();
+	}
+}

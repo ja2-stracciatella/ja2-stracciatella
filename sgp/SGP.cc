@@ -37,7 +37,6 @@
 #include "GameRes.h"
 #include "GameState.h"
 #include "Timer.h"
-#include "SaveLoadScreen.h"
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
@@ -156,15 +155,21 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
-  SLOGD(DEBUG_TAG_SGP, "Deinitializing Game");
-  SoundServiceStreams();
-  if (gfGameInitialized)
-  {
-    ShutdownGame();
-  }
-  SLOGD(DEBUG_TAG_SGP, "Shutting Down Button System");
-  ShutdownButtonSystem();
-  MSYS_Shutdown();
+	SLOGD(DEBUG_TAG_SGP, "Deinitializing Game");
+	// If we are in Dead is Dead mode, save before exit
+	// Does this code also fire on crash? Let's hope not!
+	DoDeadIsDeadSaveIfNecessary();
+	FastDebugMsg("Exiting Game");
+
+	SoundServiceStreams();
+
+	if (gfGameInitialized)
+	{
+		ShutdownGame();
+	}
+	SLOGD(DEBUG_TAG_SGP, "Shutting Down Button System");
+	ShutdownButtonSystem();
+	MSYS_Shutdown();
 
 #ifndef UTIL
   SLOGD(DEBUG_TAG_SGP, "Shutting Down Sound Manager");
