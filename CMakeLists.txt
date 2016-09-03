@@ -16,6 +16,7 @@ endmacro()
 
 project (ja2-stracciatella)
 set(BINARY "ja2")
+set (CMAKE_CXX_STANDARD 98)
 
 ## Versioning
 
