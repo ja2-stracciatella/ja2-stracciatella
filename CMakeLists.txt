@@ -42,28 +42,25 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 ## Build
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
-set(CFLAGS "${CFLAGS} -DJA2 -DGAME_VERSION=\\\"${GAME_VERSION}\\\" -DMICROINI_STATIC")
+add_definitions(-DJA2)
+add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 
-if (EXTRA_DATA_DIR STREQUAL "")
-    set(CFLAGS "${CFLAGS} -DEXTRA_DATA_DIR=\\\"\\\"")
-else()
-    message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
-    set(CFLAGS "${CFLAGS} -DEXTRA_DATA_DIR=\\\"${EXTRA_DATA_DIR}\\\"")
-endif()
+message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
+add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
 
 if (WITH_FIXMES)
     message(STATUS "Building with fixme messages" )
-    set(CFLAGS "${CFLAGS} -DWITH_FIXMES")
+    add_definitions(-DWITH_FIXMES)
 endif()
 
 if (WITH_MAEMO)
     message(STATUS "Building with right click mapped to F4 (menu button)" )
-    set(CFLAGS "${CFLAGS} -DWITH_MAEMO")
+    add_definitions(-DWITH_MAEMO)
 endif()
 
 if (WITH_SOUND_DEBUG)
     message(STATUS "Building with sound debug" )
-    set(CFLAGS "${CFLAGS} -DWITH_SOUND_DEBUG")
+    add_definitions(-DWITH_SOUND_DEBUG)
 endif()
 
 if (NOT (LOCAL_SDL_LIB STREQUAL ""))
