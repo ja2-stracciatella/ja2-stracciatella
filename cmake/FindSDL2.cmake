@@ -102,9 +102,8 @@ IF(NOT SDL2_BUILDING_LIBRARY)
         FIND_LIBRARY(SDL2MAIN_LIBRARY
                 NAMES SDL2main
                 HINTS
-                ${SDL2_PATH}
                 $ENV{SDL2DIR}
-                PATH_SUFFIXES lib64 lib
+                PATH_SUFFIXES lib64 lib lib/x64 lib/x86
                 PATHS ${SDL2_SEARCH_PATHS}
                 )
     ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")

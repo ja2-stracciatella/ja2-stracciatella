@@ -136,7 +136,7 @@ copy_dir_to_ja2_binary_after_build("_unittests")
 copy_dir_to_ja2_binary_after_build("mods")
 
 if (MSVC)
-    string(REPLACE "lib/SDL2main.lib" "lib/SDL2.dll" SDL_DLL ${SDLMAIN_LIBRARY})
+    string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")

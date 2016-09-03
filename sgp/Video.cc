@@ -100,24 +100,24 @@ void VideoSetFullScreen(const BOOLEAN enable)
 {
 	if (enable)
 	{
-		g_window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		g_window_flags |= SDL_WINDOW_FULLSCREEN;
 	}
 	else
 	{
-		g_window_flags &= ~SDL_WINDOW_FULLSCREEN_DESKTOP;
+		g_window_flags &= ~SDL_WINDOW_FULLSCREEN;
 	}
 }
 
 
 void VideoToggleFullScreen(void)
 {
-    if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN_DESKTOP)
+    if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN)
     {
         SDL_SetWindowFullscreen(g_game_window, 0);
     }
     else
     {
-        SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN);
     }
 }
 
@@ -128,6 +128,8 @@ static void GetRGBDistribution();
 void InitializeVideoManager(void)
 {
 	SLOGD(DEBUG_TAG_VIDEO, "Initializing the video manager");
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
                               SDL_WINDOWPOS_UNDEFINED,
@@ -136,7 +138,6 @@ void InitializeVideoManager(void)
                               g_window_flags);
 	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
 	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
   SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
 			(void*)gWindowIconData.pixel_data,
