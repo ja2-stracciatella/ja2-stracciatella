@@ -220,7 +220,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
   EXTR_U16A(d, usPathingData, lengthof(usPathingData))
   EXTR_U16(d, usPathDataSize)
   EXTR_U16(d, usPathIndex)
-	for (UINT8 i = 0; i < usPathDataSize; i++) {
+	for (UINT8 i = 0; i < usPathDataSize && i < MAX_PATH_LIST_SIZE; i++) {
     s->usPathingData[i] = (UINT8)usPathingData[i];
   }
 	s->usPathDataSize = (UINT8)usPathDataSize;
@@ -730,7 +730,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_SKIP(d, 3)
 
   /* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
-  usPathDataSize = (UINT16)s->usPathDataSize;
+  usPathDataSize = s->usPathDataSize > MAX_PATH_LIST_SIZE ? (UINT16)MAX_PATH_LIST_SIZE : (UINT16)s->usPathDataSize;
   usPathIndex = (UINT16)s->usPathIndex;
   for (UINT8 i = 0; i < usPathDataSize; i++) {
     usPathingData[i] = (UINT16)s->usPathingData[i];
