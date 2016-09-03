@@ -136,7 +136,7 @@ copy_dir_to_ja2_binary_after_build("_unittests")
 copy_dir_to_ja2_binary_after_build("mods")
 
 if (MSVC)
-    string(REPLACE "SDLmain.lib" "SDL.dll" SDL_DLL ${SDLMAIN_LIBRARY})
+    string(REPLACE "lib/SDL2main.lib" "lib/SDL2.dll" SDL_DLL ${SDLMAIN_LIBRARY})
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
@@ -197,7 +197,7 @@ if(WIN32 OR MINGW)
     file(GLOB WIN_DIST_FILES "_build/distr-files-win/*")
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES _build/icons/logo.ico DESTINATION .)
-    install(FILES _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll DESTINATION .)
+    install(FILES _build/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
 endif()
 
 if(APPLE)
