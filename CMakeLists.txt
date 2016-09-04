@@ -203,6 +203,7 @@ endif()
 if(APPLE)
     file(GLOB APPLE_DIST_FILES "_build/distr-files-mac/*")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
+    install(DIRECTORY _build/lib-SDL2-2.0.4-macos/SDL2.framework DESTINATION .)
     install(FILES _build/icons/logo.icns DESTINATION .)
 endif()
 
