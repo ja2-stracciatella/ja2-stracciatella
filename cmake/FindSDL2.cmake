@@ -76,11 +76,11 @@ SET(SDL2_SEARCH_PATHS
         /opt/local # DarwinPorts
         /opt/csw # Blastwave
         /opt
-        ${SDL2_PATH}
         )
 
 FIND_PATH(SDL2_INCLUDE_DIR SDL.h
         HINTS
+        ${SDL2_PATH}
         $ENV{SDL2DIR}
         PATH_SUFFIXES include/SDL2 include
         PATHS ${SDL2_SEARCH_PATHS}
@@ -89,6 +89,7 @@ FIND_PATH(SDL2_INCLUDE_DIR SDL.h
 FIND_LIBRARY(SDL2_LIBRARY_TEMP
         NAMES SDL2
         HINTS
+        ${SDL2_PATH}
         $ENV{SDL2DIR}
         PATH_SUFFIXES lib64 lib lib/x64 lib/x86
         PATHS ${SDL2_SEARCH_PATHS}
@@ -103,6 +104,7 @@ IF(NOT SDL2_BUILDING_LIBRARY)
         FIND_LIBRARY(SDL2MAIN_LIBRARY
                 NAMES SDL2main
                 HINTS
+                ${SDL2_PATH}
                 $ENV{SDL2DIR}
                 PATH_SUFFIXES lib64 lib
                 PATHS ${SDL2_SEARCH_PATHS}
