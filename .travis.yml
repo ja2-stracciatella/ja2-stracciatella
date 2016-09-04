@@ -25,6 +25,6 @@ addons:
       name: "ja2-stracciatella/ja2-stracciatella"
       description: "Build submitted via Travis CI"
     notification_email: github@stefanlau.com
-    build_command_prepend: "make clean"
+    build_command_prepend: "mkdir coverage-build && cd coverage-build && cmake .."
     build_command:   "make"
     branch_pattern: coverity-via-travis
