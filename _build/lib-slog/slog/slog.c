@@ -244,9 +244,11 @@ void SLOG_LogMessage(SLOGLevel level, SLOGTopics tag, const char *format, ...)
       fputs(buf, s_logFile);
       fflush(s_logFile);
     }
+#ifdef ENABLE_ASSERTS
     if (tag == DEBUG_TAG_ASSERTS)
     {
       abort();
     }
+#endif
   }
 }
