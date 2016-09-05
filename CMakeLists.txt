@@ -78,6 +78,10 @@ else()
     set(Boost_LIBRARIES "boost")
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DENABLE_ASSERTS)
+endif()
+
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
