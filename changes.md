@@ -1,5 +1,8 @@
 # History of changes
 
+## 0.15.1
+- Bugfix: Fix people spinning due to broken savegames
+
 ## 0.15.0
 - Feature: New logo is used as application icon
 - Feature: Using the brothel in san mona is now possible (#76)

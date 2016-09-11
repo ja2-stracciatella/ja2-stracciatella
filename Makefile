@@ -23,7 +23,7 @@ WITH_LPTHREAD ?= 1
 
 BINARY    ?= ja2
 
-VERSION := 0.15.0
+VERSION := 0.15.1
 GAME_VERSION := v$(VERSION)
 ICON_THEME = hicolor
 
