@@ -1,0 +1,12 @@
+file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR} *.h)
+set(JA2_SOURCES
+        ${JA2_SOURCES}
+        ${JA2_LOCAL_HEADERS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/Easings.cc
+        PARENT_SCOPE
+        )
+set(JA2_INCLUDES
+        ${JA2_INCLUDES}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PARENT_SCOPE
+        )

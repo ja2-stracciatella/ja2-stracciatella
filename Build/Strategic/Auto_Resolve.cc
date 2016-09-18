@@ -68,6 +68,7 @@
 #include "UILayout.h"
 #include "WeaponModels.h"
 #include "slog/slog.h"
+#include "Easings.h"
 
 #ifdef JA2BETAVERSION
 #	include "Cheats.h"
@@ -380,30 +381,19 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 
 static void RenderAutoResolve(void);
 
-
 static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 {
-	UINT32 uiStartTime, uiCurrTime;
-	UINT16 uPercentage, uFactor;
-	UINT32 uiTimeRange;
+	UINT32 uiStartTime = GetClock();
+	UINT32 uiEndTime = uiStartTime + 1000;
 
 	PauseTime( FALSE );
 
 	gpAR->fShowInterface = TRUE;
 
-	uiTimeRange = 1000;
-	uPercentage = 0;
-	uiStartTime = GetClock();
-
 	UINT16 const x = gpAR->rect.x;
 	UINT16 const y = gpAR->rect.y;
 	UINT16 const w = gpAR->rect.w;
 	UINT16 const h = gpAR->rect.h;
-
-	UINT16 const uStartLeft = 59;
-	UINT16 const uStartTop  = 69;
-	UINT16 const uEndLeft   = x + w / 2;
-	UINT16 const uEndTop    = y + h / 2;
 
 	//save the prebattle/mapscreen interface background
 	BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
@@ -419,29 +409,16 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, x, y, w, h);
 
 	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
-	while( uPercentage < 100  )
+	while( GetClock() <= uiEndTime )
 	{
-		uiCurrTime = GetClock();
-		uPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-		uPercentage = MIN( uPercentage, 100 );
-
-		//Factor the percentage so that it is modified by a gravity falling acceleration effect.
-		uFactor = (uPercentage - 50) * 2;
-		if( uPercentage < 50 )
-			uPercentage = (UINT16)(uPercentage + uPercentage * uFactor * 0.01 + 0.5);
-		else
-			uPercentage = (UINT16)(uPercentage + (100-uPercentage) * uFactor * 0.01 + 0.05);
-
-		//Calculate the center point.
-		UINT16 const uLeft = uStartLeft + (uEndLeft - uStartLeft + 1) * uPercentage / 100;
-		UINT16 const uTop  = uStartTop  + (uEndTop  - uStartTop  + 1) * uPercentage / 100;
+		FLOAT fEasingProgress = EaseInCubic(uiStartTime, uiEndTime, GetClock());
 
 		SGPBox const DstRect =
 		{
-			(UINT16)(uLeft - w * uPercentage / 200),
-			(UINT16)(uTop  - h * uPercentage / 200),
-			(UINT16)(MAX(1, w * uPercentage / 100)),
-			(UINT16)(MAX(1, h * uPercentage / 100))
+			(UINT16)(x * fEasingProgress),
+			(UINT16)(y * fEasingProgress),
+			(UINT16)(MAX(w * fEasingProgress, 1)),
+			(UINT16)(MAX(h * fEasingProgress, 1))
 		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &gpAR->rect, &DstRect);
@@ -449,7 +426,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 		RefreshScreen();
 
 		//Restore the previous rect.
-		BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, DstRect.x, DstRect.y, DstRect.w + 1, DstRect.h + 1);
+		BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, DstRect.x, DstRect.y, DstRect.w, DstRect.h);
 	}
 }
 
