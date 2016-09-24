@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include "GameSettings.h"
 #include "SaveLoadGame.h"
 #include "FileMan.h"
 #include "src/TestUtils.h"
@@ -110,7 +111,7 @@ TEST(SaveLoadGameTest, structParsers)
     // UINT8    ubLoadScreenID;
     EXPECT_EQ(header.sInitialGameOptions.fGunNut,                 1);
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
-    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       1);
+    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
     EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
     // UINT32 uiRandom;
@@ -137,7 +138,7 @@ TEST(SaveLoadGameTest, structParsers)
     // UINT8    ubLoadScreenID;
     EXPECT_EQ(header.sInitialGameOptions.fGunNut,                 1);
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
-    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       1);
+    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
     EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
     // UINT32 uiRandom;
@@ -193,7 +194,7 @@ TEST(SaveLoadGameTest, parseHeaderLinux)
     EXPECT_EQ(header.iCurrentBalance,             42000);
     EXPECT_EQ(header.sInitialGameOptions.fGunNut,                 1);
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
-    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       1);
+    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
     EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
   }
@@ -222,7 +223,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
     EXPECT_EQ(header.iCurrentBalance,             13030);
     EXPECT_EQ(header.sInitialGameOptions.fGunNut,                 1);
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
-    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       1);
+    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
     EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
   }
@@ -246,7 +247,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
     EXPECT_EQ(header.iCurrentBalance,             32000);
     EXPECT_EQ(header.sInitialGameOptions.fGunNut,                 0);
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
-    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       2);
+    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_MEDIUM);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
     EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
   }
@@ -275,7 +276,7 @@ TEST(SaveLoadGameTest, parseHeaderMac)
     EXPECT_EQ(header.iCurrentBalance,             42000);
     EXPECT_EQ(header.sInitialGameOptions.fGunNut,                 0);
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
-    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       1);
+    EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
     EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
   }
