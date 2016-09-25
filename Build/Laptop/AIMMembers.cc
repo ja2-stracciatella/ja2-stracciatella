@@ -894,8 +894,8 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		const ItemModel * item = GCM->getItem(usItem);
 		SGPVObject  const& item_vo  = GetInterfaceGraphicForItem(item);
 		ETRLEObject const& e        = item_vo.SubregionProperties(item->getGraphicNum());
-		INT16       const  sCenX    = x + abs(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
-		INT16       const  sCenY    = y + abs(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
+		INT16       const  sCenX    = x + ABS(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16       const  sCenY    = y + ABS(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
     if(GCM->getGamePolicy()->f_draw_item_shadow)
     {

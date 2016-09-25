@@ -719,7 +719,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 			for (iXDiff = -RADIUS; iXDiff < (RADIUS + 1); iXDiff += iXIncr)
 			{
 				iGridNo = iStart + iXDiff + iYDiff * WORLD_ROWS;
-				if (abs( iGridNo % WORLD_ROWS - iXStart ) > RADIUS)
+				if (ABS( iGridNo % WORLD_ROWS - iXStart ) > RADIUS)
 				{
 					// wrapped across map!
 					continue;
@@ -737,7 +737,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 							ubBestStrength = ubStrength;
 							bDir = atan8( (INT16) iXStart, (INT16) iYStart, (INT16) (iXStart + iXDiff), (INT16) (iYStart + iYDiff) );
 							// now convert it into a difference in degree between it and our current dir
-							ubBestDirDiff = abs( pSoldier->bDirection - bDir );
+							ubBestDirDiff = ABS( pSoldier->bDirection - bDir );
 							if (ubBestDirDiff > 4 ) // dir 0 compared with dir 6, for instance
 							{
 								ubBestDirDiff = 8 - ubBestDirDiff;
@@ -757,7 +757,7 @@ INT16 TrackScent( SOLDIERTYPE * pSoldier )
 								// start by calculating direction to the new gridno
 								bDir = atan8( (INT16) iXStart, (INT16) iYStart, (INT16) (iXStart + iXDiff), (INT16) (iYStart + iYDiff) );
 								// now convert it into a difference in degree between it and our current dir
-								ubDirDiff = abs( pSoldier->bDirection - bDir );
+								ubDirDiff = ABS( pSoldier->bDirection - bDir );
 								if (ubDirDiff > 4 ) // dir 0 compared with dir 6, for instance
 								{
 									ubDirDiff = 8 - ubDirDiff;

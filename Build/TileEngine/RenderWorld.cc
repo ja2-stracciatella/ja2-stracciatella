@@ -4234,8 +4234,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP 5 - Determine Deltas for center and find screen values
 	//Make sure these coordinates are multiples of scroll steps
-	const INT16 sOffsetX_W = abs(gsStartPointX_W) - abs(gsStartPointX_M * CELL_X_SIZE);
-	const INT16 sOffsetY_W = abs(gsStartPointY_W) - abs(gsStartPointY_M * CELL_Y_SIZE);
+	const INT16 sOffsetX_W = ABS(gsStartPointX_W) - ABS(gsStartPointX_M * CELL_X_SIZE);
+	const INT16 sOffsetY_W = ABS(gsStartPointY_W) - ABS(gsStartPointY_M * CELL_Y_SIZE);
 
 	INT16 sOffsetX_S;
 	INT16 sOffsetY_S;

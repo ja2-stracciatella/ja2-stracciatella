@@ -2111,8 +2111,8 @@ UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
 	float fValue = 0.0;
 
 	// grab number of rows and cols
-	sRows = (INT16)(abs((sSectorX) - ( PALACE_SECTOR_X )));
-	sCols = (INT16)(abs((sSectorY) - ( PALACE_SECTOR_Y )));
+	sRows = (INT16)(ABS((sSectorX) - ( PALACE_SECTOR_X )));
+	sCols = (INT16)(ABS((sSectorY) - ( PALACE_SECTOR_Y )));
 
 
 	// apply Pythagoras's theorem for right-handed triangle:

@@ -478,8 +478,8 @@ static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	INT16 sRows,sCols,sResult;
 
-	sRows = abs((sOrigin / MAP_WORLD_X) - (sDest / MAP_WORLD_X));
-	sCols = abs((sOrigin % MAP_WORLD_X) - (sDest % MAP_WORLD_X));
+	sRows = ABS((sOrigin / MAP_WORLD_X) - (sDest / MAP_WORLD_X));
+	sCols = ABS((sOrigin % MAP_WORLD_X) - (sDest % MAP_WORLD_X));
 
 
 	// apply Pythagoras's theorem for right-handed triangle:

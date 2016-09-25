@@ -24,6 +24,7 @@
 #define endof(a) ((a) + lengthof(a))
 
 
+#define ABS(a) (UINT16)abs(int(a))
 #define MAX(a, b) __max(a, b)
 #define MIN(a, b) __min(a, b)
 

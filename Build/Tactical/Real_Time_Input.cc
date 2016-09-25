@@ -240,7 +240,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 								else
 								{
 									// Have we moved....?
-									if ( abs( gusMouseXPos - gusRubberBandX ) > 10 || abs( gusMouseYPos - gusRubberBandY ) > 10 )
+									if ( ABS( gusMouseXPos - gusRubberBandX ) > 10 || ABS( gusMouseYPos - gusRubberBandY ) > 10 )
 									{
 										gfStartLookingForRubberBanding = FALSE;
 

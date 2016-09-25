@@ -3603,7 +3603,7 @@ static UINT8 SectorDistance(UINT8 ubSectorID1, UINT8 ubSectorID2)
 	ubSectorY1 = (UINT8)SECTORY( ubSectorID1 );
 	ubSectorY2 = (UINT8)SECTORY( ubSectorID2 );
 
-	ubDist = (UINT8)( abs( ubSectorX1 - ubSectorX2 ) + abs( ubSectorY1 - ubSectorY2 ) );
+	ubDist = (UINT8)( ABS( ubSectorX1 - ubSectorX2 ) + ABS( ubSectorY1 - ubSectorY2 ) );
 
 	return ubDist;
 }
