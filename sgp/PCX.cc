@@ -75,7 +75,7 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 			dst[i].r      = palette[i * 3 + 0];
 			dst[i].g      = palette[i * 3 + 1];
 			dst[i].b      = palette[i * 3 + 2];
-			dst[i].unused = 0;
+			dst[i].a      = 0;
 		}
 		img->pui16BPPPalette = Create16BPPPalette(dst);
 	}

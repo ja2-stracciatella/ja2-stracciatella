@@ -6,7 +6,9 @@
 
 
 #define VIDEO_NO_CURSOR 0xFFFF
+#define GAME_WINDOW g_game_window
 
+extern SDL_Window* g_game_window;
 
 void         VideoSetFullScreen(BOOLEAN enable);
 void         InitializeVideoManager(void);

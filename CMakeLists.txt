@@ -64,10 +64,12 @@ if (WITH_SOUND_DEBUG)
 endif()
 
 if (NOT (LOCAL_SDL_LIB STREQUAL ""))
-    message( STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
-    set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    message(STATUS "Using local SDL from " "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
+    set(ENV{SDL2DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
 endif()
-find_package(SDL REQUIRED)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+find_package(SDL2 REQUIRED)
 
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
@@ -99,7 +101,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-utf8cpp/source
-    ${SDL_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -125,7 +127,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
+target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
 
 macro(copy_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD
@@ -138,7 +140,7 @@ copy_dir_to_ja2_binary_after_build("_unittests")
 copy_dir_to_ja2_binary_after_build("mods")
 
 if (MSVC)
-    string(REPLACE "SDLmain.lib" "SDL.dll" SDL_DLL ${SDLMAIN_LIBRARY})
+    string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
@@ -156,7 +158,7 @@ set(CPACK_PACKAGE_DESCRIPTION ${DESCRIPTION})
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "games")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libstdc++6, libgcc1, libc6")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2, libstdc++6, libgcc1, libc6")
 
 if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -199,12 +201,13 @@ if(WIN32 OR MINGW)
     file(GLOB WIN_DIST_FILES "_build/distr-files-win/*")
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES _build/icons/logo.ico DESTINATION .)
-    install(FILES _build/lib-SDL-devel-1.2.15-mingw32/bin/SDL.dll DESTINATION .)
+    install(FILES _build/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
 endif()
 
 if(APPLE)
     file(GLOB APPLE_DIST_FILES "_build/distr-files-mac/*")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
+    install(DIRECTORY _build/lib-SDL2-2.0.4-macos/SDL2.framework DESTINATION .)
     install(FILES _build/icons/logo.icns DESTINATION .)
 endif()
 

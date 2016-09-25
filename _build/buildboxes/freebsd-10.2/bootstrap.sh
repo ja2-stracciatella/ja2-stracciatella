@@ -1,3 +1,3 @@
 #!/bin/sh
 
-pkg install -y gmake cmake sdl boost-libs
+pkg install -y gmake cmake sdl2 boost-libs
