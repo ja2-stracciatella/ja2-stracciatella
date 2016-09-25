@@ -265,7 +265,7 @@ void SetMusicMode(UINT8 ubMusicMode)
 	// OK, check if we want to restore
 	if ( ubMusicMode == MUSIC_RESTORE )
 	{
-    if ( bPreviousMode == MUSIC_TACTICAL_VICTORY || bPreviousMode == MUSIC_TACTICAL_DEATH )
+    if ( bPreviousMode == MUSIC_TACTICAL_VICTORY || bPreviousMode == MUSIC_TACTICAL_DEFEAT )
     {
       bPreviousMode = MUSIC_TACTICAL_NOTHING;
     }
@@ -391,7 +391,7 @@ static void StartMusicBasedOnMode(void)
 			}
 			break;
 
-		case MUSIC_TACTICAL_DEATH:
+		case MUSIC_TACTICAL_DEFEAT:
 
 			// ATE: Don't fade in EnemyPresent...
 			gbFadeSpeed = (INT8)uiMusicVolume;
