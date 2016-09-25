@@ -75,17 +75,6 @@
 #define		GIO_IRON_MAN_SETTING_Y							GIO_GAME_SETTINGS_Y
 #define		GIO_IRON_MAN_SETTING_WIDTH						GIO_DIF_SETTINGS_WIDTH
 
-
-//Difficulty settings
-enum
-{
-	GIO_DIFF_EASY,
-	GIO_DIFF_MED,
-	GIO_DIFF_HARD,
-
-	NUM_DIFF_SETTINGS,
-};
-
 // Game Settings options
 enum
 {
@@ -158,7 +147,7 @@ static BUTTON_PICS* giGIOCancelBtnImage;
 
 
 //checkbox to toggle the Diff level
-static GUIButtonRef guiDifficultySettingsToggles[NUM_DIFF_SETTINGS];
+static GUIButtonRef guiDifficultySettingsToggles[NUM_DIF_LEVELS];
 static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 //checkbox to toggle Game style
@@ -288,14 +277,7 @@ static void EnterGIOScreen()
 	{ // Check box to toggle difficulty settings
 		INT16 const x = GIO_DIF_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX;
 		INT16 const y = GIO_DIF_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-		size_t def;
-		switch (gGameOptions.ubDifficultyLevel)
-		{
-			case DIF_LEVEL_EASY:   def = GIO_DIFF_EASY; break;
-			default:
-			case DIF_LEVEL_MEDIUM: def = GIO_DIFF_MED;  break;
-			case DIF_LEVEL_HARD:   def = GIO_DIFF_HARD; break;
-		}
+		size_t def = gGameOptions.ubDifficultyLevel - 1;
 		MakeCheckBoxes(guiDifficultySettingsToggles, lengthof(guiDifficultySettingsToggles), x, y, BtnDifficultyTogglesCallback, def);
 	}
 
@@ -618,7 +600,7 @@ static UINT8 GetCurrentDifficultyButtonSetting(void)
 {
 	UINT8	cnt;
 
-	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
+	for (cnt = 0; cnt < NUM_DIF_LEVELS; cnt++)
 	{
 		if (guiDifficultySettingsToggles[cnt]->Clicked()) return cnt;
 	}
@@ -683,7 +665,7 @@ static void RestoreGIOButtonBackGrounds(void)
 
 	// Check box to toggle Difficulty settings
 	usPosY = GIO_DIF_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
+	for (cnt = 0; cnt < NUM_DIF_LEVELS; cnt++)
 	{
 		RestoreExternBackgroundRect(GIO_DIF_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29);
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -770,14 +752,7 @@ static void DoGioMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallba
 static void DisplayMessageToUserAboutGameDifficulty(void)
 {
 	const wchar_t* text;
-
-	switch (GetCurrentDifficultyButtonSetting())
-	{
-		case 0: text = zGioDifConfirmText[GIO_CFS_NOVICE];      break;
-		case 1: text = zGioDifConfirmText[GIO_CFS_EXPERIENCED]; break;
-		case 2: text = zGioDifConfirmText[GIO_CFS_EXPERT];      break;
-		default: return;
-	}
+        text = zGioDifConfirmText[GetCurrentDifficultyButtonSetting()];        
 	DoGioMessageBox(text, ConfirmGioDifSettingMessageBoxCallBack);
 }
 
