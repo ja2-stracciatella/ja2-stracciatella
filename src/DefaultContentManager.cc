@@ -975,7 +975,7 @@ const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) c
   return m_dealersInventory[dealerId];
 }
 
-const UTF8String* DefaultContentManager::getMusicForMode(const MusicMode mode) const {
+const UTF8String* DefaultContentManager::getMusicForMode(MusicMode mode) const {
   return m_musicMap.find(mode)->second->at(0);
 }
 

@@ -2,6 +2,7 @@
 #define _MUSIC_CONTROL_H_
 
 #include "SoundMan.h"
+#include "UTF8String.h"
 #include "ContentMusic.h"
 
 enum MusicList {
@@ -32,7 +33,7 @@ extern BOOLEAN	gfForceMusicToTense;
 void SetMusicMode(MusicMode ubMusicMode);
 
 /* Starts up one of the tunes in the music list. */
-void MusicPlay(UINT32 uiNum);
+void MusicPlay(const UTF8String* pFilename);
 
 void MusicSetVolume(UINT32 uiVolume);
 UINT32 MusicGetVolume(void);
