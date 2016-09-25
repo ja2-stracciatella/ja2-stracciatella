@@ -312,57 +312,57 @@ void SetMusicMode(MusicMode ubMusicMode)
 static void StartMusicBasedOnMode(void)
 {
 	SLOGD(DEBUG_TAG_MUSICCTL, "StartMusicBasedOnMode() %d %d", uiMusicHandle, gubMusicMode);
-  MusicMode next = gubMusicMode;
+	MusicMode next = gubMusicMode;
 
-  switch (gubMusicMode) {
-    case MUSIC_TACTICAL_NOTHING:
-      if (gfUseCreatureMusic) {
-        next = MUSIC_TACTICAL_CREATURE_NOTHING;
-      }
-      break;
-    case MUSIC_TACTICAL_ENEMYPRESENT:
-      if (gfUseCreatureMusic) {
-        next = MUSIC_TACTICAL_CREATURE_ENEMYPRESENT;
-      }
-      break;
-    case MUSIC_TACTICAL_BATTLE:
-      if (gfUseCreatureMusic) {
-        next = MUSIC_TACTICAL_CREATURE_BATTLE;
-      }
-      break;
-  }
+	switch (gubMusicMode) {
+		case MUSIC_TACTICAL_NOTHING:
+			if (gfUseCreatureMusic) {
+				next = MUSIC_TACTICAL_CREATURE_NOTHING;
+			}
+			break;
+		case MUSIC_TACTICAL_ENEMYPRESENT:
+			if (gfUseCreatureMusic) {
+				next = MUSIC_TACTICAL_CREATURE_ENEMYPRESENT;
+			}
+			break;
+		case MUSIC_TACTICAL_BATTLE:
+			if (gfUseCreatureMusic) {
+				next = MUSIC_TACTICAL_CREATURE_BATTLE;
+			}
+			break;
+	}
 
-  switch (gubMusicMode) {
-    case MUSIC_TACTICAL_VICTORY:
-      gbVictorySongCount++;
-      if( gfUseCreatureMusic && !gbWorldSectorZ )
-      { //We just killed all the creatures that just attacked the town.
-        gfUseCreatureMusic = FALSE;
-      }
-      break;
-    case MUSIC_TACTICAL_DEFEAT:
-      gbDeathSongCount++;
-      break;
-  }
+	switch (gubMusicMode) {
+		case MUSIC_TACTICAL_VICTORY:
+			gbVictorySongCount++;
+			if( gfUseCreatureMusic && !gbWorldSectorZ ) {
+				//We just killed all the creatures that just attacked the town.
+				gfUseCreatureMusic = FALSE;
+			}
+			break;
+		case MUSIC_TACTICAL_DEFEAT:
+			gbDeathSongCount++;
+			break;
+	}
 
-  switch (gubMusicMode) {
-    case MUSIC_MAIN_MENU:
-    case MUSIC_LAPTOP:
-    case MUSIC_TACTICAL_NOTHING:
-    case MUSIC_TACTICAL_ENEMYPRESENT:
-    case MUSIC_TACTICAL_BATTLE:
-    case MUSIC_TACTICAL_CREATURE_NOTHING:
-    case MUSIC_TACTICAL_CREATURE_ENEMYPRESENT:
-    case MUSIC_TACTICAL_CREATURE_BATTLE:
-    case MUSIC_TACTICAL_VICTORY:
-    case MUSIC_TACTICAL_DEFEAT:
-      // ATE: Don't fade in
-      gbFadeSpeed = (INT8)uiMusicVolume;
-      MusicPlay( GCM->getMusicForMode(next) );
-      break;
-    default:
-      MusicFadeOut();
-  }
+	switch (gubMusicMode) {
+		case MUSIC_MAIN_MENU:
+		case MUSIC_LAPTOP:
+		case MUSIC_TACTICAL_NOTHING:
+		case MUSIC_TACTICAL_ENEMYPRESENT:
+		case MUSIC_TACTICAL_BATTLE:
+		case MUSIC_TACTICAL_CREATURE_NOTHING:
+		case MUSIC_TACTICAL_CREATURE_ENEMYPRESENT:
+		case MUSIC_TACTICAL_CREATURE_BATTLE:
+		case MUSIC_TACTICAL_VICTORY:
+		case MUSIC_TACTICAL_DEFEAT:
+			// ATE: Don't fade in
+			gbFadeSpeed = (INT8)uiMusicVolume;
+			MusicPlay( GCM->getMusicForMode(next) );
+			break;
+		default:
+			MusicFadeOut();
+	}
 }
 
 

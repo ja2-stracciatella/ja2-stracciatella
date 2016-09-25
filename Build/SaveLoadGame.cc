@@ -2012,7 +2012,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 {
 	BYTE data[1024];
 	FileRead(f, data, sizeof(data));
-  UINT8 ubMusicModeToPlay = 0;
+	UINT8 ubMusicModeToPlay = 0;
 
 	BYTE const* d = data;
 	UINT32 screen_after_loading;
@@ -2020,7 +2020,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	guiScreenToGotoAfterLoadingSavedGame = static_cast<ScreenID>(screen_after_loading); // XXX TODO001A unchecked conversion
 	EXTR_U32(  d, guiCurrentUniqueSoldierId)
 	EXTR_U8(   d, ubMusicModeToPlay)
-  gMusicModeToPlay = (MusicMode)ubMusicModeToPlay;
+	gMusicModeToPlay = (MusicMode)ubMusicModeToPlay;
 	EXTR_SKIP( d, 1)
 	UINT16 sel;
 	EXTR_U16(  d, sel)
