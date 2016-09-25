@@ -20,8 +20,8 @@ static BOOLEAN fMusicFadingIn  = FALSE;
 
 static BOOLEAN gfMusicEnded = FALSE;
 
-UINT8        gubMusicMode    = 0;
-static UINT8 gubOldMusicMode = 0;
+MusicMode        gubMusicMode    = MUSIC_NONE;
+static MusicMode gubOldMusicMode = MUSIC_NONE;
 
 static INT8 gbVictorySongCount = 0;
 static INT8 gbDeathSongCount   = 0;
@@ -258,9 +258,9 @@ void MusicPoll(void)
 }
 
 
-void SetMusicMode(UINT8 ubMusicMode)
+void SetMusicMode(MusicMode ubMusicMode)
 {
-	static INT8 bPreviousMode = 0;
+	static MusicMode bPreviousMode = MUSIC_NONE;
 
 
 	// OK, check if we want to restore

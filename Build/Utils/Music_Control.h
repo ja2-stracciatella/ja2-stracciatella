@@ -2,6 +2,7 @@
 #define _MUSIC_CONTROL_H_
 
 #include "SoundMan.h"
+#include "ContentMusic.h"
 
 enum MusicList {
 	MARIMBAD2_MUSIC,
@@ -24,11 +25,11 @@ enum MusicList {
 
 extern const char* const szMusicList[NUM_MUSIC];
 
-extern UINT8		gubMusicMode;
+extern MusicMode gubMusicMode;
 extern BOOLEAN	gfForceMusicToTense;
 
 
-void SetMusicMode(UINT8 ubMusicMode);
+void SetMusicMode(MusicMode ubMusicMode);
 
 /* Starts up one of the tunes in the music list. */
 void MusicPlay(UINT32 uiNum);
