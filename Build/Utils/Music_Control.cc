@@ -311,19 +311,6 @@ void SetMusicMode(MusicMode ubMusicMode)
 
 static void StartMusicBasedOnMode(void)
 {
-	static BOOLEAN fFirstTime = TRUE;
-
-	if ( fFirstTime )
-	{
-		fFirstTime = FALSE;
-
-		bNothingModeSong = NOTHING_A_MUSIC + (INT8)Random( 4 );
-
-		bEnemyModeSong = TENSOR_A_MUSIC + (INT8)Random( 3 );
-
-		bBattleModeSong = BATTLE_A_MUSIC + (INT8)Random( 2 );
-
-	}
 	SLOGD(DEBUG_TAG_MUSICCTL, "StartMusicBasedOnMode() %d %d", uiMusicHandle, gubMusicMode);
   MusicMode next = gubMusicMode;
 
