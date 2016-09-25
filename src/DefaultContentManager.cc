@@ -976,7 +976,11 @@ const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) c
 }
 
 const UTF8String* DefaultContentManager::getMusicForMode(MusicMode mode) const {
-  return m_musicMap.find(mode)->second->at(0);
+  const u_int32_t index = Random((u_int32_t)m_musicMap.find(mode)->second->size());
+  const UTF8String* chosen = m_musicMap.find(mode)->second->at(index);
+
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Choosing music index %d of %d for: '%s'", index, m_musicMap.find(mode)->second->size(), chosen->getUTF8());
+  return chosen;
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const
