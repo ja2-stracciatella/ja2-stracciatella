@@ -25,6 +25,7 @@
 #include "Squads.h"
 #include "StrategicMap.h"
 #include "Town_Militia.h"
+#include "Types.h"
 #include "EMail.h"
 #include "slog/slog.h"
 
@@ -1438,6 +1439,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t const* const wName, BOOLEAN const fIncrease, INT16 const sPtsChanged, StatKind const ubStat)
 {
 	UINT8 ubStringIndex;
+	UINT16 absPointsChanged = abs( (int)sPtsChanged );
 
 
 	Assert( sPtsChanged != 0 );
@@ -1445,7 +1447,7 @@ void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t 
 	Assert( ubStat <= LAST_CHANGEABLE_STAT );
 
 	// if just a 1 point change
-	if ( abs( sPtsChanged ) == 1 )
+	if ( absPointsChanged == 1 )
 	{
 		// use singular
 		ubStringIndex = 2;
@@ -1462,7 +1464,7 @@ void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t 
 		ubStringIndex += 2;
 	}
 
-	swprintf( wString, Length, L"%ls %ls %d %ls %ls", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], abs( sPtsChanged ),
+	swprintf( wString, Length, L"%ls %ls %d %ls %ls", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], absPointsChanged,
 					sPreStatBuildString[ ubStringIndex ], sStatGainStrings[ ubStat - FIRST_CHANGEABLE_STAT ] );
 }
 
