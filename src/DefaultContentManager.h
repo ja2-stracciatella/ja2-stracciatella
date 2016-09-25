@@ -8,6 +8,7 @@
 #include "Build/GameRes.h"
 
 #include "ContentManager.h"
+#include "ContentMusic.h"
 #include "IGameDataLoader.h"
 #include "StringEncodingTypes.h"
 
@@ -165,6 +166,7 @@ protected:
   std::map<std::string, const MagazineModel*> m_magazineMap;
   std::map<std::string, const WeaponModel*> m_weaponMap;
   std::map<std::string, const ItemModel*> m_itemMap;
+  std::map<MusicMode, std::vector<const UTF8String*> > m_musicMap;
 
   std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
   std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
@@ -182,6 +184,8 @@ protected:
   bool loadCalibres();
   bool loadAmmoTypes();
   bool loadArmyGunChoice();
+  bool loadMusicModeList(MusicMode mode, rapidjson::Value &array);
+  bool loadMusic();
 
   const DealerInventory * loadDealerInventory(const char *fileName);
   bool loadAllDealersInventory();
