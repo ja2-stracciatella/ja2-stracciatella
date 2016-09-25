@@ -6,6 +6,7 @@
 
 /* XXX */
 #include "ItemModel.h"
+#include "ContentMusic.h"
 
 #include "ItemSystem.h"
 
@@ -100,6 +101,8 @@ public:
   virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
   virtual const DealerInventory* getBobbyRayNewInventory() const = 0;
   virtual const DealerInventory* getBobbyRayUsedInventory() const = 0;
+
+  virtual const UTF8String* getMusicForMode(MusicMode mode) const = 0;
 
   virtual const GamePolicy* getGamePolicy() const = 0;
   virtual const IMPPolicy* getIMPPolicy() const = 0;

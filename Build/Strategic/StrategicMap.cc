@@ -50,6 +50,7 @@
 #include "FileMan.h"
 #include "Animated_ProgressBar.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Fade_Screen.h"
 #include "Strategic_Movement.h"
 #include "Campaign_Types.h"

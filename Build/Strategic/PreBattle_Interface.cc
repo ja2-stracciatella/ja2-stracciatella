@@ -11,6 +11,7 @@
 #include "StrategicMap.h"
 #include "Game_Clock.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "SysUtil.h"
 #include "Font_Control.h"
 #include "Timer.h"

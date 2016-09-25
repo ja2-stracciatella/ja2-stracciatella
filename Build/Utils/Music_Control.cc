@@ -7,6 +7,7 @@
 #include "Creature_Spreading.h"
 #include "Timer_Control.h"
 #include "StrategicMap.h"
+#include "ContentMusic.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "slog/slog.h"

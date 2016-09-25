@@ -24,19 +24,6 @@ enum MusicList {
 
 extern const char* const szMusicList[NUM_MUSIC];
 
-enum MusicMode {
-
-	MUSIC_NONE,
-	MUSIC_RESTORE,
-	MUSIC_MAIN_MENU,
-	MUSIC_TACTICAL_NOTHING,
-	MUSIC_TACTICAL_ENEMYPRESENT,
-	MUSIC_TACTICAL_BATTLE,
-	MUSIC_TACTICAL_VICTORY,
-	MUSIC_TACTICAL_DEFEAT,
-	MUSIC_LAPTOP,
-};
-
 extern UINT8		gubMusicMode;
 extern BOOLEAN	gfForceMusicToTense;
 

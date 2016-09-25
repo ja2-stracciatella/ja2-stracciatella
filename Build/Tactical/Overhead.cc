@@ -54,6 +54,7 @@
 #include "Morale.h"
 #include "Campaign.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Faces.h"
 #include "Dialogue_Control.h"
 #include "Queen_Command.h"

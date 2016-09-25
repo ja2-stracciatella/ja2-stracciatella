@@ -12,6 +12,7 @@
 #include "MouseSystem.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Render_Dirty.h"
 #include "Soldier_Profile.h"
 #include "SysUtil.h"

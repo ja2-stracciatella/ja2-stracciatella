@@ -38,6 +38,7 @@
 #include "Strategic_AI.h"
 #include "Town_Militia.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Campaign.h"
 #include "Isometric_Utils.h"
 #include "Meanwhile.h"

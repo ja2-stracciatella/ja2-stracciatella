@@ -15,6 +15,7 @@
 #include "MainMenuScreen.h"
 #include "MessageBoxScreen.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"

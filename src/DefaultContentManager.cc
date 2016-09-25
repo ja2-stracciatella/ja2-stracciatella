@@ -738,17 +738,19 @@ bool DefaultContentManager::loadAmmoTypes()
   return true;
 }
 
-bool DefaultContentManager::loadMusicModeList(MusicMode mode, rapidjson::Value &array)
+bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::Value &array)
 {
-  m_musicMap[mode] = std::vector<const UTF8String*>();
+  std::vector<const UTF8String*>* musicModeList = new std::vector<const UTF8String*>();
 
   std::vector<std::string> utf8_encoded;
   JsonUtility::parseListStrings(array, utf8_encoded);
   BOOST_FOREACH(const std::string &str, utf8_encoded)
   {
-    m_musicMap[mode].push_back(new UTF8String(str.c_str()));
+    musicModeList->push_back(new UTF8String(str.c_str()));
     SLOGD(DEBUG_TAG_DEFAULTCM, "Loaded music %s", str.c_str());
   }
+
+  m_musicMap[mode] = musicModeList;
 
   return true;
 }
@@ -773,13 +775,13 @@ bool DefaultContentManager::loadMusic()
   SLOGD(DEBUG_TAG_DEFAULTCM, "Loading main_menu music");
   loadMusicModeList(MUSIC_LAPTOP, document["laptop"]);
   SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical music");
-  loadMusicModeList(MUSIC_TACTICAL, document["tactical"]);
+  loadMusicModeList(MUSIC_TACTICAL_NOTHING, document["tactical"]);
   SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_enemypresent music");
   loadMusicModeList(MUSIC_TACTICAL_ENEMYPRESENT, document["tactical_enemypresent"]);
   SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_battle music");
   loadMusicModeList(MUSIC_TACTICAL_BATTLE, document["tactical_battle"]);
   SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_creature music");
-  loadMusicModeList(MUSIC_TACTICAL_CREATURE, document["tactical_creature"]);
+  loadMusicModeList(MUSIC_TACTICAL_CREATURE_NOTHING, document["tactical_creature"]);
   SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_creature_enemypresent music");
   loadMusicModeList(MUSIC_TACTICAL_CREATURE_ENEMYPRESENT, document["tactical_creature_enemypresent"]);
   SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_creature_battle music");
@@ -971,6 +973,10 @@ const ItemModel* DefaultContentManager::getItemByName(const std::string &interna
 const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) const
 {
   return m_dealersInventory[dealerId];
+}
+
+const UTF8String* DefaultContentManager::getMusicForMode(const MusicMode mode) const {
+  return m_musicMap.find(mode)->second->at(0);
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const

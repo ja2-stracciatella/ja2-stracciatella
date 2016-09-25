@@ -14,6 +14,7 @@
 #include "Strategic_Movement.h"
 #include "Queen_Command.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "PreBattle_Interface.h"
 #include "Player_Command.h"
 #include "MouseSystem.h"

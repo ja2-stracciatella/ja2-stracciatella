@@ -22,6 +22,7 @@
 #include "Explosion_Control.h"
 #include "Interface.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Campaign_Types.h"
 #include "Text.h"
 #include "Morale.h"

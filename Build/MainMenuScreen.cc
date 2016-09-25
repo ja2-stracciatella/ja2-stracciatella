@@ -16,6 +16,7 @@
 #include "MessageBoxScreen.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
 #include "SGP.h"
