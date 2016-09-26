@@ -7,9 +7,13 @@
 #include "Creature_Spreading.h"
 #include "Timer_Control.h"
 #include "StrategicMap.h"
+#include "ContentMusic.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "slog/slog.h"
+
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 static UINT32  uiMusicHandle   = NO_SAMPLE;
 static UINT32  uiMusicVolume   = 50;
@@ -19,8 +23,8 @@ static BOOLEAN fMusicFadingIn  = FALSE;
 
 static BOOLEAN gfMusicEnded = FALSE;
 
-UINT8        gubMusicMode    = 0;
-static UINT8 gubOldMusicMode = 0;
+MusicMode        gubMusicMode    = MUSIC_NONE;
+static MusicMode gubOldMusicMode = MUSIC_NONE;
 
 static INT8 gbVictorySongCount = 0;
 static INT8 gbDeathSongCount   = 0;
@@ -61,16 +65,16 @@ static BOOLEAN MusicStop(void);
 static void MusicStopCallback(void* pData);
 
 
-void MusicPlay(UINT32 uiNum)
+void MusicPlay(const UTF8String* pFilename)
 {
 	if(fMusicPlaying)
 		MusicStop();
 
-	uiMusicHandle = SoundPlayStreamedFile(szMusicList[uiNum], 0, 64, 1, MusicStopCallback, NULL);
+	uiMusicHandle = SoundPlayStreamedFile(pFilename->getUTF8(), 0, 64, 1, MusicStopCallback, NULL);
 
 	if(uiMusicHandle!=SOUND_ERROR)
 	{
-		SLOGD(DEBUG_TAG_MUSICCTL, "Music PLay %d %d", uiMusicHandle, gubMusicMode);
+		SLOGD(DEBUG_TAG_MUSICCTL, "Music Play %d %d", uiMusicHandle, gubMusicMode);
 
 		gfMusicEnded	= FALSE;
 		fMusicPlaying	= TRUE;
@@ -78,7 +82,7 @@ void MusicPlay(UINT32 uiNum)
 		return;
 	}
 
-	SLOGE(DEBUG_TAG_MUSICCTL, "Music PLay %d %d", uiMusicHandle, gubMusicMode);
+	SLOGE(DEBUG_TAG_MUSICCTL, "Music Play Error %d %d", uiMusicHandle, gubMusicMode);
 }
 
 
@@ -257,15 +261,15 @@ void MusicPoll(void)
 }
 
 
-void SetMusicMode(UINT8 ubMusicMode)
+void SetMusicMode(MusicMode ubMusicMode)
 {
-	static INT8 bPreviousMode = 0;
+	static MusicMode bPreviousMode = MUSIC_NONE;
 
 
 	// OK, check if we want to restore
 	if ( ubMusicMode == MUSIC_RESTORE )
 	{
-    if ( bPreviousMode == MUSIC_TACTICAL_VICTORY || bPreviousMode == MUSIC_TACTICAL_DEATH )
+    if ( bPreviousMode == MUSIC_TACTICAL_VICTORY || bPreviousMode == MUSIC_TACTICAL_DEFEAT )
     {
       bPreviousMode = MUSIC_TACTICAL_NOTHING;
     }
@@ -307,101 +311,57 @@ void SetMusicMode(UINT8 ubMusicMode)
 
 static void StartMusicBasedOnMode(void)
 {
-	static BOOLEAN fFirstTime = TRUE;
-
-	if ( fFirstTime )
-	{
-		fFirstTime = FALSE;
-
-		bNothingModeSong = NOTHING_A_MUSIC + (INT8)Random( 4 );
-
-		bEnemyModeSong = TENSOR_A_MUSIC + (INT8)Random( 3 );
-
-		bBattleModeSong = BATTLE_A_MUSIC + (INT8)Random( 2 );
-
-	}
 	SLOGD(DEBUG_TAG_MUSICCTL, "StartMusicBasedOnMode() %d %d", uiMusicHandle, gubMusicMode);
+	MusicMode next = gubMusicMode;
 
-	// Setup a song based on mode we're in!
-	switch( gubMusicMode )
-	{
-		case MUSIC_MAIN_MENU:
-			// ATE: Don't fade in
-			gbFadeSpeed = (INT8)uiMusicVolume;
-			MusicPlay( MENUMIX_MUSIC );
-			break;
-
-		case MUSIC_LAPTOP:
-			gbFadeSpeed = (INT8)uiMusicVolume;
-			MusicPlay( MARIMBAD2_MUSIC );
-			break;
-
+	switch (gubMusicMode) {
 		case MUSIC_TACTICAL_NOTHING:
-			// ATE: Don't fade in
-			gbFadeSpeed = (INT8)uiMusicVolume;
-			if( gfUseCreatureMusic )
-			{
-				MusicPlay( CREEPY_MUSIC );
-			}
-			else
-			{
-				MusicPlay( bNothingModeSong );
-				bNothingModeSong = NOTHING_A_MUSIC + (INT8)Random( 4 );
+			if (gfUseCreatureMusic) {
+				next = MUSIC_TACTICAL_CREATURE_NOTHING;
 			}
 			break;
-
 		case MUSIC_TACTICAL_ENEMYPRESENT:
-			// ATE: Don't fade in EnemyPresent...
-			gbFadeSpeed = (INT8)uiMusicVolume;
-			if( gfUseCreatureMusic )
-			{
-				MusicPlay( CREEPY_MUSIC );
-			}
-			else
-			{
-				MusicPlay( bEnemyModeSong );
-				bEnemyModeSong = TENSOR_A_MUSIC + (INT8)Random( 3 );
+			if (gfUseCreatureMusic) {
+				next = MUSIC_TACTICAL_CREATURE_ENEMYPRESENT;
 			}
 			break;
-
 		case MUSIC_TACTICAL_BATTLE:
-			// ATE: Don't fade in
-			gbFadeSpeed = (INT8)uiMusicVolume;
-			if( gfUseCreatureMusic )
-			{
-				MusicPlay( CREATURE_BATTLE_MUSIC );
+			if (gfUseCreatureMusic) {
+				next = MUSIC_TACTICAL_CREATURE_BATTLE;
 			}
-			else
-			{
-				MusicPlay( bBattleModeSong );
-			}
-			bBattleModeSong = BATTLE_A_MUSIC + (INT8)Random( 2 );
 			break;
+	}
 
+	switch (gubMusicMode) {
 		case MUSIC_TACTICAL_VICTORY:
-
-			// ATE: Don't fade in EnemyPresent...
-			gbFadeSpeed = (INT8)uiMusicVolume;
-			MusicPlay( TRIUMPH_MUSIC );
 			gbVictorySongCount++;
-
-			if( gfUseCreatureMusic && !gbWorldSectorZ )
-			{ //We just killed all the creatures that just attacked the town.
+			if( gfUseCreatureMusic && !gbWorldSectorZ ) {
+				//We just killed all the creatures that just attacked the town.
 				gfUseCreatureMusic = FALSE;
 			}
 			break;
-
-		case MUSIC_TACTICAL_DEATH:
-
-			// ATE: Don't fade in EnemyPresent...
-			gbFadeSpeed = (INT8)uiMusicVolume;
-			MusicPlay( DEATH_MUSIC );
+		case MUSIC_TACTICAL_DEFEAT:
 			gbDeathSongCount++;
 			break;
+	}
 
-		default:
-			MusicFadeOut( );
+	switch (gubMusicMode) {
+		case MUSIC_MAIN_MENU:
+		case MUSIC_LAPTOP:
+		case MUSIC_TACTICAL_NOTHING:
+		case MUSIC_TACTICAL_ENEMYPRESENT:
+		case MUSIC_TACTICAL_BATTLE:
+		case MUSIC_TACTICAL_CREATURE_NOTHING:
+		case MUSIC_TACTICAL_CREATURE_ENEMYPRESENT:
+		case MUSIC_TACTICAL_CREATURE_BATTLE:
+		case MUSIC_TACTICAL_VICTORY:
+		case MUSIC_TACTICAL_DEFEAT:
+			// ATE: Don't fade in
+			gbFadeSpeed = (INT8)uiMusicVolume;
+			MusicPlay( GCM->getMusicForMode(next) );
 			break;
+		default:
+			MusicFadeOut();
 	}
 }
 

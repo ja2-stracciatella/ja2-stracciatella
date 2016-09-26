@@ -22,6 +22,7 @@
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
+#include "ContentMusic.h"
 #include "DealerInventory.h"
 #include "JsonObject.h"
 #include "JsonUtility.h"
@@ -737,6 +738,62 @@ bool DefaultContentManager::loadAmmoTypes()
   return true;
 }
 
+bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::Value &array)
+{
+  std::vector<const UTF8String*>* musicModeList = new std::vector<const UTF8String*>();
+
+  std::vector<std::string> utf8_encoded;
+  JsonUtility::parseListStrings(array, utf8_encoded);
+  BOOST_FOREACH(const std::string &str, utf8_encoded)
+  {
+    musicModeList->push_back(new UTF8String(str.c_str()));
+    SLOGD(DEBUG_TAG_DEFAULTCM, "Loaded music %s", str.c_str());
+  }
+
+  m_musicMap[mode] = musicModeList;
+
+  return true;
+}
+
+bool DefaultContentManager::loadMusic()
+{
+  AutoSGPFile f(openGameResForReading("music.json"));
+  std::string jsonData = FileMan::fileReadText(f);
+
+  rapidjson::Document document;
+  if (document.Parse<0>(jsonData.c_str()).HasParseError()) {
+    SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse music.json");
+    return false;
+  }
+  if(!document.IsObject()) {
+    SLOGE(DEBUG_TAG_DEFAULTCM, "music.json has wrong structure");
+    return false;
+  }
+
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading main_menu music");
+  loadMusicModeList(MUSIC_MAIN_MENU, document["main_menu"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading main_menu music");
+  loadMusicModeList(MUSIC_LAPTOP, document["laptop"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical music");
+  loadMusicModeList(MUSIC_TACTICAL_NOTHING, document["tactical"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_enemypresent music");
+  loadMusicModeList(MUSIC_TACTICAL_ENEMYPRESENT, document["tactical_enemypresent"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_battle music");
+  loadMusicModeList(MUSIC_TACTICAL_BATTLE, document["tactical_battle"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_creature music");
+  loadMusicModeList(MUSIC_TACTICAL_CREATURE_NOTHING, document["tactical_creature"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_creature_enemypresent music");
+  loadMusicModeList(MUSIC_TACTICAL_CREATURE_ENEMYPRESENT, document["tactical_creature_enemypresent"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_creature_battle music");
+  loadMusicModeList(MUSIC_TACTICAL_CREATURE_BATTLE, document["tactical_creature_battle"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_victory music");
+  loadMusicModeList(MUSIC_TACTICAL_VICTORY, document["tactical_victory"]);
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Loading tactical_defeat music");
+  loadMusicModeList(MUSIC_TACTICAL_DEFEAT, document["tactical_defeat"]);
+
+  return true;
+}
+
 bool DefaultContentManager::readWeaponTable(
   const char *fileName,
   std::vector<std::vector<const WeaponModel*> > & weaponTable)
@@ -825,7 +882,8 @@ bool DefaultContentManager::loadGameData()
     && loadAmmoTypes()
     && loadMagazines()
     && loadWeapons()
-    && loadArmyGunChoice();
+    && loadArmyGunChoice()
+    && loadMusic();
 
   BOOST_FOREACH(const ItemModel *item, m_items)
   {
@@ -915,6 +973,14 @@ const ItemModel* DefaultContentManager::getItemByName(const std::string &interna
 const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) const
 {
   return m_dealersInventory[dealerId];
+}
+
+const UTF8String* DefaultContentManager::getMusicForMode(MusicMode mode) const {
+  const u_int32_t index = Random((u_int32_t)m_musicMap.find(mode)->second->size());
+  const UTF8String* chosen = m_musicMap.find(mode)->second->at(index);
+
+  SLOGD(DEBUG_TAG_DEFAULTCM, "Choosing music index %d of %d for: '%s'", index, m_musicMap.find(mode)->second->size(), chosen->getUTF8());
+  return chosen;
 }
 
 const IMPPolicy* DefaultContentManager::getIMPPolicy() const

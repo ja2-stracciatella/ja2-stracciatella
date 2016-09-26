@@ -29,7 +29,7 @@
 #include "AI.h"
 #include "Dialogue_Control.h"
 #include "Music_Control.h"
-#include "SoundMan.h"
+#include "ContentMusic.h"
 #include "UILayout.h"
 
 

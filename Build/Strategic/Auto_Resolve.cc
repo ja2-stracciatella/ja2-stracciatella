@@ -14,6 +14,7 @@
 #include "Strategic_Movement.h"
 #include "Queen_Command.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "PreBattle_Interface.h"
 #include "Player_Command.h"
 #include "MouseSystem.h"
@@ -1370,7 +1371,7 @@ static void RenderAutoResolve(void)
 					HandleMoraleEvent( NULL, MORALE_HEARD_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 
-					SetMusicMode( MUSIC_TACTICAL_DEATH );
+					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
 					gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 					break;
 				case BATTLE_DEFEAT:
@@ -1385,7 +1386,7 @@ static void RenderAutoResolve(void)
 						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 						gsCiviliansEatenByMonsters = gpAR->ubAliveEnemies;
 					}
-					SetMusicMode( MUSIC_TACTICAL_DEATH );
+					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
 					LogBattleResults( LOG_DEFEAT );
 					break;
 

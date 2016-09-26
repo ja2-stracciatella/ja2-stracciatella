@@ -80,6 +80,9 @@
 #include "slog/slog.h"
 
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 static BOOLEAN gfCorruptMap        = FALSE;
 static BOOLEAN gfCorruptSchedules  = FALSE;
 BOOLEAN        gfProfileDataLoaded = FALSE;
@@ -131,7 +134,7 @@ BOOLEAN fDontUseRandom = FALSE;
 
 static LEVELNODE* gCursorNode = NULL;
 
-static INT32 giMusicID = 0;
+static MusicMode giMusicMode = MUSIC_MAIN_MENU;
 
 
 INT32 iDrawMode = DRAW_MODE_NOTHING;
@@ -1406,11 +1409,11 @@ static void HandleKeyboardShortcuts(void)
 					break;
 
 				case SDLK_F4:
-					MusicPlay( giMusicID );
-					SLOGD(DEBUG_TAG_EDITOR, "%s", szMusicList[giMusicID]);
-					giMusicID++;
-					if( giMusicID >= NUM_MUSIC )
-						giMusicID = 0;
+					MusicPlay( GCM->getMusicForMode(giMusicMode) );
+					SLOGD(DEBUG_TAG_EDITOR, "Testing music %s", GCM->getMusicForMode(giMusicMode));
+					giMusicMode = (MusicMode)(giMusicMode + 1);
+					if( giMusicMode >= MAX_MUSIC_MODES )
+						giMusicMode = MUSIC_MAIN_MENU;
 					break;
 
 				case SDLK_F5:

@@ -25,6 +25,7 @@
 #include "Sound_Control.h"
 #include "Environment.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "AI.h"
 #include "Font_Control.h"
 #include "WorldMan.h"

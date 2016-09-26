@@ -18,6 +18,7 @@
 #include "Game_Clock.h"
 #include "Strategic_Mines.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Strategic.h"
 #include "JAScreens.h"
 #include "Town_Militia.h"

@@ -94,6 +94,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "MemMan.h"
+#include "ContentMusic.h"
 #include "JAScreens.h"
 #include "BobbyR.h"
 #include "IMP_Portraits.h"
@@ -136,7 +137,7 @@ extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
 	extern		UINT8					gubReportMapscreenLock;
 #endif
 
-static UINT8 gMusicModeToPlay;
+static MusicMode gMusicModeToPlay;
 
 BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
 #ifdef JA2BETAVERSION
@@ -1875,7 +1876,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	BYTE* d = data;
 	INJ_U32(  d, guiPreviousOptionScreen)
 	INJ_U32(  d, guiCurrentUniqueSoldierId)
-	INJ_U8(   d, gubMusicMode)
+	INJ_U8(   d, (UINT8)gubMusicMode)
 	INJ_SKIP( d, 1)
 	INJ_U16(  d, Soldier2ID(GetSelectedMan()))
 	INJ_I16(  d, gsRenderCenterX)
@@ -2011,13 +2012,15 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 {
 	BYTE data[1024];
 	FileRead(f, data, sizeof(data));
+	UINT8 ubMusicModeToPlay = 0;
 
 	BYTE const* d = data;
 	UINT32 screen_after_loading;
 	EXTR_U32(  d, screen_after_loading)
 	guiScreenToGotoAfterLoadingSavedGame = static_cast<ScreenID>(screen_after_loading); // XXX TODO001A unchecked conversion
 	EXTR_U32(  d, guiCurrentUniqueSoldierId)
-	EXTR_U8(   d, gMusicModeToPlay)
+	EXTR_U8(   d, ubMusicModeToPlay)
+	gMusicModeToPlay = (MusicMode)ubMusicModeToPlay;
 	EXTR_SKIP( d, 1)
 	UINT16 sel;
 	EXTR_U16(  d, sel)

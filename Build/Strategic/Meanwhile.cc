@@ -22,6 +22,7 @@
 #include "Map_Screen_Interface_Map.h"
 #include "Map_Screen_Interface.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Interface.h"
 #include "Game_Events.h"
 #include "Strategic_AI.h"
