@@ -382,7 +382,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	{
 		// increment counters that track how often stat changes are being awarded
 		p.usStatChangeChances[ubStat]   += usNumChances;
-		p.usStatChangeSuccesses[ubStat] += abs(sSubPointChange);
+		p.usStatChangeSuccesses[ubStat] += ABS(sSubPointChange);
 	}
 }
 
@@ -1439,7 +1439,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t const* const wName, BOOLEAN const fIncrease, INT16 const sPtsChanged, StatKind const ubStat)
 {
 	UINT8 ubStringIndex;
-	UINT16 absPointsChanged = abs( (int)sPtsChanged );
+	UINT16 absPointsChanged = ABS( (int)sPtsChanged );
 
 
 	Assert( sPtsChanged != 0 );

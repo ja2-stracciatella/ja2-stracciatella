@@ -2828,7 +2828,7 @@ static void Teleport()
 	INT16 const sDeltaY = sMapY - s.sSectorY;
 	INT16       sPrevX;
 	INT16       sPrevY;
-	if (abs(sDeltaX) >= abs(sDeltaY))
+	if (ABS(sDeltaX) >= ABS(sDeltaY))
 	{
 		// use East or West
 		if (sDeltaX > 0)

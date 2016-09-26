@@ -2299,7 +2299,7 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 	if( !fDealerSelling )
 	{
 		// junk dealer won't buy expensive stuff at all, expensive dealer won't buy junk at all
-		if ( abs( (INT8) ubDealerPriceClass - (INT8) ubItemPriceClass ) == 2 )
+		if ( ABS( (INT8) ubDealerPriceClass - (INT8) ubItemPriceClass ) == 2 )
 		{
 			return( 0 );
 		}

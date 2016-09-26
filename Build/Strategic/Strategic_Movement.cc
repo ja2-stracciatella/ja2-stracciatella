@@ -342,12 +342,12 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection( GROUP *pGroup, UIN
 	if( newDX )
 	{
 		ubNumUnalignedAxes++;
-		newDX /= abs( newDX );
+		newDX /= ABS( newDX );
 	}
 	if( newDY )
 	{
 		ubNumUnalignedAxes++;
-		newDY /= abs( newDY );
+		newDY /= ABS( newDY );
 	}
 
 	// error checking

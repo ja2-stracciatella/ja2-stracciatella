@@ -2073,8 +2073,8 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		const ItemModel * item = GCM->getItem(item_idx);
 		SGPVObject  const& item_vo = GetInterfaceGraphicForItem(item);
 		ETRLEObject const& e       = item_vo.SubregionProperties(item->getGraphicNum());
-		INT16              cen_x   = x + 7 + abs(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
-		INT16              cen_y   = y +     abs(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
+		INT16              cen_x   = x + 7 + ABS(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16              cen_y   = y +     ABS(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
     if(GCM->getGamePolicy()->f_draw_item_shadow)
     {
       BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), cen_x - 2, cen_y + 2);

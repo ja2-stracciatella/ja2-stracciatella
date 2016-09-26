@@ -943,7 +943,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						INT16 sDiff = pSoldier->sHeightAdjustment - pSoldier->sDesiredHeight;
 
-						if ( abs( sDiff ) > 4 )
+						if ( ABS( sDiff ) > 4 )
 						{
 							if ( sDiff > 0 )
 							{

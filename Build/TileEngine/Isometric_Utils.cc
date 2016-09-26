@@ -459,8 +459,8 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	INT16 sRows,sCols,sResult;
 
-	sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
-	sCols = abs((sOrigin % MAXROW) - (sDest % MAXROW));
+	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 
 	// apply Pythagoras's theorem for right-handed triangle:
@@ -475,8 +475,8 @@ INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 {
  INT16 sRows,sCols;
 
- sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
- sCols = abs((sOrigin % MAXROW) - (sDest % MAXROW));
+ sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+ sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	return( __max( sRows, sCols ) );
 }
@@ -486,8 +486,8 @@ INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
 {
  INT16 sRows,sCols;
 
- sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
- sCols = abs((sOrigin % MAXROW) - (sDest % MAXROW));
+ sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+ sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	return( (INT16)( sRows + sCols ) );
 }
@@ -611,12 +611,12 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
  if (origin==dest)
      return(0);
 
- if ((abs(origin - dest)) == 4)
+ if ((ABS(origin - dest)) == 4)
      return(1);		// this could be made random
  else
   if (origin > dest)
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (8 - origin) + dest;
     if (v1 > v2)
        return(1);
@@ -625,7 +625,7 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
    }
   else
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (8 - dest) + origin;
     if (v1 > v2)
        return(-1);
@@ -642,12 +642,12 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
  if (origin==dest)
      return(0);
 
- if ((abs(origin - dest)) == 16)
+ if ((ABS(origin - dest)) == 16)
      return(1);		// this could be made random
  else
   if (origin > dest)
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (32 - origin) + dest;
     if (v1 > v2)
        return(1);
@@ -656,7 +656,7 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
    }
   else
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (32 - dest) + origin;
     if (v1 > v2)
        return(-1);
