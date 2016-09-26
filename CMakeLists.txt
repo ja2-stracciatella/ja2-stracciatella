@@ -185,7 +185,7 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
         FILES _build/icons/logo.svg
         RENAME ja2-stracciatella.svg
         DESTINATION share/icons/hicolor/scalable/apps)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|DragonFly")
+    if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|DragonFly|OpenBSD")
         install(FILES ja2_manpage DESTINATION man/man6 RENAME ja2.6)
     else()
         install(FILES ja2_manpage DESTINATION share/man/man6 RENAME ja2.6)
