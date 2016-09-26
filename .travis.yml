@@ -10,7 +10,7 @@ compiler:
   - gcc
 
 before_install:
-  - sudo apt-get install cmake make g++ libsdl2-dev libboost-all-dev -y
+  - sudo apt-get install cmake make g++ libsdl2-dev libboost-all-dev libgtest-dev -y
 
 script:
   - mkdir ci-build && cd ci-build
