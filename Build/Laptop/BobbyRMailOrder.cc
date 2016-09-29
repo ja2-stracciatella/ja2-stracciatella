@@ -995,20 +995,24 @@ static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 static void DrawShippingSpeedLights(UINT8 ubSelected)
 {
-	if(ubSelected == 0)
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[0], gShippingSpeedAreas[1], gShippingSpeedAreas[0]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[1]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
-	else
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[0], gShippingSpeedAreas[1], gShippingSpeedAreas[0]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[1]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+	UINT8 green = 0;
 
-	if(ubSelected == 1)
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[2], gShippingSpeedAreas[3], gShippingSpeedAreas[2]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[3]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
-	else
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[2], gShippingSpeedAreas[3], gShippingSpeedAreas[2]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[3]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+	if (ubSelected == 0) green = 255;
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[0], gShippingSpeedAreas[1], gShippingSpeedAreas[0]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[1]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, green, 0 ) ) );
 
-	if(ubSelected == 2)
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[4], gShippingSpeedAreas[5], gShippingSpeedAreas[4]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[5]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
-	else
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[4], gShippingSpeedAreas[5], gShippingSpeedAreas[4]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[5]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+	if (ubSelected == 1) {
+		green = 255;
+	} else {
+		green = 0;
+	}
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[2], gShippingSpeedAreas[3], gShippingSpeedAreas[2]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[3]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, green, 0 ) ) );
+
+	if (ubSelected == 2) {
+		green = 255;
+	} else {
+		green = 0;
+	}
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[4], gShippingSpeedAreas[5], gShippingSpeedAreas[4]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[5]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, green, 0 ) ) );
 
 	InvalidateRegion(STD_SCREEN_X + 585, STD_SCREEN_Y + 218, STD_SCREEN_X + 594, STD_SCREEN_Y + 287);
 }
