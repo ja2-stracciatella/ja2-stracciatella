@@ -205,9 +205,9 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_MERC_TOOK_DRUG ], pSoldier->name );
 	}
 
-  // Dirty panel
-  fInterfacePanelDirty = DIRTYLEVEL2;
-
+        // Dirty panel
+        DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
+       
 	return( TRUE );
 }
 
@@ -229,7 +229,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 			if ( pSoldier->bDrugSideEffect[ cnt ] <= 0 )
 			{
 				pSoldier->bDrugSideEffect[ cnt ] = 0;
-				fInterfacePanelDirty	= DIRTYLEVEL1;
+                                DirtyMercPanelInterface(pSoldier, DIRTYLEVEL1);
 			}
 		}
 
@@ -243,8 +243,8 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 			{
 				pSoldier->bDrugEffect[ cnt ] = 0;
 
-        // Dirty panel
-        fInterfacePanelDirty = DIRTYLEVEL2;
+                                // Dirty panel
+                                DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);                                
 
 				// Start the bad news!
 				pSoldier->bDrugSideEffectRate[ cnt ] = ubDrugSideEffectRate[ cnt ];
