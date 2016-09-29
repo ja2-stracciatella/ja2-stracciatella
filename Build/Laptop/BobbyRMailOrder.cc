@@ -239,7 +239,6 @@ static SGPVObject* guiPackageWeightImage;
 static BOOLEAN gfReDrawBobbyOrder = FALSE;
 
 static INT32  giGrandTotal;
-static UINT32 guiShippingCost;
 static UINT32 guiSubTotal;
 
 static UINT8 gubSelectedLight;
@@ -437,8 +436,6 @@ void EnterBobbyRMailOrder()
 	gSelectedCloseDropDownRegion.Disable();
 
 	CreateBobbyRayOrderTitle();
-
-	guiShippingCost = 0;
 
 	gfRemoveItemsFromStock = FALSE;
 
@@ -901,21 +898,17 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 {
 	wchar_t	sTemp[20];
 	INT32	iShippingCost = 0;
-//	INT32 iTotal;
 
 	if( fCalledFromOrderPage )
 	{
 		iSubTotal = guiSubTotal;
-//		iTotal = giGrandTotal;
 
-		if( gubSelectedLight == 0 )
-			guiShippingCost = CalcCostFromWeightOfPackage( 0 );
-		else if( gubSelectedLight == 1 )
-			guiShippingCost = CalcCostFromWeightOfPackage( 1 );
-		else if( gubSelectedLight == 2 )
-			guiShippingCost = CalcCostFromWeightOfPackage( 2 );
-
-		iShippingCost = guiShippingCost;
+		if( gubSelectedLight < 3 )
+		{
+			iShippingCost = CalcCostFromWeightOfPackage( gubSelectedLight );
+		} else {
+			iShippingCost = 0;
+		}
 	}
 	else
 	{
@@ -1032,7 +1025,6 @@ static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 		memset(&BobbyRayPurchases, 0, sizeof(BobbyRayPurchaseStruct) * MAX_PURCHASE_AMOUNT);
 		gubSelectedLight = 0;
 		gfDestroyConfirmGrphiArea = TRUE;
-		gubSelectedLight = 0;
 
 		//Goto The homepage
 		guiCurrentLaptopMode = LAPTOP_MODE_BOBBY_R;
@@ -1047,7 +1039,6 @@ static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 		memset(&BobbyRayPurchases, 0, sizeof(BobbyRayPurchaseStruct) * MAX_PURCHASE_AMOUNT);
 		gubSelectedLight = 0;
 		gfDestroyConfirmGrphiArea = TRUE;
-		gubSelectedLight = 0;
 
 	}
 }
