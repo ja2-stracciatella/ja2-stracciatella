@@ -1,6 +1,6 @@
 ## Dependencies
 
-- SDL 1.2 (included for Windows and OS X)
+- SDL 2.0.4 (included for Windows and OS X)
 - boost-filesystem (included with `-DLOCAL_BOOST_LIB=ON`)
 - cmake
 - Your systems compiler
