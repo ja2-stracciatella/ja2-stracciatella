@@ -11,17 +11,17 @@
 #include "Interface.h"
 #include "Timer_Control.h"
 
-UINT8 ubDrugTravelRate[] = {4, 2};
-UINT8 ubDrugWearoffRate[] = {2, 2};
-UINT8 ubDrugEffect[] = {15, 8};
-UINT8 ubDrugSideEffect[] = {20, 10};
+UINT8 ubDrugTravelRate[]     = {4, 2};
+UINT8 ubDrugWearoffRate[]    = {2, 2};
+UINT8 ubDrugEffect[]         = {15, 8};
+UINT8 ubDrugSideEffect[]     = {20, 10};
 UINT8 ubDrugSideEffectRate[] = {2, 1};
 
 INT32 giDrunkModifier[] = {
   100, // Sober
-  75, // Feeling good,
-  65, // Borderline
-  50, // Drunk
+  75,  // Feeling good
+  65,  // Borderline
+  50,  // Drunk
   100, // HungOver
 };
 
