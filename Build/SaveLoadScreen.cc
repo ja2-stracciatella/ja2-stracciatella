@@ -466,7 +466,7 @@ static void EnterSaveLoadScreen()
 	// Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
 	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
 	{
-		gfActiveTab = DEAD_IS_DEAD_TAB_NO-1;
+		gfActiveTab = DEAD_IS_DEAD_TAB_NO;
 		gfSaveGame = TRUE;
 	}  
   
