@@ -159,7 +159,6 @@ static void deinitGameAndExit()
 	// If we are in Dead is Dead mode, save before exit
 	// Does this code also fire on crash? Let's hope not!
 	DoDeadIsDeadSaveIfNecessary();
-	FastDebugMsg("Exiting Game");
 
 	SoundServiceStreams();
 
