@@ -418,12 +418,12 @@ static void HandleGIOScreen(void)
 				DisplayMessageToUserAboutGameDifficulty();
 				break;
       
-      case GIO_DEAD_IS_DEAD_MODE:
-        DisplayMessageToUserAboutGameDifficulty();
-        break;
-      case GIO_DEAD_IS_DEAD_SAVE:
-        DisplayMessageToUserAboutDeadIsDeadSaveScreen(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack); 
-        break;
+			case GIO_DEAD_IS_DEAD_MODE:
+				DisplayMessageToUserAboutGameDifficulty();
+				break;
+			case GIO_DEAD_IS_DEAD_SAVE:
+				DisplayMessageToUserAboutDeadIsDeadSaveScreen(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack); 
+				break;
 		}
 
 		gubGameOptionScreenHandler = GIO_NOTHING;
@@ -835,7 +835,7 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 	}
 	else if (ubIronManMode == GIO_DEAD_IS_DEAD)
 	{
-	  	DoGioMessageBox(str_dead_is_dead_mode_warning, ConfirmGioDeadIsDeadMessageBoxCallBack);
+		DoGioMessageBox(str_dead_is_dead_mode_warning, ConfirmGioDeadIsDeadMessageBoxCallBack);
 		return  TRUE;
 	}
 	return FALSE;

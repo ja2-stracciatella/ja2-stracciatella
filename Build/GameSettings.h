@@ -58,7 +58,7 @@ enum
 struct GAME_SETTINGS
 {
 	INT8				bLastSavedGameSlot;							// The last saved game number goes in here
-	wchar_t     sCurrentSavedGameName[SIZE_OF_SAVE_GAME_DESC];                     // The name of the current Savegame goes here. Only relevant for Dead is Dead games
+	wchar_t			sCurrentSavedGameName[SIZE_OF_SAVE_GAME_DESC];                     // The name of the current Savegame goes here. Only relevant for Dead is Dead games
 
 	//The following are set from the status of the toggle boxes in the Options Screen
 	UINT8				fOptions[ NUM_ALL_GAME_OPTIONS ];
@@ -97,7 +97,7 @@ struct GAME_OPTIONS
 	BOOLEAN	fSciFi;
 	UINT8		ubDifficultyLevel;
 	BOOLEAN	fTurnTimeLimit;
-	UINT8	ubGameSaveMode;
+	UINT8		ubGameSaveMode;
 };
 
 //This structure will contain general Ja2 settings  NOT individual game settings.

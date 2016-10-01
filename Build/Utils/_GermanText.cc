@@ -3580,8 +3580,8 @@ LanguageRes g_LanguageResGerman = {
   s_ger_str_iron_man_mode_warning,
   s_ger_str_dead_is_dead_mode_warning,
   s_ger_str_dead_is_dead_mode_enter_name,
-	
-	s_ger_gs_dead_is_dead_mode_tab_name,
+
+  s_ger_gs_dead_is_dead_mode_tab_name,
 };
 
 #ifdef WITH_UNITTESTS

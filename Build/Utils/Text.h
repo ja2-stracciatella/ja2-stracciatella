@@ -419,7 +419,7 @@ struct LanguageRes
   const StrPointer  str_iron_man_mode_warning;
   const StrPointer  str_dead_is_dead_mode_warning;
   const StrPointer  str_dead_is_dead_mode_enter_name;
-	const StrPointer *gs_dead_is_dead_mode_tab_name;               
+  const StrPointer *gs_dead_is_dead_mode_tab_name;               
 };
 
 /** Current language resources. */

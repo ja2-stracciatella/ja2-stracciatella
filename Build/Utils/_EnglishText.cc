@@ -3756,6 +3756,6 @@ LanguageRes g_LanguageResEnglish = {
   g_eng_str_iron_man_mode_warning,
   g_eng_str_dead_is_dead_mode_warning,
   g_eng_str_dead_is_dead_mode_enter_name,
-	
-	s_eng_gs_dead_is_dead_mode_tab_name,
+
+  s_eng_gs_dead_is_dead_mode_tab_name,
 };

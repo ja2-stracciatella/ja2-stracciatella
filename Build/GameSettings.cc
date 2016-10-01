@@ -186,7 +186,7 @@ void InitGameOptions()
 	gGameOptions.fSciFi						 = TRUE;
 	gGameOptions.ubDifficultyLevel = DIF_LEVEL_EASY;
 	//gGameOptions.fTurnTimeLimit		 = FALSE;
-	gGameOptions.ubGameSaveMode			 = DIF_CAN_SAVE;
+	gGameOptions.ubGameSaveMode		 = DIF_CAN_SAVE;
 
 }
 

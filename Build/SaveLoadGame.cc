@@ -160,7 +160,7 @@ static BYTE const* ExtractGameOptions(BYTE const* const data, GAME_OPTIONS& g)
 	EXTR_BOOL( d, g.fSciFi)
 	EXTR_U8(   d, g.ubDifficultyLevel)
 	EXTR_BOOL( d, g.fTurnTimeLimit)
-	EXTR_U8( d, g.ubGameSaveMode)
+	EXTR_U8(   d, g.ubGameSaveMode)
 	EXTR_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -174,7 +174,7 @@ static BYTE* InjectGameOptions(BYTE* const data, GAME_OPTIONS const& g)
 	INJ_BOOL( d, g.fSciFi)
 	INJ_U8(   d, g.ubDifficultyLevel)
 	INJ_BOOL( d, g.fTurnTimeLimit)
-	INJ_U8( d, g.ubGameSaveMode)
+	INJ_U8(   d, g.ubGameSaveMode)
 	INJ_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -675,14 +675,14 @@ static void LoadGameFilePosition(UINT8 slot, HWFILE load, const char* pMsg);
 
 void LoadSavedGame(UINT8 const save_slot_id)
 {
-  
 	// Save the game before if we are in Dead is Dead Mode
 	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
-	  // The previous options screen may be the main menu if we use quicksave/load
-	  if (guiCurrentScreen != SAVE_LOAD_SCREEN) {
-	    guiPreviousOptionScreen = guiCurrentScreen;
-	  }
-	  DoDeadIsDeadSave();
+		// The previous options screen may be the main menu if we use quicksave/load
+		if (guiCurrentScreen != SAVE_LOAD_SCREEN)
+		{
+			guiPreviousOptionScreen = guiCurrentScreen;
+		}
+		DoDeadIsDeadSave();
 	}
 	TrashAllSoldiers();
 	RemoveAllGroups();
@@ -734,8 +734,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	CalcJA2EncryptionSet(SaveGameHeader);
 
 	UINT32 const version = SaveGameHeader.uiSavedGameVersion;
-  // Load the savegame name, only relevant for Dead is Dead games
-  wcscpy(gGameSettings.sCurrentSavedGameName, SaveGameHeader.sSavedGameDesc);
+	// Load the savegame name, only relevant for Dead is Dead games
+	wcscpy(gGameSettings.sCurrentSavedGameName, SaveGameHeader.sSavedGameDesc);
 
 	/* If the player is loading up an older version of the game and the person
 	 * DOESN'T have the cheats on. */
