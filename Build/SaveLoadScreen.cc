@@ -155,7 +155,7 @@ static BOOLEAN gfDoingQuickLoad = FALSE;
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
 BOOLEAN		gfSaveGame=TRUE;
-static INT8   gfActiveTab=0;
+static INT8 gfActiveTab=0;
 
 static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
@@ -436,7 +436,7 @@ static void selectActiveTab()
 	INT8 const lastSaveInTab = (INT8) (gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES);
 
 	updateTabActiveState();
-	
+
 	gfActiveTab = 0;
 	InitSaveGameArray();
 	// If the lastSavedGameSlot exists, switch to the appropriate tab, otherwise select the first available save
@@ -457,19 +457,18 @@ static void selectActiveTab()
 				break;
 			}
 		}
-
 	}
 }
 
 static void EnterSaveLoadScreen()
 {
 	gfActiveTab= 0;
-  // Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
-  if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
-  {
-    gfActiveTab = DEAD_IS_DEAD_TAB_NO-1;
-    gfSaveGame = TRUE;
-  }  
+	// Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
+	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
+	{
+		gfActiveTab = DEAD_IS_DEAD_TAB_NO-1;
+		gfSaveGame = TRUE;
+	}  
   
 	// This is a hack to get sector names, but if the underground sector is NOT loaded
 	if (!gpUndergroundSectorInfoHead)
@@ -525,7 +524,7 @@ static void EnterSaveLoadScreen()
 	guiSaveLoadImage  = UseLoadedButtonImage(guiSlgButtonImage, gfx, gfx + 3);
 	guiSlgSaveLoadBtn = MakeButton(guiSaveLoadImage, text, SLG_SAVE_LOAD_BTN_POS_X, BtnSlgSaveLoadCallback);
 	guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-  
+
 	UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
 	UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
 	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
@@ -929,8 +928,8 @@ static void InitSaveGameArray(void)
 {
 	for (INT8 cnt = 0; cnt < NUM_SAVE_GAMES; ++cnt)
 	{
-    SAVED_GAME_HEADER SaveGameHeader;
-    gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt, &SaveGameHeader);
+		SAVED_GAME_HEADER SaveGameHeader;
+		gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt, &SaveGameHeader);
 	}
 }
 
@@ -1168,28 +1167,28 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason)
 {
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		giLoadscreenTab[SLS_TAB_DEAD_IS_DEAD]->uiFlags       &= ~BUTTON_CLICKED_ON;
-    if (IsDeadIsDeadTab(gfActiveTab))
-    {
+		if (IsDeadIsDeadTab(gfActiveTab))
+		{
 			LoadTab(0);
 		}
-  }
+	}
 }
 
 static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason)
 {
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags       &= ~BUTTON_CLICKED_ON;
-    if (!IsDeadIsDeadTab(gfActiveTab))
-    {
+		if (!IsDeadIsDeadTab(gfActiveTab))
+		{
 			LoadTab(1);
 		}
-  }
+	}
 }
 
 
@@ -1698,34 +1697,34 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 
 void DoQuickSave()
 {
-  // Use the Dead is Dead function if we are in DiD
-  if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+	// Use the Dead is Dead function if we are in DiD
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
 	{
-    DoDeadIsDeadSave();
+		DoDeadIsDeadSave();
 	} else
-  {
-    if (SaveGame(0, L"")) return;
+	{
+		if (SaveGame(0, L"")) return;
 
-    if (guiPreviousOptionScreen == MAP_SCREEN)
+		if (guiPreviousOptionScreen == MAP_SCREEN)
 		{
-      DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		} else
 		{
-      DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
 		}
-  }
+	}
 }
 
 // Save function for Dead Is Dead
 void DoDeadIsDeadSave()
 {
- // Check if we are in a sane state! Do not save if:
- // - we are in an AI Turn
- // - we are in a Dialogue
- // - we are in Meanwhile.....
- // - we are currently in a message box - The Messagebox would be gone without selection after loading
- if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN)
- {
+	// Check if we are in a sane state! Do not save if:
+	// - we are in an AI Turn
+	// - we are in a Dialogue
+	// - we are in Meanwhile.....
+	// - we are currently in a message box - The Messagebox would be gone without selection after loading
+	if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN)
+	{
 		// Backup old saves
 		BackupSavedGame(gGameSettings.bLastSavedGameSlot);
 		// Save the previous option screen State to reset it after saving
@@ -1741,17 +1740,20 @@ void DoDeadIsDeadSave()
 			guiPreviousOptionScreen = guiCurrentScreen;
 		}
 
-   BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
+		BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
 
-   // Reset the previous option screen
-   guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
-   if (tmpSuccess) return;
-   
-   if (guiPreviousOptionScreen == MAP_SCREEN)
-     DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-   else
-     DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
- }
+		// Reset the previous option screen
+		guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
+		if (tmpSuccess) return;
+
+		if (guiPreviousOptionScreen == MAP_SCREEN)
+		{
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		} else
+		{
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		}
+	}
 }
 
 
@@ -1854,15 +1856,15 @@ static void SaveGameToSlotNum(void)
 	MarkButtonsDirty( );
 	RenderButtons();
   
-  // If we are selecting the Dead is Dead Savegame slot, only remember the slot, do not save
-  // Also set the INTRO_SCREEN as previous options screen. This is a hack to get the game started
-  if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
-  {
-    guiPreviousOptionScreen = INTRO_SCREEN;
-    gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
-    wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField);
-    
-  } else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
+	// If we are selecting the Dead is Dead Savegame slot, only remember the slot, do not save
+	// Also set the INTRO_SCREEN as previous options screen. This is a hack to get the game started
+	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
+	{
+		guiPreviousOptionScreen = INTRO_SCREEN;
+		gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
+		wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField); 
+		
+	} else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}

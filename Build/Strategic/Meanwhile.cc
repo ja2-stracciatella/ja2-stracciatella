@@ -221,8 +221,8 @@ void BeginMeanwhile(UINT8 ubMeanwhileID)
 {
 	INT32 cnt;
   
- // Save if we are in Dead is Dead Mode
- DoDeadIsDeadSaveIfNecessary();
+	// Save if we are in Dead is Dead Mode
+	DoDeadIsDeadSaveIfNecessary();
 
 	// copy meanwhile data from array to structure for current
 	gCurrentMeanwhileDef = gMeanwhileDef[ubMeanwhileID];
