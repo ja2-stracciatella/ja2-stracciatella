@@ -155,7 +155,7 @@ static BOOLEAN gfDoingQuickLoad = FALSE;
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
 BOOLEAN		gfSaveGame=TRUE;
-static INT8   gfActiveTab=FALSE;
+static INT8   gfActiveTab=0;
 
 static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
