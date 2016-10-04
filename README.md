@@ -56,7 +56,7 @@ there are over *7000 commits* in the original svn repository
 svn://tron.homeunix.org/ja2/trunk.  Unfortunately, the work on the project
 ceased in 2010.  The [original project homepage](http://tron.homeunix.org/ja2)
 is no longer available.  Some history can be found in [JA2-Stracciatella
-Q&A](http://www.ja-galaxy-forum.com/board/ubbthreads.php/topics/186601/JA2_Stracciatella_Q_A.html)
+Q&A](http://thepit.ja-galaxy-forum.com/index.php?t=msg&th=13222)
 
 ## License
 
