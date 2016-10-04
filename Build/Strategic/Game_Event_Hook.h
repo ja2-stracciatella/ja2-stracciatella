@@ -66,8 +66,6 @@ enum StrategicEventKind
 	EVENT_MERC_MERC_WENT_UP_LEVEL_EMAIL_DELAY            = 77,
 	EVENT_MERC_SITE_NEW_MERC_AVAILABLE                   = 78,
 
-	/* Note: For text debug support, make sure you add the text version of a new
-	 * event to gEventName[] */
 	NUMBER_OF_EVENT_TYPES
 };
 

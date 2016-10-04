@@ -54,6 +54,7 @@
 #include "Morale.h"
 #include "Campaign.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Faces.h"
 #include "Dialogue_Control.h"
 #include "Queen_Command.h"
@@ -100,6 +101,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
+#include "slog/slog.h"
 
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10
@@ -826,7 +828,7 @@ void ExecuteOverhead(void)
 								if (pSoldier->sFinalDestination == pSoldier->sGridNo)
 								{
 									// Cancel path....
-									pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
+									pSoldier->ubPathIndex = pSoldier->ubPathDataSize = 0;
 
 									// Cancel reverse
 									pSoldier->bReverse = FALSE;
@@ -875,7 +877,7 @@ void ExecuteOverhead(void)
 											if (gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALKOFF_SCREEN)
 											{
 												// ATE wanted this line here...
-												pSoldier->usPathIndex--;
+												pSoldier->ubPathIndex--;
 												AdjustSoldierPathToGoOffEdge( pSoldier, pSoldier->sGridNo, (UINT8)pSoldier->uiPendingActionData1);
 												continue;
 											}
@@ -897,7 +899,7 @@ void ExecuteOverhead(void)
 									}
 									else if (soldier->hasPendingAction())
 									{
-										DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("We are inside the IF PENDING Animation with soldier #%d", pSoldier->ubID));
+										SLOGD(DEBUG_TAG_OVERHEAD, "We are inside the IF PENDING Animation with soldier #%d", pSoldier->ubID);
 
 										if (pSoldier->ubPendingAction == MERC_OPENDOOR ||
 												pSoldier->ubPendingAction == MERC_OPENSTRUCT)
@@ -910,9 +912,7 @@ void ExecuteOverhead(void)
 											STRUCTURE* const pStructure = FindStructure(sGridNo, STRUCTURE_OPENABLE);
 											if (pStructure == NULL)
 											{
-#ifdef JA2BETAVERSION
-												ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Told to open struct at %d and none was found", sGridNo);
-#endif
+												SLOGW(DEBUG_TAG_OVERHEAD, "Told to open struct at %d and none was found", sGridNo);
 												fKeepMoving = FALSE;
 											}
 											else
@@ -982,21 +982,19 @@ void ExecuteOverhead(void)
 								else if (!pSoldier->fNoAPToFinishMove)
 								{
 									// Increment path....
-									pSoldier->usPathIndex++;
-									if (pSoldier->usPathIndex > pSoldier->usPathDataSize)
+									pSoldier->ubPathIndex++;
+									if (pSoldier->ubPathIndex > pSoldier->ubPathDataSize)
 									{
-										pSoldier->usPathIndex = pSoldier->usPathDataSize;
+										pSoldier->ubPathIndex = pSoldier->ubPathDataSize;
 									}
 
 									// Are we at the end?
-									if (pSoldier->usPathIndex == pSoldier->usPathDataSize)
+									if (pSoldier->ubPathIndex == pSoldier->ubPathDataSize)
 									{
 										// ATE: Pop up warning....
-										if (pSoldier->usPathDataSize != MAX_PATH_LIST_SIZE)
+										if (pSoldier->ubPathDataSize != MAX_PATH_LIST_SIZE)
 										{
-#ifdef JA2BETAVERSION
-											ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Path for %ls ( %d ) did not make merc get to dest .", pSoldier->name, pSoldier->ubID);
-#endif
+											SLOGD(DEBUG_TAG_OVERHEAD, "Path for %ls ( %d ) did not make merc get to dest.", pSoldier->name, pSoldier->ubID);
 										}
 
 										// In case this is an AI person with the path-stored flag set,
@@ -1014,7 +1012,7 @@ void ExecuteOverhead(void)
 											// that our final dest may now have people on it....
 											if (FindBestPath(pSoldier, pSoldier->sFinalDestination, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, PATH_THROUGH_PEOPLE) != 0)
 											{
-												const INT16 sNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc((UINT8)guiPathingData[0]));
+												const INT16 sNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(guiPathingData[0]));
 												SetDelayedTileWaiting(pSoldier, sNewGridNo, 1);
 											}
 
@@ -1042,7 +1040,7 @@ void ExecuteOverhead(void)
 										{
 											// Change desired direction
 											// Just change direction
-											EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->usPathingData[pSoldier->usPathIndex], FALSE, pSoldier->usAnimState);
+											EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->ubPathingData[pSoldier->ubPathIndex], FALSE, pSoldier->usAnimState);
 										}
 
 										if (gTacticalStatus.bBoxingState != NOT_BOXING &&
@@ -1159,9 +1157,7 @@ void ExecuteOverhead(void)
 			if (GetJA2Clock() - guiWaitingForAllMercsToExitTimer > 2500)
 			{
 				// OK, set num waiting to 0
-#if defined JA2BETAVERSION
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_DEBUG, L"Waiting too long for Mercs to exit...forcing entry.");
-#endif
+				SLOGD(DEBUG_TAG_OVERHEAD, "Waiting too long for Mercs to exit...forcing entry.");
 				gbNumMercsUntilWaitingOver = 0;
 
 				// Reset all waitng codes
@@ -1345,7 +1341,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 			if (fInitialMove) UnSetUIBusy(pSoldier);
 
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: Out of Breath");
+			SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: Out of Breath");
 			return FALSE;
 		}
 
@@ -1353,7 +1349,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		if (pSoldier->bCollapsed)
 		{
 			// Collapse!
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: Has Collapsed");
+			SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: Has Collapsed");
 			pSoldier->bBreathCollapsed = TRUE;
 			pSoldier->bEndDoorOpenCode = FALSE;
 			return FALSE;
@@ -1361,10 +1357,10 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 	}
 
-	const UINT16 usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc((UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]));
+	const UINT16 usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->ubPathingData[pSoldier->ubPathIndex]));
 
 	// OK, check if this is a fence cost....
-	if (gubWorldMovementCosts[usNewGridNo][(UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel] == TRAVELCOST_FENCE)
+	if (gubWorldMovementCosts[usNewGridNo][pSoldier->ubPathingData[pSoldier->ubPathIndex]][pSoldier->bLevel] == TRAVELCOST_FENCE)
 	{
 		// We have been told to jump fence....
 
@@ -1375,12 +1371,12 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		if (EnoughPoints(pSoldier, sAPCost, sBPCost, FALSE))
 		{
 			// ATE: Check for tile being clear....
-			const UINT16 sOverFenceGridNo = NewGridNo(usNewGridNo, DirectionInc((UINT8)pSoldier->usPathingData[pSoldier->usPathIndex + 1]));
+			const UINT16 sOverFenceGridNo = NewGridNo(usNewGridNo, DirectionInc(pSoldier->ubPathingData[pSoldier->ubPathIndex + 1]));
 
-			if (HandleNextTile(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex + 1], sOverFenceGridNo, pSoldier->sFinalDestination))
+			if (HandleNextTile(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->ubPathIndex + 1], sOverFenceGridNo, pSoldier->sFinalDestination))
 			{
 				// We do, adjust path data....
-				pSoldier->usPathIndex++;
+				pSoldier->ubPathIndex++;
 				// We go two, because we really want to start moving towards the NEXT gridno,
 				// if we have any...
 
@@ -1403,7 +1399,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 		return FALSE;
 	}
-	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][(UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, TRUE) == TRAVELCOST_DOOR)
+	else if (InternalDoorTravelCost(pSoldier, usNewGridNo, gubWorldMovementCosts[usNewGridNo][pSoldier->ubPathingData[pSoldier->ubPathIndex]][pSoldier->bLevel], pSoldier->bTeam == OUR_TEAM, NULL, TRUE) == TRAVELCOST_DOOR)
 	{
 		// OK, if we are here, we have been told to get a pth through a door.
 
@@ -1412,13 +1408,13 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		// No need to check for right key ( since the path checks for that? )
 
 		// Just for now play the $&&% animation
-		const INT8 bDirection = pSoldier->usPathingData[pSoldier->usPathIndex];
+		const INT8 bDirection = pSoldier->ubPathingData[pSoldier->ubPathIndex];
 
 		// OK, based on the direction, get door gridno
 		INT16 sDoorGridNo;
 		if (bDirection == NORTH || bDirection == WEST)
 		{
-			sDoorGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc((UINT8)pSoldier->usPathingData[pSoldier->usPathIndex]));
+			sDoorGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->ubPathingData[pSoldier->ubPathIndex]));
 		}
 		else if (bDirection == SOUTH || bDirection == EAST)
 		{
@@ -1426,10 +1422,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		}
 		else
 		{
-#ifdef JA2TESTVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"ERROR: Invalid Direction to approach door. (Soldier loc: %d, dir: %d).", pSoldier->sGridNo, bDirection );
-#endif
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: Open door - invalid approach direction");
+			SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: Open door - invalid approach direction");
 
 			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 			pSoldier->bEndDoorOpenCode = FALSE;
@@ -1441,10 +1434,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		STRUCTURE* const pStructure = FindStructure(sDoorGridNo, STRUCTURE_ANYDOOR);
 		if (pStructure == NULL)
 		{
-#ifdef JA2TESTVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"ERROR: Told to open door that does not exist at %d.", sDoorGridNo );
-#endif
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: Door does not exist");
+			SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: Door does not exist");
 			HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 			pSoldier->bEndDoorOpenCode = FALSE;
 			*pfKeepMoving = FALSE;
@@ -1466,13 +1456,13 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	}
 
 	// Find out how much it takes to move here!
-	const INT16 sAPCost = ActionPointCost(    pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex], usAnimState);
-	const INT16 sBPCost = TerrainBreathPoints(pSoldier, usNewGridNo, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex], usAnimState);
+	const INT16 sAPCost = ActionPointCost(    pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[pSoldier->ubPathIndex], usAnimState);
+	const INT16 sBPCost = TerrainBreathPoints(pSoldier, usNewGridNo, (INT8)pSoldier->ubPathingData[pSoldier->ubPathIndex], usAnimState);
 
 	// CHECK IF THIS TILE IS A GOOD ONE!
-	if (!HandleNextTile(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex], usNewGridNo, pSoldier->sFinalDestination))
+	if (!HandleNextTile(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->ubPathIndex], usNewGridNo, pSoldier->sFinalDestination))
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("HandleGotoNewGridNo() Failed: Tile %d Was blocked", usNewGridNo));
+		SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: Tile %d Was blocked", usNewGridNo);
 
 		// ATE: If our own guy and an initial move.. display message
 		//if ( fInitialMove && pSoldier->bTeam == OUR_TEAM  )
@@ -1492,13 +1482,13 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	// IN other words, we have stopped from sighting...
 	if (pSoldier->fNoAPToFinishMove && !fInitialMove)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: No APs to finish move set");
+		SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: No APs to finish move set");
 		pSoldier->bEndDoorOpenCode = FALSE;
 		*pfKeepMoving = FALSE;
 	}
-	else if (pSoldier->usPathIndex == pSoldier->usPathDataSize && pSoldier->usPathDataSize == 0)
+	else if (pSoldier->ubPathIndex == pSoldier->ubPathDataSize && pSoldier->ubPathDataSize == 0)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: No Path");
+		SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: No Path");
 		pSoldier->bEndDoorOpenCode = FALSE;
 		*pfKeepMoving = FALSE;
 	}
@@ -1512,7 +1502,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	{
 		BOOLEAN fDontContinue = FALSE;
 
-		if (pSoldier->usPathIndex > 0)
+		if (pSoldier->ubPathIndex > 0)
 		{
 			// check for running into gas
 
@@ -1633,7 +1623,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						pSoldier->ubNumTilesMovesSinceLastForget++;
 					}
 
-					if (pSoldier->usPathIndex > 2 && Random(100 ) == 0 && pSoldier->ubNumTilesMovesSinceLastForget > 200)
+					if (pSoldier->ubPathIndex > 2 && Random(100 ) == 0 && pSoldier->ubNumTilesMovesSinceLastForget > 200)
 					{
 						pSoldier->ubNumTilesMovesSinceLastForget = 0;
 
@@ -1666,7 +1656,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			// OK, let's check for monsters....
 			if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 			{
-				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex]))
+				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->ubPathIndex]))
 				{
 					if (!pSoldier->bReverse)
 					{
@@ -1691,7 +1681,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			// OK, let's check for monsters....
 			if (pSoldier->ubBodyType == BLOODCAT)
 			{
-				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->usPathingData[pSoldier->usPathIndex]))
+				if (!ValidCreatureTurn(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->ubPathIndex]))
 				{
 					if (!pSoldier->bReverse)
 					{
@@ -1706,7 +1696,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			}
 
 			// Change desired direction
-			EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->usPathingData[pSoldier->usPathIndex], fInitialMove, usAnimState);
+			EVENT_InternalSetSoldierDestination(pSoldier, pSoldier->ubPathingData[pSoldier->ubPathIndex], fInitialMove, usAnimState);
 
 			// CONTINUE
 			// IT'S SAVE TO GO AGAIN, REFRESH flag
@@ -1716,7 +1706,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	else
 	{
 		// HALT GUY HERE
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("HandleGotoNewGridNo() Failed: No APs %d %d", sAPCost, pSoldier->bActionPoints));
+		SLOGD(DEBUG_TAG_OVERHEAD, "HandleGotoNewGridNo() Failed: No APs %d %d", sAPCost, pSoldier->bActionPoints);
 		HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 		pSoldier->bEndDoorOpenCode = FALSE;
 		*pfKeepMoving = FALSE;
@@ -1945,7 +1935,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	{
 		*pfKeepMoving = FALSE;
 	}
-	else if (pSoldier->usPathIndex == pSoldier->usPathDataSize && pSoldier->usPathDataSize == 0)
+	else if (pSoldier->ubPathIndex == pSoldier->ubPathDataSize && pSoldier->ubPathDataSize == 0)
 	{
 		*pfKeepMoving = FALSE;
 	}
@@ -3769,7 +3759,7 @@ INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTY
 {
 	Assert(pTargetSoldier != NULL);
 
-	for (INT16 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
+	for (UINT8 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
 	{
 		const INT16 sSpot = NewGridNo(pSoldier->sGridNo, DirectionInc(i));
 
@@ -3988,7 +3978,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 {
 	if ( gTacticalStatus.uiFlags & INCOMBAT )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Can't enter combat when already in combat" );
+		SLOGD(DEBUG_TAG_OVERHEAD, "Can't enter combat when already in combat" );
 		// we're already in combat!
 		return;
 	}
@@ -3996,12 +3986,11 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 	// Alrighty, don't do this if no enemies in sector
 	if ( NumCapableEnemyInSector( ) == 0 )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Can't enter combat when no capable enemies" );
-		//ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Trying to init combat when no enemies around!." );
+		SLOGD(DEBUG_TAG_OVERHEAD, "Can't enter combat when no capable enemies" );
 		return;
 	}
 
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Entering combat mode" );
+	SLOGD(DEBUG_TAG_OVERHEAD, "Entering combat mode" );
 
 	// ATE: Added here to guarentee we have fEnemyInSector
 	// Mostly this was not getting set if:
@@ -4043,7 +4032,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 
 void ExitCombatMode( )
 {
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Exiting combat mode" );
+	SLOGD(DEBUG_TAG_OVERHEAD, "Exiting combat mode" );
 
 	// Leave combat mode
 	gTacticalStatus.uiFlags &= (~INCOMBAT);
@@ -4480,7 +4469,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_LOST, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 		// Play death music
-		SetMusicMode( MUSIC_TACTICAL_DEATH );
+		SetMusicMode( MUSIC_TACTICAL_DEFEAT );
 		SetCustomizableTimerCallbackAndDelay( 10000, DeathNoMessageTimerCallback, FALSE );
 
 		if ( CheckFact( FACT_FIRST_BATTLE_BEING_FOUGHT, 0 ) )
@@ -5310,7 +5299,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 				// This person will be busy while they crouch or go prone
 				if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
 				{
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting suppression, on %d", pSoldier->ubID ) );
+					SLOGD(DEBUG_TAG_OVERHEAD, "Starting suppression, on %d", pSoldier->ubID);
 
 					gTacticalStatus.ubAttackBusyCount++;
 
@@ -5436,12 +5425,10 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 
 		if ( pTarget->ubCivilianGroup && ( (pTarget->bTeam == OUR_TEAM) || pTarget->bNeutral ) )
 		{
-#ifdef JA2TESTVERSION
 			if (pTarget->uiStatusFlags & SOLDIER_PC)
 			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"%ls is changing teams", pTarget->name);
+				SLOGD(DEBUG_TAG_OVERHEAD, "%ls is changing teams", pTarget->name);
 			}
-#endif
 			// member of a civ group, either recruited or neutral, so should
 			// change sides individually or all together
 
@@ -5523,7 +5510,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 	{
 		if (pTarget == NULL)
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, ">>Target ptr is null!");
+			SLOGD(DEBUG_TAG_OVERHEAD, "Target ptr is null!");
 		}
 	}
 
@@ -5547,10 +5534,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		// But for all means.... DON'T wrap!
 		if ( (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "!!!!!!! &&&&&&& Problem with attacker busy count decrementing past 0.... preventing wrap-around.");
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Attack busy problem. Save, exit and send debug.txt + save file to Sir-Tech." );
-			#endif
+			SLOGD(DEBUG_TAG_OVERHEAD, "Problem with attacker busy count decrementing past 0.... preventing wrap-around.");
 		}
 	}
 	else
@@ -5558,7 +5542,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		gTacticalStatus.ubAttackBusyCount--;
 	}
 
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Ending attack, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+	SLOGD(DEBUG_TAG_OVERHEAD, "Ending attack, attack count now %d", gTacticalStatus.ubAttackBusyCount);
 //	}
 
 	if (gTacticalStatus.ubAttackBusyCount > 0)
@@ -5577,7 +5561,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		// suppression fire might cause the count to be increased, so check it again
 		if (gTacticalStatus.ubAttackBusyCount > 0)
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting suppression, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
+			SLOGD(DEBUG_TAG_OVERHEAD, "Starting suppression, attack count now %d", gTacticalStatus.ubAttackBusyCount);
 			return( pTarget );
 		}
 	}
@@ -5614,7 +5598,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 					fEnterCombat = ProcessImplicationsOfPCAttack(pSoldier, pTarget, REASON_NORMAL_ATTACK);
 					if ( !fEnterCombat )
 					{
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, ">>Not entering combat as a result of PC attack" );
+						SLOGD(DEBUG_TAG_OVERHEAD, "Not entering combat as a result of PC attack" );
 					}
 				}
 			}
@@ -5670,11 +5654,11 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 			// something is wrong here!
 			if ( !pTarget->bActive || !pTarget->bInSector )
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, ">>Invalid target attacked!" );
+				SLOGD(DEBUG_TAG_OVERHEAD, "Invalid target attacked!" );
 			}
 			else if ( ! (pSoldier->uiStatusFlags & SOLDIER_ATTACK_NOTICED) )
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, ">>Attack not noticed" );
+				SLOGD(DEBUG_TAG_OVERHEAD, "Attack not noticed" );
 			}
 		}
 		else
@@ -5700,7 +5684,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 		if ( !fEnterCombat )
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, ">>Not to enter combat from this attack" );
+			SLOGD(DEBUG_TAG_OVERHEAD, "Not to enter combat from this attack" );
 		}
 
 
@@ -5898,9 +5882,7 @@ void RemoveManFromTeam(const INT8 bTeam)
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
 	if (!IsTeamActive(bTeam))
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[bTeam].bMenInSector);
-#endif
+		SLOGD(DEBUG_TAG_OVERHEAD, "Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[bTeam].bMenInSector);
 		return;
 	}
 	--gTacticalStatus.Team[bTeam].bMenInSector;

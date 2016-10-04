@@ -14,6 +14,7 @@
 #include "Strategic_Movement.h"
 #include "Queen_Command.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "PreBattle_Interface.h"
 #include "Player_Command.h"
 #include "MouseSystem.h"
@@ -68,6 +69,7 @@
 #include "UILayout.h"
 #include "WeaponModels.h"
 #include "slog/slog.h"
+#include "Easings.h"
 
 #ifdef JA2BETAVERSION
 #	include "Cheats.h"
@@ -75,8 +77,8 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
-#define DEBUG_TAG_AUTORESOLVE "Auto Resolve"
 //#define INVULNERABILITY
 
 BOOLEAN gfTransferTacticalOppositionToAutoResolve = FALSE;
@@ -380,30 +382,19 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 
 static void RenderAutoResolve(void);
 
-
 static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 {
-	UINT32 uiStartTime, uiCurrTime;
-	INT32 iPercentage, iFactor;
-	UINT32 uiTimeRange;
+	UINT32 uiStartTime = GetClock();
+	UINT32 uiEndTime = uiStartTime + 1000;
 
 	PauseTime( FALSE );
 
 	gpAR->fShowInterface = TRUE;
 
-	uiTimeRange = 1000;
-	iPercentage = 0;
-	uiStartTime = GetClock();
-
-	INT32 const x = gpAR->rect.x;
-	INT32 const y = gpAR->rect.y;
-	INT32 const w = gpAR->rect.w;
-	INT32 const h = gpAR->rect.h;
-
-	INT16 const sStartLeft = 59;
-	INT16 const sStartTop  = 69;
-	INT16 const sEndLeft   = x + w / 2;
-	INT16 const sEndTop    = y + h / 2;
+	UINT16 const x = gpAR->rect.x;
+	UINT16 const y = gpAR->rect.y;
+	UINT16 const w = gpAR->rect.w;
+	UINT16 const h = gpAR->rect.h;
 
 	//save the prebattle/mapscreen interface background
 	BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
@@ -419,29 +410,16 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, x, y, w, h);
 
 	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
-	while( iPercentage < 100  )
+	while( GetClock() <= uiEndTime )
 	{
-		uiCurrTime = GetClock();
-		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-		iPercentage = MIN( iPercentage, 100 );
-
-		//Factor the percentage so that it is modified by a gravity falling acceleration effect.
-		iFactor = (iPercentage - 50) * 2;
-		if( iPercentage < 50 )
-			iPercentage = (UINT32)(iPercentage + iPercentage * iFactor * 0.01 + 0.5);
-		else
-			iPercentage = (UINT32)(iPercentage + (100-iPercentage) * iFactor * 0.01 + 0.05);
-
-		//Calculate the center point.
-		INT32 const iLeft = sStartLeft + (sEndLeft - sStartLeft + 1) * iPercentage / 100;
-		INT32 const iTop  = sStartTop  + (sEndTop  - sStartTop  + 1) * iPercentage / 100;
+		FLOAT fEasingProgress = EaseInCubic(uiStartTime, uiEndTime, GetClock());
 
 		SGPBox const DstRect =
 		{
-			iLeft - w * iPercentage / 200,
-			iTop  - h * iPercentage / 200,
-			MAX(1, w * iPercentage / 100),
-			MAX(1, h * iPercentage / 100)
+			(UINT16)(x * fEasingProgress),
+			(UINT16)(y * fEasingProgress),
+			(UINT16)(MAX(w * fEasingProgress, 1)),
+			(UINT16)(MAX(h * fEasingProgress, 1))
 		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &gpAR->rect, &DstRect);
@@ -449,7 +427,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 		RefreshScreen();
 
 		//Restore the previous rect.
-		BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, DstRect.x, DstRect.y, DstRect.w + 1, DstRect.h + 1);
+		BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, DstRect.x, DstRect.y, DstRect.w, DstRect.h);
 	}
 }
 
@@ -498,9 +476,7 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 			break;
 		default:
 			//shouldn't happen
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Autoresolving with entering enemy sector code %d -- illegal KM:1", gubEnemyEncounterCode );
-			#endif
+			SLOGE(DEBUG_TAG_AUTORESOLVE, "Autoresolving with entering enemy sector code %d -- illegal", gubEnemyEncounterCode );
 			break;
 	}
 }
@@ -1395,7 +1371,7 @@ static void RenderAutoResolve(void)
 					HandleMoraleEvent( NULL, MORALE_HEARD_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 
-					SetMusicMode( MUSIC_TACTICAL_DEATH );
+					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
 					gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 					break;
 				case BATTLE_DEFEAT:
@@ -1410,7 +1386,7 @@ static void RenderAutoResolve(void)
 						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 						gsCiviliansEatenByMonsters = gpAR->ubAliveEnemies;
 					}
-					SetMusicMode( MUSIC_TACTICAL_DEATH );
+					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
 					LogBattleResults( LOG_DEFEAT );
 					break;
 
@@ -1628,7 +1604,7 @@ static void CreateAutoResolveInterface(void)
 		}
 		else
 		{
-			AssertMsg(0, "Attempting to illegally create a militia soldier.");
+			SLOGE(DEBUG_TAG_ASSERTS, "Attempting to illegally create a militia soldier.");
 			s   = 0;
 			idx = 0;
 		}
@@ -1828,9 +1804,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			case SOLDIER_CLASS_REG_MILITIA:   current_rank = REGULAR_MILITIA; break;
 			case SOLDIER_CLASS_ELITE_MILITIA: current_rank = ELITE_MILITIA;   break;
 			default:
-#ifdef JA2BETAVERSION
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
-#endif
+				SLOGE(DEBUG_TAG_AUTORESOLVE, "Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
 				break;
 		}
 		if (delete_for_good)
@@ -2686,8 +2660,8 @@ static void HandleAutoResolveInput(void)
 
 static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 {
-	INT32 cnt, cntStart;
-	INT32 xp, yp;
+	UINT8 cnt, cntStart;
+	UINT16 xp, yp;
 	const wchar_t *pStr;
 	wchar_t str[20];
 	UINT16 usColor;
@@ -2696,7 +2670,9 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	//Restore the background before drawing text.
 	xp = pCell->xp +  2;
 	yp = pCell->yp + 32;
-	SGPBox const r = { xp - gpAR->rect.x, yp - gpAR->rect.y, 46, 10 };
+	SGPBox const r = {  (UINT16)(xp - gpAR->rect.x),
+											(UINT16)(yp - gpAR->rect.y),
+											46, 10 };
 	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, xp, yp, &r);
 
 	if( pCell->pSoldier->bLife )
@@ -3134,8 +3110,8 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 		}
 		if( !IsBattleOver() )
 		{
-			AssertMsg( 0, String("***Please send PRIOR save and screenshot of this message***  iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
-				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence) );
+			SLOGE(DEBUG_TAG_ASSERTS, "Please send PRIOR save and screenshot of this message. iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
+				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence);
 		}
 	}
 	else
@@ -3163,7 +3139,7 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 			iAvailableTargets--;
 		}
 	}
-	AssertMsg( 0, "Error in ChooseTarget logic for choosing enemy target." );
+	SLOGE(DEBUG_TAG_ASSERTS, "Error in ChooseTarget logic for choosing enemy target." );
 	return NULL;
 }
 
@@ -4058,7 +4034,7 @@ static void ProcessBattleFrame(void)
 				}
 			}
 			else
-				AssertMsg( 0, "Logic error in ProcessBattleFrame()" );
+				SLOGE(DEBUG_TAG_ASSERTS, "Logic error in ProcessBattleFrame()" );
 			//Apply damage and play miss/hit sounds if delay between firing and hit has expired.
 			if( !(pAttacker->uiFlags & CELL_RETREATED ) )
 			{

@@ -11,7 +11,7 @@
 #include "VObject_Blitters.h"
 #include "UILayout.h"
 #include "GameRes.h"
-
+#include "slog/slog.h"
 
 typedef UINT8 GlyphIdx;
 
@@ -180,7 +180,7 @@ static GlyphIdx GetGlyphIndex(wchar_t const c)
 		GlyphIdx const idx = TranslationTable[c];
 		if (idx != 0 || c == getZeroGlyphChar()) return idx;
 	}
-	DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U+%04X", c));
+	SLOGE(DEBUG_TAG_FONT, "Invalid character given U+%04X", c);
 	return TranslationTable[L'?'];
 }
 

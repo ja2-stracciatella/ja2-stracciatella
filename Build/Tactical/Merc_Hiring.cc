@@ -41,7 +41,7 @@
 #include "Auto_Resolve.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Quests.h"
-
+#include "slog/slog.h"
 
 #define	MIN_FLIGHT_PREP_TIME	6
 
@@ -103,7 +103,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s == NULL)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
+		SLOGW(DEBUG_TAG_MERCHIRE, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
 		return MERC_HIRE_FAILED;
 	}
 
@@ -478,8 +478,8 @@ static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	INT16 sRows,sCols,sResult;
 
-	sRows = abs((sOrigin / MAP_WORLD_X) - (sDest / MAP_WORLD_X));
-	sCols = abs((sOrigin % MAP_WORLD_X) - (sDest % MAP_WORLD_X));
+	sRows = ABS((sOrigin / MAP_WORLD_X) - (sDest / MAP_WORLD_X));
+	sCols = ABS((sOrigin % MAP_WORLD_X) - (sDest % MAP_WORLD_X));
 
 
 	// apply Pythagoras's theorem for right-handed triangle:

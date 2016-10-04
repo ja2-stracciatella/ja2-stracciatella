@@ -23,6 +23,7 @@
 #include "RenderWorld.h"
 #include "Isometric_Utils.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Soldier_Macros.h"
 #include "QArray.h"
 #include "LOS.h"

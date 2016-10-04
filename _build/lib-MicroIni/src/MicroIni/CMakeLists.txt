@@ -17,11 +17,3 @@ else()
     set_target_properties(MicroIni PROPERTIES DEBUG_POSTFIX "-s-d")
     set_target_properties(MicroIni PROPERTIES RELEASE_POSTFIX "-s")
 endif()
-
-# install rules
-install(FILES ${header_files} DESTINATION include/MicroIni)
-install(TARGETS MicroIni
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-)

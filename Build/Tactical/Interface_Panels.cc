@@ -71,6 +71,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
+
+#include "policy/GamePolicy.h"
+#include "HImage.h"
 
 // DEFINES FOR VARIOUS PANELS
 #define	SM_ITEMDESC_START_X					214
@@ -913,7 +917,7 @@ try
 }
 catch (...)
 {
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
 	throw;
 }
 
@@ -927,7 +931,7 @@ try
 }
 catch (...)
 {
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
 	throw;
 }
 
@@ -1114,8 +1118,29 @@ static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 	r.SetFastHelpText(help);
 }
 
+void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 rgb, const UINT8 scale_rgb)
+{
+	SGPVSurface::Lock l(guiSAVEBUFFER);
 
-static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 x, INT16 y)
+	#define s(a) ((a)/2)+((a)/2)*(scale_rgb)/100
+
+	const int r = s(0xff&rgb>>16);
+	const int g = s(0xff&rgb>>8);
+	const int b = s(0xff&rgb);
+	const UINT16 fill_color = Get16BPPColor((b<<16)+(g<<8)+r);
+
+	UINT16* const dst = l.Buffer<UINT16>();
+
+	for (int y = 0; y < sHeight; ++y)
+	{
+		for(int x = 0; x < sWidth; ++x)
+		{
+			dst[(y+sTop)*l.Pitch()/2+sLeft+x]=fill_color;
+		}
+	}
+}
+
+static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 const stat_val, INT16 const x, INT16 const y, INT32 const progress)
 {
 	SOLDIERTYPE const& s  = *gpSMCurrentMerc;
 	UINT8       const  fg =
@@ -1126,14 +1151,14 @@ static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 
 		FONT_RED;
 	SetFontForeground(fg);
 
-	wchar_t str[9];
-	swprintf(str, lengthof(str), L"%2d", stat_val);
-	INT16 usX;
-	INT16 usY;
-	FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
-	MPrint(usX, usY, str);
+	wchar_t str[4];
+	swprintf(str, lengthof(str), L"%3d", stat_val);
+	if(GCM->getGamePolicy()->gui_extras)
+	{
+		ProgressBarBackgroundRect(x+16, y-2, 15*progress/100, 10, 0x514A05, progress);
+	}
+	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
 }
-
 
 void RenderSMPanel(DirtyLevel* const dirty_level)
 {
@@ -1219,16 +1244,17 @@ no_plate:
 			MPrint(SM_CAMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
 			MPrint(SM_CAMO_PERCENT_X, dy + SM_CAMO_PERCENT_Y, L"%");
 
-			PrintStat(s.uiChangeAgilityTime,      AGIL_INCREASE,     s.bAgility,      SM_AGI_X,    dy + SM_AGI_Y);
-			PrintStat(s.uiChangeDexterityTime,    DEX_INCREASE,      s.bDexterity,    SM_DEX_X,    dy + SM_DEX_Y);
-			PrintStat(s.uiChangeStrengthTime,     STRENGTH_INCREASE, s.bStrength,     SM_STR_X,    dy + SM_STR_Y);
-			PrintStat(s.uiChangeLeadershipTime,   LDR_INCREASE,      s.bLeadership,   SM_CHAR_X,   dy + SM_CHAR_Y);
-			PrintStat(s.uiChangeWisdomTime,       WIS_INCREASE,      s.bWisdom,       SM_WIS_X,    dy + SM_WIS_Y);
-			PrintStat(s.uiChangeLevelTime,        LVL_INCREASE,      s.bExpLevel,     SM_EXPLVL_X, dy + SM_EXPLVL_Y);
-			PrintStat(s.uiChangeMarksmanshipTime, MRK_INCREASE,      s.bMarksmanship, SM_MRKM_X,   dy + SM_MRKM_Y);
-			PrintStat(s.uiChangeExplosivesTime,   EXP_INCREASE,      s.bExplosive,    SM_EXPL_X,   dy + SM_EXPL_Y);
-			PrintStat(s.uiChangeMechanicalTime,   MECH_INCREASE,     s.bMechanical,   SM_MECH_X,   dy + SM_MECH_Y);
-			PrintStat(s.uiChangeMedicalTime,      MED_INCREASE,      s.bMedical,      SM_MED_X,    dy + SM_MED_Y);
+			MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+			PrintStat(s.uiChangeAgilityTime,      AGIL_INCREASE,     s.bAgility,      SM_AGI_X,    dy + SM_AGI_Y,    p.sAgilityGain*2);
+			PrintStat(s.uiChangeDexterityTime,    DEX_INCREASE,      s.bDexterity,    SM_DEX_X,    dy + SM_DEX_Y,    p.sDexterityGain*2);
+			PrintStat(s.uiChangeStrengthTime,     STRENGTH_INCREASE, s.bStrength,     SM_STR_X,    dy + SM_STR_Y,    p.sStrengthGain*2);
+			PrintStat(s.uiChangeLeadershipTime,   LDR_INCREASE,      s.bLeadership,   SM_CHAR_X,   dy + SM_CHAR_Y,   p.sLeadershipGain*2);
+			PrintStat(s.uiChangeWisdomTime,       WIS_INCREASE,      s.bWisdom,       SM_WIS_X,    dy + SM_WIS_Y,    p.sWisdomGain*2);
+			PrintStat(s.uiChangeLevelTime,        LVL_INCREASE,      s.bExpLevel,     SM_EXPLVL_X, dy + SM_EXPLVL_Y, p.sExpLevelGain*100/(350*p.bExpLevel));
+			PrintStat(s.uiChangeMarksmanshipTime, MRK_INCREASE,      s.bMarksmanship, SM_MRKM_X,   dy + SM_MRKM_Y,   p.sMarksmanshipGain*4);
+			PrintStat(s.uiChangeExplosivesTime,   EXP_INCREASE,      s.bExplosive,    SM_EXPL_X,   dy + SM_EXPL_Y,   p.sExplosivesGain*4);
+			PrintStat(s.uiChangeMechanicalTime,   MECH_INCREASE,     s.bMechanical,   SM_MECH_X,   dy + SM_MECH_Y,   p.sMechanicGain*4);
+			PrintStat(s.uiChangeMedicalTime,      MED_INCREASE,      s.bMedical,      SM_MED_X,    dy + SM_MED_Y,    p.sMedicalGain*4);
 
 			SetFontForeground(s.bLife >= OKLIFE ? STATS_TEXT_FONT_COLOR : FONT_MCOLOR_DKGRAY);
 
@@ -2433,7 +2459,7 @@ try
 }
 catch (...)
 {
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
 	throw;
 }
 

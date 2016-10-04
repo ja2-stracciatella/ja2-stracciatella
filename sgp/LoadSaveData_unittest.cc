@@ -1,4 +1,4 @@
-﻿// -*-coding: utf-8-with-signature-unix;-*-
+// -*-coding: utf-8-with-signature-unix;-*-
 
 #include "gtest/gtest.h"
 

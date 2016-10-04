@@ -185,37 +185,8 @@
 #define     PLAYER_INFO_HAND_END_X      (STD_SCREEN_X + 62)
 #define     PLAYER_INFO_HAND_END_Y      (STD_SCREEN_Y + 103)
 
-#define     INV_BODY_X (STD_SCREEN_X + 71)
-#define     INV_BODY_Y (STD_SCREEN_Y + 116)
-
-
-#define     NAME_X                (STD_SCREEN_X + 11)
-#define     NAME_WIDTH            (STD_SCREEN_X + 62 - NAME_X)
-#define     ASSIGN_X              (STD_SCREEN_X + 67)
-#define     ASSIGN_WIDTH          (STD_SCREEN_X + 118 - ASSIGN_X)
-#define			SLEEP_X								(STD_SCREEN_X + 123)
-#define			SLEEP_WIDTH						(STD_SCREEN_X + 142 - SLEEP_X)
-#define     LOC_X                 (STD_SCREEN_X + 147)
-#define     LOC_WIDTH             (STD_SCREEN_X + 179 - LOC_X)
-#define     DEST_ETA_X            (STD_SCREEN_X + 184)
-#define     DEST_ETA_WIDTH        (STD_SCREEN_X + 217 - DEST_ETA_X)
-#define     TIME_REMAINING_X      (STD_SCREEN_X + 222)
-#define     TIME_REMAINING_WIDTH  (STD_SCREEN_X + 250 - TIME_REMAINING_X)
-#define     CLOCK_Y_START         (STD_SCREEN_Y + 298)
-#define     CLOCK_ETA_X           (STD_SCREEN_X + 463 - 15 + 6 + 30)
-#define     CLOCK_HOUR_X_START    (STD_SCREEN_X + 463 + 25 + 30)
-#define     CLOCK_MIN_X_START     (STD_SCREEN_X + 463 + 45 + 30)
-
-
-// contract
-#define CONTRACT_X      (STD_SCREEN_X + 185)
-#define CONTRACT_Y      (STD_SCREEN_Y + 50)
-
-// trash can
-#define TRASH_CAN_X (STD_SCREEN_X + 176)
-#define TRASH_CAN_Y (211 + PLAYER_INFO_Y)
-#define TRASH_CAN_WIDTH 193 - 165
-#define TRASH_CAN_HEIGHT 239 - 217
+#define     INV_BODY_X (UINT16)(STD_SCREEN_X + 71)
+#define     INV_BODY_Y (UINT16)(STD_SCREEN_Y + 116)
 
 //Text offsets
 #define Y_OFFSET 2
@@ -481,15 +452,6 @@ void SetInfoChar(SOLDIERTYPE const* const s)
 	}
 }
 
-
-static void ContractBoxGlow(void)
-{
-/* Why not?
-	fResetContractGlow = FALSE;
-*/
-}
-
-
 static void ContractListRegionBoxGlow(UINT16 usCount)
 {
  static INT32 iColorNum =10;
@@ -499,7 +461,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 
 
 	// if not glowing right now, leave
-	if (giContractHighLine == -1 || fResetContractGlow || fShowInventoryFlag)
+	if (fShowInventoryFlag)
 	{
 		iColorNum = 0;
 		fDelta = TRUE;
@@ -713,11 +675,7 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 	}
 }
 
-
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont);
-
-
-static void PrintStat(UINT32 const change_time, UINT16 const stat_gone_up_bit, INT8 const stat_val, INT16 const x, INT16 const y)
+static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 stat_val, INT16 x, INT16 y, INT32 progress)
 {
 	UINT8 const colour =
 		change_time == 0 ||
@@ -725,33 +683,36 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_gone_up_bit, I
 		stat_gone_up_bit != 0                                        ? FONT_LTGREEN         :
 		FONT_RED;
 	SetFontForeground(colour);
-	wchar_t str[16];
-	swprintf(str, lengthof(str), L"%d", stat_val);
+
+	wchar_t str[4];
+	swprintf(str, lengthof(str), L"%3d", stat_val);
+	if(GCM->getGamePolicy()->gui_extras)
+	{
+		ProgressBarBackgroundRect(x+1,y-2,15*progress/100,10,0x514A05,progress);
+	}
 	DrawStringRight(str, x, y, STAT_WID, STAT_HEI, CHAR_FONT);
 }
-
 
 // Draw attributes & skills for given soldier
 static void DrawCharStats(SOLDIERTYPE const& s)
 {
 	SetFontAttributes(CHAR_FONT, CHAR_TEXT_FONT_COLOR);
 	UINT16 const up = s.usValueGoneUp;
-	PrintStat(s.uiChangeAgilityTime,      up & AGIL_INCREASE,     s.bAgility,      AGL_X, AGL_Y);
-	PrintStat(s.uiChangeDexterityTime,    up & DEX_INCREASE,      s.bDexterity,    DEX_X, DEX_Y);
-	PrintStat(s.uiChangeStrengthTime,     up & STRENGTH_INCREASE, s.bStrength,     STR_X, STR_Y);
-	PrintStat(s.uiChangeLeadershipTime,   up & LDR_INCREASE,      s.bLeadership,   LDR_X, LDR_Y);
-	PrintStat(s.uiChangeWisdomTime,       up & WIS_INCREASE,      s.bWisdom,       WIS_X, WIS_Y);
-	PrintStat(s.uiChangeLevelTime,        up & LVL_INCREASE,      s.bExpLevel,     LVL_X, LVL_Y);
-	PrintStat(s.uiChangeMarksmanshipTime, up & MRK_INCREASE,      s.bMarksmanship, MRK_X, MRK_Y);
-	PrintStat(s.uiChangeExplosivesTime,   up & EXP_INCREASE,      s.bExplosive,    EXP_X, EXP_Y);
-	PrintStat(s.uiChangeMechanicalTime,   up & MECH_INCREASE,     s.bMechanical,   MEC_X, MEC_Y);
-	PrintStat(s.uiChangeMedicalTime,      up & MED_INCREASE,      s.bMedical,      MED_X, MED_Y);
+	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+	PrintStat(s.uiChangeAgilityTime,      up & AGIL_INCREASE,     s.bAgility,      AGL_X,   AGL_Y,   p.sAgilityGain*2);
+	PrintStat(s.uiChangeDexterityTime,    up & DEX_INCREASE,      s.bDexterity,    DEX_X,   DEX_Y,   p.sDexterityGain*2);
+	PrintStat(s.uiChangeStrengthTime,     up & STRENGTH_INCREASE, s.bStrength,     STR_X,   STR_Y,   p.sStrengthGain*2);
+	PrintStat(s.uiChangeLeadershipTime,   up & LDR_INCREASE,      s.bLeadership,   LDR_X,   LDR_Y,   p.sLeadershipGain*2);
+	PrintStat(s.uiChangeWisdomTime,       up & WIS_INCREASE,      s.bWisdom,       WIS_X,   WIS_Y,   p.sWisdomGain*2);
+	PrintStat(s.uiChangeLevelTime,        up & LVL_INCREASE,      s.bExpLevel,     LVL_X,   LVL_Y,   p.sExpLevelGain*100/(350*p.bExpLevel));
+	PrintStat(s.uiChangeMarksmanshipTime, up & MRK_INCREASE,      s.bMarksmanship, MRK_X,   MRK_Y,   p.sMarksmanshipGain*4);
+	PrintStat(s.uiChangeExplosivesTime,   up & EXP_INCREASE,      s.bExplosive,    EXP_X,   EXP_Y,   p.sExplosivesGain*4);
+	PrintStat(s.uiChangeMechanicalTime,   up & MECH_INCREASE,     s.bMechanical,   MEC_X,   MEC_Y,   p.sMechanicGain*4);
+	PrintStat(s.uiChangeMedicalTime,      up & MED_INCREASE,      s.bMedical,      MED_X,   MED_Y,   p.sMedicalGain*4);
 }
-
 
 static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, SGPFont);
 static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont);
-
 
 static void DrawCharHealth(SOLDIERTYPE const& s)
 {
@@ -1906,7 +1867,6 @@ try
 		HandleHighLightingOfLinesInTeamPanel( );
 
 		// render glow for contract region
-		ContractBoxGlow( );
 		GlowTrashCan( );
 
 		// handle changing of highlighted lines
@@ -2113,7 +2073,6 @@ try
 		HandleHighLightingOfLinesInTeamPanel( );
 
 		// render glow for contract region
-		ContractBoxGlow( );
 		GlowTrashCan( );
 
 		// handle changing of highlighted lines
@@ -2200,7 +2159,7 @@ static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w,
 }
 
 
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont const font)
+void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont const font)
 {
 	INT16 rx;
 	INT16 ry;
@@ -2869,7 +2828,7 @@ static void Teleport()
 	INT16 const sDeltaY = sMapY - s.sSectorY;
 	INT16       sPrevX;
 	INT16       sPrevY;
-	if (abs(sDeltaX) >= abs(sDeltaY))
+	if (ABS(sDeltaX) >= ABS(sDeltaY))
 	{
 		// use East or West
 		if (sDeltaX > 0)
@@ -3116,10 +3075,14 @@ static void HandleModCtrl(UINT const key)
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				gfAutoAmbush ^= 1;
-				wchar_t const* const msg = gfAutoAmbush ?
-					L"Enemy ambush test mode enabled." :
-					L"Enemy ambush test mode disabled.";
-				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+				if(gfAutoAmbush)
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode enabled.");
+				}
+				else
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode disabled.");
+				}
 			}
 			break;
 
@@ -3131,17 +3094,13 @@ static void HandleModCtrl(UINT const key)
 			{
 				s->sBreathRed = 10000;
 				s->bBreath    = 100;
-				ScreenMsg(FONT_MCOLOR_RED, MSG_TESTVERSION, L"Vehicle refueled");
+				SLOGD(DEBUG_TAG_SMAP, "Vehicle refueled");
 
 				fTeamPanelDirty = TRUE;
 				fCharacterInfoPanelDirty = TRUE;
 			}
 			break;
 		}
-#endif
-
-#if defined JA2TESTVERSION
-		case 'i': fDisableJustForIan = !fDisableJustForIan; break;
 #endif
 
   case 'i':
@@ -3194,10 +3153,14 @@ static void HandleModCtrl(UINT const key)
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				gfAutoAIAware ^= 1;
-				wchar_t const* const msg = gfAutoAIAware ?
-					L"Strategic AI awareness maxed." :
-					L"Strategic AI awareness normal.";
-				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+				if(gfAutoAIAware)
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness maxed.");
+				}
+				else
+				{
+					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness normal.");
+				}
 			}
 			break;
 	}
@@ -6879,10 +6842,9 @@ void TellPlayerWhyHeCantCompressTime( void )
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time, pause state locked (reason %d). OK unless permanent.", guiLockPauseStateLastReasonId );
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) If permanent, take screenshot now, send with *previous* save & describe what happened since.");
-#endif
+		SLOGW(DEBUG_TAG_SMAP, "Can't compress time, pause state locked (reason %d). OK unless permanent.\n\
+													 If permanent, take screenshot now, send with *previous* save & describe what happened since.",
+													 guiLockPauseStateLastReasonId);
 	}
 	else if (!gfAtLeastOneMercWasHired)
 	{
@@ -6901,27 +6863,19 @@ void TellPlayerWhyHeCantCompressTime( void )
 	}
 	else if ( gfContractRenewalSquenceOn )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while contract renewal sequence is on.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while contract renewal sequence is on.");
 	}
 	else if( fDisableMapInterfaceDueToBattle )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while disabled due to battle.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while disabled due to battle.");
 	}
 	else if( fDisableDueToBattleRoster )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while in battle roster.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while in battle roster.");
 	}
 	else if ( fMapInventoryItem )
 	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_RED, MSG_BETAVERSION, L"(BETA) Can't compress time while still holding an inventory item.");
-#endif
+		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while still holding an inventory item.");
 	}
 	else if( fShowMapInventoryPool )
 	{
@@ -7137,7 +7091,7 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 				break;
 
 			default:
-				Assert(0);
+				SLOGE(DEBUG_TAG_ASSERTS, "Invalid sorting mode for Merc List");
 				return;
 		}
 	}
@@ -7278,7 +7232,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0, STD_SCREEN_X + 464, STD_SCREEN_Y + 417);
 				if (!guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->Enabled())
 				{
-					SGPRect area = { STD_SCREEN_X + 463, STD_SCREEN_Y + 417, STD_SCREEN_X + 477, STD_SCREEN_Y + 425 };
+					SGPRect area = { (UINT16)(STD_SCREEN_X + 463), (UINT16)(STD_SCREEN_Y + 417), (UINT16)(STD_SCREEN_X + 477), (UINT16)(STD_SCREEN_Y + 425) };
 
 					SGPVSurface::Lock l(FRAME_BUFFER);
 					Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &area);
@@ -8169,24 +8123,26 @@ void DumpSectorDifficultyInfo(void)
 {
 	// NOTE: This operates on the selected map sector!
 	wchar_t wSectorName[ 128 ];
-
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Playing Difficulty: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel]);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Highest Progress (0-100) = %d%%", HighestPlayerProgressPercentage() );
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Player Kills = %d", gStrategicStatus.usPlayerKills );
-
 	GetSectorIDString(sSelMapX, sSelMapY, (INT8)iCurrentMapSectorZ, wSectorName, lengthof(wSectorName), TRUE);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"SECTOR: %ls", wSectorName );
 
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Pyth. Distance From Meduna (0-20) = %d", GetPythDistanceFromPalace( sSelMapX, sSelMapY ) );
+	SLOGD(DEBUG_TAG_SMAP, "Playing Difficulty: %ls\tHighest Progress (0-100) = %d%%\n\
+												 Player Kills = %d\tSECTOR: %ls\n\
+												 Pyth. Distance From Meduna (0-20) = %d",
+												 gzGIOScreenText[GIO_DIF_LEVEL_TEXT + gGameOptions.ubDifficultyLevel],
+												 HighestPlayerProgressPercentage(),
+												 gStrategicStatus.usPlayerKills,
+												 wSectorName, GetPythDistanceFromPalace( sSelMapX, sSelMapY ));
 
 	if ( ( gWorldSectorX == sSelMapX ) && ( gWorldSectorY == sSelMapY ) && ( gbWorldSectorZ == iCurrentMapSectorZ ) )
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Enemy Difficulty Factor (0 to 100) = %d%%", CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) );
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Avg Regular Enemy Exp. Level (2-6) = %d", 2 + ( CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) / 20 ) );
+		SLOGD(DEBUG_TAG_SMAP, "Enemy Difficulty Factor (0 to 100) = %d%%\n\
+													 Avg Regular Enemy Exp. Level (2-6) = %d",
+													CalcDifficultyModifier( SOLDIER_CLASS_ARMY),
+													2 + ( CalcDifficultyModifier( SOLDIER_CLASS_ARMY ) / 20));
 	}
 	else
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"--Must load sector to calculate difficulty--" );
+		SLOGD(DEBUG_TAG_SMAP, "Must load sector to calculate difficulty");
 	}
 }
 #endif
@@ -8508,7 +8464,7 @@ static void RestorePreviousPaths(void)
 			else
 			{
 				// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "RestorePreviousPaths: invalid pSoldier: %d", pSoldier->ubID);
 				continue;
 			}
 

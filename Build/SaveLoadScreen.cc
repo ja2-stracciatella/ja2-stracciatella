@@ -43,6 +43,10 @@
 #include "FileMan.h"
 #include "Campaign_Init.h"
 #include "UILayout.h"
+#include "Handle_UI.h"
+#include "Interface_Dialogue.h"
+#include "Meanwhile.h"
+#include "PreBattle_Interface.h"
 
 #if defined JA2BETAVERSION
 #include "Soldier_Init_List.h"
@@ -125,6 +129,14 @@ enum
 	SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE,
 };
 
+// enums for the selected Loadscreen Tab (used with giLoadscreenTab[])
+enum
+{
+	SLS_TAB_NORMAL,
+	SLS_TAB_DEAD_IS_DEAD,
+	SLS_TAB_LENGTH,
+};
+
 
 static BOOLEAN gfSaveLoadScreenEntry = TRUE;
 static BOOLEAN gfSaveLoadScreenExit	= FALSE;
@@ -135,6 +147,7 @@ static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
 //Contains the array of valid save game locations
 static BOOLEAN gbSaveGameArray[NUM_SAVE_GAMES];
+static BOOLEAN gbActiveSaveGameTabs[NUM_SAVE_GAMES_TABS];
 
 static BOOLEAN gfDoingQuickLoad = FALSE;
 
@@ -142,6 +155,7 @@ static BOOLEAN gfDoingQuickLoad = FALSE;
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
 BOOLEAN		gfSaveGame=TRUE;
+static INT8 gfActiveTab=0;
 
 static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
@@ -185,6 +199,10 @@ static GUIButtonRef guiSlgCancelBtn;
 static BUTTON_PICS* guiSaveLoadImage;
 static GUIButtonRef guiSlgSaveLoadBtn;
 
+// buttons for Tabs
+static BUTTON_PICS* giLoadscreenTabButtonImage[2];
+static GUIButtonRef giLoadscreenTab[2];
+
 //Mouse regions for the currently selected save game
 static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
 
@@ -196,6 +214,8 @@ static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
 static void SaveLoadGameNumber();
+static BOOLEAN IsDeadIsDeadTab(INT8 tabNo);
+static void LoadTab(INT8 tabNo);
 
 
 ScreenID SaveLoadScreenHandle()
@@ -324,11 +344,18 @@ static void SetSaveLoadExitScreen(ScreenID const uiScreen)
 
 static void LeaveSaveLoadScreen()
 {
-	ScreenID const exit_screen =
-		gfCameDirectlyFromGame                     ? guiPreviousOptionScreen :
-		guiPreviousOptionScreen == MAINMENU_SCREEN ? MAINMENU_SCREEN         :
-		OPTIONS_SCREEN;
-	SetSaveLoadExitScreen(exit_screen);
+	if (gfCameDirectlyFromGame)
+	{
+		SetSaveLoadExitScreen(guiPreviousOptionScreen);
+	} else {
+		switch (guiPreviousOptionScreen)
+		{
+			case MAINMENU_SCREEN: SetSaveLoadExitScreen(MAINMENU_SCREEN); break;
+			case GAME_INIT_OPTIONS_SCREEN: SetSaveLoadExitScreen(GAME_INIT_OPTIONS_SCREEN); break;
+			case INTRO_SCREEN: SetSaveLoadExitScreen(INTRO_SCREEN); break;
+			default: SetSaveLoadExitScreen(OPTIONS_SCREEN);
+		}
+	}
 }
 
 
@@ -337,9 +364,19 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
 }
 
+static void MakeTab(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
+{
+	BUTTON_PICS* const img = LoadButtonImage( "sti/interface/loadscreentab.sti", idx, idx+2);
+	giLoadscreenTabButtonImage[idx] = img;
+	GUIButtonRef const btn = QuickCreateButtonNoMove(img, STD_SCREEN_X + x, STD_SCREEN_Y + 8, MSYS_PRIORITY_HIGHEST - 1, click);
+	giLoadscreenTab[idx] = btn;
+	btn->SpecifyGeneralTextAttributes(text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW);
+}
 
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason);
 static void ClearSelectedSaveSlot(void);
 static void InitSaveGameArray(void);
 static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
@@ -348,9 +385,91 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
 static void StartFadeOutForSaveLoadScreen(void);
 
+static void CreateLoadscreenTab()
+{
+	MakeTab(0,        20, BtnSlgNormalGameTabCallback, gs_dead_is_dead_mode_tab_name[0]);
+	MakeTab(1, 90, BtnSlgDeadIsDeadTabCallback,    gs_dead_is_dead_mode_tab_name[1]);
+	// Render the Normal Tab as selected after create
+	giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags |= BUTTON_CLICKED_ON;
+}
+
+static void RemoveLoadscreenTab()
+{
+	for (int i = 0; i < SLS_TAB_LENGTH; i++)
+	{
+		RemoveButton(giLoadscreenTab[i]);
+		UnloadButtonImage(giLoadscreenTabButtonImage[i]);
+	}
+}
+
+static void updateTabActiveState()
+{
+	for (INT8 i = 0; i < NUM_SAVE_GAMES_TABS; i++)
+	{
+		gfActiveTab = i;
+		InitSaveGameArray(); // Load the savegames for the current tab
+		// Check if the lastSavedGameSlot exists
+		
+		bool tabHasSaves = FALSE;
+		for (INT8 j = 0; j != NUM_SAVE_GAMES; ++j)
+		{
+			if (gbSaveGameArray[j])
+			{
+				tabHasSaves = TRUE;
+				break;
+			}
+		}
+		gbActiveSaveGameTabs[i] = tabHasSaves;
+		if (!tabHasSaves)
+		{
+			DisableButton(giLoadscreenTab[i]);
+		}
+	}
+}
+// This function determines which tab to activate in the load Screen.
+// Depending on:
+// In which tab is the last save
+// Are there any saves in the tab
+// It also deactivates tabs with no saves
+static void selectActiveTab()
+{
+	INT8 const lastSaveInTab = (INT8) (gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES);
+
+	updateTabActiveState();
+
+	gfActiveTab = 0;
+	InitSaveGameArray();
+	// If the lastSavedGameSlot exists, switch to the appropriate tab, otherwise select the first available save
+	if (gGameSettings.bLastSavedGameSlot != -1 && gbActiveSaveGameTabs[lastSaveInTab])
+	{
+		GUI_BUTTON* const b = ButtonList[giLoadscreenTab[lastSaveInTab].ID()];
+		b->ClickCallback(b,MSYS_CALLBACK_REASON_LBUTTON_UP);
+	}
+	else
+	{
+		// This code doesn't make sense until there are more than two tabs
+		for (int i = 1; i < NUM_SAVE_GAMES_TABS; i++)
+		{
+			if (gbActiveSaveGameTabs[i])
+			{
+				GUI_BUTTON* const b = ButtonList[giLoadscreenTab[i].ID()];
+				b->ClickCallback(b,MSYS_CALLBACK_REASON_LBUTTON_UP);
+				break;
+			}
+		}
+	}
+}
 
 static void EnterSaveLoadScreen()
 {
+	gfActiveTab= 0;
+	// Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
+	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
+	{
+		gfActiveTab = DEAD_IS_DEAD_TAB_NO;
+		gfSaveGame = TRUE;
+	}  
+  
 	// This is a hack to get sector names, but if the underground sector is NOT loaded
 	if (!gpUndergroundSectorInfoHead)
 	{
@@ -370,7 +489,7 @@ static void EnterSaveLoadScreen()
 	if (gfLoadGameUponEntry)
 	{
 		// Make sure the save is valid
-		INT8 const last_slot = gGameSettings.bLastSavedGameSlot;
+		INT8 const last_slot = gfActiveTab ? gGameSettings.bLastSavedGameSlot-NUM_SAVE_GAMES : gGameSettings.bLastSavedGameSlot;
 		if (last_slot != -1 && gbSaveGameArray[last_slot])
 		{
 			gbSelectedSaveLocation = last_slot;
@@ -423,6 +542,13 @@ static void EnterSaveLoadScreen()
 	// Create the screen mask to enable ability to right click to cancel the save game
 	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
 
+	  // Display DiD Tab Button if We are in load game
+  if (!gfSaveGame)
+  {
+		CreateLoadscreenTab();
+		selectActiveTab();
+	}
+	
 	ClearSelectedSaveSlot();
 
 	RemoveMouseRegionForPauseOfClock();
@@ -431,7 +557,7 @@ static void EnterSaveLoadScreen()
 	gzGameDescTextField[0] = '\0';
 
 	// If the last saved game slot is ok, set the selected slot to the last saved slot
-	INT8 const last_slot = gGameSettings.bLastSavedGameSlot;
+	INT8 const last_slot = gfActiveTab ? gGameSettings.bLastSavedGameSlot-NUM_SAVE_GAMES : gGameSettings.bLastSavedGameSlot;
 	if (last_slot != -1            &&
 			gbSaveGameArray[last_slot] &&
 			(!gfSaveGame || last_slot != 0)) // If it is not the quicksave slot, and we are loading
@@ -449,6 +575,15 @@ static void EnterSaveLoadScreen()
 	}
 
 	EnableButton(guiSlgSaveLoadBtn, gbSelectedSaveLocation != -1);
+	// Mark all buttons dirty, required for redrawing with the Tab system
+	guiSlgCancelBtn->uiFlags |= BUTTON_DIRTY;
+	if (!gfSaveGame)
+	{
+		for (INT8 i = 0; i < SLS_TAB_LENGTH; i++)
+		{
+			giLoadscreenTab[i]->uiFlags |= BUTTON_DIRTY;
+		}
+	}
 
 	RenderSaveLoadScreen();
 
@@ -495,6 +630,11 @@ static void ExitSaveLoadScreen(void)
 	{
 		RemoveButton( guiSlgSaveLoadBtn );
 		UnloadButtonImage( guiSaveLoadImage );
+	}
+	// Remove the Dead is Dead button
+	if(!gfSaveGame)
+	{
+		RemoveLoadscreenTab();
 	}
 
 	for(i=0; i<NUM_SAVE_GAMES; i++)
@@ -723,6 +863,52 @@ static void SaveLoadGameNumber()
 		}
 	}
 }
+BOOLEAN IsDeadIsDeadTab(INT8 tabNo)
+{
+	return tabNo == DEAD_IS_DEAD_TAB_NO;
+}
+
+
+// Switch between normal Load game and Dead is Dead
+void LoadTab(INT8 tabNo)
+{
+	if (gfActiveTab != tabNo)
+	{
+		gfActiveTab = tabNo;
+
+		// Reinit the savegame array and redraw the save load screen
+		InitSaveGameArray();
+		// Reinit the mouse region for selections, otherwise we can't select the save slots
+		gbSelectedSaveLocation = -1;
+		UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
+		UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
+		for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
+		{
+			// Deinitialize first
+			MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
+			// Reinitialize
+			MOUSE_REGION& r = gSelectedSaveRegion[i];
+			MSYS_DefineRegion(&r, x, y, x + SLG_SAVELOCATION_WIDTH, y + SLG_SAVELOCATION_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack);
+			MSYS_SetRegionUserData(&r, 0, i);
+
+			// Disable unused slots and select the first used slot
+			if (!gbSaveGameArray[i])
+			{  
+				r.Disable();
+			} else if(gbSelectedSaveLocation == -1)
+			{
+				gbSelectedSaveLocation = i;
+			}  
+    
+			y += SLG_GAP_BETWEEN_LOCATIONS;
+		}
+		RenderSaveLoadScreen();
+
+		// Render the buttons
+		MarkButtonsDirty( );
+		RenderButtons();
+	}
+}
 
 
 void DoSaveLoadMessageBoxWithRect(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPBox const* const centering_rect)
@@ -779,7 +965,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	SGPFont  font = SAVE_LOAD_NORMAL_FONT;
 	UINT8 foreground;
 	UINT8 shadow;
-	if (entry_idx == 0 && gfSaveGame)
+	if (entry_idx == 0 && gfSaveGame && gfActiveTab == 0)
 	{ // The QuickSave slot
 		FRAME_BUFFER->ShadowRect(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
 		foreground = SAVE_LOAD_QUICKSAVE_COLOR;
@@ -848,10 +1034,17 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 
 			// Make a string containing the extended options
 			wchar_t options[256];
+			UINT8 gameModeText;
+			switch (header.sInitialGameOptions.ubGameSaveMode)
+			{
+				case DIF_IRON_MAN: gameModeText = GIO_IRON_MAN_TEXT; break;
+				case DIF_DEAD_IS_DEAD: gameModeText = GIO_DEAD_IS_DEAD_TEXT; break;
+				default: gameModeText = GIO_SAVE_ANYWHERE_TEXT;
+			}
 			swprintf(options, lengthof(options), L"%20ls     %22ls     %22ls     %22ls",
 				difficulty,
 				/*gzGIOScreenText[GIO_TIMED_TURN_TITLE_TEXT + header.sInitialGameOptions.fTurnTimeLimit + 1],*/
-				header.sInitialGameOptions.fIronManMode ? gzGIOScreenText[GIO_IRON_MAN_TEXT] : gzGIOScreenText[GIO_SAVE_ANYWHERE_TEXT],
+				gzGIOScreenText[gameModeText],
 				header.sInitialGameOptions.fGunNut      ? zSaveLoadText[SLG_ADDITIONAL_GUNS] : zSaveLoadText[SLG_NORMAL_GUNS],
 				header.sInitialGameOptions.fSciFi       ? zSaveLoadText[SLG_SCIFI]           : zSaveLoadText[SLG_REALISTIC]
 			);
@@ -910,9 +1103,14 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	else
 	{
 		// If this is the quick save slot
-		wchar_t const* const txt = entry_idx == 0 ?
-			pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT] :
-			pMessageStrings[MSG_EMPTYSLOT];
+		wchar_t txt[64];
+		if (entry_idx == 0 && gfActiveTab == 0)
+		{
+			swprintf(txt, lengthof(txt), L"%ls", pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT]);
+		} else
+		{
+			swprintf(txt, lengthof(txt), L"%ls", pMessageStrings[MSG_EMPTYSLOT]);
+		}
 		DrawTextToScreen(txt, bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
@@ -930,7 +1128,7 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
 	{
 		char zSavedGameName[512];
-		CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
+		CreateSavedGameFileNameFromNumber(gfActiveTab ? (bEntry + NUM_SAVE_GAMES) : bEntry, zSavedGameName);
 
 		try
 		{
@@ -967,6 +1165,32 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 }
 
+static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason)
+{
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	{
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		giLoadscreenTab[SLS_TAB_DEAD_IS_DEAD]->uiFlags       &= ~BUTTON_CLICKED_ON;
+		if (IsDeadIsDeadTab(gfActiveTab))
+		{
+			LoadTab(0);
+		}
+	}
+}
+
+static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason)
+{
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	{
+		btn->uiFlags |= BUTTON_CLICKED_ON;
+		giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags       &= ~BUTTON_CLICKED_ON;
+		if (!IsDeadIsDeadTab(gfActiveTab))
+		{
+			LoadTab(1);
+		}
+	}
+}
+
 
 static void DisableSelectedSlot(void);
 static void InitSaveLoadScreenTextInputBoxes(void);
@@ -994,7 +1218,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 */
 
 		//If we are saving and this is the quick save slot
-		if( gfSaveGame && bSelected == 0 )
+		if( gfSaveGame && bSelected == 0 && gfActiveTab == 0)
 		{
 			//Display a pop up telling user what the quick save slot is
 			DoSaveLoadMessageBox(pMessageStrings[MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox);
@@ -1120,7 +1344,7 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		//If we are saving and this is the quick save slot, leave
-		if( gfSaveGame && MSYS_GetRegionUserData( pRegion, 0 ) != 0 )
+		if( gfSaveGame )
 		{
 			return;
 		}
@@ -1329,7 +1553,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 
 	try
 	{
-		LoadSavedGame(gbSelectedSaveLocation);
+		LoadSavedGame(IsDeadIsDeadTab(gfActiveTab) ? gbSelectedSaveLocation + NUM_SAVE_GAMES : gbSelectedSaveLocation);
 
 #ifdef JA2BETAVERSION
 		ValidateSoldierInitLinks(1);
@@ -1473,12 +1697,63 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 
 void DoQuickSave()
 {
-	if (SaveGame(0, L"")) return;
+	// Use the Dead is Dead function if we are in DiD
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+	{
+		DoDeadIsDeadSave();
+	} else
+	{
+		if (SaveGame(0, L"")) return;
 
-	if (guiPreviousOptionScreen == MAP_SCREEN)
-		DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-	else
-		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		if (guiPreviousOptionScreen == MAP_SCREEN)
+		{
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		} else
+		{
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
+		}
+	}
+}
+
+// Save function for Dead Is Dead
+void DoDeadIsDeadSave()
+{
+	// Check if we are in a sane state! Do not save if:
+	// - we are in an AI Turn
+	// - we are in a Dialogue
+	// - we are in Meanwhile.....
+	// - we are currently in a message box - The Messagebox would be gone without selection after loading
+	if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN)
+	{
+		// Backup old saves
+		BackupSavedGame(gGameSettings.bLastSavedGameSlot);
+		// Save the previous option screen State to reset it after saving
+		ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
+		// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
+		// Make sure we are always in a sane screen.
+		if (guiCurrentScreen != MAP_SCREEN && guiCurrentScreen != GAME_SCREEN && tmpGuiPreviousOptionScreen != MAP_SCREEN && tmpGuiPreviousOptionScreen != GAME_SCREEN)
+		{
+			// If all fails, go to the map screen, this (almost) guarantees the game will start
+			guiPreviousOptionScreen = MAP_SCREEN;
+		} else
+		{
+			guiPreviousOptionScreen = guiCurrentScreen;
+		}
+
+		BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
+
+		// Reset the previous option screen
+		guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
+		if (tmpSuccess) return;
+
+		if (guiPreviousOptionScreen == MAP_SCREEN)
+		{
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		} else
+		{
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		}
+	}
 }
 
 
@@ -1498,7 +1773,7 @@ void DoQuickLoad()
 
 bool AreThereAnySavedGameFiles()
 {
-	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
+	for (INT8 i = 0; i != (NUM_SAVE_GAMES_TABS * NUM_SAVE_GAMES); ++i)
 	{
 		char filename[512];
 		CreateSavedGameFileNameFromNumber(i, filename);
@@ -1580,8 +1855,16 @@ static void SaveGameToSlotNum(void)
 	//render the buttons
 	MarkButtonsDirty( );
 	RenderButtons();
-
-	if( !SaveGame( gbSelectedSaveLocation, gzGameDescTextField ) )
+  
+	// If we are selecting the Dead is Dead Savegame slot, only remember the slot, do not save
+	// Also set the INTRO_SCREEN as previous options screen. This is a hack to get the game started
+	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
+	{
+		guiPreviousOptionScreen = INTRO_SCREEN;
+		gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
+		wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField); 
+		
+	} else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}

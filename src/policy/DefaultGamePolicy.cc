@@ -19,6 +19,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
   f_drop_everything     = (*json)["drop_everything"].GetBool();
   f_all_dropped_visible = (*json)["all_drops_visible"].GetBool();
+  
+  gui_extras            = (*json)["gui_extras"].GetBool();
 
   enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
 }

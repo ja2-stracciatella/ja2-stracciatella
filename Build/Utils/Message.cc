@@ -66,8 +66,6 @@ static ScrollStringSt* gpDisplayList[MAX_LINE_COUNT];
 static ScrollStringSt* gMapScreenMessageList[256];
 static ScrollStringSt* pStringS = NULL;
 
-BOOLEAN fDisableJustForIan = FALSE;
-
 static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
 
@@ -304,44 +302,6 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 // new screen message
 void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 {
-	if (fDisableJustForIan)
-	{
-		switch (ubPriority)
-		{
-			case MSG_BETAVERSION:
-			case MSG_TESTVERSION:
-			case MSG_DEBUG:
-				return;
-		}
-	}
-
-	switch (ubPriority)
-	{
-		case MSG_DEBUG:
-#if defined _DEBUG
-			usColor = DEBUG_COLOR;
-			break;
-#else
-			return;
-#endif
-
-		case MSG_BETAVERSION:
-#if defined JA2BETAVERSION || defined JA2TESTVERSION
-			usColor = BETAVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-
-		case MSG_TESTVERSION:
-#if defined JA2TESTVERSION
-			usColor = TESTVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-	}
-
 	va_list argptr;
 	va_start(argptr, pStringA);
 	wchar_t DestString[512];
@@ -383,7 +343,6 @@ static void WriteMessageToFile(const wchar_t* pString);
 static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t* const fmt, ...)
 {
 	if (giTimeCompressMode > TIME_COMPRESS_X1) return;
-	if (fDisableJustForIan && priority != MSG_ERROR && priority != MSG_INTERFACE) return;
 
 	va_list ap;
 	va_start(ap, fmt);
@@ -393,38 +352,6 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 
 	switch (priority)
 	{
-		case MSG_BETAVERSION:
-#if defined JA2BETAVERSION || defined JA2TESTVERSION
-			WriteMessageToFile(msg);
-			colour = BETAVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-
-		case MSG_TESTVERSION:
-#if defined JA2TESTVERSION
-			WriteMessageToFile(msg);
-			colour = TESTVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-
-		case MSG_DEBUG:
-#if defined _DEBUG
-		{
-			wchar_t DestStringA[512];
-			wcscpy(DestStringA, msg);
-			swprintf(msg, lengthof(msg), L"Debug: %ls", DestStringA);
-			WriteMessageToFile(DestStringA);
-			colour = DEBUG_COLOR;
-			break;
-		}
-#else
-			return;
-#endif
-
 		case MSG_DIALOG:    colour = DIALOGUE_COLOR;  break;
 		case MSG_INTERFACE: colour = INTERFACE_COLOR; break;
 	}
@@ -453,18 +380,10 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 // this function sets up the string into several single line structures
 void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
 {
-	if (fDisableJustForIan)
-	{
-		switch (ubPriority)
-		{
-			case MSG_BETAVERSION:
-			case MSG_TESTVERSION:
-			case MSG_DEBUG:
-				return;
-		}
-	}
 
+#if defined _DEBUG
 	wchar_t DestStringA[512];
+#endif
 
 	va_list argptr;
 	va_start(argptr, pStringA);
@@ -474,24 +393,6 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 	switch (ubPriority)
 	{
-		case MSG_BETAVERSION:
-#if defined JA2BETAVERSION || defined JA2TESTVERSION
-			WriteMessageToFile(DestString);
-			usColor = BETAVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-
-		case MSG_TESTVERSION:
-#if defined JA2TESTVERSION
-			WriteMessageToFile(DestString);
-			usColor = TESTVERSION_COLOR;
-			break;
-#else
-			return;
-#endif
-
 		case MSG_UI_FEEDBACK:
 			// An imeediate feedback message. Do something else!
 			BeginUIMessage(FALSE, DestString);
@@ -499,12 +400,6 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 		case MSG_SKULL_UI_FEEDBACK:
 			BeginUIMessage(TRUE, DestString);
-			return;
-
-		case MSG_ERROR:
-			swprintf(DestStringA, lengthof(DestStringA), L"DEBUG: %ls", DestString);
-			BeginUIMessage(FALSE, DestStringA);
-			WriteMessageToFile(DestStringA);
 			return;
 
 		case MSG_DEBUG:

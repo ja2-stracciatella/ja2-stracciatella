@@ -21,7 +21,7 @@ UINT16* InitZBuffer(UINT32 width, UINT32 height);
 void ShutdownZBuffer(UINT16 *pBuffer);
 
 // translucency blitters
-void Blt8BPPDataTo16BPPBufferTransZTranslucent( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex );
+void Blt8BPPDataTo16BPPBufferTransZTranslucent(UINT16* buf, UINT32 uiDestPitchBYTES, UINT16* zbuf, UINT16 zval, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
 void Blt8BPPDataTo16BPPBufferTransZNBTranslucent(UINT16* buf, UINT32 uiDestPitchBYTES, UINT16* zbuf, UINT16 zval, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
 void Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(UINT16* buf, UINT32 uiDestPitchBYTES, UINT16* zbuf, UINT16 zval, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect const* clipregion);
 

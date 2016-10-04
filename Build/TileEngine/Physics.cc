@@ -19,7 +19,6 @@
 #include "Interface.h"
 #include "Interface_Items.h"
 #include "Explosion_Control.h"
-#include "Debug_Control.h"
 #include "Tile_Animation.h"
 #include "Message.h"
 #include "Weapons.h"
@@ -42,7 +41,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-
+#include "slog/slog.h"
 
 #define NO_TEST_OBJECT												0
 #define TEST_OBJECT_NO_COLLISIONS							1
@@ -81,10 +80,10 @@ static REAL_OBJECT ObjectSlots[NUM_OBJECT_SLOTS];
 UINT32					guiNumObjectSlots = 0;
 BOOLEAN					fDampingActive = FALSE;
 //real						Kdl	= (float)0.5;					// LINEAR DAMPENING ( WIND RESISTANCE )
-real						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESISTANCE )
+float						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESISTANCE )
 
 #define					EPSILONV		0.5
-#define					EPSILONP		(real)0.01
+#define					EPSILONP		(float)0.01
 #define					EPSILONPZ		3
 
 #define					CALCULATE_OBJECT_MASS( m )	( (float)( m * 2 ) )
@@ -130,7 +129,7 @@ static void RecountObjectSlots(void)
 }
 
 
-REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, real const dLifeLength, real const xPos, real const yPos, real const zPos, real const xForce, real const yForce, real const zForce, SOLDIERTYPE* const owner, UINT8 const ubActionCode, SOLDIERTYPE* const target)
+REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const dLifeLength, float const xPos, float const yPos, float const zPos, float const xForce, float const yForce, float const zForce, SOLDIERTYPE* const owner, UINT8 const ubActionCode, SOLDIERTYPE* const target)
 {
 	REAL_OBJECT* const o = GetFreeObjectSlot();
 	memset(o, 0, sizeof(*o));
@@ -176,7 +175,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, real const d
 		o->EndedWithCollisionPosition.z += h;
 	}
 
-	PhysicsDebugMsg("NewPhysics Object");
+	SLOGD(DEBUG_TAG_PHYSICS, "NewPhysics Object");
 	return o;
 }
 
@@ -193,7 +192,7 @@ static BOOLEAN RemoveRealObject(REAL_OBJECT* const o)
 }
 
 
-static void SimulateObject(REAL_OBJECT* pObject, real deltaT);
+static void SimulateObject(REAL_OBJECT* pObject, float deltaT);
 
 
 void SimulateWorld(  )
@@ -214,7 +213,7 @@ void SimulateWorld(  )
 				// Get object
 				pObject = &( ObjectSlots[ cnt ] );
 
-				SimulateObject( pObject, (real)DELTA_T );
+				SimulateObject( pObject, (float)DELTA_T );
 			}
 		}
 	}
@@ -240,17 +239,17 @@ void RemoveAllPhysicsObjects( )
 
 
 static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject);
-static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, real DeltaTime);
-static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime);
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, float DeltaTime);
+static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime);
 static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject);
-static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime);
+static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime);
 
 
-static void SimulateObject(REAL_OBJECT* pObject, real deltaT)
+static void SimulateObject(REAL_OBJECT* pObject, float deltaT)
 {
-	real DeltaTime	 = 0;
-	real CurrentTime = 0;
-	real TargetTime = DeltaTime;
+	float DeltaTime	 = 0;
+	float CurrentTime = 0;
+	float TargetTime = DeltaTime;
 	INT32			iCollisionID;
 	BOOLEAN		fEndThisObject = FALSE;
 
@@ -315,7 +314,7 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 	// Calculate forces
 	pObject->Force = pObject->InitialForce;
 
-	pObject->Force.z -= (real)GRAVITY;
+	pObject->Force.z -= (float)GRAVITY;
 
 	// Set intial force to zero
 	pObject->InitialForce = VMultScalar( &(pObject->InitialForce ), 0 );
@@ -342,7 +341,7 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 static void HandleArmedObjectImpact(REAL_OBJECT* pObject);
 
 
-static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
+static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime)
 {
 	UINT8 bLevel = 0;
 
@@ -416,7 +415,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 				PlayLocationJA2Sample(pObject->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 			}
 
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off");
+			SLOGD(DEBUG_TAG_PHYSICS, "Reducing Attack Busy Count of %d", pObject->owner->ubID);
 			ReduceAttackBusyCount(pObject->owner, FALSE);
 
 			// ATE: Handle end of animation...
@@ -455,7 +454,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 }
 
 
-static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
+static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
 {
 	vector_3			vTemp;
 
@@ -477,10 +476,15 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 
   if ( pObject->fPotentialForDebug )
   {
-	  PhysicsDebugMsg(String("Object %d: Force		%f %f %f",  REALOBJ2ID(pObject), pObject->Force.x, pObject->Force.y, pObject->Force.z));
-	  PhysicsDebugMsg(String("Object %d: Velocity %f %f %f",  REALOBJ2ID(pObject), pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z));
-	  PhysicsDebugMsg(String("Object %d: Position %f %f %f",  REALOBJ2ID(pObject), pObject->Position.x, pObject->Position.y, pObject->Position.z));
-	  PhysicsDebugMsg(String("Object %d: Delta Pos %f %f %f", REALOBJ2ID(pObject), pObject->OldPosition.x - pObject->Position.x, pObject->OldPosition.y - pObject->Position.y, pObject->OldPosition.z - pObject->Position.z));
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Force		%f %f %f",  REALOBJ2ID(pObject),
+					pObject->Force.x, pObject->Force.y, pObject->Force.z);
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Velocity %f %f %f",  REALOBJ2ID(pObject),
+					pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z);
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Position %f %f %f",  REALOBJ2ID(pObject),
+					pObject->Position.x, pObject->Position.y, pObject->Position.z);
+	  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Delta Pos %f %f %f", REALOBJ2ID(pObject),
+					pObject->OldPosition.x - pObject->Position.x, pObject->OldPosition.y - pObject->Position.y,
+					pObject->OldPosition.z - pObject->Position.z);
   }
 
   if ( pObject->Obj.usItem == MORTAR_SHELL && !pObject->fTestObject && pObject->ubActionCode == THROW_ARM_ITEM )
@@ -500,10 +504,10 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 
 
 static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisionID);
-static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, real CoefficientOfRestitution);
+static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, float CoefficientOfRestitution);
 
 
-static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, real DeltaTime)
+static BOOLEAN PhysicsHandleCollisions(REAL_OBJECT* pObject, INT32* piCollisionID, float DeltaTime)
 {
 	FLOAT					dDeltaX, dDeltaY, dDeltaZ;
 
@@ -832,7 +836,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 			if ( !pObject->fTestObject )
 			{
 				// Break window!
-				PhysicsDebugMsg(String("Object %d: Collision Window", REALOBJ2ID(pObject)));
+				SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Window", REALOBJ2ID(pObject));
 
 				sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
 
@@ -1034,10 +1038,13 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
         if ( pObject->fPotentialForDebug )
         {
-				  PhysicsDebugMsg(String("Object %d: Collision %d",                REALOBJ2ID(pObject), iCollisionCode));
-				  PhysicsDebugMsg(String("Object %d: Collision Normal %f %f %f",   REALOBJ2ID(pObject), vTemp.x, vTemp.y, vTemp.z));
-				  PhysicsDebugMsg(String("Object %d: Collision OldPos %f %f %f",   REALOBJ2ID(pObject), pObject->Position.x, pObject->Position.y, pObject->Position.z));
-				  PhysicsDebugMsg(String("Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject), pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z));
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision %d", REALOBJ2ID(pObject), iCollisionCode);
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Normal %f %f %f", REALOBJ2ID(pObject),
+								vTemp.x, vTemp.y, vTemp.z);
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision OldPos %f %f %f", REALOBJ2ID(pObject),
+								pObject->Position.x, pObject->Position.y, pObject->Position.z);
+				  SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject),
+								pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z);
         }
 		}
 		else
@@ -1052,9 +1059,9 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 }
 
 
-static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, real CoefficientOfRestitution)
+static void PhysicsResolveCollision(REAL_OBJECT* pObject, vector_3* pVelocity, vector_3* pNormal, float CoefficientOfRestitution)
 {
-	real ImpulseNumerator, Impulse;
+	float ImpulseNumerator, Impulse;
 	vector_3			vTemp;
 
 	ImpulseNumerator = -1 * CoefficientOfRestitution * VDotProduct( pVelocity , pNormal );
@@ -1193,7 +1200,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 
     if ( pObject->fPotentialForDebug )
     {
-			PhysicsDebugMsg(String("Object %d: uiNumTilesMoved: %d", REALOBJ2ID(pObject), pObject->uiNumTilesMoved));
+			SLOGD(DEBUG_TAG_PHYSICS, "Object %d: uiNumTilesMoved: %d", REALOBJ2ID(pObject), pObject->uiNumTilesMoved);
     }
 	}
 
@@ -1224,14 +1231,14 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo);
 
 
-static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo, real* pdMagForce)
+static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo, float* pdMagForce)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
-	real				dForce		= 20;
-	real				dRange;
-	real				dPercentDiff = 0;
-	real				dTestRange, dTestDiff;
+	float				dForce		= 20;
+	float				dRange;
+	float				dPercentDiff = 0;
+	float				dTestRange, dTestDiff;
 	INT32				iNumChecks = 0;
 
 	// Get XY from gridno
@@ -1309,23 +1316,20 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 	{
 		(*pdMagForce) = dForce;
 	}
-
-#ifdef JA2TESTVERSION
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Number of integration: %d", iNumChecks );
-#endif
+	SLOGD(DEBUG_TAG_PHYSICS, "Number of integration: %d", iNumChecks );
 
 	return( vForce );
 }
 
 
-static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, const OBJECTTYPE* pItem, INT16* psGridNo)
+static float FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dForce, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
-	real				dRange;
-	real				dzDegrees = ( (float)PI/8 );
-	real				dPercentDiff = 0;
-	real				dTestRange, dTestDiff;
+	float				dRange;
+	float				dzDegrees = ( (float)PI/8 );
+	float				dPercentDiff = 0;
+	float				dTestRange, dTestDiff;
 	INT32				iNumChecks = 0;
 
 
@@ -1417,7 +1421,7 @@ static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sS
 }
 
 
-static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo)
+static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, float dForce, float dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1634,7 +1638,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 	if ( sInterGridNo != NOWHERE )
 	{
 		 // IF so, adjust target height, gridno....
-		 ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Through a window!" );
+		 SLOGD(DEBUG_TAG_PHYSICS, "Through a window!" );
 
 		 fThroughIntermediateGridNo = TRUE;
 	}
@@ -1866,9 +1870,7 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 		}
 
 		// Adjust position, force, angle
-#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Throw miss by: %d", bMissBy );
-#endif
+		SLOGD(DEBUG_TAG_PHYSICS, "Throw miss by: %d", bMissBy );
 
     // Default to max radius...
     bMaxRadius = 5;
@@ -2059,9 +2061,7 @@ static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 	// base it on...? CC? Dexterity?
 	ubChanceToCatch = 50 + EffectiveDexterity(pObject->target) / 2;
 
-#ifdef JA2TESTVERSION
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Chance To Catch: %d", ubChanceToCatch );
-#endif
+	SLOGD(DEBUG_TAG_PHYSICS, "Chance To Catch: %d", ubChanceToCatch );
 
 	pObject->fCatchCheckDone = TRUE;
 

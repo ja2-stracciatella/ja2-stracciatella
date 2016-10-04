@@ -40,7 +40,7 @@
 #include "Debug.h"
 #include "UILayout.h"
 #include "Timer.h"
-
+#include "slog/slog.h"
 
 #define MAX_DEBUG_PAGES 4
 
@@ -99,7 +99,6 @@ void DisplayFrameRate( )
 	}
 }
 
-
 ScreenID ErrorScreenHandle(void)
 {
   InputAtom  InputEvent;
@@ -115,7 +114,7 @@ ScreenID ErrorScreenHandle(void)
 
 	if ( !fFirstTime )
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String( "Runtime Error: %s ", gubErrorText ) );
+		SLOGE(DEBUG_TAG_JA2SCREENS, "Runtime Error: %s ", gubErrorText );
 		fFirstTime = TRUE;
 	}
 
@@ -125,18 +124,15 @@ ScreenID ErrorScreenHandle(void)
 	// Check for esc
 	while (DequeueEvent(&InputEvent))
   {
-      if( InputEvent.usEvent == KEY_DOWN )
-			{
-				if (InputEvent.usParam == SDLK_ESCAPE || (InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN))
-				{ // Exit the program
-					DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "GameLoop: User pressed ESCape, TERMINATING");
-
-					// handle shortcut exit
-					HandleShortCutExitState( );
-				}
+    if( InputEvent.usEvent == KEY_DOWN )
+		{
+			if (InputEvent.usParam == SDLK_ESCAPE || (InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN))
+			{ // Exit the program
+				// handle shortcut exit
+				HandleShortCutExitState( );
 			}
+		}
 	}
-
 	return( ERROR_SCREEN );
 }
 
@@ -169,27 +165,6 @@ ScreenID InitScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		ubCurrentScreen = 1;
-
-		// Init screen
-
-		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-
-		const INT32 x = 10;
-		const INT32 y = SCREEN_HEIGHT;
-
-#ifdef JA2BETAVERSION
-		MPrint(x, y - 60, L"(Beta version error reporting enabled)");
-#endif
-
-#ifdef _DEBUG
-		mprintf(x, y - 50, L"%ls: %hs (Debug %hs)", pMessageStrings[MSG_VERSION], g_version_label, g_version_number);
-#else
-		mprintf(x, y - 50, L"%hs", g_version_label, g_version_number);
-#endif
-
-#ifdef _DEBUG
-		mprintf(x, y - 40, L"SOLDIERTYPE: %d bytes", sizeof(SOLDIERTYPE));
-#endif
 
 		InvalidateScreen( );
 

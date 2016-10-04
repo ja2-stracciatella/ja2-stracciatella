@@ -31,7 +31,7 @@
 #define SM_BODYINV_Y                    (INV_INTERFACE_START_Y + 6)
 
 #define EDITOR_TASKBAR_HEIGHT           (120)
-#define EDITOR_TASKBAR_POS_Y            (SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT)
+#define EDITOR_TASKBAR_POS_Y            (UINT16)(SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT)
 
 #define			DEFAULT_EXTERN_PANEL_X_POS      (STD_SCREEN_X + 320)
 #define			DEFAULT_EXTERN_PANEL_Y_POS      (STD_SCREEN_Y + 40)
@@ -43,13 +43,13 @@
 // USED TO SETUP REGION POSITIONS, ETC
 struct INV_REGION_DESC
 {
-  INT16     sX;
-  INT16     sY;
+  UINT16     uX;
+  UINT16     uY;
 
-  void set(INT16 x, INT16 y)
+  void set(UINT16 x, UINT16 y)
   {
-    sX = x;
-    sY = y;
+    uX = x;
+    uY = y;
   }
 };
 
@@ -71,10 +71,10 @@ struct MoneyLoc
 struct UILayout
 {
 public:
-  INT16                 m_mapScreenWidth;
-  INT16                 m_mapScreenHeight;
-  INT16                 m_screenWidth;
-  INT16                 m_screenHeight;
+  UINT16                m_mapScreenWidth;
+  UINT16                m_mapScreenHeight;
+  UINT16                m_screenWidth;
+  UINT16                m_screenHeight;
   INV_REGION_DESC       m_invSlotPositionMap[NUM_INVENTORY_SLOTS];      /**< Map screen inventory slots positions  */
   INV_REGION_DESC       m_invSlotPositionTac[NUM_INVENTORY_SLOTS];      /**< Tactical screen Inventory slots positions */
   INV_REGION_DESC       m_invCamoRegion;                                /**< Camo (body) region in the inventory. */
@@ -86,19 +86,20 @@ public:
   /** Viewport coordiantes.
    * Viewport is the area of the screen where tactical map is displayed.
    * For 640x480 it is (320, 180) */
-  INT16                 m_VIEWPORT_START_X;
-  INT16                 m_VIEWPORT_START_Y;
-  INT16                 m_VIEWPORT_WINDOW_START_Y;
+  UINT16                m_VIEWPORT_START_X;
+  UINT16                m_VIEWPORT_START_Y;
+  UINT16                m_VIEWPORT_WINDOW_START_Y;
 
-  INT16                 m_VIEWPORT_END_X;
-  INT16                 m_VIEWPORT_END_Y;
-  INT16                 m_tacticalMapCenterX;                           /**< Center of the tactical map (for 640x480 it is (320, 180)). */
-  INT16                 m_tacticalMapCenterY;                           /**< Center of the tactical map (for 640x480 it is (320, 180)). */
+  UINT16                m_VIEWPORT_END_X;
+  UINT16                m_VIEWPORT_END_Y;
+  UINT16                m_tacticalMapCenterX;                           /**< Center of the tactical map (for 640x480 it is (320, 180)). */
+  UINT16                m_tacticalMapCenterY;                           /**< Center of the tactical map (for 640x480 it is (320, 180)). */
 
-  INT16                 m_VIEWPORT_WINDOW_END_Y;
+  UINT16                m_VIEWPORT_WINDOW_END_Y;
 
   SGPRect               m_wordlClippingRect;
 
+  SGPPoint              m_versionPosition;
   SGPPoint              m_contractPosition;
   SGPPoint              m_attributePosition;
   SGPPoint              m_trainPosition;
@@ -107,34 +108,34 @@ public:
   SGPPoint              m_assignmentPosition ;
   SGPPoint              m_squadPosition ;
 
-  INT16                 m_stdScreenOffsetX;             /** Offset of the standard (640x480) window */
-  INT16                 m_stdScreenOffsetY;             /** Offset of the standard (640x480) window */
+  UINT16                m_stdScreenOffsetX;             /** Offset of the standard (640x480) window */
+  UINT16                m_stdScreenOffsetY;             /** Offset of the standard (640x480) window */
 
   /** Constructor.
    * @param screenWidth Screen width
    * @param screenHeight Screen height */
-  UILayout(INT16 screenWidth, INT16 screenHeight);
+  UILayout(UINT16 screenWidth, UINT16 screenHeight);
 
   /** Set new screen size.
    * This method should be called before most of the application initialization is done. */
-  bool setScreenSize(INT16 width, INT16 height);
+  bool setScreenSize(UINT16 width, UINT16 height);
 
   /** Check if the screen is bigger than original 640x480. */
   bool isBigScreen();
 
-  INT16 currentHeight();
-  INT16 get_CLOCK_X();
-  INT16 get_CLOCK_Y();
-  INT16 get_INTERFACE_START_Y();
-  INT16 get_INV_INTERFACE_START_Y();
-  INT16 get_RADAR_WINDOW_X();
-  INT16 get_RADAR_WINDOW_TM_Y();
+  UINT16 currentHeight();
+  UINT16 get_CLOCK_X();
+  UINT16 get_CLOCK_Y();
+  UINT16 get_INTERFACE_START_Y();
+  UINT16 get_INV_INTERFACE_START_Y();
+  UINT16 get_RADAR_WINDOW_X();
+  UINT16 get_RADAR_WINDOW_TM_Y();
 
   /** Get X position of tactical textbox. */
-  INT16 getTacticalTextBoxX();
+  UINT16 getTacticalTextBoxX();
 
   /** Get Y position of tactical textbox. */
-  INT16 getTacticalTextBoxY();
+  UINT16 getTacticalTextBoxY();
 
 protected:
   /** Recalculate UI elements' positions after changing screen size. */

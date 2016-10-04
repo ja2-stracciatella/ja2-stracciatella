@@ -29,10 +29,4 @@ Jagged Alliance 2 в строке "data_dir = [...]".  Назовем папку
 
 JA2-Stracciatella также доступна для Windows и Linux.
 
-Если вы хотите играть под Linux, то вам придётся скомпилировать программу из
-исходных кодов.  Это не так уж и страшно как может показаться:
- - скачать исходники с https://bitbucket.org/gennady/ja2-stracciatella
- - следовать инструкциям в INSTALL.txt
-
-
-WWW: https://bitbucket.org/gennady/ja2-stracciatella
+WWW: https://ja2-stracciatella.github.io

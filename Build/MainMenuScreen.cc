@@ -3,9 +3,11 @@
 #include "Cursors.h"
 #include "Directories.h"
 #include "English.h"
+#include "Font.h"
 #include "Font_Control.h"
 #include "GameSettings.h"
 #include "GameLoop.h"
+#include "GameVersion.h"
 #include "Input.h"
 #include "JA2_Splash.h"
 #include "JAScreens.h"
@@ -14,6 +16,7 @@
 #include "MessageBoxScreen.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
 #include "SGP.h"
@@ -72,6 +75,8 @@ static void ExitMainMenu(void);
 static void HandleMainMenuInput(void);
 static void HandleMainMenuScreen(void);
 static void RenderMainMenu(void);
+static void RenderGameVersion(void);
+static void RenderCopyright(void);
 static void RestoreButtonBackGrounds(void);
 
 
@@ -120,6 +125,8 @@ ScreenID MainMenuScreenHandle(void)
 	{
 		ClearMainMenu();
 		RenderMainMenu();
+    RenderGameVersion();
+    RenderCopyright();
 
 		fInitialRender = FALSE;
 	}
@@ -356,35 +363,16 @@ static void RenderMainMenu(void)
 	BltVideoObject(guiSAVEBUFFER, guiJa2LogoImage,            0, STD_SCREEN_X + 188, STD_SCREEN_Y + 15);
 
 	RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-#if defined TESTFOREIGNFONTS
-	UINT16 y = 105;
-#	define TEST_FONT(font) \
-		DrawTextToScreen(#font L": ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌì", 0, y, 640, font, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED); \
-		y += 20;
-	TEST_FONT(LARGEFONT1);
-	TEST_FONT(SMALLFONT1);
-	TEST_FONT(TINYFONT1);
-	TEST_FONT(FONT12POINT1);
-	TEST_FONT(COMPFONT);
-	TEST_FONT(SMALLCOMPFONT);
-	TEST_FONT(MILITARYFONT1);
-	TEST_FONT(FONT10ARIAL);
-	TEST_FONT(FONT14ARIAL);
-	TEST_FONT(FONT12ARIAL);
-	TEST_FONT(FONT10ARIALBOLD);
-	TEST_FONT(BLOCKFONT);
-	TEST_FONT(BLOCKFONT2);
-	TEST_FONT(FONT12ARIALFIXEDWIDTH);
-	TEST_FONT(FONT16ARIAL);
-	TEST_FONT(BLOCKFONTNARROW);
-	TEST_FONT(FONT14HUMANIST);
-#	undef TEST_FONT
-#else
-	DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-#endif
 }
 
+void RenderGameVersion() {
+  SetFontAttributes(FONT10ARIAL, FONT_MCOLOR_WHITE);
+  mprintf(g_ui.m_versionPosition.iX, g_ui.m_versionPosition.iY, L"%hs", g_version_label, g_version_number);
+}
+
+void RenderCopyright() {
+  DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+}
 
 static void RestoreButtonBackGrounds(void)
 {

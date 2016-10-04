@@ -176,7 +176,7 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 	if ( iCounter >= MAX_POPUP_BOX_STRING_COUNT )
 	{
 		// using too many text lines, or not freeing them up properly
-		Assert(0);
+		SLOGE(DEBUG_TAG_ASSERTS, "AddMonoString: too many text lines");
 		return;
 	}
 
@@ -208,7 +208,7 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 	if ( iCounter >= MAX_POPUP_BOX_STRING_COUNT )
 	{
 		// using too many text lines, or not freeing them up properly
-		Assert(0);
+		SLOGE(DEBUG_TAG_ASSERTS, "AddSecondColumnMonoString: too many text lines");
 		return;
 	}
 
@@ -414,7 +414,7 @@ void RemoveBox(PopUpBox* const box)
 			return;
 		}
 	}
-	Assert(0);
+	SLOGE(DEBUG_TAG_ASSERTS, "RemoveBox: box doesn't exist");
 }
 
 

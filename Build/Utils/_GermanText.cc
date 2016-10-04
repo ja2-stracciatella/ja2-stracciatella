@@ -1,4 +1,4 @@
-﻿#include "Text.h"
+#include "Text.h"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -2811,7 +2811,8 @@ static const wchar_t *s_ger_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Abbrechen",
 	L"Extraschwer",
 	L"Speichern jederzeit möglich",
-	L"Iron Man"
+	L"Iron Man",
+	L"Tot ist tot"
 };
 
 static const wchar_t *s_ger_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
@@ -3336,11 +3337,22 @@ static const wchar_t* const s_ger_zNewTacticalMessages[] =
 	L"Sichtfeld",
 	L"Dies ist ein IRON MAN-Spiel, und es kann nicht gespeichert werden, wenn sich Gegner in der Nähe befinden.",
 	L"(Kann während Kampf nicht speichern)",
+	L"(Kann keine vorigen Spielstände laden)",
+	L"Dies ist ein Tot ist Tot Spiel und Sie können nicht über den Spiel Speichern Dialog speichern.",
 };
 
 //@@@:  New string as of March 3, 2000.
 static const wchar_t s_ger_str_iron_man_mode_warning[] = L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?";
 
+// Stracciatella: New Dead is Dead game mode warning
+const wchar_t *s_ger_str_dead_is_dead_mode_warning = L"Sie haben den TOT IST TOT Modus ausgewählt. Diese Einstellung macht das Spiel bedeutend schwieriger, da Sie nicht in der Lage sein werden einen alten Spielstand zu laden falls Ihnen ein Fehler unterläuft. Das Spiel speichert den aktuellen Stand beim verlassen automatisch ab. Diese Einstellung wird den gesamten Spielverlauf verändern.  Sind Sie sicher dass Sie den TOT IST TOT Modus spielen wollen?";
+const wchar_t *s_ger_str_dead_is_dead_mode_enter_name = L"Sie werden nun zum Spiel Speichern Menü geleitet. Wählen Sie dort einen Slot und einen Namen für ihren Speicherstand. Dieser Slot wird für den Verlauf des Spiels genutzt und kann nicht geändert werden!";
+
+static const wchar_t *s_ger_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =
+{
+	L"Normal", 			// Normal Tab
+	L"TIT", 			// Dead is Dead Tab
+};
 
 /** German language resources. */
 LanguageRes g_LanguageResGerman = {
@@ -3566,6 +3578,10 @@ LanguageRes g_LanguageResGerman = {
 
   s_ger_zNewTacticalMessages,
   s_ger_str_iron_man_mode_warning,
+  s_ger_str_dead_is_dead_mode_warning,
+  s_ger_str_dead_is_dead_mode_enter_name,
+
+  s_ger_gs_dead_is_dead_mode_tab_name,
 };
 
 #ifdef WITH_UNITTESTS

@@ -179,7 +179,7 @@
 #define		SKI_DROP_ITEM_TO_GROUND_START_Y				262
 #define		SKI_DROP_ITEM_TO_GROUND_TEXT_START_Y	262
 
-#define		SKI_TACTICAL_BACKGROUND_START_WIDTH		(SCREEN_WIDTH - SKI_TACTICAL_BACKGROUND_START_X)
+#define		SKI_TACTICAL_BACKGROUND_START_WIDTH		(UINT16)(SCREEN_WIDTH - SKI_TACTICAL_BACKGROUND_START_X)
 #define		SKI_TACTICAL_BACKGROUND_START_HEIGHT	340
 
 #define		SKI_ITEM_MOVEMENT_AREA_X							85
@@ -1808,9 +1808,7 @@ void EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer )
 
 	if( gbSelectedArmsDealerID == -1 )
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to find Arms Dealer ID From Merc ID #%d", ubArmsDealer );
-		#endif
+		SLOGW(DEBUG_TAG_INTERFACE, "Failed to find Arms Dealer ID From Merc ID #%d", ubArmsDealer );
 		gfSKIScreenExit = TRUE;
 	}
 
@@ -2075,8 +2073,8 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		const ItemModel * item = GCM->getItem(item_idx);
 		SGPVObject  const& item_vo = GetInterfaceGraphicForItem(item);
 		ETRLEObject const& e       = item_vo.SubregionProperties(item->getGraphicNum());
-		INT16              cen_x   = x + 7 + abs(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
-		INT16              cen_y   = y +     abs(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
+		INT16              cen_x   = x + 7 + ABS(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16              cen_y   = y +     ABS(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
     if(GCM->getGamePolicy()->f_draw_item_shadow)
     {
       BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), cen_x - 2, cen_y + 2);
@@ -2218,9 +2216,6 @@ static void DetermineArmsDealersSellingInventory(void)
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	BOOLEAN fAddSpecialItem;
 	SPECIAL_ITEM_INFO SpclItemInfo;
-
-
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "DEF: DetermineArmsDealer");
 
 	//if there is an old inventory, delete it
 	if( gpTempDealersInventory )
@@ -3458,7 +3453,7 @@ static void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea(void)
 
 			//Remove the items from the Shopkeepers Offer area
 			if( !RemoveItemFromArmsDealerOfferArea( (UINT8)uiCnt, FALSE ) )//a->bSlotIdInOtherLocation
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea: problem removing an item from dealers offer area");
 
 			Assert(!a->fActive);
 		}
@@ -3567,7 +3562,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 	{
 		case ARMS_DEALER_INVENTORY:
 			//Should never get in here
-			Assert( 0 );
+			SLOGE(DEBUG_TAG_ASSERTS, "BeginSkiItemPointer: invalid Source");
 			return;
 
 		case ARMS_DEALER_OFFER_AREA:
@@ -3855,7 +3850,7 @@ static INT8 AddInventoryToSkiLocation(const INVENTORY_IN_SLOT* pInv, UINT8 ubSpo
 		case ARMS_DEALER_INVENTORY:
 		case PLAYERS_INVENTORY:
 			// not used this way
-			Assert( 0 );
+			SLOGE(DEBUG_TAG_ASSERTS, "AddInventoryToSkiLocation: invalid Where");
 			return( bSlotAddedTo );
 
 		case ARMS_DEALER_OFFER_AREA:
@@ -4751,9 +4746,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 				}
 				else
 				{
-					#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to add repair item to ArmsDealerOfferArea.  AM-0");
-					#endif
+					SLOGW(DEBUG_TAG_INTERFACE, "Failed to add repair item to ArmsDealerOfferArea.");
 					return;
 				}
 			}
@@ -4852,9 +4845,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 				break;
 
 			default:
-				#ifdef JA2BETAVERSION
-					ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Invalid evaluation result of %d.  AM-0", uiEvalResult );
-				#endif
+				SLOGW(DEBUG_TAG_INTERFACE, "Invalid evaluation result of %d.", uiEvalResult );
 				break;
 		}
 
@@ -5142,7 +5133,7 @@ static void InitShopKeeperItemDescBox(OBJECTTYPE* pObject, UINT8 ubPocket, UINT8
 		break;
 
 		default:
-			Assert( 0 );
+			SLOGE(DEBUG_TAG_ASSERTS, "InitShopKeeperItemDescBox: invalid FromLocation");
 			return;
 	}
 

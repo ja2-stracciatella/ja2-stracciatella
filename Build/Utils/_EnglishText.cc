@@ -2977,7 +2977,8 @@ static const wchar_t *s_eng_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Cancel",
 	L"Extra Difficulty",
 	L"Save Anytime",
-	L"Iron Man"
+	L"Iron Man",
+	L"Dead is Dead"
 };
 
 static const wchar_t *s_eng_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
@@ -3512,11 +3513,22 @@ const wchar_t *g_eng_zNewTacticalMessages[] =
 	L"Line of Sight",
 	L"This is an IRON MAN game and you cannot save when enemies are around.",	//	@@@  new text
 	L"(Cannot save during combat)", //@@@@ new text
+	L"(Cannot load previous savegames)", // Stracciatella: New Dead is Dead game mode text
+	L"This is a Dead is Dead game and you cannot save through the save screen.",
 };
 
 //@@@:  New string as of March 3, 2000.
 const wchar_t *g_eng_str_iron_man_mode_warning = L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?";
 
+// Stracciatella: New Dead is Dead game mode warning
+const wchar_t *g_eng_str_dead_is_dead_mode_warning = L"You have chosen DEAD IS DEAD mode. This setting makes the game considerably more challenging as you will not be able to load a previous savegame if you have made a mistake. The game will save automatically on leave. This setting will affect the entire course of the game.  Are you sure want to play in DEAD IS DEAD mode?";
+const wchar_t *g_eng_str_dead_is_dead_mode_enter_name = L"You will now be taken to the save screen. Choose a savegame slot and name for your game. This slot will be persistent for your game and cannot be changed!";
+
+static const wchar_t *s_eng_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =
+{
+	L"Normal", 			// Normal Tab
+	L"DiD", 			// Dead is Dead Tab
+};
 
 /** English language resources. */
 LanguageRes g_LanguageResEnglish = {
@@ -3742,4 +3754,8 @@ LanguageRes g_LanguageResEnglish = {
 
   g_eng_zNewTacticalMessages,
   g_eng_str_iron_man_mode_warning,
+  g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
+
+  s_eng_gs_dead_is_dead_mode_tab_name,
 };

@@ -557,7 +557,7 @@ void UnPauseGame(void)
 		// ignore request if locked
 		if ( gfLockPauseState )
 		{
-			ScreenMsg( FONT_ORANGE, MSG_TESTVERSION, L"Call to UnPauseGame() while Pause State is LOCKED! AM-4" );
+			SLOGW(DEBUG_TAG_GAMELOOP, "Call to UnPauseGame() while Pause State is LOCKED!");
 			return;
 		}
 

@@ -1,25 +1,22 @@
 #ifndef __TYPES_
 #define __TYPES_
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <SDL_video.h>
 
 #include "Platform.h"
 #include "SGPStrings.h"
+#include "slog/slog.h"
 
-#include <stdlib.h> // for abort()
 #define UNIMPLEMENTED \
-	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
-	abort();
-
-#define UNIMPLEMENTED_NO_ABORT \
-	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__);
+	SLOGE(DEBUG_TAG_ASSERTS, "===> %s:%d: %s() is not implemented", __FILE__, __LINE__, __func__);
 
 #ifdef WITH_FIXMES
-#	define FIXME \
-	fprintf(stderr, "===> %s:%d: %s() FIXME\n", __FILE__, __LINE__, __func__);
+  #define FIXME \
+	SLOGE(DEBUG_TAG_FIXME, "===> %s:%d: %s() FIXME", __FILE__, __LINE__, __func__);
 #else
-#	define FIXME (void)0;
+  #define FIXME (void)0;
 #endif
 
 
@@ -27,6 +24,7 @@
 #define endof(a) ((a) + lengthof(a))
 
 
+#define ABS(a) (UINT16)abs(int(a))
 #define MAX(a, b) __max(a, b)
 #define MIN(a, b) __min(a, b)
 
@@ -85,12 +83,12 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 
 struct SGPBox
 {
-  INT16 x;
-  INT16 y;
-  INT16 w;
-  INT16 h;
+  UINT16 x;
+  UINT16 y;
+  UINT16 w;
+  UINT16 h;
 
-  void set(INT16 _x, INT16 _y, INT16 _w, INT16 _h)
+  void set(UINT16 _x, UINT16 _y, UINT16 _w, UINT16 _h)
   {
     x = _x;
     y = _y;
@@ -101,12 +99,12 @@ struct SGPBox
 
 struct SGPRect
 {
-  INT32 iLeft;
-  INT32 iTop;
-  INT32 iRight;
-  INT32 iBottom;
+  UINT16 iLeft;
+  UINT16 iTop;
+  UINT16 iRight;
+  UINT16 iBottom;
 
-  void set(INT32 left, INT32 top, INT32 right, INT32 bottom)
+  void set(UINT16 left, UINT16 top, UINT16 right, UINT16 bottom)
   {
     iLeft       = left;
     iTop        = top;
@@ -117,10 +115,10 @@ struct SGPRect
 
 struct SGPPoint
 {
-	INT32 	iX;
-	INT32   iY;
+	UINT16 	iX;
+	UINT16   iY;
 
-  void set(INT32 x, INT32 y)
+  void set(UINT16 x, UINT16 y)
   {
     iX = x;
     iY = y;

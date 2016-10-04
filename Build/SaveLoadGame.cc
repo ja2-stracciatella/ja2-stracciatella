@@ -94,6 +94,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "MemMan.h"
+#include "ContentMusic.h"
 #include "JAScreens.h"
 #include "BobbyR.h"
 #include "IMP_Portraits.h"
@@ -109,6 +110,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 static const char g_quicksave_name[] = "QuickSave";
 static const char g_savegame_name[]  = "SaveGame";
@@ -135,7 +137,7 @@ extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
 	extern		UINT8					gubReportMapscreenLock;
 #endif
 
-static UINT8 gMusicModeToPlay;
+static MusicMode gMusicModeToPlay;
 
 BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
 #ifdef JA2BETAVERSION
@@ -160,7 +162,7 @@ static BYTE const* ExtractGameOptions(BYTE const* const data, GAME_OPTIONS& g)
 	EXTR_BOOL( d, g.fSciFi)
 	EXTR_U8(   d, g.ubDifficultyLevel)
 	EXTR_BOOL( d, g.fTurnTimeLimit)
-	EXTR_BOOL( d, g.fIronManMode)
+	EXTR_U8(   d, g.ubGameSaveMode)
 	EXTR_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -174,7 +176,7 @@ static BYTE* InjectGameOptions(BYTE* const data, GAME_OPTIONS const& g)
 	INJ_BOOL( d, g.fSciFi)
 	INJ_U8(   d, g.ubDifficultyLevel)
 	INJ_BOOL( d, g.fTurnTimeLimit)
-	INJ_BOOL( d, g.fIronManMode)
+	INJ_U8(   d, g.ubGameSaveMode)
 	INJ_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -219,7 +221,9 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 	InitShutDownMapTempFileTest(TRUE, "SaveMapTempFile", ubSaveGameID);
 
 	// Place a message on the screen telling the user that we are saving the game
-	{ UINT16 actual_w;
+	if (gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD) 
+	{ 
+		UINT16 actual_w;
 		UINT16 actual_h;
 		AutoMercPopUpBox const save_load_game_message_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &actual_w, &actual_h));
 		UINT16 const x = (SCREEN_WIDTH - actual_w) / 2;
@@ -673,6 +677,15 @@ static void LoadGameFilePosition(UINT8 slot, HWFILE load, const char* pMsg);
 
 void LoadSavedGame(UINT8 const save_slot_id)
 {
+	// Save the game before if we are in Dead is Dead Mode
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+		// The previous options screen may be the main menu if we use quicksave/load
+		if (guiCurrentScreen != SAVE_LOAD_SCREEN)
+		{
+			guiPreviousOptionScreen = guiCurrentScreen;
+		}
+		DoDeadIsDeadSave();
+	}
 	TrashAllSoldiers();
 	RemoveAllGroups();
 
@@ -723,6 +736,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	CalcJA2EncryptionSet(SaveGameHeader);
 
 	UINT32 const version = SaveGameHeader.uiSavedGameVersion;
+	// Load the savegame name, only relevant for Dead is Dead games
+	wcscpy(gGameSettings.sCurrentSavedGameName, SaveGameHeader.sSavedGameDesc);
 
 	/* If the player is loading up an older version of the game and the person
 	 * DOESN'T have the cheats on. */
@@ -1178,7 +1193,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from load");
+		SLOGD(DEBUG_TAG_SAVELOAD, "Setting attack busy count to 0 from load");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
@@ -1372,13 +1387,13 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
     {
       BYTE Data[2352];
       reader(f, Data, sizeof(Data));
-      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat);
+      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
     }
     else
     {
-      BYTE Data[2328];
-      reader(f, Data, sizeof(Data));
-      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat);
+			BYTE Data[2328];
+			reader(f, Data, sizeof(Data));
+			ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
     }
 
 		SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
@@ -1419,18 +1434,18 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 			}
 		}
 
-  if(isGermanVersion())
-  {
-		// Fix neutral flags
-		if (savegame_version < 94 &&
-				s->bTeam == OUR_TEAM  &&
-				s->bNeutral           &&
-				s->bAssignment != ASSIGNMENT_POW)
+		if(isGermanVersion())
 		{
-			// turn off neutral flag
-			s->bNeutral = FALSE;
+			// Fix neutral flags
+			if (savegame_version < 94 &&
+					s->bTeam == OUR_TEAM  &&
+					s->bNeutral           &&
+					s->bAssignment != ASSIGNMENT_POW)
+			{
+				// turn off neutral flag
+				s->bNeutral = FALSE;
+			}
 		}
-  }
 		// JA2Gold: fix next-to-previous attacker value
 		if (savegame_version < 99)
 		{
@@ -1466,6 +1481,33 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile);
 #endif
 
+void BackupSavedGame(UINT8 const ubSaveGameID)
+{
+	std::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
+	FileMan::createDir(backupdir.c_str());
+	char zSourceSaveGameName[512];
+	char zSourceBackupSaveGameName[515];
+	char zTargetSaveGameName[515];
+	sprintf(zSourceSaveGameName, "%s%02d.%s", g_savegame_name, ubSaveGameID, g_savegame_ext);
+	for (int i = NUM_SAVE_GAME_BACKUPS - 1; i >= 0; i--)
+	{
+		if (i==0)
+		{
+			strcpy(zSourceBackupSaveGameName, zSourceSaveGameName);
+		}
+		else
+		{
+			sprintf(zSourceBackupSaveGameName, "%s.%01d", zSourceSaveGameName, i);
+		}
+		sprintf(zTargetSaveGameName, "%s.%01d", zSourceSaveGameName, i+1);
+		// Only backup existing savegames
+		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir.c_str(), zSourceBackupSaveGameName))
+		{
+			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(), 
+												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
+		}
+	}
+}
 
 static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 {
@@ -1874,7 +1916,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	BYTE* d = data;
 	INJ_U32(  d, guiPreviousOptionScreen)
 	INJ_U32(  d, guiCurrentUniqueSoldierId)
-	INJ_U8(   d, gubMusicMode)
+	INJ_U8(   d, (UINT8)gubMusicMode)
 	INJ_SKIP( d, 1)
 	INJ_U16(  d, Soldier2ID(GetSelectedMan()))
 	INJ_I16(  d, gsRenderCenterX)
@@ -2010,13 +2052,15 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 {
 	BYTE data[1024];
 	FileRead(f, data, sizeof(data));
+	UINT8 ubMusicModeToPlay = 0;
 
 	BYTE const* d = data;
 	UINT32 screen_after_loading;
 	EXTR_U32(  d, screen_after_loading)
 	guiScreenToGotoAfterLoadingSavedGame = static_cast<ScreenID>(screen_after_loading); // XXX TODO001A unchecked conversion
 	EXTR_U32(  d, guiCurrentUniqueSoldierId)
-	EXTR_U8(   d, gMusicModeToPlay)
+	EXTR_U8(   d, ubMusicModeToPlay)
+	gMusicModeToPlay = (MusicMode)ubMusicModeToPlay;
 	EXTR_SKIP( d, 1)
 	UINT16 sel;
 	EXTR_U16(  d, sel)
@@ -2095,6 +2139,9 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, gubPlayerProgressSkyriderLastCommentedOn)
 	EXTR_BOOL( d, gfMeanwhileTryingToStart)
 	EXTR_BOOL( d, gfInMeanwhile)
+	// Always set gfInMeanwhile to false for Dead is Dead. This must be done because it is saved as true if a Meanwhile event is in the event pipe
+	// Preventing the value to be saved in the first place leads to odd behaviour during the commencing cutscene
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) gfInMeanwhile = FALSE;
 	EXTR_SKIP( d, 1)
 	for (INT16 (* i)[NUMBER_OF_SOLDIERS_PER_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
 	{
@@ -2545,8 +2592,8 @@ static void UpdateMercMercContractInfo(void)
 INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 {
 	BOOLEAN	fFile1Exist, fFile2Exist;
-	SGP_FILETIME	CreationTime1, LastAccessedTime1, LastWriteTime1;
-	SGP_FILETIME	CreationTime2, LastAccessedTime2, LastWriteTime2;
+	time_t	LastWriteTime1;
+	time_t	LastWriteTime2;
 
 	fFile1Exist = FALSE;
 	fFile2Exist = FALSE;
@@ -2559,15 +2606,13 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( GCM->doesGameResExists( zFileName1 ) )
 	{
-		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName1)));
-		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
+		GetFileManFileTime( zFileName1, &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( GCM->doesGameResExists( zFileName2 ) )
 	{
-		AutoSGPFile hFile(GCM->openUserPrivateFileForReading(std::string(zFileName2)));
-		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
+		GetFileManFileTime( zFileName2, &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}
 

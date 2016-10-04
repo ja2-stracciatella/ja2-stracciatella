@@ -171,7 +171,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			HandleHourlyUpdate();
 			break;
 		case EVENT_MINUTE_UPDATE:
-			HandleMinuteUpdate();
+			/* unused, used to be empty */
 			break;
 		case EVENT_HANDLE_MINE_INCOME:
 			HandleIncomeFromMines( );

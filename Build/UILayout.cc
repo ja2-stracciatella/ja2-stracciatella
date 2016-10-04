@@ -14,7 +14,7 @@ UILayout g_ui(MIN_INTERFACE_WIDTH, MIN_INTERFACE_HEIGHT);
 
 
 /** Constructor. */
-UILayout::UILayout(INT16 screenWidth, INT16 screenHeight)
+UILayout::UILayout(UINT16 screenWidth, UINT16 screenHeight)
   :m_mapScreenWidth(MIN_INTERFACE_WIDTH), m_mapScreenHeight(MIN_INTERFACE_HEIGHT),
    m_screenWidth(screenWidth), m_screenHeight(screenHeight)
 {
@@ -24,7 +24,7 @@ UILayout::UILayout(INT16 screenWidth, INT16 screenHeight)
 
 /** Set new screen size.
  * This method should be called before most of the application initialization is done. */
-bool UILayout::setScreenSize(INT16 width, INT16 height)
+bool UILayout::setScreenSize(UINT16 width, UINT16 height)
 {
   if((width >= MIN_INTERFACE_WIDTH) && (height >= MIN_INTERFACE_HEIGHT))
   {
@@ -44,19 +44,19 @@ bool UILayout::isBigScreen()
 }
 
 
-INT16 UILayout::currentHeight()             { return fInMapMode ? (STD_SCREEN_Y + m_mapScreenHeight) : m_screenHeight; }
-INT16 UILayout::get_CLOCK_X()               { return fInMapMode ? (STD_SCREEN_X + 554) : 554;               }
-INT16 UILayout::get_CLOCK_Y()               { return currentHeight() - 23;                                  }
-INT16 UILayout::get_RADAR_WINDOW_X()        { return fInMapMode ? (STD_SCREEN_X + 543) : 543;               }
-INT16 UILayout::get_RADAR_WINDOW_TM_Y()     { return currentHeight() - 107;                                 }
-INT16 UILayout::get_INTERFACE_START_Y()     { return m_screenHeight - 120;                                  }
-INT16 UILayout::get_INV_INTERFACE_START_Y() { return m_screenHeight - 140;                                  }
+UINT16 UILayout::currentHeight()             { return fInMapMode ? (STD_SCREEN_Y + m_mapScreenHeight) : m_screenHeight; }
+UINT16 UILayout::get_CLOCK_X()               { return fInMapMode ? (STD_SCREEN_X + 554) : 554;               }
+UINT16 UILayout::get_CLOCK_Y()               { return currentHeight() - 23;                                  }
+UINT16 UILayout::get_RADAR_WINDOW_X()        { return fInMapMode ? (STD_SCREEN_X + 543) : 543;               }
+UINT16 UILayout::get_RADAR_WINDOW_TM_Y()     { return currentHeight() - 107;                                 }
+UINT16 UILayout::get_INTERFACE_START_Y()     { return m_screenHeight - 120;                                  }
+UINT16 UILayout::get_INV_INTERFACE_START_Y() { return m_screenHeight - 140;                                  }
 
 
 /** Recalculate UI elements' positions after changing screen size. */
 void UILayout::recalculatePositions()
 {
-  INT16 startInvY = get_INV_INTERFACE_START_Y();
+  UINT16 startInvY = get_INV_INTERFACE_START_Y();
 
   m_stdScreenOffsetX            = (m_screenWidth - MIN_INTERFACE_WIDTH) / 2;
   m_stdScreenOffsetY            = (m_screenHeight - MIN_INTERFACE_HEIGHT) / 2;
@@ -127,10 +127,11 @@ void UILayout::recalculatePositions()
   m_repairPosition.set(         m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
   m_assignmentPosition.set(     m_stdScreenOffsetX + 120, m_stdScreenOffsetY + 150);
   m_squadPosition.set(          m_stdScreenOffsetX + 160, m_stdScreenOffsetY + 150);
+  m_versionPosition.set(        10, m_screenHeight - 15);
 }
 
 /** Get X position of tactical textbox. */
-INT16 UILayout::getTacticalTextBoxX()
+UINT16 UILayout::getTacticalTextBoxX()
 {
 
   if ( guiCurrentScreen == MAP_SCREEN )
@@ -144,7 +145,7 @@ INT16 UILayout::getTacticalTextBoxX()
 }
 
 /** Get Y position of tactical textbox. */
-INT16 UILayout::getTacticalTextBoxY()
+UINT16 UILayout::getTacticalTextBoxY()
 {
   if ( guiCurrentScreen == MAP_SCREEN )
   {

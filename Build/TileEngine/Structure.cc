@@ -462,7 +462,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 						{
 							case OUTSIDE_TOP_LEFT:
 							case INSIDE_TOP_LEFT:
-								sOtherGridNo = NewGridNo(sGridNo, DirectionInc((INT8)(bLoop + 2)));
+								sOtherGridNo = NewGridNo(sGridNo, DirectionInc( bLoop + 2 ));
 								break;
 
 							case OUTSIDE_TOP_RIGHT:
@@ -504,7 +504,7 @@ static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCu
 					{
 						case OUTSIDE_TOP_LEFT:
 						case INSIDE_TOP_LEFT:
-							sOtherGridNo = NewGridNo(sGridNo, DirectionInc((INT8)(bLoop + 2)));
+							sOtherGridNo = NewGridNo(sGridNo, DirectionInc( bLoop + 2 ));
 							break;
 
 						case OUTSIDE_TOP_RIGHT:

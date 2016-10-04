@@ -6,7 +6,7 @@
 #include "LoadSaveSoldierType.h"
 #include "Overhead.h"
 #include "Tactical_Save.h"
-
+#include "Types.h"
 
 static UINT32 MercChecksum(SOLDIERTYPE const& s)
 {
@@ -34,8 +34,12 @@ static UINT32 MercChecksum(SOLDIERTYPE const& s)
 }
 
 
-void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool stracLinuxFormat)
+void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool stracLinuxFormat, UINT32 uiSavedGameVersion)
 {
+  UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
+  UINT16 usPathDataSize;
+  UINT16 usPathIndex;
+
 	memset(s, 0, sizeof(*s));
 
 	const BYTE* d = data;
@@ -211,9 +215,17 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I16(d, s->sFinalDestination)
 	EXTR_I8(d, s->bLevel)
 	EXTR_SKIP(d, 3)
-	EXTR_U16A(d, s->usPathingData, lengthof(s->usPathingData))
-	EXTR_U16(d, s->usPathDataSize)
-	EXTR_U16(d, s->usPathIndex)
+
+	/* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
+  EXTR_U16A(d, usPathingData, lengthof(usPathingData))
+  EXTR_U16(d, usPathDataSize)
+  EXTR_U16(d, usPathIndex)
+	for (UINT8 i = 0; i < usPathDataSize && i < MAX_PATH_LIST_SIZE; i++) {
+    s->ubPathingData[i] = (UINT8)usPathingData[i];
+  }
+	s->ubPathDataSize = (UINT8)usPathDataSize;
+	s->ubPathIndex = (UINT8)usPathIndex;
+
 	EXTR_I16(d, s->sBlackList)
 	EXTR_I8(d, s->bAimTime)
 	EXTR_I8(d, s->bShownAimTime)
@@ -551,6 +563,10 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 
 void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 {
+  UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
+  UINT16 usPathDataSize;
+  UINT16 usPathIndex;
+
 	BYTE* d = data;
 	INJ_U8(d, s->ubID)
 	INJ_SKIP(d, 1)
@@ -712,9 +728,17 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I16(d, s->sFinalDestination)
 	INJ_I8(d, s->bLevel)
 	INJ_SKIP(d, 3)
-	INJ_U16A(d, s->usPathingData, lengthof(s->usPathingData))
-	INJ_U16(d, s->usPathDataSize)
-	INJ_U16(d, s->usPathIndex)
+
+  /* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
+  usPathDataSize = s->ubPathDataSize > MAX_PATH_LIST_SIZE ? (UINT16)MAX_PATH_LIST_SIZE : (UINT16)s->ubPathDataSize;
+  usPathIndex = (UINT16)s->ubPathIndex;
+  for (UINT8 i = 0; i < usPathDataSize; i++) {
+    usPathingData[i] = (UINT16)s->ubPathingData[i];
+  }
+  INJ_U16A(d, usPathingData, lengthof(usPathingData))
+  INJ_U16(d, usPathDataSize)
+  INJ_U16(d, usPathIndex)
+
 	INJ_I16(d, s->sBlackList)
 	INJ_I8(d, s->bAimTime)
 	INJ_I8(d, s->bShownAimTime)

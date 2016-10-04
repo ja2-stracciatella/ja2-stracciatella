@@ -1387,7 +1387,7 @@ static void AddAmmoToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 	// Ammo only, please!!!
 	if (GCM->getItem(usItemIndex)->getItemClass() != IC_AMMO )
 	{
-		Assert(0);
+		SLOGE(DEBUG_TAG_ASSERTS, "AddAmmoToArmsDealerInventory: Item isn't Ammo");
 		return;
 	}
 
@@ -1839,7 +1839,7 @@ void GiveObjectToArmsDealerForRepair(ArmsDealerID const ubArmsDealer, OBJECTTYPE
 			// If the attachment is detachable
 			if (! (GCM->getItem(pObject->usAttachItem[ubCnt])->getFlags() & ITEM_INSEPARABLE ) )
 			{
-				Assert( 0 );
+				SLOGE(DEBUG_TAG_ASSERTS, "GiveObjectToArmsDealerForRepair: something wrong with attachments");
 			}
 		}
 	}
@@ -2299,7 +2299,7 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 	if( !fDealerSelling )
 	{
 		// junk dealer won't buy expensive stuff at all, expensive dealer won't buy junk at all
-		if ( abs( (INT8) ubDealerPriceClass - (INT8) ubItemPriceClass ) == 2 )
+		if ( ABS( (INT8) ubDealerPriceClass - (INT8) ubItemPriceClass ) == 2 )
 		{
 			return( 0 );
 		}

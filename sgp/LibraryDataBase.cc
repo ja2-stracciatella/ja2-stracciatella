@@ -6,12 +6,9 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "Debug.h"
-#include "Logger.h"
 #include "StrUtils.h"
 
 #include "slog/slog.h"
-#define TAG "LibDB"
-
 
 #define	FILENAME_SIZE 256
 
@@ -130,7 +127,7 @@ try
 		// check to see if the file is not longer than it should be
 		if (strlen(DirEntry.sFileName) + 1 >= FILENAME_SIZE)
     {
-      SLOGW(TAG, "'%s' from the library '%s' has too long name", DirEntry.sFileName, lib->sLibraryPath.c_str());
+      SLOGW(DEBUG_TAG_LIBDB, "'%s' from the library '%s' has too long name", DirEntry.sFileName, lib->sLibraryPath.c_str());
     }
 
 		FileHeaderStruct* const fh = &fhs[used_entries++];
@@ -140,7 +137,7 @@ try
 		fh->uiFileOffset = DirEntry.uiOffset;
 		fh->uiFileLength = DirEntry.uiLength;
 
-    // SLOGD(TAG, "found in %s: %s", lib_name, fh->pFileName);
+    // SLOGD(DEBUG_TAG_LIBDB, "found in %s: %s", lib_name, fh->pFileName);
 	}
 
 	if (used_entries != count_entries)
@@ -317,7 +314,7 @@ static BOOLEAN CloseLibrary(LibraryHeaderStruct *lib)
 	//if there are any open files, loop through the library and close down whatever file is still open
 	if (lib->iNumFilesOpen)
 	{
-		FastDebugMsg(String("CloseLibrary():  ERROR:  %s library still has %d open files.", lib->sLibraryPath.c_str(), lib->iNumFilesOpen));
+		SLOGE(DEBUG_TAG_LIBDB, "CloseLibrary(): %s library still has %d open files.", lib->sLibraryPath.c_str(), lib->iNumFilesOpen);
 	}
 
 	//Free up the memory used for each file name
@@ -345,77 +342,6 @@ static BOOLEAN IsLibraryOpened(const LibraryHeaderStruct *lib)
 {
 	return lib->hLibraryHandle != NULL;
 }
-
-#if 1 // XXX TODO UNIMPLEMENTED
-#else
-BOOLEAN GetLibraryFileTime(LibraryFile const* const f, SGP_FILETIME* const pLastWriteTime)
-try
-{
-	LibraryHeaderStruct const* const lib = f->lib;
-	if (!lib) return FALSE;
-
-	LibFileHeader const* const file = lib->pFileHeader;
-	if (!file) return FALSE;
-
-	UINT16	usNumEntries=0;
-	UINT32	uiNumBytesRead;
-	LIBHEADER	LibFileHeader;
-	BOOLEAN fDone = FALSE;
-//	UINT32	cnt;
-	INT32	iFilePos=0;
-
-	memset( pLastWriteTime, 0, sizeof( SGP_FILETIME ) );
-
-	SetFilePointer(lib->hLibraryHandle, 0, NULL, FILE_BEGIN);
-
-	// Read in the library header ( at the begining of the library )
-	if (!ReadFile(lib->hLibraryHandle, &LibFileHeader, sizeof(LIBHEADER), &uiNumBytesRead, NULL))
-		return( FALSE );
-	if( uiNumBytesRead != sizeof( LIBHEADER ) )
-	{
-		//Error Reading the file database header.
-		return( FALSE );
-	}
-
-	DIRENTRY* const pAllEntries = MALLOCN(DIRENTRY, LibFileHeader.iEntries);
-	memset( pAllEntries, 0, sizeof( DIRENTRY ) );
-
-
-
-	iFilePos = -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) );
-
-	//set the file pointer to the right location
-	SetFilePointer(lib->hLibraryHandle, iFilePos, NULL, FILE_END);
-
-	// Read in the library header ( at the begining of the library )
-	if (!ReadFile(lib->hLibraryHandle, pAllEntries, sizeof(DIRENTRY) * LibFileHeader.iEntries, &uiNumBytesRead, NULL))
-		return( FALSE );
-	if( uiNumBytesRead != ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ) )
-	{
-		//Error Reading the file database header.
-		return( FALSE );
-	}
-
-	DIRENTRY* pDirEntry = bsearch(
-		file->pFileName,
-		pAllEntries,
-		LibFileHeader.iEntries,
-		sizeof(*pAllEntries),
-		CompareDirEntryFileNames
-	);
-
-	if (pDirEntry == NULL) return FALSE;
-
-	//Copy the dir entry time over to the passed in time
-	*pLastWriteTime = pDirEntry->sFileTime;
-
-	MemFree( pAllEntries );
-	pAllEntries = NULL;
-
-	return( TRUE );
-}
-catch (...) { return FALSE; }
-#endif
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"

@@ -894,8 +894,8 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		const ItemModel * item = GCM->getItem(usItem);
 		SGPVObject  const& item_vo  = GetInterfaceGraphicForItem(item);
 		ETRLEObject const& e        = item_vo.SubregionProperties(item->getGraphicNum());
-		INT16       const  sCenX    = x + abs(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
-		INT16       const  sCenY    = y + abs(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
+		INT16       const  sCenX    = x + ABS(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16       const  sCenY    = y + ABS(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
     if(GCM->getGamePolicy()->f_draw_item_shadow)
     {
@@ -1700,8 +1700,8 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 
 		SGPBox const DestRect =
 		{
-			AIM_MEMBER_VIDEO_FACE_X,
-			AIM_MEMBER_VIDEO_FACE_Y,
+			(UINT16)(AIM_MEMBER_VIDEO_FACE_X),
+			(UINT16)(AIM_MEMBER_VIDEO_FACE_Y),
 			AIM_MEMBER_VIDEO_FACE_WIDTH,
 			AIM_MEMBER_VIDEO_FACE_HEIGHT
 		};
@@ -2777,7 +2777,7 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 	UINT16 const usPosRightX = STD_SCREEN_X + Interpolate(405, 490, ubCount);
 	UINT16 const usPosY      = Interpolate(AIM_MEMBER_VIDEO_TITLE_START_Y, STD_SCREEN_Y + 96, ubCount);
 	SGPBox const SrcRect     = { 0,      0,      AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT };
-	SGPBox const DestRect    = { usPosX, usPosY, usPosRightX - usPosX,             AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT };
+	SGPBox const DestRect    = { usPosX, usPosY, (UINT16)(usPosRightX - usPosX),             AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT };
 
 	if (fForward)
 	{

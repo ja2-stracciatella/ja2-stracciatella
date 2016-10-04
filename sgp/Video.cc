@@ -24,10 +24,12 @@
 #include "PlatformIO.h"
 #include "PlatformSDL.h"
 #include "Font.h"
+#include "Icon.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include "slog/slog.h"
 
 #define BUFFER_READY      0x00
 #define BUFFER_DIRTY      0x02
@@ -42,6 +44,11 @@
 #define VIDEO_SUSPENDED   0x04
 
 #define MAX_NUM_FRAMES    25
+
+#define RED_MASK 0xF800
+#define GREEN_MASK 0x07E0
+#define BLUE_MASK 0x001F
+#define ALPHA_MASK 0
 
 
 static BOOLEAN gfVideoCapture = FALSE;
@@ -79,9 +86,12 @@ static UINT32  guiPrintFrameBufferIndex;
 
 static SDL_Surface* MouseCursor;
 static SDL_Surface* FrameBuffer;
-static SDL_Surface* ScreenBuffer;
-static Uint32       g_video_flags = SDL_SWSURFACE | SDL_HWPALETTE;
+static SDL_Renderer*  GameRenderer;
+SDL_Window* g_game_window;
 
+static SDL_Surface* ScreenBuffer;
+static SDL_Texture* ScreenTexture;
+static Uint32       g_window_flags = 0;
 
 static void RecreateBackBuffer();
 static void DeletePrimaryVideoSurfaces(void);
@@ -90,48 +100,25 @@ void VideoSetFullScreen(const BOOLEAN enable)
 {
 	if (enable)
 	{
-		g_video_flags |= SDL_FULLSCREEN;
+		g_window_flags |= SDL_WINDOW_FULLSCREEN;
 	}
 	else
 	{
-		g_video_flags &= ~SDL_FULLSCREEN;
+		g_window_flags &= ~SDL_WINDOW_FULLSCREEN;
 	}
 }
 
 
 void VideoToggleFullScreen(void)
 {
-	SDL_Surface* const scr = ScreenBuffer;
-
-	// First try using SDL magic to toggle fullscreen
-	if (SDL_WM_ToggleFullScreen(scr))
-	{
-		g_video_flags ^= SDL_FULLSCREEN;
-		return;
-	}
-
-	// Fallback to manual toggling
-	SDL_PixelFormat const& fmt = *scr->format;
-	int             const  w   = scr->w;
-	int             const  h   = scr->h;
-	Uint8           const  bpp = fmt.BitsPerPixel;
-
-	SGP::AutoObj<SDL_Surface, SDL_FreeSurface> tmp(SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, fmt.Rmask, fmt.Gmask, fmt.Bmask, fmt.Amask));
-	if (!tmp) return;
-
-	SDL_BlitSurface(scr, 0, tmp, 0);
-
-	Uint32       const new_vflags = g_video_flags ^ SDL_FULLSCREEN;
-	SDL_Surface* const new_scr    = SDL_SetVideoMode(w, h, bpp, new_vflags);
-	if (!new_scr) return;
-
-	g_video_flags = new_vflags;
-
-	ScreenBuffer  = new_scr;
-  RecreateBackBuffer();
-
-	SDL_BlitSurface(tmp, 0, new_scr, 0);
-	SDL_UpdateRect(new_scr, 0, 0, 0, 0);
+    if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN)
+    {
+        SDL_SetWindowFullscreen(g_game_window, 0);
+    }
+    else
+    {
+        SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN);
+    }
 }
 
 
@@ -140,29 +127,75 @@ static void GetRGBDistribution();
 
 void InitializeVideoManager(void)
 {
-	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
+	SLOGD(DEBUG_TAG_VIDEO, "Initializing the video manager");
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
+	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
+                              SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED,
+                              SCREEN_WIDTH, SCREEN_HEIGHT,
+                              g_window_flags);
+	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
+	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+  SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
+			(void*)gWindowIconData.pixel_data,
+			gWindowIconData.width,
+			gWindowIconData.height,
+			gWindowIconData.bytes_per_pixel*8,
+			gWindowIconData.bytes_per_pixel*gWindowIconData.width,
+			0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+		SDL_SetWindowIcon(g_game_window, windowIcon);
+		SDL_FreeSurface(windowIcon);
+
+
   ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, g_video_flags);
-	if (!ScreenBuffer) throw std::runtime_error("Failed to set up video mode");
+  ScreenBuffer = SDL_CreateRGBSurface(
+          0,
+          SCREEN_WIDTH,
+          SCREEN_HEIGHT,
+          PIXEL_DEPTH,
+          RED_MASK,
+          GREEN_MASK,
+          BLUE_MASK,
+          ALPHA_MASK
+  );
 
-	Uint32 Rmask = ScreenBuffer->format->Rmask;
-	Uint32 Gmask = ScreenBuffer->format->Gmask;
-	Uint32 Bmask = ScreenBuffer->format->Bmask;
-	Uint32 Amask = ScreenBuffer->format->Amask;
+  if (ScreenBuffer == NULL) {
+    SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
+  }
+
+  ScreenTexture = SDL_CreateTexture(GameRenderer,
+                                    SDL_PIXELFORMAT_RGB565,
+                                    SDL_TEXTUREACCESS_STREAMING,
+                                    SCREEN_WIDTH, SCREEN_HEIGHT);
+
+  if (ScreenTexture == NULL) {
+    SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
+  }
 
 	FrameBuffer = SDL_CreateRGBSurface(
 		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
-		Rmask, Gmask, Bmask, Amask
+		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
 
+	if (FrameBuffer == NULL)
+	{
+		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for FrameBuffer failed: %s\n", SDL_GetError());
+	}
+
 	MouseCursor = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
-		Rmask, Gmask, Bmask, Amask
+		0, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
+		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
-	SDL_SetColorKey(MouseCursor, SDL_SRCCOLORKEY, 0);
+	SDL_SetColorKey(MouseCursor, SDL_TRUE, 0);
+
+	if (MouseCursor == NULL)
+	{
+		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for MouseCursor failed: %s\n", SDL_GetError());
+  }
 
 	SDL_ShowCursor(SDL_DISABLE);
 
@@ -181,8 +214,7 @@ void InitializeVideoManager(void)
 
 void ShutdownVideoManager(void)
 {
-	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Shutting down the video manager");
-
+	SLOGD(DEBUG_TAG_VIDEO, "Shutting down the video manager");
 	/* Toggle the state of the video manager to indicate to the refresh thread
 	 * that it needs to shut itself down */
 
@@ -199,32 +231,6 @@ void SuspendVideoManager(void)
 {
 	guiVideoManagerState = VIDEO_SUSPENDED;
 }
-
-
-BOOLEAN RestoreVideoManager(void)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED;
-  return false;
-#else
-	// Make sure the video manager is indeed suspended before moving on
-
-	if (guiVideoManagerState == VIDEO_SUSPENDED)
-	{
-		// Set the video state to VIDEO_ON
-
-		guiFrameBufferState = BUFFER_DIRTY;
-		gfForceFullScreenRefresh = TRUE;
-		guiVideoManagerState = VIDEO_ON;
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
-#endif
-}
-
 
 void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
@@ -335,7 +341,7 @@ void InvalidateScreen(void)
 static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 {
 	SDL_Surface* Frame  = FrameBuffer;
-	SDL_Surface* Source = ScreenBuffer; // Primary
+	SDL_Surface* Source = SDL_CreateRGBSurface(0, ScreenBuffer->w, ScreenBuffer->h, PIXEL_DEPTH, RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK);
 	SDL_Surface* Dest   = ScreenBuffer; // Back
 	SDL_Rect     SrcRect;
 	SDL_Rect     DstRect;
@@ -344,6 +350,8 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 
 	const UINT16 usWidth  = SCREEN_WIDTH;
 	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
+
+	SDL_BlitSurface(ScreenBuffer, NULL, Source, NULL);
 
 	if (sScrollXIncrement < 0)
 	{
@@ -433,14 +441,17 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	// BLIT NEW
 	ExecuteVideoOverlaysToAlternateBuffer(BACKBUFFER);
 
-	SDL_UpdateRect
-	(
-		Dest,
-		gsVIEWPORT_START_X,
-		gsVIEWPORT_WINDOW_START_Y,
-		gsVIEWPORT_END_X - gsVIEWPORT_START_X,
-		gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y
-	);
+	SDL_Texture* screenTexture = SDL_CreateTextureFromSurface(GameRenderer, ScreenBuffer);
+
+	SDL_Rect r;
+	r.x = gsVIEWPORT_START_X;
+	r.y = gsVIEWPORT_WINDOW_START_Y;
+	r.w = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
+	r.h = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
+	SDL_RenderCopy(GameRenderer, screenTexture, &r, &r);
+
+	SDL_FreeSurface(Source);
+	SDL_DestroyTexture(screenTexture);
 }
 
 
@@ -470,8 +481,8 @@ static void WriteTGAHeader(FILE* const f)
 		0,
 		0, 0,
 		0, 0,
-		SCREEN_WIDTH  % 256, SCREEN_WIDTH  / 256,
-		SCREEN_HEIGHT % 256, SCREEN_HEIGHT / 256,
+		(UINT8) (SCREEN_WIDTH  % 256), (UINT8) (SCREEN_WIDTH  / 256),
+		(UINT8) (SCREEN_HEIGHT % 256), (UINT8) (SCREEN_HEIGHT / 256),
 		PIXEL_DEPTH,
 		0
 	};
@@ -649,10 +660,6 @@ void RefreshScreen(void)
 		gfPrintFrameBuffer = FALSE;
 	}
 
-#if EXPENSIVE_SDL_UPDATE_RECT
-  SDL_Rect combinedRect = {0, 0, 0, 0};
-#endif
-
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 	SDL_Rect src;
@@ -664,56 +671,13 @@ void RefreshScreen(void)
 	dst.x = MousePos.iX - gsMouseCursorXOffset;
 	dst.y = MousePos.iY - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
+  MouseBackground = dst;
 
-#if EXPENSIVE_SDL_UPDATE_RECT
-  joinInRectangle(combinedRect, dst);
-  joinInRectangle(combinedRect, MouseBackground);
-#else
-  SDL_UpdateRects(ScreenBuffer, 1, &dst);
-  SDL_UpdateRects(ScreenBuffer, 1, &MouseBackground);
-#endif
+  SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
 
-	MouseBackground = dst;
-
-	if (gfForceFullScreenRefresh)
-	{
-		SDL_UpdateRect(ScreenBuffer, 0, 0, 0, 0);
-	}
-	else
-	{
-#if EXPENSIVE_SDL_UPDATE_RECT
-    for(int i = 0; i < guiDirtyRegionCount; i++)
-    {
-      joinInRectangle(combinedRect, DirtyRegions[i]);
-    }
-#else
-		SDL_UpdateRects(ScreenBuffer, guiDirtyRegionCount, DirtyRegions);
-#endif
-
-		for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
-		{
-			SDL_Rect* r = &DirtyRegionsEx[i];
-			if (scrolling)
-			{
-				if (r->y <= gsVIEWPORT_WINDOW_END_Y && r->y + r->h <= gsVIEWPORT_WINDOW_END_Y)
-				{
-					continue;
-				}
-			}
-#if EXPENSIVE_SDL_UPDATE_RECT
-      joinInRectangle(combinedRect, *r);
-#else
-			SDL_UpdateRects(ScreenBuffer, 1, r);
-#endif
-		}
-	}
-
-#if EXPENSIVE_SDL_UPDATE_RECT
-  if((combinedRect.w != 0) && (combinedRect.h != 0))
-  {
-    SDL_UpdateRects(ScreenBuffer, 1, &combinedRect);
-  }
-#endif
+  SDL_RenderClear(GameRenderer);
+  SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
+	SDL_RenderPresent(GameRenderer);
 
 	gfForceFullScreenRefresh = FALSE;
 	guiDirtyRegionCount = 0;
@@ -724,6 +688,7 @@ void RefreshScreen(void)
 static void GetRGBDistribution()
 {
 	SDL_PixelFormat const& f = *ScreenBuffer->format;
+
 	UINT32          const  r = f.Rmask;
 	UINT32          const  g = f.Gmask;
 	UINT32          const  b = f.Bmask;
@@ -890,7 +855,7 @@ static void SetPrimaryVideoSurfaces(void)
 	// Delete surfaces if they exist
 	DeletePrimaryVideoSurfaces();
 
-  RecreateBackBuffer();
+    RecreateBackBuffer();
 
 	g_mouse_buffer = new SGPVSurfaceAuto(MouseCursor);
 	g_frame_buffer = new SGPVSurfaceAuto(FrameBuffer);
@@ -924,7 +889,7 @@ void InitializeVideoSurfaceManager(void)
 
 void ShutdownVideoSurfaceManager(void)
 {
-  DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Shutting down the Video Surface manager");
+  SLOGD(DEBUG_TAG_VIDEO, "Shutting down the Video Surface manager");
 
 	// Delete primary viedeo surfaces
 	DeletePrimaryVideoSurfaces();

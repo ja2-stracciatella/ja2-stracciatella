@@ -16,6 +16,11 @@ void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32
   mprintf(x+DEBUG_PAGE_LABEL_WIDTH, y, L"%d", val);
 }
 
+void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, char const* const val)
+{
+  MHeader(x, y, header);
+  mprintf(x+DEBUG_PAGE_LABEL_WIDTH, y, L"%s", val);
+}
 
 void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, wchar_t const* const val)
 {

@@ -353,21 +353,14 @@ INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
 }
 
 
-INT16 DirectionInc(INT16 sDirection)
+INT16 DirectionInc(UINT8 sDirection)
 {
  if ((sDirection < 0) || (sDirection > 7))
   {
-
-//#ifdef BETAVERSION
-//   NumMessage("DirectionInc: Invalid direction received, = ",direction);
-//#endif
-
    //direction = random(8);	// replace garbage with random direction
 	 sDirection = 1;
   }
-
-
- return(DirIncrementer[sDirection]);
+	return(DirIncrementer[sDirection]);
 }
 
 
@@ -466,8 +459,8 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	INT16 sRows,sCols,sResult;
 
-	sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
-	sCols = abs((sOrigin % MAXROW) - (sDest % MAXROW));
+	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 
 	// apply Pythagoras's theorem for right-handed triangle:
@@ -482,8 +475,8 @@ INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 {
  INT16 sRows,sCols;
 
- sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
- sCols = abs((sOrigin % MAXROW) - (sDest % MAXROW));
+ sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+ sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	return( __max( sRows, sCols ) );
 }
@@ -493,8 +486,8 @@ INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
 {
  INT16 sRows,sCols;
 
- sRows = abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
- sCols = abs((sOrigin % MAXROW) - (sDest % MAXROW));
+ sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+ sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	return( (INT16)( sRows + sCols ) );
 }
@@ -543,7 +536,7 @@ static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
 }
 
 
-bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
+bool FindHigherLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 {
 	if (s->bLevel > 0) return false;
 
@@ -579,7 +572,7 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 }
 
 
-bool FindLowerLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
+bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 {
 	if (s->bLevel == 0) return false;
 
@@ -618,12 +611,12 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
  if (origin==dest)
      return(0);
 
- if ((abs(origin - dest)) == 4)
+ if ((ABS(origin - dest)) == 4)
      return(1);		// this could be made random
  else
   if (origin > dest)
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (8 - origin) + dest;
     if (v1 > v2)
        return(1);
@@ -632,7 +625,7 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
    }
   else
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (8 - dest) + origin;
     if (v1 > v2)
        return(-1);
@@ -649,12 +642,12 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
  if (origin==dest)
      return(0);
 
- if ((abs(origin - dest)) == 16)
+ if ((ABS(origin - dest)) == 16)
      return(1);		// this could be made random
  else
   if (origin > dest)
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (32 - origin) + dest;
     if (v1 > v2)
        return(1);
@@ -663,7 +656,7 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
    }
   else
    {
-    v1 = abs(origin - dest);
+    v1 = ABS(origin - dest);
     v2 = (32 - dest) + origin;
     if (v1 > v2)
        return(-1);
@@ -730,14 +723,14 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 }
 
 
-BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const out_direction)
+BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const out_direction)
 {
-	INT32			cnt;
+	UINT8			cnt;
 	INT16			sNewGridNo, sOtherSideOfFence;
 	BOOLEAN		fFound = FALSE;
 	UINT8			bMinNumTurns = 100;
 	INT8			bNumTurns;
-	INT8			bMinDirection = 0;
+	UINT8			bMinDirection = 0;
 
 	GridNo const sGridNo = pSoldier->sGridNo;
 	// IF there is a fence in this gridno, return false!
@@ -751,8 +744,8 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const ou
 	for ( cnt = 0; cnt < 8; cnt+= 2 )
 	{
 		// go out *2* tiles
-		sNewGridNo = NewGridNo( (UINT16)sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
-		sOtherSideOfFence = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
+		sNewGridNo = NewGridNo( (UINT16)sGridNo, DirectionInc( cnt ) );
+		sOtherSideOfFence = NewGridNo( (UINT16)sNewGridNo, DirectionInc( cnt ) );
 
 		if ( NewOKDestination( pSoldier, sOtherSideOfFence, TRUE, 0 ) )
 		{
@@ -770,7 +763,7 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const ou
 				if ( bNumTurns < bMinNumTurns )
 				{
 					bMinNumTurns = bNumTurns;
-					bMinDirection = (INT8)cnt;
+					bMinDirection = cnt;
 				}
 			}
 		}

@@ -8,7 +8,7 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "SGP.h"
-
+#include "slog/slog.h"
 
 extern SGPVSurface* gpVSurfaceHead;
 
@@ -28,13 +28,13 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	switch (bpp)
 	{
 		case 8:
-			s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, 0, 0, 0, 0);
+			s = SDL_CreateRGBSurface(0, w, h, bpp, 0, 0, 0, 0);
 			break;
 
 		case 16:
 		{
-			SDL_PixelFormat const* f = SDL_GetVideoSurface()->format;
-			s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, f->Rmask, f->Gmask, f->Bmask, 0);
+			SDL_PixelFormat const* f = SDL_AllocFormat(SDL_PIXELFORMAT_RGB565);
+			s = SDL_CreateRGBSurface(0, w, h, bpp, f->Rmask, f->Gmask, f->Bmask, f->Amask);
 			break;
 		}
 
@@ -112,7 +112,7 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 
 		default: abort(); // HACK000E
 	}
-	SDL_SetColorKey(surface_, SDL_SRCCOLORKEY, colour_key);
+	SDL_SetColorKey(surface_, SDL_TRUE, colour_key);
 }
 
 
@@ -217,7 +217,7 @@ SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 		BOOLEAN const Ret   = CopyImageToBuffer(img, buffer_bpp, dst, pitch, vs->Height(), 0, 0, &box);
 		if (!Ret)
 		{
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying SGPImage to video surface");
+			SLOGE(DEBUG_TAG_VSURFACE, "Error Occured Copying SGPImage to video surface");
 		}
 	}
 
@@ -322,12 +322,12 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 			// Check Sizes, SRC size MUST be <= DEST size
 			if (dst->Height() < src->Height())
 			{
-				DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
+				SLOGD(DEBUG_TAG_VSURFACE, "Incompatible height size given in Video Surface blit");
 				return;
 			}
 			if (dst->Width() < src->Width())
 			{
-				DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
+				SLOGD(DEBUG_TAG_VSURFACE, "Incompatible height size given in Video Surface blit");
 				return;
 			}
 
@@ -348,7 +348,7 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 	}
 	else
 	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
+		SLOGD(DEBUG_TAG_VSURFACE, "Incompatible BPP values with src and dest Video Surfaces for blitting");
 	}
 }
 
@@ -370,9 +370,10 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 	UINT const dx     = src_rect->w;
 	UINT const dy     = src_rect->h;
 	UINT py = 0;
-	if (ssurface->flags & SDL_SRCCOLORKEY)
+	if (ssurface->flags & SDL_TRUE)
 	{
-		const UINT16 key = ssurface->format->colorkey;
+//		const UINT16 key = ssurface->format->colorkey;
+        const UINT16 key = 0;
 		for (UINT iy = 0; iy < height; ++iy)
 		{
 			const UINT16* s = os;

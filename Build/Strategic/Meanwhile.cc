@@ -22,6 +22,7 @@
 #include "Map_Screen_Interface_Map.h"
 #include "Map_Screen_Interface.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Interface.h"
 #include "Game_Events.h"
 #include "Strategic_AI.h"
@@ -220,6 +221,9 @@ void ScheduleMeanwhileEvent(INT16 const x, INT16 const y, UINT16 const trigger_e
 void BeginMeanwhile(UINT8 ubMeanwhileID)
 {
 	INT32 cnt;
+  
+	// Save if we are in Dead is Dead Mode
+	DoDeadIsDeadSaveIfNecessary();
 
 	// copy meanwhile data from array to structure for current
 	gCurrentMeanwhileDef = gMeanwhileDef[ubMeanwhileID];
@@ -438,6 +442,7 @@ static void BeginMeanwhileCallBack(MessageBoxReturnValue const bExitValue)
 	else
 	{
 		// skipped scene!
+		gfInMeanwhile = FALSE;
 		ProcessImplicationsOfMeanwhile();
 		UnLockPauseState();
 		UnPauseGame();

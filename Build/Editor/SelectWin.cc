@@ -683,8 +683,8 @@ void RenderSelectionWindow( void )
 		GUIButtonRef const button = iSelectWin;
 		if (!button) return;
 
-		if (abs(iStartClickX - button->MouseX()) > 9 ||
-				abs(iStartClickY - (button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y)) > 9)
+		if (ABS(iStartClickX - button->MouseX()) > 9 ||
+				ABS(iStartClickY - (button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y)) > 9)
 		{
 //			iSX = (INT32)iStartClickX;
 //			iEX = (INT32)button->MouseX();

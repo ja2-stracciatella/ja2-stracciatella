@@ -22,7 +22,7 @@
 #include "Debug.h"
 #include "MemMan.h"
 #include "Types.h"
-
+#include "slog/slog.h"
 
 struct ListHeader
 {
@@ -94,7 +94,7 @@ BOOLEAN DeleteQueue(HQUEUE hQueue)
 {
 	if (hQueue == NULL)
 	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
+		SLOGD(DEBUG_TAG_CONTAINER, "Attempted to delete an invalid pointer to a queue");
 		return FALSE;
 	}
 	MemFree(hQueue);
@@ -106,7 +106,7 @@ BOOLEAN DeleteList(HLIST hList)
 {
 	if (hList == NULL)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
+		SLOGD(DEBUG_TAG_CONTAINER, "Attempted to delete an invalid pointer to a list");
 		return FALSE;
 	}
 	MemFree(hList);
@@ -226,7 +226,7 @@ UINT32 QueueSize(HQUEUE hQueue)
 {
 	if (hQueue == NULL)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Queue pointer is NULL");
+		SLOGD(DEBUG_TAG_CONTAINER, "Queue pointer is NULL");
 		return 0;
 	}
 	return hQueue->uiTotal_items;
@@ -240,7 +240,7 @@ UINT32 ListSize(HLIST hList)
 {
 	if (hList == NULL)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "List pointer is NULL");
+		SLOGD(DEBUG_TAG_CONTAINER, "List pointer is NULL");
 		return 0;
 	}
 	return hList->uiTotal_items;
@@ -258,20 +258,20 @@ HLIST AddtoList(HLIST l, void const* pdata, UINT32 const uiPos)
 	// check for invalid handle = 0
 	if (!l)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid handle to the list");
+		SLOGD(DEBUG_TAG_CONTAINER, "This is not a valid handle to the list");
 		return NULL;
 	}
 
 	// check for data = NULL
 	if (pdata == NULL)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
+		SLOGD(DEBUG_TAG_CONTAINER, "Data to be pushed onto list is NULL");
 		return NULL;
 	}
 
 	if (uiPos > l->uiTotal_items)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are not enough elements in the list");
+		SLOGD(DEBUG_TAG_CONTAINER, "There are not enough elements in the list");
 		return NULL;
 	}
 
@@ -346,7 +346,7 @@ HLIST AddtoList(HLIST l, void const* pdata, UINT32 const uiPos)
 	// finally insert data at position uiFinalLoc
 	if (uiFinalLoc == 0)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This should never happen! report this problem!");
+		SLOGE(DEBUG_TAG_CONTAINER, "This should never happen! report this problem!");
 		return NULL;
 	}
 

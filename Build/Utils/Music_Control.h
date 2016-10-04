@@ -2,49 +2,17 @@
 #define _MUSIC_CONTROL_H_
 
 #include "SoundMan.h"
+#include "UTF8String.h"
+#include "ContentMusic.h"
 
-enum MusicList {
-	MARIMBAD2_MUSIC,
-	MENUMIX_MUSIC,
-	NOTHING_A_MUSIC,
-	NOTHING_B_MUSIC,
-	NOTHING_C_MUSIC,
-	NOTHING_D_MUSIC,
-	TENSOR_A_MUSIC,
-	TENSOR_B_MUSIC,
-	TENSOR_C_MUSIC,
-	TRIUMPH_MUSIC,
-	DEATH_MUSIC,
-	BATTLE_A_MUSIC,
-	BATTLE_B_MUSIC, //same as tensor B
-	CREEPY_MUSIC,
-	CREATURE_BATTLE_MUSIC,
-	NUM_MUSIC
-};
-
-extern const char* const szMusicList[NUM_MUSIC];
-
-enum MusicMode {
-
-	MUSIC_NONE,
-	MUSIC_RESTORE,
-	MUSIC_MAIN_MENU,
-	MUSIC_TACTICAL_NOTHING,
-	MUSIC_TACTICAL_ENEMYPRESENT,
-	MUSIC_TACTICAL_BATTLE,
-	MUSIC_TACTICAL_VICTORY,
-	MUSIC_TACTICAL_DEATH,
-	MUSIC_LAPTOP,
-};
-
-extern UINT8		gubMusicMode;
+extern MusicMode gubMusicMode;
 extern BOOLEAN	gfForceMusicToTense;
 
 
-void SetMusicMode(UINT8 ubMusicMode);
+void SetMusicMode(MusicMode ubMusicMode);
 
 /* Starts up one of the tunes in the music list. */
-void MusicPlay(UINT32 uiNum);
+void MusicPlay(const UTF8String* pFilename);
 
 void MusicSetVolume(UINT32 uiVolume);
 UINT32 MusicGetVolume(void);

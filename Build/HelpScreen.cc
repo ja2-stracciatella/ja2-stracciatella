@@ -563,7 +563,7 @@ static void EnterHelpScreen(void)
 	gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen &= ~( 1 << gHelpScreen.bCurrentHelpScreen );
 
 	//always start at the top
-	gHelpScreen.iLineAtTopOfTextBuffer = 0;
+	gHelpScreen.uiLineAtTopOfTextBuffer = 0;
 
 	//set it so there was no previous click
 	gHelpScreen.iLastMouseClickY = -1;
@@ -824,11 +824,8 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 			break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen.  DF 0" );
-      #else
+				SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen.");
         break;
-			#endif
 	}
 
 	//if there are buttons
@@ -998,11 +995,8 @@ static void HelpScreenSpecialExitCode(void)
 			break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen.  DF 0" );
-      #else
+				SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen.");
         break;
-			#endif
 	}
 }
 
@@ -1041,11 +1035,8 @@ static void SpecialHandlerCode(void)
 			break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen:  SpecialHandlerCode().  DF 0" );
-      #else
+				SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen: SpecialHandlerCode().");
         break;
-			#endif
 	}
 }
 
@@ -1092,12 +1083,9 @@ static UINT16 RenderSpecificHelpScreen(void)
 			break;
 
 		default:
-#if defined JA2BETAVERSION
 			SetFontDestBuffer(FRAME_BUFFER);
-			AssertMsg(0, "Error in help screen:  RenderSpecificHelpScreen().  DF 0");
-#else
+			SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen: RenderSpecificHelpScreen().");
 			break;
-#endif
 	}
 
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -1143,11 +1131,8 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 		case HELP_SCREEN_LOAD_GAME:                  break;
 
 		default:
-			#ifdef JA2BETAVERSION
-				AssertMsg( 0, "Error in help screen:  DisplayCurrentScreenTitleAndFooter().  DF 0" );
-      #else
-        break;
-			#endif
+			SLOGE(DEBUG_TAG_ASSERTS, "Error in help screen: DisplayCurrentScreenTitleAndFooter()." );
+      break;
 	}
 
 //	GetHelpScreenTextPositions( NULL, NULL, &usWidth );
@@ -1892,7 +1877,7 @@ static void RenderTextBufferToScreen(void)
 	SGPBox const SrcRect =
 	{
 		0,
-		gHelpScreen.iLineAtTopOfTextBuffer * HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER,
+		(UINT16) (gHelpScreen.uiLineAtTopOfTextBuffer * HLP_SCRN__HEIGHT_OF_1_LINE_IN_BUFFER),
 		HLP_SCRN__WIDTH_OF_TEXT_BUFFER,
 		HLP_SCRN__HEIGHT_OF_TEXT_AREA - 2 * 8
 	};
@@ -1904,7 +1889,7 @@ static void RenderTextBufferToScreen(void)
 static void ChangeHelpScreenSubPage(void)
 {
 	//reset
-	gHelpScreen.iLineAtTopOfTextBuffer = 0;
+	gHelpScreen.uiLineAtTopOfTextBuffer = 0;
 
 	RenderCurrentHelpScreenTextToBuffer();
 
@@ -1926,7 +1911,7 @@ static void ClearHelpScreenTextBuffer(void)
 static void ChangeTopLineInTextBufferByAmount(INT32 const delta)
 {
 	HELP_SCREEN_STRUCT& hlp     = gHelpScreen;
-	INT32&              top     = hlp.iLineAtTopOfTextBuffer;
+	UINT32&              top     = hlp.uiLineAtTopOfTextBuffer;
 	INT32 const         max_top = hlp.usTotalNumberOfLinesInBuffer - HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER;
 	INT32               new_top = top + delta;
 	if (new_top > max_top) new_top = max_top;
@@ -2078,7 +2063,7 @@ static void CalculateHeightAndPositionForHelpScreenScrollBox(INT32* piHeightOfSc
 		//
 		//next, calculate the top position of the box
 		//
-		dTemp = ( HLP_SCRN__HEIGHT_OF_SCROLL_AREA / ( FLOAT ) gHelpScreen.usTotalNumberOfLinesInBuffer ) * gHelpScreen.iLineAtTopOfTextBuffer;
+		dTemp = ( HLP_SCRN__HEIGHT_OF_SCROLL_AREA / ( FLOAT ) gHelpScreen.usTotalNumberOfLinesInBuffer ) * gHelpScreen.uiLineAtTopOfTextBuffer;
 
 		iTopPosScrollBox = (INT32)( dTemp +.5 ) + HLP_SCRN__SCROLL_POSY;
 	}
@@ -2146,7 +2131,7 @@ static void HelpScreenMouseMoveScrollBox(INT32 const mouse_y)
 	INT32 const min_y = HLP_SCRN__SCROLL_POSY + hlp.iLastMouseClickY;
 	INT32 const txt_h = hlp.usTotalNumberOfLinesInBuffer - HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER;
 	INT32 const pos   = txt_h * (mouse_y - min_y) / max_h;
-	INT32 const delta = pos - hlp.iLineAtTopOfTextBuffer;
+	INT32 const delta = pos - hlp.uiLineAtTopOfTextBuffer;
 	ChangeTopLineInTextBufferByAmount(delta);
 }
 

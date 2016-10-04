@@ -30,6 +30,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 #if defined(_MSC_VER)
   /* Visual Studio */
@@ -54,6 +55,75 @@ static FILE *s_logFile = NULL;  /**< File for logging. */
 static SLOGLevel s_consoleLevel = SLOG_INFO;
 static SLOGLevel s_fileLevel = SLOG_DEBUG;
 
+/* gDebugFlags contains one flag per topic to enable (1) or disable (0) logging
+ * default is all on for now. Watch the variable width when adding more topics! */
+static long long gDebugFlags;
+
+static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
+{
+  "Game Loop",
+  "Strategic Map",
+  "AI",
+  "Scheduler",
+  "Path AI",
+  "Animations",
+  "Gap",
+  "Weapons",
+  "Overhead",
+  "Keys",
+  "Points",
+  "Morale",
+  "Merc Hire",
+  "Opp List",
+  "Lighting",
+  "Render World",
+  "Tiles",
+  "Explosion",
+  "Physics",
+  "Ambient",
+  "Save/Load",
+  "Music Control",
+  "Smacker",
+  "Event Pump",
+  "Quests",
+  "Editor",
+  "Resources",
+  "JA2 Screens",
+  "Init",
+  "Font",
+  "SGP",
+  "STCI",
+  "Container",
+  "VSurface",
+  "Sound",
+  "Memory Manager",
+  "Game Screen",
+  "Bobby Ray",
+  "Strategic AI",
+  "Air Raid",
+  "Bullets",
+  "Handle Items",
+  "Interface",
+  "Line of Sight",
+  "Tactical Save",
+  "Team Turns",
+  "World Def",
+  "Himage",
+  "Library DB",
+  "File Man",
+  "Mod Pack",
+  "Default CM",
+  "Soldier",
+  "Asserts",
+  "Queen Command",
+  "NPC",
+  "Campaign",
+  "Loyalty",
+  "Auto Resolve",
+  "Corpses",
+  "Fixme"
+};
+
 /************************************************************
  * Function implementation
  ************************************************************/
@@ -62,6 +132,7 @@ void SLOG_Init(SLOGConsole console, const char *logFile)
 {
   if(!s_initialized)
   {
+    gDebugFlags = 0xFFFFFFFFFFFFFFFF;
     switch(console)
     {
     case SLOG_STDOUT:
@@ -103,6 +174,15 @@ void SLOG_SetLevel(SLOGLevel console, SLOGLevel file)
   s_fileLevel = file;
 }
 
+void SLOG_EnableTopic (SLOGTopics topic)
+{
+  gDebugFlags |= (1 << topic);
+}
+
+void SLOG_DisableTopic (SLOGTopics topic)
+{
+  gDebugFlags &= ~(1 << topic);
+}
 
 /** Get level name for including into the log. */
 static const char* getLevelName(SLOGLevel level)
@@ -117,10 +197,12 @@ static const char* getLevelName(SLOGLevel level)
   return "";
 }
 
-void SLOG_LogMessage(SLOGLevel level, const char *tag, const char *format, ...)
+void SLOG_LogMessage(SLOGLevel level, SLOGTopics tag, const char *format, ...)
 {
   int logToConsole = (s_consoleFD != 0) && (level >= s_consoleLevel);
   int logToFile = (s_logFile != NULL) && (level >= s_fileLevel);
+
+  if ( !(gDebugFlags & (1 << tag))) return;
 
   if(logToConsole || logToFile)
   {
@@ -137,7 +219,7 @@ void SLOG_LogMessage(SLOGLevel level, const char *tag, const char *format, ...)
     size += snprintf(buf + size, sizeof(buf) - size, "%4d/%02d/%02d %02d:%02d:%02d %-7s [%-16s] ",
                      localTime->tm_year + 1900, localTime->tm_mon, localTime->tm_mday,
                      localTime->tm_hour, localTime->tm_min, localTime->tm_sec,
-                     getLevelName(level), tag);
+                     getLevelName(level), SLOGTags[tag]);
 
     /* print message */
     va_start(args, format);
@@ -162,5 +244,11 @@ void SLOG_LogMessage(SLOGLevel level, const char *tag, const char *format, ...)
       fputs(buf, s_logFile);
       fflush(s_logFile);
     }
+#ifdef ENABLE_ASSERTS
+    if (tag == DEBUG_TAG_ASSERTS)
+    {
+      abort();
+    }
+#endif
   }
 }

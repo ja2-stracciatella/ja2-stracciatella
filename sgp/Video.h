@@ -6,13 +6,14 @@
 
 
 #define VIDEO_NO_CURSOR 0xFFFF
+#define GAME_WINDOW g_game_window
 
+extern SDL_Window* g_game_window;
 
 void         VideoSetFullScreen(BOOLEAN enable);
 void         InitializeVideoManager(void);
 void         ShutdownVideoManager(void);
 void         SuspendVideoManager(void);
-BOOLEAN      RestoreVideoManager(void);
 void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 void         InvalidateScreen(void);
 void         GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBitMask, UINT32* BlueBitMask);

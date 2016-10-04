@@ -38,6 +38,7 @@
 #include "Strategic_AI.h"
 #include "Town_Militia.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Campaign.h"
 #include "Isometric_Utils.h"
 #include "Meanwhile.h"
@@ -341,12 +342,12 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection( GROUP *pGroup, UIN
 	if( newDX )
 	{
 		ubNumUnalignedAxes++;
-		newDX /= abs( newDX );
+		newDX /= ABS( newDX );
 	}
 	if( newDY )
 	{
 		ubNumUnalignedAxes++;
-		newDY /= abs( newDY );
+		newDY /= ABS( newDY );
 	}
 
 	// error checking
@@ -594,7 +595,7 @@ static void RemoveGroupFromList(GROUP* const g)
 		MemFree(g);
 		return;
 	}
-	AssertMsg(0, "Trying to remove a strategic group that isn't in the list!");
+	SLOGE(DEBUG_TAG_ASSERTS, "Trying to remove a strategic group that isn't in the list!");
 }
 
 
@@ -659,7 +660,8 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 	if( fDisableMapInterfaceDueToBattle )
 	{
-		AssertMsg( 0, "fDisableMapInterfaceDueToBattle is set before attempting to bring up PBI.  Please send PRIOR save if possible and details on anything that just happened before this battle." );
+		SLOGE(DEBUG_TAG_ASSERTS, "fDisableMapInterfaceDueToBattle is set before attempting to bring up PBI.\
+															Please send PRIOR save if possible and details on anything that just happened before this battle." );
 		return;
 	}
 
@@ -1163,7 +1165,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		{
 			if (!g.pPlayerList)
 			{ // Nobody here, better just get out now
-				AssertMsg(0, String("Player group %d arrived in sector empty.  KM 0", g.ubGroupID));
+				SLOGE(DEBUG_TAG_ASSERTS, "Player group %d arrived in sector empty.", g.ubGroupID);
 				return;
 			}
 		}
@@ -1203,7 +1205,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-			AssertMsg(0, "Failed to add movement event.");
+			SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
 
 		if (g.fPlayer && g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
 		{
@@ -1298,7 +1300,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 		else
 		{
-			Assert(0);
+			SLOGE(DEBUG_TAG_ASSERTS, "GroupArrivedAtSector: group arrives in sector where it already has been");
 			return;
 		}
 
@@ -1718,7 +1720,7 @@ static void DelayEnemyGroupsIfPathsCross(GROUP& player_group)
 		 * values to figure out how far along its route a group is! */
 		SetGroupArrivalTime(g, player_group.uiArrivalTime + 1 + Random(10));
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-			AssertMsg(0, "Failed to add movement event.");
+			SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
 	}
 }
 
@@ -1748,10 +1750,9 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	dy = wp->y - pGroup->ubSectorY;
 	if( dx && dy )
 	{ //Can't move diagonally!
-		AssertMsg( 0, String("Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
-			pGroup->ubSectorX, pGroup->ubSectorY, wp->x, wp->y ) );
+		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
+			pGroup->ubSectorX, pGroup->ubSectorY, wp->x, wp->y );
 	}
-	AssertMsg(dx != 0 || dy != 0, String("Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y));
 	//Clip dx/dy value so that the move is for only one sector.
 	if( dx >= 1 )
 	{
@@ -1775,7 +1776,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 	else
 	{
-		Assert( 0 );
+		SLOGE(DEBUG_TAG_ASSERTS, "InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y);
 		return;
 	}
 	//All conditions for moving to the next waypoint are now good.
@@ -1865,7 +1866,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 
 	//Post the event!
 	if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
-		AssertMsg( 0, "Failed to add movement event." );
+		SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
 
 	//For the case of player groups, we need to update the information of the soldiers.
 	if( pGroup->fPlayer )
@@ -2436,9 +2437,9 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 			continue;
 		}
 
-		INT16 const sec_prev = SECTOR(g.ubPrevX,   g.ubPrevY);
+		INT16 const sec_prev = IS_VALID_SECTOR(g.ubPrevX, g.ubPrevY) ? SECTOR(g.ubPrevX,   g.ubPrevY) : -1;
 		INT16 const sec_cur  = SECTOR(g.ubSectorX, g.ubSectorY);
-		INT16 const sec_next = SECTOR(g.ubNextX,   g.ubNextY);
+		INT16 const sec_next = IS_VALID_SECTOR(g.ubNextX, g.ubNextY) ? SECTOR(g.ubNextY,   g.ubNextY) : -1;
 
 		bool const may_retreat_from_battle =
 			sec_battle == sec_src && sec_cur == sec_src && sec_prev == sec_dst;
@@ -2831,7 +2832,7 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	}
 	else
 	{
-		AssertMsg( 0, String("Player group cannot retreat from sector %c%d ", pGroup->ubSectorY+'A'-1, pGroup->ubSectorX ) );
+		SLOGE(DEBUG_TAG_ASSERTS, "Player group cannot retreat from sector %c%d ", pGroup->ubSectorY+'A'-1, pGroup->ubSectorX);
 		return;
 	}
 	if( pGroup->fPlayer )
@@ -2864,7 +2865,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		else if (dx == -1 && dy ==  0) direction = WEST_STRATEGIC_MOVE;
 		else
 		{
-			AssertMsg(0, String("Player group attempting illegal retreat from %c%d to %c%d.", g.ubSectorY + 'A' - 1, g.ubSectorX, g.ubNextY + 'A' - 1, g.ubNextX));
+			SLOGE(DEBUG_TAG_ASSERTS, "Player group attempting illegal retreat from %c%d to %c%d.", g.ubSectorY + 'A' - 1, g.ubSectorX, g.ubNextY + 'A' - 1, g.ubNextX);
 		}
 	}
 	else
@@ -2893,7 +2894,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	}
 
 	if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-		AssertMsg(0, "Failed to add movement event.");
+		SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
 
 	// For the case of player groups, we need to update the information of the soldiers.
 	if (g.fPlayer)
@@ -3153,16 +3154,16 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			dy = wp->y - pGroup->ubSectorY;
 			if( dx && dy )
 			{ //Can't move diagonally!
-				AssertMsg( 0, String( "GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector %c%d to sector %c%d for group at sector %c%d -- KM:0",
-					pGroup->ubSectorY + 'A', pGroup->ubSectorX, wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX ) );
+				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector %c%d to sector %c%d for group at sector %c%d",
+					pGroup->ubSectorY + 'A', pGroup->ubSectorX, wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSectorX = ubOrigX;
 				pGroup->ubSectorY = ubOrigY;
 				return TRUE;
 			}
 			if( !dx && !dy ) //Can't move to position currently at!
 			{
-				AssertMsg( 0, String( "GroupWillMoveThroughSector() -- Attempting to process same waypoint at %c%d for group at %c%d -- KM:0",
-					wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX ) );
+				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process same waypoint at %c%d for group at %c%d",
+					wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSectorX = ubOrigX;
 				pGroup->ubSectorY = ubOrigY;
 				return TRUE;
@@ -3184,13 +3185,6 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			{
 				dy = -1;
 			}
-			else
-			{
-				Assert( 0 );
-				pGroup->ubSectorX = ubOrigX;
-				pGroup->ubSectorY = ubOrigY;
-				return TRUE;
-			}
 			//Advance the sector value
 			pGroup->ubSectorX = (UINT8)( dx + pGroup->ubSectorX );
 			pGroup->ubSectorY = (UINT8)( dy + pGroup->ubSectorY );
@@ -3209,14 +3203,6 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 	pGroup->ubSectorY = ubOrigY;
 	return FALSE;
 }
-
-
-bool VehicleHasFuel(SOLDIERTYPE const& s)
-{
-	Assert(s.uiStatusFlags & SOLDIER_VEHICLE);
-	return s.sBreathRed != 0;
-}
-
 
 static INT16 VehicleFuelRemaining(SOLDIERTYPE const& vs)
 {

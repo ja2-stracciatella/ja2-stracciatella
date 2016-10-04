@@ -24,11 +24,6 @@
 #include "GameInstance.h"
 
 
-void HandleMinuteUpdate()
-{
-}
-
-
 static void HourlyCheckIfSlayAloneSoHeCanLeave(void);
 static void HourlyLarryUpdate(void);
 static void HourlyQuestUpdate(void);

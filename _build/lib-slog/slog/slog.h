@@ -32,6 +32,75 @@ extern "C"
 {
 #endif
 
+#define NUMBER_OF_TOPICS  62
+#define TAG_LENGTH        15
+
+typedef enum
+{
+  DEBUG_TAG_GAMELOOP,
+  DEBUG_TAG_SMAP,
+  DEBUG_TAG_AI,
+  DEBUG_TAG_SCHEDULER,
+  DEBUG_TAG_PATHAI,
+  DEBUG_TAG_ANIMATIONS, // 5
+  DEBUG_TAG_GAP,
+  DEBUG_TAG_WEAPONS,
+  DEBUG_TAG_OVERHEAD,
+  DEBUG_TAG_KEYS,
+  DEBUG_TAG_POINTS, // 10
+  DEBUG_TAG_MORALE,
+  DEBUG_TAG_MERCHIRE,
+  DEBUG_TAG_OPPLIST,
+  DEBUG_TAG_LIGHTING,
+  DEBUG_TAG_RENDERWORLD, // 15
+  DEBUG_TAG_TILES,
+  DEBUG_TAG_EXPLOSION,
+  DEBUG_TAG_PHYSICS,
+  DEBUG_TAG_AMBIENT,
+  DEBUG_TAG_SAVELOAD, // 20
+  DEBUG_TAG_MUSICCTL,
+  DEBUG_TAG_SMK,
+  DEBUG_TAG_EVENTPUMP,
+  DEBUG_TAG_QUESTS,
+  DEBUG_TAG_EDITOR, // 25
+  DEBUG_TAG_RESOURCES,
+  DEBUG_TAG_JA2SCREENS,
+  DEBUG_TAG_INIT,
+  DEBUG_TAG_FONT,
+  DEBUG_TAG_SGP, // 30
+  DEBUG_TAG_STCI,
+  DEBUG_TAG_CONTAINER,
+  DEBUG_TAG_VIDEO,
+  DEBUG_TAG_VSURFACE,
+  DEBUG_TAG_SOUND,
+  DEBUG_TAG_MEMORY, // 35
+  DEBUG_TAG_GAMESCREEN,
+  DEBUG_TAG_BOBBYRAY,
+  DEBUG_TAG_SAI,
+  DEBUG_TAG_AIRRAID,
+  DEBUG_TAG_BULLETS, // 40
+  DEBUG_TAG_HANDLEITEMS,
+  DEBUG_TAG_INTERFACE,
+  DEBUG_TAG_LOS,
+  DEBUG_TAG_TACTSAVE,
+  DEBUG_TAG_TEAMTURN, // 45
+  DEBUG_TAG_WORLDDEF,
+  DEBUG_TAG_HIMAGE,
+  DEBUG_TAG_LIBDB,
+  DEBUG_TAG_FILEMAN,
+  DEBUG_TAG_MODPACK, // 50
+  DEBUG_TAG_DEFAULTCM,
+  DEBUG_TAG_SOLDIER,
+  DEBUG_TAG_ASSERTS,
+  DEBUG_TAG_QUEENCMD,
+  DEBUG_TAG_NPC, // 55
+  DEBUG_TAG_CAMPAIGN,
+  DEBUG_TAG_LOYALTY,
+  DEBUG_TAG_AUTORESOLVE,
+  DEBUG_TAG_CORPSES,
+  DEBUG_TAG_FIXME // 60
+}
+SLOGTopics;
 
 /** @brief Console logging destinations. */
 typedef enum
@@ -53,7 +122,6 @@ typedef enum
 }
 SLOGLevel;
 
-
 /** @brief Library initialization.
  *
  * This function must be called only once.
@@ -73,6 +141,11 @@ void SLOG_Deinit(void);
 /** @brief Set logging level for console and file logging. */
 void SLOG_SetLevel(SLOGLevel console, SLOGLevel file);
 
+/** @brief enable logging for a specific SLOGTopic */
+void SLOG_EnableTopic (SLOGTopics topic);
+
+/** @brief disable logging for a specific SLOGTopic */
+void SLOG_DisableTopic (SLOGTopics topic);
 
 #ifndef SLOG_DISABLED
 
@@ -84,20 +157,20 @@ void SLOG_SetLevel(SLOGLevel console, SLOGLevel file);
    * @param level  Severity level of the message.
    * @param tag    Tag of the message, e.g. subsystem name.
    * @param format Format string (the same as for printf) */
-  void SLOG_LogMessage(SLOGLevel level, const char *tag, const char *format, ...);
+  void SLOG_LogMessage(SLOGLevel level, SLOGTopics topic, const char *format, ...);
 
 
   /** Print debug message macro. */
-  #define SLOGD(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_DEBUG, TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGD(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_DEBUG, TAG, FORMAT "\n", ##__VA_ARGS__)
 
   /** Print info message macro. */
-  #define SLOGI(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_INFO,  TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGI(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_INFO,  TAG, FORMAT "\n", ##__VA_ARGS__)
 
   /** Print warning message macro. */
-  #define SLOGW(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_WARNING, TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGW(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_WARNING, TAG, FORMAT "\n", ##__VA_ARGS__)
 
   /** Print error message macro. */
-  #define SLOGE(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_ERROR, TAG, FORMAT "\n", ##__VA_ARGS__);
+  #define SLOGE(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_ERROR, TAG, FORMAT "\n", ##__VA_ARGS__)
 
 #else
 

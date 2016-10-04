@@ -610,10 +610,10 @@ void DrawMap(void)
 			if (iZoomY < NORTH_ZOOM_BOUND + 1) iZoomY = NORTH_ZOOM_BOUND;
 			if (iZoomY > SOUTH_ZOOM_BOUND)     iZoomY = SOUTH_ZOOM_BOUND;
 
-			INT16 const  x     = iZoomX - 2;
-			INT16 const  y     = iZoomY - 3;
-			INT16        w     = MAP_VIEW_WIDTH  + 2;
-			INT16        h     = MAP_VIEW_HEIGHT - 1;
+			UINT16 const  x     = iZoomX - 2;
+			UINT16 const  y     = iZoomY - 3;
+			UINT16        w     = MAP_VIEW_WIDTH  + 2;
+			UINT16        h     = MAP_VIEW_HEIGHT - 1;
 			UINT16 const src_w = guiBIGMAP->Width();
 			UINT16 const src_h = guiBIGMAP->Height();
 			if (w > src_w - x) w = src_w - x;
@@ -980,8 +980,8 @@ static void ShadeMapElem(const INT16 sMapX, const INT16 sMapY, const INT32 iColo
 
 		SGPBox const clip =
 		{
-			2 * (sScreenX - (MAP_VIEW_START_X + 1)),
-			2 * (sScreenY -  MAP_VIEW_START_Y     ),
+			(UINT16) (2 * (sScreenX - (MAP_VIEW_START_X + 1))),
+			(UINT16) (2 * (sScreenY -  MAP_VIEW_START_Y     )),
 			2 * MAP_GRID_X,
 			2 * MAP_GRID_Y
 		};
@@ -1093,7 +1093,7 @@ static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColo
 			default: return;
 		}
 
-		SGPBox       const r       = { clip.iLeft, clip.iTop, clip.iRight - clip.iLeft, clip.iBottom - clip.iTop };
+		SGPBox       const r       = { clip.iLeft, clip.iTop, (UINT16)(clip.iRight - clip.iLeft), (UINT16)(clip.iBottom - clip.iTop) };
 		SGPVSurface* const map     = guiBIGMAP;
 		UINT16*      const org_pal = map->p16BPPPalette;
 		map->p16BPPPalette = pal;
@@ -2818,7 +2818,10 @@ void RestoreBackgroundForMapGrid( INT16 sMapX, INT16 sMapY )
 void ClipBlitsToMapViewRegion( void )
 {
 	// the standard mapscreen rectangle doesn't work for clipping while zoomed...
-	SGPRect ZoomedMapScreenClipRect={	MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y - 1, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + MAP_GRID_Y - 10 };
+	SGPRect ZoomedMapScreenClipRect={	(UINT16)(MAP_VIEW_START_X + MAP_GRID_X),
+																		(UINT16)(MAP_VIEW_START_Y + MAP_GRID_Y - 1),
+																		(UINT16)(MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X),
+																		(UINT16)(MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + MAP_GRID_Y - 10) };
 	SGPRect *pRectToUse;
 
 	if (fZoomFlag)
@@ -3225,10 +3228,10 @@ void DisplayPositionOfHelicopter( void )
 			}
 */
 
-			AssertMsg(minX < 640, String("DisplayPositionOfHelicopter: Invalid minX = %d", minX));
-			AssertMsg(maxX < 640, String("DisplayPositionOfHelicopter: Invalid maxX = %d", maxX));
-			AssertMsg(minY < 640, String("DisplayPositionOfHelicopter: Invalid minY = %d", minY));
-			AssertMsg(maxY < 640, String("DisplayPositionOfHelicopter: Invalid maxY = %d", maxY));
+			AssertMsg(minX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid minX = %d", minX));
+			AssertMsg(maxX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid maxX = %d", maxX));
+			AssertMsg(minY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid minY = %d", minY));
+			AssertMsg(maxY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid maxY = %d", maxY));
 
 			// IMPORTANT: Since min can easily be larger than max, we gotta cast to as signed value
 			x = ( UINT32 )( minX + flRatio * ( ( INT16 ) maxX - ( INT16 ) minX ) );

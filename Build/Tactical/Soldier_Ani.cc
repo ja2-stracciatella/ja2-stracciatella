@@ -69,6 +69,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "slog/slog.h"
 
 #define		NO_JUMP											0
 #define		MAX_ANIFRAMES_PER_FLASH			2
@@ -237,7 +238,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 		      // re-enable sight
 		      gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
 					{
-						//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
+						//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 						EVENT_SetSoldierPosition(pSoldier, pSoldier->sTempNewGridNo, SSP_NONE);
 					}
 					// Move two CC directions
@@ -407,7 +408,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 437:
 
 					// CHANGE DIRECTION AND GET-UP
-					//sGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( pSoldier->bDirection ) ) );
+					//sGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (-1 * DirectionInc( pSoldier->bDirection ) ) );
 					//ConvertGridNoToCenterCellXY(pSoldier->sGridNo, &sXPos, &sYPos);
 					//SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 
@@ -592,12 +593,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						// TRY FORWARDS...
 						// FIRST GRIDNO
-						sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+						sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 
 						if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 						{
 							// SECOND GRIDNO
-							// sNewGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+							// sNewGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( pSoldier->bDirection ) );
 
 							// if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, pSoldier->bDirection, FALLFORWARD_HITDEATH_STOP ) )
 							{
@@ -676,7 +677,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Gun jammed!" );
 							}
 
-							DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - aborting start of attack due to burst gun jam");
+							SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - aborting start of attack due to burst gun jam");
 							FreeUpAttacker(pSoldier);
 						}
 						else if ( bWeaponJammed == 255 )
@@ -695,7 +696,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						pSoldier->bDoBurst = 1;
 
 						// ATE; Reduce it due to animation being stopped...
-						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - Burst animation ended");
+						SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - Burst animation ended");
 						ReduceAttackBusyCount(pSoldier, FALSE);
 
 
@@ -748,8 +749,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					//CODE: BEGINHOPFENCE
 					// MOVE TWO FACGIN GRIDNOS
-					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
-					sNewGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+					sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
+					sNewGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( pSoldier->bDirection ) );
 					pSoldier->sForcastGridno = sNewGridNo;
 					break;
 
@@ -942,7 +943,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						INT16 sDiff = pSoldier->sHeightAdjustment - pSoldier->sDesiredHeight;
 
-						if ( abs( sDiff ) > 4 )
+						if ( ABS( sDiff ) > 4 )
 						{
 							if ( sDiff > 0 )
 							{
@@ -1059,7 +1060,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					if ( bOKFireWeapon == FALSE )
 					{
-						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Fire Weapon: Gun Cannot fire, code 470");
+						SLOGD(DEBUG_TAG_SOLDIER, "Fire Weapon: Gun Cannot fire, code 470");
 
 						// OK, SKIP x # OF FRAMES
 						// Skip 3 frames, ( a third ia added at the end of switch.. ) For a total of 4
@@ -1071,7 +1072,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						PlayLocationJA2Sample(pSoldier->sGridNo, S_DRYFIRE1, MIDVOLUME, 1);
 
 						// Free-up!
-						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - gun failed to fire");
+						SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - gun failed to fire");
 						FreeUpAttacker(pSoldier);
 					}
 					else if ( bOKFireWeapon == 255 )
@@ -1289,7 +1290,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CODE: FORCE FREE ATTACKER
 					// Release attacker
-					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, code 480");
+					SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 480");
 
 					ReleaseSoldiersAttacker( pSoldier );
 
@@ -1560,7 +1561,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//}
 					//else
 					//{
-					//	 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: CODE 493 Error, Pickup item action called but not setup" );
+					//	 SLOGD(DEBUG_TAG_SOLDIER, "CODE 493 Error, Pickup item action called but not setup" );
 					//}
 					break;
 
@@ -1578,7 +1579,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//}
 					//else
 					//{
-					//	 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: CODE 494 Error, OPen door action called but not setup" );
+					//	 SLOGD(DEBUG_TAG_SOLDIER, "CODE 494 Error, OPen door action called but not setup" );
 					//}
 					break;
 
@@ -1665,7 +1666,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 								default:
 									// IF we are here - something is wrong - we should have a death animation here
-									DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Ani: Death sequence needed for animation %d", pSoldier->usAnimState ) );
+									SLOGD(DEBUG_TAG_SOLDIER, "Death sequence needed for animation %d", pSoldier->usAnimState);
 									return TRUE;
 							}
 							ChangeSoldierState(pSoldier, state, 0, FALSE);
@@ -1691,7 +1692,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								gfPotentialTeamChangeDuringDeath = TRUE;
 
 								// Release attacker
-								DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, code 497 = check for death");
+								SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 497 = check for death");
 								ReleaseSoldiersAttacker( pSoldier );
 
 								// ATE: OK - the above call can potentially
@@ -1779,7 +1780,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if (pSoldier->fChangingStanceDueToSuppression)
 						{
 							pSoldier->fChangingStanceDueToSuppression = FALSE;
-							DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of suppression stance change");
+							SLOGD(DEBUG_TAG_SOLDIER, "Freeing up attacker - end of suppression stance change");
 							ReduceAttackBusyCount(pSoldier->suppressor, FALSE);
 						}
 
@@ -1863,14 +1864,14 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							// OK, if the code is == 2, get the path and try to move....
 							if ( pSoldier->fContinueMoveAfterStanceChange == 2 )
 							{
-								pSoldier->usPathIndex++;
+								pSoldier->ubPathIndex++;
 
-								if ( pSoldier->usPathIndex > pSoldier->usPathDataSize )
+								if ( pSoldier->ubPathIndex > pSoldier->ubPathDataSize )
 								{
-									pSoldier->usPathIndex = pSoldier->usPathDataSize;
+									pSoldier->ubPathIndex = pSoldier->ubPathDataSize;
 								}
 
-								if ( pSoldier->usPathIndex == pSoldier->usPathDataSize )
+								if ( pSoldier->ubPathIndex == pSoldier->ubPathDataSize )
 								{
 									// Stop, don't do anything.....
 								}
@@ -1906,9 +1907,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						else
 						{
 							// IF we are here - something is wrong - we should have a death animation here
-#ifdef JA2BETAVERSION
-							ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"Soldier Ani: GOTO Stance not chained properly: %d %d %d", ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState);
-#endif
+							SLOGD(DEBUG_TAG_SOLDIER, "Soldier Ani: GOTO Stance not chained properly: %d %d %d", ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState);
 							SoldierGotoStationaryStance(pSoldier);
 							return TRUE;
 						}
@@ -2210,13 +2209,14 @@ no_cry:
 				case 753:
 
 					// code: freeup attcker
-					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )", gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState));
+					SLOGD(DEBUG_TAG_SOLDIER, "Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )",
+								gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState);
 					ReduceAttackBusyCount(pSoldier, FALSE);
 
           // ATE: Here, reduce again if creaturequeen tentical attack...
           if ( pSoldier->usAnimState == QUEEN_SWIPE )
           {
-					  DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count for end of queen swipe");
+					  SLOGD(DEBUG_TAG_SOLDIER, "Reducing attacker busy count for end of queen swipe");
 					  ReduceAttackBusyCount(pSoldier, FALSE);
           }
 					break;
@@ -2256,7 +2256,8 @@ no_cry:
 
 					// INcrement attacker busy count....
 					gTacticalStatus.ubAttackBusyCount++;
-					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!! Incrementing attacker busy count..., CODE FROM ANIMATION %hs ( %d ) : Count now %d", gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount));
+					SLOGD(DEBUG_TAG_SOLDIER, "Incrementing attacker busy count..., CODE FROM ANIMATION %hs ( %d ) : Count now %d",
+								gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState, gTacticalStatus.ubAttackBusyCount);
 					break;
 
 				case 758:
@@ -2959,7 +2960,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
       if ( !pSoldier->fDoingExternalDeath )
       {
 			  // Release attacker
-			  DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, code 497 = handle soldier death");
+				SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 497 = handle soldier death");
 			  ReleaseSoldiersAttacker( pSoldier );
       }
 		}
@@ -2976,7 +2977,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		// If we are here - something funny has heppende
 		// We either have played a death animation when we are not dead, or we are calling
 		// this ani code in an animation which is not a death animation
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: Death animation called when not dead..." );
+		SLOGD(DEBUG_TAG_SOLDIER, "Death animation called when not dead..." );
 	}
 
 	return( fBuddyJustDead );
@@ -2988,7 +2989,7 @@ void HandlePlayerTeamMemberDeathAfterSkullAnimation(SOLDIERTYPE* pSoldier)
 	// Release attacker
   if ( !pSoldier->fDoingExternalDeath )
   {
-	  DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Releasesoldierattacker, code 497 = handle soldier death");
+	  SLOGD(DEBUG_TAG_SOLDIER, "Releasesoldierattacker, code 497 = handle soldier death");
 	  ReleaseSoldiersAttacker( pSoldier );
   }
 
@@ -3018,7 +3019,7 @@ void CheckForAndHandleSoldierDeath(SOLDIERTYPE* pSoldier, BOOLEAN* pfMadeCorpse)
 
 		default:
 			// IF we are here - something is wrong - we should have an animation stop here
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: CODE 440 Error, Death STOP not handled" );
+			SLOGW(DEBUG_TAG_SOLDIER, "CODE 440 Error, Death STOP not handled" );
 			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);
@@ -3158,7 +3159,7 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 
 			default:
 				// We have missed something here - send debug msg
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: Genmeric hit not chained");
+				SLOGW(DEBUG_TAG_SOLDIER, "Generic hit not chained");
 				return;
 		}
 	}
@@ -3200,7 +3201,7 @@ BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 			case BLOODCAT_HIT:               state = BLOODCAT_DYING;        break;
 
 			default:
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Control: Death state %d has no death hit", pSoldier->usAnimState ) );
+				SLOGD(DEBUG_TAG_SOLDIER, "Death state %d has no death hit", pSoldier->usAnimState);
 				{
 					BOOLEAN fMadeCorpse;
 					CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
@@ -3385,7 +3386,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Ani: unconscious hit sequence needed for animation %d", pSoldier->usAnimState ) );
+			SLOGD(DEBUG_TAG_SOLDIER, "unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
 
 	}
 	// OTHERWISE, GOTO APPROPRIATE STOPANIMATION!
@@ -3417,7 +3418,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Ani: unconscious hit sequence needed for animation %d", pSoldier->usAnimState ) );
+			SLOGW(DEBUG_TAG_SOLDIER, "unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
 			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);
@@ -3429,7 +3430,7 @@ void KickOutWheelchair( SOLDIERTYPE *pSoldier )
 	INT16 sNewGridNo;
 
 	// Move forward one gridno....
-	sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)( DirectionInc( pSoldier->bDirection ) ) );
+	sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 
 	// ATE: Make sure that the gridno is unoccupied!
 	if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, pSoldier->bLevel ) )

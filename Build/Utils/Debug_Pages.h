@@ -19,6 +19,7 @@
 
 void MHeader(INT32 const x, INT32 const y, wchar_t const* const str);
 void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val);
+void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, char const* const val);
 void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, wchar_t const* const val);
 void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, void const* const val);
 void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val, INT32 const effective_val);

@@ -10,6 +10,8 @@
 
 #define		SIZE_OF_SAVE_GAME_DESC				128
 
+#define		NUM_SAVE_GAME_BACKUPS					2
+
 #define		GAME_VERSION_LENGTH						16
 
 #define		SAVE__ERROR_NUM						99
@@ -75,6 +77,8 @@ void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
 
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *pGameDesc );
 void    LoadSavedGame(UINT8 save_slot_id);
+
+void BackupSavedGame(UINT8 const ubSaveGameID);
 
 void SaveFilesToSavedGame(char const* pSrcFileName, HWFILE);
 void LoadFilesFromSavedGame(char const* pSrcFileName, HWFILE);

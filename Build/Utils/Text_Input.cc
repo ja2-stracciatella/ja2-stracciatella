@@ -110,6 +110,22 @@ static void PopTextInputLevel(void)
 static BOOLEAN gfEditingText = FALSE;
 static BOOLEAN gfTextInputMode = FALSE;
 
+void SetEditingStatus(bool bIsEditing)
+{
+	if (bIsEditing != gfEditingText)
+	{
+		gfEditingText = bIsEditing;
+		if (bIsEditing)
+		{
+			SDL_StartTextInput();
+		}
+		else
+		{
+			SDL_StopTextInput();
+		}
+	}
+}
+
 //values that contain the hiliting positions and the cursor position.
 static UINT8 gubCursorPos = 0;
 static UINT8 gubStartHilite = 0;
@@ -134,7 +150,7 @@ void InitTextInputMode()
 	gpTextInputHead = NULL;
 	pColors = MALLOC(TextInputColors);
 	gfTextInputMode = TRUE;
-	gfEditingText = FALSE;
+	SetEditingStatus(FALSE);
 	pColors->fBevelling = FALSE;
 	pColors->fUseDisabledAutoShade = TRUE;
 	pColors->usCursorColor = 0;
@@ -187,7 +203,7 @@ void KillTextInputMode()
 	else
 	{
 		gfTextInputMode = FALSE;
-		gfEditingText   = FALSE;
+		SetEditingStatus(FALSE);
 	}
 
 	if (!gpTextInputHead) gpActive = 0;
@@ -211,7 +227,7 @@ static TEXTINPUTNODE* AllocateTextInputNode(BOOLEAN const start_editing)
 	n->fEnabled = TRUE;
   if (!gpTextInputHead)
 	{ // First entry, so we start with text input.
-		gfEditingText   = start_editing;
+		SetEditingStatus(start_editing);
 		gpTextInputHead = n;
 		gpActive        = n;
 		n->ubID         = 0;
@@ -325,7 +341,7 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText
 	}
 	else
 	{
-		AssertMsg(0, String("Attempting to illegally set text into user field %d", curr->ubID));
+		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to illegally set text into user field %d", curr->ubID);
 	}
 }
 
@@ -348,7 +364,7 @@ void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
 	}
 	else
 	{
-		AssertMsg(0, String("Attempting to illegally set text into user field %d", curr->ubID));
+		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to illegally set text into user field %d", curr->ubID);
 	}
 }
 
@@ -413,11 +429,11 @@ void SetActiveField(UINT8 const id)
 	{
 		gubStartHilite = 0;
 		gubCursorPos   = n->ubStrLen;
-		gfEditingText  = TRUE;
+		SetEditingStatus(TRUE);
 	}
 	else
 	{
-		gfEditingText = FALSE;
+		SetEditingStatus(FALSE);
 		if (n->InputCallback) n->InputCallback(n->ubID, TRUE);
 	}
 }
@@ -450,18 +466,18 @@ void SelectNextField()
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->ubStrLen;
-				gfEditingText = TRUE;
+				SetEditingStatus(TRUE);
 			}
 			else
 			{
-				gfEditingText = FALSE;
+				SetEditingStatus(FALSE);
 				if( gpActive->InputCallback )
 					(gpActive->InputCallback)(gpActive->ubID, TRUE);
 			}
 		}
 		if( gpActive == pStart )
 		{
-			gfEditingText = FALSE;
+			SetEditingStatus(FALSE);
 			return;
 		}
 	}
@@ -492,18 +508,18 @@ static void SelectPrevField(void)
 			{
 				gubStartHilite = 0;
 				gubCursorPos = gpActive->ubStrLen;
-				gfEditingText = TRUE;
+				SetEditingStatus(TRUE);
 			}
 			else
 			{
-				gfEditingText = FALSE;
+				SetEditingStatus(FALSE);
 				if( gpActive->InputCallback )
 					(gpActive->InputCallback)(gpActive->ubID, TRUE);
 			}
 		}
 		if( gpActive == pStart )
 		{
-			gfEditingText = FALSE;
+			SetEditingStatus(FALSE);
 			return;
 		}
 	}
@@ -898,7 +914,7 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* const reg, INT32 cons
 	{
 		SetActiveFieldMouse(reg);
 		//Signifies that we are typing text now.
-		gfEditingText = TRUE;
+		SetEditingStatus(TRUE);
 		size_t const pos = CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX);
 		gubCursorPos   = pos;
 		gubStartHilite = pos;

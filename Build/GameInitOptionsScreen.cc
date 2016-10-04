@@ -7,6 +7,7 @@
 #include "Fade_Screen.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "Options_Screen.h"
 #include "GameInitOptionsScreen.h"
 #include "GameSettings.h"
 #include "Input.h"
@@ -15,6 +16,7 @@
 #include "MainMenuScreen.h"
 #include "MessageBoxScreen.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"
@@ -75,17 +77,6 @@
 #define		GIO_IRON_MAN_SETTING_Y							GIO_GAME_SETTINGS_Y
 #define		GIO_IRON_MAN_SETTING_WIDTH						GIO_DIF_SETTINGS_WIDTH
 
-
-//Difficulty settings
-enum
-{
-	GIO_DIFF_EASY,
-	GIO_DIFF_MED,
-	GIO_DIFF_HARD,
-
-	NUM_DIFF_SETTINGS,
-};
-
 // Game Settings options
 enum
 {
@@ -120,6 +111,7 @@ enum
 {
 	GIO_CAN_SAVE,
 	GIO_IRON_MAN,
+	GIO_DEAD_IS_DEAD,
 
 	NUM_SAVE_OPTIONS,
 };
@@ -130,7 +122,9 @@ enum
 	GIO_NOTHING,
 	GIO_CANCEL,
 	GIO_EXIT,
-	GIO_IRON_MAN_MODE
+	GIO_IRON_MAN_MODE,
+	GIO_DEAD_IS_DEAD_MODE,
+	GIO_DEAD_IS_DEAD_SAVE
 };
 
 
@@ -158,7 +152,7 @@ static BUTTON_PICS* giGIOCancelBtnImage;
 
 
 //checkbox to toggle the Diff level
-static GUIButtonRef guiDifficultySettingsToggles[NUM_DIFF_SETTINGS];
+static GUIButtonRef guiDifficultySettingsToggles[NUM_DIF_LEVELS];
 static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 //checkbox to toggle Game style
@@ -188,9 +182,12 @@ static void GetGIOScreenUserInput(void);
 static void RestoreGIOButtonBackGrounds(void);
 static void DoneFadeOutForExitGameInitOptionScreen(void);
 static void DisplayMessageToUserAboutGameDifficulty(void);
+static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const wchar_t, MSGBOX_CALLBACK);
 static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DisplayMessageToUserAboutIronManMode(void);
 static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue);
+static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue);
+static void ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack(MessageBoxReturnValue);
 
 
 ScreenID GameInitOptionsScreenHandle(void)
@@ -288,14 +285,7 @@ static void EnterGIOScreen()
 	{ // Check box to toggle difficulty settings
 		INT16 const x = GIO_DIF_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX;
 		INT16 const y = GIO_DIF_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-		size_t def;
-		switch (gGameOptions.ubDifficultyLevel)
-		{
-			case DIF_LEVEL_EASY:   def = GIO_DIFF_EASY; break;
-			default:
-			case DIF_LEVEL_MEDIUM: def = GIO_DIFF_MED;  break;
-			case DIF_LEVEL_HARD:   def = GIO_DIFF_HARD; break;
-		}
+		size_t def = gGameOptions.ubDifficultyLevel - 1;
 		MakeCheckBoxes(guiDifficultySettingsToggles, lengthof(guiDifficultySettingsToggles), x, y, BtnDifficultyTogglesCallback, def);
 	}
 
@@ -309,7 +299,7 @@ static void EnterGIOScreen()
 	{ // JA2Gold: iron man buttons
 		INT16  const x   = GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TOGGLE_BOX;
 		INT16  const y   = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-		size_t const def = gGameOptions.fIronManMode ? GIO_IRON_MAN : GIO_CAN_SAVE;
+		size_t const def = gGameOptions.ubGameSaveMode ? gGameOptions.ubGameSaveMode : GIO_CAN_SAVE;
 		MakeCheckBoxes(guiGameSaveToggles, lengthof(guiGameSaveToggles), x, y, BtnGameSaveTogglesCallback, def);
 	}
 
@@ -379,6 +369,11 @@ static void ExitGIOScreen()
 	gfGIOScreenEntry = TRUE;
 }
 
+static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallback)
+{
+  gubGameOptionScreenHandler = GIO_EXIT;
+  DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_OK, ReturnCallback, NULL);
+}
 
 static void HandleGIOScreen(void)
 {
@@ -405,6 +400,13 @@ static void HandleGIOScreen(void)
 			case GIO_IRON_MAN_MODE:
 				DisplayMessageToUserAboutGameDifficulty();
 				break;
+      
+			case GIO_DEAD_IS_DEAD_MODE:
+				DisplayMessageToUserAboutGameDifficulty();
+				break;
+			case GIO_DEAD_IS_DEAD_SAVE:
+				DisplayMessageToUserAboutDeadIsDeadSaveScreen(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack); 
+				break;
 		}
 
 		gubGameOptionScreenHandler = GIO_NOTHING;
@@ -427,7 +429,7 @@ static void RenderGIOScreen(void)
 	BltVideoObject(FRAME_BUFFER, guiGIOMainBackGroundImage, 0, STD_SCREEN_X, STD_SCREEN_Y);
 
 	//Shade the background
-	FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 48, STD_SCREEN_Y + 55, STD_SCREEN_X + 592, STD_SCREEN_Y + 378); //358
+	FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 48, STD_SCREEN_Y + 55, STD_SCREEN_X + 592, STD_SCREEN_Y + 408); //358
 
 
 	//Display the title
@@ -489,10 +491,11 @@ static void RenderGIOScreen(void)
 	usPosY += GIO_GAP_BN_SETTINGS;
 
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_IRON_MAN_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-	usPosY += 20;
-	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
+	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	usPosY += GIO_GAP_BN_SETTINGS;
+	
+	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_DEAD_IS_DEAD_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_LOAD_PREVIOUS_SAVE], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
 
@@ -618,7 +621,7 @@ static UINT8 GetCurrentDifficultyButtonSetting(void)
 {
 	UINT8	cnt;
 
-	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
+	for (cnt = 0; cnt < NUM_DIF_LEVELS; cnt++)
 	{
 		if (guiDifficultySettingsToggles[cnt]->Clicked()) return cnt;
 	}
@@ -683,7 +686,7 @@ static void RestoreGIOButtonBackGrounds(void)
 
 	// Check box to toggle Difficulty settings
 	usPosY = GIO_DIF_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
-	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
+	for (cnt = 0; cnt < NUM_DIF_LEVELS; cnt++)
 	{
 		RestoreExternBackgroundRect(GIO_DIF_SETTINGS_X + GIO_OFFSET_TO_TOGGLE_BOX, usPosY, 34, 29);
 		usPosY += GIO_GAP_BN_SETTINGS;
@@ -735,10 +738,16 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 	gGameOptions.fTurnTimeLimit = GetCurrentTimedTurnsButtonSetting();
 #endif
 	// JA2Gold: iron man
-	gGameOptions.fIronManMode = GetCurrentGameSaveButtonSetting();
+	gGameOptions.ubGameSaveMode = GetCurrentGameSaveButtonSetting();
 
-	gubGIOExitScreen = INTRO_SCREEN;
-
+	if (gGameOptions.ubGameSaveMode == GIO_DEAD_IS_DEAD)
+	{
+		gubGIOExitScreen = SAVE_LOAD_SCREEN;
+	} else
+	{
+		gubGIOExitScreen = INTRO_SCREEN;
+	}
+  
 	//set the fact that we should do the intro videos
 #ifdef JA2TESTVERSION
 	if (_KeyDown(ALT))
@@ -770,24 +779,23 @@ static void DoGioMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallba
 static void DisplayMessageToUserAboutGameDifficulty(void)
 {
 	const wchar_t* text;
-
-	switch (GetCurrentDifficultyButtonSetting())
-	{
-		case 0: text = zGioDifConfirmText[GIO_CFS_NOVICE];      break;
-		case 1: text = zGioDifConfirmText[GIO_CFS_EXPERIENCED]; break;
-		case 2: text = zGioDifConfirmText[GIO_CFS_EXPERT];      break;
-		default: return;
-	}
+        text = zGioDifConfirmText[GetCurrentDifficultyButtonSetting()];        
 	DoGioMessageBox(text, ConfirmGioDifSettingMessageBoxCallBack);
 }
 
 
 static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
-	if (bExitValue == MSG_BOX_RETURN_YES)
-	{
-		gubGameOptionScreenHandler = GIO_EXIT;
-	}
+  if (bExitValue == MSG_BOX_RETURN_YES)
+  {
+    if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
+    {
+      gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD_SAVE;
+    } else
+    {
+      gubGameOptionScreenHandler = GIO_EXIT;
+    } 
+  }
 }
 
 
@@ -796,9 +804,14 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 	UINT8 ubIronManMode = GetCurrentGameSaveButtonSetting();
 
 	//if the user has selected IRON MAN mode
-	if (ubIronManMode)
+	if (ubIronManMode == GIO_IRON_MAN)
 	{
 		DoGioMessageBox(str_iron_man_mode_warning, ConfirmGioIronManMessageBoxCallBack);
+		return  TRUE;
+	}
+	else if (ubIronManMode == GIO_DEAD_IS_DEAD)
+	{
+		DoGioMessageBox(str_dead_is_dead_mode_warning, ConfirmGioDeadIsDeadMessageBoxCallBack);
 		return  TRUE;
 	}
 	return FALSE;
@@ -815,4 +828,23 @@ static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue const bExi
 	{
 		SelectCheckbox(guiGameSaveToggles, *guiGameSaveToggles[GIO_CAN_SAVE]);
 	}
+}
+
+static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
+{
+	if (bExitValue == MSG_BOX_RETURN_YES)
+	{
+		gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD_MODE;
+	}
+	else
+	{
+		SelectCheckbox(guiGameSaveToggles, *guiGameSaveToggles[GIO_CAN_SAVE]);
+	}
+}
+
+static void ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
+{
+  // Set the Previous Option Screen to the Game Init Options Screen, so the save screen knows we are starting a new game
+  guiPreviousOptionScreen = GAME_INIT_OPTIONS_SCREEN;
+  gubGameOptionScreenHandler = GIO_EXIT;
 }

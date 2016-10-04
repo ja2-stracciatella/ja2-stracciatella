@@ -16,6 +16,7 @@
 #include "Interface_Dialogue.h"
 #include "TeamTurns.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "History.h"
 #include "Game_Clock.h"
 #include "StrategicMap.h"

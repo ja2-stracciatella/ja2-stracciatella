@@ -46,6 +46,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "slog/slog.h"
 
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 
@@ -536,9 +537,9 @@ static DOUBLE LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
 {
 INT32 iDx, iDy;
 
-	iDx=abs(iX1-iX2);
+	iDx=ABS(iX1-iX2);
 	iDx*=iDx;
-	iDy=abs(iY1-iY2);
+	iDy=ABS(iY1-iY2);
 	iDy*=iDy;
 
 	return(sqrt((DOUBLE)(iDx+iDy)));
@@ -1084,7 +1085,7 @@ BOOLEAN fInsertNodes=FALSE;
 	 if((XDelta==0) && (YDelta==0))
 		 return(FALSE);
 
-	//DebugMsg(TOPIC_GAME, DBG_LEVEL_0, String("Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY));
+	SLOGD(DEBUG_TAG_LIGHTING, "Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY);
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
 	if (fInsertNodes) usCurNode = t->n_rays;
 

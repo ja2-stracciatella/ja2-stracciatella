@@ -241,9 +241,6 @@ static MERC_LEAVE_ITEM* gpLeaveListHead[NUM_LEAVE_LIST_SLOTS];
 // holds ids of mercs who left stuff behind
 static UINT32 guiLeaveListOwnerProfileId[NUM_LEAVE_LIST_SLOTS];
 
-// flag to reset contract region glow
-BOOLEAN fResetContractGlow = FALSE;
-
 // timers for double click
 static INT32 giDblClickTimersForMoveBoxMouseRegions[MAX_POPUP_BOX_STRING_COUNT];
 
@@ -587,7 +584,7 @@ void RestoreBackgroundForAssignmentGlowRegionList( void )
 	if( iOldAssignmentLine != giAssignHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 66, Y_START - 1, 118 + 1 - 67, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
+		RestoreExternBackgroundRect( ASSIGN_X, Y_START - 1, ASSIGN_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
@@ -612,7 +609,7 @@ void RestoreBackgroundForDestinationGlowRegionList( void )
 	if( iOldDestinationLine != giDestHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 182, Y_START - 1, 217 + 1 - 182, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
+		RestoreExternBackgroundRect( DEST_ETA_X, Y_START - 1, DEST_ETA_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) );
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
@@ -637,16 +634,13 @@ void RestoreBackgroundForContractGlowRegionList( void )
 	if( iOldContractLine != giContractHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 222, Y_START - 1, 250 + 1 - 222, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
+		RestoreExternBackgroundRect( TIME_REMAINING_X, Y_START - 1, TIME_REMAINING_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
 
 		// set old to current
 		iOldContractLine = giContractHighLine;
-
-		// reset color rotation
-		fResetContractGlow = TRUE;
 	}
 }
 
@@ -655,7 +649,7 @@ void RestoreBackgroundForSleepGlowRegionList( void )
 {
 	static INT32 iOldSleepHighLine = -1;
 
-	// will restore the background region of the destinations list after a glow has ceased
+	// will restore the background region of the sleep list after a glow has ceased
 	// ( a _LOST_MOUSE reason to the assignment region mvt callback handler )
 
 	if( fDisableDueToBattleRoster )
@@ -666,16 +660,13 @@ void RestoreBackgroundForSleepGlowRegionList( void )
 	if( iOldSleepHighLine != giSleepHighLine )
 	{
 		// restore background
-		RestoreExternBackgroundRect( 123, Y_START - 1, 142 + 1 - 123, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
+		RestoreExternBackgroundRect( SLEEP_X, Y_START - 1, SLEEP_WIDTH, ( INT16 )( ( ( MAX_CHARACTER_COUNT + 1 ) * ( Y_SIZE + 2 ) ) + 1 ) ) ;
 
 		// ARM: not good enough! must reblit the whole panel to erase glow chunk restored by help text disappearing!!!
 		fTeamPanelDirty = TRUE;
 
 		// set old to current
 		iOldSleepHighLine = giSleepHighLine;
-
-		// reset color rotation
-		fResetContractGlow = TRUE;
 	}
 }
 
@@ -1234,6 +1225,8 @@ void HandleGroupAboutToArrive( void )
 {
 	// reblit map to change the color of the "people in motion" marker
 	fMapPanelDirty = TRUE;
+	
+	DoDeadIsDeadSaveIfNecessary();
 
 	// ARM - commented out - don't see why this is needed
 //	fTeamPanelDirty = TRUE;
@@ -2305,7 +2298,7 @@ static void AddStringsToMoveBox(PopUpBox*);
 
 static void CreatePopUpBoxForMovementBox(void)
 {
-  SGPPoint const MovePosition = { STD_SCREEN_X + 450, STD_SCREEN_Y + 100 };
+  SGPPoint const MovePosition = { (UINT16)(STD_SCREEN_X + 450), (UINT16)(STD_SCREEN_Y + 100) };
 
 	// create the pop up box and mouse regions for movement list
 	PopUpBox* const box = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
@@ -2759,7 +2752,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			}
 			else
 			{
-				AssertMsg( 0, String( "MoveMenuBtnCallback: Invalid regionType %d, moveBoxLine %d", iRegionType, iMoveBoxLine ) );
+				SLOGE(DEBUG_TAG_ASSERTS, "MoveMenuBtnCallback: Invalid regionType %d, moveBoxLine %d", iRegionType, iMoveBoxLine);
 				return;
 			}
 
@@ -2894,7 +2887,7 @@ static void HandleMoveoutOfSectorMovementTroops(void)
 			{
 				if ( !AddCharacterToSquad( pSoldier, ( INT8 )( iSquadNumber ) ) )
 				{
-					AssertMsg( 0, String( "HandleMoveoutOfSectorMovementTroops: AddCharacterToSquad %d failed, iCounter %d", iSquadNumber, iCounter ) );
+					SLOGE(DEBUG_TAG_ASSERTS, "HandleMoveoutOfSectorMovementTroops: AddCharacterToSquad %d failed, iCounter %d", iSquadNumber, iCounter);
 					// toggle whether he's going or not to try and recover somewhat gracefully
 					fSoldierIsMoving[ iCounter ] = !fSoldierIsMoving[ iCounter ];
 				}
@@ -3858,7 +3851,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 		// Too damaged?
 		if (s.bLife < OKLIFE) return ME_VEHICLE_DAMAGED;
 		// Out of fuel?
-		if (!VehicleHasFuel(s)) return ME_VEHICLE_NO_GAS;
+		if (s.sBreathRed == 0) return ME_VEHICLE_NO_GAS;
 	}
 	else // Non-vehicle
 	{

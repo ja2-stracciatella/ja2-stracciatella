@@ -50,6 +50,7 @@
 #include "FileMan.h"
 #include "Animated_ProgressBar.h"
 #include "Music_Control.h"
+#include "ContentMusic.h"
 #include "Fade_Screen.h"
 #include "Strategic_Movement.h"
 #include "Campaign_Types.h"
@@ -105,7 +106,7 @@
 #include "ScreenIDs.h"
 #include "Items.h"
 #include "UILayout.h"
-
+#include "slog/slog.h"
 
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS	200
@@ -340,10 +341,10 @@ void BeginLoadScreen( )
 
 			SGPBox const SrcRect =
 			{
-				536 * iPercentage / 100,
-				367 * iPercentage / 100,
-				SCREEN_WIDTH  - 541 * iPercentage / 100,
-				SCREEN_HEIGHT - 406 * iPercentage / 100
+				(UINT16) (536 * iPercentage / 100),
+				(UINT16) (367 * iPercentage / 100),
+				(UINT16) (SCREEN_WIDTH  - 541 * iPercentage / 100),
+				(UINT16) (SCREEN_HEIGHT - 406 * iPercentage / 100)
 			};
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
 			InvalidateScreen();
@@ -409,11 +410,11 @@ static void EndLoadScreen(void)
 		swprintf(str, lengthof(str), L"%c%d_b%d ENTER SECTOR TIME:  %d.%02d seconds.",
 							'A' + gWorldSectorY - 1, gWorldSectorX, gbWorldSectorZ, uiSeconds, uiHundreths );
 	}
-	ScreenMsg( FONT_YELLOW, MSG_TESTVERSION, str );
+	SLOGD(DEBUG_TAG_SMAP, str );
 	if( fStartNewFile )
 	{ //start new file
 		fp = fopen( "TimeResults.txt", "w" );
-		ScreenMsg(FONT_YELLOW, MSG_TESTVERSION, L"See TimeResults.txt for more detailed timings.");
+		SLOGD(DEBUG_TAG_SMAP, "See TimeResults.txt for more detailed timings.");
 		fStartNewFile = FALSE;
 	}
 	else
@@ -920,10 +921,8 @@ void PrepareLoadedSector()
 		}
 		else
 		{
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Ambush aborted in sector %c%d -- no center point in map.  LC:1",
+			SLOGE(DEBUG_TAG_SMAP, "Ambush aborted in sector %c%d -- no center point in map.",
 					gWorldSectorY + 'A' - 1, gWorldSectorX );
-			#endif
 		}
 	}
 
@@ -942,7 +941,7 @@ void PrepareLoadedSector()
 		CalculateNonPersistantPBIInfo();
 	}
 
-	ScreenMsg( FONT_YELLOW, MSG_DEBUG, L"Current Time is: %d", GetWorldTotalMin() );
+	SLOGD(DEBUG_TAG_SMAP, "Current Time is: %d", GetWorldTotalMin() );
 
 	AllTeamsLookForAll( TRUE );
 }
@@ -1388,7 +1387,7 @@ check_entry:
 				}
 				else
 				{
-					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls has NO entrypoints -- using precise center of map for %ls.", sector, s.name);
+					SLOGD(DEBUG_TAG_SMAP, "Sector %ls has NO entrypoints -- using precise center of map for %ls.", sector, s.name);
 					goto place_in_center;
 				}
 				wchar_t const* no_entry = 0;
@@ -1402,7 +1401,7 @@ check_entry:
 				}
 				if (no_entry)
 				{
-					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a %ls entrypoint -- substituting %ls entrypoint for %ls.", sector, no_entry, entry, s.name);
+					SLOGD(DEBUG_TAG_SMAP, "Sector %ls doesn't have a %ls entrypoint -- substituting %ls entrypoint for %ls.", sector, no_entry, entry, s.name);
 				}
 			}
 			break;
@@ -1414,14 +1413,11 @@ check_entry:
 		case INSERTION_CODE_PRIMARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestPrimaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-#ifdef JA2BETAVERSION
-			char str[256];
-			sprintf(str, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.", s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
-#endif
+			SLOGD(DEBUG_TAG_SMAP, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				SLOGE(DEBUG_TAG_SMAP, "Main edgepoint search failed for %ls -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1431,14 +1427,11 @@ check_entry:
 		case INSERTION_CODE_SECONDARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestSecondaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-#ifdef JA2BETAVERSION
-			char str[256];
-			sprintf(str, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.", s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
-#endif
+			SLOGD(DEBUG_TAG_SMAP, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				SLOGE(DEBUG_TAG_SMAP, "Isolated edgepoint search failed for %ls -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1464,14 +1457,14 @@ check_entry:
 			return;
 
 		default:
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Improper insertion code %d given to UpdateMercsInSector", s.ubStrategicInsertionCode));
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion code %d given to UpdateMercsInSector", s.ubStrategicInsertionCode);
 			goto place_in_center;
 	}
 
 	// If no insertion direction exists, this is bad!
 	if (gridno == -1)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Insertion gridno for direction %d not added to map sector %d %d", s.ubStrategicInsertionCode, x, y));
+		SLOGW(DEBUG_TAG_SMAP, "Insertion gridno for direction %d not added to map sector %d %d", s.ubStrategicInsertionCode, x, y);
 place_in_center:
 		gridno = WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2;
 	}
@@ -1615,7 +1608,7 @@ static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 cons
 			EXITGRID ExitGrid;
 			if (!GetExitGrid(additional_data, &ExitGrid))
 			{
-				AssertMsg(0, "No valid Exit grid can be found when one was expected: SetInsertionDataFromAdjacentMoveDirection.");
+				SLOGE(DEBUG_TAG_ASSERTS, "No valid Exit grid can be found when one was expected: SetInsertionDataFromAdjacentMoveDirection.");
 			}
 			s.ubStrategicInsertionCode        = INSERTION_CODE_GRIDNO;
 			s.usStrategicInsertionData        = ExitGrid.usGridNo;
@@ -1628,10 +1621,7 @@ static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 cons
 		case WEST:  s.ubStrategicInsertionCode = INSERTION_CODE_EAST;  break;
 
 		default: // Wrong direction given
-#ifdef JA2BETAVERSION
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction));
-			ScreenMsg(FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
-#endif
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
 			s.ubStrategicInsertionCode = INSERTION_CODE_WEST;
 			break;
 	}
@@ -1667,10 +1657,7 @@ static UINT8 GetInsertionDataFromAdjacentMoveDirection(UINT8 ubTacticalDirection
 			break;
 		default:
 			// Wrong direction given!
-			#ifdef JA2BETAVERSION
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion direction %d given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection ) );
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection );
-			#endif
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion direction %d given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
 
@@ -1708,15 +1695,10 @@ static UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection(UINT8 ubTactical
 			break;
 		default:
 			// Wrong direction given!
-			#ifdef JA2BETAVERSION
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection ) );
-				ScreenMsg( FONT_RED, MSG_ERROR, L"Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection );
-			#endif
+			SLOGD(DEBUG_TAG_SMAP, "Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
-
 	return( ubDirection );
-
 }
 
 
@@ -1777,7 +1759,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	else
 	{
 		// OK, no jump code here given...
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Improper jump code %d given to JumpIntoAdjacentSector", ubJumpCode ) );
+		SLOGD(DEBUG_TAG_SMAP, "Improper jump code %d given to JumpIntoAdjacentSector", ubJumpCode);
 	}
 
 	Assert( pValidSoldier );
@@ -1827,7 +1809,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		// Take directions from exit grid info!
 		if ( !GetExitGrid( sAdditionalData, &ExitGrid ) )
 		{
-			AssertMsg( 0, String( "Told to use exit grid at %d but one does not exist", sAdditionalData ) );
+			SLOGE(DEBUG_TAG_ASSERTS, "Told to use exit grid at %d but one does not exist", sAdditionalData);
 		}
 
 		gsAdjacentSectorX				= ExitGrid.ubGotoSectorX;
@@ -1859,7 +1841,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 					}
 					else
 					{
-						AssertMsg(0, "Failed to get good exit location for adjacentmove");
+						SLOGE(DEBUG_TAG_ASSERTS, 	"Failed to get good exit location for adjacentmove");
 					}
 
 					EVENT_GetNewSoldierPath( curr->pSoldier, sGridNo, WALKING );
@@ -1878,7 +1860,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 						}
 						else
 						{
-							AssertMsg(0, "Failed to get good exit location for adjacentmove");
+							SLOGE(DEBUG_TAG_ASSERTS, "Failed to get good exit location for adjacentmove");
 						}
 
 						// Don't worry about walk off screen, just stay at gridno...
@@ -2277,11 +2259,7 @@ static void DoneFadeOutAdjacentSector(void)
 			}
 			else
 			{
-#ifdef JA2BETAVERSION
-				char str[256];
-				sprintf(str, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
-#endif
+				SLOGW(DEBUG_TAG_SMAP, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
 			}
 		}
 		SetActionToDoOnceMercsGetToLocation(WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum);
@@ -3097,14 +3075,14 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 	INT32	iLoop;
 
 	// will this path segment actually take us to our desired destination in the first place?
-	if (pSoldier->usPathDataSize + 2 > MAX_PATH_LIST_SIZE)
+	if (pSoldier->ubPathDataSize + 2 > MAX_PATH_LIST_SIZE)
 	{
 
 		sTempGridNo = pSoldier->sGridNo;
 
-		for (iLoop = 0; iLoop < pSoldier->usPathDataSize; iLoop++)
+		for (iLoop = 0; iLoop < pSoldier->ubPathDataSize; iLoop++)
 		{
-			sTempGridNo += (INT16)DirectionInc( pSoldier->usPathingData[ iLoop ] );
+			sTempGridNo += DirectionInc( pSoldier->ubPathingData[ iLoop ] );
 		}
 
 		if (sTempGridNo == sEndGridNo)
@@ -3112,7 +3090,7 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			// we can make it, but there isn't enough path room for the two steps required.
 			// truncate our path so there's guaranteed the merc will have to generate another
 			// path later on...
-			pSoldier->usPathDataSize -= 4;
+			pSoldier->ubPathDataSize -= 4;
 			return;
 		}
 		else
@@ -3126,19 +3104,19 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 	{
 		case EAST:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
+			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, DirectionInc( NORTHEAST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = NORTHEAST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHEAST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( NORTHEAST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -3146,8 +3124,8 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHEAST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = NORTHEAST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
@@ -3155,19 +3133,19 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		case WEST:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
+			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, DirectionInc( SOUTHWEST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = SOUTHWEST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHWEST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( SOUTHWEST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -3175,8 +3153,8 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHWEST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = SOUTHWEST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 			break;
@@ -3190,12 +3168,12 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = NORTHWEST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)NORTHWEST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( NORTHWEST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -3203,8 +3181,8 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = NORTHWEST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = NORTHWEST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
@@ -3212,19 +3190,19 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 		case SOUTH:
 
-			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
+			sNewGridNo = NewGridNo( (UINT16)sEndGridNo, DirectionInc( SOUTHEAST ) );
 
 			if ( OutOfBounds( sEndGridNo, sNewGridNo ) )
 			{
 				return;
 			}
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = SOUTHEAST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 
-			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, (UINT16)DirectionInc( (UINT8)SOUTHEAST ) );
+			sTempGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( SOUTHEAST ) );
 
 			if ( OutOfBounds( sNewGridNo, sTempGridNo ) )
 			{
@@ -3232,8 +3210,8 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 			}
 			sNewGridNo = sTempGridNo;
 
-			pSoldier->usPathingData[ pSoldier->usPathDataSize ] = SOUTHEAST;
-			pSoldier->usPathDataSize++;
+			pSoldier->ubPathingData[ pSoldier->ubPathDataSize ] = SOUTHEAST;
+			pSoldier->ubPathDataSize++;
 			pSoldier->sFinalDestination = sNewGridNo;
 			pSoldier->usActionData = sNewGridNo;
 			break;

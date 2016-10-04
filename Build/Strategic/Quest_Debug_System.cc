@@ -47,13 +47,6 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-
-//#ifdef JA2BETAVERSION
-
-
-#define QUEST_DEBUG_FILE "QuestDebugRecordLog.txt"
-
-
 #define		QUEST_DBS_FONT_TITLE								FONT14ARIAL
 #define		QUEST_DBS_COLOR_TITLE								FONT_MCOLOR_LTGREEN
 #define		QUEST_DBS_COLOR_SUBTITLE						FONT_MCOLOR_DKGRAY
@@ -2741,64 +2734,6 @@ static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 }
 
-
-void NpcRecordLoggingInit(ProfileID const npc_id, ProfileID const merc_id, UINT8 const quote_id, Approach const approach)
-{
-	// If the NPC log button is turned off, ignore
-	if (!gfNpcLogButton) return;
-	// If the approach is NPC_INITIATING_CONV, return
-	if (approach == NPC_INITIATING_CONV) return;
-
-	try
-	{
-		// Truncate when it's the first time in the game
-    static bool firstTime = true;
-		AutoSGPFile f(firstTime ? FileMan::openForWriting(QUEST_DEBUG_FILE) : FileMan::openForAppend(QUEST_DEBUG_FILE));
-    firstTime = false;
-
-		char buf[1024];
-		snprintf(buf, lengthof(buf),
-			"\n"
-			"\n"
-			"New Approach for NPC ID: %d '%ls' against Merc: %d '%ls'\n"
-			"\tTesting Record #: %d\n",
-			npc_id, GetProfile(npc_id).zNickname, merc_id, GetProfile(merc_id).zNickname, quote_id);
-		FileWrite(f, buf, strlen(buf));
-	}
-	catch (...)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE));
-	}
-}
-
-
-void NpcRecordLogging(Approach const approach, char const* const fmt, ...)
-{
-	// If the NPC log button is turned off, ignore
-	if (!gfNpcLogButton) return;
-	// If the approach is NPC_INITIATING_CONV, return
-	if (approach == NPC_INITIATING_CONV) return;
-
-  char    tmp_buf[1024];
-  va_list ap;
-	va_start(ap, fmt);
-	vsnprintf(tmp_buf, lengthof(tmp_buf), fmt, ap);
-	va_end(ap);
-
-	try
-	{
-		AutoSGPFile f(FileMan::openForAppend(QUEST_DEBUG_FILE));
-		char buf[1024];
-		snprintf(buf, lengthof(buf), "\t\t%s\n", tmp_buf);
-		FileWrite(f, buf, strlen(buf));
-	}
-	catch (...)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE));
-	}
-}
-
-
 static void EnableQDSButtons(void)
 {
 	{ bool const enable = gNpcListBox.sCurSelectedItem != -1;
@@ -3261,5 +3196,3 @@ static void GetDebugLocationString(const UINT16 usProfileID, wchar_t* const pzTe
 		GetShortSectorString( gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY, pzText, Length);
 	}
 }
-
-//#endif

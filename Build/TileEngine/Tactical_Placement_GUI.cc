@@ -111,7 +111,7 @@ static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 			gMapInformation.sSouthGridNo == -1 &&
 			gMapInformation.sWestGridNo == -1 )
 	{
-		AssertMsg( 0, "Map has no entry points at all.  Can't generate edge points.  LC:1" );
+		SLOGE(DEBUG_TAG_ASSERTS, "Map has no entry points at all.  Can't generate edge points." );
 	}
 	if( gMapInformation.sNorthGridNo	!= -1 && !gps1stNorthEdgepointArray	||
 			gMapInformation.sEastGridNo		!= -1 && !gps1stEastEdgepointArray		||
@@ -128,19 +128,19 @@ static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 		{
 			case INSERTION_CODE_NORTH:
 				if( !gps1stNorthEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 			case INSERTION_CODE_EAST:
 				if( !gps1stEastEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 			case INSERTION_CODE_SOUTH:
 				if( !gps1stSouthEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 			case INSERTION_CODE_WEST:
 				if( !gps1stWestEdgepointArray )
-					AssertMsg( 0, "Map Edgepoint generation failed.  KM : 0 -- send map" );
+					SLOGE(DEBUG_TAG_ASSERTS, "Map Edgepoint generation failed." );
 				break;
 		}
 		return;
@@ -167,7 +167,7 @@ static void FindValidInsertionCode(UINT8* pubStrategicInsertionCode)
 	}
 	else
 	{
-		AssertMsg( 0, "No maps edgepoints at all! KM, LC : 1" );
+		SLOGE(DEBUG_TAG_ASSERTS, "No maps edgepoints at all!" );
 	}
 }
 
@@ -410,7 +410,7 @@ static void RenderTacticalPlacementGUI()
 		UINT16 const hatch_colour =
 			DayTime() ? 0 :                     // 6AM to 9PM is black
 			Get16BPPColor(FROMRGB(63, 31, 31)); // 9PM to 6AM is gray (black is too dark to distinguish)
-		SGPRect clip = { STD_SCREEN_X + 4, STD_SCREEN_Y + 4, STD_SCREEN_X + 636, STD_SCREEN_Y + 320 };
+		SGPRect clip = { (UINT16)(STD_SCREEN_X + 4), (UINT16)(STD_SCREEN_Y + 4), (UINT16)(STD_SCREEN_X + 636), (UINT16)(STD_SCREEN_Y + 320) };
 		if (gbCursorMercID == -1)
 		{
 			if (gfNorth) clip.iTop    = STD_SCREEN_Y +  30;
@@ -659,7 +659,7 @@ static void KillTacticalPlacementGUI(void)
 	#ifdef JA2BETAVERSION
 	if( gfChangedEntrySide )
 	{
-		ScreenMsg( FONT_RED, MSG_ERROR, L"Substituted different entry side due to invalid entry points or map edgepoints.  KM, LC : 1" );
+		SLOGE(DEBUG_TAG_INTERFACE, "Substituted different entry side due to invalid entry points or map edgepoints.");
 	}
 	#endif
 }
@@ -944,7 +944,7 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 
 					if( fInvalidArea )
 					{ //Report error due to invalid placement.
-						SGPBox const CenterRect = { STD_SCREEN_X + 220, STD_SCREEN_Y + 120, 200, 80 };
+						SGPBox const CenterRect = { (UINT16) (STD_SCREEN_X + 220), (UINT16) (STD_SCREEN_Y + 120), 200, 80 };
 						DoMessageBox(MSG_BOX_BASIC_STYLE, gpStrategicString[STR_TP_INACCESSIBLE_MESSAGE], guiCurrentScreen, MSG_BOX_FLAG_OK, DialogRemoved, &CenterRect);
 					}
 					else
@@ -958,7 +958,7 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 		{ //not a valid cursor location...
 			if( gbCursorMercID != - 1 )
 			{
-				SGPBox const CenterRect = { STD_SCREEN_X + 220, STD_SCREEN_Y + 120, 200, 80 };
+				SGPBox const CenterRect = { (UINT16) (STD_SCREEN_X + 220), (UINT16) (STD_SCREEN_Y + 120), 200, 80 };
 				DoMessageBox(MSG_BOX_BASIC_STYLE, gpStrategicString[STR_TP_INVALID_MESSAGE], guiCurrentScreen, MSG_BOX_FLAG_OK, DialogRemoved, &CenterRect);
 			}
 		}

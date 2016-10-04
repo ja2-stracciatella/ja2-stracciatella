@@ -80,6 +80,7 @@
 #include "Soldier.h"
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
+#include "slog/slog.h"
 
 #define		ITEMDESC_FONT							BLOCKFONT2
 #define		ITEMDESC_FONTSHADOW2			32
@@ -676,15 +677,15 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 	guiGoldKeyVO = AddVideoObjectFromFile(INTERFACEDIR "/gold_key_button.sti");
 
 	// Add camo region
-	UINT16 const x = pCamoRegion->sX;
-	UINT16 const y = pCamoRegion->sY;
+	UINT16 const x = pCamoRegion->uX;
+	UINT16 const y = pCamoRegion->uY;
 	MSYS_DefineRegion(&gSMInvCamoRegion, x, y, x + CAMO_REGION_WIDTH, y + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCamoCallback, INVClickCamoCallback);
 
 	// Add regions for inventory slots
 	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
 	{ // Set inventory pocket coordinates from the table passed in
-		INT16       const  x = pRegionDesc[i].sX;
-		INT16       const  y = pRegionDesc[i].sY;
+		INT16       const  x = pRegionDesc[i].uX;
+		INT16       const  y = pRegionDesc[i].uY;
 		INV_REGIONS const& r = gSMInvData[i];
 		MOUSE_REGION&      m = gSMInvRegion[i];
 		MSYS_DefineRegion(&m, x, y, x + r.w, y + r.h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
@@ -3678,7 +3679,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// Increment attacker count...
 			gTacticalStatus.ubAttackBusyCount++;
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount) );
+			SLOGD(DEBUG_TAG_INTERFACE, "INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount);
 
 			// Given our gridno, throw grenate!
 			CalculateLaunchItemParamsForThrow(gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->bLevel, gsInterfaceLevel * 256 + sEndZ, gpItemPointer, 0, ubThrowActionCode, target);

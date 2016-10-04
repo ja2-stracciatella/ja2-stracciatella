@@ -73,7 +73,7 @@ void LoadGameSettings(void)
 		if (settings_version < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid
-		if (g.bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
+		if (g.bLastSavedGameSlot < 0 || (NUM_SAVE_GAMES * NUM_SAVE_GAMES_TABS) <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
 
 		// Make sure that at least subtitles or speech is enabled
 		if (!g.fOptions[TOPTION_SUBTITLES] && !g.fOptions[TOPTION_SPEECH])
@@ -186,7 +186,7 @@ void InitGameOptions()
 	gGameOptions.fSciFi						 = TRUE;
 	gGameOptions.ubDifficultyLevel = DIF_LEVEL_EASY;
 	//gGameOptions.fTurnTimeLimit		 = FALSE;
-	gGameOptions.fIronManMode			 = FALSE;
+	gGameOptions.ubGameSaveMode		 = DIF_CAN_SAVE;
 
 }
 
@@ -218,7 +218,7 @@ void DisplayGameSettings( )
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT], gzGIOScreenText[gGameOptions.ubDifficultyLevel + GIO_EASY_TEXT - 1]);
 
 	//Iron man option
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_GAME_SAVE_STYLE_TEXT], gzGIOScreenText[GIO_SAVE_ANYWHERE_TEXT + gGameOptions.fIronManMode]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_GAME_SAVE_STYLE_TEXT], gzGIOScreenText[GIO_SAVE_ANYWHERE_TEXT + gGameOptions.ubGameSaveMode]);
 
 	// Gun option
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_GUN_OPTIONS_TEXT], gzGIOScreenText[gGameOptions.fGunNut ? GIO_GUN_NUT_TEXT : GIO_REDUCED_GUNS_TEXT]);
@@ -255,7 +255,7 @@ void SetMeanwhileSceneSeen(UINT8 const meanwhile_id)
 BOOLEAN	CanGameBeSaved()
 {
 	//if the iron man mode is on
-	if( gGameOptions.fIronManMode )
+	if( gGameOptions.ubGameSaveMode == DIF_IRON_MAN )
 	{
 		//if we are in turn based combat
 		if( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
@@ -279,5 +279,13 @@ BOOLEAN	CanGameBeSaved()
 	else
 	{
 		return( TRUE );
+	}
+}
+
+void DoDeadIsDeadSaveIfNecessary()
+{
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+	{
+		DoDeadIsDeadSave();
 	}
 }
