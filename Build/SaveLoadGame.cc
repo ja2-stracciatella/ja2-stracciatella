@@ -162,7 +162,7 @@ static BYTE const* ExtractGameOptions(BYTE const* const data, GAME_OPTIONS& g)
 	EXTR_BOOL( d, g.fSciFi)
 	EXTR_U8(   d, g.ubDifficultyLevel)
 	EXTR_BOOL( d, g.fTurnTimeLimit)
-	EXTR_BOOL( d, g.fIronManMode)
+	EXTR_U8(   d, g.ubGameSaveMode)
 	EXTR_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -176,7 +176,7 @@ static BYTE* InjectGameOptions(BYTE* const data, GAME_OPTIONS const& g)
 	INJ_BOOL( d, g.fSciFi)
 	INJ_U8(   d, g.ubDifficultyLevel)
 	INJ_BOOL( d, g.fTurnTimeLimit)
-	INJ_BOOL( d, g.fIronManMode)
+	INJ_U8(   d, g.ubGameSaveMode)
 	INJ_SKIP( d, 7)
 	Assert(d == data + 12);
 	return d;
@@ -221,7 +221,9 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 	InitShutDownMapTempFileTest(TRUE, "SaveMapTempFile", ubSaveGameID);
 
 	// Place a message on the screen telling the user that we are saving the game
-	{ UINT16 actual_w;
+	if (gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD) 
+	{ 
+		UINT16 actual_w;
 		UINT16 actual_h;
 		AutoMercPopUpBox const save_load_game_message_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &actual_w, &actual_h));
 		UINT16 const x = (SCREEN_WIDTH - actual_w) / 2;
@@ -675,6 +677,15 @@ static void LoadGameFilePosition(UINT8 slot, HWFILE load, const char* pMsg);
 
 void LoadSavedGame(UINT8 const save_slot_id)
 {
+	// Save the game before if we are in Dead is Dead Mode
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+		// The previous options screen may be the main menu if we use quicksave/load
+		if (guiCurrentScreen != SAVE_LOAD_SCREEN)
+		{
+			guiPreviousOptionScreen = guiCurrentScreen;
+		}
+		DoDeadIsDeadSave();
+	}
 	TrashAllSoldiers();
 	RemoveAllGroups();
 
@@ -725,6 +736,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	CalcJA2EncryptionSet(SaveGameHeader);
 
 	UINT32 const version = SaveGameHeader.uiSavedGameVersion;
+	// Load the savegame name, only relevant for Dead is Dead games
+	wcscpy(gGameSettings.sCurrentSavedGameName, SaveGameHeader.sSavedGameDesc);
 
 	/* If the player is loading up an older version of the game and the person
 	 * DOESN'T have the cheats on. */
@@ -1468,6 +1481,33 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile);
 #endif
 
+void BackupSavedGame(UINT8 const ubSaveGameID)
+{
+	std::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
+	FileMan::createDir(backupdir.c_str());
+	char zSourceSaveGameName[512];
+	char zSourceBackupSaveGameName[515];
+	char zTargetSaveGameName[515];
+	sprintf(zSourceSaveGameName, "%s%02d.%s", g_savegame_name, ubSaveGameID, g_savegame_ext);
+	for (int i = NUM_SAVE_GAME_BACKUPS - 1; i >= 0; i--)
+	{
+		if (i==0)
+		{
+			strcpy(zSourceBackupSaveGameName, zSourceSaveGameName);
+		}
+		else
+		{
+			sprintf(zSourceBackupSaveGameName, "%s.%01d", zSourceSaveGameName, i);
+		}
+		sprintf(zTargetSaveGameName, "%s.%01d", zSourceSaveGameName, i+1);
+		// Only backup existing savegames
+		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir.c_str(), zSourceBackupSaveGameName))
+		{
+			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(), 
+												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
+		}
+	}
+}
 
 static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 {
@@ -2099,6 +2139,9 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, gubPlayerProgressSkyriderLastCommentedOn)
 	EXTR_BOOL( d, gfMeanwhileTryingToStart)
 	EXTR_BOOL( d, gfInMeanwhile)
+	// Always set gfInMeanwhile to false for Dead is Dead. This must be done because it is saved as true if a Meanwhile event is in the event pipe
+	// Preventing the value to be saved in the first place leads to odd behaviour during the commencing cutscene
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) gfInMeanwhile = FALSE;
 	EXTR_SKIP( d, 1)
 	for (INT16 (* i)[NUMBER_OF_SOLDIERS_PER_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
 	{

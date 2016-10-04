@@ -147,7 +147,7 @@ extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 #define gpDemoIntroString_SIZE 6
 #define gzMoneyWithdrawMessageText_SIZE 2
 #define zOptionsToggleText_SIZE 20
-#define gzGIOScreenText_SIZE 16
+#define gzGIOScreenText_SIZE 17
 #define pDeliveryLocationStrings_SIZE 17
 #define pPausedGameText_SIZE 3
 
@@ -182,7 +182,8 @@ extern FLOAT GetWeightBasedOnMetricOption( UINT32 uiObjectWeight );
 #define SKI_Text_SIZE 14
 #define str_stat_list_SIZE 11
 #define str_aim_sort_list_SIZE 8
-#define zNewTacticalMessages_SIZE 6
+#define zNewTacticalMessages_SIZE 7
+#define gs_dead_is_dead_mode_tab_name_SIZE 2
 
 //Weapon Name and Description size
 #define SIZE_ITEM_NAME        80
@@ -416,6 +417,9 @@ struct LanguageRes
 
   const StrPointer *zNewTacticalMessages;
   const StrPointer  str_iron_man_mode_warning;
+  const StrPointer  str_dead_is_dead_mode_warning;
+  const StrPointer  str_dead_is_dead_mode_enter_name;
+  const StrPointer *gs_dead_is_dead_mode_tab_name;               
 };
 
 /** Current language resources. */
@@ -645,6 +649,10 @@ extern const LanguageRes* g_langRes;
 
 #define zNewTacticalMessages                                (g_langRes->zNewTacticalMessages)
 #define str_iron_man_mode_warning                           (g_langRes->str_iron_man_mode_warning)
+#define str_dead_is_dead_mode_warning                       (g_langRes->str_dead_is_dead_mode_warning)
+#define str_dead_is_dead_mode_enter_name                    (g_langRes->str_dead_is_dead_mode_enter_name)
+#define gs_dead_is_dead_mode_tab_name                       (g_langRes->gs_dead_is_dead_mode_tab_name)
+
 
 /* -------------------------------------------------------------------------------------------- */
 
@@ -1639,7 +1647,8 @@ enum
 
 	GIO_GAME_SAVE_STYLE_TEXT,
 	GIO_SAVE_ANYWHERE_TEXT,
-	GIO_IRON_MAN_TEXT
+	GIO_IRON_MAN_TEXT,
+	GIO_DEAD_IS_DEAD_TEXT,
 };
 
 
@@ -1726,6 +1735,8 @@ enum
 	TCTL_MSG__LOS,
 	TCTL_MSG__IRON_MAN_CANT_SAVE_NOW,
 	TCTL_MSG__CANNOT_SAVE_DURING_COMBAT,
+	TCTL_MSG__CANNOT_LOAD_PREVIOUS_SAVE,
+	TCTL_MSG__DEAD_IS_DEAD_CANT_SAVE_NOW,
 };
 
 #endif

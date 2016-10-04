@@ -1,6 +1,7 @@
 #ifndef _GAME_SETTINGS__H_
 #define _GAME_SETTINGS__H_
 
+#include "VanillaDataStructures.h"
 #include "MessageBoxScreen.h"
 
 
@@ -57,6 +58,7 @@ enum
 struct GAME_SETTINGS
 {
 	INT8				bLastSavedGameSlot;							// The last saved game number goes in here
+	wchar_t			sCurrentSavedGameName[SIZE_OF_SAVE_GAME_DESC];                     // The name of the current Savegame goes here. Only relevant for Dead is Dead games
 
 	//The following are set from the status of the toggle boxes in the Options Screen
 	UINT8				fOptions[ NUM_ALL_GAME_OPTIONS ];
@@ -79,6 +81,14 @@ enum
   NUM_DIF_LEVELS = DIF_LEVEL_HARD
 };
 
+//Enums for the difficulty levels
+enum
+{
+	DIF_CAN_SAVE,
+	DIF_IRON_MAN,
+	DIF_DEAD_IS_DEAD,
+};
+
 
 struct GAME_OPTIONS
 {
@@ -86,7 +96,7 @@ struct GAME_OPTIONS
 	BOOLEAN	fSciFi;
 	UINT8		ubDifficultyLevel;
 	BOOLEAN	fTurnTimeLimit;
-	BOOLEAN	fIronManMode;
+	UINT8		ubGameSaveMode;
 };
 
 //This structure will contain general Ja2 settings  NOT individual game settings.
@@ -108,6 +118,8 @@ bool MeanwhileSceneSeen(UINT8 meanwhile_id);
 void SetMeanwhileSceneSeen(UINT8 meanwhile_id);
 
 BOOLEAN CanGameBeSaved(void);
+
+void DoDeadIsDeadSaveIfNecessary(void);
 
 void CDromEjectionErrorMessageBoxCallBack(MessageBoxReturnValue);
 

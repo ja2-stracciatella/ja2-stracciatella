@@ -21,7 +21,7 @@ typedef struct
 	BOOLEAN	fSciFi;
 	UINT8		ubDifficultyLevel;
 	BOOLEAN	fTurnTimeLimit;
-	BOOLEAN	fIronManMode;
+	UINT8	ubGameSaveMode;
 
 	UINT8		ubFiller[7];
 

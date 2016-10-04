@@ -2980,7 +2980,8 @@ static const wchar_t *s_fr_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Annuler",
 	L"En combat",
 	L"Temps illimité",
-	L"Temps limité"
+	L"Temps limité",
+	L"Mort est mort"
 };
 
 static const wchar_t *s_fr_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
@@ -3508,6 +3509,14 @@ static const wchar_t *s_fr_str_aim_sort_list[str_aim_sort_list_SIZE] =
 
 extern const wchar_t *g_eng_zNewTacticalMessages[];
 extern const wchar_t *g_eng_str_iron_man_mode_warning;
+extern const wchar_t *g_eng_str_dead_is_dead_mode_warning;
+extern const wchar_t *g_eng_str_dead_is_dead_mode_enter_name;
+
+static const wchar_t *s_fr_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =
+{
+	L"Normal", 			// Normal Tab
+	L"DiD", 			// Dead is Dead Tab
+};
 
 /** French language resources. */
 LanguageRes g_LanguageResFrench = {
@@ -3733,6 +3742,10 @@ LanguageRes g_LanguageResFrench = {
 
   g_eng_zNewTacticalMessages,
   g_eng_str_iron_man_mode_warning,
+  g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
+
+  s_fr_gs_dead_is_dead_mode_tab_name,
 };
 
 #ifdef WITH_UNITTESTS

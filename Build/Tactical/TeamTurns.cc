@@ -17,6 +17,7 @@
 #include "TeamTurns.h"
 #include "Smell.h"
 #include "Game_Clock.h"
+#include "GameSettings.h"
 #include "Soldier_Functions.h"
 #include "Queen_Command.h"
 #include "PathAI.h"
@@ -142,10 +143,13 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 	// Signal UI done enemy's turn
 	guiPendingOverrideEvent = LU_ENDUILOCK;
 
-  // ATE: Reset killed on attack variable.. this is because sometimes timing is such
-  /// that a baddie can die and still maintain it's attacker ID
-  gTacticalStatus.fKilledEnemyOnAttack = FALSE;
+	// ATE: Reset killed on attack variable.. this is because sometimes timing is such
+	/// that a baddie can die and still maintain it's attacker ID
+	gTacticalStatus.fKilledEnemyOnAttack = FALSE;
 
+	// Save if we are in Dead is Dead mode
+	DoDeadIsDeadSaveIfNecessary();
+  
 	HandleTacticalUI( );
 }
 
@@ -179,6 +183,9 @@ void EndTurn( UINT8 ubNextTeam )
 
 	EndDeadlockMsg( );
 
+	// Save if we are in Dead is Dead mode
+	DoDeadIsDeadSaveIfNecessary();
+  
 /*
 	if ( CheckForEndOfCombatMode( FALSE ) )
 	{

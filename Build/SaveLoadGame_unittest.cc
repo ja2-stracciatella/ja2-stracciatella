@@ -113,7 +113,7 @@ TEST(SaveLoadGameTest, structParsers)
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
     EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
-    EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
+    EXPECT_EQ(header.sInitialGameOptions.ubGameSaveMode,          0);
     // UINT32 uiRandom;
   }
 
@@ -140,7 +140,7 @@ TEST(SaveLoadGameTest, structParsers)
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
     EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
-    EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
+    EXPECT_EQ(header.sInitialGameOptions.ubGameSaveMode,          0);
     // UINT32 uiRandom;
   }
 }
@@ -196,7 +196,7 @@ TEST(SaveLoadGameTest, parseHeaderLinux)
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
     EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
-    EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
+    EXPECT_EQ(header.sInitialGameOptions.ubGameSaveMode,          0);
   }
 }
 
@@ -225,7 +225,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
     EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
-    EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
+    EXPECT_EQ(header.sInitialGameOptions.ubGameSaveMode,          0);
   }
 
   {
@@ -249,7 +249,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
     EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_MEDIUM);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
-    EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
+    EXPECT_EQ(header.sInitialGameOptions.ubGameSaveMode,          0);
   }
 }
 
@@ -278,6 +278,6 @@ TEST(SaveLoadGameTest, parseHeaderMac)
     EXPECT_EQ(header.sInitialGameOptions.fSciFi,                  1);
     EXPECT_EQ(header.sInitialGameOptions.ubDifficultyLevel,       DIF_LEVEL_EASY);
     EXPECT_EQ(header.sInitialGameOptions.fTurnTimeLimit,          0);
-    EXPECT_EQ(header.sInitialGameOptions.fIronManMode,            0);
+    EXPECT_EQ(header.sInitialGameOptions.ubGameSaveMode,          0);
   }
 }

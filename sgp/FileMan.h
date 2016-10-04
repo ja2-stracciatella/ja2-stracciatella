@@ -156,6 +156,9 @@ public:
   /** Check file existance. */
   static bool checkFileExistance(const char *folder, const char *fileName);
 
+  /** Move a file */
+  static void moveFile(const char *from, const char *to);
+
 private:
   /** Private constructor to avoid instantiation. */
   FileMan() {};

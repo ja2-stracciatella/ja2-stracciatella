@@ -1225,6 +1225,8 @@ void HandleGroupAboutToArrive( void )
 {
 	// reblit map to change the color of the "people in motion" marker
 	fMapPanelDirty = TRUE;
+	
+	DoDeadIsDeadSaveIfNecessary();
 
 	// ARM - commented out - don't see why this is needed
 //	fTeamPanelDirty = TRUE;

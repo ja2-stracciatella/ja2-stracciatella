@@ -3040,7 +3040,8 @@ static const wchar_t *s_rus_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	L"Отмена",
 	L"Дополнительная сложность",
 	L"Сохранение где угодно",
-	L"СТАЛЬНАЯ ВОЛЯ"
+	L"СТАЛЬНАЯ ВОЛЯ",
+	L"Dead is Dead"
 };
 
 static const wchar_t *s_rus_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
@@ -3574,9 +3575,20 @@ static const wchar_t * s_rus_zNewTacticalMessages[] =
 	L"Зона обзора",
 	L"Это игра для человека со СТАЛЬНОЙ ВОЛЕЙ. Нельзя сохраняться, когда рядом враги!",
 	L"(Нельзя сохранять игру в бою)",
+	L"(Cannot load previous savegames)",
+	L"This is a Dead is Dead game and you cannot save through the save screen.",
 };
 
 static const wchar_t s_rus_str_iron_man_mode_warning[] = L"Вы выбрали режим СТАЛЬНОЙ ВОЛИ. Эта настройка сильно усложняет игру, так как вы не сможете сохраняться, когда в секторе есть враги. ЖЕЛЕЗНАЯ ВОЛЯ действует в течение всей игры. Уверены, что хотите включить этот режим?";
+
+extern const wchar_t *g_eng_str_dead_is_dead_mode_warning;
+extern const wchar_t *g_eng_str_dead_is_dead_mode_enter_name;
+
+static const wchar_t *s_rus_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =
+{
+	L"Normal", 			// Normal Tab
+	L"DiD", 			// Dead is Dead Tab
+};
 
 /** Russian language resources. */
 LanguageRes g_LanguageResRussian = {
@@ -3802,6 +3814,8 @@ LanguageRes g_LanguageResRussian = {
 
   s_rus_zNewTacticalMessages,
   s_rus_str_iron_man_mode_warning,
+  g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
 };
 
 
@@ -4029,6 +4043,10 @@ LanguageRes g_LanguageResRussianGold = {
 
   s_rus_zNewTacticalMessages,
   s_rus_str_iron_man_mode_warning,
+  g_eng_str_dead_is_dead_mode_warning,
+  g_eng_str_dead_is_dead_mode_enter_name,
+
+  s_rus_gs_dead_is_dead_mode_tab_name,
 };
 
 #ifdef WITH_UNITTESTS
