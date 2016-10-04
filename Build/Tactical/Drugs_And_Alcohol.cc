@@ -206,7 +206,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	}
 
   // Dirty panel
-  fInterfacePanelDirty = DIRTYLEVEL2;
+  DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
 
 	return( TRUE );
 }
@@ -229,7 +229,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 			if ( pSoldier->bDrugSideEffect[ cnt ] <= 0 )
 			{
 				pSoldier->bDrugSideEffect[ cnt ] = 0;
-				fInterfacePanelDirty	= DIRTYLEVEL1;
+        DirtyMercPanelInterface(pSoldier, DIRTYLEVEL1);
 			}
 		}
 
@@ -244,7 +244,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 				pSoldier->bDrugEffect[ cnt ] = 0;
 
         // Dirty panel
-        fInterfacePanelDirty = DIRTYLEVEL2;
+        DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
 
 				// Start the bad news!
 				pSoldier->bDrugSideEffectRate[ cnt ] = ubDrugSideEffectRate[ cnt ];
