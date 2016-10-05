@@ -229,7 +229,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 			if ( pSoldier->bDrugSideEffect[ cnt ] <= 0 )
 			{
 				pSoldier->bDrugSideEffect[ cnt ] = 0;
-        DirtyMercPanelInterface(pSoldier, DIRTYLEVEL1);
+				DirtyMercPanelInterface(pSoldier, DIRTYLEVEL1);
 			}
 		}
 
