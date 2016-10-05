@@ -33,7 +33,8 @@ bool JsonUtility::writeToFile(const char *name, const std::vector<std::string> &
 bool JsonUtility::parseJsonToListStrings(const char* jsonData, std::vector<std::string> &strings)
 {
   rapidjson::Document document;
-  if (document.Parse<0>(jsonData).HasParseError())
+
+  if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData).HasParseError())
   {
     return false;
   }

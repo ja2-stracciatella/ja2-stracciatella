@@ -1,21 +1,62 @@
 {
-        "map_hotkey_ctrl_i": false,
-        "tactical_hotkey_j": false,
-        "tactical_hotkey_shift_n": false,
-        "tactical_hotkey_ctrl_n": false,
+    //  game.json
+    //  The settings in this file have an influence on the game in general.
 
-        "draw_item_shadow": true,
+    //  --------------------------------------------------
+    //  New Hotkeys
+    //  vanilla setting for all hotkeys: false
+    //  --------------------------------------------------
 
-        "ms_per_game_cycle":    25,
+    //  Press 'ctrl+i' to show sector inventory of selected sector in strategic view.
+    "map_hotkey_ctrl_i": false,
 
-        "starting_cash_easy":   45000,
-        "starting_cash_medium": 35000,
-        "starting_cash_hard":   30000,
+    //  Press 'j' to jump or climb on rooftops, fences etc.
+    "tactical_hotkey_j": false,
 
-        "drop_everything":   false,
-        "all_drops_visible": false,
+    //  Press 'shift+n' to switch the current squad's head gear to night mode (NV or UV Goggles).
+    "tactical_hotkey_shift_n": false,
 
-        "enemy_weapon_minimal_status": 0,
+    //  Press 'ctrl+n' to switch the current squad's head gear to day mode (Sun Goggles).
+    "tactical_hotkey_ctrl_n": false,
 
-        "gui_extras": false
+    //  --------------------------------------------------
+    //  System settings
+    //  --------------------------------------------------
+
+    //  Automatically draw a shadow for all items in a merc's inventory.
+    //  vanilla setting: true
+    "draw_item_shadow": true,
+
+    //  Number of milliseconds for one game cycle.
+    //  25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen is updated on every cycle).
+    //  Decreasing this value will increase the speed of the game (enemy movement, bullets speed, etc).
+    //  Stracciatella standard value: 25
+    "ms_per_game_cycle": 25,
+
+    //  --------------------------------------------------
+    //  Gameplay settings
+    //  --------------------------------------------------
+
+    //  Amount of money the player starts the game with on each difficulty.
+    //  vanilla values: 45000/35000/30000 (easy/medium/hard)
+    "starting_cash_easy":   45000,
+    "starting_cash_medium": 35000,
+    "starting_cash_hard":   30000,
+
+    //  Will enemies drop all of their equipment when they die?
+    //  vanilla setting: false
+    "drop_everything": false,
+
+    //  Will dropped items always be visible to the player, regardless of distance?
+    //  vanilla setting: false
+    "all_drops_visible": false,
+
+    //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
+    //  vanilla value: 0
+    "enemy_weapon_minimal_status": 0,
+
+    //  Enables extra GUI features. Currently includes:
+    //  - Progress Bars for the Mercs Stats in Tractical Mode
+    //  vanilla_setting: false
+    "gui_extras": true
 }
