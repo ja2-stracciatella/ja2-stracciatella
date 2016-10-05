@@ -22,7 +22,7 @@ INT32	giDrunkModifier[] =
 {
 	100,		// Sober
 	75,			// Feeling good,
-	65,			// Bporderline
+	65,			// Borderline
 	50,			// Drunk
 	100,		// HungOver
 };
@@ -206,7 +206,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	}
 
   // Dirty panel
-  fInterfacePanelDirty = DIRTYLEVEL2;
+  DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
 
 	return( TRUE );
 }
@@ -219,7 +219,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 
 	for ( cnt = 0; cnt < NUM_COMPLEX_DRUGS; cnt++ )
 	{
-		// If side effect aret is non-zero....
+		// If side effect rate is non-zero....
 		if ( pSoldier->bDrugSideEffectRate[ cnt ] > 0 )
 		{
 			// Subtract some...
@@ -229,7 +229,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 			if ( pSoldier->bDrugSideEffect[ cnt ] <= 0 )
 			{
 				pSoldier->bDrugSideEffect[ cnt ] = 0;
-				fInterfacePanelDirty	= DIRTYLEVEL1;
+				DirtyMercPanelInterface(pSoldier, DIRTYLEVEL1);
 			}
 		}
 
@@ -244,7 +244,7 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 				pSoldier->bDrugEffect[ cnt ] = 0;
 
         // Dirty panel
-        fInterfacePanelDirty = DIRTYLEVEL2;
+        DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
 
 				// Start the bad news!
 				pSoldier->bDrugSideEffectRate[ cnt ] = ubDrugSideEffectRate[ cnt ];
@@ -270,10 +270,10 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 			}
 		}
 
-		// Add increase ineffect....
+		// Add increase in effect....
 		if ( pSoldier->bDrugEffectRate[ cnt ] > 0 )
 		{
-			// Seap some in....
+			// Sip some in....
 			pSoldier->bFutureDrugEffect[ cnt ] -= pSoldier->bDrugEffectRate[ cnt ];
 			pSoldier->bDrugEffect[ cnt ]				+= pSoldier->bDrugEffectRate[ cnt ];
 
@@ -398,7 +398,7 @@ INT8 GetDrunkLevel(const SOLDIERTYPE* pSoldier)
 		return( HUNGOVER );
 	}
 
-	// Calculate how many dinks we have had....
+	// Calculate how many drinks we have had....
 	bNumDrinks = ( pSoldier->bDrugEffect[ DRUG_TYPE_ALCOHOL ] / ubDrugEffect[ DRUG_TYPE_ALCOHOL ] );
 
 	if ( bNumDrinks <= 3 )
