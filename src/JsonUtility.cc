@@ -3,7 +3,8 @@
 // #include <iostream>
 // #include <fstream>
 #include "rapidjson/document.h"
-#include "rapidjson/filestream.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
 #include "rapidjson/prettywriter.h"
 
 /** Write list of strings to file. */
@@ -12,8 +13,9 @@ bool JsonUtility::writeToFile(const char *name, const std::vector<std::string> &
   FILE *f = fopen(name, "wt");
   if(f)
   {
-    rapidjson::FileStream os(f);
-    rapidjson::PrettyWriter<rapidjson::FileStream> writer(os);
+    char writeBuffer[65536];
+    rapidjson::FileWriteStream os(f, writeBuffer, sizeof(writeBuffer));
+    rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
     writer.StartArray();
     for(std::vector<std::string>::const_iterator it = strings.begin(); it != strings.end(); ++it)
     {

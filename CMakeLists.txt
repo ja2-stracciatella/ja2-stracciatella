@@ -97,7 +97,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${JA2_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-MicroIni/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson
+    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson/rapidjson-1.1.0/include
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-utf8cpp/source
