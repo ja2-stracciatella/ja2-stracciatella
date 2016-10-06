@@ -2267,9 +2267,7 @@ static void SaveMeanwhileDefsToSaveGameFile(HWFILE const f)
 
 BOOLEAN DoesUserHaveEnoughHardDriveSpace()
 {
-	UINT32			uiBytesFree=0;
-
-	uiBytesFree = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
+	uintmax_t	uiBytesFree = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
 
 	//check to see if there is enough hard drive space
 	if( uiBytesFree < REQUIRED_FREE_SPACE )
