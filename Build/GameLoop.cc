@@ -231,7 +231,7 @@ try
 				{
 					wchar_t	zText[512];
 					wchar_t	zSpaceOnDrive[512];
-					UINT32	uiSpaceOnDrive;
+					uintmax_t uiSpaceOnDrive;
 					wchar_t	zSizeNeeded[512];
 
 					swprintf( zSizeNeeded, lengthof(zSizeNeeded), L"%d", REQUIRED_FREE_SPACE / BYTESINMEGABYTE );

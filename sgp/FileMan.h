@@ -65,7 +65,7 @@ INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* cons
 FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* hFile);
 
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
-UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
+uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 /***
  * New file manager.
