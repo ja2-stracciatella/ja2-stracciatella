@@ -36,6 +36,15 @@ init:
   - cmd: echo %PUBLISH_DIR%
   - cmd: echo %VERSION_TAG%
 
+install:
+  - cmd: if "%platform%"=="Win32" set RUST_TOOLCHAIN=stable-i686-pc-windows-msvc
+  - cmd: if "%platform%"=="x64"   set RUST_TOOLCHAIN=stable-x86_64-pc-windows-msvc
+  - cmd: curl -sSf -o rustup-init.exe https://win.rustup.rs/
+  - cmd: rustup-init.exe -y --default-toolchain %RUST_TOOLCHAIN%
+  - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - cmd: rustc -V
+  - cmd: cargo -V
+
 before_build:
   - cmd: mkdir ci-build
   - cmd: cd ci-build
@@ -43,10 +52,15 @@ before_build:
   - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
   - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake -DCMAKE_BUILD_TYPE="%configuration%" -DVERSION_TAG="%VERSION_TAG%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DCPACK_GENERATOR=ZIP ..
 
+on_failure:
+  - cmd: dir c:\build
+  - cmd: dir c:\build\%configuration%
+
 build:
   project: ci-build\ja2-stracciatella.sln
 
 test_script:
+  - cmd: cmake --build c:\projects\ja2-stracciatella\ci-build --target rust-unit-tests
   - cmd: cd %configuration%
   - cmd: ja2.exe -unittests
 

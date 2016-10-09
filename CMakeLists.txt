@@ -34,6 +34,7 @@ set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime."
 set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
+set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
@@ -95,6 +96,7 @@ set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/sgp")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_subdirectory("_build/lib-MicroIni")
 add_subdirectory("_build/lib-slog")
@@ -134,7 +136,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker dl gcc_s rt util ${CMAKE_CURRENT_SOURCE_DIR}/rust/target/debug/libstracciatella.a)
+target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker rust-stracciatella)
 
 macro(copy_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD
@@ -146,12 +148,26 @@ copy_dir_to_ja2_binary_after_build("externalized")
 copy_dir_to_ja2_binary_after_build("_unittests")
 copy_dir_to_ja2_binary_after_build("mods")
 
+get_property(STRACCIATELLA_SHARED_LIB TARGET rust-stracciatella PROPERTY IMPORTED_LOCATION)
+
+if (MSVC OR APPLE)
+    add_custom_command(TARGET ${BINARY} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${STRACCIATELLA_SHARED_LIB} "$<TARGET_FILE_DIR:${BINARY}>")
+endif()
 if (MSVC)
     string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
 endif()
+if (APPLE)
+    add_custom_command(TARGET ${BINARY}
+            POST_BUILD COMMAND
+            ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
+            "$<TARGET_FILE:${BINARY}>")
+endif()
+
 
 ## Installing and Packaging
 
@@ -202,6 +218,7 @@ include(CPack)
 if (UNIX AND NOT MINGW AND NOT APPLE)
     install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
     install(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
+    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION lib)
     install(FILES _build/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
         FILES _build/icons/logo.svg
@@ -214,6 +231,7 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
     endif()
 else()
     install(TARGETS ${BINARY} RUNTIME DESTINATION .)
+    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
     install(DIRECTORY externalized mods _unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
 endif()

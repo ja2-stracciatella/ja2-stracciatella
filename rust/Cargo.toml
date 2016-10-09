@@ -3,9 +3,13 @@ name = "stracciatella"
 version = "0.1.0"
 authors = ["Stefan Lau <github@stefanlau.com>"]
 
+[profile.dev]
+rpath = true
+[profile.release]
+rpath = true
 
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["dylib"]
 name = "stracciatella"
 path = "src/stracciatella.rs"
 
