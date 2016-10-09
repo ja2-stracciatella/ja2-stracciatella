@@ -457,8 +457,7 @@ static void RestorePathAIToDefaults(void)
 INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags)
 {
 	INT32 iDestination = sDestination, iOrigination;
-	INT8 iCnt=-1, iStructIndex;
-	INT32 iLoopStart = 0, iLoopEnd = 0;
+	UINT8 ubCnt = 0 , ubLoopStart = 0, ubLoopEnd = 0, ubLastDir = 0, ubStructIndex;
 	INT8	bLoopState = LOOPING_CLOCKWISE;
 	//BOOLEAN fLoopForwards = FALSE;
 	BOOLEAN	fCheckedBehind = FALSE;
@@ -475,15 +474,13 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		//BOOLEAN fTurnSlow = FALSE;
 		//BOOLEAN fReverse = FALSE; // stuff for vehicles turning
 		BOOLEAN fMultiTile, fVehicle;
-		//INT32 iLastDir, iPrevToLastDir;
+		//INT32 ubLastDir, iPrevToLastDir;
 		//INT8 bVehicleCheckDir;
 		//UINT16 adjLoc;
 		STRUCTURE_FILE_REF * pStructureFileRef=NULL;
 		UINT16							 usAnimSurface;
 		//INT32 iCnt2, iCnt3;
 	#endif
-
-	INT32			iLastDir = 0;
 
 	path_t *	pNewPtr;
 	path_t *	pCurrPtr;
@@ -714,8 +711,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 	if (!fContinuousTurnNeeded)
 	{
-		iLoopStart = 0;
-		iLoopEnd = 0;
+		ubLoopStart = 0;
+		ubLoopEnd = 0;
 		bLoopState = LOOPING_CLOCKWISE;
 	}
 
@@ -829,19 +826,19 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			{
 				if (fReverse)
 				{
-					iLastDir = OppositeDirection(s->bDirection);
+					ubLastDir = OppositeDirection(s->bDirection);
 				}
 				else
 				{
-					iLastDir = s->bDirection;
+					ubLastDir = s->bDirection;
 				}
 				// start prev-to-last dir at same as current (could cause a problem)
-				iPrevToLastDir = iLastDir;
+				iPrevToLastDir = ubLastDir;
 			}
 			else
 			{
 				iPrevToLastDir = trailTree[trailTree[pCurrPtr->sPathNdx].nextLink].dirDelta;
-				iLastDir = trailTree[pCurrPtr->sPathNdx].dirDelta;
+				ubLastDir = trailTree[pCurrPtr->sPathNdx].dirDelta;
 			}
 
 		}
@@ -870,43 +867,43 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		{
 			if (trailTreeNdx < 2)
 			{
-				iLastDir = s->bDirection;
+				ubLastDir = s->bDirection;
 			}
 			else if ( trailTree[pCurrPtr->sPathNdx].fFlags & STEP_BACKWARDS )
 			{
-				iLastDir = OppositeDirection(trailTree[pCurrPtr->sPathNdx].stepDir);
+				ubLastDir = OppositeDirection(trailTree[pCurrPtr->sPathNdx].stepDir);
 			}
 			else
 			{
-				iLastDir = trailTree[pCurrPtr->sPathNdx].stepDir;
+				ubLastDir = trailTree[pCurrPtr->sPathNdx].stepDir;
 			}
-			iLoopStart = iLastDir;
-			iLoopEnd = iLastDir;
+			ubLoopStart = ubLastDir;
+			ubLoopEnd = ubLastDir;
 			bLoopState = LOOPING_CLOCKWISE;
 			fCheckedBehind = FALSE;
 		}
 
 		//contemplate a new path in each direction
-		//for ( iCnt = iLoopStart; iCnt != iLoopEnd; iCnt = (iCnt + iLoopIncrement) % MAXDIR )
-		for ( iCnt = iLoopStart; ; )
+		//for ( ubCnt = ubLoopStart; ubCnt != ubLoopEnd; ubCnt = (ubCnt + iLoopIncrement) % MAXDIR )
+		for ( ubCnt = ubLoopStart; ; )
 		{
 
 #ifdef VEHICLE
 			/*
 			if (fTurnSlow)
 			{
-				if (iLastDir == iPrevToLastDir)
+				if (ubLastDir == iPrevToLastDir)
 				{
-					if (iCnt != iLastDir &&
-							iCnt != OneCDirection(iLastDir) &&
-							iCnt != OneCCDirection(iLastDir))
+					if (ubCnt != ubLastDir &&
+							ubCnt != OneCDirection(ubLastDir) &&
+							ubCnt != OneCCDirection(ubLastDir))
 					{
 						goto NEXTDIR;
 					}
 				}
 				else
 				{
-					if ( iCnt != iLastDir )
+					if ( ubCnt != ubLastDir )
 					{
 						goto NEXTDIR;
 					}
@@ -916,31 +913,31 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 			if ( bLoopState == LOOPING_REVERSE )
 			{
-				iStructIndex = OppositeDirection(OneCDirection(iCnt));
+				ubStructIndex = OppositeDirection(OneCDirection(ubCnt));
 			}
 			else
 			{
-				iStructIndex = OneCDirection(iCnt);
+				ubStructIndex = OneCDirection(ubCnt);
 			}
 
 			if (fMultiTile)
 			{
 				if ( fContinuousTurnNeeded )
 				{
-					if ( iCnt != iLastDir )
+					if ( ubCnt != ubLastDir )
 					{
-						if ( !OkayToAddStructureToWorld( (INT16) curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
+						if ( !OkayToAddStructureToWorld( (INT16) curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ ubStructIndex ]), usOKToAddStructID ) )
 						{
 							// we have to abort this loop and possibly reset the loop conditions to
 							// search in the other direction (if we haven't already done the other dir)
 							if (bLoopState == LOOPING_CLOCKWISE)
 							{
-								iLoopStart = iLastDir;
-								iLoopEnd = iCnt;
+								ubLoopStart = ubLastDir;
+								ubLoopEnd = ubCnt;
 								bLoopState = LOOPING_COUNTERCLOCKWISE; // backwards
-								// when we go to the bottom of the loop, iLoopIncrement will be added to iCnt
+								// when we go to the bottom of the loop, iLoopIncrement will be added to ubCnt
 								// which is good since it avoids duplication of effort
-								iCnt = iLoopStart;
+								ubCnt = ubLoopStart;
 								goto NEXTDIR;
 							}
 							else if ( bLoopState == LOOPING_COUNTERCLOCKWISE && !fCheckedBehind )
@@ -949,10 +946,10 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								bLoopState = LOOPING_REVERSE;
 
 								// NB we're stuck with adding 1 to the loop counter down below so configure to accomodate...
-								//iLoopStart = (iLastDir + (MAXDIR / 2) - 1) % MAXDIR;
-								iLoopStart = OppositeDirection(OneCCDirection(iLastDir));
-								iLoopEnd = (iLoopStart + 2) % MAXDIR;
-								iCnt = iLoopStart;
+								//ubLoopStart = (ubLastDir + (MAXDIR / 2) - 1) % MAXDIR;
+								ubLoopStart = OppositeDirection(OneCCDirection(ubLastDir));
+								ubLoopEnd = (ubLoopStart + 2) % MAXDIR;
+								ubCnt = ubLoopStart;
 								fCheckedBehind = TRUE;
 								goto NEXTDIR;
 							}
@@ -968,7 +965,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				else if ( pStructureFileRef )
 				{
 					// check to make sure it's okay for us to turn to the new direction in our current tile
-					if (!OkayToAddStructureToWorld( (INT16) curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
+					if (!OkayToAddStructureToWorld( (INT16) curLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ ubStructIndex ]), usOKToAddStructID ) )
 					{
 						goto NEXTDIR;
 					}
@@ -977,7 +974,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 #endif
 
-			newLoc = curLoc + DirIncrementer[iCnt];
+			newLoc = curLoc + DirIncrementer[ubCnt];
 
 
 			if ( fVisitSpotsOnlyOnce && trailCostUsed[newLoc] == gubGlobalPathCount )
@@ -1048,7 +1045,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			//how much is admission to the next tile
 			if ( gfPathAroundObstacles )
 			{
-				nextCost = gubWorldMovementCosts[ newLoc ][ iCnt ][ ubLevel ];
+				nextCost = gubWorldMovementCosts[ newLoc ][ ubCnt ][ ubLevel ];
 
 				//ATE:	Check for differences from reality
 				if (nextCost == TRAVELCOST_NOT_STANDING)
@@ -1072,7 +1069,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				{
 
 					// don't let anyone path diagonally through doors!
-					if (iCnt & 1)
+					if (ubCnt & 1)
 					{
 						goto NEXTDIR;
 					}
@@ -1296,7 +1293,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				// then 0 1 2 3 4 5 6), we must subtract 1 from the direction
 				// ATE: Send in our existing structure ID so it's ignored!
 
-				if (!OkayToAddStructureToWorld( (INT16) newLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ iStructIndex ]), usOKToAddStructID ) )
+				if (!OkayToAddStructureToWorld( (INT16) newLoc, ubLevel, &(pStructureFileRef->pDBStructureRef[ ubStructIndex ]), usOKToAddStructID ) )
 				{
 					goto NEXTDIR;
 				}
@@ -1369,7 +1366,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 						// Add here cost to go from crouch to stand AFTER fence hop....
 						// Since it's AFTER.. make sure we will be moving after jump...
-						if ( ( iCnt + 2 ) < iLastGrid )
+						if ( ( ubCnt + 2 ) < iLastGrid )
 						{
 							sPoints += AP_CROUCH;
 						}
@@ -1400,7 +1397,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 			  // don't make the mistake of adding directly to
 			  // ubCurAPCost, that must be preserved for remaining dirs!
-				if (iCnt & 1)
+				if (ubCnt & 1)
 				{
 					ubAPCost = (ubAPCost * 14) / 10;
 				}
@@ -1512,7 +1509,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			}
 
 // NOTE: on September 24, 1997, Chris went back to a diagonal bias system
-			if (iCnt & 1)
+			if (ubCnt & 1)
 			{
 				// moving on a diagonal
 				nextCost = nextCost * 14 / 10;
@@ -1588,7 +1585,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 				//make new path to current location
 				trailTree[trailTreeNdx].nextLink	= sCurPathNdx;
-				trailTree[trailTreeNdx].stepDir	= (UINT8) iCnt;
+				trailTree[trailTreeNdx].stepDir	= ubCnt;
 				if ( bLoopState == LOOPING_REVERSE )
 				{
 					trailTree[trailTreeNdx].fFlags = STEP_BACKWARDS;
@@ -1772,18 +1769,18 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 NEXTDIR:
 			if (bLoopState == LOOPING_CLOCKWISE) // backwards
 			{
-				iCnt = OneCCDirection(iCnt);
+				ubCnt = OneCCDirection(ubCnt);
 			}
 			else
 			{
-				iCnt = OneCDirection(iCnt);
+				ubCnt = OneCDirection(ubCnt);
 			}
-			if ( iCnt == iLoopEnd )
+			if ( ubCnt == ubLoopEnd )
 			{
 ENDOFLOOP:
 				break;
 			}
-			else if (fContinuousTurnNeeded && iCnt == OppositeDirection(iLoopStart))
+			else if (fContinuousTurnNeeded && ubCnt == OppositeDirection(ubLoopStart))
 			{
 				fCheckedBehind = TRUE;
 			}
@@ -1830,15 +1827,15 @@ ENDOFLOOP:
 		{
 		  z=_z;
 
-			for (iCnt=0; z && (iCnt < MAX_PATH_LIST_SIZE); iCnt++)
+			for (ubCnt=0; z && (ubCnt < MAX_PATH_LIST_SIZE); ubCnt++)
 		  {
-			  s->ubPathingData[iCnt] = trailTree[z].stepDir;
+			  s->ubPathingData[ubCnt] = trailTree[z].stepDir;
 
 			  z = trailTree[z].nextLink;
 		  }
 
 			s->ubPathIndex = 0;
-		  s->ubPathDataSize  = (UINT8) iCnt;
+		  s->ubPathDataSize  = ubCnt;
 
 		}
 		else if (bCopy == NO_COPYROUTE)
@@ -1846,15 +1843,14 @@ ENDOFLOOP:
 
 		  z=_z;
 
-			for (iCnt=0; z != 0; iCnt++)
+			for (ubCnt=0; z != 0; ubCnt++)
 		  {
-			  Assert(iCnt < lengthof(guiPathingData)); // XXX TODO001C
-			  guiPathingData[ iCnt ] = trailTree[z].stepDir;
+			  guiPathingData[ ubCnt ] = trailTree[z].stepDir;
 
 			  z = trailTree[z].nextLink;
 		  }
 
-		  giPathDataSize = (UINT8) iCnt;
+		  giPathDataSize = ubCnt;
 
 		}
 
@@ -1885,7 +1881,7 @@ ENDOFLOOP:
 		}
 
 
-		return(iCnt);
+		return(ubCnt);
 	}
 
 	#ifdef COUNT_PATHS
