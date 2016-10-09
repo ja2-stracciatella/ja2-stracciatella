@@ -128,7 +128,7 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
             };
 
             if m.free.len() > 0 {
-                return Err(format!("Unknown arguments: {}", m.free.join(" ")));
+                return Err(format!("Unknown arguments: '{}'.", m.free.join(" ")));
             }
 
             if m.opt_strs("mod").len() > 0 {
@@ -147,7 +147,7 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
                             command_line_args.resolution_y = y;
                         }
                         (None, _) | (_, None) => {
-                            return Err(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT"));
+                            return Err(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT."));
                         }
                     }
                 },
@@ -160,7 +160,7 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
                         Some(resource_version) => {
                             command_line_args.resource_version = resource_version
                         },
-                        None => return Err(format!("Unknown Resource Version: {}", s))
+                        None => return Err(format!("Unknown resource version: '{}'.", s))
                     }
                 },
                 None => {}
@@ -310,13 +310,13 @@ mod tests {
     #[test]
     fn it_should_abort_on_unknown_arguments() {
         let input = vec!(String::from("ja2"), String::from("testunknown"));
-        assert!(super::parse_args(input).is_err())
+        assert_eq!(super::parse_args(input).err().unwrap(), "Unknown arguments: 'testunknown'.");
     }
 
     #[test]
     fn it_should_abort_on_unknown_switch() {
         let input = vec!(String::from("ja2"), String::from("--testunknown"));
-        assert!(super::parse_args(input).is_err())
+        assert_eq!(super::parse_args(input).err().unwrap(), "Unrecognized option: 'testunknown'.");
     }
 
     #[test]
@@ -343,7 +343,7 @@ mod tests {
     #[test]
     fn it_should_fail_with_unknown_resversion() {
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("TESTUNKNOWN"));
-        assert!(super::parse_args(input).is_err())
+        assert_eq!(super::parse_args(input).err().unwrap(), "Unknown resource version: 'TESTUNKNOWN'.");
     }
 
     #[test]
@@ -358,5 +358,19 @@ mod tests {
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("ITALIAN"));
         let args = super::parse_args(input).unwrap();
         assert!(super::get_resource_version(&args) == super::ResourceVersion::ITALIAN);
+    }
+
+    #[test]
+    fn it_should_return_the_correct_resolution() {
+        let input = vec!(String::from("ja2"), String::from("--res"), String::from("1120x960"));
+        let args = super::parse_args(input).unwrap();
+        assert_eq!(super::get_resolution_x(&args), 1120);
+        assert_eq!(super::get_resolution_y(&args), 960);
+    }
+
+    #[test]
+    fn it_should_fail_with_bad_resolution() {
+        let input = vec!(String::from("ja2"), String::from("--res"), String::from("1120xaaa"));
+        assert_eq!(super::parse_args(input).err().unwrap(), "Resolution argument incorrect format, should be WIDTHxHEIGHT.");
     }
 }
