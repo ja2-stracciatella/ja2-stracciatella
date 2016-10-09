@@ -94,6 +94,7 @@ static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
   "SGP",
   "STCI",
   "Container",
+  "Video",
   "VSurface",
   "Sound",
   "Memory Manager",
