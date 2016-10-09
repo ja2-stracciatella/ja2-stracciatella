@@ -1,0 +1,14 @@
+[package]
+name = "stracciatella"
+version = "0.1.0"
+authors = ["Stefan Lau <github@stefanlau.com>"]
+
+
+[lib]
+crate-type = ["staticlib"]
+name = "stracciatella"
+path = "src/stracciatella.rs"
+
+[dependencies]
+getopts = "0.2"
+libc = "0.2.16"

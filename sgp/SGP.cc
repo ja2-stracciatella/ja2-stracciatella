@@ -275,31 +275,25 @@ ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 
-struct CommandLineParams
-{
-  CommandLineParams()
-  {
-    useMod = false;
-    doUnitTests = false;
-    showDebugMessages = false;
-    resourceVersionGiven = false;
-  }
-
-  bool useMod;
-  std::string modName;
-
-  bool resourceVersionGiven;
-  std::string resourceVersion;
-
-  bool doUnitTests;
-  bool showDebugMessages;
-};
-
-static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               CommandLineParams *params);
+extern "C" {
+  typedef struct command_line_params_S command_line_params_t;
+  extern command_line_params_t* create_command_line_args(char* argv[], int argc);
+  extern void free_command_line_args(command_line_params_t *);
+  extern uint32_t get_number_of_mods(const command_line_params_t *);
+  extern char * get_mod(const command_line_params_t *, uint32_t index);
+  extern uint16_t get_resolution_x(const command_line_params_t *);
+  extern uint16_t get_resolution_y(const command_line_params_t *);
+  extern char * get_resource_version(const command_line_params_t *);
+  extern void free_rust_string(char *);
+  extern bool should_run_unittests(const command_line_params_t *);
+  extern bool should_run_editor(const command_line_params_t *);
+  extern bool should_start_in_fullscreen(const command_line_params_t *);
+  extern bool should_start_in_window(const command_line_params_t *);
+  extern bool should_start_in_debug_mode(const command_line_params_t *);
+  extern bool should_start_without_sound(const command_line_params_t *);
+}
 
 int main(int argc, char* argv[])
-try
 {
   std::string exeFolder = FileMan::getParentPath(argv[0], true);
 
@@ -314,34 +308,49 @@ try
   SLOG_Init(SLOG_STDERR, "ja2.log");
   SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
-  setGameVersion(GV_ENGLISH);
+  command_line_params_t* params = create_command_line_args(argv, argc);
 
-  CommandLineParams params;
-	if (!ParseParameters(argc, argv, &params)) return EXIT_FAILURE;
-
-  if(params.showDebugMessages)
-  {
-    SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
+  if (should_start_in_fullscreen(params)) {
+    VideoSetFullScreen(TRUE);
+  } else if (should_start_in_window(params)) {
+    VideoSetFullScreen(FALSE);
   }
 
-#ifdef WITH_UNITTESTS
-  if(params.doUnitTests)
+  if (should_start_without_sound(params)) {
+    SoundEnableSound(FALSE);
+  }
+
+  if (should_start_in_debug_mode(params)) {
+    SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
+    GameState::getInstance()->setDebugging(true);
+  }
+
+  if (should_run_editor(params)) {
+    GameState::getInstance()->setEditorMode(false);
+  }
+
+  bool result = g_ui.setScreenSize(get_resolution_x(params), get_resolution_y(params));
+  if(!result)
   {
+    SLOGE(DEBUG_TAG_SGP, "Failed to set screen resolution %d x %d", get_resolution_x(params), get_resolution_y(params));
+    return EXIT_FAILURE;
+  }
+
+  if (should_run_unittests(params)) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
   }
-#endif
 
+  char * resVersion = get_resource_version(params);
   GameVersion version = GV_ENGLISH;
-  if(params.resourceVersionGiven)
+  if(!getResourceVersion(resVersion, &version))
   {
-    if(!getResourceVersion(params.resourceVersion.c_str(), &version))
-    {
-      SLOGE(DEBUG_TAG_SGP, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
-      return EXIT_FAILURE;
-    }
+    SLOGE(DEBUG_TAG_SGP, "Unknown version of the game: %s\n", resVersion);
+    free_rust_string(resVersion);
+    return EXIT_FAILURE;
   }
   setGameVersion(version);
+  free_rust_string(resVersion);
 
   ////////////////////////////////////////////////////////////
 
@@ -378,9 +387,11 @@ try
 
   DefaultContentManager *cm;
 
-  if(params.useMod)
+  if(get_number_of_mods(params) > 0)
   {
-    std::string modName = params.modName;
+    char* rustModName = get_mod(params, 0);
+    std::string modName = std::string(rustModName);
+    free_rust_string(rustModName);
     std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
     cm = new ModPackContentManager(version,
                                    modName, modResFolder, configFolderPath,
@@ -411,6 +422,8 @@ try
     SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
+
+  free_command_line_args(params);
 
   std::vector<std::string> libraries = cm->getListOfGameResources();
   cm->initGameResouces(configPath, libraries);
@@ -494,27 +507,6 @@ try
 
 	return EXIT_SUCCESS;
 }
-catch (const std::bad_alloc&)
-{
-  SLOGE(DEBUG_TAG_SGP, "out of memory");
-  return EXIT_FAILURE;
-}
-catch (const LibraryFileNotFoundException& e)
-{
-  SLOGE(DEBUG_TAG_SGP, "%s", e.what());
-  return EXIT_FAILURE;
-}
-catch (const std::exception& e)
-{
-  SLOGE(DEBUG_TAG_SGP, "caught unhandled exception:\n%s", e.what());
-  return EXIT_FAILURE;
-}
-catch (...)
-{
-  SLOGE(DEBUG_TAG_SGP, "caught unhandled unknown exception");
-  return EXIT_FAILURE;
-}
-
 
 /** Set game resources version. */
 static bool getResourceVersion(const char *versionName, GameVersion *version)
@@ -556,164 +548,6 @@ static bool getResourceVersion(const char *versionName, GameVersion *version)
     return false;
   }
   return true;
-}
-
-static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *params)
-{
-	const char* const name = *argv;
-	if (name == NULL) return TRUE; // argv does not even contain the program name
-
-#ifdef WITH_UNITTESTS
-  for(int i = 1; i < argc; i++)
-  {
-    if (strcmp(argv[i], "-unittests") == 0)
-    {
-      params->doUnitTests = true;
-      return true;
-    }
-  }
-#endif
-
-	BOOLEAN success = TRUE;
-  for(int i = 1; i < argc; i++)
-  {
-    bool haveNextParameter = (i + 1) < argc;
-
-		if (strcmp(argv[i], "-fullscreen") == 0)
-		{
-			VideoSetFullScreen(TRUE);
-		}
-		else if (strcmp(argv[i], "-nosound") == 0)
-		{
-			SoundEnableSound(FALSE);
-		}
-		else if (strcmp(argv[i], "-window") == 0)
-		{
-			VideoSetFullScreen(FALSE);
-		}
-    else if (strcmp(argv[i], "-debug") == 0)
-    {
-      params->showDebugMessages = true;
-      GameState::getInstance()->setDebugging(true);
-    }
-		else if (strcmp(argv[i], "-res") == 0)
-		{
-      if(haveNextParameter)
-      {
-        int width = 0;
-        int height = 0;
-        int readFields = sscanf(argv[++i], "%dx%d", &width, &height);
-        if(readFields != 2)
-        {
-          SLOGE(DEBUG_TAG_SGP, "Invalid value for command-line key '-res'");
-          success = FALSE;
-        }
-        else
-        {
-          bool result = g_ui.setScreenSize(width, height);
-          if(!result)
-          {
-            SLOGE(DEBUG_TAG_SGP, "Failed to set screen resolution %d x %d", width, height);
-            success = FALSE;
-          }
-        }
-      }
-      else
-      {
-        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-res'");
-        success = FALSE;
-      }
-		}
-    else if (strcmp(argv[i], "-mod") == 0)
-    {
-      if(haveNextParameter)
-      {
-        params->useMod = true;
-        params->modName = argv[++i];
-      }
-      else
-      {
-        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-mod'");
-        success = FALSE;
-      }
-    }
-#if defined JA2BETAVERSION
-		else if (strcmp(argv[i], "-quicksave") == 0)
-		{
-			/* This allows the QuickSave Slots to be autoincremented, i.e. everytime
-			 * the user saves, there will be a new quick save file */
-			gfUseConsecutiveQuickSaveSlots = TRUE;
-		}
-		else if (strcmp(argv[i], "-domaps") == 0)
-		{
-      GameState::setMode(GAME_MODE_MAP_UTILITY);
-		}
-#endif
-		else if (strcmp(argv[i], "-editor") == 0)
-		{
-      GameState::getInstance()->setEditorMode(false);
-		}
-		else if (strcmp(argv[i], "-editorauto") == 0)
-		{
-      GameState::getInstance()->setEditorMode(true);
-		}
-    else if (strcmp(argv[i], "-resversion") == 0)
-    {
-      if(haveNextParameter)
-      {
-        params->resourceVersionGiven = true;
-        params->resourceVersion = argv[++i];
-      }
-      else
-      {
-        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-resversion'");
-        success = FALSE;
-      }
-    }
-		else
-		{
-			if (strcmp(argv[i], "-help") != 0)
-			{
-				fprintf(stderr, "Unknown switch \"%s\"\n", argv[i]);
-			}
-			success = FALSE;
-		}
-	}
-
-	if (!success)
-	{
-		fprintf(stderr,
-			"Usage: %s [options]\n"
-			"\n"
-			"  -res WxH     Screen resolution, e.g. 800x600. Default value is 640x480\n"
-			"\n"
-			"  -resversion  Version of the game resources.\n"
-			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
-			"                 Default value is ENGLISH\n"
-			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
-			"                 RUSSIAN_GOLD is for Gold release\n"
-      "\n"
-      "  -mod NAME    Start one of the game modifications, bundled into the game.\n"
-      "               NAME is the name of modification, e.g. 'from-russia-with-love'.\n"
-      "               See folder mods for possible options\n"
-			"\n"
-			"  -debug       Show debug messages\n"
-#ifdef WITH_UNITTESTS
-      "  -unittests   Perform unit tests\n"
-      "                 ja2.exe -unittests [gtest options]\n"
-      "                 E.g. ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2\n"
-#endif
-			"  -editor      Start the map editor (Editor.slf is required)\n"
-			"  -editorauto  Start the map editor and load sector A9 (Editor.slf is required)\n"
-			"  -fullscreen  Start the game in the fullscreen mode\n"
-			"  -help        Display this information\n"
-			"  -nosound     Turn the sound and music off\n"
-			"  -window      Start the game in a window\n"
-            ,
-			name
-		);
-	}
-	return success;
 }
 
 static std::string findRootGameResFolder(const std::string &configPath)
