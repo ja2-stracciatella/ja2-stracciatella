@@ -10,11 +10,24 @@ use std::ffi::{CStr, CString};
 use std::str;
 use std::env;
 
+#[derive(Debug, PartialEq, Copy, Clone)]
+#[repr(C)]
+pub enum ResourceVersion {
+    DUTCH,
+    ENGLISH,
+    FRENCH,
+    GERMAN,
+    ITALIAN,
+    POLISH,
+    RUSSIAN,
+    RUSSIAN_GOLD,
+}
+
 pub struct CommandLineArgs {
     mods: Vec<String>,
     resolution_x: u16,
     resolution_y: u16,
-    resource_version: String,
+    resource_version: ResourceVersion,
     run_unittests: bool,
     run_editor: bool,
     start_in_fullscreen: bool,
@@ -82,6 +95,20 @@ pub fn get_options() -> Options {
     return opts;
 }
 
+fn get_res_version(res_version_str: &str) -> Option<ResourceVersion> {
+    match res_version_str {
+        "DUTCH" => Some(ResourceVersion::RUSSIAN),
+        "ENGLISH" => Some(ResourceVersion::ENGLISH),
+        "FRENCH" => Some(ResourceVersion::FRENCH),
+        "GERMAN" => Some(ResourceVersion::GERMAN),
+        "ITALIAN" => Some(ResourceVersion::ITALIAN),
+        "POLISH" => Some(ResourceVersion::POLISH),
+        "RUSSIAN" => Some(ResourceVersion::RUSSIAN),
+        "RUSSIAN_GOLD" => Some(ResourceVersion::RUSSIAN_GOLD),
+        _ => None
+    }
+}
+
 fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
     let opts = get_options();
 
@@ -91,7 +118,7 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
                 mods: vec!(),
                 resolution_x: 640,
                 resolution_y: 480,
-                resource_version: String::from("ENGLISH"),
+                resource_version: ResourceVersion::ENGLISH,
                 run_unittests: false,
                 run_editor: false,
                 start_in_fullscreen: false,
@@ -128,7 +155,14 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
             }
 
             match m.opt_str("resversion") {
-                Some(s) => command_line_args.resource_version = s,
+                Some(s) => {
+                    match get_res_version(s.as_ref()) {
+                        Some(resource_version) => {
+                            command_line_args.resource_version = resource_version
+                        },
+                        None => return Err(format!("Unknown Resource Version: {}", s))
+                    }
+                },
                 None => {}
             }
 
@@ -221,10 +255,9 @@ pub extern fn get_resolution_y(ptr: *const CommandLineArgs) -> u16 {
 }
 
 #[no_mangle]
-pub extern fn get_resource_version(ptr: *const CommandLineArgs) -> *mut c_char {
+pub extern fn get_resource_version(ptr: *const CommandLineArgs) -> ResourceVersion {
     let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    let c_str_resource_version = CString::new(command_line_args.resource_version.clone()).unwrap();
-    c_str_resource_version.into_raw()
+    command_line_args.resource_version
 }
 
 #[no_mangle]
@@ -274,35 +307,56 @@ pub fn free_rust_string(s: *mut c_char) {
 
 #[cfg(test)]
 mod tests {
-    use super::parse_args;
-
     #[test]
     fn it_should_abort_on_unknown_arguments() {
         let input = vec!(String::from("ja2"), String::from("testunknown"));
-        assert!(parse_args(input).is_err())
+        assert!(super::parse_args(input).is_err())
     }
 
     #[test]
     fn it_should_abort_on_unknown_switch() {
         let input = vec!(String::from("ja2"), String::from("--testunknown"));
-        assert!(parse_args(input).is_err())
+        assert!(super::parse_args(input).is_err())
     }
 
     #[test]
     fn it_should_have_correct_fullscreen_default_value() {
         let input = vec!(String::from("ja2"));
-        assert!(parse_args(input).unwrap().start_in_fullscreen == false)
+        assert!(!super::should_start_in_fullscreen(&super::parse_args(input).unwrap()));
     }
 
     #[test]
     fn it_should_be_able_to_change_fullscreen_value() {
         let input = vec!(String::from("ja2"), String::from("--fullscreen"));
-        assert!(parse_args(input).unwrap().start_in_fullscreen == true)
+        assert!(super::should_start_in_fullscreen(&super::parse_args(input).unwrap()));
     }
 
-//    #[test]
-//    fn it_should_continue_with_multiple_known_switches() {
-//        let input = vec!(String::from("ja2"), String::from("--debug"), String::from("--mod"), String::from("a"), String::from("--mod"), String::from("b"));
-//        assert!(parse_args(input).unwrap() == 0)
-//    }
+    #[test]
+    fn it_should_continue_with_multiple_known_switches() {
+        let input = vec!(String::from("ja2"), String::from("--debug"), String::from("--mod"), String::from("a"), String::from("--mod"), String::from("b"));
+        let args = super::parse_args(input).unwrap();
+
+        assert!(super::should_start_in_debug_mode(&args));
+        assert!(super::get_number_of_mods(&args) == 2);
+    }
+
+    #[test]
+    fn it_should_fail_with_unknown_resversion() {
+        let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("TESTUNKNOWN"));
+        assert!(super::parse_args(input).is_err())
+    }
+
+    #[test]
+    fn it_should_return_the_correct_resversion_for_russian() {
+        let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("RUSSIAN"));
+        let args = super::parse_args(input).unwrap();
+        assert!(super::get_resource_version(&args) == super::ResourceVersion::RUSSIAN);
+    }
+
+    #[test]
+    fn it_should_return_the_correct_resversion_for_italian() {
+        let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("ITALIAN"));
+        let args = super::parse_args(input).unwrap();
+        assert!(super::get_resource_version(&args) == super::ResourceVersion::ITALIAN);
+    }
 }

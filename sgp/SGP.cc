@@ -283,7 +283,7 @@ extern "C" {
   extern char * get_mod(const command_line_params_t *, uint32_t index);
   extern uint16_t get_resolution_x(const command_line_params_t *);
   extern uint16_t get_resolution_y(const command_line_params_t *);
-  extern char * get_resource_version(const command_line_params_t *);
+  extern GameVersion get_resource_version(const command_line_params_t *);
   extern void free_rust_string(char *);
   extern bool should_run_unittests(const command_line_params_t *);
   extern bool should_run_editor(const command_line_params_t *);
@@ -341,16 +341,8 @@ int main(int argc, char* argv[])
     return RUN_ALL_TESTS();
   }
 
-  char * resVersion = get_resource_version(params);
-  GameVersion version = GV_ENGLISH;
-  if(!getResourceVersion(resVersion, &version))
-  {
-    SLOGE(DEBUG_TAG_SGP, "Unknown version of the game: %s\n", resVersion);
-    free_rust_string(resVersion);
-    return EXIT_FAILURE;
-  }
+  GameVersion version = get_resource_version(params);;
   setGameVersion(version);
-  free_rust_string(resVersion);
 
   ////////////////////////////////////////////////////////////
 
@@ -506,48 +498,6 @@ int main(int argc, char* argv[])
   GCM = NULL;
 
 	return EXIT_SUCCESS;
-}
-
-/** Set game resources version. */
-static bool getResourceVersion(const char *versionName, GameVersion *version)
-{
-  if(strcasecmp(versionName, "ENGLISH") == 0)
-  {
-    *version = GV_ENGLISH;
-  }
-  else if(strcasecmp(versionName, "DUTCH") == 0)
-  {
-    *version = GV_DUTCH;
-  }
-  else if(strcasecmp(versionName, "FRENCH") == 0)
-  {
-    *version = GV_FRENCH;
-  }
-  else if(strcasecmp(versionName, "GERMAN") == 0)
-  {
-    *version = GV_GERMAN;
-  }
-  else if(strcasecmp(versionName, "ITALIAN") == 0)
-  {
-    *version = GV_ITALIAN;
-  }
-  else if(strcasecmp(versionName, "POLISH") == 0)
-  {
-    *version = GV_POLISH;
-  }
-  else if(strcasecmp(versionName, "RUSSIAN") == 0)
-  {
-    *version = GV_RUSSIAN;
-  }
-  else if(strcasecmp(versionName, "RUSSIAN_GOLD") == 0)
-  {
-    *version = GV_RUSSIAN_GOLD;
-  }
-  else
-  {
-    return false;
-  }
-  return true;
 }
 
 static std::string findRootGameResFolder(const std::string &configPath)
