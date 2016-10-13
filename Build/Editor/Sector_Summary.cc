@@ -2013,7 +2013,7 @@ static void CalculateOverrideStatus(void)
 	if( gfTempFile )
 	{
     // if empty, use "test.dat"
-    if(gszTempFilename && wcscmp(gszTempFilename, L""))
+    if (!wcslen(gszTempFilename))
     {
       filename = GCM->getMapPath(gszTempFilename);
     }
