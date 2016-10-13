@@ -593,7 +593,7 @@ bool DefaultContentManager::loadWeapons()
   std::string jsonData = FileMan::fileReadText(f);
 
   rapidjson::Document document;
-  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
   {
     SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse weapons.json");
     return false;
@@ -629,7 +629,7 @@ bool DefaultContentManager::loadMagazines()
   std::string jsonData = FileMan::fileReadText(f);
 
   rapidjson::Document document;
-  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
   {
     SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse magazines.json");
     return false;
@@ -666,7 +666,7 @@ bool DefaultContentManager::loadCalibres()
   std::string jsonData = FileMan::fileReadText(f);
 
   rapidjson::Document document;
-  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
   {
     SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse calibres.json");
     return false;
@@ -705,7 +705,7 @@ bool DefaultContentManager::loadAmmoTypes()
   std::string jsonData = FileMan::fileReadText(f);
 
   rapidjson::Document document;
-  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
   {
     SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse ammo_types.json");
     return false;
@@ -761,7 +761,7 @@ bool DefaultContentManager::loadMusic()
   std::string jsonData = FileMan::fileReadText(f);
 
   rapidjson::Document document;
-  if (document.Parse<0>(jsonData.c_str()).HasParseError()) {
+  if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError()) {
     SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse music.json");
     return false;
   }
@@ -802,7 +802,7 @@ bool DefaultContentManager::readWeaponTable(
   std::string jsonData = FileMan::fileReadText(f);
 
   rapidjson::Document document;
-  if (document.Parse<0>(jsonData.c_str()).HasParseError())
+  if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
   {
     SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse %s", fileName);
     return false;
@@ -912,7 +912,7 @@ rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileNam
   std::string jsonData = FileMan::fileReadText(f);
 
   rapidjson::Document *document = new rapidjson::Document();
-  if (document->Parse<0>(jsonData.c_str()).HasParseError())
+  if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
   {
     SLOGE(DEBUG_TAG_DEFAULTCM, "Failed to parse '%s'", fileName);
     delete document;
