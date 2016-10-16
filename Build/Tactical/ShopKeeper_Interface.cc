@@ -2160,7 +2160,8 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 
 	if (ItemHasAttachments(item_o))
 	{ // Display the '*' in the bottom right corner of the square
-		DrawTextToScreen(L"*", x + SKI_ATTACHMENT_SYMBOL_X_OFFSET, y + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		UINT8 attachmentHintColor = GetAttachmentHintColor(&item_o);
+		DrawTextToScreen(L"*", x + SKI_ATTACHMENT_SYMBOL_X_OFFSET, y + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, attachmentHintColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	{ // Display 'JAMMED' or 'REPAIRED', if appropriate
