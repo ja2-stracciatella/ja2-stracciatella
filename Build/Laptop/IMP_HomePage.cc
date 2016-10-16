@@ -40,8 +40,6 @@ static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason);
 GUIButtonRef giIMPHomePageButton[1];
 static BUTTON_PICS* giIMPHomePageButtonImage[1];
 
-static void CreateIMPHomePageButtons(void);
-
 static void InitImpHomepageTextInputBoxes(void) {
 	InitTextInputMode();
 
@@ -65,94 +63,6 @@ static void InitImpHomepageTextInputBoxes(void) {
 	SetActiveField(0);
 }
 
-void EnterImpHomePage( void )
-{
-	 // load buttons
-   CreateIMPHomePageButtons( );
-
-   InitImpHomepageTextInputBoxes();
-
-	 // render screen once
-	 RenderImpHomePage( );
-}
-
-void RenderImpHomePage( void )
-{
-  // the background
-	RenderProfileBackGround( );
-
-	// the IMP symbol
-	RenderIMPSymbol( 107, 45 );
-
-  // the second button image
-	RenderButton2Image( 134, 314);
-
-	// render the indents
-
-	//activation indents
-	RenderActivationIndent( 257, 328 );
-
-	// the two font page indents
-	RenderFrontPageIndent( 3, 64 );
-  RenderFrontPageIndent( 396,64 );
-
-	RenderAllTextFields();
-}
-
-
-static void RemoveIMPHomePageButtons(void);
-
-
-void ExitImpHomePage( void )
-{
-
-	// remove buttons
-  RemoveIMPHomePageButtons( );
-
-	KillTextInputMode();
-}
-
-static void GetPlayerKeyBoardInputForIMPHomePage(void);
-
-void HandleImpHomePage( void )
-{
-	// handle keyboard input for this screen
-  GetPlayerKeyBoardInputForIMPHomePage( );
-
-	RenderAllTextFields();
-}
-
-static void ProcessPlayerInputActivationString(void);
-
-
-static void GetPlayerKeyBoardInputForIMPHomePage(void)
-{
-	InputAtom					InputEvent;
-	while (DequeueEvent(&InputEvent))
-  {
-		if(	!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT || InputEvent.usEvent == KEY_UP ) )
-		{
-		  switch( InputEvent.usParam )
-			{
-				case SDLK_RETURN:
-					if(InputEvent.usEvent == KEY_UP)
-					{
-						// return hit, check to see if current player activation string is a valid one
-						ProcessPlayerInputActivationString( );
-					}
-					break;
-
-				case SDLK_ESCAPE:
-					HandleLapTopESCKey();
-					break;
-
-				default:
-					break;
-			}
-		}
-	}
-}
-
 static void ProcessPlayerInputActivationString(void)
 {
 	wchar_t const* str = GetStringFromField(0);
@@ -173,6 +83,33 @@ static void ProcessPlayerInputActivationString(void)
 	SetActiveField(0);
 }
 
+static void GetPlayerKeyBoardInputForIMPHomePage(void)
+{
+	InputAtom					InputEvent;
+	while (DequeueEvent(&InputEvent))
+	{
+		if(	!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT || InputEvent.usEvent == KEY_UP ) )
+		{
+			switch( InputEvent.usParam )
+			{
+				case SDLK_RETURN:
+					if(InputEvent.usEvent == KEY_UP)
+					{
+						// return hit, check to see if current player activation string is a valid one
+						ProcessPlayerInputActivationString( );
+					}
+					break;
+
+				case SDLK_ESCAPE:
+					HandleLapTopESCKey();
+					break;
+
+				default:
+					break;
+			}
+		}
+	}
+}
 
 static void CreateIMPHomePageButtons(void)
 {
@@ -207,4 +144,55 @@ static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason)
 		iCurrentImpPage = IMP_ABOUT_US;
 		fButtonPendingFlag = TRUE;
 	}
+}
+
+void EnterImpHomePage( void )
+{
+	// load buttons
+	CreateIMPHomePageButtons( );
+
+	InitImpHomepageTextInputBoxes();
+
+	// render screen once
+	RenderImpHomePage( );
+}
+
+void RenderImpHomePage( void )
+{
+	// the background
+	RenderProfileBackGround( );
+
+	// the IMP symbol
+	RenderIMPSymbol( 107, 45 );
+
+	// the second button image
+	RenderButton2Image( 134, 314);
+
+	// render the indents
+
+	//activation indents
+	RenderActivationIndent( 257, 328 );
+
+	// the two font page indents
+	RenderFrontPageIndent( 3, 64 );
+	RenderFrontPageIndent( 396,64 );
+
+	RenderAllTextFields();
+}
+
+void ExitImpHomePage( void )
+{
+
+	// remove buttons
+	RemoveIMPHomePageButtons( );
+
+	KillTextInputMode();
+}
+
+void HandleImpHomePage( void )
+{
+	// handle keyboard input for this screen
+	GetPlayerKeyBoardInputForIMPHomePage( );
+
+	RenderAllTextFields();
 }
