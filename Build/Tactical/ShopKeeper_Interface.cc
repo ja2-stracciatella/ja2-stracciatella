@@ -2578,7 +2578,7 @@ static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPrice
 		// if it's a GUN or AMMO (but not Launchers, and all attachments and payload is included)
 		switch ( GCM->getItem(usItemID)->getItemClass() )
 		{
-			case IC_GUN:
+			case IC_WEAPON:
 			case IC_AMMO:
 				uiDiscountValue = ( uiUnitPrice * FLO_DISCOUNT_PERCENTAGE ) / 100;
 
