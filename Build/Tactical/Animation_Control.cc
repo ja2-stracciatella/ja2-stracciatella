@@ -2769,8 +2769,11 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 						// Do we carry two pistols...
 						if ( GCM->getItem(pSoldier->inv[ SECONDHANDPOS ].usItem)->getItemClass() == IC_GUN )
 						{
-							usAnimSurface = gDoubleHandledSub.usAnimationSurfaces[ pSoldier->ubBodyType ];
-							fAdjustedForItem	= TRUE;
+							if( !GCM->getItem(pSoldier->inv[ SECONDHANDPOS ].usItem)->isTwoHanded() )
+							{
+								usAnimSurface = gDoubleHandledSub.usAnimationSurfaces[ pSoldier->ubBodyType ];
+								fAdjustedForItem	= TRUE;
+							}
 						}
 					}
 
