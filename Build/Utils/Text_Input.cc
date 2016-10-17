@@ -424,6 +424,10 @@ void SetActiveField(UINT8 const id)
 	if (n == gpActive) return;
 	if (!n->fEnabled)  return;
 
+	if (gpActive && gpActive->InputCallback) {
+		gpActive->InputCallback(gpActive->ubID, FALSE);
+	}
+
 	gpActive = n;
 	if (n->szString)
 	{
