@@ -1,3 +1,4 @@
+#include <sgp/VObject.h>
 #include "CharProfile.h"
 #include "Directories.h"
 #include "Font.h"
@@ -37,6 +38,13 @@
 #endif
 
 
+#define FULL_NAME_INPUT_X LAPTOP_SCREEN_UL_X + 196
+#define FULL_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 153
+#define FULL_NAME_INPUT_WIDTH 229
+#define NICK_NAME_INPUT_X FULL_NAME_INPUT_X
+#define NICK_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 213
+#define NICK_NAME_INPUT_WIDTH 110
+#define NAMES_INPUT_HEIGHT 23
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138
 #define NICK_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 195
 #define MALE_BOX_X 2 + 192 + LAPTOP_SCREEN_UL_X
@@ -44,8 +52,7 @@
 #define MALE_BOX_WIDTH 24 - 2
 #define MALE_BOX_HEIGHT 24 - 2
 #define FEMALE_BOX_X  2 + 302 + LAPTOP_SCREEN_UL_X
-#define FULL_NAME_REGION_WIDTH 230
-#define NICK_NAME_REGION_WIDTH 100
+
 
 // genders
 enum{
@@ -54,9 +61,7 @@ enum{
 };
 
 // TextEnterMode .. whether user is entering full name or nick name, or gender selection
-enum{
-  FULL_NAME_MODE,
-  NICK_NAME_MODE,
+enum {
 	MALE_GENDER_SELECT,
 	FEMALE_GENDER_SELECT,
 };
@@ -66,10 +71,6 @@ wchar_t pFullNameString[NAME_LENGTH];
 wchar_t pNickNameString[NICKNAME_LENGTH];
 
 
-// positions in name strings
-UINT32 uiFullNameCharacterPosition = 0;
-UINT32 uiNickNameCharacterPosition = 0;
-
 // non gender
 INT8 bGenderFlag = -1;
 
@@ -78,62 +79,52 @@ static BUTTON_PICS* giIMPBeginScreenButtonImage[1];
 GUIButtonRef giIMPBeginScreenButton[1];
 
 // current mode of entering text we are in, ie FULL or Nick name?
-UINT8 ubTextEnterMode =0;
-
-// cursor position
-UINT32 uiNickNameCursorPosition =196 + LAPTOP_SCREEN_UL_X;
-UINT32 uiFullNameCursorPosition =196 + LAPTOP_SCREEN_UL_X;
-
-// whther a new char has been entered ( to force redraw)
-BOOLEAN fNewCharInString = FALSE;
-
+UINT8 ubTextEnterMode = 0;
 
 static MOUSE_REGION gIMPBeginScreenMouseRegions[4];
-
 
 static void CreateIMPBeginScreenButtons(void);
 static void CreateIMPBeginScreenMouseRegions(void);
 
+void InitImpBeginScreeenTextInputBoxes() {
+	InitTextInputMode();
+
+	SetTextInputFont(FONT14ARIAL);
+	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 0, 0, 0) ) );
+	SetTextInputRegularColors( FONT_LTGREEN, FONT_BLACK );
+	SetTextInputHilitedColors( FONT_BLACK, FONT_LTGREEN, FONT_LTGREEN  );
+	SetCursorColor( Get16BPPColor(FROMRGB(0, 255, 0) ) );
+
+	AddTextInputField(
+			FULL_NAME_INPUT_X,
+			FULL_NAME_INPUT_Y,
+			FULL_NAME_INPUT_WIDTH,
+			NAMES_INPUT_HEIGHT,
+			MSYS_PRIORITY_HIGH + 2,
+			pFullName,
+			NAME_LENGTH,
+			INPUTTYPE_FULL_TEXT
+	);
+
+	AddTextInputField(
+			NICK_NAME_INPUT_X,
+			NICK_NAME_INPUT_Y,
+			NICK_NAME_INPUT_WIDTH,
+			NAMES_INPUT_HEIGHT,
+			MSYS_PRIORITY_HIGH + 2,
+			pNickName,
+			NICKNAME_LENGTH,
+			INPUTTYPE_FULL_TEXT
+	);
+}
 
 void EnterIMPBeginScreen( void )
 {
+	InitImpBeginScreeenTextInputBoxes();
 
-	// reset all variables
+	bGenderFlag = iCurrentProfileMode != 0 ? fCharacterIsMale : -1;
 
-	memset( pFullNameString, 0, sizeof( pFullNameString ) );
-  memset( pNickNameString, 0, sizeof( pNickNameString ) );
-
-	// if we are not restarting...then copy over name, set cursor and array positions
-	if( iCurrentProfileMode != 0 )
-	{
-	  wcscpy( pFullNameString, pFullName );
-	  wcscpy( pNickNameString, pNickName );
-		uiFullNameCharacterPosition = (UINT32)wcslen( pFullNameString );
-    uiNickNameCharacterPosition = (UINT32)wcslen( pNickNameString );
-	  uiFullNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pFullNameString, FONT14ARIAL );
-    uiNickNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pNickNameString, FONT14ARIAL );
-
-		// set gender too
-		bGenderFlag = fCharacterIsMale;
-
-	}
-  else
-	{
-		uiNickNameCursorPosition =196 + LAPTOP_SCREEN_UL_X;
-    uiFullNameCursorPosition =196 + LAPTOP_SCREEN_UL_X;
-		uiFullNameCharacterPosition = 0;
-		uiNickNameCharacterPosition = 0;
-		bGenderFlag = -1;
-	}
-
-
-
-
-	ubTextEnterMode =0;
-
-	// draw name if any
-	fNewCharInString = TRUE;
-
+	ubTextEnterMode = 0;
 
 	// render the screen on entry
   RenderIMPBeginScreen( );
@@ -155,7 +146,6 @@ void EnterIMPBeginScreen( void )
 }
 
 
-static void DisplayPlayerNameStrings(void);
 static void Print8CharacterOnlyString(void);
 static void RenderGender(void);
 
@@ -182,8 +172,8 @@ void RenderIMPBeginScreen( void )
 	// render warning string
 	Print8CharacterOnlyString( );
 
-	DisplayPlayerNameStrings();
 	RenderGender();
+	RenderAllTextFields();
 }
 
 
@@ -218,9 +208,7 @@ void ExitIMPBeginScreen( void )
 
 
 static void DisplayFemaleGlowCursor(void);
-static void DisplayFullNameStringCursor(void);
 static void DisplayMaleGlowCursor(void);
-static void DisplayNickNameStringCursor(void);
 static void GetPlayerKeyBoardInputForIMPBeginScreen(void);
 
 
@@ -229,22 +217,16 @@ void HandleIMPBeginScreen( void )
 
 	GetPlayerKeyBoardInputForIMPBeginScreen( );
 
-		// has a new char been added to activation string
-
 	// render the cursor
 	switch (ubTextEnterMode)
 	{
-		case FULL_NAME_MODE:       DisplayFullNameStringCursor(); break;
-		case NICK_NAME_MODE:       DisplayNickNameStringCursor(); break;
 		case MALE_GENDER_SELECT:   DisplayMaleGlowCursor();       break;
 		case FEMALE_GENDER_SELECT: DisplayFemaleGlowCursor();     break;
+		default: break;
 	}
 
-	if( fNewCharInString )
-	{
-		DisplayPlayerNameStrings();
-	  RenderGender();
-	}
+	RenderGender();
+	RenderAllTextFields();
 }
 
 
@@ -341,52 +323,6 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 }
 
-
-static void EnterKey(InputAtom const& a, wchar_t* const buf, UINT32 const buf_len, UINT32& pos_char, UINT32 const max_w, UINT32& pos_cursor)
-{
-	switch (a.usParam)
-	{
-		case SDLK_BACKSPACE: // Delete char left of cursor
-		{
-			if (pos_char == 0) break;
-			wchar_t const c = buf[--pos_char];
-			buf[pos_char] = L'\0';
-			pos_cursor -= GetCharWidth(FONT14ARIAL, c);
-			fNewCharInString = TRUE;
-			break;
-		}
-
-		default: // Append new char, if it is valid and there is space left
-		{
-			wchar_t const c = a.Char;
-			if (IsPrintableChar(c))
-			{
-				if (pos_char >= buf_len) break;
-				UINT32 const new_pos_cursor = pos_cursor + GetCharWidth(FONT14ARIAL, c);
-				if (new_pos_cursor > LAPTOP_SCREEN_UL_X + 196 + max_w) break;
-				pos_cursor = new_pos_cursor;
-				buf[  pos_char] = c;
-				buf[++pos_char] = L'\0';
-				fNewCharInString = TRUE;
-			}
-			break;
-		}
-	}
-}
-
-
-static void HandleBeginScreenTextEvent(InputAtom const& a)
-{
-	/* this function checks to see if a letter or a backspace was pressed, if so,
-	 * either put char to screen or delete it */
-	switch (ubTextEnterMode)
-	{
-		case FULL_NAME_MODE: EnterKey(a, pFullNameString, NAME_LENGTH, uiFullNameCharacterPosition, FULL_NAME_REGION_WIDTH, uiFullNameCursorPosition); break;
-		case NICK_NAME_MODE: EnterKey(a, pNickNameString, NICKNAME_LENGTH, uiNickNameCharacterPosition, NICK_NAME_REGION_WIDTH, uiNickNameCursorPosition); break;
-	}
-}
-
-
 static void DecrementTextEnterMode(void);
 static void IncrementTextEnterMode(void);
 
@@ -415,27 +351,21 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 
 			     // increment to next selection box
 			     IncrementTextEnterMode( );
-			     fNewCharInString = TRUE;
 				break;
 
 				case SDLK_SPACE:
 				// handle space bar
-				if( FEMALE_GENDER_SELECT  == ubTextEnterMode )
-				{
-				  bGenderFlag = IMP_FEMALE;
-					DecrementTextEnterMode( );
-				}
-			  else if( MALE_GENDER_SELECT  == ubTextEnterMode  )
-				{
-				  bGenderFlag = IMP_MALE;
-					IncrementTextEnterMode( );
-				}
-				else
-				{
-					HandleBeginScreenTextEvent(InputEvent);
-				}
-				fNewCharInString = TRUE;
-				break;
+					if( FEMALE_GENDER_SELECT  == ubTextEnterMode )
+					{
+						bGenderFlag = IMP_FEMALE;
+						DecrementTextEnterMode( );
+					}
+					else if( MALE_GENDER_SELECT  == ubTextEnterMode  )
+					{
+						bGenderFlag = IMP_MALE;
+						IncrementTextEnterMode( );
+					}
+					break;
 
 		    case SDLK_ESCAPE: HandleLapTopESCKey(); break;
 
@@ -449,17 +379,14 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 					{
 						IncrementTextEnterMode();
 					}
-		      fNewCharInString = TRUE;
 				  break;
 
 				default:
-					HandleBeginScreenTextEvent(InputEvent);
-				break;
+					break;
 			}
 		}
   }
 }
-
 
 static UINT16 CurrentGlowColour(void)
 {
@@ -485,53 +412,6 @@ static UINT16 CurrentGlowColour(void)
 	return Get16BPPColor(GlowColorsList[iCurrentState]);
 }
 
-
-static void DisplayNameStringCursor(INT32 x, INT32 y)
-{
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	LineDraw(TRUE, x, y, x, y + CURSOR_HEIGHT + 1, CurrentGlowColour(), l.Buffer<UINT16>());
-	InvalidateRegion(x, y , x + 1, y + CURSOR_HEIGHT + 2);
-}
-
-
-static void DisplayFullNameStringCursor(void)
-{
-	DisplayNameStringCursor(uiFullNameCursorPosition, FULL_NAME_CURSOR_Y - 3);
-}
-
-
-static void DisplayNickNameStringCursor(void)
-{
-	DisplayNameStringCursor(uiNickNameCursorPosition, NICK_NAME_CURSOR_Y);
-}
-
-
-static void DisplayPlayerNameStrings(void)
-{
-	// player gone too far, move back
-	if (uiFullNameCharacterPosition >= NAME_LENGTH)
-	{
-		uiFullNameCharacterPosition = NAME_LENGTH;
-	}
-	if (uiNickNameCharacterPosition >= NICKNAME_LENGTH)
-	{
-		uiNickNameCharacterPosition = NICKNAME_LENGTH;
-	}
-
-	// restore background
-	RenderNameIndent(    194, 132);
-	RenderNickNameIndent(194, 192);
-
-	SetFontAttributes(FONT14ARIAL, 184);
-	MPrint(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
-	MPrint(LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
-
-	fNewCharInString  = FALSE;
-	fReDrawScreenFlag = TRUE;
-}
-
-
 static void DisplayGenderGlowCursor(INT32 x)
 {
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
@@ -540,7 +420,6 @@ static void DisplayGenderGlowCursor(INT32 x)
   RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, CurrentGlowColour(), l.Buffer<UINT16>());
   InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
 }
-
 
 static void DisplayMaleGlowCursor(void)
 {
@@ -566,7 +445,6 @@ static void CopyFirstNameIntoNickName(void)
 	}
 }
 
-
 static void IncrementTextEnterMode(void)
 {
   // this function will incrment which text enter mode we are in, FULLname, NICKname, IMP_MALE or IMP_FEMALE
@@ -583,7 +461,6 @@ static void IncrementTextEnterMode(void)
 	}
 
 }
-
 
 static void DecrementTextEnterMode(void)
 {
@@ -613,20 +490,9 @@ static void SelectNickNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 static void CreateIMPBeginScreenMouseRegions(void)
 {
-	// this function creates the IMP mouse regions
-
 	// are we only reviewing text?.. if so, do not create regions
 	if( ubTextEnterMode == 5 )
 		return;
-
-	// full name region
-  MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 0 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 135,  LAPTOP_SCREEN_UL_X + 196 + FULL_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 135 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		MSYS_NO_CALLBACK, SelectFullNameRegionCallBack);
-
-
-	// nick name region
-	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 1 ] , LAPTOP_SCREEN_UL_X + 196, LAPTOP_SCREEN_WEB_UL_Y + 195,  LAPTOP_SCREEN_UL_X + 196 + NICK_NAME_REGION_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + 195 + 24, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		MSYS_NO_CALLBACK, SelectNickNameRegionCallBack);
 
 	// IMP_MALE gender area
   MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 2 ] , MALE_BOX_X, MALE_BOX_Y,   MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
@@ -646,36 +512,12 @@ static void DestroyIMPBeginScreenMouseRegions()
 	FOR_EACH(MOUSE_REGION, i, gIMPBeginScreenMouseRegions) MSYS_RemoveRegion(&*i);
 }
 
-
-static void SelectFullNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		// set current mode to full name type in mode
-		ubTextEnterMode = FULL_NAME_MODE;
-		fNewCharInString = TRUE;
-	}
-}
-
-
-static void SelectNickNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		// set mode to nick name type in
-		ubTextEnterMode = NICK_NAME_MODE;
-		fNewCharInString = TRUE;
-	}
-}
-
-
 static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_MALE;
-		fNewCharInString = TRUE;
 	}
 }
 
@@ -686,7 +528,6 @@ static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_FEMALE;
-		fNewCharInString = TRUE;
 	}
 }
 
@@ -700,7 +541,6 @@ static void MvtOnFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
     ubTextEnterMode = FEMALE_GENDER_SELECT;
-		fNewCharInString = TRUE;
 	}
 }
 
@@ -714,7 +554,6 @@ static void MvtOnMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
     ubTextEnterMode = MALE_GENDER_SELECT;
-		fNewCharInString = TRUE;
 	}
 }
 
