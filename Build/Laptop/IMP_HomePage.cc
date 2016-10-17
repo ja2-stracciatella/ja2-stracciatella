@@ -13,20 +13,6 @@
 #include "LaptopSave.h"
 #include "Font_Control.h"
 
-const UINT32 GlowColorsList[] = {
-	FROMRGB(0,   0, 0),
-	FROMRGB(0,  25, 0),
-	FROMRGB(0,  50, 0),
-	FROMRGB(0,  75, 0),
-	FROMRGB(0, 100, 0),
-	FROMRGB(0, 125, 0),
-	FROMRGB(0, 150, 0),
-	FROMRGB(0, 175, 0),
-	FROMRGB(0, 200, 0),
-	FROMRGB(0, 225, 0),
-	FROMRGB(0, 255, 0)
-};
-
 static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason);
 
 // position defines

@@ -45,8 +45,6 @@
 #define NICK_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 213
 #define NICK_NAME_INPUT_WIDTH 110
 #define NAMES_INPUT_HEIGHT 23
-#define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138
-#define NICK_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 195
 #define MALE_BOX_X 2 + 192 + LAPTOP_SCREEN_UL_X
 #define MALE_BOX_Y 254 + LAPTOP_SCREEN_WEB_UL_Y
 #define MALE_BOX_WIDTH 24 - 2
@@ -82,7 +80,7 @@ GUIButtonRef giIMPBeginScreenButton[1];
 // currently focused input
 UINT8 ubFocus = 0;
 
-static MOUSE_REGION gIMPBeginScreenMouseRegions[4];
+static MOUSE_REGION gIMPBeginScreenMouseRegions[2];
 
 static void CreateIMPBeginScreenButtons(void);
 static void CreateIMPBeginScreenMouseRegions(void);
@@ -226,8 +224,8 @@ void ExitIMPBeginScreen( void )
 }
 
 
-static void DisplayFemaleGlowCursor(void);
-static void DisplayMaleGlowCursor(void);
+static void DisplayFemaleCheckboxFocus(void);
+static void DisplayMaleCheckboxFocus(void);
 static void GetPlayerKeyBoardInputForIMPBeginScreen(void);
 
 
@@ -241,8 +239,10 @@ void HandleIMPBeginScreen( void )
 	// render the cursor
 	switch (ubFocus)
 	{
-		case MALE_GENDER:   DisplayMaleGlowCursor();       break;
-		case FEMALE_GENDER: DisplayFemaleGlowCursor();     break;
+		case MALE_GENDER:
+			DisplayMaleCheckboxFocus();       break;
+		case FEMALE_GENDER:
+			DisplayFemaleCheckboxFocus();     break;
 		default: break;
 	}
 
@@ -373,48 +373,24 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
   }
 }
 
-static UINT16 CurrentGlowColour(void)
+static void DisplayCheckboxFocus(INT32 x)
 {
-	static UINT32 uiBaseTime    = 0;
-	static UINT32 iCurrentState = 0;
-	static BOOLEAN fIncrement   = TRUE;
-
-	if (uiBaseTime == 0) uiBaseTime = GetJA2Clock();
-
-	// get difference
-	UINT32 uiDeltaTime = GetJA2Clock() - uiBaseTime;
-
-	// if difference is long enough, rotate colors
-	if (uiDeltaTime > MIN_GLOW_DELTA)
-	{
-		if (iCurrentState == 10) fIncrement = FALSE; // start rotating downward
-		if (iCurrentState ==  0) fIncrement = TRUE;  // rotate colors upward
-		iCurrentState = iCurrentState + (fIncrement ? 1 : -1);
-		// reset basetime to current clock
-		uiBaseTime = GetJA2Clock();
-	}
-
-	return Get16BPPColor(GlowColorsList[iCurrentState]);
-}
-
-static void DisplayGenderGlowCursor(INT32 x)
-{
-	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
+	UINT16 currentColor = Get16BPPColor(GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL ? FROMRGB(0, 255, 0) : FROMRGB(0, 0, 0));
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-  RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, CurrentGlowColour(), l.Buffer<UINT16>());
+  RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT16>());
   InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
 }
 
-static void DisplayMaleGlowCursor(void)
+static void DisplayMaleCheckboxFocus(void)
 {
-	DisplayGenderGlowCursor(MALE_BOX_X);
+	DisplayCheckboxFocus(MALE_BOX_X);
 }
 
 
-static void DisplayFemaleGlowCursor(void)
+static void DisplayFemaleCheckboxFocus(void)
 {
-	DisplayGenderGlowCursor(FEMALE_BOX_X);
+	DisplayCheckboxFocus(FEMALE_BOX_X);
 }
 
 
@@ -430,20 +406,36 @@ static void CopyFirstNameIntoNickName(void)
 	}
 }
 
-static void MvtOnFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void MvtOnMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 static void CreateIMPBeginScreenMouseRegions(void)
 {
 	// IMP_MALE gender area
-  MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 2 ] , MALE_BOX_X, MALE_BOX_Y,   MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		MvtOnMaleRegionCallBack, SelectMaleRegionCallBack);
+  MSYS_DefineRegion(
+			&gIMPBeginScreenMouseRegions[0],
+			MALE_BOX_X,
+			MALE_BOX_Y,
+			MALE_BOX_X + MALE_BOX_WIDTH,
+			MALE_BOX_Y + MALE_BOX_HEIGHT,
+			MSYS_PRIORITY_HIGH,
+			CURSOR_WWW,
+		  NULL,
+			SelectMaleRegionCallBack
+	);
 
 	// IMP_FEMALE gender region
-	MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 3 ] , FEMALE_BOX_X, MALE_BOX_Y,   FEMALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
-		MvtOnFemaleRegionCallBack, SelectFemaleRegionCallBack);
+	MSYS_DefineRegion(
+			&gIMPBeginScreenMouseRegions[1],
+			FEMALE_BOX_X,
+			MALE_BOX_Y,
+			FEMALE_BOX_X + MALE_BOX_WIDTH,
+			MALE_BOX_Y + MALE_BOX_HEIGHT,
+			MSYS_PRIORITY_HIGH,
+			CURSOR_WWW,
+			NULL,
+			SelectFemaleRegionCallBack
+	);
 }
 
 
@@ -472,27 +464,6 @@ static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		InvalidateCheckboxes();
 	}
 }
-
-
-static void MvtOnFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
-	{
-    SetActiveField(3);
-		InvalidateCheckboxes();
-	}
-}
-
-
-static void MvtOnMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
-	{
-		SetActiveField(2);
-		InvalidateCheckboxes();
-	}
-}
-
 
 static void RenderGender(void)
 {
