@@ -862,6 +862,10 @@ static void SetActiveFieldMouse(MOUSE_REGION const* const r)
 	TEXTINPUTNODE* const n = r->GetUserPtr<TEXTINPUTNODE>();
 	if (n == gpActive) return;
 	// Deselect the current text edit region if applicable, then set the new one.
+	if (gpActive && gpActive->InputCallback) {
+		gpActive->InputCallback(gpActive->ubID, FALSE);
+	}
+
 	RenderInactiveTextFieldNode(gpActive);
 	gpActive = n;
 }
@@ -992,7 +996,7 @@ static void RenderActiveTextField(void)
 	}
 
 	// Draw the blinking ibeam cursor during the on blink period.
-	if (gfEditingText && str && GetJA2Clock() % 1000 < 500)
+	if (gfEditingText && str && GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL)
 	{
 		INT32          x = n->region.RegionTopLeftX + 2;
 		wchar_t const* c = str;

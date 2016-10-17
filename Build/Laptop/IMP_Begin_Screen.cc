@@ -55,15 +55,16 @@
 
 
 // genders
-enum{
+enum {
 	IMP_FEMALE = 0,
 	IMP_MALE,
 };
 
 // TextEnterMode .. whether user is entering full name or nick name, or gender selection
 enum {
-	MALE_GENDER_SELECT,
-	FEMALE_GENDER_SELECT,
+	OTHER_INPUT,
+	MALE_GENDER,
+	FEMALE_GENDER
 };
 
 // beginning character stats
@@ -78,13 +79,31 @@ INT8 bGenderFlag = -1;
 static BUTTON_PICS* giIMPBeginScreenButtonImage[1];
 GUIButtonRef giIMPBeginScreenButton[1];
 
-// current mode of entering text we are in, ie FULL or Nick name?
-UINT8 ubTextEnterMode = 0;
+// currently focused input
+UINT8 ubFocus = 0;
 
 static MOUSE_REGION gIMPBeginScreenMouseRegions[4];
 
 static void CreateIMPBeginScreenButtons(void);
 static void CreateIMPBeginScreenMouseRegions(void);
+
+static void InvalidateCheckboxes() {
+	InvalidateRegion(MALE_BOX_X, MALE_BOX_Y,  MALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
+	InvalidateRegion(FEMALE_BOX_X, MALE_BOX_Y,  FEMALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
+
+}
+
+static void MaleCheckboxCallback(UINT8 ubID, BOOLEAN fEntering)
+{
+	ubFocus = fEntering ? MALE_GENDER : OTHER_INPUT;
+	InvalidateCheckboxes();
+}
+
+static void FemaleCheckboxCallback(UINT8 ubID, BOOLEAN fEntering)
+{
+	ubFocus = fEntering ? FEMALE_GENDER : OTHER_INPUT;
+	InvalidateCheckboxes();
+}
 
 void InitImpBeginScreeenTextInputBoxes() {
 	InitTextInputMode();
@@ -116,6 +135,9 @@ void InitImpBeginScreeenTextInputBoxes() {
 			NICKNAME_LENGTH,
 			INPUTTYPE_FULL_TEXT
 	);
+
+	AddUserInputField(MaleCheckboxCallback);
+	AddUserInputField(FemaleCheckboxCallback);
 }
 
 void EnterIMPBeginScreen( void )
@@ -124,16 +146,12 @@ void EnterIMPBeginScreen( void )
 
 	bGenderFlag = iCurrentProfileMode != 0 ? fCharacterIsMale : -1;
 
-	ubTextEnterMode = 0;
+	ubFocus = OTHER_INPUT;
 
 	// render the screen on entry
   RenderIMPBeginScreen( );
 
-  if( fFinishedCharGeneration )
-	{
-    ubTextEnterMode = 5;
-	}
-	else
+  if( !fFinishedCharGeneration )
 	{
 		fFirstIMPAttribTime = TRUE;
 	}
@@ -170,7 +188,7 @@ void RenderIMPBeginScreen( void )
   RenderNickNameIndent( 194, 192);
 
 	// render warning string
-	Print8CharacterOnlyString( );
+	Print8CharacterOnlyString();
 
 	RenderGender();
 	RenderAllTextFields();
@@ -183,12 +201,13 @@ static void RemoveIMPBeginScreenButtons(void);
 
 void ExitIMPBeginScreen( void )
 {
-
 	// remove buttons
   RemoveIMPBeginScreenButtons( );
 
   // remove mouse regions
 	DestroyIMPBeginScreenMouseRegions( );
+
+	KillTextInputMode();
 
 	wcscpy( pFullName, pFullNameString );
 
@@ -217,15 +236,16 @@ void HandleIMPBeginScreen( void )
 
 	GetPlayerKeyBoardInputForIMPBeginScreen( );
 
+	RenderGender();
+
 	// render the cursor
-	switch (ubTextEnterMode)
+	switch (ubFocus)
 	{
-		case MALE_GENDER_SELECT:   DisplayMaleGlowCursor();       break;
-		case FEMALE_GENDER_SELECT: DisplayFemaleGlowCursor();     break;
+		case MALE_GENDER:   DisplayMaleGlowCursor();       break;
+		case FEMALE_GENDER: DisplayFemaleGlowCursor();     break;
 		default: break;
 	}
 
-	RenderGender();
 	RenderAllTextFields();
 }
 
@@ -323,10 +343,6 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 }
 
-static void DecrementTextEnterMode(void);
-static void IncrementTextEnterMode(void);
-
-
 static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 {
 	InputAtom					InputEvent;
@@ -339,47 +355,16 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 		  switch( InputEvent.usParam )
 			{
 				case SDLK_RETURN:
-          // check to see if gender was highlighted..if so, select it
-			    if( FEMALE_GENDER_SELECT  == ubTextEnterMode )
-					{
-				     bGenderFlag = IMP_FEMALE;
-					}
-			     else if( MALE_GENDER_SELECT  == ubTextEnterMode  )
-					 {
-				     bGenderFlag = IMP_MALE;
-					 }
-
-			     // increment to next selection box
-			     IncrementTextEnterMode( );
-				break;
-
 				case SDLK_SPACE:
-				// handle space bar
-					if( FEMALE_GENDER_SELECT  == ubTextEnterMode )
-					{
-						bGenderFlag = IMP_FEMALE;
-						DecrementTextEnterMode( );
+					if (ubFocus != OTHER_INPUT) {
+						bGenderFlag = ubFocus == MALE_GENDER ? IMP_MALE : IMP_FEMALE;
 					}
-					else if( MALE_GENDER_SELECT  == ubTextEnterMode  )
-					{
-						bGenderFlag = IMP_MALE;
-						IncrementTextEnterMode( );
-					}
+					SetActiveField(0);
 					break;
 
-		    case SDLK_ESCAPE: HandleLapTopESCKey(); break;
-
-				case SDLK_TAB:
-			    // tab hit, increment to next selection box
-					if (InputEvent.usKeyState & SHIFT_DOWN)
-					{
-						DecrementTextEnterMode();
-					}
-					else
-					{
-						IncrementTextEnterMode();
-					}
-				  break;
+		    case SDLK_ESCAPE:
+					HandleLapTopESCKey();
+					break;
 
 				default:
 					break;
@@ -445,55 +430,13 @@ static void CopyFirstNameIntoNickName(void)
 	}
 }
 
-static void IncrementTextEnterMode(void)
-{
-  // this function will incrment which text enter mode we are in, FULLname, NICKname, IMP_MALE or IMP_FEMALE
-
-	// if at IMP_FEMALE gender selection, reset to full name
-	if( FEMALE_GENDER_SELECT  == ubTextEnterMode)
-	{
-    ubTextEnterMode = FULL_NAME_MODE;
-	}
-  else
-	{
-		// otherwise, next selection
-		ubTextEnterMode++;
-	}
-
-}
-
-static void DecrementTextEnterMode(void)
-{
-  // this function will incrment which text enter mode we are in, FULLname, NICKname, IMP_MALE or IMP_FEMALE
-
-	// if at IMP_FEMALE gender selection, reset to full name
-	if(  FULL_NAME_MODE == ubTextEnterMode)
-	{
-    ubTextEnterMode =  FEMALE_GENDER_SELECT;
-	}
-  else
-	{
-		// otherwise, next selection
-		ubTextEnterMode--;
-	}
-
-}
-
-
 static void MvtOnFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void MvtOnMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectFullNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectNickNameRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-
 
 static void CreateIMPBeginScreenMouseRegions(void)
 {
-	// are we only reviewing text?.. if so, do not create regions
-	if( ubTextEnterMode == 5 )
-		return;
-
 	// IMP_MALE gender area
   MSYS_DefineRegion(&gIMPBeginScreenMouseRegions[ 2 ] , MALE_BOX_X, MALE_BOX_Y,   MALE_BOX_X + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_WWW,
 		MvtOnMaleRegionCallBack, SelectMaleRegionCallBack);
@@ -506,9 +449,6 @@ static void CreateIMPBeginScreenMouseRegions(void)
 
 static void DestroyIMPBeginScreenMouseRegions()
 {
-	// Do not remove regions, if only reviewing text.
-	if (ubTextEnterMode == 5) return;
-
 	FOR_EACH(MOUSE_REGION, i, gIMPBeginScreenMouseRegions) MSYS_RemoveRegion(&*i);
 }
 
@@ -518,6 +458,7 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_MALE;
+		InvalidateCheckboxes();
 	}
 }
 
@@ -528,32 +469,27 @@ static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		// set mode to nick name type in
 		bGenderFlag = IMP_FEMALE;
+		InvalidateCheckboxes();
 	}
 }
 
 
 static void MvtOnFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if ( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
+	if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
-		//fNewCharInString = TRUE;
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
-	{
-    ubTextEnterMode = FEMALE_GENDER_SELECT;
+    SetActiveField(3);
+		InvalidateCheckboxes();
 	}
 }
 
 
 static void MvtOnMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if ( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
+	if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
-		//fNewCharInString = TRUE;
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
-	{
-    ubTextEnterMode = MALE_GENDER_SELECT;
+		SetActiveField(2);
+		InvalidateCheckboxes();
 	}
 }
 
@@ -572,7 +508,7 @@ static void RenderGender(void)
 		default:         return; // none selected yet
 	}
 	SetFontBackground(FONT_BLACK);
-	SetFontForeground(184);
+	SetFontAttributes(FONT14ARIAL, 184);
 	MPrint(x, MALE_BOX_Y + 6, L"X");
 }
 
