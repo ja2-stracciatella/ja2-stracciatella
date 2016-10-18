@@ -582,9 +582,18 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 	// Not in text input mode
 	if (!gfTextInputMode) return FALSE;
 	// Unless we are psycho typers, we only want to process these key events.
-	if (a->usEvent != KEY_DOWN && a->usEvent != KEY_REPEAT) return FALSE;
+	if (a->usEvent != TEXT_INPUT && a->usEvent != KEY_DOWN && a->usEvent != KEY_REPEAT) return FALSE;
 	// Currently in a user field, so return unless TAB is pressed.
 	if (!gfEditingText && a->usParam != SDLK_TAB) return FALSE;
+
+	if (a->usEvent == TEXT_INPUT) {
+		wchar_t const c = a->Char;
+		/* If the key has no character associated, bail out */
+		AssertMsg(c != L'\0', "TEXT_INPUT event sent null character");
+		DeleteHilitedText();
+		HandleRegularInput(c);
+		return TRUE;
+	}
 
 	switch (a->usKeyState)
 	{
@@ -662,7 +671,8 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					}
 					break;
 
-				default: goto enter_character;
+				default:
+					return TRUE;
 			}
 			break;
 
@@ -690,14 +700,9 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					gubCursorPos = 0;
 					return TRUE;
 
-				default: // Check for typing keys
-enter_character:
-					wchar_t const c = a->Char;
-					/* If the key has no character associated, bail out */
-					if (c == L'\0') return FALSE;
-					DeleteHilitedText();
-					HandleRegularInput(c);
+				default:
 					return TRUE;
+
 			}
 
 		case CTRL_DOWN:

@@ -356,7 +356,7 @@ void KeyUp(const SDL_Keysym* KeySym)
 
 void TextInput(const SDL_TextInputEvent* TextEv) {
 	UTF8String utf8String = UTF8String(TextEv->text);
-	QueueKeyEvent(KEY_DOWN, SDLK_UNKNOWN, KMOD_NONE, utf8String.getUTF16()[0]);
+	QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, utf8String.getUTF16()[0]);
 }
 
 
