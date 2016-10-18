@@ -139,10 +139,7 @@ void EnterIMPBeginScreen( void )
 	// render the screen on entry
   RenderIMPBeginScreen( );
 
-  if( !fFinishedCharGeneration )
-	{
-		fFirstIMPAttribTime = TRUE;
-	}
+	fFirstIMPAttribTime = TRUE;
 
 	// create mouse regions
 	CreateIMPBeginScreenMouseRegions( );
@@ -271,19 +268,9 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (fFinishedCharGeneration)
+		if (CheckCharacterInputForEgg())
 		{
-			// simply reviewing name and gender, exit to finish page
-			iCurrentImpPage = IMP_FINISH;
-			fButtonPendingFlag = TRUE;
-			return;
-		}
-		else
-		{
-			if (CheckCharacterInputForEgg())
-			{
-				fEggOnYouFace = TRUE;
-			}
+			fEggOnYouFace = TRUE;
 		}
 
 		// back to mainpage
