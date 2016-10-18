@@ -31,4 +31,6 @@ int WINvswprintf(wchar_t* s, size_t n, const wchar_t* fmt, va_list arg);
 
 #endif
 
+void CopyTrimmedString(wchar_t* dst, const size_t maxLen, const wchar_t* src);
+
 #endif

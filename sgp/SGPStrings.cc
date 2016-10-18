@@ -1,4 +1,5 @@
 #include "SGPStrings.h"
+#include "Debug.h"
 
 #if defined(__linux__) || defined(_WIN32)
 
@@ -147,6 +148,87 @@ int WINvswprintf(wchar_t* const s, size_t const n, const wchar_t* const fmt, va_
 	int const ret = _vsnwprintf(s, n, fmt, arg);
 	if (n != 0) s[n - 1] = L'\0'; // _vsnwprintf() does not guarantee NUL termination
 	return ret;
+}
+
+#endif
+
+void CopyTrimmedString(wchar_t* dst, const size_t maxLength, const wchar_t* src) {
+  size_t sourceLength = wcslen(src);
+  wchar_t const* start = src;
+  wchar_t const* end = src + sourceLength - 1;
+
+  while (start[0] == L' ' && start < src + sourceLength) {
+    start++;
+  }
+  while (end[0] == L' ' && end > start) {
+    end--;
+  }
+
+  wcsncpy(dst, start, end - start + 1);
+
+  size_t len = end - start + 1;
+
+  AssertMsg(len < maxLength, "Tried to copy a trimmed string but could not fit the terminating null character");
+
+  dst[len] = 0;
+}
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+TEST(CopyTrimmedString, no_trim)
+{
+  wchar_t dst[16];
+  wchar_t const input[] = L"Don't trim this";
+  wchar_t const expected[] = L"Don't trim this";
+
+  CopyTrimmedString(dst, 16, input);
+  EXPECT_EQ(wcslen(dst), wcslen(expected));
+  EXPECT_EQ(wcscmp(dst, expected), 0);
+}
+
+TEST(CopyTrimmedString, trim_left)
+{
+  wchar_t dst[16];
+  wchar_t const input[] = L"   Left Trim Täst";
+  wchar_t const expected[] = L"Left Trim Täst";
+
+  CopyTrimmedString(dst, 16, input);
+  EXPECT_EQ(wcslen(dst), wcslen(expected));
+  EXPECT_EQ(wcscmp(dst, expected), 0);
+}
+
+TEST(CopyTrimmedString, trim_right)
+{
+  wchar_t dst[16];
+  wchar_t const input[] = L"trimright!!!   ";
+  wchar_t const expected[] = L"trimright!!!";
+
+  CopyTrimmedString(dst, 16, input);
+  EXPECT_EQ(wcslen(dst), wcslen(expected));
+  EXPECT_EQ(wcscmp(dst, expected), 0);
+}
+
+TEST(CopyTrimmedString, trim_both)
+{
+  wchar_t dst[16];
+  wchar_t const input[] = L"   left and right ";
+  wchar_t const expected[] = L"left and right";
+
+  CopyTrimmedString(dst, 16, input);
+  EXPECT_EQ(wcslen(dst), wcslen(expected));
+  EXPECT_EQ(wcscmp(dst, expected), 0);
+}
+
+TEST(CopyTrimmedString, max_length)
+{
+  wchar_t dst[16];
+  wchar_t const input[] = L"   123456789012345 ";
+  wchar_t const expected[] = L"123456789012345";
+
+  CopyTrimmedString(dst, 16, input);
+  EXPECT_EQ(wcslen(dst), wcslen(expected));
+  EXPECT_EQ(wcscmp(dst, expected), 0);
 }
 
 #endif

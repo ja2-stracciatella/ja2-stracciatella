@@ -5,31 +5,21 @@
 #include "HImage.h"
 #include "IMP_Begin_Screen.h"
 #include "IMP_MainPage.h"
-#include "IMP_HomePage.h"
+#include "SGPStrings.h"
 #include "IMPVideoObjects.h"
-#include "Local.h"
 #include "Timer_Control.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"
 #include "IMP_Finish.h"
 #include "Text_Input.h"
-#include "MessageBoxScreen.h"
 #include "Soldier_Profile_Type.h"
-#include "IMP_Portraits.h"
 #include "IMP_Attribute_Selection.h"
-#include "English.h"
 #include "Line.h"
-#include "Merc_Hiring.h"
-#include "Game_Clock.h"
 #include "Text.h"
-#include "LaptopSave.h"
-#include "Button_System.h"
 #include "Video.h"
 #include "VSurface.h"
-#include "ScreenIDs.h"
 #include "Font_Control.h"
-#include "UILayout.h"
 
 #if defined JA2BETAVERSION && defined _DEBUG
 #	include "Campaign_Types.h"
@@ -119,7 +109,7 @@ void InitImpBeginScreeenTextInputBoxes() {
 			NAMES_INPUT_HEIGHT,
 			MSYS_PRIORITY_HIGH + 2,
 			pFullName,
-			NAME_LENGTH,
+			NAME_LENGTH-1,
 			INPUTTYPE_FULL_TEXT
 	);
 
@@ -130,7 +120,7 @@ void InitImpBeginScreeenTextInputBoxes() {
 			NAMES_INPUT_HEIGHT,
 			MSYS_PRIORITY_HIGH + 2,
 			pNickName,
-			NICKNAME_LENGTH,
+			8,
 			INPUTTYPE_FULL_TEXT
 	);
 
@@ -208,15 +198,6 @@ void ExitIMPBeginScreen( void )
 	KillTextInputMode();
 
 	wcscpy( pFullName, pFullNameString );
-
-	// is nick name too long?..shorten
-	if( wcslen( pNickNameString ) > 8 )
-	{
-		// null out char 9
-		pNickNameString[ 8 ] = 0;
-	}
-
-
 	wcscpy( pNickName, pNickNameString );
 
 	// set gender
@@ -306,12 +287,14 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 		}
 
 		// back to mainpage
+		CopyTrimmedString(pFullNameString, NAME_LENGTH, GetStringFromField(0));
+		CopyTrimmedString(pNickNameString, NICKNAME_LENGTH, GetStringFromField(1));
 
 		// check to see if a name has been selected, if not, do not allow player to proceed with more char generation
-		if (pFullNameString[0] != L'\0' && pFullNameString[0] != L' ' && bGenderFlag != -1)
+		if (wcslen(pFullNameString) != 0 && bGenderFlag != -1)
 		{
 			// valid full name, check to see if nick name
-			if (pNickNameString[0] == '\0' || pNickNameString[0] == L' ')
+			if (wcslen(pNickNameString) == 0)
 			{
 				// no nick name
 				// copy first name to nick name
