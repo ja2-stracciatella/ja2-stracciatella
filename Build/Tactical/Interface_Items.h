@@ -100,6 +100,7 @@ void EndItemPointer(void);
 void DrawItemFreeCursor(void);
 void DrawItemTileCursor(void);
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
+UINT8 GetAttachmentHintColor(const OBJECTTYPE* pObj);
 SGPVObject const& GetInterfaceGraphicForItem(const ItemModel *item);
 UINT16            GetTileGraphicForItem(const ItemModel *item);
 SGPVObject*       LoadTileGraphicForItem(const ItemModel *item);
