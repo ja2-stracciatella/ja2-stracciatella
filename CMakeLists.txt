@@ -44,6 +44,7 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 add_definitions(-DJA2)
 add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
+add_definitions(-DMICROINI_STATIC)
 
 message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
 add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
