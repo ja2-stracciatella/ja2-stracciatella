@@ -14,5 +14,5 @@ name = "stracciatella"
 path = "src/stracciatella.rs"
 
 [dependencies]
-getopts = "0.2"
+getopts = { git = "https://github.com/rust-lang-nursery/getopts" }
 libc = "0.2.16"

@@ -39,6 +39,8 @@ pub struct CommandLineArgs {
 pub fn get_options() -> Options {
     let mut opts = Options::new();
 
+    opts.long_only(true);
+
     opts.optmulti(
         "m",
         "mod",
