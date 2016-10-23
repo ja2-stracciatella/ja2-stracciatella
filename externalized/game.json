@@ -58,5 +58,9 @@
     //  Enables extra GUI features. Currently includes:
     //  - Progress Bars for the Mercs Stats in Tractical Mode
     //  vanilla_setting: false
-    "gui_extras": true
+    "gui_extras": true,
+
+    //  Enables middle mouse button to trigger a look into cursor direction
+    //  vanilla_setting: false
+    "middle_mouse_look": true
 }
