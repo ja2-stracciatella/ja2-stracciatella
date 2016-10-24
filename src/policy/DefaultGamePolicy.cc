@@ -35,10 +35,10 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   chance_to_hit_maximum     = (*json)["chance_to_hit_maximum"].GetInt();
   chance_to_hit_minimum     = (*json)["chance_to_hit_minimum"].GetInt();
 
-  imp_attribute_max         = (*json)["IMP_MAX_ATTRIBUTE_POINTS"].GetInt();
-  imp_attribute_min         = (*json)["IMP_MIN_ATTRIBUTE_POINTS"].GetInt();
-  imp_attribute_bonus       = (*json)["IMP_BONUS_ATTRIBUTE_POINTS"].GetInt();
-  imp_attribute_zero_bonus  = (*json)["IMP_ZERO_ATTRIBUTE_POINTS_BONUS"].GetInt();
+  imp_attribute_max         = (*json)["imp"]["max_attribute_points"].GetInt();
+  imp_attribute_min         = (*json)["imp"]["min_attribute_points"].GetInt();
+  imp_attribute_bonus       = (*json)["imp"]["bonus_attribute_points"].GetInt();
+  imp_attribute_zero_bonus  = (*json)["imp"]["zero_attribute_points_bonus"].GetInt();
 }
 
 /** Check if a hotkey is enabled. */

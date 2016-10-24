@@ -91,8 +91,10 @@
     //  Zero attribute point bonus is what you receive for setting a skill to 0
     //  Unspecified bonus is your initial pool of points to distribute
     //  vanilla_setting: 85, 35, 15, 40
-    "IMP_MAX_ATTRIBUTE_POINTS": 85,
-    "IMP_MIN_ATTRIBUTE_POINTS": 35,
-    "IMP_ZERO_ATTRIBUTE_POINTS_BONUS": 15,
-    "IMP_BONUS_ATTRIBUTE_POINTS": 40
+    "imp": {
+        "max_attribute_points": 85,
+        "min_attribute_points": 35,
+        "zero_attribute_points_bonus": 15,
+        "bonus_attribute_points": 40
+    }
 }
