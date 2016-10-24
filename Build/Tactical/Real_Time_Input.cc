@@ -44,6 +44,9 @@
 #include "Soldier_Macros.h"
 #include "Render_Dirty.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 static BOOLEAN gfStartLookingForRubberBanding = FALSE;
 static UINT16  gusRubberBandX                 = 0;
@@ -58,14 +61,80 @@ static BOOLEAN gfRTHaveClickedRightWhileLeftDown = FALSE;
 
 static void QueryRTLeftButton(UIEventKind* puiNewEvent);
 static void QueryRTRightButton(UIEventKind* puiNewEvent);
+static void QueryRTMiddleButton(UIEventKind* puiNewEvent);
 
 
 void GetRTMouseButtonInput(UIEventKind* puiNewEvent)
 {
 	 QueryRTLeftButton( puiNewEvent );
 	 QueryRTRightButton( puiNewEvent );
+	 QueryRTMiddleButton( puiNewEvent );
 }
 
+
+static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
+{
+//	static BOOLEAN	fClickHoldIntercepted = FALSE;
+//	static BOOLEAN	fClickIntercepted = FALSE;
+	static UINT32		uiSingleClickTime;
+	static BOOLEAN	fDoubleClickIntercepted = FALSE;
+	static BOOLEAN	fValidDoubleClickPossible = FALSE;
+
+	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+	{
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
+
+		// MIDDLE MOUSE BUTTON
+		if ( gViewportRegion.ButtonState & MSYS_MIDDLE_BUTTON )
+		{
+			if ( !fMiddleButtonDown )
+			{
+				fMiddleButtonDown = TRUE;
+				RESETCOUNTER( MMOUSECLICK_DELAY_COUNTER );
+			}
+		}
+		else
+		{
+			if ( fMiddleButtonDown )
+			{
+				// OK , FOR DOUBLE CLICKS - TAKE TIME STAMP & RECORD EVENT
+				if ( ( GetJA2Clock() - uiSingleClickTime ) < 300 )
+				{
+					// CHECK HERE FOR DOUBLE CLICK EVENTS
+					if ( fValidDoubleClickPossible )
+					{
+							fDoubleClickIntercepted = TRUE;
+
+							// Do stuff....
+					}
+				}
+
+				// Capture time!
+				uiSingleClickTime = GetJA2Clock();
+
+				fValidDoubleClickPossible = TRUE;
+
+				if ( !fDoubleClickIntercepted )
+				{
+					// CHECK COMBINATIONS ETC...
+
+							if (GCM->getGamePolicy()->middle_mouse_look) *puiNewEvent = LC_LOOK;
+				}
+
+					// Reset flag
+				fMiddleButtonDown = FALSE;
+//				fClickHoldIntercepted = FALSE;
+//				fClickIntercepted = FALSE;
+				fDoubleClickIntercepted = FALSE;
+
+
+				// Reset counter
+				RESETCOUNTER( MMOUSECLICK_DELAY_COUNTER );
+			}
+		}
+	}
+}
 
 static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 {

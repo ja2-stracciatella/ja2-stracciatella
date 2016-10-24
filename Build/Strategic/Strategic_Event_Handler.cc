@@ -27,6 +27,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 
 #define		MEDUNA_ITEM_DROP_OFF_GRIDNO			10959
@@ -132,7 +133,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 
 	// check for potential theft
 	UINT32 uiChanceOfTheft;
-	if (CheckFact(FACT_PABLO_WONT_STEAL, 0))
+	if (CheckFact(FACT_PABLO_WONT_STEAL, 0) || (GCM->getGamePolicy()->pablo_wont_steal))
 	{
 		uiChanceOfTheft = 0;
 	}

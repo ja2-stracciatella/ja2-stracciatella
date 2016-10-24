@@ -90,6 +90,7 @@ INT16 CenterX( INT16 sGridno );
 INT16 CenterY( INT16 sGridno );
 
 BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const*, UINT8* out_direction = 0);
+BOOLEAN IsFacingClimableWindow(SOLDIERTYPE const*);
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
 INT16 RandomGridNo(void);

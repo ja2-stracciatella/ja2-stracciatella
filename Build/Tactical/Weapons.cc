@@ -49,9 +49,7 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "slog/slog.h"
-
-#define MINCHANCETOHIT          1
-#define MAXCHANCETOHIT          99
+#include "policy/GamePolicy.h"
 
 // NB this is arbitrary, chances in DG ranged from 1 in 6 to 1 in 20
 #define BASIC_DEPRECIATE_CHANCE	15
@@ -65,9 +63,6 @@
 #define SNIPERSCOPE_AIM_BONUS   20
 // bonus to hit with working laser scope
 #define LASERSCOPE_BONUS				20
-
-#define HEAD_DAMAGE_ADJUSTMENT( x ) ((x * 3) / 2)
-#define LEGS_DAMAGE_ADJUSTMENT( x ) (x / 2)
 
 #define CRITICAL_HIT_THRESHOLD 30
 
@@ -321,18 +316,21 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 
 static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32* piNewImpact, INT32* piImpactForCrits)
 {
+	UINT32 critical_damage_to_head = GCM->getGamePolicy()->critical_damage_head_multiplier;
+	UINT32 critical_damage_to_legs = GCM->getGamePolicy()->critical_damage_legs_multiplier;
+
 	switch( ubHitLocation )
 	{
 		case AIM_SHOT_HEAD:
-			// 1.5x damage from successful hits to the head!
-			*piImpactForCrits = HEAD_DAMAGE_ADJUSTMENT( iImpact );
+			// vanilla was: 1.5x damage from successful hits to the head!
+			*piImpactForCrits = critical_damage_to_head * iImpact;
 			*piNewImpact = *piImpactForCrits;
 			break;
 		case AIM_SHOT_LEGS:
 			// half damage for determining critical hits
 			// quarter actual damage
-			*piImpactForCrits = LEGS_DAMAGE_ADJUSTMENT( iImpact );
-			*piNewImpact = LEGS_DAMAGE_ADJUSTMENT( *piImpactForCrits );
+			*piImpactForCrits = critical_damage_to_legs * iImpact;
+			*piNewImpact = critical_damage_to_legs * *piImpactForCrits;
 			break;
 		default:
 			*piImpactForCrits = iImpact;
@@ -927,6 +925,17 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	{
 		// Here, remove the knife...	or (for now) rocket launcher
 		RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+		if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+		{
+			INT8 slot=FindObj(pSoldier, BLOODY_THROWING_KNIFE);
+			if(slot==NO_SLOT) slot=FindObj(pSoldier, THROWING_KNIFE);
+			if(slot!=NO_SLOT)
+			{
+				OBJECTTYPE *item=&pSoldier->inv[slot];
+				CreateItem(item->usItem, item->bStatus[0], &pSoldier->inv[HANDPOS]);
+				RemoveObjs(item, 1);
+			}
+		}
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 	else if ( usItemNum == ROCKET_LAUNCHER)
@@ -1427,7 +1436,19 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 	// OK, goto throw animation
 	HandleSoldierThrowItem( pSoldier, pSoldier->sTargetGridNo );
 
+	UINT16 const thrown_item=pSoldier->inv[HANDPOS].usItem;
 	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+	if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+	{
+		INT8 const slot=FindObj(pSoldier, thrown_item);
+		if(slot!=NO_SLOT)
+		{
+			OBJECTTYPE *item=&pSoldier->inv[slot];
+			CreateItem(item->usItem, item->bStatus[0], &pSoldier->inv[HANDPOS]);
+			RemoveObjs(item, 1);
+		}
+		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+	}
 }
 
 

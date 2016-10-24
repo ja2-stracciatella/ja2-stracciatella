@@ -58,5 +58,43 @@
     //  Enables extra GUI features. Currently includes:
     //  - Progress Bars for the Mercs Stats in Tractical Mode
     //  vanilla_setting: false
-    "gui_extras": true
+    "gui_extras": true,
+
+    //  Enables middle mouse button to trigger a look into cursor direction
+    //  vanilla_setting: false
+    "middle_mouse_look": true,
+
+    //  Press 'alt+r' to reload
+    //  vanilla_setting: false
+    "tactical_hotkey_alt_r": true,
+
+    //  Press 'ctrl+q' to swap hand items
+    //  vanilla_setting: false
+    "tactical_hotkey_ctrl_q": true,
+
+    //  Press 'shift+j' to climb throug open window
+    //  vanilla_setting: false
+    "tactical_hotkey_shift_j": false,
+
+    //  Packages never stolen, no need for bribes
+    //  vanilla_setting: false
+    "pablo_wont_steal": false,
+
+    //  Min/max chance to hit and headshot damage multiplier
+    //  vanilla_setting: 1, 99, 1.5, 0.5
+    "chance_to_hit_minimum": 1,
+    "chance_to_hit_maximum": 99,
+    "tactical_head_damage_multiplier": 1.5,
+    "tactical_legs_damage_multiplier": 0.5,
+
+    //  IMP attribute point defaults
+    //  Zero attribute point bonus is what you receive for setting a skill to 0
+    //  Unspecified bonus is your initial pool of points to distribute
+    //  vanilla_setting: 85, 35, 15, 40
+    "imp": {
+        "max_attribute_points": 85,
+        "min_attribute_points": 35,
+        "zero_attribute_points_bonus": 15,
+        "bonus_attribute_points": 40
+    }
 }

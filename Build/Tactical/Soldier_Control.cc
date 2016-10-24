@@ -5168,6 +5168,21 @@ void BeginSoldierClimbUpRoof(SOLDIERTYPE* const s)
 }
 
 
+void BeginSoldierClimbWindow(SOLDIERTYPE* const s)
+{
+	if(!IsFacingClimableWindow(s)) return;
+
+	s->sTempNewGridNo            = NewGridNo(s->sGridNo, DirectionInc(s->bDirection));
+	s->fDontChargeTurningAPs     = TRUE;
+//	EVENT_SetSoldierDesiredDirectionForward(s, direction);
+	s->fTurningUntilDone         = TRUE;
+	// ATE: Reset flag to go back to prone
+	s->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+//	s->usPendingAnimation        = HOPFENCE;
+	DeductPoints( s, AP_JUMPFENCE, BP_JUMPFENCE );
+	TeleportSoldier( *s, s->sTempNewGridNo, TRUE );
+}
+
 void BeginSoldierClimbFence(SOLDIERTYPE* const s)
 {
 	UINT8 direction;

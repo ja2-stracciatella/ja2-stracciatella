@@ -140,17 +140,21 @@ void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord)
 
 		case RIGHT_BUTTON_DOWN: action |= MSYS_DO_RBUTTON_DWN; goto update_buttons;
 		case RIGHT_BUTTON_UP:   action |= MSYS_DO_RBUTTON_UP;  goto update_buttons;
+		case MIDDLE_BUTTON_DOWN:action |= MSYS_DO_MBUTTON_DWN; goto update_buttons;
+		case MIDDLE_BUTTON_UP:  action |= MSYS_DO_MBUTTON_UP;  goto update_buttons;
 
 update_buttons:
-			MSYS_CurrentButtons &= ~(MSYS_LEFT_BUTTON | MSYS_RIGHT_BUTTON);
+			MSYS_CurrentButtons &= ~(MSYS_LEFT_BUTTON | MSYS_RIGHT_BUTTON | MSYS_MIDDLE_BUTTON);
 			MSYS_CurrentButtons |= (_LeftButtonDown  ? MSYS_LEFT_BUTTON  : 0);
 			MSYS_CurrentButtons |= (_RightButtonDown ? MSYS_RIGHT_BUTTON : 0);
+			MSYS_CurrentButtons |= (_MiddleButtonDown ? MSYS_MIDDLE_BUTTON : 0);
 			break;
 
 		// ATE: Checks here for mouse button repeats.....
 		// Call mouse region with new reason
 		case LEFT_BUTTON_REPEAT:  action |= MSYS_DO_LBUTTON_REPEAT; break;
 		case RIGHT_BUTTON_REPEAT: action |= MSYS_DO_RBUTTON_REPEAT; break;
+		case MIDDLE_BUTTON_REPEAT:action |= MSYS_DO_MBUTTON_REPEAT; break;
 
 		case MOUSE_WHEEL_UP:   action |= MSYS_DO_WHEEL_UP;   break;
 		case MOUSE_WHEEL_DOWN: action |= MSYS_DO_WHEEL_DOWN; break;
@@ -407,6 +411,18 @@ static void MSYS_UpdateMouseRegion(void)
 						g_clicked_region = 0;
 					}
 
+					if (MSYS_Action & MSYS_DO_MBUTTON_DWN)
+					{
+						ButtonReason |= MSYS_CALLBACK_REASON_MBUTTON_DWN;
+						g_clicked_region = cur;
+					}
+
+					if (MSYS_Action & MSYS_DO_MBUTTON_UP)
+					{
+						ButtonReason |= MSYS_CALLBACK_REASON_MBUTTON_UP;
+						g_clicked_region = 0;
+					}
+
 					// ATE: Added repeat resons....
 					if (MSYS_Action & MSYS_DO_LBUTTON_REPEAT)
 					{
@@ -416,6 +432,11 @@ static void MSYS_UpdateMouseRegion(void)
 					if (MSYS_Action & MSYS_DO_RBUTTON_REPEAT)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_RBUTTON_REPEAT;
+					}
+
+					if (MSYS_Action & MSYS_DO_MBUTTON_REPEAT)
+					{
+						ButtonReason |= MSYS_CALLBACK_REASON_MBUTTON_REPEAT;
 					}
 
 					if (MSYS_Action & MSYS_DO_WHEEL_UP)   ButtonReason |= MSYS_CALLBACK_REASON_WHEEL_UP;
@@ -497,6 +518,7 @@ static void MSYS_UpdateMouseRegion(void)
 			// Just don't give this button the message....
 			if (MSYS_Action & MSYS_DO_RBUTTON_UP) g_clicked_region = 0;
 			if (MSYS_Action & MSYS_DO_LBUTTON_UP) g_clicked_region = 0;
+			if (MSYS_Action & MSYS_DO_MBUTTON_UP) g_clicked_region = 0;
 
 			// OK, you still want move messages however....
 			cur->uiFlags |= MSYS_MOUSE_IN_AREA;

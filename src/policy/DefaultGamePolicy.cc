@@ -6,8 +6,12 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
   map_hotkey_ctrl_i     = (*json)["map_hotkey_ctrl_i"].GetBool();
   tactical_hotkey_j     = (*json)["tactical_hotkey_j"].GetBool();
-  tactical_hotkey_shift_n       = (*json)["tactical_hotkey_shift_n"].GetBool();
-  tactical_hotkey_ctrl_n        = (*json)["tactical_hotkey_ctrl_n"].GetBool();
+  tactical_hotkey_shift_j   = (*json)["tactical_hotkey_shift_j"].GetBool();
+  tactical_hotkey_shift_n   = (*json)["tactical_hotkey_shift_n"].GetBool();
+  tactical_hotkey_ctrl_n    = (*json)["tactical_hotkey_ctrl_n"].GetBool();
+  tactical_hotkey_ctrl_q    = (*json)["tactical_hotkey_ctrl_q"].GetBool();
+  tactical_hotkey_alt_r     = (*json)["tactical_hotkey_alt_r"].GetBool();
+  middle_mouse_look         = (*json)["middle_mouse_look"].GetBool();
 
   f_draw_item_shadow    = (*json)["draw_item_shadow"].GetBool();
 
@@ -23,6 +27,18 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   gui_extras            = (*json)["gui_extras"].GetBool();
 
   enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
+
+  pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
+
+  critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();
+  critical_damage_legs_multiplier = (*json)["tactical_legs_damage_multiplier"].GetDouble();
+  chance_to_hit_maximum     = (*json)["chance_to_hit_maximum"].GetInt();
+  chance_to_hit_minimum     = (*json)["chance_to_hit_minimum"].GetInt();
+
+  imp_attribute_max         = (*json)["imp"]["max_attribute_points"].GetInt();
+  imp_attribute_min         = (*json)["imp"]["min_attribute_points"].GetInt();
+  imp_attribute_bonus       = (*json)["imp"]["bonus_attribute_points"].GetInt();
+  imp_attribute_zero_bonus  = (*json)["imp"]["zero_attribute_points_bonus"].GetInt();
 }
 
 /** Check if a hotkey is enabled. */
@@ -42,13 +58,22 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
       switch(key)
       {
       case 'n':         return tactical_hotkey_ctrl_n;
+      case 'q':         return tactical_hotkey_ctrl_q;
       }
     }
     else if(modifier == HKMOD_SHIFT)
     {
       switch(key)
       {
+      case 'j':         return tactical_hotkey_shift_j;
       case 'n':         return tactical_hotkey_shift_n;
+      }
+    }
+    else if(modifier == HKMOD_ALT)
+    {
+      switch(key)
+      {
+      case 'r':         return tactical_hotkey_alt_r;
       }
     }
   }

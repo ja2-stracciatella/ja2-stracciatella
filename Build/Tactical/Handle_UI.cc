@@ -293,6 +293,7 @@ BOOLEAN				gfUserTurnRegionActive = FALSE;
 // For use with mouse button query routines
 BOOLEAN	fRightButtonDown = FALSE;
 BOOLEAN	fLeftButtonDown = FALSE;
+BOOLEAN	fMiddleButtonDown = FALSE;
 BOOLEAN fIgnoreLeftUp		= FALSE;
 
 static BOOLEAN gUITargetReady = FALSE;
