@@ -116,14 +116,11 @@ endforeach()
 if (WITH_UNITTESTS)
     message(STATUS "Compiling with unittests" )
 
-    add_subdirectory("_build/lib-gtest")
-    set(lib-gtest "gtest")
-    set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
+    find_package(GTest REQUIRED)
+    set(lib-gtest ${GTEST_LIBRARIES})
+    add_definitions(-DWITH_UNITTESTS)
 
-    include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest
-    )
+    include_directories(${GEST_INCLUDE_DIRS})
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
