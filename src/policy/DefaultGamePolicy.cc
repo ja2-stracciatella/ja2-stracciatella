@@ -31,6 +31,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
   critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();
+  critical_damage_legs_multiplier = (*json)["tactical_legs_damage_multiplier"].GetDouble();
   chance_to_hit_maximum     = (*json)["chance_to_hit_maximum"].GetInt();
   chance_to_hit_minimum     = (*json)["chance_to_hit_minimum"].GetInt();
 
