@@ -7,7 +7,6 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   map_hotkey_ctrl_i     = (*json)["map_hotkey_ctrl_i"].GetBool();
   tactical_hotkey_j     = (*json)["tactical_hotkey_j"].GetBool();
   tactical_hotkey_shift_j   = (*json)["tactical_hotkey_shift_j"].GetBool();
-  tactical_hotkey_shift_n   = (*json)["tactical_hotkey_shift_n"].GetBool();
   tactical_hotkey_ctrl_n    = (*json)["tactical_hotkey_ctrl_n"].GetBool();
   tactical_hotkey_ctrl_q    = (*json)["tactical_hotkey_ctrl_q"].GetBool();
   tactical_hotkey_alt_r     = (*json)["tactical_hotkey_alt_r"].GetBool();
@@ -75,7 +74,6 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
       switch(key)
       {
       case 'j':         return tactical_hotkey_shift_j;
-      case 'n':         return tactical_hotkey_shift_n;
       }
     }
     else if(modifier == HKMOD_ALT)

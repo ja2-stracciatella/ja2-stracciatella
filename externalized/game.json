@@ -13,10 +13,7 @@
     //  Press 'j' to jump or climb on rooftops, fences etc.
     "tactical_hotkey_j": false,
 
-    //  Press 'shift+n' to switch the current squad's head gear to night mode (NV or UV Goggles).
-    "tactical_hotkey_shift_n": false,
-
-    //  Press 'ctrl+n' to switch the current squad's head gear to day mode (Sun Goggles).
+    //  Press 'ctrl+n' to switch the squad's head gear to night mode (NV or UV Goggles) or back.
     "tactical_hotkey_ctrl_n": false,
 
     //  --------------------------------------------------
