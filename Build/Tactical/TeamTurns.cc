@@ -908,7 +908,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	UINT8						ubMinPtsNeeded;
 	INT8						bDir;
 
-	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT) )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT && !(gubSightFlags & SIGHT_INTERRUPT))
 	{
 		return( FALSE );
 	}
@@ -1519,7 +1519,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 	UINT8 ubSlot, ubSmallestSlot;
 	BOOLEAN fIntOccurs;
 
-	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
 	{
 		ubIntCnt = 0;
 
