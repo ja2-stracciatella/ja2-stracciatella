@@ -133,7 +133,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 
 	// check for potential theft
 	UINT32 uiChanceOfTheft;
-	if (CheckFact(FACT_PABLO_WONT_STEAL, 0) || (GCM->getGamePolicy()->pablo_wont_steal))
+	if (CheckFact(FACT_PABLO_WONT_STEAL, 0) || gamepolicy(pablo_wont_steal))
 	{
 		uiChanceOfTheft = 0;
 	}

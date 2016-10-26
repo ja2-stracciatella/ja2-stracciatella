@@ -316,8 +316,8 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 
 static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32* piNewImpact, INT32* piImpactForCrits)
 {
-	UINT32 critical_damage_to_head = GCM->getGamePolicy()->critical_damage_head_multiplier;
-	UINT32 critical_damage_to_legs = GCM->getGamePolicy()->critical_damage_legs_multiplier;
+	UINT32 critical_damage_to_head = gamepolicy(critical_damage_head_multiplier);
+	UINT32 critical_damage_to_legs = gamepolicy(critical_damage_legs_multiplier);
 
 	switch( ubHitLocation )
 	{
@@ -583,10 +583,10 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 
 		}
 
-		if(GCM->getGamePolicy()->mod_ai_a && bAimShotLocation == AIM_SHOT_RANDOM)
+		if (gamepolicy(mod_ai_a) && bAimShotLocation == AIM_SHOT_RANDOM)
 		{
-			UINT32 const threshold_cth_head = GCM->getGamePolicy()->threshold_cth_head;
-			UINT32 const threshold_cth_legs = GCM->getGamePolicy()->threshold_cth_legs;
+			UINT32 const threshold_cth_head = gamepolicy(threshold_cth_head);
+			UINT32 const threshold_cth_legs = gamepolicy(threshold_cth_legs);
 			UINT32 const cth_aim_shot_head = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_HEAD );
 			UINT32 const cth_aim_shot_torso = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_TORSO );
 			UINT32 const cth_aim_shot_legs = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_LEGS );

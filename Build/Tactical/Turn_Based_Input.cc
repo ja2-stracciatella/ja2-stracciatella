@@ -174,7 +174,7 @@ static void QueryTBMiddleButton(UIEventKind* const puiNewEvent)
 					case LOOKCURSOR_MODE:
 					case MENU_MODE:
 					default:
-						if (GCM->getGamePolicy()->middle_mouse_look) *puiNewEvent = LC_ON_TERRAIN;
+						if (gamepolicy(middle_mouse_look)) *puiNewEvent = LC_ON_TERRAIN;
 						break;
 				}
 			}
@@ -1392,7 +1392,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 				*new_event = I_ENDTURN;
 			}
 
-			if (GCM->getGamePolicy()->can_enter_turnbased)
+			if (gamepolicy(can_enter_turnbased))
 			{
 				gTacticalStatus.uiFlags |= IN_TB_COMBAT;
 			}
@@ -1425,7 +1425,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case 'h': ShouldTheHelpScreenComeUp(HELP_SCREEN_TACTICAL, TRUE);       break;
 		case 'i': ToggleItemGlow(!gGameSettings.fOptions[TOPTION_GLOW_ITEMS]); break;
     case 'j':
-      if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_None, 'j'))
+      if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_None, 'j')))
       {
         ClimbUpOrDown();
       }
@@ -1644,7 +1644,7 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 			break;
 
 	case 'j':
-		if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'j'))
+		if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'j')))
 		{
 			HandleTBClimbWindow();
 		}
@@ -1663,7 +1663,7 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 #endif
 
   case 'n':
-    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n'))
+    if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n')))
     {
       SwitchHeadGear(false);
     }
@@ -1746,7 +1746,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			break;
 
   case 'n':
-    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n'))
+    if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n')))
     {
       SwitchHeadGear(true);
     }
@@ -1760,7 +1760,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 #endif
 
 		case 'q':
-			if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'q'))
+			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'q')))
 			{
 				HandleTBSwapHands();
 			}
@@ -1988,7 +1988,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			}
 			else
 			{
-				if (GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_ALT, 'r')) HandleTBReload();
+				if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_ALT, 'r'))) HandleTBReload();
 			}
 			break;
 

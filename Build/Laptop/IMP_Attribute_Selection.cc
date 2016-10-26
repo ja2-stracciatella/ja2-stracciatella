@@ -29,10 +29,10 @@
 // the sizeof one skill unit on the sliding bar in pixels
 #define BASE_SKILL_PIXEL_UNIT_SIZE (423 - 230)
 
-#define MAX_ATTRIBUTE_POINTS (GCM->getGamePolicy()->imp_attribute_max)
-#define MIN_ATTRIBUTE_POINTS (GCM->getGamePolicy()->imp_attribute_min)
-#define ZERO_ATTRIBUTE_POINTS_VALUE (GCM->getGamePolicy()->imp_attribute_zero_bonus)
-#define BONUS_ATTRIBUTE_POINTS (GCM->getGamePolicy()->imp_attribute_bonus)
+#define MAX_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_max))
+#define MIN_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_min))
+#define ZERO_ATTRIBUTE_POINTS_VALUE (gamepolicy(imp_attribute_zero_bonus))
+#define BONUS_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_bonus))
 
 enum{
 	HEALTH_ATTRIBUTE,

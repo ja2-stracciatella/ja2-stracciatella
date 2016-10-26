@@ -1625,7 +1625,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
   ////////////////////////////////////////////////////////////////////////////
 	bool in_light_at_night = InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel );
 
-	if(GCM->getGamePolicy()->mod_ai_a && (gbWorldSectorZ == 0))
+	if (gamepolicy(mod_ai_a) && (gbWorldSectorZ == 0))
 	{
 		SECTORINFO const* const pSector = &SectorInfo[ (gWorldSectorY - 1) * 16 + gWorldSectorX - 1 ];
 		in_light_at_night = !(((pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites) == 0) && (pSector->ubNumCreatures != 0));

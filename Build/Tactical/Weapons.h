@@ -8,8 +8,8 @@
 struct CalibreModel;
 
 
-#define MAXCHANCETOHIT          (GCM->getGamePolicy()->chance_to_hit_maximum)
-#define MINCHANCETOHIT          (GCM->getGamePolicy()->chance_to_hit_minimum)
+#define MAXCHANCETOHIT          (gamepolicy(chance_to_hit_maximum))
+#define MINCHANCETOHIT          (gamepolicy(chance_to_hit_minimum))
 
 #define BAD_DODGE_POSITION_PENALTY 20
 

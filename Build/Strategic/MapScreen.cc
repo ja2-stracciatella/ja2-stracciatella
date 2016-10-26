@@ -686,7 +686,7 @@ static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 st
 
 	wchar_t str[4];
 	swprintf(str, lengthof(str), L"%3d", stat_val);
-	if(GCM->getGamePolicy()->gui_extras)
+	if (gamepolicy(gui_extras))
 	{
 		ProgressBarBackgroundRect(x+1,y-2,15*progress/100,10,0x514A05,progress);
 	}
@@ -3104,7 +3104,7 @@ static void HandleModCtrl(UINT const key)
 #endif
 
   case 'i':
-    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Map, HKMOD_CTRL, 'i'))
+    if (gamepolicy(isHotkeyEnabled(UI_Map, HKMOD_CTRL, 'i')))
     {
       ToggleSectorInventory();
     }
