@@ -51,6 +51,12 @@
     //  vanilla setting: false
     "all_drops_visible": false,
 
+    //  Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is
+    //  that if you skipped reacting to the first interrupt (say your buddies took care of it),
+    //  you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
+    //  vanilla setting: false
+    "multiple_interrupts": false,
+
     //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
     //  vanilla value: 0
     "enemy_weapon_minimal_status": 0,

@@ -43,6 +43,11 @@
 #include "Items.h"
 #include "slog/slog.h"
 
+// for that single policy check :|
+#include "GamePolicy.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 static SOLDIERTYPE* gOutOfTurnOrder[MAXMERCS];
 UINT8 gubOutOfTurnPersons = 0;
 
@@ -1109,7 +1114,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	}
 
 	// soldier passed on the chance to react during previous interrupt this turn
-	if (pSoldier->bPassedLastInterrupt)
+	if (pSoldier->bPassedLastInterrupt && !gamepolicy(multiple_interrupts))
 	{
 		return(FALSE);
 	}

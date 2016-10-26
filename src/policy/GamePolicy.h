@@ -39,6 +39,8 @@ public:
   bool f_drop_everything;               /**< Enemy drop all equipment. */
   bool f_all_dropped_visible;           /**< All dropped equipment is visible right away. */
 
+  bool multiple_interrupts;             // can interrupt more than once per turn
+
   int8_t enemy_weapon_minimal_status;   /**< Minimal status of the enemy weapon (0 - 100). */
 
   bool gui_extras;                      /* graphical user interface cosmetic mod */
