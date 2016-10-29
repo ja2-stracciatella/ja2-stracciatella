@@ -264,7 +264,7 @@ add_vagrant_build_target(
         "check-compilation-on-openbsd59"
         "openbsd-5.9"
         "all"
-        ""
+        "-DCMAKE_C_COMPILER=egcc -DCMAKE_CXX_COMPILER=eg++"
 )
 
 
