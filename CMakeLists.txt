@@ -24,7 +24,6 @@ set(ja2-stracciatella_VERSION_MAJOR "0")
 set(ja2-stracciatella_VERSION_MINOR "15")
 set(ja2-stracciatella_VERSION_PATCH "x")
 set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
-set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 
 ## Meta Information
 set(CONTACT "JA2 Stracciatella Team <no-email@ja2-stracciatella.github.io>")
@@ -32,6 +31,7 @@ set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime."
 
 ## Options
 
+set(GAME_VERSION "v${ja2-stracciatella_VERSION}" CACHE STRING "Current game version")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
@@ -168,10 +168,13 @@ if(UNIX AND NOT MINGW AND NOT APPLE)
         set(PACKAGE_ARCH "i386")
     endif()
 elseif(MINGW)
+    set(CPACK_PACKAGE_VERSION ${GAME_VERSION})
     set(PACKAGE_ARCH "win-mingw")
 elseif(APPLE)
+    set(CPACK_PACKAGE_VERSION ${GAME_VERSION})
     set(PACKAGE_ARCH "macos")
 else()
+    set(CPACK_PACKAGE_VERSION ${GAME_VERSION})
     set(PACKAGE_ARCH "unknown")
 endif()
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}")
