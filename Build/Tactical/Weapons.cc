@@ -1001,7 +1001,7 @@ static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLD
 {
 	// if it was another team attacking someone under our control
 	if (target->bTeam != attacker->bTeam &&
-			target->bTeam == OUR_TEAM)
+			target->bTeam == OUR_TEAM && target->bLife >= OKLIFE)
 	{
 		StatChange(*target, AGILAMT, agil_amt, FROM_SUCCESS);
 	}

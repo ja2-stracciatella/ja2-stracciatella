@@ -3318,7 +3318,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 				}
 				else
 					PlayAutoResolveSample(SoundRange<SWOOSH_1, SWOOSH_6>(), 50, 1, MIDDLEPAN);
-				if( pTarget->uiFlags & CELL_MERC )
+				if (pTarget->uiFlags & CELL_MERC && pTarget->pSoldier->bLife >= OKLIFE)
 					// AGILITY GAIN: Target "dodged" an attack
 					StatChange(*pTarget->pSoldier, AGILAMT, 5, FROM_SUCCESS);
 			}
@@ -3496,7 +3496,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 	iNewLife = pTarget->pSoldier->bLife - pTarget->usHitDamage[index];
 	if( !pTarget->usHitDamage[index] )
 	{ //bullet missed -- play a ricochet sound.
-		if( pTarget->uiFlags & CELL_MERC )
+		if (pTarget->uiFlags & CELL_MERC && pTarget->pSoldier->bLife >= OKLIFE)
 			// AGILITY GAIN: Target "dodged" an attack
 			StatChange(*pTarget->pSoldier, AGILAMT, 5, FROM_SUCCESS);
 		PlayAutoResolveSample(SoundRange<MISS_1, MISS_8>(), 50, 1, MIDDLEPAN);
