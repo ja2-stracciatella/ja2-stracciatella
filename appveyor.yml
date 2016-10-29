@@ -1,0 +1,32 @@
+version: "{build}"
+
+platform:
+  - Win32
+  - x64
+
+configuration: Debug
+
+matrix:
+  fast_finish: true
+
+clone_folder: c:\projects\ja2-stracciatella
+clone_depth: 1
+
+init:
+  - cmd: cmake --version
+  - cmd: msbuild /version
+
+before_build:
+  - cmd: mkdir c:\build
+  - cmd: cd c:\build
+  - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
+  - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
+  - cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake c:\projects\ja2-stracciatella
+
+build:
+  project: c:\build\ja2-stracciatella.sln
+
+test_script:
+  - cmd: cd c:\build\%configuration%
+  - cmd: ja2.exe -unittests
+

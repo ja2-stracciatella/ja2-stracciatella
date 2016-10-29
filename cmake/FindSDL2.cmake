@@ -67,6 +67,14 @@
 
 message("<FindSDL2.cmake>")
 
+if(WIN32)
+    if(CMAKE_CL_64 OR "$ENV{MSYSTEM}" MATCHES "64" OR CMAKE_C_COMPILER MATCHES "64")
+        SET(SDL_ARCH "x64")
+    else()
+        SET(SDL_ARCH "x86")
+    endif()
+endif()
+
 SET(SDL2_SEARCH_PATHS
         ~/Library/Frameworks
         /Library/Frameworks
@@ -89,7 +97,7 @@ FIND_LIBRARY(SDL2_LIBRARY_TEMP
         NAMES SDL2
         HINTS
         $ENV{SDL2DIR}
-        PATH_SUFFIXES lib64 lib lib/x64 lib/x86
+        PATH_SUFFIXES lib64 lib "lib/${SDL_ARCH}"
         PATHS ${SDL2_SEARCH_PATHS}
         )
 
@@ -103,7 +111,7 @@ IF(NOT SDL2_BUILDING_LIBRARY)
                 NAMES SDL2main
                 HINTS
                 $ENV{SDL2DIR}
-                PATH_SUFFIXES lib64 lib lib/x64 lib/x86
+                PATH_SUFFIXES lib64 lib "lib/${SDL_ARCH}"
                 PATHS ${SDL2_SEARCH_PATHS}
                 )
     ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
