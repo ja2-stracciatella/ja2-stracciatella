@@ -32,7 +32,7 @@ extern "C"
 {
 #endif
 
-#define NUMBER_OF_TOPICS  61
+#define NUMBER_OF_TOPICS  62
 #define TAG_LENGTH        15
 
 typedef enum
