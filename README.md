@@ -1,5 +1,8 @@
 # JA2-Stracciatella Continued
 
+[![Build Status Travis](https://img.shields.io/travis/ja2-stracciatella/ja2-stracciatella/master.svg?style=flat-square)](https://travis-ci.org/ja2-stracciatella/ja2-stracciatella)
+[![Build Status Appveyor](https://img.shields.io/appveyor/ci/ja2-stracciatella/ja2-stracciatella/master.svg?style=flat-square)](https://ci.appveyor.com/project/ja2-stracciatella/ja2-stracciatella)
+
 This is continuation of venerable JA2-Stracciatella project.
 
 The goal of the project was to make Jagged Alliance 2 available on a wide range of platforms, improve its stability, fix bugs and provide a stable platform for mod development.  At the moment the goal mostly to fix bugs.
@@ -27,8 +30,6 @@ Run ```ja2.exe -help``` for list of available options.
 ## Development
 
 The project is developed on [github](https://github.com/ja2-stracciatella/ja2-stracciatella).  Pull requests with bug fixes are very welcome.
-
-[![Build Status](https://travis-ci.org/ja2-stracciatella/ja2-stracciatella.svg?branch=master)](https://travis-ci.org/ja2-stracciatella/ja2-stracciatella)
 
 ### How to contribute
 
