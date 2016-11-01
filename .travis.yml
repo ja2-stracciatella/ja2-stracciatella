@@ -11,11 +11,11 @@ before_install:
 script:
   - mkdir ci-build && cd ci-build
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_DATE="$NIGHTLY_VERSION" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=ZIP ..; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_DATE="$NIGHTLY_VERSION" ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_DATE="$NIGHTLY_VERSION" -DCPACK_GENERATOR=DEB ..; fi
   - make
   - ./ja2 -unittests
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$NIGHTLY_VERSION" != "" ]; then make package; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$NIGHTLY_VERSION" != "" ]; then curl --ftp-create-dirs -T $(echo ja2-stracciatella_*.zip) --ftp-ssl -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/nightlies/; fi
+  - if [ "$NIGHTLY_VERSION" != "" ]; then make package; fi
+  - if [ "$NIGHTLY_VERSION" != "" ]; then curl --ftp-create-dirs -T $(echo ja2-stracciatella_*) --ftp-ssl -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/nightlies/; fi
 
 addons:
   coverity_scan:
