@@ -10,8 +10,8 @@ before_install:
 
 script:
   - mkdir ci-build && cd ci-build
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DCMAKE_BUILD_TYPE=Release -DGAME_VERSION="$NIGHTLY_VERSION" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=ZIP ..; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DCMAKE_BUILD_TYPE=Release -DGAME_VERSION="$NIGHTLY_VERSION" ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_DATE="$NIGHTLY_VERSION" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=ZIP ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_DATE="$NIGHTLY_VERSION" ..; fi
   - make
   - ./ja2 -unittests
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$NIGHTLY_VERSION" != "" ]; then make package; fi

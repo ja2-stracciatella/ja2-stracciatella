@@ -31,7 +31,7 @@ set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime."
 
 ## Options
 
-set(GAME_VERSION "v${ja2-stracciatella_VERSION}" CACHE STRING "Current game version")
+set(BUILD_DATE "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
@@ -43,8 +43,14 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 add_definitions(-DJA2)
-add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 add_definitions(-DMICROINI_STATIC)
+
+set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
+if (NOT (BUILD_DATE STREQUAL ""))
+    set(GAME_VERSION "${GAME_VERSION}-${BUILD_DATE}")
+endif()
+
+add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 
 message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
 add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
