@@ -193,6 +193,10 @@ else()
 endif()
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}")
 
+IF(CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
+endif()
+include(InstallRequiredSystemLibraries)
 include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
@@ -222,6 +226,7 @@ endif()
 
 if (MSVC)
     install(FILES ${SDL_DLL} DESTINATION .)
+    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT Libraries)
 endif()
 
 if(MSVC OR MINGW)
