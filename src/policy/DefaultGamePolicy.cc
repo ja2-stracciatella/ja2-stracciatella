@@ -30,7 +30,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
   enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
 
-  mod_ai_a                  = (*json)["mod_ai_a"].GetBool();
+  ai_better_aiming_choice   = (*json)["ai"]["better_aiming_choice"].GetBool();
+  ai_go_prone_more_often    = (*json)["ai"]["go_prone_more_often"].GetBool();
   threshold_cth_head        = (*json)["threshold_cth_head"].GetInt();
   threshold_cth_legs        = (*json)["threshold_cth_legs"].GetInt();
   enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();

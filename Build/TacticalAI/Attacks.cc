@@ -229,7 +229,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
     {
      //HandleMyMouseCursor(KEYBOARDALSO);
 	UINT8 target = AIM_SHOT_TORSO;
-	if (gamepolicy(mod_ai_a)) {
+	if (gamepolicy(ai_better_aiming_choice)) {
 		target = pSoldier->bAimShotLocation;
 	}
 	ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier, pOpponent->sGridNo, ubAimTime, target);

@@ -583,7 +583,7 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 
 		}
 
-		if (gamepolicy(mod_ai_a) && bAimShotLocation == AIM_SHOT_RANDOM)
+		if (gamepolicy(ai_better_aiming_choice) && bAimShotLocation == AIM_SHOT_RANDOM)
 		{
 			UINT32 const threshold_cth_head = gamepolicy(threshold_cth_head);
 			UINT32 const threshold_cth_legs = gamepolicy(threshold_cth_legs);
