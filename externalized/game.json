@@ -13,10 +13,7 @@
     //  Press 'j' to jump or climb on rooftops, fences etc.
     "tactical_hotkey_j": false,
 
-    //  Press 'shift+n' to switch the current squad's head gear to night mode (NV or UV Goggles).
-    "tactical_hotkey_shift_n": false,
-
-    //  Press 'ctrl+n' to switch the current squad's head gear to day mode (Sun Goggles).
+    //  Press 'ctrl+n' to switch the squad's head gear to night mode (NV or UV Goggles) or back.
     "tactical_hotkey_ctrl_n": false,
 
     //  --------------------------------------------------
@@ -51,9 +48,31 @@
     //  vanilla setting: false
     "all_drops_visible": false,
 
+    //  Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is
+    //  that if you skipped reacting to the first interrupt (say your buddies took care of it),
+    //  you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
+    //  vanilla setting: false
+    "multiple_interrupts": false,
+
     //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
     //  vanilla value: 0
     "enemy_weapon_minimal_status": 0,
+
+    //  Make the AI a bit smarter and let it target heads and legs sometimes.
+    //  Aiming: will choose other body parts when appropriate and random choice was selected
+    //  Prone: when already facing its focus, lay down if nothing else
+    //  vanilla values: false, false, 0, 0
+    "ai": {
+      "better_aiming_choice": false,
+      "go_prone_more_often": false
+    },
+    "threshold_cth_head": 67,
+    "threshold_cth_legs": 67,
+
+    //  How much variation should there be in elite soldier xp level?
+    //  vanilla_setting: 6, 10
+    "enemy_elite_minimum_level": 6,
+    "enemy_elite_maximum_level": 10,
 
     //  Enables extra GUI features. Currently includes:
     //  - Progress Bars for the Mercs Stats in Tractical Mode
@@ -75,6 +94,10 @@
     //  Press 'shift+j' to climb throug open window
     //  vanilla_setting: false
     "tactical_hotkey_shift_j": false,
+
+    //  Press d in realtime mode to manually start turn based mode
+    //  vanilla_setting: false
+    "can_enter_turnbased": false,
 
     //  Packages never stolen, no need for bribes
     //  vanilla_setting: false

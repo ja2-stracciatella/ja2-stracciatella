@@ -228,8 +228,11 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
    for (ubAimTime = AP_MIN_AIM_ATTACK; ubAimTime <= ubMaxPossibleAimTime; ubAimTime++)
     {
      //HandleMyMouseCursor(KEYBOARDALSO);
-
-     ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier,pOpponent->sGridNo,ubAimTime, AIM_SHOT_TORSO);
+	UINT8 target = AIM_SHOT_TORSO;
+	if (gamepolicy(ai_better_aiming_choice)) {
+		target = pSoldier->bAimShotLocation;
+	}
+	ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier, pOpponent->sGridNo, ubAimTime, target);
     // ExtMen[pOpponent->ubID].haveStats = TRUE;
 
      iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubAimTime);

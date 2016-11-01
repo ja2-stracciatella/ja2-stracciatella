@@ -119,7 +119,7 @@ static void QueryRTMiddleButton(UIEventKind* const puiNewEvent)
 				{
 					// CHECK COMBINATIONS ETC...
 
-							if (GCM->getGamePolicy()->middle_mouse_look) *puiNewEvent = LC_LOOK;
+							if (gamepolicy(middle_mouse_look)) *puiNewEvent = LC_LOOK;
 				}
 
 					// Reset flag

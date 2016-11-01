@@ -7,11 +7,11 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
   map_hotkey_ctrl_i     = (*json)["map_hotkey_ctrl_i"].GetBool();
   tactical_hotkey_j     = (*json)["tactical_hotkey_j"].GetBool();
   tactical_hotkey_shift_j   = (*json)["tactical_hotkey_shift_j"].GetBool();
-  tactical_hotkey_shift_n   = (*json)["tactical_hotkey_shift_n"].GetBool();
   tactical_hotkey_ctrl_n    = (*json)["tactical_hotkey_ctrl_n"].GetBool();
   tactical_hotkey_ctrl_q    = (*json)["tactical_hotkey_ctrl_q"].GetBool();
   tactical_hotkey_alt_r     = (*json)["tactical_hotkey_alt_r"].GetBool();
   middle_mouse_look         = (*json)["middle_mouse_look"].GetBool();
+  can_enter_turnbased       = (*json)["can_enter_turnbased"].GetBool();
 
   f_draw_item_shadow    = (*json)["draw_item_shadow"].GetBool();
 
@@ -23,10 +23,19 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
   f_drop_everything     = (*json)["drop_everything"].GetBool();
   f_all_dropped_visible = (*json)["all_drops_visible"].GetBool();
-  
+
+  multiple_interrupts = (*json)["multiple_interrupts"].GetBool();
+
   gui_extras            = (*json)["gui_extras"].GetBool();
 
   enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
+
+  ai_better_aiming_choice   = (*json)["ai"]["better_aiming_choice"].GetBool();
+  ai_go_prone_more_often    = (*json)["ai"]["go_prone_more_often"].GetBool();
+  threshold_cth_head        = (*json)["threshold_cth_head"].GetInt();
+  threshold_cth_legs        = (*json)["threshold_cth_legs"].GetInt();
+  enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();
+  enemy_elite_maximum_level = (*json)["enemy_elite_maximum_level"].GetInt();
 
   pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
@@ -66,7 +75,6 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
       switch(key)
       {
       case 'j':         return tactical_hotkey_shift_j;
-      case 'n':         return tactical_hotkey_shift_n;
       }
     }
     else if(modifier == HKMOD_ALT)

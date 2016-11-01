@@ -316,8 +316,8 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 
 static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32* piNewImpact, INT32* piImpactForCrits)
 {
-	UINT32 critical_damage_to_head = GCM->getGamePolicy()->critical_damage_head_multiplier;
-	UINT32 critical_damage_to_legs = GCM->getGamePolicy()->critical_damage_legs_multiplier;
+	UINT32 critical_damage_to_head = gamepolicy(critical_damage_head_multiplier);
+	UINT32 critical_damage_to_legs = gamepolicy(critical_damage_legs_multiplier);
 
 	switch( ubHitLocation )
 	{
@@ -549,6 +549,9 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 		pSoldier->opponent = pTargetSoldier;
 		dTargetX = (FLOAT) CenterX( pTargetSoldier->sGridNo );
 		dTargetY = (FLOAT) CenterY( pTargetSoldier->sGridNo );
+
+		INT8 const bAimShotLocation = pSoldier->bAimShotLocation;
+
 		if (pSoldier->bAimShotLocation == AIM_SHOT_RANDOM)
 		{
 			uiRoll = PreRandom( 100 );
@@ -578,6 +581,28 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 				}
 			}
 
+		}
+
+		if (gamepolicy(ai_better_aiming_choice) && bAimShotLocation == AIM_SHOT_RANDOM)
+		{
+			UINT32 const threshold_cth_head = gamepolicy(threshold_cth_head);
+			UINT32 const threshold_cth_legs = gamepolicy(threshold_cth_legs);
+			UINT32 const cth_aim_shot_head = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_HEAD );
+			UINT32 const cth_aim_shot_torso = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_TORSO );
+			UINT32 const cth_aim_shot_legs = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_LEGS );
+
+			pSoldier->bAimShotLocation = AIM_SHOT_TORSO; // default
+
+			if( cth_aim_shot_legs >= threshold_cth_legs || cth_aim_shot_legs > cth_aim_shot_torso )
+			{
+				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+			}
+
+			if( cth_aim_shot_head >= threshold_cth_head ||   // good enough, override
+				((cth_aim_shot_head+5) >= cth_aim_shot_torso)) // close enough
+			{
+				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+			}
 		}
 
 		switch( pSoldier->bAimShotLocation )

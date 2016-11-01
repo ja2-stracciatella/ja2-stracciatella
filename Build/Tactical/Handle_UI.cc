@@ -1256,7 +1256,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 				if (!UIHandleInteractiveTilesAndItemsOnTerrain(sel, usMapPos, FALSE, TRUE))
 				{
 					// Are we in combat?
-					if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) )
+					if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
 					{
 						// If so, draw path, etc
 						fSetCursor = HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, MOVEUI_TARGET_NONE);
@@ -3024,7 +3024,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 	INT8							bReturnCode = 0;
 	BOOLEAN						fPlot;
 
-	if ( ((gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED )) || _KeyDown( SHIFT ) )
+	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT) || _KeyDown( SHIFT ))
 	{
 		fPlot = PLOT;
 	}
@@ -3523,7 +3523,7 @@ static void SetUIbasedOnStance(SOLDIERTYPE* pSoldier, INT8 bNewStance)
 
 static void SetMovementModeCursor(const SOLDIERTYPE* pSoldier)
 {
-	if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
 	{
 			if ( ( OK_ENTERABLE_VEHICLE( pSoldier ) ) )
 			{
@@ -3576,7 +3576,7 @@ static void SetMovementModeCursor(const SOLDIERTYPE* pSoldier)
 
 static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMove)
 {
-	if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
 	{
 		if ( gfUIAllMoveOn )
 		{
@@ -4681,7 +4681,7 @@ BOOLEAN HandleTalkInit(  )
 
 void SetUIBusy(const SOLDIERTYPE* const s)
 {
-	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == OUR_TEAM ) )
+	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT) && (gTacticalStatus.ubCurrentTeam == OUR_TEAM))
 	{
 		if (s == GetSelectedMan())
 		{
@@ -4694,7 +4694,7 @@ void SetUIBusy(const SOLDIERTYPE* const s)
 
 void UnSetUIBusy(const SOLDIERTYPE* const s)
 {
-	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == OUR_TEAM ) )
+	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT) && (gTacticalStatus.ubCurrentTeam == OUR_TEAM ))
 	{
 		if ( !gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
 		{
@@ -4774,7 +4774,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 
 			//Set UI CURSOR
 			guiNewUICursor =
-				fUseOKCursor || (gTacticalStatus.uiFlags & INCOMBAT && gTacticalStatus.uiFlags & TURNBASED) ?
+				fUseOKCursor || (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT) ?
 					OKHANDCURSOR_UICURSOR : NORMALHANDCURSOR_UICURSOR;
 
 			HandleUIMovementCursor(pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_STEAL);
@@ -4838,7 +4838,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 
 			//Set UI CURSOR
 			guiNewUICursor =
-				fUseOKCursor || (gTacticalStatus.uiFlags & INCOMBAT && gTacticalStatus.uiFlags & TURNBASED) ?
+				fUseOKCursor || (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT) ?
 				OKHANDCURSOR_UICURSOR : NORMALHANDCURSOR_UICURSOR;
 
 			HandleUIMovementCursor(pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_ITEMS);

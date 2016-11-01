@@ -39,11 +39,21 @@ public:
   bool f_drop_everything;               /**< Enemy drop all equipment. */
   bool f_all_dropped_visible;           /**< All dropped equipment is visible right away. */
 
+  bool multiple_interrupts;             // can interrupt more than once per turn
+
   int8_t enemy_weapon_minimal_status;   /**< Minimal status of the enemy weapon (0 - 100). */
 
   bool gui_extras;                      /* graphical user interface cosmetic mod */
 
   bool middle_mouse_look;               // Look cursor with middle mouse button
+  bool can_enter_turnbased;             // 'd' can start turnbased if in real-time
+
+  bool ai_better_aiming_choice;         // decide where to shoot depending on to-hit probability if random choice is being made
+  bool ai_go_prone_more_often;          // especially when already facing the right direction
+  int8_t threshold_cth_head;            // threshold AI always take head shots, increase game difficulty
+  int8_t threshold_cth_legs;            // threshold AI switch to leg shots from torso
+  int8_t enemy_elite_minimum_level;     // increase challenge: minimum experience level for enemy elite soldier
+  int8_t enemy_elite_maximum_level;     // maximum experience level for enemy elite soldier
 
   bool pablo_wont_steal;                // Packages not stolen
 

@@ -367,9 +367,9 @@ void InitNewGame()
 		INT32 starting_cash;
 		switch (gGameOptions.ubDifficultyLevel)
 		{
-			case DIF_LEVEL_EASY:   starting_cash = GCM->getGamePolicy()->starting_cash_easy; break;
-			case DIF_LEVEL_MEDIUM: starting_cash = GCM->getGamePolicy()->starting_cash_medium; break;
-			case DIF_LEVEL_HARD:   starting_cash = GCM->getGamePolicy()->starting_cash_hard; break;
+			case DIF_LEVEL_EASY:   starting_cash = gamepolicy(starting_cash_easy); break;
+			case DIF_LEVEL_MEDIUM: starting_cash = gamepolicy(starting_cash_medium); break;
+			case DIF_LEVEL_HARD:   starting_cash = gamepolicy(starting_cash_hard); break;
 			default: throw std::logic_error("invalid difficulty level");
 		}
 		AddTransactionToPlayersBook(ANONYMOUS_DEPOSIT, 0, now, starting_cash);

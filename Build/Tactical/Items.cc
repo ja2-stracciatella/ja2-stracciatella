@@ -435,6 +435,7 @@ static MergeInfo const Merge[] =
 	{BEER,						BEER,									BEER,										COMBINE_POINTS},
 	{WINE,						WINE,									WINE,										COMBINE_POINTS},
 	{ALCOHOL,					ALCOHOL,							ALCOHOL,								COMBINE_POINTS},
+	{CANTEEN,					CANTEEN,							CANTEEN,								COMBINE_POINTS},
 
 	{COMPOUND18,			FLAK_JACKET,							FLAK_JACKET_18,							TREAT_ARMOUR},
 	{COMPOUND18,			KEVLAR_VEST,							KEVLAR_VEST_18,							TREAT_ARMOUR},
@@ -1621,7 +1622,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 					// Copying the old ammo to the cursor in turnbased could screw up for the player
 					// (suppose his inventory is full!)
 
-					if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE ) )
+					if ((gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT) && !EnoughPoints( pSoldier, (INT8) (bAPs + AP_PICKUP_ITEM), 0, FALSE))
 					{
 						// try autoplace
 						if ( !AutoPlaceObject( pSoldier, &OldAmmo, FALSE ) )
