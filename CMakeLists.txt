@@ -24,7 +24,6 @@ set(ja2-stracciatella_VERSION_MAJOR "0")
 set(ja2-stracciatella_VERSION_MINOR "15")
 set(ja2-stracciatella_VERSION_PATCH "x")
 set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
-set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 
 ## Meta Information
 set(CONTACT "JA2 Stracciatella Team <no-email@ja2-stracciatella.github.io>")
@@ -32,6 +31,7 @@ set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime."
 
 ## Options
 
+set(BUILD_DATE "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
@@ -43,8 +43,14 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 add_definitions(-DJA2)
-add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 add_definitions(-DMICROINI_STATIC)
+
+set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
+if (NOT (BUILD_DATE STREQUAL ""))
+    set(GAME_VERSION "${GAME_VERSION}-${BUILD_DATE}")
+endif()
+
+add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 
 message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
 add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
@@ -153,13 +159,17 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${ja2-stracciatella_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${ja2-stracciatella_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${ja2-stracciatella_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION ${ja2-stracciatella_VERSION})
+if (NOT (BUILD_DATE STREQUAL ""))
+    set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}-${BUILD_DATE}")
+endif()
+
 set(CPACK_PACKAGE_CONTACT ${CONTACT})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
 set(CPACK_PACKAGE_DESCRIPTION ${DESCRIPTION})
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "games")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2, libstdc++6, libgcc1, libc6")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libstdc++6, libgcc1, libc6")
 
 if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -169,6 +179,13 @@ if(UNIX AND NOT MINGW AND NOT APPLE)
     endif()
 elseif(MINGW)
     set(PACKAGE_ARCH "win-mingw")
+elseif(MSVC)
+    set(PACKAGE_ARCH "win-msvc")
+    if("${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
+        set(PACKAGE_ARCH "${PACKAGE_ARCH}64")
+    else()
+        set(PACKAGE_ARCH "${PACKAGE_ARCH}32")
+    endif()
 elseif(APPLE)
     set(PACKAGE_ARCH "macos")
 else()
@@ -176,6 +193,10 @@ else()
 endif()
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}")
 
+IF(CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
+endif()
+include(InstallRequiredSystemLibraries)
 include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
@@ -199,14 +220,19 @@ endif()
 
 if (MINGW)
     file(GLOB WIN_MINGW_DIST_DLLS "_build/distr-files-win-mingw/*.dll")
+    install(FILES _build/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
     install(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
 endif()
 
-if(WIN32 OR MINGW)
+if (MSVC)
+    install(FILES ${SDL_DLL} DESTINATION .)
+    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT Libraries)
+endif()
+
+if(MSVC OR MINGW)
     file(GLOB WIN_DIST_FILES "_build/distr-files-win/*")
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES _build/icons/logo.ico DESTINATION .)
-    install(FILES _build/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
 endif()
 
 if(APPLE)
