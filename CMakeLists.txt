@@ -16,7 +16,7 @@ endmacro()
 
 project (ja2-stracciatella)
 set(BINARY "ja2")
-set (CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 98)
 
 ## Versioning
 
@@ -43,7 +43,8 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 add_definitions(-DJA2)
-add_definitions(-DMICROINI_STATIC)
+set(DEPENDENCIES microini-internal rapidjson-internal utf8cpp-internal)
+set(INTERNAL_LIBRARIES ${CMAKE_BINARY_DIR}/deps/lib/libMicroIni-s.a)
 
 set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 if (NOT (BUILD_DATE STREQUAL ""))
@@ -81,35 +82,33 @@ find_package(SDL2 REQUIRED)
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
 else()
-    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-boost" )
-    add_subdirectory("_build/lib-boost")
-    set(Boost_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-boost")
-    set(Boost_LIBRARIES "boost")
+    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies" )
+    set(DEPENDENCIES ${DEPENDENCIES} boost-internal)
+    set(INTERNAL_LIBRARIES ${INTERNAL_LIBRARIES} ${CMAKE_BINARY_DIR}/deps/lib/libboost_filesystem.a ${CMAKE_BINARY_DIR}/deps/lib/libboost_system.a)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DENABLE_ASSERTS)
 endif()
+set(DEPENDENCIES_INSTALL_DIR ${CMAKE_BINARY_DIR}/deps)
+set(DEPENDENCIES_INCLUDE_DIR ${DEPENDENCIES_INSTALL_DIR}/include)
+add_subdirectory("dependencies")
 
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/sgp")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
-add_subdirectory("_build/lib-MicroIni")
 add_subdirectory("_build/lib-slog")
 add_subdirectory("_build/lib-smacker")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${JA2_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-MicroIni/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson/rapidjson-1.1.0/include
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-smacker/libsmacker
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-utf8cpp/source
     ${SDL2_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
+    ${DEPENDENCIES_INCLUDE_DIR}
 )
 
 foreach(FILE ${JA2_SOURCES})
@@ -121,20 +120,17 @@ endforeach()
 
 if (WITH_UNITTESTS)
     message(STATUS "Compiling with unittests" )
-
-    add_subdirectory("_build/lib-gtest")
-    set(lib-gtest "gtest")
-    set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
-
-    include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest
-    )
+    set(DEPENDENCIES ${DEPENDENCIES} "gtest-internal")
+    set(INTERNAL_LIBRARIES ${INTERNAL_LIBRARIES} ${CMAKE_BINARY_DIR}/deps/lib/libgtest.a)
+    add_definitions(-DWITH_UNITTESTS)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker)
+if (DEPENDENCIES)
+    add_dependencies(${BINARY} ${DEPENDENCIES})
+endif()
+target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${INTERNAL_LIBRARIES} slog smacker)
 
 macro(copy_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD
