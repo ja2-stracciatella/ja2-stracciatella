@@ -35,6 +35,9 @@ test_script:
   - cmd: cd %configuration%
   - cmd: ja2.exe -unittests
 
+on_failure:
+  - tree ./deps
+
 deploy:
   - provider: FTP
     protocol: sftp
