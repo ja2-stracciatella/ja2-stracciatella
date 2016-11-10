@@ -15,33 +15,51 @@ clone_depth: 1
 init:
   - cmd: cmake --version
   - cmd: msbuild /version
+  - ps: $env:PUBLISH_BINARY = "false";
+  - ps: >
+        if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
+          $env:PUBLISH_BINARY = "true";
+          $env:PUBLISH_DIR = "pull-requests/${env:APPVEYOR_PULL_REQUEST_NUMBER}";
+          $env:VERSION_TAG = "${env:APPVEYOR_PULL_REQUEST_NUMBER}pullrequest";
+        }
+        true;
+  - ps: >
+        if (Test-Path Env:\NIGHTLY_VERSION) {
+          $env:PUBLISH_BINARY = "true";
+          $env:PUBLISH_DIR = "nightlies";
+          $env:VERSION_TAG = "${env:NIGHTLY_VERSION}";
+        }
+        true;
+  - cmd: echo %APPVEYOR_PULL_REQUEST_NUMBER%
   - cmd: echo %NIGHTLY_VERSION%
+  - cmd: echo %PUBLISH_BINARY%
+  - cmd: echo %PUBLISH_DIR%
+  - cmd: echo %VERSION_TAG%
 
 before_build:
   - cmd: mkdir ci-build
   - cmd: cd ci-build
   - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
   - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake -DCMAKE_BUILD_TYPE="%configuration%" -DBUILD_DATE="%NIGHTLY_VERSION%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DCPACK_GENERATOR=ZIP ..
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake -DCMAKE_BUILD_TYPE="%configuration%" -DVERSION_TAG="%VERSION_TAG%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DCPACK_GENERATOR=ZIP ..
 
 build:
   project: ci-build\ja2-stracciatella.sln
-
-after_build:
-  - cmd: if "%NIGHTLY_VERSION%" NEQ "" cmake --build . --target package
-  - ps: if (Test-Path env:NIGHTLY_VERSION) { Get-ChildItem ./ja2-stracciatella_*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
 
 test_script:
   - cmd: cd %configuration%
   - cmd: ja2.exe -unittests
 
-deploy:
-  - provider: FTP
-    protocol: sftp
-    host: www61.your-server.de
-    username:
-      secure: uBUgFeI9sHRv0IiMPpA9rg==
-    password:
-      secure: gXqhlT/yjiLd/jTpvg4kcZtBRCZ8RnoOJ3zRTSF5voA=
-    folder: nightlies
+after_test:
+  - ps: if ("$env:PUBLISH_BINARY" -eq "true") { iex "cmake --build c:\projects\ja2-stracciatella\ci-build --target package" }
+  - ps: >
+          if ("$env:PUBLISH_BINARY" -eq "true") {
+            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*.zip;
+            iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
+          }
 
+environment:
+  SFTP_USER:
+    secure: "uBUgFeI9sHRv0IiMPpA9rg=="
+  SFTP_PASSWORD:
+    secure: "gXqhlT/yjiLd/jTpvg4kcZtBRCZ8RnoOJ3zRTSF5voA="

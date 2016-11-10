@@ -31,7 +31,7 @@ set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime."
 
 ## Options
 
-set(BUILD_DATE "" CACHE STRING "Build date for nightly versioning")
+set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
@@ -46,8 +46,8 @@ add_definitions(-DJA2)
 add_definitions(-DMICROINI_STATIC)
 
 set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
-if (NOT (BUILD_DATE STREQUAL ""))
-    set(GAME_VERSION "${GAME_VERSION}-${BUILD_DATE}")
+if (NOT (VERSION_TAG STREQUAL ""))
+    set(GAME_VERSION "${GAME_VERSION}-${VERSION_TAG}")
 endif()
 
 add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
@@ -159,8 +159,8 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${ja2-stracciatella_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${ja2-stracciatella_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${ja2-stracciatella_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION ${ja2-stracciatella_VERSION})
-if (NOT (BUILD_DATE STREQUAL ""))
-    set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}-${BUILD_DATE}")
+if (NOT (VERSION_TAG STREQUAL ""))
+    set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}-${VERSION_TAG}")
 endif()
 
 set(CPACK_PACKAGE_CONTACT ${CONTACT})
