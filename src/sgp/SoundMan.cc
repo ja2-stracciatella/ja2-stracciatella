@@ -116,6 +116,8 @@ static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buf
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called
 static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
 
+SDL_AudioSpec gTargetAudioSpec;
+
 // Sample cache list for files loaded
 static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
 // Sound channel list for output channels
@@ -1111,15 +1113,14 @@ static BOOLEAN SoundInitHardware(void)
 {
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-	SDL_AudioSpec spec;
-	spec.freq     = 22050;
-	spec.format   = AUDIO_S16SYS;
-	spec.channels = 2;
-	spec.samples  = 1024;
-	spec.callback = SoundCallback;
-	spec.userdata = NULL;
+	gTargetAudioSpec.freq     = 22050;
+	gTargetAudioSpec.format   = AUDIO_S16SYS;
+	gTargetAudioSpec.channels = 2;
+	gTargetAudioSpec.samples  = 1024;
+	gTargetAudioSpec.callback = SoundCallback;
+	gTargetAudioSpec.userdata = NULL;
 
-	if (SDL_OpenAudio(&spec, NULL) != 0) return FALSE;
+	if (SDL_OpenAudio(&gTargetAudioSpec, NULL) != 0) return FALSE;
 
 	memset(pSoundList, 0, sizeof(pSoundList));
 	SDL_PauseAudio(0);
