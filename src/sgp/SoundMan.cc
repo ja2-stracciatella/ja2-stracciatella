@@ -206,7 +206,7 @@ UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pa
       buffertag = SoundGetEmptySample();
     }
   sprintf(buffertag->pName, "SmackBuff %p - SampleSize %u", pbuffer, size); 
-  buffertag->uiSpeed=22050;
+  buffertag->uiSpeed=44100;
   buffertag->n_samples = size;
   buffertag->pData = pbuffer;
   buffertag->uiFlags =  SAMPLE_16BIT | SAMPLE_STEREO | SAMPLE_ALLOCATED;
@@ -807,7 +807,7 @@ static BOOLEAN SoundInitHardware(void)
 {
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-	gTargetAudioSpec.freq     = 22050;
+	gTargetAudioSpec.freq     = 44100;
 	gTargetAudioSpec.format   = AUDIO_S16SYS;
 	gTargetAudioSpec.channels = 2;
 	gTargetAudioSpec.samples  = 1024;
