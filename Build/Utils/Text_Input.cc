@@ -424,6 +424,10 @@ void SetActiveField(UINT8 const id)
 	if (n == gpActive) return;
 	if (!n->fEnabled)  return;
 
+	if (gpActive && gpActive->InputCallback) {
+		gpActive->InputCallback(gpActive->ubID, FALSE);
+	}
+
 	gpActive = n;
 	if (n->szString)
 	{
@@ -578,9 +582,18 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 	// Not in text input mode
 	if (!gfTextInputMode) return FALSE;
 	// Unless we are psycho typers, we only want to process these key events.
-	if (a->usEvent != KEY_DOWN && a->usEvent != KEY_REPEAT) return FALSE;
+	if (a->usEvent != TEXT_INPUT && a->usEvent != KEY_DOWN && a->usEvent != KEY_REPEAT) return FALSE;
 	// Currently in a user field, so return unless TAB is pressed.
 	if (!gfEditingText && a->usParam != SDLK_TAB) return FALSE;
+
+	if (a->usEvent == TEXT_INPUT) {
+		wchar_t const c = a->Char;
+		/* If the key has no character associated, bail out */
+		AssertMsg(c != L'\0', "TEXT_INPUT event sent null character");
+		DeleteHilitedText();
+		HandleRegularInput(c);
+		return TRUE;
+	}
 
 	switch (a->usKeyState)
 	{
@@ -658,7 +671,8 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					}
 					break;
 
-				default: goto enter_character;
+				default:
+					return TRUE;
 			}
 			break;
 
@@ -686,14 +700,9 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					gubCursorPos = 0;
 					return TRUE;
 
-				default: // Check for typing keys
-enter_character:
-					wchar_t const c = a->Char;
-					/* If the key has no character associated, bail out */
-					if (c == L'\0') return FALSE;
-					DeleteHilitedText();
-					HandleRegularInput(c);
+				default:
 					return TRUE;
+
 			}
 
 		case CTRL_DOWN:
@@ -858,6 +867,10 @@ static void SetActiveFieldMouse(MOUSE_REGION const* const r)
 	TEXTINPUTNODE* const n = r->GetUserPtr<TEXTINPUTNODE>();
 	if (n == gpActive) return;
 	// Deselect the current text edit region if applicable, then set the new one.
+	if (gpActive && gpActive->InputCallback) {
+		gpActive->InputCallback(gpActive->ubID, FALSE);
+	}
+
 	RenderInactiveTextFieldNode(gpActive);
 	gpActive = n;
 }
@@ -988,7 +1001,7 @@ static void RenderActiveTextField(void)
 	}
 
 	// Draw the blinking ibeam cursor during the on blink period.
-	if (gfEditingText && str && GetJA2Clock() % 1000 < 500)
+	if (gfEditingText && str && GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL)
 	{
 		INT32          x = n->region.RegionTopLeftX + 2;
 		wchar_t const* c = str;

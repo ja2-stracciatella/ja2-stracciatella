@@ -3,6 +3,8 @@
 
 #include "Input.h"
 
+#define TEXT_CURSOR_BLINK_INTERVAL 500
+
 //AUTHOR:  Kris Morness
 //Intended for inclusion with SGP.
 

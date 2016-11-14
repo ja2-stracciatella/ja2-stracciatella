@@ -8,6 +8,7 @@
 #define KEY_DOWN									0x0001
 #define KEY_UP										0x0002
 #define KEY_REPEAT								0x0004
+#define TEXT_INPUT								0x0006
 #define LEFT_BUTTON_DOWN					0x0008
 #define LEFT_BUTTON_UP						0x0010
 #define LEFT_BUTTON_DBL_CLK				0x0020
