@@ -1,21 +1,123 @@
 {
-        "map_hotkey_ctrl_i": false,
-        "tactical_hotkey_j": false,
-        "tactical_hotkey_shift_n": false,
-        "tactical_hotkey_ctrl_n": false,
+    //  game.json
+    //  The settings in this file have an influence on the game in general.
 
-        "draw_item_shadow": true,
+    //  --------------------------------------------------
+    //  New Hotkeys
+    //  vanilla setting for all hotkeys: false
+    //  --------------------------------------------------
 
-        "ms_per_game_cycle":    25,
+    //  Press 'ctrl+i' to show sector inventory of selected sector in strategic view.
+    "map_hotkey_ctrl_i": false,
 
-        "starting_cash_easy":   45000,
-        "starting_cash_medium": 35000,
-        "starting_cash_hard":   30000,
+    //  Press 'j' to jump or climb on rooftops, fences etc.
+    "tactical_hotkey_j": false,
 
-        "drop_everything":   false,
-        "all_drops_visible": false,
+    //  Press 'ctrl+n' to switch the squad's head gear to night mode (NV or UV Goggles) or back.
+    "tactical_hotkey_ctrl_n": false,
 
-        "enemy_weapon_minimal_status": 0,
+    //  --------------------------------------------------
+    //  System settings
+    //  --------------------------------------------------
 
-        "gui_extras": false
+    //  Automatically draw a shadow for all items in a merc's inventory.
+    //  vanilla setting: true
+    "draw_item_shadow": true,
+
+    //  Number of milliseconds for one game cycle.
+    //  25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen is updated on every cycle).
+    //  Decreasing this value will increase the speed of the game (enemy movement, bullets speed, etc).
+    //  Stracciatella standard value: 25
+    "ms_per_game_cycle": 25,
+
+    //  --------------------------------------------------
+    //  Gameplay settings
+    //  --------------------------------------------------
+
+    //  Amount of money the player starts the game with on each difficulty.
+    //  vanilla values: 45000/35000/30000 (easy/medium/hard)
+    "starting_cash_easy":   45000,
+    "starting_cash_medium": 35000,
+    "starting_cash_hard":   30000,
+
+    //  Will enemies drop all of their equipment when they die?
+    //  vanilla setting: false
+    "drop_everything": false,
+
+    //  Will dropped items always be visible to the player, regardless of distance?
+    //  vanilla setting: false
+    "all_drops_visible": false,
+
+    //  Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is
+    //  that if you skipped reacting to the first interrupt (say your buddies took care of it),
+    //  you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
+    //  vanilla setting: false
+    "multiple_interrupts": false,
+
+    //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
+    //  vanilla value: 0
+    "enemy_weapon_minimal_status": 0,
+
+    //  Make the AI a bit smarter and let it target heads and legs sometimes.
+    //  Aiming: will choose other body parts when appropriate and random choice was selected
+    //  Prone: when already facing its focus, lay down if nothing else
+    //  vanilla values: false, false, 0, 0
+    "ai": {
+      "better_aiming_choice": false,
+      "go_prone_more_often": false
+    },
+    "threshold_cth_head": 67,
+    "threshold_cth_legs": 67,
+
+    //  How much variation should there be in elite soldier xp level?
+    //  vanilla_setting: 6, 10
+    "enemy_elite_minimum_level": 6,
+    "enemy_elite_maximum_level": 10,
+
+    //  Enables extra GUI features. Currently includes:
+    //  - Progress Bars for the Mercs Stats in Tractical Mode
+    //  vanilla_setting: false
+    "gui_extras": true,
+
+    //  Enables middle mouse button to trigger a look into cursor direction
+    //  vanilla_setting: false
+    "middle_mouse_look": true,
+
+    //  Press 'alt+r' to reload
+    //  vanilla_setting: false
+    "tactical_hotkey_alt_r": true,
+
+    //  Press 'ctrl+q' to swap hand items
+    //  vanilla_setting: false
+    "tactical_hotkey_ctrl_q": true,
+
+    //  Press 'shift+j' to climb throug open window
+    //  vanilla_setting: false
+    "tactical_hotkey_shift_j": false,
+
+    //  Press d in realtime mode to manually start turn based mode
+    //  vanilla_setting: false
+    "can_enter_turnbased": false,
+
+    //  Packages never stolen, no need for bribes
+    //  vanilla_setting: false
+    "pablo_wont_steal": false,
+
+    //  Min/max chance to hit and headshot damage multiplier
+    //  vanilla_setting: 1, 99, 1.5, 0.5
+    "chance_to_hit_minimum": 1,
+    "chance_to_hit_maximum": 99,
+    "tactical_head_damage_multiplier": 1.5,
+    "tactical_legs_damage_multiplier": 0.5,
+
+    //  IMP attribute point defaults
+    //  Zero attribute point bonus is what you receive for setting a skill to 0
+    //  Unspecified bonus is your initial pool of points to distribute
+    //  vanilla_setting: 85, 35, 15, 40
+    "imp": {
+        "max_attribute_points": 85,
+        "min_attribute_points": 35,
+        "zero_attribute_points_bonus": 15,
+        "bonus_attribute_points": 40
+    }
 }

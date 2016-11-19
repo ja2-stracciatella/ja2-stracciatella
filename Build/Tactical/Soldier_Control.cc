@@ -2845,7 +2845,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	}
 
 	// IAN ADDED THIS SAT JUNE 14th : HAVE TO SHOW VICTIM!
-	if (gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bVisible != -1 && pSoldier->bTeam == OUR_TEAM )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT && pSoldier->bVisible != -1 && pSoldier->bTeam == OUR_TEAM)
 	{
 		LocateSoldier(pSoldier, DONTSETLOCATOR);
 	}
@@ -4872,7 +4872,7 @@ static void CalculateSoldierAniSpeed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pStatsS
 
 	// MODIFTY NOW BASED ON REAL-TIME, ETC
 	// Adjust speed, make twice as fast if in turn-based!
-	if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
 	{
 		pSoldier->sAniDelay = pSoldier->sAniDelay / 2;
 	}
@@ -4898,7 +4898,7 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 
 	// ATE: If we are an enemy and are not visible......
 	// Set speed to 0
-	if ( ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) ) || gTacticalStatus.fAutoBandageMode )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT || gTacticalStatus.fAutoBandageMode)
 	{
 		 if ( ( ( pSoldier->bVisible == -1 && pSoldier->bVisible == pSoldier->bLastRenderVisibleValue ) || gTacticalStatus.fAutoBandageMode ) && pSoldier->usAnimState != MONSTER_UP )
 		 {
@@ -5167,6 +5167,21 @@ void BeginSoldierClimbUpRoof(SOLDIERTYPE* const s)
 	InternalGivingSoldierCancelServices(s, FALSE);
 }
 
+
+void BeginSoldierClimbWindow(SOLDIERTYPE* const s)
+{
+	if(!IsFacingClimableWindow(s)) return;
+
+	s->sTempNewGridNo            = NewGridNo(s->sGridNo, DirectionInc(s->bDirection));
+	s->fDontChargeTurningAPs     = TRUE;
+//	EVENT_SetSoldierDesiredDirectionForward(s, direction);
+	s->fTurningUntilDone         = TRUE;
+	// ATE: Reset flag to go back to prone
+	s->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+//	s->usPendingAnimation        = HOPFENCE;
+	DeductPoints( s, AP_JUMPFENCE, BP_JUMPFENCE );
+	TeleportSoldier( *s, s->sTempNewGridNo, TRUE );
+}
 
 void BeginSoldierClimbFence(SOLDIERTYPE* const s)
 {
@@ -8029,7 +8044,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 			MakeClosestEnemyChosenOne();
 		}
 
-		if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
+		if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
 		{
 			SLOGD(DEBUG_TAG_AI, "Ending turn for %d because of error from HandleItem", pSoldier->ubID);
 			EndAIGuysTurn(*pSoldier);

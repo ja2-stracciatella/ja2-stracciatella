@@ -713,7 +713,7 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 	INT16       const  sCenX   = PosX + ABS(BOBBYR_GRID_PIC_WIDTH - usWidth) / 2 - pTrav.sOffsetX;
 	INT16       const  sCenY   = PosY + 8;
 
-  if(GCM->getGamePolicy()->f_draw_item_shadow)
+  if (gamepolicy(f_draw_item_shadow))
   {
     //blt the shadow of the item
     BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);

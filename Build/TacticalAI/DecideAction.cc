@@ -32,6 +32,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "policy/GamePolicy.h"
 
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -1622,7 +1623,8 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
   ////////////////////////////////////////////////////////////////////////////
   // WHEN IN THE LIGHT, GET OUT OF THERE!
   ////////////////////////////////////////////////////////////////////////////
-  if ( ubCanMove && InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel ) && pSoldier->bOrders != STATIONARY )
+	bool in_light_at_night = InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel );
+	if ( ubCanMove && in_light_at_night && pSoldier->bOrders != STATIONARY )
 	{
 		pSoldier->usActionData = FindNearbyDarkerSpot( pSoldier );
 		if ( pSoldier->usActionData != NOWHERE )
@@ -2067,7 +2069,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 								else if ( gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_PRONE )
 								{
 									// maybe go prone
-									if ( PreRandom( 2 ) == 0 && InternalIsValidStance( pSoldier, ubOpponentDir, ANIM_PRONE ) )
+									if ((PreRandom(2) == 0 || gamepolicy(ai_go_prone_more_often)) && InternalIsValidStance(pSoldier, ubOpponentDir, ANIM_PRONE))
 									{
 										pSoldier->usActionData = ANIM_PRONE;
 										pSoldier->bNextAction = AI_ACTION_END_TURN;

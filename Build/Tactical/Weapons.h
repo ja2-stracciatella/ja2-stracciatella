@@ -8,7 +8,9 @@
 struct CalibreModel;
 
 
-#define MAXCHANCETOHIT 99
+#define MAXCHANCETOHIT          (gamepolicy(chance_to_hit_maximum))
+#define MINCHANCETOHIT          (gamepolicy(chance_to_hit_minimum))
+
 #define BAD_DODGE_POSITION_PENALTY 20
 
 #define GUN_BARREL_RANGE_BONUS	100

@@ -45,6 +45,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 
 // THESE 3 DIFFICULTY FACTORS MUST ALWAYS ADD UP TO 100% EXACTLY!!!
@@ -1306,8 +1307,15 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	}
 
 
-	pp->bExpLevel = MAX( 1, pp->bExpLevel ); //minimum exp. level of 1
-	pp->bExpLevel = MIN( 9, pp->bExpLevel ); //maximum exp. level of 9
+	// clamp experience level to 1-9 or the externalised values (elites only)
+	if (ubSoldierClass == SOLDIER_CLASS_ELITE)
+	{
+		pp->bExpLevel = MAX(gamepolicy(enemy_elite_minimum_level), pp->bExpLevel);
+		pp->bExpLevel = MIN(gamepolicy(enemy_elite_maximum_level), pp->bExpLevel);
+	} else {
+		pp->bExpLevel = MAX(1, pp->bExpLevel); //minimum exp. level of 1
+		pp->bExpLevel = MIN(9, pp->bExpLevel); //maximum exp. level of 9
+	}
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
 	#if 0 /* unsigned < 0 ? */
@@ -1336,8 +1344,12 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	pp->bWisdom				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
 	pp->bMorale				= (INT8)(bBaseAttribute + Random( 9 ) + Random( 8 ));
 
-	// CJC: now calculate the REAL experience level if in the really upper end
-	ReduceHighExpLevels( &( pp->bExpLevel ) );
+	if (ubSoldierClass != SOLDIER_CLASS_ELITE)
+	{
+		// CJC: now calculate the REAL experience level if in the really upper end
+		// we're skipping elites, since they have externalised level bounds
+		ReduceHighExpLevels( &( pp->bExpLevel ) );
+	}
 
 	pp->fVisible			= 0;
 

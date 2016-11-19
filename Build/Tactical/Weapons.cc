@@ -49,9 +49,7 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "slog/slog.h"
-
-#define MINCHANCETOHIT          1
-#define MAXCHANCETOHIT          99
+#include "policy/GamePolicy.h"
 
 // NB this is arbitrary, chances in DG ranged from 1 in 6 to 1 in 20
 #define BASIC_DEPRECIATE_CHANCE	15
@@ -65,9 +63,6 @@
 #define SNIPERSCOPE_AIM_BONUS   20
 // bonus to hit with working laser scope
 #define LASERSCOPE_BONUS				20
-
-#define HEAD_DAMAGE_ADJUSTMENT( x ) ((x * 3) / 2)
-#define LEGS_DAMAGE_ADJUSTMENT( x ) (x / 2)
 
 #define CRITICAL_HIT_THRESHOLD 30
 
@@ -321,18 +316,21 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 
 static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32* piNewImpact, INT32* piImpactForCrits)
 {
+	UINT32 critical_damage_to_head = gamepolicy(critical_damage_head_multiplier);
+	UINT32 critical_damage_to_legs = gamepolicy(critical_damage_legs_multiplier);
+
 	switch( ubHitLocation )
 	{
 		case AIM_SHOT_HEAD:
-			// 1.5x damage from successful hits to the head!
-			*piImpactForCrits = HEAD_DAMAGE_ADJUSTMENT( iImpact );
+			// vanilla was: 1.5x damage from successful hits to the head!
+			*piImpactForCrits = critical_damage_to_head * iImpact;
 			*piNewImpact = *piImpactForCrits;
 			break;
 		case AIM_SHOT_LEGS:
 			// half damage for determining critical hits
 			// quarter actual damage
-			*piImpactForCrits = LEGS_DAMAGE_ADJUSTMENT( iImpact );
-			*piNewImpact = LEGS_DAMAGE_ADJUSTMENT( *piImpactForCrits );
+			*piImpactForCrits = critical_damage_to_legs * iImpact;
+			*piNewImpact = critical_damage_to_legs * *piImpactForCrits;
 			break;
 		default:
 			*piImpactForCrits = iImpact;
@@ -551,6 +549,9 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 		pSoldier->opponent = pTargetSoldier;
 		dTargetX = (FLOAT) CenterX( pTargetSoldier->sGridNo );
 		dTargetY = (FLOAT) CenterY( pTargetSoldier->sGridNo );
+
+		INT8 const bAimShotLocation = pSoldier->bAimShotLocation;
+
 		if (pSoldier->bAimShotLocation == AIM_SHOT_RANDOM)
 		{
 			uiRoll = PreRandom( 100 );
@@ -580,6 +581,28 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 				}
 			}
 
+		}
+
+		if (gamepolicy(ai_better_aiming_choice) && bAimShotLocation == AIM_SHOT_RANDOM)
+		{
+			UINT32 const threshold_cth_head = gamepolicy(threshold_cth_head);
+			UINT32 const threshold_cth_legs = gamepolicy(threshold_cth_legs);
+			UINT32 const cth_aim_shot_head = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_HEAD );
+			UINT32 const cth_aim_shot_torso = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_TORSO );
+			UINT32 const cth_aim_shot_legs = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_LEGS );
+
+			pSoldier->bAimShotLocation = AIM_SHOT_TORSO; // default
+
+			if( cth_aim_shot_legs >= threshold_cth_legs || cth_aim_shot_legs > cth_aim_shot_torso )
+			{
+				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+			}
+
+			if( cth_aim_shot_head >= threshold_cth_head ||   // good enough, override
+				((cth_aim_shot_head+5) >= cth_aim_shot_torso)) // close enough
+			{
+				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+			}
 		}
 
 		switch( pSoldier->bAimShotLocation )
@@ -927,6 +950,17 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	{
 		// Here, remove the knife...	or (for now) rocket launcher
 		RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+		if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+		{
+			INT8 slot=FindObj(pSoldier, BLOODY_THROWING_KNIFE);
+			if(slot==NO_SLOT) slot=FindObj(pSoldier, THROWING_KNIFE);
+			if(slot!=NO_SLOT)
+			{
+				OBJECTTYPE *item=&pSoldier->inv[slot];
+				CreateItem(item->usItem, item->bStatus[0], &pSoldier->inv[HANDPOS]);
+				RemoveObjs(item, 1);
+			}
+		}
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 	}
 	else if ( usItemNum == ROCKET_LAUNCHER)
@@ -992,7 +1026,7 @@ static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLD
 {
 	// if it was another team attacking someone under our control
 	if (target->bTeam != attacker->bTeam &&
-			target->bTeam == OUR_TEAM)
+			target->bTeam == OUR_TEAM && target->bLife >= OKLIFE)
 	{
 		StatChange(*target, AGILAMT, agil_amt, FROM_SUCCESS);
 	}
@@ -1427,7 +1461,19 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 	// OK, goto throw animation
 	HandleSoldierThrowItem( pSoldier, pSoldier->sTargetGridNo );
 
+	UINT16 const thrown_item=pSoldier->inv[HANDPOS].usItem;
 	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
+	if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+	{
+		INT8 const slot=FindObj(pSoldier, thrown_item);
+		if(slot!=NO_SLOT)
+		{
+			OBJECTTYPE *item=&pSoldier->inv[slot];
+			CreateItem(item->usItem, item->bStatus[0], &pSoldier->inv[HANDPOS]);
+			RemoveObjs(item, 1);
+		}
+		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+	}
 }
 
 

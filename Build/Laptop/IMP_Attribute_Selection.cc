@@ -16,6 +16,9 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
+#include "GameInstance.h"
+#include "ContentManager.h"
+#include "policy/GamePolicy.h"
 
 // width of the slider bar region
 #define BAR_WIDTH 423 - 197
@@ -25,6 +28,11 @@
 
 // the sizeof one skill unit on the sliding bar in pixels
 #define BASE_SKILL_PIXEL_UNIT_SIZE (423 - 230)
+
+#define MAX_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_max))
+#define MIN_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_min))
+#define ZERO_ATTRIBUTE_POINTS_VALUE (gamepolicy(imp_attribute_zero_bonus))
+#define BONUS_ATTRIBUTE_POINTS (gamepolicy(imp_attribute_bonus))
 
 enum{
 	HEALTH_ATTRIBUTE,
@@ -193,7 +201,7 @@ void HandleIMPAttributeSelection(void)
 			// get old stat value
 			INT32 iCurrentAttributeValue = GetCurrentAttributeValue(giCurrentlySelectedStat);
 			INT32 sNewX = gusMouseXPos - (SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X);
-			INT32 iNewValue = sNewX * 50 / BASE_SKILL_PIXEL_UNIT_SIZE + 35;
+			INT32 iNewValue = sNewX * (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS) / BASE_SKILL_PIXEL_UNIT_SIZE + MIN_ATTRIBUTE_POINTS;
 
 			// chenged, move mouse region if change large enough
 			if (iCurrentAttributeValue != iNewValue)
@@ -275,19 +283,19 @@ void HandleIMPAttributeSelection(void)
 
 static void ProcessAttributes(void)
 {
-	if (iCurrentStrength   < 35) iCurrentStrength   = 35;
-	if (iCurrentDexterity  < 35) iCurrentDexterity  = 35;
-	if (iCurrentAgility    < 35) iCurrentAgility    = 35;
-	if (iCurrentWisdom     < 35) iCurrentWisdom     = 35;
-	if (iCurrentLeaderShip < 35) iCurrentLeaderShip = 35;
-	if (iCurrentHealth     < 35) iCurrentHealth     = 35;
+	if (iCurrentStrength   < MIN_ATTRIBUTE_POINTS) iCurrentStrength   = MIN_ATTRIBUTE_POINTS;
+	if (iCurrentDexterity  < MIN_ATTRIBUTE_POINTS) iCurrentDexterity  = MIN_ATTRIBUTE_POINTS;
+	if (iCurrentAgility    < MIN_ATTRIBUTE_POINTS) iCurrentAgility    = MIN_ATTRIBUTE_POINTS;
+	if (iCurrentWisdom     < MIN_ATTRIBUTE_POINTS) iCurrentWisdom     = MIN_ATTRIBUTE_POINTS;
+	if (iCurrentLeaderShip < MIN_ATTRIBUTE_POINTS) iCurrentLeaderShip = MIN_ATTRIBUTE_POINTS;
+	if (iCurrentHealth     < MIN_ATTRIBUTE_POINTS) iCurrentHealth     = MIN_ATTRIBUTE_POINTS;
 
-	if (iCurrentStrength   > 85) iCurrentStrength   = 85;
-	if (iCurrentDexterity  > 85) iCurrentDexterity  = 85;
-	if (iCurrentAgility    > 85) iCurrentAgility    = 85;
-	if (iCurrentWisdom     > 85) iCurrentWisdom     = 85;
-	if (iCurrentLeaderShip > 85) iCurrentLeaderShip = 85;
-	if (iCurrentHealth     > 85) iCurrentHealth     = 85;
+	if (iCurrentStrength   > MAX_ATTRIBUTE_POINTS) iCurrentStrength   = MAX_ATTRIBUTE_POINTS;
+	if (iCurrentDexterity  > MAX_ATTRIBUTE_POINTS) iCurrentDexterity  = MAX_ATTRIBUTE_POINTS;
+	if (iCurrentAgility    > MAX_ATTRIBUTE_POINTS) iCurrentAgility    = MAX_ATTRIBUTE_POINTS;
+	if (iCurrentWisdom     > MAX_ATTRIBUTE_POINTS) iCurrentWisdom     = MAX_ATTRIBUTE_POINTS;
+	if (iCurrentLeaderShip > MAX_ATTRIBUTE_POINTS) iCurrentLeaderShip = MAX_ATTRIBUTE_POINTS;
+	if (iCurrentHealth     > MAX_ATTRIBUTE_POINTS) iCurrentHealth     = MAX_ATTRIBUTE_POINTS;
 }
 
 
@@ -313,14 +321,14 @@ static void IncrementStat(INT32 iStatToIncrement)
 
 	if (*val == 0)
 	{
-		if (iCurrentBonusPoints >= 15)
+		if (iCurrentBonusPoints >= ZERO_ATTRIBUTE_POINTS_VALUE)
 		{
-			*val = 35;
-			iCurrentBonusPoints -= 15;
+			*val = MIN_ATTRIBUTE_POINTS;
+			iCurrentBonusPoints -= ZERO_ATTRIBUTE_POINTS_VALUE;
 			fSkillAtZeroWarning  = FALSE;
 		}
 	}
-	else if (*val < 85)
+	else if (*val < MAX_ATTRIBUTE_POINTS)
 	{
 		if (iCurrentBonusPoints >= 1)
 		{
@@ -352,15 +360,15 @@ static void DecrementStat(INT32 iStatToDecrement)
 		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  may_be_zero = TRUE; break;
 	}
 
-	if (*val > 35)
+	if (*val > MIN_ATTRIBUTE_POINTS)
 	{
 		--*val;
 		++iCurrentBonusPoints;
 	}
-	else if (may_be_zero && *val == 35)
+	else if (may_be_zero && *val == MIN_ATTRIBUTE_POINTS)
 	{
 		*val = 0;
-		iCurrentBonusPoints += 15;
+		iCurrentBonusPoints += ZERO_ATTRIBUTE_POINTS_VALUE;
 		iCurrentStatAtZero   = iStatToDecrement;
 		fSkillAtZeroWarning  = TRUE;
 	}
@@ -423,7 +431,7 @@ void RenderAttributeBoxes(void)
 		INT32 val = GetCurrentAttributeValue(i);
 
 		// Compensate for zeroed skills: x pos is at least 0
-		INT16 sX = MAX(0, val - 35) * BASE_SKILL_PIXEL_UNIT_SIZE / 50;
+		INT16 sX = MAX(0, val - MIN_ATTRIBUTE_POINTS) * BASE_SKILL_PIXEL_UNIT_SIZE / (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS);
 		INT16 sY = SKILL_SLIDE_START_Y + SKILL_SLIDE_HEIGHT * i;
 
 		sX += SKILL_SLIDE_START_X;
@@ -574,7 +582,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// get old stat value
 			const INT32 iCurrentAttributeValue = GetCurrentAttributeValue(iAttribute);
 			sNewX -= SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X;
-			INT32 iNewValue = (sNewX * 50) / BASE_SKILL_PIXEL_UNIT_SIZE + 35;
+			INT32 iNewValue = (sNewX * (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS)) / BASE_SKILL_PIXEL_UNIT_SIZE + MIN_ATTRIBUTE_POINTS;
 
 			// chenged, move mouse region if change large enough
 			if (iCurrentAttributeValue != iNewValue)
@@ -625,10 +633,10 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// get value of attribute
 		const INT32 iCurrentAttributeValue = GetCurrentAttributeValue(iAttribute);
 		// set the new attribute value based on position of mouse click, include screen resolution
-		INT32 iNewAttributeValue = (sX - (SKILL_SLIDE_START_X + STD_SCREEN_X)) * 50 / BASE_SKILL_PIXEL_UNIT_SIZE;
+		INT32 iNewAttributeValue = (sX - (SKILL_SLIDE_START_X + STD_SCREEN_X)) * (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS) / BASE_SKILL_PIXEL_UNIT_SIZE;
 
-		// too high, reset to 85
-		if (iNewAttributeValue > 85) iNewAttributeValue = 85;
+		// too high, reset to MAX_ATTRIBUTE_POINTS
+		if (iNewAttributeValue > MAX_ATTRIBUTE_POINTS) iNewAttributeValue = MAX_ATTRIBUTE_POINTS;
 
 		// get the delta
 		const INT32 iAttributeDelta = iCurrentAttributeValue - iNewAttributeValue;
@@ -668,7 +676,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		const INT32 iCurrentAttributeValue = GetCurrentAttributeValue(iAttribute);
 
 		// get the boxes bounding x
-		INT16 sNewX = (iCurrentAttributeValue - 35) * BASE_SKILL_PIXEL_UNIT_SIZE / 50 + SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X;
+		INT16 sNewX = (iCurrentAttributeValue - MIN_ATTRIBUTE_POINTS) * BASE_SKILL_PIXEL_UNIT_SIZE / (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS) + SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X;
 
 		// the sNewX is below 0, reset to zero
 		if (sNewX < 0) sNewX = 0;
@@ -722,7 +730,7 @@ void SetAttributes(void)
 	iCurrentExplosives  = 55;
 
 	// reset bonus pts
-	iCurrentBonusPoints = 40;
+	iCurrentBonusPoints = BONUS_ATTRIBUTE_POINTS;
 }
 
 

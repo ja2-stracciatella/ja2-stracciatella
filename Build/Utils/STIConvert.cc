@@ -56,7 +56,7 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 
 	UINT32							uiOriginalSize;
 	UINT8 *							pOutputBuffer = NULL;
-	UINT32							uiCompressedSize;
+	UINT32							uiCompressedSize=0; // Wmaybe-uninitialized
 
 	STCIHeader					Header;
 	UINT32							uiLoop;
@@ -64,8 +64,8 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	SGPPaletteEntry *		pSGPPaletteEntry;
 	STCIPaletteElement	STCIPaletteEntry;
 
-	STCISubImage *			pSubImageBuffer;
-	UINT16							usNumberOfSubImages;
+	STCISubImage *			pSubImageBuffer=0; // Wmaybe-uninitialized
+	UINT16							usNumberOfSubImages=0; // Wmaybe-uninitialized
 	UINT32							uiSubImageBufferSize=0;
 
 	//UINT16							usLoop;

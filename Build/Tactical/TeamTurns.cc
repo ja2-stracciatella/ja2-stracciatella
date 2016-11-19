@@ -43,6 +43,11 @@
 #include "Items.h"
 #include "slog/slog.h"
 
+// for that single policy check :|
+#include "GamePolicy.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+
 static SOLDIERTYPE* gOutOfTurnOrder[MAXMERCS];
 UINT8 gubOutOfTurnPersons = 0;
 
@@ -908,7 +913,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	UINT8						ubMinPtsNeeded;
 	INT8						bDir;
 
-	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT) )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT && !(gubSightFlags & SIGHT_INTERRUPT))
 	{
 		return( FALSE );
 	}
@@ -1109,7 +1114,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	}
 
 	// soldier passed on the chance to react during previous interrupt this turn
-	if (pSoldier->bPassedLastInterrupt)
+	if (pSoldier->bPassedLastInterrupt && !gamepolicy(multiple_interrupts))
 	{
 		return(FALSE);
 	}
@@ -1519,7 +1524,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 	UINT8 ubSlot, ubSmallestSlot;
 	BOOLEAN fIntOccurs;
 
-	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
 	{
 		ubIntCnt = 0;
 

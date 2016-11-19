@@ -1543,6 +1543,10 @@ void DegradeNewlyAddedItems( )
 	}
 }
 
+UINT8 GetAttachmentHintColor(const OBJECTTYPE* o) {
+	return FindAttachmentByClass(o, IC_LAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW;
+}
+
 
 void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, INT16 const outline_colour)
 {
@@ -1562,7 +1566,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 		INT16       const  cx      = sX + (sWidth  - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  cy      = sY + (sHeight - e.usHeight) / 2 - e.sOffsetY;
 
-    if(GCM->getGamePolicy()->f_draw_item_shadow)
+    if (gamepolicy(f_draw_item_shadow))
     {
       BltVideoObjectOutlineShadow(buffer, &item_vo, gfx_idx, cx - 2, cy + 2);
     }
@@ -1644,7 +1648,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 
 		if (ItemHasAttachments(o))
 		{
-			SetFontForeground(FindAttachment(&o, UNDER_GLAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW);
+			SetFontForeground(GetAttachmentHintColor(&o));
 
 			const wchar_t* const attach_marker  = L"*";
 			UINT16         const uiStringLength = StringPixLength(attach_marker, ITEM_FONT);
@@ -2242,7 +2246,7 @@ void RenderItemDescriptionBox(void)
 		SGPBox      const& xy = in_map ? g_desc_item_box_map: g_desc_item_box;
 		INT32       const  x  = dx + xy.x + (xy.w - e.usWidth)  / 2 - e.sOffsetX;
 		INT32       const  y  = dy + xy.y + (xy.h - e.usHeight) / 2 - e.sOffsetY;
-    if(GCM->getGamePolicy()->f_draw_item_shadow)
+    if (gamepolicy(f_draw_item_shadow))
     {
       BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
     }

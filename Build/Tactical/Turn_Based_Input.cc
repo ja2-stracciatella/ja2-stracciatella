@@ -90,6 +90,7 @@
 #include "Items.h"
 #include "GameRes.h"
 #include "GameState.h"
+#include "Game_Init.h"
 
 #include "slog/slog.h"
 #include "ContentManager.h"
@@ -120,15 +121,74 @@ const SOLDIERTYPE* gUITargetSoldier = NULL;
 
 static void QueryTBLeftButton(UIEventKind*);
 static void QueryTBRightButton(UIEventKind*);
+static void QueryTBMiddleButton(UIEventKind*);
 static void SwitchHeadGear(bool dayGear);
 
+void HandleTBReload( void );
+void HandleTBSwapHands( void );
+void HandleTBClimbWindow( void );
 
 void GetTBMouseButtonInput(UIEventKind* const puiNewEvent)
 {
 	 QueryTBLeftButton( puiNewEvent );
 	 QueryTBRightButton( puiNewEvent );
+	 QueryTBMiddleButton( puiNewEvent );
 }
 
+
+static void QueryTBMiddleButton(UIEventKind* const puiNewEvent)
+{
+//	static BOOLEAN	fClickHoldIntercepted = FALSE;
+//	static BOOLEAN	fClickIntercepted = FALSE;
+
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
+
+	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+	{
+
+		// MIDDLE MOUSE BUTTON
+		if ( gViewportRegion.ButtonState & MSYS_MIDDLE_BUTTON )
+		{
+			if ( !fMiddleButtonDown )
+			{
+				fMiddleButtonDown = TRUE;
+				RESETCOUNTER( MMOUSECLICK_DELAY_COUNTER );
+			}
+		}
+
+		if ( fMiddleButtonDown )
+		{
+			if ( gpItemPointer == NULL )
+			{
+				// Switch on UI mode
+				switch( gCurrentUIMode )
+				{
+					case IDLE_MODE:
+					case MOVE_MODE:
+					case ACTION_MODE:
+					case CONFIRM_MOVE_MODE:
+					case HANDCURSOR_MODE:
+					case TALKCURSOR_MODE:
+					case CONFIRM_ACTION_MODE:
+					case LOOKCURSOR_MODE:
+					case MENU_MODE:
+					default:
+						if (gamepolicy(middle_mouse_look)) *puiNewEvent = LC_ON_TERRAIN;
+						break;
+				}
+			}
+		}
+			// Reset flag
+			fMiddleButtonDown = FALSE;
+//			fClickHoldIntercepted = FALSE;
+//			fClickIntercepted = FALSE;
+
+			// Reset counter
+			RESETCOUNTER( MMOUSECLICK_DELAY_COUNTER );
+
+	}
+}
 
 static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 {
@@ -1319,8 +1379,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'd':
 			// End turn only if in combat and it is the player's turn
-			if (gTacticalStatus.uiFlags & TURNBASED          &&
-					gTacticalStatus.uiFlags & INCOMBAT           &&
+			if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT &&
 					gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
 					!gpItemPointer                               &&
@@ -1331,6 +1390,11 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 					))
 			{
 				*new_event = I_ENDTURN;
+			}
+
+			if (gamepolicy(can_enter_turnbased))
+			{
+				gTacticalStatus.uiFlags |= IN_TB_COMBAT;
 			}
 			break;
 
@@ -1361,7 +1425,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case 'h': ShouldTheHelpScreenComeUp(HELP_SCREEN_TACTICAL, TRUE);       break;
 		case 'i': ToggleItemGlow(!gGameSettings.fOptions[TOPTION_GLOW_ITEMS]); break;
     case 'j':
-      if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_None, 'j'))
+      if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_None, 'j')))
       {
         ClimbUpOrDown();
       }
@@ -1579,6 +1643,13 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 			}
 			break;
 
+	case 'j':
+		if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'j')))
+		{
+			HandleTBClimbWindow();
+		}
+		break;
+
 #ifdef JA2BETAVERSION
 		case 'l':
 		{
@@ -1590,13 +1661,6 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 #endif
-
-  case 'n':
-    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n'))
-    {
-      SwitchHeadGear(false);
-    }
-    break;
 
 		case SDLK_F1:
 		case SDLK_F2:
@@ -1674,12 +1738,18 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			}
 			break;
 
-  case 'n':
-    if(GCM->getGamePolicy()->isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n'))
-    {
-      SwitchHeadGear(true);
-    }
-    break;
+		case 'n':
+			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n')))
+			{
+				static BOOLEAN bHeadGearDirection = true;
+				if (bHeadGearDirection) {
+					SwitchHeadGear(true);
+				} else {
+					SwitchHeadGear(false);
+				}
+				bHeadGearDirection = !bHeadGearDirection;
+			}
+			break;
 
 		case 'o': if (CHEATER_CHEAT_LEVEL()) CreatePlayerControlledMonster(); break;
 
@@ -1688,6 +1758,12 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'p': DumpSectorDifficultyInfo(); break;
 #endif
 
+		case 'q':
+			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'q')))
+			{
+				HandleTBSwapHands();
+			}
+			break;
 		case 's':
 			if (!fDisableMapInterfaceDueToBattle && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 			{
@@ -1824,8 +1900,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 
 		case 'd':
 			if (CHEATER_CHEAT_LEVEL()                        &&
-					gTacticalStatus.uiFlags & TURNBASED          &&
-					gTacticalStatus.uiFlags & INCOMBAT           &&
+					gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT &&
 					gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
 					!gpItemPointer                               &&
@@ -1909,6 +1984,10 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			{ // Reload selected merc's weapon
 				SOLDIERTYPE* const sel = GetSelectedMan();
 				if (sel) ReloadWeapon(sel, sel->ubAttackingHand);
+			}
+			else
+			{
+				if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_ALT, 'r'))) HandleTBReload();
 			}
 			break;
 
@@ -2136,6 +2215,14 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			HandleShortCutExitState( );
     }
 
+		if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == 'l') && ( InputEvent.usKeyState & CTRL_DOWN ) && gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD)
+		{
+			gfSaveGame              = FALSE;
+			gfCameDirectlyFromGame  = TRUE;
+			guiPreviousOptionScreen = SAVE_LOAD_SCREEN;
+			LeaveTacticalScreen( SAVE_LOAD_SCREEN );
+		}
+
 		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_ESCAPE)
 		{
 			if ( AreInMeanwhile() && gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION )
@@ -2158,7 +2245,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			}
 		}
 
-		if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+		if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
 		{
 			{
 				if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
@@ -3142,7 +3229,7 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 			if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 			{
 				SetUIBusy(sel);
-				if (!(gTacticalStatus.uiFlags & INCOMBAT) && !(gTacticalStatus.uiFlags & TURNBASED))
+				if (!(gTacticalStatus.uiFlags & IN_TB_COMBAT))
 				{
 					BeginDisplayTimedCursor(OKHANDCURSOR_UICURSOR, 300);
 				}
@@ -3355,4 +3442,45 @@ void PopupAssignmentMenuInTactical(void)
 	DetermineWhichAssignmentMenusCanBeShown( );
 	fFirstClickInAssignmentScreenMask = TRUE;
 	gfIgnoreScrolling = TRUE;
+}
+
+void HandleTBReload( void )
+{
+	SOLDIERTYPE* const pSelectedSoldier = GetSelectedMan();
+	if (pSelectedSoldier)
+	{
+		AutoReload( pSelectedSoldier );
+	}
+}
+
+void HandleTBSwapHands()
+{
+	SOLDIERTYPE* const pSoldier = GetSelectedMan();
+	if (pSoldier && !AM_A_ROBOT(pSoldier))
+	{
+		UINT16 usOldItem = pSoldier->inv[HANDPOS].usItem;
+		if(pSoldier->inv[SECONDHANDPOS].usItem==NOTHING)
+		{
+			pSoldier->inv[SECONDHANDPOS]=pSoldier->inv[HANDPOS];
+			memset(&pSoldier->inv[HANDPOS], 0, sizeof(OBJECTTYPE));
+		}
+		else SwapHandItems( pSoldier );
+		ReLoadSoldierAnimationDueToHandItemChange(pSoldier, usOldItem, pSoldier->inv[HANDPOS].usItem);
+		fInterfacePanelDirty = DIRTYLEVEL2;
+	}
+}
+
+void HandleTBClimbWindow()
+{
+	SOLDIERTYPE* const pSelectedSoldier = GetSelectedMan();
+	if (pSelectedSoldier && !AM_A_ROBOT(pSelectedSoldier))
+	{
+		if ( IsFacingClimableWindow( pSelectedSoldier ) )
+		{
+			if (EnoughPoints(pSelectedSoldier, GetAPsToJumpFence( pSelectedSoldier ), BP_JUMPFENCE, FALSE))
+			{
+				BeginSoldierClimbWindow(pSelectedSoldier);
+			}
+		}
+	}
 }

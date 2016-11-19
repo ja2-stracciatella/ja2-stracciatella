@@ -1028,7 +1028,7 @@ check_give_money:
 // handle money being npc being
 static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const uiMoneyAmount)
 {
-	UINT8 quote_id;
+	UINT8 quote_id=0; // Wmaybe-uninitialized
 	switch( ubNPC )
 	{
 		// handle for STEVE and VINCE

@@ -1731,13 +1731,13 @@ void DoDeadIsDeadSave()
 		ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
 		// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
 		// Make sure we are always in a sane screen.
-		if (guiCurrentScreen != MAP_SCREEN && guiCurrentScreen != GAME_SCREEN && tmpGuiPreviousOptionScreen != MAP_SCREEN && tmpGuiPreviousOptionScreen != GAME_SCREEN)
-		{
-			// If all fails, go to the map screen, this (almost) guarantees the game will start
-			guiPreviousOptionScreen = MAP_SCREEN;
-		} else
-		{
-			guiPreviousOptionScreen = guiCurrentScreen;
+		if (tmpGuiPreviousOptionScreen != MAP_SCREEN && tmpGuiPreviousOptionScreen != GAME_SCREEN) {
+			if (guiCurrentScreen != MAP_SCREEN && guiCurrentScreen != GAME_SCREEN) {
+				// If all fails, go to the map screen, this (almost) guarantees the game will start
+				guiPreviousOptionScreen = MAP_SCREEN;
+			} else {
+				guiPreviousOptionScreen = guiCurrentScreen;
+			}
 		}
 
 		BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);

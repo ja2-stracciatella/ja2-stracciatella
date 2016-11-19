@@ -722,6 +722,40 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 	return( FALSE );
 }
 
+BOOLEAN IsFacingClimableWindow( SOLDIERTYPE const* const pSoldier )
+{
+	GridNo sNewGridNo, sOtherSideOfWindow;
+
+	GridNo const sGridNo = pSoldier->sGridNo;
+	INT8 const bStartingDir=pSoldier->bDirection;
+
+	// WANNE: No need to check on SOUTH and EAST tile, because it is the tile that has the fence we are standing on!
+	if (bStartingDir == NORTH || bStartingDir == WEST)
+	{
+		// IF there is a fence in this gridno, return false!
+		if ( IsJumpableWindowPresentAtGridNo( sGridNo, bStartingDir ) )
+		{
+			return( FALSE );
+		}
+
+		sNewGridNo = NewGridNo( sGridNo, (UINT16)DirectionInc( (UINT8)bStartingDir ) );
+		sOtherSideOfWindow = sNewGridNo;
+	}
+	else
+	{
+		// current tile we are standing is the fence tile
+		sNewGridNo = sGridNo;
+		sOtherSideOfWindow = NewGridNo( sNewGridNo, (UINT16)DirectionInc( (UINT8)bStartingDir ) );
+	}
+
+	// ATE: Check if there is somebody waiting here.....
+	if (! NewOKDestination( pSoldier, sOtherSideOfWindow, TRUE, 0 ) ) return false;
+
+	// Check if we have a window here
+	if (!IsJumpableWindowPresentAtGridNo( sNewGridNo , bStartingDir) ) return false;
+
+	return true;
+}
 
 BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const out_direction)
 {

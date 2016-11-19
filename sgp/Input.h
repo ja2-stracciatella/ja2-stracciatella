@@ -8,6 +8,7 @@
 #define KEY_DOWN									0x0001
 #define KEY_UP										0x0002
 #define KEY_REPEAT								0x0004
+#define TEXT_INPUT								0x0006
 #define LEFT_BUTTON_DOWN					0x0008
 #define LEFT_BUTTON_UP						0x0010
 #define LEFT_BUTTON_DBL_CLK				0x0020
@@ -18,7 +19,11 @@
 #define MOUSE_POS									0x0400
 #define MOUSE_WHEEL_UP      0x0800
 #define MOUSE_WHEEL_DOWN    0x1000
-#define MOUSE_EVENTS        0x1FF8
+#define MOUSE_EVENTS        0xFFF8
+
+#define MIDDLE_BUTTON_DOWN		0x2000
+#define MIDDLE_BUTTON_UP		0x4000
+#define MIDDLE_BUTTON_REPEAT	0x8000
 
 #define SHIFT_DOWN								0x01
 #define CTRL_DOWN									0x02
@@ -70,10 +75,11 @@ extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen
 extern BOOLEAN   gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
-
+extern BOOLEAN   gfMiddleButtonState;
 
 #define _KeyDown(a)        gfKeyState[(a)]
 #define _LeftButtonDown    gfLeftButtonState
 #define _RightButtonDown   gfRightButtonState
+#define _MiddleButtonDown   gfMiddleButtonState
 
 #endif

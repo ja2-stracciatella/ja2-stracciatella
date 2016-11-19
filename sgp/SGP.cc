@@ -484,7 +484,7 @@ try
     /* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
      * are available. All we need to do is attend to the gaming mechanics
      * themselves */
-    MainLoop(GCM->getGamePolicy()->ms_per_game_cycle);
+    MainLoop(gamepolicy(ms_per_game_cycle));
   }
 
   SLOG_Deinit();
