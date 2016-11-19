@@ -2,6 +2,12 @@
 
 extern crate getopts;
 extern crate libc;
+#[cfg(windows)]
+extern crate winapi;
+#[cfg(windows)]
+extern crate user32;
+#[cfg(windows)]
+extern crate shell32;
 
 use getopts::Options;
 use libc::{size_t, c_char};
@@ -9,6 +15,7 @@ use std::slice;
 use std::ffi::{CStr, CString};
 use std::str;
 use std::env;
+use std::path::PathBuf;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
@@ -200,6 +207,44 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
     }
 }
 
+#[cfg(not(windows))]
+pub fn get_stracciatella_home() -> Option<PathBuf> {
+    match env::home_dir() {
+        Some(mut path) => {
+            path.push(".ja2");
+            return Some(path);
+        },
+        None => None,
+    }
+}
+
+#[cfg(windows)]
+pub fn get_stracciatella_home() -> Option<PathBuf> {
+    use std::ptr::null_mut;
+    use shell32::SHGetFolderPathA;
+    use winapi::shlobj::{CSIDL_PERSONAL, CSIDL_FLAG_CREATE};
+    use winapi::minwindef::MAX_PATH;
+    use std::ffi::CStr;
+
+    let mut home: [u8; MAX_PATH] = [0; MAX_PATH];
+    let home_cstr;
+    unsafe {
+        if SHGetFolderPathA(null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, null_mut(), 0, home.as_mut_ptr() as *mut i8) != 0 {
+            return None;
+        }
+        home_cstr = CStr::from_ptr(home.as_ptr() as *const i8);
+    }
+
+    return match home_cstr.to_str() {
+        Ok(s) => {
+            let mut buf = PathBuf::from(s);
+            buf.push("JA2");
+            return Some(buf);
+        },
+        Err(_) => None
+    };
+}
+
 #[no_mangle]
 pub fn create_command_line_args(array: *const *const c_char, length: size_t) -> *mut CommandLineArgs {
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
@@ -209,12 +254,7 @@ pub fn create_command_line_args(array: *const *const c_char, length: size_t) -> 
         .map(|bs| String::from(str::from_utf8(bs).unwrap()))   // iterator of &str
         .collect();
 
-    match env::home_dir() {
-        Some(path) => println!("Home Dir: {}", path.display()),
-        None => println!("Impossible to get your home dir!"),
-    }
 
-    println!("Args: {:?}", args);
     return match parse_args(args) {
         Ok(parsed_args) => Box::into_raw(Box::new(parsed_args)),
         Err(msg) => panic!(msg)
@@ -309,6 +349,11 @@ pub fn free_rust_string(s: *mut c_char) {
 
 #[cfg(test)]
 mod tests {
+    extern crate regex;
+
+    use self::regex::Regex;
+    use std::env;
+
     #[test]
     fn it_should_abort_on_unknown_arguments() {
         let input = vec!(String::from("ja2"), String::from("testunknown"));
@@ -371,8 +416,16 @@ mod tests {
     }
 
     #[test]
-    fn it_should_fail_with_bad_resolution() {
-        let input = vec!(String::from("ja2"), String::from("--res"), String::from("1120xaaa"));
-        assert_eq!(super::parse_args(input).err().unwrap(), "Resolution argument incorrect format, should be WIDTHxHEIGHT.");
+    #[cfg(not(windows))]
+    fn it_should_find_the_correct_stracciatella_home_path_on_unixlike() {
+        assert_eq!(super::get_stracciatella_home().unwrap().to_str().unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
+    }
+
+    #[test]
+    #[cfg(windows)]
+    fn it_should_find_the_correct_stracciatella_home_path_on_windows() {
+        let result = super::get_stracciatella_home().unwrap();
+        let regex = Regex::new(r"^[A-Z]:\\(.*)+\\JA2").unwrap();
+        assert!(regex.is_match(result.to_str().unwrap()));
     }
 }
