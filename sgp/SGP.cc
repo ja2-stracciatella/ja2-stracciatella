@@ -276,21 +276,21 @@ ContentManager *GCM = NULL;
 ////////////////////////////////////////////////////////////
 
 extern "C" {
-  typedef struct command_line_params_S command_line_params_t;
-  extern command_line_params_t* create_command_line_args(char* argv[], int argc);
-  extern void free_command_line_args(command_line_params_t *);
-  extern uint32_t get_number_of_mods(const command_line_params_t *);
-  extern char * get_mod(const command_line_params_t *, uint32_t index);
-  extern uint16_t get_resolution_x(const command_line_params_t *);
-  extern uint16_t get_resolution_y(const command_line_params_t *);
-  extern GameVersion get_resource_version(const command_line_params_t *);
+  typedef struct engine_options_S engine_options_t;
+  extern engine_options_t* create_engine_options(char **argv, int argc);
+  extern void free_engine_options(engine_options_t *);
+  extern uint32_t get_number_of_mods(const engine_options_t *);
+  extern char * get_mod(const engine_options_t *, uint32_t index);
+  extern uint16_t get_resolution_x(const engine_options_t *);
+  extern uint16_t get_resolution_y(const engine_options_t *);
+  extern GameVersion get_resource_version(const engine_options_t *);
   extern void free_rust_string(char *);
-  extern bool should_run_unittests(const command_line_params_t *);
-  extern bool should_run_editor(const command_line_params_t *);
-  extern bool should_start_in_fullscreen(const command_line_params_t *);
-  extern bool should_start_in_window(const command_line_params_t *);
-  extern bool should_start_in_debug_mode(const command_line_params_t *);
-  extern bool should_start_without_sound(const command_line_params_t *);
+  extern bool should_run_unittests(const engine_options_t *);
+  extern bool should_run_editor(const engine_options_t *);
+  extern bool should_start_in_fullscreen(const engine_options_t *);
+  extern bool should_start_in_window(const engine_options_t *);
+  extern bool should_start_in_debug_mode(const engine_options_t *);
+  extern bool should_start_without_sound(const engine_options_t *);
 }
 
 int main(int argc, char* argv[])
@@ -308,7 +308,7 @@ int main(int argc, char* argv[])
   SLOG_Init(SLOG_STDERR, "ja2.log");
   SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
-  command_line_params_t* params = create_command_line_args(argv, argc);
+  engine_options_t* params = create_engine_options(argv, argc);
 
   if (should_start_in_fullscreen(params)) {
     VideoSetFullScreen(TRUE);
@@ -415,7 +415,7 @@ int main(int argc, char* argv[])
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
 
-  free_command_line_args(params);
+    free_engine_options(params);
 
   std::vector<std::string> libraries = cm->getListOfGameResources();
   cm->initGameResouces(configPath, libraries);

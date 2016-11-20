@@ -14,7 +14,6 @@ use libc::{size_t, c_char};
 use std::slice;
 use std::ffi::{CStr, CString};
 use std::str;
-use std::env;
 use std::path::PathBuf;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -30,7 +29,7 @@ pub enum ResourceVersion {
     RUSSIAN_GOLD,
 }
 
-pub struct CommandLineArgs {
+pub struct EngineOptions {
     mods: Vec<String>,
     resolution_x: u16,
     resolution_y: u16,
@@ -43,7 +42,7 @@ pub struct CommandLineArgs {
     start_without_sound: bool,
 }
 
-pub fn get_options() -> Options {
+pub fn get_command_line_options() -> Options {
     let mut opts = Options::new();
 
     opts.long_only(true);
@@ -118,12 +117,12 @@ fn get_res_version(res_version_str: &str) -> Option<ResourceVersion> {
     }
 }
 
-fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
-    let opts = get_options();
+fn parse_args(args: Vec<String>) -> Result<EngineOptions, String> {
+    let opts = get_command_line_options();
 
     match opts.parse(&args[1..]) {
         Ok(m) => {
-            let mut command_line_args = CommandLineArgs {
+            let mut engine_options = EngineOptions {
                 mods: vec!(),
                 resolution_x: 640,
                 resolution_y: 480,
@@ -141,7 +140,7 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
             }
 
             if m.opt_strs("mod").len() > 0 {
-                command_line_args.mods = m.opt_strs("mod");
+                engine_options.mods = m.opt_strs("mod");
             }
 
             match m.opt_str("res") {
@@ -152,8 +151,8 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
 
                     match (resolution_x, resolution_y) {
                         (Some(x), Some(y)) => {
-                            command_line_args.resolution_x = x;
-                            command_line_args.resolution_y = y;
+                            engine_options.resolution_x = x;
+                            engine_options.resolution_y = y;
                         }
                         (None, _) | (_, None) => {
                             return Err(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT."));
@@ -167,7 +166,7 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
                 Some(s) => {
                     match get_res_version(s.as_ref()) {
                         Some(resource_version) => {
-                            command_line_args.resource_version = resource_version
+                            engine_options.resource_version = resource_version
                         },
                         None => return Err(format!("Unknown resource version: '{}'.", s))
                     }
@@ -176,30 +175,30 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
             }
 
             if m.opt_present("unittests") {
-                command_line_args.run_unittests = true;
+                engine_options.run_unittests = true;
             }
 
             if m.opt_present("editor") {
-                command_line_args.run_editor = true;
+                engine_options.run_editor = true;
             }
 
             if m.opt_present("fullscreen") {
-                command_line_args.start_in_fullscreen = true;
+                engine_options.start_in_fullscreen = true;
             }
 
             if m.opt_present("nosound") {
-                command_line_args.start_without_sound = true;
+                engine_options.start_without_sound = true;
             }
 
             if m.opt_present("window") {
-                command_line_args.start_in_window = true;
+                engine_options.start_in_window = true;
             }
 
             if m.opt_present("debug") {
-                command_line_args.start_in_debug_mode = true;
+                engine_options.start_in_debug_mode = true;
             }
 
-            return Ok(command_line_args);
+            return Ok(engine_options);
         }
         Err(f) => {
             return Err(f.to_string());
@@ -208,7 +207,9 @@ fn parse_args(args: Vec<String>) -> Result<CommandLineArgs, String> {
 }
 
 #[cfg(not(windows))]
-pub fn get_stracciatella_home() -> Option<PathBuf> {
+pub fn find_stracciatella_home() -> Option<PathBuf> {
+    use std::env;
+
     match env::home_dir() {
         Some(mut path) => {
             path.push(".ja2");
@@ -219,7 +220,7 @@ pub fn get_stracciatella_home() -> Option<PathBuf> {
 }
 
 #[cfg(windows)]
-pub fn get_stracciatella_home() -> Option<PathBuf> {
+pub fn find_stracciatella_home() -> Option<PathBuf> {
     use std::ptr::null_mut;
     use shell32::SHGetFolderPathA;
     use winapi::shlobj::{CSIDL_PERSONAL, CSIDL_FLAG_CREATE};
@@ -246,7 +247,7 @@ pub fn get_stracciatella_home() -> Option<PathBuf> {
 }
 
 #[no_mangle]
-pub fn create_command_line_args(array: *const *const c_char, length: size_t) -> *mut CommandLineArgs {
+pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
     let args: Vec<String> = values.iter()
         .map(|&p| unsafe { CStr::from_ptr(p) })  // iterator of &CStr
@@ -262,21 +263,21 @@ pub fn create_command_line_args(array: *const *const c_char, length: size_t) -> 
 }
 
 #[no_mangle]
-pub fn free_command_line_args(ptr: *mut CommandLineArgs) {
+pub fn free_engine_options(ptr: *mut EngineOptions) {
     if ptr.is_null() { return }
     unsafe { Box::from_raw(ptr); }
 }
 
 #[no_mangle]
-pub extern fn get_number_of_mods(ptr: *const CommandLineArgs) -> u32 {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    return command_line_args.mods.len() as u32
+pub extern fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    return engine_options.mods.len() as u32
 }
 
 #[no_mangle]
-pub extern fn get_mod(ptr: *const CommandLineArgs, index: u32) -> *mut c_char {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    let str_mod = match command_line_args.mods.get(index as usize) {
+pub extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    let str_mod = match engine_options.mods.get(index as usize) {
         Some(m) => m,
         None => panic!("Invalid mod index for game options {}", index)
     };
@@ -285,57 +286,57 @@ pub extern fn get_mod(ptr: *const CommandLineArgs, index: u32) -> *mut c_char {
 }
 
 #[no_mangle]
-pub extern fn get_resolution_x(ptr: *const CommandLineArgs) -> u16 {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    return command_line_args.resolution_x
+pub extern fn get_resolution_x(ptr: *const EngineOptions) -> u16 {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    return engine_options.resolution_x
 }
 
 #[no_mangle]
-pub extern fn get_resolution_y(ptr: *const CommandLineArgs) -> u16 {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    return command_line_args.resolution_y
+pub extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    return engine_options.resolution_y
 }
 
 #[no_mangle]
-pub extern fn get_resource_version(ptr: *const CommandLineArgs) -> ResourceVersion {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    command_line_args.resource_version
+pub extern fn get_resource_version(ptr: *const EngineOptions) -> ResourceVersion {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    engine_options.resource_version
 }
 
 #[no_mangle]
-pub fn should_run_unittests(ptr: *const CommandLineArgs) -> bool {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    command_line_args.run_unittests
+pub fn should_run_unittests(ptr: *const EngineOptions) -> bool {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    engine_options.run_unittests
 }
 
 #[no_mangle]
-pub fn should_run_editor(ptr: *const CommandLineArgs) -> bool {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    command_line_args.run_editor
+pub fn should_run_editor(ptr: *const EngineOptions) -> bool {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    engine_options.run_editor
 }
 
 #[no_mangle]
-pub fn should_start_in_fullscreen(ptr: *const CommandLineArgs) -> bool {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    command_line_args.start_in_fullscreen
+pub fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    engine_options.start_in_fullscreen
 }
 
 #[no_mangle]
-pub fn should_start_in_window(ptr: *const CommandLineArgs) -> bool {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    command_line_args.start_in_window
+pub fn should_start_in_window(ptr: *const EngineOptions) -> bool {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    engine_options.start_in_window
 }
 
 #[no_mangle]
-pub fn should_start_in_debug_mode(ptr: *const CommandLineArgs) -> bool {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    command_line_args.start_in_debug_mode
+pub fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    engine_options.start_in_debug_mode
 }
 
 #[no_mangle]
-pub fn should_start_without_sound(ptr: *const CommandLineArgs) -> bool {
-    let command_line_args = unsafe { assert!(!ptr.is_null()); &*ptr };
-    command_line_args.start_without_sound
+pub fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    engine_options.start_without_sound
 }
 
 #[no_mangle]
@@ -350,9 +351,6 @@ pub fn free_rust_string(s: *mut c_char) {
 #[cfg(test)]
 mod tests {
     extern crate regex;
-
-    use self::regex::Regex;
-    use std::env;
 
     #[test]
     fn it_should_abort_on_unknown_arguments() {
@@ -418,13 +416,17 @@ mod tests {
     #[test]
     #[cfg(not(windows))]
     fn it_should_find_the_correct_stracciatella_home_path_on_unixlike() {
-        assert_eq!(super::get_stracciatella_home().unwrap().to_str().unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
+        use std::env;
+
+        assert_eq!(super::find_stracciatella_home().unwrap().to_str().unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
     }
 
     #[test]
     #[cfg(windows)]
     fn it_should_find_the_correct_stracciatella_home_path_on_windows() {
-        let result = super::get_stracciatella_home().unwrap();
+        use self::regex::Regex;
+
+        let result = super::find_stracciatella_home().unwrap();
         let regex = Regex::new(r"^[A-Z]:\\(.*)+\\JA2").unwrap();
         assert!(regex.is_match(result.to_str().unwrap()));
     }
