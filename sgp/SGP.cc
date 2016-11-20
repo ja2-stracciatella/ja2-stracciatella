@@ -292,6 +292,9 @@ int main(int argc, char* argv[])
   SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
   engine_options_t* params = create_engine_options(argv, argc);
+  if (params == NULL) {
+    return EXIT_FAILURE;
+  }
 
   if (should_start_in_fullscreen(params)) {
     VideoSetFullScreen(TRUE);

@@ -16,6 +16,7 @@ use std::ffi::{CStr, CString};
 use std::str;
 use std::path::PathBuf;
 use std::default::Default;
+use std::ptr;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
@@ -222,13 +223,12 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
             path.push(".ja2");
             return Ok(path);
         },
-        None => Err(String::from("Failed to find home directory")),
+        None => Err(String::from("Could not find home directory")),
     }
 }
 
 #[cfg(windows)]
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
-    use std::ptr::null_mut;
     use shell32::SHGetFolderPathA;
     use winapi::shlobj::{CSIDL_PERSONAL, CSIDL_FLAG_CREATE};
     use winapi::minwindef::MAX_PATH;
@@ -236,19 +236,19 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
 
     let mut home: [u8; MAX_PATH] = [0; MAX_PATH];
 
-    return match unsafe { SHGetFolderPathA(null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, null_mut(), 0, home.as_mut_ptr() as *mut i8) } {
+    return match unsafe { SHGetFolderPathA(ptr::null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, ptr::null_mut(), 0, home.as_mut_ptr() as *mut i8) } {
         0 => {
-            let home_cstr = CStr::from_ptr(home.as_ptr() as *const i8);
+            let home_cstr =unsafe { CStr::from_ptr(home.as_ptr() as *const i8) };
             return match home_cstr.to_str() {
                 Ok(s) => {
                     let mut buf = PathBuf::from(s);
                     buf.push("JA2");
                     return Ok(buf);
                 },
-                Err(e) => Err(format!("Error decoding documents folder string: {}", e))
+                Err(e) => Err(format!("Could not decode documents folder string: {}", e))
             }
         },
-        i => Err(format!("Cannot get documents folder error: {}", i))
+        i => Err(format!("Could not get documents folder: {}", i))
     };
 }
 
@@ -270,10 +270,16 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
 
             return match res_parse_args {
                 None => Box::into_raw(Box::new(engine_options)),
-                Some(msg) => panic!(msg)
+                Some(msg) => {
+                    println!("{}", msg);
+                    return ptr::null_mut();
+                }
             };
         },
-        Err(msg) => panic!(msg)
+        Err(msg) => {
+            println!("{}", msg);
+            return ptr::null_mut()
+        }
     }
 
 }
