@@ -1379,7 +1379,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'd':
 			// End turn only if in combat and it is the player's turn
-			if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT &&
+			if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
 					gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
 					!gpItemPointer                               &&
@@ -1900,7 +1900,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 
 		case 'd':
 			if (CHEATER_CHEAT_LEVEL()                        &&
-					gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT &&
+					(gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
 					gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
 					!gpItemPointer                               &&
@@ -2245,7 +2245,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			}
 		}
 
-		if (gTacticalStatus.uiFlags & IN_TB_COMBAT == IN_TB_COMBAT)
+		if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
 		{
 			{
 				if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
