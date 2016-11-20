@@ -235,22 +235,21 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     use std::ffi::CStr;
 
     let mut home: [u8; MAX_PATH] = [0; MAX_PATH];
-    unsafe {
-        return match SHGetFolderPathA(null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, null_mut(), 0, home.as_mut_ptr() as *mut i8) {
-            0 => {
-                let home_cstr = CStr::from_ptr(home.as_ptr() as *const i8);
-                return match home_cstr.to_str() {
-                    Ok(s) => {
-                        let mut buf = PathBuf::from(s);
-                        buf.push("JA2");
-                        return Ok(buf);
-                    },
-                    Err(e) => Err(format!("Error decoding documents folder string: {}", e))
-                }
-            },
-            i => Err(format!("Cannot get documents folder error: {}", i))
-        };
-    }
+
+    return match unsafe { SHGetFolderPathA(null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, null_mut(), 0, home.as_mut_ptr() as *mut i8) } {
+        0 => {
+            let home_cstr = CStr::from_ptr(home.as_ptr() as *const i8);
+            return match home_cstr.to_str() {
+                Ok(s) => {
+                    let mut buf = PathBuf::from(s);
+                    buf.push("JA2");
+                    return Ok(buf);
+                },
+                Err(e) => Err(format!("Error decoding documents folder string: {}", e))
+            }
+        },
+        i => Err(format!("Cannot get documents folder error: {}", i))
+    };
 }
 
 #[no_mangle]
@@ -262,8 +261,6 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
         .map(|cs| cs.to_bytes())                 // iterator of &[u8]
         .map(|bs| String::from(str::from_utf8(bs).unwrap()))   // iterator of &str
         .collect();
-
-
 
     return match find_stracciatella_home() {
         Ok(home_dir) => {
@@ -285,6 +282,13 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
 pub fn free_engine_options(ptr: *mut EngineOptions) {
     if ptr.is_null() { return }
     unsafe { Box::from_raw(ptr); }
+}
+
+#[no_mangle]
+pub extern fn get_stracciatella_home(ptr: *const EngineOptions) -> *mut c_char {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    let c_str_home = CString::new(engine_options.stracciatella_home.to_str().unwrap()).unwrap();
+    c_str_home.into_raw()
 }
 
 #[no_mangle]
@@ -371,6 +375,9 @@ pub fn free_rust_string(s: *mut c_char) {
 mod tests {
     extern crate regex;
 
+    use std::str;
+    use std::ffi::CStr;
+
     #[test]
     fn it_should_abort_on_unknown_arguments() {
         let mut engine_options: super::EngineOptions = Default::default();
@@ -447,7 +454,12 @@ mod tests {
     fn it_should_find_the_correct_stracciatella_home_path_on_unixlike() {
         use std::env;
 
-        assert_eq!(super::find_stracciatella_home().unwrap().to_str().unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
+
+        unsafe {
+            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_stracciatella_home(&engine_options)).to_bytes()).unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
+        }
     }
 
     #[test]
@@ -455,8 +467,11 @@ mod tests {
     fn it_should_find_the_correct_stracciatella_home_path_on_windows() {
         use self::regex::Regex;
 
-        let result = super::find_stracciatella_home().unwrap();
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
+
+        let result = unsafe { str::from_utf8(CStr::from_ptr(super::get_stracciatella_home(&engine_options)).to_bytes()).unwrap() };
         let regex = Regex::new(r"^[A-Z]:\\(.*)+\\JA2").unwrap();
-        assert!(regex.is_match(result.to_str().unwrap()));
+        assert!(regex.is_match(result), "{} is not a valid home dir for windows", result);
     }
 }

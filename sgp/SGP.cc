@@ -43,6 +43,7 @@
 #include "ModPackContentManager.h"
 #include "policy/GamePolicy.h"
 #include "sgp/UTF8String.h"
+#include "RustInterface.h"
 
 #include "slog/slog.h"
 
@@ -275,24 +276,6 @@ ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 
-extern "C" {
-  typedef struct engine_options_S engine_options_t;
-  extern engine_options_t* create_engine_options(char **argv, int argc);
-  extern void free_engine_options(engine_options_t *);
-  extern uint32_t get_number_of_mods(const engine_options_t *);
-  extern char * get_mod(const engine_options_t *, uint32_t index);
-  extern uint16_t get_resolution_x(const engine_options_t *);
-  extern uint16_t get_resolution_y(const engine_options_t *);
-  extern GameVersion get_resource_version(const engine_options_t *);
-  extern void free_rust_string(char *);
-  extern bool should_run_unittests(const engine_options_t *);
-  extern bool should_run_editor(const engine_options_t *);
-  extern bool should_start_in_fullscreen(const engine_options_t *);
-  extern bool should_start_in_window(const engine_options_t *);
-  extern bool should_start_in_debug_mode(const engine_options_t *);
-  extern bool should_start_without_sound(const engine_options_t *);
-}
-
 int main(int argc, char* argv[])
 {
   std::string exeFolder = FileMan::getParentPath(argv[0], true);
@@ -364,7 +347,9 @@ int main(int argc, char* argv[])
 	InitializeMemoryManager();
 
   SLOGD(DEBUG_TAG_SGP, "Initializing Game Resources");
-  std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
+  char* rustConfigFolderPath = get_stracciatella_home(params);
+  std::string configFolderPath = std::string(rustConfigFolderPath);
+  free_rust_string(rustConfigFolderPath);
   std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
   std::string gameResRootPath = findRootGameResFolder(configPath);
 
@@ -376,6 +361,8 @@ int main(int argc, char* argv[])
   }
 
   std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
+
+  FileMan::switchTmpFolder(configFolderPath);
 
   DefaultContentManager *cm;
 
