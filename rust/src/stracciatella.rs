@@ -15,6 +15,7 @@ use std::slice;
 use std::ffi::{CStr, CString};
 use std::str;
 use std::path::PathBuf;
+use std::default::Default;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
@@ -30,6 +31,7 @@ pub enum ResourceVersion {
 }
 
 pub struct EngineOptions {
+    stracciatella_home: PathBuf,
     mods: Vec<String>,
     resolution_x: u16,
     resolution_y: u16,
@@ -40,6 +42,24 @@ pub struct EngineOptions {
     start_in_window: bool,
     start_in_debug_mode: bool,
     start_without_sound: bool,
+}
+
+impl Default for EngineOptions {
+    fn default() -> EngineOptions {
+        EngineOptions {
+            stracciatella_home: PathBuf::from(""),
+            mods: vec!(),
+            resolution_x: 640,
+            resolution_y: 480,
+            resource_version: ResourceVersion::ENGLISH,
+            run_unittests: false,
+            run_editor: false,
+            start_in_fullscreen: false,
+            start_in_window: true,
+            start_in_debug_mode: false,
+            start_without_sound: false,
+        }
+    }
 }
 
 pub fn get_command_line_options() -> Options {
@@ -117,26 +137,13 @@ fn get_res_version(res_version_str: &str) -> Option<ResourceVersion> {
     }
 }
 
-fn parse_args(args: Vec<String>) -> Result<EngineOptions, String> {
+fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<String> {
     let opts = get_command_line_options();
 
     match opts.parse(&args[1..]) {
         Ok(m) => {
-            let mut engine_options = EngineOptions {
-                mods: vec!(),
-                resolution_x: 640,
-                resolution_y: 480,
-                resource_version: ResourceVersion::ENGLISH,
-                run_unittests: false,
-                run_editor: false,
-                start_in_fullscreen: false,
-                start_in_window: true,
-                start_in_debug_mode: false,
-                start_without_sound: false,
-            };
-
             if m.free.len() > 0 {
-                return Err(format!("Unknown arguments: '{}'.", m.free.join(" ")));
+                return Some(format!("Unknown arguments: '{}'.", m.free.join(" ")));
             }
 
             if m.opt_strs("mod").len() > 0 {
@@ -155,7 +162,7 @@ fn parse_args(args: Vec<String>) -> Result<EngineOptions, String> {
                             engine_options.resolution_y = y;
                         }
                         (None, _) | (_, None) => {
-                            return Err(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT."));
+                            return Some(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT."));
                         }
                     }
                 },
@@ -168,7 +175,7 @@ fn parse_args(args: Vec<String>) -> Result<EngineOptions, String> {
                         Some(resource_version) => {
                             engine_options.resource_version = resource_version
                         },
-                        None => return Err(format!("Unknown resource version: '{}'.", s))
+                        None => return Some(format!("Unknown resource version: '{}'.", s))
                     }
                 },
                 None => {}
@@ -198,29 +205,29 @@ fn parse_args(args: Vec<String>) -> Result<EngineOptions, String> {
                 engine_options.start_in_debug_mode = true;
             }
 
-            return Ok(engine_options);
+            return None;
         }
         Err(f) => {
-            return Err(f.to_string());
+            return Some(f.to_string());
         }
     }
 }
 
 #[cfg(not(windows))]
-pub fn find_stracciatella_home() -> Option<PathBuf> {
+pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     use std::env;
 
     match env::home_dir() {
         Some(mut path) => {
             path.push(".ja2");
-            return Some(path);
+            return Ok(path);
         },
-        None => None,
+        None => Err(String::from("Failed to find home directory")),
     }
 }
 
 #[cfg(windows)]
-pub fn find_stracciatella_home() -> Option<PathBuf> {
+pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     use std::ptr::null_mut;
     use shell32::SHGetFolderPathA;
     use winapi::shlobj::{CSIDL_PERSONAL, CSIDL_FLAG_CREATE};
@@ -228,26 +235,27 @@ pub fn find_stracciatella_home() -> Option<PathBuf> {
     use std::ffi::CStr;
 
     let mut home: [u8; MAX_PATH] = [0; MAX_PATH];
-    let home_cstr;
     unsafe {
-        if SHGetFolderPathA(null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, null_mut(), 0, home.as_mut_ptr() as *mut i8) != 0 {
-            return None;
-        }
-        home_cstr = CStr::from_ptr(home.as_ptr() as *const i8);
+        return match SHGetFolderPathA(null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, null_mut(), 0, home.as_mut_ptr() as *mut i8) {
+            0 => {
+                let home_cstr = CStr::from_ptr(home.as_ptr() as *const i8);
+                return match home_cstr.to_str() {
+                    Ok(s) => {
+                        let mut buf = PathBuf::from(s);
+                        buf.push("JA2");
+                        return Ok(buf);
+                    },
+                    Err(e) => Err(format!("Error decoding documents folder string: {}", e))
+                }
+            },
+            i => Err(format!("Cannot get documents folder error: {}", i))
+        };
     }
-
-    return match home_cstr.to_str() {
-        Ok(s) => {
-            let mut buf = PathBuf::from(s);
-            buf.push("JA2");
-            return Some(buf);
-        },
-        Err(_) => None
-    };
 }
 
 #[no_mangle]
 pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
+    let mut engine_options: EngineOptions = Default::default();
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
     let args: Vec<String> = values.iter()
         .map(|&p| unsafe { CStr::from_ptr(p) })  // iterator of &CStr
@@ -256,10 +264,21 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
         .collect();
 
 
-    return match parse_args(args) {
-        Ok(parsed_args) => Box::into_raw(Box::new(parsed_args)),
+
+    return match find_stracciatella_home() {
+        Ok(home_dir) => {
+            engine_options.stracciatella_home = home_dir;
+
+            let res_parse_args = parse_args(&mut engine_options, args);
+
+            return match res_parse_args {
+                None => Box::into_raw(Box::new(engine_options)),
+                Some(msg) => panic!(msg)
+            };
+        },
         Err(msg) => panic!(msg)
-    };
+    }
+
 }
 
 #[no_mangle]
@@ -354,63 +373,73 @@ mod tests {
 
     #[test]
     fn it_should_abort_on_unknown_arguments() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("testunknown"));
-        assert_eq!(super::parse_args(input).err().unwrap(), "Unknown arguments: 'testunknown'.");
+        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unknown arguments: 'testunknown'.");
     }
 
     #[test]
     fn it_should_abort_on_unknown_switch() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--testunknown"));
-        assert_eq!(super::parse_args(input).err().unwrap(), "Unrecognized option: 'testunknown'.");
+        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unrecognized option: 'testunknown'.");
     }
 
     #[test]
     fn it_should_have_correct_fullscreen_default_value() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"));
-        assert!(!super::should_start_in_fullscreen(&super::parse_args(input).unwrap()));
+        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert!(!super::should_start_in_fullscreen(&engine_options));
     }
 
     #[test]
     fn it_should_be_able_to_change_fullscreen_value() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--fullscreen"));
-        assert!(super::should_start_in_fullscreen(&super::parse_args(input).unwrap()));
+        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert!(super::should_start_in_fullscreen(&engine_options));
     }
 
     #[test]
     fn it_should_continue_with_multiple_known_switches() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--debug"), String::from("--mod"), String::from("a"), String::from("--mod"), String::from("b"));
-        let args = super::parse_args(input).unwrap();
-
-        assert!(super::should_start_in_debug_mode(&args));
-        assert!(super::get_number_of_mods(&args) == 2);
+        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert!(super::should_start_in_debug_mode(&engine_options));
+        assert!(super::get_number_of_mods(&engine_options) == 2);
     }
 
     #[test]
     fn it_should_fail_with_unknown_resversion() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("TESTUNKNOWN"));
-        assert_eq!(super::parse_args(input).err().unwrap(), "Unknown resource version: 'TESTUNKNOWN'.");
+        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unknown resource version: 'TESTUNKNOWN'.");
     }
 
     #[test]
     fn it_should_return_the_correct_resversion_for_russian() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("RUSSIAN"));
-        let args = super::parse_args(input).unwrap();
-        assert!(super::get_resource_version(&args) == super::ResourceVersion::RUSSIAN);
+        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::RUSSIAN);
     }
 
     #[test]
     fn it_should_return_the_correct_resversion_for_italian() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("ITALIAN"));
-        let args = super::parse_args(input).unwrap();
-        assert!(super::get_resource_version(&args) == super::ResourceVersion::ITALIAN);
+        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::ITALIAN);
     }
 
     #[test]
     fn it_should_return_the_correct_resolution() {
+        let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--res"), String::from("1120x960"));
-        let args = super::parse_args(input).unwrap();
-        assert_eq!(super::get_resolution_x(&args), 1120);
-        assert_eq!(super::get_resolution_y(&args), 960);
+        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert_eq!(super::get_resolution_x(&engine_options), 1120);
+        assert_eq!(super::get_resolution_y(&engine_options), 960);
     }
 
     #[test]
