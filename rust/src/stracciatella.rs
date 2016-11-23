@@ -18,6 +18,7 @@ use std::path::PathBuf;
 use std::default::Default;
 use std::ptr;
 use std::io::prelude::*;
+use std::fs;
 use std::fs::File;
 use std::error::Error;
 
@@ -233,6 +234,12 @@ fn build_json_config_location(stracciatella_home: PathBuf) -> PathBuf {
 
 pub fn ensure_json_config_existence(engine_options: &EngineOptions) -> Option<String> {
     let path = build_json_config_location(engine_options.stracciatella_home.clone());
+
+    if !engine_options.stracciatella_home.exists() {
+        fs::create_dir_all(engine_options.stracciatella_home.clone()).unwrap_or_else(|why| {
+            println!("! {:?}", why.kind());
+        });
+    }
 
     if !path.is_file() {
         let mut f = File::create(path.to_str().unwrap()).unwrap();
