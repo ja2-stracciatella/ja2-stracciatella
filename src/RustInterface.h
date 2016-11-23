@@ -6,6 +6,7 @@ extern "C" {
   extern engine_options_t* create_engine_options(char **argv, int argc);
   extern void free_engine_options(engine_options_t *);
   extern char * get_stracciatella_home(const engine_options_t *);
+  extern char * get_vanilla_data_dir(const engine_options_t *);
   extern UINT32 get_number_of_mods(const engine_options_t *);
   extern char * get_mod(const engine_options_t *, uint32_t index);
   extern UINT16 get_resolution_x(const engine_options_t *);

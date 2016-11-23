@@ -32,7 +32,7 @@ public:
   virtual std::vector<std::string> getListOfGameResources() const;
 
   /** Initialize game resources. */
-  virtual void initGameResouces(const std::string &configPath, const std::vector<std::string> &libraries);
+  virtual void initGameResouces(const std::string &stracciatellaHomeDir, const std::vector<std::string> &libraries);
 
   /** Load the game data. */
   bool loadGameData();

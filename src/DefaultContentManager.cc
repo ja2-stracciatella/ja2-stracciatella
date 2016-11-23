@@ -194,14 +194,14 @@ std::vector<std::string> DefaultContentManager::getListOfGameResources() const
   return libraries;
 }
 
-void DefaultContentManager::initGameResouces(const std::string &configPath, const std::vector<std::string> &libraries)
+void DefaultContentManager::initGameResouces(const std::string &stracciatellaHomeDir, const std::vector<std::string> &libraries)
 {
   const char *failedLib = m_libraryDB->InitializeFileDatabase(m_dataDir, libraries);
   if(failedLib)
   {
     std::string message = FormattedString(
-      "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s'.\n",
-      failedLib, m_dataDir.c_str(), m_gameResRootPath.c_str(), configPath.c_str());
+      "Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
+      failedLib, m_dataDir.c_str(), m_gameResRootPath.c_str(), stracciatellaHomeDir.c_str());
     throw LibraryFileNotFoundException(message);
   }
 }

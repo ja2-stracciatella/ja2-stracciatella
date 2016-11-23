@@ -351,10 +351,11 @@ int main(int argc, char* argv[])
 
   SLOGD(DEBUG_TAG_SGP, "Initializing Game Resources");
   char* rustConfigFolderPath = get_stracciatella_home(params);
+  char* rustResRootPath = get_vanilla_data_dir(params);
   std::string configFolderPath = std::string(rustConfigFolderPath);
+  std::string gameResRootPath = std::string(rustResRootPath);
   free_rust_string(rustConfigFolderPath);
-  std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
-  std::string gameResRootPath = findRootGameResFolder(configPath);
+  free_rust_string(rustResRootPath);
 
   std::string extraDataDir = EXTRA_DATA_DIR;
   if(extraDataDir.empty())
@@ -379,7 +380,7 @@ int main(int argc, char* argv[])
                                    modName, modResFolder, configFolderPath,
                                    gameResRootPath, externalizedDataPath);
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
-    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"JA2 Home Dir:                  '%s'", configFolderPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
     SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
@@ -396,7 +397,7 @@ int main(int argc, char* argv[])
                                    configFolderPath,
                                    gameResRootPath, externalizedDataPath);
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
-    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"JA2 Home Dir:                  '%s'", configFolderPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
     SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
@@ -408,7 +409,7 @@ int main(int argc, char* argv[])
     free_engine_options(params);
 
   std::vector<std::string> libraries = cm->getListOfGameResources();
-  cm->initGameResouces(configPath, libraries);
+  cm->initGameResouces(configFolderPath, libraries);
 
   if(!cm->loadGameData())
   {
@@ -488,35 +489,6 @@ int main(int argc, char* argv[])
   GCM = NULL;
 
 	return EXIT_SUCCESS;
-}
-
-static std::string findRootGameResFolder(const std::string &configPath)
-{
-  MicroIni::File configFile;
-  if(!configFile.load(configPath) || !configFile[""].has("data_dir"))
-  {
-    SLOGW(DEBUG_TAG_SGP, "Could not open configuration file (\"%s\").", configPath.c_str());
-    WriteDefaultConfigFile(configPath.c_str());
-    configFile.load(configPath);
-  }
-
-  return configFile[""]["data_dir"];
-}
-
-static void WriteDefaultConfigFile(const char* ConfigFile)
-{
-	FILE* const IniFile = fopen(ConfigFile, "a");
-	if (IniFile != NULL)
-	{
-		fprintf(IniFile, "#Tells ja2-stracciatella where the binary datafiles are located\n");
-#ifdef _WIN32
-    fprintf(IniFile, "data_dir = C:\\Program Files\\Jagged Alliance 2");
-#else
-    fprintf(IniFile, "data_dir = /some/place/where/the/data/is");
-#endif
-		fclose(IniFile);
-		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
-	}
 }
 
 static void convertDialogQuotesToJson(const DefaultContentManager *cm,

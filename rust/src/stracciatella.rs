@@ -39,6 +39,7 @@ pub enum ResourceVersion {
 
 pub struct EngineOptions {
     stracciatella_home: PathBuf,
+    vanilla_data_dir: PathBuf,
     mods: Vec<String>,
     resolution_x: u16,
     resolution_y: u16,
@@ -55,6 +56,7 @@ impl Default for EngineOptions {
     fn default() -> EngineOptions {
         EngineOptions {
             stracciatella_home: PathBuf::from(""),
+            vanilla_data_dir: PathBuf::from(""),
             mods: vec!(),
             resolution_x: 640,
             resolution_y: 480,
@@ -259,6 +261,11 @@ pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
 
     match json_parse_result {
         Ok(json_root) => {
+            match json_root.get("data_dir").and_then(|v| v.as_str()).map(|v| PathBuf::from(v)) {
+                Some(data_dir) => engine_options.vanilla_data_dir = data_dir,
+                None => return Some(String::from("Error parsing ja2.json config file: data_dir needs to be set to the vanilla data directory"))
+            }
+
             match json_root.get("mods").and_then(|v| v.as_array()) {
                 Some(mods_json) => {
                     let mods_vec = mods_json.iter().fold(vec!(), |mut mods_vec, mod_json| match mod_json.as_str() {
@@ -410,6 +417,13 @@ pub fn free_engine_options(ptr: *mut EngineOptions) {
 pub extern fn get_stracciatella_home(ptr: *const EngineOptions) -> *mut c_char {
     let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
     let c_str_home = CString::new(engine_options.stracciatella_home.to_str().unwrap()).unwrap();
+    c_str_home.into_raw()
+}
+
+#[no_mangle]
+pub extern fn get_vanilla_data_dir(ptr: *const EngineOptions) -> *mut c_char {
+    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
+    let c_str_home = CString::new(engine_options.vanilla_data_dir.to_str().unwrap()).unwrap();
     c_str_home.into_raw()
 }
 
@@ -602,6 +616,27 @@ mod tests {
         engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
 
         assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Error parsing ja2.json config file: syntax error");
+    }
+
+    #[test]
+    fn parse_json_config_should_fail_with_missing_data_dir() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{}");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Error parsing ja2.json config file: data_dir needs to be set to the vanilla data directory");
+    }
+
+    #[test]
+    fn parse_json_config_should_be_able_to_change_data_dir() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"data_dir\": \"/dd\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options), None);
+        unsafe {
+            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), "/dd");
+        }
     }
 
     #[test]
