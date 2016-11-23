@@ -2,6 +2,8 @@
 
 extern crate getopts;
 extern crate libc;
+extern crate serde;
+extern crate serde_json;
 #[cfg(windows)]
 extern crate winapi;
 #[cfg(windows)]
@@ -9,14 +11,18 @@ extern crate user32;
 #[cfg(windows)]
 extern crate shell32;
 
-use getopts::Options;
-use libc::{size_t, c_char};
 use std::slice;
 use std::ffi::{CStr, CString};
 use std::str;
 use std::path::PathBuf;
 use std::default::Default;
 use std::ptr;
+use std::io::prelude::*;
+use std::fs::File;
+use std::error::Error;
+
+use getopts::Options;
+use libc::{size_t, c_char};
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
@@ -60,6 +66,31 @@ impl Default for EngineOptions {
             start_in_debug_mode: false,
             start_without_sound: false,
         }
+    }
+}
+
+fn get_res_version(res_version_str: &str) -> Option<ResourceVersion> {
+    match res_version_str {
+        "DUTCH" => Some(ResourceVersion::RUSSIAN),
+        "ENGLISH" => Some(ResourceVersion::ENGLISH),
+        "FRENCH" => Some(ResourceVersion::FRENCH),
+        "GERMAN" => Some(ResourceVersion::GERMAN),
+        "ITALIAN" => Some(ResourceVersion::ITALIAN),
+        "POLISH" => Some(ResourceVersion::POLISH),
+        "RUSSIAN" => Some(ResourceVersion::RUSSIAN),
+        "RUSSIAN_GOLD" => Some(ResourceVersion::RUSSIAN_GOLD),
+        _ => None
+    }
+}
+
+fn get_resolution(resolution_str: &str) -> Option<(u16, u16)> {
+    let mut resolutions = resolution_str.split("x").filter_map(|r_str| r_str.parse::<u16>().ok());
+    let resolution_x = resolutions.next();
+    let resolution_y = resolutions.next();
+
+    match (resolution_x, resolution_y) {
+        (Some(x), Some(y)) => Some((x, y)),
+        _ => None
     }
 }
 
@@ -124,20 +155,6 @@ pub fn get_command_line_options() -> Options {
     return opts;
 }
 
-fn get_res_version(res_version_str: &str) -> Option<ResourceVersion> {
-    match res_version_str {
-        "DUTCH" => Some(ResourceVersion::RUSSIAN),
-        "ENGLISH" => Some(ResourceVersion::ENGLISH),
-        "FRENCH" => Some(ResourceVersion::FRENCH),
-        "GERMAN" => Some(ResourceVersion::GERMAN),
-        "ITALIAN" => Some(ResourceVersion::ITALIAN),
-        "POLISH" => Some(ResourceVersion::POLISH),
-        "RUSSIAN" => Some(ResourceVersion::RUSSIAN),
-        "RUSSIAN_GOLD" => Some(ResourceVersion::RUSSIAN_GOLD),
-        _ => None
-    }
-}
-
 fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<String> {
     let opts = get_command_line_options();
 
@@ -152,20 +169,12 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
             }
 
             match m.opt_str("res") {
-                Some(s) => {
-                    let mut resolutions = s.split("x").filter_map(|r_str| r_str.parse::<u16>().ok());
-                    let resolution_x = resolutions.next();
-                    let resolution_y = resolutions.next();
-
-                    match (resolution_x, resolution_y) {
-                        (Some(x), Some(y)) => {
-                            engine_options.resolution_x = x;
-                            engine_options.resolution_y = y;
-                        }
-                        (None, _) | (_, None) => {
-                            return Some(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT."));
-                        }
-                    }
+                Some(s) => match get_resolution(s.as_ref()) {
+                    Some((x, y)) => {
+                        engine_options.resolution_x = x;
+                        engine_options.resolution_y = y;
+                    },
+                    None => return Some(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT."))
                 },
                 None => {}
             }
@@ -176,7 +185,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
                         Some(resource_version) => {
                             engine_options.resource_version = resource_version
                         },
-                        None => return Some(format!("Unknown resource version: '{}'.", s))
+                        None => return Some(format!("Unknown resource version in arguments: '{}'.", s))
                     }
                 },
                 None => {}
@@ -212,6 +221,106 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
             return Some(f.to_string());
         }
     }
+}
+
+fn build_json_config_location(stracciatella_home: PathBuf) -> PathBuf {
+    let mut path = PathBuf::from(stracciatella_home);
+    path.push("ja2.json");
+    return path;
+}
+
+pub fn ensure_json_config_existence(engine_options: &EngineOptions) -> Option<String> {
+    let path = build_json_config_location(engine_options.stracciatella_home.clone());
+
+    if !path.is_file() {
+        let mut f = File::create(path.to_str().unwrap()).unwrap();
+        f.write_all(b"{ \"data_dir\": \"/some/place/where/the/data/is\" }").unwrap();
+    }
+
+    return None;
+}
+
+
+pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
+    let path = build_json_config_location(engine_options.stracciatella_home.clone());
+    let json_parse_result: Result<_, String> = match File::open(path) {
+            Ok(f) => Ok(f),
+            Err(s) => Err(format!("Error reading ja2.json config file: {}", s.description()))
+        }
+        .and_then(|f| match serde_json::from_reader(f) {
+            Ok(v) => Ok(v),
+            Err(s) => Err(format!("Error parsing ja2.json config file: {}", s.description()))
+        })
+        .and_then(|v: serde_json::Value| match v.as_object() {
+            Some(v) => Ok(v.clone()),
+            None => Err(String::from("Error parsing ja2.json config file: Does not contain a root object"))
+        });
+
+
+    match json_parse_result {
+        Ok(json_root) => {
+            match json_root.get("mods").and_then(|v| v.as_array()) {
+                Some(mods_json) => {
+                    let mods_vec = mods_json.iter().fold(vec!(), |mut mods_vec, mod_json| match mod_json.as_str() {
+                        Some(s) => {
+                            mods_vec.push(String::from(s));
+                            mods_vec
+                        },
+                        None => mods_vec
+                    });
+
+                    if mods_vec.len() != mods_json.len() {
+                        return Some(String::from("Error parsing ja2.json config file: Not all mods are strings"))
+                    }
+
+                    engine_options.mods = mods_vec;
+                },
+                None => {}
+            }
+
+            match json_root.get("res").and_then(|v| v.as_str()) {
+                Some(s) => match get_resolution(s) {
+                    Some((x, y)) => {
+                        engine_options.resolution_x = x;
+                        engine_options.resolution_y = y;
+                    },
+                    None => return Some(String::from("Resolution in ja2.ini has incorrect format, should be WIDTHxHEIGHT."))
+                },
+                None => {}
+            }
+
+            match json_root.get("resversion").and_then(|v| v.as_str()) {
+                Some(s) => {
+                    match get_res_version(s) {
+                        Some(resource_version) => {
+                            engine_options.resource_version = resource_version
+                        },
+                        None => return Some(format!("Unknown resource version in arguments: '{}'.", s))
+                    }
+                },
+                None => {}
+            }
+
+            if json_root.get("fullscreen").and_then(|v| v.as_bool()) == Some(true) {
+                engine_options.start_in_fullscreen = true;
+            }
+
+            if json_root.get("nosound").and_then(|v| v.as_bool()) == Some(true) {
+                engine_options.start_without_sound = true;
+            }
+
+            if json_root.get("window").and_then(|v| v.as_bool()) == Some(true) {
+                engine_options.start_in_window = true;
+            }
+
+            if json_root.get("debug").and_then(|v| v.as_bool()) == Some(true) {
+                engine_options.start_in_debug_mode = true;
+            }
+
+            return None
+        },
+        Err(s) => return Some(s)
+    };
 }
 
 #[cfg(not(windows))]
@@ -266,11 +375,18 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
         Ok(home_dir) => {
             engine_options.stracciatella_home = home_dir;
 
-            let res_parse_args = parse_args(&mut engine_options, args);
+            ensure_json_config_existence(&engine_options);
 
-            return match res_parse_args {
-                None => Box::into_raw(Box::new(engine_options)),
-                Some(msg) => {
+            let res_parse_args = parse_args(&mut engine_options, args);
+            let res_parse_json_config = parse_json_config(&mut engine_options);
+
+            return match (res_parse_args, res_parse_json_config) {
+                (None, None) => Box::into_raw(Box::new(engine_options)),
+                (Some(msg), _) => {
+                    println!("{}", msg);
+                    return ptr::null_mut();
+                },
+                (_, Some(msg)) => {
                     println!("{}", msg);
                     return ptr::null_mut();
                 }
@@ -380,84 +496,187 @@ pub fn free_rust_string(s: *mut c_char) {
 #[cfg(test)]
 mod tests {
     extern crate regex;
+    extern crate tempdir;
 
+    use std::path::{PathBuf};
     use std::str;
     use std::ffi::CStr;
+    use std::fs::File;
+    use std::io::prelude::*;
 
     #[test]
-    fn it_should_abort_on_unknown_arguments() {
+    fn parse_args_should_abort_on_unknown_arguments() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("testunknown"));
         assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unknown arguments: 'testunknown'.");
     }
 
     #[test]
-    fn it_should_abort_on_unknown_switch() {
+    fn parse_args_should_abort_on_unknown_switch() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--testunknown"));
         assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unrecognized option: 'testunknown'.");
     }
 
     #[test]
-    fn it_should_have_correct_fullscreen_default_value() {
+    fn parse_args_should_have_correct_fullscreen_default_value() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"));
-        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(!super::should_start_in_fullscreen(&engine_options));
     }
 
     #[test]
-    fn it_should_be_able_to_change_fullscreen_value() {
+    fn parse_args_should_be_able_to_change_fullscreen_value() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--fullscreen"));
-        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::should_start_in_fullscreen(&engine_options));
     }
 
     #[test]
-    fn it_should_continue_with_multiple_known_switches() {
+    fn parse_args_should_continue_with_multiple_known_switches() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--debug"), String::from("--mod"), String::from("a"), String::from("--mod"), String::from("b"));
-        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::should_start_in_debug_mode(&engine_options));
         assert!(super::get_number_of_mods(&engine_options) == 2);
     }
 
     #[test]
-    fn it_should_fail_with_unknown_resversion() {
+    fn parse_args_should_fail_with_unknown_resversion() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("TESTUNKNOWN"));
-        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unknown resource version: 'TESTUNKNOWN'.");
+        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unknown resource version in arguments: 'TESTUNKNOWN'.");
     }
 
     #[test]
-    fn it_should_return_the_correct_resversion_for_russian() {
+    fn parse_args_should_return_the_correct_resversion_for_russian() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("RUSSIAN"));
-        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::RUSSIAN);
     }
 
     #[test]
-    fn it_should_return_the_correct_resversion_for_italian() {
+    fn parse_args_should_return_the_correct_resversion_for_italian() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("ITALIAN"));
-        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::ITALIAN);
     }
 
     #[test]
-    fn it_should_return_the_correct_resolution() {
+    fn parse_args_should_return_the_correct_resolution() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--res"), String::from("1120x960"));
-        assert!(super::parse_args(&mut engine_options, input).is_none());
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert_eq!(super::get_resolution_x(&engine_options), 1120);
         assert_eq!(super::get_resolution_y(&engine_options), 960);
     }
 
+    fn write_temp_folder_with_ja2_ini(contents: &[u8]) -> tempdir::TempDir {
+        let dir = tempdir::TempDir::new("my_directory_prefix").unwrap();
+        let file_path = dir.path().join("ja2.json");
+
+        let mut f = File::create(file_path).unwrap();
+        f.write_all(contents).unwrap();
+        f.sync_all().unwrap();
+
+        return dir
+    }
+
+    #[test]
+    fn parse_json_config_should_fail_with_missing_file() {
+        let temp_dir = tempdir::TempDir::new("my_directory_prefix").unwrap();
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Error reading ja2.json config file: entity not found");
+    }
+
+    #[test]
+    fn parse_json_config_should_fail_with_invalid_json() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ not json }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Error parsing ja2.json config file: syntax error");
+    }
+
+    #[test]
+    fn parse_json_config_should_be_able_to_change_fullscreen_value() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"fullscreen\": true, \"data_dir\": \"/some/place/where/the/data/is\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options), None);
+        assert!(super::should_start_in_fullscreen(&engine_options));
+    }
+
+    #[test]
+    fn parse_json_config_should_fail_with_invalid_mod() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"mods\": [ \"a\", true ], \"data_dir\": \"/some/place/where/the/data/is\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Error parsing ja2.json config file: Not all mods are strings");
+    }
+
+    #[test]
+    fn parse_json_config_should_continue_with_multiple_known_switches() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"debug\": true, \"mods\": [ \"m1\", \"a2\" ], \"data_dir\": \"/some/place/where/the/data/is\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options), None);
+        assert!(super::should_start_in_debug_mode(&engine_options));
+        assert!(super::get_number_of_mods(&engine_options) == 2);
+    }
+
+    #[test]
+    fn parse_json_config_should_fail_with_unknown_resversion() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"resversion\": \"TESTUNKNOWN\", \"data_dir\": \"/some/place/where/the/data/is\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Unknown resource version in arguments: 'TESTUNKNOWN'.");
+    }
+
+    #[test]
+    fn parse_json_config_should_return_the_correct_resversion_for_russian() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"resversion\": \"RUSSIAN\", \"data_dir\": \"/some/place/where/the/data/is\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options), None);
+        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::RUSSIAN);
+    }
+
+    #[test]
+    fn parse_json_config_should_return_the_correct_resversion_for_italian() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"resversion\": \"ITALIAN\", \"data_dir\": \"/some/place/where/the/data/is\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options), None);
+        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::ITALIAN);
+    }
+
+    #[test]
+    fn parse_json_config_should_return_the_correct_resolution() {
+        let temp_dir = write_temp_folder_with_ja2_ini(b"{ \"data_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\" }");
+        let mut engine_options: super::EngineOptions = Default::default();
+        engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
+
+        assert_eq!(super::parse_json_config(&mut engine_options), None);
+        assert_eq!(super::get_resolution_x(&engine_options), 1024);
+        assert_eq!(super::get_resolution_y(&engine_options), 768);
+    }
+
     #[test]
     #[cfg(not(windows))]
-    fn it_should_find_the_correct_stracciatella_home_path_on_unixlike() {
+    fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
         use std::env;
 
         let mut engine_options: super::EngineOptions = Default::default();
@@ -470,7 +689,7 @@ mod tests {
 
     #[test]
     #[cfg(windows)]
-    fn it_should_find_the_correct_stracciatella_home_path_on_windows() {
+    fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_windows() {
         use self::regex::Regex;
 
         let mut engine_options: super::EngineOptions = Default::default();
