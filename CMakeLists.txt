@@ -44,7 +44,6 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 add_definitions(-DJA2)
-add_definitions(-DMICROINI_STATIC)
 
 set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 if (NOT (VERSION_TAG STREQUAL ""))
@@ -98,14 +97,12 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/sgp")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
-add_subdirectory("_build/lib-MicroIni")
 add_subdirectory("_build/lib-slog")
 add_subdirectory("_build/lib-smacker")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${JA2_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-MicroIni/include
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson/rapidjson-1.1.0/include
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
     ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-smacker/libsmacker
@@ -136,7 +133,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} MicroIni slog smacker rust-stracciatella)
+target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
 
 macro(copy_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD
