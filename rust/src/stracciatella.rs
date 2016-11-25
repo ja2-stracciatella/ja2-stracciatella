@@ -226,32 +226,30 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
     }
 }
 
-fn build_json_config_location(stracciatella_home: PathBuf) -> PathBuf {
+fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
     let mut path = PathBuf::from(stracciatella_home);
     path.push("ja2.json");
     return path;
 }
 
-pub fn ensure_json_config_existence(engine_options: &EngineOptions) -> Option<String> {
-    let path = build_json_config_location(engine_options.stracciatella_home.clone());
+pub fn ensure_json_config_existence(stracciatella_home: PathBuf) -> Result<PathBuf, String> {
+    let path = build_json_config_location(&stracciatella_home);
 
-    if !engine_options.stracciatella_home.exists() {
-        fs::create_dir_all(engine_options.stracciatella_home.clone()).unwrap_or_else(|why| {
-            println!("! {:?}", why.kind());
-        });
+    if !stracciatella_home.exists() {
+        try!(fs::create_dir_all(&stracciatella_home).map_err(|why| format!("! {:?}", why.kind())));
     }
 
     if !path.is_file() {
-        let mut f = File::create(path.to_str().unwrap()).unwrap();
-        f.write_all(b"{ \"data_dir\": \"/some/place/where/the/data/is\" }").unwrap();
+        let mut f = try!(File::create(path).map_err(|why| format!("! {:?}", why.kind())));
+        try!(f.write_all(b"{ \"data_dir\": \"/some/place/where/the/data/is\" }").map_err(|why| format!("! {:?}", why.kind())));
     }
 
-    return None;
+    return Ok(stracciatella_home);
 }
 
 
 pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
-    let path = build_json_config_location(engine_options.stracciatella_home.clone());
+    let path = build_json_config_location(&engine_options.stracciatella_home);
     let json_parse_result: Result<_, String> = match File::open(path) {
             Ok(f) => Ok(f),
             Err(s) => Err(format!("Error reading ja2.json config file: {}", s.description()))
@@ -298,7 +296,7 @@ pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
                         engine_options.resolution_x = x;
                         engine_options.resolution_y = y;
                     },
-                    None => return Some(String::from("Resolution in ja2.ini has incorrect format, should be WIDTHxHEIGHT."))
+                    None => return Some(String::from("Resolution in ja2.json has incorrect format, should be WIDTHxHEIGHT."))
                 },
                 None => {}
             }
@@ -309,7 +307,7 @@ pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
                         Some(resource_version) => {
                             engine_options.resource_version = resource_version
                         },
-                        None => return Some(format!("Unknown resource version in arguments: '{}'.", s))
+                        None => return Some(format!("Unknown resource version in ja2.json: '{}'.", s))
                     }
                 },
                 None => {}
@@ -377,7 +375,13 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
 
 #[no_mangle]
 pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
-    let mut engine_options: EngineOptions = Default::default();
+    macro_rules! fail_parsing {
+        ($msg:expr) => {{
+            println!("{}", $msg);
+            return ptr::null_mut();
+        }};
+    }
+
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
     let args: Vec<String> = values.iter()
         .map(|&p| unsafe { CStr::from_ptr(p) })  // iterator of &CStr
@@ -385,31 +389,21 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
         .map(|bs| String::from(str::from_utf8(bs).unwrap()))   // iterator of &str
         .collect();
 
-    return match find_stracciatella_home() {
+    return match find_stracciatella_home().and_then(|h| ensure_json_config_existence(h)) {
         Ok(home_dir) => {
+            let mut engine_options: EngineOptions = Default::default();
             engine_options.stracciatella_home = home_dir;
-
-            ensure_json_config_existence(&engine_options);
 
             let res_parse_args = parse_args(&mut engine_options, args);
             let res_parse_json_config = parse_json_config(&mut engine_options);
 
             return match (res_parse_args, res_parse_json_config) {
                 (None, None) => Box::into_raw(Box::new(engine_options)),
-                (Some(msg), _) => {
-                    println!("{}", msg);
-                    return ptr::null_mut();
-                },
-                (_, Some(msg)) => {
-                    println!("{}", msg);
-                    return ptr::null_mut();
-                }
+                (Some(msg), _) => fail_parsing!(msg),
+                (_, Some(msg)) => fail_parsing!(msg)
             };
         },
-        Err(msg) => {
-            println!("{}", msg);
-            return ptr::null_mut()
-        }
+        Err(msg) => fail_parsing!(msg)
     }
 
 }
@@ -682,7 +676,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
 
-        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Unknown resource version in arguments: 'TESTUNKNOWN'.");
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Unknown resource version in ja2.json: 'TESTUNKNOWN'.");
     }
 
     #[test]
