@@ -563,7 +563,7 @@ mod tests {
     }
 
     fn write_temp_folder_with_ja2_ini(contents: &[u8]) -> tempdir::TempDir {
-        let dir = tempdir::TempDir::new("my_directory_prefix").unwrap();
+        let dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let file_path = dir.path().join("ja2.json");
 
         let mut f = File::create(file_path).unwrap();
@@ -574,8 +574,35 @@ mod tests {
     }
 
     #[test]
+    fn ensure_json_config_existence_should_ensure_existence_of_config_dir() {
+        let dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let home_path = dir.path().join("ja2_home");
+        let ja2json_path = home_path.join("ja2.json");
+
+        super::ensure_json_config_existence(home_path.clone()).unwrap();
+
+        assert!(home_path.exists());
+        assert!(ja2json_path.is_file());
+    }
+
+    #[test]
+    fn ensure_json_config_existence_should_not_overwrite_existing_ja2json() {
+        let dir = write_temp_folder_with_ja2_ini(b"Test");
+        let ja2json_path = dir.path().join("ja2.json");
+
+        super::ensure_json_config_existence(PathBuf::from(dir.path())).unwrap();
+
+        let mut f = File::open(ja2json_path.clone()).unwrap();
+        let mut content: Vec<u8> = vec!();
+        f.read_to_end(&mut content).unwrap();
+
+        assert!(ja2json_path.is_file());
+        assert_eq!(content, b"Test");
+    }
+
+    #[test]
     fn parse_json_config_should_fail_with_missing_file() {
-        let temp_dir = tempdir::TempDir::new("my_directory_prefix").unwrap();
+        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = PathBuf::from(temp_dir.path());
 
