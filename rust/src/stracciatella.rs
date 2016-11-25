@@ -12,13 +12,13 @@ extern crate user32;
 extern crate shell32;
 
 use std::slice;
-use std::ffi::{CStr, CString};
 use std::str;
+use std::ptr;
+use std::fs;
+use std::ffi::{CStr, CString};
 use std::path::PathBuf;
 use std::default::Default;
-use std::ptr;
 use std::io::prelude::*;
-use std::fs;
 use std::fs::File;
 use std::error::Error;
 
@@ -88,10 +88,8 @@ fn get_res_version(res_version_str: &str) -> Option<ResourceVersion> {
 
 fn get_resolution(resolution_str: &str) -> Option<(u16, u16)> {
     let mut resolutions = resolution_str.split("x").filter_map(|r_str| r_str.parse::<u16>().ok());
-    let resolution_x = resolutions.next();
-    let resolution_y = resolutions.next();
 
-    match (resolution_x, resolution_y) {
+    match (resolutions.next(), resolutions.next()) {
         (Some(x), Some(y)) => Some((x, y)),
         _ => None
     }
@@ -123,7 +121,7 @@ pub fn get_command_line_options() -> Options {
     opts.optflag(
         "u",
         "unittests",
-        "Perform unit tests. E.g. ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2");
+        "Perform unit tests. E.g. 'ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2'");
     opts.optflag(
         "e",
         "editor",
@@ -171,27 +169,23 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
                 engine_options.mods = m.opt_strs("mod");
             }
 
-            match m.opt_str("res") {
-                Some(s) => match get_resolution(s.as_ref()) {
+            if let Some(s) = m.opt_str("res") {
+                match get_resolution(&s) {
                     Some((x, y)) => {
                         engine_options.resolution_x = x;
                         engine_options.resolution_y = y;
                     },
                     None => return Some(String::from("Resolution argument incorrect format, should be WIDTHxHEIGHT."))
-                },
-                None => {}
+                }
             }
 
-            match m.opt_str("resversion") {
-                Some(s) => {
-                    match get_res_version(s.as_ref()) {
-                        Some(resource_version) => {
-                            engine_options.resource_version = resource_version
-                        },
-                        None => return Some(format!("Unknown resource version in arguments: '{}'.", s))
-                    }
-                },
-                None => {}
+            if let Some(s) = m.opt_str("resversion") {
+                match get_res_version(&s) {
+                    Some(resource_version) => {
+                        engine_options.resource_version = resource_version
+                    },
+                    None => return Some(format!("Unknown resource version in arguments: '{}'.", s))
+                }
             }
 
             if m.opt_present("unittests") {
@@ -220,9 +214,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
 
             return None;
         }
-        Err(f) => {
-            return Some(f.to_string());
-        }
+        Err(f) => Some(f.to_string())
     }
 }
 
@@ -233,15 +225,17 @@ fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
 }
 
 pub fn ensure_json_config_existence(stracciatella_home: PathBuf) -> Result<PathBuf, String> {
+    macro_rules! make_string_err { ($msg:expr) => { $msg.map_err(|why| format!("! {:?}", why.kind())) }; }
+
     let path = build_json_config_location(&stracciatella_home);
 
     if !stracciatella_home.exists() {
-        try!(fs::create_dir_all(&stracciatella_home).map_err(|why| format!("! {:?}", why.kind())));
+        try!(make_string_err!(fs::create_dir_all(&stracciatella_home)));
     }
 
     if !path.is_file() {
-        let mut f = try!(File::create(path).map_err(|why| format!("! {:?}", why.kind())));
-        try!(f.write_all(b"{ \"data_dir\": \"/some/place/where/the/data/is\" }").map_err(|why| format!("! {:?}", why.kind())));
+        let mut f = try!(make_string_err!(File::create(path)));
+        try!(make_string_err!(f.write_all(b"{ \"data_dir\": \"/some/place/where/the/data/is\" }")));
     }
 
     return Ok(stracciatella_home);
@@ -250,14 +244,8 @@ pub fn ensure_json_config_existence(stracciatella_home: PathBuf) -> Result<PathB
 
 pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
     let path = build_json_config_location(&engine_options.stracciatella_home);
-    let json_parse_result: Result<_, String> = match File::open(path) {
-            Ok(f) => Ok(f),
-            Err(s) => Err(format!("Error reading ja2.json config file: {}", s.description()))
-        }
-        .and_then(|f| match serde_json::from_reader(f) {
-            Ok(v) => Ok(v),
-            Err(s) => Err(format!("Error parsing ja2.json config file: {}", s.description()))
-        })
+    let json_parse_result: Result<_, String> = File::open(path).map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
+        .and_then(|f| serde_json::from_reader(f).map_err(|s| format!("Error parsing ja2.json config file: {}", s.description())))
         .and_then(|v: serde_json::Value| match v.as_object() {
             Some(v) => Ok(v.clone()),
             None => Err(String::from("Error parsing ja2.json config file: Does not contain a root object"))
@@ -271,46 +259,39 @@ pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
                 None => return Some(String::from("Error parsing ja2.json config file: data_dir needs to be set to the vanilla data directory"))
             }
 
-            match json_root.get("mods").and_then(|v| v.as_array()) {
-                Some(mods_json) => {
-                    let mods_vec = mods_json.iter().fold(vec!(), |mut mods_vec, mod_json| match mod_json.as_str() {
-                        Some(s) => {
-                            mods_vec.push(String::from(s));
-                            mods_vec
-                        },
-                        None => mods_vec
-                    });
+            if let Some(mods_json) = json_root.get("mods").and_then(|v| v.as_array()) {
+                let mods_vec = mods_json.iter().fold(vec!(), |mut mods_vec, mod_json| match mod_json.as_str() {
+                    Some(s) => {
+                        mods_vec.push(String::from(s));
+                        mods_vec
+                    },
+                    None => mods_vec
+                });
 
-                    if mods_vec.len() != mods_json.len() {
-                        return Some(String::from("Error parsing ja2.json config file: Not all mods are strings"))
-                    }
+                if mods_vec.len() != mods_json.len() {
+                    return Some(String::from("Error parsing ja2.json config file: Not all mods are strings"))
+                }
 
-                    engine_options.mods = mods_vec;
-                },
-                None => {}
+                engine_options.mods = mods_vec;
             }
 
-            match json_root.get("res").and_then(|v| v.as_str()) {
-                Some(s) => match get_resolution(s) {
+            if let Some(s) = json_root.get("res").and_then(|v| v.as_str()) {
+                 match get_resolution(s) {
                     Some((x, y)) => {
                         engine_options.resolution_x = x;
                         engine_options.resolution_y = y;
                     },
                     None => return Some(String::from("Resolution in ja2.json has incorrect format, should be WIDTHxHEIGHT."))
-                },
-                None => {}
+                }
             }
 
-            match json_root.get("resversion").and_then(|v| v.as_str()) {
-                Some(s) => {
-                    match get_res_version(s) {
-                        Some(resource_version) => {
-                            engine_options.resource_version = resource_version
-                        },
-                        None => return Some(format!("Unknown resource version in ja2.json: '{}'.", s))
-                    }
-                },
-                None => {}
+            if let Some(s) = json_root.get("resversion").and_then(|v| v.as_str()) {
+                match get_res_version(s) {
+                    Some(resource_version) => {
+                        engine_options.resource_version = resource_version
+                    },
+                    None => return Some(format!("Unknown resource version in ja2.json: '{}'.", s))
+                }
             }
 
             if json_root.get("fullscreen").and_then(|v| v.as_bool()) == Some(true) {
@@ -359,7 +340,7 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
 
     return match unsafe { SHGetFolderPathA(ptr::null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, ptr::null_mut(), 0, home.as_mut_ptr() as *mut i8) } {
         0 => {
-            let home_cstr =unsafe { CStr::from_ptr(home.as_ptr() as *const i8) };
+            let home_cstr = unsafe { CStr::from_ptr(home.as_ptr() as *const i8) };
             return match home_cstr.to_str() {
                 Ok(s) => {
                     let mut buf = PathBuf::from(s);
@@ -371,6 +352,10 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
         },
         i => Err(format!("Could not get documents folder: {}", i))
     };
+}
+
+macro_rules! unsafe_from_ptr {
+    ($ptr:expr) => { unsafe { assert!(!$ptr.is_null()); &*$ptr } }
 }
 
 #[no_mangle]
@@ -416,28 +401,24 @@ pub fn free_engine_options(ptr: *mut EngineOptions) {
 
 #[no_mangle]
 pub extern fn get_stracciatella_home(ptr: *const EngineOptions) -> *mut c_char {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    let c_str_home = CString::new(engine_options.stracciatella_home.to_str().unwrap()).unwrap();
+    let c_str_home = CString::new(unsafe_from_ptr!(ptr).stracciatella_home.to_str().unwrap()).unwrap();
     c_str_home.into_raw()
 }
 
 #[no_mangle]
 pub extern fn get_vanilla_data_dir(ptr: *const EngineOptions) -> *mut c_char {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    let c_str_home = CString::new(engine_options.vanilla_data_dir.to_str().unwrap()).unwrap();
+    let c_str_home = CString::new(unsafe_from_ptr!(ptr).vanilla_data_dir.to_str().unwrap()).unwrap();
     c_str_home.into_raw()
 }
 
 #[no_mangle]
 pub extern fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    return engine_options.mods.len() as u32
+    return unsafe_from_ptr!(ptr).mods.len() as u32
 }
 
 #[no_mangle]
 pub extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    let str_mod = match engine_options.mods.get(index as usize) {
+    let str_mod = match unsafe_from_ptr!(ptr).mods.get(index as usize) {
         Some(m) => m,
         None => panic!("Invalid mod index for game options {}", index)
     };
@@ -447,56 +428,47 @@ pub extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
 
 #[no_mangle]
 pub extern fn get_resolution_x(ptr: *const EngineOptions) -> u16 {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    return engine_options.resolution_x
+    return unsafe_from_ptr!(ptr).resolution_x;
 }
 
 #[no_mangle]
 pub extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    return engine_options.resolution_y
+    return unsafe_from_ptr!(ptr).resolution_y
 }
 
 #[no_mangle]
 pub extern fn get_resource_version(ptr: *const EngineOptions) -> ResourceVersion {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    engine_options.resource_version
+    unsafe_from_ptr!(ptr).resource_version
 }
 
 #[no_mangle]
 pub fn should_run_unittests(ptr: *const EngineOptions) -> bool {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    engine_options.run_unittests
+    unsafe_from_ptr!(ptr).run_unittests
 }
 
 #[no_mangle]
 pub fn should_run_editor(ptr: *const EngineOptions) -> bool {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    engine_options.run_editor
+    unsafe_from_ptr!(ptr).run_editor
 }
 
 #[no_mangle]
 pub fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    engine_options.start_in_fullscreen
+    unsafe_from_ptr!(ptr).start_in_fullscreen
 }
 
 #[no_mangle]
 pub fn should_start_in_window(ptr: *const EngineOptions) -> bool {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    engine_options.start_in_window
+    unsafe_from_ptr!(ptr).start_in_window
 }
 
 #[no_mangle]
 pub fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    engine_options.start_in_debug_mode
+    unsafe_from_ptr!(ptr).start_in_debug_mode
 }
 
 #[no_mangle]
 pub fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
-    let engine_options = unsafe { assert!(!ptr.is_null()); &*ptr };
-    engine_options.start_without_sound
+    unsafe_from_ptr!(ptr).start_without_sound
 }
 
 #[no_mangle]
