@@ -287,6 +287,10 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
+  if (should_show_help(params)) {
+    return EXIT_SUCCESS;
+  }
+
   if (should_start_in_fullscreen(params)) {
     VideoSetFullScreen(TRUE);
   } else if (should_start_in_window(params)) {

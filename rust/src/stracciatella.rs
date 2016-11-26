@@ -45,6 +45,7 @@ pub struct EngineOptions {
     resolution_x: u16,
     resolution_y: u16,
     resource_version: ResourceVersion,
+    show_help: bool,
     run_unittests: bool,
     run_editor: bool,
     start_in_fullscreen: bool,
@@ -62,6 +63,7 @@ impl Default for EngineOptions {
             resolution_x: 640,
             resolution_y: 480,
             resource_version: ResourceVersion::ENGLISH,
+            show_help: false,
             run_unittests: false,
             run_editor: false,
             start_in_fullscreen: false,
@@ -187,6 +189,11 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
                     None => return Some(format!("Unknown resource version in arguments: '{}'.", s))
                 }
             }
+
+            if m.opt_present("help") {
+                engine_options.show_help = true;
+            }
+
 
             if m.opt_present("unittests") {
                 engine_options.run_unittests = true;
@@ -383,7 +390,14 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
             let res_parse_json_config = parse_json_config(&mut engine_options);
 
             return match (res_parse_args, res_parse_json_config) {
-                (None, None) => Box::into_raw(Box::new(engine_options)),
+                (None, None) => {
+                    if engine_options.show_help {
+                        let opts = get_command_line_options();
+                        let brief = format!("Usage: ja2 [options]");
+                        print!("{}", opts.usage(&brief));
+                    }
+                    Box::into_raw(Box::new(engine_options))
+                },
                 (Some(msg), _) => fail_parsing!(msg),
                 (_, Some(msg)) => fail_parsing!(msg)
             };
@@ -444,6 +458,11 @@ pub extern fn get_resource_version(ptr: *const EngineOptions) -> ResourceVersion
 #[no_mangle]
 pub fn should_run_unittests(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).run_unittests
+}
+
+#[no_mangle]
+pub fn should_show_help(ptr: *const EngineOptions) -> bool {
+    unsafe_from_ptr!(ptr).show_help
 }
 
 #[no_mangle]
@@ -516,15 +535,23 @@ mod tests {
     #[test]
     fn parse_args_should_be_able_to_change_fullscreen_value() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = vec!(String::from("ja2"), String::from("--fullscreen"));
+        let input = vec!(String::from("ja2"), String::from("-fullscreen"));
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::should_start_in_fullscreen(&engine_options));
     }
 
     #[test]
+    fn parse_args_should_be_able_to_show_help() {
+        let mut engine_options: super::EngineOptions = Default::default();
+        let input = vec!(String::from("ja2"), String::from("-help"));
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
+        assert!(super::should_show_help(&engine_options));
+    }
+
+    #[test]
     fn parse_args_should_continue_with_multiple_known_switches() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = vec!(String::from("ja2"), String::from("--debug"), String::from("--mod"), String::from("a"), String::from("--mod"), String::from("b"));
+        let input = vec!(String::from("ja2"), String::from("-debug"), String::from("-mod"), String::from("a"), String::from("--mod"), String::from("b"));
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::should_start_in_debug_mode(&engine_options));
         assert!(super::get_number_of_mods(&engine_options) == 2);
@@ -540,7 +567,7 @@ mod tests {
     #[test]
     fn parse_args_should_return_the_correct_resversion_for_russian() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("RUSSIAN"));
+        let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("RUSSIAN"));
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::RUSSIAN);
     }
@@ -548,7 +575,7 @@ mod tests {
     #[test]
     fn parse_args_should_return_the_correct_resversion_for_italian() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("ITALIAN"));
+        let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("ITALIAN"));
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::ITALIAN);
     }
