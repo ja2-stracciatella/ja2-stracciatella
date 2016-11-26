@@ -25,6 +25,16 @@ use std::error::Error;
 use getopts::Options;
 use libc::{size_t, c_char};
 
+#[cfg(not(windows))]
+static DEFAULT_JSON_CONTENT: &'static str = r##"{
+    "data_dir": "/some/place/where/the/data/is"
+}"##;
+
+#[cfg(windows)]
+static DEFAULT_JSON_CONTENT: &'static str = r##"{
+   "data_dir": "C:\\Program Files\\Jagged Alliance 2"
+}"##;
+
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
 pub enum ResourceVersion {
@@ -242,7 +252,7 @@ pub fn ensure_json_config_existence(stracciatella_home: PathBuf) -> Result<PathB
 
     if !path.is_file() {
         let mut f = try!(make_string_err!(File::create(path)));
-        try!(make_string_err!(f.write_all(b"{ \"data_dir\": \"/some/place/where/the/data/is\" }")));
+        try!(make_string_err!(f.write_all(DEFAULT_JSON_CONTENT.as_bytes())));
     }
 
     return Ok(stracciatella_home);
