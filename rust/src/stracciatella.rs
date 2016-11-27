@@ -348,23 +348,25 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
 
 #[cfg(windows)]
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
-    use shell32::SHGetFolderPathA;
+    use shell32::SHGetFolderPathW;
     use winapi::shlobj::{CSIDL_PERSONAL, CSIDL_FLAG_CREATE};
     use winapi::minwindef::MAX_PATH;
-    use std::ffi::CStr;
+    use std::ffi::OsString;
+    use std::os::windows::ffi::OsStringExt;
 
-    let mut home: [u8; MAX_PATH] = [0; MAX_PATH];
+    let mut home: [u16; MAX_PATH] = [0; MAX_PATH];
 
-    return match unsafe { SHGetFolderPathA(ptr::null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, ptr::null_mut(), 0, home.as_mut_ptr() as *mut i8) } {
+    return match unsafe { SHGetFolderPathW(ptr::null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, ptr::null_mut(), 0, home.as_mut_ptr()) } {
         0 => {
-            let home_cstr = unsafe { CStr::from_ptr(home.as_ptr() as *const i8) };
-            return match home_cstr.to_str() {
-                Ok(s) => {
+            let home_trimmed: Vec<u16> = home.iter().take_while(|x| **x != 0).map(|x| *x).collect();
+
+            return match OsString::from_wide(&home_trimmed).to_str() {
+                Some(s) => {
                     let mut buf = PathBuf::from(s);
                     buf.push("JA2");
                     return Ok(buf);
                 },
-                Err(e) => Err(format!("Could not decode documents folder string: {}", e))
+                None => Err(format!("Could not decode documents folder string."))
             }
         },
         i => Err(format!("Could not get documents folder: {}", i))
