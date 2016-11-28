@@ -2498,6 +2498,10 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 	if( iRandom < giReinforcementPool )
 	{ //use the pool and send the requested amount from SECTOR P3 (queen's palace)
 		iReinforcementsApproved = MIN( iReinforcementsRequested, giReinforcementPool );
+		if( !iReinforcementsApproved )
+		{
+			return;
+		}
 		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT8)iReinforcementsApproved, 0 );
 		pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 		giReinforcementPool -= iReinforcementsApproved;
