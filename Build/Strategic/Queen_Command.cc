@@ -701,7 +701,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
 				{
-					if( pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumElites != pGroup->pEnemyGroup->ubElitesInBattle && !gfPendingEnemies ||
+					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumElites != pGroup->pEnemyGroup->ubElitesInBattle && !gfPendingEnemies) ||
 							pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumElites > 50 || pGroup->pEnemyGroup->ubElitesInBattle > 50 )
 					{
 						SLOGW(DEBUG_TAG_QUEENCMD, "Group elite counters are bad. What were the last 2-3 things you did, and how?\n\
@@ -725,7 +725,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
 				{
-					if( pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumTroops != pGroup->pEnemyGroup->ubTroopsInBattle && !gfPendingEnemies ||
+					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumTroops != pGroup->pEnemyGroup->ubTroopsInBattle && !gfPendingEnemies) ||
 							pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumTroops > 50 || pGroup->pEnemyGroup->ubTroopsInBattle > 50 )
 					{
 						SLOGW(DEBUG_TAG_QUEENCMD, "Group troop counters are bad. What were the last 2-3 things you did, and how?\n\
@@ -748,7 +748,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
 				{
-					if( pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumAdmins != pGroup->pEnemyGroup->ubAdminsInBattle && !gfPendingEnemies ||
+					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumAdmins != pGroup->pEnemyGroup->ubAdminsInBattle && !gfPendingEnemies) ||
 					pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumAdmins > 50 || pGroup->pEnemyGroup->ubAdminsInBattle > 50 )
 					{
 						SLOGW(DEBUG_TAG_QUEENCMD, "Group admin counters are bad. What were the last 2-3 things you did, and how?\n\
@@ -796,7 +796,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				case SOLDIER_CLASS_ADMINISTRATOR:
 					if( guiCurrentScreen == GAME_SCREEN )
 					{
-						if( ubTotalEnemies <= 32 && pSector->ubNumAdmins != pSector->ubAdminsInBattle ||
+						if( (ubTotalEnemies <= 32 && pSector->ubNumAdmins != pSector->ubAdminsInBattle) ||
 							!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
 							pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > 32 )
 						{
@@ -816,7 +816,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				case SOLDIER_CLASS_ARMY:
 					if( guiCurrentScreen == GAME_SCREEN )
 					{
-						if( ubTotalEnemies <= 32 && pSector->ubNumTroops != pSector->ubTroopsInBattle ||
+						if( (ubTotalEnemies <= 32 && pSector->ubNumTroops != pSector->ubTroopsInBattle) ||
 								!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
 								pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > 32 )
 						{
@@ -836,7 +836,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				case SOLDIER_CLASS_ELITE:
 					if( guiCurrentScreen == GAME_SCREEN )
 					{
-						if( ubTotalEnemies <= 32 && pSector->ubNumElites != pSector->ubElitesInBattle ||
+						if( (ubTotalEnemies <= 32 && pSector->ubNumElites != pSector->ubElitesInBattle) ||
 								!pSector->ubNumElites || !pSector->ubElitesInBattle ||
 								pSector->ubNumElites > 100 || pSector->ubElitesInBattle > 32 )
 						{
@@ -858,7 +858,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 					{
 						if( guiCurrentScreen == GAME_SCREEN )
 						{
-							if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle ||
+							if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle) ||
 									!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
 									pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 							{
@@ -896,7 +896,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				switch( pSoldier->ubSoldierClass )
 				{
 					case SOLDIER_CLASS_ADMINISTRATOR:
-						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumAdmins != pSector->ubAdminsInBattle ||
+						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumAdmins != pSector->ubAdminsInBattle) ||
 								!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
 								pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
@@ -913,7 +913,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						}
 						break;
 					case SOLDIER_CLASS_ARMY:
-						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumTroops != pSector->ubTroopsInBattle ||
+						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumTroops != pSector->ubTroopsInBattle) ||
 								!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
 								pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
@@ -930,7 +930,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						}
 						break;
 					case SOLDIER_CLASS_ELITE:
-						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumElites != pSector->ubElitesInBattle ||
+						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumElites != pSector->ubElitesInBattle) ||
 								!pSector->ubNumElites || !pSector->ubElitesInBattle ||
 								pSector->ubNumElites > 100 || pSector->ubElitesInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
@@ -947,7 +947,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						}
 						break;
 					case SOLDIER_CLASS_CREATURE:
-						if( ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle ||
+						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle) ||
 								!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
 								pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 						{
