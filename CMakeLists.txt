@@ -126,7 +126,7 @@ if (WITH_UNITTESTS)
     set(lib-gtest "gtest")
     set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
 
-    include_directories(
+    include_directories(SYSTEM
         ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest/include
         ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest
     )
