@@ -89,12 +89,12 @@ struct TerroristInfo
 
 static TerroristInfo const g_terrorist_infos[] =
 {
-	DRUGGIST, { 0,       0,       0,       0,       0      }, // Elgin, preplaced
-	SLAY,     { SEC_F9,  SEC_I14, SEC_G1,  SEC_G2,  SEC_G8 }, // Slay
-	ANNIE,    { SEC_I14, SEC_C6,  SEC_B2,  SEC_L11, SEC_G8 }, // Matron
-	CHRIS,    { SEC_G1,  SEC_F9,  SEC_L11, SEC_G8,  SEC_G2 }, // Imposter
-	TIFFANY,  { SEC_I14, SEC_G2,  SEC_H14, SEC_C6,  SEC_B2 }, // Tiffany
-	T_REX,    { SEC_F9,  SEC_H14, SEC_H2,  SEC_G1,  SEC_B2 }  // Rexall
+	{DRUGGIST, { 0,       0,       0,       0,       0      }}, // Elgin, preplaced
+	{SLAY,     { SEC_F9,  SEC_I14, SEC_G1,  SEC_G2,  SEC_G8 }}, // Slay
+	{ANNIE,    { SEC_I14, SEC_C6,  SEC_B2,  SEC_L11, SEC_G8 }}, // Matron
+	{CHRIS,    { SEC_G1,  SEC_F9,  SEC_L11, SEC_G8,  SEC_G2 }}, // Imposter
+	{TIFFANY,  { SEC_I14, SEC_G2,  SEC_H14, SEC_C6,  SEC_B2 }}, // Tiffany
+	{T_REX,    { SEC_F9,  SEC_H14, SEC_H2,  SEC_G1,  SEC_B2 }}  // Rexall
 };
 
 INT16 gsRobotGridNo;
