@@ -11,6 +11,9 @@ struct AmmoTypeModel
 {
   AmmoTypeModel(uint16_t index, const char* internalName);
 
+  // This could be default in C++11
+  virtual ~AmmoTypeModel();
+
   virtual void serializeTo(JsonObject &obj) const;
 
   static AmmoTypeModel* deserialize(JsonObjectReader &obj);
