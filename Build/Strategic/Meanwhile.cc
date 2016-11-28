@@ -35,6 +35,7 @@
 
 #define MAX_MEANWHILE_PROFILES	10
 
+#ifdef JA2TESTVERSION
 static const char* const gzMeanwhileStr[] =
 {
 	"End of player's first battle",
@@ -55,6 +56,7 @@ static const char* const gzMeanwhileStr[] =
 	"Outskirts Meduna",
 	"Balime Lib.",
 };
+#endif // JA2TESTVERSION
 
 
 // the snap to grid nos for meanwhile scenes
