@@ -21,7 +21,7 @@ script:
   - make
   - ./ja2 -unittests
   - if [ "$PUBLISH_BINARY" == "true" ]; then make package; fi
-  - if [ "$PUBLISH_BINARY" == "true" ]; then curl --ftp-create-dirs -T $(echo ja2-stracciatella_*) --ftp-ssl -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/; fi
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$SFTP_PASSWORD" != "" ]; then curl --ftp-create-dirs -T $(echo ja2-stracciatella_*) --ftp-ssl -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/; fi
 
 addons:
   coverity_scan:
