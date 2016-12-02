@@ -115,54 +115,54 @@ pub fn get_command_line_options() -> Options {
     opts.long_only(true);
 
     opts.optmulti(
-        "m",
+        "",
         "mod",
         "Start one of the game modifications. MOD_NAME is the name of modification, e.g. 'from-russia-with-love. See mods folder for possible options'.",
         "MOD_NAME"
     );
     opts.optopt(
-        "r",
+        "",
         "res",
         "Screen resolution, e.g. 800x600. Default value is 640x480",
         "WIDTHxHEIGHT"
     );
     opts.optopt(
-        "l",
+        "",
         "resversion",
         "Version of the game resources. Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD. Default value is ENGLISH. RUSSIAN is for BUKA Agonia Vlasty release. RUSSIAN_GOLD is for Gold release",
         "RUSSIAN_GOLD"
     );
     opts.optflag(
-        "u",
+        "",
         "unittests",
         "Perform unit tests. E.g. 'ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2'");
     opts.optflag(
-        "e",
+        "",
         "editor",
         "Start the map editor (Editor.slf is required)"
     );
     opts.optflag(
-        "f",
+        "",
         "fullscreen",
         "Start the game in the fullscreen mode"
     );
     opts.optflag(
-        "n",
+        "",
         "nosound",
         "Turn the sound and music off"
     );
     opts.optflag(
-        "w",
+        "",
         "window",
         "Start the game in a window"
     );
     opts.optflag(
-        "d",
+        "",
         "debug",
         "Enable Debug Mode"
     );
     opts.optflag(
-        "h",
+        "",
         "help",
         "print this help menu"
     );
