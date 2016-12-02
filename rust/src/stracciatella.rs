@@ -27,11 +27,13 @@ use libc::{size_t, c_char};
 
 #[cfg(not(windows))]
 static DEFAULT_JSON_CONTENT: &'static str = r##"{
+    "help": "Put the directory to your original ja2 installation into the line below",
     "data_dir": "/some/place/where/the/data/is"
 }"##;
 
 #[cfg(windows)]
 static DEFAULT_JSON_CONTENT: &'static str = r##"{
+   "help": "Put the directory to your original ja2 installation into the line below. Make sure to use double backslashes.",
    "data_dir": "C:\\Program Files\\Jagged Alliance 2"
 }"##;
 
