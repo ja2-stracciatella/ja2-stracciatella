@@ -5778,6 +5778,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 SOLDIERTYPE* ReduceAttackBusyCount(SOLDIERTYPE* const attacker, const BOOLEAN fCalledByAttacker)
 {
 	SOLDIERTYPE* const target = (attacker == NULL ? NULL : attacker->target);
+	SLOGD(DEBUG_TAG_OVERHEAD, "Reducing Attack Busy Count of %d", attacker != NULL ? attacker->ubID : -1);
 	return InternalReduceAttackBusyCount(attacker, fCalledByAttacker, target);
 }
 

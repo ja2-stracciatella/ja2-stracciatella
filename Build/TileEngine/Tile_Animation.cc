@@ -225,9 +225,8 @@ void DeleteAniTile(ANITILE* const a)
 			}
 
 			// Freeup attacker from explosion
-			SLOGD(DEBUG_TAG_TILES, "Reducing Attack Busy Count of %d", owner->ubID); 
 			ReduceAttackBusyCount(owner, FALSE);
-		}
+    }
 
 
 		if (a->uiFlags & ANITILE_RELEASE_ATTACKER_WHEN_DONE)
