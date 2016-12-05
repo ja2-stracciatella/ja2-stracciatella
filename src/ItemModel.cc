@@ -58,6 +58,9 @@ ItemModel::ItemModel(uint16_t   itemIndex,
   this->fFlags                = fFlags;
 }
 
+// This could be default in C++11
+ItemModel::~ItemModel() {}
+
 const std::string& ItemModel::getInternalName() const  { return internalName;          }
 
 uint16_t        ItemModel::getItemIndex() const        { return itemIndex;             }

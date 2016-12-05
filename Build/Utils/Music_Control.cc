@@ -29,31 +29,7 @@ static MusicMode gubOldMusicMode = MUSIC_NONE;
 static INT8 gbVictorySongCount = 0;
 static INT8 gbDeathSongCount   = 0;
 
-static INT8 bNothingModeSong;
-static INT8 bEnemyModeSong;
-static INT8 bBattleModeSong;
-
 static INT8 gbFadeSpeed = 1;
-
-
-const char* const szMusicList[]=
-{
-	MUSICDIR "/marimbad 2.wav",
-	MUSICDIR "/menumix1.wav",
-	MUSICDIR "/nothing a.wav",
-	MUSICDIR "/nothing b.wav",
-	MUSICDIR "/nothing c.wav",
-	MUSICDIR "/nothing d.wav",
-	MUSICDIR "/tensor a.wav",
-	MUSICDIR "/tensor b.wav",
-	MUSICDIR "/tensor c.wav",
-	MUSICDIR "/triumph.wav",
-	MUSICDIR "/death.wav",
-	MUSICDIR "/battle a.wav",
-	MUSICDIR "/tensor b.wav",
-	MUSICDIR "/creepy.wav",
-	MUSICDIR "/creature battle.wav"
-};
 
 
 BOOLEAN	       gfForceMusicToTense = FALSE;

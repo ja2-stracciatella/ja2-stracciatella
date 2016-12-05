@@ -26,6 +26,8 @@ class GamePolicy
 public:
   /** Check if a hotkey is enabled. */
   virtual bool isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, uint32_t key) const = 0;
+  // this could be defaulted in C++11
+  virtual ~GamePolicy() {}
 
   bool f_draw_item_shadow;              /**< Draw shadows from the inventory items. */
 

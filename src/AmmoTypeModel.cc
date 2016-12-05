@@ -13,6 +13,9 @@ AmmoTypeModel::AmmoTypeModel(uint16_t index_,
 {
 }
 
+// This could be default in C++11
+AmmoTypeModel::~AmmoTypeModel() {}
+
 void AmmoTypeModel::serializeTo(JsonObject &obj) const
 {
   obj.AddMember("index",                index);

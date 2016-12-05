@@ -1318,11 +1318,6 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	}
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
-	#if 0 /* unsigned < 0 ? */
-	ubStatsLevel = MAX( 0, ubStatsLevel );	//minimum stats level of 0
-	#else
-	ubStatsLevel = ubStatsLevel;	//minimum stats level of 0
-	#endif
 	ubStatsLevel = MIN( 9, ubStatsLevel );	//maximum stats level of 9
 
 	//Set the minimum base attribute

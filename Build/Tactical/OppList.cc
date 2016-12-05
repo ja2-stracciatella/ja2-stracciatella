@@ -150,14 +150,6 @@ static const INT8 gbLookDistance[8][8] =
 /* NORTHWEST */ { ANGLE,          SIDE,  SBEHIND,     BEHIND,  SBEHIND,       SIDE,    ANGLE,  STRAIGHT }
 };
 
-static const INT8 gbSmellStrength[3] =
-{
-	NORMAL_HUMAN_SMELL_STRENGTH, // normal
-	NORMAL_HUMAN_SMELL_STRENGTH + 2, // slob
-	NORMAL_HUMAN_SMELL_STRENGTH - 1  // snob
-};
-
-
 const SOLDIERTYPE* gWhoThrewRock = NULL;
 
 #define NIGHTSIGHTGOGGLES_BONUS 2

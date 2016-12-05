@@ -34,6 +34,9 @@ struct ItemModel
     int8_t     bRepairEase,
     uint16_t   fFlags);
 
+  // This could be default in C++11
+  virtual ~ItemModel();
+
   const virtual std::string& getInternalName() const;
 
   virtual uint16_t        getItemIndex() const;

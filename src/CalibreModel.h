@@ -22,6 +22,9 @@ struct CalibreModel
                int silencerSound
     );
 
+  // This could be default in C++11
+  virtual ~CalibreModel();
+
   const wchar_t* getName() const;
 
   virtual void serializeTo(JsonObject &obj) const;

@@ -1804,24 +1804,6 @@ static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
 }
 
 
-static void DelayedBillyTriggerToBlockOnExit(void)
-{
-	if (WhoIsThere2(gsTempActionGridNo, 0) == NULL)
-	{
-		TriggerNPCRecord( BILLY, 6 );
-	}
-	else
-	{
-		// delay further!
-		SetCustomizableTimerCallbackAndDelay( 1000, DelayedBillyTriggerToBlockOnExit, TRUE );
-	}
-}
-
-static void BillyBlocksDoorCallback(void)
-{
-	TriggerNPCRecord( BILLY, 6 );
-}
-
 static BOOLEAN HookerInRoom(UINT8 ubRoom)
 {
 	FOR_EACH_IN_TEAM(s, CIV_TEAM)

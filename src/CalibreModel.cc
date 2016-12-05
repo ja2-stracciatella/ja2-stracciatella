@@ -25,6 +25,8 @@ CalibreModel::CalibreModel(uint16_t index_,
 {
 }
 
+CalibreModel::~CalibreModel() {}
+
 void CalibreModel::serializeTo(JsonObject &obj) const
 {
   obj.AddMember("index",                index);
