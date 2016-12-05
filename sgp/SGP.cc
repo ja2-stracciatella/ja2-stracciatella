@@ -39,10 +39,10 @@
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
 #include "JsonUtility.h"
-#include "MicroIni/MicroIni.hpp"
 #include "ModPackContentManager.h"
 #include "policy/GamePolicy.h"
 #include "sgp/UTF8String.h"
+#include "RustInterface.h"
 
 #include "slog/slog.h"
 
@@ -141,14 +141,6 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 ////////////////////////////////////////////////////////////////////////////
 
 static BOOLEAN gfGameInitialized = FALSE;
-
-
-static bool getResourceVersion(const char *versionName, GameVersion *version);
-static std::string findRootGameResFolder(const std::string &configPath);
-static void WriteDefaultConfigFile(const char* ConfigFile);
-static void convertDialogQuotesToJson(const DefaultContentManager *cm,
-				      STRING_ENC_TYPE encType,
-				      const char *dialogFile, const char *outputFile);
 
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
@@ -275,31 +267,7 @@ ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 
-struct CommandLineParams
-{
-  CommandLineParams()
-  {
-    useMod = false;
-    doUnitTests = false;
-    showDebugMessages = false;
-    resourceVersionGiven = false;
-  }
-
-  bool useMod;
-  std::string modName;
-
-  bool resourceVersionGiven;
-  std::string resourceVersion;
-
-  bool doUnitTests;
-  bool showDebugMessages;
-};
-
-static BOOLEAN ParseParameters(int argc, char* const argv[],
-                               CommandLineParams *params);
-
 int main(int argc, char* argv[])
-try
 {
   std::string exeFolder = FileMan::getParentPath(argv[0], true);
 
@@ -314,33 +282,47 @@ try
   SLOG_Init(SLOG_STDERR, "ja2.log");
   SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
-  setGameVersion(GV_ENGLISH);
-
-  CommandLineParams params;
-	if (!ParseParameters(argc, argv, &params)) return EXIT_FAILURE;
-
-  if(params.showDebugMessages)
-  {
-    SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
+  engine_options_t* params = create_engine_options(argv, argc);
+  if (params == NULL) {
+    return EXIT_FAILURE;
   }
 
-#ifdef WITH_UNITTESTS
-  if(params.doUnitTests)
+  if (should_show_help(params)) {
+    return EXIT_SUCCESS;
+  }
+
+  if (should_start_in_fullscreen(params)) {
+    VideoSetFullScreen(TRUE);
+  } else if (should_start_in_window(params)) {
+    VideoSetFullScreen(FALSE);
+  }
+
+  if (should_start_without_sound(params)) {
+    SoundEnableSound(FALSE);
+  }
+
+  if (should_start_in_debug_mode(params)) {
+    SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
+    GameState::getInstance()->setDebugging(true);
+  }
+
+  if (should_run_editor(params)) {
+    GameState::getInstance()->setEditorMode(false);
+  }
+
+  bool result = g_ui.setScreenSize(get_resolution_x(params), get_resolution_y(params));
+  if(!result)
   {
+    SLOGE(DEBUG_TAG_SGP, "Failed to set screen resolution %d x %d", get_resolution_x(params), get_resolution_y(params));
+    return EXIT_FAILURE;
+  }
+
+  if (should_run_unittests(params)) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
   }
-#endif
 
-  GameVersion version = GV_ENGLISH;
-  if(params.resourceVersionGiven)
-  {
-    if(!getResourceVersion(params.resourceVersion.c_str(), &version))
-    {
-      SLOGE(DEBUG_TAG_SGP, "Unknown version of the game: %s\n", params.resourceVersion.c_str());
-      return EXIT_FAILURE;
-    }
-  }
+  GameVersion version = get_resource_version(params);;
   setGameVersion(version);
 
   ////////////////////////////////////////////////////////////
@@ -363,9 +345,12 @@ try
 	InitializeMemoryManager();
 
   SLOGD(DEBUG_TAG_SGP, "Initializing Game Resources");
-  std::string configFolderPath = FileMan::findConfigFolderAndSwitchIntoIt();
-  std::string configPath = FileMan::joinPaths(configFolderPath, "ja2.ini");
-  std::string gameResRootPath = findRootGameResFolder(configPath);
+  char* rustConfigFolderPath = get_stracciatella_home(params);
+  char* rustResRootPath = get_vanilla_data_dir(params);
+  std::string configFolderPath = std::string(rustConfigFolderPath);
+  std::string gameResRootPath = std::string(rustResRootPath);
+  free_rust_string(rustConfigFolderPath);
+  free_rust_string(rustResRootPath);
 
   std::string extraDataDir = EXTRA_DATA_DIR;
   if(extraDataDir.empty())
@@ -376,17 +361,21 @@ try
 
   std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
 
+  FileMan::switchTmpFolder(configFolderPath);
+
   DefaultContentManager *cm;
 
-  if(params.useMod)
+  if(get_number_of_mods(params) > 0)
   {
-    std::string modName = params.modName;
+    char* rustModName = get_mod(params, 0);
+    std::string modName = std::string(rustModName);
+    free_rust_string(rustModName);
     std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
     cm = new ModPackContentManager(version,
                                    modName, modResFolder, configFolderPath,
                                    gameResRootPath, externalizedDataPath);
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
-    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"JA2 Home Dir:                  '%s'", configFolderPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
     SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
@@ -403,7 +392,7 @@ try
                                    configFolderPath,
                                    gameResRootPath, externalizedDataPath);
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
-    SLOGI(DEBUG_TAG_SGP,"Configuration file:            '%s'", configPath.c_str());
+    SLOGI(DEBUG_TAG_SGP,"JA2 Home Dir:                  '%s'", configFolderPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
     SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
     SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
@@ -412,8 +401,10 @@ try
     SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
   }
 
+    free_engine_options(params);
+
   std::vector<std::string> libraries = cm->getListOfGameResources();
-  cm->initGameResouces(configPath, libraries);
+  cm->initGameResouces(configFolderPath, libraries);
 
   if(!cm->loadGameData())
   {
@@ -493,256 +484,6 @@ try
   GCM = NULL;
 
 	return EXIT_SUCCESS;
-}
-catch (const std::bad_alloc&)
-{
-  SLOGE(DEBUG_TAG_SGP, "out of memory");
-  return EXIT_FAILURE;
-}
-catch (const LibraryFileNotFoundException& e)
-{
-  SLOGE(DEBUG_TAG_SGP, "%s", e.what());
-  return EXIT_FAILURE;
-}
-catch (const std::exception& e)
-{
-  SLOGE(DEBUG_TAG_SGP, "caught unhandled exception:\n%s", e.what());
-  return EXIT_FAILURE;
-}
-catch (...)
-{
-  SLOGE(DEBUG_TAG_SGP, "caught unhandled unknown exception");
-  return EXIT_FAILURE;
-}
-
-
-/** Set game resources version. */
-static bool getResourceVersion(const char *versionName, GameVersion *version)
-{
-  if(strcasecmp(versionName, "ENGLISH") == 0)
-  {
-    *version = GV_ENGLISH;
-  }
-  else if(strcasecmp(versionName, "DUTCH") == 0)
-  {
-    *version = GV_DUTCH;
-  }
-  else if(strcasecmp(versionName, "FRENCH") == 0)
-  {
-    *version = GV_FRENCH;
-  }
-  else if(strcasecmp(versionName, "GERMAN") == 0)
-  {
-    *version = GV_GERMAN;
-  }
-  else if(strcasecmp(versionName, "ITALIAN") == 0)
-  {
-    *version = GV_ITALIAN;
-  }
-  else if(strcasecmp(versionName, "POLISH") == 0)
-  {
-    *version = GV_POLISH;
-  }
-  else if(strcasecmp(versionName, "RUSSIAN") == 0)
-  {
-    *version = GV_RUSSIAN;
-  }
-  else if(strcasecmp(versionName, "RUSSIAN_GOLD") == 0)
-  {
-    *version = GV_RUSSIAN_GOLD;
-  }
-  else
-  {
-    return false;
-  }
-  return true;
-}
-
-static BOOLEAN ParseParameters(int argc, char* const argv[], CommandLineParams *params)
-{
-	const char* const name = *argv;
-	if (name == NULL) return TRUE; // argv does not even contain the program name
-
-#ifdef WITH_UNITTESTS
-  for(int i = 1; i < argc; i++)
-  {
-    if (strcmp(argv[i], "-unittests") == 0)
-    {
-      params->doUnitTests = true;
-      return true;
-    }
-  }
-#endif
-
-	BOOLEAN success = TRUE;
-  for(int i = 1; i < argc; i++)
-  {
-    bool haveNextParameter = (i + 1) < argc;
-
-		if (strcmp(argv[i], "-fullscreen") == 0)
-		{
-			VideoSetFullScreen(TRUE);
-		}
-		else if (strcmp(argv[i], "-nosound") == 0)
-		{
-			SoundEnableSound(FALSE);
-		}
-		else if (strcmp(argv[i], "-window") == 0)
-		{
-			VideoSetFullScreen(FALSE);
-		}
-    else if (strcmp(argv[i], "-debug") == 0)
-    {
-      params->showDebugMessages = true;
-      GameState::getInstance()->setDebugging(true);
-    }
-		else if (strcmp(argv[i], "-res") == 0)
-		{
-      if(haveNextParameter)
-      {
-        int width = 0;
-        int height = 0;
-        int readFields = sscanf(argv[++i], "%dx%d", &width, &height);
-        if(readFields != 2)
-        {
-          SLOGE(DEBUG_TAG_SGP, "Invalid value for command-line key '-res'");
-          success = FALSE;
-        }
-        else
-        {
-          bool result = g_ui.setScreenSize(width, height);
-          if(!result)
-          {
-            SLOGE(DEBUG_TAG_SGP, "Failed to set screen resolution %d x %d", width, height);
-            success = FALSE;
-          }
-        }
-      }
-      else
-      {
-        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-res'");
-        success = FALSE;
-      }
-		}
-    else if (strcmp(argv[i], "-mod") == 0)
-    {
-      if(haveNextParameter)
-      {
-        params->useMod = true;
-        params->modName = argv[++i];
-      }
-      else
-      {
-        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-mod'");
-        success = FALSE;
-      }
-    }
-#if defined JA2BETAVERSION
-		else if (strcmp(argv[i], "-quicksave") == 0)
-		{
-			/* This allows the QuickSave Slots to be autoincremented, i.e. everytime
-			 * the user saves, there will be a new quick save file */
-			gfUseConsecutiveQuickSaveSlots = TRUE;
-		}
-		else if (strcmp(argv[i], "-domaps") == 0)
-		{
-      GameState::setMode(GAME_MODE_MAP_UTILITY);
-		}
-#endif
-		else if (strcmp(argv[i], "-editor") == 0)
-		{
-      GameState::getInstance()->setEditorMode(false);
-		}
-		else if (strcmp(argv[i], "-editorauto") == 0)
-		{
-      GameState::getInstance()->setEditorMode(true);
-		}
-    else if (strcmp(argv[i], "-resversion") == 0)
-    {
-      if(haveNextParameter)
-      {
-        params->resourceVersionGiven = true;
-        params->resourceVersion = argv[++i];
-      }
-      else
-      {
-        SLOGE(DEBUG_TAG_SGP, "Missing value for command-line key '-resversion'");
-        success = FALSE;
-      }
-    }
-		else
-		{
-			if (strcmp(argv[i], "-help") != 0)
-			{
-				fprintf(stderr, "Unknown switch \"%s\"\n", argv[i]);
-			}
-			success = FALSE;
-		}
-	}
-
-	if (!success)
-	{
-		fprintf(stderr,
-			"Usage: %s [options]\n"
-			"\n"
-			"  -res WxH     Screen resolution, e.g. 800x600. Default value is 640x480\n"
-			"\n"
-			"  -resversion  Version of the game resources.\n"
-			"                 Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD\n"
-			"                 Default value is ENGLISH\n"
-			"                 RUSSIAN is for BUKA Agonia Vlasty release\n"
-			"                 RUSSIAN_GOLD is for Gold release\n"
-      "\n"
-      "  -mod NAME    Start one of the game modifications, bundled into the game.\n"
-      "               NAME is the name of modification, e.g. 'from-russia-with-love'.\n"
-      "               See folder mods for possible options\n"
-			"\n"
-			"  -debug       Show debug messages\n"
-#ifdef WITH_UNITTESTS
-      "  -unittests   Perform unit tests\n"
-      "                 ja2.exe -unittests [gtest options]\n"
-      "                 E.g. ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2\n"
-#endif
-			"  -editor      Start the map editor (Editor.slf is required)\n"
-			"  -editorauto  Start the map editor and load sector A9 (Editor.slf is required)\n"
-			"  -fullscreen  Start the game in the fullscreen mode\n"
-			"  -help        Display this information\n"
-			"  -nosound     Turn the sound and music off\n"
-			"  -window      Start the game in a window\n"
-            ,
-			name
-		);
-	}
-	return success;
-}
-
-static std::string findRootGameResFolder(const std::string &configPath)
-{
-  MicroIni::File configFile;
-  if(!configFile.load(configPath) || !configFile[""].has("data_dir"))
-  {
-    SLOGW(DEBUG_TAG_SGP, "Could not open configuration file (\"%s\").", configPath.c_str());
-    WriteDefaultConfigFile(configPath.c_str());
-    configFile.load(configPath);
-  }
-
-  return configFile[""]["data_dir"];
-}
-
-static void WriteDefaultConfigFile(const char* ConfigFile)
-{
-	FILE* const IniFile = fopen(ConfigFile, "a");
-	if (IniFile != NULL)
-	{
-		fprintf(IniFile, "#Tells ja2-stracciatella where the binary datafiles are located\n");
-#ifdef _WIN32
-    fprintf(IniFile, "data_dir = C:\\Program Files\\Jagged Alliance 2");
-#else
-    fprintf(IniFile, "data_dir = /some/place/where/the/data/is");
-#endif
-		fclose(IniFile);
-		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
-	}
 }
 
 static void convertDialogQuotesToJson(const DefaultContentManager *cm,

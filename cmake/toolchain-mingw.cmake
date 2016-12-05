@@ -1,4 +1,4 @@
-set(MINGW_PREFIX "i686-w64-mingw32" CACHE STRING "MinGW Prefix")
+set(MINGW_PREFIX "x86_64-w64-mingw32" CACHE STRING "MinGW Prefix")
 # the name of the target operating system
 set(CMAKE_SYSTEM_NAME Windows)
 
@@ -11,6 +11,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-set(LOCAL_SDL_LIB "_build/lib-SDL2-2.0.4-mingw/i686-w64-mingw32" CACHE STRING "" FORCE)
+set(LOCAL_SDL_LIB "_build/lib-SDL2-2.0.4-mingw/x86_64-w64-mingw32" CACHE STRING "" FORCE)
+set(LIBSTRACCIATELLA_TARGET "x86_64-pc-windows-gnu" CACHE STRING "" FORCE)
 set(LOCAL_BOOST_LIB ON CACHE BOOL "" FORCE)
 set(CFLAGS "${CFLAGS} -mwindows -mconsole" CACHE BOOL "" FORCE)

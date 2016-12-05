@@ -85,45 +85,13 @@ void SetBinDataDirFromBundle(void)
 #endif
 
 /** Find config folder and switch into it. */
-std::string FileMan::findConfigFolderAndSwitchIntoIt()
+std::string FileMan::switchTmpFolder(std::string home)
 {
-#ifdef _WIN32
-	char home[MAX_PATH];
-	if (FAILED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, home)))
-	{
-		throw std::runtime_error("Unable to locate home directory\n");
-	}
-#else
-	const char* home = getenv("HOME");
-	if (home == NULL)
-	{
-		const struct passwd* const passwd = getpwuid(getuid());
-		if (passwd == NULL || passwd->pw_dir == NULL)
-		{
-			throw std::runtime_error("Unable to locate home directory");
-		}
-
-		home = passwd->pw_dir;
-	}
-#endif
-
-#ifdef _WIN32
-  std::string configFolderPath = FileMan::joinPaths(home, "JA2");
-#else
-  std::string configFolderPath = FileMan::joinPaths(home, ".ja2");
-#endif
-
-	if (mkdir(configFolderPath.c_str(), 0700) != 0 && errno != EEXIST)
-	{
-	  SLOGE(DEBUG_TAG_FILEMAN, "Unable to create directory '%s'", configFolderPath.c_str());
-	  throw std::runtime_error("Unable to create local directory");
-	}
-
   // Create another directory and set is as the current directory for the process
   // Temporary files will be created in this directory.
   // ----------------------------------------------------------------------------
 
-  std::string tmpPath = FileMan::joinPaths(configFolderPath, LOCAL_CURRENT_DIR);
+  std::string tmpPath = FileMan::joinPaths(home, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
 	  SLOGE(DEBUG_TAG_FILEMAN, "Unable to create tmp directory '%s'", tmpPath.c_str());
@@ -134,7 +102,7 @@ std::string FileMan::findConfigFolderAndSwitchIntoIt()
     SetFileManCurrentDirectory(tmpPath.c_str());
   }
 
-  return configFolderPath;
+  return home;
 }
 
 

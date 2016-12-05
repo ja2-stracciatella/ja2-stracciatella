@@ -1,0 +1,29 @@
+[package]
+name = "stracciatella"
+version = "0.1.0"
+authors = ["Stefan Lau <github@stefanlau.com>"]
+
+[profile.dev]
+rpath = true
+[profile.release]
+rpath = true
+
+[lib]
+crate-type = ["dylib"]
+name = "stracciatella"
+path = "src/stracciatella.rs"
+
+[dependencies]
+getopts = { git = "https://github.com/rust-lang-nursery/getopts" }
+libc = "0.2.16"
+serde = "0.8"
+serde_json = "0.8"
+
+[dev-dependencies]
+regex = "0.1"
+tempdir = "0.3"
+
+[target.'cfg(windows)'.dependencies]
+winapi = "0.2"
+user32-sys = "0.2"
+shell32-sys = "0.1"
