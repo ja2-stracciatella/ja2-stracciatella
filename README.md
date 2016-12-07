@@ -62,7 +62,7 @@ Q&A](http://thepit.ja-galaxy-forum.com/index.php?t=msg&th=13222)
 ## License
 
 Unless specified explicitly in the commit message, all changes since `commit
-8287b98` are released to the public domain.  All libraries in `_build/lib-*`
+8287b98` are released to the public domain.  All libraries in `dependencies/lib-*`
 have their own licenses.
 
 It is not known under which license Tron released his changes.  All we know,
