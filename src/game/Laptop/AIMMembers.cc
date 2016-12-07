@@ -52,7 +52,7 @@
 #include "Font_Control.h"
 #include "Strategic_Town_Loyalty.h"
 
-#include "Build/GameRes.h"
+#include "src/game/GameRes.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"

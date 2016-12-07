@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "sgp/AutoObj.h"
+#include "src/sgp/AutoObj.h"
 
 struct SGP_FILETIME
 {

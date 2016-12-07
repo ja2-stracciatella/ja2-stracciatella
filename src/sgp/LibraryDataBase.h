@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "sgp/SGPFile.h"
-#include "sgp/Types.h"
+#include "src/sgp/SGPFile.h"
+#include "src/sgp/Types.h"
 
 #define	REAL_FILE_LIBRARY_ID					1022
 

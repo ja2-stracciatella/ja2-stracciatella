@@ -1,4 +1,4 @@
-#include <sgp/VObject.h>
+#include "src/sgp/VObject.h"
 #include "CharProfile.h"
 #include "Directories.h"
 #include "Font.h"

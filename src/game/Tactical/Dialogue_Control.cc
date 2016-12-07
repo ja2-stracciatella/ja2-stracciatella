@@ -57,7 +57,7 @@
 #include "GameInstance.h"
 #include "MercProfile.h"
 #include "content/Dialogs.h"
-#include "sgp/UTF8String.h"
+#include "src/sgp/UTF8String.h"
 
 #define   QUOTE_MESSAGE_SIZE		520
 

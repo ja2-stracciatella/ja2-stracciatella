@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "sgp/StrUtils.h"
+#include "src/sgp/StrUtils.h"
 
 #include "ItemModel.h"
 #include "ItemSystem.h"

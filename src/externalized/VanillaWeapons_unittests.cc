@@ -1,7 +1,7 @@
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 
-#include "Build/Tactical/Items.h"
+#include "src/game/Tactical/Items.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"

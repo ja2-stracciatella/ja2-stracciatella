@@ -1,8 +1,8 @@
 #include "WeaponModels.h"
 
-#include "Build/Tactical/Items.h"
-#include "Build/Tactical/Points.h"
-#include "Build/Utils/Sound_Control.h"
+#include "src/game/Tactical/Items.h"
+#include "src/game/Tactical/Points.h"
+#include "src/game/Utils/Sound_Control.h"
 
 #include "CalibreModel.h"
 #include "JsonObject.h"

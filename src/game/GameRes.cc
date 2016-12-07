@@ -3,7 +3,7 @@
 #include <locale.h>
 #include <stdexcept>
 
-#include "sgp/FileMan.h"
+#include "src/sgp/FileMan.h"
 
 #include "Directories.h"
 #include "Multi_Language_Graphic_Utils.h"

@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 
-#include "Build/Directories.h"
-#include "Build/Tactical/Soldier_Profile.h"
-#include "Build/Tactical/Soldier_Profile_Type.h"
+#include "src/game/Directories.h"
+#include "src/game/Tactical/Soldier_Profile.h"
+#include "src/game/Tactical/Soldier_Profile_Type.h"
 #include "MercProfile.h"
 
 const char* Content::GetDialogueTextFilename(const MercProfile &profile,

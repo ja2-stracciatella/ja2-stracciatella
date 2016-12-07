@@ -2,9 +2,9 @@
 
 #include <stdexcept>
 
-#include "Build/Utils/Text.h"
-#include "sgp/StrUtils.h"
-#include "sgp/UTF8String.h"
+#include "src/game/Utils/Text.h"
+#include "src/sgp/StrUtils.h"
+#include "src/sgp/UTF8String.h"
 
 #include "JsonObject.h"
 
