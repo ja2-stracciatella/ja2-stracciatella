@@ -135,12 +135,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
 target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
 
-macro(copy_dir_to_ja2_binary_after_build DIR)
-    add_custom_command(TARGET ${BINARY} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
-endmacro()
-
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -148,8 +142,8 @@ macro(copy_assets_dir_to_ja2_binary_after_build DIR)
 endmacro()
 
 copy_assets_dir_to_ja2_binary_after_build("externalized")
-copy_dir_to_ja2_binary_after_build("_unittests")
-copy_dir_to_ja2_binary_after_build("mods")
+copy_assets_dir_to_ja2_binary_after_build("unittests")
+copy_assets_dir_to_ja2_binary_after_build("mods")
 
 get_property(STRACCIATELLA_SHARED_LIB TARGET rust-stracciatella PROPERTY IMPORTED_LOCATION)
 
@@ -220,7 +214,7 @@ include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
     install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
-    install(DIRECTORY assets/externalized mods _unittests DESTINATION share/ja2)
+    install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION lib)
     install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
@@ -235,7 +229,7 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
 else()
     install(TARGETS ${BINARY} RUNTIME DESTINATION .)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
-    install(DIRECTORY assets/externalized mods _unittests DESTINATION .)
+    install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
 endif()
 
