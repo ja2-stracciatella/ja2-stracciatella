@@ -96,15 +96,15 @@ set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/game")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
-add_subdirectory("dependencies/lib-slog")
 add_subdirectory("dependencies/lib-smacker")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-slog
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-utf8cpp/source
     ${SDL2_INCLUDE_DIR}
