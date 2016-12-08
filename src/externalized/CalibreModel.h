@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "src/sgp/StrUtils.h"
+#include "sgp/StrUtils.h"
 
 class JsonObject;
 class JsonObjectReader;

@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "src/sgp/Debug.h"
+#include "sgp/Debug.h"
 
 float EaseInCubic(uint32_t uiStartTime, uint32_t uiEndTime, uint32_t uiCurrentTime) {
   Assert(uiEndTime >= uiStartTime);

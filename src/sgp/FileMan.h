@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "src/sgp/SGPFile.h"
-#include "src/sgp/Types.h"
+#include "sgp/SGPFile.h"
+#include "sgp/Types.h"
 
 #ifdef _WIN32
 #	define WIN32_LEAN_AND_MEAN

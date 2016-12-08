@@ -6,7 +6,7 @@
 #include <string>
 
 // XXX
-#include "src/game/Tactical/Weapons.h"
+#include "game/Tactical/Weapons.h"
 
 #include "ItemModel.h"
 

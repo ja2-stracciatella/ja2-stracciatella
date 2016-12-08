@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "src/game/Tactical/Item_Types.h"
+#include "game/Tactical/Item_Types.h"
 
 class JsonObject;
 class JsonObjectReader;

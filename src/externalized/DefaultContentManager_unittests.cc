@@ -3,7 +3,7 @@
 
 #include "boost/filesystem.hpp"
 
-#include "src/sgp/FileMan.h"
+#include "sgp/FileMan.h"
 
 #include "DefaultContentManager.h"
 #include "DefaultContentManagerUT.h"

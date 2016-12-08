@@ -4,7 +4,7 @@
 #include "FileMan.h"
 #include "GameSettings.h"
 
-#include "src/game/GameRes.h"
+#include "game/GameRes.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 

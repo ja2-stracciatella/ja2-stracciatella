@@ -1,6 +1,6 @@
 #pragma once
 
-#include "src/sgp/FileMan.h"
+#include "sgp/FileMan.h"
 
 /** Get location of directory with extra data. */
 std::string GetExtraDataDir();

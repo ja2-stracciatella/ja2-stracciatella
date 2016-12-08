@@ -22,7 +22,7 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
-#include "src/sgp/UTF8String.h"
+#include "sgp/UTF8String.h"
 
 #include "CalibreModel.h"
 #include "ContentManager.h"

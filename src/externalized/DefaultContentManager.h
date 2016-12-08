@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "src/game/GameRes.h"
+#include "game/GameRes.h"
 
 #include "ContentManager.h"
 #include "ContentMusic.h"

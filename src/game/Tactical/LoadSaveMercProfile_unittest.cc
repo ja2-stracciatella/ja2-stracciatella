@@ -9,7 +9,7 @@
 #include "Soldier_Profile.h"
 #include "Soldier_Profile_Type.h"
 
-#include "src/externalized/TestUtils.h"
+#include "externalized/TestUtils.h"
 
 
 TEST(LoadSaveMercProfileTest, vanillaProfile)

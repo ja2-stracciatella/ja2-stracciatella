@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "src/sgp/StrUtils.h"
+#include "sgp/StrUtils.h"
 
 #include "JsonObject.h"
 

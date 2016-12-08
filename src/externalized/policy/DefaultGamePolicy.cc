@@ -1,6 +1,6 @@
 #include "DefaultGamePolicy.h"
 
-#include "src/game/Tactical/Item_Types.h"
+#include "game/Tactical/Item_Types.h"
 
 DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {

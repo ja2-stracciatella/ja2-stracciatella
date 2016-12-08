@@ -2,23 +2,23 @@
 
 #include <stdexcept>
 
-#include "src/game/Directories.h"
-#include "src/game/Strategic/Strategic_Status.h"
-#include "src/game/Tactical/Arms_Dealer.h"
-#include "src/game/Tactical/Items.h"
-#include "src/game/Tactical/Weapons.h"
+#include "game/Directories.h"
+#include "game/Strategic/Strategic_Status.h"
+#include "game/Tactical/Arms_Dealer.h"
+#include "game/Tactical/Items.h"
+#include "game/Tactical/Weapons.h"
 
 // XXX: GameRes.h should be integrated to ContentManager
-#include "src/game/GameRes.h"
+#include "game/GameRes.h"
 
 // XXX
-#include "src/game/GameState.h"
+#include "game/GameState.h"
 
-#include "src/sgp/FileMan.h"
-#include "src/sgp/LibraryDataBase.h"
-#include "src/sgp/MemMan.h"
-#include "src/sgp/StrUtils.h"
-#include "src/sgp/UTF8String.h"
+#include "sgp/FileMan.h"
+#include "sgp/LibraryDataBase.h"
+#include "sgp/MemMan.h"
+#include "sgp/StrUtils.h"
+#include "sgp/UTF8String.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"

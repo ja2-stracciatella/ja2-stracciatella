@@ -4,7 +4,7 @@
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
 
-#include "src/externalized/TestUtils.h"
+#include "externalized/TestUtils.h"
 
 TEST(FileManTest, joinPaths)
 {

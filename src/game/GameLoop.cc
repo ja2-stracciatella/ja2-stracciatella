@@ -31,7 +31,7 @@
 #include "Font_Control.h"
 #include "UILayout.h"
 #include "GameState.h"
-#include "src/sgp/FileMan.h"
+#include "sgp/FileMan.h"
 #include "slog/slog.h"
 
 #ifdef JA2BETAVERSION

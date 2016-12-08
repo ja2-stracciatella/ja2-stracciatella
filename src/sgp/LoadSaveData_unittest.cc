@@ -4,7 +4,7 @@
 
 #include "LoadSaveData.h"
 
-#include "src/externalized/TestUtils.h"
+#include "externalized/TestUtils.h"
 
 
 TEST(LoadSaveData, integers)

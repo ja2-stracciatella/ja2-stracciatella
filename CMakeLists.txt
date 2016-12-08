@@ -101,7 +101,6 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("dependencies/lib-smacker")
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include
