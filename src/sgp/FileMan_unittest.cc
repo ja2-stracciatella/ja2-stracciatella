@@ -60,9 +60,9 @@ TEST(FileManTest, FindFilesWithBoost)
   ASSERT_EQ(results.size(), 1);
   EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 
-  results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "_unittests" PS "find-files"), ".txt", false, false);
+  results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), ".txt", false, false);
   ASSERT_EQ(results.size(), 1);
-  EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "_unittests" PS "find-files" PS "lowercase-ext.txt").c_str());
+  EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files" PS "lowercase-ext.txt").c_str());
 
   results = FindFilesInDir(testDir, ".TXT", false, false);
   ASSERT_EQ(results.size(), 1);

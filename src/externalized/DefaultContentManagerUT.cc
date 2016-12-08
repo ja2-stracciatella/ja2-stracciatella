@@ -10,8 +10,8 @@
 DefaultContentManager * createDefaultCMForTesting()
 {
   std::string extraDataDir = GetExtraDataDir();
-  std::string configFolderPath = FileMan::joinPaths(extraDataDir, "_unittests");
-  std::string gameResRootPath = FileMan::joinPaths(extraDataDir, "_unittests");
+  std::string configFolderPath = FileMan::joinPaths(extraDataDir, "unittests");
+  std::string gameResRootPath = FileMan::joinPaths(extraDataDir, "unittests");
   std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
 
   DefaultContentManager *cm;
