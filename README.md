@@ -15,7 +15,7 @@ Official Homepage: http://ja2-stracciatella.github.io/
 
 2. [Download JA2-Stracciatella](http://ja2-stracciatella.github.io/download/) or [compile](COMPILATION.md) it from the cloned git repository.
 
-3. Start the game the first time.  It will create the configuration file %USERPROFILE%\Documents\JA2\ja2.ini on Windows or ~/.ja2/ja2.ini on Unix-like systems.
+3. Start the game the first time.  It will create the configuration file %USERPROFILE%\Documents\JA2\ja2.json on Windows or ~/.ja2/ja2.json on Unix-like systems.
 
 4. Edit the configuration file and set parameter data_dir to point on the directory where the original game was installed on step 1.  For example, D:\games\ja2\ (on Windows) or /home/user/games/ja2-installed (on Linux).
 
