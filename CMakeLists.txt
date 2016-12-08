@@ -14,9 +14,9 @@ endmacro()
 
 ## Project Setup
 
-project (ja2-stracciatella)
+project(ja2-stracciatella)
 set(BINARY "ja2")
-set (CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 98)
 
 ## Versioning
 
@@ -141,7 +141,13 @@ macro(copy_dir_to_ja2_binary_after_build DIR)
             ${CMAKE_CURRENT_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
 endmacro()
 
-copy_dir_to_ja2_binary_after_build("assets/externalized")
+macro(copy_assets_dir_to_ja2_binary_after_build DIR)
+    add_custom_command(TARGET ${BINARY} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
+endmacro()
+
+copy_assets_dir_to_ja2_binary_after_build("externalized")
 copy_dir_to_ja2_binary_after_build("_unittests")
 copy_dir_to_ja2_binary_after_build("mods")
 
@@ -214,7 +220,7 @@ include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
     install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
-    install(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
+    install(DIRECTORY assets/externalized mods _unittests DESTINATION share/ja2)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION lib)
     install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
