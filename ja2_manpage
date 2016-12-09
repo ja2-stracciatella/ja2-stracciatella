@@ -9,7 +9,7 @@ ja2 [OPTIONS]
 JA2 Stracciatella is a cross-platform implementation of Jagged Alliance 2 game.
 This is only the game engine.  Game resources from the original JA2 are required to play the game.
 .TP
-When you first start the game, file \fB~/.ja2/ja2.ini\fR is created.  You should edit this file, so that \fBdata_dir\fR points to the directory with game resources from the original JA2 game.
+When you first start the game, file \fB~/.ja2/ja2.json\fR is created.  You should edit this file, so that \fBdata_dir\fR points to the directory with game resources from the original JA2 game.
 .SH OPTIONS
 .TP
 \fB\-res WxH\fR

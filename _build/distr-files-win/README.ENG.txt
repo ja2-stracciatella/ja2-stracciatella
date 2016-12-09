@@ -11,9 +11,9 @@ ja2-ENGLISH.bat.  If you have French version installed, start the game by
 running ja2-FRENCH.bat, etc.
 
 The first time you start the game, a directory "JA2" is created in your user
-directory ("My documents").  In there is a file "ja2.ini".  Edit this file and
-insert the correct path to the Jagged Alliance 2 data files in the line
-"data_dir = [...]".  If $DIR is the directory, then it shall contain:
+directory ("My documents").  In there is a file "ja2.json".  Edit this file
+and insert the correct path to the Jagged Alliance 2 data files in the line
+"data_dir: [...]".  If $DIR is the directory, then it shall contain:
 - $DIR/Data/*.slf           - all .slf files from the installation AND game CD
 - $DIR/Data/TILECACHE/*.sti - all files found in the TILECACHE directory from
 - $DIR/Data/TILECACHE/*.jsd   the installed game
