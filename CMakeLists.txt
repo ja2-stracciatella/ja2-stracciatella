@@ -14,9 +14,9 @@ endmacro()
 
 ## Project Setup
 
-project (ja2-stracciatella)
+project(ja2-stracciatella)
 set(BINARY "ja2")
-set (CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 98)
 
 ## Versioning
 
@@ -81,9 +81,9 @@ find_package(SDL2 REQUIRED)
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
 else()
-    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-boost" )
-    add_subdirectory("_build/lib-boost")
-    set(Boost_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-boost")
+    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-boost" )
+    add_subdirectory("dependencies/lib-boost")
+    set(Boost_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-boost")
     set(Boost_LIBRARIES "boost")
 endif()
 
@@ -93,20 +93,19 @@ endif()
 
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Build")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/sgp")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/game")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
-add_subdirectory("_build/lib-slog")
-add_subdirectory("_build/lib-smacker")
+add_subdirectory("dependencies/lib-smacker")
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-rapidjson/rapidjson-1.1.0/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-slog
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-smacker/libsmacker
-    ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-utf8cpp/source
+    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
+    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-utf8cpp/source
     ${SDL2_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
@@ -121,13 +120,13 @@ endforeach()
 if (WITH_UNITTESTS)
     message(STATUS "Compiling with unittests" )
 
-    add_subdirectory("_build/lib-gtest")
+    add_subdirectory("dependencies/lib-gtest")
     set(lib-gtest "gtest")
     set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
 
     include_directories(SYSTEM
-        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/_build/lib-gtest
+        ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest
     )
 endif()
 
@@ -135,15 +134,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${BINARY} ${JA2_SOURCES})
 target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
 
-macro(copy_dir_to_ja2_binary_after_build DIR)
+macro(copy_assets_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
 endmacro()
 
-copy_dir_to_ja2_binary_after_build("externalized")
-copy_dir_to_ja2_binary_after_build("_unittests")
-copy_dir_to_ja2_binary_after_build("mods")
+copy_assets_dir_to_ja2_binary_after_build("externalized")
+copy_assets_dir_to_ja2_binary_after_build("unittests")
+copy_assets_dir_to_ja2_binary_after_build("mods")
 
 get_property(STRACCIATELLA_SHARED_LIB TARGET rust-stracciatella PROPERTY IMPORTED_LOCATION)
 
@@ -214,11 +213,11 @@ include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
     install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
-    install(DIRECTORY externalized mods _unittests DESTINATION share/ja2)
+    install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION lib)
-    install(FILES _build/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
+    install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
-        FILES _build/icons/logo.svg
+        FILES assets/icons/logo.svg
         RENAME ja2-stracciatella.svg
         DESTINATION share/icons/hicolor/scalable/apps)
     if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|DragonFly|OpenBSD")
@@ -229,13 +228,13 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
 else()
     install(TARGETS ${BINARY} RUNTIME DESTINATION .)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
-    install(DIRECTORY externalized mods _unittests DESTINATION .)
+    install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
 endif()
 
 if (MINGW)
-    file(GLOB WIN_MINGW_DIST_DLLS "_build/distr-files-win-mingw/*.dll")
-    install(FILES _build/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
+    file(GLOB WIN_MINGW_DIST_DLLS "assets/distr-files-win-mingw/*.dll")
+    install(FILES dependencies/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
     install(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
 endif()
 
@@ -245,16 +244,16 @@ if (MSVC)
 endif()
 
 if(MSVC OR MINGW)
-    file(GLOB WIN_DIST_FILES "_build/distr-files-win/*")
+    file(GLOB WIN_DIST_FILES "assets/distr-files-win/*")
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
-    install(FILES _build/icons/logo.ico DESTINATION .)
+    install(FILES assets/icons/logo.ico DESTINATION .)
 endif()
 
 if(APPLE)
-    file(GLOB APPLE_DIST_FILES "_build/distr-files-mac/*")
+    file(GLOB APPLE_DIST_FILES "assets/distr-files-mac/*")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
-    install(DIRECTORY _build/lib-SDL2-2.0.4-macos/SDL2.framework DESTINATION .)
-    install(FILES _build/icons/logo.icns DESTINATION .)
+    install(DIRECTORY dependencies/lib-SDL2-2.0.4-macos/SDL2.framework DESTINATION .)
+    install(FILES assets/icons/logo.icns DESTINATION .)
 endif()
 
 add_custom_templated_target("uninstall")
@@ -264,8 +263,8 @@ add_custom_templated_target("uninstall")
 macro(add_vagrant_build_target NAME BOX TARGET ARGS)
     add_custom_target(${NAME})
     add_custom_command(TARGET ${NAME}
-            COMMAND vagrant up && vagrant ssh -c "sh /tmp/ja2-stracciatella/_build/buildboxes/common/build.sh '${TARGET}' '${ARGS}'" && vagrant halt
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/_build/buildboxes/${BOX})
+            COMMAND vagrant up && vagrant ssh -c "sh /tmp/ja2-stracciatella/release/common/build.sh '${TARGET}' '${ARGS}'" && vagrant halt
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/release/${BOX})
 endmacro(add_vagrant_build_target)
 
 add_vagrant_build_target(
