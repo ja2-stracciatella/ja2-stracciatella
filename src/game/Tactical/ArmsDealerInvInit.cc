@@ -1,24 +1,24 @@
 #include <stdexcept>
 
-#include "Types.h"
+#include "sgp/Types.h"
 #include "ArmsDealerInvInit.h"
 #include "Item_Types.h"
 #include "Arms_Dealer_Init.h"
-#include "Debug.h"
+#include "sgp/Debug.h"
 #include "Weapons.h"
 #include "Campaign.h"
-#include "BobbyR.h"
-#include "LaptopSave.h"
+#include "game/Laptop/BobbyR.h"
+#include "game/Laptop/LaptopSave.h"
 #include "ShopKeeper_Interface.h"
-#include "Random.h"
+#include "sgp/Random.h"
 #include "Items.h"
 
-#include "CalibreModel.h"
-#include "ContentManager.h"
-#include "DealerInventory.h"
-#include "GameInstance.h"
-#include "MagazineModel.h"
-#include "WeaponModels.h"
+#include "externalized/CalibreModel.h"
+#include "externalized/ContentManager.h"
+#include "externalized/DealerInventory.h"
+#include "externalized/GameInstance.h"
+#include "externalized/MagazineModel.h"
+#include "externalized/WeaponModels.h"
 
 struct ITEM_SORT_ENTRY
 {

@@ -1,7 +1,7 @@
-#include "Debug.h"
-#include "FileMan.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
 #include "LoadSaveUndergroundSectorInfo.h"
-#include "LoadSaveData.h"
+#include "sgp/LoadSaveData.h"
 
 
 void ExtractUndergroundSectorInfoFromFile(HWFILE const file, UNDERGROUND_SECTORINFO* const u)

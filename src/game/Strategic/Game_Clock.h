@@ -1,7 +1,7 @@
 #ifndef __WORLD_CLOCK
 #define __WORLD_CLOCK
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 #define			NUM_SEC_IN_DAY						86400

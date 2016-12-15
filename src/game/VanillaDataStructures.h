@@ -2,7 +2,7 @@
 
 /* This file contains copied of data structures of the original game. */
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 /** Vanilla Data Structures */
 namespace VDS

@@ -1,9 +1,9 @@
-#include "TileDef.h"
-#include "Types.h"
+#include "game/TileEngine/TileDef.h"
+#include "sgp/Types.h"
 #include "Road_Smoothing.h"
-#include "TileDat.h"
-#include "WorldDef.h"
-#include "WorldMan.h"
+#include "game/TileEngine/TileDat.h"
+#include "game/TileEngine/WorldDef.h"
+#include "game/TileEngine/WorldMan.h"
 #include "Editor_Undo.h"
 
 

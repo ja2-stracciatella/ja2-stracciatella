@@ -1,7 +1,7 @@
 #ifndef __TACTICAL_PLACEMENT_GUI_H
 #define __TACTICAL_PLACEMENT_GUI_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 void InitTacticalPlacementGUI();

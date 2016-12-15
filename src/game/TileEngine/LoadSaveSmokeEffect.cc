@@ -1,8 +1,8 @@
-#include "Debug.h"
-#include "FileMan.h"
-#include "LoadSaveData.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
+#include "sgp/LoadSaveData.h"
 #include "LoadSaveSmokeEffect.h"
-#include "Overhead.h"
+#include "game/Tactical/Overhead.h"
 #include "SmokeEffects.h"
 
 

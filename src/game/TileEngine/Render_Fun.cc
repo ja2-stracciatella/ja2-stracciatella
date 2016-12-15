@@ -1,18 +1,18 @@
-#include "Handle_Items.h"
+#include "game/Tactical/Handle_Items.h"
 #include "Render_Fun.h"
 #include "Structure.h"
 #include "TileDat.h"
 #include "WorldDef.h"
-#include "Input.h"
+#include "sgp/Input.h"
 #include "SysUtil.h"
 #include "WorldMan.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"
-#include "FOV.h"
+#include "game/Tactical/FOV.h"
 #include "Fog_Of_War.h"
 #include "Environment.h"
-#include "Dialogue_Control.h"
-#include "Random.h"
+#include "game/Tactical/Dialogue_Control.h"
+#include "sgp/Random.h"
 
 
 // Room Information

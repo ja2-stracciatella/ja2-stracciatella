@@ -1,7 +1,7 @@
 #ifndef __SKILL_CHECK_H
 #define __SKILL_CHECK_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 void ReducePointsForFatigue(const SOLDIERTYPE* s, UINT16* pusPoints);

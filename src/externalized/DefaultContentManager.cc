@@ -22,14 +22,14 @@
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
-#include "ContentMusic.h"
+#include "externalized/content/ContentMusic.h"
 #include "DealerInventory.h"
 #include "JsonObject.h"
 #include "JsonUtility.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
-#include "policy/DefaultGamePolicy.h"
-#include "policy/DefaultIMPPolicy.h"
+#include "externalized/policy/DefaultGamePolicy.h"
+#include "externalized/policy/DefaultIMPPolicy.h"
 
 #include "boost/foreach.hpp"
 

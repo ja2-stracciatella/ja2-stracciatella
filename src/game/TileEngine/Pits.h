@@ -1,7 +1,7 @@
 #ifndef __PITS_H
 #define __PITS_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 void Add3X3Pit( INT32 iMapIndex );

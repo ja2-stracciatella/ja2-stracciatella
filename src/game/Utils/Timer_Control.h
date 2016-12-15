@@ -1,7 +1,7 @@
 #ifndef __TIMER_CONTROL_H
 #define __TIMER_CONTROL_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 #ifndef CALLBACKTIMER

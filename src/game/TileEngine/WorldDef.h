@@ -1,7 +1,7 @@
 #ifndef __WORLDDEF_H
 #define __WORLDDEF_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "World_Tileset_Enums.h"
 
 

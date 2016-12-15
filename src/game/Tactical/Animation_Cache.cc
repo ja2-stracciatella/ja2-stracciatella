@@ -1,9 +1,9 @@
 #include "Overhead.h"
-#include "Types.h"
+#include "sgp/Types.h"
 #include "Animation_Cache.h"
 #include "Animation_Data.h"
 #include "Animation_Control.h"
-#include "MemMan.h"
+#include "sgp/MemMan.h"
 #include "slog/slog.h"
 
 #define EMPTY_CACHE_ENTRY		65000

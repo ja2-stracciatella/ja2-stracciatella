@@ -1,12 +1,12 @@
-#include "Directories.h"
+#include "game/Directories.h"
 #include "Text.h"
 #include "Text_Utils.h"
-#include "FileMan.h"
-#include "GameSettings.h"
+#include "sgp/FileMan.h"
+#include "game/GameSettings.h"
 
 #include "game/GameRes.h"
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 
 #define ITEMSTRINGFILENAME BINARYDATADIR "/itemdesc.edt"
 

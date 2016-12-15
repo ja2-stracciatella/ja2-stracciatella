@@ -3,9 +3,9 @@
 
 #include "Arms_Dealer.h"
 #include "Item_Types.h"
-#include "JA2Types.h"
-#include "MessageBoxScreen.h"
-#include "ScreenIDs.h"
+#include "game/JA2Types.h"
+#include "game/MessageBoxScreen.h"
+#include "game/ScreenIDs.h"
 
 
 //Enums used for when the user clicks on an item and the item goes to..

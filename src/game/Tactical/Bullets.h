@@ -1,10 +1,10 @@
 #ifndef __BULLETS_H
 #define __BULLETS_H
 
-#include "JA2Types.h"
-#include "Types.h"
+#include "game/JA2Types.h"
+#include "sgp/Types.h"
 #include "LOS.h"
-#include "Tile_Animation.h"
+#include "game/TileEngine/Tile_Animation.h"
 
 
 #define		BULLET_FLAG_CREATURE_SPIT		        0x0001

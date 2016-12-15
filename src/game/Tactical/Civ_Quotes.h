@@ -1,7 +1,7 @@
 #ifndef __CIV_QUOTES_H
 #define __CIV_QUOTES_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 #define			CIV_TYPE_NA									0

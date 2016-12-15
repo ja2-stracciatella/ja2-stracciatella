@@ -1,11 +1,11 @@
-#include "Buffer.h"
-#include "Debug.h"
-#include "Types.h"
-#include "ImgFmt.h"
-#include "HImage.h"
+#include "sgp/Buffer.h"
+#include "sgp/Debug.h"
+#include "sgp/Types.h"
+#include "sgp/ImgFmt.h"
+#include "sgp/HImage.h"
 #include "STIConvert.h"
-#include "WCheck.h"
-#include "MemMan.h"
+#include "sgp/WCheck.h"
+#include "sgp/MemMan.h"
 
 
 #define CONVERT_ADD_APPDATA										0x0001

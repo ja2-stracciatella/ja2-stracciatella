@@ -1,8 +1,8 @@
 //sgp
-#include "Button_System.h"
-#include "Directories.h"
-#include "Font.h"
-#include "Font_Control.h"
+#include "sgp/Button_System.h"
+#include "game/Directories.h"
+#include "sgp/Font.h"
+#include "game/Utils/Font_Control.h"
 //editor
 #include "EditorDefines.h"
 #include "Editor_Callback_Prototypes.h"
@@ -11,11 +11,11 @@
 #include "EditorMercs.h"
 #include "EditorMapInfo.h"
 //tactical
-#include "Soldier_Control.h"
-#include "Soldier_Create.h"
-#include "Overhead_Types.h"
+#include "game/Tactical/Soldier_Control.h"
+#include "game/Tactical/Soldier_Create.h"
+#include "game/Tactical/Overhead_Types.h"
 
-#include "UILayout.h"
+#include "game/UILayout.h"
 
 
 static void InitEditorItemStatsButtons(void)

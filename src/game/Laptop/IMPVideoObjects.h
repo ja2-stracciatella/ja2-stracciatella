@@ -1,7 +1,7 @@
 #ifndef __IMP_VIDEO_H
 #define __IMP_VIDEO_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 // the functions
 

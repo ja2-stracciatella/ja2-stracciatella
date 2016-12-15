@@ -1,14 +1,14 @@
 #include "SkillCheck.h"
 #include "Soldier_Profile.h"
-#include "Random.h"
+#include "sgp/Random.h"
 #include "Items.h"
 #include "Dialogue_Control.h"
 #include "Overhead.h"
 #include "Soldier_Macros.h"
-#include "Isometric_Utils.h"
+#include "game/TileEngine/Isometric_Utils.h"
 #include "Morale.h"
 #include "Drugs_And_Alcohol.h"
-#include "StrategicMap.h"
+#include "game/Strategic/StrategicMap.h"
 
 
 INT8 EffectiveStrength(const SOLDIERTYPE* s)

@@ -1,5 +1,5 @@
 #include <stdarg.h>
-#include "Types.h"
+#include "sgp/Types.h"
 #include "ScreenIDs.h"
 #include "Sys_Globals.h"
 #include "GameLoop.h"

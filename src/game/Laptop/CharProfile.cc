@@ -1,7 +1,7 @@
-#include "Directories.h"
-#include "Font.h"
+#include "game/Directories.h"
+#include "sgp/Font.h"
 #include "Laptop.h"
-#include "Cursors.h"
+#include "game/Utils/Cursors.h"
 #include "CharProfile.h"
 #include "IMP_AboutUs.h"
 #include "IMP_Attribute_Entrance.h"
@@ -20,11 +20,11 @@
 #include "IMP_Personality_Finish.h"
 #include "IMP_Confirm.h"
 #include "LaptopSave.h"
-#include "Button_System.h"
-#include "Debug.h"
-#include "Font_Control.h"
-#include "Text.h"
-#include "Soldier_Profile_Type.h"
+#include "sgp/Button_System.h"
+#include "sgp/Debug.h"
+#include "game/Utils/Font_Control.h"
+#include "game/Utils/Text.h"
+#include "game/Tactical/Soldier_Profile_Type.h"
 
 
 BOOLEAN fReDrawCharProfile = FALSE;

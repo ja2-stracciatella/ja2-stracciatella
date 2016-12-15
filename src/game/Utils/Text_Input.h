@@ -1,7 +1,7 @@
 #ifndef __TEXT_INPUT_H
 #define __TEXT_INPUT_H
 
-#include "Input.h"
+#include "sgp/Input.h"
 
 #define TEXT_CURSOR_BLINK_INTERVAL 500
 

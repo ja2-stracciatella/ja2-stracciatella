@@ -1,11 +1,11 @@
 #ifndef STRUCTURE_H
 #define STRUCTURE_H
 
-#include "AutoObj.h"
-#include "JA2Types.h"
+#include "sgp/AutoObj.h"
+#include "game/JA2Types.h"
 #include "Structure_Internals.h"
-#include "Overhead_Types.h"
-#include "Sound_Control.h"
+#include "game/Tactical/Overhead_Types.h"
+#include "game/Utils/Sound_Control.h"
 
 #define NOTHING_BLOCKING							0
 #define BLOCKING_REDUCE_RANGE					1

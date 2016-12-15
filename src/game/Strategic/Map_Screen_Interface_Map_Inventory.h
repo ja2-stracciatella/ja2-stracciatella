@@ -1,8 +1,8 @@
 #ifndef _MAP_INTERFACE_MAP_INVEN_H
 #define _MAP_INTERFACE_MAP_INVEN_H
 
-#include "Types.h"
-#include "World_Items.h"
+#include "sgp/Types.h"
+#include "game/Tactical/World_Items.h"
 
 // number of inventory slots
 #define MAP_INVENTORY_POOL_SLOT_COUNT 45

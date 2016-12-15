@@ -1,8 +1,8 @@
 #ifndef __AI_H
 #define __AI_H
 
-#include "JA2Types.h"
-#include "WorldDef.h"
+#include "game/JA2Types.h"
+#include "game/TileEngine/WorldDef.h"
 #include "slog/slog.h"
 
 extern INT8	gubAIPathCosts[19][19];

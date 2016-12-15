@@ -1,7 +1,7 @@
 #ifndef __CAMPAIGN_H
 #define __CAMPAIGN_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "Soldier_Profile_Type.h"
 
 

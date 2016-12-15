@@ -1,7 +1,7 @@
 #ifndef __SECTOR_SUMMARY_H
 #define __SECTOR_SUMMARY_H
 
-#include "Input.h"
+#include "sgp/Input.h"
 
 
 void CreateSummaryWindow(void);

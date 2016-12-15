@@ -1,7 +1,7 @@
 #ifndef ITEM_TYPES_H
 #define ITEM_TYPES_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 enum ItemCursor
 {

@@ -1,5 +1,5 @@
-#include "TileDat.h"
-#include "Types.h"
+#include "game/TileEngine/TileDat.h"
+#include "sgp/Types.h"
 #include "Editor_Modes.h"
 #include "Editor_Taskbar_Utils.h"
 #include "EditorDefines.h"
@@ -7,14 +7,14 @@
 #include "EditorBuildings.h"
 #include "EditorTerrain.h"
 #include "Cursor_Modes.h"
-#include "Map_Information.h"
+#include "game/Tactical/Map_Information.h"
 #include "EditScreen.h"
 #include "SelectWin.h"
-#include "Environment.h"
-#include "WorldDef.h"
-#include "Exit_Grids.h"
-#include "WorldMan.h"
-#include "Debug.h"
+#include "game/TileEngine/Environment.h"
+#include "game/TileEngine/WorldDef.h"
+#include "game/TileEngine/Exit_Grids.h"
+#include "game/TileEngine/WorldMan.h"
+#include "sgp/Debug.h"
 
 
 BOOLEAN gfShowExitGrids = FALSE;

@@ -1,7 +1,7 @@
 #ifndef CURSORS_H
 #define CURSORS_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 // INDIVIDUAL CURSORS
 

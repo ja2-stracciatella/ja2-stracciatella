@@ -1,10 +1,10 @@
 #ifndef __TACTICAL_SAVE_H_
 #define __TACTICAL_SAVE_H_
 
-#include "Campaign_Types.h"
+#include "game/Strategic/Campaign_Types.h"
 #include "Handle_Items.h"
 #include "World_Items.h"
-#include "WorldDef.h"
+#include "game/TileEngine/WorldDef.h"
 #include "Rotting_Corpses.h"
 
 #include "Soldier_Profile_Type.h"

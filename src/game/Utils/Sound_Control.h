@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "JA2Types.h"
-#include "Random.h"
+#include "game/JA2Types.h"
+#include "sgp/Random.h"
 
 
 #define FARLEFT         0

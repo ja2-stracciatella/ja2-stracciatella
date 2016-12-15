@@ -1,7 +1,7 @@
 #ifndef _UI_LAYOUT_H_
 #define _UI_LAYOUT_H_
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 /////////////////////////////////////////////////////////////
 // defines

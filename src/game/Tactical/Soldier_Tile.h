@@ -1,7 +1,7 @@
 #ifndef __SOLDIER_TILE_H
 #define __SOLDIER_TILE_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 #define			MOVE_TILE_CLEAR										1

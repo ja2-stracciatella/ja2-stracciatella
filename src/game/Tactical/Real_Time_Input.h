@@ -2,7 +2,7 @@
 #define REAL_TIME_INPUT_H
 
 #include "Handle_UI.h"
-#include "Types.h"
+#include "sgp/Types.h"
 
 extern BOOLEAN gfBeginBurstSpreadTracking;
 

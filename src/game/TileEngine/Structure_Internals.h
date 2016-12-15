@@ -6,7 +6,7 @@
 // structure_extern.h, not structure.h!
 //
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 // A few words about the overall structure scheme:
 //

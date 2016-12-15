@@ -1,7 +1,7 @@
 #ifndef __EMAIL_H
 #define __EMAIL_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 #define IMP_EMAIL_INTRO					0

@@ -5,8 +5,8 @@
 #include "English.h"
 #include "Timer.h"
 #include "Video.h"
-#include "Local.h"
-#include "UILayout.h"
+#include "game/Local.h"
+#include "game/UILayout.h"
 
 
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling

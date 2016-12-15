@@ -1,6 +1,6 @@
-#include "TileDef.h"
-#include "WorldDef.h"	//LEVELNODE def
-#include "WorldMan.h"	//ReplaceStructIndex
+#include "game/TileEngine/TileDef.h"
+#include "game/TileEngine/WorldDef.h"	//LEVELNODE def
+#include "game/TileEngine/WorldMan.h"	//ReplaceStructIndex
 #include "SmartMethod.h"
 #include "Smoothing_Utils.h"
 #include "Editor_Undo.h"

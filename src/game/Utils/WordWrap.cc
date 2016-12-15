@@ -1,10 +1,10 @@
-#include "Font.h"
+#include "sgp/Font.h"
 #include "WordWrap.h"
-#include "Render_Dirty.h"
+#include "game/TileEngine/Render_Dirty.h"
 #include "Font_Control.h"
-#include "Video.h"
-#include "MemMan.h"
-#include "VSurface.h"
+#include "sgp/Video.h"
+#include "sgp/MemMan.h"
+#include "sgp/VSurface.h"
 
 
 static WRAPPED_STRING* AllocWrappedString(const wchar_t* start, const wchar_t* end)

@@ -2,7 +2,7 @@
 #define _OPTIONS_SCREEN__H_
 
 #include "ScreenIDs.h"
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 #define		OPT_BUTTON_FONT												FONT14ARIAL

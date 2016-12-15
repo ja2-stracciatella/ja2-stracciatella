@@ -19,7 +19,7 @@ MagazineModel::MagazineModel(uint16_t itemIndex_,
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "Items.h"
+#include "game/Tactical/Items.h"
 
 void MagazineModel::serializeTo(JsonObject &obj) const
 {

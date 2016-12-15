@@ -1,8 +1,8 @@
 #ifndef __INTERACTIVE_TILES_H
 #define __INTERACTIVE_TILES_H
 
-#include "Interface_Cursors.h"
-#include "JA2Types.h"
+#include "game/Tactical/Interface_Cursors.h"
+#include "game/JA2Types.h"
 #include "WorldDef.h"
 
 

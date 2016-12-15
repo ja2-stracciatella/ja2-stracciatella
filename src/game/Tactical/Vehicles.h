@@ -1,8 +1,8 @@
 #ifndef _VEHICLES_H
 #define _VEHICLES_H
 
-#include "JA2Types.h"
-#include "Strategic_Movement.h"
+#include "game/JA2Types.h"
+#include "game/Strategic/Strategic_Movement.h"
 
 
 #define	MAX_VEHICLES	10

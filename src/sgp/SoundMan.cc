@@ -15,8 +15,8 @@
 #include <SDL.h>
 #include <assert.h>
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 #include "slog/slog.h"
 
 

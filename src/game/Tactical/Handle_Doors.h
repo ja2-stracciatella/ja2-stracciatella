@@ -1,7 +1,7 @@
 #ifndef _DOORS_H
 #define _DOORS_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 enum HandleDoor
 {

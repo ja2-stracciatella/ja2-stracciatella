@@ -1,14 +1,14 @@
 #include "CharProfile.h"
-#include "Directories.h"
-#include "Font.h"
+#include "game/Directories.h"
+#include "sgp/Font.h"
 #include "IMP_Attribute_Entrance.h"
 #include "IMPVideoObjects.h"
-#include "Text.h"
-#include "Render_Dirty.h"
-#include "Cursors.h"
+#include "game/Utils/Text.h"
+#include "game/TileEngine/Render_Dirty.h"
+#include "game/Utils/Cursors.h"
 #include "Laptop.h"
-#include "Button_System.h"
-#include "Font_Control.h"
+#include "sgp/Button_System.h"
+#include "game/Utils/Font_Control.h"
 
 
 // the buttons

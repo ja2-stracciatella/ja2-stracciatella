@@ -1,7 +1,7 @@
 #ifndef TEAMTURNS_H
 #define TEAMTURNS_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 extern UINT8 gubOutOfTurnPersons;

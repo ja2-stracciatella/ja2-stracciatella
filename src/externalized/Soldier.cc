@@ -15,9 +15,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "content/NewStrings.h"
-#include "content/npcs.h"
-#include "internals/enums.h"
+#include "externalized/content/NewStrings.h"
+#include "externalized/content/npcs.h"
+#include "externalized/internals/enums.h"
 
 #include "boost/make_shared.hpp"
 

@@ -1,8 +1,8 @@
 #include "ContentMercs.h"
 
-#include "ContentManager.h"
+#include "externalized/ContentManager.h"
 #include "Dialogs.h"
-#include "MercProfile.h"
+#include "externalized/MercProfile.h"
 
 bool Content::canMercBeHired(const ContentManager *cm, uint16_t profileNum)
 {

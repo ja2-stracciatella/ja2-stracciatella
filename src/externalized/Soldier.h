@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 #include "boost/shared_ptr.hpp"
 

@@ -1,13 +1,13 @@
 #include <SDL.h>
 #include <stdexcept>
 
-#include "Debug.h"
-#include "MapScreen.h"
-#include "Soldier_Control.h"
+#include "sgp/Debug.h"
+#include "game/Strategic/MapScreen.h"
+#include "game/Tactical/Soldier_Control.h"
 #include "Timer_Control.h"
-#include "Overhead.h"
-#include "Handle_Items.h"
-#include "WorldDef.h"
+#include "game/Tactical/Overhead.h"
+#include "game/Tactical/Handle_Items.h"
+#include "game/TileEngine/WorldDef.h"
 
 
 INT32	giClockTimer = -1;

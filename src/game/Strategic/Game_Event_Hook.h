@@ -1,7 +1,7 @@
 #ifndef __GAME_EVENT_HOOK_H
 #define __GAME_EVENT_HOOK_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 enum StrategicEventKind
 {

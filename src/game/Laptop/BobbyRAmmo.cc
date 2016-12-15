@@ -1,14 +1,14 @@
-#include "Directories.h"
+#include "game/Directories.h"
 #include "Laptop.h"
 #include "BobbyRAmmo.h"
 #include "BobbyRGuns.h"
 #include "BobbyR.h"
-#include "VObject.h"
-#include "Interface_Items.h"
-#include "Text.h"
-#include "Button_System.h"
-#include "Video.h"
-#include "VSurface.h"
+#include "sgp/VObject.h"
+#include "game/Tactical/Interface_Items.h"
+#include "game/Utils/Text.h"
+#include "sgp/Button_System.h"
+#include "sgp/Video.h"
+#include "sgp/VSurface.h"
 
 
 static SGPVObject* guiAmmoBackground;

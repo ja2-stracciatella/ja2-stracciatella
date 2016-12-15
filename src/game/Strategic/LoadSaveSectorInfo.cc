@@ -1,7 +1,7 @@
-#include "Debug.h"
-#include "FileMan.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
 #include "LoadSaveSectorInfo.h"
-#include "LoadSaveData.h"
+#include "sgp/LoadSaveData.h"
 
 
 void ExtractSectorInfoFromFile(HWFILE const f, SECTORINFO& s)

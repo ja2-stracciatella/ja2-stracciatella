@@ -1,7 +1,7 @@
 #ifndef __CHARPROFILE_H
 #define __CHARPROFILE_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 void GameInitCharProfile(void);
 void EnterCharProfile(void);
 void ExitCharProfile(void);

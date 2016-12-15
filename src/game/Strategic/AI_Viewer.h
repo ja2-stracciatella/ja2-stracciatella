@@ -3,8 +3,8 @@
 
 #ifdef JA2BETAVERSION
 
-#include "ScreenIDs.h"
-#include "Types.h"
+#include "game/ScreenIDs.h"
+#include "sgp/Types.h"
 
 
 void     AIViewerScreenInit(void);

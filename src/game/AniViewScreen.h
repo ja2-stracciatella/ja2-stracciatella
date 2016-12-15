@@ -2,7 +2,7 @@
 #define ANIVIEWSCREEN_H
 
 #include "ScreenIDs.h"
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 ScreenID AniEditScreenHandle(void);

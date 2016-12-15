@@ -1,10 +1,10 @@
 #include "DefaultContentManagerUT.h"
 
-#include "GameRes.h"
+#include "game/GameRes.h"
 #include "sgp/FileMan.h"
 
-#include "externalized/DefaultContentManager.h"
-#include "externalized/TestUtils.h"
+#include "DefaultContentManager.h"
+#include "TestUtils.h"
 
 /** Create DefaultContentManager for usage in unit testing. */
 DefaultContentManager * createDefaultCMForTesting()

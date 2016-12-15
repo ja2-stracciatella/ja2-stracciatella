@@ -1,10 +1,10 @@
 #include <stdexcept>
 #include <vector>
 
-#include "WCheck.h"
+#include "sgp/WCheck.h"
 #include "Event_Manager.h"
 #include "Timer_Control.h"
-#include "MemMan.h"
+#include "sgp/MemMan.h"
 
 typedef std::vector<EVENT*>EventList;
 

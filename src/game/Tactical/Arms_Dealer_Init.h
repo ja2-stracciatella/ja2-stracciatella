@@ -3,7 +3,7 @@
 
 #include "Arms_Dealer.h"
 #include "Item_Types.h"
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 //the enums for the different kinds of arms dealers

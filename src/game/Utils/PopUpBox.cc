@@ -1,15 +1,15 @@
 #include <stdexcept>
 
-#include "Font.h"
-#include "Local.h"
+#include "sgp/Font.h"
+#include "game/Local.h"
 #include "PopUpBox.h"
-#include "SysUtil.h"
-#include "Debug.h"
-#include "VObject.h"
-#include "Video.h"
-#include "MemMan.h"
-#include "VSurface.h"
-#include "UILayout.h"
+#include "game/TileEngine/SysUtil.h"
+#include "sgp/Debug.h"
+#include "sgp/VObject.h"
+#include "sgp/Video.h"
+#include "sgp/MemMan.h"
+#include "sgp/VSurface.h"
+#include "game/UILayout.h"
 
 #define MAX_POPUP_BOX_COUNT 20
 

@@ -6,7 +6,7 @@
 
 /* XXX */
 #include "ItemModel.h"
-#include "ContentMusic.h"
+#include "externalized/content/ContentMusic.h"
 
 #include "ItemSystem.h"
 

@@ -26,13 +26,13 @@
 #include "Cursor_Control.h"
 #include "Button_System.h"
 #include "Timer.h"
-#include "Font_Control.h"
-#include "JAScreens.h"
-#include "Local.h"
-#include "Render_Dirty.h"
+#include "game/Utils/Font_Control.h"
+#include "game/JAScreens.h"
+#include "game/Local.h"
+#include "game/TileEngine/Render_Dirty.h"
 #include "VSurface.h"
-#include "ScreenIDs.h"
-#include "UILayout.h"
+#include "game/ScreenIDs.h"
+#include "game/UILayout.h"
 
 
 //Kris:	Nov 31, 1999 -- Added support for double clicking

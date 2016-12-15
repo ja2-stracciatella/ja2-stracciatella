@@ -1,15 +1,15 @@
 #include "Ambient_Types.h"
-#include "Directories.h"
-#include "FileMan.h"
+#include "game/Directories.h"
+#include "sgp/FileMan.h"
 #include "Environment.h"
-#include "Sound_Control.h"
-#include "Game_Events.h"
+#include "game/Utils/Sound_Control.h"
+#include "game/Strategic/Game_Events.h"
 #include "Ambient_Control.h"
-#include "SoundMan.h"
-#include "Debug.h"
+#include "sgp/SoundMan.h"
+#include "sgp/Debug.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 #include "slog/slog.h"
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];

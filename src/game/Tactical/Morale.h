@@ -1,7 +1,7 @@
 #ifndef _MORALE_H
 #define _MORALE_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 #define	DEFAULT_MORALE		50

@@ -1,7 +1,7 @@
 #ifndef WORLD_DAT_H
 #define WORLD_DAT_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 #include "TileDat.h"
 #include "World_Tileset_Enums.h"
 

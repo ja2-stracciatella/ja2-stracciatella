@@ -1,8 +1,8 @@
 #ifndef _QUEST_DEBUG_SYSTEM_H_
 #define _QUEST_DEBUG_SYSTEM_H_
 
-#include "NPC.h"
-#include "ScreenIDs.h"
+#include "game/TacticalAI/NPC.h"
+#include "game/ScreenIDs.h"
 
 
 extern	INT16				gsQdsEnteringGridNo;

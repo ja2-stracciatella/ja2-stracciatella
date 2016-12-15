@@ -2,7 +2,7 @@
 #define __QUEEN_COMMAND_H
 
 #include "Campaign_Types.h"
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "Strategic_Movement.h"
 
 

@@ -1,7 +1,7 @@
 #ifndef	__WORDWRAP_H_
 #define	__WORDWRAP_H_
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 //Flags for DrawTextToScreen()
 

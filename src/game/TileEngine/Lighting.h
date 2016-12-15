@@ -1,7 +1,7 @@
 #ifndef _LIGHTING_H_
 #define _LIGHTING_H_
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 /****************************************************************************************

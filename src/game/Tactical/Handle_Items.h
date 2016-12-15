@@ -1,7 +1,7 @@
 #ifndef __HANDLE_ITEMS_H
 #define __HANDLE_ITEMS_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "World_Items.h"
 
 

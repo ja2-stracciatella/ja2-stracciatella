@@ -1,7 +1,7 @@
 #ifndef _SOLDIER_FUNCTIONS_H
 #define _SOLDIER_FUNCTIONS_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 void ContinueMercMovement( SOLDIERTYPE *pSoldier );

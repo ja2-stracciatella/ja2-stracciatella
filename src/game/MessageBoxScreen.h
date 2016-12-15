@@ -1,9 +1,9 @@
 #ifndef MESSAGEBOXSCREEN_H
 #define MESSAGEBOXSCREEN_H
 
-#include "Button_System.h"
+#include "sgp/Button_System.h"
 #include "JA2Types.h"
-#include "MouseSystem.h"
+#include "sgp/MouseSystem.h"
 #include "ScreenIDs.h"
 
 

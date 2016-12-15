@@ -3,7 +3,7 @@
   #include <strings.h>
 #endif
 #include "Smack_Stub.h"
-#include "Sound_Control.h"
+#include "game/Utils/Sound_Control.h"
 #include "SoundMan.h"
 #include "FileMan.h"
 

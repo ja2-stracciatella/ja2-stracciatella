@@ -1,7 +1,7 @@
 #ifndef __EDITORMERCS_H
 #define __EDITORMERCS_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 //Merc editing modes.  These are used to determine which buttons to show and hide.

@@ -1,7 +1,7 @@
 #ifndef __SCHEDULING_H
 #define __SCHEDULING_H
 
-#include "Soldier_Init_List.h"
+#include "game/Tactical/Soldier_Init_List.h"
 
 
 //Merc scheduling actions

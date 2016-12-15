@@ -2,7 +2,7 @@
 
 #include "GameSettings.h"
 #include "SaveLoadGame.h"
-#include "FileMan.h"
+#include "sgp/FileMan.h"
 #include "externalized/TestUtils.h"
 
 const uint8_t s_savedGameHeaderVanilla[] = {

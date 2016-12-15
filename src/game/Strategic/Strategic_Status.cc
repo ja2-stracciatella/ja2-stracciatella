@@ -1,15 +1,15 @@
 #include "Strategic_Status.h"
-#include "Inventory_Choosing.h"
-#include "FileMan.h"
-#include "Soldier_Profile.h"
-#include "Campaign.h"
+#include "game/Tactical/Inventory_Choosing.h"
+#include "sgp/FileMan.h"
+#include "game/Tactical/Soldier_Profile.h"
+#include "game/Tactical/Campaign.h"
 #include "Strategic_Mines.h"
-#include "EMail.h"
+#include "game/Laptop/EMail.h"
 #include "Game_Clock.h"
-#include "GameSettings.h"
-#include "History.h"
+#include "game/GameSettings.h"
+#include "game/Laptop/History.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Debug.h"
+#include "sgp/Debug.h"
 
 
 STRATEGIC_STATUS	gStrategicStatus;
