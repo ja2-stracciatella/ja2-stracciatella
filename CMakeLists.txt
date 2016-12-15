@@ -36,6 +36,8 @@ set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
+option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
+option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
@@ -81,10 +83,17 @@ find_package(SDL2 REQUIRED)
 if (NOT LOCAL_BOOST_LIB)
     find_package(Boost REQUIRED COMPONENTS filesystem system)
 else()
-    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-boost" )
+    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-boost")
     add_subdirectory("dependencies/lib-boost")
     set(Boost_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-boost")
     set(Boost_LIBRARIES "boost")
+endif()
+
+if (NOT LOCAL_RAPIDJSON_LIB)
+    find_package(RapidJSON REQUIRED)
+else()
+    message(STATUS "Compiling with local RapidJSON libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson")
+    set(RAPIDJSON_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -98,16 +107,15 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/game")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
-add_subdirectory("dependencies/lib-smacker")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${JA2_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include
+    ${Boost_INCLUDE_DIRS}
+    ${RAPIDJSON_INCLUDE_DIRS}
+    ${SDL2_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-utf8cpp/source
-    ${SDL2_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
 )
 
 foreach(FILE ${JA2_SOURCES})
@@ -120,14 +128,18 @@ endforeach()
 if (WITH_UNITTESTS)
     message(STATUS "Compiling with unittests" )
 
-    add_subdirectory("dependencies/lib-gtest")
-    set(lib-gtest "gtest")
-    set(CFLAGS "${CFLAGS} -DWITH_UNITTESTS")
+    if (NOT LOCAL_GTEST_LIB)
+        find_package(GTest REQUIRED)
+    else()
+        message(STATUS "Compiling with local GTest libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest")
+        add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest")
+        set(GTEST_LIBRARIES "gtest")
+        set(GTEST_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest/include")
+    endif()
 
-    include_directories(SYSTEM
-        ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest
-    )
+    set(lib-gtest "${GTEST_LIBRARIES}")
+    include_directories(${GTEST_INCLUDE_DIRS})
+    add_definitions("-DWITH_UNITTESTS")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
