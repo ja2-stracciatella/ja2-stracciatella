@@ -69,10 +69,10 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 //
 ////////////////////////////////////////////////////////////////////////////
 
-// #include "JsonObject.h"
-// #include "MagazineModel.h"
-// #include "WeaponModels.h"
-// #include "Weapons.h"
+// #include "externalized/JsonObject.h"
+// #include "externalized/MagazineModel.h"
+// #include "externalized/WeaponModels.h"
+// #include "game/Tactical/Weapons.h"
 // #include "rapidjson/document.h"
 // #include "rapidjson/filestream.h"
 // #include "rapidjson/prettywriter.h"

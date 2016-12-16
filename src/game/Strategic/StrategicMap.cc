@@ -270,7 +270,7 @@ StrategicMapElement StrategicMap[MAP_WORLD_X * MAP_WORLD_Y];
 	UINT32 uiLoadMapLightsTime;
 	UINT32 uiBuildShadeTableTime;
 	UINT32 uiNumImagesReloaded;
-	#include "TileDat.h"
+	#include "game/TileEngine/TileDat.h"
 #endif
 
 
