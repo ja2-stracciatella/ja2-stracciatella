@@ -342,7 +342,7 @@ static void WriteMessageToFile(const wchar_t* pString);
 // this function sets up the string into several single line structures
 static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t* const fmt, ...)
 {
-	if (giTimeCompressMode > TIME_COMPRESS_X1) return;
+	if (IsTimeBeingCompressed()) return;
 
 	va_list ap;
 	va_start(ap, fmt);
