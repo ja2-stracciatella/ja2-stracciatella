@@ -1,7 +1,7 @@
 #ifndef JA2TYPES_H
 #define JA2TYPES_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 typedef INT16 GridNo;

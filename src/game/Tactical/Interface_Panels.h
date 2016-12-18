@@ -1,10 +1,10 @@
 #ifndef __INTERFACE_PANELS
 #define __INTERFACE_PANELS
 
-#include "Button_System.h"
+#include "sgp/Button_System.h"
 #include "Interface.h"
-#include "JA2Types.h"
-#include "MouseSystem.h"
+#include "game/JA2Types.h"
+#include "sgp/MouseSystem.h"
 
 
 enum

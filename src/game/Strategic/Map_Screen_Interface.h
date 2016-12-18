@@ -1,11 +1,11 @@
 #ifndef MAP_SCREEN_INTERFACE_H
 #define MAP_SCREEN_INTERFACE_H
 
-#include "Item_Types.h"
-#include "JA2Types.h"
-#include "MessageBoxScreen.h"
-#include "MouseSystem.h"
-#include "ScreenIDs.h"
+#include "game/Tactical/Item_Types.h"
+#include "game/JA2Types.h"
+#include "game/MessageBoxScreen.h"
+#include "sgp/MouseSystem.h"
+#include "game/ScreenIDs.h"
 
 
 // char breath and life position

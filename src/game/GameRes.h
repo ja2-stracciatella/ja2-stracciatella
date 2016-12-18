@@ -5,10 +5,10 @@
 
 /* Game resources */
 
-#include "Types.h"
-#include "IEncodingCorrector.h"
+#include "sgp/Types.h"
+#include "sgp/IEncodingCorrector.h"
 
-#include "StringEncodingTypes.h"
+#include "externalized/StringEncodingTypes.h"
 
 /** List of supported game versions (localizations). */
 enum GameVersion {

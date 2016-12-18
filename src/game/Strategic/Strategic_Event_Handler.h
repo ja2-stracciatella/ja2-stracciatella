@@ -1,7 +1,7 @@
 #ifndef _STRATEGIC_EVENT_HANDLER_H_
 #define _STRATEGIC_EVENT_HANDLER_H_
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 #define KINGPIN_MONEY_SECTOR_X	5
 #define KINGPIN_MONEY_SECTOR_Y	MAP_ROW_D

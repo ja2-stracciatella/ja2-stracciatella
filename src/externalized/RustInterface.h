@@ -1,5 +1,5 @@
-#include "Types.h"
-#include "GameRes.h"
+#include "sgp/Types.h"
+#include "game/GameRes.h"
 
 extern "C" {
   typedef struct engine_options_S engine_options_t;

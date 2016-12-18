@@ -1,8 +1,8 @@
-#include "Directories.h"
-#include "Font.h"
-#include "Text.h"
-#include "WordWrap.h"
-#include "Render_Dirty.h"
+#include "game/Directories.h"
+#include "sgp/Font.h"
+#include "game/Utils/Text.h"
+#include "game/Utils/WordWrap.h"
+#include "game/TileEngine/Render_Dirty.h"
 #include "IMP_Text_System.h"
 #include "CharProfile.h"
 #include "Laptop.h"
@@ -10,10 +10,10 @@
 #include "IMP_Personality_Finish.h"
 #include "IMP_Attribute_Selection.h"
 #include "IMP_MainPage.h"
-#include "Font_Control.h"
+#include "game/Utils/Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 
 #define IMP_SEEK_AMOUNT (5 * 80)
 

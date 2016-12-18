@@ -1,8 +1,8 @@
 #ifndef __CAMPAIGN_TYPES_H
 #define __CAMPAIGN_TYPES_H
 
-#include "Debug.h"
-#include "Types.h"
+#include "sgp/Debug.h"
+#include "sgp/Types.h"
 
 static inline bool IS_VALID_SECTOR(UINT8 const x, UINT8 const y)
 {

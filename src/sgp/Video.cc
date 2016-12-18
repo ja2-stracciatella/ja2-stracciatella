@@ -3,16 +3,16 @@
 #include <stdexcept>
 
 #include "Debug.h"
-#include "Fade_Screen.h"
+#include "game/Fade_Screen.h"
 #include "FileMan.h"
 #include "HImage.h"
 #include "Input.h"
-#include "Local.h"
+#include "game/Local.h"
 #include "MemMan.h"
-#include "RenderWorld.h"
-#include "Render_Dirty.h"
+#include "game/TileEngine/RenderWorld.h"
+#include "game/TileEngine/Render_Dirty.h"
 #include "Timer.h"
-#include "Timer_Control.h"
+#include "game/Utils/Timer_Control.h"
 #include "Types.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
@@ -20,14 +20,14 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
-#include "UILayout.h"
+#include "game/UILayout.h"
 #include "PlatformIO.h"
 #include "PlatformSDL.h"
 #include "Font.h"
 #include "Icon.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 
 #include "slog/slog.h"
 

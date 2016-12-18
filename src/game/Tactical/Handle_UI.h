@@ -1,11 +1,11 @@
 #ifndef _HANDLE_UI_
 #define _HANDLE_UI_
 
-#include "Input.h"
+#include "sgp/Input.h"
 #include "Interface_Cursors.h"
-#include "JA2Types.h"
-#include "MouseSystem.h"
-#include "ScreenIDs.h"
+#include "game/JA2Types.h"
+#include "sgp/MouseSystem.h"
+#include "game/ScreenIDs.h"
 #include "Soldier_Find.h"
 
 

@@ -6,8 +6,8 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 
 struct PcxHeader
 {

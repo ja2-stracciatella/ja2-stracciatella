@@ -1,7 +1,7 @@
 #ifndef __SYSTEM_UTILS
 #define __SYSTEM_UTILS
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 extern SGPVSurface* guiSAVEBUFFER;

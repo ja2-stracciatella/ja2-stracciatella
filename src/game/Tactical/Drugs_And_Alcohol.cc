@@ -1,15 +1,15 @@
-#include "Font_Control.h"
+#include "game/Utils/Font_Control.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile.h"
 #include "Drugs_And_Alcohol.h"
 #include "Items.h"
 #include "Morale.h"
 #include "Points.h"
-#include "Message.h"
-#include "Random.h"
-#include "Text.h"
+#include "game/Utils/Message.h"
+#include "sgp/Random.h"
+#include "game/Utils/Text.h"
 #include "Interface.h"
-#include "Timer_Control.h"
+#include "game/Utils/Timer_Control.h"
 
 
 UINT8 ubDrugTravelRate[]			= { 4,	2 };

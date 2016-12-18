@@ -8,7 +8,7 @@
 #include "game/GameRes.h"
 
 #include "ContentManager.h"
-#include "ContentMusic.h"
+#include "externalized/content/ContentMusic.h"
 #include "IGameDataLoader.h"
 #include "StringEncodingTypes.h"
 

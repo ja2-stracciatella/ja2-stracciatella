@@ -1,7 +1,7 @@
 #ifndef __EDITOR_CALLBACK_PROTOTYPES_H
 #define __EDITOR_CALLBACK_PROTOTYPES_H
 
-#include "Button_System.h"
+#include "sgp/Button_System.h"
 
 
 // Editor Tabs

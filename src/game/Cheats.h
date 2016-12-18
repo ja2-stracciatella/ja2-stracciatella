@@ -1,7 +1,7 @@
 #ifndef _CHEATS__H_
 #define _CHEATS__H_
 
-#include "Types.h"
+#include "sgp/Types.h"
 #include "GameState.h"
 
 extern	UINT8			gubCheatLevel;

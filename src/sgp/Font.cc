@@ -1,6 +1,6 @@
 #include <stdarg.h>
 #include "HImage.h"
-#include "Local.h"
+#include "game/Local.h"
 #include "Types.h"
 #include "MemMan.h"
 #include "Font.h"
@@ -9,8 +9,8 @@
 #include "VSurface.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
-#include "UILayout.h"
-#include "GameRes.h"
+#include "game/UILayout.h"
+#include "game/GameRes.h"
 #include "slog/slog.h"
 
 typedef UINT8 GlyphIdx;

@@ -2,7 +2,7 @@
 #define __OVERHEAD_TYPES_H
 // GLOBAL HEADER FOR DATA, TYPES FOR TACTICAL ENGINE
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 #define REFINE_AIM_1					0

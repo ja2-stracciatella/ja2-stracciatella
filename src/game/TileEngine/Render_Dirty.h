@@ -1,7 +1,7 @@
 #ifndef __RENDER_DIRTY_H
 #define __RENDER_DIRTY_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 #define NO_BGND_RECT NULL

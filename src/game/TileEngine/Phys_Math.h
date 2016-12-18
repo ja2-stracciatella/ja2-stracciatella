@@ -1,7 +1,7 @@
 #ifndef __PHYS_MATH_H
 #define __PHYS_MATH_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 struct vector_3
 {

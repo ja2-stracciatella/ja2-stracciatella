@@ -1,7 +1,7 @@
 #ifndef LOADSAVETACTICALSTATUSTYPE_H
 #define LOADSAVETACTICALSTATUSTYPE_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 #define TACTICAL_STATUS_TYPE_SIZE               (316)

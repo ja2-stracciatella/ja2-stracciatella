@@ -1,7 +1,7 @@
 #ifndef _SOLDIER_CREATE_H
 #define _SOLDIER_CREATE_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "Overhead_Types.h"
 #include "Item_Types.h"
 #include "Soldier_Control.h"

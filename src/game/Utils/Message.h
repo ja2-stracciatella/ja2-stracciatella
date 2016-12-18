@@ -1,7 +1,7 @@
 #ifndef __MESSAGE_H
 #define __MESSAGE_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 extern UINT8 gubCurrentMapMessageString;
 

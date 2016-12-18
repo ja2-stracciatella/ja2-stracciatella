@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IMPPolicy.h"
-#include "ItemModel.h"
+#include "externalized/ItemModel.h"
 
 #include "rapidjson/document.h"
 

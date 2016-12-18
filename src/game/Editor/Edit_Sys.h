@@ -1,7 +1,7 @@
 #ifndef __EDIT_SYS_H
 #define __EDIT_SYS_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 #define			SMALLBRUSH		0

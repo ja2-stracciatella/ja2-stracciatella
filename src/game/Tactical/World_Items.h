@@ -1,7 +1,7 @@
 #ifndef __WORLD_ITEMS
 #define __WORLD_ITEMS
 
-#include "Debug.h"
+#include "sgp/Debug.h"
 #include "Item_Types.h"
 
 

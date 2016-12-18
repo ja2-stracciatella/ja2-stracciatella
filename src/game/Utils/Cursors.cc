@@ -1,15 +1,15 @@
 #include "Cursors.h"
-#include "Directories.h"
+#include "game/Directories.h"
 #include "Timer_Control.h"
-#include "Font.h"
+#include "sgp/Font.h"
 #include "Font_Control.h"
-#include "Handle_UI.h"
-#include "Interface.h"
-#include "Overhead.h"
-#include "Cursor_Control.h"
+#include "game/Tactical/Handle_UI.h"
+#include "game/Tactical/Interface.h"
+#include "game/Tactical/Overhead.h"
+#include "sgp/Cursor_Control.h"
 #include "Sound_Control.h"
-#include "Video.h"
-#include "VSurface.h"
+#include "sgp/Video.h"
+#include "sgp/VSurface.h"
 
 
 #define SCURSOR(name)         { name, NULL, 0,                   0 }

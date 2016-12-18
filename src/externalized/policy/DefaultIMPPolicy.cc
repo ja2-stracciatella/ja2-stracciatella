@@ -4,8 +4,8 @@
 
 #include "boost/foreach.hpp"
 
-#include "ItemSystem.h"
-#include "JsonUtility.h"
+#include "externalized/ItemSystem.h"
+#include "externalized/JsonUtility.h"
 
 struct ItemModel;
 

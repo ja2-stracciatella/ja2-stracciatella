@@ -1,9 +1,9 @@
 #ifndef _MUSIC_CONTROL_H_
 #define _MUSIC_CONTROL_H_
 
-#include "SoundMan.h"
-#include "UTF8String.h"
-#include "ContentMusic.h"
+#include "sgp/SoundMan.h"
+#include "sgp/UTF8String.h"
+#include "externalized/content/ContentMusic.h"
 
 extern MusicMode gubMusicMode;
 extern BOOLEAN	gfForceMusicToTense;

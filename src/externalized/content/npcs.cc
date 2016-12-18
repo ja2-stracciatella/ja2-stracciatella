@@ -1,4 +1,4 @@
-#include "content/npcs.h"
+#include "npcs.h"
 
 /** Get NPC name by ID.
  * @return NPC's name or NULL when not found */

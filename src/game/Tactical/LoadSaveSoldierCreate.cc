@@ -1,7 +1,7 @@
-#include "Debug.h"
+#include "sgp/Debug.h"
 #include "LoadSaveSoldierCreate.h"
-#include "FileMan.h"
-#include "LoadSaveData.h"
+#include "sgp/FileMan.h"
+#include "sgp/LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 
 #include "slog/slog.h"

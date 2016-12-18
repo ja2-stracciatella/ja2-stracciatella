@@ -1,13 +1,13 @@
-#include "Directories.h"
-#include "Font.h"
-#include "HImage.h"
-#include "VObject.h"
-#include "VSurface.h"
-#include "WCheck.h"
+#include "game/Directories.h"
+#include "sgp/Font.h"
+#include "sgp/HImage.h"
+#include "sgp/VObject.h"
+#include "sgp/VSurface.h"
+#include "sgp/WCheck.h"
 #include "Font_Control.h"
-#include "MemMan.h"
-#include "GameRes.h"
-#include "GameState.h"
+#include "sgp/MemMan.h"
+#include "game/GameRes.h"
+#include "game/GameState.h"
 
 
 SGPFont gp10PointArial;

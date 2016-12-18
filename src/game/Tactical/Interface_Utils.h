@@ -2,7 +2,7 @@
 #define __INTERFACE_UTILS_H
 
 #include "Item_Types.h"
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 #define		DRAW_ITEM_STATUS_ATTACHMENT1		200

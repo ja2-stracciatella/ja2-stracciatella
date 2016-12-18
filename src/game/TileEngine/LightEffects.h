@@ -1,7 +1,7 @@
 #ifndef __LIGHT_EFFECTS
 #define __LIGHT_EFFECTS
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 // Light effect types

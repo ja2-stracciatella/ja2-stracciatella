@@ -1,18 +1,18 @@
 #include <stdexcept>
 
-#include "Font.h"
-#include "Local.h"
+#include "sgp/Font.h"
+#include "game/Local.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
-#include "VSurface.h"
+#include "sgp/VSurface.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"
-#include "Video.h"
-#include "VObject_Blitters.h"
+#include "sgp/Video.h"
+#include "sgp/VObject_Blitters.h"
 #include <stdarg.h>
-#include "MemMan.h"
-#include "Debug.h"
-#include "UILayout.h"
+#include "sgp/MemMan.h"
+#include "sgp/Debug.h"
+#include "game/UILayout.h"
 
 #include <vector>
 

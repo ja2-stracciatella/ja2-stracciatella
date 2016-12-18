@@ -1,19 +1,19 @@
 #include <stdexcept>
 
-#include "Directories.h"
-#include "Font.h"
-#include "HImage.h"
-#include "Local.h"
+#include "game/Directories.h"
+#include "sgp/Font.h"
+#include "sgp/HImage.h"
+#include "game/Local.h"
 #include "MercTextBox.h"
-#include "PODObj.h"
-#include "VObject.h"
-#include "VSurface.h"
+#include "sgp/PODObj.h"
+#include "sgp/VObject.h"
+#include "sgp/VSurface.h"
 #include "Font_Control.h"
 #include "WordWrap.h"
-#include "Render_Dirty.h"
-#include "Video.h"
-#include "MemMan.h"
-#include "UILayout.h"
+#include "game/TileEngine/Render_Dirty.h"
+#include "sgp/Video.h"
+#include "sgp/MemMan.h"
+#include "game/UILayout.h"
 
 
 #define		TEXT_POPUP_GAP_BN_LINES						10

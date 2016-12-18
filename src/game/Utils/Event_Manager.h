@@ -1,7 +1,7 @@
 #ifndef __EVENT_MANAGER_H
 #define __EVENT_MANAGER_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 struct EVENT
 {

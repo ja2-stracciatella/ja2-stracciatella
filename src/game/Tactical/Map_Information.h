@@ -1,7 +1,7 @@
 #ifndef __MAP_INFORMATION_H
 #define __MAP_INFORMATION_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 extern UINT8 gubMinorMapVersion;
 

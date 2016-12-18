@@ -1,7 +1,7 @@
 #ifndef __Q_ARRAY_H
 #define __Q_ARRAY_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 extern	BOOLEAN QuoteExp_HeadShotOnly[75];

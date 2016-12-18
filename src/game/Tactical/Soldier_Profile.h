@@ -1,8 +1,8 @@
 #ifndef __SOLDER_PROFILE_H
 #define __SOLDER_PROFILE_H
 
-#include "Debug.h"
-#include "JA2Types.h"
+#include "sgp/Debug.h"
+#include "game/JA2Types.h"
 #include "Soldier_Profile_Type.h"
 
 

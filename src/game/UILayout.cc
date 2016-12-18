@@ -1,7 +1,7 @@
 #include "UILayout.h"
 
-#include "MapScreen.h"
-#include "Soldier_Control.h"
+#include "game/Strategic/MapScreen.h"
+#include "game/Tactical/Soldier_Control.h"
 #include "JAScreens.h"
 
 #define MIN_INTERFACE_WIDTH       640

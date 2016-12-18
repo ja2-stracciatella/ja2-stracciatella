@@ -1,7 +1,7 @@
 #ifndef __ITEM_STATISTICS_H
 #define __ITEM_STATISTICS_H
 
-#include "Item_Types.h"
+#include "game/Tactical/Item_Types.h"
 
 //Handles the dynamic changing of text input fields and button modes depending on the currently edited
 //item.  Both the merc's inventory panel, and the items tab use the same code to accomplish this.

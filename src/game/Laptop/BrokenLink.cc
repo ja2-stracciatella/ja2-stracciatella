@@ -1,13 +1,13 @@
 #include "BrokenLink.h"
-#include "Font.h"
-#include "HImage.h"
-#include "VObject.h"
-#include "WordWrap.h"
+#include "sgp/Font.h"
+#include "sgp/HImage.h"
+#include "sgp/VObject.h"
+#include "game/Utils/WordWrap.h"
 #include "Laptop.h"
-#include "Text.h"
-#include "Video.h"
-#include "VSurface.h"
-#include "Font_Control.h"
+#include "game/Utils/Text.h"
+#include "sgp/Video.h"
+#include "sgp/VSurface.h"
+#include "game/Utils/Font_Control.h"
 
 
 #define		BROKEN_LINK__FONT									FONT12ARIAL

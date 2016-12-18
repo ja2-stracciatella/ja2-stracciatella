@@ -6,12 +6,12 @@
 #include "sgp/FileMan.h"
 
 #include "Directories.h"
-#include "Multi_Language_Graphic_Utils.h"
-#include "Text.h"
-#include "TranslationTable.h"
+#include "game/Utils/Multi_Language_Graphic_Utils.h"
+#include "game/Utils/Text.h"
+#include "sgp/TranslationTable.h"
 #include "GameState.h"
-#include "EncodingCorrectors.h"
-#include "StrUtils.h"
+#include "sgp/EncodingCorrectors.h"
+#include "sgp/StrUtils.h"
 
 #include "slog/slog.h"
 

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "ItemModel.h"
+#include "externalized/ItemModel.h"
 
 class ItemSystem;
 

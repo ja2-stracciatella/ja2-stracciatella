@@ -1,7 +1,7 @@
 #ifndef LOADSAVEVEHICLETYPE_H
 #define LOADSAVEVEHICLETYPE_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 void ExtractVehicleTypeFromFile(HWFILE, VEHICLETYPE*, UINT32 savegame_version);

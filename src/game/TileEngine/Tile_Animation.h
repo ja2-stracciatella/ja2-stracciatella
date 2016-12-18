@@ -1,8 +1,8 @@
 #ifndef _TILE_ANIMATION_H
 #define _TILE_ANIMATION_H
 
-#include "JA2Types.h"
-#include "Sound_Control.h"
+#include "game/JA2Types.h"
+#include "game/Utils/Sound_Control.h"
 #include "WorldDef.h"
 
 

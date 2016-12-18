@@ -1,7 +1,7 @@
 #ifndef _GAME_VERSION_H_
 #define _GAME_VERSION_H_
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 //

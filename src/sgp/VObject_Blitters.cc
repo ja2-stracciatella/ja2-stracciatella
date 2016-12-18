@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "Debug.h"
 #include "HImage.h"
-#include "Local.h"
+#include "game/Local.h"
 #include "MemMan.h"
 #include "Shading.h"
 #include "VObject.h"

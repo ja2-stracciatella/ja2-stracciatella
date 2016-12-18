@@ -1,7 +1,7 @@
 #ifndef __TILEDAT_H
 #define __TILEDAT_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 enum TileDefines

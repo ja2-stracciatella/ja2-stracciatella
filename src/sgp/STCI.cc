@@ -8,8 +8,8 @@
 #include "Debug.h"
 #include "STCI.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 #include "slog/slog.h"
 
 static SGPImage* STCILoadIndexed(UINT16 contents, HWFILE, STCIHeader const*);

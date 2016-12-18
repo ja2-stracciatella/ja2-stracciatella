@@ -1,7 +1,7 @@
 #ifndef CINEMATICS_H
 #define CINEMATICS_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 struct SMKFLIC;

@@ -1,9 +1,9 @@
-#include "Directories.h"
+#include "game/Directories.h"
 #include "Types.h"
 #include "Button_Sound_Control.h"
-#include "Sound_Control.h"
-#include "JAScreens.h"
-#include "ScreenIDs.h"
+#include "game/Utils/Sound_Control.h"
+#include "game/JAScreens.h"
+#include "game/ScreenIDs.h"
 
 
 void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme scheme)

@@ -1,7 +1,7 @@
 #ifndef JA2_SPLASH_H
 #define JA2_SPLASH_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 void InitJA2SplashScreen(void);

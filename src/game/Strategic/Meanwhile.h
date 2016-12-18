@@ -1,7 +1,7 @@
 #ifndef MEANWHILE_H
 #define MEANWHILE_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 enum

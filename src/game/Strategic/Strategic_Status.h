@@ -1,8 +1,8 @@
 #ifndef __STRATEGIC_STATUS_H
 #define __STRATEGIC_STATUS_H
 
-#include "Item_Types.h"
-#include "JA2Types.h"
+#include "game/Tactical/Item_Types.h"
+#include "game/JA2Types.h"
 
 
 //Enemy is allowed to capture the player after certain day

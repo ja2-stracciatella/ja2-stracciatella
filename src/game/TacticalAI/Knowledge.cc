@@ -1,14 +1,14 @@
 #include "AI.h"
 #include "AIInternals.h"
-#include "Isometric_Utils.h"
-#include "OppList.h"
-#include "Soldier_Profile.h"
-#include "LOS.h"
+#include "game/TileEngine/Isometric_Utils.h"
+#include "game/Tactical/OppList.h"
+#include "game/Tactical/Soldier_Profile.h"
+#include "game/Tactical/LOS.h"
 #include "NPC.h"
-#include "Quests.h"
-#include "Render_Fun.h"
-#include "Soldier_Macros.h"
-#include "Timer_Control.h"
+#include "game/Strategic/Quests.h"
+#include "game/TileEngine/Render_Fun.h"
+#include "game/Tactical/Soldier_Macros.h"
+#include "game/Utils/Timer_Control.h"
 
 
 void CallAvailableEnemiesTo(GridNo grid_no)

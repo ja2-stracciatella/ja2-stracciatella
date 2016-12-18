@@ -2,7 +2,7 @@
 #define LOADSAVEMERCPROFILE_H
 
 #include "Soldier_Profile_Type.h"
-#include "IEncodingCorrector.h"
+#include "sgp/IEncodingCorrector.h"
 
 #define MERC_PROFILE_SIZE               (716)           /**< Vanilla Merc profile size */
 #define MERC_PROFILE_SIZE_STRAC_LINUX   (796)           /**< Stracciatella Linux Merc profile size */

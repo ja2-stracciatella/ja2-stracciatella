@@ -1,7 +1,7 @@
 #ifndef __RADAR_SCREEN_H
 #define __RADAR_SCREEN_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 void LoadRadarScreenBitmap(const char* filename);

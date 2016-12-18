@@ -1,7 +1,7 @@
 #ifndef _SELECTION_WIN_H_
 #define _SELECTION_WIN_H_
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 enum SelectWindow

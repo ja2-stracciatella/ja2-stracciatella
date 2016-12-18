@@ -2,11 +2,11 @@
 #define __MAP_SCREEN_HELICOPTER_H
 
 #include "Assignments.h"
-#include "Debug.h"
-#include "JA2Types.h"
-#include "Soldier_Control.h"
+#include "sgp/Debug.h"
+#include "game/JA2Types.h"
+#include "game/Tactical/Soldier_Control.h"
 #include "Strategic_Movement.h"
-#include "Vehicles.h"
+#include "game/Tactical/Vehicles.h"
 
 // costs of flying through sectors
 #define COST_AIRSPACE_SAFE    100

@@ -1,7 +1,7 @@
 #include "Directories.h"
 #include "MercPortrait.h"
-#include "Soldier_Profile_Type.h"
-#include "VObject.h"
+#include "game/Tactical/Soldier_Profile_Type.h"
+#include "sgp/VObject.h"
 
 
 static SGPVObject* LoadPortrait(MERCPROFILESTRUCT const& p, char const* const subdir)

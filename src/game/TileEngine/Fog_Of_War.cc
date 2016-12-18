@@ -1,4 +1,4 @@
-#include "Types.h"
+#include "sgp/Types.h"
 #include "Fog_Of_War.h"
 #include "Simple_Render_Utils.h"
 #include "Lighting.h"

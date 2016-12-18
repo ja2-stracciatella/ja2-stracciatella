@@ -2,7 +2,7 @@
 #define _INTERFACE_H
 
 #include "Handle_UI.h"
-#include "MouseSystem.h"
+#include "sgp/MouseSystem.h"
 
 
 #define					MAX_UICOMPOSITES	4

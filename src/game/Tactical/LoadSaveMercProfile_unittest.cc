@@ -2,9 +2,9 @@
 
 #include "gtest/gtest.h"
 
-#include "EncodingCorrectors.h"
-#include "FileMan.h"
-#include "IMP_Compile_Character.h"
+#include "sgp/EncodingCorrectors.h"
+#include "sgp/FileMan.h"
+#include "game/Laptop/IMP_Compile_Character.h"
 #include "LoadSaveMercProfile.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Profile_Type.h"

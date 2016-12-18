@@ -1,17 +1,17 @@
-#include "Directories.h"
+#include "game/Directories.h"
 #include "Laptop.h"
 #include "Florist.h"
 #include "Florist_Gallery.h"
-#include "VObject.h"
-#include "WordWrap.h"
-#include "Cursors.h"
-#include "Text.h"
-#include "Button_System.h"
-#include "Video.h"
-#include "Font_Control.h"
+#include "sgp/VObject.h"
+#include "game/Utils/WordWrap.h"
+#include "game/Utils/Cursors.h"
+#include "game/Utils/Text.h"
+#include "sgp/Button_System.h"
+#include "sgp/Video.h"
+#include "game/Utils/Font_Control.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 
 #define	FLOR_GALLERY_TITLE_FONT								FONT10ARIAL
 #define	FLOR_GALLERY_TITLE_COLOR							FONT_MCOLOR_WHITE

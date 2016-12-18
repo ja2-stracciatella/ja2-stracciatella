@@ -205,7 +205,7 @@ void FileClose(SGPFile* f)
 
 
 #ifdef JA2TESTVERSION
-#	include "Timer_Control.h"
+#	include "game/Utils/Timer_Control.h"
 extern UINT32 uiTotalFileReadTime;
 extern UINT32 uiTotalFileReadCalls;
 #endif

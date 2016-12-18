@@ -1,7 +1,7 @@
 #ifndef STRATEGIC_MOVEMENT_COSTS_H
 #define STRATEGIC_MOVEMENT_COSTS_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 void InitStrategicMovementCosts();

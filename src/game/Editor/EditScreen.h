@@ -2,8 +2,8 @@
 #define EDITSCREEN_H
 
 #include "EditorDefines.h"
-#include "JA2Types.h"
-#include "ScreenIDs.h"
+#include "game/JA2Types.h"
+#include "game/ScreenIDs.h"
 
 
 #define EDITOR_LIGHT_MAX		(SHADE_MIN + SHADE_MAX)

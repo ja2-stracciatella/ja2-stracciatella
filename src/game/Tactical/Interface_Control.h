@@ -1,7 +1,7 @@
 #ifndef __INTERFACE_CONTROL_H
 #define __INTERFACE_CONTROL_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 void SetUpInterface();

@@ -1,7 +1,7 @@
 #ifndef __TILEDEF_H
 #define __TILEDEF_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "TileDat.h"
 
 

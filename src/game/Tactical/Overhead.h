@@ -1,7 +1,7 @@
 #ifndef __OVERHEAD_H
 #define __OVERHEAD_H
 
-#include "Debug.h"
+#include "sgp/Debug.h"
 #include "Soldier_Control.h"
 
 

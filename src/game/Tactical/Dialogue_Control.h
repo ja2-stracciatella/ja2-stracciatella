@@ -2,9 +2,9 @@
 #define _DIALOG_CONTROL_H
 
 #include "Faces.h"
-#include "GameScreen.h"
+#include "game/GameScreen.h"
 
-#include "MercProfile.h"
+#include "externalized/MercProfile.h"
 
 // An enumeration for dialog quotes
 enum DialogQuoteIDs

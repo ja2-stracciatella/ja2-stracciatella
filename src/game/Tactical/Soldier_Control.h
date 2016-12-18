@@ -7,7 +7,7 @@
 #define MAXPATROLGRIDS  10  // *** THIS IS A DUPLICATION - MUST BE MOVED !
 
 #include "Animation_Cache.h"
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "Overhead_Types.h"
 #include "Item_Types.h"
 

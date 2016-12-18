@@ -16,7 +16,7 @@
 
 #ifdef JA2
 #	include "MouseSystem.h"
-#	include "MessageBoxScreen.h"
+#	include "game/MessageBoxScreen.h"
 #endif
 
 // debug variable for total memory currently allocated

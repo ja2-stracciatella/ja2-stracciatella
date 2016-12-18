@@ -13,10 +13,10 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "WCheck.h"
-#include "WordWrap.h"
+#include "game/Utils/WordWrap.h"
 
 #ifdef _JA2_RENDER_DIRTY
-#	include "Font_Control.h"
+#	include "game/Utils/Font_Control.h"
 #endif
 
 

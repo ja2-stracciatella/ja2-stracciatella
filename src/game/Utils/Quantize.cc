@@ -1,5 +1,5 @@
-#include "HImage.h"
-#include "MemMan.h"
+#include "sgp/HImage.h"
+#include "sgp/MemMan.h"
 #include "Quantize.h"
 
 

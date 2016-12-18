@@ -1,20 +1,20 @@
-#include "FileMan.h"
-#include "Types.h"
+#include "sgp/FileMan.h"
+#include "sgp/Types.h"
 #include "Map_Information.h"
 #include "Soldier_Init_List.h"
-#include "Random.h"
-#include "WorldDef.h"
-#include "RenderWorld.h"
-#include "EditorMercs.h"
-#include "Exit_Grids.h"
-#include "Isometric_Utils.h"
+#include "sgp/Random.h"
+#include "game/TileEngine/WorldDef.h"
+#include "game/TileEngine/RenderWorld.h"
+#include "game/Editor/EditorMercs.h"
+#include "game/TileEngine/Exit_Grids.h"
+#include "game/TileEngine/Isometric_Utils.h"
 #include "Animation_Data.h"
-#include "Road_Smoothing.h"
+#include "game/Editor/Road_Smoothing.h"
 #include "Weapons.h"
-#include "Environment.h"
-#include "Lighting.h"
-#include "Animated_ProgressBar.h"
-#include "Debug.h"
+#include "game/TileEngine/Environment.h"
+#include "game/TileEngine/Lighting.h"
+#include "game/Utils/Animated_ProgressBar.h"
+#include "sgp/Debug.h"
 #include "World_Items.h"
 
 
@@ -553,7 +553,7 @@ void ValidateAndUpdateMapVersionIfNecessary()
 	AutoCalculateItemNoOverwriteStatus() ;
 }
 
-#include "Summary_Info.h"
+#include "game/Editor/Summary_Info.h"
 //This function is used to avoid conflicts between minor version updates and sector summary info.
 //By updating the summary info in conjunction with minor version updates, we can avoid these conflicts
 //and really prevent major map updates.

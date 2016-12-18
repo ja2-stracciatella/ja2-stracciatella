@@ -2,8 +2,8 @@
 #define __WEAPONS_H
 
 #include "Item_Types.h"
-#include "JA2Types.h"
-#include "Sound_Control.h"
+#include "game/JA2Types.h"
+#include "game/Utils/Sound_Control.h"
 
 struct CalibreModel;
 

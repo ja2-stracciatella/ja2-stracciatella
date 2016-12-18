@@ -1,10 +1,10 @@
 #include <vector>
 
-#include "Debug.h"
-#include "FileMan.h"
-#include "LoadSaveData.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
+#include "sgp/LoadSaveData.h"
 #include "LoadSaveTacticalStatusType.h"
-#include "Overhead.h"
+#include "game/Tactical/Overhead.h"
 
 
 void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)

@@ -1,9 +1,9 @@
 #ifndef __AUTO_RESOLVE_H
 #define __AUTO_RESOLVE_H
 
-#include "Item_Types.h"
-#include "JA2Types.h"
-#include "ScreenIDs.h"
+#include "game/Tactical/Item_Types.h"
+#include "game/JA2Types.h"
+#include "game/ScreenIDs.h"
 
 
 void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY );

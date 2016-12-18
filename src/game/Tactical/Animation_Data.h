@@ -1,7 +1,7 @@
 #ifndef ANIMATION_DATA_H_
 #define ANIMATION_DATA_H_
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 // DEFINES FOR ANIMATION PROFILES

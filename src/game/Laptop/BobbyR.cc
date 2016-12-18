@@ -1,31 +1,31 @@
-#include "Directories.h"
-#include "Font.h"
+#include "game/Directories.h"
+#include "sgp/Font.h"
 #include "Laptop.h"
 #include "BobbyR.h"
 #include "BobbyRGuns.h"
-#include "Timer_Control.h"
-#include "VObject.h"
-#include "WordWrap.h"
-#include "Cursors.h"
-#include "Interface_Items.h"
-#include "Weapons.h"
+#include "game/Utils/Timer_Control.h"
+#include "sgp/VObject.h"
+#include "game/Utils/WordWrap.h"
+#include "game/Utils/Cursors.h"
+#include "game/Tactical/Interface_Items.h"
+#include "game/Tactical/Weapons.h"
 #include "Store_Inventory.h"
-#include "Game_Event_Hook.h"
-#include "Game_Clock.h"
+#include "game/Strategic/Game_Event_Hook.h"
+#include "game/Strategic/Game_Clock.h"
 #include "LaptopSave.h"
-#include "Random.h"
-#include "Text.h"
-#include "Multi_Language_Graphic_Utils.h"
-#include "ArmsDealerInvInit.h"
-#include "Video.h"
-#include "VSurface.h"
-#include "Debug.h"
-#include "Font_Control.h"
-#include "Items.h"
+#include "sgp/Random.h"
+#include "game/Utils/Text.h"
+#include "game/Utils/Multi_Language_Graphic_Utils.h"
+#include "game/Tactical/ArmsDealerInvInit.h"
+#include "sgp/Video.h"
+#include "sgp/VSurface.h"
+#include "sgp/Debug.h"
+#include "game/Utils/Font_Control.h"
+#include "game/Tactical/Items.h"
 
-#include "ContentManager.h"
-#include "DealerInventory.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/DealerInventory.h"
+#include "externalized/GameInstance.h"
 
 
 #ifdef JA2TESTVERSION
@@ -33,7 +33,7 @@
 #endif
 
 #ifdef BR_INVENTORY_TURNOVER_DEBUG
-#	include "Message.h"
+#	include "game/Utils/Message.h"
 #endif
 
 

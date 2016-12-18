@@ -1,7 +1,7 @@
 #ifndef _MERC_CONTRACT_H_
 #define _MERC_CONTRACT_H_
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 
 //enums used for extending contract, etc.

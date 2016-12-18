@@ -1,16 +1,16 @@
 #include <stdexcept>
 
-#include "HImage.h"
+#include "sgp/HImage.h"
 #include "Structure.h"
 #include "TileDef.h"
-#include "VObject.h"
+#include "sgp/VObject.h"
 #include "WorldDef.h"
-#include "Debug.h"
+#include "sgp/Debug.h"
 #include "WorldMan.h"
-#include "Edit_Sys.h"
-#include "PathAI.h"
+#include "game/Editor/Edit_Sys.h"
+#include "game/Tactical/PathAI.h"
 #include "Tile_Surface.h"
-#include "MemMan.h"
+#include "sgp/MemMan.h"
 #include "slog/slog.h"
 
 // GLobals

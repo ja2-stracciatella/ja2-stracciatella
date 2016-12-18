@@ -1,10 +1,10 @@
-#include "TileDef.h"
-#include "WorldDef.h"
-#include "WorldMan.h"
+#include "game/TileEngine/TileDef.h"
+#include "game/TileEngine/WorldDef.h"
+#include "game/TileEngine/WorldMan.h"
 #include "Smooth.h"
 #include "EditScreen.h"
-#include "Structure_Wrap.h"
-#include "Exit_Grids.h"
+#include "game/Tactical/Structure_Wrap.h"
+#include "game/TileEngine/Exit_Grids.h"
 #include "Editor_Undo.h"
 
 

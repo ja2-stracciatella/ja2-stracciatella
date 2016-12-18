@@ -1,7 +1,7 @@
 #ifndef _JA2_LOAD_SCREEN_
 #define _JA2_LOAD_SCREEN_
 
-#include "ScreenIDs.h"
+#include "game/ScreenIDs.h"
 
 
 struct FDLG_LIST

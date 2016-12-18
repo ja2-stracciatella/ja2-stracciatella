@@ -1,40 +1,40 @@
 #include <stdexcept>
 
-#include "Buffer.h"
-#include "HImage.h"
-#include "LoadSaveData.h"
-#include "Soldier_Control.h"
-#include "Types.h"
-#include "VObject.h"
-#include "WCheck.h"
-#include "Debug.h"
-#include "FileMan.h"
-#include "MemMan.h"
+#include "sgp/Buffer.h"
+#include "sgp/HImage.h"
+#include "sgp/LoadSaveData.h"
+#include "game/Tactical/Soldier_Control.h"
+#include "sgp/Types.h"
+#include "sgp/VObject.h"
+#include "sgp/WCheck.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
+#include "sgp/MemMan.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
-#include "Interface.h"
+#include "game/Tactical/Interface.h"
 #include "Isometric_Utils.h"
-#include "Font.h"
-#include "Font_Control.h"
-#include "Debug_Pages.h"
-#include "LOS.h"
+#include "sgp/Font.h"
+#include "game/Utils/Font_Control.h"
+#include "game/Utils/Debug_Pages.h"
+#include "game/Tactical/LOS.h"
 #include "Smell.h"
 #include "SaveLoadMap.h"
-#include "StrategicMap.h"
-#include "Sys_Globals.h"	//for access to gfEditMode flag
+#include "game/Strategic/StrategicMap.h"
+#include "game/Sys_Globals.h"	//for access to gfEditMode flag
 //Kris:
-#include "Editor_Undo.h" //for access to AddToUndoList( iMapIndex )
+#include "game/Editor/Editor_Undo.h" //for access to AddToUndoList( iMapIndex )
 
 #include "Explosion_Control.h"
 #include "Buildings.h"
-#include "Random.h"
+#include "sgp/Random.h"
 #include "Tile_Animation.h"
-#include "GameState.h"
+#include "game/GameState.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 
 #ifdef COUNT_PATHS
 	extern UINT32 guiSuccessfulPathChecks;

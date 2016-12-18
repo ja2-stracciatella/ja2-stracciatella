@@ -1,12 +1,12 @@
 #ifndef __INTERFACE_ITEMS_H
 #define __INTERFACE_ITEMS_H
 
-#include "Button_System.h"
+#include "sgp/Button_System.h"
 #include "Interface.h"
-#include "MouseSystem.h"
+#include "sgp/MouseSystem.h"
 #include "Soldier_Control.h"
 
-#include "UILayout.h"
+#include "game/UILayout.h"
 
 struct ItemModel;
 

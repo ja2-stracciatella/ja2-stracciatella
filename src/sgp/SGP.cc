@@ -13,36 +13,36 @@
 #include <new>
 
 #include "Button_System.h"
-#include "Cheats.h"
+#include "game/Cheats.h"
 #include "Debug.h"
 #include "FileMan.h"
 #include "Font.h"
-#include "GameLoop.h"
-#include "Init.h" // XXX should not be used in SGP
+#include "game/GameLoop.h"
+#include "game/Init.h" // XXX should not be used in SGP
 #include "Input.h"
-#include "Intro.h"
-#include "JA2_Splash.h"
+#include "game/Intro.h"
+#include "game/JA2_Splash.h"
 #include "MemMan.h"
 #include "Random.h"
 #include "SGP.h"
-#include "SaveLoadGame.h" // XXX should not be used in SGP
+#include "game/SaveLoadGame.h" // XXX should not be used in SGP
 #include "SoundMan.h"
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
 #include <SDL.h>
-#include "UILayout.h"
-#include "GameRes.h"
-#include "GameState.h"
+#include "game/UILayout.h"
+#include "game/GameRes.h"
+#include "game/GameState.h"
 #include "Timer.h"
 
-#include "DefaultContentManager.h"
-#include "GameInstance.h"
-#include "JsonUtility.h"
-#include "ModPackContentManager.h"
-#include "policy/GamePolicy.h"
-#include "sgp/UTF8String.h"
-#include "RustInterface.h"
+#include "externalized/DefaultContentManager.h"
+#include "externalized/GameInstance.h"
+#include "externalized/JsonUtility.h"
+#include "externalized/ModPackContentManager.h"
+#include "externalized/policy/GamePolicy.h"
+#include "UTF8String.h"
+#include "externalized/RustInterface.h"
 
 #include "slog/slog.h"
 
@@ -54,10 +54,10 @@
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
 
-#	include "Local.h"
+#	include "game/Local.h"
 #endif
 
-#include "Multi_Language_Graphic_Utils.h"
+#include "game/Utils/Multi_Language_Graphic_Utils.h"
 
 
 #ifdef JA2
@@ -69,10 +69,10 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 //
 ////////////////////////////////////////////////////////////////////////////
 
-// #include "JsonObject.h"
-// #include "MagazineModel.h"
-// #include "WeaponModels.h"
-// #include "Weapons.h"
+// #include "externalized/JsonObject.h"
+// #include "externalized/MagazineModel.h"
+// #include "externalized/WeaponModels.h"
+// #include "game/Tactical/Weapons.h"
 // #include "rapidjson/document.h"
 // #include "rapidjson/filestream.h"
 // #include "rapidjson/prettywriter.h"

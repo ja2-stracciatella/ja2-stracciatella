@@ -1,8 +1,8 @@
 #ifndef __MAP_INTERFACE_BORDER_H
 #define __MAP_INTERFACE_BORDER_H
 
-#include "Button_System.h"
-#include "Types.h"
+#include "sgp/Button_System.h"
+#include "sgp/Types.h"
 
 
 #define     MAP_BORDER_START_X   261

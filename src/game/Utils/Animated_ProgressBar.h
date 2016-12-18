@@ -1,7 +1,7 @@
 #ifndef __ANIMATED_PROGRESSBAR_H
 #define __ANIMATED_PROGRESSBAR_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 void CreateLoadingScreenProgressBar(void);

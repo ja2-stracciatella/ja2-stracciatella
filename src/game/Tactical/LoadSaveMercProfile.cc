@@ -1,11 +1,11 @@
 #include <stdexcept>
 
-#include "Debug.h"
-#include "FileMan.h"
-#include "LoadSaveData.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
+#include "sgp/LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
 #include "Tactical_Save.h"
-#include "UTF8String.h"
+#include "sgp/UTF8String.h"
 
 /** Calculates soldier profile checksum. */
 UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)

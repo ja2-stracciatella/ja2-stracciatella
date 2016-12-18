@@ -1,7 +1,7 @@
 #ifndef LOS_H
 #define LOS_H
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 
 //#define LOS_DEBUG
 

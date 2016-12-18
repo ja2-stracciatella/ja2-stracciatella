@@ -1,20 +1,20 @@
 #include <stdexcept>
 #include <vector>
 
-#include "Directories.h"
-#include "HImage.h"
+#include "game/Directories.h"
+#include "sgp/HImage.h"
 #include "Structure.h"
 #include "TileDef.h"
-#include "Animation_Cache.h"
-#include "Animation_Data.h"
+#include "game/Tactical/Animation_Cache.h"
+#include "game/Tactical/Animation_Data.h"
 #include "Tile_Surface.h"
 #include "Tile_Cache.h"
-#include "FileMan.h"
-#include "MemMan.h"
+#include "sgp/FileMan.h"
+#include "sgp/MemMan.h"
 #include <boost/foreach.hpp>
 
-#include "ContentManager.h"
-#include "GameInstance.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
 
 struct TILE_CACHE_STRUCT
 {

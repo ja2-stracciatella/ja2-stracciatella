@@ -1,9 +1,9 @@
 #ifndef __INTERFACE_DIALOGUE_H
 #define __INTERFACE_DIALOGUE_H
 
-#include "Button_System.h"
-#include "MouseSystem.h"
-#include "NPC.h"
+#include "sgp/Button_System.h"
+#include "sgp/MouseSystem.h"
+#include "game/TacticalAI/NPC.h"
 
 
 extern UINT8 gubSrcSoldierProfile;

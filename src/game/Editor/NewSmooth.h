@@ -1,7 +1,7 @@
 #ifndef __NEWSMOOTH_H
 #define __NEWSMOOTH_H
 
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 void AddBuildingSectionToWorld( SGPRect *pSelectRegion );

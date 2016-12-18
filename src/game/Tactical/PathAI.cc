@@ -8,32 +8,32 @@
 	Date            :       1997-NOV
 */
 
-#include "Font_Control.h"
-#include "Isometric_Utils.h"
+#include "game/Utils/Font_Control.h"
+#include "game/TileEngine/Isometric_Utils.h"
 #include "Overhead.h"
-#include "MemMan.h"
+#include "sgp/MemMan.h"
 #include "Overhead_Types.h"
 #include "Soldier_Control.h"
 #include "Animation_Cache.h"
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Interface.h"
-#include "Input.h"
-#include "English.h"
-#include "Structure.h"
-#include "TileDef.h"
-#include "WorldDef.h"
-#include "WorldMan.h"
+#include "sgp/Input.h"
+#include "sgp/English.h"
+#include "game/TileEngine/Structure.h"
+#include "game/TileEngine/TileDef.h"
+#include "game/TileEngine/WorldDef.h"
+#include "game/TileEngine/WorldMan.h"
 #include "PathAI.h"
 #include "PathAIDebug.h"
 #include "Points.h"
-#include "AI.h"
-#include "Random.h"
-#include "Message.h"
+#include "game/TacticalAI/AI.h"
+#include "sgp/Random.h"
+#include "game/Utils/Message.h"
 #include "Structure_Wrap.h"
 #include "Keys.h"
-#include "GameSettings.h"
-#include "Buildings.h"
+#include "game/GameSettings.h"
+#include "game/TileEngine/Buildings.h"
 #include "slog/slog.h"
 
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
@@ -44,7 +44,7 @@
 //#define PATHAI_SKIPLIST_DEBUG
 
 #ifdef PATHAI_VISIBLE_DEBUG
-#include "Video.h"
+#include "sgp/Video.h"
 
 extern INT16 gsCoverValue[WORLD_MAX];
 BOOLEAN gfDisplayCoverValues = TRUE;

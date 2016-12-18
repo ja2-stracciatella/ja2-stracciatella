@@ -3,7 +3,7 @@
 
 // header for assignment manipulation/updating for characters
 
-#include "JA2Types.h"
+#include "game/JA2Types.h"
 #include "Strategic_Movement.h"
 
 

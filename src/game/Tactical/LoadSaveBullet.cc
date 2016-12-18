@@ -1,7 +1,7 @@
-#include "Debug.h"
-#include "FileMan.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
 #include "LoadSaveBullet.h"
-#include "LoadSaveData.h"
+#include "sgp/LoadSaveData.h"
 #include "Overhead.h"
 
 

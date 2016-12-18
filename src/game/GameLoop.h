@@ -3,7 +3,7 @@
 
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
-#include "Types.h"
+#include "sgp/Types.h"
 
 
 void InitializeGame(void);
