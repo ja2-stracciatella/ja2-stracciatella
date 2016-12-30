@@ -501,11 +501,6 @@ static bool AdjacentSectorIsImportantAndUndefended(UINT8 const sector_id)
 }
 
 
-static void ValidateWeights(INT32 iID)
-{
-}
-
-
 static void ReassignAIGroup(GROUP** pGroup);
 
 
@@ -833,8 +828,6 @@ void InitStrategicAI()
 	SECTORINFO& si = SectorInfo[cache_sectors[Random(lengthof(cache_sectors))]];
 	si.uiFlags     |= SF_USE_ALTERNATE_MAP;
 	si.ubNumTroops  = 6 + difficulty * 2;
-
-	ValidateWeights(1);
 }
 
 
@@ -1275,8 +1268,6 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 	GROUP *pPatrolGroup;
 	INT32 i;
 
-	ValidateWeights( 2 );
-
 	if( !gfQueenAIAwake )
 	{
 		return FALSE;
@@ -1434,7 +1425,6 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 			return TRUE;
 		}
 	}
-	ValidateWeights( 3 );
 	return FALSE;
 }
 
@@ -1765,8 +1755,6 @@ void RemoveGroupFromStrategicAILists(GROUP const& g)
  * some missing calls. */
 static void RecalculatePatrolWeight(PATROL_GROUP& p)
 {
-	ValidateWeights(4);
-
 	// First, remove the previous weight from the applicable field
 	INT32 const prev_weight = p.bWeight;
 	if (prev_weight > 0) giRequestPoints -= prev_weight;
@@ -1778,7 +1766,6 @@ static void RecalculatePatrolWeight(PATROL_GROUP& p)
 		if (need_population < 0)
 		{
 			p.bWeight = 0;
-			ValidateWeights(27);
 			return;
 		}
 	}
@@ -1790,8 +1777,6 @@ static void RecalculatePatrolWeight(PATROL_GROUP& p)
 	weight = MIN(weight, 2);
 	p.bWeight        = weight;
 	giRequestPoints += weight;
-
-	ValidateWeights(5);
 }
 
 
@@ -1803,8 +1788,6 @@ static void RecalculateGarrisonWeight(INT32 iGarrisonID)
 	SECTORINFO *pSector;
 	INT32 iWeight, iPrevWeight;
 	INT32 iDesiredPop, iCurrentPop, iPriority;
-
-	ValidateWeights( 6 );
 
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
 	iDesiredPop = gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bDesiredPopulation;
@@ -1839,8 +1822,6 @@ static void RecalculateGarrisonWeight(INT32 iGarrisonID)
 	}
 
 	gGarrisonGroup[ iGarrisonID ].bWeight = (INT8)iWeight;
-
-	ValidateWeights( 7 );
 }
 
 void RecalculateSectorWeight( UINT8 ubSectorID )
@@ -1997,8 +1978,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 	UINT8 ubGroupSize;
 	BOOLEAN fLimitMaxTroopsAllowable = FALSE;
 
-	ValidateWeights( 8 );
-
 	//Determine how many units the garrison needs.
 	iReinforcementsRequested = GarrisonReinforcementsRequested( iDstGarrisonID, &ubNumExtraReinforcements );
 
@@ -2019,7 +1998,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 	if( iReinforcementsRequested <= 0 )
 	{
-		ValidateWeights( 9 );
 		return;
 	}
 
@@ -2038,7 +2016,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		gGarrisonGroup[ iDstGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 		ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ iDstGarrisonID ].ubComposition );
 		MoveSAIGroupToSector( pOptionalGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, REINFORCEMENTS );
-		ValidateWeights( 10 );
 		return;
 	}
 	iRandom = Random( giReinforcementPoints + giReinforcementPool );
@@ -2057,7 +2034,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 		if( !giReinforcementPool )
 		{
-			ValidateWeights( 11 );
 			return;
 		}
 		iReinforcementsApproved = MIN( iReinforcementsRequested, giReinforcementPool );
@@ -2065,7 +2041,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		if( iReinforcementsApproved * 3 < usDefencePoints )
 		{ //The enemy force that would be sent would likely be decimated by the player forces.
 			gubGarrisonReinforcementsDenied[ iDstGarrisonID ] += (UINT8)(gArmyComp[ gGarrisonGroup[ iDstGarrisonID ].ubComposition ].bPriority / 2);
-			ValidateWeights( 12 );
 			return;
 		}
 		else
@@ -2081,7 +2056,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			iChance = (iReinforcementsApproved + ubNumExtraReinforcements) * 100 / usDefencePoints;
 			if( !Chance( iChance ) )
 			{
-				ValidateWeights( 13 );
 				return;
 			}
 		}
@@ -2108,7 +2082,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 					ubGroupSize, ubDstSectorY + 'A' - 1, ubDstSectorX );
 			MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, REINFORCEMENTS );
 		}
-		ValidateWeights( 14 );
 		return;
 	}
 	else
@@ -2116,7 +2089,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		iSrcGarrisonID = ChooseSuitableGarrisonToProvideReinforcements( iDstGarrisonID, iReinforcementsRequested );
 		if( iSrcGarrisonID == -1 )
 		{
-			ValidateWeights( 15 );
 			goto QUEEN_POOL;
 		}
 
@@ -2140,7 +2112,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			else if( (iReinforcementsApproved + ubNumExtraReinforcements) * 3 < usDefencePoints )
 			{ //The enemy force that would be sent would likely be decimated by the player forces.
 				gubGarrisonReinforcementsDenied[ iDstGarrisonID ] += (UINT8)(gArmyComp[ gGarrisonGroup[ iDstGarrisonID ].ubComposition ].bPriority / 2);
-				ValidateWeights( 17 );
 				return;
 			}
 			else
@@ -2156,7 +2127,6 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 				iChance = (iReinforcementsApproved + ubNumExtraReinforcements) * 100 / usDefencePoints;
 				if( !Chance( iChance ) )
 				{
-					ValidateWeights( 18 );
 					return;
 				}
 			}
@@ -2187,11 +2157,9 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			SLOGD(DEBUG_TAG_SAI, "%d troops have been sent from garrison sector %c%d to patrol area near sector %c%d",
 					ubGroupSize, ubSrcSectorY + 'A' - 1, ubSrcSectorX, ubDstSectorY + 'A' - 1, ubDstSectorX );
 
-			ValidateWeights( 19 );
 			return;
 		}
 	}
-	ValidateWeights( 20 );
 }
 
 
@@ -2201,8 +2169,6 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 	INT32 iRandom, iSrcGarrisonID, iWeight;
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	UINT8 ubSrcSectorX, ubSrcSectorY;
-
-	ValidateWeights( 21 );
 
 	PATROL_GROUP* const pg = &gPatrolGroup[iPatrolID];
 
@@ -2226,8 +2192,6 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 				ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 		MoveSAIGroupToSector(pOptionalGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
-
-		ValidateWeights( 22 );
 		return;
 	}
 	iRandom = Random( giReinforcementPoints + giReinforcementPool );
@@ -2249,7 +2213,6 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 				ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 		MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
-		ValidateWeights( 23 );
 		return;
 	}
 	else
@@ -2282,9 +2245,6 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 								ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 						MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
-
-						ValidateWeights( 24 );
-
 						return;
 					}
 				}
@@ -2292,7 +2252,6 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 			}
 		}
 	}
-	ValidateWeights( 25 );
 }
 
 
@@ -2311,8 +2270,6 @@ void EvaluateQueenSituation()
 	UINT32 uiOffset;
 	UINT16 usDefencePoints;
 	INT32 iSumOfAllWeights = 0;
-
-	ValidateWeights( 26 );
 
 	// figure out how long it shall be before we call this again
 
@@ -2411,8 +2368,6 @@ void EvaluateQueenSituation()
 			iRandom -= iWeight;
 		}
 	}
-
-	ValidateWeights( 27 );
 }
 
 
@@ -2891,8 +2846,6 @@ void LoadStrategicAI(HWFILE const hFile)
 
 	//Update the version number to the most current.
 	gubSAIVersion = SAI_VERSION;
-
-	ValidateWeights( 28 );
 }
 
 
