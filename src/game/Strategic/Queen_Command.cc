@@ -57,11 +57,6 @@ extern BOOLEAN gfOverrideSector;
 
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
-
-static void ValidateEnemiesHaveWeapons(void)
-{
-}
-
 //Counts enemies and crepitus, but not bloodcats.
 UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
@@ -383,7 +378,6 @@ void PrepareEnemyForSectorBattle()
 			if (g->pEnemyGroup->ubElitesInBattle != 0) continue;
 			HandleArrivalOfReinforcements(g);
 		}
-		ValidateEnemiesHaveWeapons();
 		return;
 	}
 
@@ -448,7 +442,6 @@ void PrepareEnemyForSectorBattle()
 	{ // If there are no troops in the current groups, then we're done.
 		if (total_admins == 0 && total_troops == 0 && total_elites == 0) return;
 		AddSoldierInitListEnemyDefenceSoldiers(total_admins, total_troops, total_elites);
-		ValidateEnemiesHaveWeapons();
 		return;
 	}
 #endif
@@ -590,7 +583,6 @@ void PrepareEnemyForSectorBattle()
 		AssertMsg(n == 0 || n_slots == 0, "Failed to assign battle counters for enemies properly. Please send save. KM:0.");
 	}
 
-	ValidateEnemiesHaveWeapons();
 }
 
 
@@ -610,7 +602,6 @@ static void PrepareEnemyForUndergroundBattle()
 	u->ubTroopsInBattle += ubTotalTroops;
 	u->ubElitesInBattle += ubTotalElites;
 	AddSoldierInitListEnemyDefenceSoldiers(u->ubNumAdmins, u->ubNumTroops, u->ubNumElites);
-	ValidateEnemiesHaveWeapons();
 }
 
 
