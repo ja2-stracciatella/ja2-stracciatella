@@ -184,11 +184,6 @@ static void SaveSoldierStructure(HWFILE hFile);
 static void SaveTacticalStatusToSavedGame(HWFILE);
 static void SaveWatchedLocsToSavedGame(HWFILE);
 
-#define InitSaveGameFilePosition(slot)              ((void)0)
-#define InitShutDownMapTempFileTest(init, name, id) ((void)0)
-#define SaveGameFilePosition(slot, file, msg)       ((void)0)
-
-
 BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 {
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
@@ -200,8 +195,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		PauseBeforeSaveGame();
 		fWePausedIt = true;
 	}
-
-	InitShutDownMapTempFileTest(TRUE, "SaveMapTempFile", ubSaveGameID);
 
 	// Place a message on the screen telling the user that we are saving the game
 	if (gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD) 
@@ -237,8 +230,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
             break;
 	}
 
-	InitSaveGameFilePosition(ubSaveGameID);
-
 	// Set the fact that we are saving a game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 
@@ -267,7 +258,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		char savegame_name[512];
 		CreateSavedGameFileNameFromNumber(ubSaveGameID, savegame_name);
 		AutoSGPFile f(FileMan::openForWriting(savegame_name));
-		SaveGameFilePosition(ubSaveGameID, f, "Just Opened File");
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
 		 * saving the sector info struct because the
@@ -334,145 +324,99 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		Assert(d == endof(data));
 
 		FileWrite(f, data, sizeof(data));
-		SaveGameFilePosition(ubSaveGameID, f, "Save Game Header");
 
 		CalcJA2EncryptionSet(header);
 
 		// Save the gTactical Status array, plus the curent sector location
 		SaveTacticalStatusToSavedGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Tactical Status");
 
 		SaveGameClock(f, fPausedStateBeforeSaving, fLockPauseStateBeforeSaving);
-		SaveGameFilePosition(ubSaveGameID, f, "Game Clock");
 
 		SaveStrategicEventsToSavedGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Strategic Events");
 
 		SaveLaptopInfoToSavedGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Laptop Info");
 
 		SaveMercProfiles(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Merc Profiles");
 
 		SaveSoldierStructure(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Soldier Structure");
 
 		SaveTempFileToSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
-		SaveGameFilePosition(ubSaveGameID, f, "Finances Data File");
 
 		SaveFilesToSavedGame(HISTORY_DATA_FILE, f);
-		SaveGameFilePosition(ubSaveGameID, f, "History file");
 
 		SaveFilesToSavedGame(FILES_DAT_FILE, f);
-		SaveGameFilePosition(ubSaveGameID, f, "The Laptop FILES file");
 
 		SaveEmailToSavedGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Email");
 
 		SaveStrategicInfoToSavedFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Strategic Information");
 
 		SaveUnderGroundSectorInfoToSaveGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Underground Information");
 
 		SaveSquadInfoToSavedGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Squad Info");
 
 		SaveStrategicMovementGroupsToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Strategic Movement Groups");
 
 		SaveMapTempFilesToSavedGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "All the Map Temp files");
 
 		SaveQuestInfoToSavedGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Quest Info");
 
 		SaveOppListInfoToSavedGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "OppList info");
 
 		SaveMapScreenMessagesToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "MapScreen Messages");
 
 		SaveNPCInfoToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "NPC Info");
 
 		SaveKeyTableToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "KeyTable");
 
 		SaveTempNpcQuoteArrayToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "NPC Temp Quote File");
 
 		SavePreRandomNumbersToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "PreGenerated Random Files");
 
 		SaveArmsDealerInventoryToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Arms Dealers Inventory");
 
 		SaveGeneralInfo(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Misc. Info");
 
 		SaveMineStatusToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Mine Status");
 
 		SaveStrategicTownLoyaltyToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Town Loyalty");
 
 		SaveVehicleInformationToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Vehicle Information");
 
 		SaveBulletStructureToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Bullet Information");
 
 		SavePhysicsTableToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Physics Table");
 
 		SaveAirRaidInfoToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Air Raid Info");
 
 		SaveTeamTurnsToTheSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Team Turn Info");
 
 		SaveExplosionTableToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Explosion Table");
 
 		SaveCreatureDirectives(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Creature Spreading");
 
 		SaveStrategicStatusToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Strategic Status");
 
 		SaveStrategicAI(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Strategic AI");
 
 		SaveWatchedLocsToSavedGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Watched Locs Info");
 
 		SaveItemCursorToSavedGame(f);
-		SaveGameFilePosition(ubSaveGameID, f, "ItemCursor Info");
 
 		SaveCivQuotesToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Civ Quote System");
 
 		SaveBackupNPCInfoToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Backed up NPC Info");
 
 		SaveMeanwhileDefsToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Meanwhile Definitions");
 
 		SaveSchedules(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Schedules");
 
 		NewSaveVehicleMovementInfoToSavedGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Vehicle Movement Stuff");
 
 		SaveContractRenewalDataToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "Contract Renewal Data");
 
 		SaveLeaveItemList(f);
-		SaveGameFilePosition(ubSaveGameID, f, "leave list");
 
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
-		SaveGameFilePosition(ubSaveGameID, f, "New way of saving Bobby R mailorders");
 	}
 	catch (...)
 	{
@@ -483,8 +427,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 
 		//Put out an error message
 		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, zSaveLoadText[SLG_SAVE_GAME_ERROR]);
-
-		InitShutDownMapTempFileTest(FALSE, "SaveMapTempFile", ubSaveGameID);
 
 		NextLoopCheckForEnoughFreeHardDriveSpace();
 
@@ -513,8 +455,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 	gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
 
 	UnPauseAfterSaveGame();
-
-	InitShutDownMapTempFileTest(FALSE, "SaveMapTempFile", ubSaveGameID);
 
 	NextLoopCheckForEnoughFreeHardDriveSpace();
 	return TRUE;
@@ -631,10 +571,6 @@ static void LoadWatchedLocsFromSavedGame(HWFILE);
 static void TruncateStrategicGroupSizes(void);
 static void UpdateMercMercContractInfo(void);
 
-#define InitLoadGameFilePosition(slot)        ((void)0)
-#define LoadGameFilePosition(slot, file, msg) ((void)0)
-
-
 void LoadSavedGame(UINT8 const save_slot_id)
 {
 	// Save the game before if we are in Dead is Dead Mode
@@ -659,15 +595,11 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	ShutdownNPCQuotes();
 
-	InitShutDownMapTempFileTest(TRUE, "LoadMapTempFile", save_slot_id);
-
 	//Used in mapescreen to disable the annoying 'swoosh' transitions
 	gfDontStartTransitionFromLaptop = TRUE;
 
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;
-
-	InitLoadGameFilePosition(save_slot_id);
 
 	//Set the fact that we are loading a saved game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
@@ -686,12 +618,10 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
 	AutoSGPFile f(GCM->openUserPrivateFileForReading(std::string(zSaveGameName)));
-	LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 	SAVED_GAME_HEADER SaveGameHeader;
   bool stracLinuxFormat;
 	ExtractSavedGameHeaderFromFile(f, SaveGameHeader, &stracLinuxFormat);
-	LoadGameFilePosition(save_slot_id, f, "Save Game Header");
 
 	CalcJA2EncryptionSet(SaveGameHeader);
 
@@ -708,12 +638,10 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 #if 0 // XXX was commented out
 	LoadGeneralInfo(f, version);
-	LoadGameFilePosition(save_slot_id, f, "Misc info");
 #endif
 
 	//Load the gtactical status structure plus the current sector x,y,z
 	LoadTacticalStatusFromSavedGame(f, stracLinuxFormat);
-	LoadGameFilePosition(save_slot_id, f, "Tactical Status");
 
 	//This gets reset by the above function
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
@@ -721,7 +649,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	//Load the game clock ingo
 	LoadGameClock(f);
-	LoadGameFilePosition(save_slot_id, f, "Game Clock");
 
 	//if we are suppose to use the alternate sector
 	if (SaveGameHeader.fAlternateSector)
@@ -775,169 +702,135 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	BAR(1, L"Strategic Events...");
 	LoadStrategicEventsFromSavedGame(f);
-	LoadGameFilePosition(save_slot_id, f, "Strategic Events");
 
 	BAR(0, L"Laptop Info");
 	LoadLaptopInfoFromSavedGame(f);
-	LoadGameFilePosition(save_slot_id, f, "Laptop Info");
 
 	BAR(0, L"Merc Profiles...");
 	LoadSavedMercProfiles(f, version, stracLinuxFormat);
-	LoadGameFilePosition(save_slot_id, f, "Merc Profiles");
 
 	BAR(30, L"Soldier Structure...");
 	LoadSoldierStructure(f, version, stracLinuxFormat);
-	LoadGameFilePosition(save_slot_id, f, "Soldier Structure");
 
 	BAR(1, L"Finances Data File...");
 	LoadTempFileFromSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
-	LoadGameFilePosition(save_slot_id, f, "Finances Data File");
 
 	BAR(1, L"History File...");
 	LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
-	LoadGameFilePosition(save_slot_id, f, "History File");
 
 	BAR(1, L"The Laptop FILES file...");
 	LoadFilesFromSavedGame(FILES_DAT_FILE, f);
-	LoadGameFilePosition(save_slot_id, f, "The Laptop FILES file");
 
 	BAR(1, L"Email...");
 	LoadEmailFromSavedGame(f);
-	LoadGameFilePosition(save_slot_id, f, "Email");
 
 	BAR(1, L"Strategic Information...");
 	LoadStrategicInfoFromSavedFile(f);
-	LoadGameFilePosition(save_slot_id, f, "Strategic Information");
 
 	BAR(1, L"UnderGround Information...");
 	LoadUnderGroundSectorInfoFromSavedGame(f);
-	LoadGameFilePosition(save_slot_id, f, "UnderGround Information");
 
 	BAR(1, L"Squad Info...");
 	LoadSquadInfoFromSavedGameFile(f);
-	LoadGameFilePosition(save_slot_id, f, "Squad Info");
 
 	BAR(1, L"Strategic Movement Groups...");
 	LoadStrategicMovementGroupsFromSavedGameFile(f);
-	LoadGameFilePosition(save_slot_id, f, "Strategic Movement Groups");
 
 	BAR(30, L"All the Map Temp files...");
 	LoadMapTempFilesFromSavedGameFile(f, version);
-	LoadGameFilePosition(save_slot_id, f, "All the Map Temp files");
 
 	BAR(1, L"Quest Info...");
 	LoadQuestInfoFromSavedGameFile(f);
-	LoadGameFilePosition(save_slot_id, f, "Quest Info");
 
 	BAR(1, L"OppList Info...");
 	LoadOppListInfoFromSavedGame(f);
-	LoadGameFilePosition(save_slot_id, f, "OppList Info");
 
 	BAR(1, L"MapScreen Messages...");
 	LoadMapScreenMessagesFromSaveGameFile(f, stracLinuxFormat);
-	LoadGameFilePosition(save_slot_id, f, "MapScreen Messages");
 
 	BAR(1, L"NPC Info...");
 	LoadNPCInfoFromSavedGameFile(f, version);
-	LoadGameFilePosition(save_slot_id, f, "NPC Info");
 
 	BAR(1, L"KeyTable...");
 	LoadKeyTableFromSaveedGameFile(f);
-	LoadGameFilePosition(save_slot_id, f, "KeyTable");
 
 	BAR(1, L"Npc Temp Quote File...");
 	LoadTempNpcQuoteArrayToSaveGameFile(f);
-	LoadGameFilePosition(save_slot_id, f, "Npc Temp Quote File");
 
 	BAR(0, L"PreGenerated Random Files...");
 	LoadPreRandomNumbersFromSaveGameFile(f);
-	LoadGameFilePosition(save_slot_id, f, "PreGenerated Random Files");
 
 	BAR(0, L"Smoke Effect Structures...");
 	// No longer need to load smoke effects.  They are now in temp files
 	if (version < 75) LoadSmokeEffectsFromLoadGameFile(f, version);
-	LoadGameFilePosition(save_slot_id, f, "Smoke Effect Structures");
 
 	BAR(1, L"Arms Dealers Inventory...");
 	LoadArmsDealerInventoryFromSavedGameFile(f, version);
-	LoadGameFilePosition(save_slot_id, f, "Arms Dealers Inventory");
 
 	BAR(0, L"Misc info...");
 	LoadGeneralInfo(f, version);
-	LoadGameFilePosition(save_slot_id, f, "Misc info");
 
 	BAR(1, L"Mine Status...");
 	LoadMineStatusFromSavedGameFile(f);
-	LoadGameFilePosition(save_slot_id, f, "Mine Status");
 
 	BAR(0, L"Town Loyalty...");
 	if (version	>= 21)
 	{
 		LoadStrategicTownLoyaltyFromSavedGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Town Loyalty");
 	}
 
 	BAR(1, L"Vehicle Information...");
 	if (version	>= 22)
 	{
 		LoadVehicleInformationFromSavedGameFile(f, version);
-		LoadGameFilePosition(save_slot_id, f, "Vehicle Information");
 	}
 
 	BAR(1, L"Bullet Information...");
 	if (version	>= 24)
 	{
 		LoadBulletStructureFromSavedGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Bullet Information");
 	}
 
 	BAR(1, L"Physics table...");
 	if (version	>= 24)
 	{
 		LoadPhysicsTableFromSavedGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Physics table");
 	}
 
 	BAR(1, L"Air Raid Info...");
 	if (version	>= 24)
 	{
 		LoadAirRaidInfoFromSaveGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Air Raid Info");
 	}
 
 	BAR(0, L"Team Turn Info...");
 	if (version	>= 24)
 	{
 		LoadTeamTurnsFromTheSavedGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Team Turn Info");
 	}
 
 	BAR(1, L"Explosion Table...");
 	if (version	>= 25)
 	{
 		LoadExplosionTableFromSavedGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Explosion Table");
 	}
 
 	BAR(1, L"Creature Spreading...");
 	if (version	>= 27)
 	{
 		LoadCreatureDirectives(f, version);
-		LoadGameFilePosition(save_slot_id, f, "Creature Spreading");
 	}
 
 	BAR(1, L"Strategic Status...");
 	if (version	>= 28)
 	{
 		LoadStrategicStatusFromSaveGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Strategic Status");
 	}
 
 	BAR(1, L"Strategic AI...");
 	if (version	>= 31)
 	{
 		LoadStrategicAI(f);
-		LoadGameFilePosition(save_slot_id, f, "Strategic AI");
 	}
 
 	BAR(1, L"Lighting Effects...");
@@ -945,7 +838,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	if (37 <= version && version < 76)
 	{
 		LoadLightEffectsFromLoadGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Lighting Effects");
 	}
 
 	BAR(1, L"Watched Locs Info...");
@@ -953,34 +845,29 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	{
 		LoadWatchedLocsFromSavedGame(f);
 	}
-	LoadGameFilePosition(save_slot_id, f, "Watched Locs Info");
 
 	BAR(1, L"Item cursor Info...");
 	if (version	>= 39)
 	{
 		LoadItemCursorFromSavedGame(f);
 	}
-	LoadGameFilePosition(save_slot_id, f, "Item cursor Info");
 
 	BAR(1, L"Civ Quote System...");
 	if (version >= 51)
 	{
 		LoadCivQuotesFromLoadGameFile(f);
 	}
-	LoadGameFilePosition(save_slot_id, f, "Civ Quote System");
 
 	BAR(1, L"Backed up NPC Info...");
 	if (version >= 53)
 	{
 		LoadBackupNPCInfoFromSavedGameFile(f);
 	}
-	LoadGameFilePosition(save_slot_id, f, "Backed up NPC Info");
 
 	BAR(1, L"Meanwhile definitions...");
 	if (version >= 58)
 	{
 		LoadMeanwhileDefsFromSaveGameFile(f, version);
-		LoadGameFilePosition(save_slot_id, f, "Meanwhile definitions");
 	}
 	else
 	{
@@ -993,7 +880,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		// trash schedules loaded from map
 		DestroyAllSchedulesWithoutDestroyingEvents();
 		LoadSchedulesFromSave(f);
-		LoadGameFilePosition(save_slot_id, f, "Schedules");
 	}
 
 	BAR(1, L"Extra Vehicle Info...");
@@ -1007,7 +893,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		{
 			NewLoadVehicleMovementInfoFromSavedGameFile(f);
 		}
-		LoadGameFilePosition(save_slot_id, f, "Extra Vehicle Info");
 	}
 
 	BAR(1, L"Contract renweal sequence stuff...");
@@ -1019,13 +904,11 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	if (version >= 67)
 	{
 		LoadContractRenewalDataFromSaveGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "Contract renweal sequence stuff");
 	}
 
 	if (version >= 70)
 	{
 		LoadLeaveItemList(f);
-		LoadGameFilePosition(save_slot_id, f, "Leave List");
 	}
 
 	if (version <= 73)
@@ -1036,7 +919,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	if (version >= 85)
 	{
 		NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(f);
-		LoadGameFilePosition(save_slot_id, f, "New way of loading Bobby R mailorders");
 	}
 
 	// If there are any old Bobby R Mail orders, tranfer them to the new system
@@ -1137,8 +1019,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	// OK, turn OFF show all enemies....
 	gTacticalStatus.uiFlags &= ~(SHOW_ALL_MERCS | SHOW_ALL_ITEMS);
-
-	InitShutDownMapTempFileTest(FALSE, "LoadMapTempFile", save_slot_id);
 
 	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
