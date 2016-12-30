@@ -60,11 +60,6 @@ GROUP *gpGroupList;
 
 static GROUP* gpPendingSimultaneousGroup = NULL;
 
-#ifdef JA2BETAVERSION
-	extern BOOLEAN gfExitViewer;
-static void ValidateGroups(GROUP const&);
-#endif
-
 extern BOOLEAN gubNumAwareBattles;
 extern INT8 SquadMovementGroups[ ];
 extern INT8 gubVehicleMovementGroups[ ];
@@ -516,29 +511,6 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 	pNew->ubCreatedSectorID = pNew->ubOriginalSector;
 	pNew->ubSectorIDOfLastReassignment = 255;
 
-#ifdef JA2BETAVERSION
-	{
-		wchar_t str[512];
-		if( PlayerMercsInSector( pNew->ubSectorX, pNew->ubSectorY, 0 ) || CountAllMilitiaInSector( pNew->ubSectorX, pNew->ubSectorY ) )
-		{
-			swprintf(str, lengthof(str), L"Attempting to send enemy troops from player occupied location.  "
-										 L"Please ALT+TAB out of the game before doing anything else and send 'Strategic Decisions.txt' "
-										 L"and this message.  You'll likely need to revert to a previous save.  If you can reproduce this "
-										 L"with a save close to this event, that would really help me! -- KM:0" );
-			DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
-		}
-		else if( pNew->ubGroupSize > 25 )
-		{
-			swprintf(str, lengthof(str), L"Strategic AI warning:  Creating an enemy group containing %d soldiers "
-										 L"(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message "
-										 L"to evaluate a potential problems with very large enemy groups.",
-										 pNew->ubGroupSize, ubNumAdmins, ubNumTroops, ubNumElites,
-										 pNew->ubSectorY + 'A' - 1, pNew->ubSectorX );
-			DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
-		}
-	}
-#endif
-
 	AddGroupToList(pNew);
 	return pNew;
 }
@@ -765,12 +737,6 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 				pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
 				curr )
 		{ //Reinforcements have arrived!
-			#ifdef JA2BETAVERSION
-			if( guiCurrentScreen == AIVIEWER_SCREEN )
-			{
-				gfExitViewer = TRUE;
-			}
-			#endif
 			if( gTacticalStatus.fEnemyInSector )
 			{
 				HandleArrivalOfReinforcements( pGroup );
@@ -888,9 +854,6 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		//then we will go straight to autoresolve, where the enemy will likely annihilate them or capture them.
 		//If there are no alive mercs, then there is nothing anybody can do.  The enemy will completely ignore
 		//this, and continue on.
-#ifdef JA2BETAVERSION
-		ValidateGroups(*pGroup);
-#endif
 
 		if( gubNumGroupsArrivedSimultaneously )
 		{ //Because this is a battle case, clear all the group flags
@@ -930,11 +893,6 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 			}
 		}
-
-		#ifdef JA2BETAVERSION
-			if( guiCurrentScreen == AIVIEWER_SCREEN )
-				gfExitViewer = TRUE;
-		#endif
 
 		if( pPlayerDialogGroup )
 		{
@@ -3226,11 +3184,6 @@ void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 	pItem = &pSoldier->inv[ HANDPOS ];
 	if( pItem->usItem != GAS_CAN )
 	{
-#ifdef JA2BETAVERSION
-		wchar_t str[100];
-		swprintf(str, lengthof(str), L"%ls is supposed to have gas can in hand.  ATE:0", pSoldier->name);
-		DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, NULL);
-#endif
 		return;
 	}
 	//Soldier has gas can, so now add gas to vehicle while removing gas from the gas can.
@@ -3747,38 +3700,3 @@ bool GroupHasInTransitDeadOrPOWMercs(GROUP const& g)
 	return false;
 }
 
-
-#ifdef JA2BETAVERSION
-
-static void ValidateGroups(GROUP const& g)
-{
-	// Do error checking, and report group
-	ValidatePlayersAreInOneGroupOnly();
-	if (g.fPlayer || g.ubGroupSize != 0) return;
-
-	// Report error
-	wchar_t str[512];
-	if (g.ubSectorIDOfLastReassignment == 255)
-	{
-		swprintf(str, lengthof(str),
-			L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted.  Group %d in sector %c%d originated from sector %c%d.",
-			g.ubGroupID,
-			'A' - 1 + g.ubSectorY,                  g.ubSectorX,
-			'A' - 1 + SECTORY(g.ubCreatedSectorID), SECTORX(g.ubCreatedSectorID)
-			);
-	}
-	else
-	{
-		swprintf(str, lengthof(str),
-			L"Enemy group found with 0 troops in it.  This is illegal and group will be deleted.  Group %d in sector %c%d originated from sector %c%d and last reassignment location was %c%d.",
-			g.ubGroupID,
-			'A' - 1 + g.ubSectorY,                             g.ubSectorX,
-			'A' - 1 + SECTORY(g.ubCreatedSectorID),            SECTORX(g.ubCreatedSectorID),
-			'A' - 1 + SECTORY(g.ubSectorIDOfLastReassignment), SECTORX(g.ubSectorIDOfLastReassignment)
-		);
-	}
-
-	DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, 0);
-}
-
-#endif

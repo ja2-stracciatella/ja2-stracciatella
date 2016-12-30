@@ -668,14 +668,6 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	SyncStrategicTurnTimes();
 
-#ifdef JA2BETAVERSION
-	if (gfOverrideSector)
-	{
-		/* Skip the cancel, and force load the sector.  This is used by the AIViewer
-		 * to "reset" a level with different numbers of various types of enemies. */
-	}
-	else
-#endif
 	// is the sector already loaded?
 	if (gWorldSectorX == x && y == gWorldSectorY && z == gbWorldSectorZ)
 	{
@@ -1157,11 +1149,6 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	}
 
 	CreateLoadingScreenProgressBar();
-#ifdef JA2BETAVERSION
-	SetProgressBarMsgAttributes(0, FONT12ARIAL, FONT_MCOLOR_WHITE, 0);
-	// Set the tile so we do not see the text come up
-	SetProgressBarTextDisplayFlag(0, TRUE, TRUE, TRUE);
-#endif
 
 	char filename[50];
 	GetMapFileName(x, y, z, filename, TRUE);

@@ -117,11 +117,6 @@ static const char g_savegame_name[]  = "SaveGame";
 static const char g_savegame_ext[]   = "sav";
 
 //Global variable used
-#ifdef JA2BETAVERSION
-static UINT32 guiNumberOfMapTempFiles; // Test purposes
-static UINT32 guiSizeOfTempFiles;
-static char   gzNameOfMapTempFile[128];
-#endif
 
 extern		INT32					giSortStateForMapScreenList;
 extern		INT16					sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
@@ -133,16 +128,10 @@ extern		BOOLEAN				gfLoadedGame;
 extern		UINT8					gubDesertTemperature;
 extern		UINT8					gubGlobalTemperature;
 extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
-#ifdef JA2BETAVERSION
-	extern		UINT8					gubReportMapscreenLock;
-#endif
 
 static MusicMode gMusicModeToPlay;
 
 BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
-#ifdef JA2BETAVERSION
-static UINT32 guiCurrentQuickSaveNumber = 0;
-#endif
 UINT32	guiLastSaveGameNum;
 
 UINT32	guiJA2EncryptionSet = 0;
@@ -195,15 +184,9 @@ static void SaveSoldierStructure(HWFILE hFile);
 static void SaveTacticalStatusToSavedGame(HWFILE);
 static void SaveWatchedLocsToSavedGame(HWFILE);
 
-#ifdef JA2BETAVERSION
-static void InitSaveGameFilePosition(UINT8 slot);
-static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, UINT8 ubSaveGameID);
-static void SaveGameFilePosition(UINT8 slot, const HWFILE save, const char* pMsg);
-#else
-#	define InitSaveGameFilePosition(slot)              ((void)0)
-#	define InitShutDownMapTempFileTest(init, name, id) ((void)0)
-#	define SaveGameFilePosition(slot, file, msg)       ((void)0)
-#endif
+#define InitSaveGameFilePosition(slot)              ((void)0)
+#define InitShutDownMapTempFileTest(init, name, id) ((void)0)
+#define SaveGameFilePosition(slot, file, msg)       ((void)0)
 
 
 BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
@@ -270,14 +253,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		wchar_t (& desc)[lengthof(header.sSavedGameDesc)] = header.sSavedGameDesc;
 		if (ubSaveGameID == 0)
 		{ // We are saving the quick save
-#ifdef JA2BETAVERSION
-			// Increment the quicksave counter
-			++guiCurrentQuickSaveNumber;
-
-			if (gfUseConsecutiveQuickSaveSlots)
-				swprintf(desc, lengthof(desc), L"%hs%03d", g_quicksave_name, guiCurrentQuickSaveNumber);
-			else
-#endif
 				swprintf(desc, lengthof(desc), L"%hs", g_quicksave_name);
 		}
 		else
@@ -513,12 +488,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 
 		NextLoopCheckForEnoughFreeHardDriveSpace();
 
-#ifdef JA2BETAVERSION
-		if (fDisableDueToBattleRoster || fDisableMapInterfaceDueToBattle)
-		{
-			gubReportMapscreenLock = 2;
-		}
-#endif
 		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
 		return FALSE;
 	}
@@ -546,10 +515,6 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 	UnPauseAfterSaveGame();
 
 	InitShutDownMapTempFileTest(FALSE, "SaveMapTempFile", ubSaveGameID);
-
-#ifdef JA2BETAVERSION
-	ValidateSoldierInitLinks(2);
-#endif
 
 	NextLoopCheckForEnoughFreeHardDriveSpace();
 	return TRUE;
@@ -666,13 +631,8 @@ static void LoadWatchedLocsFromSavedGame(HWFILE);
 static void TruncateStrategicGroupSizes(void);
 static void UpdateMercMercContractInfo(void);
 
-#ifdef JA2BETAVERSION
-static void InitLoadGameFilePosition(UINT8 slot);
-static void LoadGameFilePosition(UINT8 slot, HWFILE load, const char* pMsg);
-#else
-#	define InitLoadGameFilePosition(slot)        ((void)0)
-#	define LoadGameFilePosition(slot, file, msg) ((void)0)
-#endif
+#define InitLoadGameFilePosition(slot)        ((void)0)
+#define LoadGameFilePosition(slot, file, msg) ((void)0)
 
 
 void LoadSavedGame(UINT8 const save_slot_id)
@@ -803,17 +763,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	CreateLoadingScreenProgressBar();
 	SetProgressBarColor(0, 0, 0, 150);
-
-#ifdef JA2BETAVERSION
-	SetProgressBarMsgAttributes(0, FONT12ARIAL, FONT_MCOLOR_WHITE, 0);
-
-	//
-	// Set the tile so we don see the text come up
-	//
-
-	//if the world is unloaded, we must use the save buffer for the text
-	SetProgressBarTextDisplayFlag(0, TRUE, TRUE, !SaveGameHeader.fWorldLoaded);
-#endif
 
 	UINT32 uiRelStartPerc = 0;
 	UINT32 uiRelEndPerc   = 0;
@@ -1273,13 +1222,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	RESET_CHEAT_LEVEL();
 #endif
 
-#ifdef JA2BETAVERSION
-	if (fDisableDueToBattleRoster || fDisableMapInterfaceDueToBattle)
-	{
-		gubReportMapscreenLock = 1;
-	}
-#endif
-
 	// reset once-per-convo records for everyone in the loaded sector
 	ResetOncePerConvoRecordsForAllNPCsInLoadedSector();
 
@@ -1477,10 +1419,6 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 }
 
 
-#ifdef JA2BETAVERSION
-static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile);
-#endif
-
 void BackupSavedGame(UINT8 const ubSaveGameID)
 {
 	std::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
@@ -1511,10 +1449,6 @@ void BackupSavedGame(UINT8 const ubSaveGameID)
 
 static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 {
-#ifdef JA2BETAVERSION
-	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
-#endif
-
 	//Get the file size of the source data file
 	UINT32 uiFileSize = FileGetSize( fileToSave );
 
@@ -1529,11 +1463,6 @@ static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 
 	// Write the buffer to the saved game file
 	FileWrite(hFile, pData, uiFileSize);
-
-#ifdef JA2BETAVERSION
-	//Write out the name of the temp file so we can track whcih ones get loaded, and saved
-	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
-#endif
 }
 
 static void SaveTempFileToSavedGame(const char* fileName, HWFILE const hFile)
@@ -1551,10 +1480,6 @@ void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 
 static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 {
-#ifdef JA2BETAVERSION
-	++guiNumberOfMapTempFiles; //Increment counter:  To determine where the temp files are crashing
-#endif
-
 	// Read the size of the data
 	UINT32 uiFileSize;
 	FileRead(hFile, &uiFileSize, sizeof(UINT32));
@@ -1567,10 +1492,6 @@ static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 
 	// Write the buffer to the new file
 	FileWrite(fileToWrite, pData, uiFileSize);
-
-#ifdef JA2BETAVERSION
-	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
-#endif
 }
 
 void LoadTempFileFromSavedGame(const char* tempFileName, HWFILE const hFile)
@@ -1743,14 +1664,6 @@ void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzN
 		case 0: // we are creating the QuickSave file
 		{
 			char const* const quick = g_quicksave_name;
-#ifdef JA2BETAVERSION
-			if (gfUseConsecutiveQuickSaveSlots &&
-					guiCurrentQuickSaveNumber != 0)
-			{
-				sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), quick, guiCurrentQuickSaveNumber, ext);
-			}
-			else
-#endif
 			{
 				sprintf(pzNewFileName, "%s/%s.%s", dir.c_str(), quick, ext);
 			}
@@ -1829,61 +1742,6 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 }
 
 
-#ifdef JA2BETAVERSION
-static void InitSaveGameFilePosition(UINT8 const slot)
-{
-	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
-	FileDelete( zFileName );
-}
-
-
-static void SaveGameFilePosition(UINT8 const slot, const HWFILE save, const char* const pMsg)
-{
-	CHAR8		zTempString[512];
-	UINT32	uiStrLen=0;
-	CHAR8		zFileName[128];
-
-	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
-
-	// create the save game file
-	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
-
-	const INT32 pos = FileGetPos(save);
-	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
-	uiStrLen = strlen( zTempString );
-	FileWrite(hFile, zTempString, uiStrLen);
-}
-
-
-static void InitLoadGameFilePosition(UINT8 const slot)
-{
-	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
-	FileDelete( zFileName );
-}
-
-
-static void LoadGameFilePosition(UINT8 const slot, const HWFILE load, const char* const pMsg)
-{
-	CHAR8		zTempString[512];
-	UINT32	uiStrLen=0;
-
-	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", GCM->getSavedGamesFolder().c_str(), slot);
-
-	// create the save game file
-	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
-
-	const INT32 pos = FileGetPos(load);
-	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
-	uiStrLen = strlen( zTempString );
-
-	FileWrite(hFile, zTempString, uiStrLen);
-}
-#endif
-
-
 static BYTE* InjectMeanwhileDefinition(BYTE* const data, MEANWHILE_DEFINITION const& m)
 {
 	BYTE* d = data;
@@ -1953,14 +1811,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_BOOL( d, gfSkyriderSaidCongratsOnTakingSAM)
 	INJ_I16(  d, pContractReHireSoldier ? pContractReHireSoldier->ubID : -1)
 	d = InjectGameOptions(d, gGameOptions);
-#ifdef JA2BETAVERSION
-	// Everytime we save get, and set a seed value, when reload, seed again
-	UINT32 const seed = GetJA2Clock();
-	INJ_U32(  d, seed)
-	srand(seed);
-#else
 	INJ_SKIP( d, 4)
-#endif
 	INJ_U32(  d, guiBaseJA2Clock)
 	INJ_I16(  d, gsCurInterfacePanel)
 	INJ_U8(   d, gpSMCurrentMerc ? gpSMCurrentMerc->ubID : 255)
@@ -2099,14 +1950,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_I16(  d, contract_rehire_soldier)
 	pContractReHireSoldier = contract_rehire_soldier != -1 ? &GetMan(contract_rehire_soldier) : 0;
 	d = ExtractGameOptions(d, gGameOptions);
-#ifdef JA2BETAVERSION
-	// Everytime we save get, and set a seed value, when reload, seed again
-	UINT32 seed;
-	EXTR_U32(  d, seed)
-	srand(seed);
-#else
 	EXTR_SKIP( d, 4)
-#endif
 	EXTR_U32(  d, guiBaseJA2Clock)
 	ResetJA2ClockGlobalTimers();
 	INT16 cur_interface_panel;
@@ -2277,60 +2121,6 @@ BOOLEAN DoesUserHaveEnoughHardDriveSpace()
 
 	return( TRUE );
 }
-
-#ifdef JA2BETAVERSION
-
-static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, UINT8 ubSaveGameID)
-{
-	CHAR8		zFileName[128];
-	CHAR8		zTempString[512];
-	UINT32	uiStrLen;
-
-	//strcpy( gzNameOfMapTempFile, pNameOfFile);
-	sprintf( gzNameOfMapTempFile, "%s%d", pNameOfFile, ubSaveGameID );
-
-	sprintf(zFileName, "%s/%s.txt", GCM->getSavedGamesFolder().c_str(), gzNameOfMapTempFile);
-
-	if( fInit )
-	{
-		guiNumberOfMapTempFiles = 0;		//Test:  To determine where the temp files are crashing
-		guiSizeOfTempFiles = 0;
-
-		FileDelete(zFileName);
-	}
-	else
-	{
-		// create the save game file
-		AutoSGPFile hFile(FileMan::openForAppend(zFileName));
-
-		sprintf( zTempString, "Number Of Files: %6d.  Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
-		uiStrLen = strlen( zTempString );
-		FileWrite(hFile, zTempString, uiStrLen);
-	}
-}
-
-
-static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile)
-{
-	CHAR8		zTempString[512];
-	UINT32	uiStrLen=0;
-
-	CHAR8		zFileName[128];
-
-	guiSizeOfTempFiles += uiSizeOfFile;
-
-	sprintf(zFileName, "%s/%s.txt", GCM->getSavedGamesFolder().c_str(), gzNameOfMapTempFile);
-
-	// create the save game file
-	AutoSGPFile hFile(FileMan::openForAppend(zFileName));
-
-	sprintf( zTempString, "%8d   %6d   %s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
-	uiStrLen = strlen( zTempString );
-
-	FileWrite(hFile, zTempString, uiStrLen);
-}
-
-#endif
 
 
 void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSectorY, INT8* const pbSectorZ)

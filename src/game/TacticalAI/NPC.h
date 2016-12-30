@@ -96,10 +96,6 @@ BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj );
 void SaveBackupNPCInfoToSaveGameFile(HWFILE);
 void LoadBackupNPCInfoFromSavedGameFile(HWFILE);
 
-#ifdef JA2BETAVERSION
-void ToggleNPCRecordDisplay( void );
-#endif
-
 void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier );
 
 #define WALTER_BRIBE_AMOUNT 20000

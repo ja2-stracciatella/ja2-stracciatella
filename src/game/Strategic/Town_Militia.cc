@@ -565,11 +565,6 @@ static void PayMilitiaTrainingYesNoBoxCallback(MessageBoxReturnValue const bExit
 				StartTrainingInAllUnpaidTrainableSectors();
 			}
 
-#ifdef JA2BETAVERSION
-			// put this BEFORE training gets handled to avoid detecting an error everytime a sector completes training
-			VerifyTownTrainingIsPaidFor();
-#endif
-
 			// this completes the training prompt sequence
 			pMilitiaTrainerSoldier = NULL;
 		}
@@ -608,11 +603,6 @@ static void MilitiaTrainingRejected(void)
 		// take all mercs in unpaid sectors EVERYWHERE off militia training
 		ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList();
 	}
-
-#ifdef JA2BETAVERSION
-	// put this BEFORE training gets handled to avoid detecting an error everytime a sector completes training
-	VerifyTownTrainingIsPaidFor();
-#endif
 
 	// this completes the training prompt sequence
 	pMilitiaTrainerSoldier = NULL;

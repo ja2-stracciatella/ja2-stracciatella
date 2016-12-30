@@ -327,11 +327,6 @@ void InternalLeaveTacticalScreen(ScreenID const uiNewScreen)
 }
 
 
-#ifdef JA2BETAVERSION
-	extern BOOLEAN gfDoDialogOnceGameScreenFadesIn;
-#endif
-
-
 static void HandleModalTactical(void);
 static void TacticalScreenLocateToSoldier(void);
 
@@ -348,11 +343,6 @@ ScreenID MainGameScreenHandle(void)
 		return( GAME_SCREEN );
 	}
 
-
-
-#ifdef JA2BETAVERSION
-	DebugValidateSoldierData( );
-#endif
 
 	if ( HandleAutoBandage( ) )
 	{
@@ -483,13 +473,6 @@ ScreenID MainGameScreenHandle(void)
 	}
 
 
-	#ifdef JA2BETAVERSION
-		if( gfDoDialogOnceGameScreenFadesIn )
-		{
-			ValidateSoldierInitLinks( 4 );
-		}
-	#endif
-
 	HandleHeliDrop( );
 
 	if ( !ARE_IN_FADE_IN( ) )
@@ -586,18 +569,6 @@ ScreenID MainGameScreenHandle(void)
 		SetFontAttributes(MILITARYFONT1, FONT_MCOLOR_LTGREEN);
 		GDirtyPrintF(0, 0, L"IN CONVERSATION %d", giNPCReferenceCount);
 	}
-
-#ifdef JA2BETAVERSION
-
-	if (GamePaused())
-	{
-		SetFontAttributes(MILITARYFONT1, FONT_MCOLOR_LTGREEN);
-		GDirtyPrint(0, 10, L"Game Clock Paused");
-	}
-
-#endif
-
-
 
 	if ( gTacticalStatus.uiFlags & SHOW_ALL_MERCS )
 	{

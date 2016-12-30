@@ -694,12 +694,6 @@ void ClearTacticalMessageQueue(void)
 
 static void WriteMessageToFile(const wchar_t* pString)
 {
-#ifdef JA2BETAVERSION
-	FILE* fp = fopen("DebugMessage.txt", "a");
-	if (fp == NULL) return;
-	fprintf(fp, "%ls\n", pString);
-	fclose(fp);
-#endif
 }
 
 

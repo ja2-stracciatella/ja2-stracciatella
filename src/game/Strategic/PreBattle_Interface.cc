@@ -58,10 +58,6 @@
 
 extern BOOLEAN gfDelayAutoResolveStart;
 
-#ifdef JA2BETAVERSION
-extern BOOLEAN gfExitViewer;
-#endif
-
 
 BOOLEAN gfTacticalTraversal = FALSE;
 GROUP *gpTacticalTraversalGroup = NULL;
@@ -146,59 +142,6 @@ BOOLEAN gfCantRetreatInPBI = FALSE;
 
 BOOLEAN gfUsePersistantPBI;
 
-
-#ifdef JA2BETAVERSION
-
-//The group is passed so we can extract the sector location
-static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
-{
-	SECTORINFO *pSector;
-	UINT8 ubSectorID;
-	UINT8 ubInvalidGroups = 0;
-
-	if( !pLocGroup->ubSectorZ )
-	{
-		FOR_EACH_ENEMY_GROUP(pGroup)
-		{
-			if( pGroup->ubSectorX == pLocGroup->ubSectorX && pGroup->ubSectorY == pLocGroup->ubSectorY )
-			{
-				if( pGroup->pEnemyGroup->ubAdminsInBattle || pGroup->pEnemyGroup->ubTroopsInBattle || pGroup->pEnemyGroup->ubElitesInBattle )
-				{
-					ubInvalidGroups++;
-					pGroup->pEnemyGroup->ubAdminsInBattle = 0;
-					pGroup->pEnemyGroup->ubTroopsInBattle = 0;
-					pGroup->pEnemyGroup->ubElitesInBattle = 0;
-				}
-			}
-		}
-	}
-
-	ubSectorID = (UINT8)SECTOR( pLocGroup->ubSectorX, pLocGroup->ubSectorY );
-	pSector = &SectorInfo[ ubSectorID ];
-
-	if( ubInvalidGroups || pSector->ubAdminsInBattle || pSector->ubTroopsInBattle || pSector->ubElitesInBattle || pSector->ubCreaturesInBattle )
-	{
-		wchar_t str[512];
-		swprintf(str, lengthof(str), L"Strategic info warning:  Sector 'in battle' counters are not clear when they should be.  "
-									 L"If you can provide information on how a previous battle was resolved here or nearby patrol "
-									 L"(auto resolve, tactical battle, cheat keys, or retreat),"
-									 L"please forward that info (no data files necessary) as well as the following code (very important):  "
-									 L"G(%02d:%c%d_b%d) A(%02d:%02d) T(%02d:%02d) E(%02d:%02d) C(%02d:%02d)",
-									 ubInvalidGroups, pLocGroup->ubSectorY + 'A' - 1, pLocGroup->ubSectorX, pLocGroup->ubSectorZ,
-									 pSector->ubNumAdmins, pSector->ubAdminsInBattle,
-									 pSector->ubNumTroops, pSector->ubTroopsInBattle,
-									 pSector->ubNumElites, pSector->ubElitesInBattle,
-									 pSector->ubNumCreatures, pSector->ubCreaturesInBattle );
-		DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
-		pSector->ubAdminsInBattle = 0;
-		pSector->ubTroopsInBattle = 0;
-		pSector->ubElitesInBattle = 0;
-		pSector->ubCreaturesInBattle = 0;
-	}
-}
-#endif
-
-
 static void MakeButton(UINT idx, INT16 x, const wchar_t* text, GUI_CALLBACK click)
 {
 	GUIButtonRef const btn = QuickCreateButton(iPBButtonImage[idx], x, STD_SCREEN_Y + 54, MSYS_PRIORITY_HIGHEST - 2, click);
@@ -239,10 +182,6 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		gfBlitBattleSectorLocator = TRUE;
 		gfBlinkHeader = FALSE;
 
-#ifdef JA2BETAVERSION
-		if (battle_group) ValidateAndCorrectInBattleCounters(battle_group);
-#endif
-
 		//	InitializeTacticalStatusAtBattleStart();
 		// CJC, Oct 5 98: this is all we should need from InitializeTacticalStatusAtBattleStart()
 		if (gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE        &&
@@ -251,21 +190,6 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		{
 			SetFactTrue(FACT_FIRST_BATTLE_BEING_FOUGHT);
 		}
-
-#ifdef JA2BETAVERSION
-		/* If we are currently in the AI Viewer development utility, then remove it
-		 * first. It automatically returns to the mapscreen upon removal, which is
-		 * where we want to go. */
-		if (guiCurrentScreen == AIVIEWER_SCREEN)
-		{
-			gfExitViewer                                 = TRUE;
-			gpBattleGroup                                = battle_group;
-			gfEnteringMapScreen                          = TRUE;
-			gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
-			gfUsePersistantPBI                           = TRUE;
-			return;
-		}
-#endif
 
 		// ATE: Added check for persistent_pbi if !battle_group
 		// Searched code and saw that this condition only happens for creatures
@@ -347,9 +271,6 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 		else
 		{
-#ifdef JA2BETAVERSION
-			DoScreenIndependantMessageBox(L"Can't determine valid reason for battle indicator. Please try to provide information as to when and why this indicator first appeared and send whatever files that may help.", MSG_BOX_FLAG_OK, 0);
-#endif
 			gfBlitBattleSectorLocator = FALSE;
 			return;
 		}

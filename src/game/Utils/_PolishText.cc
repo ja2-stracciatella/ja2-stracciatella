@@ -2777,23 +2777,9 @@ static const wchar_t *s_pl_zSaveLoadText[zSaveLoadText_SIZE] =
 	L"Wersja gry w zapisanym pliku różni się od bieżącej. Prawdopodobnie można bezpiecznie kontynuować. Kontynuować?",
 	L"Zapisane pliki gier mogą być uszkodzone. Czy chcesz je usunąć?",
 
-	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
-	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
-#ifdef JA2BETAVERSION
-	L"Nieprawidłowa wersja zapisu gry.  W razie problemów prosimy o raport.  Kontynuować?",
-#else
 	L"Próba odczytu starszej wersji zapisu gry.  Zaktualizować ten zapis i odczytać grę?",
-#endif
 
-	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
-	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
-#ifdef JA2BETAVERSION
-	L"Nieprawidłowa wersja zapisu gry.  W razie problemów prosimy o raport.  Kontynuować?",
-#else
 	L"Próba odczytu starszej wersji zapisu gry.  Zaktualizować ten zapis i odczytać grę?",
-#endif
 
 	L"Czy na pewno chcesz nadpisać grę na pozycji %d?",
 
@@ -3121,9 +3107,6 @@ static const wchar_t *s_pl_pMessageStrings[pMessageStrings_SIZE] =
 	L"Przesyłka dotarła do Drassen.",
  	L"%ls przybędzie do wyznaczonego punktu zrzutu (sektor %ls) w dniu %d, około godziny %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	L"Lista historii zaktualizowana.",
-#ifdef JA2BETAVERSION
-	L"Automatyczny zapis został pomyślnie wykonany.",
-#endif
 };
 
 

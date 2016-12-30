@@ -34,11 +34,6 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#ifdef JA2BETAVERSION
-#	include "Debug.h"
-#endif
-
-
 extern void PrintDate( void );
 extern void PrintNumberOnTeam( void );
 extern void PrintBalance( void );

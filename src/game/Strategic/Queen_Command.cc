@@ -42,10 +42,6 @@
 #include "slog/slog.h"
 #include "JAScreens.h"
 
-#ifdef JA2BETAVERSION
-	extern BOOLEAN gfClearCreatureQuest;
-#endif
-
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
 //as well as intentions, etc.
 SECTORINFO SectorInfo[256];
@@ -64,20 +60,6 @@ INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 static void ValidateEnemiesHaveWeapons(void)
 {
-#ifdef JA2BETAVERSION
-	INT32 iNumInvalid = 0;
-	CFOR_EACH_IN_TEAM(s, ENEMY_TEAM)
-	{
-		if (!s->bInSector) continue;
-		if (!s->inv[HANDPOS].usItem) iNumInvalid++;
-	}
-
-	// log and return
-	if (iNumInvalid)
-	{
-		SLOGW(DEBUG_TAG_QUEENCMD, "%d enemies have been added without any weapons! Please note sector.", iNumInvalid);
-	}
-#endif
 }
 
 //Counts enemies and crepitus, but not bloodcats.
@@ -1159,15 +1141,6 @@ void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const f)
 	// Read the number of nodes stored
 	UINT32 n_records;
 	FileRead(f, &n_records, sizeof(UINT32));
-
-#ifdef JA2BETAVERSION
-	if (n_records == 0)
-	{
-		BuildUndergroundSectorInfoList();
-		gfClearCreatureQuest = TRUE;
-		return;
-	}
-#endif
 
 	UNDERGROUND_SECTORINFO** anchor = &gpUndergroundSectorInfoHead;
 	for (UINT32 n = n_records; n != 0; --n)

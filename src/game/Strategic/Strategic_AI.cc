@@ -35,15 +35,6 @@
 #include "FileMan.h"
 #include "slog/slog.h"
 
-#ifdef JA2BETAVERSION
-#	include "JAScreens.h"
-#	include "MessageBoxScreen.h"
-#	include "ScreenIDs.h"
-#	include "Squads.h"
-#	include <stdarg.h>
-#endif
-
-
 #define SAI_VERSION		29
 
 /*
@@ -512,76 +503,11 @@ static bool AdjacentSectorIsImportantAndUndefended(UINT8 const sector_id)
 
 static void ValidatePendingGroups(void)
 {
-	#ifdef JA2BETAVERSION
-		GROUP *pGroup;
-		INT32 i, iErrorsForInvalidPendingGroup = 0;
-		UINT8 ubGroupID;
-		for( i = 0; i < giPatrolArraySize; i++ )
-		{
-			ubGroupID = gPatrolGroup[ i ].ubPendingGroupID;
-			if( ubGroupID )
-			{
-				pGroup = GetGroup( ubGroupID );
-				if( !pGroup || pGroup->fPlayer )
-				{
-					iErrorsForInvalidPendingGroup++;
-					gPatrolGroup[ i ].ubPendingGroupID = 0;
-				}
-			}
-		}
-		for( i = 0; i < giGarrisonArraySize; i++ )
-		{
-			ubGroupID = gGarrisonGroup[ i ].ubPendingGroupID;
-			if( ubGroupID )
-			{
-				pGroup = GetGroup( ubGroupID );
-				if( !pGroup || pGroup->fPlayer )
-				{
-					iErrorsForInvalidPendingGroup++;
-					gGarrisonGroup[ i ].ubPendingGroupID = 0;
-				}
-			}
-		}
-		if( iErrorsForInvalidPendingGroup )
-		{
-			SLOGE(DEBUG_TAG_SAI,  "Internal error -- %d pending groups were discovered to be invalid.  Please report error and send save.\n\
-												You can continue playing, as this has been auto-corrected.  No need to send any debug files.", iErrorsForInvalidPendingGroup );
-		}
-	#endif
 }
 
 
 static void ValidateWeights(INT32 iID)
 {
-	#ifdef JA2BETAVERSION
-		INT32 i;
-		INT32 iSumRequestPoints = 0;
-		INT32 iSumReinforcementPoints = 0;
-		for( i = 0; i < giPatrolArraySize; i++ )
-		{
-			iSumRequestPoints += gPatrolGroup[ i ].bWeight;
-		}
-		for( i = 0; i < giGarrisonArraySize; i++ )
-		{
-			if( gGarrisonGroup[ i ].bWeight > 0 )
-			{
-				iSumRequestPoints += gGarrisonGroup[ i ].bWeight;
-			}
-			else if( gGarrisonGroup[ i ].bWeight < 0 )
-			{
-				iSumReinforcementPoints -= gGarrisonGroup[ i ].bWeight; //double negative is positive!
-			}
-		}
-		if( giReinforcementPoints != iSumReinforcementPoints || giRequestPoints != iSumRequestPoints )
-		{
-			SLOGE( DEBUG_TAG_SAI, "Internal error #%02d (total request/reinforcement points).  Please report error including error#.\n\
-												You can continue playing, as the points have been auto-corrected.  No need to send any save/debug files.", iID );
-
-			//Correct the misalignment.
-			giReinforcementPoints = iSumReinforcementPoints;
-			giRequestPoints = iSumRequestPoints;
-		}
-	#endif
 }
 
 
@@ -635,191 +561,6 @@ static void ValidateLargeGroup(GROUP* pGroup)
 		}
 }
 
-
-#ifdef JA2BETAVERSION
-static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE& s)
-{
-	FOR_EACH_GROUP_SAFE(i)
-	{
-		GROUP& g = *i;
-		if (!g.fPlayer) continue;
-		if (s.ubGroupID == g.ubGroupID) continue;
-
-		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
-		{
-			if (pPlayer->pSoldier != &s) continue;
-			RemovePlayerFromPGroup(g, s);
-			break;
-		}
-	}
-}
-#endif
-
-
-#ifdef JA2BETAVERSION
-void ValidatePlayersAreInOneGroupOnly(void)
-{
-	INT32 iGroups;
-	INT32 iMismatches;
-	INT32 iNumErrors;
-	wchar_t str[1024];
-	UINT8 ubGroupID;
-	//Go through each merc slot in the player team
-	iNumErrors = 0;
-	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
-	{ //check to see if the merc has a group ID
-		if (!pSoldier->bLife || !pSoldier->ubGroupID)
-		{ //non-existant, dead, or in no group (don't care, skip to next merc)
-			continue;
-		}
-
-		//Record the merc's group ID, as we may have to restore this later if the merc is found to exist
-		//in multiple groups.
-		ubGroupID = pSoldier->ubGroupID;
-
-		iGroups = 0;
-		iMismatches = 0;
-		//Go through each group and determine if the player exists in multiple groups
-		//iGroups ------ counts the number of groups the merc is in.
-		//iMismatches -- counts the cases where the merc's ubGroupID doesn't match the ubGroupID of the group
-		//               the merc exists in.
-		CFOR_EACH_PLAYER_GROUP(pGroup)
-		{
-			CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
-			{
-				if( pPlayer->pSoldier == pSoldier )
-				{
-					if( pSoldier->ubGroupID != pGroup->ubGroupID )
-					{
-						iMismatches++;
-					}
-					iGroups++;
-					break;
-				}
-			}
-		}
-
-		if( iMismatches || !iGroups )
-		{ //If we have any mismatches or a merc not in a group, then there is definately an error.
-			//We need to record and report the "first" error in detail
-			iNumErrors++; //keeps track of the total errors (this number will be reported)
-
-			if( iNumErrors == 1 )
-			{ //This is the first error, so we will provide detailed debug information to help fix the bug(s).
-				if( iGroups == 1 && iMismatches == 1 )
-				{ //We have a very serious problem, as we have no way to know which group this merc is supposed to be in.
-					//This problem cannot be corrected (so we will assign the merc to his own unique squad) and definately report it.
-
-					//Get a pointer to the group that contains the merc
-					iMismatches = 0;
-					iGroups = 0;
-					const GROUP* pOtherGroup = NULL;
-					CFOR_EACH_PLAYER_GROUP(pGroup)
-					{
-						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
-						{
-							if( pPlayer->pSoldier == pSoldier )
-							{
-								if( pSoldier->ubGroupID != pGroup->ubGroupID )
-								{
-									pOtherGroup = pGroup;
-									iMismatches++;
-								}
-								iGroups++;
-								break;
-							}
-						}
-						if( iMismatches == 1 )
-						{
-							break;
-						}
-					}
-					const GROUP* const pGroup = GetGroup(pSoldier->ubGroupID);
-					Assert( pGroup );
-					Assert( pOtherGroup );
-					SLOGE( DEBUG_TAG_SAI, "%ls in %c%d thinks he/she is in group %d in %c%d but isn't.\n\
-														Group %d in %c%d thinks %ls is in the group but isn't.  %ls will be assigned to a unique squad.\n\
-														Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
-												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX,
-												 pSoldier->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-												 pOtherGroup->ubGroupID, pOtherGroup->ubSectorY + 'A' - 1, pOtherGroup->ubSectorX, pSoldier->name,
-												 pSoldier->name );
-				}
-				else if( iGroups > 1 && iMismatches == iGroups - 1 )
-				{ //This is the error that is being targetted.  This means that the merc exists in multiple groups though the merc
-					//knows what group he is supposed to be in.  This error can be corrected, by manually removing the merc from all
-					//mismatch groups.  This is indicative of a merc being reassigned to another group without removing him first.
-
-					//Get a pointer to the first mismatch group that contains the merc
-					iMismatches = 0;
-					iGroups = 0;
-					const GROUP* pOtherGroup = NULL;
-					CFOR_EACH_PLAYER_GROUP(pGroup)
-					{
-						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
-						{
-							if( pPlayer->pSoldier == pSoldier )
-							{
-								if( pSoldier->ubGroupID != pGroup->ubGroupID )
-								{
-									pOtherGroup = pGroup;
-									iMismatches++;
-								}
-								iGroups++;
-								break;
-							}
-						}
-					}
-					const GROUP* const pGroup = GetGroup(pSoldier->ubGroupID);
-					Assert( pGroup );
-					Assert( pOtherGroup );
-
-					SLOGE( DEBUG_TAG_SAI, "%ls in %c%d has been found in multiple groups.  The group he/she is supposed\n\
-														to be in is group %d in %c%d, but %ls was also found to be in group %d in %c%d.  %ls was found in %d groups\n\
-														total.  Please send screenshot, PRIOR save (corrected by time you read this), and any theories.",
-												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX,
-												 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-												 pSoldier->name, pOtherGroup->ubGroupID, pOtherGroup->ubSectorY + 'A' - 1, pOtherGroup->ubSectorX,
-												 pSoldier->name, iGroups );
-				}
-				else if( !iGroups )
-				{ //The merc cannot be found in any group!  This should never happen!  We will assign the merc into his
-					//own unique squad as a correction.
-					SLOGE( DEBUG_TAG_SAI, "%ls in %c%d cannot be found in any group.  %ls will be assigned to a unique group/squad.\n\
-														Please provide details on how you think this may have happened.  Send screenshot and PRIOR save. Do not send a save\n\
-														you create after this point as the info will have been corrected by then.",
-												 pSoldier->name, pSoldier->sSectorY + 'A' - 1, pSoldier->sSectorX, pSoldier->name );
-				}
-			}
-
-			//CORRECT THE ERRORS NOW
-			if( iGroups == 1 && iMismatches == 1 )
-			{ //We have a very serious problem, as we have no way to know which group this merc is supposed to be in.
-				//This problem cannot be corrected (so we will assign the merc to his own unique squad).
-				RemovePlayersFromAllMismatchGroups(*pSoldier);
-				AddCharacterToUniqueSquad( pSoldier );
-			}
-			else if( iGroups > 1 && iMismatches == iGroups - 1 )
-			{ //This is the error that is being targetted.  This means that the merc exists in multiple groups though the merc
-				//knows what group he is supposed to be in.  This error can be corrected, by manually removing the merc from all
-				//mismatch groups.  This is indicative of a merc being reassigned to another group without removing him first.
-				RemovePlayersFromAllMismatchGroups(*pSoldier);
-				pSoldier->ubGroupID = ubGroupID;
-			}
-			else if( !iGroups )
-			{ //The merc cannot be found in any group!  This should never happen!  We will assign the merc into his
-				//own unique squad as a correction.
-				AddCharacterToUniqueSquad( pSoldier );
-			}
-		}
-	}
-	if( iNumErrors )
-	{ //The first error to be detected is the one responsible for building the strings.  We will simply append another string containing
-		//the total number of detected errors.
-		SLOGE( DEBUG_TAG_SAI, "A total of %d related errors have been detected.", iNumErrors );
-	}
-}
-#endif
 
 void InitStrategicAI()
 {
@@ -2737,10 +2478,6 @@ void SaveStrategicAI(HWFILE const hFile)
 	FileWrite(hFile, gubPatrolReinforcementsDenied, giPatrolArraySize);
 
 	FileWrite(hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize);
-
-	#ifdef JA2BETAVERSION
-		ValidatePlayersAreInOneGroupOnly();
-	#endif
 }
 
 
@@ -2828,10 +2565,6 @@ void LoadStrategicAI(HWFILE const hFile)
 	}
 	gubGarrisonReinforcementsDenied = MALLOCN(UINT8, giGarrisonArraySize);
 	FileRead(hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize);
-
-	#ifdef JA2BETAVERSION
-		InitStrategicMovementCosts();
-	#endif
 
 	if( ubSAIVersion < 6 )
 	{ //Reinitialize the costs since they have changed.
@@ -3166,9 +2899,6 @@ void LoadStrategicAI(HWFILE const hFile)
 
 	ValidateWeights( 28 );
 	ValidatePendingGroups();
-	#ifdef JA2BETAVERSION
-		ValidatePlayersAreInOneGroupOnly();
-	#endif
 }
 
 

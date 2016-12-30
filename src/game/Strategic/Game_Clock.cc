@@ -628,11 +628,7 @@ void UpdateClock()
 	// check game state for pause screen masks
 	CreateDestroyScreenMaskForPauseGame( );
 
-#ifdef JA2BETAVERSION
-	if( guiCurrentScreen != GAME_SCREEN && guiCurrentScreen != MAP_SCREEN && guiCurrentScreen != AIVIEWER_SCREEN && guiCurrentScreen != GAME_SCREEN )
-#else
 	if( guiCurrentScreen != GAME_SCREEN && guiCurrentScreen != MAP_SCREEN && guiCurrentScreen != GAME_SCREEN )
-#endif
 	{
 		uiLastSecondTime = GetJA2Clock( );
 		gfTimeInterruptPause = FALSE;

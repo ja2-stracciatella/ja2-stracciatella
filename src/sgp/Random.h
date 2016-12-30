@@ -28,10 +28,6 @@ extern BOOLEAN Chance( UINT32 uiChance );
 	extern UINT32 guiPreRandomIndex;
 	extern UINT32 guiPreRandomNums[ MAX_PREGENERATED_NUMS ];
 
-#	ifdef JA2BETAVERSION
-		void CountRandomCalls(BOOLEAN fStart);
-		void GetRandomCalls(UINT32* puiRandoms, UINT32* puiPreRandoms);
-#	endif
 #endif
 
 #endif

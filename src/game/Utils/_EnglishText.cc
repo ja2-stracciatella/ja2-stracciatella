@@ -2773,23 +2773,9 @@ static const wchar_t *s_eng_zSaveLoadText[zSaveLoadText_SIZE] =
 	L"The game version in the saved game file is different then the current version.  It is most likely safe to continue.  Continue?",
 	L"The saved game files may be invalidated.  Do you want them all deleted?",
 
-	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
-	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
-#ifdef JA2BETAVERSION
-	L"Save version has changed.  Please report if there any problems.  Continue?",
-#else
 	L"Attempting to load an older version save.  Automatically update and load the save?",
-#endif
 
-	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
-	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
-#ifdef JA2BETAVERSION
-	L"Save version and game version have changed.  Please report if there are any problems.  Continue?",
-#else
 	L"Attempting to load an older version save.  Automatically update and load the save?",
-#endif
 
 	L"Are you sure you want to overwrite the saved game in slot #%d?",
 
@@ -3117,9 +3103,6 @@ static const wchar_t *s_eng_pMessageStrings[pMessageStrings_SIZE] =
 	L"A package has arrived in Drassen.",
  	L"%ls should arrive at the designated drop-off point (sector %ls) on day %d, at approximately %ls.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	L"History log updated.",
-#ifdef JA2BETAVERSION
-	L"Successfully Saved the Game into the End Turn Auto Save slot.",
-#endif
 };
 
 

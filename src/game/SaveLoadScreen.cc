@@ -48,10 +48,6 @@
 #include "Meanwhile.h"
 #include "PreBattle_Interface.h"
 
-#if defined JA2BETAVERSION
-#include "Soldier_Init_List.h"
-#endif
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 
@@ -1555,9 +1551,6 @@ static void DoneFadeOutForSaveLoadScreen(void)
 	{
 		LoadSavedGame(IsDeadIsDeadTab(gfActiveTab) ? gbSelectedSaveLocation + NUM_SAVE_GAMES : gbSelectedSaveLocation);
 
-#ifdef JA2BETAVERSION
-		ValidateSoldierInitLinks(1);
-#endif
 		gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
 
 		ScreenID const screen = guiScreenToGotoAfterLoadingSavedGame;
@@ -1648,27 +1641,6 @@ static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExit
 		SaveGameToSlotNum();
 	}
 }
-
-
-#ifdef JA2BETAVERSION
-
-void ErrorDetectedInSaveCallback(MessageBoxReturnValue)
-{
-	gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
-	ScreenID const screen = guiScreenToGotoAfterLoadingSavedGame;
-	SetSaveLoadExitScreen(screen);
-	if (screen == MAP_SCREEN)
-	{ // We are to go to map screen after loading the game
-		FadeInNextFrame();
-	}
-	else
-	{ // We are to go to the Tactical screen after loading
-		FadeInGameScreen();
-	}
-	gfStartedFadingOut = TRUE;
-}
-
-#endif
 
 
 static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
