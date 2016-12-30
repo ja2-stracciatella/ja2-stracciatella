@@ -501,11 +501,6 @@ static bool AdjacentSectorIsImportantAndUndefended(UINT8 const sector_id)
 }
 
 
-static void ValidatePendingGroups(void)
-{
-}
-
-
 static void ValidateWeights(INT32 iID)
 {
 }
@@ -2898,7 +2893,6 @@ void LoadStrategicAI(HWFILE const hFile)
 	gubSAIVersion = SAI_VERSION;
 
 	ValidateWeights( 28 );
-	ValidatePendingGroups();
 }
 
 
