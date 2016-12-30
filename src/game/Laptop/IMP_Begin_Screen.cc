@@ -250,22 +250,13 @@ static void RemoveIMPBeginScreenButtons(void)
 }
 
 
-static BOOLEAN CheckCharacterInputForEgg(void);
 static void CopyFirstNameIntoNickName(void);
 
 
 static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	// easter egg check
-	BOOLEAN fEggOnYouFace = FALSE;
-
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (CheckCharacterInputForEgg())
-		{
-			fEggOnYouFace = TRUE;
-		}
-
 		// back to mainpage
 		CopyTrimmedString(pFullNameString, NAME_LENGTH, GetStringFromField(0));
 		CopyTrimmedString(pNickNameString, NICKNAME_LENGTH, GetStringFromField(1));
@@ -290,12 +281,8 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 				iCurrentProfileMode = 0;
 			}
 
-			// no easter egg?...then proceed along
-			if (!fEggOnYouFace)
-			{
-				iCurrentImpPage = IMP_MAIN_PAGE;
-				fButtonPendingFlag = TRUE;
-			}
+			iCurrentImpPage = IMP_MAIN_PAGE;
+			fButtonPendingFlag = TRUE;
 		}
 		else
 		{
@@ -454,8 +441,3 @@ static void Print8CharacterOnlyString(void)
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
-
-static BOOLEAN CheckCharacterInputForEgg(void)
-{
-	return FALSE;
-}
