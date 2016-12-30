@@ -22,6 +22,9 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
+#include "GameSettings.h"
+#include "MessageBoxScreen.h"
+
 static BOOLEAN gfIntroScreenEntry = TRUE;
 static BOOLEAN gfIntroScreenExit;
 
