@@ -2,28 +2,20 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-#ifdef PRERANDOM_GENERATOR
-
-	UINT32 guiPreRandomIndex = 0;
-	UINT32 guiPreRandomNums[ MAX_PREGENERATED_NUMS ];
-
-#endif
-
+UINT32 guiPreRandomIndex = 0;
+UINT32 guiPreRandomNums[ MAX_PREGENERATED_NUMS ];
 
 void InitializeRandom(void)
 {
-  // Seed the random-number generator with current time so that
-  // the numbers will be different every time we run.
-  srand( (unsigned) time(NULL) );
-	#ifdef PRERANDOM_GENERATOR
-		//Pregenerate all of the random numbers.
-		for( guiPreRandomIndex = 0; guiPreRandomIndex < MAX_PREGENERATED_NUMS; guiPreRandomIndex++ )
-		{
-			guiPreRandomNums[ guiPreRandomIndex ] = rand();
-		}
-		guiPreRandomIndex = 0;
-	#endif
+	// Seed the random-number generator with current time so that
+	// the numbers will be different every time we run.
+	srand( (unsigned) time(NULL) );
+	//Pregenerate all of the random numbers.
+	for( guiPreRandomIndex = 0; guiPreRandomIndex < MAX_PREGENERATED_NUMS; guiPreRandomIndex++ )
+	{
+		guiPreRandomNums[ guiPreRandomIndex ] = rand();
+	}
+	guiPreRandomIndex = 0;
 }
 
 // Returns a pseudo-random integer between 0 and uiRange
@@ -47,8 +39,6 @@ BOOLEAN Chance( UINT32 uiChance )
 {
 	return Random(100) < uiChance;
 }
-
-#ifdef PRERANDOM_GENERATOR
 
 UINT32 PreRandom( UINT32 uiRange )
 {
@@ -77,5 +67,3 @@ BOOLEAN PreChance( UINT32 uiChance )
 {
 	return PreRandom(100) < uiChance;
 }
-
-#endif
