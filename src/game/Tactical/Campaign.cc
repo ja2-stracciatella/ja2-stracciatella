@@ -29,24 +29,6 @@
 #include "EMail.h"
 #include "slog/slog.h"
 
-#ifdef STAT_CHANGE_DEBUG
-const wchar_t* const  wDebugStatStrings[] = {
-	L"",
-	L"Life (Max)",
-  L"Agility",
-  L"Dexterity",
-  L"Wisdom",
-  L"Medical",
-  L"Explosives",
-  L"Mechanical",
-	L"Marksmanship",
-  L"Experience Level",
-  L"Strength",
-  L"Leadership",
-};
-#endif
-
-
 // Convert hired mercs' stats subpoint changes into actual point changes where warranted
 static void ProcessUpdateStats(MERCPROFILESTRUCT&, SOLDIERTYPE*);
 
@@ -361,15 +343,6 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
       }
     }
   }
-
-#ifdef STAT_CHANGE_DEBUG
-	if (sSubPointChange != 0)
-	{
-		// debug message
-		SLOGD(DEBUG_TAG_CAMPAIGN, "%s's %s changed by %d", p.zNickname, wDebugStatStrings[ubStat], sSubPointChange);
-	}
-#endif
-
 
 	// exclude training, that's not under our control
 	if (ubReason != FROM_TRAINING)
