@@ -4,11 +4,7 @@
   #define GAME_VERSION "XXXXX"
 #endif
 
-#ifdef JA2BETAVERSION
-  #define FULL_VERSION "Beta v. 0.98";
-#else
-  #define FULL_VERSION "Stracciatella " GAME_VERSION
-#endif
+#define FULL_VERSION "Stracciatella " GAME_VERSION
 
 //
 //	Keeps track of the game version

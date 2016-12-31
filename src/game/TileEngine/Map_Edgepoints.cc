@@ -901,34 +901,6 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 	}
 	pMapEdgepointInfo->ubStrategicInsertionCode = ubStrategicInsertionCode;
 
-#ifdef JA2BETAVERSION
-	if (!psArray || usArraySize == 0)
-	{
-		if (gMapInformation.sNorthGridNo  == -1 &&
-				gMapInformation.sEastGridNo   == -1 &&
-				gMapInformation.sSouthGridNo  == -1 &&
-				gMapInformation.sWestGridNo   == -1 &&
-				gMapInformation.sCenterGridNo == -1)
-		{
-			if (gbWorldSectorZ)
-			{
-				SLOGE(DEBUG_TAG_ASSERTS, "Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints.", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
-			}
-			else
-			{
-				SLOGE(DEBUG_TAG_ASSERTS, "Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints.", gWorldSectorY + 'A' - 1, gWorldSectorX);
-			}
-		}
-		else switch (ubStrategicInsertionCode)
-		{
-			case INSERTION_CODE_NORTH: SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any north mapedgepoints.  Possibly because there is no north entry point."); break;
-			case INSERTION_CODE_EAST:  SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any east mapedgepoints.  Possibly because there is no east entry point.");   break;
-			case INSERTION_CODE_SOUTH: SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any south mapedgepoints.  Possibly because there is no south entry point."); break;
-			case INSERTION_CODE_WEST:  SLOGE(DEBUG_TAG_ASSERTS, "This map doesn't have any west mapedgepoints.  Possibly because there is no west entry point. NOTE: Teleportation always uses the west entrypoint. Some maps shouldn't have west entrypoints."); break;
-		}
-	}
-#endif
-
 	if (usArraySize == 0)
 	{
 		pMapEdgepointInfo->ubNumPoints = 0;

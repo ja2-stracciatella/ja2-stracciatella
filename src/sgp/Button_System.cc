@@ -44,7 +44,7 @@
  * TO REMOVE ALL DEBUG FUNCTIONALITY: simply comment out BUTTONSYSTEM_DEBUGGING
  * definition
  */
-#if defined JA2 && defined _DEBUG
+#if defined _DEBUG
 #	define BUTTONSYSTEM_DEBUGGING
 #endif
 
@@ -948,12 +948,10 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		}
 	}
 
-#if defined JA2
 	if (StateBefore != StateAfter)
 	{
 		InvalidateRegion(b->X(), b->Y(), b->BottomRightX(), b->BottomRightY());
 	}
-#endif
 
 	if (gfPendingButtonDeletion) RemoveButtonsMarkedForDeletion();
 }
@@ -994,9 +992,7 @@ void RenderButtons(void)
 			b->uiFlags &= ~BUTTON_DIRTY;
 			DrawButtonFromPtr(b);
 
-#if defined JA2
 			InvalidateRegion(b->X(), b->Y(), b->BottomRightX(), b->BottomRightY());
-#endif
 		}
 	}
 
@@ -1472,7 +1468,6 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 		yp++;
 	}
 
-#if defined JA2
 	if (b->sWrappedWidth != -1)
 	{
 		UINT8 bJustified = 0;
@@ -1525,9 +1520,6 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 		xp += b->bTextXSubOffSet;
 		MPrint(xp, yp, b->string);
 	}
-#else
-	MPrint(xp, yp, b->string);
-#endif
 	// Restore the old text printing settings
 }
 
@@ -1579,17 +1571,8 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 		}
 	}
 
-#if defined JA2
 	const INT32 iBorderWidth  = 3;
 	const INT32 iBorderHeight = 2;
-#else
-	/* DB - Added this to support more flexible sizing of border images.  The 3x2
-	 * size was a bit limiting. JA2 should default to the original size, unchanged
-	 */
-	ETRLEObject const& pTrav         = &BPic->SubregionProperties(0);
-	INT32       const  iBorderHeight = pTrav.usHeight;
-	INT32       const  iBorderWidth  = pTrav.usWidth;
-#endif
 
 	// Compute the number of button "chunks" needed to be blitted
 	INT32 const width         = b->W();
@@ -1676,9 +1659,7 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 				PlayButtonSound(btn, BUTTON_SOUND_CLICKED_OFF);
 			}
 		}
-#if defined JA2
 		InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
-#endif
 	}
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
@@ -1687,9 +1668,7 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			PlayButtonSound(btn, BUTTON_SOUND_CLICKED_ON);
 		}
-#if defined JA2
 		InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
-#endif
 	}
 }
 
@@ -1711,9 +1690,7 @@ void ReleaseAnchorMode(void)
 		{
 			b->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
-#if defined JA2
 		InvalidateRegion(b->X(), b->Y(), b->BottomRightX(), b->BottomRightY());
-#endif
 	}
 	gpPrevAnchoredButton = b;
 	gpAnchoredButton     = 0;
@@ -1724,9 +1701,7 @@ void GUI_BUTTON::Hide()
 {
 	Area.Disable();
 	uiFlags |= BUTTON_DIRTY;
-#if defined JA2
 	InvalidateRegion(X(), Y(), BottomRightX(), BottomRightY());
-#endif
 }
 
 
@@ -1741,9 +1716,7 @@ void GUI_BUTTON::Show()
 {
 	Area.Enable();
 	uiFlags |= BUTTON_DIRTY;
-#if defined JA2
 	InvalidateRegion(X(), Y(), BottomRightX(), BottomRightY());
-#endif
 }
 
 

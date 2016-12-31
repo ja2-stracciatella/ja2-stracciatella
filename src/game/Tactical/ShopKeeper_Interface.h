@@ -87,11 +87,6 @@ void DeleteShopKeeperItemDescBox(void);
 
 BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* s);
 
-
-#ifdef JA2TESTVERSION
-void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo );
-#endif
-
 void RestrictSkiMouseCursor(void);
 
 void DoSkiMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);

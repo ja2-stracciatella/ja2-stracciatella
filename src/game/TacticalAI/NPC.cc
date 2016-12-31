@@ -170,11 +170,6 @@ INT8 const gbFirstApproachFlags[] = { 0x01, 0x02, 0x04, 0x08 };
 static UINT8 const gubAlternateNPCFileNumsForQueenMeanwhiles[]  = { 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176 };
 static UINT8 const gubAlternateNPCFileNumsForElliotMeanwhiles[] = { 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196 };
 
-#ifdef JA2BETAVERSION
-static BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
-#endif
-
-
 static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 {
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
@@ -1733,13 +1728,6 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			}
 			else
 			{
-#ifdef JA2BETAVERSION
-				if ( gfDisplayScreenMsgOnRecordUsage )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Using record %d for %ls", ubRecordNum, gMercProfiles[ubNPC].zNickname);
-				}
-#endif
-
 				// turn before speech?
 				if ( pQuotePtr->sActionData <= -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
@@ -2413,12 +2401,6 @@ BOOLEAN NPCHasUnusedHostileRecord(UINT8 const ubNPC, Approach const approach)
 		if (!NPCConsiderQuote(ubNPC, 0, approach, i, 0, quotes)) continue;
 		NPCQuoteInfo const& q = quotes[i];
 		if (q.usFactMustBeTrue == FACT_NPC_HOSTILE_OR_PISSED_OFF) continue;
-#ifdef JA2BETAVERSION
-		if (!(q.fFlags & QUOTE_FLAG_ERASE_ONCE_SAID))
-		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Warning: possible infinite quote loop to follow.");
-		}
-#endif
 		return TRUE;
 	}
 	return FALSE;
@@ -2747,22 +2729,6 @@ BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum )
 
 	return( FALSE );
 }
-
-#ifdef JA2BETAVERSION
-void ToggleNPCRecordDisplay( void )
-{
-	if ( gfDisplayScreenMsgOnRecordUsage )
-	{
-		gfDisplayScreenMsgOnRecordUsage = FALSE;
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Turning record reporting OFF" );
-	}
-	else
-	{
-		gfDisplayScreenMsgOnRecordUsage = TRUE;
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Turning record reporting ON" );
-	}
-}
-#endif
 
 void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 {

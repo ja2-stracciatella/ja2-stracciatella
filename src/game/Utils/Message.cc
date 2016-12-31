@@ -336,9 +336,6 @@ static void ClearWrappedStrings(WRAPPED_STRING* pStringWrapperHead)
 }
 
 
-static void WriteMessageToFile(const wchar_t* pString);
-
-
 // this function sets up the string into several single line structures
 static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t* const fmt, ...)
 {
@@ -689,17 +686,6 @@ void ClearTacticalMessageQueue(void)
 	}
 
 	pStringS = NULL;
-}
-
-
-static void WriteMessageToFile(const wchar_t* pString)
-{
-#ifdef JA2BETAVERSION
-	FILE* fp = fopen("DebugMessage.txt", "a");
-	if (fp == NULL) return;
-	fprintf(fp, "%ls\n", pString);
-	fclose(fp);
-#endif
 }
 
 

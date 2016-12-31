@@ -96,9 +96,6 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 			PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
 		}
 
-		// Remove deadlock message
-		EndDeadlockMsg( );
-
 		// Check for victory conditions
 
 		// Are we in combat already?
@@ -186,8 +183,6 @@ void EndTurn( UINT8 ubNextTeam )
 	//Check for enemy pooling (add enemies if there happens to be more than the max in the
 	//current battle.  If one or more slots have freed up, we can add them now.
 
-	EndDeadlockMsg( );
-
 	// Save if we are in Dead is Dead mode
 	DoDeadIsDeadSaveIfNecessary();
   
@@ -233,8 +228,6 @@ void EndTurn( UINT8 ubNextTeam )
 
 void EndAITurn( void )
 {
-	// Remove any deadlock message
-	EndDeadlockMsg( );
 	if (INTERRUPT_QUEUED)
 	{
 		EndInterrupt( FALSE );
@@ -258,8 +251,6 @@ void EndAllAITurns( void )
 {
 	// warp turn to the player's turn
 
-	// Remove any deadlock message
-	EndDeadlockMsg( );
 	if (INTERRUPT_QUEUED)
 	{
 		EndInterrupt( FALSE );
@@ -395,7 +386,6 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	{
 		return;
 	}
-	EndDeadlockMsg( );
 
 	if (pSoldier->bVisible != -1) SlideTo(pSoldier, SETLOCATOR);
 
@@ -588,9 +578,6 @@ static void StartInterrupt(void)
 		}
 
 		SLOGD(DEBUG_TAG_TEAMTURN, "INTERRUPT: starting interrupt for %d", first_interrupter->ubID);
-
-		// Remove deadlock message
-		EndDeadlockMsg( );
 
 		// Select guy....
 		SelectSoldier(first_interrupter, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);

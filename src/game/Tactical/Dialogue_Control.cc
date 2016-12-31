@@ -756,11 +756,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 					 gMercProfiles[ubCharacterNum].bPersonalityTrait == NONSWIMMER ||
 					 gMercProfiles[ubCharacterNum].bPersonalityTrait == FEAR_OF_INSECTS))
 					//usQuoteNum == QUOTE_STARTING_TO_WHINE ||
-#ifdef JA2BETAVERSION
-					|| usQuoteNum == QUOTE_WHINE_EQUIPMENT) && (guiCurrentScreen != QUEST_DEBUG_SCREEN) )
-#else
           ) )
-#endif
 
 		{
 			// This quote might spawn another quote from someone
@@ -878,9 +874,7 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_
 			if (!success)
 			{
 				swprintf(zDialogueText, Length, L"I have no text in the EDT file (%d) %hs", usQuoteNum, pFilename);
-#ifndef JA2BETAVERSION
 				return( FALSE );
-#endif
 			}
    }
 

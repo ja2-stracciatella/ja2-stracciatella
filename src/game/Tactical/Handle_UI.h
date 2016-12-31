@@ -179,11 +179,6 @@ extern UINT32       guiShowUPDownArrows;
 extern BOOLEAN      gfUIHandleSelection;
 extern INT16        gsSelectedGridNo;
 extern SOLDIERTYPE* gSelectedGuy;
-
-#ifdef JA2TESTVERSION
-extern UINT8 gUIDeadlockedSoldier;
-#endif
-
 extern BOOLEAN            gfUIMouseOnValidCatcher;
 extern const SOLDIERTYPE* gUIValidCatcher;
 extern BOOLEAN            gUIUseReverse;

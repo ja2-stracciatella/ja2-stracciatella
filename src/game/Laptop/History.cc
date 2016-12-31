@@ -340,12 +340,6 @@ static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDat
 	*anchor = h;
 }
 
-
-#ifdef JA2TESTVERSION
-static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
-#endif
-
-
 // open and read in data to the History list
 static void OpenAndReadHistoryFile(void)
 {
@@ -370,10 +364,6 @@ static void OpenAndReadHistoryFile(void)
 		FileRead(f, &sSectorY,     sizeof(INT16));
 		FileRead(f, &bSectorZ,     sizeof(INT8));
 		FileSeek(f, 1, FILE_SEEK_FROM_CURRENT);
-
-#ifdef JA2TESTVERSION
-		PerformCheckOnHistoryRecord(1, sSectorX, sSectorY, bSectorZ);
-#endif
 
 		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
@@ -593,9 +583,6 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 		case HISTORY_MERC_KILLED:
 			if (h->ubSecondCode == NO_PROFILE)
 			{
-#ifdef JA2BETAVERSION
-				swprintf(pString, Length, pHistoryStrings[code], L"ERROR!!!  NO_PROFILE");
-#endif
 				break;
 			}
 			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);
@@ -728,10 +715,6 @@ try
 		FileRead(f, &bSectorZ,     sizeof(INT8));
 		FileSeek(f, 1, FILE_SEEK_FROM_CURRENT);
 
-#ifdef JA2TESTVERSION
-		PerformCheckOnHistoryRecord(3, sSectorX, sSectorY, bSectorZ);
-#endif
-
 		ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
 
@@ -772,10 +755,6 @@ static void AppendHistoryToEndOfFile(void)
 	AutoSGPFile f(FileMan::openForAppend(HISTORY_DATA_FILE));
 
 	const HistoryUnit* const h = pHistoryListHead;
-
-#ifdef JA2TESTVERSION
-	PerformCheckOnHistoryRecord(5, h->sSectorX, h->sSectorY, h->bSectorZ);
-#endif
 
 	BYTE  data[12];
 	BYTE* d = data;
@@ -825,19 +804,6 @@ static void GetQuestEndedString(const UINT8 ubQuestValue, wchar_t* const sQuestS
 	// open the file and copy the string
 	GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
 }
-
-
-#ifdef JA2TESTVERSION
-// perform a check on the data to see if it is pooched
-static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
-{
-	if( sSectorX > 16 || sSectorY > 16 || bSectorZ > 3 || sSectorX < -1 || sSectorY < -1 || bSectorZ < 0 )
-	{
-		SLOGE(DEBUG_TAG_ASSERTS, "History page is pooched, please remember what you were just doing, send your latest save to dave, and tell him this number, Error #%d.", uiErrorCode );
-	}
-}
-#endif
-
 
 static INT32 GetNumberOfHistoryPages(void)
 {

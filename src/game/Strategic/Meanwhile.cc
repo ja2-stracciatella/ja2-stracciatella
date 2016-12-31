@@ -35,30 +35,6 @@
 
 #define MAX_MEANWHILE_PROFILES	10
 
-#ifdef JA2TESTVERSION
-static const char* const gzMeanwhileStr[] =
-{
-	"End of player's first battle",
-	"Drassen Lib. ",
-	"Cambria Lib.",
-	"Alma Lib.",
-	"Grumm lib.",
-	"Chitzena Lib.",
-	"NW SAM",
-	"NE SAM",
-	"Central SAM",
-	"Flowers",
-	"Lost town",
-	"Interrogation",
-	"Creatures",
-	"Kill Chopper",
-	"AWOL Madlab",
-	"Outskirts Meduna",
-	"Balime Lib.",
-};
-#endif // JA2TESTVERSION
-
-
 // the snap to grid nos for meanwhile scenes
 static const UINT16 gusMeanWhileGridNo[] =
 {
@@ -250,17 +226,10 @@ static void BringupMeanwhileBox(void)
 {
 	wchar_t zStr[256];
 
-#ifdef JA2TESTVERSION
-	swprintf(zStr, lengthof(zStr), L"Meanwhile..... ( %hs : Remember to make sure towns are controlled if required by script )", gzMeanwhileStr[gCurrentMeanwhileDef.ubMeanwhileID]);
-#else
 	swprintf( zStr, lengthof(zStr), L"%ls.....", pMessageStrings[ MSG_MEANWHILE ] );
-#endif
-
 	MessageBoxFlags const flags =
 		gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION
-#if !defined JA2TESTVERSION
 		&& MeanwhileSceneSeen(gCurrentMeanwhileDef.ubMeanwhileID)
-#endif
 		? MSG_BOX_FLAG_OKSKIP : MSG_BOX_FLAG_OK;
 	DoMessageBox(MSG_BOX_BASIC_STYLE, zStr, guiCurrentScreen, flags, BeginMeanwhileCallBack, NULL);
 }

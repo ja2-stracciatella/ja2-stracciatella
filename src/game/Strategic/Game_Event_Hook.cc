@@ -36,11 +36,6 @@
 #include "Campaign.h"
 #include "Debug.h"
 
-#ifdef JA2BETAVERSION
-#	include "JAScreens.h"
-#	include "ScreenIDs.h"
-#endif
-
 extern UINT32	guiTimeStampOfCurrentlyExecutingEvent;
 extern BOOLEAN gfPreventDeletionOfAnyEvent;
 
@@ -74,22 +69,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		return FALSE;
 	}
 
-	#ifdef JA2BETAVERSION
-		//If we are currently in the AIViewer, only process the events that we want to process.
-		//The rest of the events will be delayed until AFTER we leave the viewer.
-		if( guiCurrentScreen == AIVIEWER_SCREEN )
-		{
-			if (pEvent->ubCallbackID != EVENT_CREATURE_SPREAD &&
-					pEvent->ubCallbackID != EVENT_DELAYED_HIRING_OF_MERC &&
-					pEvent->ubCallbackID != EVENT_GROUP_ARRIVAL	&&
-					pEvent->ubCallbackID != EVENT_EVALUATE_QUEEN_SITUATION &&
-					pEvent->ubCallbackID != EVENT_CHECK_ENEMY_CONTROLLED_SECTOR	)
-			{
-				gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
-				return FALSE;
-			}
-		}
-	#endif
 	// Look at the ID of event and do stuff according to that!
 	switch( pEvent->ubCallbackID )
 	{

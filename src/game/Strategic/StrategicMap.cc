@@ -248,31 +248,6 @@ StrategicMapElement StrategicMap[MAP_WORLD_X * MAP_WORLD_Y];
 
 
 //temp timer stuff -- to measure the time it takes to load a map.
-#ifdef JA2TESTVERSION
-	extern INT16	 gsAINumAdmins;
-	extern INT16	 gsAINumTroops;
-	extern INT16	 gsAINumElites;
-	extern INT16	 gsAINumCreatures;
-	//The wrapper time for EnterSector
-	BOOLEAN fStartNewFile = TRUE;
-	UINT32 uiEnterSectorStartTime;
-	UINT32 uiEnterSectorEndTime;
-	//The grand total time for loading a map
-	UINT32 uiLoadWorldStartTime;
-	UINT32 uiLoadWorldEndTime;
-	//The time spent in FileRead
-	UINT32 uiTotalFileReadTime;
-	UINT32 uiTotalFileReadCalls;
-	//LoadWorld and parts
-	UINT32 uiLoadWorldTime;
-	UINT32 uiTrashWorldTime;
-	UINT32 uiLoadMapTilesetTime;
-	UINT32 uiLoadMapLightsTime;
-	UINT32 uiBuildShadeTableTime;
-	UINT32 uiNumImagesReloaded;
-	#include "TileDat.h"
-#endif
-
 
 static UINT32 UndergroundTacticalTraversalTime(INT8 const exit_direction)
 { /* We are attempting to traverse in an underground environment. We need to use
@@ -364,114 +339,7 @@ void BeginLoadScreen( )
 			GetLoadScreenID(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		DisplayLoadScreenWithID(id);
 	}
-
-#ifdef JA2TESTVERSION
-	uiEnterSectorStartTime = 0;
-	uiEnterSectorEndTime = 0;
-	//The grand total time for loading a map
-	uiLoadWorldStartTime = 0;
-	uiLoadWorldEndTime = 0;
-	//The time spent in FileRead
-	uiTotalFileReadTime = 0;
-	uiTotalFileReadCalls = 0;
-	//Sections of LoadWorld
-	uiLoadWorldTime = 0;
-	uiTrashWorldTime = 0;
-	uiLoadMapTilesetTime = 0;
-	uiLoadMapLightsTime = 0;
-	uiBuildShadeTableTime = 0;
-	uiEnterSectorStartTime = GetJA2Clock();
-#endif
-
 }
-
-
-static void EndLoadScreen(void)
-{
-#ifdef JA2TESTVERSION
-	//Report the time it took to load the map.  This is temporary until we are satisfied with the time
-	//it takes to load the map.
-	wchar_t str[60];
-	FILE *fp;
-	UINT32 uiSeconds;
-	UINT32 uiHundreths;
-	UINT32 uiUnaccounted;
-	UINT32 uiPercentage;
-	uiEnterSectorEndTime = GetJA2Clock();
-	uiSeconds = (uiEnterSectorEndTime - uiEnterSectorStartTime) / 1000;
-	uiHundreths = ((uiEnterSectorEndTime - uiEnterSectorStartTime) / 10) % 100;
-	if( !gbWorldSectorZ )
-	{
-		swprintf(str, lengthof(str), L"%c%d ENTER SECTOR TIME:  %d.%02d seconds.",
-							'A' + gWorldSectorY - 1, gWorldSectorX, uiSeconds, uiHundreths );
-	}
-	else
-	{
-		swprintf(str, lengthof(str), L"%c%d_b%d ENTER SECTOR TIME:  %d.%02d seconds.",
-							'A' + gWorldSectorY - 1, gWorldSectorX, gbWorldSectorZ, uiSeconds, uiHundreths );
-	}
-	SLOGD(DEBUG_TAG_SMAP, str );
-	if( fStartNewFile )
-	{ //start new file
-		fp = fopen( "TimeResults.txt", "w" );
-		SLOGD(DEBUG_TAG_SMAP, "See TimeResults.txt for more detailed timings.");
-		fStartNewFile = FALSE;
-	}
-	else
-	{ //append to end of file
-		fp = fopen( "TimeResults.txt", "a" );
-
-		if ( fp )
-		{
-			fprintf( fp, "\n\n--------------------------------------------------------------------\n\n" );
-		}
-	}
-	if( fp )
-	{
-		//Record all of the timings.
-		fprintf( fp, "%ls\n", str );
-		fprintf( fp, "EnterSector() supersets LoadWorld().  This includes other external sections.\n");
-		//FileRead()
-		fprintf( fp, "\n\nVARIOUS FUNCTION TIMINGS (exclusive of actual function timings in second heading)\n" );
-		uiSeconds = uiTotalFileReadTime / 1000;
-		uiHundreths = (uiTotalFileReadTime / 10) % 100;
-		fprintf( fp, "FileRead:  %d.%02d (called %d times)\n", uiSeconds, uiHundreths, uiTotalFileReadCalls );
-
-		fprintf(fp, "\n\nSECTIONS OF LOADWORLD (all parts should add up to 100%%)\n");
-		//TrashWorld()
-		uiSeconds = uiTrashWorldTime / 1000;
-		uiHundreths = (uiTrashWorldTime / 10) % 100;
-		fprintf( fp, "TrashWorld: %d.%02d\n", uiSeconds, uiHundreths );
-		//LoadMapTilesets()
-		uiSeconds = uiLoadMapTilesetTime / 1000;
-		uiHundreths = (uiLoadMapTilesetTime / 10) % 100;
-		fprintf( fp, "LoadMapTileset: %d.%02d\n", uiSeconds, uiHundreths );
-		//LoadMapLights()
-		uiSeconds = uiLoadMapLightsTime / 1000;
-		uiHundreths = (uiLoadMapLightsTime / 10) % 100;
-		fprintf( fp, "LoadMapLights: %d.%02d\n", uiSeconds, uiHundreths );
-		uiSeconds = uiBuildShadeTableTime / 1000;
-		uiHundreths = (uiBuildShadeTableTime / 10) % 100;
-		fprintf( fp, "  1)  BuildShadeTables: %d.%02d\n", uiSeconds, uiHundreths );
-
-		uiPercentage = uiNumImagesReloaded * 100 / NUMBEROFTILETYPES;
-		fprintf( fp, "  2)  %d%% of the tileset images were actually reloaded.\n", uiPercentage );
-
-		//Unaccounted
-		uiUnaccounted = uiLoadWorldTime - uiTrashWorldTime - uiLoadMapTilesetTime - uiLoadMapLightsTime;
-		uiSeconds = uiUnaccounted / 1000;
-		uiHundreths = (uiUnaccounted / 10) % 100;
-		fprintf( fp, "Unaccounted: %d.%02d\n", uiSeconds, uiHundreths );
-		//LoadWorld()
-		uiSeconds = uiLoadWorldTime / 1000;
-		uiHundreths = (uiLoadWorldTime / 10) % 100;
-		fprintf( fp, "\nTotal: %d.%02d\n", uiSeconds, uiHundreths );
-
-		fclose( fp );
-	}
-#endif
-}
-
 
 static void InitializeMapStructure(void);
 
@@ -668,14 +536,6 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	SyncStrategicTurnTimes();
 
-#ifdef JA2BETAVERSION
-	if (gfOverrideSector)
-	{
-		/* Skip the cancel, and force load the sector.  This is used by the AIViewer
-		 * to "reset" a level with different numbers of various types of enemies. */
-	}
-	else
-#endif
 	// is the sector already loaded?
 	if (gWorldSectorX == x && y == gWorldSectorY && z == gbWorldSectorZ)
 	{
@@ -863,31 +723,6 @@ void PrepareLoadedSector()
 		//Creatures are only added if there are actually some of them.  It has to go through some
 		//additional checking.
 
-		#ifdef JA2TESTVERSION
-		//Override the sector with the populations specified in the AIViewer
-		if( gfOverrideSector )
-		{
-			if( gbWorldSectorZ > 0 )
-			{
-				UNDERGROUND_SECTORINFO *pSector;
-				pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-				pSector->ubNumAdmins = (UINT8)( gsAINumAdmins > 0 ? gsAINumAdmins : 0 );
-				pSector->ubNumTroops = (UINT8)( gsAINumTroops > 0 ? gsAINumTroops : 0 );
-				pSector->ubNumElites = (UINT8)( gsAINumElites > 0 ? gsAINumElites : 0 );
-				pSector->ubNumCreatures = (UINT8)( gsAINumCreatures > 0 ? gsAINumCreatures : 0 );
-			}
-			else if( !gbWorldSectorZ )
-			{
-				SECTORINFO *pSector;
-				pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-				pSector->ubNumAdmins = (UINT8)( gsAINumAdmins > 0 ? gsAINumAdmins : 0 );
-				pSector->ubNumTroops = (UINT8)( gsAINumTroops > 0 ? gsAINumTroops : 0 );
-				pSector->ubNumElites = (UINT8)( gsAINumElites > 0 ? gsAINumElites : 0 );
-				pSector->ubNumCreatures = (UINT8)( gsAINumCreatures > 0 ? gsAINumCreatures : 0 );
-			}
-		}
-		#endif
-
 		PrepareCreaturesForBattle();
 
 		PrepareMilitiaForTactical();
@@ -925,8 +760,6 @@ void PrepareLoadedSector()
 					gWorldSectorY + 'A' - 1, gWorldSectorX );
 		}
 	}
-
-	EndLoadScreen( );
 
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
@@ -1157,11 +990,6 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	}
 
 	CreateLoadingScreenProgressBar();
-#ifdef JA2BETAVERSION
-	SetProgressBarMsgAttributes(0, FONT12ARIAL, FONT_MCOLOR_WHITE, 0);
-	// Set the tile so we do not see the text come up
-	SetProgressBarTextDisplayFlag(0, TRUE, TRUE, TRUE);
-#endif
 
 	char filename[50];
 	GetMapFileName(x, y, z, filename, TRUE);

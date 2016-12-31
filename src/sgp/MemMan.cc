@@ -13,11 +13,8 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "slog/slog.h"
-
-#ifdef JA2
-#	include "MouseSystem.h"
-#	include "MessageBoxScreen.h"
-#endif
+#include "MouseSystem.h"
+#include "MessageBoxScreen.h"
 
 // debug variable for total memory currently allocated
 static size_t guiMemAlloced    = 0;

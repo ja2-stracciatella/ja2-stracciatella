@@ -335,7 +335,7 @@ void InitNewGame()
 	uiMeanWhileFlags = 0;
 	SetSelectedMan(0);
 
-  resetCheatLevelToInitialValue();
+	RESET_CHEAT_LEVEL();
 
 	if (gubScreenCount == 0)
 	{
@@ -453,11 +453,6 @@ void ReStartingGame()
 		EndAirRaid( );
 	}
 
-#ifdef JA2TESTVERSION
-	//Reset so we can use the 'cheat key' to start with mercs
-	TempHiringOfMercs( 0, TRUE );
-#endif
-
 	//Make sure the game starts in the TEAM panel ( it wasnt being reset )
 	gsCurInterfacePanel = TEAM_PANEL;
 
@@ -470,5 +465,5 @@ void ReStartingGame()
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;
 
-  resetCheatLevelToInitialValue();
+	RESET_CHEAT_LEVEL();
 }

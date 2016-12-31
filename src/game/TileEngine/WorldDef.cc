@@ -104,17 +104,6 @@ INT16		gsRecompileAreaLeft = 0;
 INT16		gsRecompileAreaRight = 0;
 INT16		gsRecompileAreaBottom = 0;
 
-//TIMER TESTING STUFF
-#ifdef JA2TESTVERSION
-	extern UINT32 uiLoadWorldTime;
-	extern UINT32 uiTrashWorldTime;
-	extern UINT32 uiLoadMapTilesetTime;
-	extern UINT32 uiLoadMapLightsTime;
-	extern UINT32 uiBuildShadeTableTime;
-	extern UINT32 uiNumImagesReloaded;
-#endif
-
-
 /** Check if the grid number is valid. */
 static BOOLEAN isValidGridNo(INT32 gridNo)
 {
@@ -277,11 +266,6 @@ extern BOOLEAN gfLoadShadeTablesFromTextFile;
 
 void BuildTileShadeTables()
 {
-#ifdef JA2TESTVERSION
-	UINT32 const start_time = GetJA2Clock();
-	uiNumImagesReloaded = 0;
-#endif
-
 	if (gfLoadShadeTablesFromTextFile)
 	{ /* Because we're tweaking the RGB values in the text file, always force
 		 * rebuild the shadetables so that the user can tweak them in the same exe
@@ -303,17 +287,9 @@ void BuildTileShadeTables()
     {
       if (!gbNewTileSurfaceLoaded[i]) continue;
     }
-
-#ifdef JA2TESTVERSION
-		++uiNumImagesReloaded;
-#endif
 		RenderProgressBar(0, i * 100 / NUMBEROFTILETYPES);
 		CreateTilePaletteTables(t->vo);
 	}
-
-#ifdef JA2TESTVERSION
-	uiBuildShadeTableTime = GetJA2Clock() - start_time;
-#endif
 }
 
 
@@ -2043,11 +2019,6 @@ static void LoadMapLights(HWFILE);
 void LoadWorld(char const* const filename)
 try
 {
-#ifdef JA2TESTVERSION
-	UINT32       uiStartTime;
-	UINT32 const uiLoadWorldStartTime = GetJA2Clock();
-#endif
-
 	LoadShadeTablesFromTextFile();
 
 	// Reset flags for outdoors/indoors
@@ -2057,13 +2028,7 @@ try
 	AutoSGPFile f(GCM->openMapForReading(filename));
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
-#ifdef JA2TESTVERSION
-	uiStartTime = GetJA2Clock();
-#endif
 	TrashWorld();
-#ifdef JA2TESTVERSION
-	uiTrashWorldTime = GetJA2Clock() - uiStartTime;
-#endif
 
 	LightReset();
 
@@ -2093,13 +2058,7 @@ try
 	INT32 iTilesetID;
 	FileRead(f, &iTilesetID, sizeof(iTilesetID));
 
-#ifdef JA2TESTVERSION
-	uiStartTime = GetJA2Clock();
-#endif
 	LoadMapTileset(static_cast<TileSetID>(iTilesetID));
-#ifdef JA2TESTVERSION
-	uiLoadMapTilesetTime = GetJA2Clock() - uiStartTime;
-#endif
 
 	// Skip soldier size
 	FileSeek(f, 4, FILE_SEEK_FROM_CURRENT);
@@ -2375,9 +2334,6 @@ try
 			ubAmbientLightLevel = 4;
 		}
 	}
-#ifdef JA2TESTVERSION
-	uiStartTime = GetJA2Clock();
-#endif
 	if (uiFlags & MAP_WORLDLIGHTS_SAVED)
 	{
 		LoadMapLights(f);
@@ -2387,10 +2343,6 @@ try
 		SetDefaultWorldLightingColors();
 	}
 	LightSetBaseLevel(ubAmbientLightLevel);
-#ifdef JA2TESTVERSION
-	uiLoadMapLightsTime = GetJA2Clock() - uiStartTime;
-#endif
-
 
 	SetRelativeStartAndEndPercentage(0, 85, 86, L"Loading map information...");
 	RenderProgressBar(0, 0);
@@ -2475,10 +2427,6 @@ try
   {
     strlcpy(g_filename, filename, lengthof(g_filename));
   }
-
-#ifdef JA2TESTVERSION
-	uiLoadWorldTime = GetJA2Clock() - uiLoadWorldStartTime;
-#endif
 
   // ATE: Not while updating maps!
   if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();

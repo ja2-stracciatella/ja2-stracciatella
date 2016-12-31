@@ -807,11 +807,7 @@ static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffe
 		{
 			HandleFaceHilights(f, uiRenderBuffer, sFaceX, sFaceY);
 
-#ifdef JA2BETAVERSION
-			if (s->bOppCnt != 0)
-#else
 			if (s->bOppCnt > 0)
-#endif
 			{
 				SetFontDestBuffer(uiRenderBuffer);
 

@@ -2340,11 +2340,7 @@ void RenderItemDescriptionBox(void)
 
 	{ // Render name
 		SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
-#ifdef JA2TESTVERSION
-		mprintf(dx + xy.x, dy + xy.y, L"%ls (%d)", gzItemName, obj.usItem);
-#else
 		MPrint(dx + xy.x, dy + xy.y, gzItemName);
-#endif
 	}
 
 	SetFontShadow(ITEMDESC_FONTSHADOW2);

@@ -203,19 +203,8 @@ void FileClose(SGPFile* f)
 	MemFree(f);
 }
 
-
-#ifdef JA2TESTVERSION
-#	include "Timer_Control.h"
-extern UINT32 uiTotalFileReadTime;
-extern UINT32 uiTotalFileReadCalls;
-#endif
-
 void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 {
-#ifdef JA2TESTVERSION
-	const UINT32 uiStartTime = GetJA2Clock();
-#endif
-
 	BOOLEAN ret;
 	if (f->flags & SGPFILE_REAL)
 	{
@@ -225,12 +214,6 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 	{
 		ret = LoadDataFromLibrary(&f->u.lib, pDest, (UINT32)uiBytesToRead);
 	}
-
-#ifdef JA2TESTVERSION
-	//Add the time that we spent in this function to the total.
-	uiTotalFileReadTime += GetJA2Clock() - uiStartTime;
-	uiTotalFileReadCalls++;
-#endif
 
 	if (!ret) throw std::runtime_error("Reading from file failed");
 }

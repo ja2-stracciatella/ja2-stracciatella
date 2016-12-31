@@ -797,13 +797,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	// ROLL DICE
 	uiDiceRoll = PreRandom( 100 );
 
-	#ifdef JA2BETAVERSION
-	if ( gfReportHitChances )
-	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Hit chance was %ld, roll %ld (range %d)", uiHitChance, uiDiceRoll, PythSpacesAway( pSoldier->sGridNo, pSoldier->sTargetGridNo ) );
-	}
-	#endif
-
 	fGonnaHit = uiDiceRoll <= uiHitChance;
 
 	// ATE; Moved a whole blotch if logic code for finding target positions to a function
@@ -1242,13 +1235,6 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 		// ROLL DICE
 		iDiceRoll = (INT32) PreRandom( 100 );
 
-		#ifdef JA2BETAVERSION
-		if ( gfReportHitChances )
-		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Hit chance was %ld, roll %ld", iHitChance, iDiceRoll );
-		}
-		#endif
-
 		if (fStealing )
 		{
 			if ( pTargetSoldier->inv[HANDPOS].usItem != NOTHING )
@@ -1411,13 +1397,6 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 
 	uiDiceRoll = PreRandom( 100 );
 
-	#ifdef JA2BETAVERSION
-	if ( gfReportHitChances )
-	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Hit chance was %ld, roll %ld (range %d)", uiHitChance, uiDiceRoll, PythSpacesAway( pSoldier->sGridNo, sTargetGridNo ) );
-	}
-	#endif
-
 	if ( pSoldier->bTeam == OUR_TEAM && gTacticalStatus.uiFlags & INCOMBAT )
 	{
 		// check target gridno
@@ -1550,14 +1529,6 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_TORSO );
 
 	uiDiceRoll = PreRandom( 100 );
-
-	#ifdef JA2BETAVERSION
-	if ( gfReportHitChances )
-	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Hit chance was %ld, roll %ld (range %d)", uiHitChance, uiDiceRoll, PythSpacesAway( pSoldier->sGridNo, sTargetGridNo ) );
-	}
-	#endif
-
 
 	if ( GCM->getItem(usItemNum)->getItemClass() == IC_LAUNCHER )
 	{

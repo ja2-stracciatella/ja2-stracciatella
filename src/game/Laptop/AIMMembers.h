@@ -36,16 +36,4 @@ enum AIMVideoMode
 // which mode are we in during video conferencing?..0 means no video conference
 extern AIMVideoMode gubVideoConferencingMode;
 
-//TEMP!!!
-#ifdef JA2TESTVERSION
-void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset );
-#endif
-
-
-#if defined ( JA2TESTVERSION )
- void DemoHiringOfMercs(void);
-#endif
-
-
-
 #endif

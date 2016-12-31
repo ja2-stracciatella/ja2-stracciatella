@@ -1028,17 +1028,6 @@ void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 	}
 }
 
-
-#ifdef JA2TESTVERSION
-
-void CheatToGetAll5Merc()
-{
-	LaptopSaveInfo.gubLastMercIndex = LAST_MERC_ID;
-}
-
-#endif
-
-
 static BOOLEAN AreAnyOfTheNewMercsAvailable(void);
 static UINT32 CalcMercDaysServed(void);
 static BOOLEAN CanMercBeAvailableYet(UINT8 ubMercToCheck);

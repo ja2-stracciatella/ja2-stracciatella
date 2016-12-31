@@ -540,28 +540,6 @@ static void GetOptionsScreenUserInput(void)
 					SetOptionsExitScreen( SAVE_LOAD_SCREEN );
 					gfSaveGame = FALSE;
 					break;
-
-
-#ifdef JA2TESTVERSION
-
-				case 'r':
-					gfRedrawOptionsScreen = TRUE;
-					break;
-
-				case 'i':
-					InvalidateScreen();
-					break;
-
-					//Test keys
-
-				case 'y':
-					{
-					static	UINT32	uiTest2 = NO_SAMPLE;
-					if( !SoundIsPlaying( uiTest2 ) )
-						uiTest2 = PlayJA2SampleFromFile(SOUNDSDIR "/raid dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
-					}
-					break;
-#endif
 			}
 		}
 	}

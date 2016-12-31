@@ -43,7 +43,6 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 ## Build
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
-add_definitions(-DJA2)
 
 set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 if (NOT (VERSION_TAG STREQUAL ""))
