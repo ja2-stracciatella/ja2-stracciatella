@@ -42,10 +42,6 @@
 #include "slog/slog.h"
 #include "JAScreens.h"
 
-#ifdef JA2BETAVERSION
-	extern BOOLEAN gfClearCreatureQuest;
-#endif
-
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
 //as well as intentions, etc.
 SECTORINFO SectorInfo[256];
@@ -60,25 +56,6 @@ extern BOOLEAN gfOverrideSector;
 #endif
 
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
-
-
-static void ValidateEnemiesHaveWeapons(void)
-{
-#ifdef JA2BETAVERSION
-	INT32 iNumInvalid = 0;
-	CFOR_EACH_IN_TEAM(s, ENEMY_TEAM)
-	{
-		if (!s->bInSector) continue;
-		if (!s->inv[HANDPOS].usItem) iNumInvalid++;
-	}
-
-	// log and return
-	if (iNumInvalid)
-	{
-		SLOGW(DEBUG_TAG_QUEENCMD, "%d enemies have been added without any weapons! Please note sector.", iNumInvalid);
-	}
-#endif
-}
 
 //Counts enemies and crepitus, but not bloodcats.
 UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
@@ -401,7 +378,6 @@ void PrepareEnemyForSectorBattle()
 			if (g->pEnemyGroup->ubElitesInBattle != 0) continue;
 			HandleArrivalOfReinforcements(g);
 		}
-		ValidateEnemiesHaveWeapons();
 		return;
 	}
 
@@ -466,7 +442,6 @@ void PrepareEnemyForSectorBattle()
 	{ // If there are no troops in the current groups, then we're done.
 		if (total_admins == 0 && total_troops == 0 && total_elites == 0) return;
 		AddSoldierInitListEnemyDefenceSoldiers(total_admins, total_troops, total_elites);
-		ValidateEnemiesHaveWeapons();
 		return;
 	}
 #endif
@@ -608,7 +583,6 @@ void PrepareEnemyForSectorBattle()
 		AssertMsg(n == 0 || n_slots == 0, "Failed to assign battle counters for enemies properly. Please send save. KM:0.");
 	}
 
-	ValidateEnemiesHaveWeapons();
 }
 
 
@@ -628,7 +602,6 @@ static void PrepareEnemyForUndergroundBattle()
 	u->ubTroopsInBattle += ubTotalTroops;
 	u->ubElitesInBattle += ubTotalElites;
 	AddSoldierInitListEnemyDefenceSoldiers(u->ubNumAdmins, u->ubNumTroops, u->ubNumElites);
-	ValidateEnemiesHaveWeapons();
 }
 
 
@@ -1159,15 +1132,6 @@ void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const f)
 	// Read the number of nodes stored
 	UINT32 n_records;
 	FileRead(f, &n_records, sizeof(UINT32));
-
-#ifdef JA2BETAVERSION
-	if (n_records == 0)
-	{
-		BuildUndergroundSectorInfoList();
-		gfClearCreatureQuest = TRUE;
-		return;
-	}
-#endif
 
 	UNDERGROUND_SECTORINFO** anchor = &gpUndergroundSectorInfoHead;
 	for (UINT32 n = n_records; n != 0; --n)

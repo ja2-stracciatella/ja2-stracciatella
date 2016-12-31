@@ -216,10 +216,6 @@ bool PlayerSoldierTooTiredToTravel(SOLDIERTYPE&);
 
 void CreateContractBox(const SOLDIERTYPE* s);
 
-#ifdef JA2BETAVERSION
-void VerifyTownTrainingIsPaidFor();
-#endif
-
 // screen mask for pop up menus
 void ClearScreenMaskForMapScreenExit(void);
 

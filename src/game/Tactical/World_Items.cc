@@ -22,11 +22,6 @@
 #include "Soldier_Profile.h"
 #include "MemMan.h"
 #include "FileMan.h"
-
-#ifdef JA2BETAVERSION
-#	include "Message.h"
-#endif
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "MagazineModel.h"

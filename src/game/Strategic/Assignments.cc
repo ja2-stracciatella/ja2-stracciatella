@@ -938,12 +938,6 @@ void UpdateAssignments()
 	// check for mercs tired enough go to sleep, and wake up well-rested mercs
 	HandleRestFatigueAndSleepStatus( );
 
-
-#ifdef JA2BETAVERSION
-	// put this BEFORE training gets handled to avoid detecting an error everytime a sector completes training
-	VerifyTownTrainingIsPaidFor();
-#endif
-
 	// run through sectors and handle each type in sector
 	for(sX = 0 ; sX < MAP_WORLD_X; sX++ )
 	{
@@ -989,26 +983,6 @@ void UpdateAssignments()
 	fTeamPanelDirty = TRUE;
 	fMapScreenBottomDirty = TRUE;
 }
-
-
-#ifdef JA2BETAVERSION
-void VerifyTownTrainingIsPaidFor()
-{
-	CFOR_EACH_IN_CHAR_LIST(i)
-	{
-		SOLDIERTYPE const& s = *i->merc;
-		if (s.bAssignment != TRAIN_TOWN) continue;
-		// Make sure that sector is paid up
-		if (SectorInfo[SECTOR(s.sSectorX, s.sSectorY)].fMilitiaTrainingPaid) continue;
-		// No, we've got a bug somewhere
-		StopTimeCompression();
-		// Report the error
-		DoScreenIndependantMessageBox(L"ERROR: Unpaid militia training. Describe *how* you're re-assigning mercs, how many/where/when! Send *prior* save!", MSG_BOX_FLAG_OK, 0);
-		// Avoid repeating this
-		break;
-	}
-}
-#endif
 
 
 static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pDoctor, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck);

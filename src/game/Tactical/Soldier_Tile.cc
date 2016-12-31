@@ -39,43 +39,6 @@
 
 #define NEXT_TILE_CHECK_DELAY		700
 
-#ifdef JA2BETAVERSION
-
-static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
-{
-	if ( (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->ubPathDataSize > 0) )
-	{
-		UINT32	uiLoop;
-		UINT16	usNewGridNo;
-
-		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->ubPathIndex ] ) );
-
-		// provide more info!!
-		SLOGD(DEBUG_TAG_SOLDIER, "Soldier path size %d, index %d", pSoldier->ubPathDataSize, pSoldier->ubPathIndex);
-		SLOGD(DEBUG_TAG_SOLDIER, "Who is at blocked gridno: %d", SOLDIER2ID(WhoIsThere2(usNewGridNo, pSoldier->bLevel)));
-
-		UINT16 usTemp = NO_TILE; // XXX HACK000E
-		for ( uiLoop = 0; uiLoop < pSoldier->ubPathDataSize; uiLoop++ )
-		{
-			if ( uiLoop > pSoldier->ubPathIndex )
-			{
-				usTemp = NewGridNo( usTemp, DirectionInc( pSoldier->ubPathingData[ uiLoop ] ) );
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->ubPathingData[uiLoop], usTemp);
-			}
-			else if ( uiLoop == pSoldier->ubPathIndex )
-			{
-				usTemp = usNewGridNo;
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d == gridno %d", uiLoop, pSoldier->ubPathingData[uiLoop], usTemp);
-			}
-			else
-			{
-				SLOGD(DEBUG_TAG_SOLDIER, "Soldier path[%d]: %d", uiLoop, pSoldier->ubPathingData[uiLoop]);
-			}
-		}
-	}
-}
-#endif
-
 void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bValue )
 {
 	// Cancel AI Action
@@ -114,13 +77,6 @@ static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 {
 	// OK, If we were waiting for stuff, do it here...
 	pSoldier->sFinalDestination = pSoldier->sGridNo;
-
-	#ifdef JA2BETAVERSION
-		if ( gTacticalStatus.uiFlags & INCOMBAT )
-		{
-			OutputDebugInfoForTurnBasedNextTileWaiting( pSoldier );
-		}
-	#endif
 
   if ( pSoldier->bTeam == OUR_TEAM  && fGivenUp )
   {
@@ -372,12 +328,6 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 
 					// Maintain sFinalDest....
 					sOldFinalDest = pSoldier->sFinalDestination;
-					#ifdef JA2BETAVERSION
-						if ( gTacticalStatus.uiFlags & INCOMBAT )
-						{
-							OutputDebugInfoForTurnBasedNextTileWaiting( pSoldier );
-						}
-					#endif
 					EVENT_StopMerc(pSoldier);
 					// Restore...
 					pSoldier->sFinalDestination = sOldFinalDest;
@@ -394,12 +344,6 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 
 					// Maintain sFinalDest....
 					sOldFinalDest = pSoldier->sFinalDestination;
-					#ifdef JA2BETAVERSION
-						if ( gTacticalStatus.uiFlags & INCOMBAT )
-						{
-							OutputDebugInfoForTurnBasedNextTileWaiting( pSoldier );
-						}
-					#endif
 					EVENT_StopMerc(pSoldier);
 					// Restore...
 					pSoldier->sFinalDestination = sOldFinalDest;

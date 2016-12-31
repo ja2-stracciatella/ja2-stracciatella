@@ -67,13 +67,7 @@ void EvaluateDeathEffectsToSoldierInitList(SOLDIERTYPE const&);
 
 void AddProfilesUsingProfileInsertionData(void);
 void AddProfilesNotUsingProfileInsertionData(void);
-
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated();
-
-#if defined JA2BETAVERSION
-BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode);
-#endif
-
 bool AddPlacementToWorld(SOLDIERINITNODE*);
 
 #endif

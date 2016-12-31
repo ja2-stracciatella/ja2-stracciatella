@@ -30,10 +30,6 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
-#ifdef JA2BETAVERSION
-#	include "Debug.h"
-#endif
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"

@@ -92,10 +92,6 @@
 #include "WeaponModels.h"
 #include "slog/slog.h"
 
-#if defined JA2BETAVERSION
-#	include "Strategic_AI.h"
-#endif
-
 #define		PALETTEFILENAME							BINARYDATADIR "/ja2pal.dat"
 
 #define		LOW_MORALE_BATTLE_SND_THREASHOLD	35
@@ -8925,81 +8921,6 @@ void CrowsFlyAway(const UINT8 ubTeam)
 		}
 	}
 }
-
-
-#ifdef JA2BETAVERSION
-void DebugValidateSoldierData( )
-{
-	wchar_t sString[ 1024 ];
-	BOOLEAN fProblemDetected = FALSE;
-	static UINT32 uiFrameCount = 0;
-
-
-	// this function is too slow to run every frame, so do the check only every 50 frames
-	if ( uiFrameCount++ < 50 )
-	{
-		return;
-	}
-
-	// reset frame counter
-	uiFrameCount = 0;
-
-	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
-	{
-		// OK, first check for alive people
-		// Don't do this check if we are a vehicle...
-		if (s->bLife > 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
-		{
-			// Alive -- now check for proper group IDs
-			if (s->ubGroupID   == 0 &&
-					s->bAssignment != IN_TRANSIT &&
-					s->bAssignment != ASSIGNMENT_POW &&
-					!(s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER)))
-			{
-				// This is bad!
-				SLOGE( "Soldier Data", "Error: Soldier %d is alive but has a zero group ID.", s->ubID);
-				fProblemDetected = TRUE;
-			}
-			else if (s->ubGroupID != 0 && GetGroup(s->ubGroupID) == NULL)
-			{
-				// This is bad!
-				SLOGE( "Soldier Data", "Error: Soldier %d has an invalid group ID of %d.", s->ubID, s->ubGroupID);
-				fProblemDetected = TRUE;
-			}
-		}
-		else
-		{
-			if (s->ubGroupID != 0 && s->uiStatusFlags & SOLDIER_DEAD)
-			{
-				// Dead guys should have 0 group IDs
-				//SLOGE( "Soldier Data", "Error: Soldier %d is dead but has a non-zero group ID.", s->ubID);
-				//fProblemDetected = TRUE;
-			}
-		}
-
-		// check for invalid sector data
-		if (s->bAssignment != IN_TRANSIT &&
-				(
-					s->sSectorX <= 0 || 17 <= s->sSectorX ||
-					s->sSectorY <= 0 || 17 <= s->sSectorY ||
-					s->bSectorZ <  0 ||  3 <  s->bSectorZ
-				))
-		{
-			SLOGE( "Soldier Data", "Error: Soldier %d is located at %d/%d/%d.", s->ubID, s->sSectorX, s->sSectorY, s->bSectorZ);
-			fProblemDetected = TRUE;
-		}
-
-		if (fProblemDetected)
-		{
-			break;
-		}
-	}
-
-	// also do this
-	ValidatePlayersAreInOneGroupOnly();
-}
-#endif
-
 
 
 void BeginTyingToFall( SOLDIERTYPE *pSoldier )

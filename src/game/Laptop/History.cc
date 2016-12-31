@@ -593,9 +593,6 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 		case HISTORY_MERC_KILLED:
 			if (h->ubSecondCode == NO_PROFILE)
 			{
-#ifdef JA2BETAVERSION
-				swprintf(pString, Length, pHistoryStrings[code], L"ERROR!!!  NO_PROFILE");
-#endif
 				break;
 			}
 			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);

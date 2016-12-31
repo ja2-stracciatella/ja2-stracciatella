@@ -2776,23 +2776,9 @@ static const wchar_t *s_fr_zSaveLoadText[zSaveLoadText_SIZE] =
 	L"La version de la sauvegarde est différente de celle du jeu. Désirez-vous continuer ?",
 	L"Les fichiers de sauvegarde sont peut-être altérés. Voulez-vous les effacer ?",
 
-	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
-	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
-#ifdef JA2BETAVERSION
-	L"La version de la sauvegarde a changé. Désirez-vous continuer ?",
-#else
 	L"Tentative de chargement d'une sauvegarde de version précédente. Voulez-vous effectuer une mise à jour ?",
-#endif
 
-	//Translators, the next two strings are for the same thing.  The first one is for beta version releases and the second one
-	//is used for the final version.  Please don't modify the "#ifdef JA2BETAVERSION" or the "#else" or the "#endif" as they are
-	//used by the compiler and will cause program errors if modified/removed.  It's okay to translate the strings though.
-#ifdef JA2BETAVERSION
-	L"La version de la sauvegarde a changé. Désirez-vous continuer?",
-#else
 	L"Tentative de chargement d'une sauvegarde de version précédente. Voulez-vous effectuer une mise à jour ?",
-#endif
 
 	L"Etes-vous sûr de vouloir écraser la sauvegarde #%d ?",
 
@@ -3120,9 +3106,6 @@ static const wchar_t *s_fr_pMessageStrings[pMessageStrings_SIZE] =
 	L"Un colis vient d'arriver à Drassen.",
  	L"%ls devrait arriver au point d'entrée (secteur %ls) en jour %d vers %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	L"Historique mis à jour.",
-#ifdef JA2BETAVERSION
-	L"Partie enregistrée dans l'emplacement de sauvegarde automatique.",
-#endif
 };
 
 
