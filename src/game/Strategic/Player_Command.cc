@@ -315,14 +315,3 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 
 	return fWasPlayerControlled;
 }
-
-
-#ifdef JA2TESTVERSION
-void ClearMapControlledFlags()
-{
-	FOR_EACH(StrategicMapElement, i, StrategicMap)
-	{
-		i->fEnemyControlled = FALSE;
-	}
-}
-#endif

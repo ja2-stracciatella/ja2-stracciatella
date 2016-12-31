@@ -117,10 +117,6 @@ UINT32 smacksize = FileGetSize(FileHandle);
   smkstatus = smk_info_audio(flickinfo->Smacker,  NULL, a_channels, a_depth, a_rate);
   SmackCheckStatus(smkstatus);
 
-  #ifdef JA2TESTVERSION
-  SmackPrintFlickInfo(width, height, scale, framecount, usf, a_channels[0], a_depth[0], a_rate[0]);
-  #endif
-
   SmkVideoSwitch (flickinfo->Smacker, DISABLE);
 
   flickinfo->Frames=framecount;
@@ -155,9 +151,6 @@ UINT32 SmackDoFrame(Smack* Smk)
 
   if (  framerate > millisecondspassed ) {
     delay = framerate-millisecondspassed;
-#ifdef JA2TESTVERSION
-    printf ("Ticks %u  Delay: %u ", millisecondspassed, delay);
-#endif
   } 
   else // video is delayed - so skip frames according to delay but take fps into account
     {
@@ -183,9 +176,6 @@ UINT32 SmackDoFrame(Smack* Smk)
         //i=0;
         //goto bigskiptime; // skiptime was big.. so just go on skipping frames
       }
-#ifdef JA2TESTVERSION
-      printf ("Skipframes: %d Delay: %d\n", skipframes,delay);
-#endif
     }
   SDL_Delay(delay);
   Smk->LastTick = SDL_GetTicks();
@@ -198,9 +188,6 @@ CHAR8 SmackNextFrame(Smack* Smk)
 {
   CHAR8 smkstatus;
   smkstatus = smk_next(Smk->Smacker);
-#ifdef JA2TESTVERSION
-  SmackCheckStatus(smkstatus);
-#endif
   return smkstatus;
 }
 

@@ -117,10 +117,6 @@ void MakeDialogueEventEnterMapScreen();
 
 void SetMapCursorItem();
 
-#ifdef JA2TESTVERSION
-void DumpSectorDifficultyInfo(void);
-#endif
-
 #define     NAME_X                (STD_SCREEN_X + 11)
 #define     NAME_WIDTH            (STD_SCREEN_X + 62 - NAME_X)
 #define     ASSIGN_X              (STD_SCREEN_X + 67)

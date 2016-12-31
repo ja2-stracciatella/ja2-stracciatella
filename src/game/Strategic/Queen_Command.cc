@@ -51,10 +51,6 @@ BOOLEAN gfPendingEnemies = FALSE;
 
 extern GARRISON_GROUP *gGarrisonGroup;
 
-#ifdef JA2TESTVERSION
-extern BOOLEAN gfOverrideSector;
-#endif
-
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 //Counts enemies and crepitus, but not bloodcats.
@@ -436,15 +432,6 @@ void PrepareEnemyForSectorBattle()
 	sector.ubAdminsInBattle += total_admins;
 	sector.ubTroopsInBattle += total_troops;
 	sector.ubElitesInBattle += total_elites;
-
-#ifdef JA2TESTVERSION
-	if (gfOverrideSector)
-	{ // If there are no troops in the current groups, then we're done.
-		if (total_admins == 0 && total_troops == 0 && total_elites == 0) return;
-		AddSoldierInitListEnemyDefenceSoldiers(total_admins, total_troops, total_elites);
-		return;
-	}
-#endif
 
 	// Search for movement groups that happen to be in the sector.
 	INT16 n_slots = NumFreeEnemySlots();

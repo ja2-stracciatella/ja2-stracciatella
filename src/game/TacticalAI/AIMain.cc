@@ -373,23 +373,10 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 	if (gfTurnBasedAI)
 	{
-		if (GetJA2Clock() - gTacticalStatus.uiTimeSinceMercAIStart > DEADLOCK_DELAY
-#ifdef JA2TESTVERSION
-				&& gUIDeadlockedSoldier == NOBODY
-#endif
-			)
+		if (GetJA2Clock() - gTacticalStatus.uiTimeSinceMercAIStart > DEADLOCK_DELAY)
 		{
       // ATE: Display message that deadlock occured...
       SLOGI(DEBUG_TAG_AI, "Breaking Deadlock");
-
-#ifdef JA2TESTVERSION
-			// display deadlock message
-			gUIDeadlockedSoldier = pSoldier->ubID;
-			SLOGD(DEBUG_TAG_AI, "DEADLOCK soldier %d action %hs ABC %d",
-						pSoldier->ubID, gzActionStr[pSoldier->bAction],
-						gTacticalStatus.ubAttackBusyCount);
-#else
-
 			// If we are in beta version, also report message!
 			SLOGE(DEBUG_TAG_AI, "Aborting AI deadlock for %d. Please sent LOG file and SAVE.", pSoldier->ubID );
 			// just abort
@@ -398,7 +385,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			{
 				return;
 			}
-#endif
 		}
 	}
 
@@ -664,8 +650,6 @@ void StartNPCAI(SOLDIERTYPE& s)
 
 		UpdateEnemyUIBar();
 	}
-
-	EndDeadlockMsg(); // Remove deadlock message
 	DecideAlertStatus(&s);
 }
 

@@ -769,33 +769,6 @@ static void SnapshotSmall(void)
 	if (giNumFrames == MAX_NUM_FRAMES) RefreshMovieCache();
 }
 
-
-void VideoCaptureToggle(void)
-{
-#ifdef JA2TESTVERSION
-	gfVideoCapture = !gfVideoCapture;
-	if (gfVideoCapture)
-	{
-		for (INT32 cnt = 0; cnt < MAX_NUM_FRAMES; cnt++)
-		{
-			gpFrameData[cnt] = MALLOCN(UINT16, SCREEN_WIDTH * SCREEN_HEIGHT);
-		}
-		guiLastFrame = GetClock();
-	}
-	else
-	{
-		RefreshMovieCache();
-
-		for (INT32 cnt = 0; cnt < MAX_NUM_FRAMES; cnt++)
-		{
-			if (gpFrameData[cnt] != NULL) MemFree(gpFrameData[cnt]);
-		}
-	}
-	giNumFrames = 0;
-#endif
-}
-
-
 static void RefreshMovieCache(void)
 {
 	static UINT32 uiPicNum = 0;

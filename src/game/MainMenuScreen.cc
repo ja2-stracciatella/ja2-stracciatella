@@ -263,18 +263,6 @@ static void HandleMainMenuInput(void)
 				case SDLK_ESCAPE: gbHandledMainMenu = QUIT; break;
 */
 
-#if defined JA2TESTVERSION
-				case 'q':
-					gbHandledMainMenu = NEW_GAME;
-					SetMainMenuExitScreen(INIT_SCREEN);
-					break;
-
-				case 'i':
-					SetPendingNewScreen(INTRO_SCREEN);
-					gfMainMenuScreenExit = TRUE;
-					break;
-#endif
-
 				case 'c':
 					if (_KeyDown(ALT)) gfLoadGameUponEntry = TRUE;
 					gbHandledMainMenu = LOAD_GAME;

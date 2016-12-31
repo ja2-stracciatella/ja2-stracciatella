@@ -373,14 +373,6 @@ void RenderTopmostTacticalInterface()
 		RenderMovementMenu();
 	}
 
-#ifdef JA2TESTVERSION
-	if (gUIDeadlockedSoldier != NOBODY)
-	{
-		SetFontAttributes(LARGEFONT1, FONT_MCOLOR_WHITE);
-		GDirtyPrintF(0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier);
-	}
-#endif
-
 	// Syncronize for upcoming soldier counters
 	SYNCTIMECOUNTER();
 

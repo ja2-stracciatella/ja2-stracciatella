@@ -26,8 +26,6 @@ void VideoToggleFullScreen(void);
 
 void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth);
 
-void VideoCaptureToggle(void);
-
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 
 void RefreshScreen(void);
