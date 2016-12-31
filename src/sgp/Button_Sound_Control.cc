@@ -8,7 +8,6 @@
 
 void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme scheme)
 {
-#ifdef JA2
 	if (scheme == BUTTON_SOUND_SCHEME_GENERIC)
 	{
 		switch (guiCurrentScreen)
@@ -49,14 +48,12 @@ void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme scheme)
                 break;
 		}
 	}
-#endif
 	b->ubSoundSchemeID = scheme;
 }
 
 
 void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 {
-#ifdef JA2
 	SoundID sample;
 	switch (sound_type)
 	{
@@ -112,5 +109,4 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 		default: return;
 	}
 	PlayJA2Sample(sample, 15, 1, MIDDLEPAN);
-#endif
 }
