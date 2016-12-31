@@ -92,7 +92,6 @@
 #include "Button_System.h"
 #include "JAScreens.h"
 #include "UILayout.h"
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
@@ -272,7 +271,6 @@ enum MapEvent
 	MAP_EVENT_CLICK_SECTOR,
 	MAP_EVENT_PLOT_PATH,
 	MAP_EVENT_CANCEL_PATH,
-
 };
 
 

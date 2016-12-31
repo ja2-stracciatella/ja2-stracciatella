@@ -47,7 +47,6 @@
 #include "Interface_Dialogue.h"
 #include "Meanwhile.h"
 #include "PreBattle_Interface.h"
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 

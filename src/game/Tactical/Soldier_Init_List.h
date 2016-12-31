@@ -67,9 +67,7 @@ void EvaluateDeathEffectsToSoldierInitList(SOLDIERTYPE const&);
 
 void AddProfilesUsingProfileInsertionData(void);
 void AddProfilesNotUsingProfileInsertionData(void);
-
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated();
-
 bool AddPlacementToWorld(SOLDIERINITNODE*);
 
 #endif

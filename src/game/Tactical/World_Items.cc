@@ -22,7 +22,6 @@
 #include "Soldier_Profile.h"
 #include "MemMan.h"
 #include "FileMan.h"
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "MagazineModel.h"
