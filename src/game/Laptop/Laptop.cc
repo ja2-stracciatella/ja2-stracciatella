@@ -216,11 +216,6 @@ BOOLEAN fReDrawBookMarkInfo = FALSE;
 // show the 2 second info about bookmarks being accessed by clicking on web
 BOOLEAN fShowBookmarkInfo = FALSE;
 
-
-//TEMP! Disables the loadpending delay when switching b/n www pages
-static BOOLEAN gfTemporaryDisablingOfLoadPendingFlag = FALSE;
-
-
 //GLOBAL FOR WHICH SCREEN TO EXIT TO FOR LAPTOP
 static ScreenID guiExitScreen = MAP_SCREEN;
 
@@ -1893,35 +1888,28 @@ static void DisplayLoadPending(void)
 	// TEMP disables the loadpending
 	INT32 iLoadTime;
 	INT32 iUnitTime;
-	if (gfTemporaryDisablingOfLoadPendingFlag)
+
+	if (fFastLoadFlag)
 	{
-		iLoadTime = 1;
-		iUnitTime = 1;
+		iUnitTime = (fConnectingToSubPage ? FASTEST_UNIT_TIME : FAST_UNIT_TIME);
+	}
+	else if (fConnectingToSubPage)
+	{
+		iUnitTime = ALMOST_FAST_UNIT_TIME;
+	}
+	else if (guiCurrentLaptopMode == LAPTOP_MODE_MERC && !LaptopSaveInfo.fMercSiteHasGoneDownYet)
+	{
+		/* if we are connecting the MERC site, and the MERC site hasnt yet moved
+		 * to their new site, have the sloooww wait */
+		iUnitTime = LONG_UNIT_TIME;
 	}
 	else
 	{
-		if (fFastLoadFlag)
-		{
-			iUnitTime = (fConnectingToSubPage ? FASTEST_UNIT_TIME : FAST_UNIT_TIME);
-		}
-		else if (fConnectingToSubPage)
-		{
-			iUnitTime = ALMOST_FAST_UNIT_TIME;
-		}
-		else if (guiCurrentLaptopMode == LAPTOP_MODE_MERC && !LaptopSaveInfo.fMercSiteHasGoneDownYet)
-		{
-			/* if we are connecting the MERC site, and the MERC site hasnt yet moved
-			 * to their new site, have the sloooww wait */
-			iUnitTime = LONG_UNIT_TIME;
-		}
-		else
-		{
-			iUnitTime = UNIT_TIME;
-		}
-
-		iUnitTime += WWaitDelayIncreasedIfRaining(iUnitTime);
-		iLoadTime  = iUnitTime * 30;
+		iUnitTime = UNIT_TIME;
 	}
+
+	iUnitTime += WWaitDelayIncreasedIfRaining(iUnitTime);
+	iLoadTime  = iUnitTime * 30;
 
 	// we are now waiting on a web page to download, reset counter
 	if (!fLoadPendingFlag)
