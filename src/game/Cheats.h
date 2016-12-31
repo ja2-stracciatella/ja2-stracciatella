@@ -6,9 +6,6 @@
 
 extern	UINT8			gubCheatLevel;
 
-/** Reset cheat level to initial value. */
-extern void resetCheatLevelToInitialValue();
-
 /** Get cheat code. */
 extern const char * getCheatCode();
 

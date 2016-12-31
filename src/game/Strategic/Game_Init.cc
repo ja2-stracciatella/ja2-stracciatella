@@ -335,7 +335,7 @@ void InitNewGame()
 	uiMeanWhileFlags = 0;
 	SetSelectedMan(0);
 
-  resetCheatLevelToInitialValue();
+	RESET_CHEAT_LEVEL();
 
 	if (gubScreenCount == 0)
 	{
@@ -465,5 +465,5 @@ void ReStartingGame()
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;
 
-  resetCheatLevelToInitialValue();
+	RESET_CHEAT_LEVEL();
 }
