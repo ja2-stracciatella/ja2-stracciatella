@@ -58,13 +58,7 @@ enum
 
 
 #define SOUND_MAX_CACHED 128 // number of cache slots
-
-#ifdef JA2
-#	define SOUND_MAX_CHANNELS 16 // number of mixer channels
-#else
-#	define SOUND_MAX_CHANNELS 32 // number of mixer channels
-#endif
-
+#define SOUND_MAX_CHANNELS 16 // number of mixer channels
 
 #define SOUND_DEFAULT_MEMORY (16 * 1024 * 1024) // default memory limit
 #define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered

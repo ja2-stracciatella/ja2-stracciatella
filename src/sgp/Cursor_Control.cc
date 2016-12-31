@@ -189,7 +189,6 @@ void CursorDatabaseClear(void)
 
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 {
-#ifdef JA2
 	if (uiCursorIndex == VIDEO_NO_CURSOR)
 	{
 		SetMouseCursorProperties(0, 0, 0, 0);
@@ -315,10 +314,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 		}
 	}
 
-  return TRUE;
-#else
-	return FALSE;
-#endif
+	return TRUE;
 }
 
 
