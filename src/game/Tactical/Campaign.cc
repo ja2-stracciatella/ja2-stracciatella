@@ -29,12 +29,6 @@
 #include "EMail.h"
 #include "slog/slog.h"
 
-
-#ifdef JA2TESTVERSION
-// comment out to get rid of stat change msgs
-//#define STAT_CHANGE_DEBUG
-#endif
-
 #ifdef STAT_CHANGE_DEBUG
 const wchar_t* const  wDebugStatStrings[] = {
 	L"",
@@ -1307,105 +1301,6 @@ void HourlyProgressUpdate(void)
 		SLOGD(DEBUG_TAG_CAMPAIGN, "New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
 	}
 }
-
-
-
-#ifdef JA2TESTVERSION
-void TestDumpStatChanges(void)
-{
-  UINT32 uiProfileId;
-  CHAR8 zPrintFileName[60];
-  FILE *FDump;
-	BOOLEAN fMercUsed;
-	CHAR8 cEvolutionChars[3] = { '+', '=', '-' };
-	UINT32 uiTotalSuccesses[ 12 ];
-	UINT32 uiTotalChances[ 12 ];
-
-
-	// clear totals
-	memset( uiTotalSuccesses, 0, sizeof( uiTotalSuccesses ) );
-	memset( uiTotalChances,   0, sizeof( uiTotalChances ) );
-
-  // open output file
- 	strcpy(zPrintFileName, "C:\\Temp\\StatChanges.TXT");
-  FDump = fopen(zPrintFileName, "w");
-
-  if (FDump == NULL)
-    return;
-
-
-	// print headings
-	fprintf(FDump, "   NAME   SRV EVL ");
-	fprintf(FDump, "---HEALTH-- --AGILITY-- -DEXTERITY- ---WISDOM-- --MEDICAL-- --EXPLOSIV- --MECHANIC- --MARKSMAN- -EXP.LEVEL- --STRENGTH- -LEADERSHIP");
-	fprintf(FDump, "\n");
-
-
-  // loop through profiles
-	for (uiProfileId = 0; uiProfileId < NUM_PROFILES; uiProfileId++)
-  {
-    MERCPROFILESTRUCT const& p = GetProfile(uiProfileId);
-
-		fMercUsed = FALSE;
-
-		// see if this guy should be printed at all (only mercs actually used are dumped)
-		for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
-		{
-			if (p.usStatChangeChances[ubStat] > 0)
-			{
-				fMercUsed = TRUE;
-				break;
-			}
-    }
-
-		if (fMercUsed)
-		{
-			// print nickname
-			fprintf(FDump, "%-10ls ", p.zNickname);
-			// print days served
-			fprintf(FDump, "%3d ", p.usTotalDaysServed);
-			// print evolution type
-			fprintf(FDump, "%c ", cEvolutionChars[p.bEvolution]);
-
-			// now print all non-zero stats
-			for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
-			{
-				if (p.usStatChangeChances[ubStat] > 0)
-				{
-					// print successes/chances
-					fprintf(FDump, " %5d/%-5d", p.usStatChangeSuccesses[ubStat], p.usStatChangeChances[ubStat]);
-				}
-				else
-				{
-					//
-					fprintf(FDump, "            ");
-				}
-
-				uiTotalSuccesses[ubStat] += p.usStatChangeSuccesses[ubStat];
-				uiTotalChances[ubStat]   += p.usStatChangeChances[ubStat];
-			}
-
-			// newline
-			fprintf(FDump, "\n");
-		}
-  }
-
-
-	// print totals:
-	fprintf(FDump, "TOTAL        ");
-
-	for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
-	{
-		fprintf(FDump, " %5d/%-5d", uiTotalSuccesses[ ubStat ], uiTotalChances[ ubStat ]);
-	}
-
-	fprintf(FDump, "\n");
-
-
-  fclose(FDump);
-}
-#endif
-
-
 
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 {

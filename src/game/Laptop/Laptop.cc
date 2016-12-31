@@ -88,12 +88,6 @@
 #include "JAScreens.h"
 #include "UILayout.h"
 
-#ifdef JA2TESTVERSION
-#	include "Arms_Dealer_Init.h"
-#	include "Strategic_Status.h"
-#endif
-
-
 // laptop programs
 enum
 {
@@ -2826,12 +2820,6 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			fTabHandled = TRUE;
 			break;
 
-#if defined JA2TESTVERSION
-		case 'm':
-			if (usKeyState & ALT_DOWN) CheatToGetAll5Merc();
-			break;
-#endif
-
 		case 'b':
 			if (CHEATER_CHEAT_LEVEL())
 			{
@@ -2850,41 +2838,9 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			if (usKeyState & ALT_DOWN) HandleShortCutExitState();
 			break;
 
-#if defined JA2TESTVERSION
-		case 'q':
-			//if we dont currently have mercs on the team, hire some
-			if (NumberOfMercsOnPlayerTeam() == 0)
-			{
-				UINT8 ubRand = (UINT8)Random(2) + 2;
-				TempHiringOfMercs(ubRand, FALSE);
-			}
-			MarkButtonsDirty();
-			fExitingLaptopFlag = TRUE;
-			break;
-
-		case 's':
-			if (usKeyState & ALT_DOWN)
-			{
-				SetBookMark(AIM_BOOKMARK);
-				SetBookMark(BOBBYR_BOOKMARK);
-				SetBookMark(IMP_BOOKMARK);
-				SetBookMark(MERC_BOOKMARK);
-				SetBookMark(FUNERAL_BOOKMARK);
-				SetBookMark(FLORIST_BOOKMARK);
-				SetBookMark(INSURANCE_BOOKMARK);
-			}
-			break;
-#endif
-
 		case SDLK_h:
 			ShouldTheHelpScreenComeUp(HELP_SCREEN_LAPTOP, TRUE);
 			break;
-
-#if defined JA2TESTVERSION
-		case 'w':
-			DemoHiringOfMercs();
-			break;
-#endif
 
 		case '=':
 			if (CHEATER_CHEAT_LEVEL())
@@ -2895,42 +2851,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			}
 			break;
 
-#if defined JA2TESTVERSION
-		case 'd':
-			gfTemporaryDisablingOfLoadPendingFlag = !gfTemporaryDisablingOfLoadPendingFlag;
-			break;
-
-		case '+':
-			if (usKeyState & ALT_DOWN)
-			{
-				gStrategicStatus.ubHighestProgress += 10;
-				if (gStrategicStatus.ubHighestProgress > 100)
-				{
-					gStrategicStatus.ubHighestProgress = 100;
-				}
-				InitAllArmsDealers();
-				InitBobbyRayInventory();
-			}
-			break;
-#endif
-
 		case '-':
-#if defined JA2TESTVERSION
-			if (usKeyState & ALT_DOWN)
-			{
-				if (gStrategicStatus.ubHighestProgress >= 10)
-				{
-					gStrategicStatus.ubHighestProgress -= 10;
-				}
-				else
-				{
-					gStrategicStatus.ubHighestProgress = 0;
-				}
-				InitAllArmsDealers();
-				InitBobbyRayInventory();
-			}
-			else
-#endif
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				// subtracting money
@@ -2938,39 +2859,6 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 				MarkButtonsDirty();
 			}
 			break;
-
-#if defined JA2TESTVERSION
-		case '*':
-			if (usKeyState & ALT_DOWN)
-			{
-				DeleteAllStrategicEventsOfType(EVENT_EVALUATE_QUEEN_SITUATION);
-				AdvanceToNextDay();
-			}
-			break;
-
-#	if defined SGP_VIDEO_DEBUGGING
-		case 'v':
-			if (usKeyState & CTRL_DOWN)
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d", guiVObjectSize);
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize);
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated...");
-				PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
-			}
-			break;
-#	endif
-
-		case '1': TempHiringOfMercs( 1, FALSE); break;
-		case '2': TempHiringOfMercs( 2, FALSE); break;
-		case '3': TempHiringOfMercs( 3, FALSE); break;
-		case '4': TempHiringOfMercs( 4, FALSE); break;
-		case '5': TempHiringOfMercs( 5, FALSE); break;
-		case '6': TempHiringOfMercs( 6, FALSE); break;
-		case '7': TempHiringOfMercs( 7, FALSE); break;
-		case '8': TempHiringOfMercs( 8, FALSE); break;
-		case '9': TempHiringOfMercs( 9, FALSE); break;
-		case '0': TempHiringOfMercs(10, FALSE); break;
-#endif
 	}
 }
 

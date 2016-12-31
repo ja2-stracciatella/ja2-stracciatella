@@ -100,11 +100,6 @@
 
 #define DEBUG_CONSOLE_TOPIC "Debug Console"
 
-#ifdef JA2TESTVERSION
-#	include "Ambient_Control.h"
-#	include "MapScreen.h"
-#endif
-
 #ifdef SGP_VIDEO_DEBUGGING
 #	include "VObject.h"
 #endif
@@ -1292,13 +1287,6 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case '*': gTacticalStatus.uiFlags ^= RED_ITEM_GLOW_ON; break;
 
-#ifdef JA2TESTVERSION
-		case '+':
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Using Higher Scroll Speed");
-			gubCurScrollSpeedID = 2;
-			break;
-#endif
-
 		case '-':
 			// If the display cover or line of sight is being displayed
 			if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
@@ -1308,13 +1296,6 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 				if (_KeyDown(SDLK_END))
 					ChangeSizeOfLOS(gGameSettings.ubSizeOfLOS - 1);
 			}
-#ifdef JA2TESTVERSION
-			else
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Using Normal Scroll Speed");
-				gubCurScrollSpeedID = 1;
-			}
-#endif
 			break;
 
 		case '/':
@@ -1587,13 +1568,6 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 
-#if defined JA2TESTVERSION
-		case SDLK_F9:
-			*new_event                 = I_ENTER_EDIT_MODE;
-			gfMercResetUponEditorEntry = TRUE;
-			break;
-#endif
-
 		case SDLK_F11:
 			if (DEBUG_CHEAT_LEVEL())
 			{
@@ -1665,29 +1639,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
 	{
-#ifdef JA2TESTVERSION
-		case '+':
-		{
-			INT8& speed = gTacticalStatus.bRealtimeSpeed;
-			speed = MIN(speed + 1, MAX_REALTIME_SPEED_VAL);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Increasing Realtime speed to %d", speed);
-			break;
-		}
-
-		case '-':
-		{
-			INT8& speed = gTacticalStatus.bRealtimeSpeed;
-			speed = MAX(1, speed - 1);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Decreasing Realtime speed to %d", speed);
-			break;
-		}
-#endif
-
 		case 'c': if (CHEATER_CHEAT_LEVEL()) ToggleCliffDebug(); break;
-
-#ifdef JA2TESTVERSION
-		case 'd': AdvanceToNextDay(); break;
-#endif
 
   case 'e':
     if(GameState::getInstance()->isEditorMode())
@@ -1734,11 +1686,6 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			break;
 
 		case 'o': if (CHEATER_CHEAT_LEVEL()) CreatePlayerControlledMonster(); break;
-
-#if defined JA2TESTVERSION
-		// Display player's highest progress percentage
-		case 'p': DumpSectorDifficultyInfo(); break;
-#endif
 
 		case 'q':
 			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'q')))
@@ -1817,16 +1764,6 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			if (CHEATER_CHEAT_LEVEL()) AttemptToChangeFloorLevel(+1);
 			break;
 
-#if defined JA2TESTVERSION
-		case SDLK_F1: TestMeanWhile(10); break;
-		case SDLK_F2: TestMeanWhile(11); break;
-		case SDLK_F3: TestMeanWhile(12); break;
-		case SDLK_F4: TestMeanWhile(13); break;
-		case SDLK_F5: TestMeanWhile(14); break;
-		case SDLK_F6: TestMeanWhile(15); break;
-		case SDLK_F9: TestMeanWhile( 8); break;
-#endif
-
 		case SDLK_F12: ClearTacticalMessageQueue(); break;
 	}
 }
@@ -1836,15 +1773,6 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
 	{
-#ifdef JA2TESTVERSION
-		case '+':
-		{
-			UINT32 const vol = MusicGetVolume();
-			MusicSetVolume(MIN(vol + 20, MAXVOLUME));
-			break;
-		}
-#endif
-
 		case '-':
 		{
 			UINT32 const vol = MusicGetVolume();
@@ -1852,30 +1780,10 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			break;
 		}
 
-#ifdef JA2TESTVERSION
-		case '0':
-		{
-			INT32              const start   = GetJA2Clock();
-			SOLDIERTYPE const* const sel     = GetSelectedMan();
-			GridNo             const map_pos = GetMouseMapPos();
-			for (INT32 i = 0; i != 1000; ++i)
-			{
-				GridNo grid_no;
-				INT8   level;
-				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], map_pos, 0, 0, &grid_no, TRUE, &level, TRUE);
-			}
-			SLOGD(DEBUG_TAG_INTERFACE, "Physics 1000 times: %d", GetJA2Clock() - start);
-		}
-#endif
-
 		case '2': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(INFANT_MONSTER, TRUE);                      break;
 		case '3': if (CHEATER_CHEAT_LEVEL()) EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE); break;
 		case '4': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(CRIPPLECIV,     TRUE);                      break;
 		case '5': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(YAM_MONSTER,    TRUE);                      break;
-
-#ifdef JA2TESTVERSION
-		case '=': WarpGameTime(60, TRUE); break;
-#endif
 
 		case 'b': if (CHEATER_CHEAT_LEVEL()) *new_event = I_NEW_BADMERC; break;
 		case 'c': if (CHEATER_CHEAT_LEVEL()) CreateNextCivType();        break;
@@ -2064,50 +1972,6 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
 			break;
 		}
-
-#if defined JA2TESTVERSION
-		case SDLK_F1:  TestMeanWhile(15); break;
-		case SDLK_F2:  TestMeanWhile( 1); break;
-		case SDLK_F3:  TestMeanWhile( 2); break;
-		case SDLK_F4:  TestMeanWhile( 3); break;
-		case SDLK_F5:  TestMeanWhile( 4); break;
-		case SDLK_F6:  TestMeanWhile( 5); break;
-		case SDLK_F7:  TestMeanWhile(16); break;
-		case SDLK_F8:  TestMeanWhile( 7); break;
-		case SDLK_F10: TestMeanWhile( 9); break;
-
-		case SDLK_F9:
-      if(GameState::getInstance()->isEditorMode())
-      {
-        *new_event                 = I_ENTER_EDIT_MODE;
-        gfMercResetUponEditorEntry = FALSE;
-      }
-			break;
-
-		case SDLK_F11:
-			if (SOLDIERTYPE* const sel = GetSelectedMan())
-			{
-				if (sel->ubProfile == LARRY_NORMAL)
-				{ // Change guy to drunk larry
-					ForceSoldierProfileID(sel, LARRY_DRUNK);
-				}
-				else
-				{ // Change guy to normal larry
-					ForceSoldierProfileID(sel, LARRY_NORMAL);
-				}
-				DirtyMercPanelInterface(sel, DIRTYLEVEL2);
-			}
-			break;
-
-		case SDLK_F12:
-		{
-			ProfileID const pid = TONY;
-			gsQdsEnteringGridNo = GetMouseMapPos();
-			AddShopkeeperToGridNo(pid, gsQdsEnteringGridNo);
-			EnterShopKeeperInterfaceScreen(pid);
-			break;
-		}
-#endif
 	}
 }
 
@@ -2304,13 +2168,6 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
     if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
     {
 			//EscapeUILock( );
-#ifdef JA2TESTVERSION
-			if ( InAirRaid( ) )
-			{
-				EndAirRaid( );
-			}
-#endif
-
   		// Cancel out of spread burst...
 			gfBeginBurstSpreadTracking = FALSE;
 			gfRTClickLeftHoldIntercepted = TRUE;

@@ -27,11 +27,6 @@
 #include "DealerInventory.h"
 #include "GameInstance.h"
 
-
-#ifdef JA2TESTVERSION
-	#define BR_INVENTORY_TURNOVER_DEBUG
-#endif
-
 #ifdef BR_INVENTORY_TURNOVER_DEBUG
 #	include "Message.h"
 #endif

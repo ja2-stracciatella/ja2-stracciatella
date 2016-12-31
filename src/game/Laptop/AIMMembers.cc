@@ -587,11 +587,6 @@ static void HandleMercAttitude(void);
 static void HandleVideoDistortion(void);
 static void StopMercTalking(void);
 
-#ifdef JA2TESTVERSION
-static void TempHandleAimMemberKeyBoardInput(void);
-#endif
-
-
 void HandleAIMMembers()
 {
 	//determine if the merc has a quote that is waiting to be said
@@ -673,13 +668,7 @@ void HandleAIMMembers()
 		RenderAIMMembers();
 		gfRedrawScreen = FALSE;
 	}
-
-	#ifdef JA2TESTVERSION
-	TempHandleAimMemberKeyBoardInput();
-	#endif
-
-
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 }
 
 
@@ -2827,72 +2816,6 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 	}
 }
 
-
-#ifdef JA2TESTVERSION
-//TEMP:
-void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
-{
-	static ProfileID const MercID[] = { RED, GUS, MAGIC, SCOPE, LYNX, SHADOW, BUNS, GRUNTY, IVAN, REAPER, BARRY, BLOOD, GRIZZLY, VICKY, TREVOR, STEROID, IGOR, FIDEL, FOX, SIDNEY, ICE, SPIDER };
-
-	static BOOLEAN fHaveCalledBefore = FALSE;
-
-	//if we should reset the global variable
-	if (fReset)
-	{
-		fHaveCalledBefore = FALSE;
-		return;
-	}
-
-	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE) return;
-
-	if (fHaveCalledBefore) return;
-	fHaveCalledBefore = TRUE;
-
-	for (INT16 i = 0; i < ubNumberOfMercs; ++i)
-	{
-		ProfileID const    pid = MercID[i];
-		MERCPROFILESTRUCT& p   = GetProfile(pid);
-		if (!IsMercHireable(p))
-		{
-			++ubNumberOfMercs;
-			continue;
-		}
-
-		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
-		p.bMercStatus  = 0; // since this is only a testing function, make the merc available
-
-		MERC_HIRE_STRUCT hire;
-		memset(&hire, 0, sizeof(hire));
-		hire.ubProfileID               = pid;
-		hire.sSectorX                  = SECTORX(g_merc_arrive_sector);
-		hire.sSectorY                  = SECTORY(g_merc_arrive_sector);
-		hire.fCopyProfileItemsOver     = TRUE;
-		hire.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
-		hire.ubInsertionCode	         = INSERTION_CODE_ARRIVING_GAME;
-		hire.fUseLandingZoneForArrival = TRUE;
-		hire.iTotalContractLength      =
-			_KeyDown(ALT)  ? 14 :
-			_KeyDown(CTRL) ?  7 :
-			1;
-		HireMerc(hire);
-
-		// add an entry in the finacial page for the hiring of the merc
-		AddTransactionToPlayersBook(HIRED_MERC, pid, GetWorldTotalMin(), -(INT32)p.sSalary);
-
-		if (p.bMedicalDeposit)
-		{
-			// add an entry in the finacial page for the medical deposit
-			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, GetWorldTotalMin(), -p.sMedicalDepositAmount);
-		}
-
-		//add an entry in the history page for the hiring of the merc
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), -1, -1);
-	}
-}
-
-#endif
-
-
 static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset)
 {
 	static UINT32		uiLastTime=0;
@@ -2944,90 +2867,6 @@ static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, B
 	}
 }
 
-
-#ifdef JA2TESTVERSION
-
-extern void SetFlagToForceHireMerc(BOOLEAN fForceHire);
-
-
-static void QuickHireMerc(void)
-{
-	ProfileID const pid = AimMercArray[gbCurrentIndex];
-	if (FindSoldierByProfileIDOnPlayerTeam(pid)) return;
-
-	MERC_HIRE_STRUCT h;
-	h.ubProfileID               = pid;
-	h.sSectorX                  = SECTORX(g_merc_arrive_sector);
-	h.sSectorY                  = SECTORY(g_merc_arrive_sector);
-	h.bSectorZ                  = 0;
-	h.fUseLandingZoneForArrival = TRUE;
-	h.ubInsertionCode	          = INSERTION_CODE_ARRIVING_GAME;
-	h.fCopyProfileItemsOver     = TRUE;
-	h.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
-	h.iTotalContractLength      =
-		_KeyDown(ALT)  ? 14 :
-		_KeyDown(CTRL) ?  7 :
-		1;
-
-	SetFlagToForceHireMerc(TRUE);
-	INT8 const ret = HireMerc(h);
-	SetFlagToForceHireMerc(FALSE);
-	if (ret == MERC_HIRE_OK)
-	{
-		MERCPROFILESTRUCT& p = GetProfile(pid);
-		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
-
-		UINT32 const now = GetWorldTotalMin();
-		// Add an entry in the finacial page for the hiring of the merc
-		AddTransactionToPlayersBook(HIRED_MERC, pid, now, -p.sSalary);
-
-		if (p.bMedicalDeposit)
-		{ // Add an entry in the finacial page for the medical deposit
-			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, now, -p.sMedicalDepositAmount);
-		}
-
-		// Add an entry in the history page for the hiring of the merc
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, now, -1, -1);
-
-		gfRedrawScreen = TRUE;
-	}
-	else if (ret == MERC_HIRE_OVER_20_MERCS_HIRED)
-	{ // Display a warning saying you can't hire more then 20 mercs
-		DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[AIM_MEMBER_ALREADY_HAVE_20_MERCS], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-	}
-}
-
-
-static void TempHandleAimMemberKeyBoardInput(void)
-{
-	InputAtom					InputEvent;
-
-	while (DequeueEvent(&InputEvent))
-	{//!HandleTextInput( &InputEvent ) &&
-		if( InputEvent.usEvent == KEY_DOWN )
-		{
-			switch (InputEvent.usParam)
-			{
-				case SDLK_SPACE: QuickHireMerc(); break;
-
-				case '~':
-					// to test going on other assignments, unhired merc improvements & deaths
-					if (guiDay == 1) guiDay++;
-					MercDailyUpdate();
-					gfRedrawScreen = TRUE;
-					break;
-
-				default:
-					HandleKeyBoardShortCutsForLapTop( InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState );
-					break;
-			}
-		}
-	}
-}
-
-#endif
-
-
 static void WaitForMercToFinishTalkingOrUserToClick(void)
 {
 	//if the region is not active
@@ -3047,55 +2886,6 @@ static void WaitForMercToFinishTalkingOrUserToClick(void)
 	gfHangUpMerc = TRUE;
 	gfStopMercFromTalking = FALSE;
 }
-
-
-#if defined JA2TESTVERSION
-
-void DemoHiringOfMercs()
-{
-	ProfileID const MercID[] = { IVAN, SHADOW, VICKY, isGermanVersion() ? FOX : GASKET, isGermanVersion() ? BUBBA : DR_Q };
-
-	static bool was_called_before = false;
-	if (was_called_before) return;
-	was_called_before = true;
-
-	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE) return;
-
-	FOR_EACH(ProfileID const, i, MercID)
-	{
-		ProfileID const    pid = *i;
-		MERCPROFILESTRUCT& p   = GetProfile(pid);
-
-		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
-		p.bMercStatus  = 0; // Since this is only a testing function, make the merc available
-
-		MERC_HIRE_STRUCT h;
-		memset(&h, 0, sizeof(h));
-		h.ubProfileID           = pid;
-		h.sSectorX              = 1;
-		h.sSectorY              = 16;
-		h.ubInsertionCode       = INSERTION_CODE_ARRIVING_GAME;
-		h.fCopyProfileItemsOver = TRUE;
-		h.iTotalContractLength  = 60;
-		h.uiTimeTillMercArrives = GetMercArrivalTimeOfDay();
-		HireMerc(h);
-
-		UINT32 const now = GetWorldTotalMin();
-		// Add an entry in the finacial page for the hiring of the merc
-		AddTransactionToPlayersBook(HIRED_MERC, pid, now, -(INT32)p.sSalary);
-
-		if (p.bMedicalDeposit)
-		{ // Add an entry in the finacial page for the medical deposit
-			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, now, -p.sMedicalDepositAmount);
-		}
-
-		// Add an entry in the history page for the hiring of the merc
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, now, -1, -1);
-	}
-}
-
-#endif
-
 
 static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(MessageBoxReturnValue);
 

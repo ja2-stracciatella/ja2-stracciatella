@@ -544,10 +544,6 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 		default: throw std::logic_error("Invalid direction passed to AddCreaturesToBattle()");
 	}
 
-#ifdef JA2TESTVERSION
-	ScreenMsg(FONT_RED, MSG_INTERFACE, L"Creature attackers have arrived!");
-#endif
-
 	MAPEDGEPOINTINFO edgepoint_info;
 	if (insertion_code != INSERTION_CODE_GRIDNO)
 	{

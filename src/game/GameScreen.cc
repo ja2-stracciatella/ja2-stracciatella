@@ -60,11 +60,6 @@
 #include "JAScreens.h"
 #include "UILayout.h"
 #include "GameState.h"
-
-#ifdef JA2TESTVERSION
-#	include "Scheduling.h"
-#endif
-
 #include "EditScreen.h"
 #include "slog/slog.h"
 
@@ -562,35 +557,6 @@ ScreenID MainGameScreenHandle(void)
 
 	// Render Interface
 	RenderTopmostTacticalInterface( );
-
-#ifdef JA2TESTVERSION
-	if ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )
-	{
-		SetFontAttributes(MILITARYFONT1, FONT_MCOLOR_LTGREEN);
-		GDirtyPrintF(0, 0, L"IN CONVERSATION %d", giNPCReferenceCount);
-	}
-
-	if ( gTacticalStatus.uiFlags & SHOW_ALL_MERCS )
-	{
-		INT32 iSchedules;
-		SCHEDULENODE *curr;
-
-		SetFontAttributes(MILITARYFONT1, FONT_MCOLOR_LTGREEN);
-
-		GDirtyPrintF(0, 15, L"Attacker Busy Count: %d", gTacticalStatus.ubAttackBusyCount);
-
-		curr = gpScheduleList;
-		iSchedules = 0;
-		while( curr )
-		{
-			iSchedules++;
-			curr = curr->next;
-		}
-
-		GDirtyPrintF(0, 25, L"Schedules: %d", iSchedules);
-	}
-#endif
-
 
 	// Render view window
 	RenderRadarScreen( );

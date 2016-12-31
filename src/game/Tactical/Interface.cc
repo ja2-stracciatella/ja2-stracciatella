@@ -1182,16 +1182,6 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	*/
 }
 
-
-#ifdef JA2TESTVERSION
-void EndDeadlockMsg(void)
-{
-	// Reset gridlock
-	gUIDeadlockedSoldier = NOBODY;
-}
-#endif
-
-
 void ClearInterface( )
 {
 	if (fInMapMode) return; // XXX necessary?

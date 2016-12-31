@@ -312,17 +312,6 @@ static void GetCreditScreenUserInput(void)
 			switch (Event.usParam)
 			{
 				case SDLK_ESCAPE: g_credits_active = FALSE; break;
-
-#ifdef JA2TESTVERSION
-				case 'r': RenderCreditScreen(); break;
-				case 'i': InvalidateScreen();   break;
-
-				case SDLK_UP:                                   guiCrdtNodeScrollSpeed += 5; break;
-				case SDLK_DOWN: if (guiCrdtNodeScrollSpeed > 5) guiCrdtNodeScrollSpeed -= 5; break;
-
-				case SDLK_PAUSE:
-				case SDLK_SPACE: gfPauseCreditScreen = !gfPauseCreditScreen; break;
-#endif
 			}
 		}
 	}

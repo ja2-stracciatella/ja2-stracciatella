@@ -104,11 +104,7 @@ void DisplayCoverOfSelectedGridNo()
 		//if it is the first time in here
 
 		//pop up a message to say we are in the display cover routine
-#ifdef JA2TESTVERSION
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER], gGameSettings.ubSizeOfDisplayCover);
-#else
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER]);
-#endif
 	}
 
 	gbLastStance        = bStance;
@@ -461,12 +457,8 @@ void DisplayGridNoVisibleToSoldierGrid( )
 			}
 			else
 			{
-#ifdef JA2TESTVERSION
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__LOS], gGameSettings.ubSizeOfLOS);
-#else
 				//pop up a message to say we are in the display cover routine
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[ TCTL_MSG__LOS ] );
-#endif
 				//increment the display LOS counter ( just seeing how many times people use it )
 				//gJa25SaveStruct.uiDisplayLosCounter++;
 			}

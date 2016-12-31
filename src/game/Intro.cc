@@ -221,17 +221,6 @@ static void GetIntroScreenUserInput(void)
 			{
 				case SDLK_ESCAPE: PrepareToExitIntroScreen(); break;
 				case SDLK_SPACE:  SmkCloseFlic(gpSmackFlic);  break;
-
-#ifdef JA2TESTVERSION
-
-				case 'r':
-					break;
-
-				case 'i':
-					InvalidateScreen();
-					break;
-
-#endif
 			}
 		}
 	}

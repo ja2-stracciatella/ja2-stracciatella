@@ -405,10 +405,6 @@ void TacticalPlacementHandle()
 		{
 			switch( InputEvent.usParam )
 			{
-#ifdef JA2TESTVERSION
-				case SDLK_ESCAPE: KillTacticalPlacementGUI(); break;
-#endif
-
 				case SDLK_RETURN:
 					if (iTPButtons[DONE_BUTTON]->Enabled())
 					{

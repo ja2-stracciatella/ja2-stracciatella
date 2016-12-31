@@ -241,11 +241,6 @@ static void DecideActiveTerrorists()
 		if (Chance(chance)) ++n_additional_terrorists;
 	}
 
-	// ifdefs added by CJC
-#ifdef JA2TESTVERSION
-	n_additional_terrorists = 4;
-#endif
-
 	UINT8 terrorist_placement[MAX_ADDITIONAL_TERRORISTS];
 	for (UINT8 n_terrorists_added = 0; n_terrorists_added != n_additional_terrorists;)
 	{

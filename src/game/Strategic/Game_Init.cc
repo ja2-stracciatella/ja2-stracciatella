@@ -453,11 +453,6 @@ void ReStartingGame()
 		EndAirRaid( );
 	}
 
-#ifdef JA2TESTVERSION
-	//Reset so we can use the 'cheat key' to start with mercs
-	TempHiringOfMercs( 0, TRUE );
-#endif
-
 	//Make sure the game starts in the TEAM panel ( it wasnt being reset )
 	gsCurInterfacePanel = TEAM_PANEL;
 

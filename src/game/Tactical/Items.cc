@@ -4061,35 +4061,3 @@ bool HasObjectImprint(OBJECTTYPE const& o)
 		(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
 		o.ubImprintID != NO_PROFILE;
 }
-
-
-#ifdef JA2TESTVERSION
-void DumpItemsList( void )
-{
-  CHAR8 zPrintFileName[60];
-  FILE *FDump;
-	UINT16 usItem;
-
-  // open output file
- 	strcpy(zPrintFileName, "ItemDump.txt");
-  FDump = fopen(zPrintFileName, "w");
-
-  if (FDump == NULL)
-    return;
-
-	// print headings
-	fprintf(FDump, "            ITEM              COOLNESS  VALUE\n");
-	fprintf(FDump, "============================  ========  =====\n");
-
-	for( usItem = 0; usItem < MAXITEMS; usItem++ )
-	{
-		const ItemModel * pItem = GCM->getItem(usItem);
-		if (pItem->getCoolness() > 0 )
-		{
-			fprintf(FDump, "%28ls     %2d     $%4d\n", ItemNames[ usItem ], pItem->getCoolness(), pItem->getPrice() );
-		}
-	}
-
-  fclose(FDump);
-}
-#endif // JA2TESTVERSION

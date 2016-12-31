@@ -328,7 +328,7 @@ void KeyUp(const SDL_Keysym* KeySym)
 			break;
 
 		case SDLK_PRINTSCREEN:
-			if (KeySym->mod & KMOD_CTRL) VideoCaptureToggle(); else PrintScreen();
+			PrintScreen();
 			break;
 
 		case SDLK_SCROLLLOCK:
