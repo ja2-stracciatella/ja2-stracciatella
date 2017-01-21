@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
-find_package(Cargo REQUIRED)
+find_package(Cargo 0.9.0 REQUIRED)
+find_package(Rustc 1.8.0 REQUIRED)
 
 set(LIBSTRACCIATELLA_BUILD_SWITCHES "")
 set(LIBSTRACCIATELLA_BUILD_TYPE "debug")
