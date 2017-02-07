@@ -15,10 +15,14 @@ SGPRect	ClippingRect;
 UINT32	guiTranslucentMask=0x3def; //0x7bef;		// mask for halving 5,6,5
 
 
-/* Difference or Zero */
-template<typename T> static inline T DoZ(T const a, T const b)
+/*
+ * Difference or Zero
+ * NB: the types of the parameters are int32_t to ensure the compiler can
+ * safely promote 16 bit unsigned integers.
+ */
+static uint16_t DoZ(int32_t const a, int32_t const b)
 {
-	return a > b ? a - b : 0;
+  return a > b ? static_cast<uint16_t>(a - b) : 0;
 }
 
 
@@ -36,12 +40,12 @@ void Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(UINT16* const buf, UINT32 c
 
 	// Get offsets from index into structure.
 	ETRLEObject const& e      = hSrcVObject->SubregionProperties(usIndex);
-	UINT16      const  height = e.usHeight;
-	UINT16      const  width  = e.usWidth;
+	int32_t      const  height = e.usHeight; // NB: safe automatic conversion
+	int32_t      const  width  = e.usWidth;
 
 	// Add to start position of dest buffer.
-	UINT16 const x = iX + e.sOffsetX;
-	UINT16 const y = iY + e.sOffsetY;
+	int32_t const x = iX + e.sOffsetX;
+	int32_t const y = iY + e.sOffsetY;
 
 	if (!clipregion) clipregion = &ClippingRect;
 
@@ -51,14 +55,14 @@ void Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(UINT16* const buf, UINT32 c
 	if (left_skip   >= width)  return;
 	UINT16       top_skip    = DoZ(clipregion->iTop,  y);
 	if (top_skip    >= height) return;
-	UINT16 const right_skip  = DoZ((UINT16)(x + width),  clipregion->iRight);
+	UINT16 const right_skip  = DoZ(x + width,  clipregion->iRight);
 	if (right_skip  >= width)  return;
-	UINT16 const bottom_skip = DoZ((UINT16)(y + height), clipregion->iBottom);
+	UINT16 const bottom_skip = DoZ(y + height, clipregion->iBottom);
 	if (bottom_skip >= height) return;
 
 	// Calculate the remaining rows and columns to blit.
-	INT32 const blit_length = (INT32)width  - left_skip - right_skip;
-	INT32       blit_height = (INT32)height - top_skip  - bottom_skip;
+	INT32 const blit_length = width  - left_skip - right_skip;
+	INT32       blit_height = height - top_skip  - bottom_skip;
 
 	UINT32         const pitch     = uiDestPitchBYTES / 2;
 	UINT8   const*       src       = hSrcVObject->PixData(e);
