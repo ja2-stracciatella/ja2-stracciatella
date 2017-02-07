@@ -314,8 +314,12 @@ int main(int argc, char* argv[])
   }
 
   if (should_run_unittests(params)) {
+#ifdef WITH_UNITTESTS
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
+#else
+    SLOGW(DEBUG_TAG_SGP, "This executable does not include unit tests.");
+#endif
   }
 
   GameVersion version = get_resource_version(params);;
