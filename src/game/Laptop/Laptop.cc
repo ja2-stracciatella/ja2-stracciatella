@@ -554,7 +554,7 @@ static void DeleteDesktopBackground(void);
 static void DeleteLapTopButtons(void);
 static void DeleteLapTopMouseRegions(void);
 static void DeleteLoadPending(void);
-static void ExitLaptopMode(UINT32 uiMode);
+static void ExitLaptopMode(LaptopMode& uiMode);
 
 
 void ExitLaptop(void)
@@ -1241,7 +1241,7 @@ ScreenID LaptopScreenHandle()
 }
 
 
-static void ExitLaptopMode(UINT32 uiMode)
+static void ExitLaptopMode(LaptopMode& uiMode)
 {
 	// Deallocate the previous mode that you were in.
 	switch (uiMode)
@@ -1295,6 +1295,10 @@ static void ExitLaptopMode(UINT32 uiMode)
 	{
 		CreateDestroyMinimizeButtonForCurrentMode();
 	}
+
+  // This laptop mode is now destroyed, so also destroy the caller's reference to it.
+  // Fixes Stracciatella issue #68.
+  uiMode = LAPTOP_MODE_NONE;
 }
 
 
