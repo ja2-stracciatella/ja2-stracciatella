@@ -69,15 +69,13 @@ void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 void DequeueAllKeyBoardEvents(void);
 
 
-extern BOOLEAN gfKeyState[SDL_SCANCODE_TO_KEYCODE(SDL_NUM_SCANCODES)]; // TRUE = Pressed, FALSE = Not Pressed
-
 extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen
 extern BOOLEAN   gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
 extern BOOLEAN   gfMiddleButtonState;
 
-#define _KeyDown(a)        gfKeyState[(a)]
+bool _KeyDown(SDL_Keycode);
 #define _LeftButtonDown    gfLeftButtonState
 #define _RightButtonDown   gfRightButtonState
 #define _MiddleButtonDown   gfMiddleButtonState
