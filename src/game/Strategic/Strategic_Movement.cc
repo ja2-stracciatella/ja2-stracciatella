@@ -2397,7 +2397,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 
 		INT16 const sec_prev = IS_VALID_SECTOR(g.ubPrevX, g.ubPrevY) ? SECTOR(g.ubPrevX,   g.ubPrevY) : -1;
 		INT16 const sec_cur  = SECTOR(g.ubSectorX, g.ubSectorY);
-		INT16 const sec_next = IS_VALID_SECTOR(g.ubNextX, g.ubNextY) ? SECTOR(g.ubNextY,   g.ubNextY) : -1;
+		INT16 const sec_next = IS_VALID_SECTOR(g.ubNextX, g.ubNextY) ? SECTOR(g.ubNextX,   g.ubNextY) : -1;
 
 		bool const may_retreat_from_battle =
 			sec_battle == sec_src && sec_cur == sec_src && sec_prev == sec_dst;

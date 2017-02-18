@@ -3,6 +3,7 @@
 - SDL 2.0.4 (included for Windows and OS X)
 - boost-filesystem (included with `-DLOCAL_BOOST_LIB=ON`)
 - cmake
+- Rust and Cargo
 - Your systems compiler
 
 ## General Notes
@@ -14,6 +15,12 @@ directory (`_bin` is ignored by git). Cmake only needs to be executed once unles
 ```
 mkdir _bin && cd _bin
 ```
+
+## Rust notes
+
+We suggest to install Rust and Cargo using [rustup](http://rustup.rs/). This way you will get the most recent version
+installed in your home directory. As rust is a rapidly developing language the binaries provided by your distribution
+might be too old to build ja2-stracciatella and its dependencies.
 
 ## Build on Linux or freeBSD/openBSD
 
