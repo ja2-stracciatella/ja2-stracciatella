@@ -46,6 +46,7 @@ public:
 	int8_t enemy_weapon_minimal_status;   /**< Minimal status of the enemy weapon (0 - 100). */
 
 	bool gui_extras;                      /* graphical user interface cosmetic mod */
+	bool extra_attachments;               // allow more item attachments options
 
 	bool middle_mouse_look;               // Look cursor with middle mouse button
 	bool can_enter_turnbased;             // 'd' can start turnbased if in real-time
