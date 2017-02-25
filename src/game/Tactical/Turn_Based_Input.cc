@@ -1191,28 +1191,28 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 
 	}
 
-	if (_KeyDown(SDLK_DELETE))
+	if (_KeyDown(SDL_SCANCODE_DELETE))
 	{
 		DisplayCoverOfSelectedGridNo( );
 
 		fDeleteDown = TRUE;
 	}
 
-	if (!_KeyDown(SDLK_DELETE) && fDeleteDown)
+	if (!_KeyDown(SDL_SCANCODE_DELETE) && fDeleteDown)
 	{
 		RemoveCoverOfSelectedGridNo();
 
 		fDeleteDown = FALSE;
 	}
 
-	if (_KeyDown(SDLK_END))
+	if (_KeyDown(SDL_SCANCODE_END))
 	{
 		DisplayGridNoVisibleToSoldierGrid( );
 
 		fEndDown = TRUE;
 	}
 
-	if (!_KeyDown(SDLK_END) && fEndDown)
+	if (!_KeyDown(SDL_SCANCODE_END) && fEndDown)
 	{
 		RemoveVisibleGridNoAtSelectedGridNo();
 
@@ -1289,11 +1289,11 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case '-':
 			// If the display cover or line of sight is being displayed
-			if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
+			if (_KeyDown(SDL_SCANCODE_END) || _KeyDown(SDL_SCANCODE_DELETE))
 			{
-				if (_KeyDown(SDLK_DELETE))
+				if (_KeyDown(SDL_SCANCODE_DELETE))
 					ChangeSizeOfDisplayCover(gGameSettings.ubSizeOfDisplayCover - 1);
-				if (_KeyDown(SDLK_END))
+				if (_KeyDown(SDL_SCANCODE_END))
 					ChangeSizeOfLOS(gGameSettings.ubSizeOfLOS - 1);
 			}
 			break;
@@ -1320,11 +1320,11 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case '=':
 			//if the display cover or line of sight is being displayed
-			if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
+			if (_KeyDown(SDL_SCANCODE_END) || _KeyDown(SDL_SCANCODE_DELETE))
 			{
-				if (_KeyDown(SDLK_DELETE))
+				if (_KeyDown(SDL_SCANCODE_DELETE))
 					ChangeSizeOfDisplayCover(gGameSettings.ubSizeOfDisplayCover + 1);
-				if (_KeyDown(SDLK_END))
+				if (_KeyDown(SDL_SCANCODE_END))
 					ChangeSizeOfLOS(gGameSettings.ubSizeOfLOS + 1);
 			}
 			else if (!(gTacticalStatus.uiFlags & INCOMBAT))
@@ -2855,7 +2855,7 @@ static void CreatePlayerControlledMonster(void)
 	MercCreateStruct.sSectorY         = gWorldSectorY;
 	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
 	//Note:  only gets called if Alt and/or Ctrl isn't pressed!
-	MercCreateStruct.bBodyType        = (_KeyDown(SDLK_INSERT) ? QUEENMONSTER : ADULTFEMALEMONSTER);
+	MercCreateStruct.bBodyType        = (_KeyDown(SDL_SCANCODE_INSERT) ? QUEENMONSTER : ADULTFEMALEMONSTER);
 	MercCreateStruct.bTeam            = CREATURE_TEAM;
 	MercCreateStruct.sInsertionGridNo = usMapPos;
 	RandomizeNewSoldierStats(&MercCreateStruct);

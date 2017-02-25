@@ -12,7 +12,7 @@
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
 // the interface.
 
-BOOLEAN gfKeyState[SDL_SCANCODE_TO_KEYCODE(SDL_NUM_SCANCODES)]; // TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfKeyState[SDL_NUM_SCANCODES]; // TRUE = Pressed, FALSE = Not Pressed
 static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
@@ -226,9 +226,50 @@ void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
 
 static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 {
-	SDL_Keycode      key = key_sym->sym;
+	// Note: We use the SDL_Scancode as an index for gfKeyState, but use
+	// the SDL_Keycode for everything else.
+	SDL_Scancode scancode = key_sym->scancode;
 	SDL_Keymod const mod = (SDL_Keymod) key_sym->mod;
 	bool   const num = mod & KMOD_NUM;
+	// Handle special keys that do not have a scancode in SDL.
+	switch (key_sym->sym)
+	{
+		case SDLK_ASTERISK:		scancode = SCANCODE_ASTERISK;	break;
+		case SDLK_PLUS:			scancode = SCANCODE_PLUS;		break;
+		case SDLK_UNDERSCORE:	scancode = SCANCODE_UNDERSCORE;	break;
+		default: break;
+	}
+
+    switch (scancode)
+	{
+		case SDL_SCANCODE_KP_0:			scancode = num ? SDL_SCANCODE_0			: SDL_SCANCODE_INSERT;	break;
+		case SDL_SCANCODE_KP_1:			scancode = num ? SDL_SCANCODE_1			: SDL_SCANCODE_END;		break;
+		case SDL_SCANCODE_KP_2:			scancode = num ? SDL_SCANCODE_2			: SDL_SCANCODE_DOWN;	break;
+		case SDL_SCANCODE_KP_3:			scancode = num ? SDL_SCANCODE_3			: SDL_SCANCODE_PAGEDOWN;break;
+		case SDL_SCANCODE_KP_4:			scancode = num ? SDL_SCANCODE_4			: SDL_SCANCODE_LEFT;	break;
+		case SDL_SCANCODE_KP_5:
+			if (!num) return;
+			scancode = SDL_SCANCODE_5;
+			break;
+		case SDL_SCANCODE_KP_6:			scancode = num ? SDL_SCANCODE_6			: SDL_SCANCODE_RIGHT;	break;
+		case SDL_SCANCODE_KP_7:			scancode = num ? SDL_SCANCODE_7			: SDL_SCANCODE_HOME;	break;
+		case SDL_SCANCODE_KP_8:			scancode = num ? SDL_SCANCODE_8			: SDL_SCANCODE_UP;		break;
+		case SDL_SCANCODE_KP_9:			scancode = num ? SDL_SCANCODE_9			: SDL_SCANCODE_PAGEUP;	break;
+		case SDL_SCANCODE_KP_PERIOD:	scancode = num ? SDL_SCANCODE_PERIOD	: SDL_SCANCODE_DELETE;	break;
+		case SDL_SCANCODE_KP_DIVIDE:	scancode = SDL_SCANCODE_SLASH;									break;
+		case SDL_SCANCODE_KP_MULTIPLY:	scancode = SCANCODE_ASTERISK;									break;
+		case SDL_SCANCODE_KP_MINUS:		scancode = SDL_SCANCODE_MINUS;									break;
+		case SDL_SCANCODE_KP_PLUS:		scancode = SCANCODE_PLUS;										break;
+		case SDL_SCANCODE_KP_ENTER:		scancode = SDL_SCANCODE_RETURN;									break;
+
+		default:
+			if (scancode >= lengthof(gfKeyState)) return;
+			break;
+	}
+
+
+
+	SDL_Keycode      key = key_sym->sym;
 	switch (key)
 	{
 #if defined WITH_MAEMO
@@ -257,12 +298,11 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 		case SDLK_KP_ENTER:    key = SDLK_RETURN;                       break;
 
 		default:
-			if (key >= lengthof(gfKeyState)) return;
 			break;
 	}
 
 	UINT     event_type;
-	BOOLEAN& key_state = gfKeyState[key];
+	BOOLEAN& key_state = gfKeyState[scancode];
 	if (pressed)
 	{
 		event_type = key_state ? KEY_REPEAT : KEY_DOWN;
