@@ -255,6 +255,7 @@ INT16 ActionPointCost(const SOLDIERTYPE* const pSoldier, const INT16 sGridNo, co
 			case BLOODCAT_WALK_BACKWARDS:
 			case MONSTER_WALK_BACKWARDS:
       case LARVAE_WALK:
+      case KID_SKIPPING:
 			case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
 
 			case START_SWAT:
@@ -318,6 +319,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			case BLOODCAT_WALK_BACKWARDS:
 			case MONSTER_WALK_BACKWARDS:
       case LARVAE_WALK:
+      case KID_SKIPPING:
 			case WALKING :	sPoints = (sTileCost + WALKCOST);		break;
 
 			case START_SWAT:
@@ -328,7 +330,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			default:
 
 				// Invalid movement mode
-				SLOGW(DEBUG_TAG_POINTS, "Invalid movement mode %d used in ActionPointCost", usMovementMode);
+				SLOGW(DEBUG_TAG_POINTS, "Invalid movement mode %d used in EstimateActionPointCost", usMovementMode);
 				sPoints = 1;
 		}
 	}
