@@ -355,8 +355,20 @@ void KeyUp(const SDL_Keysym* KeySym)
 }
 
 void TextInput(const SDL_TextInputEvent* TextEv) {
-	UTF8String utf8String = UTF8String(TextEv->text);
-	QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, utf8String.getUTF16()[0]);
+	try {
+		UTF8String utf8String = UTF8String(TextEv->text);
+		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, utf8String.getUTF16()[0]);
+	}
+	catch (const InvalidEncodingException&)
+	{
+		// ignore invalid inputs
+		static bool warn = true;
+		if (warn)
+		{
+			SLOGW(DEBUG_TAG_SGP, "Received invalid utf-8 character.");
+			warn = false;
+		}
+	}
 }
 
 
