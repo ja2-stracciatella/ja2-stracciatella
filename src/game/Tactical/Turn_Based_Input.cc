@@ -2760,7 +2760,7 @@ static void ObliterateSector()
 	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		if (s->bNeutral || s->bSide == OUR_TEAM) continue;
-		EVENT_SoldierGotHit(s, 0, 400, 0, s->bDirection, 320, 0, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
+		EVENT_SoldierGotHit(s, STRUCTURE_EXPLOSION, 100000, 0, s->bDirection, 320, 0, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
 	}
 }
 
