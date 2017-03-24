@@ -70,7 +70,6 @@ struct SAMPLETAG
 	CHAR8   pName[128];  // Path to sample data
 	UINT32  n_samples;
 	UINT32  uiFlags;     // Status flags
-	UINT32  uiSpeed;     // Playback frequency
 	PTR     pData;       // pointer to sample data memory
 	UINT32  uiCacheHits;
 
@@ -205,7 +204,6 @@ UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pa
       buffertag = SoundGetEmptySample();
     }
   sprintf(buffertag->pName, "SmackBuff %p - SampleSize %u", pbuffer, size); 
-  buffertag->uiSpeed=44100;
   buffertag->n_samples = size;
   buffertag->pData = pbuffer;
   buffertag->uiFlags =  SAMPLE_STEREO | SAMPLE_ALLOCATED;
@@ -609,7 +607,6 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
   strcpy(s->pName, pFilename);
   s->n_samples = UINT32(cvt.len * cvt.len_mult / (wavSpec.channels * 2));
-  s->uiSpeed = UINT32(gTargetAudioSpec.freq);
   s->uiFlags     |= SAMPLE_ALLOCATED;
   if (wavSpec.channels != 1) {
     s->uiFlags |= SAMPLE_STEREO;
