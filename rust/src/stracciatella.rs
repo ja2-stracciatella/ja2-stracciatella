@@ -520,7 +520,7 @@ mod tests {
 
     use std::path::{PathBuf};
     use std::str;
-    use std::ffi::CStr;
+    use std::ffi::{CStr, CString};
     use std::fs::File;
     use std::io::prelude::*;
 
@@ -565,10 +565,14 @@ mod tests {
     #[test]
     fn parse_args_should_continue_with_multiple_known_switches() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = vec!(String::from("ja2"), String::from("-debug"), String::from("-mod"), String::from("a"), String::from("--mod"), String::from("b"));
+        let input = vec!(String::from("ja2"), String::from("-debug"), String::from("-mod"), String::from("a"), String::from("--mod"), String::from("ö"));
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert!(super::should_start_in_debug_mode(&engine_options));
-        assert!(super::get_number_of_mods(&engine_options) == 2);
+        assert_eq!(super::get_number_of_mods(&engine_options), 2);
+        unsafe {
+            assert_eq!(CString::from_raw(super::get_mod(&engine_options, 0)), CString::new("a").unwrap());
+            assert_eq!(CString::from_raw(super::get_mod(&engine_options, 1)), CString::new("ö").unwrap());
+        }
     }
 
     #[test]
