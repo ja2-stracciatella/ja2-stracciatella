@@ -26,11 +26,15 @@ use getopts::Options;
 use libc::{size_t, c_char};
 
 #[cfg(not(windows))]
+static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
+#[cfg(not(windows))]
 static DEFAULT_JSON_CONTENT: &'static str = r##"{
     "help": "Put the directory to your original ja2 installation into the line below",
     "data_dir": "/some/place/where/the/data/is"
 }"##;
 
+#[cfg(windows)]
+static DATA_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
 #[cfg(windows)]
 static DEFAULT_JSON_CONTENT: &'static str = r##"{
    "help": "Put the directory to your original ja2 installation into the line below. Make sure to use double backslashes.",
@@ -116,6 +120,12 @@ pub fn get_command_line_options() -> Options {
 
     opts.optmulti(
         "",
+        "datadir",
+        "Set path for data directory",
+        DATA_DIR_OPTION_EXAMPLE
+    );
+    opts.optmulti(
+        "",
         "mod",
         "Start one of the game modifications. MOD_NAME is the name of modification, e.g. 'from-russia-with-love. See mods folder for possible options'.",
         "MOD_NAME"
@@ -177,6 +187,10 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
         Ok(m) => {
             if m.free.len() > 0 {
                 return Some(format!("Unknown arguments: '{}'.", m.free.join(" ")));
+            }
+
+            if let Some(s) = m.opt_str("datadir") {
+                engine_options.vanilla_data_dir = PathBuf::from(s);
             }
 
             if m.opt_strs("mod").len() > 0 {
@@ -605,6 +619,17 @@ mod tests {
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         assert_eq!(super::get_resolution_x(&engine_options), 1120);
         assert_eq!(super::get_resolution_y(&engine_options), 960);
+    }
+
+    #[test]
+    fn parse_json_config_should_return_the_correct_data_dir() {
+        let mut engine_options: super::EngineOptions = Default::default();
+        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from("/öpt/ja2"));
+
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
+        unsafe {
+            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), "/öpt/ja2");
+        }
     }
 
     fn write_temp_folder_with_ja2_ini(contents: &[u8]) -> tempdir::TempDir {
