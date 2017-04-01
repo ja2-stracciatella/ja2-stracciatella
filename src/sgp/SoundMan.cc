@@ -59,7 +59,7 @@ enum
 #define SOUND_MAX_CACHED 128 // number of cache slots
 #define SOUND_MAX_CHANNELS 16 // number of mixer channels
 
-#define SOUND_DEFAULT_MEMORY (16 * 1024 * 1024) // default memory limit
+#define SOUND_DEFAULT_MEMORY (32 * 1024 * 1024) // default memory limit
 #define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
 #define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
 
@@ -105,11 +105,13 @@ struct SOUNDTAG
 	UINT32        Pan;
 };
 
-
+static size_t GetSampleSize(const SAMPLETAG* const s);
 static const UINT32 guiSoundDefaultVolume  = MAXVOLUME;
 static const UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
 static       UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
 static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
+static void IncreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryUsed += sample->n_samples * GetSampleSize(sample); }
+static void DecreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryUsed -= sample->n_samples * GetSampleSize(sample); }
 
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called
 static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
@@ -191,7 +193,6 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 static SAMPLETAG* SoundGetEmptySample(void);
 static BOOLEAN    SoundCleanCache(void);
 static SAMPLETAG* SoundGetEmptySample(void);
-static size_t GetSampleSize(const SAMPLETAG* const s);
 
 UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
@@ -209,7 +210,7 @@ UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pa
   buffertag->uiFlags =  SAMPLE_STEREO | SAMPLE_ALLOCATED;
   buffertag->uiPanMax        = 64;
   buffertag->uiMaxInstances  = 1;
-  guiSoundMemoryUsed += size * GetSampleSize(buffertag);
+  IncreaseSoundMemoryUsedBySample(buffertag);
 
   SOUNDTAG* const channel = SoundGetFreeChannel();
   if (channel == NULL) return SOUND_ERROR;
@@ -549,7 +550,8 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
 
-	UINT32 uiSize = FileGetSize(hFile);
+  // A pessimistic approach as we dont know the decoded size yet
+	UINT32 uiSize = FileGetSize(hFile) * 2;
 
 	// if insufficient memory, start unloading old samples until either
 	// there's nothing left to unload, or we fit
@@ -615,7 +617,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
   s->uiInstances  = 0;
   s->pData = cvt.buf;
 
-  guiSoundMemoryUsed += s->n_samples * GetSampleSize(s);
+  IncreaseSoundMemoryUsedBySample(s);
 
 	return s;
 }
@@ -677,7 +679,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 
 	assert(s->uiInstances == 0);
 
-	guiSoundMemoryUsed -= s->n_samples * GetSampleSize(s);
+  DecreaseSoundMemoryUsedBySample(s);
 	MemFree(s->pData);
 	memset(s, 0, sizeof(*s));
 }
