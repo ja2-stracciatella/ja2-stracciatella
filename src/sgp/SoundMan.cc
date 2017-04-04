@@ -52,15 +52,14 @@ enum
 	SAMPLE_ALLOCATED = 1U << 0,
 	SAMPLE_LOCKED    = 1U << 1,
 	SAMPLE_RANDOM    = 1U << 2,
-	SAMPLE_STEREO    = 1U << 3,
-	SAMPLE_16BIT     = 1U << 4
+	SAMPLE_STEREO    = 1U << 3
 };
 
 
 #define SOUND_MAX_CACHED 128 // number of cache slots
 #define SOUND_MAX_CHANNELS 16 // number of mixer channels
 
-#define SOUND_DEFAULT_MEMORY (16 * 1024 * 1024) // default memory limit
+#define SOUND_DEFAULT_MEMORY (32 * 1024 * 1024) // default memory limit
 #define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
 #define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
 
@@ -71,7 +70,6 @@ struct SAMPLETAG
 	CHAR8   pName[128];  // Path to sample data
 	UINT32  n_samples;
 	UINT32  uiFlags;     // Status flags
-	UINT32  uiSpeed;     // Playback frequency
 	PTR     pData;       // pointer to sample data memory
 	UINT32  uiCacheHits;
 
@@ -107,14 +105,18 @@ struct SOUNDTAG
 	UINT32        Pan;
 };
 
-
+static size_t GetSampleSize(const SAMPLETAG* const s);
 static const UINT32 guiSoundDefaultVolume  = MAXVOLUME;
 static const UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
 static       UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
 static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
+static void IncreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryUsed += sample->n_samples * GetSampleSize(sample); }
+static void DecreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryUsed -= sample->n_samples * GetSampleSize(sample); }
 
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called
 static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
+
+SDL_AudioSpec gTargetAudioSpec;
 
 // Sample cache list for files loaded
 static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
@@ -191,7 +193,6 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 static SAMPLETAG* SoundGetEmptySample(void);
 static BOOLEAN    SoundCleanCache(void);
 static SAMPLETAG* SoundGetEmptySample(void);
-static size_t GetSampleSize(const SAMPLETAG* const s);
 
 UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
@@ -204,13 +205,12 @@ UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pa
       buffertag = SoundGetEmptySample();
     }
   sprintf(buffertag->pName, "SmackBuff %p - SampleSize %u", pbuffer, size); 
-  buffertag->uiSpeed=22050;
   buffertag->n_samples = size;
   buffertag->pData = pbuffer;
-  buffertag->uiFlags =  SAMPLE_16BIT | SAMPLE_STEREO | SAMPLE_ALLOCATED;
+  buffertag->uiFlags =  SAMPLE_STEREO | SAMPLE_ALLOCATED;
   buffertag->uiPanMax        = 64;
   buffertag->uiMaxInstances  = 1;
-  guiSoundMemoryUsed += size * GetSampleSize(buffertag);
+  IncreaseSoundMemoryUsedBySample(buffertag);
 
   SOUNDTAG* const channel = SoundGetFreeChannel();
   if (channel == NULL) return SOUND_ERROR;
@@ -536,260 +536,8 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 
 static size_t GetSampleSize(const SAMPLETAG* const s)
 {
-	return
-		(s->uiFlags & SAMPLE_16BIT  ? 2 : 1) *
-		(s->uiFlags & SAMPLE_STEREO ? 2 : 1);
+	return 2u * (s->uiFlags & SAMPLE_STEREO ? 2 : 1);
 }
-
-
-static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
-{
-	SLOGD(DEBUG_TAG_SOUND, "halfing the sample rate of \"%s\" from %uHz to %uHz", s->pName, s->uiSpeed, s->uiSpeed / 2);
-
-	UINT32 const n_samples = s->n_samples / 2;
-	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
-	if (ndata == NULL) return FALSE;
-	void*  const odata     = s->pData;
-	if (s->uiFlags & SAMPLE_16BIT)
-	{
-		INT16*       const dst = (INT16*)ndata;
-		const INT16* const src = (const INT16*)odata;
-		if (s->uiFlags & SAMPLE_STEREO)
-		{
-			for (size_t i = 0; i < n_samples; ++i)
-			{
-				dst[2 * i + 0] = (src[4 * i + 0] + src[4 * i + 2]) / 2;
-				dst[2 * i + 1] = (src[4 * i + 1] + src[4 * i + 3]) / 2;
-			}
-		}
-		else
-		{
-			for (size_t i = 0; i < n_samples; ++i)
-			{
-				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
-			}
-		}
-	}
-	else
-	{
-		UINT8*       const dst = (UINT8*)ndata;
-		const UINT8* const src = (const UINT8*)odata;
-		if (s->uiFlags & SAMPLE_STEREO)
-		{
-			for (size_t i = 0; i < n_samples; ++i)
-			{
-				dst[2 * i + 0] = (src[4 * i + 0] + src[4 * i + 2]) / 2;
-				dst[2 * i + 1] = (src[4 * i + 1] + src[4 * i + 3]) / 2;
-			}
-		}
-		else
-		{
-			for (size_t i = 0; i < n_samples; ++i)
-			{
-				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
-			}
-		}
-	}
-	s->pData = ndata;
-	free(odata);
-
-	s->n_samples  = n_samples;
-	s->uiSpeed   /= 2;
-	return TRUE;
-}
-
-static BOOLEAN DoubleSampleRate(SAMPLETAG* const s)
-{
-	UINT8 bitcount = s->uiFlags & SAMPLE_16BIT ? 16 : 8;
-
-	SLOGD(DEBUG_TAG_SOUND, "doubling the sample rate of \"%s\" %dbit from %uHz to %uHz", s->pName, bitcount, s->uiSpeed, s->uiSpeed * 2);
-
-	UINT32 const n_samples = s->n_samples * 2;
-	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
-	if (ndata == NULL) return FALSE;
-	void*  const odata     = s->pData;
-	if (bitcount == 16)
-	{
-		INT16*       const dst = (INT16*)ndata;
-		const INT16* const src = (const INT16*)odata;
-		if (s->uiFlags & SAMPLE_STEREO)
-		{
-			for (size_t i = 0; i < s->n_samples; ++i)
-			{
-				INT16 i1c1 = src[2 * i + 0];
-				INT16 i1c2 = src[2 * i + 1];
-				INT16 i2c1 = i != s->n_samples-1 ? src[2 * i + 2] : i1c1;
-				INT16 i2c2 = i != s->n_samples-1 ? src[2 * i + 3] : i1c2;
-
-				dst[4 * i + 0] = i1c1;
-				dst[4 * i + 1] = i1c2;
-				dst[4 * i + 2] = (i1c1 + i2c1) / 2;
-				dst[4 * i + 3] = (i1c2 + i2c2) / 2;
-			}
-		}
-		else
-		{
-			for (size_t i = 0; i < s->n_samples; ++i)
-			{
-				INT16 i1 = src[i];
-				INT16 i2 = i != s->n_samples-1 ? src[i+1] : i1;
-				dst[i*2] = i1;
-				dst[i*2+1] = (i1 + i2) / 2;
-			}
-		}
-	}
-	else
-	{
-		UINT8*       const dst = (UINT8*)ndata;
-		const UINT8* const src = (const UINT8*)odata;
-		if (s->uiFlags & SAMPLE_STEREO)
-		{
-			for (size_t i = 0; i < s->n_samples; ++i)
-			{
-				UINT8 i1c1 = src[2 * i + 0];
-				UINT8 i1c2 = src[2 * i + 1];
-				UINT8 i2c1 = i != s->n_samples-1 ? src[2 * i + 2] : i1c1;
-				UINT8 i2c2 = i != s->n_samples-1 ? src[2 * i + 3] : i1c2;
-
-				dst[4 * i + 0] = i1c1;
-				dst[4 * i + 1] = i1c2;
-				dst[4 * i + 2] = (i1c1 + i2c1) / 2;
-				dst[4 * i + 3] = (i1c2 + i2c2) / 2;
-			}
-		}
-		else
-		{
-			for (size_t i = 0; i < s->n_samples; ++i)
-			{
-				UINT8 i1 = src[i];
-				UINT8 i2 = i != s->n_samples-1 ? src[i+1] : i1;
-				dst[i*2] = i1;
-				dst[i*2+1] = (i1 + i2) / 2;
-			}
-		}
-	}
-	s->pData = ndata;
-	free(odata);
-
-	s->n_samples  = n_samples;
-	s->uiSpeed   *= 2;
-	return TRUE;
-}
-
-
-#define FOURCC(a, b, c, d) ((UINT8)(d) << 24 | (UINT8)(c) << 16 | (UINT8)(b) << 8 | (UINT8)(a))
-
-
-enum WaveFormatTag
-{
-	WAVE_FORMAT_UNKNOWN   = 0x0000,
-	WAVE_FORMAT_PCM       = 0x0001,
-	WAVE_FORMAT_DVI_ADPCM = 0x0011
-};
-
-
-static void LoadPCM(SAMPLETAG* const s, HWFILE const file, UINT32 const size)
-{
-	SGP::Buffer<UINT8> data(size);
-	FileRead(file, data, size);
-
-	s->n_samples = size / GetSampleSize(s);
-	s->pData     = data.Release();
-}
-
-
-static inline int Clamp(int min, int x, int max)
-{
-	if (x < min) return min;
-	if (x > max) return max;
-	return x;
-}
-
-
-static void LoadDVIADPCM(SAMPLETAG* const s, HWFILE const file, UINT16 const block_align)
-{
-	s->uiFlags |= SAMPLE_16BIT;
-
-	size_t       CountSamples = s->n_samples;
-	INT16* const Data         = (INT16*)malloc(CountSamples * GetSampleSize(s));
-	INT16*       D            = Data;
-
-	for (;;)
-	{
-		INT16 CurSample_;
-		FileRead(file, &CurSample_, sizeof(CurSample_));
-
-		UINT8 StepIndex_;
-		FileRead(file, &StepIndex_, sizeof(StepIndex_));
-
-		FileSeek(file, 1 , FILE_SEEK_FROM_CURRENT); // reserved byte
-
-		INT32 CurSample = CurSample_;
-		INT32 StepIndex = StepIndex_;
-
-		*D++ = CurSample;
-		if (--CountSamples == 0)
-		{
-			s->pData  = Data;
-			return;
-		}
-
-		UINT DataCount = block_align / 4;
-		while (--DataCount != 0)
-		{
-			UINT32 DataWord;
-			FileRead(file, &DataWord, sizeof(DataWord));
-			for (UINT i = 0; i < 8; i++)
-			{
-				static const INT16 StepTable[] =
-				{
-							7,     8,     9,    10,    11,    12,    13,    14,
-						 16,    17,    19,    21,    23,    25,    28,    31,
-						 34,    37,    41,    45,    50,    55,    60,    66,
-						 73,    80,    88,    97,   107,   118,   130,   143,
-						157,   173,   190,   209,   230,   253,   279,   307,
-						337,   371,   408,   449,   494,   544,   598,   658,
-						724,   796,   876,   963,  1060,  1166,  1282,  1411,
-					 1552,  1707,  1878,  2066,  2272,  2499,  2749,  3024,
-					 3327,  3660,  4026,  4428,  4871,  5358,  5894,  6484,
-					 7132,  7845,  8630,  9493, 10442, 11487, 12635, 13899,
-					15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794,
-					32767
-				};
-
-				static const INT8 IndexTable[] =
-				{
-					-1, -1, -1, -1, 2, 4, 6, 8
-				};
-
-#if 1
-				INT32 Diff = ((DataWord & 7) * 2 + 1) * StepTable[StepIndex] >> 3;
-#else
-				INT32 Diff = 0;
-				if (DataWord & 4) Diff += StepTable[StepIndex];
-				if (DataWord & 2) Diff += StepTable[StepIndex] >> 1;
-				if (DataWord & 1) Diff += StepTable[StepIndex] >> 2;
-				Diff += StepTable[StepIndex] >> 3;
-#endif
-				if (DataWord & 8) Diff = -Diff;
-				CurSample = Clamp(-32768, CurSample + Diff, 32767);
-				StepIndex = Clamp(0, StepIndex + IndexTable[DataWord & 7], 88);
-				DataWord >>= 4;
-
-				*D++ = CurSample;
-				if (--CountSamples == 0)
-				{
-					s->pData  = Data;
-					return;
-				}
-			}
-		}
-	}
-}
-
-
-
-
 
 /* Loads a sound file from disk into the cache, allocating memory and a slot
  * for storage.
@@ -797,13 +545,13 @@ static void LoadDVIADPCM(SAMPLETAG* const s, HWFILE const file, UINT16 const blo
  * Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
  *          in the cache. */
 static SAMPLETAG* SoundLoadDisk(const char* pFilename)
-try
 {
 	Assert(pFilename != NULL);
 
 	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
 
-	UINT32 uiSize = FileGetSize(hFile);
+  // A pessimistic approach as we dont know the decoded size yet
+	UINT32 uiSize = FileGetSize(hFile) * 2;
 
 	// if insufficient memory, start unloading old samples until either
 	// there's nothing left to unload, or we fit
@@ -834,102 +582,52 @@ try
 
 	memset(s, 0, sizeof(*s));
 
-	FileSeek(hFile, 12, FILE_SEEK_FROM_CURRENT);
+  SDL_RWops* rwOps = FileGetRWOps(hFile);
+  SDL_AudioSpec wavSpec;
+  Uint32 wavLength;
+  Uint8 *wavBuffer;
+  SDL_AudioCVT cvt;
 
-	UINT16 FormatTag = WAVE_FORMAT_UNKNOWN;
-	UINT16 BlockAlign = 0;
-	for (;;)
-	{
-		UINT32 Tag;
-		UINT32 Size;
+  if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
+    SLOGE(DEBUG_TAG_SOUND, "Error loading sound file: %s", SDL_GetError());
+    return NULL;
+  }
 
-		FileRead(hFile, &Tag,  sizeof(Tag));
-		FileRead(hFile, &Size, sizeof(Size));
+  SDL_BuildAudioCVT(&cvt, wavSpec.format, wavSpec.channels, wavSpec.freq, gTargetAudioSpec.format, wavSpec.channels, gTargetAudioSpec.freq);
+  cvt.len = wavLength;
+  cvt.buf = MALLOCN(UINT8, cvt.len * cvt.len_mult);
+  memcpy(cvt.buf, wavBuffer, wavLength);
+  SDL_FreeWAV(wavBuffer);
+  SDL_FreeRW(rwOps);
 
-		switch (Tag)
-		{
-			case FOURCC('f', 'm', 't', ' '):
-				{
-					UINT16 Channels;
-					UINT32 Rate;
-					UINT16 BitsPerSample;
+  if (cvt.needed) {
+    if (SDL_ConvertAudio(&cvt) != 0) {
+      SLOGE(DEBUG_TAG_SOUND, "Error converting sound file: %s", SDL_GetError());
+      return NULL;
+    };
+  }
 
-					FileRead(hFile, &FormatTag,     sizeof(FormatTag));
-					FileRead(hFile, &Channels,      sizeof(Channels));
-					FileRead(hFile, &Rate,          sizeof(Rate));
-					FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT);
-					FileRead(hFile, &BlockAlign,    sizeof(BlockAlign));
-					FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample));
-					SLOGD(DEBUG_TAG_SOUND, "loading file \"%s\" format %u channels %u rate %u bits %u to slot %u",
-								pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
-					switch (FormatTag)
-					{
-						case WAVE_FORMAT_PCM: break;
+  strcpy(s->pName, pFilename);
+  s->n_samples = UINT32(cvt.len * cvt.len_mult / (wavSpec.channels * 2));
+  s->uiFlags     |= SAMPLE_ALLOCATED;
+  if (wavSpec.channels != 1) {
+    s->uiFlags |= SAMPLE_STEREO;
+  }
 
-						case WAVE_FORMAT_DVI_ADPCM:
-							FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT);
-							break;
+  s->uiInstances  = 0;
+  s->pData = cvt.buf;
 
-						default: return NULL;
-					}
+  IncreaseSoundMemoryUsedBySample(s);
 
-					s->uiSpeed = Rate;
-					if (Channels      !=  1) s->uiFlags |= SAMPLE_STEREO;
-					if (BitsPerSample == 16) s->uiFlags |= SAMPLE_16BIT;
-					break;
-				}
-
-			case FOURCC('f', 'a', 'c', 't'):
-				{
-					UINT32 Samples;
-					FileRead(hFile, &Samples, sizeof(Samples));
-					s->n_samples = Samples;
-					break;
-				}
-
-			case FOURCC('d', 'a', 't', 'a'):
-				{
-					switch (FormatTag)
-					{
-						case WAVE_FORMAT_PCM:
-							LoadPCM(s, hFile, Size);
-							goto sound_loaded;
-
-						case WAVE_FORMAT_DVI_ADPCM:
-							LoadDVIADPCM(s, hFile, BlockAlign);
-							goto sound_loaded;
-
-						default: return NULL;
-					}
-				}
-
-			default:
-				FileSeek(hFile, Size, FILE_SEEK_FROM_CURRENT);
-				break;
-		}
-	}
-
-sound_loaded:
-	strcpy(s->pName, pFilename);
-	if (s->uiSpeed == 44100 && !HalfSampleRate(s))
-	{
-		free(s->pData);
-		return NULL;
-	}
-	if (s->uiSpeed == 11025 && !DoubleSampleRate(s))
-	{
-		free(s->pData);
-		return NULL;
-	}
-	guiSoundMemoryUsed += s->n_samples * GetSampleSize(s);
-	s->uiFlags     |= SAMPLE_ALLOCATED;
-	s->uiInstances  = 0;
 	return s;
 }
-catch (...) { return 0; }
 
 
-static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s);
+// Returns TRUE/FALSE that a sample is currently in use for playing a sound.
+static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
+{
+  return s->uiInstances > 0;
+}
 
 
 /* Removes the least-used sound from the cache to make room.
@@ -960,13 +658,6 @@ static BOOLEAN SoundCleanCache(void)
 }
 
 
-// Returns TRUE/FALSE that a sample is currently in use for playing a sound.
-static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
-{
-	return s->uiInstances > 0;
-}
-
-
 /* Returns an available sample.
  *
  * Returns: A free sample or NULL if none are left. */
@@ -988,8 +679,8 @@ static void SoundFreeSample(SAMPLETAG* s)
 
 	assert(s->uiInstances == 0);
 
-	guiSoundMemoryUsed -= s->n_samples * GetSampleSize(s);
-	free(s->pData);
+  DecreaseSoundMemoryUsedBySample(s);
+	MemFree(s->pData);
 	memset(s, 0, sizeof(*s));
 }
 
@@ -1041,48 +732,23 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 mixing:
 				amount = MIN(samples, s->n_samples - Sound->pos);
-				if (s->uiFlags & SAMPLE_16BIT)
+				if (s->uiFlags & SAMPLE_STEREO)
 				{
-					if (s->uiFlags & SAMPLE_STEREO)
+					const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
+					for (UINT32 i = 0; i < amount; ++i)
 					{
-						const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
-						for (UINT32 i = 0; i < amount; ++i)
-						{
-							Stream[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
-							Stream[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
-						}
-					}
-					else
-					{
-						const INT16* const src = (const INT16*)s->pData + Sound->pos;
-						for (UINT32 i = 0; i < amount; i++)
-						{
-							const INT data = src[i];
-							Stream[2 * i + 0] += data * vol_l >> 7;
-							Stream[2 * i + 1] += data * vol_r >> 7;
-						}
+						Stream[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
+						Stream[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 					}
 				}
 				else
 				{
-					if (s->uiFlags & SAMPLE_STEREO)
+					const INT16* const src = (const INT16*)s->pData + Sound->pos;
+					for (UINT32 i = 0; i < amount; i++)
 					{
-						const UINT8* const src = (const UINT8*)s->pData + Sound->pos * 2;
-						for (UINT32 i = 0; i < amount; ++i)
-						{
-							Stream[2 * i + 0] += (src[2 * i + 0] - 128) * vol_l << 1;
-							Stream[2 * i + 1] += (src[2 * i + 1] - 128) * vol_r << 1;
-						}
-					}
-					else
-					{
-						const UINT8* const src = (const UINT8*)s->pData + Sound->pos;
-						for (UINT32 i = 0; i < amount; ++i)
-						{
-							const INT data = (src[i] - 128) << 1;
-							Stream[2 * i + 0] += data * vol_l;
-							Stream[2 * i + 1] += data * vol_r;
-						}
+						const INT data = src[i];
+						Stream[2 * i + 0] += data * vol_l >> 7;
+						Stream[2 * i + 1] += data * vol_r >> 7;
 					}
 				}
 
@@ -1111,15 +777,14 @@ static BOOLEAN SoundInitHardware(void)
 {
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-	SDL_AudioSpec spec;
-	spec.freq     = 22050;
-	spec.format   = AUDIO_S16SYS;
-	spec.channels = 2;
-	spec.samples  = 1024;
-	spec.callback = SoundCallback;
-	spec.userdata = NULL;
+	gTargetAudioSpec.freq     = 44100;
+	gTargetAudioSpec.format   = AUDIO_S16SYS;
+	gTargetAudioSpec.channels = 2;
+	gTargetAudioSpec.samples  = 1024;
+	gTargetAudioSpec.callback = SoundCallback;
+	gTargetAudioSpec.userdata = NULL;
 
-	if (SDL_OpenAudio(&spec, NULL) != 0) return FALSE;
+	if (SDL_OpenAudio(&gTargetAudioSpec, NULL) != 0) return FALSE;
 
 	memset(pSoundList, 0, sizeof(pSoundList));
 	SDL_PauseAudio(0);
