@@ -174,6 +174,8 @@ static BOOLEAN gfTitleBarSurfaceAlreadyActive = FALSE;
 // Mode values
 LaptopMode        guiCurrentLaptopMode;
 LaptopMode        guiPreviousLaptopMode;
+// Used to prevent double free problems. Fixes Stracciatella issue #68:
+LaptopMode        guiLastExitedLaptopMode = LAPTOP_MODE_NONE;
 static LaptopMode guiCurrentWWWMode = LAPTOP_MODE_NONE;
 INT32  giCurrentSubPage;
 
@@ -276,9 +278,6 @@ static BOOLEAN fMinizingProgram = FALSE;
 // process openned queue
 static INT32 gLaptopProgramQueueList[6];
 
-
-// state of createion of minimize button
-static BOOLEAN fCreateMinimizeButton = FALSE;
 
 BOOLEAN fExitingLaptopFlag = FALSE;
 
@@ -554,7 +553,7 @@ static void DeleteDesktopBackground(void);
 static void DeleteLapTopButtons(void);
 static void DeleteLapTopMouseRegions(void);
 static void DeleteLoadPending(void);
-static void ExitLaptopMode(LaptopMode& uiMode);
+static void ExitLaptopMode(LaptopMode uiMode);
 
 
 void ExitLaptop(void)
@@ -864,6 +863,8 @@ do_nothing:
 		RenderWWWProgramTitleBar();
 		if (guiPreviousLaptopMode >= LAPTOP_MODE_WWW) gfShowBookmarks = FALSE;
 	}
+
+	guiLastExitedLaptopMode = LAPTOP_MODE_NONE;
 
 	//Initialize the new mode.
 	switch (guiCurrentLaptopMode)
@@ -1241,8 +1242,12 @@ ScreenID LaptopScreenHandle()
 }
 
 
-static void ExitLaptopMode(LaptopMode& uiMode)
+static void ExitLaptopMode(LaptopMode uiMode)
 {
+	if (guiLastExitedLaptopMode == uiMode) {
+		return;
+	}
+
 	// Deallocate the previous mode that you were in.
 	switch (uiMode)
 	{
@@ -1296,9 +1301,7 @@ static void ExitLaptopMode(LaptopMode& uiMode)
 		CreateDestroyMinimizeButtonForCurrentMode();
 	}
 
-	// This laptop mode is now destroyed, so also destroy the caller's reference to it.
-	// Fixes Stracciatella issue #68.
-	uiMode = LAPTOP_MODE_NONE;
+	guiLastExitedLaptopMode = uiMode;
 }
 
 
@@ -2497,6 +2500,8 @@ static void CreateDestroyMinimizeButtonForCurrentMode(void)
 {
 	// will create the minimize button
 	static BOOLEAN fAlreadyCreated = FALSE;
+	// state of creation of minimize button
+	BOOLEAN fCreateMinimizeButton = FALSE;
 	// check to see if created, if so, do nothing
 
 	// check current mode
