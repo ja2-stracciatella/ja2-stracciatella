@@ -14,6 +14,7 @@
 #include "Timer.h"
 #include <SDL.h>
 #include <assert.h>
+#include <stdexcept>
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -548,7 +549,17 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 {
 	Assert(pFilename != NULL);
 
-	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
+	AutoSGPFile hFile;
+
+	try
+	{
+		hFile = GCM->openGameResForReading(pFilename);
+	}
+	catch (const std::runtime_error& err)
+	{
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: %s", err.what());
+		return NULL;
+	}
 
   // A pessimistic approach as we dont know the decoded size yet
 	UINT32 uiSize = FileGetSize(hFile) * 2;
