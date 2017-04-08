@@ -2002,7 +2002,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 				const ItemModel * tgt_item = GCM->getItem(target.usItem);
 				SoundID const  sound    =
 					tgt_item->isWeapon() ? ATTACH_TO_GUN         :
-					tgt_item->isArmour() ? ATTACH_CERAMIC_PLATES :
+					tgt_item->isArmour() ? NO_SOUND              : // TODO: Fix underlying exception cause
 					tgt_item->isBomb()   ? ATTACH_DETONATOR      :
 					NO_SOUND;
 				if (sound != NO_SOUND) PlayLocationJA2Sample(s->sGridNo, sound, MIDVOLUME, 1);
