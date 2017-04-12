@@ -234,7 +234,7 @@ static char const* const szSoundEffects[NUM_SAMPLES] =
     SOUNDSDIR "/fight bell.wav",                                // 215
     SOUNDSDIR "/helicopter crash sequence.wav",                 // 216
     SOUNDSDIR "/attachment.wav",                                // 217
-    SOUNDSDIR "/ceramic armour insert.wav",                     // 218
+    SOUNDSDIR "/ceramic armor insert.wav",                      // 218
     SOUNDSDIR "/detonator beep.wav",                            // 219
     SOUNDSDIR "/grab roof.wav",                                 // 220
     SOUNDSDIR "/land on roof.wav",                              // 221

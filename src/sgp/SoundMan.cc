@@ -557,7 +557,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	}
 	catch (const std::runtime_error& err)
 	{
-		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: %s", err.what());
+		SLOGE(DEBUG_TAG_ASSERTS, "SoundLoadDisk Error: %s", err.what());
 		return NULL;
 	}
 
