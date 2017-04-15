@@ -2100,10 +2100,10 @@ void ScrollWorld(void)
 		if (!fIgnoreInput)
 		{
 			// Check keys
-			if (_KeyDown(SDLK_UP))    ScrollFlags |= SCROLL_UP;
-			if (_KeyDown(SDLK_DOWN))  ScrollFlags |= SCROLL_DOWN;
-			if (_KeyDown(SDLK_RIGHT)) ScrollFlags |= SCROLL_RIGHT;
-			if (_KeyDown(SDLK_LEFT))  ScrollFlags |= SCROLL_LEFT;
+			if (_KeyDown(SDL_SCANCODE_UP))    ScrollFlags |= SCROLL_UP;
+			if (_KeyDown(SDL_SCANCODE_DOWN))  ScrollFlags |= SCROLL_DOWN;
+			if (_KeyDown(SDL_SCANCODE_RIGHT)) ScrollFlags |= SCROLL_RIGHT;
+			if (_KeyDown(SDL_SCANCODE_LEFT))  ScrollFlags |= SCROLL_LEFT;
 
 			// Do mouse - PUT INTO A TIMER!
 			// Put a counter on starting from mouse, if we have not started already!
