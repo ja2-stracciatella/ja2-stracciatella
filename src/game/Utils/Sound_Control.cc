@@ -74,7 +74,7 @@ static char const* const szSoundEffects[NUM_SAMPLES] =
     SOUNDSDIR "/beep2.wav",                                     // 55
     SOUNDSDIR "/endturn.wav",                                   // 56
     SOUNDSDIR "/ja2 death hit.wav",                             // 57
-    SOUNDSDIR "/doorcr_b.wav",                                  // 58
+    SOUNDSDIR "/doorcr.wav",                                    // 58
     SOUNDSDIR "/head exploding 01.wav",                         // 59
     SOUNDSDIR "/body exploding.wav",                            // 60
     SOUNDSDIR "/explode1.wav",                                  // 61
