@@ -341,7 +341,10 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 	}
 	else if ( pBullet->usFlags & ( BULLET_FLAG_FLAME ) )
 	{
-		AniParams.zCachedFile = TILECACHEDIR "/flmthr2.sti";
+		// The following line used to reference the non-existing animation
+		// "/flmthr2.sti". This could crash the game if the the unfinished
+		// flamethrower is accessed by cheat codes.
+		AniParams.zCachedFile = TILECACHEDIR "/msle_smk.sti";
 		AniParams.sDelay							= (INT16)( 100 );
 	}
 
