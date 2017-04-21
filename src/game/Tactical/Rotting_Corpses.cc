@@ -171,7 +171,9 @@ static const char* const	zNoBloodCorpseFilenames[NUM_CORPSES] =
 	ANIMSDIR "/corpses/ft_dead2_nb.sti",
 	ANIMSDIR "/corpses/s_dead2_nb.sti",
 	ANIMSDIR "/corpses/w_dead2_nb.sti",
-	ANIMSDIR "/corpses/cp_dead2_nb.sti",
+	// The following line used to reference the non-existing animation
+	// cp_dead2_nb.sti.
+	ANIMSDIR "/corpses/cp_dead2.sti",
 	ANIMSDIR "/corpses/ct_dead.sti",
 	ANIMSDIR "/corpses/cw_dead1.sti",
 	ANIMSDIR "/corpses/mn_dead2.sti",
