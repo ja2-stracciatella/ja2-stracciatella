@@ -59,10 +59,10 @@ enum SoundID
   PICKING_LOCK,                 // 28
   GARAGE_DOOR_OPEN,             // 29
   GARAGE_DOOR_CLOSE,            // 30
-  ELEVATOR_DOOR_OPEN,           // 31
-  ELEVATOR_DOOR_CLOSE,          // 32
-  HITECH_DOOR_OPEN,             // 33
-  HITECH_DOOR_CLOSE,            // 34
+  S_UNUSED_31,                  // 31
+  S_UNUSED_32,                  // 32
+  S_UNUSED_33,                  // 33
+  S_UNUSED_34,                  // 34
   CURTAINS_OPEN,                // 35
   CURTAINS_CLOSE,               // 36
   METAL_DOOR_OPEN,              // 37
@@ -207,7 +207,7 @@ enum SoundID
   BCR_DYING,                    // 176
   BCR_DRAGGING,                 // 177
   BCR_SHRIEK,                   // 178
-  BCR_SPITTING,                 // 179
+  S_UNUSED_179,                 // 179
   LCR_MOVEMENT,                 // 180
   LCR_RUPTURE,                  // 181
   LQ_SHRIEK,                    // 182
@@ -244,15 +244,15 @@ enum SoundID
   BIG_SWITCH3_OUT,              // 213
   KLAXON_ALARM,                 // 214
   BOXING_BELL,                  // 215
-  HELI_CRASH,                   // 216
+  S_UNUSED_216,                 // 216
   ATTACH_TO_GUN,                // 217
   ATTACH_CERAMIC_PLATES,        // 218
   ATTACH_DETONATOR,             // 219
   GRAB_ROOF,                    // 220
   LAND_ON_ROOF,                 // 221
-  UNSTEALTHY_OUTSIDE_1,         // 222
-  UNSTEALTHY_OUTSIDE_2,         // 223
-  UNSTEALTHY_INSIDE_1,          // 224
+  S_UNUSED_222,                 // 222
+  S_UNUSED_223,                 // 223
+  S_UNUSED_224,                 // 224
   OPEN_DEFAULT_OPENABLE,        // 225
   CLOSE_DEFAULT_OPENABLE,       // 226
   FIRE_ON_MERC,                 // 227
