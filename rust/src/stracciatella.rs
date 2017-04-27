@@ -191,7 +191,10 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
             }
 
             if let Some(s) = m.opt_str("datadir") {
-                engine_options.vanilla_data_dir = PathBuf::from(s);
+                match fs::canonicalize(PathBuf::from(s)) {
+                    Ok(s) => engine_options.vanilla_data_dir = s,
+                    Err(_) => return Some(String::from("Please specify an existing datadir."))
+                };
             }
 
             if m.opt_strs("mod").len() > 0 {
@@ -632,14 +635,45 @@ mod tests {
     }
 
     #[test]
-    fn parse_json_config_should_return_the_correct_data_dir() {
+    #[cfg(not(windows))]
+    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_linux() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from("/öpt/ja2"));
+        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let dir_path = temp_dir.path().join("foo");
+
+        fs::create_dir_all(dir_path).unwrap();
+
+        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), "/öpt/ja2");
+            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
         }
+    }
+
+    #[test]
+    #[cfg(windows)]
+    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_windows() {
+        let mut engine_options: super::EngineOptions = Default::default();
+        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let dir_path = temp_dir.path().join("foo");
+
+        fs::create_dir_all(dir_path).unwrap();
+
+        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().to_str().unwrap()));
+
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
+        unsafe {
+            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
+        }
+    }
+
+    #[test]
+    fn parse_json_config_should_fail_with_non_existing_directory() {
+        let mut engine_options: super::EngineOptions = Default::default();
+        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from("somethingelse"));
+
+        assert_eq!(super::parse_args(&mut engine_options, input), Some(String::from("Please specify an existing datadir.")));
     }
 
     fn write_temp_folder_with_ja2_ini(contents: &[u8]) -> tempdir::TempDir {
