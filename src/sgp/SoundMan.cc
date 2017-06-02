@@ -549,6 +549,11 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 {
 	Assert(pFilename != NULL);
 
+	if(pFilename[0] == '\0') {
+		SLOGE(DEBUG_TAG_ASSERTS, "SoundLoadDisk Error: pFilename is an empty string.");
+		return NULL;
+	}
+
 	AutoSGPFile hFile;
 
 	try
