@@ -2,6 +2,7 @@
 name = "stracciatella"
 version = "0.1.0"
 authors = ["Stefan Lau <github@stefanlau.com>"]
+release-debuginfo = true
 
 [profile.dev]
 rpath = true

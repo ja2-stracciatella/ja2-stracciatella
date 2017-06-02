@@ -30,7 +30,10 @@ set(CONTACT "JA2 Stracciatella Team <no-email@ja2-stracciatella.github.io>")
 set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime.")
 
 ## Options
-
+# Default CMAKE_BUILD_TYPE to RelWithDebInfo
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug RelWithDebInfo." FORCE)
+endif()
 set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")

@@ -47,10 +47,10 @@ static char const* const szSoundEffects[NUM_SAMPLES] =
     SOUNDSDIR "/picking lock.wav",                              // 28
     SOUNDSDIR "/garage door open.wav",                          // 29
     SOUNDSDIR "/garage door close.wav",                         // 30
-    SOUNDSDIR "/elevator door open.wav",                        // 31
-    SOUNDSDIR "/elevator door close.wav",                       // 32
-    SOUNDSDIR "/high tech door open.wav",                       // 33
-    SOUNDSDIR "/high tech door close.wav",                      // 34
+    NULL,                                                       // 31
+    NULL,                                                       // 32
+    NULL,                                                       // 33
+    NULL,                                                       // 34
     SOUNDSDIR "/curtains door open.wav",                        // 35
     SOUNDSDIR "/curtains door close.wav",                       // 36
     SOUNDSDIR "/metal door open.wav",                           // 37
@@ -74,7 +74,7 @@ static char const* const szSoundEffects[NUM_SAMPLES] =
     SOUNDSDIR "/beep2.wav",                                     // 55
     SOUNDSDIR "/endturn.wav",                                   // 56
     SOUNDSDIR "/ja2 death hit.wav",                             // 57
-    SOUNDSDIR "/doorcr_b.wav",                                  // 58
+    SOUNDSDIR "/doorcr.wav",                                    // 58
     SOUNDSDIR "/head exploding 01.wav",                         // 59
     SOUNDSDIR "/body exploding.wav",                            // 60
     SOUNDSDIR "/explode1.wav",                                  // 61
@@ -195,7 +195,7 @@ static char const* const szSoundEffects[NUM_SAMPLES] =
     SOUNDSDIR "/baby dying 01.wav",                             // 176
     SOUNDSDIR "/baby dragging 01.wav",                          // 177
     SOUNDSDIR "/baby shriek 01.wav",                            // 178
-    SOUNDSDIR "/baby spitting 01.wav",                          // 179
+    NULL,                                                       // 179
     SOUNDSDIR "/larvae movement 01.wav",                        // 180
     SOUNDSDIR "/larvae rupture 01.wav",                         // 181
     SOUNDSDIR "/queen shriek 01.wav",                           // 182
@@ -232,15 +232,15 @@ static char const* const szSoundEffects[NUM_SAMPLES] =
     SOUNDSDIR "/big switch 03 out.wav",                         // 213
     SOUNDSDIR "/alarm.wav",                                     // 214
     SOUNDSDIR "/fight bell.wav",                                // 215
-    SOUNDSDIR "/helicopter crash sequence.wav",                 // 216
+    NULL,                                                       // 216
     SOUNDSDIR "/attachment.wav",                                // 217
-    SOUNDSDIR "/ceramic armour insert.wav",                     // 218
+    SOUNDSDIR "/ceramic armor insert.wav",                      // 218
     SOUNDSDIR "/detonator beep.wav",                            // 219
     SOUNDSDIR "/grab roof.wav",                                 // 220
     SOUNDSDIR "/land on roof.wav",                              // 221
-    SOUNDSDIR "/branch snap 01.wav",                            // 222
-    SOUNDSDIR "/branch snap 02.wav",                            // 223
-    SOUNDSDIR "/indoor bump 01.wav",                            // 224
+    NULL,                                                       // 222
+    NULL,                                                       // 223
+    NULL,                                                       // 224
     SOUNDSDIR "/fridge door open.wav",                          // 225
     SOUNDSDIR "/fridge door close.wav",                         // 226
     SOUNDSDIR "/fire 03 loop.wav",                              // 227
