@@ -582,27 +582,18 @@ void MessageBoxScreenShutdown()
 	gMsgBox.box = 0;
 }
 
-
-static void DoScreenIndependantMessageBoxWithRect(wchar_t const* msg, MessageBoxFlags, MSGBOX_CALLBACK, SGPBox const* centering_rect);
-
-
 // a basic box that don't care what screen we came from
-void DoScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoScreenIndependantMessageBox(wchar_t const* const msg, MessageBoxFlags const flags, MSGBOX_CALLBACK const callback)
 {
 	SGPBox const centering_rect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
-}
-
-static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const msg, MessageBoxFlags const flags, MSGBOX_CALLBACK const callback, SGPBox const* const centering_rect)
-{
 	switch (ScreenID const screen = guiCurrentScreen)
 	{
 		case AUTORESOLVE_SCREEN:
-		case GAME_SCREEN:        DoMessageBox(                    MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, centering_rect); break;
-		case LAPTOP_SCREEN:      DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, msg, screen, flags, callback, centering_rect); break;
-		case MAP_SCREEN:         DoMapMessageBoxWithRect(         MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, centering_rect); break;
-		case OPTIONS_SCREEN:     DoOptionsMessageBoxWithRect(                             msg, screen, flags, callback, centering_rect); break;
-		case SAVE_LOAD_SCREEN:   DoSaveLoadMessageBoxWithRect(                            msg, screen, flags, callback, centering_rect); break;
+		case GAME_SCREEN:        DoMessageBox(                    MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, &centering_rect); break;
+		case LAPTOP_SCREEN:      DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, msg, screen, flags, callback, &centering_rect); break;
+		case MAP_SCREEN:         DoMapMessageBoxWithRect(         MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, &centering_rect); break;
+		case OPTIONS_SCREEN:     DoOptionsMessageBoxWithRect(                             msg, screen, flags, callback, &centering_rect); break;
+		case SAVE_LOAD_SCREEN:   DoSaveLoadMessageBoxWithRect(                            msg, screen, flags, callback, &centering_rect); break;
         default:
             break;
 	}
