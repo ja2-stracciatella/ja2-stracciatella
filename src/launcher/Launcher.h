@@ -10,8 +10,11 @@ public:
     void show();
     int writeIniFile();
     int readFromIniOrDefaults();
+    void setConfigPath(std::string);
 private:
     std::string exePath;
+    std::string configPath;
+    std::string helpString;
 
     void populateChoices();
     void enablePredefinedResolutions();

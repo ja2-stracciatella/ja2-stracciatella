@@ -1,17 +1,25 @@
 #include <string>
 #include "FL/Fl_Native_File_Chooser.H"
 #include <boost/foreach.hpp>
-#include <MicroIni/MicroIni.hpp>
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/filewritestream.h>
 #include "slog/slog.h"
 
-#include "FileMan.h"
+#include "FileMan.h" // for joinPaths
 #include "Launcher.h"
+
+#include <iostream>
+#include <fstream>
 
 #define LAUNCHER_TOPIC DEBUG_TAG_LAUNCHER
 
 #define GAME_SECTION ""
 #define LAUNCHER_SECTION "launcher"
 #define DATA_DIR_KEY "data_dir"
+#define HELP_KEY "help"
 #define GAME_VERSION_KEY "gameVersion"
 #define RESOLUTION_KEY "resolution"
 #define FULLSCREEN_KEY "fullscreen"
@@ -38,8 +46,10 @@ const char* predefinedVersions[] = {
         "RUSSIAN_GOLD"
 };
 
-std::string getJa2Directory() {
-    return FileMan::findConfigFile(FileMan::findConfigFolderAndSwitchIntoIt());
+
+
+void Launcher::setConfigPath(std::string configPath) {
+    this->configPath = FileMan::joinPaths(configPath, "ja2.json");
 }
 
 Launcher::Launcher(const std::string exePath) : StracciatellaLauncher() {
@@ -60,89 +70,138 @@ void Launcher::show() {
 }
 
 int Launcher::writeIniFile() {
-    const std::string configPath = getJa2Directory();
-    MicroIni::File file;
+    std::ofstream ofs(configPath.c_str());
 
-    file[GAME_SECTION][DATA_DIR_KEY] = dataDirectoryInput->value();
+    if (ofs) {
+        rapidjson::OStreamWrapper osw(ofs);
 
-    file[LAUNCHER_SECTION][GAME_VERSION_KEY] = gameVersionInput->value();
-    if (customResolutionButton->value()) {
+        rapidjson::Document document;
+        document.SetObject();
+
+        rapidjson::Document::AllocatorType &allocator = document.GetAllocator();
+        rapidjson::Value val;
+
+        val.SetString(rapidjson::StringRef(helpString.c_str()));
+        document.AddMember(HELP_KEY, val, allocator);
+
+        val.SetString(rapidjson::StringRef(dataDirectoryInput->value()));
+        document.AddMember(DATA_DIR_KEY, val, allocator);
+
+        rapidjson::Value launcher_section(rapidjson::kObjectType);
+        val.SetString(rapidjson::StringRef(gameVersionInput->value()));
+        launcher_section.AddMember(GAME_VERSION_KEY, val, allocator);
+
         char res[80];
-        sprintf(res, "%dx%d", (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
-        file[LAUNCHER_SECTION][RESOLUTION_KEY] = res;
-    } else {
-        file[LAUNCHER_SECTION][RESOLUTION_KEY] = predefinedResolutionInput->value();
-    }
-    file[LAUNCHER_SECTION][FULLSCREEN_KEY] = fullscreenCheckbox->value() == 1 ? "true" : "false";
-    file[LAUNCHER_SECTION][PLAY_SOUNDS_KEY] = playSoundsCheckbox->value() == 1 ? "true" : "false";
+        if (customResolutionButton->value()) {
+            sprintf(res, "%dx%d", (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
+            val.SetString(rapidjson::StringRef(res));
+        } else {
+            val.SetString(rapidjson::StringRef(predefinedResolutionInput->value()));
+        }
+        launcher_section.AddMember(RESOLUTION_KEY, val, allocator);
 
-    if(!file.save(configPath)) {
-        SLOGW(LAUNCHER_TOPIC, "Failed writing to file\" %s", configPath.c_str());
-        return 1;
-    }
-    SLOGD(LAUNCHER_TOPIC, "Succeeded writing to file %s", configPath.c_str());
+        val.SetBool(fullscreenCheckbox->value());
+        launcher_section.AddMember(FULLSCREEN_KEY, val, allocator);
 
-    return 0;
+        val.SetBool(playSoundsCheckbox->value());
+        launcher_section.AddMember(PLAY_SOUNDS_KEY, val, allocator);
+
+
+
+
+        document.AddMember(LAUNCHER_SECTION, launcher_section, allocator);
+
+
+        rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+        document.Accept(writer);
+
+        ofs.close();
+
+        if (ofs) {
+            SLOGD(LAUNCHER_TOPIC, "Succeeded writing to file %s", configPath.c_str());
+            return 0;
+        }
+    }
+    SLOGW(LAUNCHER_TOPIC, "Failed writing to file\" %s", configPath.c_str());
+    return 1;
 }
 
 int Launcher::readFromIniOrDefaults() {
-    const std::string configPath = getJa2Directory();
-    MicroIni::File file;
-    bool failedToRead = false;
+    std::ifstream configs(configPath.c_str());
+    rapidjson::IStreamWrapper configisw(configs);
 
-    if(!file.load(configPath)) {
-        failedToRead = true;
+
+    rapidjson::Document document;
+    document.ParseStream(configisw);
+
+    bool failedToRead = document.Size() < 1;
+
+    if(failedToRead) {
         SLOGW(LAUNCHER_TOPIC, "Failed reading from file %s", configPath.c_str());
     } else {
         SLOGD(LAUNCHER_TOPIC, "Succeeded reading from file %s", configPath.c_str());
     }
 
+    // default values:
+    dataDirectoryInput->value("/some/place/where/the/data/is");
+    gameVersionInput->value("ENGLISH");
+    fullscreenCheckbox->value(1);
+    playSoundsCheckbox->value(1);
+    bool use_default_resolutions = true;
 
-    if (!failedToRead && file[GAME_SECTION].has(DATA_DIR_KEY)) {
-        dataDirectoryInput->value(file[GAME_SECTION][DATA_DIR_KEY].c_str());
-    } else {
-        dataDirectoryInput->value("/some/place/where/the/data/is");
-    }
-    if (!failedToRead && file[LAUNCHER_SECTION].has(GAME_VERSION_KEY)) {
-        gameVersionInput->value(file[LAUNCHER_SECTION][GAME_VERSION_KEY].c_str());
-    } else {
-        gameVersionInput->value("ENGLISH");
-    }
-    if (!failedToRead && file[LAUNCHER_SECTION].has(RESOLUTION_KEY)) {
-        const char* resolutionString = file[LAUNCHER_SECTION][RESOLUTION_KEY].c_str();
-        bool predefinedResolutionFound = false;
 
-        BOOST_FOREACH(const char* str, predefinedResolutions)
-        {
-            if (strcmp(str, resolutionString) == 0) {
-                predefinedResolutionFound = true;
+    if (document.HasMember(DATA_DIR_KEY) && document[DATA_DIR_KEY].IsString()) {
+        dataDirectoryInput->value(document[DATA_DIR_KEY].GetString());
+    }
+
+    if (document.HasMember(HELP_KEY) && document[HELP_KEY].IsString()) {
+        helpString = document[HELP_KEY].GetString();
+    } else {
+        helpString = "Put the directory to your original ja2 installation into the line below";
+    }
+
+    if (document.HasMember(LAUNCHER_SECTION) && document[LAUNCHER_SECTION].IsObject()) {
+        const rapidjson::Value& launcher_section = document[LAUNCHER_SECTION];
+        if (launcher_section.HasMember(GAME_VERSION_KEY) && launcher_section[GAME_VERSION_KEY].IsString()) {
+            gameVersionInput->value(launcher_section[GAME_VERSION_KEY].GetString());
+        }
+        if (launcher_section.HasMember(FULLSCREEN_KEY) && launcher_section[FULLSCREEN_KEY].IsBool()) {
+            fullscreenCheckbox->value(launcher_section[FULLSCREEN_KEY].GetBool());
+        }
+        if (launcher_section.HasMember(PLAY_SOUNDS_KEY) && launcher_section[PLAY_SOUNDS_KEY].IsBool()) {
+            playSoundsCheckbox->value(launcher_section[PLAY_SOUNDS_KEY].GetBool());
+        }
+
+        if (launcher_section.HasMember(RESOLUTION_KEY) && launcher_section[RESOLUTION_KEY].IsString()) {
+            use_default_resolutions = false;
+
+            const char* resolutionString = launcher_section[RESOLUTION_KEY].GetString();
+            bool predefinedResolutionFound = false;
+
+            BOOST_FOREACH(const char* str, predefinedResolutions)
+            {
+                if (strcmp(str, resolutionString) == 0) {
+                    predefinedResolutionFound = true;
+                }
+            }
+            if (predefinedResolutionFound) {
+                enablePredefinedResolutions();
+                predefinedResolutionInput->value(resolutionString);
+            } else {
+                enableCustomResolutions();
+                char* res = const_cast<char*>(resolutionString);
+                const char* x = strtok(res, RESOLUTION_SEPARATOR);
+                const char* y = strtok(NULL, RESOLUTION_SEPARATOR);
+
+                customResolutionXInput->value(atoi(x));
+                customResolutionYInput->value(atoi(y));
             }
         }
-        if (predefinedResolutionFound) {
-            enablePredefinedResolutions();
-            predefinedResolutionInput->value(resolutionString);
-        } else {
-            enableCustomResolutions();
-            char* res = const_cast<char*>(resolutionString);
-            const char* x = strtok(res, RESOLUTION_SEPARATOR);
-            const char* y = strtok(NULL, RESOLUTION_SEPARATOR);
+    }
 
-            customResolutionXInput->value(atoi(x));
-            customResolutionYInput->value(atoi(y));
-        }
-    } else {
+    if (use_default_resolutions) {
         enablePredefinedResolutions();
         predefinedResolutionInput->value(predefinedResolutions[0]);
-    }
-    if (!failedToRead && file[LAUNCHER_SECTION].has(FULLSCREEN_KEY)) {
-        fullscreenCheckbox->value(file[LAUNCHER_SECTION][FULLSCREEN_KEY] == "true" ? 1 : 0);
-    } else {
-        fullscreenCheckbox->value(1);
-    }
-    if (!failedToRead && file[LAUNCHER_SECTION].has(PLAY_SOUNDS_KEY)) {
-        playSoundsCheckbox->value(file[LAUNCHER_SECTION][PLAY_SOUNDS_KEY] == "true" ? 1 : 0);
-    } else {
-        playSoundsCheckbox->value(1);
     }
 
     return failedToRead ? 1 : 0;
