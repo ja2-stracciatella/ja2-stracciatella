@@ -593,15 +593,6 @@ void DoScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags
 	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
 }
 
-
-// a basic box that don't care what screen we came from
-void DoLowerScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
-{
-	SGPBox const centering_rect = {0, (UINT16)(INV_INTERFACE_START_Y / 2), SCREEN_WIDTH, (UINT16)(INV_INTERFACE_START_Y / 2) };
-	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
-}
-
-
 static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const msg, MessageBoxFlags const flags, MSGBOX_CALLBACK const callback, SGPBox const* const centering_rect)
 {
 	switch (ScreenID const screen = guiCurrentScreen)
