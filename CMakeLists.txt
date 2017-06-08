@@ -46,6 +46,7 @@ option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
+option(BUILD_LAUNCHER "Build the ja2 launcher application" OFF)
 
 ## Build
 
@@ -107,7 +108,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DENABLE_ASSERTS)
 endif()
 
-find_package(FLTK)
+if(BUILD_LAUNCHER)
+    find_package(FLTK)
+endif()
 
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
@@ -118,27 +121,34 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 
-set(LAUNCHER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp)
-set(LAUNCHER_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.cc
-)
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
+if(BUILD_LAUNCHER)
+    set(LAUNCHER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp)
+    set(LAUNCHER_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.cc
+    )
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
+endif()
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
-    ${LAUNCHER_INCLUDES}
     ${Boost_INCLUDE_DIRS}
     ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-utf8cpp/source
 )
+
+if(BUILD_LAUNCHER)
+    include_directories(
+        ${LAUNCHER_INCLUDES}
+    )
+endif()
 
 foreach(FILE ${JA2_SOURCES})
   get_filename_component(PARENT_DIR "${FILE}" PATH)
@@ -168,10 +178,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
 
-fltk_wrap_ui(launcherUi src/launcher/StracciatellaLauncher.fl)
-add_library(launcherUi STATIC ${launcherUi_FLTK_UI_SRCS})
-add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-target_link_libraries(${LAUNCHER_BINARY} launcherUi ${SDL2_LIBRARY} ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} slog rust-stracciatella)
+if(BUILD_LAUNCHER)
+    fltk_wrap_ui(launcherUi src/launcher/StracciatellaLauncher.fl)
+    add_library(launcherUi STATIC ${launcherUi_FLTK_UI_SRCS})
+    add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
+    target_link_libraries(${LAUNCHER_BINARY} launcherUi ${SDL2_LIBRARY} ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} slog rust-stracciatella)
+endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
@@ -252,6 +264,9 @@ include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
     install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION bin)
+    if(BUILD_LAUNCHER)
+        install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION bin)
+    endif()
     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION ${INSTALL_LIB_DIR})
     install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
@@ -266,6 +281,9 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
     endif()
 else()
     install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION .)
+    if(BUILD_LAUNCHER)
+        install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION .)
+    endif()
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
