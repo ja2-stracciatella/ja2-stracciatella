@@ -46,7 +46,7 @@ option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
-option(BUILD_LAUNCHER "Build the ja2 launcher application" OFF)
+option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 
 ## Build
 
