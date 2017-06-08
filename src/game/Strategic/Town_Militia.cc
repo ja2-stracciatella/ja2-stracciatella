@@ -457,20 +457,6 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 	}
 }
 
-
-static void DoContinueMilitiaTrainingMessageBox(INT16 const sSectorX, INT16 const sSectorY, wchar_t const* const str, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
-{
-	if( sSectorX <= 10 && sSectorY >= 6 && sSectorY <= 11 )
-	{
-		DoLowerScreenIndependantMessageBox( str, usFlags, ReturnCallback );
-	}
-	else
-	{
-		DoScreenIndependantMessageBox( str, usFlags, ReturnCallback );
-	}
-}
-
-
 // continue training?
 static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* const pSoldier)
 {
@@ -493,7 +479,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	{
 		// loyalty too low to continue training
 		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[8], pTownNames[GetTownIdForSector(sector)], MIN_RATING_TO_TRAIN_TOWN);
-		DoContinueMilitiaTrainingMessageBox( sSectorX, sSectorY, sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
+		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
 
@@ -512,7 +498,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 			// town
 			swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[9], pTownNames[bTownId], MIN_RATING_TO_TRAIN_TOWN);
 		}
-		DoContinueMilitiaTrainingMessageBox( sSectorX, sSectorY, sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
+		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
 
@@ -524,7 +510,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	{
 		// can't afford to continue training
 		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[7], giTotalCostOfTraining);
-		DoContinueMilitiaTrainingMessageBox( sSectorX, sSectorY, sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
+		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
 
@@ -534,7 +520,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	swprintf( sString, lengthof(sString), pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining );
 
 	// ask player whether he'd like to continue training
-	//DoContinueMilitiaTrainingMessageBox( sSectorX, sSectorY, sString, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
+	//DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
 	DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
 }
 

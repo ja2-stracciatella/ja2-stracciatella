@@ -91,7 +91,6 @@ extern wchar_t gzUserDefinedButton2[128];
  * pCenteringRect Rect to center in. Can be NULL */
 void DoMessageBox(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
 void DoScreenIndependantMessageBox(const wchar_t* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
-void DoLowerScreenIndependantMessageBox(const wchar_t* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 //wrappers for other screens
 void DoMapMessageBoxWithRect(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
