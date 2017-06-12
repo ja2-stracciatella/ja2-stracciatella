@@ -5564,8 +5564,8 @@ void SetTacticalPopUpAssignmentBoxXY()
 
 	// ATE: Check if we are past tactical viewport....
 	// Use estimate widths/heights
-	if (sX > g_ui.m_screenWidth  - 100)	sX = g_ui.m_screenWidth  - 100;
-	if (sY > g_ui.m_screenHeight - 130)	sY = g_ui.m_screenHeight - 130;
+	if (sX > g_ui.m_screenWidth  - 50)	sX -= 90;
+	if (sY > g_ui.m_screenHeight)		sY = g_ui.m_screenHeight;
 
 	gsAssignmentBoxesX = sX;
 	gsAssignmentBoxesY = sY;
