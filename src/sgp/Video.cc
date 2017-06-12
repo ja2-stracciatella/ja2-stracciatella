@@ -130,6 +130,8 @@ void InitializeVideoManager(void)
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
+	g_window_flags |= SDL_WINDOW_RESIZABLE;
+
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
