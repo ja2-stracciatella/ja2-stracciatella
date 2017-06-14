@@ -5,7 +5,7 @@
 #include "ScreenIDs.h"
 
 
-#define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
+#define ARE_IN_FADE_IN( )			( gfFadeIn || gfFadeInitialized )
 
 
 

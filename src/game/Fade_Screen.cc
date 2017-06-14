@@ -26,16 +26,16 @@ INT16		gsFadeRealCount;
 BOOLEAN	gfFadeInVideo;
 
 
-FADE_FUNCTION			gFadeFunction = NULL;
+FADE_FUNCTION	gFadeFunction = NULL;
 
-FADE_HOOK		gFadeInDoneCallback	 = NULL;
-FADE_HOOK		gFadeOutDoneCallback = NULL;
+FADE_HOOK	gFadeInDoneCallback  = NULL;
+FADE_HOOK	gFadeOutDoneCallback = NULL;
 
 
-BOOLEAN			gfFadeIn						 = FALSE;
-BOOLEAN			gfFadeOut            = FALSE;
-BOOLEAN			gfFadeOutDone				 = FALSE;
-BOOLEAN			gfFadeInDone				 = FALSE;
+BOOLEAN		gfFadeIn      = FALSE;
+BOOLEAN		gfFadeOut     = FALSE;
+BOOLEAN		gfFadeOutDone = FALSE;
+BOOLEAN		gfFadeInDone  = FALSE;
 
 
 void FadeInNextFrame( )

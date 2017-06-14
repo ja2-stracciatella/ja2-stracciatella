@@ -25,9 +25,9 @@ static UINT8		ubStartHeight = 0;
 static SOLDIERTYPE *pSoldier;
 
 static BOOLEAN fOKFiles = FALSE;
-static UINT8	 ubNumStates = 0;
-static UINT16   *pusStates = NULL;
-static INT8   ubCurLoadedState = 0;
+static UINT8   ubNumStates = 0;
+static UINT16  *pusStates = NULL;
+static INT8    ubCurLoadedState = 0;
 
 
 static void CycleAnimations(void)
@@ -55,9 +55,9 @@ static void BuildListFile(void);
 
 ScreenID AniEditScreenHandle(void)
 {
-  InputAtom					InputEvent;
+	InputAtom		InputEvent;
 	static BOOLEAN		fFirstTime = TRUE;
-	static UINT16			usOldState;
+	static UINT16		usOldState;
 	static BOOLEAN		fToggle = FALSE;
 	static BOOLEAN		fToggle2 = FALSE;
 
@@ -70,7 +70,7 @@ ScreenID AniEditScreenHandle(void)
 		ubStartHeight = ANIM_STAND;
 
 		fFirstTime = FALSE;
-		fToggle		 = FALSE;
+		fToggle    = FALSE;
 		fToggle2   = FALSE;
 		ubCurLoadedState = 0;
 
@@ -111,26 +111,26 @@ ScreenID AniEditScreenHandle(void)
 	}
 
 	if (DequeueEvent(&InputEvent))
-  {
-    if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
-    {
-			 fFirstTime = TRUE;
+	{
+		if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
+		{
+			fFirstTime = TRUE;
 
-			 gfAniEditMode = FALSE;
+			gfAniEditMode = FALSE;
 
-	  	 fFirstTimeInGameScreen = TRUE;
+			fFirstTimeInGameScreen = TRUE;
 
-			 gTacticalStatus.uiFlags &= (~LOADING_SAVED_GAME);
+			gTacticalStatus.uiFlags &= (~LOADING_SAVED_GAME);
 
-			 if ( fOKFiles )
-			 {
-					 MemFree( pusStates );
-			 }
+			if ( fOKFiles )
+			{
+				MemFree( pusStates );
+			}
 
-			 fOKFiles = FALSE;
+				fOKFiles = FALSE;
 
-			 return( GAME_SCREEN );
-    }
+				return( GAME_SCREEN );
+		}
 
 		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_SPACE)
 		{
@@ -150,17 +150,14 @@ ScreenID AniEditScreenHandle(void)
 				switch( ubStartHeight )
 				{
 					case ANIM_STAND:
-
 						usAnim = STANDING;
 						break;
 
 					case ANIM_CROUCH:
-
 						usAnim = CROUCHING;
 						break;
 
 					case ANIM_PRONE:
-
 						usAnim = PRONE;
 						break;
 				}
@@ -193,33 +190,33 @@ ScreenID AniEditScreenHandle(void)
 
 		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_PAGEUP)
 		{
-			 if ( fOKFiles && fToggle2 )
-			 {
-					ubCurLoadedState++;
+			if ( fOKFiles && fToggle2 )
+			{
+				ubCurLoadedState++;
 
-					if ( ubCurLoadedState == ubNumStates )
-					{
-						ubCurLoadedState = 0;
-					}
+				if ( ubCurLoadedState == ubNumStates )
+				{
+					ubCurLoadedState = 0;
+				}
 
-					EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+				EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
 
-			 }
+			}
 		}
 
 		if (InputEvent.usEvent == KEY_UP && InputEvent.usParam == SDLK_PAGEDOWN)
 		{
-			 if ( fOKFiles && fToggle2 )
-			 {
-					ubCurLoadedState--;
+			if ( fOKFiles && fToggle2 )
+			{
+				ubCurLoadedState--;
 
-					if ( ubCurLoadedState == 0 )
-					{
-						ubCurLoadedState = ubNumStates;
-					}
+				if ( ubCurLoadedState == 0 )
+				{
+					ubCurLoadedState = ubNumStates;
+				}
 
-					EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
-			 }
+				EVENT_InitNewSoldierAnim( pSoldier, pusStates[ ubCurLoadedState ], 0 , TRUE );
+			}
 		}
 
 		if ((InputEvent.usEvent == KEY_UP) && (InputEvent.usParam == 'c' ))
@@ -245,10 +242,10 @@ ScreenID AniEditScreenHandle(void)
 			}
 		}
 
-  }
+	}
 
 
-  return( ANIEDIT_SCREEN );
+	return( ANIEDIT_SCREEN );
 
 }
 

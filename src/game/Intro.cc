@@ -35,8 +35,8 @@ extern	BOOLEAN	gfDoneWithSplashScreen;
 
 static SMKFLIC* gpSmackFlic = 0;
 
-#define		SMKINTRO_FIRST_VIDEO				255
-#define		SMKINTRO_NO_VIDEO						-1
+#define SMKINTRO_FIRST_VIDEO	255
+#define SMKINTRO_NO_VIDEO	-1
 
 //enums for the various smacker files
 enum

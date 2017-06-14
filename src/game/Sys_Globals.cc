@@ -18,11 +18,11 @@ UINT32	guiGameCycleCounter = 0;
 
 void SET_ERROR(char const* const String, ...)
 {
-  va_list  ArgPtr;
+	va_list  ArgPtr;
 
-  va_start(ArgPtr, String);
-  vsprintf( gubErrorText, String, ArgPtr);
-  va_end(ArgPtr);
+	va_start(ArgPtr, String);
+	vsprintf( gubErrorText, String, ArgPtr);
+	va_end(ArgPtr);
 
 	SetPendingNewScreen( ERROR_SCREEN );
 

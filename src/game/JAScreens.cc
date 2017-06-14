@@ -46,12 +46,12 @@
 
 
 // GLOBAL FOR PAL EDITOR
-UINT8	 CurrentPalette = 0;
+UINT8 CurrentPalette = 0;
 static BACKGROUND_SAVE* guiBackgroundRect = NO_BGND_RECT;
-BOOLEAN	gfExitPalEditScreen = FALSE;
-BOOLEAN	gfExitDebugScreen = FALSE;
+BOOLEAN gfExitPalEditScreen = FALSE;
+BOOLEAN gfExitDebugScreen = FALSE;
 static BOOLEAN FirstTime = TRUE;
-BOOLEAN	gfDoneWithSplashScreen = FALSE;
+BOOLEAN gfDoneWithSplashScreen = FALSE;
 
 
 INT8 gCurDebugPage = 0;
@@ -101,7 +101,7 @@ void DisplayFrameRate( )
 
 ScreenID ErrorScreenHandle(void)
 {
-  InputAtom  InputEvent;
+	InputAtom  InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
 
 	// Create string
@@ -123,8 +123,8 @@ ScreenID ErrorScreenHandle(void)
 
 	// Check for esc
 	while (DequeueEvent(&InputEvent))
-  {
-    if( InputEvent.usEvent == KEY_DOWN )
+	{
+		if( InputEvent.usEvent == KEY_DOWN )
 		{
 			if (InputEvent.usParam == SDLK_ESCAPE || (InputEvent.usParam == 'x' && InputEvent.usKeyState & ALT_DOWN))
 			{ // Exit the program
@@ -139,27 +139,27 @@ ScreenID ErrorScreenHandle(void)
 
 ScreenID InitScreenHandle(void)
 {
-  static UINT32 splashDisplayedMoment = 0;
+	static UINT32 splashDisplayedMoment = 0;
 	static UINT8					ubCurrentScreen = 255;
 
 	if ( ubCurrentScreen == 255 )
 	{
-    if(isEnglishVersion())
-    {
-      if( gfDoneWithSplashScreen )
-      {
-        ubCurrentScreen = 0;
-      }
-      else
-      {
-        SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-        return( INTRO_SCREEN );
-      }
-    }
-    else
-    {
-      ubCurrentScreen = 0;
-    }
+		if(isEnglishVersion())
+		{
+			if( gfDoneWithSplashScreen )
+			{
+				ubCurrentScreen = 0;
+			}
+			else
+			{
+				SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
+				return( INTRO_SCREEN );
+			}
+		}
+		else
+		{
+			ubCurrentScreen = 0;
+		}
 	}
 
 	if ( ubCurrentScreen == 0 )
@@ -171,7 +171,7 @@ ScreenID InitScreenHandle(void)
 		//ATE: Set to true to reset before going into main screen!
 
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-    splashDisplayedMoment = GetClock();
+		splashDisplayedMoment = GetClock();
 		return( INIT_SCREEN );
 	}
 
@@ -183,13 +183,13 @@ ScreenID InitScreenHandle(void)
 
 	if ( ubCurrentScreen == 2 )
 	{
-    // wait 3 seconds since the splash displayed and then switch
-    // to the main menu
-    if((GetClock() - splashDisplayedMoment) >= 3000)
-    {
-      InitMainMenu( );
-      ubCurrentScreen = 3;
-    }
+		// wait 3 seconds since the splash displayed and then switch
+		// to the main menu
+		if((GetClock() - splashDisplayedMoment) >= 3000)
+		{
+			InitMainMenu( );
+			ubCurrentScreen = 3;
+		}
 		return( INIT_SCREEN );
 	}
 
@@ -293,18 +293,18 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return FALSE;
 
-  switch (pInputEvent->usParam)
-  {
-  	case SDLK_ESCAPE: gfExitPalEditScreen = TRUE; break;
+	switch (pInputEvent->usParam)
+	{
+		case SDLK_ESCAPE: gfExitPalEditScreen = TRUE; break;
 
-  	case 'h': CyclePaletteReplacement(*sel, sel->HeadPal);  break;
-  	case 'v': CyclePaletteReplacement(*sel, sel->VestPal);  break;
-  	case 'p': CyclePaletteReplacement(*sel, sel->PantsPal); break;
-  	case 's': CyclePaletteReplacement(*sel, sel->SkinPal);  break;
+		case 'h': CyclePaletteReplacement(*sel, sel->HeadPal);  break;
+		case 'v': CyclePaletteReplacement(*sel, sel->VestPal);  break;
+		case 'p': CyclePaletteReplacement(*sel, sel->PantsPal); break;
+		case 's': CyclePaletteReplacement(*sel, sel->SkinPal);  break;
 
-  	default: return FALSE;
-  }
-  return TRUE;
+		default: return FALSE;
+	}
+	return TRUE;
 }
 
 
@@ -314,7 +314,7 @@ static BOOLEAN CheckForAndExitTacticalDebug(void)
 	{
 		FirstTime = TRUE;
 		gfExitDebugScreen = FALSE;
-    gfDoVideoScroll = TRUE;
+		gfDoVideoScroll = TRUE;
 		FreeBackgroundRect( guiBackgroundRect );
 		guiBackgroundRect = NO_BGND_RECT;
 		SetRenderHook(NULL);
@@ -346,7 +346,7 @@ ScreenID DebugScreenHandle(void)
 
 	if ( FirstTime )
 	{
-    gfDoVideoScroll = FALSE;
+		gfDoVideoScroll = FALSE;
 		FirstTime = FALSE;
 
 		SetRenderHook(DebugRenderHook);
@@ -371,29 +371,29 @@ static void DebugRenderHook(void)
 
 static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 {
-  if (pInputEvent->usEvent == KEY_UP)
-  {
-  	switch (pInputEvent->usParam)
-  	{
-  		case 'q':
+	if (pInputEvent->usEvent == KEY_UP)
+	{
+		switch (pInputEvent->usParam)
+		{
+			case 'q':
 				gfExitDebugScreen = TRUE;
 				return TRUE;
 
-  		case SDLK_PAGEUP:
+			case SDLK_PAGEUP:
 				gCurDebugPage++;
 				if (gCurDebugPage == MAX_DEBUG_PAGES) gCurDebugPage = 0;
 				FreeBackgroundRect(guiBackgroundRect);
 				guiBackgroundRect = NO_BGND_RECT;
-  			break;
+				break;
 
-  		case SDLK_PAGEDOWN:
+			case SDLK_PAGEDOWN:
 				gCurDebugPage--;
 				if (gCurDebugPage < 0) gCurDebugPage = MAX_DEBUG_PAGES - 1;
 				FreeBackgroundRect(guiBackgroundRect);
 				guiBackgroundRect = NO_BGND_RECT;
-  			break;
-  	}
-  }
+				break;
+		}
+	}
 
 	return FALSE;
 }
@@ -413,19 +413,19 @@ static void DefaultDebugPage1(void)
 
 static void DefaultDebugPage2(void)
 {
-  MPageHeader(L"DEBUG PAGE TWO");
+	MPageHeader(L"DEBUG PAGE TWO");
 }
 
 
 static void DefaultDebugPage3(void)
 {
-  MPageHeader(L"DEBUG PAGE THREE");
+	MPageHeader(L"DEBUG PAGE THREE");
 }
 
 
 static void DefaultDebugPage4(void)
 {
-  MPageHeader(L"DEBUG PAGE FOUR");
+	MPageHeader(L"DEBUG PAGE FOUR");
 }
 
 

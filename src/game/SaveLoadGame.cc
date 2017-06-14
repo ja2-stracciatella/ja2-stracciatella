@@ -197,8 +197,8 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 	}
 
 	// Place a message on the screen telling the user that we are saving the game
-	if (gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD) 
-	{ 
+	if (gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD)
+	{
 		UINT16 actual_w;
 		UINT16 actual_h;
 		AutoMercPopUpBox const save_load_game_message_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &actual_w, &actual_h));
@@ -226,8 +226,8 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		case SAVE_LOAD_SCREEN:
 			gfRedrawSaveLoadScreen = TRUE;
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 
 	// Set the fact that we are saving a game
@@ -299,11 +299,11 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		BYTE* d = data;
 		INJ_U32(   d, header.uiSavedGameVersion)
 		INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
-    {
-      DataWriter writer(d);
-      writer.writeStringAsUTF16(header.sSavedGameDesc, lengthof(header.sSavedGameDesc));
-      d += writer.getConsumed();
-    }
+		{
+			DataWriter writer(d);
+			writer.writeStringAsUTF16(header.sSavedGameDesc, lengthof(header.sSavedGameDesc));
+			d += writer.getConsumed();
+		}
 		INJ_SKIP(  d, 4)
 		INJ_U32(   d, header.uiDay)
 		INJ_U8(    d, header.ubHour)
@@ -469,19 +469,19 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 {
 	BYTE const* d = data;
 	EXTR_U32(   d, h.uiSavedGameVersion);
-  EXTR_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber));
-  if(stracLinuxFormat)
-  {
-    DataReader reader(d);
-    reader.readUTF32(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
-    d += reader.getConsumed();
-  }
-  else
-  {
-    DataReader reader(d);
-    reader.readUTF16(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
-    d += reader.getConsumed();
-  }
+	EXTR_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber));
+	if(stracLinuxFormat)
+	{
+		DataReader reader(d);
+		reader.readUTF32(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
+		d += reader.getConsumed();
+	}
+	else
+	{
+		DataReader reader(d);
+		reader.readUTF16(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
+		d += reader.getConsumed();
+	}
 	EXTR_SKIP(  d, 4)
 	EXTR_U32(   d, h.uiDay)
 	EXTR_U8(    d, h.ubHour)
@@ -499,64 +499,64 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	EXTR_SKIP(  d, 1)
 	EXTR_U32(   d, h.uiRandom)
 	EXTR_SKIP(  d, 112)
-  // XXX: this assert doesn't work anymore
-  // Assert(d == endof(data));
+	// XXX: this assert doesn't work anymore
+	// Assert(d == endof(data));
 }
 
 /** @brief Check if SAVED_GAME_HEADER structure contains valid data.
  * This function does only a basic check.  It might not detect all problems. */
 bool isValidSavedGameHeader(SAVED_GAME_HEADER& h)
 {
-  if((h.sSectorX == 0) && (h.sSectorY == 0) && (h.bSectorZ == -1))
-  {
-    // Special case: sector N/A at the game start
-    if((h.uiDay == 0)
-       || (h.iCurrentBalance < 0))
-    {
-      // invalid for sure
-      return false;
-    }
-  }
-  else
-  {
-    if((h.uiDay == 0)
-       || (h.sSectorX <= 0) || (h.sSectorX > 16)
-       || (h.sSectorY <= 0) || (h.sSectorY > 16)
-       || (h.bSectorZ  < 0) || (h.bSectorZ > 3)
-       || (h.iCurrentBalance < 0))
-    {
-      // invalid for sure
-      return false;
-    }
-  }
-  return true;
+	if((h.sSectorX == 0) && (h.sSectorY == 0) && (h.bSectorZ == -1))
+	{
+		// Special case: sector N/A at the game start
+		if((h.uiDay == 0)
+			|| (h.iCurrentBalance < 0))
+		{
+			// invalid for sure
+			return false;
+		}
+	}
+	else
+	{
+		if((h.uiDay == 0)
+			|| (h.sSectorX <= 0) || (h.sSectorX > 16)
+			|| (h.sSectorY <= 0) || (h.sSectorY > 16)
+			|| (h.bSectorZ  < 0) || (h.bSectorZ > 3)
+			|| (h.iCurrentBalance < 0))
+		{
+			// invalid for sure
+			return false;
+		}
+	}
+	return true;
 }
 
 
 void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *stracLinuxFormat)
 {
-  // first try Strac Linux format
-  try
-  {
-    BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN];
-    FileRead(f, data, sizeof(data));
-    ParseSavedGameHeader(data, h, true);
-    if(isValidSavedGameHeader(h))
-    {
-      *stracLinuxFormat = true;
-      return;
-    }
-  }
-  catch (...) {}
+	// first try Strac Linux format
+	try
+	{
+		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN];
+		FileRead(f, data, sizeof(data));
+		ParseSavedGameHeader(data, h, true);
+		if(isValidSavedGameHeader(h))
+		{
+			*stracLinuxFormat = true;
+			return;
+		}
+	}
+	catch (...) {}
 
-  {
-    // trying vanilla format
-    BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE];
-    FileSeek(f, 0, FILE_SEEK_FROM_START);
-    FileRead(f, data, sizeof(data));
-    ParseSavedGameHeader(data, h, false);
-    *stracLinuxFormat = false;
-  }
+	{
+		// trying vanilla format
+		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE];
+		FileSeek(f, 0, FILE_SEEK_FROM_START);
+		FileRead(f, data, sizeof(data));
+		ParseSavedGameHeader(data, h, false);
+		*stracLinuxFormat = false;
+	}
 }
 
 static void HandleOldBobbyRMailOrders(void);
@@ -620,7 +620,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	AutoSGPFile f(GCM->openUserPrivateFileForReading(std::string(zSaveGameName)));
 
 	SAVED_GAME_HEADER SaveGameHeader;
-  bool stracLinuxFormat;
+	bool stracLinuxFormat;
 	ExtractSavedGameHeaderFromFile(f, SaveGameHeader, &stracLinuxFormat);
 
 	CalcJA2EncryptionSet(SaveGameHeader);
@@ -1137,15 +1137,15 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version,
 		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
 	FOR_EACH(MERCPROFILESTRUCT, i, gMercProfiles)
 	{
-    UINT32 checksum;
-    UINT32 dataSize = stracLinuxFormat ? MERC_PROFILE_SIZE_STRAC_LINUX : MERC_PROFILE_SIZE;
-    std::vector<BYTE> data(dataSize);
-    reader(f, data.data(), dataSize);
-    ExtractMercProfile(data.data(), *i, stracLinuxFormat, &checksum, NULL);
-    if (checksum != SoldierProfileChecksum(*i))
-    {
-      throw std::runtime_error("Merc profile checksum mismatch");
-    }
+		UINT32 checksum;
+		UINT32 dataSize = stracLinuxFormat ? MERC_PROFILE_SIZE_STRAC_LINUX : MERC_PROFILE_SIZE;
+		std::vector<BYTE> data(dataSize);
+		reader(f, data.data(), dataSize);
+		ExtractMercProfile(data.data(), *i, stracLinuxFormat, &checksum, NULL);
+		if (checksum != SoldierProfileChecksum(*i))
+		{
+			throw std::runtime_error("Merc profile checksum mismatch");
+		}
 	}
 }
 
@@ -1201,18 +1201,18 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 
 		//Read in the saved soldier info into a Temp structure
 		SOLDIERTYPE SavedSoldierInfo;
-    if(stracLinuxFormat)
-    {
-      BYTE Data[2352];
-      reader(f, Data, sizeof(Data));
-      ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
-    }
-    else
-    {
+		if(stracLinuxFormat)
+		{
+			BYTE Data[2352];
+			reader(f, Data, sizeof(Data));
+			ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
+		}
+		else
+		{
 			BYTE Data[2328];
 			reader(f, Data, sizeof(Data));
 			ExtractSoldierType(Data, &SavedSoldierInfo, stracLinuxFormat, savegame_version);
-    }
+		}
 
 		SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
 		Assert(s->ubID == i);
@@ -1317,7 +1317,7 @@ void BackupSavedGame(UINT8 const ubSaveGameID)
 		// Only backup existing savegames
 		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir.c_str(), zSourceBackupSaveGameName))
 		{
-			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(), 
+			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(),
 												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
 		}
 	}
@@ -1344,13 +1344,13 @@ static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 static void SaveTempFileToSavedGame(const char* fileName, HWFILE const hFile)
 {
 	AutoSGPFile fileToSave(GCM->openTempFileForReading(fileName));
-  SaveFileToSavedGame(fileToSave, hFile);
+	SaveFileToSavedGame(fileToSave, hFile);
 }
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
 	AutoSGPFile hSrcFile(GCM->openGameResForReading(pSrcFileName));
-  SaveFileToSavedGame(hSrcFile, hFile);
+	SaveFileToSavedGame(hSrcFile, hFile);
 }
 
 
@@ -1373,13 +1373,13 @@ static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 void LoadTempFileFromSavedGame(const char* tempFileName, HWFILE const hFile)
 {
 	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(tempFileName, true));
-  LoadFileFromSavedGame(fileToWrite, hFile);
+	LoadFileFromSavedGame(fileToWrite, hFile);
 }
 
 void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
 	AutoSGPFile hSrcFile(FileMan::openForWriting(pSrcFileName));
-  LoadFileFromSavedGame(hSrcFile, hFile);
+	LoadFileFromSavedGame(hSrcFile, hFile);
 }
 
 static void SaveTacticalStatusToSavedGame(HWFILE const f)
@@ -1532,7 +1532,7 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 
 void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
 {
-  std::string dir = GCM->getSavedGamesFolder();
+	std::string dir = GCM->getSavedGamesFolder();
 	char const* const ext = g_savegame_ext;
 
 	switch (ubSaveGameID)
@@ -2371,10 +2371,10 @@ static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 		}
 	}
 
-  if(isGermanVersion())
-  {
-    set *= 11;
-  }
+	if(isGermanVersion())
+	{
+		set *= 11;
+	}
 
 	set %= 10;
 	set += h.uiDay / 10;

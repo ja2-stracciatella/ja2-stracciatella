@@ -5,17 +5,17 @@
 #include "ScreenIDs.h"
 
 
-#define		BYTESINMEGABYTE						1048576 //1024*1024
-#define		REQUIRED_FREE_SPACE				(20 * BYTESINMEGABYTE)
+#define BYTESINMEGABYTE		1048576 //1024*1024
+#define REQUIRED_FREE_SPACE	(20 * BYTESINMEGABYTE)
 
-#define		SIZE_OF_SAVE_GAME_DESC				128
+#define SIZE_OF_SAVE_GAME_DESC	128
 
-#define		NUM_SAVE_GAME_BACKUPS					2
+#define NUM_SAVE_GAME_BACKUPS	2
 
-#define		GAME_VERSION_LENGTH						16
+#define GAME_VERSION_LENGTH	16
 
-#define		SAVE__ERROR_NUM						99
-#define		SAVE__END_TURN_NUM				98
+#define SAVE__ERROR_NUM		99
+#define SAVE__END_TURN_NUM	98
 
 #define SAVED_GAME_HEADER_ON_DISK_SIZE            (432) /** Size of SAVED_GAME_HEADER on disk in Vanilla and Stracciatella Windows  */
 #define SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN  (688) /** Size of SAVED_GAME_HEADER on disk in Stracciatella Linux */

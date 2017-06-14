@@ -37,7 +37,7 @@
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
 
-#define	DONT_CHECK_FOR_FREE_SPACE		255
+#define DONT_CHECK_FOR_FREE_SPACE 255
 static UINT8 gubCheckForFreeSpaceOnHardDriveCount = DONT_CHECK_FOR_FREE_SPACE;
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
@@ -61,11 +61,11 @@ void InitializeGame(void)
 	SLOGI(DEBUG_TAG_GAMELOOP, "Version #:     %s", g_version_number);
 
 	// Initialize Game Screens.
-  for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
-  {
+	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
+	{
 		void (*const init)(void) = GameScreens[uiIndex].InitializeScreen;
 		if (init) init();
-  }
+	}
 
 	//Init the help screen system
 	InitHelpScreenSystem();
@@ -91,7 +91,7 @@ void    ShutdownGame(void)
 	// handle shutdown of game with respect to preloaded mapscreen graphics
 	HandleRemovalOfPreLoadedMapGraphics( );
 
-	 ShutdownJA2( );
+	ShutdownJA2( );
 
 	//Save the general save game settings to disk
 	SaveGameSettings();
@@ -102,8 +102,8 @@ void    ShutdownGame(void)
 
 static void InsertCommasIntoNumber(wchar_t pString[])
 {
-  INT16 sCounter = 0;
-  INT16 sZeroCount = 0;
+	INT16 sCounter = 0;
+	INT16 sZeroCount = 0;
 	INT16 sTempCounter = 0;
 
 	// go to end of dollar figure
@@ -120,14 +120,14 @@ static void InsertCommasIntoNumber(wchar_t pString[])
 	}
 
 	// at end, start backing up until beginning
-  while (sCounter > 0)
+	while (sCounter > 0)
 	{
 		// enough for a comma?
 		if (sZeroCount == 3)
 		{
 			// reset count
 			sZeroCount = 0;
-      // set tempcounter to current counter
+			// set tempcounter to current counter
 			sTempCounter = sCounter;
 
 			// run until end
@@ -163,7 +163,7 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen);
 void GameLoop(void)
 try
 {
-  InputAtom					InputEvent;
+	InputAtom					InputEvent;
 	ScreenID uiOldScreen = guiCurrentScreen;
 
 	SGPPoint MousePos;
@@ -172,8 +172,8 @@ try
 	MouseSystemHook(MOUSE_POS, MousePos.iX, MousePos.iY);
 	MusicPoll();
 
-  while (DequeueSpecificEvent(&InputEvent, MOUSE_EVENTS))
-  {
+	while (DequeueSpecificEvent(&InputEvent, MOUSE_EVENTS))
+	{
 		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 	}
 
@@ -245,8 +245,8 @@ try
 				case LAPTOP_SCREEN:
 					ExitLaptop();
 					break;
-                default:
-                    break;
+				default:
+					break;
 			}
 		}
 
@@ -265,7 +265,7 @@ try
 
 
 
-  uiOldScreen = (*(GameScreens[guiCurrentScreen].HandleScreen))();
+	uiOldScreen = (*(GameScreens[guiCurrentScreen].HandleScreen))();
 
 	// if the screen has chnaged
 	if( uiOldScreen != guiCurrentScreen )
@@ -374,7 +374,7 @@ void HandleShortCutExitState()
 void EndGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		requestGameExit();
 	}

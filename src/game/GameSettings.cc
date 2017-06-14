@@ -20,20 +20,20 @@
 #include "Random.h"
 #include "SGP.h"
 #include "SaveLoadGame.h"
-#include	"Text.h"
+#include "Text.h"
 #include "GameRes.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#define				GAME_SETTINGS_FILE		"../Ja2.set"
+#define GAME_SETTINGS_FILE "../Ja2.set"
 
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
 
 
 //Change this number when we want any who gets the new build to reset the options
-#define				GAME_SETTING_CURRENT_VERSION		522
+#define GAME_SETTING_CURRENT_VERSION 522
 
 
 static void InitGameSettings(void);
@@ -182,11 +182,11 @@ void InitGameOptions()
 	memset( &gGameOptions, 0, sizeof( GAME_OPTIONS ) );
 
 	//Init the game options
-	gGameOptions.fGunNut					 = FALSE;
-	gGameOptions.fSciFi						 = TRUE;
+	gGameOptions.fGunNut           = FALSE;
+	gGameOptions.fSciFi            = TRUE;
 	gGameOptions.ubDifficultyLevel = DIF_LEVEL_EASY;
-	//gGameOptions.fTurnTimeLimit		 = FALSE;
-	gGameOptions.ubGameSaveMode		 = DIF_CAN_SAVE;
+	//gGameOptions.fTurnTimeLimit  = FALSE;
+	gGameOptions.ubGameSaveMode    = DIF_CAN_SAVE;
 
 }
 
