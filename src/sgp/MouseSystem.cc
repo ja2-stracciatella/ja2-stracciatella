@@ -268,8 +268,8 @@ static void MSYS_UpdateMouseRegion(void)
 	for (cur = MSYS_RegList; cur != NULL; cur = cur->next)
 	{
 		if (cur->uiFlags & (MSYS_REGION_ENABLED | MSYS_ALLOW_DISABLED_FASTHELP) &&
-		  	cur->RegionTopLeftX <= MSYS_CurrentMX && MSYS_CurrentMX <= cur->RegionBottomRightX &&
-		  	cur->RegionTopLeftY <= MSYS_CurrentMY && MSYS_CurrentMY <= cur->RegionBottomRightY)
+			cur->RegionTopLeftX <= MSYS_CurrentMX && MSYS_CurrentMX <= cur->RegionBottomRightX &&
+			cur->RegionTopLeftY <= MSYS_CurrentMY && MSYS_CurrentMY <= cur->RegionBottomRightY)
 		{
 			/* We got the right region. We don't need to check for priorities because
 			 * the whole list is sorted the right way! */
@@ -337,7 +337,7 @@ static void MSYS_UpdateMouseRegion(void)
 			}
 
 			// if the cursor is set and is not set to no cursor
-      if (cur->uiFlags & MSYS_REGION_ENABLED && cur->Cursor != MSYS_NO_CURSOR)
+			if (cur->uiFlags & MSYS_REGION_ENABLED && cur->Cursor != MSYS_NO_CURSOR)
 			{
 				MSYS_SetCurrentCursor(cur->Cursor);
 			}
@@ -356,7 +356,7 @@ static void MSYS_UpdateMouseRegion(void)
 						break;
 					}
 				}
-      }
+			}
 		}
 
 		// OK, if we do not have a button down, any button is game!
@@ -559,7 +559,7 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 	r->MouseYPos          = 0;
 	r->RelativeXPos       = 0;
 	r->RelativeYPos       = 0;
-	r->ButtonState	      = 0;
+	r->ButtonState        = 0;
 	r->Cursor             = crsr;
 	r->MovementCallback   = movecallback;
 	r->ButtonCallback     = buttoncallback;
@@ -669,8 +669,8 @@ void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
 	FastHelpText = MALLOCN(wchar_t, wcslen(text) + 1);
 	wcscpy(FastHelpText, text);
 
-  /* ATE: We could be replacing already existing, active text so let's remove
-   * the region so it be rebuilt */
+	/* ATE: We could be replacing already existing, active text so let's remove
+	 * the region so it be rebuilt */
 
 	if (guiCurrentScreen == MAP_SCREEN) return;
 

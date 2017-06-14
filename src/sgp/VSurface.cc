@@ -122,21 +122,21 @@ void SGPVSurface::Fill(const UINT16 colour)
 }
 
 SGPVSurfaceAuto::SGPVSurfaceAuto(UINT16 w, UINT16 h, UINT8 bpp)
-  : SGPVSurface(w, h, bpp)
+	: SGPVSurface(w, h, bpp)
 {
 }
 
 SGPVSurfaceAuto::SGPVSurfaceAuto(SDL_Surface* surface)
-  : SGPVSurface(surface)
+	: SGPVSurface(surface)
 {
 }
 
 SGPVSurfaceAuto::~SGPVSurfaceAuto()
 {
-  if(surface_)
-  {
-    SDL_FreeSurface(surface_);
-  }
+	if(surface_)
+	{
+		SDL_FreeSurface(surface_);
+	}
 }
 
 
@@ -373,7 +373,7 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 	if (ssurface->flags & SDL_TRUE)
 	{
 //		const UINT16 key = ssurface->format->colorkey;
-        const UINT16 key = 0;
+		const UINT16 key = 0;
 		for (UINT iy = 0; iy < height; ++iy)
 		{
 			const UINT16* s = os;
@@ -420,17 +420,17 @@ void BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, INT
 void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const filename)
 {
 	SGP::AutoPtr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
-  FillVideoSurfaceWithStretch(dst, src);
+	FillVideoSurfaceWithStretch(dst, src);
 }
 
 /** Fill video surface with another one with stretch. */
 void FillVideoSurfaceWithStretch(SGPVSurface* const dst, SGPVSurface* const src)
 {
-  SGPBox srcRec;
-  SGPBox dstRec;
-  srcRec.set(0, 0, src->Width(), src->Height());
-  dstRec.set(0, 0, dst->Width(), dst->Height());
-  BltStretchVideoSurface(dst, src, &srcRec, &dstRec);
+	SGPBox srcRec;
+	SGPBox dstRec;
+	srcRec.set(0, 0, src->Width(), src->Height());
+	dstRec.set(0, 0, dst->Width(), dst->Height());
+	BltStretchVideoSurface(dst, src, &srcRec, &dstRec);
 }
 
 #ifdef SGP_VIDEO_DEBUGGING

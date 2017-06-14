@@ -10,10 +10,10 @@
 class CTranslationTable
 {
 public:
-  unsigned char m_table[TRANSLATION_TABLE_SIZE];
+	unsigned char m_table[TRANSLATION_TABLE_SIZE];
 
-  /** Constructor. */
-  CTranslationTable();
+	/** Constructor. */
+	CTranslationTable();
 };
 
 extern unsigned char const *TranslationTable;

@@ -26,8 +26,8 @@ class SGPVSurface
 	public:
 		SGPVSurface(SDL_Surface*);
 
-  protected:
-    SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
+	protected:
+		SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
 
 	public:
 		virtual ~SGPVSurface();
@@ -132,8 +132,8 @@ class SGPVSurface
 class SGPVSurfaceAuto : public SGPVSurface
 {
 	public:
-    SGPVSurfaceAuto(UINT16 w, UINT16 h, UINT8 bpp);
-    SGPVSurfaceAuto(SDL_Surface*);
+		SGPVSurfaceAuto(UINT16 w, UINT16 h, UINT8 bpp);
+		SGPVSurfaceAuto(SDL_Surface*);
 
 		virtual ~SGPVSurfaceAuto();
 };

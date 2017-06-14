@@ -4,21 +4,21 @@
 #include "Types.h"
 
 
-#define		DEFAULT_SHADOW			2
-#define		MILITARY_SHADOW			67
-#define		NO_SHADOW						0
+#define DEFAULT_SHADOW		2
+#define MILITARY_SHADOW	67
+#define NO_SHADOW		0
 
 // these are bogus! No palette is set yet!
 // font foreground color symbols
-#define		FONT_FCOLOR_WHITE			208
-#define		FONT_FCOLOR_RED				162
-#define		FONT_FCOLOR_NICERED		164
-#define		FONT_FCOLOR_BLUE			203
-#define		FONT_FCOLOR_GREEN			184
-#define		FONT_FCOLOR_YELLOW		144
-#define		FONT_FCOLOR_BROWN			184
-#define		FONT_FCOLOR_ORANGE		76
-#define		FONT_FCOLOR_PURPLE		160
+#define FONT_FCOLOR_WHITE	208
+#define FONT_FCOLOR_RED	162
+#define FONT_FCOLOR_NICERED	164
+#define FONT_FCOLOR_BLUE	203
+#define FONT_FCOLOR_GREEN	184
+#define FONT_FCOLOR_YELLOW	144
+#define FONT_FCOLOR_BROWN	184
+#define FONT_FCOLOR_ORANGE	76
+#define FONT_FCOLOR_PURPLE	160
 
 
 extern SGPFont FontDefault;

@@ -10,13 +10,13 @@
 
 #include "slog/slog.h"
 
-#define	FILENAME_SIZE 256
+#define FILENAME_SIZE		256
 
 
-#define FILE_OK           0x00
-#define FILE_DELETED      0xFF
-#define FILE_OLD          0x01
-#define FILE_DOESNT_EXIST 0xFE
+#define FILE_OK		0x00
+#define FILE_DELETED		0xFF
+#define FILE_OLD		0x01
+#define FILE_DOESNT_EXIST	0xFE
 
 
 // NOTE:  The following structs are also used by the datalib98 utility
@@ -51,16 +51,16 @@ static BOOLEAN InitializeLibrary(const std::string &dataDir, const char* pLibrar
  * @return NULL when successful, otherwise the name of failed library. */
 const char* LibraryDB::InitializeFileDatabase(const std::string &dataDir, const std::vector<std::string> &libs)
 {
-  for (int i = 0; i < libs.size(); i++)
-  {
-    LibraryHeaderStruct lib;
-    if (!InitializeLibrary(dataDir, libs[i].c_str(), &lib))
-    {
-      return libs[i].c_str();
-    }
-    m_libraries.push_back(lib);
-  }
-  return NULL;
+	for (int i = 0; i < libs.size(); i++)
+	{
+		LibraryHeaderStruct lib;
+		if (!InitializeLibrary(dataDir, libs[i].c_str(), &lib))
+		{
+			return libs[i].c_str();
+		}
+		m_libraries.push_back(lib);
+	}
+	return NULL;
 }
 
 
@@ -69,10 +69,10 @@ static BOOLEAN CloseLibrary(LibraryHeaderStruct *lib);
 
 void LibraryDB::ShutDownFileDatabase()
 {
-  for(int i = 0; i < m_libraries.size(); i++)
-  {
+	for(int i = 0; i < m_libraries.size(); i++)
+	{
 		CloseLibrary(&m_libraries[i]);
-  }
+	}
 }
 
 
@@ -97,10 +97,10 @@ static char* Slashify(const char* s)
 static BOOLEAN InitializeLibrary(const std::string &dataDir, const char* const lib_name, LibraryHeaderStruct* const lib)
 try
 {
-  FILE* hFile = FileMan::openForReadingCaseInsensitive(dataDir, lib_name);
-  if (hFile == NULL)
-  {
-      fprintf(stderr, "ERROR: Failed to open library \"%s\"\n", lib_name);
+	FILE* hFile = FileMan::openForReadingCaseInsensitive(dataDir, lib_name);
+	if (hFile == NULL)
+	{
+			fprintf(stderr, "ERROR: Failed to open library \"%s\"\n", lib_name);
 			return FALSE;
 	}
 
@@ -126,9 +126,10 @@ try
 
 		// check to see if the file is not longer than it should be
 		if (strlen(DirEntry.sFileName) + 1 >= FILENAME_SIZE)
-    {
-      SLOGW(DEBUG_TAG_LIBDB, "'%s' from the library '%s' has too long name", DirEntry.sFileName, lib->sLibraryPath.c_str());
-    }
+		{
+			SLOGW(DEBUG_TAG_LIBDB, "'%s' from the library '%s' has too long name",
+				DirEntry.sFileName, lib->sLibraryPath.c_str());
+		}
 
 		FileHeaderStruct* const fh = &fhs[used_entries++];
 
@@ -137,7 +138,7 @@ try
 		fh->uiFileOffset = DirEntry.uiOffset;
 		fh->uiFileLength = DirEntry.uiLength;
 
-    // SLOGD(DEBUG_TAG_LIBDB, "found in %s: %s", lib_name, fh->pFileName);
+		// SLOGD(DEBUG_TAG_LIBDB, "found in %s: %s", lib_name, fh->pFileName);
 	}
 
 	if (used_entries != count_entries)
@@ -151,7 +152,7 @@ try
 	lib->usNumberOfEntries = used_entries;
 
 	lib->sLibraryPath = LibFileHeader.sPathToLibrary;
-  FileMan::slashifyPath(lib->sLibraryPath);
+	FileMan::slashifyPath(lib->sLibraryPath);
 
 	lib->hLibraryHandle = hFile;
 	lib->iNumFilesOpen  = 0;
@@ -200,13 +201,13 @@ static BOOLEAN IsLibraryOpened(const LibraryHeaderStruct *lib);
  * File name should use / (not \\). */
 LibraryHeaderStruct* LibraryDB::GetLibraryFromFileName(const std::string &filename)
 {
-  bool hasDirectoryInPath = filename.find('/') != std::string::npos;
+	bool hasDirectoryInPath = filename.find('/') != std::string::npos;
 
 	// Loop through all the libraries to check which library the file is in
 	LibraryHeaderStruct* best_match = 0;
 
-  for(int i = 0; i < m_libraries.size(); i++)
-  {
+	for(int i = 0; i < m_libraries.size(); i++)
+	{
 		LibraryHeaderStruct* lib = &m_libraries[i];
 
 		if (!IsLibraryOpened(lib)) continue;
@@ -252,8 +253,8 @@ static int CompareFileNames(const void* key, const void* member)
 {
 	const FileHeaderStruct* const TempFileHeader = (const FileHeaderStruct*)member;
 
-  // XXX: need to optimize this
-  // XXX: the whole thing requires refactoring
+	// XXX: need to optimize this
+	// XXX: the whole thing requires refactoring
 	char sFileNameWithPath[FILENAME_SIZE];
 	sprintf(sFileNameWithPath, "%s%s", g_current_lib_path, TempFileHeader->pFileName);
 
@@ -348,8 +349,8 @@ static BOOLEAN IsLibraryOpened(const LibraryHeaderStruct *lib)
 
 TEST(LibraryDatabase, asserts)
 {
-  EXPECT_EQ(sizeof(LIBHEADER), 532);
-  EXPECT_EQ(sizeof(DIRENTRY), 280);
+	EXPECT_EQ(sizeof(LIBHEADER), 532);
+	EXPECT_EQ(sizeof(DIRENTRY), 280);
 }
 
 #endif

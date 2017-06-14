@@ -32,9 +32,9 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	// depending on extension of filename, use different image readers
 	const char* const dot = strstr(filename, ".");
 	if (!dot)
-  {
-    throw std::logic_error("Tried to load image with no extension");
-  }
+	{
+		throw std::logic_error("Tried to load image with no extension");
+	}
 	const char* const ext = dot + 1;
 
 	return
@@ -185,7 +185,7 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 
 
 /**********************************************************************************************
- Create16BPPPaletteShaded
+Create16BPPPaletteShaded
 
 	Creates an 8 bit to 16 bit palette table, and modifies the colors as it builds.
 
@@ -349,10 +349,10 @@ void ConvertRGBDistribution565ToAny(UINT16* const p16BPPData, UINT32 const uiNum
 
 TEST(HImage, asserts)
 {
-  EXPECT_EQ(sizeof(AuxObjectData), 16);
-  EXPECT_EQ(sizeof(RelTileLoc), 2);
-  EXPECT_EQ(sizeof(ETRLEObject), 16);
-  EXPECT_EQ(sizeof(SGPPaletteEntry), 4);
+	EXPECT_EQ(sizeof(AuxObjectData), 16);
+	EXPECT_EQ(sizeof(RelTileLoc), 2);
+	EXPECT_EQ(sizeof(ETRLEObject), 16);
+	EXPECT_EQ(sizeof(SGPPaletteEntry), 4);
 }
 
 #endif
