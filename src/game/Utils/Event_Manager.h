@@ -20,7 +20,7 @@ enum EventQueueID
 	DEMAND_EVENT_QUEUE
 };
 
-#define			EVENT_EXPIRED						0x00000002
+#define EVENT_EXPIRED 0x00000002
 
 void InitializeEventManager(void);
 void ShutdownEventManager(void);

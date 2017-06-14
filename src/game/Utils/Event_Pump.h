@@ -20,53 +20,53 @@ enum GameEvent
 
 struct EV_S_GETNEWPATH
 {
-	UINT16	 usSoldierID;
-	UINT32	 uiUniqueId;
-	INT16		 sDestGridNo;
-	UINT16		usMovementAnim;
+	UINT16 usSoldierID;
+	UINT32 uiUniqueId;
+	INT16  sDestGridNo;
+	UINT16 usMovementAnim;
 };
 
 struct EV_S_SETDESIREDDIRECTION
 {
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	UINT16	usDesiredDirection;
+	UINT16 usSoldierID;
+	UINT32 uiUniqueId;
+	UINT16 usDesiredDirection;
 };
 
 
 struct EV_S_BEGINFIREWEAPON
 {
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	INT16		sTargetGridNo;
-	INT8		bTargetLevel;
-	INT8		bTargetCubeLevel;
+	UINT16 usSoldierID;
+	UINT32 uiUniqueId;
+	INT16  sTargetGridNo;
+	INT8   bTargetLevel;
+	INT8   bTargetCubeLevel;
 };
 
 
 struct EV_S_FIREWEAPON
 {
-	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
-	INT16		sTargetGridNo;
-	INT8		bTargetLevel;
-	INT8		bTargetCubeLevel;
+	UINT16 usSoldierID;
+	UINT32 uiUniqueId;
+	INT16  sTargetGridNo;
+	INT8   bTargetLevel;
+	INT8   bTargetCubeLevel;
 };
 
 struct EV_S_WEAPONHIT
 {
-	UINT16  usSoldierID;
-	UINT16	usWeaponIndex;
-	INT16		sDamage;
-	INT16		sBreathLoss;
-	UINT16	usDirection;
-	INT16		sXPos;
-	INT16		sYPos;
-	INT16		sZPos;
-	INT16		sRange;
-	UINT8		ubAttackerID;
-	UINT8		ubSpecial;
-	UINT8		ubLocation;
+	UINT16 usSoldierID;
+	UINT16 usWeaponIndex;
+	INT16  sDamage;
+	INT16  sBreathLoss;
+	UINT16 usDirection;
+	INT16  sXPos;
+	INT16  sYPos;
+	INT16  sZPos;
+	INT16  sRange;
+	UINT8  ubAttackerID;
+	UINT8  ubSpecial;
+	UINT8  ubLocation;
 };
 
 struct EV_S_NOISE

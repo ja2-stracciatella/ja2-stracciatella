@@ -16,7 +16,7 @@ void CreateProgressBar(UINT8 ubProgressBarID, UINT16 x, UINT16 y, UINT16 w, UINT
 //You may also define a panel to go in behind the progress bar.  You can now assign a title to go with
 //the panel.
 void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
-														 UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom );
+				UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom );
 
 //Assigning a title for the panel will automatically position the text horizontally centered on the
 //panel and vertically centered from the top of the panel, to the top of the progress bar.

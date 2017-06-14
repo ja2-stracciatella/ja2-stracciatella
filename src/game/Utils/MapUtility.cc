@@ -30,10 +30,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#define		MINIMAP_X_SIZE			88
-#define		MINIMAP_Y_SIZE			44
+#define MINIMAP_X_SIZE		88
+#define MINIMAP_Y_SIZE		44
 
-#define		WINDOW_SIZE					2
+#define WINDOW_SIZE		2
 
 static float     gdXStep;
 static float     gdYStep;
@@ -49,7 +49,7 @@ ScreenID MapUtilScreenHandle()
 {
 	static SGPPaletteEntry* p24BitValues = NULL;
 	static INT16		fNewMap = TRUE;
-  InputAtom  InputEvent;
+	InputAtom  InputEvent;
 	static FDLG_LIST *FListNode;
 	static INT16 sFiles = 0, sCurFile = 0;
 	static FDLG_LIST *FileList = NULL;
@@ -81,12 +81,12 @@ ScreenID MapUtilScreenHandle()
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		try
 		{
-      std::vector<std::string> files = GCM->getAllMaps();
-      BOOST_FOREACH(const std::string &file, files)
-      {
-        FileList = AddToFDlgList(FileList, file.c_str());
+			std::vector<std::string> files = GCM->getAllMaps();
+			BOOST_FOREACH(const std::string &file, files)
+			{
+				FileList = AddToFDlgList(FileList, file.c_str());
 				++sFiles;
-      }
+			}
 		}
 		catch (...) { /* XXX ignore */ }
 
@@ -102,7 +102,7 @@ ScreenID MapUtilScreenHandle()
 	//OK, we are here, now loop through files
 	if ( sCurFile == sFiles || FListNode== NULL )
 	{
-    requestGameExit();
+		requestGameExit();
 		return( MAPUTILITY_SCREEN );
 	}
 
@@ -120,7 +120,7 @@ ScreenID MapUtilScreenHandle()
 
 	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, TRUE);
 
-  TrashOverheadMap( );
+	TrashOverheadMap( );
 
 	// OK, NOW PROCESS OVERHEAD MAP ( SHOUIDL BE ON THE FRAMEBUFFER )
 	gdXStep	= SCREEN_WIDTH / 88.f;
@@ -269,11 +269,11 @@ ScreenID MapUtilScreenHandle()
 	InvalidateScreen( );
 
 	while (DequeueEvent(&InputEvent))
-  {
+	{
 		if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
-      { // Exit the program
-        requestGameExit();
-      }
+		{ // Exit the program
+			requestGameExit();
+		}
 	}
 
 	// Set next

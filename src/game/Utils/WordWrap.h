@@ -1,5 +1,5 @@
-#ifndef	__WORDWRAP_H_
-#define	__WORDWRAP_H_
+#ifndef __WORDWRAP_H_
+#define __WORDWRAP_H_
 
 #include "Types.h"
 
@@ -7,28 +7,28 @@
 
 
 // Defines for coded text For use with IanDisplayWrappedString()
-#define				TEXT_SPACE					 32
-#define				TEXT_CODE_NEWLINE		177
-#define				TEXT_CODE_BOLD			178
-#define				TEXT_CODE_CENTER		179
-#define				TEXT_CODE_NEWCOLOR	180
-#define				TEXT_CODE_DEFCOLOR	181
+#define TEXT_SPACE		32
+#define TEXT_CODE_NEWLINE	177
+#define TEXT_CODE_BOLD		178
+#define TEXT_CODE_CENTER	179
+#define TEXT_CODE_NEWCOLOR	180
+#define TEXT_CODE_DEFCOLOR	181
 
 UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, SGPFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags);
 
 
-#define				LEFT_JUSTIFIED		0x00000001
-#define				CENTER_JUSTIFIED	0x00000002
-#define				RIGHT_JUSTIFIED		0x00000004
-#define				TEXT_SHADOWED			0x00000008
+#define LEFT_JUSTIFIED		0x00000001
+#define CENTER_JUSTIFIED	0x00000002
+#define RIGHT_JUSTIFIED		0x00000004
+#define TEXT_SHADOWED		0x00000008
 
-#define				INVALIDATE_TEXT		0x00000010
-#define				DONT_DISPLAY_TEXT	0x00000020			//Wont display the text.  Used if you just want to get how many lines will be displayed
+#define INVALIDATE_TEXT		0x00000010
+#define DONT_DISPLAY_TEXT	0x00000020			//Wont display the text.  Used if you just want to get how many lines will be displayed
 
 #define MARK_DIRTY 0x00000040
 
 
-#define       IAN_WRAP_NO_SHADOW  32
+#define IAN_WRAP_NO_SHADOW  32
 
 
 struct WRAPPED_STRING

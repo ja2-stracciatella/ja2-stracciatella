@@ -53,10 +53,10 @@ void InitializeFonts(void)
 	M(gpSmallFontType1,        FONTSDIR "/smallfont1.sti");
 	M(gpTinyFontType1,         FONTSDIR "/tinyfont1.sti");
 
-  if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
-  {
-    M(gpHugeFont, FONTSDIR "/hugefont.sti");
-  }
+	if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
+	{
+		M(gpHugeFont, FONTSDIR "/hugefont.sti");
+	}
 #undef M
 
 	// Set default for font system
@@ -83,10 +83,10 @@ void ShutdownFonts(void)
 	UnloadFont(gpSmallFontType1);
 	UnloadFont(gpTinyFontType1);
 
-  if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
-  {
-    UnloadFont(gpHugeFont);
-  }
+	if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
+	{
+		UnloadFont(gpHugeFont);
+	}
 }
 
 

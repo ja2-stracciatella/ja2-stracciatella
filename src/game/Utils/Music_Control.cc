@@ -32,7 +32,7 @@ static INT8 gbDeathSongCount   = 0;
 static INT8 gbFadeSpeed = 1;
 
 
-BOOLEAN	       gfForceMusicToTense = FALSE;
+BOOLEAN        gfForceMusicToTense = FALSE;
 static BOOLEAN gfDontRestartSong   = FALSE;
 
 
@@ -67,18 +67,18 @@ static void StartMusicBasedOnMode(void);
 
 void MusicSetVolume(UINT32 uiVolume)
 {
-  INT32 uiOldMusicVolume = uiMusicVolume;
+	INT32 uiOldMusicVolume = uiMusicVolume;
 
 	uiMusicVolume = __min(uiVolume, MAXVOLUME);
 
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
-    // get volume and if 0 stop music!
-    if ( uiMusicVolume == 0 )
-    {
-      gfDontRestartSong = TRUE;
-      MusicStop( );
-    }
+		// get volume and if 0 stop music!
+		if ( uiMusicVolume == 0 )
+		{
+			gfDontRestartSong = TRUE;
+			MusicStop( );
+		}
 		else
 		{
 			SoundSetVolume(uiMusicHandle, uiMusicVolume);
@@ -224,14 +224,14 @@ void MusicPoll(void)
 			}
 			else
 			{
-        if ( !gfDontRestartSong )
-        {
-  				StartMusicBasedOnMode( );
-	  		}
+				if ( !gfDontRestartSong )
+				{
+					StartMusicBasedOnMode( );
+				}
 			}
 
 			gfMusicEnded = FALSE;
-      gfDontRestartSong = FALSE;
+			gfDontRestartSong = FALSE;
 		}
 	}
 }
@@ -245,10 +245,10 @@ void SetMusicMode(MusicMode ubMusicMode)
 	// OK, check if we want to restore
 	if ( ubMusicMode == MUSIC_RESTORE )
 	{
-    if ( bPreviousMode == MUSIC_TACTICAL_VICTORY || bPreviousMode == MUSIC_TACTICAL_DEFEAT )
-    {
-      bPreviousMode = MUSIC_TACTICAL_NOTHING;
-    }
+		if ( bPreviousMode == MUSIC_TACTICAL_VICTORY || bPreviousMode == MUSIC_TACTICAL_DEFEAT )
+		{
+			bPreviousMode = MUSIC_TACTICAL_NOTHING;
+		}
 
 		ubMusicMode = bPreviousMode;
 	}

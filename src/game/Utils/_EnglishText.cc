@@ -30,7 +30,7 @@ GENERAL INSTRUCTIONS
 	string(s) on the next line(s), unless the comment is on the same line as a string.
 - All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching
 	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-  Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
+	Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
 	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
 - If you have a problem or question with translating certain strings, please use "//!!! comment"
 	(without the quotes).  The syntax is important, and should be identical to the comments used with @@@
@@ -59,7 +59,7 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|e)
 
 2) NEWLINE
-  Any place you see a \n within the string, you are looking at another string that is part of the fast help
+	Any place you see a \n within the string, you are looking at another string that is part of the fast help
 	text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
 	to start a new line.
 
@@ -67,19 +67,19 @@ FAST HELP TEXT -- Explains how the syntax of fast help text works.
 
 	Would appear as:
 
-				Clears all the mercs' positions,
-				and allows you to re-enter them manually.
+		Clears all the mercs' positions,
+		and allows you to re-enter them manually.
 
 	NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
-	       in the above example, we would see
+		in the above example, we would see
 
 	WRONG WAY -- spaces before and after the \n
 	EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
 
 	Would appear as: (the second line is moved in a character)
 
-				Clears all the mercs' positions,
- 				 and allows you to re-enter them manually.
+		Clears all the mercs' positions,
+		and allows you to re-enter them manually.
 
 
 @@@ NOTATION
@@ -204,7 +204,7 @@ static StrPointer s_eng_Message[Message_SIZE] =
 	L"Surrender?",
 	L"This person refuses your aid.",
 	L"I DON'T think so!",
-  L"To travel in Skyrider's chopper, you'll have to ASSIGN mercs to VEHICLE/HELICOPTER first.",
+	L"To travel in Skyrider's chopper, you'll have to ASSIGN mercs to VEHICLE/HELICOPTER first.",
 	L"%ls only had enough time to reload ONE gun",
 	L"Bloodcats' turn",
 };
@@ -292,7 +292,7 @@ static const wchar_t *s_eng_pAssignmentStrings[pAssignmentStrings_SIZE] =
 	L"In Trans", // in transit - abbreviated form
 	L"Repair", // repairing
 	L"Practice", // training themselves
-  L"Militia", // training a town to revolt
+	L"Militia", // training a town to revolt
 	L"Trainer", // training a teammate
 	L"Student", // being trained by someone else
 	L"Dead", // dead
@@ -371,7 +371,7 @@ static const wchar_t *s_eng_pLongAssignmentStrings[pLongAssignmentStrings_SIZE] 
 	L"In Transit",
 	L"Repair",
 	L"Practice",
-  L"Train Militia",
+	L"Train Militia",
 	L"Train Teammate",
 	L"Student",
 	L"Dead",
@@ -434,7 +434,7 @@ static const wchar_t *s_eng_pUpperLeftMapScreenStrings[pUpperLeftMapScreenString
 static const wchar_t *s_eng_pTrainingStrings[pTrainingStrings_SIZE] =
 {
 	L"Practice", // tell merc to train self
-  L"Militia", // tell merc to train town
+	L"Militia", // tell merc to train town
 	L"Trainer", // tell merc to act as trainer
 	L"Student", // tell merc to be train by other
 };
@@ -472,11 +472,11 @@ static const wchar_t *s_eng_pAttributeMenuStrings[pAttributeMenuStrings_SIZE] =
 
 static const wchar_t *s_eng_pTrainingMenuStrings[pTrainingMenuStrings_SIZE] =
 {
- L"Practice", // train yourself
- L"Militia", // train the town
- L"Trainer", // train your teammates
- L"Student",  // be trained by an instructor
- L"Cancel", // cancel this menu
+	L"Practice", // train yourself
+	L"Militia", // train the town
+	L"Trainer", // train your teammates
+	L"Student",  // be trained by an instructor
+	L"Cancel", // cancel this menu
 };
 
 
@@ -872,7 +872,7 @@ static const wchar_t *s_eng_zHealthStr[zHealthStr_SIZE] =
 	L"WOUNDED",    	//	>= 45
 	L"HEALTHY",    	//	>= 60
 	L"STRONG",     	// 	>= 75
-  L"EXCELLENT",		// 	>= 90
+	L"EXCELLENT",		// 	>= 90
 };
 
 static const wchar_t *s_eng_gzMoneyAmounts[gzMoneyAmounts_SIZE] =
@@ -916,12 +916,12 @@ static const wchar_t s_eng_zDialogActions[] = L"Done";
 
 static const wchar_t *s_eng_pVehicleStrings[pVehicleStrings_SIZE] =
 {
- L"Eldorado",
- L"Hummer", // a hummer jeep/truck -- military vehicle
- L"Icecream Truck",
- L"Jeep",
- L"Tank",
- L"Helicopter",
+	L"Eldorado",
+	L"Hummer", // a hummer jeep/truck -- military vehicle
+	L"Icecream Truck",
+	L"Jeep",
+	L"Tank",
+	L"Helicopter",
 };
 
 static const wchar_t *s_eng_pShortVehicleStrings[pVehicleStrings_SIZE] =
@@ -1133,7 +1133,7 @@ static StrPointer s_eng_TacticalStr[TacticalStr_SIZE] =
 	L"Lock destroyed",
 	L"Somebody else is trying to use this door.",
 	L"Health: %d/%d\nFuel: %d/%d",
-  L"%ls cannot see %ls.",  // Cannot see person trying to talk to
+	L"%ls cannot see %ls.",  // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -1227,10 +1227,10 @@ static const wchar_t *s_eng_pHelicopterEtaStrings[pHelicopterEtaStrings_SIZE] =
 	L"Total Cost: ", 		// total cost of trip by helicopter
 	L"ETA:  ", 			// ETA is an acronym for "estimated time of arrival"
 	L"Helicopter is low on fuel and must land in hostile territory!",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
-  L"Passengers: ",
-  L"Select Skyrider or the Arrivals Drop-off?",
-  L"Skyrider",
-  L"Arrivals",
+	L"Passengers: ",
+	L"Select Skyrider or the Arrivals Drop-off?",
+	L"Skyrider",
+	L"Arrivals",
 };
 
 static const wchar_t s_eng_sMapLevelString[] = L"Sublevel:"; // what level below the ground is the player viewing in mapscreen
@@ -1454,8 +1454,8 @@ static const wchar_t s_eng_pNewMailStrings[] = L"You have new mail...";
 
 static const wchar_t *s_eng_pDeleteMailStrings[pDeleteMailStrings_SIZE] =
 {
- L"Delete mail?",
- L"Delete UNREAD mail?",
+	L"Delete mail?",
+	L"Delete UNREAD mail?",
 };
 
 
@@ -1496,7 +1496,7 @@ static const wchar_t *s_eng_pFinanceSummary[pFinanceSummary_SIZE] =
 
 static const wchar_t *s_eng_pFinanceHeaders[pFinanceHeaders_SIZE] =
 {
-  L"Day", 				// the day column
+	L"Day", 				// the day column
 	L"Credit", 			// the credits column (to ADD money to your account)
 	L"Debit",				// the debits column (to SUBTRACT money from your account)
 	L"Transaction", // transaction type - see TransactionText below
@@ -1599,8 +1599,8 @@ static const wchar_t *s_eng_pMapErrorString[pMapErrorString_SIZE] =
 	L"Move the squad above ground first.",
 	L"Movement orders? It's a hostile sector!",
 	L"Mercs must be assigned to a squad or vehicle in order to travel.",
-	L"You don't have any team members yet.", 		// you have no members, can't do anything
-	L"Merc can't comply.",			 		// merc can't comply with your order
+	L"You don't have any team members yet.", // you have no members, can't do anything
+	L"Merc can't comply.", // merc can't comply with your order
 //6-10
 	L"%ls needs an escort to move. Place him on a squad with one.", // merc can't move unescorted .. for a male
 	L"%ls needs an escort to move. Place her on a squad with one.", // for a female
@@ -1703,7 +1703,7 @@ static const wchar_t *s_eng_pImpPopUpStrings[pImpPopUpStrings_SIZE] =
 	L"You Are About To Restart The Entire Profiling Process. Are You Certain?",
 	L"Please Enter A Valid Full Name and Gender",
 	L"Preliminary analysis of your financial status shows that you cannot afford a profile analysis.",
-  L"Not A Valid Option At This Time.",
+	L"Not A Valid Option At This Time.",
 	L"To complete an accurate profile, you must have room for at least one team member.",
 	L"Profile Already Completed.",
 };
@@ -1753,10 +1753,10 @@ static const wchar_t s_eng_pFilesTitle[] = L"File Viewer";
 
 static const wchar_t *s_eng_pFilesSenderList[pFilesSenderList_SIZE] =
 {
-  L"Recon Report", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
-	L"Intercept #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
-	L"Intercept #2",	   // second intercept file
-	L"Intercept #3",			 // third intercept file
+	L"Recon Report", // the recon report sent to the player. Recon is an abbreviation for reconissance
+	L"Intercept #1", // first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
+	L"Intercept #2", // second intercept file
+	L"Intercept #3", // third intercept file
 	L"Intercept #4", // fourth intercept file
 	L"Intercept #5", // fifth intercept file
 	L"Intercept #6", // sixth intercept file
@@ -2405,8 +2405,8 @@ static const wchar_t *s_eng_BobbyRText[BobbyRText_SIZE] =
 
 
 /* The following line is used on the Ammunition page.  It is used for help text
- * to display how many items the player's merc has that can use this type of
- * ammo. */
+	* to display how many items the player's merc has that can use this type of
+	* ammo. */
 static const wchar_t s_eng_str_bobbyr_guns_num_guns_that_use_ammo[] = L"Your team has %d weapon(s) that use this type of ammo";
 
 
@@ -2825,7 +2825,7 @@ static const wchar_t *s_eng_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	L"There aren't enough people willing to be trained right now.",
 	L"%ls is full of militia.",
 	L"Merc has a finite contract.",
-  L"Merc's contract is not insured",
+	L"Merc's contract is not insured",
 };
 
 
@@ -2918,7 +2918,7 @@ static const wchar_t *s_eng_zOptionsScreenHelpText[zOptionsToggleText_SIZE] =
 	L"When ON, an additional \"safety\" click will be required for movement in Real-time.",
 
 	//Sleep/Wake notification
-  L"When ON, you will be notified when mercs on \"assignment\" go to sleep and resume work.",
+	L"When ON, you will be notified when mercs on \"assignment\" go to sleep and resume work.",
 
 	//Use the metric system
 	L"When ON, uses the metric system for measurements; otherwise it uses the Imperial system.",
@@ -2989,8 +2989,8 @@ static const wchar_t *s_eng_pDeliveryLocationStrings[pDeliveryLocationStrings_SI
 };
 
 /* This string is used in the IMP character generation.  It is possible to
- * select 0 ability in a skill meaning you can't use it.  This text is
- * confirmation to the player. */
+	* select 0 ability in a skill meaning you can't use it.  This text is
+	* confirmation to the player. */
 static const wchar_t s_eng_pSkillAtZeroWarning[]    = L"Are you sure? A value of zero means NO ability in this skill.";
 static const wchar_t s_eng_pIMPBeginScreenStrings[] = L"( 8 Characters Max )";
 static const wchar_t s_eng_pIMPFinishButtonText[]   = L"Analyzing";
@@ -3033,8 +3033,8 @@ static const wchar_t *s_eng_pMessageStrings[pMessageStrings_SIZE] =
 	L"USD",					//Abbreviation to US dollars
 	L"n/a",					//Lowercase acronym for not applicable.
 	L"Meanwhile",		//Meanwhile
-	L"%ls has arrived in sector %ls%ls", //Name/Squad has arrived in sector A9.  Order must not change without notifying
-																		//SirTech
+	L"%ls has arrived in sector %ls%ls",	//Name/Squad has arrived in sector A9.  Order must not
+						//change without notifyingSirTech
 	L"Version",
 	L"Empty Quick Save Slot",
 	L"This slot is reserved for Quick Saves made from the tactical and map screens using ALT+S.",
@@ -3060,8 +3060,8 @@ static const wchar_t *s_eng_pMessageStrings[pMessageStrings_SIZE] =
 	L"Throw",
 	L"Pass",
 
-	L"%ls passed to %ls.", //"Item" passed to "merc".  Please try to keep the item %s before the merc %s, otherwise,
-											 //must notify SirTech.
+	L"%ls passed to %ls.", 	//"Item" passed to "merc".  Please try to keep the item %s before the merc %s,
+				//otherwise, must notify SirTech.
 	L"No room to pass %ls to %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
@@ -3101,7 +3101,7 @@ static const wchar_t *s_eng_pMessageStrings[pMessageStrings_SIZE] =
 	L"A save has been created called, SaveGame99.sav.  If needed, rename it to SaveGame01 - SaveGame10 and then you will have access to it in the Load screen.",
 	L"%ls drank some %ls",
 	L"A package has arrived in Drassen.",
- 	L"%ls should arrive at the designated drop-off point (sector %ls) on day %d, at approximately %ls.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	L"%ls should arrive at the designated drop-off point (sector %ls) on day %d, at approximately %ls.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	L"History log updated.",
 };
 
@@ -3343,7 +3343,7 @@ static const wchar_t *s_eng_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	//14
 	L"Arulco",
 
-  L"(roof)",
+	L"(roof)",
 
 	L"Health: %d/%d",
 
@@ -3353,7 +3353,7 @@ static const wchar_t *s_eng_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 
 	L"The %ls is full!",  //(ex "The ice cream truck is full")
 
-  L"%ls does not need immediate first aid or bandaging but rather more serious medical attention and/or rest.",
+	L"%ls does not need immediate first aid or bandaging but rather more serious medical attention and/or rest.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
@@ -3416,7 +3416,7 @@ static const wchar_t *s_eng_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	//46-48
 	L"%ls's gun barrel extender falls off!",
 	L"No more than %d militia trainers are permitted per sector.",
-  L"Are you sure?",
+	L"Are you sure?",
 
 	//49-50
 	L"Time Compression",
@@ -3440,7 +3440,7 @@ static const wchar_t *s_eng_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	L"Escort John and Mary?",
 
 	// 58
-  L"Switch Activated.",
+	L"Switch Activated.",
 };
 
 static const wchar_t s_eng_str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been smashed!";
@@ -3476,14 +3476,14 @@ static const wchar_t *s_eng_str_stat_list[str_stat_list_SIZE] =
 
 static const wchar_t *s_eng_str_aim_sort_list[str_aim_sort_list_SIZE] =
 {
-  s_eng_str_aim_sort_price,
-  s_eng_str_aim_sort_experience,
-  s_eng_str_aim_sort_marksmanship,
-  s_eng_str_aim_sort_medical,
-  s_eng_str_aim_sort_explosives,
-  s_eng_str_aim_sort_mechanical,
-  s_eng_str_aim_sort_ascending,
-  s_eng_str_aim_sort_descending,
+	s_eng_str_aim_sort_price,
+	s_eng_str_aim_sort_experience,
+	s_eng_str_aim_sort_marksmanship,
+	s_eng_str_aim_sort_medical,
+	s_eng_str_aim_sort_explosives,
+	s_eng_str_aim_sort_mechanical,
+	s_eng_str_aim_sort_ascending,
+	s_eng_str_aim_sort_descending,
 };
 
 // VERY TRUNCATED FILE COPIED FROM JA2.5 FOR ITS FEATURES FOR JA2 GOLD
@@ -3516,229 +3516,229 @@ static const wchar_t *s_eng_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_t
 /** English language resources. */
 LanguageRes g_LanguageResEnglish = {
 
-  s_eng_WeaponType,
+	s_eng_WeaponType,
 
-  s_eng_Message,
-  s_eng_TeamTurnString,
-  s_eng_pAssignMenuStrings,
-  s_eng_pTrainingStrings,
-  s_eng_pTrainingMenuStrings,
-  s_eng_pAttributeMenuStrings,
-  s_eng_pVehicleStrings,
-  s_eng_pShortAttributeStrings,
-  s_eng_pContractStrings,
-  s_eng_pAssignmentStrings,
-  s_eng_pConditionStrings,
-  s_eng_pTownNames,
-  s_eng_g_towns_locative,
-  s_eng_pPersonnelScreenStrings,
-  s_eng_pUpperLeftMapScreenStrings,
-  s_eng_pTacticalPopupButtonStrings,
-  s_eng_pSquadMenuStrings,
-  s_eng_pDoorTrapStrings,
-  s_eng_pLongAssignmentStrings,
-  s_eng_pMapScreenMouseRegionHelpText,
-  s_eng_pNoiseVolStr,
-  s_eng_pNoiseTypeStr,
-  s_eng_pDirectionStr,
-  s_eng_pRemoveMercStrings,
-  s_eng_sTimeStrings,
-  s_eng_pLandTypeStrings,
-  s_eng_pInvPanelTitleStrings,
-  s_eng_pPOWStrings,
-  s_eng_pMilitiaString,
-  s_eng_pMilitiaButtonString,
-  s_eng_pEpcMenuStrings,
-  s_eng_pRepairStrings,
-  s_eng_sPreStatBuildString,
-  s_eng_sStatGainStrings,
-  s_eng_pHelicopterEtaStrings,
-  s_eng_sMapLevelString,
-  s_eng_gsLoyalString,
-  s_eng_gsUndergroundString,
-  s_eng_gsTimeStrings,
-  s_eng_sFacilitiesStrings,
-  s_eng_pMapPopUpInventoryText,
-  s_eng_pwTownInfoStrings,
-  s_eng_pwMineStrings,
-  s_eng_pwMiscSectorStrings,
-  s_eng_pMapInventoryErrorString,
-  s_eng_pMapInventoryStrings,
-  s_eng_pMovementMenuStrings,
-  s_eng_pUpdateMercStrings,
-  s_eng_pMapScreenBorderButtonHelpText,
-  s_eng_pMapScreenBottomFastHelp,
-  s_eng_pMapScreenBottomText,
-  s_eng_pMercDeadString,
-  s_eng_pSenderNameList,
-  s_eng_pNewMailStrings,
-  s_eng_pDeleteMailStrings,
-  s_eng_pEmailHeaders,
-  s_eng_pEmailTitleText,
-  s_eng_pFinanceTitle,
-  s_eng_pFinanceSummary,
-  s_eng_pFinanceHeaders,
-  s_eng_pTransactionText,
-  s_eng_pMoralStrings,
-  s_eng_pSkyriderText,
-  s_eng_str_left_equipment,
-  s_eng_pMapScreenStatusStrings,
-  s_eng_pMapScreenPrevNextCharButtonHelpText,
-  s_eng_pEtaString,
-  s_eng_pShortVehicleStrings,
-  s_eng_pTrashItemText,
-  s_eng_pMapErrorString,
-  s_eng_pMapPlotStrings,
-  s_eng_pBullseyeStrings,
-  s_eng_pMiscMapScreenMouseRegionHelpText,
-  s_eng_str_he_leaves_where_drop_equipment,
-  s_eng_str_she_leaves_where_drop_equipment,
-  s_eng_str_he_leaves_drops_equipment,
-  s_eng_str_she_leaves_drops_equipment,
-  s_eng_pImpPopUpStrings,
-  s_eng_pImpButtonText,
-  s_eng_pExtraIMPStrings,
-  s_eng_pFilesTitle,
-  s_eng_pFilesSenderList,
-  s_eng_pHistoryLocations,
-  s_eng_pHistoryStrings,
-  s_eng_pHistoryHeaders,
-  s_eng_pHistoryTitle,
-  s_eng_pShowBookmarkString,
-  s_eng_pWebPagesTitles,
-  s_eng_pWebTitle,
-  s_eng_pPersonnelString,
-  s_eng_pErrorStrings,
-  s_eng_pDownloadString,
-  s_eng_pBookMarkStrings,
-  s_eng_pLaptopIcons,
-  s_eng_gsAtmStartButtonText,
-  s_eng_pPersonnelTeamStatsStrings,
-  s_eng_pPersonnelCurrentTeamStatsStrings,
-  s_eng_pPersonelTeamStrings,
-  s_eng_pPersonnelDepartedStateStrings,
-  s_eng_pMapHortIndex,
-  s_eng_pMapVertIndex,
-  s_eng_pMapDepthIndex,
-  s_eng_pLaptopTitles,
-  s_eng_pDayStrings,
-  s_eng_pMilitiaConfirmStrings,
-  s_eng_pDeliveryLocationStrings,
-  s_eng_pSkillAtZeroWarning,
-  s_eng_pIMPBeginScreenStrings,
-  s_eng_pIMPFinishButtonText,
-  s_eng_pIMPFinishStrings,
-  s_eng_pIMPVoicesStrings,
-  s_eng_pPersTitleText,
-  s_eng_pPausedGameText,
-  s_eng_zOptionsToggleText,
-  s_eng_zOptionsScreenHelpText,
-  s_eng_pDoctorWarningString,
-  s_eng_pMilitiaButtonsHelpText,
-  s_eng_pMapScreenJustStartedHelpText,
-  s_eng_pLandMarkInSectorString,
-  s_eng_gzMercSkillText,
-  s_eng_gzNonPersistantPBIText,
-  s_eng_gzMiscString,
-  s_eng_wMapScreenSortButtonHelpText,
-  s_eng_pNewNoiseStr,
-  s_eng_gzLateLocalizedString,
-  s_eng_pAntiHackerString,
-  s_eng_pMessageStrings,
-  s_eng_ItemPickupHelpPopup,
-  s_eng_TacticalStr,
-  s_eng_LargeTacticalStr,
-  s_eng_zDialogActions,
-  s_eng_zDealerStrings,
-  s_eng_zTalkMenuStrings,
-  s_eng_gzMoneyAmounts,
-  s_eng_gzProsLabel,
-  s_eng_gzConsLabel,
-  s_eng_gMoneyStatsDesc,
-  s_eng_gWeaponStatsDesc,
-  s_eng_sKeyDescriptionStrings,
-  s_eng_zHealthStr,
-  s_eng_zVehicleName,
-  s_eng_pExitingSectorHelpText,
-  s_eng_InsContractText,
-  s_eng_InsInfoText,
-  s_eng_MercAccountText,
-  s_eng_MercInfo,
-  s_eng_MercNoAccountText,
-  s_eng_MercHomePageText,
-  s_eng_sFuneralString,
-  s_eng_sFloristText,
-  s_eng_sOrderFormText,
-  s_eng_sFloristGalleryText,
-  s_eng_sFloristCards,
-  s_eng_BobbyROrderFormText,
-  s_eng_BobbyRText,
-  s_eng_str_bobbyr_guns_num_guns_that_use_ammo,
-  s_eng_BobbyRaysFrontText,
-  s_eng_AimSortText,
-  s_eng_str_aim_sort_price,
-  s_eng_str_aim_sort_experience,
-  s_eng_str_aim_sort_marksmanship,
-  s_eng_str_aim_sort_medical,
-  s_eng_str_aim_sort_explosives,
-  s_eng_str_aim_sort_mechanical,
-  s_eng_str_aim_sort_ascending,
-  s_eng_str_aim_sort_descending,
-  s_eng_AimPolicyText,
-  s_eng_AimMemberText,
-  s_eng_CharacterInfo,
-  s_eng_VideoConfercingText,
-  s_eng_AimPopUpText,
-  s_eng_AimLinkText,
-  s_eng_AimHistoryText,
-  s_eng_AimFiText,
-  s_eng_AimAlumniText,
-  s_eng_AimScreenText,
-  s_eng_AimBottomMenuText,
-  s_eng_zMarksMapScreenText,
-  s_eng_gpStrategicString,
-  s_eng_gpGameClockString,
-  s_eng_SKI_Text,
-  s_eng_SkiMessageBoxText,
-  s_eng_zSaveLoadText,
-  s_eng_zOptionsText,
-  s_eng_gzGIOScreenText,
-  s_eng_gzHelpScreenText,
-  s_eng_gzLaptopHelpText,
-  s_eng_gzMoneyWithdrawMessageText,
-  s_eng_gzCopyrightText,
-  s_eng_BrokenLinkText,
-  s_eng_gzBobbyRShipmentText,
-  s_eng_zGioDifConfirmText,
-  s_eng_gzCreditNames,
-  s_eng_gzCreditNameTitle,
-  s_eng_gzCreditNameFunny,
-  s_eng_pContractButtonString,
-  s_eng_gzIntroScreen,
-  s_eng_pUpdatePanelButtons,
-  s_eng_sRepairsDoneString,
-  s_eng_str_ceramic_plates_smashed,
-  s_eng_str_arrival_rerouted,
+	s_eng_Message,
+	s_eng_TeamTurnString,
+	s_eng_pAssignMenuStrings,
+	s_eng_pTrainingStrings,
+	s_eng_pTrainingMenuStrings,
+	s_eng_pAttributeMenuStrings,
+	s_eng_pVehicleStrings,
+	s_eng_pShortAttributeStrings,
+	s_eng_pContractStrings,
+	s_eng_pAssignmentStrings,
+	s_eng_pConditionStrings,
+	s_eng_pTownNames,
+	s_eng_g_towns_locative,
+	s_eng_pPersonnelScreenStrings,
+	s_eng_pUpperLeftMapScreenStrings,
+	s_eng_pTacticalPopupButtonStrings,
+	s_eng_pSquadMenuStrings,
+	s_eng_pDoorTrapStrings,
+	s_eng_pLongAssignmentStrings,
+	s_eng_pMapScreenMouseRegionHelpText,
+	s_eng_pNoiseVolStr,
+	s_eng_pNoiseTypeStr,
+	s_eng_pDirectionStr,
+	s_eng_pRemoveMercStrings,
+	s_eng_sTimeStrings,
+	s_eng_pLandTypeStrings,
+	s_eng_pInvPanelTitleStrings,
+	s_eng_pPOWStrings,
+	s_eng_pMilitiaString,
+	s_eng_pMilitiaButtonString,
+	s_eng_pEpcMenuStrings,
+	s_eng_pRepairStrings,
+	s_eng_sPreStatBuildString,
+	s_eng_sStatGainStrings,
+	s_eng_pHelicopterEtaStrings,
+	s_eng_sMapLevelString,
+	s_eng_gsLoyalString,
+	s_eng_gsUndergroundString,
+	s_eng_gsTimeStrings,
+	s_eng_sFacilitiesStrings,
+	s_eng_pMapPopUpInventoryText,
+	s_eng_pwTownInfoStrings,
+	s_eng_pwMineStrings,
+	s_eng_pwMiscSectorStrings,
+	s_eng_pMapInventoryErrorString,
+	s_eng_pMapInventoryStrings,
+	s_eng_pMovementMenuStrings,
+	s_eng_pUpdateMercStrings,
+	s_eng_pMapScreenBorderButtonHelpText,
+	s_eng_pMapScreenBottomFastHelp,
+	s_eng_pMapScreenBottomText,
+	s_eng_pMercDeadString,
+	s_eng_pSenderNameList,
+	s_eng_pNewMailStrings,
+	s_eng_pDeleteMailStrings,
+	s_eng_pEmailHeaders,
+	s_eng_pEmailTitleText,
+	s_eng_pFinanceTitle,
+	s_eng_pFinanceSummary,
+	s_eng_pFinanceHeaders,
+	s_eng_pTransactionText,
+	s_eng_pMoralStrings,
+	s_eng_pSkyriderText,
+	s_eng_str_left_equipment,
+	s_eng_pMapScreenStatusStrings,
+	s_eng_pMapScreenPrevNextCharButtonHelpText,
+	s_eng_pEtaString,
+	s_eng_pShortVehicleStrings,
+	s_eng_pTrashItemText,
+	s_eng_pMapErrorString,
+	s_eng_pMapPlotStrings,
+	s_eng_pBullseyeStrings,
+	s_eng_pMiscMapScreenMouseRegionHelpText,
+	s_eng_str_he_leaves_where_drop_equipment,
+	s_eng_str_she_leaves_where_drop_equipment,
+	s_eng_str_he_leaves_drops_equipment,
+	s_eng_str_she_leaves_drops_equipment,
+	s_eng_pImpPopUpStrings,
+	s_eng_pImpButtonText,
+	s_eng_pExtraIMPStrings,
+	s_eng_pFilesTitle,
+	s_eng_pFilesSenderList,
+	s_eng_pHistoryLocations,
+	s_eng_pHistoryStrings,
+	s_eng_pHistoryHeaders,
+	s_eng_pHistoryTitle,
+	s_eng_pShowBookmarkString,
+	s_eng_pWebPagesTitles,
+	s_eng_pWebTitle,
+	s_eng_pPersonnelString,
+	s_eng_pErrorStrings,
+	s_eng_pDownloadString,
+	s_eng_pBookMarkStrings,
+	s_eng_pLaptopIcons,
+	s_eng_gsAtmStartButtonText,
+	s_eng_pPersonnelTeamStatsStrings,
+	s_eng_pPersonnelCurrentTeamStatsStrings,
+	s_eng_pPersonelTeamStrings,
+	s_eng_pPersonnelDepartedStateStrings,
+	s_eng_pMapHortIndex,
+	s_eng_pMapVertIndex,
+	s_eng_pMapDepthIndex,
+	s_eng_pLaptopTitles,
+	s_eng_pDayStrings,
+	s_eng_pMilitiaConfirmStrings,
+	s_eng_pDeliveryLocationStrings,
+	s_eng_pSkillAtZeroWarning,
+	s_eng_pIMPBeginScreenStrings,
+	s_eng_pIMPFinishButtonText,
+	s_eng_pIMPFinishStrings,
+	s_eng_pIMPVoicesStrings,
+	s_eng_pPersTitleText,
+	s_eng_pPausedGameText,
+	s_eng_zOptionsToggleText,
+	s_eng_zOptionsScreenHelpText,
+	s_eng_pDoctorWarningString,
+	s_eng_pMilitiaButtonsHelpText,
+	s_eng_pMapScreenJustStartedHelpText,
+	s_eng_pLandMarkInSectorString,
+	s_eng_gzMercSkillText,
+	s_eng_gzNonPersistantPBIText,
+	s_eng_gzMiscString,
+	s_eng_wMapScreenSortButtonHelpText,
+	s_eng_pNewNoiseStr,
+	s_eng_gzLateLocalizedString,
+	s_eng_pAntiHackerString,
+	s_eng_pMessageStrings,
+	s_eng_ItemPickupHelpPopup,
+	s_eng_TacticalStr,
+	s_eng_LargeTacticalStr,
+	s_eng_zDialogActions,
+	s_eng_zDealerStrings,
+	s_eng_zTalkMenuStrings,
+	s_eng_gzMoneyAmounts,
+	s_eng_gzProsLabel,
+	s_eng_gzConsLabel,
+	s_eng_gMoneyStatsDesc,
+	s_eng_gWeaponStatsDesc,
+	s_eng_sKeyDescriptionStrings,
+	s_eng_zHealthStr,
+	s_eng_zVehicleName,
+	s_eng_pExitingSectorHelpText,
+	s_eng_InsContractText,
+	s_eng_InsInfoText,
+	s_eng_MercAccountText,
+	s_eng_MercInfo,
+	s_eng_MercNoAccountText,
+	s_eng_MercHomePageText,
+	s_eng_sFuneralString,
+	s_eng_sFloristText,
+	s_eng_sOrderFormText,
+	s_eng_sFloristGalleryText,
+	s_eng_sFloristCards,
+	s_eng_BobbyROrderFormText,
+	s_eng_BobbyRText,
+	s_eng_str_bobbyr_guns_num_guns_that_use_ammo,
+	s_eng_BobbyRaysFrontText,
+	s_eng_AimSortText,
+	s_eng_str_aim_sort_price,
+	s_eng_str_aim_sort_experience,
+	s_eng_str_aim_sort_marksmanship,
+	s_eng_str_aim_sort_medical,
+	s_eng_str_aim_sort_explosives,
+	s_eng_str_aim_sort_mechanical,
+	s_eng_str_aim_sort_ascending,
+	s_eng_str_aim_sort_descending,
+	s_eng_AimPolicyText,
+	s_eng_AimMemberText,
+	s_eng_CharacterInfo,
+	s_eng_VideoConfercingText,
+	s_eng_AimPopUpText,
+	s_eng_AimLinkText,
+	s_eng_AimHistoryText,
+	s_eng_AimFiText,
+	s_eng_AimAlumniText,
+	s_eng_AimScreenText,
+	s_eng_AimBottomMenuText,
+	s_eng_zMarksMapScreenText,
+	s_eng_gpStrategicString,
+	s_eng_gpGameClockString,
+	s_eng_SKI_Text,
+	s_eng_SkiMessageBoxText,
+	s_eng_zSaveLoadText,
+	s_eng_zOptionsText,
+	s_eng_gzGIOScreenText,
+	s_eng_gzHelpScreenText,
+	s_eng_gzLaptopHelpText,
+	s_eng_gzMoneyWithdrawMessageText,
+	s_eng_gzCopyrightText,
+	s_eng_BrokenLinkText,
+	s_eng_gzBobbyRShipmentText,
+	s_eng_zGioDifConfirmText,
+	s_eng_gzCreditNames,
+	s_eng_gzCreditNameTitle,
+	s_eng_gzCreditNameFunny,
+	s_eng_pContractButtonString,
+	s_eng_gzIntroScreen,
+	s_eng_pUpdatePanelButtons,
+	s_eng_sRepairsDoneString,
+	s_eng_str_ceramic_plates_smashed,
+	s_eng_str_arrival_rerouted,
 
-  s_eng_str_stat_health,
-  s_eng_str_stat_agility,
-  s_eng_str_stat_dexterity,
-  s_eng_str_stat_strength,
-  s_eng_str_stat_leadership,
-  s_eng_str_stat_wisdom,
-  s_eng_str_stat_exp_level,
-  s_eng_str_stat_marksmanship,
-  s_eng_str_stat_mechanical,
-  s_eng_str_stat_explosive,
-  s_eng_str_stat_medical,
+	s_eng_str_stat_health,
+	s_eng_str_stat_agility,
+	s_eng_str_stat_dexterity,
+	s_eng_str_stat_strength,
+	s_eng_str_stat_leadership,
+	s_eng_str_stat_wisdom,
+	s_eng_str_stat_exp_level,
+	s_eng_str_stat_marksmanship,
+	s_eng_str_stat_mechanical,
+	s_eng_str_stat_explosive,
+	s_eng_str_stat_medical,
 
-  s_eng_str_stat_list,
-  s_eng_str_aim_sort_list,
+	s_eng_str_stat_list,
+	s_eng_str_aim_sort_list,
 
-  g_eng_zNewTacticalMessages,
-  g_eng_str_iron_man_mode_warning,
-  g_eng_str_dead_is_dead_mode_warning,
-  g_eng_str_dead_is_dead_mode_enter_name,
+	g_eng_zNewTacticalMessages,
+	g_eng_str_iron_man_mode_warning,
+	g_eng_str_dead_is_dead_mode_warning,
+	g_eng_str_dead_is_dead_mode_enter_name,
 
-  s_eng_gs_dead_is_dead_mode_tab_name,
+	s_eng_gs_dead_is_dead_mode_tab_name,
 };
