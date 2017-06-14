@@ -34,8 +34,8 @@ void CalcSmartBrokenWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 	switch( gubBrokenWallUIValue )
 	{
 		case 0:case 1: *pusUseIndex = 49 + gubBrokenWallUIValue;	break;
-		case 3:				 *pusUseIndex = 62;													break;
-		case 4:				 *pusUseIndex = 64;													break;
+		case 3:		*pusUseIndex = 62;				break;
+		case 4:		*pusUseIndex = 64;				break;
 	}
 	*pusObjIndex = FIRSTWALL;
 }
@@ -72,7 +72,7 @@ static UINT16 CalcSmartBrokenWallIndex(UINT16 usWallOrientation)
 	{
 		//convert the orientation value as the graphics are in a different order.
 		//orientation values:   INSIDE_TOP_LEFT=1, INSIDE_TOP_RIGHT=2, OUTSIDE_TOP_LEFT=3, OUTSIDE_TOP_RIGHT=4
-		//																			4										6										8										 10
+		//			4			6		8			10
 		//door graphics order:  INSIDE_TOP_LEFT=4, INSIDE_TOP_RIGHT=6, OUTSIDE_TOP_LEFT=0, OUTSIDE_TOP_RIGHT=2
 		usWallOrientation = usWallOrientation * 2 + 2;
 		usWallOrientation -= usWallOrientation > 6 ? 8 : 0;
@@ -131,7 +131,7 @@ void DecSmartBrokenWallUIValue()
 
 BOOLEAN CalcWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
 {
-  return FALSE;
+	return FALSE;
 }
 
 BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UINT16 *pusIndex )
@@ -322,7 +322,7 @@ void PasteSmartWall( UINT32 iMapIndex )
 						&& !GetVerticalWall( iMapIndex - WORLD_COLS ) )
 					ChangeVerticalWall( iMapIndex, INTERIOR_EXTENDED );
 				else if( GetHorizontalWall( iMapIndex - WORLD_COLS ) && !GetHorizontalWall( iMapIndex - WORLD_COLS - 1 )
-								 && !GetVerticalWall( iMapIndex - WORLD_COLS - 1 ) )
+					&& !GetVerticalWall( iMapIndex - WORLD_COLS - 1 ) )
 				{
 					ChangeVerticalWall( iMapIndex, INTERIOR_EXTENDED );
 					EraseHorizontalWall( iMapIndex - WORLD_COLS );
@@ -335,7 +335,7 @@ void PasteSmartWall( UINT32 iMapIndex )
 						&& !GetVerticalWall( iMapIndex - WORLD_COLS ) )
 					ChangeVerticalWall( iMapIndex, EXTERIOR_EXTENDED );
 				else if( GetHorizontalWall( iMapIndex - WORLD_COLS ) && !GetHorizontalWall( iMapIndex - WORLD_COLS - 1 )
-								 && !GetVerticalWall( iMapIndex - WORLD_COLS - 1 ) )
+					&& !GetVerticalWall( iMapIndex - WORLD_COLS - 1 ) )
 				{
 					ChangeVerticalWall( iMapIndex, EXTERIOR_EXTENDED );
 					EraseHorizontalWall( iMapIndex - WORLD_COLS );
@@ -345,8 +345,10 @@ void PasteSmartWall( UINT32 iMapIndex )
 		else
 		{
 			if( GetVerticalWall( iMapIndex - 1 ) && !GetVerticalWall( iMapIndex - WORLD_COLS - 1 )
-				  && !GetHorizontalWall( iMapIndex - WORLD_COLS - 1 ) )
+				&& !GetHorizontalWall( iMapIndex - WORLD_COLS - 1 ) )
+			{
 				EraseVerticalWall( iMapIndex - 1);
+			}
 			if( FloorAtGridNo( iMapIndex + WORLD_COLS ) )
 			{ //inside
 				BuildWallPiece( iMapIndex, EXTERIOR_BOTTOM, gubWallUIValue );
@@ -355,8 +357,10 @@ void PasteSmartWall( UINT32 iMapIndex )
 				if( GetVerticalWall( iMapIndex + WORLD_COLS - 1 ) && !GetVerticalWall( iMapIndex - 1 ) )
 					ChangeVerticalWall( iMapIndex + WORLD_COLS - 1,  INTERIOR_EXTENDED );
 				else if( GetVerticalWall( iMapIndex - 1 ) && !GetVerticalWall( iMapIndex + WORLD_COLS - 1 )
-								 && FloorAtGridNo( iMapIndex ) )
+					&& FloorAtGridNo( iMapIndex ) )
+				{
 					ChangeVerticalWall( iMapIndex - 1, INTERIOR_BOTTOMEND );
+				}
 			}
 			else
 			{ //outside
@@ -366,8 +370,10 @@ void PasteSmartWall( UINT32 iMapIndex )
 				if( GetVerticalWall( iMapIndex + WORLD_COLS - 1 ) && !GetVerticalWall( iMapIndex - 1 ) )
 					ChangeVerticalWall( iMapIndex + WORLD_COLS - 1,  EXTERIOR_EXTENDED );
 				else if( GetVerticalWall( iMapIndex - 1 ) && !GetVerticalWall( iMapIndex + WORLD_COLS - 1 )
-								 && FloorAtGridNo( iMapIndex ) )
+					&& FloorAtGridNo( iMapIndex ) )
+				{
 					ChangeVerticalWall( iMapIndex - 1, EXTERIOR_BOTTOMEND );
+				}
 			}
 		}
 		return;

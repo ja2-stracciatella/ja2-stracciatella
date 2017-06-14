@@ -59,16 +59,16 @@ struct SUMMARYFILE
 	//start version 9
 	UINT8	ubCivCows;
 	UINT8 ubCivBloodcats;
-	//																//-----
-																		//	190
+	//					//-----
+						//	190
 	//start version 10
-	EXITGRID ExitGrid[4];			  //5*4 //	 20
+	EXITGRID ExitGrid[4];			//5*4 //	20
 	UINT16 usExitGridSize[4];   //2*4 //    8
-	BOOLEAN fInvalidDest[4];					//    4
-	UINT8	 ubNumExitGridDests;				//		1
+	BOOLEAN fInvalidDest[4];		//    4
+	UINT8   ubNumExitGridDests;		//		1
 	BOOLEAN fTooManyExitGridDests;		//		1
-	//																//-----
-	//																//	224
+	//					//-----
+	//					//	224
 	//start version 11
 	UINT8	ubEnemiesReqWaypoints;			//		1
 	//																//-----

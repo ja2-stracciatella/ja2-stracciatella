@@ -11,22 +11,22 @@
 INT16 gbSmoothStruct[] =
 
 {
-		3, 2, 12, 27, 12, 0,
-		5, 2, 15, 30, 39, 0,
-		7, 2, 17, 32, 41, 0,
-	 11, 2, 14, 29, 14, 0,
-		8, 2, 13, 28, 38, 0,
-   15, 1, 19,  0, 43, 0,
-	 26, 1, 20,  0, 44, 0,
-	 12, 2, 18, 33, 42, 0,
-	 23, 1, 21,  0, 45, 0,
-	 18, 2, 16, 31, 40, 0,
-	 21, 1, 22,  0, 46, 0,
-	 14, 2, 11, 26, 11, 0,
-	 19, 1, 23,  0, 47, 0,
-	 16, 2, 24, 34, 48, 0,
-	 10, 2, 25, 35, 49, 0,
-   -1
+	3, 2, 12, 27, 12, 0,
+	5, 2, 15, 30, 39, 0,
+	7, 2, 17, 32, 41, 0,
+	11, 2, 14, 29, 14, 0,
+	8, 2, 13, 28, 38, 0,
+	15, 1, 19,  0, 43, 0,
+	26, 1, 20,  0, 44, 0,
+	12, 2, 18, 33, 42, 0,
+	23, 1, 21,  0, 45, 0,
+	18, 2, 16, 31, 40, 0,
+	21, 1, 22,  0, 46, 0,
+	14, 2, 11, 26, 11, 0,
+	19, 1, 23,  0, 47, 0,
+	16, 2, 24, 34, 48, 0,
+	10, 2, 25, 35, 49, 0,
+	-1
 };
 
 // This is a list of smoothed out water/shoreline textures
@@ -37,48 +37,48 @@ INT16 gbSmoothStruct[] =
 // 4th - the second variation
 
 INT16 gbSmoothWaterStruct[] =
-// FIRST			ENTRY			MAJIC NUMBER CALCULATED
-// 2nd				ENTRY			# OF VARIATIONS
-// 3rd, 4rth  ENTRY			TILE NUMBERS ( entry 1, entry 2 )
+// FIRST ENTRY		MAJIC NUMBER CALCULATED
+// 2nd ENTRY		# OF VARIATIONS
+// 3rd, 4rth ENTRY	TILE NUMBERS ( entry 1, entry 2 )
 {
-	  1020, 1, 11, 0,
-  	1000, 1, 12, 0,
-		510, 2, 13, 43,
-		190, 1, 14, 0,
-		894, 1, 15, 0,
-		622, 1, 16, 0,
-	  1014, 2, 17, 41,
-    944, 1, 18, 24,
-    872, 1, 19, 0,
-    992, 1, 20, 0,
-		62, 1, 21, 0,
-		190, 2, 22, 14,
-		620, 1, 23, 0,
-		944, 1, 24, 18,
-		878, 2, 25, 32,
-		434, 1, 28, 0,
-		110, 1, 29,0,
-		1010, 1, 30,0,
-		876, 2, 31, 32,
-		878, 2, 32, 31,
-    1004, 2, 32, 31,
-		1006, 2, 33, 34,
-		1008, 2, 34, 33,
-		1016, 2, 33, 34,
-		126, 2, 35, 36,
-		254, 2, 35, 26,
-		638, 2, 36, 26,
-		438, 2, 38, 27,
-		446, 2, 37, 38,
-		950, 2, 37, 27,
-		864, 1, 39, 0,
-		1040, 1, 40, 0,
-		1014, 2, 41, 17,
-		432, 1, 42, 0,
-		510, 1, 43, 13,
-		54, 1, 44, 0,
-    108, 1, 45, 0,
-		-1
+	1020, 1, 11, 0,
+	1000, 1, 12, 0,
+	510, 2, 13, 43,
+	190, 1, 14, 0,
+	894, 1, 15, 0,
+	622, 1, 16, 0,
+	1014, 2, 17, 41,
+	944, 1, 18, 24,
+	872, 1, 19, 0,
+	992, 1, 20, 0,
+	62, 1, 21, 0,
+	190, 2, 22, 14,
+	620, 1, 23, 0,
+	944, 1, 24, 18,
+	878, 2, 25, 32,
+	434, 1, 28, 0,
+	110, 1, 29,0,
+	1010, 1, 30,0,
+	876, 2, 31, 32,
+	878, 2, 32, 31,
+	1004, 2, 32, 31,
+	1006, 2, 33, 34,
+	1008, 2, 34, 33,
+	1016, 2, 33, 34,
+	126, 2, 35, 36,
+	254, 2, 35, 26,
+	638, 2, 36, 26,
+	438, 2, 38, 27,
+	446, 2, 37, 38,
+	950, 2, 37, 27,
+	864, 1, 39, 0,
+	1040, 1, 40, 0,
+	1014, 2, 41, 17,
+	432, 1, 42, 0,
+	510, 1, 43, 13,
+	54, 1, 44, 0,
+	108, 1, 45, 0,
+	-1
 };
 
 
@@ -95,11 +95,11 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	BOOLEAN	fSameTile;
 
 	INT16		*pSmoothStruct;
-  // Check to see if the orginal texture was water, is so, smooth square/hex with
+	// Check to see if the orginal texture was water, is so, smooth square/hex with
 	// SmoothWaterTerrain rather than the proceeding method
 	if( origType==REGWATERTEXTURE)
 	{
-    SmoothWaterTerrain( gridno, origType, piNewTile, TRUE);
+		SmoothWaterTerrain( gridno, origType, piNewTile, TRUE);
 		return;
 	}
 	pSmoothStruct = gbSmoothStruct;
@@ -188,10 +188,10 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 				}
 				if ( pSmoothStruct[ cnt + 3 ] )
 				{
-					 if ( pSmoothStruct[ cnt + 3 ] == usOldIndex  )
-					 {
-							fSameTile = TRUE;
-					 }
+					if ( pSmoothStruct[ cnt + 3 ] == usOldIndex  )
+					{
+						fSameTile = TRUE;
+					}
 				}
 				if ( fSameTile )
 				{
@@ -224,10 +224,10 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 
 void SmoothAllTerrainWorld( void )
 {
-	int						cnt;
-	UINT16				NewTile;
-	UINT32				uiCheckType;
-	 // Smooth out entire world surrounding tiles
+	int	cnt;
+	UINT16	NewTile;
+	UINT32	uiCheckType;
+	// Smooth out entire world surrounding tiles
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
 		for ( uiCheckType = FIRSTTEXTURE; uiCheckType <= SEVENTHTEXTURE; uiCheckType++ )
@@ -238,7 +238,7 @@ void SmoothAllTerrainWorld( void )
 
 				if ( NewTile != NO_TILE )
 				{
-					 // Change tile
+					// Change tile
 					SetLandIndex(cnt, NewTile, uiCheckType);
 				}
 			}
@@ -251,14 +251,14 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
-	INT32				    iNewIndex;
-	UINT16					NewTile;
-	INT32					leftmost;
+	INT32  iNewIndex;
+	UINT16 NewTile;
+	INT32  leftmost;
 	// Don't bother to smooth floors, they don't need them
 	if ( uiCheckType >= FIRSTFLOOR && uiCheckType <= LASTFLOOR )
 		return;
 	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -269,16 +269,16 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 		{
 			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
 			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
+				iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
 				if (FindTypeInLandLayer(iNewIndex, uiCheckType))
 				{
-						SmoothTerrain(  iNewIndex, uiCheckType, &NewTile, fForceSmooth );
+					SmoothTerrain(  iNewIndex, uiCheckType, &NewTile, fForceSmooth );
 
 					if ( NewTile != NO_TILE )
-				  {
-						 // Change tile
-						 AddToUndoList( iNewIndex );
+					{
+						// Change tile
+						AddToUndoList( iNewIndex );
 						SetLandIndex(iNewIndex, NewTile, uiCheckType);
 					}
 				}
@@ -292,11 +292,11 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2, cnt3;
-	INT32				    iNewIndex;
-	UINT16					NewTile;
-	INT32					leftmost;
+	INT32  iNewIndex;
+	UINT16 NewTile;
+	INT32  leftmost;
 	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
+	sTop	= ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
@@ -309,14 +309,14 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 			{
 				iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
 				if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-						 iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
+					iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 				{
 					if (FindTypeInLandLayer(iNewIndex, cnt3))
 					{
 						SmoothTerrain(  iNewIndex, cnt3, &NewTile, fForceSmooth );
 						if ( NewTile != NO_TILE )
 						{
-							 // Change tile
+							// Change tile
 							SetLandIndex(iNewIndex, NewTile, cnt3);
 						}
 					}
@@ -338,7 +338,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	UINT32	uiTempIndex;
 	UINT16	land=0;
 	BOOLEAN	fSameTile;
-	INT16		*pSmoothStruct;
+	INT16	*pSmoothStruct;
 
 	pSmoothStruct = gbSmoothWaterStruct;
 	// Get land index value for given level and adjust according to type
@@ -465,14 +465,14 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 				// CHeck if it's the same tile
 				if ( pSmoothStruct[ cnt + 2 ] == usOldIndex )
 				{
-						fSameTile = TRUE;
+					fSameTile = TRUE;
 				}
 				if ( pSmoothStruct[ cnt + 3 ] )
 				{
-					 if ( pSmoothStruct[ cnt + 3 ] == usOldIndex  )
-					 {
-							fSameTile = TRUE;
-					 }
+					if ( pSmoothStruct[ cnt + 3 ] == usOldIndex  )
+					{
+						fSameTile = TRUE;
+					}
 				}
 				if ( fSameTile )
 				{
@@ -490,7 +490,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	if ( !fFound )
 	{
 			// Check for existance of same tile
-		  if ( usOldIndex >= 1 && usOldIndex <= 10 )
+			if ( usOldIndex >= 1 && usOldIndex <= 10 )
 			{
 				*piNewTile = NO_TILE;
 				return;

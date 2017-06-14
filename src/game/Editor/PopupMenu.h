@@ -18,21 +18,21 @@ interface system which is functionally similar to Win95 and MacOS.
 As soon as you click on a button which activates the popup menu, the user
 will choose a selection in one of three ways:
 
-	1) KEYBOARD - at anytime, the user can use the keyboard regardless of mouse
-		 mode.  The up/down arrow keys will cycle through the choices and enter will
-		 accept the choice.  ESC will cancel the menu without making a choice.
-	2) When the mousedown event activates the menu, the user releases the mouse before
-		 entering the popup menu region.  The menu mode will change and become persistant.
-		 Clicking on the hilighted item will close the popup and activate the choice.
-		 Clicking elsewhere, the popup will be closed without making a selection.  This
-		 is functionally equivalent to Win95.
-	3) When the mousedown event activates the menu, the user holds the mouse down and
-		 moves the cursor over the popup region.  At this moment the menu becomes
-		 non-persistant and a choice is made by releasing the mouse.  If the mouse is
-		 released on a highlighted choice, that choice is selected, otherwise the popup
-		 is cancelled.  This is functionally equivalent to MacOS.  The small diffence is
-		 that under Win95's standard convention, the release of the mouse outside of the
-		 region doesn't kill the menu, but in MacOS, it does.
+  1) KEYBOARD - at anytime, the user can use the keyboard regardless of mouse
+     mode.  The up/down arrow keys will cycle through the choices and enter will
+     accept the choice.  ESC will cancel the menu without making a choice.
+  2) When the mousedown event activates the menu, the user releases the mouse before
+     entering the popup menu region.  The menu mode will change and become persistant.
+     Clicking on the hilighted item will close the popup and activate the choice.
+     Clicking elsewhere, the popup will be closed without making a selection.  This
+     is functionally equivalent to Win95.
+  3) When the mousedown event activates the menu, the user holds the mouse down and
+     moves the cursor over the popup region.  At this moment the menu becomes
+     non-persistant and a choice is made by releasing the mouse.  If the mouse is
+     released on a highlighted choice, that choice is selected, otherwise the popup
+     is cancelled.  This is functionally equivalent to MacOS.  The small diffence is
+     that under Win95's standard convention, the release of the mouse outside of the
+     region doesn't kill the menu, but in MacOS, it does.
 */
 
 

@@ -67,11 +67,11 @@ void DisableUndo()
 // undo node data element
 struct undo_struct
 {
-	INT32						iMapIndex;
-	MAP_ELEMENT		*pMapTile;
-	BOOLEAN				fLightSaved;	 //determines that a light has been saved
-	UINT8					ubLightRadius; //the radius of the light to build if undo is called
-	UINT8					ubRoomNum;
+	INT32       iMapIndex;
+	MAP_ELEMENT *pMapTile;
+	BOOLEAN     fLightSaved;   //determines that a light has been saved
+	UINT8       ubLightRadius; //the radius of the light to build if undo is called
+	UINT8       ubRoomNum;
 };
 
 // Undo stack node
@@ -588,7 +588,7 @@ void DetermineUndoState()
 	if( !fNewUndoCmd )
 	{
 		if( (!gfLeftButtonState  && !gfCurrentSelectionWithRightButton) ||
-			  (!gfRightButtonState &&  gfCurrentSelectionWithRightButton) )
+			(!gfRightButtonState &&  gfCurrentSelectionWithRightButton) )
 		{
 			//Clear the mapindex binary tree list, and set up flag for new undo command.
 			fNewUndoCmd = TRUE;

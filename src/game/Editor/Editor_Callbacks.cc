@@ -388,10 +388,10 @@ void BuildingSawRoomCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BuildingKillBuildingCallback(GUI_BUTTON *btn, INT32 reason)
 {
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SetEditorBuildingTaskbarMode( BUILDING_KILL_BUILDING );
-	  iDrawMode = DRAW_MODE_KILL_BUILDING;
+		iDrawMode = DRAW_MODE_KILL_BUILDING;
 	}
 }
 
@@ -415,10 +415,10 @@ void BuildingMoveBuildingCallback( GUI_BUTTON *btn, INT32 reason )
 
 void BuildingDrawRoomNumCallback(GUI_BUTTON *btn, INT32 reason)
 {
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SetEditorBuildingTaskbarMode( BUILDING_DRAW_ROOMNUM );
-	  iDrawMode = DRAW_MODE_ROOMNUM;
+		iDrawMode = DRAW_MODE_ROOMNUM;
 		gubCurrRoomNumber = gubMaxRoomNumber;
 	}
 }

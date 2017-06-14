@@ -54,7 +54,7 @@ void CreateMessageBox(wchar_t const* const msg)
 
 BOOLEAN MessageBoxHandled()
 {
-  InputAtom DummyEvent;
+	InputAtom DummyEvent;
 
 	while( DequeueEvent( &DummyEvent ) )
 	{

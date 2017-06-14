@@ -194,7 +194,7 @@ void InitPopupMenu(GUIButtonRef const button, PopupMenuID const ubPopupMenuID, U
 	gPopup.ubMaxEntriesPerColumn = gPopup.ubNumEntries;
 	usMenuHeight = gPopup.ubNumEntries * gusEntryHeight + 3;
 	while ((usMenuHeight                 >= usY && (ubDirection == DIR_UPLEFT   || ubDirection == DIR_UPRIGHT)) ||
-				 (SCREEN_HEIGHT - usMenuHeight >= usY && (ubDirection == DIR_DOWNLEFT || ubDirection == DIR_DOWNRIGHT)))
+		(SCREEN_HEIGHT - usMenuHeight >= usY && (ubDirection == DIR_DOWNLEFT || ubDirection == DIR_DOWNRIGHT)))
 	{ //menu has too many entries.  Increase the number of columns until the height is
 		//less than the max height.
 		gPopup.ubMaxEntriesPerColumn = (gPopup.ubNumEntries+gPopup.ubColumns)/(gPopup.ubColumns+1);
@@ -460,7 +460,7 @@ static void PopupMenuHandle(void)
 				}
 				break;
 		}
-  }
+	}
 }
 
 
