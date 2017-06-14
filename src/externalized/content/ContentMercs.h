@@ -6,5 +6,5 @@ class ContentManager;
 
 namespace Content
 {
-  bool canMercBeHired(const ContentManager *cm, uint16_t profileNum);
+	bool canMercBeHired(const ContentManager *cm, uint16_t profileNum);
 }
