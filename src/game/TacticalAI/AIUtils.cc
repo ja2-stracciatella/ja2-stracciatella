@@ -41,7 +41,7 @@ UINT8 Urgency[NUM_STATUS_STATES][NUM_MORALE_STATES] =
 
 UINT16 MovementMode[LAST_MOVEMENT_ACTION + 1][NUM_URGENCY_STATES] =
 {
-	{WALKING,	 WALKING,  WALKING }, // AI_ACTION_NONE
+	{WALKING,  WALKING,  WALKING }, // AI_ACTION_NONE
 
 	{WALKING,  WALKING,  WALKING }, // AI_ACTION_RANDOM_PATROL
 	{WALKING,  RUNNING,  RUNNING }, // AI_ACTION_SEEK_FRIEND
@@ -58,12 +58,12 @@ UINT16 MovementMode[LAST_MOVEMENT_ACTION + 1][NUM_URGENCY_STATES] =
 	{RUNNING,  RUNNING,  RUNNING }, // AI_ACTION_KNIFE_MOVE
 	{WALKING,  WALKING,  WALKING }, // AI_ACTION_APPROACH_MERC
 	{RUNNING,  RUNNING,  RUNNING }, // AI_ACTION_TRACK
-	{RUNNING,	 RUNNING,  RUNNING },	// AI_ACTION_EAT
-	{WALKING,	 RUNNING,  SWATTING},	// AI_ACTION_PICKUP_ITEM
+	{RUNNING,  RUNNING,  RUNNING },	// AI_ACTION_EAT
+	{WALKING,  RUNNING,  SWATTING},	// AI_ACTION_PICKUP_ITEM
 
-	{WALKING,	 WALKING,  WALKING},	// AI_ACTION_SCHEDULE_MOVE
-	{WALKING,	 WALKING,  WALKING},	// AI_ACTION_WALK
-	{RUNNING,	 RUNNING,  RUNNING},	// AI_ACTION_MOVE_TO_CLIMB
+	{WALKING,  WALKING,  WALKING},	// AI_ACTION_SCHEDULE_MOVE
+	{WALKING,  WALKING,  WALKING},	// AI_ACTION_WALK
+	{RUNNING,  RUNNING,  RUNNING},	// AI_ACTION_MOVE_TO_CLIMB
 };
 
 INT8 OKToAttack(const SOLDIERTYPE * pSoldier, int target)
@@ -112,9 +112,9 @@ INT8 OKToAttack(const SOLDIERTYPE * pSoldier, int target)
 
 static BOOLEAN ConsiderProne(SOLDIERTYPE* pSoldier)
 {
-	INT16		sOpponentGridNo;
-	INT8		bOpponentLevel;
-	INT32		iRange;
+	INT16 sOpponentGridNo;
+	INT8  bOpponentLevel;
+	INT32 iRange;
 
 	if (pSoldier->bAIMorale >= MORALE_NORMAL)
 	{
@@ -169,12 +169,12 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 	// just compare the chance of the bullet hitting if we are
 	// standing, crouched, or prone
 
-	UINT16	usRealAnimState, usBestAnimState;
-	INT8		bBestStanceDiff=-1;
-	INT8		bLoop, bStanceNum, bStanceDiff, bAPsAfterAttack;
-	UINT32	uiChanceOfDamage, uiBestChanceOfDamage, uiCurrChanceOfDamage;
-	UINT32	uiStanceBonus, uiMinimumStanceBonusPerChange = 20 - 3 * pAttack->ubAimTime;
-	INT32		iRange;
+	UINT16 usRealAnimState, usBestAnimState;
+	INT8   bBestStanceDiff=-1;
+	INT8   bLoop, bStanceNum, bStanceDiff, bAPsAfterAttack;
+	UINT32 uiChanceOfDamage, uiBestChanceOfDamage, uiCurrChanceOfDamage;
+	UINT32 uiStanceBonus, uiMinimumStanceBonusPerChange = 20 - 3 * pAttack->ubAimTime;
+	INT32  iRange;
 
 	bStanceNum = 0;
 	uiCurrChanceOfDamage = 0;
@@ -494,7 +494,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 
 		case AI_ACTION_YELLOW_ALERT:          // tell friends opponent(s) heard
 		case AI_ACTION_RED_ALERT:             // tell friends opponent(s) seen
-		case AI_ACTION_CREATURE_CALL:				 // for now
+		case AI_ACTION_CREATURE_CALL:         // for now
 			bMinPointsNeeded = AP_RADIO;
 			break;
 
@@ -768,20 +768,20 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 
 INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, BOOLEAN * pfChangeLevel )
 {
-	INT16		*psLastLoc, *pusNoiseGridNo;
-	INT8		*pbLastLevel;
-	INT16		sGridNo=-1;
-	INT8		bLevel;
-	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
-	INT32		iPathCost;
-	INT16		sClosestDisturbance = NOWHERE;
-	INT8		*pbNoiseLevel;
-	INT8		*pbPersOL,*pbPublOL;
-	INT16		sClimbGridNo;
+	INT16   *psLastLoc, *pusNoiseGridNo;
+	INT8    *pbLastLevel;
+	INT16   sGridNo=-1;
+	INT8    bLevel;
+	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = FALSE;
+	INT32   iPathCost;
+	INT16   sClosestDisturbance = NOWHERE;
+	INT8    *pbNoiseLevel;
+	INT8    *pbPersOL,*pbPublOL;
+	INT16   sClimbGridNo;
 
 	// CJC: can't trace a path to every known disturbance!
 	// for starters, try the closest one as the crow flies
-	INT16		sClosestEnemy = NOWHERE, sDistToClosestEnemy = 1000, sDistToEnemy;
+	INT16   sClosestEnemy = NOWHERE, sDistToClosestEnemy = 1000, sDistToEnemy;
 
 	*pfChangeLevel = FALSE;
 
@@ -789,9 +789,9 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	pbNoiseLevel = &gbPublicNoiseLevel[pSoldier->bTeam];
 
 	// hang pointers at start of this guy's personal and public opponent opplists
-//	pbPersOL = &pSoldier->bOppList[0];
-//	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
-//	psLastLoc = &(gsLastKnownOppLoc[pSoldier->ubID][0]);
+	//pbPersOL = &pSoldier->bOppList[0];
+	//pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
+	//psLastLoc = &(gsLastKnownOppLoc[pSoldier->ubID][0]);
 
 	// look through this man's personal & public opplists for opponents known
 	INT8 bClosestLevel = 0; // XXX HACK000E
@@ -827,7 +827,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 
 		// if personal knowledge is more up to date or at least equal
 		if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE] > 0) ||
-			 (*pbPersOL == *pbPublOL))
+			(*pbPersOL == *pbPublOL))
 		{
 			// using personal knowledge, obtain opponent's "best guess" gridno
 			sGridNo = *psLastLoc;
@@ -958,7 +958,7 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 {
 	INT16 sGridNo, sClosestOpponent = NOWHERE;
 	INT32 iRange, iClosestRange = 1500;
-	INT8	*pbPersOL,*pbPublOL;
+	INT8  *pbPersOL, *pbPublOL;
 	INT8  bLevel, bClosestLevel;
 
 	bClosestLevel = -1;
@@ -998,7 +998,7 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 
 		// if personal knowledge is more up to date or at least equal
 		if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE] > 0) ||
-			 (*pbPersOL == *pbPublOL))
+			(*pbPersOL == *pbPublOL))
 		{
 			// using personal knowledge, obtain opponent's "best guess" gridno
 			sGridNo = gsLastKnownOppLoc[pSoldier->ubID][pOpp->ubID];
@@ -1051,7 +1051,7 @@ INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLeve
 {
 	INT16 sGridNo, sClosestOpponent = NOWHERE;
 	INT32 iRange, iClosestRange = 1500;
-	INT8	*pbPersOL;
+	INT8  *pbPersOL;
 	INT8  bLevel, bClosestLevel;
 
 	bClosestLevel = -1;
@@ -1128,9 +1128,9 @@ INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 
 	// NOTE: skips EPCs!
 
-	INT16					sMinDist = (INT16)WORLD_MAX;
-	INT16					sDist;
-	INT16					sGridNo = NOWHERE;
+	INT16 sMinDist = (INT16)WORLD_MAX;
+	INT16 sDist;
+	INT16 sGridNo = NOWHERE;
 
 	CFOR_EACH_IN_TEAM(pTargetSoldier, OUR_TEAM)
 	{
@@ -1142,7 +1142,7 @@ INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 		// if not conscious, skip him
 		if (pTargetSoldier->bLife < OKLIFE)
 		{
-		   continue;
+			continue;
 		}
 
 		if ( AM_AN_EPC( pTargetSoldier ) )
@@ -1177,9 +1177,9 @@ INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 
 static INT16 FindClosestClimbPointAvailableToAI(SOLDIERTYPE* pSoldier, INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN fClimbUp)
 {
-	INT16	sGridNo;
-	INT16	sRoamingOrigin;
-	INT16	sRoamingRange;
+	INT16 sGridNo;
+	INT16 sRoamingOrigin;
+	INT16 sRoamingRange;
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_PC )
 	{
@@ -1263,7 +1263,7 @@ INT16 GetInterveningClimbingLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo,
 
 INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT8 bDestLevel, BOOLEAN fAddCostAfterClimbingUp, BOOLEAN * pfClimbingNecessary, INT16 * psClimbGridNo )
 {
-	INT16	sPathCost;
+	INT16 sPathCost;
 	INT16 sClimbGridNo;
 
 	if (pSoldier->bLevel == bDestLevel)
@@ -1364,8 +1364,8 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 
 static BOOLEAN GuySawEnemyThisTurnOrBefore(SOLDIERTYPE* pSoldier)
 {
-	UINT8		ubTeamLoop;
-	UINT8		ubIDLoop;
+	UINT8 ubTeamLoop;
+	UINT8 ubIDLoop;
 
 	for ( ubTeamLoop = 0; ubTeamLoop < MAXTEAMS; ubTeamLoop++ )
 	{
@@ -1412,7 +1412,7 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 
 		// if this friend is not under fire, and isn't the last one to radio
 		if (!pFriend->bUnderFire &&
-				(pFriend != gTacticalStatus.Team[pFriend->bTeam].last_merc_to_radio || !GuySawEnemyThisTurnOrBefore(pFriend)))
+			(pFriend != gTacticalStatus.Team[pFriend->bTeam].last_merc_to_radio || !GuySawEnemyThisTurnOrBefore(pFriend)))
 		{
 			continue;          // next merc
 		}
@@ -1452,8 +1452,8 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 {
 	// find the distance to the closest person on the same team
-	INT16					sMinDist = 1000;
-	INT16					sDist;
+	INT16 sMinDist = 1000;
+	INT16 sDist;
 
 	CFOR_EACH_IN_TEAM(pTargetSoldier, pSoldier->bTeam)
 	{
@@ -1468,7 +1468,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 			// if not conscious, skip him
 			else if (pTargetSoldier->bLife < OKLIFE)
 			{
-				 continue;
+				continue;
 			}
 		}
 		else
@@ -1482,7 +1482,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 			}
 			else if (pTargetSoldier->bLife < OKLIFE)
 			{
-				 continue;
+				continue;
 			}
 			else
 			{
@@ -1584,27 +1584,27 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 {
- INT32 iOurTotalThreat = 0, iTheirTotalThreat = 0;
- INT16 sOppThreatValue, sFrndThreatValue, sMorale;
- INT32 iPercent;
- INT8	bMostRecentOpplistValue;
- INT8 bMoraleCategory;
- INT8  *pbPersOL, *pbPublOL;
+	INT32 iOurTotalThreat = 0, iTheirTotalThreat = 0;
+	INT16 sOppThreatValue, sFrndThreatValue, sMorale;
+	INT32 iPercent;
+	INT8  bMostRecentOpplistValue;
+	INT8  bMoraleCategory;
+	INT8  *pbPersOL, *pbPublOL;
 
- // if army guy has NO weapons left then panic!
- if ( pSoldier->bTeam == ENEMY_TEAM )
- {
-	 if ( FindAIUsableObjClass( pSoldier, IC_WEAPON ) == NO_SLOT )
-	 {
-		 return( MORALE_HOPELESS );
-	 }
- }
+	// if army guy has NO weapons left then panic!
+	if ( pSoldier->bTeam == ENEMY_TEAM )
+	{
+		if ( FindAIUsableObjClass( pSoldier, IC_WEAPON ) == NO_SLOT )
+		{
+			return( MORALE_HOPELESS );
+		}
+	}
 
- // hang pointers to my personal opplist, my team's public opplist, and my
- // list of previously seen opponents
+	// hang pointers to my personal opplist, my team's public opplist, and my
+	// list of previously seen opponents
 	const INT8* pSeenOpp = &gbSeenOpponents[pSoldier->ubID][0];
 
- // loop through every one of my possible opponents
+	// loop through every one of my possible opponents
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
@@ -1612,9 +1612,9 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 		// if this merc is inactive, at base, on assignment, dead, unconscious
 		if (pOpponent->bLife < OKLIFE) continue; // next merc
 
-   // if this merc is neutral/on same side, he's not an opponent, skip him!
-   if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
-     continue;          // next merc
+		// if this merc is neutral/on same side, he's not an opponent, skip him!
+		if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
+			continue;          // next merc
 
 		// Special stuff for Carmen the bounty hunter
 		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpponent->ubProfile != SLAY)
@@ -1622,40 +1622,40 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 			continue;  // next opponent
 		}
 
-	 pbPersOL = pSoldier->bOppList + pOpponent->ubID;
-	 pbPublOL = gbPublicOpplist[pSoldier->bTeam] + pOpponent->ubID;
-	 pSeenOpp = gbSeenOpponents[pSoldier->ubID] + pOpponent->ubID;
+		pbPersOL = pSoldier->bOppList + pOpponent->ubID;
+		pbPublOL = gbPublicOpplist[pSoldier->bTeam] + pOpponent->ubID;
+		pSeenOpp = gbSeenOpponents[pSoldier->ubID] + pOpponent->ubID;
 
-   // if this opponent is unknown to me personally AND unknown to my team, too
-   if ((*pbPersOL == NOT_HEARD_OR_SEEN) && (*pbPublOL == NOT_HEARD_OR_SEEN))
-    {
-     // if I have never seen him before anywhere in this sector, either
-     if (!(*pSeenOpp))
-       continue;        // next merc
+		// if this opponent is unknown to me personally AND unknown to my team, too
+		if ((*pbPersOL == NOT_HEARD_OR_SEEN) && (*pbPublOL == NOT_HEARD_OR_SEEN))
+		{
+			// if I have never seen him before anywhere in this sector, either
+			if (!(*pSeenOpp))
+				continue;        // next merc
 
-     // have seen him in the past, so he remains something of a threat
-     bMostRecentOpplistValue = 0;        // uses the free slot for 0 opplist
-    }
-   else         // decide which opplist is more current
-    {
-     // if personal knowledge is more up to date or at least equal
-     if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE] > 0) || (*pbPersOL == *pbPublOL))
-       bMostRecentOpplistValue = *pbPersOL;      // use personal
-     else
-       bMostRecentOpplistValue = *pbPublOL;      // use public
-    }
+			// have seen him in the past, so he remains something of a threat
+			bMostRecentOpplistValue = 0;        // uses the free slot for 0 opplist
+		}
+		else         // decide which opplist is more current
+		{
+			// if personal knowledge is more up to date or at least equal
+			if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE] > 0) || (*pbPersOL == *pbPublOL))
+				bMostRecentOpplistValue = *pbPersOL;      // use personal
+			else
+				bMostRecentOpplistValue = *pbPublOL;      // use public
+		}
 
-   iPercent = ThreatPercent[bMostRecentOpplistValue - OLDEST_HEARD_VALUE];
+		iPercent = ThreatPercent[bMostRecentOpplistValue - OLDEST_HEARD_VALUE];
 
-   sOppThreatValue = (iPercent * CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier)) / 100;
+		sOppThreatValue = (iPercent * CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier)) / 100;
 
-   // ADD this to their running total threatValue (decreases my MORALE)
-   iTheirTotalThreat += sOppThreatValue;
+		// ADD this to their running total threatValue (decreases my MORALE)
+		iTheirTotalThreat += sOppThreatValue;
 
-   // NOW THE FUN PART: SINCE THIS OPPONENT IS KNOWN TO ME IN SOME WAY,
-   // ANY FRIENDS OF MINE THAT KNOW ABOUT HIM BOOST MY MORALE.  SO, LET'S GO
-   // THROUGH THEIR PERSONAL OPPLISTS AND CHECK WHICH OF MY FRIENDS KNOW
-   // SOMETHING ABOUT HIM AND WHAT THEIR THREAT VALUE TO HIM IS.
+		// NOW THE FUN PART: SINCE THIS OPPONENT IS KNOWN TO ME IN SOME WAY,
+		// ANY FRIENDS OF MINE THAT KNOW ABOUT HIM BOOST MY MORALE.  SO, LET'S GO
+		// THROUGH THEIR PERSONAL OPPLISTS AND CHECK WHICH OF MY FRIENDS KNOW
+		// SOMETHING ABOUT HIM AND WHAT THEIR THREAT VALUE TO HIM IS.
 
 		FOR_EACH_MERC(j)
 		{
@@ -1664,144 +1664,144 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 			// if this merc is inactive, at base, on assignment, dead, unconscious
 			if (pFriend->bLife < OKLIFE) continue; // next merc
 
-     // if this merc is not on my side, then he's NOT one of my friends
+			// if this merc is not on my side, then he's NOT one of my friends
 
-     // WE CAN'T AFFORD TO CONSIDER THE ENEMY OF MY ENEMY MY FRIEND, HERE!
-     // ONLY IF WE ARE ACTUALLY OFFICIALLY CO-OPERATING TOGETHER (SAME SIDE)
-     if ( pFriend->bNeutral && !( pSoldier->ubCivilianGroup != NON_CIV_GROUP && pSoldier->ubCivilianGroup == pFriend->ubCivilianGroup ) )
-		 {
-			 continue;        // next merc
-		 }
+			// WE CAN'T AFFORD TO CONSIDER THE ENEMY OF MY ENEMY MY FRIEND, HERE!
+			// ONLY IF WE ARE ACTUALLY OFFICIALLY CO-OPERATING TOGETHER (SAME SIDE)
+			if ( pFriend->bNeutral && !( pSoldier->ubCivilianGroup != NON_CIV_GROUP && pSoldier->ubCivilianGroup == pFriend->ubCivilianGroup ) )
+			{
+				continue;        // next merc
+			}
 
-		 if ( pSoldier->bSide != pFriend->bSide )
-       continue;        // next merc
+			if ( pSoldier->bSide != pFriend->bSide )
+				continue;        // next merc
 
-     // THIS TEST IS INVALID IF A COMPUTER-TEAM IS PLAYING CO-OPERATIVELY
-     // WITH A NON-COMPUTER TEAM SINCE THE OPPLISTS INVOLVED ARE NOT
-     // UP-TO-DATE.  THIS SITUATION IS CURRENTLY NOT POSSIBLE IN HTH/DG.
+			// THIS TEST IS INVALID IF A COMPUTER-TEAM IS PLAYING CO-OPERATIVELY
+			// WITH A NON-COMPUTER TEAM SINCE THE OPPLISTS INVOLVED ARE NOT
+			// UP-TO-DATE.  THIS SITUATION IS CURRENTLY NOT POSSIBLE IN HTH/DG.
 
-     // ALSO NOTE THAT WE COUNT US AS OUR (BEST) FRIEND FOR THESE CALCULATIONS
+			// ALSO NOTE THAT WE COUNT US AS OUR (BEST) FRIEND FOR THESE CALCULATIONS
 
 			// subtract HEARD_2_TURNS_AGO (which is negative) to make values start at 0 and
 			// be positive otherwise
-     iPercent = ThreatPercent[pFriend->bOppList[pOpponent->ubID] - OLDEST_HEARD_VALUE];
+			iPercent = ThreatPercent[pFriend->bOppList[pOpponent->ubID] - OLDEST_HEARD_VALUE];
 
-	 // reduce the percentage value based on how far away they are from the enemy, if they only hear him
-	 if ( pFriend->bOppList[ pOpponent->ubID ] <= HEARD_LAST_TURN )
-	 {
-		 iPercent -= PythSpacesAway( pSoldier->sGridNo, pFriend->sGridNo ) * 2;
-		 if ( iPercent <= 0 )
-		 {
-			 //ignore!
-			 continue;
-		 }
-	 }
+			// reduce the percentage value based on how far away they are from the enemy, if they only hear him
+			if ( pFriend->bOppList[ pOpponent->ubID ] <= HEARD_LAST_TURN )
+			{
+				iPercent -= PythSpacesAway( pSoldier->sGridNo, pFriend->sGridNo ) * 2;
+				if ( iPercent <= 0 )
+				{
+					//ignore!
+					continue;
+				}
+			}
 
-     sFrndThreatValue = (iPercent * CalcManThreatValue(pFriend,pOpponent->sGridNo,FALSE,pSoldier)) / 100;
+			sFrndThreatValue = (iPercent * CalcManThreatValue(pFriend,pOpponent->sGridNo,FALSE,pSoldier)) / 100;
 
-     // ADD this to our running total threatValue (increases my MORALE)
-     // We multiply by sOppThreatValue to PRO-RATE this based on opponent's
-     // threat value to ME personally.  Divide later by sum of them all.
-     iOurTotalThreat += sOppThreatValue * sFrndThreatValue;
-    }
-  }
-
-
- // if they are no threat whatsoever
- if (!iTheirTotalThreat)
-   sMorale = 500;        // our morale is just incredible
- else
-  {
-   // now divide sOutTotalThreat by sTheirTotalThreat to get the REAL value
-   iOurTotalThreat /= iTheirTotalThreat;
-
-   // calculate the morale (100 is even, < 100 is us losing, > 100 is good)
-   sMorale = (INT16) ((100 * iOurTotalThreat) / iTheirTotalThreat);
-  }
+			// ADD this to our running total threatValue (increases my MORALE)
+			// We multiply by sOppThreatValue to PRO-RATE this based on opponent's
+			// threat value to ME personally.  Divide later by sum of them all.
+			iOurTotalThreat += sOppThreatValue * sFrndThreatValue;
+		}
+	}
 
 
- if (sMorale <= 25)              // odds 1:4 or worse
-   bMoraleCategory = MORALE_HOPELESS;
- else if (sMorale <= 50)         // odds between 1:4 and 1:2
-   bMoraleCategory = MORALE_WORRIED;
- else if (sMorale <= 150)        // odds between 1:2 and 3:2
-   bMoraleCategory = MORALE_NORMAL;
- else if (sMorale <= 300)        // odds between 3:2 and 3:1
-   bMoraleCategory = MORALE_CONFIDENT;
- else                           // odds better than 3:1
-   bMoraleCategory = MORALE_FEARLESS;
+	// if they are no threat whatsoever
+	if (!iTheirTotalThreat)
+		sMorale = 500;        // our morale is just incredible
+	else
+	{
+		// now divide sOutTotalThreat by sTheirTotalThreat to get the REAL value
+		iOurTotalThreat /= iTheirTotalThreat;
+
+		// calculate the morale (100 is even, < 100 is us losing, > 100 is good)
+		sMorale = (INT16) ((100 * iOurTotalThreat) / iTheirTotalThreat);
+	}
 
 
- switch (pSoldier->bAttitude)
-  {
-   case DEFENSIVE:	bMoraleCategory--; break;
-   case BRAVESOLO:	bMoraleCategory += 2; break;
-   case BRAVEAID:	bMoraleCategory += 2; break;
-   case CUNNINGSOLO:    break;
-   case CUNNINGAID:     break;
-   case AGGRESSIVE:	bMoraleCategory++; break;
-  }
-
- // make idiot administrators much more aggressive
- if ( pSoldier->ubSoldierClass == SOLDIER_CLASS_ADMINISTRATOR )
- {
-	 bMoraleCategory += 2;
- }
+	if (sMorale <= 25)              // odds 1:4 or worse
+		bMoraleCategory = MORALE_HOPELESS;
+	else if (sMorale <= 50)         // odds between 1:4 and 1:2
+		bMoraleCategory = MORALE_WORRIED;
+	else if (sMorale <= 150)        // odds between 1:2 and 3:2
+		bMoraleCategory = MORALE_NORMAL;
+	else if (sMorale <= 300)        // odds between 3:2 and 3:1
+		bMoraleCategory = MORALE_CONFIDENT;
+	else                           // odds better than 3:1
+		bMoraleCategory = MORALE_FEARLESS;
 
 
- // if still full of energy
- if (pSoldier->bBreath > 75)
-   bMoraleCategory++;
- else
-  {
-   // if getting a bit low on breath
-   if (pSoldier->bBreath < 40)
-     bMoraleCategory--;
+	switch (pSoldier->bAttitude)
+	{
+		case DEFENSIVE:	bMoraleCategory--; break;
+		case BRAVESOLO:	bMoraleCategory += 2; break;
+		case BRAVEAID:	bMoraleCategory += 2; break;
+		case CUNNINGSOLO:    break;
+		case CUNNINGAID:     break;
+		case AGGRESSIVE:	bMoraleCategory++; break;
+	}
 
-   // if getting REALLY low on breath
-   if (pSoldier->bBreath < 10)
-     bMoraleCategory--;
-  }
-
-
- // if still very healthy
- if (pSoldier->bLife > 75)
-   bMoraleCategory++;
- else
-  {
-   // if getting a bit low on life
-   if (pSoldier->bLife < 40)
-     bMoraleCategory--;
-
-   // if getting REALLY low on life
-   if (pSoldier->bLife < 20)
-     bMoraleCategory--;
-  }
+	// make idiot administrators much more aggressive
+	if ( pSoldier->ubSoldierClass == SOLDIER_CLASS_ADMINISTRATOR )
+	{
+		bMoraleCategory += 2;
+	}
 
 
- // if soldier is currently not under fire
- if (!pSoldier->bUnderFire)
-   bMoraleCategory++;
+	// if still full of energy
+	if (pSoldier->bBreath > 75)
+		bMoraleCategory++;
+	else
+	{
+		// if getting a bit low on breath
+		if (pSoldier->bBreath < 40)
+			bMoraleCategory--;
+
+		// if getting REALLY low on breath
+		if (pSoldier->bBreath < 10)
+			bMoraleCategory--;
+	}
 
 
- // if adjustments made it outside the allowed limits
- if (bMoraleCategory < MORALE_HOPELESS)
-   bMoraleCategory = MORALE_HOPELESS;
- else
-  {
-   if (bMoraleCategory > MORALE_FEARLESS)
-     bMoraleCategory = MORALE_FEARLESS;
-  }
+	// if still very healthy
+	if (pSoldier->bLife > 75)
+		bMoraleCategory++;
+	else
+	{
+		// if getting a bit low on life
+		if (pSoldier->bLife < 40)
+			bMoraleCategory--;
 
- // brave guys never get hopeless, at worst they get worried
- if (bMoraleCategory == MORALE_HOPELESS &&
-     (pSoldier->bAttitude == BRAVESOLO || pSoldier->bAttitude == BRAVEAID))
-  bMoraleCategory = MORALE_WORRIED;
+		// if getting REALLY low on life
+		if (pSoldier->bLife < 20)
+			bMoraleCategory--;
+	}
+
+
+	// if soldier is currently not under fire
+	if (!pSoldier->bUnderFire)
+		bMoraleCategory++;
+
+
+	// if adjustments made it outside the allowed limits
+	if (bMoraleCategory < MORALE_HOPELESS)
+		bMoraleCategory = MORALE_HOPELESS;
+	else
+	{
+		if (bMoraleCategory > MORALE_FEARLESS)
+			bMoraleCategory = MORALE_FEARLESS;
+	}
+
+	// brave guys never get hopeless, at worst they get worried
+	if (bMoraleCategory == MORALE_HOPELESS &&
+		(pSoldier->bAttitude == BRAVESOLO || pSoldier->bAttitude == BRAVEAID))
+		bMoraleCategory = MORALE_WORRIED;
 
 	SLOGD(DEBUG_TAG_AI, "Morale = %d (category %d), iOurTotalThreat %d, iTheirTotalThreat %d",
 				sMorale, bMoraleCategory, iOurTotalThreat, iTheirTotalThreat);
 
- return(bMoraleCategory);
+	return(bMoraleCategory);
 }
 
 INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForCover, SOLDIERTYPE * pMe )
@@ -1946,35 +1946,43 @@ INT16 RoamingRange(SOLDIERTYPE *pSoldier, INT16 * pusFromGridNo)
 	switch (pSoldier->bOrders)
 	{
 		// JA2 GOLD: give non-NPCs a 5 tile roam range for cover in combat when being shot at
-		case STATIONARY:			if (pSoldier->ubProfile != NO_PROFILE || (pSoldier->bAlertStatus < STATUS_BLACK && !(pSoldier->bUnderFire)))
-									{
-										return( 0 );
-									}
-									else
-									{
-										return( 5 );
-									}		case ONGUARD:					return( 5 );
-		case CLOSEPATROL:			return( 15 );
+		case STATIONARY:
+			if (pSoldier->ubProfile != NO_PROFILE || (pSoldier->bAlertStatus < STATUS_BLACK && !(pSoldier->bUnderFire)))
+			{
+				return( 0 );
+			}
+			else
+			{
+				return( 5 );
+			}
+		case ONGUARD:
+			return( 5 );
+		case CLOSEPATROL:
+			return( 15 );
 		case RNDPTPATROL:
-		case POINTPATROL:			return(10 );     // from nextPatrolGrid, not whereIWas
-		case FARPATROL:				if (pSoldier->bAlertStatus < STATUS_RED)
-													{
-														return( 25 );
-													}
-													else
-													{
-														return( 50 );
-													}
-		case ONCALL:					if (pSoldier->bAlertStatus < STATUS_RED)
-													{
-														return( 10 );
-													}
-													else
-													{
-														return( 30 );
-													}
-		case SEEKENEMY:				*pusFromGridNo = pSoldier->sGridNo; // from current position!
-													return(MAX_ROAMING_RANGE);
+		case POINTPATROL:
+			return(10 );     // from nextPatrolGrid, not whereIWas
+		case FARPATROL:
+			if (pSoldier->bAlertStatus < STATUS_RED)
+			{
+				return( 25 );
+			}
+			else
+			{
+				return( 50 );
+			}
+		case ONCALL:
+			if (pSoldier->bAlertStatus < STATUS_RED)
+			{
+				return( 10 );
+			}
+			else
+			{
+				return( 30 );
+			}
+		case SEEKENEMY:
+			*pusFromGridNo = pSoldier->sGridNo; // from current position!
+			return(MAX_ROAMING_RANGE);
 		default:
 			return(0);
 	}
@@ -2094,10 +2102,10 @@ UINT8 SoldierDifficultyLevel( const SOLDIERTYPE * pSoldier )
 
 BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection )
 {
-	INT8	bDirChange;
-	INT8	bTempDir;
-	INT8	bLoop;
-	BOOLEAN	fFound;
+	INT8    bDirChange;
+	INT8    bTempDir;
+	INT8    bLoop;
+	BOOLEAN fFound;
 
 	bDirChange = (INT8) QuickestDirection( pCreature->bDirection, bNewDirection );
 
@@ -2153,13 +2161,13 @@ INT32 RangeChangeDesire( const SOLDIERTYPE * pSoldier )
 	iRangeFactorMultiplier = pSoldier->bAIMorale - 1;
 	switch (pSoldier->bAttitude)
 	{
-		case DEFENSIVE:		iRangeFactorMultiplier += -1; break;
-		case BRAVESOLO:		iRangeFactorMultiplier +=  2; break;
-		case BRAVEAID:		iRangeFactorMultiplier +=  2; break;
-		case CUNNINGSOLO:	iRangeFactorMultiplier +=  0; break;
-		case CUNNINGAID:	iRangeFactorMultiplier +=  0; break;
+		case DEFENSIVE:      iRangeFactorMultiplier += -1; break;
+		case BRAVESOLO:      iRangeFactorMultiplier +=  2; break;
+		case BRAVEAID:       iRangeFactorMultiplier +=  2; break;
+		case CUNNINGSOLO:    iRangeFactorMultiplier +=  0; break;
+		case CUNNINGAID:     iRangeFactorMultiplier +=  0; break;
 		case ATTACKSLAYONLY:
-		case AGGRESSIVE:	iRangeFactorMultiplier +=  1; break;
+		case AGGRESSIVE:     iRangeFactorMultiplier +=  1; break;
 	}
 	if ( gTacticalStatus.bConsNumTurnsWeHaventSeenButEnemyDoes > 0 )
 	{
