@@ -57,8 +57,8 @@ extern UINT8 AtHeight[PROFILE_Z_SIZE];
 // then the structure is the "base" of the object
 // and its hitpoint value is the one for the object
 //
-//															        vv    generic flags for all structures
-//															     vvv      type flags
+//    vv       generic flags for all structures
+//    vvv      type flags
 //
 
 // how to handle explodable structures

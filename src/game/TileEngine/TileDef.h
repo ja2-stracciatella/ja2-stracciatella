@@ -6,8 +6,8 @@
 
 
 // CATEGORY TYPES
-#define NO_TILE									64000
-#define REQUIRES_SMOOTHING_TILE	19
+#define NO_TILE				64000
+#define REQUIRES_SMOOTHING_TILE		19
 
 enum TileElementFlags
 {
@@ -28,8 +28,8 @@ enum TileElementFlags
 ENUM_BITSET(TileElementFlags)
 
 
-#define MAX_ANIMATED_TILES			200
-#define	WALL_HEIGHT		50
+#define MAX_ANIMATED_TILES		200
+#define WALL_HEIGHT			50
 
 
 enum WallOrientationDefines
@@ -59,23 +59,23 @@ enum TerrainTypeDefines
 // These structures are placed in a list and used for all tile imagery
 struct TILE_IMAGERY
 {
-	HVOBJECT									vo;
-	UINT32										fType;
-  AuxObjectData *						pAuxData;
-	RelTileLoc *							pTileLocData;
-	STRUCTURE_FILE_REF *			pStructureFileRef;
-	UINT8											ubTerrainID;
-	BYTE											bRaisedObjectType;
+	HVOBJECT           vo;
+	UINT32             fType;
+	AuxObjectData      *pAuxData;
+	RelTileLoc         *pTileLocData;
+	STRUCTURE_FILE_REF *pStructureFileRef;
+	UINT8              ubTerrainID;
+	BYTE               bRaisedObjectType;
 
 	// Reserved for added room and 32-byte boundaries
-	BYTE													bReserved[ 2 ];
+	BYTE               bReserved[2];
 };
 
 struct TILE_ANIMATION_DATA
 {
-	UINT16							*pusFrames;
-	INT8								bCurrentFrame;
-	UINT8								ubNumFrames;
+	UINT16 *pusFrames;
+	INT8   bCurrentFrame;
+	UINT8  ubNumFrames;
 };
 
 

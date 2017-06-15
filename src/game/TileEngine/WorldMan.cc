@@ -79,16 +79,16 @@ void CountLevelNodes(void)
 void DebugLevelNodePage(void)
 {
 	MPageHeader(L"DEBUG LEVELNODES PAGE 1 OF 1");
-  INT32 y = DEBUG_PAGE_START_Y;
-  INT32 h = DEBUG_PAGE_LINE_HEIGHT;
+	INT32 y = DEBUG_PAGE_START_Y;
+	INT32 h = DEBUG_PAGE_LINE_HEIGHT;
 
 	for (UINT32 uiLoop = 1; uiLoop < 9; uiLoop++)
 	{
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, gzLevelString[uiLoop], guiLNCount[uiLoop]);
 	}
 	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"%d land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX);
-  mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total # levelnodes %d, %d bytes each", guiLNCount[0], sizeof(LEVELNODE));
-  mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total memory for levelnodes %d", guiLNCount[0] * sizeof(LEVELNODE));
+	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total # levelnodes %d, %d bytes each", guiLNCount[0], sizeof(LEVELNODE));
+	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total memory for levelnodes %d", guiLNCount[0] * sizeof(LEVELNODE));
 }
 
 
@@ -855,9 +855,9 @@ bool AddWallToStructLayer(INT32 const map_idx, UINT16 const idx, bool const repl
 		 * then we we want to replace it.  This is because of an existing problem
 		 * with say, INSIDE_TOP_LEFT and OUTSIDE_TOP_LEFT walls coexisting. */
 		if (((wall_orientation  == INSIDE_TOP_RIGHT || wall_orientation  == OUTSIDE_TOP_RIGHT) &&
-			  (check_wall_orient == INSIDE_TOP_RIGHT || check_wall_orient == OUTSIDE_TOP_RIGHT)) ||
-				((wall_orientation  == INSIDE_TOP_LEFT  || wall_orientation  == OUTSIDE_TOP_LEFT) &&
-			  (check_wall_orient == INSIDE_TOP_LEFT  || check_wall_orient == OUTSIDE_TOP_LEFT)))
+			(check_wall_orient == INSIDE_TOP_RIGHT || check_wall_orient == OUTSIDE_TOP_RIGHT)) ||
+			((wall_orientation  == INSIDE_TOP_LEFT  || wall_orientation  == OUTSIDE_TOP_LEFT) &&
+			(check_wall_orient == INSIDE_TOP_LEFT  || check_wall_orient == OUTSIDE_TOP_LEFT)))
 		{
 			// Same, if replace, replace here
 			return replace ? ReplaceStructIndex(map_idx, i->usIndex, idx) : false;
@@ -935,7 +935,7 @@ void AddShadowToTail(UINT32 const iMapIndex, UINT16 const usIndex)
 
 //Kris:  identical shadows can exist in the same gridno, though it makes no sense
 //		because it actually renders the shadows darker than the others.  This is an
-//	  undesirable effect with walls and buildings so I added this function to make
+//		undesirable effect with walls and buildings so I added this function to make
 //		sure there isn't already a shadow before placing it.
 void AddExclusiveShadow(UINT32 iMapIndex, UINT16 usIndex)
 {
@@ -1145,7 +1145,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* co
 
 BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
-  //if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
+	//if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
 	{
 		// Get surface data
 		UINT16 const usAnimSurface = GetSoldierAnimationSurface(pSoldier);
@@ -1652,7 +1652,7 @@ BOOLEAN RemoveAllTopmostsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32
 			}
 		}
 	}
-  return fRetVal;
+	return fRetVal;
 }
 
 
@@ -1725,7 +1725,7 @@ UINT8	GetTerrainType(GridNo const grid_no)
 
 bool Water(GridNo const grid_no)
 {
-  if (grid_no == NOWHERE) return false;
+	if (grid_no == NOWHERE) return false;
 
 	UINT8 const terrain = GetTerrainType(grid_no);
 	return

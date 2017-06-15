@@ -63,20 +63,20 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
+#define SET_MOVEMENTCOST( a, b, c, d )		( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
-#define SET_CURRMOVEMENTCOST( a, b )					SET_MOVEMENTCOST( usGridNo, a, 0, b )
+#define SET_CURRMOVEMENTCOST( a, b )		SET_MOVEMENTCOST( usGridNo, a, 0, b )
 
 #define TEMP_FILE_FOR_TILESET_CHANGE "jatiles34.dat"
 
-#define	 MAP_FULLSOLDIER_SAVED				0x00000001
-#define	 MAP_WORLDLIGHTS_SAVED				0x00000004
-#define	 MAP_WORLDITEMS_SAVED					0x00000008
-#define  MAP_EXITGRIDS_SAVED					0x00000010
-#define  MAP_DOORTABLE_SAVED					0x00000020
-#define  MAP_EDGEPOINTS_SAVED					0x00000040
-#define  MAP_AMBIENTLIGHTLEVEL_SAVED	0x00000080
-#define	 MAP_NPCSCHEDULES_SAVED				0x00000100
+#define MAP_FULLSOLDIER_SAVED			0x00000001
+#define MAP_WORLDLIGHTS_SAVED			0x00000004
+#define MAP_WORLDITEMS_SAVED			0x00000008
+#define MAP_EXITGRIDS_SAVED			0x00000010
+#define MAP_DOORTABLE_SAVED			0x00000020
+#define MAP_EDGEPOINTS_SAVED			0x00000040
+#define MAP_AMBIENTLIGHTLEVEL_SAVED		0x00000080
+#define MAP_NPCSCHEDULES_SAVED			0x00000100
 
 #include "LoadScreen.h"
 
@@ -107,7 +107,7 @@ INT16		gsRecompileAreaBottom = 0;
 /** Check if the grid number is valid. */
 static BOOLEAN isValidGridNo(INT32 gridNo)
 {
-  return (gridNo >= 0) && (gridNo < WORLD_MAX);
+	return (gridNo >= 0) && (gridNo < WORLD_MAX);
 }
 
 BOOLEAN DoorAtGridNo(const UINT32 iMapIndex)
@@ -208,7 +208,7 @@ static void LoadTileSurfaces(char const tile_surface_filenames[][32], TileSetID 
 try
 {
 	SetRelativeStartAndEndPercentage(0, 1, 35, L"Tile Surfaces");
-  for (UINT32 i = 0; i != NUMBEROFTILETYPES; ++i)
+	for (UINT32 i = 0; i != NUMBEROFTILETYPES; ++i)
 	{
 		UINT32 const percentage = i * 100 / (NUMBEROFTILETYPES - 1);
 		RenderProgressBar(0, percentage);
@@ -279,14 +279,14 @@ void BuildTileShadeTables()
 		if (!t) continue;
 
 		// Don't create shade tables if default were already used once!
-    if(GameState::getInstance()->isEditorMode())
-    {
-      if (!gbNewTileSurfaceLoaded[i] && !gfEditorForceShadeTableRebuild) continue;
-    }
-    else
-    {
-      if (!gbNewTileSurfaceLoaded[i]) continue;
-    }
+		if(GameState::getInstance()->isEditorMode())
+		{
+			if (!gbNewTileSurfaceLoaded[i] && !gfEditorForceShadeTableRebuild) continue;
+		}
+		else
+		{
+			if (!gbNewTileSurfaceLoaded[i]) continue;
+		}
 		RenderProgressBar(0, i * 100 / NUMBEROFTILETYPES);
 		CreateTilePaletteTables(t->vo);
 	}
@@ -301,20 +301,20 @@ void DestroyTileShadeTables(void)
 		if (ti == NULL) continue;
 
 		// Don't delete shade tables if default are still being used...
-    if(GameState::getInstance()->isEditorMode())
-    {
-      if (gbNewTileSurfaceLoaded[i] || gfEditorForceShadeTableRebuild)
-      {
-        ti->vo->DestroyPalettes();
-      }
-    }
-    else
-    {
-      if (gbNewTileSurfaceLoaded[i])
-      {
-        ti->vo->DestroyPalettes();
-      }
-    }
+		if(GameState::getInstance()->isEditorMode())
+		{
+			if (gbNewTileSurfaceLoaded[i] || gfEditorForceShadeTableRebuild)
+			{
+				ti->vo->DestroyPalettes();
+			}
+		}
+		else
+		{
+			if (gbNewTileSurfaceLoaded[i])
+			{
+				ti->vo->DestroyPalettes();
+			}
+		}
 	}
 }
 
@@ -386,10 +386,10 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 
 	UINT8			ubDirLoop;
 
-  if(!isValidGridNo(usGridNo))
-  {
-    return;
-  }
+	if(!isValidGridNo(usGridNo))
+	{
+		return;
+	}
 
 /*
 */
@@ -400,7 +400,7 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 		for ( ubDirLoop = 0; ubDirLoop < 8; ubDirLoop++ )
 		{
 			if ( gpWorldLevelData[ usGridNo ].sHeight !=
-					 gpWorldLevelData[ usGridNo + DirectionInc( ubDirLoop ) ].sHeight )
+				gpWorldLevelData[ usGridNo + DirectionInc( ubDirLoop ) ].sHeight )
 			{
 				SET_CURRMOVEMENTCOST( ubDirLoop, TRAVELCOST_OBSTACLE );
 			}
@@ -577,12 +577,12 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 						}
 					}
 					else if ( (pStructure->fFlags & STRUCTURE_CAVEWALL ) )
-          {
+					{
 						for (ubDirLoop=0; ubDirLoop < NUM_WORLD_DIRECTIONS; ubDirLoop++)
 						{
 							SET_CURRMOVEMENTCOST( ubDirLoop, TRAVELCOST_CAVEWALL );
 						}
-          }
+					}
 					else
 					{
 						for (ubDirLoop=0; ubDirLoop < NUM_WORLD_DIRECTIONS; ubDirLoop++)
@@ -1096,7 +1096,7 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 		for( sGridX = sCentreGridX - LOCAL_RADIUS - 1; sGridX < sCentreGridX + LOCAL_RADIUS + 1; sGridX++ )
 		{
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-      CompileTileMovementCosts( usGridNo );
+			CompileTileMovementCosts( usGridNo );
 		}
 	}
 }
@@ -1129,7 +1129,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 				usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
 				// times 2 for 2 levels, times 2 for UINT16s
 	//			memset( &(gubWorldMovementCosts[usGridNo]), 0, MAXDIR * 2 * 2 );
-        if (isValidGridNo(usGridNo))
+				if (isValidGridNo(usGridNo))
 				{
 					for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
 					{
@@ -1147,7 +1147,7 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 			for( sGridX = sCentreGridX - bRadius - 1; sGridX < sCentreGridX + bRadius + 1; sGridX++ )
 			{
 				usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-        CompileTileMovementCosts( usGridNo );
+				CompileTileMovementCosts( usGridNo );
 			}
 		}
 	}
@@ -1224,7 +1224,7 @@ void RecompileLocalMovementCostsInAreaWithFlags( void )
 		for( sGridX = gsRecompileAreaLeft; sGridX <= gsRecompileAreaRight; sGridX++ )
 		{
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-      CompileTileMovementCosts( usGridNo );
+			CompileTileMovementCosts( usGridNo );
 		}
 	}
 }
@@ -1329,14 +1329,14 @@ static void SaveMapLights(HWFILE);
 BOOLEAN SaveWorld(char const* const filename)
 try
 {
-  // Let's save map into Data/maps
-  std::string path = GCM->getNewMapFolder();
-  FileMan::createDir(path.c_str());
-  path = FileMan::joinPaths(path.c_str(), (const char*)filename);
+	// Let's save map into Data/maps
+	std::string path = GCM->getNewMapFolder();
+	FileMan::createDir(path.c_str());
+	path = FileMan::joinPaths(path.c_str(), (const char*)filename);
 	AutoSGPFile f(FileMan::openForWriting(path.c_str()));
 
 	// Write JA2 Version ID
-  FLOAT mapVersion = getMajorMapVersion();
+	FLOAT mapVersion = getMajorMapVersion();
 	FileWrite(f, &mapVersion, sizeof(FLOAT));
 	if (mapVersion >= 4.00)
 	{
@@ -1868,8 +1868,8 @@ try
 			if (basic.fDetailedPlacement)
 			{ //skip static priority placement
 
-        // Always use windows format because here we are loading a map
-        // file, not a user save
+				// Always use windows format because here we are loading a map
+				// file, not a user save
 				ExtractSoldierCreateFromFile(f, &priority, false);
 
 				if (priority.ubProfile != NO_PROFILE)
@@ -2036,10 +2036,10 @@ try
 	FLOAT dMajorMapVersion;
 	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
 
-  if(isRussianVersion() && (dMajorMapVersion != 6.00))
-  {
-    throw std::runtime_error("Incompatible major map version");
-  }
+	if(isRussianVersion() && (dMajorMapVersion != 6.00))
+	{
+		throw std::runtime_error("Incompatible major map version");
+	}
 
 	UINT8 ubMinorMapVersion;
 	if (dMajorMapVersion >= 4.00)
@@ -2193,18 +2193,18 @@ try
 
 			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
-      if (ubMinorMapVersion <= 25)
-      {
-        // Check patching for phantom menace struct data
-        if (gTileDatabase[usTileIndex].uiFlags & UNDERFLOW_FILLER)
-        { /* HACK000F Workaround: Skip underflow fillers, when there is more
-        	 * than one struct on this tile, otherwise adding the underflow
-        	 * replacement struct will fail */
+			if (ubMinorMapVersion <= 25)
+			{
+				// Check patching for phantom menace struct data
+				if (gTileDatabase[usTileIndex].uiFlags & UNDERFLOW_FILLER)
+				{ /* HACK000F Workaround: Skip underflow fillers, when there is more
+					 * than one struct on this tile, otherwise adding the underflow
+					 * replacement struct will fail */
 					if (bCounts[cnt][2] > 1) continue;
 
-			    usTileIndex = GetTileIndexFromTypeSubIndex(ubType, 1);
-        }
-      }
+					usTileIndex = GetTileIndexFromTypeSubIndex(ubType, 1);
+				}
+			}
 
 			try
 			{
@@ -2280,27 +2280,27 @@ try
 		}
 	}
 
-  if(isRussianVersion())
-  {
-    FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
-  }
+	if(isRussianVersion())
+	{
+		FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
+	}
 
 	SetRelativeStartAndEndPercentage(0, 58, 59, L"Loading room information...");
 	RenderProgressBar(0, 100);
 
 	FileRead(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
 
-  if(GameState::getInstance()->isEditorMode())
-  {
-    UINT8 max_room_no = 0;
-    for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
-    {
-      if (max_room_no < gubWorldRoomInfo[cnt])
-        max_room_no = gubWorldRoomInfo[cnt];
-    }
-    if (max_room_no < 255) ++max_room_no;
-    gubMaxRoomNumber = max_room_no;
-  }
+	if(GameState::getInstance()->isEditorMode())
+	{
+		UINT8 max_room_no = 0;
+		for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
+		{
+			if (max_room_no < gubWorldRoomInfo[cnt])
+				max_room_no = gubWorldRoomInfo[cnt];
+		}
+		if (max_room_no < 255) ++max_room_no;
+		gubMaxRoomNumber = max_room_no;
+	}
 
 	memset(gubWorldRoomHidden, TRUE, sizeof(gubWorldRoomHidden));
 
@@ -2423,13 +2423,13 @@ try
 
 	gfWorldLoaded = TRUE;
 
-  if(GameState::getInstance()->isEditorMode())
-  {
-    strlcpy(g_filename, filename, lengthof(g_filename));
-  }
+	if(GameState::getInstance()->isEditorMode())
+	{
+		strlcpy(g_filename, filename, lengthof(g_filename));
+	}
 
-  // ATE: Not while updating maps!
-  if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();
+	// ATE: Not while updating maps!
+	if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();
 
 	RenderProgressBar(0, 100);
 	DequeueAllKeyBoardEvents();
@@ -2545,10 +2545,10 @@ void TrashWorld(void)
 	TrashDoorStatusArray();
 
 	gfWorldLoaded = FALSE;
-  if(GameState::getInstance()->isEditorMode())
-  {
-    strcpy(g_filename, "none");
-  }
+	if(GameState::getInstance()->isEditorMode())
+	{
+		strcpy(g_filename, "none");
+	}
 }
 
 static void TrashMapTile(const INT16 MapTile)
@@ -2665,12 +2665,12 @@ static void RemoveWireFrameTiles(GridNo);
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 {
-	INT32					cnt;
-	STRUCTURE		 *pStructure;
-	INT16					sGridNo;
-	UINT8					ubWallOrientation;
-	INT8					bNumWallsSameGridNo;
-  UINT16        usWireFrameIndex;
+	INT32     cnt;
+	STRUCTURE *pStructure;
+	INT16     sGridNo;
+	UINT8     ubWallOrientation;
+	INT8      bNumWallsSameGridNo;
+	UINT16    usWireFrameIndex;
 
 	// Create world randomly from tiles
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -2736,111 +2736,111 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 				}
 				// Check for windows
 				else
-        {
-          if ( pStructure->fFlags & STRUCTURE_WALLNWINDOW )
-				  {
-					  // Does the gridno we are over have a non-visible tile?
-					  // Based on orientation
-					  ubWallOrientation = pStructure->ubWallOrientation;
+				{
+					if ( pStructure->fFlags & STRUCTURE_WALLNWINDOW )
+					{
+						// Does the gridno we are over have a non-visible tile?
+						// Based on orientation
+						ubWallOrientation = pStructure->ubWallOrientation;
 
-					  switch( ubWallOrientation )
-					  {
-						  case OUTSIDE_TOP_LEFT:
-						  case INSIDE_TOP_LEFT:
+						switch( ubWallOrientation )
+						{
+							case OUTSIDE_TOP_LEFT:
+							case INSIDE_TOP_LEFT:
 
-							  // Get gridno
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
+								// Get gridno
+								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
 
-							  if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-							  {
-								  AddWireFrame((INT16)cnt, WIREFRAMES2, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-							  }
-							  break;
+								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
+								{
+									AddWireFrame((INT16)cnt, WIREFRAMES2, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+								}
+								break;
 
-						  case OUTSIDE_TOP_RIGHT:
-						  case INSIDE_TOP_RIGHT:
+							case OUTSIDE_TOP_RIGHT:
+							case INSIDE_TOP_RIGHT:
 
-							  // Get gridno
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+								// Get gridno
+								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
 
-							  if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-							  {
-								  AddWireFrame((INT16)cnt, WIREFRAMES1, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-							  }
-							  break;
+								if ( IsRoofVisibleForWireframe( sGridNo ) && !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
+								{
+									AddWireFrame((INT16)cnt, WIREFRAMES1, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+								}
+								break;
 
-					  }
+						}
 
-				  }
+					}
 
-				  // Check for walls
-				  if ( pStructure->fFlags & STRUCTURE_WALLSTUFF )
-				  {
-					  // Does the gridno we are over have a non-visible tile?
-					  // Based on orientation
-					  ubWallOrientation = pStructure->ubWallOrientation;
+					// Check for walls
+					if ( pStructure->fFlags & STRUCTURE_WALLSTUFF )
+					{
+						// Does the gridno we are over have a non-visible tile?
+						// Based on orientation
+						ubWallOrientation = pStructure->ubWallOrientation;
 
-            usWireFrameIndex = GetWireframeGraphicNumToUseForWall( (UINT16)cnt, pStructure );
+						usWireFrameIndex = GetWireframeGraphicNumToUseForWall( (UINT16)cnt, pStructure );
 
-					  switch( ubWallOrientation )
-					  {
-						  case OUTSIDE_TOP_LEFT:
-						  case INSIDE_TOP_LEFT:
+						switch( ubWallOrientation )
+						{
+							case OUTSIDE_TOP_LEFT:
+							case INSIDE_TOP_LEFT:
 
-							  // Get gridno
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
+								// Get gridno
+								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( SOUTH ) );
 
-							  if ( IsRoofVisibleForWireframe( sGridNo ) )
-							  {
-								   bNumWallsSameGridNo++;
+								if ( IsRoofVisibleForWireframe( sGridNo ) )
+								{
+									bNumWallsSameGridNo++;
 
-								   AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+									AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
 
-								   // Check along our direction to see if we are a corner
-								   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( WEST ) );
-								   sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-								   if (!IsHiddenTileMarkerThere(sGridNo))
-								   {
-									   // Place corner!
-									   AddWireFrame((INT16)cnt, WIREFRAMES9, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-								   }
-							  }
-							  break;
+									// Check along our direction to see if we are a corner
+									sGridNo = NewGridNo( (INT16)cnt, DirectionInc( WEST ) );
+									sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
+									if (!IsHiddenTileMarkerThere(sGridNo))
+									{
+										// Place corner!
+										AddWireFrame((INT16)cnt, WIREFRAMES9, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+									}
+								}
+								break;
 
-						  case OUTSIDE_TOP_RIGHT:
-						  case INSIDE_TOP_RIGHT:
+							case OUTSIDE_TOP_RIGHT:
+							case INSIDE_TOP_RIGHT:
 
-							  // Get gridno
-							  sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+								// Get gridno
+								sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
 
-							  if ( IsRoofVisibleForWireframe( sGridNo ) )
-							  {
-								   bNumWallsSameGridNo++;
+								if ( IsRoofVisibleForWireframe( sGridNo ) )
+								{
+									bNumWallsSameGridNo++;
 
-								   AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+									AddWireFrame((INT16)cnt, usWireFrameIndex, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
 
-								   // Check along our direction to see if we are a corner
-								   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( NORTH ) );
-								   sGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
-								   if (!IsHiddenTileMarkerThere(sGridNo))
-								   {
-									   // Place corner!
-									   AddWireFrame((INT16)cnt, WIREFRAMES8, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-								   }
+									// Check along our direction to see if we are a corner
+									sGridNo = NewGridNo( (INT16)cnt, DirectionInc( NORTH ) );
+									sGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
+									if (!IsHiddenTileMarkerThere(sGridNo))
+									{
+										// Place corner!
+										AddWireFrame((INT16)cnt, WIREFRAMES8, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+									}
 
-							  }
-							  break;
+								}
+								break;
 
-					  }
+						}
 
-					  // Check for both walls
-					  if ( bNumWallsSameGridNo == 2 )
-					  {
-						   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
-						   sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-						   AddWireFrame((INT16)cnt, WIREFRAMES7, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
-					  }
-          }
+						// Check for both walls
+						if ( bNumWallsSameGridNo == 2 )
+						{
+							sGridNo = NewGridNo( (INT16)cnt, DirectionInc( EAST ) );
+							sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
+							AddWireFrame((INT16)cnt, WIREFRAMES7, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
+						}
+					}
 				}
 
 				pStructure = pStructure->pNext;
@@ -2989,8 +2989,8 @@ static bool IsRoofVisibleForWireframe(GridNo const sMapPos)
 
 TEST(WorldDef, asserts)
 {
-  EXPECT_EQ(sizeof(TEAMSUMMARY), 15);
-  EXPECT_EQ(sizeof(SUMMARYFILE), 408);
+	EXPECT_EQ(sizeof(TEAMSUMMARY), 15);
+	EXPECT_EQ(sizeof(SUMMARYFILE), 408);
 }
 
 #endif

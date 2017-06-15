@@ -1,5 +1,5 @@
-#ifndef		_SAVELOADMAP__H_
-#define		_SAVELOADMAP__H_
+#ifndef _SAVELOADMAP__H_
+#define _SAVELOADMAP__H_
 
 #include "WorldDef.h"
 #include "Exit_Grids.h"
@@ -14,20 +14,20 @@ enum
 	SLM_OBJECT,
 	SLM_STRUCT,
 	SLM_SHADOW,
-	SLM_MERC,										//Should never be used
+	SLM_MERC, //Should never be used
 	SLM_ROOF,
 	SLM_ONROOF,
-	SLM_TOPMOST,								//Should never be used
+	SLM_TOPMOST, //Should never be used
 
 	// For Removing
 	SLM_REMOVE_LAND,
 	SLM_REMOVE_OBJECT,
 	SLM_REMOVE_STRUCT,
 	SLM_REMOVE_SHADOW,
-	SLM_REMOVE_MERC,										//Should never be used
+	SLM_REMOVE_MERC, //Should never be used
 	SLM_REMOVE_ROOF,
 	SLM_REMOVE_ONROOF,
-	SLM_REMOVE_TOPMOST,								//Should never be used
+	SLM_REMOVE_TOPMOST, //Should never be used
 
 	//Smell, or Blood is used
 	SLM_BLOOD_SMELL,
@@ -47,13 +47,13 @@ enum
 
 struct MODIFY_MAP
 {
-	UINT16	usGridNo;				//The gridno the graphic will be applied to
-	UINT16	usImageType;			//graphic index
-	UINT16	usSubImageIndex;		//
-//	UINT16	usIndex;
-	UINT8		ubType;						// the layer it will be applied to
+	UINT16 usGridNo;		//The gridno the graphic will be applied to
+	UINT16 usImageType;		//graphic index
+	UINT16 usSubImageIndex;	//
+	//UINT16 usIndex;
+	UINT8  ubType;		// the layer it will be applied to
 
-	UINT8		ubExtra;					// Misc. variable used to strore arbritary values
+	UINT8 ubExtra;	// Misc. variable used to strore arbritary values
 };
 
 

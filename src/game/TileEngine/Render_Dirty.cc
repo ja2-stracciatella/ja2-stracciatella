@@ -110,16 +110,16 @@ static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 
 	if (guiNumBackSaves == gBackSaves.size())
 	{
-    // out of back saves capacity
-    // let's add some more
-    const int increment = 100;
-    SLOGI(DEBUG_TAG_RENDERWORLD, "Increasing background slots to %d", gBackSaves.size() + increment);
-    for(int i = 0; i < increment; i++) {
-      gBackSaves.push_back(new BACKGROUND_SAVE());
-    }
+		// out of back saves capacity
+		// let's add some more
+		const int increment = 100;
+		SLOGI(DEBUG_TAG_RENDERWORLD, "Increasing background slots to %d", gBackSaves.size() + increment);
+		for(int i = 0; i < increment; i++) {
+			gBackSaves.push_back(new BACKGROUND_SAVE());
+		}
 	}
 
-  return gBackSaves[guiNumBackSaves++];
+	return gBackSaves[guiNumBackSaves++];
 }
 
 
@@ -299,10 +299,10 @@ void FreeBackgroundRect(BACKGROUND_SAVE* const b)
 
 void FreeBackgroundRectPending(BACKGROUND_SAVE* const b)
 {
-  if(b)
-  {
-    b->fPendingDelete = TRUE;
-  }
+	if(b)
+	{
+		b->fPendingDelete = TRUE;
+	}
 }
 
 
@@ -334,7 +334,7 @@ void FreeBackgroundRectType(BackgroundFlags const uiFlags)
 void InitializeBackgroundRects(void)
 {
 	guiNumBackSaves = 0;
-  gDirtyClipRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	gDirtyClipRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -383,9 +383,9 @@ void RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE* const b)
 
 
 /* Dirties a single-frame rect exactly the size needed to save the background
- * for a given call to gprintf. Note that this must be called before the
- * backgrounds are saved, and before the actual call to gprintf that writes to
- * the video buffer. */
+	* for a given call to gprintf. Note that this must be called before the
+	* backgrounds are saved, and before the actual call to gprintf that writes to
+	* the video buffer. */
 static void GDirty(INT16 const x, INT16 const y, wchar_t const* const str)
 {
 	UINT16 const length = StringPixLength(str, FontDefault);

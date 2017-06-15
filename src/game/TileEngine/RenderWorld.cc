@@ -966,8 +966,8 @@ zlevel_topmost:
 												OneCDirection(s.bDirection);
 										}
 										break;
-                                    default:
-                                        break;
+									default:
+										break;
 								}
 
 								// IF we are not active, or are a placeholder for multi-tile animations do nothing
@@ -1141,8 +1141,8 @@ zlevel_topmost:
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
 								break;
 							}
-                            default:
-                                break;
+							default:
+								break;
 						}
 
 						// Adjust for interface level
@@ -1642,13 +1642,13 @@ static void ScrollBackground(INT16 sScrollXIncrement, INT16 sScrollYIncrement)
 
 
 enum ScrollType {
-  ScrollType_Undefined,
-  ScrollType_Horizontal,
-  ScrollType_Vertical
+	ScrollType_Undefined,
+	ScrollType_Horizontal,
+	ScrollType_Vertical
 };
 
 static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOLEAN fForceAdjust, BOOLEAN fCheckOnly,
-                              ScrollType scrollType=ScrollType_Undefined);
+				ScrollType scrollType=ScrollType_Undefined);
 static void ClearMarkedTiles(void);
 static void ExamineZBufferRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
 static void RenderDynamicWorld(void);
@@ -1973,7 +1973,7 @@ static void RenderDynamicWorld(void)
 
 static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, INT16 sScrollYStep, BOOLEAN fCheckOnly)
 {
-  // printf("HandleScrollDirections: %d, (%4d, %4d), %d\n", ScrollFlags, sScrollXStep, sScrollYStep, fCheckOnly);
+	// printf("HandleScrollDirections: %d, (%4d, %4d), %d\n", ScrollFlags, sScrollXStep, sScrollYStep, fCheckOnly);
 	INT16 scroll_x = 0;
 	if (ScrollFlags & SCROLL_LEFT)  scroll_x -= sScrollXStep;
 	if (ScrollFlags & SCROLL_RIGHT) scroll_x += sScrollXStep;
@@ -2278,9 +2278,9 @@ void InitRenderParams(UINT8 ubRestrictionID)
 
 /** This function checks whether the render screen can be moved to new position. */
 static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOLEAN fForceAdjust, BOOLEAN fCheckOnly,
-                              ScrollType scrollType)
+				ScrollType scrollType)
 {
-  // printf("~ %4d, %4d\n", sTempRenderCenterX, sTempRenderCenterY);
+	// printf("~ %4d, %4d\n", sTempRenderCenterX, sTempRenderCenterY);
 
 	// Make sure it's a multiple of 5
 	sTempRenderCenterX = sTempRenderCenterX / CELL_X_SIZE * CELL_X_SIZE + CELL_X_SIZE / 2;
@@ -2314,47 +2314,47 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
 #define TILE_SIZE 10
 
-  // Checking if screen shows areas outside of the map
+	// Checking if screen shows areas outside of the map
 	BOOLEAN fOutLeft   = (gsTLX > sTopLeftWorldX);
 	BOOLEAN fOutRight  = (gsTRX < sTopRightWorldX);
 	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY);            /* top of the screen is above top of the map */
 	BOOLEAN fOutBottom = (gsBLY < sBottomLeftWorldY);          /* bottom of the screen is below bottom if the map */
 
-  int mapHeight = gsBLY - gsTLY;
-  int screenHeight = gsVIEWPORT_END_Y - gsVIEWPORT_START_Y;
+	int mapHeight = gsBLY - gsTLY;
+	int screenHeight = gsVIEWPORT_END_Y - gsVIEWPORT_START_Y;
 
-  int mapWidth = gsTRX - gsTLX;
-  int screenWidth = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
+	int mapWidth = gsTRX - gsTLX;
+	int screenWidth = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
 
 	BOOLEAN fScrollGood = FALSE;
 
 	if (!fOutRight && !fOutLeft && !fOutTop && !fOutBottom)
-  {
-    // Nothing goes outside the borders of the map.
-    // Can change render center.
-    fScrollGood = TRUE;
-  }
-  else
-  {
-    // Something is outside the border.
-    // Let's check if we can move horizontally or vertically.
+	{
+		// Nothing goes outside the borders of the map.
+		// Can change render center.
+		fScrollGood = TRUE;
+	}
+	else
+	{
+		// Something is outside the border.
+		// Let's check if we can move horizontally or vertically.
 
-    if((scrollType == ScrollType_Horizontal)
-       && (((sTempRenderCenterX < gsRenderCenterX) && !fOutLeft)                /** moving left */
-           || ((sTempRenderCenterX > gsRenderCenterX) && !fOutRight)))            /** moving right */
-    {
-      // can move
-      fScrollGood = TRUE;
-    }
+		if((scrollType == ScrollType_Horizontal)
+			&& (((sTempRenderCenterX < gsRenderCenterX) && !fOutLeft)                /** moving left */
+			|| ((sTempRenderCenterX > gsRenderCenterX) && !fOutRight)))            /** moving right */
+		{
+			// can move
+			fScrollGood = TRUE;
+		}
 
-    if((scrollType == ScrollType_Vertical)
-       && (((sTempRenderCenterY < gsRenderCenterY) && !fOutTop)
-           || ((sTempRenderCenterY > gsRenderCenterY) && !fOutBottom)))
-    {
-      // can move
-      fScrollGood = TRUE;
-    }
-  }
+		if((scrollType == ScrollType_Vertical)
+			&& (((sTempRenderCenterY < gsRenderCenterY) && !fOutTop)
+			|| ((sTempRenderCenterY > gsRenderCenterY) && !fOutBottom)))
+		{
+			// can move
+			fScrollGood = TRUE;
+		}
+	}
 
 	// If in editor, anything goes
 	if (gfEditMode && _KeyDown(SHIFT)) fScrollGood = TRUE;
@@ -2369,43 +2369,43 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	{
 		if (fForceAdjust)
 		{
-      INT16 newScreenCenterX = sScreenCenterX;
-      INT16 newScreenCenterY = sScreenCenterY;
+			INT16 newScreenCenterX = sScreenCenterX;
+			INT16 newScreenCenterY = sScreenCenterY;
 
 			if (screenHeight > mapHeight)
-      {
-        // printf("screen height is bigger than map height\n");
-        newScreenCenterY = gsCY;
-      }
+			{
+				// printf("screen height is bigger than map height\n");
+				newScreenCenterY = gsCY;
+			}
 			else if (fOutTop)
 			{
-        newScreenCenterY = gsTLY + sY_S;
+				newScreenCenterY = gsTLY + sY_S;
 			}
 			else if (fOutBottom)
 			{
-        newScreenCenterY = gsBLY - sY_S - 50;
+				newScreenCenterY = gsBLY - sY_S - 50;
 			}
 
 			if (screenWidth > mapWidth)
-      {
-        // printf("screen width is bigger than map width\n");
-        newScreenCenterX = gsCX;
-      }
+			{
+				// printf("screen width is bigger than map width\n");
+				newScreenCenterX = gsCX;
+			}
 			else if (fOutLeft)
 			{
-        newScreenCenterX = gsTLX + sX_S;
+				newScreenCenterX = gsTLX + sX_S;
 			}
 			else if (fOutRight)
 			{
-        newScreenCenterX = gsTRX - sX_S;
+				newScreenCenterX = gsTRX - sX_S;
 			}
 
 			INT16 sTempPosX_W;
 			INT16 sTempPosY_W;
-      FromScreenToCellCoordinates(newScreenCenterX, newScreenCenterY, &sTempPosX_W, &sTempPosY_W);
-      sTempRenderCenterX = sTempPosX_W;
-      sTempRenderCenterY = sTempPosY_W;
-      fScrollGood = TRUE;
+			FromScreenToCellCoordinates(newScreenCenterX, newScreenCenterY, &sTempPosX_W, &sTempPosY_W);
+			sTempRenderCenterX = sTempPosX_W;
+			sTempRenderCenterY = sTempPosY_W;
+			fScrollGood = TRUE;
 		}
 		else
 		{
@@ -2457,7 +2457,7 @@ void InvalidateWorldRedundency(void)
 #define Z_STRIP_DELTA_Y  (Z_SUBLAYERS * 10)
 
 /**********************************************************************************************
- Blt8BPPDataTo16BPPBufferTransZIncClip
+Blt8BPPDataTo16BPPBufferTransZIncClip
 
 	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
 	buffer as a destination. As it is blitting, it checks the Z value of the ZBuffer, and if the
@@ -2720,7 +2720,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 
 
 /**********************************************************************************************
- Blt8BPPDataTo16BPPBufferTransZIncClipSaveZBurnsThrough
+Blt8BPPDataTo16BPPBufferTransZIncClipSaveZBurnsThrough
 
 	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
 	buffer as a destination. As it is blitting, it checks the Z value of the ZBuffer, and if the
@@ -2982,7 +2982,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 
 
 /**********************************************************************************************
- Blt8BPPDataTo16BPPBufferTransZIncObscureClip
+Blt8BPPDataTo16BPPBufferTransZIncObscureClip
 
 	Blits an image into the destination buffer, using an ETRLE brush as a source, and a 16-bit
 	buffer as a destination. As it is blitting, it checks the Z value of the ZBuffer, and if the
@@ -3253,10 +3253,10 @@ BlitNonTransLoop: // blit non-transparent pixels
 
 
 /* Blitter Specs
- * 1) 8 to 16 bpp
- * 2) strip z-blitter
- * 3) clipped
- * 4) trans shadow - if value is 254, makes a shadow */
+	* 1) 8 to 16 bpp
+	* 2) strip z-blitter
+	* 3) clipped
+	* 4) trans shadow - if value is 254, makes a shadow */
 static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
 {
 	UINT32 Unblitted;
@@ -3521,10 +3521,10 @@ BlitNonTransLoop: // blit non-transparent pixels
 }
 
 /* Blitter Specs
- * 1) 8 to 16 bpp
- * 2) strip z-blitter
- * 3) clipped
- * 4) trans shadow - if value is 254, makes a shadow */
+	* 1) 8 to 16 bpp
+	* 2) strip z-blitter
+	* 3) clipped
+	* 4) trans shadow - if value is 254, makes a shadow */
 static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette)
 {
 	UINT32 Unblitted;
@@ -4407,9 +4407,9 @@ void RenderCoverDebug(void)
 
 TEST(RenderWorld, asserts)
 {
-  EXPECT_EQ(lengthof(RenderFX), NUM_RENDER_FX_TYPES);
-  EXPECT_EQ(lengthof(RenderFXStartIndex), NUM_RENDER_FX_TYPES);
-  EXPECT_EQ(lengthof(g_render_fx_layer_flags), NUM_RENDER_FX_TYPES);
+	EXPECT_EQ(lengthof(RenderFX), NUM_RENDER_FX_TYPES);
+	EXPECT_EQ(lengthof(RenderFXStartIndex), NUM_RENDER_FX_TYPES);
+	EXPECT_EQ(lengthof(g_render_fx_layer_flags), NUM_RENDER_FX_TYPES);
 }
 
 #endif

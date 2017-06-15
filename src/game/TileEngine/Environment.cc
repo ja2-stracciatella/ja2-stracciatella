@@ -24,65 +24,72 @@
 
 //effects whether or not time of day effects the lighting.  Underground
 //maps have an ambient light level that is saved in the map, and doesn't change.
-BOOLEAN			gfBasement = FALSE;
-BOOLEAN			gfCaves = FALSE;
+BOOLEAN gfBasement = FALSE;
+BOOLEAN gfCaves = FALSE;
 
 /*
-#define		DAWNLIGHT_START											( 5 * 60 )
-#define		DAWN_START													( 6 * 60 )
-#define   DAY_START														( 8 * 60 )
-#define		TWILLIGHT_START											( 19 * 60 )
-#define		DUSK_START													( 20 * 60 )
-#define   NIGHT_START													( 22 * 60 )
+#define DAWNLIGHT_START		( 5 * 60 )
+#define DAWN_START		( 6 * 60 )
+#define DAY_START		( 8 * 60 )
+#define TWILLIGHT_START		( 19 * 60 )
+#define DUSK_START		( 20 * 60 )
+#define NIGHT_START		( 22 * 60 )
 */
-#define		DAWN_START													( 6 * 60 + 47 )		//6:47AM
-#define   DAY_START														( 7 * 60 + 5 )		//7:05AM
-#define		DUSK_START													( 20 * 60 + 57 )	//8:57PM
-#define   NIGHT_START													( 21 * 60 + 15 )	//9:15PM
+#define DAWN_START		( 6 * 60 + 47 )		//6:47AM
+#define DAY_START		( 7 * 60 + 5 )		//7:05AM
+#define DUSK_START		( 20 * 60 + 57 )	//8:57PM
+#define NIGHT_START		( 21 * 60 + 15 )	//9:15PM
 
-#define		DAWN_TO_DAY													(DAY_START-DAWN_START)
-#define		DAY_TO_DUSK													(DUSK_START-DAY_START)
-#define		DUSK_TO_NIGHT												(NIGHT_START-DUSK_START)
-#define		NIGHT_TO_DAWN												(24*60-NIGHT_START+DAWN_START)
+#define DAWN_TO_DAY		(DAY_START-DAWN_START)
+#define DAY_TO_DUSK		(DUSK_START-DAY_START)
+#define DUSK_TO_NIGHT		(NIGHT_START-DUSK_START)
+#define NIGHT_TO_DAWN		(24*60-NIGHT_START+DAWN_START)
 
-UINT32										guiEnvWeather	 = 0;
-UINT32										guiRainLoop  = NO_SAMPLE;
+UINT32 guiEnvWeather = 0;
+UINT32 guiRainLoop   = NO_SAMPLE;
 
 
 // frame cues for lightning
-UINT8 ubLightningTable[3][10][2]=
-																{	{	{0,	15},
-																		{1, 0},
-																		{2, 0},
-																		{3, 6},
-																		{4, 0},
-																		{5, 0},
-																		{6, 0},
-																		{7, 0},
-																		{8, 0},
-																		{9, 0}	},
+UINT8 ubLightningTable[3][10][2] = {
+	{
+		{0, 15},
+		{1, 0},
+		{2, 0},
+		{3, 6},
+		{4, 0},
+		{5, 0},
+		{6, 0},
+		{7, 0},
+		{8, 0},
+		{9, 0}
+	},
 
-																	{	{0,	15},
-																		{1, 0},
-																		{2, 0},
-																		{3, 6},
-																		{4, 0},
-																		{5, 15},
-																		{6, 0},
-																		{7, 6},
-																		{8, 0},
-																		{9, 0}	},
+	{
+		{0, 15},
+		{1, 0},
+		{2, 0},
+		{3, 6},
+		{4, 0},
+		{5, 15},
+		{6, 0},
+		{7, 6},
+		{8, 0},
+		{9, 0}
+	},
 
-																	{	{0,	15},
-																		{1, 0},
-																		{2, 15},
-																		{3, 0},
-																		{4, 0},
-																		{5, 0},
-																		{6, 0},
-																		{7, 0},
-																		{8, 0},
-																		{9, 0}	}	};
+	{
+		{0, 15},
+		{1, 0},
+		{2, 15},
+		{3, 0},
+		{4, 0},
+		{5, 0},
+		{6, 0},
+		{7, 0},
+		{8, 0},
+		{9, 0}
+	}
+};
 
 
 enum Temperatures
@@ -102,39 +109,39 @@ enum TemperatureEvents
 	TEMPERATURE_GLOBAL_HOT,
 };
 
-#define DESERT_WARM_START		( 8 * 60 )
-#define DESERT_HOT_START		( 9 * 60 )
-#define DESERT_HOT_END			(17 * 60 )
-#define DESERT_WARM_END			(19 * 60 )
+#define DESERT_WARM_START	( 8 * 60 )
+#define DESERT_HOT_START	( 9 * 60 )
+#define DESERT_HOT_END		(17 * 60 )
+#define DESERT_WARM_END		(19 * 60 )
 
-#define GLOBAL_WARM_START		( 9 * 60 )
-#define GLOBAL_HOT_START		(12 * 60 )
-#define GLOBAL_HOT_END			(14 * 60 )
-#define GLOBAL_WARM_END			(17 * 60 )
+#define GLOBAL_WARM_START	( 9 * 60 )
+#define GLOBAL_HOT_START	(12 * 60 )
+#define GLOBAL_HOT_END		(14 * 60 )
+#define GLOBAL_WARM_END		(17 * 60 )
 
 #define HOT_DAY_LIGHTLEVEL 2
 
-BOOLEAN		fTimeOfDayControls=TRUE;
-UINT32		guiEnvTime=0;
-UINT32		guiEnvDay=0;
-UINT8			gubEnvLightValue = 0;
-BOOLEAN		gfDoLighting		 = FALSE;
+BOOLEAN fTimeOfDayControls=TRUE;
+UINT32  guiEnvTime=0;
+UINT32  guiEnvDay=0;
+UINT8   gubEnvLightValue = 0;
+BOOLEAN gfDoLighting = FALSE;
 
-UINT8		gubDesertTemperature = 0;
-UINT8		gubGlobalTemperature = 0;
+UINT8   gubDesertTemperature = 0;
+UINT8   gubGlobalTemperature = 0;
 
 // polled by the game to handle time/atmosphere changes from gamescreen
 void EnvironmentController( BOOLEAN fCheckForLights )
 {
-	UINT32			 uiOldWorldHour;
-	UINT8				 ubLightAdjustFromWeather = 0;
+	UINT32 uiOldWorldHour;
+	UINT8  ubLightAdjustFromWeather = 0;
 
 
 	// do none of this stuff in the basement or caves
 	if( gfBasement || gfCaves )
 	{
-	  guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
-	  guiEnvWeather	&= (~WEATHER_FORECAST_SHOWERS );
+		guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
+		guiEnvWeather	&= (~WEATHER_FORECAST_SHOWERS );
 
 		if ( guiRainLoop != NO_SAMPLE )
 		{
@@ -293,7 +300,7 @@ void BuildDayLightLevels()
 
 void BuildDayAmbientSounds( )
 {
-	INT32									cnt;
+	INT32 cnt;
 
 	// Add events!
 	for ( cnt = 0; cnt < gsNumAmbData; cnt++ )
@@ -361,11 +368,11 @@ void ForecastDayEvents( )
 					ubStormIntensity = 1;
 				}
 
-   // ATE: Disable RAIN!
-	//			AddSameDayRangedStrategicEvent( EVENT_RAINSTORM, uiStartTime, uiEndTime - uiStartTime, ubStormIntensity );
+				// ATE: Disable RAIN!
+				//AddSameDayRangedStrategicEvent( EVENT_RAINSTORM, uiStartTime, uiEndTime - uiStartTime, ubStormIntensity );
 
 				//AddSameDayStrategicEvent( EVENT_BEGINRAINSTORM, uiStartTime, ubStormIntensity );
-				//AddSameDayStrategicEvent( EVENT_ENDRAINSTORM,		uiEndTime, 0 );
+				//AddSameDayStrategicEvent( EVENT_ENDRAINSTORM, uiEndTime, 0 );
 			}
 		}
 	}
@@ -392,16 +399,16 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 		gfDoLighting = TRUE;
 		SLOGD(DEBUG_TAG_RENDERWORLD, "Starting Rain...."  );
 
-	  if ( ubIntensity == 1 )
-	  {
-		  // Turn on rain storms
-		  guiEnvWeather	|= WEATHER_FORECAST_THUNDERSHOWERS;
-	  }
-	  else
-	  {
-		  guiEnvWeather	|= WEATHER_FORECAST_SHOWERS;
-	  }
-  }
+		if ( ubIntensity == 1 )
+		{
+			// Turn on rain storms
+			guiEnvWeather	|= WEATHER_FORECAST_THUNDERSHOWERS;
+		}
+		else
+		{
+			guiEnvWeather	|= WEATHER_FORECAST_SHOWERS;
+		}
+	}
 
 }
 
@@ -420,7 +427,7 @@ void TurnOnNightLights()
 	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->uiFlags & LIGHT_NIGHTTIME &&
-				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
+			!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
 			LightSpritePower(l, TRUE);
 		}
@@ -433,8 +440,8 @@ void TurnOffNightLights()
 	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->uiFlags & LIGHT_NIGHTTIME &&
-				l->uiFlags & LIGHT_SPR_ON &&
-				!(l->uiFlags & MERC_LIGHT))
+			l->uiFlags & LIGHT_SPR_ON &&
+			!(l->uiFlags & MERC_LIGHT))
 		{
 			LightSpritePower(l, FALSE);
 		}
@@ -460,8 +467,8 @@ void TurnOffPrimeLights()
 	FOR_EACH_LIGHT_SPRITE(l)
 	{
 		if (l->uiFlags & LIGHT_PRIMETIME &&
-				l->uiFlags & LIGHT_SPR_ON &&
-				!(l->uiFlags & MERC_LIGHT))
+			l->uiFlags & LIGHT_SPR_ON &&
+			!(l->uiFlags & MERC_LIGHT))
 		{
 			LightSpritePower(l, FALSE);
 		}

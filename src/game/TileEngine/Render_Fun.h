@@ -3,8 +3,8 @@
 
 #include "WorldDef.h"
 
-#define		NO_ROOM			0
-#define   MAX_ROOMS		250
+#define NO_ROOM		0
+#define MAX_ROOMS	250
 
 
 extern UINT8 gubWorldRoomHidden[MAX_ROOMS];

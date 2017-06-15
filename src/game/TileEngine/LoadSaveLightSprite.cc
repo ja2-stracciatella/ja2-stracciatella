@@ -55,7 +55,7 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 			l->uiFlags |= LIGHT_NIGHTTIME;
 		}
 	}
-  MemFree(template_name);
+	MemFree(template_name);
 }
 
 

@@ -44,7 +44,7 @@ void Add3X3Pit( INT32 iMapIndex )
 		AddExitGridToWorld( iMapIndex -   1, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 161, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 160, &ExitGrid );
-		AddExitGridToWorld( iMapIndex,			 &ExitGrid );
+		AddExitGridToWorld( iMapIndex,       &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 160, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 161, &ExitGrid );
 		AddExitGridToWorld( iMapIndex +   1, &ExitGrid );
@@ -72,7 +72,7 @@ void Add5X5Pit( INT32 iMapIndex )
 	AddObjectToTail( iMapIndex - 321, REGWATERTEXTURE19 );
 	AddObjectToTail( iMapIndex + 320, REGWATERTEXTURE20 );
 	AddObjectToTail( iMapIndex + 160, REGWATERTEXTURE21 );
-	AddObjectToTail( iMapIndex,				REGWATERTEXTURE22 );
+	AddObjectToTail( iMapIndex,       REGWATERTEXTURE22 );
 	AddObjectToTail( iMapIndex - 160, REGWATERTEXTURE23 );
 	AddObjectToTail( iMapIndex - 320, REGWATERTEXTURE24 );
 	AddObjectToTail( iMapIndex + 321, REGWATERTEXTURE25 );
@@ -103,7 +103,7 @@ void Add5X5Pit( INT32 iMapIndex )
 		AddExitGridToWorld( iMapIndex - 321, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 320, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 160, &ExitGrid );
-		AddExitGridToWorld( iMapIndex,			 &ExitGrid );
+		AddExitGridToWorld( iMapIndex,       &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 160, &ExitGrid );
 		AddExitGridToWorld( iMapIndex - 320, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 321, &ExitGrid );
