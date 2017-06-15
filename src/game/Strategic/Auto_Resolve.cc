@@ -127,9 +127,9 @@ struct AUTORESOLVE_STRUCT
 	SGPVSurface* iInterfaceBuffer;
 	INT32 iNumMercFaces;
 	INT32 iActualMercFaces; //this represents the real number of merc faces.  Because
-													 //my debug mode allows to freely add and subtract mercs, we
-													 //can add/remove temp mercs, but we don't want to remove the
-													 //actual mercs.
+				//my debug mode allows to freely add and subtract mercs, we
+				//can add/remove temp mercs, but we don't want to remove the
+				//actual mercs.
 	UINT32 uiTimeSlice;
 	UINT32 uiTotalElapsedBattleTimeInMilliseconds;
 	UINT32 uiPrevTime, uiCurrTime;
@@ -178,41 +178,41 @@ struct AUTORESOLVE_STRUCT
 };
 
 //Classifies the type of soldier the soldier cell is
-#define CELL_MERC							0x00000001
-#define CELL_MILITIA					0x00000002
-#define CELL_ELITE						0x00000004
-#define CELL_TROOP						0x00000008
-#define	CELL_ADMIN						0x00000010
-#define CELL_AF_CREATURE			0x00000020
-#define CELL_AM_CREATURE			0x00000040
-#define CELL_YF_CREATURE			0x00000080
-#define CELL_YM_CREATURE			0x00000100
+#define CELL_MERC		0x00000001
+#define CELL_MILITIA		0x00000002
+#define CELL_ELITE		0x00000004
+#define CELL_TROOP		0x00000008
+#define CELL_ADMIN		0x00000010
+#define CELL_AF_CREATURE	0x00000020
+#define CELL_AM_CREATURE	0x00000040
+#define CELL_YF_CREATURE	0x00000080
+#define CELL_YM_CREATURE	0x00000100
 //The team leader is the one with the highest leadership.
 //There can only be one teamleader per side (mercs/civs and enemies)
-#define CELL_TEAMLEADER				0x00000200
+#define CELL_TEAMLEADER		0x00000200
 //Combat flags
-#define CELL_FIREDATTARGET		0x00000400
-#define CELL_DODGEDATTACK			0x00000800
-#define CELL_HITBYATTACKER		0x00001000
-#define CELL_HITLASTFRAME			0x00002000
+#define CELL_FIREDATTARGET	0x00000400
+#define CELL_DODGEDATTACK	0x00000800
+#define CELL_HITBYATTACKER	0x00001000
+#define CELL_HITLASTFRAME	0x00002000
 //Cell statii
-#define CELL_SHOWRETREATTEXT  0x00004000
-#define CELL_RETREATING				0x00008000
-#define CELL_RETREATED				0x00010000
-#define CELL_DIRTY						0x00020000
-#define CELL_PROCESSED				0x00040000
-#define CELL_ASSIGNED					0x00080000
-#define CELL_EPC							0x00100000
-#define CELL_ROBOT						0x00200000
+#define CELL_SHOWRETREATTEXT	0x00004000
+#define CELL_RETREATING		0x00008000
+#define CELL_RETREATED		0x00010000
+#define CELL_DIRTY		0x00020000
+#define CELL_PROCESSED		0x00040000
+#define CELL_ASSIGNED		0x00080000
+#define CELL_EPC		0x00100000
+#define CELL_ROBOT		0x00200000
 
 //Combined flags
-#define CELL_PLAYER						( CELL_MERC | CELL_MILITIA )
-#define CELL_ENEMY						( CELL_ELITE | CELL_TROOP | CELL_ADMIN )
-#define CELL_CREATURE					( CELL_AF_CREATURE | CELL_AM_CREATURE | CELL_YF_CREATURE | CELL_YM_CREATURE )
-#define CELL_FEMALECREATURE	  ( CELL_AF_CREATURE | CELL_YF_CREATURE )
-#define CELL_MALECREATURE			( CELL_AM_CREATURE | CELL_YM_CREATURE )
-#define CELL_YOUNGCREATURE		( CELL_YF_CREATURE | CELL_YM_CREATURE )
-#define CELL_INVOLVEDINCOMBAT ( CELL_FIREDATTARGET | CELL_DODGEDATTACK | CELL_HITBYATTACKER )
+#define CELL_PLAYER		( CELL_MERC | CELL_MILITIA )
+#define CELL_ENEMY		( CELL_ELITE | CELL_TROOP | CELL_ADMIN )
+#define CELL_CREATURE		( CELL_AF_CREATURE | CELL_AM_CREATURE | CELL_YF_CREATURE | CELL_YM_CREATURE )
+#define CELL_FEMALECREATURE	( CELL_AF_CREATURE | CELL_YF_CREATURE )
+#define CELL_MALECREATURE	( CELL_AM_CREATURE | CELL_YM_CREATURE )
+#define CELL_YOUNGCREATURE	( CELL_YF_CREATURE | CELL_YM_CREATURE )
+#define CELL_INVOLVEDINCOMBAT	( CELL_FIREDATTARGET | CELL_DODGEDATTACK | CELL_HITBYATTACKER )
 
 enum
 {
@@ -2239,7 +2239,7 @@ static void ResetAutoResolveInterface(void)
 	{
 		switch( PreRandom( 5 ) )
 		{
-			case 0:				  gpAR->ubElites++; break;
+			case 0:         gpAR->ubElites++; break;
 			case 1: case 2: gpAR->ubAdmins++; break;
 			case 3: case 4: gpAR->ubTroops++; break;
 		}
@@ -2263,7 +2263,7 @@ static void ResetAutoResolveInterface(void)
 		gpAR->fSound = TRUE;
 	}
 	gpAR->uiTimeSlice = 1000;
-	gpAR->uiTotalElapsedBattleTimeInMilliseconds	 = 0;
+	gpAR->uiTotalElapsedBattleTimeInMilliseconds = 0;
 	gpAR->uiCurrTime = 0;
 	gpAR->fPlayerRejectedSurrenderOffer = FALSE;
 	gpAR->fPendingSurrender = FALSE;
@@ -3764,9 +3764,9 @@ static void ProcessBattleFrame(void)
 			gpAR->uiTotalElapsedBattleTimeInMilliseconds += uiSlice;
 
 		//Now process each of the players
-		iTotal = gpAR->ubMercs + gpAR->ubCivs + gpAR->ubEnemies + 1;
-		iMercs	 = iMercsLeft		= gpAR->ubMercs;
-		iCivs		 = iCivsLeft		= gpAR->ubCivs;
+		iTotal   = gpAR->ubMercs + gpAR->ubCivs + gpAR->ubEnemies + 1;
+		iMercs   = iMercsLeft   = gpAR->ubMercs;
+		iCivs    = iCivsLeft    = gpAR->ubCivs;
 		iEnemies = iEnemiesLeft = gpAR->ubEnemies;
 		FOR_EACH_AR_MERC(i)
 			i->uiFlags &= ~CELL_PROCESSED;

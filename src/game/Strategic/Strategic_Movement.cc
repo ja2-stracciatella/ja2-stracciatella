@@ -628,12 +628,12 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	// ATE; Changed alogrithm here...
 	// We first loop through the group and save ubID's ov valid guys to talk....
 	// ( Can't if sleeping, unconscious, and EPC, etc....
-	UINT8				ubNumMercs = 0;
+	UINT8 ubNumMercs = 0;
 
 	if( fDisableMapInterfaceDueToBattle )
 	{
 		SLOGE(DEBUG_TAG_ASSERTS, "fDisableMapInterfaceDueToBattle is set before attempting to bring up PBI.\
-															Please send PRIOR save if possible and details on anything that just happened before this battle." );
+			Please send PRIOR save if possible and details on anything that just happened before this battle." );
 		return;
 	}
 
@@ -657,9 +657,9 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
 	if( (gfTacticalTraversal && pInitiatingBattleGroup == gpTacticalTraversalGroup) ||
-			(pInitiatingBattleGroup && !pInitiatingBattleGroup->fPlayer &&
-			pInitiatingBattleGroup->ubSectorX == gWorldSectorX &&
-		  pInitiatingBattleGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ) )
+		(pInitiatingBattleGroup && !pInitiatingBattleGroup->fPlayer &&
+		pInitiatingBattleGroup->ubSectorX == gWorldSectorX &&
+		pInitiatingBattleGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ) )
 	{	// At least say quote....
 		if ( ubNumMercs > 0 )
 		{
@@ -734,8 +734,8 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 	{ //look for people arriving in the currently loaded sector.  This handles reinforcements.
 		const GROUP* const curr = FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY);
 		if( !gbWorldSectorZ && PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, gbWorldSectorZ ) &&
-				pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
-				curr )
+			pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
+			curr )
 		{ //Reinforcements have arrived!
 			if( gTacticalStatus.fEnemyInSector )
 			{
@@ -762,8 +762,8 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 				if (g.ubSectorX == pGroup->ubSectorX && g.ubSectorY == pGroup->ubSectorY && !g.ubSectorZ)
 				{
 					if (!GroupHasInTransitDeadOrPOWMercs(g) &&
-							(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
-							(!g.fVehicle || DoesVehicleGroupHaveAnyPassengers(g)))
+						(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
+						(!g.fVehicle || DoesVehicleGroupHaveAnyPassengers(g)))
 					{
 						//Now, a player group is in this sector.  Determine if the group contains any mercs that can fight.
 						//Vehicles, EPCs and the robot doesn't count.  Mercs below OKLIFE do.
@@ -773,8 +773,8 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 							if( !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
 							{
 								if( !AM_A_ROBOT( pSoldier ) &&
-										!AM_AN_EPC( pSoldier ) &&
-										pSoldier->bLife >= OKLIFE )
+									!AM_AN_EPC( pSoldier ) &&
+									pSoldier->bLife >= OKLIFE )
 								{
 									fCombatAbleMerc = TRUE;
 								}
@@ -1049,42 +1049,42 @@ static void AwardExperienceForTravelling(GROUP& g)
 
 static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 {
-  ROTTING_CORPSE_DEFINITION		Corpse;
+	ROTTING_CORPSE_DEFINITION		Corpse;
 	memset( &Corpse, 0, sizeof( ROTTING_CORPSE_DEFINITION ) );
 
 	// Setup some values!
-	Corpse.ubBodyType							= REGMALE;
-	Corpse.sHeightAdjustment			= 0;
-	Corpse.bVisible								=	TRUE;
+	Corpse.ubBodyType        = REGMALE;
+	Corpse.sHeightAdjustment = 0;
+	Corpse.bVisible          = TRUE;
 
-	SET_PALETTEREP_ID ( Corpse.HeadPal,		"BROWNHEAD" );
-	SET_PALETTEREP_ID ( Corpse.VestPal,		"YELLOWVEST" );
-	SET_PALETTEREP_ID ( Corpse.SkinPal,		"PINKSKIN" );
-	SET_PALETTEREP_ID ( Corpse.PantsPal,  "GREENPANTS" );
+	SET_PALETTEREP_ID ( Corpse.HeadPal,  "BROWNHEAD" );
+	SET_PALETTEREP_ID ( Corpse.VestPal,  "YELLOWVEST" );
+	SET_PALETTEREP_ID ( Corpse.SkinPal,  "PINKSKIN" );
+	SET_PALETTEREP_ID ( Corpse.PantsPal, "GREENPANTS" );
 
 
-	Corpse.bDirection	= (INT8)Random(8);
+	Corpse.bDirection = (INT8)Random(8);
 
 	// Set time of death
-  // Make sure they will be rotting!
+	// Make sure they will be rotting!
 	Corpse.uiTimeOfDeath = GetWorldTotalMin( ) - ( 2 * NUM_SEC_IN_DAY / 60 );
 	// Set type
-	Corpse.ubType	= (UINT8)SMERC_JFK;
+	Corpse.ubType  = (UINT8)SMERC_JFK;
 	Corpse.usFlags = ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO;
 
-  // 1st gridno
-	Corpse.sGridNo								= 14319;
+	// 1st gridno
+	Corpse.sGridNo 	= 14319;
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
 
-  // 2nd gridno
-	Corpse.sGridNo								= 9835;
+	// 2nd gridno
+	Corpse.sGridNo = 9835;
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
 
 
-  // 3rd gridno
-	Corpse.sGridNo								= 11262;
+	// 3rd gridno
+	Corpse.sGridNo = 11262;
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
 }
@@ -1114,8 +1114,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			VEHICLETYPE const& v = GetVehicleFromMvtGroup(g);
 			if (!IsHelicopter(v) && !g.pPlayerList)
 			{ /* Nobody here, better just get out now. With vehicles, arriving empty
-				 * is probably ok, since passengers might have been killed but vehicle
-				 * lived. */
+				* is probably ok, since passengers might have been killed but vehicle
+				* lived. */
 				return;
 			}
 		}
@@ -1142,19 +1142,19 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	/* First check if the group arriving is going to queue another battle.
 	 * NOTE: We can't have more than one battle ongoing at a time. */
 	if (exception_queue ||
-			(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) && (x != gWorldSectorX || y != gWorldSectorY || gbWorldSectorZ > 0)) ||
-			AreInMeanwhile() ||
-			/* KM: Aug 11, 1999 -- Patch fix: Added additional checks to prevent a 2nd
-			 * battle in the case where the player is involved in a potential battle
-			 * with bloodcats/civilians */
-			(check_for_battle && HostileCiviliansPresent()) ||
-			(check_for_battle && HostileBloodcatsPresent()))
+		(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) && (x != gWorldSectorX || y != gWorldSectorY || gbWorldSectorZ > 0)) ||
+		AreInMeanwhile() ||
+		/* KM: Aug 11, 1999 -- Patch fix: Added additional checks to prevent a 2nd
+			* battle in the case where the player is involved in a potential battle
+			* with bloodcats/civilians */
+		(check_for_battle && HostileCiviliansPresent()) ||
+		(check_for_battle && HostileBloodcatsPresent()))
 	{ /* Queue battle! Delay arrival by a random value ranging from 3-5 minutes,
-		 * so it doesn't get the player too suspicious after it happens to him a few
-		 * times, which, by the way, is a rare occurrence. */
+		* so it doesn't get the player too suspicious after it happens to him a few
+		* times, which, by the way, is a rare occurrence. */
 		if (AreInMeanwhile())
 		{ /* Tack on only 1 minute if we are in a meanwhile scene. This effectively
-			 * prevents any battle from occurring while inside a meanwhile scene. */
+			* prevents any battle from occurring while inside a meanwhile scene. */
 			++g.uiArrivalTime;
 		}
 		else
@@ -1364,12 +1364,12 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			// On foot, or in a vehicle other than the chopper
 			if (!g.fVehicle || !IsGroupTheHelicopterGroup(g))
 			{
-        // ATE: Add a few corpse to the bloodcat lair
-        if (SECTOR(x, y) == SEC_I16 &&
-        		!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED))
-        {
-          AddCorpsesToBloodcatLair(x, y);
-        }
+				// ATE: Add a few corpse to the bloodcat lair
+				if (SECTOR(x, y) == SEC_I16 &&
+					!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED))
+				{
+					AddCorpsesToBloodcatLair(x, y);
+				}
 
 				// Mark the sector as visited already
 				SetSectorFlag(x, y, z, SF_ALREADY_VISITED);
@@ -1408,8 +1408,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			g.uiFlags = 0;
 			if (gubNumAwareBattles != 0)
 			{ /* When the AI is looking for the players, and a battle is initiated,
-				 * then decrement the value, otherwise the queen will continue searching
-				 * to infinity. */
+				* then decrement the value, otherwise the queen will continue searching
+				* to infinity. */
 				--gubNumAwareBattles;
 			}
 		}
@@ -1422,7 +1422,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 {
 	if (StrategicAILookForAdjacentGroups(&g))
 	{ /* The routine actually just deleted the enemy group (player's don't get
-		 * deleted), so we are done! */
+		* deleted), so we are done! */
 		return;
 	}
 
@@ -1642,7 +1642,7 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 
 static void PlanSimultaneousGroupArrivalCallback(MessageBoxReturnValue const bMessageValue)
 {
-  if( bMessageValue == MSG_BOX_RETURN_YES )
+	if( bMessageValue == MSG_BOX_RETURN_YES )
 	{
 		PrepareGroupsForSimultaneousArrival();
 	}
@@ -1769,9 +1769,9 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 
 	AssertMsg(pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).",
-				pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
-				pGroup->ubSectorY+'A', pGroup->ubSectorX, pGroup->ubNextY+'A', pGroup->ubNextX,
-				gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
+			pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
+			pGroup->ubSectorY+'A', pGroup->ubSectorX, pGroup->ubNextY+'A', pGroup->ubNextX,
+			gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
 
 	// add sleep, if any
 	pGroup->uiTraverseTime += uiSleepMinutes;
@@ -1912,7 +1912,7 @@ void RemoveGroup(GROUP& g)
 	}
 
 	RemoveGroupFromList(&g);
-	
+
 	/* safety check: if this group is the BattleGroup, invalid the pointer */
 	if(gpBattleGroup == &g)
 	{
@@ -2062,7 +2062,7 @@ INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* const pSource, WAYPOINT con
 	INT32 iCurrentCostInTime = 0;
 	UINT8 ubCurrentSector = 0;
 	UINT8 ubDirection;
-	INT32	iThisCostInTime;
+	INT32 iThisCostInTime;
 
 
 	// find travel time between waypoints
@@ -2893,13 +2893,13 @@ GROUP* FindPlayerMovementGroupInSector(const UINT8 x, const UINT8 y)
 	{
 		GROUP& g = *i;
 		// NOTE: These checks must always match the INVOLVED group checks in PBI!!!
-		if (g.ubGroupSize != 0                  &&
-				!g.fBetweenSectors                  &&
-				g.ubSectorX   == x                  &&
-				g.ubSectorY   == y                  &&
-				g.ubSectorZ   == 0                  &&
-				!GroupHasInTransitDeadOrPOWMercs(g) &&
-				(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne))
+		if (g.ubGroupSize != 0 &&
+			!g.fBetweenSectors &&
+			g.ubSectorX   == x &&
+			g.ubSectorY   == y &&
+			g.ubSectorZ   == 0 &&
+			!GroupHasInTransitDeadOrPOWMercs(g) &&
+			(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne))
 		{
 			return &g;
 		}
@@ -3016,8 +3016,8 @@ static void ResetMovementForEnemyGroup(GROUP* pGroup)
 
 void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 {
-	INT32		cnt;
-	BOOLEAN	fDoChange = FALSE;
+	INT32   cnt;
+	BOOLEAN fDoChange = FALSE;
 
 	// ATE: If saved game is < 61, we need to do something better!
 	if( uiSavedGameVersion < 61 )
@@ -3080,7 +3080,7 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 
 	Assert( pGroup );
 	AssertMsg( pGroup->ubMoveType == ONE_WAY, String( "GroupWillMoveThroughSector() -- Attempting to test group with an invalid move type.  ubGroupID: %d, ubMoveType: %d, sector: %c%d -- KM:0",
-						 pGroup->ubGroupID, pGroup->ubMoveType, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX ) );
+			pGroup->ubGroupID, pGroup->ubMoveType, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX ) );
 
 	//Preserve the original sector values, as we will be temporarily modifying the group's ubSectorX/Y values
 	//as we traverse the waypoints.
@@ -3240,7 +3240,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const& g, INT16 const x,
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			/* These are apparently unnecessary, since vehicles are part of the
-			 * pPlayerList in a vehicle group. Oh well. */
+				* pPlayerList in a vehicle group. Oh well. */
 			vs.sSectorX = x;
 			vs.sSectorY = y;
 			vs.bSectorZ = z;
@@ -3666,8 +3666,8 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 			ChangeSelectedMapSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 			StopTimeCompression();
 			break;
-        default:
-            break;
+				default:
+						break;
 	}
 	fMapPanelDirty        = TRUE;
 	fMapScreenBottomDirty = TRUE;

@@ -89,7 +89,7 @@ void HandleQuarterHourUpdate()
 	if ( DidGameJustStart() )
 		return;
 
-  DecayTacticalMoraleModifiers( );
+	DecayTacticalMoraleModifiers( );
 }
 
 

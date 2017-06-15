@@ -11,7 +11,7 @@
 // Sector name identifiers
 enum Towns
 {
-  BLANK_SECTOR=0,
+	BLANK_SECTOR=0,
 	OMERTA,
 	DRASSEN,
 	ALMA,
@@ -23,7 +23,7 @@ enum Towns
 	ORTA,
 	BALIME,
 	MEDUNA,
-  CHITZENA,
+	CHITZENA,
 	NUM_TOWNS
 };
 
@@ -117,31 +117,31 @@ void MakeDialogueEventEnterMapScreen();
 
 void SetMapCursorItem();
 
-#define     NAME_X                (STD_SCREEN_X + 11)
-#define     NAME_WIDTH            (STD_SCREEN_X + 62 - NAME_X)
-#define     ASSIGN_X              (STD_SCREEN_X + 67)
-#define     ASSIGN_WIDTH          (STD_SCREEN_X + 118 - ASSIGN_X)
-#define			SLEEP_X								(STD_SCREEN_X + 123)
-#define			SLEEP_WIDTH						(STD_SCREEN_X + 142 - SLEEP_X)
-#define     LOC_X                 (STD_SCREEN_X + 147)
-#define     LOC_WIDTH             (STD_SCREEN_X + 179 - LOC_X)
-#define     DEST_ETA_X            (STD_SCREEN_X + 184)
-#define     DEST_ETA_WIDTH        (STD_SCREEN_X + 217 - DEST_ETA_X)
-#define     TIME_REMAINING_X      (STD_SCREEN_X + 222)
-#define     TIME_REMAINING_WIDTH  (STD_SCREEN_X + 250 - TIME_REMAINING_X)
-#define     CLOCK_Y_START         (STD_SCREEN_Y + 298)
-#define     CLOCK_ETA_X           (STD_SCREEN_X + 463 - 15 + 6 + 30)
-#define     CLOCK_HOUR_X_START    (STD_SCREEN_X + 463 + 25 + 30)
-#define     CLOCK_MIN_X_START     (STD_SCREEN_X + 463 + 45 + 30)
+#define NAME_X                (STD_SCREEN_X + 11)
+#define NAME_WIDTH            (STD_SCREEN_X + 62 - NAME_X)
+#define ASSIGN_X              (STD_SCREEN_X + 67)
+#define ASSIGN_WIDTH          (STD_SCREEN_X + 118 - ASSIGN_X)
+#define SLEEP_X               (STD_SCREEN_X + 123)
+#define SLEEP_WIDTH           (STD_SCREEN_X + 142 - SLEEP_X)
+#define LOC_X                 (STD_SCREEN_X + 147)
+#define LOC_WIDTH             (STD_SCREEN_X + 179 - LOC_X)
+#define DEST_ETA_X            (STD_SCREEN_X + 184)
+#define DEST_ETA_WIDTH        (STD_SCREEN_X + 217 - DEST_ETA_X)
+#define TIME_REMAINING_X      (STD_SCREEN_X + 222)
+#define TIME_REMAINING_WIDTH  (STD_SCREEN_X + 250 - TIME_REMAINING_X)
+#define CLOCK_Y_START         (STD_SCREEN_Y + 298)
+#define CLOCK_ETA_X           (STD_SCREEN_X + 463 - 15 + 6 + 30)
+#define CLOCK_HOUR_X_START    (STD_SCREEN_X + 463 + 25 + 30)
+#define CLOCK_MIN_X_START     (STD_SCREEN_X + 463 + 45 + 30)
 
 // contract
-#define CONTRACT_X      (STD_SCREEN_X + 185)
-#define CONTRACT_Y      (STD_SCREEN_Y + 50)
+#define CONTRACT_X            (STD_SCREEN_X + 185)
+#define CONTRACT_Y            (STD_SCREEN_Y + 50)
 
 // trash can
-#define TRASH_CAN_X (STD_SCREEN_X + 176)
-#define TRASH_CAN_Y (211 + PLAYER_INFO_Y)
-#define TRASH_CAN_WIDTH 193 - 165
-#define TRASH_CAN_HEIGHT 239 - 217
+#define TRASH_CAN_X           (STD_SCREEN_X + 176)
+#define TRASH_CAN_Y           (211 + PLAYER_INFO_Y)
+#define TRASH_CAN_WIDTH       193 - 165
+#define TRASH_CAN_HEIGHT      239 - 217
 
 #endif

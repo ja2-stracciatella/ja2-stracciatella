@@ -36,9 +36,9 @@
 #define MAX_LOYALTY_VALUE 100
 
 // loyalty Omerta drops to and maxes out at if the player betrays the rebels
-#define HOSTILE_OMERTA_LOYALTY_RATING		10
+#define HOSTILE_OMERTA_LOYALTY_RATING 10
 
-#define LOYALTY_EVENT_DISTANCE_THRESHOLD		3			// in sectors
+#define LOYALTY_EVENT_DISTANCE_THRESHOLD 3 // in sectors
 
 
 // effect of unintentional killing /100 vs intentional murder
@@ -55,15 +55,15 @@
 
 
 // gain for hiring an NPC from a particular town (represents max. at 100% town attachment)
-#define MULTIPLIER_LOCAL_RPC_HIRED											25		// 5%
+#define MULTIPLIER_LOCAL_RPC_HIRED 25 // 5%
 
 // multiplier for causing pts of damage directly done to a building
-#define MULTIPLIER_FOR_DAMAGING_A_BUILDING							10		// 50 pts = 1%
+#define MULTIPLIER_FOR_DAMAGING_A_BUILDING 10 // 50 pts = 1%
 // multiplier for not preventing pts of damage to a building
-#define MULTIPLIER_FOR_NOT_PREVENTING_BUILDING_DAMAGE		3			// 167 pts = 1%
+#define MULTIPLIER_FOR_NOT_PREVENTING_BUILDING_DAMAGE 3 // 167 pts = 1%
 
 // divisor for dmg to a building by allied rebel
-#define DIVISOR_FOR_REBEL_BUILDING_DMG									2
+#define DIVISOR_FOR_REBEL_BUILDING_DMG 2
 
 
 // town loyalty table
@@ -78,14 +78,14 @@ TownSectorInfo g_town_sectors[40];
 
 UINT32 uiPercentLoyaltyDecreaseForCivMurder[]={
 	// These get multiplied by GAIN_PTS_PER_LOYALTY_PT so they're in % of loyalty decrease (for an average town)
-	   (5 * GAIN_PTS_PER_LOYALTY_PT),	// fat civ
-	   (7 * GAIN_PTS_PER_LOYALTY_PT),	// man civ
-	   (8 * GAIN_PTS_PER_LOYALTY_PT),	// min civ
-    (10 * GAIN_PTS_PER_LOYALTY_PT),	// dress (woman)
-    (20 * GAIN_PTS_PER_LOYALTY_PT), // hat kid
-    (20 * GAIN_PTS_PER_LOYALTY_PT), // kid
-	  (20 * GAIN_PTS_PER_LOYALTY_PT),	// cripple
-     (1 * GAIN_PTS_PER_LOYALTY_PT),	// cow
+	(5 * GAIN_PTS_PER_LOYALTY_PT), // fat civ
+	(7 * GAIN_PTS_PER_LOYALTY_PT), // man civ
+	(8 * GAIN_PTS_PER_LOYALTY_PT), // min civ
+	(10 * GAIN_PTS_PER_LOYALTY_PT), // dress (woman)
+	(20 * GAIN_PTS_PER_LOYALTY_PT), // hat kid
+	(20 * GAIN_PTS_PER_LOYALTY_PT), // kid
+	(20 * GAIN_PTS_PER_LOYALTY_PT), // cripple
+	(1 * GAIN_PTS_PER_LOYALTY_PT), // cow
 };
 
 
@@ -93,36 +93,36 @@ UINT32 uiPercentLoyaltyDecreaseForCivMurder[]={
 // it primarily controls the RATE of loyalty change in each town: the loyalty effect of the same events depends on it
 UINT8 gubTownRebelSentiment[ NUM_TOWNS ] =
 {
-	0,	// not a town - blank sector index
- 90,	// OMERTA,	- They ARE the rebels!!!
- 30,	// DRASSEN,	- Rebel friendly, makes it pretty easy to get first mine's income going at the start
- 12,	// ALMA			- Military town, high loyalty to Queen, need quests to get 100%
- 15,	// GRUMM,		- Close to Meduna, strong influence
- 20,	// TIXA,		- Not a real town
- 15,	// CAMBRIA, - Artificially much lower 'cause it's big and central and too easy to get loyalty up there
- 20,	// SAN_MONA,- Neutral ground, loyalty doesn't vary
- 20,	// ESTONI,	- Not a real town
- 20,	// ORTA,		- Not a real town
- 12,	// BALIME,	- Rich town, high loyalty to Queen
- 10,	// MEDUNA,	- Enemy HQ, for God's sake!
- 35,	// CHITZENA, - Artificially high 'cause there's not enough fights near it to get the loyalty up otherwise
+	0, // not a town - blank sector index
+	90, // OMERTA, - They ARE the rebels!!!
+	30, // DRASSEN, - Rebel friendly, makes it pretty easy to get first mine's income going at the start
+	12, // ALMA - Military town, high loyalty to Queen, need quests to get 100%
+	15, // GRUMM, - Close to Meduna, strong influence
+	20, // TIXA, - Not a real town
+	15, // CAMBRIA, - Artificially much lower 'cause it's big and central and too easy to get loyalty up there
+	20, // SAN_MONA, - Neutral ground, loyalty doesn't vary
+	20, // ESTONI, - Not a real town
+	20, // ORTA, - Not a real town
+	12, // BALIME, - Rich town, high loyalty to Queen
+	10, // MEDUNA, - Enemy HQ, for God's sake!
+	35, // CHITZENA, - Artificially high 'cause there's not enough fights near it to get the loyalty up otherwise
 };
 
 BOOLEAN gfTownUsesLoyalty[ NUM_TOWNS ] =
 {
-	FALSE,		// not a town - blank sector index
-	TRUE	,		// OMERTA
-	TRUE,			// DRASSEN
-	TRUE,			// ALMA
-	TRUE,			// GRUMM
-	FALSE,		// TIXA
-	TRUE,			// CAMBRIA
-	FALSE,		// SAN_MONA
-	FALSE,		// ESTONI
-	FALSE,		// ORTA
-	TRUE,			// BALIME
-	TRUE,			// MEDUNA
-	TRUE,			// CHITZENA
+	FALSE, // not a town - blank sector index
+	TRUE, // OMERTA
+	TRUE, // DRASSEN
+	TRUE, // ALMA
+	TRUE, // GRUMM
+	FALSE, // TIXA
+	TRUE, // CAMBRIA
+	FALSE, // SAN_MONA
+	FALSE, // ESTONI
+	FALSE, // ORTA
+	TRUE, // BALIME
+	TRUE, // MEDUNA
+	TRUE, // CHITZENA
 };
 
 // location of first enocunter with enemy
@@ -597,7 +597,7 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 
 	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
 
-  // is the merc currently in their home town?
+	// is the merc currently in their home town?
 	if( bTownId == gMercProfiles[ pSoldier->ubProfile ].bTown )
 	{
 		// yep, value of loyalty bonus depends on his importance to this to town
@@ -1169,17 +1169,17 @@ bool DidFirstBattleTakePlaceInThisTown(INT8 const town)
 
 static UINT32 PlayerStrength(void)
 {
-	UINT32					uiStrength, uiTotal = 0;
+	UINT32 uiStrength, uiTotal = 0;
 
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector ||
-				(
-					s->fBetweenSectors &&
-					s->ubPrevSectorID % 16 + 1 == gWorldSectorX &&
-					s->ubPrevSectorID / 16 + 1 == gWorldSectorY &&
-					s->bSectorZ == gbWorldSectorZ
-				))
+			(
+				s->fBetweenSectors &&
+				s->ubPrevSectorID % 16 + 1 == gWorldSectorX &&
+				s->ubPrevSectorID / 16 + 1 == gWorldSectorY &&
+				s->bSectorZ == gbWorldSectorZ
+			))
 		{
 			// count this person's strength (condition), calculated as life reduced up to half according to maxbreath
 			uiStrength = s->bLife * (s->bBreathMax + 100) / 200;

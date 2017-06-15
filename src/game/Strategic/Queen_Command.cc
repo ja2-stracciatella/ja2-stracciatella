@@ -439,9 +439,9 @@ void PrepareEnemyForSectorBattle()
 	if (n_slots != gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1)
 	{
 		SLOGE(DEBUG_TAG_QUEENCMD, "All enemy slots should be free at this point.  Only %d of %d are available.\n\
-															 Trying to add %d admins, %d troops, and %d elites.",
-					n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1,
-					total_admins, total_troops, total_elites);
+			Trying to add %d admins, %d troops, and %d elites.",
+			n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1,
+			total_admins, total_troops, total_elites);
 	}
 	/* Subtract the total number of stationary enemies from the available slots,
 	 * as stationary forces take precendence in combat. The mobile forces that
@@ -662,10 +662,10 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				if( guiCurrentScreen == GAME_SCREEN )
 				{
 					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumElites != pGroup->pEnemyGroup->ubElitesInBattle && !gfPendingEnemies) ||
-							pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumElites > 50 || pGroup->pEnemyGroup->ubElitesInBattle > 50 )
+						pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumElites > 50 || pGroup->pEnemyGroup->ubElitesInBattle > 50 )
 					{
 						SLOGW(DEBUG_TAG_QUEENCMD, "Group elite counters are bad. What were the last 2-3 things you did, and how?\n\
-																			 Pleas save the game and file a bug.");
+							Pleas save the game and file a bug.");
 					}
 				}
 				if( pGroup->pEnemyGroup->ubNumElites )
@@ -686,10 +686,10 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				if( guiCurrentScreen == GAME_SCREEN )
 				{
 					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumTroops != pGroup->pEnemyGroup->ubTroopsInBattle && !gfPendingEnemies) ||
-							pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumTroops > 50 || pGroup->pEnemyGroup->ubTroopsInBattle > 50 )
+						pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumTroops > 50 || pGroup->pEnemyGroup->ubTroopsInBattle > 50 )
 					{
 						SLOGW(DEBUG_TAG_QUEENCMD, "Group troop counters are bad. What were the last 2-3 things you did, and how?\n\
-																			 Please save the game and file a bug.");
+							Please save the game and file a bug.");
 					}
 				}
 				if( pGroup->pEnemyGroup->ubNumTroops )
@@ -712,7 +712,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 					pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumAdmins > 50 || pGroup->pEnemyGroup->ubAdminsInBattle > 50 )
 					{
 						SLOGW(DEBUG_TAG_QUEENCMD, "Group admin counters are bad. What were the last 2-3 things you did, and how?\n\
-																			 Please save the game and file a bug.");
+							Please save the game and file a bug.");
 					}
 				}
 				if( pGroup->pEnemyGroup->ubNumAdmins )
@@ -761,7 +761,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > 32 )
 						{
 							SLOGW(DEBUG_TAG_QUEENCMD, "Sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
-																				 Please save the game and file a bug.");
+								Please save the game and file a bug.");
 						}
 					}
 					if( pSector->ubNumAdmins )
@@ -777,11 +777,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 					if( guiCurrentScreen == GAME_SCREEN )
 					{
 						if( (ubTotalEnemies <= 32 && pSector->ubNumTroops != pSector->ubTroopsInBattle) ||
-								!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
-								pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > 32 )
+							!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
+							pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > 32 )
 						{
 							SLOGW(DEBUG_TAG_QUEENCMD, "Sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
-																				 Please save the game and file a bug.");
+								Please save the game and file a bug.");
 						}
 					}
 					if( pSector->ubNumTroops )
@@ -797,11 +797,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 					if( guiCurrentScreen == GAME_SCREEN )
 					{
 						if( (ubTotalEnemies <= 32 && pSector->ubNumElites != pSector->ubElitesInBattle) ||
-								!pSector->ubNumElites || !pSector->ubElitesInBattle ||
-								pSector->ubNumElites > 100 || pSector->ubElitesInBattle > 32 )
+							!pSector->ubNumElites || !pSector->ubElitesInBattle ||
+							pSector->ubNumElites > 100 || pSector->ubElitesInBattle > 32 )
 						{
 							SLOGW(DEBUG_TAG_QUEENCMD, "Sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
-																				 Please save the game and file a bug");
+								Please save the game and file a bug");
 						}
 					}
 					if( pSector->ubNumElites )
@@ -819,11 +819,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						if( guiCurrentScreen == GAME_SCREEN )
 						{
 							if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle) ||
-									!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
-									pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
+								!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
+								pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 							{
 								SLOGW(DEBUG_TAG_QUEENCMD, "Sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
-																					 Please save game and file a bug.");
+									Please save game and file a bug.");
 							}
 						}
 						if( pSector->ubNumCreatures )
@@ -857,11 +857,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				{
 					case SOLDIER_CLASS_ADMINISTRATOR:
 						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumAdmins != pSector->ubAdminsInBattle) ||
-								!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
-								pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > MAX_STRATEGIC_TEAM_SIZE )
+							!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
+							pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
 							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
-																				 Please save game and file a bug.");
+								Please save game and file a bug.");
 						}
 						if( pSector->ubNumAdmins )
 						{
@@ -874,11 +874,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						break;
 					case SOLDIER_CLASS_ARMY:
 						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumTroops != pSector->ubTroopsInBattle) ||
-								!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
-								pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > MAX_STRATEGIC_TEAM_SIZE )
+							!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
+							pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
 							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
-																				 Please save game and file a bug.");
+								Please save game and file a bug.");
 						}
 						if( pSector->ubNumTroops )
 						{
@@ -891,11 +891,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						break;
 					case SOLDIER_CLASS_ELITE:
 						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumElites != pSector->ubElitesInBattle) ||
-								!pSector->ubNumElites || !pSector->ubElitesInBattle ||
-								pSector->ubNumElites > 100 || pSector->ubElitesInBattle > MAX_STRATEGIC_TEAM_SIZE )
+							!pSector->ubNumElites || !pSector->ubElitesInBattle ||
+							pSector->ubNumElites > 100 || pSector->ubElitesInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
 							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
-																				 Please save game and file a bug.");
+								Please save game and file a bug.");
 						}
 						if( pSector->ubNumElites )
 						{
@@ -908,11 +908,11 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 						break;
 					case SOLDIER_CLASS_CREATURE:
 						if( (ubTotalEnemies <= MAX_STRATEGIC_TEAM_SIZE && pSector->ubNumCreatures != pSector->ubCreaturesInBattle) ||
-								!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
-								pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
+							!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
+							pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 						{
 							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
-																				 Please save game and file a bug.");
+								Please save game and file a bug.");
 						}
 						if( pSector->ubNumCreatures )
 						{
@@ -960,7 +960,7 @@ static void AddEnemiesToBattle(GROUP const&, UINT8 strategic_insertion_code, UIN
  * highly likely that they will all be successfully added on the first call. */
 void AddPossiblePendingEnemiesToBattle()
 {
-  if (!gfPendingEnemies)
+	if (!gfPendingEnemies)
 	{ /* Optimization: No point in checking if we know that there aren't any more
 		 * enemies that can be added to this battle. This changes whenever a new
 		 * enemy group arrives at the scene. */
@@ -1215,8 +1215,8 @@ static void CaptureSoldier(SOLDIERTYPE* const s, INT16 const x, INT16 const y, G
 
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 {
-  BOOLEAN       fMadeCorpse;
-  INT32         iNumEnemiesInSector;
+	BOOLEAN       fMadeCorpse;
+	INT32         iNumEnemiesInSector;
 
 	static INT16 sAlmaCaptureGridNos[] = { 9208, 9688, 9215 };
 	static INT16 sAlmaCaptureItemsGridNo[] = { 12246, 12406, 13046 };
@@ -1224,46 +1224,46 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	static INT16 sInterrogationItemGridNo[] = { 12089, 12089, 12089 };
 
 
-  // ATE: Check first if ! in player captured sequence already
+	// ATE: Check first if ! in player captured sequence already
 	// CJC Dec 1 2002: fixing multiple captures
 	if ( ( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE ) && (gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE) )
-  {
-    return;
-  }
+	{
+		return;
+	}
 
-  // ATE: If maximum prisoners captured, return!
-  if ( gStrategicStatus.ubNumCapturedForRescue > 3 )
-  {
-    return;
-  }
-
-
-  // If this is an EPC , just kill them...
-  if ( AM_AN_EPC( pSoldier ) )
-  {
-	  pSoldier->bLife = 0;
-    HandleSoldierDeath( pSoldier, &fMadeCorpse );
-    return;
-  }
-
-  if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-  {
-    return;
-  }
-
-  // ATE: Patch fix If in a vehicle, remove from vehicle...
-  TakeSoldierOutOfVehicle( pSoldier );
+	// ATE: If maximum prisoners captured, return!
+	if ( gStrategicStatus.ubNumCapturedForRescue > 3 )
+	{
+		return;
+	}
 
 
-  // Are there anemies in ALMA? ( I13 )
-  iNumEnemiesInSector = NumEnemiesInSector( 13, 9 );
+	// If this is an EPC , just kill them...
+	if ( AM_AN_EPC( pSoldier ) )
+	{
+		pSoldier->bLife = 0;
+		HandleSoldierDeath( pSoldier, &fMadeCorpse );
+		return;
+	}
 
-  // IF there are no enemies, and we need to do alma, skip!
-  if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED && iNumEnemiesInSector == 0 )
-  {
-	  InternalStartQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY, FALSE );
-	  InternalEndQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY, FALSE );
-  }
+	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	{
+		return;
+	}
+
+	// ATE: Patch fix If in a vehicle, remove from vehicle...
+	TakeSoldierOutOfVehicle( pSoldier );
+
+
+	// Are there anemies in ALMA? ( I13 )
+	iNumEnemiesInSector = NumEnemiesInSector( 13, 9 );
+
+	// IF there are no enemies, and we need to do alma, skip!
+	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED && iNumEnemiesInSector == 0 )
+	{
+		InternalStartQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY, FALSE );
+		InternalEndQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY, FALSE );
+	}
 
 	HandleMoraleEvent( pSoldier, MORALE_MERC_CAPTURED, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 
@@ -1332,8 +1332,8 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 	SECTORINFO *pSector;
 	pSector = &SectorInfo[ ubSectorID ];
 	if( pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ] +
-			pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] +
-			pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ] )
+		pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] +
+		pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ] )
 	{ //militia in sector
 		return TRUE;
 	}

@@ -76,7 +76,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			// Change light to value
 			gubEnvLightValue = (UINT8)pEvent->uiParam;
 			if( !gfBasement && !gfCaves )
-				gfDoLighting		 = TRUE;
+				gfDoLighting = TRUE;
 			break;
 		case EVENT_CHECKFORQUESTS:
 			CheckForQuests( GetWorldDay() );
@@ -113,7 +113,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_DAILY_UPDATE_OF_MERC_SITE:
 			DailyUpdateOfMercSite( (UINT16)GetWorldDay() );
 			break;
-    case EVENT_DAY3_ADD_EMAIL_FROM_SPECK:
+		case EVENT_DAY3_ADD_EMAIL_FROM_SPECK:
 			AddEmail(MERC_INTRO, MERC_INTRO_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin( ) );
 			break;
 		case EVENT_DAY2_ADD_EMAIL_FROM_IMP:
@@ -197,8 +197,8 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		case EVENT_RAINSTORM:
 
-      // ATE: Disabled
-      //
+			// ATE: Disabled
+			//
 			//if( pEvent->ubEventType == ENDRANGED_EVENT )
 			//{
 			//	EnvEndRainStorm( );

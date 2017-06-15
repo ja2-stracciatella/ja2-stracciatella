@@ -7,13 +7,13 @@
 
 
 //  Quest.ubStatus values
-#define QUESTNOTSTARTED					0
-#define	QUESTINPROGRESS					1
-#define QUESTDONE								2
+#define QUESTNOTSTARTED		0
+#define QUESTINPROGRESS		1
+#define QUESTDONE		2
 
-#define MAX_QUESTS							30
-#define MAX_FACTS								65536
-#define	NUM_FACTS								500			//If you increase this number, add entries to the fact text list in QuestText.c
+#define MAX_QUESTS		30
+#define MAX_FACTS		65536
+#define NUM_FACTS		500 //If you increase this number, add entries to the fact text list in QuestText.c
 
 
 #define MAP_ROW_A		1
@@ -76,7 +76,7 @@ enum Quests
 // part is finding him. Miguel is UNDERGROUND in EAST OMERTA. Only by talking to Miguel's right
 // hand man will the player be delivered to this hideout. This hideout will also serve as the
 // player's HQ and inventory stash.
-#define	QUEST_DELIVER_LETTER		0
+#define QUEST_DELIVER_LETTER		0
 
 
 // This quest is triggered by Miguel. Player can liberate route from either SAN MONA or
@@ -94,7 +94,7 @@ enum Quests
 #define QUEST_KILL_TERRORIST3		4
 #define QUEST_KILL_TERRORIST4		5
 #define QUEST_KILL_TERRORIST5		6
-#define	QUEST_KILL_TERRORIST6		7
+#define QUEST_KILL_TERRORIST6		7
 
 // While there'll always be one arms dealer in SAN MONA, there'll be a second one
 // randomized in the outskirts of either: GRUMM, BARLINETTA or ESTONI. Only way player
@@ -188,7 +188,7 @@ enum Quests
 // Find the chopper pilot near Drassen(?) and get him to work for you.
 #define QUEST_CHOPPER_PILOT			21
 
-#define	QUEST_KILL_DEIDRANNA		29	// Meduna
+#define QUEST_KILL_DEIDRANNA		29	// Meduna
 
 
 
@@ -196,26 +196,26 @@ enum Quests
 */
 
 
-#define BOBBYR_SHIPPING_DEST_SECTOR   SEC_B13
-#define BOBBYR_SHIPPING_DEST_SECTOR_X SECTORX(BOBBYR_SHIPPING_DEST_SECTOR)
-#define BOBBYR_SHIPPING_DEST_SECTOR_Y SECTORY(BOBBYR_SHIPPING_DEST_SECTOR)
-#define		BOBBYR_SHIPPING_DEST_SECTOR_Z				0
-#define		BOBBYR_SHIPPING_DEST_GRIDNO					10112
-#define		PABLOS_STOLEN_DEST_GRIDNO						1
-#define		LOST_SHIPMENT_GRIDNO								2
+#define BOBBYR_SHIPPING_DEST_SECTOR	SEC_B13
+#define BOBBYR_SHIPPING_DEST_SECTOR_X	SECTORX(BOBBYR_SHIPPING_DEST_SECTOR)
+#define BOBBYR_SHIPPING_DEST_SECTOR_Y	SECTORY(BOBBYR_SHIPPING_DEST_SECTOR)
+#define BOBBYR_SHIPPING_DEST_SECTOR_Z	0
+#define BOBBYR_SHIPPING_DEST_GRIDNO	10112
+#define PABLOS_STOLEN_DEST_GRIDNO	1
+#define LOST_SHIPMENT_GRIDNO		2
 
-#define START_SECTOR                    SEC_A9
-#define START_SECTOR_LEAVE_EQUIP_GRIDNO 4868
+#define START_SECTOR			SEC_A9
+#define START_SECTOR_LEAVE_EQUIP_GRIDNO	4868
 
 // NB brothel rooms 88-90 removed because they are the antechamber
-#define IN_BROTHEL( room ) (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && (room) >= 91 && (room) <= 119)
-#define IN_BROTHEL_GUARD_ROOM( room ) ( room == 110 )
+#define IN_BROTHEL( room )		(gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && (room) >= 91 && (room) <= 119)
+#define IN_BROTHEL_GUARD_ROOM( room )	( room == 110 )
 
-#define IN_KINGPIN_HOUSE( room ) ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_D && (room) >= 30 && (room) <= 39 )
+#define IN_KINGPIN_HOUSE( room )	( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_D && (room) >= 30 && (room) <= 39 )
 
 #define LOYALTY_LOW_THRESHOLD		30
 #define LOYALTY_OK_THRESHOLD		50
-#define LOYALTY_HIGH_THRESHOLD	80
+#define LOYALTY_HIGH_THRESHOLD		80
 
 extern UINT8 gubQuest[MAX_QUESTS];
 extern UINT8 gubFact[NUM_FACTS];

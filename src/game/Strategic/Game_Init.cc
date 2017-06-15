@@ -156,7 +156,7 @@ static void InitNPCs(void)
 		//SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
 	}
 
-  gfPlayerTeamSawJoey = FALSE;
+	gfPlayerTeamSawJoey = FALSE;
 
 
 	if ( gGameOptions.fSciFi )

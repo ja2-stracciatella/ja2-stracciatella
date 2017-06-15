@@ -123,42 +123,42 @@ enum {
 
 
 // size of squares on the map
-#define			MAP_GRID_X						21
-#define			MAP_GRID_Y						18
+#define MAP_GRID_X		21
+#define MAP_GRID_Y		18
 
 
 // scroll bounds
-#define EAST_ZOOM_BOUND (STD_SCREEN_X + 378)
-#define WEST_ZOOM_BOUND (STD_SCREEN_X + 42)
-#define SOUTH_ZOOM_BOUND (STD_SCREEN_Y + 324)
-#define NORTH_ZOOM_BOUND (STD_SCREEN_Y + 36)
+#define EAST_ZOOM_BOUND		(STD_SCREEN_X + 378)
+#define WEST_ZOOM_BOUND		(STD_SCREEN_X + 42)
+#define SOUTH_ZOOM_BOUND	(STD_SCREEN_Y + 324)
+#define NORTH_ZOOM_BOUND	(STD_SCREEN_Y + 36)
 
 // map view region
-#define			MAP_VIEW_START_X			(STD_SCREEN_X + 270)
-#define			MAP_VIEW_START_Y			(STD_SCREEN_Y + 10)
-#define			MAP_VIEW_WIDTH				336
-#define			MAP_VIEW_HEIGHT				298
+#define MAP_VIEW_START_X	(STD_SCREEN_X + 270)
+#define MAP_VIEW_START_Y	(STD_SCREEN_Y + 10)
+#define MAP_VIEW_WIDTH		336
+#define MAP_VIEW_HEIGHT		298
 
 // zoomed in grid sizes
-#define     MAP_GRID_ZOOM_X       MAP_GRID_X*2
-#define     MAP_GRID_ZOOM_Y       MAP_GRID_Y*2
+#define MAP_GRID_ZOOM_X		MAP_GRID_X*2
+#define MAP_GRID_ZOOM_Y		MAP_GRID_Y*2
 
 // number of units wide
-#define     WORLD_MAP_X           18
+#define WORLD_MAP_X		18
 
 // dirty regions for the map
-#define			DMAP_GRID_X						( MAP_GRID_X + 1 )
-#define			DMAP_GRID_Y						( MAP_GRID_Y + 1 )
-#define     DMAP_GRID_ZOOM_X      ( MAP_GRID_ZOOM_X+1)
-#define     DMAP_GRID_ZOOM_Y      ( MAP_GRID_ZOOM_Y+1)
+#define DMAP_GRID_X		( MAP_GRID_X + 1 )
+#define DMAP_GRID_Y		( MAP_GRID_Y + 1 )
+#define DMAP_GRID_ZOOM_X	( MAP_GRID_ZOOM_X+1)
+#define DMAP_GRID_ZOOM_Y	( MAP_GRID_ZOOM_Y+1)
 
 
 // Orta position on the map
-#define ORTA_SECTOR_X 4
-#define ORTA_SECTOR_Y 11
+#define ORTA_SECTOR_X		4
+#define ORTA_SECTOR_Y		11
 
-#define TIXA_SECTOR_X 9
-#define TIXA_SECTOR_Y 10
+#define TIXA_SECTOR_X		9
+#define TIXA_SECTOR_Y		10
 
 
 // wait time until temp path is drawn, from placing cursor on a map grid

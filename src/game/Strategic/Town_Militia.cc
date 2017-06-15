@@ -33,9 +33,9 @@
 // temporary local global variables
 UINT8 gubTownSectorServerTownId = BLANK_SECTOR;
 INT16 gsTownSectorServerSkipX = -1;
-INT16	gsTownSectorServerSkipY = -1;
+INT16 gsTownSectorServerSkipY = -1;
 UINT8 gubTownSectorServerIndex = 0;
-BOOLEAN gfYesNoPromptIsForContinue = FALSE;		// this flag remembers whether we're starting new training, or continuing
+BOOLEAN gfYesNoPromptIsForContinue = FALSE; // this flag remembers whether we're starting new training, or continuing
 INT32 giTotalCostOfTraining = 0;
 
 
@@ -537,7 +537,7 @@ static void PayMilitiaTrainingYesNoBoxCallback(MessageBoxReturnValue const bExit
 	Assert( giTotalCostOfTraining > 0 );
 
 	// yes
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		// does the player have enough
 		if( LaptopSaveInfo.iCurrentBalance >= giTotalCostOfTraining )
@@ -767,17 +767,17 @@ void HandleContinueOfTownTraining( void )
 
 	if( fContinueEventPosted )
 	{
-    // ATE: If this event happens in tactical mode we will be switching at some time to mapscreen...
-    if ( guiCurrentScreen == GAME_SCREEN )
-    {
-		  gfEnteringMapScreen = TRUE;
-    }
+		// ATE: If this event happens in tactical mode we will be switching at some time to mapscreen...
+		if ( guiCurrentScreen == GAME_SCREEN )
+		{
+			gfEnteringMapScreen = TRUE;
+		}
 
 		//If the militia view isn't currently active, then turn it on when prompting to continue training.
 		if ( !fShowMilitia )
-    {
-		  ToggleShowMilitiaMode();
-    }
+		{
+			ToggleShowMilitiaMode();
+		}
 	}
 }
 

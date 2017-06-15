@@ -650,9 +650,9 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 	// take everyone out of heli and add to movement group
 	INT8 bNewSquad;
 	BOOLEAN fSuccess;
-  UINT8   ubInsertionCode = (UINT8)-1; // XXX HACK000E
-  BOOLEAN fInsertionCodeSet = FALSE;
-  UINT16  usInsertionData = (UINT16)-1; // XXX HACK000E
+	UINT8   ubInsertionCode = (UINT8)-1; // XXX HACK000E
+	BOOLEAN fInsertionCodeSet = FALSE;
+	UINT16  usInsertionData = (UINT16)-1; // XXX HACK000E
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
 	bNewSquad = GetFirstEmptySquad();
@@ -951,7 +951,7 @@ void HandleAnimationOfSectors( void )
 	{
 		switch( gubBlitSectorLocatorCode )
 		{
-			case LOCATOR_COLOR_RED:		 // normal one used for mines (will now be overriden with yellow)
+			case LOCATOR_COLOR_RED: // normal one used for mines (will now be overriden with yellow)
 				HandleBlitOfSectorLocatorIcon( gsSectorLocatorX, gsSectorLocatorY, 0, LOCATOR_COLOR_RED );
 				break;
 			case LOCATOR_COLOR_YELLOW: // used for all other dialogues
@@ -1108,16 +1108,16 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 			// everyone die die die
 			// play sound
 			if (PlayJA2StreamingSampleFromFile(STSOUNDSDIR "/blah2.wav", HIGHVOLUME, 1, MIDDLEPAN, HeliCrashSoundStopCallback) == SOUND_ERROR)
-      {
-        // Destroy here if we cannot play streamed sound sample....
-  			SkyriderDestroyed( );
-      }
-      else
-      {
-        // otherwise it's handled in the callback
-	      // remove any arrival events for the helicopter's group
-	      DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, GetHelicopter().ubMovementGroup);
-      }
+			{
+				// Destroy here if we cannot play streamed sound sample....
+				SkyriderDestroyed( );
+			}
+			else
+			{
+				// otherwise it's handled in the callback
+				// remove any arrival events for the helicopter's group
+				DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, GetHelicopter().ubMovementGroup);
+			}
 
 			// special return code indicating heli was destroyed
 			return( TRUE );
@@ -1219,7 +1219,7 @@ INT16 GetNumSafeSectorsInPath()
 	VEHICLETYPE const& v      = GetHelicopter();
 	INT32       const  sector = CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY);
 	GROUP*      const  g      = GetGroup(v.ubMovementGroup);
-  UINT32             n      = 0;
+	UINT32             n      = 0;
 
 	if (PathSt const* i = v.pMercPath)
 	{
@@ -1235,7 +1235,7 @@ INT16 GetNumSafeSectorsInPath()
 
 		for (; i; i = i->pNext)
 		{
-      if (StrategicMap[i->uiSectorId].fEnemyAirControlled) continue;
+			if (StrategicMap[i->uiSectorId].fEnemyAirControlled) continue;
 			++n;
 		}
 	}
@@ -1259,7 +1259,7 @@ INT16 GetNumSafeSectorsInPath()
 
 		for (; i; i = i->pNext)
 		{
-      if (StrategicMap[i->uiSectorId].fEnemyAirControlled) continue;
+			if (StrategicMap[i->uiSectorId].fEnemyAirControlled) continue;
 			++n;
 		}
 	}
@@ -1270,7 +1270,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
 {
 	// get the last sector value in the helictoper's path
 	UINT32 uiLocation = 0;
-  UINT32  uiCount = 0;
+	UINT32  uiCount = 0;
 
 	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
 	if (!CanHelicopterFly()) return 0;
@@ -1299,10 +1299,10 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		{
 			uiLocation = pNode -> uiSectorId;
 
-      if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
+			if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
+			{
+				uiCount++;
+			}
 
 			pNode = pNode ->pNext;
 		}
@@ -1326,10 +1326,10 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		{
 			uiLocation = pNode -> uiSectorId;
 
-      if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
+			if ( StrategicMap[ uiLocation ].fEnemyAirControlled )
+			{
+				uiCount++;
+			}
 
 			pNode = pNode ->pNext;
 		}

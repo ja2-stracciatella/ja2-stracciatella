@@ -417,14 +417,14 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 		// data and copy into soldier's database
 
 
-		  z=_z;
+		z=_z;
 
-			for (iCnt=0; z && (iCnt < MAX_PATH_LIST_SIZE); iCnt++)
-		  {
-			  gusMapPathingData[ iCnt ] = trailStratTreeB[z].diStratDelta;
+		for (iCnt=0; z && (iCnt < MAX_PATH_LIST_SIZE); iCnt++)
+		{
+			gusMapPathingData[ iCnt ] = trailStratTreeB[z].diStratDelta;
 
-			  z = trailStratTreeB[z].nextLink;
-		  }
+			z = trailStratTreeB[z].nextLink;
+		}
 
 		// return path length : serves as a "successful" flag and a path length counter
 		return(iCnt);
@@ -497,10 +497,10 @@ PathSt* AppendStrategicPath(PathSt* pNewSection, PathSt* pHeadOfPathList)
 	if( pNode )
 	{
 		// move to tail of old list
-	  while( pNode -> pNext )
+		while( pNode -> pNext )
 		{
 			// next node in list
-		  pNode = pNode ->pNext;
+			pNode = pNode ->pNext;
 		}
 
 		// make sure the 2 are not the same
@@ -590,7 +590,7 @@ PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT
 		// get current sector value
 		if( pNode != NULL )
 		{
-	    sCurrentSector = ( INT16 )pNode -> uiSectorId;
+			sCurrentSector = ( INT16 )pNode -> uiSectorId;
 		}
 	}
 
@@ -616,8 +616,8 @@ PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT
 	// if we're NOT about to clear the head (there's a previous entry)
 	if( pNode -> pPrev )
 	{
-	  // set next for tail to NULL
-	  pNode -> pPrev -> pNext = NULL;
+		// set next for tail to NULL
+		pNode -> pPrev -> pNext = NULL;
 	}
 	else
 	{

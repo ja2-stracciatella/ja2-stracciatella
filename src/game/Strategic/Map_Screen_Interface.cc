@@ -470,7 +470,7 @@ void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* const pS
 
 			// if either is between sectors, they must be in the same movement group
 			if ( ( pSoldier->fBetweenSectors || pSoldier2->fBetweenSectors ) &&
-					 ( pSoldier->ubGroupID != pSoldier2->ubGroupID ) )
+				( pSoldier->ubGroupID != pSoldier2->ubGroupID ) )
 			{
 				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
@@ -703,7 +703,7 @@ BOOLEAN CharacterIsGettingPathPlotted(INT16 const sCharNumber)
 
 	// if the highlighted line character is also selected
 	if ( ( ( giDestHighLine != -1 ) && IsEntryInSelectedListSet ( ( INT8 ) giDestHighLine ) ) ||
-			 ( ( bSelectedDestChar != -1 ) && IsEntryInSelectedListSet ( bSelectedDestChar ) ) )
+		( ( bSelectedDestChar != -1 ) && IsEntryInSelectedListSet ( bSelectedDestChar ) ) )
 	{
 		// then ALL selected lines will be affected
 		if( IsEntryInSelectedListSet( ( INT8 ) sCharNumber ) )
@@ -1196,8 +1196,8 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE& s)
 		SetUpMercAboutToLeaveEquipment(s.ubProfile, slot);
 	}
 
-  /* ATE: Added this to drop keyring keys - the 2nd last paramter says to add it
-   * to a leave list; the gridno, level and visiblity are ignored */
+	/* ATE: Added this to drop keyring keys - the 2nd last paramter says to add it
+	 * to a leave list; the gridno, level and visiblity are ignored */
 	DropKeysInKeyRing(s, NOWHERE, 0, VISIBILITY_0, true, slot, false);
 
 	// Zero out profiles
@@ -1225,7 +1225,7 @@ void HandleGroupAboutToArrive( void )
 {
 	// reblit map to change the color of the "people in motion" marker
 	fMapPanelDirty = TRUE;
-	
+
 	DoDeadIsDeadSaveIfNecessary();
 
 	// ARM - commented out - don't see why this is needed
@@ -1450,7 +1450,7 @@ static bool ValidSelectableCharForNextOrPrev(SOLDIERTYPE const& s)
 	bool const holding_item = gpItemPointer || fMapInventoryItem;
 	return
 		/* If showing merc inventory or holding an item, then the new guy must have
-		 * accessible inventory */
+			* accessible inventory */
 		((!holding_item && !fShowInventoryFlag) || MapCharacterHasAccessibleInventory(s)) &&
 		(!holding_item || MapscreenCanPassItemToChar(&s));
 }
@@ -1474,8 +1474,8 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 	{
 		// disallow passing items to anyone not in that sector
 		if ( pNewSoldier->sSectorX != sSelMapX ||
-				 pNewSoldier->sSectorY != sSelMapY ||
-				 pNewSoldier->bSectorZ != ( INT8 )( iCurrentMapSectorZ ) )
+			pNewSoldier->sSectorY != sSelMapY ||
+			pNewSoldier->bSectorZ != ( INT8 )( iCurrentMapSectorZ ) )
 		{
 			return( FALSE );
 		}
@@ -1511,8 +1511,8 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 	{
 		// disallow passing items to a merc not in the same sector
 		if ( pNewSoldier->sSectorX != pOldSoldier->sSectorX ||
-				 pNewSoldier->sSectorY != pOldSoldier->sSectorY ||
-				 pNewSoldier->bSectorZ != pOldSoldier->bSectorZ )
+			pNewSoldier->sSectorY != pOldSoldier->sSectorY ||
+			pNewSoldier->bSectorZ != pOldSoldier->bSectorZ )
 		{
 			return( FALSE );
 		}
@@ -1959,7 +1959,7 @@ static void SelectSquadForMovement(INT32 const squad_no)
 			SOLDIERTYPE& s = **k;
 			if (!s.bActive) continue;
 			/* Is he able and allowed to move? Report only the first reason for
-			 * failure encountered */
+				* failure encountered */
 			if (CanMoveBoxSoldierMoveStrategically(&s, first_failure))
 			{
 				SelectSoldierForMovement(s);
@@ -2045,7 +2045,7 @@ static void SelectVehicleForMovement(INT32 const vehicle_id, BOOLEAN const and_a
 		}
 
 		/* Vehicle itself can only move if at least one passenger can move and is
-		 * moving */
+			* moving */
 		if (has_driver) fVehicleIsMoving[i] = TRUE;
 		break;
 	}
@@ -2234,7 +2234,7 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		CreatePopUpBoxForMovementBox( );
 		BuildMouseRegionsForMoveBox( );
 		CreateScreenMaskForMoveBox( );
-  	fMapPanelDirty = TRUE;
+		fMapPanelDirty = TRUE;
 	}
 	else if (!fShowMapScreenMovementList && fCreated)
 	{
@@ -2245,7 +2245,7 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		RemoveBox( ghMoveBox );
 		ghMoveBox = NO_POPUP_BOX;
 		RemoveScreenMaskForMoveBox( );
-  	fMapPanelDirty = TRUE;
+		fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;		// really long move boxes can overlap bottom panel
 	}
 
@@ -2298,7 +2298,7 @@ static void AddStringsToMoveBox(PopUpBox*);
 
 static void CreatePopUpBoxForMovementBox(void)
 {
-  SGPPoint const MovePosition = { (UINT16)(STD_SCREEN_X + 450), (UINT16)(STD_SCREEN_Y + 100) };
+	SGPPoint const MovePosition = { (UINT16)(STD_SCREEN_X + 450), (UINT16)(STD_SCREEN_Y + 100) };
 
 	// create the pop up box and mouse regions for movement list
 	PopUpBox* const box = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
@@ -2575,7 +2575,7 @@ static void MoveMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
 		// highlight string
-	  HighLightBoxLine( ghMoveBox, iValue );
+		HighLightBoxLine( ghMoveBox, iValue );
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
@@ -2600,7 +2600,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	iMoveBoxLine = MSYS_GetRegionUserData( pRegion, 0 );
 	iRegionType  = MSYS_GetRegionUserData( pRegion, 1 );
 	iListIndex   = MSYS_GetRegionUserData( pRegion, 2 );
-	iClickTime	 = GetJA2Clock();
+	iClickTime   = GetJA2Clock();
 
 	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )  )
 	{
@@ -3599,7 +3599,7 @@ static void RenderSoldierSmallFaceForUpdatePanel(INT32 iIndex, INT32 iX, INT32 i
 static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		EndUpdateBox(TRUE); // restart time compression
 	}
 }
@@ -3608,7 +3608,7 @@ static void ContinueUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static void StopUpdateButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		EndUpdateBox(FALSE); // stop time compression
 	}
 }
@@ -3687,13 +3687,13 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
 	if (!fCreated && fCreate)
 	{
 		MSYS_DefineRegion( &gContractIconRegion, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y, CHAR_ICON_X + CHAR_ICON_WIDTH, CHAR_ICON_CONTRACT_Y + CHAR_ICON_HEIGHT,
-						 MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+					MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
 		MSYS_DefineRegion( &gInsuranceIconRegion, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + CHAR_ICON_SPACING, CHAR_ICON_X + CHAR_ICON_WIDTH, CHAR_ICON_CONTRACT_Y + CHAR_ICON_SPACING + CHAR_ICON_HEIGHT,
-						 MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+					MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
 		MSYS_DefineRegion( &gDepositIconRegion, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + ( 2 * CHAR_ICON_SPACING ), CHAR_ICON_X + CHAR_ICON_WIDTH, CHAR_ICON_CONTRACT_Y + ( 2 * CHAR_ICON_SPACING ) + CHAR_ICON_HEIGHT,
-						 MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+					MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
 		fCreated = TRUE;
 	}
@@ -3980,7 +3980,7 @@ MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE& s)
 		if (&other == &s) continue; // Skip the same guy we did already
 
 		/* Is he in the same movement group (i.e. squad), or is he still selected to
-		 * go with us (legal?) */
+			* go with us (legal?) */
 		if (GetSoldierGroup(other) != g && !c->selected) continue;
 
 		MoveError const ret = CanCharacterMoveInStrategic(other);
@@ -4117,10 +4117,10 @@ static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* const pSoldier, co
 
 		// as long as they're in the same location, amd neither is between sectors, different vehicles is also ok
 		if( ( pVehicle1->sSectorX == pVehicle2->sSectorX ) &&
-			  ( pVehicle1->sSectorY == pVehicle2->sSectorY ) &&
-			  ( pVehicle1->sSectorZ == pVehicle2->sSectorZ ) &&
-					!pVehicle1->fBetweenSectors &&
-					!pVehicle2->fBetweenSectors )
+			( pVehicle1->sSectorY == pVehicle2->sSectorY ) &&
+			( pVehicle1->sSectorZ == pVehicle2->sSectorZ ) &&
+			!pVehicle1->fBetweenSectors &&
+			!pVehicle2->fBetweenSectors )
 		{
 			return( TRUE );
 		}
@@ -4317,7 +4317,7 @@ void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSecto
 		sScreenX = MAP_GRID_X;
 	}
 	sScreenY--; //Carterism ritual
-  if( sScreenY < MAP_GRID_Y )
+	if( sScreenY < MAP_GRID_Y )
 	{
 		sScreenY = MAP_GRID_Y;
 	}

@@ -109,8 +109,8 @@ BOOLEAN AddPeriodStrategicEvent(StrategicEventKind, UINT32 uiOnceEveryXMinutes, 
 BOOLEAN AddPeriodStrategicEventWithOffset(StrategicEventKind, UINT32 uiOnceEveryXMinutes, UINT32 uiOffsetFromCurrent, UINT32 uiParam);
 
 /* Search for and remove the first event matching the supplied information.
- * There may very well be a need for more specific event removal, so let me know
- * (Kris), of any support needs. */
+	* There may very well be a need for more specific event removal, so let me know
+	* (Kris), of any support needs. */
 void DeleteStrategicEvent(StrategicEventKind, UINT32 param);
 void DeleteAllStrategicEventsOfType(StrategicEventKind);
 void DeleteAllStrategicEvents(void);
