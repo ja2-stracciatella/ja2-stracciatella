@@ -38,7 +38,7 @@ ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initia
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
 
 #define	DONT_CHECK_FOR_FREE_SPACE		255
-static UINT8 gubCheckForFreeSpaceOnHardDriveCount = DONT_CHECK_FOR_FREE_SPACE;
+static UINT8 gubCheckForFreeSpaceOnHardDriveCount = DONT_CHECK_FOR_FREE_SPACE - 1;
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
@@ -99,61 +99,6 @@ void    ShutdownGame(void)
 	InitTacticalSave();
 }
 
-
-static void InsertCommasIntoNumber(wchar_t pString[])
-{
-  INT16 sCounter = 0;
-  INT16 sZeroCount = 0;
-	INT16 sTempCounter = 0;
-
-	// go to end of dollar figure
-	while (pString[sCounter] != L'\0')
-	{
-		sCounter++;
-	}
-
-	// is there under $1,000?
-	if (sCounter < 4)
-	{
-		// can't do anything, return
-		return;
-	}
-
-	// at end, start backing up until beginning
-  while (sCounter > 0)
-	{
-		// enough for a comma?
-		if (sZeroCount == 3)
-		{
-			// reset count
-			sZeroCount = 0;
-      // set tempcounter to current counter
-			sTempCounter = sCounter;
-
-			// run until end
-			while (pString[sTempCounter] != L'\0')
-			{
-				sTempCounter++;
-			}
-			// now shift everything over ot the right one place until sTempCounter = sCounter
-			while (sTempCounter >= sCounter)
-			{
-				pString[sTempCounter + 1] = pString[sTempCounter];
-				sTempCounter--;
-			}
-			// now insert comma
-			pString[sCounter] = L',';
-		}
-
-		// increment count of digits
-		sZeroCount++;
-
-		// decrement counter
-		sCounter--;
-	}
-}
-
-
 static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen);
 
 
@@ -197,21 +142,15 @@ try
 			else
 			{
 				// Make sure the user has enough hard drive space
-				if( !DoesUserHaveEnoughHardDriveSpace() )
+				uintmax_t uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
+				if( uiSpaceOnDrive < REQUIRED_FREE_SPACE )
 				{
 					wchar_t	zText[512];
 					wchar_t	zSpaceOnDrive[512];
-					uintmax_t uiSpaceOnDrive;
-					wchar_t	zSizeNeeded[512];
-
-					swprintf( zSizeNeeded, lengthof(zSizeNeeded), L"%d", REQUIRED_FREE_SPACE / BYTESINMEGABYTE );
-					InsertCommasIntoNumber(zSizeNeeded);
-
-					uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
 
 					swprintf( zSpaceOnDrive, lengthof(zSpaceOnDrive), L"%.2f", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE );
 
-					swprintf( zText, lengthof(zText), pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, zSizeNeeded );
+					swprintf( zText, lengthof(zText), pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, L"20" );
 
 					if( guiPreviousOptionScreen == MAP_SCREEN )
 						DoMapMessageBox( MSG_BOX_BASIC_STYLE, zText, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
