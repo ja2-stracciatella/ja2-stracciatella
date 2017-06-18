@@ -25,8 +25,8 @@ void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 		usItemIndex = pInventoryArray[ i ].usItemIndex;
 		Assert(usItemIndex < MAXITEMS);
 
-    const ItemModel *item = GCM->getItem(usItemIndex);
-    int maxAmount = fUsed ? GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) : GCM->getBobbyRayNewInventory()->getMaxItemAmount(item);
+		const ItemModel *item = GCM->getItem(usItemIndex);
+		int maxAmount = fUsed ? GCM->getBobbyRayUsedInventory()->getMaxItemAmount(item) : GCM->getBobbyRayNewInventory()->getMaxItemAmount(item);
 		ubNumBought = DetermineInitialInvItems(ARMS_DEALER_BOBBYR, usItemIndex, maxAmount, fUsed);
 		if ( ubNumBought > 0)
 		{

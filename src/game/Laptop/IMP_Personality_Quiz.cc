@@ -66,12 +66,12 @@ void EnterIMPPersonalityQuiz( void )
 {
 
 	// void answers out the quiz
-  memset( &iQuizAnswerList, -1, sizeof( INT32 ) * MAX_NUMBER_OF_IMP_QUESTIONS );
+	memset( &iQuizAnswerList, -1, sizeof( INT32 ) * MAX_NUMBER_OF_IMP_QUESTIONS );
 
 	// if we are entering for first time, reset
 	if( giCurrentPersonalityQuizQuestion == MAX_NUMBER_OF_IMP_QUESTIONS )
 	{
-    giCurrentPersonalityQuizQuestion = 0;
+		giCurrentPersonalityQuizQuestion = 0;
 	}
 	// reset previous
 	giPreviousPersonalityQuizQuestion = -1;
@@ -91,11 +91,11 @@ void EnterIMPPersonalityQuiz( void )
 
 void RenderIMPPersonalityQuiz( void )
 {
-   // the background
+	// the background
 	RenderProfileBackGround( );
 
 	// highlight answer
-  PrintImpText( );
+	PrintImpText( );
 
 	// indent for current and last page numbers
 	//RenderAttrib2IndentFrame(BTN_FIRST_COLUMN_X + 2, 365 );
@@ -111,17 +111,15 @@ static void DestroyPersonalityQuizButtons(void);
 
 void ExitIMPPersonalityQuiz( void )
 {
-
-
 	// set previous to current, we want it's buttons gone!
-  giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
+	giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
 
 
 	// destroy regular quiz buttons: the done and start over buttons
-  DestroyIMPersonalityQuizButtons( );
+	DestroyIMPersonalityQuizButtons( );
 
 	// destroy the buttons used for answers
-  DestroyPersonalityQuizButtons( );
+	DestroyPersonalityQuizButtons( );
 
 	if( fStartOverFlag )
 	{
@@ -136,14 +134,13 @@ static void HandleIMPQuizKeyBoard(void);
 
 void HandleIMPPersonalityQuiz( void )
 {
-
 	// create/destroy buttons for  questions, if needed
 	CreateIMPPersonalityQuizAnswerButtons( );
 
 	// handle keyboard input
 	HandleIMPQuizKeyBoard( );
 
-  if( iCurrentAnswer == -1)
+	if( iCurrentAnswer == -1)
 	{
 		DisableButton(	giIMPPersonalityQuizButton[0] );
 	}
@@ -168,15 +165,15 @@ static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
 
 static void CreateIMPPersonalityQuizButtons(void)
 {
-  // this function will create the buttons needed for the IMP personality quiz Page
-  const INT16 dx = LAPTOP_SCREEN_UL_X;
-  const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
+	// this function will create the buttons needed for the IMP personality quiz Page
+	const INT16 dx = LAPTOP_SCREEN_UL_X;
+	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
 
 	// ths Done button
 	giIMPPersonalityQuizButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_7.sti", 0, 1);
 	giIMPPersonalityQuizButton[0] = MakeButton(giIMPPersonalityQuizButtonImage[0], pImpButtonText[8], dx + 197, dy + 302, BtnIMPPersonalityQuizAnswerConfirmCallback);
 
-  // start over
+	// start over
 	giIMPPersonalityQuizButtonImage[1] = LoadButtonImage(LAPTOPDIR "/button_5.sti", 0, 1);
 	giIMPPersonalityQuizButton[1] = MakeButton(giIMPPersonalityQuizButtonImage[1], pImpButtonText[7], dx + BTN_FIRST_COLUMN_X, dy + 302, BtnIMPPersonalityQuizStartOverCallback);
 
@@ -199,12 +196,12 @@ static void DestroyIMPersonalityQuizButtons(void)
 	// this function will destroy the buttons needed for the IMP personality quiz page
 
 	// the done button
-  RemoveButton(giIMPPersonalityQuizButton[ 0 ] );
-  UnloadButtonImage(giIMPPersonalityQuizButtonImage[ 0 ] );
+	RemoveButton(giIMPPersonalityQuizButton[ 0 ] );
+	UnloadButtonImage(giIMPPersonalityQuizButtonImage[ 0 ] );
 
-  // the start over button
+	// the start over button
 	RemoveButton(giIMPPersonalityQuizButton[ 1 ] );
-  UnloadButtonImage(giIMPPersonalityQuizButtonImage[ 1 ] );
+	UnloadButtonImage(giIMPPersonalityQuizButtonImage[ 1 ] );
 
 	// previosu button
 	RemoveButton( giPreviousQuestionButton );
@@ -222,9 +219,9 @@ static void ToggleQuestionNumberButtonOn(INT32 iAnswerNumber);
 
 static void CreateIMPPersonalityQuizAnswerButtons(void)
 {
-  // this function will create the buttons for the personality quiz answer selections
+	// this function will create the buttons for the personality quiz answer selections
 
-  if( IMP_PERSONALITY_QUIZ != iCurrentImpPage )
+	if( IMP_PERSONALITY_QUIZ != iCurrentImpPage )
 	{
 		// not valid pagre, get out
 		return;
@@ -237,14 +234,14 @@ static void CreateIMPPersonalityQuizAnswerButtons(void)
 		return;
 	}
 
-  // destroy old screens buttons
-  DestroyPersonalityQuizButtons( );
+	// destroy old screens buttons
+	DestroyPersonalityQuizButtons( );
 
 	// re-render screen
 	RenderProfileBackGround( );
 
-  switch( giCurrentPersonalityQuizQuestion )
-  {
+	switch( giCurrentPersonalityQuizQuestion )
+	{
 		case -1: break; // do nothing
 		case  0: iNumberOfPersonaButtons = 6; break;
 		case  3: iNumberOfPersonaButtons = 5; break;
@@ -254,7 +251,7 @@ static void CreateIMPPersonalityQuizAnswerButtons(void)
 		default: iNumberOfPersonaButtons = 4; break;
 	}
 
-  AddIMPPersonalityQuizAnswerButtons( iNumberOfPersonaButtons );
+	AddIMPPersonalityQuizAnswerButtons( iNumberOfPersonaButtons );
 
 	ToggleQuestionNumberButtonOn( iQuizAnswerList[ giCurrentPersonalityQuizQuestion ] );
 
@@ -276,9 +273,9 @@ static void DestroyPersonalityQuizButtons(void)
 {
 
 	// this function will destroy the buttons used in the previous personality question
-  // destroy old buttons
+	// destroy old buttons
 	UINT32 ButtonCount;
-  switch( giPreviousPersonalityQuizQuestion  )
+	switch( giPreviousPersonalityQuizQuestion  )
 	{
 		case -1: return; // do nothing
 		case  0: ButtonCount = 6; break;
@@ -297,7 +294,7 @@ static void BtnQuizAnswerCallback(GUI_BUTTON*, INT32 reason);
 
 static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 {
-  // will add iNumberofbuttons to the answer button list
+	// will add iNumberofbuttons to the answer button list
 	for (UINT32 i = 0; i < iNumberOfButtons; i++)
 	{
 		INT32 XLoc = LAPTOP_SCREEN_UL_X + (i < 4 ? BTN_FIRST_COLUMN_X : BTN_SECOND_COLUMN_X);
@@ -315,17 +312,17 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 	}
 
 	// previous is current
-  giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
+	giPreviousPersonalityQuizQuestion = giCurrentPersonalityQuizQuestion;
 }
 
 
 static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 {
-  INT32 iCounter = 0;
+	INT32 iCounter = 0;
 	for(iCounter = 0; iCounter < iNumberOfButtons; iCounter++)
 	{
-     RemoveButton(giIMPPersonalityQuizAnswerButton[ iCounter ] );
-     UnloadButtonImage(giIMPPersonalityQuizAnswerButtonImage[ iCounter ] );
+		RemoveButton(giIMPPersonalityQuizAnswerButton[ iCounter ] );
+		UnloadButtonImage(giIMPPersonalityQuizAnswerButtonImage[ iCounter ] );
 	}
 }
 
@@ -566,182 +563,177 @@ static void CompileQuestionsInStatsAndWhatNot(void)
 
 void BltAnswerIndents( INT32 iNumberOfIndents )
 {
-  INT32 iCounter = 0;
+	INT32 iCounter = 0;
 
 
 	// the question indent
-  RenderQtnIndentFrame( 15, 20 );
+	RenderQtnIndentFrame( 15, 20 );
 
 
-  // the answers
+	// the answers
 
 	for( iCounter = 0; iCounter < iNumberOfIndents; iCounter++)
 	{
 		switch( iCounter )
 		{
-		  case( 0 ):
-        if( iNumberOfIndents < 5 )
+			case( 0 ):
+				if( iNumberOfIndents < 5 )
 				{
-          RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93);
 
 					if( iCurrentAnswer == iCounter )
 					{
 						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 );
 					}
 				}
-        else
+				else
 				{
-          RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93);
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93);
 
 					if( iCurrentAnswer == iCounter )
 					{
 						RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 93 );
 					}
 				}
-		  break;
-		  case( 1 ):
-        if( iNumberOfIndents < 5 )
+				break;
+			case( 1 ):
+				if( iNumberOfIndents < 5 )
 				{
-          RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143);
 
 					if( iCurrentAnswer == iCounter )
 					{
 						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 );
 					}
 				}
-        else
+				else
 				{
-          RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143);
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143);
 
 					if( iCurrentAnswer == iCounter )
 					{
 						RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 143 );
 					}
 				}
-		  break;
-		  case( 2 ):
-      if( iNumberOfIndents < 5 )
-			{
-        RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193);
-
-				if( iCurrentAnswer == iCounter )
+				break;
+			case( 2 ):
+				if( iNumberOfIndents < 5 )
 				{
-				  RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 );
-				}
-			}
-      else
-			{
-        RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193);
 
-				if( iCurrentAnswer == iCounter )
+					if( iCurrentAnswer == iCounter )
+					{
+					RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 );
+					}
+				}
+				else
 				{
-				  RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 );
-				}
-			}
-		  break;
-		  case( 3 ):
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193);
 
+					if( iCurrentAnswer == iCounter )
+					{
+					RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 193 );
+					}
+				}
+				break;
+			case( 3 ):
 				// is this question # 6 ..if so, need longer answer box
 				if( giCurrentPersonalityQuizQuestion == 5 )
 				{
 					// render longer frame
 					RenderQtnShort2IndentFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
 
-						// is this answer currently selected?
+					// is this answer currently selected?
 					if( iCurrentAnswer == iCounter )
 					{
 						// need to highlight
- 				    RenderQtnShort2IndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
-
+						RenderQtnShort2IndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
 					}
 					// done
 					break;
 				}
 
-        if( iNumberOfIndents < 5 )
+				if( iNumberOfIndents < 5 )
 				{
-          RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243);
+					RenderQtnLongIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243);
 
 					if( iCurrentAnswer == iCounter )
 					{
-				    RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
+						RenderQtnLongIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
 					}
 				}
-        else
+				else
 				{
-          RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243);
+					RenderQtnShortIndentFrame(BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243);
 
 					if( iCurrentAnswer == iCounter )
 					{
-				    RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
+						RenderQtnShortIndentHighFrame( BTN_FIRST_COLUMN_X + INDENT_OFFSET, 243 );
 					}
 				}
-		  break;
-		  case( 4 ):
+				break;
+			case( 4 ):
+				//is this question # 14 or 21?..if so, need longer answer box
+				if( ( giCurrentPersonalityQuizQuestion == 10)||( giCurrentPersonalityQuizQuestion == 5 ) )
+				{
+					// render longer frame
+					RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
 
-				   //is this question # 14 or 21?..if so, need longer answer box
-				  if( ( giCurrentPersonalityQuizQuestion == 10)||( giCurrentPersonalityQuizQuestion == 5 ) )
+					// is this answer currently selected?
+					if( iCurrentAnswer == iCounter )
 					{
-					  // render longer frame
-					  RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
-
-						// is this answer currently selected?
-					  if( iCurrentAnswer == iCounter )
-						{
-						  // need to highlight
-				      RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
-
-						}
-					  // done
-					  break;
+						// need to highlight
+						RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
 					}
+					// done
+					break;
+				}
 
-         RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93);
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93);
 
-				 if( iCurrentAnswer == iCounter )
-				 {
-				    RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
-				 }
-		  break;
-		  case( 5 ):
-
+				if( iCurrentAnswer == iCounter )
+				{
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 93 );
+				}
+				break;
+			case( 5 ):
 				// special case?..longer frame needed if so
-				 if(  giCurrentPersonalityQuizQuestion == 19 )
-				 {
-					  // render longer frame
-					  RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
+				if(  giCurrentPersonalityQuizQuestion == 19 )
+				{
+					// render longer frame
+					RenderQtnShort2IndentFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
 
-						// is this answer currently selected?
-					  if( iCurrentAnswer == iCounter )
-						{
-						  // need to highlight
-              RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
-						}
-					  // done
-					  break;
+					// is this answer currently selected?
+					if( iCurrentAnswer == iCounter )
+					{
+						// need to highlight
+						RenderQtnShort2IndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
 					}
-         RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143);
-				 if( iCurrentAnswer == iCounter )
-				 {
-				    RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
-				 }
-		  break;
-		  case( 6 ):
-         RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193);
-				 if( iCurrentAnswer == iCounter )
-				 {
-				    RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193 );
-				 }
-		  break;
-      case( 7 ):
-         RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243);
-				 if( iCurrentAnswer == iCounter )
-				 {
-				    RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243 );
-				 }
-		  break;
-		  case( 8 ):
-      break;
+					// done
+					break;
+				}
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143);
+				if( iCurrentAnswer == iCounter )
+				{
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 143 );
+				}
+				break;
+			case( 6 ):
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193);
+				if( iCurrentAnswer == iCounter )
+				{
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 193 );
+				}
+				break;
+			case( 7 ):
+				RenderQtnShortIndentFrame(BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243);
+				if( iCurrentAnswer == iCounter )
+				{
+					RenderQtnShortIndentHighFrame( BTN_SECOND_COLUMN_X + INDENT_OFFSET, 243 );
+				}
+				break;
+			case( 8 ):
+				break;
 		}
 	}
 }
@@ -749,21 +741,21 @@ void BltAnswerIndents( INT32 iNumberOfIndents )
 
 static void PrintQuizQuestionNumber(void)
 {
-  // this function will print the number of the current question and the numebr of questions
+	// this function will print the number of the current question and the numebr of questions
 
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
 
 	// print current question number
 	mprintf(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, L"%d", giCurrentPersonalityQuizQuestion + 1);
 
-  // total number of questions
-  MPrint(LAPTOP_SCREEN_UL_X + 383, LAPTOP_SCREEN_WEB_UL_Y + 370, L"16");
+	// total number of questions
+	MPrint(LAPTOP_SCREEN_UL_X + 383, LAPTOP_SCREEN_WEB_UL_Y + 370, L"16");
 }
 
 
 static void CheckStateOfTheConfirmButton(void)
 {
-  // will check the state of the confirm button, should it be enabled or disabled?
+	// will check the state of the confirm button, should it be enabled or disabled?
 	if( iCurrentAnswer == -1 )
 	{
 		// was disabled, enable
@@ -778,14 +770,14 @@ static void MoveBackAQuestion(void);
 
 static void HandleIMPQuizKeyBoard(void)
 {
-	InputAtom					InputEvent;
+	InputAtom InputEvent;
 	BOOLEAN fSkipFrame = FALSE;
 
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 
 	while (DequeueEvent(&InputEvent))
-  {
+	{
 		if (!fSkipFrame)
 	{
 		// HOOK INTO MOUSE HOOKS
@@ -852,8 +844,7 @@ static void HandleIMPQuizKeyBoard(void)
 			MoveBackAQuestion( );
 			fSkipFrame = TRUE;
 		}
-		else
-*/
+		else*/
 		{
 			MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 			HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);

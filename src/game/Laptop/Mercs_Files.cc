@@ -33,70 +33,70 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#define		MERCBIOFILE												BINARYDATADIR "/mercbios.edt"
+#define MERCBIOFILE			BINARYDATADIR "/mercbios.edt"
 
-#define		MERC_BIO_FONT											FONT14ARIAL//FONT12ARIAL
-#define		MERC_BIO_COLOR										FONT_MCOLOR_WHITE
+#define MERC_BIO_FONT			FONT14ARIAL//FONT12ARIAL
+#define MERC_BIO_COLOR			FONT_MCOLOR_WHITE
 
-#define		MERC_TITLE_FONT										FONT14ARIAL
-#define		MERC_TITLE_COLOR									146
+#define MERC_TITLE_FONT			FONT14ARIAL
+#define MERC_TITLE_COLOR		146
 
-#define		MERC_NAME_FONT										FONT14ARIAL
-#define		MERC_NAME_COLOR										FONT_MCOLOR_WHITE
+#define MERC_NAME_FONT			FONT14ARIAL
+#define MERC_NAME_COLOR			FONT_MCOLOR_WHITE
 
-#define		MERC_STATS_FONT										FONT12ARIAL
-#define		MERC_STATIC_STATS_COLOR						146
-#define		MERC_DYNAMIC_STATS_COLOR					FONT_MCOLOR_WHITE
-
-
-#define		MERC_FILES_PORTRAIT_BOX_X					LAPTOP_SCREEN_UL_X + 16
-#define		MERC_FILES_PORTRAIT_BOX_Y					LAPTOP_SCREEN_WEB_UL_Y + 17
-
-#define		MERC_FACE_X												MERC_FILES_PORTRAIT_BOX_X + 2
-#define		MERC_FACE_Y												MERC_FILES_PORTRAIT_BOX_Y + 2
-#define		MERC_FACE_WIDTH										106
-#define		MERC_FACE_HEIGHT									122
-
-#define		MERC_FILES_STATS_BOX_X						LAPTOP_SCREEN_UL_X + 164
-#define		MERC_FILES_STATS_BOX_Y						MERC_FILES_PORTRAIT_BOX_Y
+#define MERC_STATS_FONT			FONT12ARIAL
+#define MERC_STATIC_STATS_COLOR		146
+#define MERC_DYNAMIC_STATS_COLOR	FONT_MCOLOR_WHITE
 
 
-#define		MERC_FILES_BIO_BOX_X							MERC_FILES_PORTRAIT_BOX_X
-#define		MERC_FILES_BIO_BOX_Y							LAPTOP_SCREEN_WEB_UL_Y + 155
+#define MERC_FILES_PORTRAIT_BOX_X	LAPTOP_SCREEN_UL_X + 16
+#define MERC_FILES_PORTRAIT_BOX_Y	LAPTOP_SCREEN_WEB_UL_Y + 17
 
-#define MERC_FILES_PREV_BUTTON_X (STD_SCREEN_X + 128)
-#define MERC_FILES_NEXT_BUTTON_X (STD_SCREEN_X + 490)
-#define MERC_FILES_HIRE_BUTTON_X (STD_SCREEN_X + 260)
-#define MERC_FILES_BACK_BUTTON_X (STD_SCREEN_X + 380)
-#define MERC_FILES_BUTTON_Y      (STD_SCREEN_Y + 380)
+#define MERC_FACE_X			MERC_FILES_PORTRAIT_BOX_X + 2
+#define MERC_FACE_Y			MERC_FILES_PORTRAIT_BOX_Y + 2
+#define MERC_FACE_WIDTH			106
+#define MERC_FACE_HEIGHT		122
 
-#define		MERC_NAME_X												MERC_FILES_STATS_BOX_X + 50
-#define		MERC_NAME_Y												MERC_FILES_STATS_BOX_Y + 10
+#define MERC_FILES_STATS_BOX_X		LAPTOP_SCREEN_UL_X + 164
+#define MERC_FILES_STATS_BOX_Y		MERC_FILES_PORTRAIT_BOX_Y
 
-#define		MERC_BIO_TEXT_X										MERC_FILES_BIO_BOX_X + 5
-#define		MERC_BIO_TEXT_Y										MERC_FILES_BIO_BOX_Y + 10
 
-#define		MERC_ADD_BIO_TITLE_X							MERC_BIO_TEXT_X
-#define		MERC_ADD_BIO_TITLE_Y							MERC_BIO_TEXT_Y + 100
+#define MERC_FILES_BIO_BOX_X		MERC_FILES_PORTRAIT_BOX_X
+#define MERC_FILES_BIO_BOX_Y		LAPTOP_SCREEN_WEB_UL_Y + 155
 
-#define		MERC_ADD_BIO_TEXT_X								MERC_BIO_TEXT_X
-#define		MERC_ADD_BIO_TEXT_Y								MERC_ADD_BIO_TITLE_Y + 20
+#define MERC_FILES_PREV_BUTTON_X	(STD_SCREEN_X + 128)
+#define MERC_FILES_NEXT_BUTTON_X	(STD_SCREEN_X + 490)
+#define MERC_FILES_HIRE_BUTTON_X	(STD_SCREEN_X + 260)
+#define MERC_FILES_BACK_BUTTON_X	(STD_SCREEN_X + 380)
+#define MERC_FILES_BUTTON_Y		(STD_SCREEN_Y + 380)
 
-#define		MERC_BIO_WIDTH										460 - 10
+#define MERC_NAME_X			MERC_FILES_STATS_BOX_X + 50
+#define MERC_NAME_Y			MERC_FILES_STATS_BOX_Y + 10
 
-#define MERC_BIO_INFO_TEXT_SIZE     5 * 80
-#define MERC_BIO_ADD_INFO_TEXT_SIZE 2 * 80
-#define MERC_BIO_SIZE               7 * 80
+#define MERC_BIO_TEXT_X			MERC_FILES_BIO_BOX_X + 5
+#define MERC_BIO_TEXT_Y			MERC_FILES_BIO_BOX_Y + 10
 
-#define		MERC_STATS_FIRST_COL_X						MERC_NAME_X
-#define		MERC_STATS_FIRST_NUM_COL_X				MERC_STATS_FIRST_COL_X + 90
-#define		MERC_STATS_SECOND_COL_X						MERC_FILES_STATS_BOX_X + 170
-#define		MERC_STATS_SECOND_NUM_COL_X				MERC_STATS_SECOND_COL_X + 115
-#define		MERC_SPACE_BN_LINES								15
+#define MERC_ADD_BIO_TITLE_X		MERC_BIO_TEXT_X
+#define MERC_ADD_BIO_TITLE_Y		MERC_BIO_TEXT_Y + 100
 
-#define		MERC_HEALTH_Y											MERC_FILES_STATS_BOX_Y + 30
+#define MERC_ADD_BIO_TEXT_X		MERC_BIO_TEXT_X
+#define MERC_ADD_BIO_TEXT_Y		MERC_ADD_BIO_TITLE_Y + 20
 
-#define		MERC_PORTRAIT_TEXT_OFFSET_Y				110
+#define MERC_BIO_WIDTH			460 - 10
+
+#define MERC_BIO_INFO_TEXT_SIZE		5 * 80
+#define MERC_BIO_ADD_INFO_TEXT_SIZE	2 * 80
+#define MERC_BIO_SIZE			7 * 80
+
+#define MERC_STATS_FIRST_COL_X		MERC_NAME_X
+#define MERC_STATS_FIRST_NUM_COL_X	MERC_STATS_FIRST_COL_X + 90
+#define MERC_STATS_SECOND_COL_X		MERC_FILES_STATS_BOX_X + 170
+#define MERC_STATS_SECOND_NUM_COL_X	MERC_STATS_SECOND_COL_X + 115
+#define MERC_SPACE_BN_LINES		15
+
+#define MERC_HEALTH_Y			MERC_FILES_STATS_BOX_Y + 30
+
+#define MERC_PORTRAIT_TEXT_OFFSET_Y	110
 
 
 static SGPVObject* guiPortraitBox;
@@ -155,7 +155,7 @@ void EnterMercsFiles()
 	guiHireButton     = MakeButton(MercInfo[MERC_FILES_HIRE],     MERC_FILES_HIRE_BUTTON_X, BtnMercHireButtonCallback);
 	guiMercBackButton = MakeButton(MercInfo[MERC_FILES_HOME],     MERC_FILES_BACK_BUTTON_X, BtnMercFilesBackButtonCallback);
 
-//	RenderMercsFiles();
+	//RenderMercsFiles();
 }
 
 
@@ -269,7 +269,7 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 
 			//start the merc talking
-//			HandlePlayerHiringMerc(GetMercIDFromMERCArray(gubCurMercIndex));
+			//HandlePlayerHiringMerc(GetMercIDFromMERCArray(gubCurMercIndex));
 
 			gfJustHiredAMercMerc = TRUE;
 			DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
@@ -328,12 +328,12 @@ try
 		text   = NULL;
 	}
 
-  BltVideoObject(FRAME_BUFFER, face, 0, MERC_FACE_X, MERC_FACE_Y);
+	BltVideoObject(FRAME_BUFFER, face, 0, MERC_FACE_X, MERC_FACE_Y);
 
-  if (shaded)
-  {
+	if (shaded)
+	{
 		FRAME_BUFFER->ShadowRect(MERC_FACE_X, MERC_FACE_Y, MERC_FACE_X + MERC_FACE_WIDTH, MERC_FACE_Y + MERC_FACE_HEIGHT);
-  }
+	}
 
 	if (text != NULL)
 	{
@@ -441,9 +441,9 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 
 	HireMercStruct.ubProfileID = ubMercID;
 
-//
-//	HireMercStruct.fCopyProfileItemsOver = gfBuyEquipment;
-//
+
+	//HireMercStruct.fCopyProfileItemsOver = gfBuyEquipment;
+
 	HireMercStruct.fCopyProfileItemsOver = TRUE;
 
 	HireMercStruct.iTotalContractLength = 1;
@@ -457,8 +457,8 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 
 
 	//Set the time and ID of the last hired merc will arrive
-//	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = HireMercStruct.ubProfileID;
-//	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = HireMercStruct.uiTimeTillMercArrives;
+	//LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = HireMercStruct.ubProfileID;
+	//LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = HireMercStruct.uiTimeTillMercArrives;
 
 
 	bReturnCode = HireMerc(HireMercStruct);

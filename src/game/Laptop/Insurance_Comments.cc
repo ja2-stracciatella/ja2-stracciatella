@@ -14,23 +14,23 @@
 #include "Font_Control.h"
 
 
-#define		INS_CMNT_TITLE_Y								52 + LAPTOP_SCREEN_WEB_UL_Y
+#define INS_CMNT_TITLE_Y		52 + LAPTOP_SCREEN_WEB_UL_Y
 
-#define		INS_CMNT_FIRST_BULLET_X					82 + LAPTOP_SCREEN_UL_X
-#define		INS_CMNT_FIRST_BULLET_Y					75 + LAPTOP_SCREEN_WEB_UL_Y
+#define INS_CMNT_FIRST_BULLET_X		82 + LAPTOP_SCREEN_UL_X
+#define INS_CMNT_FIRST_BULLET_Y		75 + LAPTOP_SCREEN_WEB_UL_Y
 
-#define		INS_CMNT_REDLINE_WIDTH					384
+#define INS_CMNT_REDLINE_WIDTH		384
 
-#define		INS_CMNT_COMMENT_OFFSET_Y				20
+#define INS_CMNT_COMMENT_OFFSET_Y	20
 
-#define		INS_CMNT_NEXT_COMMENT_OFFSET_Y	65
+#define INS_CMNT_NEXT_COMMENT_OFFSET_Y	65
 
-#define		INS_CMNT_COMMENT_TEXT_WIDTH			364
+#define INS_CMNT_COMMENT_TEXT_WIDTH	364
 
-#define		INS_CMNT_LINK_Y									357 + LAPTOP_SCREEN_WEB_UL_Y
-#define		INS_CMNT_LINK_WIDTH							90
-#define		INS_CMNT_LINK_HEIGHT						35
-#define		INS_CMNT_LINK_OFFSET_X					166
+#define INS_CMNT_LINK_Y			357 + LAPTOP_SCREEN_WEB_UL_Y
+#define INS_CMNT_LINK_WIDTH		90
+#define INS_CMNT_LINK_HEIGHT		35
+#define INS_CMNT_LINK_OFFSET_X		166
 
 
 static SGPVObject* guiInsCmntBulletImage;
@@ -56,8 +56,10 @@ void EnterInsuranceComments()
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 	for( i=0; i<3; i++)
 	{
-		MSYS_DefineRegion( &gSelectedInsuranceCommentLinkRegion[i], usPosX, INS_CMNT_LINK_Y-1, (UINT16)(usPosX + INS_CMNT_LINK_WIDTH), INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT+1, MSYS_PRIORITY_HIGH,
-					 CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceCommentLinkRegionCallBack);
+		MSYS_DefineRegion(&gSelectedInsuranceCommentLinkRegion[i], usPosX, INS_CMNT_LINK_Y-1,
+					(UINT16)(usPosX + INS_CMNT_LINK_WIDTH), INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT+1,
+					MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK,
+					SelectInsuranceCommentLinkRegionCallBack);
 		MSYS_SetRegionUserData( &gSelectedInsuranceCommentLinkRegion[i], 0, i );
 
 		usPosX += INS_CMNT_LINK_OFFSET_X;
@@ -81,9 +83,9 @@ static void DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPos
 
 void RenderInsuranceComments()
 {
-//  HVOBJECT hPixHandle;
-	wchar_t		sText[800];
-	UINT16	usPosX, usPosY;
+	//HVOBJECT hPixHandle;
+	wchar_t sText[800];
+	UINT16  usPosX, usPosY;
 
 	SetFontShadow( INS_FONT_SHADOW );
 
@@ -140,9 +142,9 @@ void RenderInsuranceComments()
 	DisplaySmallRedLineWithShadow( usPosX, INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT, (UINT16)(usPosX+INS_CMNT_LINK_WIDTH), INS_CMNT_LINK_Y+INS_CMNT_LINK_HEIGHT);
 
 	SetFontShadow(DEFAULT_SHADOW);
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -164,8 +166,8 @@ static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT3
 
 static void DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY)
 {
-	wchar_t		sText[800];
-	UINT16		sNumPixels=0;
+	wchar_t sText[800];
+	UINT16  sNumPixels=0;
 
 	BltVideoObject(FRAME_BUFFER, guiInsCmntBulletImage, 0, INS_CMNT_FIRST_BULLET_X, usPosY);
 

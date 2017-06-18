@@ -36,14 +36,14 @@ static void InitImpHomepageTextInputBoxes(void) {
 	SetCursorColor( Get16BPPColor(FROMRGB(0, 255, 0) ) );
 
 	AddTextInputField(
-			IMP_PLAYER_ACTIVATION_STRING_X,
-			IMP_PLAYER_ACTIVATION_STRING_Y,
-			IMP_PLAYER_ACTIVATION_STRING_WIDTH,
-			IMP_PLAYER_ACTIVATION_STRING_HEIGHT,
-			MSYS_PRIORITY_HIGH + 2,
-			L"",
-			IMP_PLAYER_ACTIVATION_STRING_LENGTH,
-			INPUTTYPE_FULL_TEXT
+		IMP_PLAYER_ACTIVATION_STRING_X,
+		IMP_PLAYER_ACTIVATION_STRING_Y,
+		IMP_PLAYER_ACTIVATION_STRING_WIDTH,
+		IMP_PLAYER_ACTIVATION_STRING_HEIGHT,
+		MSYS_PRIORITY_HIGH + 2,
+		L"",
+		IMP_PLAYER_ACTIVATION_STRING_LENGTH,
+		INPUTTYPE_FULL_TEXT
 	);
 
 	SetActiveField(0);
@@ -60,11 +60,11 @@ static void ProcessPlayerInputActivationString(void)
 	}
 
 	DoLapTopMessageBox(
-			MSG_BOX_IMP_STYLE,
-			stringMatchesCode ? pImpPopUpStrings[6] : pImpPopUpStrings[0],
-			LAPTOP_SCREEN,
-			MSG_BOX_FLAG_OK,
-			0
+		MSG_BOX_IMP_STYLE,
+		stringMatchesCode ? pImpPopUpStrings[6] : pImpPopUpStrings[0],
+		LAPTOP_SCREEN,
+		MSG_BOX_FLAG_OK,
+		0
 	);
 	SetActiveField(0);
 }
@@ -74,7 +74,7 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 	InputAtom					InputEvent;
 	while (DequeueEvent(&InputEvent))
 	{
-		if(	!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT || InputEvent.usEvent == KEY_UP ) )
+		if(!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT || InputEvent.usEvent == KEY_UP ) )
 		{
 			switch( InputEvent.usParam )
 			{
@@ -99,15 +99,19 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 
 static void CreateIMPHomePageButtons(void)
 {
-  // this procedure will create the buttons needed for the IMP homepage
+	// this procedure will create the buttons needed for the IMP homepage
 
 	// ths about us button
 	giIMPHomePageButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_1.sti", 0, 1);
-	giIMPHomePageButton[0] = CreateIconAndTextButton( giIMPHomePageButtonImage[0], pImpButtonText[ 0 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 286 - 106, LAPTOP_SCREEN_WEB_UL_Y + 248 - 48, MSYS_PRIORITY_HIGH,
-														 	BtnIMPAboutUsCallback);
+	giIMPHomePageButton[0] = CreateIconAndTextButton(
+					giIMPHomePageButtonImage[0],
+					pImpButtonText[ 0 ], FONT12ARIAL,
+					FONT_WHITE, DEFAULT_SHADOW,
+					FONT_WHITE, DEFAULT_SHADOW,
+					LAPTOP_SCREEN_UL_X + 286 - 106,
+					LAPTOP_SCREEN_WEB_UL_Y + 248 - 48,
+					MSYS_PRIORITY_HIGH,
+					BtnIMPAboutUsCallback);
 
 	giIMPHomePageButton[0]->SetCursor(CURSOR_WWW);
 }
@@ -115,11 +119,11 @@ static void CreateIMPHomePageButtons(void)
 
 static void RemoveIMPHomePageButtons(void)
 {
-  // this procedure will destroy the already created buttosn for the IMP homepage
+	// this procedure will destroy the already created buttosn for the IMP homepage
 
-  // the about us button
-  RemoveButton(giIMPHomePageButton[0] );
-  UnloadButtonImage(giIMPHomePageButtonImage[0] );
+	// the about us button
+	RemoveButton(giIMPHomePageButton[0] );
+	UnloadButtonImage(giIMPHomePageButtonImage[0] );
 }
 
 

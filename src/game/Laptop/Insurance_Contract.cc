@@ -35,75 +35,75 @@
 #include "EMail.h"
 
 
-#define		INS_CTRCT_ORDER_GRID_WIDTH					132
-#define		INS_CTRCT_ORDER_GRID_HEIGHT					216
+#define INS_CTRCT_ORDER_GRID_WIDTH			132
+#define INS_CTRCT_ORDER_GRID_HEIGHT			216
 
-#define INS_CTRCT_ORDER_GRID_X        (LAPTOP_SCREEN_UL_X         +  76)
-#define INS_CTRCT_ORDER_GRID_Y        (LAPTOP_SCREEN_WEB_UL_Y     + 126)
-#define INS_CTRCT_ORDER_GRID_OFFSET_X (INS_CTRCT_ORDER_GRID_WIDTH +   2)
+#define INS_CTRCT_ORDER_GRID_X				(LAPTOP_SCREEN_UL_X         +  76)
+#define INS_CTRCT_ORDER_GRID_Y				(LAPTOP_SCREEN_WEB_UL_Y     + 126)
+#define INS_CTRCT_ORDER_GRID_OFFSET_X			(INS_CTRCT_ORDER_GRID_WIDTH +   2)
 
-#define		INS_CTRCT_OG_FACE_OFFSET_X					5
-#define		INS_CTRCT_OG_FACE_OFFSET_Y					4
-
-
-#define		INS_CTRCT_OG_NICK_NAME_OFFSET_X			57
-#define		INS_CTRCT_OG_NICK_NAME_OFFSET_Y			13
-
-#define		INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X	INS_CTRCT_OG_NICK_NAME_OFFSET_X
-#define		INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y	INS_CTRCT_OG_NICK_NAME_OFFSET_Y + 13
-
-#define		INS_CTRCT_TITLE_Y										(48 + LAPTOP_SCREEN_WEB_UL_Y)//52 + LAPTOP_SCREEN_WEB_UL_Y
-
-#define		INS_CTRCT_FIRST_BULLET_TEXT_X				86 + LAPTOP_SCREEN_UL_X
-#define		INS_CTRCT_FIRST_BULLET_TEXT_Y				65 + LAPTOP_SCREEN_WEB_UL_Y
-
-#define		INS_CTRCT_SECOND_BULLET_TEXT_X			INS_CTRCT_FIRST_BULLET_TEXT_X
-#define		INS_CTRCT_SECOND_BULLET_TEXT_Y			93 + LAPTOP_SCREEN_WEB_UL_Y
-
-#define		INS_CTRCT_INTSRUCTION_TEXT_WIDTH		375
-
-#define		INS_CTRCT_RED_BAR_UNDER_INSTRUCTION_TEXT_Y	123 + LAPTOP_SCREEN_WEB_UL_Y
-
-#define		INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X			4
-#define		INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_Y			54
-
-#define		INS_CTRCT_LENGTH_OFFSET_X										INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X
-#define		INS_CTRCT_LENGTH_OFFSET_Y										71
-
-#define		INS_CTRCT_DAYS_REMAINING_OFFSET_Y						87
-
-#define		INS_CTRCT_INSURANCE_CNTRCT_OFFSET_Y					108
-
-#define		INS_CTRCT_PREMIUM_OWING_OFFSET_Y						160
+#define INS_CTRCT_OG_FACE_OFFSET_X			5
+#define INS_CTRCT_OG_FACE_OFFSET_Y			4
 
 
-#define		INS_CTRCT_OG_BOX_OFFSET_X										92
-#define		INS_CTRCT_OG_BOX_WIDTH											35
+#define INS_CTRCT_OG_NICK_NAME_OFFSET_X			57
+#define INS_CTRCT_OG_NICK_NAME_OFFSET_Y			13
 
-#define		INS_CTRCT_ACCEPT_BTN_X											( 132 / 2 - 43 / 2 ) //6
-#define		INS_CTRCT_ACCEPT_BTN_Y											193
+#define INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X		INS_CTRCT_OG_NICK_NAME_OFFSET_X
+#define INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y		INS_CTRCT_OG_NICK_NAME_OFFSET_Y + 13
 
-#define		INS_CTRCT_CLEAR_BTN_X												86
+#define INS_CTRCT_TITLE_Y				(48 + LAPTOP_SCREEN_WEB_UL_Y)//52 + LAPTOP_SCREEN_WEB_UL_Y
 
-#define		INS_CTRCT_BOTTON_LINK_Y										351 + LAPTOP_SCREEN_WEB_UL_Y
+#define INS_CTRCT_FIRST_BULLET_TEXT_X			86 + LAPTOP_SCREEN_UL_X
+#define INS_CTRCT_FIRST_BULLET_TEXT_Y			65 + LAPTOP_SCREEN_WEB_UL_Y
 
-#define		INS_CTRCT_BOTTOM_LINK_RED_BAR_X						171 + LAPTOP_SCREEN_UL_X
-#define		INS_CTRCT_BOTTON_LINK_RED_BAR_Y						INS_CTRCT_BOTTON_LINK_Y + 41
+#define INS_CTRCT_SECOND_BULLET_TEXT_X			INS_CTRCT_FIRST_BULLET_TEXT_X
+#define INS_CTRCT_SECOND_BULLET_TEXT_Y			93 + LAPTOP_SCREEN_WEB_UL_Y
+
+#define INS_CTRCT_INTSRUCTION_TEXT_WIDTH		375
+
+#define INS_CTRCT_RED_BAR_UNDER_INSTRUCTION_TEXT_Y	123 + LAPTOP_SCREEN_WEB_UL_Y
+
+#define INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X		4
+#define INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_Y		54
+
+#define INS_CTRCT_LENGTH_OFFSET_X			INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X
+#define INS_CTRCT_LENGTH_OFFSET_Y			71
+
+#define INS_CTRCT_DAYS_REMAINING_OFFSET_Y		87
+
+#define INS_CTRCT_INSURANCE_CNTRCT_OFFSET_Y		108
+
+#define INS_CTRCT_PREMIUM_OWING_OFFSET_Y		160
 
 
-#define		INS_CTRCT_BOTTOM_LINK_RED_BAR_OFFSET			117
+#define INS_CTRCT_OG_BOX_OFFSET_X			92
+#define INS_CTRCT_OG_BOX_WIDTH				35
 
-#define		INS_CTRCT_BOTTOM_LINK_RED_WIDTH						97
+#define INS_CTRCT_ACCEPT_BTN_X				( 132 / 2 - 43 / 2 ) //6
+#define INS_CTRCT_ACCEPT_BTN_Y				193
 
-#define		INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH			74
+#define INS_CTRCT_CLEAR_BTN_X				86
+
+#define INS_CTRCT_BOTTON_LINK_Y				351 + LAPTOP_SCREEN_WEB_UL_Y
+
+#define INS_CTRCT_BOTTOM_LINK_RED_BAR_X			171 + LAPTOP_SCREEN_UL_X
+#define INS_CTRCT_BOTTON_LINK_RED_BAR_Y			INS_CTRCT_BOTTON_LINK_Y + 41
+
+
+#define INS_CTRCT_BOTTOM_LINK_RED_BAR_OFFSET		117
+
+#define INS_CTRCT_BOTTOM_LINK_RED_WIDTH			97
+
+#define INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH		74
 
 // this is the percentage of daily salary used as a base to calculate daily insurance premiums
-#define		INSURANCE_PREMIUM_RATE										5
+#define INSURANCE_PREMIUM_RATE				5
 
-#define		INS_CTRCT_SKILL_BASE											42
-#define		INS_CTRCT_FITNESS_BASE										85
-#define		INS_CTRCT_EXP_LEVEL_BASE									3
-#define		INS_CTRCT_SURVIVAL_BASE										90
+#define INS_CTRCT_SKILL_BASE				42
+#define INS_CTRCT_FITNESS_BASE				85
+#define INS_CTRCT_EXP_LEVEL_BASE			3
+#define INS_CTRCT_SURVIVAL_BASE				90
 
 
 static SGPVObject* guiInsOrderGridImage;
@@ -115,7 +115,7 @@ static BOOLEAN gfChangeInsuranceFormButtons = FALSE;
 
 static SOLDIERTYPE* g_insurance_merc_array[20];
 static UINT         g_n_insurable_mercs;
-INT16		gsCurrentInsuranceMercIndex;
+INT16               gsCurrentInsuranceMercIndex;
 
 
 //link to the varios pages
@@ -146,8 +146,7 @@ static InsuranceInfo insurance_info[3];
 
 static void SetNumberOfDisplayedInsuranceMercs(void)
 {
-	gubNumberofDisplayedInsuranceGrids =
-		MIN(g_n_insurable_mercs - gsCurrentInsuranceMercIndex, 3);
+	gubNumberofDisplayedInsuranceGrids = MIN(g_n_insurable_mercs - gsCurrentInsuranceMercIndex, 3);
 }
 
 
@@ -169,7 +168,7 @@ static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 void EnterInsuranceContract()
 {
-	UINT16					usPosX,i;
+	UINT16 usPosX,i;
 
 	//build the list of mercs that are can be displayed
 	BuildInsuranceArray();
@@ -190,8 +189,10 @@ void EnterInsuranceContract()
 	usPosX = INS_CTRCT_BOTTOM_LINK_RED_BAR_X;
 	for(i=0; i<2; i++)
 	{
-		MSYS_DefineRegion( &gSelectedInsuranceContractLinkRegion[i], usPosX, INS_CTRCT_BOTTON_LINK_RED_BAR_Y-37, (UINT16)(usPosX + INS_CTRCT_BOTTOM_LINK_RED_WIDTH), INS_CTRCT_BOTTON_LINK_RED_BAR_Y+2, MSYS_PRIORITY_HIGH,
-						 CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceContractRegionCallBack);
+		MSYS_DefineRegion(&gSelectedInsuranceContractLinkRegion[i], usPosX, INS_CTRCT_BOTTON_LINK_RED_BAR_Y-37,
+					(UINT16)(usPosX + INS_CTRCT_BOTTOM_LINK_RED_WIDTH),
+					INS_CTRCT_BOTTON_LINK_RED_BAR_Y+2, MSYS_PRIORITY_HIGH,
+					CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceContractRegionCallBack);
 		MSYS_SetRegionUserData( &gSelectedInsuranceContractLinkRegion[i], 0, i );
 
 		usPosX += INS_CTRCT_BOTTOM_LINK_RED_BAR_OFFSET;
@@ -209,7 +210,7 @@ void EnterInsuranceContract()
 	//create the new set of buttons
 	CreateDestroyInsuranceContractFormButtons( TRUE );
 
-//	RenderInsuranceContract();
+	//RenderInsuranceContract();
 }
 
 
@@ -275,9 +276,9 @@ static void InsContractNoMercsPopupCallBack(MessageBoxReturnValue);
 
 void RenderInsuranceContract()
 {
-	wchar_t		sText[800];
-	INT16			sNextMercID;
-	UINT16		usPosX;
+	wchar_t sText[800];
+	INT16   sNextMercID;
+	UINT16  usPosX;
 
 
 	SetFontShadow( INS_FONT_SHADOW );
@@ -349,9 +350,9 @@ void RenderInsuranceContract()
 
 
 	SetFontShadow(DEFAULT_SHADOW);
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -386,9 +387,9 @@ static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(const SOLDIERTYPE* pSo
 static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSoldier)
 try
 {
-	INT32		iCostOfContract=0;
-	wchar_t		sText[800];
-	BOOLEAN		fDisplayMercContractStateTextColorInRed = FALSE;
+	INT32   iCostOfContract=0;
+	wchar_t sText[800];
+	BOOLEAN fDisplayMercContractStateTextColorInRed = FALSE;
 
 	Assert(ubGridNumber < 3);
 
@@ -697,8 +698,8 @@ void DailyUpdateOfInsuredMercs()
 }
 
 
-#define MIN_INSURANCE_RATIO		 0.1f
-#define MAX_INSURANCE_RATIO		10.0f
+#define MIN_INSURANCE_RATIO	0.1f
+#define MAX_INSURANCE_RATIO	10.0f
 
 
 static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue);
@@ -706,9 +707,9 @@ static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue);
 
 INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 {
-	INT16	sTotalSkill=0;
-	FLOAT flSkillFactor, flFitnessFactor, flExpFactor, flSurvivalFactor;
-	FLOAT flRiskFactor;
+	INT16  sTotalSkill=0;
+	FLOAT  flSkillFactor, flFitnessFactor, flExpFactor, flSurvivalFactor;
+	FLOAT  flRiskFactor;
 	UINT32 uiDailyInsurancePremium;
 	UINT32 uiTotalInsurancePremium;
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
@@ -726,14 +727,13 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 		return( 0 );
 	}
 
-/*
+	/*
 	replaced with the above check
 
 	if (iLength < 2)
 	{
 		return(0);
-	}
-	*/
+	}*/
 
 	MERCPROFILESTRUCT const& p = GetProfile(ubMercID);
 
@@ -806,7 +806,7 @@ static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue)
 static void InsContractNoMercsPopupCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
-  if( bExitValue == MSG_BOX_RETURN_OK )
+	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}
@@ -833,7 +833,7 @@ static void BuildInsuranceArray(void)
 
 void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 {
-	UINT8	ubPayoutID;
+	UINT8  ubPayoutID;
 	UINT32 uiTimeInMinutes;
 	UINT32 uiCostPerDay;
 	UINT32 uiDaysToPay;
@@ -995,7 +995,7 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 
 	LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed --;
 	lip->fActive = FALSE;
-//	MemFree( pPayoutStruct );
+	//MemFree( pPayoutStruct );
 }
 
 
@@ -1018,7 +1018,7 @@ static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier)
 	{
 		// with more than one day left on their employment contract are eligible for insurance
 		// the second part is because the insurance doesn't pay for any working day already started at time of death
-//		if( ( (pSoldier->iEndofContractTime - GetWorldTotalMin()) > 24 * 60) || pSoldier->usLifeInsurance )
+		//if( ( (pSoldier->iEndofContractTime - GetWorldTotalMin()) > 24 * 60) || pSoldier->usLifeInsurance )
 		if( CanSoldierExtendInsuranceContract( pSoldier ) || pSoldier->usLifeInsurance )
 		{
 			// who aren't currently being held POW
@@ -1079,7 +1079,7 @@ static UINT32 GetTimeRemainingOnSoldiersContract(const SOLDIERTYPE* pSoldier)
 		iDayMercLeaves = pSoldier->iTotalContractLength;
 
 	return( iDayMercLeaves );
-//	return( ( pSoldier->iEndofContractTime - (INT32)GetWorldTotalMin( ) ) / 1440 );
+	//return( ( pSoldier->iEndofContractTime - (INT32)GetWorldTotalMin( ) ) / 1440 );
 }
 
 

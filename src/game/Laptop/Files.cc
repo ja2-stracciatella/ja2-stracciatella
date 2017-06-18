@@ -60,36 +60,36 @@ enum
 };
 
 
-#define TOP_X														0+LAPTOP_SCREEN_UL_X
-#define TOP_Y														LAPTOP_SCREEN_UL_Y
-#define TITLE_X													(140 + STD_SCREEN_X)
-#define TITLE_Y													(33 + STD_SCREEN_Y)
-#define FILES_TITLE_FONT								FONT14ARIAL
-#define FILES_TEXT_FONT									FONT10ARIAL//FONT12ARIAL
-#define FILES_SENDER_TEXT_X             (FILES_LIST_X + 5)
-#define MAX_FILES_LIST_LENGTH						28
-#define FILE_VIEWER_X										(236 + STD_SCREEN_X)
-#define FILE_VIEWER_Y                   ( 81 + STD_SCREEN_Y)
-#define FILE_VIEWER_W                   364
-#define FILE_VIEWER_H                   353
-#define FILE_GAP												2
-#define FILE_TEXT_COLOR									FONT_BLACK
-#define FILE_STRING_SIZE								400
-#define MAX_FILES_PAGE									MAX_FILES_LIST_LENGTH
-#define FILES_LIST_X                    (TOP_X + 10)
-#define FILES_LIST_Y                    (85 + STD_SCREEN_Y)
-#define FILES_LIST_W                    107
-#define FILES_LIST_H                     12
-#define LENGTH_OF_ENRICO_FILE						68
-#define MAX_FILE_MESSAGE_PAGE_SIZE			325
-#define PREVIOUS_FILE_PAGE_BUTTON_X			(553 + STD_SCREEN_X)
-#define PREVIOUS_FILE_PAGE_BUTTON_Y			(53 + STD_SCREEN_Y)
-#define NEXT_FILE_PAGE_BUTTON_X					(577 + STD_SCREEN_X)
-#define NEXT_FILE_PAGE_BUTTON_Y					PREVIOUS_FILE_PAGE_BUTTON_Y
+#define TOP_X				0+LAPTOP_SCREEN_UL_X
+#define TOP_Y				LAPTOP_SCREEN_UL_Y
+#define TITLE_X				(140 + STD_SCREEN_X)
+#define TITLE_Y				(33 + STD_SCREEN_Y)
+#define FILES_TITLE_FONT		FONT14ARIAL
+#define FILES_TEXT_FONT			FONT10ARIAL//FONT12ARIAL
+#define FILES_SENDER_TEXT_X		(FILES_LIST_X + 5)
+#define MAX_FILES_LIST_LENGTH		28
+#define FILE_VIEWER_X			(236 + STD_SCREEN_X)
+#define FILE_VIEWER_Y			( 81 + STD_SCREEN_Y)
+#define FILE_VIEWER_W			364
+#define FILE_VIEWER_H			353
+#define FILE_GAP			2
+#define FILE_TEXT_COLOR			FONT_BLACK
+#define FILE_STRING_SIZE		400
+#define MAX_FILES_PAGE			MAX_FILES_LIST_LENGTH
+#define FILES_LIST_X			(TOP_X + 10)
+#define FILES_LIST_Y			(85 + STD_SCREEN_Y)
+#define FILES_LIST_W			107
+#define FILES_LIST_H			12
+#define LENGTH_OF_ENRICO_FILE		68
+#define MAX_FILE_MESSAGE_PAGE_SIZE	325
+#define PREVIOUS_FILE_PAGE_BUTTON_X	(553 + STD_SCREEN_X)
+#define PREVIOUS_FILE_PAGE_BUTTON_Y	(53 + STD_SCREEN_Y)
+#define NEXT_FILE_PAGE_BUTTON_X		(577 + STD_SCREEN_X)
+#define NEXT_FILE_PAGE_BUTTON_Y		PREVIOUS_FILE_PAGE_BUTTON_Y
 
-#define	FILES_COUNTER_1_WIDTH						7
-#define	FILES_COUNTER_2_WIDTH						43
-#define	FILES_COUNTER_3_WIDTH						45
+#define FILES_COUNTER_1_WIDTH		7
+#define FILES_COUNTER_2_WIDTH		43
+#define FILES_COUNTER_3_WIDTH		45
 
 
 // the highlighted line
@@ -170,7 +170,7 @@ static void AddFilesToPlayersLog(UINT8 ubCode)
 
 	// if not in Files mode, read in from file
 	if(!fInFilesMode)
-   OpenAndReadFilesFile( );
+		OpenAndReadFilesFile( );
 
 	// process the actual data
 	ProcessAndEnterAFilesRecord(ubCode, FALSE);
@@ -180,7 +180,7 @@ static void AddFilesToPlayersLog(UINT8 ubCode)
 
 	// write out to file if not in Files mode
 	if(!fInFilesMode)
-   OpenAndWriteFilesFile( );
+		OpenAndWriteFilesFile( );
 }
 
 
@@ -209,28 +209,28 @@ void EnterFiles(void)
 	// load grpahics for files system
 	LoadFiles( );
 
-  // in files mode now, set the fact
+	// in files mode now, set the fact
 	fInFilesMode=TRUE;
 
 	// initialize mouse regions
-  InitializeFilesMouseRegions( );
+	InitializeFilesMouseRegions( );
 
-  // create buttons
+	// create buttons
 	CreateButtonsForFilesPage( );
 
 	// now set start states
 	HandleFileViewerButtonStates( );
 
 	// build files list
-  OpenAndReadFilesFile( );
+	OpenAndReadFilesFile( );
 
 	// render files system
-  RenderFiles( );
+	RenderFiles( );
 
 	// entered due to icon
 	if (fEnteredFileViewerFromNewFileIcon)
 	{
-	  OpenFirstUnreadFile( );
+		OpenFirstUnreadFile( );
 		fEnteredFileViewerFromNewFileIcon = FALSE;
 	}
 }
@@ -245,7 +245,7 @@ void ExitFiles(void)
 {
 
 	// write files list out to disk
-  OpenAndWriteFilesFile( );
+	OpenAndWriteFilesFile( );
 
 	// remove mouse regions
 	RemoveFilesMouseRegions( );
@@ -278,10 +278,10 @@ void RenderFiles(void)
 	RenderFilesBackGround(  );
 
 	// draw the title bars text
-  DrawFilesTitleText( );
+	DrawFilesTitleText( );
 
 	// display the list of senders
-  DisplayFilesList( );
+	DisplayFilesList( );
 
 	// draw the highlighted file
 	DisplayFileMessage( );
@@ -311,7 +311,7 @@ static void DrawFilesTitleText(void)
 
 static void LoadFiles(void)
 {
-  // load files video objects into memory
+	// load files video objects into memory
 
 	// title bar
 	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
@@ -363,7 +363,7 @@ static void OpenAndReadFilesFile(void)
 	catch (...) { return; /* XXX TODO0019 ignore */ }
 
 	// file exists, read in data, continue until file end
-  for (UINT i = FileGetSize(f) / FILE_ENTRY_SIZE; i != 0; --i)
+	for (UINT i = FileGetSize(f) / FILE_ENTRY_SIZE; i != 0; --i)
 	{
 		BYTE data[FILE_ENTRY_SIZE];
 		FileRead(f, data, sizeof(data));
@@ -386,7 +386,7 @@ static void OpenAndWriteFilesFile(void)
 {
 	AutoSGPFile f(FileMan::openForWriting(FILES_DAT_FILE));
 
-  for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
+	for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
 	{
 		BYTE  data[FILE_ENTRY_SIZE];
 		BYTE* d = data;
@@ -405,7 +405,7 @@ static void OpenAndWriteFilesFile(void)
 static void ClearFilesList(void)
 {
 	FilesUnit* i   = pFilesListHead;
-  pFilesListHead = NULL;
+	pFilesListHead = NULL;
 	while (i)
 	{
 		FilesUnit* const del = i;
@@ -445,9 +445,9 @@ static void DisplayFormattedText(void);
 
 static void DisplayFileMessage(void)
 {
-  if (iHighLightFileLine != -1)
-  {
-    DisplayFormattedText();
+	if (iHighLightFileLine != -1)
+	{
+		DisplayFormattedText();
 	}
 	else
 	{
@@ -640,7 +640,7 @@ static FileString const* GetFirstStringOnThisPage(FileString const* RecordList, 
 
 		// next page
 		iCurrentPage++;
-//		iCounter++;
+		//iCounter++;
 
 	}
 
@@ -713,8 +713,8 @@ static void HandleSpecialFiles(void)
 		SGPFont const font = giFilesPage == 0 && clause == 0 ?
 			FILES_TITLE_FONT : FILES_TEXT_FONT;
 
-		/* Based on the record we are at, selected X start position and the width to
-		 * wrap the line, to fit around pictures */
+		// Based on the record we are at, selected X start position and the width to
+		// wrap the line, to fit around pictures
 		INT32 max_width = 350;
 		INT32 start_x   = FILE_VIEWER_X +  10;
 		switch (clause)
@@ -874,19 +874,19 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void)
 
 
 		// first record width
-//	pTempRecord = CreateRecordWidth( 7, 350, 200,0 );
+	//pTempRecord = CreateRecordWidth( 7, 350, 200,0 );
 	pTempRecord = CreateRecordWidth( FILES_COUNTER_1_WIDTH, 350, MAX_FILE_MESSAGE_PAGE_SIZE,0 );
 
 	// set up head of list now
 	pRecordListHead = pTempRecord;
 
 	// next record
-//	pTempRecord -> Next = CreateRecordWidth( 43, 200,0, 0 );
+	//pTempRecord -> Next = CreateRecordWidth( 43, 200,0, 0 );
 	pTempRecord -> Next = CreateRecordWidth( FILES_COUNTER_2_WIDTH, 200,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
 	// and the next..
-//	pTempRecord -> Next = CreateRecordWidth( 45, 200,0, 0 );
+	//pTempRecord -> Next = CreateRecordWidth( 45, 200,0, 0 );
 	pTempRecord -> Next = CreateRecordWidth( FILES_COUNTER_3_WIDTH, 200,0, 0 );
 	pTempRecord = pTempRecord->Next;
 
@@ -902,7 +902,7 @@ static FileRecordWidth* CreateWidthRecordsForTerroristFile(void)
 	FileRecordWidth* pRecordListHead = NULL;
 
 
-		// first record width
+	// first record width
 	pTempRecord = CreateRecordWidth( 4, 170, 0,0 );
 
 	// set up head of list now
@@ -950,14 +950,14 @@ static void CheckForUnreadFiles(void)
 	// will check for any unread files and set flag if any
 	BOOLEAN any_unread = FALSE;
 	for (FilesUnit const* i = pFilesListHead; i; i = i->Next)
-  {
+	{
 		if (i->fRead) continue;
 		any_unread = TRUE;
 		break;
 	}
 
-	/* If the old flag and the new flag aren't the same, either create or destory
-	 * the fast help region */
+	// If the old flag and the new flag aren't the same, either create or destory
+	// the fast help region
 	if (fNewFilesInFileViewer == any_unread) return;
 
 	fNewFilesInFileViewer = any_unread;
@@ -996,8 +996,8 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		SGPFont const font = giFilesPage == 0 && clause == 0 ?
 			FILES_TITLE_FONT : FILES_TEXT_FONT;
 
-		/* Based on the record we are at, selected X start position and the width to
-		 * wrap the line, to fit around pictures */
+		// Based on the record we are at, selected X start position and the width to
+		// wrap the line, to fit around pictures
 		INT32 max_width;
 		INT32 start_x;
 		if (4 <= clause && clause < 7)

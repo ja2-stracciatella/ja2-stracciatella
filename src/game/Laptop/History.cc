@@ -41,35 +41,35 @@ struct HistoryUnit
 };
 
 
-#define TOP_X											0+LAPTOP_SCREEN_UL_X
-#define TOP_Y											LAPTOP_SCREEN_UL_Y
-#define BOX_HEIGHT								14
-#define TOP_DIVLINE_Y							(STD_SCREEN_Y + 101)
-#define TITLE_X										(STD_SCREEN_X + 140)
-#define TITLE_Y										(STD_SCREEN_Y + 33 )
-#define PAGE_SIZE									22
-#define RECORD_Y									TOP_DIVLINE_Y
-#define RECORD_HISTORY_WIDTH			200
-#define PAGE_NUMBER_X							TOP_X+20
-#define PAGE_NUMBER_Y							TOP_Y+33
-#define HISTORY_DATE_X						PAGE_NUMBER_X+85
-#define HISTORY_DATE_Y						PAGE_NUMBER_Y
-#define RECORD_LOCATION_WIDTH			142//95
+#define TOP_X				0+LAPTOP_SCREEN_UL_X
+#define TOP_Y				LAPTOP_SCREEN_UL_Y
+#define BOX_HEIGHT			14
+#define TOP_DIVLINE_Y			(STD_SCREEN_Y + 101)
+#define TITLE_X				(STD_SCREEN_X + 140)
+#define TITLE_Y				(STD_SCREEN_Y + 33 )
+#define PAGE_SIZE			22
+#define RECORD_Y			TOP_DIVLINE_Y
+#define RECORD_HISTORY_WIDTH		200
+#define PAGE_NUMBER_X			TOP_X+20
+#define PAGE_NUMBER_Y			TOP_Y+33
+#define HISTORY_DATE_X			PAGE_NUMBER_X+85
+#define HISTORY_DATE_Y			PAGE_NUMBER_Y
+#define RECORD_LOCATION_WIDTH		142//95
 
-#define HISTORY_HEADER_FONT FONT14ARIAL
-#define HISTORY_TEXT_FONT FONT12ARIAL
-#define RECORD_DATE_X TOP_X+10
-#define RECORD_DATE_WIDTH 31//68
-#define RECORD_HEADER_Y           (STD_SCREEN_Y + 90)
+#define HISTORY_HEADER_FONT		FONT14ARIAL
+#define HISTORY_TEXT_FONT		FONT12ARIAL
+#define RECORD_DATE_X			TOP_X+10
+#define RECORD_DATE_WIDTH		31//68
+#define RECORD_HEADER_Y			(STD_SCREEN_Y + 90)
 
 
-#define NUM_RECORDS_PER_PAGE PAGE_SIZE
-#define SIZE_OF_HISTORY_FILE_RECORD ( sizeof( UINT8 ) + sizeof( UINT8 ) + sizeof( UINT32 ) + sizeof( UINT16 ) + sizeof( UINT16 ) + sizeof( UINT8 ) + sizeof( UINT8 ) )
+#define NUM_RECORDS_PER_PAGE		PAGE_SIZE
+#define SIZE_OF_HISTORY_FILE_RECORD	( sizeof( UINT8 ) + sizeof( UINT8 ) + sizeof( UINT32 ) + sizeof( UINT16 ) + sizeof( UINT16 ) + sizeof( UINT8 ) + sizeof( UINT8 ) )
 
 // button positions
-#define NEXT_BTN_X (STD_SCREEN_X + 577)
-#define PREV_BTN_X (STD_SCREEN_X + 553)
-#define BTN_Y      (STD_SCREEN_Y + 53 )
+#define NEXT_BTN_X			(STD_SCREEN_X + 577)
+#define PREV_BTN_X			(STD_SCREEN_X + 553)
+#define BTN_Y				(STD_SCREEN_Y + 53 )
 
 // graphics handles
 static SGPVObject* guiTITLE;
@@ -79,7 +79,7 @@ static SGPVObject* guiSHADELINE;
 
 enum{
 	PREV_PAGE_BUTTON=0,
-  NEXT_PAGE_BUTTON,
+	NEXT_PAGE_BUTTON,
 };
 
 // the page flipping buttons
@@ -132,12 +132,11 @@ static void SetHistoryButtonStates(void);
 
 void EnterHistory()
 {
-
 	// load the graphics
-  LoadHistory( );
+	LoadHistory( );
 
-  // create History buttons
-  CreateHistoryButtons( );
+	// create History buttons
+	CreateHistoryButtons( );
 
 	// reset current to first page
 	iCurrentHistoryPage = LaptopSaveInfo.iCurrentHistoryPage;
@@ -146,17 +145,17 @@ void EnterHistory()
 	LoadInHistoryRecords(iCurrentHistoryPage);
 
 	// render hbackground
-  RenderHistory( );
+	RenderHistory( );
 
 
-  // set the fact we are in the history viewer
-  fInHistoryMode=TRUE;
+	// set the fact we are in the history viewer
+	fInHistoryMode=TRUE;
 
 	// build Historys list
-  //OpenAndReadHistoryFile( );
+	//OpenAndReadHistoryFile( );
 
-  // force redraw of the entire screen
-  //fReDrawScreenFlag=TRUE;
+	// force redraw of the entire screen
+	//fReDrawScreenFlag=TRUE;
 
 	// set inital states
 	SetHistoryButtonStates( );
@@ -169,13 +168,13 @@ static void RemoveHistory(void);
 
 void ExitHistory()
 {
-  LaptopSaveInfo.iCurrentHistoryPage = iCurrentHistoryPage;
+	LaptopSaveInfo.iCurrentHistoryPage = iCurrentHistoryPage;
 
-  // not in History system anymore
-  fInHistoryMode=FALSE;
+	// not in History system anymore
+	fInHistoryMode=FALSE;
 
 	// delete graphics
-  RemoveHistory( );
+	RemoveHistory( );
 
 	// delete buttons
 	DestroyHistoryButtons( );
@@ -190,20 +189,20 @@ static void RenderHistoryBackGround(void);
 
 void RenderHistory( void )
 {
-	 //render the background to the display
-   RenderHistoryBackGround( );
+	//render the background to the display
+	RenderHistoryBackGround( );
 
-	 // render the currentpage of records
-	 DrawAPageofHistoryRecords( );
+	// render the currentpage of records
+	DrawAPageofHistoryRecords( );
 
-	 // title bar icon
-	 BlitTitleBarIcons(  );
+	// title bar icon
+	BlitTitleBarIcons(  );
 }
 
 
 static void LoadHistory(void)
 {
-  // load History video objects into memory
+	// load History video objects into memory
 
 	// title bar
 	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
@@ -211,10 +210,10 @@ static void LoadHistory(void)
 	// top portion of the screen background
 	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/historywindow.sti");
 
-  // shaded line
+	// shaded line
 	guiSHADELINE = AddVideoObjectFromFile(LAPTOPDIR "/historylines.sti");
 
-  // black divider line - long ( 480 length)
+	// black divider line - long ( 480 length)
 	guiLONGLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline480.sti");
 }
 
@@ -222,7 +221,7 @@ static void LoadHistory(void)
 static void RemoveHistory(void)
 {
 	// delete history video objects from memory
-  DeleteVideoObject(guiLONGLINE);
+	DeleteVideoObject(guiLONGLINE);
 	DeleteVideoObject(guiTOP);
 	DeleteVideoObject(guiTITLE);
 	DeleteVideoObject(guiSHADELINE);
@@ -384,22 +383,22 @@ void ClearHistoryList(void)
 
 static void DisplayHistoryListHeaders(void)
 {
-  // this procedure will display the headers to each column in History
+	// this procedure will display the headers to each column in History
 	SetFontAttributes(HISTORY_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 
-  INT16 usX;
-  INT16 usY;
+	INT16 usX;
+	INT16 usY;
 
-  // the date header
-  FindFontCenterCoordinates(RECORD_DATE_X + 5,0,RECORD_DATE_WIDTH,0, pHistoryHeaders[0], HISTORY_TEXT_FONT,&usX, &usY);
+	// the date header
+	FindFontCenterCoordinates(RECORD_DATE_X + 5,0,RECORD_DATE_WIDTH,0, pHistoryHeaders[0], HISTORY_TEXT_FONT,&usX, &usY);
 	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[0]);
 
 	// the date header
-  FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
+	FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
 	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[3]);
 
 	// event header
-  FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + RECORD_LOCATION_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
+	FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + RECORD_LOCATION_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
 	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[4]);
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
@@ -408,19 +407,19 @@ static void DisplayHistoryListHeaders(void)
 
 static void DisplayHistoryListBackground(void)
 {
-  // this function will display the History list display background
-  INT32 iCounter=0;
+	// this function will display the History list display background
+	INT32 iCounter=0;
 
 	// get shaded line object
 	for(iCounter=0; iCounter <11; iCounter++)
 	{
-    // blt title bar to screen
-	  BltVideoObject(FRAME_BUFFER, guiSHADELINE, 0, TOP_X + 15, TOP_DIVLINE_Y + BOX_HEIGHT * 2 * iCounter);
+		// blt title bar to screen
+		BltVideoObject(FRAME_BUFFER, guiSHADELINE, 0, TOP_X + 15, TOP_DIVLINE_Y + BOX_HEIGHT * 2 * iCounter);
 	}
 
 	// the long hortizontal line int he records list display region
-  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0,TOP_X + 9, TOP_DIVLINE_Y);
-  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0,TOP_X + 9, TOP_DIVLINE_Y + BOX_HEIGHT * 2 * 11);
+	BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0,TOP_X + 9, TOP_DIVLINE_Y);
+	BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0,TOP_X + 9, TOP_DIVLINE_Y + BOX_HEIGHT * 2 * 11);
 }
 
 
@@ -436,7 +435,7 @@ static void DrawHistoryRecordsText(void)
 
 	SetFont(HISTORY_TEXT_FONT);
 	SetFontBackground(FONT_BLACK);
-  SetFontShadow(NO_SHADOW);
+	SetFontShadow(NO_SHADOW);
 
 	UINT entry_count = 0;
 	for (const HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
@@ -460,8 +459,8 @@ static void DrawHistoryRecordsText(void)
 		{
 			// no location
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0, pHistoryLocations, HISTORY_TEXT_FONT, &sX, &sY);
-		  MPrint(sX, y, pHistoryLocations);
-    }
+			MPrint(sX, y, pHistoryLocations);
+		}
 		else
 		{
 			GetSectorIDString(h->sSectorX, h->sSectorY, h->bSectorZ, sString, lengthof(sString), TRUE);
@@ -478,7 +477,7 @@ static void DrawHistoryRecordsText(void)
 	}
 
 	// restore shadow
-  SetFontShadow(DEFAULT_SHADOW);
+	SetFontShadow(DEFAULT_SHADOW);
 }
 
 
@@ -492,20 +491,20 @@ static void DrawAPageofHistoryRecords(void)
 	// (re-)render background
 
 	// the title bar text
-	 DrawHistoryTitleText( );
+	DrawHistoryTitleText( );
 
-	  // the actual lists background
-	 DisplayHistoryListBackground( );
+	// the actual lists background
+	DisplayHistoryListBackground( );
 
-	 // the headers to each column
-	 DisplayHistoryListHeaders( );
+	// the headers to each column
+	DisplayHistoryListHeaders( );
 
 
 	// error check
 	if(iCurrentHistoryPage==-1)
 	{
 		iCurrentHistoryPage=0;
-  }
+	}
 
 
 	// current page is found, render  from here
@@ -523,10 +522,10 @@ static INT32 GetNumberOfHistoryPages(void);
  * NUM_RECORDS_PER_PAGE and get the date range and the page number */
 static void DisplayPageNumberAndDateRange(void)
 {
-	UINT               current_page;
-	UINT               count_pages;
-	UINT               first_date;
-	UINT               last_date;
+	UINT current_page;
+	UINT count_pages;
+	UINT first_date;
+	UINT last_date;
 	const HistoryUnit* h = pHistoryListHead;
 	if (h == NULL)
 	{
@@ -534,8 +533,8 @@ static void DisplayPageNumberAndDateRange(void)
 		count_pages  = 1;
 		first_date   = 1;
 		last_date    = 1;
-  }
-  else
+	}
+	else
 	{
 		current_page     = iCurrentHistoryPage;
 		count_pages      = GetNumberOfHistoryPages();
@@ -727,7 +726,7 @@ catch (...) { return FALSE; }
 static void LoadNextHistoryPage(void)
 {
 	// now load in previous page's records, if we can
-  if ( LoadInHistoryRecords( iCurrentHistoryPage + 1 ) )
+	if ( LoadInHistoryRecords( iCurrentHistoryPage + 1 ) )
 	{
 		iCurrentHistoryPage++;
 	}
