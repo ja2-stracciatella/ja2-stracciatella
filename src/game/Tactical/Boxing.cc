@@ -23,12 +23,12 @@
 #include "Animation_Data.h"
 #include "Items.h"
 
-INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
+INT16   gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
 SOLDIERTYPE* gBoxer[NUM_BOXERS];
 BOOLEAN gfBoxerFought[ NUM_BOXERS ] = { FALSE, FALSE, FALSE };
-BOOLEAN	gfLastBoxingMatchWonByPlayer = FALSE;
-UINT8	gubBoxingMatchesWon = 0;
-UINT8	gubBoxersRests = 0;
+BOOLEAN gfLastBoxingMatchWonByPlayer = FALSE;
+UINT8   gubBoxingMatchesWon = 0;
+UINT8   gubBoxersRests = 0;
 BOOLEAN gfBoxersResting = FALSE;
 
 
@@ -166,10 +166,10 @@ static void PickABoxer();
 
 static void CountPeopleInBoxingRingAndDoActions(void)
 {
-	UINT8						ubTotalInRing = 0;
-	UINT8						ubPlayersInRing = 0;
-	SOLDIERTYPE *		pInRing[2] = { NULL, NULL };
-	SOLDIERTYPE *		pNonBoxingPlayer = NULL;
+	UINT8       ubTotalInRing = 0;
+	UINT8       ubPlayersInRing = 0;
+	SOLDIERTYPE *pInRing[2] = { NULL, NULL };
+	SOLDIERTYPE *pNonBoxingPlayer = NULL;
 
 	FOR_EACH_MERC(i)
 	{
@@ -249,8 +249,7 @@ static void CountPeopleInBoxingRingAndDoActions(void)
 			BoxingPlayerDisqualified( pNonBoxingPlayer, NON_BOXER_IN_RING );
 			return;
 		}
-	}
-	*/
+	}*/
 }
 
 
@@ -291,11 +290,13 @@ static void PickABoxer()
 		if (!boxer) continue;
 
 		if (gfBoxerFought[i])
-		{ // pathetic attempt to prevent multiple AI boxers
+		{
+			// pathetic attempt to prevent multiple AI boxers
 			boxer->uiStatusFlags &= ~SOLDIER_BOXER;
 		}
 		else if (boxer->bActive && boxer->bInSector && boxer->bLife >= OKLIFE)
-		{ // Pick this boxer
+		{
+			// Pick this boxer
 			boxer->uiStatusFlags |= SOLDIER_BOXER;
 			SetSoldierNonNeutral(boxer);
 			RecalculateOppCntsDueToNoLongerNeutral(boxer);
@@ -335,8 +336,8 @@ bool BoxerAvailable()
 // SEQUEL FIGHT.   Maybe we could check Kingpin's location instead!
 static UINT8 BoxersAvailable(void)
 {
-	UINT8			ubLoop;
-	UINT8			ubCount = 0;
+	UINT8 ubLoop;
+	UINT8 ubCount = 0;
 
 	for( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 	{
@@ -352,7 +353,7 @@ BOOLEAN AnotherFightPossible( void )
 	// a player has at least OKLIFE + 5 life
 
 	// and at least one fight HAS occurred
-	UINT8						ubAvailable;
+	UINT8 ubAvailable;
 
 	ubAvailable = BoxersAvailable();
 

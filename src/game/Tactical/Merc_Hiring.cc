@@ -43,10 +43,10 @@
 #include "Quests.h"
 #include "slog/slog.h"
 
-#define	MIN_FLIGHT_PREP_TIME	6
+#define MIN_FLIGHT_PREP_TIME 6
 
-extern BOOLEAN		gfTacticalDoHeliRun;
-extern BOOLEAN		gfFirstHeliRun;
+extern BOOLEAN gfTacticalDoHeliRun;
+extern BOOLEAN gfFirstHeliRun;
 
 // ATE: Globals that dictate where the mercs will land once being hired
 // Default to start sector
@@ -176,19 +176,19 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		{
 			case 1:
 				s->bTypeOfLastContract   = CONTRACT_EXTEND_1_DAY;
-      	s->iTimeCanSignElsewhere = GetWorldTotalMin();
-      	break;
+				s->iTimeCanSignElsewhere = GetWorldTotalMin();
+				break;
 
 			case 7:
 				s->bTypeOfLastContract   = CONTRACT_EXTEND_1_WEEK;
-      	s->iTimeCanSignElsewhere = GetWorldTotalMin();
-      	break;
+				s->iTimeCanSignElsewhere = GetWorldTotalMin();
+				break;
 
 			case 14:
 				s->bTypeOfLastContract   = CONTRACT_EXTEND_2_WEEK;
-      	// This fellow needs to stay the whole duration!
-      	s->iTimeCanSignElsewhere = s->iEndofContractTime;
-      	break;
+				// This fellow needs to stay the whole duration!
+				s->iTimeCanSignElsewhere = s->iEndofContractTime;
+				break;
 		}
 
 		// remember the medical deposit we PAID.  The one in his profile can increase when he levels!
@@ -227,15 +227,16 @@ static void CheckForValidArrivalSector(void);
 
 void MercArrivesCallback(SOLDIERTYPE& s)
 {
-	UINT32									uiTimeOfPost;
+	UINT32 uiTimeOfPost;
 
 	if (!DidGameJustStart() && g_merc_arrive_sector == START_SECTOR)
-	{ /* Mercs arriving in start sector. This sector has been deemed as the always
-		 * safe sector. Seeing we don't support entry into a hostile sector (except
-		 * for the beginning), we will nuke any enemies in this sector first. */
-		if (gWorldSectorX  != SECTORX(START_SECTOR) ||
-				gWorldSectorY  != SECTORY(START_SECTOR) ||
-				gbWorldSectorZ != 0)
+	{
+		// Mercs arriving in start sector. This sector has been deemed as the always
+		// safe sector. Seeing we don't support entry into a hostile sector (except
+		// for the beginning), we will nuke any enemies in this sector first.
+		if (gWorldSectorX != SECTORX(START_SECTOR) ||
+			gWorldSectorY != SECTORY(START_SECTOR) ||
+			gbWorldSectorZ != 0)
 		{
 			EliminateAllEnemies(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 		}
@@ -274,7 +275,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 			// OK, If we are in mapscreen, get out...
 			if ( guiCurrentScreen == MAP_SCREEN )
 			{
-        // ATE: Make sure the current one is selected!
+				// ATE: Make sure the current one is selected!
 				ChangeSelectedMapSector( gWorldSectorX, gWorldSectorY, 0 );
 
 				RequestTriggerExitFromMapscreen( MAP_EXIT_TO_TACTICAL );
@@ -356,8 +357,8 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 
 bool IsMercHireable(MERCPROFILESTRUCT const& p)
 {
-	/* If the merc has an .edt file, is not away on assignment, and isn't already
-	 * hired (but not arrived yet), he is not dead and he isn't returning home */
+	// If the merc has an .edt file, is not away on assignment, and isn't already
+	// hired (but not arrived yet), he is not dead and he isn't returning home
 	return
 		p.bMercStatus <= 0                              &&
 		p.bMercStatus != MERC_HAS_NO_TEXT_FILE          &&
@@ -383,7 +384,7 @@ void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 
 	// Player-generated characters issue a comment about arriving in Omerta.
 	if (s.ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER &&
-			gubQuest[QUEST_DELIVER_LETTER] == QUESTINPROGRESS)
+		gubQuest[QUEST_DELIVER_LETTER] == QUESTINPROGRESS)
 	{
 		TacticalCharacterDialogue(&s, QUOTE_PC_DROPPED_OMERTA);
 	}
@@ -405,8 +406,8 @@ void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 
 UINT32 GetMercArrivalTimeOfDay( )
 {
-	UINT32		uiCurrHour;
-	UINT32		uiMinHour;
+	UINT32 uiCurrHour;
+	UINT32 uiMinHour;
 
 	// Pick a time...
 
@@ -414,7 +415,7 @@ UINT32 GetMercArrivalTimeOfDay( )
 	uiCurrHour = GetWorldHour( );
 
 	// Subtract the min time for any arrival....
-	uiMinHour	= uiCurrHour + MIN_FLIGHT_PREP_TIME;
+	uiMinHour = uiCurrHour + MIN_FLIGHT_PREP_TIME;
 
 	// OK, first check if we need to advance a whole day's time...
 	// See if we have missed the last flight for the day...
@@ -477,14 +478,14 @@ static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 // if so, search around for nearest non-occupied sector.
 static void CheckForValidArrivalSector(void)
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	UINT8	 ubRadius = 4;
-	INT32	 leftmost;
-	INT16	 sSectorGridNo, sSectorGridNo2;
-	INT32	 uiRange, uiLowestRange = 999999;
-	BOOLEAN	fFound = FALSE;
+	INT16   sTop, sBottom;
+	INT16   sLeft, sRight;
+	INT16   cnt1, cnt2;
+	UINT8   ubRadius = 4;
+	INT32   leftmost;
+	INT16   sSectorGridNo, sSectorGridNo2;
+	INT32   uiRange, uiLowestRange = 999999;
+	BOOLEAN fFound = FALSE;
 	wchar_t sString[ 1024 ];
 	wchar_t zShortTownIDString1[ 50 ];
 	wchar_t zShortTownIDString2[ 50 ];
@@ -501,7 +502,7 @@ static void CheckForValidArrivalSector(void)
 
 
 	// If here - we need to do a search!
-	sTop		= ubRadius;
+	sTop    = ubRadius;
 	sBottom = -ubRadius;
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;

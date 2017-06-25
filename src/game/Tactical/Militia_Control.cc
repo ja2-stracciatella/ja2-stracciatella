@@ -40,7 +40,7 @@ static void RemoveMilitiaFromTactical(void)
 void PrepareMilitiaForTactical()
 {
 	SECTORINFO *pSector;
-//	INT32 i;
+	//INT32 i;
 	UINT8 ubGreen, ubRegs, ubElites;
 	if( gbWorldSectorZ > 0 )
 		return;

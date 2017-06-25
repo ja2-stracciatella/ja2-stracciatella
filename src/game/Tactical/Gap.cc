@@ -13,15 +13,15 @@
 
 static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 {
-	/* This procedure will load in the appropriate .gap file, corresponding to
-	 * the .wav file in szSoundEffects indexed by uiSampleNum.  The procedure
-	 * will then allocate and load in the AUDIO_GAP information, while counting
-	 * the number of elements loaded */
+	// This procedure will load in the appropriate .gap file, corresponding to
+	// the .wav file in szSoundEffects indexed by uiSampleNum.  The procedure
+	// will then allocate and load in the AUDIO_GAP information, while counting
+	// the number of elements loaded
 
 	SLOGD(DEBUG_TAG_GAP, "File is %s", zSoundFile);
 
 	// strip .wav and change to .gap
-  std::string sFileName(FileMan::replaceExtension(std::string(zSoundFile), ".gap"));
+	std::string sFileName(FileMan::replaceExtension(std::string(zSoundFile), ".gap"));
 
 	try
 	{
@@ -57,7 +57,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 				SLOGD(DEBUG_TAG_GAP, "Gap Start %d and Ends %d", start, end);
 			}
 
-      SLOGD(DEBUG_TAG_GAP, "gap list started from file %s", sFileName.c_str());
+			SLOGD(DEBUG_TAG_GAP, "gap list started from file %s", sFileName.c_str());
 
 			MemFree(data);
 			return;
@@ -72,7 +72,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 void AudioGapListDone(AudioGapList* pGapList)
 {
-	/* Free the array and nullify the pointers in the AudioGapList */
+	// Free the array and nullify the pointers in the AudioGapList
 	MemFree(pGapList->gaps);
 	pGapList->gaps = NULL;
 	pGapList->end  = NULL;
@@ -82,13 +82,13 @@ void AudioGapListDone(AudioGapList* pGapList)
 
 BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 {
-	/* This procedure will access the AudioGapList pertaining to the .wav about
-	 * to be played and returns whether there is a gap currently.  This is done
-	 * by going to the current AUDIO_GAP element in the AudioGapList, comparing
-	 * to see if the current time is between the start and end. If so, return
-	 * TRUE..if not and the start of the next element is not greater than
-	 * current time, set current to next and repeat ...if next elements start
-	 * is larger than current time, or no more elements..  return FALSE */
+	// This procedure will access the AudioGapList pertaining to the .wav about
+	// to be played and returns whether there is a gap currently.  This is done
+	// by going to the current AUDIO_GAP element in the AudioGapList, comparing
+	// to see if the current time is between the start and end. If so, return
+	// TRUE..if not and the start of the next element is not greater than
+	// current time, set current to next and repeat ...if next elements start
+	// is larger than current time, or no more elements..  return FALSE
 
 	if (!pGapList)
 	{

@@ -72,8 +72,8 @@ static void BeginAutoBandageCallBack(MessageBoxReturnValue);
 
 void BeginAutoBandage( )
 {
-	BOOLEAN					fFoundAGuy = FALSE;
-	BOOLEAN					fFoundAMedKit = FALSE;
+	BOOLEAN fFoundAGuy = FALSE;
+	BOOLEAN fFoundAMedKit = FALSE;
 
 	// If we are in combat, we con't...
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) || (NumEnemyInSector() != 0) )
@@ -156,12 +156,12 @@ void HandleAutoBandagePending( )
 		// Do any guys have pending actions...?
 		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
-      boost::shared_ptr<const Soldier> soldier = GetSoldier(s);
+			boost::shared_ptr<const Soldier> soldier = GetSoldier(s);
 			if (s->sSectorX == gWorldSectorX &&
-					s->sSectorY == gWorldSectorY &&
-					s->bSectorZ == gbWorldSectorZ &&
-					!s->fBetweenSectors &&
-          soldier->hasPendingAction())
+				s->sSectorY == gWorldSectorY &&
+				s->bSectorZ == gbWorldSectorZ &&
+				!s->fBetweenSectors &&
+				soldier->hasPendingAction())
 			{
 				return;
 			}
@@ -197,11 +197,11 @@ void ShouldBeginAutoBandage( )
 		return;
 	}
 
-  // ATE: If not in endgame
-  if ( ( gTacticalStatus.uiFlags & IN_DEIDRANNA_ENDGAME ) )
-  {
-    return;
-  }
+	// ATE: If not in endgame
+	if ( ( gTacticalStatus.uiFlags & IN_DEIDRANNA_ENDGAME ) )
+	{
+		return;
+	}
 
 	if ( CanAutoBandage( FALSE ) )
 	{
@@ -216,7 +216,7 @@ static void DisplayAutoBandageUpdatePanel(void);
 
 BOOLEAN HandleAutoBandage( )
 {
-  InputAtom					InputEvent;
+	InputAtom InputEvent;
 
 	if ( gTacticalStatus.fAutoBandageMode )
 	{
@@ -253,7 +253,8 @@ BOOLEAN HandleAutoBandage( )
 			if ( InputEvent.usEvent == KEY_UP )
 			{
 				if ((InputEvent.usParam == SDLK_ESCAPE && !fAutoBandageComplete) ||
-						((InputEvent.usParam == SDLK_RETURN || InputEvent.usParam == SDLK_SPACE) && fAutoBandageComplete))
+					((InputEvent.usParam == SDLK_RETURN ||
+					InputEvent.usParam == SDLK_SPACE) && fAutoBandageComplete))
 				{
 					AutoBandage( FALSE );
 				}
@@ -293,8 +294,8 @@ void AutoBandage( BOOLEAN fStart )
 {
 	if ( fStart )
 	{
-		gTacticalStatus.fAutoBandageMode	 = TRUE;
-		gTacticalStatus.uiFlags						|= OUR_MERCS_AUTO_MOVE;
+		gTacticalStatus.fAutoBandageMode = TRUE;
+		gTacticalStatus.uiFlags |= OUR_MERCS_AUTO_MOVE;
 
 		gfAutoBandageFailed = FALSE;
 
@@ -325,7 +326,7 @@ void AutoBandage( BOOLEAN fStart )
 	else
 	{
 		gTacticalStatus.fAutoBandageMode = FALSE;
-		gTacticalStatus.uiFlags					 &= ( ~OUR_MERCS_AUTO_MOVE );
+		gTacticalStatus.uiFlags &= ( ~OUR_MERCS_AUTO_MOVE );
 
 		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
@@ -391,7 +392,7 @@ void AutoBandage( BOOLEAN fStart )
 
 static void BeginAutoBandageCallBack(MessageBoxReturnValue const bExitValue)
 {
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		fRestoreBackgroundForMessageBox = TRUE;
 		AutoBandage( TRUE );
@@ -607,22 +608,28 @@ static void DisplayAutoBandageUpdatePanel(void)
 
 	for( iCounterB = 0; iCounterB < iNumberPatientsWide; iCounterB ++ )
 	{
-			// slap down background piece
-			BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 16, sXPosition + ( iCounterB * TACT_UPDATE_MERC_FACE_X_WIDTH ), sCurrentYPosition + ( TACT_UPDATE_MERC_FACE_X_HEIGHT ));
-			BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 16, sXPosition + ( iCounterB * TACT_UPDATE_MERC_FACE_X_WIDTH ), sYPosition - 9);
+		// slap down background piece
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 16,
+				sXPosition + (iCounterB * TACT_UPDATE_MERC_FACE_X_WIDTH),
+				sCurrentYPosition + (TACT_UPDATE_MERC_FACE_X_HEIGHT));
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 16,
+				sXPosition + (iCounterB * TACT_UPDATE_MERC_FACE_X_WIDTH),
+				sYPosition - 9);
 
 
 	}
 
-		// bordering patient title
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 11, sXPosition - 4, sYPosition + ( ( iNumberDoctorsHigh ) * TACT_UPDATE_MERC_FACE_X_HEIGHT ));
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 13, sXPosition + iTotalPixelsWide , sYPosition + ( ( iNumberDoctorsHigh ) * TACT_UPDATE_MERC_FACE_X_HEIGHT ));
+	// bordering patient title
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 11, sXPosition - 4,
+			sYPosition + ((iNumberDoctorsHigh) * TACT_UPDATE_MERC_FACE_X_HEIGHT));
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 13, sXPosition + iTotalPixelsWide,
+			sYPosition + ((iNumberDoctorsHigh) * TACT_UPDATE_MERC_FACE_X_HEIGHT));
 
 
 	SetFontAttributes(TINYFONT1, FONT_WHITE);
 
-//	iCurPixelY = sYPosition;
-	iCurPixelY = sYPosition + ( ( iCounterA - 1 ) * TACT_UPDATE_MERC_FACE_X_HEIGHT );
+	//iCurPixelY = sYPosition;
+	iCurPixelY = sYPosition + ((iCounterA - 1) * TACT_UPDATE_MERC_FACE_X_HEIGHT);
 
 
 	const wchar_t* Medics = zMarksMapScreenText[13];
@@ -678,8 +685,10 @@ static void DisplayAutoBandageUpdatePanel(void)
 	// bordering patients squares
 	for( iCounterA = 0; iCounterA < iNumberPatientsHigh; iCounterA++ )
 	{
-		BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 3, sXPosition - 4, sYPosition + ( ( iCounterA + iNumberDoctorsHigh ) * TACT_UPDATE_MERC_FACE_X_HEIGHT ));
-		BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 5, sXPosition + iTotalPixelsWide , sYPosition + ( ( iCounterA  + iNumberDoctorsHigh ) * TACT_UPDATE_MERC_FACE_X_HEIGHT ));
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 3, sXPosition - 4,
+				sYPosition + ((iCounterA + iNumberDoctorsHigh) * TACT_UPDATE_MERC_FACE_X_HEIGHT));
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 5, sXPosition + iTotalPixelsWide,
+				sYPosition + ((iCounterA + iNumberDoctorsHigh) * TACT_UPDATE_MERC_FACE_X_HEIGHT));
 	}
 
 
@@ -689,41 +698,49 @@ static void DisplayAutoBandageUpdatePanel(void)
 	// pieces bordering doctor squares
 	for( iCounterA = 0; iCounterA < iNumberDoctorsHigh; iCounterA++ )
 	{
-		BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 3, sXPosition - 4, sYPosition + ( ( iCounterA  ) * TACT_UPDATE_MERC_FACE_X_HEIGHT ));
-		BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 5, sXPosition + iTotalPixelsWide , sYPosition + ( ( iCounterA  ) * TACT_UPDATE_MERC_FACE_X_HEIGHT ));
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 3, sXPosition - 4,
+				sYPosition + ((iCounterA) * TACT_UPDATE_MERC_FACE_X_HEIGHT));
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 5, sXPosition + iTotalPixelsWide,
+				sYPosition + ((iCounterA) * TACT_UPDATE_MERC_FACE_X_HEIGHT));
 	}
 
 	// bordering doctor title
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 11, sXPosition - 4, sYPosition - 9);
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 13, sXPosition + iTotalPixelsWide , sYPosition - 9);
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 11, sXPosition - 4, sYPosition - 9);
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 13, sXPosition + iTotalPixelsWide , sYPosition - 9);
 
 
 	// now the top pieces
 	for( iCounterA = 0; iCounterA < iNumberPatientsWide; iCounterA++ )
 	{
 		// the top bottom
-		BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 1, sXPosition + TACT_UPDATE_MERC_FACE_X_WIDTH * (iCounterA ) , sYPosition - 13);
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 1,
+				sXPosition + TACT_UPDATE_MERC_FACE_X_WIDTH * (iCounterA), sYPosition - 13);
 	}
 
 	// the top corners
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 0, sXPosition -4, sYPosition - 13);
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 2, sXPosition + iTotalPixelsWide , sYPosition - 13);
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 0, sXPosition -4, sYPosition - 13);
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 2, sXPosition + iTotalPixelsWide, sYPosition - 13);
 
 	iTotalPixelsHigh+= 9;
 
 	// the bottom
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 17, sXPosition - 4, sYPosition + iTotalPixelsHigh);
-	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 18, sXPosition + iTotalPixelsWide - TACT_UPDATE_MERC_FACE_X_WIDTH,  sYPosition + iTotalPixelsHigh);
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 17, sXPosition - 4, sYPosition + iTotalPixelsHigh);
+	BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 18,
+			sXPosition + iTotalPixelsWide - TACT_UPDATE_MERC_FACE_X_WIDTH,
+			sYPosition + iTotalPixelsHigh);
 
 	if( iNumberPatientsWide == 2 )
 	{
-		BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 6, sXPosition - 4, sYPosition + iTotalPixelsHigh);
-		CreateTerminateAutoBandageButton( ( INT16)( sXPosition ), ( INT16 )( sYPosition + iTotalPixelsHigh + 3) );
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 6, sXPosition - 4, sYPosition + iTotalPixelsHigh);
+		CreateTerminateAutoBandageButton((INT16)(sXPosition), (INT16)(sYPosition + iTotalPixelsHigh + 3));
 	}
 	else
 	{
-		BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 6, sXPosition + TACT_UPDATE_MERC_FACE_X_WIDTH - 4, sYPosition + iTotalPixelsHigh);
-		CreateTerminateAutoBandageButton( ( INT16 )( sXPosition + TACT_UPDATE_MERC_FACE_X_WIDTH), ( INT16 )( sYPosition + iTotalPixelsHigh + 3) );
+		BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 6,
+				sXPosition + TACT_UPDATE_MERC_FACE_X_WIDTH - 4,
+				sYPosition + iTotalPixelsHigh);
+		CreateTerminateAutoBandageButton((INT16)(sXPosition + TACT_UPDATE_MERC_FACE_X_WIDTH),
+							(INT16)(sYPosition + iTotalPixelsHigh + 3));
 	}
 
 	SetFontAttributes(TINYFONT1, FONT_WHITE);
@@ -747,7 +764,8 @@ static void DisplayAutoBandageUpdatePanel(void)
 	EnableButton(iEndAutoBandageButton[1], !complete);
 
 	// now make sure it goes to the screen
-	InvalidateRegion( sXPosition - 4, sYPosition - 18, ( INT16 )( sXPosition + iTotalPixelsWide + 4), ( INT16 )( sYPosition + iTotalPixelsHigh  ) );
+	InvalidateRegion(sXPosition - 4, sYPosition - 18, (INT16)(sXPosition + iTotalPixelsWide + 4),
+				(INT16)(sYPosition + iTotalPixelsHigh));
 }
 
 
@@ -756,7 +774,8 @@ static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, const wchar_t* text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/group_confirm_tactical.sti", 7, 8, x, y, MSYS_PRIORITY_HIGHEST - 1, StopAutoBandageButtonCallback);
+	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/group_confirm_tactical.sti", 7, 8, x, y,
+							MSYS_PRIORITY_HIGHEST - 1, StopAutoBandageButtonCallback);
 	iEndAutoBandageButton[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, MAP_SCREEN_FONT, FONT_MCOLOR_BLACK, FONT_BLACK);
 }
@@ -781,7 +800,7 @@ static void CreateTerminateAutoBandageButton(INT16 sX, INT16 sY)
 static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		fEndAutoBandage = TRUE;
 	}
 }
@@ -831,7 +850,7 @@ static void AddFacesToAutoBandageBox(void)
 		}
 	}
 
-		// grab panels
+	// grab panels
 	giMercPanelImage = AddVideoObjectFromFile(INTERFACEDIR "/panels.sti");
 }
 
@@ -893,28 +912,38 @@ static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCu
 
 	//yellow one for bleeding
 	iStartY = sCurrentYPosition + 29 - 27*pSoldier->bLifeMax/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(107, 107, 57)));
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(222, 181, 115)));
 
 	//pink one for bandaged.
 	iStartY += 27*pSoldier->bBleeding/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 156, 57, 57 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(156, 57, 57)));
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(222, 132, 132)));
 
 	//red one for actual health
 	iStartY = sCurrentYPosition + 29 - 27*pSoldier->bLife/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+36, iStartY, sCurrentXPosition+37,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(107, 8, 8)));
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+37, iStartY, sCurrentXPosition+38,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(206, 0, 0)));
 
 	//BREATH BAR
 	iStartY = sCurrentYPosition + 29 - 27*pSoldier->bBreathMax/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+39, iStartY, sCurrentXPosition+40, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 8, 8, 132 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+40, iStartY, sCurrentXPosition+41, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+39, iStartY, sCurrentXPosition+40,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(8, 8, 132 )));
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+40, iStartY, sCurrentXPosition+41,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(8, 8, 107)));
 
 	//MORALE BAR
 	iStartY = sCurrentYPosition + 29 - 27*pSoldier->bMorale/100;
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+42, iStartY, sCurrentXPosition+43, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+43, iStartY, sCurrentXPosition+44, sCurrentYPosition+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+42, iStartY, sCurrentXPosition+43,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(8, 156, 8)));
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sCurrentXPosition+43, iStartY, sCurrentXPosition+44,
+					sCurrentYPosition+29, Get16BPPColor(FROMRGB(8, 107, 8)));
 
 	return( TRUE );
 }

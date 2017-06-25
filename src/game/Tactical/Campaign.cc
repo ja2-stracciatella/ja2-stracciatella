@@ -35,8 +35,8 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT&, SOLDIERTYPE*);
 static void ProcessStatChange(MERCPROFILESTRUCT&, StatKind, UINT16 usNumChances, StatChangeCause);
 
 
-/* Give soldier n_chances to improve stat. If it's from training, it doesn't
- * count towards experience level gain */
+// Give soldier n_chances to improve stat. If it's from training, it doesn't
+// count towards experience level gain
 void StatChange(SOLDIERTYPE& s, StatKind const stat, UINT16 const n_chances, StatChangeCause const reason)
 {
 	Assert(s.bActive);
@@ -93,20 +93,20 @@ static UINT16 SubpointsPerPoint(StatKind, INT8 bExpLevel);
 
 static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT16 const usNumChances, StatChangeCause const ubReason)
 {
-  UINT32 uiCnt,uiEffLevel;
-  INT16 sSubPointChange = 0;
+	UINT32 uiCnt,uiEffLevel;
+	INT16 sSubPointChange = 0;
 	UINT16 usChance=0;
 	UINT16 usSubpointsPerPoint;
 	UINT16 usSubpointsPerLevel;
 	INT8 bCurrentRating;
 	BOOLEAN fAffectedByWisdom = TRUE;
 
-  if (p.bEvolution == NO_EVOLUTION)
-    return;     // No change possible, quit right away
+	if (p.bEvolution == NO_EVOLUTION)
+		return; // No change possible, quit right away
 
-  // if this is a Reverse-Evolving merc who attempting to train
-  if (ubReason == FROM_TRAINING && p.bEvolution == DEVOLVE)
-    return;	// he doesn't get any benefit, but isn't penalized either
+	// if this is a Reverse-Evolving merc who attempting to train
+	if (ubReason == FROM_TRAINING && p.bEvolution == DEVOLVE)
+		return; // he doesn't get any benefit, but isn't penalized either
 
 	if (usNumChances == 0)
 		return;
@@ -116,72 +116,72 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	usSubpointsPerLevel = SubpointsPerPoint(EXPERAMT, p.bExpLevel);
 
 	INT16* psStatGainPtr;
-  switch (ubStat)
-  {
-    case HEALTHAMT:
-      bCurrentRating = p.bLifeMax;
-      psStatGainPtr  = &p.sLifeGain;
+	switch (ubStat)
+	{
+		case HEALTHAMT:
+			bCurrentRating = p.bLifeMax;
+			psStatGainPtr  = &p.sLifeGain;
 			// NB physical stat checks not affected by wisdom, unless training is going on
 			fAffectedByWisdom = FALSE;
-      break;
+			break;
 
-    case AGILAMT:
-      bCurrentRating = p.bAgility;
-      psStatGainPtr  = &p.sAgilityGain;
+		case AGILAMT:
+			bCurrentRating = p.bAgility;
+			psStatGainPtr  = &p.sAgilityGain;
 			fAffectedByWisdom = FALSE;
-      break;
+			break;
 
-    case DEXTAMT:
-      bCurrentRating = p.bDexterity;
-      psStatGainPtr  = &p.sDexterityGain;
+		case DEXTAMT:
+			bCurrentRating = p.bDexterity;
+			psStatGainPtr  = &p.sDexterityGain;
 			fAffectedByWisdom = FALSE;
-      break;
+			break;
 
-    case WISDOMAMT:
-      bCurrentRating = p.bWisdom;
-      psStatGainPtr  = &p.sWisdomGain;
-      break;
+		case WISDOMAMT:
+			bCurrentRating = p.bWisdom;
+			psStatGainPtr  = &p.sWisdomGain;
+			break;
 
-    case MEDICALAMT:
-      bCurrentRating = p.bMedical;
-      psStatGainPtr  = &p.sMedicalGain;
-      break;
+		case MEDICALAMT:
+			bCurrentRating = p.bMedical;
+			psStatGainPtr  = &p.sMedicalGain;
+			break;
 
-    case EXPLODEAMT:
-      bCurrentRating = p.bExplosive;
-      psStatGainPtr  = &p.sExplosivesGain;
-      break;
+		case EXPLODEAMT:
+			bCurrentRating = p.bExplosive;
+			psStatGainPtr  = &p.sExplosivesGain;
+			break;
 
-    case MECHANAMT:
-      bCurrentRating = p.bMechanical;
-      psStatGainPtr  = &p.sMechanicGain;
-      break;
+		case MECHANAMT:
+			bCurrentRating = p.bMechanical;
+			psStatGainPtr  = &p.sMechanicGain;
+			break;
 
-    case MARKAMT:
-      bCurrentRating = p.bMarksmanship;
-      psStatGainPtr  = &p.sMarksmanshipGain;
-      break;
+		case MARKAMT:
+			bCurrentRating = p.bMarksmanship;
+			psStatGainPtr  = &p.sMarksmanshipGain;
+			break;
 
-    case EXPERAMT:
-      bCurrentRating = p.bExpLevel;
-      psStatGainPtr  = &p.sExpLevelGain;
-      break;
+		case EXPERAMT:
+			bCurrentRating = p.bExpLevel;
+			psStatGainPtr  = &p.sExpLevelGain;
+			break;
 
 		case STRAMT:
-      bCurrentRating = p.bStrength;
-      psStatGainPtr  = &p.sStrengthGain;
+			bCurrentRating = p.bStrength;
+			psStatGainPtr  = &p.sStrengthGain;
 			fAffectedByWisdom = FALSE;
-      break;
+			break;
 
 		case LDRAMT:
-      bCurrentRating = p.bLeadership;
-      psStatGainPtr  = &p.sLeadershipGain;
-      break;
+			bCurrentRating = p.bLeadership;
+			psStatGainPtr  = &p.sLeadershipGain;
+			break;
 
-    default:
-      SLOGE(DEBUG_TAG_CAMPAIGN, "ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
-      return;
-  }
+		default:
+			SLOGE(DEBUG_TAG_CAMPAIGN, "ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
+			return;
+	}
 
 
 	if (ubReason == FROM_TRAINING)
@@ -198,19 +198,21 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	}
 
 
-  // loop once for each chance to improve
-  for (uiCnt = 0; uiCnt < usNumChances; uiCnt++)
-  {
-    if (p.bEvolution == NORMAL_EVOLUTION) // Evolves!
-    {
-			// if this is improving from a failure, and a successful roll would give us enough to go up a point
+	// loop once for each chance to improve
+	for (uiCnt = 0; uiCnt < usNumChances; uiCnt++)
+	{
+		if (p.bEvolution == NORMAL_EVOLUTION) // Evolves!
+		{
+			// if this is improving from a failure, and a successful roll would give us
+			// enough to go up a point
 			if ((ubReason == FROM_FAILURE) && ((*psStatGainPtr + 1) >= usSubpointsPerPoint))
 			{
-				// can't improve any more from this statchange, because Ian don't want failures causin increases!
+				// can't improve any more from this statchange, because Ian don't want
+				// failures causin increases!
 				break;
 			}
 
-      if (ubStat != EXPERAMT)
+			if (ubStat != EXPERAMT)
 			{
 				// NON-experience level changes, actual usChance depends on bCurrentRating
 				// Base usChance is '100 - bCurrentRating'
@@ -222,63 +224,64 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 					usChance = 0;
 				}
 			}
-      else
-      {
-			  // Experience level changes, actual usChance depends on level
-			  // Base usChance is '100 - (10 * current level)'
+			else
+			{
+				// Experience level changes, actual usChance depends on level
+				// Base usChance is '100 - (10 * current level)'
 				usChance = 100 - 10 * (bCurrentRating + (*psStatGainPtr / usSubpointsPerPoint));
-      }
+			}
 
-      // if there IS a usChance, adjust it for high or low wisdom (50 is avg)
-      if (usChance > 0 && fAffectedByWisdom)
+			// if there IS a usChance, adjust it for high or low wisdom (50 is avg)
+			if (usChance > 0 && fAffectedByWisdom)
 			{
 				usChance += (usChance * (p.bWisdom + (p.sWisdomGain / SubpointsPerPoint(WISDOMAMT, p.bExpLevel)) - 50)) / 100;
 			}
 
-/*
-      // if the stat is Marksmanship, and the guy is a hopeless shot
-      if ((ubStat == MARKAMT) && (p.bSpecialTrait == HOPELESS_SHOT))
+			/*
+			// if the stat is Marksmanship, and the guy is a hopeless shot
+			if ((ubStat == MARKAMT) && (p.bSpecialTrait == HOPELESS_SHOT))
 			{
-				usChance /= 5;		// MUCH slower to improve, divide usChance by 5
-			}
-*/
+				usChance /= 5; // MUCH slower to improve, divide usChance by 5
+			}*/
 
-      // maximum possible usChance is 99%
-      if (usChance > 99)
+			// maximum possible usChance is 99%
+			if (usChance > 99)
 			{
 				usChance = 99;
 			}
 
-      if (PreRandom(100) < usChance)
-      {
-        (*psStatGainPtr)++;
+			if (PreRandom(100) < usChance)
+			{
+				(*psStatGainPtr)++;
 				sSubPointChange++;
 
-        // as long as we're not dealing with exp_level changes (already added above!)
-        // and it's not from training, and the exp level isn't max'ed out already
-        if ((ubStat != EXPERAMT) && (ubReason != FROM_TRAINING))
-        {
-          uiEffLevel = p.bExpLevel + (p.sExpLevelGain / usSubpointsPerLevel);
+				// as long as we're not dealing with exp_level changes (already added above!)
+				// and it's not from training, and the exp level isn't max'ed out already
+				if ((ubStat != EXPERAMT) && (ubReason != FROM_TRAINING))
+				{
+					uiEffLevel = p.bExpLevel + (p.sExpLevelGain / usSubpointsPerLevel);
 
 					// if level is not at maximum
-	        if (uiEffLevel < MAXEXPLEVEL)
+					if (uiEffLevel < MAXEXPLEVEL)
 					{
-						// if this is NOT improving from a failure, OR it would NOT give us enough to go up a level
+						// if this is NOT improving from a failure, OR it would
+						// NOT give us enough to go up a level
 						if (ubReason != FROM_FAILURE || p.sExpLevelGain + 1 < usSubpointsPerLevel)
 						{
-							// all other stat changes count towards experience level changes (1 for 1 basis)
+							// all other stat changes count towards experience
+							// level changes (1 for 1 basis)
 							p.sExpLevelGain++;
 						}
 					}
 				}
-	    }
-    }
-    else                          // Regresses!
-    {
+			}
+		}
+		else // Regresses!
+		{
 			// regression can happen from both failures and successes (but not training, checked above)
 
-      if (ubStat != EXPERAMT)
-      {
+			if (ubStat != EXPERAMT)
+			{
 				// NON-experience level changes, actual usChance depends on bCurrentRating
 				switch (ubStat)
 				{
@@ -299,11 +302,11 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 						// Base usChance is 'bCurrentRating', these can drop to 0
 						usChance = bCurrentRating + (*psStatGainPtr / usSubpointsPerPoint);
 						break;
-                    default:
-                        break;
+					default:
+						break;
 				}
-      }
-      else
+			}
+			else
 			{
 				// Experience level changes, actual usChance depends on level
 				// Base usChance is '10 * (current level - 1)'
@@ -320,29 +323,29 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 				{
 					usChance = 1;
 				}
-      }
+			}
 
-      if (PreRandom(100) < usChance)
-      {
+			if (PreRandom(100) < usChance)
+			{
 				(*psStatGainPtr)--;
 				sSubPointChange--;
 
-        // as long as we're not dealing with exp_level changes (already added above!)
-        // and it's not from training, and the exp level isn't max'ed out already
-        if ((ubStat != EXPERAMT) && (ubReason != FROM_TRAINING))
-        {
-          uiEffLevel = p.bExpLevel + (p.sExpLevelGain / usSubpointsPerLevel);
+				// as long as we're not dealing with exp_level changes (already added above!)
+				// and it's not from training, and the exp level isn't max'ed out already
+				if ((ubStat != EXPERAMT) && (ubReason != FROM_TRAINING))
+				{
+					uiEffLevel = p.bExpLevel + (p.sExpLevelGain / usSubpointsPerLevel);
 
 					// if level is not at minimum
-          if (uiEffLevel > 1)
+					if (uiEffLevel > 1)
 					{
-            // all other stat changes count towards experience level changes (1 for 1 basis)
-            p.sExpLevelGain--;
+						// all other stat changes count towards experience level changes (1 for 1 basis)
+						p.sExpLevelGain--;
 					}
 				}
-      }
-    }
-  }
+			}
+		}
+	}
 
 	// exclude training, that's not under our control
 	if (ubReason != FROM_TRAINING)
@@ -384,73 +387,74 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 	// build ptrs to appropriate profiletype stat fields
 	switch( ubStat )
 	{
-	case HEALTHAMT:
-    psStatGainPtr  = &p.sLifeGain;
-		pbStatDeltaPtr = &p.bLifeDelta;
-		pbStatPtr      = &p.bLifeMax;
-    break;
+		case HEALTHAMT:
+			psStatGainPtr  = &p.sLifeGain;
+			pbStatDeltaPtr = &p.bLifeDelta;
+			pbStatPtr      = &p.bLifeMax;
+			break;
 
-  case AGILAMT:
-    psStatGainPtr  = &p.sAgilityGain;
-		pbStatDeltaPtr = &p.bAgilityDelta;
-		pbStatPtr      = &p.bAgility;
-    break;
+		case AGILAMT:
+			psStatGainPtr  = &p.sAgilityGain;
+			pbStatDeltaPtr = &p.bAgilityDelta;
+			pbStatPtr      = &p.bAgility;
+			break;
 
-  case DEXTAMT:
-    psStatGainPtr  = &p.sDexterityGain;
-		pbStatDeltaPtr = &p.bDexterityDelta;
-		pbStatPtr      = &p.bDexterity;
-    break;
+		case DEXTAMT:
+			psStatGainPtr  = &p.sDexterityGain;
+			pbStatDeltaPtr = &p.bDexterityDelta;
+			pbStatPtr      = &p.bDexterity;
+			break;
 
-  case WISDOMAMT:
-    psStatGainPtr  = &p.sWisdomGain;
-		pbStatDeltaPtr = &p.bWisdomDelta;
-    pbStatPtr      = &p.bWisdom;
-		break;
+		case WISDOMAMT:
+			psStatGainPtr  = &p.sWisdomGain;
+			pbStatDeltaPtr = &p.bWisdomDelta;
+			pbStatPtr      = &p.bWisdom;
+			break;
 
-  case MEDICALAMT:
-    psStatGainPtr  = &p.sMedicalGain;
-		pbStatDeltaPtr = &p.bMedicalDelta;
-    pbStatPtr      = &p.bMedical;
-		break;
+		case MEDICALAMT:
+			psStatGainPtr  = &p.sMedicalGain;
+			pbStatDeltaPtr = &p.bMedicalDelta;
+			pbStatPtr      = &p.bMedical;
+			break;
 
-  case EXPLODEAMT:
-    psStatGainPtr  = &p.sExplosivesGain;
-		pbStatDeltaPtr = &p.bExplosivesDelta;
-    pbStatPtr      = &p.bExplosive;
-		break;
+		case EXPLODEAMT:
+			psStatGainPtr  = &p.sExplosivesGain;
+			pbStatDeltaPtr = &p.bExplosivesDelta;
+			pbStatPtr      = &p.bExplosive;
+			break;
 
-  case MECHANAMT:
-    psStatGainPtr  = &p.sMechanicGain;
-		pbStatDeltaPtr = &p.bMechanicDelta;
-    pbStatPtr      = &p.bMechanical;
-		break;
+		case MECHANAMT:
+			psStatGainPtr  = &p.sMechanicGain;
+			pbStatDeltaPtr = &p.bMechanicDelta;
+			pbStatPtr      = &p.bMechanical;
+			break;
 
-  case MARKAMT:
-    psStatGainPtr  = &p.sMarksmanshipGain;
-		pbStatDeltaPtr = &p.bMarksmanshipDelta;
-    pbStatPtr      = &p.bMarksmanship;
-		break;
+		case MARKAMT:
+			psStatGainPtr  = &p.sMarksmanshipGain;
+			pbStatDeltaPtr = &p.bMarksmanshipDelta;
+			pbStatPtr      = &p.bMarksmanship;
+			break;
 
-  case EXPERAMT:
-    psStatGainPtr  = &p.sExpLevelGain;
-		pbStatDeltaPtr = &p.bExpLevelDelta;
-    pbStatPtr      = &p.bExpLevel;
-		break;
+		case EXPERAMT:
+			psStatGainPtr  = &p.sExpLevelGain;
+			pbStatDeltaPtr = &p.bExpLevelDelta;
+			pbStatPtr      = &p.bExpLevel;
+			break;
 
-	case STRAMT:
-    psStatGainPtr  = &p.sStrengthGain;
-		pbStatDeltaPtr = &p.bStrengthDelta;
-    pbStatPtr      = &p.bStrength;
-		break;
+		case STRAMT:
+			psStatGainPtr  = &p.sStrengthGain;
+			pbStatDeltaPtr = &p.bStrengthDelta;
+			pbStatPtr      = &p.bStrength;
+			break;
 
-	case LDRAMT:
-    psStatGainPtr  = &p.sLeadershipGain;
-		pbStatDeltaPtr = &p.bLeadershipDelta;
-    pbStatPtr      = &p.bLeadership;
-		break;
-        default:
-            break;
+		case LDRAMT:
+			psStatGainPtr  = &p.sLeadershipGain;
+			pbStatDeltaPtr = &p.bLeadershipDelta;
+			pbStatPtr      = &p.bLeadership;
+			break;
+
+		default:
+			break;
 	}
 
 
@@ -525,8 +529,9 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 			puiStatTimerPtr = &( pSoldier->uiChangeLeadershipTime);
 			usIncreaseValue = LDR_INCREASE;
 			break;
-            default:
-                break;
+
+		default:
+			break;
 		}
 	}
 
@@ -688,9 +693,9 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 						// Send special E-mail
 						//
 
-//	DEF: 03/06/99 Now sets an event that will be processed later in the day
-//						ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue );
-//						AddEmail( ubEmailOffset, MERC_UP_LEVEL_LENGTH_BIFF, SPECK_FROM_MERC, GetWorldTotalMin() );
+						// DEF: 03/06/99 Now sets an event that will be processed later in the day
+						//ubEmailOffset = MERC_UP_LEVEL_BIFF + MERC_UP_LEVEL_LENGTH_BIFF * ( ubMercMercIdValue );
+						//AddEmail( ubEmailOffset, MERC_UP_LEVEL_LENGTH_BIFF, SPECK_FROM_MERC, GetWorldTotalMin() );
 						AddStrategicEvent( EVENT_MERC_MERC_WENT_UP_LEVEL_EMAIL_DELAY, GetWorldTotalMin( ) + 60 + Random( 60 ), ubMercMercIdValue );
 
 						fChangeSalary = TRUE;
@@ -702,7 +707,7 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 						break;
 				}
 			}
-			else	// not employed by player
+			else // not employed by player
 			{
 				// only AIM and M.E.R.C.s update stats when not on player's team, and both of them DO change salary
 				fChangeSalary = TRUE;
@@ -713,14 +718,20 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 				// increase all salaries and medical deposits, once for each level gained
 				for (uiLevelCnt = 0; uiLevelCnt < (UINT32) sPtsChanged; uiLevelCnt++)
 				{
-					p.sSalary								= (INT16) CalcNewSalary(p.sSalary,								fChangeTypeIncrease, MAX_DAILY_SALARY);
-					p.uiWeeklySalary				=					CalcNewSalary(p.uiWeeklySalary,					fChangeTypeIncrease, MAX_LARGE_SALARY);
-					p.uiBiWeeklySalary			=					CalcNewSalary(p.uiBiWeeklySalary,				fChangeTypeIncrease, MAX_LARGE_SALARY);
-					p.sMedicalDepositAmount = (INT16) CalcNewSalary(p.sMedicalDepositAmount,	fChangeTypeIncrease, MAX_DAILY_SALARY);
+					p.sSalary = (INT16) CalcNewSalary(p.sSalary, fChangeTypeIncrease,
+										MAX_DAILY_SALARY);
+					p.uiWeeklySalary = CalcNewSalary(p.uiWeeklySalary, fChangeTypeIncrease,
+										MAX_LARGE_SALARY);
+					p.uiBiWeeklySalary = CalcNewSalary(p.uiBiWeeklySalary, fChangeTypeIncrease,
+										MAX_LARGE_SALARY);
+					p.sMedicalDepositAmount = (INT16) CalcNewSalary(p.sMedicalDepositAmount,
+											fChangeTypeIncrease,
+											MAX_DAILY_SALARY);
 
 					//if (pSoldier != NULL)
-						// DON'T increase the *effective* medical deposit, it's already been paid out
-						// pSoldier->usMedicalDeposit = p.sMedicalDepositAmount;
+					//	// DON'T increase the *effective* medical deposit, it's already been
+					//	//paid out
+					//	pSoldier->usMedicalDeposit = p.sMedicalDepositAmount;
 				}
 			}
 		}
@@ -744,18 +755,22 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier
 	if ( pSoldier != NULL )
 	{
 		// ATE: if in the midst of an attack, if in the field, delay all stat changes until the check made after the 'attack'...
-		if ( ( gTacticalStatus.ubAttackBusyCount > 0 ) && pSoldier->bInSector && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+		if ((gTacticalStatus.ubAttackBusyCount > 0) && pSoldier->bInSector &&
+			(gTacticalStatus.uiFlags & INCOMBAT))
+		{
 			return;
+		}
 
 		// ignore non-player soldiers
-		if (!IsOnOurTeam(*pSoldier)) return;
+		if (!IsOnOurTeam(*pSoldier))
+			return;
 
 		// ignore anything without a profile
 		if (pSoldier->ubProfile == NO_PROFILE)
 			return;
 
 		// ignore vehicles and robots
-		if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
+		if((pSoldier->uiStatusFlags & SOLDIER_VEHICLE) || (pSoldier->uiStatusFlags & SOLDIER_ROBOT))
 			return;
 
 		// delay increases while merc is dying
@@ -791,79 +806,82 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier
 		switch( ubStat )
 		{
 			case HEALTHAMT:
-      psStatGainPtr = &p.sLifeGain;
-			pbStatPtr     = &p.bLifeMax;
+				psStatGainPtr = &p.sLifeGain;
+				pbStatPtr     = &p.bLifeMax;
 
-			bMinStatValue = OKLIFE;
-      break;
+				bMinStatValue = OKLIFE;
+				break;
 
-    case AGILAMT:
-      psStatGainPtr = &p.sAgilityGain;
-			pbStatPtr     = &p.bAgility;
-      break;
+			case AGILAMT:
+				psStatGainPtr = &p.sAgilityGain;
+				pbStatPtr     = &p.bAgility;
+				break;
 
-    case DEXTAMT:
-      psStatGainPtr = &p.sDexterityGain;
-			pbStatPtr     = &p.bDexterity;
-      break;
+			case DEXTAMT:
+				psStatGainPtr = &p.sDexterityGain;
+				pbStatPtr     = &p.bDexterity;
+				break;
 
-    case WISDOMAMT:
-      psStatGainPtr = &p.sWisdomGain;
-      pbStatPtr     = &p.bWisdom;
-			break;
+			case WISDOMAMT:
+				psStatGainPtr = &p.sWisdomGain;
+				pbStatPtr     = &p.bWisdom;
+				break;
 
-    case MEDICALAMT:
-      psStatGainPtr = &p.sMedicalGain;
-      pbStatPtr     = &p.bMedical;
+			case MEDICALAMT:
+				psStatGainPtr = &p.sMedicalGain;
+				pbStatPtr     = &p.bMedical;
 
-			bMinStatValue = 0;
-			break;
+				bMinStatValue = 0;
+				break;
 
-    case EXPLODEAMT:
-      psStatGainPtr = &p.sExplosivesGain;
-      pbStatPtr     = &p.bExplosive;
+			case EXPLODEAMT:
+				psStatGainPtr = &p.sExplosivesGain;
+				pbStatPtr     = &p.bExplosive;
 
-			bMinStatValue = 0;
-			break;
+				bMinStatValue = 0;
+				break;
 
-    case MECHANAMT:
-      psStatGainPtr = &p.sMechanicGain;
-      pbStatPtr     = &p.bMechanical;
+			case MECHANAMT:
+				psStatGainPtr = &p.sMechanicGain;
+				pbStatPtr     = &p.bMechanical;
 
-			bMinStatValue = 0;
-			break;
+				bMinStatValue = 0;
+				break;
 
-    case MARKAMT:
-      psStatGainPtr = &p.sMarksmanshipGain;
-      pbStatPtr     = &p.bMarksmanship;
+			case MARKAMT:
+				psStatGainPtr = &p.sMarksmanshipGain;
+				pbStatPtr     = &p.bMarksmanship;
 
-			bMinStatValue = 0;
-			break;
+				bMinStatValue = 0;
+				break;
 
-    case EXPERAMT:
-      psStatGainPtr = &p.sExpLevelGain;
-      pbStatPtr     = &p.bExpLevel;
+			case EXPERAMT:
+				psStatGainPtr = &p.sExpLevelGain;
+				pbStatPtr     = &p.bExpLevel;
 
-			bMaxStatValue = MAXEXPLEVEL;
-			break;
+				bMaxStatValue = MAXEXPLEVEL;
+				break;
 
-		case STRAMT:
-      psStatGainPtr = &p.sStrengthGain;
-      pbStatPtr     = &p.bStrength;
-			break;
+			case STRAMT:
+				psStatGainPtr = &p.sStrengthGain;
+				pbStatPtr     = &p.bStrength;
+				break;
 
-		case LDRAMT:
-      psStatGainPtr = &p.sLeadershipGain;
-      pbStatPtr     = &p.bLeadership;
-			break;
-            default:
-                break;
+			case LDRAMT:
+				psStatGainPtr = &p.sLeadershipGain;
+				pbStatPtr     = &p.bLeadership;
+				break;
+
+			default:
+				break;
 		}
 
 		// ptrs set up, now handle
 
-		// Calc how many full points worth of stat changes we have accumulated in this stat (positive OR negative!)
-		// NOTE: for simplicity, this hopes nobody will go up more than one level at once, which would change the subpoints/pt
+		// Calc how many full points worth of stat changes we have accumulated in
+		// this stat (positive OR negative!)
+		// NOTE: for simplicity, this hopes nobody will go up more than one
+		//       level at once, which would change the subpoints/pt
 		sPtsChanged = ( *psStatGainPtr ) / usSubpointsPerPoint;
 
 		// gone too high or too low?..handle the fact
@@ -907,7 +925,7 @@ static UINT32 RoundOffSalary(UINT32 uiSalary);
 
 static UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit)
 {
-  UINT32 uiNewSalary;
+	UINT32 uiNewSalary;
 
 	// if he was working for free, it's still free!
 	if (uiOldSalary == 0)
@@ -915,17 +933,17 @@ static UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxL
 		return(0);
 	}
 
-  if (fIncrease)
+	if (fIncrease)
 	{
-    uiNewSalary = (UINT32) (uiOldSalary * SALARY_CHANGE_PER_LEVEL);
+		uiNewSalary = (UINT32) (uiOldSalary * SALARY_CHANGE_PER_LEVEL);
 	}
-  else
+	else
 	{
-    uiNewSalary = (UINT32) (uiOldSalary / SALARY_CHANGE_PER_LEVEL);
+		uiNewSalary = (UINT32) (uiOldSalary / SALARY_CHANGE_PER_LEVEL);
 	}
 
-  // round it off to a reasonable multiple
-  uiNewSalary = RoundOffSalary(uiNewSalary);
+	// round it off to a reasonable multiple
+	uiNewSalary = RoundOffSalary(uiNewSalary);
 
 	// let's set some reasonable limits here, lest it get silly one day
 	if (uiNewSalary > uiMaxLimit)
@@ -935,7 +953,7 @@ static UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxL
 		uiNewSalary = 5;
 
 
-  return(uiNewSalary);
+	return(uiNewSalary);
 }
 
 
@@ -945,15 +963,24 @@ static UINT32 RoundOffSalary(UINT32 uiSalary)
 
 
 	// determine what multiple value the salary should be rounded off to
-	if      (uiSalary <=   250) uiMultiple =    5;
-	else if (uiSalary <=   500) uiMultiple =   10;
-	else if (uiSalary <=  1000) uiMultiple =   25;
-	else if (uiSalary <=  2000) uiMultiple =   50;
-	else if (uiSalary <=  5000) uiMultiple =  100;
-	else if (uiSalary <= 10000) uiMultiple =  500;
-	else if (uiSalary <= 25000) uiMultiple = 1000;
-	else if (uiSalary <= 50000) uiMultiple = 2000;
-	else												uiMultiple = 5000;
+	if      (uiSalary <=   250)
+		uiMultiple =    5;
+	else if (uiSalary <=   500)
+		uiMultiple =   10;
+	else if (uiSalary <=  1000)
+		uiMultiple =   25;
+	else if (uiSalary <=  2000)
+		uiMultiple =   50;
+	else if (uiSalary <=  5000)
+		uiMultiple =  100;
+	else if (uiSalary <= 10000)
+		uiMultiple =  500;
+	else if (uiSalary <= 25000)
+		uiMultiple = 1000;
+	else if (uiSalary <= 50000)
+		uiMultiple = 2000;
+	else
+		uiMultiple = 5000;
 
 
 	// if the salary doesn't divide evenly by the multiple
@@ -973,34 +1000,34 @@ static UINT16 SubpointsPerPoint(StatKind const ubStat, INT8 const bExpLevel)
 	UINT16 usSubpointsPerPoint;
 
 	// figure out how many subpoints this type of stat needs to change
-  switch (ubStat)
-  {
-    case HEALTHAMT:
-    case AGILAMT:
-    case DEXTAMT:
-    case WISDOMAMT:
+	switch (ubStat)
+	{
+		case HEALTHAMT:
+		case AGILAMT:
+		case DEXTAMT:
+		case WISDOMAMT:
 		case STRAMT:
 			// attributes
 			usSubpointsPerPoint = ATTRIBS_SUBPOINTS_TO_IMPROVE;
-      break;
+			break;
 
-    case MEDICALAMT:
-    case EXPLODEAMT:
-    case MECHANAMT:
-    case MARKAMT:
+		case MEDICALAMT:
+		case EXPLODEAMT:
+		case MECHANAMT:
+		case MARKAMT:
 		case LDRAMT:
 			// skills
 			usSubpointsPerPoint = SKILLS_SUBPOINTS_TO_IMPROVE;
-      break;
+			break;
 
-    case EXPERAMT:
+		case EXPERAMT:
 			usSubpointsPerPoint = LEVEL_SUBPOINTS_TO_IMPROVE * bExpLevel;
-      break;
+			break;
 
-    default:
-      SLOGE(DEBUG_TAG_CAMPAIGN, "SubpointsPerPoint: Unknown ubStat %d", ubStat);
-      return(100);
-  }
+		default:
+			SLOGE(DEBUG_TAG_CAMPAIGN, "SubpointsPerPoint: Unknown ubStat %d", ubStat);
+			return(100);
+	}
 
 	return(usSubpointsPerPoint);
 }
@@ -1028,8 +1055,8 @@ void HandleUnhiredMercImprovement(MERCPROFILESTRUCT& p)
 
 		// all stats (including experience itself) get an equal chance to improve
 		// 80 wisdom gives 8 rolls per stat per day, 10 stats, avg success rate 40% = 32pts per day,
-		// so about 10 working days to hit lvl 2.  This seems high, but mercs don't actually "work" that often, and it's twice
-		// as long to hit level 3.  If we go lower, attribs & skills will barely move.
+		// so about 10 working days to hit lvl 2.  This seems high, but mercs don't actually "work" that often,
+		// and it's twice as long to hit level 3.  If we go lower, attribs & skills will barely move.
 		usNumChances = p.bWisdom / 10;
 		for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
 		{
@@ -1049,7 +1076,8 @@ void HandleUnhiredMercImprovement(MERCPROFILESTRUCT& p)
 		StatKind ubStat;
 		do
 		{
-			// pick ONE stat at random to focus on (it may be beyond training cap, but so what, too hard to weed those out)
+			// pick ONE stat at random to focus on (it may be beyond training cap, but so what,
+			// too hard to weed those out)
 			ubStat = static_cast<StatKind>(FIRST_CHANGEABLE_STAT + Random(ubNumStats));
 			// except experience - can't practise that!
 		} while (ubStat == EXPERAMT);
@@ -1116,8 +1144,10 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 	}
 
 	// stealthy guys are slightly less likely to get killed (they're careful)
-	if (p.bSkillTrait  == STEALTHY) sChance -= 1;
-	if (p.bSkillTrait2 == STEALTHY) sChance -= 1;
+	if (p.bSkillTrait  == STEALTHY)
+		sChance -= 1;
+	if (p.bSkillTrait2 == STEALTHY)
+		sChance -= 1;
 
 
 	if ((INT16) PreRandom(1000) < sChance)
@@ -1145,7 +1175,7 @@ static UINT8 CalcImportantSectorControl(void);
 // These HAVE to total 100% at all times!!!
 #define PROGRESS_PORTION_KILLS		25
 #define PROGRESS_PORTION_CONTROL	25
-#define PROGRESS_PORTION_INCOME		50
+#define PROGRESS_PORTION_INCOME	50
 
 
 // returns a number between 0-100, this is an estimate of how far a player has progressed through the game
@@ -1283,20 +1313,30 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 
 	switch ( ubExpBonusType )
 	{
-		case EXP_BONUS_MINIMUM:		usXPs =   25;			break;
-		case EXP_BONUS_SMALL:			usXPs =   50;			break;
-		case EXP_BONUS_AVERAGE:		usXPs =  100;			break;
-		case EXP_BONUS_LARGE:			usXPs =  200;			break;
-		case EXP_BONUS_MAXIMUM:		usXPs =  400;			break;
+		case EXP_BONUS_MINIMUM:
+			usXPs =   25;
+			break;
+		case EXP_BONUS_SMALL:
+			usXPs =   50;
+			break;
+		case EXP_BONUS_AVERAGE:
+			usXPs =  100;
+			break;
+		case EXP_BONUS_LARGE:
+			usXPs =  200;
+			break;
+		case EXP_BONUS_MAXIMUM:
+			usXPs =  400;
+			break;
 	}
 
 	// to do: find guys in sector on the currently active squad, those that are conscious get this amount in XPs
 	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bInSector &&
-				IsMercOnCurrentSquad(s) &&
-				s->bLife >= CONSCIOUSNESS &&
-				!IsMechanical(*s))
+			IsMercOnCurrentSquad(s) &&
+			s->bLife >= CONSCIOUSNESS &&
+			!IsMechanical(*s))
 		{
 			StatChange(*s, EXPERAMT, usXPs, FROM_SUCCESS);
 		}
@@ -1332,15 +1372,17 @@ void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t 
 		ubStringIndex += 2;
 	}
 
-	swprintf( wString, Length, L"%ls %ls %d %ls %ls", wName, sPreStatBuildString[ fIncrease ? 1 : 0 ], absPointsChanged,
-					sPreStatBuildString[ ubStringIndex ], sStatGainStrings[ ubStat - FIRST_CHANGEABLE_STAT ] );
+	swprintf(wString, Length, L"%ls %ls %d %ls %ls", wName,
+			sPreStatBuildString[fIncrease ? 1 : 0], absPointsChanged,
+			sPreStatBuildString[ubStringIndex],
+			sStatGainStrings[ubStat - FIRST_CHANGEABLE_STAT]);
 }
 
 
 static UINT8 CalcImportantSectorControl(void)
 {
 	UINT8 ubMapX, ubMapY;
-	UINT8	ubSectorControlPts = 0;
+	UINT8 ubSectorControlPts = 0;
 
 
 	for ( ubMapX = 1; ubMapX < MAP_WORLD_X - 1; ubMapX++ )
@@ -1355,7 +1397,8 @@ static UINT8 CalcImportantSectorControl(void)
 				{
 					ubSectorControlPts++;
 
-					// SAM sites count double - they have no income, but have significant air control value
+					// SAM sites count double - they have no income, but have significant
+					// air control value
 					if ( IsThisSectorASAMSector( ubMapX, ubMapY, 0 ) )
 					{
 						ubSectorControlPts++;

@@ -2,20 +2,20 @@
 #define __DRUGS_AND_ALCOHOL_H
 
 
-#define	DRUG_TYPE_ADRENALINE							0
-#define	DRUG_TYPE_ALCOHOL									1
-#define NO_DRUG													  2
-#define NUM_COMPLEX_DRUGS									2
-#define DRUG_TYPE_REGENERATION						3
+#define DRUG_TYPE_ADRENALINE		0
+#define DRUG_TYPE_ALCOHOL		1
+#define NO_DRUG			2
+#define NUM_COMPLEX_DRUGS		2
+#define DRUG_TYPE_REGENERATION		3
 
-#define	SOBER															0
-#define	FEELING_GOOD											1
-#define	BORDERLINE												2
-#define DRUNK															3
-#define	HUNGOVER													4
+#define SOBER				0
+#define FEELING_GOOD			1
+#define BORDERLINE			2
+#define DRUNK				3
+#define HUNGOVER			4
 
-#define REGEN_POINTS_PER_BOOSTER					4
-#define LIFE_GAIN_PER_REGEN_POINT					10
+#define REGEN_POINTS_PER_BOOSTER	4
+#define LIFE_GAIN_PER_REGEN_POINT	10
 
 BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject );
 

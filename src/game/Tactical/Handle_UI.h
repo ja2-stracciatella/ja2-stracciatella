@@ -9,13 +9,13 @@
 #include "Soldier_Find.h"
 
 
-#define		UIEVENT_SINGLEEVENT					0x00000002
-#define		UIEVENT_SNAPMOUSE						0x00000008
+#define UIEVENT_SINGLEEVENT		0x00000002
+#define UIEVENT_SNAPMOUSE		0x00000008
 
-#define		NO_GUY_SELECTION									0
-#define   SELECTED_GUY_SELECTION						1
-#define   NONSELECTED_GUY_SELECTION					2
-#define   ENEMY_GUY_SELECTION								3
+#define NO_GUY_SELECTION		0
+#define SELECTED_GUY_SELECTION		1
+#define NONSELECTED_GUY_SELECTION	2
+#define ENEMY_GUY_SELECTION		3
 
 enum MouseMoveState
 {
@@ -40,7 +40,7 @@ enum MoveUITarget
 	MOVEUI_TARGET_REFUEL      = 12
 };
 
-#define	MOVEUI_RETURN_ON_TARGET_MERC		1
+#define MOVEUI_RETURN_ON_TARGET_MERC	1
 
 enum	UI_MODE
 {
@@ -70,13 +70,13 @@ struct UI_EVENT
 {
 	typedef ScreenID (*UI_HANDLEFNC)(UI_EVENT*);
 
-	UINT32					uiFlags;
-	UI_MODE					ChangeToUIMode;
-	UI_HANDLEFNC		HandleEvent;
-	BOOLEAN					fFirstTime;
-	BOOLEAN					fDoneMenu;
-	UI_MODE         uiMenuPreviousMode;
-	UINT32					uiParams[3];
+	UINT32  uiFlags;
+	UI_MODE ChangeToUIMode;
+	UI_HANDLEFNC HandleEvent;
+	BOOLEAN fFirstTime;
+	BOOLEAN fDoneMenu;
+	UI_MODE uiMenuPreviousMode;
+	UINT32  uiParams[3];
 };
 
 

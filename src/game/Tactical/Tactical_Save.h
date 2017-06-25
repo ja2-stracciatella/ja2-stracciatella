@@ -47,10 +47,10 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 sMapX, INT16 sMapY
 
 
 //Flags used for the AddDeadSoldierToUnLoadedSector() function
-#define		ADD_DEAD_SOLDIER_USE_GRIDNO									0x00000001				// just place the items and corpse on the gridno location
-#define		ADD_DEAD_SOLDIER_TO_SWEETSPOT								0x00000002				// Finds the closet free gridno
+#define ADD_DEAD_SOLDIER_USE_GRIDNO			0x00000001 // just place the items and corpse on the gridno location
+#define ADD_DEAD_SOLDIER_TO_SWEETSPOT			0x00000002 // Finds the closet free gridno
 
-#define		ADD_DEAD_SOLDIER__USE_JFK_HEADSHOT_CORPSE		0x00000040				// Will ue the JFK headshot
+#define ADD_DEAD_SOLDIER__USE_JFK_HEADSHOT_CORPSE	0x00000040 // Will ue the JFK headshot
 
 
 
@@ -90,8 +90,8 @@ void GetMapTempFileName(SectorFlags uiType, char* pMapName, INT16 sMapX, INT16 s
 UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 void		SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems );
 
-#define NEW_ROTATION_ARRAY_SIZE 49
-#define BASE_NUMBER_OF_ROTATION_ARRAYS 19
+#define NEW_ROTATION_ARRAY_SIZE			49
+#define BASE_NUMBER_OF_ROTATION_ARRAYS			19
 
 
 void SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM const* pData);

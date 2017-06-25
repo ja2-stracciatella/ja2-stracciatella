@@ -16,7 +16,7 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 
-#define		MAX_BURST_LOCATIONS		50
+#define MAX_BURST_LOCATIONS 50
 
 
 struct BURST_LOCATIONS
@@ -66,11 +66,11 @@ void AccumulateBurstLocation( INT16 sGridNo )
 
 void PickBurstLocations( SOLDIERTYPE *pSoldier )
 {
-	UINT8		ubShotsPerBurst;
-	FLOAT		dAccululator = 0;
-	FLOAT		dStep = 0;
-	INT32		cnt;
-	UINT8		ubLocationNum;
+	UINT8 ubShotsPerBurst;
+	FLOAT dAccululator = 0;
+	FLOAT dStep = 0;
+	INT32 cnt;
+	UINT8 ubLocationNum;
 
 	// OK, using the # of locations, spread them evenly between our current weapon shots per burst value
 
@@ -98,11 +98,11 @@ void PickBurstLocations( SOLDIERTYPE *pSoldier )
 
 void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pTargets[5] )
 {
-	UINT8		ubShotsPerBurst;
-	FLOAT		dAccululator = 0;
-	FLOAT		dStep = 0;
-	INT32		cnt;
-	UINT8		ubLocationNum;
+	UINT8 ubShotsPerBurst;
+	FLOAT dAccululator = 0;
+	FLOAT dStep = 0;
+	INT32 cnt;
+	UINT8 ubLocationNum;
 
 	// OK, using the # of locations, spread them evenly between our current weapon shots per burst value
 
@@ -133,8 +133,8 @@ void AIPickBurstLocations( SOLDIERTYPE *pSoldier, INT8 bTargets, SOLDIERTYPE *pT
 
 void RenderAccumulatedBurstLocations( )
 {
-	INT32			cnt;
-	INT16			sGridNo;
+	INT32 cnt;
+	INT16 sGridNo;
 
 	if ( !gfBeginBurstSpreadTracking )
 	{
@@ -157,9 +157,9 @@ void RenderAccumulatedBurstLocations( )
 
 		if ( GridNoOnScreen( sGridNo ) )
 		{
-			FLOAT				dOffsetX, dOffsetY;
-			FLOAT				dTempX_S, dTempY_S;
-			INT16				sXPos, sYPos;
+			FLOAT dOffsetX, dOffsetY;
+			FLOAT dTempX_S, dTempY_S;
+			INT16 sXPos, sYPos;
 
 			dOffsetX = (FLOAT)( gsBurstLocations[ cnt ].sX - gsRenderCenterX );
 			dOffsetY = (FLOAT)( gsBurstLocations[ cnt ].sY - gsRenderCenterY );

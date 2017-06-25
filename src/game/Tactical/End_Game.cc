@@ -43,15 +43,15 @@
 INT16 sStatueGridNos[] = { 13829, 13830, 13669, 13670 };
 
 SOLDIERTYPE *gpKillerSoldier = NULL;
-INT16				 gsGridNo;
-INT8				 gbLevel;
+INT16 gsGridNo;
+INT8 gbLevel;
 
 
 // This function checks if our statue exists in the current sector at given gridno
 BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 {
 	INT32 cnt;
-	EXITGRID								ExitGrid;
+	EXITGRID ExitGrid;
 
 	// First check current sector......
 	if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_O && gbWorldSectorZ == 0 )
@@ -76,11 +76,12 @@ BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 // This function changes the graphic of the statue and adds the exit grid...
 void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 {
-	EXITGRID								ExitGrid;
-	UINT16									usTileIndex;
+	EXITGRID ExitGrid;
+	UINT16 usTileIndex;
 
 	// Remove old graphic
-	{ ApplyMapChangesToMapTempFile app;
+	{
+		ApplyMapChangesToMapTempFile app;
 		// Remove it!
 		// Get index for it...
 		usTileIndex = GetTileIndexFromTypeSubIndex(EIGHTOSTRUCT, 5);
@@ -168,10 +169,10 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s != pKillerSoldier &&
-				OkControllableMerc(s) &&
-				!(s->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_AN_EPC(s) &&
-				QuoteExp_WitnessDeidrannaDeath[s->ubProfile])
+			OkControllableMerc(s) &&
+			!(s->uiStatusFlags & SOLDIER_GASSED) &&
+			!AM_AN_EPC(s) &&
+			QuoteExp_WitnessDeidrannaDeath[s->ubProfile])
 		{
 			// Can we see location?
 			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
@@ -191,7 +192,8 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 	{
 		public:
 			bool Execute()
-			{ // Called after all player quotes are done
+			{
+				// Called after all player quotes are done
 				gFadeOutDoneCallback = DoneFadeOutKilledQueen;
 				FadeOutGameScreen();
 				return false;
@@ -280,8 +282,8 @@ static void DoneFadeOutKilledQueen()
 	sector.ubTroopsInBattle = 0;
 	sector.ubElitesInBattle = 0;
 
-  // ATE: Get rid of Elliot in P3
-  GetProfile(ELLIOT).sSectorX = 1;
+	// ATE: Get rid of Elliot in P3
+	GetProfile(ELLIOT).sSectorX = 1;
 
 	ChangeNpcToDifferentSector(GetProfile(DEREK),  3, MAP_ROW_P, 0);
 	ChangeNpcToDifferentSector(GetProfile(OLIVER), 3, MAP_ROW_P, 0);
@@ -303,7 +305,7 @@ static void DoneFadeOutEndCinematic(void);
 void EndQueenDeathEndgameBeginEndCimenatic( )
 {
 	// Start end cimimatic....
-  gTacticalStatus.uiFlags |= IN_ENDGAME_SEQUENCE;
+	gTacticalStatus.uiFlags |= IN_ENDGAME_SEQUENCE;
 
 	// first thing is to loop through team and say end quote...
 	FOR_EACH_IN_TEAM(s, OUR_TEAM)
@@ -318,7 +320,8 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
 	{
 		public:
 			bool Execute()
-			{ // End death UI - fade to smaker
+			{
+				// End death UI - fade to smaker
 				EndQueenDeathEndgame();
 				gFadeOutDoneCallback = DoneFadeOutEndCinematic;
 				FadeOutGameScreen();
@@ -346,14 +349,14 @@ static void DoneFadeOutEndCinematic(void)
 {
 	// DAVE PUT SMAKER STUFF HERE!!!!!!!!!!!!
 	// :)
-  gTacticalStatus.uiFlags &= (~IN_ENDGAME_SEQUENCE);
+	gTacticalStatus.uiFlags &= (~IN_ENDGAME_SEQUENCE);
 
 
 	// For now, just quit the freaken game...
-//	InternalLeaveTacticalScreen( MAINMENU_SCREEN );
+	//InternalLeaveTacticalScreen( MAINMENU_SCREEN );
 
 	InternalLeaveTacticalScreen( INTRO_SCREEN );
-//	guiCurrentScreen = INTRO_SCREEN;
+	//guiCurrentScreen = INTRO_SCREEN;
 
 
 	SetIntroType( INTRO_ENDING );
@@ -376,9 +379,9 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 	gbLevel  = bLevel;
 
 	// Lock the UI.....
-	 gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
+	gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
 	// Increment refrence count...
-	 giNPCReferenceCount = 1;
+	giNPCReferenceCount = 1;
 
 	// gTacticalStatus.uiFlags |= IN_DEIDRANNA_ENDGAME;
 
@@ -398,7 +401,7 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 			// HELLO!  THESE ARE CREATURES!  THEY CAN'T BE NEUTRAL!
 			//if (!s->bNeutral && s->bSide != OUR_TEAM)
 			{
-    		gTacticalStatus.ubAttackBusyCount++;
+				gTacticalStatus.ubAttackBusyCount++;
 				EVENT_SoldierGotHit(s, 0, 10000, 0, s->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
 			}
 		}
@@ -423,10 +426,10 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16
 	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s != pKillerSoldier &&
-				OkControllableMerc(s) &&
-				!(s->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_AN_EPC(s) &&
-				QuoteExp_WitnessQueenBugDeath[s->ubProfile])
+			OkControllableMerc(s) &&
+			!(s->uiStatusFlags & SOLDIER_GASSED) &&
+			!AM_AN_EPC(s) &&
+			QuoteExp_WitnessQueenBugDeath[s->ubProfile])
 		{
 			// Can we see location?
 			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
@@ -440,14 +443,14 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16
 
 	// Set fact that she is dead!
 	if ( CheckFact( FACT_QUEEN_DEAD, 0 ) )
-  {
-     EndQueenDeathEndgameBeginEndCimenatic( );
-  }
-  else
-  {
-	  // Unset flags...
-	  gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV );
-	  // Increment refrence count...
-	  giNPCReferenceCount = 0;
-  }
+	{
+		EndQueenDeathEndgameBeginEndCimenatic( );
+	}
+	else
+	{
+		// Unset flags...
+		gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV );
+		// Increment refrence count...
+		giNPCReferenceCount = 0;
+	}
 }

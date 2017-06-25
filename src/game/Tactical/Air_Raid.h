@@ -3,19 +3,19 @@
 
 #include "Types.h"
 
-#define AIR_RAID_BEGINNING_GAME								0x00000001
-#define AIR_RAID_CAN_RANDOMIZE_TEASE_DIVES		0x00000002
+#define AIR_RAID_BEGINNING_GAME		0x00000001
+#define AIR_RAID_CAN_RANDOMIZE_TEASE_DIVES	0x00000002
 
 
 struct AIR_RAID_DEFINITION
 {
-	INT16		sSectorX;
-	INT16		sSectorY;
-	INT16		sSectorZ;
-	INT8		bIntensity;
-	UINT32	uiFlags;
-	UINT8		ubNumMinsFromCurrentTime;
-	UINT8		ubFiller[8]; // XXX HACK000B
+	INT16  sSectorX;
+	INT16  sSectorY;
+	INT16  sSectorZ;
+	INT8   bIntensity;
+	UINT32 uiFlags;
+	UINT8  ubNumMinsFromCurrentTime;
+	UINT8  ubFiller[8]; // XXX HACK000B
 };
 
 

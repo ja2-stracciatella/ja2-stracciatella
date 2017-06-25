@@ -59,10 +59,10 @@
 #include "content/Dialogs.h"
 #include "sgp/UTF8String.h"
 
-#define   QUOTE_MESSAGE_SIZE		520
+#define QUOTE_MESSAGE_SIZE			520
 
-#define		DIALOGUE_DEFAULT_SUBTITLE_WIDTH		200
-#define		TEXT_DELAY_MODIFIER			60
+#define DIALOGUE_DEFAULT_SUBTITLE_WIDTH	200
+#define TEXT_DELAY_MODIFIER			60
 
 
 typedef std::queue<DialogueEvent*>DialogueQueue;
@@ -108,11 +108,11 @@ static UINT16 const gusStopTimeQuoteList[] =
 
 // QUEUE UP DIALOG!
 static DialogueQueue ghDialogueQ;
-FACETYPE	*gpCurrentTalkingFace	= NULL;
+FACETYPE *gpCurrentTalkingFace	= NULL;
 static ProfileID       gubCurrentTalkingID = NO_PROFILE;
 static DialogueHandler gbUIHandlerID;
 
-INT32				giNPCReferenceCount = 0;
+INT32 giNPCReferenceCount = 0;
 
 static INT16 gsExternPanelXPosition;
 static INT16 gsExternPanelYPosition;
@@ -121,7 +121,7 @@ static BOOLEAN        gfDialogueQueuePaused = FALSE;
 static UINT16         gusSubtitleBoxWidth;
 static UINT16         gusSubtitleBoxHeight;
 static VIDEO_OVERLAY* g_text_box_overlay = NULL;
-BOOLEAN			gfFacePanelActive = FALSE;
+BOOLEAN               gfFacePanelActive = FALSE;
 static UINT32         guiScreenIDUsedWhenUICreated;
 static MOUSE_REGION   gTextBoxMouseRegion;
 static MOUSE_REGION   gFacePopupMouseRegion;
@@ -157,8 +157,8 @@ BOOLEAN DialogueActive( )
 void InitalizeDialogueControl()
 {
 	giNPCReferenceCount = 0;
-  gsExternPanelXPosition = DEFAULT_EXTERN_PANEL_X_POS;
-  gsExternPanelYPosition = DEFAULT_EXTERN_PANEL_Y_POS;
+	gsExternPanelXPosition = DEFAULT_EXTERN_PANEL_X_POS;
+	gsExternPanelYPosition = DEFAULT_EXTERN_PANEL_Y_POS;
 }
 
 void ShutdownDialogueControl()
@@ -313,9 +313,9 @@ void HandleDialogue()
 	}
 
 	if (gTacticalStatus.uiFlags & ENGAGED_IN_CONV &&
-			!gfInTalkPanel                            && // Are we in here because of the dialogue system up?
-			guiPendingScreen != MSG_BOX_SCREEN        && // ATE: NOT if we have a message box pending
-			guiCurrentScreen != MSG_BOX_SCREEN)
+		!gfInTalkPanel && // Are we in here because of the dialogue system up?
+		guiPendingScreen != MSG_BOX_SCREEN && // ATE: NOT if we have a message box pending
+		guiCurrentScreen != MSG_BOX_SCREEN)
 	{
 		// No, so we should lock the UI!
 		guiPendingOverrideEvent = LU_BEGINUILOCK;
@@ -330,10 +330,10 @@ void HandleDialogue()
 		{
 			// ATE: OK, MANAGE THE DISPLAY OF OUR CURRENTLY ACTIVE FACE IF WE / IT CHANGES STATUS
 			// THINGS THAT CAN CHANGE STATUS:
-			//		CHANGE TO MAPSCREEN
-			//		CHANGE TO GAMESCREEN
-			//		CHANGE IN MERC STATUS TO BE IN A SQUAD
-			//    CHANGE FROM TEAM TO INV INTERFACE
+			//   CHANGE TO MAPSCREEN
+			//   CHANGE TO GAMESCREEN
+			//   CHANGE IN MERC STATUS TO BE IN A SQUAD
+			//   CHANGE FROM TEAM TO INV INTERFACE
 
 			// Where are we and where did this face once exist?
 			if (guiScreenIDUsedWhenUICreated == GAME_SCREEN && guiCurrentScreen == MAP_SCREEN)
@@ -361,8 +361,8 @@ void HandleDialogue()
 					SetAutoFaceInActive(f);
 					HandleTacticalSpeechUI(gubCurrentTalkingID, f);
 
-          // ATE: Force mapscreen to set face active again.....
-        	fReDrawFace = TRUE;
+					// ATE: Force mapscreen to set face active again.....
+					fReDrawFace = TRUE;
 					DrawFace();
 
 					gfFacePanelActive = FALSE;
@@ -382,12 +382,12 @@ void HandleDialogue()
 		// If we are done, check special face flag for trigger NPC!
 		if (f.uiFlags & FACE_PCTRIGGER_NPC)
 		{
-			 // Decrement refrence count...
-			 giNPCReferenceCount--;
+			// Decrement refrence count...
+			giNPCReferenceCount--;
 
-			 TriggerNPCRecord(f.u.trigger.npc, f.u.trigger.record);
-			 //Reset flag!
-			 f.uiFlags &= ~FACE_PCTRIGGER_NPC;
+			TriggerNPCRecord(f.u.trigger.npc, f.u.trigger.record);
+			//Reset flag!
+			f.uiFlags &= ~FACE_PCTRIGGER_NPC;
 		}
 
 		if (f.uiFlags & FACE_MODAL)
@@ -406,7 +406,7 @@ void HandleDialogue()
 		}
 
 		gpCurrentTalkingFace = NULL;
-		gubCurrentTalkingID	 = NO_PROFILE;
+		gubCurrentTalkingID = NO_PROFILE;
 		gTacticalStatus.ubLastQuoteProfileNUm = NO_PROFILE;
 
 		if (fWasPausedDuringDialogue)
@@ -504,19 +504,25 @@ void MakeCharacterDialogueEventSleep(SOLDIERTYPE& s, bool const sleep)
 
 static bool CanSayQuote(SOLDIERTYPE const& s, UINT16 const quote)
 {
-	if (s.ubProfile == NO_PROFILE)        return false;
+	if (s.ubProfile == NO_PROFILE)
+		return false;
 	INT8 const min_life = quote == QUOTE_SERIOUSLY_WOUNDED ? CONSCIOUSNESS : OKLIFE;
-	if (s.bLife < min_life)               return false;
-	if (AM_A_ROBOT(&s))                   return false;
-	if (s.uiStatusFlags & SOLDIER_GASSED) return false;
-	if (s.bAssignment == ASSIGNMENT_POW)  return false;
+	if (s.bLife < min_life)
+		return false;
+	if (AM_A_ROBOT(&s))
+		return false;
+	if (s.uiStatusFlags & SOLDIER_GASSED)
+		return false;
+	if (s.bAssignment == ASSIGNMENT_POW)
+		return false;
 	return true;
 }
 
 
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
-	if (!CanSayQuote(*pSoldier, usQuoteNum)) return FALSE;
+	if (!CanSayQuote(*pSoldier, usQuoteNum))
+		return FALSE;
 	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, true);
 	return TRUE;
 }
@@ -524,7 +530,8 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 {
-	if (!CanSayQuote(*pSoldier, usQuoteNum)) return FALSE;
+	if (!CanSayQuote(*pSoldier, usQuoteNum))
+		return FALSE;
 
 	if ( AreInMeanwhile( ) )
 	{
@@ -532,8 +539,8 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 	}
 
 	// OK, let's check if this is the exact one we just played, if so, skip.
-	if ( pSoldier->ubProfile == gTacticalStatus.ubLastQuoteProfileNUm &&
-			 usQuoteNum == gTacticalStatus.ubLastQuoteSaid )
+	if (pSoldier->ubProfile == gTacticalStatus.ubLastQuoteProfileNUm &&
+		usQuoteNum == gTacticalStatus.ubLastQuoteSaid)
 	{
 		return( FALSE );
 	}
@@ -552,7 +559,8 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 		}
 	}
 
-	if ( AM_AN_EPC( pSoldier ) && !(gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags & PROFILE_MISC_FLAG_FORCENPCQUOTE) )
+	if (AM_AN_EPC(pSoldier) &&
+		!(gMercProfiles[pSoldier->ubProfile].ubMiscFlags & PROFILE_MISC_FLAG_FORCENPCQUOTE))
 		return( FALSE );
 
 	// Check for logging of me too bleeds...
@@ -576,17 +584,17 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 
 // This function takes a profile num, quote num, faceindex and a UI hander ID.
 // What it does is queues up the dialog to be ultimately loaded/displayed
-//				FACEINDEX
-//						The face index is an index into an ACTIVE face. The face is considered to
-//						be active, and if it's not, either that has to be handled by the UI handler
-//						ir nothing will show.  What this function does is set the face to talking,
-//						and the face sprite system should handle the rest.
-//				bUIHandlerID
-//						Because this could be used in any place, the UI handleID is used to differentiate
-//						places in the game. For example, specific things happen in the tactical engine
-//						that may not be the place where in the AIM contract screen uses.....
+// FACEINDEX
+//    The face index is an index into an ACTIVE face. The face is considered to
+//    be active, and if it's not, either that has to be handled by the UI handler
+//    ir nothing will show.  What this function does is set the face to talking,
+//    and the face sprite system should handle the rest.
+// bUIHandlerID
+//    Because this could be used in any place, the UI handleID is used to differentiate
+//    places in the game. For example, specific things happen in the tactical engine
+//    that may not be the place where in the AIM contract screen uses.....
 
-// NB;				The queued system is not yet implemented, but will be transpatent to the caller....
+// NB; The queued system is not yet implemented, but will be transpatent to the caller....
 
 
 void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* const face, DialogueHandler const dialogue_handler, BOOLEAN const fFromSoldier, bool const delayed)
@@ -611,7 +619,8 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 				// Try to find soldier...
 				SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(character_);
 				if (s && SoundIsPlaying(s->uiBattleSoundID))
-				{ // Place back in!
+				{
+					// Place back in!
 					return true;
 				}
 
@@ -700,7 +709,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	gpCurrentTalkingFace = face;
 	gubCurrentTalkingID  = ubCharacterNum;
 
-	CHAR8		zSoundString[ 164 ];
+	CHAR8 zSoundString[ 164 ];
 
 	// Check if we are dead now or not....( if from a soldier... )
 
@@ -750,23 +759,23 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 		// now being used in a different way...
 		/*
 		if ( ( (usQuoteNum == QUOTE_PERSONALITY_TRAIT &&
-					(gMercProfiles[ubCharacterNum].bPersonalityTrait == FORGETFUL ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == CLAUSTROPHOBIC ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == NERVOUS ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == NONSWIMMER ||
-					 gMercProfiles[ubCharacterNum].bPersonalityTrait == FEAR_OF_INSECTS))
-					//usQuoteNum == QUOTE_STARTING_TO_WHINE ||
-          ) )
-
+			(gMercProfiles[ubCharacterNum].bPersonalityTrait == FORGETFUL ||
+			gMercProfiles[ubCharacterNum].bPersonalityTrait == CLAUSTROPHOBIC ||
+			gMercProfiles[ubCharacterNum].bPersonalityTrait == NERVOUS ||
+			gMercProfiles[ubCharacterNum].bPersonalityTrait == NONSWIMMER ||
+			gMercProfiles[ubCharacterNum].bPersonalityTrait == FEAR_OF_INSECTS))
+			//usQuoteNum == QUOTE_STARTING_TO_WHINE ||
+		) )
 		{
 			// This quote might spawn another quote from someone
 			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
 				if (s->ubProfile != ubCharacterNum &&
-						OkControllableMerc(s) &&
-						SpacesAway(pSoldier->sGridNo, s->sGridNo) < 5)
+					OkControllableMerc(s) &&
+					SpacesAway(pSoldier->sGridNo, s->sGridNo) < 5)
 				{
-					// if this merc disliked the whining character sufficiently and hasn't already retorted
+					// if this merc disliked the whining character sufficiently and hasn't
+					// already retorted
 					if (gMercProfiles[s->ubProfile].bMercOpinion[ubCharacterNum] < -2 &&
 							!(s->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_ANNOYING_MERC))
 					{
@@ -777,8 +786,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 					}
 				}
 			}
-		}
-		*/
+		}*/
 	}
 	else
 	{
@@ -793,13 +801,13 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	CHECKF(face != NULL);
 
 	wchar_t gzQuoteStr[QUOTE_MESSAGE_SIZE];
-  if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr), zSoundString,
-        useAlternateDialogueFile))
-  {
-    return( FALSE );
-  }
+	if (!GetDialogue(MercProfile(ubCharacterNum), usQuoteNum, gzQuoteStr, lengthof(gzQuoteStr),
+		zSoundString, useAlternateDialogueFile))
+	{
+		return( FALSE );
+	}
 
-  SetFaceTalking(*face, zSoundString, gzQuoteStr);
+	SetFaceTalking(*face, zSoundString, gzQuoteStr);
 	CreateTalkingUI(bUIHandlerID, *face, ubCharacterNum, gzQuoteStr);
 
 	// Set global handleer ID value, used when face desides it's done...
@@ -824,14 +832,26 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 	{
 		switch (bUIHandlerID)
 		{
-			case DIALOGUE_TACTICAL_UI:           HandleTacticalTextUI(            ubCharacterNum, zQuoteStr); break;
-			case DIALOGUE_NPC_UI:                HandleTacticalNPCTextUI(         ubCharacterNum, zQuoteStr); break;
-			case DIALOGUE_CONTACTPAGE_UI:        DisplayTextForMercFaceVideoPopUp(                zQuoteStr); break;
-			case DIALOGUE_SPECK_CONTACT_PAGE_UI: DisplayTextForSpeckVideoPopUp(                   zQuoteStr); break;
-			case DIALOGUE_EXTERNAL_NPC_UI:       DisplayTextForExternalNPC(       ubCharacterNum, zQuoteStr); break;
-			case DIALOGUE_SHOPKEEPER_UI:         InitShopKeeperSubTitledText(                     zQuoteStr); break;
-            default:
-                break;
+			case DIALOGUE_TACTICAL_UI:
+				HandleTacticalTextUI(ubCharacterNum, zQuoteStr);
+				break;
+			case DIALOGUE_NPC_UI:
+				HandleTacticalNPCTextUI(ubCharacterNum, zQuoteStr);
+				break;
+			case DIALOGUE_CONTACTPAGE_UI:
+				DisplayTextForMercFaceVideoPopUp(zQuoteStr);
+				break;
+			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
+				DisplayTextForSpeckVideoPopUp(zQuoteStr);
+				break;
+			case DIALOGUE_EXTERNAL_NPC_UI:
+				DisplayTextForExternalNPC(ubCharacterNum, zQuoteStr);
+				break;
+			case DIALOGUE_SHOPKEEPER_UI:
+				InitShopKeeperSubTitledText(zQuoteStr);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -839,53 +859,59 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 	{
 		switch (bUIHandlerID)
 		{
-			case DIALOGUE_TACTICAL_UI:           HandleTacticalSpeechUI(ubCharacterNum, f); break;
-			case DIALOGUE_CONTACTPAGE_UI:        break;
-			case DIALOGUE_SPECK_CONTACT_PAGE_UI: break;
-			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(f); break;
-            default:
-                break;
+			case DIALOGUE_TACTICAL_UI:
+				HandleTacticalSpeechUI(ubCharacterNum, f);
+				break;
+			case DIALOGUE_CONTACTPAGE_UI:
+				break;
+			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
+				break;
+			case DIALOGUE_EXTERNAL_NPC_UI:
+				HandleExternNPCSpeechFace(f);
+				break;
+			default:
+				break;
 		}
 	}
 }
 
 static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString, bool useAlternateDialogueFile)
 {
-   // first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
-   //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
-   {
-     const char* pFilename = Content::GetDialogueTextFilename(
-       profile,
-       useAlternateDialogueFile,
-       ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()));
+	// first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
+	//if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
+	{
+		const char* pFilename = Content::GetDialogueTextFilename(
+						profile,
+						useAlternateDialogueFile,
+						ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()));
 
-			bool success = false;
-			try
+		bool success = false;
+		try
+		{
+			UTF8String* quote = GCM->loadDialogQuoteFromFile(pFilename, usQuoteNum);
+			if(quote)
 			{
-        UTF8String* quote = GCM->loadDialogQuoteFromFile(pFilename, usQuoteNum);
-        if(quote)
-        {
-          wcsncpy(zDialogueText, quote->getWCHAR().data(), Length);
-          delete quote;
-          success = zDialogueText[0] != L'\0';
-        }
+				wcsncpy(zDialogueText, quote->getWCHAR().data(), Length);
+				delete quote;
+				success = zDialogueText[0] != L'\0';
 			}
-			catch (...) { success = false; }
-			if (!success)
-			{
-				swprintf(zDialogueText, Length, L"I have no text in the EDT file (%d) %hs", usQuoteNum, pFilename);
-				return( FALSE );
-			}
-   }
+		}
+		catch (...) { success = false; }
+		if (!success)
+		{
+			swprintf(zDialogueText, Length, L"I have no text in the EDT file (%d) %hs", usQuoteNum, pFilename);
+			return( FALSE );
+		}
+	}
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-   const char* pFilename = Content::GetDialogueVoiceFilename(
-     profile, usQuoteNum, useAlternateDialogueFile,
-     ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
-     isRussianVersion() || isRussianGoldVersion());
+	const char* pFilename = Content::GetDialogueVoiceFilename(
+		profile, usQuoteNum, useAlternateDialogueFile,
+		ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
+		isRussianVersion() || isRussianGoldVersion());
 
 	strcpy( zSoundString, pFilename );
- return(TRUE);
+	return(TRUE);
 }
 
 
@@ -911,8 +937,8 @@ static void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, cons
 // Handlers for tactical UI stuff
 static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
-	INT16									sLeft;
-  INT16 sTop;
+	INT16 sLeft;
+	INT16 sTop;
 
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
@@ -923,21 +949,22 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 
 	// post message to mapscreen message system
 	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%ls\"", zQuoteStr );
-	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls: \"%ls\"", GetProfile(ubCharacterNum).zNickname, zQuoteStr);
+	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls: \"%ls\"",
+				GetProfile(ubCharacterNum).zNickname, zQuoteStr);
 
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{
-    // on the map screen dialog can be in any place requested
-    sLeft = gsExternPanelXPosition + 97;
-    sTop = gsExternPanelYPosition;
+		// on the map screen dialog can be in any place requested
+		sLeft = gsExternPanelXPosition + 97;
+		sTop = gsExternPanelYPosition;
 	}
-  else
-  {
-    // on the tactical screen show message always in the same position (corner
-    // of the screen)
-    sLeft = 110;
-    sTop = 20;
-  }
+	else
+	{
+		// on the tactical screen show message always in the same position (corner
+		// of the screen)
+		sLeft = 110;
+		sTop = 20;
+	}
 
 	ExecuteTacticalTextBox( sLeft, sTop, gTalkPanel.zQuoteStr );
 }
@@ -945,7 +972,7 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 
 static void HandleTacticalTextUI(const ProfileID profile_id, const wchar_t* const zQuoteStr)
 {
-	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
+	wchar_t zText[ QUOTE_MESSAGE_SIZE ];
 
 	swprintf( zText, lengthof(zText), L"\"%ls\"", zQuoteStr );
 
@@ -1027,7 +1054,7 @@ static void HandleExternNPCSpeechFace(FACETYPE& f)
 
 static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 {
-	BOOLEAN								fDoExternPanel = FALSE;
+	BOOLEAN fDoExternPanel = FALSE;
 
 	// Get soldier pointer, if there is one...
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharacterNum);
@@ -1056,7 +1083,8 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 		f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE | FACE_MAKEACTIVE_ONCE_DONE;
 
 		// IF we are in tactical and this soldier is on the current squad
-		if ( ( guiCurrentScreen == GAME_SCREEN ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment == iCurrentTacticalSquad ) )
+		if ((guiCurrentScreen == GAME_SCREEN) && (pSoldier != NULL) &&
+			(pSoldier->bAssignment == iCurrentTacticalSquad))
 		{
 			// Make the interface panel dirty..
 			// This will dirty the panel next frame...
@@ -1078,7 +1106,8 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 			fExternFaceBoxRegionCreated = TRUE;
 
 			//Define main region
-			MSYS_DefineRegion(&gFacePopupMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback);
+			MSYS_DefineRegion(&gFacePopupMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST,
+						CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback);
 		}
 
 		gfFacePanelActive = TRUE;
@@ -1117,23 +1146,24 @@ void HandleDialogueEnd(FACETYPE& f)
 		switch( gbUIHandlerID )
 		{
 			case DIALOGUE_TACTICAL_UI:
-
-			if ( gfFacePanelActive )
-			{
-				// Set face inactive!
-				f.fCanHandleInactiveNow = TRUE;
-				SetAutoFaceInActive(f);
-				gfFacePanelActive = FALSE;
-
-				if ( fExternFaceBoxRegionCreated )
+				if ( gfFacePanelActive )
 				{
-					fExternFaceBoxRegionCreated = FALSE;
-					MSYS_RemoveRegion(&(gFacePopupMouseRegion) );
+					// Set face inactive!
+					f.fCanHandleInactiveNow = TRUE;
+					SetAutoFaceInActive(f);
+					gfFacePanelActive = FALSE;
+
+					if ( fExternFaceBoxRegionCreated )
+					{
+						fExternFaceBoxRegionCreated = FALSE;
+						MSYS_RemoveRegion(&(gFacePopupMouseRegion) );
+					}
 				}
-			}
-			break;
+				break;
+
 			case DIALOGUE_NPC_UI:
-			break;
+				break;
+
 			case DIALOGUE_EXTERNAL_NPC_UI:
 				f.fCanHandleInactiveNow = TRUE;
 				SetAutoFaceInActive(f);
@@ -1144,15 +1174,15 @@ void HandleDialogueEnd(FACETYPE& f)
 					fExternFaceBoxRegionCreated = FALSE;
 					MSYS_RemoveRegion(&(gFacePopupMouseRegion) );
 				}
+				break;
 
-			break;
-            default:
-                break;
+			default:
+				break;
 		}
 	}
 
 
-  if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !f.fValidSpeech)
+	if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !f.fValidSpeech)
 	{
 		switch( gbUIHandlerID )
 		{
@@ -1201,15 +1231,16 @@ void HandleDialogueEnd(FACETYPE& f)
 
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
 				break;
-            default:
-                break;
+
+			default:
+				break;
 		}
 	}
 
-  TurnOffSectorLocator();
+	TurnOffSectorLocator();
 
-  gsExternPanelXPosition     = DEFAULT_EXTERN_PANEL_X_POS;
-  gsExternPanelYPosition     = DEFAULT_EXTERN_PANEL_Y_POS;
+	gsExternPanelXPosition = DEFAULT_EXTERN_PANEL_X_POS;
+	gsExternPanelYPosition = DEFAULT_EXTERN_PANEL_Y_POS;
 
 }
 
@@ -1243,7 +1274,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 		MPrint(sFontX, sFontY, s->name);
 
 		// What sector are we in, (and is it the same as ours?)
-		if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ || s->fBetweenSectors)
+		if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY ||
+			s->bSectorZ != gbWorldSectorZ || s->fBetweenSectors)
 		{
 			wchar_t sector_id[50];
 			GetSectorIDString(s->sSectorX, s->sSectorY, s->bSectorZ, sector_id, lengthof(sector_id), FALSE);
@@ -1279,8 +1311,8 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 }
 
 
-/* Let Red talk, if he is in the list and the quote is QUOTE_AIR_RAID.  Choose
- * somebody else otherwise */
+// Let Red talk, if he is in the list and the quote is QUOTE_AIR_RAID.  Choose
+// somebody else otherwise
 static void ChooseRedIfPresentAndAirRaid(SOLDIERTYPE*const*const mercs_in_sector, UINT32 merc_count, UINT16 quote)
 {
 	if (merc_count == 0) return;
@@ -1309,17 +1341,24 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 	INT32       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
-	{ // Add guy if he's a candidate
+	{
+		// Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;
-		if (!OkControllableMerc(&s))          continue;
-		if (AM_AN_EPC(&s))                    continue;
-		if (s.uiStatusFlags & SOLDIER_GASSED) continue;
-		if (AM_A_ROBOT(&s))                   continue;
-		if (s.fMercAsleep)                    continue;
+		if (!OkControllableMerc(&s))
+			continue;
+		if (AM_AN_EPC(&s))
+			continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED)
+			continue;
+		if (AM_A_ROBOT(&s))
+			continue;
+		if (s.fMercAsleep)
+			continue;
 
 		if (gTacticalStatus.bNumFoughtInBattle[ENEMY_TEAM] == 0)
-		{ /* Skip quotes referring to Deidranna's men, if there were no army guys
-			 * fought */
+		{
+			// Skip quotes referring to Deidranna's men, if there were no army guys
+			// fought
 			switch (quote_id)
 			{
 				case QUOTE_SECTOR_SAFE:
@@ -1356,15 +1395,23 @@ void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z,
 	INT32       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
-	{ // Add guy if he's a candidate
+	{
+		// Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;
-		if (s.sSectorX != x)                  continue;
-		if (s.sSectorY != y)                  continue;
-		if (s.bSectorZ != z)                  continue;
-		if (AM_AN_EPC(&s))                    continue;
-		if (s.uiStatusFlags & SOLDIER_GASSED) continue;
-		if (AM_A_ROBOT(&s))                   continue;
-		if (s.fMercAsleep)                    continue;
+		if (s.sSectorX != x)
+			continue;
+		if (s.sSectorY != y)
+			continue;
+		if (s.bSectorZ != z)
+			continue;
+		if (AM_AN_EPC(&s))
+			continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED)
+			continue;
+		if (AM_A_ROBOT(&s))
+			continue;
+		if (s.fMercAsleep)
+			continue;
 		mercs_in_sector[n_mercs++] = &s;
 	}
 
@@ -1378,16 +1425,25 @@ void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UI
 	INT32       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
-	{ // Add guy if he's a candidate
+	{
+		// Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;
-		if (!OkControllableMerc(&s))                       continue;
-		if (PythSpacesAway(gridno, s.sGridNo) >= distance) continue;
-		if (AM_AN_EPC(&s))                                 continue;
-		if (s.uiStatusFlags & SOLDIER_GASSED)              continue;
-		if (AM_A_ROBOT(&s))                                continue;
-		if (s.fMercAsleep)                                 continue;
-		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE)) continue;
-		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(&s))      continue;
+		if (!OkControllableMerc(&s))
+			continue;
+		if (PythSpacesAway(gridno, s.sGridNo) >= distance)
+			continue;
+		if (AM_AN_EPC(&s))
+			continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED)
+			continue;
+		if (AM_A_ROBOT(&s))
+			continue;
+		if (s.fMercAsleep)
+			continue;
+		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE))
+			continue;
+		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(&s))
+			continue;
 		mercs_in_sector[n_mercs++] = &s;
 	}
 
@@ -1412,19 +1468,32 @@ void SayQuote58FromNearbyMercInSector(GridNo const gridno, INT8 const distance, 
 	{
 		// Add guy if he's a candidate
 		SOLDIERTYPE& s = *i;
-		if (!OkControllableMerc(&s))                       continue;
-		if (PythSpacesAway(gridno, s.sGridNo) >= distance) continue;
-		if (AM_AN_EPC(&s))                                 continue;
-		if (s.uiStatusFlags & SOLDIER_GASSED)              continue;
-		if (AM_A_ROBOT(&s))                                continue;
-		if (s.fMercAsleep)                                 continue;
-		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE)) continue;
+		if (!OkControllableMerc(&s))
+			continue;
+		if (PythSpacesAway(gridno, s.sGridNo) >= distance)
+			continue;
+		if (AM_AN_EPC(&s))
+			continue;
+		if (s.uiStatusFlags & SOLDIER_GASSED)
+			continue;
+		if (AM_A_ROBOT(&s))
+			continue;
+		if (s.fMercAsleep)
+			continue;
+		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE))
+			continue;
 
 		// ATE: This is to check gedner for this quote
 		switch (QuoteExp_GenderCode[s.ubProfile])
 		{
-			case 0: if (sex == FEMALE) continue; break;
-			case 1: if (sex == MALE)   continue; break;
+			case 0:
+				if (sex == FEMALE)
+					continue;
+				break;
+			case 1:
+				if (sex == MALE)
+					continue;
+				break;
 		}
 
 		mercs_in_sector[n_mercs++] = &s;
@@ -1517,7 +1586,8 @@ static bool IsStopTimeQuote(UINT16 const quote_id)
 {
 	FOR_EACH(UINT16 const, i, gusStopTimeQuoteList)
 	{
-		if (*i == quote_id) return true;
+		if (*i == quote_id)
+			return true;
 	}
 	return false;
 }
@@ -1557,11 +1627,12 @@ void SetMercPrecedentQuoteBitStatus(MERCPROFILESTRUCT* const p, UINT8 const ubBi
 }
 
 
-UINT8	GetQuoteBitNumberFromQuoteID(UINT32 const uiQuoteID)
+UINT8 GetQuoteBitNumberFromQuoteID(UINT32 const uiQuoteID)
 {
 	for (size_t i = 0; i != lengthof(gubMercValidPrecedentQuoteID); ++i)
 	{
-		if (gubMercValidPrecedentQuoteID[i] == uiQuoteID) return i;
+		if (gubMercValidPrecedentQuoteID[i] == uiQuoteID)
+			return i;
 	}
 	return 0;
 }
@@ -1610,8 +1681,8 @@ void UnPauseDialogueQueue( void )
 
 void SetExternMapscreenSpeechPanelXY( INT16 sXPos, INT16 sYPos )
 {
-  gsExternPanelXPosition     = sXPos;
-  gsExternPanelYPosition     = sYPos;
+	gsExternPanelXPosition = sXPos;
+	gsExternPanelYPosition = sYPos;
 }
 
 
@@ -1635,7 +1706,7 @@ void DeleteDialogueControlGraphics()
 
 TEST(DialogueControl, asserts)
 {
-  EXPECT_EQ(lengthof(g_external_face_profile_ids), NUMBER_OF_EXTERNAL_NPC_FACES);
+	EXPECT_EQ(lengthof(g_external_face_profile_ids), NUMBER_OF_EXTERNAL_NPC_FACES);
 }
 
 #endif

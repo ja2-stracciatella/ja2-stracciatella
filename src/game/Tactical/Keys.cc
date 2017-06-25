@@ -65,32 +65,32 @@ LOCK LockTable[NUM_LOCKS];
 /*
 LOCK LockTable[NUM_LOCKS] =
 {
-	// Keys that will open the lock				Lock type			Pick diff			Smash diff
-	{ { NO_KEY, NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,					0,						0},
-	{ { 0,			NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,				-25,					-25},
-	{ { 1,			NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,				-60,					-55},
-	{ { 2,			NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,				-75,					-80},
-	{ { 3,			NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,				-35,					-45},
-	{ { 4,			NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,				-45,					-60},
-	{ { 5,			NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,				-65,					-90},
-	{ { 6,			NO_KEY, NO_KEY, NO_KEY},	LOCK_PADLOCK,				-60,					-70},
-	{ { 7,			NO_KEY, NO_KEY, NO_KEY},	LOCK_ELECTRONIC,		-50,					-60},
-	{ { 8,			NO_KEY, NO_KEY, NO_KEY},	LOCK_ELECTRONIC,		-75,					-80},
-	{ { 9,			NO_KEY, NO_KEY, NO_KEY},	LOCK_CARD,					-50,					-40},
-	{ { 10,			NO_KEY, NO_KEY, NO_KEY},	LOCK_CARD,					-85,					-80},
-	{ { 11,			NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,				-50,					-50}
+	// Keys that will open the lock,	Lock type,		Pick diff,	Smash diff
+	{{NO_KEY, NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		0,		0},
+	{{0,	NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		-25,		-25},
+	{{1,	NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		-60,		-55},
+	{{2,	NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		-75,		-80},
+	{{3,	NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		-35,		-45},
+	{{4,	NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		-45,		-60},
+	{{5,	NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		-65,		-90},
+	{{6,	NO_KEY, NO_KEY, NO_KEY},	LOCK_PADLOCK,		-60,		-70},
+	{{7,	NO_KEY, NO_KEY, NO_KEY},	LOCK_ELECTRONIC,	-50,		-60},
+	{{8,	NO_KEY, NO_KEY, NO_KEY},	LOCK_ELECTRONIC,	-75,		-80},
+	{{9,	NO_KEY, NO_KEY, NO_KEY},	LOCK_CARD,		-50,		-40},
+	{{10,	NO_KEY, NO_KEY, NO_KEY},	LOCK_CARD,		-85,		-80},
+	{{11,	NO_KEY, NO_KEY, NO_KEY},	LOCK_REGULAR,		-50,		-50}
 };
 */
 
 DOORTRAP const DoorTrapTable[NUM_DOOR_TRAPS] =
 {
-	{ 0 },																						// nothing
-	{ DOOR_TRAP_STOPS_ACTION },												// explosion
-	{ DOOR_TRAP_STOPS_ACTION | DOOR_TRAP_RECURRING},	// electric
-	{ DOOR_TRAP_RECURRING },													// siren
-	{ DOOR_TRAP_RECURRING | DOOR_TRAP_SILENT},				// silent alarm
-	{ DOOR_TRAP_RECURRING },													// brothel siren
-	{ DOOR_TRAP_STOPS_ACTION | DOOR_TRAP_RECURRING},	// super electric
+	{0}, // nothing
+	{DOOR_TRAP_STOPS_ACTION}, // explosion
+	{DOOR_TRAP_STOPS_ACTION | DOOR_TRAP_RECURRING}, // electric
+	{DOOR_TRAP_RECURRING}, // siren
+	{DOOR_TRAP_RECURRING | DOOR_TRAP_SILENT}, // silent alarm
+	{DOOR_TRAP_RECURRING}, // brothel siren
+	{DOOR_TRAP_STOPS_ACTION | DOOR_TRAP_RECURRING}, // super electric
 };
 
 
@@ -104,7 +104,7 @@ DOOR * DoorTable = NULL;
 void LoadLockTable(void)
 try
 {
-	UINT32	uiBytesToRead;
+	UINT32 uiBytesToRead;
 	const char *pFileName = BINARYDATADIR "/Locks.bin";
 
 	// Load the Lock Table
@@ -126,8 +126,7 @@ static bool KeyExistsInInventory(SOLDIERTYPE const&, UINT8 key_id);
 
 bool SoldierHasKey(SOLDIERTYPE const& s, UINT8 const key_id)
 {
-	return
-		KeyExistsInKeyRing(s, key_id) ||
+	return KeyExistsInKeyRing(s, key_id) ||
 		KeyExistsInInventory(s, key_id);
 }
 
@@ -220,8 +219,8 @@ BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
 
 BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 {
-	INT32		iResult;
-	INT8		bStress, bSlot;
+	INT32 iResult;
+	INT8  bStress, bSlot;
 
 	bSlot = FindUsableObj( pSoldier, CROWBAR );
 	if ( bSlot == ITEM_NOT_FOUND )
@@ -273,7 +272,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 	if (iResult > 0)
 	{
-    // STR GAIN (20) - Pried open a lock
+		// STR GAIN (20) - Pried open a lock
 		StatChange(*pSoldier, STRAMT, 20, FROM_SUCCESS);
 
 		// succeeded! door can never be locked again, so remove from door list...
@@ -308,9 +307,8 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 {
-	INT32		iResult;
-
-	LOCK * pLock;
+	INT32 iResult;
+	LOCK  *pLock;
 
 	// generate a noise for thumping on the door
 	MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, SMASHING_DOOR_VOLUME, NOISE_DOOR_SMASHING);
@@ -350,8 +348,8 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	}
 	if (iResult > 0)
 	{
-    // STR GAIN (20) - Pried open a lock
-    StatChange(*pSoldier, STRAMT, 20, FROM_SUCCESS);
+		// STR GAIN (20) - Pried open a lock
+		StatChange(*pSoldier, STRAMT, 20, FROM_SUCCESS);
 
 		// succeeded! door can never be locked again, so remove from door list...
 		RemoveDoorInfoFromTable( pDoor->sGridNo );
@@ -383,9 +381,9 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 {
-	INT32	iResult;
-	INT8 bReason;
-	LOCK * pLock;
+	INT32 iResult;
+	INT8  bReason;
+	LOCK  *pLock;
 
 	if ( pDoor->ubLockID == LOCK_UNOPENABLE )
 	{
@@ -423,11 +421,11 @@ BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	}
 	if (iResult > 0)
 	{
-	  // MECHANICAL GAIN:  Picked open a lock
-    StatChange(*pSoldier, MECHANAMT, pLock->ubPickDifficulty / 5, FROM_SUCCESS);
+		// MECHANICAL GAIN:  Picked open a lock
+		StatChange(*pSoldier, MECHANAMT, pLock->ubPickDifficulty / 5, FROM_SUCCESS);
 
-	  // DEXTERITY GAIN:  Picked open a lock
-    StatChange(*pSoldier, DEXTAMT, pLock->ubPickDifficulty / 10, FROM_SUCCESS);
+		// DEXTERITY GAIN:  Picked open a lock
+		StatChange(*pSoldier, DEXTAMT, pLock->ubPickDifficulty / 10, FROM_SUCCESS);
 
 		// succeeded!
 		pDoor->fLocked = FALSE;
@@ -444,7 +442,7 @@ BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 BOOLEAN AttemptToUntrapDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 {
-	INT32		iResult;
+	INT32 iResult;
 
 	// See if we measure up to the task.
 	if ( pDoor->ubTrapID == EXPLOSION  )
@@ -550,9 +548,9 @@ void HandleDoorTrap(SOLDIERTYPE& s, DOOR const& d)
 			IgniteExplosion(NULL, 25, s.sGridNo, HAND_GRENADE, 0);
 			break;
 
- 		case SIREN:
-			/* play siren sound effect but otherwise treat as silent alarm, calling
-			 * available enemies to this location */
+		case SIREN:
+			// play siren sound effect but otherwise treat as silent alarm, calling
+			// available enemies to this location
 			PlayLocationJA2Sample(d.sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
 			/* FALLTHROUGH */
 
@@ -572,22 +570,23 @@ void HandleDoorTrap(SOLDIERTYPE& s, DOOR const& d)
 			// insert electrical sound effect here
 			PlayLocationJA2Sample(d.sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
 
-	    s.attacker = &s;
-	    s.bBeingAttackedCount++;
-		  gTacticalStatus.ubAttackBusyCount++;
-		  SLOGD(DEBUG_TAG_KEYS, "Trap gone off. Busy count: %d", gTacticalStatus.ubAttackBusyCount);
+			s.attacker = &s;
+			s.bBeingAttackedCount++;
+			gTacticalStatus.ubAttackBusyCount++;
+			SLOGD(DEBUG_TAG_KEYS, "Trap gone off. Busy count: %d", gTacticalStatus.ubAttackBusyCount);
 
-			SoldierTakeDamage(&s, 10 + PreRandom(10), 3 + PreRandom(3) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
+			SoldierTakeDamage(&s, 10 + PreRandom(10), 3 + PreRandom(3) * 1000,
+						TAKE_DAMAGE_ELECTRICITY, NULL);
 			break;
 
 		case SUPER_ELECTRIC:
 			// insert electrical sound effect here
 			PlayLocationJA2Sample(d.sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
 
-	    s.attacker = &s;
-	    s.bBeingAttackedCount++;
-		  gTacticalStatus.ubAttackBusyCount++;
-		  SLOGD(DEBUG_TAG_KEYS, "Trap gone off. Busy count: %d", gTacticalStatus.ubAttackBusyCount);
+			s.attacker = &s;
+			s.bBeingAttackedCount++;
+			gTacticalStatus.ubAttackBusyCount++;
+			SLOGD(DEBUG_TAG_KEYS, "Trap gone off. Busy count: %d", gTacticalStatus.ubAttackBusyCount);
 
 			SoldierTakeDamage(&s, 20 + PreRandom(20), 6 + PreRandom(6) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
 			break;
@@ -601,8 +600,8 @@ void HandleDoorTrap(SOLDIERTYPE& s, DOOR const& d)
 
 BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 {
-	INT32	iResult;
-	INT8	bSlot = NO_SLOT;
+	INT32 iResult;
+	INT8  bSlot = NO_SLOT;
 
 	bSlot = FindObj( pSoldier, SHAPED_CHARGE );
 	if (bSlot == NO_SLOT)
@@ -615,9 +614,9 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	{
 		// Do explosive graphic....
 		{
-			ANITILE_PARAMS	AniParams;
-			INT16						sGridNo;
-			INT16						sX, sY, sZ;
+			ANITILE_PARAMS AniParams;
+			INT16 sGridNo;
+			INT16 sX, sY, sZ;
 
 			// Get gridno
 			sGridNo = pDoor->sGridNo;
@@ -629,14 +628,14 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			// Get Z position, based on orientation....
 			sZ = 20;
 
-			AniParams.sGridNo							= sGridNo;
-			AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
-			AniParams.sDelay							= (INT16)( 100 );
-			AniParams.sStartFrame					= 0;
-			AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
-			AniParams.sX									= sX;
-			AniParams.sY									= sY;
-			AniParams.sZ									= sZ;
+			AniParams.sGridNo = sGridNo;
+			AniParams.ubLevelID = ANI_TOPMOST_LEVEL;
+			AniParams.sDelay = (INT16)( 100 );
+			AniParams.sStartFrame = 0;
+			AniParams.uiFlags = ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
+			AniParams.sX = sX;
+			AniParams.sY = sY;
+			AniParams.sZ = sZ;
 			AniParams.zCachedFile = TILECACHEDIR "/miniboom.sti";
 			CreateAnimationTile( &AniParams );
 
@@ -760,16 +759,16 @@ void AddDoorInfoToTable( DOOR *pDoor )
 void RemoveDoorInfoFromTable( INT32 iMapIndex )
 {
 	INT32 i;
-  INT32 iNumDoorsToCopy;
+	INT32 iNumDoorsToCopy;
 	for( i = 0; i < gubNumDoors; i++ )
 	{
 		if( DoorTable[ i ].sGridNo == iMapIndex )
 		{
-      iNumDoorsToCopy = gubNumDoors - i - 1;
-      if( iNumDoorsToCopy )
-      {
-			  memmove( &DoorTable[ i ], &DoorTable[ i+1 ], sizeof( DOOR ) * iNumDoorsToCopy );
-      }
+			iNumDoorsToCopy = gubNumDoors - i - 1;
+			if( iNumDoorsToCopy )
+			{
+				memmove( &DoorTable[ i ], &DoorTable[ i+1 ], sizeof( DOOR ) * iNumDoorsToCopy );
+			}
 			gubNumDoors--;
 			return;
 		}
@@ -834,9 +833,9 @@ void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z
 
 void LoadDoorTableFromDoorTableTempFile()
 {
-	CHAR8		zMapName[ 128 ];
+	CHAR8 zMapName[ 128 ];
 
-//	return( TRUE );
+	//return( TRUE );
 
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -967,10 +966,10 @@ DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 static bool IsCloseEnoughAndHasLOS(SOLDIERTYPE const& s, GridNo const gridno, INT16 const dist_visible)
 {
 	return
-		/* Is he close enough to see that gridno if he turns his head? */
+		// Is he close enough to see that gridno if he turns his head?
 		PythSpacesAway(s.sGridNo, gridno) <= dist_visible &&
-		/* Can we trace a line of sight to his x,y coordinates? (taking into account
-		 * we are definitely aware of this guy now) */
+		// Can we trace a line of sight to his x,y coordinates? (taking into account
+		// we are definitely aware of this guy now)
 		SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, dist_visible, TRUE);
 }
 
@@ -1046,9 +1045,9 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 	STRUCTURE* const s = FindStructure(d.sGridNo, STRUCTURE_ANYDOOR);
 	if (!s) return;
 
-	/* ATE: One of the purposes of this function is to MAKE sure the door status
-	 * MATCHES the struct data value - if not - change (REGARDLESS of perceived
-	 * being used or not) */
+	// ATE: One of the purposes of this function is to MAKE sure the door status
+	// MATCHES the struct data value - if not - change (REGARDLESS of perceived
+	// being used or not)
 	bool const door_open   = d.ubFlags & DOOR_OPEN;
 	bool const struct_open = s->fFlags & STRUCTURE_OPEN;
 	if (door_open == struct_open) return;
@@ -1099,12 +1098,12 @@ static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const& d, bool const
 		}
 	}
 
-	/* We either have an opened graphic, in which case we want to switch to the
-	 * closed, or a closed in which case we want to switch to opened
-	 * adjust o' graphic */
+	// We either have an opened graphic, in which case we want to switch to the
+	// closed, or a closed in which case we want to switch to opened
+	// adjust o' graphic
 
-	/* We now need to test these things against the true structure data we may
-	 * need to only adjust the graphic here */
+	// We now need to test these things against the true structure data we may
+	// need to only adjust the graphic here
 	if (want_to_be_open && s->fFlags & STRUCTURE_OPEN)
 	{
 		// Adjust graphic
@@ -1184,14 +1183,14 @@ dirty_end:
 
 static bool InternalIsPerceivedDifferentThanReality(DOOR_STATUS const& d)
 {
-	return
-		d.ubFlags & DOOR_PERCEIVED_NOTSET ||
+	return d.ubFlags & DOOR_PERCEIVED_NOTSET ||
 		((d.ubFlags & DOOR_OPEN) != 0) != ((d.ubFlags & DOOR_PERCEIVED_OPEN) != 0);
 }
 
 
 static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS& d)
-{ // Set perceived value the same as actual
+{
+	// Set perceived value the same as actual
 	d.ubFlags &= ~(DOOR_PERCEIVED_NOTSET | DOOR_PERCEIVED_OPEN);
 	d.ubFlags |= (d.ubFlags & DOOR_OPEN ? DOOR_PERCEIVED_OPEN : 0);
 }
@@ -1284,7 +1283,8 @@ void ExamineDoorsOnEnteringSector()
 		if (!s->bInSector) continue;
 
 		FOR_EACH_DOOR_STATUS(i)
-		{ // If open, close
+		{
+			// If open, close
 			DOOR_STATUS const& d = *i;
 			if (!(d.ubFlags & DOOR_OPEN)) continue;
 			HandleDoorChangeFromGridNo(0, d.sGridNo, TRUE);
@@ -1333,9 +1333,9 @@ void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Vi
 
 TEST(Keys, asserts)
 {
-  EXPECT_EQ(sizeof(LOCK), 46);
-  EXPECT_EQ(sizeof(DOOR), 14);
-  EXPECT_EQ(sizeof(DOOR_STATUS), 4);
+	EXPECT_EQ(sizeof(LOCK), 46);
+	EXPECT_EQ(sizeof(DOOR), 14);
+	EXPECT_EQ(sizeof(DOOR_STATUS), 4);
 }
 
 #endif

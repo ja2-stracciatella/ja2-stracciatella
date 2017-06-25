@@ -30,14 +30,14 @@ enum ItemCursor
 	REFUELCURS     = 23
 };
 
-#define ITEM_NOT_FOUND -1
+#define ITEM_NOT_FOUND			-1
 
 
-#define USABLE          10      // minimum work% of items to still be usable
+#define USABLE				10 // minimum work% of items to still be usable
 
-#define MAX_OBJECTS_PER_SLOT 8
-#define MAX_ATTACHMENTS 4
-#define MAX_MONEY_PER_SLOT 20000
+#define MAX_OBJECTS_PER_SLOT		8
+#define MAX_ATTACHMENTS		4
+#define MAX_MONEY_PER_SLOT		20000
 
 enum DetonatorType
 {
@@ -47,72 +47,73 @@ enum DetonatorType
 	BOMB_SWITCH
 };
 
-#define FIRST_MAP_PLACED_FREQUENCY 50
-#define PANIC_FREQUENCY 127
-#define PANIC_FREQUENCY_2 126
-#define PANIC_FREQUENCY_3 125
+#define FIRST_MAP_PLACED_FREQUENCY	50
+#define PANIC_FREQUENCY		127
+#define PANIC_FREQUENCY_2		126
+#define PANIC_FREQUENCY_3		125
 
-#define OBJECT_UNDROPPABLE					0x01
-#define OBJECT_MODIFIED							0x02
-#define OBJECT_AI_UNUSABLE					0x04
-#define OBJECT_ARMED_BOMB						0x08
+#define OBJECT_UNDROPPABLE		0x01
+#define OBJECT_MODIFIED		0x02
+#define OBJECT_AI_UNUSABLE		0x04
+#define OBJECT_ARMED_BOMB		0x08
 #define OBJECT_KNOWN_TO_BE_TRAPPED	0x10
-#define OBJECT_DISABLED_BOMB				0x20
-#define OBJECT_ALARM_TRIGGER				0x40
-#define OBJECT_NO_OVERWRITE					0x80
+#define OBJECT_DISABLED_BOMB		0x20
+#define OBJECT_ALARM_TRIGGER		0x40
+#define OBJECT_NO_OVERWRITE		0x80
 
 struct OBJECTTYPE
 {
-	UINT16	usItem;
-	UINT8		ubNumberOfObjects;
+	UINT16 usItem;
+	UINT8  ubNumberOfObjects;
 	union
 	{
 		struct
 		{
-			INT8		bGunStatus;			// status % of gun
-			UINT8		ubGunAmmoType;	// ammo type, as per weapons.h
-			UINT8		ubGunShotsLeft;	// duh, amount of ammo left
-			UINT16	usGunAmmoItem;	// the item # for the item table
-			INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
-			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6]; // XXX HACK000B
+			INT8   bGunStatus; // status % of gun
+			UINT8  ubGunAmmoType; // ammo type, as per weapons.h
+			UINT8  ubGunShotsLeft; // duh, amount of ammo left
+			UINT16 usGunAmmoItem; // the item # for the item table
+			INT8   bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
+			UINT8  ubGunUnused[MAX_OBJECTS_PER_SLOT - 6]; // XXX HACK000B
 		};
 		struct
 		{
-			UINT8		ubShotsLeft[MAX_OBJECTS_PER_SLOT];
+			UINT8 ubShotsLeft[MAX_OBJECTS_PER_SLOT];
 		};
 		struct
 		{
-			INT8		bStatus[MAX_OBJECTS_PER_SLOT];
+			INT8 bStatus[MAX_OBJECTS_PER_SLOT];
 		};
 		struct
 		{
-			INT8		bMoneyStatus;
-			UINT32	uiMoneyAmount;
-			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5]; // XXX HACK000B
+			INT8   bMoneyStatus;
+			UINT32 uiMoneyAmount;
+			UINT8  ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5]; // XXX HACK000B
 		};
 		struct
-		{ // this is used by placed bombs, switches, and the action item
-			INT8		bBombStatus;			// % status
-			INT8		bDetonatorType;		// timed, remote, or pressure-activated
-			UINT16	usBombItem;				// the usItem of the bomb.
+		{
+			// this is used by placed bombs, switches, and the action item
+			INT8  bBombStatus; // % status
+			INT8  bDetonatorType; // timed, remote, or pressure-activated
+			UINT16 usBombItem; // the usItem of the bomb.
 			union
 			{
 				struct
 				{
-					INT8		bDelay;				// >=0 values used only
+					INT8 bDelay; // >=0 values used only
 				};
 				struct
 				{
-					INT8		bFrequency;		// >=0 values used only
+					INT8 bFrequency; // >=0 values used only
 				};
 			};
 			UINT8 ubBombOwner; // side which placed the bomb
-			UINT8	bActionValue;// this is used by the ACTION_ITEM fake item
+			UINT8 bActionValue;// this is used by the ACTION_ITEM fake item
 			UINT8 ubTolerance; // tolerance value for panic triggers
 		};
 		struct
 		{
-			INT8 bKeyStatus[ 6 ];
+			INT8  bKeyStatus[ 6 ];
 			UINT8 ubKeyID;
 			UINT8 ubKeyUnused[1]; // XXX HACK000B
 		};
@@ -123,98 +124,98 @@ struct OBJECTTYPE
 			UINT8 ubOwnershipUnused[6]; // XXX HACK000B
 		};
 	};
-  // attached objects
-	UINT16	usAttachItem[MAX_ATTACHMENTS];
-	INT8		bAttachStatus[MAX_ATTACHMENTS];
+	// attached objects
+	UINT16 usAttachItem[MAX_ATTACHMENTS];
+	INT8   bAttachStatus[MAX_ATTACHMENTS];
 
-	INT8		fFlags;
-	UINT8		ubMission;
-	INT8		bTrap;        // 1-10 exp_lvl to detect
-	UINT8		ubImprintID;	// ID of merc that item is imprinted on
-	UINT8		ubWeight;
-	UINT8		fUsed;				// flags for whether the item is used or not
+	INT8   fFlags;
+	UINT8  ubMission;
+	INT8   bTrap; // 1-10 exp_lvl to detect
+	UINT8  ubImprintID; // ID of merc that item is imprinted on
+	UINT8  ubWeight;
+	UINT8  fUsed; // flags for whether the item is used or not
 };
 
 
 // SUBTYPES
-#define IC_NONE						0x00000001
-#define IC_GUN						0x00000002
-#define IC_BLADE					0x00000004
-#define IC_THROWING_KNIFE	0x00000008
+#define IC_NONE			0x00000001
+#define IC_GUN				0x00000002
+#define IC_BLADE			0x00000004
+#define IC_THROWING_KNIFE		0x00000008
 
-#define IC_LAUNCHER				0x00000010
+#define IC_LAUNCHER			0x00000010
 #define IC_TENTACLES			0x00000020
 
-#define IC_THROWN					0x00000040
-#define IC_PUNCH					0x00000080
+#define IC_THROWN			0x00000040
+#define IC_PUNCH			0x00000080
 
-#define IC_GRENADE				0x00000100
-#define IC_BOMB						0x00000200
-#define IC_AMMO						0x00000400
-#define IC_ARMOUR					0x00000800
+#define IC_GRENADE			0x00000100
+#define IC_BOMB			0x00000200
+#define IC_AMMO			0x00000400
+#define IC_ARMOUR			0x00000800
 
-#define IC_MEDKIT					0x00001000
-#define IC_KIT						0x00002000
-#define IC_FACE           0x00008000
+#define IC_MEDKIT			0x00001000
+#define IC_KIT				0x00002000
+#define IC_FACE			0x00008000
 
-#define IC_KEY						0x00010000
+#define IC_KEY				0x00010000
 
-#define IC_MISC						0x10000000
-#define IC_MONEY					0x20000000
+#define IC_MISC			0x10000000
+#define IC_MONEY			0x20000000
 
 // PARENT TYPES
-#define IC_ALL            0xFFFFFFFF
+#define IC_ALL				0xFFFFFFFF
 
-#define IC_WEAPON					( IC_GUN | IC_BLADE | IC_THROWING_KNIFE | IC_LAUNCHER | IC_TENTACLES )
-#define IC_EXPLOSV				( IC_GRENADE | IC_BOMB )
+#define IC_WEAPON			( IC_GUN | IC_BLADE | IC_THROWING_KNIFE | IC_LAUNCHER | IC_TENTACLES )
+#define IC_EXPLOSV			( IC_GRENADE | IC_BOMB )
 
 #define IC_BOBBY_GUN			( IC_GUN | IC_LAUNCHER )
 #define IC_BOBBY_MISC			( IC_GRENADE | IC_BOMB | IC_MISC | IC_MEDKIT | IC_KIT | IC_BLADE | IC_THROWING_KNIFE | IC_PUNCH | IC_FACE )
 
 
 // replaces candamage
-#define ITEM_DAMAGEABLE			0x0001
+#define ITEM_DAMAGEABLE		0x0001
 // replaces canrepair
-#define ITEM_REPAIRABLE			0x0002
+#define ITEM_REPAIRABLE		0x0002
 // replaces waterdamage
-#define ITEM_WATER_DAMAGES	0x0004
+#define ITEM_WATER_DAMAGES		0x0004
 // replaces metal
-#define ITEM_METAL					0x0008
+#define ITEM_METAL			0x0008
 // replaces sinkable
-#define ITEM_SINKS					0x0010
+#define ITEM_SINKS			0x0010
 // replaces seemeter
 #define ITEM_SHOW_STATUS		0x0020
 // for attachers/merges, hidden
 #define ITEM_HIDDEN_ADDON		0x0040
 // needs two hands
-#define ITEM_TWO_HANDED			0x0080
+#define ITEM_TWO_HANDED		0x0080
 // can't be found for sale
 #define ITEM_NOT_BUYABLE		0x0100
 // item is an attachment for something
-#define ITEM_ATTACHMENT			0x0200
+#define ITEM_ATTACHMENT		0x0200
 // item only belongs in the "big gun list"
-#define ITEM_BIGGUNLIST			0x0400
+#define ITEM_BIGGUNLIST		0x0400
 // item should not be placed via the editor
-#define ITEM_NOT_EDITOR			0x0800
+#define ITEM_NOT_EDITOR		0x0800
 // item defaults to undroppable
 #define ITEM_DEFAULT_UNDROPPABLE	0x1000
 // item is terrible for throwing
-#define ITEM_UNAERODYNAMIC	0x2000
+#define ITEM_UNAERODYNAMIC		0x2000
 // item is electronic for repair (etc) purposes
-#define ITEM_ELECTRONIC			0x4000
+#define ITEM_ELECTRONIC		0x4000
 // item is a PERMANENT attachment
 #define ITEM_INSEPARABLE		0x8000
 
 // item flag combinations
 
-#define IF_STANDARD_GUN ITEM_DAMAGEABLE | ITEM_WATER_DAMAGES | ITEM_REPAIRABLE | ITEM_SHOW_STATUS | ITEM_METAL | ITEM_SINKS
-#define IF_TWOHANDED_GUN IF_STANDARD_GUN | ITEM_TWO_HANDED
-#define IF_STANDARD_BLADE ITEM_DAMAGEABLE | ITEM_WATER_DAMAGES | ITEM_REPAIRABLE | ITEM_SHOW_STATUS | ITEM_METAL | ITEM_SINKS
-#define IF_STANDARD_ARMOUR ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_SHOW_STATUS | ITEM_SINKS
-#define IF_STANDARD_KIT ITEM_DAMAGEABLE | ITEM_SHOW_STATUS | ITEM_SINKS
-#define IF_STANDARD_CLIP ITEM_SINKS | ITEM_METAL
+#define IF_STANDARD_GUN		ITEM_DAMAGEABLE | ITEM_WATER_DAMAGES | ITEM_REPAIRABLE | ITEM_SHOW_STATUS | ITEM_METAL | ITEM_SINKS
+#define IF_TWOHANDED_GUN		IF_STANDARD_GUN | ITEM_TWO_HANDED
+#define IF_STANDARD_BLADE		ITEM_DAMAGEABLE | ITEM_WATER_DAMAGES | ITEM_REPAIRABLE | ITEM_SHOW_STATUS | ITEM_METAL | ITEM_SINKS
+#define IF_STANDARD_ARMOUR		ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_SHOW_STATUS | ITEM_SINKS
+#define IF_STANDARD_KIT		ITEM_DAMAGEABLE | ITEM_SHOW_STATUS | ITEM_SINKS
+#define IF_STANDARD_CLIP		ITEM_SINKS | ITEM_METAL
 
-#define EXPLOSIVE_GUN( x ) ( x == ROCKET_LAUNCHER || x == TANK_CANNON )
+#define EXPLOSIVE_GUN( x )		( x == ROCKET_LAUNCHER || x == TANK_CANNON )
 
 #define FIRST_WEAPON 1
 #define LAST_WEAPON 70
@@ -228,47 +229,47 @@ struct OBJECTTYPE
 #define NOTHING NONE
 enum ITEMDEFINE
 {
-	NONE									= 0,
+	NONE = 0,
 
 	// weapons
-	GLOCK_17							= FIRST_WEAPON,
+	GLOCK_17 = FIRST_WEAPON,
 	GLOCK_18,
-	__ITEM_3,       // BERETTA_92F,
-	__ITEM_4,       // BERETTA_93R,
+	__ITEM_3, // BERETTA_92F,
+	__ITEM_4, // BERETTA_93R,
 	SW38,
-	__ITEM_6,       // BARRACUDA,
+	__ITEM_6, // BARRACUDA,
 	DESERTEAGLE,
-	__ITEM_8,       // M1911,
-	__ITEM_9,       // MP5K,
-	__ITEM_10,      // MAC10,
+	__ITEM_8, // M1911,
+	__ITEM_9, // MP5K,
+	__ITEM_10, // MAC10,
 
-	__ITEM_11,      // THOMPSON,
-	__ITEM_12,      // COMMANDO,
-	__ITEM_13,      // MP53,
-	__ITEM_14,      // AKSU74,
-	__ITEM_15,      // P90,
-	__ITEM_16,      // TYPE85,
-	__ITEM_17,      // SKS,
-	__ITEM_18,      // DRAGUNOV,
-	__ITEM_19,      // M24,
-	__ITEM_20,      // AUG,
+	__ITEM_11, // THOMPSON,
+	__ITEM_12, // COMMANDO,
+	__ITEM_13, // MP53,
+	__ITEM_14, // AKSU74,
+	__ITEM_15, // P90,
+	__ITEM_16, // TYPE85,
+	__ITEM_17, // SKS,
+	__ITEM_18, // DRAGUNOV,
+	__ITEM_19, // M24,
+	__ITEM_20, // AUG,
 
 	G41,
-	__ITEM_22,      // MINI14,
-	__ITEM_23,      // C7,
-	__ITEM_24,      // FAMAS,
-	__ITEM_25,      // AK74,
-	__ITEM_26,      // AKM,
-	__ITEM_27,      // M14,
-	__ITEM_28,      // FNFAL,
-	__ITEM_29,      // G3A3,
+	__ITEM_22, // MINI14,
+	__ITEM_23, // C7,
+	__ITEM_24, // FAMAS,
+	__ITEM_25, // AK74,
+	__ITEM_26, // AKM,
+	__ITEM_27, // M14,
+	__ITEM_28, // FNFAL,
+	__ITEM_29, // G3A3,
 	G11,
 
-	__ITEM_31,      // M870,
-	__ITEM_32,      // SPAS15,
-	__ITEM_33,      // CAWS,
+	__ITEM_31, // M870,
+	__ITEM_32, // SPAS15,
+	__ITEM_33, // CAWS,
 	MINIMI,
-	__ITEM_35,      // RPK74,
+	__ITEM_35, // RPK74,
 	HK21E,
 	COMBAT_KNIFE,
 	THROWING_KNIFE,
@@ -289,7 +290,7 @@ enum ITEMDEFINE
 	ROCKET_LAUNCHER,
 	BLOODCAT_CLAW_ATTACK,
 	BLOODCAT_BITE,
-	__ITEM_54,      // MACHETE,
+	__ITEM_54, // MACHETE,
 	ROCKET_RIFLE,
 	AUTOMAG_III,
 	CREATURE_INFANT_SPIT,
@@ -302,78 +303,78 @@ enum ITEMDEFINE
 	FLAMETHROWER,
 	CROWBAR,
 	AUTO_ROCKET_RIFLE,
-  __ITEM_66,      // NOTHING,
-  __ITEM_67,      // NOTHING,
-  __ITEM_68,      // NOTHING,
-  __ITEM_69,      // NOTHING,
-  __ITEM_70,      // NOTHING,
-	MAX_WEAPONS							= ( FIRST_AMMO - 1 ),
+	__ITEM_66, // NOTHING,
+	__ITEM_67, // NOTHING,
+	__ITEM_68, // NOTHING,
+	__ITEM_69, // NOTHING,
+	__ITEM_70, // NOTHING,
+	MAX_WEAPONS = ( FIRST_AMMO - 1 ),
 
 	CLIP9_15 = FIRST_AMMO,
 	CLIP9_30,
-	__ITEM_73,      // CLIP9_15_AP,
-	__ITEM_74,      // CLIP9_30_AP,
-	__ITEM_75,      // CLIP9_15_HP,
-	__ITEM_76,      // CLIP9_30_HP,
+	__ITEM_73, // CLIP9_15_AP,
+	__ITEM_74, // CLIP9_30_AP,
+	__ITEM_75, // CLIP9_15_HP,
+	__ITEM_76, // CLIP9_30_HP,
 	CLIP38_6,
-	__ITEM_78,      // CLIP38_6_AP,
-	__ITEM_79,      // CLIP38_6_HP,
+	__ITEM_78, // CLIP38_6_AP,
+	__ITEM_79, // CLIP38_6_HP,
 	CLIP45_7,
 
 	CLIP45_30,
-	__ITEM_82,      // CLIP45_7_AP,
-	__ITEM_83,      // CLIP45_30_AP,
-	__ITEM_84,      // CLIP45_7_HP,
-	__ITEM_85,      // CLIP45_30_HP,
+	__ITEM_82, // CLIP45_7_AP,
+	__ITEM_83, // CLIP45_30_AP,
+	__ITEM_84, // CLIP45_7_HP,
+	__ITEM_85, // CLIP45_30_HP,
 	CLIP357_6,
 	CLIP357_9,
-	__ITEM_88,      // CLIP357_6_AP,
-	__ITEM_89,      // CLIP357_9_AP,
-	__ITEM_90,      // CLIP357_6_HP,
+	__ITEM_88, // CLIP357_6_AP,
+	__ITEM_89, // CLIP357_9_AP,
+	__ITEM_90, // CLIP357_6_HP,
 
-	__ITEM_91,      // CLIP357_9_HP,
-	__ITEM_92,      // CLIP545_30_AP,
+	__ITEM_91, // CLIP357_9_HP,
+	__ITEM_92, // CLIP545_30_AP,
 	CLIP545_30_HP,
-	__ITEM_94,      // CLIP556_30_AP,
+	__ITEM_94, // CLIP556_30_AP,
 	CLIP556_30_HP,
-	__ITEM_96,      // CLIP762W_10_AP,
-	__ITEM_97,      // CLIP762W_30_AP,
+	__ITEM_96, // CLIP762W_10_AP,
+	__ITEM_97, // CLIP762W_30_AP,
 	CLIP762W_10_HP,
 	CLIP762W_30_HP,
 	CLIP762N_5_AP,
 
-	__ITEM_101,     // CLIP762N_20_AP,
+	__ITEM_101, // CLIP762N_20_AP,
 	CLIP762N_5_HP,
 	CLIP762N_20_HP,
-	__ITEM_104,     // CLIP47_50_SAP,
-	__ITEM_105,     // CLIP57_50_AP,
-	__ITEM_106,     // CLIP57_50_HP,
+	__ITEM_104, // CLIP47_50_SAP,
+	__ITEM_105, // CLIP57_50_AP,
+	__ITEM_106, // CLIP57_50_HP,
 	CLIP12G_7,
 	CLIP12G_7_BUCKSHOT,
-	__ITEM_109,     // CLIPCAWS_10_SAP,
-	__ITEM_110,     // CLIPCAWS_10_FLECH,
+	__ITEM_109, // CLIPCAWS_10_SAP,
+	__ITEM_110, // CLIPCAWS_10_FLECH,
 
-	__ITEM_111,     // CLIPROCKET_AP,
-	__ITEM_112,     // CLIPROCKET_HE,
-	__ITEM_113,     // CLIPROCKET_HEAT,
-	__ITEM_114,     // CLIPDART_SLEEP,
+	__ITEM_111, // CLIPROCKET_AP,
+	__ITEM_112, // CLIPROCKET_HE,
+	__ITEM_113, // CLIPROCKET_HEAT,
+	__ITEM_114, // CLIPDART_SLEEP,
 
-	__ITEM_115,     // CLIPFLAME,
-  __ITEM_116,     // NOTHING
-  __ITEM_117,     // NOTHING
-  __ITEM_118,     // NOTHING
-  __ITEM_119,     // NOTHING
-  __ITEM_120,     // NOTHING
-  __ITEM_121,     // NOTHING
-  __ITEM_122,     // NOTHING
-  __ITEM_123,     // NOTHING
-  __ITEM_124,     // NOTHING
-  __ITEM_125,     // NOTHING
-  __ITEM_126,     // NOTHING
-  __ITEM_127,     // NOTHING
-  __ITEM_128,     // NOTHING
-  __ITEM_129,     // NOTHING
-  __ITEM_130,     // NOTHING
+	__ITEM_115, // CLIPFLAME,
+	__ITEM_116, // NOTHING
+	__ITEM_117, // NOTHING
+	__ITEM_118, // NOTHING
+	__ITEM_119, // NOTHING
+	__ITEM_120, // NOTHING
+	__ITEM_121, // NOTHING
+	__ITEM_122, // NOTHING
+	__ITEM_123, // NOTHING
+	__ITEM_124, // NOTHING
+	__ITEM_125, // NOTHING
+	__ITEM_126, // NOTHING
+	__ITEM_127, // NOTHING
+	__ITEM_128, // NOTHING
+	__ITEM_129, // NOTHING
+	__ITEM_130, // NOTHING
 
 	// explosives
 	STUN_GRENADE = FIRST_EXPLOSIVE,
@@ -407,7 +408,7 @@ enum ITEMDEFINE
 	BIG_TEAR_GAS,
 	SMALL_CREATURE_GAS,
 	LARGE_CREATURE_GAS,
-  VERY_SMALL_CREATURE_GAS,
+	VERY_SMALL_CREATURE_GAS,
 
 	// armor
 	FLAK_JACKET,
@@ -451,8 +452,8 @@ enum ITEMDEFINE
 	KEVLAR2_VEST,
 	KEVLAR2_VEST_18,
 	KEVLAR2_VEST_Y,
-  __ITEM_199,
-  __ITEM_200,
+	__ITEM_199,
+	__ITEM_200,
 
 	// kits
 	FIRSTAIDKIT,
@@ -481,10 +482,10 @@ enum ITEMDEFINE
 	ADRENALINE_BOOSTER,
 	DETONATOR,
 	REMDETONATOR,
-	__ITEM_225,     // VIDEOTAPE,
+	__ITEM_225, // VIDEOTAPE,
 	DEED,
 	LETTER,
-	__ITEM_228,     // TERRORIST_INFO,
+	__ITEM_228, // TERRORIST_INFO,
 	CHALICE,
 	BLOODCAT_CLAWS,
 
@@ -516,7 +517,7 @@ enum ITEMDEFINE
 	HEAD_7,
 	WINE,
 	BEER,
-	__ITEM_257,     // PORNOS,
+	__ITEM_257, // PORNOS,
 	VIDEO_CAMERA,
 	ROBOT_REMOTE_CONTROL,
 	CREATURE_PART_CLAWS,
@@ -524,47 +525,47 @@ enum ITEMDEFINE
 	CREATURE_PART_ORGAN,
 	REMOTETRIGGER,
 	GOLDWATCH,
-	__ITEM_265,     // GOLFCLUBS,
+	__ITEM_265, // GOLFCLUBS,
 	WALKMAN,
-	__ITEM_267,     // PORTABLETV,
+	__ITEM_267, // PORTABLETV,
 	MONEY_FOR_PLAYERS_ACCOUNT,
 	CIGARS,
-  __ITEM_270,     // NOTHING
+	__ITEM_270, // NOTHING
 
 	KEY_1 = FIRST_KEY,
-	__ITEM_272,     // KEY_2,
-	__ITEM_273,     // KEY_3,
-	__ITEM_274,     // KEY_4,
-	__ITEM_275,     // KEY_5,
-	__ITEM_276,     // KEY_6,
-	__ITEM_277,     // KEY_7,
-	__ITEM_278,     // KEY_8,
-	__ITEM_279,     // KEY_9,
-	__ITEM_280,     // KEY_10,
+	__ITEM_272, // KEY_2,
+	__ITEM_273, // KEY_3,
+	__ITEM_274, // KEY_4,
+	__ITEM_275, // KEY_5,
+	__ITEM_276, // KEY_6,
+	__ITEM_277, // KEY_7,
+	__ITEM_278, // KEY_8,
+	__ITEM_279, // KEY_9,
+	__ITEM_280, // KEY_10,
 
-	__ITEM_281,     // KEY_11,
-	__ITEM_282,     // KEY_12,
-	__ITEM_283,     // KEY_13,
-	__ITEM_284,     // KEY_14,
-	__ITEM_285,     // KEY_15,
-	__ITEM_286,     // KEY_16,
-	__ITEM_287,     // KEY_17,
-	__ITEM_288,     // KEY_18,
-	__ITEM_289,     // KEY_19,
-	__ITEM_290,     // KEY_20,
+	__ITEM_281, // KEY_11,
+	__ITEM_282, // KEY_12,
+	__ITEM_283, // KEY_13,
+	__ITEM_284, // KEY_14,
+	__ITEM_285, // KEY_15,
+	__ITEM_286, // KEY_16,
+	__ITEM_287, // KEY_17,
+	__ITEM_288, // KEY_18,
+	__ITEM_289, // KEY_19,
+	__ITEM_290, // KEY_20,
 
-	__ITEM_291,     // KEY_21,
-	__ITEM_292,     // KEY_22,
-	__ITEM_293,     // KEY_23,
-	__ITEM_294,     // KEY_24,
-	__ITEM_295,     // KEY_25,
-	__ITEM_296,     // KEY_26,
-	__ITEM_297,     // KEY_27,
-	__ITEM_298,     // KEY_28,
-	__ITEM_299,     // KEY_29,
-	__ITEM_300,     // KEY_30,
+	__ITEM_291, // KEY_21,
+	__ITEM_292, // KEY_22,
+	__ITEM_293, // KEY_23,
+	__ITEM_294, // KEY_24,
+	__ITEM_295, // KEY_25,
+	__ITEM_296, // KEY_26,
+	__ITEM_297, // KEY_27,
+	__ITEM_298, // KEY_28,
+	__ITEM_299, // KEY_29,
+	__ITEM_300, // KEY_30,
 
-	__ITEM_301,     // KEY_31,
+	__ITEM_301, // KEY_31,
 	KEY_32,
 	SILVER_PLATTER,
 	DUCT_TAPE,
@@ -588,50 +589,50 @@ enum ITEMDEFINE
 
 	FLASH_DEVICE,
 	BATTERIES,
-	__ITEM_323,     // ELASTIC,
+	__ITEM_323, // ELASTIC,
 	XRAY_DEVICE,
 	SILVER,
 	GOLD,
 	GAS_CAN,
-	__ITEM_328,     // UNUSED_26,
-	__ITEM_329,     // UNUSED_27,
-	__ITEM_330,     // UNUSED_28,
+	__ITEM_328, // UNUSED_26,
+	__ITEM_329, // UNUSED_27,
+	__ITEM_330, // UNUSED_28,
 
-	__ITEM_331,     // UNUSED_29,
-	__ITEM_332,     // UNUSED_30,
-	__ITEM_333,     // UNUSED_31,
-	__ITEM_334,     // UNUSED_32,
-	__ITEM_335,     // UNUSED_33,
-	__ITEM_336,     // UNUSED_34,
-	__ITEM_337,     // UNUSED_35,
-	__ITEM_338,     // UNUSED_36,
-	__ITEM_339,     // UNUSED_37,
-	__ITEM_340,     // UNUSED_38,
+	__ITEM_331, // UNUSED_29,
+	__ITEM_332, // UNUSED_30,
+	__ITEM_333, // UNUSED_31,
+	__ITEM_334, // UNUSED_32,
+	__ITEM_335, // UNUSED_33,
+	__ITEM_336, // UNUSED_34,
+	__ITEM_337, // UNUSED_35,
+	__ITEM_338, // UNUSED_36,
+	__ITEM_339, // UNUSED_37,
+	__ITEM_340, // UNUSED_38,
 
-	__ITEM_341,     // UNUSED_39,
-	__ITEM_342,     // UNUSED_40,
-	__ITEM_343,     // UNUSED_41,
-	__ITEM_344,     // UNUSED_42,
-	__ITEM_345,     // UNUSED_43,
-	__ITEM_346,     // UNUSED_44,
-	__ITEM_347,     // UNUSED_45,
-	__ITEM_348,     // UNUSED_46,
-	__ITEM_349,     // UNUSED_47,
-	__ITEM_350,     // UNUSED_48,
+	__ITEM_341, // UNUSED_39,
+	__ITEM_342, // UNUSED_40,
+	__ITEM_343, // UNUSED_41,
+	__ITEM_344, // UNUSED_42,
+	__ITEM_345, // UNUSED_43,
+	__ITEM_346, // UNUSED_44,
+	__ITEM_347, // UNUSED_45,
+	__ITEM_348, // UNUSED_46,
+	__ITEM_349, // UNUSED_47,
+	__ITEM_350, // UNUSED_48,
 
 	MAXITEMS
 };
 
-#define FIRST_HELMET STEEL_HELMET
-#define LAST_HELMET SPECTRA_HELMET_Y
+#define FIRST_HELMET			STEEL_HELMET
+#define LAST_HELMET			SPECTRA_HELMET_Y
 
-#define FIRST_VEST FLAK_JACKET
-#define LAST_VEST KEVLAR2_VEST_Y
+#define FIRST_VEST			FLAK_JACKET
+#define LAST_VEST			KEVLAR2_VEST_Y
 
-#define FIRST_LEGGINGS KEVLAR_LEGGINGS
-#define LAST_LEGGINGS SPECTRA_LEGGINGS_Y
+#define FIRST_LEGGINGS			KEVLAR_LEGGINGS
+#define LAST_LEGGINGS			SPECTRA_LEGGINGS_Y
 
-#define FIRST_HEAD_ITEM EXTENDEDEAR
-#define LAST_HEAD_ITEM SUNGOGGLES
+#define FIRST_HEAD_ITEM		EXTENDEDEAR
+#define LAST_HEAD_ITEM			SUNGOGGLES
 
 #endif

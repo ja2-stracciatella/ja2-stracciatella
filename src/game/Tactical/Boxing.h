@@ -2,15 +2,15 @@
 
 #define BOXING_H
 
-#define BOXING_SECTOR_X 5
-#define BOXING_SECTOR_Y 4
-#define BOXING_SECTOR_Z 0
-#define ROOM_SURROUNDING_BOXING_RING 3
-#define BOXING_RING 29
+#define BOXING_SECTOR_X		5
+#define BOXING_SECTOR_Y		4
+#define BOXING_SECTOR_Z		0
+#define ROOM_SURROUNDING_BOXING_RING	3
+#define BOXING_RING			29
 
-#define BOXING_AI_START_POSITION 11235
+#define BOXING_AI_START_POSITION	11235
 
-#define NUM_BOXERS 3
+#define NUM_BOXERS			3
 
 enum DisqualificationReasons
 {

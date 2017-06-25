@@ -22,23 +22,23 @@
 #include "GameInstance.h"
 #include "MagazineModel.h"
 
-#define			LIFE_BAR_SHADOW							FROMRGB( 108, 12, 12 )
-#define			LIFE_BAR										FROMRGB( 200, 0, 0 )
-#define			BANDAGE_BAR_SHADOW					FROMRGB( 156, 60, 60 )
-#define			BANDAGE_BAR									FROMRGB( 222, 132, 132 )
-#define			BLEEDING_BAR_SHADOW					FROMRGB( 128, 128, 60 )
-#define			BLEEDING_BAR								FROMRGB( 240,  240, 20 )
-#define			CURR_BREATH_BAR_SHADOW			FROMRGB( 8,		12, 118 ) // the MAX max breatth, always at 100%
-#define			CURR_BREATH_BAR							FROMRGB( 8,		12, 160 )
-#define     CURR_MAX_BREATH							FROMRGB( 0,		0,	0		) // the current max breath, black
-#define     CURR_MAX_BREATH_SHADOW			FROMRGB( 0,		0,	0		)
-#define			MORALE_BAR_SHADOW						FROMRGB( 8,		112, 12 )
-#define			MORALE_BAR									FROMRGB( 8,		180, 12 )
-#define			BREATH_BAR_SHADOW						FROMRGB( 60,	108, 108 ) // the lt blue current breath
-#define			BREATH_BAR									FROMRGB( 113,	178, 218 )
-#define			BREATH_BAR_SHAD_BACK				FROMRGB( 1,1,1 )
-#define			FACE_WIDTH									48
-#define			FACE_HEIGHT									43
+#define LIFE_BAR_SHADOW		FROMRGB(108, 12, 12)
+#define LIFE_BAR			FROMRGB(200, 0, 0)
+#define BANDAGE_BAR_SHADOW		FROMRGB(156, 60, 60)
+#define BANDAGE_BAR			FROMRGB(222, 132, 132)
+#define BLEEDING_BAR_SHADOW		FROMRGB(128, 128, 60)
+#define BLEEDING_BAR			FROMRGB(240,  240, 20)
+#define CURR_BREATH_BAR_SHADOW		FROMRGB(8, 12, 118) // the MAX max breatth, always at 100%
+#define CURR_BREATH_BAR		FROMRGB(8, 12, 160)
+#define CURR_MAX_BREATH		FROMRGB(0, 0, 0) // the current max breath, black
+#define CURR_MAX_BREATH_SHADOW		FROMRGB(0, 0, 0)
+#define MORALE_BAR_SHADOW		FROMRGB(8, 112, 12)
+#define MORALE_BAR			FROMRGB(8, 180, 12)
+#define BREATH_BAR_SHADOW		FROMRGB(60, 108, 108) // the lt blue current breath
+#define BREATH_BAR			FROMRGB(113, 178, 218)
+#define BREATH_BAR_SHAD_BACK		FROMRGB(1, 1, 1)
+#define FACE_WIDTH			48
+#define FACE_HEIGHT			43
 
 
 // car portraits
@@ -173,10 +173,10 @@ void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPo
 		// DO MAX BREATH
 		// brown guy
 		UINT16 Region;
-		if (guiCurrentScreen != MAP_SCREEN            &&
-				GetSelectedMan() == &s                    &&
-				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
-				OK_INTERRUPT_MERC(&s))
+		if (guiCurrentScreen != MAP_SCREEN &&
+			GetSelectedMan() == &s &&
+			gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
+			OK_INTERRUPT_MERC(&s))
 		{
 			Region = 1; // gold, the second entry in the .sti
 		}

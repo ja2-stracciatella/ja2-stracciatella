@@ -59,14 +59,14 @@
 #include "GameInstance.h"
 
 
-#define ARROWS_X_OFFSET			10
-#define	ARROWS_HEIGHT				20
-#define	ARROWS_WIDTH				20
-#define UPARROW_Y_OFFSET		-30
-#define DOWNARROW_Y_OFFSET	-10
+#define ARROWS_X_OFFSET					10
+#define ARROWS_HEIGHT						20
+#define ARROWS_WIDTH						20
+#define UPARROW_Y_OFFSET					-30
+#define DOWNARROW_Y_OFFSET					-10
 
-#define	BUTTON_PANEL_WIDTH	78
-#define	BUTTON_PANEL_HEIGHT	76
+#define BUTTON_PANEL_WIDTH					78
+#define BUTTON_PANEL_HEIGHT					76
 
 
 BOOLEAN	gfInMovementMenu = FALSE;
@@ -80,10 +80,10 @@ static UINT8   gubProgCurEnemy   = 0;
 struct TOP_MESSAGE
 {
 	SGPVSurface* uiSurface;
-	UINT32			uiTimeSinceLastBeep;
-	BOOLEAN			fCreated;
-	INT16				sWorldRenderX;
-	INT16				sWorldRenderY;
+	UINT32  uiTimeSinceLastBeep;
+	BOOLEAN fCreated;
+	INT16   sWorldRenderX;
+	INT16   sWorldRenderY;
 };
 
 static TOP_MESSAGE gTopMessage;
@@ -96,9 +96,9 @@ static MOUSE_REGION gMenuOverlayRegion;
 VIDEO_OVERLAY*       g_ui_message_overlay = NULL;
 static UINT16        gusUIMessageWidth;
 static UINT16        gusUIMessageHeight;
-UINT32				guiUIMessageTime = 0;
+UINT32 guiUIMessageTime = 0;
 static MercPopUpBox* g_ui_message_box;
-UINT32				guiUIMessageTimeDelay = 0;
+UINT32 guiUIMessageTimeDelay = 0;
 static BOOLEAN       gfUseSkullIconMessage = FALSE;
 
 static BOOLEAN gfPanelAllocated = FALSE;
@@ -195,31 +195,31 @@ InterfacePanelKind gsCurInterfacePanel  = TEAM_PANEL;
 void InitializeTacticalInterface()
 {
 	// Load button Interfaces
-	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage(INTERFACEDIR "/newicons3.sti", -1,3,4,5,-1 );
-	iIconImages[ SNEAK_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 6, 7, 8, -1 );
-	iIconImages[ RUN_IMAGES ]				= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 0, 1, 2, -1 );
-	iIconImages[ CRAWL_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 9, 10, 11, -1 );
-	iIconImages[ LOOK_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 12, 13, 14, -1 );
-	iIconImages[ TALK_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 21, 22, 23, -1 );
-	iIconImages[ HAND_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 18, 19, 20, -1 );
-	iIconImages[ CANCEL_IMAGES ]		= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 15, 16, 17, -1 );
+	iIconImages[WALK_IMAGES ] = LoadButtonImage(INTERFACEDIR "/newicons3.sti", -1,3,4,5,-1 );
+	iIconImages[SNEAK_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 6, 7, 8, -1 );
+	iIconImages[RUN_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 0, 1, 2, -1 );
+	iIconImages[CRAWL_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 9, 10, 11, -1 );
+	iIconImages[LOOK_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 12, 13, 14, -1 );
+	iIconImages[TALK_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 21, 22, 23, -1 );
+	iIconImages[HAND_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 18, 19, 20, -1 );
+	iIconImages[CANCEL_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 15, 16, 17, -1 );
 
-	iIconImages[ TARGETACTIONC_IMAGES ]		= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 24, 25, 26, -1 );
-	iIconImages[ KNIFEACTIONC_IMAGES ]		= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 27, 28, 29, -1 );
-	iIconImages[ AIDACTIONC_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 30, 31, 32, -1 );
-	iIconImages[ PUNCHACTIONC_IMAGES ]		= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 33, 34, 35, -1 );
-	iIconImages[ BOMBACTIONC_IMAGES ]			= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 36, 37, 38, -1 );
-	iIconImages[ TOOLKITACTIONC_IMAGES ]	= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 39, 40, 41, -1 );
-	iIconImages[ WIRECUTACTIONC_IMAGES ]	= UseLoadedButtonImage(iIconImages[ WALK_IMAGES  ], -1, 42, 43, 44, -1 );
+	iIconImages[TARGETACTIONC_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 24, 25, 26, -1 );
+	iIconImages[KNIFEACTIONC_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 27, 28, 29, -1 );
+	iIconImages[AIDACTIONC_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 30, 31, 32, -1 );
+	iIconImages[PUNCHACTIONC_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 33, 34, 35, -1 );
+	iIconImages[BOMBACTIONC_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 36, 37, 38, -1 );
+	iIconImages[TOOLKITACTIONC_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 39, 40, 41, -1 );
+	iIconImages[WIRECUTACTIONC_IMAGES] = UseLoadedButtonImage(iIconImages[WALK_IMAGES ], -1, 42, 43, 44, -1 );
 
-	iIconImages[ OPEN_DOOR_IMAGES ]				= LoadButtonImage(INTERFACEDIR "/door_op2.sti", -1,9,10,11,-1 );
-	iIconImages[ EXAMINE_DOOR_IMAGES ]		= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 12, 13, 14, -1 );
-	iIconImages[ LOCKPICK_DOOR_IMAGES ]		= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 21, 22, 23, -1 );
-	iIconImages[ BOOT_DOOR_IMAGES ]				= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 25, 26, 27, -1 );
-	iIconImages[ CROWBAR_DOOR_IMAGES ]		= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 0, 1, 2, -1 );
-	iIconImages[ USE_KEY_IMAGES ]					= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 3, 4, 5, -1 );
-	iIconImages[ USE_KEYRING_IMAGES ]			= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 6, 7, 8, -1 );
-	iIconImages[ EXPLOSIVE_DOOR_IMAGES ]	= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 15, 16, 17, -1 );
+	iIconImages[OPEN_DOOR_IMAGES] = LoadButtonImage(INTERFACEDIR "/door_op2.sti", -1,9,10,11,-1 );
+	iIconImages[EXAMINE_DOOR_IMAGES] = UseLoadedButtonImage(iIconImages[OPEN_DOOR_IMAGES ], -1, 12, 13, 14, -1 );
+	iIconImages[LOCKPICK_DOOR_IMAGES] = UseLoadedButtonImage(iIconImages[OPEN_DOOR_IMAGES ], -1, 21, 22, 23, -1 );
+	iIconImages[BOOT_DOOR_IMAGES] = UseLoadedButtonImage(iIconImages[OPEN_DOOR_IMAGES ], -1, 25, 26, 27, -1 );
+	iIconImages[CROWBAR_DOOR_IMAGES] = UseLoadedButtonImage(iIconImages[OPEN_DOOR_IMAGES ], -1, 0, 1, 2, -1 );
+	iIconImages[USE_KEY_IMAGES] = UseLoadedButtonImage(iIconImages[OPEN_DOOR_IMAGES ], -1, 3, 4, 5, -1 );
+	iIconImages[USE_KEYRING_IMAGES] = UseLoadedButtonImage(iIconImages[OPEN_DOOR_IMAGES ], -1, 6, 7, 8, -1 );
+	iIconImages[EXPLOSIVE_DOOR_IMAGES] = UseLoadedButtonImage(iIconImages[OPEN_DOOR_IMAGES ], -1, 15, 16, 17, -1 );
 
 	// Load interface panels
 	guiDEAD         = AddVideoObjectFromFile(INTERFACEDIR "/p_dead.sti");
@@ -262,7 +262,7 @@ void InitializeCurrentPanel()
 			throw std::logic_error("Tried to initialise invalid tactical panel");
 	}
 
-//	RefreshMouseRegions( );
+	//RefreshMouseRegions( );
 	gfPanelAllocated = TRUE;
 }
 
@@ -281,8 +281,8 @@ void ShutdownCurrentPanel( )
 			case TEAM_PANEL:
 				ShutdownTEAMPanel( );
 				break;
-            default:
-                break;
+			default:
+				break;
 		}
 
 		gfPanelAllocated = FALSE;
@@ -307,10 +307,14 @@ void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s)
 
 	switch( gsCurInterfacePanel )
 	{
-		case SM_PANEL:   gSelectSMPanelToMerc = s;  break;
-		case TEAM_PANEL: SetTEAMPanelCurrentMerc(); break;
-        default:
-            break;
+		case SM_PANEL:
+			gSelectSMPanelToMerc = s;
+			break;
+		case TEAM_PANEL:
+			SetTEAMPanelCurrentMerc();
+			break;
+		default:
+			break;
 	}
 }
 
@@ -319,10 +323,14 @@ void CreateCurrentTacticalPanelButtons(void)
 {
 	switch (gsCurInterfacePanel)
 	{
-		case SM_PANEL:   CreateSMPanelButtons();   break;
-		case TEAM_PANEL: CreateTEAMPanelButtons(); break;
-        default:
-            break;
+		case SM_PANEL:
+			CreateSMPanelButtons();
+			break;
+		case TEAM_PANEL:
+			CreateTEAMPanelButtons();
+			break;
+		default:
+			break;
 	}
 }
 
@@ -350,10 +358,14 @@ void RemoveCurrentTacticalPanelButtons(void)
 {
 	switch (gsCurInterfacePanel)
 	{
-		case SM_PANEL:   RemoveSMPanelButtons();   break;
-		case TEAM_PANEL: RemoveTEAMPanelButtons(); break;
-        default:
-            break;
+		case SM_PANEL:
+			RemoveSMPanelButtons();
+			break;
+		case TEAM_PANEL:
+			RemoveTEAMPanelButtons();
+			break;
+		default:
+			break;
 	}
 }
 
@@ -362,9 +374,12 @@ BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s)
 {
 	switch (gsCurInterfacePanel)
 	{
-		case TEAM_PANEL: return TRUE;
-		case SM_PANEL:   return gpSMCurrentMerc == s;
-		default:         return FALSE;
+		case TEAM_PANEL:
+			return TRUE;
+		case SM_PANEL:
+			return gpSMCurrentMerc == s;
+		default:
+			return FALSE;
 	}
 }
 
@@ -426,10 +441,12 @@ void PopupMovementMenu(UI_EVENT* const ev)
 	bool               const is_robot              = s->uiStatusFlags & SOLDIER_ROBOT;
 	bool               const is_uncontrolled_robot = is_robot && !CanRobotBeControlled(s);
 
-	MakeButtonMove(LOOK_ICON, LOOK_IMAGES, x,      y, ev, TacticalStr[LOOK_CURSOR_POPUPTEXT],    is_vehicle || is_uncontrolled_robot);
-	MakeButtonMove(RUN_ICON,  RUN_IMAGES,  x + 20, y, ev, pTacticalPopupButtonStrings[RUN_ICON], is_vehicle || is_robot || MercInWater(s));
+	MakeButtonMove(LOOK_ICON, LOOK_IMAGES, x, y, ev, TacticalStr[LOOK_CURSOR_POPUPTEXT],
+			is_vehicle || is_uncontrolled_robot);
+	MakeButtonMove(RUN_ICON, RUN_IMAGES, x + 20, y, ev, pTacticalPopupButtonStrings[RUN_ICON],
+			is_vehicle || is_robot || MercInWater(s));
 	wchar_t const* const help = is_vehicle ? TacticalStr[DRIVE_POPUPTEXT] : pTacticalPopupButtonStrings[WALK_ICON];
-	MakeButtonMove(WALK_ICON, WALK_IMAGES, x + 40, y, ev, help,                                  is_uncontrolled_robot);
+	MakeButtonMove(WALK_ICON, WALK_IMAGES, x + 40, y, ev, help, is_uncontrolled_robot);
 
 	UINT32         action_image;
 	wchar_t const* action_text;
@@ -442,7 +459,8 @@ void PopupMovementMenu(UI_EVENT* const ev)
 		disable_action = true;
 	}
 	else
-	{ // Create button based on what is in our hands at the moment!
+	{
+		// Create button based on what is in our hands at the moment!
 		UINT16 const item = s->inv[HANDPOS].usItem;
 		if (item == TOOLKIT)
 		{
@@ -490,12 +508,18 @@ void PopupMovementMenu(UI_EVENT* const ev)
 		}
 	}
 
-	MakeButtonMove(ACTIONC_ICON, action_image,  x,      y + 20, ev, action_text,                              is_epc || disable_action);
-	MakeButtonMove(CANCEL_ICON,  CANCEL_IMAGES, x + 20, y + 20, ev, pTacticalPopupButtonStrings[CANCEL_ICON], false);
-	MakeButtonMove(SNEAK_ICON,   SNEAK_IMAGES,  x + 40, y + 20, ev, pTacticalPopupButtonStrings[SNEAK_ICON],  !IsValidStance(s, ANIM_CROUCH));
-	MakeButtonMove(TALK_ICON,    TALK_IMAGES,   x,      y + 40, ev, pTacticalPopupButtonStrings[TALK_ICON],   is_epc || is_vehicle);
-	MakeButtonMove(HAND_ICON,    HAND_IMAGES,   x + 20, y + 40, ev, pTacticalPopupButtonStrings[HAND_ICON],   is_epc || is_vehicle);
-	MakeButtonMove(CRAWL_ICON,   CRAWL_IMAGES,  x + 40, y + 40, ev, pTacticalPopupButtonStrings[CRAWL_ICON],  !IsValidStance(s, ANIM_PRONE));
+	MakeButtonMove(ACTIONC_ICON, action_image, x, y + 20, ev, action_text,
+			is_epc || disable_action);
+	MakeButtonMove(CANCEL_ICON, CANCEL_IMAGES, x + 20, y + 20, ev, pTacticalPopupButtonStrings[CANCEL_ICON],
+			false);
+	MakeButtonMove(SNEAK_ICON, SNEAK_IMAGES, x + 40, y + 20, ev, pTacticalPopupButtonStrings[SNEAK_ICON],
+			!IsValidStance(s, ANIM_CROUCH));
+	MakeButtonMove(TALK_ICON, TALK_IMAGES, x, y + 40, ev, pTacticalPopupButtonStrings[TALK_ICON],
+			is_epc || is_vehicle);
+	MakeButtonMove(HAND_ICON, HAND_IMAGES, x + 20, y + 40, ev, pTacticalPopupButtonStrings[HAND_ICON],
+			is_epc || is_vehicle);
+	MakeButtonMove(CRAWL_ICON, CRAWL_IMAGES, x + 40, y + 40, ev, pTacticalPopupButtonStrings[CRAWL_ICON],
+			!IsValidStance(s, ANIM_PRONE));
 
 	gfInMovementMenu  = TRUE;
 	gfIgnoreScrolling = TRUE;
@@ -548,7 +572,8 @@ void RenderMovementMenu( )
 		MarkAButtonDirty( iActionIcons[ HAND_ICON  ] );
 		MarkAButtonDirty( iActionIcons[ CANCEL_ICON  ] );
 
-		InvalidateRegion( giMenuAnchorX, giMenuAnchorY, giMenuAnchorX + BUTTON_PANEL_WIDTH, giMenuAnchorY + BUTTON_PANEL_HEIGHT );
+		InvalidateRegion(giMenuAnchorX, giMenuAnchorY, giMenuAnchorX + BUTTON_PANEL_WIDTH,
+					giMenuAnchorY + BUTTON_PANEL_HEIGHT);
 
 	}
 }
@@ -557,7 +582,7 @@ void CancelMovementMenu( )
 {
 	// Signal end of event
 	PopDownMovementMenu( );
-	guiPendingOverrideEvent		= A_CHANGE_TO_MOVE;
+	guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 }
 
 
@@ -627,7 +652,7 @@ static void GetArrowsBackground(void);
 
 static void HandleUpDownArrowBackgrounds(void)
 {
-	static	UINT32						 uiOldShowUpDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
+	static UINT32 uiOldShowUpDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 
 	// Check for change in mode
 	if ( guiShowUPDownArrows != uiOldShowUpDownArrows || gfUIRefreshArrows )
@@ -645,7 +670,7 @@ static void HandleUpDownArrowBackgrounds(void)
 
 void RenderArrows( )
 {
-	TILE_ELEMENT							 TileElem;
+	TILE_ELEMENT TileElem;
 
 	if ( guiShowUPDownArrows & ARROWS_HIDE_UP && guiShowUPDownArrows & ARROWS_HIDE_DOWN )
 	{
@@ -654,111 +679,111 @@ void RenderArrows( )
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_BESIDE )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
+		BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_G )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS1 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS1 ];
+		BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_Y )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
+		BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YG )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-			TileElem = gTileDatabase[ SECONDPOINTERS1 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
+		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
+		BltVideoObject( FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS1 ];
+		BltVideoObject( FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_GG )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS1 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
+		TileElem = gTileDatabase[ SECONDPOINTERS1 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YY )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
+		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS8 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS8 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB2 )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
-			TileElem = gTileDatabase[ SECONDPOINTERS8 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
+		TileElem = gTileDatabase[ SECONDPOINTERS8 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB3 )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS3 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
-			TileElem = gTileDatabase[ SECONDPOINTERS8 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 40);
+		TileElem = gTileDatabase[ SECONDPOINTERS3 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS8 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 20);
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsUpArrowX, gsUpArrowY + 40);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BESIDE )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_G )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS2 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS2 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_Y )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_CLIMB )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS7 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS7 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YG )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS2 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
-			TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
+		TileElem = gTileDatabase[ SECONDPOINTERS2 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_GG )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS2 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
+		TileElem = gTileDatabase[ SECONDPOINTERS2 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
 	}
 
 	if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YY )
 	{
-			TileElem = gTileDatabase[ SECONDPOINTERS4 ];
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
-			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
+		TileElem = gTileDatabase[ SECONDPOINTERS4 ];
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY);
+		BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, gsDownArrowX, gsDownArrowY + 20);
 	}
 
 
@@ -766,18 +791,20 @@ void RenderArrows( )
 
 void EraseRenderArrows( )
 {
-	if (giUpArrowRect != NO_BGND_RECT) FreeBackgroundRect(giUpArrowRect);
+	if (giUpArrowRect != NO_BGND_RECT)
+		FreeBackgroundRect(giUpArrowRect);
 	giUpArrowRect = NO_BGND_RECT;
 
-	if (giDownArrowRect != NO_BGND_RECT) FreeBackgroundRect(giDownArrowRect);
+	if (giDownArrowRect != NO_BGND_RECT)
+		FreeBackgroundRect(giDownArrowRect);
 	giDownArrowRect = NO_BGND_RECT;
 }
 
 
 static void GetArrowsBackground(void)
 {
-	INT16											 sMercScreenX, sMercScreenY;
-	UINT16										 sArrowHeight = ARROWS_HEIGHT, sArrowWidth = ARROWS_WIDTH;
+	INT16  sMercScreenX, sMercScreenY;
+	UINT16 sArrowHeight = ARROWS_HEIGHT, sArrowWidth = ARROWS_WIDTH;
 
 	if ( guiShowUPDownArrows & ARROWS_HIDE_UP && guiShowUPDownArrows & ARROWS_HIDE_DOWN )
 	{
@@ -865,16 +892,18 @@ static void GetArrowsBackground(void)
 	// Adjust arrows based on level
 	if (gsInterfaceLevel == I_ROOF_LEVEL)
 	{
-	//	gsDownArrowY -= ROOF_LEVEL_HEIGHT;
-	//	gsUpArrowY	 -= ROOF_LEVEL_HEIGHT;
+		//gsDownArrowY -= ROOF_LEVEL_HEIGHT;
+		//gsUpArrowY -= ROOF_LEVEL_HEIGHT;
 	}
 
 	//Erase prevois ones...
 	EraseRenderArrows();
 
 	// Register dirty rects
-	giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsDownArrowX, gsDownArrowY, sArrowWidth, sArrowHeight);
-	giUpArrowRect   = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsUpArrowX,   gsUpArrowY,   sArrowWidth, sArrowHeight);
+	giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsDownArrowX, gsDownArrowY,
+							sArrowWidth, sArrowHeight);
+	giUpArrowRect   = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsUpArrowX,gsUpArrowY,
+							sArrowWidth, sArrowHeight);
 }
 
 
@@ -886,20 +915,30 @@ void GetSoldierAboveGuyPositions(SOLDIERTYPE const* const s, INT16* const psX, I
 	// Adjust based on body type
 	switch (s->ubBodyType)
 	{
-		case CROW:          sStanceOffset = 30; break;
-		case ROBOTNOWEAPON: sStanceOffset = 30; break;
+		case CROW:
+			sStanceOffset = 30;
+			break;
+		case ROBOTNOWEAPON:
+			sStanceOffset = 30;
+			break;
 
 		default:
 		{
 			// Adjust based on stance
 			ANIMCONTROLTYPE const& ac = gAnimControl[s->usAnimState];
 			UINT8 const ubAnimUseHeight = ac.uiFlags & ANIM_NOMOVE_MARKER ?
-				ac.ubHeight : ac.ubEndHeight;
+							ac.ubHeight : ac.ubEndHeight;
 			switch (ubAnimUseHeight)
 			{
-				case ANIM_PRONE:  sStanceOffset = 25; break;
-				case ANIM_CROUCH: sStanceOffset = 10; break;
-				default:          sStanceOffset =  0; break;
+				case ANIM_PRONE:
+					sStanceOffset = 25;
+					break;
+				case ANIM_CROUCH:
+					sStanceOffset = 10;
+					break;
+				default:
+					sStanceOffset =  0;
+					break;
 			}
 			break;
 		}
@@ -915,8 +954,8 @@ void GetSoldierAboveGuyPositions(SOLDIERTYPE const* const s, INT16* const psX, I
 	// OK, Check if we need to go below....
 	// Can do this if 1) displaying damge or 2) above screen
 	if (s->ubProfile != NO_PROFILE &&
-			!fRadio                    &&
-			(s->fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y))
+		!fRadio &&
+		(s->fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y))
 	{
 		*psY = sMercScreenY;
 	}
@@ -955,7 +994,8 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 
 				s.fShowLocator = TRUE;
 				if (++s.sLocatorFrame == 5)
-				{ // Update time we do this
+				{
+					// Update time we do this
 					++s.fFlashLocator;
 					s.sLocatorFrame = 0;
 				}
@@ -980,7 +1020,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 			RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
 			SGPVObject const* const gfx = s.bNeutral || s.bSide == OUR_TEAM ?
-				guiRADIO : guiRADIO2;
+							guiRADIO : guiRADIO2;
 			BltVideoObject(FRAME_BUFFER, gfx, s.sLocatorFrame, sXPos, sYPos);
 		}
 	}
@@ -997,9 +1037,9 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 	{
 		usGraphicToUse = THIRDPOINTERS2;
 	}
-	else if (s.fShowLocator                      ||
-			s.uiStatusFlags & SOLDIER_MULTI_SELECTED ||
-			(&s == gSelectedGuy && !gfIgnoreOnSelectedGuy))
+	else if (s.fShowLocator ||
+		s.uiStatusFlags & SOLDIER_MULTI_SELECTED ||
+		(&s == gSelectedGuy && !gfIgnoreOnSelectedGuy))
 	{
 		usGraphicToUse = THIRDPOINTERS1;
 	}
@@ -1037,10 +1077,10 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 			swprintf(buf, lengthof(buf), L"(%ls)", pAssignmentStrings[s.bAssignment]);
 			action = buf;
 		}
-		else if (s.bTeam == OUR_TEAM     &&
-				s.bAssignment < ON_DUTY         &&
-				s.bAssignment != CurrentSquad() &&
-				!(s.uiStatusFlags & SOLDIER_MULTI_SELECTED))
+		else if (s.bTeam == OUR_TEAM &&
+			s.bAssignment < ON_DUTY &&
+			s.bAssignment != CurrentSquad() &&
+			!(s.uiStatusFlags & SOLDIER_MULTI_SELECTED))
 		{
 			swprintf(buf, lengthof(buf), gzLateLocalizedString[STR_LATE_34], s.bAssignment + 1);
 			action = buf;
@@ -1069,9 +1109,9 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 		PrintAboveGuy(sXPos, raise_name ? sYPos - 10 : sYPos, s.name);
 
 		if (s.ubProfile < FIRST_RPC ||
-				RPC_RECRUITED(&s)       ||
-				AM_AN_EPC(&s)           ||
-				s.uiStatusFlags & SOLDIER_VEHICLE)
+			RPC_RECRUITED(&s) ||
+			AM_AN_EPC(&s) ||
+			s.uiStatusFlags & SOLDIER_VEHICLE)
 		{
 			// Adjust for bars!
 			if (&s == sel)
@@ -1124,10 +1164,10 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 
 static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight)
 {
-	FLOAT											 dWidth, dPercentage;
-	//UINT16										 usLineColor;
-	UINT16										 usLineColor;
-	INT8											 bBandage;
+	FLOAT  dWidth, dPercentage;
+	//UINT16 usLineColor;
+	UINT16 usLineColor;
+	INT8   bBandage;
 
 	// Draw breath points
 
@@ -1145,7 +1185,7 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	if ( pSoldier->bBleeding )
 	{
 		dPercentage = (FLOAT)( pSoldier->bBleeding +  pSoldier->bLife + bBandage )/ (FLOAT)100;
-		dWidth			=	dPercentage * sWidth;
+		dWidth = dPercentage * sWidth;
 		usLineColor = Get16BPPColor(FROMRGB(240, 240, 20));
 		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
@@ -1153,33 +1193,32 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	if( bBandage )
 	{
 		dPercentage = (FLOAT)( pSoldier->bLife + bBandage ) / (FLOAT)100;
-		dWidth			=	dPercentage * sWidth;
+		dWidth = dPercentage * sWidth;
 		usLineColor = Get16BPPColor( FROMRGB( 222, 132, 132 ) );
 		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
 
 	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
-	dWidth			=	dPercentage * sWidth;
+	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(200, 0, 0));
 	RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 
 	dPercentage = (FLOAT)( pSoldier->bBreathMax ) / (FLOAT)100;
-	dWidth			=	dPercentage * sWidth;
+	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(20, 20, 150));
 	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
 	dPercentage = (FLOAT)( pSoldier->bBreath ) / (FLOAT)100;
-	dWidth			=	dPercentage * sWidth;
+	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(100, 100, 220));
 	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
 	/*
 	// morale
 	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
-	dWidth			=	dPercentage * sWidth;
+	dWidth = dPercentage * sWidth;
 	usLineColor = Get16BPPColor(FROMRGB(0, 250, 0));
-	RectangleDraw(TRUE, sXPos + 1, sYPos + 7, (INT32)(sXPos + dWidth + 1), sYPos + 7, usLineColor, pDestBuf);
-	*/
+	RectangleDraw(TRUE, sXPos + 1, sYPos + 7, (INT32)(sXPos + dWidth + 1), sYPos + 7, usLineColor, pDestBuf);*/
 }
 
 void ClearInterface( )
@@ -1215,7 +1254,7 @@ void ClearInterface( )
 	// Remove UP/DOWN arrows...
 	//EraseRenderArrows( );
 	// Don't render arrows this frame!
-	guiShowUPDownArrows	= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
+	guiShowUPDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 
 	ResetPhysicsTrajectoryUI( );
 
@@ -1271,14 +1310,14 @@ void DirtyMercPanelInterface(SOLDIERTYPE const* const pSoldier, DirtyLevel const
 struct OPENDOOR_MENU
 {
 	SOLDIERTYPE *pSoldier;
-	INT16				sX;
-	INT16				sY;
-	BOOLEAN			fMenuHandled;
-	BOOLEAN			fClosingDoor;
+	INT16   sX;
+	INT16   sY;
+	BOOLEAN fMenuHandled;
+	BOOLEAN fClosingDoor;
 };
 
 static OPENDOOR_MENU gOpenDoorMenu;
-BOOLEAN				gfInOpenDoorMenu = FALSE;
+BOOLEAN gfInOpenDoorMenu = FALSE;
 
 
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor);
@@ -1286,7 +1325,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor);
 
 void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 {
-	INT16	sScreenX, sScreenY;
+	INT16 sScreenX, sScreenY;
 
 	// Erase other menus....
 	EraseInterfaceMenus( TRUE );
@@ -1298,8 +1337,8 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 	PauseTime( TRUE );
 
 
-	gOpenDoorMenu.pSoldier		= pSoldier;
-	gOpenDoorMenu.fClosingDoor	= fClosingDoor;
+	gOpenDoorMenu.pSoldier     = pSoldier;
+	gOpenDoorMenu.fClosingDoor = fClosingDoor;
 
 	// OK, Determine position...
 	// Center on guy
@@ -1332,9 +1371,9 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 	}
 
 
-	gOpenDoorMenu.fMenuHandled	= FALSE;
+	gOpenDoorMenu.fMenuHandled = FALSE;
 
-	guiPendingOverrideEvent		= OP_OPENDOORMENU;
+	guiPendingOverrideEvent    = OP_OPENDOORMENU;
 	HandleTacticalUI( );
 
 	PopupDoorOpenMenu( fClosingDoor );
@@ -1358,8 +1397,7 @@ static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16
 		swprintf(zDisp, lengthof(zDisp), L"%ls ( %d )", help, ap);
 		btn->SetFastHelpText(zDisp);
 	}
-	if (disable ||
-			(ap != 0 && !EnoughPoints(gOpenDoorMenu.pSoldier, ap, bp, FALSE)))
+	if (disable || (ap != 0 && !EnoughPoints(gOpenDoorMenu.pSoldier, ap, bp, FALSE)))
 	{
 		DisableButton(btn);
 	}
@@ -1384,25 +1422,32 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	BOOLEAN d;
 
 	d = d0 || !SoldierHasKey(*gOpenDoorMenu.pSoldier, ANYKEY);
-	MakeButtonDoor(USE_KEYRING_ICON, USE_KEYRING_IMAGES, dx + 20, dy, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, d, pTacticalPopupButtonStrings[USE_KEYRING_ICON]);
+	MakeButtonDoor(USE_KEYRING_ICON, USE_KEYRING_IMAGES, dx + 20, dy, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, d,
+			pTacticalPopupButtonStrings[USE_KEYRING_ICON]);
 
 	d = fClosingDoor || FindUsableObj(gOpenDoorMenu.pSoldier, CROWBAR) == NO_SLOT;
-	MakeButtonDoor(USE_CROWBAR_ICON, CROWBAR_DOOR_IMAGES, dx + 40, dy, AP_USE_CROWBAR, BP_USE_CROWBAR, d, pTacticalPopupButtonStrings[USE_CROWBAR_ICON]);
+	MakeButtonDoor(USE_CROWBAR_ICON, CROWBAR_DOOR_IMAGES, dx + 40, dy, AP_USE_CROWBAR, BP_USE_CROWBAR, d,
+			pTacticalPopupButtonStrings[USE_CROWBAR_ICON]);
 
 	d = d0 || FindObj(gOpenDoorMenu.pSoldier, LOCKSMITHKIT) == NO_SLOT;
-	MakeButtonDoor(LOCKPICK_DOOR_ICON, LOCKPICK_DOOR_IMAGES, dx + 40, dy + 20, AP_PICKLOCK, BP_PICKLOCK, d, pTacticalPopupButtonStrings[LOCKPICK_DOOR_ICON]);
+	MakeButtonDoor(LOCKPICK_DOOR_ICON, LOCKPICK_DOOR_IMAGES, dx + 40, dy + 20, AP_PICKLOCK, BP_PICKLOCK, d,
+			pTacticalPopupButtonStrings[LOCKPICK_DOOR_ICON]);
 
 	d = d0 || FindObj(gOpenDoorMenu.pSoldier, SHAPED_CHARGE) == NO_SLOT;
-	MakeButtonDoor(EXPLOSIVE_DOOR_ICON, EXPLOSIVE_DOOR_IMAGES, dx + 40, dy + 40, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, d, pTacticalPopupButtonStrings[EXPLOSIVE_DOOR_ICON]);
+	MakeButtonDoor(EXPLOSIVE_DOOR_ICON, EXPLOSIVE_DOOR_IMAGES, dx + 40, dy + 40, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR,
+			d, pTacticalPopupButtonStrings[EXPLOSIVE_DOOR_ICON]);
 
 	const wchar_t* const help = pTacticalPopupButtonStrings[fClosingDoor ? CANCEL_ICON + 1 : OPEN_DOOR_ICON];
 	MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE, help);
 
-	MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx,      dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0, pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON]);
-	MakeButtonDoor(BOOT_DOOR_ICON, BOOT_DOOR_IMAGES,       dx,      dy + 40, AP_BOOT_DOOR,    BP_BOOT_DOOR,    d0, pTacticalPopupButtonStrings[BOOT_DOOR_ICON]);
-	MakeButtonDoor(UNTRAP_DOOR_ICON, UNTRAP_DOOR_ICON,     dx + 20, dy + 40, AP_UNTRAP_DOOR,  BP_UNTRAP_DOOR,  d0, pTacticalPopupButtonStrings[UNTRAP_DOOR_ICON]);
-
-	MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE, pTacticalPopupButtonStrings[CANCEL_ICON]);
+	MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx, dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0,
+			pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON]);
+	MakeButtonDoor(BOOT_DOOR_ICON, BOOT_DOOR_IMAGES, dx, dy + 40, AP_BOOT_DOOR, BP_BOOT_DOOR, d0,
+			pTacticalPopupButtonStrings[BOOT_DOOR_ICON]);
+	MakeButtonDoor(UNTRAP_DOOR_ICON, UNTRAP_DOOR_ICON, dx + 20, dy + 40, AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, d0,
+			pTacticalPopupButtonStrings[UNTRAP_DOOR_ICON]);
+	MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE,
+			pTacticalPopupButtonStrings[CANCEL_ICON]);
 
 	gfInOpenDoorMenu = TRUE;
 
@@ -1582,11 +1627,13 @@ BOOLEAN HandleOpenDoorMenu( )
 static void RenderUIMessage(VIDEO_OVERLAY* pBlitter)
 {
 	// Shade area first...
-	pBlitter->uiDestBuff->ShadowRect(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth - 2, pBlitter->sY + gusUIMessageHeight - 2);
+	pBlitter->uiDestBuff->ShadowRect(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth - 2,
+						pBlitter->sY + gusUIMessageHeight - 2);
 
 	RenderMercPopUpBox(g_ui_message_box, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff);
 
-	InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth, pBlitter->sY + gusUIMessageHeight );
+	InvalidateRegion(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth,
+				pBlitter->sY + gusUIMessageHeight);
 }
 
 
@@ -1654,23 +1701,23 @@ void EndUIMessage( )
 		RemoveVideoOverlay(g_ui_message_overlay);
 		g_ui_message_overlay = NULL;
 
-    // Remove popup as well....
-    if (g_ui_message_box)
-    {
-    	RemoveMercPopupBox(g_ui_message_box);
-    	g_ui_message_box = 0;
-    }
+		// Remove popup as well....
+		if (g_ui_message_box)
+		{
+			RemoveMercPopupBox(g_ui_message_box);
+			g_ui_message_box = 0;
+		}
 	}
 }
 
-#define PLAYER_TEAM_TIMER_INTTERUPT_GRACE		( 15000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
-#define PLAYER_TEAM_TIMER_GRACE_PERIOD			1000
+#define PLAYER_TEAM_TIMER_INTTERUPT_GRACE			( 15000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
+#define PLAYER_TEAM_TIMER_GRACE_PERIOD				1000
 #define PLAYER_TEAM_TIMER_SEC_PER_TICKS			100
-#define PLAYER_TEAM_TIMER_TICKS_PER_OK_MERC								( 15000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
-#define PLAYER_TEAM_TIMER_TICKS_PER_NOTOK_MERC						( 5000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
+#define PLAYER_TEAM_TIMER_TICKS_PER_OK_MERC			( 15000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
+#define PLAYER_TEAM_TIMER_TICKS_PER_NOTOK_MERC			( 5000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 #define PLAYER_TEAM_TIMER_TICKS_FROM_END_TO_START_BEEP		( 5000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
-#define PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS							( 500 )
-#define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY									( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
+#define PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS			( 500 )
+#define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY			( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 
 
 static void CreateTopMessage(void);
@@ -1696,7 +1743,7 @@ static void CreateTopMessage(void)
 
 	const char* bar_file;
 	UINT16      bar_gfx     = 0;
-	BOOLEAN	    fDoLimitBar = FALSE;
+	BOOLEAN     fDoLimitBar = FALSE;
 	UINT8       foreground;
 	UINT8       shadow;
 	switch (ts->ubTopMessageType)
@@ -1773,17 +1820,23 @@ static void CreateTopMessage(void)
 		case COMPUTER_TURN_MESSAGE:
 		{
 			const UINT8 team = ts->ubCurrentTeam;
-			msg =
-				team == CREATURE_TEAM && HostileBloodcatsPresent() ? g_langRes->Message[STR_BLOODCATS_TURN] :
-				                                                     TeamTurnString[team];
+			msg = team == CREATURE_TEAM && HostileBloodcatsPresent() ?
+					g_langRes->Message[STR_BLOODCATS_TURN] :
+					TeamTurnString[team];
 			break;
 		}
 
 		case COMPUTER_INTERRUPT_MESSAGE:
 		case PLAYER_INTERRUPT_MESSAGE:
-		case MILITIA_INTERRUPT_MESSAGE:  msg = g_langRes->Message[STR_INTERRUPT];            break;
-		case AIR_RAID_TURN_MESSAGE:      msg = TacticalStr[AIR_RAID_TURN_MESSAGE]; break;
-		case PLAYER_TURN_MESSAGE:        msg = TeamTurnString[OUR_TEAM];           break;
+		case MILITIA_INTERRUPT_MESSAGE:
+			msg = g_langRes->Message[STR_INTERRUPT];
+			break;
+		case AIR_RAID_TURN_MESSAGE:
+			msg = TacticalStr[AIR_RAID_TURN_MESSAGE];
+			break;
+		case PLAYER_TURN_MESSAGE:
+			msg = TeamTurnString[OUR_TEAM];
+			break;
 
 		default: abort();
 	}
@@ -1806,12 +1859,12 @@ void HandleTopMessages(void)
 
 	if (!ts->fInTopMessage)
 	{
-	  gsVIEWPORT_WINDOW_START_Y = 0;
-	  return;
+		gsVIEWPORT_WINDOW_START_Y = 0;
+		return;
 	}
 
-	/* ATE: If we are told to go into top message, but we have not initialized it
-	 * yet.  This is mostly for loading saved games. */
+	// ATE: If we are told to go into top message, but we have not initialized it
+	// yet.  This is mostly for loading saved games.
 	if (!gTopMessage.fCreated)
 	{
 		gfTopMessageDirty = TRUE;
@@ -1848,9 +1901,9 @@ void HandleTopMessages(void)
 		case PLAYER_TURN_MESSAGE:
 		case PLAYER_INTERRUPT_MESSAGE:
 			if (gGameOptions.fTurnTimeLimit &&
-					!gfUserTurnRegionActive     &&
-					!AreWeInAUIMenu()           &&
-					GetJA2Clock() - ts->uiTactialTurnLimitClock > PLAYER_TEAM_TIMER_GRACE_PERIOD) // Check Grace period...
+				!gfUserTurnRegionActive &&
+				!AreWeInAUIMenu() &&
+				GetJA2Clock() - ts->uiTactialTurnLimitClock > PLAYER_TEAM_TIMER_GRACE_PERIOD) // Check Grace period...
 			{
 				ts->uiTactialTurnLimitClock = 0;
 
@@ -1898,9 +1951,9 @@ void HandleTopMessages(void)
 
 	gsVIEWPORT_WINDOW_START_Y = 20;
 
-	if (gfTopMessageDirty                            ||
-			gTopMessage.sWorldRenderX != gsRenderCenterX ||
-			gTopMessage.sWorldRenderY != gsRenderCenterY)
+	if (gfTopMessageDirty ||
+		gTopMessage.sWorldRenderX != gsRenderCenterX ||
+		gTopMessage.sWorldRenderY != gsRenderCenterY)
 	{
 		gfTopMessageDirty         = FALSE;
 		gTopMessage.sWorldRenderX = gsRenderCenterX;
@@ -1929,7 +1982,7 @@ void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies )
 {
 	// OK, set value
 	gubProgNumEnemies = ubNumEnemies + ubDoneEnemies;
-	gubProgCurEnemy		= ubDoneEnemies;
+	gubProgCurEnemy = ubDoneEnemies;
 	gfProgBarActive = TRUE;
 
 	gTacticalStatus.usTactialTurnLimitCounter = ubDoneEnemies * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY;
@@ -1951,7 +2004,7 @@ void UpdateEnemyUIBar( )
 
 	// Do we have an active enemy bar?
 	if (gTacticalStatus.fInTopMessage &&
-			gTacticalStatus.ubTopMessageType == COMPUTER_TURN_MESSAGE)
+		gTacticalStatus.ubTopMessageType == COMPUTER_TURN_MESSAGE)
 	{
 		// Update message!
 		CreateTopMessage();
@@ -1961,7 +2014,7 @@ void UpdateEnemyUIBar( )
 
 void InitPlayerUIBar( BOOLEAN fInterrupt )
 {
-	INT8				bNumOK = 0, bNumNotOK = 0;
+	INT8 bNumOK = 0, bNumNotOK = 0;
 
 	if ( !gGameOptions.fTurnTimeLimit )
 	{
@@ -1989,7 +2042,8 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 			}
 		}
 
-		gTacticalStatus.usTactialTurnLimitMax = ( bNumOK * PLAYER_TEAM_TIMER_TICKS_PER_OK_MERC ) + ( bNumNotOK * PLAYER_TEAM_TIMER_TICKS_PER_NOTOK_MERC );
+		gTacticalStatus.usTactialTurnLimitMax = (bNumOK * PLAYER_TEAM_TIMER_TICKS_PER_OK_MERC) +
+							(bNumNotOK * PLAYER_TEAM_TIMER_TICKS_PER_NOTOK_MERC);
 	}
 	else
 	{
@@ -1999,7 +2053,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 		}
 	}
 
-	gTacticalStatus.uiTactialTurnLimitClock		= 0;
+	gTacticalStatus.uiTactialTurnLimitClock = 0;
 	gTacticalStatus.fTactialTurnLimitStartedBeep = FALSE;
 
 	// RESET COIUNTER...
@@ -2042,16 +2096,16 @@ const wchar_t* GetSoldierHealthString(const SOLDIERTYPE* const s)
 
 
 static BOOLEAN gfDisplayPhysicsUI = FALSE;
-static INT16	 gsPhysicsImpactPointGridNo;
-static INT8		 gbPhysicsImpactPointLevel;
+static INT16   gsPhysicsImpactPointGridNo;
+static INT8    gbPhysicsImpactPointLevel;
 static BOOLEAN gfBadPhysicsCTGT = FALSE;
 
 void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT )
 {
-	gfDisplayPhysicsUI					= TRUE;
-	gsPhysicsImpactPointGridNo	= sGridNo;
-	gbPhysicsImpactPointLevel		= bLevel;
-	gfBadPhysicsCTGT						= fBadCTGT;
+	gfDisplayPhysicsUI = TRUE;
+	gsPhysicsImpactPointGridNo = sGridNo;
+	gbPhysicsImpactPointLevel = bLevel;
+	gfBadPhysicsCTGT = fBadCTGT;
 }
 
 void EndPhysicsTrajectoryUI( )
@@ -2094,7 +2148,7 @@ void ResetPhysicsTrajectoryUI( )
 
 void DirtyTopMessage( )
 {
-	gTopMessage.fCreated	 = FALSE;
+	gTopMessage.fCreated = FALSE;
 }
 
 
@@ -2116,24 +2170,24 @@ static INT8    gbMultiPurposeLocatorCycles;
 
 void BeginMultiPurposeLocator(const INT16 sGridNo, const INT8 bLevel)
 {
-  guiMultiPurposeLocatorLastUpdate = 0;
-  gbMultiPurposeLocatorCycles      = 0;
-  gbMultiPurposeLocatorFrame       = 0;
-  gfMultipurposeLocatorOn = TRUE;
+	guiMultiPurposeLocatorLastUpdate = 0;
+	gbMultiPurposeLocatorCycles      = 0;
+	gbMultiPurposeLocatorFrame       = 0;
+	gfMultipurposeLocatorOn = TRUE;
 
-  gsMultiPurposeLocatorGridNo = sGridNo;
-  gbMultiPurposeLocatorLevel  = bLevel;
+	gsMultiPurposeLocatorGridNo = sGridNo;
+	gbMultiPurposeLocatorLevel  = bLevel;
 }
 
 
 void HandleMultiPurposeLocator( )
 {
-	UINT32			uiClock;
+	UINT32 uiClock;
 
-  if ( !gfMultipurposeLocatorOn )
-  {
-    return;
-  }
+	if ( !gfMultipurposeLocatorOn )
+	{
+		return;
+	}
 
 	// Update radio locator
 	uiClock = GetJA2Clock( );
@@ -2149,13 +2203,13 @@ void HandleMultiPurposeLocator( )
 		if ( gbMultiPurposeLocatorFrame == 5 )
 		{
 			gbMultiPurposeLocatorFrame = 0;
-      gbMultiPurposeLocatorCycles++;
+			gbMultiPurposeLocatorCycles++;
 		}
 
-    if ( gbMultiPurposeLocatorCycles == 8 )
-    {
-      gfMultipurposeLocatorOn    = FALSE;
-    }
+		if ( gbMultiPurposeLocatorCycles == 8 )
+		{
+			gfMultipurposeLocatorOn    = FALSE;
+		}
 	}
 }
 
@@ -2163,14 +2217,14 @@ void HandleMultiPurposeLocator( )
 
 void RenderTopmostMultiPurposeLocator( )
 {
-	FLOAT				dOffsetX, dOffsetY;
-	FLOAT				dTempX_S, dTempY_S;
-	INT16				sX, sY, sXPos, sYPos;
+	FLOAT dOffsetX, dOffsetY;
+	FLOAT dTempX_S, dTempY_S;
+	INT16 sX, sY, sXPos, sYPos;
 
-  if ( !gfMultipurposeLocatorOn )
-  {
-    return;
-  }
+	if ( !gfMultipurposeLocatorOn )
+	{
+		return;
+	}
 
 	ConvertGridNoToCenterCellXY( gsMultiPurposeLocatorGridNo, &sX, &sY );
 

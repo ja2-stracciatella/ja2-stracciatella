@@ -69,8 +69,9 @@ BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveState* const puiCursorFlags, BOOLE
 
 	bool show_APs = false;
 	if (cursor_flags != MOUSE_STATIONARY)
-	{ /* If cursor was previously stationary, make the additional check of grid
-		 * pos change */
+	{
+		// If cursor was previously stationary, make the additional check of grid
+		// pos change
 		RESETCOUNTER(PATHFINDCOUNTER);
 		do_new_tile = true;
 	}
@@ -99,9 +100,9 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 	BOOLEAN        show_APs;
 	BOOLEAN const  recalc = GetMouseRecalcAndShowAPFlags(&cursor_flags, &show_APs);
 
-	/* ATE: Update attacking weapon!
-	 * CC has added this attackingWeapon stuff and I need to update it constantly
-	 * for CTGH algorithms */
+	// ATE: Update attacking weapon!
+	// CC has added this attackingWeapon stuff and I need to update it constantly
+	// for CTGH algorithms
 	if (gTacticalStatus.ubAttackBusyCount == 0)
 	{
 		UINT16 const in_hand = s->inv[HANDPOS].usItem;
@@ -120,15 +121,15 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 				HandleNonActivatedTargetCursor(s, tgt_grid_no, show_APs, recalc, cursor_flags);
 
 			if (gCurrentUIMode == ACTION_MODE       &&
-					gTacticalStatus.uiFlags & INCOMBAT  &&
-					recalc                              &&
-					tgt                                 &&
-					IsValidTargetMerc(tgt)              &&
-					EnoughAmmo(s, FALSE, HANDPOS)       && // ATE: Check for ammo
-					guiUIFullTargetFlags & ENEMY_MERC   && // IF it's an ememy, goto confirm action mode
-					guiUIFullTargetFlags & VISIBLE_MERC &&
-					!(guiUIFullTargetFlags & DEAD_MERC) &&
-					!gfCannotGetThrough)
+				gTacticalStatus.uiFlags & INCOMBAT  &&
+				recalc                              &&
+				tgt                                 &&
+				IsValidTargetMerc(tgt)              &&
+				EnoughAmmo(s, FALSE, HANDPOS)       && // ATE: Check for ammo
+				guiUIFullTargetFlags & ENEMY_MERC   && // IF it's an ememy, goto confirm action mode
+				guiUIFullTargetFlags & VISIBLE_MERC &&
+				!(guiUIFullTargetFlags & DEAD_MERC) &&
+				!gfCannotGetThrough)
 			{
 				guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
 			}
@@ -136,9 +137,8 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 
 		case TOSSCURS:
 		case TRAJECTORYCURS:
-			cursor =
-				activated && gfUIHandlePhysicsTrajectory ? HandleActivatedTossCursor() :
-				HandleNonActivatedTossCursor(s, tgt_grid_no, recalc, cursor_flags, item_cursor);
+			cursor = activated && gfUIHandlePhysicsTrajectory ? HandleActivatedTossCursor() :
+					HandleNonActivatedTossCursor(s, tgt_grid_no, recalc, cursor_flags, item_cursor);
 			break;
 
 		case PUNCHCURS:   cursor = HandlePunchCursor(     s, tgt_grid_no, activated, cursor_flags); break;
@@ -152,8 +152,8 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 		case TINCANCURS:  cursor = HandleTinCanCursor(    s, tgt_grid_no,            cursor_flags); break;
 		case REFUELCURS:  cursor = HandleRefuelCursor(    s, tgt_grid_no,            cursor_flags); break;
 		case INVALIDCURS: cursor = INVALID_ACTION_UICURSOR; break;
-        default:
-            break;
+		default:
+			break;
 	}
 
 	return cursor;
@@ -169,9 +169,9 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 	if (is_throwing_knife)
 	{
 		// If we are in realtime, follow!
-		if (!(gTacticalStatus.uiFlags & INCOMBAT)                  &&
-				gAnimControl[s->usAnimState].uiFlags & ANIM_STATIONARY &&
-				gUITargetShotWaiting)
+		if (!(gTacticalStatus.uiFlags & INCOMBAT) &&
+			gAnimControl[s->usAnimState].uiFlags & ANIM_STATIONARY &&
+			gUITargetShotWaiting)
 		{
 			guiPendingOverrideEvent = CA_MERC_SHOOT;
 		}
@@ -209,7 +209,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 	}
 
 	if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
-			COUNTERDONE(TARGETREFINE))
+		COUNTERDONE(TARGETREFINE))
 	{
 		RESETCOUNTER(TARGETREFINE);
 
@@ -244,15 +244,13 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 	if (max_point_limit_hit)
 	{
 		// Check if we're in burst mode!
-		cursor =
-			s->bDoBurst       ? ACTION_TARGETREDBURST_UICURSOR :
+		cursor = s->bDoBurst       ? ACTION_TARGETREDBURST_UICURSOR :
 			is_throwing_knife ? RED_THROW_UICURSOR             :
 			ACTION_TARGETRED_UICURSOR;
 	}
 	else if (s->bDoBurst)
 	{
-		cursor =
-			s->fDoSpread ? ACTION_TARGETREDBURST_UICURSOR :
+		cursor = s->fDoSpread ? ACTION_TARGETREDBURST_UICURSOR :
 			ACTION_TARGETCONFIRMBURST_UICURSOR;
 	}
 	else
@@ -262,15 +260,13 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_1:
 				if (is_throwing_knife)
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW1_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW1_UICURSOR :
 						enough_points          ? ACTION_THROWAIM1_UICURSOR       :
 						ACTION_THROWAIMCANT1_UICURSOR;
 				}
 				else
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW1_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW1_UICURSOR :
 						enough_points          ? ACTION_TARGETAIM1_UICURSOR       :
 						ACTION_TARGETAIMCANT1_UICURSOR;
 				}
@@ -279,15 +275,13 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_2:
 				if (is_throwing_knife)
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW2_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW2_UICURSOR :
 						enough_points          ? ACTION_THROWAIM3_UICURSOR       :
 						ACTION_THROWAIMCANT2_UICURSOR;
 				}
 				else
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW2_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW2_UICURSOR :
 						enough_points          ? ACTION_TARGETAIM3_UICURSOR       :
 						ACTION_TARGETAIMCANT2_UICURSOR;
 				}
@@ -296,15 +290,13 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_3:
 				if (is_throwing_knife)
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW3_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW3_UICURSOR :
 						enough_points          ? ACTION_THROWAIM5_UICURSOR       :
 						ACTION_THROWAIMCANT3_UICURSOR;
 				}
 				else
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW3_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW3_UICURSOR :
 						enough_points          ? ACTION_TARGETAIM5_UICURSOR       :
 						ACTION_TARGETAIMCANT3_UICURSOR;
 				}
@@ -313,15 +305,13 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_4:
 				if (is_throwing_knife)
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW4_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW4_UICURSOR :
 						enough_points          ? ACTION_THROWAIM7_UICURSOR       :
 						ACTION_THROWAIMCANT4_UICURSOR;
 				}
 				else
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW4_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW4_UICURSOR :
 						enough_points          ? ACTION_TARGETAIM7_UICURSOR       :
 						ACTION_TARGETAIMCANT4_UICURSOR;
 				}
@@ -330,15 +320,13 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_5:
 				if (is_throwing_knife)
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_THROWAIMFULL_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_THROWAIMFULL_UICURSOR :
 						enough_points          ? ACTION_THROWAIM9_UICURSOR    :
 						ACTION_THROWAIMCANT5_UICURSOR;
 				}
 				else
 				{
-					cursor =
-						gfDisplayFullCountRing ? ACTION_TARGETAIMFULL_UICURSOR :
+					cursor = gfDisplayFullCountRing ? ACTION_TARGETAIMFULL_UICURSOR :
 						enough_points          ? ACTION_TARGETAIM9_UICURSOR    :
 						ACTION_TARGETAIMCANT5_UICURSOR;
 				}
@@ -360,7 +348,8 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			SetCursorSpecialFrame(free_cursor_name, 1);
 		}
 		else if (!InRange(s, map_pos))
-		{ // OK, make buddy flash!
+		{
+			// OK, make buddy flash!
 			SetCursorFlags(free_cursor_name, CURSOR_TO_FLASH | CURSOR_TO_PLAY_SOUND);
 		}
 		else
@@ -423,22 +412,20 @@ static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo co
 
 	if (gfCannotGetThrough)
 	{
-		return
-			s->bDoBurst       ? ACTION_NOCHANCE_BURST_UICURSOR :
+		return s->bDoBurst       ? ACTION_NOCHANCE_BURST_UICURSOR :
 			is_throwing_knife ? BAD_THROW_UICURSOR             :
 			ACTION_NOCHANCE_SHOOT_UICURSOR;
 	}
 	else if (!InRange(s, map_pos))
-	{ // Flash cursor!
-		return
-			s->bDoBurst       ? ACTION_FLASH_BURST_UICURSOR :
+	{
+		// Flash cursor!
+		return s->bDoBurst       ? ACTION_FLASH_BURST_UICURSOR :
 			is_throwing_knife ? FLASH_THROW_UICURSOR        :
 			ACTION_FLASH_SHOOT_UICURSOR;
 	}
 	else
 	{
-		return
-			s->bDoBurst       ? ACTION_TARGETBURST_UICURSOR :
+		return s->bDoBurst       ? ACTION_TARGETBURST_UICURSOR :
 			is_throwing_knife ? GOOD_THROW_UICURSOR         :
 			ACTION_SHOOT_UICURSOR;
 	}
@@ -448,8 +435,9 @@ static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo co
 static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const display, BOOLEAN const recalc)
 {
 	if (gTacticalStatus.ubAttackBusyCount > 0)
-	{ /* ATE: Return if attacker busy count > 0, this helps in RT with re-setting
-		 * the flag to random */
+	{
+		// ATE: Return if attacker busy count > 0, this helps in RT with re-setting
+		// the flag to random
 		return;
 	}
 
@@ -480,7 +468,8 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 
 			// Check if we have a half tile profile
 			flags = n->uiAnimHitLocationFlags;
-			if (flags & (TILE_FLAG_NORTH_HALF | TILE_FLAG_SOUTH_HALF | TILE_FLAG_WEST_HALF | TILE_FLAG_EAST_HALF | TILE_FLAG_TOP_HALF | TILE_FLAG_BOTTOM_HALF))
+			if (flags & (TILE_FLAG_NORTH_HALF | TILE_FLAG_SOUTH_HALF | TILE_FLAG_WEST_HALF |
+				TILE_FLAG_EAST_HALF | TILE_FLAG_TOP_HALF | TILE_FLAG_BOTTOM_HALF))
 			{
 				INT16 sCellX;
 				INT16 sCellY;
@@ -526,7 +515,8 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 		}
 
 		if (!tgt)
-		{ // Check if we can find a soldier here
+		{
+			// Check if we can find a soldier here
 			SOLDIERTYPE* const potential_tgt = gUIFullTarget;
 			if (potential_tgt)
 			{
@@ -609,7 +599,7 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 		}
 
 		if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
-				COUNTERDONE(NONGUNTARGETREFINE))
+			COUNTERDONE(NONGUNTARGETREFINE))
 		{
 			RESETCOUNTER(NONGUNTARGETREFINE);
 
@@ -624,14 +614,12 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 		switch (s->bShownAimTime)
 		{
 			case REFINE_KNIFE_1:
-				return
-					gfDisplayFullCountRing ? KNIFE_YELLOW_AIM1_UICURSOR :
+				return gfDisplayFullCountRing ? KNIFE_YELLOW_AIM1_UICURSOR :
 					enough_points          ? KNIFE_HIT_AIM1_UICURSOR    :
 					KNIFE_NOGO_AIM1_UICURSOR;
 
 			case REFINE_KNIFE_2:
-				return
-					gfDisplayFullCountRing ? KNIFE_YELLOW_AIM2_UICURSOR :
+				return gfDisplayFullCountRing ? KNIFE_YELLOW_AIM2_UICURSOR :
 					enough_points          ? KNIFE_HIT_AIM2_UICURSOR    :
 					KNIFE_NOGO_AIM2_UICURSOR;
 
@@ -690,7 +678,7 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 		}
 
 		if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
-				COUNTERDONE(NONGUNTARGETREFINE))
+			COUNTERDONE(NONGUNTARGETREFINE))
 		{
 			RESETCOUNTER(NONGUNTARGETREFINE);
 
@@ -705,14 +693,12 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 		switch (s->bShownAimTime)
 		{
 			case REFINE_PUNCH_1:
-				return
-					gfDisplayFullCountRing ? ACTION_PUNCH_YELLOW_AIM1_UICURSOR :
+				return gfDisplayFullCountRing ? ACTION_PUNCH_YELLOW_AIM1_UICURSOR :
 					enough_points          ? ACTION_PUNCH_RED_AIM1_UICURSOR    :
 					ACTION_PUNCH_NOGO_AIM1_UICURSOR;
 
 			case REFINE_PUNCH_2:
-				return
-					gfDisplayFullCountRing ? ACTION_PUNCH_YELLOW_AIM2_UICURSOR :
+				return gfDisplayFullCountRing ? ACTION_PUNCH_YELLOW_AIM2_UICURSOR :
 					enough_points          ? ACTION_PUNCH_RED_AIM2_UICURSOR    :
 					ACTION_PUNCH_NOGO_AIM2_UICURSOR;
 
@@ -784,8 +770,8 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 		gfUIDisplayActionPoints       = TRUE;
 		gfUIDisplayActionPointsCenter = TRUE;
 
-		/* If we don't have any points and we are at the first refine, do nothing
-		 * but warn! */
+		// If we don't have any points and we are at the first refine, do nothing
+		// but warn!
 		if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
 		{
 			gfUIDisplayActionPointsInvalid = TRUE;
@@ -806,19 +792,19 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 		}
 		else
 		{
-	    OBJECTTYPE const& o = s->inv[HANDPOS];
-      // ATE: Find the object to use
-      OBJECTTYPE TempObject = o;
+			OBJECTTYPE const& o = s->inv[HANDPOS];
+			// ATE: Find the object to use
+			OBJECTTYPE TempObject = o;
 
-      // Do we have a launchable?
-	    for (INT8 i = 0; i != MAX_ATTACHMENTS; ++i)
-	    {
-		    UINT16 const attach_item = o.usAttachItem[i];
-		    if (attach_item == NOTHING)                        continue;
+			// Do we have a launchable?
+			for (INT8 i = 0; i != MAX_ATTACHMENTS; ++i)
+			{
+				UINT16 const attach_item = o.usAttachItem[i];
+				if (attach_item == NOTHING) continue;
 				if (!(GCM->getItem(attach_item)->isExplosive())) continue;
 				CreateItem(attach_item, o.bAttachStatus[i], &TempObject);
 				break;
-	    }
+			}
 
 			if (s->bWeaponMode == WM_ATTACHED)
 			{
@@ -843,8 +829,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 static UICursorID HandleWirecutterCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
 	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_WIREFENCE);
-	return
-		s->bLevel == 0 && IsCuttableWireFenceAtGridNo(map_pos) ? GOOD_WIRECUTTER_UICURSOR :
+	return s->bLevel == 0 && IsCuttableWireFenceAtGridNo(map_pos) ? GOOD_WIRECUTTER_UICURSOR :
 		BAD_WIRECUTTER_UICURSOR;
 }
 
@@ -852,8 +837,7 @@ static UICursorID HandleWirecutterCursor(SOLDIERTYPE* const s, GridNo const map_
 static UICursorID HandleRepairCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
 	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_REPAIR);
-	return
-		s->bLevel == 0 && IsRepairableStructAtGridNo(map_pos, 0) ? GOOD_REPAIR_UICURSOR :
+	return s->bLevel == 0 && IsRepairableStructAtGridNo(map_pos, 0) ? GOOD_REPAIR_UICURSOR :
 		BAD_REPAIR_UICURSOR;
 }
 
@@ -861,8 +845,7 @@ static UICursorID HandleRepairCursor(SOLDIERTYPE* const s, GridNo const map_pos,
 static UICursorID HandleRefuelCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
 	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_REFUEL);
-	return
-		s->bLevel == 0 && GetRefuelableStructAtGridNo(map_pos) ? REFUEL_RED_UICURSOR :
+	return s->bLevel == 0 && GetRefuelableStructAtGridNo(map_pos) ? REFUEL_RED_UICURSOR :
 		REFUEL_GREY_UICURSOR;
 }
 
@@ -870,8 +853,7 @@ static UICursorID HandleRefuelCursor(SOLDIERTYPE* const s, GridNo const map_pos,
 static UICursorID HandleJarCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
 	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_JAR);
-	return
-		IsCorpseAtGridNo(map_pos, s->bLevel) ? GOOD_JAR_UICURSOR :
+	return IsCorpseAtGridNo(map_pos, s->bLevel) ? GOOD_JAR_UICURSOR :
 		BAD_JAR_UICURSOR;
 }
 
@@ -882,10 +864,9 @@ static UICursorID HandleTinCanCursor(SOLDIERTYPE* const s, GridNo const map_pos,
 
 	// Check if a door exists here
 	STRUCTURE*       structure;
-  INT16            int_tile_grid_no;
+	INT16            int_tile_grid_no;
 	LEVELNODE* const int_tile = GetCurInteractiveTileGridNoAndStructure(&int_tile_grid_no, &structure);
-	return
-		int_tile && structure->fFlags & STRUCTURE_ANYDOOR ? PLACE_TINCAN_GREY_UICURSOR :
+	return int_tile && structure->fFlags & STRUCTURE_ANYDOOR ? PLACE_TINCAN_GREY_UICURSOR :
 		PLACE_TINCAN_RED_UICURSOR;
 }
 
@@ -935,7 +916,8 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 
 	// OK, if we are i realtime.. goto directly to shoot
-	if ( ( ( gTacticalStatus.uiFlags & TURNBASED ) && !( gTacticalStatus.uiFlags & INCOMBAT ) ) && ubItemCursor != TOSSCURS && ubItemCursor != TRAJECTORYCURS )
+	if (((gTacticalStatus.uiFlags & TURNBASED) && !(gTacticalStatus.uiFlags & INCOMBAT)) &&
+		ubItemCursor != TOSSCURS && ubItemCursor != TRAJECTORYCURS)
 	{
 		// GOTO DIRECTLY TO USING ITEM
 		// ( only if not burst mode.. )
@@ -956,14 +938,14 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 	switch( ubItemCursor )
 	{
 		case TARGETCURS:
-			pSoldier->bShownAimTime				= REFINE_AIM_1;
+			pSoldier->bShownAimTime = REFINE_AIM_1;
 
 			// Reset counter
 			RESETCOUNTER( TARGETREFINE );
 			break;
 
 		case PUNCHCURS:
-			pSoldier->bShownAimTime				= REFINE_PUNCH_1;
+			pSoldier->bShownAimTime = REFINE_PUNCH_1;
 
 			// Reset counter
 			RESETCOUNTER( NONGUNTARGETREFINE );
@@ -971,7 +953,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 
 
 		case KNIFECURS:
-			pSoldier->bShownAimTime				= REFINE_KNIFE_1;
+			pSoldier->bShownAimTime = REFINE_KNIFE_1;
 
 			// Reset counter
 			RESETCOUNTER( NONGUNTARGETREFINE );
@@ -988,10 +970,10 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 
 void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 {
-	INT16					sAPCosts;
-	INT8					bFutureAim;
-	INT16					sGridNo;
-	INT8					bTargetLevel;
+	INT16 sAPCosts;
+	INT8  bFutureAim;
+	INT16 sGridNo;
+	INT8  bTargetLevel;
 
 	ItemCursor const ubCursor = GetActionModeCursor(pSoldier);
 
@@ -1010,8 +992,8 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 			}
 			else
 			{
-				sGridNo					= usMapPos;
-				bTargetLevel	  = (INT8)gsInterfaceLevel;
+				sGridNo = usMapPos;
+				bTargetLevel = (INT8)gsInterfaceLevel;
 
 				// Look for a target here...
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
@@ -1178,7 +1160,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 ItemCursor GetActionModeCursor(SOLDIERTYPE const* const pSoldier)
 {
-  UINT16				usInHand;
+	UINT16 usInHand;
 
 	// If we are an EPC, do nothing....
 	//if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )

@@ -19,20 +19,20 @@
 #include "GameInstance.h"
 #include "slog/slog.h"
 
-#define EMPTY_SLOT		-1
-#define TO_INIT				0
+#define EMPTY_SLOT					-1
+#define TO_INIT					0
 
-#define ANIMPROFILEFILENAME BINARYDATADIR "/ja2prof.dat"
+#define ANIMPROFILEFILENAME				BINARYDATADIR "/ja2prof.dat"
 
 
 
-ANIM_PROF		*gpAnimProfiles = NULL;
+ANIM_PROF *gpAnimProfiles = NULL;
 static UINT8 gubNumAnimProfiles = 0;
 
-INT8				gbAnimUsageHistory[ NUMANIMATIONSURFACETYPES ][ MAX_NUM_SOLDIERS ];
+INT8 gbAnimUsageHistory[ NUMANIMATIONSURFACETYPES ][ MAX_NUM_SOLDIERS ];
 
 
-#define M(name, file, type, flags, dir, profile) { name, file, type, flags, dir, TO_INIT, NULL, 0, profile }
+#define M(name, file, type, flags, dir, profile)	{ name, file, type, flags, dir, TO_INIT, NULL, 0, profile }
 
 AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES] =
 {
@@ -472,8 +472,8 @@ struct AnimationStructureType
 };
 
 
-#define PATH_STRUCT ANIMSDIR "/STRUCTDATA/"
-#define SUFFIX      ".JSD"
+#define PATH_STRUCT					ANIMSDIR "/STRUCTDATA/"
+#define SUFFIX						".JSD"
 #define ABCDEF(a, b, c, d, e, f)  \
 {                                 \
 	{ PATH_STRUCT a SUFFIX, NULL }, \
@@ -536,7 +536,7 @@ static void LoadAnimationProfiles(void);
 
 void InitAnimationSystem()
 {
-	INT32									cnt1, cnt2;
+	INT32 cnt1, cnt2;
 
 	LoadAnimationStateInstructions();
 	InitAnimationSurfacesPerBodytype();
@@ -593,7 +593,7 @@ void DeInitAnimationSystem()
 
 static STRUCTURE_FILE_REF* InternalGetAnimationStructureRef(const SOLDIERTYPE* const s, const UINT16 usSurfaceIndex, const UINT16 usAnimState, const BOOLEAN fUseAbsolute)
 {
-	INT8	bStructDataType;
+	INT8 bStructDataType;
 
 	if ( usSurfaceIndex == INVALID_ANIMATION_SURFACE )
 	{
@@ -799,8 +799,8 @@ catch (...)
 
 static void DeleteAnimationProfiles(void)
 {
-	INT32				iProfileCount, iDirectionCount;
-	ANIM_PROF_DIR			*pProfileDir;
+	INT32 iProfileCount, iDirectionCount;
+	ANIM_PROF_DIR *pProfileDir;
 
 	// Loop profiles
 	for ( iProfileCount = 0; iProfileCount < gubNumAnimProfiles; iProfileCount++ )
@@ -825,13 +825,13 @@ static void DeleteAnimationProfiles(void)
 
 void ZeroAnimSurfaceCounts( )
 {
-  INT32 cnt;
+	INT32 cnt;
 
-  for ( cnt = 0; cnt < NUMANIMATIONSURFACETYPES; cnt++ )
-  {
-    gAnimSurfaceDatabase[ cnt ].bUsageCount   = 0;
-    gAnimSurfaceDatabase[ cnt ].hVideoObject  = NULL;
-  }
+	for ( cnt = 0; cnt < NUMANIMATIONSURFACETYPES; cnt++ )
+	{
+		gAnimSurfaceDatabase[ cnt ].bUsageCount   = 0;
+		gAnimSurfaceDatabase[ cnt ].hVideoObject  = NULL;
+	}
 
-  memset( gbAnimUsageHistory, 0, sizeof( gbAnimUsageHistory ) );
+	memset( gbAnimUsageHistory, 0, sizeof( gbAnimUsageHistory ) );
 }

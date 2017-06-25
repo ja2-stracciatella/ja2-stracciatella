@@ -31,27 +31,27 @@ UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)
 
 
 /**
- * Extract merc profile from the binary data.
- * @param encodingCorrection Perform encoding correction - it is necessary for loading strings from the game data files. */
+* Extract merc profile from the binary data.
+* @param encodingCorrection Perform encoding correction - it is necessary for loading strings from the game data files. */
 void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum,
-                        const IEncodingCorrector *fixer)
+			const IEncodingCorrector *fixer)
 {
 	const BYTE* S = Src;
 
-  if(stracLinuxFormat)
-  {
-    DataReader reader(S);
-    reader.readUTF32(p.zName,     NAME_LENGTH);
-    reader.readUTF32(p.zNickname, NICKNAME_LENGTH);
-    S += reader.getConsumed();
-  }
-  else
-  {
-    DataReader reader(S);
-    reader.readUTF16(p.zName,     NAME_LENGTH,          fixer);
-    reader.readUTF16(p.zNickname, NICKNAME_LENGTH,      fixer);
-    S += reader.getConsumed();
-  }
+	if(stracLinuxFormat)
+	{
+		DataReader reader(S);
+		reader.readUTF32(p.zName,     NAME_LENGTH);
+		reader.readUTF32(p.zNickname, NICKNAME_LENGTH);
+		S += reader.getConsumed();
+	}
+	else
+	{
+		DataReader reader(S);
+		reader.readUTF16(p.zName,     NAME_LENGTH,          fixer);
+		reader.readUTF16(p.zNickname, NICKNAME_LENGTH,      fixer);
+		S += reader.getConsumed();
+	}
 
 	EXTR_SKIP(S, 28)
 	EXTR_U8(S, p.ubFaceIndex)
@@ -209,44 +209,44 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 	EXTR_I32(S, p.iMercMercContractLength)
 	EXTR_U32(S, p.uiTotalCostToDate)
 	EXTR_SKIP(S, 4)
-  if(stracLinuxFormat)
-  {
-    Assert(S == Src + MERC_PROFILE_SIZE_STRAC_LINUX);
-  }
-  else
-  {
-    Assert(S == Src + MERC_PROFILE_SIZE);
-  }
+	if(stracLinuxFormat)
+	{
+		Assert(S == Src + MERC_PROFILE_SIZE_STRAC_LINUX);
+	}
+	else
+	{
+		Assert(S == Src + MERC_PROFILE_SIZE);
+	}
 }
 
 
 /** Extract IMP merc profile from file.
- * If saved checksum is not correct, exception will be thrown. */
+* If saved checksum is not correct, exception will be thrown. */
 void ExtractImpProfileFromFile(SGPFile *hFile, INT32 *iProfileId, INT32 *iPortraitNumber, MERCPROFILESTRUCT& p)
 {
-  UINT32 fileSize = FileGetSize(hFile);
+	UINT32 fileSize = FileGetSize(hFile);
 
-  // read in the profile
-  FileRead(hFile, iProfileId, sizeof(INT32));
+	// read in the profile
+	FileRead(hFile, iProfileId, sizeof(INT32));
 
-  // read in the portrait
-  FileRead(hFile, iPortraitNumber, sizeof(INT32));
+	// read in the portrait
+	FileRead(hFile, iPortraitNumber, sizeof(INT32));
 
-  // read in the profile
-  // not checking the checksum
-  UINT32 checksum;
-  if(fileSize >= MERC_PROFILE_SIZE_STRAC_LINUX)
-  {
-    std::vector<BYTE> data(MERC_PROFILE_SIZE_STRAC_LINUX);
-    FileRead(hFile, data.data(), MERC_PROFILE_SIZE_STRAC_LINUX);
-    ExtractMercProfile(data.data(), p, true, &checksum, NULL);
-  }
-  else
-  {
-    std::vector<BYTE> data(MERC_PROFILE_SIZE);
-    FileRead(hFile, data.data(), MERC_PROFILE_SIZE);
-    ExtractMercProfile(data.data(), p, false, &checksum, NULL);
-  }
+	// read in the profile
+	// not checking the checksum
+	UINT32 checksum;
+	if(fileSize >= MERC_PROFILE_SIZE_STRAC_LINUX)
+	{
+		std::vector<BYTE> data(MERC_PROFILE_SIZE_STRAC_LINUX);
+		FileRead(hFile, data.data(), MERC_PROFILE_SIZE_STRAC_LINUX);
+		ExtractMercProfile(data.data(), p, true, &checksum, NULL);
+	}
+	else
+	{
+		std::vector<BYTE> data(MERC_PROFILE_SIZE);
+		FileRead(hFile, data.data(), MERC_PROFILE_SIZE);
+		ExtractMercProfile(data.data(), p, false, &checksum, NULL);
+	}
 }
 
 
@@ -254,12 +254,12 @@ void InjectMercProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p)
 {
 	BYTE* D = Dst;
 
-  {
-    DataWriter writer(D);
-    writer.writeStringAsUTF16(p.zName, lengthof(p.zName));
-    writer.writeStringAsUTF16(p.zNickname, lengthof(p.zNickname));
-    D += writer.getConsumed();
-  }
+	{
+		DataWriter writer(D);
+		writer.writeStringAsUTF16(p.zName, lengthof(p.zName));
+		writer.writeStringAsUTF16(p.zNickname, lengthof(p.zNickname));
+		D += writer.getConsumed();
+	}
 	INJ_SKIP(D, 28)
 	INJ_U8(D, p.ubFaceIndex)
 	INJ_STR(D, p.PANTS, lengthof(p.PANTS))
@@ -430,17 +430,17 @@ void InjectMercProfileIntoFile(HWFILE const f, MERCPROFILESTRUCT const& p)
 
 
 /** Load raw merc profiles.
- * @param f Open file with profile data.
- * @param numProfiles Number of profiles to load
- * @param profiles Array for storing profile data */
+* @param f Open file with profile data.
+* @param numProfiles Number of profiles to load
+* @param profiles Array for storing profile data */
 void LoadRawMercProfiles(HWFILE const f, int numProfiles, MERCPROFILESTRUCT *profiles, const IEncodingCorrector *fixer)
 {
-  for (UINT32 i = 0; i != numProfiles; ++i)
-  {
-    BYTE data[MERC_PROFILE_SIZE];
-    JA2EncryptedFileRead(f, data, sizeof(data));
-    UINT32 checksum;
-    ExtractMercProfile(data, profiles[i], false, &checksum, fixer);
-    // not checking the checksum
-  }
+	for (UINT32 i = 0; i != numProfiles; ++i)
+	{
+		BYTE data[MERC_PROFILE_SIZE];
+		JA2EncryptedFileRead(f, data, sizeof(data));
+		UINT32 checksum;
+		ExtractMercProfile(data, profiles[i], false, &checksum, fixer);
+		// not checking the checksum
+	}
 }

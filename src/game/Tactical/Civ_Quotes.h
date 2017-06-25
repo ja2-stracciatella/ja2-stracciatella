@@ -4,11 +4,11 @@
 #include "JA2Types.h"
 
 
-#define			CIV_TYPE_NA									0
-#define			CIV_TYPE_ADULT							1
-#define			CIV_TYPE_KID								2
-#define			CIV_TYPE_MARRIED_PC					3
-#define			CIV_TYPE_ENEMY							4
+#define CIV_TYPE_NA		0
+#define CIV_TYPE_ADULT		1
+#define CIV_TYPE_KID		2
+#define CIV_TYPE_MARRIED_PC	3
+#define CIV_TYPE_ENEMY		4
 
 enum
 {

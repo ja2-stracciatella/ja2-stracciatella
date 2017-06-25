@@ -31,10 +31,10 @@ enum ArmsDealerID
 	ARMS_DEALER_FREDO,
 	ARMS_DEALER_PERKO,
 
-// added only in GameVersion 54
+	// added only in GameVersion 54
 	ARMS_DEALER_ELGIN,
 
-// added only in GameVersion 55
+	// added only in GameVersion 55
 	ARMS_DEALER_MANNY,
 
 	NUM_ARMS_DEALERS
