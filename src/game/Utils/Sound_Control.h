@@ -7,12 +7,12 @@
 #include "Random.h"
 
 
-#define FARLEFT         0
-#define LEFTSIDE        48
-#define MIDDLE          64
+#define FARLEFT	0
+#define LEFTSIDE	48
+#define MIDDLE		64
 #define MIDDLEPAN	64
-#define RIGHTSIDE       80
-#define FARRIGHT        127
+#define RIGHTSIDE	80
+#define FARRIGHT	127
 
 
 #define LOWVOLUME	25
@@ -21,7 +21,7 @@
 #define HIGHVOLUME	127
 
 
-#define LOOPING		0
+#define LOOPING	0
 
 
 // SOUNDS ENUMERATION

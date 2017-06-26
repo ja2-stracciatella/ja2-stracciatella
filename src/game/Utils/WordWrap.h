@@ -19,16 +19,16 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 
 #define LEFT_JUSTIFIED		0x00000001
 #define CENTER_JUSTIFIED	0x00000002
-#define RIGHT_JUSTIFIED		0x00000004
+#define RIGHT_JUSTIFIED	0x00000004
 #define TEXT_SHADOWED		0x00000008
 
-#define INVALIDATE_TEXT		0x00000010
-#define DONT_DISPLAY_TEXT	0x00000020			//Wont display the text.  Used if you just want to get how many lines will be displayed
+#define INVALIDATE_TEXT	0x00000010
+#define DONT_DISPLAY_TEXT	0x00000020 //Wont display the text.  Used if you just want to get how many lines will be displayed
 
-#define MARK_DIRTY 0x00000040
+#define MARK_DIRTY		0x00000040
 
 
-#define IAN_WRAP_NO_SHADOW  32
+#define IAN_WRAP_NO_SHADOW	32
 
 
 struct WRAPPED_STRING

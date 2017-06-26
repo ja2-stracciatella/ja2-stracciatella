@@ -88,19 +88,19 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 
 #else
 
-#define   UPDATECOUNTER( c )
-#define   RESETCOUNTER( c )		( giTimerCounters[ c ] = giClockTimer )
-#define   COUNTERDONE( c )		( ( ( giClockTimer = GetJA2Clock() ) - giTimerCounters[ c ] ) >  giTimerIntervals[ c ] ) ? TRUE : FALSE
+#define UPDATECOUNTER( c )
+#define RESETCOUNTER( c )		( giTimerCounters[ c ] = giClockTimer )
+#define COUNTERDONE( c )		( ( ( giClockTimer = GetJA2Clock() ) - giTimerCounters[ c ] ) >  giTimerIntervals[ c ] ) ? TRUE : FALSE
 
-#define   UPDATETIMECOUNTER( c )
-#define   RESETTIMECOUNTER( c, d )	( c = giClockTimer )
-#define   TIMECOUNTERDONE(c, d)		(giClockTimer - c >  d)
+#define UPDATETIMECOUNTER( c )
+#define RESETTIMECOUNTER( c, d )	( c = giClockTimer )
+#define TIMECOUNTERDONE(c, d)		(giClockTimer - c >  d)
 #define SYNCTIMECOUNTER( )		( giClockTimer = GetJA2Clock() )
 
 #endif
 
-/* whenever guiBaseJA2Clock changes, we must reset all the timer variables that
- * use it as a reference */
+// whenever guiBaseJA2Clock changes, we must reset all the timer variables that
+// use it as a reference
 void ResetJA2ClockGlobalTimers(void);
 
 #endif

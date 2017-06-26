@@ -4,101 +4,100 @@
 #include "gtest/gtest.h"
 #endif
 
-/*
 
-******************************************************************************************************
-**                                  IMPORTANT TRANSLATION NOTES                                     **
-******************************************************************************************************
+// ******************************************************************************************************
+// **                                  IMPORTANT TRANSLATION NOTES                                     **
+// ******************************************************************************************************
+//
+// GENERAL INSTRUCTIONS
+// - Always be aware that foreign strings should be of equal or shorter length than the English equivalent.
+//   I know that this is difficult to do on many occasions due to the nature of foreign languages when
+//   compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In
+//   most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
+//   The general rule is if the string is very short (less than 10 characters), then it's short because of
+//   interface limitations.  On the other hand, full sentences commonly have little limitations for length.
+//   Strings in between are a little dicey.
+// - Never translate a string to appear on multiple lines.  All strings L"This is a really long string...",
+//   must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
+// - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
+//   have one space after a period, which is different than standard typing convention.  Never modify sections
+//   of strings contain combinations of % characters.  These are special format characters and are always
+//   used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
+//   locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
+//   %% is how a single % character is built.  There are countless types, but strings containing these
+//   special characters are usually commented to explain what they mean.  If it isn't commented, then
+//   if you can't figure out the context, then feel free to ask SirTech.
+// - Comments are always started with // Anything following these two characters on the same line are
+//   considered to be comments.  Do not translate comments.  Comments are always applied to the following
+//   string(s) on the next line(s), unless the comment is on the same line as a string.
+// - All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching
+//   for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
+//   Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
+//   comments intact, and SirTech will remove them once the translation for that particular area is resolved.
+// - If you have a problem or question with translating certain strings, please use "//!!! comment"
+//   (without the quotes).  The syntax is important, and should be identical to the comments used with @@@
+//   symbols.  SirTech will search for !!! to look for your problems and questions.  This is a more
+//   efficient method than detailing questions in email, so try to do this whenever possible.
+//
+//
+//
+// FAST HELP TEXT -- Explains how the syntax of fast help text works.
+// **************
+//
+// 1) BOLDED LETTERS
+//   The popup help text system supports special characters to specify the hot key(s) for a button.
+//   Anytime you see a '|' symbol within the help text string, that means the following key is assigned
+//   to activate the action which is usually a button.
+//
+//   EX:  L"|Map Screen"
+//
+//   This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
+//   button.  When translating the text to another language, it is best to attempt to choose a word that
+//   uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
+//   of the string in this format:
+//
+//   EX:  L"Ecran De Carte (|M)"  (this is the French translation)
+//
+//   Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|j|a)
+//
+// 2) NEWLINE
+//   Any place you see a \n within the string, you are looking at another string that is part of the fast help
+//   text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
+//   to start a new line.
+//
+//   EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
+//
+//   Would appear as:
+//
+//     Clears all the mercs' positions,
+//     and allows you to re-enter them manually.
+//
+//   NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
+//     in the above example, we would see
+//
+//   WRONG WAY -- spaces before and after the \n
+//   EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
+//
+//   Would appear as: (the second line is moved in a character)
+//
+//     Clears all the mercs' positions,
+//     and allows you to re-enter them manually.
+//
+//
+// @@@ NOTATION
+// ************
+//
+//   Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
+//   text to make translation easier, but comments don't need to be translated.  A good thing is to search for
+//   "@@@" after receiving new version of the text file, and address the special notes in this manner.
+//
+// !!! NOTATION
+// ************
+//
+//   As described above, the "!!!" notation should be used by you to ask questions and address problems as
+//   SirTech uses the "@@@" notation.
 
-GENERAL INSTRUCTIONS
-- Always be aware that foreign strings should be of equal or shorter length than the English equivalent.
-	I know that this is difficult to do on many occasions due to the nature of foreign languages when
-	compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In
-	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
-	The general rule is if the string is very short (less than 10 characters), then it's short because of
-	interface limitations.  On the other hand, full sentences commonly have little limitations for length.
-	Strings in between are a little dicey.
-- Never translate a string to appear on multiple lines.  All strings L"This is a really long string...",
-	must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
-- Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
-	have one space after a period, which is different than standard typing convention.  Never modify sections
-	of strings contain combinations of % characters.  These are special format characters and are always
-	used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
-	locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
-	%% is how a single % character is built.  There are countless types, but strings containing these
-	special characters are usually commented to explain what they mean.  If it isn't commented, then
-	if you can't figure out the context, then feel free to ask SirTech.
-- Comments are always started with // Anything following these two characters on the same line are
-	considered to be comments.  Do not translate comments.  Comments are always applied to the following
-	string(s) on the next line(s), unless the comment is on the same line as a string.
-- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching
-	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-	Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
-	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
-- If you have a problem or question with translating certain strings, please use "//!!! comment"
-	(without the quotes).  The syntax is important, and should be identical to the comments used with @@@
-	symbols.  SirTech will search for !!! to look for your problems and questions.  This is a more
-	efficient method than detailing questions in email, so try to do this whenever possible.
 
-
-
-FAST HELP TEXT -- Explains how the syntax of fast help text works.
-**************
-
-1) BOLDED LETTERS
-	The popup help text system supports special characters to specify the hot key(s) for a button.
-	Anytime you see a '|' symbol within the help text string, that means the following key is assigned
-	to activate the action which is usually a button.
-
-	EX:  L"|Map Screen"
-
-	This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
-	button.  When translating the text to another language, it is best to attempt to choose a word that
-	uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
-	of the string in this format:
-
-	EX:  L"Ecran De Carte (|M)"  (this is the French translation)
-
-	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|j|a)
-
-2) NEWLINE
-	Any place you see a \n within the string, you are looking at another string that is part of the fast help
-	text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
-	to start a new line.
-
-	EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
-
-	Would appear as:
-
-		Clears all the mercs' positions,
-		and allows you to re-enter them manually.
-
-	NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
-		in the above example, we would see
-
-	WRONG WAY -- spaces before and after the \n
-	EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
-
-	Would appear as: (the second line is moved in a character)
-
-		Clears all the mercs' positions,
-		and allows you to re-enter them manually.
-
-
-@@@ NOTATION
-************
-
-	Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
-	text to make translation easier, but comments don't need to be translated.  A good thing is to search for
-	"@@@" after receiving new version of the text file, and address the special notes in this manner.
-
-!!! NOTATION
-************
-
-	As described above, the "!!!" notation should be used by you to ask questions and address problems as
-	SirTech uses the "@@@" notation.
-
-*/
 
 static StrPointer s_pl_WeaponType[WeaponType_SIZE] =
 {
@@ -2408,9 +2407,9 @@ static const wchar_t *s_pl_BobbyRText[BobbyRText_SIZE] =
 };
 
 
-/* The following line is used on the Ammunition page.  It is used for help text
-	* to display how many items the player's merc has that can use this type of
-	* ammo. */
+// The following line is used on the Ammunition page.  It is used for help text
+// to display how many items the player's merc has that can use this type of
+// ammo.
 static const wchar_t s_pl_str_bobbyr_guns_num_guns_that_use_ammo[] = L"Twój zespół posiada %d szt. broni do której pasuje amunicja tego typu";
 
 
@@ -2992,9 +2991,9 @@ static const wchar_t *s_pl_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZ
 	L"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
 };
 
-/* This string is used in the IMP character generation.  It is possible to
-	* select 0 ability in a skill meaning you can't use it.  This text is
-	* confirmation to the player. */
+// This string is used in the IMP character generation.  It is possible to
+// select 0 ability in a skill meaning you can't use it.  This text is
+// confirmation to the player.
 static const wchar_t s_pl_pSkillAtZeroWarning[]    = L"Na pewno? Wartość zero oznacza brak jakichkolwiek umiejętności w tej dziedzinie.";
 static const wchar_t s_pl_pIMPBeginScreenStrings[] = L"( Maks. 8 znaków )";
 static const wchar_t s_pl_pIMPFinishButtonText[]   = L"Analizuję";
@@ -3504,7 +3503,7 @@ static const wchar_t *s_pl_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_ta
 	L"DiD", 			// Dead is Dead Tab
 };
 
-/** Polish language resources. */
+// Polish language resources.
 LanguageRes g_LanguageResPolish = {
 
 	s_pl_WeaponType,

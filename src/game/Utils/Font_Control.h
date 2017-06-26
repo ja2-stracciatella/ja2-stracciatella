@@ -35,12 +35,12 @@ extern SGPFont gpHugeFont;
 #define FONT10ARIAL		gp10PointArial
 #define FONT14ARIAL		gp14PointArial
 #define FONT12ARIAL		gp12PointArial
-#define FONT10ARIALBOLD		gp10PointArialBold
+#define FONT10ARIALBOLD	gp10PointArialBold
 #define BLOCKFONT		gpBlockyFont
 #define BLOCKFONT2		gpBlockyFont2
 #define FONT12ARIALFIXEDWIDTH	gp12PointArialFixedFont
 #define FONT16ARIAL		gp16PointArial
-#define BLOCKFONTNARROW		gpBlockFontNarrow
+#define BLOCKFONTNARROW	gpBlockFontNarrow
 #define FONT14HUMANIST		gp14PointHumanist
 
 #define HUGEFONT		((GameState::getInstance()->isEditorMode() && isEnglishVersion()) ? gpHugeFont : gp16PointArial)
@@ -54,7 +54,7 @@ extern SGPFont gpHugeFont;
 #define FONT_MCOLOR_DKGRAY	136
 #define FONT_MCOLOR_LTBLUE	203
 #define FONT_MCOLOR_LTRED	162
-#define FONT_MCOLOR_RED		163
+#define FONT_MCOLOR_RED	163
 #define FONT_MCOLOR_DKRED	164
 #define FONT_MCOLOR_LTGREEN	184
 #define FONT_MCOLOR_LTYELLOW	144

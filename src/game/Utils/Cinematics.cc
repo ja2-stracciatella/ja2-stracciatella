@@ -28,13 +28,13 @@
 
 struct SMKFLIC
 {
-	HWFILE    hFileHandle;
-	Smack*    SmackerObject;
-	CHAR8     SmackerStatus;
-	SDL_Surface*    SmackBuffer;
-	UINT32    uiFlags;
-	UINT32    uiLeft;
-	UINT32    uiTop;
+	HWFILE hFileHandle;
+	Smack  *SmackerObject;
+	CHAR8  SmackerStatus;
+	SDL_Surface *SmackBuffer;
+	UINT32 uiFlags;
+	UINT32 uiLeft;
+	UINT32 uiTop;
 };
 
 

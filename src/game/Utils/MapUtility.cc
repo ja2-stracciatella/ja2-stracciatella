@@ -48,22 +48,22 @@ static SGPVSurface* gi8BitMiniMap;
 ScreenID MapUtilScreenHandle()
 {
 	static SGPPaletteEntry* p24BitValues = NULL;
-	static INT16		fNewMap = TRUE;
-	InputAtom  InputEvent;
+	static INT16 fNewMap = TRUE;
+	InputAtom InputEvent;
 	static FDLG_LIST *FListNode;
 	static INT16 sFiles = 0, sCurFile = 0;
 	static FDLG_LIST *FileList = NULL;
 
-	UINT32					uiRGBColor;
+	UINT32 uiRGBColor;
 
-	UINT32					bR, bG, bB, bAvR, bAvG, bAvB;
-	INT16						s16BPPSrc, sDest16BPPColor;
+	UINT32 bR, bG, bB, bAvR, bAvG, bAvB;
+	INT16 s16BPPSrc, sDest16BPPColor;
 
 	INT16 sX1, sX2, sY1, sY2, sTop, sBottom, sLeft, sRight;
 
 
-	FLOAT		dX, dY, dStartX, dStartY;
-	INT32		iX, iY, iSubX1, iSubY1, iSubX2, iSubY2, iWindowX, iWindowY, iCount;
+	FLOAT dX, dY, dStartX, dStartY;
+	INT32 iX, iY, iSubX1, iSubY1, iSubX2, iSubY2, iWindowX, iWindowY, iCount;
 	SGPPaletteEntry pPalette[ 256 ];
 
 
