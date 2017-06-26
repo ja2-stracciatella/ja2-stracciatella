@@ -43,6 +43,7 @@ static DEFAULT_JSON_CONTENT: &'static str = r##"{
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
+#[allow(non_camel_case_types)]
 pub enum ResourceVersion {
     DUTCH,
     ENGLISH,
