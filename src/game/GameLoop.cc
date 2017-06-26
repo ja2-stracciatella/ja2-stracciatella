@@ -163,7 +163,7 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen);
 void GameLoop(void)
 try
 {
-	InputAtom					InputEvent;
+	InputAtom InputEvent;
 	ScreenID uiOldScreen = guiCurrentScreen;
 
 	SGPPoint MousePos;

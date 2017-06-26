@@ -15,27 +15,27 @@
 
 
 static ScreenID guiExitScreen;
-BOOLEAN	gfFadeInitialized = FALSE;
-INT16		gsFadeLimit;
-UINT32	guiTime;
-UINT32	guiFadeDelay;
-BOOLEAN	gfFirstTimeInFade = FALSE;
-INT16		gsFadeCount;
+BOOLEAN gfFadeInitialized = FALSE;
+INT16   gsFadeLimit;
+UINT32  guiTime;
+UINT32  guiFadeDelay;
+BOOLEAN gfFirstTimeInFade = FALSE;
+INT16   gsFadeCount;
 static INT8 gbFadeType;
-INT16		gsFadeRealCount;
-BOOLEAN	gfFadeInVideo;
+INT16   gsFadeRealCount;
+BOOLEAN gfFadeInVideo;
 
 
-FADE_FUNCTION	gFadeFunction = NULL;
+FADE_FUNCTION gFadeFunction = NULL;
 
-FADE_HOOK	gFadeInDoneCallback  = NULL;
-FADE_HOOK	gFadeOutDoneCallback = NULL;
+FADE_HOOK gFadeInDoneCallback  = NULL;
+FADE_HOOK gFadeOutDoneCallback = NULL;
 
 
-BOOLEAN		gfFadeIn      = FALSE;
-BOOLEAN		gfFadeOut     = FALSE;
-BOOLEAN		gfFadeOutDone = FALSE;
-BOOLEAN		gfFadeInDone  = FALSE;
+BOOLEAN gfFadeIn      = FALSE;
+BOOLEAN gfFadeOut     = FALSE;
+BOOLEAN gfFadeOutDone = FALSE;
+BOOLEAN gfFadeInDone  = FALSE;
 
 
 void FadeInNextFrame( )
@@ -46,8 +46,8 @@ void FadeInNextFrame( )
 
 void FadeOutNextFrame( )
 {
-	gfFadeOut			= TRUE;
-	gfFadeOutDone	= FALSE;
+	gfFadeOut = TRUE;
+	gfFadeOutDone = FALSE;
 }
 
 
