@@ -16,9 +16,9 @@ CalibreModel::CalibreModel(uint16_t index_,
 				const char* burstSoundString_,
 				bool showInHelpText_,
 				bool monsterWeapon_,
-				int silencerSound_
-)
-	:index(index_), internalName(internalName_), burstSoundString(burstSoundString_),
+				int silencerSound_)
+	:index(index_), internalName(internalName_),
+	burstSoundString(burstSoundString_),
 	showInHelpText(showInHelpText_),
 	monsterWeapon(monsterWeapon_),
 	silencerSound(silencerSound_)

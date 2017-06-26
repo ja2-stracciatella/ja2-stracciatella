@@ -360,9 +360,9 @@ void Soldier::putDayHeadGear()
 		}
 	}
 	else if((sunGogglesPos != NO_SLOT)
-					&& !isHeadPosition(sunGogglesPos)
-					&& !gasMaskEquiped
-					&& (freeHeadSlot != NO_SLOT))
+		&& !isHeadPosition(sunGogglesPos)
+		&& !gasMaskEquiped
+		&& (freeHeadSlot != NO_SLOT))
 	{
 		// have sun goggles somewhere in the inventory and
 		// can equip them
