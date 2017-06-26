@@ -3,8 +3,8 @@
 
 #include "Types.h"
 
-#define GLOBAL_SUMMARY_VERSION		14
-#define MINIMUMVERSION						7
+#define GLOBAL_SUMMARY_VERSION	14
+#define MINIMUMVERSION		7
 
 struct TEAMSUMMARY
 {
@@ -34,7 +34,7 @@ struct SUMMARYFILE
 	UINT8 ubNumDoorsTrapped;
 	UINT8 ubNumDoorsLockedAndTrapped;
 	//start version 2
-	UINT8	ubTilesetID;
+	UINT8 ubTilesetID;
 	UINT8 ubNumRooms;
 	//start version	3
 	UINT8 ubNumElites;
@@ -49,47 +49,47 @@ struct SUMMARYFILE
 	UINT8 ubAdminProfile;
 	UINT8 ubTroopProfile;
 	//start version 6
-	UINT8	ubEliteExistance;
+	UINT8 ubEliteExistance;
 	UINT8 ubAdminExistance;
 	UINT8 ubTroopExistance;
 	//start version 7
-	FLOAT	dMajorMapVersion;
+	FLOAT dMajorMapVersion;
 	//start version 8
 	UINT8 ubCivSchedules;
 	//start version 9
-	UINT8	ubCivCows;
+	UINT8 ubCivCows;
 	UINT8 ubCivBloodcats;
 	//					//-----
-						//	190
+	//					// 190
 	//start version 10
-	EXITGRID ExitGrid[4];			//5*4 //	20
-	UINT16 usExitGridSize[4];   //2*4 //    8
-	BOOLEAN fInvalidDest[4];		//    4
-	UINT8   ubNumExitGridDests;		//		1
-	BOOLEAN fTooManyExitGridDests;		//		1
+	EXITGRID ExitGrid[4];			//  20  (5*4)
+	UINT16  usExitGridSize[4];		//   8   (2*4)
+	BOOLEAN fInvalidDest[4];		//   4
+	UINT8   ubNumExitGridDests;		//   1
+	BOOLEAN fTooManyExitGridDests;		//   1
 	//					//-----
-	//					//	224
+	//					// 224
 	//start version 11
-	UINT8	ubEnemiesReqWaypoints;			//		1
-	//																//-----
-	//																		225
+	UINT8   ubEnemiesReqWaypoints;		//   1
+	//					//-----
+	//					// 225
 	//start version 12
-	UINT16 usWarningRoomNums;					//    2
-																		//	227
+	UINT16 usWarningRoomNums;		//   2
+	//					// 227
 	//start version 13
-	UINT8 ubEnemiesHaveWaypoints;			//		1
-	UINT32 uiNumItemsPosition;				//		4
-																		//-----
-																		//	232
+	UINT8 ubEnemiesHaveWaypoints;		//   1
+	UINT32 uiNumItemsPosition;		//   4
+	//					//-----
+	//					// 232
 	//start version 14
-	UINT32 uiEnemyPlacementPosition;	//		4
-																		//-----
-																		//	236
+	UINT32 uiEnemyPlacementPosition;	//   4
+	//					//-----
+	//					// 236
 
 
-	UINT8 ubPadding[164];							//	164 // XXX HACK000B
-	//																//-----
-	//																		400 total bytes
+	UINT8 ubPadding[164];			// 164 // XXX HACK000B
+	//					//-----
+	//					// 400 total bytes
 };
 
 

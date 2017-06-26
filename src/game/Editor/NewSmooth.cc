@@ -274,7 +274,7 @@ static const INT8 gbWallTileLUT[NUM_WALL_TYPES][7] =
 //Roof table -- such a small table, using definitions instead.
 #define TOP_ROOF_INDEX		2
 #define BOTTOM_ROOF_INDEX	4
-#define LEFT_ROOF_INDEX		1
+#define LEFT_ROOF_INDEX	1
 #define RIGHT_ROOF_INDEX	5
 #define TOPLEFT_ROOF_INDEX	3
 #define TOPRIGHT_ROOF_INDEX	7

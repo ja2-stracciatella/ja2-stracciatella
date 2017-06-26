@@ -203,12 +203,24 @@ static void ShowEditorToolbar(TaskMode const iNewTaskMode)
 {
 	switch( iNewTaskMode )
 	{
-		case TASK_TERRAIN:		ShowEditorButtons( FIRST_TERRAIN_BUTTON, LAST_TERRAIN_BUTTON );								break;
-		case TASK_BUILDINGS:	ShowEditorButtons( FIRST_BUILDINGS_BUTTON, LAST_BUILDINGS_BUTTON );						break;
-		case TASK_ITEMS:			ShowEditorButtons( FIRST_ITEMS_BUTTON, LAST_ITEMS_BUTTON );										break;
-		case TASK_MERCS:			ShowEditorButtons( FIRST_MERCS_TEAMMODE_BUTTON, LAST_MERCS_TEAMMODE_BUTTON );	break;
-		case TASK_MAPINFO:		ShowEditorButtons( FIRST_MAPINFO_BUTTON, LAST_MAPINFO_BUTTON );								break;
-		case TASK_OPTIONS:		ShowEditorButtons( FIRST_OPTIONS_BUTTON, LAST_OPTIONS_BUTTON );								break;
+		case TASK_TERRAIN:
+			ShowEditorButtons(FIRST_TERRAIN_BUTTON, LAST_TERRAIN_BUTTON);
+			break;
+		case TASK_BUILDINGS:
+			ShowEditorButtons(FIRST_BUILDINGS_BUTTON, LAST_BUILDINGS_BUTTON);
+			break;
+		case TASK_ITEMS:
+			ShowEditorButtons(FIRST_ITEMS_BUTTON, LAST_ITEMS_BUTTON);
+			break;
+		case TASK_MERCS:
+			ShowEditorButtons(FIRST_MERCS_TEAMMODE_BUTTON, LAST_MERCS_TEAMMODE_BUTTON);
+			break;
+		case TASK_MAPINFO:
+			ShowEditorButtons(FIRST_MAPINFO_BUTTON, LAST_MAPINFO_BUTTON);
+			break;
+		case TASK_OPTIONS:
+			ShowEditorButtons(FIRST_OPTIONS_BUTTON, LAST_OPTIONS_BUTTON);
+			break;
 		default:
 			return;
 	}
@@ -220,12 +232,30 @@ static void HideEditorToolbar(TaskMode const iOldTaskMode)
 	INT32 i, iStart, iEnd;
 	switch( iOldTaskMode )
 	{
-		case TASK_TERRAIN:		iStart = FIRST_TERRAIN_BUTTON;			iEnd = LAST_TERRAIN_BUTTON;			break;
-		case TASK_BUILDINGS:	iStart = FIRST_BUILDINGS_BUTTON;		iEnd = LAST_BUILDINGS_BUTTON;		break;
-		case TASK_ITEMS:			iStart = FIRST_ITEMS_BUTTON;				iEnd = LAST_ITEMS_BUTTON;				break;
-		case TASK_MERCS:			iStart = FIRST_MERCS_BUTTON;				iEnd = LAST_MERCS_BUTTON;				break;
-		case TASK_MAPINFO:		iStart = FIRST_MAPINFO_BUTTON;			iEnd = LAST_MAPINFO_BUTTON;		break;
-		case TASK_OPTIONS:		iStart = FIRST_OPTIONS_BUTTON;			iEnd = LAST_OPTIONS_BUTTON;			break;
+		case TASK_TERRAIN:
+			iStart = FIRST_TERRAIN_BUTTON;
+			iEnd = LAST_TERRAIN_BUTTON;
+			break;
+		case TASK_BUILDINGS:
+			iStart = FIRST_BUILDINGS_BUTTON;
+			iEnd = LAST_BUILDINGS_BUTTON;
+			break;
+		case TASK_ITEMS:
+			iStart = FIRST_ITEMS_BUTTON;
+			iEnd = LAST_ITEMS_BUTTON;
+			break;
+		case TASK_MERCS:
+			iStart = FIRST_MERCS_BUTTON;
+			iEnd = LAST_MERCS_BUTTON;
+			break;
+		case TASK_MAPINFO:
+			iStart = FIRST_MAPINFO_BUTTON;
+			iEnd = LAST_MAPINFO_BUTTON;
+			break;
+		case TASK_OPTIONS:
+			iStart = FIRST_OPTIONS_BUTTON;
+			iEnd = LAST_OPTIONS_BUTTON;
+			break;
 		default:
 			return;
 	}

@@ -260,7 +260,7 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 	// Determine start end end indicies and num rows
 	sTop	= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
+	sLeft   = -ubRadius;
 	sRight  = ubRadius;
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
@@ -298,7 +298,7 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 	// Determine start end end indicies and num rows
 	sTop	= ubRadius;
 	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
+	sLeft   = -ubRadius;
 	sRight  = ubRadius;
 	for( cnt3 = FIRSTTEXTURE; cnt3 <= SEVENTHTEXTURE; cnt3++ )
 	{

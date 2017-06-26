@@ -1350,8 +1350,8 @@ void RenderSummaryWindow()
 						giCurrentViewLevel == BASEMENT2_LEVEL_MASK ||
 						giCurrentViewLevel == BASEMENT3_LEVEL_MASK ||
 						giCurrentViewLevel == ALTERNATE_B1_MASK ||
-						giCurrentViewLevel == ALTERNATE_B2_MASK  ||
-						giCurrentViewLevel == ALTERNATE_B3_MASK         )
+						giCurrentViewLevel == ALTERNATE_B2_MASK ||
+						giCurrentViewLevel == ALTERNATE_B3_MASK)
 					{
 						FRAME_BUFFER->ShadowRect(ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					}

@@ -33,9 +33,16 @@ void CalcSmartBrokenWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex )
 {
 	switch( gubBrokenWallUIValue )
 	{
-		case 0:case 1: *pusUseIndex = 49 + gubBrokenWallUIValue;	break;
-		case 3:		*pusUseIndex = 62;				break;
-		case 4:		*pusUseIndex = 64;				break;
+		case 0:
+		case 1:
+			*pusUseIndex = 49 + gubBrokenWallUIValue;
+			break;
+		case 3:
+			*pusUseIndex = 62;
+			break;
+		case 4:
+			*pusUseIndex = 64;
+			break;
 	}
 	*pusObjIndex = FIRSTWALL;
 }
