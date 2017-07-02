@@ -179,8 +179,14 @@ add_executable(${JA2_BINARY} ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
 
 if(BUILD_LAUNCHER)
-    fltk_wrap_ui(launcherUi src/launcher/StracciatellaLauncher.fl)
-    add_library(launcherUi STATIC ${launcherUi_FLTK_UI_SRCS})
+    add_custom_command(
+        OUTPUT "StracciatellaLauncher.cxx" "StracciatellaLauncher.h"
+        COMMAND fluid -c ${CMAKE_CURRENT_SOURCE_DIR}/src/launcher/StracciatellaLauncher.fl
+    )
+
+    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+    add_library(launcherUi STATIC StracciatellaLauncher.cxx)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
     target_link_libraries(${LAUNCHER_BINARY} launcherUi ${SDL2_LIBRARY} ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} slog rust-stracciatella)
 endif()
