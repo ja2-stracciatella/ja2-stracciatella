@@ -645,8 +645,8 @@ mod tests {
     }
 
     #[test]
-    #[cfg(not(windows))]
-    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_linux() {
+    #[cfg(target_os = "macos")]
+    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_mac() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
@@ -658,14 +658,27 @@ mod tests {
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         unsafe {
             let comp = str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap();
-            let mut base = String::new();
+            let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
+            let base = temp.to_str().unwrap();
 
-            // allow /private prefix on mac:
-            if comp.starts_with("/private") {
-                base.push_str("/private");
-            }
-            base.push_str(temp_dir.path().to_str().unwrap());
             assert_eq!(comp, base);
+        }
+    }
+
+    #[test]
+    #[cfg(all(not(windows), not(target_os = "macos")))]
+    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_linux() {
+        let mut engine_options: super::EngineOptions = Default::default();
+        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let dir_path = temp_dir.path().join("foo");
+
+        fs::create_dir_all(dir_path).unwrap();
+
+        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
+
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
+        unsafe {
+            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
         }
     }
 
