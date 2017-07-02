@@ -193,7 +193,16 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
 
             if let Some(s) = m.opt_str("datadir") {
                 match fs::canonicalize(PathBuf::from(s)) {
-                    Ok(s) => engine_options.vanilla_data_dir = s,
+                    Ok(s) => {
+                        let mut temp = String::from(s.to_str().expect("Should not happen"));
+                        // remove UNC path prefix (Windows)
+                        if temp.starts_with("\\\\") {
+                            temp.drain(..2);
+                            let pos = temp.find("\\").unwrap() + 1;
+                            temp.drain(..pos);
+                        }
+                        engine_options.vanilla_data_dir = PathBuf::from(temp)
+                    },
                     Err(_) => return Some(String::from("Please specify an existing datadir."))
                 };
             }
