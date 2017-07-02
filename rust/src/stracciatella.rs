@@ -657,7 +657,15 @@ mod tests {
 
         assert_eq!(super::parse_args(&mut engine_options, input), None);
         unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
+            let comp = str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap();
+            let mut base = String::new();
+
+            // allow /private prefix on mac:
+            if comp.starts_with("/private") {
+                base.push_str("/private");
+            }
+            base.push_str(temp_dir.path().to_str().unwrap());
+            assert_eq!(comp, base);
         }
     }
 
