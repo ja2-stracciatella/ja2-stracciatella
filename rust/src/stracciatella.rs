@@ -193,7 +193,16 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
 
             if let Some(s) = m.opt_str("datadir") {
                 match fs::canonicalize(PathBuf::from(s)) {
-                    Ok(s) => engine_options.vanilla_data_dir = s,
+                    Ok(s) => {
+                        let mut temp = String::from(s.to_str().expect("Should not happen"));
+                        // remove UNC path prefix (Windows)
+                        if temp.starts_with("\\\\") {
+                            temp.drain(..2);
+                            let pos = temp.find("\\").unwrap() + 1;
+                            temp.drain(..pos);
+                        }
+                        engine_options.vanilla_data_dir = PathBuf::from(temp)
+                    },
                     Err(_) => return Some(String::from("Please specify an existing datadir."))
                 };
             }
@@ -636,7 +645,28 @@ mod tests {
     }
 
     #[test]
-    #[cfg(not(windows))]
+    #[cfg(target_os = "macos")]
+    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_mac() {
+        let mut engine_options: super::EngineOptions = Default::default();
+        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let dir_path = temp_dir.path().join("foo");
+
+        fs::create_dir_all(dir_path).unwrap();
+
+        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
+
+        assert_eq!(super::parse_args(&mut engine_options, input), None);
+        unsafe {
+            let comp = str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap();
+            let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
+            let base = temp.to_str().unwrap();
+
+            assert_eq!(comp, base);
+        }
+    }
+
+    #[test]
+    #[cfg(all(not(windows), not(target_os = "macos")))]
     fn parse_json_config_should_return_the_correct_canonical_data_dir_on_linux() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
