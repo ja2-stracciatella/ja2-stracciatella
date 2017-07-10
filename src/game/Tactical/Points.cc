@@ -894,7 +894,6 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 				ap_cost += s->sWalkToAttackWalkToCost;
 			}
 			ap_cost += MinAPsToAttack(s, adjusted_grid_no, ubAddTurningCost);
-			printf("mincost: %d\n", ap_cost);
 			ap_cost += aim_time;
 			break;
 	}
