@@ -3244,7 +3244,8 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 
 			 if ( sGotLocation != NOWHERE )
 			 {
-				 sAPCost += MinAPsToAttack( pSoldier, sAdjustedGridNo, TRUE );
+				 //sAPCost += MinAPsToAttack( pSoldier, sAdjustedGridNo, TRUE );
+				 sAPCost += CalcTotalAPsToAttack(pSoldier, sAdjustedGridNo, TRUE, (pSoldier->bShownAimTime/2));
 				 sAPCost += UIPlotPath(pSoldier, sGotLocation, NO_COPYROUTE, fPlot, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 				 if ( sGotLocation != pSoldier->sGridNo && fGotAdjacent )

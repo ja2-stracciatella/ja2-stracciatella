@@ -1116,16 +1116,20 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_t
 		{
 			ap += GetAPsToChangeStance(&s, ANIM_CROUCH);
 		}
-		else if (s.sGridNo == gridno)
+		else
 		{
 			ap += GetAPsToChangeStance(&s, ANIM_STAND);
 		}
 	}
 
-	if (add_turning_cost && s.sGridNo == gridno)
+	if (add_turning_cost && s.sGridNo != gridno)
 	{ // Is it the same as he's facing?
 		UINT8 const direction = GetDirectionFromGridNo(gridno, &s);
-		if (direction != s.bDirection) ap += AP_LOOK_STANDING; // ATE: Use standing turn cost
+
+		// Would expect that merc is standing up(2AP) and then looking(1AP)
+		// rather than looking(2AP) and then standing up(2AP)
+		if (direction != s.bDirection && gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_STAND) ap += AP_LOOK_STANDING; // ATE: Use standing turn cost
+		else if(direction != s.bDirection && gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_CROUCH) ap += AP_LOOK_CROUCHED;
 	}
 
 	return ap;
