@@ -572,7 +572,7 @@ mod tests {
     fn parse_args_should_abort_on_unknown_switch() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--testunknown"));
-        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unrecognized option: 'testunknown'.");
+        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unrecognized option: 'testunknown'");
     }
 
     #[test]
