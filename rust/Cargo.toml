@@ -16,7 +16,7 @@ path = "src/stracciatella.rs"
 
 [dependencies]
 getopts = { git = "https://github.com/rust-lang-nursery/getopts" }
-libc = "0.2.16"
+libc = "0.2"
 serde = "0.8"
 serde_json = "0.8"
 
