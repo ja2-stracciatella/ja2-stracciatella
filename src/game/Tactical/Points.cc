@@ -1116,17 +1116,51 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_t
 		{
 			ap += GetAPsToChangeStance(&s, ANIM_CROUCH);
 		}
-		else if (s.sGridNo == gridno)
+		else
 		{
 			ap += GetAPsToChangeStance(&s, ANIM_STAND);
 		}
 	}
 
-	if (add_turning_cost && s.sGridNo == gridno)
-	{ // Is it the same as he's facing?
-		UINT8 const direction = GetDirectionFromGridNo(gridno, &s);
-		if (direction != s.bDirection) ap += AP_LOOK_STANDING; // ATE: Use standing turn cost
-	}
+	if (add_turning_cost && s.sGridNo != gridno)
+ 	{ // Is it the same as he's facing?
+		UINT8 direction;
+		SOLDIERTYPE const* const tgt = WhoIsThere2(gridno, s.bTargetLevel);
+
+		// Check whether the target is proning or lying
+		// if true the target is attack on torso/head not legs
+		if(tgt && gAnimControl[ tgt->usAnimState ].ubEndHeight == ANIM_PRONE)
+		{
+			// fallback direction if direction could not be found what should
+			// not be possible
+			direction = 0;
+			// Check all gridno around target to find in which direction
+			// the target lies
+			for (INT16 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
+			{
+				const INT16 sSpot = NewGridNo(gridno, DirectionInc(i));
+				// Check for who is there...
+				if (tgt == WhoIsThere2(sSpot, s.bLevel))
+				{
+					// We found the torso gridno
+					direction = i+1;
+					if(direction > NUM_WORLD_DIRECTIONS) direction = 0;
+					break;
+				}
+			}
+
+		}
+		else
+		{
+			direction = GetDirectionFromGridNo(gridno, &s);
+		}
+		// Would expect that merc is standing up(2AP) and then looking(1AP)
+		// rather than looking(2AP) and then standing up(2AP)
+		// same for proning
+		if (direction != s.bDirection && gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_STAND) ap += AP_LOOK_STANDING; // ATE: Use standing turn cost
+		else if(direction != s.bDirection && gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_CROUCH) ap += AP_LOOK_CROUCHED;
+		else if(direction != s.bDirection && gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_PRONE) ap += AP_LOOK_PRONE;
+ 	}
 
 	return ap;
 }
