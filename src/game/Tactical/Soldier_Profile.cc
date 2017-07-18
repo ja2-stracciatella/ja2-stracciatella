@@ -608,6 +608,8 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	new_s->bLastRenderVisibleValue = old_s->bLastRenderVisibleValue;
 	new_s->bVisible                = old_s->bVisible;
 	new_s->bCamo                   = old_s->bCamo;
+	new_s->bLevel                  = old_s->bLevel;
+	if(old_s->bLevel == 1) SetSoldierHeight(new_s, 58.0);
 	if (new_s->bCamo != 0) CreateSoldierPalettes(*new_s);
 
 	if (team == OUR_TEAM) new_s->bVisible = 1;
