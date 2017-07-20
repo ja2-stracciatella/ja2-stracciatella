@@ -21,6 +21,7 @@
 #include "Text.h"
 #include "World_Items.h"
 #include "WorldMan.h"
+#include "WorldDef.h"
 #include "Overhead.h"
 #include "RenderWorld.h"
 #include "Animation_Data.h"
@@ -395,7 +396,7 @@ void AddMercToWorld( INT32 iMapIndex )
 				gpSelected->pBasicPlacement->fOnRoof = TRUE;
 				if( gpSelected->pDetailedPlacement )
 					gpSelected->pDetailedPlacement->fOnRoof = TRUE;
-				SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+				SetSoldierHeight( gpSelected->pSoldier, SECOND_LEVEL_Z_OFFSET );
 			}
 			UnclickEditorButtons( FIRST_MERCS_INVENTORY_BUTTON, LAST_MERCS_INVENTORY_BUTTON );
 			for( i = FIRST_MERCS_INVENTORY_BUTTON; i <= LAST_MERCS_INVENTORY_BUTTON; i++ )
@@ -432,7 +433,7 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 			gpSelected->pBasicPlacement->fOnRoof = TRUE;
 			if( gpSelected->pDetailedPlacement )
 				gpSelected->pDetailedPlacement->fOnRoof = TRUE;
-			SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+			SetSoldierHeight( gpSelected->pSoldier, SECOND_LEVEL_Z_OFFSET );
 		}
 		else
 		{
@@ -472,7 +473,7 @@ void ResetAllMercPositions()
 		//{
 		//	EVENT_SetSoldierPosition(gpSelected->pSoldier, usMapIndex, SSP_NONE);
 		//	if( gpSelected->pBasicPlacement->fOnRoof )
-		//		SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+		//		SetSoldierHeight( gpSelected->pSoldier, SECOND_LEVEL_Z_OFFSET );
 		//	SetMercDirection( gpSelected->pBasicPlacement->bDirection );
 		//}
 	}
@@ -3018,7 +3019,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 				gpSelected->pBasicPlacement->fOnRoof = TRUE;
 				if( gpSelected->pDetailedPlacement )
 					gpSelected->pDetailedPlacement->fOnRoof = TRUE;
-				SetSoldierHeight( gpSelected->pSoldier, 58.0 );
+				SetSoldierHeight( gpSelected->pSoldier, SECOND_LEVEL_Z_OFFSET );
 			}
 			UnclickEditorButtons( FIRST_MERCS_INVENTORY_BUTTON, LAST_MERCS_INVENTORY_BUTTON );
 			for( i = FIRST_MERCS_INVENTORY_BUTTON; i <= LAST_MERCS_INVENTORY_BUTTON; i++ )
