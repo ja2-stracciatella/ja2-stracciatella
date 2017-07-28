@@ -995,6 +995,9 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	GetMapFileName(x, y, z, filename, TRUE);
 	LoadWorld(filename);
 	LoadRadarScreenBitmap(filename);
+	// We have to add the helicopter after the sector is fully loaded
+	// to prevent that the pathfinding doenst consider its collission-grids
+	HandleHelicopterOnGround(true);
 
 	/* ATE: Moved this form above, so that we can have the benefit of changing the
 	 * world BEFORE adding guys to it. */
