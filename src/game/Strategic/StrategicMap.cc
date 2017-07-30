@@ -748,18 +748,7 @@ void PrepareLoadedSector()
 		PostSchedules();
 	}
 
-	if( gubEnemyEncounterCode == ENEMY_AMBUSH_CODE || gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
-	{
-		if( gMapInformation.sCenterGridNo != -1 )
-		{
-			CallAvailableEnemiesTo( gMapInformation.sCenterGridNo );
-		}
-		else
-		{
-			SLOGE(DEBUG_TAG_SMAP, "Ambush aborted in sector %c%d -- no center point in map.",
-					gWorldSectorY + 'A' - 1, gWorldSectorX );
-		}
-	}
+	CallAvailableTeamEnemiesToAmbush(gMapInformation.sCenterGridNo);
 
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
