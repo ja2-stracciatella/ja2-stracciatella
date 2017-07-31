@@ -1985,20 +1985,6 @@ static void SaveMeanwhileDefsToSaveGameFile(HWFILE const f)
 }
 
 
-BOOLEAN DoesUserHaveEnoughHardDriveSpace()
-{
-	uintmax_t	uiBytesFree = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
-
-	//check to see if there is enough hard drive space
-	if( uiBytesFree < REQUIRED_FREE_SPACE )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
-
-
 void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSectorY, INT8* const pbSectorZ)
 {
 	//if the current sector is valid
