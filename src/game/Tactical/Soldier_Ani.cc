@@ -272,6 +272,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								ChangeInterfaceLevel( 1 );
 							}
 						}
+						UIHandleSoldierStanceChange(pSoldier, ANIM_CROUCH);
 						HandlePlacingRoofMarker(*pSoldier, true, true);
 					}
 					else
