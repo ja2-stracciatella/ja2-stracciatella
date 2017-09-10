@@ -22,7 +22,6 @@
 #include <stdarg.h>
 #include "UILayout.h"
 #include "PlatformIO.h"
-#include "PlatformSDL.h"
 #include "Font.h"
 #include "Icon.h"
 
@@ -130,6 +129,8 @@ void InitializeVideoManager(void)
 	SLOGD(DEBUG_TAG_VIDEO, "Initializing the video manager");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+
+	g_window_flags |= SDL_WINDOW_RESIZABLE;
 
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
                               SDL_WINDOWPOS_UNDEFINED,
@@ -549,29 +550,6 @@ static void TakeScreenshot()
 }
 
 static void SnapshotSmall(void);
-
-#if EXPENSIVE_SDL_UPDATE_RECT
-static void joinInRectangle(SDL_Rect &result, const SDL_Rect &newRect)
-{
-  if((newRect.w != 0) && (newRect.h != 0))
-  {
-    if((result.w == 0) && (result.h == 0))
-    {
-      // special case: empty rectangle
-      result = newRect;
-    }
-    else
-    {
-      int16_t X2 = std::max(result.x + result.w, newRect.x + newRect.w);
-      int16_t Y2 = std::max(result.y + result.h, newRect.y + newRect.h);
-      result.x = std::min(result.x, newRect.x);
-      result.y = std::min(result.y, newRect.y);
-      result.w = X2 - result.x;
-      result.h = Y2 - result.y;
-    }
-  }
-}
-#endif
 
 void RefreshScreen(void)
 {

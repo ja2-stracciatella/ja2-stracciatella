@@ -243,6 +243,18 @@ void UpdateBullets(void)
 							b->pAniTile->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
 							b->pAniTile->pLevelNode->sRelativeZ = CONVERT_HEIGHTUNITS_TO_PIXELS(FIXEDPT_TO_INT32(b->qCurrZ));
 
+							// it seems some sectors deliver wrong depth informationen(Z)
+							// As there only a fixed amount of ways to throw a knife we can
+							// correct the relativeZ value
+							if(b->pAniTile->pLevelNode->sRelativeZ > 160)
+							{
+								b->pAniTile->pLevelNode->sRelativeZ -= 115;
+							}
+							else if(b->pAniTile->pLevelNode->sRelativeZ > 90)
+							{
+								b->pAniTile->pLevelNode->sRelativeZ -= 70;
+							}
+
 							if (b->usFlags & BULLET_FLAG_KNIFE)
 							{
 								b->pShadowAniTile->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
@@ -341,7 +353,10 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 	}
 	else if ( pBullet->usFlags & ( BULLET_FLAG_FLAME ) )
 	{
-		AniParams.zCachedFile = TILECACHEDIR "/flmthr2.sti";
+		// The following line used to reference the non-existing animation
+		// "/flmthr2.sti". This could crash the game if the the unfinished
+		// flamethrower is accessed by cheat codes.
+		AniParams.zCachedFile = TILECACHEDIR "/msle_smk.sti";
 		AniParams.sDelay							= (INT16)( 100 );
 	}
 

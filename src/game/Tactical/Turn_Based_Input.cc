@@ -2759,8 +2759,11 @@ static void ObliterateSector()
 	SLOGD(DEBUG_TAG_INTERFACE, "Obliterating Sector!");
 	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
-		if (s->bNeutral || s->bSide == OUR_TEAM) continue;
-		EVENT_SoldierGotHit(s, 0, 400, 0, s->bDirection, 320, 0, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
+		// bloodcats and civilians are neutral
+		if ((s->bNeutral && s->ubBodyType != BLOODCAT) || s->bSide == OUR_TEAM) continue;
+		// a damage value like 0xFFFF seems to be too high and leads to weird
+		// calculations like 0 or 1 damage or even healing
+		EVENT_SoldierGotHit(s, STRUCTURE_EXPLOSION, 10000, 0, s->bDirection, 320, 0, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
 	}
 }
 

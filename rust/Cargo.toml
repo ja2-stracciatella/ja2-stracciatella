@@ -2,6 +2,7 @@
 name = "stracciatella"
 version = "0.1.0"
 authors = ["Stefan Lau <github@stefanlau.com>"]
+release-debuginfo = true
 
 [profile.dev]
 rpath = true
@@ -14,8 +15,8 @@ name = "stracciatella"
 path = "src/stracciatella.rs"
 
 [dependencies]
-getopts = { git = "https://github.com/rust-lang-nursery/getopts" }
-libc = "0.2.16"
+getopts = { git = "https://github.com/rust-lang-nursery/getopts", rev = "b8beaf63" }
+libc = "0.2"
 serde = "0.8"
 serde_json = "0.8"
 

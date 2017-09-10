@@ -17,6 +17,8 @@ before_install:
   - echo "$PUBLISH_BINARY"
   - echo "$PUBLISH_DIR"
   - echo "$VERSION_TAG"
+  - cargo -V
+  - rustc -V
 
 script:
   - mkdir ci-build && cd ci-build

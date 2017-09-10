@@ -21,6 +21,7 @@
 #endif
 
 #include "PlatformIO.h"
+#include "Debug.h"
 
 #if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 #include <CoreFoundation/CFBundle.h>
@@ -28,11 +29,14 @@
 
 #if CASE_SENSITIVE_FS
 #include <dirent.h>
+#include <SDL_rwops.h>
+
 #endif
 
 // XXX: remove FileMan class and make it into a namespace
 
 #define LOCAL_CURRENT_DIR "tmp"
+#define SDL_RWOPS_SGP 222
 
 enum FileOpenFlags
 {
@@ -225,6 +229,80 @@ void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesTo
 	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
 }
 
+static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
+{
+  SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
+  FileSeekMode mode = FILE_SEEK_FROM_CURRENT;
+  switch (whence) {
+    case RW_SEEK_SET:
+      mode = FILE_SEEK_FROM_START;
+      break;
+    case RW_SEEK_END:
+      mode = FILE_SEEK_FROM_END;
+      break;
+    default:
+      break;
+  }
+
+  FileSeek(sgpFile, offset, mode);
+
+  return int64_t(FileGetPos(sgpFile));
+}
+
+static int64_t SGPSizeRW(SDL_RWops *context)
+{
+  SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
+
+  return FileGetSize(sgpFile);
+}
+
+static size_t SGPReadRW(SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
+{
+  SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
+  UINT32 posBefore = UINT32(FileGetPos(sgpFile));
+
+  FileRead(sgpFile, ptr, size * maxnum);
+
+  UINT32 posAfter = UINT32(FileGetPos(sgpFile));
+
+  return (posAfter - posBefore) / size;
+}
+
+static size_t SGPWriteRW(SDL_RWops *context, const void *ptr, size_t size, size_t num)
+{
+  AssertMsg(false, "SGPWriteRW not supported");
+  return 0;
+}
+
+static int SGPCloseRW(SDL_RWops *context)
+{
+  if(context->type != SDL_RWOPS_SGP)
+  {
+    return SDL_SetError("Wrong kind of SDL_RWops for SGPCloseRW()");
+  }
+  SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
+
+  FileClose(sgpFile);
+  SDL_FreeRW(context);
+
+  return 0;
+}
+
+SDL_RWops* FileGetRWOps(SGPFile* const f) {
+  SDL_RWops* rwOps = SDL_AllocRW();
+  if(rwOps == NULL) {
+    return NULL;
+  }
+  rwOps->type = SDL_RWOPS_SGP;
+  rwOps->size = SGPSizeRW;
+  rwOps->seek = SGPSeekRW;
+  rwOps->read = SGPReadRW;
+  rwOps->write= SGPWriteRW;
+  rwOps->close= SGPCloseRW;
+  rwOps->hidden.unknown.data1 = f;
+
+  return rwOps;
+}
 
 void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 {

@@ -877,6 +877,14 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 	INT8	bLightLevel;
 
 	const SOLDIERTYPE* const pSubject = WhoIsThere2(sSubjectGridNo, bLevel);
+  
+       // While the merc is climbing up/down he is shortly on an 
+       // undefined grid_no(NOWHERE) we can't calc anything if this happens so
+       // we check the return of WhoIsThere2 for zero value
+       if (pSubject == 0) 
+       {
+           return( FALSE );
+       }
 
 	if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 	{

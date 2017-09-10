@@ -42,23 +42,20 @@ void SmackPrintFlickInfo(unsigned long width, unsigned long height, UCHAR8 scale
 // read all smackaudio and convert it to 22050Hz on the fly (44100 originally)
 UINT32 SmackGetAudio (const smk SmkObj, const INT16* audiobuffer) 
 {
-  UINT32 n_samples = 0,  smacklen = 0;
+  UINT32 n_samples = 0;
   UINT32 i, index;
-  INT16 *smackaudio, *paudio = (INT16*) audiobuffer;
+  INT16 *paudio = (INT16*) audiobuffer;
   if (! audiobuffer ) return 0;
   SmkAudioSwitch  (SmkObj, ENABLE);
   smk_first(SmkObj);
   do {
-    smacklen = smk_get_audio_size (SmkObj, SMKTRACK);
-    smackaudio = (INT16*) smk_get_audio (SmkObj, SMKTRACK);
-    index = 0; 
-    for  ( i = 0 ; i < smacklen/8; i++ )
-      {
-        *paudio++ = ((smackaudio[ index   ] +smackaudio[index+2]) / 2 );
-        *paudio++ = ((smackaudio[ index +1] +smackaudio[index+3]) / 2 );
-        index += 4;
-      } 
-    n_samples += i;
+    const UINT32 smacklen = smk_get_audio_size (SmkObj, SMKTRACK);
+    const INT16 *smackaudio = (INT16*) smk_get_audio (SmkObj, SMKTRACK);
+
+    memcpy(paudio, smackaudio, smacklen);
+    paudio += smacklen / 2;
+
+    n_samples += smacklen / 2;
   } while (  smk_next(SmkObj) != SMK_DONE  );
   SmkAudioSwitch  (SmkObj, DISABLE);
   return n_samples;
@@ -124,7 +121,7 @@ UINT32 smacksize = FileGetSize(FileHandle);
   flickinfo->Width=width;
   flickinfo->FramesPerSecond = usf;
   // calculated audio memory for downsampling 44100->22050
-  audiosamples = ( (flickinfo->Frames / (usf/1000)) * (a_rate[SMKTRACK]/2) * 16 *  a_channels[SMKTRACK]);
+  audiosamples = ( (flickinfo->Frames / (usf/1000)) * (a_rate[SMKTRACK]) * 16 *  a_channels[SMKTRACK]);
   audiobuffer = (INT16*) malloc( audiosamples );
   if ( ! audiobuffer ) { free(flickinfo); return NULL; }
   audiolen = SmackGetAudio (flickinfo->Smacker, audiobuffer);
