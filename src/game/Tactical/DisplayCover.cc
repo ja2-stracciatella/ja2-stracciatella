@@ -710,7 +710,7 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 	}
 
 
-	usSightLimit = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sTargetGridNo, fRoof );
+	usSightLimit = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sTargetGridNo, fRoof, TRUE );
 
 	//
 	// Prone
