@@ -873,6 +873,12 @@ INT16 MaxDistanceVisible( void )
 
 INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel)
 {
+    return (DistanceVisible(pSoldier, bFacingDir, bSubjectDir, sSubjectGridNo, bLevel, FALSE));
+}
+   
+
+INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel, BOOLEAN fIsLineOfSight)
+{
 	INT16 sDistVisible;
 	INT8	bLightLevel;
 
@@ -881,7 +887,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
        // While the merc is climbing up/down he is shortly on an 
        // undefined grid_no(NOWHERE) we can't calc anything if this happens so
        // we check the return of WhoIsThere2 for zero value
-       if (pSubject == 0) 
+       if (pSubject == 0 && !fIsLineOfSight) 
        {
            return( FALSE );
        }

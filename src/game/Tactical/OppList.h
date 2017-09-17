@@ -89,6 +89,7 @@ void GloballyDecideWhoSeesWho(void);
 UINT16 GetClosestMerc( UINT16 usSoldierIndex );
 INT16 MaxDistanceVisible( void );
 INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel);
+INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel, BOOLEAN fIsLineOfSight);
 void RecalculateOppCntsDueToNoLongerNeutral( SOLDIERTYPE * pSoldier );
 
 
