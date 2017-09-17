@@ -748,18 +748,7 @@ void PrepareLoadedSector()
 		PostSchedules();
 	}
 
-	if( gubEnemyEncounterCode == ENEMY_AMBUSH_CODE || gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
-	{
-		if( gMapInformation.sCenterGridNo != -1 )
-		{
-			CallAvailableEnemiesTo( gMapInformation.sCenterGridNo );
-		}
-		else
-		{
-			SLOGE(DEBUG_TAG_SMAP, "Ambush aborted in sector %c%d -- no center point in map.",
-					gWorldSectorY + 'A' - 1, gWorldSectorX );
-		}
-	}
+	CallAvailableTeamEnemiesToAmbush(gMapInformation.sCenterGridNo);
 
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
@@ -995,6 +984,9 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	GetMapFileName(x, y, z, filename, TRUE);
 	LoadWorld(filename);
 	LoadRadarScreenBitmap(filename);
+	// We have to add the helicopter after the sector is fully loaded
+	// to prevent that the pathfinding doenst consider its collission-grids
+	HandleHelicopterOnGround(true);
 
 	/* ATE: Moved this form above, so that we can have the benefit of changing the
 	 * world BEFORE adding guys to it. */

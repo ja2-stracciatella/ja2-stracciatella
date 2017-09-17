@@ -83,8 +83,6 @@ void BackupSavedGame(UINT8 const ubSaveGameID);
 void SaveFilesToSavedGame(char const* pSrcFileName, HWFILE);
 void LoadFilesFromSavedGame(char const* pSrcFileName, HWFILE);
 
-BOOLEAN DoesUserHaveEnoughHardDriveSpace(void);
-
 void GetBestPossibleSectorXYZValues(INT16* psSectorX, INT16* psSectorY, INT8* pbSectorZ);
 
 void SaveMercPath(HWFILE, PathSt const* head);

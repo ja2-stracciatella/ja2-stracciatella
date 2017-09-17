@@ -1182,8 +1182,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 
 	// Deduct points!
 	// August 13 2002: unless stealing - APs already deducted elsewhere
-
-//	if (!fStealing)
+	if (!fStealing)
 	{
  		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
 

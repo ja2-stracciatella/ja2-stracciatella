@@ -4761,7 +4761,7 @@ void RenderItemPickupMenu()
 
 			if (ItemHasAttachments(o))
 			{ // Render attachment symbols
-				SetFontForeground(FONT_GREEN);
+				SetFontForeground(GetAttachmentHintColor(&o));
 				SetFontShadow(DEFAULT_SHADOW);
 				wchar_t const* const AttachMarker   = L"*";
 				UINT16         const uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);

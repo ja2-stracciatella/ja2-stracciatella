@@ -134,6 +134,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier);
 void CallAvailableEnemiesTo(GridNo);
 void CallAvailableKingpinMenTo( INT16 sGridNo );
 void CallAvailableTeamEnemiesTo(GridNo, INT8 team);
+void CallAvailableTeamEnemiesToAmbush(GridNo);
 void CallEldinTo( INT16 sGridNo );
 void CancelAIAction(SOLDIERTYPE* pSoldier);
 void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
