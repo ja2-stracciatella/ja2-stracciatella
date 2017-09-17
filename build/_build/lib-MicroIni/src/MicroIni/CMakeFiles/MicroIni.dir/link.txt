@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../lib/libMicroIni-s-d.a  CMakeFiles/MicroIni.dir/File.cpp.o CMakeFiles/MicroIni.dir/Line.cpp.o CMakeFiles/MicroIni.dir/Section.cpp.o CMakeFiles/MicroIni.dir/Value.cpp.o ../../../../../_build/lib-MicroIni/src/MicroIni/File.o ../../../../../_build/lib-MicroIni/src/MicroIni/Line.o ../../../../../_build/lib-MicroIni/src/MicroIni/Section.o ../../../../../_build/lib-MicroIni/src/MicroIni/Value.o
+/usr/bin/ranlib ../../lib/libMicroIni-s-d.a

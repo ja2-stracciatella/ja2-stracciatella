@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsmacker.a  CMakeFiles/smacker.dir/libsmacker/smacker.c.o CMakeFiles/smacker.dir/libsmacker/smk_hufftree.c.o CMakeFiles/smacker.dir/libsmacker/smk_bitstream.c.o
+/usr/bin/ranlib libsmacker.a
