@@ -876,15 +876,10 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 	INT16 sDistVisible;
 	INT8	bLightLevel;
 
+	// IMPORTANT! WhoIsThere2 can return a null-pointer for grid calcs
 	const SOLDIERTYPE* const pSubject = WhoIsThere2(sSubjectGridNo, bLevel);
-  
-       // While the merc is climbing up/down he is shortly on an 
-       // undefined grid_no(NOWHERE) we can't calc anything if this happens so
-       // we check the return of WhoIsThere2 for zero value
-       if (pSubject == 0) 
-       {
-           return( FALSE );
-       }
+	// muzzleflash can only considered if there is actually a soldier on the grid_no
+	BOOLEAN const hasMuzzleFlash = pSubject && pSubject->fMuzzleFlash;
 
 	if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 	{
@@ -909,7 +904,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 		//bSubjectDir = atan8(pSoldier->sX,pSoldier->sY,pOpponent->sX,pOpponent->sY);
 	}
 
-	if ( !TANK( pSoldier ) && ( bFacingDir == DIRECTION_IRRELEVANT || (pSoldier->uiStatusFlags & SOLDIER_ROBOT) || (pSubject && pSubject->fMuzzleFlash) ) )
+	if ( !TANK( pSoldier ) && ( bFacingDir == DIRECTION_IRRELEVANT || (pSoldier->uiStatusFlags & SOLDIER_ROBOT) || hasMuzzleFlash ) )
 	{
 		sDistVisible = MaxDistanceVisible();
 	}
@@ -954,12 +949,9 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 	// highest number the light can be
 	bLightLevel = LightTrueLevel(sSubjectGridNo, bLevel);
 
-
-	if ( pSubject && !( pSubject->fMuzzleFlash && (bLightLevel > NORMAL_LIGHTLEVEL_DAY) ) )
-	{
-		// ATE: Made function to adjust light distence...
-		sDistVisible = AdjustMaxSightRangeForEnvEffects(bLightLevel, sDistVisible);
-	}
+	if (hasMuzzleFlash)
+		bLightLevel = MIN(bLightLevel, NORMAL_LIGHTLEVEL_DAY);
+	sDistVisible = AdjustMaxSightRangeForEnvEffects(bLightLevel, sDistVisible);
 
 	// if we wanted to simulate desert-blindness, we'd bump up the light level
 	// under certain conditions (daytime in the desert, for instance)
