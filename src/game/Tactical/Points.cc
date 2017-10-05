@@ -1105,7 +1105,7 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_t
 {
 	UINT8	ap = 4;
 
-	if (gridno == NOWHERE) return ap;
+	if (gridno == NOWHERE || s.sGridNo == gridno) return 0;
 
 	if (SOLDIERTYPE const* const tgt = WhoIsThere2(gridno, s.bTargetLevel))
 	{ // On a guy, get his gridno
@@ -1116,18 +1116,37 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_t
 		{
 			ap += GetAPsToChangeStance(&s, ANIM_CROUCH);
 		}
-		else if (s.sGridNo == gridno)
+		else
 		{
 			ap += GetAPsToChangeStance(&s, ANIM_STAND);
 		}
 	}
 
-	if (add_turning_cost && s.sGridNo == gridno)
+	if (add_turning_cost && s.sGridNo != gridno)
 	{ // Is it the same as he's facing?
 		UINT8 const direction = GetDirectionFromGridNo(gridno, &s);
-		if (direction != s.bDirection) ap += AP_LOOK_STANDING; // ATE: Use standing turn cost
-	}
 
+		// Would expect that merc is standing up(2AP) and then looking(1AP)
+		// rather than looking(2AP) and then standing up(2AP)
+		// same for proning
+		if(direction != s.bDirection)
+		{
+			// We only add turning costs for enemys in attack range. If we have to
+			// move first turning cost are considered within walking
+			if (gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_STAND && s.sWalkToAttackWalkToCost == AP_MOVE_STANDING)
+			{
+				ap += AP_LOOK_STANDING; // ATE: Use standing turn cost
+			}
+			else if(gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_CROUCH && s.sWalkToAttackWalkToCost == AP_MOVE_CROUCHING)
+			{
+				ap += AP_LOOK_CROUCHED;
+			}
+			else if(gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_PRONE && s.sWalkToAttackWalkToCost == AP_MOVE_PRONING)
+			{
+				ap += AP_LOOK_PRONE;
+			} 
+		}
+	}
 	return ap;
 }
 

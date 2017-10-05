@@ -41,6 +41,10 @@
 #define AP_MOVEMENT_LAKE        9       // deep wade -> slowest
 #define AP_MOVEMENT_OCEAN       8       // swimming is faster than deep wade
 
+#define AP_MOVE_STANDING        2
+#define AP_MOVE_CROUCHING       3
+#define AP_MOVE_PRONING         4
+
 #define AP_CHANGE_FACING        1       // turning to face any other direction
 #define AP_CHANGE_TARGET        1       // aiming at a new target
 
