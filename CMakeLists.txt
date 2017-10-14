@@ -36,6 +36,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
@@ -58,6 +59,9 @@ add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 
 message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
 add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
+
+message(STATUS "Setting directory for libraries to" "${INSTALL_LIB_DIR}")
+add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
 if (WITH_FIXMES)
     message(STATUS "Building with fixme messages" )
@@ -229,7 +233,7 @@ include(CPack)
 if (UNIX AND NOT MINGW AND NOT APPLE)
     install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
-    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION lib)
+    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION ${INSTALL_LIB_DIR})
     install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
         FILES assets/icons/logo.svg
