@@ -1105,7 +1105,11 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_t
 {
 	UINT8	ap = 4;
 
-	if (gridno == NOWHERE) return ap;
+	// We return 0 for invalid attacks; will be handled as impossible
+	if (gridno == NOWHERE)
+	{
+		return 0;
+	}
 
 	if (SOLDIERTYPE const* const tgt = WhoIsThere2(gridno, s.bTargetLevel))
 	{ // On a guy, get his gridno
