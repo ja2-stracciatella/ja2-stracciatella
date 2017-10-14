@@ -3402,7 +3402,16 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 		return false;
 	}
 
-	if (item->getItemClass() == IC_PUNCH) return tgt;
+	if (item->getItemClass() == IC_PUNCH)
+	{
+		// We test again whether the target is reachable
+		if (CalcTotalAPsToAttack(s, tgt->sGridNo, true, 0) == 0)
+		{
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+			return false;
+		}
+		return tgt;
+	}
 
 	if (item->getItemClass() == IC_MEDKIT)
 	{ // If a guy's here, check if he needs medical help!
