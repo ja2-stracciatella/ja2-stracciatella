@@ -6752,7 +6752,6 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 {
 	//UINT32 uiMercFlags;
 	UINT8 ubTDirection;
-	BOOLEAN fChangeDirection = FALSE;
 	UINT16	usItem;
 
 	// Get item in hand...
@@ -6771,15 +6770,9 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	SOLDIERTYPE* const pTSoldier = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bLevel);
 	if (pTSoldier == NULL) return;
 
-	fChangeDirection = TRUE;
-
-
-	if ( fChangeDirection )
-	{
-			// CHANGE DIRECTION AND GOTO ANIMATION NOW
-		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
-		EVENT_SetSoldierDirection( pSoldier, ubDirection );
-	}
+	// CHANGE DIRECTION AND GOTO ANIMATION NOW
+	EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+	EVENT_SetSoldierDirection( pSoldier, ubDirection );
 
 
 	if (HAS_SKILL_TRAIT(pSoldier, MARTIALARTS) && !AreInMeanwhile() && usItem != CROWBAR)

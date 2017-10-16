@@ -3244,9 +3244,11 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 
 			 if ( sGotLocation != NOWHERE )
 			 {
-				 sAPCost += MinAPsToAttack( pSoldier, sAdjustedGridNo, TRUE );
-				 sAPCost += UIPlotPath(pSoldier, sGotLocation, NO_COPYROUTE, fPlot, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
+				 //sAPCost += MinAPsToAttack( pSoldier, sAdjustedGridNo, TRUE );
+				 
+				 // method CalcTotalAPsToAttack includes path and minap costs
+				 sAPCost += CalcTotalAPsToAttack(pSoldier, sAdjustedGridNo, TRUE, (pSoldier->bShownAimTime/2));
+ 				 //sAPCost += UIPlotPath(pSoldier, sGotLocation, NO_COPYROUTE, fPlot, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 				 if ( sGotLocation != pSoldier->sGridNo && fGotAdjacent )
 				 {
 						gfUIHandleShowMoveGrid = TRUE;
