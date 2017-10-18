@@ -1472,8 +1472,8 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
    // Have we hit things like furniture, etc?
 	 if ( Blocking != NOTHING_BLOCKING && !fTravelCostObs )
 	 {
-      // ATE: Tall things should blaock all
-      if ( bStructHeight == 4 )
+      // ATE: Tall things should blaock all; Default wall/door height is 4
+      if ( bStructHeight > 4 )
       {
 				 (*pubKeepGoing) = FALSE;
       }
