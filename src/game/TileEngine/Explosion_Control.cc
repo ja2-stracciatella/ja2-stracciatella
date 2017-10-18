@@ -1530,6 +1530,17 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 			  ( *pubKeepGoing ) = TRUE;
       }
 	 }
+	 
+	 if (bLevel == 1)
+	 {
+	 	 // We check for roof-level and structure to prevent smoke spreading over roof
+	 	 STRUCTURE * pStructure = FindStructure( uiNewSpot, STRUCTURE_ROOF );
+	 	 if (pStructure == NULL)
+	 	 {
+	 	 	 // no structure found therefore we can't spread
+	 	 	 ( *pubKeepGoing ) = FALSE;	   
+	 	 }
+	 }
 }
 
 
