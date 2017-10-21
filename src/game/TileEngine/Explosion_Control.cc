@@ -1172,11 +1172,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			if (pSoldier == NULL) return fRecompileMovementCosts;
 			// someone is here, and they're gonna get hurt
 
-			// only damage if there is smoke/gas on gridno and bLevel
-			if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & ANY_SMOKE_EFFECT)
-			{
-			  fRecompileMovementCosts = DishOutGasDamage(pSoldier, pExplosive, sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, owner);
-			}
+			fRecompileMovementCosts = DishOutGasDamage(pSoldier, pExplosive, sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, owner);
 /*
 		 if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->bLife || AM_A_ROBOT( pSoldier ) )
 		 {
