@@ -2840,6 +2840,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			break;
 
 		case '=':
+		case '+':
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				// adding money
