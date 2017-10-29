@@ -39,6 +39,7 @@ addons:
     - g++
     - libsdl2-dev
     - libboost-all-dev
+    - libfltk1.3-dev
   coverity_scan:
     project:
       name: "ja2-stracciatella/ja2-stracciatella"
