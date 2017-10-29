@@ -110,6 +110,10 @@ endif()
 
 if(BUILD_LAUNCHER)
     find_package(FLTK)
+    if(NOT FLTK_FOUND)
+        message(STATUS "FLTK not found. Disabling launcher.")
+        set(BUILD_LAUNCHER OFF)
+    endif()
 endif()
 
 set(JA2_INCLUDES "")
