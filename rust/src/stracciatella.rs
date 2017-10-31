@@ -419,6 +419,10 @@ macro_rules! unsafe_from_ptr {
     ($ptr:expr) => { unsafe { assert!(!$ptr.is_null()); &*$ptr } }
 }
 
+macro_rules! unsafe_from_ptr_mut {
+    ($ptr:expr) => { unsafe { assert!(!$ptr.is_null()); &mut *$ptr } }
+}
+
 #[no_mangle]
 pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
@@ -494,8 +498,23 @@ pub extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
 }
 
 #[no_mangle]
+pub extern fn set_resolution(ptr: *mut EngineOptions, x: u16, y: u16) -> () {
+    unsafe_from_ptr_mut!(ptr).resolution = (x, y)
+}
+
+#[no_mangle]
 pub extern fn get_resource_version(ptr: *const EngineOptions) -> ResourceVersion {
     unsafe_from_ptr!(ptr).resource_version
+}
+
+#[no_mangle]
+pub extern fn set_resource_version(ptr: *mut EngineOptions, res_ptr: *const c_char) -> () {
+    let c_str = unsafe { CStr::from_ptr(res_ptr) };
+    let version = c_str.to_str().unwrap();
+
+    if let Ok(v) = ResourceVersion::from_str(version) {
+        unsafe_from_ptr_mut!(ptr).resource_version = v
+    }
 }
 
 #[no_mangle]
@@ -519,6 +538,11 @@ pub fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
 }
 
 #[no_mangle]
+pub fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {
+    unsafe_from_ptr_mut!(ptr).start_in_fullscreen = val
+}
+
+#[no_mangle]
 pub fn should_start_in_window(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_window
 }
@@ -531,6 +555,11 @@ pub fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
 #[no_mangle]
 pub fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_without_sound
+}
+
+#[no_mangle]
+pub fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () {
+    unsafe_from_ptr_mut!(ptr).start_without_sound = val
 }
 
 #[no_mangle]
@@ -993,7 +1022,8 @@ mod tests {
         let mut config_file_contents = String::from("");
         File::open(stracciatella_json).unwrap().read_to_string(&mut config_file_contents).unwrap();
 
-        assert_eq!(config_file_contents, r##"{
+        assert_eq!(config_file_contents,
+r##"{
   "data_dir": "",
   "mods": [],
   "res": "100x100",

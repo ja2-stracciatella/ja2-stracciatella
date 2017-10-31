@@ -9,8 +9,8 @@ public:
     Launcher(std::string exePath, engine_options_t* initialParams);
 
     void show();
-    int writeIniFile();
     void initializeInputsFromDefaults();
+    int writeJsonFile();
     void setConfigPath(std::string);
 private:
     std::string exePath;

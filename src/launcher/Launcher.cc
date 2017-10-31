@@ -108,60 +108,29 @@ void Launcher::initializeInputsFromDefaults() {
     playSoundsCheckbox->value(should_start_without_sound(this->initialParams) ? 1 : 0);
 }
 
-int Launcher::writeIniFile() {
-    std::ofstream ofs(configPath.c_str());
+int Launcher::writeJsonFile() {
+    set_start_in_fullscreen(this->initialParams, fullscreenCheckbox->value());
+    set_start_without_sound(this->initialParams, !playSoundsCheckbox->value());
 
-    if (ofs) {
-        rapidjson::OStreamWrapper osw(ofs);
-
-        rapidjson::Document document;
-        document.SetObject();
-
-        rapidjson::Document::AllocatorType &allocator = document.GetAllocator();
-        rapidjson::Value val;
-
-        val.SetString(rapidjson::StringRef(helpString.c_str()));
-        document.AddMember(HELP_KEY, val, allocator);
-
-        val.SetString(rapidjson::StringRef(dataDirectoryInput->value()));
-        document.AddMember(DATA_DIR_KEY, val, allocator);
-
-        rapidjson::Value launcher_section(rapidjson::kObjectType);
-        val.SetString(rapidjson::StringRef(gameVersionInput->value()));
-        launcher_section.AddMember(GAME_VERSION_KEY, val, allocator);
-
-        char res[80];
-        if (customResolutionButton->value()) {
-            sprintf(res, "%dx%d", (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
-            val.SetString(rapidjson::StringRef(res));
-        } else {
-            val.SetString(rapidjson::StringRef(predefinedResolutionInput->value()));
-        }
-        launcher_section.AddMember(RESOLUTION_KEY, val, allocator);
-
-        val.SetBool(fullscreenCheckbox->value());
-        launcher_section.AddMember(FULLSCREEN_KEY, val, allocator);
-
-        val.SetBool(playSoundsCheckbox->value());
-        launcher_section.AddMember(PLAY_SOUNDS_KEY, val, allocator);
-
-
-
-
-        document.AddMember(LAUNCHER_SECTION, launcher_section, allocator);
-
-
-        rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
-        document.Accept(writer);
-
-        ofs.close();
-
-        if (ofs) {
-            SLOGD(LAUNCHER_TOPIC, "Succeeded writing to file %s", configPath.c_str());
-            return 0;
-        }
+    if (customResolutionButton->value()) {
+        set_resolution(this->initialParams, (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
+    } else {
+        std::string res = predefinedResolutionInput->value();
+        int split_index = res.find(RESOLUTION_SEPARATOR);
+        int x = atoi(res.substr(0, split_index).c_str());
+        int y = atoi(res.substr(split_index+1, res.length()).c_str());
+        set_resolution(this->initialParams, x, y);
     }
-    SLOGW(LAUNCHER_TOPIC, "Failed writing to file\" %s", configPath.c_str());
+
+    set_resource_version(this->initialParams, gameVersionInput->value());
+
+    bool success = write_engine_options(this->initialParams);
+
+    if (success) {
+        SLOGE(LAUNCHER_TOPIC, "Succeeded writing config file");
+        return 0;
+    }
+    SLOGE(LAUNCHER_TOPIC, "Failed writing config file");
     return 1;
 }
 
@@ -218,22 +187,6 @@ void Launcher::selectCustomResolution(Fl_Widget* btn, void* userdata) {
 void Launcher::startExecutable(bool asEditor) {
     std::string cmd(this->exePath);
 
-    cmd += std::string(" -resversion ") + std::string(gameVersionInput->value());
-
-    cmd += std::string(" -res ");
-    if (customResolutionButton->value()) {
-        char res[80];
-        sprintf(res, "%dx%d", (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
-        cmd += std::string(res);
-    } else {
-        cmd += std::string(predefinedResolutionInput->value());
-    }
-    if (!playSoundsCheckbox->value()) {
-        cmd += std::string(" -nosound");
-    }
-    if (fullscreenCheckbox->value()) {
-        cmd += std::string(" -fullscreen");
-    }
     if (asEditor) {
         cmd += std::string(" -editor");
     }
@@ -244,13 +197,13 @@ void Launcher::startExecutable(bool asEditor) {
 void Launcher::startGame(Fl_Widget* btn, void* userdata) {
     Launcher* window = static_cast< Launcher* >( userdata );
 
-    window->writeIniFile();
+    window->writeJsonFile();
     window->startExecutable(false);
 }
 
 void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
     Launcher* window = static_cast< Launcher* >( userdata );
 
-    window->writeIniFile();
+    window->writeJsonFile();
     window->startExecutable(true);
 }
