@@ -23,6 +23,9 @@ int main(int argc, char* argv[]) {
     if (params == NULL) {
       return EXIT_FAILURE;
     }
+    if (should_show_help(params)) {
+      return EXIT_SUCCESS;
+    }
 
     Launcher launcher(getJa2Executable(argv), params);
 
