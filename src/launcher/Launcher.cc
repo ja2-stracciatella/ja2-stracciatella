@@ -39,8 +39,8 @@ Launcher::Launcher(const std::string exePath, engine_options_t* engine_options) 
 
 void Launcher::show() {
     browseJa2DirectoryButton->callback((Fl_Callback *) openDataDirectorySelector, (void *) (this));
-    predefinedResolutionButton->callback( (Fl_Callback*)selectPredefinedResolution, (void*)(this) );
-    customResolutionButton->callback( (Fl_Callback*)selectCustomResolution, (void*)(this) );
+    predefinedResolutionButton->callback( (Fl_Callback*)enablePredefinedResolutionSelection, (void*)(this) );
+    customResolutionButton->callback( (Fl_Callback*)enableCustomResolutionSelection, (void*)(this) );
     playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
     editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
 
@@ -82,7 +82,7 @@ void Launcher::initializeInputsFromDefaults() {
     }
 
     fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
-    playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 1 : 0);
+    playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
 }
 
 int Launcher::writeJsonFile() {
@@ -104,10 +104,10 @@ int Launcher::writeJsonFile() {
     bool success = write_engine_options(this->engine_options);
 
     if (success) {
-        SLOGE(LAUNCHER_TOPIC, "Succeeded writing config file");
+        SLOGD(LAUNCHER_TOPIC, "Succeeded writing config file");
         return 0;
     }
-    SLOGE(LAUNCHER_TOPIC, "Failed writing config file");
+    SLOGD(LAUNCHER_TOPIC, "Failed writing config file");
     return 1;
 }
 
@@ -151,12 +151,12 @@ void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
     }
 }
 
-void Launcher::selectPredefinedResolution(Fl_Widget* btn, void* userdata) {
+void Launcher::enablePredefinedResolutionSelection(Fl_Widget* btn, void* userdata) {
     Launcher* window = static_cast< Launcher* >( userdata );
     window->enablePredefinedResolutions();
 }
 
-void Launcher::selectCustomResolution(Fl_Widget* btn, void* userdata) {
+void Launcher::enableCustomResolutionSelection(Fl_Widget* btn, void* userdata) {
     Launcher* window = static_cast< Launcher* >( userdata );
     window->enableCustomResolutions();
 }

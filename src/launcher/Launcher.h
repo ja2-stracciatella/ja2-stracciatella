@@ -21,8 +21,8 @@ private:
     void enableCustomResolutions();
     void startExecutable(bool asEditor);
     static void openDataDirectorySelector(Fl_Widget *btn, void *userdata);
-    static void selectPredefinedResolution(Fl_Widget* btn, void* userdata);
-    static void selectCustomResolution(Fl_Widget* btn, void* userdata);
+    static void enablePredefinedResolutionSelection(Fl_Widget* btn, void* userdata);
+    static void enableCustomResolutionSelection(Fl_Widget* btn, void* userdata);
     static void startGame(Fl_Widget* btn, void* userdata);
     static void startEditor(Fl_Widget* btn, void* userdata);
 };
