@@ -192,7 +192,7 @@ if(BUILD_LAUNCHER)
 
     add_library(launcherUi STATIC StracciatellaLauncher.cxx)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} launcherUi ${SDL2_LIBRARY} ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} slog rust-stracciatella)
+    target_link_libraries(${LAUNCHER_BINARY} launcherUi ${SDL2_LIBRARY} ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} dl slog rust-stracciatella)
 endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
