@@ -28,6 +28,8 @@ use std::fs::File;
 use std::error::Error;
 use serde::Deserializer;
 use serde::Deserialize;
+use serde::Serializer;
+use serde::Serialize;
 
 use getopts::Options;
 use libc::{size_t, c_char};
@@ -48,7 +50,7 @@ static DEFAULT_JSON_CONTENT: &'static str = r##"{
    "data_dir": "C:\\Program Files\\Jagged Alliance 2"
 }"##;
 
-#[derive(Debug, PartialEq, Copy, Clone, Deserialize)]
+#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]
 #[allow(non_camel_case_types)]
 pub enum ResourceVersion {
@@ -112,14 +114,22 @@ where
     parse_resolution(&res).map_err(|s| serde::de::Error::custom(s))
 }
 
-#[derive(Debug, PartialEq, Deserialize)]
+fn serialize_resolution<S>(&(x, y): &(u16, u16), serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    String::serialize(&format!("{}x{}", x, y), serializer)
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct EngineOptions {
+    #[serde(skip)]
     stracciatella_home: PathBuf,
     #[serde(rename = "data_dir")]
     vanilla_data_dir: PathBuf,
     mods: Vec<String>,
-    #[serde(rename(deserialize="res"), deserialize_with = "deserialize_resolution")]
+    #[serde(rename ="res", serialize_with = "serialize_resolution", deserialize_with = "deserialize_resolution")]
     resolution: (u16, u16),
     #[serde(rename = "resversion")]
     resource_version: ResourceVersion,
@@ -341,6 +351,14 @@ pub fn parse_json_config(stracciatella_home: PathBuf) -> Result<EngineOptions, S
         });
 }
 
+pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
+    let json = serde_json::to_string_pretty(engine_options).map_err(|s| format!("Error creating contents of ja2.json config file: {}", s.description()))?;
+    let path = build_json_config_location(&engine_options.stracciatella_home);
+    let mut f = File::create(path).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))?;
+
+    f.write_all(json.as_bytes()).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
+}
+
 #[cfg(not(windows))]
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     use std::env;
@@ -424,6 +442,12 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
             return ptr::null_mut();
         }
     };
+}
+
+#[no_mangle]
+pub fn write_engine_options(ptr: *mut EngineOptions) -> bool {
+    let engine_options = unsafe_from_ptr!(ptr);
+    write_json_config(engine_options).is_ok()
 }
 
 #[no_mangle]
@@ -936,6 +960,48 @@ mod tests {
             _ => {}
         }
         assert_eq!(engine_options_res, Err(String::from(expected_error_message)));
+    }
+
+    #[test]
+    fn write_engine_options_should_write_a_json_file_that_can_be_serialized_again() {
+        let mut engine_options = super::EngineOptions::default();
+        let temp_dir = write_temp_folder_with_ja2_ini(b"Invalid JSON");
+        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
+
+        engine_options.stracciatella_home = stracciatella_home.clone();
+        engine_options.resolution = (100, 100);
+
+        super::write_engine_options(&mut engine_options);
+
+        let got_engine_options = super::parse_json_config(stracciatella_home).unwrap();
+
+        assert_eq!(got_engine_options.resolution, engine_options.resolution);
+    }
+
+    #[test]
+    fn write_engine_options_should_write_a_pretty_json_file() {
+        let mut engine_options = super::EngineOptions::default();
+        let temp_dir = write_temp_folder_with_ja2_ini(b"Invalid JSON");
+        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
+        let stracciatella_json = PathBuf::from(temp_dir.path().join(".ja2/ja2.json"));
+
+        engine_options.stracciatella_home = stracciatella_home.clone();
+        engine_options.resolution = (100, 100);
+
+        super::write_engine_options(&mut engine_options);
+
+        let mut config_file_contents = String::from("");
+        File::open(stracciatella_json).unwrap().read_to_string(&mut config_file_contents).unwrap();
+
+        assert_eq!(config_file_contents, r##"{
+  "data_dir": "",
+  "mods": [],
+  "res": "100x100",
+  "resversion": "ENGLISH",
+  "fullscreen": false,
+  "debug": false,
+  "nosound": false
+}"##);
     }
 
     #[test]
