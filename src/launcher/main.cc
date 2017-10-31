@@ -25,15 +25,6 @@ int main(int argc, char* argv[]) {
     }
 
     Launcher launcher(getJa2Executable(argv), params);
-    {
-
-
-
-        char* rustConfigFolderPath = get_stracciatella_home(params);
-        std::string configFolderPath = std::string(rustConfigFolderPath);
-        launcher.setConfigPath(configFolderPath);
-        free_rust_string(rustConfigFolderPath);
-    }
 
     launcher.show();
     return Fl::run();

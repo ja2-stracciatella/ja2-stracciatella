@@ -1,30 +1,11 @@
 #include <string>
 #include "FL/Fl_Native_File_Chooser.H"
-#include <boost/foreach.hpp>
-#include <rapidjson/document.h>
-#include <rapidjson/istreamwrapper.h>
-#include <rapidjson/ostreamwrapper.h>
-#include <rapidjson/prettywriter.h>
-#include <rapidjson/filewritestream.h>
 #include "slog/slog.h"
 #include "RustInterface.h"
 
-#include "FileMan.h" // for joinPaths
 #include "Launcher.h"
 
-#include <iostream>
-#include <fstream>
-
 #define LAUNCHER_TOPIC DEBUG_TAG_LAUNCHER
-
-#define GAME_SECTION ""
-#define LAUNCHER_SECTION "launcher"
-#define DATA_DIR_KEY "data_dir"
-#define HELP_KEY "help"
-#define GAME_VERSION_KEY "gameVersion"
-#define RESOLUTION_KEY "resolution"
-#define FULLSCREEN_KEY "fullscreen"
-#define PLAY_SOUNDS_KEY "playSounds"
 
 #define RESOLUTION_SEPARATOR "x"
 
@@ -51,13 +32,9 @@ const char* predefinedVersions[] = {
 
 
 
-void Launcher::setConfigPath(std::string configPath) {
-    this->configPath = FileMan::joinPaths(configPath, "ja2.json");
-}
-
-Launcher::Launcher(const std::string exePath, engine_options_t* initialParams) : StracciatellaLauncher() {
+Launcher::Launcher(const std::string exePath, engine_options_t* engine_options) : StracciatellaLauncher() {
     this->exePath = exePath;
-    this->initialParams = initialParams;
+    this->engine_options = engine_options;
 }
 
 void Launcher::show() {
@@ -74,16 +51,16 @@ void Launcher::show() {
 }
 
 void Launcher::initializeInputsFromDefaults() {
-    char* rustResRootPath = get_vanilla_data_dir(this->initialParams);
+    char* rustResRootPath = get_vanilla_data_dir(this->engine_options);
     dataDirectoryInput->value(rustResRootPath);
     free_rust_string(rustResRootPath);
 
-    char* rustResVersion = get_resource_version_string(get_resource_version(this->initialParams));
+    char* rustResVersion = get_resource_version_string(get_resource_version(this->engine_options));
     gameVersionInput->value(rustResVersion);
     free_rust_string(rustResVersion);
 
     char resolutionString[255];
-    sprintf(resolutionString, "%dx%d", get_resolution_x(this->initialParams), get_resolution_y(this->initialParams));
+    sprintf(resolutionString, "%dx%d", get_resolution_x(this->engine_options), get_resolution_y(this->engine_options));
 
     bool predefinedResolutionFound = false;
     for (int i=0; predefinedResolutions[i] != NULL; i++) {
@@ -104,27 +81,27 @@ void Launcher::initializeInputsFromDefaults() {
         customResolutionYInput->value(atoi(y));
     }
 
-    fullscreenCheckbox->value(should_start_in_fullscreen(this->initialParams) ? 1 : 0);
-    playSoundsCheckbox->value(should_start_without_sound(this->initialParams) ? 1 : 0);
+    fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
+    playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 1 : 0);
 }
 
 int Launcher::writeJsonFile() {
-    set_start_in_fullscreen(this->initialParams, fullscreenCheckbox->value());
-    set_start_without_sound(this->initialParams, !playSoundsCheckbox->value());
+    set_start_in_fullscreen(this->engine_options, fullscreenCheckbox->value());
+    set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
 
     if (customResolutionButton->value()) {
-        set_resolution(this->initialParams, (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
+        set_resolution(this->engine_options, (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
     } else {
         std::string res = predefinedResolutionInput->value();
         int split_index = res.find(RESOLUTION_SEPARATOR);
         int x = atoi(res.substr(0, split_index).c_str());
         int y = atoi(res.substr(split_index+1, res.length()).c_str());
-        set_resolution(this->initialParams, x, y);
+        set_resolution(this->engine_options, x, y);
     }
 
-    set_resource_version(this->initialParams, gameVersionInput->value());
+    set_resource_version(this->engine_options, gameVersionInput->value());
 
-    bool success = write_engine_options(this->initialParams);
+    bool success = write_engine_options(this->engine_options);
 
     if (success) {
         SLOGE(LAUNCHER_TOPIC, "Succeeded writing config file");
