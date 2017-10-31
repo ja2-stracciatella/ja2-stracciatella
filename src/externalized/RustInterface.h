@@ -12,6 +12,7 @@ extern "C" {
   extern UINT16 get_resolution_x(const engine_options_t *);
   extern UINT16 get_resolution_y(const engine_options_t *);
   extern GameVersion get_resource_version(const engine_options_t *);
+  extern char * get_resource_version_string(GameVersion);
   extern void free_rust_string(char *);
   extern bool should_show_help(const engine_options_t *);
   extern bool should_run_unittests(const engine_options_t *);

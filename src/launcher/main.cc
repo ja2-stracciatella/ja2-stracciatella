@@ -19,12 +19,15 @@ int main(int argc, char* argv[]) {
     SLOG_Init(SLOG_STDERR, "stracciatella-launcher.log");
     SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
-    Launcher launcher(getJa2Executable(argv));
+    engine_options_t* params = create_engine_options(argv, argc);
+    if (params == NULL) {
+      return EXIT_FAILURE;
+    }
+
+    Launcher launcher(getJa2Executable(argv), params);
     {
-        engine_options_t* params = create_engine_options(argv, argc);
-        if (params == NULL) {
-          return EXIT_FAILURE;
-        }
+
+
 
         char* rustConfigFolderPath = get_stracciatella_home(params);
         std::string configFolderPath = std::string(rustConfigFolderPath);

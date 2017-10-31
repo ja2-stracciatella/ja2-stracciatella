@@ -7,6 +7,7 @@
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/filewritestream.h>
 #include "slog/slog.h"
+#include "RustInterface.h"
 
 #include "FileMan.h" // for joinPaths
 #include "Launcher.h"
@@ -33,7 +34,8 @@ const char* predefinedResolutions[] = {
         "1024x768",
         "1280x720",
         "1600x900",
-        "1920x1080"
+        "1920x1080",
+        NULL
 };
 const char* predefinedVersions[] = {
         "DUTCH",
@@ -43,7 +45,8 @@ const char* predefinedVersions[] = {
         "ITALIAN",
         "POLISH",
         "RUSSIAN",
-        "RUSSIAN_GOLD"
+        "RUSSIAN_GOLD",
+        NULL
 };
 
 
@@ -52,8 +55,9 @@ void Launcher::setConfigPath(std::string configPath) {
     this->configPath = FileMan::joinPaths(configPath, "ja2.json");
 }
 
-Launcher::Launcher(const std::string exePath) : StracciatellaLauncher() {
+Launcher::Launcher(const std::string exePath, engine_options_t* initialParams) : StracciatellaLauncher() {
     this->exePath = exePath;
+    this->initialParams = initialParams;
 }
 
 void Launcher::show() {
@@ -64,9 +68,44 @@ void Launcher::show() {
     editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
 
     populateChoices();
-    readFromIniOrDefaults();
+    initializeInputsFromDefaults();
 
     stracciatellaLauncher->show();
+}
+
+void Launcher::initializeInputsFromDefaults() {
+    char* rustResRootPath = get_vanilla_data_dir(this->initialParams);
+    dataDirectoryInput->value(rustResRootPath);
+    free_rust_string(rustResRootPath);
+
+    char* rustResVersion = get_resource_version_string(get_resource_version(this->initialParams));
+    gameVersionInput->value(rustResVersion);
+    free_rust_string(rustResVersion);
+
+    char resolutionString[255];
+    sprintf(resolutionString, "%dx%d", get_resolution_x(this->initialParams), get_resolution_y(this->initialParams));
+
+    bool predefinedResolutionFound = false;
+    for (int i=0; predefinedResolutions[i] != NULL; i++) {
+        if (strcmp(predefinedResolutions[i], resolutionString) == 0) {
+            predefinedResolutionFound = true;
+        }
+    }
+    if (predefinedResolutionFound) {
+        enablePredefinedResolutions();
+        predefinedResolutionInput->value(resolutionString);
+    } else {
+        enableCustomResolutions();
+        char* res = const_cast<char*>(resolutionString);
+        const char* x = strtok(res, RESOLUTION_SEPARATOR);
+        const char* y = strtok(NULL, RESOLUTION_SEPARATOR);
+
+        customResolutionXInput->value(atoi(x));
+        customResolutionYInput->value(atoi(y));
+    }
+
+    fullscreenCheckbox->value(should_start_in_fullscreen(this->initialParams) ? 1 : 0);
+    playSoundsCheckbox->value(should_start_without_sound(this->initialParams) ? 1 : 0);
 }
 
 int Launcher::writeIniFile() {
@@ -126,95 +165,12 @@ int Launcher::writeIniFile() {
     return 1;
 }
 
-int Launcher::readFromIniOrDefaults() {
-    std::ifstream configs(configPath.c_str());
-    rapidjson::IStreamWrapper configisw(configs);
-
-
-    rapidjson::Document document;
-    document.ParseStream(configisw);
-
-    bool failedToRead = document.Size() < 1;
-
-    if(failedToRead) {
-        SLOGW(LAUNCHER_TOPIC, "Failed reading from file %s", configPath.c_str());
-    } else {
-        SLOGD(LAUNCHER_TOPIC, "Succeeded reading from file %s", configPath.c_str());
-    }
-
-    // default values:
-    dataDirectoryInput->value("/some/place/where/the/data/is");
-    gameVersionInput->value("ENGLISH");
-    fullscreenCheckbox->value(1);
-    playSoundsCheckbox->value(1);
-    bool use_default_resolutions = true;
-
-
-    if (document.HasMember(DATA_DIR_KEY) && document[DATA_DIR_KEY].IsString()) {
-        dataDirectoryInput->value(document[DATA_DIR_KEY].GetString());
-    }
-
-    if (document.HasMember(HELP_KEY) && document[HELP_KEY].IsString()) {
-        helpString = document[HELP_KEY].GetString();
-    } else {
-        helpString = "Put the directory to your original ja2 installation into the line below";
-    }
-
-    if (document.HasMember(LAUNCHER_SECTION) && document[LAUNCHER_SECTION].IsObject()) {
-        const rapidjson::Value& launcher_section = document[LAUNCHER_SECTION];
-        if (launcher_section.HasMember(GAME_VERSION_KEY) && launcher_section[GAME_VERSION_KEY].IsString()) {
-            gameVersionInput->value(launcher_section[GAME_VERSION_KEY].GetString());
-        }
-        if (launcher_section.HasMember(FULLSCREEN_KEY) && launcher_section[FULLSCREEN_KEY].IsBool()) {
-            fullscreenCheckbox->value(launcher_section[FULLSCREEN_KEY].GetBool());
-        }
-        if (launcher_section.HasMember(PLAY_SOUNDS_KEY) && launcher_section[PLAY_SOUNDS_KEY].IsBool()) {
-            playSoundsCheckbox->value(launcher_section[PLAY_SOUNDS_KEY].GetBool());
-        }
-
-        if (launcher_section.HasMember(RESOLUTION_KEY) && launcher_section[RESOLUTION_KEY].IsString()) {
-            use_default_resolutions = false;
-
-            const char* resolutionString = launcher_section[RESOLUTION_KEY].GetString();
-            bool predefinedResolutionFound = false;
-
-            BOOST_FOREACH(const char* str, predefinedResolutions)
-            {
-                if (strcmp(str, resolutionString) == 0) {
-                    predefinedResolutionFound = true;
-                }
-            }
-            if (predefinedResolutionFound) {
-                enablePredefinedResolutions();
-                predefinedResolutionInput->value(resolutionString);
-            } else {
-                enableCustomResolutions();
-                char* res = const_cast<char*>(resolutionString);
-                const char* x = strtok(res, RESOLUTION_SEPARATOR);
-                const char* y = strtok(NULL, RESOLUTION_SEPARATOR);
-
-                customResolutionXInput->value(atoi(x));
-                customResolutionYInput->value(atoi(y));
-            }
-        }
-    }
-
-    if (use_default_resolutions) {
-        enablePredefinedResolutions();
-        predefinedResolutionInput->value(predefinedResolutions[0]);
-    }
-
-    return failedToRead ? 1 : 0;
-}
-
 void Launcher::populateChoices() {
-    BOOST_FOREACH(const char* str, predefinedVersions)
-    {
-        gameVersionInput->add(str);
+    for (int i=0; predefinedVersions[i] != NULL; i++) {
+        gameVersionInput->add(predefinedVersions[i]);
     }
-    BOOST_FOREACH(const char* str, predefinedResolutions)
-    {
-        predefinedResolutionInput->add(str);
+    for (int i=0; predefinedResolutions[i] != NULL; i++) {
+        predefinedResolutionInput->add(predefinedResolutions[i]);
     }
 }
 
@@ -298,5 +254,3 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
     window->writeIniFile();
     window->startExecutable(true);
 }
-
-

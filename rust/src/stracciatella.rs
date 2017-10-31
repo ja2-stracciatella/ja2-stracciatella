@@ -13,7 +13,10 @@ extern crate shell32;
 
 use std::slice;
 use std::str;
+use std::str::FromStr;
 use std::ptr;
+use std::fmt;
+use std::fmt::Display;
 use std::fs;
 use std::ffi::{CStr, CString};
 use std::path::PathBuf;
@@ -55,6 +58,39 @@ pub enum ResourceVersion {
     RUSSIAN_GOLD,
 }
 
+impl FromStr for ResourceVersion {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "DUTCH" => Ok(ResourceVersion::DUTCH),
+            "ENGLISH" => Ok(ResourceVersion::ENGLISH),
+            "FRENCH" => Ok(ResourceVersion::FRENCH),
+            "GERMAN" => Ok(ResourceVersion::GERMAN),
+            "ITALIAN" => Ok(ResourceVersion::ITALIAN),
+            "POLISH" => Ok(ResourceVersion::POLISH),
+            "RUSSIAN" => Ok(ResourceVersion::RUSSIAN),
+            "RUSSIAN_GOLD" => Ok(ResourceVersion::RUSSIAN_GOLD),
+            _ => Err(format!("Resource version {} is unknown", s))
+        }
+    }
+}
+
+impl Display for ResourceVersion {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", match self {
+            &ResourceVersion::DUTCH => "DUTCH",
+            &ResourceVersion::ENGLISH => "ENGLISH",
+            &ResourceVersion::FRENCH => "FRENCH",
+            &ResourceVersion::GERMAN => "GERMAN",
+            &ResourceVersion::ITALIAN => "ITALIAN",
+            &ResourceVersion::POLISH => "POLISH",
+            &ResourceVersion::RUSSIAN => "RUSSIAN",
+            &ResourceVersion::RUSSIAN_GOLD => "RUSSIAN_GOLD",
+        })
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct EngineOptions {
     stracciatella_home: PathBuf,
@@ -89,20 +125,6 @@ impl Default for EngineOptions {
             start_in_debug_mode: false,
             start_without_sound: false,
         }
-    }
-}
-
-fn get_res_version(res_version_str: &str) -> Option<ResourceVersion> {
-    match res_version_str {
-        "DUTCH" => Some(ResourceVersion::RUSSIAN),
-        "ENGLISH" => Some(ResourceVersion::ENGLISH),
-        "FRENCH" => Some(ResourceVersion::FRENCH),
-        "GERMAN" => Some(ResourceVersion::GERMAN),
-        "ITALIAN" => Some(ResourceVersion::ITALIAN),
-        "POLISH" => Some(ResourceVersion::POLISH),
-        "RUSSIAN" => Some(ResourceVersion::RUSSIAN),
-        "RUSSIAN_GOLD" => Some(ResourceVersion::RUSSIAN_GOLD),
-        _ => None
     }
 }
 
@@ -222,11 +244,11 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
             }
 
             if let Some(s) = m.opt_str("resversion") {
-                match get_res_version(&s) {
-                    Some(resource_version) => {
+                match ResourceVersion::from_str(&s) {
+                    Ok(resource_version) => {
                         engine_options.resource_version = resource_version
                     },
-                    None => return Some(format!("Unknown resource version in arguments: '{}'.", s))
+                    Err(str) => return Some(str)
                 }
             }
 
@@ -333,11 +355,11 @@ pub fn parse_json_config(engine_options: &mut EngineOptions) -> Option<String> {
             }
 
             if let Some(s) = json_root.get("resversion").and_then(|v| v.as_str()) {
-                match get_res_version(s) {
-                    Some(resource_version) => {
+                match ResourceVersion::from_str(s) {
+                    Ok(resource_version) => {
                         engine_options.resource_version = resource_version
                     },
-                    None => return Some(format!("Unknown resource version in ja2.json: '{}'.", s))
+                    Err(str) => return Some(str)
                 }
             }
 
@@ -540,6 +562,12 @@ pub fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
 }
 
 #[no_mangle]
+pub extern fn get_resource_version_string(version: ResourceVersion) -> *mut c_char {
+    let c_str_home = CString::new(version.to_string()).unwrap();
+    c_str_home.into_raw()
+}
+
+#[no_mangle]
 pub fn free_rust_string(s: *mut c_char) {
     unsafe {
         if s.is_null() { return }
@@ -616,7 +644,7 @@ mod tests {
     fn parse_args_should_fail_with_unknown_resversion() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("TESTUNKNOWN"));
-        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Unknown resource version in arguments: 'TESTUNKNOWN'.");
+        assert_eq!(super::parse_args(&mut engine_options, input).unwrap(), "Resource version TESTUNKNOWN is unknown");
     }
 
     #[test]
@@ -646,7 +674,7 @@ mod tests {
 
     #[test]
     #[cfg(target_os = "macos")]
-    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_mac() {
+    fn parse_args_should_return_the_correct_canonical_data_dir_on_mac() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
@@ -667,7 +695,7 @@ mod tests {
 
     #[test]
     #[cfg(all(not(windows), not(target_os = "macos")))]
-    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_linux() {
+    fn parse_args_should_return_the_correct_canonical_data_dir_on_linux() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
@@ -684,7 +712,7 @@ mod tests {
 
     #[test]
     #[cfg(windows)]
-    fn parse_json_config_should_return_the_correct_canonical_data_dir_on_windows() {
+    fn parse_args_should_return_the_correct_canonical_data_dir_on_windows() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
@@ -700,7 +728,7 @@ mod tests {
     }
 
     #[test]
-    fn parse_json_config_should_fail_with_non_existing_directory() {
+    fn parse_args_should_fail_with_non_existing_directory() {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--datadir"), String::from("somethingelse"));
 
@@ -813,7 +841,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
 
-        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Unknown resource version in ja2.json: 'TESTUNKNOWN'.");
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Resource version TESTUNKNOWN is unknown");
     }
 
     #[test]
@@ -906,5 +934,24 @@ mod tests {
             _ => {}
         }
         assert_eq!(engine_options_res, Err(String::from(expected_error_message)));
+    }
+
+    macro_rules! assert_chars_eq { ($got:expr, $expected:expr) => {
+        unsafe {
+            assert_eq!(str::from_utf8(CStr::from_ptr($got).to_bytes()).unwrap(), $expected);
+        }
+    } }
+
+    #[test]
+    fn get_resource_version_string_should_return_the_correct_resource_version_string() {
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::DUTCH), "DUTCH");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ENGLISH), "ENGLISH");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::FRENCH), "FRENCH");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::GERMAN), "GERMAN");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ITALIAN), "ITALIAN");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::POLISH), "POLISH");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN), "RUSSIAN");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN_GOLD), "RUSSIAN_GOLD");
+
     }
 }

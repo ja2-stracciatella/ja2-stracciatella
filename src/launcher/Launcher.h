@@ -2,19 +2,21 @@
 #define JA2_LAUNCHER_H_H
 
 #include "StracciatellaLauncher.h"
+#include "RustInterface.h"
 
 class Launcher : public StracciatellaLauncher {
 public:
-    Launcher(std::string exePath);
+    Launcher(std::string exePath, engine_options_t* initialParams);
 
     void show();
     int writeIniFile();
-    int readFromIniOrDefaults();
+    void initializeInputsFromDefaults();
     void setConfigPath(std::string);
 private:
     std::string exePath;
     std::string configPath;
     std::string helpString;
+    engine_options_t* initialParams;
 
     void populateChoices();
     void enablePredefinedResolutions();
