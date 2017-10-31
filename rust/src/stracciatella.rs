@@ -762,7 +762,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
 
-        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Error parsing ja2.json config file: syntax error");
+        assert_eq!(super::parse_json_config(&mut engine_options).unwrap(), "Error parsing ja2.json config file: JSON error");
     }
 
     #[test]
