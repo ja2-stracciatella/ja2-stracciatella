@@ -569,6 +569,20 @@ pub extern fn get_resource_version_string(version: ResourceVersion) -> *mut c_ch
 }
 
 #[no_mangle]
+pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *const c_char {
+    let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr).to_string_lossy() };
+    let is_exe = launcher_path.to_lowercase().ends_with(".exe");
+    let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
+    let mut executable_path = String::from(&launcher_path[0..end_of_executable_slice]);
+
+    if is_exe {
+        executable_path.push_str(if is_exe { ".exe" } else { "" });
+    }
+
+    CString::new(executable_path).unwrap().into_raw()
+}
+
+#[no_mangle]
 pub fn free_rust_string(s: *mut c_char) {
     unsafe {
         if s.is_null() { return }
@@ -1045,5 +1059,14 @@ r##"{
         assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN), "RUSSIAN");
         assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN_GOLD), "RUSSIAN_GOLD");
 
+    }
+
+    #[test]
+    fn find_ja2_executable_should_determine_game_path_from_launcher_path() {
+        assert_chars_eq!(super::find_ja2_executable(CString::new("/home/test/ja2-launcher").unwrap().as_ptr()), "/home/test/ja2");
+        assert_chars_eq!(super::find_ja2_executable(CString::new("C:\\\\home\\\\test\\\\ja2-launcher.exe").unwrap().as_ptr()), "C:\\\\home\\\\test\\\\ja2.exe");
+        assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher").unwrap().as_ptr()), "ja2");
+        assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher.exe").unwrap().as_ptr()), "ja2.exe");
+        assert_chars_eq!(super::find_ja2_executable(CString::new("JA2-LAUNCHER.EXE").unwrap().as_ptr()), "JA2.exe");
     }
 }

@@ -27,4 +27,6 @@ extern "C" {
   extern bool should_start_in_debug_mode(const engine_options_t *);
   extern bool should_start_without_sound(const engine_options_t *);
   extern void set_start_without_sound(const engine_options_t *, bool);
+
+  extern char * find_ja2_executable(const char *);
 }

@@ -127,14 +127,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 
 if(BUILD_LAUNCHER)
     set(LAUNCHER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp)
-    set(LAUNCHER_SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/FileMan.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/LibraryDataBase.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/MemMan.cc
-    )
+    set(LAUNCHER_SOURCES "")
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
 endif()
 
@@ -192,7 +185,7 @@ if(BUILD_LAUNCHER)
 
     add_library(launcherUi STATIC StracciatellaLauncher.cxx)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} launcherUi ${SDL2_LIBRARY} ${FLTK_LIBRARIES} ${Boost_LIBRARIES} ${lib-gtest} dl slog rust-stracciatella)
+    target_link_libraries(${LAUNCHER_BINARY} launcherUi ${FLTK_LIBRARIES} dl slog rust-stracciatella)
 endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
