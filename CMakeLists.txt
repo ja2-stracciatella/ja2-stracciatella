@@ -40,6 +40,7 @@ set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
+option(LOCAL_FLTK_LIB "Build with fltk boost lib" OFF)
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
 option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
@@ -108,13 +109,40 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DENABLE_ASSERTS)
 endif()
 
+set(FLTK_LIBRARIES "")
+set(FLTK_INCLUDE_DIR "")
 if(BUILD_LAUNCHER)
-    find_package(FLTK)
-    if(NOT FLTK_FOUND)
-        message(STATUS "FLTK not found. Disabling launcher.")
-        set(BUILD_LAUNCHER OFF)
+    if (NOT LOCAL_FLTK_LIB)
+        find_package(FLTK)
+        if(NOT FLTK_FOUND)
+            message(STATUS "FLTK not found. Disabling launcher.")
+            set(BUILD_LAUNCHER OFF)
+        endif()
+    else()
+        add_subdirectory("dependencies/lib-fltk")
+        set(FLTK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-fltk/include")
+
+        if (UNIX AND NOT MINGW AND NOT APPLE)
+            set(FLTK_LIBRARIES
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_images.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_forms.a"
+                X11)
+        elseif(APPLE)
+            set(FLTK_LIBRARIES
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_images.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_forms.a")
+        elseif(MSVC)
+            # TODO Debug versions only
+            set(FLTK_LIBRARIES
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltkd.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_imagesd.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_formsd.lib")
+        endif()
     endif()
 endif()
+message(STATUS "Fltk Libraries: ${FLTK_LIBRARIES}")
 
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
@@ -126,7 +154,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 
 if(BUILD_LAUNCHER)
-    set(LAUNCHER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/sgp)
+    set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR})
     set(LAUNCHER_SOURCES "")
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
 endif()
@@ -176,16 +204,16 @@ add_executable(${JA2_BINARY} ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
 
 if(BUILD_LAUNCHER)
-    add_custom_command(
-        OUTPUT "StracciatellaLauncher.cxx" "StracciatellaLauncher.h"
-        COMMAND fluid -c ${CMAKE_CURRENT_SOURCE_DIR}/src/launcher/StracciatellaLauncher.fl
-    )
-
-    include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
-    add_library(launcherUi STATIC StracciatellaLauncher.cxx)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} launcherUi ${FLTK_LIBRARIES} dl slog rust-stracciatella)
+
+    set(ADDITIONAL_LIBS "")
+    if (UNIX AND NOT MINGW)
+        set(ADDITIONAL_LIBS dl)
+    endif()
+    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} slog rust-stracciatella ${ADDITIONAL_LIBS})
+    if (LOCAL_FLTK_LIB)
+        add_dependencies(${LAUNCHER_BINARY} fltk-internal)
+    endif()
 endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
@@ -216,6 +244,10 @@ if (APPLE)
             POST_BUILD COMMAND
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
             "$<TARGET_FILE:${JA2_BINARY}>")
+    add_custom_command(TARGET ${LAUNCHER_BINARY}
+            POST_BUILD COMMAND
+            ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
+            "$<TARGET_FILE:${LAUNCHER_BINARY}>")
 endif()
 
 
