@@ -89,6 +89,8 @@ int Launcher::writeJsonFile() {
     set_start_in_fullscreen(this->engine_options, fullscreenCheckbox->value());
     set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
 
+    set_vanilla_data_dir(this->engine_options, dataDirectoryInput->value());
+
     if (customResolutionButton->value()) {
         set_resolution(this->engine_options, (int)customResolutionXInput->value(), (int)customResolutionYInput->value());
     } else {

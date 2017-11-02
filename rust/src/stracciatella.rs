@@ -473,6 +473,12 @@ pub extern fn get_vanilla_data_dir(ptr: *const EngineOptions) -> *mut c_char {
 }
 
 #[no_mangle]
+pub extern fn set_vanilla_data_dir(ptr: *mut EngineOptions, data_dir_ptr: *const c_char) -> () {
+    let c_str = unsafe { CStr::from_ptr(data_dir_ptr) };
+    unsafe_from_ptr_mut!(ptr).vanilla_data_dir = PathBuf::from(c_str.to_string_lossy().into_owned());
+}
+
+#[no_mangle]
 pub extern fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
     return unsafe_from_ptr!(ptr).mods.len() as u32
 }
