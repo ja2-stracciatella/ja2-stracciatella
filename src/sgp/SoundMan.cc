@@ -623,15 +623,20 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
     };
   }
 
+  UINT32 convertedSize = cvt.len * cvt.len_ratio;
+
   strcpy(s->pName, pFilename);
-  s->n_samples = UINT32(cvt.len * cvt.len_mult / (wavSpec.channels * 2));
+  s->n_samples = UINT32(convertedSize / (wavSpec.channels * 2));
   s->uiFlags     |= SAMPLE_ALLOCATED;
   if (wavSpec.channels != 1) {
     s->uiFlags |= SAMPLE_STEREO;
   }
 
   s->uiInstances  = 0;
-  s->pData = cvt.buf;
+  s->pData = MALLOCN(UINT8, convertedSize);
+  memcpy(s->pData, cvt.buf, convertedSize);
+
+  free(cvt.buf);
 
   IncreaseSoundMemoryUsedBySample(s);
 
