@@ -1,6 +1,6 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0303 
-header_name {.h} 
+version 1.0304
+header_name {.h}
 code_name {.cxx}
 class StracciatellaLauncher {open
 } {
@@ -8,29 +8,29 @@ class StracciatellaLauncher {open
   } {
     Fl_Window stracciatellaLauncher {
       label {JA2 Stracciatella Launcher} open
-      xywh {959 320 450 305} type Double visible
+      xywh {719 235 455 290} type Double visible
     } {
-      Fl_Group {} {open
-        xywh {-1 0 455 385}
+      Fl_Group {} {open selected
+        xywh {-1 0 456 290}
       } {
         Fl_Group {} {open
-          xywh {0 10 454 65} align 4
+          xywh {5 10 440 65} align 20
         } {
           Fl_Input dataDirectoryInput {
-            label {Ja2 Data Directory}
-            xywh {138 10 270 25}
+            label {Ja2 Data Directory:}
+            xywh {145 10 270 25} align 132
           }
           Fl_Input_Choice gameVersionInput {
-            label {Game Version} open
-            xywh {137 47 300 25}
+            label {Game Version:}
+            xywh {145 47 300 25}
           } {}
           Fl_Button browseJa2DirectoryButton {
             label {...}
-            xywh {410 10 25 25}
+            xywh {420 10 25 25}
           }
         }
         Fl_Group {} {open
-          xywh {0 105 250 280}
+          xywh {0 105 250 175}
         } {
           Fl_Check_Button fullscreenCheckbox {
             label Fullscreen
@@ -41,11 +41,11 @@ class StracciatellaLauncher {open
             xywh {10 105 240 120} box THIN_DOWN_FRAME
           } {
             Fl_Round_Button predefinedResolutionButton {
-              label Predefined
+              label {Predefined:}
               xywh {20 115 100 20} down_box ROUND_DOWN_BOX
             }
             Fl_Round_Button customResolutionButton {
-              label Custom
+              label {Custom:}
               xywh {20 165 80 20} down_box ROUND_DOWN_BOX
             }
             Fl_Input_Choice predefinedResolutionInput {open
@@ -60,23 +60,23 @@ class StracciatellaLauncher {open
             }
           }
           Fl_Check_Button playSoundsCheckbox {
-            label {Play Sounds} selected
+            label {Play Sounds}
             xywh {20 252 130 19} down_box DOWN_BOX
           }
         }
         Fl_Group {} {open
-          xywh {270 105 165 185}
+          xywh {260 105 185 175}
         } {
           Fl_Button playButton {
             label {Play Ja2 Stracciatella}
-            xywh {270 240 150 50}
+            xywh {260 225 185 55}
           }
           Fl_Button editorButton {
             label {Start Map Editor}
-            xywh {270 205 150 25}
+            xywh {260 190 185 25}
           }
         }
       }
     }
   }
-} 
+}
