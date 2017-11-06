@@ -11,6 +11,7 @@
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Value_Input.H>
+#include <FL/Fl_Box.H>
 
 class StracciatellaLauncher {
 public:

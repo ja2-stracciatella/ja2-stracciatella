@@ -10,10 +10,10 @@ class StracciatellaLauncher {open
       label {JA2 Stracciatella Launcher} open
       xywh {719 235 455 290} type Double visible
     } {
-      Fl_Group {} {open selected
+      Fl_Group {} {open
         xywh {-1 0 456 290}
       } {
-        Fl_Group {} {open
+        Fl_Group {} {open selected
           xywh {5 10 440 65} align 20
         } {
           Fl_Input dataDirectoryInput {
@@ -21,7 +21,7 @@ class StracciatellaLauncher {open
             xywh {145 10 270 25} align 132
           }
           Fl_Input_Choice gameVersionInput {
-            label {Game Version:}
+            label {Game Version:} open
             xywh {145 47 300 25}
           } {}
           Fl_Button browseJa2DirectoryButton {
@@ -38,7 +38,7 @@ class StracciatellaLauncher {open
           }
           Fl_Group {} {
             label Resolution open
-            xywh {10 105 240 120} box THIN_DOWN_FRAME
+            xywh {10 105 240 120} box THIN_DOWN_FRAME labelfont 1
           } {
             Fl_Round_Button predefinedResolutionButton {
               label {Predefined:}
@@ -49,14 +49,17 @@ class StracciatellaLauncher {open
               xywh {20 165 80 20} down_box ROUND_DOWN_BOX
             }
             Fl_Input_Choice predefinedResolutionInput {open
-              xywh {37 135 165 25}
+              xywh {40 135 180 25}
             } {}
             Fl_Value_Input customResolutionXInput {
-              xywh {37 185 75 25}
+              xywh {40 185 80 25} minimum 640 maximum 0 value 640
             }
             Fl_Value_Input customResolutionYInput {
+              xywh {140 185 80 25} minimum 480 maximum 0 value 480
+            }
+            Fl_Box {} {
               label x
-              xywh {125 185 75 25}
+              xywh {120 185 20 25}
             }
           }
           Fl_Check_Button playSoundsCheckbox {
