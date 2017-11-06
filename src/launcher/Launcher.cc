@@ -1,5 +1,7 @@
 #include <string>
 #include "FL/Fl_Native_File_Chooser.H"
+#include <FL/Fl_PNG_Image.H>
+#include "logo32.png.h"
 #include "slog/slog.h"
 #include "RustInterface.h"
 
@@ -47,6 +49,8 @@ void Launcher::show() {
 	populateChoices();
 	initializeInputsFromDefaults();
 
+	const Fl_PNG_Image icon("logo32.png", logo32_png, 1374);
+	stracciatellaLauncher->icon(&icon);
 	stracciatellaLauncher->show();
 }
 
