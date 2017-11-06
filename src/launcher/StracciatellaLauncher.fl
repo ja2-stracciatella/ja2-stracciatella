@@ -1,0 +1,82 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0303 
+header_name {.h} 
+code_name {.cxx}
+class StracciatellaLauncher {open
+} {
+  Function {StracciatellaLauncher()} {open
+  } {
+    Fl_Window stracciatellaLauncher {
+      label {JA2 Stracciatella Launcher} open
+      xywh {959 320 450 305} type Double visible
+    } {
+      Fl_Group {} {open
+        xywh {-1 0 455 385}
+      } {
+        Fl_Group {} {open
+          xywh {0 10 454 65} align 4
+        } {
+          Fl_Input dataDirectoryInput {
+            label {Ja2 Data Directory}
+            xywh {138 10 270 25}
+          }
+          Fl_Input_Choice gameVersionInput {
+            label {Game Version} open
+            xywh {137 47 300 25}
+          } {}
+          Fl_Button browseJa2DirectoryButton {
+            label {...}
+            xywh {410 10 25 25}
+          }
+        }
+        Fl_Group {} {open
+          xywh {0 105 250 280}
+        } {
+          Fl_Check_Button fullscreenCheckbox {
+            label Fullscreen
+            xywh {20 232 100 20} down_box DOWN_BOX
+          }
+          Fl_Group {} {
+            label Resolution open
+            xywh {10 105 240 120} box THIN_DOWN_FRAME
+          } {
+            Fl_Round_Button predefinedResolutionButton {
+              label Predefined
+              xywh {20 115 100 20} down_box ROUND_DOWN_BOX
+            }
+            Fl_Round_Button customResolutionButton {
+              label Custom
+              xywh {20 165 80 20} down_box ROUND_DOWN_BOX
+            }
+            Fl_Input_Choice predefinedResolutionInput {open
+              xywh {37 135 165 25}
+            } {}
+            Fl_Value_Input customResolutionXInput {
+              xywh {37 185 75 25}
+            }
+            Fl_Value_Input customResolutionYInput {
+              label x
+              xywh {125 185 75 25}
+            }
+          }
+          Fl_Check_Button playSoundsCheckbox {
+            label {Play Sounds} selected
+            xywh {20 252 130 19} down_box DOWN_BOX
+          }
+        }
+        Fl_Group {} {open
+          xywh {270 105 165 185}
+        } {
+          Fl_Button playButton {
+            label {Play Ja2 Stracciatella}
+            xywh {270 240 150 50}
+          }
+          Fl_Button editorButton {
+            label {Start Map Editor}
+            xywh {270 205 150 25}
+          }
+        }
+      }
+    }
+  }
+} 
