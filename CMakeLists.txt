@@ -40,7 +40,7 @@ set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
-option(LOCAL_FLTK_LIB "Build with fltk boost lib" OFF)
+option(LOCAL_FLTK_LIB "Build with fltk lib" OFF)
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
 option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
@@ -127,18 +127,24 @@ if(BUILD_LAUNCHER)
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_images.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_forms.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_png.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_z.a"
                 X11)
         elseif(APPLE)
             set(FLTK_LIBRARIES
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_images.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_forms.a")
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_forms.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_png.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_z.a")
         elseif(MSVC)
             # TODO Debug versions only
             set(FLTK_LIBRARIES
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltkd.lib"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_imagesd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_formsd.lib")
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_formsd.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_pngd.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_zd.lib")
         endif()
     endif()
 endif()
