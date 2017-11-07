@@ -1437,105 +1437,101 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 			{
 				fTravelCostObs = FALSE;
 				fReduceRay = FALSE;
-      }
-			 if ( BlockingTemp == BLOCKING_TOPRIGHT_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_WINDOW )
-			 {
-				 if ( pBlockingStructure != NULL )
-				 {
-       			WindowHit( sNewGridNo, pBlockingStructure->usStructureID, FALSE, TRUE );
-				 }
-			 }
+			}
+			if ( BlockingTemp == BLOCKING_TOPRIGHT_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_WINDOW )
+			{
+				if ( pBlockingStructure != NULL )
+				{
+					WindowHit( sNewGridNo, pBlockingStructure->usStructureID, FALSE, TRUE );
+				}
+			}
 
-			 sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
-			 BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
+			sNewGridNo = NewGridNo( (INT16)uiNewSpot, DirectionInc( NORTH ) );
+			BlockingTemp = GetBlockingStructureInfo( (INT16)sNewGridNo, ubDir, 0, bLevel, &bStructHeight, &pBlockingStructure, TRUE );
 
-			 if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
-			 {
-				  fTravelCostObs = FALSE;
-				  fReduceRay = FALSE;
-			 }
-			 if ( BlockingTemp == BLOCKING_TOPRIGHT_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_WINDOW )
-			 {
-				 if ( pBlockingStructure != NULL )
-				 {
-       			WindowHit( sNewGridNo, pBlockingStructure->usStructureID, FALSE, TRUE );
-				 }
-			 }
-		 }
-	 }
+			if ( pBlockingStructure && pBlockingStructure->pDBStructureRef->pDBStructure->ubDensity <= 15 )
+			{
+				fTravelCostObs = FALSE;
+				fReduceRay = FALSE;
+			}
+			if ( BlockingTemp == BLOCKING_TOPRIGHT_WINDOW || BlockingTemp == BLOCKING_TOPLEFT_WINDOW )
+			{
+				if ( pBlockingStructure != NULL )
+				{
+					WindowHit( sNewGridNo, pBlockingStructure->usStructureID, FALSE, TRUE );
+				}
+			}
+		}
+	}
 
-   // Have we hit things like furniture, etc?
-	 if ( Blocking != NOTHING_BLOCKING && !fTravelCostObs )
-	 {
-      // ATE: Tall things should blaock all; Default wall/door height is 4
-      if ( bStructHeight > 4 )
-      {
-				 (*pubKeepGoing) = FALSE;
-      }
-      else
-      {
-        // If we are smoke, reduce range variably....
-			  if ( fReduceRay )
-			  {
-				  if ( fSmokeEffect )
-				  {
-					  switch( bStructHeight )
-					  {
-						  case 3:
-							  uiRangeReduce = 2;
-							  break;
+	// Have we hit things like furniture, etc?
+	if ( Blocking != NOTHING_BLOCKING && !fTravelCostObs )
+	{
+		// ATE: Tall things should blaock all; Default wall/door height is 4
+		if ( bStructHeight > 4 )
+		{
+			(*pubKeepGoing) = FALSE;
+		}
+		else
+		{
+			// If we are smoke, reduce range variably....
+			if ( fReduceRay )
+			{
+				if ( fSmokeEffect )
+				{
+					switch( bStructHeight )
+					{
+						case 3:
+							uiRangeReduce = 2;
+							break;
+						case 2:
+							uiRangeReduce = 1;
+							break;
+						default:
+							uiRangeReduce = 0;
+							break;
+					}
+				}
+				else
+				{
+					uiRangeReduce = 2;
+				}
 
-						  case 2:
+				(*piMaxRange) -= uiRangeReduce;
+			}
 
-							  uiRangeReduce = 1;
-							  break;
+			if ( uiCurRange <= (*piMaxRange) )
+			{
+				(*pubKeepGoing) = TRUE;
+			}
+			else
+			{
+				(*pubKeepGoing) = FALSE;
+			}
+		}
+	}
+	else
+	{
+		if ( fTravelCostObs )
+		{
+			(*pubKeepGoing) = FALSE;
+		}
+		else
+		{
+			(*pubKeepGoing) = TRUE;
+		}
+	}
 
-						  default:
-
-							  uiRangeReduce = 0;
-							  break;
-					  }
-				  }
-				  else
-				  {
-					  uiRangeReduce = 2;
-				  }
-
-	  		  ( *piMaxRange ) -= uiRangeReduce;
-			  }
-
-			  if ( uiCurRange <= (*piMaxRange) )
-			  {
-				   (*pubKeepGoing) = TRUE;
-			  }
-			  else
-			  {
-				   (*pubKeepGoing) = FALSE;
-			  }
-      }
-	 }
-	 else
-	 {
-      if ( fTravelCostObs )
-      {
-			  ( *pubKeepGoing ) = FALSE;
-      }
-      else
-      {
-			  ( *pubKeepGoing ) = TRUE;
-      }
-	 }
-	 
-	 if (bLevel == 1)
-	 {
-	 	 // We check for roof-level and structure to prevent smoke spreading over roof
-	 	 STRUCTURE * pStructure = FindStructure( uiNewSpot, STRUCTURE_ROOF );
-	 	 if (pStructure == NULL)
-	 	 {
-	 	 	 // no structure found therefore we can't spread
-	 	 	 ( *pubKeepGoing ) = FALSE;	   
-	 	 }
-	 }
+	if (bLevel == 1)
+	{
+		// We check for roof-level and structure to prevent smoke spreading over roof
+		STRUCTURE * pStructure = FindStructure( uiNewSpot, STRUCTURE_ROOF );
+		if (pStructure == NULL)
+		{
+			// no structure found therefore we can't spread
+			(*pubKeepGoing) = FALSE;
+		}
+	}
 }
 
 

@@ -576,7 +576,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		if (!SoundCleanCache())
 		{
 			SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: trying to play %s, not enough memory\nSize: %u, Used: %u, Max: %u",
-						pFilename, uiSize, guiSoundMemoryUsed, guiSoundMemoryLimit);
+				pFilename, uiSize, guiSoundMemoryUsed, guiSoundMemoryLimit);
 			return NULL;
 		}
 	}
@@ -598,47 +598,47 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 	memset(s, 0, sizeof(*s));
 
-  SDL_RWops* rwOps = FileGetRWOps(hFile);
-  SDL_AudioSpec wavSpec;
-  Uint32 wavLength;
-  Uint8 *wavBuffer;
-  SDL_AudioCVT cvt;
+	SDL_RWops* rwOps = FileGetRWOps(hFile);
+	SDL_AudioSpec wavSpec;
+	Uint32 wavLength;
+	Uint8 *wavBuffer;
+	SDL_AudioCVT cvt;
 
-  if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
-    SLOGE(DEBUG_TAG_SOUND, "Error loading sound file: %s", SDL_GetError());
-    return NULL;
-  }
+	if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
+		SLOGE(DEBUG_TAG_SOUND, "Error loading sound file: %s", SDL_GetError());
+		return NULL;
+	}
 
-  SDL_BuildAudioCVT(&cvt, wavSpec.format, wavSpec.channels, wavSpec.freq, gTargetAudioSpec.format, wavSpec.channels, gTargetAudioSpec.freq);
-  cvt.len = wavLength;
-  cvt.buf = MALLOCN(UINT8, cvt.len * cvt.len_mult);
-  memcpy(cvt.buf, wavBuffer, wavLength);
-  SDL_FreeWAV(wavBuffer);
-  SDL_FreeRW(rwOps);
+	SDL_BuildAudioCVT(&cvt, wavSpec.format, wavSpec.channels, wavSpec.freq, gTargetAudioSpec.format, wavSpec.channels, gTargetAudioSpec.freq);
+	cvt.len = wavLength;
+	cvt.buf = MALLOCN(UINT8, cvt.len * cvt.len_mult);
+	memcpy(cvt.buf, wavBuffer, wavLength);
+	SDL_FreeWAV(wavBuffer);
+	SDL_FreeRW(rwOps);
 
-  if (cvt.needed) {
-    if (SDL_ConvertAudio(&cvt) != 0) {
-      SLOGE(DEBUG_TAG_SOUND, "Error converting sound file: %s", SDL_GetError());
-      return NULL;
-    };
-  }
+	if (cvt.needed) {
+		if (SDL_ConvertAudio(&cvt) != 0) {
+			SLOGE(DEBUG_TAG_SOUND, "Error converting sound file: %s", SDL_GetError());
+			return NULL;
+		};
+	}
 
-  UINT32 convertedSize = cvt.len * cvt.len_ratio;
+	UINT32 convertedSize = cvt.len * cvt.len_ratio;
 
-  strcpy(s->pName, pFilename);
-  s->n_samples = UINT32(convertedSize / (wavSpec.channels * 2));
-  s->uiFlags     |= SAMPLE_ALLOCATED;
-  if (wavSpec.channels != 1) {
-    s->uiFlags |= SAMPLE_STEREO;
-  }
+	strcpy(s->pName, pFilename);
+	s->n_samples = UINT32(convertedSize / (wavSpec.channels * 2));
+	s->uiFlags     |= SAMPLE_ALLOCATED;
+	if (wavSpec.channels != 1) {
+		s->uiFlags |= SAMPLE_STEREO;
+	}
 
-  s->uiInstances  = 0;
-  s->pData = MALLOCN(UINT8, convertedSize);
-  memcpy(s->pData, cvt.buf, convertedSize);
+	s->uiInstances  = 0;
+	s->pData = MALLOCN(UINT8, convertedSize);
+	memcpy(s->pData, cvt.buf, convertedSize);
 
-  free(cvt.buf);
+	free(cvt.buf);
 
-  IncreaseSoundMemoryUsedBySample(s);
+	IncreaseSoundMemoryUsedBySample(s);
 
 	return s;
 }
