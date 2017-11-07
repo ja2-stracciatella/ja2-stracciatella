@@ -1038,7 +1038,10 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	{
 		if (GCM->getItem(item)->getItemClass() == IC_THROWING_KNIFE)
 		{
-			ap_cost += AP_LOOK_STANDING;
+			//ap_cost += AP_LOOK_STANDING;
+			if (gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_STAND) ap_cost += AP_LOOK_STANDING;
+			else if(gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_CROUCH) ap_cost += AP_LOOK_CROUCHED;
+			else if(gAnimControl[ s.usAnimState ].ubEndHeight == ANIM_PRONE) ap_cost += AP_LOOK_PRONE;
 		}
 		else
 		{

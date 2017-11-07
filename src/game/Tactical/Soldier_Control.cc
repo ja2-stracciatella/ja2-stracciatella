@@ -6877,11 +6877,11 @@ void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 	pSoldier->bBulletsLeft = 1;
 	SLOGD(DEBUG_TAG_SOLDIER, "Starting knifethrow attack, bullets left %d", pSoldier->bBulletsLeft);
 
-	EVENT_InitNewSoldierAnim( pSoldier, THROW_KNIFE, 0 , FALSE );
-
 	// CHANGE DIRECTION AND GOTO ANIMATION NOW
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
 	EVENT_SetSoldierDirection( pSoldier, ubDirection );
+	// We should throw the knife after turning around
+	EVENT_InitNewSoldierAnim( pSoldier, THROW_KNIFE, 0 , FALSE );
 
 
 	// SET TARGET GRIDNO
@@ -8982,7 +8982,7 @@ static void EnableDisableSoldierLightEffects(BOOLEAN const enable_lights)
 	{
 		if (!s->bInSector)     continue;
 		if (s->bLife < OKLIFE) continue;
-                // att: NO Soldier Lights if in a VEHICLE 
+                // att: NO Soldier Lights if in a VEHICLE
                 if (s->bAssignment == VEHICLE) continue;
 
 		if (enable_lights)
