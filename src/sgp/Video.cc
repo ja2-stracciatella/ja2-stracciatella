@@ -110,14 +110,14 @@ void VideoSetFullScreen(const BOOLEAN enable)
 
 void VideoToggleFullScreen(void)
 {
-    if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN)
-    {
-        SDL_SetWindowFullscreen(g_game_window, 0);
-    }
-    else
-    {
-        SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN);
-    }
+	if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN)
+	{
+		SDL_SetWindowFullscreen(g_game_window, 0);
+	}
+	else
+	{
+		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN);
+	}
 }
 
 
@@ -133,49 +133,50 @@ void InitializeVideoManager(void)
 	g_window_flags |= SDL_WINDOW_RESIZABLE;
 
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SCREEN_WIDTH, SCREEN_HEIGHT,
-                              g_window_flags);
+					SDL_WINDOWPOS_UNDEFINED,
+					SDL_WINDOWPOS_UNDEFINED,
+					SCREEN_WIDTH, SCREEN_HEIGHT,
+					g_window_flags);
+
 	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
 	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
+	SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
 			(void*)gWindowIconData.pixel_data,
 			gWindowIconData.width,
 			gWindowIconData.height,
 			gWindowIconData.bytes_per_pixel*8,
 			gWindowIconData.bytes_per_pixel*gWindowIconData.width,
 			0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-		SDL_SetWindowIcon(g_game_window, windowIcon);
-		SDL_FreeSurface(windowIcon);
+	SDL_SetWindowIcon(g_game_window, windowIcon);
+	SDL_FreeSurface(windowIcon);
 
 
-  ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	ClippingRect.set(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  ScreenBuffer = SDL_CreateRGBSurface(
-          0,
-          SCREEN_WIDTH,
-          SCREEN_HEIGHT,
-          PIXEL_DEPTH,
-          RED_MASK,
-          GREEN_MASK,
-          BLUE_MASK,
-          ALPHA_MASK
-  );
+	ScreenBuffer = SDL_CreateRGBSurface(
+					0,
+					SCREEN_WIDTH,
+					SCREEN_HEIGHT,
+					PIXEL_DEPTH,
+					RED_MASK,
+					GREEN_MASK,
+					BLUE_MASK,
+					ALPHA_MASK
+	);
 
-  if (ScreenBuffer == NULL) {
-    SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
-  }
+	if (ScreenBuffer == NULL) {
+		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
+	}
 
-  ScreenTexture = SDL_CreateTexture(GameRenderer,
-                                    SDL_PIXELFORMAT_RGB565,
-                                    SDL_TEXTUREACCESS_STREAMING,
-                                    SCREEN_WIDTH, SCREEN_HEIGHT);
+	ScreenTexture = SDL_CreateTexture(GameRenderer,
+					SDL_PIXELFORMAT_RGB565,
+					SDL_TEXTUREACCESS_STREAMING,
+					SCREEN_WIDTH, SCREEN_HEIGHT);
 
-  if (ScreenTexture == NULL) {
-    SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
-  }
+	if (ScreenTexture == NULL) {
+		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
+	}
 
 	FrameBuffer = SDL_CreateRGBSurface(
 		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
@@ -196,7 +197,7 @@ void InitializeVideoManager(void)
 	if (MouseCursor == NULL)
 	{
 		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for MouseCursor failed: %s\n", SDL_GetError());
-  }
+	}
 
 	SDL_ShowCursor(SDL_DISABLE);
 
@@ -556,22 +557,22 @@ void RefreshScreen(void)
 	if (guiVideoManagerState != VIDEO_ON) return;
 
 #if DEBUG_PRINT_FPS
-  {
-    static int32_t prevSecond = 0;
-    static int32_t fps = 0;
+	{
+		static int32_t prevSecond = 0;
+		static int32_t fps = 0;
 
-    int32_t currentSecond = time(NULL);
-    if(currentSecond != prevSecond)
-    {
-      printf("fps: %d\n", fps);
-      fps = 0;
-      prevSecond = currentSecond;
-    }
-    else
-    {
-      fps++;
-    }
-  }
+		int32_t currentSecond = time(NULL);
+		if(currentSecond != prevSecond)
+		{
+			printf("fps: %d\n", fps);
+			fps = 0;
+			prevSecond = currentSecond;
+		}
+		else
+		{
+			fps++;
+		}
+	}
 #endif
 
 	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
@@ -649,12 +650,12 @@ void RefreshScreen(void)
 	dst.x = MousePos.iX - gsMouseCursorXOffset;
 	dst.y = MousePos.iY - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
-  MouseBackground = dst;
+	MouseBackground = dst;
 
-  SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
+	SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
 
-  SDL_RenderClear(GameRenderer);
-  SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
+	SDL_RenderClear(GameRenderer);
+	SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
 	SDL_RenderPresent(GameRenderer);
 
 	gfForceFullScreenRefresh = FALSE;
@@ -786,17 +787,17 @@ static void RefreshMovieCache(void)
 
 static void RecreateBackBuffer()
 {
-  // ScreenBuffer should not be automatically removed because it was created
-  // with SDL_SetVideoMode.  So, using SGPVSurface instead of SGPVSurfaceAuto
-  SGPVSurface* newBackbuffer = new SGPVSurface(ScreenBuffer);
+	// ScreenBuffer should not be automatically removed because it was created
+	// with SDL_SetVideoMode.  So, using SGPVSurface instead of SGPVSurfaceAuto
+	SGPVSurface* newBackbuffer = new SGPVSurface(ScreenBuffer);
 
-  if(g_back_buffer != NULL)
-  {
-    ReplaceFontBackBuffer(g_back_buffer, newBackbuffer);
+	if(g_back_buffer != NULL)
+	{
+		ReplaceFontBackBuffer(g_back_buffer, newBackbuffer);
 
-    delete g_back_buffer;
-    g_back_buffer = NULL;
-  }
+		delete g_back_buffer;
+		g_back_buffer = NULL;
+	}
 
 	g_back_buffer  = newBackbuffer;
 }
@@ -806,7 +807,7 @@ static void SetPrimaryVideoSurfaces(void)
 	// Delete surfaces if they exist
 	DeletePrimaryVideoSurfaces();
 
-    RecreateBackBuffer();
+	RecreateBackBuffer();
 
 	g_mouse_buffer = new SGPVSurfaceAuto(MouseCursor);
 	g_frame_buffer = new SGPVSurfaceAuto(FrameBuffer);
@@ -840,7 +841,7 @@ void InitializeVideoSurfaceManager(void)
 
 void ShutdownVideoSurfaceManager(void)
 {
-  SLOGD(DEBUG_TAG_VIDEO, "Shutting down the Video Surface manager");
+	SLOGD(DEBUG_TAG_VIDEO, "Shutting down the Video Surface manager");
 
 	// Delete primary viedeo surfaces
 	DeletePrimaryVideoSurfaces();

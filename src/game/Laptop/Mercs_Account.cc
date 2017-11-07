@@ -25,41 +25,41 @@
 #include "Font_Control.h"
 
 
-#define		MERC_ACCOUNT_TEXT_FONT				FONT14ARIAL
-#define		MERC_ACCOUNT_TEXT_COLOR				FONT_MCOLOR_WHITE
+#define MERC_ACCOUNT_TEXT_FONT		FONT14ARIAL
+#define MERC_ACCOUNT_TEXT_COLOR		FONT_MCOLOR_WHITE
 
-#define		MERC_ACCOUNT_DYNAMIC_TEXT_FONT	FONT12ARIAL
-#define		MERC_ACCOUNT_DYNAMIC_TEXT_COLOR	FONT_MCOLOR_WHITE
-#define		MERC_ACCOUNT_DEAD_TEXT_COLOR		FONT_MCOLOR_RED
+#define MERC_ACCOUNT_DYNAMIC_TEXT_FONT	FONT12ARIAL
+#define MERC_ACCOUNT_DYNAMIC_TEXT_COLOR	FONT_MCOLOR_WHITE
+#define MERC_ACCOUNT_DEAD_TEXT_COLOR	FONT_MCOLOR_RED
 
-#define		MERC_AC_ORDER_GRID_X					LAPTOP_SCREEN_UL_X + 23
-#define		MERC_AC_ORDER_GRID_Y					LAPTOP_SCREEN_WEB_UL_Y + 59
+#define MERC_AC_ORDER_GRID_X		LAPTOP_SCREEN_UL_X + 23
+#define MERC_AC_ORDER_GRID_Y		LAPTOP_SCREEN_WEB_UL_Y + 59
 
-#define		MERC_AC_ACCOUNT_NUMBER_X			LAPTOP_SCREEN_UL_X + 23
-#define		MERC_AC_ACCOUNT_NUMBER_Y			LAPTOP_SCREEN_WEB_UL_Y + 13
+#define MERC_AC_ACCOUNT_NUMBER_X	LAPTOP_SCREEN_UL_X + 23
+#define MERC_AC_ACCOUNT_NUMBER_Y	LAPTOP_SCREEN_WEB_UL_Y + 13
 
-#define MERC_AC_AUTHORIZE_BUTTON_X (STD_SCREEN_X + 128)
-#define MERC_AC_CANCEL_BUTTON_X    (STD_SCREEN_X + 490)
-#define MERC_AC_BUTTON_Y           (STD_SCREEN_Y + 380)
+#define MERC_AC_AUTHORIZE_BUTTON_X	(STD_SCREEN_X + 128)
+#define MERC_AC_CANCEL_BUTTON_X		(STD_SCREEN_X + 490)
+#define MERC_AC_BUTTON_Y		(STD_SCREEN_Y + 380)
 
-#define		MERC_AC_ACCOUNT_NUMBER_TEXT_X	MERC_AC_ACCOUNT_NUMBER_X + 5
-#define		MERC_AC_ACCOUNT_NUMBER_TEXT_Y	MERC_AC_ACCOUNT_NUMBER_Y + 12
+#define MERC_AC_ACCOUNT_NUMBER_TEXT_X	MERC_AC_ACCOUNT_NUMBER_X + 5
+#define MERC_AC_ACCOUNT_NUMBER_TEXT_Y	MERC_AC_ACCOUNT_NUMBER_Y + 12
 
-#define		MERC_AC_MERC_TITLE_Y					MERC_AC_ORDER_GRID_Y + 14
-#define		MERC_AC_TOTAL_COST_Y					MERC_AC_ORDER_GRID_Y + 242
+#define MERC_AC_MERC_TITLE_Y		MERC_AC_ORDER_GRID_Y + 14
+#define MERC_AC_TOTAL_COST_Y		MERC_AC_ORDER_GRID_Y + 242
 
-#define		MERC_AC_FIRST_COLUMN_X				MERC_AC_ORDER_GRID_X + 2
-#define		MERC_AC_SECOND_COLUMN_X				MERC_AC_ORDER_GRID_X + 222
-#define		MERC_AC_THIRD_COLUMN_X				MERC_AC_ORDER_GRID_X + 292
-#define		MERC_AC_FOURTH_COLUMN_X				MERC_AC_ORDER_GRID_X + 382
+#define MERC_AC_FIRST_COLUMN_X		MERC_AC_ORDER_GRID_X + 2
+#define MERC_AC_SECOND_COLUMN_X		MERC_AC_ORDER_GRID_X + 222
+#define MERC_AC_THIRD_COLUMN_X		MERC_AC_ORDER_GRID_X + 292
+#define MERC_AC_FOURTH_COLUMN_X		MERC_AC_ORDER_GRID_X + 382
 
-#define		MERC_AC_FIRST_COLUMN_WIDTH		218
-#define		MERC_AC_SECOND_COLUMN_WIDTH		68
-#define		MERC_AC_THIRD_COLUMN_WIDTH		88
-#define		MERC_AC_FOURTH_COLUMN_WIDTH		76
+#define MERC_AC_FIRST_COLUMN_WIDTH	218
+#define MERC_AC_SECOND_COLUMN_WIDTH	68
+#define MERC_AC_THIRD_COLUMN_WIDTH	88
+#define MERC_AC_FOURTH_COLUMN_WIDTH	76
 
-#define		MERC_AC_FIRST_ROW_Y						MERC_AC_ORDER_GRID_Y + 42
-#define		MERC_AC_ROW_SIZE							16
+#define MERC_AC_FIRST_ROW_Y		MERC_AC_ORDER_GRID_Y + 42
+#define MERC_AC_ROW_SIZE		16
 
 
 static SGPVObject* guiMercOrderGrid;
@@ -108,7 +108,7 @@ void EnterMercsAccount()
 	guiMercAuthorizeBoxButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	guiMercBackBoxButton        = MakeButton(MercAccountText[MERC_ACCOUNT_HOME],      MERC_AC_CANCEL_BUTTON_X,    BtnMercBackButtonCallback);
 
-//	RenderMercsAccount();
+	//RenderMercsAccount();
 
 	//if true, will display a msgbox telling user that they dont have enough funds
 	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
@@ -172,9 +172,9 @@ void RenderMercsAccount()
 
 
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -266,7 +266,7 @@ static void DisplayHiredMercs(void)
 
 static void SettleMercAccounts(void)
 {
-//	SOLDIERTYPE *pSoldier;
+	//SOLDIERTYPE *pSoldier;
 	INT16	i;
 	UINT8 ubMercID;
 	INT32	iPartialPayment=0;
@@ -334,8 +334,7 @@ static void SettleMercAccounts(void)
 	gubArrivedFromMercSubSite = MERC_CAME_FROM_ACCOUNTS_PAGE;
 
 
-/*
-
+	/*
 	//if the player doesnt have enough money to fully pay for the all the mercs contract
 	if( LaptopSaveInfo.iCurrentBalance < giMercTotalContractCharge )
 	{
@@ -378,7 +377,7 @@ static void SettleMercAccounts(void)
 		}
 
 
-//		DoLapTopMessageBox( MSG_BOX_BLUE_ON_GREY, MercAccountText[MERC_ACCOUNT_NOT_ENOUGH_MONEY], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		//DoLapTopMessageBox( MSG_BOX_BLUE_ON_GREY, MercAccountText[MERC_ACCOUNT_NOT_ENOUGH_MONEY], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		//return to the main page and have speck say quote
 		guiCurrentLaptopMode = LAPTOP_MODE_MERC;
 		gubArrivedFromMercSubSite = MERC_CAME_FROM_ACCOUNTS_PAGE;
@@ -412,15 +411,14 @@ static void SettleMercAccounts(void)
 	//Go to the merc homepage to say the quote
 	guiCurrentLaptopMode = LAPTOP_MODE_MERC;
 	gubArrivedFromMercSubSite = MERC_CAME_FROM_ACCOUNTS_PAGE;
-	gusMercVideoSpeckSpeech = SPECK_QUOTE_PLAYER_MAKES_FULL_PAYMENT;
-*/
+	gusMercVideoSpeckSpeech = SPECK_QUOTE_PLAYER_MAKES_FULL_PAYMENT;*/
 }
 
 
 static void MercAuthorizePaymentMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, clear the form
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		//if the player owes Speck money, then settle the accounts
 		if( giMercTotalContractCharge )
@@ -431,9 +429,9 @@ static void MercAuthorizePaymentMessageBoxCallBack(MessageBoxReturnValue const b
 
 UINT32	CalculateHowMuchPlayerOwesSpeck()
 {
-	UINT8				i=0;
-	UINT32			uiContractCharge=0;
-	UINT16			usMercID;
+	UINT8  i=0;
+	UINT32 uiContractCharge=0;
+	UINT16 usMercID;
 
 
 	for(i=0; i<10; i++)

@@ -23,7 +23,7 @@
 #include "Smell.h"
 #include "SaveLoadMap.h"
 #include "StrategicMap.h"
-#include "Sys_Globals.h"	//for access to gfEditMode flag
+#include "Sys_Globals.h" //for access to gfEditMode flag
 //Kris:
 #include "Editor_Undo.h" //for access to AddToUndoList( iMapIndex )
 
@@ -115,34 +115,34 @@ index 25, indestructable metal
 */
 UINT8 const gubMaterialArmour[] =
 { // note: must increase; r.c. should block *AP* 7.62mm rounds
-	  0, // nothing
-	 25, // dry timber; wood wall +1/2
-	 20, // furniture wood (thin!) or plywood wall +1/2
-	 30, // wood (live); 1.5x timber
-	  3, // light vegetation
-	 10, // upholstered furniture
-	 47, // porcelain
-	 10, // cactus, hay, bamboo
-	  0,
-	  0,
-	  0,
-	 55, // stone masonry; 3x timber
-	 63, // non-reinforced concrete; 4x timber???
-	 70, // reinforced concrete; 6x timber
-	 85, // rock? - number invented
-	  9, // rubber - tires
-	 40, // sand
-	  1, // cloth
-	 40, // sandbag
-	  0,
-	  0,
-	 37, // light metal (furniture; NB thin!)
-	 57, // thicker metal (dumpster)
-	 85, // heavy metal (vault doors) - block everything
+	0, // nothing
+	25, // dry timber; wood wall +1/2
+	20, // furniture wood (thin!) or plywood wall +1/2
+	30, // wood (live); 1.5x timber
+	3, // light vegetation
+	10, // upholstered furniture
+	47, // porcelain
+	10, // cactus, hay, bamboo
+	0,
+	0,
+	0,
+	55, // stone masonry; 3x timber
+	63, // non-reinforced concrete; 4x timber???
+	70, // reinforced concrete; 6x timber
+	85, // rock? - number invented
+	9, // rubber - tires
+	40, // sand
+	1, // cloth
+	40, // sandbag
+	0,
+	0,
+	37, // light metal (furniture; NB thin!)
+	57, // thicker metal (dumpster)
+	85, // heavy metal (vault doors) - block everything
 	// note that vehicle armour will probably end up in here
 	127, // rock indestructable
 	127, // indestructable
-	 57, // like 22 but with screen windows
+	57, // like 22 but with screen windows
 };
 
 
@@ -682,15 +682,15 @@ try
 		s->sGridNo = sBaseGridNo + t->sPosRelToBase;
 		if (i != BASE_TILE)
 		{
-      if(GameState::getInstance()->isEditorMode())
-      {
-			/* Kris:
-			 * Added this undo code if in the editor.
-			 * It is important to save tiles effected by multitiles.  If the
-			 * structure placement fails below, it doesn't matter, because it won't
-			 * hurt the undo code. */
-			if (gfEditMode) AddToUndoList(s->sGridNo);
-      }
+			if(GameState::getInstance()->isEditorMode())
+			{
+				/* Kris:
+				* Added this undo code if in the editor.
+				* It is important to save tiles effected by multitiles.  If the
+				* structure placement fails below, it doesn't matter, because it won't
+				* hurt the undo code. */
+				if (gfEditMode) AddToUndoList(s->sGridNo);
+			}
 			s->sBaseGridNo = sBaseGridNo;
 		}
 		s->sCubeOffset =
@@ -727,7 +727,7 @@ try
 	}
 	else if (pLevelNode->uiFlags & LEVELNODE_ROTTINGCORPSE)
 	{
-    // ATE: Offset IDs so they don't collide with soldiers
+		// ATE: Offset IDs so they don't collide with soldiers
 		usStructureID = (UINT16)(TOTAL_SOLDIERS + pLevelNode->pAniTile->v.user.uiData);
 	}
 	else
@@ -1196,8 +1196,8 @@ BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason 
 		}
 
 		// Make hit sound
-    SoundID const snd =
-    	s->fFlags & STRUCTURE_CAVEWALL ? S_VEG_IMPACT1 :
+		SoundID const snd =
+			s->fFlags & STRUCTURE_CAVEWALL ? S_VEG_IMPACT1 :
 			guiMaterialHitSound[armour_kind];
 		if (snd != NO_SOUND) PlayLocationJA2Sample(grid_no, snd, HIGHVOLUME, 1);
 
@@ -1242,54 +1242,54 @@ void DebugStructurePage1()
 
 	GridNo const grid_no = GetMouseMapPos();
 	if (grid_no == NOWHERE) {
-    MPageHeader(L"DEBUG STRUCTURES PAGE ONE");
-  } else {
-    MPageHeader(L"DEBUG STRUCTURES PAGE ONE, GRIDNO %d", grid_no);
-  }
+		MPageHeader(L"DEBUG STRUCTURES PAGE ONE");
+	} else {
+		MPageHeader(L"DEBUG STRUCTURES PAGE ONE, GRIDNO %d", grid_no);
+	}
 
-  INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
-  INT32 y = DEBUG_PAGE_START_Y;
+	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
+	INT32 y = DEBUG_PAGE_START_Y;
 
-  MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Building:", gubBuildingInfo[grid_no]);
+	MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Building:", gubBuildingInfo[grid_no]);
 
 
-  bool might_have_structures = GridNoOnVisibleWorldTile(grid_no);
-  INT8 n_structures = 0;
-  if (might_have_structures) {
-    for (STRUCTURE* i = gpWorldLevelData[grid_no].pStructureHead; i; i = i->pNext)
-    {
-      ++n_structures;
-    }
-  }
-  MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Number of structures:", n_structures);
+	bool might_have_structures = GridNoOnVisibleWorldTile(grid_no);
+	INT8 n_structures = 0;
+	if (might_have_structures) {
+		for (STRUCTURE* i = gpWorldLevelData[grid_no].pStructureHead; i; i = i->pNext)
+		{
+			++n_structures;
+		}
+	}
+	MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Number of structures:", n_structures);
 
-  if (!might_have_structures) return;
+	if (!might_have_structures) return;
 
-  MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Movement Costs:");
-  mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"N %d NE %d E %d SE %d S %d SW %d W %d NW %d",
-          gubWorldMovementCosts[grid_no][NORTH    ][gsInterfaceLevel],
-          gubWorldMovementCosts[grid_no][NORTHEAST][gsInterfaceLevel],
-          gubWorldMovementCosts[grid_no][EAST     ][gsInterfaceLevel],
-          gubWorldMovementCosts[grid_no][SOUTHEAST][gsInterfaceLevel],
-          gubWorldMovementCosts[grid_no][SOUTH    ][gsInterfaceLevel],
-          gubWorldMovementCosts[grid_no][SOUTHWEST][gsInterfaceLevel],
-          gubWorldMovementCosts[grid_no][WEST     ][gsInterfaceLevel],
-          gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]);
-  MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Ground smell:");
-  mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d of strength %d",
-          SMELL_TYPE(gpWorldLevelData[grid_no].ubSmellInfo),
-          SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo));
+	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Movement Costs:");
+	mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"N %d NE %d E %d SE %d S %d SW %d W %d NW %d",
+		gubWorldMovementCosts[grid_no][NORTH    ][gsInterfaceLevel],
+		gubWorldMovementCosts[grid_no][NORTHEAST][gsInterfaceLevel],
+		gubWorldMovementCosts[grid_no][EAST     ][gsInterfaceLevel],
+		gubWorldMovementCosts[grid_no][SOUTHEAST][gsInterfaceLevel],
+		gubWorldMovementCosts[grid_no][SOUTH    ][gsInterfaceLevel],
+		gubWorldMovementCosts[grid_no][SOUTHWEST][gsInterfaceLevel],
+		gubWorldMovementCosts[grid_no][WEST     ][gsInterfaceLevel],
+		gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]);
+	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Ground smell:");
+	mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d of strength %d",
+		SMELL_TYPE(gpWorldLevelData[grid_no].ubSmellInfo),
+		SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo));
 
 	INT16 const desired_level = gsInterfaceLevel == I_GROUND_LEVEL ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF;
 	for (STRUCTURE* s = gpWorldLevelData[grid_no].pStructureHead; s; s = s->pNext)
 	{
 		if (s->sCubeOffset != desired_level) continue;
 
-    y += h;
+		y += h;
 
-    MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure ID:", s->usStructureID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure ID:", s->usStructureID);
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Type:");
-    if (s->fFlags & STRUCTURE_GENERIC)
+		if (s->fFlags & STRUCTURE_GENERIC)
 		{
 			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Generic structure no %d", s->fFlags, s->pDBStructureRef->pDBStructure->usStructureNumber);
 		}
@@ -1297,14 +1297,14 @@ void DebugStructurePage1()
 		{
 			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Tree");
 		}
-    else if (s->fFlags & STRUCTURE_FENCE)
-    {
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Fence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
-    }
-    else if (s->fFlags & STRUCTURE_WIREFENCE)
-    {
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wirefence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
-    }
+		else if (s->fFlags & STRUCTURE_FENCE)
+		{
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Fence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+		}
+		else if (s->fFlags & STRUCTURE_WIREFENCE)
+		{
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wirefence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+		}
 		else if (s->fFlags & STRUCTURE_WALL)
 		{
 			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wall with orientation %ls", WallOrientationString[s->ubWallOrientation]);
@@ -1325,26 +1325,26 @@ void DebugStructurePage1()
 		{
 			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Slanted roof");
 		}
-    else if (s->fFlags & STRUCTURE_TALL_ROOF)
-    {
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Tall roof");
-    }
-    else if (s->fFlags & STRUCTURE_SWITCH)
-    {
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Switch");
-    }
-    else if (s->fFlags & STRUCTURE_CORPSE)
-    {
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Corpse");
-    }
-    else if (s->fFlags & STRUCTURE_PERSON)
-    {
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Person");
-    }
-    else if (s->fFlags & STRUCTURE_CAVEWALL)
-    {
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Cave wall");
-    }
+		else if (s->fFlags & STRUCTURE_TALL_ROOF)
+		{
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Tall roof");
+		}
+		else if (s->fFlags & STRUCTURE_SWITCH)
+		{
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Switch");
+		}
+		else if (s->fFlags & STRUCTURE_CORPSE)
+		{
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Corpse");
+		}
+		else if (s->fFlags & STRUCTURE_PERSON)
+		{
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Person");
+		}
+		else if (s->fFlags & STRUCTURE_CAVEWALL)
+		{
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Cave wall");
+		}
 		else if (s->fFlags & STRUCTURE_DOOR)
 		{
 			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Door with orientation %ls", WallOrientationString[s->ubWallOrientation]);
@@ -1367,37 +1367,37 @@ void DebugStructurePage1()
 			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Unknown Structure");
 		}
 
-    MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Flags:");
-    wchar_t flagString[256];
-    swprintf(flagString, lengthof(flagString), L"");
-    if (s->fFlags & STRUCTURE_MOBILE) {
-      wcscat(flagString, L"MOB ");
-    }
-    if (s->fFlags & STRUCTURE_PASSABLE) {
-      wcscat(flagString, L"PAS ");
-    }
-    if (s->fFlags & STRUCTURE_EXPLOSIVE) {
-      wcscat(flagString, L"EXP ");
-    }
-    if (s->fFlags & STRUCTURE_TRANSPARENT) {
-      wcscat(flagString, L"TRA ");
-    }
-    if (s->fFlags & STRUCTURE_HASITEMONTOP) {
-      wcscat(flagString, L"HIT ");
-    }
-    if (s->fFlags & STRUCTURE_SPECIAL) {
-      wcscat(flagString, L"SPE ");
-    }
-    if (s->fFlags & STRUCTURE_LIGHTSOURCE) {
-      wcscat(flagString, L"LIG ");
-    }
-    mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, flagString);
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Flags:");
+		wchar_t flagString[256];
+		swprintf(flagString, lengthof(flagString), L"");
+		if (s->fFlags & STRUCTURE_MOBILE) {
+			wcscat(flagString, L"MOB ");
+		}
+		if (s->fFlags & STRUCTURE_PASSABLE) {
+			wcscat(flagString, L"PAS ");
+		}
+		if (s->fFlags & STRUCTURE_EXPLOSIVE) {
+			wcscat(flagString, L"EXP ");
+		}
+		if (s->fFlags & STRUCTURE_TRANSPARENT) {
+			wcscat(flagString, L"TRA ");
+		}
+		if (s->fFlags & STRUCTURE_HASITEMONTOP) {
+			wcscat(flagString, L"HIT ");
+		}
+		if (s->fFlags & STRUCTURE_SPECIAL) {
+			wcscat(flagString, L"SPE ");
+		}
+		if (s->fFlags & STRUCTURE_LIGHTSOURCE) {
+			wcscat(flagString, L"LIG ");
+		}
+		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, flagString);
 
-    INT8             const height = StructureHeight(s);
+		INT8             const height = StructureHeight(s);
 		STRUCTURE const* const base   = FindBaseStructure(s);
 		UINT8            const armour = gubMaterialArmour[s->pDBStructureRef->pDBStructure->ubArmour];
-    MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure info:");
-    mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Structure height %d, cube offset %d, armour %d, HP %d", height, s->sCubeOffset, armour, base->ubHitPoints);
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure info:");
+		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Structure height %d, cube offset %d, armour %d, HP %d", height, s->sCubeOffset, armour, base->ubHitPoints);
 
 		UINT8 dens0;
 		UINT8 dens1;
@@ -1405,8 +1405,8 @@ void DebugStructurePage1()
 		UINT8 dens3;
 		if (StructureDensity(s, &dens0, &dens1, &dens2, &dens3))
 		{
-      MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure fill:");
-      mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L" %d%%/%d%%/%d%%/%d%% density %d", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity);
+			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure fill:");
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L" %d%%/%d%%/%d%%/%d%% density %d", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity);
 		}
 	}
 
@@ -1443,11 +1443,11 @@ void DebugStructurePage1()
 	if (guiTotalPathChecks > 0)
 	{
 		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h,
-				L"Total %ld, %%succ %3ld | %%failed %3ld | %%unsucc %3ld",
-				guiTotalPathChecks,
-				100 * guiSuccessfulPathChecks   / guiTotalPathChecks,
-				100 * guiFailedPathChecks       / guiTotalPathChecks,
-				100 * guiUnsuccessfulPathChecks / guiTotalPathChecks);
+			L"Total %ld, %%succ %3ld | %%failed %3ld | %%unsucc %3ld",
+			guiTotalPathChecks,
+			100 * guiSuccessfulPathChecks   / guiTotalPathChecks,
+			100 * guiFailedPathChecks       / guiTotalPathChecks,
+			100 * guiUnsuccessfulPathChecks / guiTotalPathChecks);
 	}
 #endif
 }
@@ -1524,7 +1524,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 		// Increment struct index....
 		if (uiLoop == (UINT32)sNext)
 		{
-			sNext					= uiLoop + sSTIStep;
+			sNext = uiLoop + sSTIStep;
 			sStructIndex++;
 		}
 		else
@@ -1722,9 +1722,9 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 {
 	STRUCTURE* pStructure = NULL; // XXX HACK000E
 	STRUCTURE* pCurrent;
-	INT16				sDesiredLevel;
-	BOOLEAN			fOKStructOnLevel = FALSE;
-	BOOLEAN			fMinimumBlockingFound = FALSE;
+	INT16      sDesiredLevel;
+	BOOLEAN    fOKStructOnLevel = FALSE;
+	BOOLEAN    fMinimumBlockingFound = FALSE;
 
 	if ( bLevel == 0)
 	{
@@ -1740,7 +1740,7 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 	// If no struct, return
 	if ( pCurrent == NULL )
 	{
-    (*pStructHeight) = StructureHeight( pCurrent );
+		(*pStructHeight) = StructureHeight( pCurrent );
 		(*ppTallestStructure) = NULL;
 		return( NOTHING_BLOCKING );
 	}
@@ -1751,10 +1751,10 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 		if (pCurrent->sCubeOffset == sDesiredLevel )
 		{
 			fOKStructOnLevel = TRUE;
-      pStructure       = pCurrent;
+			pStructure       = pCurrent;
 
 			// Turn off if we are on upper level!
-		  if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
+			if ( pCurrent->fFlags & STRUCTURE_ROOF && bLevel == 1 )
 			{
 				fOKStructOnLevel = FALSE;
 			}
@@ -1787,32 +1787,32 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 					case OUTSIDE_TOP_LEFT:
 					case INSIDE_TOP_LEFT:
 
-            (*pStructHeight) = StructureHeight( pCurrent );
+						(*pStructHeight) = StructureHeight( pCurrent );
 						(*ppTallestStructure) = pCurrent;
 
-            if ( pCurrent->fFlags & STRUCTURE_OPEN )
-            {
-						  return( BLOCKING_TOPLEFT_OPEN_WINDOW );
-            }
-            else
-            {
-						  return( BLOCKING_TOPLEFT_WINDOW );
-            }
+						if ( pCurrent->fFlags & STRUCTURE_OPEN )
+						{
+							return( BLOCKING_TOPLEFT_OPEN_WINDOW );
+						}
+						else
+						{
+							return( BLOCKING_TOPLEFT_WINDOW );
+						}
 
 					case OUTSIDE_TOP_RIGHT:
 					case INSIDE_TOP_RIGHT:
 
-            (*pStructHeight) = StructureHeight( pCurrent );
+						(*pStructHeight) = StructureHeight( pCurrent );
 						(*ppTallestStructure) = pCurrent;
 
-            if ( pCurrent->fFlags & STRUCTURE_OPEN )
-            {
-						  return( BLOCKING_TOPRIGHT_OPEN_WINDOW );
-            }
-            else
-            {
-						  return( BLOCKING_TOPRIGHT_WINDOW );
-            }
+						if ( pCurrent->fFlags & STRUCTURE_OPEN )
+						{
+							return( BLOCKING_TOPRIGHT_OPEN_WINDOW );
+						}
+						else
+						{
+							return( BLOCKING_TOPRIGHT_WINDOW );
+						}
 				}
 			}
 
@@ -1822,7 +1822,7 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 				// If we are not opem, we are full blocking!
 				if ( !(pCurrent->fFlags & STRUCTURE_OPEN ) )
 				{
-          (*pStructHeight) = StructureHeight( pCurrent );
+					(*pStructHeight) = StructureHeight( pCurrent );
 					(*ppTallestStructure) = pCurrent;
 					return( FULL_BLOCKING );
 				}
@@ -1833,14 +1833,14 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 						case OUTSIDE_TOP_LEFT:
 						case INSIDE_TOP_LEFT:
 
-              (*pStructHeight) = StructureHeight( pCurrent );
+							(*pStructHeight) = StructureHeight( pCurrent );
 							(*ppTallestStructure) = pCurrent;
 							return( BLOCKING_TOPLEFT_DOOR );
 
 						case OUTSIDE_TOP_RIGHT:
 						case INSIDE_TOP_RIGHT:
 
-              (*pStructHeight) = StructureHeight( pCurrent );
+							(*pStructHeight) = StructureHeight( pCurrent );
 							(*ppTallestStructure) = pCurrent;
 							return( BLOCKING_TOPRIGHT_DOOR );
 					}
@@ -1855,20 +1855,20 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 	{
 		if ( fMinimumBlockingFound )
 		{
-      (*pStructHeight) = StructureHeight( pStructure );
+			(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_REDUCE_RANGE );
 		}
 		else
 		{
-      (*pStructHeight) = StructureHeight( pStructure );
+			(*pStructHeight) = StructureHeight( pStructure );
 			(*ppTallestStructure) = pStructure;
 			return( BLOCKING_NEXT_TILE );
 		}
 	}
 	else
 	{
-    (*pStructHeight) = 0;
+		(*pStructHeight) = 0;
 		(*ppTallestStructure) = NULL;
 		return( NOTHING_BLOCKING );
 	}
@@ -1879,8 +1879,8 @@ INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLe
 
 UINT8 StructureFlagToType( UINT32 uiFlag )
 {
-	UINT8		ubLoop;
-	UINT32		uiBit = STRUCTURE_GENERIC;
+	UINT8  ubLoop;
+	UINT32 uiBit = STRUCTURE_GENERIC;
 
 	for ( ubLoop = 8; ubLoop < 32; ubLoop++ )
 	{
@@ -1909,18 +1909,18 @@ STRUCTURE* FindStructureBySavedInfo(INT16 const grid_no, UINT8 const type, UINT8
 
 SoundID GetStructureOpenSound(STRUCTURE const* const s, bool const closing)
 {
-  SoundID sound_id;
-  switch (s->pDBStructureRef->pDBStructure->ubArmour)
-  {
-    case MATERIAL_LIGHT_METAL:
-    case MATERIAL_THICKER_METAL: sound_id = OPEN_LOCKER;           break;
-    case MATERIAL_WOOD_WALL:
-    case MATERIAL_PLYWOOD_WALL:
-    case MATERIAL_FURNITURE:     sound_id = OPEN_WOODEN_BOX;       break;
-    default:                     sound_id = OPEN_DEFAULT_OPENABLE; break;
-  }
+	SoundID sound_id;
+	switch (s->pDBStructureRef->pDBStructure->ubArmour)
+	{
+		case MATERIAL_LIGHT_METAL:
+		case MATERIAL_THICKER_METAL: sound_id = OPEN_LOCKER;           break;
+		case MATERIAL_WOOD_WALL:
+		case MATERIAL_PLYWOOD_WALL:
+		case MATERIAL_FURNITURE:     sound_id = OPEN_WOODEN_BOX;       break;
+		default:                     sound_id = OPEN_DEFAULT_OPENABLE; break;
+	}
 
-  if (closing) sound_id = static_cast<SoundID>(sound_id + 1);
+	if (closing) sound_id = static_cast<SoundID>(sound_id + 1);
 
-  return sound_id;
+	return sound_id;
 }

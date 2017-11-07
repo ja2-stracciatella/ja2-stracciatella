@@ -46,8 +46,9 @@ The second best way is to file a bug report if you encounter a bug.
 5. Create a pull requst from your branch into master
 
 Please don't reformat the code for the sake of it, because it will make the merge process harder.  Instead use the following settings in your editor:
-- display tab as 2 spaces
-- indent with spaces
+- display tab as 8 spaces
+- indent with tabs
+If you add new code, please don't add spaces after opening or before closing round brackets.
 
 ## History of the Project
 

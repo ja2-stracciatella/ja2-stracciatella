@@ -1,12 +1,10 @@
-/*
-	Filename        :       pathai.c
-	Author          :       Ray E. Bornert II
-	Date            :       1992-MAR-15
+// Filename        :       pathai.c
+// Author          :       Ray E. Bornert II
+// Date            :       1992-MAR-15
 
-	Skip list additions
-	Author          :       Chris Camfield
-	Date            :       1997-NOV
-*/
+// Skip list additions
+// Author          :       Chris Camfield
+// Date            :       1997-NOV
 
 #include "Font_Control.h"
 #include "Isometric_Utils.h"
@@ -57,49 +55,49 @@ BOOLEAN gfPlotPathToExitGrid = FALSE;
 BOOLEAN gfRecalculatingExistingPathCost = FALSE;
 UINT8 gubGlobalPathFlags = 0;
 
-UINT8	gubBuildingInfoToSet;
+UINT8 gubBuildingInfoToSet;
 
 // ABSOLUTE maximums
-	#define ABSMAX_SKIPLIST_LEVEL 5
-	#define ABSMAX_TRAIL_TREE (16384)
-	#define ABSMAX_PATHQ (512)
+#define ABSMAX_SKIPLIST_LEVEL			5
+#define ABSMAX_TRAIL_TREE			(16384)
+#define ABSMAX_PATHQ				(512)
 
 // STANDARD maximums... configurable!
-#define MAX_SKIPLIST_LEVEL 5
-#define MAX_TRAIL_TREE	(4096)
-#define MAX_PATHQ			(512)
+#define MAX_SKIPLIST_LEVEL			5
+#define MAX_TRAIL_TREE				(4096)
+#define MAX_PATHQ				(512)
 
 INT32 iMaxSkipListLevel = MAX_SKIPLIST_LEVEL;
-INT32	iMaxTrailTree = MAX_TRAIL_TREE;
+INT32 iMaxTrailTree = MAX_TRAIL_TREE;
 INT32 iMaxPathQ = MAX_PATHQ;
 
 extern BOOLEAN gfGeneratingMapEdgepoints;
 
 #define VEHICLE
 
-#define TRAILCELLTYPE UINT16
+#define TRAILCELLTYPE				UINT16
 
 // OLD PATHAI STUFF
 /////////////////////////////////////////////////
 struct path_t
 {
-	INT32							iLocation;						//4
-	path_t*       pNext[ABSMAX_SKIPLIST_LEVEL];   //4 * MAX_SKIPLIST_LEVEL (5) = 20
-	INT16							sPathNdx;							//2
-	TRAILCELLTYPE			usCostSoFar;          //2
-	TRAILCELLTYPE			usCostToGo;           //2
-	TRAILCELLTYPE			usTotalCost;					//2
-	INT8							bLevel;								//1
-	UINT8							ubTotalAPCost;				//1
-	UINT8							ubLegDistance;				//1
+	INT32   iLocation; //4
+	path_t* pNext[ABSMAX_SKIPLIST_LEVEL]; //4 * MAX_SKIPLIST_LEVEL (5) = 20
+	INT16   sPathNdx; //2
+	TRAILCELLTYPE usCostSoFar; //2
+	TRAILCELLTYPE usCostToGo; //2
+	TRAILCELLTYPE usTotalCost; //2
+	INT8    bLevel; //1
+	UINT8   ubTotalAPCost; //1
+	UINT8   ubLegDistance; //1
 };
 
 struct trail_t
 {
 	INT16 nextLink;
-	UINT8	stepDir;
-	INT8	fFlags;
-	INT16	sGridNo;
+	UINT8 stepDir;
+	INT8  fFlags;
+	INT16 sGridNo;
 };
 
 enum TrailFlags
@@ -107,59 +105,59 @@ enum TrailFlags
 	STEP_BACKWARDS = 0x01
 };
 
-#define EASYWATERCOST	TRAVELCOST_FLAT / 2
-#define ISWATER(t)	(((t)==TRAVELCOST_KNEEDEEP) || ((t)==TRAVELCOST_DEEPWATER))
-#define NOPASS (TRAVELCOST_BLOCKED)
+#define EASYWATERCOST				TRAVELCOST_FLAT / 2
+#define ISWATER(t)				(((t)==TRAVELCOST_KNEEDEEP) || ((t)==TRAVELCOST_DEEPWATER))
+#define NOPASS					(TRAVELCOST_BLOCKED)
 
-static path_t * pathQ;
-static UINT16	gusPathShown,gusAPtsToMove;
-static INT32	queRequests;
-static INT32	iSkipListSize;
-static INT32	iClosedListSize;
-static INT8		bSkipListLevel;
-static INT32	iSkipListLevelLimit[8] = {0, 4, 16, 64, 256, 1024, 4192, 16384 };
+static path_t *pathQ;
+static UINT16 gusPathShown,gusAPtsToMove;
+static INT32  queRequests;
+static INT32  iSkipListSize;
+static INT32  iClosedListSize;
+static INT8   bSkipListLevel;
+static INT32  iSkipListLevelLimit[8] = {0, 4, 16, 64, 256, 1024, 4192, 16384 };
 
-#define ESTIMATE0	((dx>dy) ?       (dx)      :       (dy))
-#define ESTIMATE1	((dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
-#define ESTIMATE2	FLATCOST*( (dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
-#define ESTIMATEn	((int)(FLATCOST*sqrt(dx*dx+dy*dy)))
-#define ESTIMATEC ( ( (dx<dy) ? (TRAVELCOST_BUMPY * (dx * 14 + dy * 10) / 10) : ( TRAVELCOST_BUMPY * (dy * 14 + dx * 10) / 10 ) ) )
-//#define ESTIMATEC (((dx<dy) ? ( (TRAVELCOST_FLAT * dx * 14) / 10 + dy) : (TRAVELCOST_FLAT * dy * 14 ) / 10 + dx) ) )
-#define ESTIMATE ESTIMATEC
+#define ESTIMATE0				((dx>dy) ?       (dx)      :       (dy))
+#define ESTIMATE1				((dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
+#define ESTIMATE2				FLATCOST*( (dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
+#define ESTIMATEn				((int)(FLATCOST*sqrt(dx*dx+dy*dy)))
+#define ESTIMATEC				( ( (dx<dy) ? (TRAVELCOST_BUMPY * (dx * 14 + dy * 10) / 10) : ( TRAVELCOST_BUMPY * (dy * 14 + dx * 10) / 10 ) ) )
+//#define ESTIMATEC 				(((dx<dy) ? ( (TRAVELCOST_FLAT * dx * 14) / 10 + dy) : (TRAVELCOST_FLAT * dy * 14 ) / 10 + dx) ) )
+#define ESTIMATE				ESTIMATEC
 
-#define MAXCOST (9990)
-//#define MAXCOST (255)
-//#define TOTALCOST( pCurrPtr ) (pCurrPtr->usCostSoFar + pCurrPtr->usCostToGo)
-#define TOTALCOST( ptr ) (ptr->usTotalCost)
-#define XLOC(a) (a%MAPWIDTH)
-#define YLOC(a) (a/MAPWIDTH)
-//#define LEGDISTANCE(a,b) ( abs( XLOC(b)-XLOC(a) ) + abs( YLOC(b)-YLOC(a) ) )
-#define LEGDISTANCE( x1, y1, x2, y2 ) ( ABS( x2 - x1 ) + ABS( y2 - y1 ) )
-//#define FARTHER(ndx,NDX) ( LEGDISTANCE( ndx->sLocation,sDestination) > LEGDISTANCE(NDX->sLocation,sDestination) )
-#define FARTHER(ndx,NDX) ( ndx->ubLegDistance > NDX->ubLegDistance )
+#define MAXCOST				(9990)
+//#define MAXCOST				(255)
+//#define TOTALCOST(pCurrPtr)			(pCurrPtr->usCostSoFar + pCurrPtr->usCostToGo)
+#define TOTALCOST( ptr )			(ptr->usTotalCost)
+#define XLOC(a)				(a%MAPWIDTH)
+#define YLOC(a)				(a/MAPWIDTH)
+//#define LEGDISTANCE(a,b)			( abs( XLOC(b)-XLOC(a) ) + abs( YLOC(b)-YLOC(a) ) )
+#define LEGDISTANCE( x1, y1, x2, y2 )		( ABS( x2 - x1 ) + ABS( y2 - y1 ) )
+//#define FARTHER(ndx,NDX)			( LEGDISTANCE( ndx->sLocation,sDestination) > LEGDISTANCE(NDX->sLocation,sDestination) )
+#define FARTHER(ndx,NDX)			( ndx->ubLegDistance > NDX->ubLegDistance )
 
-#define SETLOC( str, loc ) \
+#define SETLOC( str, loc )\
 {\
-(str).iLocation = loc;\
+	(str).iLocation = loc;\
 }
 
-static TRAILCELLTYPE * trailCost;
-static UINT8 * trailCostUsed;
+static TRAILCELLTYPE *trailCost;
+static UINT8 *trailCostUsed;
 static UINT8 gubGlobalPathCount = 0;
-static trail_t * trailTree;
+static trail_t *trailTree;
 
 static short trailTreeNdx=0;
 
-#define QHEADNDX (0)
-#define QPOOLNDX (iMaxPathQ-1)
+#define QHEADNDX				(0)
+#define QPOOLNDX				(iMaxPathQ-1)
 
-static path_t * pQueueHead;
-static path_t * pClosedHead;
+static path_t *pQueueHead;
+static path_t *pClosedHead;
 
 
-#define pathQNotEmpty (pQueueHead->pNext[0] != NULL)
-#define pathFound (pQueueHead->pNext[0]->iLocation == iDestination)
-#define pathNotYetFound (!pathFound)
+#define pathQNotEmpty				(pQueueHead->pNext[0] != NULL)
+#define pathFound				(pQueueHead->pNext[0]->iLocation == iDestination)
+#define pathNotYetFound			(!pathFound)
 
 // Note, the closed list is maintained as a doubly-linked list;
 // it's a regular queue, essentially, as we always add to the end
@@ -202,8 +200,7 @@ static path_t * pClosedHead;
 	{\
 		pNew = NULL;\
 	}\
-}
-*/
+}*/
 
 // experiment 1, seemed to fail
 #define ClosedListAdd( pNew ) \
@@ -271,8 +268,7 @@ static path_t * pClosedHead;
 	{\
 		pNew = NULL;\
 	}\
-}
-*/
+}*/
 
 #define SkipListRemoveHead()\
 {\
@@ -336,54 +332,53 @@ static path_t * pClosedHead;
 	}\
 }
 
-#define REMQUEHEADNODE()							SkipListRemoveHead();
+#define REMQUEHEADNODE()			SkipListRemoveHead();
 
-#define DELQUENODE(ndx) SkipListRemoveHead()
+#define DELQUENODE(ndx)				SkipListRemoveHead()
 
-#define REMAININGCOST(ptr)					\
-(								\
-	(dy = ABS(iDestY-iLocY)),					\
-	(dx = ABS(iDestX-iLocX)),					\
-	ESTIMATE						\
+#define REMAININGCOST(ptr)\
+(\
+	(dy = ABS(iDestY-iLocY)),\
+	(dx = ABS(iDestX-iLocX)),\
+	ESTIMATE\
 )
 /*
-#define REMAININGCOST(ptr)					\
-(								\
-	(locY = (ptr)->iLocation/MAPWIDTH),			\
-	(locX = (ptr)->iLocation%MAPWIDTH),			\
-	(dy = ABS(iDestY-locY)),					\
-	(dx = ABS(iDestX-locX)),					\
-	ESTIMATE						\
-)
-*/
+#define REMAININGCOST(ptr)\
+(\
+	(locY = (ptr)->iLocation/MAPWIDTH),\
+	(locX = (ptr)->iLocation%MAPWIDTH),\
+	(dy = ABS(iDestY-locY)),\
+	(dx = ABS(iDestX-locX)),\
+	ESTIMATE\
+)*/
 
-#define NEWQUENODE ClosedListGet( pNewPtr )
+#define NEWQUENODE				ClosedListGet( pNewPtr )
 
-#define QUEINSERT(ndx) SkipListInsert( ndx )
+#define QUEINSERT(ndx)				SkipListInsert( ndx )
 
-#define GREENSTEPSTART		0
-#define REDSTEPSTART			16
-#define PURPLESTEPSTART		32
-#define BLUESTEPSTART			48
-#define ORANGESTEPSTART		64
+#define GREENSTEPSTART				0
+#define REDSTEPSTART				16
+#define PURPLESTEPSTART				32
+#define BLUESTEPSTART				48
+#define ORANGESTEPSTART			64
 
-UINT8 gubNPCAPBudget = 0;
-UINT8 gubNPCDistLimit = 0;
+UINT8   gubNPCAPBudget = 0;
+UINT8   gubNPCDistLimit = 0;
 BOOLEAN gfNPCCircularDistLimit = FALSE;
-UINT8	gubNPCPathCount;
+UINT8   gubNPCPathCount;
 
 BOOLEAN gfPlotDirectPath = FALSE;
 BOOLEAN gfEstimatePath = FALSE;
-BOOLEAN	gfPathAroundObstacles = TRUE;
+BOOLEAN gfPathAroundObstacles = TRUE;
 
 static UINT32 guiPlottedPath[256];
-UINT8 guiPathingData[256];
+UINT8  guiPathingData[256];
 static INT32 giPathDataSize;
 static INT32 giPlotCnt;
 
-#define LOOPING_CLOCKWISE 0
-#define LOOPING_COUNTERCLOCKWISE 1
-#define LOOPING_REVERSE 2
+#define LOOPING_CLOCKWISE			0
+#define LOOPING_COUNTERCLOCKWISE		1
+#define LOOPING_REVERSE				2
 
 #ifdef COUNT_PATHS
 UINT32 guiSuccessfulPathChecks = 0;
@@ -458,14 +453,14 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 {
 	INT32 iDestination = sDestination, iOrigination;
 	UINT8 ubCnt = 0 , ubLoopStart = 0, ubLoopEnd = 0, ubLastDir = 0, ubStructIndex;
-	INT8	bLoopState = LOOPING_CLOCKWISE;
+	INT8  bLoopState = LOOPING_CLOCKWISE;
 	//BOOLEAN fLoopForwards = FALSE;
-	BOOLEAN	fCheckedBehind = FALSE;
+	BOOLEAN fCheckedBehind = FALSE;
 	INT32 iDestX,iDestY, iLocX, iLocY, dx, dy;
-	INT32	newLoc,curLoc;
+	INT32 newLoc,curLoc;
 	//INT32 curY;
 	INT32 curCost,newTotCost,nextCost;
-	INT16	sCurPathNdx;
+	INT16 sCurPathNdx;
 	INT32 prevCost;
 	INT32 iWaterToWater;
 	UINT8 ubCurAPCost,ubAPCost;
@@ -477,51 +472,51 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		//INT32 ubLastDir, iPrevToLastDir;
 		//INT8 bVehicleCheckDir;
 		//UINT16 adjLoc;
-		STRUCTURE_FILE_REF * pStructureFileRef=NULL;
-		UINT16							 usAnimSurface;
+		STRUCTURE_FILE_REF *pStructureFileRef=NULL;
+		UINT16 usAnimSurface;
 		//INT32 iCnt2, iCnt3;
 	#endif
 
-	path_t *	pNewPtr;
-	path_t *	pCurrPtr;
+	path_t *pNewPtr;
+	path_t *pCurrPtr;
 
-	path_t *	pUpdate[ABSMAX_SKIPLIST_LEVEL];
-	path_t *	pCurr;
-	path_t *	pNext;
-	path_t *	pDel;
-	UINT32		uiCost;
-	INT32			iCurrLevel, iLoop;
+	path_t *pUpdate[ABSMAX_SKIPLIST_LEVEL];
+	path_t *pCurr;
+	path_t *pNext;
+	path_t *pDel;
+	UINT32 uiCost;
+	INT32 iCurrLevel, iLoop;
 
-	UINT16		usOKToAddStructID=0;
+	UINT16 usOKToAddStructID=0;
 
-	BOOLEAN		fCopyReachable;
-	BOOLEAN		fCopyPathCosts;
-	BOOLEAN		fVisitSpotsOnlyOnce;
-	INT32			iOriginationX, iOriginationY, iX, iY;
+	BOOLEAN fCopyReachable;
+	BOOLEAN fCopyPathCosts;
+	BOOLEAN fVisitSpotsOnlyOnce;
+	INT32 iOriginationX, iOriginationY, iX, iY;
 
-	BOOLEAN		fTurnBased;
-	BOOLEAN		fPathingForPlayer;
-	INT32			iDoorGridNo=-1;
-	BOOLEAN		fDoorIsObstacleIfClosed= 0; // if false, door is obstacle if it is open
-	DOOR_STATUS *	pDoorStatus;
-	DOOR *				pDoor;
-	STRUCTURE *		pDoorStructure;
-	BOOLEAN		fDoorIsOpen = FALSE;
-	BOOLEAN		fNonFenceJumper;
-	BOOLEAN		fNonSwimmer;
-	BOOLEAN		fPathAroundPeople;
-	BOOLEAN		fGoingThroughDoor = FALSE; // for one tile
-	BOOLEAN		fContinuousTurnNeeded;
-	BOOLEAN		fCloseGoodEnough;
-  UINT16    usMovementModeToUseForAPs;
-	INT16 sClosePathLimit = -1; // XXX HACK000E
+	BOOLEAN fTurnBased;
+	BOOLEAN fPathingForPlayer;
+	INT32   iDoorGridNo=-1;
+	BOOLEAN fDoorIsObstacleIfClosed= 0; // if false, door is obstacle if it is open
+	DOOR_STATUS *pDoorStatus;
+	DOOR    *pDoor;
+	STRUCTURE *pDoorStructure;
+	BOOLEAN fDoorIsOpen = FALSE;
+	BOOLEAN fNonFenceJumper;
+	BOOLEAN fNonSwimmer;
+	BOOLEAN fPathAroundPeople;
+	BOOLEAN fGoingThroughDoor = FALSE; // for one tile
+	BOOLEAN fContinuousTurnNeeded;
+	BOOLEAN fCloseGoodEnough;
+	UINT16  usMovementModeToUseForAPs;
+	INT16   sClosePathLimit = -1; // XXX HACK000E
 
 #ifdef PATHAI_SKIPLIST_DEBUG
-	CHAR8				zTempString[1000], zTS[50];
+	CHAR8 zTempString[1000], zTS[50];
 #endif
 
 #ifdef PATHAI_VISIBLE_DEBUG
-	UINT16		usCounter = 0;
+	UINT16 usCounter = 0;
 #endif
 
 	fVehicle = FALSE;
@@ -530,12 +525,14 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 	if (iOrigination < 0 || iOrigination > WORLD_MAX)
 	{
-		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from off-world gridno %d to %d", iOrigination, sDestination );
+		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from off-world gridno %d to %d",
+			iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
 	{
-		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from non-visible gridno %d to %d", iOrigination, sDestination );
+		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from non-visible gridno %d to %d",
+			iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (s->bLevel != ubLevel)
@@ -613,8 +610,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		if (gubNPCDistLimit == 0)
 		{
 			return( FALSE );
-		}
-		*/
+		}*/
 	}
 	else
 	{
@@ -672,14 +668,12 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			if (fVehicle && s->bReverse)
 			{
 				fReverse = TRUE;
-			}
-			*/
+			}*/
 			/*
 			if (fVehicle || s->ubBodyType == COW || s->ubBodyType == BLOODCAT) // or a vehicle
 			{
 				fTurnSlow = TRUE;
-			}
-			*/
+			}*/
 			if ( gfEstimatePath )
 			{
 				usOKToAddStructID = IGNORE_PEOPLE_STRUCTURE_ID;
@@ -754,17 +748,22 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	}
 	else
 	{
-		if (ISWATER(gubWorldMovementCosts[iOrigination][0][ubLevel]) && ISWATER(gubWorldMovementCosts[iDestination][0][ubLevel]))
+		if (ISWATER(gubWorldMovementCosts[iOrigination][0][ubLevel]) &&
+			ISWATER(gubWorldMovementCosts[iDestination][0][ubLevel]))
+		{
 				iWaterToWater = 1;
+		}
 		else
+		{
 				iWaterToWater = 0;
+		}
 	}
 
 	//setup Q and first path record
 
 	SETLOC( *pQueueHead, iOrigination );
-	pQueueHead->usCostSoFar	= MAXCOST;
-	pQueueHead->bLevel			= iMaxSkipListLevel - 1;
+	pQueueHead->usCostSoFar = MAXCOST;
+	pQueueHead->bLevel = iMaxSkipListLevel - 1;
 
 	pClosedHead->pNext[0] = pClosedHead;
 	pClosedHead->pNext[1] = pClosedHead;
@@ -774,39 +773,39 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	iLocX = iOrigination % MAPWIDTH;
 
 	SETLOC( pathQ[1], iOrigination );
-	pathQ[1].sPathNdx						= 0;
-	pathQ[1].usCostSoFar				= 0;
+	pathQ[1].sPathNdx = 0;
+	pathQ[1].usCostSoFar = 0;
 	if ( fCopyReachable )
 	{
-		pathQ[1].usCostToGo					= 100;
+		pathQ[1].usCostToGo = 100;
 	}
 	else
 	{
-		pathQ[1].usCostToGo					= REMAININGCOST( &(pathQ[1]) );
+		pathQ[1].usCostToGo = REMAININGCOST( &(pathQ[1]) );
 	}
-	pathQ[1].usTotalCost				= pathQ[1].usCostSoFar + pathQ[1].usCostToGo;
-	pathQ[1].ubLegDistance			= LEGDISTANCE( iLocX, iLocY, iDestX, iDestY );
-	pathQ[1].bLevel							= 1;
+	pathQ[1].usTotalCost = pathQ[1].usCostSoFar + pathQ[1].usCostToGo;
+	pathQ[1].ubLegDistance = LEGDISTANCE( iLocX, iLocY, iDestX, iDestY );
+	pathQ[1].bLevel = 1;
 	pQueueHead->pNext[0] = &( pathQ[1] );
 	iSkipListSize++;
 
-	trailTreeNdx						=	0;
-	trailCost[iOrigination]	=	0;
-	pCurrPtr											= pQueueHead->pNext[0];
-	pCurrPtr->sPathNdx						= trailTreeNdx;
+	trailTreeNdx = 0;
+	trailCost[iOrigination] = 0;
+	pCurrPtr = pQueueHead->pNext[0];
+	pCurrPtr->sPathNdx = trailTreeNdx;
 	trailTreeNdx++;
 
 
 	do
 	{
 		//remove the first and best path so far from the que
-		pCurrPtr				= pQueueHead->pNext[0];
-		curLoc		= pCurrPtr->iLocation;
-		curCost		= pCurrPtr->usCostSoFar;
+		pCurrPtr = pQueueHead->pNext[0];
+		curLoc = pCurrPtr->iLocation;
+		curCost = pCurrPtr->usCostSoFar;
 		sCurPathNdx = pCurrPtr->sPathNdx;
 
 		// remember the cost used to get here...
-		prevCost = gubWorldMovementCosts[ trailTree[ sCurPathNdx ].sGridNo ][ trailTree[ sCurPathNdx ].stepDir ][ ubLevel ];
+		prevCost = gubWorldMovementCosts[trailTree[sCurPathNdx].sGridNo][trailTree[sCurPathNdx].stepDir][ubLevel];
 
 #if defined( PATHAI_VISIBLE_DEBUG )
 		if (gfDisplayCoverValues && gfDrawPathPoints)
@@ -840,9 +839,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				iPrevToLastDir = trailTree[trailTree[pCurrPtr->sPathNdx].nextLink].dirDelta;
 				ubLastDir = trailTree[pCurrPtr->sPathNdx].dirDelta;
 			}
-
-		}
-		*/
+		}*/
 #endif
 
 		if (gubNPCAPBudget)
@@ -908,8 +905,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						goto NEXTDIR;
 					}
 				}
-			}
-			*/
+			}*/
 
 			if ( bLoopState == LOOPING_REVERSE )
 			{
@@ -1039,8 +1035,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 						goto NEXTDIR;
 					}
 				}
-			}
-			*/
+			}*/
 
 			//how much is admission to the next tile
 			if ( gfPathAroundObstacles )
@@ -1266,7 +1261,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			// when doing a reachable test, ignore all locations with people in them
 			if (fPathAroundPeople && ( (newLoc != iDestination) || fCopyReachable) )
 			{
-				 // ATE: ONLY cancel if they are moving.....
+				// ATE: ONLY cancel if they are moving.....
 				const SOLDIERTYPE* const tgt = WhoIsThere2(newLoc, s->bLevel);
 				if (tgt != NULL && tgt != s)
 				{
@@ -1275,7 +1270,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 					//{
 						goto NEXTDIR;
 					//}
-				//	else
+					//else
 					//{
 					//	nextCost += 50;
 					//}
@@ -1305,16 +1300,19 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 					// transmogrify pathing costs for vehicles!
 					switch(nextCost)
 					{
-						case TRAVELCOST_THICK		:	nextCost = TRAVELCOST_GRASS;
-																			break;
-						case TRAVELCOST_SHORE		:
+						case TRAVELCOST_THICK:
+							nextCost = TRAVELCOST_GRASS;
+							break;
+						case TRAVELCOST_SHORE:
 						case TRAVELCOST_KNEEDEEP:
 						case TRAVELCOST_DEEPWATER:
-						//case TRAVELCOST_DOOR		:
-						case TRAVELCOST_FENCE		:	nextCost = TRAVELCOST_OBSTACLE;
-																			break;
+						//case TRAVELCOST_DOOR:
+						case TRAVELCOST_FENCE:
+							nextCost = TRAVELCOST_OBSTACLE;
+							break;
 
-						default									:	break;
+						default:
+							break;
 					}
 				}
 				*/
@@ -1323,92 +1321,102 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 			// NEW Apr 21 by Ian: abort if cost exceeds budget
 			if (gubNPCAPBudget)
-			 {
+			{
 				switch(nextCost)
 				{
-					case TRAVELCOST_NONE		: ubAPCost = 0;
-																		break;
+					case TRAVELCOST_NONE:
+						ubAPCost = 0;
+						break;
 
 					case TRAVELCOST_DIRTROAD:
-					case TRAVELCOST_FLAT		: ubAPCost = AP_MOVEMENT_FLAT;
-																		break;
-					//case TRAVELCOST_BUMPY	:
-					case TRAVELCOST_GRASS		: ubAPCost = AP_MOVEMENT_GRASS;
-																		break;
-					case TRAVELCOST_THICK		:	ubAPCost = AP_MOVEMENT_BUSH;
-																		break;
-					case TRAVELCOST_DEBRIS	: ubAPCost = AP_MOVEMENT_RUBBLE;
-																		break;
-					case TRAVELCOST_SHORE		: ubAPCost = AP_MOVEMENT_SHORE; // wading shallow water
-																		break;
-					case TRAVELCOST_KNEEDEEP:	ubAPCost = AP_MOVEMENT_LAKE; // wading waist/chest deep - very slow
-																		break;
+					case TRAVELCOST_FLAT:
+						ubAPCost = AP_MOVEMENT_FLAT;
+						break;
+					//case TRAVELCOST_BUMPY:
+					case TRAVELCOST_GRASS:
+						ubAPCost = AP_MOVEMENT_GRASS;
+						break;
+					case TRAVELCOST_THICK:
+						ubAPCost = AP_MOVEMENT_BUSH;
+						break;
+					case TRAVELCOST_DEBRIS:
+						ubAPCost = AP_MOVEMENT_RUBBLE;
+						break;
+					case TRAVELCOST_SHORE:
+						ubAPCost = AP_MOVEMENT_SHORE; // wading shallow water
+						break;
+					case TRAVELCOST_KNEEDEEP:
+						ubAPCost = AP_MOVEMENT_LAKE; // wading waist/chest deep - very slow
+						break;
 
-					case TRAVELCOST_DEEPWATER:ubAPCost = AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
-																		break;
+					case TRAVELCOST_DEEPWATER:
+						ubAPCost = AP_MOVEMENT_OCEAN; // can swim, so it's faster than wading
+						break;
 
-					//case TRAVELCOST_DOOR		:	ubAPCost = AP_MOVEMENT_FLAT;
-					//													break;
+					//case TRAVELCOST_DOOR:
+					//	ubAPCost = AP_MOVEMENT_FLAT;
+					//	break;
 
-					case TRAVELCOST_FENCE		: ubAPCost = AP_JUMPFENCE;
+					case TRAVELCOST_FENCE:
+						ubAPCost = AP_JUMPFENCE;
 
-/*
-			if ( sSwitchValue == TRAVELCOST_FENCE )
-			{
-				sPoints += sTileCost;
-
-				// If we are changeing stance ( either before or after getting there....
-				// We need to reflect that...
-				switch(usMovementMode)
-				{
-					case RUNNING:
-					case WALKING :
-
-						// Add here cost to go from crouch to stand AFTER fence hop....
-						// Since it's AFTER.. make sure we will be moving after jump...
-						if ( ( ubCnt + 2 ) < iLastGrid )
+						/*
+						if ( sSwitchValue == TRAVELCOST_FENCE )
 						{
-							sPoints += AP_CROUCH;
-						}
+							sPoints += sTileCost;
+
+							// If we are changeing stance ( either before or after getting there....
+							// We need to reflect that...
+							switch(usMovementMode)
+							{
+								case RUNNING:
+								case WALKING :
+
+									// Add here cost to go from crouch to stand AFTER fence hop....
+									// Since it's AFTER.. make sure we will be moving after jump...
+									if ( ( ubCnt + 2 ) < iLastGrid )
+									{
+										sPoints += AP_CROUCH;
+									}
+									break;
+
+								case SWATTING:
+
+									// Add cost to stand once there BEFORE....
+									sPoints += AP_CROUCH;
+									break;
+
+								case CRAWLING:
+
+									// Can't do it here.....
+									break;
+
+							}
+						}*/
+
 						break;
-
-					case SWATTING:
-
-						// Add cost to stand once there BEFORE....
-						sPoints += AP_CROUCH;
-						break;
-
-					case CRAWLING:
-
-						// Can't do it here.....
-						break;
-
-				}
-			}
-
-*/
-
-																		break;
 
 					case TRAVELCOST_OBSTACLE:
-					default									:	goto NEXTDIR;	// Cost too much to be considered!
+					default:
+						goto NEXTDIR; // Cost too much to be considered!
 				}
 
 
-			  // don't make the mistake of adding directly to
-			  // ubCurAPCost, that must be preserved for remaining dirs!
+				// don't make the mistake of adding directly to
+				// ubCurAPCost, that must be preserved for remaining dirs!
 				if (ubCnt & 1)
 				{
 					ubAPCost = (ubAPCost * 14) / 10;
 				}
 
-        usMovementModeToUseForAPs = usMovementMode;
+				usMovementModeToUseForAPs = usMovementMode;
 
-        // ATE: if water, force to be walking always!
-        if ( nextCost == TRAVELCOST_SHORE || nextCost == TRAVELCOST_KNEEDEEP || nextCost == TRAVELCOST_DEEPWATER )
-        {
-          usMovementModeToUseForAPs = WALKING;
-        }
+				// ATE: if water, force to be walking always!
+				if ( nextCost == TRAVELCOST_SHORE || nextCost == TRAVELCOST_KNEEDEEP ||
+					nextCost == TRAVELCOST_DEEPWATER )
+				{
+					usMovementModeToUseForAPs = WALKING;
+				}
 
 				// adjust AP cost for movement mode
 				switch( usMovementModeToUseForAPs )
@@ -1474,13 +1482,13 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				}
 
 
-			  ubNewAPCost = ubCurAPCost + ubAPCost;
+				ubNewAPCost = ubCurAPCost + ubAPCost;
 
 
-			  if (ubNewAPCost > gubNPCAPBudget)
-			    goto NEXTDIR;
+				if (ubNewAPCost > gubNPCAPBudget)
+				goto NEXTDIR;
 
-			 }
+			}
 
 			if ( fCloseGoodEnough )
 			{
@@ -1494,10 +1502,10 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			}
 			//make the destination look very attractive
 			if (newLoc == iDestination)
-					nextCost = 0;
+				nextCost = 0;
 			else
-				 if (gfPlotDirectPath && nextCost < NOPASS)
-						nextCost = TRAVELCOST_FLAT;
+				if (gfPlotDirectPath && nextCost < NOPASS)
+					nextCost = TRAVELCOST_FLAT;
 
 			// make water cost attractive for water to water paths
 			if (iWaterToWater)
@@ -1508,7 +1516,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 					nextCost = EASYWATERCOST;
 			}
 
-// NOTE: on September 24, 1997, Chris went back to a diagonal bias system
+			// NOTE: on September 24, 1997, Chris went back to a diagonal bias system
 			if (ubCnt & 1)
 			{
 				// moving on a diagonal
@@ -1529,54 +1537,52 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			{
 
 				#if defined( PATHAI_VISIBLE_DEBUG )
-
-					if (gfDisplayCoverValues && gfDrawPathPoints)
-					{
-						if (gsCoverValue[newLoc] == 0x7F7F)
-						{
-							gsCoverValue[newLoc] = usCounter++;
-						}
-						/*
-						else if (gsCoverValue[newLoc] >= 0)
-						{
-							gsCoverValue[newLoc]++;
-						}
-						else
-						{
-							gsCoverValue[newLoc]--;
-						}
-						*/
-					}
-				#endif
-
-				//NEWQUENODE;
+				if (gfDisplayCoverValues && gfDrawPathPoints)
 				{
-					if (queRequests<QPOOLNDX)
+					if (gsCoverValue[newLoc] == 0x7F7F)
 					{
-						pNewPtr = pathQ + (queRequests);
-						queRequests++;
-						memset( pNewPtr->pNext, 0, sizeof( path_t *) * ABSMAX_SKIPLIST_LEVEL );
-						pNewPtr->bLevel = RandomSkipListLevel();
+						gsCoverValue[newLoc] = usCounter++;
 					}
-					else if (iClosedListSize > 0)
+					/*
+					else if (gsCoverValue[newLoc] >= 0)
 					{
-						pNewPtr = pClosedHead->pNext[0];
-						pClosedHead->pNext[0] = pNewPtr->pNext[0];
-						iClosedListSize--;
-						queRequests++;
-						memset( pNewPtr->pNext, 0, sizeof( path_t *) * ABSMAX_SKIPLIST_LEVEL );
-						pNewPtr->bLevel = RandomSkipListLevel();
+						gsCoverValue[newLoc]++;
 					}
 					else
 					{
-						pNewPtr = NULL;
-					}
+						gsCoverValue[newLoc]--;
+					}*/
 				}
+				#endif
+
+				//NEWQUENODE;
+				//{
+				if (queRequests<QPOOLNDX)
+				{
+					pNewPtr = pathQ + (queRequests);
+					queRequests++;
+					memset( pNewPtr->pNext, 0, sizeof( path_t *) * ABSMAX_SKIPLIST_LEVEL );
+					pNewPtr->bLevel = RandomSkipListLevel();
+				}
+				else if (iClosedListSize > 0)
+				{
+					pNewPtr = pClosedHead->pNext[0];
+					pClosedHead->pNext[0] = pNewPtr->pNext[0];
+					iClosedListSize--;
+					queRequests++;
+					memset( pNewPtr->pNext, 0, sizeof( path_t *) * ABSMAX_SKIPLIST_LEVEL );
+					pNewPtr->bLevel = RandomSkipListLevel();
+				}
+				else
+				{
+					pNewPtr = NULL;
+				}
+				//}
 
 				if (pNewPtr == NULL)
 				{
 					#ifdef COUNT_PATHS
-						guiFailedPathChecks++;
+					guiFailedPathChecks++;
 					#endif
 					gubNPCAPBudget = 0;
 					gubNPCDistLimit = 0;
@@ -1584,8 +1590,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				}
 
 				//make new path to current location
-				trailTree[trailTreeNdx].nextLink	= sCurPathNdx;
-				trailTree[trailTreeNdx].stepDir	= ubCnt;
+				trailTree[trailTreeNdx].nextLink = sCurPathNdx;
+				trailTree[trailTreeNdx].stepDir = ubCnt;
 				if ( bLoopState == LOOPING_REVERSE )
 				{
 					trailTree[trailTreeNdx].fFlags = STEP_BACKWARDS;
@@ -1594,14 +1600,14 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				{
 					trailTree[trailTreeNdx].fFlags = 0;
 				}
-				trailTree[trailTreeNdx].sGridNo		= (INT16) newLoc;
-				pNewPtr->sPathNdx						= trailTreeNdx;
+				trailTree[trailTreeNdx].sGridNo = (INT16) newLoc;
+				pNewPtr->sPathNdx = trailTreeNdx;
 				trailTreeNdx++;
 
 				if (trailTreeNdx >= iMaxTrailTree)
 				{
 					#ifdef COUNT_PATHS
-						guiFailedPathChecks++;
+					guiFailedPathChecks++;
 					#endif
 					gubNPCAPBudget = 0;
 					gubNPCDistLimit = 0;
@@ -1611,24 +1617,24 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				iLocY = newLoc / MAPWIDTH;
 				iLocX = newLoc % MAPWIDTH;
 				SETLOC( *pNewPtr, newLoc );
-				pNewPtr->usCostSoFar		= (UINT16) newTotCost;
-				pNewPtr->usCostToGo			= (UINT16) REMAININGCOST(pNewPtr);
+				pNewPtr->usCostSoFar = (UINT16) newTotCost;
+				pNewPtr->usCostToGo = (UINT16) REMAININGCOST(pNewPtr);
 				if ( fCopyReachable )
 				{
-					pNewPtr->usCostToGo			= 100;
+					pNewPtr->usCostToGo = 100;
 				}
 				else
 				{
-					pNewPtr->usCostToGo			= (UINT16) REMAININGCOST(pNewPtr);
+					pNewPtr->usCostToGo = (UINT16) REMAININGCOST(pNewPtr);
 				}
 
-				pNewPtr->usTotalCost		= newTotCost + pNewPtr->usCostToGo;
-				pNewPtr->ubLegDistance	= LEGDISTANCE( iLocX, iLocY, iDestX, iDestY );
+				pNewPtr->usTotalCost = newTotCost + pNewPtr->usCostToGo;
+				pNewPtr->ubLegDistance = LEGDISTANCE( iLocX, iLocY, iDestX, iDestY );
 
 				if (gubNPCAPBudget)
 				{
-				  //save the AP cost so far along this path
-				  pNewPtr->ubTotalAPCost = ubNewAPCost;
+					//save the AP cost so far along this path
+					pNewPtr->ubTotalAPCost = ubNewAPCost;
 					// update the AP costs in the AI array of path costs if necessary...
 					if (fCopyPathCosts)
 					{
@@ -1699,8 +1705,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 #ifdef PATHAI_SKIPLIST_DEBUG
 					// print out contents of queue
 					{
-						INT32				iLoop;
-						INT8				bTemp;
+						INT32 iLoop;
+						INT8  bTemp;
 
 						zTempString[0] = '\0';
 						pCurr = pQueueHead;
@@ -1825,50 +1831,50 @@ ENDOFLOOP:
 		// data and copy into soldier's database
 		if (bCopy == COPYROUTE)
 		{
-		  z=_z;
+			z=_z;
 
 			for (ubCnt=0; z && (ubCnt < MAX_PATH_LIST_SIZE); ubCnt++)
-		  {
-			  s->ubPathingData[ubCnt] = trailTree[z].stepDir;
+			{
+				s->ubPathingData[ubCnt] = trailTree[z].stepDir;
 
-			  z = trailTree[z].nextLink;
-		  }
+				z = trailTree[z].nextLink;
+			}
 
 			s->ubPathIndex = 0;
-		  s->ubPathDataSize  = ubCnt;
+			s->ubPathDataSize  = ubCnt;
 
 		}
 		else if (bCopy == NO_COPYROUTE)
 		{
 
-		  z=_z;
+			z=_z;
 
 			for (ubCnt=0; z != 0; ubCnt++)
-		  {
-			  guiPathingData[ ubCnt ] = trailTree[z].stepDir;
+			{
+				guiPathingData[ ubCnt ] = trailTree[z].stepDir;
 
-			  z = trailTree[z].nextLink;
-		  }
+				z = trailTree[z].nextLink;
+			}
 
-		  giPathDataSize = ubCnt;
+			giPathDataSize = ubCnt;
 
 		}
 
 		#if defined( PATHAI_VISIBLE_DEBUG )
-			if (gfDisplayCoverValues && gfDrawPathPoints)
-			{
-				SetRenderFlags( RENDER_FLAG_FULL );
-				RenderWorld();
-				RenderCoverDebug( );
-				InvalidateScreen( );
-				RefreshScreen();
-			}
+		if (gfDisplayCoverValues && gfDrawPathPoints)
+		{
+			SetRenderFlags( RENDER_FLAG_FULL );
+			RenderWorld();
+			RenderCoverDebug( );
+			InvalidateScreen( );
+			RefreshScreen();
+		}
 		#endif
 
 
 		// return path length : serves as a "successful" flag and a path length counter
 		#ifdef COUNT_PATHS
-			guiSuccessfulPathChecks++;
+		guiSuccessfulPathChecks++;
 		#endif
 		gubNPCAPBudget = 0;
 		gubNPCDistLimit = 0;
@@ -1885,15 +1891,15 @@ ENDOFLOOP:
 	}
 
 	#ifdef COUNT_PATHS
-		if (fCopyReachable)
-		{
-			// actually this is a success
-			guiSuccessfulPathChecks++;
-		}
-		else
-		{
-			guiUnsuccessfulPathChecks++;
-		}
+	if (fCopyReachable)
+	{
+		// actually this is a success
+		guiSuccessfulPathChecks++;
+	}
+	else
+	{
+		guiUnsuccessfulPathChecks++;
+	}
 	#endif
 
 	// failed miserably, report...
@@ -1926,7 +1932,7 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 {
 	SOLDIERTYPE s;
 	INT32 iCurrentGridNo = 0;
-	INT32	iX, iY;
+	INT32 iX, iY;
 
 	memset( &s, 0, sizeof( SOLDIERTYPE ) );
 	s.sGridNo = sStartGridNo;
@@ -2016,35 +2022,35 @@ void ErasePath()
 {
 	INT16 iCnt;
 
- // NOTE: This routine must be called BEFORE anything happens that changes
- //       a merc's gridno, else the....
+	// NOTE: This routine must be called BEFORE anything happens that changes
+	//       a merc's gridno, else the....
 
- //EraseAPCursor();
+	//EraseAPCursor();
 
-	 if ( gfUIHandleShowMoveGrid )
-	 {
-	 		gfUIHandleShowMoveGrid					= FALSE;
+	if ( gfUIHandleShowMoveGrid )
+	{
+		gfUIHandleShowMoveGrid = FALSE;
 
-		  RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS4	);
-		  RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS9	);
-		  RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS2 );
-		  RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS13 );
-		  RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS15 );
-		  RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS19 );
-		  RemoveTopmost( gsUIHandleShowMoveGridLocation, FIRSTPOINTERS20 );
-	 }
+		RemoveTopmost(gsUIHandleShowMoveGridLocation, FIRSTPOINTERS4);
+		RemoveTopmost(gsUIHandleShowMoveGridLocation, FIRSTPOINTERS9);
+		RemoveTopmost(gsUIHandleShowMoveGridLocation, FIRSTPOINTERS2);
+		RemoveTopmost(gsUIHandleShowMoveGridLocation, FIRSTPOINTERS13);
+		RemoveTopmost(gsUIHandleShowMoveGridLocation, FIRSTPOINTERS15);
+		RemoveTopmost(gsUIHandleShowMoveGridLocation, FIRSTPOINTERS19);
+		RemoveTopmost(gsUIHandleShowMoveGridLocation, FIRSTPOINTERS20);
+	}
 
 	if (!gusPathShown)
-  {
-   //OldPath = FALSE;
-   return;
-  }
+	{
+		//OldPath = FALSE;
+		return;
+	}
 
 
- //if (OldPath > 0 && !eraseOldOne)
- //   return;
+	//if (OldPath > 0 && !eraseOldOne)
+	//   return;
 
- //OldPath = FALSE;
+	//OldPath = FALSE;
 
 
 
@@ -2052,7 +2058,7 @@ void ErasePath()
 
 
 	for (iCnt=0; iCnt < giPlotCnt; iCnt++)
-  {
+	{
 		//Grid[PlottedPath[cnt]].fstep = 0;
 
 		RemoveAllObjectsOfTypeRange( guiPlottedPath[iCnt], FOOTPRINTS, FOOTPRINTS );
@@ -2060,91 +2066,100 @@ void ErasePath()
 		RemoveAllOnRoofsOfTypeRange( guiPlottedPath[iCnt], FOOTPRINTS, FOOTPRINTS );
 
 		//RemoveAllObjectsOfTypeRange( guiPlottedPath[iCnt], FIRSTPOINTERS, FIRSTPOINTERS );
-  }
+	}
 
- //for (cnt=0; cnt < GRIDSIZE; cnt++)
- //    Grid[cnt].fstep = 0;
+	//for (cnt=0; cnt < GRIDSIZE; cnt++)
+	//	Grid[cnt].fstep = 0;
 
- giPlotCnt = 0;
- memset(guiPlottedPath,0,256*sizeof(UINT32));
+	giPlotCnt = 0;
+	memset(guiPlottedPath,0,256*sizeof(UINT32));
 }
 
 
 INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCopyRoute, const INT8 bPlot, const UINT16 usMovementMode, const INT16 sAPBudget)
 {
- INT16 sTileCost,sPoints=0,sTempGrid,sAnimCost=0;
- INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
- INT16 sExtraCostStand,sExtraCostSwat,sExtraCostCrawl;
- INT32 iCnt;
- INT16 sFootOrderIndex;
- INT16 sSwitchValue;
- INT16 sFootOrder[5] = {	GREENSTEPSTART, PURPLESTEPSTART, BLUESTEPSTART,
-													ORANGESTEPSTART, REDSTEPSTART };
- UINT16	usTileNum;
- LEVELNODE	*pNode;
- UINT16 usMovementModeToUseForAPs;
- BOOLEAN  bIgnoreNextCost = FALSE;
- INT16    sTestGridno;
+	INT16 sTileCost,sPoints=0,sTempGrid,sAnimCost=0;
+	INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
+	INT16 sExtraCostStand,sExtraCostSwat,sExtraCostCrawl;
+	INT32 iCnt;
+	INT16 sFootOrderIndex;
+	INT16 sSwitchValue;
+	INT16 sFootOrder[5] = {
+		GREENSTEPSTART,
+		PURPLESTEPSTART,
+		BLUESTEPSTART,
+		ORANGESTEPSTART,
+		REDSTEPSTART
+	};
+	UINT16 usTileNum;
+	LEVELNODE *pNode;
+	UINT16 usMovementModeToUseForAPs;
+	BOOLEAN bIgnoreNextCost = FALSE;
+	INT16  sTestGridno;
 
- if ( bPlot && gusPathShown )
- {
-    ErasePath();
- }
+	if ( bPlot && gusPathShown )
+	{
+		ErasePath();
+	}
 
- gusAPtsToMove	 = 0;
- sTempGrid			 = (INT16) pSold->sGridNo;
+	gusAPtsToMove = 0;
+	sTempGrid = (INT16) pSold->sGridNo;
 
- sFootOrderIndex = 0;
+	sFootOrderIndex = 0;
 
 
- //gubNPCMovementMode = (UINT8) usMovementMode;
- // distance limit to reduce the cost of plotting a path to a location we can't reach
+	//gubNPCMovementMode = (UINT8) usMovementMode;
+	// distance limit to reduce the cost of plotting a path to a location we can't reach
 
- // For now, use known hight adjustment
- if ( gfRecalculatingExistingPathCost || FindBestPath( pSold, sDestGridno, (INT8)pSold->bLevel, usMovementMode, bCopyRoute, 0 ) )
- {
-		 // if soldier would be STARTING to run then he pays a penalty since it takes time to
-		 // run full speed
-		 if (pSold->usAnimState != RUNNING)
-		 {
+	// For now, use known hight adjustment
+	if (gfRecalculatingExistingPathCost ||
+		FindBestPath(pSold, sDestGridno, (INT8)pSold->bLevel, usMovementMode, bCopyRoute, 0 ))
+	{
+		// if soldier would be STARTING to run then he pays a penalty since it takes time to
+		// run full speed
+		if (pSold->usAnimState != RUNNING)
+		{
 			// for estimation purposes, always pay penalty
 			sPointsRun = AP_START_RUN_COST;
-		 }
+		}
 
-     // Add to points, those needed to start from different stance!
-		 sPoints += MinAPsToStartMovement( pSold, usMovementMode );
+		// Add to points, those needed to start from different stance!
+		sPoints += MinAPsToStartMovement( pSold, usMovementMode );
 
 
-     // We should reduce points for starting to run if first tile is a fence...
-		 sTestGridno  = NewGridNo(pSold->sGridNo, DirectionInc( guiPathingData[0]));
-     if ( gubWorldMovementCosts[ sTestGridno ][ guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
-     {
-	    if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
-	    {
-		    sPoints -= AP_START_RUN_COST;
-	    }
-     }
+		// We should reduce points for starting to run if first tile is a fence...
+		sTestGridno  = NewGridNo(pSold->sGridNo, DirectionInc( guiPathingData[0]));
+		if ( gubWorldMovementCosts[ sTestGridno ][ guiPathingData[0] ][ pSold->bLevel] == TRAVELCOST_FENCE )
+		{
+			if ( usMovementMode == RUNNING && pSold->usAnimState != RUNNING )
+			{
+				sPoints -= AP_START_RUN_COST;
+			}
+		}
 
 		// FIRST, add up "startup" additional costs - such as intermediate animations, etc.
-		// switch(pSold->usAnimState)
-		{
-			//case START_AID   :
-			//case GIVING_AID  :	sAnimCost = AP_STOP_FIRST_AID;
-			//										break;
-			//case TWISTOMACH  :
-			//case COLLAPSED   :	sAnimCost = AP_GET_UP;
-			//										break;
-			//case TWISTBACK   :
-			//case UNCONSCIOUS :	sAnimCost = (AP_ROLL_OVER+AP_GET_UP);
-			//										break;
+		//switch(pSold->usAnimState)
+		//{
+		//	case START_AID:
+		//	case GIVING_AID:
+		//		sAnimCost = AP_STOP_FIRST_AID;
+		//		break;
+		//	case TWISTOMACH:
+		//	case COLLAPSED:
+				sAnimCost = AP_GET_UP;
+		//		break;
+		//	case TWISTBACK:
+		//	case UNCONSCIOUS:
+		//		sAnimCost = (AP_ROLL_OVER+AP_GET_UP);
+		//		break;
+		//	case CROUCHING:
+		//		if (usMovementMode == WALKING || usMovementMode == RUNNING)
+		//			sAnimCost = AP_CROUCH;
+		//		break;
+		//}
 
-			//	case CROUCHING	 :  if (usMovementMode == WALKING || usMovementMode == RUNNING)
-			//													sAnimCost = AP_CROUCH;
-			//											break;
-			}
 
-
-		sPoints				+= sAnimCost;
+		sPoints += sAnimCost;
 		gusAPtsToMove += sAnimCost;
 
 		const INT32 iLastGrid = giPathDataSize;
@@ -2162,94 +2177,102 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 			// get the tile cost for that tile based on WALKING
 			sTileCost = TerrainActionPoints( pSold, sTempGrid, guiPathingData[iCnt], pSold->bLevel );
 
-      usMovementModeToUseForAPs = usMovementMode;
+			usMovementModeToUseForAPs = usMovementMode;
 
-      // ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
-	    if ( gpWorldLevelData[ sTempGrid ].ubTerrainID == DEEP_WATER || gpWorldLevelData[ sTempGrid ].ubTerrainID == MED_WATER || gpWorldLevelData[ sTempGrid ].ubTerrainID == LOW_WATER )
-      {
-        usMovementModeToUseForAPs = WALKING;
-      }
+			// ATE - MAKE MOVEMENT ALWAYS WALK IF IN WATER
+			if (gpWorldLevelData[sTempGrid].ubTerrainID == DEEP_WATER ||
+				gpWorldLevelData[sTempGrid].ubTerrainID == MED_WATER ||
+				gpWorldLevelData[sTempGrid].ubTerrainID == LOW_WATER)
+			{
+				usMovementModeToUseForAPs = WALKING;
+			}
 
-      if ( bIgnoreNextCost )
-      {
-        bIgnoreNextCost = FALSE;
-      }
-      else
-      {
-			  // ATE: If we have a 'special cost, like jump fence...
-			  if ( sSwitchValue == TRAVELCOST_FENCE )
-			  {
-				  sPoints += sTileCost;
+			if ( bIgnoreNextCost )
+			{
+				bIgnoreNextCost = FALSE;
+			}
+			else
+			{
+				// ATE: If we have a 'special cost, like jump fence...
+				if ( sSwitchValue == TRAVELCOST_FENCE )
+				{
+					sPoints += sTileCost;
 
-          bIgnoreNextCost = TRUE;
+					bIgnoreNextCost = TRUE;
 
-				  // If we are changeing stance ( either before or after getting there....
-				  // We need to reflect that...
-				  switch( usMovementModeToUseForAPs )
-				  {
-					  case RUNNING:
-					  case WALKING :
+					// If we are changeing stance ( either before or after getting there....
+					// We need to reflect that...
+					switch( usMovementModeToUseForAPs )
+					{
+						case RUNNING:
+						case WALKING:
+							// Add here cost to go from crouch to stand AFTER fence hop....
+							// Since it's AFTER.. make sure we will be moving after jump...
+							if ( ( iCnt + 2 ) < iLastGrid )
+							{
+								sExtraCostStand += AP_CROUCH;
 
-						  // Add here cost to go from crouch to stand AFTER fence hop....
-						  // Since it's AFTER.. make sure we will be moving after jump...
-						  if ( ( iCnt + 2 ) < iLastGrid )
-						  {
-							  sExtraCostStand += AP_CROUCH;
+								// ATE: if running, charge extra point to srart again
+								if ( usMovementModeToUseForAPs== RUNNING )
+								{
+									sExtraCostStand++;
+								}
 
-                // ATE: if running, charge extra point to srart again
-                if ( usMovementModeToUseForAPs== RUNNING )
-                {
-                  sExtraCostStand++;
-                }
+								sPoints += sExtraCostStand;
+							}
+							break;
 
-				        sPoints += sExtraCostStand;
-						  }
-						  break;
+						case SWATTING:
+							// Add cost to stand once there BEFORE....
+							sExtraCostSwat += AP_CROUCH;
+							sPoints += sExtraCostSwat;
+							break;
 
-					  case SWATTING:
+						case CRAWLING:
+							// Can't do it here.....
+							break;
 
-						  // Add cost to stand once there BEFORE....
-						  sExtraCostSwat += AP_CROUCH;
-				      sPoints += sExtraCostSwat;
-						  break;
+				}
+			}
+			else if (sTileCost > 0)
+			{
+				// else, movement is adjusted based on mode...
 
-					  case CRAWLING:
+				if (sSwitchValue == TRAVELCOST_NOT_STANDING)
+				{
+					switch( usMovementModeToUseForAPs )
+					{
+						case RUNNING:
+						case WALKING :
+							// charge crouch APs for ducking head!
+							sExtraCostStand += AP_CROUCH;
+							break;
 
-						  // Can't do it here.....
-						  break;
+						default:
+							break;
+					}
+				}
 
-				  }
-			  }
-			  else if (sTileCost > 0)
-			  {
-				  // else, movement is adjusted based on mode...
-
-				  if (sSwitchValue == TRAVELCOST_NOT_STANDING)
-				  {
-					  switch( usMovementModeToUseForAPs )
-					  {
-						  case RUNNING:
-						  case WALKING :
-							  // charge crouch APs for ducking head!
-							  sExtraCostStand += AP_CROUCH;
-							  break;
-
-						  default:
-							  break;
-					  }
-				  }
-
-				  // so, then we must modify it for other movement styles and accumulate
-				  switch( usMovementModeToUseForAPs )
-				  {
-					  case RUNNING:		sPoints += (INT16)((DOUBLE)(sTileCost) / RUNDIVISOR) + sExtraCostStand;	break;
-					  case WALKING :	sPoints += (sTileCost + WALKCOST) + sExtraCostStand;		break;
-					  case SWATTING:	sPoints += (sTileCost + SWATCOST) + sExtraCostSwat;		break;
-					  case CRAWLING:	sPoints += (sTileCost + CRAWLCOST) + sExtraCostCrawl;		break;
-					  default      :  sPoints += sTileCost;									break;
-				  }
-			  }
-      }
+				// so, then we must modify it for other movement styles and accumulate
+				switch( usMovementModeToUseForAPs )
+				{
+					case RUNNING:
+						sPoints += (INT16)((DOUBLE)(sTileCost) / RUNDIVISOR) + sExtraCostStand;	break;
+					case WALKING :
+						sPoints += (sTileCost + WALKCOST) + sExtraCostStand;
+						break;
+					case SWATTING:
+						sPoints += (sTileCost + SWATCOST) + sExtraCostSwat;
+						break;
+					case CRAWLING:
+						sPoints += (sTileCost + CRAWLCOST) + sExtraCostCrawl;
+						break;
+					default:
+						sPoints += sTileCost;
+						break;
+				}
+			}
+		}
 
 			// THIS NEXT SECTION ONLY NEEDS TO HAPPEN FOR CURSOR UI FEEDBACK, NOT ACTUAL COSTING
 
@@ -2361,8 +2384,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 					{
 						// use red footprints ( offset by 16 )
 						usTileIndex += REDSTEPSTART;
-					}
-					*/
+					}*/
 
 					if ( pSold->bLevel == 0 )
 					{
@@ -2395,7 +2417,8 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 					usTileIndex = GetTileIndexFromTypeSubIndex(FOOTPRINTS, usTileNum);
 
 					// Adjust based on what mode we are in...
-					if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+					if ((gTacticalStatus.uiFlags & REALTIME) ||
+						!(gTacticalStatus.uiFlags & INCOMBAT))
 					{
 						// find out which color we're using
 						usTileIndex += sFootOrder[ 4 ];
@@ -2422,7 +2445,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 					}
 				}
 
-			}		// end of if turn based or real-time user option "show paths" on...
+			} // end of if turn based or real-time user option "show paths" on...
 		}
 
 		if ( bPlot )
@@ -2430,12 +2453,12 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 			gusPathShown = TRUE;
 		}
 
- } 	// end of found a path
+	} // end of found a path
 
- // reset distance limit
- gubNPCDistLimit = 0;
+	// reset distance limit
+	gubNPCDistLimit = 0;
 
- return(sPoints);
+	return(sPoints);
 }
 
 
@@ -2467,7 +2490,8 @@ INT16 UIPlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 b
 
 INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode )
 {
-	// AI function for a soldier already with a path; this will return the cost of that path using the given movement mode
+	// AI function for a soldier already with a path; this will return the cost of that
+	// path using the given movement mode
 
 	if ( !pSoldier->bPathStored || pSoldier->ubPathDataSize == 0 )
 	{
@@ -2501,13 +2525,13 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 	// This function will return either TRAVELCOST_DOOR (in place of closed door cost),
 	// TRAVELCOST_OBSTACLE, or the base ground terrain
 	// travel cost, depending on whether or not the door is open or closed etc.
-	BOOLEAN				fDoorIsObstacleIfClosed=FALSE;
-	INT32					iDoorGridNo=-1;
-	DOOR_STATUS *	pDoorStatus;
-	DOOR *				pDoor;
-	STRUCTURE *		pDoorStructure;
-	BOOLEAN				fDoorIsOpen;
-	UINT8					ubReplacementCost;
+	BOOLEAN fDoorIsObstacleIfClosed=FALSE;
+	INT32 iDoorGridNo=-1;
+	DOOR_STATUS *pDoorStatus;
+	DOOR *pDoor;
+	STRUCTURE *pDoorStructure;
+	BOOLEAN fDoorIsOpen;
+	UINT8 ubReplacementCost;
 
 	if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 	{
@@ -2607,7 +2631,8 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 			*piDoorGridNo = iDoorGridNo;
 		}
 
-		if ( fReturnPerceivedValue && gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT )
+		if (fReturnPerceivedValue &&
+			gpWorldLevelData[ iDoorGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_DOOR_STATUS_PRESENT)
 		{
 			// check door status
 			pDoorStatus = GetDoorStatus( (INT16) iDoorGridNo );
@@ -2655,7 +2680,9 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 				// a path for an enemy or NPC with keys
 
 				// creatures and animals can't open doors!
-				if ( fReturnPerceivedValue || ( pSoldier && (pSoldier->uiStatusFlags & SOLDIER_MONSTER || pSoldier->uiStatusFlags & SOLDIER_ANIMAL ) ) )
+				if (fReturnPerceivedValue ||
+					(pSoldier && (pSoldier->uiStatusFlags & SOLDIER_MONSTER ||
+					pSoldier->uiStatusFlags & SOLDIER_ANIMAL)))
 				{
 					ubMovementCost = ubReplacementCost;
 				}

@@ -145,12 +145,12 @@ static void LoadSaveScreenEntry(void)
 	iTopFileShown = iTotalFiles = 0;
 	try
 	{
-    std::vector<std::string> files = GCM->getAllMaps();
-    BOOST_FOREACH(const std::string &file, files)
-    {
+		std::vector<std::string> files = GCM->getAllMaps();
+		BOOST_FOREACH(const std::string &file, files)
+		{
 			FileList = AddToFDlgList(FileList, file.c_str());
 			++iTotalFiles;
-    }
+		}
 	}
 	catch (...) { /* XXX ignore */ }
 
@@ -319,7 +319,7 @@ ScreenID LoadSaveScreenHandle(void)
 	{
 		SetFontForeground( FONT_LTRED );
 		SetFontBackground( 142 );
-	  MPrint(226, 126, L"NO FILES IN /MAPS DIRECTORY");
+		MPrint(226, 126, L"NO FILES IN /MAPS DIRECTORY");
 	}
 	else for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
 	{
@@ -352,7 +352,7 @@ ScreenID LoadSaveScreenHandle(void)
 
 		case DIALOG_DELETE:
 		{
-      gMapFileForRemoval = GCM->getMapPath(gzFilename);
+			gMapFileForRemoval = GCM->getMapPath(gzFilename);
 			const UINT32 attr = FileGetAttributes(gMapFileForRemoval.c_str());
 			if (attr != FILE_ATTR_ERROR)
 			{
@@ -370,7 +370,7 @@ ScreenID LoadSaveScreenHandle(void)
 		}
 
 		case DIALOG_SAVE:
-    {
+		{
 			if( !ExtractFilenameFromFields() )
 			{
 				CreateMessageBox( L" Illegal filename.  Try another filename? " );
@@ -378,7 +378,7 @@ ScreenID LoadSaveScreenHandle(void)
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-      std::string filename(GCM->getMapPath(gzFilename));
+			std::string filename(GCM->getMapPath(gzFilename));
 			if ( GCM->doesGameResExists(filename.c_str()) )
 			{
 				gfFileExists = TRUE;
@@ -397,7 +397,7 @@ ScreenID LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			gbCurrentFileIOStatus = INITIATE_MAP_SAVE;
 			return LOADSAVE_SCREEN ;
-    }
+		}
 		case DIALOG_LOAD:
 			if( !ExtractFilenameFromFields() )
 			{

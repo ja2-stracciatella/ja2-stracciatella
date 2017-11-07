@@ -1002,7 +1002,7 @@ void RenderButtons(void)
 
 void MarkAButtonDirty(GUIButtonRef const b)
 {
-  // surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
+	// surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
 	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags |= BUTTON_DIRTY;
 }
@@ -1675,8 +1675,8 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 
 void ReleaseAnchorMode(void)
 {
-  GUI_BUTTON* const b = gpAnchoredButton;
-  if (!b) return;
+	GUI_BUTTON* const b = gpAnchoredButton;
+	if (!b) return;
 
 	if (gusMouseXPos < b->X() || b->BottomRightX() < gusMouseXPos ||
 			gusMouseYPos < b->Y() || b->BottomRightY() < gusMouseYPos)

@@ -110,7 +110,7 @@ static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 const w, UINT16
 
 TEST(PCX, asserts)
 {
-  EXPECT_EQ(sizeof(PcxHeader), 128);
+	EXPECT_EQ(sizeof(PcxHeader), 128);
 }
 
 #endif

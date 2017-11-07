@@ -92,82 +92,82 @@ of the group.  If the priority of the group is high, they
 //16 sectors that are LEVEL 1, 2, or 3 garrison groups.  The lower the level, the more
 //troops stay in that sector, and the rest will also be used as a secondary pool when
 //the primary pool runs dry.  So basically, this number is only part of the equation.
-#define EASY_QUEENS_POOL_OF_TROOPS					150
-#define NORMAL_QUEENS_POOL_OF_TROOPS				200
-#define HARD_QUEENS_POOL_OF_TROOPS					400
+#define EASY_QUEENS_POOL_OF_TROOPS		150
+#define NORMAL_QUEENS_POOL_OF_TROOPS		200
+#define HARD_QUEENS_POOL_OF_TROOPS		400
 
 //Modifies the starting values as well as the desired values for all of the garrisons.
-#define EASY_INITIAL_GARRISON_PERCENTAGES		70
+#define EASY_INITIAL_GARRISON_PERCENTAGES	70
 #define NORMAL_INITIAL_GARRISON_PERCENTAGES	100
-#define HARD_INITIAL_GARRISON_PERCENTAGES		125
+#define HARD_INITIAL_GARRISON_PERCENTAGES	125
 
-#define EASY_MIN_ENEMY_GROUP_SIZE						3
-#define NORMAL_MIN_ENEMY_GROUP_SIZE					4
-#define HARD_MIN_ENEMY_GROUP_SIZE						6
+#define EASY_MIN_ENEMY_GROUP_SIZE		3
+#define NORMAL_MIN_ENEMY_GROUP_SIZE		4
+#define HARD_MIN_ENEMY_GROUP_SIZE		6
 
 //Sets the starting alert chances.  Everytime an enemy arrives in a new sector, or the player,
 //this is the chance the enemy will detect the player in adjacent sectors.  This chance is associated
 //with each side checked.  Stationary groups do this check periodically.
-#define EASY_ENEMY_STARTING_ALERT_LEVEL			5
-#define	NORMAL_ENEMY_STARTING_ALERT_LEVEL		20
-#define HARD_ENEMY_STARTING_ALERT_LEVEL			60
+#define EASY_ENEMY_STARTING_ALERT_LEVEL		5
+#define NORMAL_ENEMY_STARTING_ALERT_LEVEL	20
+#define HARD_ENEMY_STARTING_ALERT_LEVEL		60
 
 //When an enemy spots and chases a player group, the alertness value decrements by this value.  The
 //higher the value, the less of a chance the enemy will spot and attack subsequent groups.  This
 //minimizes the aggressiveness of the enemy.  Ranges from 1-100 (but recommend 20-60).
-#define EASY_ENEMY_STARTING_ALERT_DECAY			75
-#define	NORMAL_ENEMY_STARTING_ALERT_DECAY		50
-#define HARD_ENEMY_STARTING_ALERT_DECAY			25
+#define EASY_ENEMY_STARTING_ALERT_DECAY		75
+#define NORMAL_ENEMY_STARTING_ALERT_DECAY	50
+#define HARD_ENEMY_STARTING_ALERT_DECAY		25
 //The base time that the queen can think about reinforcements for refilling lost patrol groups,
 //town garrisons, etc. She only is allowed one action per 'turn'.
-#define EASY_TIME_EVALUATE_IN_MINUTES				480
-#define NORMAL_TIME_EVALUATE_IN_MINUTES			360
-#define HARD_TIME_EVALUATE_IN_MINUTES				180
+#define EASY_TIME_EVALUATE_IN_MINUTES		480
+#define NORMAL_TIME_EVALUATE_IN_MINUTES		360
+#define HARD_TIME_EVALUATE_IN_MINUTES		180
 //The variance added on.
-#define EASY_TIME_EVALUATE_VARIANCE					240
-#define NORMAL_TIME_EVALUATE_VARIANCE				180
-#define HARD_TIME_EVALUATE_VARIANCE					120
+#define EASY_TIME_EVALUATE_VARIANCE		240
+#define NORMAL_TIME_EVALUATE_VARIANCE		180
+#define HARD_TIME_EVALUATE_VARIANCE		120
 
 //When a player takes control of a sector, don't allow any enemy reinforcements to enter the sector for a
 //limited amount of time.  This essentially dumbs down the AI, making it less aggressive.
-#define EASY_GRACE_PERIOD_IN_HOURS					144		// 6 days
-#define NORMAL_GRACE_PERIOD_IN_HOURS				96		// 4 days
-#define HARD_GRACE_PERIOD_IN_HOURS					48		// 2 days
+#define EASY_GRACE_PERIOD_IN_HOURS		144 // 6 days
+#define NORMAL_GRACE_PERIOD_IN_HOURS		96 // 4 days
+#define HARD_GRACE_PERIOD_IN_HOURS		48 // 2 days
 
 //Defines how many days must pass before the queen is willing to refill a defeated patrol group.
-#define EASY_PATROL_GRACE_PERIOD_IN_DAYS		16
+#define EASY_PATROL_GRACE_PERIOD_IN_DAYS	16
 #define NORMAL_PATROL_GRACE_PERIOD_IN_DAYS	12
-#define HARD_PATROL_GRACE_PERIOD_IN_DAYS		8
+#define HARD_PATROL_GRACE_PERIOD_IN_DAYS	8
 
 //Certain conditions can cause the queen to go into a "full alert" mode.  This means that temporarily, the queen's
 //forces will automatically succeed adjacent checks until x number of enemy initiated battles occur.  The same variable
 //is what is used to determine the free checks.
-#define EASY_NUM_AWARE_BATTLES							1
-#define NORMAL_NUM_AWARE_BATTLES						2
-#define HARD_NUM_AWARE_BATTLES							3
+#define EASY_NUM_AWARE_BATTLES			1
+#define NORMAL_NUM_AWARE_BATTLES		2
+#define HARD_NUM_AWARE_BATTLES			3
 
 BOOLEAN gfAutoAIAware = FALSE;
 
 //Saved vars
-BOOLEAN gfExtraElites						= 0;	//Set when queen compositions are augmented with bonus elites.
+BOOLEAN      gfExtraElites = 0;			//Set when queen compositions are augmented with bonus elites.
 static INT32 giGarrisonArraySize = 0;
-INT32		giPatrolArraySize				= 0;
-INT32		giForcePercentage				= 0;	//Modifies the starting group sizes relative by percentage
-INT32		giArmyAlertness					= 0;	//The chance the group will spot an adjacent player/militia
-INT32   giArmyAlertnessDecay		= 0;	//How much the spotting chance decreases when spot check succeeds
-UINT8		gubNumAwareBattles			= 0;	//When non-zero, this means the queen is very aware and searching for players.  Every time
-																			//there is an enemy initiated battle, this counter decrements until zero.  Until that point,
-																			//all adjacent sector checks automatically succeed.
-BOOLEAN gfQueenAIAwake					= FALSE;	//This flag turns on/off the strategic decisions.  If it's off, no reinforcements
-																					//or assaults will happen.
-																					//@@@Alex, this flag is ONLY set by the first meanwhile scene which calls an action.  If this
-																					//action isn't called, the AI will never turn on.  It is completely dependant on this action.  It can
-																					//be toggled at will in the AIViewer for testing purposes.
-INT32		giReinforcementPool			= 0;	//How many troops the queen has in reserve in noman's land.  These guys are spawned as needed in P3.
-INT32   giReinforcementPoints		= 0;	//the entire army's capacity to provide reinforcements.
-INT32		giRequestPoints					= 0;	//the entire army's need for reinforcements.
-UINT8   gubSAIVersion						= SAI_VERSION;	//Used for adding new features to be saved.
-UINT8		gubQueenPriorityPhase		= 0;	//Defines how far into defence the queen is -- abstractly related to defcon index ranging from 0-10.
+INT32        giPatrolArraySize = 0;
+INT32        giForcePercentage = 0;		//Modifies the starting group sizes relative by percentage
+INT32        giArmyAlertness = 0;		//The chance the group will spot an adjacent player/militia
+INT32        giArmyAlertnessDecay = 0;		//How much the spotting chance decreases when spot check succeeds
+UINT8        gubNumAwareBattles = 0;		//When non-zero, this means the queen is very aware and searching for players.  Every time
+						//there is an enemy initiated battle, this counter decrements until zero.  Until that point,
+						//all adjacent sector checks automatically succeed.
+BOOLEAN gfQueenAIAwake = FALSE;			//This flag turns on/off the strategic decisions.  If it's off, no reinforcements
+						//or assaults will happen.
+						//@@@Alex, this flag is ONLY set by the first meanwhile scene which calls an action.  If this
+						//action isn't called, the AI will never turn on.  It is completely dependant on this action.  It can
+						//be toggled at will in the AIViewer for testing purposes.
+INT32        giReinforcementPool = 0;		//How many troops the queen has in reserve in noman's land.  These guys are spawned as needed in P3.
+INT32        giReinforcementPoints = 0;		//the entire army's capacity to provide reinforcements.
+INT32        giRequestPoints = 0;		//the entire army's need for reinforcements.
+UINT8        gubSAIVersion = SAI_VERSION;	//Used for adding new features to be saved.
+UINT8        gubQueenPriorityPhase = 0;		//Defines how far into defence the queen is -- abstractly related to defcon index ranging from 0-10.
 																			//10 is the most defensive
 //Used for authorizing the use of the first battle meanwhile scene AFTER the battle is complete.  This is the case used when
 //the player attacks a town, and is set once militia are sent to investigate.
@@ -176,19 +176,19 @@ BOOLEAN gfFirstBattleMeanwhileScenePending = FALSE;
 //After the first battle meanwhile scene is finished, this flag is set, and the queen orders patrol groups to immediately fortify all towns.
 BOOLEAN gfMassFortificationOrdered = FALSE;
 
-UINT8		gubMinEnemyGroupSize			= 0;
-UINT8		gubHoursGracePeriod      = 0;
-UINT16	gusPlayerBattleVictories = 0;
+UINT8   gubMinEnemyGroupSize     = 0;
+UINT8   gubHoursGracePeriod      = 0;
+UINT16  gusPlayerBattleVictories = 0;
 BOOLEAN gfUseAlternateQueenPosition = FALSE;
 
 //padding for generic globals
-#define SAI_PADDING_BYTES				97
+#define SAI_PADDING_BYTES		97
 INT8		gbPadding[SAI_PADDING_BYTES]; // XXX HACK000B
 //patrol group info plus padding
-#define SAVED_PATROL_GROUPS			50
+#define SAVED_PATROL_GROUPS		50
 static PATROL_GROUP* gPatrolGroup;
 //army composition info plus padding
-#define SAVED_ARMY_COMPOSITIONS	60
+#define SAVED_ARMY_COMPOSITIONS		60
 ARMY_COMPOSITION gArmyComp[ NUM_ARMY_COMPOSITIONS ];
 //garrison info plus padding
 #define SAVED_GARRISON_GROUPS		100
@@ -256,9 +256,9 @@ static const ARMY_COMPOSITION gOrigArmyComp[NUM_ARMY_COMPOSITIONS] =
 #define M(size, prio, p1, p2, p3, p4) { size, prio, { p1, p2, p3, p4 }, -1, 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 
 //Patrol definitions
-//NOTE:	  A point containing 0 is actually the same as SEC_A1, but because nobody is using SEC_A1 in any
-//				of the patrol groups, I am coding 0 to be ignored.
-//NOTE:		Must have at least two points.
+//NOTE: A point containing 0 is actually the same as SEC_A1, but because nobody is using SEC_A1 in any
+//      of the patrol groups, I am coding 0 to be ignored.
+//NOTE: Must have at least two points.
 static const PATROL_GROUP gOrigPatrolGroup[] =
 { //SIZE PRIO POINT1    POINT2    POINT3    POINT4
 	M( 8,   40, SEC_B1,   SEC_C1,   SEC_C3,   SEC_A3 ),
@@ -511,7 +511,7 @@ static void ValidateGroup(GROUP* pGroup)
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
 			SLOGE( DEBUG_TAG_SAI, "Internal error (invalid enemy group #%d location at %c%d, destination %c%d).  Please send PRIOR save file and Debug Log.",
-						 pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
+				pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
 			RemoveGroupFromStrategicAILists(*pGroup);
 			RemoveGroup(*pGroup);
 			return;
@@ -520,7 +520,7 @@ static void ValidateGroup(GROUP* pGroup)
 	if( !pGroup->ubNextX || !pGroup->ubNextY )
 	{
 		if( !pGroup->fPlayer && pGroup->pEnemyGroup->ubIntention != STAGING
-												 && pGroup->pEnemyGroup->ubIntention != REINFORCEMENTS )
+			&& pGroup->pEnemyGroup->ubIntention != REINFORCEMENTS )
 		{
 			SLOGE( DEBUG_TAG_SAI, "Internal error (floating group).  Please send PRIOR save file and Debug Log." );
 			if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -544,10 +544,10 @@ static void ValidateLargeGroup(GROUP* pGroup)
 		if( pGroup->ubGroupSize > 25 )
 		{
 			SLOGW( DEBUG_TAG_SAI, "warning:  Enemy group containing %d soldiers\n\
-												(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message\n\
-												to evaluate a potential problems with very large enemy groups.",
-									 pGroup->ubGroupSize, pGroup->pEnemyGroup->ubNumAdmins, pGroup->pEnemyGroup->ubNumTroops, pGroup->pEnemyGroup->ubNumElites,
-									 pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
+				(%d admins, %d troops, %d elites) in sector %c%d.  This message is a temporary test message\n\
+				to evaluate a potential problems with very large enemy groups.",
+				pGroup->ubGroupSize, pGroup->pEnemyGroup->ubNumAdmins, pGroup->pEnemyGroup->ubNumTroops, pGroup->pEnemyGroup->ubNumElites,
+				pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
 		}
 }
 
@@ -1361,10 +1361,10 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					{
 						UINT8 ubCut;
 						SLOGE( DEBUG_TAG_SAI, "Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.  Size truncated from %d to %d.\n\
-															Please send Strategic Decisions.txt and PRIOR save.",
-													 pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
-													 pGroup->ubGroupID, SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
-													 pPatrolGroup->ubGroupSize, MAX_STRATEGIC_TEAM_SIZE );
+							Please send Strategic Decisions.txt and PRIOR save.",
+							pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
+							pGroup->ubGroupID, SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
+							pPatrolGroup->ubGroupSize, MAX_STRATEGIC_TEAM_SIZE );
 						//truncate the group size.
 						ubCut = pPatrolGroup->ubGroupSize - MAX_STRATEGIC_TEAM_SIZE;
 						while( ubCut-- )
@@ -2692,7 +2692,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		//when we finally go down there, otherwise she will end up in the wrong spot, possibly inside
 		//the walls.
 		if( !gubFact[ FACT_QUEEN_DEAD ] && gMercProfiles[ QUEEN ].bSectorZ == 1 )
-        {
+				{
 		if( gbWorldSectorZ != 1 || gWorldSectorX != 16 || gWorldSectorY != 3 )
 		{ //We aren't in the basement sector
 			gMercProfiles[ QUEEN ].fUseProfileInsertionInfo = FALSE;
@@ -2709,7 +2709,7 @@ void LoadStrategicAI(HWFILE const hFile)
 				break;
 			}
 		}
-        }
+				}
 	}
 	if( ubSAIVersion < 25 )
 	{
@@ -2738,7 +2738,7 @@ void LoadStrategicAI(HWFILE const hFile)
 
 	//KM : August 4, 1999 patch fix
 	//     This addresses the problem of not having any soldiers in sector N7 when playing the game under easy difficulty.
-	//		 If captured and interrogated, the player would find no soldiers defending the sector.  This changes the composition
+	//     If captured and interrogated, the player would find no soldiers defending the sector.  This changes the composition
 	//     so that it will always be there, and adds the soldiers accordingly if the sector isn't loaded when the update is made.
 	if( ubSAIVersion < 27 )
 	{
@@ -2819,8 +2819,8 @@ void LoadStrategicAI(HWFILE const hFile)
 	}
 
 	//KM : Aug 11, 1999 -- Patch fix:  Blindly update the airspace control.  There is a bug somewhere
-	//		 that is failing to keep this information up to date, and I failed to find it.  At least this
-	//		 will patch saves.
+	//     that is failing to keep this information up to date, and I failed to find it.  At least this
+	//     will patch saves.
 	UpdateAirspaceControl( );
 
 	EvolveQueenPriorityPhase( TRUE );
@@ -2877,10 +2877,10 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 	{
 		SLOGD(DEBUG_TAG_SAI, "The queen's defence priority has increased from %d0%% to %d0%%.", gubQueenPriorityPhase, ubNewPhase );
 	}
-  else
-  {
+	else
+	{
 		SLOGD(DEBUG_TAG_SAI, "The queen's defence priority is the same (%d0%%), but has been forced to update.", gubQueenPriorityPhase );
-  }
+	}
 
 	gubQueenPriorityPhase = ubNewPhase;
 
@@ -3567,7 +3567,7 @@ static void EliminateSurplusTroopsForGarrison(GROUP* pGroup, SECTORINFO* pSector
 {
 	INT32 iTotal;
 	iTotal = pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins +
-					 pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
+			pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins;
 	if( iTotal <= MAX_STRATEGIC_TEAM_SIZE )
 	{
 		return;
@@ -4255,9 +4255,9 @@ static void ReinitializeUnvisitedGarrisons(void)
 
 TEST(StrategicAI, asserts)
 {
-  EXPECT_EQ(sizeof(ARMY_COMPOSITION), 20);
-  EXPECT_EQ(sizeof(PATROL_GROUP), 20);
-  EXPECT_EQ(sizeof(GARRISON_GROUP), 14);
+	EXPECT_EQ(sizeof(ARMY_COMPOSITION), 20);
+	EXPECT_EQ(sizeof(PATROL_GROUP), 20);
+	EXPECT_EQ(sizeof(GARRISON_GROUP), 14);
 }
 
 #endif

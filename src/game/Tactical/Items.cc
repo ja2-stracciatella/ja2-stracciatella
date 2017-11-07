@@ -63,257 +63,257 @@
 /** Fill the vector with all hardcoded item models. */
 void createAllHardcodedItemModels(std::vector<const ItemModel*> &items)
 {
-  items.resize(MAXITEMS);
+	items.resize(MAXITEMS);
 
-  items[131] = new ItemModel(131, "STUN_GRENADE",                    IC_GRENADE,       0,      TOSSCURS,     1,    38,   6,  4,     100, 6,    /* stun grenade       */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE );
-  items[132] = new ItemModel(132, "TEARGAS_GRENADE",                 IC_GRENADE,       1,      TOSSCURS,     1,    48,   6,  4,     120, 5,    /* tear gas grenade   */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[133] = new ItemModel(133, "MUSTARD_GRENADE",                 IC_GRENADE,       2,      TOSSCURS,     1,    41,   6,  4,     500, 8,    /* mustard gas grenade*/  0,    -3,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[134] = new ItemModel(134, "MINI_GRENADE",                    IC_GRENADE,       3,      TOSSCURS,     1,    50,   3,  6,     150, 6,    /* mini hand grenade  */  0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[135] = new ItemModel(135, "HAND_GRENADE",                    IC_GRENADE,       4,      TOSSCURS,     1,    49,   6,  4,     200, 7,    /* reg hand grenade   */  0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[136] = new ItemModel(136, "RDX",                             IC_BOMB,          5,      INVALIDCURS,  2,     3,  11,  2,     400, 7,    /* RDX                */  0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
-  items[137] = new ItemModel(137, "TNT",                             IC_BOMB,          6,      INVALIDCURS,  2,     0,  11,  1,     500, 6,    /* TNT (="explosives")*/  0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
-  items[138] = new ItemModel(138, "HMX",                             IC_BOMB,          7,      INVALIDCURS,  2,    23,  11,  1,    1000, 8,    /* HMX (=RDX+TNT)     */  0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
-  items[139] = new ItemModel(139, "C1",                              IC_BOMB,          8,      INVALIDCURS,  1,    45,  11,  1,     750, 7,    /* C1  (=RDX+min oil) */  0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
-  items[140] = new ItemModel(140, "MORTAR_SHELL",                    IC_BOMB,          9,      INVALIDCURS,  1,    40,  41,  2,     400, 9,    /* mortar shell       */  0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[131] = new ItemModel(131, "STUN_GRENADE",               IC_GRENADE, 0,  TOSSCURS,    1, 38,  6,   4, 100,  6,  /* stun grenade */        0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[132] = new ItemModel(132, "TEARGAS_GRENADE",            IC_GRENADE, 1,  TOSSCURS,    1, 48,  6,   4, 120,  5,  /* tear gas grenade */    0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[133] = new ItemModel(133, "MUSTARD_GRENADE",            IC_GRENADE, 2,  TOSSCURS,    1, 41,  6,   4, 500,  8,  /* mustard gas grenade*/  0, -3, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[134] = new ItemModel(134, "MINI_GRENADE",               IC_GRENADE, 3,  TOSSCURS,    1, 50,  3,   6, 150,  6,  /* mini hand grenade */   0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[135] = new ItemModel(135, "HAND_GRENADE",               IC_GRENADE, 4,  TOSSCURS,    1, 49,  6,   4, 200,  7,  /* reg hand grenade */    0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[136] = new ItemModel(136, "RDX",                        IC_BOMB,    5,  INVALIDCURS, 2, 3,   11,  2, 400,  7,  /* RDX */                 0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[137] = new ItemModel(137, "TNT",                        IC_BOMB,    6,  INVALIDCURS, 2, 0,   11,  1, 500,  6,  /* TNT (="explosives")*/  0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[138] = new ItemModel(138, "HMX",                        IC_BOMB,    7,  INVALIDCURS, 2, 23,  11,  1, 1000, 8,  /* HMX (=RDX+TNT) */      0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[139] = new ItemModel(139, "C1",                         IC_BOMB,    8,  INVALIDCURS, 1, 45,  11,  1, 750,  7,  /* C1  (=RDX+min oil) */  0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[140] = new ItemModel(140, "MORTAR_SHELL",               IC_BOMB,    9,  INVALIDCURS, 1, 40,  41,  2, 400,  9,  /* mortar shell */        0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
 
-  items[141] = new ItemModel(141, "MINE",                            IC_BOMB,          10,     BOMBCURS,     1,    46,   8,  1,     300, 5,    /* mine               */  0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE );
-  items[142] = new ItemModel(142, "C4",                              IC_BOMB,          11,     INVALIDCURS,  1,    44,  11,  1,    1500, 9,    /* C4  ("plastique")  */  0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
-  items[143] = new ItemModel(143, "TRIP_FLARE",                      IC_BOMB,          12,     BOMBCURS,     1,    42,   4,  2,       0, 0,    /* trip flare         */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE | ITEM_REPAIRABLE );
-  items[144] = new ItemModel(144, "TRIP_KLAXON",                     IC_BOMB,          13,     BOMBCURS,     1,    43,   4,  2,       0, 0,    /* trip klaxon        */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE | ITEM_REPAIRABLE );
-  items[145] = new ItemModel(145, "SHAPED_CHARGE",                   IC_BOMB,          14,     INVALIDCURS,  1,    107,  2,  4,     250, 6,    /* shaped charge      */  0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[146] = new ItemModel(146, "BREAK_LIGHT",                     IC_GRENADE,       15,     TOSSCURS,     2,    24,   1,  6,      50, 3,    /* break light (flare)*/  0,    0,      ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
-  items[147] = new ItemModel(147, "GL_HE_GRENADE",                   IC_GRENADE,       16,     INVALIDCURS,  1,    97,  10,  4,     400, 8,    /* 40mm HE grenade    */  0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[148] = new ItemModel(148, "GL_TEARGAS_GRENADE",              IC_GRENADE,       17,     INVALIDCURS,  1,    111, 10,  4,     250, 6,    /* 40mm tear gas grnd */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[149] = new ItemModel(149, "GL_STUN_GRENADE",                 IC_GRENADE,       18,     INVALIDCURS,  1,    113, 10,  4,     200, 5,    /* 40mm stun grenade  */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[150] = new ItemModel(150, "GL_SMOKE_GRENADE",                IC_GRENADE,       19,     INVALIDCURS,  1,    112, 10,  4,     100, 7,    /* 40mm smoke grenade */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[141] = new ItemModel(141, "MINE",                       IC_BOMB,    10, BOMBCURS,    1, 46,  8,   1, 300,  5,  /* mine */                0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[142] = new ItemModel(142, "C4",                         IC_BOMB,    11, INVALIDCURS, 1, 44,  11,  1, 1500, 9,  /* C4  ("plastique") */   0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[143] = new ItemModel(143, "TRIP_FLARE",                 IC_BOMB,    12, BOMBCURS,    1, 42,  4,   2, 0,    0,  /* trip flare */          0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE | ITEM_REPAIRABLE);
+	items[144] = new ItemModel(144, "TRIP_KLAXON",                IC_BOMB,    13, BOMBCURS,    1, 43,  4,   2, 0,    0,  /* trip klaxon */         0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE | ITEM_REPAIRABLE);
+	items[145] = new ItemModel(145, "SHAPED_CHARGE",              IC_BOMB,    14, INVALIDCURS, 1, 107, 2,   4, 250,  6,  /* shaped charge */       0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[146] = new ItemModel(146, "BREAK_LIGHT",                IC_GRENADE, 15, TOSSCURS,    2, 24,  1,   6, 50,   3,  /* break light (flare)*/  0, 0,  ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[147] = new ItemModel(147, "GL_HE_GRENADE",              IC_GRENADE, 16, INVALIDCURS, 1, 97,  10,  4, 400,  8,  /* 40mm HE grenade */     0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[148] = new ItemModel(148, "GL_TEARGAS_GRENADE",         IC_GRENADE, 17, INVALIDCURS, 1, 111, 10,  4, 250,  6,  /* 40mm tear gas grnd */  0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[149] = new ItemModel(149, "GL_STUN_GRENADE",            IC_GRENADE, 18, INVALIDCURS, 1, 113, 10,  4, 200,  5,  /* 40mm stun grenade */   0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[150] = new ItemModel(150, "GL_SMOKE_GRENADE",           IC_GRENADE, 19, INVALIDCURS, 1, 112, 10,  4, 100,  7,  /* 40mm smoke grenade */  0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
 
-  items[151] = new ItemModel(151, "SMOKE_GRENADE",                   IC_GRENADE,       20,     TOSSCURS,     1,    98,   6,  4,      50, 4,    /* smoke hand grenade */  0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
-  items[152] = new ItemModel(152, "TANK_SHELL",                      IC_BOMB,          21,     INVALIDCURS,  1,    40,  41,  8,     450, 0,    /* tank shell       */    0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR );
-  items[153] = new ItemModel(153, "STRUCTURE_IGNITE",                IC_BOMB,          22,     INVALIDCURS,  1,    40,  41,  2,     450, 0,    /* fake struct ignite*/   0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE );
-  items[154] = new ItemModel(154, "CREATURE_COCKTAIL",               IC_GRENADE,       23,     TOSSCURS,     2,    37,   6,  4,      50, 0,    /* creature cocktail*/    0,    0,      ITEM_DAMAGEABLE | ITEM_METAL );
-  items[155] = new ItemModel(155, "STRUCTURE_EXPLOSION",             IC_BOMB,          24,     INVALIDCURS,  1,    40,  41,  2,     450, 0,    /* fake struct xplod*/    0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE );
-  items[156] = new ItemModel(156, "GREAT_BIG_EXPLOSION",             IC_BOMB,          25,     INVALIDCURS,  1,    40,  41,  2,     450, 0,    /* fake vehicle xplod*/   0,    -4,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE );
-  items[157] = new ItemModel(157, "BIG_TEAR_GAS",                    IC_GRENADE,       26,     TOSSCURS,     1,    48,   6,  4,       0, 0,    /* BIG tear gas grenade*/ 0,    -2,     ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE | ITEM_NOT_BUYABLE );
-  items[158] = new ItemModel(158, "SMALL_CREATURE_GAS",              IC_GRENADE,       27,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* small creature gas */  0,    0,      0);
-  items[159] = new ItemModel(159, "LARGE_CREATURE_GAS",              IC_GRENADE,       28,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* big creature gas */    0,    0,      0);
-  items[160] = new ItemModel(160, "VERY_SMALL_CREATURE_GAS",         IC_GRENADE,       29,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* very sm creat gas */   0,    0,      0);
+	items[151] = new ItemModel(151, "SMOKE_GRENADE",              IC_GRENADE, 20, TOSSCURS,    1, 98,  6,   4, 50,   4,  /* smoke hand grenade */  0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE);
+	items[152] = new ItemModel(152, "TANK_SHELL",                 IC_BOMB,    21, INVALIDCURS, 1, 40,  41,  8, 450,  0,  /* tank shell */          0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR);
+	items[153] = new ItemModel(153, "STRUCTURE_IGNITE",           IC_BOMB,    22, INVALIDCURS, 1, 40,  41,  2, 450,  0,  /* fake struct ignite*/   0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE);
+	items[154] = new ItemModel(154, "CREATURE_COCKTAIL",          IC_GRENADE, 23, TOSSCURS,    2, 37,  6,   4, 50,   0,  /* creature cocktail*/    0, 0,  ITEM_DAMAGEABLE | ITEM_METAL);
+	items[155] = new ItemModel(155, "STRUCTURE_EXPLOSION",        IC_BOMB,    24, INVALIDCURS, 1, 40,  41,  2, 450,  0,  /* fake struct xplod*/    0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE);
+	items[156] = new ItemModel(156, "GREAT_BIG_EXPLOSION",        IC_BOMB,    25, INVALIDCURS, 1, 40,  41,  2, 450,  0,  /* fake vehicle xplod*/   0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE);
+	items[157] = new ItemModel(157, "BIG_TEAR_GAS",               IC_GRENADE, 26, TOSSCURS,    1, 48,  6,   4, 0,    0,  /* BIG tear gas grenade*/ 0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE | ITEM_NOT_BUYABLE);
+	items[158] = new ItemModel(158, "SMALL_CREATURE_GAS",         IC_GRENADE, 27, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* small creature gas */  0, 0,  0);
+	items[159] = new ItemModel(159, "LARGE_CREATURE_GAS",         IC_GRENADE, 28, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* big creature gas */    0, 0,  0);
+	items[160] = new ItemModel(160, "VERY_SMALL_CREATURE_GAS",    IC_GRENADE, 29, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* very sm creat gas */   0, 0,  0);
 
-  items[161] = new ItemModel(161, "FLAK_JACKET",                     IC_ARMOUR,       0,     INVALIDCURS,  1,    66,   20, 0,     300, 2,    /* Flak jacket     */ 0,    +2,     IF_STANDARD_ARMOUR);
-  items[162] = new ItemModel(162, "FLAK_JACKET_18",                  IC_ARMOUR,       1,     INVALIDCURS,  2,    18,   22, 0,     350, 0,    /* Flak jacket w X */ 0,    +1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[163] = new ItemModel(163, "FLAK_JACKET_Y",                   IC_ARMOUR,       2,     INVALIDCURS,  2,    11,   18, 0,     400, 0,    /* Flak jacket w Y */ 0,    +3,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[164] = new ItemModel(164, "KEVLAR_VEST",                     IC_ARMOUR,       3,     INVALIDCURS,  1,    64,   32, 0,     500, 4,    /* Kevlar jacket   */ 0,    0,      IF_STANDARD_ARMOUR);
-  items[165] = new ItemModel(165, "KEVLAR_VEST_18",                  IC_ARMOUR,       4,     INVALIDCURS,  2,    16,   35, 0,     600, 0,    /* Kevlar jack w X */ 0,    -1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[166] = new ItemModel(166, "KEVLAR_VEST_Y",                   IC_ARMOUR,       5,     INVALIDCURS,  2,     9,   29, 0,     700, 0,    /* Kevlar jack w Y */ 0,    +1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[167] = new ItemModel(167, "SPECTRA_VEST",                    IC_ARMOUR,       6,     INVALIDCURS,  1,    65,   32, 0,    1000, 8,    /* Spectra jacket  */ 0,    -2,     IF_STANDARD_ARMOUR);
-  items[168] = new ItemModel(168, "SPECTRA_VEST_18",                 IC_ARMOUR,       7,     INVALIDCURS,  2,    17,   35, 0,    1100, 0,    /* Spectra jack w X*/ 0,    -3,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[169] = new ItemModel(169, "SPECTRA_VEST_Y",                  IC_ARMOUR,       8,     INVALIDCURS,  2,    10,   29, 0,    1200, 0,    /* Spectra jack w Y*/ 0,    -1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[170] = new ItemModel(170, "KEVLAR_LEGGINGS",                 IC_ARMOUR,       9,     INVALIDCURS,  1,    67,   39, 0,     650, 5,    /* Kevlar leggings */ 0,    0,      IF_STANDARD_ARMOUR);
+	items[161] = new ItemModel(161, "FLAK_JACKET",                IC_ARMOUR,  0,  INVALIDCURS, 1, 66,  20,  0, 300,  2,  /* Flak jacket */         0, +2, IF_STANDARD_ARMOUR);
+	items[162] = new ItemModel(162, "FLAK_JACKET_18",             IC_ARMOUR,  1,  INVALIDCURS, 2, 18,  22,  0, 350,  0,  /* Flak jacket w X */     0, +1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[163] = new ItemModel(163, "FLAK_JACKET_Y",              IC_ARMOUR,  2,  INVALIDCURS, 2, 11,  18,  0, 400,  0,  /* Flak jacket w Y */     0, +3, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[164] = new ItemModel(164, "KEVLAR_VEST",                IC_ARMOUR,  3,  INVALIDCURS, 1, 64,  32,  0, 500,  4,  /* Kevlar jacket */       0, 0,  IF_STANDARD_ARMOUR);
+	items[165] = new ItemModel(165, "KEVLAR_VEST_18",             IC_ARMOUR,  4,  INVALIDCURS, 2, 16,  35,  0, 600,  0,  /* Kevlar jack w X */     0, -1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[166] = new ItemModel(166, "KEVLAR_VEST_Y",              IC_ARMOUR,  5,  INVALIDCURS, 2, 9,   29,  0, 700,  0,  /* Kevlar jack w Y */     0, +1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[167] = new ItemModel(167, "SPECTRA_VEST",               IC_ARMOUR,  6,  INVALIDCURS, 1, 65,  32,  0, 1000, 8,  /* Spectra jacket */      0, -2, IF_STANDARD_ARMOUR);
+	items[168] = new ItemModel(168, "SPECTRA_VEST_18",            IC_ARMOUR,  7,  INVALIDCURS, 2, 17,  35,  0, 1100, 0,  /* Spectra jack w X*/     0, -3, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[169] = new ItemModel(169, "SPECTRA_VEST_Y",             IC_ARMOUR,  8,  INVALIDCURS, 2, 10,  29,  0, 1200, 0,  /* Spectra jack w Y*/     0, -1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[170] = new ItemModel(170, "KEVLAR_LEGGINGS",            IC_ARMOUR,  9,  INVALIDCURS, 1, 67,  39,  0, 650,  5,  /* Kevlar leggings */     0, 0,  IF_STANDARD_ARMOUR);
 
-  items[171] = new ItemModel(171, "KEVLAR_LEGGINGS_18",              IC_ARMOUR,      10,     INVALIDCURS,  2,    19,   43, 0,     800, 0,    /* Kevlar legs w X */ 0,    -1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[172] = new ItemModel(172, "KEVLAR_LEGGINGS_Y",               IC_ARMOUR,      11,     INVALIDCURS,  2,    12,   35, 0,     950, 0,    /* Kevlar legs w Y */ 0,    +1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[173] = new ItemModel(173, "SPECTRA_LEGGINGS",                IC_ARMOUR,      12,     INVALIDCURS,  1,    68,   39, 0,     900, 8,    /* Spectra leggings*/ 0,    -2,     IF_STANDARD_ARMOUR);
-  items[174] = new ItemModel(174, "SPECTRA_LEGGINGS_18",             IC_ARMOUR,      13,     INVALIDCURS,  2,    20,   43, 0,    1100, 0,    /* Spectra legs w X*/ 0,    -3,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[175] = new ItemModel(175, "SPECTRA_LEGGINGS_Y",              IC_ARMOUR,      14,     INVALIDCURS,  2,    13,   35, 0,    1300, 0,    /* Spectra legs w Y*/ 0,    -1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[176] = new ItemModel(176, "STEEL_HELMET",                    IC_ARMOUR,      15,     INVALIDCURS,  1,    61,   14, 0,      50, 2,    /* Steel helmet    */ 0,    +2,     IF_STANDARD_ARMOUR | ITEM_METAL);
-  items[177] = new ItemModel(177, "KEVLAR_HELMET",                   IC_ARMOUR,      16,     INVALIDCURS,  1,    63,   14, 0,     200, 4,    /* Kevlar helmet   */ 0,    0,      IF_STANDARD_ARMOUR);
-  items[178] = new ItemModel(178, "KEVLAR_HELMET_18",                IC_ARMOUR,      17,     INVALIDCURS,  2,    15,   15, 0,     250, 0,    /* Kevlar helm w X */ 0,    -1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[179] = new ItemModel(179, "KEVLAR_HELMET_Y",                 IC_ARMOUR,      18,     INVALIDCURS,  2,     8,   13, 0,     300, 0,    /* Kevlar helm w Y */ 0,    +1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[180] = new ItemModel(180, "SPECTRA_HELMET",                  IC_ARMOUR,      19,     INVALIDCURS,  1,    62,   14, 0,     450, 7,    /* Spectra helmet  */ 0,    -2,     IF_STANDARD_ARMOUR);
+	items[171] = new ItemModel(171, "KEVLAR_LEGGINGS_18",         IC_ARMOUR,  10, INVALIDCURS, 2, 19,  43,  0, 800,  0,  /* Kevlar legs w X */     0, -1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[172] = new ItemModel(172, "KEVLAR_LEGGINGS_Y",          IC_ARMOUR,  11, INVALIDCURS, 2, 12,  35,  0, 950,  0,  /* Kevlar legs w Y */     0, +1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[173] = new ItemModel(173, "SPECTRA_LEGGINGS",           IC_ARMOUR,  12, INVALIDCURS, 1, 68,  39,  0, 900,  8,  /* Spectra leggings*/     0, -2, IF_STANDARD_ARMOUR);
+	items[174] = new ItemModel(174, "SPECTRA_LEGGINGS_18",        IC_ARMOUR,  13, INVALIDCURS, 2, 20,  43,  0, 1100, 0,  /* Spectra legs w X*/     0, -3, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[175] = new ItemModel(175, "SPECTRA_LEGGINGS_Y",         IC_ARMOUR,  14, INVALIDCURS, 2, 13,  35,  0, 1300, 0,  /* Spectra legs w Y*/     0, -1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[176] = new ItemModel(176, "STEEL_HELMET",               IC_ARMOUR,  15, INVALIDCURS, 1, 61,  14,  0, 50,   2,  /* Steel helmet */        0, +2, IF_STANDARD_ARMOUR | ITEM_METAL);
+	items[177] = new ItemModel(177, "KEVLAR_HELMET",              IC_ARMOUR,  16, INVALIDCURS, 1, 63,  14,  0, 200,  4,  /* Kevlar helmet */       0, 0,  IF_STANDARD_ARMOUR);
+	items[178] = new ItemModel(178, "KEVLAR_HELMET_18",           IC_ARMOUR,  17, INVALIDCURS, 2, 15,  15,  0, 250,  0,  /* Kevlar helm w X */     0, -1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[179] = new ItemModel(179, "KEVLAR_HELMET_Y",            IC_ARMOUR,  18, INVALIDCURS, 2, 8,   13,  0, 300,  0,  /* Kevlar helm w Y */     0, +1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[180] = new ItemModel(180, "SPECTRA_HELMET",             IC_ARMOUR,  19, INVALIDCURS, 1, 62,  14,  0, 450,  7,  /* Spectra helmet */      0, -2, IF_STANDARD_ARMOUR);
 
-  items[181] = new ItemModel(181, "SPECTRA_HELMET_18",               IC_ARMOUR,      20,     INVALIDCURS,  2,    14,   15, 0,     550, 0,    /* Spectra helm w X*/ 0,    -3,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[182] = new ItemModel(182, "SPECTRA_HELMET_Y",                IC_ARMOUR,      21,     INVALIDCURS,  2,     7,   13, 0,     650, 0,    /* Spectra helm w Y*/ 0,    -1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[183] = new ItemModel(183, "CERAMIC_PLATES",                  IC_ARMOUR,      22,     INVALIDCURS,  1,    81,   12, 2,     250, 5,    /* Ceramic plates  */ 0,    -4,     (IF_STANDARD_ARMOUR | ITEM_ATTACHMENT) & (~ITEM_REPAIRABLE) );
-  items[184] = new ItemModel(184, "CREATURE_INFANT_HIDE",            IC_ARMOUR,      23,     INVALIDCURS,  1,    0,    0,  0,       0, 0,    /* Infant crt hide */ 0,    0,      IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
-  items[185] = new ItemModel(185, "CREATURE_YOUNG_MALE_HIDE",        IC_ARMOUR,      24,     INVALIDCURS,  1,    0,    0,  0,       0, 0,    /* Yng male hide */   0,    0,      IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
-  items[186] = new ItemModel(186, "CREATURE_OLD_MALE_HIDE",          IC_ARMOUR,      25,     INVALIDCURS,  1,    0,    0,  0,       0, 0,    /* Old male hide */   0,    0,      IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
-  items[187] = new ItemModel(187, "CREATURE_QUEEN_HIDE",             IC_ARMOUR,      26,     INVALIDCURS,  1,    0,    0,  0,       0, 0,    /* Queen cret hide */ 0,    0,      IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
-  items[188] = new ItemModel(188, "LEATHER_JACKET",                  IC_ARMOUR,      27,     INVALIDCURS,  1,    96,   20, 0,     200, 2,    /* Leather jacket  */ 0,    +4,     IF_STANDARD_ARMOUR );
-  items[189] = new ItemModel(189, "LEATHER_JACKET_W_KEVLAR",         IC_ARMOUR,      28,     INVALIDCURS,  1,    116,  20, 0,     950, 0,    /* L jacket w kev  */ 0,    +2,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[190] = new ItemModel(190, "LEATHER_JACKET_W_KEVLAR_18",      IC_ARMOUR,      29,     INVALIDCURS,  1,    117,  20, 0,    1200, 0,    /* L jacket w kev 18*/0,    +1,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
+	items[181] = new ItemModel(181, "SPECTRA_HELMET_18",          IC_ARMOUR,  20, INVALIDCURS, 2, 14,  15,  0, 550,  0,  /* Spectra helm w X*/     0, -3, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[182] = new ItemModel(182, "SPECTRA_HELMET_Y",           IC_ARMOUR,  21, INVALIDCURS, 2, 7,   13,  0, 650,  0,  /* Spectra helm w Y*/     0, -1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[183] = new ItemModel(183, "CERAMIC_PLATES",             IC_ARMOUR,  22, INVALIDCURS, 1, 81,  12,  2, 250,  5,  /* Ceramic plates */      0, -4, (IF_STANDARD_ARMOUR | ITEM_ATTACHMENT) & (~ITEM_REPAIRABLE));
+	items[184] = new ItemModel(184, "CREATURE_INFANT_HIDE",       IC_ARMOUR,  23, INVALIDCURS, 1, 0,   0,   0, 0,    0,  /* Infant crt hide */     0, 0,  IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
+	items[185] = new ItemModel(185, "CREATURE_YOUNG_MALE_HIDE",   IC_ARMOUR,  24, INVALIDCURS, 1, 0,   0,   0, 0,    0,  /* Yng male hide */       0, 0,  IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
+	items[186] = new ItemModel(186, "CREATURE_OLD_MALE_HIDE",     IC_ARMOUR,  25, INVALIDCURS, 1, 0,   0,   0, 0,    0,  /* Old male hide */       0, 0,  IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
+	items[187] = new ItemModel(187, "CREATURE_QUEEN_HIDE",        IC_ARMOUR,  26, INVALIDCURS, 1, 0,   0,   0, 0,    0,  /* Queen cret hide */     0, 0,  IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
+	items[188] = new ItemModel(188, "LEATHER_JACKET",             IC_ARMOUR,  27, INVALIDCURS, 1, 96,  20,  0, 200,  2,  /* Leather jacket */      0, +4, IF_STANDARD_ARMOUR);
+	items[189] = new ItemModel(189, "LEATHER_JACKET_W_KEVLAR",    IC_ARMOUR,  28, INVALIDCURS, 1, 116, 20,  0, 950,  0,  /* L jacket w kev */      0, +2, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[190] = new ItemModel(190, "LEATHER_JACKET_W_KEVLAR_18", IC_ARMOUR,  29, INVALIDCURS, 1, 117, 20,  0, 1200, 0,  /* L jacket w kev 18*/    0, +1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
 
-  items[191] = new ItemModel(191, "LEATHER_JACKET_W_KEVLAR_Y",       IC_ARMOUR,      30,     INVALIDCURS,  1,    118,  20, 0,    1500, 0,    /* L jacket w kev c*/ 0,    +3,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[192] = new ItemModel(192, "CREATURE_YOUNG_FEMALE_HIDE",      IC_ARMOUR,      31,     INVALIDCURS,  1,    0,    0,  0,       0, 0,    /* yng fem hide */    0,    0,      IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
-  items[193] = new ItemModel(193, "CREATURE_OLD_FEMALE_HIDE",        IC_ARMOUR,      32,     INVALIDCURS,  1,    0,    0,  0,       0, 0,    /* old fem hide */    0,    0,      IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
-  items[194] = new ItemModel(194, "TSHIRT",                          IC_ARMOUR,      33,     INVALIDCURS,  2,    25,   3,  1,      10, 1,    /* t-shirt */         0,    0,      ITEM_DAMAGEABLE | ITEM_SHOW_STATUS | ITEM_UNAERODYNAMIC);
-  items[195] = new ItemModel(195, "TSHIRT_DEIDRANNA",                IC_ARMOUR,      33,     INVALIDCURS,  2,    34,   3,  1,      10, 1,    /* t-shirt D. rules*/ 0,    0,      ITEM_DAMAGEABLE | ITEM_SHOW_STATUS | ITEM_UNAERODYNAMIC);
-  items[196] = new ItemModel(196, "KEVLAR2_VEST",                    IC_ARMOUR,      34,     INVALIDCURS,  1,    137,    32, 0,     700, 6,    /* Kevlar2 jacket  */ 0,    -1,     IF_STANDARD_ARMOUR);
-  items[197] = new ItemModel(197, "KEVLAR2_VEST_18",                 IC_ARMOUR,      35,     INVALIDCURS,  2,    40,   35, 0,     800, 0,    /* Kevlar2 jack w X*/ 0,    -2,     IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[198] = new ItemModel(198, "KEVLAR2_VEST_Y",                  IC_ARMOUR,      36,     INVALIDCURS,  2,    41,   29, 0,     900, 0,    /* Kevlar2 jack w Y*/ 0,    0,      IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
-  items[199] = new ItemModel(199, "NOTHING",                         IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[200] = new ItemModel(200, "NOTHING",                         IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
+	items[191] = new ItemModel(191, "LEATHER_JACKET_W_KEVLAR_Y",  IC_ARMOUR,  30, INVALIDCURS, 1, 118, 20,  0, 1500, 0,  /* L jacket w kev c*/     0, +3, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
+	items[192] = new ItemModel(192, "CREATURE_YOUNG_FEMALE_HIDE", IC_ARMOUR,  31, INVALIDCURS, 1, 0,   0,   0, 0,    0,  /* yng fem hide */        0, 0,  IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
+	items[193] = new ItemModel(193, "CREATURE_OLD_FEMALE_HIDE",   IC_ARMOUR,  32, INVALIDCURS, 1, 0,   0,   0, 0,    0,  /* old fem hide */        0, 0,  IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE | ITEM_NOT_EDITOR | ITEM_DEFAULT_UNDROPPABLE);
+	items[194] = new ItemModel(194, "TSHIRT",                     IC_ARMOUR,  33, INVALIDCURS, 2, 25,  3,   1, 10,   1,  /* t-shirt */             0, 0,  ITEM_DAMAGEABLE | ITEM_SHOW_STATUS | ITEM_UNAERODYNAMIC);
+	items[195] = new ItemModel(195, "TSHIRT_DEIDRANNA",           IC_ARMOUR,  33, INVALIDCURS, 2, 34,  3,   1, 10,   1,  /* t-shirt D. rules*/     0, 0,  ITEM_DAMAGEABLE | ITEM_SHOW_STATUS | ITEM_UNAERODYNAMIC);
+	items[196] = new ItemModel(196, "KEVLAR2_VEST",               IC_ARMOUR,  34, INVALIDCURS, 1, 137, 32,  0, 700,  6,  /* Kevlar2 jacket */      0, -1, IF_STANDARD_ARMOUR);
+	items[197] = new ItemModel(197, "KEVLAR2_VEST_18",            IC_ARMOUR,  35, INVALIDCURS, 2, 40,  35,  0, 800,  0,  /* Kevlar2 jack w X*/     0, -2, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
+	items[198] = new ItemModel(198, "KEVLAR2_VEST_Y",             IC_ARMOUR,  36, INVALIDCURS, 2, 41,  29,  0, 900,  0,  /* Kevlar2 jack w Y*/     0, 0,  IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE );
+	items[199] = new ItemModel(199, "NOTHING",                    IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[200] = new ItemModel(200, "NOTHING",                    IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
 
-  items[201] = new ItemModel(201, "FIRSTAIDKIT",                     IC_MEDKIT,      0,      AIDCURS,      1,    73,   5,  4,     100, 1,    /* First aid kit */   0,    0,      IF_STANDARD_KIT);
-  items[202] = new ItemModel(202, "MEDICKIT",                        IC_MEDKIT,      0,      AIDCURS,      1,    86,   18, 0,     300, 1,    /* Medical Kit   */   0,    0,      IF_STANDARD_KIT | ITEM_METAL);
-  items[203] = new ItemModel(203, "TOOLKIT",                         IC_KIT,         0,      REPAIRCURS,   2,    21,   50, 0,     250, 1,    /* Tool Kit      */   0,    0,      IF_STANDARD_KIT | ITEM_METAL);
-  items[204] = new ItemModel(204, "LOCKSMITHKIT",                    IC_KIT,         0,      INVALIDCURS,  1,    78,   3,  1,     250, 3,    /* Locksmith kit */   0,    -2,     IF_STANDARD_KIT | ITEM_METAL | ITEM_REPAIRABLE);
-  items[205] = new ItemModel(205, "CAMOUFLAGEKIT",                   IC_KIT,         0,      INVALIDCURS,  1,    58,   1,  4,     250, 5,    /* Camouflage kit*/   0,    0,      IF_STANDARD_KIT);
-  items[206] = new ItemModel(206, "BOOBYTRAPKIT",                    IC_MISC,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[207] = new ItemModel(207, "SILENCER",                        IC_MISC,        0,      INVALIDCURS,  1,    52,   5,  4,     300, 5,    /* Silencer      */   0,    0,      ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
-  items[208] = new ItemModel(208, "SNIPERSCOPE",                     IC_MISC,        0,      INVALIDCURS,  1,    76,   9,  4,     500, 6,    /* Sniper scope  */   0,    0,      ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
-  items[209] = new ItemModel(209, "BIPOD",                           IC_MISC,        0,      INVALIDCURS,  1,    69,   5,  2,      50, 4,    /* Bipod         */   0,    +5,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
-  items[210] = new ItemModel(210, "EXTENDEDEAR",                     IC_FACE,        0,      INVALIDCURS,  1,    77,   9,  1,     400, 7,    /* Extended ear  */   0,    -3,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC );
+	items[201] = new ItemModel(201, "FIRSTAIDKIT",                IC_MEDKIT,  0,  AIDCURS,     1, 73,  5,   4, 100,  1,  /* First aid kit */       0, 0,  IF_STANDARD_KIT);
+	items[202] = new ItemModel(202, "MEDICKIT",                   IC_MEDKIT,  0,  AIDCURS,     1, 86,  18,  0, 300,  1,  /* Medical Kit */         0, 0,  IF_STANDARD_KIT | ITEM_METAL);
+	items[203] = new ItemModel(203, "TOOLKIT",                    IC_KIT,     0,  REPAIRCURS,  2, 21,  50,  0, 250,  1,  /* Tool Kit */            0, 0,  IF_STANDARD_KIT | ITEM_METAL);
+	items[204] = new ItemModel(204, "LOCKSMITHKIT",               IC_KIT,     0,  INVALIDCURS, 1, 78,  3,   1, 250,  3,  /* Locksmith kit */       0, -2, IF_STANDARD_KIT | ITEM_METAL | ITEM_REPAIRABLE);
+	items[205] = new ItemModel(205, "CAMOUFLAGEKIT",              IC_KIT,     0,  INVALIDCURS, 1, 58,  1,   4, 250,  5,  /* Camouflage kit*/       0, 0,  IF_STANDARD_KIT);
+	items[206] = new ItemModel(206, "BOOBYTRAPKIT",               IC_MISC,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[207] = new ItemModel(207, "SILENCER",                   IC_MISC,    0,  INVALIDCURS, 1, 52,  5,   4, 300,  5,  /* Silencer */            0, 0,  ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
+	items[208] = new ItemModel(208, "SNIPERSCOPE",                IC_MISC,    0,  INVALIDCURS, 1, 76,  9,   4, 500,  6,  /* Sniper scope */        0, 0,  ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
+	items[209] = new ItemModel(209, "BIPOD",                      IC_MISC,    0,  INVALIDCURS, 1, 69,  5,   2, 50,   4,  /* Bipod */               0, +5, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
+	items[210] = new ItemModel(210, "EXTENDEDEAR",                IC_FACE,    0,  INVALIDCURS, 1, 77,  9,   1, 400,  7,  /* Extended ear */        0, -3, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
 
-  items[211] = new ItemModel(211, "NIGHTGOGGLES",                    IC_FACE,        0,      INVALIDCURS,  1,    74,   9,  1,     800, 7,    /* Night goggles */   0,    -1,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC );
-  items[212] = new ItemModel(212, "SUNGOGGLES",                      IC_FACE,        0,      INVALIDCURS,  1,    55,   2,  4,     150, 3,    /* Sun goggles   */   0,    +3,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE );
-  items[213] = new ItemModel(213, "GASMASK",                         IC_FACE,        0,      INVALIDCURS,  1,    75,   9,  1,     100, 4,    /* Gas mask      */   0,    +1,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE );
-  items[214] = new ItemModel(214, "CANTEEN",                         IC_KIT,         0,      INVALIDCURS,  2,     5,  10,  4,      10, 1,    /* Canteen       */   0,    0,      ITEM_DAMAGEABLE);
-  items[215] = new ItemModel(215, "METALDETECTOR",                   IC_MISC,        0,      INVALIDCURS,  1,    80,  10,  1,     200, 4,    /* Metal detector*/   0,    -2,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC );
-  items[216] = new ItemModel(216, "COMPOUND18",                      IC_MISC,        0,      INVALIDCURS,  2,     6,   1,  4,     900, 7,    /* Compound 18   */   0,    0,      ITEM_DAMAGEABLE);
-  items[217] = new ItemModel(217, "JAR_QUEEN_CREATURE_BLOOD",        IC_MISC,        0,      INVALIDCURS,  2,    42,   1,  4,    2500, 0,    /* Jar/QueenBlood*/   0,    0,      ITEM_DAMAGEABLE | ITEM_NOT_BUYABLE);
-  items[218] = new ItemModel(218, "JAR_ELIXIR",                      IC_MISC,        0,      INVALIDCURS,  2,     2,   1,  4,     500, 1,    /* Jar/Elixir    */   0,    0,      ITEM_DAMAGEABLE );
-  items[219] = new ItemModel(219, "MONEY",                           IC_MONEY,       0,      INVALIDCURS,  2,     1,   1,  1,       0, 0,    /* Money         */   0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[220] = new ItemModel(220, "JAR",                             IC_MISC,        0,      JARCURS,      1,    71,   1,  2,      10, 1,    /* Glass jar     */   0,    0,      ITEM_DAMAGEABLE);
+	items[211] = new ItemModel(211, "NIGHTGOGGLES",               IC_FACE,    0,  INVALIDCURS, 1, 74,  9,   1, 800,  7,  /* Night goggles */       0, -1, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[212] = new ItemModel(212, "SUNGOGGLES",                 IC_FACE,    0,  INVALIDCURS, 1, 55,  2,   4, 150,  3,  /* Sun goggles */         0, +3, ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[213] = new ItemModel(213, "GASMASK",                    IC_FACE,    0,  INVALIDCURS, 1, 75,  9,   1, 100,  4,  /* Gas mask */            0, +1, ITEM_DAMAGEABLE | ITEM_REPAIRABLE);
+	items[214] = new ItemModel(214, "CANTEEN",                    IC_KIT,     0,  INVALIDCURS, 2, 5,   10,  4, 10,   1,  /* Canteen */             0, 0,  ITEM_DAMAGEABLE);
+	items[215] = new ItemModel(215, "METALDETECTOR",              IC_MISC,    0,  INVALIDCURS, 1, 80,  10,  1, 200,  4,  /* Metal detector*/       0, -2, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[216] = new ItemModel(216, "COMPOUND18",                 IC_MISC,    0,  INVALIDCURS, 2, 6,   1,   4, 900,  7,  /* Compound 18 */         0, 0,  ITEM_DAMAGEABLE);
+	items[217] = new ItemModel(217, "JAR_QUEEN_CREATURE_BLOOD",   IC_MISC,    0,  INVALIDCURS, 2, 42,  1,   4, 2500, 0,  /* Jar/QueenBlood*/       0, 0,  ITEM_DAMAGEABLE | ITEM_NOT_BUYABLE);
+	items[218] = new ItemModel(218, "JAR_ELIXIR",                 IC_MISC,    0,  INVALIDCURS, 2, 2,   1,   4, 500,  1,  /* Jar/Elixir */          0, 0,  ITEM_DAMAGEABLE );
+	items[219] = new ItemModel(219, "MONEY",                      IC_MONEY,   0,  INVALIDCURS, 2, 1,   1,   1, 0,    0,  /* Money */               0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[220] = new ItemModel(220, "JAR",                        IC_MISC,    0,  JARCURS,     1, 71,  1,   2, 10,   1,  /* Glass jar */           0, 0,  ITEM_DAMAGEABLE);
 
-  items[221] = new ItemModel(221, "JAR_CREATURE_BLOOD",              IC_MISC,        0,      INVALIDCURS,  1,    72,   5,  2,      50, 1,    /* Jar/CreatureBlood*/0,    0,      ITEM_DAMAGEABLE | ITEM_NOT_BUYABLE);
-  items[222] = new ItemModel(222, "ADRENALINE_BOOSTER",              IC_MISC,        0,      INVALIDCURS,  1,    70,   1,  8,     150, 4,    /* Adren Booster */   0,    0,      ITEM_DAMAGEABLE | ITEM_UNAERODYNAMIC);
-  items[223] = new ItemModel(223, "DETONATOR",                       IC_MISC,        0,      INVALIDCURS,  1,    47,   1,  4,     100, 3,    /* Detonator     */   0,    +1,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ATTACHMENT | ITEM_METAL);
-  items[224] = new ItemModel(224, "REMDETONATOR",                    IC_MISC,        0,      INVALIDCURS,  1,    47,   1,  4,     200, 6,    /* Rem Detonator */   0,    -1,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ATTACHMENT | ITEM_METAL | ITEM_ELECTRONIC );
-  items[225] = new ItemModel(225, "VIDEOTAPE",                       IC_MISC,        0,      INVALIDCURS,  1,    93,   1,  8,       0, 0,    /* Videotape     */   0,    0,      ITEM_NOT_BUYABLE);
-  items[226] = new ItemModel(226, "DEED",                            IC_MISC,        0,      INVALIDCURS,  1,    94,   1,  8,       0, 0,    /* Deed          */   0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[227] = new ItemModel(227, "LETTER",                          IC_MISC,        0,      INVALIDCURS,  1,    56,   1,  1,       0, 0,    /* Letter        */   0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[228] = new ItemModel(228, "TERRORIST_INFO",                  IC_MISC,        0,      INVALIDCURS,  1,    59,   1,  1,       0, 0,    /* Diskette      */   0,    0,      ITEM_NOT_BUYABLE);
-  items[229] = new ItemModel(229, "CHALICE",                         IC_MISC,        0,      INVALIDCURS,  1,  124,    0,  1,    3000, 0,    /* Chalice       */   0,    0,      ITEM_NOT_BUYABLE);
-  items[230] = new ItemModel(230, "BLOODCAT_CLAWS",                  IC_MISC,        0,      INVALIDCURS,  1,  120,    1,  4,      50, 0,    /* Bloodcat claws*/   0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[221] = new ItemModel(221, "JAR_CREATURE_BLOOD",         IC_MISC,    0,  INVALIDCURS, 1, 72,  5,   2, 50,   1,  /* Jar/CreatureBlood*/    0, 0,  ITEM_DAMAGEABLE | ITEM_NOT_BUYABLE);
+	items[222] = new ItemModel(222, "ADRENALINE_BOOSTER",         IC_MISC,    0,  INVALIDCURS, 1, 70,  1,   8, 150,  4,  /* Adren Booster */       0, 0,  ITEM_DAMAGEABLE | ITEM_UNAERODYNAMIC);
+	items[223] = new ItemModel(223, "DETONATOR",                  IC_MISC,    0,  INVALIDCURS, 1, 47,  1,   4, 100,  3,  /* Detonator */           0, +1, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ATTACHMENT | ITEM_METAL);
+	items[224] = new ItemModel(224, "REMDETONATOR",               IC_MISC,    0,  INVALIDCURS, 1, 47,  1,   4, 200,  6,  /* Rem Detonator */       0, -1, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ATTACHMENT | ITEM_METAL | ITEM_ELECTRONIC);
+	items[225] = new ItemModel(225, "VIDEOTAPE",                  IC_MISC,    0,  INVALIDCURS, 1, 93,  1,   8, 0,    0,  /* Videotape */           0, 0,  ITEM_NOT_BUYABLE);
+	items[226] = new ItemModel(226, "DEED",                       IC_MISC,    0,  INVALIDCURS, 1, 94,  1,   8, 0,    0,  /* Deed */                0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[227] = new ItemModel(227, "LETTER",                     IC_MISC,    0,  INVALIDCURS, 1, 56,  1,   1, 0,    0,  /* Letter */              0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[228] = new ItemModel(228, "TERRORIST_INFO",             IC_MISC,    0,  INVALIDCURS, 1, 59,  1,   1, 0,    0,  /* Diskette */            0, 0,  ITEM_NOT_BUYABLE);
+	items[229] = new ItemModel(229, "CHALICE",                    IC_MISC,    0,  INVALIDCURS, 1, 124, 0,   1, 3000, 0,  /* Chalice */             0, 0,  ITEM_NOT_BUYABLE);
+	items[230] = new ItemModel(230, "BLOODCAT_CLAWS",             IC_MISC,    0,  INVALIDCURS, 1, 120, 1,   4, 50,   0,  /* Bloodcat claws*/       0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
 
-  items[231] = new ItemModel(231, "BLOODCAT_TEETH",                  IC_MISC,        0,      INVALIDCURS,  1,  121,    1,  4,     100, 0,    /* Bloodcat teeth*/   0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
-  items[232] = new ItemModel(232, "BLOODCAT_PELT",                   IC_MISC,        0,      INVALIDCURS,  3,    9,   60,  0,     400, 0,    /* Bloodcat pelt */   0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
-  items[233] = new ItemModel(233, "SWITCH",                          IC_MISC,        0,      INVALIDCURS,  1,    54,   0,  99,      0, 0,    /* Switch        */   0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[234] = new ItemModel(234, "ACTION_ITEM",                     IC_MISC,        0,      INVALIDCURS,  1,    47,   0,  99,      0, 0,    /* Action item   */   0,    0,      ITEM_NOT_BUYABLE );
-  items[235] = new ItemModel(235, "REGEN_BOOSTER",                   IC_MISC,        0,      INVALIDCURS,  1,    70,   1,  6,     300, 6,    /* Regen Booster */   0,    0,      ITEM_DAMAGEABLE | ITEM_UNAERODYNAMIC);
-  items[236] = new ItemModel(236, "SYRINGE_3",                       IC_MISC,        0,      INVALIDCURS,  1,    70,   0,  99,      0, 0,    /* syringe 3     */   0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[237] = new ItemModel(237, "SYRINGE_4",                       IC_MISC,        0,      INVALIDCURS,  1,    70,   0,  99,      0, 0,    /* syringe 4     */   0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[238] = new ItemModel(238, "SYRINGE_5",                       IC_MISC,        0,      INVALIDCURS,  1,    70,   0,  99,      0, 0,    /* syringe 5     */   0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[239] = new ItemModel(239, "JAR_HUMAN_BLOOD",                 IC_MISC,        0,      INVALIDCURS,  1,    72,   5,  2,      10, 1,    /* Jar/Human Blood*/  0,    0,      ITEM_DAMAGEABLE);
-  items[240] = new ItemModel(240, "OWNERSHIP",                       IC_MISC,        0,      INVALIDCURS,  1,    0,    0,  0,       0, 0,    /* ownership     */   0,    0,      ITEM_NOT_BUYABLE);
+	items[231] = new ItemModel(231, "BLOODCAT_TEETH",             IC_MISC,    0,  INVALIDCURS, 1, 121, 1,   4, 100,  0,  /* Bloodcat teeth*/       0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[232] = new ItemModel(232, "BLOODCAT_PELT",              IC_MISC,    0,  INVALIDCURS, 3, 9,   60,  0, 400,  0,  /* Bloodcat pelt */       0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[233] = new ItemModel(233, "SWITCH",                     IC_MISC,    0,  INVALIDCURS, 1, 54,  0,   99, 0,   0,  /* Switch */              0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[234] = new ItemModel(234, "ACTION_ITEM",                IC_MISC,    0,  INVALIDCURS, 1, 47,  0,   99, 0,   0,  /* Action item */         0, 0,  ITEM_NOT_BUYABLE);
+	items[235] = new ItemModel(235, "REGEN_BOOSTER",              IC_MISC,    0,  INVALIDCURS, 1, 70,  1,   6, 300,  6,  /* Regen Booster */       0, 0,  ITEM_DAMAGEABLE | ITEM_UNAERODYNAMIC);
+	items[236] = new ItemModel(236, "SYRINGE_3",                  IC_MISC,    0,  INVALIDCURS, 1, 70,  0,   99, 0,   0,  /* syringe 3 */           0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[237] = new ItemModel(237, "SYRINGE_4",                  IC_MISC,    0,  INVALIDCURS, 1, 70,  0,   99, 0,   0,  /* syringe 4 */           0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[238] = new ItemModel(238, "SYRINGE_5",                  IC_MISC,    0,  INVALIDCURS, 1, 70,  0,   99, 0,   0,  /* syringe 5 */           0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[239] = new ItemModel(239, "JAR_HUMAN_BLOOD",            IC_MISC,    0,  INVALIDCURS, 1, 72,  5,   2, 10,   1,  /* Jar/Human Blood*/      0, 0,  ITEM_DAMAGEABLE);
+	items[240] = new ItemModel(240, "OWNERSHIP",                  IC_MISC,    0,  INVALIDCURS, 1, 0,   0,   0, 0,    0,  /* ownership */           0, 0,  ITEM_NOT_BUYABLE);
 
-  items[241] = new ItemModel(241, "LASERSCOPE",                      IC_MISC,        0,      INVALIDCURS,  1,    51,   4,  4,     750, 8,    /* Laser scope   */   0,    -1,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT | ITEM_ELECTRONIC );
-  items[242] = new ItemModel(242, "REMOTEBOMBTRIGGER",               IC_MISC,        0,      REMOTECURS,   1,    54,   9,  4,     400, 6,    /* Remote bomb trig*/ 0,    -2,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC );
-  items[243] = new ItemModel(243, "WIRECUTTERS",                     IC_MISC,        0,      WIRECUTCURS,  1,    88,   4,  2,      20, 2,    /* Wirecutters   */   0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
-  items[244] = new ItemModel(244, "DUCKBILL",                        IC_MISC,        0,      INVALIDCURS,  1,    90,   9,  4,      30, 2,    /* Duckbill      */   0,    +5,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
-  items[245] = new ItemModel(245, "ALCOHOL",                         IC_MISC,        0,      INVALIDCURS,  1,    106,  20, 1,      30, 1,    /* Alcohol  */        0,    0,      ITEM_DAMAGEABLE);
-  items[246] = new ItemModel(246, "UVGOGGLES",                       IC_FACE,        0,      INVALIDCURS,  1,    74,   11, 1,    1500, 10,   /* UV goggles */      0,    -1,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC );
-  items[247] = new ItemModel(247, "DISCARDED_LAW",                   IC_MISC,        0,      INVALIDCURS,  0,    44,   21, 0,      30, 0,    /* discarded LAW*/    0,    0,      IF_TWOHANDED_GUN | ITEM_NOT_BUYABLE );
-  items[248] = new ItemModel(248, "HEAD_1",                          IC_MISC,        0,      INVALIDCURS,  3,    0,    40, 0,       0, 0,    /* head - generic */  0,    0,      ITEM_DAMAGEABLE);
-  items[249] = new ItemModel(249, "HEAD_2",                          IC_MISC,        0,      INVALIDCURS,  3,    1,    40, 0,       0, 0,    /* head - Imposter*/  0,    0,      ITEM_DAMAGEABLE);
-  items[250] = new ItemModel(250, "HEAD_3",                          IC_MISC,        0,      INVALIDCURS,  3,    2,    40, 0,       0, 0,    /* head - T-Rex */    0,    0,      ITEM_DAMAGEABLE);
+	items[241] = new ItemModel(241, "LASERSCOPE",                 IC_MISC,    0,  INVALIDCURS, 1, 51,  4,   4, 750,  8,  /* Laser scope */         0, -1, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT | ITEM_ELECTRONIC);
+	items[242] = new ItemModel(242, "REMOTEBOMBTRIGGER",          IC_MISC,    0,  REMOTECURS,  1, 54,  9,   4, 400,  6,  /* Remote bomb trig*/     0, -2, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[243] = new ItemModel(243, "WIRECUTTERS",                IC_MISC,    0,  WIRECUTCURS, 1, 88,  4,   2, 20,   2,  /* Wirecutters */         0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
+	items[244] = new ItemModel(244, "DUCKBILL",                   IC_MISC,    0,  INVALIDCURS, 1, 90,  9,   4, 30,   2,  /* Duckbill */            0, +5, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ATTACHMENT);
+	items[245] = new ItemModel(245, "ALCOHOL",                    IC_MISC,    0,  INVALIDCURS, 1, 106, 20,  1, 30,   1,  /* Alcohol */             0, 0,  ITEM_DAMAGEABLE);
+	items[246] = new ItemModel(246, "UVGOGGLES",                  IC_FACE,    0,  INVALIDCURS, 1, 74,  11,  1, 1500, 10, /* UV goggles */          0, -1, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[247] = new ItemModel(247, "DISCARDED_LAW",              IC_MISC,    0,  INVALIDCURS, 0, 44,  21,  0, 30,   0,  /* discarded LAW*/        0, 0,  IF_TWOHANDED_GUN | ITEM_NOT_BUYABLE);
+	items[248] = new ItemModel(248, "HEAD_1",                     IC_MISC,    0,  INVALIDCURS, 3, 0,   40,  0, 0,    0,  /* head - generic */      0, 0,  ITEM_DAMAGEABLE);
+	items[249] = new ItemModel(249, "HEAD_2",                     IC_MISC,    0,  INVALIDCURS, 3, 1,   40,  0, 0,    0,  /* head - Imposter*/      0, 0,  ITEM_DAMAGEABLE);
+	items[250] = new ItemModel(250, "HEAD_3",                     IC_MISC,    0,  INVALIDCURS, 3, 2,   40,  0, 0,    0,  /* head - T-Rex */        0, 0,  ITEM_DAMAGEABLE);
 
-  items[251] = new ItemModel(251, "HEAD_4",                          IC_MISC,        0,      INVALIDCURS,  3,    3,    40, 0,       0, 0,    /* head - Slay */     0,    0,      ITEM_DAMAGEABLE);
-  items[252] = new ItemModel(252, "HEAD_5",                          IC_MISC,        0,      INVALIDCURS,  3,    4,    40, 0,       0, 0,    /* head - Druggist */ 0,    0,      ITEM_DAMAGEABLE);
-  items[253] = new ItemModel(253, "HEAD_6",                          IC_MISC,        0,      INVALIDCURS,  3,    5,    40, 0,       0, 0,    /* head - Matron */   0,    0,      ITEM_DAMAGEABLE);
-  items[254] = new ItemModel(254, "HEAD_7",                          IC_MISC,        0,      INVALIDCURS,  3,    6,    40, 0,       0, 0,    /* head - Tiffany */  0,    0,      ITEM_DAMAGEABLE);
-  items[255] = new ItemModel(255, "WINE",                            IC_MISC,        0,      INVALIDCURS,  1,    100,  12, 1,      20, 1,    /* wine     */        0,    0,      ITEM_DAMAGEABLE);
-  items[256] = new ItemModel(256, "BEER",                            IC_MISC,        0,      INVALIDCURS,  1,    101,  4,  4,      10, 1,    /* beer     */        0,    0,      ITEM_DAMAGEABLE);
-  items[257] = new ItemModel(257, "PORNOS",                          IC_MISC,        0,      INVALIDCURS,  1,    99,   0,  2,      20, 3,    /* pornos   */        0,    0,      ITEM_DAMAGEABLE);
-  items[258] = new ItemModel(258, "VIDEO_CAMERA",                    IC_MISC,        0,      INVALIDCURS,  0,    43,   20, 0,     900, 6,    /* video camera */    0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC  );
-  items[259] = new ItemModel(259, "ROBOT_REMOTE_CONTROL",            IC_FACE,        0,      INVALIDCURS,  0,    42,   5,  1,    2500, 0,    /* robot remote */    0,    -5,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC  );
-  items[260] = new ItemModel(260, "CREATURE_PART_CLAWS",             IC_MISC,        0,      INVALIDCURS,  1,    103, 20,  0,     500, 0,    /* creature claws */  0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[251] = new ItemModel(251, "HEAD_4",                     IC_MISC,    0,  INVALIDCURS, 3, 3,   40,  0, 0,    0,  /* head - Slay */         0, 0,  ITEM_DAMAGEABLE);
+	items[252] = new ItemModel(252, "HEAD_5",                     IC_MISC,    0,  INVALIDCURS, 3, 4,   40,  0, 0,    0,  /* head - Druggist */     0, 0,  ITEM_DAMAGEABLE);
+	items[253] = new ItemModel(253, "HEAD_6",                     IC_MISC,    0,  INVALIDCURS, 3, 5,   40,  0, 0,    0,  /* head - Matron */       0, 0,  ITEM_DAMAGEABLE);
+	items[254] = new ItemModel(254, "HEAD_7",                     IC_MISC,    0,  INVALIDCURS, 3, 6,   40,  0, 0,    0,  /* head - Tiffany */      0, 0,  ITEM_DAMAGEABLE);
+	items[255] = new ItemModel(255, "WINE",                       IC_MISC,    0,  INVALIDCURS, 1, 100, 12,  1, 20,   1,  /* wine */                0, 0,  ITEM_DAMAGEABLE);
+	items[256] = new ItemModel(256, "BEER",                       IC_MISC,    0,  INVALIDCURS, 1, 101, 4,   4, 10,   1,  /* beer */                0, 0,  ITEM_DAMAGEABLE);
+	items[257] = new ItemModel(257, "PORNOS",                     IC_MISC,    0,  INVALIDCURS, 1, 99,  0,   2, 20,   3,  /* pornos */              0, 0,  ITEM_DAMAGEABLE);
+	items[258] = new ItemModel(258, "VIDEO_CAMERA",               IC_MISC,    0,  INVALIDCURS, 0, 43,  20,  0, 900,  6,  /* video camera */        0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[259] = new ItemModel(259, "ROBOT_REMOTE_CONTROL",       IC_FACE,    0,  INVALIDCURS, 0, 42,  5,   1, 2500, 0,  /* robot remote */        0, -5, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[260] = new ItemModel(260, "CREATURE_PART_CLAWS",        IC_MISC,    0,  INVALIDCURS, 1, 103, 20,  0, 500,  0,  /* creature claws */      0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
 
-  items[261] = new ItemModel(261, "CREATURE_PART_FLESH",             IC_MISC,        0,      INVALIDCURS,  3,    7,   40,  0,     250, 0,    /* creature flesh */  0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
-  items[262] = new ItemModel(262, "CREATURE_PART_ORGAN",             IC_MISC,        0,      INVALIDCURS,  1,    104, 10,  0,    1000, 0,    /* creature organ */  0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
-  items[263] = new ItemModel(263, "REMOTETRIGGER",                   IC_MISC,        0,      REMOTECURS,   1,    54,   9,  4,     400, 6,    /* Remote trigger*/   0,    -2,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
-  items[264] = new ItemModel(264, "GOLDWATCH",                       IC_MISC,        0,      INVALIDCURS,  0,    47,   2,  8,     500, 2,    /* gold watch */      0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
-  items[265] = new ItemModel(265, "GOLFCLUBS",                       IC_MISC,        0,      INVALIDCURS,  1,    136, 100, 0,     200, 2,    /* golf clubs */      0,    0,      ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
-  items[266] = new ItemModel(266, "WALKMAN",                         IC_FACE,        0,      INVALIDCURS,  3,    11,   5,  1,     100, 1,    /* walkman */         0,    -4,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC );
-  items[267] = new ItemModel(267, "PORTABLETV",                      IC_MISC,        0,      INVALIDCURS,  3,    8,   50,  0,     300, 2,    /* portable tv */     0,    -3,     ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC );
-  items[268] = new ItemModel(268, "MONEY_FOR_PLAYERS_ACCOUNT",       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[269] = new ItemModel(269, "CIGARS",                          IC_MISC,        0,      INVALIDCURS,  3,    10,  10,  1,      30, 1,    /* cigars */          0,    0,      ITEM_DAMAGEABLE );
-  items[270] = new ItemModel(270, "NOTHING",                         IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
+	items[261] = new ItemModel(261, "CREATURE_PART_FLESH",        IC_MISC,    0,  INVALIDCURS, 3, 7,   40,  0, 250,  0,  /* creature flesh */      0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[262] = new ItemModel(262, "CREATURE_PART_ORGAN",        IC_MISC,    0,  INVALIDCURS, 1, 104, 10,  0, 1000, 0,  /* creature organ */      0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[263] = new ItemModel(263, "REMOTETRIGGER",              IC_MISC,    0,  REMOTECURS,  1, 54,  9,   4, 400,  6,  /* Remote trigger*/       0, -2, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
+	items[264] = new ItemModel(264, "GOLDWATCH",                  IC_MISC,    0,  INVALIDCURS, 0, 47,  2,   8, 500,  2,  /* gold watch */          0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
+	items[265] = new ItemModel(265, "GOLFCLUBS",                  IC_MISC,    0,  INVALIDCURS, 1, 136, 100, 0, 200,  2,  /* golf clubs */          0, 0,  ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL);
+	items[266] = new ItemModel(266, "WALKMAN",                    IC_FACE,    0,  INVALIDCURS, 3, 11,  5,   1, 100,  1,  /* walkman */             0, -4, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[267] = new ItemModel(267, "PORTABLETV",                 IC_MISC,    0,  INVALIDCURS, 3, 8,   50,  0, 300,  2,  /* portable tv */         0, -3, ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC);
+	items[268] = new ItemModel(268, "MONEY_FOR_PLAYERS_ACCOUNT",  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[269] = new ItemModel(269, "CIGARS",                     IC_MISC,    0,  INVALIDCURS, 3, 10,  10,  1, 30,   1,  /* cigars */              0, 0,  ITEM_DAMAGEABLE );
+	items[270] = new ItemModel(270, "NOTHING",                    IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
 
-  items[271] = new ItemModel(271, "KEY_1",                           IC_KEY,         0,      INVALIDCURS,  1,    82,   1,  8,       0, 0,    /* dull gold key */   0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[272] = new ItemModel(272, "KEY_2",                           IC_KEY,         1,      INVALIDCURS,  1,    83,   1,  8,       0, 0,    /* silver key */      0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[273] = new ItemModel(273, "KEY_3",                           IC_KEY,         2,      INVALIDCURS,  1,    84,   1,  8,       0, 0,    /* diamond-shpd key */0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[274] = new ItemModel(274, "KEY_4",                           IC_KEY,         3,      INVALIDCURS,  1,    87,   1,  8,       0, 0,    /* bright gold key */ 0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[275] = new ItemModel(275, "KEY_5",                           IC_KEY,         4,      INVALIDCURS,  1,    91,   1,  8,       0, 0,    /* gold key */        0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[276] = new ItemModel(276, "KEY_6",                           IC_KEY,         5,      INVALIDCURS,  1,    92,   1,  8,       0, 0,    /* small gold key */  0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[277] = new ItemModel(277, "KEY_7",                           IC_KEY,         6,      INVALIDCURS,  1,    108,  1,  8,       0, 0,    /* electronic */      0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL | ITEM_ELECTRONIC );
-  items[278] = new ItemModel(278, "KEY_8",                           IC_KEY,         7,      INVALIDCURS,  1,    109,  1,  8,       0, 0,    /* passcard       */  0,    0,      ITEM_NOT_BUYABLE | ITEM_METAL);
-  items[279] = new ItemModel(279, "KEY_9",                           IC_KEY,         8,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[280] = new ItemModel(280, "KEY_10",                          IC_KEY,         9,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
+	items[271] = new ItemModel(271, "KEY_1",                      IC_KEY,     0,  INVALIDCURS, 1, 82,  1,   8, 0,    0,  /* dull gold key */       0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[272] = new ItemModel(272, "KEY_2",                      IC_KEY,     1,  INVALIDCURS, 1, 83,  1,   8, 0,    0,  /* silver key */          0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[273] = new ItemModel(273, "KEY_3",                      IC_KEY,     2,  INVALIDCURS, 1, 84,  1,   8, 0,    0,  /* diamond-shpd key */    0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[274] = new ItemModel(274, "KEY_4",                      IC_KEY,     3,  INVALIDCURS, 1, 87,  1,   8, 0,    0,  /* bright gold key */     0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[275] = new ItemModel(275, "KEY_5",                      IC_KEY,     4,  INVALIDCURS, 1, 91,  1,   8, 0,    0,  /* gold key */            0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[276] = new ItemModel(276, "KEY_6",                      IC_KEY,     5,  INVALIDCURS, 1, 92,  1,   8, 0,    0,  /* small gold key */      0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[277] = new ItemModel(277, "KEY_7",                      IC_KEY,     6,  INVALIDCURS, 1, 108, 1,   8, 0,    0,  /* electronic */          0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[278] = new ItemModel(278, "KEY_8",                      IC_KEY,     7,  INVALIDCURS, 1, 109, 1,   8, 0,    0,  /* passcard */            0, 0,  ITEM_NOT_BUYABLE | ITEM_METAL);
+	items[279] = new ItemModel(279, "KEY_9",                      IC_KEY,     8,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[280] = new ItemModel(280, "KEY_10",                     IC_KEY,     9,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
 
-  items[281] = new ItemModel(281, "KEY_11",                          IC_KEY,         10,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[282] = new ItemModel(282, "KEY_12",                          IC_KEY,         11,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[283] = new ItemModel(283, "KEY_13",                          IC_KEY,         12,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[284] = new ItemModel(284, "KEY_14",                          IC_KEY,         13,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[285] = new ItemModel(285, "KEY_15",                          IC_KEY,         14,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[286] = new ItemModel(286, "KEY_16",                          IC_KEY,         15,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[287] = new ItemModel(287, "KEY_17",                          IC_KEY,         16,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[288] = new ItemModel(288, "KEY_18",                          IC_KEY,         17,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[289] = new ItemModel(289, "KEY_19",                          IC_KEY,         18,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[290] = new ItemModel(290, "KEY_20",                          IC_KEY,         19,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
+	items[281] = new ItemModel(281, "KEY_11",                     IC_KEY,     10, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[282] = new ItemModel(282, "KEY_12",                     IC_KEY,     11, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[283] = new ItemModel(283, "KEY_13",                     IC_KEY,     12, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[284] = new ItemModel(284, "KEY_14",                     IC_KEY,     13, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[285] = new ItemModel(285, "KEY_15",                     IC_KEY,     14, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[286] = new ItemModel(286, "KEY_16",                     IC_KEY,     15, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[287] = new ItemModel(287, "KEY_17",                     IC_KEY,     16, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[288] = new ItemModel(288, "KEY_18",                     IC_KEY,     17, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[289] = new ItemModel(289, "KEY_19",                     IC_KEY,     18, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[290] = new ItemModel(290, "KEY_20",                     IC_KEY,     19, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
 
-  items[291] = new ItemModel(291, "KEY_21",                          IC_KEY,         20,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[292] = new ItemModel(292, "KEY_22",                          IC_KEY,         21,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[293] = new ItemModel(293, "KEY_23",                          IC_KEY,         22,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[294] = new ItemModel(294, "KEY_24",                          IC_KEY,         23,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[295] = new ItemModel(295, "KEY_25",                          IC_KEY,         24,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[296] = new ItemModel(296, "KEY_26",                          IC_KEY,         25,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[297] = new ItemModel(297, "KEY_27",                          IC_KEY,         26,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[298] = new ItemModel(298, "KEY_28",                          IC_KEY,         27,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[299] = new ItemModel(299, "KEY_29",                          IC_KEY,         28,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[300] = new ItemModel(300, "KEY_30",                          IC_KEY,         29,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
+	items[291] = new ItemModel(291, "KEY_21",                     IC_KEY,     20, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[292] = new ItemModel(292, "KEY_22",                     IC_KEY,     21, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[293] = new ItemModel(293, "KEY_23",                     IC_KEY,     22, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[294] = new ItemModel(294, "KEY_24",                     IC_KEY,     23, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[295] = new ItemModel(295, "KEY_25",                     IC_KEY,     24, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[296] = new ItemModel(296, "KEY_26",                     IC_KEY,     25, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[297] = new ItemModel(297, "KEY_27",                     IC_KEY,     26, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[298] = new ItemModel(298, "KEY_28",                     IC_KEY,     27, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[299] = new ItemModel(299, "KEY_29",                     IC_KEY,     28, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[300] = new ItemModel(300, "KEY_30",                     IC_KEY,     29, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
 
-  items[301] = new ItemModel(301, "KEY_31",                          IC_KEY,         30,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[302] = new ItemModel(302, "KEY_32",                          IC_KEY,         31,     INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* key      */        0,    0,      ITEM_NOT_EDITOR | ITEM_METAL);
-  items[303] = new ItemModel(303, "SILVER_PLATTER",                  IC_MISC,        0,      INVALIDCURS,  2,    31,   4,  0,     150, 2,    /* silver platter */  0,    0,      ITEM_DAMAGEABLE | ITEM_METAL);
-  items[304] = new ItemModel(304, "DUCT_TAPE",                       IC_MISC,        0,      INVALIDCURS,  2,    30,   1,  6,       5, 1,    /* duct tape */       0,    0,      ITEM_DAMAGEABLE | ITEM_HIDDEN_ADDON );
-  items[305] = new ItemModel(305, "ALUMINUM_ROD",                    IC_MISC,        0,      INVALIDCURS,  2,    28,   3,  1,      20, 0,    /* aluminum rod */    0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_HIDDEN_ADDON);
-  items[306] = new ItemModel(306, "SPRING",                          IC_MISC,        0,      INVALIDCURS,  2,    32,   1,  8,       0, 0,    /* spring */          0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_UNAERODYNAMIC | ITEM_HIDDEN_ADDON);
-  items[307] = new ItemModel(307, "SPRING_AND_BOLT_UPGRADE",         IC_MISC,        0,      INVALIDCURS,  2,    33,   4,  1,      25, 0,    /* a. rod & spring */ 0,    0,      ITEM_NOT_BUYABLE | ITEM_REPAIRABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_INSEPARABLE);
-  items[308] = new ItemModel(308, "STEEL_ROD",                       IC_MISC,        0,      INVALIDCURS,  1,   133,   4,  1,      20, 0,    /* steel rod */       0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_HIDDEN_ADDON);
-  items[309] = new ItemModel(309, "QUICK_GLUE",                      IC_MISC,        0,      INVALIDCURS,  1,   132,   2,  6,       5, 3,    /* quick glue */      0,    0,      ITEM_DAMAGEABLE  | ITEM_HIDDEN_ADDON);
-  items[310] = new ItemModel(310, "GUN_BARREL_EXTENDER",             IC_MISC,        0,      INVALIDCURS,  1,   134,   6,  1,     150, 0,    /* gun barrel xtndr */0,    0,      ITEM_NOT_BUYABLE | ITEM_REPAIRABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_INSEPARABLE);
+	items[301] = new ItemModel(301, "KEY_31",                     IC_KEY,     30, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[302] = new ItemModel(302, "KEY_32",                     IC_KEY,     31, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* key */                 0, 0,  ITEM_NOT_EDITOR | ITEM_METAL);
+	items[303] = new ItemModel(303, "SILVER_PLATTER",             IC_MISC,    0,  INVALIDCURS, 2, 31,  4,   0, 150,  2,  /* silver platter */      0, 0,  ITEM_DAMAGEABLE | ITEM_METAL);
+	items[304] = new ItemModel(304, "DUCT_TAPE",                  IC_MISC,    0,  INVALIDCURS, 2, 30,  1,   6, 5,    1,  /* duct tape */           0, 0,  ITEM_DAMAGEABLE | ITEM_HIDDEN_ADDON);
+	items[305] = new ItemModel(305, "ALUMINUM_ROD",               IC_MISC,    0,  INVALIDCURS, 2, 28,  3,   1, 20,   0,  /* aluminum rod */        0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_HIDDEN_ADDON);
+	items[306] = new ItemModel(306, "SPRING",                     IC_MISC,    0,  INVALIDCURS, 2, 32,  1,   8, 0,    0,  /* spring */              0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_UNAERODYNAMIC | ITEM_HIDDEN_ADDON);
+	items[307] = new ItemModel(307, "SPRING_AND_BOLT_UPGRADE",    IC_MISC,    0,  INVALIDCURS, 2, 33,  4,   1, 25,   0,  /* a. rod & spring */     0, 0,  ITEM_NOT_BUYABLE | ITEM_REPAIRABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_INSEPARABLE);
+	items[308] = new ItemModel(308, "STEEL_ROD",                  IC_MISC,    0,  INVALIDCURS, 1, 133, 4,   1, 20,   0,  /* steel rod */           0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_HIDDEN_ADDON);
+	items[309] = new ItemModel(309, "QUICK_GLUE",                 IC_MISC,    0,  INVALIDCURS, 1, 132, 2,   6, 5,    3,  /* quick glue */          0, 0,  ITEM_DAMAGEABLE  | ITEM_HIDDEN_ADDON);
+	items[310] = new ItemModel(310, "GUN_BARREL_EXTENDER",        IC_MISC,    0,  INVALIDCURS, 1, 134, 6,   1, 150,  0,  /* gun barrel xtndr */    0, 0,  ITEM_NOT_BUYABLE | ITEM_REPAIRABLE | ITEM_DAMAGEABLE | ITEM_METAL | ITEM_INSEPARABLE);
 
-  items[311] = new ItemModel(311, "STRING",                          IC_MISC,        0,      INVALIDCURS,  2,    35,   1,  8,       0, 0,    /* string */          0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC  | ITEM_HIDDEN_ADDON);
-  items[312] = new ItemModel(312, "TIN_CAN",                         IC_MISC,        0,      INVALIDCURS,  2,    27,   1,  1,       0, 0,    /* tin can */         0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC  | ITEM_HIDDEN_ADDON);
-  items[313] = new ItemModel(313, "STRING_TIED_TO_TIN_CAN",          IC_MISC,        0,      TINCANCURS,   2,    36,   2,  4,       0, 0,    /* string & tin can */0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[314] = new ItemModel(314, "MARBLES",                         IC_MISC,        0,      INVALIDCURS,  1,  122,    3,  6,       5, 0,    /* marbles */         0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE );
-  items[315] = new ItemModel(315, "LAME_BOY",                        IC_MISC,        0,      INVALIDCURS,  1,  127,    6,  1,     200, 6,    /* lame boy */        0,    0,      ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC | ITEM_HIDDEN_ADDON);
-  items[316] = new ItemModel(316, "COPPER_WIRE",                     IC_MISC,        0,      INVALIDCURS,  1,  128,    1,  8,       5, 1,    /* copper wire */     0,    0,      ITEM_METAL | ITEM_HIDDEN_ADDON );
-  items[317] = new ItemModel(317, "DISPLAY_UNIT",                    IC_MISC,        0,      INVALIDCURS,  1,  126,    7,  1,      50, 0,    /* display unit */    0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC | ITEM_HIDDEN_ADDON);
-  items[318] = new ItemModel(318, "FUMBLE_PAK",                      IC_MISC,        0,      INVALIDCURS,  1,  130,    1,  1,     100, 5,    /* fumble pak */      0,    0,      ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC);
-  items[319] = new ItemModel(319, "XRAY_BULB",                       IC_MISC,        0,      INVALIDCURS,  1,  131,    1,  2,      10, 5,    /* xray bulb */       0,    0,      ITEM_DAMAGEABLE | ITEM_HIDDEN_ADDON);
-  items[320] = new ItemModel(320, "CHEWING_GUM",                     IC_MISC,        0,      INVALIDCURS,  2,   29,    1,  8,       1, 1,    /* chewing gum */     0,    0,      ITEM_DAMAGEABLE | ITEM_HIDDEN_ADDON);
+	items[311] = new ItemModel(311, "STRING",                     IC_MISC,    0,  INVALIDCURS, 2, 35,  1,   8, 0,    0,  /* string */              0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC  | ITEM_HIDDEN_ADDON);
+	items[312] = new ItemModel(312, "TIN_CAN",                    IC_MISC,    0,  INVALIDCURS, 2, 27,  1,   1, 0,    0,  /* tin can */             0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC  | ITEM_HIDDEN_ADDON);
+	items[313] = new ItemModel(313, "STRING_TIED_TO_TIN_CAN",     IC_MISC,    0,  TINCANCURS,  2, 36,  2,   4, 0,    0,  /* string & tin can */    0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[314] = new ItemModel(314, "MARBLES",                    IC_MISC,    0,  INVALIDCURS, 1, 122, 3,   6, 5,    0,  /* marbles */             0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE );
+	items[315] = new ItemModel(315, "LAME_BOY",                   IC_MISC,    0,  INVALIDCURS, 1, 127, 6,   1, 200,  6,  /* lame boy */            0, 0,  ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC | ITEM_HIDDEN_ADDON);
+	items[316] = new ItemModel(316, "COPPER_WIRE",                IC_MISC,    0,  INVALIDCURS, 1, 128, 1,   8, 5,    1,  /* copper wire */         0, 0,  ITEM_METAL | ITEM_HIDDEN_ADDON );
+	items[317] = new ItemModel(317, "DISPLAY_UNIT",               IC_MISC,    0,  INVALIDCURS, 1, 126, 7,   1, 50,   0,  /* display unit */        0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC | ITEM_HIDDEN_ADDON);
+	items[318] = new ItemModel(318, "FUMBLE_PAK",                 IC_MISC,    0,  INVALIDCURS, 1, 130, 1,   1, 100,  5,  /* fumble pak */          0, 0,  ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_ELECTRONIC);
+	items[319] = new ItemModel(319, "XRAY_BULB",                  IC_MISC,    0,  INVALIDCURS, 1, 131, 1,   2, 10,   5,  /* xray bulb */           0, 0,  ITEM_DAMAGEABLE | ITEM_HIDDEN_ADDON);
+	items[320] = new ItemModel(320, "CHEWING_GUM",                IC_MISC,    0,  INVALIDCURS, 2, 29,  1,   8, 1,    1,  /* chewing gum */         0, 0,  ITEM_DAMAGEABLE | ITEM_HIDDEN_ADDON);
 
-  items[321] = new ItemModel(321, "FLASH_DEVICE",                    IC_MISC,        0,      INVALIDCURS,  1,  129,    3,  1,     100, 0,    /* flash device */    0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC | ITEM_HIDDEN_ADDON);
-  items[322] = new ItemModel(322, "BATTERIES",                       IC_MISC,        0,      INVALIDCURS,  2,   26,    1,  6,       5, 1,    /* batteries */       0,    0,      ITEM_DAMAGEABLE);
-  items[323] = new ItemModel(323, "ELASTIC",                         IC_MISC,        0,      INVALIDCURS,  1,  123,    1,  8,       0, 0,    /* elastic */         0,    0,      ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
-  items[324] = new ItemModel(324, "XRAY_DEVICE",                     IC_MISC,        0,      REMOTECURS,   1,  125,   10,  1,    2500, 0,    /* xray device */     0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
-  items[325] = new ItemModel(325, "SILVER",                          IC_MONEY,       0,      INVALIDCURS,  2,   38,    2,  1,     100, 0,    /* silver   */        0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
-  items[326] = new ItemModel(326, "GOLD",                            IC_MONEY,       0,      INVALIDCURS,  1,  135,    2,  1,     300, 0,    /* gold     */        0,    0,      ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
-  items[327] = new ItemModel(327, "GAS_CAN",                         IC_KIT,         0,      REFUELCURS,   2,   39,   20,  0,     250, 0,    /* gas can */         0,    0,      ITEM_DAMAGEABLE);
-  items[328] = new ItemModel(328, "UNUSED_26",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[329] = new ItemModel(329, "UNUSED_27",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[330] = new ItemModel(330, "UNUSED_28",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
+	items[321] = new ItemModel(321, "FLASH_DEVICE",               IC_MISC,    0,  INVALIDCURS, 1, 129, 3,   1, 100,  0,  /* flash device */        0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC | ITEM_HIDDEN_ADDON);
+	items[322] = new ItemModel(322, "BATTERIES",                  IC_MISC,    0,  INVALIDCURS, 2, 26,  1,   6, 5,    1,  /* batteries */           0, 0,  ITEM_DAMAGEABLE);
+	items[323] = new ItemModel(323, "ELASTIC",                    IC_MISC,    0,  INVALIDCURS, 1, 123, 1,   8, 0,    0,  /* elastic */             0, 0,  ITEM_NOT_BUYABLE | ITEM_UNAERODYNAMIC);
+	items[324] = new ItemModel(324, "XRAY_DEVICE",                IC_MISC,    0,  REMOTECURS,  1, 125, 10,  1, 2500, 0,  /* xray device */         0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE | ITEM_REPAIRABLE | ITEM_METAL | ITEM_ELECTRONIC);
+	items[325] = new ItemModel(325, "SILVER",                     IC_MONEY,   0,  INVALIDCURS, 2, 38,  2,   1, 100,  0,  /* silver */              0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[326] = new ItemModel(326, "GOLD",                       IC_MONEY,   0,  INVALIDCURS, 1, 135, 2,   1, 300,  0,  /* gold */                0, 0,  ITEM_NOT_BUYABLE | ITEM_DAMAGEABLE);
+	items[327] = new ItemModel(327, "GAS_CAN",                    IC_KIT,     0,  REFUELCURS,  2, 39,  20,  0, 250,  0,  /* gas can */             0, 0,  ITEM_DAMAGEABLE);
+	items[328] = new ItemModel(328, "UNUSED_26",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[329] = new ItemModel(329, "UNUSED_27",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[330] = new ItemModel(330, "UNUSED_28",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
 
-  items[331] = new ItemModel(331, "UNUSED_29",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[332] = new ItemModel(332, "UNUSED_30",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[333] = new ItemModel(333, "UNUSED_31",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[334] = new ItemModel(334, "UNUSED_32",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[335] = new ItemModel(335, "UNUSED_33",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[336] = new ItemModel(336, "UNUSED_34",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[337] = new ItemModel(337, "UNUSED_35",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[338] = new ItemModel(338, "UNUSED_36",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[339] = new ItemModel(339, "UNUSED_37",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[340] = new ItemModel(340, "UNUSED_38",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
+	items[331] = new ItemModel(331, "UNUSED_29",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[332] = new ItemModel(332, "UNUSED_30",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[333] = new ItemModel(333, "UNUSED_31",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[334] = new ItemModel(334, "UNUSED_32",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[335] = new ItemModel(335, "UNUSED_33",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[336] = new ItemModel(336, "UNUSED_34",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[337] = new ItemModel(337, "UNUSED_35",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[338] = new ItemModel(338, "UNUSED_36",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[339] = new ItemModel(339, "UNUSED_37",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[340] = new ItemModel(340, "UNUSED_38",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
 
-  items[341] = new ItemModel(341, "UNUSED_39",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[342] = new ItemModel(342, "UNUSED_40",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[343] = new ItemModel(343, "UNUSED_41",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[344] = new ItemModel(344, "UNUSED_42",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[345] = new ItemModel(345, "UNUSED_43",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[346] = new ItemModel(346, "UNUSED_44",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[347] = new ItemModel(347, "UNUSED_45",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[348] = new ItemModel(348, "UNUSED_46",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[349] = new ItemModel(349, "UNUSED_47",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
-  items[350] = new ItemModel(350, "UNUSED_48",                       IC_NONE,        0,      INVALIDCURS,  0,    0,    0,  0,       0, 0,    /* nothing! */        0,    0,      0);
+	items[341] = new ItemModel(341, "UNUSED_39",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[342] = new ItemModel(342, "UNUSED_40",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[343] = new ItemModel(343, "UNUSED_41",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[344] = new ItemModel(344, "UNUSED_42",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[345] = new ItemModel(345, "UNUSED_43",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[346] = new ItemModel(346, "UNUSED_44",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[347] = new ItemModel(347, "UNUSED_45",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[348] = new ItemModel(348, "UNUSED_46",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[349] = new ItemModel(349, "UNUSED_47",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
+	items[350] = new ItemModel(350, "UNUSED_48",                  IC_NONE,    0,  INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* nothing! */            0, 0,  0);
 }
 
 struct AttachmentInfoStruct
 {
-	UINT16	usItem;
-	UINT32	uiItemClass;
-	INT8		bAttachmentSkillCheck;
-	INT8		bAttachmentSkillCheckMod;
+	UINT16 usItem;
+	UINT32 uiItemClass;
+	INT8   bAttachmentSkillCheck;
+	INT8   bAttachmentSkillCheckMod;
 };
 
 
@@ -322,21 +322,21 @@ struct AttachmentInfoStruct
 
 static const AttachmentInfoStruct AttachmentInfo[] =
 {
-	{ SILENCER,									IC_GUN,			NO_CHECK,																			0 },
-	{ SNIPERSCOPE,							IC_GUN,			NO_CHECK,																			0 },
-	{ LASERSCOPE,								IC_GUN,			NO_CHECK,																			0 },
-	{ BIPOD,										IC_GUN,			NO_CHECK,																			0 },
-	{ UNDER_GLAUNCHER,					IC_GUN,			NO_CHECK,																			0 },
-	{ DUCKBILL,									IC_GUN,			NO_CHECK,																			0 },
-	{	SPRING_AND_BOLT_UPGRADE,	IC_GUN,			ATTACHING_SPECIAL_ITEM_CHECK,									0 },
-	{ GUN_BARREL_EXTENDER,			IC_GUN,			ATTACHING_SPECIAL_ITEM_CHECK,								  0 },
-	{ DETONATOR,								IC_BOMB,		ATTACHING_DETONATOR_CHECK,										0 },
-	{ REMDETONATOR,							IC_BOMB,		ATTACHING_REMOTE_DETONATOR_CHECK,						-10 },
-	{ REMDETONATOR,							IC_BOMB,		ATTACHING_REMOTE_DETONATOR_CHECK,						-10 },
-	{ XRAY_BULB,								IC_NONE,		ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,		-15 },
-	{ COPPER_WIRE,							IC_NONE,		ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,		+20 },
-	{ CERAMIC_PLATES,						IC_ARMOUR,	NO_CHECK,																			0 },
-	{ NONE,                     0,          0,                                            0 }
+	{SILENCER,			IC_GUN,		NO_CHECK,					0},
+	{SNIPERSCOPE,			IC_GUN,		NO_CHECK,					0},
+	{LASERSCOPE,			IC_GUN,		NO_CHECK,					0},
+	{BIPOD,				IC_GUN,		NO_CHECK,					0},
+	{UNDER_GLAUNCHER,		IC_GUN,		NO_CHECK,					0},
+	{DUCKBILL,			IC_GUN,		NO_CHECK,					0},
+	{SPRING_AND_BOLT_UPGRADE,	IC_GUN,		ATTACHING_SPECIAL_ITEM_CHECK,			0},
+	{GUN_BARREL_EXTENDER,		IC_GUN,		ATTACHING_SPECIAL_ITEM_CHECK,			0},
+	{DETONATOR,			IC_BOMB,	ATTACHING_DETONATOR_CHECK,			0},
+	{REMDETONATOR,			IC_BOMB,	ATTACHING_REMOTE_DETONATOR_CHECK,		-10},
+	{REMDETONATOR,			IC_BOMB,	ATTACHING_REMOTE_DETONATOR_CHECK,		-10},
+	{XRAY_BULB,			IC_NONE,	ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,	-15},
+	{COPPER_WIRE,			IC_NONE,	ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,	+20},
+	{CERAMIC_PLATES,		IC_ARMOUR,	NO_CHECK,					0},
+	{NONE,				0,		0,						0}
 };
 
 static UINT16 const g_attachments[][2] =
@@ -364,13 +364,13 @@ static UINT16 const g_attachments[][2] =
 	{CERAMIC_PLATES, KEVLAR2_VEST_18},
 	{CERAMIC_PLATES, KEVLAR2_VEST_Y},
 
-	{SPRING,					ALUMINUM_ROD},
-	{QUICK_GLUE,			STEEL_ROD},
-	{DUCT_TAPE,				STEEL_ROD},
-	{XRAY_BULB,				FUMBLE_PAK},
-	{CHEWING_GUM,			FUMBLE_PAK},
-	{BATTERIES,				XRAY_DEVICE},
-	{COPPER_WIRE,			LAME_BOY},
+	{SPRING, ALUMINUM_ROD},
+	{QUICK_GLUE, STEEL_ROD},
+	{DUCT_TAPE, STEEL_ROD},
+	{XRAY_BULB, FUMBLE_PAK},
+	{CHEWING_GUM, FUMBLE_PAK},
+	{BATTERIES, XRAY_DEVICE},
+	{COPPER_WIRE, LAME_BOY},
 	{0, 0}
 };
 
@@ -425,86 +425,87 @@ struct MergeInfo
 
 
 static MergeInfo const Merge[] =
-{ // first item			second item						resulting item,					merge type
-	{FIRSTAIDKIT,			FIRSTAIDKIT,					FIRSTAIDKIT,						COMBINE_POINTS},
-	{MEDICKIT,				MEDICKIT,							MEDICKIT,								COMBINE_POINTS},
-	{LOCKSMITHKIT,		LOCKSMITHKIT,					LOCKSMITHKIT,						COMBINE_POINTS},
-	{TOOLKIT,					TOOLKIT,							TOOLKIT,								COMBINE_POINTS},
-	{GAS_CAN,					GAS_CAN,							GAS_CAN,								COMBINE_POINTS},
-	{CAMOUFLAGEKIT,		CAMOUFLAGEKIT,				CAMOUFLAGEKIT,					COMBINE_POINTS},
-	{BEER,						BEER,									BEER,										COMBINE_POINTS},
-	{WINE,						WINE,									WINE,										COMBINE_POINTS},
-	{ALCOHOL,					ALCOHOL,							ALCOHOL,								COMBINE_POINTS},
-	{CANTEEN,					CANTEEN,							CANTEEN,								COMBINE_POINTS},
+{
+	// first item			second item			resulting item,			merge type
+	{FIRSTAIDKIT,			FIRSTAIDKIT,			FIRSTAIDKIT,			COMBINE_POINTS},
+	{MEDICKIT,			MEDICKIT,			MEDICKIT,			COMBINE_POINTS},
+	{LOCKSMITHKIT,			LOCKSMITHKIT,			LOCKSMITHKIT,			COMBINE_POINTS},
+	{TOOLKIT,			TOOLKIT,			TOOLKIT,			COMBINE_POINTS},
+	{GAS_CAN,			GAS_CAN,			GAS_CAN,			COMBINE_POINTS},
+	{CAMOUFLAGEKIT,			CAMOUFLAGEKIT,			CAMOUFLAGEKIT,			COMBINE_POINTS},
+	{BEER,				BEER,				BEER,				COMBINE_POINTS},
+	{WINE,				WINE,				WINE,				COMBINE_POINTS},
+	{ALCOHOL,			ALCOHOL,			ALCOHOL,			COMBINE_POINTS},
+	{CANTEEN,			CANTEEN,			CANTEEN,			COMBINE_POINTS},
 
-	{COMPOUND18,			FLAK_JACKET,							FLAK_JACKET_18,							TREAT_ARMOUR},
-	{COMPOUND18,			KEVLAR_VEST,							KEVLAR_VEST_18,							TREAT_ARMOUR},
-	{COMPOUND18,			KEVLAR2_VEST,							KEVLAR2_VEST_18,						TREAT_ARMOUR},
-	{COMPOUND18,			SPECTRA_VEST,							SPECTRA_VEST_18,						TREAT_ARMOUR},
+	{COMPOUND18,			FLAK_JACKET,			FLAK_JACKET_18,			TREAT_ARMOUR},
+	{COMPOUND18,			KEVLAR_VEST,			KEVLAR_VEST_18,			TREAT_ARMOUR},
+	{COMPOUND18,			KEVLAR2_VEST,			KEVLAR2_VEST_18,		TREAT_ARMOUR},
+	{COMPOUND18,			SPECTRA_VEST,			SPECTRA_VEST_18,		TREAT_ARMOUR},
 	{COMPOUND18,			LEATHER_JACKET_W_KEVLAR,	LEATHER_JACKET_W_KEVLAR_18,	TREAT_ARMOUR},
-	{COMPOUND18,			KEVLAR_LEGGINGS,					KEVLAR_LEGGINGS_18,					TREAT_ARMOUR},
-	{COMPOUND18,			SPECTRA_LEGGINGS,					SPECTRA_LEGGINGS_18,				TREAT_ARMOUR},
-	{COMPOUND18,			KEVLAR_HELMET,						KEVLAR_HELMET_18,						TREAT_ARMOUR},
-	{COMPOUND18,			SPECTRA_HELMET,						SPECTRA_HELMET_18,					TREAT_ARMOUR},
-	{COMPOUND18,			FLAK_JACKET_Y,						NOTHING,										DESTRUCTION},
-	{COMPOUND18,			KEVLAR_VEST_Y,						NOTHING,										DESTRUCTION},
-	{COMPOUND18,			KEVLAR2_VEST_Y,						NOTHING,										DESTRUCTION},
-	{COMPOUND18,			SPECTRA_VEST_Y,						NOTHING,										DESTRUCTION},
-	{COMPOUND18,			LEATHER_JACKET_W_KEVLAR_Y,NOTHING,										DESTRUCTION},
-	{COMPOUND18,			KEVLAR_LEGGINGS_Y,				NOTHING,										DESTRUCTION},
-	{COMPOUND18,			SPECTRA_LEGGINGS_Y,				NOTHING,										DESTRUCTION},
-	{COMPOUND18,			KEVLAR_HELMET_Y,					NOTHING,										DESTRUCTION},
-	{COMPOUND18,			SPECTRA_HELMET_Y,					NOTHING,										DESTRUCTION},
+	{COMPOUND18,			KEVLAR_LEGGINGS,		KEVLAR_LEGGINGS_18,		TREAT_ARMOUR},
+	{COMPOUND18,			SPECTRA_LEGGINGS,		SPECTRA_LEGGINGS_18,		TREAT_ARMOUR},
+	{COMPOUND18,			KEVLAR_HELMET,			KEVLAR_HELMET_18,		TREAT_ARMOUR},
+	{COMPOUND18,			SPECTRA_HELMET,			SPECTRA_HELMET_18,		TREAT_ARMOUR},
+	{COMPOUND18,			FLAK_JACKET_Y,			NOTHING,			DESTRUCTION},
+	{COMPOUND18,			KEVLAR_VEST_Y,			NOTHING,			DESTRUCTION},
+	{COMPOUND18,			KEVLAR2_VEST_Y,			NOTHING,			DESTRUCTION},
+	{COMPOUND18,			SPECTRA_VEST_Y,			NOTHING,			DESTRUCTION},
+	{COMPOUND18,			LEATHER_JACKET_W_KEVLAR_Y,	NOTHING,			DESTRUCTION},
+	{COMPOUND18,			KEVLAR_LEGGINGS_Y,		NOTHING,			DESTRUCTION},
+	{COMPOUND18,			SPECTRA_LEGGINGS_Y,		NOTHING,			DESTRUCTION},
+	{COMPOUND18,			KEVLAR_HELMET_Y,		NOTHING,			DESTRUCTION},
+	{COMPOUND18,			SPECTRA_HELMET_Y,		NOTHING,			DESTRUCTION},
 
-	{JAR_QUEEN_CREATURE_BLOOD,	FLAK_JACKET,					FLAK_JACKET_Y,					TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_VEST,					KEVLAR_VEST_Y,					TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_VEST,					SPECTRA_VEST_Y,					TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	FLAK_JACKET,			FLAK_JACKET_Y,			TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_VEST,			KEVLAR_VEST_Y,			TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_VEST,			SPECTRA_VEST_Y,			TREAT_ARMOUR},
 	{JAR_QUEEN_CREATURE_BLOOD,	LEATHER_JACKET_W_KEVLAR,	LEATHER_JACKET_W_KEVLAR_Y,	TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR2_VEST,					KEVLAR2_VEST_Y,				TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_LEGGINGS,			KEVLAR_LEGGINGS_Y,			TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_LEGGINGS,			SPECTRA_LEGGINGS_Y,			TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_HELMET,				KEVLAR_HELMET_Y,				TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_HELMET,				SPECTRA_HELMET_Y,				TREAT_ARMOUR},
-	{JAR_QUEEN_CREATURE_BLOOD,	FLAK_JACKET_18,				NOTHING,								DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_VEST_18,				NOTHING,								DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR2_VEST_18,			NOTHING,								DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_VEST_18,			NOTHING,								DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	LEATHER_JACKET_W_KEVLAR_18,	NOTHING,					DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_LEGGINGS_18,		NOTHING,								DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_LEGGINGS_18,	NOTHING,								DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_HELMET_18,			NOTHING,								DESTRUCTION},
-	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_HELMET_18,		NOTHING,								DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR2_VEST,			KEVLAR2_VEST_Y,			TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_LEGGINGS,		KEVLAR_LEGGINGS_Y,		TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_LEGGINGS,		SPECTRA_LEGGINGS_Y,		TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_HELMET,			KEVLAR_HELMET_Y,		TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_HELMET,			SPECTRA_HELMET_Y,		TREAT_ARMOUR},
+	{JAR_QUEEN_CREATURE_BLOOD,	FLAK_JACKET_18,			NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_VEST_18,			NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR2_VEST_18,		NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_VEST_18,		NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	LEATHER_JACKET_W_KEVLAR_18,	NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_LEGGINGS_18,		NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_LEGGINGS_18,		NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	KEVLAR_HELMET_18,		NOTHING,			DESTRUCTION},
+	{JAR_QUEEN_CREATURE_BLOOD,	SPECTRA_HELMET_18,		NOTHING,			DESTRUCTION},
 
-	{RDX,							TNT,									HMX,										EXPLOSIVE},
-	{RDX,							C1,										C4,											EXPLOSIVE},
-	{TNT,							RDX,									HMX,										EXPLOSIVE},
-	{C1,							RDX,									C4,											EXPLOSIVE},
+	{RDX,				TNT,				HMX,				EXPLOSIVE},
+	{RDX,				C1,				C4,				EXPLOSIVE},
+	{TNT,				RDX,				HMX,				EXPLOSIVE},
+	{C1,				RDX,				C4,				EXPLOSIVE},
 
-	{STRING,					TIN_CAN,							STRING_TIED_TO_TIN_CAN,	EASY_MERGE},
-	{TIN_CAN,					STRING,								STRING_TIED_TO_TIN_CAN,	EASY_MERGE},
+	{STRING,			TIN_CAN,			STRING_TIED_TO_TIN_CAN,		EASY_MERGE},
+	{TIN_CAN,			STRING,				STRING_TIED_TO_TIN_CAN,		EASY_MERGE},
 
-	{FLASH_DEVICE,		DISPLAY_UNIT,					XRAY_DEVICE,						ELECTRONIC_MERGE},
-	{DISPLAY_UNIT,		FLASH_DEVICE,					XRAY_DEVICE,						ELECTRONIC_MERGE},
+	{FLASH_DEVICE,			DISPLAY_UNIT,			XRAY_DEVICE,			ELECTRONIC_MERGE},
+	{DISPLAY_UNIT,			FLASH_DEVICE,			XRAY_DEVICE,			ELECTRONIC_MERGE},
 
 	{ NOTHING,  NOTHING, NOTHING, DESTRUCTION}
 };
 
 struct ComboMergeInfoStruct
 {
-	UINT16	usItem;
-	UINT16	usAttachment[2];
-	UINT16	usResult;
+	UINT16 usItem;
+	UINT16 usAttachment[2];
+	UINT16 usResult;
 };
 
 
 ComboMergeInfoStruct AttachmentComboMerge[] =
 {
-	// base item							attach 1								attach 2						 result
-	{ALUMINUM_ROD,						{SPRING,								NOTHING},						SPRING_AND_BOLT_UPGRADE	},
-	{STEEL_ROD,								{QUICK_GLUE,						DUCT_TAPE},					GUN_BARREL_EXTENDER },
-	{FUMBLE_PAK,							{XRAY_BULB,							CHEWING_GUM},				FLASH_DEVICE },
-	{LAME_BOY,								{COPPER_WIRE,						NOTHING},						DISPLAY_UNIT },
-	{NOTHING,									{NOTHING,								NOTHING},						NOTHING },
+	// base item	attach 1	attach 2	result
+	{ALUMINUM_ROD,	{SPRING,	NOTHING},	SPRING_AND_BOLT_UPGRADE},
+	{STEEL_ROD,	{QUICK_GLUE,	DUCT_TAPE},	GUN_BARREL_EXTENDER},
+	{FUMBLE_PAK,	{XRAY_BULB,	CHEWING_GUM},	FLASH_DEVICE},
+	{LAME_BOY,	{COPPER_WIRE,	NOTHING},	DISPLAY_UNIT},
+	{NOTHING,	{NOTHING,	NOTHING},	NOTHING},
 };
 
 
@@ -513,18 +514,18 @@ BOOLEAN ItemIsLegal( UINT16 usItemIndex )
 	//if the user has selected the reduced gun list
 	if( !gGameOptions.fGunNut )
 	{
-    const ItemModel *item = GCM->getItem(usItemIndex);
+		const ItemModel *item = GCM->getItem(usItemIndex);
 
-    if(item->isGun() && item->asWeapon()->isInBigGunList())
-    {
-      return false;
-    }
+		if(item->isGun() && item->asWeapon()->isInBigGunList())
+		{
+			return false;
+		}
 
-    if(item->isAmmo() && item->asAmmo()->isInBigGunList())
-    {
-      return false;
-    }
-  }
+		if(item->isAmmo() && item->asAmmo()->isInBigGunList())
+		{
+			return false;
+		}
+	}
 
 	return(TRUE);
 }
@@ -653,7 +654,7 @@ INT8 FindExactObj( const SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 
 INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUpper )
 {
-	INT8	bLoop;
+	INT8 bLoop;
 
 	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
 	{
@@ -668,8 +669,8 @@ INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUp
 
 INT8 FindObjInObjRange(const SOLDIERTYPE* const pSoldier, UINT16 usItem1, UINT16 usItem2)
 {
-	INT8		bLoop;
-	UINT16	usTemp;
+	INT8   bLoop;
+	UINT16 usTemp;
 
 	if (usItem1 > usItem2 )
 	{
@@ -756,7 +757,7 @@ INT8 FindAIUsableObjClassWithin( const SOLDIERTYPE * pSoldier, 	UINT32 usItemCla
 
 INT8 FindEmptySlotWithin( const SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper )
 {
-	INT8	bLoop;
+	INT8 bLoop;
 
 	for (bLoop = bLower; bLoop <= bUpper; bLoop++)
 	{
@@ -844,7 +845,7 @@ INT8 FindThrowableGrenade( const SOLDIERTYPE * pSoldier )
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
 {
-	INT8	bLoop;
+	INT8 bLoop;
 
 	for (bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
 	{
@@ -859,7 +860,7 @@ INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
 
 INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClass)
 {
-	INT8	bLoop;
+	INT8 bLoop;
 
 	for (bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
 	{
@@ -873,7 +874,7 @@ INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClas
 
 INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 {
-	INT8	bLoop;
+	INT8 bLoop;
 
 	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
 	{
@@ -888,7 +889,7 @@ INT8 FindLaunchable( const SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 
 INT8 FindLaunchableAttachment(const OBJECTTYPE* const pObj, const UINT16 usWeapon)
 {
-	INT8		bLoop;
+	INT8 bLoop;
 
 	for ( bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++ )
 	{
@@ -904,8 +905,7 @@ INT8 FindLaunchableAttachment(const OBJECTTYPE* const pObj, const UINT16 usWeapo
 
 bool ItemHasAttachments(OBJECTTYPE const& o)
 {
-	return
-		o.usAttachItem[0] != NOTHING ||
+	return o.usAttachItem[0] != NOTHING ||
 		o.usAttachItem[1] != NOTHING ||
 		o.usAttachItem[2] != NOTHING ||
 		o.usAttachItem[3] != NOTHING;
@@ -942,11 +942,11 @@ static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 
 bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 {
-  const ItemModel *itemModel = GCM->getItem(item);
-  if(itemModel->canBeAttached(attachment))
-  {
-    return true;
-  }
+	const ItemModel *itemModel = GCM->getItem(item);
+	if(itemModel->canBeAttached(attachment))
+	{
+		return true;
+	}
 
 	UINT16 const (*i)[2] = g_attachments;
 	for (;; ++i)
@@ -966,8 +966,8 @@ bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 
 BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachment, const BOOLEAN fAttemptingAttachment)
 {
-	BOOLEAN		fSameItem = FALSE, fSimilarItems = FALSE;
-	UINT16		usSimilarItem = NOTHING;
+	BOOLEAN fSameItem = FALSE, fSimilarItems = FALSE;
+	UINT16  usSimilarItem = NOTHING;
 
 	if ( !ValidAttachment( usAttachment, pObj->usItem ) )
 	{
@@ -1077,7 +1077,7 @@ bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
 {
 	if (GCM->getItem(usItem)->getItemClass() == IC_GUN && GCM->getItem(usAmmoType)->getItemClass() == IC_AMMO)
 	{
-    return GCM->getWeapon(usItem)->matches(GCM->getItem(usAmmoType)->asAmmo()->calibre);
+		return GCM->getWeapon(usItem)->matches(GCM->getItem(usAmmoType)->asAmmo()->calibre);
 	}
 	return false;
 }
@@ -1191,16 +1191,16 @@ static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UIN
 
 BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 {
-	UINT16	usIgnoreResult;
-	UINT8		ubIgnoreType;
+	UINT16 usIgnoreResult;
+	UINT8  ubIgnoreType;
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &ubIgnoreType ) );
 }
 
 
 UINT8 CalculateObjectWeight(OBJECTTYPE const* const o)
 {
-	const ItemModel * item = GCM->getItem(o->usItem);
-	UINT16         weight = item->getWeight(); // Start with base weight
+	const ItemModel *item  = GCM->getItem(o->usItem);
+	UINT16          weight = item->getWeight(); // Start with base weight
 
 	if (item->getPerPocket() <= 1)
 	{
@@ -1217,8 +1217,8 @@ UINT8 CalculateObjectWeight(OBJECTTYPE const* const o)
 		}
 	}
 
-	/* Make sure it really fits into that UINT8, in case we ever add anything real
-	 * heavy with attachments/ammo */
+	// Make sure it really fits into that UINT8, in case we ever add anything real
+	// heavy with attachments/ammo
 	Assert(weight <= 255);
 	return weight;
 }
@@ -1231,7 +1231,8 @@ UINT32 CalculateCarriedWeight(SOLDIERTYPE const* const s)
 	{
 		UINT16 weight = i->ubWeight;
 		if (GCM->getItem(i->usItem)->getPerPocket() > 1)
-		{ // Account for # of items
+		{
+			// Account for # of items
 			weight *= i->ubNumberOfObjects;
 		}
 		total_weight += weight;
@@ -1243,10 +1244,10 @@ UINT32 CalculateCarriedWeight(SOLDIERTYPE const* const s)
 		strength_for_carrying += strength_for_carrying - 80;
 	}
 
-	/* For now, assume soldiers can carry 1/2 their strength in kg without
-	 * penalty. Instead of multiplying by 100 for percent, and then dividing by 10
-	 * to account for weight units being in 10ths of kilos, not kilos... we just
-	 * start with 10 instead of 100! */
+	// For now, assume soldiers can carry 1/2 their strength in kg without
+	// penalty. Instead of multiplying by 100 for percent, and then dividing by 10
+	// to account for weight units being in 10ths of kilos, not kilos... we just
+	// start with 10 instead of 100!
 	UINT32 const percent = 10 * total_weight / (strength_for_carrying / 2);
 	return percent;
 }
@@ -1356,7 +1357,7 @@ void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 
 void StackObjs(OBJECTTYPE* pSourceObj, OBJECTTYPE* pTargetObj, UINT8 ubNumberToCopy)
 {
-	UINT8		ubLoop;
+	UINT8 ubLoop;
 
 	// copy over N status values
 	for (ubLoop = 0; ubLoop < ubNumberToCopy; ubLoop++)
@@ -1381,8 +1382,8 @@ void CleanUpStack(OBJECTTYPE* const o, OBJECTTYPE* const cursor_o)
 {
 	const ItemModel * item = GCM->getItem(o->usItem);
 	if (!(item->isAmmo()) &&
-			!(item->isKit())  &&
-			!(item->isMedkit()))
+		!(item->isKit())  &&
+		!(item->isMedkit()))
 	{
 		return;
 	}
@@ -1463,22 +1464,22 @@ BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetO
 	}
 }
 
-#define RELOAD_NONE 0
-#define RELOAD_PLACE 1
-#define RELOAD_SWAP 2
-#define RELOAD_TOPOFF 3
-#define RELOAD_AUTOPLACE_OLD 4
+#define RELOAD_NONE		0
+#define RELOAD_PLACE		1
+#define RELOAD_SWAP		2
+#define RELOAD_TOPOFF		3
+#define RELOAD_AUTOPLACE_OLD	4
 
 BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo )
 {
-	OBJECTTYPE	OldAmmo;
-	UINT8				ubBulletsToMove;
-	BOOLEAN			fSameAmmoType;
-	BOOLEAN			fSameMagazineSize;
-	BOOLEAN			fReloadingWithStack;
-	BOOLEAN			fEmptyGun;
-	INT8				bReloadType;
-	UINT16			usNewAmmoItem;
+	OBJECTTYPE OldAmmo;
+	UINT8   ubBulletsToMove;
+	BOOLEAN fSameAmmoType;
+	BOOLEAN fSameMagazineSize;
+	BOOLEAN fReloadingWithStack;
+	BOOLEAN fEmptyGun;
+	INT8    bReloadType;
+	UINT16  usNewAmmoItem;
 
 	if (pGun->usItem == ROCKET_LAUNCHER) return( FALSE ); // IC_GUN but uses no ammo (LAW)
 
@@ -1712,13 +1713,13 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 		// start by erasing ammo item, just in case...
 		DeleteObj( pAmmo );
 
-		pAmmo->ubShotsLeft[0]			= pWeapon->ubGunShotsLeft;
-		pAmmo->usItem							= pWeapon->usGunAmmoItem;
-		pAmmo->ubNumberOfObjects	= 1;
+		pAmmo->ubShotsLeft[0] = pWeapon->ubGunShotsLeft;
+		pAmmo->usItem = pWeapon->usGunAmmoItem;
+		pAmmo->ubNumberOfObjects = 1;
 
-		pWeapon->ubGunShotsLeft		= 0;
-		pWeapon->ubGunAmmoType	  = 0;
-		//pWeapon->usGunAmmoItem		= 0; // leaving the ammo item the same for auto-reloading purposes
+		pWeapon->ubGunShotsLeft = 0;
+		pWeapon->ubGunAmmoType = 0;
+		//pWeapon->usGunAmmoItem = 0; // leaving the ammo item the same for auto-reloading purposes
 
 		// Play some effects!
 		SoundID const usReloadSound = GCM->getWeapon(pWeapon->usItem)->sReloadSound;
@@ -1740,8 +1741,8 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 /*
 BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 {
-	BOOLEAN			fOldAmmo;
-	OBJECTTYPE	OldAmmo;
+	BOOLEAN    fOldAmmo;
+	OBJECTTYPE OldAmmo;
 
 	if (pLauncher->ubGunShotsLeft == 0)
 	{
@@ -1780,8 +1781,7 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 		RemoveObjs( pAmmo, 1 );
 	}
 	return( TRUE );
-}
-*/
+}*/
 
 
 INT8 FindAmmo(const SOLDIERTYPE* s, const CalibreModel * calibre, UINT8 const mag_size, INT8 const exclude_slot)
@@ -1791,7 +1791,7 @@ INT8 FindAmmo(const SOLDIERTYPE* s, const CalibreModel * calibre, UINT8 const ma
 		if (slot == exclude_slot) continue;
 		const ItemModel * item = GCM->getItem(s->inv[slot].usItem);
 		if (!item->isAmmo()) continue;
-    const MagazineModel * m = item->asAmmo();
+		const MagazineModel * m = item->asAmmo();
 		if (m->calibre->index != calibre->index) continue;
 		if (m->capacity != mag_size && mag_size != ANY_MAGSIZE) continue;
 		return slot;
@@ -1802,8 +1802,8 @@ INT8 FindAmmo(const SOLDIERTYPE* s, const CalibreModel * calibre, UINT8 const ma
 
 INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot )
 {
-	const OBJECTTYPE *	pObj;
-	INT8					bSlot;
+	const OBJECTTYPE *pObj;
+	INT8 bSlot;
 
 	if (pSoldier == NULL)
 	{
@@ -1850,9 +1850,9 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 {
-	OBJECTTYPE *	pObj;
-	INT8					bSlot, bAPCost;
-	BOOLEAN				fRet;
+	OBJECTTYPE *pObj;
+	INT8    bSlot, bAPCost;
+	BOOLEAN fRet;
 
 	CHECKF( pSoldier );
 	pObj = &(pSoldier->inv[HANDPOS]);
@@ -1921,10 +1921,10 @@ static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 
 static void PerformAttachmentComboMerge(OBJECTTYPE& o, ComboMergeInfoStruct const& m)
 {
-	/* This object has been validated as available for an attachment combo merge.
-	 * - Find all attachments in list and destroy them
-	 * - Status of new object should be average of items including attachments
-	 * - Change object */
+	// This object has been validated as available for an attachment combo merge.
+	// - Find all attachments in list and destroy them
+	// - Status of new object should be average of items including attachments
+	// - Change object
 	UINT32 total_status          = o.bStatus[0];
 	INT8   n_status_contributors = 1;
 	FOR_EACH(UINT16 const, i, m.usAttachment)
@@ -1961,7 +1961,8 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 			// try replacing if possible
 			attach_pos = FindAttachmentByClass(&target, GCM->getItem(attachment.usItem)->getItemClass());
 			if (attach_pos != NO_SLOT && attachment.ubNumberOfObjects > 1)
-			{ // we can only do a swap if there is only 1 grenade being attached
+			{
+				// we can only do a swap if there is only 1 grenade being attached
 				return false;
 			}
 		}
@@ -1998,7 +1999,8 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 			}
 
 			if (ValidItemAttachment(&target, attachment.usItem, TRUE)) // not launchable
-			{ // Attachment sounds
+			{
+				// Attachment sounds
 				const ItemModel * tgt_item = GCM->getItem(target.usItem);
 				SoundID const  sound    =
 					tgt_item->isWeapon() ? ATTACH_TO_GUN         :
@@ -2016,8 +2018,8 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 		target.bAttachStatus[attach_pos] = attachment.bStatus[0];
 
 		// Transfer any attachment (max 1) from the grenade launcher to the gun
-		if (attachment.usItem          == UNDER_GLAUNCHER &&
-				attachment.usAttachItem[0] != NOTHING)
+		if (attachment.usItem == UNDER_GLAUNCHER &&
+			attachment.usAttachItem[0] != NOTHING)
 		{
 			INT8 const second_attach_pos = FindAttachment(&target, NOTHING);
 			if (second_attach_pos == ITEM_NOT_FOUND)
@@ -2036,7 +2038,8 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 		}
 
 		if (temp_item != NOTHING)
-		{ // overwrite/swap!
+		{
+			// overwrite/swap!
 			CreateItem(temp_item, temp_status, &attachment);
 		}
 		else
@@ -2075,9 +2078,8 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 		{
 			// transfer points...
 			const ItemModel * tgt_item = GCM->getItem(target.usItem);
-			UINT8   const  limit    =
-				tgt_item->getItemClass() == IC_AMMO ? tgt_item->asAmmo()->capacity :
-				100;
+			UINT8 const limit = tgt_item->getItemClass() == IC_AMMO ?
+						tgt_item->asAmmo()->capacity : 100;
 
 			// count down through # of attaching items and add to status of item in position 0
 			for (INT8 bLoop = attachment.ubNumberOfObjects - 1; bLoop >= 0; --bLoop)
@@ -2161,8 +2163,8 @@ default_merge:
 
 BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos, BOOLEAN fDoingPlacement)
 {
-	UINT8					ubSlotLimit;
-	INT8					bNewPos;
+	UINT8 ubSlotLimit;
+	INT8  bNewPos;
 
 	switch( bPos )
 	{
@@ -2285,9 +2287,9 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	// returns object to have in hand after placement... same as original in the
 	// case of error
 
-	UINT8					ubSlotLimit, ubNumberToDrop, ubLoop;
-	OBJECTTYPE *	pInSlot;
-	BOOLEAN				fObjectWasRobotRemote = FALSE;
+	UINT8 ubSlotLimit, ubNumberToDrop, ubLoop;
+	OBJECTTYPE *pInSlot;
+	BOOLEAN fObjectWasRobotRemote = FALSE;
 
 	if ( pObj->usItem == ROBOT_REMOTE_CONTROL )
 	{
@@ -2305,7 +2307,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD2POS ].usItem ) )
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_CANT_USE_TWO_ITEMS], ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD2POS].usItem]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
+					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD2POS].usItem]);
 			return( FALSE );
 		}
 	}
@@ -2313,7 +2316,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD1POS ].usItem ) )
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_CANT_USE_TWO_ITEMS], ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD1POS].usItem]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
+					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD1POS].usItem]);
 			return( FALSE );
 		}
 	}
@@ -2370,7 +2374,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		// replacement/reloading/merging/stacking
 		// keys have an additional check for key ID being the same
-		if ( (pObj->usItem == pInSlot->usItem) && ( GCM->getItem(pObj->usItem)->getItemClass() != IC_KEY || pObj->ubKeyID == pInSlot->ubKeyID ) )
+		if ((pObj->usItem == pInSlot->usItem) && (GCM->getItem(pObj->usItem)->getItemClass() != IC_KEY ||
+			pObj->ubKeyID == pInSlot->ubKeyID))
 		{
 			if (GCM->getItem(pObj->usItem)->getItemClass() == IC_MONEY)
 			{
@@ -2489,8 +2494,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN fNewItem, INT8 bExcludeSlot)
 {
-	INT8			bSlot;
-	UINT8			ubPerSlot;
+	INT8  bSlot;
+	UINT8 ubPerSlot;
 
 	// statuses of extra objects would be 0 if the # exceeds the maximum
 	Assert( pObj->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
@@ -2852,8 +2857,8 @@ BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj )
 
 UINT16 TotalPoints(const OBJECTTYPE* const pObj)
 {
-	UINT16	usPoints = 0;
-	UINT8		ubLoop;
+	UINT16 usPoints = 0;
+	UINT8  ubLoop;
 
 	for (ubLoop = 0; ubLoop < pObj->ubNumberOfObjects; ubLoop++)
 	{
@@ -2864,8 +2869,9 @@ UINT16 TotalPoints(const OBJECTTYPE* const pObj)
 
 
 UINT16 UseKitPoints(OBJECTTYPE& o, UINT16 const original_points, SOLDIERTYPE const& s)
-{ /* Start consuming from the last kit in, so we end up with fewer fuller kits
-	 * rather than lots of half-empty ones. */
+{
+	// Start consuming from the last kit in, so we end up with fewer fuller kits
+	// rather than lots of half-empty ones.
 	UINT16 points = original_points;
 	UINT8& n      = o.ubNumberOfObjects;
 	for (INT8 i = n - 1; i >= 0; --i)
@@ -2877,7 +2883,8 @@ UINT16 UseKitPoints(OBJECTTYPE& o, UINT16 const original_points, SOLDIERTYPE con
 			return original_points;
 		}
 		else
-		{ // Consume this kit totally
+		{
+			// Consume this kit totally
 			points -= status;
 			status  = 0;
 			--n;
@@ -2899,11 +2906,11 @@ UINT16 DefaultMagazine(UINT16 const gun)
 	}
 
 	const WeaponModel * w = GCM->getWeapon(gun);
-  const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-  BOOST_FOREACH(const MagazineModel* mag, magazines)
-  {
+	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+	BOOST_FOREACH(const MagazineModel* mag, magazines)
+	{
 		if (mag->calibre->index == NOAMMO)      break;
-    if (mag->dontUseAsDefaultMagazine) continue;
+		if (mag->dontUseAsDefaultMagazine) continue;
 		if (mag->calibre->index != w->calibre->index) continue;
 		if (mag->capacity != w->ubMagSize) continue;
 		return mag->getItemIndex();
@@ -2916,9 +2923,9 @@ UINT16 DefaultMagazine(UINT16 const gun)
 UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_size, UINT8 const ammo_type)
 {
 	UINT16 default_mag = NOTHING;
-  const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-  BOOST_FOREACH(const MagazineModel* mag, magazines)
-  {
+	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+	BOOST_FOREACH(const MagazineModel* mag, magazines)
+	{
 		if (mag->calibre->index == NOAMMO)   break;
 		if (mag->calibre->index != calibre->index)  continue;
 		if (mag->capacity != mag_size) continue;
@@ -2936,7 +2943,7 @@ UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_siz
 
 UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 const old_ammo_id, const WeaponModel *new_gun)
 {
-  const MagazineModel * old_mag = GCM->getMagazineByItemIndex(old_ammo_id);
+	const MagazineModel * old_mag = GCM->getMagazineByItemIndex(old_ammo_id);
 	if (old_mag->calibre->index != old_gun->calibre->index) return NOTHING;
 	if (old_mag->capacity != old_gun->ubMagSize) return NOTHING;
 	return FindReplacementMagazine(new_gun->calibre, new_gun->ubMagSize, old_mag->ammoType->index);
@@ -2945,8 +2952,8 @@ UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 con
 
 UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 {
-  std::vector<const MagazineModel*> possibleMags;
-	UINT8					ubMagChosen;
+	std::vector<const MagazineModel*> possibleMags;
+	UINT8 ubMagChosen;
 
 	if (!(GCM->getItem(usItem)->isGun()))
 	{
@@ -2956,12 +2963,12 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 	const WeaponModel *pWeapon = GCM->getWeapon(usItem);
 
 	// find & store all possible mag types that fit this gun
-  const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-  BOOST_FOREACH(const MagazineModel* mag, magazines)
-  {
+	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+	BOOST_FOREACH(const MagazineModel* mag, magazines)
+	{
 		if (pWeapon->matches(mag))
 		{
-      possibleMags.push_back(mag);
+			possibleMags.push_back(mag);
 		}
 	}
 
@@ -2972,7 +2979,7 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 	}
 	else if (possibleMags.size() == 1)
 	{
-    // only one match?
+		// only one match?
 		// use that, no choice
 		return possibleMags[0]->getItemIndex();
 	}
@@ -3035,8 +3042,7 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 		{
 			pObj->usAttachItem[0] = DUCKBILL;
 			pObj->bAttachStatus[0] = 100;
-		}
-		*/
+		}*/
 	}
 }
 
@@ -3093,7 +3099,7 @@ void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 
 void CreateItems(UINT16 const usItem, INT8 const bStatus, UINT8 ubNumber, OBJECTTYPE* const pObj)
 {
-	UINT8		ubLoop;
+	UINT8 ubLoop;
 
 	// can't create any more than this, the loop for setting the bStatus[] of others will overwrite memory!
 	Assert( ubNumber <= MAX_OBJECTS_PER_SLOT );
@@ -3218,9 +3224,9 @@ static void RenumberAttachments(OBJECTTYPE* pObj)
 {
 	// loop through attachment positions and make sure we don't have any empty
 	// attachment slots before filled ones
-	INT8			bAttachPos;
-	INT8			bFirstSpace;
-	BOOLEAN		fDone = FALSE;
+	INT8 bAttachPos;
+	INT8 bFirstSpace;
+	BOOLEAN fDone = FALSE;
 
 	while (!fDone)
 	{
@@ -3260,7 +3266,7 @@ static void RenumberAttachments(OBJECTTYPE* pObj)
 
 BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj )
 {
-	INT8		bGrenade;
+	INT8 bGrenade;
 
 	CHECKF( pObj );
 
@@ -3313,19 +3319,19 @@ void SetNewItem(SOLDIERTYPE* pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem)
 {
 	if( fNewItem )
 	{
-		pSoldier->bNewItemCount[ ubInvPos ]						 = -1;
-		pSoldier->bNewItemCycleCount[ ubInvPos ]			 = NEW_ITEM_CYCLE_COUNT;
-		pSoldier->fCheckForNewlyAddedItems             = TRUE;
+		pSoldier->bNewItemCount[ ubInvPos ] = -1;
+		pSoldier->bNewItemCycleCount[ ubInvPos ] = NEW_ITEM_CYCLE_COUNT;
+		pSoldier->fCheckForNewlyAddedItems = TRUE;
 	}
 }
 
 
 BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 {
-	INT8				bLoop, bLoop2;
-	UINT16			usItem;
-	INT8				bStatus;
-	BOOLEAN			fReturnVal = FALSE;
+	INT8    bLoop, bLoop2;
+	UINT16  usItem;
+	INT8    bStatus;
+	BOOLEAN fReturnVal = FALSE;
 
 	usItem	= pObject->usItem;
 	bStatus = pObject->bStatus[0];
@@ -3445,10 +3451,10 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 
 void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 {
-	//INT8						bSlot;
-	OBJECTTYPE			Object;
-	//SOLDIERTYPE *		pSoldier;
-	BOOLEAN					fRet;
+	//INT8 bSlot;
+	OBJECTTYPE Object;
+	//SOLDIERTYPE *pSoldier;
+	BOOLEAN fRet;
 
 	// remove all money from soldier
 	do
@@ -3501,7 +3507,7 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 
 static INT8 CheckItemForDamage(UINT16 usItem, INT32 iMaxDamage)
 {
-	INT8	bDamage = 0;
+	INT8 bDamage = 0;
 
 	// if the item is protective armour, reduce the amount of damage
 	// by its armour value
@@ -3555,8 +3561,8 @@ static BOOLEAN CheckForChainReaction(UINT16 usItem, INT8 bStatus, INT8 bDamage, 
 
 static BOOLEAN DamageItem(OBJECTTYPE* pObject, INT32 iDamage, BOOLEAN fOnGround)
 {
-	INT8		bLoop;
-	INT8		bDamage;
+	INT8 bLoop;
+	INT8 bDamage;
 
 	if ( (GCM->getItem(pObject->usItem)->getFlags() & ITEM_DAMAGEABLE || GCM->getItem(pObject->usItem)->getItemClass() == IC_AMMO) && pObject->ubNumberOfObjects > 0)
 	{
@@ -3641,8 +3647,8 @@ static BOOLEAN DamageItem(OBJECTTYPE* pObject, INT32 iDamage, BOOLEAN fOnGround)
 
 void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 {
-	BOOLEAN			fBlowsUp;
-	UINT8				ubNumberOfObjects;
+	BOOLEAN fBlowsUp;
+	UINT8   ubNumberOfObjects;
 
 	if ( TANK( pSoldier ) )
 	{
@@ -3674,8 +3680,8 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 {
 	// glass jars etc can be damaged by falling over
-	UINT8				ubNumberOfObjects;
-	BOOLEAN			fPlayedGlassBreak = FALSE;
+	UINT8   ubNumberOfObjects;
+	BOOLEAN fPlayedGlassBreak = FALSE;
 
 	FOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
@@ -3704,7 +3710,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 
 BOOLEAN DamageItemOnGround(OBJECTTYPE* const pObject, const INT16 sGridNo, const INT8 bLevel, const INT32 iDamage, SOLDIERTYPE* const owner)
 {
-	BOOLEAN			fBlowsUp;
+	BOOLEAN fBlowsUp;
 
 	fBlowsUp = DamageItem( pObject, iDamage, TRUE );
 	if ( fBlowsUp )
@@ -3734,7 +3740,7 @@ BOOLEAN IsMedicalKitItem(const OBJECTTYPE* pObject)
 
 void SwapHandItems( SOLDIERTYPE * pSoldier )
 {
-	BOOLEAN		fOk;
+	BOOLEAN fOk;
 
 	CHECKV( pSoldier );
 	if (pSoldier->inv[HANDPOS].usItem == NOTHING || pSoldier->inv[SECONDHANDPOS].usItem == NOTHING)
@@ -3764,8 +3770,8 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 void WaterDamage(SOLDIERTYPE& s)
 {
 	// damage guy's equipment and camouflage due to water
-	INT8		bDamage, bDieSize;
-	UINT32	uiRoll;
+	INT8   bDamage, bDieSize;
+	UINT32 uiRoll;
 
 	if (s.bOverTerrainType == DEEP_WATER)
 	{
@@ -3834,10 +3840,10 @@ void WaterDamage(SOLDIERTYPE& s)
 
 BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* const pfGoodAPs)
 {
-	INT8		bPointsToUse;
-	UINT16	usTotalKitPoints;
+	INT8   bPointsToUse;
+	UINT16 usTotalKitPoints;
 
-  (*pfGoodAPs) = TRUE;
+	(*pfGoodAPs) = TRUE;
 
 	if (pObj->usItem != CAMOUFLAGEKIT)
 	{
@@ -3846,7 +3852,7 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 
 	if (!EnoughPoints( pSoldier, AP_CAMOFLAGE, 0, TRUE ) )
 	{
-    (*pfGoodAPs) = FALSE;
+		(*pfGoodAPs) = FALSE;
 		return( TRUE );
 	}
 
@@ -3884,10 +3890,10 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 
 BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
 {
-	INT16		sPointsToUse;
-	UINT16	usTotalKitPoints;
+	INT16  sPointsToUse;
+	UINT16 usTotalKitPoints;
 
-  (*pfGoodAPs) = TRUE;
+	(*pfGoodAPs) = TRUE;
 
 	if (pObj->usItem != CANTEEN)
 	{
@@ -3903,21 +3909,21 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 
 	if (!EnoughPoints( pSoldier, AP_DRINK, 0, TRUE ) )
 	{
-    (*pfGoodAPs) = FALSE;
+		(*pfGoodAPs) = FALSE;
 		return( TRUE );
 	}
 
-  if ( pSoldier->bTeam == OUR_TEAM )
-  {
-    if ( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
-    {
-		  PlayJA2Sample(DRINK_CANTEEN_MALE, MIDVOLUME, 1, MIDDLEPAN);
-    }
-    else
-    {
-		  PlayJA2Sample(DRINK_CANTEEN_FEMALE, MIDVOLUME, 1, MIDDLEPAN);
-    }
-  }
+	if ( pSoldier->bTeam == OUR_TEAM )
+	{
+		if ( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
+		{
+			PlayJA2Sample(DRINK_CANTEEN_MALE, MIDVOLUME, 1, MIDDLEPAN);
+		}
+		else
+		{
+			PlayJA2Sample(DRINK_CANTEEN_FEMALE, MIDVOLUME, 1, MIDDLEPAN);
+		}
+	}
 
 	sPointsToUse = __min( 20, usTotalKitPoints );
 
@@ -3933,10 +3939,10 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 
 BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
 {
-	INT16		sPointsToUse;
-	UINT16	usTotalKitPoints;
+	INT16  sPointsToUse;
+	UINT16 usTotalKitPoints;
 
-  (*pfGoodAPs) = TRUE;
+	(*pfGoodAPs) = TRUE;
 
 	if (pObj->usItem != JAR_ELIXIR )
 	{
@@ -3952,7 +3958,7 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 
 	if (!EnoughPoints( pSoldier, AP_CAMOFLAGE, 0, TRUE ) )
 	{
-    (*pfGoodAPs) = FALSE;
+		(*pfGoodAPs) = FALSE;
 		return( TRUE );
 	}
 
@@ -3987,7 +3993,7 @@ bool ItemIsCool(OBJECTTYPE const& o)
 
 void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 {
-	INT8					bBatteries;
+	INT8 bBatteries;
 
 	// check for batteries
 	bBatteries = FindAttachment( &(pSoldier->inv[HANDPOS]), BATTERIES );
@@ -4023,7 +4029,7 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 	{
 		SOLDIERTYPE* const tgt = *i;
 		if (tgt->bTeam != pSoldier->bTeam &&
-				PythSpacesAway(pSoldier->sGridNo, tgt->sGridNo) < XRAY_RANGE)
+			PythSpacesAway(pSoldier->sGridNo, tgt->sGridNo) < XRAY_RANGE)
 		{
 			tgt->ubMiscSoldierFlags |= SOLDIER_MISC_XRAYED;
 			tgt->xrayed_by           = pSoldier;
@@ -4045,7 +4051,7 @@ void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 	{
 		SOLDIERTYPE* const tgt = *i;
 		if (tgt->ubMiscSoldierFlags &  SOLDIER_MISC_XRAYED &&
-				tgt->xrayed_by          == pSoldier)
+			tgt->xrayed_by == pSoldier)
 		{
 			tgt->ubMiscSoldierFlags &= ~SOLDIER_MISC_XRAYED;
 			tgt->xrayed_by           = NULL;
@@ -4057,7 +4063,6 @@ void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 
 bool HasObjectImprint(OBJECTTYPE const& o)
 {
-	return
-		(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
+	return (o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
 		o.ubImprintID != NO_PROFILE;
 }

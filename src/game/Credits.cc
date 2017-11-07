@@ -33,63 +33,63 @@ struct CRDT_NODE
 };
 
 //flags for the credits
-#define		CRDT_FLAG__TITLE							0x00000001
-#define		CRDT_FLAG__START_SECTION			0x00000002
-#define		CRDT_FLAG__END_SECTION				0x00000004
+#define CRDT_FLAG__TITLE		0x00000001
+#define CRDT_FLAG__START_SECTION	0x00000002
+#define CRDT_FLAG__END_SECTION		0x00000004
 
 
-#define CRDT_NAME_OF_CREDIT_FILE BINARYDATADIR "/credits.edt"
+#define CRDT_NAME_OF_CREDIT_FILE	BINARYDATADIR "/credits.edt"
 
-#define CREDITS_LINESIZE 80
+#define CREDITS_LINESIZE		80
 
 
 //
 // Code tokens
 //
 //new codes:
-#define CRDT_START_CODE      L'@'
-#define CRDT_SEPARATION_CODE L','
-#define CRDT_END_CODE        L';'
+#define CRDT_START_CODE		L'@'
+#define CRDT_SEPARATION_CODE		L','
+#define CRDT_END_CODE			L';'
 
-#define		CRDT_DELAY_BN_STRINGS_CODE			'D'
-#define		CRDT_DELAY_BN_SECTIONS_CODE			'B'
-#define		CRDT_SCROLL_SPEED								'S'
-#define		CRDT_FONT_JUSTIFICATION					'J'
-#define		CRDT_TITLE_FONT_COLOR						'C'
-#define		CRDT_ACTIVE_FONT_COLOR					'R'
+#define CRDT_DELAY_BN_STRINGS_CODE	'D'
+#define CRDT_DELAY_BN_SECTIONS_CODE	'B'
+#define CRDT_SCROLL_SPEED		'S'
+#define CRDT_FONT_JUSTIFICATION	'J'
+#define CRDT_TITLE_FONT_COLOR		'C'
+#define CRDT_ACTIVE_FONT_COLOR		'R'
 
 //Flags:
-#define		CRDT_TITLE											'T'
-#define		CRDT_START_OF_SECTION						'{'
-#define		CRDT_END_OF_SECTION							'}'
+#define CRDT_TITLE			'T'
+#define CRDT_START_OF_SECTION		'{'
+#define CRDT_END_OF_SECTION		'}'
 
 
-#define		CRDT_NAME_LOC_X										(375 + STD_SCREEN_X)
-#define		CRDT_NAME_LOC_Y										(420 + STD_SCREEN_Y)
-#define		CRDT_NAME_TITLE_LOC_Y							(435 + STD_SCREEN_Y)
-#define		CRDT_NAME_FUNNY_LOC_Y							(450 + STD_SCREEN_Y)
-#define		CRDT_NAME_LOC_WIDTH								260
-#define		CRDT_NAME_LOC_HEIGHT							( CRDT_NAME_FUNNY_LOC_Y - CRDT_NAME_LOC_Y + GetFontHeight( CRDT_NAME_FONT ) )
+#define CRDT_NAME_LOC_X		(375 + STD_SCREEN_X)
+#define CRDT_NAME_LOC_Y		(420 + STD_SCREEN_Y)
+#define CRDT_NAME_TITLE_LOC_Y		(435 + STD_SCREEN_Y)
+#define CRDT_NAME_FUNNY_LOC_Y		(450 + STD_SCREEN_Y)
+#define CRDT_NAME_LOC_WIDTH		260
+#define CRDT_NAME_LOC_HEIGHT		( CRDT_NAME_FUNNY_LOC_Y - CRDT_NAME_LOC_Y + GetFontHeight( CRDT_NAME_FONT ) )
 
-#define		CRDT_NAME_FONT										FONT12ARIAL
-
-
-#define		CRDT_WIDTH_OF_TEXT_AREA					210
-#define		CRDT_TEXT_START_LOC							(10 + STD_SCREEN_X)
+#define CRDT_NAME_FONT			FONT12ARIAL
 
 
-#define		CRDT_SCROLL_PIXEL_AMOUNT				1
-#define		CRDT_NODE_DELAY_AMOUNT					25
+#define CRDT_WIDTH_OF_TEXT_AREA	210
+#define CRDT_TEXT_START_LOC		(10 + STD_SCREEN_X)
 
-#define		CRDT_SPACE_BN_SECTIONS					50
-#define		CRDT_SPACE_BN_NODES							12
 
-#define CRDT_START_POS_Y        (SCREEN_HEIGHT - 1 - STD_SCREEN_Y)
+#define CRDT_SCROLL_PIXEL_AMOUNT	1
+#define CRDT_NODE_DELAY_AMOUNT		25
 
-#define		CRDT_EYE_WIDTH									30
-#define		CRDT_EYE_HEIGHT									12
+#define CRDT_SPACE_BN_SECTIONS		50
+#define CRDT_SPACE_BN_NODES		12
 
-#define		CRDT_EYES_CLOSED_TIME						150
+#define CRDT_START_POS_Y		(SCREEN_HEIGHT - 1 - STD_SCREEN_Y)
+
+#define CRDT_EYE_WIDTH			30
+#define CRDT_EYE_HEIGHT		12
+
+#define CRDT_EYES_CLOSED_TIME		150
 
 
 struct CreditFace
@@ -297,7 +297,7 @@ static void HandleCreditScreen(void)
 
 static void RenderCreditScreen(void)
 {
-  BltVideoObject(FRAME_BUFFER, guiCreditBackGroundImage, 0, STD_SCREEN_X, STD_SCREEN_Y);
+	BltVideoObject(FRAME_BUFFER, guiCreditBackGroundImage, 0, STD_SCREEN_X, STD_SCREEN_Y);
 	InvalidateScreen();
 }
 
@@ -579,7 +579,7 @@ static void HandleCreditEyeBlinking()
 
 TEST(Credits, asserts)
 {
-  EXPECT_EQ(lengthof(gCreditFaces), NUM_PEOPLE_IN_CREDITS);
+	EXPECT_EQ(lengthof(gCreditFaces), NUM_PEOPLE_IN_CREDITS);
 }
 
 #endif

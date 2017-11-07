@@ -335,7 +335,7 @@ void PrepareSchedulesForEditorExit()
 void LoadSchedules(HWFILE const f)
 {
 	/* Delete all the schedules we might have loaded (though we shouldn't have any
-	 * loaded!) */
+		* loaded!) */
 	if (gpScheduleList) DestroyAllSchedules();
 
 	UINT8 n_schedules;
@@ -584,8 +584,8 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 
 	SOLDIERTYPE* const pSoldier = pSchedule->soldier;
 
-  if(GameState::getInstance()->isEditorMode())
-  {
+	if(GameState::getInstance()->isEditorMode())
+	{
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
 				SLOGD(DEBUG_TAG_SCHEDULER, "Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
@@ -609,7 +609,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 				pSchedule->usTime[ index ] % 60,
 				pSchedule->usData1[ index ]);
 		}
-  }
+	}
 
 	// always assume the merc is going to wake, unless the event is a sleep
 	pSoldier->fAIFlags &= ~(AI_ASLEEP);
@@ -935,7 +935,7 @@ void PostSchedules()
 	#endif
 	//If no way to leave the map, then don't post default schedules.
 	if( gMapInformation.sNorthGridNo != -1 || gMapInformation.sEastGridNo != -1 ||
-		  gMapInformation.sSouthGridNo != -1 || gMapInformation.sWestGridNo != -1 )
+		gMapInformation.sSouthGridNo != -1 || gMapInformation.sWestGridNo != -1 )
 	{
 		fDefaultSchedulesPossible = TRUE;
 	}
@@ -951,11 +951,11 @@ void PostSchedules()
 			{
 				// ATE: There should be a better way here...
 				if( curr->pSoldier->ubBodyType != COW &&
-						curr->pSoldier->ubBodyType != BLOODCAT &&
-						curr->pSoldier->ubBodyType != HUMVEE &&
-					  curr->pSoldier->ubBodyType != ELDORADO &&
-					  curr->pSoldier->ubBodyType != ICECREAMTRUCK &&
-					  curr->pSoldier->ubBodyType != JEEP )
+					curr->pSoldier->ubBodyType != BLOODCAT &&
+					curr->pSoldier->ubBodyType != HUMVEE &&
+					curr->pSoldier->ubBodyType != ELDORADO &&
+					curr->pSoldier->ubBodyType != ICECREAMTRUCK &&
+					curr->pSoldier->ubBodyType != JEEP )
 				{
 					PostDefaultSchedule( curr->pSoldier );
 				}

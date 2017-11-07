@@ -5,28 +5,28 @@
 
 
 // DEFINES FOR ANIMATION PROFILES
-#define		TILE_FLAG_FEET					0x0001
-#define		TILE_FLAG_MID						0x0002
-#define		TILE_FLAG_HEAD					0x0004
-#define		TILE_FLAG_CANMOVE				0x0008
-#define		TILE_FLAG_NORTH_HALF		0x0010
-#define		TILE_FLAG_SOUTH_HALF		0x0020
-#define		TILE_FLAG_WEST_HALF			0x0040
-#define		TILE_FLAG_EAST_HALF			0x0080
-#define		TILE_FLAG_TOP_HALF			0x0100
-#define		TILE_FLAG_BOTTOM_HALF		0x0200
+#define TILE_FLAG_FEET			0x0001
+#define TILE_FLAG_MID			0x0002
+#define TILE_FLAG_HEAD			0x0004
+#define TILE_FLAG_CANMOVE		0x0008
+#define TILE_FLAG_NORTH_HALF		0x0010
+#define TILE_FLAG_SOUTH_HALF		0x0020
+#define TILE_FLAG_WEST_HALF		0x0040
+#define TILE_FLAG_EAST_HALF		0x0080
+#define TILE_FLAG_TOP_HALF		0x0100
+#define TILE_FLAG_BOTTOM_HALF		0x0200
 
-#define		ANIM_DATA_FLAG_NOFRAMES	0x01
+#define ANIM_DATA_FLAG_NOFRAMES	0x01
 
 
 // BODY TYPES
 // RGM = Regular Male
 // (RG) = Body desc ( Regular - RG, Short Stocky ( SS ), etc
 // (M) = Sex, Male, female
-#define	IS_MERC_BODY_TYPE(p) ((p)->ubBodyType <= REGFEMALE)
-#define IS_CIV_BODY_TYPE(p)  (FATCIV <= (p)->ubBodyType && (p)->ubBodyType <= CRIPPLECIV)
+#define IS_MERC_BODY_TYPE(p)		((p)->ubBodyType <= REGFEMALE)
+#define IS_CIV_BODY_TYPE(p)		(FATCIV <= (p)->ubBodyType && (p)->ubBodyType <= CRIPPLECIV)
 
-#define NUMSOLDIERBODYTYPES	4
+#define NUMSOLDIERBODYTYPES		4
 
 enum SoldierBodyType
 {
@@ -63,7 +63,7 @@ enum SoldierBodyType
 	ICECREAMTRUCK,
 	JEEP,
 
-  TOTALBODYTYPES
+	TOTALBODYTYPES
 };
 
 

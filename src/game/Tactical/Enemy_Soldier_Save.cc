@@ -55,8 +55,8 @@ void LoadEnemySoldiersFromTempFile()
 	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
 	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
-	/* STEP TWO: Determine whether or not we should use this data.  Because it
-	 * is the demo, it is automatically used. */
+	// STEP TWO: Determine whether or not we should use this data.  Because it
+	// is the demo, it is automatically used.
 
 	INT16 saved_y;
 	FileRead(f, &saved_y, 2);
@@ -91,7 +91,8 @@ void LoadEnemySoldiersFromTempFile()
 	}
 
 	if (GetWorldTotalMin() > timestamp + 300)
-	{ // The file has aged.  Use the regular method for adding soldiers.
+	{
+		// The file has aged.  Use the regular method for adding soldiers.
 		f.Deallocate(); // Close the file before deleting it
 		RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
@@ -99,26 +100,30 @@ void LoadEnemySoldiersFromTempFile()
 	}
 
 	if (slots == 0)
-	{ /* No need to restore the enemy's to the map.  This means we are restoring
-		 * a saved game. */
+	{
+		// No need to restore the enemy's to the map.  This means we are restoring
+		// a saved game.
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
 	}
 
 	if (slots < 0 || 64 <= slots)
-	{ //bad IO!
+	{
+		//bad IO!
 		throw std::runtime_error("Invalid slot count");
 	}
 
-	/* For all the enemy (enemy/creature) and civilian slots, clear the
-	 * fPriorityExistance flag.  We will use these flags to determine which
-	 * slots have been modified as we load the data into the map pristine
-	 * soldier init list. */
+	// For all the enemy (enemy/creature) and civilian slots, clear the
+	// fPriorityExistance flag.  We will use these flags to determine which
+	// slots have been modified as we load the data into the map pristine
+	// soldier init list.
 	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-		if (!bp->fPriorityExistance) continue;
-		if (bp->bTeam != ENEMY_TEAM && bp->bTeam != CREATURE_TEAM && bp->bTeam != CIV_TEAM) continue;
+		if (!bp->fPriorityExistance)
+			continue;
+		if (bp->bTeam != ENEMY_TEAM && bp->bTeam != CREATURE_TEAM && bp->bTeam != CIV_TEAM)
+			continue;
 		bp->fPriorityExistance = FALSE;
 	}
 
@@ -134,9 +139,9 @@ void LoadEnemySoldiersFromTempFile()
 		{
 			throw std::runtime_error("Missing underground sector info");
 		}
-		ubStrategicElites		 = pSector->ubNumElites;
-		ubStrategicTroops		 = pSector->ubNumTroops;
-		ubStrategicAdmins		 = pSector->ubNumAdmins;
+		ubStrategicElites = pSector->ubNumElites;
+		ubStrategicTroops = pSector->ubNumTroops;
+		ubStrategicAdmins = pSector->ubNumAdmins;
 		ubStrategicCreatures = pSector->ubNumCreatures;
 	}
 	else
@@ -153,26 +158,30 @@ void LoadEnemySoldiersFromTempFile()
 	for (INT32 i = 0; i < slots; ++i)
 	{
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-    UINT16 saved_checksum;
+		UINT16 saved_checksum;
 		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-			if (bp->fPriorityExistance) continue;
-			if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
+			if (bp->fPriorityExistance)
+				continue;
+			if (bp->bTeam != tempDetailedPlacement.bTeam)
+				continue;
 
 			SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
-			if (dp && dp->ubProfile != NO_PROFILE) continue;
+			if (dp && dp->ubProfile != NO_PROFILE)
+				continue;
 
 			bp->fPriorityExistance = TRUE;
 
 			if (!dp)
-			{ // Need to upgrade the placement to detailed placement
+			{
+				// Need to upgrade the placement to detailed placement
 				dp = MALLOC(SOLDIERCREATE_STRUCT);
 				curr->pDetailedPlacement = dp;
 			}
-			/* Now replace the map pristine placement info with the temp map file
-			 * version. */
+			// Now replace the map pristine placement info with the temp map file
+			// version.
 			*dp = tempDetailedPlacement;
 
 			bp->fPriorityExistance = TRUE;
@@ -191,26 +200,32 @@ void LoadEnemySoldiersFromTempFile()
 			// Verify the checksum equation (anti-hack) -- see save
 			UINT16 const checksum = CalcSoldierCreateCheckSum(dp);
 			if (saved_checksum != checksum)
-			{	// Hacker has modified the stats on the enemy placements.
+			{
+				// Hacker has modified the stats on the enemy placements.
 				throw std::runtime_error("Invalid checksum for placement");
 			}
 
 			if (bp->bTeam != CIV_TEAM)
 			{
 				switch (bp->ubSoldierClass)
-				{ /* Add preserved placements as long as they don't exceed the actual
-					 * population. */
+				{
+					// Add preserved placements as long as they don't exceed the actual
+					// population.
 					case SOLDIER_CLASS_ELITE:
-						if (++ubNumElites >= ubStrategicElites) goto no_add;
+						if (++ubNumElites >= ubStrategicElites)
+							goto no_add;
 						break;
 					case SOLDIER_CLASS_ARMY:
-						if (++ubNumTroops >= ubStrategicTroops) goto no_add;
+						if (++ubNumTroops >= ubStrategicTroops)
+							goto no_add;
 						break;
 					case SOLDIER_CLASS_ADMINISTRATOR:
-						if (++ubNumAdmins >= ubStrategicAdmins) goto no_add;
+						if (++ubNumAdmins >= ubStrategicAdmins)
+							goto no_add;
 						break;
 					case SOLDIER_CLASS_CREATURE:
-						if (++ubNumCreatures >= ubStrategicCreatures) goto no_add;
+						if (++ubNumCreatures >= ubStrategicCreatures)
+							goto no_add;
 						break;
 					default:
 						goto no_add;
@@ -231,8 +246,8 @@ no_add:
 
 	// Now add any extra enemies that have arrived since the temp file was made.
 	if (ubStrategicTroops > ubNumTroops ||
-			ubStrategicElites > ubNumElites ||
-			ubStrategicAdmins > ubNumAdmins)
+		ubStrategicElites > ubNumElites ||
+		ubStrategicAdmins > ubNumAdmins)
 	{
 		ubStrategicTroops = ubStrategicTroops > ubNumTroops ? ubStrategicTroops - ubNumTroops : 0;
 		ubStrategicElites = ubStrategicElites > ubNumElites ? ubStrategicElites - ubNumElites : 0;
@@ -258,8 +273,8 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	INT16 const y = gWorldSectorY;
 	INT8  const z = gbWorldSectorZ;
 
-	/* Count the number of enemies (elites, regulars, admins and creatures) that
-	 * are in the temp file. */
+	// Count the number of enemies (elites, regulars, admins and creatures) that
+	// are in the temp file.
 	UNDERGROUND_SECTORINFO const* underground_info = NULL;
 	UINT8                         ubNumElites      = 0;
 	UINT8                         ubNumTroops      = 0;
@@ -287,10 +302,10 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 		// Get the number of enemies form the temp file
 		CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(&ubStrategicElites, &ubStrategicTroops, &ubStrategicAdmins, &ubStrategicCreatures);
 		// If any of the counts differ from what is in memory
-		if (ubStrategicElites    != ubNumElites ||
-				ubStrategicTroops    != ubNumTroops ||
-				ubStrategicAdmins    != ubNumAdmins ||
-				ubStrategicCreatures != ubNumCreatures)
+		if (ubStrategicElites != ubNumElites ||
+			ubStrategicTroops != ubNumTroops ||
+			ubStrategicAdmins != ubNumAdmins ||
+			ubStrategicCreatures != ubNumCreatures)
 		{
 			RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
 			return;
@@ -308,8 +323,8 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
 	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
-	/* STEP TWO:  Determine whether or not we should use this data.  Because it
-	 * is the demo, it is automatically used. */
+	// STEP TWO:  Determine whether or not we should use this data.  Because it
+	// is the demo, it is automatically used.
 
 	INT16 saved_y;
 	FileRead(f, &saved_y, 2);
@@ -344,7 +359,8 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 
 	if (GetWorldTotalMin() > timestamp + 300)
-	{ // The file has aged.  Use the regular method for adding soldiers.
+	{
+		// The file has aged.  Use the regular method for adding soldiers.
 		f.Deallocate(); // Close the file before deleting it
 		RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
@@ -352,34 +368,38 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 
 	if (slots == 0)
-	{ /* no need to restore the enemy's to the map.  This means we are restoring
-		 * a saved game. */
+	{
+		// no need to restore the enemy's to the map.  This means we are restoring
+		// a saved game.
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
 	}
 
 	if (slots < 0 || 64 <= slots)
-	{ //bad IO!
+	{
+		//bad IO!
 		throw std::runtime_error("Invalid slot count");
 	}
 
-	/* For all the enemy slots (enemy/creature), clear the fPriorityExistance
-	 * flag.  We will use these flags to determine which slots have been
-	 * modified as we load the data into the map pristine soldier init list. */
+	// For all the enemy slots (enemy/creature), clear the fPriorityExistance
+	// flag.  We will use these flags to determine which slots have been
+	// modified as we load the data into the map pristine soldier init list.
 	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-		if (!bp->fPriorityExistance)                               continue;
-		if (bp->bTeam != ENEMY_TEAM && bp->bTeam != CREATURE_TEAM) continue;
+		if (!bp->fPriorityExistance)
+			continue;
+		if (bp->bTeam != ENEMY_TEAM && bp->bTeam != CREATURE_TEAM)
+			continue;
 		bp->fPriorityExistance = FALSE;
 	}
 
 	// Get the number of enemies in this sector.
 	if (z != 0)
 	{
-		ubStrategicElites		 = underground_info->ubNumElites;
-		ubStrategicTroops		 = underground_info->ubNumTroops;
-		ubStrategicAdmins		 = underground_info->ubNumAdmins;
+		ubStrategicElites = underground_info->ubNumElites;
+		ubStrategicTroops = underground_info->ubNumTroops;
+		ubStrategicAdmins = underground_info->ubNumAdmins;
 		ubStrategicCreatures = underground_info->ubNumCreatures;
 	}
 	else
@@ -391,24 +411,27 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	for (INT32 i = 0; i != slots; ++i)
 	{
-    UINT16 saved_checksum;
+		UINT16 saved_checksum;
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
 		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-			if (bp->fPriorityExistance)                   continue;
-			if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
+			if (bp->fPriorityExistance)
+				continue;
+			if (bp->bTeam != tempDetailedPlacement.bTeam)
+				continue;
 
 			bp->fPriorityExistance = TRUE;
 			SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
 			if (!dp)
-			{ // Need to upgrade the placement to detailed placement
+			{
+				// Need to upgrade the placement to detailed placement
 				dp = MALLOC(SOLDIERCREATE_STRUCT);
 				curr->pDetailedPlacement = dp;
 			}
-			/* Now replace the map pristine placement info with the temp map file
-			 * version. */
+			// Now replace the map pristine placement info with the temp map file
+			// version.
 			*dp = tempDetailedPlacement;
 
 			bp->fPriorityExistance  =  TRUE;
@@ -427,18 +450,27 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			// verify the checksum equation (anti-hack) -- see save
 			UINT16 const checksum = CalcSoldierCreateCheckSum(dp);
 			if (saved_checksum != checksum)
-			{	// Hacker has modified the stats on the enemy placements.
+			{
+				// Hacker has modified the stats on the enemy placements.
 				throw std::runtime_error("Invalid checksum for placement");
 			}
 
-			/* Add preserved placements as long as they don't exceed the actual
-			 * population. */
+			// Add preserved placements as long as they don't exceed the actual
+			// population.
 			switch (bp->ubSoldierClass)
 			{
-				case SOLDIER_CLASS_ELITE:         ++ubNumElites;    break;
-				case SOLDIER_CLASS_ARMY:          ++ubNumTroops;    break;
-				case SOLDIER_CLASS_ADMINISTRATOR: ++ubNumAdmins;    break;
-				case SOLDIER_CLASS_CREATURE:      ++ubNumCreatures; break;
+				case SOLDIER_CLASS_ELITE:
+					++ubNumElites;
+					break;
+				case SOLDIER_CLASS_ARMY:
+					++ubNumTroops;
+					break;
+				case SOLDIER_CLASS_ADMINISTRATOR:
+					++ubNumAdmins;
+					break;
+				case SOLDIER_CLASS_CREATURE:
+					++ubNumCreatures;
+					break;
 			}
 			break;
 		}
@@ -453,8 +485,8 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	//now add any extra enemies that have arrived since the temp file was made.
 	if (ubStrategicTroops > ubNumTroops ||
-			ubStrategicElites > ubNumElites ||
-			ubStrategicAdmins > ubNumAdmins)
+		ubStrategicElites > ubNumElites ||
+		ubStrategicAdmins > ubNumAdmins)
 	{
 		ubStrategicTroops = ubStrategicTroops > ubNumTroops ? ubStrategicTroops - ubNumTroops : 0;
 		ubStrategicElites = ubStrategicElites > ubNumElites ? ubStrategicElites - ubNumElites : 0;
@@ -477,8 +509,8 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
 	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
-	/* STEP TWO:  Determine whether or not we should use this data.  Because it
-	 * is the demo, it is automatically used. */
+	// STEP TWO:  Determine whether or not we should use this data.  Because it
+	// is the demo, it is automatically used.
 
 	INT16 saved_y;
 	FileRead(f, &saved_y, 2);
@@ -514,8 +546,9 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	}
 
 	if (slots == 0)
-	{ /* No need to restore the civilians to the map.  This means we are
-		 * restoring a saved game. */
+	{
+		// No need to restore the civilians to the map.  This means we are
+		// restoring a saved game.
 		gfRestoringCiviliansFromTempFile = FALSE;
 		return;
 	}
@@ -525,9 +558,9 @@ void NewWayOfLoadingCiviliansFromTempFile()
 		throw std::runtime_error("Invalid slot count");
 	}
 
-	/* For all the civilian slots, clear the fPriorityExistance flag.  We will
-	 * use these flags to determine which slots have been modified as we load
-	 * the data into the map pristine soldier init list. */
+	// For all the civilian slots, clear the fPriorityExistance flag.  We will
+	// use these flags to determine which slots have been modified as we load
+	// the data into the map pristine soldier init list.
 	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
@@ -539,26 +572,30 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	for (INT32 i = 0; i != slots; ++i)
 	{
-    UINT16 saved_checksum;
+		UINT16 saved_checksum;
 		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-			if (bp->fPriorityExistance)                   continue;
-			if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
+			if (bp->fPriorityExistance)
+				continue;
+			if (bp->bTeam != tempDetailedPlacement.bTeam)
+				continue;
 
 			SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
-			if (dp && dp->ubProfile != NO_PROFILE) continue;
+			if (dp && dp->ubProfile != NO_PROFILE)
+				continue;
 
 			bp->fPriorityExistance = TRUE;
 
 			if (!dp)
-			{ // Need to upgrade the placement to detailed placement
+			{
+				// Need to upgrade the placement to detailed placement
 				dp = MALLOC(SOLDIERCREATE_STRUCT);
 				curr->pDetailedPlacement = dp;
 			}
-			/* Now replace the map pristine placement info with the temp map file
-			 * version. */
+			// Now replace the map pristine placement info with the temp map file
+			// version.
 			*dp = tempDetailedPlacement;
 
 			bp->fPriorityExistance = TRUE;
@@ -577,17 +614,20 @@ void NewWayOfLoadingCiviliansFromTempFile()
 			// Verify the checksum equation (anti-hack) -- see save
 			UINT16 const checksum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 			if (saved_checksum != checksum)
-			{ // Hacker has modified the stats on the civilian placements.
+			{
+				// Hacker has modified the stats on the civilian placements.
 				throw std::runtime_error("Invalid checksum for placement");
 			}
 
 			if (dp->bLife < dp->bLifeMax)
-			{ // Add 4 life for every hour that passes.
+			{
+				// Add 4 life for every hour that passes.
 				INT32 const new_life = MIN(dp->bLife + time_since_last_loaded / 15, dp->bLifeMax);
 				dp->bLife = (INT8)new_life;
 			}
 
-			if (bp->bTeam == CIV_TEAM) break;
+			if (bp->bTeam == CIV_TEAM)
+				break;
 		}
 	}
 
@@ -595,10 +635,13 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	FOR_EACH_SOLDIERINITNODE_SAFE(curr)
 	{
 		BASIC_SOLDIERCREATE_STRUCT const* const bp = curr->pBasicPlacement;
-		if (bp->fPriorityExistance)                   continue;
-		if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
+		if (bp->fPriorityExistance)
+			continue;
+		if (bp->bTeam != tempDetailedPlacement.bTeam)
+			continue;
 		SOLDIERCREATE_STRUCT       const* const dp = curr->pDetailedPlacement;
-		if (dp && dp->ubProfile != NO_PROFILE)        continue;
+		if (dp && dp->ubProfile != NO_PROFILE)
+			continue;
 		RemoveSoldierNodeFromInitList(curr);
 	}
 
@@ -613,9 +656,9 @@ void NewWayOfLoadingCiviliansFromTempFile()
 }
 
 
-/* If we are saving a game and we are in the sector, we will need to preserve
- * the links between the soldiers and the soldier init list.  Otherwise, the
- * temp file will be deleted. */
+// If we are saving a game and we are in the sector, we will need to preserve
+// the links between the soldiers and the soldier init list.  Otherwise, the
+// temp file will be deleted.
 void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ, BOOLEAN const fEnemy, BOOLEAN const fValidateOnly)
 {
 	//if we are saving the enemy info to the enemy temp file
@@ -629,7 +672,8 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 		file_flag  = SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS;
 	}
 	else
-	{ // It's the civilian team
+	{
+		// It's the civilian team
 		first_team = CIV_TEAM;
 		last_team  = CIV_TEAM;
 		file_flag  = SF_CIV_PRESERVED_TEMP_FILE_EXISTS;
@@ -640,28 +684,33 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 
 	// STEP ONE:  Prep the soldiers for saving
 
-	/* Modify the map's soldier init list to reflect the changes to the member's
-	 * still alive */
+	// Modify the map's soldier init list to reflect the changes to the member's
+	// still alive
 	INT32 slots = 0;
 	for (INT32 i = first; i <= last; ++i)
 	{
 		SOLDIERTYPE const& s = GetMan(i);
 
 		// Make sure the person is active, alive, and is not a profiled person
-		if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE) continue;
+		if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE)
+			continue;
 		// Soldier is valid, so find the matching soldier init list entry for modification.
 		SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(s);
-		if (!curr) continue;
+		if (!curr)
+			continue;
 
 		// Increment the counter, so we know how many there are.
 		slots++;
 
-		if (fValidateOnly)                                continue;
-		if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) continue;
+		if (fValidateOnly)
+			continue;
+		if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME)
+			continue;
 
 		SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
 		if (!dp)
-		{ //need to upgrade the placement to detailed placement
+		{
+			//need to upgrade the placement to detailed placement
 			dp                                        = MALLOCZ(SOLDIERCREATE_STRUCT);
 			curr->pDetailedPlacement                  = dp;
 			curr->pBasicPlacement->fDetailedPlacement = TRUE;
@@ -696,16 +745,18 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 		dp->bTeam           = s.bTeam;
 		dp->bDirection      = s.bDirection;
 
-		/* We don't want the player to think that all the enemies start in the exact
-		 * position when we left the map, so randomize the start locations either
-		 * current position or original position. */
+		// We don't want the player to think that all the enemies start in the exact
+		// position when we left the map, so randomize the start locations either
+		// current position or original position.
 		if (PreRandom(2))
-		{ // Use current position
+		{
+			// Use current position
 			dp->fOnRoof          = s.bLevel;
 			dp->sInsertionGridNo = s.sGridNo;
 		}
 		else
-		{ // Use original position
+		{
+			// Use original position
 			dp->fOnRoof          = curr->pBasicPlacement->fOnRoof;
 			dp->sInsertionGridNo = curr->pBasicPlacement->usStartingGridNo;
 		}
@@ -750,11 +801,11 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 
 	FileWrite(f, &sSectorX, 2);
 
-	/* This check may appear confusing.  It is intended to abort if the player is
-	 * saving the game.  It is only supposed to preserve the links to the
-	 * placement list, so when we finally do leave the level with enemies
-	 * remaining, we will need the links that are only added when the map is
-	 * loaded, and are normally lost when restoring a save. */
+	// This check may appear confusing.  It is intended to abort if the player is
+	// saving the game.  It is only supposed to preserve the links to the
+	// placement list, so when we finally do leave the level with enemies
+	// remaining, we will need the links that are only added when the map is
+	// loaded, and are normally lost when restoring a save.
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME)
 	{
 		slots = 0;
@@ -767,19 +818,21 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 
 	FileWrite(f, &bSectorZ, 1);
 
-	/* If we are saving the game, we don't need to preserve the soldier
-	 * information, just preserve the links to the placement list. */
+	// If we are saving the game, we don't need to preserve the soldier
+	// information, just preserve the links to the placement list.
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		for (INT32 i = first; i <= last; ++i)
 		{
 			SOLDIERTYPE const& s = GetMan(i);
 			// CJC: note that bInSector is not required; the civ could be offmap!
-			if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE) continue;
+			if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE)
+				continue;
 
 			// Soldier is valid, so find the matching soldier init list entry for modification.
 			SOLDIERINITNODE const* const curr = FindSoldierInitNodeBySoldier(s);
-			if (!curr) continue;
+			if (!curr)
+				continue;
 
 			SOLDIERCREATE_STRUCT const* const dp = curr->pDetailedPlacement;
 			InjectSoldierCreateIntoFile(f, dp);
@@ -813,8 +866,8 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
 	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
-	/* STEP TWO: Determine whether or not we should use this data.  Because it
-	 * is the demo, it is automatically used. */
+	// STEP TWO: Determine whether or not we should use this data.  Because it
+	// is the demo, it is automatically used.
 
 	INT16 saved_y;
 	FileRead(f, &saved_y, 2);
@@ -849,28 +902,38 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	}
 
 	if (slots == 0)
-	{ /* No need to restore the enemy's to the map.  This means we are restoring
-		 * a saved game. */
+	{
+		// No need to restore the enemy's to the map.  This means we are restoring
+		// a saved game.
 		return;
 	}
 
 	if (slots < 0 || 64 <= slots)
-	{ //bad IO!
+	{
+		//bad IO!
 		throw std::runtime_error("Invalid slot count");
 	}
 
 	for (INT32 i = 0; i != slots; ++i)
 	{
-    UINT16 saved_checksum;
+		UINT16 saved_checksum;
 		SOLDIERCREATE_STRUCT tempDetailedPlacement;
 		ExtractSoldierCreateFromFileWithChecksumAndGuess(f, &tempDetailedPlacement, &saved_checksum);
 		// Increment the current type of soldier
 		switch (tempDetailedPlacement.ubSoldierClass)
 		{
-			case SOLDIER_CLASS_ELITE:         ++*n_elites;    break;
-			case SOLDIER_CLASS_ARMY:          ++*n_regulars;  break;
-			case SOLDIER_CLASS_ADMINISTRATOR: ++*n_admins;    break;
-			case SOLDIER_CLASS_CREATURE:      ++*n_creatures; break;
+			case SOLDIER_CLASS_ELITE:
+				++*n_elites;
+				break;
+			case SOLDIER_CLASS_ARMY:
+				++*n_regulars;
+				break;
+			case SOLDIER_CLASS_ADMINISTRATOR:
+				++*n_admins;
+				break;
+			case SOLDIER_CLASS_CREATURE:
+				++*n_creatures;
+				break;
 		}
 	}
 

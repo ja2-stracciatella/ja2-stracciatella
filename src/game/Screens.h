@@ -11,8 +11,8 @@
 
 struct Screens
 {
-  void     (*InitializeScreen)(void);
-  ScreenID (*HandleScreen)(void);
+	void     (*InitializeScreen)(void);
+	ScreenID (*HandleScreen)(void);
 	void     (*ShutdownScreen)(void);
 };
 

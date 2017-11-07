@@ -164,7 +164,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	// Init save buffer
 	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, PIXEL_DEPTH);
 
-  //Save what we have under here...
+	//Save what we have under here...
 	SGPBox const r = { gMsgBox.uX, gMsgBox.uY, usTextBoxWidth, usTextBoxHeight };
 	BltVideoSurface(gMsgBox.uiSaveBuffer, FRAME_BUFFER, 0, 0, &r);
 
@@ -274,9 +274,9 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	// Pause timers as well....
 	PauseTime(TRUE);
 
-  // Save mouse restriction region...
-  GetRestrictedClipCursor(&gOldCursorLimitRectangle);
-  FreeMouseCursor();
+	// Save mouse restriction region...
+	GetRestrictedClipCursor(&gOldCursorLimitRectangle);
+	FreeMouseCursor();
 
 	gfNewMessageBox = TRUE;
 	gfInMsgBox     = TRUE;
@@ -382,8 +382,8 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 	// UnPause timers as well....
 	PauseTime(FALSE);
 
-  // Restore mouse restriction region...
-  RestrictMouseCursor(&gOldCursorLimitRectangle);
+	// Restore mouse restriction region...
+	RestrictMouseCursor(&gOldCursorLimitRectangle);
 
 	gfInMsgBox = FALSE;
 
@@ -435,8 +435,8 @@ static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 		case MAP_SCREEN:
 			fMapPanelDirty = TRUE;
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 
 	if (gfFadeInitialized)
@@ -560,12 +560,12 @@ ScreenID MessageBoxScreenHandle(void)
 					case '4': gMsgBox.bHandled = MSG_BOX_RETURN_4; break;
 				}
 				break;
-            default:
-                break;
+			default:
+				break;
 		}
 	}
 
-  if (gMsgBox.bHandled != MSG_BOX_RETURN_NONE)
+	if (gMsgBox.bHandled != MSG_BOX_RETURN_NONE)
 	{
 		SetRenderFlags(RENDER_FLAG_FULL);
 		return ExitMsgBox(gMsgBox.bHandled);
@@ -594,7 +594,7 @@ void DoScreenIndependantMessageBox(wchar_t const* const msg, MessageBoxFlags con
 		case MAP_SCREEN:         DoMapMessageBoxWithRect(         MSG_BOX_BASIC_STYLE,    msg, screen, flags, callback, &centering_rect); break;
 		case OPTIONS_SCREEN:     DoOptionsMessageBoxWithRect(                             msg, screen, flags, callback, &centering_rect); break;
 		case SAVE_LOAD_SCREEN:   DoSaveLoadMessageBoxWithRect(                            msg, screen, flags, callback, &centering_rect); break;
-        default:
-            break;
+		default:
+			break;
 	}
 }

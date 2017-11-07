@@ -6,18 +6,18 @@
 #include "ScreenIDs.h"
 
 
-#define		NUM_SAVE_GAMES											11
+#define NUM_SAVE_GAMES		11
 
-#define		NUM_SAVE_GAMES_TABS									2
-#define		DEAD_IS_DEAD_TAB_NO									(NUM_SAVE_GAMES_TABS - 1)
+#define NUM_SAVE_GAMES_TABS	2
+#define DEAD_IS_DEAD_TAB_NO	(NUM_SAVE_GAMES_TABS - 1)
 
 
 //This flag is used to diferentiate between loading a game and saveing a game.
-// gfSaveGame=TRUE		For saving a game
-// gfSaveGame=FALSE		For loading a game
+// gfSaveGame=TRUE	For saving a game
+// gfSaveGame=FALSE	For loading a game
 extern BOOLEAN gfSaveGame;
 
-extern	BOOLEAN			gfCameDirectlyFromGame;
+extern	BOOLEAN gfCameDirectlyFromGame;
 
 ScreenID SaveLoadScreenHandle(void);
 

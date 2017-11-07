@@ -126,8 +126,7 @@ void EnterIMPAttributeSelection(void)
 		// does character have PROBLEMS?
 		/*
 		if (DoesCharacterHaveAnAttitude())   iCurrentBonusPoints += 10;
-		if (DoesCharacterHaveAPersoanlity()) iCurrentBonusPoints += 10;
-		*/
+		if (DoesCharacterHaveAPersoanlity()) iCurrentBonusPoints += 10;*/
 	}
 	fReturnStatus = TRUE;
 	fFirstIMPAttribTime = FALSE;
@@ -251,7 +250,7 @@ void HandleIMPAttributeSelection(void)
 		else
 		{
 			RenderAttributeFrameForIndex(51, 87, uiBarToReRender);
-/*
+			/*
 			// print text for screen
 			PrintImpText();
 
@@ -265,8 +264,7 @@ void HandleIMPAttributeSelection(void)
 
 			PrintImpText();
 
-			InvalidateRegion(LAPTOP_SCREEN_UL_X + 51, LAPTOP_SCREEN_WEB_UL_Y + 87, LAPTOP_SCREEN_UL_X + 51 + 400, LAPTOP_SCREEN_WEB_UL_Y + 87 + 220);
-*/
+			InvalidateRegion(LAPTOP_SCREEN_UL_X + 51, LAPTOP_SCREEN_WEB_UL_Y + 87, LAPTOP_SCREEN_UL_X + 51 + 400, LAPTOP_SCREEN_WEB_UL_Y + 87 + 220);*/
 			uiBarToReRender = -1;
 			MarkButtonsDirty();
 		}
@@ -521,8 +519,8 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 static void CreateSlideRegionMouseRegions()
 {
-	/* Create the mouse regions on the sliding area, that, if the player clicks
-	 * on, the bar will automatically jump to */
+	// Create the mouse regions on the sliding area, that, if the player clicks
+	// on, the bar will automatically jump to
 	for (UINT32 i = 0; i != lengthof(pSliderRegions); ++i)
 	{
 		MOUSE_REGION& r = pSliderRegions[i];
@@ -535,7 +533,8 @@ static void CreateSlideRegionMouseRegions()
 
 
 static void DestroySlideRegionMouseRegions()
-{ // Destroy the regions used for the slider 'jumping'
+{
+	// Destroy the regions used for the slider 'jumping'
 	FOR_EACH(MOUSE_REGION, i, pSliderRegions) MSYS_RemoveRegion(&*i);
 }
 
@@ -777,7 +776,7 @@ static void StatAtZeroBoxCallBack(MessageBoxReturnValue const bExitValue)
 			fHasAnySlidingBarMoved = TRUE;
 			MarkButtonsDirty();
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 }

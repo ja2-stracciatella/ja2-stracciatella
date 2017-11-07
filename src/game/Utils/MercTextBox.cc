@@ -16,19 +16,19 @@
 #include "UILayout.h"
 
 
-#define		TEXT_POPUP_GAP_BN_LINES						10
-#define		TEXT_POPUP_FONT										FONT12ARIAL
-#define		TEXT_POPUP_COLOR									FONT_MCOLOR_WHITE
+#define TEXT_POPUP_GAP_BN_LINES		10
+#define TEXT_POPUP_FONT			FONT12ARIAL
+#define TEXT_POPUP_COLOR			FONT_MCOLOR_WHITE
 
-#define		MERC_TEXT_FONT										FONT12ARIAL
-#define		MERC_TEXT_COLOR										FONT_MCOLOR_WHITE
+#define MERC_TEXT_FONT				FONT12ARIAL
+#define MERC_TEXT_COLOR			FONT_MCOLOR_WHITE
 
-#define		MERC_TEXT_MIN_WIDTH								10
-#define		MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X		10
-#define		MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y		10
+#define MERC_TEXT_MIN_WIDTH			10
+#define MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X	10
+#define MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y	10
 
-#define		MERC_BACKGROUND_WIDTH										350
-#define		MERC_BACKGROUND_HEIGHT									200
+#define MERC_BACKGROUND_WIDTH			350
+#define MERC_BACKGROUND_HEIGHT			200
 
 
 // both of the below are index by the enum for thier types - background and border in
@@ -37,21 +37,21 @@
 // filenames for border popup .sti's
 static char const* const zMercBorderPopupFilenames[] =
 {
- INTERFACEDIR "/tactpopup.sti",
- INTERFACEDIR "/tactredpopup.sti",
- INTERFACEDIR "/tactbluepopup.sti",
- INTERFACEDIR "/tactpopupmain.sti",
- INTERFACEDIR "/laptoppopup.sti"
+	INTERFACEDIR "/tactpopup.sti",
+	INTERFACEDIR "/tactredpopup.sti",
+	INTERFACEDIR "/tactbluepopup.sti",
+	INTERFACEDIR "/tactpopupmain.sti",
+	INTERFACEDIR "/laptoppopup.sti"
 };
 
 // filenames for background popup .pcx's
 static char const* const zMercBackgroundPopupFilenames[] =
 {
-  INTERFACEDIR "/tactpopupbackground.pcx",
-  INTERFACEDIR "/tactpopupwhitebackground.pcx",
-  INTERFACEDIR "/tactpopupgreybackground.pcx",
-  INTERFACEDIR "/tactpopupbackgroundmain.pcx",
-  INTERFACEDIR "/laptoppopupbackground.pcx",
+	INTERFACEDIR "/tactpopupbackground.pcx",
+	INTERFACEDIR "/tactpopupwhitebackground.pcx",
+	INTERFACEDIR "/tactpopupgreybackground.pcx",
+	INTERFACEDIR "/tactpopupbackgroundmain.pcx",
+	INTERFACEDIR "/laptoppopupbackground.pcx",
 	INTERFACEDIR "/imp_popup_background.pcx"
 };
 
@@ -81,7 +81,7 @@ void InitMercPopupBox()
 // Tactical Popup
 static void LoadTextMercPopupImages(MercPopUpBox* const box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex)
 {
-  // this function will load the graphics associated with the background and border index values
+	// this function will load the graphics associated with the background and border index values
 	box->uiMercTextPopUpBackground = AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]);
 	box->uiMercTextPopUpBorder     = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
 
@@ -211,17 +211,17 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const u
 	for (UINT16 i = TEXT_POPUP_GAP_BN_LINES; i < usWidth - TEXT_POPUP_GAP_BN_LINES; i += TEXT_POPUP_GAP_BN_LINES)
 	{
 		//TOP ROW
-	  BltVideoObject(vs, hImageHandle, 1, i, usPosY);
+		BltVideoObject(vs, hImageHandle, 1, i, usPosY);
 		//BOTTOM ROW
-	  BltVideoObject(vs, hImageHandle, 6, i, usHeight - TEXT_POPUP_GAP_BN_LINES + 6);
+		BltVideoObject(vs, hImageHandle, 6, i, usHeight - TEXT_POPUP_GAP_BN_LINES + 6);
 	}
 
 	//blit the left and right row of images
 	UINT16 usPosX = 0;
 	for (UINT16 i= TEXT_POPUP_GAP_BN_LINES; i < usHeight - TEXT_POPUP_GAP_BN_LINES; i += TEXT_POPUP_GAP_BN_LINES)
 	{
-	  BltVideoObject(vs, hImageHandle, 3, usPosX,               i);
-	  BltVideoObject(vs, hImageHandle, 4, usPosX + usWidth - 4, i);
+		BltVideoObject(vs, hImageHandle, 3, usPosX,               i);
+		BltVideoObject(vs, hImageHandle, 4, usPosX + usWidth - 4, i);
 	}
 
 	//blt the corner images for the row

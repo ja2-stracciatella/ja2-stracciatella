@@ -48,7 +48,7 @@ enum FileAttributes
 ENUM_BITSET(FileAttributes)
 
 FileAttributes FileGetAttributes(const char* filename);
-BOOLEAN        FileClearAttributes(const char* filename);
+BOOLEAN FileClearAttributes(const char* filename);
 BOOLEAN FileClearAttributes(const std::string &filename);
 
 
@@ -76,93 +76,93 @@ class FileMan
 {
 public:
 
-  /** Find config folder and switch into it. */
-  static std::string switchTmpFolder(std::string homeDir);
+	/** Find config folder and switch into it. */
+	static std::string switchTmpFolder(std::string homeDir);
 
-  /** Open file for writing.
-   * If file is missing it will be created.
-   * If file exists, it's content will be removed. */
-  static SGPFile* openForWriting(const char *filename, bool truncate=true);
+	/** Open file for writing.
+	 * If file is missing it will be created.
+	 * If file exists, it's content will be removed. */
+	static SGPFile* openForWriting(const char *filename, bool truncate=true);
 
-  /** Open file for appending data.
-   * If file doesn't exist, it will be created. */
-  static SGPFile* openForAppend(const char *filename);
+	/** Open file for appending data.
+	 * If file doesn't exist, it will be created. */
+	static SGPFile* openForAppend(const char *filename);
 
-  /** Open file for reading and writing.
-   * If file doesn't exist, it will be created. */
-  static SGPFile* openForReadWrite(const char *filename);
+	/** Open file for reading and writing.
+	 * If file doesn't exist, it will be created. */
+	static SGPFile* openForReadWrite(const char *filename);
 
-  /** Open file for reading. */
-  static SGPFile* openForReading(const char *filename);
+	/** Open file for reading. */
+	static SGPFile* openForReading(const char *filename);
 
-  /** Open file for reading. */
-  static SGPFile* openForReading(const std::string &filename);
+	/** Open file for reading. */
+	static SGPFile* openForReading(const std::string &filename);
 
-  /** Read the whole file as text. */
-  static std::string fileReadText(SGPFile*);
+	/** Read the whole file as text. */
+	static std::string fileReadText(SGPFile*);
 
 #if CASE_SENSITIVE_FS
-  /** Find an object (file or subdirectory) in the given directory in case-independent manner.
-   * @return true when found, return the found name using foundName. */
-  static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
+	/** Find an object (file or subdirectory) in the given directory in case-independent manner.
+	 * @return true when found, return the found name using foundName. */
+	static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
 #endif
 
-  /** Open file in the 'Data' directory in case-insensitive manner. */
-  static FILE* openForReadingCaseInsensitive(const std::string &folderPath, const char *filename);
+	/** Open file in the 'Data' directory in case-insensitive manner. */
+	static FILE* openForReadingCaseInsensitive(const std::string &folderPath, const char *filename);
 
-  /* ------------------------------------------------------------
-   * Other operations
-   * ------------------------------------------------------------ */
+	/* ------------------------------------------------------------
+	 * Other operations
+	 * ------------------------------------------------------------ */
 
-  /** Create directory.
-   * If directory already exists, do nothing.
-   * If failed to create, raise an exception. */
-  static void createDir(char const* path);
+	/** Create directory.
+	 * If directory already exists, do nothing.
+	 * If failed to create, raise an exception. */
+	static void createDir(char const* path);
 
-  /** Join two path components. */
-  static std::string joinPaths(const char *first, const char *second);
+	/** Join two path components. */
+	static std::string joinPaths(const char *first, const char *second);
 
-  /** Join two path components. */
-  static std::string joinPaths(const std::string &first, const char *second);
+	/** Join two path components. */
+	static std::string joinPaths(const std::string &first, const char *second);
 
-  /** Join two path components. */
-  static std::string joinPaths(const std::string &first, const std::string &second);
+	/** Join two path components. */
+	static std::string joinPaths(const std::string &first, const std::string &second);
 
-  /** Replace extension of a file. */
-  static std::string replaceExtension(const std::string &path, const char *newExtensionWithDot);
+	/** Replace extension of a file. */
+	static std::string replaceExtension(const std::string &path, const char *newExtensionWithDot);
 
-  /** Get parent path (e.g. directory path from the full path). */
-  static std::string getParentPath(const std::string &path, bool absolute);
+	/** Get parent path (e.g. directory path from the full path). */
+	static std::string getParentPath(const std::string &path, bool absolute);
 
-  /** Get filename from the path. */
-  static std::string getFileName(const std::string &path);
+	/** Get filename from the path. */
+	static std::string getFileName(const std::string &path);
 
-  /** Get filename from the path without extension. */
-  static std::string getFileNameWithoutExt(const char *path);
-  static std::string getFileNameWithoutExt(const std::string &path);
+	/** Get filename from the path without extension. */
+	static std::string getFileNameWithoutExt(const char *path);
+	static std::string getFileNameWithoutExt(const std::string &path);
 
-  static int openFileForReading(const char *filename, int mode);
+	static int openFileForReading(const char *filename, int mode);
 
-  /** Open file in the given folder in case-insensitive manner.
-   * @return file descriptor or -1 if file is not found. */
-  static int openFileCaseInsensitive(const std::string &folderPath, const char *filename, int mode);
+	/** Open file in the given folder in case-insensitive manner.
+	 * @return file descriptor or -1 if file is not found. */
+	static int openFileCaseInsensitive(const std::string &folderPath, const char *filename, int mode);
 
-  /** Convert file descriptor to HWFile.
-   * Raise runtime_error if not possible. */
-  static SGPFile* getSGPFileFromFD(int fd, const char *filename, const char *fmode);
+	/** Convert file descriptor to HWFile.
+	 * Raise runtime_error if not possible. */
+	static SGPFile* getSGPFileFromFD(int fd, const char *filename, const char *fmode);
 
-  /** Replace all \ with / */
-  static void slashifyPath(std::string &path);
+	/** Replace all \ with / */
+	static void slashifyPath(std::string &path);
 
-  /** Check file existance. */
-  static bool checkFileExistance(const char *folder, const char *fileName);
+	/** Check file existance. */
+	static bool checkFileExistance(const char *folder, const char *fileName);
 
-  /** Move a file */
-  static void moveFile(const char *from, const char *to);
+	/** Move a file */
+	static void moveFile(const char *from, const char *to);
 
 private:
-  /** Private constructor to avoid instantiation. */
-  FileMan() {};
+	/** Private constructor to avoid instantiation. */
+	FileMan() {};
 };
 
 /**
@@ -175,10 +175,10 @@ private:
  * @return List of paths (dir + filename). */
 std::vector<std::string>
 FindFilesInDir(const std::string &dirPath,
-               const std::string &ext,
-               bool caseIncensitive,
-               bool returnOnlyNames,
-               bool sortResults = false);
+		const std::string &ext,
+		bool caseIncensitive,
+		bool returnOnlyNames,
+		bool sortResults = false);
 
 /**
  * Find all files in a directory.

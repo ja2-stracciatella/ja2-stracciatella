@@ -1206,7 +1206,7 @@ static void RemoveGotoGridNoUI(void);
 // Select action to be taken based on the user's current key press (if any)
 static void HandleKeyboardShortcuts(void)
 {
-  static BOOLEAN fShowTrees = TRUE;
+	static BOOLEAN fShowTrees = TRUE;
 	while( DequeueEvent( &EditorInputEvent ) )
 	{
 		if( !HandleSummaryInput( &EditorInputEvent ) && !HandleTextInput( &EditorInputEvent ) && EditorInputEvent.usEvent == KEY_DOWN )
@@ -2276,7 +2276,7 @@ static ScreenID ProcessEditscreenMessageBoxResponse(void)
 //	Displays a help screen and waits for the user to wisk it away.
 static ScreenID WaitForHelpScreenResponse(void)
 {
-  InputAtom DummyEvent;
+	InputAtom DummyEvent;
 	BOOLEAN fLeaveScreen;
 
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,	50, 50, 590, 310,
@@ -2390,7 +2390,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 //	Handles all keyboard input and display for a selection window.
 static ScreenID WaitForSelectionWindowResponse(void)
 {
-  InputAtom DummyEvent;
+	InputAtom DummyEvent;
 
 	while (DequeueEvent(&DummyEvent))
 	{
@@ -3169,11 +3169,13 @@ static void DrawObjectsBasedOnSelectionRegion(void)
 	//so the density test can be skipped.
 	fSkipTest = FALSE;
 	if( gusSelectionType == SMALLSELECTION ||
-		  iDrawMode == DRAW_MODE_GROUND ||
-			iDrawMode == DRAW_MODE_FLOORS ||
-		  iDrawMode == DRAW_MODE_ROOMNUM ||
-			iDrawMode == DRAW_MODE_EXITGRID )
+		iDrawMode == DRAW_MODE_GROUND ||
+		iDrawMode == DRAW_MODE_FLOORS ||
+		iDrawMode == DRAW_MODE_ROOMNUM ||
+		iDrawMode == DRAW_MODE_EXITGRID )
+	{
 		fSkipTest = TRUE;
+	}
 
 	//The reason why I process the region from top to bottom then to the right is
 	//to even out the binary tree undo placements.  Otherwise, the placements within
@@ -3343,7 +3345,7 @@ ScreenID EditScreenHandle(void)
 	}
 	ExecuteVideoOverlays( );
 
-  ScrollString( );
+	ScrollString( );
 
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender( );

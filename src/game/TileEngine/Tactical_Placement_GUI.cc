@@ -386,7 +386,7 @@ static void KillTacticalPlacementGUI(void);
 
 void TacticalPlacementHandle()
 {
-  InputAtom InputEvent;
+	InputAtom InputEvent;
 
 	EnsureDoneButtonStatus();
 
@@ -399,8 +399,8 @@ void TacticalPlacementHandle()
 		gpTacticalPlacementSelectedSoldier = NULL;
 	}
 
-  while( DequeueEvent( &InputEvent ) )
-  {
+	while( DequeueEvent( &InputEvent ) )
+	{
 		if( InputEvent.usEvent == KEY_DOWN )
 		{
 			switch( InputEvent.usParam )
@@ -431,8 +431,8 @@ void TacticalPlacementHandle()
 	}
 	gfValidCursor = FALSE;
 	if( gbSelectedMercID != -1
-      && (gusMouseYPos >= STD_SCREEN_Y) && (gusMouseYPos < STD_SCREEN_Y + 320)
-      && (gusMouseXPos >= STD_SCREEN_X) && (gusMouseXPos < STD_SCREEN_X + 640) )
+		&& (gusMouseYPos >= STD_SCREEN_Y) && (gusMouseYPos < STD_SCREEN_Y + 320)
+		&& (gusMouseXPos >= STD_SCREEN_X) && (gusMouseXPos < STD_SCREEN_X + 640) )
 	{
 		switch( gMercPlacement[ gbCursorMercID ].ubStrategicInsertionCode )
 		{

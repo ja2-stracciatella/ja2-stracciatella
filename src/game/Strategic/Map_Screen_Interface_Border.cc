@@ -108,7 +108,7 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 
 void LoadMapBorderGraphics(void)
 {
-  // this procedure will load the graphics needed for the map border
+	// this procedure will load the graphics needed for the map border
 	guiLEVELMARKER       = AddVideoObjectFromFile(INTERFACEDIR "/greenarr.sti");
 	guiMapBorder         = AddVideoObjectFromFile(MAP_BORDER_FILE);
 	guiMapBorderEtaPopUp = AddVideoObjectFromFile(INTERFACEDIR "/eta_pop_up.sti");
@@ -334,7 +334,7 @@ void BtnLowerLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 		MarkButtonsDirty( );
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	{
 		// go down one level
 		GoDownOneLevelInMap( );
 	}
@@ -355,7 +355,7 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason)
 		MarkButtonsDirty( );
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	{
 		// go up one level
 		GoUpOneLevelInMap( );
 	}
@@ -424,12 +424,12 @@ static void BtnMineCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason)
 {
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-  {
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	{
 		CommonBtnCallbackBtnDownChecks();
 
 		ToggleAirspaceMode();
-  }
+	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -439,12 +439,12 @@ static void BtnAircraftCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void BtnItemCallback(GUI_BUTTON* btn, INT32 reason)
 {
-  if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-  {
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	{
 		CommonBtnCallbackBtnDownChecks();
 
 		ToggleItemsFilter();
-  }
+	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
 		CommonBtnCallbackBtnDownChecks();
@@ -467,27 +467,27 @@ void BtnZoomCallback(GUI_BUTTON *btn,INT32 reason)
 		fZoomFlag = btn->Clicked();
 		if (fZoomFlag)
 		{
-		 if( sSelMapX > 14 )
-		 {
-			 iZoomX = ( ( sSelMapX + 2 ) / 2 ) * ( MAP_GRID_X * 2 );
-		 }
-		 else
-		 {
-			 iZoomX=sSelMapX/2*MAP_GRID_X*2;
-		 }
+			if( sSelMapX > 14 )
+			{
+				iZoomX = ( ( sSelMapX + 2 ) / 2 ) * ( MAP_GRID_X * 2 );
+			}
+			else
+			{
+				iZoomX=sSelMapX/2*MAP_GRID_X*2;
+			}
 
-		 if( sOldSelMapY > 14 )
-		 {
-			 iZoomY = ( ( sSelMapY + 2 ) / 2 ) * ( MAP_GRID_Y * 2 );
-		 }
-		 else
-		 {
-			 iZoomY=sSelMapY/2*MAP_GRID_Y*2;
-		 }
+			if( sOldSelMapY > 14 )
+			{
+				iZoomY = ( ( sSelMapY + 2 ) / 2 ) * ( MAP_GRID_Y * 2 );
+			}
+			else
+			{
+				iZoomY=sSelMapY/2*MAP_GRID_Y*2;
+			}
 
 		}
 
-	 	fMapPanelDirty=TRUE;
+		fMapPanelDirty=TRUE;
 	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
 	{
@@ -721,7 +721,7 @@ void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		}
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	{
 		giScrollButtonState = NORTH_DIR;
 		fMapScrollDueToPanelButton = TRUE;
 	}
@@ -740,19 +740,19 @@ void BtnScrollSouthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		if (!fZoomFlag) return;
 
 		// are help messages being displayed?..redraw
-		 if( ScrollButtonsDisplayingHelpMessage( ) )
-		 {
-			 fMapPanelDirty = TRUE;
-		 }
+		if( ScrollButtonsDisplayingHelpMessage( ) )
+		{
+			fMapPanelDirty = TRUE;
+		}
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	{
 		giScrollButtonState = SOUTH_DIR;
 		fMapScrollDueToPanelButton = TRUE;
 	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
-		 giScrollButtonState = SOUTH_DIR;
+		giScrollButtonState = SOUTH_DIR;
 	}
 }
 
@@ -761,7 +761,7 @@ void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	  // not zoomed in?...don't push down
+		// not zoomed in?...don't push down
 		if (!fZoomFlag) return;
 
 		// are help messages being displayed?..redraw
@@ -771,13 +771,13 @@ void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		}
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	{
 		giScrollButtonState = EAST_DIR;
 		fMapScrollDueToPanelButton = TRUE;
 	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
-		 giScrollButtonState = EAST_DIR;
+		giScrollButtonState = EAST_DIR;
 	}
 }
 
@@ -786,7 +786,7 @@ void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-	  // not zoomed in?...don't push down
+		// not zoomed in?...don't push down
 		if (!fZoomFlag) return;
 
 		// are help messages being displayed?..redraw
@@ -796,13 +796,13 @@ void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 		}
 	}
 	else if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-  {
+	{
 		giScrollButtonState = WEST_DIR;
 		fMapScrollDueToPanelButton = TRUE;
 	}
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
 	{
-		 giScrollButtonState = WEST_DIR;
+		giScrollButtonState = WEST_DIR;
 	}
 }
 
@@ -865,9 +865,9 @@ void HandleMapScrollButtonStates( void )
 	if( fZoomFlag )
 	{
 		EnableButton( guiMapBorderScrollButtons[ 0 ]);
-	  EnableButton( guiMapBorderScrollButtons[ 1 ]);
-	  EnableButton( guiMapBorderScrollButtons[ 2 ]);
-	  EnableButton( guiMapBorderScrollButtons[ 3 ]);
+		EnableButton( guiMapBorderScrollButtons[ 1 ]);
+		EnableButton( guiMapBorderScrollButtons[ 2 ]);
+		EnableButton( guiMapBorderScrollButtons[ 3 ]);
 
 		UpdateScrollButtonStatesWhileScrolling(  );
 
@@ -876,9 +876,9 @@ void HandleMapScrollButtonStates( void )
 	{
 
 		DisableButton( guiMapBorderScrollButtons[ 0 ]);
-	  DisableButton( guiMapBorderScrollButtons[ 1 ]);
-	  DisableButton( guiMapBorderScrollButtons[ 2 ]);
-	  DisableButton( guiMapBorderScrollButtons[ 3 ]);
+		DisableButton( guiMapBorderScrollButtons[ 1 ]);
+		DisableButton( guiMapBorderScrollButtons[ 2 ]);
+		DisableButton( guiMapBorderScrollButtons[ 3 ]);
 
 	}
 
@@ -940,7 +940,7 @@ void CreateMouseRegionsForLevelMarkers(void)
 		wchar_t sString[64];
 		swprintf(sString, lengthof(sString), L"%ls %d", zMarksMapScreenText[0], sCounter + 1);
 		r->SetFastHelpText(sString);
-  }
+	}
 }
 
 

@@ -89,14 +89,14 @@ void EnterIMPConfirm( void )
 void RenderIMPConfirm( void )
 {
 
-	 // the background
+	// the background
 	RenderProfileBackGround( );
 
-		// indent
-  RenderAvgMercIndentFrame(90, 40 );
+	// indent
+	RenderAvgMercIndentFrame(90, 40 );
 
 	// highlight answer
-  PrintImpText( );
+	PrintImpText( );
 }
 
 
@@ -105,9 +105,8 @@ static void DestroyConfirmButtons(void);
 
 void ExitIMPConfirm( void )
 {
-
 	// destroy buttons
-  DestroyConfirmButtons( );
+	DestroyConfirmButtons( );
 }
 
 void HandleIMPConfirm( void )
@@ -138,14 +137,14 @@ static void CreateConfirmButtons(void)
 
 static void DestroyConfirmButtons(void)
 {
-  // destroy buttons for confirm screen
+	// destroy buttons for confirm screen
 
-  RemoveButton(giIMPConfirmButton[ 0 ] );
-  UnloadButtonImage(giIMPConfirmButtonImage[ 0 ] );
+	RemoveButton(giIMPConfirmButton[ 0 ] );
+	UnloadButtonImage(giIMPConfirmButtonImage[ 0 ] );
 
 
 	RemoveButton(giIMPConfirmButton[ 1 ] );
-  UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
+	UnloadButtonImage(giIMPConfirmButtonImage[ 1 ] );
 }
 
 
@@ -154,7 +153,6 @@ static void GiveItemsToPC(UINT8 ubProfileId);
 
 static BOOLEAN AddCharacterToPlayersTeam(void)
 {
-
 	MERC_HIRE_STRUCT HireMercStruct;
 
 
@@ -174,8 +172,8 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	}
 
 
-	HireMercStruct.sSectorX									 = SECTORX(g_merc_arrive_sector);
-	HireMercStruct.sSectorY									 = SECTORY(g_merc_arrive_sector);
+	HireMercStruct.sSectorX = SECTORX(g_merc_arrive_sector);
+	HireMercStruct.sSectorY = SECTORY(g_merc_arrive_sector);
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.fCopyProfileItemsOver = TRUE;
@@ -274,15 +272,15 @@ static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT&, UINT32 uiPos, UINT16 
 
 static void GiveItemsToPC(UINT8 ubProfileId)
 {
-  // gives starting items to merc
+	// gives starting items to merc
 	// NOTE: Any guns should probably be from those available in regular gun set
 
 	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
 
-  BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getInventory())
-  {
+	BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getInventory())
+	{
 		MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-  }
+	}
 
 	if ( PreRandom( 100 ) < (UINT32) p.bWisdom )
 	{
@@ -291,17 +289,17 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 	if (p.bMarksmanship >= 80)
 	{
-    BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getGoodShooterItems())
-    {
-      MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-    }
+		BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getGoodShooterItems())
+		{
+			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+		}
 	}
 	else
 	{
-    BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getNormalShooterItems())
-    {
-      MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
-    }
+		BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getNormalShooterItems())
+		{
+			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
+		}
 	}
 
 
@@ -395,9 +393,9 @@ static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT& p, UINT16 const usItem,
 
 static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT& p, UINT32 const uiPos, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
 {
-  p.inv[uiPos]				= usItem;
-  p.bInvStatus[uiPos] = ubStatus;
-  p.bInvNumber[uiPos] = ubHowMany;
+	p.inv[uiPos]        = usItem;
+	p.bInvStatus[uiPos] = ubStatus;
+	p.bInvNumber[uiPos] = ubHowMany;
 }
 
 
@@ -446,7 +444,7 @@ static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
 {
-  // ATE: Check boundary conditions!
+	// ATE: Check boundary conditions!
 	MERCPROFILESTRUCT& p = GetProfile(ubMercProfileID);
 	if (p.ubFaceIndex - 200 > 16 || ubMercProfileID >= PROF_HUMMER) return;
 

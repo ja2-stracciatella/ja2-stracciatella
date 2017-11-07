@@ -11,7 +11,7 @@ enum TileSetID
 	LUSH_1,
 	TROPICAL_1,
 	MOUNTAIN_1,
-	COASTAL_1,				//7
+	COASTAL_1, //7
 	SWAMP_1,
 	FARM_1,
 	OMERTA_1,

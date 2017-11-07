@@ -47,7 +47,7 @@ BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
 
 /* Returns the GridNo of the tile the mouse cursor is currently over or NOWHERE
- * if the cursor is not over any tile. */
+	* if the cursor is not over any tile. */
 GridNo GetMouseMapPos(void);
 
 

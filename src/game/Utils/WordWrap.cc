@@ -88,7 +88,7 @@ WRAPPED_STRING* LineWrap(SGPFont const font, UINT16 const usLineWidthPixels, wch
 UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap, SGPFont const font, UINT8 const foreground, const wchar_t* const string, UINT8 const background, UINT32 const flags)
 {
 	UINT16       total_h = 0;
-  UINT16 const h       = GetFontHeight(font) + gap;
+	UINT16 const h       = GetFontHeight(font) + gap;
 	for (WRAPPED_STRING* i = LineWrap(font, w, string); i;)
 	{
 		DrawTextToScreen(i->sString, x, y, w, font, foreground, background, flags);

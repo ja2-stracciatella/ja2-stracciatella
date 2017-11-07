@@ -6,56 +6,56 @@
 
 
 ItemModel::ItemModel(uint16_t itemIndex,
-                     const char* internalName,
-                     uint32_t usItemClass,
-                     uint8_t classIndex,
-                     ItemCursor cursor)
+			const char* internalName,
+			uint32_t usItemClass,
+			uint8_t classIndex,
+			ItemCursor cursor)
 {
-  this->itemIndex             = itemIndex;
-  this->internalName          = internalName;
-  this->usItemClass           = usItemClass;
-  this->ubClassIndex          = classIndex;
-  this->ubCursor              = cursor;
-  this->ubGraphicType         = 0;
-  this->ubGraphicNum          = 0;
-  this->ubWeight              = 0;
-  this->ubPerPocket           = 0;
-  this->usPrice               = 0;
-  this->ubCoolness            = 0;
-  this->bReliability          = 0;
-  this->bRepairEase           = 0;
-  this->fFlags                = 0;
+	this->itemIndex             = itemIndex;
+	this->internalName          = internalName;
+	this->usItemClass           = usItemClass;
+	this->ubClassIndex          = classIndex;
+	this->ubCursor              = cursor;
+	this->ubGraphicType         = 0;
+	this->ubGraphicNum          = 0;
+	this->ubWeight              = 0;
+	this->ubPerPocket           = 0;
+	this->usPrice               = 0;
+	this->ubCoolness            = 0;
+	this->bReliability          = 0;
+	this->bRepairEase           = 0;
+	this->fFlags                = 0;
 }
 
 ItemModel::ItemModel(uint16_t   itemIndex,
-                     const char* internalName,
-                     uint32_t   usItemClass,
-                     uint8_t    ubClassIndex,
-                     ItemCursor ubCursor,
-                     uint8_t    ubGraphicType,
-                     uint8_t    ubGraphicNum,
-                     uint8_t    ubWeight,
-                     uint8_t    ubPerPocket,
-                     uint16_t   usPrice,
-                     uint8_t    ubCoolness,
-                     int8_t     bReliability,
-                     int8_t     bRepairEase,
-                     uint16_t   fFlags)
+			const char* internalName,
+			uint32_t   usItemClass,
+			uint8_t    ubClassIndex,
+			ItemCursor ubCursor,
+			uint8_t    ubGraphicType,
+			uint8_t    ubGraphicNum,
+			uint8_t    ubWeight,
+			uint8_t    ubPerPocket,
+			uint16_t   usPrice,
+			uint8_t    ubCoolness,
+			int8_t     bReliability,
+			int8_t     bRepairEase,
+			uint16_t   fFlags)
 {
-  this->itemIndex             = itemIndex;
-  this->internalName          = internalName;
-  this->usItemClass           = usItemClass;
-  this->ubClassIndex          = ubClassIndex;
-  this->ubCursor              = ubCursor;
-  this->ubGraphicType         = ubGraphicType;
-  this->ubGraphicNum          = ubGraphicNum;
-  this->ubWeight              = ubWeight;
-  this->ubPerPocket           = ubPerPocket;
-  this->usPrice               = usPrice;
-  this->ubCoolness            = ubCoolness;
-  this->bReliability          = bReliability;
-  this->bRepairEase           = bRepairEase;
-  this->fFlags                = fFlags;
+	this->itemIndex             = itemIndex;
+	this->internalName          = internalName;
+	this->usItemClass           = usItemClass;
+	this->ubClassIndex          = ubClassIndex;
+	this->ubCursor              = ubCursor;
+	this->ubGraphicType         = ubGraphicType;
+	this->ubGraphicNum          = ubGraphicNum;
+	this->ubWeight              = ubWeight;
+	this->ubPerPocket           = ubPerPocket;
+	this->usPrice               = usPrice;
+	this->ubCoolness            = ubCoolness;
+	this->bReliability          = bReliability;
+	this->bRepairEase           = bRepairEase;
+	this->fFlags                = fFlags;
 }
 
 // This could be default in C++11
@@ -102,48 +102,48 @@ bool ItemModel::isInBigGunList() const   { return fFlags & ITEM_BIGGUNLIST;     
 
 void ItemModel::serializeFlags(JsonObject &obj) const
 {
-  if(getFlags() & ITEM_DAMAGEABLE)          { obj.AddMember("bDamageable", true);     }
-  if(getFlags() & ITEM_REPAIRABLE)          { obj.AddMember("bRepairable", true);     }
-  if(getFlags() & ITEM_WATER_DAMAGES)       { obj.AddMember("bWaterDamages", true);   }
-  if(getFlags() & ITEM_METAL)               { obj.AddMember("bMetal", true);          }
-  if(getFlags() & ITEM_SINKS)               { obj.AddMember("bSinks", true);          }
-  if(getFlags() & ITEM_SHOW_STATUS)         { obj.AddMember("bShowStatus", true);     }
-  if(getFlags() & ITEM_HIDDEN_ADDON)        { obj.AddMember("bHiddenAddon", true);    }
-  if(getFlags() & ITEM_TWO_HANDED)          { obj.AddMember("bTwoHanded", true);      }
-  if(getFlags() & ITEM_NOT_BUYABLE)         { obj.AddMember("bNotBuyable", true);     }
-  if(getFlags() & ITEM_ATTACHMENT)          { obj.AddMember("bAttachment", true);     }
-  if(getFlags() & ITEM_BIGGUNLIST)          { obj.AddMember("bBigGunList", true);     }
-  if(getFlags() & ITEM_NOT_EDITOR)          { obj.AddMember("bNotEditor", true);      }
-  if(getFlags() & ITEM_DEFAULT_UNDROPPABLE) { obj.AddMember("bDefaultUndroppable", true); }
-  if(getFlags() & ITEM_UNAERODYNAMIC)       { obj.AddMember("bUnaerodynamic", true);  }
-  if(getFlags() & ITEM_ELECTRONIC)          { obj.AddMember("bElectronic", true);     }
-  if(getFlags() & ITEM_INSEPARABLE)         { obj.AddMember("bInseparable", true);    }
+	if(getFlags() & ITEM_DAMAGEABLE)          { obj.AddMember("bDamageable", true);     }
+	if(getFlags() & ITEM_REPAIRABLE)          { obj.AddMember("bRepairable", true);     }
+	if(getFlags() & ITEM_WATER_DAMAGES)       { obj.AddMember("bWaterDamages", true);   }
+	if(getFlags() & ITEM_METAL)               { obj.AddMember("bMetal", true);          }
+	if(getFlags() & ITEM_SINKS)               { obj.AddMember("bSinks", true);          }
+	if(getFlags() & ITEM_SHOW_STATUS)         { obj.AddMember("bShowStatus", true);     }
+	if(getFlags() & ITEM_HIDDEN_ADDON)        { obj.AddMember("bHiddenAddon", true);    }
+	if(getFlags() & ITEM_TWO_HANDED)          { obj.AddMember("bTwoHanded", true);      }
+	if(getFlags() & ITEM_NOT_BUYABLE)         { obj.AddMember("bNotBuyable", true);     }
+	if(getFlags() & ITEM_ATTACHMENT)          { obj.AddMember("bAttachment", true);     }
+	if(getFlags() & ITEM_BIGGUNLIST)          { obj.AddMember("bBigGunList", true);     }
+	if(getFlags() & ITEM_NOT_EDITOR)          { obj.AddMember("bNotEditor", true);      }
+	if(getFlags() & ITEM_DEFAULT_UNDROPPABLE) { obj.AddMember("bDefaultUndroppable", true); }
+	if(getFlags() & ITEM_UNAERODYNAMIC)       { obj.AddMember("bUnaerodynamic", true);  }
+	if(getFlags() & ITEM_ELECTRONIC)          { obj.AddMember("bElectronic", true);     }
+	if(getFlags() & ITEM_INSEPARABLE)         { obj.AddMember("bInseparable", true);    }
 }
 
 uint32_t ItemModel::deserializeFlags(JsonObjectReader &obj) const
 {
-  uint32_t flags = 0;
-  if(obj.getOptionalBool("bDamageable"))        { flags |= ITEM_DAMAGEABLE;             }
-  if(obj.getOptionalBool("bRepairable"))        { flags |= ITEM_REPAIRABLE;             }
-  if(obj.getOptionalBool("bWaterDamages"))      { flags |= ITEM_WATER_DAMAGES;          }
-  if(obj.getOptionalBool("bMetal"))             { flags |= ITEM_METAL;                  }
-  if(obj.getOptionalBool("bSinks"))             { flags |= ITEM_SINKS;                  }
-  if(obj.getOptionalBool("bShowStatus"))        { flags |= ITEM_SHOW_STATUS;            }
-  if(obj.getOptionalBool("bHiddenAddon"))       { flags |= ITEM_HIDDEN_ADDON;           }
-  if(obj.getOptionalBool("bTwoHanded"))         { flags |= ITEM_TWO_HANDED;             }
-  if(obj.getOptionalBool("bNotBuyable"))        { flags |= ITEM_NOT_BUYABLE;            }
-  if(obj.getOptionalBool("bAttachment"))        { flags |= ITEM_ATTACHMENT;             }
-  if(obj.getOptionalBool("bBigGunList"))        { flags |= ITEM_BIGGUNLIST;             }
-  if(obj.getOptionalBool("bNotEditor"))         { flags |= ITEM_NOT_EDITOR;             }
-  if(obj.getOptionalBool("bDefaultUndroppable")){ flags |= ITEM_DEFAULT_UNDROPPABLE;    }
-  if(obj.getOptionalBool("bUnaerodynamic"))     { flags |= ITEM_UNAERODYNAMIC;          }
-  if(obj.getOptionalBool("bElectronic"))        { flags |= ITEM_ELECTRONIC;             }
-  if(obj.getOptionalBool("bInseparable"))       { flags |= ITEM_INSEPARABLE;            }
-  return flags;
+	uint32_t flags = 0;
+	if(obj.getOptionalBool("bDamageable"))        { flags |= ITEM_DAMAGEABLE;             }
+	if(obj.getOptionalBool("bRepairable"))        { flags |= ITEM_REPAIRABLE;             }
+	if(obj.getOptionalBool("bWaterDamages"))      { flags |= ITEM_WATER_DAMAGES;          }
+	if(obj.getOptionalBool("bMetal"))             { flags |= ITEM_METAL;                  }
+	if(obj.getOptionalBool("bSinks"))             { flags |= ITEM_SINKS;                  }
+	if(obj.getOptionalBool("bShowStatus"))        { flags |= ITEM_SHOW_STATUS;            }
+	if(obj.getOptionalBool("bHiddenAddon"))       { flags |= ITEM_HIDDEN_ADDON;           }
+	if(obj.getOptionalBool("bTwoHanded"))         { flags |= ITEM_TWO_HANDED;             }
+	if(obj.getOptionalBool("bNotBuyable"))        { flags |= ITEM_NOT_BUYABLE;            }
+	if(obj.getOptionalBool("bAttachment"))        { flags |= ITEM_ATTACHMENT;             }
+	if(obj.getOptionalBool("bBigGunList"))        { flags |= ITEM_BIGGUNLIST;             }
+	if(obj.getOptionalBool("bNotEditor"))         { flags |= ITEM_NOT_EDITOR;             }
+	if(obj.getOptionalBool("bDefaultUndroppable")){ flags |= ITEM_DEFAULT_UNDROPPABLE;    }
+	if(obj.getOptionalBool("bUnaerodynamic"))     { flags |= ITEM_UNAERODYNAMIC;          }
+	if(obj.getOptionalBool("bElectronic"))        { flags |= ITEM_ELECTRONIC;             }
+	if(obj.getOptionalBool("bInseparable"))       { flags |= ITEM_INSEPARABLE;            }
+	return flags;
 }
 
 /** Check if the given attachment can be attached to the item. */
 bool ItemModel::canBeAttached(uint16_t attachment) const
 {
-  return false;
+	return false;
 }

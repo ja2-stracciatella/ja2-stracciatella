@@ -95,7 +95,7 @@ static void LoadImpGraphics(void);
 void EnterCharProfile(void)
 {
 	// reset previous page
-  iPreviousImpPage = -1;
+	iPreviousImpPage = -1;
 
 	// grab the graphics
 	LoadImpGraphics( );
@@ -108,7 +108,7 @@ static void RemoveImpGraphics(void);
 
 void ExitCharProfile(void)
 {
-  // get rid of graphics
+	// get rid of graphics
 	RemoveImpGraphics( );
 
 	// clean up past mode
@@ -123,9 +123,9 @@ static BOOLEAN HasTheCurrentIMPPageBeenVisited(void);
 void HandleCharProfile(void)
 {
 	if( fReDrawCharProfile )
-  {
+	{
 		// re draw
-    RenderCharProfile( );
+		RenderCharProfile( );
 		fReDrawCharProfile = FALSE;
 
 	}
@@ -159,84 +159,79 @@ void HandleCharProfile(void)
 			{
 				fDoneLoadPending = TRUE;
 			}
-
-
 		}
 
 		fVisitedIMPSubPages[ iCurrentImpPage ] = TRUE;
 
 		if (fButtonPendingFlag)
 		{
-      // render screen
-      RenderCharProfile( );
-		  return;
+			// render screen
+			RenderCharProfile( );
+			return;
 		}
 
 		// exity old mode
-    ExitOldIMPMode( );
+		ExitOldIMPMode( );
 
 		// set previous page
 		iPreviousImpPage = iCurrentImpPage;
 
 		// enter new
-    EnterNewIMPMode( );
+		EnterNewIMPMode( );
 
 
 		// render screen
-    RenderCharProfile( );
+		RenderCharProfile( );
 
-		 // render title bar
-
-
-
+		// render title bar
 	}
 
 	// handle
-  switch( iCurrentImpPage )
-	 {
-		 case( IMP_HOME_PAGE ):
-			 HandleImpHomePage( );
-		 break;
-		 case( IMP_BEGIN ):
-		   HandleIMPBeginScreen( );
-		 break;
-		 case( IMP_PERSONALITY ):
-			 HandleIMPPersonalityEntrance( );
-		 break;
-		 case( IMP_PERSONALITY_QUIZ ):
-			 HandleIMPPersonalityQuiz( );
-		 break;
-		 case( IMP_PERSONALITY_FINISH ):
-		   HandleIMPPersonalityFinish( );
-		 break;
-		 case( IMP_ATTRIBUTE_ENTRANCE ):
-			 HandleIMPAttributeEntrance( );
-		 break;
-		 case( IMP_ATTRIBUTE_PAGE ):
-       HandleIMPAttributeSelection( );
-		 break;
-		 case( IMP_ATTRIBUTE_FINISH ):
-       HandleIMPAttributeFinish( );
-		 break;
-		 case( IMP_PORTRAIT ):
-       HandleIMPPortraits( );
-		 break;
-		 case( IMP_VOICE ):
-       HandleIMPVoices( );
-		 break;
-		 case( IMP_FINISH ):
-       HandleIMPFinish( );
-		 break;
-		 case( IMP_ABOUT_US ):
-       HandleIMPAboutUs( );
-		 break;
-		 case( IMP_MAIN_PAGE ):
-			 HandleIMPMainPage( );
-		 break;
-		 case( IMP_CONFIRM ):
-		   HandleIMPConfirm( );
-		 break;
-	 }
+	switch( iCurrentImpPage )
+	{
+		case( IMP_HOME_PAGE ):
+			HandleImpHomePage( );
+			break;
+		case( IMP_BEGIN ):
+			HandleIMPBeginScreen( );
+			break;
+		case( IMP_PERSONALITY ):
+			HandleIMPPersonalityEntrance( );
+			break;
+		case( IMP_PERSONALITY_QUIZ ):
+			HandleIMPPersonalityQuiz( );
+			break;
+		case( IMP_PERSONALITY_FINISH ):
+			HandleIMPPersonalityFinish( );
+			break;
+		case( IMP_ATTRIBUTE_ENTRANCE ):
+			HandleIMPAttributeEntrance( );
+			break;
+		case( IMP_ATTRIBUTE_PAGE ):
+			HandleIMPAttributeSelection( );
+			break;
+		case( IMP_ATTRIBUTE_FINISH ):
+			HandleIMPAttributeFinish( );
+			break;
+		case( IMP_PORTRAIT ):
+			HandleIMPPortraits( );
+			break;
+		case( IMP_VOICE ):
+			HandleIMPVoices( );
+			break;
+		case( IMP_FINISH ):
+			HandleIMPFinish( );
+			break;
+		case( IMP_ABOUT_US ):
+			HandleIMPAboutUs( );
+			break;
+		case( IMP_MAIN_PAGE ):
+			HandleIMPMainPage( );
+			break;
+		case( IMP_CONFIRM ):
+			HandleIMPConfirm( );
+			break;
+	}
 }
 
 
@@ -244,68 +239,68 @@ void RenderCharProfile(void)
 {
 	// button is waiting to go up?...do nothing,
 
-	 if( fButtonPendingFlag )
-	 {
-		 fPausedReDrawScreenFlag = TRUE;
-		 fButtonPendingFlag = FALSE;
-		 return;
-	 }
+	if( fButtonPendingFlag )
+	{
+		fPausedReDrawScreenFlag = TRUE;
+		fButtonPendingFlag = FALSE;
+		return;
+	}
 
-	 switch( iCurrentImpPage )
-	 {
-		 case( IMP_HOME_PAGE ):
-			 RenderImpHomePage( );
-		 break;
-		 case( IMP_BEGIN ):
-		   RenderIMPBeginScreen( );
-		 break;
-		 case( IMP_PERSONALITY ):
-			 RenderIMPPersonalityEntrance( );
-		 break;
-		 case( IMP_PERSONALITY_QUIZ ):
-			 RenderIMPPersonalityQuiz( );
-		 break;
-		 case( IMP_PERSONALITY_FINISH ):
-		   RenderIMPPersonalityFinish( );
-		 break;
-		 case( IMP_ATTRIBUTE_ENTRANCE ):
-			 RenderIMPAttributeEntrance( );
-		 break;
-		 case( IMP_ATTRIBUTE_PAGE ):
-       RenderIMPAttributeSelection( );
-		 break;
-		 case( IMP_ATTRIBUTE_FINISH ):
-       RenderIMPAttributeFinish( );
-		 break;
-		 case( IMP_PORTRAIT ):
-       RenderIMPPortraits( );
-		 break;
-		 case( IMP_VOICE ):
-       RenderIMPVoices( );
-		 break;
-		 case( IMP_FINISH ):
-       RenderIMPFinish( );
-		 break;
-		 case( IMP_ABOUT_US ):
-       RenderIMPAboutUs( );
-		 break;
-		 case( IMP_MAIN_PAGE ):
-		   RenderIMPMainPage( );
-		 break;
-		 case( IMP_CONFIRM ):
-		   RenderIMPConfirm( );
-		 break;
-	 }
+	switch( iCurrentImpPage )
+	{
+		case( IMP_HOME_PAGE ):
+			RenderImpHomePage( );
+			break;
+		case( IMP_BEGIN ):
+			RenderIMPBeginScreen( );
+			break;
+		case( IMP_PERSONALITY ):
+			RenderIMPPersonalityEntrance( );
+			break;
+		case( IMP_PERSONALITY_QUIZ ):
+			RenderIMPPersonalityQuiz( );
+			break;
+		case( IMP_PERSONALITY_FINISH ):
+			RenderIMPPersonalityFinish( );
+			break;
+		case( IMP_ATTRIBUTE_ENTRANCE ):
+			RenderIMPAttributeEntrance( );
+			break;
+		case( IMP_ATTRIBUTE_PAGE ):
+			RenderIMPAttributeSelection( );
+			break;
+		case( IMP_ATTRIBUTE_FINISH ):
+			RenderIMPAttributeFinish( );
+			break;
+		case( IMP_PORTRAIT ):
+			RenderIMPPortraits( );
+			break;
+		case( IMP_VOICE ):
+			RenderIMPVoices( );
+			break;
+		case( IMP_FINISH ):
+			RenderIMPFinish( );
+			break;
+		case( IMP_ABOUT_US ):
+			RenderIMPAboutUs( );
+			break;
+		case( IMP_MAIN_PAGE ):
+			RenderIMPMainPage( );
+			break;
+		case( IMP_CONFIRM ):
+			RenderIMPConfirm( );
+			break;
+	}
 
-	 // render title bar
-	 //RenderWWWProgramTitleBar( );
+	// render title bar
+	//RenderWWWProgramTitleBar( );
 
-   // render the text
-	 PrintImpText( );
+	// render the text
+	PrintImpText( );
 
-	 RenderWWWProgramTitleBar( );
+	RenderWWWProgramTitleBar( );
 
-	 DisplayProgramBoundingBox( TRUE );
+	DisplayProgramBoundingBox( TRUE );
 }
 
 
@@ -314,70 +309,69 @@ static void DestroyIMPButtons(void);
 
 static void ExitOldIMPMode(void)
 {
-  // exit old mode
+	// exit old mode
 
 	if( iPreviousImpPage == -1 )
 	{
 		// don't both, leave
-	  return;
-
+		return;
 	}
 	// remove old mode
-	 switch( iPreviousImpPage )
-	 {
-		 case( IMP_HOME_PAGE ):
-			 ExitImpHomePage( );
-		 break;
-		 case( IMP_BEGIN ):
-       DestroyIMPButtons( );
-		   ExitIMPBeginScreen( );
-		 break;
-		 case( IMP_FINISH ):
-       DestroyIMPButtons( );
-		   ExitIMPFinish( );
-		 break;
-		 case( IMP_PERSONALITY ):
-			 DestroyIMPButtons( );
-			 ExitIMPPersonalityEntrance( );
-		 break;
-		 case( IMP_PERSONALITY_QUIZ ):
-			 DestroyIMPButtons( );
-			 ExitIMPPersonalityQuiz( );
-		 break;
-		 case( IMP_PERSONALITY_FINISH ):
-			 DestroyIMPButtons( );
-		   ExitIMPPersonalityFinish( );
-		 break;
-		 case( IMP_ATTRIBUTE_ENTRANCE ):
-			 DestroyIMPButtons( );
-			 ExitIMPAttributeEntrance( );
-		 break;
-		 case( IMP_ATTRIBUTE_PAGE ):
-			 DestroyIMPButtons( );
-       ExitIMPAttributeSelection( );
-		 break;
-		 case( IMP_ATTRIBUTE_FINISH ):
-			 DestroyIMPButtons( );
-       ExitIMPAttributeFinish( );
-		 break;
-		 case( IMP_PORTRAIT ):
-			 DestroyIMPButtons( );
-       ExitIMPPortraits( );
-		 break;
-		 case( IMP_VOICE ):
-			 DestroyIMPButtons( );
-       ExitIMPVoices( );
-		 break;
-		 case( IMP_ABOUT_US ):
-       ExitIMPAboutUs( );
-		 break;
-		 case( IMP_MAIN_PAGE ):
-		   ExitIMPMainPage( );
-		 break;
-		  case( IMP_CONFIRM ):
-		   ExitIMPConfirm( );
-		 break;
-	 }
+	switch( iPreviousImpPage )
+	{
+		case( IMP_HOME_PAGE ):
+			ExitImpHomePage( );
+			break;
+		case( IMP_BEGIN ):
+			DestroyIMPButtons( );
+			ExitIMPBeginScreen( );
+			break;
+		case( IMP_FINISH ):
+			DestroyIMPButtons( );
+			ExitIMPFinish( );
+			break;
+		case( IMP_PERSONALITY ):
+			DestroyIMPButtons( );
+			ExitIMPPersonalityEntrance( );
+			break;
+		case( IMP_PERSONALITY_QUIZ ):
+			DestroyIMPButtons( );
+			ExitIMPPersonalityQuiz( );
+			break;
+		case( IMP_PERSONALITY_FINISH ):
+			DestroyIMPButtons( );
+			ExitIMPPersonalityFinish( );
+			break;
+		case( IMP_ATTRIBUTE_ENTRANCE ):
+			DestroyIMPButtons( );
+			ExitIMPAttributeEntrance( );
+			break;
+		case( IMP_ATTRIBUTE_PAGE ):
+			DestroyIMPButtons( );
+			ExitIMPAttributeSelection( );
+			break;
+		case( IMP_ATTRIBUTE_FINISH ):
+			DestroyIMPButtons( );
+			ExitIMPAttributeFinish( );
+			break;
+		case( IMP_PORTRAIT ):
+			DestroyIMPButtons( );
+			ExitIMPPortraits( );
+			break;
+		case( IMP_VOICE ):
+			DestroyIMPButtons( );
+			ExitIMPVoices( );
+			break;
+		case( IMP_ABOUT_US ):
+			ExitIMPAboutUs( );
+			break;
+		case( IMP_MAIN_PAGE ):
+			ExitIMPMainPage( );
+			break;
+		case( IMP_CONFIRM ):
+			ExitIMPConfirm( );
+			break;
+	}
 }
 
 
@@ -386,97 +380,95 @@ static void CreateIMPButtons(void);
 
 static void EnterNewIMPMode(void)
 {
-  // enter new mode
+	// enter new mode
 
-	 switch( iCurrentImpPage )
-	 {
-		 case( IMP_HOME_PAGE ):
-			 EnterImpHomePage( );
-		 break;
-		 case( IMP_BEGIN ):
-			 CreateIMPButtons( );
-		   EnterIMPBeginScreen( );
-		 break;
-		 case( IMP_FINISH ):
-			 CreateIMPButtons( );
-		   EnterIMPFinish( );
-		 break;
-		 case( IMP_PERSONALITY ):
-			 CreateIMPButtons( );
-			 EnterIMPPersonalityEntrance( );
-		 break;
-		 case( IMP_PERSONALITY_QUIZ ):
-			 CreateIMPButtons( );
-			 EnterIMPPersonalityQuiz( );
-		 break;
-		 case( IMP_PERSONALITY_FINISH ):
-			 CreateIMPButtons( );
-		   EnterIMPPersonalityFinish( );
-		 break;
-		 case( IMP_ATTRIBUTE_ENTRANCE ):
-			 CreateIMPButtons( );
-			 EnterIMPAttributeEntrance( );
-		 break;
-		 case( IMP_ATTRIBUTE_PAGE ):
-       CreateIMPButtons( );
-       EnterIMPAttributeSelection( );
-		 break;
-		 case( IMP_ATTRIBUTE_FINISH ):
-			 CreateIMPButtons( );
-       EnterIMPAttributeFinish( );
-		 break;
-		 case( IMP_PORTRAIT ):
-			 CreateIMPButtons( );
-       EnterIMPPortraits( );
-		 break;
-		 case( IMP_VOICE ):
-			 CreateIMPButtons( );
-       EnterIMPVoices( );
-		 break;
-		 case( IMP_ABOUT_US ):
-       EnterIMPAboutUs( );
-		 break;
-		 case( IMP_MAIN_PAGE ):
-		   EnterIMPMainPage( );
-		 break;
-     case( IMP_CONFIRM ):
-		   EnterIMPConfirm( );
-		 break;
-	 }
+	switch( iCurrentImpPage )
+	{
+		case( IMP_HOME_PAGE ):
+			EnterImpHomePage( );
+			break;
+		case( IMP_BEGIN ):
+			CreateIMPButtons( );
+			EnterIMPBeginScreen( );
+			break;
+		case( IMP_FINISH ):
+			CreateIMPButtons( );
+			EnterIMPFinish( );
+			break;
+		case( IMP_PERSONALITY ):
+			CreateIMPButtons( );
+			EnterIMPPersonalityEntrance( );
+			break;
+		case( IMP_PERSONALITY_QUIZ ):
+			CreateIMPButtons( );
+			EnterIMPPersonalityQuiz( );
+			break;
+		case( IMP_PERSONALITY_FINISH ):
+			CreateIMPButtons( );
+			EnterIMPPersonalityFinish( );
+			break;
+		case( IMP_ATTRIBUTE_ENTRANCE ):
+			CreateIMPButtons( );
+			EnterIMPAttributeEntrance( );
+			break;
+		case( IMP_ATTRIBUTE_PAGE ):
+			CreateIMPButtons( );
+			EnterIMPAttributeSelection( );
+			break;
+		case( IMP_ATTRIBUTE_FINISH ):
+			CreateIMPButtons( );
+			EnterIMPAttributeFinish( );
+			break;
+		case( IMP_PORTRAIT ):
+			CreateIMPButtons( );
+			EnterIMPPortraits( );
+			break;
+		case( IMP_VOICE ):
+			CreateIMPButtons( );
+			EnterIMPVoices( );
+			break;
+		case( IMP_ABOUT_US ):
+			EnterIMPAboutUs( );
+			break;
+		case( IMP_MAIN_PAGE ):
+			EnterIMPMainPage( );
+			break;
+		case( IMP_CONFIRM ):
+			EnterIMPConfirm( );
+			break;
+	}
 }
 
 
 void ResetCharacterStats( void )
 {
-  // attributes
-  iStrength = 55;
-  iDexterity = 55;
-  iAgility = 55;
-  iWisdom = 55;
-  iLeadership =55;
-  iHealth = 55;
-
-  // skills
-  iMarksmanship = 55;
-  iMedical = 55;
-  iExplosives = 55;
-  iMechanical = 55;
+	// attributes
+	iStrength = 55;
+	iDexterity = 55;
+	iAgility = 55;
+	iWisdom = 55;
+	iLeadership =55;
+	iHealth = 55;
 
 	// skills
-  iSkillA = 0;
-  iSkillB = 0;
+	iMarksmanship = 55;
+	iMedical = 55;
+	iExplosives = 55;
+	iMechanical = 55;
 
-  // personality
-  iPersonality = 0;
+	// skills
+	iSkillA = 0;
+	iSkillB = 0;
 
-  // attitude
-  iAttitude = 0;
+	// personality
+	iPersonality = 0;
+
+	// attitude
+	iAttitude = 0;
 
 	// names
 	memset( &pFullName, 0 , sizeof( pFullName) );
 	memset( &pNickName, 0 , sizeof( pNickName) );
-
-
 }
 
 
@@ -492,7 +484,7 @@ static void LoadImpGraphics(void)
 	LoadAnalyse( );
 	LoadAttributeGraph( );
 
-  LoadNameIndent( );
+	LoadNameIndent( );
 	LoadGenderIndent( );
 	LoadNickNameIndent( );
 
@@ -514,13 +506,13 @@ static void LoadImpGraphics(void)
 	LoadQtnShortIndentFrame( );
 	LoadQtnLongIndentHighFrame( );
 	LoadQtnShortIndentHighFrame( );
-  LoadQtnShort2IndentFrame( );
+	LoadQtnShort2IndentFrame( );
 	LoadQtnShort2IndentHighFrame( );
 
 	LoadQtnIndentFrame( );
-  LoadAttrib1IndentFrame( );
+	LoadAttrib1IndentFrame( );
 	LoadAttrib2IndentFrame( );
-  LoadAvgMercIndentFrame( );
+	LoadAvgMercIndentFrame( );
 	LoadAboutUsIndentFrame( );
 }
 
@@ -529,7 +521,7 @@ static void RemoveImpGraphics(void)
 {
 	// remove all graphics needed for IMP
 
-  RemoveProfileBackGround( );
+	RemoveProfileBackGround( );
 	DeleteIMPSymbol( );
 	DeleteBeginIndent( );
 	DeleteActivationIndent( );
@@ -537,7 +529,7 @@ static void RemoveImpGraphics(void)
 	DeleteAnalyse( );
 	DeleteAttributeGraph( );
 
-  DeleteNameIndent( );
+	DeleteNameIndent( );
 	DeleteGenderIndent( );
 	DeleteNickNameIndent( );
 
@@ -559,13 +551,13 @@ static void RemoveImpGraphics(void)
 	DeleteQtnShortIndentFrame( );
 	DeleteQtnLongIndentHighFrame( );
 	DeleteQtnShortIndentHighFrame( );
-  DeleteQtnShort2IndentFrame( );
+	DeleteQtnShort2IndentFrame( );
 	DeleteQtnShort2IndentHighFrame( );
 
 	DeleteQtnIndentFrame( );
-  DeleteAttrib1IndentFrame( );
+	DeleteAttrib1IndentFrame( );
 	DeleteAttrib2IndentFrame( );
-  DeleteAvgMercIndentFrame( );
+	DeleteAvgMercIndentFrame( );
 	DeleteAboutUsIndentFrame( );
 }
 
@@ -575,17 +567,17 @@ static void BtnIMPCancelCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateIMPButtons(void)
 {
-  // create all the buttons global to the IMP system
+	// create all the buttons global to the IMP system
 
-  giIMPButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
+	giIMPButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_3.sti", 0, 1);
 
 
 	// cancel
-	giIMPButton[0] = CreateIconAndTextButton( giIMPButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
-														 BtnIMPCancelCallback);
+	giIMPButton[0] = CreateIconAndTextButton(giIMPButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL,
+							FONT_WHITE, DEFAULT_SHADOW,
+							FONT_WHITE, DEFAULT_SHADOW,
+							LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
+							BtnIMPCancelCallback);
 
 	giIMPButton[0]->SpecifyTextSubOffsets(0, -1, FALSE);
 
@@ -596,9 +588,9 @@ static void CreateIMPButtons(void)
 
 static void DestroyIMPButtons(void)
 {
-  // destroy the buttons we created
+	// destroy the buttons we created
 	RemoveButton(giIMPButton[0] );
-  UnloadButtonImage(giIMPButtonImage[0] );
+	UnloadButtonImage(giIMPButtonImage[0] );
 }
 
 

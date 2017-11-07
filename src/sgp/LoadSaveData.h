@@ -48,32 +48,32 @@ void wchar_to_utf16(const wchar_t *string, void *outputBuf, int charsToWrite);
 class DataWriter
 {
 public:
-  /** Constructor.
-   * @param buf Pointer to the buffer for writing data. */
-  DataWriter(void *buf);
+	/** Constructor.
+	 * @param buf Pointer to the buffer for writing data. */
+	DataWriter(void *buf);
 
-  /** Write wchar string into UTF-16 format.
-   *
-   * If \a numChars is bigger then the number of actual characters in the string,
-   * then zeroes will be written to the buffer.
-   *
-   * @param string      String to write
-   * @param numChars    Number of characters to write. */
-  void writeStringAsUTF16(const wchar_t *string, int numChars);
+	/** Write wchar string into UTF-16 format.
+	 *
+	 * If \a numChars is bigger then the number of actual characters in the string,
+	 * then zeroes will be written to the buffer.
+	 *
+	 * @param string      String to write
+	 * @param numChars    Number of characters to write. */
+	void writeStringAsUTF16(const wchar_t *string, int numChars);
 
-  void writeU8 (uint8_t  value);        /**< Write uint8_t */
-  void writeU16(uint16_t value);        /**< Write uint16_t */
-  void writeU32(uint32_t value);        /**< Write uint32_t */
+	void writeU8 (uint8_t  value);        /**< Write uint8_t */
+	void writeU16(uint16_t value);        /**< Write uint16_t */
+	void writeU32(uint32_t value);        /**< Write uint32_t */
 
-  /** Get number of the consumed bytes during writing. */
-  size_t getConsumed() const;
+	/** Get number of the consumed bytes during writing. */
+	size_t getConsumed() const;
 
 protected:
-  void *m_buf;
-  const void *m_original;
+	void *m_buf;
+	const void *m_original;
 
-  /** Move pointer to \a numBytes bytes forward. */
-  void move(int numBytes);
+	/** Move pointer to \a numBytes bytes forward. */
+	void move(int numBytes);
 
 };
 
@@ -87,43 +87,43 @@ protected:
 class DataReader
 {
 public:
-  /** Constructor.
-   * @param buf Pointer to the buffer for writing data. */
-  DataReader(const void *buf);
+	/** Constructor.
+	 * @param buf Pointer to the buffer for writing data. */
+	DataReader(const void *buf);
 
-  /** Read UTF-16 encoded string.
-   * @param numChars Number of characters to read.
-   * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-  UTF8String readUTF16(int numChars, const IEncodingCorrector *fixer=NULL);
+	/** Read UTF-16 encoded string.
+	 * @param numChars Number of characters to read.
+	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
+	UTF8String readUTF16(int numChars, const IEncodingCorrector *fixer=NULL);
 
-  /** Read UTF-32 encoded string.
-   * @param numChars Number of characters to read. */
-  UTF8String readUTF32(int numChars);
+	/** Read UTF-32 encoded string.
+	 * @param numChars Number of characters to read. */
+	UTF8String readUTF32(int numChars);
 
-  /** Read UTF-16 encoded string into wide string buffer.
-   * @param buffer Buffer to read data in.
-   * @param numChars Number of characters to read.
-   * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-  void readUTF16(wchar_t *buffer, int numChars, const IEncodingCorrector *fixer=NULL);
+	/** Read UTF-16 encoded string into wide string buffer.
+	 * @param buffer Buffer to read data in.
+	 * @param numChars Number of characters to read.
+	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
+	void readUTF16(wchar_t *buffer, int numChars, const IEncodingCorrector *fixer=NULL);
 
-  /** Read UTF-32 encoded string into wide string buffer.
-   * @param buffer Buffer to read data in.
-   * @param numChars Number of characters to read. */
-  void readUTF32(wchar_t *buffer, int numChars);
+	/** Read UTF-32 encoded string into wide string buffer.
+	 * @param buffer Buffer to read data in.
+	 * @param numChars Number of characters to read. */
+	void readUTF32(wchar_t *buffer, int numChars);
 
-  uint8_t  readU8();            /**< Read uint8_t */
-  uint16_t readU16();           /**< Read uint16_t */
-  uint32_t readU32();           /**< Read uint32_t */
+	uint8_t  readU8();            /**< Read uint8_t */
+	uint16_t readU16();           /**< Read uint16_t */
+	uint32_t readU32();           /**< Read uint32_t */
 
-  /** Get number of the consumed bytes during reading. */
-  size_t getConsumed() const;
+	/** Get number of the consumed bytes during reading. */
+	size_t getConsumed() const;
 
 protected:
-  const void *m_buf;
-  const void *m_original;
+	const void *m_buf;
+	const void *m_original;
 
-  /** Move pointer to \a numBytes bytes forward. */
-  void move(int numBytes);
+	/** Move pointer to \a numBytes bytes forward. */
+	void move(int numBytes);
 
 };
 

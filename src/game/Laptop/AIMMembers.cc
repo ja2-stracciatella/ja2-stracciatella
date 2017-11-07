@@ -57,223 +57,223 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
-#define	MERCBIOSFILENAME		BINARYDATADIR "/aimbios.edt"
+#define MERCBIOSFILENAME			BINARYDATADIR "/aimbios.edt"
 
 
 
-#define	AIM_M_FONT_PREV_NEXT_CONTACT		FONT14ARIAL
-#define	AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP		FONT_MCOLOR_DKWHITE
-#define	AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN		138
-#define AIM_M_FONT_STATIC_TEXT					FONT12ARIAL
-#define AIM_M_COLOR_STATIC_TEXT					146//75
-#define AIM_M_FONT_DYNAMIC_TEXT					FONT10ARIAL
-#define AIM_M_COLOR_DYNAMIC_TEXT				FONT_MCOLOR_WHITE
-#define AIM_M_WEAPON_TEXT_FONT					FONT10ARIAL
-#define AIM_M_WEAPON_TEXT_COLOR					FONT_MCOLOR_WHITE
-#define AIM_M_NUMBER_FONT								FONT12ARIAL
-#define AIM_M_ACTIVE_MEMBER_TITLE_COLOR	AIM_GREEN
-#define AIM_M_FEE_CONTRACT_COLOR				AIM_GREEN
-#define	AIM_M_VIDEO_TITLE_COLOR					AIM_FONT_GOLD
-#define	AIM_M_VIDEO_NAME_COLOR					FONT_MCOLOR_BLACK
-#define	AIM_M_VIDEO_NAME_SHADOWCOLOR		AIM_FONT_GOLD
+#define AIM_M_FONT_PREV_NEXT_CONTACT		FONT14ARIAL
+#define AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP	FONT_MCOLOR_DKWHITE
+#define AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN	138
+#define AIM_M_FONT_STATIC_TEXT			FONT12ARIAL
+#define AIM_M_COLOR_STATIC_TEXT			146//75
+#define AIM_M_FONT_DYNAMIC_TEXT			FONT10ARIAL
+#define AIM_M_COLOR_DYNAMIC_TEXT		FONT_MCOLOR_WHITE
+#define AIM_M_WEAPON_TEXT_FONT			FONT10ARIAL
+#define AIM_M_WEAPON_TEXT_COLOR			FONT_MCOLOR_WHITE
+#define AIM_M_NUMBER_FONT			FONT12ARIAL
+#define AIM_M_ACTIVE_MEMBER_TITLE_COLOR		AIM_GREEN
+#define AIM_M_FEE_CONTRACT_COLOR		AIM_GREEN
+#define AIM_M_VIDEO_TITLE_COLOR			AIM_FONT_GOLD
+#define AIM_M_VIDEO_NAME_COLOR			FONT_MCOLOR_BLACK
+#define AIM_M_VIDEO_NAME_SHADOWCOLOR		AIM_FONT_GOLD
 
 
-#define	AIM_M_VIDEO_CONTRACT_AMOUNT_FONT	FONT10ARIAL
-#define	AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR	183
+#define AIM_M_VIDEO_CONTRACT_AMOUNT_FONT	FONT10ARIAL
+#define AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR	183
 
-#define	AIM_POPUP_BOX_FONT							FONT12ARIAL
-#define	AIM_POPUP_BOX_COLOR							FONT_MCOLOR_BLACK
+#define AIM_POPUP_BOX_FONT			FONT12ARIAL
+#define AIM_POPUP_BOX_COLOR			FONT_MCOLOR_BLACK
 
-#define	HIGH_STAT_COLOR											FONT_MCOLOR_WHITE//FONT_MCOLOR_LTGREEN
-#define	MED_STAT_COLOR											FONT_MCOLOR_DKWHITE//FONT_MCOLOR_WHITE
-#define	LOW_STAT_COLOR											FONT_MCOLOR_DKWHITE//FONT_MCOLOR_DKGRAY
+#define HIGH_STAT_COLOR				FONT_MCOLOR_WHITE//FONT_MCOLOR_LTGREEN
+#define MED_STAT_COLOR				FONT_MCOLOR_DKWHITE//FONT_MCOLOR_WHITE
+#define LOW_STAT_COLOR				FONT_MCOLOR_DKWHITE//FONT_MCOLOR_DKGRAY
 
-#define SIZE_MERC_BIO_INFO        400
-#define SIZE_MERC_ADDITIONAL_INFO 160
+#define SIZE_MERC_BIO_INFO			400
+#define SIZE_MERC_ADDITIONAL_INFO		160
 
-#define	MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES	6 * 60
-#define	NUMBER_HATED_MERCS_ONTEAM							3
-
-
-#define		STATS_X						IMAGE_OFFSET_X + 121
-#define		STATS_Y						IMAGE_OFFSET_Y + 66//69
-
-#define		PRICE_X						IMAGE_OFFSET_X + 377
-#define		PRICE_Y						STATS_Y
-#define		PRICE_WIDTH				116
-
-#define		PORTRAIT_X				IMAGE_OFFSET_X + 8
-#define		PORTRAIT_Y				STATS_Y
-#define   PORTRAIT_WIDTH		110
-#define   PORTRAIT_HEIGHT		126
-
-#define		FACE_X						PORTRAIT_X + 2
-#define		FACE_Y						PORTRAIT_Y + 2
-#define		FACE_WIDTH				106
-#define		FACE_HEIGHT				122
+#define MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES	6 * 60
+#define NUMBER_HATED_MERCS_ONTEAM		3
 
 
-#define		WEAPONBOX_X				IMAGE_OFFSET_X + 6
-#define		WEAPONBOX_Y				IMAGE_OFFSET_Y + 296//299
-#define		WEAPONBOX_SIZE_X	61
-#define		WEAPONBOX_SIZE_Y	31
-#define		WEAPONBOX_NUMBER	8
+#define STATS_X					IMAGE_OFFSET_X + 121
+#define STATS_Y					IMAGE_OFFSET_Y + 66//69
 
-#define		SPACE_BN_LINES		15//13
-#define		STATS_FIRST_COL		STATS_X + 9
-#define		STATS_SECOND_COL	STATS_FIRST_COL + 129
-#define   STAT_NAME_WIDTH    87
-#define   STAT_VALUE_DX     102
+#define PRICE_X					IMAGE_OFFSET_X + 377
+#define PRICE_Y					STATS_Y
+#define PRICE_WIDTH				116
 
-#define		HEALTH_Y					STATS_Y + 34
-#define		AGILITY_Y					HEALTH_Y	+ SPACE_BN_LINES
-#define		DEXTERITY_Y				AGILITY_Y + SPACE_BN_LINES
-#define		STRENGTH_Y				DEXTERITY_Y + SPACE_BN_LINES
-#define		LEADERSHIP_Y			STRENGTH_Y + SPACE_BN_LINES
-#define		WISDOM_Y					LEADERSHIP_Y + SPACE_BN_LINES
+#define PORTRAIT_X				IMAGE_OFFSET_X + 8
+#define PORTRAIT_Y				STATS_Y
+#define PORTRAIT_WIDTH				110
+#define PORTRAIT_HEIGHT				126
 
-#define		EXPLEVEL_Y				HEALTH_Y
-#define		MARKSMAN_Y				AGILITY_Y
-#define		MECHANAICAL_Y			DEXTERITY_Y
-#define		EXPLOSIVE_Y				STRENGTH_Y
-#define		MEDICAL_Y					LEADERSHIP_Y
+#define FACE_X					PORTRAIT_X + 2
+#define FACE_Y					PORTRAIT_Y + 2
+#define FACE_WIDTH				106
+#define FACE_HEIGHT				122
 
-#define		NAME_X						STATS_FIRST_COL
-#define		NAME_Y						STATS_Y + 7
 
-#define		FEE_X							PRICE_X + 7
-#define		FEE_Y							NAME_Y
-#define		FEE_WIDTH					37  //33
+#define WEAPONBOX_X				IMAGE_OFFSET_X + 6
+#define WEAPONBOX_Y				IMAGE_OFFSET_Y + 296//299
+#define WEAPONBOX_SIZE_X			61
+#define WEAPONBOX_SIZE_Y			31
+#define WEAPONBOX_NUMBER			8
 
-#define		AIM_CONTRACT_X		PRICE_X + 51
-#define		AIM_CONTRACT_Y		FEE_Y
-#define		AIM_CONTRACT_WIDTH		59
+#define SPACE_BN_LINES				15//13
+#define STATS_FIRST_COL				STATS_X + 9
+#define STATS_SECOND_COL			STATS_FIRST_COL + 129
+#define STAT_NAME_WIDTH				87
+#define STAT_VALUE_DX				102
 
-#define		ONEDAY_X					AIM_CONTRACT_X
-#define		ONEWEEK_X					AIM_CONTRACT_X
-#define		TWOWEEK_X					AIM_CONTRACT_X
+#define HEALTH_Y				STATS_Y + 34
+#define AGILITY_Y				HEALTH_Y	+ SPACE_BN_LINES
+#define DEXTERITY_Y				AGILITY_Y + SPACE_BN_LINES
+#define STRENGTH_Y				DEXTERITY_Y + SPACE_BN_LINES
+#define LEADERSHIP_Y				STRENGTH_Y + SPACE_BN_LINES
+#define WISDOM_Y				LEADERSHIP_Y + SPACE_BN_LINES
 
-#define PREVIOUS_X (STD_SCREEN_X + 224)
-#define CONTACT_X  (STD_SCREEN_X + 331)
-#define NEXT_X     (STD_SCREEN_X + 431)
-#define BTN_BOX_Y  (STD_SCREEN_Y + 386 + LAPTOP_SCREEN_WEB_DELTA_Y - 4)
+#define EXPLEVEL_Y				HEALTH_Y
+#define MARKSMAN_Y				AGILITY_Y
+#define MECHANAICAL_Y				DEXTERITY_Y
+#define EXPLOSIVE_Y				STRENGTH_Y
+#define MEDICAL_Y				LEADERSHIP_Y
 
-#define		AIM_MERC_INFO_X		(STD_SCREEN_X + 124)
-#define		AIM_MERC_INFO_Y		(STD_SCREEN_Y + 223 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define NAME_X					STATS_FIRST_COL
+#define NAME_Y					STATS_Y + 7
 
-#define		AIM_MERC_ADD_X		AIM_MERC_ADD_INFO_X
-#define		AIM_MERC_ADD_Y		(STD_SCREEN_Y + 269 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define FEE_X					PRICE_X + 7
+#define FEE_Y					NAME_Y
+#define FEE_WIDTH				37  //33
 
-#define   AIM_MERC_ADD_INFO_X	AIM_MERC_INFO_X
-#define   AIM_MERC_ADD_INFO_Y	AIM_MERC_ADD_Y + 15
-#define   AIM_MERC_INFO_WIDTH 470
+#define AIM_CONTRACT_X				PRICE_X + 51
+#define AIM_CONTRACT_Y				FEE_Y
+#define AIM_CONTRACT_WIDTH			59
 
-#define		AIM_MEDICAL_DEPOSIT_X		PRICE_X + 5
-#define		AIM_MEDICAL_DEPOSIT_Y		LEADERSHIP_Y
-#define		AIM_MEDICAL_DEPOSIT_WIDTH		PRICE_WIDTH - 6
+#define ONEDAY_X				AIM_CONTRACT_X
+#define ONEWEEK_X				AIM_CONTRACT_X
+#define TWOWEEK_X				AIM_CONTRACT_X
 
-#define		AIM_MEMBER_ACTIVE_TEXT_X	IMAGE_OFFSET_X + 149
-#define		AIM_MEMBER_ACTIVE_TEXT_Y	AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y	- 1	// + 1
-#define		AIM_MEMBER_ACTIVE_TEXT_WIDTH	AIM_SYMBOL_WIDTH
+#define PREVIOUS_X				(STD_SCREEN_X + 224)
+#define CONTACT_X				(STD_SCREEN_X + 331)
+#define NEXT_X					(STD_SCREEN_X + 431)
+#define BTN_BOX_Y				(STD_SCREEN_Y + 386 + LAPTOP_SCREEN_WEB_DELTA_Y - 4)
 
-#define		AIM_MEMBER_OPTIONAL_GEAR_X		AIM_MERC_INFO_X
-#define		AIM_MEMBER_OPTIONAL_GEAR_Y		WEAPONBOX_Y - 13
+#define AIM_MERC_INFO_X				(STD_SCREEN_X + 124)
+#define AIM_MERC_INFO_Y				(STD_SCREEN_Y + 223 + LAPTOP_SCREEN_WEB_DELTA_Y)
 
-#define		AIM_MEMBER_WEAPON_NAME_Y			WEAPONBOX_Y + WEAPONBOX_SIZE_Y + 1
-#define		AIM_MEMBER_WEAPON_NAME_WIDTH	WEAPONBOX_SIZE_X - 2
+#define AIM_MERC_ADD_X				AIM_MERC_ADD_INFO_X
+#define AIM_MERC_ADD_Y				(STD_SCREEN_Y + 269 + LAPTOP_SCREEN_WEB_DELTA_Y)
+
+#define AIM_MERC_ADD_INFO_X			AIM_MERC_INFO_X
+#define AIM_MERC_ADD_INFO_Y			AIM_MERC_ADD_Y + 15
+#define AIM_MERC_INFO_WIDTH			470
+
+#define AIM_MEDICAL_DEPOSIT_X			PRICE_X + 5
+#define AIM_MEDICAL_DEPOSIT_Y			LEADERSHIP_Y
+#define AIM_MEDICAL_DEPOSIT_WIDTH		PRICE_WIDTH - 6
+
+#define AIM_MEMBER_ACTIVE_TEXT_X		IMAGE_OFFSET_X + 149
+#define AIM_MEMBER_ACTIVE_TEXT_Y		AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y	- 1	// + 1
+#define AIM_MEMBER_ACTIVE_TEXT_WIDTH		AIM_SYMBOL_WIDTH
+
+#define AIM_MEMBER_OPTIONAL_GEAR_X		AIM_MERC_INFO_X
+#define AIM_MEMBER_OPTIONAL_GEAR_Y		WEAPONBOX_Y - 13
+
+#define AIM_MEMBER_WEAPON_NAME_Y		WEAPONBOX_Y + WEAPONBOX_SIZE_Y + 1
+#define AIM_MEMBER_WEAPON_NAME_WIDTH		WEAPONBOX_SIZE_X - 2
 
 //video Conferencing Info
-#define		AIM_MEMBER_VIDEO_CONF_TERMINAL_X	(STD_SCREEN_X + 125)
-#define		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y	(STD_SCREEN_Y + 97 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_MEMBER_VIDEO_CONF_TERMINAL_X	(STD_SCREEN_X + 125)
+#define AIM_MEMBER_VIDEO_CONF_TERMINAL_Y	(STD_SCREEN_Y + 97 + LAPTOP_SCREEN_WEB_DELTA_Y)
 
-#define		AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH			368
-#define		AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT			21
-#define		AIM_MEMBER_VIDEO_TITLE_ITERATIONS			18
-#define		AIM_MEMBER_VIDEO_TITLE_START_Y				(STD_SCREEN_Y + 382 + LAPTOP_SCREEN_WEB_DELTA_Y)
-
-
-#define		AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 6
-#define		AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 130
-
-#define		AIM_MEMBER_VIDEO_CONF_XCLOSE_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 348
-#define		AIM_MEMBER_VIDEO_CONF_XCLOSE_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 3
-
-#define		AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y	20
-
-#define		AIM_MEMBER_BUY_CONTRACT_LENGTH_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113
-#define		AIM_MEMBER_BUY_CONTRACT_LENGTH_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 15
-
-#define		AIM_MEMBER_BUY_EQUIPMENT_GAP			23
-
-#define		AIM_MEMBER_BUY_EQUIPMENT_X				AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 235
-
-#define		AIM_MEMBER_AUTHORIZE_PAY_X				AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113
-#define		AIM_MEMBER_AUTHORIZE_PAY_Y				AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 92
-#define		AIM_MEMBER_AUTHORIZE_PAY_GAP			122
-
-#define		AIM_MEMBER_VIDEO_FACE_X						AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7 + 1
-#define		AIM_MEMBER_VIDEO_FACE_Y						AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 6 + 1
-
-#define		AIM_MEMBER_VIDEO_FACE_WIDTH				96
-#define		AIM_MEMBER_VIDEO_FACE_HEIGHT			86
-
-#define		AIM_MEMBER_VIDEO_NAME_X						AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7
-#define		AIM_MEMBER_VIDEO_NAME_Y						AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 5
-
-#define		AIM_CONTRACT_CHARGE_X							AIM_MEMBER_VIDEO_NAME_X
-#define		AIM_CONTRACT_CHARGE_Y							AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 98
-
-#define		AIM_CONTRACT_LENGTH_ONE_DAY				0
-#define		AIM_CONTRACT_LENGTH_ONE_WEEK			1
-#define		AIM_CONTRACT_LENGTH_TWO_WEEKS			2
-
-#define		AIM_SELECT_LIGHT_ON_X							105
-#define		AIM_SELECT_LIGHT_ON_Y							8
-
-#define		AIM_SELECT_LIGHT_OFF_X						105
-#define		AIM_SELECT_LIGHT_OFF_Y						7
-
-#define		AIM_CONTRACT_CHARGE_AMOUNNT_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7//8
-#define		AIM_CONTRACT_CHARGE_AMOUNNT_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 111//114
-
-#define		AIM_POPUP_BOX_X										(STD_SCREEN_X + 260)
-#define		AIM_POPUP_BOX_Y										(STD_SCREEN_Y + 140 + LAPTOP_SCREEN_WEB_DELTA_Y)
-
-#define		AIM_POPUP_BOX_WIDTH								162
-#define		AIM_POPUP_BOX_STRING1_Y						6
-#define		AIM_POPUP_BOX_BUTTON_OFFSET_X			20
-#define		AIM_POPUP_BOX_BUTTON_OFFSET_Y			62
-#define		AIM_POPUP_BOX_SUCCESS							0
-#define		AIM_POPUP_BOX_FAILURE							1
-
-#define		AIM_MEMBER_HANG_UP_X							(STD_SCREEN_X + 290)
-#define		AIM_MEMBER_HANG_UP_Y							AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 42
-
-#define		VC_CONTACT_STATIC_TIME						30
-#define		VC_CONTACT_FUZZY_LINE_TIME				100
-#define		VC_NUM_LINES_SNOW									6
-#define		VC_NUM_FUZZ_LINES									10
-#define		VC_NUM_STRAIGHT_LINES							9
-
-#define		VC_ANSWER_IMAGE_DELAY							100
+#define AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH	368
+#define AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT	21
+#define AIM_MEMBER_VIDEO_TITLE_ITERATIONS	18
+#define AIM_MEMBER_VIDEO_TITLE_START_Y		(STD_SCREEN_Y + 382 + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 
-#define		QUOTE_FIRST_ATTITUDE_TIME				3000
-#define		QUOTE_ATTITUDE_TIME							10000
+#define AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 6
+#define AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 130
 
-#define		QUOTE_DELAY_SMALL_TALK					1
-#define		QUOTE_DELAY_IMPATIENT_TALK			2
-#define		QUOTE_DELAY_VERY_IMPATIENT_TALK	3
-#define		QUOTE_DELAY_HANGUP_TALK					4
-#define		QUOTE_DELAY_NO_ACTION						5
-#define		QUOTE_MERC_BUSY									6
+#define AIM_MEMBER_VIDEO_CONF_XCLOSE_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 348
+#define AIM_MEMBER_VIDEO_CONF_XCLOSE_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 3
 
-#define		TEXT_POPUP_WINDOW_Y								(STD_SCREEN_Y + 255 + LAPTOP_SCREEN_WEB_DELTA_Y)
-#define		TEXT_POPUP_STRING_SIZE						512
+#define AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y	20
 
-#define		MINIMUM_TALKING_TIME_FOR_MERC			1500
+#define AIM_MEMBER_BUY_CONTRACT_LENGTH_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113
+#define AIM_MEMBER_BUY_CONTRACT_LENGTH_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 15
 
-#define		AIM_TEXT_SPEECH_MODIFIER					80
+#define AIM_MEMBER_BUY_EQUIPMENT_GAP		23
+
+#define AIM_MEMBER_BUY_EQUIPMENT_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 235
+
+#define AIM_MEMBER_AUTHORIZE_PAY_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113
+#define AIM_MEMBER_AUTHORIZE_PAY_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 92
+#define AIM_MEMBER_AUTHORIZE_PAY_GAP		122
+
+#define AIM_MEMBER_VIDEO_FACE_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7 + 1
+#define AIM_MEMBER_VIDEO_FACE_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 6 + 1
+
+#define AIM_MEMBER_VIDEO_FACE_WIDTH		96
+#define AIM_MEMBER_VIDEO_FACE_HEIGHT		86
+
+#define AIM_MEMBER_VIDEO_NAME_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7
+#define AIM_MEMBER_VIDEO_NAME_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 5
+
+#define AIM_CONTRACT_CHARGE_X			AIM_MEMBER_VIDEO_NAME_X
+#define AIM_CONTRACT_CHARGE_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 98
+
+#define AIM_CONTRACT_LENGTH_ONE_DAY		0
+#define AIM_CONTRACT_LENGTH_ONE_WEEK		1
+#define AIM_CONTRACT_LENGTH_TWO_WEEKS		2
+
+#define AIM_SELECT_LIGHT_ON_X			105
+#define AIM_SELECT_LIGHT_ON_Y			8
+
+#define AIM_SELECT_LIGHT_OFF_X			105
+#define AIM_SELECT_LIGHT_OFF_Y			7
+
+#define AIM_CONTRACT_CHARGE_AMOUNNT_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7//8
+#define AIM_CONTRACT_CHARGE_AMOUNNT_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 111//114
+
+#define AIM_POPUP_BOX_X				(STD_SCREEN_X + 260)
+#define AIM_POPUP_BOX_Y				(STD_SCREEN_Y + 140 + LAPTOP_SCREEN_WEB_DELTA_Y)
+
+#define AIM_POPUP_BOX_WIDTH			162
+#define AIM_POPUP_BOX_STRING1_Y			6
+#define AIM_POPUP_BOX_BUTTON_OFFSET_X		20
+#define AIM_POPUP_BOX_BUTTON_OFFSET_Y		62
+#define AIM_POPUP_BOX_SUCCESS			0
+#define AIM_POPUP_BOX_FAILURE			1
+
+#define AIM_MEMBER_HANG_UP_X			(STD_SCREEN_X + 290)
+#define AIM_MEMBER_HANG_UP_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 42
+
+#define VC_CONTACT_STATIC_TIME			30
+#define VC_CONTACT_FUZZY_LINE_TIME		100
+#define VC_NUM_LINES_SNOW			6
+#define VC_NUM_FUZZ_LINES			10
+#define VC_NUM_STRAIGHT_LINES			9
+
+#define VC_ANSWER_IMAGE_DELAY			100
+
+
+#define QUOTE_FIRST_ATTITUDE_TIME		3000
+#define QUOTE_ATTITUDE_TIME			10000
+
+#define QUOTE_DELAY_SMALL_TALK			1
+#define QUOTE_DELAY_IMPATIENT_TALK		2
+#define QUOTE_DELAY_VERY_IMPATIENT_TALK		3
+#define QUOTE_DELAY_HANGUP_TALK			4
+#define QUOTE_DELAY_NO_ACTION			5
+#define QUOTE_MERC_BUSY	6
+
+#define TEXT_POPUP_WINDOW_Y			(STD_SCREEN_Y + 255 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define TEXT_POPUP_STRING_SIZE			512
+
+#define MINIMUM_TALKING_TIME_FOR_MERC		1500
+
+#define AIM_TEXT_SPEECH_MODIFIER		80
 
 
 // Enumerated types used for the Pop Up Box
@@ -293,8 +293,8 @@ enum
 	VC_STATIC_IMAGE,
 	VC_BW_SNOW,
 	VC_PIXELATE,
-	VC_TRANS_SNOW_IN,			// fade from clear to snowy
-	VC_TRANS_SNOW_OUT,		// fade from snowy to clear
+	VC_TRANS_SNOW_IN, // fade from clear to snowy
+	VC_TRANS_SNOW_OUT, // fade from snowy to clear
 };
 
 
@@ -303,8 +303,8 @@ static SGPVObject* guiStats;
 static SGPVObject* guiPrice;
 static SGPVObject* guiPortrait;
 static SGPVObject* guiWeaponBox;
-//UINT32		guiVideoFace;
-//UINT32		guiContactButton;
+//UINT32  guiVideoFace;
+//UINT32 guiContactButton;
 static SGPVObject* guiVideoConfPopup;
 static SGPVObject* guiVideoConfTerminal;
 static SGPVObject* guiPopUpBox;
@@ -405,7 +405,7 @@ void EnterInitAimMembers()
 	gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	gfVideoFaceActive = FALSE;
-//fShouldMercTalk = FALSE;
+	//fShouldMercTalk = FALSE;
 	gubPopUpBoxAction = AIM_POPUP_NOTHING;
 	gfRedrawScreen = FALSE;
 	giContractAmount = 0;
@@ -417,7 +417,7 @@ void EnterInitAimMembers()
 	//reset the variable so a pop up can be displyed this time in laptop
 	LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop = FALSE;
 
-		//reset the id of the last merc
+	//reset the id of the last merc
 	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
 }
 
@@ -486,12 +486,14 @@ void EnterAIMMembers()
 
 
 	//** Mouse Regions **
-	MSYS_DefineRegion( &gSelectedFaceRegion, PORTRAIT_X, PORTRAIT_Y , PORTRAIT_X + PORTRAIT_WIDTH , PORTRAIT_Y + PORTRAIT_HEIGHT, MSYS_PRIORITY_HIGH,
-							 CURSOR_WWW, SelectFaceMovementRegionCallBack, SelectFaceRegionCallBack );
+	MSYS_DefineRegion(&gSelectedFaceRegion, PORTRAIT_X, PORTRAIT_Y,
+				PORTRAIT_X + PORTRAIT_WIDTH , PORTRAIT_Y + PORTRAIT_HEIGHT, MSYS_PRIORITY_HIGH,
+				CURSOR_WWW, SelectFaceMovementRegionCallBack, SelectFaceRegionCallBack);
 
 	// if user clicks in the area, the merc will shut up!
-	MSYS_DefineRegion( &gSelectedShutUpMercRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y ,LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
-							 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectShutUpMercRegionCallBack);
+	MSYS_DefineRegion(&gSelectedShutUpMercRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y,
+				LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
+				CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectShutUpMercRegionCallBack);
 	//have it disbled at first
 	gSelectedShutUpMercRegion.Disable();
 
@@ -571,7 +573,7 @@ void ExitAIMMembers()
 	RemoveButton( giContactButton );
 	RemoveButton( giNextButton );
 
-  MSYS_RemoveRegion( &gSelectedFaceRegion);
+	MSYS_RemoveRegion( &gSelectedFaceRegion);
 	MSYS_RemoveRegion( &gSelectedShutUpMercRegion);
 
 	ExitAimMenuBar();
@@ -606,14 +608,13 @@ void HandleAIMMembers()
 	{
 		StopMercTalking();
 		gfStopMercFromTalking = FALSE;
-/*
+		/*
 		//if we were waiting for the merc to stop talking
 		if( gfWaitingForMercToStopTalkingOrUserToClick )
 		{
 			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
 			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
-		}
-*/
+		}*/
 	}
 
 	// If we have to change video conference modes, change to new mode
@@ -706,7 +707,7 @@ void RenderAIMMembers()
 		uiPosX += WEAPONBOX_SIZE_X;
 	}
 
-  UpdateMercInfo();
+	UpdateMercInfo();
 
 	//Draw fee & contract
 	DrawTextToScreen(CharacterInfo[AIM_MEMBER_FEE],      FEE_X,          FEE_Y,          0,                  AIM_M_FONT_PREV_NEXT_CONTACT, AIM_M_FEE_CONTRACT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -747,7 +748,7 @@ void RenderAIMMembers()
 		gfIsAnsweringMachineActive = FALSE;
 	}
 
-//	DisplayAimPopUpBox();
+	//DisplayAimPopUpBox();
 
 	//check to see if the merc is dead if so disable the contact button
 	EnableButton(giContactButton, !IsMercDead(p));
@@ -886,17 +887,17 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		INT16       const  sCenX    = x + ABS(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  sCenY    = y + ABS(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
-    if (gamepolicy(f_draw_item_shadow))
-    {
-      // Blt the shadow of the item
-      BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), sCenX - 2, sCenY + 2);
-    }
+		if (gamepolicy(f_draw_item_shadow))
+		{
+			// Blt the shadow of the item
+			BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), sCenX - 2, sCenY + 2);
+		}
 
 		// Blt the item
 		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item->getGraphicNum(), sCenX,     sCenY, SGP_TRANSPARENT);
 
-		/* If there are more then 1 piece of equipment in the current slot, display
-		 * how many there are */
+		// If there are more then 1 piece of equipment in the current slot, display
+		// how many there are
 		if (p.bInvNumber[i] > 1)
 		{
 			wchar_t buf[32];
@@ -951,7 +952,7 @@ static void BtnContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		if (gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE)
 		{
 			gubVideoConferencingMode = AIM_VIDEO_POPUP_MODE;
-//				gubVideoConferencingMode = AIM_VIDEO_INIT_MODE;
+			//gubVideoConferencingMode = AIM_VIDEO_INIT_MODE;
 			gfFirstTimeInContactScreen = TRUE;
 		}
 
@@ -1085,7 +1086,7 @@ static void DisplayMercStats(MERCPROFILESTRUCT const& p)
 static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t* pString)
 {
 	UINT16 usStringLength = StringPixLength(pString, AIM_M_FONT_STATIC_TEXT);
-	INT16	 i;
+	INT16  i;
 	UINT16 usPosX;
 
 	usPosX = usStatX;
@@ -1154,7 +1155,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			StopMercTalking();
 
 			//can the merc be hired?  (does he like/not like people on the team
-//			if( CanMercBeHired() )
+			//if( CanMercBeHired() )
 			{
 				//Was the merc hired
 				if (AimMemberHireMerc())
@@ -1194,7 +1195,8 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static INT8 AimMemberHireMerc(void)
 {
 	if (LaptopSaveInfo.iCurrentBalance < giContractAmount)
-	{ // Wasn't hired because of lack of funds
+	{
+		// Wasn't hired because of lack of funds
 		CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_FAILED], AimPopUpText[AIM_MEMBER_NOT_ENOUGH_FUNDS], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_FAILURE);
 
 		// Disable the buttons behind the message box
@@ -1278,7 +1280,7 @@ static void DisplayMercsVideoFace(void);
 
 static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 {
-	wchar_t		sMercName[128];
+	wchar_t sMercName[128];
 
 	if (gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE) return;
 	if (gubVideoConferencingMode == AIM_VIDEO_POPUP_MODE)         return;
@@ -1308,7 +1310,7 @@ static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 
 	DisplayMercChargeAmount();
 
-//	if( gfMercIsTalking && !gfIsAnsweringMachineActive)
+	//if( gfMercIsTalking && !gfIsAnsweringMachineActive)
 	if( gfMercIsTalking && gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
 	{
 		UINT16 usActualWidth;
@@ -1320,7 +1322,7 @@ static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 		RenderMercPopUpBox(aim_members_box, usPosX, TEXT_POPUP_WINDOW_Y, FRAME_BUFFER);
 	}
 
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -1522,8 +1524,8 @@ static BOOLEAN DeleteAimPopUpBox()
 	{
 		case AIM_VIDEO_HIRE_MERC_MODE:              EnableDisableCurrentVideoConferenceButtons(FALSE); break;
 		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE: EnableButton(giAnsweringMachineButton[1]);         break;
-        default:
-            break;
+		default:
+			break;
 	}
 
 	return TRUE;
@@ -1545,7 +1547,7 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 			fInCallback = FALSE;
 
-//			gfStopMercFromTalking = TRUE;
+			//gfStopMercFromTalking = TRUE;
 
 			gubPopUpBoxAction = AIM_POPUP_DELETE;
 
@@ -1574,7 +1576,7 @@ static void BtnFirstContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		UINT8	const ubRetValue = btn->GetUserData();
 
-//		gfStopMercFromTalking = TRUE;
+		//gfStopMercFromTalking = TRUE;
 		StopMercTalking();
 
 		gfAimMemberCanMercSayOpeningQuote = FALSE;
@@ -1607,7 +1609,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			WaitForMercToFinishTalkingOrUserToClick();
 
 			//Display a message box displaying a messsage that the message was recorded
-//			DoLapTopMessageBox(10, AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			//DoLapTopMessageBox(10, AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			CreateAimPopUpBox(L" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 
 
@@ -1618,7 +1620,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		else
 		{
 			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
-//			gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
+			//gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 		}
 	}
 }
@@ -1628,7 +1630,7 @@ static void BtnHangUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-//		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
+		//gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 		gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
 	}
 }
@@ -1682,7 +1684,7 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 	HandleTalkingAutoFaces( );
 
 	//If the answering machine is up, dont display the face
-//	if( !gfIsAnsweringMachineActive )
+	//if( !gfIsAnsweringMachineActive )
 	{
 		//Test
 		SGPBox const SrcRect = { 0, 0, 48, 43 };
@@ -1772,13 +1774,13 @@ static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static AIMVideoMode WillMercAcceptCall(void)
 {
-	/* If merc has hung up on the player twice within a period of time
-	 * (MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES), the merc cant ber hired */
+	// If merc has hung up on the player twice within a period of time
+	// (MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES), the merc cant ber hired
 	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
 	if (p.bMercStatus == MERC_ANNOYED_WONT_CONTACT) return AIM_VIDEO_MERC_UNAVAILABLE_MODE;
 
-	/* If the merc is at home, or if the merc is only slightly annoyed at the
-	 * player, he will greet the player */
+	// If the merc is at home, or if the merc is only slightly annoyed at the
+	// player, he will greet the player
 	if (IsMercHireable(p)) return AIM_VIDEO_FIRST_CONTACT_MERC_MODE;
 
 	return AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE;
@@ -1915,7 +1917,7 @@ static BOOLEAN DisplaySnowBackground(void)
 	}
 	BltVideoObject(FRAME_BUFFER, guiBWSnow, ubCount,AIM_MEMBER_VIDEO_FACE_X, AIM_MEMBER_VIDEO_FACE_Y);
 
-  InvalidateRegion(AIM_MEMBER_VIDEO_FACE_X,AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT);
+	InvalidateRegion(AIM_MEMBER_VIDEO_FACE_X,AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT);
 
 	return(FALSE);
 }
@@ -1941,7 +1943,7 @@ static BOOLEAN DisplayBlackBackground(UINT8 ubMaxNumOfLoops)
 	}
 	// Blit color to screen
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, AIM_MEMBER_VIDEO_FACE_X, AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,	AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-  InvalidateRegion(AIM_MEMBER_VIDEO_FACE_X,AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT);
+	InvalidateRegion(AIM_MEMBER_VIDEO_FACE_X,AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT);
 
 	return(FALSE);
 }
@@ -1973,43 +1975,43 @@ static void HandleVideoDistortion(void)
 		switch( gubCurrentStaticMode )
 		{
 			case VC_NO_STATIC:
+			{
+				static UINT32 uiCurTime=0;
+				UINT8	ubNum;
+
+				//if the sound is playing, stop it
+				if( uiStaticNoiseSound != NO_SAMPLE )
 				{
-					static UINT32 uiCurTime=0;
-					UINT8	ubNum;
-
-					//if the sound is playing, stop it
-					if( uiStaticNoiseSound != NO_SAMPLE )
-					{
-						SoundStop( uiStaticNoiseSound );
-						uiStaticNoiseSound = NO_SAMPLE;
-					}
-
-					//DECIDE WHICH ONE TO BLIT NEXT
-					if( (GetJA2Clock() - uiCurTime) > 2500)
-					{
-						ubNum = (UINT8)Random( 200 );//125;
-
-						if( ubNum < 15)
-							gubCurrentStaticMode = VC_FUZZY_LINE;
-
-						else if( ubNum < 25)
-							gubCurrentStaticMode = VC_STRAIGHTLINE;
-
-						else if( ubNum < 35)
-							gubCurrentStaticMode = VC_BW_SNOW;
-
-						else if( ubNum < 40)
-							gubCurrentStaticMode = VC_PIXELATE;
-
-						else if( ubNum < 80)
-							gubCurrentStaticMode = VC_TRANS_SNOW_OUT;
-
-						else if( ubNum < 100)
-							gubCurrentStaticMode = VC_TRANS_SNOW_IN;
-
-						uiCurTime = GetJA2Clock();
-					}
+					SoundStop( uiStaticNoiseSound );
+					uiStaticNoiseSound = NO_SAMPLE;
 				}
+
+				//DECIDE WHICH ONE TO BLIT NEXT
+				if( (GetJA2Clock() - uiCurTime) > 2500)
+				{
+					ubNum = (UINT8)Random( 200 );//125;
+
+					if( ubNum < 15)
+						gubCurrentStaticMode = VC_FUZZY_LINE;
+
+					else if( ubNum < 25)
+						gubCurrentStaticMode = VC_STRAIGHTLINE;
+
+					else if( ubNum < 35)
+						gubCurrentStaticMode = VC_BW_SNOW;
+
+					else if( ubNum < 40)
+						gubCurrentStaticMode = VC_PIXELATE;
+
+					else if( ubNum < 80)
+						gubCurrentStaticMode = VC_TRANS_SNOW_OUT;
+
+					else if( ubNum < 100)
+						gubCurrentStaticMode = VC_TRANS_SNOW_IN;
+
+					uiCurTime = GetJA2Clock();
+				}
+			}
 				break;
 
 			case VC_FUZZY_LINE:
@@ -2084,9 +2086,9 @@ static void HandleVideoDistortion(void)
 //returns true when done. else false
 static UINT8 DisplayTransparentSnow(const UINT8 ubMode, const SGPVObject* const image, const UINT8 ubMaxImages, const BOOLEAN bForward)
 {
-	static INT8	bCount= 0;
-	UINT32		uiCurrentTime = 0;
-	static UINT32	uiLastTime=0;
+	static INT8   bCount= 0;
+	UINT32        uiCurrentTime = 0;
+	static UINT32 uiLastTime=0;
 
 	uiCurrentTime = GetJA2Clock();
 
@@ -2204,7 +2206,7 @@ static UINT8 DisplayPixelatedImage(UINT8 ubMaxImages)
 
 static void HandleMercAttitude(void)
 {
-	UINT32		uiCurrentTime = 0;
+	UINT32 uiCurrentTime = 0;
 
 	uiCurrentTime = GetJA2Clock();
 
@@ -2231,7 +2233,7 @@ static void HandleMercAttitude(void)
 			InitVideoFaceTalking(gbCurrentSoldier, QUOTE_COMMENT_BEFORE_HANG_UP);
 
 			//if the merc is going to hang up disable the buttons, so user cant press any buttons
-//			EnableDisableCurrentVideoConferenceButtons( FALSE);
+			//EnableDisableCurrentVideoConferenceButtons( FALSE);
 			if( gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE )
 			{
 				// Enable the current video conference buttons
@@ -2286,7 +2288,7 @@ static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
-//		gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
+		//gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	}
 }
 
@@ -2318,9 +2320,9 @@ static void InitDeleteVideoConferencePopUp(void)
 	// reset (in case merc was going to say something)
 	DelayMercSpeech(0, 0, 0, FALSE, TRUE);
 
-	/* if the video conferencing is currently displayed, put the 'x' to close it
-	 * in the top right corner and disable the ability to click on the BIG face to
-	 * go to different screen */
+	// if the video conferencing is currently displayed, put the 'x' to close it
+	// in the top right corner and disable the ability to click on the BIG face to
+	// go to different screen
 	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE &&
 			gubVideoConferencingMode != AIM_VIDEO_POPUP_MODE         &&
 			!giXToCloseVideoConfButton)
@@ -2334,7 +2336,8 @@ static void InitDeleteVideoConferencePopUp(void)
 	switch (gubVideoConferencingMode)
 	{
 		case AIM_VIDEO_NOT_DISPLAYED_MODE:
-		{ // The video conference is not displayed
+		{
+			// The video conference is not displayed
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 			gfRedrawScreen = TRUE;
 
@@ -2389,7 +2392,8 @@ static void InitDeleteVideoConferencePopUp(void)
 		}
 
 		case AIM_VIDEO_INIT_MODE:
-		{ // The opening animation of the vc (fuzzy screen, then goes to black)
+		{
+			// The opening animation of the vc (fuzzy screen, then goes to black)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 			gubMercAttitudeLevel  = 0;
 			gubContractLength     = AIM_CONTRACT_LENGTH_ONE_WEEK;
@@ -2402,10 +2406,11 @@ static void InitDeleteVideoConferencePopUp(void)
 		}
 
 		case AIM_VIDEO_FIRST_CONTACT_MERC_MODE:
-		{ /* The screen in which you first contact the merc, you have the option to
-			 * hang up or goto hire merc screen */
-			/* if the last screen was the init screen, then we need to initialize the
-			 * video face */
+		{
+			// The screen in which you first contact the merc, you have the option to
+			// hang up or goto hire merc screen
+			// if the last screen was the init screen, then we need to initialize the
+			// video face
 			if (gubVideoConferencingPreviousMode == AIM_VIDEO_INIT_MODE ||
 					gubVideoConferencingPreviousMode == AIM_VIDEO_NOT_DISPLAYED_MODE)
 			{
@@ -2435,8 +2440,9 @@ static void InitDeleteVideoConferencePopUp(void)
 		}
 
 		case AIM_VIDEO_HIRE_MERC_MODE:
-		{ /* The screen in which you set the contract length, and the ability to buy
-			 * equipment. */
+		{
+			// The screen in which you set the contract length, and the ability to buy
+			// equipment.
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// Contract Length button
@@ -2489,7 +2495,8 @@ static void InitDeleteVideoConferencePopUp(void)
 		}
 
 		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE:
-		{ // The merc is not home and the player gets the answering machine
+		{
+			// The merc is not home and the player gets the answering machine
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			gfIsAnsweringMachineActive = TRUE;
@@ -2524,7 +2531,8 @@ static void InitDeleteVideoConferencePopUp(void)
 		}
 
 		case AIM_VIDEO_MERC_UNAVAILABLE_MODE:
-		{ // The merc is home but for some reason doesnt want to work for player
+		{
+			// The merc is home but for some reason doesnt want to work for player
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
 			// The hangup button
@@ -2581,15 +2589,15 @@ static void DeleteVideoConfPopUp(void)
 		case AIM_VIDEO_INIT_MODE:
 			break;
 
-		/* The screen in which you first contact the merc, you have the option to
-		 * hang up or goto hire merc screen */
+		// The screen in which you first contact the merc, you have the option to
+		// hang up or goto hire merc screen
 		case AIM_VIDEO_FIRST_CONTACT_MERC_MODE:
 			UnloadButtonImage(guiVideoConferenceButtonImage[2]);
 			for (UINT16 i = 0; i < 2; ++i) RemoveButton(giAuthorizeButton[i]);
 			break;
 
-		/* The screen in which you set the contract length, and the ability to buy
-		 * equipment. */
+		// The screen in which you set the contract length, and the ability to buy
+		// equipment.
 		case AIM_VIDEO_HIRE_MERC_MODE:
 			for (UINT16 i = 0; i < 2; ++i) UnloadButtonImage(guiVideoConferenceButtonImage[i]);
 			for (UINT16 i = 0; i < 3; ++i) RemoveButton(giContractLengthButton[i]);
@@ -2661,13 +2669,13 @@ static void HandleCurrentVideoConfMode(void)
 			break;
 		}
 
-		/* The screen in which you first contact the merc, you have the option to
-		 * hang up or goto hire merc screen */
+		// The screen in which you first contact the merc, you have the option to
+		// hang up or goto hire merc screen
 		case AIM_VIDEO_FIRST_CONTACT_MERC_MODE:
 			break;
 
-		/* The screen in which you set the contract length, and the ability to buy
-		 * equipment. */
+		// The screen in which you set the contract length, and the ability to buy
+		// equipment.
 		case AIM_VIDEO_HIRE_MERC_MODE:
 			break;
 
@@ -2818,13 +2826,13 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 
 static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset)
 {
-	static UINT32		uiLastTime=0;
-	UINT32					uiCurTime;
-	static UINT16		usCurQuoteNum;
-	static UINT16		usCurDelay;
-	static BOOLEAN	fQuoteWaiting = FALSE;		//a quote is waiting to be said
-	static UINT8		ubCurMercID;
-	static BOOLEAN	fHangUpAfter=FALSE;
+	static UINT32  uiLastTime=0;
+	UINT32         uiCurTime;
+	static UINT16  usCurQuoteNum;
+	static UINT16  usCurDelay;
+	static BOOLEAN fQuoteWaiting = FALSE; //a quote is waiting to be said
+	static UINT8   ubCurMercID;
+	static BOOLEAN fHangUpAfter=FALSE;
 
 	uiCurTime = GetJA2Clock();
 
@@ -2913,14 +2921,14 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	UINT32         const day      = h.uiArrivalTime / 1440;
 
 	// German version has a different argument order
-  if(isGermanVersion())
-  {
-    swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, day, time_string, sector_string);
-  }
-  else
-  {
-    swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, sector_string, day, time_string);
-  }
+	if(isGermanVersion())
+	{
+		swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, day, time_string, sector_string);
+	}
+	else
+	{
+		swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, sector_string, day, time_string);
+	}
 
 	DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, msg, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack);
 

@@ -37,7 +37,7 @@
 #include "NPC.h"
 #include "slog/slog.h"
 
-#define NEXT_TILE_CHECK_DELAY		700
+#define NEXT_TILE_CHECK_DELAY 700
 
 void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bValue )
 {
@@ -78,10 +78,10 @@ static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 	// OK, If we were waiting for stuff, do it here...
 	pSoldier->sFinalDestination = pSoldier->sGridNo;
 
-  if ( pSoldier->bTeam == OUR_TEAM  && fGivenUp )
-  {
+	if ( pSoldier->bTeam == OUR_TEAM  && fGivenUp )
+	{
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
-  }
+	}
 
 	EVENT_StopMerc(pSoldier);
 }
@@ -129,8 +129,8 @@ void UnMarkMovementReserved(SOLDIERTYPE& s)
 
 static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, INT8 bLevel)
 {
-	INT16		sTempDestGridNo;
-	INT16		sNewGridNo;
+	INT16 sTempDestGridNo;
+	INT16 sNewGridNo;
 
 	if ( sGridNo == NOWHERE )
 	{
@@ -145,7 +145,7 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 		{
 			// OK, set flag indicating we are blocked by a merc....
 			if ( pSoldier->bTeam != OUR_TEAM ) // CJC: shouldn't this be in all cases???
-		//if ( 0 )
+			//if ( 0 )
 			{
 				pSoldier->fBlockedByAnotherMerc = TRUE;
 				// Set direction we were trying to goto
@@ -162,7 +162,7 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 					// OK, if buddy who is blocking us is trying to move too...
 					// And we are in opposite directions...
 					if (tgt->fBlockedByAnotherMerc &&
-							tgt->bBlockedByAnotherMercDirection == OppositeDirection(bDirection))
+						tgt->bBlockedByAnotherMercDirection == OppositeDirection(bDirection))
 					{
 						// OK, try and get a path around buddy....
 						// We have to temporarily make buddy stopped...
@@ -186,25 +186,25 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 						else
 						{
 
-								// Not for multi-tiled things...
-								if ( !( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )
-								{
-									// If we are to swap and we're near a door, open door first and then close it...?
+							// Not for multi-tiled things...
+							if ( !( pSoldier->uiStatusFlags & SOLDIER_MULTITILE ) )
+							{
+								// If we are to swap and we're near a door, open door first and then close it...?
 
-									// Swap now!
-									tgt->fBlockedByAnotherMerc = FALSE;
+								// Swap now!
+								tgt->fBlockedByAnotherMerc = FALSE;
 
-									// Restore final dest....
-									tgt->sFinalDestination = sTempDestGridNo;
+								// Restore final dest....
+								tgt->sFinalDestination = sTempDestGridNo;
 
-									// Swap merc positions.....
-									SwapMercPositions(*pSoldier, *tgt);
+								// Swap merc positions.....
+								SwapMercPositions(*pSoldier, *tgt);
 
-									// With these two guys swapped, they should try and continue on their way....
-									// Start them both again along their way...
-									EVENT_GetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode );
-									EVENT_GetNewSoldierPath(tgt, tgt->sFinalDestination, tgt->usUIMovementMode);
-								}
+								// With these two guys swapped, they should try and continue on their way....
+								// Start them both again along their way...
+								EVENT_GetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode );
+								EVENT_GetNewSoldierPath(tgt, tgt->sFinalDestination, tgt->usUIMovementMode);
+							}
 						}
 					}
 					return( MOVE_TILE_TEMP_BLOCKED );
@@ -286,8 +286,8 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 
 BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, INT16 sFinalDestTile )
 {
-	INT8 bBlocked;
-	INT16	bOverTerrainType;
+	INT8  bBlocked;
+	INT16 bOverTerrainType;
 
 	// Check for blocking if in realtime
 	///if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -312,7 +312,9 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 		{
 			// Is the next gridno our destination?
 			// OK: Let's check if we are NOT walking off screen
-			if ( sGridNo == sFinalDestTile && pSoldier->ubWaitActionToDo == 0 && (pSoldier->bTeam == OUR_TEAM || pSoldier->sAbsoluteFinalDestination == NOWHERE) )
+			if ( sGridNo == sFinalDestTile && pSoldier->ubWaitActionToDo == 0 &&
+				(pSoldier->bTeam == OUR_TEAM ||
+				pSoldier->sAbsoluteFinalDestination == NOWHERE) )
 			{
 				// Yah, well too bad, stop here.
 				SetFinalTile( pSoldier, pSoldier->sGridNo, FALSE );
@@ -323,34 +325,30 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 			else if ( bBlocked == MOVE_TILE_STATIONARY_BLOCKED )
 			{
 				// Stationary,
-				{
-					INT16 sOldFinalDest;
+				INT16 sOldFinalDest;
 
-					// Maintain sFinalDest....
-					sOldFinalDest = pSoldier->sFinalDestination;
-					EVENT_StopMerc(pSoldier);
-					// Restore...
-					pSoldier->sFinalDestination = sOldFinalDest;
+				// Maintain sFinalDest....
+				sOldFinalDest = pSoldier->sFinalDestination;
+				EVENT_StopMerc(pSoldier);
+				// Restore...
+				pSoldier->sFinalDestination = sOldFinalDest;
 
-					SetDelayedTileWaiting( pSoldier, sGridNo, 1 );
+				SetDelayedTileWaiting( pSoldier, sGridNo, 1 );
 
-					return( FALSE );
-				}
+				return( FALSE );
 			}
 			else
 			{
-				{
-					INT16 sOldFinalDest;
+				INT16 sOldFinalDest;
 
-					// Maintain sFinalDest....
-					sOldFinalDest = pSoldier->sFinalDestination;
-					EVENT_StopMerc(pSoldier);
-					// Restore...
-					pSoldier->sFinalDestination = sOldFinalDest;
+				// Maintain sFinalDest....
+				sOldFinalDest = pSoldier->sFinalDestination;
+				EVENT_StopMerc(pSoldier);
+				// Restore...
+				pSoldier->sFinalDestination = sOldFinalDest;
 
-					// Setting to two means: try and wait until this tile becomes free....
-					SetDelayedTileWaiting( pSoldier, sGridNo, 100 );
-				}
+				// Setting to two means: try and wait until this tile becomes free....
+				SetDelayedTileWaiting( pSoldier, sGridNo, 100 );
 
 				return( FALSE );
 			}
@@ -396,10 +394,10 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 {
 	// Buddy is waiting to continue his path
-	INT8		bBlocked, bPathBlocked;
-	INT16		sCost;
-	INT16   sNewGridNo, sCheckGridNo;
-	UINT8		fFlags = 0;
+	INT8  bBlocked, bPathBlocked;
+	INT16 sCost;
+	INT16 sNewGridNo, sCheckGridNo;
+	UINT8 fFlags = 0;
 
 	if ( pSoldier->fDelayedMovement )
 	{
@@ -571,8 +569,14 @@ void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 					if (tgt != NULL)
 					{
 						if (pSoldier->ubQuoteRecord != 0 ||
-								(pSoldier->bTeam != OUR_TEAM && pSoldier->bOrders != STATIONARY && tgt->bTeam != OUR_TEAM && tgt->bOrders != STATIONARY) ||
-								(pSoldier->bTeam == OUR_TEAM && gTacticalStatus.fAutoBandageMode && (tgt->bTeam != CIV_TEAM || tgt->bOrders != STATIONARY)))
+							(pSoldier->bTeam != OUR_TEAM &&
+							pSoldier->bOrders != STATIONARY &&
+							tgt->bTeam != OUR_TEAM &&
+							tgt->bOrders != STATIONARY) ||
+							(pSoldier->bTeam == OUR_TEAM &&
+							gTacticalStatus.fAutoBandageMode &&
+							(tgt->bTeam != CIV_TEAM ||
+							tgt->bOrders != STATIONARY)))
 						{
 							// Swap now!
 							//tgt->fBlockedByAnotherMerc = FALSE;
@@ -666,12 +670,14 @@ void SwapMercPositions(SOLDIERTYPE& s1, SOLDIERTYPE& s2)
 
 	// Test OK destination for each
 	if (NewOKDestination(&s1, gridno2, TRUE, 0) && NewOKDestination(&s2, gridno1, TRUE, 0))
-	{ // Call teleport function for each
+	{
+		// Call teleport function for each
 		TeleportSoldier(s1, gridno2, false);
 		TeleportSoldier(s2, gridno1, false);
 	}
 	else
-	{ // Place back
+	{
+		// Place back
 		TeleportSoldier(s1, gridno1, true);
 		TeleportSoldier(s2, gridno2, true);
 	}
@@ -683,50 +689,54 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 	// NB checks outside of this function
 	if ( EnoughPoints( pSoldier1, AP_EXCHANGE_PLACES, 0, fShow ) )
 	{
-	  if ( EnoughPoints( pSoldier2, AP_EXCHANGE_PLACES, 0, fShow ) )
-	  {
-      if ( ( gAnimControl[ pSoldier2->usAnimState ].uiFlags & ANIM_MOVING ) )
-      {
-        return( FALSE );
-      }
+		if ( EnoughPoints( pSoldier2, AP_EXCHANGE_PLACES, 0, fShow ) )
+		{
+			if ( ( gAnimControl[ pSoldier2->usAnimState ].uiFlags & ANIM_MOVING ) )
+			{
+				return( FALSE );
+			}
 
-      if ( ( gAnimControl[ pSoldier1->usAnimState ].uiFlags & ANIM_MOVING ) && !(gTacticalStatus.uiFlags & INCOMBAT) )
-      {
-        return( FALSE );
-      }
+			if ( ( gAnimControl[ pSoldier1->usAnimState ].uiFlags & ANIM_MOVING ) && !(gTacticalStatus.uiFlags & INCOMBAT) )
+			{
+				return( FALSE );
+			}
 
-		  if ( pSoldier2->bSide == 0 )
-		  {
-			  return( TRUE );
-		  }
+			if ( pSoldier2->bSide == 0 )
+			{
+				return( TRUE );
+			}
 
-      // hehe - don't allow animals to exchange places
-      if ( pSoldier2->uiStatusFlags & ( SOLDIER_ANIMAL ) )
-      {
-        return( FALSE );
-      }
+			// hehe - don't allow animals to exchange places
+			if ( pSoldier2->uiStatusFlags & ( SOLDIER_ANIMAL ) )
+			{
+				return( FALSE );
+			}
 
-      // must NOT be hostile, must NOT have stationary orders OR militia team, must be >= OKLIFE
-      if ( pSoldier2->bNeutral && pSoldier2->bLife >= OKLIFE &&
-			     pSoldier2->ubCivilianGroup != HICKS_CIV_GROUP &&
-			   ( ( pSoldier2->bOrders != STATIONARY || pSoldier2->bTeam == MILITIA_TEAM ) ||
-			   ( pSoldier2->sAbsoluteFinalDestination != NOWHERE && pSoldier2->sAbsoluteFinalDestination != pSoldier2->sGridNo ) ) )
-      {
-        return( TRUE );
-      }
+			// must NOT be hostile, must NOT have stationary orders OR militia team, must be >= OKLIFE
+			if ( pSoldier2->bNeutral && pSoldier2->bLife >= OKLIFE &&
+				pSoldier2->ubCivilianGroup != HICKS_CIV_GROUP &&
+				( ( pSoldier2->bOrders != STATIONARY ||
+				pSoldier2->bTeam == MILITIA_TEAM ) ||
+				( pSoldier2->sAbsoluteFinalDestination != NOWHERE &&
+				pSoldier2->sAbsoluteFinalDestination != pSoldier2->sGridNo ) ) )
+			{
+				return( TRUE );
+			}
 
-		  if ( fShow )
-		  {
-        if ( pSoldier2->ubProfile == NO_PROFILE )
-        {
-				  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ REFUSE_EXCHANGE_PLACES ] );
-        }
-        else
-        {
-				  ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_03], pSoldier2->name);
-        }
-		  }
-	  }
-  }
+			if ( fShow )
+			{
+				if ( pSoldier2->ubProfile == NO_PROFILE )
+				{
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK,
+							TacticalStr[REFUSE_EXCHANGE_PLACES]);
+				}
+				else
+				{
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK,
+							gzLateLocalizedString[STR_LATE_03], pSoldier2->name);
+				}
+			}
+		}
+	}
 	return FALSE;
 }

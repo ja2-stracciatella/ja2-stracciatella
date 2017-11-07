@@ -489,13 +489,13 @@ static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* 
 
 static void drawItemWithOutline(INT16 min_idx, INT16 end_idx, INT16 scroll_idx, INT16 itemIndex, INT16 const outline)
 {
-  if (min_idx <= itemIndex && itemIndex < end_idx)
-  {
-    INT16   const  x    = (itemIndex / 2 - scroll_idx) * 60 + 110;
-    INT16   const  y    = EDITOR_TASKBAR_POS_Y + (itemIndex % 2) * 40;
-    const ItemModel *item = GCM->getItem(eInfo.pusItemIndex[itemIndex]);
-    DrawItemCentered(item, FRAME_BUFFER, x, y + 2, outline);
-  }
+	if (min_idx <= itemIndex && itemIndex < end_idx)
+	{
+		INT16   const  x    = (itemIndex / 2 - scroll_idx) * 60 + 110;
+		INT16   const  y    = EDITOR_TASKBAR_POS_Y + (itemIndex % 2) * 40;
+		const ItemModel *item = GCM->getItem(eInfo.pusItemIndex[itemIndex]);
+		DrawItemCentered(item, FRAME_BUFFER, x, y + 2, outline);
+	}
 }
 
 
@@ -522,8 +522,8 @@ void RenderEditorItemsInfo()
 	// Draw the hilighted and selected items if applicable.
 	if (eInfo.pusItemIndex)
 	{
-    drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sHilitedItemIndex, Get16BPPColor(FROMRGB(250, 250, 0)));
-    drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sSelItemIndex,     Get16BPPColor(FROMRGB(250, 0, 0)));
+		drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sHilitedItemIndex, Get16BPPColor(FROMRGB(250, 250, 0)));
+		drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sSelItemIndex,     Get16BPPColor(FROMRGB(250, 0, 0)));
 	}
 
 	// Draw the numbers of each visible item that currently resides in the world.
@@ -602,8 +602,8 @@ void ClearEditorItemsInfo()
 			eInfo.sSaveSelKeysIndex = eInfo.sSelItemIndex;
 			eInfo.sSaveKeysScrollIndex = eInfo.sScrollIndex;
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 }
 

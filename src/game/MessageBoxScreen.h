@@ -42,8 +42,8 @@ typedef void (*MSGBOX_CALLBACK)(MessageBoxReturnValue);
 // message box style flags
 enum MessageBoxStyleID
 {
-	MSG_BOX_BASIC_STYLE,         // We'll have other styles, like in laptop, etc
-	                             // Graphics are all that are required here...
+	MSG_BOX_BASIC_STYLE,	// We'll have other styles, like in laptop, etc
+				// Graphics are all that are required here...
 	MSG_BOX_RED_ON_WHITE,
 	MSG_BOX_BLUE_ON_GREY,
 	MSG_BOX_BASIC_SMALL_BUTTONS,

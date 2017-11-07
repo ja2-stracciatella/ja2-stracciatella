@@ -96,25 +96,25 @@ void InitImpBeginScreeenTextInputBoxes() {
 	SetCursorColor( Get16BPPColor(FROMRGB(0, 255, 0) ) );
 
 	AddTextInputField(
-			FULL_NAME_INPUT_X,
-			FULL_NAME_INPUT_Y,
-			FULL_NAME_INPUT_WIDTH,
-			NAMES_INPUT_HEIGHT,
-			MSYS_PRIORITY_HIGH + 2,
-			pFullName,
-			NAME_LENGTH-1,
-			INPUTTYPE_FULL_TEXT
+		FULL_NAME_INPUT_X,
+		FULL_NAME_INPUT_Y,
+		FULL_NAME_INPUT_WIDTH,
+		NAMES_INPUT_HEIGHT,
+		MSYS_PRIORITY_HIGH + 2,
+		pFullName,
+		NAME_LENGTH-1,
+		INPUTTYPE_FULL_TEXT
 	);
 
 	AddTextInputField(
-			NICK_NAME_INPUT_X,
-			NICK_NAME_INPUT_Y,
-			NICK_NAME_INPUT_WIDTH,
-			NAMES_INPUT_HEIGHT,
-			MSYS_PRIORITY_HIGH + 2,
-			pNickName,
-			8,
-			INPUTTYPE_FULL_TEXT
+		NICK_NAME_INPUT_X,
+		NICK_NAME_INPUT_Y,
+		NICK_NAME_INPUT_WIDTH,
+		NAMES_INPUT_HEIGHT,
+		MSYS_PRIORITY_HIGH + 2,
+		pNickName,
+		8,
+		INPUTTYPE_FULL_TEXT
 	);
 
 	AddUserInputField(MaleCheckboxCallback);
@@ -130,7 +130,7 @@ void EnterIMPBeginScreen( void )
 	ubFocus = OTHER_INPUT;
 
 	// render the screen on entry
-  RenderIMPBeginScreen( );
+	RenderIMPBeginScreen( );
 
 	fFirstIMPAttribTime = TRUE;
 
@@ -148,7 +148,7 @@ static void RenderGender(void);
 
 void RenderIMPBeginScreen( void )
 {
-  // the background
+	// the background
 	RenderProfileBackGround( );
 
 	// fourth button image 3X
@@ -157,13 +157,13 @@ void RenderIMPBeginScreen( void )
 	RenderButton4Image( 64, 238 );
 
 	// the begin screen indents
-  RenderBeginIndent( 105, 58);
+	RenderBeginIndent( 105, 58);
 
 	// full name indent
 	RenderNameIndent( 194, 132);
 
 	// nick name
-  RenderNickNameIndent( 194, 192);
+	RenderNickNameIndent( 194, 192);
 
 	// render warning string
 	Print8CharacterOnlyString();
@@ -180,9 +180,9 @@ static void RemoveIMPBeginScreenButtons(void);
 void ExitIMPBeginScreen( void )
 {
 	// remove buttons
-  RemoveIMPBeginScreenButtons( );
+	RemoveIMPBeginScreenButtons( );
 
-  // remove mouse regions
+	// remove mouse regions
 	DestroyIMPBeginScreenMouseRegions( );
 
 	KillTextInputMode();
@@ -226,15 +226,17 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateIMPBeginScreenButtons(void)
 {
-  // this procedure will create the buttons needed for the IMP BeginScreen
+	// this procedure will create the buttons needed for the IMP BeginScreen
 
 	// ths done button
 	giIMPBeginScreenButtonImage[0] = LoadButtonImage(LAPTOPDIR "/button_2.sti", 0, 1);
-	giIMPBeginScreenButton[0] = CreateIconAndTextButton( giIMPBeginScreenButtonImage[ 0 ], pImpButtonText[ 6 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 134, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
-														 BtnIMPBeginScreenDoneCallback);
+	giIMPBeginScreenButton[0] = CreateIconAndTextButton(giIMPBeginScreenButtonImage[ 0 ],
+								pImpButtonText[ 6 ], FONT12ARIAL,
+								FONT_WHITE, DEFAULT_SHADOW,
+								FONT_WHITE, DEFAULT_SHADOW,
+								LAPTOP_SCREEN_UL_X + 134, LAPTOP_SCREEN_WEB_UL_Y + 314,
+								MSYS_PRIORITY_HIGH,
+								BtnIMPBeginScreenDoneCallback);
 
 	giIMPBeginScreenButton[0]->SetCursor(CURSOR_WWW);
 }
@@ -242,11 +244,11 @@ static void CreateIMPBeginScreenButtons(void)
 
 static void RemoveIMPBeginScreenButtons(void)
 {
-  // this procedure will destroy the already created buttosn for the IMP BeginScreen
+	// this procedure will destroy the already created buttosn for the IMP BeginScreen
 
-  // the done button
-  RemoveButton(giIMPBeginScreenButton[0] );
-  UnloadButtonImage(giIMPBeginScreenButtonImage[0] );
+	// the done button
+	RemoveButton(giIMPBeginScreenButton[0] );
+	UnloadButtonImage(giIMPBeginScreenButtonImage[0] );
 }
 
 
@@ -295,14 +297,14 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 {
-	InputAtom					InputEvent;
+	InputAtom InputEvent;
 
 	// handle input events
-  while( DequeueEvent(&InputEvent) )
-  {
-    if(	!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT) )
+	while( DequeueEvent(&InputEvent) )
+	{
+		if(!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT) )
 		{
-		  switch( InputEvent.usParam )
+			switch( InputEvent.usParam )
 			{
 				case SDLK_RETURN:
 				case SDLK_SPACE:
@@ -312,7 +314,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 					SetActiveField(0);
 					break;
 
-		    case SDLK_ESCAPE:
+				case SDLK_ESCAPE:
 					HandleLapTopESCKey();
 					break;
 
@@ -320,7 +322,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 					break;
 			}
 		}
-  }
+	}
 }
 
 static void DisplayCheckboxFocus(INT32 x)
@@ -328,8 +330,8 @@ static void DisplayCheckboxFocus(INT32 x)
 	UINT16 currentColor = Get16BPPColor(GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL ? FROMRGB(0, 255, 0) : FROMRGB(0, 0, 0));
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-  RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT16>());
-  InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
+	RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT16>());
+	InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
 }
 
 static void DisplayMaleCheckboxFocus(void)
@@ -348,7 +350,7 @@ static void CopyFirstNameIntoNickName(void)
 {
 	// this procedure will copy the characters first name in to the nickname for the character
 	UINT32 iCounter=0;
-  while( ( pFullNameString[ iCounter ] != L' ' ) && ( iCounter < NICKNAME_LENGTH) && ( pFullNameString[ iCounter ] != 0 ) )
+	while( ( pFullNameString[ iCounter ] != L' ' ) && ( iCounter < NICKNAME_LENGTH) && ( pFullNameString[ iCounter ] != 0 ) )
 	{
 		// copy charcters into nick name
 		pNickNameString[ iCounter ] = pFullNameString[ iCounter ];
@@ -362,29 +364,29 @@ static void SelectMaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void CreateIMPBeginScreenMouseRegions(void)
 {
 	// IMP_MALE gender area
-  MSYS_DefineRegion(
-			&gIMPBeginScreenMouseRegions[0],
-			MALE_BOX_X,
-			MALE_BOX_Y,
-			MALE_BOX_X + MALE_BOX_WIDTH,
-			MALE_BOX_Y + MALE_BOX_HEIGHT,
-			MSYS_PRIORITY_HIGH,
-			CURSOR_WWW,
-		  NULL,
-			SelectMaleRegionCallBack
+	MSYS_DefineRegion(
+		&gIMPBeginScreenMouseRegions[0],
+		MALE_BOX_X,
+		MALE_BOX_Y,
+		MALE_BOX_X + MALE_BOX_WIDTH,
+		MALE_BOX_Y + MALE_BOX_HEIGHT,
+		MSYS_PRIORITY_HIGH,
+		CURSOR_WWW,
+		NULL,
+		SelectMaleRegionCallBack
 	);
 
 	// IMP_FEMALE gender region
 	MSYS_DefineRegion(
-			&gIMPBeginScreenMouseRegions[1],
-			FEMALE_BOX_X,
-			MALE_BOX_Y,
-			FEMALE_BOX_X + MALE_BOX_WIDTH,
-			MALE_BOX_Y + MALE_BOX_HEIGHT,
-			MSYS_PRIORITY_HIGH,
-			CURSOR_WWW,
-			NULL,
-			SelectFemaleRegionCallBack
+		&gIMPBeginScreenMouseRegions[1],
+		FEMALE_BOX_X,
+		MALE_BOX_Y,
+		FEMALE_BOX_X + MALE_BOX_WIDTH,
+		MALE_BOX_Y + MALE_BOX_HEIGHT,
+		MSYS_PRIORITY_HIGH,
+		CURSOR_WWW,
+		NULL,
+		SelectFemaleRegionCallBack
 	);
 }
 
@@ -417,7 +419,7 @@ static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void RenderGender(void)
 {
-  // this procedure will render the gender of the character int he appropriate box
+	// this procedure will render the gender of the character int he appropriate box
 	RenderGenderIndent(192, 252);
 	RenderGenderIndent(302, 252);
 

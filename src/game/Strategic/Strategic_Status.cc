@@ -12,7 +12,7 @@
 #include "Debug.h"
 
 
-STRATEGIC_STATUS	gStrategicStatus;
+STRATEGIC_STATUS gStrategicStatus;
 
 void InitStrategicStatus(void)
 {
@@ -211,8 +211,8 @@ void HandleEnricoEmail(void)
 
 	// test for a major setback OR a second minor setback
 	if ((((ubHighestProgress - ubCurrentProgress) >= MAJOR_SETBACK_THRESHOLD) ||
-	    (((ubHighestProgress - ubCurrentProgress) >= MINOR_SETBACK_THRESHOLD) && (gStrategicStatus.usEnricoEmailFlags & ENRICO_EMAIL_FLAG_SETBACK_OVER))) &&
-			!(gStrategicStatus.usEnricoEmailFlags & ENRICO_EMAIL_SENT_MAJOR_SETBACK))
+		(((ubHighestProgress - ubCurrentProgress) >= MINOR_SETBACK_THRESHOLD) && (gStrategicStatus.usEnricoEmailFlags & ENRICO_EMAIL_FLAG_SETBACK_OVER))) &&
+		!(gStrategicStatus.usEnricoEmailFlags & ENRICO_EMAIL_SENT_MAJOR_SETBACK))
 	{
 		AddEmail(ENRICO_SETBACK, ENRICO_SETBACK_LENGTH, MAIL_ENRICO, GetWorldTotalMin());
 		gStrategicStatus.usEnricoEmailFlags |= ENRICO_EMAIL_SENT_MAJOR_SETBACK;
@@ -220,7 +220,7 @@ void HandleEnricoEmail(void)
 	else
 	// test for a first minor setback
 	if (((ubHighestProgress - ubCurrentProgress) >= MINOR_SETBACK_THRESHOLD) &&
-		  !(gStrategicStatus.usEnricoEmailFlags & (ENRICO_EMAIL_SENT_MINOR_SETBACK | ENRICO_EMAIL_SENT_MAJOR_SETBACK)))
+		!(gStrategicStatus.usEnricoEmailFlags & (ENRICO_EMAIL_SENT_MINOR_SETBACK | ENRICO_EMAIL_SENT_MAJOR_SETBACK)))
 	{
 		AddEmail(ENRICO_SETBACK_2, ENRICO_SETBACK_2_LENGTH, MAIL_ENRICO, GetWorldTotalMin());
 		gStrategicStatus.usEnricoEmailFlags |= ENRICO_EMAIL_SENT_MINOR_SETBACK;
@@ -390,7 +390,7 @@ UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex )
 
 TEST(StrategicStatus, asserts)
 {
-  EXPECT_EQ(sizeof(STRATEGIC_STATUS), 192);
+	EXPECT_EQ(sizeof(STRATEGIC_STATUS), 192);
 }
 
 #endif

@@ -157,9 +157,9 @@ UINT32 MoneySlotLimit( INT8 bSlot );
 void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage );
 
 // Range of Xray device
-#define XRAY_RANGE 40
+#define XRAY_RANGE	40
 // Seconds that Xray lasts
-#define XRAY_TIME 5
+#define XRAY_TIME	5
 
 extern void ActivateXRayDevice( SOLDIERTYPE * pSoldier );
 extern void TurnOffXRayEffects( SOLDIERTYPE * pSoldier );
@@ -174,7 +174,7 @@ bool ItemIsCool(OBJECTTYPE const&);
 
 bool HasObjectImprint(OBJECTTYPE const&);
 
-/** Fill the vector with all hardcoded item models. */
+// Fill the vector with all hardcoded item models.
 void createAllHardcodedItemModels(std::vector<const ItemModel*> &items);
 
 #endif

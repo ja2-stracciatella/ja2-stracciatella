@@ -6,7 +6,7 @@
 
 static inline UINT32 GetClock(void)
 {
-  return SDL_GetTicks();
+	return SDL_GetTicks();
 }
 
 #endif

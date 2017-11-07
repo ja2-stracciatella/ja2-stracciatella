@@ -16,7 +16,7 @@
 #include "Debug.h"
 #include "slog/slog.h"
 
-#define		NUM_BULLET_SLOTS		50
+#define NUM_BULLET_SLOTS 50
 
 
 static BULLET gBullets[NUM_BULLET_SLOTS];
@@ -58,12 +58,12 @@ BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16
 	if (b == NULL) return NULL;
 
 	memset(b, 0, sizeof(*b));
-	b->fAllocated         = TRUE;
-	b->fLocated		        = FALSE;
-	b->pFirer             = firer;
-	b->usFlags		        = usFlags;
+	b->fAllocated = TRUE;
+	b->fLocated = FALSE;
+	b->pFirer = firer;
+	b->usFlags = usFlags;
 	b->usLastStructureHit = 0;
-	b->fReal              = !fFake;
+	b->fReal = !fFake;
 
 	return b;
 }
@@ -71,9 +71,9 @@ BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16
 
 void HandleBulletSpecialFlags(BULLET* pBullet)
 {
-	ANITILE_PARAMS	AniParams;
-	FLOAT		dX, dY;
-	UINT8		ubDirection;
+	ANITILE_PARAMS AniParams;
+	FLOAT          dX, dY;
+	UINT8          ubDirection;
 
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 
@@ -82,14 +82,14 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 		// Create ani tile if this is a spit!
 		if ( pBullet->usFlags & ( BULLET_FLAG_KNIFE ) )
 		{
-			AniParams.sGridNo							= (INT16)pBullet->sGridNo;
-			AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-			AniParams.sDelay							= 100;
-			AniParams.sStartFrame					= 3;
-			AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
-			AniParams.sX									= FIXEDPT_TO_INT32( pBullet->qCurrX );
-			AniParams.sY									= FIXEDPT_TO_INT32( pBullet->qCurrY );
-			AniParams.sZ									= CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( pBullet->qCurrZ ) );
+			AniParams.sGridNo = (INT16)pBullet->sGridNo;
+			AniParams.ubLevelID = ANI_STRUCT_LEVEL;
+			AniParams.sDelay = 100;
+			AniParams.sStartFrame = 3;
+			AniParams.uiFlags = ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
+			AniParams.sX = FIXEDPT_TO_INT32( pBullet->qCurrX );
+			AniParams.sY = FIXEDPT_TO_INT32( pBullet->qCurrY );
+			AniParams.sZ = CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( pBullet->qCurrZ ) );
 
 			if ( pBullet->usFlags & ( BULLET_FLAG_CREATURE_SPIT ) )
 			{
@@ -114,9 +114,9 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 			// IF we are anything that needs a shadow.. set it here....
 			if ( pBullet->usFlags & ( BULLET_FLAG_KNIFE ) )
 			{
-				AniParams.ubLevelID						= ANI_SHADOW_LEVEL;
-				AniParams.sZ									= 0;
-				pBullet->pShadowAniTile				= CreateAnimationTile( &AniParams );
+				AniParams.ubLevelID = ANI_SHADOW_LEVEL;
+				AniParams.sZ = 0;
+				pBullet->pShadowAniTile = CreateAnimationTile( &AniParams );
 			}
 
 		}
@@ -186,9 +186,9 @@ void LocateBullet(BULLET* b)
 
 void UpdateBullets(void)
 {
-	UINT32					uiCount;
-	LEVELNODE				*pNode;
-	BOOLEAN					fDeletedSome = FALSE;
+	UINT32    uiCount;
+	LEVELNODE *pNode;
+	BOOLEAN   fDeletedSome = FALSE;
 
 	for ( uiCount = 0; uiCount < guiNumBullets; uiCount++ )
 	{
@@ -263,7 +263,8 @@ void UpdateBullets(void)
 						}
 					}
 					// Are we a missle?
-					else if (b->usFlags & (BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT))
+					else if (b->usFlags & (BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE |
+						BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT))
 					{
 					}
 					else
@@ -272,8 +273,8 @@ void UpdateBullets(void)
 						pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->uiFlags |= ( LEVELNODE_USEABSOLUTEPOS | LEVELNODE_IGNOREHEIGHT );
-						pNode->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
-						pNode->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
+						pNode->sRelativeX = FIXEDPT_TO_INT32(b->qCurrX);
+						pNode->sRelativeY = FIXEDPT_TO_INT32(b->qCurrY);
 						pNode->sRelativeZ = CONVERT_HEIGHTUNITS_TO_PIXELS(FIXEDPT_TO_INT32(b->qCurrZ));
 
 						// Display shadow
@@ -281,8 +282,8 @@ void UpdateBullets(void)
 						pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->uiFlags |= ( LEVELNODE_USEABSOLUTEPOS | LEVELNODE_IGNOREHEIGHT );
-						pNode->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
-						pNode->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
+						pNode->sRelativeX = FIXEDPT_TO_INT32(b->qCurrX);
+						pNode->sRelativeY = FIXEDPT_TO_INT32(b->qCurrY);
 						pNode->sRelativeZ = gpWorldLevelData[b->sGridNo].sHeight;
 					}
 				}
@@ -307,7 +308,7 @@ void UpdateBullets(void)
 
 void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ )
 {
-	ANITILE_PARAMS	AniParams;
+	ANITILE_PARAMS AniParams;
 
 	// If we are a small missle, don't show
 	if ( pBullet->usFlags & ( BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT ) )
@@ -329,14 +330,14 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 
 
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-	AniParams.sGridNo							= (INT16)pBullet->sGridNo;
-	AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-	AniParams.sDelay							= (INT16)( 100 + Random( 100 ) );
-	AniParams.sStartFrame					= 0;
-	AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
-	AniParams.sX									= FIXEDPT_TO_INT32( qCurrX );
-	AniParams.sY									= FIXEDPT_TO_INT32( qCurrY );
-	AniParams.sZ									= CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( qCurrZ ) );
+	AniParams.sGridNo = (INT16)pBullet->sGridNo;
+	AniParams.ubLevelID = ANI_STRUCT_LEVEL;
+	AniParams.sDelay = (INT16)( 100 + Random( 100 ) );
+	AniParams.sStartFrame = 0;
+	AniParams.uiFlags = ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
+	AniParams.sX = FIXEDPT_TO_INT32( qCurrX );
+	AniParams.sY = FIXEDPT_TO_INT32( qCurrY );
+	AniParams.sZ = CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( qCurrZ ) );
 
 
 	if ( pBullet->usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_TANK_CANNON ) )
@@ -357,7 +358,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 		// "/flmthr2.sti". This could crash the game if the the unfinished
 		// flamethrower is accessed by cheat codes.
 		AniParams.zCachedFile = TILECACHEDIR "/msle_smk.sti";
-		AniParams.sDelay							= (INT16)( 100 );
+		AniParams.sDelay = (INT16)( 100 );
 	}
 
 	CreateAnimationTile( &AniParams );
@@ -366,8 +367,8 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 
 void SaveBulletStructureToSaveGameFile(HWFILE const hFile)
 {
-	UINT16	usCnt;
-	UINT32	uiBulletCount=0;
+	UINT16 usCnt;
+	UINT32 uiBulletCount=0;
 
 	//loop through and count the number of bullets
 	for( usCnt=0; usCnt<NUM_BULLET_SLOTS; usCnt++ )

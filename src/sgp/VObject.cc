@@ -37,7 +37,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 #endif
 	next_(gpVObjectHead)
 {
-  memset(&pShades[0], 0, sizeof(pShades));
+	memset(&pShades[0], 0, sizeof(pShades));
 
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
 	{

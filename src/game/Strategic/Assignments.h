@@ -10,58 +10,58 @@
 // this distinguishes whether we're only looking for patients healable THIS HOUR (those that have been on their assignment
 // long enough), or those that will be healable EVER (regardless of whether they're getting healed during this hour)
 #define HEALABLE_EVER				0
-#define HEALABLE_THIS_HOUR	1
+#define HEALABLE_THIS_HOUR			1
 
 
 // merc collapses from fatigue if max breath drops to this.  Can't go any lower!
-#define BREATHMAX_ABSOLUTE_MINIMUM	10
-#define BREATHMAX_GOTTA_STOP_MOVING	30
+#define BREATHMAX_ABSOLUTE_MINIMUM		10
+#define BREATHMAX_GOTTA_STOP_MOVING		30
 #define BREATHMAX_PRETTY_TIRED			50
 #define BREATHMAX_CANCEL_COLLAPSE		60
 #define BREATHMAX_CANCEL_TIRED			75
 #define BREATHMAX_FULLY_RESTED			95
 
 
-#define	VEHICLE_REPAIR_POINTS_DIVISOR		10
+#define VEHICLE_REPAIR_POINTS_DIVISOR		10
 
 
 // Assignments Defines
 enum{
- SQUAD_1 =0,
- SQUAD_2,
- SQUAD_3,
- SQUAD_4,
- SQUAD_5,
- SQUAD_6,
- SQUAD_7,
- SQUAD_8,
- SQUAD_9,
- SQUAD_10,
- SQUAD_11,
- SQUAD_12,
- SQUAD_13,
- SQUAD_14,
- SQUAD_15,
- SQUAD_16,
- SQUAD_17,
- SQUAD_18,
- SQUAD_19,
- SQUAD_20,
- ON_DUTY,
- DOCTOR,
- PATIENT,
- VEHICLE,
- IN_TRANSIT,
- REPAIR,
- TRAIN_SELF,
- TRAIN_TOWN,
- TRAIN_TEAMMATE,
- TRAIN_BY_OTHER,
- ASSIGNMENT_DEAD,
- ASSIGNMENT_UNCONCIOUS,			// unused
- ASSIGNMENT_POW,
- ASSIGNMENT_HOSPITAL,
- ASSIGNMENT_EMPTY,
+	SQUAD_1 =0,
+	SQUAD_2,
+	SQUAD_3,
+	SQUAD_4,
+	SQUAD_5,
+	SQUAD_6,
+	SQUAD_7,
+	SQUAD_8,
+	SQUAD_9,
+	SQUAD_10,
+	SQUAD_11,
+	SQUAD_12,
+	SQUAD_13,
+	SQUAD_14,
+	SQUAD_15,
+	SQUAD_16,
+	SQUAD_17,
+	SQUAD_18,
+	SQUAD_19,
+	SQUAD_20,
+	ON_DUTY,
+	DOCTOR,
+	PATIENT,
+	VEHICLE,
+	IN_TRANSIT,
+	REPAIR,
+	TRAIN_SELF,
+	TRAIN_TOWN,
+	TRAIN_TEAMMATE,
+	TRAIN_BY_OTHER,
+	ASSIGNMENT_DEAD,
+	ASSIGNMENT_UNCONCIOUS, // unused
+	ASSIGNMENT_POW,
+	ASSIGNMENT_HOSPITAL,
+	ASSIGNMENT_EMPTY,
 };
 
 #define NO_ASSIGNMENT		127 //used when no pSoldier->ubDesiredSquad
@@ -69,9 +69,9 @@ enum{
 // Train stats defines (must match ATTRIB_MENU_ defines, and pAttributeMenuStrings )
 enum{
 	STRENGTH = 0,
-  DEXTERITY,
+	DEXTERITY,
 	AGILITY,
-  HEALTH,
+	HEALTH,
 	MARKSMANSHIP,
 	MEDICAL,
 	MECHANICAL,

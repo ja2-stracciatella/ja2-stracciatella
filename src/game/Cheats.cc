@@ -7,5 +7,5 @@ UINT8			gubCheatLevel;
 /** Get cheat code. */
 const char * getCheatCode()
 {
-  return isGermanVersion() ? "iguana" : "gabbi";
+	return isGermanVersion() ? "iguana" : "gabbi";
 }

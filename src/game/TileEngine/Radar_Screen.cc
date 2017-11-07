@@ -82,7 +82,7 @@ void LoadRadarScreenBitmap(const char* const filename)
 	ClearOutRadarMapImage();
 
 	// Grab the Map image
-  std::string image_filename(GCM->getRadarMapResourceName(FileMan::replaceExtension(FileMan::getFileName(filename), ".sti")));
+	std::string image_filename(GCM->getRadarMapResourceName(FileMan::replaceExtension(FileMan::getFileName(filename), ".sti")));
 
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename.c_str());
 	gusRadarImage = radar;
@@ -101,10 +101,10 @@ void ClearOutRadarMapImage( void )
 {
 	// If we have loaded, remove old one
 	if (gusRadarImage)
-  {
-	  DeleteVideoObject(gusRadarImage);
+	{
+		DeleteVideoObject(gusRadarImage);
 		gusRadarImage = 0;
-  }
+	}
 }
 
 
@@ -117,12 +117,12 @@ void MoveRadarScreen( )
 	MSYS_RemoveRegion( &gRadarRegion );
 
 	// Add region for radar
-	MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y,
-										 RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
-										 (UINT16)(RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT),
-										 MSYS_PRIORITY_HIGHEST, 0,
-										 RadarRegionMoveCallback,
-										 RadarRegionButtonCallback );
+	MSYS_DefineRegion(&gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y,
+				RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
+				(UINT16)(RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT),
+				MSYS_PRIORITY_HIGHEST, 0,
+				RadarRegionMoveCallback,
+				RadarRegionButtonCallback);
 }
 
 
@@ -269,9 +269,9 @@ void RenderRadarScreen()
 			INT16 const sHeight = RADAR_WINDOW_HEIGHT;
 			INT16 const sX      = RADAR_WINDOW_X;
 
-			INT16 const sRadarTLX = sTopLeftWorldX     * gdScaleX - sRadarCX + sX      					 + sWidth  / 2;
+			INT16 const sRadarTLX = sTopLeftWorldX     * gdScaleX - sRadarCX + sX + sWidth / 2;
 			INT16 const sRadarTLY = sTopLeftWorldY     * gdScaleY - sRadarCY + RADAR_WINDOW_TM_Y + sHeight / 2;
-			INT16 const sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX   					   + sWidth  / 2;
+			INT16 const sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX + sWidth / 2;
 			INT16 const sRadarBRY = sBottomRightWorldY * gdScaleY - sRadarCY + RADAR_WINDOW_TM_Y + sHeight / 2;
 
 			UINT16 const line_colour = Get16BPPColor(FROMRGB(0, 255, 0));
@@ -480,7 +480,7 @@ static void RenderSquadList(void)
 			sSelectedSquadLine == i         ? FONT_WHITE   : // highlight line?
 			!IsSquadOnCurrentTacticalMap(i) ? FONT_BLACK   :
 			CurrentSquad() == (INT32)i      ? FONT_LTGREEN :
-			                                  FONT_DKGREEN;
+								FONT_DKGREEN;
 		SetFontForeground(colour);
 
 		INT16 sX;

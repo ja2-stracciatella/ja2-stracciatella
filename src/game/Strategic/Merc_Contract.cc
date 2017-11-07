@@ -210,7 +210,7 @@ static void EndCurrentContractRenewal(void)
 	{
 		// OK stop this one and increment current one
 		ubCurrentContractRenewalInProgress = FALSE;
-		gfInContractMenuFromRenewSequence	 = FALSE;
+		gfInContractMenuFromRenewSequence  = FALSE;
 
 		ubCurrentContractRenewal++;
 
@@ -527,9 +527,9 @@ void CheckIfMercGetsAnotherContract(SOLDIERTYPE& s)
 	// AIM merc?
 	if (s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return;
 
-  UINT32 const now = GetWorldTotalMin();
-  // ATE: Check time we have and see if we can accept new contracts
-  if (now <= (UINT32)s.iTimeCanSignElsewhere) return;
+	UINT32 const now = GetWorldTotalMin();
+	// ATE: Check time we have and see if we can accept new contracts
+	if (now <= (UINT32)s.iTimeCanSignElsewhere) return;
 
 	if (s.fSignedAnotherContract) return;
 	// He doesn't already have another contract
@@ -952,7 +952,7 @@ static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ub
 
 static void ExtendMercInsuranceContractCallBack(MessageBoxReturnValue const bExitValue)
 {
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		PurchaseOrExtendInsuranceForSoldier( gpInsuranceSoldier, gubContractLength );
 	}
@@ -1044,7 +1044,7 @@ static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier)
 
 TEST(MercContract, asserts)
 {
-  EXPECT_EQ(sizeof(CONTRACT_NEWAL_LIST_NODE), 4);
+	EXPECT_EQ(sizeof(CONTRACT_NEWAL_LIST_NODE), 4);
 }
 
 #endif

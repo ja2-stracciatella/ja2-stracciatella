@@ -61,9 +61,9 @@ void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	// set current sector
 	if( ( bCurrentTownMineSectorX != sMapX ) || ( bCurrentTownMineSectorY != sMapY ) || ( bCurrentTownMineSectorZ != bMapZ ) )
 	{
-	  bCurrentTownMineSectorX = ( INT8 )sMapX;
-	  bCurrentTownMineSectorY = ( INT8 )sMapY;
-	  bCurrentTownMineSectorZ = bMapZ;
+		bCurrentTownMineSectorX = ( INT8 )sMapX;
+		bCurrentTownMineSectorY = ( INT8 )sMapY;
+		bCurrentTownMineSectorZ = bMapZ;
 	}
 
 	//create destroy the box
@@ -130,7 +130,7 @@ no_mine:
 
 		AddItemsInSectorToBox(box);
 
-    SetBoxFont(                     box, BLOCKFONT2);
+		SetBoxFont(                     box, BLOCKFONT2);
 		SetBoxHighLight(                box, FONT_WHITE);
 		SetBoxSecondColumnForeground(   box, FONT_WHITE);
 		SetBoxSecondColumnBackground(   box, FONT_BLACK);
@@ -239,9 +239,9 @@ static void AddTextToTownBox(PopUpBox* const box)
 	if( sMineSector != -1 )
 	{
 		// Associated Mine: Sector
-	  swprintf(wString, lengthof(wString), L"%ls:",  pwTownInfoStrings[2]);
+		swprintf(wString, lengthof(wString), L"%ls:",  pwTownInfoStrings[2]);
 		AddMonoString(box, wString);
-	  GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString, lengthof(wString));
+		GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString, lengthof(wString));
 		AddSecondColumnMonoString(box, wString);
 	}
 }
@@ -421,10 +421,10 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 		if (ubMilitiaTotal > 0)
 		{
 			// some militia, show total & their breakdown by level
-	 		swprintf( wString, lengthof(wString), L"%d  (%d/%d/%d)", ubMilitiaTotal,
-												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, GREEN_MILITIA),
-												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, REGULAR_MILITIA),
-												MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, ELITE_MILITIA));
+			swprintf( wString, lengthof(wString), L"%d  (%d/%d/%d)", ubMilitiaTotal,
+					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, GREEN_MILITIA),
+					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, REGULAR_MILITIA),
+					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, ELITE_MILITIA));
 			AddSecondColumnMonoString(box, wString);
 		}
 		else
@@ -500,7 +500,7 @@ static void PositionTownMineInfoBox(PopUpBox* const box)
 	// position the box based on x and y of the selected sector
 	INT16 sX = 0;
 	INT16 sY = 0;
-  GetScreenXYFromMapXY(bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
+	GetScreenXYFromMapXY(bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
 	SGPBox const& area = GetBoxArea(box);
 
 	// now position box - the x axis
@@ -559,17 +559,17 @@ static void RemoveInventoryButtonForMapPopUpBox(void)
 
 	// get rid of button
 	RemoveButton( guiMapButtonInventory[0] );
-  UnloadButtonImage( guiMapButtonInventoryImage[0] );
+	UnloadButtonImage( guiMapButtonInventoryImage[0] );
 
 	RemoveButton( guiMapButtonInventory[1] );
-  UnloadButtonImage( guiMapButtonInventoryImage[1] );
+	UnloadButtonImage( guiMapButtonInventoryImage[1] );
 }
 
 
 static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		fShowMapInventoryPool = TRUE;
 		fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
@@ -588,7 +588,7 @@ static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
 		fShowTownInfo = FALSE;

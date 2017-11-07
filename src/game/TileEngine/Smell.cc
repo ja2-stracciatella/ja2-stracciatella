@@ -122,7 +122,7 @@
 
 #define SET_BLOOD_DELAY_TIME( b ) \
 { \
- (b) = BLOOD_DELAY_TIME( (UINT8) Random( BLOOD_DELAY_MAX ) + 1 ) | (b & 0xFC); \
+	(b) = BLOOD_DELAY_TIME( (UINT8) Random( BLOOD_DELAY_MAX ) + 1 ) | (b & 0xFC); \
 }
 
 #define SET_BLOOD_FLOOR_TYPE( s, ntg ) \

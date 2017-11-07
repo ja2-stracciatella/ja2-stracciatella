@@ -28,13 +28,13 @@
 
 struct SMKFLIC
 {
-	HWFILE    hFileHandle;
-	Smack*    SmackerObject;
-        CHAR8     SmackerStatus;
-        SDL_Surface*    SmackBuffer;
-	UINT32    uiFlags;
-	UINT32    uiLeft;
-	UINT32    uiTop;
+	HWFILE hFileHandle;
+	Smack  *SmackerObject;
+	CHAR8  SmackerStatus;
+	SDL_Surface *SmackBuffer;
+	UINT32 uiFlags;
+	UINT32 uiLeft;
+	UINT32 uiTop;
 };
 
 
@@ -55,24 +55,25 @@ BOOLEAN SmkPollFlics(void)
 		if (!(i->uiFlags & SMK_FLIC_PLAYING)) continue;
 		fFlicStatus = TRUE;
 
-                Smack* const smkobj = i->SmackerObject;
+		Smack* const smkobj = i->SmackerObject;
 
 
 		if (SmackWait(smkobj)) continue;
 
-                //if (SmackSkipFrames(smkobj)) continue;
+		//if (SmackSkipFrames(smkobj)) continue;
 
-		{ SGPVSurface::Lock l(FRAME_BUFFER);
-                  SmackToBuffer(smkobj, i->uiLeft, i->uiTop, l.Pitch(), smkobj->Height, smkobj->Width, l.Buffer<UINT16>(), guiSmackPixelFormat);
-		  SmackDoFrame(smkobj);
+		{
+			SGPVSurface::Lock l(FRAME_BUFFER);
+			SmackToBuffer(smkobj, i->uiLeft, i->uiTop, l.Pitch(), smkobj->Height, smkobj->Width, l.Buffer<UINT16>(), guiSmackPixelFormat);
+			SmackDoFrame(smkobj);
 		}
 
 		// Check to see if the flic is done the last frame
-                //printf ("smk->FrameNum %u\n", smk->FrameNum);
+		//printf ("smk->FrameNum %u\n", smk->FrameNum);
 		// if (smk->FrameNum == smk->Frames - 1)
-                if (i->SmackerStatus == SMK_LAST )
+		if (i->SmackerStatus == SMK_LAST )
 		{
-                  if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
+			if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
 		}
 		else
 		{
@@ -142,16 +143,16 @@ try
 
 	//FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
-        //printf("File Size: %u\n", FileGetSize(file));
+	//printf("File Size: %u\n", FileGetSize(file));
 	// Allocate a Smacker buffer for video decompression
-        /*
-        sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+	/*
+	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	if (sf->SmackBuffer == NULL)
 	{
 		SLOGE(DEBUG_TAG_SMK, "Can't allocate a Smacker decompression buffer");
 		return NULL;
 	}
-        */
+	*/
 	sf->SmackerObject = SmackOpen( file , SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
 	if (!sf->SmackerObject)
 	{
@@ -171,10 +172,10 @@ catch (...) { return 0; }
 
 void SmkCloseFlic(SMKFLIC* const sf)
 {
-  SmackClose(sf->SmackerObject);
-  //FileClose(sf->hFileHandle);
-  // reenable for blitting SmackBufferClose(sf->SmackBuffer);
-  memset(sf, 0, sizeof(*sf));
+	SmackClose(sf->SmackerObject);
+	//FileClose(sf->hFileHandle);
+	// reenable for blitting SmackBufferClose(sf->SmackBuffer);
+	memset(sf, 0, sizeof(*sf));
 }
 
 

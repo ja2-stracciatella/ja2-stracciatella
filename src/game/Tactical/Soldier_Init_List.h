@@ -50,9 +50,9 @@ SOLDIERINITNODE* FindSoldierInitNodeBySoldier(SOLDIERTYPE const&);
 
 void AddSoldierInitListTeamToWorld(INT8 team);
 void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTroops, UINT8 ubTotalElite );
-void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumInfants,
-																	UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales,
-																	UINT8 ubNumAdultFemales );
+void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumInfants,
+					UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales,
+					UINT8 ubNumAdultFemales);
 void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumReg, UINT8 ubNumElites );
 
 void AddSoldierInitListBloodcats(void);
@@ -60,9 +60,9 @@ void AddSoldierInitListBloodcats(void);
 void UseEditorOriginalList(void);
 void UseEditorAlternateList(void);
 
-/* Any killed people that used detailed placement information must prevent that
- * from occurring again in the future.  Otherwise, the sniper guy with 99
- * marksmanship could appear again if the map was loaded again! */
+// Any killed people that used detailed placement information must prevent that
+// from occurring again in the future.  Otherwise, the sniper guy with 99
+// marksmanship could appear again if the map was loaded again!
 void EvaluateDeathEffectsToSoldierInitList(SOLDIERTYPE const&);
 
 void AddProfilesUsingProfileInsertionData(void);

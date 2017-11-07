@@ -56,7 +56,7 @@ Screens const GameScreens[] =
 
 TEST(Screens, asserts)
 {
-  EXPECT_EQ(lengthof(GameScreens), MAX_SCREENS);
+	EXPECT_EQ(lengthof(GameScreens), MAX_SCREENS);
 }
 
 #endif

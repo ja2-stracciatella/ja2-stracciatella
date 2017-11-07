@@ -48,13 +48,11 @@ static void LoadCharacterPortrait(void);
 
 void EnterIMPFinish( void )
 {
-
-
 	// load graphic for portrait
 	LoadCharacterPortrait( );
 
 	//	CREATE buttons for IMP finish screen
-  CreateIMPFinishButtons( );
+	CreateIMPFinishButtons( );
 
 	// set review mode
 	fReviewStats = TRUE;
@@ -70,14 +68,14 @@ static void RenderCharFullName(void);
 
 void RenderIMPFinish( void )
 {
-  // the background
+	// the background
 	RenderProfileBackGround( );
 
 	// render merc fullname
 	RenderCharFullName( );
 
-		// indent for text
-  RenderBeginIndent( 110, 50 );
+	// indent for text
+	RenderBeginIndent( 110, 50 );
 }
 
 
@@ -87,9 +85,8 @@ static void DestroyCharacterPortrait(void);
 
 void ExitIMPFinish( void )
 {
-
 	// remove buttons for IMP finish screen
-  DeleteIMPFinishButtons( );
+	DeleteIMPFinishButtons( );
 
 	// get rid of graphic for portrait
 	DestroyCharacterPortrait( );
@@ -121,11 +118,11 @@ static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateIMPFinishButtons(void)
 {
-  // this function will create the buttons needed for th IMP about us page
+	// this function will create the buttons needed for th IMP about us page
 	const INT16 dx = LAPTOP_SCREEN_UL_X;
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
 
-  // the start over button button
+	// the start over button button
 	MakeButton(0, LAPTOPDIR "/button_2.sti", pImpButtonText[7], dx + 136, dy + 174, BtnIMPFinishStartOverCallback);
 
 	// the done button
@@ -139,7 +136,7 @@ static void CreateIMPFinishButtons(void)
 	MakeButton(3, LAPTOPDIR "/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPFinishAttributesCallback);
 	giIMPFinishButton[3]->SpecifyIcon(guiATTRIBUTEGRAPH, 0, 25, 25, FALSE);
 
-  // the portrait button
+	// the portrait button
 	MakeButton(4, LAPTOPDIR "/button_8.sti", pImpButtonText[4], dx + 253, dy + 245, BtnIMPMainPagePortraitCallback);
 	giIMPFinishButton[4]->SpecifyIcon(guiCHARACTERPORTRAIT, 0, 33, 23, FALSE);
 
@@ -153,31 +150,31 @@ static void CreateIMPFinishButtons(void)
 
 static void DeleteIMPFinishButtons(void)
 {
-  // this function destroys the buttons needed for the IMP about Us Page
+	// this function destroys the buttons needed for the IMP about Us Page
 
-  // the back  button
-  RemoveButton(giIMPFinishButton[0] );
-  UnloadButtonImage(giIMPFinishButtonImage[0] );
+	// the back  button
+	RemoveButton(giIMPFinishButton[0] );
+	UnloadButtonImage(giIMPFinishButtonImage[0] );
 
 	// begin profiling button
 	RemoveButton(giIMPFinishButton[1] );
-  UnloadButtonImage(giIMPFinishButtonImage[1] );
+	UnloadButtonImage(giIMPFinishButtonImage[1] );
 
 	// begin personna button
 	RemoveButton(giIMPFinishButton[2] );
-  UnloadButtonImage(giIMPFinishButtonImage[2] );
+	UnloadButtonImage(giIMPFinishButtonImage[2] );
 
 	// begin attribs button
 	RemoveButton(giIMPFinishButton[3] );
-  UnloadButtonImage(giIMPFinishButtonImage[3] );
+	UnloadButtonImage(giIMPFinishButtonImage[3] );
 
 	// begin portrait button
 	RemoveButton(giIMPFinishButton[4] );
-  UnloadButtonImage(giIMPFinishButtonImage[4] );
+	UnloadButtonImage(giIMPFinishButtonImage[4] );
 
 	// begin voice button
 	RemoveButton(giIMPFinishButton[5] );
-  UnloadButtonImage(giIMPFinishButtonImage[5] );
+	UnloadButtonImage(giIMPFinishButtonImage[5] );
 }
 
 
@@ -211,17 +208,17 @@ static void BtnIMPFinishDoneCallback(GUI_BUTTON *btn, INT32 reason)
 static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
-  static BOOLEAN fAnimateFlag = FALSE;
+	static BOOLEAN fAnimateFlag = FALSE;
 	static UINT32 uiBaseTime = 0;
 	static BOOLEAN fState = 0;
 
-  INT32 iDifference = 0;
+	INT32 iDifference = 0;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-     uiBaseTime = GetJA2Clock();
+		uiBaseTime = GetJA2Clock();
 		btn->SpecifyText(pImpButtonText[23]);
-     fAnimateFlag = TRUE;
+		fAnimateFlag = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -232,11 +229,11 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 
 	// get amount of time between callbacks
-  iDifference = GetJA2Clock() - uiBaseTime;
+	iDifference = GetJA2Clock() - uiBaseTime;
 
 	if (fAnimateFlag)
 	{
-    if (iDifference > ANIMATE_MIN_TIME)
+		if (iDifference > ANIMATE_MIN_TIME)
 		{
 			uiBaseTime = GetJA2Clock();
 			fState = !fState;
@@ -250,7 +247,7 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	// btn callback for Main Page Begin Profiling
 
-  // if not this far in char generation, don't alot ANY action
+	// if not this far in char generation, don't alot ANY action
 	if (iCurrentProfileMode < 2)
 	{
 		btn->uiFlags &= ~BUTTON_CLICKED_ON;
@@ -268,21 +265,20 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void RenderCharFullName(void)
 {
-
 	wchar_t sString[ 64 ];
 	INT16 sX, sY;
 
 	// render the characters full name
 	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
 	swprintf(sString, lengthof(sString), pIMPFinishStrings, pFullName);
-  FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
+	FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
 	MPrint(sX, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);
 }
 
 
 static void LoadCharacterPortrait(void)
 {
-  // this function will load the character's portrait, to be used on portrait button
+	// this function will load the character's portrait, to be used on portrait button
 	// load it
 	guiCHARACTERPORTRAIT = LoadIMPPortait();
 }
@@ -298,7 +294,7 @@ static void DestroyCharacterPortrait(void)
 static void FinishMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		iCurrentImpPage = IMP_HOME_PAGE;
 		fButtonPendingFlag = TRUE;

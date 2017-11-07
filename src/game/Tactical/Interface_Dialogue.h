@@ -12,34 +12,34 @@ extern UINT8 gubSrcSoldierProfile;
 // Structure used in Tactical display of NPC dialogue
 struct NPC_DIALOGUE_TYPE
 {
-	FACETYPE*     face;
-	INT16					sX;
-	INT16					sY;
-	INT16					sPopupX;
-	INT16					sPopupY;
-	UINT8					ubPopupOrientation;
-	UINT8					ubCharNum;
+	FACETYPE *face;
+	INT16    sX;
+	INT16    sY;
+	INT16    sPopupX;
+	INT16    sPopupY;
+	UINT8    ubPopupOrientation;
+	UINT8    ubCharNum;
 	SGPVObject*   uiPanelVO;
 	BUTTON_PICS*  iButtonImages;
 	GUIButtonRef  uiCancelButton;
-	INT8					bCurSelect;
-	INT8					bOldCurSelect;
-	UINT16				usWidth;
-	UINT16				usHeight;
-	MOUSE_REGION	Regions[ 6 ];
-	MOUSE_REGION	BackRegion;
-	MOUSE_REGION	NameRegion;
-	MOUSE_REGION	ScreenRegion;
-	MOUSE_REGION	TextRegion;
-	BOOLEAN				fTextRegionOn;
-	BOOLEAN				fOnName;
-	SGPVSurface*  uiSaveBuffer;
-	BOOLEAN				fHandled;
-	BOOLEAN				fHandledTalkingVal;
-	BOOLEAN				fHandledCanDeleteVal;
-	BOOLEAN				fRenderSubTitlesNow;
-	BOOLEAN				fSetupSubTitles;
-	wchar_t				zQuoteStr[ 480 ];			//QIALOGUE_SIZE is in dialog control which includes this file...
+	INT8     bCurSelect;
+	INT8     bOldCurSelect;
+	UINT16   usWidth;
+	UINT16   usHeight;
+	MOUSE_REGION Regions[ 6 ];
+	MOUSE_REGION BackRegion;
+	MOUSE_REGION NameRegion;
+	MOUSE_REGION ScreenRegion;
+	MOUSE_REGION TextRegion;
+	BOOLEAN  fTextRegionOn;
+	BOOLEAN  fOnName;
+	SGPVSurface* uiSaveBuffer;
+	BOOLEAN  fHandled;
+	BOOLEAN  fHandledTalkingVal;
+	BOOLEAN  fHandledCanDeleteVal;
+	BOOLEAN  fRenderSubTitlesNow;
+	BOOLEAN  fSetupSubTitles;
+	wchar_t  zQuoteStr[ 480 ]; //QIALOGUE_SIZE is in dialog control which includes this file...
 };
 
 
@@ -218,7 +218,7 @@ enum
 	NPC_ACTION_REDUCE_CONRAD_SALARY_CONDITIONS,
 	NPC_ACTION_REMOVE_CONRAD,
 	NPC_ACTION_KROTT_REQUESTOR,
-	NPC_ACTION_KROTT_ALIVE_LOYALTY_BOOST,		/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM */
+	NPC_ACTION_KROTT_ALIVE_LOYALTY_BOOST, // Delayed loyalty effects elimininated.  Sep.12/98.  ARM
 	NPC_ACTION_TRIGGER_YANNI, // 185
 	NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_9,
 	NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_10,
@@ -247,7 +247,7 @@ enum
 	NPC_ACTION_CHANGE_MANNY_POSITION = 210,
 	NPC_ACTION_TIMER_FOR_VEHICLE, // 211
 	NPC_ACTION_ASK_ABOUT_PAYING_RPC_WITH_DAILY_SALARY,//212
-  NPC_ACTION_TRIGGER_MICKY_BY_SCI_FI, // 213
+	NPC_ACTION_TRIGGER_MICKY_BY_SCI_FI, // 213
 	// 214 is blank
 	NPC_ACTION_TRIGGER_ELLIOT_BY_BATTLE_RESULT = 215,
 	NPC_ACTION_TRIGGER_ELLIOT_BY_SAM_DISABLED,
@@ -255,10 +255,10 @@ enum
 	NPC_ACTION_LAYLAS_NEXT_LINE_AFTER_CINDY,
 	NPC_ACTION_LAYLAS_NEXT_LINE_AFTER_BAMBI,
 	NPC_ACTION_LAYLAS_NEXT_LINE_AFTER_MARIA,
-	NPC_ACTION_PROMPT_PLAYER_TO_LIE,						// 221
-	NPC_ACTION_REMOVE_JOE_QUEEN,							// 222
-	NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE,		// 223
-	NPC_ACTION_NO_SCI_FI_END_MEANWHILE,				//224
+	NPC_ACTION_PROMPT_PLAYER_TO_LIE, // 221
+	NPC_ACTION_REMOVE_JOE_QUEEN, // 222
+	NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE, // 223
+	NPC_ACTION_NO_SCI_FI_END_MEANWHILE, //224
 	// 225 is obsolete
 	NPC_ACTION_TRIGGER_MARRY_DARYL_PROMPT = 226,
 	NPC_ACTION_HAVE_MARRIED_NPC_LEAVE_TEAM,

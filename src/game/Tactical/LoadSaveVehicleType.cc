@@ -23,7 +23,7 @@ void ExtractVehicleTypeFromFile(HWFILE const file, VEHICLETYPE* const v, UINT32 
 	EXTR_SKIP(d, 1)
 	EXTR_I16(d, v->sGridNo);
 	const ProfileID noone = (savegame_version < 86 ? 0 : NO_PROFILE);
-	/* The ProfileID of the passengers gets stored, not their SoldierID */
+	// The ProfileID of the passengers gets stored, not their SoldierID
 	FOR_EACH(SOLDIERTYPE*, i, v->pPassengers)
 	{
 		ProfileID id;
@@ -56,7 +56,7 @@ void InjectVehicleTypeIntoFile(HWFILE const file, VEHICLETYPE const* const v)
 	INJ_BOOL(d, v->fBetweenSectors)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, v->sGridNo);
-	/* The ProfileID of the passengers gets stored, not their SoldierID */
+	// The ProfileID of the passengers gets stored, not their SoldierID
 	FOR_EACH(SOLDIERTYPE* const, i, v->pPassengers)
 	{
 		const ProfileID id = (*i == NULL ? NO_PROFILE : (*i)->ubProfile);

@@ -44,16 +44,16 @@
 //This is how often the creatures spread, once the quest begins.  The smaller the gap,
 //the faster the creatures will advance.  This is also directly related to the reproduction
 //rates which are applied each time the creatures spread.
-#define EASY_SPREAD_TIME_IN_MINUTES					510	//easy spreads every 8.5 hours
-#define NORMAL_SPREAD_TIME_IN_MINUTES				450	//normal spreads every 7.5 hours
-#define HARD_SPREAD_TIME_IN_MINUTES					390	//hard spreads every 6.5 hours
+#define EASY_SPREAD_TIME_IN_MINUTES		510	//easy spreads every 8.5 hours
+#define NORMAL_SPREAD_TIME_IN_MINUTES		450	//normal spreads every 7.5 hours
+#define HARD_SPREAD_TIME_IN_MINUTES		390	//hard spreads every 6.5 hours
 
 //Once the queen is added to the game, we can instantly let her spread x number of times
 //to give her a head start.  This can also be a useful tool for having slow reproduction rates
 //but quicker head start to compensate to make the creatures less aggressive overall.
-#define EASY_QUEEN_INIT_BONUS_SPREADS				1
-#define NORMAL_QUEEN_INIT_BONUS_SPREADS			2
-#define HARD_QUEEN_INIT_BONUS_SPREADS				3
+#define EASY_QUEEN_INIT_BONUS_SPREADS		1
+#define NORMAL_QUEEN_INIT_BONUS_SPREADS		2
+#define HARD_QUEEN_INIT_BONUS_SPREADS		3
 
 //This value modifies the chance to populate a given sector.  This is different from the previous definition.
 //This value gets applied to a potentially complicated formula, using the creature habitat to modify
@@ -61,26 +61,26 @@
 //population increases), etc.  I would recommend not tweaking the value too much in either direction from
 //zero due to the fact that this can greatly effect spread times and maximum populations.  Basically, if the
 //creatures are spreading too quickly, increase the value, otherwise decrease it to a negative value
-#define EASY_POPULATION_MODIFIER						0
-#define NORMAL_POPULATION_MODIFIER					0
-#define HARD_POPULATION_MODIFIER						0
+#define EASY_POPULATION_MODIFIER		0
+#define NORMAL_POPULATION_MODIFIER		0
+#define HARD_POPULATION_MODIFIER		0
 
 //Augments the chance that the creatures will attack a town.  The conditions for attacking a town
 //are based strictly on the occupation of the creatures in each of the four mine exits.  For each creature
 //there is a base chance of 10% that the creatures will feed sometime during the night.
-#define EASY_CREATURE_TOWN_AGGRESSIVENESS		-10
+#define EASY_CREATURE_TOWN_AGGRESSIVENESS	-10
 #define NORMAL_CREATURE_TOWN_AGGRESSIVENESS	0
-#define HARD_CREATURE_TOWN_AGGRESSIVENESS		10
+#define HARD_CREATURE_TOWN_AGGRESSIVENESS	10
 
 
 //This is how many creatures the queen produces for each cycle of spreading.  The higher
 //the numbers the faster the creatures will advance.
-#define EASY_QUEEN_REPRODUCTION_BASE				6 //6-7
-#define EASY_QUEEN_REPRODUCTION_BONUS				1
-#define NORMAL_QUEEN_REPRODUCTION_BASE			7 //7-9
-#define NORMAL_QUEEN_REPRODUCTION_BONUS			2
-#define HARD_QUEEN_REPRODUCTION_BASE				9 //9-12
-#define HARD_QUEEN_REPRODUCTION_BONUS				3
+#define EASY_QUEEN_REPRODUCTION_BASE		6 //6-7
+#define EASY_QUEEN_REPRODUCTION_BONUS		1
+#define NORMAL_QUEEN_REPRODUCTION_BASE		7 //7-9
+#define NORMAL_QUEEN_REPRODUCTION_BONUS		2
+#define HARD_QUEEN_REPRODUCTION_BASE		9 //9-12
+#define HARD_QUEEN_REPRODUCTION_BONUS		3
 
 //When either in a cave level with blue lights or there is a creature presence, then
 //we override the normal music with the creature music.  The conditions are maintained
@@ -89,13 +89,13 @@ BOOLEAN gfUseCreatureMusic = FALSE;
 BOOLEAN gfCreatureMeanwhileScenePlayed = FALSE;
 enum
 {
-	QUEEN_LAIR,				//where the queen lives.  Highly protected
-	LAIR,							//part of the queen's lair -- lots of babies and defending mothers
+	QUEEN_LAIR,		//where the queen lives.  Highly protected
+	LAIR,			//part of the queen's lair -- lots of babies and defending mothers
 	LAIR_ENTRANCE,		//where the creatures access the mine.
-	INNER_MINE,				//parts of the mines that aren't close to the outside world
-	OUTER_MINE,				//area's where miners work, close to towns, creatures love to eat :)
+	INNER_MINE,		//parts of the mines that aren't close to the outside world
+	OUTER_MINE,		//area's where miners work, close to towns, creatures love to eat :)
 	FEEDING_GROUNDS,	//creatures love to populate these sectors :)
-	MINE_EXIT,				//the area that creatures can initiate town attacks if lots of monsters.
+	MINE_EXIT,		//the area that creatures can initiate town attacks if lots of monsters.
 };
 
 struct CREATURE_DIRECTIVE
@@ -105,7 +105,7 @@ struct CREATURE_DIRECTIVE
 };
 
 CREATURE_DIRECTIVE *lair;
-INT32	giHabitatedDistance = 0;
+INT32 giHabitatedDistance = 0;
 INT32 giPopulationModifier = 0;
 INT32 giLairID = 0;
 INT32 giDestroyedLairID = 0;
@@ -407,13 +407,14 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 		//the area is populated enough to spread further.  The minimum population must be 4 before
 		//spreading is even considered.
 		if( node->pLevel->ubNumCreatures*10 - 10 <= (INT32)Random( 60 ) )
-		{ // x<=1   100%
-			// x==2		 83%
-			// x==3		 67%
-			// x==4		 50%
-			// x==5		 33%
-			// x==6		 17%
-			// x>=7		  0%
+		{
+			// x<=1 100%
+			// x==2  83%
+			// x==3  67%
+			// x==4  50%
+			// x==5  33%
+			// x==6  17%
+			// x>=7   0%
 			AddCreatureToNode( node );
 			return TRUE;
 		}
@@ -422,7 +423,7 @@ static BOOLEAN PlaceNewCreature(CREATURE_DIRECTIVE* node, INT32 iDistance)
 	{ //we are within the "safe" habitated area of the creature's area of influence.  The chance of
 		//increasing the population inside this sector depends on how deep we are within the sector.
 		if( node->pLevel->ubNumCreatures < MAX_STRATEGIC_TEAM_SIZE ||
-			  (node->pLevel->ubNumCreatures < 32 && node->pLevel->ubCreatureHabitat == QUEEN_LAIR) )
+			(node->pLevel->ubNumCreatures < 32 && node->pLevel->ubCreatureHabitat == QUEEN_LAIR) )
 		{ //there is ALWAYS a chance to habitate an interior sector, though the chances are slim for
 			//highly occupied sectors.  This chance is modified by the type of area we are in.
 			INT32 iAbsoluteMaxPopulation;
@@ -779,7 +780,7 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 	}
 	else if( CountAllMilitiaInSector( ubSectorX, ubSectorY ) )
 	{ //we have militia in the sector
-	  gubCreatureBattleCode = CREATURE_BATTLE_CODE_AUTORESOLVE;
+		gubCreatureBattleCode = CREATURE_BATTLE_CODE_AUTORESOLVE;
 	}
 	else if( !StrategicMap[ ubSectorX + MAP_WORLD_X * ubSectorY ].fEnemyControlled )
 	{ //player controlled sector -- eat some civilians
@@ -946,9 +947,9 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 	return TRUE;
 }
 
-void DetermineCreatureTownComposition( UINT8 ubNumCreatures,
-																			 UINT8 *pubNumYoungMales, UINT8 *pubNumYoungFemales,
-																			 UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales )
+void DetermineCreatureTownComposition(UINT8 ubNumCreatures,
+					UINT8 *pubNumYoungMales, UINT8 *pubNumYoungFemales,
+					UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales)
 {
 	INT32 i, iRandom;
 	UINT8 ubYoungMalePercentage = 10;
@@ -980,9 +981,9 @@ void DetermineCreatureTownComposition( UINT8 ubNumCreatures,
 	}
 }
 
-void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT8 *pubNumCreatures,
-																			 UINT8 *pubNumYoungMales, UINT8 *pubNumYoungFemales,
-																			 UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales )
+void DetermineCreatureTownCompositionBasedOnTacticalInformation(UINT8 *pubNumCreatures,
+								UINT8 *pubNumYoungMales, UINT8 *pubNumYoungFemales,
+								UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales)
 {
 	SECTORINFO *pSector;
 

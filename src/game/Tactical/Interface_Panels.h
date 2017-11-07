@@ -36,16 +36,16 @@ enum
 };
 
 
-#define NEW_ITEM_CYCLE_COUNT	19
-#define NEW_ITEM_CYCLES				4
-#define	NUM_TEAM_SLOTS							6
+#define NEW_ITEM_CYCLE_COUNT			19
+#define NEW_ITEM_CYCLES			4
+#define NUM_TEAM_SLOTS				6
 
 
-#define	PASSING_ITEM_DISTANCE_OKLIFE			3
-#define	PASSING_ITEM_DISTANCE_NOTOKLIFE		2
+#define PASSING_ITEM_DISTANCE_OKLIFE		3
+#define PASSING_ITEM_DISTANCE_NOTOKLIFE	2
 
-#define	SHOW_LOCATOR_NORMAL									1
-#define SHOW_LOCATOR_FAST										2
+#define SHOW_LOCATOR_NORMAL			1
+#define SHOW_LOCATOR_FAST			2
 
 void CreateSMPanelButtons(void);
 void RemoveSMPanelButtons(void);

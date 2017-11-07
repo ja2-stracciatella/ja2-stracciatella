@@ -24,7 +24,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#define			NUM_REVEALED_BYTES			3200
+#define NUM_REVEALED_BYTES 3200
 
 extern BOOLEAN gfLoadingExitGrids;
 
@@ -39,7 +39,7 @@ UINT8				*gpRevealedMap;
 
 static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
-	CHAR8		zMapName[ 128 ];
+	CHAR8 zMapName[ 128 ];
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
@@ -60,9 +60,9 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 void LoadAllMapChangesFromMapTempFileAndApplyThem()
 {
-	CHAR8		zMapName[ 128 ];
-	UINT32	uiNumberOfElementsSavedBackToFile = 0;	// added becuase if no files get saved back to disk, the flag needs to be erased
-	UINT32	cnt;
+	CHAR8      zMapName[ 128 ];
+	UINT32     uiNumberOfElementsSavedBackToFile = 0; // added becuase if no files get saved back to disk, the flag needs to be erased
+	UINT32     cnt;
 	MODIFY_MAP *pMap;
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
@@ -694,10 +694,10 @@ static bool ModifyWindowStatus(GridNo const grid_no)
 
 static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened)
 {
-	STRUCTURE * pStructure;
-	STRUCTURE * pBase;
-	BOOLEAN			fStatusOnTheMap;
-  INT16     sBaseGridNo = (INT16)uiMapIndex;
+	STRUCTURE *pStructure;
+	STRUCTURE *pBase;
+	BOOLEAN   fStatusOnTheMap;
+	INT16     sBaseGridNo = (INT16)uiMapIndex;
 
 	pStructure = FindStructure( (UINT16)uiMapIndex, STRUCTURE_OPENABLE );
 
@@ -715,10 +715,10 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 		pBase = FindBaseStructure( pStructure );
 
 		// Get LEVELNODE for struct and remove!
-    if ( pBase )
-    {
-		  sBaseGridNo = pBase->sGridNo;
-    }
+		if (pBase)
+		{
+			sBaseGridNo = pBase->sGridNo;
+		}
 
 		if (!SwapStructureForPartner(pStructure))
 		{
@@ -726,8 +726,8 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 		}
 
 		// Adjust visiblity of any item pools here....
-    // ATE: Nasty bug here - use base gridno for structure for items!
-    // since items always drop to base gridno in AddItemToPool
+		// ATE: Nasty bug here - use base gridno for structure for items!
+		// since items always drop to base gridno in AddItemToPool
 		if (fOpened)
 		{
 			// We are open, make un-hidden if so....

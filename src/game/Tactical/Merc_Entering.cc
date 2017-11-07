@@ -33,11 +33,12 @@
 #include "UILayout.h"
 
 
-#define		MAX_MERC_IN_HELI		20
-#define		MAX_HELI_SCRIPT			30
-#define		ME_SCRIPT_DELAY			100
-#define		NUM_PER_HELI_RUN		6
-#define		REPEAT_HELI_MOVEAWAY		( (STD_SCREEN_X) / 7 )
+#define MAX_MERC_IN_HELI		20
+#define MAX_HELI_SCRIPT		30
+#define ME_SCRIPT_DELAY		100
+#define NUM_PER_HELI_RUN		6
+#define REPEAT_HELI_MOVEAWAY		( (STD_SCREEN_X) / 7)
+
 enum HeliStateEnums
 {
 	HELI_APPROACH,
@@ -73,7 +74,8 @@ enum HeliCodes
 
 static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 {
-	{ // HELI_APPROACH
+	{
+		// HELI_APPROACH
 		HELI_REST,
 		HELI_REST,
 		HELI_REST,
@@ -111,7 +113,8 @@ static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 		HELI_GOTO_MOVETO
 	},
 
-	{ // MOVE TO
+	{
+		// MOVE TO
 		HELI_SHOW_HELI,
 		HELI_MOVEY,
 		HELI_MOVEY,
@@ -149,7 +152,8 @@ static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 		HELI_GOTO_BEGINDROP
 	},
 
-	{ // HELI_BEGIN_DROP
+	{
+		// HELI_BEGIN_DROP
 		HELI_MOVE_DOWN,
 		HELI_MOVE_DOWN,
 		HELI_MOVE_DOWN,
@@ -187,7 +191,8 @@ static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 		HELI_GOTO_DROP
 	},
 
-	{ // Heli Begin Drop
+	{
+		// Heli Begin Drop
 		HELI_MOVESMALL_UP,
 		HELI_MOVESMALL_UP,
 		HELI_MOVESMALL_UP,
@@ -225,7 +230,8 @@ static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 		HELI_GOTO_DROP
 	},
 
-	{ // HELI END DROP
+	{
+		// HELI END DROP
 		HELI_MOVE_UP,
 		HELI_MOVE_UP,
 		HELI_MOVE_UP,
@@ -263,7 +269,8 @@ static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 		HELI_GOTO_MOVEAWAY
 	},
 
-	{ // MOVE AWAY
+	{
+		// MOVE AWAY
 		HELI_MOVELARGERY,
 		HELI_MOVELARGERY,
 		HELI_MOVELARGERY,
@@ -301,7 +308,8 @@ static UINT8 const ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 		HELI_GOTO_EXIT
 	},
 
-	{ // HELI EXIT
+	{
+		// HELI EXIT
 		HELI_REST,
 		HELI_REST,
 		HELI_REST,
@@ -363,10 +371,10 @@ static UINT8  gubMoveAwayRepeated = 0;
 static BOOLEAN fFadingHeliIn = FALSE;
 static BOOLEAN fFadingHeliOut = FALSE;
 
-BOOLEAN		gfIngagedInDrop = FALSE;
+BOOLEAN gfIngagedInDrop = FALSE;
 
 static ANITILE* gpHeli;
-BOOLEAN		gfFirstHeliRun;
+BOOLEAN gfFirstHeliRun;
 
 
 void ResetHeliSeats( )
@@ -408,26 +416,26 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 
 	ConvertGridNoToCenterCellXY( sGridNoSweetSpot, &sX, &sY );
 
-	gsHeliXPos					= sX - ( 2 * CELL_X_SIZE );
-	gsHeliYPos					= sY - ( 10 * CELL_Y_SIZE );
-	//gsHeliXPos					= sX - ( 3 * CELL_X_SIZE );
-	//gsHeliYPos					= sY + ( 4 * CELL_Y_SIZE );
-	gdHeliZPos					= 0;
-	gsHeliScript				= 0;
-	gbCurDrop						= 0;
-	gbExitCount					= 0;
-	gbHeliRound					= 1;
+	gsHeliXPos = sX - ( 2 * CELL_X_SIZE );
+	gsHeliYPos = sY - ( 10 * CELL_Y_SIZE );
+	//gsHeliXPos = sX - ( 3 * CELL_X_SIZE );
+	//gsHeliYPos = sY + ( 4 * CELL_Y_SIZE );
+	gdHeliZPos = 0;
+	gsHeliScript = 0;
+	gbCurDrop = 0;
+	gbExitCount = 0;
+	gbHeliRound = 1;
 
-	gubHeliState				= HELI_APPROACH;
-	guiHeliLastUpdate		= GetJA2Clock( );
+	gubHeliState = HELI_APPROACH;
+	guiHeliLastUpdate = GetJA2Clock( );
 
 	// Start sound
 	uiSoundSample = PlayJA2Sample(HELI_1, 0, 10000, MIDDLEPAN);
-	fFadingHeliIn				= TRUE;
+	fFadingHeliIn = TRUE;
 
-	gfHandleHeli			= TRUE;
+	gfHandleHeli = TRUE;
 
-	gfFirstGuyDown		= TRUE;
+	gfFirstGuyDown = TRUE;
 
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
 }
@@ -439,7 +447,7 @@ static void HandleFirstHeliDropOfGame(void);
 void HandleHeliDrop( )
 {
 	UINT8 ubScriptCode;
-	UINT32	uiClock;
+	UINT32 uiClock;
 	INT32 iVol;
 	INT32 cnt;
 	ANITILE_PARAMS	AniParams;
@@ -471,7 +479,7 @@ void HandleHeliDrop( )
 			// Remove heli
 			DeleteAniTile( gpHeli );
 
-      RebuildCurrentSquad( );
+			RebuildCurrentSquad( );
 
 			// Remove sound
 			if( uiSoundSample!=NO_SAMPLE )
@@ -542,7 +550,7 @@ void HandleHeliDrop( )
 						UnLockPauseState();
 						UnPauseGame();
 
-            RebuildCurrentSquad( );
+						RebuildCurrentSquad( );
 
 						HandleFirstHeliDropOfGame( );
 					}
@@ -557,7 +565,7 @@ void HandleHeliDrop( )
 					UnLockPauseState();
 					UnPauseGame();
 
-          RebuildCurrentSquad( );
+					RebuildCurrentSquad( );
 
 					HandleFirstHeliDropOfGame( );
 				}
@@ -620,8 +628,8 @@ void HandleHeliDrop( )
 							if ( gbExitCount == 1 )
 							{
 								// Goto leave
-								gsHeliScript				= -1;
-								gubHeliState				= HELI_ENDDROP;
+								gsHeliScript = -1;
+								gubHeliState = HELI_ENDDROP;
 
 							}
 						}
@@ -669,30 +677,30 @@ void HandleHeliDrop( )
 					// Repeat some frames on higher resolutions to avoid the heli shadow from disappearing mid screen
 					if (gubMoveAwayRepeated < REPEAT_HELI_MOVEAWAY)
 					{
-					  gubMoveAwayRepeated++;
-					  gsHeliScript--;
+						gubMoveAwayRepeated++;
+						gsHeliScript--;
 					}
 					gpHeli->sRelativeY += 6;
 					break;
 
 				case HELI_GOTO_BEGINDROP:
 
-					gsHeliScript				= -1;
-					gubHeliState				= HELI_BEGINDROP;
+					gsHeliScript = -1;
+					gubHeliState = HELI_BEGINDROP;
 					break;
 
 				case HELI_SHOW_HELI:
 
 					// Start animation
 					memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-					AniParams.sGridNo							= gsGridNoSweetSpot;
-					AniParams.ubLevelID						= ANI_SHADOW_LEVEL;
-					AniParams.sDelay							= 90;
-					AniParams.sStartFrame					= 0;
-					AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_LOOPING;
-					AniParams.sX									= gsHeliXPos;
-					AniParams.sY									= gsHeliYPos;
-					AniParams.sZ									= (INT16)gdHeliZPos;
+					AniParams.sGridNo = gsGridNoSweetSpot;
+					AniParams.ubLevelID = ANI_SHADOW_LEVEL;
+					AniParams.sDelay = 90;
+					AniParams.sStartFrame = 0;
+					AniParams.uiFlags = ANITILE_FORWARD | ANITILE_LOOPING;
+					AniParams.sX = gsHeliXPos;
+					AniParams.sY = gsHeliYPos;
+					AniParams.sZ = (INT16)gdHeliZPos;
 					AniParams.zCachedFile = TILECACHEDIR "/heli_sh.sti";
 					gpHeli = CreateAnimationTile( &AniParams );
 					break;
@@ -702,22 +710,22 @@ void HandleHeliDrop( )
 					// Goto drop animation
 					gdHeliZPos -= 0.25;
 					gpHeli->pLevelNode->sRelativeZ = ( INT16 )gdHeliZPos;
-					gsHeliScript				= -1;
-					gubHeliState				= HELI_DROP;
+					gsHeliScript = -1;
+					gubHeliState = HELI_DROP;
 					break;
 
 				case HELI_GOTO_MOVETO:
 
 					// Goto drop animation
-					gsHeliScript				= -1;
-					gubHeliState				= HELI_MOVETO;
+					gsHeliScript = -1;
+					gubHeliState = HELI_MOVETO;
 					break;
 
 				case HELI_GOTO_MOVEAWAY:
 
 					// Goto drop animation
-					gsHeliScript				= -1;
-					gubHeliState				= HELI_MOVEAWAY;
+					gsHeliScript = -1;
+					gubHeliState = HELI_MOVEAWAY;
 					break;
 
 				case HELI_GOTO_EXIT:
@@ -729,12 +737,12 @@ void HandleHeliDrop( )
 
 						ConvertGridNoToCenterCellXY( gsGridNoSweetSpot, &sX, &sY );
 
-						gsHeliXPos					= sX - ( 2 * CELL_X_SIZE );
-						gsHeliYPos					= sY - ( 10 * CELL_Y_SIZE );
-						gdHeliZPos					= 0;
-						gsHeliScript				= 0;
-						gbExitCount					= 0;
-						gubHeliState				= HELI_APPROACH;
+						gsHeliXPos = sX - ( 2 * CELL_X_SIZE );
+						gsHeliYPos = sY - ( 10 * CELL_Y_SIZE );
+						gdHeliZPos = 0;
+						gsHeliScript = 0;
+						gbExitCount = 0;
+						gubHeliState = HELI_APPROACH;
 						gbHeliRound++;
 
 						// Ahh, but still delete the heli!
@@ -744,8 +752,8 @@ void HandleHeliDrop( )
 					else
 					{
 						// Goto drop animation
-						gsHeliScript				= -1;
-						gubHeliState				= HELI_EXIT;
+						gsHeliScript = -1;
+						gubHeliState = HELI_EXIT;
 
 						// Delete helicopter image!
 						DeleteAniTile( gpHeli );
@@ -760,7 +768,7 @@ void HandleHeliDrop( )
 				case HELI_DONE:
 
 					// End
-					fFadingHeliOut			= TRUE;
+					fFadingHeliOut = TRUE;
 					break;
 			}
 

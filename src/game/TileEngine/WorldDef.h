@@ -7,17 +7,17 @@
 
 #define WORLD_TILE_X		40
 #define WORLD_TILE_Y		20
-#define WORLD_COLS			160
-#define WORLD_ROWS			160
-#define WORLD_COORD_COLS			1600
-#define WORLD_COORD_ROWS			1600
-#define WORLD_MAX					25600
-#define CELL_X_SIZE					10
-#define CELL_Y_SIZE					10
+#define WORLD_COLS		160
+#define WORLD_ROWS		160
+#define WORLD_COORD_COLS	1600
+#define WORLD_COORD_ROWS	1600
+#define WORLD_MAX		25600
+#define CELL_X_SIZE		10
+#define CELL_Y_SIZE		10
 
 #define CENTER_GRIDNO (WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2)
 
-#define WORLD_CLIFF_HEIGHT		80
+#define WORLD_CLIFF_HEIGHT	80
 
 //A macro that actually memcpy's over data and increments the pointer automatically
 //based on the size.  Works like a FileRead except with a buffer instead of a file pointer.
@@ -25,11 +25,11 @@
 #define  LOADDATA( dst, src, size ) memcpy( dst, src, size ); src += size
 
 
-#define LANDHEAD							0
-#define MAXDIR								8
+#define LANDHEAD		0
+#define MAXDIR			8
 
 // Defines for shade levels
-#define DEFAULT_SHADE_LEVEL		4
+#define DEFAULT_SHADE_LEVEL	4
 
 
 // DEFINES FOR LEVELNODE FLAGS
@@ -66,66 +66,66 @@ ENUM_BITSET(LevelnodeFlags)
 
 
 // THE FIRST FEW ( 4 ) bits are flags which are saved in the world
-#define MAPELEMENT_REDUNDENT								0x0001
-#define MAPELEMENT_REEVALUATE_REDUNDENCY		0x0002
-#define MAPELEMENT_ENEMY_MINE_PRESENT				0x0004
-#define MAPELEMENT_PLAYER_MINE_PRESENT			0x0008
-#define	MAPELEMENT_STRUCTURE_DAMAGED				0x0010
-#define MAPELEMENT_REEVALUATEBLOOD					0x0020
-#define MAPELEMENT_INTERACTIVETILE					0x0040
-#define MAPELEMENT_RAISE_LAND_START					0x0080
-#define MAPELEMENT_REVEALED									0x0100
-#define MAPELEMENT_RAISE_LAND_END           0x0200
-#define MAPELEMENT_REDRAW										0x0400
-#define MAPELEMENT_REVEALED_ROOF						0x0800
-#define MAPELEMENT_MOVEMENT_RESERVED				0x1000
-#define MAPELEMENT_RECALCULATE_WIREFRAMES		0x2000
-#define MAPELEMENT_ITEMPOOL_PRESENT					0x4000
-#define MAPELEMENT_REACHABLE								0x8000
+#define MAPELEMENT_REDUNDENT			0x0001
+#define MAPELEMENT_REEVALUATE_REDUNDENCY	0x0002
+#define MAPELEMENT_ENEMY_MINE_PRESENT		0x0004
+#define MAPELEMENT_PLAYER_MINE_PRESENT		0x0008
+#define MAPELEMENT_STRUCTURE_DAMAGED		0x0010
+#define MAPELEMENT_REEVALUATEBLOOD		0x0020
+#define MAPELEMENT_INTERACTIVETILE		0x0040
+#define MAPELEMENT_RAISE_LAND_START		0x0080
+#define MAPELEMENT_REVEALED			0x0100
+#define MAPELEMENT_RAISE_LAND_END		0x0200
+#define MAPELEMENT_REDRAW			0x0400
+#define MAPELEMENT_REVEALED_ROOF		0x0800
+#define MAPELEMENT_MOVEMENT_RESERVED		0x1000
+#define MAPELEMENT_RECALCULATE_WIREFRAMES	0x2000
+#define MAPELEMENT_ITEMPOOL_PRESENT		0x4000
+#define MAPELEMENT_REACHABLE			0x8000
 
-#define MAPELEMENT_EXT_SMOKE								0x01
-#define MAPELEMENT_EXT_TEARGAS							0x02
-#define MAPELEMENT_EXT_MUSTARDGAS						0x04
+#define MAPELEMENT_EXT_SMOKE			0x01
+#define MAPELEMENT_EXT_TEARGAS			0x02
+#define MAPELEMENT_EXT_MUSTARDGAS		0x04
 #define MAPELEMENT_EXT_DOOR_STATUS_PRESENT	0x08
-#define MAPELEMENT_EXT_RECALCULATE_MOVEMENT 0x10
-#define MAPELEMENT_EXT_NOBURN_STRUCT				0x20
-#define MAPELEMENT_EXT_ROOFCODE_VISITED			0x40
-#define MAPELEMENT_EXT_CREATUREGAS     			0x80
+#define MAPELEMENT_EXT_RECALCULATE_MOVEMENT	0x10
+#define MAPELEMENT_EXT_NOBURN_STRUCT		0x20
+#define MAPELEMENT_EXT_ROOFCODE_VISITED		0x40
+#define MAPELEMENT_EXT_CREATUREGAS		0x80
 
-#define FIRST_LEVEL 0
-#define SECOND_LEVEL 1
+#define FIRST_LEVEL				0
+#define SECOND_LEVEL				1
 
 #define FIRST_LEVEL_Z_OFFET 0.0
 #define SECOND_LEVEL_Z_OFFSET 58.0
 
-#define ANY_SMOKE_EFFECT		( MAPELEMENT_EXT_CREATUREGAS | MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS )
+#define ANY_SMOKE_EFFECT			( MAPELEMENT_EXT_CREATUREGAS | MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS )
 
 
 struct LEVELNODE
 {
-	LEVELNODE*                  pNext;
-	LevelnodeFlags              uiFlags;
+	LEVELNODE*     pNext;
+	LevelnodeFlags uiFlags;
 
-	UINT8												ubSumLights;					// LIGHTING INFO
-	UINT8												ubMaxLights;					// MAX LIGHTING INFO
+	UINT8 ubSumLights; // LIGHTING INFO
+	UINT8 ubMaxLights; // MAX LIGHTING INFO
 
 	union
 	{
-		LEVELNODE*                  pPrevNode;					// FOR LAND, GOING BACKWARDS POINTER
-		STRUCTURE										*pStructureData;		// STRUCTURE DATA
-		INT32												uiAPCost;						// FOR AP DISPLAY
-		INT32												iExitGridInfo;
+		LEVELNODE *pPrevNode; // FOR LAND, GOING BACKWARDS POINTER
+		STRUCTURE *pStructureData; // STRUCTURE DATA
+		INT32     uiAPCost; // FOR AP DISPLAY
+		INT32     iExitGridInfo;
 	}; // ( 4 byte union )
 
 	union
 	{
 		struct
 		{
-			UINT16										usIndex;							// TILE DATABASE INDEX
-			INT16											sCurrentFrame;				// Stuff for animated tiles for a given tile location ( doors, etc )
+			UINT16 usIndex; // TILE DATABASE INDEX
+			INT16 sCurrentFrame; // Stuff for animated tiles for a given tile location ( doors, etc )
 		};
 
-		SOLDIERTYPE									*pSoldier;							// POINTER TO SOLDIER
+		SOLDIERTYPE *pSoldier; // POINTER TO SOLDIER
 
 	}; // ( 4 byte union )
 
@@ -134,13 +134,13 @@ struct LEVELNODE
 		// Some levelnodes can specify relative X and Y values!
 		struct
 		{
-			INT16											sRelativeX;							// Relative position values
-			INT16											sRelativeY;							// Relative position values
+			INT16 sRelativeX; // Relative position values
+			INT16 sRelativeY; // Relative position values
 		};
 
 		struct
 		{
-			UINT32										uiAnimHitLocationFlags;	// Animation profile flags for soldier placeholders ( prone merc hit location values )
+			UINT32 uiAnimHitLocationFlags;	// Animation profile flags for soldier placeholders ( prone merc hit location values )
 		};
 
 		// Some can contains index values into animated tile data
@@ -152,27 +152,27 @@ struct LEVELNODE
 		// Can be an item pool as well...
 		struct
 		{
-			ITEM_POOL										*pItemPool;					// ITEM POOLS
+			ITEM_POOL *pItemPool; // ITEM POOLS
 		};
 
 
 	};
 
-	INT16													sRelativeZ;							// Relative position values
- 	UINT8													ubShadeLevel;						// LIGHTING INFO
- 	UINT8													ubNaturalShadeLevel;		// LIGHTING INFO
-	UINT8													ubFakeShadeLevel;				// LIGHTING INFO
+	INT16 sRelativeZ; // Relative position values
+	UINT8 ubShadeLevel; // LIGHTING INFO
+	UINT8 ubNaturalShadeLevel; // LIGHTING INFO
+	UINT8 ubFakeShadeLevel; // LIGHTING INFO
 };
 
 
-#define		LAND_START_INDEX									1
-#define		OBJECT_START_INDEX								2
-#define		STRUCT_START_INDEX								3
-#define		SHADOW_START_INDEX								4
-#define		MERC_START_INDEX									5
-#define		ROOF_START_INDEX									6
-#define		ONROOF_START_INDEX								7
-#define		TOPMOST_START_INDEX								8
+#define LAND_START_INDEX			1
+#define OBJECT_START_INDEX			2
+#define STRUCT_START_INDEX			3
+#define SHADOW_START_INDEX			4
+#define MERC_START_INDEX			5
+#define ROOF_START_INDEX			6
+#define ONROOF_START_INDEX			7
+#define TOPMOST_START_INDEX			8
 
 
 struct MAP_ELEMENT
@@ -181,39 +181,39 @@ struct MAP_ELEMENT
 	{
 		struct
 		{
-			LEVELNODE								*pLandHead;							//0
-			LEVELNODE								*pLandStart;						//1
+			LEVELNODE *pLandHead; //0
+			LEVELNODE *pLandStart; //1
 
-			LEVELNODE								*pObjectHead;						//2
+			LEVELNODE *pObjectHead; //2
 
-			LEVELNODE								*pStructHead;						//3
+			LEVELNODE *pStructHead; //3
 
-			LEVELNODE								*pShadowHead;						//4
+			LEVELNODE *pShadowHead; //4
 
-			LEVELNODE								*pMercHead;							//5
+			LEVELNODE *pMercHead; //5
 
-			LEVELNODE								*pRoofHead;							//6
+			LEVELNODE *pRoofHead; //6
 
-			LEVELNODE								*pOnRoofHead;						//7
+			LEVELNODE *pOnRoofHead; //7
 
-			LEVELNODE								*pTopmostHead;					//8
+			LEVELNODE *pTopmostHead; //8
 		};
 
-		LEVELNODE									*pLevelNodes[ 9 ];
+		LEVELNODE *pLevelNodes[ 9 ];
 	};
 
-	STRUCTURE								*pStructureHead;
-	STRUCTURE								*pStructureTail;
+	STRUCTURE *pStructureHead;
+	STRUCTURE *pStructureTail;
 
-	UINT16									uiFlags;
-	UINT8										ubExtFlags[2];
-	UINT8										sHeight;
-	UINT8										ubAdjacentSoldierCnt;
-	UINT8										ubTerrainID;
+	UINT16 uiFlags;
+	UINT8 ubExtFlags[2];
+	UINT8 sHeight;
+	UINT8 ubAdjacentSoldierCnt;
+	UINT8 ubTerrainID;
 
- 	UINT8										ubReservedSoldierID;
-	UINT8										ubBloodInfo;
-	UINT8										ubSmellInfo;
+	UINT8 ubReservedSoldierID;
+	UINT8 ubBloodInfo;
+	UINT8 ubSmellInfo;
 };
 
 
@@ -229,10 +229,10 @@ extern UINT8 gubWorldMovementCosts[WORLD_MAX][MAXDIR][2];
 
 extern TileSetID giCurrentTilesetID;
 
-extern INT16		gsRecompileAreaTop;
-extern INT16		gsRecompileAreaLeft;
-extern INT16		gsRecompileAreaRight;
-extern INT16		gsRecompileAreaBottom;
+extern INT16 gsRecompileAreaTop;
+extern INT16 gsRecompileAreaLeft;
+extern INT16 gsRecompileAreaRight;
+extern INT16 gsRecompileAreaBottom;
 
 void InitializeWorld(void);
 void DeinitializeWorld(void);

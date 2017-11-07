@@ -38,10 +38,10 @@ void HandleRPCDescription()
 
 	// Are we a SAM site?
 	if (ts.ubGuideDescriptionToUse == 25 ||
-			ts.ubGuideDescriptionToUse == 27 ||
-			ts.ubGuideDescriptionToUse == 30 ||
-			ts.ubGuideDescriptionToUse == 31 ||
-			ts.ubGuideDescriptionToUse == 32)
+		ts.ubGuideDescriptionToUse == 27 ||
+		ts.ubGuideDescriptionToUse == 30 ||
+		ts.ubGuideDescriptionToUse == 31 ||
+		ts.ubGuideDescriptionToUse == 32)
 	{
 		ts.bGuideDescriptionCountDown = 1;
 	}
@@ -71,9 +71,9 @@ void HandleRPCDescription()
 		if (s->fBetweenSectors)                         continue;
 
 		if (s->ubProfile == IRA    ||
-				s->ubProfile == MIGUEL ||
-				s->ubProfile == CARLOS ||
-				s->ubProfile == DIMITRI)
+			s->ubProfile == MIGUEL ||
+			s->ubProfile == CARLOS ||
+			s->ubProfile == DIMITRI)
 		{
 			mercs_in_sector[n_mercs++] = s;
 		}
@@ -104,9 +104,9 @@ void HandleTacticalEndTurn()
 	DecayBloodAndSmells(now);
 	DecayRottingCorpseAIWarnings();
 
-	/* Check for enemy pooling: Add enemies if there happens to be more than the
-	 * max in the current battle. If one or more slots have freed up, we can add
-	 * them now. */
+	// Check for enemy pooling: Add enemies if there happens to be more than the
+	// max in the current battle. If one or more slots have freed up, we can add
+	// them now.
 	AddPossiblePendingEnemiesToBattle();
 
 	// Loop through each active team and decay public opplist
@@ -118,17 +118,16 @@ void HandleTacticalEndTurn()
 	{
 		BeginLoggingForBleedMeToos(TRUE);
 
-		/* First pass:
-		 * Loop through our own mercs:
-		 *	Check things like (even if not in our sector)
-		 *		1. All updates of breath, shock, bleeding, etc.
-		 *    2. Updating First aid, etc.
-		 *  (If in our sector:)
-		 *		3. Update things like decayed opplist, etc.
-		 * Second pass:
-		 *  Loop through all mercs in tactical engine
-		 *  If not a player merc (ubTeam), do things like 1, 2, 3 above
-		 */
+		// First pass:
+		// Loop through our own mercs:
+		//   Check things like (even if not in our sector)
+		//   1. All updates of breath, shock, bleeding, etc.
+		//   2. Updating First aid, etc.
+		//   (If in our sector:)
+		//   3. Update things like decayed opplist, etc.
+		// Second pass:
+		//   Loop through all mercs in tactical engine
+		//   If not a player merc (ubTeam), do things like 1, 2, 3 above
 
 		FOR_EACH_IN_TEAM(i, OUR_TEAM)
 		{
@@ -150,8 +149,8 @@ void HandleTacticalEndTurn()
 
 		BeginLoggingForBleedMeToos(FALSE);
 
-		/* We're looping through only mercs in tactical engine, ignoring our mercs
-		 * because they were done earlier */
+		// We're looping through only mercs in tactical engine, ignoring our mercs
+		// because they were done earlier
 		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE& s = **i;

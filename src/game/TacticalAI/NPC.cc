@@ -124,37 +124,37 @@ enum StandardQuoteIDs
 
 struct NPCQuoteInfo
 {
-  UINT32  ubIdentifier;
+	UINT32  ubIdentifier;
 
-  UINT16  fFlags;
+	UINT16  fFlags;
 
-  // conditions
-  union
-  {
-    INT16 sRequiredItem;      // item NPC must have to say quote
-    INT16 sRequiredGridno;    // location for NPC req'd to say quote
-  };
-  UINT16  usFactMustBeTrue;   // ...before saying quote
-  UINT16  usFactMustBeFalse;  // ...before saying quote
-  UINT8   ubQuest;            // quest must be current to say quote
-  UINT8   ubFirstDay;         // first day quote can be said
-  UINT8   ubLastDay;          // last day quote can be said
-  UINT8   ubApproachRequired; // must use this approach to generate quote
-  UINT8   ubOpinionRequired;  // opinion needed for this quote
+	// conditions
+	union
+	{
+		INT16 sRequiredItem;      // item NPC must have to say quote
+		INT16 sRequiredGridno;    // location for NPC req'd to say quote
+	};
+	UINT16  usFactMustBeTrue;   // ...before saying quote
+	UINT16  usFactMustBeFalse;  // ...before saying quote
+	UINT8   ubQuest;            // quest must be current to say quote
+	UINT8   ubFirstDay;         // first day quote can be said
+	UINT8   ubLastDay;          // last day quote can be said
+	UINT8   ubApproachRequired; // must use this approach to generate quote
+	UINT8   ubOpinionRequired;  // opinion needed for this quote
 
-  // quote to say (if any)
-  UINT8   ubQuoteNum;         // this is the quote to say
-  UINT8   ubNumQuotes;        // total # of quotes to say
+	// quote to say (if any)
+	UINT8   ubQuoteNum;         // this is the quote to say
+	UINT8   ubNumQuotes;        // total # of quotes to say
 
-  // actions
-  UINT8   ubStartQuest;
-  UINT8   ubEndQuest;
-  UINT8   ubTriggerNPC;
-  UINT8   ubTriggerNPCRec;
-  UINT16  usSetFactTrue;
-  UINT16  usGiftItem;         // item NPC gives to merc after saying quote
-  UINT16  usGoToGridno;
-  INT16   sActionData;        // special action value
+	// actions
+	UINT8   ubStartQuest;
+	UINT8   ubEndQuest;
+	UINT8   ubTriggerNPC;
+	UINT8   ubTriggerNPCRec;
+	UINT16  usSetFactTrue;
+	UINT16  usGiftItem;         // item NPC gives to merc after saying quote
+	UINT16  usGoToGridno;
+	INT16   sActionData;        // special action value
 };
 
 static NPCQuoteInfo* gpNPCQuoteInfoArray[NUM_PROFILES];
@@ -179,14 +179,14 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		FileRead(f, data, sizeof(data));
 
 		BYTE const* d = data;
-    if(isRussianVersion())
-    {
-      EXTR_U32( d, i->ubIdentifier);
-    }
-    else
-    {
-      i->ubIdentifier = 0;
-    }
+		if(isRussianVersion())
+		{
+			EXTR_U32( d, i->ubIdentifier);
+		}
+		else
+		{
+			i->ubIdentifier = 0;
+		}
 		EXTR_U16( d, i->fFlags)
 		EXTR_I16( d, i->sRequiredItem)
 		EXTR_U16( d, i->usFactMustBeTrue)
@@ -207,10 +207,10 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		EXTR_U16( d, i->usGiftItem)
 		EXTR_U16( d, i->usGoToGridno)
 		EXTR_I16( d, i->sActionData)
-    if(!isRussianVersion())
-    {
-      EXTR_SKIP(d, 4);
-    }
+		if(!isRussianVersion())
+		{
+			EXTR_SKIP(d, 4);
+		}
 		Assert(d == endof(data));
 	}
 	return buf.Release();
@@ -243,10 +243,10 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 	{
 		BYTE  data[32];
 		BYTE* d = data;
-    if(isRussianVersion())
-    {
-      INJ_U32( d, i->ubIdentifier);
-    }
+		if(isRussianVersion())
+		{
+			INJ_U32( d, i->ubIdentifier);
+		}
 		INJ_U16( d, i->fFlags)
 		INJ_I16( d, i->sRequiredItem)
 		INJ_U16( d, i->usFactMustBeTrue)
@@ -267,10 +267,10 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 		INJ_U16( d, i->usGiftItem)
 		INJ_U16( d, i->usGoToGridno)
 		INJ_I16( d, i->sActionData)
-    if(!isRussianVersion())
-    {
-      INJ_SKIP(d, 4);
-    }
+		if(!isRussianVersion())
+		{
+			INJ_SKIP(d, 4);
+		}
 		Assert(d == endof(data));
 		FileWrite(f, data, sizeof(data));
 	}
@@ -1258,7 +1258,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 						uiDay, pNPCProfile->ubLastDateSpokenTo,
 						(uiDay <= pNPCProfile->ubLastDateSpokenTo) ? "TRUE, return" : "FALSE" );
 		}
-		
+
 		if (uiDay <= pNPCProfile->ubLastDateSpokenTo)
 		{
 			// too early!
@@ -1379,9 +1379,9 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 	for ( ubLoop = FIRST_RPC; ubLoop < NUM_PROFILES; ubLoop++ )
 	{
 		if ( gMercProfiles[ ubLoop ].sSectorX == gWorldSectorX &&
-				 gMercProfiles[ ubLoop ].sSectorY == gWorldSectorY &&
-				 gMercProfiles[ ubLoop ].bSectorZ == gbWorldSectorZ &&
-				 gpNPCQuoteInfoArray[ ubLoop ] != NULL )
+				gMercProfiles[ ubLoop ].sSectorY == gWorldSectorY &&
+				gMercProfiles[ ubLoop ].bSectorZ == gbWorldSectorZ &&
+				gpNPCQuoteInfoArray[ ubLoop ] != NULL )
 		{
 			ResetOncePerConvoRecordsForNPC( ubLoop );
 		}
@@ -2771,7 +2771,7 @@ BOOLEAN RecordHasDialogue(UINT8 const ubNPC, UINT8 const ubRecord)
 
 static INT8 FindCivQuoteFileIndex(INT16 const x, INT16 const y, INT16 const z)
 {
-  if (z > 0) return MINERS_CIV_QUOTE_INDEX;
+	if (z > 0) return MINERS_CIV_QUOTE_INDEX;
 
 	for (UINT8 i = 0; i != NUM_CIVQUOTE_SECTORS; ++i)
 	{

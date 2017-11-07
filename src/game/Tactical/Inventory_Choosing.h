@@ -36,8 +36,8 @@ enum
 	GREAT_MILITIA_EQUIPMENT_RATING,
 };
 
-#define MIN_EQUIPMENT_CLASS				1
-#define MAX_EQUIPMENT_CLASS				11
+#define MIN_EQUIPMENT_CLASS	1
+#define MAX_EQUIPMENT_CLASS	11
 
 
 // Selects at the start of the game the set of guns the Queen's army will use during this game

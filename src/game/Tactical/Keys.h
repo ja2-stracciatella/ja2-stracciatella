@@ -8,55 +8,55 @@
 
 struct KEY
 {
-	UINT16		usSectorFound;		// where and
-	UINT16		usDateFound;			// when the key was found
+	UINT16 usSectorFound; // where and
+	UINT16 usDateFound; // when the key was found
 };
 
 
-#define KEY_USED				0x01
+#define KEY_USED			0x01
 
-#define LOCK_UNOPENABLE	255
-#define NO_KEY					255
+#define LOCK_UNOPENABLE		255
+#define NO_KEY				255
 
 #define LOCK_REGULAR			1
 #define LOCK_PADLOCK			2
-#define LOCK_CARD					3
+#define LOCK_CARD			3
 #define LOCK_ELECTRONIC		4
 #define LOCK_SPECIAL			5
 
-#define MAXLOCKDESCLENGTH 40
+#define MAXLOCKDESCLENGTH		40
 struct LOCK
 {
-	UINT8		ubEditorName[ MAXLOCKDESCLENGTH ];	// name to display in editor
-	UINT16	usKeyItem;													// key for this door uses which graphic (item #)?
-	UINT8		ubLockType;													// regular, padlock, electronic, etc
-	UINT8		ubPickDifficulty;										// difficulty to pick such a lock
-	UINT8		ubSmashDifficulty;										// difficulty to smash such a lock
-	UINT8		ubFiller; // XXX HACK000B
+	UINT8  ubEditorName[ MAXLOCKDESCLENGTH ]; // name to display in editor
+	UINT16 usKeyItem; // key for this door uses which graphic (item #)?
+	UINT8  ubLockType; // regular, padlock, electronic, etc
+	UINT8  ubPickDifficulty; // difficulty to pick such a lock
+	UINT8  ubSmashDifficulty; // difficulty to smash such a lock
+	UINT8  ubFiller; // XXX HACK000B
 };
 
 // Defines below for the perceived value of the door
 #define DOOR_PERCEIVED_UNKNOWN		0
-#define DOOR_PERCEIVED_LOCKED			1
-#define DOOR_PERCEIVED_UNLOCKED		2
-#define DOOR_PERCEIVED_BROKEN			3
+#define DOOR_PERCEIVED_LOCKED		1
+#define DOOR_PERCEIVED_UNLOCKED	2
+#define DOOR_PERCEIVED_BROKEN		3
 
 #define DOOR_PERCEIVED_TRAPPED		1
 #define DOOR_PERCEIVED_UNTRAPPED	2
 
 struct DOOR
 {
-	INT16			sGridNo;
-	BOOLEAN		fLocked;							// is the door locked
-	UINT8			ubTrapLevel;					// difficulty of finding the trap, 0-10
-	UINT8			ubTrapID;							// the trap type (0 is no trap)
-	UINT8			ubLockID;							// the lock (0 is no lock)
-	INT8			bPerceivedLocked;			// The perceived lock value can be different than the fLocked.
-																	// Values for this include the fact that we don't know the status of
-																	// the door, etc
-	INT8			bPerceivedTrapped;		// See above, but with respect to traps rather than locked status
-	INT8			bLockDamage;					// Damage to the lock
-	INT8			bPadding[4];					// extra bytes // XXX HACK000B
+	INT16   sGridNo;
+	BOOLEAN fLocked; // is the door locked
+	UINT8   ubTrapLevel; // difficulty of finding the trap, 0-10
+	UINT8   ubTrapID; // the trap type (0 is no trap)
+	UINT8   ubLockID; // the lock (0 is no lock)
+	INT8    bPerceivedLocked;	// The perceived lock value can be different than the fLocked.
+					// Values for this include the fact that we don't know the status of
+					// the door, etc
+	INT8    bPerceivedTrapped; // See above, but with respect to traps rather than locked status
+	INT8    bLockDamage; // Damage to the lock
+	INT8    bPadding[4]; // extra bytes // XXX HACK000B
 };
 
 
@@ -73,30 +73,30 @@ enum DoorTrapTypes
 };
 
 #define DOOR_TRAP_STOPS_ACTION		0x01
-#define DOOR_TRAP_RECURRING				0x02
-#define DOOR_TRAP_SILENT					0x04
+#define DOOR_TRAP_RECURRING		0x02
+#define DOOR_TRAP_SILENT		0x04
 
 
 struct DOORTRAP
 {
-	UINT8		fFlags;									// stops action?  recurring trap?
+	UINT8 fFlags; // stops action?  recurring trap?
 };
 
 
 //The status of the door, either open or closed
-#define		DOOR_OPEN								0x01
-#define		DOOR_PERCEIVED_OPEN			0x02
-#define		DOOR_PERCEIVED_NOTSET		0x04
-#define		DOOR_BUSY								0x08
-#define		DOOR_HAS_TIN_CAN				0x10
+#define DOOR_OPEN			0x01
+#define DOOR_PERCEIVED_OPEN		0x02
+#define DOOR_PERCEIVED_NOTSET		0x04
+#define DOOR_BUSY			0x08
+#define DOOR_HAS_TIN_CAN		0x10
 
 
-#define   DONTSETDOORSTATUS			2
+#define DONTSETDOORSTATUS		2
 
 struct DOOR_STATUS
 {
-	INT16		sGridNo;
-	UINT8		ubFlags;
+	INT16 sGridNo;
+	UINT8 ubFlags;
 
 };
 
@@ -104,12 +104,12 @@ struct DOOR_STATUS
 // This is the number of different types of doors we can have
 // in one map at a time...
 
-#define NUM_KEYS 64
-#define NUM_LOCKS 64
-#define INVALID_KEY_NUMBER 255
+#define NUM_KEYS			64
+#define NUM_LOCKS			64
+#define INVALID_KEY_NUMBER		255
 
-#define ANYKEY									252
-#define AUTOUNLOCK							253
+#define ANYKEY				252
+#define AUTOUNLOCK			253
 #define OPENING_NOT_POSSIBLE		254
 
 extern KEY KeyTable[NUM_KEYS];
@@ -122,9 +122,9 @@ extern BOOLEAN RemoveAllOfKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OB
 bool KeyExistsInKeyRing(SOLDIERTYPE const&, UINT8 key_id);
 bool SoldierHasKey(SOLDIERTYPE const&, UINT8 key_id);
 
-/**********************************
- * Door utils add by Kris Morness *
- **********************************/
+//**********************************
+//* Door utils add by Kris Morness *
+//**********************************
 
 //Dynamic array of Doors.  For general game purposes, the doors that are locked and/or trapped
 //are permanently saved within the map, and are loaded and allocated when the map is loaded.  Because
@@ -182,10 +182,10 @@ void SaveDoorTableToDoorTableTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSect
 void LoadDoorTableFromDoorTableTempFile(void);
 
 
-/* Add a door to the door status array. As the user comes across the door, they
- * are added. If the door already exists, nothing happens.
- * is_open is True if the door is to be initially open, false if it is closed
- * perceived_open is true if the door is to be initially open, else false */
+// Add a door to the door status array. As the user comes across the door, they
+// are added. If the door already exists, nothing happens.
+// is_open is True if the door is to be initially open, false if it is closed
+// perceived_open is true if the door is to be initially open, else false
 bool ModifyDoorStatus(GridNo, BOOLEAN is_open, BOOLEAN perceived_open);
 
 //Deletes the door status array
@@ -205,7 +205,7 @@ void SaveKeyTableToSaveGameFile(HWFILE);
 void LoadKeyTableFromSaveedGameFile(HWFILE);
 
 // Returns a doors status value, NULL if not found
-DOOR_STATUS	*GetDoorStatus( INT16 sGridNo );
+DOOR_STATUS *GetDoorStatus( INT16 sGridNo );
 
 bool AllMercsLookForDoor(GridNo);
 

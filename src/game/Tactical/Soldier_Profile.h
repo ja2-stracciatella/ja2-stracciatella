@@ -7,7 +7,7 @@
 
 
 extern INT8 gbSkillTraitBonus[NUM_SKILLTRAITS];
-extern BOOLEAN	gfPotentialTeamChangeDuringDeath;
+extern BOOLEAN gfPotentialTeamChangeDuringDeath;
 
 extern MERCPROFILESTRUCT gMercProfiles[NUM_PROFILES];
 
@@ -17,7 +17,7 @@ static inline MERCPROFILESTRUCT& GetProfile(ProfileID const id)
 	return gMercProfiles[id];
 }
 
-#define AIM_AND_MERC_MERCS		51		// A.I.M. is 0-39, M.E.R.C.s are 40-50
+#define AIM_AND_MERC_MERCS 51 // A.I.M. is 0-39, M.E.R.C.s are 40-50
 
 //enums for the mercs
 enum NPCIDs
@@ -77,7 +77,7 @@ enum NPCIDs
 	VINCE,
 	CONRAD,
 
-	RPC71,	// 71
+	RPC71, // 71
 	MADDOG,
 	DARREL,
 	PERKO,
@@ -88,7 +88,7 @@ enum NPCIDs
 	JOE,
 	STEVE,
 
-	RAT,		// 81
+	RAT, // 81
 	ANNIE,
 	CHRIS,
 	BOB,
@@ -99,7 +99,7 @@ enum NPCIDs
 	ANGEL,
 	JOEY,
 
-	TONY,		// 91
+	TONY, // 91
 	FRANK,
 	SPIKE,
 	DAMON,
@@ -110,7 +110,7 @@ enum NPCIDs
 	SAL,
 	FATHER,
 
-	FATIMA,	// 101
+	FATIMA, // 101
 	WARDEN,
 	GORDON,
 	GABBY,
@@ -121,8 +121,8 @@ enum NPCIDs
 	MARTHA,
 	TIFFANY,
 
-	T_REX,	// 111
-	DRUGGIST,	// ELGIN
+	T_REX, // 111
+	DRUGGIST, // ELGIN
 	JAKE,
 	PACOS,
 	GERARD,
@@ -132,7 +132,7 @@ enum NPCIDs
 	MARY,
 	GENERAL,
 
-	SERGEANT,	// 121
+	SERGEANT, // 121
 	ARMAND,
 	LORA,
 	FRANZ,
@@ -143,7 +143,7 @@ enum NPCIDs
 	TINA,
 	FREDO,
 
-	WALTER,	// 131
+	WALTER, // 131
 	JENNY,
 	BILLY,
 	BREWSTER,
@@ -154,7 +154,7 @@ enum NPCIDs
 	DOREEN,
 	JIM,
 
-	JACK,		// 141
+	JACK, // 141
 	OLAF,
 	RAY,
 	OLGA,
@@ -165,7 +165,7 @@ enum NPCIDs
 	MIKE,
 	DARYL,
 
-	HERVE,	// 151
+	HERVE, // 151
 	PETER,
 	ALBERTO,
 	CARLO,
@@ -177,7 +177,7 @@ enum NPCIDs
 
 	PROF_HUMMER,
 
-	PROF_ELDERODO,	// 161
+	PROF_ELDERODO, // 161
 	PROF_ICECREAM,
 	PROF_HELICOPTER,
 	NPC164,

@@ -5,5 +5,5 @@
 class IGameDataLoader
 {
 public:
-  rapidjson::Document* readJsonDataFile(const char *fileName) const;
+	rapidjson::Document* readJsonDataFile(const char *fileName) const;
 };

@@ -5,18 +5,18 @@
 
 extern UINT8 gubCurrentMapMessageString;
 
-#define		MSG_INTERFACE				0
-#define		MSG_DIALOG					1
-#define		MSG_CHAT						2
-#define   MSG_DEBUG						3
-#define		MSG_UI_FEEDBACK			4
-#define   MSG_SKULL_UI_FEEDBACK	11
+#define MSG_INTERFACE		0
+#define MSG_DIALOG		1
+#define MSG_CHAT		2
+#define MSG_DEBUG		3
+#define MSG_UI_FEEDBACK	4
+#define MSG_SKULL_UI_FEEDBACK	11
 
 
 // These defines correlate to defines in font.h
-#define		MSG_FONT_RED					FONT_MCOLOR_RED
-#define		MSG_FONT_YELLOW				FONT_MCOLOR_LTYELLOW
-#define		MSG_FONT_WHITE				FONT_MCOLOR_WHITE
+#define MSG_FONT_RED		FONT_MCOLOR_RED
+#define MSG_FONT_YELLOW	FONT_MCOLOR_LTYELLOW
+#define MSG_FONT_WHITE		FONT_MCOLOR_WHITE
 
 // are we allowed to beep on message scroll in tactical
 extern BOOLEAN fOkToBeepNewMessage;

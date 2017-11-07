@@ -4,101 +4,100 @@
 #include "gtest/gtest.h"
 #endif
 
-/*
 
-******************************************************************************************************
-**                                  IMPORTANT TRANSLATION NOTES                                     **
-******************************************************************************************************
+// ******************************************************************************************************
+// **                                  IMPORTANT TRANSLATION NOTES                                     **
+// ******************************************************************************************************
+//
+// GENERAL INSTRUCTIONS
+// - Always be aware that foreign strings should be of equal or shorter length than the English equivalent.
+//   I know that this is difficult to do on many occasions due to the nature of foreign languages when
+//   compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In
+//   most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
+//   The general rule is if the string is very short (less than 10 characters), then it's short because of
+//   interface limitations.  On the other hand, full sentences commonly have little limitations for length.
+//   Strings in between are a little dicey.
+// - Never translate a string to appear on multiple lines.  All strings L"This is a really long string...",
+//   must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
+// - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
+//   have one space after a period, which is different than standard typing convention.  Never modify sections
+//   of strings contain combinations of % characters.  These are special format characters and are always
+//   used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
+//   locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
+//   %% is how a single % character is built.  There are countless types, but strings containing these
+//   special characters are usually commented to explain what they mean.  If it isn't commented, then
+//   if you can't figure out the context, then feel free to ask SirTech.
+// - Comments are always started with // Anything following these two characters on the same line are
+//   considered to be comments.  Do not translate comments.  Comments are always applied to the following
+//   string(s) on the next line(s), unless the comment is on the same line as a string.
+// - All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching
+//   for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
+//   Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
+//   comments intact, and SirTech will remove them once the translation for that particular area is resolved.
+// - If you have a problem or question with translating certain strings, please use "//!!! comment"
+//   (without the quotes).  The syntax is important, and should be identical to the comments used with @@@
+//   symbols.  SirTech will search for !!! to look for your problems and questions.  This is a more
+//   efficient method than detailing questions in email, so try to do this whenever possible.
+//
+//
+//
+// FAST HELP TEXT -- Explains how the syntax of fast help text works.
+// **************
+//
+// 1) BOLDED LETTERS
+//   The popup help text system supports special characters to specify the hot key(s) for a button.
+//   Anytime you see a '|' symbol within the help text string, that means the following key is assigned
+//   to activate the action which is usually a button.
+//
+//   EX:  L"|Map Screen"
+//
+//   This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
+//   button.  When translating the text to another language, it is best to attempt to choose a word that
+//   uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
+//   of the string in this format:
+//
+//   EX:  L"Ecran De Carte (|M)"  (this is the French translation)
+//
+//   Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|j|a)
+//
+// 2) NEWLINE
+//   Any place you see a \n within the string, you are looking at another string that is part of the fast help
+//   text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
+//   to start a new line.
+//
+//   EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
+//
+//   Would appear as:
+//
+//     Clears all the mercs' positions,
+//     and allows you to re-enter them manually.
+//
+//   NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
+//     in the above example, we would see
+//
+//   WRONG WAY -- spaces before and after the \n
+//   EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
+//
+//   Would appear as: (the second line is moved in a character)
+//
+//     Clears all the mercs' positions,
+//     and allows you to re-enter them manually.
+//
+//
+// @@@ NOTATION
+// ************
+//
+//   Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
+//   text to make translation easier, but comments don't need to be translated.  A good thing is to search for
+//   "@@@" after receiving new version of the text file, and address the special notes in this manner.
+//
+// !!! NOTATION
+// ************
+//
+//   As described above, the "!!!" notation should be used by you to ask questions and address problems as
+//   SirTech uses the "@@@" notation.
 
-GENERAL INSTRUCTIONS
-- Always be aware that foreign strings should be of equal or shorter length than the English equivalent.
-	I know that this is difficult to do on many occasions due to the nature of foreign languages when
-	compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In
-	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
-	The general rule is if the string is very short (less than 10 characters), then it's short because of
-	interface limitations.  On the other hand, full sentences commonly have little limitations for length.
-	Strings in between are a little dicey.
-- Never translate a string to appear on multiple lines.  All strings L"This is a really long string...",
-	must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
-- Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
-	have one space after a period, which is different than standard typing convention.  Never modify sections
-	of strings contain combinations of % characters.  These are special format characters and are always
-	used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
-	locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
-	%% is how a single % character is built.  There are countless types, but strings containing these
-	special characters are usually commented to explain what they mean.  If it isn't commented, then
-	if you can't figure out the context, then feel free to ask SirTech.
-- Comments are always started with // Anything following these two characters on the same line are
-	considered to be comments.  Do not translate comments.  Comments are always applied to the following
-	string(s) on the next line(s), unless the comment is on the same line as a string.
-- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching
-	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-  Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
-	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
-- If you have a problem or question with translating certain strings, please use "//!!! comment"
-	(without the quotes).  The syntax is important, and should be identical to the comments used with @@@
-	symbols.  SirTech will search for !!! to look for your problems and questions.  This is a more
-	efficient method than detailing questions in email, so try to do this whenever possible.
 
-
-
-FAST HELP TEXT -- Explains how the syntax of fast help text works.
-**************
-
-1) BOLDED LETTERS
-	The popup help text system supports special characters to specify the hot key(s) for a button.
-	Anytime you see a '|' symbol within the help text string, that means the following key is assigned
-	to activate the action which is usually a button.
-
-	EX:  L"|Map Screen"
-
-	This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
-	button.  When translating the text to another language, it is best to attempt to choose a word that
-	uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
-	of the string in this format:
-
-	EX:  L"Ecran De Carte (|M)"  (this is the French translation)
-
-	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|j|a)
-
-2) NEWLINE
-  Any place you see a \n within the string, you are looking at another string that is part of the fast help
-	text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
-	to start a new line.
-
-	EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
-
-	Would appear as:
-
-				Clears all the mercs' positions,
-				and allows you to re-enter them manually.
-
-	NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
-	       in the above example, we would see
-
-	WRONG WAY -- spaces before and after the \n
-	EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
-
-	Would appear as: (the second line is moved in a character)
-
-				Clears all the mercs' positions,
- 				 and allows you to re-enter them manually.
-
-
-@@@ NOTATION
-************
-
-	Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
-	text to make translation easier, but comments don't need to be translated.  A good thing is to search for
-	"@@@" after receiving new version of the text file, and address the special notes in this manner.
-
-!!! NOTATION
-************
-
-	As described above, the "!!!" notation should be used by you to ask questions and address problems as
-	SirTech uses the "@@@" notation.
-
-*/
 
 static StrPointer s_pl_WeaponType[WeaponType_SIZE] =
 {
@@ -207,7 +206,7 @@ static StrPointer s_pl_Message[Message_SIZE] =
 	L"Poddać się?",
 	L"Ta osoba nie chce twojej pomocy.",
 	L"NIE SĄDZĘ!",
-  	L"Aby podróżować helikopterem Skyridera, musisz najpierw zmienić przydział najemników na POJAZD/HELIKOPTER.",
+	L"Aby podróżować helikopterem Skyridera, musisz najpierw zmienić przydział najemników na POJAZD/HELIKOPTER.",
 	L"%ls miał(a) czas by przeładować tylko jedną broń",
 	L"Tura dzikich kotów",
 };
@@ -475,11 +474,11 @@ static const wchar_t *s_pl_pAttributeMenuStrings[pAttributeMenuStrings_SIZE] =
 
 static const wchar_t *s_pl_pTrainingMenuStrings[pTrainingMenuStrings_SIZE] =
 {
- L"Praktyka", // train yourself //****************************NEW************************** as of June 24, 1998
- L"Samoobrona", // train the town // ****************************NEW ************************* as of June 24, 1998
- L"Instruktor", // train your teammates // *******************NEW************************** as of June 24, 1998
- L"Uczeń",  // be trained by an instructor //***************NEW************************** as of June 24, 1998
- L"Anuluj", // cancel this menu
+	L"Praktyka", // train yourself //****************************NEW************************** as of June 24, 1998
+	L"Samoobrona", // train the town // ****************************NEW ************************* as of June 24, 1998
+	L"Instruktor", // train your teammates // *******************NEW************************** as of June 24, 1998
+	L"Uczeń",  // be trained by an instructor //***************NEW************************** as of June 24, 1998
+	L"Anuluj", // cancel this menu
 };
 
 
@@ -511,20 +510,20 @@ static const wchar_t *s_pl_pSquadMenuStrings[pSquadMenuStrings_SIZE] =
 
 static const wchar_t *s_pl_pPersonnelScreenStrings[pPersonnelScreenStrings_SIZE] =
 {
- 	L"Zastaw na życie:", // amount of medical deposit put down on the merc
- 	L"Bieżący kontrakt:", // cost of current contract
- 	L"Liczba zabójstw", // number of kills by merc
- 	L"Liczba asyst", // number of assists on kills by merc
- 	L"Dzienny koszt:", // daily cost of merc
- 	L"Ogólny koszt:", // total cost of merc
- 	L"Wartość kontraktu:", // cost of current contract
- 	L"Usługi ogółem", // total service rendered by merc
- 	L"Zaległa kwota", // amount left on MERC merc to be paid
- 	L"Celność:", // percentage of shots that hit target
- 	L"Ilość walk", // number of battles fought
- 	L"Ranny(a)", // number of times merc has been wounded
- 	L"Umiejętności:",
- 	L"Brak umięjętności",
+	L"Zastaw na życie:", // amount of medical deposit put down on the merc
+	L"Bieżący kontrakt:", // cost of current contract
+	L"Liczba zabójstw", // number of kills by merc
+	L"Liczba asyst", // number of assists on kills by merc
+	L"Dzienny koszt:", // daily cost of merc
+	L"Ogólny koszt:", // total cost of merc
+	L"Wartość kontraktu:", // cost of current contract
+	L"Usługi ogółem", // total service rendered by merc
+	L"Zaległa kwota", // amount left on MERC merc to be paid
+	L"Celność:", // percentage of shots that hit target
+	L"Ilość walk", // number of battles fought
+	L"Ranny(a)", // number of times merc has been wounded
+	L"Umiejętności:",
+	L"Brak umięjętności",
 };
 
 
@@ -845,7 +844,7 @@ static StrPointer s_pl_gWeaponStatsDesc[ gWeaponStatsDesc_SIZE] =
 	L"Ilość:", 		// Number of bullets left in a magazine
 	L"Zas.:",		// Range
 	L"Siła:",		// Damage
-    L"PA:",                 // abbreviation for Action Points
+	L"PA:",                 // abbreviation for Action Points
 	L"="
 };
 
@@ -919,12 +918,12 @@ static const wchar_t s_pl_zDialogActions[] = L"OK";
 
 static const wchar_t *s_pl_pVehicleStrings[pVehicleStrings_SIZE] =
 {
- L"Eldorado",
- L"Hummer", // a hummer jeep/truck -- military vehicle
- L"Furgonetka z lodami",
- L"Jeep",
- L"Czołg",
- L"Helikopter",
+	L"Eldorado",
+	L"Hummer", // a hummer jeep/truck -- military vehicle
+	L"Furgonetka z lodami",
+	L"Jeep",
+	L"Czołg",
+	L"Helikopter",
 };
 
 static const wchar_t *s_pl_pShortVehicleStrings[pVehicleStrings_SIZE] =
@@ -1136,7 +1135,7 @@ static StrPointer s_pl_TacticalStr[TacticalStr_SIZE] =
 	L"Zamek został zniszczony",
 	L"Ktoś inny majstruje przy tych drzwiach.",
 	L"Stan: %d/%d\nPaliwo: %d/%d",
-  L"%ls nie widzi - %ls.",  // Cannot see person trying to talk to
+	L"%ls nie widzi - %ls.",  // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -1230,10 +1229,10 @@ static const wchar_t *s_pl_pHelicopterEtaStrings[pHelicopterEtaStrings_SIZE] =
 	L"Całkowity koszt: ", 		// total cost of trip by helicopter
 	L"PCP:  ", 			// ETA is an acronym for "estimated time of arrival"
 	L"Helikopter ma mało paliwa i musi wylądować na terenie wroga.",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
-  L"Pasażerowie: ",
-  L"Wybór Skyridera lub pasażerów?",
-  L"Skyrider",
-  L"Pasażerowie",
+	L"Pasażerowie: ",
+	L"Wybór Skyridera lub pasażerów?",
+	L"Skyrider",
+	L"Pasażerowie",
 };
 
 static const wchar_t s_pl_sMapLevelString[] = L"Poziom:"; // what level below the ground is the player viewing in mapscreen
@@ -1457,8 +1456,8 @@ static const wchar_t s_pl_pNewMailStrings[] = L"Masz nową pocztę...";
 
 static const wchar_t *s_pl_pDeleteMailStrings[pDeleteMailStrings_SIZE] =
 {
- L"Usunąć wiadomość?",
- L"Usunąć wiadomość?",
+	L"Usunąć wiadomość?",
+	L"Usunąć wiadomość?",
 };
 
 
@@ -1466,9 +1465,9 @@ static const wchar_t *s_pl_pDeleteMailStrings[pDeleteMailStrings_SIZE] =
 
 static const wchar_t *s_pl_pEmailHeaders[pEmailHeaders_SIZE] =
 {
- 	L"Od:",
- 	L"Temat:",
- 	L"Dzień:",
+	L"Od:",
+	L"Temat:",
+	L"Dzień:",
 };
 
 // email titlebar text
@@ -1555,12 +1554,12 @@ static const wchar_t *s_pl_pSkyriderText[pSkyriderText_SIZE] =
 
 static const wchar_t *s_pl_pMoralStrings[pMoralStrings_SIZE] =
 {
- L"Świetne",
- L"Dobre",
- L"Stabilne",
- L"Słabe",
- L"Panika",
- L"Złe",
+	L"Świetne",
+	L"Dobre",
+	L"Stabilne",
+	L"Słabe",
+	L"Panika",
+	L"Złe",
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
@@ -1602,8 +1601,8 @@ static const wchar_t *s_pl_pMapErrorString[pMapErrorString_SIZE] =
 	L"Najpierw wyprowadź oddział na powierzchnię.",
 	L"Rozkazy przemieszczenia? To jest sektor wroga!",
 	L"Aby podróżować najemnicy muszą być przydzieleni do oddziału lub pojazdu.",
-	L"Nie masz jeszcze ludzi.", 		// you have no members, can't do anything
-	L"Najemnik nie może wypełnić tego rozkazu.",			 		// merc can't comply with your order
+	L"Nie masz jeszcze ludzi.", // you have no members, can't do anything
+	L"Najemnik nie może wypełnić tego rozkazu.", // merc can't comply with your order
 //6-10
 	L"%ls musi mieć eskortę, aby się przemieszczać. Umieść go w oddziale z eskortą.", // merc can't move unescorted .. for a male
 	L"%ls musi mieć eskortę, aby się przemieszczać. Umieść ją w oddziale z eskortą.", // for a female
@@ -1756,10 +1755,10 @@ static const wchar_t s_pl_pFilesTitle[] = L"Przeglądarka plików";
 
 static const wchar_t *s_pl_pFilesSenderList[pFilesSenderList_SIZE] =
 {
-	L"Raport Rozp.", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
-	L"Intercept #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
-	L"Intercept #2",	   // second intercept file
-	L"Intercept #3",			 // third intercept file
+	L"Raport Rozp.", // the recon report sent to the player. Recon is an abbreviation for reconissance
+	L"Intercept #1", // first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
+	L"Intercept #2", // second intercept file
+	L"Intercept #3", // third intercept file
 	L"Intercept #4", // fourth intercept file
 	L"Intercept #5", // fifth intercept file
 	L"Intercept #6", // sixth intercept file
@@ -2408,9 +2407,9 @@ static const wchar_t *s_pl_BobbyRText[BobbyRText_SIZE] =
 };
 
 
-/* The following line is used on the Ammunition page.  It is used for help text
- * to display how many items the player's merc has that can use this type of
- * ammo. */
+// The following line is used on the Ammunition page.  It is used for help text
+// to display how many items the player's merc has that can use this type of
+// ammo.
 static const wchar_t s_pl_str_bobbyr_guns_num_guns_that_use_ammo[] = L"Twój zespół posiada %d szt. broni do której pasuje amunicja tego typu";
 
 
@@ -2807,7 +2806,7 @@ static const wchar_t *s_pl_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	L"Nie masz jeszcze żołnierzy samoobrony.  Musisz najpierw wytrenować mieszkańców miast.",
 	L"Dzienny przychód",
 	L"Najmemnik ma polisę ubezpieczeniową",
-    L"%ls nie potrzebuje snu.",
+	L"%ls nie potrzebuje snu.",
 	L"%ls jest w drodze i nie może spać",
 	L"%ls jest zbyt zmęczony(na), spróbuj trochę później.",
 	L"%ls prowadzi.",
@@ -2829,7 +2828,7 @@ static const wchar_t *s_pl_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	L"Brak chętnych ludzi do szkolenia, w tej chwili.",
 	L"%ls posiada już maksymalną liczbę oddziałów samoobrony.",
 	L"Najemnik ma kontrakt na określony czas.",
-  L"Kontrakt najemnika nie jest ubezpieczony",
+	L"Kontrakt najemnika nie jest ubezpieczony",
 };
 
 
@@ -2922,7 +2921,7 @@ static const wchar_t *s_pl_zOptionsScreenHelpText[zOptionsToggleText_SIZE] =
 	L"Gdy opcja ta jest włączona, każdy ruch najemnika w trybie Real-Time będzie wymagał dodatkowego, potwierdzającego kliknięcia.",
 
 	//Sleep/Wake notification
-  	L"Gdy opcja ta jest włączona, wyświetlana będzie informacja, że najemnik położył się spać lub wstał i wrócił do pracy.",
+	L"Gdy opcja ta jest włączona, wyświetlana będzie informacja, że najemnik położył się spać lub wstał i wrócił do pracy.",
 
 	//Use the metric system
 	L"Gdy opcja ta jest włączona, gra używa systemu metrycznego.",
@@ -2992,9 +2991,9 @@ static const wchar_t *s_pl_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZ
 	L"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
 };
 
-/* This string is used in the IMP character generation.  It is possible to
- * select 0 ability in a skill meaning you can't use it.  This text is
- * confirmation to the player. */
+// This string is used in the IMP character generation.  It is possible to
+// select 0 ability in a skill meaning you can't use it.  This text is
+// confirmation to the player.
 static const wchar_t s_pl_pSkillAtZeroWarning[]    = L"Na pewno? Wartość zero oznacza brak jakichkolwiek umiejętności w tej dziedzinie.";
 static const wchar_t s_pl_pIMPBeginScreenStrings[] = L"( Maks. 8 znaków )";
 static const wchar_t s_pl_pIMPFinishButtonText[]   = L"Analizuję";
@@ -3064,8 +3063,8 @@ static const wchar_t *s_pl_pMessageStrings[pMessageStrings_SIZE] =
 	L"Rzuć",
 	L"Podaj",
 
-	L"%ls przekazano do - %ls.", //"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls, otherwise,
-											 //must notify SirTech.
+	L"%ls przekazano do - %ls.",	//"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls,
+					//otherwise, must notify SirTech.
 	L"Brak wolnego miejsca, by przekazać %ls do - %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
@@ -3105,7 +3104,7 @@ static const wchar_t *s_pl_pMessageStrings[pMessageStrings_SIZE] =
 	L"Utworzono zapis gry o nazwie SaveGame99.sav. W razie potrzeby zmień jego nazwę na SaveGame01..10. Wtedy będzie można go odczytać ze standardowego okna odczytu gry.",
 	L"%ls wypił(a) trochę - %ls",
 	L"Przesyłka dotarła do Drassen.",
- 	L"%ls przybędzie do wyznaczonego punktu zrzutu (sektor %ls) w dniu %d, około godziny %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	L"%ls przybędzie do wyznaczonego punktu zrzutu (sektor %ls) w dniu %d, około godziny %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	L"Lista historii zaktualizowana.",
 };
 
@@ -3349,7 +3348,7 @@ static const wchar_t *s_pl_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	//14
 	L"Arulco",
 
-  L"(dach)",
+	L"(dach)",
 
 	L"Zdrowie: %d/%d",
 
@@ -3359,7 +3358,7 @@ static const wchar_t *s_pl_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 
 	L"%ls - brak wolnych miejsc!",  //(ex "The ice cream truck is full")
 
-  L"%ls nie potrzebuje pierwszej pomocy lecz opieki lekarza lub dłuższego odpoczynku.",
+	L"%ls nie potrzebuje pierwszej pomocy lecz opieki lekarza lub dłuższego odpoczynku.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
@@ -3422,7 +3421,7 @@ static const wchar_t *s_pl_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	//46-48
 	L"%ls - przedłużka lufy jego/jej broni odpada!",
 	L"W jednym sektorze, szkolenie samoobrony może prowadzić tylko %d instruktor(ów).",
-  	L"Na pewno?",
+	L"Na pewno?",
 
 	//49-50
 	L"Kompresja czasu",
@@ -3446,7 +3445,7 @@ static const wchar_t *s_pl_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	//57
 	L"Eskortować Johna i Mary?",
 
-  L"Przełącznik aktywowany.",
+	L"Przełącznik aktywowany.",
 };
 
 static const wchar_t s_pl_str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been smashed!"; // TODO translate
@@ -3483,14 +3482,14 @@ static const wchar_t *s_pl_str_stat_list[str_stat_list_SIZE] =
 
 static const wchar_t *s_pl_str_aim_sort_list[str_aim_sort_list_SIZE] =
 {
-  s_pl_str_aim_sort_price,
-  s_pl_str_aim_sort_experience,
-  s_pl_str_aim_sort_marksmanship,
-  s_pl_str_aim_sort_medical,
-  s_pl_str_aim_sort_explosives,
-  s_pl_str_aim_sort_mechanical,
-  s_pl_str_aim_sort_ascending,
-  s_pl_str_aim_sort_descending,
+	s_pl_str_aim_sort_price,
+	s_pl_str_aim_sort_experience,
+	s_pl_str_aim_sort_marksmanship,
+	s_pl_str_aim_sort_medical,
+	s_pl_str_aim_sort_explosives,
+	s_pl_str_aim_sort_mechanical,
+	s_pl_str_aim_sort_ascending,
+	s_pl_str_aim_sort_descending,
 };
 
 extern const wchar_t *g_eng_zNewTacticalMessages[];
@@ -3504,250 +3503,250 @@ static const wchar_t *s_pl_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_ta
 	L"DiD", 			// Dead is Dead Tab
 };
 
-/** Polish language resources. */
+// Polish language resources.
 LanguageRes g_LanguageResPolish = {
 
-  s_pl_WeaponType,
+	s_pl_WeaponType,
 
-  s_pl_Message,
-  s_pl_TeamTurnString,
-  s_pl_pAssignMenuStrings,
-  s_pl_pTrainingStrings,
-  s_pl_pTrainingMenuStrings,
-  s_pl_pAttributeMenuStrings,
-  s_pl_pVehicleStrings,
-  s_pl_pShortAttributeStrings,
-  s_pl_pContractStrings,
-  s_pl_pAssignmentStrings,
-  s_pl_pConditionStrings,
-  s_pl_pTownNames,
-  s_pl_g_towns_locative,
-  s_pl_pPersonnelScreenStrings,
-  s_pl_pUpperLeftMapScreenStrings,
-  s_pl_pTacticalPopupButtonStrings,
-  s_pl_pSquadMenuStrings,
-  s_pl_pDoorTrapStrings,
-  s_pl_pLongAssignmentStrings,
-  s_pl_pMapScreenMouseRegionHelpText,
-  s_pl_pNoiseVolStr,
-  s_pl_pNoiseTypeStr,
-  s_pl_pDirectionStr,
-  s_pl_pRemoveMercStrings,
-  s_pl_sTimeStrings,
-  s_pl_pLandTypeStrings,
-  s_pl_pInvPanelTitleStrings,
-  s_pl_pPOWStrings,
-  s_pl_pMilitiaString,
-  s_pl_pMilitiaButtonString,
-  s_pl_pEpcMenuStrings,
-  s_pl_pRepairStrings,
-  s_pl_sPreStatBuildString,
-  s_pl_sStatGainStrings,
-  s_pl_pHelicopterEtaStrings,
-  s_pl_sMapLevelString,
-  s_pl_gsLoyalString,
-  s_pl_gsUndergroundString,
-  s_pl_gsTimeStrings,
-  s_pl_sFacilitiesStrings,
-  s_pl_pMapPopUpInventoryText,
-  s_pl_pwTownInfoStrings,
-  s_pl_pwMineStrings,
-  s_pl_pwMiscSectorStrings,
-  s_pl_pMapInventoryErrorString,
-  s_pl_pMapInventoryStrings,
-  s_pl_pMovementMenuStrings,
-  s_pl_pUpdateMercStrings,
-  s_pl_pMapScreenBorderButtonHelpText,
-  s_pl_pMapScreenBottomFastHelp,
-  s_pl_pMapScreenBottomText,
-  s_pl_pMercDeadString,
-  s_pl_pSenderNameList,
-  s_pl_pNewMailStrings,
-  s_pl_pDeleteMailStrings,
-  s_pl_pEmailHeaders,
-  s_pl_pEmailTitleText,
-  s_pl_pFinanceTitle,
-  s_pl_pFinanceSummary,
-  s_pl_pFinanceHeaders,
-  s_pl_pTransactionText,
-  s_pl_pMoralStrings,
-  s_pl_pSkyriderText,
-  s_pl_str_left_equipment,
-  s_pl_pMapScreenStatusStrings,
-  s_pl_pMapScreenPrevNextCharButtonHelpText,
-  s_pl_pEtaString,
-  s_pl_pShortVehicleStrings,
-  s_pl_pTrashItemText,
-  s_pl_pMapErrorString,
-  s_pl_pMapPlotStrings,
-  s_pl_pBullseyeStrings,
-  s_pl_pMiscMapScreenMouseRegionHelpText,
-  s_pl_str_he_leaves_where_drop_equipment,
-  s_pl_str_she_leaves_where_drop_equipment,
-  s_pl_str_he_leaves_drops_equipment,
-  s_pl_str_she_leaves_drops_equipment,
-  s_pl_pImpPopUpStrings,
-  s_pl_pImpButtonText,
-  s_pl_pExtraIMPStrings,
-  s_pl_pFilesTitle,
-  s_pl_pFilesSenderList,
-  s_pl_pHistoryLocations,
-  s_pl_pHistoryStrings,
-  s_pl_pHistoryHeaders,
-  s_pl_pHistoryTitle,
-  s_pl_pShowBookmarkString,
-  s_pl_pWebPagesTitles,
-  s_pl_pWebTitle,
-  s_pl_pPersonnelString,
-  s_pl_pErrorStrings,
-  s_pl_pDownloadString,
-  s_pl_pBookMarkStrings,
-  s_pl_pLaptopIcons,
-  s_pl_gsAtmStartButtonText,
-  s_pl_pPersonnelTeamStatsStrings,
-  s_pl_pPersonnelCurrentTeamStatsStrings,
-  s_pl_pPersonelTeamStrings,
-  s_pl_pPersonnelDepartedStateStrings,
-  s_pl_pMapHortIndex,
-  s_pl_pMapVertIndex,
-  s_pl_pMapDepthIndex,
-  s_pl_pLaptopTitles,
-  s_pl_pDayStrings,
-  s_pl_pMilitiaConfirmStrings,
-  s_pl_pDeliveryLocationStrings,
-  s_pl_pSkillAtZeroWarning,
-  s_pl_pIMPBeginScreenStrings,
-  s_pl_pIMPFinishButtonText,
-  s_pl_pIMPFinishStrings,
-  s_pl_pIMPVoicesStrings,
-  s_pl_pPersTitleText,
-  s_pl_pPausedGameText,
-  s_pl_zOptionsToggleText,
-  s_pl_zOptionsScreenHelpText,
-  s_pl_pDoctorWarningString,
-  s_pl_pMilitiaButtonsHelpText,
-  s_pl_pMapScreenJustStartedHelpText,
-  s_pl_pLandMarkInSectorString,
-  s_pl_gzMercSkillText,
-  s_pl_gzNonPersistantPBIText,
-  s_pl_gzMiscString,
-  s_pl_wMapScreenSortButtonHelpText,
-  s_pl_pNewNoiseStr,
-  s_pl_gzLateLocalizedString,
-  s_pl_pAntiHackerString,
-  s_pl_pMessageStrings,
-  s_pl_ItemPickupHelpPopup,
-  s_pl_TacticalStr,
-  s_pl_LargeTacticalStr,
-  s_pl_zDialogActions,
-  s_pl_zDealerStrings,
-  s_pl_zTalkMenuStrings,
-  s_pl_gzMoneyAmounts,
-  s_pl_gzProsLabel,
-  s_pl_gzConsLabel,
-  s_pl_gMoneyStatsDesc,
-  s_pl_gWeaponStatsDesc,
-  s_pl_sKeyDescriptionStrings,
-  s_pl_zHealthStr,
-  s_pl_zVehicleName,
-  s_pl_pExitingSectorHelpText,
-  s_pl_InsContractText,
-  s_pl_InsInfoText,
-  s_pl_MercAccountText,
-  s_pl_MercInfo,
-  s_pl_MercNoAccountText,
-  s_pl_MercHomePageText,
-  s_pl_sFuneralString,
-  s_pl_sFloristText,
-  s_pl_sOrderFormText,
-  s_pl_sFloristGalleryText,
-  s_pl_sFloristCards,
-  s_pl_BobbyROrderFormText,
-  s_pl_BobbyRText,
-  s_pl_str_bobbyr_guns_num_guns_that_use_ammo,
-  s_pl_BobbyRaysFrontText,
-  s_pl_AimSortText,
-  s_pl_str_aim_sort_price,
-  s_pl_str_aim_sort_experience,
-  s_pl_str_aim_sort_marksmanship,
-  s_pl_str_aim_sort_medical,
-  s_pl_str_aim_sort_explosives,
-  s_pl_str_aim_sort_mechanical,
-  s_pl_str_aim_sort_ascending,
-  s_pl_str_aim_sort_descending,
-  s_pl_AimPolicyText,
-  s_pl_AimMemberText,
-  s_pl_CharacterInfo,
-  s_pl_VideoConfercingText,
-  s_pl_AimPopUpText,
-  s_pl_AimLinkText,
-  s_pl_AimHistoryText,
-  s_pl_AimFiText,
-  s_pl_AimAlumniText,
-  s_pl_AimScreenText,
-  s_pl_AimBottomMenuText,
-  s_pl_zMarksMapScreenText,
-  s_pl_gpStrategicString,
-  s_pl_gpGameClockString,
-  s_pl_SKI_Text,
-  s_pl_SkiMessageBoxText,
-  s_pl_zSaveLoadText,
-  s_pl_zOptionsText,
-  s_pl_gzGIOScreenText,
-  s_pl_gzHelpScreenText,
-  s_pl_gzLaptopHelpText,
-  s_pl_gzMoneyWithdrawMessageText,
-  s_pl_gzCopyrightText,
-  s_pl_BrokenLinkText,
-  s_pl_gzBobbyRShipmentText,
-  s_pl_zGioDifConfirmText,
-  s_pl_gzCreditNames,
-  s_pl_gzCreditNameTitle,
-  s_pl_gzCreditNameFunny,
-  s_pl_pContractButtonString,
-  s_pl_gzIntroScreen,
-  s_pl_pUpdatePanelButtons,
-  s_pl_sRepairsDoneString,
-  s_pl_str_ceramic_plates_smashed,
-  s_pl_str_arrival_rerouted,
+	s_pl_Message,
+	s_pl_TeamTurnString,
+	s_pl_pAssignMenuStrings,
+	s_pl_pTrainingStrings,
+	s_pl_pTrainingMenuStrings,
+	s_pl_pAttributeMenuStrings,
+	s_pl_pVehicleStrings,
+	s_pl_pShortAttributeStrings,
+	s_pl_pContractStrings,
+	s_pl_pAssignmentStrings,
+	s_pl_pConditionStrings,
+	s_pl_pTownNames,
+	s_pl_g_towns_locative,
+	s_pl_pPersonnelScreenStrings,
+	s_pl_pUpperLeftMapScreenStrings,
+	s_pl_pTacticalPopupButtonStrings,
+	s_pl_pSquadMenuStrings,
+	s_pl_pDoorTrapStrings,
+	s_pl_pLongAssignmentStrings,
+	s_pl_pMapScreenMouseRegionHelpText,
+	s_pl_pNoiseVolStr,
+	s_pl_pNoiseTypeStr,
+	s_pl_pDirectionStr,
+	s_pl_pRemoveMercStrings,
+	s_pl_sTimeStrings,
+	s_pl_pLandTypeStrings,
+	s_pl_pInvPanelTitleStrings,
+	s_pl_pPOWStrings,
+	s_pl_pMilitiaString,
+	s_pl_pMilitiaButtonString,
+	s_pl_pEpcMenuStrings,
+	s_pl_pRepairStrings,
+	s_pl_sPreStatBuildString,
+	s_pl_sStatGainStrings,
+	s_pl_pHelicopterEtaStrings,
+	s_pl_sMapLevelString,
+	s_pl_gsLoyalString,
+	s_pl_gsUndergroundString,
+	s_pl_gsTimeStrings,
+	s_pl_sFacilitiesStrings,
+	s_pl_pMapPopUpInventoryText,
+	s_pl_pwTownInfoStrings,
+	s_pl_pwMineStrings,
+	s_pl_pwMiscSectorStrings,
+	s_pl_pMapInventoryErrorString,
+	s_pl_pMapInventoryStrings,
+	s_pl_pMovementMenuStrings,
+	s_pl_pUpdateMercStrings,
+	s_pl_pMapScreenBorderButtonHelpText,
+	s_pl_pMapScreenBottomFastHelp,
+	s_pl_pMapScreenBottomText,
+	s_pl_pMercDeadString,
+	s_pl_pSenderNameList,
+	s_pl_pNewMailStrings,
+	s_pl_pDeleteMailStrings,
+	s_pl_pEmailHeaders,
+	s_pl_pEmailTitleText,
+	s_pl_pFinanceTitle,
+	s_pl_pFinanceSummary,
+	s_pl_pFinanceHeaders,
+	s_pl_pTransactionText,
+	s_pl_pMoralStrings,
+	s_pl_pSkyriderText,
+	s_pl_str_left_equipment,
+	s_pl_pMapScreenStatusStrings,
+	s_pl_pMapScreenPrevNextCharButtonHelpText,
+	s_pl_pEtaString,
+	s_pl_pShortVehicleStrings,
+	s_pl_pTrashItemText,
+	s_pl_pMapErrorString,
+	s_pl_pMapPlotStrings,
+	s_pl_pBullseyeStrings,
+	s_pl_pMiscMapScreenMouseRegionHelpText,
+	s_pl_str_he_leaves_where_drop_equipment,
+	s_pl_str_she_leaves_where_drop_equipment,
+	s_pl_str_he_leaves_drops_equipment,
+	s_pl_str_she_leaves_drops_equipment,
+	s_pl_pImpPopUpStrings,
+	s_pl_pImpButtonText,
+	s_pl_pExtraIMPStrings,
+	s_pl_pFilesTitle,
+	s_pl_pFilesSenderList,
+	s_pl_pHistoryLocations,
+	s_pl_pHistoryStrings,
+	s_pl_pHistoryHeaders,
+	s_pl_pHistoryTitle,
+	s_pl_pShowBookmarkString,
+	s_pl_pWebPagesTitles,
+	s_pl_pWebTitle,
+	s_pl_pPersonnelString,
+	s_pl_pErrorStrings,
+	s_pl_pDownloadString,
+	s_pl_pBookMarkStrings,
+	s_pl_pLaptopIcons,
+	s_pl_gsAtmStartButtonText,
+	s_pl_pPersonnelTeamStatsStrings,
+	s_pl_pPersonnelCurrentTeamStatsStrings,
+	s_pl_pPersonelTeamStrings,
+	s_pl_pPersonnelDepartedStateStrings,
+	s_pl_pMapHortIndex,
+	s_pl_pMapVertIndex,
+	s_pl_pMapDepthIndex,
+	s_pl_pLaptopTitles,
+	s_pl_pDayStrings,
+	s_pl_pMilitiaConfirmStrings,
+	s_pl_pDeliveryLocationStrings,
+	s_pl_pSkillAtZeroWarning,
+	s_pl_pIMPBeginScreenStrings,
+	s_pl_pIMPFinishButtonText,
+	s_pl_pIMPFinishStrings,
+	s_pl_pIMPVoicesStrings,
+	s_pl_pPersTitleText,
+	s_pl_pPausedGameText,
+	s_pl_zOptionsToggleText,
+	s_pl_zOptionsScreenHelpText,
+	s_pl_pDoctorWarningString,
+	s_pl_pMilitiaButtonsHelpText,
+	s_pl_pMapScreenJustStartedHelpText,
+	s_pl_pLandMarkInSectorString,
+	s_pl_gzMercSkillText,
+	s_pl_gzNonPersistantPBIText,
+	s_pl_gzMiscString,
+	s_pl_wMapScreenSortButtonHelpText,
+	s_pl_pNewNoiseStr,
+	s_pl_gzLateLocalizedString,
+	s_pl_pAntiHackerString,
+	s_pl_pMessageStrings,
+	s_pl_ItemPickupHelpPopup,
+	s_pl_TacticalStr,
+	s_pl_LargeTacticalStr,
+	s_pl_zDialogActions,
+	s_pl_zDealerStrings,
+	s_pl_zTalkMenuStrings,
+	s_pl_gzMoneyAmounts,
+	s_pl_gzProsLabel,
+	s_pl_gzConsLabel,
+	s_pl_gMoneyStatsDesc,
+	s_pl_gWeaponStatsDesc,
+	s_pl_sKeyDescriptionStrings,
+	s_pl_zHealthStr,
+	s_pl_zVehicleName,
+	s_pl_pExitingSectorHelpText,
+	s_pl_InsContractText,
+	s_pl_InsInfoText,
+	s_pl_MercAccountText,
+	s_pl_MercInfo,
+	s_pl_MercNoAccountText,
+	s_pl_MercHomePageText,
+	s_pl_sFuneralString,
+	s_pl_sFloristText,
+	s_pl_sOrderFormText,
+	s_pl_sFloristGalleryText,
+	s_pl_sFloristCards,
+	s_pl_BobbyROrderFormText,
+	s_pl_BobbyRText,
+	s_pl_str_bobbyr_guns_num_guns_that_use_ammo,
+	s_pl_BobbyRaysFrontText,
+	s_pl_AimSortText,
+	s_pl_str_aim_sort_price,
+	s_pl_str_aim_sort_experience,
+	s_pl_str_aim_sort_marksmanship,
+	s_pl_str_aim_sort_medical,
+	s_pl_str_aim_sort_explosives,
+	s_pl_str_aim_sort_mechanical,
+	s_pl_str_aim_sort_ascending,
+	s_pl_str_aim_sort_descending,
+	s_pl_AimPolicyText,
+	s_pl_AimMemberText,
+	s_pl_CharacterInfo,
+	s_pl_VideoConfercingText,
+	s_pl_AimPopUpText,
+	s_pl_AimLinkText,
+	s_pl_AimHistoryText,
+	s_pl_AimFiText,
+	s_pl_AimAlumniText,
+	s_pl_AimScreenText,
+	s_pl_AimBottomMenuText,
+	s_pl_zMarksMapScreenText,
+	s_pl_gpStrategicString,
+	s_pl_gpGameClockString,
+	s_pl_SKI_Text,
+	s_pl_SkiMessageBoxText,
+	s_pl_zSaveLoadText,
+	s_pl_zOptionsText,
+	s_pl_gzGIOScreenText,
+	s_pl_gzHelpScreenText,
+	s_pl_gzLaptopHelpText,
+	s_pl_gzMoneyWithdrawMessageText,
+	s_pl_gzCopyrightText,
+	s_pl_BrokenLinkText,
+	s_pl_gzBobbyRShipmentText,
+	s_pl_zGioDifConfirmText,
+	s_pl_gzCreditNames,
+	s_pl_gzCreditNameTitle,
+	s_pl_gzCreditNameFunny,
+	s_pl_pContractButtonString,
+	s_pl_gzIntroScreen,
+	s_pl_pUpdatePanelButtons,
+	s_pl_sRepairsDoneString,
+	s_pl_str_ceramic_plates_smashed,
+	s_pl_str_arrival_rerouted,
 
-  s_pl_str_stat_health,
-  s_pl_str_stat_agility,
-  s_pl_str_stat_dexterity,
-  s_pl_str_stat_strength,
-  s_pl_str_stat_leadership,
-  s_pl_str_stat_wisdom,
-  s_pl_str_stat_exp_level,
-  s_pl_str_stat_marksmanship,
-  s_pl_str_stat_mechanical,
-  s_pl_str_stat_explosive,
-  s_pl_str_stat_medical,
+	s_pl_str_stat_health,
+	s_pl_str_stat_agility,
+	s_pl_str_stat_dexterity,
+	s_pl_str_stat_strength,
+	s_pl_str_stat_leadership,
+	s_pl_str_stat_wisdom,
+	s_pl_str_stat_exp_level,
+	s_pl_str_stat_marksmanship,
+	s_pl_str_stat_mechanical,
+	s_pl_str_stat_explosive,
+	s_pl_str_stat_medical,
 
-  s_pl_str_stat_list,
-  s_pl_str_aim_sort_list,
+	s_pl_str_stat_list,
+	s_pl_str_aim_sort_list,
 
-  g_eng_zNewTacticalMessages,
-  g_eng_str_iron_man_mode_warning,
-  g_eng_str_dead_is_dead_mode_warning,
-  g_eng_str_dead_is_dead_mode_enter_name,
+	g_eng_zNewTacticalMessages,
+	g_eng_str_iron_man_mode_warning,
+	g_eng_str_dead_is_dead_mode_warning,
+	g_eng_str_dead_is_dead_mode_enter_name,
 
-  s_pl_gs_dead_is_dead_mode_tab_name,
+	s_pl_gs_dead_is_dead_mode_tab_name,
 };
 
 #ifdef WITH_UNITTESTS
 #define ARR_SIZE(x) (sizeof(x)/sizeof(x[0]))
 TEST(WideStringEncodingTest, PolishTextFile)
 {
-  // This test checks that the wide string literals in this file are correctly
-  // interpreted by the compiler.  Visual Studio requires BOM (byte-order mark)
-  // to correctly identify file encoding.  Failed test means that the compiler
-  // cannot correctly interpret the string literals.
-  const wchar_t str[] = L"тест";
-  ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
-  EXPECT_EQ(str[0], 0x0442);
-  EXPECT_EQ(str[1], 0x0435);
-  EXPECT_EQ(str[2], 0x0441);
-  EXPECT_EQ(str[3], 0x0442);
-  EXPECT_EQ(str[4], 0x00);
+	// This test checks that the wide string literals in this file are correctly
+	// interpreted by the compiler.  Visual Studio requires BOM (byte-order mark)
+	// to correctly identify file encoding.  Failed test means that the compiler
+	// cannot correctly interpret the string literals.
+	const wchar_t str[] = L"тест";
+	ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
+	EXPECT_EQ(str[0], 0x0442);
+	EXPECT_EQ(str[1], 0x0435);
+	EXPECT_EQ(str[2], 0x0441);
+	EXPECT_EQ(str[3], 0x0442);
+	EXPECT_EQ(str[4], 0x00);
 }
 #endif

@@ -74,9 +74,9 @@ static INT16 iEndClickY;
 
 
 #define CANCEL_ICON		0
-#define UP_ICON				1
-#define DOWN_ICON			2
-#define OK_ICON				3
+#define UP_ICON		1
+#define DOWN_ICON		2
+#define OK_ICON		3
 
 static INT32 iButtonIcons[4];
 static GUIButtonRef iSelectWin;
@@ -93,41 +93,41 @@ static SGPBox   g_sel_win_box;
 
 //These definitions help define the start and end of the various wall indices.
 //This needs to be maintained if the walls change.
-#define WALL_LAST_WALL_OFFSET						 30
-#define	WALL_FIRST_AFRAME_OFFSET				 31
-#define WALL_LAST_AFRAME_OFFSET					 34
-#define	WALL_FIRST_WINDOW_OFFSET				 35
-#define WALL_LAST_WINDOW_OFFSET					 46
-#define WALL_FIRST_BROKEN_WALL_OFFSET		 47
-#define WALL_LAST_BROKEN_WALL_OFFSET		 54
-#define WALL_FIRST_APPENDED_WALL_OFFSET	 55
-#define WALL_LAST_APPENDED_WALL_OFFSET	 56
+#define WALL_LAST_WALL_OFFSET            30
+#define WALL_FIRST_AFRAME_OFFSET         31
+#define WALL_LAST_AFRAME_OFFSET          34
+#define WALL_FIRST_WINDOW_OFFSET         35
+#define WALL_LAST_WINDOW_OFFSET          46
+#define WALL_FIRST_BROKEN_WALL_OFFSET    47
+#define WALL_LAST_BROKEN_WALL_OFFSET     54
+#define WALL_FIRST_APPENDED_WALL_OFFSET  55
+#define WALL_LAST_APPENDED_WALL_OFFSET   56
 #define WALL_FIRST_WEATHERED_WALL_OFFSET 57
 #define WALL_LAST_WEATHERED_WALL_OFFSET  64
 
 //I've added these definitions to add readability, and minimize conversion time for changes
 //incase there are new values, etc.
-#define OSTRUCTS_NUMELEMENTS		( LASTOSTRUCT - FIRSTFULLSTRUCT + 22 )
-#define OSTRUCTS1_NUMELEMENTS					5
-#define OSTRUCTS2_NUMELEMENTS					12
-#define BANKSLIST_NUMELEMENTS					5
-#define ROADSLIST_NUMELEMENTS					1
+#define OSTRUCTS_NUMELEMENTS				( LASTOSTRUCT - FIRSTFULLSTRUCT + 22 )
+#define OSTRUCTS1_NUMELEMENTS				5
+#define OSTRUCTS2_NUMELEMENTS				12
+#define BANKSLIST_NUMELEMENTS				5
+#define ROADSLIST_NUMELEMENTS				1
 #define DEBRISLIST_NUMELEMENTS				( LASTDEBRIS - DEBRISROCKS + 2 + 1 ) //+1 for ANOTHERDEBRIS
 
 #define SINGLEWALL_NUMELEMENTS				( (LASTWALL-FIRSTWALL+1) * 2 )
 #define SINGLEDOOR_NUMELEMENTS				(( LASTDOOR - FIRSTDOOR + 1 ) * 5)
 #define SINGLEWINDOW_NUMELEMENTS			( LASTWALL - FIRSTWALL + 1 )
 #define SINGLEROOF_NUMELEMENTS				( (LASTROOF-FIRSTROOF+1) + (LASTSLANTROOF-FIRSTSLANTROOF+1) + \
-																				(LASTWALL-FIRSTWALL+1) + (SECONDONROOF-FIRSTONROOF+1) )
+								(LASTWALL-FIRSTWALL+1) + (SECONDONROOF-FIRSTONROOF+1) )
 #define SINGLENEWROOF_NUMELEMENTS			(LASTROOF-FIRSTROOF+1)
-#define SINGLEBROKENWALL_NUMELEMENTS	( (LASTDECORATIONS-FIRSTDECORATIONS+1) + (LASTWALL-FIRSTWALL+1)*2 )
-#define SINGLEDECOR_NUMELEMENTS				( LASTISTRUCT - FIRSTISTRUCT + 1 )
-#define SINGLEDECAL_NUMELEMENTS				( LASTWALLDECAL - FIRSTWALLDECAL + EIGTHWALLDECAL - FIFTHWALLDECAL + 3 )
-#define SINGLEFLOOR_NUMELEMENTS				( LASTFLOOR - FIRSTFLOOR + 1 )
+#define SINGLEBROKENWALL_NUMELEMENTS			( (LASTDECORATIONS-FIRSTDECORATIONS+1) + (LASTWALL-FIRSTWALL+1)*2 )
+#define SINGLEDECOR_NUMELEMENTS			( LASTISTRUCT - FIRSTISTRUCT + 1 )
+#define SINGLEDECAL_NUMELEMENTS			( LASTWALLDECAL - FIRSTWALLDECAL + EIGTHWALLDECAL - FIFTHWALLDECAL + 3 )
+#define SINGLEFLOOR_NUMELEMENTS			( LASTFLOOR - FIRSTFLOOR + 1 )
 #define SINGLETOILET_NUMELEMENTS			( EIGHTISTRUCT - FIFTHISTRUCT + 1 )
 //	the final 2 used to be (LASTSLANTROOF-FIRSTSLANTROOF+1)
-#define ROOM_NUMELEMENTS					( (LASTWALL-FIRSTWALL+1) + (LASTFLOOR-FIRSTFLOOR+1) + \
-																		(LASTROOF-FIRSTROOF+1) + (2 ))
+#define ROOM_NUMELEMENTS				( (LASTWALL-FIRSTWALL+1) + (LASTFLOOR-FIRSTFLOOR+1) + \
+								(LASTROOF-FIRSTROOF+1) + (2 ))
 
 
 //This is a special case for trees which may have varying numbers.  There was a problem
@@ -876,7 +876,7 @@ static void AddToSelectionList(DisplayList* pNode)
 	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
+			pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
 			// Was already in the list, so bump up the count
 			++pSelList[iIndex].sCount;
@@ -937,7 +937,7 @@ static BOOLEAN RemoveFromSelectionList(DisplayList* pNode)
 	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
-				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
+			pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
 			if (--pSelList[iIndex].sCount <= 0)
 			{

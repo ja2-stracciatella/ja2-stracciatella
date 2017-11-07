@@ -9,8 +9,8 @@
 
 void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 {
-  UINT32 dataSize = stracLinuxFormat ? TACTICAL_STATUS_TYPE_SIZE_STRAC_LINUX : TACTICAL_STATUS_TYPE_SIZE;
-  std::vector<BYTE> data(dataSize);
+	UINT32 dataSize = stracLinuxFormat ? TACTICAL_STATUS_TYPE_SIZE_STRAC_LINUX : TACTICAL_STATUS_TYPE_SIZE;
+	std::vector<BYTE> data(dataSize);
 	FileRead(f, data.data(), dataSize);
 
 	TacticalStatusType* const s = &gTacticalStatus;
@@ -63,19 +63,19 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 	EXTR_U16(d, s->usTactialTurnLimitCounter)
 	EXTR_BOOL(d, s->fInTopMessage)
 	EXTR_U8(d, s->ubTopMessageType)
-  if(stracLinuxFormat)
-  {
-    EXTR_SKIP(d, 82);
-  }
-  else
-  {
-    EXTR_SKIP(d, 40);
-  }
+	if(stracLinuxFormat)
+	{
+		EXTR_SKIP(d, 82);
+	}
+	else
+	{
+		EXTR_SKIP(d, 40);
+	}
 	EXTR_U16(d, s->usTactialTurnLimitMax)
-  if(stracLinuxFormat)
-  {
-    EXTR_SKIP(d, 2);
-  }
+	if(stracLinuxFormat)
+	{
+		EXTR_SKIP(d, 2);
+	}
 	EXTR_U32(d, s->uiTactialTurnLimitClock)
 	EXTR_BOOL(d, s->fTactialTurnLimitStartedBeep)
 	EXTR_I8(d, s->bBoxingState)

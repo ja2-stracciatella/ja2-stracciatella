@@ -84,7 +84,7 @@ static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 LIGHT_SPRITE	LightSprites[MAX_LIGHT_SPRITES];
 
 // Lighting system general data
-UINT8						ubAmbientLightLevel=DEFAULT_SHADE_LEVEL;
+UINT8 ubAmbientLightLevel = DEFAULT_SHADE_LEVEL;
 
 SGPPaletteEntry g_light_color = { 0, 0, 0, 0 };
 
@@ -92,42 +92,46 @@ static SGPPaletteEntry gpOrigLight = { 0, 0, 0, 0 };
 
 
 /*
-UINT16 gusShadeLevels[16][3]={{500, 500, 500},				// green table
-															{450, 450, 450},		// bright
-															{350, 350, 350},
-															{300, 300, 300},
-															{255, 255, 255},		// normal
-															{227, 227, 227},
-															{198, 198, 198},
-															{171, 171, 171},
-															{143, 143, 143},
-															{115, 115, 160},				// darkening
-															{87, 87, 176},
-															{60, 60, 160},
-															{48, 48, 192},
-															{36, 36, 208},
-															{18, 18, 224},
-															{48, 222, 48}};
+UINT16 gusShadeLevels[16][3]={
+	{500, 500, 500}, // green table
+	{450, 450, 450}, // bright
+	{350, 350, 350},
+	{300, 300, 300},
+	{255, 255, 255}, // normal
+	{227, 227, 227},
+	{198, 198, 198},
+	{171, 171, 171},
+	{143, 143, 143},
+	{115, 115, 160}, // darkening
+	{87, 87, 176},
+	{60, 60, 160},
+	{48, 48, 192},
+	{36, 36, 208},
+	{18, 18, 224},
+	{48, 222, 48}
+};
 */
 // Externed in Rotting Corpses.c
 //Kris' attempt at blue night lights
 /*
-UINT16 gusShadeLevels[16][3]={{500, 500, 500},				// green table
-															{450, 450, 450},		// bright
-															{350, 350, 350},
-															{300, 300, 300},
-															{255, 255, 255},		// normal
-															{215, 215, 227},
-															{179, 179, 179},
-															{149, 149, 149},
-															{125, 125, 128},
-															{104, 104, 128},				// darkening
-															{86, 86, 128},
-															{72, 72, 128},
-															{60, 60, 128},
-															{36, 36, 208},
-															{18, 18, 224},
-															{48, 222, 48}};
+UINT16 gusShadeLevels[16][3]={
+	{500, 500, 500}, // green table
+	{450, 450, 450}, // bright
+	{350, 350, 350},
+	{300, 300, 300},
+	{255, 255, 255}, // normal
+	{215, 215, 227},
+	{179, 179, 179},
+	{149, 149, 149},
+	{125, 125, 128},
+	{104, 104, 128}, // darkening
+	{86, 86, 128},
+	{72, 72, 128},
+	{60, 60, 128},
+	{36, 36, 208},
+	{18, 18, 224},
+	{48, 222, 48}
+};
 */
 
 /*
@@ -136,18 +140,18 @@ UINT16 gusShadeLevels[16][3]={{500, 500, 500},				// green table
 UINT16 gusShadeLevels[16][3] =
 {
 	500, 500, 500,
-	450, 450, 450,	//bright
+	450, 450, 450, //bright
 	350, 350, 350,
 	300, 300, 300,
-	255, 255, 255,	//normal
+	255, 255, 255, //normal
 	222, 200, 200,
 	174, 167, 167,
 	150, 137, 137,
-	122, 116, 116,	//darkening
+	122, 116, 116, //darkening
 	96, 96, 96,
 	77, 77, 84,
 	58, 58, 69,
-	44, 44, 66,			//night
+	44, 44, 66, //night
 	36, 36, 244,
 	18, 18, 224,
 	48, 222, 48,
@@ -176,7 +180,7 @@ static UINT16 gusShadeLevels[16][3] =
 };
 
 //Set this true if you want the shadetables to be loaded from the text file.
-BOOLEAN gfLoadShadeTablesFromTextFile =		FALSE;
+BOOLEAN gfLoadShadeTablesFromTextFile = FALSE;
 
 void LoadShadeTablesFromTextFile()
 {
@@ -209,7 +213,7 @@ static LightTemplate* LightLoad(const char* pFilename);
 
 
 /****************************************************************************************
- InitLightingSystem
+InitLightingSystem
 
 	Initializes the lighting system.
 
@@ -240,7 +244,7 @@ static BOOLEAN LightDelete(LightTemplate*);
 
 
 /****************************************************************************************
- ShutdownLightingSystem
+ShutdownLightingSystem
 
 	Closes down the lighting system. Any lights that were created are destroyed, and the
 	memory attached to them freed up.
@@ -257,7 +261,7 @@ void ShutdownLightingSystem(void)
 
 
 /****************************************************************************************
- LightReset
+LightReset
 
 	Removes all currently active lights, without undrawing them.
 
@@ -281,7 +285,7 @@ void LightReset(void)
 
 
 /* Creates a new node, and appends it to the template list. The index into the
- * list is returned. */
+	* list is returned. */
 static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
 {
 	const UINT16 n_lights = t->n_lights;
@@ -301,7 +305,7 @@ static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, co
 
 
 /* Adds a node to the template list. If the node does not exist, it creates a
- * new one.  Returns the index into the list. */
+	* new one.  Returns the index into the list. */
 static UINT16 LightAddTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
 {
 	for (UINT16 i = 0; i < t->n_lights; ++i)
@@ -349,7 +353,7 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY);
 // Returns TRUE/FALSE if the tile at the specified tile number can block light.
 static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
-UINT16 usTileNo, usSrcTileNo;
+	UINT16 usTileNo, usSrcTileNo;
 
 	Assert(gpWorldLevelData!=NULL);
 
@@ -392,12 +396,12 @@ UINT16 usTileNo, usSrcTileNo;
 // Returns TRUE/FALSE if the tile at the specified coordinates contains a wall.
 static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
-//LEVELNODE *pStruct;
-UINT16 usTileNo;
-UINT16 usSrcTileNo;
-INT8		bDirection;
-UINT8		ubTravelCost;
-//INT8		bWallCount = 0;
+	//LEVELNODE *pStruct;
+	UINT16 usTileNo;
+	UINT16 usSrcTileNo;
+	INT8		bDirection;
+	UINT8		ubTravelCost;
+	//INT8		bWallCount = 0;
 
 	Assert(gpWorldLevelData!=NULL);
 
@@ -532,10 +536,10 @@ static LightTemplate* LightGetFree(void)
 
 
 /* Calculates the 2D linear distance between two points. Returns the result in
- * a DOUBLE for greater accuracy. */
+	* a DOUBLE for greater accuracy. */
 static DOUBLE LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
 {
-INT32 iDx, iDy;
+	INT32 iDx, iDy;
 
 	iDx=ABS(iX1-iX2);
 	iDx*=iDx;
@@ -546,9 +550,9 @@ INT32 iDx, iDy;
 }
 
 /****************************************************************************************
-	LightTrueLevel
+LightTrueLevel
 
-		Returns the light level at a particular level without fake lights
+	Returns the light level at a particular level without fake lights
 
 ***************************************************************************************/
 UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
@@ -583,7 +587,7 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
 // Does the addition of light values to individual LEVELNODEs in the world tile list.
 static void LightAddTileNode(LEVELNODE* const pNode, const UINT8 ubShadeAdd, const BOOLEAN fFake)
 {
-INT16 sSum;
+	INT16 sSum;
 
 	pNode->ubSumLights += ubShadeAdd;
 	if (fFake)
@@ -606,7 +610,7 @@ INT16 sSum;
 // Does the subtraction of light values to individual LEVELNODEs in the world tile list.
 static void LightSubtractTileNode(LEVELNODE* const pNode, const UINT8 ubShadeSubtract, const BOOLEAN fFake)
 {
-INT16 sSum;
+	INT16 sSum;
 
 	if (ubShadeSubtract > pNode->ubSumLights )
 	{
@@ -647,11 +651,11 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 // Adds a specified amount of light to all objects on a given tile.
 static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX, const INT16 iY, const UINT8 ubShade, const UINT32 uiFlags, const BOOLEAN fOnlyWalls)
 {
-LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
-UINT8 ubShadeAdd;
-UINT32 uiTile;
-BOOLEAN fLitWall=FALSE;
-BOOLEAN fFake;
+	LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
+	UINT8 ubShadeAdd;
+	UINT32 uiTile;
+	BOOLEAN fLitWall=FALSE;
+	BOOLEAN fFake;
 
 	Assert(gpWorldLevelData!=NULL);
 
@@ -665,9 +669,9 @@ BOOLEAN fFake;
 	gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
 
 	//if((uiFlags&LIGHT_BACKLIGHT) && !(uiFlags&LIGHT_ROOF_ONLY))
-	//	ubShadeAdd=ubShade*7/10;
+	//	ubShadeAdd = ubShade*7/10;
 	//else
-		ubShadeAdd=ubShade;
+		ubShadeAdd = ubShade;
 
 
 	if (uiFlags&LIGHT_FAKE)
@@ -718,42 +722,42 @@ BOOLEAN fFake;
 			pStruct=pStruct->pNext;
 		}
 
-		ubShadeAdd=ubShade;
+		ubShadeAdd = ubShade;
 
-    if ( !fOnlyWalls )
-    {
-		  pLand = gpWorldLevelData[uiTile].pLandHead;
+		if ( !fOnlyWalls )
+		{
+			pLand = gpWorldLevelData[uiTile].pLandHead;
 
-		  while( pLand )
-		  {
-			  if( gfCaves || !fLitWall )
-			  {
-				  LightAddTileNode(pLand, ubShadeAdd, fFake);
-			  }
-			  pLand=pLand->pNext;
-		  }
+			while( pLand )
+			{
+				if( gfCaves || !fLitWall )
+				{
+					LightAddTileNode(pLand, ubShadeAdd, fFake);
+				}
+				pLand = pLand->pNext;
+			}
 
-		  pObject = gpWorldLevelData[uiTile].pObjectHead;
-		  while(pObject!=NULL)
-		  {
-			  if ( pObject->usIndex < NUMBEROFTILES )
-			  {
-				  LightAddTileNode(pObject, ubShadeAdd, FALSE);
-			  }
-			  pObject=pObject->pNext;
-		  }
+			pObject = gpWorldLevelData[uiTile].pObjectHead;
+			while(pObject != NULL)
+			{
+				if ( pObject->usIndex < NUMBEROFTILES )
+				{
+					LightAddTileNode(pObject, ubShadeAdd, FALSE);
+				}
+				pObject = pObject->pNext;
+			}
 
-		  if(uiFlags&LIGHT_BACKLIGHT)
-			  ubShadeAdd=(INT16)ubShade*7/10;
+			if(uiFlags&LIGHT_BACKLIGHT)
+				ubShadeAdd = (INT16)ubShade*7/10;
 
-		  pMerc = gpWorldLevelData[uiTile].pMercHead;
-		  while(pMerc!=NULL)
-		  {
-			  LightAddTileNode(pMerc, ubShadeAdd, FALSE);
-			  pMerc=pMerc->pNext;
-		  }
-	  }
-  }
+			pMerc = gpWorldLevelData[uiTile].pMercHead;
+			while(pMerc != NULL)
+			{
+				LightAddTileNode(pMerc, ubShadeAdd, FALSE);
+				pMerc = pMerc->pNext;
+			}
+		}
+	}
 
 	if((uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
 	{
@@ -782,13 +786,13 @@ BOOLEAN fFake;
 // Subtracts a specified amount of light to a given tile.
 static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX, const INT16 iY, const UINT8 ubShade, const UINT32 uiFlags, const BOOLEAN fOnlyWalls)
 {
-LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
-UINT8 ubShadeSubtract;
-UINT32 uiTile;
-BOOLEAN fLitWall=FALSE;
-BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
+	LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
+	UINT8 ubShadeSubtract;
+	UINT32 uiTile;
+	BOOLEAN fLitWall=FALSE;
+	BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 
-	Assert(gpWorldLevelData!=NULL);
+	Assert(gpWorldLevelData != NULL);
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
@@ -803,7 +807,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 //	if((uiFlags&LIGHT_BACKLIGHT) && !(uiFlags&LIGHT_ROOF_ONLY))
 //		ubShadeSubtract=ubShade*7/10;
 //	else
-		ubShadeSubtract=ubShade;
+		ubShadeSubtract = ubShade;
 
 	if (uiFlags&LIGHT_FAKE)
 	{
@@ -839,56 +843,56 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 						{
 							LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
 						}
-            else if ( !fOnlyWalls )
-            {
-						  LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
-            }
+						else if ( !fOnlyWalls )
+						{
+							LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
+						}
 					}
 				}
 			}
-      else
-      {
+			else
+			{
 				LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
-      }
-			pStruct=pStruct->pNext;
+			}
+			pStruct = pStruct->pNext;
 		}
 
-		ubShadeSubtract=ubShade;
+		ubShadeSubtract = ubShade;
 
-    if ( !fOnlyWalls )
-    {
-		  pLand = gpWorldLevelData[uiTile].pLandHead;
+		if ( !fOnlyWalls )
+		{
+			pLand = gpWorldLevelData[uiTile].pLandHead;
 
-		  while( pLand )
-		  {
-			  if( gfCaves || !fLitWall )
-			  {
-				  LightSubtractTileNode(pLand, ubShadeSubtract, fFake);
-			  }
-			  pLand=pLand->pNext;
-		  }
+			while( pLand )
+			{
+				if( gfCaves || !fLitWall )
+				{
+					LightSubtractTileNode(pLand, ubShadeSubtract, fFake);
+				}
+				pLand=pLand->pNext;
+			}
 
-		  pObject = gpWorldLevelData[uiTile].pObjectHead;
-		  while(pObject!=NULL)
-		  {
-			  if ( pObject->usIndex < NUMBEROFTILES )
-			  {
-				  LightSubtractTileNode(pObject, ubShadeSubtract, FALSE);
-			  }
-			  pObject=pObject->pNext;
-		  }
+			pObject = gpWorldLevelData[uiTile].pObjectHead;
+			while(pObject!=NULL)
+			{
+				if ( pObject->usIndex < NUMBEROFTILES )
+				{
+					LightSubtractTileNode(pObject, ubShadeSubtract, FALSE);
+				}
+				pObject=pObject->pNext;
+			}
 
-		  if(uiFlags&LIGHT_BACKLIGHT)
-			  ubShadeSubtract=(INT16)ubShade*7/10;
+			if(uiFlags&LIGHT_BACKLIGHT)
+				ubShadeSubtract=(INT16)ubShade*7/10;
 
-		  pMerc = gpWorldLevelData[uiTile].pMercHead;
-		  while(pMerc!=NULL)
-		  {
-			  LightSubtractTileNode(pMerc, ubShadeSubtract, FALSE);
-			  pMerc=pMerc->pNext;
-		  }
-	  }
-  }
+			pMerc = gpWorldLevelData[uiTile].pMercHead;
+			while(pMerc!=NULL)
+			{
+				LightSubtractTileNode(pMerc, ubShadeSubtract, FALSE);
+				pMerc=pMerc->pNext;
+			}
+		}
+	}
 
 	if((uiFlags&LIGHT_ROOF_ONLY) || (uiFlags&LIGHT_EVERYTHING))
 	{
@@ -918,7 +922,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 
 
 /* Set the natural light level (as well as the current) on all LEVELNODEs on a
- * level. */
+	* level. */
 static void LightSetNaturalLevel(LEVELNODE* n, UINT8 const shade)
 {
 	for (; n; n = n->pNext)
@@ -932,8 +936,8 @@ static void LightSetNaturalLevel(LEVELNODE* n, UINT8 const shade)
 
 
 /* Set the natural light value of all objects on a given tile to the specified
- * value.  This is the light value a tile has with no artificial lighting
- * affecting it. */
+	* value.  This is the light value a tile has with no artificial lighting
+	* affecting it. */
 static void LightSetNaturalTile(MAP_ELEMENT const& e, UINT8 shade)
 {
 	LightSetNaturalLevel(e.pLandHead,    shade);
@@ -947,7 +951,7 @@ static void LightSetNaturalTile(MAP_ELEMENT const& e, UINT8 shade)
 
 
 /* Reset the light level of all LEVELNODEs on a level to the value contained in
- * the natural light level. */
+	* the natural light level. */
 static void LightResetLevel(LEVELNODE* n)
 {
 	for (; n; n = n->pNext)
@@ -979,9 +983,9 @@ static void LightResetAllTiles(void)
 // Creates a new node, and adds it to the end of a light list.
 static void LightAddNode(LightTemplate* const t, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
-DOUBLE dDistance;
-UINT8 ubShade;
-INT32 iLightDecay;
+	DOUBLE dDistance;
+	UINT8 ubShade;
+	INT32 iLightDecay;
 
 	dDistance=LinearDistanceDouble(iX, iY, iHotSpotX, iHotSpotY);
 	dDistance/=DISTANCE_SCALE;
@@ -1003,9 +1007,9 @@ INT32 iLightDecay;
 // Creates a new node, and inserts it after the specified node.
 static void LightInsertNode(LightTemplate* const t, const UINT16 usLightIns, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
-DOUBLE dDistance;
-UINT8 ubShade;
-INT32 iLightDecay;
+	DOUBLE dDistance;
+	UINT8 ubShade;
+	INT32 iLightDecay;
 
 	dDistance=LinearDistanceDouble(iX, iY, iHotSpotX, iHotSpotY);
 	dDistance/=DISTANCE_SCALE;
@@ -1025,7 +1029,7 @@ INT32 iLightDecay;
 
 
 /* Traverses the linked list until a node with the LIGHT_NEW_RAY marker, and
- * returns the pointer. If the end of list is reached, NULL is returned. */
+	* returns the pointer. If the end of list is reached, NULL is returned. */
 static UINT16 LightFindNextRay(const LightTemplate* const t, const UINT16 usIndex)
 {
 	UINT16 usNodeIndex = usIndex;
@@ -1037,223 +1041,202 @@ static UINT16 LightFindNextRay(const LightTemplate* const t, const UINT16 usInde
 
 
 /* Casts a ray from an origin to an end point, creating nodes and adding them
- * to the light list. */
+	* to the light list. */
 static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const INT16 iStartY, const INT16 iEndPointX, const INT16 iEndPointY, const UINT8 ubStartIntens, const UINT8 ubEndIntens)
 {
-INT16 AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
-INT32 WholeStep, InitialPixelCount, FinalPixelCount, i, j, RunLength;
-INT16 iXPos, iYPos, iEndY, iEndX;
-UINT16 usCurNode=0, usFlags=0;
-BOOLEAN fInsertNodes=FALSE;
+	INT16 AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
+	INT32 WholeStep, InitialPixelCount, FinalPixelCount, i, j, RunLength;
+	INT16 iXPos, iYPos, iEndY, iEndX;
+	UINT16 usCurNode=0, usFlags=0;
+	BOOLEAN fInsertNodes=FALSE;
 
-		if((iEndPointX > 0) && (iEndPointY > 0))
-			usFlags=LIGHT_BACKLIGHT;
+	if((iEndPointX > 0) && (iEndPointY > 0))
+		usFlags=LIGHT_BACKLIGHT;
 
-   /* We'll always draw top to bottom, to reduce the number of cases we have to
-   handle, and to make lines between the same endpoints draw the same pixels */
-		if (iStartY > iEndPointY)
-		{
-			iXPos=iEndPointX;
-			iEndX=iStartX;
-			iYPos=iEndPointY;
-			iEndY=iStartY;
-			fInsertNodes=TRUE;
-		}
-		else
-		{
-			iXPos=iStartX;
-			iEndX=iEndPointX;
-			iYPos=iStartY;
-			iEndY=iEndPointY;
-		}
+	/* We'll always draw top to bottom, to reduce the number of cases we have to
+		handle, and to make lines between the same endpoints draw the same pixels */
+	if (iStartY > iEndPointY)
+	{
+		iXPos=iEndPointX;
+		iEndX=iStartX;
+		iYPos=iEndPointY;
+		iEndY=iStartY;
+		fInsertNodes=TRUE;
+	}
+	else
+	{
+		iXPos=iStartX;
+		iEndX=iEndPointX;
+		iYPos=iStartY;
+		iEndY=iEndPointY;
+	}
 
-	 /* Figure out whether we're going left or right, and how far we're
-      going horizontally */
-   if ((XDelta = (iEndX - iXPos)) < 0)
-   {
-      XAdvance = -1;
-      XDelta = -XDelta;
-   }
-   else
-   {
-      XAdvance = 1;
-   }
-   /* Figure out how far we're going vertically */
-   YDelta = iEndY - iYPos;
+	/* Figure out whether we're going left or right, and how far we're
+		going horizontally */
+	if ((XDelta = (iEndX - iXPos)) < 0)
+	{
+		XAdvance = -1;
+		XDelta = -XDelta;
+	}
+	else
+	{
+		XAdvance = 1;
+	}
+	/* Figure out how far we're going vertically */
+	YDelta = iEndY - iYPos;
 
-	 // Check for 0 length ray
-	 if((XDelta==0) && (YDelta==0))
-		 return(FALSE);
+	// Check for 0 length ray
+	if((XDelta==0) && (YDelta==0))
+		return(FALSE);
 
 	SLOGD(DEBUG_TAG_LIGHTING, "Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY);
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
 	if (fInsertNodes) usCurNode = t->n_rays;
-
-		/* Special-case horizontal, vertical, and diagonal lines, for speed
-      and to avoid nasty boundary conditions and division by 0 */
-   if (XDelta == 0)
-   {
-     /* Vertical line */
-		 if(fInsertNodes)
-		 {
-				for (i=0; i<=YDelta; i++)
-				{
-					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iYPos++;
-				}
-		 }
-		 else
-		 {
-				for (i=0; i<=YDelta; i++)
-				{
-					LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iYPos++;
-				}
-		 }
-     return(TRUE);
-   }
-   if (YDelta == 0)
-   {
-      /* Horizontal line */
-		 if(fInsertNodes)
-		 {
-				for (i=0; i<=XDelta; i++)
-				{
-					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
-			  }
-		 }
-		 else
-		 {
-				for (i=0; i<=XDelta; i++)
-				{
-					LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
-			  }
-		 }
-      return(TRUE);
-   }
-   if (XDelta == YDelta)
-   {
-      /* Diagonal line */
-		 if(fInsertNodes)
-		 {
-	      for (i=0; i<=XDelta; i++)
-		    {
-					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
-					iYPos++;
-				}
-		 }
-		 else
-		 {
-				for (i=0; i<=XDelta; i++)
-				{
-					LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
-					iYPos++;
-				}
-		 }
-      return(TRUE);
-   }
-
-   /* Determine whether the line is X or Y major, and handle accordingly */
-   if (XDelta >= YDelta)
-   {
-			/* X major line */
-      /* Minimum # of pixels in a run in this line */
-      WholeStep = XDelta / YDelta;
-
-      /* Error term adjust each time Y steps by 1; used to tell when one
-         extra pixel should be drawn as part of a run, to account for
-         fractional steps along the X axis per 1-pixel steps along Y */
-      AdjUp = (XDelta % YDelta) * 2;
-
-      /* Error term adjust when the error term turns over, used to factor
-         out the X step made at that time */
-      AdjDown = YDelta * 2;
-
-      /* Initial error term; reflects an initial step of 0.5 along the Y
-         axis */
-      ErrorTerm = (XDelta % YDelta) - (YDelta * 2);
-
-      /* The initial and last runs are partial, because Y advances only 0.5
-         for these runs, rather than 1. Divide one full run, plus the
-         initial pixel, between the initial and last runs */
-      InitialPixelCount = (WholeStep / 2) + 1;
-      FinalPixelCount = InitialPixelCount;
-
-      /* If the basic run length is even and there's no fractional
-         advance, we have one pixel that could go to either the initial
-         or last partial run, which we'll arbitrarily allocate to the
-         last run */
-      if ((AdjUp == 0) && ((WholeStep & 0x01) == 0))
-      {
-         InitialPixelCount--;
-      }
-      /* If there're an odd number of pixels per run, we have 1 pixel that can't
-         be allocated to either the initial or last partial run, so we'll add 0.5
-         to error term so this pixel will be handled by the normal full-run loop */
-      if ((WholeStep & 0x01) != 0)
-      {
-         ErrorTerm += YDelta;
-      }
-      /* Draw the first, partial run of pixels */
-      //DrawHorizontalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color);
-			if(fInsertNodes)
+	/* Special-case horizontal, vertical, and diagonal lines, for speed
+		and to avoid nasty boundary conditions and division by 0 */
+	if (XDelta == 0)
+	{
+		/* Vertical line */
+		if(fInsertNodes)
+		{
+			for (i=0; i<=YDelta; i++)
 			{
-				for (i=0; i<InitialPixelCount; i++)
-				{
-					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
-				}
-			}
-			else
-			{
-				for (i=0; i<InitialPixelCount; i++)
-		    {
-					LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iXPos+=XAdvance;
-				}
-			}
-			iYPos++;
-
-      /* Draw all full runs */
-      for (j=0; j<(YDelta-1); j++)
-      {
-         RunLength = WholeStep;  /* run is at least this long */
-         /* Advance the error term and add an extra pixel if the error
-            term so indicates */
-         if ((ErrorTerm += AdjUp) > 0)
-         {
-            RunLength++;
-            ErrorTerm -= AdjDown;   /* reset the error term */
-         }
-         /* Draw this scan line's run */
-         //DrawHorizontalRun(&ScreenPtr, XAdvance, RunLength, Color);
-				 if(fInsertNodes)
-				 {
-						for (i=0; i<RunLength; i++)
-						{
-							LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-							iXPos+=XAdvance;
-						}
-				 }
-				 else
-				 {
-						for (i=0; i<RunLength; i++)
-						{
-							LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-							iXPos+=XAdvance;
-						}
-				 }
+				LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 				iYPos++;
-      }
-      /* Draw the final run of pixels */
-      //DrawHorizontalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color);
-      if(fInsertNodes)
+			}
+		}
+		else
+		{
+			for (i=0; i<=YDelta; i++)
 			{
-				for (i=0; i<FinalPixelCount; i++)
+				LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iYPos++;
+			}
+		}
+		return(TRUE);
+	}
+	if (YDelta == 0)
+	{
+		/* Horizontal line */
+		if(fInsertNodes)
+		{
+			for (i=0; i<=XDelta; i++)
+			{
+				LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iXPos+=XAdvance;
+			}
+		}
+		else
+		{
+			for (i=0; i<=XDelta; i++)
+			{
+				LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iXPos+=XAdvance;
+			}
+		}
+		return(TRUE);
+	}
+	if (XDelta == YDelta)
+	{
+		/* Diagonal line */
+		if(fInsertNodes)
+		{
+			for (i=0; i<=XDelta; i++)
+			{
+				LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iXPos+=XAdvance;
+				iYPos++;
+			}
+		}
+		else
+		{
+			for (i=0; i<=XDelta; i++)
+			{
+				LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iXPos+=XAdvance;
+				iYPos++;
+			}
+		}
+		return(TRUE);
+	}
+
+	/* Determine whether the line is X or Y major, and handle accordingly */
+	if (XDelta >= YDelta)
+	{
+		/* X major line */
+		/* Minimum # of pixels in a run in this line */
+		WholeStep = XDelta / YDelta;
+
+		/* Error term adjust each time Y steps by 1; used to tell when one
+			extra pixel should be drawn as part of a run, to account for
+			fractional steps along the X axis per 1-pixel steps along Y */
+		AdjUp = (XDelta % YDelta) * 2;
+
+		/* Error term adjust when the error term turns over, used to factor
+			out the X step made at that time */
+		AdjDown = YDelta * 2;
+
+		/* Initial error term; reflects an initial step of 0.5 along the Y
+			axis */
+		ErrorTerm = (XDelta % YDelta) - (YDelta * 2);
+
+		/* The initial and last runs are partial, because Y advances only 0.5
+			for these runs, rather than 1. Divide one full run, plus the
+			initial pixel, between the initial and last runs */
+		InitialPixelCount = (WholeStep / 2) + 1;
+		FinalPixelCount = InitialPixelCount;
+
+		/* If the basic run length is even and there's no fractional
+			advance, we have one pixel that could go to either the initial
+			or last partial run, which we'll arbitrarily allocate to the
+			last run */
+		if ((AdjUp == 0) && ((WholeStep & 0x01) == 0))
+		{
+			InitialPixelCount--;
+		}
+		/* If there're an odd number of pixels per run, we have 1 pixel that can't
+			be allocated to either the initial or last partial run, so we'll add 0.5
+			to error term so this pixel will be handled by the normal full-run loop */
+		if ((WholeStep & 0x01) != 0)
+		{
+			ErrorTerm += YDelta;
+		}
+		/* Draw the first, partial run of pixels */
+		//DrawHorizontalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color);
+		if(fInsertNodes)
+		{
+			for (i=0; i<InitialPixelCount; i++)
+			{
+				LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iXPos+=XAdvance;
+			}
+		}
+		else
+		{
+			for (i=0; i<InitialPixelCount; i++)
+			{
+				LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iXPos+=XAdvance;
+			}
+		}
+		iYPos++;
+
+		/* Draw all full runs */
+		for (j=0; j<(YDelta-1); j++)
+		{
+			RunLength = WholeStep;  /* run is at least this long */
+			/* Advance the error term and add an extra pixel if the error
+				term so indicates */
+			if ((ErrorTerm += AdjUp) > 0)
+			{
+				RunLength++;
+				ErrorTerm -= AdjDown;   /* reset the error term */
+			}
+			/* Draw this scan line's run */
+			//DrawHorizontalRun(&ScreenPtr, XAdvance, RunLength, Color);
+			if(fInsertNodes)
+			{
+				for (i=0; i<RunLength; i++)
 				{
 					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iXPos+=XAdvance;
@@ -1261,110 +1244,110 @@ BOOLEAN fInsertNodes=FALSE;
 			}
 			else
 			{
-				for (i=0; i<FinalPixelCount; i++)
+				for (i=0; i<RunLength; i++)
 				{
 					LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iXPos+=XAdvance;
 				}
 			}
 			iYPos++;
-   }
-   else
-   {
-		 /* Y major line */
-
-      /* Minimum # of pixels in a run in this line */
-      WholeStep = YDelta / XDelta;
-
-      /* Error term adjust each time X steps by 1; used to tell when 1 extra
-         pixel should be drawn as part of a run, to account for
-         fractional steps along the Y axis per 1-pixel steps along X */
-      AdjUp = (YDelta % XDelta) * 2;
-
-      /* Error term adjust when the error term turns over, used to factor
-         out the Y step made at that time */
-      AdjDown = XDelta * 2;
-
-      /* Initial error term; reflects initial step of 0.5 along the X axis */
-      ErrorTerm = (YDelta % XDelta) - (XDelta * 2);
-
-      /* The initial and last runs are partial, because X advances only 0.5
-         for these runs, rather than 1. Divide one full run, plus the
-         initial pixel, between the initial and last runs */
-      InitialPixelCount = (WholeStep / 2) + 1;
-      FinalPixelCount = InitialPixelCount;
-
-      /* If the basic run length is even and there's no fractional advance, we
-         have 1 pixel that could go to either the initial or last partial run,
-         which we'll arbitrarily allocate to the last run */
-      if ((AdjUp == 0) && ((WholeStep & 0x01) == 0))
-      {
-         InitialPixelCount--;
-      }
-      /* If there are an odd number of pixels per run, we have one pixel
-         that can't be allocated to either the initial or last partial
-         run, so we'll add 0.5 to the error term so this pixel will be
-         handled by the normal full-run loop */
-      if ((WholeStep & 0x01) != 0)
-      {
-         ErrorTerm += XDelta;
-      }
-      /* Draw the first, partial run of pixels */
-			if(fInsertNodes)
+		}
+		/* Draw the final run of pixels */
+		//DrawHorizontalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color);
+		if(fInsertNodes)
+		{
+			for (i=0; i<FinalPixelCount; i++)
 			{
-				for (i=0; i<InitialPixelCount; i++)
-				{
-					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iYPos++;
-				}
-			}
-			else
-			{
-				for (i=0; i<InitialPixelCount; i++)
-				{
-					LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-					iYPos++;
-				}
-			}
-			iXPos+=XAdvance;
-      //DrawVerticalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color);
-
-      /* Draw all full runs */
-      for (j=0; j<(XDelta-1); j++)
-      {
-         RunLength = WholeStep;  /* run is at least this long */
-         /* Advance the error term and add an extra pixel if the error
-            term so indicates */
-         if ((ErrorTerm += AdjUp) > 0)
-         {
-            RunLength++;
-            ErrorTerm -= AdjDown;   /* reset the error term */
-         }
-         /* Draw this scan line's run */
-         //DrawVerticalRun(&ScreenPtr, XAdvance, RunLength, Color);
-				if(fInsertNodes)
-				{
-					for (i=0; i<RunLength; i++)
-					{
-						LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-						iYPos++;
-					}
-				}
-				else
-				{
-					for (i=0; i<RunLength; i++)
-					{
-						LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
-						iYPos++;
-					}
-				}
+				LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 				iXPos+=XAdvance;
-      }
-      /* Draw the final run of pixels */
-      //DrawVerticalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color);
+			}
+		}
+		else
+		{
+			for (i=0; i<FinalPixelCount; i++)
+			{
+				LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iXPos+=XAdvance;
+			}
+		}
+		iYPos++;
+	}
+	else
+	{
+		/* Y major line */
+
+		/* Minimum # of pixels in a run in this line */
+		WholeStep = YDelta / XDelta;
+
+		/* Error term adjust each time X steps by 1; used to tell when 1 extra
+			pixel should be drawn as part of a run, to account for
+			fractional steps along the Y axis per 1-pixel steps along X */
+		AdjUp = (YDelta % XDelta) * 2;
+
+		/* Error term adjust when the error term turns over, used to factor
+			out the Y step made at that time */
+		AdjDown = XDelta * 2;
+
+		/* Initial error term; reflects initial step of 0.5 along the X axis */
+		ErrorTerm = (YDelta % XDelta) - (XDelta * 2);
+
+		/* The initial and last runs are partial, because X advances only 0.5
+			for these runs, rather than 1. Divide one full run, plus the
+			initial pixel, between the initial and last runs */
+		InitialPixelCount = (WholeStep / 2) + 1;
+		FinalPixelCount = InitialPixelCount;
+
+		/* If the basic run length is even and there's no fractional advance, we
+			have 1 pixel that could go to either the initial or last partial run,
+			which we'll arbitrarily allocate to the last run */
+		if ((AdjUp == 0) && ((WholeStep & 0x01) == 0))
+		{
+			InitialPixelCount--;
+		}
+		/* If there are an odd number of pixels per run, we have one pixel
+			that can't be allocated to either the initial or last partial
+			run, so we'll add 0.5 to the error term so this pixel will be
+			handled by the normal full-run loop */
+		if ((WholeStep & 0x01) != 0)
+		{
+			ErrorTerm += XDelta;
+		}
+		/* Draw the first, partial run of pixels */
+		if(fInsertNodes)
+		{
+			for (i=0; i<InitialPixelCount; i++)
+			{
+				LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iYPos++;
+			}
+		}
+		else
+		{
+			for (i=0; i<InitialPixelCount; i++)
+			{
+				LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iYPos++;
+			}
+		}
+		iXPos+=XAdvance;
+		//DrawVerticalRun(&ScreenPtr, XAdvance, InitialPixelCount, Color);
+
+		/* Draw all full runs */
+		for (j=0; j<(XDelta-1); j++)
+		{
+			RunLength = WholeStep;  /* run is at least this long */
+			/* Advance the error term and add an extra pixel if the error
+				term so indicates */
+			if ((ErrorTerm += AdjUp) > 0)
+			{
+				RunLength++;
+				ErrorTerm -= AdjDown;   /* reset the error term */
+			}
+			/* Draw this scan line's run */
+			//DrawVerticalRun(&ScreenPtr, XAdvance, RunLength, Color);
 			if(fInsertNodes)
 			{
-				for (i=0; i<FinalPixelCount; i++)
+				for (i=0; i<RunLength; i++)
 				{
 					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iYPos++;
@@ -1372,99 +1355,119 @@ BOOLEAN fInsertNodes=FALSE;
 			}
 			else
 			{
-				for (i=0; i<FinalPixelCount; i++)
+				for (i=0; i<RunLength; i++)
 				{
 					LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iYPos++;
 				}
 			}
 			iXPos+=XAdvance;
-   }
-	 return(TRUE);
+		}
+		/* Draw the final run of pixels */
+		//DrawVerticalRun(&ScreenPtr, XAdvance, FinalPixelCount, Color);
+		if(fInsertNodes)
+		{
+			for (i=0; i<FinalPixelCount; i++)
+			{
+				LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iYPos++;
+			}
+		}
+		else
+		{
+			for (i=0; i<FinalPixelCount; i++)
+			{
+				LightAddNode(t, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+				iYPos++;
+			}
+		}
+		iXPos+=XAdvance;
+	}
+	return(TRUE);
 }
 
 
 // Creates an elliptical light, taking two radii.
 static void LightGenerateElliptical(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
 {
-INT16 iX, iY;
-INT32 WorkingX, WorkingY;
-DOUBLE ASquared;
-DOUBLE BSquared;
-DOUBLE Temp;
+	INT16 iX, iY;
+	INT32 WorkingX, WorkingY;
+	DOUBLE ASquared;
+	DOUBLE BSquared;
+	DOUBLE Temp;
 
 	iX=0;
 	iY=0;
 	ASquared = (DOUBLE) iA * iA;
 	BSquared = (DOUBLE) iB * iB;
 
-   /* Draw the four symmetric arcs for which X advances faster (that is,
-      for which X is the major axis) */
-   /* Draw the initial top & bottom points */
+	/* Draw the four symmetric arcs for which X advances faster (that is,
+		for which X is the major axis) */
+	/* Draw the initial top & bottom points */
 	LightCastRay(t, iX, iY, (INT16)iX, (INT16)(iY+iB), iIntensity, 1);
 	LightCastRay(t, iX, iY, (INT16)iX, (INT16)(iY-iB), iIntensity, 1);
 
-   /* Draw the four arcs */
-   for (WorkingX = 0; ; )
-	 {
-      /* Advance one pixel along the X axis */
-      WorkingX++;
+	/* Draw the four arcs */
+	for (WorkingX = 0; ; )
+	{
+		/* Advance one pixel along the X axis */
+		WorkingX++;
 
-      /* Calculate the corresponding point along the Y axis. Guard
-         against floating-point roundoff making the intermediate term
-         less than 0 */
-      Temp = BSquared - (BSquared * WorkingX * WorkingX / ASquared);
+		/* Calculate the corresponding point along the Y axis. Guard
+			against floating-point roundoff making the intermediate term
+			less than 0 */
+		Temp = BSquared - (BSquared * WorkingX * WorkingX / ASquared);
 
-			if(Temp >= 0)
-				WorkingY= (INT32)(sqrt(Temp)+0.5);
-			else
-				WorkingY=0;
+		if(Temp >= 0)
+			WorkingY= (INT32)(sqrt(Temp)+0.5);
+		else
+			WorkingY=0;
 
-      /* Stop if X is no longer the major axis (the arc has passed the
-         45-degree point) */
-      if(((DOUBLE)WorkingY/BSquared) <= ((DOUBLE)WorkingX/ASquared))
-         break;
+		/* Stop if X is no longer the major axis (the arc has passed the
+			45-degree point) */
+		if(((DOUBLE)WorkingY/BSquared) <= ((DOUBLE)WorkingX/ASquared))
+				break;
 
-      /* Draw the 4 symmetries of the current point */
-			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
-			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
-   }
+		/* Draw the 4 symmetries of the current point */
+		LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+		LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+		LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+		LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+	}
 
-   /* Draw the four symmetric arcs for which Y advances faster (that is,
-      for which Y is the major axis) */
-   /* Draw the initial left & right points */
+	/* Draw the four symmetric arcs for which Y advances faster (that is,
+		for which Y is the major axis) */
+	/* Draw the initial left & right points */
 	LightCastRay(t, iX, iY, (INT16)(iX+iA), iY, iIntensity, 1);
 	LightCastRay(t, iX, iY, (INT16)(iX-iA), iY, iIntensity, 1);
 
-   /* Draw the four arcs */
-   for (WorkingY = 0; ; )
-	 {
-      /* Advance one pixel along the Y axis */
-      WorkingY++;
+	/* Draw the four arcs */
+	for (WorkingY = 0; ; )
+	{
+		/* Advance one pixel along the Y axis */
+		WorkingY++;
 
-      /* Calculate the corresponding point along the X axis. Guard
-         against floating-point roundoff making the intermediate term
-         less than 0 */
-      Temp = ASquared - (ASquared * WorkingY * WorkingY / BSquared);
+		/* Calculate the corresponding point along the X axis. Guard
+			against floating-point roundoff making the intermediate term
+			less than 0 */
+		Temp = ASquared - (ASquared * WorkingY * WorkingY / BSquared);
 
-			if(Temp >= 0)
-				WorkingX = (INT32)(sqrt(Temp)+0.5);
-			else
-				WorkingX = 0;
+		if(Temp >= 0)
+			WorkingX = (INT32)(sqrt(Temp)+0.5);
+		else
+			WorkingX = 0;
 
-      /* Stop if Y is no longer the major axis (the arc has passed the
-         45-degree point) */
-      if (((DOUBLE)WorkingX/ASquared) < ((DOUBLE)WorkingY/BSquared))
-         break;
+		/* Stop if Y is no longer the major axis (the arc has passed the
+			45-degree point) */
+		if (((DOUBLE)WorkingX/ASquared) < ((DOUBLE)WorkingY/BSquared))
+			break;
 
-      /* Draw the 4 symmetries of the current point */
-			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
-			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
-   }
+		/* Draw the 4 symmetries of the current point */
+		LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+		LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+		LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+		LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+	}
 }
 
 /****************************************************************************************
@@ -1506,7 +1509,7 @@ void LightSetBaseLevel(UINT8 iIntensity)
 
 void LightAddBaseLevel(const UINT8 iIntensity)
 {
-INT16 iCountY, iCountX;
+	INT16 iCountY, iCountX;
 
 	ubAmbientLightLevel=__max(SHADE_MAX, ubAmbientLightLevel-iIntensity);
 
@@ -1523,7 +1526,7 @@ INT16 iCountY, iCountX;
 
 void LightSubtractBaseLevel(const UINT8 iIntensity)
 {
-INT16 iCountY, iCountX;
+	INT16 iCountY, iCountX;
 
 	ubAmbientLightLevel=__min(SHADE_MIN, ubAmbientLightLevel+iIntensity);
 
@@ -1577,16 +1580,16 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 
 #endif
 
-  return( TRUE );
+	return( TRUE );
 }
 
 
 BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 {
-UINT32 uiFlags;
-INT32		iOldX, iOldY;
-BOOLEAN	fBlocked = FALSE;
-BOOLEAN fOnlyWalls;
+	UINT32  uiFlags;
+	INT32   iOldX, iOldY;
+	BOOLEAN fBlocked = FALSE;
+	BOOLEAN fOnlyWalls;
 
 	const LightTemplate* const t = l->light_template;
 	if (t->lights == NULL) return FALSE;
@@ -1609,7 +1612,7 @@ BOOLEAN fOnlyWalls;
 		if(!(usNodeIndex&LIGHT_NEW_RAY))
 		{
 			fBlocked = FALSE;
-      fOnlyWalls = FALSE;
+			fOnlyWalls = FALSE;
 
 			LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 
@@ -1619,7 +1622,7 @@ BOOLEAN fOnlyWalls;
 				{
 					uiCount = LightFindNextRay(t, uiCount);
 
-          fOnlyWalls = TRUE;
+					fOnlyWalls = TRUE;
 					fBlocked = TRUE;
 				}
 			}
@@ -1740,11 +1743,11 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			//Kris:  added map boundary checking!!!
 			if(LightHideWall(
-				 (INT16)MIN(MAX((iX+pLight->iDX),0),WORLD_COLS-1),
-				 (INT16)MIN(MAX((iY+pLight->iDY),0),WORLD_ROWS-1),
-				 (INT16)MIN(MAX(iX,0),WORLD_COLS-1),
-				 (INT16)MIN(MAX(iY,0),WORLD_ROWS-1)
-				))
+				(INT16)MIN(MAX((iX+pLight->iDX),0),WORLD_COLS-1),
+				(INT16)MIN(MAX((iY+pLight->iDY),0),WORLD_ROWS-1),
+				(INT16)MIN(MAX(iX,0),WORLD_COLS-1),
+				(INT16)MIN(MAX(iY,0),WORLD_ROWS-1)
+			))
 			{
 				uiCount = LightFindNextRay(t, uiCount);
 				SetRenderFlags(RENDER_FLAG_FULL);
@@ -1759,10 +1762,10 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 // Reverts all tiles a given light affects to their natural light levels.
 static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 {
-UINT32 uiFlags;
-INT32		iOldX, iOldY;
-BOOLEAN	fBlocked = FALSE;
-BOOLEAN fOnlyWalls;
+	UINT32  uiFlags;
+	INT32   iOldX, iOldY;
+	BOOLEAN fBlocked = FALSE;
+	BOOLEAN fOnlyWalls;
 
 	LightTemplate* const t = l->light_template;
 	if (t->lights == NULL) return FALSE;
@@ -1784,7 +1787,7 @@ BOOLEAN fOnlyWalls;
 		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
 			fBlocked = FALSE;
-      fOnlyWalls = FALSE;
+			fOnlyWalls = FALSE;
 
 			LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 
@@ -1794,7 +1797,7 @@ BOOLEAN fOnlyWalls;
 				{
 					uiCount = LightFindNextRay(t, uiCount);
 
-          fOnlyWalls = TRUE;
+					fOnlyWalls = TRUE;
 					fBlocked = TRUE;
 				}
 			}
@@ -1832,9 +1835,9 @@ BOOLEAN fOnlyWalls;
 
 
 /****************************************************************************************
-	LightSave
+LightSave
 
-		Saves the light list of a given template to a file. Passing in NULL for the
+	Saves the light list of a given template to a file. Passing in NULL for the
 	filename forces the system to save the light with the internal filename (recommended).
 
 ***************************************************************************************/
@@ -1850,7 +1853,7 @@ void LightSave(LightTemplate const* const t, char const* const pFilename)
 
 
 /* Loads a light template from disk. The light template is returned, or NULL if
- * the file wasn't loaded. */
+	* the file wasn't loaded. */
 static LightTemplate* LightLoad(const char* pFilename)
 {
 	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
@@ -1879,7 +1882,7 @@ static LightTemplate* LightLoad(const char* pFilename)
 
 
 /* Figures out whether a light template is already in memory, or needs to be
- * loaded from disk. */
+	* loaded from disk. */
 static LightTemplate* LightLoadCachedTemplate(const char* pFilename)
 {
 	FOR_EACH_LIGHT_TEMPLATE(t)
@@ -2152,9 +2155,9 @@ void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadeP
 
 
 /**********************************************************************************************
- CreateObjectPaletteTables
+CreateObjectPaletteTables
 
-		Creates the shading tables for 8-bit brushes. One highlight table is created, based on
+	Creates the shading tables for 8-bit brushes. One highlight table is created, based on
 	the object-type, 3 brightening tables, 1 normal, and 11 darkening tables. The entries are
 	created iteratively, rather than in a loop to allow hand-tweaking of the values. If you
 	change the HVOBJECT_SHADE_TABLES symbol, remember to add/delete entries here, it won't
@@ -2186,7 +2189,7 @@ const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 
 TEST(Lighting, asserts)
 {
-  EXPECT_EQ(sizeof(LIGHT_NODE), 6);
+	EXPECT_EQ(sizeof(LIGHT_NODE), 6);
 }
 
 #endif

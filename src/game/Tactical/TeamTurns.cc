@@ -59,7 +59,7 @@ static inline SOLDIERTYPE* LatestInterruptGuy(void)
 
 
 #define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( (UINT8) (gubOutOfTurnPersons), TRUE ))
-#define INTERRUPTS_OVER (gubOutOfTurnPersons == 1)
+#define INTERRUPTS_OVER		(gubOutOfTurnPersons == 1)
 
 BOOLEAN gfHiddenInterrupt = FALSE;
 static SOLDIERTYPE* gLastInterruptedGuy = NULL;
@@ -67,7 +67,7 @@ static SOLDIERTYPE* gLastInterruptedGuy = NULL;
 extern SightFlags gubSightFlags;
 
 
-#define MIN_APS_TO_INTERRUPT 4
+#define MIN_APS_TO_INTERRUPT		4
 
 void ClearIntList( void )
 {
@@ -151,7 +151,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 
 	// Save if we are in Dead is Dead mode
 	DoDeadIsDeadSaveIfNecessary();
-  
+
 	HandleTacticalUI( );
 }
 
@@ -185,8 +185,8 @@ void EndTurn( UINT8 ubNextTeam )
 
 	// Save if we are in Dead is Dead mode
 	DoDeadIsDeadSaveIfNecessary();
-  
-/*
+
+	/*
 	if ( CheckForEndOfCombatMode( FALSE ) )
 	{
 		return;
@@ -201,7 +201,7 @@ void EndTurn( UINT8 ubNextTeam )
 	{
 		AddPossiblePendingEnemiesToBattle();
 
-//		InitEnemyUIBar( );
+		//InitEnemyUIBar( );
 
 		FreezeInterfaceForEnemyTurn();
 
@@ -211,10 +211,10 @@ void EndTurn( UINT8 ubNextTeam )
 			s->bMoved = TRUE;
 			// Cancel merc movement if continue path was not used
 			const INT16 sAPCost = PtsToMoveDirection(s, s->ubPathingData[0]);
-			if (EnoughPoints(s, sAPCost, 0, FALSE)) 
+			if (EnoughPoints(s, sAPCost, 0, FALSE))
 			{
-			  s->sFinalDestination=s->sGridNo;
-			  s->fNoAPToFinishMove = 0;
+				s->sFinalDestination=s->sGridNo;
+				s->fNoAPToFinishMove = 0;
 			}
 		}
 
@@ -409,7 +409,7 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	// get rid of any old overlay message
 	const MESSAGE_TYPES msg =
 		pSoldier->bTeam == MILITIA_TEAM ? MILITIA_INTERRUPT_MESSAGE:
-		                                  COMPUTER_INTERRUPT_MESSAGE;
+					COMPUTER_INTERRUPT_MESSAGE;
 	AddTopMessage(msg);
 
 	gfHiddenInterrupt = FALSE;
@@ -457,7 +457,7 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 static BOOLEAN EveryoneInInterruptListOnSameTeam(void)
 {
 	UINT8 ubLoop;
-	UINT8	ubTeam = 255;
+	UINT8 ubTeam = 255;
 
 	for (ubLoop = 1; ubLoop <= gubOutOfTurnPersons; ubLoop++)
 	{
@@ -483,10 +483,10 @@ void SayCloseCallQuotes(void)
 	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (OkControllableMerc(s) &&
-				s->fCloseCall &&
-				s->bNumHitsThisTurn == 0 &&
-				!(s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) &&
-				Random(3) == 0)
+			s->fCloseCall &&
+			s->bNumHitsThisTurn == 0 &&
+			!(s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) &&
+			Random(3) == 0)
 		{
 			// say close call quote!
 			TacticalCharacterDialogue(s, QUOTE_CLOSE_CALL);
@@ -502,9 +502,9 @@ static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate);
 
 static void StartInterrupt(void)
 {
-	SOLDIERTYPE* first_interrupter = LatestInterruptGuy();
-	const INT8   bTeam             = first_interrupter->bTeam;
-	SOLDIERTYPE* Interrupter       = first_interrupter;
+	SOLDIERTYPE *first_interrupter = LatestInterruptGuy();
+	const INT8  bTeam = first_interrupter->bTeam;
+	SOLDIERTYPE *Interrupter = first_interrupter;
 
 	// display everyone on int queue!
 	for (INT32 cnt = gubOutOfTurnPersons; cnt > 0; --cnt)
@@ -523,8 +523,8 @@ static void StartInterrupt(void)
 	if (first_interrupter->bTeam == OUR_TEAM)
 	{
 		// start interrupts for everyone on our side at once
-		wchar_t	sTemp[ 255 ];
-		UINT8		ubInterrupters = 0;
+		wchar_t sTemp[ 255 ];
+		UINT8   ubInterrupters = 0;
 
 		// build string for display of who gets interrupt
 		while( 1 )
@@ -586,7 +586,7 @@ static void StartInterrupt(void)
 		SlideTo(gLastInterruptedGuy, SETLOCATOR);
 
 		// Dirty panel interface!
-		fInterfacePanelDirty						= DIRTYLEVEL2;
+		fInterfacePanelDirty = DIRTYLEVEL2;
 		gTacticalStatus.ubCurrentTeam   = first_interrupter->bTeam;
 
 		// Signal UI done enemy's turn
@@ -896,9 +896,9 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pOpponent, const INT8 bOldOppList)
 {
-//	UINT8 ubAniType;
-	UINT8						ubMinPtsNeeded;
-	INT8						bDir;
+	//UINT8 ubAniType;
+	UINT8 ubMinPtsNeeded;
+	INT8  bDir;
 
 	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT && !(gubSightFlags & SIGHT_INTERRUPT))
 	{
@@ -918,7 +918,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		{
 			return(FALSE);
 		}
-  }
+	}
 
 	// in non-combat allow interrupt points to be calculated freely (everyone's in control!)
 	// also allow calculation for storing in AllTeamsLookForAll
@@ -1187,8 +1187,8 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 	else
 	{
 		// either non-combat or the player with the current turn... i.e. active...
-		// unfortunately we can't use opplist here to record whether or not we saw this guy before, because at this point
-		// the opplist has been updated to seen.  But we can use gbSeenOpponents ...
+		// unfortunately we can't use opplist here to record whether or not we saw this guy before, because at
+		// this point the opplist has been updated to seen.  But we can use gbSeenOpponents ...
 
 		// this soldier is moving, so give them a bonus for crawling or swatting at long distances
 		if (!gbSeenOpponents[opponent->ubID][pSoldier->ubID])
@@ -1268,10 +1268,10 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 
 	if (bPoints >= AUTOMATIC_INTERRUPT)
 	{
-		bPoints = AUTOMATIC_INTERRUPT - 1;	// hack it to one less than max so its legal
+		bPoints = AUTOMATIC_INTERRUPT - 1; // hack it to one less than max so its legal
 	}
 	SLOGD(DEBUG_TAG_TEAMTURN, "Calculating int pts for %d vs %d, number is %d",
-				pSoldier->ubID, opponent->ubID, bPoints);
+		pSoldier->ubID, opponent->ubID, bPoints);
 	return( bPoints );
 }
 
@@ -1282,7 +1282,7 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 	// if opponent can't currently see us and we can see them
 	if ( pSoldier->bOppList[ pOpponent->ubID ] == SEEN_CURRENTLY && pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 	{
-		fResult = TRUE;       // we automatically interrupt
+		fResult = TRUE; // we automatically interrupt
 		// fix up our interrupt duel pts if necessary
 		if (pSoldier->bInterruptDuelPts < pOpponent->bInterruptDuelPts)
 		{
@@ -1295,9 +1295,9 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 		if (pSoldier->bInterruptDuelPts > pOpponent->bInterruptDuelPts)
 		{
 			fResult = TRUE;
-    }
-  }
-//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Interrupt duel %d (%d pts) vs %d (%d pts)", pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts );
+		}
+	}
+	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Interrupt duel %d (%d pts) vs %d (%d pts)", pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts );
 	return( fResult );
 }
 

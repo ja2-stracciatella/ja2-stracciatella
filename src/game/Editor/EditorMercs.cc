@@ -626,7 +626,7 @@ void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
 		if (btn == iEditorButton[MERCS_BODYTYPE_DOWN])
 			ChangeBodyType( 1 );	//next
 		else
-      ChangeBodyType( -1 ); //previous
+			ChangeBodyType( -1 ); //previous
 	}
 }
 
@@ -704,7 +704,7 @@ static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
 
 	// Draw color bar window area
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, sLeft,		 sTop,		 sRight, sBottom, usFillColorDark );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sLeft,     sTop,     sRight, sBottom, usFillColorDark );
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, sLeft + 1, sTop + 1, sRight, sBottom, usFillColorLight );
 	InvalidateRegion( sLeft, sTop, sRight, sBottom );
 
@@ -1198,7 +1198,9 @@ static void ExtractAndUpdateMercAttributes(void)
 	//make sure the life doesn't exceed the maxlife...
 	if( gpSelected->pDetailedPlacement->bLifeMax != -1 && gpSelected->pDetailedPlacement->bLife != -1 &&
 			gpSelected->pDetailedPlacement->bLife > gpSelected->pDetailedPlacement->bLifeMax )
-	  gpSelected->pDetailedPlacement->bLife = gpSelected->pDetailedPlacement->bLifeMax;
+	{
+		gpSelected->pDetailedPlacement->bLife = gpSelected->pDetailedPlacement->bLifeMax;
+	}
 
 	//update the soldier
 	UpdateSoldierWithStaticDetailedInformation( gpSelected->pSoldier, gpSelected->pDetailedPlacement );
@@ -1267,7 +1269,7 @@ void ExtractAndUpdateMercSchedule()
 	BOOLEAN fValidSchedule = FALSE;
 	BOOLEAN fScheduleNeedsUpdate = FALSE;
 	SCHEDULENODE *pNext = NULL;
-  if( !gpSelected )
+	if( !gpSelected )
 		return;
 	//extract all of the fields into a temp schedulenode.
 	//memset( &gScheduleNode, 0, sizeof( SCHEDULENODE ) );
@@ -1387,7 +1389,7 @@ static void ChangeBodyType(INT8 const offset)
 	BASIC_SOLDIERCREATE_STRUCT& bp  = *sel.pBasicPlacement;
 	// Select next body type depending on offset
 	SoldierBodyType const*      body_types; // HACK000E
-	INT32	                      n;          // HACK000E
+	INT32                       n;          // HACK000E
 	switch (bp.bTeam)
 	{
 		case ENEMY_TEAM:    body_types = bEnemyArray;    n = lengthof(bEnemyArray);    break;
@@ -1436,8 +1438,8 @@ static void ChangeBodyType(INT8 const offset)
 			case JEEP:
 			case TANK_NW:
 			case TANK_NE:            s.uiStatusFlags |= SOLDIER_VEHICLE; break;
-            default:
-                break;
+			default:
+				break;
 		}
 		SetSoldierAnimationSurface(&s, s.usAnimState);
 	}
@@ -2075,8 +2077,8 @@ void DeleteSelectedMercsItem()
 //This function does two main things:
 // 1)  Allows a new item to be created via usItem and assigned to the currently selected merc.
 // 2)  Converts the image from interface size to the smaller panel used by the editor.  The slots
-//		 in the editor are approximately 80% of that size.  This involves scaling calculations.  These
-//		 images are saved in individual slots are are blitted to the screen during rendering, not here.
+//     in the editor are approximately 80% of that size.  This involves scaling calculations.  These
+//     images are saved in individual slots are are blitted to the screen during rendering, not here.
 // NOTE:  Step one can be skipped (when selecting an existing merc).  By setting the
 static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 {

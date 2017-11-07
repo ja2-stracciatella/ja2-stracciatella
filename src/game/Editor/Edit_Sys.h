@@ -4,18 +4,18 @@
 #include "Types.h"
 
 
-#define			SMALLBRUSH		0
-#define			MEDIUMBRUSH		1
-#define     LARGEBRUSH		2
+#define SMALLBRUSH	0
+#define MEDIUMBRUSH	1
+#define LARGEBRUSH	2
 
-#define			NO_BANKS				0
-#define			DRAW_BANKS			1
-#define			DRAW_BANK_WATER 2
-#define			DRAW_ERASE		  3
+#define NO_BANKS	0
+#define DRAW_BANKS	1
+#define DRAW_BANK_WATER	2
+#define DRAW_ERASE	3
 
-#define			NO_CLIFFS				0
-#define			DRAW_CLIFFS			1
-#define			DRAW_CLIFF_LAND 2
+#define NO_CLIFFS	0
+#define DRAW_CLIFFS	1
+#define DRAW_CLIFF_LAND 2
 
 extern UINT16 CurrentPaste;
 
