@@ -445,8 +445,9 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		{
 			const INT16 sSpot = NewGridNo(s->sGridNo, DirectionInc(i));
 
-			// Make sure movement costs are OK....
-			if (gubWorldMovementCosts[sSpot][i][bLevel] >= TRAVELCOST_BLOCKED)
+			// Make sure movement costs are OK.... Check for blocking doors also
+			if (gubWorldMovementCosts[sSpot][i][bLevel] >= TRAVELCOST_BLOCKED ||
+			    DoorTravelCost(s, sSpot, gubWorldMovementCosts[sSpot][i][bLevel], FALSE, NULL) >= TRAVELCOST_BLOCKED)
 			{
 				continue;
 			}

@@ -15,7 +15,8 @@ endmacro()
 ## Project Setup
 
 project(ja2-stracciatella)
-set(BINARY "ja2")
+set(JA2_BINARY "ja2")
+set(LAUNCHER_BINARY "ja2-launcher")
 set(CMAKE_CXX_STANDARD 98)
 
 ## Versioning
@@ -36,14 +37,17 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
+option(LOCAL_FLTK_LIB "Build with fltk boost lib" OFF)
 option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
 option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
+option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 
 ## Build
 
@@ -58,6 +62,9 @@ add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 
 message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
 add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
+
+message(STATUS "Setting directory for libraries to" "${INSTALL_LIB_DIR}")
+add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
 if (WITH_FIXMES)
     message(STATUS "Building with fixme messages" )
@@ -102,6 +109,41 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DENABLE_ASSERTS)
 endif()
 
+set(FLTK_LIBRARIES "")
+set(FLTK_INCLUDE_DIR "")
+if(BUILD_LAUNCHER)
+    if (NOT LOCAL_FLTK_LIB)
+        find_package(FLTK)
+        if(NOT FLTK_FOUND)
+            message(STATUS "FLTK not found. Disabling launcher.")
+            set(BUILD_LAUNCHER OFF)
+        endif()
+    else()
+        add_subdirectory("dependencies/lib-fltk")
+        set(FLTK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-fltk/include")
+
+        if (UNIX AND NOT MINGW AND NOT APPLE)
+            set(FLTK_LIBRARIES
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_images.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_forms.a"
+                X11)
+        elseif(APPLE)
+            set(FLTK_LIBRARIES
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_images.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_forms.a")
+        elseif(MSVC)
+            # TODO Debug versions only
+            set(FLTK_LIBRARIES
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltkd.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_imagesd.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_formsd.lib")
+        endif()
+    endif()
+endif()
+message(STATUS "Fltk Libraries: ${FLTK_LIBRARIES}")
+
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
@@ -110,6 +152,12 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
+
+if(BUILD_LAUNCHER)
+    set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR})
+    set(LAUNCHER_SOURCES "")
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
+endif()
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -120,6 +168,12 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-utf8cpp/source
 )
+
+if(BUILD_LAUNCHER)
+    include_directories(
+        ${LAUNCHER_INCLUDES}
+    )
+endif()
 
 foreach(FILE ${JA2_SOURCES})
   get_filename_component(PARENT_DIR "${FILE}" PATH)
@@ -146,13 +200,26 @@ if (WITH_UNITTESTS)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
-add_executable(${BINARY} ${JA2_SOURCES})
-target_link_libraries(${BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
+add_executable(${JA2_BINARY} ${JA2_SOURCES})
+target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
+
+if(BUILD_LAUNCHER)
+    add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
+
+    set(ADDITIONAL_LIBS "")
+    if (UNIX AND NOT MINGW)
+        set(ADDITIONAL_LIBS dl)
+    endif()
+    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} slog rust-stracciatella ${ADDITIONAL_LIBS})
+    if (LOCAL_FLTK_LIB)
+        add_dependencies(${LAUNCHER_BINARY} fltk-internal)
+    endif()
+endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/assets/${DIR} "$<TARGET_FILE_DIR:${BINARY}>/${DIR}")
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets/${DIR} "$<TARGET_FILE_DIR:${JA2_BINARY}>/${DIR}")
 endmacro()
 
 copy_assets_dir_to_ja2_binary_after_build("externalized")
@@ -162,21 +229,25 @@ copy_assets_dir_to_ja2_binary_after_build("mods")
 get_property(STRACCIATELLA_SHARED_LIB TARGET rust-stracciatella PROPERTY IMPORTED_LOCATION)
 
 if (MSVC OR APPLE)
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            ${STRACCIATELLA_SHARED_LIB} "$<TARGET_FILE_DIR:${BINARY}>")
+            ${STRACCIATELLA_SHARED_LIB} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
 if (MSVC)
     string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
-    add_custom_command(TARGET ${BINARY} POST_BUILD
+    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
-            ${SDL_DLL} "$<TARGET_FILE_DIR:${BINARY}>")
+            ${SDL_DLL} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
 endif()
 if (APPLE)
-    add_custom_command(TARGET ${BINARY}
+    add_custom_command(TARGET ${JA2_BINARY}
             POST_BUILD COMMAND
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
-            "$<TARGET_FILE:${BINARY}>")
+            "$<TARGET_FILE:${JA2_BINARY}>")
+    add_custom_command(TARGET ${LAUNCHER_BINARY}
+            POST_BUILD COMMAND
+            ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
+            "$<TARGET_FILE:${LAUNCHER_BINARY}>")
 endif()
 
 
@@ -227,9 +298,12 @@ include(InstallRequiredSystemLibraries)
 include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
-    install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
+    install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION bin)
+    if(BUILD_LAUNCHER)
+        install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION bin)
+    endif()
     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
-    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION lib)
+    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION ${INSTALL_LIB_DIR})
     install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
         FILES assets/icons/logo.svg
@@ -241,7 +315,10 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
         install(FILES ja2_manpage DESTINATION share/man/man6 RENAME ja2.6)
     endif()
 else()
-    install(TARGETS ${BINARY} RUNTIME DESTINATION .)
+    install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION .)
+    if(BUILD_LAUNCHER)
+        install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION .)
+    endif()
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)

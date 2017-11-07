@@ -9,6 +9,7 @@
 #include "Render_Fun.h"
 #include "Soldier_Macros.h"
 #include "Timer_Control.h"
+#include "PreBattle_Interface.h"
 
 
 void CallAvailableEnemiesTo(GridNo grid_no)
@@ -42,6 +43,20 @@ void CallAvailableTeamEnemiesTo(GridNo const grid_no, INT8 const team)
 	}
 }
 
+void CallAvailableTeamEnemiesToAmbush(GridNo const grid_no){
+	if( gubEnemyEncounterCode == ENEMY_AMBUSH_CODE || gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
+	{
+		if( grid_no != -1 )
+		{
+			CallAvailableEnemiesTo( grid_no );
+		}
+		else
+		{
+			SLOGE(DEBUG_TAG_SMAP, "Ambush aborted in sector %c%d -- no center point in map.",
+					gWorldSectorY + 'A' - 1, gWorldSectorX );
+		}
+	}
+}
 
 void CallAvailableKingpinMenTo( INT16 sGridNo )
 {

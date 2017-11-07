@@ -122,7 +122,8 @@ static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
   "Loyalty",
   "Auto Resolve",
   "Corpses",
-  "Fixme"
+  "Fixme",
+  "Launcher"
 };
 
 /************************************************************

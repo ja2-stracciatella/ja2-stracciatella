@@ -7734,7 +7734,7 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 
 	if ( pSoldier->bCollapsed )
 	{
-		if ( bNewStance == ANIM_STAND || bNewStance == ANIM_CROUCH )
+		if ((bNewStance == ANIM_STAND || bNewStance == ANIM_CROUCH) && pSoldier->bBreath < OKBREATH)
 		{
 			return( FALSE );
 		}

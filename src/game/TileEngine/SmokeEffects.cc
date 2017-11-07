@@ -422,7 +422,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 		else
 		{
 			// damage anyone standing in cloud
-			SpreadEffectSmoke(pSmoke, REDO_SPREAD_EFFECT, 0);
+			SpreadEffectSmoke(pSmoke, REDO_SPREAD_EFFECT, bLevel);
 		}
 	}
 

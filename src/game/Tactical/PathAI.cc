@@ -2535,7 +2535,7 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 
 	if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 	{
-		ubReplacementCost = TRAVELCOST_OBSTACLE;
+		ubReplacementCost = ubMovementCost;
 
 		switch( ubMovementCost )
 		{
@@ -2615,6 +2615,7 @@ UINT8 InternalDoorTravelCost(const SOLDIERTYPE* pSoldier, INT32 iGridNo, UINT8 u
 				iDoorGridNo = iGridNo + DirIncrementer[ NORTHWEST ] + DirIncrementer[ WEST ];
 				break;
 			default:
+				ubReplacementCost = TRAVELCOST_OBSTACLE;
 				break;
 		}
 

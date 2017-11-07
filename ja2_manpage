@@ -1,6 +1,6 @@
 .\" Manpage for ja2.
-.\" Contact gennady.trafimenkov@gmail.com to correct errors or typos.
-.TH ja2 6 "04 May 2014" "1.0" "ja2 man page"
+.\" Goto https://github.com/ja2-stracciatella/ja2-stracciatella to report or correct errors or typos.
+.TH ja2 6 "30 March 2017" "1.0" "ja2 man page"
 .SH NAME
 ja2 \- JA2 Stracciatella
 .SH SYNOPSIS
@@ -11,6 +11,9 @@ This is only the game engine.  Game resources from the original JA2 are required
 .TP
 When you first start the game, file \fB~/.ja2/ja2.json\fR is created.  You should edit this file, so that \fBdata_dir\fR points to the directory with game resources from the original JA2 game.
 .SH OPTIONS
+.TP
+\fB\-datadir /opt/ja2\fR
+Path to vanilla data
 .TP
 \fB\-res WxH\fR
 Screen resolution, e.g. 800x600. Default value is 640x480
@@ -52,4 +55,4 @@ Turn the sound and music off
 \fB\-window\fR
 Start the game in a window
 .SH AUTHOR
-Gennady Trafimenkov (gennady.trafimenkov@gmail.com)
+The JA2 Stracciatella Team

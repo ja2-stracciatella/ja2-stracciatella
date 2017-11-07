@@ -1113,6 +1113,14 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	/* The above function LightSetBaseLevel adjusts ALL the level node light
 	 * values including the merc node, we must reset the values */
 	HandlePlayerTogglingLightEffects(FALSE);
+
+	// on loading a gamestate or getting ambushed from the StrategicMap
+	// We have to call this right after loading a saved game for several reasons:
+	// 1. the gubEnemyEncounterCode may be analyzed later so we cant check the
+	// 		ambush code properly
+	// 2. the ai may ignoring the CallAvailableEnemiesTo(...) because it wasn't
+	//		fully analyzed before
+	CallAvailableTeamEnemiesToAmbush(gMapInformation.sCenterGridNo);
 }
 
 
@@ -1982,20 +1990,6 @@ static void SaveMeanwhileDefsToSaveGameFile(HWFILE const f)
 		InjectMeanwhileDefinition(data, *i);
 		FileWrite(f, data, sizeof(data));
 	}
-}
-
-
-BOOLEAN DoesUserHaveEnoughHardDriveSpace()
-{
-	uintmax_t	uiBytesFree = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
-
-	//check to see if there is enough hard drive space
-	if( uiBytesFree < REQUIRED_FREE_SPACE )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
 }
 
 

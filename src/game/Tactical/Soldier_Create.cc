@@ -42,6 +42,7 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
+#include "WorldDef.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -448,7 +449,7 @@ try
 
 	if (c.fOnRoof && FlatRoofAboveGridNo(c.sInsertionGridNo))
 	{
-		SetSoldierHeight(s, 58.0);
+		SetSoldierHeight(s, SECOND_LEVEL_Z_OFFSET);
 	}
 
 	AddManToTeam(team_id);

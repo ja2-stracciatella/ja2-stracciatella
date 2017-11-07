@@ -2208,6 +2208,9 @@ static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
+	// preinit to prevent false ap costs; actions which dont charge turning ap
+	// are coming after this line and put the value to true
+	sel->fDontChargeTurningAPs = FALSE;
 
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
@@ -3430,7 +3433,16 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 		return false;
 	}
 
-	if (item->getItemClass() == IC_PUNCH) return tgt;
+	if (item->getItemClass() == IC_PUNCH)
+	{
+		// We test again whether the target is reachable
+		if (CalcTotalAPsToAttack(s, tgt->sGridNo, true, 0) == 0)
+		{
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+			return false;
+		}
+		return tgt;
+	}
 
 	if (item->getItemClass() == IC_MEDKIT)
 	{
