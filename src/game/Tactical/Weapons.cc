@@ -55,7 +55,7 @@
 #define BASIC_DEPRECIATE_CHANCE	15
 
 #define NORMAL_RANGE		90 // # world units considered an 'avg' shot
-#define MIN_SCOPE_RANGE		60 // # world units after which scope's useful
+#define MIN_SCOPE_RANGE	60 // # world units after which scope's useful
 
 #define MIN_TANK_RANGE		120 // range at which tank starts really having trouble aiming
 

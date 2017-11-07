@@ -709,7 +709,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	gpCurrentTalkingFace = face;
 	gubCurrentTalkingID  = ubCharacterNum;
 
-	CHAR8 zSoundString[ 164 ];
+	CHAR8 zSoundString[164];
 
 	// Check if we are dead now or not....( if from a soldier... )
 
@@ -862,13 +862,11 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UIN
 			case DIALOGUE_TACTICAL_UI:
 				HandleTacticalSpeechUI(ubCharacterNum, f);
 				break;
-			case DIALOGUE_CONTACTPAGE_UI:
-				break;
-			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
-				break;
 			case DIALOGUE_EXTERNAL_NPC_UI:
 				HandleExternNPCSpeechFace(f);
 				break;
+			//case DIALOGUE_CONTACTPAGE_UI:
+			//case DIALOGUE_SPECK_CONTACT_PAGE_UI:
 			default:
 				break;
 		}
@@ -972,7 +970,7 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 
 static void HandleTacticalTextUI(const ProfileID profile_id, const wchar_t* const zQuoteStr)
 {
-	wchar_t zText[ QUOTE_MESSAGE_SIZE ];
+	wchar_t zText[QUOTE_MESSAGE_SIZE];
 
 	swprintf( zText, lengthof(zText), L"\"%ls\"", zQuoteStr );
 

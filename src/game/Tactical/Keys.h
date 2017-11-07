@@ -13,7 +13,7 @@ struct KEY
 };
 
 
-#define KEY_USED		0x01
+#define KEY_USED			0x01
 
 #define LOCK_UNOPENABLE		255
 #define NO_KEY				255
@@ -21,7 +21,7 @@ struct KEY
 #define LOCK_REGULAR			1
 #define LOCK_PADLOCK			2
 #define LOCK_CARD			3
-#define LOCK_ELECTRONIC			4
+#define LOCK_ELECTRONIC		4
 #define LOCK_SPECIAL			5
 
 #define MAXLOCKDESCLENGTH		40

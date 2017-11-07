@@ -2465,7 +2465,7 @@ static ScreenID UIHandleHCOnTerrain(UI_EVENT* pUIEvent)
 	}
 	else
 	{
-		if ( gsOverItemsGridNo != NOWHERE && ( usMapPos != gsOverItemsGridNo || gsInterfaceLevel != gsOverItemsLevel ) )
+		if (gsOverItemsGridNo != NOWHERE && (usMapPos != gsOverItemsGridNo || gsInterfaceLevel != gsOverItemsLevel))
 		{
 			gsOverItemsGridNo = NOWHERE;
 			guiPendingOverrideEvent = A_CHANGE_TO_MOVE;

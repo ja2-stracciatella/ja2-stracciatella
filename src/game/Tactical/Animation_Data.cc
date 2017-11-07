@@ -24,6 +24,9 @@
 
 #define ANIMPROFILEFILENAME				BINARYDATADIR "/ja2prof.dat"
 
+#define PATH_STRUCT					ANIMSDIR "/STRUCTDATA/"
+#define SUFFIX						".JSD"
+
 
 
 ANIM_PROF *gpAnimProfiles = NULL;
@@ -472,8 +475,6 @@ struct AnimationStructureType
 };
 
 
-#define PATH_STRUCT					ANIMSDIR "/STRUCTDATA/"
-#define SUFFIX						".JSD"
 #define ABCDEF(a, b, c, d, e, f)  \
 {                                 \
 	{ PATH_STRUCT a SUFFIX, NULL }, \

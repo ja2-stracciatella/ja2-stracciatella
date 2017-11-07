@@ -282,7 +282,7 @@ static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 														// Check if we are not in combat
 														if ( gsCurrentActionPoints == 0 )
 														{
-															ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+															ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
 														}
 														else
 														{
@@ -594,20 +594,20 @@ static void QueryTBRightButton(UIEventKind* const puiNewEvent)
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return;
 
-	if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
+	if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
 	{
 
 		// RIGHT MOUSE BUTTON
-		if ( gViewportRegion.ButtonState & MSYS_RIGHT_BUTTON )
+		if (gViewportRegion.ButtonState & MSYS_RIGHT_BUTTON)
 		{
-			if ( !fRightButtonDown )
+			if (!fRightButtonDown)
 			{
 				fRightButtonDown = TRUE;
-				RESETCOUNTER( RMOUSECLICK_DELAY_COUNTER );
+				RESETCOUNTER(RMOUSECLICK_DELAY_COUNTER);
 			}
 
 			// CHECK COMBINATIONS
-			if ( fLeftButtonDown )
+			if (fLeftButtonDown)
 			{
 			}
 			else
@@ -674,17 +674,17 @@ static void QueryTBRightButton(UIEventKind* const puiNewEvent)
 								case CONFIRM_MOVE_MODE:
 								case MOVE_MODE:
 
-									if ( gfUICanBeginAllMoveCycle )
+									if (gfUICanBeginAllMoveCycle)
 									{
 										*puiNewEvent = M_CYCLE_MOVE_ALL;
 									}
 									else
 									{
-										if ( !gfFirstCycleMovementStarted )
+										if (!gfFirstCycleMovementStarted)
 										{
 											gfFirstCycleMovementStarted = TRUE;
 
-											// OK, set this guy's movement mode to crawling fo rthat we will start cycling in run.....
+											// OK, set this guy's movement mode to crawling for that we will start cycling in run.....
 											if (sel->usUIMovementMode != RUNNING)
 											{
 												// ATE: UNLESS WE ARE IN RUNNING MODE ALREADY

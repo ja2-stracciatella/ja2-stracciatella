@@ -2700,7 +2700,8 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 		// Default it to the 1 ( ie: no rifle )
 		if ( usItem != NOTHING )
 		{
-			if ((GCM->getItem(usItem)->getItemClass() == IC_GUN || GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER) &&
+			if ((GCM->getItem(usItem)->getItemClass() == IC_GUN
+				|| GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER) &&
 				usItem != ROCKET_LAUNCHER)
 			{
 				if ( (GCM->getItem(usItem)->isTwoHanded()) )
@@ -2724,7 +2725,8 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 		// ADJUST BASED ON ITEM IN HAND....
 		usItem = pSoldier->inv[HANDPOS].usItem;
 
-		if ((!(GCM->getItem(usItem)->getItemClass() == IC_GUN) && !(GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER)) ||
+		if ((!(GCM->getItem(usItem)->getItemClass() == IC_GUN) &&
+			!(GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER)) ||
 			usItem == ROCKET_LAUNCHER)
 		{
 			if ( usAnimState == STANDING )
@@ -2746,7 +2748,8 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 		else
 		{
 			// CHECK FOR HANDGUN
-			if ((GCM->getItem(usItem)->getItemClass() == IC_GUN || GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER) &&
+			if ((GCM->getItem(usItem)->getItemClass() == IC_GUN
+				|| GCM->getItem(usItem)->getItemClass() == IC_LAUNCHER) &&
 				usItem != ROCKET_LAUNCHER)
 			{
 				if ( !(GCM->getItem(usItem)->isTwoHanded()) )

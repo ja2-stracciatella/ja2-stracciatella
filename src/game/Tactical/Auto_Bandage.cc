@@ -198,7 +198,7 @@ void ShouldBeginAutoBandage( )
 	}
 
 	// ATE: If not in endgame
-	if ( ( gTacticalStatus.uiFlags & IN_DEIDRANNA_ENDGAME ) )
+	if ( gTacticalStatus.uiFlags & IN_DEIDRANNA_ENDGAME )
 	{
 		return;
 	}
