@@ -462,6 +462,8 @@ void DisplayItemInfo(UINT32 uiItemClass)
 	if( gusFirstItemIndex == BOBBYR_NO_ITEMS )
 	{
 		if (fExitingLaptopFlag) return;
+		if (gfShowBookmarks)	return;
+		if (fLoadPendingFlag)	return;
 
 		DisableBobbyRButtons();
 
