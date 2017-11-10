@@ -90,7 +90,7 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 
 #define UPDATECOUNTER( c )
 #define RESETCOUNTER( c )		( giTimerCounters[ c ] = giClockTimer )
-#define COUNTERDONE( c )		( ( ( giClockTimer = GetJA2Clock() ) - giTimerCounters[ c ] ) >  giTimerIntervals[ c ] ) ? TRUE : FALSE
+#define COUNTERDONE( c )		((((giClockTimer = GetJA2Clock()) - giTimerCounters[c]) >  giTimerIntervals[c]) ? TRUE : FALSE)
 
 #define UPDATETIMECOUNTER( c )
 #define RESETTIMECOUNTER( c, d )	( c = giClockTimer )
