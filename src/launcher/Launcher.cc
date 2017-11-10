@@ -11,15 +11,8 @@
 
 #define RESOLUTION_SEPARATOR "x"
 
-const char* predefinedResolutions[] = {
-	"640x480",
-	"800x600",
-	"1024x768",
-	"1280x720",
-	"1600x900",
-	"1920x1080",
-	NULL
-};
+
+const char* defaultResolution = "640x480";
 const char* predefinedVersions[] = {
 	"DUTCH",
 	"ENGLISH",
@@ -32,11 +25,17 @@ const char* predefinedVersions[] = {
 	NULL
 };
 
-
-
 Launcher::Launcher(const std::string exePath, engine_options_t* engine_options) : StracciatellaLauncher() {
 	this->exePath = exePath;
 	this->engine_options = engine_options;
+	this->predefinedResolutions = std::vector< std::pair<int, int> >();
+
+	this->predefinedResolutions.push_back(std::make_pair(640,  480));
+	this->predefinedResolutions.push_back(std::make_pair(800,  600));
+	this->predefinedResolutions.push_back(std::make_pair(1024, 768));
+	this->predefinedResolutions.push_back(std::make_pair(1280, 720));
+	this->predefinedResolutions.push_back(std::make_pair(1600, 900));
+	this->predefinedResolutions.push_back(std::make_pair(1920, 1080));
 }
 
 void Launcher::show() {
@@ -63,26 +62,28 @@ void Launcher::initializeInputsFromDefaults() {
 	gameVersionInput->value(rustResVersion);
 	free_rust_string(rustResVersion);
 
-	char resolutionString[255];
-	sprintf(resolutionString, "%dx%d", get_resolution_x(this->engine_options), get_resolution_y(this->engine_options));
+	int x = get_resolution_x(this->engine_options);
+	int y = get_resolution_y(this->engine_options);
+	std::pair<int, int> resolution = std::make_pair(x, y);
 
-	bool predefinedResolutionFound = false;
-	for (int i=0; predefinedResolutions[i] != NULL; i++) {
-		if (strcmp(predefinedResolutions[i], resolutionString) == 0) {
-			predefinedResolutionFound = true;
+	char resolutionString[255];
+	sprintf(resolutionString, "%dx%d", x, y);
+
+	std::pair<int, int>* predefinedResolution = NULL;
+	for (int i=0; i < predefinedResolutions.size(); i++) {
+		if (predefinedResolutions[i] == resolution) {
+			predefinedResolution = &predefinedResolutions[i];
 		}
 	}
-	if (predefinedResolutionFound) {
-		enablePredefinedResolutions();
-		predefinedResolutionInput->value(resolutionString);
-	} else {
-		enableCustomResolutions();
-		char* res = const_cast<char*>(resolutionString);
-		const char* x = strtok(res, RESOLUTION_SEPARATOR);
-		const char* y = strtok(NULL, RESOLUTION_SEPARATOR);
 
-		customResolutionXInput->value(atoi(x));
-		customResolutionYInput->value(atoi(y));
+	customResolutionXInput->value(x);
+	customResolutionYInput->value(y);
+	if (predefinedResolution != NULL) {
+		predefinedResolutionInput->value(resolutionString);
+		enablePredefinedResolutions();
+	} else {
+		predefinedResolutionInput->value(defaultResolution);
+		enableCustomResolutions();
 	}
 
 	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
@@ -123,8 +124,10 @@ void Launcher::populateChoices() {
 	for (int i=0; predefinedVersions[i] != NULL; i++) {
 		gameVersionInput->add(predefinedVersions[i]);
 	}
-	for (int i=0; predefinedResolutions[i] != NULL; i++) {
-		predefinedResolutionInput->add(predefinedResolutions[i]);
+	for (int i=0; i < predefinedResolutions.size(); i++) {
+		char resolutionString[255];
+		sprintf(resolutionString, "%dx%d", predefinedResolutions[i].first, predefinedResolutions[i].second);
+		predefinedResolutionInput->add(resolutionString);
 	}
 }
 

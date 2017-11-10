@@ -14,6 +14,7 @@ public:
 private:
 	std::string exePath;
 	std::string helpString;
+	std::vector< std::pair<int, int> > predefinedResolutions;
 	engine_options_t* engine_options;
 
 	void populateChoices();
