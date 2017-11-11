@@ -6,7 +6,7 @@
 #include "Tile_Animation.h"
 
 
-#define	NUM_CORPSE_SHADES		17
+#define NUM_CORPSE_SHADES				17
 
 enum RottingCorpseDefines
 {
@@ -38,7 +38,7 @@ enum RottingCorpseDefines
 	FMERC_FALL,
 	FMERC_FALLF,
 
-  // CIVS
+	// CIVS
 	M_DEAD1,
 	K_DEAD1,
 	H_DEAD1,
@@ -65,58 +65,58 @@ enum RottingCorpseDefines
 	TANK2_DEAD,
 	HUMMER_DEAD,
 	ICECREAM_DEAD,
-  QUEEN_MONSTER_DEAD,
-  ROBOT_DEAD,
-  BURNT_DEAD,
-  EXPLODE_DEAD,
+	QUEEN_MONSTER_DEAD,
+	ROBOT_DEAD,
+	BURNT_DEAD,
+	EXPLODE_DEAD,
 
-  NUM_CORPSES
+	NUM_CORPSES
 };
 
 
-#define		ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO			0x01		//Find the closest spot to the given gridno
-#define		ROTTING_CORPSE_USE_NORTH_ENTRY_POINT					0x02		//Find the spot closest to the north entry grid
-#define		ROTTING_CORPSE_USE_SOUTH_ENTRY_POINT					0x04		//Find the spot closest to the south entry grid
-#define		ROTTING_CORPSE_USE_EAST_ENTRY_POINT						0x08		//Find the spot closest to the east entry grid
-#define		ROTTING_CORPSE_USE_WEST_ENTRY_POINT						0x10		//Find the spot closest to the west entry grid
-#define   ROTTING_CORPSE_USE_CAMO_PALETTE               0x20    //We use camo palette here....
-#define		ROTTING_CORPSE_VEHICLE												0x40		//Vehicle Corpse
+#define ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO	0x01 //Find the closest spot to the given gridno
+#define ROTTING_CORPSE_USE_NORTH_ENTRY_POINT		0x02 //Find the spot closest to the north entry grid
+#define ROTTING_CORPSE_USE_SOUTH_ENTRY_POINT		0x04 //Find the spot closest to the south entry grid
+#define ROTTING_CORPSE_USE_EAST_ENTRY_POINT		0x08 //Find the spot closest to the east entry grid
+#define ROTTING_CORPSE_USE_WEST_ENTRY_POINT		0x10 //Find the spot closest to the west entry grid
+#define ROTTING_CORPSE_USE_CAMO_PALETTE		0x20 //We use camo palette here....
+#define ROTTING_CORPSE_VEHICLE				0x40 //Vehicle Corpse
 
 struct ROTTING_CORPSE_DEFINITION
 {
-	UINT8												ubType;
-	UINT8												ubBodyType;
-	INT16												sGridNo;
-	INT16												sHeightAdjustment;
+	UINT8   ubType;
+	UINT8   ubBodyType;
+	INT16   sGridNo;
+	INT16   sHeightAdjustment;
 
-	PaletteRepID								HeadPal;			// Palette reps
-	PaletteRepID								PantsPal;
-	PaletteRepID								VestPal;
-	PaletteRepID								SkinPal;
+	PaletteRepID HeadPal; // Palette reps
+	PaletteRepID PantsPal;
+	PaletteRepID VestPal;
+	PaletteRepID SkinPal;
 
-	INT8												bDirection;
-	UINT32											uiTimeOfDeath;
+	INT8    bDirection;
+	UINT32  uiTimeOfDeath;
 
-	UINT16											usFlags;
+	UINT16  usFlags;
 
-	INT8												bLevel;
+	INT8    bLevel;
 
-	INT8												bVisible;
-	INT8												bNumServicingCrows;
-	UINT8												ubProfile;
-  BOOLEAN                     fHeadTaken;
-  	UINT8												ubAIWarningValue;
+	INT8    bVisible;
+	INT8    bNumServicingCrows;
+	UINT8   ubProfile;
+	BOOLEAN fHeadTaken;
+	UINT8   ubAIWarningValue;
 };
 
 
 struct ROTTING_CORPSE
 {
-	ROTTING_CORPSE_DEFINITION		def;
-	BOOLEAN											fActivated;
+	ROTTING_CORPSE_DEFINITION def;
+	BOOLEAN fActivated;
 
-	ANITILE											*pAniTile;
+	ANITILE *pAniTile;
 
-	UINT16											*pShades[ NUM_CORPSE_SHADES ];
+	UINT16  *pShades[ NUM_CORPSE_SHADES ];
 };
 
 
@@ -141,11 +141,11 @@ void HandleCrowLeave( SOLDIERTYPE *pSoldier );
 
 void HandleCrowFlyAway( SOLDIERTYPE *pSoldier );
 
-#define		MAX_ROTTING_CORPSES		100
+#define MAX_ROTTING_CORPSES				100
 
-extern ROTTING_CORPSE	gRottingCorpse[ MAX_ROTTING_CORPSES ];
-extern INT32					giNumRottingCorpse;
-extern UINT8					gb4DirectionsFrom8[8];
+extern ROTTING_CORPSE gRottingCorpse[ MAX_ROTTING_CORPSES ];
+extern INT32 giNumRottingCorpse;
+extern UINT8 gb4DirectionsFrom8[8];
 
 static inline UINT32 Corpse2ID(const ROTTING_CORPSE* const c)
 {
@@ -166,11 +166,11 @@ static inline ROTTING_CORPSE* ID2Corpse(const UINT32 id)
 #define ID2CORPSE(i) (ID2Corpse((i)))
 
 #define BASE_FOR_EACH_ROTTING_CORPSE(type, iter)                      \
-	for (type*       iter        = gRottingCorpse,                      \
-	         * const end__##iter = gRottingCorpse + giNumRottingCorpse; \
-	     iter != end__##iter;                                           \
-	     ++iter)                                                        \
-	  if (!iter->fActivated) continue; else
+	for (type* iter = gRottingCorpse,                      \
+		* const end__##iter = gRottingCorpse + giNumRottingCorpse; \
+		iter != end__##iter;                                           \
+		++iter)                                                        \
+		if (!iter->fActivated) continue; else
 #define  FOR_EACH_ROTTING_CORPSE(iter) BASE_FOR_EACH_ROTTING_CORPSE(      ROTTING_CORPSE, iter)
 #define CFOR_EACH_ROTTING_CORPSE(iter) BASE_FOR_EACH_ROTTING_CORPSE(const ROTTING_CORPSE, iter)
 

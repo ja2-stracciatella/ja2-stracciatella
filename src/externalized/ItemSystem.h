@@ -7,5 +7,5 @@ struct ItemModel;
 class ItemSystem
 {
 public:
-  virtual const ItemModel* getItemByName(const std::string &internalName) const = 0;
+	virtual const ItemModel* getItemByName(const std::string &internalName) const = 0;
 };

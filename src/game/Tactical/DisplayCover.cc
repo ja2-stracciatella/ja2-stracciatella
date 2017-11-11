@@ -25,25 +25,25 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 
-#define		DC_MAX_COVER_RANGE						31
+#define DC_MAX_COVER_RANGE		31
 
-#define		DC__SOLDIER_VISIBLE_RANGE			31
+#define DC__SOLDIER_VISIBLE_RANGE	31
 
-#define		DC__MIN_SIZE									4
-#define		DC__MAX_SIZE									11
+#define DC__MIN_SIZE			4
+#define DC__MAX_SIZE			11
 
 struct BEST_COVER_STRUCT
 {
-	INT16	sGridNo;
-	INT8	bCover;				//% chance that the gridno is fully covered.  ie 100 if safe, 0  is has no cover
+	INT16 sGridNo;
+	INT8  bCover; //% chance that the gridno is fully covered.  ie 100 if safe, 0  is has no cover
 };
 
 
 struct VISIBLE_TO_SOLDIER_STRUCT
 {
-	INT16 sGridNo;
-	INT8	bVisibleToSoldier;
-	BOOLEAN	fRoof;
+	INT16   sGridNo;
+	INT8    bVisibleToSoldier;
+	BOOLEAN fRoof;
 };
 
 
@@ -85,16 +85,16 @@ void DisplayCoverOfSelectedGridNo()
 
 	//if the gridno is different then the last one that was displayed
 	if (gsLastCoverGridNo == sGridNo &&
-			gbLastStance      == bStance &&
-			gsLastCoverGridNo == sel->sGridNo)
+		gbLastStance == bStance &&
+		gsLastCoverGridNo == sel->sGridNo)
 	{
 		return;
 	}
 
 	//if the cover is currently being displayed
-	if (gsLastCoverGridNo   != NOWHERE ||
-			gbLastStance        != -1      ||
-			gsLastSoldierGridNo != NOWHERE)
+	if (gsLastCoverGridNo != NOWHERE ||
+		gbLastStance != -1 ||
+		gsLastSoldierGridNo != NOWHERE)
 	{
 		//remove the gridnos
 		RemoveCoverOfSelectedGridNo();
@@ -142,7 +142,7 @@ static void AddCoverTileToEachGridNo(void)
 				cover <= 40 ? SPECIALTILE_COVER_2 :
 				cover <= 60 ? SPECIALTILE_COVER_3 :
 				cover <= 80 ? SPECIALTILE_COVER_4 :
-				              SPECIALTILE_COVER_5;
+						SPECIALTILE_COVER_5;
 			AddCoverObjectToWorld(cr.sGridNo, gfx, roof);
 		}
 	}
@@ -171,7 +171,7 @@ void RemoveCoverOfSelectedGridNo()
 				cover <= 40 ? SPECIALTILE_COVER_2 :
 				cover <= 60 ? SPECIALTILE_COVER_3 :
 				cover <= 80 ? SPECIALTILE_COVER_4 :
-				              SPECIALTILE_COVER_5;
+						SPECIALTILE_COVER_5;
 			RemoveCoverObjectFromWorld(cr.sGridNo, gfx, roof);
 		}
 	}
@@ -286,7 +286,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 
 		// if this opponent is unknown personally and publicly
 		if (*pbPersOL != SEEN_CURRENTLY && *pbPersOL != SEEN_THIS_TURN &&
-				*pbPublOL != SEEN_CURRENTLY && *pbPublOL != SEEN_THIS_TURN)
+			*pbPublOL != SEEN_CURRENTLY && *pbPublOL != SEEN_THIS_TURN)
 		{
 			continue;
 		}
@@ -302,8 +302,10 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 			continue;
 		}
 
-		INT32  const iGetThrough       = SoldierToLocationChanceToGetThrough(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NULL);
-		UINT16 const usMaxRange        = WeaponInHand(pOpponent) ? GunRange(pOpponent->inv[HANDPOS]) : GCM->getWeapon(GLOCK_18)->usRange;
+		INT32  const iGetThrough = SoldierToLocationChanceToGetThrough(pOpponent, sTargetGridNo,
+										pSoldier->bLevel, bStance, NULL);
+		UINT16 const usMaxRange = WeaponInHand(pOpponent) ? GunRange(pOpponent->inv[HANDPOS]) :
+						GCM->getWeapon(GLOCK_18)->usRange;
 		INT32  const iBulletGetThrough = __min(__max((INT32)(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0), 100);
 		if (iBulletGetThrough > 5 && iGetThrough > 0)
 		{
@@ -368,7 +370,7 @@ static SOLDIERTYPE* GetCurrentMercForDisplayCover(void)
 static INT8 GetCurrentMercForDisplayCoverStance(void)
 {
 	const SOLDIERTYPE* const pSoldier = GetCurrentMercForDisplayCover();
-	INT8	bStance;
+	INT8  bStance;
 
 	switch( pSoldier->usUIMovementMode )
 	{
@@ -408,20 +410,22 @@ void DisplayRangeToTarget(SOLDIERTYPE const* const s, INT16 const sTargetGridNo)
 	if (WeaponInHand(s))
 	{
 		//display a string with the weapons range, then range to target
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE], GCM->getWeapon(s->inv[HANDPOS].usItem)->usRange / 10, usRange);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+				zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE],
+				GCM->getWeapon(s->inv[HANDPOS].usItem)->usRange / 10, usRange);
 	}
 	else
 	{
 		//display a string with the range to target
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET], usRange);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
+				zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET], usRange);
 	}
 
 	//if the target is out of the mercs gun range or knife
 	if (!InRange(s, sTargetGridNo))
 	{
 		UINT16 const item_class = GCM->getItem(s->inv[HANDPOS].usItem)->getItemClass();
-		if (item_class == IC_GUN ||
-				item_class == IC_THROWING_KNIFE)
+		if (item_class == IC_GUN || item_class == IC_THROWING_KNIFE)
 		{
 			// Display a warning saying so
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[OUT_OF_RANGE_STRING]);
@@ -436,11 +440,12 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 
 void DisplayGridNoVisibleToSoldierGrid( )
 {
-//	INT8	bStance;
+	//INT8 bStance;
 
 	const SOLDIERTYPE* const sel = GetSelectedMan();
 	//Only allowed in if there is someone selected
-	if (sel == NULL) return;
+	if (sel == NULL)
+		return;
 
 	//if the cursor is in a the tactical map
 	const GridNo sGridNo = GetMouseMapPos();
@@ -486,10 +491,10 @@ static BOOLEAN IsTheRoofVisible(INT16 sGridNo);
 
 static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange)
 {
-	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16	sGridNo;
-	INT16	sCounterX, sCounterY;
-	BOOLEAN	fRoof=FALSE;
+	INT16   sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
+	INT16   sGridNo;
+	INT16   sCounterX, sCounterY;
+	BOOLEAN fRoof=FALSE;
 
 	//clear out the struct
 	memset( gVisibleToSoldierStruct, 0, sizeof( VISIBLE_TO_SOLDIER_STRUCT ) * DC__SOLDIER_VISIBLE_RANGE * DC__SOLDIER_VISIBLE_RANGE );
@@ -544,14 +549,13 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 				}
 			}
 
-/*
+			/*
 			//if we are to display cover for the roofs, and there is a roof above us
 			if( gsInterfaceLevel == I_ROOF_LEVEL && !FlatRoofAboveGridNo( sGridNo ) )
 			{
 				continue;
-			}
-*/
-/*
+			}*/
+			/*
 			// if someone (visible) is there, skip
 			//Check both bottom level, and top level
 			SOLDIERTYPE* tgt = WhoIsThere2(sGridNo, 0);
@@ -563,8 +567,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 			}
 
 			//Calculate the cover for this gridno
-			gCoverRadius[ sCounterX ][ sCounterY ].bCover = CalcCoverForGridNoBasedOnTeamKnownEnemies( pSoldier, sGridNo, bStance );
-*/
+			gCoverRadius[ sCounterX ][ sCounterY ].bCover = CalcCoverForGridNoBasedOnTeamKnownEnemies( pSoldier, sGridNo, bStance );*/
 
 			gVisibleToSoldierStruct[ sCounterX ][ sCounterY ].bVisibleToSoldier = CalcIfSoldierCanSeeGridNo( pSoldier, sGridNo, fRoof );
 			gVisibleToSoldierStruct[ sCounterX ][ sCounterY ].fRoof = fRoof;
@@ -578,10 +581,10 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 
 static void AddVisibleToSoldierToEachGridNo(void)
 {
-	UINT32 uiCntX, uiCntY;
-	INT8	bVisibleToSoldier=0;
+	UINT32  uiCntX, uiCntY;
+	INT8    bVisibleToSoldier=0;
 	BOOLEAN fRoof;
-	INT16 sGridNo;
+	INT16   sGridNo;
 
 	//loop through all the gridnos
 	for(uiCntY=0; uiCntY<DC_MAX_COVER_RANGE ;uiCntY++)
@@ -632,8 +635,8 @@ static void AddVisibleToSoldierToEachGridNo(void)
 
 void RemoveVisibleGridNoAtSelectedGridNo()
 {
-	UINT32 uiCntX, uiCntY;
-	INT8	bVisibleToSoldier;
+	UINT32  uiCntX, uiCntY;
+	INT8    bVisibleToSoldier;
 	BOOLEAN fRoof;
 
 	//make sure to only remove it when its right
@@ -691,10 +694,10 @@ void RemoveVisibleGridNoAtSelectedGridNo()
 
 static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof)
 {
-	INT8	bRetVal=0;
-	INT32 iLosForGridNo=0;
-	UINT16	usSightLimit=0;
-	BOOLEAN	bAware=FALSE;
+	INT8    bRetVal=0;
+	INT32   iLosForGridNo=0;
+	UINT16  usSightLimit=0;
+	BOOLEAN bAware=FALSE;
 
 	const SOLDIERTYPE* const tgt = WhoIsThere2(sTargetGridNo, fRoof ? 1 : 0);
 	if (tgt != NULL)
@@ -702,10 +705,10 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 		const INT8* const pPersOL  = &pSoldier->bOppList[tgt->ubID];
 		const INT8* const pbPublOL = &gbPublicOpplist[pSoldier->bTeam][tgt->ubID];
 
-		 // if soldier is known about (SEEN or HEARD within last few turns)
+		// if soldier is known about (SEEN or HEARD within last few turns)
 		if (*pPersOL || *pbPublOL)
 		{
-			 bAware = TRUE;
+			bAware = TRUE;
 		}
 	}
 

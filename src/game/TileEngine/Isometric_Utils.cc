@@ -18,8 +18,8 @@ UINT32 guiForceRefreshMousePositionCalculation = 0;
 
 // GLOBALS
 const INT16 DirIncrementer[8] =
- {
-  -MAPWIDTH,        //N
+{
+	-MAPWIDTH,        //N
 	1-MAPWIDTH,       //NE
 	1,                //E
 	1+MAPWIDTH,       //SE
@@ -27,19 +27,18 @@ const INT16 DirIncrementer[8] =
 	MAPWIDTH-1,       //SW
 	-1,               //W
 	-MAPWIDTH-1       //NW
+};
 
- };
 
-
-//														DIRECTION FACING			 DIRECTION WE WANT TO GOTO
+// DIRECTION FACING    DIRECTION WE WANT TO GOTO
 UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] =
 {
 	{ // NORTH
-		WEST,					// EITHER
+		WEST,		// EITHER
 		NORTHWEST,
 		NORTH,
 		NORTHEAST,
-		EAST,					// EITHER
+		EAST,		// EITHER
 		NORTHWEST,
 		NORTH,
 		NORTHEAST
@@ -47,11 +46,11 @@ UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] 
 
 	{ // NORTH EAST
 		NORTHWEST,
-		NORTHWEST,		// EITHER
+		NORTHWEST,	// EITHER
 		SOUTH,
 		NORTHEAST,
 		EAST,
-		SOUTHEAST,		// EITHER
+		SOUTHEAST,	// EITHER
 		NORTH,
 		NORTHEAST
 	},
@@ -59,11 +58,11 @@ UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] 
 	{ // EAST
 		EAST,
 		SOUTHEAST,
-		NORTH,				// EITHER
+		NORTH,		// EITHER
 		NORTHEAST,
 		EAST,
 		SOUTHEAST,
-		NORTH,				// EITHER
+		NORTH,		// EITHER
 		NORTHEAST
 	},
 
@@ -71,19 +70,19 @@ UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] 
 		EAST,
 		SOUTHEAST,
 		SOUTH,
-		SOUTHWEST,		// EITHER
+		SOUTHWEST,	// EITHER
 		SOUTHWEST,
 		SOUTHEAST,
 		SOUTH,
-		SOUTHWEST		// EITHER
+		SOUTHWEST	// EITHER
 	},
 
 	{ // SOUTH
-		WEST,					// EITHER
+		WEST,		// EITHER
 		SOUTHEAST,
 		SOUTH,
 		SOUTHWEST,
-		EAST,					// EITHER
+		EAST,		// EITHER
 		SOUTHEAST,
 		SOUTH,
 		SOUTHWEST
@@ -91,11 +90,11 @@ UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] 
 
 	{ // SOUTHWEST
 		WEST,
-		NORTHWEST,		// EITHER
+		NORTHWEST,	// EITHER
 		SOUTH,
 		SOUTHWEST,
 		WEST,
-		SOUTHEAST,		// EITHER
+		SOUTHEAST,	// EITHER
 		SOUTH,
 		SOUTHWEST
 	},
@@ -103,11 +102,11 @@ UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] 
 	{ // WEST
 		WEST,
 		NORTHWEST,
-		NORTH,					// EITHER
+		NORTH,		// EITHER
 		SOUTHWEST,
 		WEST,
 		NORTHWEST,
-		SOUTH,				// EITHER
+		SOUTH,		// EITHER
 		SOUTHWEST
 	},
 
@@ -115,11 +114,11 @@ UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] 
 		WEST,
 		NORTHWEST,
 		NORTH,
-		SOUTHWEST,		// EITHER
+		SOUTHWEST,	// EITHER
 		SOUTHWEST,
 		NORTHWEST,
 		NORTH,
-		NORTHEAST		// EITHER
+		NORTHEAST	// EITHER
 	}
 };
 
@@ -128,7 +127,6 @@ void FromCellToScreenCoordinates( INT16 sCellX, INT16 sCellY, INT16 *psScreenX, 
 {
 	*psScreenX = ( 2 * sCellX ) - ( 2 * sCellY );
 	*psScreenY = sCellX + sCellY;
-
 }
 
 void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX, INT16 *psCellY )
@@ -143,7 +141,7 @@ void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX
 
 void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScreenX, FLOAT *pdScreenY )
 {
-	FLOAT		dScreenX, dScreenY;
+	FLOAT dScreenX, dScreenY;
 
 	dScreenX = ( 2 * dCellX ) - ( 2 * dCellY );
 	dScreenY = dCellX + dCellY;
@@ -175,11 +173,11 @@ BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 {
 	INT16 sOffsetX, sOffsetY;
-	INT16	sTempPosX_W, sTempPosY_W;
+	INT16 sTempPosX_W, sTempPosY_W;
 	INT16 sStartPointX_W, sStartPointY_W;
 
 	// Convert mouse screen coords into offset from center
-  if ( ! ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
+	if ( ! ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
 	{
 		*psMouseX = 0;
 		*psMouseY = 0;
@@ -204,7 +202,7 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 
 
 	// check if we are out of bounds..
-  if ( sStartPointX_W < 0 || sStartPointX_W >= WORLD_COORD_ROWS || sStartPointY_W < 0 || sStartPointY_W >= WORLD_COORD_COLS )
+	if ( sStartPointX_W < 0 || sStartPointX_W >= WORLD_COORD_ROWS || sStartPointY_W < 0 || sStartPointY_W >= WORLD_COORD_COLS )
 	{
 		*psMouseX = 0;
 		*psMouseY = 0;
@@ -306,68 +304,68 @@ GridNo GetMapPosFromAbsoluteScreenXY(const INT16 sWorldScreenX, const INT16 sWor
 
 INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno)
 {
- INT16 sMod,sPropMod;
+	INT16 sMod,sPropMod;
 
- // get modulas of our origin
- sMod = sGridno % MAXCOL;
+	// get modulas of our origin
+	sMod = sGridno % MAXCOL;
 
- if (sMod != 0)  		// if we're not on leftmost grid
-  if (sMod != RIGHTMOSTGRID)	// if we're not on rightmost grid
-    if (sGridno < LASTROWSTART)	// if we're above bottom row
-      if (sGridno > MAXCOL)	// if we're below top row
-       // Everything's OK - we're not on the edge of the map
-       return(FALSE);
+	if (sMod != 0)  		// if we're not on leftmost grid
+		if (sMod != RIGHTMOSTGRID)	// if we're not on rightmost grid
+			if (sGridno < LASTROWSTART)	// if we're above bottom row
+				if (sGridno > MAXCOL)	// if we're below top row
+				// Everything's OK - we're not on the edge of the map
+					return(FALSE);
 
 
-  // if we've got this far, there's a potential problem - check it out!
+	// if we've got this far, there's a potential problem - check it out!
 
- if (sProposedGridno < 0)
-    return(TRUE);
+	if (sProposedGridno < 0)
+		return(TRUE);
 
- sPropMod = sProposedGridno % MAXCOL;
+	sPropMod = sProposedGridno % MAXCOL;
 
- if (sMod == 0 && sPropMod == RIGHTMOSTGRID)
-   return(TRUE);
- else
-  if (sMod == RIGHTMOSTGRID && sPropMod == 0)
-	return(TRUE);
- else
-  if (sGridno >= LASTROWSTART && sProposedGridno >= GRIDSIZE)
-	return(TRUE);
-  else
-       return(FALSE);
+	if (sMod == 0 && sPropMod == RIGHTMOSTGRID)
+		return(TRUE);
+	else
+		if (sMod == RIGHTMOSTGRID && sPropMod == 0)
+			return(TRUE);
+	else
+		if (sGridno >= LASTROWSTART && sProposedGridno >= GRIDSIZE)
+			return(TRUE);
+		else
+			return(FALSE);
 }
 
 
 
 INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
 {
- INT16 sProposedGridno = sGridno + sDirInc;
+	INT16 sProposedGridno = sGridno + sDirInc;
 
- // now check for out-of-bounds
- if (OutOfBounds(sGridno,sProposedGridno))
+	// now check for out-of-bounds
+	if (OutOfBounds(sGridno,sProposedGridno))
 		// return ORIGINAL gridno to user
 		sProposedGridno = sGridno;
 
- return(sProposedGridno);
+	return(sProposedGridno);
 }
 
 
 INT16 DirectionInc(UINT8 sDirection)
 {
- if ((sDirection < 0) || (sDirection > 7))
-  {
-   //direction = random(8);	// replace garbage with random direction
-	 sDirection = 1;
-  }
+	if ((sDirection < 0) || (sDirection > 7))
+	{
+		//direction = random(8);	// replace garbage with random direction
+		sDirection = 1;
+	}
 	return(DirIncrementer[sDirection]);
 }
 
 
 void CellXYToScreenXY(INT16 const sCellX, INT16 const sCellY, INT16* const sScreenX, INT16* const sScreenY)
 {
-INT16 sDeltaCellX, sDeltaCellY;
-INT16 sDeltaScreenX, sDeltaScreenY;
+	INT16 sDeltaCellX, sDeltaCellY;
+	INT16 sDeltaScreenX, sDeltaScreenY;
 
 	sDeltaCellX=sCellX-gsRenderCenterX;
 	sDeltaCellY=sCellY-gsRenderCenterY;
@@ -404,8 +402,8 @@ void ConvertGridNoToCenterCellXY(const INT16 gridno, INT16* const x, INT16* cons
 
 INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 {
-	INT32					uiDist;
-	INT16					sXPos, sYPos, sXPos2, sYPos2;
+	INT32 uiDist;
+	INT16 sXPos, sYPos, sXPos2, sYPos2;
 
 	// Convert our grid-not into an XY
 	ConvertGridNoToXY( sGridNo1, &sXPos, &sYPos );
@@ -420,7 +418,7 @@ INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 
 INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 {
-	INT16					sXPos, sYPos, sXPos2, sYPos2;
+	INT16 sXPos, sYPos, sXPos2, sYPos2;
 
 	// Convert our grid-not into an XY
 	ConvertGridNoToXY( sGridNo1, &sXPos, &sYPos );
@@ -429,7 +427,6 @@ INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 	ConvertGridNoToXY( sGridNo2, &sXPos2, &sYPos2 );
 
 	return( (INT32)( sqrt(double(( sXPos2 - sXPos ) * ( sXPos2 - sXPos ) + ( sYPos2 - sYPos ) * ( sYPos2 - sYPos ) )) ) * CELL_X_SIZE );
-
 }
 
 
@@ -473,10 +470,10 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 
 INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 {
- INT16 sRows,sCols;
+	INT16 sRows,sCols;
 
- sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
- sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
+	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	return( __max( sRows, sCols ) );
 }
@@ -484,10 +481,10 @@ INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
 // distance away, ignoring diagonals!
 {
- INT16 sRows,sCols;
+	INT16 sRows,sCols;
 
- sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
- sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
+	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
+	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	return( (INT16)( sRows + sCols ) );
 }
@@ -507,7 +504,7 @@ static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
 
 		if (sDirection > 7)
 		{
-			 sDirection = 0;
+			sDirection = 0;
 		}
 		else
 		{
@@ -606,63 +603,71 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, UINT8* const out_direction)
 
 INT16 QuickestDirection(INT16 origin, INT16 dest)
 {
- INT16 v1,v2;
+	INT16 v1,v2;
 
- if (origin==dest)
-     return(0);
+	if (origin==dest)
+		return(0);
 
- if ((ABS(origin - dest)) == 4)
-     return(1);		// this could be made random
- else
-  if (origin > dest)
-   {
-    v1 = ABS(origin - dest);
-    v2 = (8 - origin) + dest;
-    if (v1 > v2)
-       return(1);
-    else
-      return(-1);
-   }
-  else
-   {
-    v1 = ABS(origin - dest);
-    v2 = (8 - dest) + origin;
-    if (v1 > v2)
-       return(-1);
-    else
-       return(1);
-   }
+	if ((ABS(origin - dest)) == 4)
+	{
+		return(1);		// this could be made random
+	}
+	else
+	{
+		if (origin > dest)
+		{
+			v1 = ABS(origin - dest);
+			v2 = (8 - origin) + dest;
+			if (v1 > v2)
+				return(1);
+			else
+				return(-1);
+		}
+		else
+		{
+			v1 = ABS(origin - dest);
+			v2 = (8 - dest) + origin;
+			if (v1 > v2)
+				return(-1);
+			else
+				return(1);
+		}
+	}
 }
 
 
 INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
 {
- INT16 v1,v2;
+	INT16 v1,v2;
 
- if (origin==dest)
-     return(0);
+	if (origin==dest)
+		return(0);
 
- if ((ABS(origin - dest)) == 16)
-     return(1);		// this could be made random
- else
-  if (origin > dest)
-   {
-    v1 = ABS(origin - dest);
-    v2 = (32 - origin) + dest;
-    if (v1 > v2)
-       return(1);
-    else
-      return(-1);
-   }
-  else
-   {
-    v1 = ABS(origin - dest);
-    v2 = (32 - dest) + origin;
-    if (v1 > v2)
-       return(-1);
-    else
-       return(1);
-   }
+	if ((ABS(origin - dest)) == 16)
+	{
+		return(1);		// this could be made random
+	}
+	else
+	{
+		if (origin > dest)
+		{
+			v1 = ABS(origin - dest);
+			v2 = (32 - origin) + dest;
+			if (v1 > v2)
+				return(1);
+			else
+				return(-1);
+		}
+		else
+		{
+			v1 = ABS(origin - dest);
+			v2 = (32 - dest) + origin;
+			if (v1 > v2)
+				return(-1);
+			else
+				return(1);
+		}
+	}
 }
 
 
@@ -694,8 +699,8 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 	INT16 sWorldY;
 	GetAbsoluteScreenXYFromMapPos(sGridNo, &sWorldX, &sWorldY);
 
-	if ( sWorldX > 0 && sWorldX < ( gsTRX - gsTLX - 20 ) &&
-			 sWorldY > 20	&& sWorldY < ( gsBLY - gsTLY - 20 ) )
+	if (sWorldX > 0 && sWorldX < (gsTRX - gsTLX - 20) &&
+		sWorldY > 20 && sWorldY < (gsBLY - gsTLY - 20))
 	{
 		return( TRUE );
 	}
@@ -706,7 +711,7 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 
 BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 {
-	INT8		bDir;
+	INT8 bDir;
 
 	// check NE, SE, SW, NW because of tilt of isometric display
 
@@ -759,12 +764,12 @@ BOOLEAN IsFacingClimableWindow( SOLDIERTYPE const* const pSoldier )
 
 BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, UINT8* const out_direction)
 {
-	UINT8			cnt;
-	INT16			sNewGridNo, sOtherSideOfFence;
-	BOOLEAN		fFound = FALSE;
-	UINT8			bMinNumTurns = 100;
-	INT8			bNumTurns;
-	UINT8			bMinDirection = 0;
+	UINT8   cnt;
+	INT16   sNewGridNo, sOtherSideOfFence;
+	BOOLEAN fFound = FALSE;
+	UINT8   bMinNumTurns = 100;
+	INT8    bNumTurns;
+	UINT8   bMinDirection = 0;
 
 	GridNo const sGridNo = pSoldier->sGridNo;
 	// IF there is a fence in this gridno, return false!
@@ -821,6 +826,6 @@ INT16 RandomGridNo()
 		iMapXPos = Random( WORLD_COLS );
 		iMapYPos = Random( WORLD_ROWS );
 		iMapIndex = iMapYPos * WORLD_COLS + iMapXPos;
-	}while( !GridNoOnVisibleWorldTile( (INT16)iMapIndex ) );
+	} while( !GridNoOnVisibleWorldTile( (INT16)iMapIndex ) );
 	return (INT16)iMapIndex;
 }

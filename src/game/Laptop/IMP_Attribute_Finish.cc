@@ -31,21 +31,21 @@ static void CreateAttributeFinishButtons(void);
 
 void EnterIMPAttributeFinish( void )
 {
-   // create the needed buttons
+	// create the needed buttons
 	CreateAttributeFinishButtons( );
 
 	// render screen
-   RenderIMPAttributeFinish( );
+	RenderIMPAttributeFinish( );
 }
 
 
 void RenderIMPAttributeFinish( void )
 {
-  // render background
-		RenderProfileBackGround( );
+	// render background
+	RenderProfileBackGround( );
 
 	// indent for text
-  RenderBeginIndent( 110, 93 );
+	RenderBeginIndent( 110, 93 );
 }
 
 
@@ -54,7 +54,7 @@ static void DestroyAttributeFinishButtons(void);
 
 void ExitIMPAttributeFinish( void )
 {
-  // destroy the buttons for this screen
+	// destroy the buttons for this screen
 	DestroyAttributeFinishButtons( );
 }
 
@@ -90,12 +90,12 @@ static void DestroyAttributeFinishButtons(void)
 	// this procedure will destroy the buttons for the attribute finish screen
 
 	// the yes  button
-  RemoveButton(giIMPAttributeFinishButton[ 0 ] );
-  UnloadButtonImage(giIMPAttributeFinishButtonImage[ 0 ] );
+	RemoveButton(giIMPAttributeFinishButton[ 0 ] );
+	UnloadButtonImage(giIMPAttributeFinishButtonImage[ 0 ] );
 
 	// the no  button
-  RemoveButton(giIMPAttributeFinishButton[ 1 ] );
-  UnloadButtonImage(giIMPAttributeFinishButtonImage[ 1 ] );
+	RemoveButton(giIMPAttributeFinishButton[ 1 ] );
+	UnloadButtonImage(giIMPAttributeFinishButtonImage[ 1 ] );
 }
 
 

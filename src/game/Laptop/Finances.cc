@@ -87,14 +87,14 @@ struct FinanceUnit
 #define RECORD_HEADER_Y (90 + STD_SCREEN_Y)
 
 
-#define PAGE_NUMBER_X				TOP_X+297 //345
-#define PAGE_NUMBER_Y				TOP_Y+33
+#define PAGE_NUMBER_X TOP_X+297 //345
+#define PAGE_NUMBER_Y TOP_Y+33
 
 
 // BUTTON defines
 enum{
 	PREV_PAGE_BUTTON=0,
-  NEXT_PAGE_BUTTON,
+	NEXT_PAGE_BUTTON,
 	FIRST_PAGE_BUTTON,
 	LAST_PAGE_BUTTON,
 };
@@ -102,11 +102,11 @@ enum{
 
 // button positions
 
-#define	FIRST_PAGE_X		(STD_SCREEN_X + 505)
-#define NEXT_BTN_X			(STD_SCREEN_X + 553)
-#define PREV_BTN_X			(STD_SCREEN_X + 529)
-#define	LAST_PAGE_X			(STD_SCREEN_X + 577)
-#define BTN_Y           (STD_SCREEN_Y +  53)
+#define FIRST_PAGE_X	(STD_SCREEN_X + 505)
+#define NEXT_BTN_X	(STD_SCREEN_X + 553)
+#define PREV_BTN_X	(STD_SCREEN_X + 529)
+#define LAST_PAGE_X	(STD_SCREEN_X + 577)
+#define BTN_Y		(STD_SCREEN_Y +  53)
 
 
 
@@ -167,7 +167,7 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 
 	// read in balance from file
 
-  GetBalanceFromDisk( );
+	GetBalanceFromDisk( );
 	// process the actual data
 
 
@@ -194,9 +194,9 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 	ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, LaptopSaveInfo.iCurrentBalance);
 
 	// write balance to disk
-  WriteBalanceToDisk( );
+	WriteBalanceToDisk( );
 
-  // append to end of file
+	// append to end of file
 	AppendFinanceToEndOfFile();
 
 	// set number of pages
@@ -204,14 +204,14 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 
 	if( !fInFinancialMode )
 	{
-    ClearFinanceList( );
+		ClearFinanceList( );
 	}
-  else
+	else
 	{
 		SetFinanceButtonStates( );
 
 		// force update
-	  fPausedReDrawScreenFlag = TRUE;
+		fPausedReDrawScreenFlag = TRUE;
 	}
 
 	fMapScreenBottomDirty = TRUE;
@@ -233,7 +233,7 @@ INT32 GetProjectedTotalDailyIncome( void )
 	// The point is:  PredictIncomeFromPlayerMines isn't dependant on the time of day
 	// (anymore) and this would report income of 0 at midnight!
 	/*
-  if (GetWorldMinutesInDay() <= 0)
+	if (GetWorldMinutesInDay() <= 0)
 	{
 		return ( 0 );
 	}
@@ -249,34 +249,34 @@ INT32 GetProjectedTotalDailyIncome( void )
 
 void GameInitFinances()
 {
-  // initialize finances on game start up
+	// initialize finances on game start up
 	GCM->deleteTempFile(NEWTMP_FINANCES_DATA_FILE);
 	GetBalanceFromDisk( );
 }
 
 void EnterFinances()
 {
- //entry into finanacial system, load graphics, set variables..draw screen once
- // set the fact we are in the financial display system
+	//entry into finanacial system, load graphics, set variables..draw screen once
+	// set the fact we are in the financial display system
 
-  fInFinancialMode=TRUE;
+	fInFinancialMode=TRUE;
 
-  // get the balance
-  GetBalanceFromDisk( );
+	// get the balance
+	GetBalanceFromDisk( );
 
-  // set number of pages
+	// set number of pages
 	SetLastPageInRecords( );
 
-  // load graphics into memory
-  LoadFinances( );
+	// load graphics into memory
+	LoadFinances( );
 
-  // create buttons
-  CreateFinanceButtons( );
+	// create buttons
+	CreateFinanceButtons( );
 
 	// reset page we are on
 	LoadInRecords(LaptopSaveInfo.iCurrentFinancesPage);
 
-  RenderFinances( );
+	RenderFinances( );
 }
 
 void ExitFinances( void )
@@ -285,12 +285,12 @@ void ExitFinances( void )
 
 
 	// not in finance system anymore
-  fInFinancialMode=FALSE;
+	fInFinancialMode=FALSE;
 
 	// destroy buttons
 	DestroyFinanceButtons( );
 
-  // clear out list
+	// clear out list
 	ClearFinanceList( );
 
 
@@ -308,17 +308,17 @@ static void RenderBackGround(void);
 
 void RenderFinances(void)
 {
-  RenderBackGround();
+	RenderBackGround();
 
 	// if we are on the first page, draw the summary
 	if(iCurrentPage==0)
-   DrawSummary( );
+		DrawSummary( );
 	else
-   DrawAPageOfRecords( );
+		DrawAPageOfRecords( );
 
 	DrawFinanceTitleText( );
 
-  DisplayFinancePageNumberAndDateRange( );
+	DisplayFinancePageNumberAndDateRange( );
 
 	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, STD_SCREEN_X + 108, STD_SCREEN_Y + 23);
 
@@ -328,7 +328,7 @@ void RenderFinances(void)
 
 static void LoadFinances(void)
 {
-  // load Finance video objects into memory
+	// load Finance video objects into memory
 
 	// title bar
 	guiTITLE = AddVideoObjectFromFile(LAPTOPDIR "/programtitlebar.sti");
@@ -336,13 +336,13 @@ static void LoadFinances(void)
 	// top portion of the screen background
 	guiTOP = AddVideoObjectFromFile(LAPTOPDIR "/financeswindow.sti");
 
-  // black divider line - long ( 480 length)
+	// black divider line - long ( 480 length)
 	guiLONGLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline480.sti");
 
 	// the records columns
 	guiLISTCOLUMNS = AddVideoObjectFromFile(LAPTOPDIR "/recordcolumns.sti");
 
-  // black divider line - long ( 480 length)
+	// black divider line - long ( 480 length)
 	guiLINE = AddVideoObjectFromFile(LAPTOPDIR "/divisionline.sti");
 }
 
@@ -350,9 +350,9 @@ static void LoadFinances(void)
 static void RemoveFinances(void)
 {
 	// delete Finance video objects from memory
-  DeleteVideoObject(guiLONGLINE);
+	DeleteVideoObject(guiLONGLINE);
 	DeleteVideoObject(guiLINE);
-  DeleteVideoObject(guiLISTCOLUMNS);
+	DeleteVideoObject(guiLISTCOLUMNS);
 	DeleteVideoObject(guiTOP);
 	DeleteVideoObject(guiTITLE);
 }
@@ -373,7 +373,7 @@ static void DrawSummaryText(void);
 static void DrawSummary(void)
 {
 	// draw day's summary to screen
-  DrawSummaryLines( );
+	DrawSummaryLines( );
 	DrawSummaryText( );
 }
 
@@ -383,11 +383,11 @@ static void DrawSummaryLines(void)
 	// draw divider lines on screen
 	// blit summary LINE object to screen
 	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, TOP_DIVLINE_Y);
-  BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, TOP_DIVLINE_Y+2);
-  //BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, MID_DIVLINE_Y);
-  BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y);
+	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, TOP_DIVLINE_Y+2);
+	//BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, MID_DIVLINE_Y);
+	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y);
 	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, MID_DIVLINE_Y2);
-  //BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y2);
+	//BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y2);
 }
 
 
@@ -415,37 +415,37 @@ static void DrawAPageOfRecords(void)
 static void DrawRecordsBackGround(void)
 {
 	// proceudre will draw the background for the list of financial records
-  INT32 iCounter;
+	INT32 iCounter;
 
 	// now the columns
 	for (iCounter = 6; iCounter < 35; iCounter++)
 	{
-    BltVideoObject(FRAME_BUFFER, guiLISTCOLUMNS, 0, TOP_X + 10, TOP_Y + 18 + iCounter * BLOCK_HEIGHT + 1);
+		BltVideoObject(FRAME_BUFFER, guiLISTCOLUMNS, 0, TOP_X + 10, TOP_Y + 18 + iCounter * BLOCK_HEIGHT + 1);
 	}
 
 	// the divisorLines
-  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 17 + 6 * BLOCK_HEIGHT);
-  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + 6 * BLOCK_HEIGHT);
-  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + iCounter * BLOCK_HEIGHT);
+	BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 17 + 6 * BLOCK_HEIGHT);
+	BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + 6 * BLOCK_HEIGHT);
+	BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + iCounter * BLOCK_HEIGHT);
 
 	// the header text
-  DrawRecordsColumnHeadersText( );
+	DrawRecordsColumnHeadersText( );
 }
 
 
 static void DrawRecordsColumnHeadersText(void)
 {
-  // write the headers text for each column
+	// write the headers text for each column
 	SetFontAttributes(FINANCE_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 
 	INT16 usX;
 	INT16 usY;
 
 	// the date header
-  FindFontCenterCoordinates(RECORD_DATE_X,0,RECORD_DATE_WIDTH,0, pFinanceHeaders[0], FINANCE_TEXT_FONT,&usX, &usY);
+	FindFontCenterCoordinates(RECORD_DATE_X,0,RECORD_DATE_WIDTH,0, pFinanceHeaders[0], FINANCE_TEXT_FONT,&usX, &usY);
 	MPrint(usX, RECORD_HEADER_Y, pFinanceHeaders[0]);
 
-  // debit header
+	// debit header
 	FindFontCenterCoordinates(RECORD_DEBIT_X,0,RECORD_DEBIT_WIDTH,0, pFinanceHeaders[1], FINANCE_TEXT_FONT,&usX, &usY);
 	MPrint(usX, RECORD_HEADER_Y, pFinanceHeaders[1]);
 
@@ -454,11 +454,11 @@ static void DrawRecordsColumnHeadersText(void)
 	MPrint(usX, RECORD_HEADER_Y, pFinanceHeaders[2]);
 
 	// balance header
-  FindFontCenterCoordinates(RECORD_BALANCE_X,0,RECORD_BALANCE_WIDTH,0, pFinanceHeaders[4], FINANCE_TEXT_FONT,&usX, &usY);
+	FindFontCenterCoordinates(RECORD_BALANCE_X,0,RECORD_BALANCE_WIDTH,0, pFinanceHeaders[4], FINANCE_TEXT_FONT,&usX, &usY);
 	MPrint(usX, RECORD_HEADER_Y, pFinanceHeaders[4]);
 
 	// transaction header
-  FindFontCenterCoordinates(RECORD_TRANSACTION_X,0,RECORD_TRANSACTION_WIDTH,0, pFinanceHeaders[3], FINANCE_TEXT_FONT,&usX, &usY);
+	FindFontCenterCoordinates(RECORD_TRANSACTION_X,0,RECORD_TRANSACTION_WIDTH,0, pFinanceHeaders[3], FINANCE_TEXT_FONT,&usX, &usY);
 	MPrint(usX, RECORD_HEADER_Y, pFinanceHeaders[3]);
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -551,7 +551,7 @@ static void SPrintMoneyNoDollarOnZero(wchar_t* Str, INT32 Amount);
 static void DrawSummaryText(void)
 {
 	INT16 usX, usY;
-  wchar_t pString[100];
+	wchar_t pString[100];
 	INT32 iBalance = 0;
 
 	SetFontAttributes(FINANCE_TEXT_FONT, FONT_BLACK, NO_SHADOW);
@@ -656,7 +656,7 @@ static void DrawSummaryText(void)
 	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_CURRENT_BALANCE, pString);
 
-  SetFontForeground( FONT_BLACK );
+	SetFontForeground( FONT_BLACK );
 
 	// todays forcast income
 	SPrintMoneyNoDollarOnZero(pString, GetProjectedTotalDailyIncome());
@@ -678,7 +678,7 @@ static void DrawSummaryText(void)
 	FindFontRightCoordinates(STD_SCREEN_X, 0, 580, 0,pString,FINANCE_TEXT_FONT, &usX, &usY);
 	MPrint(usX, TODAYS_CURRENT_FORCAST_BALANCE, pString);
 
-  SetFontForeground( FONT_BLACK );
+	SetFontForeground( FONT_BLACK );
 
 	// reset the shadow
 	SetFontShadow(DEFAULT_SHADOW);
@@ -694,7 +694,7 @@ static void ClearFinanceList(void)
 	// while there are elements in the list left, delete them
 	while( pFinanceList )
 	{
-    // set node to list head
+		// set node to list head
 		pFinanceNode=pFinanceList;
 
 		// set list head to next node
@@ -703,7 +703,7 @@ static void ClearFinanceList(void)
 		// delete current node
 		MemFree(pFinanceNode);
 	}
-  pFinanceListHead = NULL;
+	pFinanceListHead = NULL;
 }
 
 
@@ -887,7 +887,7 @@ static void GetBalanceFromDisk(void)
 {
 	// will grab the current blanace from disk
 	// assuming file already openned
-  // this procedure will open and read in data to the finance list
+	// this procedure will open and read in data to the finance list
 	AutoSGPFile f;
 	try
 	{
@@ -900,7 +900,7 @@ static void GetBalanceFromDisk(void)
 	}
 
 	// get balance from disk first
-  FileRead(f, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
+	FileRead(f, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
 
@@ -1058,8 +1058,8 @@ static INT32 GetPreviousDaysBalance(void)
 	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 balance = 0;
-  // start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
-  // loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
+	// start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
+	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
@@ -1178,8 +1178,8 @@ static INT32 GetPreviousDaysIncome(void)
 
 static INT32 GetTodaysDaysIncome(void)
 {
-  const UINT32 date_in_minutes = GetWorldTotalMin();
-  const UINT32 date_in_days    = date_in_minutes / (24 * 60);
+	const UINT32 date_in_minutes = GetWorldTotalMin();
+	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
 	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
@@ -1239,13 +1239,13 @@ static void SetFinanceButtonStates(void)
 // grab todays other deposits
 static INT32 GetTodaysOtherDeposits(void)
 {
-  const UINT32 date_in_minutes = GetWorldTotalMin();
-  const UINT32 date_in_days    = date_in_minutes / (24 * 60);
+	const UINT32 date_in_minutes = GetWorldTotalMin();
+	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
 	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 
 	INT32 iTotalIncome = 0;
-  // loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
+	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
 	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
@@ -1287,8 +1287,8 @@ static INT32 GetTodaysOtherDeposits(void)
 
 static INT32 GetYesterdaysOtherDeposits(void)
 {
-  const UINT32 iDateInMinutes = GetWorldTotalMin();
-  const UINT32 date_in_days   = iDateInMinutes / (24 * 60);
+	const UINT32 iDateInMinutes = GetWorldTotalMin();
+	const UINT32 date_in_days   = iDateInMinutes / (24 * 60);
 
 	AutoSGPFile f(GCM->openTempFileForReading(NEWTMP_FINANCES_DATA_FILE));
 

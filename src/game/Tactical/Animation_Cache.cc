@@ -6,7 +6,7 @@
 #include "MemMan.h"
 #include "slog/slog.h"
 
-#define EMPTY_CACHE_ENTRY		65000
+#define EMPTY_CACHE_ENTRY 65000
 
 static const UINT32 guiCacheSize = MIN_CACHE_SIZE;
 
@@ -54,20 +54,20 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 
 void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheType* const pAnimCache, UINT16 const usSurfaceIndex, UINT16 const usCurrentAnimation)
 {
-	UINT8			cnt;
-	UINT8			ubLowestIndex = 0;
-	INT16		  sMostHits = (INT16)32000;
-	UINT16		usCurrentAnimSurface;
+	UINT8  cnt;
+	UINT8  ubLowestIndex = 0;
+	INT16  sMostHits = (INT16)32000;
+	UINT16 usCurrentAnimSurface;
 
 	// Check to see if surface exists already
 	for ( cnt = 0; cnt < pAnimCache->ubCacheSize; cnt++ )
 	{
 		if ( pAnimCache->usCachedSurfaces[ cnt ] == usSurfaceIndex )
 		{
-			 // Found surface, return
-			 SLOGD(DEBUG_TAG_ANIMATIONS, "Anim Cache: Hit %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
-			 pAnimCache->sCacheHits[cnt]++;
-			 return;
+			// Found surface, return
+			SLOGD(DEBUG_TAG_ANIMATIONS, "Anim Cache: Hit %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
+			pAnimCache->sCacheHits[cnt]++;
+			return;
 		}
 	}
 
@@ -133,7 +133,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 
 void UnLoadCachedAnimationSurfaces( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
-	UINT8			cnt;
+	UINT8 cnt;
 
 	// Check to see if surface exists already
 	for ( cnt = 0; cnt < pAnimCache->ubCacheSize; cnt++ )

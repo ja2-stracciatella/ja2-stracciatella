@@ -5,7 +5,7 @@
 #include "Strategic_Movement.h"
 
 
-#define	MAX_VEHICLES	10
+#define MAX_VEHICLES 10
 
 // type of vehicles
 enum{
@@ -22,25 +22,25 @@ enum{
 // struct for vehicles
 struct VEHICLETYPE
 {
-	PathSt* pMercPath; // vehicle's stategic path list
- UINT8     ubMovementGroup; // the movement group this vehicle belongs to
- UINT8     ubVehicleType; // type of vehicle
- INT16     sSectorX;   // X position on the Stategic Map
- INT16     sSectorY;   // Y position on the Stategic Map
- INT16     sSectorZ;
- BOOLEAN fBetweenSectors;  // between sectors?
- INT16		 sGridNo;   // location in tactical
- SOLDIERTYPE *pPassengers[ 10 ];
- BOOLEAN	 fDestroyed;
- INT32		 iMovementSoundID;
- BOOLEAN fValid;
+	PathSt  *pMercPath; // vehicle's stategic path list
+	UINT8   ubMovementGroup; // the movement group this vehicle belongs to
+	UINT8   ubVehicleType; // type of vehicle
+	INT16   sSectorX; // X position on the Stategic Map
+	INT16   sSectorY; // Y position on the Stategic Map
+	INT16   sSectorZ;
+	BOOLEAN fBetweenSectors; // between sectors?
+	INT16   sGridNo; // location in tactical
+	SOLDIERTYPE *pPassengers[ 10 ];
+	BOOLEAN fDestroyed;
+	INT32   iMovementSoundID;
+	BOOLEAN fValid;
 };
 
 #define CFOR_EACH_PASSENGER(v, iter)                                                   \
-	for (SOLDIERTYPE* const*       iter        = (v).pPassengers,                        \
-	                * const* const end__##iter = (v).pPassengers + GetVehicleSeats((v)); \
-	     iter != end__##iter;                                                            \
-	     ++iter)                                                                         \
+	for (SOLDIERTYPE* const* iter = (v).pPassengers,                        \
+		* const* const end__##iter = (v).pPassengers + GetVehicleSeats((v)); \
+		iter != end__##iter;                                                            \
+		++iter)                                                                         \
 		if (!*iter) continue; else
 
 
@@ -53,10 +53,10 @@ extern UINT8 ubNumberOfVehicles;
 #define VEHICLE2ID(v) (UINT32)((&(v) - pVehicleList))
 
 #define BASE_FOR_EACH_VEHICLE(type, iter)                           \
-	for (type*       iter        = pVehicleList,                      \
-	         * const end__##iter = pVehicleList + ubNumberOfVehicles; \
-	     iter != end__##iter;                                         \
-	     ++iter)                                                      \
+	for (type* iter = pVehicleList,                      \
+		* const end__##iter = pVehicleList + ubNumberOfVehicles; \
+		iter != end__##iter;                                         \
+		++iter)                                                      \
 		if (!iter->fValid) continue; else
 #define FOR_EACH_VEHICLE( iter) BASE_FOR_EACH_VEHICLE(      VEHICLETYPE, iter)
 #define CFOR_EACH_VEHICLE(iter) BASE_FOR_EACH_VEHICLE(const VEHICLETYPE, iter)
@@ -85,9 +85,9 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier );
 // Return the vehicle, iff the vehicle ID is valid, NULL otherwise
 VEHICLETYPE& GetVehicle(INT32 vehicle_id);
 
-/* Given this grunt, find out if asscoiated vehicle has a mvt group, if so,
- * set this grunts mvt group to the vehicle.  For pathing purposes, will be
- * reset to zero in copying of path */
+// Given this grunt, find out if asscoiated vehicle has a mvt group, if so,
+// set this grunts mvt group to the vehicle.  For pathing purposes, will be
+// reset to zero in copying of path
 void SetUpMvtGroupForVehicle(SOLDIERTYPE*);
 
 // find vehicle id of group with this vehicle

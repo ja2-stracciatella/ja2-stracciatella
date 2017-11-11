@@ -6,7 +6,7 @@
 
 //Merc scheduling actions
 //NOTE:  Any modifications to this enumeration also require updating the text in EditorMercs.c used
-//			 in the editor for merc schedule purposes.
+//       in the editor for merc schedule purposes.
 enum
 {
 	SCHEDULE_ACTION_NONE,

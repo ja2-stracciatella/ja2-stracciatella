@@ -77,168 +77,168 @@
 #include "HImage.h"
 
 // DEFINES FOR VARIOUS PANELS
-#define	SM_ITEMDESC_START_X					214
-#define	SM_ITEMDESC_START_Y					1 + INV_INTERFACE_START_Y
-#define	SM_ITEMDESC_HEIGHT					128
-#define	SM_ITEMDESC_WIDTH					314
+#define SM_ITEMDESC_START_X			214
+#define SM_ITEMDESC_START_Y			1 + INV_INTERFACE_START_Y
+#define SM_ITEMDESC_HEIGHT			128
+#define SM_ITEMDESC_WIDTH			314
 
 // SINGLE MERC SCREEN
 
-#define SM_SELMERC_AP_X      67
-#define SM_SELMERC_AP_Y      53
-#define SM_SELMERC_AP_HEIGHT 10
-#define SM_SELMERC_AP_WIDTH  17
+#define SM_SELMERC_AP_X			67
+#define SM_SELMERC_AP_Y			53
+#define SM_SELMERC_AP_HEIGHT			10
+#define SM_SELMERC_AP_WIDTH			17
 
-#define SM_SELMERC_HEALTH_X 69
-#define SM_SELMERC_HEALTH_Y 47
+#define SM_SELMERC_HEALTH_X			69
+#define SM_SELMERC_HEALTH_Y			47
 
-#define SM_SELMERCNAME_X      11
-#define SM_SELMERCNAME_Y      53
-#define SM_SELMERCNAME_WIDTH  53
-#define SM_SELMERCNAME_HEIGHT 10
+#define SM_SELMERCNAME_X			11
+#define SM_SELMERCNAME_Y			53
+#define SM_SELMERCNAME_WIDTH			53
+#define SM_SELMERCNAME_HEIGHT			10
 
-#define SM_SELMERC_FACE_X      13
-#define SM_SELMERC_FACE_Y       6
-#define SM_SELMERC_FACE_HEIGHT 42
-#define SM_SELMERC_FACE_WIDTH  48
+#define SM_SELMERC_FACE_X			13
+#define SM_SELMERC_FACE_Y			6
+#define SM_SELMERC_FACE_HEIGHT			42
+#define SM_SELMERC_FACE_WIDTH			48
 
-#define	SM_SELMERC_PLATE_X       4
-#define	SM_SELMERC_PLATE_Y       2
-#define	SM_SELMERC_PLATE_HEIGHT 65
-#define	SM_SELMERC_PLATE_WIDTH  83
-
-
-#define STATS_TITLE_FONT_COLOR				6
-#define STATS_TEXT_FONT_COLOR					5
+#define SM_SELMERC_PLATE_X			4
+#define SM_SELMERC_PLATE_Y			2
+#define SM_SELMERC_PLATE_HEIGHT		65
+#define SM_SELMERC_PLATE_WIDTH			83
 
 
-#define SM_TALKB_X       155
-#define SM_TALKB_Y       108
-#define SM_MUTEB_X        91
-#define SM_MUTEB_Y       108
-#define SM_STANCEUPB_X   187
-#define SM_STANCEUPB_Y    40
-#define SM_UPDOWNB_X      91
-#define SM_UPDOWNB_Y      73
-#define SM_CLIMBB_X      187
-#define SM_CLIMBB_Y        8
-#define SM_STANCEDOWNB_X 187
-#define SM_STANCEDOWNB_Y 108
-#define SM_HANDCURSORB_X 123
-#define SM_HANDCURSORB_Y  73
-#define SM_PREVMERCB_X     9
-#define SM_PREVMERCB_Y    70
-#define SM_NEXTMERCB_X    51
-#define SM_NEXTMERCB_Y    70
-#define SM_OPTIONSB_X      9
-#define SM_OPTIONSB_Y    105
-#define SM_BURSTMODEB_X  155
-#define SM_BURSTMODEB_Y   73
-#define SM_LOOKB_X       123
-#define SM_LOOKB_Y       108
-#define SM_STEALTHMODE_X 187
-#define SM_STEALTHMODE_Y  73
-#define SM_DONE_X        543
-#define SM_DONE_Y          4
-#define SM_MAPSCREEN_X   589
-#define SM_MAPSCREEN_Y     4
+#define STATS_TITLE_FONT_COLOR			6
+#define STATS_TEXT_FONT_COLOR			5
 
 
-#define SM_PERCENT_WIDTH    20
-#define SM_PERCENT_HEIGHT   10
-#define SM_ARMOR_X         347
-#define SM_ARMOR_Y          79
-#define SM_ARMOR_LABEL_X   363
-#define SM_ARMOR_LABEL_Y    69
-#define SM_ARMOR_PERCENT_X 368
-#define SM_ARMOR_PERCENT_Y  79
+#define SM_TALKB_X				155
+#define SM_TALKB_Y				108
+#define SM_MUTEB_X				91
+#define SM_MUTEB_Y				108
+#define SM_STANCEUPB_X				187
+#define SM_STANCEUPB_Y				40
+#define SM_UPDOWNB_X				91
+#define SM_UPDOWNB_Y				73
+#define SM_CLIMBB_X				187
+#define SM_CLIMBB_Y				8
+#define SM_STANCEDOWNB_X			187
+#define SM_STANCEDOWNB_Y			108
+#define SM_HANDCURSORB_X			123
+#define SM_HANDCURSORB_Y			73
+#define SM_PREVMERCB_X				9
+#define SM_PREVMERCB_Y				70
+#define SM_NEXTMERCB_X				51
+#define SM_NEXTMERCB_Y				70
+#define SM_OPTIONSB_X				9
+#define SM_OPTIONSB_Y				105
+#define SM_BURSTMODEB_X			155
+#define SM_BURSTMODEB_Y			73
+#define SM_LOOKB_X				123
+#define SM_LOOKB_Y				108
+#define SM_STEALTHMODE_X			187
+#define SM_STEALTHMODE_Y			73
+#define SM_DONE_X				543
+#define SM_DONE_Y				4
+#define SM_MAPSCREEN_X				589
+#define SM_MAPSCREEN_Y				4
 
-#define SM_WEIGHT_LABEL_X   430
-#define SM_WEIGHT_LABEL_Y   107
-#define SM_WEIGHT_PERCENT_X 449
-#define SM_WEIGHT_PERCENT_Y 106
-#define SM_WEIGHT_X         428
-#define SM_WEIGHT_Y         106
 
-#define SM_CAMO_LABEL_X   430
-#define SM_CAMO_LABEL_Y   122
-#define SM_CAMO_PERCENT_X 449
-#define SM_CAMO_PERCENT_Y 121
-#define SM_CAMO_X         428
-#define SM_CAMO_Y         121
+#define SM_PERCENT_WIDTH			20
+#define SM_PERCENT_HEIGHT			10
+#define SM_ARMOR_X				347
+#define SM_ARMOR_Y				79
+#define SM_ARMOR_LABEL_X			363
+#define SM_ARMOR_LABEL_Y			69
+#define SM_ARMOR_PERCENT_X			368
+#define SM_ARMOR_PERCENT_Y			79
+
+#define SM_WEIGHT_LABEL_X			430
+#define SM_WEIGHT_LABEL_Y			107
+#define SM_WEIGHT_PERCENT_X			449
+#define SM_WEIGHT_PERCENT_Y			106
+#define SM_WEIGHT_X				428
+#define SM_WEIGHT_Y				106
+
+#define SM_CAMO_LABEL_X			430
+#define SM_CAMO_LABEL_Y			122
+#define SM_CAMO_PERCENT_X			449
+#define SM_CAMO_PERCENT_Y			121
+#define SM_CAMO_X				428
+#define SM_CAMO_Y				121
 
 
-#define SM_STATS_WIDTH   30
-#define SM_STATS_HEIGHT   8
-#define SM_AGI_X         99
-#define SM_AGI_Y          7
-#define SM_DEX_X         99
-#define SM_DEX_Y         17
-#define SM_STR_X         99
-#define SM_STR_Y         27
-#define SM_CHAR_X        99
-#define SM_CHAR_Y        37
-#define SM_WIS_X         99
-#define SM_WIS_Y         47
-#define SM_EXPLVL_X     148
-#define SM_EXPLVL_Y       7
-#define SM_MRKM_X       148
-#define SM_MRKM_Y        17
-#define SM_EXPL_X       148
-#define SM_EXPL_Y        27
-#define SM_MECH_X       148
-#define SM_MECH_Y        37
-#define SM_MED_X        148
-#define SM_MED_Y         47
+#define SM_STATS_WIDTH				30
+#define SM_STATS_HEIGHT			8
+#define SM_AGI_X				99
+#define SM_AGI_Y				7
+#define SM_DEX_X				99
+#define SM_DEX_Y				17
+#define SM_STR_X				99
+#define SM_STR_Y				27
+#define SM_CHAR_X				99
+#define SM_CHAR_Y				37
+#define SM_WIS_X				99
+#define SM_WIS_Y				47
+#define SM_EXPLVL_X				148
+#define SM_EXPLVL_Y				7
+#define SM_MRKM_X				148
+#define SM_MRKM_Y				17
+#define SM_EXPL_X				148
+#define SM_EXPL_Y				27
+#define SM_MECH_X				148
+#define SM_MECH_Y				37
+#define SM_MED_X				148
+#define SM_MED_Y				47
 
-#define MONEY_X      460
-#define MONEY_Y      105
-#define MONEY_WIDTH   30
-#define MONEY_HEIGHT  22
+#define MONEY_X				460
+#define MONEY_Y				105
+#define MONEY_WIDTH				30
+#define MONEY_HEIGHT				22
 
-#define TM_FACE_X      14
-#define TM_FACE_Y       6
-#define TM_FACE_WIDTH  48
-#define TM_FACE_HEIGHT 43
+#define TM_FACE_X				14
+#define TM_FACE_Y				6
+#define TM_FACE_WIDTH				48
+#define TM_FACE_HEIGHT				43
 
-#define TM_ENDTURN_X    507
-#define TM_ENDTURN_Y      9
-#define TM_ROSTERMODE_X 507
-#define TM_ROSTERMODE_Y  45
-#define TM_DISK_X       507
-#define TM_DISK_Y        81
+#define TM_ENDTURN_X				507
+#define TM_ENDTURN_Y				9
+#define TM_ROSTERMODE_X			507
+#define TM_ROSTERMODE_Y			45
+#define TM_DISK_X				507
+#define TM_DISK_Y				81
 
-#define TM_NAME_X      11
-#define TM_NAME_Y      53
-#define TM_NAME_WIDTH  53
-#define TM_NAME_HEIGHT 10
+#define TM_NAME_X				11
+#define TM_NAME_Y				53
+#define TM_NAME_WIDTH				53
+#define TM_NAME_HEIGHT				10
 
-#define TM_AP_X      67
-#define TM_AP_Y      53
-#define TM_AP_WIDTH  18
-#define TM_AP_HEIGHT 10
+#define TM_AP_X				67
+#define TM_AP_Y				53
+#define TM_AP_WIDTH				18
+#define TM_AP_HEIGHT				10
 
-#define TM_LIFEBAR_HEIGHT 42
+#define TM_LIFEBAR_HEIGHT			42
 
-#define TM_FACEHIGHTL_X        4
-#define TM_FACEHIGHTL_Y        2
-#define TM_FACEHIGHTL_WIDTH   84
-#define TM_FACEHIGHTL_HEIGHT 114
+#define TM_FACEHIGHTL_X			4
+#define TM_FACEHIGHTL_Y			2
+#define TM_FACEHIGHTL_WIDTH			84
+#define TM_FACEHIGHTL_HEIGHT			114
 
-#define TM_INV_WIDTH       58
-#define TM_INV_HEIGHT      23
-#define TM_INV_HAND1STARTX  8
-#define TM_INV_HAND1STARTY 67
-#define TM_INV_HAND_SEP    83
-#define TM_INV_HAND_SEPY   24
+#define TM_INV_WIDTH				58
+#define TM_INV_HEIGHT				23
+#define TM_INV_HAND1STARTX			8
+#define TM_INV_HAND1STARTY			67
+#define TM_INV_HAND_SEP			83
+#define TM_INV_HAND_SEPY			24
 
-#define TM_BARS_X      67
-#define TM_BARS_Y       3
-#define TM_BARS_WIDTH  19
-#define TM_BARS_HEIGHT 47
+#define TM_BARS_X				67
+#define TM_BARS_Y				3
+#define TM_BARS_WIDTH				19
+#define TM_BARS_HEIGHT				47
 
-#define INDICATOR_BOX_WIDTH  12
-#define INDICATOR_BOX_HEIGHT 10
+#define INDICATOR_BOX_WIDTH			12
+#define INDICATOR_BOX_HEIGHT			10
 
 
 enum
@@ -251,7 +251,7 @@ enum
 	PREVMERC_IMAGES,
 	NEXTMERC_IMAGES,
 	OPTIONS_IMAGES,
-//BURSTMODE_IMAGES,
+	//BURSTMODE_IMAGES,
 	LOOK_IMAGES,
 	TALK_IMAGES,
 	MUTE_IMAGES,
@@ -279,16 +279,16 @@ static BUTTON_PICS* iTEAMPanelImages[NUM_TEAM_BUTTON_IMAGES];
 static BUTTON_PICS* giSMStealthImages;
 GUIButtonRef giSMStealthButton;
 
-BOOLEAN									gfUIStanceDifferent = FALSE;
+BOOLEAN gfUIStanceDifferent = FALSE;
 static BOOLEAN gfAllDisabled = FALSE;
 
-BOOLEAN									gfSMDisableForItems = FALSE;
+BOOLEAN gfSMDisableForItems = FALSE;
 
-BOOLEAN									gfDisableTacticalPanelButtons = FALSE;
+BOOLEAN gfDisableTacticalPanelButtons = FALSE;
 
-BOOLEAN	gfCheckForMouseOverItem = FALSE;
-UINT32	guiMouseOverItemTime		= 0;
-INT8		gbCheckForMouseOverItemPos = 0;
+BOOLEAN gfCheckForMouseOverItem = FALSE;
+UINT32 guiMouseOverItemTime = 0;
+INT8 gbCheckForMouseOverItemPos = 0;
 SOLDIERTYPE* gSelectSMPanelToMerc = NULL;
 static BOOLEAN gfReEvaluateDisabledINVPanelButtons = FALSE;
 
@@ -316,13 +316,13 @@ static SGPVObject* guiCLOSE;
 // Globals for various mouse regions
 static MOUSE_REGION gSM_SELMERCPanelRegion;
 static MOUSE_REGION gSM_SELMERCBarsRegion;
-MOUSE_REGION		gSM_SELMERCMoneyRegion;
+MOUSE_REGION        gSM_SELMERCMoneyRegion;
 static MOUSE_REGION gSM_SELMERCEnemyIndicatorRegion;
 static MOUSE_REGION gTEAM_PanelRegion;
 
 
 // Globals - for one - the current merc here
-SOLDIERTYPE			*gpSMCurrentMerc = NULL;
+SOLDIERTYPE *gpSMCurrentMerc = NULL;
 
 MOUSE_REGION gSMPanelRegion;
 
@@ -340,7 +340,7 @@ struct TeamPanelSlot
 
 static TeamPanelSlot gTeamPanel[NUM_TEAM_SLOTS];
 
-#define FOR_EACH_TEAM_PANEL_SLOT(iter) FOR_EACH(TeamPanelSlot, iter, gTeamPanel)
+#define FOR_EACH_TEAM_PANEL_SLOT(iter)		FOR_EACH(TeamPanelSlot, iter, gTeamPanel)
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
@@ -385,7 +385,7 @@ void CheckForDisabledForGiveItem(void)
 					if (sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE)
 					{
 						gfSMDisableForItems = FALSE;
-						break;	// found one, no need to keep looking
+						break; // found one, no need to keep looking
 					}
 				}
 			}
@@ -521,8 +521,10 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	{
 		FOR_EACH_TEAM_PANEL_SLOT(i)
 		{
-			if (i->merc != pSoldier)       continue;
-			if (!IsMouseInRegion(i->face)) continue;
+			if (i->merc != pSoldier)
+				continue;
+			if (!IsMouseInRegion(i->face))
+				continue;
 			HandleMouseOverSoldierFaceForContMove(pSoldier, fOn);
 		}
 	}
@@ -532,7 +534,8 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 static void SetButtonState(UINT const idx, bool const clicked)
 {
 	GUI_BUTTON& b = *iSMPanelButtons[idx];
-	if (b.ubToggleButtonActivated) return;
+	if (b.ubToggleButtonActivated)
+		return;
 	b.uiFlags &= ~BUTTON_CLICKED_ON;
 	b.uiFlags |= clicked ? BUTTON_CLICKED_ON : 0;
 }
@@ -555,7 +558,7 @@ static void UpdateSMPanel()
 
 	INT32 stance_gfx; // XXX HACK000E
 	switch (stance_state)
-  {
+	{
 		case ANIM_STAND:
 			stance_gfx = 11;
 			DisableButton(iSMPanelButtons[STANCEUP_BUTTON]);
@@ -586,8 +589,11 @@ static void UpdateSMPanel()
 
 		// Make new
 		if (!s.bStealthMode) stance_gfx += 3;
-		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], stance_gfx + 2, stance_gfx, -1, stance_gfx + 1, -1);
-		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, INV_INTERFACE_START_Y + SM_STEALTHMODE_Y, MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
+		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], stance_gfx + 2, stance_gfx,
+								-1, stance_gfx + 1, -1);
+		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X,
+							INV_INTERFACE_START_Y + SM_STEALTHMODE_Y,
+							MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
 		giSMStealthButton->SetFastHelpText(TacticalStr[TOGGLE_STEALTH_MODE_POPUPTEXT]);
 
 		gfUIStanceDifferent = FALSE;
@@ -601,7 +607,8 @@ static void UpdateSMPanel()
 
 	// Check for any newly added items we need
 	if (s.fCheckForNewlyAddedItems)
-	{ // Startup any newly added items
+	{
+		// Startup any newly added items
 		CheckForAnyNewlyAddedItems(&s);
 		s.fCheckForNewlyAddedItems = FALSE;
 	}
@@ -631,10 +638,10 @@ static void UpdateSMPanel()
 	SetButtonState(LOOK_BUTTON,       gCurrentUIMode == LOOKCURSOR_MODE);
 
 	// If not selected (or dead), disable/gray some buttons
-	if (&s                            != GetSelectedMan() ||
-			s.bLife                       <  OKLIFE           ||
-			gTacticalStatus.ubCurrentTeam != OUR_TEAM      ||
-			gfSMDisableForItems)
+	if (&s != GetSelectedMan() ||
+		s.bLife< OKLIFE ||
+		gTacticalStatus.ubCurrentTeam != OUR_TEAM ||
+		gfSMDisableForItems)
 	{
 		DisableButton(iSMPanelButtons[CLIMB_BUTTON]);
 		DisableButton(iSMPanelButtons[BURSTMODE_BUTTON]);
@@ -643,27 +650,31 @@ static void UpdateSMPanel()
 		DisableButton(iSMPanelButtons[LOOK_BUTTON]);
 		DisableButton(iSMPanelButtons[UPDOWN_BUTTON]);
 		DisableButton(iSMPanelButtons[HANDCURSOR_BUTTON]);
-		if (giSMStealthButton) DisableButton(giSMStealthButton);
+		if (giSMStealthButton)
+			DisableButton(giSMStealthButton);
 	}
 	else
 	{
-		bool const enable_burst = IsGunBurstCapable(&s, HANDPOS) || FindAttachment(&s.inv[HANDPOS], UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
+		bool const enable_burst = IsGunBurstCapable(&s, HANDPOS) ||
+						FindAttachment(&s.inv[HANDPOS], UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
 		EnableButton(iSMPanelButtons[BURSTMODE_BUTTON], enable_burst);
 		EnableButton(iSMPanelButtons[LOOK_BUTTON]);
 		EnableButton(iSMPanelButtons[UPDOWN_BUTTON]);
 		EnableButton(iSMPanelButtons[HANDCURSOR_BUTTON]);
 
-		if (giSMStealthButton) EnableButton(giSMStealthButton);
+		if (giSMStealthButton)
+			EnableButton(giSMStealthButton);
 	}
 
 	// CJC Dec 4 2002: or if item pickup menu is up
-	EnableButton(iSMPanelButtons[SM_MAP_SCREEN_BUTTON], !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV) && !gfInItemPickupMenu);
+	EnableButton(iSMPanelButtons[SM_MAP_SCREEN_BUTTON],
+			!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV) && !gfInItemPickupMenu);
 }
 
 
 void ReevaluateItemHatches(SOLDIERTYPE* pSoldier, BOOLEAN fAllValid)
 {
-	INT32	cnt;
+	INT32 cnt;
 
 	// if there's an item in the cursor and we're not supposed to just make them all valid
 	if ( ( gpItemPointer != NULL ) && !fAllValid )
@@ -782,7 +793,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 
 				gfSMDisableForItems = FALSE;
 
-      	DisableInvRegions( gfSMDisableForItems );
+				DisableInvRegions( gfSMDisableForItems );
 			}
 
 			if ( !fFromItemPickup )
@@ -834,11 +845,11 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 /** Fill empty space at the bottom of the screen. */
 static void FillEmptySpaceAtBottom()
 {
-  if(g_ui.isBigScreen())
-  {
-    ColorFillVideoSurfaceArea(guiSAVEBUFFER, 640, g_ui.get_INV_INTERFACE_START_Y(),
-                              g_ui.m_screenWidth, g_ui.m_screenHeight, 0);
-  }
+	if(g_ui.isBigScreen())
+	{
+		ColorFillVideoSurfaceArea(guiSAVEBUFFER, 640, g_ui.get_INV_INTERFACE_START_Y(),
+						g_ui.m_screenWidth, g_ui.m_screenHeight, 0);
+	}
 }
 
 void InitializeSMPanel(void)
@@ -847,7 +858,7 @@ void InitializeSMPanel(void)
 	guiSMObjects  = AddVideoObjectFromFile(INTERFACEDIR "/inventory_gold_front.sti");
 	guiSMObjects2 = AddVideoObjectFromFile(INTERFACEDIR "/inv_frn.sti");
 
-  FillEmptySpaceAtBottom();
+	FillEmptySpaceAtBottom();
 
 	// INit viewport region
 	// Set global mouse regions
@@ -873,7 +884,9 @@ void InitializeSMPanel(void)
 	MSYS_DefineRegion(&gSM_SELMERCPanelRegion, x, y, x + SM_SELMERC_FACE_WIDTH, y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, SelectedMercButtonCallback);
 
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCEnemyIndicatorRegion, x + 1, y + 1, x + INDICATOR_BOX_WIDTH, y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback);
+	MSYS_DefineRegion(&gSM_SELMERCEnemyIndicatorRegion, x + 1, y + 1, x + INDICATOR_BOX_WIDTH,
+				y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR,
+				MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback);
 
 	//DEfine region for money button
 	x = MONEY_X;
@@ -893,8 +906,9 @@ void InitializeSMPanel(void)
 	InitInvSlotInterface(g_ui.m_invSlotPositionTac, &g_ui.m_invCamoRegion, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
 
-	// this is important! It will disable buttons like SM_MAP_SCREEN_BUTTON when they're supposed to be disabled - the previous
-	// disabled state is lost everytime panel is reinitialized, because all the buttons are created from scratch!
+	// this is important! It will disable buttons like SM_MAP_SCREEN_BUTTON when they're supposed to be
+	// disabled - the previous disabled state is lost everytime panel is reinitialized, because all the
+	// buttons are created from scratch!
 	if (gpItemPointer == NULL)
 	{
 		// empty cursor - enable, not from item pickup
@@ -1070,9 +1084,12 @@ void ShutdownSMPanel(void)
 
 static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 {
-	if (!(gTacticalStatus.uiFlags & TURNBASED)) return;
-	if (!(gTacticalStatus.uiFlags & INCOMBAT))  return;
-	if (s->bLife < OKLIFE)                      return;
+	if (!(gTacticalStatus.uiFlags & TURNBASED))
+		return;
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
+		return;
+	if (s->bLife < OKLIFE)
+		return;
 
 	INT8  const ap         = GetUIApsToDisplay(s);
 	UINT8 const min_ap     = MinAPsToAttack(s, s->sLastTarget, TRUE);
@@ -1122,7 +1139,7 @@ void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 
 {
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 
-	#define s(a) ((a)/2)+((a)/2)*(scale_rgb)/100
+	#define s(a)				((a)/2)+((a)/2)*(scale_rgb)/100
 
 	const int r = s(0xff&rgb>>16);
 	const int g = s(0xff&rgb>>8);
@@ -1166,7 +1183,8 @@ void RenderSMPanel(DirtyLevel* const dirty_level)
 	if (gSelectSMPanelToMerc) SetSMPanelCurrentMerc(gSelectSMPanelToMerc);
 
 	// ATE: Don't do anything if we are in stack popup and are refreshing stuff
-	if ((InItemStackPopup() || InKeyRingPopup()) && *dirty_level == DIRTYLEVEL1) return;
+	if ((InItemStackPopup() || InKeyRingPopup()) && *dirty_level == DIRTYLEVEL1)
+		return;
 
 	if (!gpSMCurrentMerc) return;
 
@@ -1199,8 +1217,8 @@ void RenderSMPanel(DirtyLevel* const dirty_level)
 				gfx = guiSMObjects2;
 			}
 			else if (gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
-					&s == GetSelectedMan()                         &&
-					OK_INTERRUPT_MERC(&s))
+				&s == GetSelectedMan() &&
+				OK_INTERRUPT_MERC(&s))
 			{
 				gfx = guiSMObjects;
 			}
@@ -1317,9 +1335,9 @@ no_plate:
 	if (gfSMDisableForItems && *dirty_level != DIRTYLEVEL0)
 	{
 		SGPRect ClipRect;
-		ClipRect.iLeft	 = 87;
-		ClipRect.iRight  = 536;
-		ClipRect.iTop		 = INV_INTERFACE_START_Y;
+		ClipRect.iLeft = 87;
+		ClipRect.iRight = 536;
+		ClipRect.iTop = INV_INTERFACE_START_Y;
 		ClipRect.iBottom = SCREEN_HEIGHT;
 		SGPVSurface::Lock l(FRAME_BUFFER);
 		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
@@ -1352,7 +1370,7 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)uiHandPos, FALSE );
 			gfCheckForMouseOverItem = FALSE;
-			fInterfacePanelDirty		= DIRTYLEVEL2;
+			fInterfacePanelDirty = DIRTYLEVEL2;
 		}
 	}
 }
@@ -1528,8 +1546,8 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	UINT16 usOldItemIndex, usNewItemIndex;
 	UINT16 usItemPrevInItemPointer;
 	BOOLEAN fNewItem = FALSE;
-	static BOOLEAN	fRightDown = FALSE;
-	static BOOLEAN	fLeftDown = FALSE;
+	static BOOLEAN fRightDown = FALSE;
+	static BOOLEAN fLeftDown = FALSE;
 
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
@@ -1592,7 +1610,8 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			//if we are in the shopkeeper interface
 			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 			{
-				// pick up item from regular inventory slot into cursor OR try to sell it ( unless CTRL is held down )
+				// pick up item from regular inventory slot into cursor OR try to sell it
+				// ( unless CTRL is held down )
 				BeginSkiItemPointer(PLAYERS_INVENTORY, (INT8)uiHandPos, !_KeyDown(CTRL));
 			}
 
@@ -1600,10 +1619,10 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			// HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)uiHandPos, FALSE );
 		}
-		else	// item in cursor
+		else // item in cursor
 		{
-			BOOLEAN		fOKToGo = FALSE;
-			BOOLEAN		fDeductPoints = FALSE;
+			BOOLEAN fOKToGo = FALSE;
+			BOOLEAN fDeductPoints = FALSE;
 
 			// ATE: OK, get source, dest guy if different... check for and then charge appropriate APs
 			if (gpSMCurrentMerc == gpItemPointerSoldier)
@@ -1648,7 +1667,8 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			if ( fOKToGo )
 			{
-				// OK, check if this is Nails, and we're in the vest position , don't allow it to come off....
+				// OK, check if this is Nails, and we're in the vest position , don't allow
+				// it to come off....
 				if ( HandleNailsVestFetish( gpSMCurrentMerc, uiHandPos, gpItemPointer->usItem ) )
 				{
 					return;
@@ -1722,13 +1742,17 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 							// if we're holding something else in the pointer now
 							if ( usItemPrevInItemPointer != gpItemPointer->usItem )
 							{
-								// pick up item swapped out of inventory slot into cursor (don't try to sell)
+								// pick up item swapped out of inventory slot into
+								// cursor (don't try to sell)
 								BeginSkiItemPointer( PLAYERS_INVENTORY, -1, FALSE );
 							}
 							else
 							{
-								// otherwise, leave the cursor as is, means more items were picked up at once than can be placed in this slot
-								// we deal with this by leaving the remainder in the cursor, to be put down elsewhere using subsequent clicks
+								// otherwise, leave the cursor as is, means more items
+								// were picked up at once than can be placed in this slot
+								// we deal with this by leaving the remainder in the
+								// cursor, to be put down elsewhere using subsequent
+								// clicks
 							}
 						}
 					}
@@ -1773,8 +1797,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					gfCheckForMouseOverItem = TRUE;
 					gbCheckForMouseOverItemPos = (INT8)uiHandPos;
 
-				}
-				*/
+				}*/
 			}
 		}
 	}
@@ -1795,18 +1818,23 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		// Some global stuff here - for esc, etc
 		// Check for # of slots in item
-		if( ( gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects > 1 && ItemSlotLimit( gpSMCurrentMerc->inv[ uiHandPos ].usItem, (UINT8)uiHandPos ) > 0 ) && ( guiCurrentScreen != MAP_SCREEN ) )
+		if((gpSMCurrentMerc->inv[uiHandPos].ubNumberOfObjects > 1 &&
+			ItemSlotLimit(gpSMCurrentMerc->inv[uiHandPos].usItem, (UINT8)uiHandPos) > 0) &&
+			(guiCurrentScreen != MAP_SCREEN))
 		{
 			if ( !InItemStackPopup( )  )
 			{
-				InitItemStackPopup( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, INV_INTERFACE_START_Y, SM_ITEMDESC_WIDTH, SCREEN_HEIGHT - INV_INTERFACE_START_Y );
+				InitItemStackPopup(gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X,
+							INV_INTERFACE_START_Y, SM_ITEMDESC_WIDTH,
+							SCREEN_HEIGHT - INV_INTERFACE_START_Y );
 			}
 		}
 		else
 		{
 			if ( !InItemDescriptionBox( ) )
 			{
-				InitItemDescriptionBox( gpSMCurrentMerc, (UINT8)uiHandPos, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0 );
+				InitItemDescriptionBox(gpSMCurrentMerc, (UINT8)uiHandPos,
+							SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0);
 			}
 		}
 	}
@@ -1844,7 +1872,7 @@ static void MergeMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 
 static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN fOn)
 {
-	INT16			sGridNo;
+	INT16 sGridNo;
 
 	if ( pSoldier == NULL )
 	{
@@ -2004,8 +2032,12 @@ static void BtnStanceUpCallback(GUI_BUTTON* btn, INT32 reason)
 		INT8 bNewStance = gAnimControl[gpSMCurrentMerc->usAnimState].ubEndHeight;
 		switch (bNewStance)
 		{
-			case ANIM_CROUCH: bNewStance = ANIM_STAND;  break;
-			case ANIM_PRONE:  bNewStance = ANIM_CROUCH; break;
+			case ANIM_CROUCH:
+				bNewStance = ANIM_STAND;
+				break;
+			case ANIM_PRONE:
+				bNewStance = ANIM_CROUCH;
+				break;
 		}
 		UIHandleSoldierStanceChange(gpSMCurrentMerc, bNewStance);
 	}
@@ -2050,8 +2082,12 @@ static void BtnStanceDownCallback(GUI_BUTTON* btn, INT32 reason)
 		INT8 bNewStance = gAnimControl[gpSMCurrentMerc->usAnimState].ubEndHeight;
 		switch (bNewStance)
 		{
-			case ANIM_STAND:  bNewStance = ANIM_CROUCH; break;
-			case ANIM_CROUCH: bNewStance = ANIM_PRONE;  break;
+			case ANIM_STAND:
+				bNewStance = ANIM_CROUCH;
+				break;
+			case ANIM_CROUCH:
+				bNewStance = ANIM_PRONE;
+				break;
 		}
 		UIHandleSoldierStanceChange(gpSMCurrentMerc, bNewStance);
 	}
@@ -2063,9 +2099,9 @@ static void BtnStealthModeCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gpSMCurrentMerc->bStealthMode = !gpSMCurrentMerc->bStealthMode;
-		gfUIStanceDifferent		= TRUE;
-		gfPlotNewMovement			= TRUE;
-		fInterfacePanelDirty	= DIRTYLEVEL2;
+		gfUIStanceDifferent = TRUE;
+		gfPlotNewMovement = TRUE;
+		fInterfacePanelDirty = DIRTYLEVEL2;
 	}
 }
 
@@ -2218,7 +2254,7 @@ void InitializeTEAMPanel(void)
 	guiTEAMObjects = AddVideoObjectFromFile(INTERFACEDIR "/gold_front.sti");
 	guiVEHINV      = AddVideoObjectFromFile(INTERFACEDIR "/inventor.sti");
 
-  FillEmptySpaceAtBottom();
+	FillEmptySpaceAtBottom();
 
 	// Create buttons
 	CreateTEAMPanelButtons();
@@ -2235,8 +2271,10 @@ void InitializeTEAMPanel(void)
 
 		INT32 const face_x = dx + TM_FACE_X;
 		INT32 const face_y = dy + TM_FACE_Y;
-		MakeRegion(tp, tp.face,            face_x,     face_y,     TM_FACE_WIDTH,           TM_FACE_HEIGHT,           MercFacePanelMoveCallback, MercFacePanelCallback);
-		MakeRegion(tp, tp.enemy_indicator, face_x + 1, face_y + 1, INDICATOR_BOX_WIDTH - 1, INDICATOR_BOX_HEIGHT - 1, MSYS_NO_CALLBACK,          EnemyIndicatorClickCallback);
+		MakeRegion(tp, tp.face, face_x, face_y, TM_FACE_WIDTH, TM_FACE_HEIGHT,
+				MercFacePanelMoveCallback, MercFacePanelCallback);
+		MakeRegion(tp, tp.enemy_indicator, face_x + 1, face_y + 1, INDICATOR_BOX_WIDTH - 1,
+				INDICATOR_BOX_HEIGHT - 1, MSYS_NO_CALLBACK, EnemyIndicatorClickCallback);
 
 		if (IsMouseInRegion(tp.face))
 		{
@@ -2244,13 +2282,17 @@ void InitializeTEAMPanel(void)
 			if (s) HandleMouseOverSoldierFaceForContMove(s, TRUE);
 		}
 
-		MakeRegion(tp, tp.bars,      dx + TM_BARS_X,     dy + TM_BARS_Y, TM_BARS_WIDTH, TM_BARS_HEIGHT, MSYS_NO_CALLBACK, MercFacePanelCallback);
-		MakeRegion(tp, tp.left_bars, dx + TM_FACE_X - 8, dy + TM_FACE_Y, 8,             TM_BARS_HEIGHT, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		MakeRegion(tp, tp.bars, dx + TM_BARS_X, dy + TM_BARS_Y,
+				TM_BARS_WIDTH, TM_BARS_HEIGHT, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		MakeRegion(tp, tp.left_bars, dx + TM_FACE_X - 8, dy + TM_FACE_Y, 8, TM_BARS_HEIGHT,
+				MSYS_NO_CALLBACK, MercFacePanelCallback);
 
 		INT32 const hand_x = dx + TM_INV_HAND1STARTX;
 		INT32 const hand_y = dy + TM_INV_HAND1STARTY;
-		MakeRegion(tp, tp.first_hand,  hand_x, hand_y,                    TM_INV_WIDTH,  TM_INV_HEIGHT,  MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
-		MakeRegion(tp, tp.second_hand, hand_x, hand_y + TM_INV_HAND_SEPY, TM_INV_WIDTH,  TM_INV_HEIGHT,  MSYS_NO_CALLBACK, TMClickSecondHandInvCallback);
+		MakeRegion(tp, tp.first_hand, hand_x, hand_y, TM_INV_WIDTH, TM_INV_HEIGHT,
+				MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
+		MakeRegion(tp, tp.second_hand, hand_x, hand_y + TM_INV_HAND_SEPY, TM_INV_WIDTH,
+				TM_INV_HEIGHT, MSYS_NO_CALLBACK, TMClickSecondHandInvCallback);
 
 		dx += TM_INV_HAND_SEP;
 	}
@@ -2343,7 +2385,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				{
 					// Get soldier pointer for vehicle.....
 					SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
-					swprintf(help_buf, lengthof(help_buf), TacticalStr[DRIVER_POPUPTEXT], vs.bLife, vs.bLifeMax, vs.bBreath, vs.bBreathMax);
+					swprintf(help_buf, lengthof(help_buf), TacticalStr[DRIVER_POPUPTEXT], vs.bLife,
+							vs.bLifeMax, vs.bBreath, vs.bBreathMax);
 					help = help_buf;
 				}
 				else if (s->uiStatusFlags & SOLDIER_DEAD)
@@ -2383,7 +2426,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				SetFontDestBuffer(guiSAVEBUFFER);
 				INT16 sFontX;
 				INT16 sFontY;
-				FindFontCenterCoordinates(dx + TM_NAME_X, dy + TM_NAME_Y, TM_NAME_WIDTH, TM_NAME_HEIGHT, s->name, BLOCKFONT2, &sFontX, &sFontY);
+				FindFontCenterCoordinates(dx + TM_NAME_X, dy + TM_NAME_Y, TM_NAME_WIDTH, TM_NAME_HEIGHT,
+								s->name, BLOCKFONT2, &sFontX, &sFontY);
 				MPrint(sFontX, sFontY, s->name);
 				// reset to frame buffer!
 				SetFontDestBuffer(FRAME_BUFFER);
@@ -2392,7 +2436,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 			dx += TM_INV_HAND_SEP;
 		}
 
-		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INTERFACE_START_Y);
+		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X,
+						SCREEN_HEIGHT - INTERFACE_START_Y);
 
 		RenderTownIDString();
 	}
@@ -2424,7 +2469,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				if (!(s->uiStatusFlags & SOLDIER_DEAD))
 				{
 					PrintAP(s, x, y, w, h);
-					DrawSoldierUIBars(*s, dx + TM_BARS_X + 2, dy + TM_BARS_Y + 2 + TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER);
+					DrawSoldierUIBars(*s, dx + TM_BARS_X + 2, dy + TM_BARS_Y + 2 + TM_LIFEBAR_HEIGHT,
+								TRUE, FRAME_BUFFER);
 				}
 				else
 				{
@@ -2477,9 +2523,12 @@ void CreateTEAMPanelButtons(void)
 	iTEAMPanelImages[DISK_IMAGES]       = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES],  2, 5);
 
 	const INT32 dy = INTERFACE_START_Y;
-	MakeButtonTeam(TEAM_DONE_BUTTON,       iTEAMPanelImages[ENDTURN_IMAGES],    TM_ENDTURN_X,    dy + TM_ENDTURN_Y,    BtnEndTurnCallback,    TacticalStr[END_TURN_POPUPTEXT]);
-	MakeButtonTeam(TEAM_MAP_SCREEN_BUTTON, iTEAMPanelImages[ROSTERMODE_IMAGES], TM_ROSTERMODE_X, dy + TM_ROSTERMODE_Y, BtnRostermodeCallback, TacticalStr[MAPSCREEN_POPUPTEXT]);
-	MakeButtonTeam(CHANGE_SQUAD_BUTTON,    iTEAMPanelImages[DISK_IMAGES],       TM_DISK_X,       dy + TM_DISK_Y,       BtnSquadCallback,      TacticalStr[CHANGE_SQUAD_POPUPTEXT]);
+	MakeButtonTeam(TEAM_DONE_BUTTON, iTEAMPanelImages[ENDTURN_IMAGES], TM_ENDTURN_X, dy + TM_ENDTURN_Y,
+			BtnEndTurnCallback, TacticalStr[END_TURN_POPUPTEXT]);
+	MakeButtonTeam(TEAM_MAP_SCREEN_BUTTON, iTEAMPanelImages[ROSTERMODE_IMAGES], TM_ROSTERMODE_X,
+			dy + TM_ROSTERMODE_Y, BtnRostermodeCallback, TacticalStr[MAPSCREEN_POPUPTEXT]);
+	MakeButtonTeam(CHANGE_SQUAD_BUTTON, iTEAMPanelImages[DISK_IMAGES], TM_DISK_X, dy + TM_DISK_Y,
+			BtnSquadCallback, TacticalStr[CHANGE_SQUAD_POPUPTEXT]);
 }
 
 
@@ -2530,7 +2579,8 @@ void SetTEAMPanelCurrentMerc(void)
 
 static void UpdateTEAMPanel(void)
 {
-	EnableButton(iTEAMPanelButtons[TEAM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == OUR_TEAM && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
+	EnableButton(iTEAMPanelButtons[TEAM_DONE_BUTTON], gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
+			!(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT);
 
 	EnableButton(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON], !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV));
 
@@ -2799,7 +2849,7 @@ void FinishAnySkullPanelAnimations(void)
 	FOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->bLife == 0 &&
-				(s->fUIdeadMerc || s->fClosePanelToDie))
+			(s->fUIdeadMerc || s->fClosePanelToDie))
 		{
 			HandlePlayerTeamMemberDeathAfterSkullAnimation(s);
 
@@ -2840,7 +2890,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 		pSoldier->sPanelFaceY = pSoldier->face->usFaceY;
 
 		pSoldier->fUIdeadMerc = FALSE;
-		pSoldier->fClosePanel		= TRUE;
+		pSoldier->fClosePanel = TRUE;
 		pSoldier->fClosePanelToDie = TRUE;
 		pSoldier->ubClosePanelFrame = 0;
 		pSoldier->ubDeadPanelFrame = 0;
@@ -2849,30 +2899,30 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->fClosePanel )
 	{
-		 if ( TIMECOUNTERDONE( pSoldier->PanelAnimateCounter, 160 ) )
-		 {
-				pSoldier->ubClosePanelFrame++;
+		if ( TIMECOUNTERDONE( pSoldier->PanelAnimateCounter, 160 ) )
+		{
+			pSoldier->ubClosePanelFrame++;
 
-				if ( pSoldier->ubClosePanelFrame > 5 )
+			if ( pSoldier->ubClosePanelFrame > 5 )
+			{
+				pSoldier->fClosePanel = FALSE;
+				pSoldier->ubClosePanelFrame = 5;
+
+				if ( pSoldier->fClosePanelToDie )
 				{
-					pSoldier->fClosePanel = FALSE;
-					pSoldier->ubClosePanelFrame = 5;
-
-					if ( pSoldier->fClosePanelToDie )
+					pSoldier->fDeadPanel = TRUE;
+					//PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+				}
+				else
+				{
+					if (!pSoldier->face->fDisabled)
 					{
-						pSoldier->fDeadPanel = TRUE;
-						//PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
-					}
-					else
-					{
-						if (!pSoldier->face->fDisabled)
-						{
-							RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
-						}
+						RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
 					}
 				}
-				RESETTIMECOUNTER( pSoldier->PanelAnimateCounter, 160 );
-		 }
+				}
+			RESETTIMECOUNTER( pSoldier->PanelAnimateCounter, 160 );
+		}
 	}
 
 	if ( pSoldier->fClosePanel )
@@ -2880,47 +2930,54 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 		if (!pSoldier->face->fDisabled)
 		{
 			RestoreExternBackgroundRect(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT);
-			BltVideoObject(FRAME_BUFFER, guiCLOSE, pSoldier->ubClosePanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
-			InvalidateRegion(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, pSoldier->sPanelFaceX + TM_FACE_WIDTH, pSoldier->sPanelFaceY + TM_FACE_HEIGHT);
+			BltVideoObject(FRAME_BUFFER, guiCLOSE, pSoldier->ubClosePanelFrame,
+					pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
+			InvalidateRegion(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY,
+					pSoldier->sPanelFaceX + TM_FACE_WIDTH,
+					pSoldier->sPanelFaceY + TM_FACE_HEIGHT);
 		}
 	}
 
 
 	if ( pSoldier->fDeadPanel )
 	{
-		 if ( TIMECOUNTERDONE(  pSoldier->PanelAnimateCounter, 160 ) )
-		 {
-				pSoldier->ubDeadPanelFrame++;
+		if ( TIMECOUNTERDONE(  pSoldier->PanelAnimateCounter, 160 ) )
+		{
+			pSoldier->ubDeadPanelFrame++;
 
-				if ( pSoldier->ubDeadPanelFrame == 4 )
+			if ( pSoldier->ubDeadPanelFrame == 4 )
+			{
+				ScreenMsg(FONT_RED, MSG_SKULL_UI_FEEDBACK, pMercDeadString, pSoldier->name);
+
+				PlayJA2Sample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+				PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+			}
+
+			if ( pSoldier->ubDeadPanelFrame > 5 )
+			{
+				pSoldier->fDeadPanel = FALSE;
+				pSoldier->ubDeadPanelFrame = 5;
+				pSoldier->fClosePanelToDie = FALSE;
+
+				// Finish!
+				if (!pSoldier->face->fDisabled)
 				{
-					ScreenMsg(FONT_RED, MSG_SKULL_UI_FEEDBACK, pMercDeadString, pSoldier->name);
+					BltVideoObject(guiSAVEBUFFER, guiDEAD, pSoldier->ubDeadPanelFrame,
+							pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
 
-					PlayJA2Sample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
-					PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
+					// Blit hatch!
+					BltVideoObject(guiSAVEBUFFER, guiHATCH, 0, pSoldier->sPanelFaceX,
+							pSoldier->sPanelFaceY);
+
+					RestoreExternBackgroundRect(pSoldier->sPanelFaceX,
+									pSoldier->sPanelFaceY, TM_FACE_WIDTH,
+									TM_FACE_HEIGHT);
 				}
+				HandlePlayerTeamMemberDeathAfterSkullAnimation( pSoldier );
 
-				if ( pSoldier->ubDeadPanelFrame > 5 )
-				{
-					pSoldier->fDeadPanel = FALSE;
-					pSoldier->ubDeadPanelFrame = 5;
-					pSoldier->fClosePanelToDie = FALSE;
-
-					// Finish!
-					if (!pSoldier->face->fDisabled)
-					{
-						BltVideoObject(guiSAVEBUFFER, guiDEAD, pSoldier->ubDeadPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
-
-						// Blit hatch!
-						BltVideoObject(guiSAVEBUFFER, guiHATCH, 0, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
-
-						RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
-					}
-					HandlePlayerTeamMemberDeathAfterSkullAnimation( pSoldier );
-
-				}
-				RESETTIMECOUNTER( pSoldier->PanelAnimateCounter, 160 );
-		 }
+			}
+			RESETTIMECOUNTER( pSoldier->PanelAnimateCounter, 160 );
+		}
 	}
 
 	if ( pSoldier->fDeadPanel )
@@ -2928,12 +2985,15 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 		// Render panel!
 		if (!pSoldier->face->fDisabled)
 		{
-			BltVideoObject(FRAME_BUFFER, guiDEAD, pSoldier->ubDeadPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
+			BltVideoObject(FRAME_BUFFER, guiDEAD, pSoldier->ubDeadPanelFrame,
+					pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
 
 			// Blit hatch!
 			BltVideoObject(guiSAVEBUFFER, guiHATCH, 0, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
 
-			InvalidateRegion(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, pSoldier->sPanelFaceX + TM_FACE_WIDTH, pSoldier->sPanelFaceY + TM_FACE_HEIGHT);
+			InvalidateRegion(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY,
+						pSoldier->sPanelFaceX + TM_FACE_WIDTH,
+						pSoldier->sPanelFaceY + TM_FACE_HEIGHT);
 		}
 	}
 }
@@ -2952,7 +3012,8 @@ static void RenderSoldierTeamInv(SOLDIERTYPE const& s, INT16 const x, INT16 y, D
 		RestoreExternBackgroundRect(x, y, w, h);
 	}
 	else
-	{ // Look in primary hand
+	{
+		// Look in primary hand
 		INVRenderItem(buf, &s, s.inv[HANDPOS], x, y, w, h, dirty_level, 0, SGP_TRANSPARENT);
 	}
 
@@ -2963,7 +3024,8 @@ static void RenderSoldierTeamInv(SOLDIERTYPE const& s, INT16 const x, INT16 y, D
 		RestoreExternBackgroundRect(x, y, w, h);
 	}
 	else
-	{ // Do secondary hand
+	{
+		// Do secondary hand
 		INVRenderItem(buf, &s, s.inv[SECONDHANDPOS], x, y, w, h, dirty_level, 0, SGP_TRANSPARENT);
 	}
 }
@@ -3127,11 +3189,11 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 	if (s->bTeam != OUR_TEAM) return;
 
 	// Are we in the loaded sector?
-	if (s->sSectorX == gWorldSectorX  &&
-			s->sSectorY == gWorldSectorY  &&
-			s->bSectorZ == gbWorldSectorZ &&
-			!s->fBetweenSectors &&
-			s->bInSector)
+	if (s->sSectorX == gWorldSectorX &&
+		s->sSectorY == gWorldSectorY &&
+		s->bSectorZ == gbWorldSectorZ &&
+		!s->fBetweenSectors &&
+		s->bInSector)
 	{
 		// IF on duty....
 		INT32 const cur_squad = CurrentSquad();
@@ -3145,8 +3207,9 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 				CFOR_EACH_PASSENGER(v, i) AddPlayerToInterfaceTeamSlot(*i);
 			}
 			else if (s->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
-			{ /* ATE: If we have the insertion code of helicopter, don't add just yet!
-				 * (will add in heli code) */
+			{
+				// ATE: If we have the insertion code of helicopter, don't add just yet!
+				// (will add in heli code)
 				AddPlayerToInterfaceTeamSlot(s);
 			}
 		}
@@ -3261,14 +3324,15 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if( guiCurrentScreen == MAP_SCREEN )
 		{
 			// shade the background
-			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
-			InvalidateRegion(        STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359 );
-      InitKeyRingPopup( pSoldier, STD_SCREEN_X + 0, sStartYPosition, sWidth, sHeight );
+			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 0, STD_SCREEN_Y + 107,
+							STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
+			InvalidateRegion(STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
+			InitKeyRingPopup(pSoldier, STD_SCREEN_X + 0, sStartYPosition, sWidth, sHeight);
 		}
-    else
-    {
-      InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
-    }
+		else
+		{
+			InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
+		}
 	}
 }
 
@@ -3276,9 +3340,9 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	UINT32 uiKeyRing;
 	// Copyies of values
-	UINT16	usOldItemIndex;
-	static BOOLEAN	fRightDown = FALSE;
-	static BOOLEAN	fLeftDown = FALSE;
+	UINT16 usOldItemIndex;
+	static BOOLEAN fRightDown = FALSE;
+	static BOOLEAN fLeftDown = FALSE;
 
 	uiKeyRing = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -3312,8 +3376,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 				// Fill out the inv slot for the item
 				//InvSlot.sItemIndex = gpSMCurrentMerc->inv[ uiHandPos ].usItem;
-//			InvSlot.ubNumberOfItems = gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects;
-//			InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ].bGunStatus;
+				//InvSlot.ubNumberOfItems = gpSMCurrentMerc->inv[ uiHandPos ].ubNumberOfObjects;
+				//InvSlot.ubItemQuality = gpSMCurrentMerc->inv[ uiHandPos ].bGunStatus;
 				//InvSlot.ItemObject = gpSMCurrentMerc->inv[uiHandPos];
 				//InvSlot.ubLocationOfObject = PLAYERS_INVENTORY;
 
@@ -3350,8 +3414,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		}
 		else
 		{
-			BOOLEAN		fOKToGo = FALSE;
-			BOOLEAN		fDeductPoints = FALSE;
+			BOOLEAN fOKToGo = FALSE;
+			BOOLEAN fDeductPoints = FALSE;
 
 			if( ( gpItemPointer ->usItem < FIRST_KEY ) || ( gpItemPointer ->usItem > KEY_32 ) )
 			{
@@ -3360,7 +3424,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 			// ATE: OK, get source, dest guy if different... check for and then charge appropriate APs
 			if (gpItemPointerSoldier == NULL ||
-					gpItemPointerSoldier == GetSelectedInfoChar())
+				gpItemPointerSoldier == GetSelectedInfoChar())
 			{
 				// We are doing this ourselve, continue
 				fOKToGo = TRUE;
@@ -3499,11 +3563,11 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			if (fInMapMode)
 			{
 				//InitKeyItemDescriptionBox(gpItemPopupSoldier, (UINT8)uiKeyRing, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y);
-      }
-      else
-      {
+			}
+			else
+			{
 				InitKeyItemDescriptionBox(gpItemPopupSoldier, (UINT8)uiKeyRing, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y);
-      }
+			}
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -3552,8 +3616,7 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface(void)
 
 static bool IsMouseInRegion(MOUSE_REGION const& r)
 {
-	return
-		r.RegionTopLeftX <= gusMouseXPos && gusMouseXPos <= r.RegionBottomRightX &&
+	return r.RegionTopLeftX <= gusMouseXPos && gusMouseXPos <= r.RegionBottomRightX &&
 		r.RegionTopLeftY <= gusMouseYPos && gusMouseYPos <= r.RegionBottomRightY;
 }
 
@@ -3578,9 +3641,9 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				wchar_t	zText[512];
 				wchar_t	zMoney[64];
 
-        // Make sure we go back to movement mode...
-		    guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-		    HandleTacticalUI( );
+				// Make sure we go back to movement mode...
+				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+				HandleTacticalUI( );
 
 				SPrintMoney(zMoney, gpItemPointer->uiMoneyAmount);
 
@@ -3605,12 +3668,13 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			gfAddingMoneyToMercFromPlayersAccount = TRUE;
 
 			//create the temp object from the players account balance
-//			if( LaptopSaveInfo.iCurrentBalance > MAX_MONEY_PER_SLOT )
-//				CreateMoney( MAX_MONEY_PER_SLOT, &gItemPointer );
-//			else
+			//if( LaptopSaveInfo.iCurrentBalance > MAX_MONEY_PER_SLOT )
+			//	CreateMoney( MAX_MONEY_PER_SLOT, &gItemPointer );
+			//else
 				CreateMoney( LaptopSaveInfo.iCurrentBalance, &gItemPointer );
 
-			InternalInitItemDescriptionBox( &gItemPointer, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y, 0, gpSMCurrentMerc );
+			InternalInitItemDescriptionBox(&gItemPointer, SM_ITEMDESC_START_X, SM_ITEMDESC_START_Y,
+							0, gpSMCurrentMerc);
 		}
 	}
 }
@@ -3621,7 +3685,8 @@ static void ConfirmationToDepositMoneyToPlayersAccount(MessageBoxReturnValue con
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		//add the money to the players account
-		AddTransactionToPlayersBook( MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile, GetWorldTotalMin(), gpItemPointer->uiMoneyAmount );
+		AddTransactionToPlayersBook(MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT, gpSMCurrentMerc->ubProfile,
+						GetWorldTotalMin(), gpItemPointer->uiMoneyAmount);
 
 		EndItemPointer( );
 		// remove contents of the moving item because object still is money and usable
@@ -3678,7 +3743,8 @@ void GoToMapScreenFromTactical(void)
 	if ( gTacticalStatus.bBoxingState != NOT_BOXING )
 	{
 		// pop up dialogue asking whether the player wants to abandon the fight
-		DoMessageBox(MSG_BOX_BASIC_STYLE, g_langRes->Message[STR_ABANDON_FIGHT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, AbandonBoxingCallback, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, g_langRes->Message[STR_ABANDON_FIGHT], GAME_SCREEN,
+				MSG_BOX_FLAG_YESNO, AbandonBoxingCallback, NULL);
 		return;
 	}
 	// ok, proceed!
@@ -3689,7 +3755,8 @@ void GoToMapScreenFromTactical(void)
 void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem)
 {
 	// if in attached weapon mode and don't have weapon with GL attached in hand, reset weapon mode
-	if ( pSoldier->bWeaponMode == WM_ATTACHED && FindAttachment( &(pSoldier->inv[ HANDPOS ]), UNDER_GLAUNCHER ) == NO_SLOT )
+	if (pSoldier->bWeaponMode == WM_ATTACHED &&
+		FindAttachment(&(pSoldier->inv[HANDPOS]), UNDER_GLAUNCHER) == NO_SLOT)
 	{
 		pSoldier->bWeaponMode = WM_NORMAL;
 		pSoldier->bDoBurst = FALSE;
@@ -3716,9 +3783,10 @@ void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvP
 	else
 	{
 		// as a minimum
-		if ( (GCM->getItem(pSoldier->inv[ HANDPOS ].usItem)->isWeapon()) && GCM->getWeapon( pSoldier->inv[ HANDPOS].usItem)->ubShotsPerBurst == 0 )
+		if ((GCM->getItem(pSoldier->inv[HANDPOS].usItem)->isWeapon()) &&
+			GCM->getWeapon(pSoldier->inv[HANDPOS].usItem)->ubShotsPerBurst == 0)
 		{
-			pSoldier->bDoBurst		= FALSE;
+			pSoldier->bDoBurst = FALSE;
 			pSoldier->bWeaponMode = WM_NORMAL;
 		}
 	}

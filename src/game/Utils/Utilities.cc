@@ -39,10 +39,10 @@ catch (...) { return FALSE; }
 
 void DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const UINT8 ubYPos, SGPVSurface* const dst)
 {
-	UINT16										us16BPPColor;
-	UINT32										cnt1;
-	UINT8											ubSize;
-	INT16											 sTLX, sTLY, sBRX, sBRY;
+	UINT16 us16BPPColor;
+	UINT32 cnt1;
+	UINT8  ubSize;
+	INT16  sTLX, sTLY, sBRX, sBRY;
 
 	// Create 16BPP Palette
 	const UINT8 ubPaletteRep = GetPaletteRepIndexFromID(aPalRep);

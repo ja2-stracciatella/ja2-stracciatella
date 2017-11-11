@@ -235,7 +235,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 	soldier.sGridNo = pSoldier->sGridNo;
 
 	// OK, Get an exit grid ( if possible )
-  if ( !GetExitGrid( sSweetGridNo, &ExitGrid ) )
+	if ( !GetExitGrid( sSweetGridNo, &ExitGrid ) )
 	{
 		return( NOWHERE );
 	}
@@ -366,7 +366,7 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 
 TEST(ExitGrids, asserts)
 {
-  EXPECT_EQ(sizeof(EXITGRID), 6);
+	EXPECT_EQ(sizeof(EXITGRID), 6);
 }
 
 #endif

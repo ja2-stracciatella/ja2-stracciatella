@@ -28,49 +28,49 @@
 #include "WordWrap.h"
 #include "UILayout.h"
 
-#define		GIO_TITLE_FONT											FONT16ARIAL//FONT14ARIAL
-#define		GIO_TITLE_COLOR											FONT_MCOLOR_WHITE
+#define GIO_TITLE_FONT			FONT16ARIAL//FONT14ARIAL
+#define GIO_TITLE_COLOR		FONT_MCOLOR_WHITE
 
-#define		GIO_TOGGLE_TEXT_FONT								FONT16ARIAL//FONT14ARIAL
-#define		GIO_TOGGLE_TEXT_COLOR								FONT_MCOLOR_WHITE
+#define GIO_TOGGLE_TEXT_FONT		FONT16ARIAL//FONT14ARIAL
+#define GIO_TOGGLE_TEXT_COLOR		FONT_MCOLOR_WHITE
 
 //buttons
-#define		GIO_BTN_OK_X												(STD_SCREEN_X + 141)
-#define		GIO_BTN_OK_Y												(STD_SCREEN_Y + 418)
-#define		GIO_CANCEL_X												(STD_SCREEN_X + 379)
+#define GIO_BTN_OK_X			(STD_SCREEN_X + 141)
+#define GIO_BTN_OK_Y			(STD_SCREEN_Y + 418)
+#define GIO_CANCEL_X			(STD_SCREEN_X + 379)
 
 //main title
-#define		GIO_MAIN_TITLE_X										(STD_SCREEN_X + 0)
-#define		GIO_MAIN_TITLE_Y										(STD_SCREEN_Y + 68)
-#define GIO_MAIN_TITLE_WIDTH 640
+#define GIO_MAIN_TITLE_X		(STD_SCREEN_X + 0)
+#define GIO_MAIN_TITLE_Y		(STD_SCREEN_Y + 68)
+#define GIO_MAIN_TITLE_WIDTH		640
 
 //radio box locations
-#define		GIO_GAP_BN_SETTINGS									35
-#define		GIO_OFFSET_TO_TEXT									20//30
-#define		GIO_OFFSET_TO_TOGGLE_BOX						155//200
-#define		GIO_OFFSET_TO_TOGGLE_BOX_Y					9
+#define GIO_GAP_BN_SETTINGS		35
+#define GIO_OFFSET_TO_TEXT		20//30
+#define GIO_OFFSET_TO_TOGGLE_BOX	155//200
+#define GIO_OFFSET_TO_TOGGLE_BOX_Y	9
 
-#define		GIO_DIF_SETTINGS_X									(STD_SCREEN_X + 80)
-#define		GIO_DIF_SETTINGS_Y									(STD_SCREEN_Y + 150)
-#define		GIO_DIF_SETTINGS_WIDTH							GIO_OFFSET_TO_TOGGLE_BOX - GIO_OFFSET_TO_TEXT //230
+#define GIO_DIF_SETTINGS_X		(STD_SCREEN_X + 80)
+#define GIO_DIF_SETTINGS_Y		(STD_SCREEN_Y + 150)
+#define GIO_DIF_SETTINGS_WIDTH		GIO_OFFSET_TO_TOGGLE_BOX - GIO_OFFSET_TO_TEXT //230
 
-#define		GIO_GAME_SETTINGS_X									(STD_SCREEN_X + 350)
-#define		GIO_GAME_SETTINGS_Y									(STD_SCREEN_Y + 300)
-#define		GIO_GAME_SETTINGS_WIDTH							GIO_DIF_SETTINGS_WIDTH
+#define GIO_GAME_SETTINGS_X		(STD_SCREEN_X + 350)
+#define GIO_GAME_SETTINGS_Y		(STD_SCREEN_Y + 300)
+#define GIO_GAME_SETTINGS_WIDTH	GIO_DIF_SETTINGS_WIDTH
 
-#define		GIO_GUN_SETTINGS_X									GIO_GAME_SETTINGS_X
-#define		GIO_GUN_SETTINGS_Y									GIO_DIF_SETTINGS_Y//150//280
-#define		GIO_GUN_SETTINGS_WIDTH							GIO_DIF_SETTINGS_WIDTH
+#define GIO_GUN_SETTINGS_X		GIO_GAME_SETTINGS_X
+#define GIO_GUN_SETTINGS_Y		GIO_DIF_SETTINGS_Y//150//280
+#define GIO_GUN_SETTINGS_WIDTH		GIO_DIF_SETTINGS_WIDTH
 
 #if 0
-#define		GIO_TIMED_TURN_SETTING_X						GIO_DIF_SETTINGS_X
-#define		GIO_TIMED_TURN_SETTING_Y						GIO_GAME_SETTINGS_Y
-#define		GIO_TIMED_TURN_SETTING_WIDTH				GIO_DIF_SETTINGS_WIDTH
+#define GIO_TIMED_TURN_SETTING_X	GIO_DIF_SETTINGS_X
+#define GIO_TIMED_TURN_SETTING_Y	GIO_GAME_SETTINGS_Y
+#define GIO_TIMED_TURN_SETTING_WIDTH	GIO_DIF_SETTINGS_WIDTH
 #endif
 
-#define		GIO_IRON_MAN_SETTING_X							GIO_DIF_SETTINGS_X
-#define		GIO_IRON_MAN_SETTING_Y							GIO_GAME_SETTINGS_Y
-#define		GIO_IRON_MAN_SETTING_WIDTH						GIO_DIF_SETTINGS_WIDTH
+#define GIO_IRON_MAN_SETTING_X		GIO_DIF_SETTINGS_X
+#define GIO_IRON_MAN_SETTING_Y		GIO_GAME_SETTINGS_Y
+#define GIO_IRON_MAN_SETTING_WIDTH	GIO_DIF_SETTINGS_WIDTH
 
 // Game Settings options
 enum
@@ -366,8 +366,8 @@ static void ExitGIOScreen()
 
 static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallback)
 {
-  gubGameOptionScreenHandler = GIO_EXIT;
-  DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_OK, ReturnCallback, NULL);
+	gubGameOptionScreenHandler = GIO_EXIT;
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_OK, ReturnCallback, NULL);
 }
 
 static void HandleGIOScreen(void)
@@ -391,16 +391,14 @@ static void HandleGIOScreen(void)
 					FadeOutNextFrame();
 				}
 				break;
-
 			case GIO_IRON_MAN_MODE:
 				DisplayMessageToUserAboutGameDifficulty();
 				break;
-      
 			case GIO_DEAD_IS_DEAD_MODE:
 				DisplayMessageToUserAboutGameDifficulty();
 				break;
 			case GIO_DEAD_IS_DEAD_SAVE:
-				DisplayMessageToUserAboutDeadIsDeadSaveScreen(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack); 
+				DisplayMessageToUserAboutDeadIsDeadSaveScreen(str_dead_is_dead_mode_enter_name, ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack);
 				break;
 		}
 
@@ -488,7 +486,7 @@ static void RenderGIOScreen(void)
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_IRON_MAN_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_SAVE_DURING_COMBAT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usPosY += GIO_GAP_BN_SETTINGS;
-	
+
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY, GIO_DIF_SETTINGS_WIDTH, 2, GIO_TOGGLE_TEXT_FONT, GIO_TOGGLE_TEXT_COLOR, gzGIOScreenText[GIO_DEAD_IS_DEAD_TEXT], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DisplayWrappedString(GIO_IRON_MAN_SETTING_X + GIO_OFFSET_TO_TEXT, usPosY+20, 220, 2, FONT12ARIAL, GIO_TOGGLE_TEXT_COLOR, zNewTacticalMessages[TCTL_MSG__CANNOT_LOAD_PREVIOUS_SAVE], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
@@ -732,7 +730,7 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 	{
 		gubGIOExitScreen = INTRO_SCREEN;
 	}
-  
+
 	//set the fact that we should do the intro videos
 	SetIntroType(INTRO_BEGINING);
 
@@ -751,23 +749,23 @@ static void DoGioMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallba
 static void DisplayMessageToUserAboutGameDifficulty(void)
 {
 	const wchar_t* text;
-        text = zGioDifConfirmText[GetCurrentDifficultyButtonSetting()];        
+	text = zGioDifConfirmText[GetCurrentDifficultyButtonSetting()];
 	DoGioMessageBox(text, ConfirmGioDifSettingMessageBoxCallBack);
 }
 
 
 static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
-  if (bExitValue == MSG_BOX_RETURN_YES)
-  {
-    if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
-    {
-      gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD_SAVE;
-    } else
-    {
-      gubGameOptionScreenHandler = GIO_EXIT;
-    } 
-  }
+	if (bExitValue == MSG_BOX_RETURN_YES)
+	{
+		if (GetCurrentGameSaveButtonSetting() == GIO_DEAD_IS_DEAD)
+		{
+			gubGameOptionScreenHandler = GIO_DEAD_IS_DEAD_SAVE;
+		} else
+		{
+			gubGameOptionScreenHandler = GIO_EXIT;
+		}
+	}
 }
 
 
@@ -816,7 +814,7 @@ static void ConfirmGioDeadIsDeadMessageBoxCallBack(MessageBoxReturnValue const b
 
 static void ConfirmGioDeadIsDeadGoToSaveMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
-  // Set the Previous Option Screen to the Game Init Options Screen, so the save screen knows we are starting a new game
-  guiPreviousOptionScreen = GAME_INIT_OPTIONS_SCREEN;
-  gubGameOptionScreenHandler = GIO_EXIT;
+	// Set the Previous Option Screen to the Game Init Options Screen, so the save screen knows we are starting a new game
+	guiPreviousOptionScreen = GAME_INIT_OPTIONS_SCREEN;
+	gubGameOptionScreenHandler = GIO_EXIT;
 }

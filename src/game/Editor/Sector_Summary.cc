@@ -459,26 +459,26 @@ static void RenderSectorInformation(void)
 		if (m->sIsolatedGridNo != -1) { MPrint(x, 75, L"I"); x += StringPixLength(L"I", FONT10ARIAL) + 2; }
 		MPrint(x, 75, L")");
 	}
-	mprintf( 10, 85,		L"Number of rooms:  %d", s->ubNumRooms );
-	mprintf( 10, 95,		L"Total map population:  %d", m->ubNumIndividuals );
+	mprintf( 10, 85,			L"Number of rooms:  %d", s->ubNumRooms );
+	mprintf( 10, 95,			L"Total map population:  %d", m->ubNumIndividuals );
 	mprintf( 20, 105,			L"Enemies:  %d", s->EnemyTeam.ubTotal );
 	mprintf( 30, 115,			L"Admins:  %d", s->ubNumAdmins );
 	if( s->ubNumAdmins )
-		mprintf( 100, 115,			L"(%d detailed, %d profile -- %d have priority existance)", s->ubAdminDetailed, s->ubAdminProfile, s->ubAdminExistance );
+		mprintf( 100, 115,		L"(%d detailed, %d profile -- %d have priority existance)", s->ubAdminDetailed, s->ubAdminProfile, s->ubAdminExistance );
 	mprintf( 30, 125,			L"Troops:  %d", s->ubNumTroops );
 	if( s->ubNumTroops )
-		mprintf( 100, 125,			L"(%d detailed, %d profile -- %d have priority existance)", s->ubTroopDetailed, s->ubTroopProfile, s->ubTroopExistance );
+		mprintf( 100, 125,		L"(%d detailed, %d profile -- %d have priority existance)", s->ubTroopDetailed, s->ubTroopProfile, s->ubTroopExistance );
 	mprintf( 30, 135,			L"Elites:  %d", s->ubNumElites );
 	if( s->ubNumElites )
-		mprintf( 100, 135,			L"(%d detailed, %d profile -- %d have priority existance)", s->ubEliteDetailed, s->ubEliteProfile, s->ubEliteExistance );
+		mprintf( 100, 135,		L"(%d detailed, %d profile -- %d have priority existance)", s->ubEliteDetailed, s->ubEliteProfile, s->ubEliteExistance );
 	mprintf( 20, 145,			L"Civilians:  %d", s->CivTeam.ubTotal );
 	if( s->CivTeam.ubTotal )
-		mprintf( 100, 145,			L"(%d detailed, %d profile -- %d have priority existance)", s->CivTeam.ubDetailed, s->CivTeam.ubProfile, s->CivTeam.ubExistance );
+		mprintf( 100, 145,		L"(%d detailed, %d profile -- %d have priority existance)", s->CivTeam.ubDetailed, s->CivTeam.ubProfile, s->CivTeam.ubExistance );
 	if( s->ubSummaryVersion >= 9 )
 	{
-		mprintf( 30, 155,		  L"Humans:  %d", s->CivTeam.ubTotal - s->ubCivCows - s->ubCivBloodcats );
-		mprintf( 30, 165,			L"Cows:  %d", s->ubCivCows );
-		mprintf( 30, 175,			L"Bloodcats:  %d", s->ubCivBloodcats );
+		mprintf( 30, 155,		L"Humans:  %d", s->CivTeam.ubTotal - s->ubCivCows - s->ubCivBloodcats );
+		mprintf( 30, 165,		L"Cows:  %d", s->ubCivCows );
+		mprintf( 30, 175,		L"Bloodcats:  %d", s->ubCivBloodcats );
 	}
 	mprintf( 20, 185,			L"Creatures:  %d", s->CreatureTeam.ubTotal );
 	if( s->ubSummaryVersion >= 9 )
@@ -655,7 +655,7 @@ static void RenderItemDetails(void)
 				if( gpWorldItemsSummaryArray[ i ].o.usItem == index )
 				{
 					if( (gubSummaryItemMode == ITEMMODE_SCIFI && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_REALISTIC_ONLY)) ||
-						  (gubSummaryItemMode == ITEMMODE_REAL  && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY)) )
+						(gubSummaryItemMode == ITEMMODE_REAL  && !(gpWorldItemsSummaryArray[ i ].usFlags & WORLD_ITEM_SCIFI_ONLY)) )
 					{
 						pItem = &gpWorldItemsSummaryArray[ i ].o;
 						uiExistChance += (100 - gpWorldItemsSummaryArray[ i ].ubNonExistChance) * pItem->ubNumberOfObjects;
@@ -1347,11 +1347,11 @@ void RenderSummaryWindow()
 					ClipRect.iRight = ClipRect.iLeft + 12;
 					FRAME_BUFFER->ShadowRect(ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					if( giCurrentViewLevel == BASEMENT1_LEVEL_MASK ||
-						  giCurrentViewLevel == BASEMENT2_LEVEL_MASK ||
-							giCurrentViewLevel == BASEMENT3_LEVEL_MASK ||
-							giCurrentViewLevel == ALTERNATE_B1_MASK		 ||
-							giCurrentViewLevel == ALTERNATE_B2_MASK		 ||
-							giCurrentViewLevel == ALTERNATE_B3_MASK		 )
+						giCurrentViewLevel == BASEMENT2_LEVEL_MASK ||
+						giCurrentViewLevel == BASEMENT3_LEVEL_MASK ||
+						giCurrentViewLevel == ALTERNATE_B1_MASK ||
+						giCurrentViewLevel == ALTERNATE_B2_MASK ||
+						giCurrentViewLevel == ALTERNATE_B3_MASK)
 					{
 						FRAME_BUFFER->ShadowRect(ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					}
@@ -2007,27 +2007,27 @@ static void SummaryOverrideCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void CalculateOverrideStatus(void)
 {
-  std::string filename;
+	std::string filename;
 	gfOverrideDirty = FALSE;
 	gfOverride = FALSE;
 	if( gfTempFile )
 	{
-    // if empty, use "test.dat"
-    if (!wcslen(gszTempFilename))
-    {
-      filename = GCM->getMapPath(gszTempFilename);
-    }
-    else
-    {
-      filename = GCM->getMapPath("test.dat");
-    }
+		// if empty, use "test.dat"
+		if (!wcslen(gszTempFilename))
+		{
+			filename = GCM->getMapPath(gszTempFilename);
+		}
+		else
+		{
+			filename = GCM->getMapPath("test.dat");
+		}
 
-    filename = FileMan::replaceExtension(filename, ".dat");
+		filename = FileMan::replaceExtension(filename, ".dat");
 	}
 	else
-  {
-    filename = GCM->getMapPath(gszFilename);
-  }
+	{
+		filename = GCM->getMapPath(gszFilename);
+	}
 
 	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%hs", FileMan::getFileName(filename).c_str());
 
@@ -2565,8 +2565,8 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 
-      // Always use windows format because here we are loading a map
-      // file, not a user save
+			// Always use windows format because here we are loading a map
+			// file, not a user save
 			ExtractSoldierCreateFromFile(hfile, &priority, false);
 		}
 		else
@@ -2617,8 +2617,8 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 
-      // Always use windows format because here we are loading a map
-      // file, not a user save
+			// Always use windows format because here we are loading a map
+			// file, not a user save
 			ExtractSoldierCreateFromFile(hfile, &priority, false);
 		}
 		else

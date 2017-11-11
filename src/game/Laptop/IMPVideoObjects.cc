@@ -60,35 +60,35 @@ void LoadProfileBackGround(void)
 
 void RemoveProfileBackGround( void )
 {
-  // remove background
+	// remove background
 	DeleteVideoObject(guiBACKGROUND);
 }
 
 
 void RenderProfileBackGround( void )
 {
-  INT32 iCounter = 0;
+	INT32 iCounter = 0;
 
-  // this procedure will render the generic backgound to the screen
+	// this procedure will render the generic backgound to the screen
 
 	// render each row 5 times wide, 5 tiles high
 	const SGPVObject* hHandle = guiBACKGROUND;
-  for(iCounter = 0; iCounter < 4; iCounter++)
+	for(iCounter = 0; iCounter < 4; iCounter++)
 	{
-	  // blt background to screen from left to right
+		// blt background to screen from left to right
 		const INT32 x = LAPTOP_SCREEN_UL_X;
 		const INT32 y = LAPTOP_SCREEN_WEB_UL_Y + iCounter * CHAR_PROFILE_BACKGROUND_TILE_HEIGHT;
-	  BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 0 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 1 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 2 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
-    BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 3 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
+		BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 0 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
+		BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 1 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
+		BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 2 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
+		BltVideoObject(FRAME_BUFFER, hHandle, 0, x + 3 * CHAR_PROFILE_BACKGROUND_TILE_WIDTH, y);
  	}
 
 	// dirty buttons
 	MarkButtonsDirty( );
 
 	// force refresh of screen
-  InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
@@ -102,7 +102,7 @@ void LoadIMPSymbol(void)
 
 void DeleteIMPSymbol( void )
 {
-  // remove IMP symbol
+	// remove IMP symbol
 	DeleteVideoObject(guiIMPSYMBOL);
 }
 
@@ -122,7 +122,7 @@ void LoadBeginIndent(void)
 
 void DeleteBeginIndent( void )
 {
-  // remove indent symbol
+	// remove indent symbol
 	DeleteVideoObject(guiBEGININDENT);
 }
 
@@ -142,7 +142,7 @@ void LoadActivationIndent(void)
 
 void DeleteActivationIndent( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiACTIVATIONINDENT);
 }
 
@@ -162,7 +162,7 @@ void LoadFrontPageIndent(void)
 
 void DeleteFrontPageIndent( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiFRONTPAGEINDENT);
 }
 
@@ -182,7 +182,7 @@ void LoadAnalyse(void)
 
 void DeleteAnalyse( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiANALYSE);
 }
 
@@ -196,7 +196,7 @@ void LoadAttributeGraph(void)
 
 void DeleteAttributeGraph( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiATTRIBUTEGRAPH);
 }
 
@@ -210,7 +210,7 @@ void LoadNickNameIndent(void)
 
 void DeleteNickNameIndent( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiNICKNAMEINDENT);
 }
 
@@ -230,7 +230,7 @@ void LoadNameIndent(void)
 
 void DeleteNameIndent( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiNAMEINDENT);
 }
 
@@ -250,7 +250,7 @@ void LoadGenderIndent(void)
 
 void DeleteGenderIndent( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiGENDERINDENT);
 }
 
@@ -270,7 +270,7 @@ void LoadSmallSilhouette(void)
 
 void DeleteSmallSilhouette( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiSMALLSILHOUETTE);
 }
 
@@ -284,7 +284,7 @@ void LoadLargeSilhouette(void)
 
 void DeleteLargeSilhouette( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiLARGESILHOUETTE);
 }
 
@@ -304,7 +304,7 @@ void LoadAttributeFrame(void)
 
 void DeleteAttributeFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiATTRIBUTEFRAME);
 }
 
@@ -316,7 +316,7 @@ void RenderAttributeFrame(INT16 sX, INT16 sY)
 
 	const SGPVObject* const hHandle = guiATTRIBUTEFRAME;
 
-  // blt to sX, sY relative to upper left corner
+	// blt to sX, sY relative to upper left corner
 	BltVideoObject(FRAME_BUFFER, hHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 
 	sCurrentY += 10;
@@ -368,7 +368,7 @@ void LoadSliderBar(void)
 
 void DeleteSliderBar( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiSLIDERBAR);
 }
 
@@ -388,7 +388,7 @@ void LoadButton2Image(void)
 
 void DeleteButton2Image( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiBUTTON2IMAGE);
 }
 
@@ -408,7 +408,7 @@ void LoadButton4Image(void)
 
 void DeleteButton4Image( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiBUTTON4IMAGE);
 }
 
@@ -428,7 +428,7 @@ void LoadPortraitFrame(void)
 
 void DeletePortraitFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiPORTRAITFRAME);
 }
 
@@ -449,7 +449,7 @@ void LoadMainIndentFrame(void)
 
 void DeleteMainIndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiMAININDENT);
 }
 
@@ -469,7 +469,7 @@ void LoadQtnLongIndentFrame(void)
 
 void DeleteQtnLongIndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiLONGINDENT);
 }
 
@@ -489,7 +489,7 @@ void LoadQtnShortIndentFrame(void)
 
 void DeleteQtnShortIndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiSHORTINDENT);
 }
 
@@ -509,7 +509,7 @@ void LoadQtnLongIndentHighFrame(void)
 
 void DeleteQtnLongIndentHighFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiLONGHINDENT);
 }
 
@@ -529,7 +529,7 @@ void LoadQtnShortIndentHighFrame(void)
 
 void DeleteQtnShortIndentHighFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiSHORTHINDENT);
 }
 
@@ -549,7 +549,7 @@ void LoadQtnIndentFrame(void)
 
 void DeleteQtnIndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiQINDENT);
 }
 
@@ -569,7 +569,7 @@ void LoadAttrib1IndentFrame(void)
 
 void DeleteAttrib1IndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiA1INDENT);
 }
 
@@ -589,7 +589,7 @@ void LoadAttrib2IndentFrame(void)
 
 void DeleteAttrib2IndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiA2INDENT);
 }
 
@@ -609,7 +609,7 @@ void LoadAvgMercIndentFrame(void)
 
 void DeleteAvgMercIndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiAVGMERCINDENT);
 }
 
@@ -629,7 +629,7 @@ void LoadAboutUsIndentFrame(void)
 
 void DeleteAboutUsIndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiABOUTUSINDENT);
 }
 
@@ -649,7 +649,7 @@ void LoadQtnShort2IndentFrame(void)
 
 void DeleteQtnShort2IndentFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiSHORT2INDENT);
 }
 
@@ -669,7 +669,7 @@ void LoadQtnShort2IndentHighFrame(void)
 
 void DeleteQtnShort2IndentHighFrame( void )
 {
-  // remove activation indent symbol
+	// remove activation indent symbol
 	DeleteVideoObject(guiSHORT2HINDENT);
 }
 

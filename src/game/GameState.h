@@ -14,28 +14,28 @@ class GameState
 {
 public:
 
-  /** Get instance of the object. */
-  static GameState* getInstance();
+	/** Get instance of the object. */
+	static GameState* getInstance();
 
-  /** Get current game mode. */
-  GameMode getMode();
+	/** Get current game mode. */
+	GameMode getMode();
 
-  /** Set editor mode. */
-  void setEditorMode(bool autoLoad);
-  void setDebugging(bool enabled);
+	/** Set editor mode. */
+	void setEditorMode(bool autoLoad);
+	void setDebugging(bool enabled);
 
-  /** Check if we are in the editor mode. */
-  bool isEditorMode();
-  bool debugging();
+	/** Check if we are in the editor mode. */
+	bool isEditorMode();
+	bool debugging();
 
 private:
 
-  GameMode m_mode;
-  bool debug;
+	GameMode m_mode;
+	bool debug;
 
-  /** Private constructor to avoid instantiation. */
-  GameState();
+	/** Private constructor to avoid instantiation. */
+	GameState();
 
-  GameState(GameState const&);
-  void operator=(GameState const&);
+	GameState(GameState const&);
+	void operator=(GameState const&);
 };

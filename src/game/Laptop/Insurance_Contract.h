@@ -9,7 +9,7 @@ void ExitInsuranceContract(void);
 void HandleInsuranceContract(void);
 void RenderInsuranceContract(void);
 
-extern	INT16		gsCurrentInsuranceMercIndex;
+extern INT16 gsCurrentInsuranceMercIndex;
 
 // determines if a merc will run out of there insurance contract
 void DailyUpdateOfInsuredMercs(void);
@@ -21,7 +21,7 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8	ubPayoutID );
 void StartInsuranceInvestigation( UINT8	ubPayoutID );
 void EndInsuranceInvestigation( UINT8	ubPayoutID );
 
-INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID );
+INT32 CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID );
 
 void InsuranceContractEndGameShutDown(void);
 

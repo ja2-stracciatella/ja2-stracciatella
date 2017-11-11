@@ -12,14 +12,14 @@
 
 /** List of supported game versions (localizations). */
 enum GameVersion {
-  GV_DUTCH,
-  GV_ENGLISH,
-  GV_FRENCH,
-  GV_GERMAN,
-  GV_ITALIAN,
-  GV_POLISH,
-  GV_RUSSIAN,
-  GV_RUSSIAN_GOLD,
+	GV_DUTCH,
+	GV_ENGLISH,
+	GV_FRENCH,
+	GV_GERMAN,
+	GV_ITALIAN,
+	GV_POLISH,
+	GV_RUSSIAN,
+	GV_RUSSIAN_GOLD,
 };
 
 enum MultiLanguageGraphic
@@ -57,7 +57,7 @@ enum MultiLanguageGraphic
 	MLG_TOSTATS,
 	MLG_WARNING,
 	MLG_YOURAD13,
-  MSG__LAST
+	MSG__LAST
 };
 
 char const* GetMLGFilename(MultiLanguageGraphic);

@@ -16,7 +16,7 @@ INT8 EffectiveStrength(const SOLDIERTYPE* s)
 	// Effective strength is:
 	// 1/2 full strength
 	// plus 1/2 strength scaled according to how hurt we are
-  const INT8 bBandaged    = s->bLifeMax - s->bLife - s->bBleeding;
+	const INT8 bBandaged    = s->bLifeMax - s->bLife - s->bBleeding;
 	INT32      iEffStrength = s->bStrength / 2;
 	iEffStrength += (s->bStrength / 2) * (s->bLife + bBandaged / 2) / (s->bLifeMax);
 
@@ -65,8 +65,8 @@ INT8 EffectiveMedical(const SOLDIERTYPE* s)
 
 INT8 EffectiveLeadership(const SOLDIERTYPE* s)
 {
-	INT32	iEffLeadership;
-	INT8	bDrunkLevel;
+	INT32 iEffLeadership;
+	INT8  bDrunkLevel;
 
 	iEffLeadership = s->bLeadership;
 
@@ -84,15 +84,15 @@ INT8 EffectiveLeadership(const SOLDIERTYPE* s)
 
 INT8 EffectiveExpLevel(const SOLDIERTYPE* s)
 {
-	INT32	iEffExpLevel;
-	INT8	bDrunkLevel;
-	INT32	iExpModifier[] =
-		{ 0,	// SOBER
-			0,	// Feeling good
-		-1,	// Borderline
-		-2,	// Drunk
-		 0,		// Hung
-		};
+	INT32 iEffExpLevel;
+	INT8  bDrunkLevel;
+	INT32 iExpModifier[] = {
+		0, // SOBER
+		0, // Feeling good
+		-1, // Borderline
+		-2, // Drunk
+		0, // Hung
+	};
 
 	iEffExpLevel = s->bExpLevel;
 
@@ -135,7 +135,7 @@ INT8 EffectiveMarksmanship(const SOLDIERTYPE* s)
 
 INT8 EffectiveDexterity(const SOLDIERTYPE* s)
 {
-	INT32	iEffDexterity;
+	INT32 iEffDexterity;
 
 	iEffDexterity = s->bDexterity;
 
@@ -175,18 +175,18 @@ INT32 GetSkillCheckPenaltyForFatigue( const SOLDIERTYPE *pSoldier, INT32 iSkill 
 
 INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 {
-	INT32	iSkill;
-	INT32	iChance;
-	INT32	iRoll, iMadeItBy;
-	INT8	bSlot;
-  BOOLEAN fForceDamnSound = FALSE;
+	INT32   iSkill;
+	INT32   iChance;
+	INT32   iRoll, iMadeItBy;
+	INT8    bSlot;
+	BOOLEAN fForceDamnSound = FALSE;
 
 	switch (bReason)
 	{
 		case LOCKPICKING_CHECK:
 		case ELECTRONIC_LOCKPICKING_CHECK:
 
-      fForceDamnSound = TRUE;
+			fForceDamnSound = TRUE;
 
 			iSkill = EffectiveMechanical( pSoldier );
 			if (iSkill == 0)
@@ -250,7 +250,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 
 		case DISARM_TRAP_CHECK:
 
-      fForceDamnSound = TRUE;
+			fForceDamnSound = TRUE;
 
 			iSkill = EffectiveExplosive( pSoldier ) * 7;
 			if ( iSkill == 0 )
@@ -266,7 +266,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 
 		case DISARM_ELECTRONIC_TRAP_CHECK:
 
-      fForceDamnSound = TRUE;
+			fForceDamnSound = TRUE;
 
 			iSkill = __max( EffectiveMechanical( pSoldier ) , EffectiveExplosive( pSoldier ) ) * 7;
 			if ( iSkill == 0 )
@@ -288,7 +288,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 		case OPEN_WITH_CROWBAR:
 			// Add for crowbar...
 			iSkill = EffectiveStrength( pSoldier ) + 20;
-      fForceDamnSound = TRUE;
+			fForceDamnSound = TRUE;
 			break;
 
 		case SMASH_DOOR_CHECK:

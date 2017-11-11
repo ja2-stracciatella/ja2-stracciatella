@@ -9,31 +9,31 @@
 
 //Kris:  SERIALIZING INFORMATION
 //All maps must have:
-//	-MAPCREATE_STRUCT
-//		MAPCREATE_STRUCT.ubNumIndividuals determines how many BASIC_SOLDIERCREATE_STRUCTs there are
-//  -The BASIC_SOLDIERCREATE_STRUCTS are saved contiguously, but if any of them
-//		fDetailedPlacement set, then there is a SOLDIERCREATE_STRUCT saved immediately after.
+// - MAPCREATE_STRUCT
+//     MAPCREATE_STRUCT.ubNumIndividuals determines how many BASIC_SOLDIERCREATE_STRUCTs there are
+// - The BASIC_SOLDIERCREATE_STRUCTS are saved contiguously, but if any of them
+//     fDetailedPlacement set, then there is a SOLDIERCREATE_STRUCT saved immediately after.
 
 //These are the placement slots used by the editor to define where characters are in a map, what
 //they are, what team they are on, personality traits, etc.  The Merc section of the editor is
 //what is used to define these values.
 struct BASIC_SOLDIERCREATE_STRUCT
 {
-	UINT16 usStartingGridNo;				//Where the placement position is.
-	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
-	INT8 bTeam;											//The team this individual is part of.
-	INT8 bRelativeAttributeLevel;
-	INT8 bRelativeEquipmentLevel;
-	INT8 bDirection;								//1 of 8 values (always mandatory)
-	INT8 bOrders;
-	INT8 bAttitude;
-	INT8 bBodyType;									//up to 128 body types, -1 means random
-	INT16 sPatrolGrid[ MAXPATROLGRIDS ]; //possible locations to visit, patrol, etc.
-	INT8 bPatrolCnt;
+	UINT16  usStartingGridNo; //Where the placement position is.
+	BOOLEAN fDetailedPlacement; //Specialized information.  Has a counterpart containing all info.
+	INT8    bTeam; //The team this individual is part of.
+	INT8    bRelativeAttributeLevel;
+	INT8    bRelativeEquipmentLevel;
+	INT8    bDirection; //1 of 8 values (always mandatory)
+	INT8    bOrders;
+	INT8    bAttitude;
+	INT8    bBodyType; //up to 128 body types, -1 means random
+	INT16   sPatrolGrid[ MAXPATROLGRIDS ]; //possible locations to visit, patrol, etc.
+	INT8    bPatrolCnt;
 	BOOLEAN fOnRoof;
-	UINT8	ubSoldierClass;							//army, administrator, elite
-	UINT8 ubCivilianGroup;
-	BOOLEAN fPriorityExistance;			//These slots are used first
+	UINT8   ubSoldierClass; //army, administrator, elite
+	UINT8   ubCivilianGroup;
+	BOOLEAN fPriorityExistance; //These slots are used first
 	BOOLEAN fHasKeys;
 };
 
@@ -41,72 +41,72 @@ struct SOLDIERCREATE_STRUCT
 {
 	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.
 	//Used by editor for validation purposes.
-	BOOLEAN						fStatic;
+	BOOLEAN fStatic;
 
 	//Profile information used for special NPCs and player mercs.
-	UINT8							ubProfile;
-	BOOLEAN						fCopyProfileItemsOver;
+	UINT8   ubProfile;
+	BOOLEAN fCopyProfileItemsOver;
 
 	//Location information
-	INT16							sSectorX;
-	INT16							sSectorY;
-	INT8							bDirection;
-	INT16							sInsertionGridNo;
+	INT16   sSectorX;
+	INT16   sSectorY;
+	INT8    bDirection;
+	INT16   sInsertionGridNo;
 
 	// Can force a team, but needs flag set
-	INT8							bTeam;
-	INT8							bBodyType;
+	INT8    bTeam;
+	INT8    bBodyType;
 
 	//Orders and attitude settings
-	INT8							bAttitude;
-	INT8							bOrders;
+	INT8    bAttitude;
+	INT8    bOrders;
 
 	//Attributes
-	INT8							bLifeMax;
-	INT8							bLife;
-	INT8							bAgility;
-	INT8							bDexterity;
-	INT8							bExpLevel;
-	INT8							bMarksmanship;
-	INT8							bMedical;
-	INT8							bMechanical;
-	INT8							bExplosive;
-	INT8							bLeadership;
-	INT8							bStrength;
-	INT8							bWisdom;
-	INT8							bMorale;
-	INT8							bAIMorale;
+	INT8    bLifeMax;
+	INT8    bLife;
+	INT8    bAgility;
+	INT8    bDexterity;
+	INT8    bExpLevel;
+	INT8    bMarksmanship;
+	INT8    bMedical;
+	INT8    bMechanical;
+	INT8    bExplosive;
+	INT8    bLeadership;
+	INT8    bStrength;
+	INT8    bWisdom;
+	INT8    bMorale;
+	INT8    bAIMorale;
 
 	//Inventory
-	OBJECTTYPE				Inv[ NUM_INV_SLOTS ];
+	OBJECTTYPE Inv[ NUM_INV_SLOTS ];
 
 	//Palette information for soldiers.
-	PaletteRepID			HeadPal;
-	PaletteRepID			PantsPal;
-	PaletteRepID			VestPal;
-	PaletteRepID			SkinPal;
+	PaletteRepID HeadPal;
+	PaletteRepID PantsPal;
+	PaletteRepID VestPal;
+	PaletteRepID SkinPal;
 
 	//Waypoint information for patrolling
-	INT16 sPatrolGrid[ MAXPATROLGRIDS ];
-	INT8 bPatrolCnt;
+	INT16   sPatrolGrid[ MAXPATROLGRIDS ];
+	INT8    bPatrolCnt;
 
-	//Kris:  Additions November 16, 1997 (padding down to 129 from 150)
-	BOOLEAN						fVisible;
-	wchar_t						name[ 10 ];
+	//Kris: Additions November 16, 1997 (padding down to 129 from 150)
+	BOOLEAN fVisible;
+	wchar_t name[ 10 ];
 
-	UINT8							ubSoldierClass;	//army, administrator, elite
+	UINT8   ubSoldierClass; //army, administrator, elite
 
-	BOOLEAN						fOnRoof;
+	BOOLEAN fOnRoof;
 
-	INT8							bSectorZ;
+	INT8    bSectorZ;
 
-	UINT8							ubCivilianGroup;
+	UINT8   ubCivilianGroup;
 
-	UINT8							ubScheduleID;
+	UINT8   ubScheduleID;
 
-	BOOLEAN						fUseGivenVehicle;
-	INT8							bUseGivenVehicleID;
-	BOOLEAN						fHasKeys;
+	BOOLEAN fUseGivenVehicle;
+	INT8    bUseGivenVehicleID;
+	BOOLEAN fHasKeys;
 };
 
 
@@ -141,16 +141,16 @@ UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY );
 //  modify soldier attributes on the fly for testing purposes.
 //BasicPlacement (bp):  A BASIC_SOLDIERCREATE_STRUCT that contains compact, very general, information about
 //  a soldier.  The BasicPlacement is then used to generate a DetailedPlacement before creating a soldier.
-//	Most of the soldiers saved in the maps will be saved in this manner.
+//  Most of the soldiers saved in the maps will be saved in this manner.
 //DetailedPlacement (pp):  A SOLDIERCREATE_STRUCT ready to be passed to TacticalCreateSoldier to generate
-//	and add a new soldier to the world.  The DetailedPlacement contains all of the necessary information
+//  and add a new soldier to the world.  The DetailedPlacement contains all of the necessary information
 //  to do this.  This information won't be saved in maps. In most cases, only very few attributes are static,
 //  and the rest are generated at runtime.  Because of this situation, saved detailed placements must be in a
 //  different format.
 //StaticDetailedPlacement (spp):  A hybrid version of the DetailedPlacement.  This is the information saved in
-//	the map via the editor.  When loaded, this information is converted to a normal detailed placement, but
-//	must also use the BasicPlacement information to complete this properly.  Once the conversion is complete,
-//	the static information is lost.  This gives us complete flexibility.  The basic placements contain relative
+//  the map via the editor.  When loaded, this information is converted to a normal detailed placement, but
+//  must also use the BasicPlacement information to complete this properly.  Once the conversion is complete,
+//  the static information is lost.  This gives us complete flexibility.  The basic placements contain relative
 //  values that work in conjunction with the strategic AI's relative values to generate soldiers.  In no
 //  circumstances will static detailed placements be used outside of the editor.  Note, that this hybrid version
 //  uses the identical structure as detailed placements.  All non-static values are set to -1.
@@ -171,7 +171,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 //the proper priority placement slot given the static detailed placement and it's accompanying basic placment.
 //For the purposes of merc editing, the static detailed placement is preserved.
 void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
-		   SOLDIERCREATE_STRUCT *pp, SOLDIERCREATE_STRUCT *spp, BASIC_SOLDIERCREATE_STRUCT *bp );
+	SOLDIERCREATE_STRUCT *pp, SOLDIERCREATE_STRUCT *spp, BASIC_SOLDIERCREATE_STRUCT *bp);
 
 //Used to update a existing soldier's attributes with the new static detailed placement info.  This is used
 //by the editor upon exiting the editor into the game, to update the existing soldiers with new information.

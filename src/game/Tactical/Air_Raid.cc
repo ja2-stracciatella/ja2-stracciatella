@@ -32,100 +32,99 @@
 #include "SoundMan.h"
 #include "Debug.h"
 #include "FileMan.h"
-#include	"slog/slog.h"
+#include "slog/slog.h"
 
-#define		SCRIPT_DELAY													10
-#define		AIR_RAID_SAY_QUOTE_TIME								3000
-#define		AIR_RAID_DIVE_INTERVAL								10000
-#define		RAID_DELAY														40
-#define		TIME_FROM_DIVE_SOUND_TO_ATTACK_DELAY	8000
-#define		TIME_FROM_BOMB_SOUND_TO_ATTACK_DELAY	3000
-#define		MOVE_X																5
-#define		MOVE_Y																5
-#define		STRAFE_DIST														80
-#define   BOMB_DIST															150
+#define SCRIPT_DELAY				10
+#define AIR_RAID_SAY_QUOTE_TIME		3000
+#define AIR_RAID_DIVE_INTERVAL			10000
+#define RAID_DELAY				40
+#define TIME_FROM_DIVE_SOUND_TO_ATTACK_DELAY	8000
+#define TIME_FROM_BOMB_SOUND_TO_ATTACK_DELAY	3000
+#define MOVE_X					5
+#define MOVE_Y					5
+#define STRAFE_DIST				80
+#define BOMB_DIST				150
 
 
 
 // BEGIN SERALIZATION
-extern INT32		giTimerAirRaidQuote;
-extern INT32		giTimerAirRaidDiveStarted;
-extern INT32		giTimerAirRaidUpdate;
+extern INT32 giTimerAirRaidQuote;
+extern INT32 giTimerAirRaidDiveStarted;
+extern INT32 giTimerAirRaidUpdate;
 
-BOOLEAN				gfInAirRaid					= FALSE;
-BOOLEAN				gfAirRaidScheduled	= FALSE;
-UINT8					gubAirRaidMode;
-UINT32				guiSoundSample;
-UINT32				guiRaidLastUpdate;
-BOOLEAN				gfFadingRaidIn			= FALSE;
-BOOLEAN				gfQuoteSaid					= FALSE;
-INT8					gbNumDives					= 0;
-INT8					gbMaxDives					= 0;
-BOOLEAN				gfFadingRaidOut					= FALSE;
-INT16					gsDiveX;
-INT16					gsDiveY;
-INT16					gsDiveTargetLocation;
-UINT8					gubDiveDirection;
-INT16					gsNumGridNosMoved;
-INT32					giNumTurnsSinceLastDive;
-INT32					giNumTurnsSinceDiveStarted;
-INT32					giNumGridNosMovedThisTurn;
-BOOLEAN				gfAirRaidHasHadTurn = FALSE;
-UINT8					gubBeginTeamTurn = 0;
-BOOLEAN				gfHaveTBBatton = FALSE;
-INT16					gsNotLocatedYet = FALSE;
-static INT32  giNumFrames;
+BOOLEAN gfInAirRaid = FALSE;
+BOOLEAN gfAirRaidScheduled = FALSE;
+UINT8   gubAirRaidMode;
+UINT32  guiSoundSample;
+UINT32  guiRaidLastUpdate;
+BOOLEAN gfFadingRaidIn = FALSE;
+BOOLEAN gfQuoteSaid = FALSE;
+INT8    gbNumDives = 0;
+INT8    gbMaxDives = 0;
+BOOLEAN gfFadingRaidOut = FALSE;
+INT16   gsDiveX;
+INT16   gsDiveY;
+INT16   gsDiveTargetLocation;
+UINT8   gubDiveDirection;
+INT16   gsNumGridNosMoved;
+INT32   giNumTurnsSinceLastDive;
+INT32   giNumTurnsSinceDiveStarted;
+INT32   giNumGridNosMovedThisTurn;
+BOOLEAN gfAirRaidHasHadTurn = FALSE;
+UINT8   gubBeginTeamTurn = 0;
+BOOLEAN gfHaveTBBatton = FALSE;
+INT16   gsNotLocatedYet = FALSE;
+static INT32 giNumFrames;
 
-AIR_RAID_DEFINITION	gAirRaidDef;
+AIR_RAID_DEFINITION gAirRaidDef;
 
 
 struct AIR_RAID_SAVE_STRUCT
 {
-	BOOLEAN				fInAirRaid;
-	BOOLEAN				fAirRaidScheduled;
-	UINT8					ubAirRaidMode;
-	UINT32				uiSoundSample;
-	UINT32				uiRaidLastUpdate;
-	BOOLEAN				fFadingRaidIn;
-	BOOLEAN				fQuoteSaid;
-	INT8					bNumDives;
-	INT8					bMaxDives;
-	BOOLEAN				fFadingRaidOut;
-	INT16					sDiveX;
-	INT16					sDiveY;
-	INT16					sDiveTargetLocation;
-	UINT8					ubDiveDirection;
-	INT16					sNumGridNosMoved;
-	INT32					iNumTurnsSinceLastDive;
-	INT32					iNumTurnsSinceDiveStarted;
-	INT32					iNumGridNosMovedThisTurn;
-	BOOLEAN				fAirRaidHasHadTurn;
-	UINT8					ubBeginTeamTurn;
-	BOOLEAN				fHaveTBBatton;
-	AIR_RAID_DEFINITION	AirRaidDef;
-	INT16					sRaidSoldierID;
+	BOOLEAN fInAirRaid;
+	BOOLEAN fAirRaidScheduled;
+	UINT8   ubAirRaidMode;
+	UINT32  uiSoundSample;
+	UINT32  uiRaidLastUpdate;
+	BOOLEAN fFadingRaidIn;
+	BOOLEAN fQuoteSaid;
+	INT8    bNumDives;
+	INT8    bMaxDives;
+	BOOLEAN fFadingRaidOut;
+	INT16   sDiveX;
+	INT16   sDiveY;
+	INT16   sDiveTargetLocation;
+	UINT8   ubDiveDirection;
+	INT16   sNumGridNosMoved;
+	INT32   iNumTurnsSinceLastDive;
+	INT32   iNumTurnsSinceDiveStarted;
+	INT32   iNumGridNosMovedThisTurn;
+	BOOLEAN fAirRaidHasHadTurn;
+	UINT8   ubBeginTeamTurn;
+	BOOLEAN fHaveTBBatton;
+	AIR_RAID_DEFINITION AirRaidDef;
+	INT16   sRaidSoldierID;
 
-	INT16					sNotLocatedYet;
-	INT32					iNumFrames;
+	INT16   sNotLocatedYet;
+	INT32   iNumFrames;
 
-	INT8					bLevel;
-	INT8					bTeam;
-	INT8					bSide;
-	UINT8					ubAttackerID;
-	UINT16				usAttackingWeapon;
-	FLOAT					dXPos;
-	FLOAT					dYPos;
-	INT16					sX;
-	INT16					sY;
-	INT16					sGridNo;
+	INT8    bLevel;
+	INT8    bTeam;
+	INT8    bSide;
+	UINT8   ubAttackerID;
+	UINT16  usAttackingWeapon;
+	FLOAT   dXPos;
+	FLOAT   dYPos;
+	INT16   sX;
+	INT16   sY;
+	INT16   sGridNo;
 
-
-	UINT8					ubFiller[ 32 ]; // XXX HACK000B
+	UINT8   ubFiller[ 32 ]; // XXX HACK000B
 };
 
 
 // END SERIALIZATION
-SOLDIERTYPE		*gpRaidSoldier;
+SOLDIERTYPE *gpRaidSoldier;
 
 
 struct AIR_RAID_DIR
@@ -141,7 +140,7 @@ struct AIR_RAID_POS
 };
 
 
-AIR_RAID_DIR	ubPerpDirections[ ] =
+AIR_RAID_DIR ubPerpDirections[ ] =
 {
 	{ 2, 6 },
 	{ 3, 7 },
@@ -153,7 +152,7 @@ AIR_RAID_DIR	ubPerpDirections[ ] =
 	{ 1, 5 }
 };
 
-AIR_RAID_POS	ubXYTragetInvFromDirection[ ] =
+AIR_RAID_POS ubXYTragetInvFromDirection[ ] =
 {
 	{  0, -1 },
 	{  1, -1 },
@@ -174,113 +173,113 @@ BOOLEAN BeginAirRaid( )
 	// First remove scheduled flag...
 	gfAirRaidScheduled = FALSE;
 
-/*
+	/*
 	if( WillAirRaidBeStopped( gAirRaidDef.sSectorX, gAirRaidDef.sSectorY ) )
 	{
 		return( FALSE );
-	}
-*/
+	}*/
 
 	// CHECK IF WE CURRENTLY HAVE THIS SECTOR OPEN....
 	/*if (	gAirRaidDef.sSectorX == gWorldSectorX &&
 				gAirRaidDef.sSectorY == gWorldSectorY &&
 				gAirRaidDef.sSectorZ == gbWorldSectorZ )
 	*/
-		// Do we have any guys in here...
+	// Do we have any guys in here...
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->sSectorX == gAirRaidDef.sSectorX &&
-				s->sSectorY == gAirRaidDef.sSectorY &&
-				s->bSectorZ == gAirRaidDef.sSectorZ &&
-				!s->fBetweenSectors &&
-				s->bLife != 0 &&
-				s->bAssignment != IN_TRANSIT)
+			s->sSectorY == gAirRaidDef.sSectorY &&
+			s->bSectorZ == gAirRaidDef.sSectorZ &&
+			!s->fBetweenSectors &&
+			s->bLife != 0 &&
+			s->bAssignment != IN_TRANSIT)
 		{
 			fOK = TRUE;
 		}
 	}
 
 
-		if ( !fOK )
-		{
-			return( FALSE );
-		}
+	if ( !fOK )
+	{
+		return( FALSE );
+	}
 
-		// ( unless we are in prebattle interface, then ignore... )
-		if ( gfPreBattleInterfaceActive )
-		{
-			return( FALSE );
-		}
+	// ( unless we are in prebattle interface, then ignore... )
+	if ( gfPreBattleInterfaceActive )
+	{
+		return( FALSE );
+	}
 
-		ChangeSelectedMapSector( gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, ( INT8 )gAirRaidDef.sSectorZ );
+	ChangeSelectedMapSector( gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, ( INT8 )gAirRaidDef.sSectorZ );
 
-		if (	gAirRaidDef.sSectorX != gWorldSectorX ||
-				gAirRaidDef.sSectorY != gWorldSectorY ||
-				gAirRaidDef.sSectorZ != gbWorldSectorZ || guiCurrentScreen == MAP_SCREEN )
-		{
-			// sector not loaded
-			// Set flag for handling raid....
-			gubAirRaidMode = AIR_RAID_TRYING_TO_START;
-			gfQuoteSaid = TRUE;
-			SayQuoteFromAnyBodyInThisSector( gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, ( INT8 )gAirRaidDef.sSectorZ, QUOTE_AIR_RAID );
-
-			class DialogueEventExitMapScreen : public DialogueEvent
-			{
-				public:
-					DialogueEventExitMapScreen(INT16 const x, INT16 const y, INT16 const z) :
-						x_(x),
-						y_(y),
-						z_(z)
-					{}
-
-					bool Execute()
-					{
-						ChangeSelectedMapSector(x_, y_, z_);
-						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
-						return false;
-					}
-
-				private:
-					INT16 const x_;
-					INT16 const y_;
-					INT16 const z_;
-			};
-
-			DialogueEvent::Add(new DialogueEventExitMapScreen(gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, gAirRaidDef.sSectorZ));
-		}
-		else
-		{
-			gubAirRaidMode = AIR_RAID_TRYING_TO_START;
-			gfQuoteSaid				= FALSE;
-		}
-
+	if (gAirRaidDef.sSectorX != gWorldSectorX ||
+		gAirRaidDef.sSectorY != gWorldSectorY ||
+		gAirRaidDef.sSectorZ != gbWorldSectorZ || guiCurrentScreen == MAP_SCREEN )
+	{
+		// sector not loaded
 		// Set flag for handling raid....
-		gfInAirRaid = TRUE;
-		giNumFrames = 0;
+		gubAirRaidMode = AIR_RAID_TRYING_TO_START;
+		gfQuoteSaid = TRUE;
+		SayQuoteFromAnyBodyInThisSector(gAirRaidDef.sSectorX, gAirRaidDef.sSectorY,
+							(INT8)gAirRaidDef.sSectorZ, QUOTE_AIR_RAID);
+
+		class DialogueEventExitMapScreen : public DialogueEvent
+		{
+			public:
+				DialogueEventExitMapScreen(INT16 const x, INT16 const y, INT16 const z) :
+					x_(x),
+					y_(y),
+					z_(z)
+				{}
+
+				bool Execute()
+				{
+					ChangeSelectedMapSector(x_, y_, z_);
+					RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
+					return false;
+				}
+
+			private:
+				INT16 const x_;
+				INT16 const y_;
+				INT16 const z_;
+		};
+
+		DialogueEvent::Add(new DialogueEventExitMapScreen(gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, gAirRaidDef.sSectorZ));
+	}
+	else
+	{
+		gubAirRaidMode = AIR_RAID_TRYING_TO_START;
+		gfQuoteSaid				= FALSE;
+	}
+
+	// Set flag for handling raid....
+	gfInAirRaid = TRUE;
+	giNumFrames = 0;
 
 
 
-		guiRaidLastUpdate = GetJA2Clock( );
+	guiRaidLastUpdate = GetJA2Clock( );
 
 
-		gbNumDives				= 0;
-		gfAirRaidHasHadTurn = FALSE;
+	gbNumDives = 0;
+	gfAirRaidHasHadTurn = FALSE;
 
-		SOLDIERTYPE& s = GetMan(MAX_NUM_SOLDIERS - 1);
-		memset(&s, 0, sizeof(s));
-		s.bLevel              = 0;
-		s.bTeam               = 1;
-		s.bSide               = 1;
-		s.ubID                = MAX_NUM_SOLDIERS - 1;
-		s.attacker            = 0;
-		s.usAttackingWeapon   = HK21E;
-		s.inv[HANDPOS].usItem = HK21E;
-		gpRaidSoldier = &s;
+	SOLDIERTYPE& s = GetMan(MAX_NUM_SOLDIERS - 1);
+	memset(&s, 0, sizeof(s));
+	s.bLevel              = 0;
+	s.bTeam               = 1;
+	s.bSide               = 1;
+	s.ubID                = MAX_NUM_SOLDIERS - 1;
+	s.attacker            = 0;
+	s.usAttackingWeapon   = HK21E;
+	s.inv[HANDPOS].usItem = HK21E;
+	gpRaidSoldier = &s;
 
-		// Determine how many dives this one will be....
-		gbMaxDives				= (INT8)( gAirRaidDef.bIntensity + Random( gAirRaidDef.bIntensity - 1 ) );
+	// Determine how many dives this one will be....
+	gbMaxDives = (INT8)( gAirRaidDef.bIntensity + Random( gAirRaidDef.bIntensity - 1 ) );
 
-		SLOGD(DEBUG_TAG_AIRRAID, "Begin Air Raid." );
+	SLOGD(DEBUG_TAG_AIRRAID, "Begin Air Raid." );
 
 	return(TRUE);
 }
@@ -494,8 +493,9 @@ static void AirRaidLookForDive(void)
 			{
 				// Free up attacker...
 				FreeUpAttacker(gpRaidSoldier);
-				SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID NO DIVE, attack count now %d",
-							gTacticalStatus.ubAttackBusyCount);
+				SLOGD(DEBUG_TAG_AIRRAID,
+					"Tried to free up attacker AIR RAID NO DIVE, attack count now %d",
+					gTacticalStatus.ubAttackBusyCount);
 			}
 		}
 	}
@@ -518,8 +518,8 @@ static void AirRaidStartEnding(void)
 
 static void BeginBombing(void)
 {
-	INT16 sGridNo;
-	UINT32	iSoundStartDelay;
+	INT16  sGridNo;
+	UINT32 iSoundStartDelay;
 
 	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
@@ -563,15 +563,15 @@ static void BeginBombing(void)
 	gubDiveDirection = (INT8)GetDirectionToGridNoFromGridNo( sGridNo, gsDiveTargetLocation );
 
 	gsNumGridNosMoved = 0;
-	gsNotLocatedYet		= TRUE;
+	gsNotLocatedYet = TRUE;
 
 }
 
 
 static void BeginDive()
 {
-	INT16 sGridNo;
-	UINT32	iSoundStartDelay;
+	INT16  sGridNo;
+	UINT32 iSoundStartDelay;
 
 	// Start diving sound...
 	PlayJA2Sample(S_RAID_DIVE, HIGHVOLUME, 1, MIDDLEPAN);
@@ -581,7 +581,7 @@ static void BeginDive()
 	// Increment attacker bust count....
 	gTacticalStatus.ubAttackBusyCount++;
 	SLOGD(DEBUG_TAG_AIRRAID, "Starting attack BEGIN DIVE %d",
-				gTacticalStatus.ubAttackBusyCount);
+		gTacticalStatus.ubAttackBusyCount);
 
 	// Pick location...
 	gsDiveTargetLocation = PickLocationNearAnyMercInSector( );
@@ -616,14 +616,14 @@ static void BeginDive()
 	gubDiveDirection = (INT8)GetDirectionToGridNoFromGridNo( sGridNo, gsDiveTargetLocation );
 
 	gsNumGridNosMoved = 0;
-	gsNotLocatedYet		= TRUE;
+	gsNotLocatedYet = TRUE;
 
 }
 
 
 static void MoveDiveAirplane(FLOAT dAngle)
 {
-	FLOAT					dDeltaPos;
+	FLOAT dDeltaPos;
 
 	// Find delta Movement for X pos
 	dDeltaPos = MOVE_X * (FLOAT)sin( dAngle );
@@ -641,13 +641,13 @@ static void MoveDiveAirplane(FLOAT dAngle)
 
 static void DoDive(void)
 {
-	INT16		sRange;
-	INT16		sGridNo, sOldGridNo;
+	INT16 sRange;
+	INT16 sGridNo, sOldGridNo;
 
-	INT16		sTargetX, sTargetY;
-	INT16		sStrafeX, sStrafeY;
-	FLOAT		dDeltaX, dDeltaY, dAngle, dDeltaXPos, dDeltaYPos;
-	INT16		sX, sY;
+	INT16 sTargetX, sTargetY;
+	INT16 sStrafeX, sStrafeY;
+	FLOAT dDeltaX, dDeltaY, dAngle, dDeltaXPos, dDeltaYPos;
+	INT16 sX, sY;
 
 
 	// Delay for a specific perion of time to allow sound to Q up...
@@ -700,10 +700,10 @@ static void DoDive(void)
 
 			MoveDiveAirplane( dAngle );
 
-			gpRaidSoldier->dXPos	 = gsDiveX;
-			gpRaidSoldier->sX			 = gsDiveX;
-			gpRaidSoldier->dYPos	 = gsDiveY;
-			gpRaidSoldier->sY			 = gsDiveY;
+			gpRaidSoldier->dXPos = gsDiveX;
+			gpRaidSoldier->sX = gsDiveX;
+			gpRaidSoldier->dYPos = gsDiveY;
+			gpRaidSoldier->sY = gsDiveY;
 
 			// Figure gridno....
 			sGridNo = GETWORLDINDEXFROMWORLDCOORDS( gsDiveY, gsDiveX );
@@ -731,20 +731,20 @@ static void DoDive(void)
 					LocateGridNo( sGridNo );
 				}
 
-				if ( GridNoOnVisibleWorldTile( (INT16)( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) ) )
+				if (GridNoOnVisibleWorldTile((INT16)(GETWORLDINDEXFROMWORLDCOORDS(sStrafeY, sStrafeX))))
 				{
 					//if ( gsNotLocatedYet && !( gTacticalStatus.uiFlags & INCOMBAT ) )
-				//	{
+					//{
 					//	gsNotLocatedYet = FALSE;
-				//		LocateGridNo( sGridNo );
-				//	}
+					//	LocateGridNo( sGridNo );
+					//}
 
 					//if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
 					{
 						// Increase attacker busy...
 						//gTacticalStatus.ubAttackBusyCount++;
 						//SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID ( fire gun ), attack count now %d",
-						//			gTacticalStatus.ubAttackBusyCount);
+						//	gTacticalStatus.ubAttackBusyCount);
 
 						// INcrement bullet fired...
 						gpRaidSoldier->bBulletsLeft++;
@@ -760,10 +760,10 @@ static void DoDive(void)
 				sX = (INT16)( gsDiveX + ( (FLOAT)sin( dAngle + ( PI/2) ) * 40 ) );
 				sY = (INT16)( gsDiveY + ( (FLOAT)cos( dAngle + ( PI/2) ) * 40 ) );
 
-				gpRaidSoldier->dXPos	 = sX;
-				gpRaidSoldier->sX			 = sX;
-				gpRaidSoldier->dYPos	 = sY;
-				gpRaidSoldier->sY			 = sY;
+				gpRaidSoldier->dXPos = sX;
+				gpRaidSoldier->sX = sX;
+				gpRaidSoldier->dYPos = sY;
+				gpRaidSoldier->sY = sY;
 				gpRaidSoldier->sGridNo = GETWORLDINDEXFROMWORLDCOORDS( sY, sX );
 
 				// Get target.....
@@ -772,14 +772,14 @@ static void DoDive(void)
 				// Find delta Movement for Y pos
 				sStrafeY = (INT16)( sY + dDeltaYPos );
 
-				if ( GridNoOnVisibleWorldTile( (INT16)( GETWORLDINDEXFROMWORLDCOORDS( sStrafeY, sStrafeX ) ) ) )
+				if (GridNoOnVisibleWorldTile((INT16)(GETWORLDINDEXFROMWORLDCOORDS(sStrafeY, sStrafeX))))
 				{
 					//if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
 					{
 						// Increase attacker busy...
 						//gTacticalStatus.ubAttackBusyCount++;
 						//SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID ( second one ), attack count now %d",
-						//			gTacticalStatus.ubAttackBusyCount);
+						//	gTacticalStatus.ubAttackBusyCount);
 
 						// INcrement bullet fired...
 						gpRaidSoldier->bBulletsLeft++;
@@ -799,7 +799,7 @@ static void DoDive(void)
 					// Free up attacker...
 					FreeUpAttacker(gpRaidSoldier);
 					SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID DIVE DONE FOR THIS TURN, attack count now %d",
-								gTacticalStatus.ubAttackBusyCount);
+						gTacticalStatus.ubAttackBusyCount);
 				}
 			}
 		}
@@ -809,14 +809,14 @@ static void DoDive(void)
 
 static void DoBombing(void)
 {
-	INT16		sRange;
-	INT16		sGridNo, sOldGridNo, sBombGridNo;
+	INT16   sRange;
+	INT16   sGridNo, sOldGridNo, sBombGridNo;
 
-	INT16		sTargetX, sTargetY;
-	UINT16	usItem;
-	INT16		sStrafeX, sStrafeY;
-	FLOAT		dDeltaX, dDeltaY, dAngle, dDeltaXPos, dDeltaYPos;
-	BOOLEAN	fLocate = FALSE;
+	INT16   sTargetX, sTargetY;
+	UINT16  usItem;
+	INT16   sStrafeX, sStrafeY;
+	FLOAT   dDeltaX, dDeltaY, dAngle, dDeltaXPos, dDeltaYPos;
+	BOOLEAN fLocate = FALSE;
 
 	// Delay for a specific perion of time to allow sound to Q up...
 	if ( TIMECOUNTERDONE( giTimerAirRaidDiveStarted, 0 ) )
@@ -868,10 +868,10 @@ static void DoBombing(void)
 
 			MoveDiveAirplane( dAngle );
 
-			gpRaidSoldier->dXPos	 = gsDiveX;
-			gpRaidSoldier->sX			 = gsDiveX;
-			gpRaidSoldier->dYPos	 = gsDiveY;
-			gpRaidSoldier->sY			 = gsDiveY;
+			gpRaidSoldier->dXPos = gsDiveX;
+			gpRaidSoldier->sX = gsDiveX;
+			gpRaidSoldier->dYPos = gsDiveY;
+			gpRaidSoldier->sY = gsDiveY;
 
 			// Figure gridno....
 			sGridNo = GETWORLDINDEXFROMWORLDCOORDS( gsDiveY, gsDiveX );
@@ -920,8 +920,9 @@ static void DoBombing(void)
 							fLocate = TRUE;
 							// Increase attacker busy...
 							gTacticalStatus.ubAttackBusyCount++;
-							SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID ( bombs away ), attack count now %d",
-										gTacticalStatus.ubAttackBusyCount);
+							SLOGD(DEBUG_TAG_AIRRAID,
+								"Starting attack AIR RAID (bombs away), attack count now %d",
+								gTacticalStatus.ubAttackBusyCount);
 						}
 
 						// Drop bombs...
@@ -936,8 +937,9 @@ static void DoBombing(void)
 					{
 						// Free up attacker...
 						FreeUpAttacker(gpRaidSoldier);
-						SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID BOMB ATTACK DONE FOR THIS TURN, attack count now %d",
-									gTacticalStatus.ubAttackBusyCount);
+						SLOGD(DEBUG_TAG_AIRRAID,
+							"Tried to free up attacker AIR RAID BOMB ATTACK DONE FOR THIS TURN, attack count now %d",
+							gTacticalStatus.ubAttackBusyCount);
 					}
 				}
 			}
@@ -960,7 +962,7 @@ void HandleAirRaid( )
 			// Do we have the batton?
 			if ( !gfHaveTBBatton )
 			{
-				// Don;t do anything else!
+				// Don't do anything else!
 				return;
 			}
 		}
@@ -984,7 +986,7 @@ void HandleAirRaid( )
 						iVol=__min( HIGHVOLUME, iVol+1);
 						SoundSetVolume(guiSoundSample, iVol);
 						if(iVol==HIGHVOLUME)
-								gfFadingRaidIn=FALSE;
+							gfFadingRaidIn=FALSE;
 					}
 				}
 				else
@@ -1013,8 +1015,8 @@ void HandleAirRaid( )
 				}
 				else
 				{
-						gfFadingRaidOut=FALSE;
-						gubAirRaidMode = AIR_RAID_END;
+					gfFadingRaidOut=FALSE;
+					gubAirRaidMode = AIR_RAID_END;
 				}
 			}
 
@@ -1053,7 +1055,7 @@ void HandleAirRaid( )
 				case AIR_RAID_DIVING:
 					// If in combat, check if we have reached our max...
 					if (!(gTacticalStatus.uiFlags & INCOMBAT) ||
-							giNumGridNosMovedThisTurn < 6)
+						giNumGridNosMovedThisTurn < 6)
 					{
 						DoDive();
 					}
@@ -1068,8 +1070,9 @@ void HandleAirRaid( )
 					{
 						// Free up attacker...
 						FreeUpAttacker(gpRaidSoldier);
-						SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d",
-									gTacticalStatus.ubAttackBusyCount);
+						SLOGD(DEBUG_TAG_AIRRAID,
+							"Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d",
+							gTacticalStatus.ubAttackBusyCount);
 					}
 
 					gubAirRaidMode = AIR_RAID_LOOK_FOR_DIVE;
@@ -1084,8 +1087,9 @@ void HandleAirRaid( )
 					{
 						// Free up attacker...
 						FreeUpAttacker(gpRaidSoldier);
-						SLOGD(DEBUG_TAG_AIRRAID, "Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d",
-									gTacticalStatus.ubAttackBusyCount);
+						SLOGD(DEBUG_TAG_AIRRAID,
+							"Tried to free up attacker AIR RAID ENDING DIVE, attack count now %d",
+							gTacticalStatus.ubAttackBusyCount);
 					}
 
 					gubAirRaidMode = AIR_RAID_LOOK_FOR_DIVE;
@@ -1151,26 +1155,26 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 	// Increment attacker bust count....
 	gTacticalStatus.ubAttackBusyCount++;
 	SLOGD(DEBUG_TAG_AIRRAID, "Starting attack AIR RAID, attack count now %d",
-				gTacticalStatus.ubAttackBusyCount);
+		gTacticalStatus.ubAttackBusyCount);
 
 	AddTopMessage(AIR_RAID_TURN_MESSAGE);
 
 	// OK, handle some sound effects, depending on the mode we are in...
 	if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
-			switch( gubAirRaidMode )
-			{
-				case AIR_RAID_BOMBING:
+		switch( gubAirRaidMode )
+		{
+			case AIR_RAID_BOMBING:
 
-					// Start diving sound...
-					PlayJA2Sample(S_RAID_TB_BOMB, HIGHVOLUME, 1, MIDDLEPAN);
-					break;
+				// Start diving sound...
+				PlayJA2Sample(S_RAID_TB_BOMB, HIGHVOLUME, 1, MIDDLEPAN);
+				break;
 
-				case AIR_RAID_BEGIN_DIVE:
+			case AIR_RAID_BEGIN_DIVE:
 
-					PlayJA2Sample(S_RAID_TB_DIVE, HIGHVOLUME, 1, MIDDLEPAN);
-					break;
-			}
+				PlayJA2Sample(S_RAID_TB_DIVE, HIGHVOLUME, 1, MIDDLEPAN);
+				break;
+		}
 	}
 
 	return( FALSE );
@@ -1321,7 +1325,8 @@ void EndAirRaid( )
 
 	// OK, look at flags...
 	if ( gAirRaidDef.uiFlags & AIR_RAID_BEGINNING_GAME )
-	{	// OK, make enemy appear in Omerta
+	{
+		// OK, make enemy appear in Omerta
 		// Talk to strategic AI for this...
 		//GROUP *pGroup;
 		//Create a patrol group originating from sector B9
@@ -1343,8 +1348,8 @@ void EndAirRaid( )
 
 TEST(AirRaid, asserts)
 {
-  EXPECT_EQ(sizeof(AIR_RAID_SAVE_STRUCT), 132);
-  EXPECT_EQ(sizeof(AIR_RAID_DEFINITION), 24);
+	EXPECT_EQ(sizeof(AIR_RAID_SAVE_STRUCT), 132);
+	EXPECT_EQ(sizeof(AIR_RAID_DEFINITION), 24);
 }
 
 #endif

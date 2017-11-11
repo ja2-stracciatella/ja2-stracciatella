@@ -63,6 +63,7 @@ test_script:
   - cmd: cmake --build c:\projects\ja2-stracciatella\ci-build --target rust-unit-tests
   - cmd: cd %configuration%
   - cmd: ja2.exe -unittests
+  - cmd: ja2-launcher.exe -help
 
 after_test:
   - ps: if ("$env:PUBLISH_BINARY" -eq "true") { iex "cmake --build c:\projects\ja2-stracciatella\ci-build --target package" }

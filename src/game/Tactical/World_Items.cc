@@ -28,18 +28,18 @@
 #include "WeaponModels.h"
 
 //Global dynamic array of all of the items in a loaded map.
-WORLDITEM *		gWorldItems = NULL;
-UINT32				guiNumWorldItems = 0;
+WORLDITEM *gWorldItems = NULL;
+UINT32    guiNumWorldItems = 0;
 
-WORLDBOMB *		gWorldBombs = NULL;
-UINT32				guiNumWorldBombs = 0;
+WORLDBOMB *gWorldBombs = NULL;
+UINT32    guiNumWorldBombs = 0;
 
 
 static INT32 GetFreeWorldBombIndex(void)
 {
-	UINT32 uiCount;
+	UINT32    uiCount;
 	WORLDBOMB *newWorldBombs;
-	UINT32	uiOldNumWorldBombs;
+	UINT32    uiOldNumWorldBombs;
 
 	for(uiCount=0; uiCount < guiNumWorldBombs; uiCount++)
 	{
@@ -68,8 +68,8 @@ static INT32 AddBombToWorld(INT32 iItemIndex)
 	iBombIndex = GetFreeWorldBombIndex( );
 
 	//Add the new world item to the table.
-	gWorldBombs[ iBombIndex ].fExists										= TRUE;
-	gWorldBombs[ iBombIndex ].iItemIndex								= iItemIndex;
+	gWorldBombs[ iBombIndex ].fExists = TRUE;
+	gWorldBombs[ iBombIndex ].iItemIndex = iItemIndex;
 
 	return ( iBombIndex );
 }
@@ -277,16 +277,18 @@ void LoadWorldItemsFromMap(HWFILE const f)
 	FileRead(f, &n_world_items, sizeof(n_world_items));
 
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode)
-	{ /* The sector has already been visited. The items are saved in a different
-		 * format that will be loaded later on. So, all we need to do is skip the
-		 * data entirely. */
+	{
+		// The sector has already been visited. The items are saved in a different
+		// format that will be loaded later on. So, all we need to do is skip the
+		// data entirely.
 		FileSeek(f, sizeof(WORLDITEM) * n_world_items, FILE_SEEK_FROM_CURRENT);
 		return;
 	}
 
 	for (UINT32 n = n_world_items; n != 0; --n)
-	{	/* Add all of the items to the world indirectly through AddItemToPool, but
-		 * only if the chance associated with them succeed. */
+	{
+		// Add all of the items to the world indirectly through AddItemToPool, but
+		// only if the chance associated with them succeed.
 		WORLDITEM wi;
 		FileRead(f, &wi, sizeof(wi));
 		OBJECTTYPE& o = wi.o;
@@ -304,11 +306,11 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			{
 				// do replacements?
 				const ItemModel * item = GCM->getItem(o.usItem);
-        const WeaponModel *weapon = item->asWeapon();
-        const MagazineModel *mag = item->asAmmo();
+				const WeaponModel *weapon = item->asWeapon();
+				const MagazineModel *mag = item->asAmmo();
 				if (weapon && weapon->isInBigGunList())
 				{
-          const WeaponModel *replacement = GCM->getWeaponByName(item->asWeapon()->getStandardReplacement());
+					const WeaponModel *replacement = GCM->getWeaponByName(item->asWeapon()->getStandardReplacement());
 
 						// everything else can be the same? no.
 						INT8 const ammo     = o.ubGunShotsLeft;
@@ -319,7 +321,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 				}
 				else if (mag && mag->isInBigGunList())
 				{
-          const MagazineModel *replacement = GCM->getMagazineByName(mag->getStandardReplacement());
+					const MagazineModel *replacement = GCM->getMagazineByName(mag->getStandardReplacement());
 
 						// Go through status values and scale up/down
 						UINT8 const mag_size     = mag->capacity;
@@ -340,7 +342,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			case ACTION_ITEM:
 				// If we are loading a pit, they are typically loaded without being armed.
 				if (o.bActionValue == ACTION_ITEM_SMALL_PIT ||
-						o.bActionValue == ACTION_ITEM_LARGE_PIT)
+					o.bActionValue == ACTION_ITEM_LARGE_PIT)
 				{
 					wi.usFlags      &= ~WORLD_ITEM_ARMED_BOMB;
 					wi.bVisible      = BURIED;
@@ -479,7 +481,7 @@ void RefreshWorldItemsIntoItemPools(const WORLDITEM* const items, const INT32 it
 
 TEST(WorldItems, asserts)
 {
-  EXPECT_EQ(sizeof(WORLDITEM), 52);
+	EXPECT_EQ(sizeof(WORLDITEM), 52);
 }
 
 #endif

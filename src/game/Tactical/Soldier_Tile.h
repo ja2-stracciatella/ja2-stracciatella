@@ -4,9 +4,9 @@
 #include "JA2Types.h"
 
 
-#define			MOVE_TILE_CLEAR										1
-#define			MOVE_TILE_TEMP_BLOCKED					 -1
-#define			MOVE_TILE_STATIONARY_BLOCKED		 -2
+#define MOVE_TILE_CLEAR		1
+#define MOVE_TILE_TEMP_BLOCKED		-1
+#define MOVE_TILE_STATIONARY_BLOCKED	-2
 
 
 void UnMarkMovementReserved(SOLDIERTYPE&);

@@ -23,8 +23,8 @@ bool InterfaceOKForMeanwhilePopup();
 
 extern BOOLEAN gfRerenderInterfaceFromHelpText;
 
-/* If given a null pointer, show the team panel. Otherwise show the given merc
- * in the single merc panel. */
+// If given a null pointer, show the team panel. Otherwise show the given merc
+// in the single merc panel.
 void SetNewPanel(SOLDIERTYPE*);
 
 #endif

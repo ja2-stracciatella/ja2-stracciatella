@@ -1028,8 +1028,8 @@ void AutoPlaceObjectInInventoryStash(OBJECTTYPE* pItemPtr)
 static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
-  	InventoryNextPage();
+	{
+		InventoryNextPage();
 	}
 }
 
@@ -1037,8 +1037,8 @@ static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, INT32 reason)
 static void MapInventoryPoolPrevBtn(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
-  	InventoryPrevPage();
+	{
+		InventoryPrevPage();
 	}
 }
 
@@ -1046,7 +1046,7 @@ static void MapInventoryPoolPrevBtn(GUI_BUTTON* btn, INT32 reason)
 static void MapInventoryPoolDoneBtn(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
+	{
 		fShowMapInventoryPool = FALSE;
 	}
 }
@@ -1196,14 +1196,14 @@ static void DrawTextOnMapInventoryBackground(void)
 
 	SetFontDestBuffer(guiSAVEBUFFER);
 
-  int xPos = STD_SCREEN_X + 268;
-  int yPos = STD_SCREEN_Y + 342;
+	int xPos = STD_SCREEN_X + 268;
+	int yPos = STD_SCREEN_Y + 342;
 
 	//Calculate the height of the string, as it needs to be vertically centered.
 	usStringHeight = DisplayWrappedString(xPos, yPos, 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_BLACK, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
 	DisplayWrappedString(xPos, yPos - (usStringHeight / 2), 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_BLACK, RIGHT_JUSTIFIED);
 
-  xPos = STD_SCREEN_X + 369;
+	xPos = STD_SCREEN_X + 369;
 
 	//Calculate the height of the string, as it needs to be vertically centered.
 	usStringHeight = DisplayWrappedString(xPos, yPos, 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[1], FONT_BLACK, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
@@ -1412,9 +1412,9 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM* const pWorldI
 //Check to see if any of the items in the list have a gridno of NOWHERE and the entry point flag NOT set
 static void CheckGridNoOfItemsInMapScreenMapInventory(void)
 {
-	INT32 iCnt;
+	INT32  iCnt;
 	UINT32 uiNumFlagsNotSet = 0;
-	INT32	 iTotalNumberItems = GetTotalNumberOfItems( );
+	INT32  iTotalNumberItems = GetTotalNumberOfItems( );
 
 
 	for( iCnt=0; iCnt<iTotalNumberItems; iCnt++)

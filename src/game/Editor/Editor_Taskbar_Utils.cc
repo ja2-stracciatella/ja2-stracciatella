@@ -203,13 +203,26 @@ static void ShowEditorToolbar(TaskMode const iNewTaskMode)
 {
 	switch( iNewTaskMode )
 	{
-		case TASK_TERRAIN:		ShowEditorButtons( FIRST_TERRAIN_BUTTON, LAST_TERRAIN_BUTTON );								break;
-		case TASK_BUILDINGS:	ShowEditorButtons( FIRST_BUILDINGS_BUTTON, LAST_BUILDINGS_BUTTON );						break;
-		case TASK_ITEMS:			ShowEditorButtons( FIRST_ITEMS_BUTTON, LAST_ITEMS_BUTTON );										break;
-		case TASK_MERCS:			ShowEditorButtons( FIRST_MERCS_TEAMMODE_BUTTON, LAST_MERCS_TEAMMODE_BUTTON );	break;
-		case TASK_MAPINFO:		ShowEditorButtons( FIRST_MAPINFO_BUTTON, LAST_MAPINFO_BUTTON );								break;
-		case TASK_OPTIONS:		ShowEditorButtons( FIRST_OPTIONS_BUTTON, LAST_OPTIONS_BUTTON );								break;
-		default:		return;
+		case TASK_TERRAIN:
+			ShowEditorButtons(FIRST_TERRAIN_BUTTON, LAST_TERRAIN_BUTTON);
+			break;
+		case TASK_BUILDINGS:
+			ShowEditorButtons(FIRST_BUILDINGS_BUTTON, LAST_BUILDINGS_BUTTON);
+			break;
+		case TASK_ITEMS:
+			ShowEditorButtons(FIRST_ITEMS_BUTTON, LAST_ITEMS_BUTTON);
+			break;
+		case TASK_MERCS:
+			ShowEditorButtons(FIRST_MERCS_TEAMMODE_BUTTON, LAST_MERCS_TEAMMODE_BUTTON);
+			break;
+		case TASK_MAPINFO:
+			ShowEditorButtons(FIRST_MAPINFO_BUTTON, LAST_MAPINFO_BUTTON);
+			break;
+		case TASK_OPTIONS:
+			ShowEditorButtons(FIRST_OPTIONS_BUTTON, LAST_OPTIONS_BUTTON);
+			break;
+		default:
+			return;
 	}
 }
 
@@ -219,13 +232,32 @@ static void HideEditorToolbar(TaskMode const iOldTaskMode)
 	INT32 i, iStart, iEnd;
 	switch( iOldTaskMode )
 	{
-		case TASK_TERRAIN:		iStart = FIRST_TERRAIN_BUTTON;			iEnd = LAST_TERRAIN_BUTTON;			break;
-		case TASK_BUILDINGS:	iStart = FIRST_BUILDINGS_BUTTON;		iEnd = LAST_BUILDINGS_BUTTON;		break;
-		case TASK_ITEMS:			iStart = FIRST_ITEMS_BUTTON;				iEnd = LAST_ITEMS_BUTTON;				break;
-		case TASK_MERCS:			iStart = FIRST_MERCS_BUTTON;				iEnd = LAST_MERCS_BUTTON;				break;
-		case TASK_MAPINFO:		iStart = FIRST_MAPINFO_BUTTON;			iEnd = LAST_MAPINFO_BUTTON;		break;
-		case TASK_OPTIONS:		iStart = FIRST_OPTIONS_BUTTON;			iEnd = LAST_OPTIONS_BUTTON;			break;
-		default:		return;
+		case TASK_TERRAIN:
+			iStart = FIRST_TERRAIN_BUTTON;
+			iEnd = LAST_TERRAIN_BUTTON;
+			break;
+		case TASK_BUILDINGS:
+			iStart = FIRST_BUILDINGS_BUTTON;
+			iEnd = LAST_BUILDINGS_BUTTON;
+			break;
+		case TASK_ITEMS:
+			iStart = FIRST_ITEMS_BUTTON;
+			iEnd = LAST_ITEMS_BUTTON;
+			break;
+		case TASK_MERCS:
+			iStart = FIRST_MERCS_BUTTON;
+			iEnd = LAST_MERCS_BUTTON;
+			break;
+		case TASK_MAPINFO:
+			iStart = FIRST_MAPINFO_BUTTON;
+			iEnd = LAST_MAPINFO_BUTTON;
+			break;
+		case TASK_OPTIONS:
+			iStart = FIRST_OPTIONS_BUTTON;
+			iEnd = LAST_OPTIONS_BUTTON;
+			break;
+		default:
+			return;
 	}
 	for( i = iStart; i <= iEnd; i++ )
 	{
@@ -300,8 +332,8 @@ void DoTaskbar(void)
 		case TASK_OPTIONS:
 			UnclickEditorButton( TAB_OPTIONS );
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 
 	//Setup the new tab mode
@@ -373,8 +405,8 @@ void DoTaskbar(void)
 			iDrawMode           = DRAW_MODE_NOTHING;
 			TerrainTileDrawMode = TERRAIN_TILES_NODRAW;
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 }
 
@@ -810,8 +842,8 @@ static void RenderEditorInfo(void)
 				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
 			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 450, 70, 60, 30);
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 }
 
@@ -836,7 +868,7 @@ void ProcessEditorRendering()
 	}
 	if( gfRenderDrawingMode )
 	{
-	  if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS )
+		if( iCurrentTaskbar == TASK_BUILDINGS || iCurrentTaskbar == TASK_TERRAIN || iCurrentTaskbar == TASK_ITEMS )
 		{
 			ShowCurrentDrawingMode();
 			gfRenderDrawingMode = FALSE;
@@ -864,8 +896,10 @@ void ProcessEditorRendering()
 		if( iCurrentTaskbar == TASK_MAPINFO )
 			RenderMapEntryPointsAndLights();
 		if( (iDrawMode == DRAW_MODE_PLACE_ITEM && eInfo.uiItemType == TBAR_MODE_ITEM_KEYS) ||
-			  iDrawMode == DRAW_MODE_DOORKEYS )
+			iDrawMode == DRAW_MODE_DOORKEYS )
+		{
 			RenderDoorLockInfo();
+		}
 	}
 
 

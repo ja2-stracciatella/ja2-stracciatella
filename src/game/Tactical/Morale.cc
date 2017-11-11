@@ -18,59 +18,59 @@
 #include "Soldier_Macros.h"
 #include "slog/slog.h"
 
-#define MORALE_MOD_MAX 50		// morale *mod* range is -50 to 50, if you change this, check the decay formulas!
+#define MORALE_MOD_MAX				50 // morale *mod* range is -50 to 50, if you change this, check the decay formulas!
 
 #define	DRUG_EFFECT_MORALE_MOD			150
 #define	ALCOHOL_EFFECT_MORALE_MOD		160
 
-#define HOURS_BETWEEN_STRATEGIC_DECAY 3
+#define HOURS_BETWEEN_STRATEGIC_DECAY		3
 
-#define PHOBIC_LIMIT -20
+#define PHOBIC_LIMIT				-20
 
 
 // macros
-#define SOLDIER_IN_SECTOR(s, x, y, z) (!(s)->fBetweenSectors && (s)->sSectorX == (x) && (s)->sSectorY == (y) && (s)->bSectorZ == (z))
+#define SOLDIER_IN_SECTOR(s, x, y, z)		(!(s)->fBetweenSectors && (s)->sSectorX == (x) && (s)->sSectorY == (y) && (s)->bSectorZ == (z))
 
 
 
 MoraleEvent gbMoraleEvent[NUM_MORALE_EVENTS] =
 {
 	// TACTICAL = Short Term Effect, STRATEGIC = Long Term Effect
-	{	TACTICAL_MORALE_EVENT,			+4},	//	MORALE_KILLED_ENEMY
-	{ TACTICAL_MORALE_EVENT,		  -5},	//	MORALE_SQUADMATE_DIED,		// in same sector (not really squad)... IN ADDITION to strategic loss of morale
-	{ TACTICAL_MORALE_EVENT,			-1},	//	MORALE_SUPPRESSED,				// up to 4 times per turn
-	{ TACTICAL_MORALE_EVENT,			-2},	//	MORALE_AIRSTRIKE,
-	{ TACTICAL_MORALE_EVENT,			+2},	//	MORALE_DID_LOTS_OF_DAMAGE,
-	{ TACTICAL_MORALE_EVENT,			-3},	//	MORALE_TOOK_LOTS_OF_DAMAGE,
-	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_KILLED_CIVILIAN,
-	{ STRATEGIC_MORALE_EVENT,			+4},	//	MORALE_BATTLE_WON,
-	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_RAN_AWAY,
-	{ STRATEGIC_MORALE_EVENT,			+2},	//	MORALE_HEARD_BATTLE_WON,
-	{ STRATEGIC_MORALE_EVENT,			-2},	//	MORALE_HEARD_BATTLE_LOST,
-	{ STRATEGIC_MORALE_EVENT,			+5},	//	MORALE_TOWN_LIBERATED,
-	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_TOWN_LOST,
-	{ STRATEGIC_MORALE_EVENT,			+8},	//	MORALE_MINE_LIBERATED,
-	{ STRATEGIC_MORALE_EVENT,			-8},	//	MORALE_MINE_LOST,
-	{ STRATEGIC_MORALE_EVENT,			+3},	//	MORALE_SAM_SITE_LIBERATED,
-	{ STRATEGIC_MORALE_EVENT,			-3},	//	MORALE_SAM_SITE_LOST,
-	{ STRATEGIC_MORALE_EVENT,		 -15},	//	MORALE_BUDDY_DIED,
-	{ STRATEGIC_MORALE_EVENT,			+5},	//	MORALE_HATED_DIED,
-	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_TEAMMATE_DIED,			// not in same sector
-	{ STRATEGIC_MORALE_EVENT,			+5},	//	MORALE_LOW_DEATHRATE,
-	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_HIGH_DEATHRATE,
-	{ STRATEGIC_MORALE_EVENT,			+2},	//	MORALE_GREAT_MORALE,
-	{ STRATEGIC_MORALE_EVENT,			-2},	//	MORALE_POOR_MORALE,
-	{ TACTICAL_MORALE_EVENT,		 -10},	//  MORALE_DRUGS_CRASH
-	{ TACTICAL_MORALE_EVENT,		 -10},	//  MORALE_ALCOHOL_CRASH
-	{ STRATEGIC_MORALE_EVENT,		 +15},	//  MORALE_MONSTER_QUEEN_KILLED
-	{ STRATEGIC_MORALE_EVENT,		 +25},	//  MORALE_DEIDRANNA_KILLED
-	{ TACTICAL_MORALE_EVENT,			-1},	//	MORALE_CLAUSTROPHOBE_UNDERGROUND,
-	{ TACTICAL_MORALE_EVENT,			-5},	//	MORALE_INSECT_PHOBIC_SEES_CREATURE,
-	{ TACTICAL_MORALE_EVENT,			-1},	//	MORALE_NERVOUS_ALONE,
-	{	STRATEGIC_MORALE_EVENT,		  -5},	//	MORALE_MERC_CAPTURED,
-	{ STRATEGIC_MORALE_EVENT,			-5},	//	MORALE_MERC_MARRIED,
-	{ STRATEGIC_MORALE_EVENT,			+8},	//	MORALE_QUEEN_BATTLE_WON,
-	{ STRATEGIC_MORALE_EVENT,			+5},	//  MORALE_SEX,
+	{TACTICAL_MORALE_EVENT, +4}, // MORALE_KILLED_ENEMY
+	{TACTICAL_MORALE_EVENT, -5}, // MORALE_SQUADMATE_DIED, // in same sector (not really squad)... IN ADDITION to strategic loss of morale
+	{TACTICAL_MORALE_EVENT, -1}, // MORALE_SUPPRESSED, // up to 4 times per turn
+	{TACTICAL_MORALE_EVENT, -2}, // MORALE_AIRSTRIKE,
+	{TACTICAL_MORALE_EVENT, +2}, // MORALE_DID_LOTS_OF_DAMAGE,
+	{TACTICAL_MORALE_EVENT, -3}, // MORALE_TOOK_LOTS_OF_DAMAGE,
+	{STRATEGIC_MORALE_EVENT, -5}, // MORALE_KILLED_CIVILIAN,
+	{STRATEGIC_MORALE_EVENT, +4}, // MORALE_BATTLE_WON,
+	{STRATEGIC_MORALE_EVENT, -5}, // MORALE_RAN_AWAY,
+	{STRATEGIC_MORALE_EVENT, +2}, // MORALE_HEARD_BATTLE_WON,
+	{STRATEGIC_MORALE_EVENT, -2}, // MORALE_HEARD_BATTLE_LOST,
+	{STRATEGIC_MORALE_EVENT, +5}, // MORALE_TOWN_LIBERATED,
+	{STRATEGIC_MORALE_EVENT, -5}, // MORALE_TOWN_LOST,
+	{STRATEGIC_MORALE_EVENT, +8}, // MORALE_MINE_LIBERATED,
+	{STRATEGIC_MORALE_EVENT, -8}, // MORALE_MINE_LOST,
+	{STRATEGIC_MORALE_EVENT, +3}, // MORALE_SAM_SITE_LIBERATED,
+	{STRATEGIC_MORALE_EVENT, -3}, // MORALE_SAM_SITE_LOST,
+	{STRATEGIC_MORALE_EVENT, -15}, // MORALE_BUDDY_DIED,
+	{STRATEGIC_MORALE_EVENT, +5}, // MORALE_HATED_DIED,
+	{STRATEGIC_MORALE_EVENT, -5}, // MORALE_TEAMMATE_DIED, // not in same sector
+	{STRATEGIC_MORALE_EVENT, +5}, // MORALE_LOW_DEATHRATE,
+	{STRATEGIC_MORALE_EVENT, -5}, // MORALE_HIGH_DEATHRATE,
+	{STRATEGIC_MORALE_EVENT, +2}, // MORALE_GREAT_MORALE,
+	{STRATEGIC_MORALE_EVENT, -2}, // MORALE_POOR_MORALE,
+	{TACTICAL_MORALE_EVENT, -10}, //  MORALE_DRUGS_CRASH
+	{TACTICAL_MORALE_EVENT, -10}, //  MORALE_ALCOHOL_CRASH
+	{STRATEGIC_MORALE_EVENT, +15}, //  MORALE_MONSTER_QUEEN_KILLED
+	{STRATEGIC_MORALE_EVENT, +25}, //  MORALE_DEIDRANNA_KILLED
+	{TACTICAL_MORALE_EVENT, -1}, // MORALE_CLAUSTROPHOBE_UNDERGROUND,
+	{TACTICAL_MORALE_EVENT, -5}, // MORALE_INSECT_PHOBIC_SEES_CREATURE,
+	{TACTICAL_MORALE_EVENT, -1}, // MORALE_NERVOUS_ALONE,
+	{STRATEGIC_MORALE_EVENT, -5}, // MORALE_MERC_CAPTURED,
+	{STRATEGIC_MORALE_EVENT, -5}, // MORALE_MERC_MARRIED,
+	{STRATEGIC_MORALE_EVENT, +8}, // MORALE_QUEEN_BATTLE_WON,
+	{STRATEGIC_MORALE_EVENT, +5}, // MORALE_SEX,
 };
 
 BOOLEAN gfSomeoneSaidMoraleQuote = FALSE;
@@ -234,9 +234,9 @@ static void DecayStrategicMoraleModifiers(void)
 	{
 		//if the merc is active, in Arulco
 		// CJC: decay modifiers while asleep! or POW!
-		if (s->ubProfile   != NO_PROFILE &&
-				s->bAssignment != IN_TRANSIT &&
-				s->bAssignment != ASSIGNMENT_DEAD)
+		if (s->ubProfile != NO_PROFILE &&
+			s->bAssignment != IN_TRANSIT &&
+			s->bAssignment != ASSIGNMENT_DEAD)
 		{
 			// only let morale mod decay if it is positive while merc is a POW
 			if (s->bAssignment == ASSIGNMENT_POW && s->bStrategicMoraleMod < 0)
@@ -254,7 +254,7 @@ static void DecayStrategicMoraleModifiers(void)
 
 void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 {
-	INT32		iActualMorale;
+	INT32 iActualMorale;
 
 	if ( pSoldier->fMercAsleep )
 	{
@@ -280,16 +280,16 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 
 static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoraleMod)
 {
-	INT32									iMoraleModTotal;
+	INT32 iMoraleModTotal;
 
 	if (!pSoldier->bActive)              return;
 	if (pSoldier->bLife < CONSCIOUSNESS) return;
 	if (IsMechanical(*pSoldier))         return;
 	if (AM_AN_EPC(pSoldier))             return;
 
-	if ( ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
-			 ( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			 ( pSoldier->bAssignment == IN_TRANSIT ) )
+	if ((pSoldier->bAssignment == ASSIGNMENT_DEAD) ||
+		(pSoldier->bAssignment == ASSIGNMENT_POW) ||
+		(pSoldier->bAssignment == IN_TRANSIT))
 	{
 		return;
 	}
@@ -419,13 +419,15 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 	// Those that do need it have Asserts on a case by case basis below
 	if (pSoldier == NULL)
 	{
-		SLOGD(DEBUG_TAG_MORALE, "Handling morale event %d at X=%d, Y=%d,Z=%d",
-					bMoraleEvent, sMapX, sMapY, bMapZ);
+		SLOGD(DEBUG_TAG_MORALE,
+			"Handling morale event %d at X=%d, Y=%d,Z=%d",
+			bMoraleEvent, sMapX, sMapY, bMapZ);
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_MORALE, "Handling morale event %d for %ls at X=%d, Y=%d, Z=%d",
-					bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ);
+		SLOGD(DEBUG_TAG_MORALE,
+			"Handling morale event %d for %ls at X=%d, Y=%d, Z=%d",
+			bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ);
 	}
 
 
@@ -477,16 +479,14 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			FOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE& s = *i;
-				/* CJC: adding to SOLDIER_IN_SECTOR check special stuff because the old
-				 * sector values might be appropriate (because in transit going out of
-				 * that sector!) */
+				// CJC: adding to SOLDIER_IN_SECTOR check special stuff because the old
+				// sector values might be appropriate (because in transit going out of
+				// that sector!)
 				if (SOLDIER_IN_SECTOR(&s, sMapX, sMapY, bMapZ) ||
-						(
-							s.fBetweenSectors &&
-							s.ubPrevSectorID % 16 + 1 == sMapX &&
-							s.ubPrevSectorID / 16 + 1 == sMapY &&
-							s.bSectorZ == bMapZ
-						))
+					(s.fBetweenSectors &&
+					s.ubPrevSectorID % 16 + 1 == sMapX &&
+					s.ubPrevSectorID / 16 + 1 == sMapY &&
+					s.bSectorZ == bMapZ))
 				{
 					switch (GetProfile(s.ubProfile).bAttitude)
 					{
@@ -557,7 +557,8 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			// needs specific soldier!
 			Assert( pSoldier );
 
-			// affects everyone, in sector differently than not, extra bonuses if it's a buddy or hated merc
+			// affects everyone, in sector differently than not, extra bonuses if
+			// it's a buddy or hated merc
 			FOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE& other = *i;
@@ -571,12 +572,13 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 				else
 				{
 					if (SOLDIER_IN_SECTOR(&other, sMapX, sMapY, bMapZ))
-					{ // Mate died in my sector! tactical morale mod
+					{
+						// Mate died in my sector! tactical morale mod
 						HandleMoraleEventForSoldier(&other, MORALE_SQUADMATE_DIED);
 					}
 
-					/* This is handled for everyone even if in sector, as it's a strategic
-					 * morale mod */
+					// This is handled for everyone even if in sector, as it's a strategic
+					// morale mod
 					HandleMoraleEventForSoldier(&other, MORALE_TEAMMATE_DIED);
 
 					if (BUDDY_MERC(p, pSoldier->ubProfile))
@@ -588,8 +590,8 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			break;
 
 		case MORALE_MERC_MARRIED:
-			/* Female mercs get unhappy based on how sexist they are (=hate men),
-			 * gentlemen males get unhappy too */
+			// Female mercs get unhappy based on how sexist they are (=hate men),
+			// gentlemen males get unhappy too
 			FOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE& other = *i;
@@ -625,7 +627,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 		default:
 			// debug message
-			SLOGI(DEBUG_TAG_MORALE, "Invalid morale event type = %d.", bMoraleEvent );
+			SLOGI(DEBUG_TAG_MORALE, "Invalid morale event type = %d.", bMoraleEvent);
 			break;
 	}
 
@@ -723,7 +725,8 @@ void HourlyMoraleUpdate()
 			if (other->bAssignment == ASSIGNMENT_POW)  continue;
 
 			if (same_group_only)
-			{ // All we have to check is the group ID
+			{
+				// All we have to check is the group ID
 				if (s->ubGroupID != other->ubGroupID) continue;
 			}
 			else
@@ -742,8 +745,9 @@ void HourlyMoraleUpdate()
 			{
 				INT8 const hated = WhichHated(s->ubProfile, other->ubProfile);
 				if (hated >= 2 || // Learn to hate which has become full-blown hatred, full strength
-						p.bHatedCount[hated] <= p.bHatedTime[hated] / 2)
-				{ // We're teamed with someone we hate! We HATE this! Ignore everyone else!
+					p.bHatedCount[hated] <= p.bHatedTime[hated] / 2)
+				{
+					// We're teamed with someone we hate! We HATE this! Ignore everyone else!
 					found_hated = true;
 					break;
 				}
@@ -812,8 +816,8 @@ void HourlyMoraleUpdate()
 			s->bDelayedStrategicMoraleMod = 0;
 		}
 
-		/* Refresh the morale value for the soldier based on the recalculated team
-		 * modifier */
+		// Refresh the morale value for the soldier based on the recalculated team
+		// modifier
 		RefreshSoldierMorale(s);
 	}
 
@@ -833,7 +837,7 @@ void DailyMoraleUpdate(SOLDIERTYPE *pSoldier)
 	}
 
 	// CJC: made per hour now
-/*
+	/*
 	// decay the merc's strategic morale modifier
 	if (pSoldier->bStrategicMoraleMod != 0)
 	{
@@ -842,8 +846,7 @@ void DailyMoraleUpdate(SOLDIERTYPE *pSoldier)
 
 		// refresh the morale value for the soldier based on the recalculated modifier
 		RefreshSoldierMorale( pSoldier );
-	}
-*/
+	}*/
 
 	// check death rate vs. merc's tolerance once/day (ignores buddies!)
 	if (MercThinksDeathRateTooHigh(GetProfile(pSoldier->ubProfile)))

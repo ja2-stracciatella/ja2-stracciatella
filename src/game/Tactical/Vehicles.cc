@@ -80,7 +80,7 @@ static const VehicleTypeInfo g_vehicle_type_info[] =
 // Loop through and create a few soldier squad ID's for vehicles ( max # 3 )
 void InitVehicles(void)
 {
-	INT32		cnt;
+	INT32 cnt;
 	for( cnt = 0; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
@@ -96,9 +96,9 @@ void SetVehicleValuesIntoSoldierType(SOLDIERTYPE* const vs)
 	const VEHICLETYPE* const v = &pVehicleList[vs->bVehicleID];
 	wcscpy(vs->name, zVehicleName[v->ubVehicleType]);
 	vs->ubProfile           = g_vehicle_type_info[v->ubVehicleType].profile;
-  vs->sBreathRed          = 10000; // Init fuel
-  vs->bBreath             = 100;
-  vs->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
+	vs->sBreathRed          = 10000; // Init fuel
+	vs->bBreath             = 100;
+	vs->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
 }
 
 
@@ -172,9 +172,8 @@ void ClearOutVehicleList(void)
 
 bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const& s, VEHICLETYPE const& v)
 {
-	return
-		!s.fBetweenSectors       &&
-		!v.fBetweenSectors       &&
+	return !s.fBetweenSectors &&
+		!v.fBetweenSectors &&
 		s.sSectorX == v.sSectorX &&
 		s.sSectorY == v.sSectorY &&
 		s.bSectorZ == v.sSectorZ &&
@@ -232,7 +231,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 	if (vs)
 	{
 		// can't call SelectSoldier in mapscreen, that will initialize interface panels!!!
-	  if (guiCurrentScreen == GAME_SCREEN)
+		if (guiCurrentScreen == GAME_SCREEN)
 		{
 			SelectSoldier(vs, SELSOLDIER_FORCE_RESELECT);
 		}
@@ -249,13 +248,13 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 		if (s.bAssignment == VEHICLE)
 		{
 			TakeSoldierOutOfVehicle(&s);
-			/* NOTE: This will leave the soldier on a squad.  Must be done PRIOR TO
-			 * and in AS WELL AS the call to RemoveCharacterFromSquads() that's coming
-			 * up, to permit direct vehicle->vehicle reassignment! */
+			// NOTE: This will leave the soldier on a squad.  Must be done PRIOR TO
+			// and in AS WELL AS the call to RemoveCharacterFromSquads() that's coming
+			// up, to permit direct vehicle->vehicle reassignment!
 		}
 
-		/* if in a squad, remove from squad, if not, then check if in mvt group, if
-		 * so, move and destroy group */
+		// if in a squad, remove from squad, if not, then check if in mvt group, if
+		// so, move and destroy group
 		if (s.bAssignment < ON_DUTY)
 		{
 			RemoveCharacterFromSquads(&s);
@@ -296,7 +295,8 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 			// Stop from any movement.....
 			EVENT_StopMerc(&s);
 
-			// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
+			// can't call SetCurrentSquad OR SelectSoldier in mapscreen,
+			// that will initialize interface panels!!!
 			if (guiCurrentScreen == GAME_SCREEN)
 			{
 				SetCurrentSquad(vs->bAssignment, TRUE);
@@ -316,14 +316,16 @@ void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE* const s)
 	if (s->bInSector) return;
 
 	if (s->sSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X &&
-			s->sSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y &&
-			s->bSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z)
-	{ // This is Drassen, make insertion gridno specific
+		s->sSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y &&
+		s->bSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z)
+	{
+		// This is Drassen, make insertion gridno specific
 		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		s->usStrategicInsertionData = 10125;
 	}
 	else
-	{ // Not anything different here - just use center gridno
+	{
+		// Not anything different here - just use center gridno
 		s->ubStrategicInsertionCode = INSERTION_CODE_CENTER;
 	}
 }
@@ -356,20 +358,22 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
 	if (IsHelicopter(v))
-	{ /* The vehicle the helicopter? It can continue moving when no soldiers
-		 * aboard (Skyrider remains) */
+	{
+		// The vehicle the helicopter? It can continue moving when no soldiers
+		// aboard (Skyrider remains)
 		if (s.bLife >= OKLIFE)
-		{ /* Mark the sector as visited (flying around in the chopper doesn't, so
-			 * this does it as soon as we get off it) */
+		{
+			// Mark the sector as visited (flying around in the chopper doesn't, so
+			// this does it as soon as we get off it)
 			SetSectorFlag(s.sSectorX, s.sSectorY, s.bSectorZ, SF_ALREADY_VISITED);
 		}
 
 		SetSoldierExitHelicopterInsertionData(&s);
 
-    // Update in sector if this is the current sector
+		// Update in sector if this is the current sector
 		if (s.sSectorX == gWorldSectorX &&
-				s.sSectorY == gWorldSectorY &&
-				s.bSectorZ == gbWorldSectorZ)
+			s.sSectorY == gWorldSectorY &&
+			s.bSectorZ == gbWorldSectorZ)
 		{
 			UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
@@ -389,8 +393,9 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		}
 
 		if (v.fBetweenSectors)
-		{ /* The vehicle was abandoned between sectors. Teleport it to the closer of
-			 * its current and next sectors (it beats having it arrive empty later) */
+		{
+			// The vehicle was abandoned between sectors. Teleport it to the closer of
+			// its current and next sectors (it beats having it arrive empty later)
 			TeleportVehicleToItsClosestSector(vs.ubGroupID);
 		}
 
@@ -550,10 +555,10 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 	if (s->bAssignment != VEHICLE) return FALSE;
 
 	if (s->sSectorX == gWorldSectorX &&
-			s->sSectorY == gWorldSectorY &&
-			s->bSectorZ == 0             &&
-			s->bInSector                 &&
-			!InHelicopter(*s)) // helicopter isn't a soldiertype instance
+		s->sSectorY == gWorldSectorY &&
+		s->bSectorZ == 0 &&
+		s->bInSector &&
+		!InHelicopter(*s)) // helicopter isn't a soldiertype instance
 	{
 		return ExitVehicle(s);
 	}
@@ -568,11 +573,11 @@ bool PutSoldierInVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 {
 	if (!AddSoldierToVehicle(s, v)) return false;
 
-	if (s.sSectorX == gWorldSectorX          &&
-			s.sSectorY == gWorldSectorY          &&
-			s.bSectorZ == 0                      &&
-			!IsHelicopter(v)                     &&
-			guiCurrentScreen == GAME_SCREEN)
+	if (s.sSectorX == gWorldSectorX &&
+		s.sSectorY == gWorldSectorY &&
+		s.bSectorZ == 0 &&
+		!IsHelicopter(v) &&
+		guiCurrentScreen == GAME_SCREEN)
 	{
 		SetCurrentInterfacePanel(TEAM_PANEL);
 	}
@@ -627,10 +632,10 @@ static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 
 
 void VehicleTakeDamage(const UINT8 ubID, const UINT8 ubReason, const INT16 sDamage, const INT16 sGridNo, SOLDIERTYPE* const att)
 {
-  if ( ubReason != TAKE_DAMAGE_GAS )
-  {
-  	PlayLocationJA2Sample(sGridNo, S_METAL_IMPACT3, MIDVOLUME, 1);
-  }
+	if ( ubReason != TAKE_DAMAGE_GAS )
+	{
+		PlayLocationJA2Sample(sGridNo, S_METAL_IMPACT3, MIDVOLUME, 1);
+	}
 
 	// check if there was in fact damage done to the vehicle
 	if( ( ubReason == TAKE_DAMAGE_HANDTOHAND ) || ( ubReason == TAKE_DAMAGE_GAS ) )
@@ -722,8 +727,8 @@ bool DoesVehicleNeedAnyRepairs(VEHICLETYPE const& v)
 
 INT8 RepairVehicle(VEHICLETYPE const& v, INT8 const bRepairPtsLeft, BOOLEAN* const pfNothingToRepair)
 {
-	INT8					bRepairPtsUsed = 0;
-	INT8					bOldLife;
+	INT8 bRepairPtsUsed = 0;
+	INT8 bOldLife;
 
 	if (!DoesVehicleNeedAnyRepairs(v)) return bRepairPtsUsed;
 
@@ -841,7 +846,7 @@ void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 
 void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 {
-	INT32		cnt;
+	INT32 cnt;
 
 	//Load in the Squad movement id's
 	FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * 5);
@@ -894,10 +899,10 @@ BOOLEAN OKUseVehicle( UINT8 ubProfile )
 
 static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 {
-	GROUP *pGroup = NULL;
+	GROUP  *pGroup = NULL;
 	UINT32 uiTimeToNextSector;
 	UINT32 uiTimeToLastSector;
-	INT16 sPrevX, sPrevY, sNextX, sNextY;
+	INT16  sPrevX, sPrevY, sNextX, sNextY;
 
 
 	pGroup = GetGroup( ubGroupID );
@@ -955,8 +960,7 @@ void AddVehicleFuelToSave( )
 
 static bool CanSoldierDriveVehicle(SOLDIERTYPE const& s, INT32 const vehicle_id, bool const ignore_asleep)
 {
-	return
-		s.bAssignment == VEHICLE           && // In a vehicle?
+	return s.bAssignment == VEHICLE            && // In a vehicle?
 		vehicle_id == s.iVehicleId         && // In this vehicle?
 		vehicle_id != iHelicopterVehicleId && // Only Skyrider can pilot the helicopter
 		(ignore_asleep || !s.fMercAsleep)  &&
@@ -988,14 +992,14 @@ bool SoldierMustDriveVehicle(SOLDIERTYPE const& s, bool const trying_to_travel)
 	INT32       const  vehicle_id = s.iVehicleId;
 	VEHICLETYPE const& v          = GetVehicle(vehicle_id);
 
-	/* If vehicle is not going anywhere, then nobody has to be driving it. Need
-	 * the path length check in case we're doing a test while actually in a sector
-	 * even though we're moving. */
+	// If vehicle is not going anywhere, then nobody has to be driving it. Need
+	// the path length check in case we're doing a test while actually in a sector
+	// even though we're moving.
 	if (!trying_to_travel && !v.fBetweenSectors && GetLengthOfPath(v.pMercPath) == 0) return false;
 
-	/* Can he drive it (don't care if he is currently asleep) and is he the only
-	 * one aboard who can do so? If there are multiple possible drivers, than the
-	 * assumption is that this guy isn't driving, so he can sleep. */
+	// Can he drive it (don't care if he is currently asleep) and is he the only
+	// one aboard who can do so? If there are multiple possible drivers, than the
+	// assumption is that this guy isn't driving, so he can sleep.
 	if (!CanSoldierDriveVehicle(s, vehicle_id, true))   return false;
 	if (!OnlyThisSoldierCanDriveVehicle(s, vehicle_id)) return false;
 	return true;

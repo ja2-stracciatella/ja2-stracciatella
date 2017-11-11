@@ -27,6 +27,7 @@ script:
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
   - make rust-unit-tests
   - ./ja2 -unittests
+  - ./ja2-launcher -help
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make uninstall; fi
   - if [ "$PUBLISH_BINARY" == "true" ]; then make package; fi
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$SFTP_PASSWORD" != "" ]; then curl --ftp-create-dirs -T $(echo ja2-stracciatella_*) --ftp-ssl -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/; fi
@@ -39,6 +40,8 @@ addons:
     - g++
     - libsdl2-dev
     - libboost-all-dev
+    - fluid
+    - libfltk1.3-dev
   coverity_scan:
     project:
       name: "ja2-stracciatella/ja2-stracciatella"

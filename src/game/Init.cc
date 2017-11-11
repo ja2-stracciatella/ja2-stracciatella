@@ -94,15 +94,15 @@ try
 
 	InitMercPopupBox( );
 
-  if(GameState::getInstance()->isEditorMode())
-  {
-    //UNCOMMENT NEXT LINE TO ALLOW FORCE UPDATES...
-    //LoadGlobalSummary();
-    if( gfMustForceUpdateAllMaps )
-    {
-      ApologizeOverrideAndForceUpdateEverything();
-    }
-  }
+	if(GameState::getInstance()->isEditorMode())
+	{
+		//UNCOMMENT NEXT LINE TO ALLOW FORCE UPDATES...
+		//LoadGlobalSummary();
+		if( gfMustForceUpdateAllMaps )
+		{
+			ApologizeOverrideAndForceUpdateEverything();
+		}
+	}
 
 	switch (GameState::getInstance()->getMode())
 	{
@@ -131,7 +131,7 @@ catch (...) { return ERROR_SCREEN; }
 
 void ShutdownJA2(void)
 {
-  UINT32 uiIndex;
+	UINT32 uiIndex;
 
 	FRAME_BUFFER->Fill(Get16BPPColor(FROMRGB(0, 0, 0)));
 	InvalidateScreen( );
@@ -148,12 +148,12 @@ void ShutdownJA2(void)
 	// Shutdown queue system
 	ShutdownDialogueControl();
 
-  // Shutdown Screens
-  for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
-  {
+	// Shutdown Screens
+	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
+	{
 		void (*const shutdown)(void) = GameScreens[uiIndex].ShutdownScreen;
 		if (shutdown != NULL) shutdown();
-  }
+	}
 
 
 	ShutdownLightingSystem();

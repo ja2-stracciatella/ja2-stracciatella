@@ -39,21 +39,20 @@ static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)
 static inline BOOLEAN OkControllableMerc(const SOLDIERTYPE* const s)
 {
 	Assert(s->bActive);
-	return
-		s->bLife >= OKLIFE &&
+	return s->bLife >= OKLIFE &&
 		s->bInSector &&
 		s->bTeam == OUR_TEAM &&
 		s->bAssignment < ON_DUTY;
 }
-#define OK_CONTROLLABLE_MERC(s) ((s)->bActive && OkControllableMerc((s)))
+#define OK_CONTROLLABLE_MERC(s)	((s)->bActive && OkControllableMerc((s)))
 
 // Check if our guy can be selected and is not in a position where our team has an interupt and he does not have one
-#define OK_INTERRUPT_MERC(p) (!INTERRUPT_QUEUED || !(p)->bMoved)
+#define OK_INTERRUPT_MERC(p)	(!INTERRUPT_QUEUED || !(p)->bMoved)
 
-#define CREATURE_OR_BLOODCAT(p) ((p)->uiStatusFlags & SOLDIER_MONSTER || (p)->ubBodyType == BLOODCAT)
+#define CREATURE_OR_BLOODCAT(p)	((p)->uiStatusFlags & SOLDIER_MONSTER || (p)->ubBodyType == BLOODCAT)
 
-#define TANK(p) ((p)->ubBodyType == TANK_NE || (p)->ubBodyType == TANK_NW)
+#define TANK(p)			((p)->ubBodyType == TANK_NE || (p)->ubBodyType == TANK_NW)
 
-#define OK_ENTERABLE_VEHICLE(p) ((p)->uiStatusFlags & SOLDIER_VEHICLE && !TANK((p)) && (p)->bLife >= OKLIFE)
+#define OK_ENTERABLE_VEHICLE(p)	((p)->uiStatusFlags & SOLDIER_VEHICLE && !TANK((p)) && (p)->bLife >= OKLIFE)
 
 #endif

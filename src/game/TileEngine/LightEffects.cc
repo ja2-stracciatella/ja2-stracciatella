@@ -19,7 +19,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#define		NUM_LIGHT_EFFECT_SLOTS					25
+#define NUM_LIGHT_EFFECT_SLOTS 25
 
 
 // GLOBAL FOR LIGHT LISTING
@@ -29,9 +29,9 @@ static UINT32      guiNumLightEffects = 0;
 
 #define BASE_FOR_EACH_LIGHTEFFECT(type, iter)                           \
 	for (type*       iter        = gLightEffectData,                      \
-	         * const iter##__end = gLightEffectData + guiNumLightEffects; \
-	     iter != iter##__end;                                             \
-	     ++iter)                                                          \
+		* const iter##__end = gLightEffectData + guiNumLightEffects; \
+		iter != iter##__end;                                             \
+		++iter)                                                          \
 		if (!iter->fAllocated) continue; else
 #define FOR_EACH_LIGHTEFFECT(iter)  BASE_FOR_EACH_LIGHTEFFECT(      LIGHTEFFECT, iter)
 #define CFOR_EACH_LIGHTEFFECT(iter) BASE_FOR_EACH_LIGHTEFFECT(const LIGHTEFFECT, iter)
@@ -95,15 +95,15 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 	l->light              = NULL;
 	l->uiTimeOfLastUpdate = GetWorldTotalSeconds();
 
-  switch( bType )
-  {
+	switch( bType )
+	{
 		case LIGHT_FLARE_MARK_1:
 
-			ubDuration				= 6;
-			ubStartRadius			= 6;
+			ubDuration    = 6;
+			ubStartRadius = 6;
 			break;
 
-  }
+	}
 
 	l->ubDuration = ubDuration;
 	l->bRadius    = ubStartRadius;
@@ -112,7 +112,7 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 
 	UpdateLightingSprite(l);
 
-  // Handle sight here....
+	// Handle sight here....
 	AllTeamsLookForAll( FALSE );
 
 	return l;
@@ -121,9 +121,9 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 
 void DecayLightEffects( UINT32 uiTime )
 {
-  // age all active tear gas clouds, deactivate those that are just dispersing
+	// age all active tear gas clouds, deactivate those that are just dispersing
 	FOR_EACH_LIGHTEFFECT(l)
-  {
+	{
 		// ATE: Do this every so ofte, to acheive the effect we want...
 		if (uiTime - l->uiTimeOfLastUpdate <= 350) continue;
 
@@ -164,7 +164,7 @@ void DecayLightEffects( UINT32 uiTime )
 
 		// Handle sight here....
 		AllTeamsLookForAll(FALSE);
-  }
+	}
 }
 
 

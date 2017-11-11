@@ -1,5 +1,5 @@
 #ifndef __PHYSICS_H
-#define	__PHYSICS_H
+#define __PHYSICS_H
 
 #include "Item_Types.h"
 #include "JA2Types.h"
@@ -11,59 +11,59 @@ extern UINT32 guiNumObjectSlots;
 
 struct REAL_OBJECT
 {
-	BOOLEAN			fAllocated;
-	BOOLEAN			fAlive;
-	BOOLEAN			fApplyFriction;
-	BOOLEAN			fVisible;
-	BOOLEAN			fInWater;
-	BOOLEAN			fTestObject;
-	BOOLEAN			fTestEndedWithCollision;
-	BOOLEAN			fTestPositionNotSet;
+	BOOLEAN      fAllocated;
+	BOOLEAN      fAlive;
+	BOOLEAN      fApplyFriction;
+	BOOLEAN      fVisible;
+	BOOLEAN      fInWater;
+	BOOLEAN      fTestObject;
+	BOOLEAN      fTestEndedWithCollision;
+	BOOLEAN      fTestPositionNotSet;
 
-	float				TestZTarget;
-	float				OneOverMass;
-	float				AppliedMu;
+	float        TestZTarget;
+	float        OneOverMass;
+	float        AppliedMu;
 
-	vector_3		Position;
-	vector_3		TestTargetPosition;
-	vector_3		OldPosition;
-	vector_3		Velocity;
-	vector_3		OldVelocity;
-	vector_3		InitialForce;
-	vector_3		Force;
-	vector_3		CollisionNormal;
-	vector_3		CollisionVelocity;
-	float				CollisionElasticity;
+	vector_3     Position;
+	vector_3     TestTargetPosition;
+	vector_3     OldPosition;
+	vector_3     Velocity;
+	vector_3     OldVelocity;
+	vector_3     InitialForce;
+	vector_3     Force;
+	vector_3     CollisionNormal;
+	vector_3     CollisionVelocity;
+	float        CollisionElasticity;
 
-	INT16				sGridNo;
-	LEVELNODE		*pNode;
-	LEVELNODE   *pShadow;
+	INT16        sGridNo;
+	LEVELNODE    *pNode;
+	LEVELNODE    *pShadow;
 
-	INT16				sConsecutiveCollisions;
-	INT16				sConsecutiveZeroVelocityCollisions;
-	INT32				iOldCollisionCode;
+	INT16        sConsecutiveCollisions;
+	INT16        sConsecutiveZeroVelocityCollisions;
+	INT32        iOldCollisionCode;
 
-	FLOAT				dLifeLength;
-	FLOAT				dLifeSpan;
-	OBJECTTYPE	Obj;
+	FLOAT        dLifeLength;
+	FLOAT        dLifeSpan;
+	OBJECTTYPE   Obj;
 	SOLDIERTYPE* owner;
-	INT16				sFirstGridNo;
-	BOOLEAN			fFirstTimeMoved;
-	UINT8				ubActionCode;
+	INT16        sFirstGridNo;
+	BOOLEAN      fFirstTimeMoved;
+	UINT8        ubActionCode;
 	SOLDIERTYPE* target;
-	BOOLEAN			fDropItem;
-	UINT32			uiNumTilesMoved;
-	BOOLEAN			fCatchGood;
-	BOOLEAN			fAttemptedCatch;
-	BOOLEAN			fCatchAnimOn;
-	BOOLEAN			fCatchCheckDone;
-	BOOLEAN			fEndedWithCollisionPositionSet;
-	vector_3		EndedWithCollisionPosition;
-	BOOLEAN			fHaveHitGround;
-  BOOLEAN     fPotentialForDebug;
-  INT16       sLevelNodeGridNo;
-  INT32       iSoundID;
-  UINT8       ubLastTargetTakenDamage;
+	BOOLEAN      fDropItem;
+	UINT32       uiNumTilesMoved;
+	BOOLEAN      fCatchGood;
+	BOOLEAN      fAttemptedCatch;
+	BOOLEAN      fCatchAnimOn;
+	BOOLEAN      fCatchCheckDone;
+	BOOLEAN      fEndedWithCollisionPositionSet;
+	vector_3     EndedWithCollisionPosition;
+	BOOLEAN      fHaveHitGround;
+	BOOLEAN      fPotentialForDebug;
+	INT16        sLevelNodeGridNo;
+	INT32        iSoundID;
+	UINT8        ubLastTargetTakenDamage;
 };
 
 

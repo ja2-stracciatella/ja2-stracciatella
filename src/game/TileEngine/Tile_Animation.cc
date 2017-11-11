@@ -106,8 +106,8 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 		case ANI_ROOF_LEVEL:    ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);       break;
 		case ANI_ONROOF_LEVEL:  ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);     break;
 		case ANI_TOPMOST_LEVEL: ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);    break;
-        default:
-            break;
+		default:
+			break;
 	}
 
 	// set flags for levelnode
@@ -226,7 +226,7 @@ void DeleteAniTile(ANITILE* const a)
 
 			// Freeup attacker from explosion
 			ReduceAttackBusyCount(owner, FALSE);
-    }
+		}
 
 
 		if (a->uiFlags & ANITILE_RELEASE_ATTACKER_WHEN_DONE)
@@ -299,9 +299,9 @@ void UpdateAniTiles( )
 								break;
 							}
 
-              case ANI_KEYFRAME_DO_SOUND:
-                PlayLocationJA2Sample(pNode->sGridNo, pNode->v.sound, MIDVOLUME, 1);
-                break;
+							case ANI_KEYFRAME_DO_SOUND:
+								PlayLocationJA2Sample(pNode->sGridNo, pNode->v.sound, MIDVOLUME, 1);
+								break;
 						}
 
 					}
@@ -309,26 +309,26 @@ void UpdateAniTiles( )
 					// CHECK IF WE SHOULD BE DISPLAYING TRANSLUCENTLY!
 					if ( pNode->sCurrentFrame == pNode->ubKeyFrame2 )
 					{
-           	switch( pNode->uiKeyFrame2Code )
+						switch( pNode->uiKeyFrame2Code )
 						{
 							case ANI_KEYFRAME_BEGIN_DAMAGE:
 							{
-                Assert(pNode->uiFlags & ANITILE_EXPLOSION);
-                const EXPLOSIONTYPE* const e    = pNode->v.explosion;
+								Assert(pNode->uiFlags & ANITILE_EXPLOSION);
+								const EXPLOSIONTYPE* const e    = pNode->v.explosion;
 								const UINT16               item = e->usItem;
-                const UINT8 ubExpType = Explosive[GCM->getItem(item)->getClassIndex()].ubType;
+								const UINT8 ubExpType = Explosive[GCM->getItem(item)->getClassIndex()].ubType;
 
-                if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
-                     ubExpType == EXPLOSV_SMOKE )
-                {
-                  // Do sound....
-                  // PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
+								if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
+									ubExpType == EXPLOSV_SMOKE )
+								{
+									// Do sound....
+									// PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
 									NewSmokeEffect(pNode->sGridNo, item, e->bLevel, e->owner);
-                }
-                else
-                {
+								}
+								else
+								{
 									SpreadEffect(pNode->sGridNo, Explosive[GCM->getItem(item)->getClassIndex()].ubRadius, item, e->owner, FALSE, e->bLevel, NULL);
-                }
+								}
 								// Forfait any other animations this frame....
 								return;
 							}

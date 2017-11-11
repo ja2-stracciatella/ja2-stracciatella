@@ -6,5 +6,5 @@
 
 bool Content::canMercBeHired(const ContentManager *cm, uint16_t profileNum)
 {
-  return cm->doesGameResExists(Content::GetDialogueTextFilename(MercProfile(profileNum), false, false));
+	return cm->doesGameResExists(Content::GetDialogueTextFilename(MercProfile(profileNum), false, false));
 }

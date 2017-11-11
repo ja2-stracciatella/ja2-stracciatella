@@ -19,10 +19,10 @@ enum ItemHandleResult
 };
 
 // Define for code to try and pickup all items....
-#define ITEM_PICKUP_ACTION_ALL									32000
-#define ITEM_PICKUP_SELECTION										31000
+#define ITEM_PICKUP_ACTION_ALL	32000
+#define ITEM_PICKUP_SELECTION	31000
 
-#define ITEM_IGNORE_Z_LEVEL											-1
+#define ITEM_IGNORE_Z_LEVEL	-1
 
 enum Visibility
 {
@@ -38,21 +38,21 @@ enum Visibility
 #define	ITEM_LOCATOR_LOCKED 0x02
 
 
-/* Check if at least one item in the item pool is visible */
+// Check if at least one item in the item pool is visible
 bool IsItemPoolVisible(ITEM_POOL const*);
 
 
 struct ITEM_POOL
 {
-	ITEM_POOL*  pNext;
-	INT32				iItemIndex;
-	LEVELNODE*  pLevelNode;
+	ITEM_POOL *pNext;
+	INT32     iItemIndex;
+	LEVELNODE *pLevelNode;
 };
 
 
 ItemHandleResult HandleItem(SOLDIERTYPE* pSoldier, INT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI);
 
-/* iItemIndex is ignored for player soldiers */
+// iItemIndex is ignored for player soldiers
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );

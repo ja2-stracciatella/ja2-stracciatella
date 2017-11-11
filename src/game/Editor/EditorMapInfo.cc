@@ -200,8 +200,8 @@ void ExtractAndUpdateMapInfo()
 		gExitGrid.ubGotoSectorX = (UINT8)MAX( MIN( gExitGrid.ubGotoSectorX, 16 ), 1 );
 		gExitGrid.ubGotoSectorY = (UINT8)MAX( MIN( gExitGrid.ubGotoSectorY, 16 ), 1 );
 	}
-	gExitGrid.ubGotoSectorZ    = (UINT8)MAX( MIN( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
-	gExitGrid.usGridNo					 = (UINT16)MAX( MIN( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
+	gExitGrid.ubGotoSectorZ = (UINT8)MAX( MIN( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
+	gExitGrid.usGridNo      = (UINT16)MAX( MIN( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
 
 	UpdateMapInfoFields();
 }

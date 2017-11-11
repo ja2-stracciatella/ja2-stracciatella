@@ -8,10 +8,10 @@ extern "C" {
 }
 
 enum
-  {
-    DISABLE = 0,
-    ENABLE
-  };
+{
+	DISABLE = 0,
+	ENABLE
+};
 
 enum
 {
@@ -41,14 +41,14 @@ enum
 
 struct Smack
 {
-  smk Smacker; //object pointer type for libsmacker
-  unsigned char* SmackerInMemory;
-  UINT32 SoundTag; // for soundman
-  UINT32 Height;
-  UINT32 Width;
-  UINT32 Frames;
-  UINT32 FramesPerSecond;
-  UINT32 LastTick;
+	smk Smacker; //object pointer type for libsmacker
+	unsigned char* SmackerInMemory;
+	UINT32 SoundTag; // for soundman
+	UINT32 Height;
+	UINT32 Width;
+	UINT32 Frames;
+	UINT32 FramesPerSecond;
+	UINT32 LastTick;
 };
 
 typedef void SmackBuf;

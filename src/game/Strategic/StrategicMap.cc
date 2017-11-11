@@ -109,22 +109,22 @@
 #include "slog/slog.h"
 
 //Used by PickGridNoToWalkIn
-#define MAX_ATTEMPTS	200
+#define MAX_ATTEMPTS 200
 
-#define		QUEST_CHECK_EVENT_TIME							( 8 * 60 )
-#define		BOBBYRAY_UPDATE_TIME							  ( 9 * 60 )
-#define		INSURANCE_UPDATE_TIME								0
-#define		EARLY_MORNING_TIME									( 4 * 60 )
-#define   ENRICO_MAIL_TIME                    ( 7 * 60 )
+#define QUEST_CHECK_EVENT_TIME ( 8 * 60 )
+#define BOBBYRAY_UPDATE_TIME   ( 9 * 60 )
+#define INSURANCE_UPDATE_TIME  0
+#define EARLY_MORNING_TIME     ( 4 * 60 )
+#define ENRICO_MAIL_TIME       ( 7 * 60 )
 
 
-extern INT16		gsRobotGridNo;
+extern INT16 gsRobotGridNo;
 
-BOOLEAN		gfGettingNameFromSaveLoadScreen;
+BOOLEAN gfGettingNameFromSaveLoadScreen;
 
-INT16			gWorldSectorX = 0;
-INT16			gWorldSectorY = 0;
-INT8			gbWorldSectorZ = -1;
+INT16 gWorldSectorX = 0;
+INT16 gWorldSectorY = 0;
+INT8  gbWorldSectorZ = -1;
 
 static INT16  gsAdjacentSectorX;
 static INT16  gsAdjacentSectorY;
@@ -217,8 +217,8 @@ UINT8 ubSAMControlledSectors[ MAP_WORLD_Y ][ MAP_WORLD_X ] = {
 };
 
 static INT16 const DirXIncrementer[8] =
- {
-  0,        //N
+{
+	0,        //N
 	1,        //NE
 	1,        //E
 	1,        //SE
@@ -226,11 +226,11 @@ static INT16 const DirXIncrementer[8] =
 	-1,       //SW
 	-1,       //W
 	-1       //NW
- };
+};
 
 static INT16 const DirYIncrementer[8] =
- {
-  -1,        //N
+{
+	-1,        //N
 	-1,        //NE
 	0,        //E
 	1,        //SE
@@ -238,7 +238,7 @@ static INT16 const DirYIncrementer[8] =
 	1,       //SW
 	0,       //W
 	-1       //NW
- };
+};
 
 
 extern BOOLEAN gfOverrideSector;
@@ -589,7 +589,7 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 	}
 	else
 	{
-    StopAnyCurrentlyTalkingSpeech();
+		StopAnyCurrentlyTalkingSpeech();
 
 		/* Check to see if the sector we are loading is the cave sector under Tixa.
 		 * If so then we will set up the meanwhile scene to start the creature
@@ -601,7 +601,7 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 
 		gTacticalStatus.uiTimeSinceLastInTactical = GetWorldTotalMin();
 		InitializeTacticalStatusAtBattleStart();
-	  HandleHelicopterOnGround(false);
+		HandleHelicopterOnGround(false);
 	}
 
 	EnterSector(x, y, z);
@@ -641,11 +641,11 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 
 		ResetMultiSelection();
 
-    gTacticalStatus.fHasEnteredCombatModeSinceEntering = FALSE;
-    gTacticalStatus.fDontAddNewCrows                   = FALSE;
+		gTacticalStatus.fHasEnteredCombatModeSinceEntering = FALSE;
+		gTacticalStatus.fDontAddNewCrows                   = FALSE;
 
-    // Adjust delay for tense quote
-    gTacticalStatus.sCreatureTenseQuoteDelay = 10 + Random(20);
+		// Adjust delay for tense quote
+		gTacticalStatus.sCreatureTenseQuoteDelay = 10 + Random(20);
 
 		INT16 sWarpWorldX;
 		INT16 sWarpWorldY;
@@ -695,7 +695,7 @@ void PrepareLoadedSector()
 		{
 			SetPendingNewScreen(GAME_SCREEN);
 
-      // Make interface the team panel always...
+			// Make interface the team panel always...
 			SetCurrentInterfacePanel(TEAM_PANEL);
 		}
 
@@ -1296,13 +1296,13 @@ place_in_center:
 
 static void InitializeStrategicMapSectorTownNames(void)
 {
-  StrategicMap[2+2*MAP_WORLD_X].bNameId= StrategicMap[2+1*MAP_WORLD_X].bNameId= CHITZENA;
+	StrategicMap[2+2*MAP_WORLD_X].bNameId= StrategicMap[2+1*MAP_WORLD_X].bNameId= CHITZENA;
 	StrategicMap[5+3*MAP_WORLD_X].bNameId=StrategicMap[6+3*MAP_WORLD_X].bNameId=StrategicMap[5+4*MAP_WORLD_X].bNameId = StrategicMap[4+4*MAP_WORLD_X].bNameId =SAN_MONA;
 	StrategicMap[9+1*MAP_WORLD_X].bNameId=StrategicMap[10+1*MAP_WORLD_X].bNameId=OMERTA;
-  StrategicMap[13+2*MAP_WORLD_X].bNameId=StrategicMap[13+3*MAP_WORLD_X].bNameId=StrategicMap[13+4*MAP_WORLD_X].bNameId=DRASSEN;
+	StrategicMap[13+2*MAP_WORLD_X].bNameId=StrategicMap[13+3*MAP_WORLD_X].bNameId=StrategicMap[13+4*MAP_WORLD_X].bNameId=DRASSEN;
 	StrategicMap[1+7*MAP_WORLD_X].bNameId=StrategicMap[1+8*MAP_WORLD_X].bNameId=StrategicMap[2+7*MAP_WORLD_X].bNameId= StrategicMap[2+8*MAP_WORLD_X].bNameId = StrategicMap[3+8*MAP_WORLD_X].bNameId = GRUMM;
 	StrategicMap[6+9*MAP_WORLD_X].bNameId=ESTONI;
-  StrategicMap[9+10*MAP_WORLD_X].bNameId=TIXA;
+	StrategicMap[9+10*MAP_WORLD_X].bNameId=TIXA;
 	StrategicMap[8+6*MAP_WORLD_X].bNameId=StrategicMap[9+6*MAP_WORLD_X].bNameId=StrategicMap[8+7*MAP_WORLD_X].bNameId=StrategicMap[9+7*MAP_WORLD_X].bNameId= StrategicMap[8+8*MAP_WORLD_X].bNameId = CAMBRIA;
 	StrategicMap[13+9*MAP_WORLD_X].bNameId=StrategicMap[14+9*MAP_WORLD_X].bNameId=StrategicMap[13+8*MAP_WORLD_X].bNameId=StrategicMap[14+8*MAP_WORLD_X].bNameId=ALMA;
 	StrategicMap[4+11*MAP_WORLD_X].bNameId=ORTA;
@@ -1657,11 +1657,11 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 						// Save wait code - this will make buddy walk off screen into oblivion
 						curr->pSoldier->ubWaitActionToDo = 2;
 						// This will set the direction so we know now to move into oblivion
-						curr->pSoldier->uiPendingActionData1		 = ubTacticalDirection;
+						curr->pSoldier->uiPendingActionData1 = ubTacticalDirection;
 					}
 					else
 					{
-						SLOGE(DEBUG_TAG_ASSERTS, 	"Failed to get good exit location for adjacentmove");
+						SLOGE(DEBUG_TAG_ASSERTS, "Failed to get good exit location for adjacentmove");
 					}
 
 					EVENT_GetNewSoldierPath( curr->pSoldier, sGridNo, WALKING );
@@ -1669,27 +1669,27 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 				}
 				else
 				{
-						// Here, get closest location for exit grid....
-						const INT16 sGridNo = FindGridNoFromSweetSpotCloseToExitGrid(curr->pSoldier, sAdditionalData, 10);
+					// Here, get closest location for exit grid....
+					const INT16 sGridNo = FindGridNoFromSweetSpotCloseToExitGrid(curr->pSoldier, sAdditionalData, 10);
 
-						//curr->pSoldier->
-						if ( sGridNo != NOWHERE )
-						{
-							// Save wait code - this will make buddy walk off screen into oblivion
-						//	curr->pSoldier->ubWaitActionToDo = 2;
-						}
-						else
-						{
-							SLOGE(DEBUG_TAG_ASSERTS, "Failed to get good exit location for adjacentmove");
-						}
+					//curr->pSoldier->
+					if ( sGridNo != NOWHERE )
+					{
+						// Save wait code - this will make buddy walk off screen into oblivion
+						//curr->pSoldier->ubWaitActionToDo = 2;
+					}
+					else
+					{
+						SLOGE(DEBUG_TAG_ASSERTS, "Failed to get good exit location for adjacentmove");
+					}
 
-						// Don't worry about walk off screen, just stay at gridno...
-						curr->pSoldier->ubWaitActionToDo = 1;
+					// Don't worry about walk off screen, just stay at gridno...
+					curr->pSoldier->ubWaitActionToDo = 1;
 
-						// Set buddy go!
-						gfPlotPathToExitGrid = TRUE;
-						EVENT_GetNewSoldierPath( curr->pSoldier, sGridNo, WALKING );
-						gfPlotPathToExitGrid = FALSE;
+					// Set buddy go!
+					gfPlotPathToExitGrid = TRUE;
+					EVENT_GetNewSoldierPath( curr->pSoldier, sGridNo, WALKING );
+					gfPlotPathToExitGrid = FALSE;
 
 				}
 				ubNum++;
@@ -1757,9 +1757,9 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 
 	if( pSoldier->ubGroupID == 0 )
 	{
-	  // create independant group
-	  GROUP& g = *CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
-	  AddPlayerToGroup(g, *pSoldier);
+		// create independant group
+		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
+		AddPlayerToGroup(g, *pSoldier);
 	}
 }
 
@@ -1772,7 +1772,7 @@ void AllMercsWalkedToExitGrid()
 {
 	BOOLEAN fDone;
 
-  HandlePotentialMoraleHitForSkimmingSectors( gpAdjacentGroup );
+	HandlePotentialMoraleHitForSkimmingSectors( gpAdjacentGroup );
 
 	if( gubAdjacentJumpCode == JUMP_ALL_NO_LOAD || gubAdjacentJumpCode == JUMP_SINGLE_NO_LOAD )
 	{
@@ -2186,13 +2186,13 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 //ATE: Returns FALSE if NOBODY is close enough, 1 if ONLY selected guy is and 2 if all on squad are...
 BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *puiTraverseTimeInMinutes )
 {
-	BOOLEAN		fAtLeastOneMercControllable = FALSE;
-	BOOLEAN		fOnlySelectedGuy = FALSE;
+	BOOLEAN     fAtLeastOneMercControllable = FALSE;
+	BOOLEAN     fOnlySelectedGuy = FALSE;
 	SOLDIERTYPE *pValidSoldier = NULL;
-	UINT8			ubReturnVal = FALSE;
-	UINT8			ubNumControllableMercs = 0;
-	UINT8		  ubNumMercs = 0, ubNumEPCs = 0;
-	UINT8     ubPlayerControllableMercsInSquad = 0;
+	UINT8       ubReturnVal = FALSE;
+	UINT8       ubNumControllableMercs = 0;
+	UINT8       ubNumMercs = 0, ubNumEPCs = 0;
+	UINT8       ubPlayerControllableMercsInSquad = 0;
 
 	const SOLDIERTYPE* const sel = GetSelectedMan();
 	// must have a selected soldier to be allowed to tactically traverse.
@@ -2455,8 +2455,8 @@ bool CanGoToTacticalInSector(INT16 const x, INT16 const y, UINT8 const z)
 	if (y < 1 || 16 < x) return false;
 	if (          3 < z) return false;
 
-  /* Look for all living, fighting mercs on player's team. Robot and EPCs
-   * qualify! */
+	/* Look for all living, fighting mercs on player's team. Robot and EPCs
+	 * qualify! */
 	CFOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE const& s = *i;
@@ -2632,19 +2632,19 @@ void LoadStrategicInfoFromSavedFile(HWFILE const f)
 
 static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirection)
 {
-	INT16			sGridNo, sStartGridNo, sOldGridNo;
-	INT8			bOdd = 1, bOdd2 = 1;
-	UINT8			bAdjustedDist = 0;
-	UINT32		cnt;
+	INT16  sGridNo, sStartGridNo, sOldGridNo;
+	INT8   bOdd = 1, bOdd2 = 1;
+	UINT8  bAdjustedDist = 0;
+	UINT32 cnt;
 
 	switch( ubTacticalDirection )
 	{
 
 		case EAST:
 
-			sGridNo				 = pSoldier->sGridNo;
-			sStartGridNo	 = pSoldier->sGridNo;
-			sOldGridNo     = pSoldier->sGridNo;
+			sGridNo      = pSoldier->sGridNo;
+			sStartGridNo = pSoldier->sGridNo;
+			sOldGridNo   = pSoldier->sGridNo;
 
 			// Move directly to the right!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -2663,7 +2663,7 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 				bOdd = (INT8)!bOdd;
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			do
@@ -2703,9 +2703,9 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 
 		case WEST:
 
-			sGridNo				 = pSoldier->sGridNo;
-			sStartGridNo	 = pSoldier->sGridNo;
-			sOldGridNo     = pSoldier->sGridNo;
+			sGridNo      = pSoldier->sGridNo;
+			sStartGridNo = pSoldier->sGridNo;
+			sOldGridNo   = pSoldier->sGridNo;
 
 			// Move directly to the left!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -2724,7 +2724,7 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 				bOdd = (INT8)!bOdd;
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			do
@@ -2764,9 +2764,9 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 
 		case NORTH:
 
-			sGridNo				 = pSoldier->sGridNo;
-			sStartGridNo	 = pSoldier->sGridNo;
-			sOldGridNo     = pSoldier->sGridNo;
+			sGridNo      = pSoldier->sGridNo;
+			sStartGridNo = pSoldier->sGridNo;
+			sOldGridNo   = pSoldier->sGridNo;
 
 			// Move directly to the left!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -2785,7 +2785,7 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 				bOdd = (INT8)(!bOdd);
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			do
@@ -2825,9 +2825,9 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 
 		case SOUTH:
 
-			sGridNo				 = pSoldier->sGridNo;
-			sStartGridNo	 = pSoldier->sGridNo;
-			sOldGridNo     = pSoldier->sGridNo;
+			sGridNo      = pSoldier->sGridNo;
+			sStartGridNo = pSoldier->sGridNo;
+			sOldGridNo   = pSoldier->sGridNo;
 
 			// Move directly to the left!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -2846,7 +2846,7 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 				bOdd = (INT8)(!bOdd);
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			do
@@ -2892,7 +2892,7 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT8 ubTacticalDirection )
 {
 	INT16 sNewGridNo, sTempGridNo;
-	INT32	iLoop;
+	INT32 iLoop;
 
 	// will this path segment actually take us to our desired destination in the first place?
 	if (pSoldier->ubPathDataSize + 2 > MAX_PATH_LIST_SIZE)
@@ -3042,10 +3042,10 @@ void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT
 
 static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirection, UINT32* puiNumAttempts)
 {
-	INT16			sGridNo, sStartGridNo, sOldGridNo;
-	INT8			bOdd = 1, bOdd2 = 1;
-	UINT8			bAdjustedDist = 0;
-	UINT32		cnt;
+	INT16  sGridNo, sStartGridNo, sOldGridNo;
+	INT8   bOdd = 1, bOdd2 = 1;
+	UINT8  bAdjustedDist = 0;
+	UINT32 cnt;
 
 	*puiNumAttempts = 0;
 
@@ -3055,9 +3055,9 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 		// we find that is just on the start of visible map...
 		case INSERTION_CODE_WEST:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo      = (INT16)pSoldier->sGridNo;
+			sStartGridNo = (INT16)pSoldier->sGridNo;
+			sOldGridNo   = (INT16)pSoldier->sGridNo;
 
 			// Move directly to the left!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -3076,7 +3076,7 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 				bOdd = (INT8)(!bOdd);
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			while( *puiNumAttempts < MAX_ATTEMPTS )
@@ -3118,9 +3118,9 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 
 		case INSERTION_CODE_EAST:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo      = (INT16)pSoldier->sGridNo;
+			sStartGridNo = (INT16)pSoldier->sGridNo;
+			sOldGridNo   = (INT16)pSoldier->sGridNo;
 
 			// Move directly to the right!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -3139,7 +3139,7 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 				bOdd = (INT8)(!bOdd);
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			while( *puiNumAttempts < MAX_ATTEMPTS )
@@ -3181,8 +3181,8 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 
 		case INSERTION_CODE_NORTH:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
+			sGridNo        = (INT16)pSoldier->sGridNo;
+			sStartGridNo   = (INT16)pSoldier->sGridNo;
 			sOldGridNo     = (INT16)pSoldier->sGridNo;
 
 			// Move directly to the up!
@@ -3202,7 +3202,7 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 				bOdd = (INT8)(!bOdd);
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			while( *puiNumAttempts < MAX_ATTEMPTS )
@@ -3244,9 +3244,9 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 
 		case INSERTION_CODE_SOUTH:
 
-			sGridNo				 = (INT16)pSoldier->sGridNo;
-			sStartGridNo	 = (INT16)pSoldier->sGridNo;
-			sOldGridNo     = (INT16)pSoldier->sGridNo;
+			sGridNo       = (INT16)pSoldier->sGridNo;
+			sStartGridNo  = (INT16)pSoldier->sGridNo;
+			sOldGridNo    = (INT16)pSoldier->sGridNo;
 
 			// Move directly to the down!
 			while( GridNoOnVisibleWorldTile( sGridNo ) )
@@ -3265,7 +3265,7 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 				bOdd = (INT8)(!bOdd);
 			}
 
-			sGridNo			 = sOldGridNo;
+			sGridNo      = sOldGridNo;
 			sStartGridNo = sOldGridNo;
 
 			while( *puiNumAttempts < MAX_ATTEMPTS )
@@ -3469,9 +3469,9 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 				}
 			}
 		}
-  }
+	}
 
-  return( FALSE );
+	return( FALSE );
 }
 
 
@@ -3529,9 +3529,9 @@ try
 		}
 		//KM : August 6, 1999 Patch fix
 		//     Added logic to prevent a crash when player mercs would retreat from a battle involving militia and enemies.
-		//		 Without the return here, it would proceed to trash the world, and then when autoresolve would come up to
+		//     Without the return here, it would proceed to trash the world, and then when autoresolve would come up to
 		//     finish the tactical battle, it would fail to find the existing soldier information (because it was trashed).
-    if( HandlePotentialBringUpAutoresolveToFinishBattle( ) )
+		if( HandlePotentialBringUpAutoresolveToFinishBattle( ) )
 		{
 			return FALSE;
 		}
@@ -3594,7 +3594,7 @@ try
 	//Clear all combat related flags.
 	gTacticalStatus.fEnemyInSector = FALSE;
 	gTacticalStatus.uiFlags &= ~INCOMBAT;
-  EndTopMessage( );
+	EndTopMessage( );
 
 
 	//Clear the world sector values.
@@ -3686,8 +3686,8 @@ void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* const s)
 
 static void HandlePotentialMoraleHitForSkimmingSectors(GROUP* pGroup)
 {
-  if ( !gTacticalStatus.fHasEnteredCombatModeSinceEntering && gTacticalStatus.fEnemyInSector )
-  {
+	if ( !gTacticalStatus.fHasEnteredCombatModeSinceEntering && gTacticalStatus.fEnemyInSector )
+	{
 		//Flag is set so if "wilderness" enemies are in the adjacent sector of this group, the group has
 		//a 90% chance of ambush.  Because this typically doesn't happen very often, the chance is high.
 		//This reflects the enemies radioing ahead to other enemies of the group's arrival, so they have
@@ -3695,12 +3695,12 @@ static void HandlePotentialMoraleHitForSkimmingSectors(GROUP* pGroup)
 		pGroup->uiFlags |= GROUPFLAG_HIGH_POTENTIAL_FOR_AMBUSH;
 
 		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
-	  {
-      // Do morale hit...
-      // CC look here!
-      // pPlayer->pSoldier
-	  }
-  }
+		{
+			// Do morale hit...
+			// CC look here!
+			// pPlayer->pSoldier
+		}
+	}
 }
 
 

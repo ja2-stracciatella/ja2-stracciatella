@@ -229,7 +229,7 @@ static const INT16 pers_stat_y[] =
 	455,
 	390, // for contract price
 	445,
-	 33, // Personnel Header // XXX unused
+	33, // Personnel Header // XXX unused
 	340,
 	350, // 20
 	365,

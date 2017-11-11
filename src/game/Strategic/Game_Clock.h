@@ -4,13 +4,13 @@
 #include "Types.h"
 
 
-#define			NUM_SEC_IN_DAY						86400
-#define			NUM_SEC_IN_HOUR						3600
-#define			NUM_SEC_IN_MIN						60
-#define			ROUNDTO_MIN								5
+#define NUM_SEC_IN_DAY		86400
+#define NUM_SEC_IN_HOUR		3600
+#define NUM_SEC_IN_MIN		60
+#define ROUNDTO_MIN		5
 
-#define			NUM_MIN_IN_DAY						1440
-#define			NUM_MIN_IN_HOUR						60
+#define NUM_MIN_IN_DAY		1440
+#define NUM_MIN_IN_HOUR		60
 
 //Kris:
 //This is the plan for game time...
@@ -97,10 +97,10 @@ enum
 extern INT32 giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ];
 
 
-#define			STARTING_TIME						( ( 1 * NUM_SEC_IN_HOUR ) + ( 0 * NUM_SEC_IN_MIN ) + NUM_SEC_IN_DAY )		// 1am
-#define			FIRST_ARRIVAL_DELAY			( ( 6 * NUM_SEC_IN_HOUR ) + ( 0 * NUM_SEC_IN_MIN ) )		// 7am ( 6hours later)
+#define STARTING_TIME		( ( 1 * NUM_SEC_IN_HOUR ) + ( 0 * NUM_SEC_IN_MIN ) + NUM_SEC_IN_DAY ) // 1am
+#define FIRST_ARRIVAL_DELAY	( ( 6 * NUM_SEC_IN_HOUR ) + ( 0 * NUM_SEC_IN_MIN ) ) // 7am ( 6hours later)
 
-#define WORLDTIMESTR	gswzWorldTimeStr
+#define WORLDTIMESTR		gswzWorldTimeStr
 
 
 // compress mode now in use

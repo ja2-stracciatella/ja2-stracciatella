@@ -808,7 +808,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			{
 				// if Skyrider, ignore low loyalty until he has monologues, and wait at least a day since the latest monologue to avoid a hot/cold attitude
 				if ( ( ubProfileID == SKYRIDER ) &&
-						 ( ( guiHelicopterSkyriderTalkState == 0 ) || ( ( GetWorldTotalMin() - guiTimeOfLastSkyriderMonologue ) < ( 24 * 60 ) ) ) )
+					( ( guiHelicopterSkyriderTalkState == 0 ) || ( ( GetWorldTotalMin() - guiTimeOfLastSkyriderMonologue ) < ( 24 * 60 ) ) ) )
 				{
 					gubFact[usFact] = FALSE;
 				}
@@ -1098,7 +1098,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 
 void StartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY )
 {
-  InternalStartQuest( ubQuest, sSectorX, sSectorY, TRUE );
+	InternalStartQuest( ubQuest, sSectorX, sSectorY, TRUE );
 }
 
 
@@ -1108,10 +1108,10 @@ void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN 
 	{
 		gubQuest[ubQuest] = QUESTINPROGRESS;
 
-    if ( fUpdateHistory )
-    {
+		if ( fUpdateHistory )
+		{
 			AddHistoryToPlayersLog(HISTORY_QUEST_STARTED, ubQuest, GetWorldTotalMin(), sSectorX, sSectorY);
-    }
+		}
 	}
 	else
 	{
@@ -1121,7 +1121,7 @@ void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN 
 
 void EndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY )
 {
-  InternalEndQuest( ubQuest, sSectorX, sSectorY, TRUE );
+	InternalEndQuest( ubQuest, sSectorX, sSectorY, TRUE );
 }
 
 void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fUpdateHistory )
@@ -1130,10 +1130,10 @@ void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fU
 	{
 		gubQuest[ubQuest] = QUESTDONE;
 
-    if ( fUpdateHistory )
-    {
+		if ( fUpdateHistory )
+		{
 			AddHistoryToPlayersLog(HISTORY_QUEST_FINISHED, ubQuest, GetWorldTotalMin(), sSectorX, sSectorY);
-    }
+		}
 	}
 	else
 	{
@@ -1181,7 +1181,7 @@ void CheckForQuests( UINT32 uiDay )
 
 	SLOGD(DEBUG_TAG_QUESTS, "Checking For Quests, Day %d", uiDay );
 
-  // -------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------
 	// QUEST 0 : DELIVER LETTER
 	// -------------------------------------------------------------------------------
 	// The game always starts with DELIVER LETTER quest, so turn it on if it hasn't

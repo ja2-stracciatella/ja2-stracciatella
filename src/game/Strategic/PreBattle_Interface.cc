@@ -872,9 +872,9 @@ void RenderPreBattleInterface()
 		// Enemy
 		wchar_t const* enemies;
 		if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE        ||
-			  gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE        ||
-				gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
-				WhatPlayerKnowsAboutEnemiesInSector(sec_x, sec_y) != KNOWS_HOW_MANY)
+			gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE        ||
+			gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
+			WhatPlayerKnowsAboutEnemiesInSector(sec_x, sec_y) != KNOWS_HOW_MANY)
 		{ // Don't know how many
 			enemies = L"?";
 		}

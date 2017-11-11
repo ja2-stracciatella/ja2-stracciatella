@@ -17,40 +17,40 @@
 
 // Defines
 
-#define	NUM_AIM_HISTORY_PAGES					5
+#define NUM_AIM_HISTORY_PAGES			5
 
-#define AIM_HISTORY_TITLE_FONT				FONT14ARIAL
-#define AIM_HISTORY_TITLE_COLOR				AIM_GREEN
-#define AIM_HISTORY_TEXT_FONT					FONT10ARIAL
-#define AIM_HISTORY_TEXT_COLOR				FONT_MCOLOR_WHITE
-#define AIM_HISTORY_TOC_TEXT_FONT			FONT12ARIAL
-#define AIM_HISTORY_TOC_TEXT_COLOR					FONT_MCOLOR_WHITE
-#define	AIM_HISTORY_PARAGRAPH_TITLE_FONT		FONT12ARIAL
-#define	AIM_HISTORY_PARAGRAPH_TITLE_COLOR		FONT_MCOLOR_WHITE
+#define AIM_HISTORY_TITLE_FONT			FONT14ARIAL
+#define AIM_HISTORY_TITLE_COLOR			AIM_GREEN
+#define AIM_HISTORY_TEXT_FONT			FONT10ARIAL
+#define AIM_HISTORY_TEXT_COLOR			FONT_MCOLOR_WHITE
+#define AIM_HISTORY_TOC_TEXT_FONT		FONT12ARIAL
+#define AIM_HISTORY_TOC_TEXT_COLOR		FONT_MCOLOR_WHITE
+#define AIM_HISTORY_PARAGRAPH_TITLE_FONT	FONT12ARIAL
+#define AIM_HISTORY_PARAGRAPH_TITLE_COLOR	FONT_MCOLOR_WHITE
 
 
-#define	AIM_HISTORY_MENU_X						LAPTOP_SCREEN_UL_X + 40
-#define	AIM_HISTORY_MENU_Y						(STD_SCREEN_Y + 370 + LAPTOP_SCREEN_WEB_DELTA_Y)
-#define	AIM_HISTORY_MENU_BUTTON_AMOUNT	4
-#define	AIM_HISTORY_GAP_X							40 + BOTTOM_BUTTON_START_WIDTH
+#define AIM_HISTORY_MENU_X			LAPTOP_SCREEN_UL_X + 40
+#define AIM_HISTORY_MENU_Y			(STD_SCREEN_Y + 370 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_HISTORY_MENU_BUTTON_AMOUNT		4
+#define AIM_HISTORY_GAP_X			40 + BOTTOM_BUTTON_START_WIDTH
 
-#define	AIM_HISTORY_TEXT_X						IMAGE_OFFSET_X + 149
-#define AIM_HISTORY_TEXT_Y						AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y + 45
-#define AIM_HISTORY_TEXT_WIDTH				AIM_SYMBOL_WIDTH
+#define AIM_HISTORY_TEXT_X			IMAGE_OFFSET_X + 149
+#define AIM_HISTORY_TEXT_Y			AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y + 45
+#define AIM_HISTORY_TEXT_WIDTH			AIM_SYMBOL_WIDTH
 
-#define	AIM_HISTORY_PARAGRAPH_X				LAPTOP_SCREEN_UL_X + 20
-#define	AIM_HISTORY_PARAGRAPH_Y				AIM_HISTORY_SUBTITLE_Y + 18
-#define	AIM_HISTORY_SUBTITLE_Y				(150 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y)
+#define AIM_HISTORY_PARAGRAPH_X			LAPTOP_SCREEN_UL_X + 20
+#define AIM_HISTORY_PARAGRAPH_Y			AIM_HISTORY_SUBTITLE_Y + 18
+#define AIM_HISTORY_SUBTITLE_Y			(150 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y)
 #define AIM_HISTORY_PARAGRAPH_WIDTH		460
 
 #define AIM_HISTORY_CONTENTBUTTON_X		(259 + STD_SCREEN_X)
 #define AIM_HISTORY_CONTENTBUTTON_Y		AIM_HISTORY_SUBTITLE_Y
 
-#define AIM_HISTORY_TOC_X							AIM_HISTORY_CONTENTBUTTON_X
-#define AIM_HISTORY_TOC_Y							5
-#define	AIM_HISTORY_TOC_GAP_Y					25
+#define AIM_HISTORY_TOC_X			AIM_HISTORY_CONTENTBUTTON_X
+#define AIM_HISTORY_TOC_Y			5
+#define AIM_HISTORY_TOC_GAP_Y			25
 
-#define	AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS	8
+#define AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS	8
 
 static SGPVObject* guiContentButton;
 
@@ -152,7 +152,7 @@ void RenderAimHistory()
 	wchar_t	sText[AIM_HISTORY_LINE_SIZE];
 
 	DrawAimDefaults();
-//	DrawAimHistoryMenuBar();
+	//DrawAimHistoryMenuBar();
 	DisplayAimSlogan();
 	DisplayAimCopyright();
 
@@ -203,11 +203,11 @@ void RenderAimHistory()
 			break;
 	}
 
-  MarkButtonsDirty( );
+	MarkButtonsDirty( );
 
 	RenderWWWProgramTitleBar( );
 
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -222,11 +222,14 @@ static void InitAimHistoryMenuBar(void)
 	usPosX = AIM_HISTORY_MENU_X;
 	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
 	{
-		guiHistoryMenuButton[i] = CreateIconAndTextButton( guiHistoryMenuButtonImage, AimHistoryText[i+AIM_HISTORY_PREVIOUS], FONT10ARIAL,
-														 AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 usPosX, AIM_HISTORY_MENU_Y, MSYS_PRIORITY_HIGH,
-														 BtnHistoryMenuButtonCallback);
+		guiHistoryMenuButton[i] = CreateIconAndTextButton(
+						guiHistoryMenuButtonImage, AimHistoryText[i+AIM_HISTORY_PREVIOUS],
+						FONT10ARIAL,
+						AIM_BUTTON_ON_COLOR, DEFAULT_SHADOW,
+						AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
+						usPosX, AIM_HISTORY_MENU_Y, MSYS_PRIORITY_HIGH,
+						BtnHistoryMenuButtonCallback
+					);
 		guiHistoryMenuButton[i]->SetCursor(CURSOR_WWW);
 		guiHistoryMenuButton[i]->SetUserData(i + 1);
 
@@ -285,13 +288,12 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 
 static void InitTocMenu(void)
 {
-	UINT16			i, usPosY;
-	UINT8				ubLocInFile[]=
-								{IN_THE_BEGINNING,
-								 THE_ISLAND_METAVIRA,
-								 GUS_TARBALLS,
-								 WORD_FROM_FOUNDER,
-								 INCORPORATION};
+	UINT16 i, usPosY;
+	UINT8  ubLocInFile[] = {IN_THE_BEGINNING,
+					THE_ISLAND_METAVIRA,
+					GUS_TARBALLS,
+					WORD_FROM_FOUNDER,
+					INCORPORATION};
 
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;
 	for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
@@ -304,7 +306,7 @@ static void InitTocMenu(void)
 		{
 			//Mouse region for the history toc buttons
 			MSYS_DefineRegion( &gSelectedHistoryTocMenuRegion[i], AIM_HISTORY_TOC_X, usPosY, (UINT16)(AIM_HISTORY_TOC_X + AIM_CONTENTBUTTON_WIDTH), (UINT16)(usPosY + AIM_CONTENTBUTTON_HEIGHT), MSYS_PRIORITY_HIGH,
-									 CURSOR_WWW, MSYS_NO_CALLBACK, SelectHistoryTocMenuRegionCallBack);
+						CURSOR_WWW, MSYS_NO_CALLBACK, SelectHistoryTocMenuRegionCallBack);
 			MSYS_SetRegionUserData( &gSelectedHistoryTocMenuRegion[i], 0, i+1);
 		}
 
@@ -341,7 +343,7 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 
 			ExitTocMenu();
 			ResetAimHistoryButtons();
-//			RenderAimHistory();
+			//RenderAimHistory();
 			DisableAimHistoryButton();
 		}
 	}

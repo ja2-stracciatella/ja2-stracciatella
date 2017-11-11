@@ -66,37 +66,37 @@ static MOUSE_REGION gClockScreenMaskMouseRegion;
 
 //These contain all of the information about the game time, rate of time, etc.
 //All of these get saved and loaded.
-INT32				giTimeCompressMode			=	TIME_COMPRESS_X0;
-static UINT8         gubClockResolution          = 1;
-BOOLEAN			gfGamePaused						= TRUE;
-BOOLEAN			gfTimeInterrupt					= FALSE;
-static BOOLEAN       gfTimeInterruptPause        = FALSE;
-static BOOLEAN       fSuperCompression           = FALSE;
-UINT32			guiGameClock						= STARTING_TIME;
-static UINT32        guiPreviousGameClock        = 0; // used only for error-checking purposes
-static UINT32        guiGameSecondsPerRealSecond;
-static UINT32        guiTimesThisSecondProcessed = 0;
-static MercPopUpBox* g_paused_popup_box;
-UINT32			guiDay;
-UINT32			guiHour;
-UINT32			guiMin;
-wchar_t			gswzWorldTimeStr[20];
-INT32				giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ] = { 0, 1, 5 * 60, 30 * 60, 60 * 60 };
-static UINT16        usPausedActualWidth;
-static UINT16        usPausedActualHeight;
-UINT32			guiTimeOfLastEventQuery = 0;
-BOOLEAN			gfLockPauseState = FALSE;
-BOOLEAN			gfPauseDueToPlayerGamePause = FALSE;
-BOOLEAN			gfResetAllPlayerKnowsEnemiesFlags = FALSE;
-static BOOLEAN       gfTimeCompressionOn = FALSE;
-UINT32			guiLockPauseStateLastReasonId = 0;
+INT32          giTimeCompressMode = TIME_COMPRESS_X0;
+static UINT8   gubClockResolution = 1;
+BOOLEAN        gfGamePaused	= TRUE;
+BOOLEAN        gfTimeInterrupt	= FALSE;
+static BOOLEAN gfTimeInterruptPause = FALSE;
+static BOOLEAN fSuperCompression = FALSE;
+UINT32         guiGameClock = STARTING_TIME;
+static UINT32  guiPreviousGameClock = 0; // used only for error-checking purposes
+static UINT32  guiGameSecondsPerRealSecond;
+static UINT32  guiTimesThisSecondProcessed = 0;
+static         MercPopUpBox* g_paused_popup_box;
+UINT32         guiDay;
+UINT32         guiHour;
+UINT32         guiMin;
+wchar_t        gswzWorldTimeStr[20];
+INT32          giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ] = { 0, 1, 5 * 60, 30 * 60, 60 * 60 };
+static UINT16  usPausedActualWidth;
+static UINT16  usPausedActualHeight;
+UINT32         guiTimeOfLastEventQuery = 0;
+BOOLEAN        gfLockPauseState = FALSE;
+BOOLEAN        gfPauseDueToPlayerGamePause = FALSE;
+BOOLEAN        gfResetAllPlayerKnowsEnemiesFlags = FALSE;
+static BOOLEAN gfTimeCompressionOn = FALSE;
+UINT32         guiLockPauseStateLastReasonId = 0;
 //***When adding new saved time variables, make sure you remove the appropriate amount from the paddingbytes and
 //   more IMPORTANTLY, add appropriate code in Save/LoadGameClock()!
-#define			TIME_PADDINGBYTES		20
+#define TIME_PADDINGBYTES 20
 
 
-extern			UINT32		guiEnvTime;
-extern			UINT32		guiEnvDay;
+extern UINT32 guiEnvTime;
+extern UINT32 guiEnvDay;
 
 
 
@@ -235,7 +235,7 @@ static void AdvanceClock(UINT8 ubWarpCode)
 
 void AdvanceToNextDay()
 {
-	INT32	 uiDiff;
+	INT32  uiDiff;
 	UINT32 uiTomorrowTimeInSec;
 
 	uiTomorrowTimeInSec = (guiDay+1)*NUM_SEC_IN_DAY + 8*NUM_SEC_IN_HOUR + 15*NUM_SEC_IN_MIN;
@@ -605,8 +605,8 @@ static void CreateDestroyScreenMaskForPauseGame(void);
 //-Speed:  The speed is the amount of game time passes per real second of time.  The higher this
 //         value, the faster the game time flows.
 //-Resolution:  The higher the resolution, the more often per second the clock is actually updated.
-//				 This value doesn't affect how much game time passes per real second, but allows for
-//				 a more accurate representation of faster time flows.
+//              This value doesn't affect how much game time passes per real second, but allows for
+//              a more accurate representation of faster time flows.
 void UpdateClock()
 {
 	UINT32 uiNewTime;
@@ -777,7 +777,7 @@ void LoadGameClock(HWFILE const hFile)
 	swprintf(WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%ls %d, %02d:%02d", pDayStrings, guiDay, guiHour, guiMin);
 
 	if( !gfBasement && !gfCaves )
-		gfDoLighting		 = TRUE;
+		gfDoLighting = TRUE;
 }
 
 

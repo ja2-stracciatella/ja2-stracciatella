@@ -57,20 +57,20 @@ extern	BOOLEAN		gfUseAlternateMap;
 
 
 // FUNCTIONS FOR DERTERMINING GOOD SECTOR EXIT DATA
-#define			CHECK_DIR_X_DELTA							( WORLD_TILE_X * 4 )
-#define			CHECK_DIR_Y_DELTA							( WORLD_TILE_Y * 10 )
+#define CHECK_DIR_X_DELTA			( WORLD_TILE_X * 4 )
+#define CHECK_DIR_Y_DELTA			( WORLD_TILE_Y * 10 )
 
-#define MAP_WORLD_X 18
-#define MAP_WORLD_Y 18
+#define MAP_WORLD_X				18
+#define MAP_WORLD_Y				18
 
 // get index into aray
-#define		CALCULATE_STRATEGIC_INDEX( x, y )			( x + ( y * MAP_WORLD_X ) )
-#define   GET_X_FROM_STRATEGIC_INDEX( i )				( i % MAP_WORLD_X )
-#define   GET_Y_FROM_STRATEGIC_INDEX( i )				( i / MAP_WORLD_X )
+#define CALCULATE_STRATEGIC_INDEX( x, y )	( x + ( y * MAP_WORLD_X ) )
+#define GET_X_FROM_STRATEGIC_INDEX( i )		( i % MAP_WORLD_X )
+#define GET_Y_FROM_STRATEGIC_INDEX( i )		( i / MAP_WORLD_X )
 
 // macros to convert between the 2 different sector numbering systems
-#define		SECTOR_INFO_TO_STRATEGIC_INDEX( i )		( CALCULATE_STRATEGIC_INDEX ( SECTORX( i ), SECTORY( i ) ) )
-#define		STRATEGIC_INDEX_TO_SECTOR_INFO( i )		( SECTOR(  GET_X_FROM_STRATEGIC_INDEX( i ), GET_Y_FROM_STRATEGIC_INDEX( i ) ) )
+#define SECTOR_INFO_TO_STRATEGIC_INDEX( i )	( CALCULATE_STRATEGIC_INDEX ( SECTORX( i ), SECTORY( i ) ) )
+#define STRATEGIC_INDEX_TO_SECTOR_INFO( i )	( SECTOR(  GET_X_FROM_STRATEGIC_INDEX( i ), GET_Y_FROM_STRATEGIC_INDEX( i ) ) )
 
 
 // grab the town id value

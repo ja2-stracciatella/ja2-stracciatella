@@ -225,7 +225,7 @@ static TEXTINPUTNODE* AllocateTextInputNode(BOOLEAN const start_editing)
 {
 	TEXTINPUTNODE* const n = MALLOCZ(TEXTINPUTNODE);
 	n->fEnabled = TRUE;
-  if (!gpTextInputHead)
+	if (!gpTextInputHead)
 	{ // First entry, so we start with text input.
 		SetEditingStatus(start_editing);
 		gpTextInputHead = n;
@@ -1193,7 +1193,7 @@ void SaveAndRemoveCurrentTextInputMode()
 void RestoreSavedTextInputMode()
 {
 	AssertMsg(pSavedHead != NULL, "Attempting to restore saved text input stack head, when one doesn't exist.");
-  gpTextInputHead = pSavedHead;
+	gpTextInputHead = pSavedHead;
 	pColors = pSavedColors;
 	pSavedHead = NULL;
 	pSavedColors = NULL;

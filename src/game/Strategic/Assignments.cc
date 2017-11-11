@@ -3562,7 +3562,7 @@ void HandleShadingOfLinesForAssignmentMenus()
 				PopUpShade const shade =
 					!BasicCanCharacterDoctor(s) ? POPUP_SHADE           :
 					!CanCharacterDoctor(s)      ? POPUP_SHADE_SECONDARY :
-					                              POPUP_SHADE_NONE;
+									POPUP_SHADE_NONE;
 				ShadeStringInBox(box, ASSIGN_MENU_DOCTOR, shade);
 			}
 
@@ -3570,7 +3570,7 @@ void HandleShadingOfLinesForAssignmentMenus()
 				PopUpShade const shade =
 					!BasicCanCharacterRepair(s) ? POPUP_SHADE           :
 					!CanCharacterRepair(s)      ? POPUP_SHADE_SECONDARY :
-					                              POPUP_SHADE_NONE;
+									POPUP_SHADE_NONE;
 				ShadeStringInBox(box, ASSIGN_MENU_REPAIR, shade);
 			}
 
@@ -4617,7 +4617,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 		}
 
 		/* Can the character join this squad?  If already in it, accept that as a
-		 * legal choice and exit menu */
+			* legal choice and exit menu */
 		SOLDIERTYPE& s = *GetSelectedAssignSoldier(FALSE);
 		switch (CanCharacterSquad(s, value))
 		{
@@ -5268,7 +5268,7 @@ static void HandleShadingOfLinesForSquadMenu(void)
 			// Shade, if the reason doesn't have a good explanatory message
 			bResult == CHARACTER_CANT_JOIN_SQUAD ? POPUP_SHADE      :
 			bResult == CHARACTER_CAN_JOIN_SQUAD  ? POPUP_SHADE_NONE :
-			                                       POPUP_SHADE_SECONDARY;
+					POPUP_SHADE_SECONDARY;
 		ShadeStringInBox(box, i, shade);
 	}
 }
@@ -5706,7 +5706,7 @@ static bool CharacterIsTakingItEasy(SOLDIERTYPE const&);
 static void HandleRestFatigueAndSleepStatus()
 {
 	{ /* Run through all player characters and handle their rest, fatigue, and
-		 * going to sleep */
+		* going to sleep */
 		bool   reason_added = false;
 		bool   box_set_up   = false;
 		UINT16 sleep_quote  = QUOTE_NEED_SLEEP;
@@ -5736,11 +5736,11 @@ static void HandleRestFatigueAndSleepStatus()
 			if (s.bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM)
 			{
 				/* If between sectors, don't put tired mercs to sleep, will be handled
-				 * when they arrive at the next sector */
+					* when they arrive at the next sector */
 				if (s.fBetweenSectors) continue;
 
 				/* He goes to sleep, provided it's at all possible (it still won't happen
-				 * in a hostile sector, etc.) */
+					* in a hostile sector, etc.) */
 				if (!SetMercAsleep(s, false)) continue;
 
 				if (s.bAssignment < ON_DUTY || s.bAssignment == VEHICLE)
@@ -5788,7 +5788,7 @@ static void HandleRestFatigueAndSleepStatus()
 	}
 
 	{ /* Now handle waking. Needs seperate list queue, that's why it has its own
-		 * loop */
+		* loop */
 		bool box_set_up   = false;
 		bool reason_added = false;
 		FOR_EACH_IN_TEAM(i, OUR_TEAM)
@@ -6497,7 +6497,7 @@ BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const& g)
 		if (!PlayerSoldierTooTiredToTravel(s)) continue;
 
 		/* NOTE: we only complain about it if it's gonna force the group to stop
-		 * moving! */
+			* moving! */
 		group_must_stop = TRUE;
 
 		HandleImportantMercQuote(&s, quote);
@@ -6733,12 +6733,12 @@ void ReEvaluateEveryonesNothingToDo()
 
 			case TRAIN_TEAMMATE:
 				fNothingToDo = !CanCharacterTrainStat(pSoldier, pSoldier->bTrainStat, FALSE, TRUE) ||
-				               !ValidTrainingPartnerInSameSectorOnAssignmentFound(pSoldier, TRAIN_BY_OTHER, pSoldier->bTrainStat);
+					!ValidTrainingPartnerInSameSectorOnAssignmentFound(pSoldier, TRAIN_BY_OTHER, pSoldier->bTrainStat);
 				break;
 
 			case TRAIN_BY_OTHER:
 				fNothingToDo = !CanCharacterTrainStat(pSoldier, pSoldier->bTrainStat, TRUE, FALSE) ||
-				               !ValidTrainingPartnerInSameSectorOnAssignmentFound(pSoldier, TRAIN_TEAMMATE, pSoldier->bTrainStat);
+					!ValidTrainingPartnerInSameSectorOnAssignmentFound(pSoldier, TRAIN_TEAMMATE, pSoldier->bTrainStat);
 				break;
 
 			case VEHICLE:
@@ -6832,7 +6832,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 #endif
 						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, GetVehicle(sel->bVehicleUnderRepairID)) :
 						s.fFixingRobot                   ? CanCharacterRepairRobot(&s)                                          : // XXX s in condition seems wrong, should probably be sel
-						                                   TRUE;
+						TRUE;
 					if (fCanFixSpecificTarget)
 					{
 						SetSoldierAssignmentRepair(s, sel->fFixingSAMSite, sel->fFixingRobot, sel->bVehicleUnderRepairID);
@@ -7214,7 +7214,7 @@ void ResumeOldAssignment(SOLDIERTYPE* const s)
 	StopTimeCompression();
 
 	/* Assignment has changed, redraw left side as well as the map (to update
-	 * on/off duty icons) */
+		* on/off duty icons) */
 	fTeamPanelDirty          = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
 	fMapPanelDirty           = TRUE;

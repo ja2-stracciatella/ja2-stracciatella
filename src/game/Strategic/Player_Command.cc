@@ -29,7 +29,7 @@ void GetSectorFacilitiesFlags(INT16 const x, INT16 const y, wchar_t* const buf, 
 	UINT32 const facilities = SectorInfo[SECTOR(x, y)].uiFacilitiesFlags;
 	if (facilities == 0)
 	{
-	  wcslcpy(buf, sFacilitiesStrings[0], length);
+		wcslcpy(buf, sFacilitiesStrings[0], length);
 		return;
 	}
 

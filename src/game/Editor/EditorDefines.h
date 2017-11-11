@@ -218,7 +218,7 @@ enum
 	DRAW_MODE_SELECT_BRUSH = 200,
 	DRAW_MODE_FILL_AREA,
 	DRAW_MODE_UNDO,
-	DRAW_MODE_ERASE				 = 1000
+	DRAW_MODE_ERASE = 1000
 };
 
 extern GUIButtonRef iEditorButton[NUMBER_EDITOR_BUTTONS];
@@ -247,9 +247,9 @@ extern BOOLEAN gfMercGetItem;
 //When actually editing item statistics, this value will be set, for the purposes of rendering, input, etc.
 extern BOOLEAN gfShowItemStatsPanel;
 
-#define TASKBAR_Y (EDITOR_TASKBAR_POS_Y)
+#define TASKBAR_Y	(EDITOR_TASKBAR_POS_Y)
 
-#define	MERCPANEL_X						177
-#define MERCPANEL_Y						(EDITOR_TASKBAR_POS_Y + 1)
+#define MERCPANEL_X	177
+#define MERCPANEL_Y	(EDITOR_TASKBAR_POS_Y + 1)
 
 #endif

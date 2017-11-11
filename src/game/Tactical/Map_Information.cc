@@ -24,43 +24,42 @@ struct MAPCREATE_STRUCT;
 MAPCREATE_STRUCT gMapInformation;
 
 //Current minor map version updater.
-#define MINOR_MAP_VERSION		25
+#define MINOR_MAP_VERSION 25
 UINT8 gubMinorMapVersion = MINOR_MAP_VERSION;
 
-/*
-MINOR_MAP_VERSION Log -- Created by Kris Morness, November 14, 1997
-Version 0 -- Kris -- obsolete November 14, 1997
-	The newly created soldier information had a couple bugs regarding initialization
-  Bug 1)	Soldier placements without detailed slots weren't initialized.
-	Bug 2)  The attitude variable was accidentally being generated like attributes
-			which usually put it completely out of range.
-Version 1 -- Kris -- obsolete January 7, 1998
-	Bug 3)  New changes to the wall decals, made the currently existing ones in the world
-			unpredictable, and are automatically removed, so new ones can be used.
-Version 2 -- Kris -- obsolete February 3, 1998
-  Bug 4)  Enemy mercs now have a color code assignment which defaults to army.
-Version 3 -- Kris -- obsolete February 9, 1998
-  Bug 5)  Move entry points down if they are too high.
-Version 4 -- Kris -- obsolete February 25, 1998
-  Bug 6)  Change all doors to FIRSTDOOR
-Version 5 -- Kris -- obsolete March 4, 1998
-  Bug 7)  Remove all exit grids (the format has changed)
-Version 6 -- Kris -- obsolete March 9, 1998
-  Bug 8)  Change droppable status of merc items so that they are all undroppable.
-Version 7 -- Kris -- obsolete April 14, 1998
-	Bug 9)  Priority placements have been dropped in favor of splitting it into two categories.
-					The first is Detailed placements, and the second is priority existance.  So, all
-					current detailed placements will also have priority existance.
-Version 8 -- Kris -- obsolete April 16, 1998
-	MAJOR CONFLICT RESULTING IN A MAJOR VERSION UPDATE 2.00!
-	Bug 10) Padding on detailed placements is uninitialized.  Clear it.
-Version 9 -- Kris -- obsolete April 26, 1998
-	This version requires no auto updating, but external code has adjusted the size of the mapedgepoint
-	arraysize from UINT8 to UINT16.  See Map Edgepoints.c.
-	Bug 11) Convert all wheelchaired placement bodytypes to cows.  Result of change in the animation database.
-Version 11 -- Kris -- obsolete May 2, 1998
-  Added new center entry point.  Need to initialize the original padding to -1.
-*/
+// MINOR_MAP_VERSION Log -- Created by Kris Morness, November 14, 1997
+// Version 0 -- Kris -- obsolete November 14, 1997
+//   The newly created soldier information had a couple bugs regarding initialization
+//   Bug 1)  Soldier placements without detailed slots weren't initialized.
+//   Bug 2)  The attitude variable was accidentally being generated like attributes
+//           which usually put it completely out of range.
+// Version 1 -- Kris -- obsolete January 7, 1998
+//   Bug 3)  New changes to the wall decals, made the currently existing ones in the world
+//           unpredictable, and are automatically removed, so new ones can be used.
+// Version 2 -- Kris -- obsolete February 3, 1998
+//   Bug 4)  Enemy mercs now have a color code assignment which defaults to army.
+// Version 3 -- Kris -- obsolete February 9, 1998
+//   Bug 5)  Move entry points down if they are too high.
+// Version 4 -- Kris -- obsolete February 25, 1998
+//   Bug 6)  Change all doors to FIRSTDOOR
+// Version 5 -- Kris -- obsolete March 4, 1998
+//   Bug 7)  Remove all exit grids (the format has changed)
+// Version 6 -- Kris -- obsolete March 9, 1998
+//   Bug 8)  Change droppable status of merc items so that they are all undroppable.
+// Version 7 -- Kris -- obsolete April 14, 1998
+//   Bug 9)  Priority placements have been dropped in favor of splitting it into two categories.
+//           The first is Detailed placements, and the second is priority existance.  So, all
+//           current detailed placements will also have priority existance.
+// Version 8 -- Kris -- obsolete April 16, 1998
+//   MAJOR CONFLICT RESULTING IN A MAJOR VERSION UPDATE 2.00!
+//   Bug 10) Padding on detailed placements is uninitialized.  Clear it.
+// Version 9 -- Kris -- obsolete April 26, 1998
+//   This version requires no auto updating, but external code has adjusted the size of the mapedgepoint
+//   arraysize from UINT8 to UINT16.  See Map Edgepoints.c.
+//   Bug 11) Convert all wheelchaired placement bodytypes to cows.  Result of change in the animation database.
+// Version 11 -- Kris -- obsolete May 2, 1998
+//   Added new center entry point.  Need to initialize the original padding to -1.
+
 
 //EntryPoints can't be placed on the top two gridnos in a map.  So all we do in this case
 //is return the closest gridno.  Returns TRUE if the mapindex changes.
@@ -118,8 +117,9 @@ void LoadMapInformation(HWFILE const f)
 //loading and won't be permanently updated until the map is saved, regardless of changes.
 static void UpdateOldVersionMap(void)
 {
-#if 0 //This code is no longer needed since the major version update from 1.0 to 4.0
-			//However, I am keeping it in for reference.
+#if 0
+	//This code is no longer needed since the major version update from 1.0 to 4.0
+	//However, I am keeping it in for reference.
 	INT32 i;
 	LEVELNODE *pStruct;
 	//VERSION 0 -- obsolete November 14, 1997
@@ -189,11 +189,11 @@ static void UpdateOldVersionMap(void)
 		for( i = 0; i < WORLD_MAX; i++ )
 		{
 			//NOTE:  Here are the index values for the various doors
-			//DOOR		OPEN		CLOSED
-			//FIRST		 916			 912
-			//SECOND	 936       932
-			//THIRD		 956       952
-			//FOURTH	 976       972
+			//DOOR   OPEN   CLOSED
+			//FIRST   916      912
+			//SECOND  936      932
+			//THIRD   956      952
+			//FOURTH  976      972
 			pStruct = gpWorldLevelData[ i ].pStructHead;
 			while( pStruct )
 			{
@@ -249,7 +249,7 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion == 5 )
 	{
 		gMapInformation.ubMapVersion++;
-	  //Bug 7)  Remove all exit grids (the format has changed)
+		//Bug 7)  Remove all exit grids (the format has changed)
 		for( i = 0; i < WORLD_MAX; i++ )
 			RemoveExitGridFromWorld( i );
 	}
@@ -515,7 +515,8 @@ static void AutoCalculateItemNoOverwriteStatus(void)
 
 	//Recalculate the "no overwrite" status flag on all items.  There are two different cases:
 	//1)  If detailed placement has item, the item "no overwrite" flag is set
-	//2)  If detailed placement doesn't have item, but item is set to drop (forced empty slot), the "no overwrite" flag is set.
+	//2)  If detailed placement doesn't have item, but item is set to drop (forced empty slot),
+	//    the "no overwrite" flag is set.
 	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if( curr->pDetailedPlacement )
@@ -524,11 +525,13 @@ static void AutoCalculateItemNoOverwriteStatus(void)
 			{
 				pItem = &curr->pDetailedPlacement->Inv[ i ];
 				if( pItem->usItem != NONE )
-				{	//case 1 (see above)
+				{
+					//case 1 (see above)
 					pItem->fFlags |= OBJECT_NO_OVERWRITE;
 				}
 				else if( !(pItem->fFlags & OBJECT_UNDROPPABLE) )
-				{ //case 2 (see above)
+				{
+					//case 2 (see above)
 					pItem->fFlags |= OBJECT_NO_OVERWRITE;
 				}
 			}
@@ -562,7 +565,8 @@ void UpdateSummaryInfo( SUMMARYFILE *pSummary )
 	if( pSummary->MapInfo.ubMapVersion == MINOR_MAP_VERSION )
 		return;
 	if( pSummary->MapInfo.ubMapVersion < 9 )
-	{ //See bug 10
+	{
+		//See bug 10
 		pSummary->ubCivSchedules = 0;
 	}
 	if( pSummary->MapInfo.ubMapVersion < 12 )
@@ -581,7 +585,7 @@ void UpdateSummaryInfo( SUMMARYFILE *pSummary )
 
 TEST(MapInformation, asserts)
 {
-  EXPECT_EQ(sizeof(MAPCREATE_STRUCT), 100);
+	EXPECT_EQ(sizeof(MAPCREATE_STRUCT), 100);
 }
 
 #endif

@@ -59,55 +59,55 @@ union AniUserData
 struct ANITILE
 {
 	ANITILE*       pNext;
-	AnimationFlags              uiFlags;							// flags struct
-	UINT32											uiTimeLastUpdate;			// Stuff for animated tiles
+	AnimationFlags uiFlags; // flags struct
+	UINT32         uiTimeLastUpdate; // Stuff for animated tiles
 
-	LEVELNODE										*pLevelNode;
-	UINT8												ubLevelID;
-	INT16											  sCurrentFrame;
-	INT16												sStartFrame;
-	INT16												sDelay;
-	UINT16											usNumFrames;
+	LEVELNODE      *pLevelNode;
+	UINT8          ubLevelID;
+	INT16          sCurrentFrame;
+	INT16          sStartFrame;
+	INT16          sDelay;
+	UINT16         usNumFrames;
 
-	INT16												sRelativeX;
-	INT16												sRelativeY;
-	INT16												sRelativeZ;
-	INT16												sGridNo;
-	UINT16											usTileIndex;
+	INT16          sRelativeX;
+	INT16          sRelativeY;
+	INT16          sRelativeZ;
+	INT16          sGridNo;
+	UINT16         usTileIndex;
 
-	INT16												sCachedTileID;					// Index into cached tile ID
+	INT16          sCachedTileID; // Index into cached tile ID
 
-	UINT8												ubKeyFrame1;
-	UINT32											uiKeyFrame1Code;
-	UINT8												ubKeyFrame2;
-	UINT32											uiKeyFrame2Code;
+	UINT8          ubKeyFrame1;
+	UINT32         uiKeyFrame1Code;
+	UINT8          ubKeyFrame2;
+	UINT32         uiKeyFrame2Code;
 
 	AniUserData v;
 
-	INT8												bFrameCountAfterStart;
+	INT8           bFrameCountAfterStart;
 
 };
 
 
 struct ANITILE_PARAMS
 {
-	AnimationFlags              uiFlags;							// flags struct
-	AnimationLevel              ubLevelID;						// Level ID for rendering layer
-	INT16											  sStartFrame;					// Start frame
-	INT16												sDelay;								// Delay time
-	UINT16											usTileIndex;					// Tile database index ( optional )
-	INT16												sX;										// World X ( optional )
-	INT16												sY;										// World Y ( optional )
-	INT16												sZ;										// World Z ( optional )
-	INT16												sGridNo;							// World GridNo
+	AnimationFlags uiFlags; // flags struct
+	AnimationLevel ubLevelID; // Level ID for rendering layer
+	INT16          sStartFrame; // Start frame
+	INT16          sDelay; // Delay time
+	UINT16         usTileIndex; // Tile database index ( optional )
+	INT16          sX; // World X ( optional )
+	INT16          sY; // World Y ( optional )
+	INT16          sZ; // World Z ( optional )
+	INT16          sGridNo; // World GridNo
 
-	LEVELNODE										*pGivenLevelNode;			// Levelnode for existing tile ( optional )
-	const char* zCachedFile; // Filename for cached tile name ( optional )
+	LEVELNODE      *pGivenLevelNode; // Levelnode for existing tile ( optional )
+	const char     *zCachedFile; // Filename for cached tile name ( optional )
 
-	UINT8												ubKeyFrame1;					// Key frame 1
-	UINT32											uiKeyFrame1Code;			// Key frame code
-	UINT8												ubKeyFrame2;					// Key frame 2
-	UINT32											uiKeyFrame2Code;			// Key frame code
+	UINT8          ubKeyFrame1; // Key frame 1
+	UINT32         uiKeyFrame1Code; // Key frame code
+	UINT8          ubKeyFrame2; // Key frame 2
+	UINT32         uiKeyFrame2Code; // Key frame code
 
 	AniUserData v;
 };
@@ -119,7 +119,7 @@ enum KeyFrameEnums
 	ANI_KEYFRAME_BEGIN_TRANSLUCENCY,
 	ANI_KEYFRAME_BEGIN_DAMAGE,
 	ANI_KEYFRAME_CHAIN_WATER_EXPLOSION,
-  ANI_KEYFRAME_DO_SOUND
+	ANI_KEYFRAME_DO_SOUND
 };
 
 

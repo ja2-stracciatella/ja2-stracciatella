@@ -50,70 +50,69 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#define		SAVE_LOAD_TITLE_FONT								FONT14ARIAL
-#define		SAVE_LOAD_TITLE_COLOR								FONT_MCOLOR_WHITE
+#define SAVE_LOAD_TITLE_FONT				FONT14ARIAL
+#define SAVE_LOAD_TITLE_COLOR				FONT_MCOLOR_WHITE
 
-#define		SAVE_LOAD_NORMAL_FONT								FONT12ARIAL
-#define		SAVE_LOAD_NORMAL_COLOR							2//FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
-#define		SAVE_LOAD_NORMAL_SHADOW_COLOR				118//121//118//125
-/*#define		SAVE_LOAD_NORMAL_FONT								FONT12ARIAL
-#define		SAVE_LOAD_NORMAL_COLOR							FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
-#define		SAVE_LOAD_NORMAL_SHADOW_COLOR				2//125
-*/
+#define SAVE_LOAD_NORMAL_FONT				FONT12ARIAL
+#define SAVE_LOAD_NORMAL_COLOR				2//FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
+#define SAVE_LOAD_NORMAL_SHADOW_COLOR			118//121//118//125
+/*#define SAVE_LOAD_NORMAL_FONT			FONT12ARIAL
+#define SAVE_LOAD_NORMAL_COLOR				FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
+#define SAVE_LOAD_NORMAL_SHADOW_COLOR			2//125*/
 
-#define		SAVE_LOAD_QUICKSAVE_COLOR						2//FONT_MCOLOR_DKGRAY//FONT_MCOLOR_WHITE
-#define		SAVE_LOAD_QUICKSAVE_SHADOW_COLOR		189//248//2
+#define SAVE_LOAD_QUICKSAVE_COLOR			2//FONT_MCOLOR_DKGRAY//FONT_MCOLOR_WHITE
+#define SAVE_LOAD_QUICKSAVE_SHADOW_COLOR		189//248//2
 
-#define		SAVE_LOAD_EMPTYSLOT_COLOR						2//125//FONT_MCOLOR_WHITE
-#define		SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		121//118
+#define SAVE_LOAD_EMPTYSLOT_COLOR			2//125//FONT_MCOLOR_WHITE
+#define SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		121//118
 
-#define		SAVE_LOAD_HIGHLIGHTED_COLOR					FONT_MCOLOR_WHITE
-#define		SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR	2
+#define SAVE_LOAD_HIGHLIGHTED_COLOR			FONT_MCOLOR_WHITE
+#define SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR		2
 
-#define		SAVE_LOAD_SELECTED_COLOR						2//145//FONT_MCOLOR_WHITE
-#define		SAVE_LOAD_SELECTED_SHADOW_COLOR			130//2
-
-
-
-#define		SAVE_LOAD_NUMBER_FONT								FONT12ARIAL
-#define		SAVE_LOAD_NUMBER_COLOR							FONT_MCOLOR_WHITE
-
-#define		SLG_SELECTED_COLOR									FONT_MCOLOR_WHITE
-#define		SLG_UNSELECTED_COLOR								FONT_MCOLOR_DKWHITE
-
-#define		SLG_SAVELOCATION_WIDTH							605
-#define		SLG_SAVELOCATION_HEIGHT							30//46
-#define		SLG_FIRST_SAVED_SPOT_X							(STD_SCREEN_X + 17)
-#define		SLG_FIRST_SAVED_SPOT_Y							(STD_SCREEN_Y + 49)
-#define		SLG_GAP_BETWEEN_LOCATIONS						35//47
+#define SAVE_LOAD_SELECTED_COLOR			2//145//FONT_MCOLOR_WHITE
+#define SAVE_LOAD_SELECTED_SHADOW_COLOR		130//2
 
 
 
-#define		SLG_DATE_OFFSET_X										13
-#define		SLG_DATE_OFFSET_Y										11
+#define SAVE_LOAD_NUMBER_FONT				FONT12ARIAL
+#define SAVE_LOAD_NUMBER_COLOR				FONT_MCOLOR_WHITE
 
-#define		SLG_SECTOR_OFFSET_X									95//105//114
-#define		SLG_SECTOR_WIDTH										98
+#define SLG_SELECTED_COLOR				FONT_MCOLOR_WHITE
+#define SLG_UNSELECTED_COLOR				FONT_MCOLOR_DKWHITE
 
-#define		SLG_NUM_MERCS_OFFSET_X							196//190//SLG_DATE_OFFSET_X
+#define SLG_SAVELOCATION_WIDTH				605
+#define SLG_SAVELOCATION_HEIGHT			30//46
+#define SLG_FIRST_SAVED_SPOT_X				(STD_SCREEN_X + 17)
+#define SLG_FIRST_SAVED_SPOT_Y				(STD_SCREEN_Y + 49)
+#define SLG_GAP_BETWEEN_LOCATIONS			35//47
 
-#define		SLG_BALANCE_OFFSET_X								260//SLG_SECTOR_OFFSET_X
 
-#define		SLG_SAVE_GAME_DESC_X								318//320//204
-#define		SLG_SAVE_GAME_DESC_Y								SLG_DATE_OFFSET_Y//SLG_DATE_OFFSET_Y + 7
 
-#define		SLG_TITLE_POS_X											(STD_SCREEN_X)
-#define		SLG_TITLE_POS_Y											(STD_SCREEN_Y)
+#define SLG_DATE_OFFSET_X				13
+#define SLG_DATE_OFFSET_Y				11
 
-#define SLG_SAVE_CANCEL_POS_X   (226 + STD_SCREEN_X)
-#define SLG_LOAD_CANCEL_POS_X   (329 + STD_SCREEN_X)
-#define SLG_SAVE_LOAD_BTN_POS_X (123 + STD_SCREEN_X)
-#define SLG_BTN_POS_Y           (438 + STD_SCREEN_Y)
+#define SLG_SECTOR_OFFSET_X				95//105//114
+#define SLG_SECTOR_WIDTH				98
 
-#define		SLG_SELECTED_SLOT_GRAPHICS_NUMBER		3
-#define		SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER	2
+#define SLG_NUM_MERCS_OFFSET_X				196//190//SLG_DATE_OFFSET_X
 
-#define		SLG_DOUBLE_CLICK_DELAY							500
+#define SLG_BALANCE_OFFSET_X				260//SLG_SECTOR_OFFSET_X
+
+#define SLG_SAVE_GAME_DESC_X				318//320//204
+#define SLG_SAVE_GAME_DESC_Y				SLG_DATE_OFFSET_Y//SLG_DATE_OFFSET_Y + 7
+
+#define SLG_TITLE_POS_X				(STD_SCREEN_X)
+#define SLG_TITLE_POS_Y				(STD_SCREEN_Y)
+
+#define SLG_SAVE_CANCEL_POS_X				(226 + STD_SCREEN_X)
+#define SLG_LOAD_CANCEL_POS_X				(329 + STD_SCREEN_X)
+#define SLG_SAVE_LOAD_BTN_POS_X				(123 + STD_SCREEN_X)
+#define SLG_BTN_POS_Y					(438 + STD_SCREEN_Y)
+
+#define SLG_SELECTED_SLOT_GRAPHICS_NUMBER		3
+#define SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER		2
+
+#define SLG_DOUBLE_CLICK_DELAY				500
 
 //defines for saved game version status
 enum
@@ -404,7 +403,7 @@ static void updateTabActiveState()
 		gfActiveTab = i;
 		InitSaveGameArray(); // Load the savegames for the current tab
 		// Check if the lastSavedGameSlot exists
-		
+
 		bool tabHasSaves = FALSE;
 		for (INT8 j = 0; j != NUM_SAVE_GAMES; ++j)
 		{
@@ -463,8 +462,8 @@ static void EnterSaveLoadScreen()
 	{
 		gfActiveTab = DEAD_IS_DEAD_TAB_NO;
 		gfSaveGame = TRUE;
-	}  
-  
+	}
+
 	// This is a hack to get sector names, but if the underground sector is NOT loaded
 	if (!gpUndergroundSectorInfoHead)
 	{
@@ -537,13 +536,13 @@ static void EnterSaveLoadScreen()
 	// Create the screen mask to enable ability to right click to cancel the save game
 	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
 
-	  // Display DiD Tab Button if We are in load game
-  if (!gfSaveGame)
-  {
+	// Display DiD Tab Button if We are in load game
+	if (!gfSaveGame)
+	{
 		CreateLoadscreenTab();
 		selectActiveTab();
 	}
-	
+
 	ClearSelectedSaveSlot();
 
 	RemoveMouseRegionForPauseOfClock();
@@ -634,7 +633,7 @@ static void ExitSaveLoadScreen(void)
 
 	for(i=0; i<NUM_SAVE_GAMES; i++)
 	{
-	  MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
+		MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
 	}
 
 	DeleteVideoObject(guiSlgBackGroundImage);
@@ -643,7 +642,7 @@ static void ExitSaveLoadScreen(void)
 	//Destroy the text fields ( if created )
 	DestroySaveLoadTextInputBoxes();
 
-  MSYS_RemoveRegion( &gSLSEntireScreenRegion );
+	MSYS_RemoveRegion( &gSLSEntireScreenRegion );
 
 	gfSaveLoadScreenEntry = TRUE;
 	gfSaveLoadScreenExit = FALSE;
@@ -888,13 +887,13 @@ void LoadTab(INT8 tabNo)
 
 			// Disable unused slots and select the first used slot
 			if (!gbSaveGameArray[i])
-			{  
+			{
 				r.Disable();
 			} else if(gbSelectedSaveLocation == -1)
 			{
 				gbSelectedSaveLocation = i;
-			}  
-    
+			}
+
 			y += SLG_GAP_BETWEEN_LOCATIONS;
 		}
 		RenderSaveLoadScreen();
@@ -1127,7 +1126,7 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 
 		try
 		{
-      bool stracLinuxFormat;
+			bool stracLinuxFormat;
 			AutoSGPFile f(GCM->openUserPrivateFileForReading(zSavedGameName));
 			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
 			endof(header->zGameVersionNumber)[-1] =  '\0';
@@ -1402,7 +1401,7 @@ static void DestroySaveLoadTextInputBoxes(void)
 static void SetSelection(UINT8 const new_selection)
 {
 	// If we are loading and there is no entry, return
- 	if (!gfSaveGame && !gbSaveGameArray[new_selection]) return;
+	if (!gfSaveGame && !gbSaveGameArray[new_selection]) return;
 
 	gfRedrawSaveLoadScreen = TRUE;
 	DestroySaveLoadTextInputBoxes();
@@ -1458,7 +1457,7 @@ static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(MessageBoxReturnVal
 static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, load the game
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		//Setup up the fade routines
 		StartFadeOutForSaveLoadScreen();
@@ -1479,7 +1478,7 @@ static void DeleteAllSaveGameFile(void);
 static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, Delete all the save game files
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		DeleteAllSaveGameFile( );
 		gfSaveLoadScreenExit = TRUE;
@@ -1635,7 +1634,7 @@ static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExit
 {
 	Assert( gbSelectedSaveLocation != -1 );
 
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		SaveGameToSlotNum();
 	}
@@ -1645,7 +1644,7 @@ static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExit
 static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes
-  if( bExitValue == MSG_BOX_RETURN_OK )
+	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		//if the current screen is tactical
 		if( guiPreviousOptionScreen == MAP_SCREEN )
@@ -1681,7 +1680,7 @@ void DoQuickSave()
 			DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		} else
 		{
-			DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL); 
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 		}
 	}
 }
@@ -1826,16 +1825,16 @@ static void SaveGameToSlotNum(void)
 	//render the buttons
 	MarkButtonsDirty( );
 	RenderButtons();
-  
+
 	// If we are selecting the Dead is Dead Savegame slot, only remember the slot, do not save
 	// Also set the INTRO_SCREEN as previous options screen. This is a hack to get the game started
 	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
 	{
 		guiPreviousOptionScreen = INTRO_SCREEN;
 		gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
-		wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField); 
-		
-	} else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
+		wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField);
+	}
+	else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}

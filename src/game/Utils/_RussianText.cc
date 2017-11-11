@@ -4,101 +4,100 @@
 #include "gtest/gtest.h"
 #endif
 
-/*
 
-******************************************************************************************************
-**                                  IMPORTANT TRANSLATION NOTES                                     **
-******************************************************************************************************
+// ******************************************************************************************************
+// **                                  IMPORTANT TRANSLATION NOTES                                     **
+// ******************************************************************************************************
+//
+// GENERAL TOPWARE INSTRUCTIONS
+// - Always be aware that German strings should be of equal or shorter length than the English equivalent.
+//   I know that this is difficult to do on many occasions due to the nature of the German language when
+//   compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In
+//   most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
+//   The general rule is if the string is very short (less than 10 characters), then it's short because of
+//   interface limitations.  On the other hand, full sentences commonly have little limitations for length.
+//   Strings in between are a little dicey.
+// - Never translate a string to appear on multiple lines.  All strings L"This is a really long string...",
+//   must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
+// - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
+//   have one space after a period, which is different than standard typing convention.  Never modify sections
+//   of strings contain combinations of % characters.  These are special format characters and are always
+//   used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
+//   locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
+//   %% is how a single % character is built.  There are countless types, but strings containing these
+//   special characters are usually commented to explain what they mean.  If it isn't commented, then
+//   if you can't figure out the context, then feel free to ask SirTech.
+// - Comments are always started with // Anything following these two characters on the same line are
+//   considered to be comments.  Do not translate comments.  Comments are always applied to the following
+//   string(s) on the next line(s), unless the comment is on the same line as a string.
+// - All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching
+//   for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
+//   Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
+//   comments intact, and SirTech will remove them once the translation for that particular area is resolved.
+// - If you have a problem or question with translating certain strings, please use "//!!! comment"
+//   (without the quotes).  The syntax is important, and should be identical to the comments used with @@@
+//   symbols.  SirTech will search for !!! to look for Topware problems and questions.  This is a more
+//   efficient method than detailing questions in email, so try to do this whenever possible.
+//
+//
+//
+// FAST HELP TEXT -- Explains how the syntax of fast help text works.
+// **************
+//
+// 1) BOLDED LETTERS
+//   The popup help text system supports special characters to specify the hot key(s) for a button.
+//   Anytime you see a '|' symbol within the help text string, that means the following key is assigned
+//   to activate the action which is usually a button.
+//
+//   EX:  L"|Map Screen"
+//
+//   This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
+//   button.  When translating the text to another language, it is best to attempt to choose a word that
+//   uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
+//   of the string in this format:
+//
+//   EX:  L"Ecran De Carte (|M)"  (this is the French translation)
+//
+//   Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|e)
+//
+// 2) NEWLINE
+//   Any place you see a \n within the string, you are looking at another string that is part of the fast help
+//   text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
+//   to start a new line.
+//
+//   EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
+//
+//   Would appear as:
+//
+//         Clears all the mercs' positions,
+//         and allows you to re-enter them manually.
+//
+//   NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
+//     in the above example, we would see
+//
+//   WRONG WAY -- spaces before and after the \n
+//   EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
+//
+//   Would appear as: (the second line is moved in a character)
+//
+//     Clears all the mercs' positions,
+//     and allows you to re-enter them manually.
+//
+//
+// @@@ NOTATION
+// ************
+//
+//   Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
+//   text to make translation easier, but comments don't need to be translated.  A good thing is to search for
+//   "@@@" after receiving new version of the text file, and address the special notes in this manner.
+//
+// !!! NOTATION
+// ************
+//
+//   As described above, the "!!!" notation should be used by Topware to ask questions and address problems as
+//   SirTech uses the "@@@" notation.
 
-GENERAL TOPWARE INSTRUCTIONS
-- Always be aware that German strings should be of equal or shorter length than the English equivalent.
-	I know that this is difficult to do on many occasions due to the nature of the German language when
-	compared to English.  By doing so, this will greatly reduce the amount of work on both sides.  In
-	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
-	The general rule is if the string is very short (less than 10 characters), then it's short because of
-	interface limitations.  On the other hand, full sentences commonly have little limitations for length.
-	Strings in between are a little dicey.
-- Never translate a string to appear on multiple lines.  All strings L"This is a really long string...",
-	must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
-- Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
-	have one space after a period, which is different than standard typing convention.  Never modify sections
-	of strings contain combinations of % characters.  These are special format characters and are always
-	used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
-	locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
-	%% is how a single % character is built.  There are countless types, but strings containing these
-	special characters are usually commented to explain what they mean.  If it isn't commented, then
-	if you can't figure out the context, then feel free to ask SirTech.
-- Comments are always started with // Anything following these two characters on the same line are
-	considered to be comments.  Do not translate comments.  Comments are always applied to the following
-	string(s) on the next line(s), unless the comment is on the same line as a string.
-- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation.  By searching
-	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-  Commonly, these types of comments will be used to ask you to abbreviate a string.  Please leave the
-	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
-- If you have a problem or question with translating certain strings, please use "//!!! comment"
-	(without the quotes).  The syntax is important, and should be identical to the comments used with @@@
-	symbols.  SirTech will search for !!! to look for Topware problems and questions.  This is a more
-	efficient method than detailing questions in email, so try to do this whenever possible.
 
-
-
-FAST HELP TEXT -- Explains how the syntax of fast help text works.
-**************
-
-1) BOLDED LETTERS
-	The popup help text system supports special characters to specify the hot key(s) for a button.
-	Anytime you see a '|' symbol within the help text string, that means the following key is assigned
-	to activate the action which is usually a button.
-
-	EX:  L"|Map Screen"
-
-	This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
-	button.  When translating the text to another language, it is best to attempt to choose a word that
-	uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
-	of the string in this format:
-
-	EX:  L"Ecran De Carte (|M)"  (this is the French translation)
-
-	Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|e)
-
-2) NEWLINE
-  Any place you see a \n within the string, you are looking at another string that is part of the fast help
-	text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
-	to start a new line.
-
-	EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
-
-	Would appear as:
-
-				Clears all the mercs' positions,
-				and allows you to re-enter them manually.
-
-	NOTE:  It is important that you don't pad the characters adjacent to the \n with spaces.  If we did this
-	       in the above example, we would see
-
-	WRONG WAY -- spaces before and after the \n
-	EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
-
-	Would appear as: (the second line is moved in a character)
-
-				Clears all the mercs' positions,
- 				 and allows you to re-enter them manually.
-
-
-@@@ NOTATION
-************
-
-	Throughout the text files, you'll find an assortment of comments.  Comments are used to describe the
-	text to make translation easier, but comments don't need to be translated.  A good thing is to search for
-	"@@@" after receiving new version of the text file, and address the special notes in this manner.
-
-!!! NOTATION
-************
-
-	As described above, the "!!!" notation should be used by Topware to ask questions and address problems as
-	SirTech uses the "@@@" notation.
-
-*/
 
 static StrPointer s_rus_WeaponType[WeaponType_SIZE] =
 {
@@ -1813,13 +1812,13 @@ static const wchar_t s_rus_pFilesTitle[] = L"Просмотр файлов";
 
 static const wchar_t *s_rus_pFilesSenderList[pFilesSenderList_SIZE] =
 {
-	L"Отчет разведки", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
-	L"Перехват #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
-	L"Перехват #2",	   // second intercept file
-	L"Перехват #3",			 // third intercept file
-	L"Перехват #4", // fourth intercept file
-	L"Перехват #5", // fifth intercept file
-	L"Перехват #6", // sixth intercept file
+	L"Отчет разведки",	// the recon report sent to the player. Recon is an abbreviation for reconissance
+	L"Перехват #1",		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
+	L"Перехват #2",		// second intercept file
+	L"Перехват #3",		// third intercept file
+	L"Перехват #4",		// fourth intercept file
+	L"Перехват #5",		// fifth intercept file
+	L"Перехват #6",		// sixth intercept file
 };
 
 // Text having to do with the History Log
@@ -2464,9 +2463,9 @@ static const wchar_t *s_rus_BobbyRText[BobbyRText_SIZE] =
 };
 
 
-/* The following line is used on the Ammunition page.  It is used for help text
- * to display how many items the player's merc has that can use this type of
- * ammo. */
+// The following line is used on the Ammunition page.  It is used for help text
+// to display how many items the player's merc has that can use this type of
+// ammo.
 static const wchar_t s_rus_str_bobbyr_guns_num_guns_that_use_ammo[] = L"Количество единиц оружия у вашей команды, использующих этот боеприпас: %d";
 
 
@@ -3032,28 +3031,28 @@ static const wchar_t *s_rus_gzGIOScreenText[gzGIOScreenText_SIZE] =
 
 static const wchar_t *s_rus_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
 {
-	L"Остин",			//Austin, Texas, USA
-	L"Багдад",			//Baghdad, Iraq (Suddam Hussein's home)
-	L"Драссен",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
-	L"Гонконг",		   //Hong Kong, Hong Kong
-	L"Бейрут",			//Beirut, Lebanon	(Middle East)
-	L"Лондон",			//London, England
+	L"Остин",		//Austin, Texas, USA
+	L"Багдад",		//Baghdad, Iraq (Suddam Hussein's home)
+	L"Драссен",		//The main place in JA2 that you can receive items.  The other towns are dummy names...
+	L"Гонконг",		//Hong Kong, Hong Kong
+	L"Бейрут",		//Beirut, Lebanon	(Middle East)
+	L"Лондон",		//London, England
 	L"Лос Анджелес",	//Los Angeles, California, USA (SW corner of USA)
-	L"Медуна",			//Meduna -- the other airport in JA2 that you can receive items.
+	L"Медуна",		//Meduna -- the other airport in JA2 that you can receive items.
 	L"Метавира",		//The island of Metavira was the fictional location used by JA1
-	L"Майами",				//Miami, Florida, USA (SE corner of USA)
-	L"Москва",			//Moscow, USSR
+	L"Майами",		//Miami, Florida, USA (SE corner of USA)
+	L"Москва",		//Moscow, USSR
 	L"Нью-Йорк",		//New York, New York, USA
-	L"Оттава",			//Ottawa, Ontario, Canada -- where JA2 was made!
-	L"Париж",				//Paris, France
-	L"Триполи",			//Tripoli, Libya (eastern Mediterranean)
-	L"Токио",				//Tokyo, Japan
+	L"Оттава",		//Ottawa, Ontario, Canada -- where JA2 was made!
+	L"Париж",		//Paris, France
+	L"Триполи",		//Tripoli, Libya (eastern Mediterranean)
+	L"Токио",		//Tokyo, Japan
 	L"Ванкувер",		//Vancouver, British Columbia, Canada (west coast near US border)
 };
 
-/* This string is used in the IMP character generation.  It is possible to
- * select 0 ability in a skill meaning you can't use it.  This text is
- * confirmation to the player. */
+// This string is used in the IMP character generation.  It is possible to
+// select 0 ability in a skill meaning you can't use it.  This text is
+// confirmation to the player.
 static const wchar_t s_rus_pSkillAtZeroWarning[]    = L"Уверены? Ноль означает отсутствие навыка.";
 static const wchar_t s_rus_pIMPBeginScreenStrings[] = L"(не более 8 букв)";
 static const wchar_t s_rus_pIMPFinishButtonText[]   = L"Анализ";
@@ -3123,8 +3122,8 @@ static const wchar_t *s_rus_pMessageStrings[pMessageStrings_SIZE] =
 	L"Бросить",
 	L"Передать",
 
-	L"%ls передан %ls.", //"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls, otherwise,
-											 //must notify SirTech.
+	L"%ls передан %ls.",	//"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls,
+				//otherwise, must notify SirTech.
 	L"Нельзя передать %ls %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
@@ -3540,14 +3539,14 @@ static const wchar_t *s_rus_str_stat_list[str_stat_list_SIZE] =
 
 static const wchar_t *s_rus_str_aim_sort_list[str_aim_sort_list_SIZE] =
 {
-  s_rus_str_aim_sort_price,
-  s_rus_str_aim_sort_experience,
-  s_rus_str_aim_sort_marksmanship,
-  s_rus_str_aim_sort_medical,
-  s_rus_str_aim_sort_explosives,
-  s_rus_str_aim_sort_mechanical,
-  s_rus_str_aim_sort_ascending,
-  s_rus_str_aim_sort_descending,
+	s_rus_str_aim_sort_price,
+	s_rus_str_aim_sort_experience,
+	s_rus_str_aim_sort_marksmanship,
+	s_rus_str_aim_sort_medical,
+	s_rus_str_aim_sort_explosives,
+	s_rus_str_aim_sort_mechanical,
+	s_rus_str_aim_sort_ascending,
+	s_rus_str_aim_sort_descending,
 };
 
 static const wchar_t * s_rus_zNewTacticalMessages[] =
@@ -3573,479 +3572,479 @@ static const wchar_t *s_rus_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_t
 	L"DiD", 			// Dead is Dead Tab
 };
 
-/** Russian language resources. */
+// Russian language resources.
 LanguageRes g_LanguageResRussian = {
 
-  s_rus_WeaponType,
+	s_rus_WeaponType,
 
-  s_rus_Message,
-  s_rus_TeamTurnString,
-  s_rus_pAssignMenuStrings,
-  s_rus_pTrainingStrings,
-  s_rus_pTrainingMenuStrings,
-  s_rus_pAttributeMenuStrings,
-  s_rus_pVehicleStrings,
-  s_rus_pShortAttributeStrings,
-  s_rus_pContractStrings,
-  s_rus_pAssignmentStrings,
-  s_rus_pConditionStrings,
-  s_rus_pTownNames,
-  s_rus_g_towns_locative,
-  s_rus_pPersonnelScreenStrings,
-  s_rus_pUpperLeftMapScreenStrings,
-  s_rus_pTacticalPopupButtonStrings,
-  s_rus_pSquadMenuStrings,
-  s_rus_pDoorTrapStrings,
-  s_rus_pLongAssignmentStrings,
-  s_rus_pMapScreenMouseRegionHelpText,
-  s_rus_pNoiseVolStr,
-  s_rus_pNoiseTypeStr,
-  s_rus_pDirectionStr,
-  s_rus_pRemoveMercStrings,
-  s_rus_sTimeStrings,
-  s_rus_pLandTypeStrings,
-  s_rus_pInvPanelTitleStrings,
-  s_rus_pPOWStrings,
-  s_rus_pMilitiaString,
-  s_rus_pMilitiaButtonString,
-  s_rus_pEpcMenuStrings,
-  s_rus_pRepairStrings,
-  s_rus_sPreStatBuildString,
-  s_rus_sStatGainStrings,
-  s_rus_pHelicopterEtaStrings,
-  s_rus_sMapLevelString,
-  s_rus_gsLoyalString,
-  s_rus_gsUndergroundString,
-  s_rus_gsTimeStrings,
-  s_rus_sFacilitiesStrings,
-  s_rus_pMapPopUpInventoryText,
-  s_rus_pwTownInfoStrings,
-  s_rus_pwMineStrings,
-  s_rus_pwMiscSectorStrings,
-  s_rus_pMapInventoryErrorString,
-  s_rus_pMapInventoryStrings,
-  s_rus_pMovementMenuStrings,
-  s_rus_pUpdateMercStrings,
-  s_rus_pMapScreenBorderButtonHelpText,
-  s_rus_pMapScreenBottomFastHelp,
-  s_rus_pMapScreenBottomText,
-  s_rus_pMercDeadString,
-  s_rus_pSenderNameList,
-  s_rus_pNewMailStrings,
-  s_rus_pDeleteMailStrings,
-  s_rus_pEmailHeaders,
-  s_rus_pEmailTitleText,
-  s_rus_pFinanceTitle,
-  s_rus_pFinanceSummary,
-  s_rus_pFinanceHeaders,
-  s_rus_pTransactionText,
-  s_rus_pMoralStrings,
-  s_rus_pSkyriderText,
-  s_rus_str_left_equipment,
-  s_rus_pMapScreenStatusStrings,
-  s_rus_pMapScreenPrevNextCharButtonHelpText,
-  s_rus_pEtaString,
-  s_rus_pShortVehicleStrings,
-  s_rus_pTrashItemText,
-  s_rus_pMapErrorString,
-  s_rus_pMapPlotStrings,
-  s_rus_pBullseyeStrings,
-  s_rus_pMiscMapScreenMouseRegionHelpText,
-  s_rus_str_he_leaves_where_drop_equipment,
-  s_rus_str_she_leaves_where_drop_equipment,
-  s_rus_str_he_leaves_drops_equipment,
-  s_rus_str_she_leaves_drops_equipment,
-  s_rus_pImpPopUpStrings,
-  s_rus_pImpButtonText,
-  s_rus_pExtraIMPStrings,
-  s_rus_pFilesTitle,
-  s_rus_pFilesSenderList,
-  s_rus_pHistoryLocations,
-  s_rus_pHistoryStrings,
-  s_rus_pHistoryHeaders,
-  s_rus_pHistoryTitle,
-  s_rus_pShowBookmarkString,
-  s_rus_pWebPagesTitles,
-  s_rus_pWebTitle,
-  s_rus_pPersonnelString,
-  s_rus_pErrorStrings,
-  s_rus_pDownloadString,
-  s_rus_pBookMarkStrings,
-  s_rus_pLaptopIcons,
-  s_rus_gsAtmStartButtonText,
-  s_rus_pPersonnelTeamStatsStrings,
-  s_rus_pPersonnelCurrentTeamStatsStrings,
-  s_rus_pPersonelTeamStrings,
-  s_rus_pPersonnelDepartedStateStrings,
-  s_rus_pMapHortIndex,
-  s_rus_pMapVertIndex,
-  s_rus_pMapDepthIndex,
-  s_rus_pLaptopTitles,
-  s_rus_pDayStrings,
-  s_rus_pMilitiaConfirmStrings,
-  s_rus_pDeliveryLocationStrings,
-  s_rus_pSkillAtZeroWarning,
-  s_rus_pIMPBeginScreenStrings,
-  s_rus_pIMPFinishButtonText,
-  s_rus_pIMPFinishStrings,
-  s_rus_pIMPVoicesStrings,
-  s_rus_pPersTitleText,
-  s_rus_pPausedGameText,
-  s_rus_zOptionsToggleText,
-  s_rus_zOptionsScreenHelpText,
-  s_rus_pDoctorWarningString,
-  s_rus_pMilitiaButtonsHelpText,
-  s_rus_pMapScreenJustStartedHelpText,
-  s_rus_pLandMarkInSectorString,
-  s_rus_gzMercSkillText,
-  s_rus_gzNonPersistantPBIText,
-  s_rus_gzMiscString,
-  s_rus_wMapScreenSortButtonHelpText,
-  s_rus_pNewNoiseStr,
-  s_rus_gzLateLocalizedString,
-  s_rus_pAntiHackerString,
-  s_rus_pMessageStrings,
-  s_rus_ItemPickupHelpPopup,
-  s_rus_TacticalStr,
-  s_rus_LargeTacticalStr,
-  s_rus_zDialogActions,
-  s_rus_zDealerStrings,
-  s_rus_zTalkMenuStrings,
-  s_rus_gzMoneyAmounts,
-  s_rus_gzProsLabel,
-  s_rus_gzConsLabel,
-  s_rus_gMoneyStatsDesc,
-  s_rus_gWeaponStatsDesc,
-  s_rus_sKeyDescriptionStrings,
-  s_rus_zHealthStr,
-  s_rus_zVehicleName,
-  s_rus_pExitingSectorHelpText,
-  s_rus_InsContractText,
-  s_rus_InsInfoText,
-  s_rus_MercAccountText,
-  s_rus_MercInfo,
-  s_rus_MercNoAccountText,
-  s_rus_MercHomePageText,
-  s_rus_sFuneralString,
-  s_rus_sFloristText,
-  s_rus_sOrderFormText,
-  s_rus_sFloristGalleryText,
-  s_rus_sFloristCards,
-  s_rus_BobbyROrderFormText,
-  s_rus_BobbyRText,
-  s_rus_str_bobbyr_guns_num_guns_that_use_ammo,
-  s_rus_BobbyRaysFrontText,
-  s_rus_AimSortText,
-  s_rus_str_aim_sort_price,
-  s_rus_str_aim_sort_experience,
-  s_rus_str_aim_sort_marksmanship,
-  s_rus_str_aim_sort_medical,
-  s_rus_str_aim_sort_explosives,
-  s_rus_str_aim_sort_mechanical,
-  s_rus_str_aim_sort_ascending,
-  s_rus_str_aim_sort_descending,
-  s_rus_AimPolicyText,
-  s_rus_AimMemberText,
-  s_rus_CharacterInfo,
-  s_rus_VideoConfercingText,
-  s_rus_AimPopUpText,
-  s_rus_AimLinkText,
-  s_rus_AimHistoryText,
-  s_rus_AimFiText,
-  s_rus_AimAlumniText,
-  s_rus_AimScreenText,
-  s_rus_AimBottomMenuText,
-  s_rus_zMarksMapScreenText,
-  s_rus_gpStrategicString,
-  s_rus_gpGameClockString,
-  s_rus_SKI_Text,
-  s_rus_SkiMessageBoxText,
-  s_rus_zSaveLoadText,
-  s_rus_zOptionsText,
-  s_rus_gzGIOScreenText,
-  s_rus_gzHelpScreenText,
-  s_rus_gzLaptopHelpText,
-  s_rus_gzMoneyWithdrawMessageText,
-  s_rus_gzCopyrightText,
-  s_rus_BrokenLinkText,
-  s_rus_gzBobbyRShipmentText,
-  s_rus_zGioDifConfirmText,
-  s_rus_gzCreditNames,
-  s_rus_gzCreditNameTitle,
-  s_rus_gzCreditNameFunny,
-  s_rus_pContractButtonString,
-  s_rus_gzIntroScreen,
-  s_rus_pUpdatePanelButtons,
-  s_rus_sRepairsDoneString,
-  s_rus_str_ceramic_plates_smashed,
-  s_rus_str_arrival_rerouted,
+	s_rus_Message,
+	s_rus_TeamTurnString,
+	s_rus_pAssignMenuStrings,
+	s_rus_pTrainingStrings,
+	s_rus_pTrainingMenuStrings,
+	s_rus_pAttributeMenuStrings,
+	s_rus_pVehicleStrings,
+	s_rus_pShortAttributeStrings,
+	s_rus_pContractStrings,
+	s_rus_pAssignmentStrings,
+	s_rus_pConditionStrings,
+	s_rus_pTownNames,
+	s_rus_g_towns_locative,
+	s_rus_pPersonnelScreenStrings,
+	s_rus_pUpperLeftMapScreenStrings,
+	s_rus_pTacticalPopupButtonStrings,
+	s_rus_pSquadMenuStrings,
+	s_rus_pDoorTrapStrings,
+	s_rus_pLongAssignmentStrings,
+	s_rus_pMapScreenMouseRegionHelpText,
+	s_rus_pNoiseVolStr,
+	s_rus_pNoiseTypeStr,
+	s_rus_pDirectionStr,
+	s_rus_pRemoveMercStrings,
+	s_rus_sTimeStrings,
+	s_rus_pLandTypeStrings,
+	s_rus_pInvPanelTitleStrings,
+	s_rus_pPOWStrings,
+	s_rus_pMilitiaString,
+	s_rus_pMilitiaButtonString,
+	s_rus_pEpcMenuStrings,
+	s_rus_pRepairStrings,
+	s_rus_sPreStatBuildString,
+	s_rus_sStatGainStrings,
+	s_rus_pHelicopterEtaStrings,
+	s_rus_sMapLevelString,
+	s_rus_gsLoyalString,
+	s_rus_gsUndergroundString,
+	s_rus_gsTimeStrings,
+	s_rus_sFacilitiesStrings,
+	s_rus_pMapPopUpInventoryText,
+	s_rus_pwTownInfoStrings,
+	s_rus_pwMineStrings,
+	s_rus_pwMiscSectorStrings,
+	s_rus_pMapInventoryErrorString,
+	s_rus_pMapInventoryStrings,
+	s_rus_pMovementMenuStrings,
+	s_rus_pUpdateMercStrings,
+	s_rus_pMapScreenBorderButtonHelpText,
+	s_rus_pMapScreenBottomFastHelp,
+	s_rus_pMapScreenBottomText,
+	s_rus_pMercDeadString,
+	s_rus_pSenderNameList,
+	s_rus_pNewMailStrings,
+	s_rus_pDeleteMailStrings,
+	s_rus_pEmailHeaders,
+	s_rus_pEmailTitleText,
+	s_rus_pFinanceTitle,
+	s_rus_pFinanceSummary,
+	s_rus_pFinanceHeaders,
+	s_rus_pTransactionText,
+	s_rus_pMoralStrings,
+	s_rus_pSkyriderText,
+	s_rus_str_left_equipment,
+	s_rus_pMapScreenStatusStrings,
+	s_rus_pMapScreenPrevNextCharButtonHelpText,
+	s_rus_pEtaString,
+	s_rus_pShortVehicleStrings,
+	s_rus_pTrashItemText,
+	s_rus_pMapErrorString,
+	s_rus_pMapPlotStrings,
+	s_rus_pBullseyeStrings,
+	s_rus_pMiscMapScreenMouseRegionHelpText,
+	s_rus_str_he_leaves_where_drop_equipment,
+	s_rus_str_she_leaves_where_drop_equipment,
+	s_rus_str_he_leaves_drops_equipment,
+	s_rus_str_she_leaves_drops_equipment,
+	s_rus_pImpPopUpStrings,
+	s_rus_pImpButtonText,
+	s_rus_pExtraIMPStrings,
+	s_rus_pFilesTitle,
+	s_rus_pFilesSenderList,
+	s_rus_pHistoryLocations,
+	s_rus_pHistoryStrings,
+	s_rus_pHistoryHeaders,
+	s_rus_pHistoryTitle,
+	s_rus_pShowBookmarkString,
+	s_rus_pWebPagesTitles,
+	s_rus_pWebTitle,
+	s_rus_pPersonnelString,
+	s_rus_pErrorStrings,
+	s_rus_pDownloadString,
+	s_rus_pBookMarkStrings,
+	s_rus_pLaptopIcons,
+	s_rus_gsAtmStartButtonText,
+	s_rus_pPersonnelTeamStatsStrings,
+	s_rus_pPersonnelCurrentTeamStatsStrings,
+	s_rus_pPersonelTeamStrings,
+	s_rus_pPersonnelDepartedStateStrings,
+	s_rus_pMapHortIndex,
+	s_rus_pMapVertIndex,
+	s_rus_pMapDepthIndex,
+	s_rus_pLaptopTitles,
+	s_rus_pDayStrings,
+	s_rus_pMilitiaConfirmStrings,
+	s_rus_pDeliveryLocationStrings,
+	s_rus_pSkillAtZeroWarning,
+	s_rus_pIMPBeginScreenStrings,
+	s_rus_pIMPFinishButtonText,
+	s_rus_pIMPFinishStrings,
+	s_rus_pIMPVoicesStrings,
+	s_rus_pPersTitleText,
+	s_rus_pPausedGameText,
+	s_rus_zOptionsToggleText,
+	s_rus_zOptionsScreenHelpText,
+	s_rus_pDoctorWarningString,
+	s_rus_pMilitiaButtonsHelpText,
+	s_rus_pMapScreenJustStartedHelpText,
+	s_rus_pLandMarkInSectorString,
+	s_rus_gzMercSkillText,
+	s_rus_gzNonPersistantPBIText,
+	s_rus_gzMiscString,
+	s_rus_wMapScreenSortButtonHelpText,
+	s_rus_pNewNoiseStr,
+	s_rus_gzLateLocalizedString,
+	s_rus_pAntiHackerString,
+	s_rus_pMessageStrings,
+	s_rus_ItemPickupHelpPopup,
+	s_rus_TacticalStr,
+	s_rus_LargeTacticalStr,
+	s_rus_zDialogActions,
+	s_rus_zDealerStrings,
+	s_rus_zTalkMenuStrings,
+	s_rus_gzMoneyAmounts,
+	s_rus_gzProsLabel,
+	s_rus_gzConsLabel,
+	s_rus_gMoneyStatsDesc,
+	s_rus_gWeaponStatsDesc,
+	s_rus_sKeyDescriptionStrings,
+	s_rus_zHealthStr,
+	s_rus_zVehicleName,
+	s_rus_pExitingSectorHelpText,
+	s_rus_InsContractText,
+	s_rus_InsInfoText,
+	s_rus_MercAccountText,
+	s_rus_MercInfo,
+	s_rus_MercNoAccountText,
+	s_rus_MercHomePageText,
+	s_rus_sFuneralString,
+	s_rus_sFloristText,
+	s_rus_sOrderFormText,
+	s_rus_sFloristGalleryText,
+	s_rus_sFloristCards,
+	s_rus_BobbyROrderFormText,
+	s_rus_BobbyRText,
+	s_rus_str_bobbyr_guns_num_guns_that_use_ammo,
+	s_rus_BobbyRaysFrontText,
+	s_rus_AimSortText,
+	s_rus_str_aim_sort_price,
+	s_rus_str_aim_sort_experience,
+	s_rus_str_aim_sort_marksmanship,
+	s_rus_str_aim_sort_medical,
+	s_rus_str_aim_sort_explosives,
+	s_rus_str_aim_sort_mechanical,
+	s_rus_str_aim_sort_ascending,
+	s_rus_str_aim_sort_descending,
+	s_rus_AimPolicyText,
+	s_rus_AimMemberText,
+	s_rus_CharacterInfo,
+	s_rus_VideoConfercingText,
+	s_rus_AimPopUpText,
+	s_rus_AimLinkText,
+	s_rus_AimHistoryText,
+	s_rus_AimFiText,
+	s_rus_AimAlumniText,
+	s_rus_AimScreenText,
+	s_rus_AimBottomMenuText,
+	s_rus_zMarksMapScreenText,
+	s_rus_gpStrategicString,
+	s_rus_gpGameClockString,
+	s_rus_SKI_Text,
+	s_rus_SkiMessageBoxText,
+	s_rus_zSaveLoadText,
+	s_rus_zOptionsText,
+	s_rus_gzGIOScreenText,
+	s_rus_gzHelpScreenText,
+	s_rus_gzLaptopHelpText,
+	s_rus_gzMoneyWithdrawMessageText,
+	s_rus_gzCopyrightText,
+	s_rus_BrokenLinkText,
+	s_rus_gzBobbyRShipmentText,
+	s_rus_zGioDifConfirmText,
+	s_rus_gzCreditNames,
+	s_rus_gzCreditNameTitle,
+	s_rus_gzCreditNameFunny,
+	s_rus_pContractButtonString,
+	s_rus_gzIntroScreen,
+	s_rus_pUpdatePanelButtons,
+	s_rus_sRepairsDoneString,
+	s_rus_str_ceramic_plates_smashed,
+	s_rus_str_arrival_rerouted,
 
-  s_rus_str_stat_health,
-  s_rus_str_stat_agility,
-  s_rus_str_stat_dexterity,
-  s_rus_str_stat_strength,
-  s_rus_str_stat_leadership,
-  s_rus_str_stat_wisdom,
-  s_rus_str_stat_exp_level,
-  s_rus_str_stat_marksmanship,
-  s_rus_str_stat_mechanical,
-  s_rus_str_stat_explosive,
-  s_rus_str_stat_medical,
+	s_rus_str_stat_health,
+	s_rus_str_stat_agility,
+	s_rus_str_stat_dexterity,
+	s_rus_str_stat_strength,
+	s_rus_str_stat_leadership,
+	s_rus_str_stat_wisdom,
+	s_rus_str_stat_exp_level,
+	s_rus_str_stat_marksmanship,
+	s_rus_str_stat_mechanical,
+	s_rus_str_stat_explosive,
+	s_rus_str_stat_medical,
 
-  s_rus_str_stat_list,
-  s_rus_str_aim_sort_list,
+	s_rus_str_stat_list,
+	s_rus_str_aim_sort_list,
 
-  s_rus_zNewTacticalMessages,
-  s_rus_str_iron_man_mode_warning,
-  g_eng_str_dead_is_dead_mode_warning,
-  g_eng_str_dead_is_dead_mode_enter_name,
+	s_rus_zNewTacticalMessages,
+	s_rus_str_iron_man_mode_warning,
+	g_eng_str_dead_is_dead_mode_warning,
+	g_eng_str_dead_is_dead_mode_enter_name,
 };
 
 
-/** Russian Gold language resources. */
+// Russian Gold language resources.
 LanguageRes g_LanguageResRussianGold = {
 
-  s_rus_WeaponType,
+	s_rus_WeaponType,
 
-  s_rus_Message,
-  s_rus_TeamTurnString,
-  s_rus_pAssignMenuStrings,
-  s_rus_pTrainingStrings,
-  s_rus_pTrainingMenuStrings,
-  s_rus_pAttributeMenuStrings,
-  s_rus_pVehicleStrings,
-  s_rus_pShortAttributeStrings,
-  s_rus_pContractStrings,
-  s_rus_pAssignmentStrings,
-  s_rus_pConditionStrings,
-  s_rus_pTownNames,
-  s_rus_g_towns_locative,
-  s_rus_pPersonnelScreenStrings,
-  s_rus_pUpperLeftMapScreenStrings,
-  s_rus_pTacticalPopupButtonStrings,
-  s_rus_pSquadMenuStrings,
-  s_rus_pDoorTrapStrings,
-  s_rus_pLongAssignmentStrings,
-  s_rus_pMapScreenMouseRegionHelpText,
-  s_rus_pNoiseVolStr,
-  s_rus_pNoiseTypeStr,
-  s_rus_pDirectionStr,
-  s_rus_pRemoveMercStrings,
-  s_rus_sTimeStrings,
-  s_rus_pLandTypeStrings,
-  s_rus_pInvPanelTitleStrings,
-  s_rus_pPOWStrings,
-  s_rus_pMilitiaString,
-  s_rus_pMilitiaButtonString,
-  s_rus_pEpcMenuStrings,
-  s_rus_pRepairStrings,
-  s_rus_sPreStatBuildString,
-  s_rus_sStatGainStrings,
-  s_rus_pHelicopterEtaStrings,
-  s_rus_sMapLevelString,
-  s_rus_gsLoyalString,
-  s_rus_gsUndergroundString,
-  s_rus_gsTimeStrings,
-  s_rus_sFacilitiesStrings,
-  s_rus_pMapPopUpInventoryText,
-  s_rus_pwTownInfoStrings,
-  s_rus_pwMineStrings,
-  s_rus_pwMiscSectorStrings,
-  s_rus_pMapInventoryErrorString,
-  s_rus_pMapInventoryStrings,
-  s_rus_pMovementMenuStrings,
-  s_rus_pUpdateMercStrings,
-  s_rus_pMapScreenBorderButtonHelpText,
-  s_rus_pMapScreenBottomFastHelp,
-  s_rus_pMapScreenBottomText,
-  s_rus_pMercDeadString,
-  s_rusGold_pSenderNameList,
-  s_rus_pNewMailStrings,
-  s_rus_pDeleteMailStrings,
-  s_rus_pEmailHeaders,
-  s_rus_pEmailTitleText,
-  s_rus_pFinanceTitle,
-  s_rus_pFinanceSummary,
-  s_rus_pFinanceHeaders,
-  s_rus_pTransactionText,
-  s_rus_pMoralStrings,
-  s_rus_pSkyriderText,
-  s_rus_str_left_equipment,
-  s_rus_pMapScreenStatusStrings,
-  s_rus_pMapScreenPrevNextCharButtonHelpText,
-  s_rus_pEtaString,
-  s_rus_pShortVehicleStrings,
-  s_rus_pTrashItemText,
-  s_rus_pMapErrorString,
-  s_rus_pMapPlotStrings,
-  s_rus_pBullseyeStrings,
-  s_rus_pMiscMapScreenMouseRegionHelpText,
-  s_rus_str_he_leaves_where_drop_equipment,
-  s_rus_str_she_leaves_where_drop_equipment,
-  s_rus_str_he_leaves_drops_equipment,
-  s_rus_str_she_leaves_drops_equipment,
-  s_rus_pImpPopUpStrings,
-  s_rus_pImpButtonText,
-  s_rus_pExtraIMPStrings,
-  s_rus_pFilesTitle,
-  s_rus_pFilesSenderList,
-  s_rus_pHistoryLocations,
-  s_rus_pHistoryStrings,
-  s_rus_pHistoryHeaders,
-  s_rus_pHistoryTitle,
-  s_rus_pShowBookmarkString,
-  s_rus_pWebPagesTitles,
-  s_rus_pWebTitle,
-  s_rus_pPersonnelString,
-  s_rus_pErrorStrings,
-  s_rus_pDownloadString,
-  s_rus_pBookMarkStrings,
-  s_rus_pLaptopIcons,
-  s_rus_gsAtmStartButtonText,
-  s_rus_pPersonnelTeamStatsStrings,
-  s_rus_pPersonnelCurrentTeamStatsStrings,
-  s_rus_pPersonelTeamStrings,
-  s_rus_pPersonnelDepartedStateStrings,
-  s_rus_pMapHortIndex,
-  s_rus_pMapVertIndex,
-  s_rus_pMapDepthIndex,
-  s_rus_pLaptopTitles,
-  s_rus_pDayStrings,
-  s_rus_pMilitiaConfirmStrings,
-  s_rus_pDeliveryLocationStrings,
-  s_rus_pSkillAtZeroWarning,
-  s_rus_pIMPBeginScreenStrings,
-  s_rus_pIMPFinishButtonText,
-  s_rus_pIMPFinishStrings,
-  s_rus_pIMPVoicesStrings,
-  s_rus_pPersTitleText,
-  s_rus_pPausedGameText,
-  s_rus_zOptionsToggleText,
-  s_rus_zOptionsScreenHelpText,
-  s_rus_pDoctorWarningString,
-  s_rus_pMilitiaButtonsHelpText,
-  s_rus_pMapScreenJustStartedHelpText,
-  s_rus_pLandMarkInSectorString,
-  s_rus_gzMercSkillText,
-  s_rus_gzNonPersistantPBIText,
-  s_rus_gzMiscString,
-  s_rus_wMapScreenSortButtonHelpText,
-  s_rus_pNewNoiseStr,
-  s_rus_gzLateLocalizedString,
-  s_rus_pAntiHackerString,
-  s_rus_pMessageStrings,
-  s_rus_ItemPickupHelpPopup,
-  s_rus_TacticalStr,
-  s_rus_LargeTacticalStr,
-  s_rus_zDialogActions,
-  s_rus_zDealerStrings,
-  s_rus_zTalkMenuStrings,
-  s_rus_gzMoneyAmounts,
-  s_rus_gzProsLabel,
-  s_rus_gzConsLabel,
-  s_rus_gMoneyStatsDesc,
-  s_rus_gWeaponStatsDesc,
-  s_rus_sKeyDescriptionStrings,
-  s_rus_zHealthStr,
-  s_rus_zVehicleName,
-  s_rus_pExitingSectorHelpText,
-  s_rus_InsContractText,
-  s_rus_InsInfoText,
-  s_rus_MercAccountText,
-  s_rus_MercInfo,
-  s_rus_MercNoAccountText,
-  s_rus_MercHomePageText,
-  s_rus_sFuneralString,
-  s_rus_sFloristText,
-  s_rus_sOrderFormText,
-  s_rus_sFloristGalleryText,
-  s_rus_sFloristCards,
-  s_rus_BobbyROrderFormText,
-  s_rus_BobbyRText,
-  s_rus_str_bobbyr_guns_num_guns_that_use_ammo,
-  s_rus_BobbyRaysFrontText,
-  s_rus_AimSortText,
-  s_rus_str_aim_sort_price,
-  s_rus_str_aim_sort_experience,
-  s_rus_str_aim_sort_marksmanship,
-  s_rus_str_aim_sort_medical,
-  s_rus_str_aim_sort_explosives,
-  s_rus_str_aim_sort_mechanical,
-  s_rus_str_aim_sort_ascending,
-  s_rus_str_aim_sort_descending,
-  s_rus_AimPolicyText,
-  s_rus_AimMemberText,
-  s_rus_CharacterInfo,
-  s_rus_VideoConfercingText,
-  s_rus_AimPopUpText,
-  s_rus_AimLinkText,
-  s_rus_AimHistoryText,
-  s_rus_AimFiText,
-  s_rus_AimAlumniText,
-  s_rus_AimScreenText,
-  s_rus_AimBottomMenuText,
-  s_rus_zMarksMapScreenText,
-  s_rus_gpStrategicString,
-  s_rus_gpGameClockString,
-  s_rus_SKI_Text,
-  s_rus_SkiMessageBoxText,
-  s_rus_zSaveLoadText,
-  s_rus_zOptionsText,
-  s_rus_gzGIOScreenText,
-  s_rus_gzHelpScreenText,
-  s_rus_gzLaptopHelpText,
-  s_rus_gzMoneyWithdrawMessageText,
-  s_rusGold_gzCopyrightText,
-  s_rus_BrokenLinkText,
-  s_rus_gzBobbyRShipmentText,
-  s_rus_zGioDifConfirmText,
-  s_rus_gzCreditNames,
-  s_rus_gzCreditNameTitle,
-  s_rus_gzCreditNameFunny,
-  s_rus_pContractButtonString,
-  s_rus_gzIntroScreen,
-  s_rus_pUpdatePanelButtons,
-  s_rus_sRepairsDoneString,
-  s_rus_str_ceramic_plates_smashed,
-  s_rus_str_arrival_rerouted,
+	s_rus_Message,
+	s_rus_TeamTurnString,
+	s_rus_pAssignMenuStrings,
+	s_rus_pTrainingStrings,
+	s_rus_pTrainingMenuStrings,
+	s_rus_pAttributeMenuStrings,
+	s_rus_pVehicleStrings,
+	s_rus_pShortAttributeStrings,
+	s_rus_pContractStrings,
+	s_rus_pAssignmentStrings,
+	s_rus_pConditionStrings,
+	s_rus_pTownNames,
+	s_rus_g_towns_locative,
+	s_rus_pPersonnelScreenStrings,
+	s_rus_pUpperLeftMapScreenStrings,
+	s_rus_pTacticalPopupButtonStrings,
+	s_rus_pSquadMenuStrings,
+	s_rus_pDoorTrapStrings,
+	s_rus_pLongAssignmentStrings,
+	s_rus_pMapScreenMouseRegionHelpText,
+	s_rus_pNoiseVolStr,
+	s_rus_pNoiseTypeStr,
+	s_rus_pDirectionStr,
+	s_rus_pRemoveMercStrings,
+	s_rus_sTimeStrings,
+	s_rus_pLandTypeStrings,
+	s_rus_pInvPanelTitleStrings,
+	s_rus_pPOWStrings,
+	s_rus_pMilitiaString,
+	s_rus_pMilitiaButtonString,
+	s_rus_pEpcMenuStrings,
+	s_rus_pRepairStrings,
+	s_rus_sPreStatBuildString,
+	s_rus_sStatGainStrings,
+	s_rus_pHelicopterEtaStrings,
+	s_rus_sMapLevelString,
+	s_rus_gsLoyalString,
+	s_rus_gsUndergroundString,
+	s_rus_gsTimeStrings,
+	s_rus_sFacilitiesStrings,
+	s_rus_pMapPopUpInventoryText,
+	s_rus_pwTownInfoStrings,
+	s_rus_pwMineStrings,
+	s_rus_pwMiscSectorStrings,
+	s_rus_pMapInventoryErrorString,
+	s_rus_pMapInventoryStrings,
+	s_rus_pMovementMenuStrings,
+	s_rus_pUpdateMercStrings,
+	s_rus_pMapScreenBorderButtonHelpText,
+	s_rus_pMapScreenBottomFastHelp,
+	s_rus_pMapScreenBottomText,
+	s_rus_pMercDeadString,
+	s_rusGold_pSenderNameList,
+	s_rus_pNewMailStrings,
+	s_rus_pDeleteMailStrings,
+	s_rus_pEmailHeaders,
+	s_rus_pEmailTitleText,
+	s_rus_pFinanceTitle,
+	s_rus_pFinanceSummary,
+	s_rus_pFinanceHeaders,
+	s_rus_pTransactionText,
+	s_rus_pMoralStrings,
+	s_rus_pSkyriderText,
+	s_rus_str_left_equipment,
+	s_rus_pMapScreenStatusStrings,
+	s_rus_pMapScreenPrevNextCharButtonHelpText,
+	s_rus_pEtaString,
+	s_rus_pShortVehicleStrings,
+	s_rus_pTrashItemText,
+	s_rus_pMapErrorString,
+	s_rus_pMapPlotStrings,
+	s_rus_pBullseyeStrings,
+	s_rus_pMiscMapScreenMouseRegionHelpText,
+	s_rus_str_he_leaves_where_drop_equipment,
+	s_rus_str_she_leaves_where_drop_equipment,
+	s_rus_str_he_leaves_drops_equipment,
+	s_rus_str_she_leaves_drops_equipment,
+	s_rus_pImpPopUpStrings,
+	s_rus_pImpButtonText,
+	s_rus_pExtraIMPStrings,
+	s_rus_pFilesTitle,
+	s_rus_pFilesSenderList,
+	s_rus_pHistoryLocations,
+	s_rus_pHistoryStrings,
+	s_rus_pHistoryHeaders,
+	s_rus_pHistoryTitle,
+	s_rus_pShowBookmarkString,
+	s_rus_pWebPagesTitles,
+	s_rus_pWebTitle,
+	s_rus_pPersonnelString,
+	s_rus_pErrorStrings,
+	s_rus_pDownloadString,
+	s_rus_pBookMarkStrings,
+	s_rus_pLaptopIcons,
+	s_rus_gsAtmStartButtonText,
+	s_rus_pPersonnelTeamStatsStrings,
+	s_rus_pPersonnelCurrentTeamStatsStrings,
+	s_rus_pPersonelTeamStrings,
+	s_rus_pPersonnelDepartedStateStrings,
+	s_rus_pMapHortIndex,
+	s_rus_pMapVertIndex,
+	s_rus_pMapDepthIndex,
+	s_rus_pLaptopTitles,
+	s_rus_pDayStrings,
+	s_rus_pMilitiaConfirmStrings,
+	s_rus_pDeliveryLocationStrings,
+	s_rus_pSkillAtZeroWarning,
+	s_rus_pIMPBeginScreenStrings,
+	s_rus_pIMPFinishButtonText,
+	s_rus_pIMPFinishStrings,
+	s_rus_pIMPVoicesStrings,
+	s_rus_pPersTitleText,
+	s_rus_pPausedGameText,
+	s_rus_zOptionsToggleText,
+	s_rus_zOptionsScreenHelpText,
+	s_rus_pDoctorWarningString,
+	s_rus_pMilitiaButtonsHelpText,
+	s_rus_pMapScreenJustStartedHelpText,
+	s_rus_pLandMarkInSectorString,
+	s_rus_gzMercSkillText,
+	s_rus_gzNonPersistantPBIText,
+	s_rus_gzMiscString,
+	s_rus_wMapScreenSortButtonHelpText,
+	s_rus_pNewNoiseStr,
+	s_rus_gzLateLocalizedString,
+	s_rus_pAntiHackerString,
+	s_rus_pMessageStrings,
+	s_rus_ItemPickupHelpPopup,
+	s_rus_TacticalStr,
+	s_rus_LargeTacticalStr,
+	s_rus_zDialogActions,
+	s_rus_zDealerStrings,
+	s_rus_zTalkMenuStrings,
+	s_rus_gzMoneyAmounts,
+	s_rus_gzProsLabel,
+	s_rus_gzConsLabel,
+	s_rus_gMoneyStatsDesc,
+	s_rus_gWeaponStatsDesc,
+	s_rus_sKeyDescriptionStrings,
+	s_rus_zHealthStr,
+	s_rus_zVehicleName,
+	s_rus_pExitingSectorHelpText,
+	s_rus_InsContractText,
+	s_rus_InsInfoText,
+	s_rus_MercAccountText,
+	s_rus_MercInfo,
+	s_rus_MercNoAccountText,
+	s_rus_MercHomePageText,
+	s_rus_sFuneralString,
+	s_rus_sFloristText,
+	s_rus_sOrderFormText,
+	s_rus_sFloristGalleryText,
+	s_rus_sFloristCards,
+	s_rus_BobbyROrderFormText,
+	s_rus_BobbyRText,
+	s_rus_str_bobbyr_guns_num_guns_that_use_ammo,
+	s_rus_BobbyRaysFrontText,
+	s_rus_AimSortText,
+	s_rus_str_aim_sort_price,
+	s_rus_str_aim_sort_experience,
+	s_rus_str_aim_sort_marksmanship,
+	s_rus_str_aim_sort_medical,
+	s_rus_str_aim_sort_explosives,
+	s_rus_str_aim_sort_mechanical,
+	s_rus_str_aim_sort_ascending,
+	s_rus_str_aim_sort_descending,
+	s_rus_AimPolicyText,
+	s_rus_AimMemberText,
+	s_rus_CharacterInfo,
+	s_rus_VideoConfercingText,
+	s_rus_AimPopUpText,
+	s_rus_AimLinkText,
+	s_rus_AimHistoryText,
+	s_rus_AimFiText,
+	s_rus_AimAlumniText,
+	s_rus_AimScreenText,
+	s_rus_AimBottomMenuText,
+	s_rus_zMarksMapScreenText,
+	s_rus_gpStrategicString,
+	s_rus_gpGameClockString,
+	s_rus_SKI_Text,
+	s_rus_SkiMessageBoxText,
+	s_rus_zSaveLoadText,
+	s_rus_zOptionsText,
+	s_rus_gzGIOScreenText,
+	s_rus_gzHelpScreenText,
+	s_rus_gzLaptopHelpText,
+	s_rus_gzMoneyWithdrawMessageText,
+	s_rusGold_gzCopyrightText,
+	s_rus_BrokenLinkText,
+	s_rus_gzBobbyRShipmentText,
+	s_rus_zGioDifConfirmText,
+	s_rus_gzCreditNames,
+	s_rus_gzCreditNameTitle,
+	s_rus_gzCreditNameFunny,
+	s_rus_pContractButtonString,
+	s_rus_gzIntroScreen,
+	s_rus_pUpdatePanelButtons,
+	s_rus_sRepairsDoneString,
+	s_rus_str_ceramic_plates_smashed,
+	s_rus_str_arrival_rerouted,
 
-  s_rus_str_stat_health,
-  s_rus_str_stat_agility,
-  s_rus_str_stat_dexterity,
-  s_rus_str_stat_strength,
-  s_rus_str_stat_leadership,
-  s_rus_str_stat_wisdom,
-  s_rus_str_stat_exp_level,
-  s_rus_str_stat_marksmanship,
-  s_rus_str_stat_mechanical,
-  s_rus_str_stat_explosive,
-  s_rus_str_stat_medical,
+	s_rus_str_stat_health,
+	s_rus_str_stat_agility,
+	s_rus_str_stat_dexterity,
+	s_rus_str_stat_strength,
+	s_rus_str_stat_leadership,
+	s_rus_str_stat_wisdom,
+	s_rus_str_stat_exp_level,
+	s_rus_str_stat_marksmanship,
+	s_rus_str_stat_mechanical,
+	s_rus_str_stat_explosive,
+	s_rus_str_stat_medical,
 
-  s_rus_str_stat_list,
-  s_rus_str_aim_sort_list,
+	s_rus_str_stat_list,
+	s_rus_str_aim_sort_list,
 
-  s_rus_zNewTacticalMessages,
-  s_rus_str_iron_man_mode_warning,
-  g_eng_str_dead_is_dead_mode_warning,
-  g_eng_str_dead_is_dead_mode_enter_name,
+	s_rus_zNewTacticalMessages,
+	s_rus_str_iron_man_mode_warning,
+	g_eng_str_dead_is_dead_mode_warning,
+	g_eng_str_dead_is_dead_mode_enter_name,
 
-  s_rus_gs_dead_is_dead_mode_tab_name,
+	s_rus_gs_dead_is_dead_mode_tab_name,
 };
 
 #ifdef WITH_UNITTESTS
 #define ARR_SIZE(x) (sizeof(x)/sizeof(x[0]))
 TEST(WideStringEncodingTest, RusianTextFile)
 {
-  // This test checks that the wide string literals in this file are correctly
-  // interpreted by the compiler.  Visual Studio requires BOM (byte-order mark)
-  // to correctly identify file encoding.  Failed test means that the compiler
-  // cannot correctly interpret the string literals.
-  const wchar_t str[] = L"тест";
-  ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
-  EXPECT_EQ(str[0], 0x0442);
-  EXPECT_EQ(str[1], 0x0435);
-  EXPECT_EQ(str[2], 0x0441);
-  EXPECT_EQ(str[3], 0x0442);
-  EXPECT_EQ(str[4], 0x00);
+	// This test checks that the wide string literals in this file are correctly
+	// interpreted by the compiler.  Visual Studio requires BOM (byte-order mark)
+	// to correctly identify file encoding.  Failed test means that the compiler
+	// cannot correctly interpret the string literals.
+	const wchar_t str[] = L"тест";
+	ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
+	EXPECT_EQ(str[0], 0x0442);
+	EXPECT_EQ(str[1], 0x0435);
+	EXPECT_EQ(str[2], 0x0441);
+	EXPECT_EQ(str[3], 0x0442);
+	EXPECT_EQ(str[4], 0x00);
 }
 #endif

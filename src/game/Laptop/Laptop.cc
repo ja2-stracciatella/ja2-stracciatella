@@ -720,8 +720,8 @@ static void RenderLaptop(void)
 		case LAPTOP_MODE_WWW:                      DrawDeskTopBackground();   break;
 
 		case LAPTOP_MODE_BROKEN_LINK:              RenderBrokenLink();        break;
-        default:
-            break;
+				default:
+						break;
 	}
 
 	if (guiCurrentLaptopMode >= LAPTOP_MODE_WWW)
@@ -913,8 +913,8 @@ do_nothing:
 		case LAPTOP_MODE_EMAIL:                    EnterEmail();             break;
 
 		case LAPTOP_MODE_BROKEN_LINK:              EnterBrokenLink();        break;
-        default:
-            break;
+				default:
+						break;
 	}
 
 	// first time using webbrowser in this laptop session
@@ -965,8 +965,8 @@ static void HandleLapTopHandles(void)
 		case LAPTOP_MODE_PERSONNEL:                HandlePersonnel();         break;
 		case LAPTOP_MODE_FILES:                    HandleFiles();             break;
 		case LAPTOP_MODE_EMAIL:                    HandleEmail();             break;
-        default:
-            break;
+				default:
+						break;
 	}
 }
 
@@ -1398,7 +1398,7 @@ static void LeaveLapTopScreen(void)
 
 			//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 			//         Start transitioning the screen.
-      SGPBox const DstRect = { STD_SCREEN_X, STD_SCREEN_Y, MAP_SCREEN_WIDTH, MAP_SCREEN_HEIGHT };
+			SGPBox const DstRect = { STD_SCREEN_X, STD_SCREEN_Y, MAP_SCREEN_WIDTH, MAP_SCREEN_HEIGHT };
 			const UINT32 uiTimeRange = 1000;
 			INT32 iPercentage     = 100;
 			INT32 iRealPercentage = 100;
@@ -1906,8 +1906,8 @@ static void DisplayLoadPending(void)
 	}
 	else if (guiCurrentLaptopMode == LAPTOP_MODE_MERC && !LaptopSaveInfo.fMercSiteHasGoneDownYet)
 	{
-		/* if we are connecting the MERC site, and the MERC site hasnt yet moved
-		 * to their new site, have the sloooww wait */
+		// if we are connecting the MERC site, and the MERC site hasnt yet moved
+		// to their new site, have the sloooww wait
 		iUnitTime = LONG_UNIT_TIME;
 	}
 	else
@@ -2040,8 +2040,8 @@ static void PostButtonRendering(void)
 	switch (guiCurrentLaptopMode)
 	{
 		case LAPTOP_MODE_AIM_MEMBERS: RenderAIMMembersTopLevel(); break;
-        default:
-            break;
+				default:
+						break;
 	}
 }
 
@@ -2051,8 +2051,8 @@ static void ShouldNewMailBeDisplayed(void)
 	switch (guiCurrentLaptopMode)
 	{
 		case LAPTOP_MODE_AIM_MEMBERS: DisableNewMailMessage(); break;
-        default:
-            break;
+				default:
+						break;
 	}
 }
 
@@ -2216,7 +2216,7 @@ static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGra
 
 	// Create a background video surface to blt the title bar onto
 	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH + LAPTOP_TITLE_BAR_ICON_OFFSET_X,
-                                       LAPTOP_TITLE_BAR_HEIGHT + LAPTOP_TITLE_BAR_ICON_OFFSET_Y, PIXEL_DEPTH);
+						LAPTOP_TITLE_BAR_HEIGHT + LAPTOP_TITLE_BAR_ICON_OFFSET_Y, PIXEL_DEPTH);
 
 	BltVideoObject(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
 	BltVideoObject(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
@@ -2840,6 +2840,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			break;
 
 		case '=':
+		case '+':
 			if (CHEATER_CHEAT_LEVEL())
 			{
 				// adding money
@@ -3532,9 +3533,9 @@ void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHe
 
 TEST(Laptop, asserts)
 {
-  EXPECT_EQ(sizeof(LIFE_INSURANCE_PAYOUT), 8);
-  EXPECT_EQ(sizeof(BobbyRayPurchaseStruct), 8);
-  EXPECT_EQ(sizeof(BobbyRayOrderStruct), 84);
+	EXPECT_EQ(sizeof(LIFE_INSURANCE_PAYOUT), 8);
+	EXPECT_EQ(sizeof(BobbyRayPurchaseStruct), 8);
+	EXPECT_EQ(sizeof(BobbyRayOrderStruct), 84);
 }
 
 #endif

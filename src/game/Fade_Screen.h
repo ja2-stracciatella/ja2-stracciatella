@@ -4,14 +4,14 @@
 #include "ScreenIDs.h"
 #include "Types.h"
 
-#define	FADE_OUT_REALFADE					5
+#define FADE_OUT_REALFADE	5
 
-#define FADE_IN_REALFADE					12
+#define FADE_IN_REALFADE	12
 
 typedef void (*FADE_HOOK)( void );
 
-extern FADE_HOOK		gFadeInDoneCallback;
-extern FADE_HOOK		gFadeOutDoneCallback;
+extern FADE_HOOK gFadeInDoneCallback;
+extern FADE_HOOK gFadeOutDoneCallback;
 
 
 typedef void (*FADE_FUNCTION)( void );

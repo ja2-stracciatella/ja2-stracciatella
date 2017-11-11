@@ -54,22 +54,22 @@ MINE_LOCATION_TYPE const gMineLocation[] =
 
 // the are not being randomized at all at this time
 UINT8 gubMineTypes[]={
-	GOLD_MINE,			// SAN MONA
-	SILVER_MINE,		// DRASSEN
-	SILVER_MINE,		// ALMA
-	SILVER_MINE,		// CAMBRIA
-	SILVER_MINE,		// CHITZENA
-	GOLD_MINE,			// GRUMM
+	GOLD_MINE,	// SAN MONA
+	SILVER_MINE,	// DRASSEN
+	SILVER_MINE,	// ALMA
+	SILVER_MINE,	// CAMBRIA
+	SILVER_MINE,	// CHITZENA
+	GOLD_MINE,	// GRUMM
 };
 
 // These values also determine the most likely ratios of mine sizes after random production increases are done
 UINT32 guiMinimumMineProduction[]={
-	    0,		// SAN MONA
-	 1000,		// DRASSEN
-	 1500,		// ALMA
-	 1500,		// CAMBRIA
-	  500,		// CHITZENA
-	 2000,		// GRUMM
+	0,	// SAN MONA
+	1000,	// DRASSEN
+	1500,	// ALMA
+	1500,	// CAMBRIA
+	500,	// CHITZENA
+	2000,	// GRUMM
 };
 
 

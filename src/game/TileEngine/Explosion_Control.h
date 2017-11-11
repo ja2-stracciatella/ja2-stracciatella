@@ -34,9 +34,9 @@ enum EXPLOSION_TYPES
 	BLAST_3,
 	STUN_BLAST,
 	WATER_BLAST,
-  TARGAS_EXP,
-  SMOKE_EXP,
-  MUSTARD_EXP,
+	TARGAS_EXP,
+	SMOKE_EXP,
+	MUSTARD_EXP,
 
 	NUM_EXP_TYPES
 };
@@ -49,7 +49,7 @@ struct ExplosionQueueElement
 };
 
 
-#define	ERASE_SPREAD_EFFECT					2
+#define ERASE_SPREAD_EFFECT					2
 #define BLOOD_SPREAD_EFFECT					3
 #define REDO_SPREAD_EFFECT					4
 

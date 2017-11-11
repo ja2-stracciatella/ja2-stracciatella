@@ -26,13 +26,13 @@
 // Once allocated, the special item slots remain allocated for the duration of the game, or until the dealer dies.
 // This is a little bit wasteful, but saves an awful lot of hassles, and avoid unnecessary memory fragmentation
 
-#define	MIN_REPAIR_TIME_IN_MINUTES				15		// minutes
-#define MIN_REPAIR_COST										10		// dollars
+#define MIN_REPAIR_TIME_IN_MINUTES			15 // minutes
+#define MIN_REPAIR_COST				10 // dollars
 
 // price classes
-#define PRICE_CLASS_JUNK									0
-#define PRICE_CLASS_CHEAP									1
-#define PRICE_CLASS_EXPENSIVE							2
+#define PRICE_CLASS_JUNK				0
+#define PRICE_CLASS_CHEAP				1
+#define PRICE_CLASS_EXPENSIVE				2
 
 UINT8 gubLastSpecialItemAddedAtElement = 255;
 
@@ -40,41 +40,41 @@ UINT8 gubLastSpecialItemAddedAtElement = 255;
 // THIS STRUCTURE HAS UNCHANGING INFO THAT DOESN'T GET SAVED/RESTORED/RESET
 const ARMS_DEALER_INFO ArmsDealerInfo[NUM_ARMS_DEALERS] =
 {
-//                      Buying   Selling  Merc ID#           Type          Initial                         Flags
-//                       Price    Price                       Of            Cash
-//                      Modifier Modifier                   Dealer
-/* Tony            */ { { { 0.75f, 1.25f } }, TONY,     ARMS_DEALER_BUYS_SELLS, 15000, ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE  },
-/* Franz Hinkle    */ { { { 1.0f,  1.5f  } }, FRANZ,    ARMS_DEALER_BUYS_SELLS,  5000, ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE  },
-/* Keith Hemps     */ { { { 0.75f, 1.0f  } }, KEITH,    ARMS_DEALER_BUYS_SELLS,  1500, ARMS_DEALER_ONLY_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE  },
-/* Jake Cameron    */ { { { 0.8f,  1.1f  } }, JAKE,     ARMS_DEALER_BUYS_SELLS,  2500, ARMS_DEALER_ONLY_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE  },
-/* Gabby Mulnick   */ { { { 1.0f,  1.0f  } }, GABBY,    ARMS_DEALER_BUYS_SELLS,  3000, ARMS_DEALER_GIVES_CHANGE                                },
+	//                      Buying   Selling  Merc ID#           Type          Initial                         Flags
+	//                       Price    Price                       Of            Cash
+	//                      Modifier Modifier                   Dealer
+	/* Tony            */ {{{0.75f, 1.25f}}, TONY,     ARMS_DEALER_BUYS_SELLS, 15000, ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE },
+	/* Franz Hinkle    */ {{{1.0f,  1.5f }}, FRANZ,    ARMS_DEALER_BUYS_SELLS,  5000, ARMS_DEALER_SOME_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE },
+	/* Keith Hemps     */ {{{0.75f, 1.0f }}, KEITH,    ARMS_DEALER_BUYS_SELLS,  1500, ARMS_DEALER_ONLY_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE },
+	/* Jake Cameron    */ {{{0.8f,  1.1f }}, JAKE,     ARMS_DEALER_BUYS_SELLS,  2500, ARMS_DEALER_ONLY_USED_ITEMS | ARMS_DEALER_GIVES_CHANGE },
+	/* Gabby Mulnick   */ {{{1.0f,  1.0f }}, GABBY,    ARMS_DEALER_BUYS_SELLS,  3000, ARMS_DEALER_GIVES_CHANGE                               },
 
-/* Devin Connell   */ { { { 0.75f, 1.25f } }, DEVIN,    ARMS_DEALER_SELLS_ONLY,  5000, ARMS_DEALER_GIVES_CHANGE                                },
-/* Howard Filmore  */ { { { 1.0f,  1.0f  } }, HOWARD,   ARMS_DEALER_SELLS_ONLY,  3000, ARMS_DEALER_GIVES_CHANGE                                },
-/* Sam Rozen       */ { { { 1.0f,  1.0f  } }, SAM,      ARMS_DEALER_SELLS_ONLY,  3000, ARMS_DEALER_GIVES_CHANGE                                },
-/* Frank           */ { { { 1.0f,  1.0f  } }, FRANK,    ARMS_DEALER_SELLS_ONLY,   500, ARMS_DEALER_ACCEPTS_GIFTS                               },
+	/* Devin Connell   */ {{{0.75f, 1.25f}}, DEVIN,    ARMS_DEALER_SELLS_ONLY,  5000, ARMS_DEALER_GIVES_CHANGE                               },
+	/* Howard Filmore  */ {{{1.0f,  1.0f }}, HOWARD,   ARMS_DEALER_SELLS_ONLY,  3000, ARMS_DEALER_GIVES_CHANGE                               },
+	/* Sam Rozen       */ {{{1.0f,  1.0f }}, SAM,      ARMS_DEALER_SELLS_ONLY,  3000, ARMS_DEALER_GIVES_CHANGE                               },
+	/* Frank           */ {{{1.0f,  1.0f }}, FRANK,    ARMS_DEALER_SELLS_ONLY,   500, ARMS_DEALER_ACCEPTS_GIFTS                              },
 
-/* Bar Bro 1       */ { { { 1.0f,  1.0f  } }, HERVE,    ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                               },
-/* Bar Bro 2       */ { { { 1.0f,  1.0f  } }, PETER,    ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                               },
-/* Bar Bro 3       */ { { { 1.0f,  1.0f  } }, ALBERTO,  ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                               },
-/* Bar Bro 4       */ { { { 1.0f,  1.0f  } }, CARLO,    ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                               },
+	/* Bar Bro 1       */ {{{1.0f,  1.0f }}, HERVE,    ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                              },
+	/* Bar Bro 2       */ {{{1.0f,  1.0f }}, PETER,    ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                              },
+	/* Bar Bro 3       */ {{{1.0f,  1.0f }}, ALBERTO,  ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                              },
+	/* Bar Bro 4       */ {{{1.0f,  1.0f }}, CARLO,    ARMS_DEALER_SELLS_ONLY,   250, ARMS_DEALER_ACCEPTS_GIFTS                              },
 
-/* Micky O'Brien   */ { { { 1.0f,  1.4f  } }, MICKY,    ARMS_DEALER_BUYS_ONLY,  10000, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
+	/* Micky O'Brien   */ {{{1.0f,  1.4f }}, MICKY,    ARMS_DEALER_BUYS_ONLY,  10000, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE},
 
-                    //Repair  Repair
-                    //Speed    Cost
-/* Arnie Brunzwell */ { { { 0.1f,  0.8f  } }, ARNIE,    ARMS_DEALER_REPAIRS,     1500, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
-/* Fredo           */ { { { 0.6f,  0.6f  } }, FREDO,    ARMS_DEALER_REPAIRS,     1000, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
-/* Perko           */ { { { 1.0f,  0.4f  } }, PERKO,    ARMS_DEALER_REPAIRS,     1000, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE },
+	//                     Repair  Repair
+	//                     Speed    Cost
+	/* Arnie Brunzwell */ {{{0.1f,  0.8f }}, ARNIE,    ARMS_DEALER_REPAIRS,     1500, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE},
+	/* Fredo           */ {{{0.6f,  0.6f }}, FREDO,    ARMS_DEALER_REPAIRS,     1000, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE},
+	/* Perko           */ {{{1.0f,  0.4f }}, PERKO,    ARMS_DEALER_REPAIRS,     1000, ARMS_DEALER_HAS_NO_INVENTORY | ARMS_DEALER_GIVES_CHANGE},
 
-/* Elgin           */ { { { 1.0f,  1.0f  } }, DRUGGIST, ARMS_DEALER_SELLS_ONLY,   500, ARMS_DEALER_ACCEPTS_GIFTS                               },
-/* Manny           */ { { { 1.0f,  1.0f  } }, MANNY,    ARMS_DEALER_SELLS_ONLY,   500, ARMS_DEALER_ACCEPTS_GIFTS                               }
+	/* Elgin           */ {{{1.0f,  1.0f }}, DRUGGIST, ARMS_DEALER_SELLS_ONLY,   500, ARMS_DEALER_ACCEPTS_GIFTS                              },
+	/* Manny           */ {{{1.0f,  1.0f }}, MANNY,    ARMS_DEALER_SELLS_ONLY,   500, ARMS_DEALER_ACCEPTS_GIFTS                              }
 };
 
 
 // THESE GET SAVED/RESTORED/RESET
-ARMS_DEALER_STATUS	gArmsDealerStatus[ NUM_ARMS_DEALERS ];
-DEALER_ITEM_HEADER	gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
+ARMS_DEALER_STATUS gArmsDealerStatus[ NUM_ARMS_DEALERS ];
+DEALER_ITEM_HEADER gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
 
 
 static void AdjustCertainDealersInventory(void);
@@ -105,8 +105,8 @@ static void ArmsDealerGetsFreshStock(ArmsDealerID, UINT16 usItemIndex, UINT8 ubN
 
 static void InitializeOneArmsDealer(ArmsDealerID const ubArmsDealer)
 {
-	UINT16	usItemIndex;
-	UINT8		ubNumItems=0;
+	UINT16 usItemIndex;
+	UINT8  ubNumItems=0;
 
 
 	memset( &( gArmsDealerStatus[ ubArmsDealer ] ), 0, sizeof( ARMS_DEALER_STATUS ) );
@@ -147,7 +147,7 @@ static void FreeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem);
 
 void ShutDownArmsDealers()
 {
-	UINT16	usItemIndex;
+	UINT16 usItemIndex;
 
 	// loop through all the dealers
 	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
@@ -282,9 +282,9 @@ void DailyUpdateOfArmsDealersInventory()
 // Once a day, loop through each dealer's inventory items and possibly sell some
 static void SimulateArmsDealerCustomer(void)
 {
-	UINT16	usItemIndex;
-	UINT8   ubItemsSold=0;
-	UINT8		ubElement;
+	UINT16 usItemIndex;
+	UINT8  ubItemsSold=0;
+	UINT8  ubElement;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
 	//loop through all the arms dealers
@@ -343,12 +343,12 @@ static void SimulateArmsDealerCustomer(void)
 
 static void DailyCheckOnItemQuantities(void)
 {
-	UINT16	usItemIndex;
-	UINT8		ubMaxSupply;
-	UINT8		ubNumItems;
-	UINT32	uiArrivalDay;
+	UINT16  usItemIndex;
+	UINT8   ubMaxSupply;
+	UINT8   ubNumItems;
+	UINT32  uiArrivalDay;
 	BOOLEAN fPrevElig;
-	UINT8		ubReorderDays;
+	UINT8   ubReorderDays;
 
 	//loop through all the arms dealers
 	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
@@ -391,19 +391,21 @@ static void DailyCheckOnItemQuantities(void)
 							if ( !fPrevElig )
 							{
 								// eliminate the ordering delay and stock the items instantly!
-								// This is just a way to reward the player right away for making progress without the reordering lag...
+								// This is just a way to reward the player right away for making
+								// progress without the reordering lag...
 								ArmsDealerGetsFreshStock( ubArmsDealer, usItemIndex, ubNumItems );
 							}
 							else
 							{
 								if ( ( ubArmsDealer == ARMS_DEALER_TONY ) || ( ubArmsDealer == ARMS_DEALER_DEVIN ) )
 								{
-									// the stuff Tony and Devin sell is imported, so it takes longer to arrive (for game balance)
-									ubReorderDays = ( UINT8) ( 2 + Random( 2 ) );	// 2-3 days
+									// the stuff Tony and Devin sell is imported, so it takes longer
+									// to arrive (for game balance)
+									ubReorderDays = ( UINT8) ( 2 + Random( 2 ) ); // 2-3 days
 								}
 								else
 								{
-									ubReorderDays = ( UINT8) ( 1 + Random( 2 ) );	// 1-2 days
+									ubReorderDays = ( UINT8) ( 1 + Random( 2 ) ); // 1-2 days
 								}
 
 								//Determine when the inventory should arrive
@@ -436,7 +438,7 @@ static void DailyCheckOnItemQuantities(void)
 
 static void ConvertCreatureBloodToElixir(void)
 {
-	UINT8	ubBloodAvailable;
+	UINT8 ubBloodAvailable;
 	UINT8 ubAmountToConvert;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
@@ -504,14 +506,14 @@ static void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID, UINT16 usItemI
 
 static void LimitArmsDealersInventory(ArmsDealerID const ubArmsDealer, UINT32 uiDealerItemType, UINT8 ubMaxNumberOfItemType)
 {
-	UINT16	usItemIndex=0;
-	UINT32	uiItemsToRemove=0;
+	UINT16 usItemIndex=0;
+	UINT32 uiItemsToRemove=0;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
-	UINT16	usAvailableItem[ MAXITEMS ] = { NOTHING };
-	UINT8		ubNumberOfAvailableItem[ MAXITEMS ] = { 0 };
-	UINT32	uiTotalNumberOfItems = 0, uiRandomChoice;
-	UINT32	uiNumAvailableItems = 0, uiIndex;
+	UINT16 usAvailableItem[ MAXITEMS ] = { NOTHING };
+	UINT8  ubNumberOfAvailableItem[ MAXITEMS ] = { 0 };
+	UINT32 uiTotalNumberOfItems = 0, uiRandomChoice;
+	UINT32 uiNumAvailableItems = 0, uiIndex;
 
 	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
 	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
@@ -630,8 +632,7 @@ static void LimitArmsDealersInventory(ArmsDealerID const ubArmsDealer, UINT32 ui
 						}
 					}
 				}
-			}
-			*/
+			}*/
 		} while (uiItemsToRemove > 0);
 	}
 }
@@ -640,11 +641,11 @@ static void LimitArmsDealersInventory(ArmsDealerID const ubArmsDealer, UINT32 ui
 static void GuaranteeAtLeastOneItemOfType(ArmsDealerID const ubArmsDealer, UINT32 uiDealerItemType)
 {
 	UINT16 usItemIndex;
-	UINT8 ubChance;
-	UINT16	usAvailableItem[ MAXITEMS ] = { NOTHING };
-	UINT8		ubChanceForAvailableItem[ MAXITEMS ] = { 0 };
-	UINT32	uiTotalChances = 0;
-	UINT32	uiNumAvailableItems = 0, uiIndex, uiRandomChoice;
+	UINT8  ubChance;
+	UINT16 usAvailableItem[ MAXITEMS ] = { NOTHING };
+	UINT8  ubChanceForAvailableItem[ MAXITEMS ] = { 0 };
+	UINT32 uiTotalChances = 0;
+	UINT32 uiNumAvailableItems = 0, uiIndex, uiRandomChoice;
 
 	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
 	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
@@ -727,8 +728,8 @@ void GuaranteeAtLeastXItemsOfIndex(ArmsDealerID const ubArmsDealer, UINT16 const
 	}
 
 	// if he can stock it (it appears in his inventory list)
-// RESTRICTION REMOVED: Jake must be able to guarantee GAS even though it's not in his list, it's presence is conditional
-//	if( GetDealersMaxItemAmount( ubArmsDealer, usItemIndex ) > 0)
+	// RESTRICTION REMOVED: Jake must be able to guarantee GAS even though it's not in his list, it's presence is conditional
+	//if( GetDealersMaxItemAmount( ubArmsDealer, usItemIndex ) > 0)
 	{
 		//add the item
 		ArmsDealerGetsFreshStock( ubArmsDealer, usItemIndex, (UINT8)( ubHowMany - gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems ) );
@@ -745,31 +746,42 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 		case IC_GUN:
 			switch(  GCM->getItem(usItem)->asWeapon()->ubWeaponClass )
 			{
-				case HANDGUNCLASS: return ARMS_DEALER_HANDGUNCLASS;
+				case HANDGUNCLASS:
+					return ARMS_DEALER_HANDGUNCLASS;
 
 				case RIFLECLASS:
 					return ItemIsARocketRifle(usItem) ?
 						ARMS_DEALER_ROCKET_RIFLE : ARMS_DEALER_RIFLECLASS;
 
-				case SHOTGUNCLASS: return ARMS_DEALER_SHOTGUNCLASS;
-				case SMGCLASS:     return ARMS_DEALER_SMGCLASS;
-				case MGCLASS:      return ARMS_DEALER_MGCLASS;
-				case MONSTERCLASS: return 0;
-				case KNIFECLASS:   return ARMS_DEALER_KNIFECLASS;
+				case SHOTGUNCLASS:
+					return ARMS_DEALER_SHOTGUNCLASS;
+				case SMGCLASS:
+					return ARMS_DEALER_SMGCLASS;
+				case MGCLASS:
+					return ARMS_DEALER_MGCLASS;
+				case MONSTERCLASS:
+					return 0;
+				case KNIFECLASS:
+					return ARMS_DEALER_KNIFECLASS;
 			}
 			break;
 
 		case IC_PUNCH:
-			if (usItem == NOTHING) return 0;
+			if (usItem == NOTHING)
+				return 0;
 			// else treat as blade
 		case IC_BLADE:
 		case IC_THROWING_KNIFE:
 			return ARMS_DEALER_BLADE;
 
-		case IC_LAUNCHER:       return ARMS_DEALER_LAUNCHER;
-		case IC_ARMOUR:         return ARMS_DEALER_ARMOUR;
-		case IC_MEDKIT:         return ARMS_DEALER_MEDKIT;
-		case IC_KIT:            return ARMS_DEALER_KIT;
+		case IC_LAUNCHER:
+			return ARMS_DEALER_LAUNCHER;
+		case IC_ARMOUR:
+			return ARMS_DEALER_ARMOUR;
+		case IC_MEDKIT:
+			return ARMS_DEALER_MEDKIT;
+		case IC_KIT:
+			return ARMS_DEALER_KIT;
 
 		case IC_MISC:
 			//switch on the type of item
@@ -782,7 +794,7 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 
 				case METALDETECTOR:
 				case LASERSCOPE:
-//				case REMDETONATOR:
+				//case REMDETONATOR:
 					return( ARMS_DEALER_ELECTRONICS );
 
 				case CANTEEN:
@@ -811,7 +823,8 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 				default: return ARMS_DEALER_MISC;
 			}
 
-		case IC_AMMO: return ARMS_DEALER_AMMO;
+		case IC_AMMO:
+			return ARMS_DEALER_AMMO;
 
 		case IC_FACE:
 			switch( usItem )
@@ -821,21 +834,28 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 				case ROBOT_REMOTE_CONTROL:
 					return( ARMS_DEALER_ELECTRONICS );
 
-				default: return ARMS_DEALER_FACE;
+				default:
+					return ARMS_DEALER_FACE;
 			}
 
-		case IC_THROWN:  return 0; // return ARMS_DEALER_THROWN;
-		case IC_KEY:     return 0; // return ARMS_DEALER_KEY;
-		case IC_GRENADE: return ARMS_DEALER_GRENADE;
-		case IC_BOMB:    return ARMS_DEALER_BOMB;
-		case IC_EXPLOSV: return ARMS_DEALER_EXPLOSV;
+		case IC_THROWN:
+			return 0; // return ARMS_DEALER_THROWN;
+		case IC_KEY:
+			return 0; // return ARMS_DEALER_KEY;
+		case IC_GRENADE:
+			return ARMS_DEALER_GRENADE;
+		case IC_BOMB:
+			return ARMS_DEALER_BOMB;
+		case IC_EXPLOSV:
+			return ARMS_DEALER_EXPLOSV;
 
 		case IC_TENTACLES:
 		case IC_MONEY:
 			return( 0 );
 
 		default:
-			AssertMsg( FALSE, String( "GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.", GCM->getItem(usItem)->getItemClass(), usItem ) );
+			AssertMsg(FALSE, String("GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.",
+						GCM->getItem(usItem)->getItemClass(), usItem));
 			break;
 	}
 	return( 0 );
@@ -845,7 +865,7 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 
 BOOLEAN IsMercADealer( UINT8 ubMercID )
 {
-	UINT8	cnt;
+	UINT8 cnt;
 
 	// Manny is not actually a valid dealer unless a particular event sets that fact
 	if( ( ubMercID == MANNY ) && !CheckFact( FACT_MANNY_IS_BARTENDER, 0 ) )
@@ -877,7 +897,7 @@ ArmsDealerID GetArmsDealerIDFromMercID(UINT8 const ubMercID)
 
 
 
-UINT8 GetTypeOfArmsDealer( UINT8	ubDealerID )
+UINT8 GetTypeOfArmsDealer( UINT8 ubDealerID )
 {
 	return( ArmsDealerInfo[ ubDealerID ].ubTypeOfArmsDealer );
 }
@@ -895,8 +915,8 @@ BOOLEAN	DoesDealerDoRepairs(ArmsDealerID const ubArmsDealer)
 BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 {
 	BOOLEAN fHaveOnlyUnRepairedItems=FALSE;
-	UINT8		ubElement;
-	UINT16	usItemIndex;
+	UINT8   ubElement;
+	UINT16  usItemIndex;
 
 	ArmsDealerID const bArmsDealer = GetArmsDealerIDFromMercID( ubProfileID );
 	if (bArmsDealer == ARMS_DEALER_INVALID) return FALSE;
@@ -1028,7 +1048,7 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 			break;
 
 		default:
-			AssertMsg( FALSE, String( "CanDealerRepairItem(), Arms Dealer %d is not a recognized repairman!.  AM 1.", ubArmsDealer ) );
+			AssertMsg(FALSE, String("CanDealerRepairItem(), Arms Dealer %d is not a recognized repairman!.  AM 1.", ubArmsDealer));
 	}
 
 	// can't repair this...
@@ -1139,7 +1159,7 @@ static UINT8 DetermineDealerItemCondition(ArmsDealerID const ubArmsDealer, UINT1
 	{
 		// if he ONLY has used items, or 50% of the time if he carries both used & new items
 		if ( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_ONLY_USED_ITEMS ) ||
-			 ( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_SOME_USED_ITEMS ) && ( Random( 100 ) < 50 ) ) )
+			( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_SOME_USED_ITEMS ) && ( Random( 100 ) < 50 ) ) )
 		{
 			// make the item a used one
 			ubCondition = (UINT8)(20 + Random( 60 ));
@@ -1255,8 +1275,8 @@ UINT16 CountTotalItemsRepairDealerHasInForRepairs(ArmsDealerID const ubArmsDeale
 
 static UINT8 CountSpecificItemsRepairDealerHasInForRepairs(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex)
 {
-	UINT8		ubElement;
-	UINT8		ubHowManyInForRepairs = 0;
+	UINT8 ubElement;
+	UINT8 ubHowManyInForRepairs = 0;
 
 	//if the dealer is not a repair dealer, no need to count, return 0
 	if( !DoesDealerDoRepairs( ubArmsDealer ) )
@@ -1358,7 +1378,7 @@ void AddObjectToArmsDealerInventory(ArmsDealerID const ubArmsDealer, OBJECTTYPE*
 	{
 		if( pObject->usAttachItem[ ubCnt ] != NONE )
 		{
-// ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
+			// ARM: Note: this is only used for selling, not repairs, so attachmentes are seperated when sold to a dealer
 			// If the attachment is detachable
 			if (! (GCM->getItem(pObject->usAttachItem[ubCnt])->getFlags() & ITEM_INSEPARABLE ) )
 			{
@@ -1624,8 +1644,8 @@ static void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID const ubArmsDea
 			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
 			{
 				// if this is an active special item, not in repair
-				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive ) // &&
-//					 ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition > 0 ) )
+				if (gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].fActive) // &&
+					//(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].Info.bItemCondition > 0))
 				{
 					// if we skipped the right amount of them
 					if ( ubSkippedAlready == ubWhichOne )
@@ -1669,11 +1689,11 @@ void RemoveSpecialItemFromArmsDealerInventoryAtElement(ArmsDealerID const ubArms
 
 BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 {
-	UINT16	usItemIndex;
-	UINT8 ubElement;
-	UINT8 ubHowManyMaxAtATime;
-	UINT8 ubLeftToDrop;
-	UINT8	ubNowDropping;
+	UINT16 usItemIndex;
+	UINT8  ubElement;
+	UINT8  ubHowManyMaxAtATime;
+	UINT8  ubLeftToDrop;
+	UINT8  ubNowDropping;
 	OBJECTTYPE TempObject;
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	SPECIAL_ITEM_INFO SpclItemInfo;
@@ -1714,8 +1734,8 @@ BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 
 				ubLeftToDrop = gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubPerfectItems;
 
-        // ATE: While it IS leagal here to use pSoldier->sInitialGridNo, cause of where this
-        // function is called, there are times when we're not guarenteed that sGridNo is good
+				// ATE: While it IS leagal here to use pSoldier->sInitialGridNo, cause of where this
+				// function is called, there are times when we're not guarenteed that sGridNo is good
 				while ( ubLeftToDrop > 0)
 				{
 					ubNowDropping = MIN( ubLeftToDrop, ubHowManyMaxAtATime );
@@ -1814,24 +1834,24 @@ static void GiveItemToArmsDealerforRepair(ArmsDealerID, UINT16 usItemIndex, SPEC
 
 void GiveObjectToArmsDealerForRepair(ArmsDealerID const ubArmsDealer, OBJECTTYPE const* const pObject, UINT8 const ubOwnerProfileId)
 {
-//	UINT8 ubCnt;
+	//UINT8 ubCnt;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
 
 	// Any object passed into here must already be:
-	//		a) Unstacked
+	//   a) Unstacked
 	Assert( pObject->ubNumberOfObjects == 1 );
 
-	//		b) Repairable
+	//   b) Repairable
 	Assert( CanDealerRepairItem( ubArmsDealer, pObject->usItem ) );
 
-	//		c) Actually damaged, or a rocket rifle (being reset)
+	//   c) Actually damaged, or a rocket rifle (being reset)
 	Assert( ( pObject->bStatus[ 0 ] < 100 ) || ItemIsARocketRifle( pObject->usItem ) );
 
-/* ARM: Can now repair with removeable attachments still attached...
-	//		d) Already stripped of all *detachable* attachments
+	/* ARM: Can now repair with removeable attachments still attached...
+	//   d) Already stripped of all *detachable* attachments
 	for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
 	{
 		if ( pObject->usAttachItem[ ubCnt ] != NONE )
@@ -1842,10 +1862,9 @@ void GiveObjectToArmsDealerForRepair(ArmsDealerID const ubArmsDealer, OBJECTTYPE
 				SLOGE(DEBUG_TAG_ASSERTS, "GiveObjectToArmsDealerForRepair: something wrong with attachments");
 			}
 		}
-	}
-*/
+	}*/
 
-	//		e) If a gun, stripped of any non-ammo-class GunAmmoItems, and bullets
+	//   e) If a gun, stripped of any non-ammo-class GunAmmoItems, and bullets
 	if (GCM->getItem(pObject->usItem)->getItemClass() == IC_GUN )
 	{
 		// if any GunAmmoItem is specified
@@ -1909,9 +1928,9 @@ static void GiveItemToArmsDealerforRepair(ArmsDealerID const ubArmsDealer, UINT1
 
 static UINT32 WhenWillRepairmanBeAllDoneRepairing(ArmsDealerID const ubArmsDealer)
 {
-	UINT32	uiWhenFree;
-	UINT16	usItemIndex;
-	UINT8		ubElement;
+	UINT32 uiWhenFree;
+	UINT16 usItemIndex;
+	UINT8  ubElement;
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
 
@@ -2003,8 +2022,8 @@ static UINT32 CalculateSimpleItemRepairCost(ArmsDealerID, UINT16 usItemIndex, IN
 
 static UINT32 CalculateSimpleItemRepairTime(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, INT8 const bItemCondition)
 {
-	UINT32	uiTimeToRepair = 0;
-	UINT32	uiRepairCost = 0;
+	UINT32 uiTimeToRepair = 0;
+	UINT32 uiRepairCost = 0;
 
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
 
@@ -2014,7 +2033,7 @@ static UINT32 CalculateSimpleItemRepairTime(ArmsDealerID const ubArmsDealer, UIN
 	// Now adjust that for the repairman's individual repair speed.
 	// For a repairman, his BUY modifier controls his REPAIR SPEED (1.0 means minutes to repair = price in $)
 	// with a REPAIR SPEED of 1.0, typical gun price of $2000, and a REPAIR COST of 0.5 this works out to 16.6 hrs
-	//		 for a full 100% status repair...  Not bad.
+	// for a full 100% status repair...  Not bad.
 	uiTimeToRepair = (UINT32)(uiRepairCost * ArmsDealerInfo[ubArmsDealer].u.repair.speed);
 
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
@@ -2061,10 +2080,10 @@ UINT32 CalculateObjectItemRepairCost(ArmsDealerID const ubArmsDealer, OBJECTTYPE
 
 static UINT32 CalculateSimpleItemRepairCost(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, INT8 const bItemCondition)
 {
-	UINT32	uiItemCost = 0;
-	UINT32	uiRepairCost = 0;
-	INT16		sRepairCostAdj = 0;
-//	UINT32	uiDifFrom10=0;
+	UINT32 uiItemCost = 0;
+	UINT32 uiRepairCost = 0;
+	INT16  sRepairCostAdj = 0;
+	//UINT32 uiDifFrom10=0;
 
 	// figure out the full value of the item, modified by this dealer's personal Sell (i.e. repair cost) modifier
 	// don't use CalcShopKeeperItemPrice - we want FULL value!!!
@@ -2082,14 +2101,13 @@ static UINT32 CalculateSimpleItemRepairCost(ArmsDealerID const ubArmsDealer, UIN
 	// calculate repair cost, the more broken it is the more it costs, and the difficulty of repair it is also a factor
 	uiRepairCost = (UINT32)( uiItemCost * ( sRepairCostAdj * (100 - bItemCondition) / ((FLOAT)100 * 100) ));
 
-/*
+	/*
 	//if the price is not diviseble by 10, make it so
 	uiDifFrom10 = 10 - uiRepairCost % 10;
 	if( uiDifFrom10 != 0 )
 	{
 		uiRepairCost += uiDifFrom10;
-	}
-*/
+	}*/
 
 	if ( ItemIsARocketRifle( usItemIndex ) )
 	{
@@ -2205,15 +2223,15 @@ static BOOLEAN IsItemInfoSpecial(SPECIAL_ITEM_INFO* pSpclItemInfo)
 
 static bool DoesItemAppearInDealerInventoryList(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
 {
-  if(GCM->getDealerInventory(ubArmsDealer)->hasItem(GCM->getItem(usItemIndex)))
-  {
-    int maxAmount = GetDealersMaxItemAmount(ubArmsDealer, usItemIndex);
-    return (maxAmount > 0) || fPurchaseFromPlayer;
-  }
-  else
-  {
-    return false;
-  }
+	if(GCM->getDealerInventory(ubArmsDealer)->hasItem(GCM->getItem(usItemIndex)))
+	{
+		int maxAmount = GetDealersMaxItemAmount(ubArmsDealer, usItemIndex);
+		return (maxAmount > 0) || fPurchaseFromPlayer;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 
@@ -2263,9 +2281,9 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 	// the rest of this function applies only to the "general" dealers ( Jake, Keith, and Franz )
 
 	// Micky & Gabby specialize in creature parts & such, the others don't buy these at all (exception: jars)
-	if ( ( usItemIndex != JAR ) &&
-				( DoesItemAppearInDealerInventoryList( ARMS_DEALER_MICKY, usItemIndex, TRUE ) ||
-					DoesItemAppearInDealerInventoryList( ARMS_DEALER_GABBY, usItemIndex, TRUE ) ) )
+	if ((usItemIndex != JAR) &&
+		(DoesItemAppearInDealerInventoryList(ARMS_DEALER_MICKY, usItemIndex, TRUE) ||
+		DoesItemAppearInDealerInventoryList(ARMS_DEALER_GABBY, usItemIndex, TRUE)))
 	{
 		return( 0 );
 	}
@@ -2348,12 +2366,11 @@ BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )
 		return( FALSE );
 	}
 
-/*
+	/*
 	if ( ItemSlotLimit( usItemIndex, BIGPOCK1POS ) > 1 )
 	{
 		return( TRUE );
-	}
-*/
+	}*/
 
 	return( TRUE );
 }
@@ -2524,9 +2541,9 @@ UINT32 CalculateMinutesClosedBetween(ArmsDealerID const ubArmsDealer, UINT32 uiS
 
 TEST(ArmsDealerInit, asserts)
 {
-  EXPECT_EQ(sizeof(ARMS_DEALER_STATUS), 20);
-  EXPECT_EQ(sizeof(SPECIAL_ITEM_INFO), 16);
-  EXPECT_EQ(sizeof(DEALER_SPECIAL_ITEM), 28);
+	EXPECT_EQ(sizeof(ARMS_DEALER_STATUS), 20);
+	EXPECT_EQ(sizeof(SPECIAL_ITEM_INFO), 16);
+	EXPECT_EQ(sizeof(DEALER_SPECIAL_ITEM), 28);
 }
 
 #endif

@@ -21,7 +21,7 @@ void HandleStrategicDeath(SOLDIERTYPE& s)
 	if (s.bAssignment == VEHICLE && s.iVehicleId != -1)
 	{
 		TakeSoldierOutOfVehicle(&s);
-  }
+	}
 
 	RemoveCharacterFromSquads(&s);
 	if (s.bAssignment != ASSIGNMENT_DEAD)

@@ -45,14 +45,14 @@ SOLDIERINITNODE *gAlternateSoldierInitListHead = NULL;
 void InitSoldierInitList()
 {
 	if( gSoldierInitHead )
-	  KillSoldierInitList();
+		KillSoldierInitList();
 	gSoldierInitHead = NULL;
 	gSoldierInitTail = NULL;
 }
 
 void KillSoldierInitList()
 {
-  while( gSoldierInitHead )
+	while( gSoldierInitHead )
 		RemoveSoldierNodeFromInitList( gSoldierInitTail );
 	if( gfOriginalList )
 		gOriginalSoldierInitListHead = NULL;
@@ -68,9 +68,9 @@ SOLDIERINITNODE* AddBasicPlacementToSoldierInitList(BASIC_SOLDIERCREATE_STRUCT c
 	si->pBasicPlacement  = MALLOC(BASIC_SOLDIERCREATE_STRUCT);
 	*si->pBasicPlacement = bp;
 
-	/* It is impossible to set up detailed placement stuff now. If there is any
-	 * detailed placement information during map load, it will be added
-	 * immediately after this function call. */
+	// It is impossible to set up detailed placement stuff now. If there is any
+	// detailed placement information during map load, it will be added
+	// immediately after this function call.
 	si->pDetailedPlacement = 0;
 	si->pSoldier           = 0;
 	si->next               = 0;
@@ -86,7 +86,8 @@ SOLDIERINITNODE* AddBasicPlacementToSoldierInitList(BASIC_SOLDIERCREATE_STRUCT c
 			gAlternateSoldierInitListHead = si;
 	}
 	else
-	{ // TEMP: no sorting, just enemies
+	{
+		// TEMP: no sorting, just enemies
 		gSoldierInitTail->next = si;
 	}
 	gSoldierInitTail = si;
@@ -201,10 +202,10 @@ void LoadSoldiersFromMap(HWFILE const f, bool stracLinuxFormat)
 		throw std::runtime_error("Corrupt map check failed. ubNumIndividuals is greater than MAX_NUM_SOLDIERS.");
 	}
 
-	/* Because we are loading the map, we needed to know how many guys are being
-	 * loaded, but when we add them to the list here, it automatically increments
-	 * that number, effectively doubling it, which would be a problem. Now that we
-	 * know the number, we clear it here, so it gets built again. */
+	// Because we are loading the map, we needed to know how many guys are being
+	// loaded, but when we add them to the list here, it automatically increments
+	// that number, effectively doubling it, which would be a problem. Now that we
+	// know the number, we clear it here, so it gets built again.
 	gMapInformation.ubNumIndividuals = 0; // Must be cleared here
 
 	bool cow_in_sector = false;
@@ -216,8 +217,9 @@ void LoadSoldiersFromMap(HWFILE const f, bool stracLinuxFormat)
 		n->ubNodeID = i;
 
 		if (bp.fDetailedPlacement)
-		{ /* Add the static detailed placement information in the same newly created
-			 * node as the basic placement. */
+		{
+			// Add the static detailed placement information in the same newly created
+			// node as the basic placement.
 			SOLDIERCREATE_STRUCT* const sc = MALLOC(SOLDIERCREATE_STRUCT);
 			ExtractSoldierCreateFromFile(f, sc, stracLinuxFormat);
 
@@ -247,15 +249,15 @@ void LoadSoldiersFromMap(HWFILE const f, bool stracLinuxFormat)
 //list will need to be sorted to reflect this.  It is quite likely that this won't be needed,
 //but the flexibility is there just incase.  Now the list is sorted in the following manner:
 //-1st priority:  Any nodes containing valid pointers to soldiers are moved to the end of the list.
-//								We don't ever want to use two identical placements.
+//                We don't ever want to use two identical placements.
 //-2nd priority:  Any nodes that have priority existance and detailed placement information are
-//								put first in the list.
-//-3rd priority:	Any nodes that have priority existance and no detailed placement information are used next.
-//-4th priority:	Any nodes that have detailed placement and no priority existance information are used next.
+//                put first in the list.
+//-3rd priority:  Any nodes that have priority existance and no detailed placement information are used next.
+//-4th priority:  Any nodes that have detailed placement and no priority existance information are used next.
 //-5th priority:  The rest of the nodes are basic placements and are placed in the center of the list.  Of
-//								these, they are randomly filled based on the number needed.
+//                these, they are randomly filled based on the number needed.
 //NOTE:  This function is called by AddSoldierInitListTeamToWorld().  There is no other place it needs to
-//			 be called.
+//       be called.
 static void SortSoldierInitList(void)
 {
 	SOLDIERINITNODE *temp, *curr;
@@ -268,11 +270,13 @@ static void SortSoldierInitList(void)
 	while( curr )
 	{
 		if( curr->pSoldier && curr != gSoldierInitTail )
-		{	//This node has an existing soldier, so move to end of list.
+		{
+			//This node has an existing soldier, so move to end of list.
 			//copy node
 			temp = curr;
 			if( temp == gSoldierInitHead )
-			{ //If we dealing with the head, we need to move it now.
+			{
+				//If we dealing with the head, we need to move it now.
 				gSoldierInitHead = gSoldierInitHead->next;
 				if( gfOriginalList )
 					gOriginalSoldierInitListHead = gSoldierInitHead;
@@ -303,11 +307,13 @@ static void SortSoldierInitList(void)
 	while( curr )
 	{
 		if( !curr->pSoldier && !curr->pBasicPlacement->fPriorityExistance && curr->pDetailedPlacement && curr != gSoldierInitHead )
-		{	//Priority existance nodes without detailed placement info are moved to beginning of list
+		{
+			//Priority existance nodes without detailed placement info are moved to beginning of list
 			//copy node
 			temp = curr;
 			if( temp == gSoldierInitTail )
-			{ //If we dealing with the tail, we need to move it now.
+			{
+				//If we dealing with the tail, we need to move it now.
 				gSoldierInitTail = gSoldierInitTail->prev;
 				gSoldierInitTail->next = NULL;
 				temp->prev = NULL;
@@ -338,11 +344,13 @@ static void SortSoldierInitList(void)
 	while( curr )
 	{
 		if( !curr->pSoldier && curr->pBasicPlacement->fPriorityExistance && !curr->pDetailedPlacement && curr != gSoldierInitHead )
-		{	//Priority existance nodes without detailed placement info are moved to beginning of list
-			//copy node
+		{
+			//Priority existance nodes without detailed placement info are moved
+			//to beginning of list copy node
 			temp = curr;
 			if( temp == gSoldierInitTail )
-			{ //If we dealing with the tail, we need to move it now.
+			{
+				//If we dealing with the tail, we need to move it now.
 				gSoldierInitTail = gSoldierInitTail->prev;
 				gSoldierInitTail->next = NULL;
 				temp->prev = NULL;
@@ -378,7 +386,8 @@ static void SortSoldierInitList(void)
 			//copy node
 			temp = curr;
 			if( temp == gSoldierInitTail )
-			{ //If we dealing with the tail, we need to move it now.
+			{
+				//If we dealing with the tail, we need to move it now.
 				gSoldierInitTail = gSoldierInitTail->prev;
 				gSoldierInitTail->next = NULL;
 				temp->prev = NULL;
@@ -406,8 +415,8 @@ static void SortSoldierInitList(void)
 	}
 	//4th priority sort
 	//Done!  If the soldier existing slots are at the end of the list and the
-	//			 priority placements are at the beginning of the list, then the
-	//			 basic placements are in the middle.
+	//       priority placements are at the beginning of the list, then the
+	//       basic placements are in the middle.
 }
 
 
@@ -436,8 +445,9 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 			// Special case code when adding icecream truck.
 			// CJC, August 18, 1999: don't do this code unless the ice cream truck is on our team
 			if (init_dp->bBodyType == ICECREAMTRUCK &&
-					FindSoldierByProfileIDOnPlayerTeam(ICECREAMTRUCK))
-			{ // Check to see if Hamous is here and not recruited. If so, add truck
+				FindSoldierByProfileIDOnPlayerTeam(ICECREAMTRUCK))
+			{
+				// Check to see if Hamous is here and not recruited. If so, add truck
 				MERCPROFILESTRUCT& hamous = GetProfile(HAMOUS);
 				// If not here, do not add
 				if (hamous.sSectorX != gWorldSectorX) return true;
@@ -465,19 +475,15 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 			if (x == 5 && y == MAP_ROW_C)
 			{
 				// Kinpin guys might be guarding Tony
-				if (dp.ubCivilianGroup == KINGPIN_CIV_GROUP &&
-						(
-							gTacticalStatus.fCivGroupHostile[KINGPIN_CIV_GROUP] == CIV_GROUP_WILL_BECOME_HOSTILE ||
-							(
-								gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS &&
-								CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN)
-							)
-						))
+				if (dp.ubCivilianGroup == KINGPIN_CIV_GROUP && (
+					gTacticalStatus.fCivGroupHostile[KINGPIN_CIV_GROUP] == CIV_GROUP_WILL_BECOME_HOSTILE || (
+					gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS &&
+					CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN))))
 				{
 					if (dp.ubProfile == NO_PROFILE)
-					{ // These guys should be guarding Tony
-						dp.sInsertionGridNo =
-							13531 +
+					{
+						// These guys should be guarding Tony
+						dp.sInsertionGridNo = 13531 +
 							PreRandom(8) * (PreRandom(1) ? -1 : 1) +
 							PreRandom(8) * (PreRandom(1) ? -1 : 1) * WORLD_ROWS;
 
@@ -489,29 +495,33 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 						}
 					}
 					else if (dp.ubProfile == BILLY)
-					{ // Billy should now be able to roam around
-						dp.sInsertionGridNo =
-							13531 +
+					{
+						// Billy should now be able to roam around
+						dp.sInsertionGridNo = 13531 +
 							PreRandom(30) * (PreRandom(1) ? -1 : 1) +
 							PreRandom(30) * (PreRandom(1) ? -1 : 1) * WORLD_ROWS;
 						dp.bOrders = SEEKENEMY;
 					}
 					else if (dp.ubProfile == MADAME)
-					{ // She shouldn't be here
+					{
+						// She shouldn't be here
 						return true;
 					}
 					else if (dp.ubProfile == NO_PROFILE)
-					{ // XXX unreachable due to same condition above
+					{
+						// XXX unreachable due to same condition above
 						UINT8 const room = GetRoom(dp.sInsertionGridNo);
 						if (IN_BROTHEL(room))
-						{ // Must be a hooker, shouldn't be here
+						{
+							// Must be a hooker, shouldn't be here
 							return true;
 						}
 					}
 				}
 			}
 			else if (x == 3 && y == MAP_ROW_P && z == 0 && !gfInMeanwhile)
-			{ // Special civilian setup for queen's palace
+			{
+				// Special civilian setup for queen's palace
 				if (gubFact[FACT_QUEEN_DEAD])
 				{
 					// The queen's civs aren't added if queen is dead
@@ -524,38 +534,43 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 						dp.sInsertionGridNo = 11448;
 					}
 					if (dp.ubCivilianGroup != QUEENS_CIV_GROUP)
-					{ // The free civilians aren't added if queen is alive
+					{
+						// The free civilians aren't added if queen is alive
 						return true;
 					}
 				}
 			}
 			else if (x == TIXA_SECTOR_X && y == TIXA_SECTOR_Y && z == 0)
-			{ /* Tixa prison, once liberated, should not have any civs without
-				 * profiles unless they are kids */
+			{
+				// Tixa prison, once liberated, should not have any civs without
+				// profiles unless they are kids
 				if (!StrategicMap[TIXA_SECTOR_X + TIXA_SECTOR_Y * MAP_WORLD_X].fEnemyControlled &&
-						dp.ubProfile == NO_PROFILE                                                  &&
-						dp.bBodyType != HATKIDCIV                                                   &&
-						dp.bBodyType != KIDCIV)
-				{ // not there
+					dp.ubProfile == NO_PROFILE &&
+					dp.bBodyType != HATKIDCIV &&
+					dp.bBodyType != KIDCIV)
+				{
+					// not there
 					return true;
 				}
 			}
 			else if (x == 13 && y == MAP_ROW_C && z == 0)
 			{
 				if (CheckFact(FACT_KIDS_ARE_FREE, 0) &&
-						(dp.bBodyType == HATKIDCIV || dp.bBodyType == KIDCIV))
-				{ // Not there any more, kids have been freed.
+					(dp.bBodyType == HATKIDCIV || dp.bBodyType == KIDCIV))
+				{
+					// Not there any more, kids have been freed.
 					return true;
 				}
 			}
 		}
 		else if (dp.bTeam == ENEMY_TEAM && dp.ubSoldierClass == SOLDIER_CLASS_ELITE)
-		{ /* Special! Certain events in the game can cause profiled NPCs to become
-			 * enemies. The two cases are adding Mike and Iggy. We will only add one
-			 * NPC in any given combat and the conditions for setting the associated
-			 * facts are done elsewhere. There is also another place where NPCs can
-			 * get added, which is in TacticalCreateElite() used for inserting
-			 * offensive enemies.  */
+		{
+			// Special! Certain events in the game can cause profiled NPCs to become
+			// enemies. The two cases are adding Mike and Iggy. We will only add one
+			// NPC in any given combat and the conditions for setting the associated
+			// facts are done elsewhere. There is also another place where NPCs can
+			// get added, which is in TacticalCreateElite() used for inserting
+			// offensive enemies.
 			OkayToUpgradeEliteToSpecialProfiledEnemy(&dp);
 		}
 	}
@@ -569,7 +584,8 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_SOLDIER, "Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
+		SLOGD(DEBUG_TAG_SOLDIER,
+			"Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
 		return false;
 	}
 }
@@ -577,15 +593,16 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 
 void AddSoldierInitListTeamToWorld(INT8 const team)
 {
-	/* Sort the list in the following manner:
-	 * - Priority placements first
-	 * - Basic placements next
-	 * - Any placements with existing soldiers last (overrides others) */
+	// Sort the list in the following manner:
+	// - Priority placements first
+	// - Basic placements next
+	// - Any placements with existing soldiers last (overrides others)
 	SortSoldierInitList();
 
 	if (giCurrentTilesetID == CAVES_1) // Cave/mine tileset only
-	{ /* Convert all civilians to miners which use uniforms and more masculine
-		 * body types. */
+	{
+		// Convert all civilians to miners which use uniforms and more masculine
+		// body types.
 		CFOR_EACH_SOLDIERINITNODE(i)
 		{
 			BASIC_SOLDIERCREATE_STRUCT& bp = *i->pBasicPlacement;
@@ -595,24 +612,24 @@ void AddSoldierInitListTeamToWorld(INT8 const team)
 		}
 	}
 
-	/* While we have a list, with no active soldiers, process the list to add new
-	 * soldiers. */
+	// While we have a list, with no active soldiers, process the list to add new
+	// soldiers.
 	for (SOLDIERINITNODE* i = gSoldierInitHead; i && !i->pSoldier; i = i->next)
 	{
 		if (i->pBasicPlacement->bTeam != team) continue;
 
-		/* mgl: Missing civilians Fix
-		 * AddPlacementToWorld() returns false for people (civilians) who have a profile
-		 * but are not currently in the sector of the loaded map. It doesn't mean that
-		 * there isn't any remaining slot for them in this case.
-		 */
+		// mgl: Missing civilians Fix
+		// AddPlacementToWorld() returns false for people (civilians) who have a profile
+		// but are not currently in the sector of the loaded map. It doesn't mean that
+		// there isn't any remaining slot for them in this case.
 		if (!AddPlacementToWorld(i) && i->pBasicPlacement->bTeam != CIV_TEAM)
-		{ /* If it fails to create the soldier, it is likely that it is because the
-			 * slots in the tactical engine are already full. Besides, the strategic
-			 * AI shouldn't be trying to fill a map with more than the maximum
-			 * allowable soldiers of team. All teams can have a max of 32 individuals,
-			 * except for the player which is 20. Players aren't processed in this
-			 * list anyway. */
+		{
+			// If it fails to create the soldier, it is likely that it is because the
+			// slots in the tactical engine are already full. Besides, the strategic
+			// AI shouldn't be trying to fill a map with more than the maximum
+			// allowable soldiers of team. All teams can have a max of 32 individuals,
+			// except for the player which is 20. Players aren't processed in this
+			// list anyway.
 			break;
 		}
 	}
@@ -624,7 +641,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 	SOLDIERINITNODE *mark;
 	INT32 iRandom;
 	UINT8 ubMaxNum;
- 	UINT8 ubElitePDSlots = 0, ubEliteDSlots = 0, ubElitePSlots = 0, ubEliteBSlots = 0;
+	UINT8 ubElitePDSlots = 0, ubEliteDSlots = 0, ubElitePSlots = 0, ubEliteBSlots = 0;
 	UINT8 ubTroopPDSlots = 0, ubTroopDSlots = 0, ubTroopPSlots = 0, ubTroopBSlots = 0;
 	UINT8 ubAdminPDSlots = 0, ubAdminDSlots = 0, ubAdminPSlots = 0, ubAdminBSlots = 0;
 	UINT8 ubFreeSlots;
@@ -718,10 +735,10 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 		FOR_EACH_SOLDIERINITNODE(curr)
 		{
 			if (ubMaxNum == 0 ||
-					*pCurrTotal == 0 ||
-					*pCurrSlots == 0 ||
-					curr->pDetailedPlacement == NULL ||
-					!curr->pBasicPlacement->fPriorityExistance)
+				*pCurrTotal == 0 ||
+				*pCurrSlots == 0 ||
+				curr->pDetailedPlacement == NULL ||
+				!curr->pBasicPlacement->fPriorityExistance)
 			{
 				break;
 			}
@@ -779,7 +796,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 		//Now, loop through the priority existance and non detailed placement section of the list.
 		curr = mark;
 		while( curr && ubMaxNum && *pCurrTotal && *pCurrSlots &&
-			 !curr->pDetailedPlacement && curr->pBasicPlacement->fPriorityExistance )
+			!curr->pDetailedPlacement && curr->pBasicPlacement->fPriorityExistance )
 		{
 			if( !curr->pSoldier && curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 			{
@@ -835,7 +852,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 		//Now, loop through the priority existance and detailed placement section of the list.
 		curr = mark;
 		while( curr && ubMaxNum && *pCurrTotal && *pCurrSlots &&
-			 curr->pDetailedPlacement && !curr->pBasicPlacement->fPriorityExistance )
+			curr->pDetailedPlacement && !curr->pBasicPlacement->fPriorityExistance )
 		{
 			if( !curr->pSoldier && curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 			{
@@ -1038,7 +1055,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	INT32 iRandom;
 	UINT8 ubMaxNum;
 	BOOLEAN fDoPlacement;
- 	UINT8 ubEliteSlots = 0;
+	UINT8 ubEliteSlots = 0;
 	UINT8 ubRegSlots = 0;
 	UINT8 ubGreenSlots = 0;
 	UINT8 ubFreeSlots;
@@ -1088,7 +1105,8 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 				curr->pBasicPlacement->bOrders = STATIONARY;
 				curr->pBasicPlacement->bAttitude = (INT8) Random( MAXATTITUDES );
 				if( curr->pDetailedPlacement )
-				{ //delete the detailed placement information.
+				{
+					//delete the detailed placement information.
 					MemFree( curr->pDetailedPlacement );
 					curr->pDetailedPlacement = NULL;
 					curr->pBasicPlacement->fDetailedPlacement = FALSE;
@@ -1117,9 +1135,9 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 		{
 			switch( curr->pBasicPlacement->ubSoldierClass )
 			{
-				case SOLDIER_CLASS_ELITE:						ubEliteSlots++;	break;
-				case SOLDIER_CLASS_ADMINISTRATOR:		ubGreenSlots++; break;
-				case SOLDIER_CLASS_ARMY:						ubRegSlots++; break;
+				case SOLDIER_CLASS_ELITE:         ubEliteSlots++; break;
+				case SOLDIER_CLASS_ADMINISTRATOR: ubGreenSlots++; break;
+				case SOLDIER_CLASS_ARMY:          ubRegSlots++;   break;
 			}
 		}
 		curr = curr->next;
@@ -1198,8 +1216,12 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	ubFreeSlots = 0;
 	CFOR_EACH_SOLDIERINITNODE(curr)
 	{
-		if( !curr->pSoldier && (curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM) )
+		if(!curr->pSoldier &&
+			(curr->pBasicPlacement->bTeam == ENEMY_TEAM ||
+			curr->pBasicPlacement->bTeam == MILITIA_TEAM))
+		{
 			ubFreeSlots++;
+		}
 	}
 
 	//Now, loop through the entire list again, but for the last time.  All enemies will be inserted now ignoring
@@ -1207,7 +1229,9 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	FOR_EACH_SOLDIERINITNODE(curr)
 	{
 		if (ubFreeSlots == 0 || ubMaxNum == 0) break;
-		if( !curr->pSoldier && (curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM) )
+		if(!curr->pSoldier &&
+			(curr->pBasicPlacement->bTeam == ENEMY_TEAM ||
+			curr->pBasicPlacement->bTeam == MILITIA_TEAM))
 		{
 			//Randomly determine if we will use this slot; the more available slots in proportion to
 			//the number of enemies, the lower the chance of accepting the slot.
@@ -1231,12 +1255,14 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 					ubNumGreen--;
 				}
 				else
-					SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListMilitia: something wrong with random");
+					SLOGE(DEBUG_TAG_ASSERTS,
+						"AddSoldierInitListMilitia: something wrong with random");
 				curr->pBasicPlacement->bTeam = MILITIA_TEAM;
 				curr->pBasicPlacement->bOrders = STATIONARY;
 				curr->pBasicPlacement->bAttitude = (INT8) Random( MAXATTITUDES );
 				if( curr->pDetailedPlacement )
-				{ //delete the detailed placement information.
+				{
+					//delete the detailed placement information.
 					MemFree( curr->pDetailedPlacement );
 					curr->pDetailedPlacement = NULL;
 					curr->pBasicPlacement->fDetailedPlacement = FALSE;
@@ -1257,9 +1283,9 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	}
 }
 
-void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumInfants,
-																	UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales,
-																	UINT8 ubNumAdultFemales )
+void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumInfants,
+					UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales,
+					UINT8 ubNumAdultMales, UINT8 ubNumAdultFemales )
 {
 	INT32 iRandom;
 	UINT8 ubFreeSlots;
@@ -1509,9 +1535,12 @@ void LoadSoldierInitListLinks(HWFILE const f)
 
 			curr->ubSoldierID = soldier_id;
 			TacticalTeamType const* const team = gTacticalStatus.Team;
-			if ((team[ENEMY_TEAM].bFirstID <= soldier_id && soldier_id <= team[CREATURE_TEAM].bLastID) ||
-					(team[CIV_TEAM  ].bFirstID <= soldier_id && soldier_id <= team[CIV_TEAM     ].bLastID))
-			{ // only enemies, creatures and civilians
+			if ((team[ENEMY_TEAM].bFirstID <= soldier_id &&
+				soldier_id <= team[CREATURE_TEAM].bLastID) ||
+				(team[CIV_TEAM].bFirstID <= soldier_id &&
+				soldier_id <= team[CIV_TEAM].bLastID))
+			{
+				// only enemies, creatures and civilians
 				curr->pSoldier = &GetMan(soldier_id);
 			}
 		}
@@ -1549,7 +1578,7 @@ void AddSoldierInitListBloodcats()
 			}
 		}
 		if( bBloodCatPlacements != pSector->bBloodCatPlacements &&
-				ubSectorID != SEC_I16 && ubSectorID != SEC_N5 )
+			ubSectorID != SEC_I16 && ubSectorID != SEC_N5 )
 		{
 			pSector->bBloodCatPlacements = bBloodCatPlacements;
 			pSector->bBloodCats = -1;
@@ -1560,7 +1589,8 @@ void AddSoldierInitListBloodcats()
 		}
 	}
 	if( pSector->bBloodCats > 0 )
-	{ //Add them to the world now...
+	{
+		//Add them to the world now...
 		UINT8 ubNumAdded = 0;
 		UINT8 ubMaxNum = (UINT8)pSector->bBloodCats;
 		SOLDIERINITNODE *mark;
@@ -1666,16 +1696,16 @@ static SOLDIERINITNODE* FindSoldierInitListNodeByProfile(UINT8 ubProfile)
 }
 
 
-/* Loop through the profiles starting at the RPCs, add them using strategic
- * insertion information and not editor placements. The key flag involved for
- * doing it this way is the GetProfile(i).fUseProfileInsertionInfo. */
+// Loop through the profiles starting at the RPCs, add them using strategic
+// insertion information and not editor placements. The key flag involved for
+// doing it this way is the GetProfile(i).fUseProfileInsertionInfo.
 void AddProfilesUsingProfileInsertionData()
 {
 	for (INT32 i = FIRST_RPC; i != PROF_HUMMER; ++i)
 	{
-		/* Perform various checks to make sure the soldier is actually in the same
-		 * sector, alive and so on. More importantly, the flag to use profile
-		 * insertion data must be set. */
+		// Perform various checks to make sure the soldier is actually in the same
+		// sector, alive and so on. More importantly, the flag to use profile
+		// insertion data must be set.
 		MERCPROFILESTRUCT const& p = GetProfile(i);
 		if (p.sSectorX != gWorldSectorX)                 continue;
 		if (p.sSectorY != gWorldSectorY)                 continue;
@@ -1687,7 +1717,8 @@ void AddProfilesUsingProfileInsertionData()
 
 		SOLDIERTYPE* ps = FindSoldierByProfileID(i);
 		if (!ps)
-		{ // Create a new soldier, as this one doesn't exist
+		{
+			// Create a new soldier, as this one doesn't exist
 			SOLDIERCREATE_STRUCT c;
 			memset(&c, 0, sizeof(c));
 			c.bTeam     = CIV_TEAM;
@@ -1711,7 +1742,8 @@ void AddProfilesUsingProfileInsertionData()
 			s.ubQuoteRecord   = p.ubQuoteRecord;
 			s.ubQuoteActionID = p.ubQuoteActionID;
 			if (s.ubQuoteActionID == QUOTE_ACTION_ID_CHECKFORDEST)
-			{ // Gridno will have been changed to destination, so we're there
+			{
+				// Gridno will have been changed to destination, so we're there
 				NPCReachedDestination(&s, FALSE);
 			}
 		}
@@ -1811,20 +1843,22 @@ void NewWayOfLoadingCivilianInitListLinks(HWFILE const f)
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 {
 	if (!gfWorldLoaded || gbWorldSectorZ != 0)
-	{ /* No world loaded or underground.  Underground sectors don't matter seeing
-		 * enemies (not creatures) never rejuvenate underground. */
+	{
+		// No world loaded or underground.  Underground sectors don't matter seeing
+		// enemies (not creatures) never rejuvenate underground.
 		return;
 	}
 
 	SECTORINFO const& sector = SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
 	if (sector.uiTimeLastPlayerLiberated == 0)
-	{ // The player has never owned the sector.
+	{
+		// The player has never owned the sector.
 		return;
 	}
 
-	/* The player has owned the sector at one point.  By stripping all of the
-	 * detailed placements, only basic placements will remain.  This prevents
-	 * tanks and "specially detailed" enemies from coming back. */
+	// The player has owned the sector at one point.  By stripping all of the
+	// detailed placements, only basic placements will remain.  This prevents
+	// tanks and "specially detailed" enemies from coming back.
 	FOR_EACH_SOLDIERINITNODE(i)
 	{
 		SOLDIERINITNODE&            si = *i;

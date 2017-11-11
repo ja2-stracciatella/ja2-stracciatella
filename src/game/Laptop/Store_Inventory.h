@@ -6,11 +6,11 @@
 
 struct STORE_INVENTORY
 {
-	UINT16	usItemIndex;								//Index into the item table
-	UINT8		ubQtyOnHand;
-	UINT8		ubQtyOnOrder;								//The number of items on order
-	UINT8		ubItemQuality;							// the % damaged listed from 0 to 100
-	BOOLEAN fPreviouslyEligible;				// whether or not dealer has been eligible to sell this item in days prior to today
+	UINT16  usItemIndex; //Index into the item table
+	UINT8   ubQtyOnHand;
+	UINT8   ubQtyOnOrder; //The number of items on order
+	UINT8   ubItemQuality; // the % damaged listed from 0 to 100
+	BOOLEAN fPreviouslyEligible; // whether or not dealer has been eligible to sell this item in days prior to today
 };
 
 
@@ -19,7 +19,6 @@ enum
 {
 	BOBBY_RAY_NEW,
 	BOBBY_RAY_USED,
-
 	BOBBY_RAY_LISTS,
 };
 

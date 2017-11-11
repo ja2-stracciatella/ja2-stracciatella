@@ -78,7 +78,7 @@ enum
 	DIF_LEVEL_EASY = 1,
 	DIF_LEVEL_MEDIUM = 2,
 	DIF_LEVEL_HARD = 3,	
-  NUM_DIF_LEVELS = DIF_LEVEL_HARD
+	NUM_DIF_LEVELS = DIF_LEVEL_HARD
 };
 
 //Enums for the difficulty levels

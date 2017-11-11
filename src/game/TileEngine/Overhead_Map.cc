@@ -49,13 +49,13 @@ extern SOLDIERINITNODE *gpSelected;
 
 // OK, these are values that are calculated in InitRenderParams( ) with normal view settings.
 // These would be different if we change ANYTHING about the game worlkd map sizes...
-#define	NORMAL_MAP_SCREEN_WIDTH			3160
-#define	NORMAL_MAP_SCREEN_HEIGHT		1540
-#define	NORMAL_MAP_SCREEN_X					1580
-#define	NORMAL_MAP_SCREEN_BY				2400
-#define	NORMAL_MAP_SCREEN_TY				860
+#define NORMAL_MAP_SCREEN_WIDTH		3160
+#define NORMAL_MAP_SCREEN_HEIGHT	1540
+#define NORMAL_MAP_SCREEN_X		1580
+#define NORMAL_MAP_SCREEN_BY		2400
+#define NORMAL_MAP_SCREEN_TY		860
 
-#define FASTMAPROWCOLTOPOS( r, c )									( (r) * WORLD_COLS + (c) )
+#define FASTMAPROWCOLTOPOS( r, c )	( (r) * WORLD_COLS + (c) )
 
 
 struct SMALL_TILE_SURF
@@ -252,8 +252,8 @@ static void DisplayMercNameInOverhead(SOLDIERTYPE const& s)
 	INT16 y;
 	GetOverheadScreenXYFromGridNo(s.sGridNo, &x, &y);
 
-  x += STD_SCREEN_X;
-  y += STD_SCREEN_Y;
+	x += STD_SCREEN_X;
+	y += STD_SCREEN_Y;
 
 	y -= s.sHeightAdjustment / 5 + 13;
 
@@ -300,7 +300,7 @@ void HandleOverheadMap(void)
 			RenderClock();
 			RenderTownIDString();
 
-    	HandleAutoFaces();
+			HandleAutoFaces();
 		}
 	}
 
@@ -336,7 +336,7 @@ void HandleOverheadMap(void)
 					gsOveritemPoolGridNo = GetWorldItem(pItemPool->iItemIndex).sGridNo;
 				}
 			}
-    }
+		}
 	}
 
 	RenderOverheadOverlays();
@@ -349,13 +349,13 @@ void HandleOverheadMap(void)
 		gSelectedGuy = NULL;
 		INT16 const usMapPos = GetOverheadMouseGridNoForFullSoldiersGridNo();
 		if (usMapPos != NOWHERE)
-    {
+		{
 			SOLDIERTYPE* const s = GetClosestMercInOverheadMap(usMapPos, 1);
 			if (s != NULL)
 			{
 				if (s->bTeam == OUR_TEAM) gSelectedGuy = s;
 				DisplayMercNameInOverhead(*s);
-      }
+			}
 		}
 	}
 
@@ -766,8 +766,8 @@ static void RenderOverheadOverlays(void)
 		GetOverheadScreenXYFromGridNo(s.sGridNo, &sX, &sY);
 		//Now, draw his "doll"
 
-    sX += STD_SCREEN_X;
-    sY += STD_SCREEN_Y;
+		sX += STD_SCREEN_X;
+		sY += STD_SCREEN_Y;
 
 		//adjust for position.
 		sX += 2;
@@ -813,8 +813,8 @@ static void RenderOverheadOverlays(void)
 			INT16 sY;
 			GetOverheadScreenXYFromGridNo(wi->sGridNo, &sX, &sY);
 
-      sX += STD_SCREEN_X;
-      sY += STD_SCREEN_Y;
+			sX += STD_SCREEN_X;
+			sY += STD_SCREEN_Y;
 
 			//adjust for position.
 			sY += 6;

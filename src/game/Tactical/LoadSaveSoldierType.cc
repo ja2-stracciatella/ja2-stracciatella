@@ -36,9 +36,9 @@ static UINT32 MercChecksum(SOLDIERTYPE const& s)
 
 void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool stracLinuxFormat, UINT32 uiSavedGameVersion)
 {
-  UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
-  UINT16 usPathDataSize;
-  UINT16 usPathIndex;
+	UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
+	UINT16 usPathDataSize;
+	UINT16 usPathIndex;
 
 	memset(s, 0, sizeof(*s));
 
@@ -67,7 +67,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I8(d, s->bStealthMode)
 	EXTR_I16(d, s->sBreathRed)
 	EXTR_BOOL(d, s->fDelayedMovement)
-  EXTR_SKIP(d, 1);
+	EXTR_SKIP(d, 1);
 	EXTR_U8(d, s->ubWaitActionToDo)
 	EXTR_SKIP(d, 1)
 	EXTR_I8(d, s->ubInsertionDirection)
@@ -78,29 +78,29 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_U8(d, s->ubAttackingHand)
 	EXTR_SKIP(d, 2)
 	EXTR_I16(d, s->sWeightCarriedAtTurnStart)
-  if(stracLinuxFormat)
-  {
-    EXTR_SKIP(d, 2)
-    DataReader reader(d);
-    reader.readUTF32(s->name, lengthof(s->name));
-    d += reader.getConsumed();
-  }
-  else
-  {
-    DataReader reader(d);
-    reader.readUTF16(s->name, lengthof(s->name));
-    d += reader.getConsumed();
-  }
+	if(stracLinuxFormat)
+	{
+		EXTR_SKIP(d, 2)
+		DataReader reader(d);
+		reader.readUTF32(s->name, lengthof(s->name));
+		d += reader.getConsumed();
+	}
+	else
+	{
+		DataReader reader(d);
+		reader.readUTF16(s->name, lengthof(s->name));
+		d += reader.getConsumed();
+	}
 	EXTR_I8(d, s->bVisible)
 	EXTR_I8(d, s->bActive)
 	EXTR_I8(d, s->bTeam)
 	EXTR_U8(d, s->ubGroupID)
 	EXTR_BOOL(d, s->fBetweenSectors)
 	EXTR_U8(d, s->ubMovementNoiseHeard)
-  if(stracLinuxFormat)
-  {
-    EXTR_SKIP(d, 2)
-  }
+	if(stracLinuxFormat)
+	{
+		EXTR_SKIP(d, 2)
+	}
 	EXTR_FLOAT(d, s->dXPos)
 	EXTR_FLOAT(d, s->dYPos)
 	EXTR_SKIP(d, 8)
@@ -216,13 +216,13 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I8(d, s->bLevel)
 	EXTR_SKIP(d, 3)
 
-	/* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
-  EXTR_U16A(d, usPathingData, lengthof(usPathingData))
-  EXTR_U16(d, usPathDataSize)
-  EXTR_U16(d, usPathIndex)
+	// pathing info takes up 16 bit in the savegame but 8 bit in the engine
+	EXTR_U16A(d, usPathingData, lengthof(usPathingData))
+	EXTR_U16(d, usPathDataSize)
+	EXTR_U16(d, usPathIndex)
 	for (UINT8 i = 0; i < usPathDataSize && i < MAX_PATH_LIST_SIZE; i++) {
-    s->ubPathingData[i] = (UINT8)usPathingData[i];
-  }
+		s->ubPathingData[i] = (UINT8)usPathingData[i];
+	}
 	s->ubPathDataSize = (UINT8)usPathDataSize;
 	s->ubPathIndex = (UINT8)usPathIndex;
 
@@ -545,14 +545,14 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I32(d, s->uiTimeSinceLastBleedGrunt)
 	EXTR_SOLDIER(d, s->next_to_previous_attacker)
 	EXTR_SKIP(d, 39)
-  if(stracLinuxFormat)
-  {
-    Assert(d == data + 2352);
-  }
-  else
-  {
-    Assert(d == data + 2328);
-  }
+	if(stracLinuxFormat)
+	{
+		Assert(d == data + 2352);
+	}
+	else
+	{
+		Assert(d == data + 2328);
+	}
 
 	if (checksum != MercChecksum(*s))
 	{
@@ -563,9 +563,9 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 
 void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 {
-  UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
-  UINT16 usPathDataSize;
-  UINT16 usPathIndex;
+	UINT16 usPathingData[ MAX_PATH_LIST_SIZE ];
+	UINT16 usPathDataSize;
+	UINT16 usPathIndex;
 
 	BYTE* d = data;
 	INJ_U8(d, s->ubID)
@@ -603,11 +603,11 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_U8(d, s->ubAttackingHand)
 	INJ_SKIP(d, 2)
 	INJ_I16(d, s->sWeightCarriedAtTurnStart)
-  {
-    DataWriter writer(d);
-    writer.writeStringAsUTF16(s->name, lengthof(s->name));
-    d += writer.getConsumed();
-  }
+	{
+		DataWriter writer(d);
+		writer.writeStringAsUTF16(s->name, lengthof(s->name));
+		d += writer.getConsumed();
+	}
 	INJ_I8(d, s->bVisible)
 	INJ_I8(d, s->bActive)
 	INJ_I8(d, s->bTeam)
@@ -729,15 +729,15 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I8(d, s->bLevel)
 	INJ_SKIP(d, 3)
 
-  /* pathing info takes up 16 bit in the savegame but 8 bit in the engine */
-  usPathDataSize = s->ubPathDataSize > MAX_PATH_LIST_SIZE ? (UINT16)MAX_PATH_LIST_SIZE : (UINT16)s->ubPathDataSize;
-  usPathIndex = (UINT16)s->ubPathIndex;
-  for (UINT8 i = 0; i < usPathDataSize; i++) {
-    usPathingData[i] = (UINT16)s->ubPathingData[i];
-  }
-  INJ_U16A(d, usPathingData, lengthof(usPathingData))
-  INJ_U16(d, usPathDataSize)
-  INJ_U16(d, usPathIndex)
+	// pathing info takes up 16 bit in the savegame but 8 bit in the engine
+	usPathDataSize = s->ubPathDataSize > MAX_PATH_LIST_SIZE ? (UINT16)MAX_PATH_LIST_SIZE : (UINT16)s->ubPathDataSize;
+	usPathIndex = (UINT16)s->ubPathIndex;
+	for (UINT8 i = 0; i < usPathDataSize; i++) {
+		usPathingData[i] = (UINT16)s->ubPathingData[i];
+	}
+	INJ_U16A(d, usPathingData, lengthof(usPathingData))
+	INJ_U16(d, usPathDataSize)
+	INJ_U16(d, usPathIndex)
 
 	INJ_I16(d, s->sBlackList)
 	INJ_I8(d, s->bAimTime)

@@ -122,7 +122,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		INT16 sY;
 		INT8  bZ;
 		if (SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ) &&
-				(s->sSectorX != sX || s->sSectorY != sY || s->bSectorZ != bZ))
+			(s->sSectorX != sX || s->sSectorY != sY || s->bSectorZ != bZ))
 		{
 			return FALSE;
 		}
@@ -293,9 +293,9 @@ BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 			if (*i != s) continue;
 			*i = 0;
 
-			/* Release memory for his personal path, but don't clear his group's
-			 * path/waypoints (pass in groupID -1).  Just because one guy leaves a
-			 * group is no reason to cancel movement for the rest of the group. */
+			// Release memory for his personal path, but don't clear his group's
+			// path/waypoints (pass in groupID -1).  Just because one guy leaves a
+			// group is no reason to cancel movement for the rest of the group.
 			s->pMercPath = ClearStrategicPathList(s->pMercPath, -1);
 
 			RemovePlayerFromGroup(*s);
@@ -452,10 +452,10 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 	// set the current tactical squad
 
 	// ARM: can't call SetCurrentSquad() in mapscreen, it calls SelectSoldier(), that will initialize interface panels!!!
-  // ATE: Adjusted conditions a bit ( sometimes were not getting selected )
+	// ATE: Adjusted conditions a bit ( sometimes were not getting selected )
 	if ( guiCurrentScreen == LAPTOP_SCREEN || guiCurrentScreen == MAP_SCREEN )
-  {
-  	return( FALSE );
+	{
+		return( FALSE );
 	}
 
 	// ATE; Added to allow us to have NO current squad
@@ -494,7 +494,7 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 	RemoveAllPlayersFromSlot( );
 
 	// set all auto faces inactive
-  SetAllAutoFacesInactive( );
+	SetAllAutoFacesInactive( );
 
 	if (iCurrentSquad != NO_CURRENT_SQUAD)
 	{
@@ -534,7 +534,7 @@ void RebuildCurrentSquad( void )
 	RemoveAllPlayersFromSlot( );
 
 	// set all auto faces inactive
-  SetAllAutoFacesInactive( );
+	SetAllAutoFacesInactive( );
 
 	gfPausedTacticalRenderInterfaceFlags = DIRTYLEVEL2;
 
@@ -739,7 +739,7 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 		{
 			SetSelectedMan(NULL);
 
-      // ATE: Make sure we are in TEAM panel at this point!
+			// ATE: Make sure we are in TEAM panel at this point!
 			SetCurrentInterfacePanel( TEAM_PANEL );
 		}
 	}
@@ -813,7 +813,7 @@ void ResetDeadSquadMemberList(INT32 const iSquadValue)
 BOOLEAN IsMercOnCurrentSquad(const SOLDIERTYPE* pSoldier)
 {
 	// current squad valid?
-  if( iCurrentTacticalSquad >= NUMBER_OF_SQUADS )
+	if( iCurrentTacticalSquad >= NUMBER_OF_SQUADS )
 	{
 		// no
 		return( FALSE );
@@ -840,7 +840,8 @@ INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
 	FOR_EACH_IN_SQUAD(i, bSquadValue)
 	{
 		SOLDIERTYPE const* const pSoldier = *i;
-		//Kris:  This breaks the CLIENT of this function, tactical traversal.  Do NOT check for EPCS or ROBOT here.
+		//Kris:  This breaks the CLIENT of this function, tactical traversal.
+		//       Do NOT check for EPCS or ROBOT here.
 		//if ( !AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) &&
 		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{

@@ -84,10 +84,10 @@ void StartInteractiveObject(GridNo const gridno, STRUCTURE const& structure, SOL
 	if (s.usAnimState == BEGIN_OPENSTRUCT)          return;
 	if (s.usAnimState == BEGIN_OPENSTRUCT_CROUCHED) return;
 
-  SoldierSP soldier = GetSoldier(&s);
+	SoldierSP soldier = GetSoldier(&s);
 
 	// Add soldier event for opening door/struct
-  soldier->setPendingAction(structure.fFlags & STRUCTURE_ANYDOOR ? MERC_OPENDOOR : MERC_OPENSTRUCT);
+	soldier->setPendingAction(structure.fFlags & STRUCTURE_ANYDOOR ? MERC_OPENDOOR : MERC_OPENSTRUCT);
 	s.uiPendingActionData1     = structure.usStructureID;
 	s.sPendingActionData2      = gridno;
 	s.bPendingActionData3      = direction;
@@ -131,7 +131,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 					!CheckFact(FACT_PLAYER_FOUND_ITEMS_MISSING, 0))
 			{
 				SayQuoteFromNearbyMercInSector(BOBBYR_SHIPPING_DEST_GRIDNO, 3, QUOTE_STUFF_MISSING_DRASSEN);
-        did_missing_quote = true;
+				did_missing_quote = true;
 			}
 		}
 		else if (s->bTeam == CIV_TEAM)
@@ -168,17 +168,17 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 				SetItemsVisibilityOn(grid_no, s->bLevel, ANY_VISIBILITY_VALUE, do_locators);
 
 				// ATE: Check now many things in pool
-        if (!did_missing_quote)
-        {
-				  if (item_pool->pNext && item_pool->pNext->pNext)
+				if (!did_missing_quote)
+				{
+					if (item_pool->pNext && item_pool->pNext->pNext)
 					{
 						MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_COOL1, 500);
 					}
-				  else if (do_humm)
-				  {
-						MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_HUMM, 500);
-				  }
-        }
+				else if (do_humm)
+				{
+					MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_HUMM, 500);
+				}
+				}
 			}
 			else
 			{
@@ -228,7 +228,7 @@ UICursorID GetInteractiveTileCursor(UICursorID const old_cursor, BOOLEAN const c
 
 void SetActionModeDoorCursorText()
 {
-  // If we are over a merc, don't
+	// If we are over a merc, don't
 	if (gUIFullTarget) return;
 
 	GridNo     grid_no;
@@ -487,14 +487,14 @@ static bool RefineLogicOnStruct(INT16 gridno, LEVELNODE const& n)
 
 		// For a OPENED door, addition requirements are: need to be in 'HAND CURSOR' mode
 		if (structure.fFlags & STRUCTURE_OPEN &&
-				gCurrentUIMode != HANDCURSOR_MODE &&
-				gCurrentUIMode != ACTION_MODE)
+			gCurrentUIMode != HANDCURSOR_MODE &&
+			gCurrentUIMode != ACTION_MODE)
 		{
 			return false;
 		}
 
 		if (!gGameSettings.fOptions[TOPTION_SNAP_CURSOR_TO_DOOR] &&
-				gCurrentUIMode != HANDCURSOR_MODE)
+			gCurrentUIMode != HANDCURSOR_MODE)
 		{
 			return false;
 		}
@@ -566,8 +566,8 @@ static BOOLEAN RefinePointCollisionOnStruct(INT16 const test_x, INT16 const test
 // will return true if data found, else false
 BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY)
 {
-	BOOLEAN	fDataFound = FALSE;
-	INT32	 iTestPos, iStartPos;
+	BOOLEAN fDataFound = FALSE;
+	INT32   iTestPos, iStartPos;
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
@@ -613,8 +613,8 @@ BOOLEAN ShouldCheckForMouseDetections( )
 {
 	BOOLEAN fOK = FALSE;
 
-	if ( gsINTOldRenderCenterX != gsRenderCenterX || gsINTOldRenderCenterY != gsRenderCenterY ||
-			 gusINTOldMousePosX	!= gusMouseXPos	|| gusINTOldMousePosY	!= gusMouseYPos	)
+	if (gsINTOldRenderCenterX != gsRenderCenterX || gsINTOldRenderCenterY != gsRenderCenterY ||
+		gusINTOldMousePosX != gusMouseXPos || gusINTOldMousePosY != gusMouseYPos)
 	{
 		fOK = TRUE;
 	}

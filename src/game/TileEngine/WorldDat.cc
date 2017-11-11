@@ -11,7 +11,7 @@
 
 // THIS FILE CONTAINS DEFINITIONS FOR TILESET FILES
 
-TILESET	 gTilesets[ NUM_TILESETS ];
+TILESET gTilesets[NUM_TILESETS];
 
 
 static void SetTilesetFourTerrainValues(void);

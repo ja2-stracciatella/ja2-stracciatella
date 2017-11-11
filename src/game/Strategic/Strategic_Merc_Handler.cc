@@ -42,7 +42,7 @@
 #include "WeaponModels.h"
 #include "slog/slog.h"
 
-#define		NUM_DAYS_TILL_UNPAID_RPC_QUITS				3
+#define NUM_DAYS_TILL_UNPAID_RPC_QUITS 3
 
 
 void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
@@ -143,9 +143,9 @@ void MercDailyUpdate()
 
 	/* add an event so the merc will say the departing warning (2 hours prior to
 	 * leaving).  Do so for all time slots they will depart from */
-	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_1 - 2 * 60,	0);
-	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_2 - 2 * 60,	0);
-	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_3 - 2 * 60,	0);
+	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_1 - 2 * 60, 0);
+	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_2 - 2 * 60, 0);
+	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_3 - 2 * 60, 0);
 
 	AddSameDayStrategicEvent(EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_1, 0);
 	AddSameDayStrategicEvent(EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_2, 0);
@@ -166,8 +166,8 @@ void MercDailyUpdate()
 			// ATE; Reset found something nice flag...
 			s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE;
 
-      // ATE: Decrement tolerance value...
-      if (--s->bCorpseQuoteTolerance < 0) s->bCorpseQuoteTolerance = 0;
+			// ATE: Decrement tolerance value...
+			if (--s->bCorpseQuoteTolerance < 0) s->bCorpseQuoteTolerance = 0;
 
 			MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 
@@ -205,8 +205,8 @@ void MercDailyUpdate()
 				++s->iTotalContractLength;
 
 				// The player owes the salary
-				INT16	const sSalary          = p.sSalary;
-				INT32	      iMoneyOwedToMerc = sSalary;
+				INT16 const sSalary    = p.sSalary;
+				INT32 iMoneyOwedToMerc = sSalary;
 
 				//if the player owes the npc money, the balance field will be negative
 				if (p.iBalance < 0) iMoneyOwedToMerc += -p.iBalance;
@@ -426,9 +426,9 @@ void RPCWhineAboutNoPay(SOLDIERTYPE& s)
 // OK loop through and check!
 BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 {
-	UINT16	usItem;
-	INT8		bBestArmour = -1;
-	INT8		bBestGun = -1;
+	UINT16 usItem;
+	INT8   bBestArmour = -1;
+	INT8   bBestGun = -1;
 
 	CFOR_EACH_SOLDIER_INV_SLOT(i, *pSoldier)
 	{
@@ -461,7 +461,7 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 	// this of course assumes default morale is 50
 	if ( bBestGun != -1 )
 	{
-		bBestGun		= (bBestGun		 * (50 + pSoldier->bMorale)) / 100;
+		bBestGun = (bBestGun  * (50 + pSoldier->bMorale)) / 100;
 	}
 	if ( bBestArmour != -1 )
 	{
@@ -469,8 +469,8 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 	}
 
 	// OK, check values!
-	if ( 	(bBestGun != -1 && bBestGun < ( gMercProfiles[ pSoldier->ubProfile ].bMainGunAttractiveness / 2 )) ||
-				(bBestArmour != -1 && bBestArmour < ( gMercProfiles[ pSoldier->ubProfile ].bArmourAttractiveness / 2 )) )
+	if ((bBestGun != -1 && bBestGun < ( gMercProfiles[ pSoldier->ubProfile ].bMainGunAttractiveness / 2 )) ||
+		(bBestArmour != -1 && bBestArmour < ( gMercProfiles[ pSoldier->ubProfile ].bArmourAttractiveness / 2 )) )
 	{
 		// Pipe up!
 		return( TRUE );
@@ -501,8 +501,8 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 	if ( pSoldier != NULL )
 	{
 		if (!pSoldier->fMercAsleep          &&
-				pSoldier->bLife       >= OKLIFE &&
-				pSoldier->bAssignment <  ON_DUTY)
+			pSoldier->bLife       >= OKLIFE &&
+			pSoldier->bAssignment <  ON_DUTY)
 		{
 			//ATE: Double check that this problem still exists!
 			if ( SoldierHasWorseEquipmentThanUsedTo( pSoldier ) )
@@ -572,10 +572,9 @@ void UpdateBuddyAndHatedCounters(void)
 										hated_count = 1;
 									}
 									else if (hated_count > 0 && (
-											hated_count == p.bHatedTime[i] / 2 || (
-												hated_count < p.bHatedTime[i] / 2 &&
-												hated_count % TIME_BETWEEN_HATED_COMPLAINTS == 0
-											)))
+										hated_count == p.bHatedTime[i] / 2 || (
+										hated_count < p.bHatedTime[i] / 2 &&
+										hated_count % TIME_BETWEEN_HATED_COMPLAINTS == 0)))
 									{ // Complain!
 										UINT16 const quote = i == 0 ?
 											QUOTE_HATED_MERC_ONE : QUOTE_HATED_MERC_TWO;
@@ -657,12 +656,11 @@ void UpdateBuddyAndHatedCounters(void)
 										p.bMercOpinion[ubOtherProfileID] = HATED_OPINION;
 
 										if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC || (
-												s->ubWhatKindOfMercAmI == MERC_TYPE__NPC && (
-													s->ubProfile == DEVIN ||
-													s->ubProfile == SLAY  ||
-													s->ubProfile == IGGY  ||
-													s->ubProfile == CONRAD
-												)))
+											s->ubWhatKindOfMercAmI == MERC_TYPE__NPC && (
+											s->ubProfile == DEVIN ||
+											s->ubProfile == SLAY  ||
+											s->ubProfile == IGGY  ||
+											s->ubProfile == CONRAD)))
 										{ // Leave now! (handle equipment too)
 											TacticalCharacterDialogue(s, QUOTE_MERC_QUIT_LEARN_TO_HATE);
 											MakeCharacterDialogueEventContractEnding(*s, false);

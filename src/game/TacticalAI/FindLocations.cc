@@ -21,7 +21,7 @@
 #include "Text.h"
 #include "Structure_Wrap.h"
 #ifdef _DEBUG
-#	include "Video.h"
+	#include "Video.h"
 #endif
 #include "WorldMan.h"
 #include "StrategicMap.h"
@@ -36,14 +36,14 @@
 
 #ifdef _DEBUG
 	INT16 gsCoverValue[WORLD_MAX];
-	INT16	gsBestCover;
+	INT16 gsBestCover;
 	#ifndef PATHAI_VISIBLE_DEBUG
-		// NB Change this to true to get visible cover debug -- CJC
-		BOOLEAN gfDisplayCoverValues = FALSE;
+	// NB Change this to true to get visible cover debug -- CJC
+	BOOLEAN gfDisplayCoverValues = FALSE;
 	#endif
 #endif
 
-INT8	gubAIPathCosts[19][19];
+INT8 gubAIPathCosts[19][19];
 
 
 static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale, INT32 iNewScale)
@@ -57,15 +57,15 @@ static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale
 	if (iValueChange <= 0)
 	{
 		return(NOWHERE);
-  }
-	
+	}
+
 	iScaleSum = iOldScale + iNewScale;
 
 	// here, the change in cover HAS to be an improvement over current cover
 	if (iScaleSum <= 0)
 	{
 		return(NOWHERE);
-  }
+	}
 	iPercentBetter = (iValueChange * 100) / iScaleSum;
 	SLOGD(DEBUG_TAG_AI, "CalcPercentBetter: %%Better %ld, old %ld, new %ld, change %ld\noldScale %ld, newScale %ld, scaleSum %ld",
 				iPercentBetter, iOldValue, iNewValue, iValueChange, iOldScale,
@@ -76,7 +76,7 @@ static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale
 
 static void AICenterXY(INT16 sGridNo, FLOAT* pdX, FLOAT* pdY)
 {
-	INT16		sXPos, sYPos;
+	INT16 sXPos, sYPos;
 
 	sXPos = sGridNo % WORLD_COLS;
 	sYPos = sGridNo / WORLD_COLS;
@@ -90,7 +90,7 @@ static INT8 CalcWorstCTGTForPosition(SOLDIERTYPE* const pSoldier, const SOLDIERT
 {
 	// When considering a gridno for cover, we want to take into account cover if we
 	// lie down, so we return the LOWEST chance to get through for that location.
-	INT8		bCubeLevel, bThisCTGT,bWorstCTGT = 100;
+	INT8 bCubeLevel, bThisCTGT,bWorstCTGT = 100;
 
 	for (bCubeLevel = 1; bCubeLevel <= 3; bCubeLevel++)
 	{
@@ -130,13 +130,13 @@ static INT8 CalcAverageCTGTForPosition(SOLDIERTYPE* const pSoldier, const SOLDIE
 {
 	// When considering a gridno for cover, we want to take into account cover if we
 	// lie down, so we return the LOWEST chance to get through for that location.
-	INT8		bCubeLevel;
+	INT8  bCubeLevel;
 	INT32 iTotalCTGT       = 0;
 	INT32 bValidCubeLevels = 0;
 
 	for (bCubeLevel = 1; bCubeLevel <= 3; bCubeLevel++)
 	{
-			switch (bCubeLevel)
+		switch (bCubeLevel)
 		{
 			case 1:
 				if (iMyAPsLeft < AP_CROUCH + AP_PRONE)
@@ -243,13 +243,13 @@ static INT8 CalcBestCTGT(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const o
 static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, INT32 iMyAPsLeft, UINT32 uiThreatIndex, INT32 iRange, INT32 morale, INT32* iTotalScale)
 {
 	// all 32-bit integers for max. speed
-	INT32	iMyPosValue, iHisPosValue, iCoverValue;
-	INT32	iReductionFactor, iThisScale;
-	INT16	sHisGridNo, sMyRealGridNo = NOWHERE, sHisRealGridNo = NOWHERE;
+	INT32 iMyPosValue, iHisPosValue, iCoverValue;
+	INT32 iReductionFactor, iThisScale;
+	INT16 sHisGridNo, sMyRealGridNo = NOWHERE, sHisRealGridNo = NOWHERE;
 	INT16 sTempX, sTempY;
 	FLOAT dMyX, dMyY, dHisX, dHisY;
-	INT8	bHisBestCTGT, bHisActualCTGT, bHisCTGT, bMyCTGT;
-	INT32	iRangeChange, iRangeFactor, iRangeFactorMultiplier;
+	INT8  bHisBestCTGT, bHisActualCTGT, bHisCTGT, bMyCTGT;
+	INT32 iRangeChange, iRangeFactor, iRangeFactorMultiplier;
 	SOLDIERTYPE *pHim;
 
 	dMyX = dMyY = dHisX = dHisY = -1.0;
@@ -391,22 +391,22 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 	}
 
 
- // if my positional value is worth something at all here
- if (iMyPosValue > 0)
-  {
-   // if I CAN'T crouch when I get there, that makes it significantly less
-   // appealing a spot (how much depends on range), so that's a penalty to me
-   if (iMyAPsLeft < AP_CROUCH)
-     // subtract another 1 % penalty for NOT being able to crouch per tile
-     // the farther away we are, the bigger a difference crouching will make!
-     iMyPosValue -= ((iMyPosValue * (AIM_PENALTY_TARGET_CROUCHED + (iRange / CELL_X_SIZE))) / 100);
-  }
+	// if my positional value is worth something at all here
+	if (iMyPosValue > 0)
+	{
+		// if I CAN'T crouch when I get there, that makes it significantly less
+		// appealing a spot (how much depends on range), so that's a penalty to me
+		if (iMyAPsLeft < AP_CROUCH)
+			// subtract another 1 % penalty for NOT being able to crouch per tile
+			// the farther away we are, the bigger a difference crouching will make!
+			iMyPosValue -= ((iMyPosValue * (AIM_PENALTY_TARGET_CROUCHED + (iRange / CELL_X_SIZE))) / 100);
+	}
 
 
 	// high morale prefers decreasing the range (positive factor), while very
 	// low morale (HOPELESS) prefers increasing it
 
-//	if (bHisCTGT < 100 || (morale - 1 < 0))
+	//if (bHisCTGT < 100 || (morale - 1 < 0))
 	{
 
 		iRangeFactorMultiplier = RangeChangeDesire( pMe );
@@ -420,7 +420,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 				//iRangeFactor = (iRangeChange * (morale - 1)) / 4;
 				iRangeFactor = (iRangeChange * iRangeFactorMultiplier) / 2;
 				SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iRangeChange %d, iRangeFactor %d\n",
-							iRangeChange, iRangeFactor);
+					iRangeChange, iRangeFactor);
 
 				// aggression booster for stupider enemies
 				iMyPosValue += 100 * iRangeFactor * ( 5 - SoldierDifficultyLevel( pMe ) ) / 5 ;
@@ -429,7 +429,6 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 				// change both values, since one or the other could be 0
 				if (iRangeFactor > 0)
 				{
-
 					iMyPosValue = (iMyPosValue * (100 + iRangeFactor)) / 100;
 					iHisPosValue = (100 * iHisPosValue) / (100 + iRangeFactor);
 				}
@@ -445,7 +444,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 	// the farther apart we are, the less important the cover differences are
 	// the less certain his position, the less important cover differences are
 	iReductionFactor = ((MAX_THREAT_RANGE - iRange) * Threat[uiThreatIndex].iCertainty) /
-		    MAX_THREAT_RANGE;
+				MAX_THREAT_RANGE;
 
 	// divide by a 100 to make the numbers more managable and avoid 32-bit limit
 	iThisScale = MAX( iMyPosValue, iHisPosValue) / 100;
@@ -460,17 +459,17 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 	iCoverValue = (iCoverValue * iReductionFactor) / 100;
 
 	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iCoverValue %d, sMyGridNo %d, sHisGrid %d, iRange %d, morale %d",
-				iCoverValue, sMyGridNo, sHisGridNo, iRange, morale);
+		iCoverValue, sMyGridNo, sHisGridNo, iRange, morale);
 	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iCertainty %d, his bOppCnt %d, my bOppCnt %d",
-				Threat[uiThreatIndex].iCertainty, pHim->bOppCnt, pMe->bOppCnt);
+		Threat[uiThreatIndex].iCertainty, pHim->bOppCnt, pMe->bOppCnt);
 	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: bHisCTGT = %d, hisThreat = %d, hisFullAPs = %d",
-				bHisCTGT, Threat[uiThreatIndex].iValue, Threat[uiThreatIndex].iAPs);
+		bHisCTGT, Threat[uiThreatIndex].iValue, Threat[uiThreatIndex].iAPs);
 	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: bMyCTGT = %d,  iMyThreat = %d,  iMyAPsLeft = %d",
-				bMyCTGT, iMyThreat, iMyAPsLeft);
+		bMyCTGT, iMyThreat, iMyAPsLeft);
 	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: hisPosValue = %d, myPosValue = %d",
-				iHisPosValue, iMyPosValue);
+		iHisPosValue, iMyPosValue);
 	SLOGD(DEBUG_TAG_AI, "CalcCoverValue: iThisScale = %d, iTotalScale = %d, iReductionFactor %d",
-				iThisScale, *iTotalScale, iReductionFactor);
+		iThisScale, *iTotalScale, iReductionFactor);
 
 	return( iCoverValue );
 }
@@ -478,7 +477,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 
 static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	INT16	sTempGridNo;
+	INT16 sTempGridNo;
 
 	UINT8 ubCount = 0;
 
@@ -502,27 +501,27 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 {
 	// all 32-bit integers for max. speed
 	INT32 iCurrentCoverValue, iCoverValue, iBestCoverValue;
-	INT32	iCurrentScale, iCoverScale;
-	INT32	iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
-	INT16	sGridNo, sBestCover = NOWHERE;
+	INT32 iCurrentScale, iCoverScale;
+	INT32 iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
+	INT16 sGridNo, sBestCover = NOWHERE;
 	INT32 iPathCost;
-	INT32	iThreatRange, iClosestThreatRange = 1500;
+	INT32 iThreatRange, iClosestThreatRange = 1500;
 //	INT16 sClosestThreatGridno = NOWHERE;
-	INT32	iMyThreatValue;
-	INT16	sThreatLoc;
+	INT32 iMyThreatValue;
+	INT16 sThreatLoc;
 	INT32 iMaxThreatRange;
-	UINT32	uiThreatCnt = 0;
+	UINT32 uiThreatCnt = 0;
 	INT32 iMaxMoveTilesLeft, iSearchRange, iRoamRange;
-	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16	sOrigin;	// has to be a short, need a pointer
-	INT16	*		pusLastLoc;
-	INT8 *		pbPersOL;
-	INT8 *		pbPublOL;
+	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
+	INT16 sOrigin;	// has to be a short, need a pointer
+	INT16 *pusLastLoc;
+	INT8 *pbPersOL;
+	INT8 *pbPublOL;
 
-	UINT8	ubBackgroundLightLevel;
-	UINT8	ubBackgroundLightPercent = 0;
-	UINT8	ubLightPercentDifference;
-	BOOLEAN		fNight;
+	UINT8 ubBackgroundLightLevel;
+	UINT8 ubBackgroundLightPercent = 0;
+	UINT8 ubLightPercentDifference;
+	BOOLEAN fNight;
 
 	INT32 iBestCoverScale = 0; // XXX HACK000E
 
@@ -569,7 +568,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	// decide how far we're gonna be looking
 	iSearchRange = gbDiff[DIFF_MAX_COVER_RANGE][ SoldierDifficultyLevel( pSoldier ) ];
 
-/*
+	/*
 	switch (pSoldier->bAttitude)
 	{
 		case DEFENSIVE:		iSearchRange += 2; break;
@@ -630,7 +629,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		if (pOpponent->bLife < OKLIFE) continue; // next merc
 
 		// if this man is neutral / on the same side, he's not an opponent
- 		if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
+		if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
 		{
 			continue;          // next merc
 		}
@@ -654,7 +653,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// if personal knowledge is more up to date or at least equal
 		if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE] > 0) ||
 			(*pbPersOL == *pbPublOL))
-    {
+		{
 			// using personal knowledge, obtain opponent's "best guess" gridno
 			sThreatLoc = *pusLastLoc;
 			iThreatCertainty = ThreatPercent[*pbPersOL - OLDEST_HEARD_VALUE];
@@ -738,7 +737,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 	// if status isn't black (life & death combat), and roaming range is limited
 	if ((pSoldier->bAlertStatus != STATUS_BLACK) && (iRoamRange < MAX_ROAMING_RANGE) &&
-		 (sOrigin != NOWHERE))
+		(sOrigin != NOWHERE))
 	{
 		// must try to stay within or return to the point of origin
 		iDistFromOrigin = SpacesAway(sOrigin,pSoldier->sGridNo);
@@ -749,7 +748,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		iDistFromOrigin = -1;
 	}
 	SLOGD(DEBUG_TAG_AI, "FBNC: iRoamRange %d, sMaxLeft %d, sMaxRight %d, sMaxUp %d, sMaxDown %d",
-				iRoamRange, sMaxLeft, sMaxRight, sMaxUp, sMaxDown);
+		iRoamRange, sMaxLeft, sMaxRight, sMaxUp, sMaxDown);
 
 	// the initial cover value to beat is our current cover value
 	iBestCoverValue = iCurrentCoverValue;
@@ -815,11 +814,11 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 				// if this is outside roaming range, and doesn't get us closer to it
 				if ((iDistCoverFromOrigin > iRoamRange) &&
-					 (iDistFromOrigin <= iDistCoverFromOrigin))
+					(iDistFromOrigin <= iDistCoverFromOrigin))
 				{
 					continue;	// then we can't go there
 				}
-      }
+			}
 
 			if (!(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE))
 			{
@@ -913,7 +912,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			if (uiThreatCnt > 1)
 			{
 				SLOGD(DEBUG_TAG_AI, "FBNC: Total iCoverValue at gridno %d is %d",
-							sGridNo, iCoverValue);
+					sGridNo, iCoverValue);
 			}
 
 #if defined( _DEBUG ) && !defined( PATHAI_VISIBLE_DEBUG )
@@ -928,7 +927,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			if (iCoverValue > iBestCoverValue)
 			{
 				SLOGD(DEBUG_TAG_AI, "FBNC: NEW BEST iCoverValue at gridno %d is %d",
-							sGridNo, iCoverValue);
+					sGridNo, iCoverValue);
 				// remember it instead
 				sBestCover = sGridNo;
 				iBestCoverValue = iCoverValue;
@@ -952,12 +951,12 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		InvalidateScreen( );
 		RefreshScreen();
 		/*
-	 iLoop = GetJA2Clock();
-	 do
-	 {
+		iLoop = GetJA2Clock();
+		do
+		{
 
-	 } while( ( GetJA2Clock( ) - iLoop ) < 2000 );
-	 */
+		} while( ( GetJA2Clock( ) - iLoop ) < 2000 );
+		*/
 	}
 	#endif
 
@@ -976,7 +975,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		if (*piPercentBetter >= MIN_PERCENT_BETTER)
 		{
 			SLOGD(DEBUG_TAG_AI, "Found Cover: current %ld, best %ld, %d%%Better %ld",
-						iCurrentCoverValue, iBestCoverValue, *piPercentBetter);
+				iCurrentCoverValue, iBestCoverValue, *piPercentBetter);
 			return((INT16)sBestCover);       // return the gridno of that cover
 		}
 	}
@@ -1037,7 +1036,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 
 		// if personal knowledge is more up to date or at least equal
 		if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][*pbPersOL - OLDEST_HEARD_VALUE] > 0) ||
-       (*pbPersOL == *pbPublOL))
+			(*pbPersOL == *pbPublOL))
 		{
 			// using personal knowledge, obtain opponent's "best guess" gridno
 			sThreatLoc = gsLastKnownOppLoc[pSoldier->ubID][pOpponent->ubID];
@@ -1119,9 +1118,9 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	// use the min macro here to make sure we don't wrap the UINT8 to 255...
 
 	#if 0 /* doppelt? */
-	gubNPCAPBudget = 	gubNPCAPBudget = __min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
+	gubNPCAPBudget = gubNPCAPBudget = __min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
 	#else
-	gubNPCAPBudget = 	__min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
+	gubNPCAPBudget = __min( gubNPCAPBudget, gubNPCAPBudget - GetAPsToChangeStance( pSoldier, ANIM_STAND ) );
 	#endif
 
 	// determine maximum horizontal limits
@@ -1359,7 +1358,7 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 {
 	INT16 sGridNo, sClosestSpot = NOWHERE, sPathCost;
-	INT32	iSpotValue, iBestSpotValue = 1000;
+	INT32 iSpotValue, iBestSpotValue = 1000;
 	INT16 sMaxLeft,sMaxRight,sMaxUp,sMaxDown,sXOffset,sYOffset;
 	INT32 iSearchRange;
 	INT8 bLightLevel, bCurrLightLevel, bLightDiff;
@@ -1667,7 +1666,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
 	SLOGD(DEBUG_TAG_AI, "%d decides to pick up %ls", s.ubID, ItemNames[o.usItem]);
 	if (GCM->getItem(o.usItem)->getItemClass() == IC_GUN &&
-			!FindBetterSpotForItem(s, HANDPOS))
+		!FindBetterSpotForItem(s, HANDPOS))
 	{
 		if (s.bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
 		{
@@ -1696,11 +1695,11 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 
 INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 {
-	INT16		sClosestDoor = NOWHERE;
-	INT32		iSearchRange;
-	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16		sGridNo;
-	INT32		iDist, iClosestDist = 10;
+	INT16 sClosestDoor = NOWHERE;
+	INT32 iSearchRange;
+	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
+	INT16 sGridNo;
+	INT32 iDist, iClosestDist = 10;
 
 	iSearchRange = 5;
 
@@ -1735,10 +1734,10 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 
 INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 {
-	INT32			iLoop;
-	INT16			*psEdgepointArray;
-	INT32			iEdgepointArraySize;
-	INT16			sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
+	INT32 iLoop;
+	INT16 *psEdgepointArray;
+	INT32 iEdgepointArraySize;
+	INT16 sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
 
 	switch( bEdgeCode )
 	{
@@ -1781,13 +1780,13 @@ INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 
 INT16 FindNearestEdgePoint( INT16 sGridNo )
 {
-	INT16			sScreenX, sScreenY, sMaxScreenX, sMaxScreenY;
-	INT16			sDist[5], sMinDist;
-	INT32			iLoop;
-	INT8			bMinIndex;
-	INT16 *		psEdgepointArray;
-	INT32			iEdgepointArraySize;
-	INT16			sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
+	INT16 sScreenX, sScreenY, sMaxScreenX, sMaxScreenY;
+	INT16 sDist[5], sMinDist;
+	INT32 iLoop;
+	INT8  bMinIndex;
+	INT16 *psEdgepointArray;
+	INT32 iEdgepointArraySize;
+	INT16 sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
 
 	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
@@ -1795,10 +1794,10 @@ INT16 FindNearestEdgePoint( INT16 sGridNo )
 	sMaxScreenY = gsBRY - gsTLY;
 
 	sDist[0] = 0x7FFF;
-	sDist[1] = sScreenX;									// west
-	sDist[2] = sMaxScreenX - sScreenX;		// east
-	sDist[3] = sScreenY;									// north
-	sDist[4] = sMaxScreenY - sScreenY;		// south
+	sDist[1] = sScreenX;			// west
+	sDist[2] = sMaxScreenX - sScreenX;	// east
+	sDist[3] = sScreenY;			// north
+	sDist[4] = sMaxScreenY - sScreenY;	// south
 
 	sMinDist = sDist[0];
 	bMinIndex = 0;
@@ -1854,11 +1853,11 @@ INT16 FindNearestEdgePoint( INT16 sGridNo )
 
 INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 {
-	INT32		iSearchRange;
-	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
+	INT32 iSearchRange;
+	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
 	INT16 sGridNo, sClosestSpot = NOWHERE;
-	INT8	bDirection, bClosestDirection;
+	INT8  bDirection, bClosestDirection;
 	INT32 iPathCost, iClosestPathCost = 1000;
 
 	bClosestDirection = -1;
@@ -1939,8 +1938,8 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 
 INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 {
-	INT32		iSearchRange;
-	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
+	INT32 iSearchRange;
+	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
 	INT16 sGridNo, sClosestSpot = NOWHERE;
 	INT32 iDistance, iClosestDistance = 9999;
@@ -1972,7 +1971,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 			if (room == NO_ROOM) continue;
 
 			if ((fInRing  && room == BOXING_RING) ||
-					((!fInRing && room != BOXING_RING) && LegalNPCDestination(pSoldier, sGridNo, IGNORE_PATH, NOWATER, 0)))
+				((!fInRing && room != BOXING_RING) && LegalNPCDestination(pSoldier, sGridNo, IGNORE_PATH, NOWATER, 0)))
 			{
 				iDistance = ABS( sXOffset ) + ABS( sYOffset );
 				if (iDistance < iClosestDistance && WhoIsThere2(sGridNo, 0) == NULL)
@@ -1989,11 +1988,11 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 
 INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 {
-	INT32		iSearchRange;
-	INT16		sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
+	INT32 iSearchRange;
+	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 
-	INT16		sGridNo, sClosestSpot = NOWHERE;
-	INT32		iDistance, iClosestDistance = 9999;
+	INT16 sGridNo, sClosestSpot = NOWHERE;
+	INT32 iDistance, iClosestDistance = 9999;
 
 	// set the distance limit of the square region
 	iSearchRange = 7;

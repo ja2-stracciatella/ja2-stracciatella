@@ -540,25 +540,25 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 	if (size == 0) return 0;
 
 	SGP::PODObj<ScrollStringSt> s;
-  {
-    SGP::Buffer<uint8_t> data(size);
-    FileRead(f, data, size);
-    DataReader reader(data);
-    if(stracLinuxFormat)
-    {
-      size_t const len = size / 4;
-      SGP::Buffer<wchar_t> str(len);
-      reader.readUTF32(str, len);
-      s->pString = str.Release();
-    }
-    else
-    {
-      size_t const len = size / 2;
-      SGP::Buffer<wchar_t> str(len);
-      reader.readUTF16(str, len);
-      s->pString = str.Release();
-    }
-  }
+	{
+		SGP::Buffer<uint8_t> data(size);
+		FileRead(f, data, size);
+		DataReader reader(data);
+		if(stracLinuxFormat)
+		{
+			size_t const len = size / 4;
+			SGP::Buffer<wchar_t> str(len);
+			reader.readUTF32(str, len);
+			s->pString = str.Release();
+		}
+		else
+		{
+			size_t const len = size / 2;
+			SGP::Buffer<wchar_t> str(len);
+			reader.readUTF16(str, len);
+			s->pString = str.Release();
+		}
+	}
 
 	BYTE data[28];
 	FileRead(f, data, sizeof(data));
@@ -578,17 +578,17 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 
 static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* const s)
 {
-  if(!s)
-  {
-    UINT32 const size = 0;
-    FileWrite(f, &size, sizeof(size));
-    return;
-  }
+	if(!s)
+	{
+		UINT32 const size = 0;
+		FileWrite(f, &size, sizeof(size));
+		return;
+	}
 
-  UTF8String str(s->pString);
-  std::vector<uint16_t> utf16data = str.getUTF16();
-  UINT32 const size = 2 * utf16data.size();
-  FileWrite(f, &size, sizeof(size));
+	UTF8String str(s->pString);
+	std::vector<uint16_t> utf16data = str.getUTF16();
+	UINT32 const size = 2 * utf16data.size();
+	FileWrite(f, &size, sizeof(size));
 	FileWrite(f, utf16data.data(), size);
 
 	BYTE data[28];

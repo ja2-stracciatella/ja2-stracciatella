@@ -36,55 +36,55 @@
 #include "UILayout.h"
 
 
-BOOLEAN		gfInSectorExitMenu = FALSE;
+BOOLEAN gfInSectorExitMenu = FALSE;
 
 
 struct EXIT_DIALOG_STRUCT
 {
-	MOUSE_REGION			BackRegion;
-	MOUSE_REGION			SingleRegion;
-	MOUSE_REGION			LoadRegion;
-	MOUSE_REGION			AllRegion;
-	GUIButtonRef      uiLoadCheckButton;
-	GUIButtonRef      uiSingleMoveButton;
-	GUIButtonRef      uiAllMoveButton;
-	GUIButtonRef      uiOKButton;
-	GUIButtonRef      uiCancelButton;
-	MercPopUpBox*     box;
-	BUTTON_PICS*      iButtonImages;
-	UINT16						usWidth;
-	UINT16						usHeight;
-	INT16							sX;
-	INT16							sY;
-	INT16							sAdditionalData;
-	UINT8							ubFlags;
-	UINT8							ubLeaveSectorType;
-	UINT8							ubLeaveSectorCode;
-	UINT8							ubDirection;
-	UINT8							ubNumPeopleOnSquad;
+	MOUSE_REGION BackRegion;
+	MOUSE_REGION SingleRegion;
+	MOUSE_REGION LoadRegion;
+	MOUSE_REGION AllRegion;
+	GUIButtonRef uiLoadCheckButton;
+	GUIButtonRef uiSingleMoveButton;
+	GUIButtonRef uiAllMoveButton;
+	GUIButtonRef uiOKButton;
+	GUIButtonRef uiCancelButton;
+	MercPopUpBox *box;
+	BUTTON_PICS  *iButtonImages;
+	UINT16 usWidth;
+	UINT16 usHeight;
+	INT16 sX;
+	INT16 sY;
+	INT16 sAdditionalData;
+	UINT8 ubFlags;
+	UINT8 ubLeaveSectorType;
+	UINT8 ubLeaveSectorCode;
+	UINT8 ubDirection;
+	UINT8 ubNumPeopleOnSquad;
 	const SOLDIERTYPE* single_move_will_isolate_epc; //if not NULL, then that means it is an EPC
-	INT8							bHandled;
-	BOOLEAN						fRender;
-	BOOLEAN						fGotoSector;
-	BOOLEAN						fGotoSectorText;
-	BOOLEAN						fSingleMove;
-	BOOLEAN						fAllMove;
-	BOOLEAN						fSingleMoveDisabled;
-	BOOLEAN						fGotoSectorDisabled;
-	BOOLEAN						fAllMoveDisabled;
-	BOOLEAN						fGotoSectorHilighted;
-	BOOLEAN						fSingleMoveHilighted;
-	BOOLEAN						fAllMoveHilighted;
-	BOOLEAN						fMultipleSquadsInSector;
-	BOOLEAN						fSingleMoveOn;
-	BOOLEAN						fAllMoveOn;
-	BOOLEAN						fSelectedMercIsEPC;
-	BOOLEAN						fSquadHasMultipleEPCs;
-	BOOLEAN						fUncontrolledRobotInSquad;
+	INT8 bHandled;
+	BOOLEAN fRender;
+	BOOLEAN fGotoSector;
+	BOOLEAN fGotoSectorText;
+	BOOLEAN fSingleMove;
+	BOOLEAN fAllMove;
+	BOOLEAN fSingleMoveDisabled;
+	BOOLEAN fGotoSectorDisabled;
+	BOOLEAN fAllMoveDisabled;
+	BOOLEAN fGotoSectorHilighted;
+	BOOLEAN fSingleMoveHilighted;
+	BOOLEAN fAllMoveHilighted;
+	BOOLEAN fMultipleSquadsInSector;
+	BOOLEAN fSingleMoveOn;
+	BOOLEAN fAllMoveOn;
+	BOOLEAN fSelectedMercIsEPC;
+	BOOLEAN fSquadHasMultipleEPCs;
+	BOOLEAN fUncontrolledRobotInSquad;
 };
 
 
-EXIT_DIALOG_STRUCT	gExitDialog;
+EXIT_DIALOG_STRUCT gExitDialog;
 
 
 UINT8   gubExitGUIDirection;
@@ -99,7 +99,9 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 dx, GUI_CALLBACK click
 {
 	const INT16 text_col   = FONT_MCOLOR_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	return CreateIconAndTextButton(gExitDialog.iButtonImages, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, gExitDialog.sX + dx, gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST, click);
+	return CreateIconAndTextButton(gExitDialog.iButtonImages, text, FONT12ARIAL, text_col,
+					shadow_col, text_col, shadow_col, gExitDialog.sX + dx,
+					gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST, click);
 }
 
 
@@ -118,15 +120,15 @@ static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 //KM:  New method is coded for more sophistocated rules.  All the information is stored within the gExitDialog struct
-//		 and calculated upon entry to this function instead of passing in multiple arguments and calculating it prior.
+//     and calculated upon entry to this function instead of passing in multiple arguments and calculating it prior.
 static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
 {
-	UINT32 uiTraverseTimeInMinutes;
-	SGPRect	aRect;
-	UINT16	usTextBoxWidth, usTextBoxHeight;
-	UINT16	usMapPos = 0;
-	INT8		bExitCode = -1;
-	BOOLEAN	OkExitCode;
+	UINT32  uiTraverseTimeInMinutes;
+	SGPRect aRect;
+	UINT16  usTextBoxWidth, usTextBoxHeight;
+	UINT16  usMapPos = 0;
+	INT8    bExitCode = -1;
+	BOOLEAN OkExitCode;
 
 	//STEP 1:  Calculate the information for the exit gui
 	memset( &gExitDialog, 0, sizeof( EXIT_DIALOG_STRUCT ) );
@@ -155,15 +157,16 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	OkExitCode = OKForSectorExit( bExitCode, usMapPos, &uiTraverseTimeInMinutes );
 
 	if( uiTraverseTimeInMinutes <= 5 )
-	{ //if the traverse time is short, then traversal is percieved to be instantaneous.
+	{
+		//if the traverse time is short, then traversal is percieved to be instantaneous.
 		gExitDialog.fGotoSectorText = TRUE;
 	}
 
 	if( OkExitCode == 1 )
 	{
-		gExitDialog.fAllMoveDisabled	= TRUE;
-		gExitDialog.fSingleMoveOn			= TRUE;
-		gExitDialog.fSingleMove				= TRUE;
+		gExitDialog.fAllMoveDisabled = TRUE;
+		gExitDialog.fSingleMoveOn = TRUE;
+		gExitDialog.fSingleMove = TRUE;
 		if( gfRobotWithoutControllerAttemptingTraversal )
 		{
 			gfRobotWithoutControllerAttemptingTraversal = FALSE;
@@ -173,8 +176,8 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	}
 	else if( OkExitCode == 2 )
 	{
-		gExitDialog.fAllMoveOn				= TRUE;
-		gExitDialog.fAllMove					= TRUE;
+		gExitDialog.fAllMoveOn = TRUE;
+		gExitDialog.fAllMove = TRUE;
 	}
 
 	if ( gTacticalStatus.uiFlags & INCOMBAT )
@@ -202,8 +205,9 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 
 
 	if( gExitDialog.fAllMoveOn )
-	{ //either an all-move in non-combat, or the last concious guy in combat.
-		gExitDialog.fGotoSector							= TRUE;
+	{
+		//either an all-move in non-combat, or the last concious guy in combat.
+		gExitDialog.fGotoSector = TRUE;
 	}
 
 	const SOLDIERTYPE* const sel = GetSelectedMan();
@@ -214,13 +218,18 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	{
 		if (pSoldier == sel) continue;
 		if( !pSoldier->fBetweenSectors &&
-				pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ &&
-				pSoldier->bLife >= OKLIFE &&
-				pSoldier->bAssignment != sel->bAssignment &&
-				pSoldier->bAssignment != ASSIGNMENT_POW && pSoldier->bAssignment != IN_TRANSIT && pSoldier->bAssignment != ASSIGNMENT_DEAD )
-		{ //KM:  We need to determine if there are more than one squad (meaning other concious mercs in a different squad or assignment)
-			//		 These conditions were done to the best of my knowledge, so if there are other situations that require modification,
-			//		 then feel free to do so.
+			pSoldier->sSectorX == gWorldSectorX &&
+			pSoldier->sSectorY == gWorldSectorY &&
+			pSoldier->bSectorZ == gbWorldSectorZ &&
+			pSoldier->bLife >= OKLIFE &&
+			pSoldier->bAssignment != sel->bAssignment &&
+			pSoldier->bAssignment != ASSIGNMENT_POW &&
+			pSoldier->bAssignment != IN_TRANSIT &&
+			pSoldier->bAssignment != ASSIGNMENT_DEAD )
+		{
+			//KM:  We need to determine if there are more than one squad (meaning other concious mercs in a different squad or assignment)
+			//     These conditions were done to the best of my knowledge, so if there are other situations that require modification,
+			//     then feel free to do so.
 			gExitDialog.fMultipleSquadsInSector = TRUE;
 			break;
 		}
@@ -233,8 +242,8 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 		// Check if there are more than one in this squad
 		if ( gExitDialog.ubNumPeopleOnSquad > 1 )
 		{
-			gExitDialog.fSingleMoveOn				= FALSE;
-			gExitDialog.fAllMoveOn					= TRUE;
+			gExitDialog.fSingleMoveOn = FALSE;
+			gExitDialog.fAllMoveOn = TRUE;
 			gExitDialog.fSelectedMercIsEPC  = TRUE;
 		}
 		gExitDialog.fSingleMoveDisabled = TRUE;
@@ -253,14 +262,15 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 				if (AM_AN_EPC(s))
 				{
 					ubNumEPCs++;
-					/* record the epc.  If there are more than one EPCs, then it doesn't
-					 * matter.  This is used in building the text message explaining why
-					 * the selected merc can't leave.  This is how we extract the EPC's
-					 * name. */
+					// record the epc.  If there are more than one EPCs, then it doesn't
+					// matter.  This is used in building the text message explaining why
+					// the selected merc can't leave.  This is how we extract the EPC's
+					// name.
 					gExitDialog.single_move_will_isolate_epc = s;
 				}
 				else
-				{ //We have more than one merc, so we will allow the selected merc to leave alone if
+				{
+					//We have more than one merc, so we will allow the selected merc to leave alone if
 					//the user so desired.
 					ubNumMercs++;
 					break;
@@ -270,8 +280,8 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 
 		if( ubNumMercs == 1 && ubNumEPCs >= 1 )
 		{
-			gExitDialog.fSingleMoveOn				= FALSE;
-			gExitDialog.fAllMoveOn					= TRUE;
+			gExitDialog.fSingleMoveOn = FALSE;
+			gExitDialog.fAllMoveOn = TRUE;
 			gExitDialog.fSingleMoveDisabled = TRUE;
 			if( ubNumEPCs > 1 )
 			{
@@ -283,12 +293,14 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	if( gTacticalStatus.fEnemyInSector )
 	{
 		if( gExitDialog.fMultipleSquadsInSector )
-		{ //We have multiple squads in a hostile sector.  That means that we can't load the adjacent sector.
+		{
+			//We have multiple squads in a hostile sector.  That means that we can't load the adjacent sector.
 			gExitDialog.fGotoSectorDisabled = TRUE;
 			gExitDialog.fGotoSector = FALSE;
 		}
 		else if( GetNumberOfMilitiaInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-		{ //Leaving this sector will result in militia being forced to fight the battle, can't load adjacent sector.
+		{
+			//Leaving this sector will result in militia being forced to fight the battle, can't load adjacent sector.
 			gExitDialog.fGotoSectorDisabled = TRUE;
 			gExitDialog.fGotoSector = FALSE;
 		}
@@ -304,16 +316,18 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 		gExitDialog.fGotoSectorDisabled = TRUE;
 	}
 
-	gExitDialog.ubDirection							= ubDirection;
-	gExitDialog.sAdditionalData					= sAdditionalData;
+	gExitDialog.ubDirection = ubDirection;
+	gExitDialog.sAdditionalData = sAdditionalData;
 
-	gExitDialog.box = PrepareMercPopupBox(0, DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, TacticalStr[EXIT_GUI_TITLE_STR], 100, 85, 2, 75, &usTextBoxWidth, &usTextBoxHeight);
+	gExitDialog.box = PrepareMercPopupBox(0, DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER,
+						TacticalStr[EXIT_GUI_TITLE_STR], 100, 85, 2, 75,
+						&usTextBoxWidth, &usTextBoxHeight);
 
 
-	gExitDialog.sX				= (INT16)( ( ( ( aRect.iRight	- aRect.iLeft ) - usTextBoxWidth ) / 2 ) + aRect.iLeft );
-	gExitDialog.sY				= (INT16)( ( ( ( aRect.iBottom - aRect.iTop ) - usTextBoxHeight ) / 2 ) + aRect.iTop );
-	gExitDialog.usWidth		= usTextBoxWidth;
-	gExitDialog.usHeight	= usTextBoxHeight;
+	gExitDialog.sX = (INT16)( ( ( ( aRect.iRight	- aRect.iLeft ) - usTextBoxWidth ) / 2 ) + aRect.iLeft );
+	gExitDialog.sY = (INT16)( ( ( ( aRect.iBottom - aRect.iTop ) - usTextBoxHeight ) / 2 ) + aRect.iTop );
+	gExitDialog.usWidth = usTextBoxWidth;
+	gExitDialog.usHeight = usTextBoxHeight;
 
 	guiPendingOverrideEvent = EX_EXITSECTORMENU;
 	HandleTacticalUI( );
@@ -321,29 +335,43 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 
 	gfInSectorExitMenu = TRUE;
 
-	MSYS_DefineRegion(&gExitDialog.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, SectorExitBackgroundCallback);
+	MSYS_DefineRegion(&gExitDialog.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+				MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK,
+				SectorExitBackgroundCallback);
 
 	gExitDialog.iButtonImages = LoadButtonImage(INTERFACEDIR "/popupbuttons.sti", 0, 1);
 
 
-	MSYS_DefineRegion( &gExitDialog.SingleRegion, (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 37), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 37 + 12), MSYS_PRIORITY_HIGHEST,
-																			CURSOR_NORMAL, SingleRegionMoveCallback, SingleRegionCallback );
+	MSYS_DefineRegion(&gExitDialog.SingleRegion, (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 37),
+				(INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 37 + 12),
+				MSYS_PRIORITY_HIGHEST,
+				CURSOR_NORMAL, SingleRegionMoveCallback, SingleRegionCallback);
 	gExitDialog.SingleRegion.AllowDisabledRegionFastHelp(TRUE);
 
 
-	MSYS_DefineRegion( &(gExitDialog.AllRegion), (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 57), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 57 + 12), MSYS_PRIORITY_HIGHEST,
-																			CURSOR_NORMAL, AllRegionMoveCallback, AllRegionCallback );
+	MSYS_DefineRegion(&(gExitDialog.AllRegion), (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 57),
+				(INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 57 + 12),
+				MSYS_PRIORITY_HIGHEST,
+				CURSOR_NORMAL, AllRegionMoveCallback, AllRegionCallback);
 	gExitDialog.AllRegion.AllowDisabledRegionFastHelp(TRUE);
 
-	MSYS_DefineRegion( &(gExitDialog.LoadRegion), (INT16)(gExitDialog.sX + 155), (INT16)(gExitDialog.sY + 45), (INT16)(gExitDialog.sX + 180 + 85), (INT16)(gExitDialog.sY + 45 + 15), MSYS_PRIORITY_HIGHEST,
-																			CURSOR_NORMAL, LoadRegionMoveCallback, LoadRegionCallback );
+	MSYS_DefineRegion(&(gExitDialog.LoadRegion), (INT16)(gExitDialog.sX + 155), (INT16)(gExitDialog.sY + 45),
+				(INT16)(gExitDialog.sX + 180 + 85), (INT16)(gExitDialog.sY + 45 + 15),
+				MSYS_PRIORITY_HIGHEST,
+				CURSOR_NORMAL, LoadRegionMoveCallback, LoadRegionCallback );
 	gExitDialog.LoadRegion.AllowDisabledRegionFastHelp(TRUE);
 
-	gExitDialog.uiLoadCheckButton		= CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 155 ), (INT16)(gExitDialog.sY + 43 ), INTERFACEDIR "/popupcheck.sti", MSYS_PRIORITY_HIGHEST, CheckLoadMapCallback );
+	gExitDialog.uiLoadCheckButton = CreateCheckBoxButton((INT16)(gExitDialog.sX + 155 ), (INT16)(gExitDialog.sY + 43 ),
+								INTERFACEDIR "/popupcheck.sti", MSYS_PRIORITY_HIGHEST,
+								CheckLoadMapCallback);
 
-	gExitDialog.uiSingleMoveButton	=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 35 ), INTERFACEDIR "/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, SingleMoveCallback );
+	gExitDialog.uiSingleMoveButton =  CreateCheckBoxButton((INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 35 ),
+								INTERFACEDIR "/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST,
+								SingleMoveCallback );
 
-	gExitDialog.uiAllMoveButton			=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 55 ), INTERFACEDIR "/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, AllMoveCallback );
+	gExitDialog.uiAllMoveButton = CreateCheckBoxButton((INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 55 ),
+								INTERFACEDIR "/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST,
+								AllMoveCallback);
 
 	gExitDialog.uiOKButton     = MakeButton(TacticalStr[OK_BUTTON_TEXT_STR],      65, OKCallback);
 	gExitDialog.uiCancelButton = MakeButton(TacticalStr[CANCEL_BUTTON_TEXT_STR], 135, CancelCallback);
@@ -363,7 +391,7 @@ static void DoneFadeInWarp(void)
 
 static void DoneFadeOutWarpCallback(void)
 {
-  // Warp!
+	// Warp!
 	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		// Are we in this sector, On the current squad?
@@ -381,7 +409,7 @@ static void DoneFadeOutWarpCallback(void)
 			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 			pSoldier->usStrategicInsertionData = gsWarpGridNo;
 			// Set direction to face....
-			pSoldier->ubInsertionDirection		 = 100 + NORTHWEST;
+			pSoldier->ubInsertionDirection = 100 + NORTHWEST;
 		}
 	}
 
@@ -402,35 +430,36 @@ static void DoneFadeOutWarpCallback(void)
 
 static void WarpToSurfaceCallback(MessageBoxReturnValue const bExitValue)
 {
-  if( bExitValue == MSG_BOX_RETURN_YES )
+	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-	  gFadeOutDoneCallback = DoneFadeOutWarpCallback;
+		gFadeOutDoneCallback = DoneFadeOutWarpCallback;
 
-	  FadeOutGameScreen( );
-  }
-  else
-  {
-    InternalInitSectorExitMenu( gubExitGUIDirection, gsExitGUIAdditionalData );
-  }
+		FadeOutGameScreen( );
+	}
+	else
+	{
+		InternalInitSectorExitMenu( gubExitGUIDirection, gsExitGUIAdditionalData );
+	}
 }
 
 
 void InitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
 {
-  gubExitGUIDirection     = ubDirection;
-  gsExitGUIAdditionalData = sAdditionalData;
+	gubExitGUIDirection     = ubDirection;
+	gsExitGUIAdditionalData = sAdditionalData;
 
-  if ( gbWorldSectorZ >= 2 && gubQuest[ QUEST_CREATURES ] == QUESTDONE )
-  {
-    if ( GetWarpOutOfMineCodes( &gsWarpWorldX, &gsWarpWorldY, &gbWarpWorldZ, &gsWarpGridNo ) )
-    {
-      // ATE: Check if we are in a creature lair and bring up box if so....
-      DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_33], GAME_SCREEN, MSG_BOX_FLAG_YESNO, WarpToSurfaceCallback, NULL);
-      return;
-    }
-  }
+	if ( gbWorldSectorZ >= 2 && gubQuest[ QUEST_CREATURES ] == QUESTDONE )
+	{
+		if ( GetWarpOutOfMineCodes( &gsWarpWorldX, &gsWarpWorldY, &gbWarpWorldZ, &gsWarpGridNo ) )
+		{
+			// ATE: Check if we are in a creature lair and bring up box if so....
+			DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_33], GAME_SCREEN,
+					MSG_BOX_FLAG_YESNO, WarpToSurfaceCallback, NULL);
+			return;
+		}
+	}
 
-  InternalInitSectorExitMenu(ubDirection, sAdditionalData);
+	InternalInitSectorExitMenu(ubDirection, sAdditionalData);
 }
 
 
@@ -471,15 +500,18 @@ static void UpdateSectorExitMenu(void)
 			DisableButton(gExitDialog.uiLoadCheckButton);
 			gExitDialog.LoadRegion.Disable();
 			if (!gExitDialog.fGotoSectorText)
-			{ // Traversal takes too long to warrant instant travel (we MUST go to mapscreen).
+			{
+				// Traversal takes too long to warrant instant travel (we MUST go to mapscreen).
 				help = pExitingSectorHelpText[EXIT_GUI_MUST_GOTO_MAPSCREEN_HELPTEXT];
 			}
 			else if (gExitDialog.fMultipleSquadsInSector && gTacticalStatus.fEnemyInSector)
-			{ // We have multiple squads in a hostile sector.  That means that we can't load the adjacent sector.
+			{
+				// We have multiple squads in a hostile sector.  That means that we can't load the adjacent sector.
 				help = pExitingSectorHelpText[EXIT_GUI_CANT_LEAVE_HOSTILE_SECTOR_HELPTEXT];
 			}
 			else
-			{ // Travesal is quick enough to allow the player to "warp" to the next sector and we MUST load it.
+			{
+				// Travesal is quick enough to allow the player to "warp" to the next sector and we MUST load it.
 				help = pExitingSectorHelpText[EXIT_GUI_MUST_LOAD_ADJACENT_SECTOR_HELPTEXT];
 			}
 		}
@@ -488,11 +520,13 @@ static void UpdateSectorExitMenu(void)
 			EnableButton(gExitDialog.uiLoadCheckButton);
 			gExitDialog.LoadRegion.Enable();
 			if (gExitDialog.fGotoSectorText)
-			{ // Travesal is quick enough to allow the player to "warp" to the next sector and we load it.
+			{
+				// Travesal is quick enough to allow the player to "warp" to the next sector and we load it.
 				help = pExitingSectorHelpText[EXIT_GUI_LOAD_ADJACENT_SECTOR_HELPTEXT];
 			}
 			else
-			{ // Traversal takes too long to warrant instant travel (we go to mapscreen)
+			{
+				// Traversal takes too long to warrant instant travel (we go to mapscreen)
 				help = pExitingSectorHelpText[EXIT_GUI_GOTO_MAPSCREEN_HELPTEXT];
 			}
 		}
@@ -506,36 +540,42 @@ static void UpdateSectorExitMenu(void)
 		DisableButton( gExitDialog.uiSingleMoveButton );
 		gExitDialog.SingleRegion.Disable();
 		if( gExitDialog.fSelectedMercIsEPC )
-		{ //EPCs cannot leave the sector alone and must be escorted
+		{
+			//EPCs cannot leave the sector alone and must be escorted
 			wchar_t str[ 256 ];
 			swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_MUST_BE_ESCORTED_HELPTEXT], sel->name);
 			gExitDialog.uiSingleMoveButton->SetFastHelpText(str);
 			gExitDialog.SingleRegion.SetFastHelpText(str);
 		}
 		else if (gExitDialog.single_move_will_isolate_epc != NULL)
-		{ //It has been previously determined that there are only two mercs in the squad, the selected merc
+		{
+			//It has been previously determined that there are only two mercs in the squad, the selected merc
 			//isn't an EPC, but the other merc is.  That means that this merc cannot leave the sector alone
 			//as he would isolate the EPC.
 			wchar_t str[ 256 ];
 			if( !gExitDialog.fSquadHasMultipleEPCs )
 			{
 				if (gMercProfiles[sel->ubProfile].bSex == MALE)
-				{ //male singular
+				{
+					//male singular
 					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
 				}
 				else
-				{ //female singular
+				{
+					//female singular
 					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
 				}
 			}
 			else
 			{
 				if (gMercProfiles[sel->ubProfile].bSex == MALE)
-				{ //male plural
+				{
+					//male plural
 					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL], sel->name);
 				}
 				else
-				{ //female plural
+				{
+					//female plural
 					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL], sel->name);
 				}
 			}
@@ -606,7 +646,8 @@ void RenderSectorExitMenu()
 	SetFont(FONT12ARIAL);
 	SetFontBackground(FONT_MCOLOR_BLACK);
 
-	{ UINT8 const foreground =
+	{
+		UINT8 const foreground =
 			gExitDialog.fSingleMoveDisabled  ? FONT_MCOLOR_DKGRAY   :
 			gExitDialog.fSingleMoveHilighted ? FONT_MCOLOR_LTYELLOW :
 			FONT_MCOLOR_WHITE;
@@ -614,7 +655,8 @@ void RenderSectorExitMenu()
 		MPrint(x + 45, y + 37, TacticalStr[EXIT_GUI_SELECTED_MERC_STR]);
 	}
 
-	{ UINT8 const foreground =
+	{
+		UINT8 const foreground =
 			gExitDialog.fAllMoveDisabled  ? FONT_MCOLOR_DKGRAY   :
 			gExitDialog.fAllMoveHilighted ? FONT_MCOLOR_LTYELLOW :
 			FONT_MCOLOR_WHITE;
@@ -622,7 +664,8 @@ void RenderSectorExitMenu()
 		MPrint(x + 45, y + 57, TacticalStr[EXIT_GUI_ALL_MERCS_IN_SQUAD_STR]);
 	}
 
-	{ UINT8 const foreground =
+	{
+		UINT8 const foreground =
 			gExitDialog.fGotoSectorDisabled  ? FONT_MCOLOR_DKGRAY   :
 			gExitDialog.fGotoSectorHilighted ? FONT_MCOLOR_LTYELLOW :
 			FONT_MCOLOR_WHITE;
@@ -726,12 +769,14 @@ static void SingleMoveAction(void)
 	if( !gExitDialog.fMultipleSquadsInSector )
 	{
 		if( gTacticalStatus.fEnemyInSector )
-		{ //if enemy in sector, and mercs will be left behind, prevent user from selecting load
+		{
+			//if enemy in sector, and mercs will be left behind, prevent user from selecting load
 			gExitDialog.fGotoSectorDisabled = TRUE;
 			gExitDialog.fGotoSector = FALSE;
 		}
 		else
-		{ //freedom to load or not load
+		{
+			//freedom to load or not load
 			gExitDialog.fGotoSectorDisabled = FALSE;
 		}
 	}
@@ -740,14 +785,14 @@ static void SingleMoveAction(void)
 		gExitDialog.fGotoSector = FALSE;
 	}
 	gExitDialog.fSingleMove = TRUE;
-	gExitDialog.fAllMove		= FALSE;
+	gExitDialog.fAllMove = FALSE;
 	//end
 
 	//previous logic
 	/*
 	gExitDialog.fGotoSector = FALSE;
 	gExitDialog.fSingleMove = TRUE;
-	gExitDialog.fAllMove		= FALSE;
+	gExitDialog.fAllMove = FALSE;
 	*/
 }
 
@@ -761,13 +806,13 @@ static void AllMoveAction(void)
 		gExitDialog.fGotoSector = TRUE;
 	}
 	gExitDialog.fSingleMove = FALSE;
-	gExitDialog.fAllMove		= TRUE;
+	gExitDialog.fAllMove = TRUE;
 	//end
 
 	//previous logic
 	/*
 	gExitDialog.fSingleMove = FALSE;
-	gExitDialog.fAllMove		= TRUE;
+	gExitDialog.fAllMove = TRUE;
 	*/
 }
 

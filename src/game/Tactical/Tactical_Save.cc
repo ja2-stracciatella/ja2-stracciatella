@@ -152,8 +152,8 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 }
 
 
-/* Load all the temp files from the saved game file and write them into the temp
- * directory */
+// Load all the temp files from the saved game file and write them into the temp
+// directory
 void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_version)
 {
 	// HACK FOR GABBY
@@ -220,8 +220,8 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 		GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
 		AutoSGPFile f(FileMan::openForWriting(filename));
 		FileWriteArray(f, uiNumberOfItems, pData);
-		/* Close the file before
-		 * SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it */
+		// Close the file before
+		// SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it
 	}
 
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ITEM_TEMP_FILE_EXISTS);
@@ -292,7 +292,9 @@ void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const b
 		{
 			wi->usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 			// Display warning.....
-			SLOGW(DEBUG_TAG_TACTSAVE, "Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", wi->o.usItem, ItemNames[wi->o.usItem]);
+			SLOGW(DEBUG_TAG_TACTSAVE,
+				"Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.",
+				wi->o.usItem, ItemNames[wi->o.usItem]);
 		}
 	}
 
@@ -313,7 +315,8 @@ static void SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bM
 void SaveCurrentSectorsInformationToTempItemFile()
 {
 	if (gfWasInMeanwhile)
-	{ // Don't save a temp file for the meanwhile scene map.
+	{
+		// Don't save a temp file for the meanwhile scene map.
 		gfWasInMeanwhile = FALSE;
 		return;
 	}
@@ -392,7 +395,8 @@ void HandleAllReachAbleItemsInTheSector(INT16 const x, INT16 const y, INT8 const
 	{
 		bool reachable;
 		if (wi->o.bTrap > 0)
-		{ // If the item is trapped, then flag it as unreachable
+		{
+			// If the item is trapped, then flag it as unreachable
 			reachable = false;
 		}
 		else if (ItemTypeExistsAtLocation(wi->sGridNo, OWNERSHIP, wi->ubLevel, 0))
@@ -404,15 +408,18 @@ void HandleAllReachAbleItemsInTheSector(INT16 const x, INT16 const y, INT8 const
 			reachable = false;
 		}
 		else if (gpWorldLevelData[wi->sGridNo].uiFlags & MAPELEMENT_REACHABLE)
-		{ // The gridno itself is reachable, so the item is reachable
+		{
+			// The gridno itself is reachable, so the item is reachable
 			reachable = true;
 		}
 		else if (wi->ubLevel > 0)
-		{ // Items on roofs are always reachable
+		{
+			// Items on roofs are always reachable
 			reachable = true;
 		}
 		else
-		{ // Check the 4 grids around the item. If any is reachable, then the item is reachable
+		{
+			// Check the 4 grids around the item. If any is reachable, then the item is reachable
 			reachable = false;
 			for (UINT8 dir = 0; dir != NUM_WORLD_DIRECTIONS; dir += 2)
 			{
@@ -424,7 +431,8 @@ void HandleAllReachAbleItemsInTheSector(INT16 const x, INT16 const y, INT8 const
 				if (!(gpWorldLevelData[new_loc].uiFlags & MAPELEMENT_REACHABLE)) continue;
 
 				UINT8 const movement_cost = gubWorldMovementCosts[wi->sGridNo][OppositeDirection(dir)][0];
-				// If we find a door movement cost, if the door is open the gridno should be accessible itself
+				// If we find a door movement cost, if the door is open the gridno
+				// should be accessible itself
 				if (movement_cost == TRAVELCOST_DOOR) continue;
 				if (movement_cost == TRAVELCOST_WALL) continue;
 
@@ -472,12 +480,13 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 	UINT32 const flags = GetSectorFlags(x, y, z);
 
 	if (AreInMeanwhile())
-	{ /* There will never be a temp file for the meanwhile scene, so return TRUE.
-		 * However, set a flag to not save it either! */
+	{
+		// There will never be a temp file for the meanwhile scene, so return TRUE.
+		// However, set a flag to not save it either!
 		gfWasInMeanwhile = TRUE;
 
-		/* OK  - this is true except for interrogations - we need that item temp
-		 * file to be processed! */
+		// OK  - this is true except for interrogations - we need that item temp
+		// file to be processed!
 		if (GetMeanwhileID() == INTERROGATION)
 		{
 			//If there is a file, load in the Items array
@@ -539,7 +548,8 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 		}
 	}
 	else
-	{ // use the new way of loading the enemy and civilian placements
+	{
+		// use the new way of loading the enemy and civilian placements
 		if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
 		{
 			NewWayOfLoadingEnemySoldiersFromTempFile();
@@ -625,8 +635,8 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 	// Have we already been to the sector?
 	if (GetSectorFlagStatus(sMapX, sMapY, bMapZ, SF_ALREADY_LOADED))
 	{
-		/* Completly replace the current sectors item table because all the items
-		 * SHOULD be in the temp file. */
+		// Completly replace the current sectors item table because all the items
+		// SHOULD be in the temp file.
 		TrashWorldItems();
 	}
 
@@ -640,11 +650,13 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 
 		GridNo pos = i->sGridNo;
 		if (i->usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT)
-		{ // The item has an invalid gridno, use the maps entry point
+		{
+			// The item has an invalid gridno, use the maps entry point
 			pos = gMapInformation.sCenterGridNo;
 		}
 		else if (i->usFlags & WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO)
-		{ // Find a gridno to place the item at
+		{
+			// Find a gridno to place the item at
 			GridNo new_pos = FindNearestAvailableGridNoForItem(pos, 5);
 			if (new_pos == NOWHERE)
 			{
@@ -704,24 +716,23 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 	UINT32 n_corpses;
 	FileRead(f, &n_corpses, sizeof(UINT32));
 
-	bool const maybe_dont_add =
-		!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) &&
-		z == 0 && GetTownIdForSector(SECTOR(x, y)) != BLANK_SECTOR; // In town?
+	bool const maybe_dont_add = !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) &&
+					z == 0 && GetTownIdForSector(SECTOR(x, y)) != BLANK_SECTOR; // In town?
 	for (UINT32 n = n_corpses; n != 0; --n)
 	{
 		ROTTING_CORPSE_DEFINITION def;
 		ExtractRottingCorpseFromFile(f, &def);
 
-		/* Check the flags to see if we have to find a gridno to place the rotting
-		 * corpses at */
+		// Check the flags to see if we have to find a gridno to place the rotting
+		// corpses at
 		if (def.usFlags & ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO)
 		{
 			def.sGridNo = FindNearestAvailableGridNoForCorpse(&def, 5);
 			if (def.sGridNo == NOWHERE)
 				def.sGridNo = FindNearestAvailableGridNoForCorpse(&def, 15);
-			/* ATE: Here we still could have a bad location, but send in NOWHERE to
-			 * corpse function anyway, 'cause it will iwth not drop it or use a map
-			 * edgepoint */
+			// ATE: Here we still could have a bad location, but send in NOWHERE to
+			// corpse function anyway, 'cause it will iwth not drop it or use a map
+			// edgepoint
 		}
 		else if (def.usFlags & ROTTING_CORPSE_USE_NORTH_ENTRY_POINT)
 		{
@@ -740,11 +751,11 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 			def.sGridNo = gMapInformation.sWestGridNo;
 		}
 
-		/* Don't add a corpse on an invalid gridno */
+		// Don't add a corpse on an invalid gridno
 		if (def.sGridNo >= WORLD_MAX || def.sGridNo < 0) continue;
 
-		/* ATE: Don't place corpses if not loading a savegame, in town, indoors and
-		 * the corpse is too old */
+		// ATE: Don't place corpses if not loading a savegame, in town, indoors and
+		// the corpse is too old
 		if (maybe_dont_add &&
 				FloorAtGridNo(def.sGridNo) && // Are we indoors?
 				GetWorldTotalMin() - def.uiTimeOfDeath >= 30)
@@ -848,7 +859,8 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_set)
 {
 	if (flag_to_set == SF_ALREADY_VISITED)
-	{ // Do certain things when particular sectors are visited
+	{
+		// Do certain things when particular sectors are visited
 		if (x == TIXA_SECTOR_X && y == TIXA_SECTOR_Y)
 		{
 			// Tixa prison (not seen until Tixa visited)
@@ -865,8 +877,9 @@ void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags cons
 
 		// Increment daily counter of sectors visited
 		if (!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED) &&
-				++gStrategicStatus.ubNumNewSectorsVisitedToday == NEW_SECTORS_EQUAL_TO_ACTIVITY)
-		{ // Visited enough to count as an active day
+			++gStrategicStatus.ubNumNewSectorsVisitedToday == NEW_SECTORS_EQUAL_TO_ACTIVITY)
+		{
+			// Visited enough to count as an active day
 			UpdateLastDayOfPlayerActivity(GetWorldDay());
 		}
 	}
@@ -935,8 +948,8 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 
 			if (s->bTeam != OUR_TEAM)
 			{
-				/* This percent of the time, they don't drop stuff they would've dropped
-				 * in tactical */
+				// This percent of the time, they don't drop stuff they would've dropped
+				// in tactical
 				if (Random(100) < 75)
 				{
 					o.fFlags |= OBJECT_UNDROPPABLE;
@@ -975,11 +988,10 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 		PRONE_HIT_DEATH,
 		FLYBACK_HIT_DEATH
 	};
-	/* If the dead body shot be the result of a JFK headshot, set it, else choose
-	 * a random death sequence */
-	UINT32 const death_anim =
-		flags & ADD_DEAD_SOLDIER__USE_JFK_HEADSHOT_CORPSE ? JFK_HITDEATH :
-		possible_death_anims[Random(lengthof(possible_death_anims))];
+	// If the dead body shot be the result of a JFK headshot, set it, else choose
+	// a random death sequence
+	UINT32 const death_anim = flags & ADD_DEAD_SOLDIER__USE_JFK_HEADSHOT_CORPSE ? JFK_HITDEATH :
+					possible_death_anims[Random(lengthof(possible_death_anims))];
 	c.ubType = gubAnimSurfaceCorpseID[s->ubBodyType][death_anim];
 
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile(x, y, z, &c);
@@ -987,14 +999,16 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 
 
 void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
-{ // Write zero size marker for the obsolescent temporary NPC quote file.
+{
+	// Write zero size marker for the obsolescent temporary NPC quote file.
 	UINT32 const size = 0;
 	FileWrite(f, &size, sizeof(size));
 }
 
 
 void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
-{ // Skip obsolescent temporary NPC quote file.
+{
+	// Skip obsolescent temporary NPC quote file.
 	UINT32 size;
 	FileRead(f, &size, sizeof(size));
 	FileSeek(f, size, FILE_SEEK_FROM_CURRENT);
@@ -1132,11 +1146,12 @@ UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, I
 	}
 
 	// If the requested sector is currently loaded
-	if (gfWorldLoaded      &&
-			x == gWorldSectorX &&
-			y == gWorldSectorY &&
-			z == gbWorldSectorZ)
-	{ // Since items might have been added, update
+	if (gfWorldLoaded &&
+		x == gWorldSectorX &&
+		y == gWorldSectorY &&
+		z == gbWorldSectorZ)
+	{
+		// Since items might have been added, update
 		n_items = UpdateLoadedSectorsItemInventory(x, y, z, n_items);
 	}
 
@@ -3502,7 +3517,7 @@ static UINT8 const* GetRotationArray()
 
 TEST(TacticalSave, asserts)
 {
-  EXPECT_EQ(lengthof(g_encryption_array), BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
+	EXPECT_EQ(lengthof(g_encryption_array), BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
 }
 
 #endif

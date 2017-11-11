@@ -4,18 +4,18 @@
 #include "Arms_Dealer.h"
 
 
-#define		LAST_DEALER_ITEM					-1
-#define		NO_DEALER_ITEM						0
+#define LAST_DEALER_ITEM		-1
+#define NO_DEALER_ITEM			0
 
 // item suitability categories for dealer inventory initialization, virtual customer sales, and re-ordering
-#define	ITEM_SUITABILITY_NONE			0
-#define ITEM_SUITABILITY_LOW			1
-#define ITEM_SUITABILITY_MEDIUM		2
-#define ITEM_SUITABILITY_HIGH			3
-#define ITEM_SUITABILITY_ALWAYS		4
+#define ITEM_SUITABILITY_NONE		0
+#define ITEM_SUITABILITY_LOW		1
+#define ITEM_SUITABILITY_MEDIUM	2
+#define ITEM_SUITABILITY_HIGH		3
+#define ITEM_SUITABILITY_ALWAYS	4
 
 #define DEALER_BUYING			0
-#define DEALER_SELLING		1
+#define DEALER_SELLING			1
 
 
 INT8 GetDealersMaxItemAmount(ArmsDealerID, UINT16 usItemIndex);

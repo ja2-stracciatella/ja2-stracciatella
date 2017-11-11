@@ -5,7 +5,7 @@
 #include "Soldier_Control.h"
 
 
-#define MAX_REALTIME_SPEED_VAL 10
+#define MAX_REALTIME_SPEED_VAL		10
 
 
 // Enums for waiting for mercs to finish codes
@@ -32,12 +32,12 @@ struct TacticalTeamType
 };
 
 
-#define PANIC_BOMBS_HERE    0x01
-#define PANIC_TRIGGERS_HERE 0x02
+#define PANIC_BOMBS_HERE		0x01
+#define PANIC_TRIGGERS_HERE		0x02
 
-#define NUM_PANIC_TRIGGERS 3
+#define NUM_PANIC_TRIGGERS		3
 
-#define ENEMY_OFFERED_SURRENDER 0x01
+#define ENEMY_OFFERED_SURRENDER	0x01
 
 struct TacticalStatusType
 {
@@ -150,8 +150,8 @@ static inline SOLDIERTYPE* ID2Soldier(const SoldierID id)
 }
 
 // For temporary use
-#define SOLDIER2ID(s) (Soldier2ID((s)))
-#define ID2SOLDIER(i) (ID2Soldier((i)))
+#define SOLDIER2ID(s)			(Soldier2ID((s)))
+#define ID2SOLDIER(i)			(ID2Soldier((i)))
 
 static inline SOLDIERTYPE* GetSelectedMan(void)
 {
@@ -171,10 +171,10 @@ extern SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
 extern UINT32       guiNumMercSlots;
 
 #define FOR_EACH_MERC(iter)                                           \
-	for (SOLDIERTYPE**       iter        = MercSlots,                   \
-	                ** const end__##iter = MercSlots + guiNumMercSlots; \
-	     iter != end__##iter;                                           \
-	     ++iter)                                                        \
+	for (SOLDIERTYPE** iter = MercSlots,                   \
+		** const end__##iter = MercSlots + guiNumMercSlots; \
+		iter != end__##iter;                                           \
+		++iter)                                                        \
 		if (Assert(!*iter || (*iter)->bActive), !*iter) continue; else
 
 
@@ -187,10 +187,10 @@ static inline BOOLEAN IsTeamActive(const UINT team)
 
 
 #define BASE_FOR_EACH_IN_TEAM(type, iter, team)                                      \
-	for (type*       iter        = &Menptr[gTacticalStatus.Team[(team)].bFirstID],    \
-	         * const end__##iter = &Menptr[gTacticalStatus.Team[(team)].bLastID + 1]; \
-	     iter != end__##iter;                                                         \
-	     ++iter)                                                                      \
+	for (type* iter = &Menptr[gTacticalStatus.Team[(team)].bFirstID],    \
+		* const end__##iter = &Menptr[gTacticalStatus.Team[(team)].bLastID + 1]; \
+		iter != end__##iter;                                                         \
+		++iter)                                                                      \
 		if (!iter->bActive) continue; else
 #define FOR_EACH_IN_TEAM( iter, team) BASE_FOR_EACH_IN_TEAM(      SOLDIERTYPE, iter, (team))
 #define CFOR_EACH_IN_TEAM(iter, team) BASE_FOR_EACH_IN_TEAM(const SOLDIERTYPE, iter, (team))
@@ -202,10 +202,10 @@ static inline BOOLEAN IsTeamActive(const UINT team)
 #define CFOR_EACH_SOLDIER(iter) BASE_FOR_EACH_SOLDIER(const SOLDIERTYPE, iter)
 
 #define BASE_FOR_EACH_NON_PLAYER_SOLDIER(type, iter)                                    \
-	for (type*       iter        = &Menptr[gTacticalStatus.Team[ENEMY_TEAM].bFirstID],    \
-	         * const end__##iter = &Menptr[gTacticalStatus.Team[CIV_TEAM  ].bLastID + 1]; \
-	     iter != end__##iter;                                                             \
-	     ++iter)                                                                          \
+	for (type* iter = &Menptr[gTacticalStatus.Team[ENEMY_TEAM].bFirstID],    \
+		* const end__##iter = &Menptr[gTacticalStatus.Team[CIV_TEAM  ].bLastID + 1]; \
+		iter != end__##iter;                                                             \
+		++iter)                                                                          \
 		if (!iter->bActive) continue; else
 #define FOR_EACH_NON_PLAYER_SOLDIER( iter) BASE_FOR_EACH_NON_PLAYER_SOLDIER(      SOLDIERTYPE, iter)
 #define CFOR_EACH_NON_PLAYER_SOLDIER(iter) BASE_FOR_EACH_NON_PLAYER_SOLDIER(const SOLDIERTYPE, iter)
@@ -318,8 +318,8 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE&);
 
 void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide );
 
-#define REASON_NORMAL_ATTACK 1
-#define REASON_EXPLOSION 2
+#define REASON_NORMAL_ATTACK		1
+#define REASON_EXPLOSION		2
 
 BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTarget, INT8 bReason);
 

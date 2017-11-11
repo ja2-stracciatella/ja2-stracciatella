@@ -9,10 +9,10 @@
  *************************************************************/
 
 #if defined(_MSC_VER)
-  #define strcasecmp      _stricmp
-  #define strncasecmp     _strnicmp
+	#define strcasecmp      _stricmp
+	#define strncasecmp     _strnicmp
 #else
-  #include <strings.h>
+	#include <strings.h>
 #endif
 
 /**************************************************************

@@ -114,7 +114,7 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	{
 		return;
 	}
-  // write header
+	// write header
 	fwrite(&Header, sizeof(Header), 1, pOutput);
 	// write palette and subimage structs, if any
 	if (Header.fFlags & STCI_INDEXED)
@@ -363,7 +363,7 @@ static UINT32 ETRLECompressSubImage(UINT8* pDest, UINT32 uiDestLen, UINT8* p8BPP
 
 static UINT32 ETRLECompress(UINT8* pDest, UINT32 uiDestLen, UINT8* pSource, UINT32 uiSourceLen)
 { // Compress a buffer (a scanline) into ETRLE format, which is a series of runs.
-  // Each run starts with a byte whose high bit is 1 if the run is compressed, 0 otherwise.
+	// Each run starts with a byte whose high bit is 1 if the run is compressed, 0 otherwise.
 	// The lower seven bits of that byte indicate the length of the run
 
 	// ETRLECompress returns the number of bytes used by the compressed buffer, or 0 if an error

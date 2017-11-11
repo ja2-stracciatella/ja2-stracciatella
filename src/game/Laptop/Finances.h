@@ -6,7 +6,7 @@ void EnterFinances(void);
 void ExitFinances(void);
 void RenderFinances(void);
 
-#define	NEWTMP_FINANCES_DATA_FILE "finances.dat"
+#define NEWTMP_FINANCES_DATA_FILE "finances.dat"
 
 enum
 {

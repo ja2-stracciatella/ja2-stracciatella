@@ -8,8 +8,8 @@
 #include "MercProfile.h"
 
 const char* Content::GetDialogueTextFilename(const MercProfile &profile,
-                                             bool useAlternateDialogueFile,
-                                             bool isCurrentlyTalking)
+						bool useAlternateDialogueFile,
+						bool isCurrentlyTalking)
 {
 	static char zFileName[164];
 	uint8_t		ubFileNumID;
@@ -24,9 +24,9 @@ const char* Content::GetDialogueTextFilename(const MercProfile &profile,
 		}
 	}
 	else if ( profile.getNum() >= FIRST_RPC
-            && ( !profile.isRecruited()
-                 || isCurrentlyTalking
-                 || profile.isForcedNPCQuote()))
+			&& ( !profile.isRecruited()
+				|| isCurrentlyTalking
+				|| profile.isForcedNPCQuote()))
 	{
 		ubFileNumID = profile.getNum();
 
@@ -53,9 +53,9 @@ const char* Content::GetDialogueTextFilename(const MercProfile &profile,
 }
 
 const char* Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16_t usQuoteNum,
-                                              bool useAlternateDialogueFile,
-                                              bool isCurrentlyTalking,
-                                              bool isRussianVersion)
+						bool useAlternateDialogueFile,
+						bool isCurrentlyTalking,
+						bool isRussianVersion)
 {
 	static char zFileName[164];
 	uint8_t		ubFileNumID;
@@ -70,9 +70,9 @@ const char* Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16
 		}
 	}
 	else if ( profile.getNum() >= FIRST_RPC
-            && ( !profile.isRecruited()
-                 || isCurrentlyTalking
-                 || profile.isForcedNPCQuote()))
+			&& ( !profile.isRecruited()
+				|| isCurrentlyTalking
+				|| profile.isForcedNPCQuote()))
 	{
 		ubFileNumID = profile.getNum();
 
@@ -89,23 +89,23 @@ const char* Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16
 	else
 	{
 		{
-      if(isRussianVersion)
-      {
-        if (profile.getNum() >= FIRST_RPC && profile.isRecruited())
-        {
-          sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", profile.getNum(), usQuoteNum);
-        }
-        else
-        {
-          // build name of wav file (characternum + quotenum)
-          sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
-        }
-      }
-      else
-      {
-        // build name of wav file (characternum + quotenum)
+			if(isRussianVersion)
+			{
+				if (profile.getNum() >= FIRST_RPC && profile.isRecruited())
+				{
+					sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", profile.getNum(), usQuoteNum);
+				}
+				else
+				{
+					// build name of wav file (characternum + quotenum)
+					sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
+				}
+			}
+			else
+			{
+				// build name of wav file (characternum + quotenum)
 				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
-      }
+			}
 		}
 	}
 

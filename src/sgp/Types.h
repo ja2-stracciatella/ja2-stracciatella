@@ -13,10 +13,10 @@
 	SLOGE(DEBUG_TAG_ASSERTS, "===> %s:%d: %s() is not implemented", __FILE__, __LINE__, __func__);
 
 #ifdef WITH_FIXMES
-  #define FIXME \
-	SLOGE(DEBUG_TAG_FIXME, "===> %s:%d: %s() FIXME", __FILE__, __LINE__, __func__);
+	#define FIXME \
+		SLOGE(DEBUG_TAG_FIXME, "===> %s:%d: %s() FIXME", __FILE__, __LINE__, __func__);
 #else
-  #define FIXME (void)0;
+	#define FIXME (void)0;
 #endif
 
 
@@ -53,7 +53,7 @@ typedef int16_t         INT16;
 typedef float           FLOAT;
 typedef double          DOUBLE;
 // strings
-typedef char			      CHAR8;
+typedef char            CHAR8;
 
 // other
 typedef unsigned char		BOOLEAN;
@@ -83,46 +83,46 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 
 struct SGPBox
 {
-  UINT16 x;
-  UINT16 y;
-  UINT16 w;
-  UINT16 h;
+	UINT16 x;
+	UINT16 y;
+	UINT16 w;
+	UINT16 h;
 
-  void set(UINT16 _x, UINT16 _y, UINT16 _w, UINT16 _h)
-  {
-    x = _x;
-    y = _y;
-    w = _w;
-    h = _h;
-  }
+	void set(UINT16 _x, UINT16 _y, UINT16 _w, UINT16 _h)
+	{
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+	}
 };
 
 struct SGPRect
 {
-  UINT16 iLeft;
-  UINT16 iTop;
-  UINT16 iRight;
-  UINT16 iBottom;
+	UINT16 iLeft;
+	UINT16 iTop;
+	UINT16 iRight;
+	UINT16 iBottom;
 
-  void set(UINT16 left, UINT16 top, UINT16 right, UINT16 bottom)
-  {
-    iLeft       = left;
-    iTop        = top;
-    iRight      = right;
-    iBottom     = bottom;
-  }
+	void set(UINT16 left, UINT16 top, UINT16 right, UINT16 bottom)
+	{
+		iLeft       = left;
+		iTop        = top;
+		iRight      = right;
+		iBottom     = bottom;
+	}
 };
 
 struct SGPPoint
 {
-	UINT16 	iX;
-	UINT16   iY;
+	UINT16 iX;
+	UINT16 iY;
 
-  void set(UINT16 x, UINT16 y)
-  {
-    iX = x;
-    iY = y;
-  }
+	void set(UINT16 x, UINT16 y)
+	{
+		iX = x;
+		iY = y;
+	}
 };
 
 

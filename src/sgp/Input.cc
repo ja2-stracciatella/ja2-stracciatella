@@ -212,14 +212,14 @@ right_button:
 
 void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
 {
-    if (WheelEv->y > 0)
-    {
-    	QueueMouseEvent(MOUSE_WHEEL_UP);
-    }
-    else
-    {
-        QueueMouseEvent(MOUSE_WHEEL_DOWN);
-    }
+	if (WheelEv->y > 0)
+	{
+		QueueMouseEvent(MOUSE_WHEEL_UP);
+	}
+	else
+	{
+		QueueMouseEvent(MOUSE_WHEEL_DOWN);
+	}
 }
 
 
@@ -227,15 +227,15 @@ void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
 // Necessary to be able to use the keycode as an index for the gfKeyState bitset.
 static SDL_Keycode RemapKeycode(SDL_Keycode const key)
 {
-  return (key & SDLK_SCANCODE_MASK)
-    ? (key & ~SDLK_SCANCODE_MASK) + SDL_NUM_SCANCODES
-    : key;
+	return (key & SDLK_SCANCODE_MASK)
+		? (key & ~SDLK_SCANCODE_MASK) + SDL_NUM_SCANCODES
+		: key;
 }
 
 
 bool _KeyDown(SDL_Keycode const keycode)
 {
-  return gfKeyState[RemapKeycode(keycode)];
+	return gfKeyState[RemapKeycode(keycode)];
 }
 
 
@@ -349,7 +349,7 @@ void KeyUp(const SDL_Keysym* KeySym)
 		case SDLK_SCROLLLOCK:
 			SDL_SetWindowGrab
 			(
-			    GAME_WINDOW,
+				GAME_WINDOW,
 				SDL_GetWindowGrab(GAME_WINDOW) == SDL_FALSE ?
 					SDL_TRUE : SDL_FALSE
 			);
@@ -483,7 +483,7 @@ void DequeueAllKeyBoardEvents(void)
 	//Deque all the events waiting in the SGP queue
 	InputAtom InputEvent;
 	while (DequeueEvent(&InputEvent))
-  {
+	{
 		//dont do anything
 	}
 #endif

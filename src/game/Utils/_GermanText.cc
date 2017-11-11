@@ -4,100 +4,100 @@
 #include "gtest/gtest.h"
 #endif
 
-/*
-******************************************************************************************************
-**																	IMPORTANT TRANSLATION NOTES																			**
-******************************************************************************************************
 
-GENERAL TOPWARE INSTRUCTIONS
-- Always be aware that German strings should be of equal or shorter length than the English equivalent.
-	I know that this is difficult to do on many occasions due to the nature of the German language when
-	compared to English. By doing so, this will greatly reduce the amount of work on both sides. In
-	most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
-	The general rule is if the string is very short (less than 10 characters), then it's short because of
-	interface limitations. On the other hand, full sentences commonly have little limitations for length.
-	Strings in between are a little dicey.
-- Never translate a string to appear on multiple lines. All strings L"This is a really long string...",
-	must fit on a single line no matter how long the string is. All strings start with L" and end with ",
-- Never remove any extra spaces in strings. In addition, all strings containing multiple sentences only
-	have one space after a period, which is different than standard typing convention. Never modify sections
-	of strings contain combinations of % characters. These are special format characters and are always
-	used in conjunction with other characters. For example, %s means string, and is commonly used for names,
-	locations, items, etc. %d is used for numbers. %c%d is a character and a number (such as A9).
-	%% is how a single % character is built. There are countless types, but strings containing these
-	special characters are usually commented to explain what they mean. If it isn't commented, then
-	if you can't figure out the context, then feel free to ask SirTech.
-- Comments are always started with // Anything following these two characters on the same line are
-	considered to be comments. Do not translate comments. Comments are always applied to the following
-	string(s) on the next line(s), unless the comment is on the same line as a string.
-- All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation. By searching
-	for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
-	Commonly, these types of comments will be used to ask you to abbreviate a string. Please leave the
-	comments intact, and SirTech will remove them once the translation for that particular area is resolved.
-- If you have a problem or question with translating certain strings, please use "//!!! comment"
-	(without the quotes). The syntax is important, and should be identical to the comments used with @@@
-	symbols. SirTech will search for !!! to look for Topware problems and questions. This is a more
-	efficient method than detailing questions in email, so try to do this whenever possible.
+// ******************************************************************************************************
+// **                                  IMPORTANT TRANSLATION NOTES                                     **
+// ******************************************************************************************************
+//
+// GENERAL TOPWARE INSTRUCTIONS
+// - Always be aware that German strings should be of equal or shorter length than the English equivalent.
+//   I know that this is difficult to do on many occasions due to the nature of the German language when
+//   compared to English. By doing so, this will greatly reduce the amount of work on both sides. In
+//   most cases (but not all), JA2 interfaces were designed with just enough space to fit the English word.
+//   The general rule is if the string is very short (less than 10 characters), then it's short because of
+//   interface limitations. On the other hand, full sentences commonly have little limitations for length.
+//   Strings in between are a little dicey.
+// - Never translate a string to appear on multiple lines. All strings L"This is a really long string...",
+//   must fit on a single line no matter how long the string is. All strings start with L" and end with ",
+// - Never remove any extra spaces in strings. In addition, all strings containing multiple sentences only
+//   have one space after a period, which is different than standard typing convention. Never modify sections
+//   of strings contain combinations of % characters. These are special format characters and are always
+//   used in conjunction with other characters. For example, %s means string, and is commonly used for names,
+//   locations, items, etc. %d is used for numbers. %c%d is a character and a number (such as A9).
+//   %% is how a single % character is built. There are countless types, but strings containing these
+//   special characters are usually commented to explain what they mean. If it isn't commented, then
+//   if you can't figure out the context, then feel free to ask SirTech.
+// - Comments are always started with // Anything following these two characters on the same line are
+//   considered to be comments. Do not translate comments. Comments are always applied to the following
+//   string(s) on the next line(s), unless the comment is on the same line as a string.
+// - All new comments made by SirTech will use "//@@@ comment" (without the quotes) notation. By searching
+//   for @@@ everytime you recieve a new version, it will simplify your task and identify special instructions.
+//   Commonly, these types of comments will be used to ask you to abbreviate a string. Please leave the
+//   comments intact, and SirTech will remove them once the translation for that particular area is resolved.
+// - If you have a problem or question with translating certain strings, please use "//!!! comment"
+//   (without the quotes). The syntax is important, and should be identical to the comments used with @@@
+//   symbols. SirTech will search for !!! to look for Topware problems and questions. This is a more
+//   efficient method than detailing questions in email, so try to do this whenever possible.
+//
+//
+//
+// FAST HELP TEXT -- Explains how the syntax of fast help text works.
+// **************
+//
+// 1) BOLDED LETTERS
+//   The popup help text system supports special characters to specify the hot key(s) for a button.
+//   Anytime you see a '|' symbol within the help text string, that means the following key is assigned
+//   to activate the action which is usually a button.
+//
+//   EX: L"|Map Screen"
+//
+//   This means the 'M' is the hotkey. In the game, when somebody hits the 'M' key, it activates that
+//   button. When translating the text to another language, it is best to attempt to choose a word that
+//   uses 'M'. If you can't always find a match, then the best thing to do is append the 'M' at the end
+//   of the string in this format:
+//
+//   EX: L"Ecran De Carte (|M)" (this is the French translation)
+//
+//   Other examples are used multiple times, like the Esc key or "|E|s|c" or Space -> (|S|p|a|c|e)
+//
+// 2) NEWLINE
+//   Any place you see a \n within the string, you are looking at another string that is part of the fast help
+//   text system. \n notation doesn't need to be precisely placed within that string, but whereever you wish
+//   to start a new line.
+//
+//   EX: L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
+//
+//   Would appear as:
+//
+//     Clears all the mercs' positions,
+//     and allows you to re-enter them manually.
+//
+//   NOTE: It is important that you don't pad the characters adjacent to the \n with spaces. If we did this
+//     in the above example, we would see
+//
+//   WRONG WAY -- spaces before and after the \n
+//   EX: L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
+//
+//   Would appear as: (the second line is moved in a character)
+//
+//     Clears all the mercs' positions,
+//     and allows you to re-enter them manually.
+//
+//
+// @@@ NOTATION
+// ************
+//
+//   Throughout the text files, you'll find an assortment of comments. Comments are used to describe the
+//   text to make translation easier, but comments don't need to be translated. A good thing is to search for
+//   "@@@" after receiving new version of the text file, and address the special notes in this manner.
+//
+// !!! NOTATION
+// ************
+//
+//   As described above, the "!!!" notation should be used by Topware to ask questions and address problems as
+//   SirTech uses the "@@@" notation.
 
 
-
-FAST HELP TEXT -- Explains how the syntax of fast help text works.
-**************
-
-1) BOLDED LETTERS
-	The popup help text system supports special characters to specify the hot key(s) for a button.
-	Anytime you see a '|' symbol within the help text string, that means the following key is assigned
-	to activate the action which is usually a button.
-
-	EX: L"|Map Screen"
-
-	This means the 'M' is the hotkey. In the game, when somebody hits the 'M' key, it activates that
-	button. When translating the text to another language, it is best to attempt to choose a word that
-	uses 'M'. If you can't always find a match, then the best thing to do is append the 'M' at the end
-	of the string in this format:
-
-	EX: L"Ecran De Carte (|M)" (this is the French translation)
-
-	Other examples are used multiple times, like the Esc key or "|E|s|c" or Space -> (|S|p|a|c|e)
-
-2) NEWLINE
-	Any place you see a \n within the string, you are looking at another string that is part of the fast help
-	text system. \n notation doesn't need to be precisely placed within that string, but whereever you wish
-	to start a new line.
-
-	EX: L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
-
-	Would appear as:
-
-				Clears all the mercs' positions,
-				and allows you to re-enter them manually.
-
-	NOTE: It is important that you don't pad the characters adjacent to the \n with spaces. If we did this
-				in the above example, we would see
-
-	WRONG WAY -- spaces before and after the \n
-	EX: L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
-
-	Would appear as: (the second line is moved in a character)
-
-				Clears all the mercs' positions,
- 				 and allows you to re-enter them manually.
-
-
-@@@ NOTATION
-************
-
-	Throughout the text files, you'll find an assortment of comments. Comments are used to describe the
-	text to make translation easier, but comments don't need to be translated. A good thing is to search for
-	"@@@" after receiving new version of the text file, and address the special notes in this manner.
-
-!!! NOTATION
-************
-
-	As described above, the "!!!" notation should be used by Topware to ask questions and address problems as
-	SirTech uses the "@@@" notation.
-
-*/
 
 static StrPointer s_ger_WeaponType[WeaponType_SIZE] =
 {
@@ -460,11 +460,11 @@ static const wchar_t *s_ger_pAttributeMenuStrings[pAttributeMenuStrings_SIZE] =
 
 static const wchar_t *s_ger_pTrainingMenuStrings[pTrainingMenuStrings_SIZE] =
 {
- L"Üben", // train yourself
- L"Miliz", // train the town
- L"Trainer", // train your teammates
- L"Rekrut", // be trained by an instructor
- L"Abbrechen", // cancel this menu
+	L"Üben", // train yourself
+	L"Miliz", // train the town
+	L"Trainer", // train your teammates
+	L"Rekrut", // be trained by an instructor
+	L"Abbrechen", // cancel this menu
 };
 
 static const wchar_t *s_ger_pSquadMenuStrings[pSquadMenuStrings_SIZE] =
@@ -1467,7 +1467,7 @@ static const wchar_t *s_ger_pTransactionText[pTransactionText_SIZE] =
 	L"Anonyme Einzahlung",
 	L"Bearbeitungsgebühr",
 	L"%ls von AIM angeheuert", // Merc was hired
-	L"Kauf bei Bobby Rays",	 		// Bobby Ray is the name of an arms dealer
+	L"Kauf bei Bobby Rays",		// Bobby Ray is the name of an arms dealer
 	L"Ausgeglichene Konten bei M.E.R.C.",
 	L"Krankenversicherung für %ls", 		// medical deposit for merc
 	L"BSE-Profilanalyse", 		// IMP is the acronym for International Mercenary Profiling
@@ -1547,8 +1547,8 @@ static const wchar_t *s_ger_pMapErrorString[pMapErrorString_SIZE] =
 	L"Wir müssen erst an die Oberfläche.",
 	L"Marschbefehl? Wir sind in einem feindlichen Sektor!",
 	L"Wenn Söldner reisen sollen, müssen sie einem Trupp oder Fahrzeug zugewiesen werden.",
-	L"Sie haben noch keine Teammitglieder.", 		// you have no members, can't do anything
-	L"Söldner kann nicht gehorchen.",			 		// merc can't comply with your order
+	L"Sie haben noch keine Teammitglieder.",		// you have no members, can't do anything
+	L"Söldner kann nicht gehorchen.",			// merc can't comply with your order
 //6-10
 	L"%ls braucht eine Eskorte. Platzieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
 	L"%ls braucht eine Eskorte. Platzieren Sie sie in einem Trupp mit Eskorte.", // for a female
@@ -1661,14 +1661,14 @@ static const wchar_t *s_ger_pImpButtonText[pImpButtonText_SIZE] =
 	L"Porträt", 			// the personal portrait selection
 	L"Stimme %d", 			// the voice selection
 	L"Fertig", 			// done profiling
-	L"Von vorne anfangen",	 		// start over profiling
+	L"Von vorne anfangen",		// start over profiling
 	L"Ja, die Antwort passt!",
 	L"Ja",
 	L"Nein",
 	L"Fertig", 			// finished answering questions
 	L"Zurück", 			// previous question..abbreviated form
 	L"Weiter", 			// next question
-	L"JA",		 		// yes, I am certain
+	L"JA",				// yes, I am certain
 	L"NEIN, ICH MÖCHTE VON VORNE ANFANGEN.", // no, I want to start over the profiling process
 	L"JA",
 	L"NEIN",
@@ -1694,13 +1694,13 @@ static const wchar_t s_ger_pFilesTitle[] = L"Akten einsehen";
 
 static const wchar_t *s_ger_pFilesSenderList[pFilesSenderList_SIZE] =
 {
-	L"Aufklärungsbericht", 		// the recon report sent to the player. Recon is an abbreviation for reconissance
-	L"Intercept #1", 		// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
-	L"Intercept #2",		// second intercept file
-	L"Intercept #3",		// third intercept file
-	L"Intercept #4",		// fourth intercept file
-	L"Intercept #5",		// fifth intercept file
-	L"Intercept #6",		// sixth intercept file
+	L"Aufklärungsbericht",	// the recon report sent to the player. Recon is an abbreviation for reconissance
+	L"Intercept #1",	// first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
+	L"Intercept #2",	// second intercept file
+	L"Intercept #3",	// third intercept file
+	L"Intercept #4",	// fourth intercept file
+	L"Intercept #5",	// fifth intercept file
+	L"Intercept #6",	// sixth intercept file
 };
 
 // Text having to do with the History Log
@@ -1708,11 +1708,11 @@ static const wchar_t s_ger_pHistoryTitle[] = L"Logbuch";
 
 static const wchar_t *s_ger_pHistoryHeaders[pHistoryHeaders_SIZE] =
 {
-	L"Tag",	 			// the day the history event occurred
-	L"Seite", 			// the current page in the history report we are in
-	L"Tag", 			// the days the history report occurs over
-	L"Ort",	 			// location (in sector) the event occurred
-	L"Ereignis", 			// the event label
+	L"Tag",		// the day the history event occurred
+	L"Seite",	// the current page in the history report we are in
+	L"Tag",		// the days the history report occurs over
+	L"Ort",		// location (in sector) the event occurred
+	L"Ereignis",	// the event label
 };
 
 // various history events
@@ -2288,9 +2288,9 @@ static const wchar_t *s_ger_BobbyRText[BobbyRText_SIZE] =
 	L"Es tut uns sehr leid, aber im Moment sind diese Sachen total ausverkauft.",
 };
 
-/* The following line is used on the Ammunition page.  It is used for help text
- * to display how many items the player's merc has that can use this type of
- * ammo. */
+// The following line is used on the Ammunition page.  It is used for help text
+// to display how many items the player's merc has that can use this type of
+// ammo.
 static const wchar_t s_ger_str_bobbyr_guns_num_guns_that_use_ammo[] = L"Ihr Team hat %d Waffe(n), die dieses Kaliber benutzen";
 
 // Text for Bobby Ray's Home Page
@@ -2753,7 +2753,7 @@ static const wchar_t *s_ger_zOptionsScreenHelpText[zOptionsToggleText_SIZE] =
 	L"Durch diese Option wird vor der Rückkehr in den Echtzeit-Modus ein zusätzlicher \"Sicherheits\"-Klick verlangt.",
 
 	//Sleep/Wake notification
-  L"Wenn ANgeschaltet werden Sie informiert, wann Ihre Söldner, die sich im \"Dienst\" befinden schlafen oder die Arbeit wieder aufnehmen.",
+	L"Wenn ANgeschaltet werden Sie informiert, wann Ihre Söldner, die sich im \"Dienst\" befinden schlafen oder die Arbeit wieder aufnehmen.",
 
 	//Use the metric system
 	L"Mit dieser Option wird im Spiel das metrische System verwendet.",
@@ -2822,9 +2822,9 @@ static const wchar_t *s_ger_pDeliveryLocationStrings[pDeliveryLocationStrings_SI
 	L"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
 };
 
-/* This string is used in the IMP character generation.  It is possible to
- * select 0 ability in a skill meaning you can't use it.  This text is
- * confirmation to the player. */
+// This string is used in the IMP character generation.  It is possible to
+// select 0 ability in a skill meaning you can't use it.  This text is
+// confirmation to the player.
 static const wchar_t s_ger_pSkillAtZeroWarning[]    = L"Sind Sie sicher? Ein Wert von 0 bedeutet, dass der Charakter diese Fähigkeit nicht nutzen kann.";
 static const wchar_t s_ger_pIMPBeginScreenStrings[] = L"(max. 8 Buchstaben)";
 static const wchar_t s_ger_pIMPFinishButtonText[]   = L"Analyse wird durchgeführt";
@@ -2893,8 +2893,8 @@ static const wchar_t *s_ger_pMessageStrings[pMessageStrings_SIZE] =
 	L"Werfen",
 	L"Weitergeben",
 
-	L"%ls weitergegeben an %ls.", //"Item" passed to "merc". Please try to keep the item %s before the merc %s, otherwise,
-											 //must notify SirTech.
+	L"%ls weitergegeben an %ls.",	//"Item" passed to "merc". Please try to keep the item %s before the merc %s,
+					//otherwise, must notify SirTech.
 	L"Kein Platz, um %ls an %ls weiterzugeben.", //pass "item" to "merc". Same instructions as above.
 
 	//A list of attachments appear after the items. Ex: Kevlar vest ( Ceramic Plate 'Attached )'
@@ -3239,7 +3239,7 @@ static const wchar_t *s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	//46-48
 	L"%lss Gewehrlauf-Verlängerung fällt ab!",
 	L"Pro Sektor sind nicht mehr als %d Milizausbilder erlaubt.",
-  L"Sind Sie sicher?", //
+	L"Sind Sie sicher?", //
 
 	//49-50
 	L"Zeitraffer", //time compression
@@ -3265,7 +3265,7 @@ static const wchar_t *s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	//57
 	L"John und Mary eskortieren?",
 
-  L"Schalter betätigt.",
+	L"Schalter betätigt.",
 };
 
 static const wchar_t s_ger_str_ceramic_plates_smashed[] = L"%lss Keramikplatten wurden zertrümmert!";
@@ -3302,14 +3302,14 @@ static const wchar_t *s_ger_str_stat_list[str_stat_list_SIZE] =
 
 static const wchar_t *s_ger_str_aim_sort_list[str_aim_sort_list_SIZE] =
 {
-  s_ger_str_aim_sort_price,
-  s_ger_str_aim_sort_experience,
-  s_ger_str_aim_sort_marksmanship,
-  s_ger_str_aim_sort_medical,
-  s_ger_str_aim_sort_explosives,
-  s_ger_str_aim_sort_mechanical,
-  s_ger_str_aim_sort_ascending,
-  s_ger_str_aim_sort_descending,
+	s_ger_str_aim_sort_price,
+	s_ger_str_aim_sort_experience,
+	s_ger_str_aim_sort_marksmanship,
+	s_ger_str_aim_sort_medical,
+	s_ger_str_aim_sort_explosives,
+	s_ger_str_aim_sort_mechanical,
+	s_ger_str_aim_sort_ascending,
+	s_ger_str_aim_sort_descending,
 };
 
 static const wchar_t* const s_ger_zNewTacticalMessages[] =
@@ -3337,250 +3337,250 @@ static const wchar_t *s_ger_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_t
 	L"TIT", 			// Dead is Dead Tab
 };
 
-/** German language resources. */
+// German language resources.
 LanguageRes g_LanguageResGerman = {
 
-  s_ger_WeaponType,
+	s_ger_WeaponType,
 
-  s_ger_Message,
-  s_ger_TeamTurnString,
-  s_ger_pAssignMenuStrings,
-  s_ger_pTrainingStrings,
-  s_ger_pTrainingMenuStrings,
-  s_ger_pAttributeMenuStrings,
-  s_ger_pVehicleStrings,
-  s_ger_pShortAttributeStrings,
-  s_ger_pContractStrings,
-  s_ger_pAssignmentStrings,
-  s_ger_pConditionStrings,
-  s_ger_pTownNames,
-  s_ger_g_towns_locative,
-  s_ger_pPersonnelScreenStrings,
-  s_ger_pUpperLeftMapScreenStrings,
-  s_ger_pTacticalPopupButtonStrings,
-  s_ger_pSquadMenuStrings,
-  s_ger_pDoorTrapStrings,
-  s_ger_pLongAssignmentStrings,
-  s_ger_pMapScreenMouseRegionHelpText,
-  s_ger_pNoiseVolStr,
-  s_ger_pNoiseTypeStr,
-  s_ger_pDirectionStr,
-  s_ger_pRemoveMercStrings,
-  s_ger_sTimeStrings,
-  s_ger_pLandTypeStrings,
-  s_ger_pInvPanelTitleStrings,
-  s_ger_pPOWStrings,
-  s_ger_pMilitiaString,
-  s_ger_pMilitiaButtonString,
-  s_ger_pEpcMenuStrings,
-  s_ger_pRepairStrings,
-  s_ger_sPreStatBuildString,
-  s_ger_sStatGainStrings,
-  s_ger_pHelicopterEtaStrings,
-  s_ger_sMapLevelString,
-  s_ger_gsLoyalString,
-  s_ger_gsUndergroundString,
-  s_ger_gsTimeStrings,
-  s_ger_sFacilitiesStrings,
-  s_ger_pMapPopUpInventoryText,
-  s_ger_pwTownInfoStrings,
-  s_ger_pwMineStrings,
-  s_ger_pwMiscSectorStrings,
-  s_ger_pMapInventoryErrorString,
-  s_ger_pMapInventoryStrings,
-  s_ger_pMovementMenuStrings,
-  s_ger_pUpdateMercStrings,
-  s_ger_pMapScreenBorderButtonHelpText,
-  s_ger_pMapScreenBottomFastHelp,
-  s_ger_pMapScreenBottomText,
-  s_ger_pMercDeadString,
-  s_ger_pSenderNameList,
-  s_ger_pNewMailStrings,
-  s_ger_pDeleteMailStrings,
-  s_ger_pEmailHeaders,
-  s_ger_pEmailTitleText,
-  s_ger_pFinanceTitle,
-  s_ger_pFinanceSummary,
-  s_ger_pFinanceHeaders,
-  s_ger_pTransactionText,
-  s_ger_pMoralStrings,
-  s_ger_pSkyriderText,
-  s_ger_str_left_equipment,
-  s_ger_pMapScreenStatusStrings,
-  s_ger_pMapScreenPrevNextCharButtonHelpText,
-  s_ger_pEtaString,
-  s_ger_pShortVehicleStrings,
-  s_ger_pTrashItemText,
-  s_ger_pMapErrorString,
-  s_ger_pMapPlotStrings,
-  s_ger_pBullseyeStrings,
-  s_ger_pMiscMapScreenMouseRegionHelpText,
-  s_ger_str_he_leaves_where_drop_equipment,
-  s_ger_str_she_leaves_where_drop_equipment,
-  s_ger_str_he_leaves_drops_equipment,
-  s_ger_str_she_leaves_drops_equipment,
-  s_ger_pImpPopUpStrings,
-  s_ger_pImpButtonText,
-  s_ger_pExtraIMPStrings,
-  s_ger_pFilesTitle,
-  s_ger_pFilesSenderList,
-  s_ger_pHistoryLocations,
-  s_ger_pHistoryStrings,
-  s_ger_pHistoryHeaders,
-  s_ger_pHistoryTitle,
-  s_ger_pShowBookmarkString,
-  s_ger_pWebPagesTitles,
-  s_ger_pWebTitle,
-  s_ger_pPersonnelString,
-  s_ger_pErrorStrings,
-  s_ger_pDownloadString,
-  s_ger_pBookMarkStrings,
-  s_ger_pLaptopIcons,
-  s_ger_gsAtmStartButtonText,
-  s_ger_pPersonnelTeamStatsStrings,
-  s_ger_pPersonnelCurrentTeamStatsStrings,
-  s_ger_pPersonelTeamStrings,
-  s_ger_pPersonnelDepartedStateStrings,
-  s_ger_pMapHortIndex,
-  s_ger_pMapVertIndex,
-  s_ger_pMapDepthIndex,
-  s_ger_pLaptopTitles,
-  s_ger_pDayStrings,
-  s_ger_pMilitiaConfirmStrings,
-  s_ger_pDeliveryLocationStrings,
-  s_ger_pSkillAtZeroWarning,
-  s_ger_pIMPBeginScreenStrings,
-  s_ger_pIMPFinishButtonText,
-  s_ger_pIMPFinishStrings,
-  s_ger_pIMPVoicesStrings,
-  s_ger_pPersTitleText,
-  s_ger_pPausedGameText,
-  s_ger_zOptionsToggleText,
-  s_ger_zOptionsScreenHelpText,
-  s_ger_pDoctorWarningString,
-  s_ger_pMilitiaButtonsHelpText,
-  s_ger_pMapScreenJustStartedHelpText,
-  s_ger_pLandMarkInSectorString,
-  s_ger_gzMercSkillText,
-  s_ger_gzNonPersistantPBIText,
-  s_ger_gzMiscString,
-  s_ger_wMapScreenSortButtonHelpText,
-  s_ger_pNewNoiseStr,
-  s_ger_gzLateLocalizedString,
-  s_ger_pAntiHackerString,
-  s_ger_pMessageStrings,
-  s_ger_ItemPickupHelpPopup,
-  s_ger_TacticalStr,
-  s_ger_LargeTacticalStr,
-  s_ger_zDialogActions,
-  s_ger_zDealerStrings,
-  s_ger_zTalkMenuStrings,
-  s_ger_gzMoneyAmounts,
-  s_ger_gzProsLabel,
-  s_ger_gzConsLabel,
-  s_ger_gMoneyStatsDesc,
-  s_ger_gWeaponStatsDesc,
-  s_ger_sKeyDescriptionStrings,
-  s_ger_zHealthStr,
-  s_ger_zVehicleName,
-  s_ger_pExitingSectorHelpText,
-  s_ger_InsContractText,
-  s_ger_InsInfoText,
-  s_ger_MercAccountText,
-  s_ger_MercInfo,
-  s_ger_MercNoAccountText,
-  s_ger_MercHomePageText,
-  s_ger_sFuneralString,
-  s_ger_sFloristText,
-  s_ger_sOrderFormText,
-  s_ger_sFloristGalleryText,
-  s_ger_sFloristCards,
-  s_ger_BobbyROrderFormText,
-  s_ger_BobbyRText,
-  s_ger_str_bobbyr_guns_num_guns_that_use_ammo,
-  s_ger_BobbyRaysFrontText,
-  s_ger_AimSortText,
-  s_ger_str_aim_sort_price,
-  s_ger_str_aim_sort_experience,
-  s_ger_str_aim_sort_marksmanship,
-  s_ger_str_aim_sort_medical,
-  s_ger_str_aim_sort_explosives,
-  s_ger_str_aim_sort_mechanical,
-  s_ger_str_aim_sort_ascending,
-  s_ger_str_aim_sort_descending,
-  s_ger_AimPolicyText,
-  s_ger_AimMemberText,
-  s_ger_CharacterInfo,
-  s_ger_VideoConfercingText,
-  s_ger_AimPopUpText,
-  s_ger_AimLinkText,
-  s_ger_AimHistoryText,
-  s_ger_AimFiText,
-  s_ger_AimAlumniText,
-  s_ger_AimScreenText,
-  s_ger_AimBottomMenuText,
-  s_ger_zMarksMapScreenText,
-  s_ger_gpStrategicString,
-  s_ger_gpGameClockString,
-  s_ger_SKI_Text,
-  s_ger_SkiMessageBoxText,
-  s_ger_zSaveLoadText,
-  s_ger_zOptionsText,
-  s_ger_gzGIOScreenText,
-  s_ger_gzHelpScreenText,
-  s_ger_gzLaptopHelpText,
-  s_ger_gzMoneyWithdrawMessageText,
-  s_ger_gzCopyrightText,
-  s_ger_BrokenLinkText,
-  s_ger_gzBobbyRShipmentText,
-  s_ger_zGioDifConfirmText,
-  s_ger_gzCreditNames,
-  s_ger_gzCreditNameTitle,
-  s_ger_gzCreditNameFunny,
-  s_ger_pContractButtonString,
-  s_ger_gzIntroScreen,
-  s_ger_pUpdatePanelButtons,
-  s_ger_sRepairsDoneString,
-  s_ger_str_ceramic_plates_smashed,
-  s_ger_str_arrival_rerouted,
+	s_ger_Message,
+	s_ger_TeamTurnString,
+	s_ger_pAssignMenuStrings,
+	s_ger_pTrainingStrings,
+	s_ger_pTrainingMenuStrings,
+	s_ger_pAttributeMenuStrings,
+	s_ger_pVehicleStrings,
+	s_ger_pShortAttributeStrings,
+	s_ger_pContractStrings,
+	s_ger_pAssignmentStrings,
+	s_ger_pConditionStrings,
+	s_ger_pTownNames,
+	s_ger_g_towns_locative,
+	s_ger_pPersonnelScreenStrings,
+	s_ger_pUpperLeftMapScreenStrings,
+	s_ger_pTacticalPopupButtonStrings,
+	s_ger_pSquadMenuStrings,
+	s_ger_pDoorTrapStrings,
+	s_ger_pLongAssignmentStrings,
+	s_ger_pMapScreenMouseRegionHelpText,
+	s_ger_pNoiseVolStr,
+	s_ger_pNoiseTypeStr,
+	s_ger_pDirectionStr,
+	s_ger_pRemoveMercStrings,
+	s_ger_sTimeStrings,
+	s_ger_pLandTypeStrings,
+	s_ger_pInvPanelTitleStrings,
+	s_ger_pPOWStrings,
+	s_ger_pMilitiaString,
+	s_ger_pMilitiaButtonString,
+	s_ger_pEpcMenuStrings,
+	s_ger_pRepairStrings,
+	s_ger_sPreStatBuildString,
+	s_ger_sStatGainStrings,
+	s_ger_pHelicopterEtaStrings,
+	s_ger_sMapLevelString,
+	s_ger_gsLoyalString,
+	s_ger_gsUndergroundString,
+	s_ger_gsTimeStrings,
+	s_ger_sFacilitiesStrings,
+	s_ger_pMapPopUpInventoryText,
+	s_ger_pwTownInfoStrings,
+	s_ger_pwMineStrings,
+	s_ger_pwMiscSectorStrings,
+	s_ger_pMapInventoryErrorString,
+	s_ger_pMapInventoryStrings,
+	s_ger_pMovementMenuStrings,
+	s_ger_pUpdateMercStrings,
+	s_ger_pMapScreenBorderButtonHelpText,
+	s_ger_pMapScreenBottomFastHelp,
+	s_ger_pMapScreenBottomText,
+	s_ger_pMercDeadString,
+	s_ger_pSenderNameList,
+	s_ger_pNewMailStrings,
+	s_ger_pDeleteMailStrings,
+	s_ger_pEmailHeaders,
+	s_ger_pEmailTitleText,
+	s_ger_pFinanceTitle,
+	s_ger_pFinanceSummary,
+	s_ger_pFinanceHeaders,
+	s_ger_pTransactionText,
+	s_ger_pMoralStrings,
+	s_ger_pSkyriderText,
+	s_ger_str_left_equipment,
+	s_ger_pMapScreenStatusStrings,
+	s_ger_pMapScreenPrevNextCharButtonHelpText,
+	s_ger_pEtaString,
+	s_ger_pShortVehicleStrings,
+	s_ger_pTrashItemText,
+	s_ger_pMapErrorString,
+	s_ger_pMapPlotStrings,
+	s_ger_pBullseyeStrings,
+	s_ger_pMiscMapScreenMouseRegionHelpText,
+	s_ger_str_he_leaves_where_drop_equipment,
+	s_ger_str_she_leaves_where_drop_equipment,
+	s_ger_str_he_leaves_drops_equipment,
+	s_ger_str_she_leaves_drops_equipment,
+	s_ger_pImpPopUpStrings,
+	s_ger_pImpButtonText,
+	s_ger_pExtraIMPStrings,
+	s_ger_pFilesTitle,
+	s_ger_pFilesSenderList,
+	s_ger_pHistoryLocations,
+	s_ger_pHistoryStrings,
+	s_ger_pHistoryHeaders,
+	s_ger_pHistoryTitle,
+	s_ger_pShowBookmarkString,
+	s_ger_pWebPagesTitles,
+	s_ger_pWebTitle,
+	s_ger_pPersonnelString,
+	s_ger_pErrorStrings,
+	s_ger_pDownloadString,
+	s_ger_pBookMarkStrings,
+	s_ger_pLaptopIcons,
+	s_ger_gsAtmStartButtonText,
+	s_ger_pPersonnelTeamStatsStrings,
+	s_ger_pPersonnelCurrentTeamStatsStrings,
+	s_ger_pPersonelTeamStrings,
+	s_ger_pPersonnelDepartedStateStrings,
+	s_ger_pMapHortIndex,
+	s_ger_pMapVertIndex,
+	s_ger_pMapDepthIndex,
+	s_ger_pLaptopTitles,
+	s_ger_pDayStrings,
+	s_ger_pMilitiaConfirmStrings,
+	s_ger_pDeliveryLocationStrings,
+	s_ger_pSkillAtZeroWarning,
+	s_ger_pIMPBeginScreenStrings,
+	s_ger_pIMPFinishButtonText,
+	s_ger_pIMPFinishStrings,
+	s_ger_pIMPVoicesStrings,
+	s_ger_pPersTitleText,
+	s_ger_pPausedGameText,
+	s_ger_zOptionsToggleText,
+	s_ger_zOptionsScreenHelpText,
+	s_ger_pDoctorWarningString,
+	s_ger_pMilitiaButtonsHelpText,
+	s_ger_pMapScreenJustStartedHelpText,
+	s_ger_pLandMarkInSectorString,
+	s_ger_gzMercSkillText,
+	s_ger_gzNonPersistantPBIText,
+	s_ger_gzMiscString,
+	s_ger_wMapScreenSortButtonHelpText,
+	s_ger_pNewNoiseStr,
+	s_ger_gzLateLocalizedString,
+	s_ger_pAntiHackerString,
+	s_ger_pMessageStrings,
+	s_ger_ItemPickupHelpPopup,
+	s_ger_TacticalStr,
+	s_ger_LargeTacticalStr,
+	s_ger_zDialogActions,
+	s_ger_zDealerStrings,
+	s_ger_zTalkMenuStrings,
+	s_ger_gzMoneyAmounts,
+	s_ger_gzProsLabel,
+	s_ger_gzConsLabel,
+	s_ger_gMoneyStatsDesc,
+	s_ger_gWeaponStatsDesc,
+	s_ger_sKeyDescriptionStrings,
+	s_ger_zHealthStr,
+	s_ger_zVehicleName,
+	s_ger_pExitingSectorHelpText,
+	s_ger_InsContractText,
+	s_ger_InsInfoText,
+	s_ger_MercAccountText,
+	s_ger_MercInfo,
+	s_ger_MercNoAccountText,
+	s_ger_MercHomePageText,
+	s_ger_sFuneralString,
+	s_ger_sFloristText,
+	s_ger_sOrderFormText,
+	s_ger_sFloristGalleryText,
+	s_ger_sFloristCards,
+	s_ger_BobbyROrderFormText,
+	s_ger_BobbyRText,
+	s_ger_str_bobbyr_guns_num_guns_that_use_ammo,
+	s_ger_BobbyRaysFrontText,
+	s_ger_AimSortText,
+	s_ger_str_aim_sort_price,
+	s_ger_str_aim_sort_experience,
+	s_ger_str_aim_sort_marksmanship,
+	s_ger_str_aim_sort_medical,
+	s_ger_str_aim_sort_explosives,
+	s_ger_str_aim_sort_mechanical,
+	s_ger_str_aim_sort_ascending,
+	s_ger_str_aim_sort_descending,
+	s_ger_AimPolicyText,
+	s_ger_AimMemberText,
+	s_ger_CharacterInfo,
+	s_ger_VideoConfercingText,
+	s_ger_AimPopUpText,
+	s_ger_AimLinkText,
+	s_ger_AimHistoryText,
+	s_ger_AimFiText,
+	s_ger_AimAlumniText,
+	s_ger_AimScreenText,
+	s_ger_AimBottomMenuText,
+	s_ger_zMarksMapScreenText,
+	s_ger_gpStrategicString,
+	s_ger_gpGameClockString,
+	s_ger_SKI_Text,
+	s_ger_SkiMessageBoxText,
+	s_ger_zSaveLoadText,
+	s_ger_zOptionsText,
+	s_ger_gzGIOScreenText,
+	s_ger_gzHelpScreenText,
+	s_ger_gzLaptopHelpText,
+	s_ger_gzMoneyWithdrawMessageText,
+	s_ger_gzCopyrightText,
+	s_ger_BrokenLinkText,
+	s_ger_gzBobbyRShipmentText,
+	s_ger_zGioDifConfirmText,
+	s_ger_gzCreditNames,
+	s_ger_gzCreditNameTitle,
+	s_ger_gzCreditNameFunny,
+	s_ger_pContractButtonString,
+	s_ger_gzIntroScreen,
+	s_ger_pUpdatePanelButtons,
+	s_ger_sRepairsDoneString,
+	s_ger_str_ceramic_plates_smashed,
+	s_ger_str_arrival_rerouted,
 
-  s_ger_str_stat_health,
-  s_ger_str_stat_agility,
-  s_ger_str_stat_dexterity,
-  s_ger_str_stat_strength,
-  s_ger_str_stat_leadership,
-  s_ger_str_stat_wisdom,
-  s_ger_str_stat_exp_level,
-  s_ger_str_stat_marksmanship,
-  s_ger_str_stat_mechanical,
-  s_ger_str_stat_explosive,
-  s_ger_str_stat_medical,
+	s_ger_str_stat_health,
+	s_ger_str_stat_agility,
+	s_ger_str_stat_dexterity,
+	s_ger_str_stat_strength,
+	s_ger_str_stat_leadership,
+	s_ger_str_stat_wisdom,
+	s_ger_str_stat_exp_level,
+	s_ger_str_stat_marksmanship,
+	s_ger_str_stat_mechanical,
+	s_ger_str_stat_explosive,
+	s_ger_str_stat_medical,
 
-  s_ger_str_stat_list,
-  s_ger_str_aim_sort_list,
+	s_ger_str_stat_list,
+	s_ger_str_aim_sort_list,
 
-  s_ger_zNewTacticalMessages,
-  s_ger_str_iron_man_mode_warning,
-  s_ger_str_dead_is_dead_mode_warning,
-  s_ger_str_dead_is_dead_mode_enter_name,
+	s_ger_zNewTacticalMessages,
+	s_ger_str_iron_man_mode_warning,
+	s_ger_str_dead_is_dead_mode_warning,
+	s_ger_str_dead_is_dead_mode_enter_name,
 
-  s_ger_gs_dead_is_dead_mode_tab_name,
+	s_ger_gs_dead_is_dead_mode_tab_name,
 };
 
 #ifdef WITH_UNITTESTS
 #define ARR_SIZE(x) (sizeof(x)/sizeof(x[0]))
 TEST(WideStringEncodingTest, GermanTextFile)
 {
-  // This test checks that the wide string literals in this file are correctly
-  // interpreted by the compiler.  Visual Studio requires BOM (byte-order mark)
-  // to correctly identify file encoding.  Failed test means that the compiler
-  // cannot correctly interpret the string literals.
-  const wchar_t str[] = L"тест";
-  ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
-  EXPECT_EQ(str[0], 0x0442);
-  EXPECT_EQ(str[1], 0x0435);
-  EXPECT_EQ(str[2], 0x0441);
-  EXPECT_EQ(str[3], 0x0442);
-  EXPECT_EQ(str[4], 0x00);
+	// This test checks that the wide string literals in this file are correctly
+	// interpreted by the compiler.  Visual Studio requires BOM (byte-order mark)
+	// to correctly identify file encoding.  Failed test means that the compiler
+	// cannot correctly interpret the string literals.
+	const wchar_t str[] = L"тест";
+	ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
+	EXPECT_EQ(str[0], 0x0442);
+	EXPECT_EQ(str[1], 0x0435);
+	EXPECT_EQ(str[2], 0x0441);
+	EXPECT_EQ(str[3], 0x0442);
+	EXPECT_EQ(str[4], 0x00);
 }
 #endif

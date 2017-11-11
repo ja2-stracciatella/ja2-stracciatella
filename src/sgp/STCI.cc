@@ -174,9 +174,9 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 
 TEST(STCI, asserts)
 {
-  EXPECT_EQ(sizeof(STCIHeader), 64);
-  EXPECT_EQ(sizeof(STCISubImage), 16);
-  EXPECT_EQ(sizeof(STCIPaletteElement), 3);
+	EXPECT_EQ(sizeof(STCIHeader), 64);
+	EXPECT_EQ(sizeof(STCISubImage), 16);
+	EXPECT_EQ(sizeof(STCIPaletteElement), 3);
 }
 
 #endif

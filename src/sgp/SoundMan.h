@@ -8,8 +8,8 @@
 
 
 // Sound error values (they're all the same)
-#define		NO_SAMPLE							0xffffffff
-#define		SOUND_ERROR						0xffffffff
+#define NO_SAMPLE	0xffffffff
+#define SOUND_ERROR	0xffffffff
 
 
 // Zeros out the structs for the system info, and initializes the cache.

@@ -622,58 +622,58 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 //	This function performs the appropriate actions.
 static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 {
-	 UINT8					ubLastHighLevel;
-	 UINT32					*puiDeletedTypes = NULL;
-	 UINT8					ubNumTypes;
-	 UINT8					cnt;
+	UINT8  ubLastHighLevel;
+	UINT32 *puiDeletedTypes = NULL;
+	UINT8  ubNumTypes;
+	UINT8  cnt;
 
-	 // Here we do the following:
-	 // - Remove old type from layer
-	 // - Smooth World with old type
-	 // - Add a 3 by 3 square of new type at head
-	 // - Smooth World with new type
+	// Here we do the following:
+	// - Remove old type from layer
+	// - Smooth World with old type
+	// - Add a 3 by 3 square of new type at head
+	// - Smooth World with new type
 
-		//if (iMapIndex < 0x8000 && TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
-		//ATE: DONOT DO THIS!!!!!!! - I know what was intended - not to draw over floors - this
-		// I don't know is the right way to do it!
-			//return;
+	//if (iMapIndex < 0x8000 && TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
+	//ATE: DONOT DO THIS!!!!!!! - I know what was intended - not to draw over floors - this
+	// I don't know is the right way to do it!
+		//return;
 
 
-	 if ( iMapIndex < 0x8000 && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
-	 {
-		 AddToUndoList( iMapIndex );
+	if ( iMapIndex < 0x8000 && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
+	{
+		AddToUndoList( iMapIndex );
 
-		 // - For all heigher level, remove
-		 RemoveHigherLandLevels(iMapIndex, fNewType, puiDeletedTypes, ubNumTypes);
+		// - For all heigher level, remove
+		RemoveHigherLandLevels(iMapIndex, fNewType, puiDeletedTypes, ubNumTypes);
 
-		 // Set with a radius of 1 and smooth according to height difference
-		 SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );
+		// Set with a radius of 1 and smooth according to height difference
+		SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );
 
-		 // Smooth all deleted levels
-		 for ( cnt = 0; cnt < ubNumTypes; cnt++ )
-		 {
-				SmoothTerrainRadius( iMapIndex, puiDeletedTypes[ cnt ], 1, TRUE );
-		 }
+		// Smooth all deleted levels
+		for ( cnt = 0; cnt < ubNumTypes; cnt++ )
+		{
+		SmoothTerrainRadius( iMapIndex, puiDeletedTypes[ cnt ], 1, TRUE );
+		}
 
-		 MemFree( puiDeletedTypes );
+		MemFree( puiDeletedTypes );
 
-	 }
-	 else if ( iMapIndex < 0x8000 )
-	 {
-			AddToUndoList( iMapIndex );
+	}
+	else if ( iMapIndex < 0x8000 )
+	{
+		AddToUndoList( iMapIndex );
 
-			UINT16 NewTile = GetTileIndexFromTypeSubIndex(fNewType, REQUIRES_SMOOTHING_TILE);
+		UINT16 NewTile = GetTileIndexFromTypeSubIndex(fNewType, REQUIRES_SMOOTHING_TILE);
+		SetLandIndex(iMapIndex, NewTile, fNewType);
+
+		// Smooth item then adding here
+		SmoothTerrain( iMapIndex, fNewType, &NewTile, FALSE );
+
+		if ( NewTile != NO_TILE )
+		{
+			// Change tile
 			SetLandIndex(iMapIndex, NewTile, fNewType);
-
-			// Smooth item then adding here
-			SmoothTerrain( iMapIndex, fNewType, &NewTile, FALSE );
-
-		  if ( NewTile != NO_TILE )
-		  {
-				// Change tile
-				SetLandIndex(iMapIndex, NewTile, fNewType);
-		  }
-	 }
+		}
+	}
 }
 
 
@@ -693,7 +693,7 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	//if (TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
 	//	return( FALSE );
 
-  // Get top tile index
+	// Get top tile index
 	// Remove all land peices except
 	const UINT32 uiNewType = GetTileType(usIndex);
 
@@ -711,7 +711,7 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	SetLandIndex(iMapIndex, usIndex, uiNewType);
 
 	// ATE: Set this land peice to require smoothing again!
-  SmoothAllTerrainTypeRadius( iMapIndex, 2, TRUE );
+	SmoothAllTerrainTypeRadius( iMapIndex, 2, TRUE );
 
 	return( TRUE );
 }
@@ -720,16 +720,16 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 //	Puts a land index "under" an existing ground texture. Affects a radial area.
 static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace)
 {
-	INT16					sTop, sBottom;
-	INT16					sLeft, sRight;
-	INT16					cnt1, cnt2;
-	INT32				  iNewIndex;
-	BOOLEAN				fDoPaste = FALSE;
-	INT32					leftmost;
-	UINT8					ubLastHighLevel;
-  UINT32				*puiSmoothTiles = NULL;
-	INT16 			  sNumSmoothTiles = 0;
-	UINT16				usTemp;
+	INT16   sTop, sBottom;
+	INT16   sLeft, sRight;
+	INT16   cnt1, cnt2;
+	INT32   iNewIndex;
+	BOOLEAN fDoPaste = FALSE;
+	INT32   leftmost;
+	UINT8   ubLastHighLevel;
+	UINT32  *puiSmoothTiles = NULL;
+	INT16   sNumSmoothTiles = 0;
+	UINT16  usTemp;
 
 	// Determine start end end indicies and num rows
 	sTop		= ubRadius;
@@ -750,7 +750,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
 
 			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
+				iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
 
 				if ( fReplace )
@@ -807,11 +807,9 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 	// Once here, smooth any tiles that need it
 	if ( sNumSmoothTiles > 0 )
 	{
-		for (	 cnt1 = 0; cnt1 < sNumSmoothTiles; cnt1++ )
+		for ( cnt1 = 0; cnt1 < sNumSmoothTiles; cnt1++ )
 		{
-
 			SmoothTerrainRadius( puiSmoothTiles[ cnt1 ], uiNewType, 10, FALSE );
-
 		}
 		MemFree( puiSmoothTiles );
 	}
@@ -1086,7 +1084,7 @@ void RaiseWorldLand( )
 			{
 				if( gpWorldLevelData[cnt - WORLD_ROWS ].sHeight > gpWorldLevelData[cnt + WORLD_ROWS ].sHeight )
 				{
-					 gpWorldLevelData[ cnt ].sHeight = gpWorldLevelData[cnt - WORLD_ROWS ].sHeight;
+					gpWorldLevelData[ cnt ].sHeight = gpWorldLevelData[cnt - WORLD_ROWS ].sHeight;
 				}
 				else
 				{
