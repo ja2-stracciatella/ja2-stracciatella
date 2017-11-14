@@ -1,6 +1,7 @@
 #include <string>
 #include "FL/Fl_Native_File_Chooser.H"
 #include <FL/Fl_PNG_Image.H>
+#include <FL/fl_ask.H>
 #include "logo32.png.h"
 #include "slog/slog.h"
 #include "RustInterface.h"
@@ -177,6 +178,16 @@ void Launcher::enableCustomResolutionSelection(Fl_Widget* btn, void* userdata) {
 }
 
 void Launcher::startExecutable(bool asEditor) {
+	// check minimal resolution:
+	if (customResolutionButton->value() &&
+		(customResolutionXInput->value() < 640 ||
+		customResolutionYInput->value() < 480)) {
+		fl_alert("Invalid custom resolution %dx%d.\nJA2 Stracciatella needs a resolution of at least 640x480.",
+			(int) customResolutionXInput->value(),
+			(int) customResolutionYInput->value());
+		return;
+	}
+
 	std::string cmd(this->exePath);
 
 	if (asEditor) {
