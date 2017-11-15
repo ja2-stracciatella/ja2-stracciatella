@@ -1,6 +1,9 @@
 ## Dependencies
 
-- SDL 2.0.4 (included for Windows and OS X)
+- SDL2 >= `2.0.4` (version `2.0.4` is included in this repo for Windows and macOS).
+  __WARNING__: There is an issue with SDL in version `2.0.6` that causes segfaults when playing sounds.
+  Please ensure that you run the game with a different version of the SDL2 library otherwise sound will be
+  disabled.
 - boost-filesystem (included with `-DLOCAL_BOOST_LIB=ON`)
 - cmake
 - Rust and Cargo
