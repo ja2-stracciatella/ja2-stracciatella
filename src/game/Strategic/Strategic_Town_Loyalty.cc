@@ -816,12 +816,7 @@ INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId )
 // is the ENTIRE town under enemy control?
 static INT32 IsTownUnderCompleteControlByEnemy(INT8 bTownId)
 {
-	if ( GetTownSectorsUnderControl( bTownId ) == 0 )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return GetTownSectorsUnderControl(bTownId) == 0;
 }
 
 void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 ubHowMany)
