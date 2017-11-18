@@ -13,7 +13,7 @@
     //  Press 'alt+r' to reload
     //  Press 'ctrl+q' to swap hand items
     //  Press 'shift+j' to climb throug open window
-    "extra_hotkeys": false,
+    "extra_hotkeys": true,
 
     //  --------------------------------------------------
     //  System settings
