@@ -90,13 +90,6 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
 	return( FALSE );
 }
 
-
-BOOLEAN	IsTreePresentAtGridno( INT16 sGridNo )
-{
-	return FindStructure(sGridNo, STRUCTURE_TREE) != NULL;
-}
-
-
 STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, INT8 const orientation)
 {
 	FOR_EACH_STRUCTURE(pStructure, grid_no, STRUCTURE_WALLSTUFF)

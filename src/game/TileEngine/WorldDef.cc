@@ -1614,7 +1614,8 @@ static void OptimizeMapForShadows()
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		if (!IsTreePresentAtGridno(cnt)) continue;
+		// Is there a tree here?
+		if (FindStructure(cnt, STRUCTURE_TREE) == NULL) continue;
 
 		// Check for a structure a footprint away
 		for (UINT8 const* dir = bDirectionsForShadowSearch;; ++dir)
