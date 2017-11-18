@@ -13,12 +13,7 @@
 
 BOOLEAN	IsRoofPresentAtGridno( INT16 sGridNo )
 {
-	if ( FindStructure( sGridNo, STRUCTURE_ROOF ) != NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return FindStructure(sGridNo, STRUCTURE_ROOF) != NULL;
 }
 
 
