@@ -22,6 +22,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	multiple_interrupts = (*json)["multiple_interrupts"].GetBool();
 
 	gui_extras            = (*json)["gui_extras"].GetBool();
+	extra_attachments = (*json)["extra_attachments"].GetBool();
 
 	enemy_weapon_minimal_status   = (*json)["enemy_weapon_minimal_status"].GetInt();
 
