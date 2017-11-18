@@ -330,10 +330,7 @@ INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno)
 		if (sMod == RIGHTMOSTGRID && sPropMod == 0)
 			return(TRUE);
 	else
-		if (sGridno >= LASTROWSTART && sProposedGridno >= GRIDSIZE)
-			return(TRUE);
-		else
-			return(FALSE);
+		return (sGridno >= LASTROWSTART && sProposedGridno >= GRIDSIZE);
 }
 
 
