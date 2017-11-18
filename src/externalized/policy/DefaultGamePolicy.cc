@@ -4,12 +4,7 @@
 
 DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
-	map_hotkey_ctrl_i     = (*json)["map_hotkey_ctrl_i"].GetBool();
-	tactical_hotkey_j     = (*json)["tactical_hotkey_j"].GetBool();
-	tactical_hotkey_shift_j   = (*json)["tactical_hotkey_shift_j"].GetBool();
-	tactical_hotkey_ctrl_n    = (*json)["tactical_hotkey_ctrl_n"].GetBool();
-	tactical_hotkey_ctrl_q    = (*json)["tactical_hotkey_ctrl_q"].GetBool();
-	tactical_hotkey_alt_r     = (*json)["tactical_hotkey_alt_r"].GetBool();
+	extra_hotkeys = (*json)["extra_hotkeys"].GetBool();
 	middle_mouse_look         = (*json)["middle_mouse_look"].GetBool();
 	can_enter_turnbased       = (*json)["can_enter_turnbased"].GetBool();
 
@@ -59,29 +54,29 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
 		{
 			switch(key)
 			{
-				case 'j':         return tactical_hotkey_j;
+				case 'j':         return extra_hotkeys;
 			}
 		}
 		else if(modifier == HKMOD_CTRL)
 		{
 			switch(key)
 			{
-				case 'n':         return tactical_hotkey_ctrl_n;
-				case 'q':         return tactical_hotkey_ctrl_q;
+				case 'n':
+				case 'q':         return extra_hotkeys;
 			}
 		}
 		else if(modifier == HKMOD_SHIFT)
 		{
 			switch(key)
 			{
-				case 'j':         return tactical_hotkey_shift_j;
+				case 'j':         return extra_hotkeys;
 			}
 		}
 		else if(modifier == HKMOD_ALT)
 		{
 			switch(key)
 			{
-				case 'r':         return tactical_hotkey_alt_r;
+				case 'r':         return extra_hotkeys;
 			}
 		}
 	}
@@ -92,7 +87,7 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
 		{
 			switch(key)
 			{
-				case 'i':         return map_hotkey_ctrl_i;
+				case 'i':         return extra_hotkeys;
 			}
 		}
 	}
