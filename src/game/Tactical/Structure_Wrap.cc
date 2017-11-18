@@ -93,12 +93,7 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
 
 BOOLEAN	IsTreePresentAtGridno( INT16 sGridNo )
 {
-	if ( FindStructure( sGridNo, STRUCTURE_TREE ) != NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return FindStructure(sGridNo, STRUCTURE_TREE) != NULL;
 }
 
 
