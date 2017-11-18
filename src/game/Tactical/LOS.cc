@@ -3214,8 +3214,11 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 		// increment shots fired if shooter has a merc profile
 		if( ( pFirer->ubProfile != NO_PROFILE ) && ( pFirer->bTeam == 0 ) )
 		{
-			// another shot fired
-			gMercProfiles[ pFirer->ubProfile ].usShotsFired++;
+			if (pFirer->target)
+			{
+				// Do not count shots fired at nothing in particular because it skews hit %. It would always counts as a miss
+				if (pFirer->target->bLife > 0) gMercProfiles[pFirer->ubProfile].usShotsFired++;
+			}
 		}
 
 		if ( GCM->getItem(pFirer->usAttackingWeapon)->getItemClass() == IC_THROWING_KNIFE )
