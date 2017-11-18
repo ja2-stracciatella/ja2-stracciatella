@@ -8,13 +8,12 @@
     //  --------------------------------------------------
 
     //  Press 'ctrl+i' to show sector inventory of selected sector in strategic view.
-    "map_hotkey_ctrl_i": false,
-
     //  Press 'j' to jump or climb on rooftops, fences etc.
-    "tactical_hotkey_j": false,
-
     //  Press 'ctrl+n' to switch the squad's head gear to night mode (NV or UV Goggles) or back.
-    "tactical_hotkey_ctrl_n": false,
+    //  Press 'alt+r' to reload
+    //  Press 'ctrl+q' to swap hand items
+    //  Press 'shift+j' to climb throug open window
+    "extra_hotkeys": false,
 
     //  --------------------------------------------------
     //  System settings
@@ -82,18 +81,6 @@
     //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
     "middle_mouse_look": true,
-
-    //  Press 'alt+r' to reload
-    //  vanilla_setting: false
-    "tactical_hotkey_alt_r": true,
-
-    //  Press 'ctrl+q' to swap hand items
-    //  vanilla_setting: false
-    "tactical_hotkey_ctrl_q": true,
-
-    //  Press 'shift+j' to climb throug open window
-    //  vanilla_setting: false
-    "tactical_hotkey_shift_j": false,
 
     //  Press d in realtime mode to manually start turn based mode
     //  vanilla_setting: false
