@@ -11,16 +11,6 @@
 #include "Rotting_Corpses.h"
 
 
-BOOLEAN	IsFencePresentAtGridno( INT16 sGridNo )
-{
-	if ( FindStructure( sGridNo, STRUCTURE_ANYFENCE ) != NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
 BOOLEAN	IsRoofPresentAtGridno( INT16 sGridNo )
 {
 	if ( FindStructure( sGridNo, STRUCTURE_ROOF ) != NULL )
