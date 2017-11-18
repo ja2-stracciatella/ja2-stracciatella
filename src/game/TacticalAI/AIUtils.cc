@@ -1573,13 +1573,7 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 
 	// NB light levels are backwards, so a lower light level means the
 	// spot in question is BRIGHTER
-
-	if ( LightTrueLevel( sGridNo, bLevel ) < ubBackgroundLightLevel )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return LightTrueLevel(sGridNo, bLevel) < ubBackgroundLightLevel;
 }
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier)

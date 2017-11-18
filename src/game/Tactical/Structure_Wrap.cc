@@ -11,24 +11,9 @@
 #include "Rotting_Corpses.h"
 
 
-BOOLEAN	IsFencePresentAtGridno( INT16 sGridNo )
-{
-	if ( FindStructure( sGridNo, STRUCTURE_ANYFENCE ) != NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
 BOOLEAN	IsRoofPresentAtGridno( INT16 sGridNo )
 {
-	if ( FindStructure( sGridNo, STRUCTURE_ROOF ) != NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return FindStructure(sGridNo, STRUCTURE_ROOF) != NULL;
 }
 
 
@@ -89,18 +74,6 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo )
 
 	return( FALSE );
 }
-
-
-BOOLEAN	IsTreePresentAtGridno( INT16 sGridNo )
-{
-	if ( FindStructure( sGridNo, STRUCTURE_TREE ) != NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
 
 STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, INT8 const orientation)
 {

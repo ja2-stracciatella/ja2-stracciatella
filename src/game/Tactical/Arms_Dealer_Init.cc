@@ -905,10 +905,7 @@ UINT8 GetTypeOfArmsDealer( UINT8 ubDealerID )
 
 BOOLEAN	DoesDealerDoRepairs(ArmsDealerID const ubArmsDealer)
 {
-	if( ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-		return( TRUE );
-	else
-		return( FALSE );
+	return ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS;
 }
 
 

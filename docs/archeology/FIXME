@@ -57,7 +57,6 @@ InitializeStrategicMapSectorTownNames(): complicated?
 IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
 IsMapScreenWorldItemVisibleInMapInventory(): complicated
-IsTownUnderCompleteControlByEnemy(): complicated
 KeyRingSlotInvClickCallback: one caller
 LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
