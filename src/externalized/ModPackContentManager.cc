@@ -2,6 +2,7 @@
 
 #include "JsonUtility.h"
 #include "sgp/FileMan.h"
+#include "sgp/PathTools.h"
 #include "sgp/UTF8String.h"
 
 #include "slog/slog.h"
@@ -67,7 +68,7 @@ SGPFile* ModPackContentManager::openGameResForReading(const std::string& filenam
 std::string ModPackContentManager::getSavedGamesFolder() const
 {
 	std::string folderName = std::string("SavedGames-") + m_modName;
-	return FileMan::joinPaths(m_configFolder, folderName);
+	return PathTools::joinPaths(m_configFolder, folderName);
 }
 
 /** Load dialogue quote from file. */

@@ -1,12 +1,12 @@
 #include "TestUtils.h"
 
 #include "externalized/DefaultContentManager.h"
-
+#include "sgp/PathTools.h"
 
 SGPFile* OpenTestResourceForReading(const char *filePath)
 {
 	std::string extraDataDir = GetExtraDataDir();
-	return FileMan::openForReading(FileMan::joinPaths(extraDataDir, filePath));
+	return FileMan::openForReading(PathTools::joinPaths(extraDataDir, filePath));
 }
 
 std::string GetExtraDataDir()

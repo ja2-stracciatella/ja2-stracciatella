@@ -23,6 +23,7 @@
 #include "Intro.h"
 #include "JA2_Splash.h"
 #include "MemMan.h"
+#include "PathTools.h"
 #include "Random.h"
 #include "SGP.h"
 #include "SaveLoadGame.h" // XXX should not be used in SGP
@@ -368,7 +369,7 @@ int main(int argc, char* argv[])
 		extraDataDir = exeFolder;
 	}
 
-	std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
+	std::string externalizedDataPath = PathTools::joinPaths(extraDataDir, "externalized");
 
 	FileMan::switchTmpFolder(configFolderPath);
 
@@ -379,7 +380,7 @@ int main(int argc, char* argv[])
 		char* rustModName = get_mod(params, 0);
 		std::string modName = std::string(rustModName);
 		free_rust_string(rustModName);
-		std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
+		std::string modResFolder = PathTools::joinPaths(PathTools::joinPaths(PathTools::joinPaths(extraDataDir, "mods"), modName), "data");
 		cm = new ModPackContentManager(version,
 						modName, modResFolder, configFolderPath,
 						gameResRootPath, externalizedDataPath);

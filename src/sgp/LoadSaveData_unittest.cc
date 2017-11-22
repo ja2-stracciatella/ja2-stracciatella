@@ -6,6 +6,8 @@
 
 #include "externalized/TestUtils.h"
 
+#include "sgp/PathTools.h"
+
 
 TEST(LoadSaveData, integers)
 {
@@ -163,8 +165,8 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	// as on Windows.  Otherwise, there will be problems with
 	// loading saved games made on Windows.
 
-	std::string floatsPath = FileMan::joinPaths(GetExtraDataDir(), "unittests/datatypes/floats.bin");
-	std::string doublesPath = FileMan::joinPaths(GetExtraDataDir(), "unittests/datatypes/doubles.bin");
+	std::string floatsPath = PathTools::joinPaths(GetExtraDataDir(), "unittests/datatypes/floats.bin");
+	std::string doublesPath = PathTools::joinPaths(GetExtraDataDir(), "unittests/datatypes/doubles.bin");
 
 	// // Test data were previously written with the following code.
 	// {

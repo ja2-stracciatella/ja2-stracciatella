@@ -101,12 +101,6 @@ public:
 	/** Read the whole file as text. */
 	static std::string fileReadText(SGPFile*);
 
-#if CASE_SENSITIVE_FS
-	/** Find an object (file or subdirectory) in the given directory in case-independent manner.
-	 * @return true when found, return the found name using foundName. */
-	static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
-#endif
-
 	/** Open file in the 'Data' directory in case-insensitive manner. */
 	static FILE* openForReadingCaseInsensitive(const std::string &folderPath, const char *filename);
 
@@ -118,15 +112,6 @@ public:
 	 * If directory already exists, do nothing.
 	 * If failed to create, raise an exception. */
 	static void createDir(char const* path);
-
-	/** Join two path components. */
-	static std::string joinPaths(const char *first, const char *second);
-
-	/** Join two path components. */
-	static std::string joinPaths(const std::string &first, const char *second);
-
-	/** Join two path components. */
-	static std::string joinPaths(const std::string &first, const std::string &second);
 
 	/** Replace extension of a file. */
 	static std::string replaceExtension(const std::string &path, const char *newExtensionWithDot);

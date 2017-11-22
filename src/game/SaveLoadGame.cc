@@ -16,6 +16,7 @@
 #include "Types.h"
 #include "Soldier_Profile.h"
 #include "FileMan.h"
+#include "sgp/PathTools.h"
 #include "Debug.h"
 #include "Overhead.h"
 #include "Keys.h"
@@ -1305,7 +1306,7 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 
 void BackupSavedGame(UINT8 const ubSaveGameID)
 {
-	std::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
+	std::string backupdir = PathTools::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
 	FileMan::createDir(backupdir.c_str());
 	char zSourceSaveGameName[512];
 	char zSourceBackupSaveGameName[515];
@@ -1325,8 +1326,8 @@ void BackupSavedGame(UINT8 const ubSaveGameID)
 		// Only backup existing savegames
 		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir.c_str(), zSourceBackupSaveGameName))
 		{
-			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(),
-												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
+			FileMan::moveFile(PathTools::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(),
+												PathTools::joinPaths(backupdir,zTargetSaveGameName).c_str());
 		}
 	}
 }

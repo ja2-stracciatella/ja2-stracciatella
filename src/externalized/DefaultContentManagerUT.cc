@@ -2,6 +2,7 @@
 
 #include "GameRes.h"
 #include "sgp/FileMan.h"
+#include "sgp/PathTools.h"
 
 #include "externalized/DefaultContentManager.h"
 #include "externalized/TestUtils.h"
@@ -10,9 +11,9 @@
 DefaultContentManager * createDefaultCMForTesting()
 {
 	std::string extraDataDir = GetExtraDataDir();
-	std::string configFolderPath = FileMan::joinPaths(extraDataDir, "unittests");
-	std::string gameResRootPath = FileMan::joinPaths(extraDataDir, "unittests");
-	std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
+	std::string configFolderPath = PathTools::joinPaths(extraDataDir, "unittests");
+	std::string gameResRootPath = PathTools::joinPaths(extraDataDir, "unittests");
+	std::string externalizedDataPath = PathTools::joinPaths(extraDataDir, "externalized");
 
 	DefaultContentManager *cm;
 

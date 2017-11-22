@@ -9,6 +9,7 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "PODObj.h"
+#include "PathTools.h"
 
 #include "boost/filesystem.hpp"
 
@@ -95,7 +96,7 @@ std::string FileMan::switchTmpFolder(std::string home)
 	// Temporary files will be created in this directory.
 	// ----------------------------------------------------------------------------
 
-	std::string tmpPath = FileMan::joinPaths(home, LOCAL_CURRENT_DIR);
+	std::string tmpPath = PathTools::joinPaths(home, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
 		SLOGE(DEBUG_TAG_FILEMAN, "Unable to create tmp directory '%s'", tmpPath.c_str());
@@ -114,16 +115,16 @@ std::string FileMan::switchTmpFolder(std::string home)
  * @return file descriptor or -1 if file is not found. */
 int FileMan::openFileCaseInsensitive(const std::string &folderPath, const char *filename, int mode)
 {
-	std::string path = FileMan::joinPaths(folderPath, filename);
+	std::string path = PathTools::joinPaths(folderPath, filename);
 	int d = open(path.c_str(), mode);
 	if (d < 0)
 	{
 #if CASE_SENSITIVE_FS
 		// on case-sensitive file system need to try to find another name
 		std::string newFileName;
-		if(findObjectCaseInsensitive(folderPath.c_str(), filename, true, false, newFileName))
+		if(PathTools::findObjectCaseInsensitiveFullPath(folderPath.c_str(), filename, true, false, newFileName))
 		{
-			path = FileMan::joinPaths(folderPath, newFileName);
+			path = newFileName;
 			d = open(path.c_str(), mode);
 		}
 #endif
@@ -477,96 +478,6 @@ uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 	}
 }
 
-/** Join two path components. */
-std::string FileMan::joinPaths(const std::string &first, const char *second)
-{
-	std::string result = first;
-	if((result.length() == 0) || (result[result.length()-1] != PATH_SEPARATOR))
-	{
-		if(second[0] != PATH_SEPARATOR)
-		{
-			result += PATH_SEPARATOR;
-		}
-	}
-	result += second;
-	return result;
-}
-
-/** Join two path components. */
-std::string FileMan::joinPaths(const std::string &first, const std::string &second)
-{
-	return joinPaths(first, second.c_str());
-}
-
-/** Join two path components. */
-std::string FileMan::joinPaths(const char *first, const char *second)
-{
-	return joinPaths(std::string(first), second);
-}
-
-#if CASE_SENSITIVE_FS
-
-/**
- * Find an object (file or subdirectory) in the given directory in case-independent manner.
- * @return true when found, return the found name using foundName. */
-bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
-{
-	bool result = false;
-
-	// if name contains directories, than we have to find actual case-sensitive name of the directory
-	// and only then look for a file
-	const char *splitter = strstr(name, "/");
-	int dirNameLen = (int)(splitter - name);
-	if(splitter && (dirNameLen > 0) && splitter[1] != 0)
-	{
-		// we have directory in the name
-		// let's find its correct name first
-		char newDirectory[128];
-		std::string actualSubdirName;
-		strncpy(newDirectory, name, sizeof(newDirectory));
-		newDirectory[dirNameLen] = 0;
-
-		if(findObjectCaseInsensitive(directory, newDirectory, false, true, actualSubdirName))
-		{
-			// found subdirectory; let's continue the full search
-			std::string pathInSubdir;
-			std::string newDirectory = FileMan::joinPaths(directory, actualSubdirName.c_str());
-			if(findObjectCaseInsensitive(newDirectory.c_str(), splitter + 1,
-							lookForFiles, lookForSubdirs, pathInSubdir))
-			{
-				// found name in subdir
-				foundName = FileMan::joinPaths(actualSubdirName, pathInSubdir);
-				result = true;
-			}
-		}
-	}
-	else
-	{
-		// name contains only file, no directories
-		DIR *d;
-		struct dirent *entry;
-		uint8_t objectTypes = (lookForFiles ? DT_REG : 0) | (lookForSubdirs ? DT_DIR : 0);
-
-		d = opendir(directory);
-		if (d)
-		{
-			while ((entry = readdir(d)) != NULL)
-			{
-				if((entry->d_type & objectTypes)
-					&& !strcasecmp(name, entry->d_name))
-				{
-					foundName = entry->d_name;
-					result = true;
-				}
-			}
-			closedir(d);
-		}
-	}
-
-	// SLOGI(DEBUG_TAG_FILEMAN,"Looking for %s/[ %s ] : %s", directory, name, result ? "success" : "failure");
-	return result;
-}
-#endif
 
 
 /** Convert file descriptor to HWFile.

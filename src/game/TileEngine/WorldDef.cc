@@ -42,6 +42,7 @@
 #include "PathAI.h"
 #include "EditorBuildings.h"
 #include "FileMan.h"
+#include "sgp/PathTools.h"
 #include "Map_Edgepoints.h"
 #include "Environment.h"
 #include "Structure_Wrap.h"
@@ -1332,7 +1333,7 @@ try
 	// Let's save map into Data/maps
 	std::string path = GCM->getNewMapFolder();
 	FileMan::createDir(path.c_str());
-	path = FileMan::joinPaths(path.c_str(), (const char*)filename);
+	path = PathTools::joinPaths(path.c_str(), (const char*)filename);
 	AutoSGPFile f(FileMan::openForWriting(path.c_str()));
 
 	// Write JA2 Version ID

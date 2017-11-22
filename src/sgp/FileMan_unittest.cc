@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "FileMan.h"
+#include "sgp/PathTools.h"
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
 
@@ -14,26 +15,26 @@ TEST(FileManTest, joinPaths)
 
 		// ~~~ platform-specific separators
 
-		result = FileMan::joinPaths("foo", "bar");
+		result = PathTools::joinPaths("foo", "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo"), std::string("bar"));
+		result = PathTools::joinPaths(std::string("foo"), std::string("bar"));
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo"), "bar");
+		result = PathTools::joinPaths(std::string("foo"), "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
-		result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, "bar");
+		result = PathTools::joinPaths("foo" PATH_SEPARATOR_STR, "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo" PATH_SEPARATOR_STR), std::string("bar"));
+		result = PathTools::joinPaths(std::string("foo" PATH_SEPARATOR_STR), std::string("bar"));
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo" PATH_SEPARATOR_STR), "bar");
+		result = PathTools::joinPaths(std::string("foo" PATH_SEPARATOR_STR), "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
 		// // XXX FAILS
-		// result = FileMan::joinPaths("foo", PATH_SEPARATOR_STR "bar");
+		// result = PathTools::joinPaths("foo", PATH_SEPARATOR_STR "bar");
 		// EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
 		// // XXX FAILS
-		// result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, PATH_SEPARATOR_STR "bar");
+		// result = PathTools::joinPaths("foo" PATH_SEPARATOR_STR, PATH_SEPARATOR_STR "bar");
 		// EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
 		// ~~~ unix separators
@@ -54,19 +55,19 @@ TEST(FileManTest, FindFilesWithBoost)
 	// result on Linux: "unittests/find-files/lowercase-ext.txt"
 	// result on Win:   "unittests/find-files\lowercase-ext.txt"
 
-	std::string testDir = FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files");
+	std::string testDir = PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files");
 
 	std::vector<std::string> results = FindFilesInDir(testDir, ".txt", false, false);
 	ASSERT_EQ(results.size(), 1);
-	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
+	EXPECT_STREQ(results[0].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 
-	results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), ".txt", false, false);
+	results = FindFilesInDir(PathTools::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), ".txt", false, false);
 	ASSERT_EQ(results.size(), 1);
-	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files" PS "lowercase-ext.txt").c_str());
+	EXPECT_STREQ(results[0].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests" PS "find-files" PS "lowercase-ext.txt").c_str());
 
 	results = FindFilesInDir(testDir, ".TXT", false, false);
 	ASSERT_EQ(results.size(), 1);
-	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
+	EXPECT_STREQ(results[0].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
 	results = FindFilesInDir(testDir, ".TXT", false, true);
 	ASSERT_EQ(results.size(), 1);
@@ -75,13 +76,13 @@ TEST(FileManTest, FindFilesWithBoost)
 	results = FindFilesInDir(testDir, ".tXt", true, false);
 	std::sort(results.begin(), results.end());
 	ASSERT_EQ(results.size(), 2);
-	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
-	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
+	EXPECT_STREQ(results[0].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
+	EXPECT_STREQ(results[1].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
 	results = FindFilesInDir(testDir, ".tXt", true, false, true);
 	ASSERT_EQ(results.size(), 2);
-	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
-	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
+	EXPECT_STREQ(results[0].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
+	EXPECT_STREQ(results[1].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
 	results = FindFilesInDir(testDir, ".tXt", true, true, true);
 	ASSERT_EQ(results.size(), 2);
@@ -90,9 +91,9 @@ TEST(FileManTest, FindFilesWithBoost)
 
 	results = FindAllFilesInDir(testDir, true);
 	ASSERT_EQ(results.size(), 3);
-	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "file-without-extension").c_str());
-	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
-	EXPECT_STREQ(results[2].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
+	EXPECT_STREQ(results[0].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "file-without-extension").c_str());
+	EXPECT_STREQ(results[1].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
+	EXPECT_STREQ(results[2].c_str(), PathTools::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
 #undef PS
 }

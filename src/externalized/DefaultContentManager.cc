@@ -18,6 +18,7 @@
 #include "sgp/FileMan.h"
 #include "sgp/LibraryDataBase.h"
 #include "sgp/MemMan.h"
+#include "sgp/PathTools.h"
 #include "sgp/StrUtils.h"
 #include "sgp/UTF8String.h"
 
@@ -158,8 +159,8 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_gameResRootPath = gameResRootPath;
 	m_externalizedDataPath = externalizedDataPath;
 
-	m_dataDir = FileMan::joinPaths(gameResRootPath, BASEDATADIR);
-	m_tileDir = FileMan::joinPaths(m_dataDir, TILECACHEDIR);
+	m_dataDir = PathTools::joinPaths(gameResRootPath, BASEDATADIR);
+	m_tileDir = PathTools::joinPaths(m_dataDir, TILECACHEDIR);
 
 
 #if CASE_SENSITIVE_FS
@@ -167,14 +168,14 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	// need to find precise names of the directories
 
 	std::string name;
-	if(FileMan::findObjectCaseInsensitive(m_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
+	if(PathTools::findObjectCaseInsensitiveFullPath(m_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
 	{
-		m_dataDir = FileMan::joinPaths(m_gameResRootPath, name);
+		m_dataDir = name;
 	}
 
-	if(FileMan::findObjectCaseInsensitive(m_dataDir.c_str(), TILECACHEDIR, false, true, name))
+	if(PathTools::findObjectCaseInsensitiveFullPath(m_dataDir.c_str(), TILECACHEDIR, false, true, name))
 	{
-		m_tileDir = FileMan::joinPaths(m_dataDir, name);
+		m_tileDir = name;
 	}
 #endif
 
@@ -334,7 +335,7 @@ SGPFile* DefaultContentManager::openMapForReading(const wchar_t *mapName) const
 /** Get directory for storing new map file. */
 std::string DefaultContentManager::getNewMapFolder() const
 {
-	return FileMan::joinPaths(m_dataDir, MAPSDIR);
+	return PathTools::joinPaths(m_dataDir, MAPSDIR);
 }
 
 /** Get all available maps. */
@@ -352,21 +353,21 @@ std::vector<std::string> DefaultContentManager::getAllTilecache() const
 /** Open temporary file for writing. */
 SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, bool truncate) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	std::string path = PathTools::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForWriting(path.c_str(), truncate);
 }
 
 /** Open temporary file for appending. */
 SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	std::string path = PathTools::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForAppend(path.c_str());
 }
 
 /* Open temporary file for reading. */
 SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	std::string path = PathTools::joinPaths(NEW_TEMP_DIR, filename);
 
 	int         mode;
 	const char* fmode = GetFileOpenModeForReading(&mode);
@@ -378,7 +379,7 @@ SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) con
 /** Delete temporary file. */
 void DefaultContentManager::deleteTempFile(const char* filename) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	std::string path = PathTools::joinPaths(NEW_TEMP_DIR, filename);
 	FileDelete(path);
 }
 
@@ -498,7 +499,7 @@ std::string DefaultContentManager::getVideoCaptureFolder() const
 /** Get folder for saved games. */
 std::string DefaultContentManager::getSavedGamesFolder() const
 {
-	return FileMan::joinPaths(m_configFolder, "SavedGames");
+	return PathTools::joinPaths(m_configFolder, "SavedGames");
 }
 
 /** Load encrypted string from game resource file. */
