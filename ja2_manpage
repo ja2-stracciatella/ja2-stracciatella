@@ -40,9 +40,6 @@ E.g. ja2 -unittests --gtest_output="xml:report.xml" --gtest_repeat=2
 \fB\-editor\fR
 Start the map editor (Editor.slf is necessary)
 .TP
-\fB\-editorauto\fR
-Start the map editor and load sector A9 (Editor.slf is necessary)
-.TP
 \fB\-fullscreen\fR
 Start the game in the fullscreen mode
 .TP
