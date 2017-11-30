@@ -343,6 +343,7 @@ endif()
 
 if(MSVC OR MINGW)
     file(GLOB WIN_DIST_FILES "assets/distr-files-win/*")
+    install(FILES dependencies/lib-SDL2-2.0.4-mingw/README-SDL.txt DESTINATION .)
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES assets/icons/logo.ico DESTINATION .)
 endif()
