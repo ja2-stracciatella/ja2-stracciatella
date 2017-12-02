@@ -50,7 +50,7 @@ before_build:
   - cmd: cd ci-build
   - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
   - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake -DCMAKE_BUILD_TYPE="%configuration%" -DVERSION_TAG="%VERSION_TAG%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DCPACK_GENERATOR=ZIP ..
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake -DCMAKE_BUILD_TYPE="%configuration%" -DVERSION_TAG="%VERSION_TAG%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DCPACK_GENERATOR=ZIP;NSIS ..
 
 on_failure:
   - cmd: dir c:\build
@@ -70,6 +70,10 @@ after_test:
   - ps: >
           if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
             $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*.zip;
+            iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
+          }
+          if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
+            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*.exe;
             iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
           }
 
