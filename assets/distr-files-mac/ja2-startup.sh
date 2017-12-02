@@ -8,6 +8,4 @@ echo "running $0"
 echo "BUNDLE: $BUNDLE"
 echo "RESOURCES: $RESOURCES"
 
-export "DYLD_LIBRARY_PATH=$RESOURCES:$DYLD_LIBRARY_PATH"
-
 exec "$RESOURCES/ja2-launcher"
