@@ -11,7 +11,7 @@ This is only the game engine.  Game resources from the original JA2 are required
 .TP
 When you first start the game, file \fB~/.ja2/ja2.json\fR is created.  You should edit this file, so that \fBdata_dir\fR points to the directory with game resources from the original JA2 game.
 .TP
-You can also use ja2-launcher to configure your game with a UI.
+You can also use ja2-launcher to comfortably configure the game.
 .SH OPTIONS
 .TP
 \fB\-datadir /opt/ja2\fR
@@ -24,7 +24,7 @@ Screen resolution, e.g. 800x600. Default value is 640x480
 Version of the game resources.
 Possible values are: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD.
 Default value is ENGLISH.
-Use RUSSIAN for the BUKA Agonia Vlasty release.
+Use RUSSIAN for the "BUKA Agonia Vlasty" release.
 Use RUSSIAN_GOLD for the Russian Gold release.
 
 .TP
