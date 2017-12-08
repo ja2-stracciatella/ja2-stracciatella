@@ -188,7 +188,7 @@ void Launcher::startExecutable(bool asEditor) {
 		return;
 	}
 
-	std::string cmd(this->exePath);
+	std::string cmd("\"" + this->exePath + "\"");
 
 	if (asEditor) {
 		cmd += std::string(" -editor");

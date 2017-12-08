@@ -21,7 +21,7 @@ before_install:
 
 script:
   - mkdir ci-build && cd ci-build
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DCMAKE_BUILD_TYPE=Debug -DVERSION_TAG="$VERSION_TAG" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=ZIP $EXTRA_BUILD_SWITCHES ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DCMAKE_BUILD_TYPE=Debug -DVERSION_TAG="$VERSION_TAG" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle $EXTRA_BUILD_SWITCHES ..; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DCMAKE_BUILD_TYPE=Debug -DVERSION_TAG="$VERSION_TAG" -DCPACK_GENERATOR=DEB $EXTRA_BUILD_SWITCHES ..; fi
   - make
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
