@@ -34,13 +34,11 @@ init:
         }
         true;
 
-  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS"
+  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
 
-  - cmd: echo %APPVEYOR_PULL_REQUEST_NUMBER%
-  - cmd: echo %NIGHTLY_VERSION%
-  - cmd: echo %PUBLISH_BINARY%
-  - cmd: echo %PUBLISH_DIR%
-  - cmd: echo %VERSION_TAG%
+  - cmd: echo "%PUBLISH_BINARY%"
+  - cmd: echo "%PUBLISH_DIR%"
+  - cmd: echo "%BUILD_SWITCHES%"
 
 install:
   - cmd: if "%platform%"=="Win32" set RUST_TOOLCHAIN=stable-i686-pc-windows-msvc
@@ -56,11 +54,7 @@ before_build:
   - cmd: cd ci-build
   - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
   - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake %BUILD_SWITCHES% -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake ..
-
-on_failure:
-  - cmd: dir c:\build
-  - cmd: dir c:\build\%configuration%
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake %BUILD_SWITCHES% ..
 
 build:
   project: ci-build\ja2-stracciatella.sln
@@ -75,11 +69,7 @@ after_test:
   - ps: if ("$env:PUBLISH_BINARY" -eq "true") { iex "cmake --build c:\projects\ja2-stracciatella\ci-build --target package" }
   - ps: >
           if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
-            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*.zip;
-            iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
-          }
-          if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
-            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*.exe;
+            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*;
             iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
           }
 
