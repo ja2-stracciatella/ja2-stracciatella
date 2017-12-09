@@ -15,7 +15,10 @@ clone_depth: 1
 init:
   - cmd: cmake --version
   - cmd: msbuild /version
+
   - ps: $env:PUBLISH_BINARY = "false";
+  - ps: $env:BUILD_TYPE = "Debug";
+
   - ps: >
         if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
           $env:PUBLISH_BINARY = "true";
@@ -30,6 +33,9 @@ init:
           $env:VERSION_TAG = "${env:NIGHTLY_VERSION}";
         }
         true;
+
+  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS"
+
   - cmd: echo %APPVEYOR_PULL_REQUEST_NUMBER%
   - cmd: echo %NIGHTLY_VERSION%
   - cmd: echo %PUBLISH_BINARY%
@@ -50,7 +56,7 @@ before_build:
   - cmd: cd ci-build
   - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
   - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake -DCMAKE_BUILD_TYPE="%configuration%" -DVERSION_TAG="%VERSION_TAG%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DCPACK_GENERATOR=ZIP;NSIS ..
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake %BUILD_SWITCHES% -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake ..
 
 on_failure:
   - cmd: dir c:\build

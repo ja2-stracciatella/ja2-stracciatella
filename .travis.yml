@@ -7,19 +7,24 @@ sudo: required
 
 before_install:
   - export PUBLISH_BINARY="false"
-  - export EXTRA_BUILD_SWITCHES=""
+  - export BUILD_SWITCHES=""
+  - export BUILD_TYPE="Debug";
+
   - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
       export PUBLISH_BINARY="true";
       export PUBLISH_DIR="pull-requests/$TRAVIS_PULL_REQUEST";
       export VERSION_TAG="${TRAVIS_PULL_REQUEST}pullrequest";
+
     fi
   - if [[ "$NIGHTLY_VERSION" != "" ]]; then
       export PUBLISH_BINARY="true";
       export PUBLISH_DIR="nightlies";
       export VERSION_TAG="$NIGHTLY_VERSION";
     fi
+
+  - export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVERSION_TAG=$VERSION_TAG"
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      export EXTRA_BUILD_SWITCHES="-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON";
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON";
     fi
 
   - curl -sSf https://static.rust-lang.org/rustup.sh | sh
@@ -32,10 +37,10 @@ before_install:
 script:
   - mkdir ci-build && cd ci-build
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      cmake -DCMAKE_BUILD_TYPE=Debug -DVERSION_TAG="$VERSION_TAG" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle $EXTRA_BUILD_SWITCHES ..;
+      cmake $BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle ..;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      cmake -DCMAKE_BUILD_TYPE=Debug -DVERSION_TAG="$VERSION_TAG" -DCPACK_GENERATOR=DEB $EXTRA_BUILD_SWITCHES ..;
+      cmake $BUILD_SWITCHES -DCPACK_GENERATOR=DEB ..;
     fi
   - make
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
