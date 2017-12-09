@@ -13,9 +13,6 @@ clone_folder: c:\projects\ja2-stracciatella
 clone_depth: 1
 
 init:
-  - cmd: cmake --version
-  - cmd: msbuild /version
-
   - ps: $env:PUBLISH_BINARY = "false";
   - ps: $env:BUILD_TYPE = "Debug";
 
@@ -36,13 +33,23 @@ init:
 
   - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
 
+  - ps: >
+        if ("$env:platform" -eq "Win32") {
+          $env:RUST_TOOLCHAIN = "stable-i686-pc-windows-msvc";
+          $env:CMAKE_GENERATOR_NAME = "Visual Studio 14 2015";
+        } else {
+          $env:RUST_TOOLCHAIN = "stable-x86_64-pc-windows-msvc";
+          $env:CMAKE_GENERATOR_NAME = "Visual Studio 14 2015 Win64";
+        }
+
+  - cmd: echo "%RUST_TOOLCHAIN%"
+  - cmd: echo "%CMAKE_GENERATOR_NAME%"
+
   - cmd: echo "%PUBLISH_BINARY%"
   - cmd: echo "%PUBLISH_DIR%"
   - cmd: echo "%BUILD_SWITCHES%"
 
 install:
-  - cmd: if "%platform%"=="Win32" set RUST_TOOLCHAIN=stable-i686-pc-windows-msvc
-  - cmd: if "%platform%"=="x64"   set RUST_TOOLCHAIN=stable-x86_64-pc-windows-msvc
   - cmd: curl -sSf -o rustup-init.exe https://win.rustup.rs/
   - cmd: rustup-init.exe -y --default-toolchain %RUST_TOOLCHAIN%
   - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
@@ -52,8 +59,6 @@ install:
 before_build:
   - cmd: mkdir ci-build
   - cmd: cd ci-build
-  - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
-  - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
   - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake %BUILD_SWITCHES% ..
 
 build:
