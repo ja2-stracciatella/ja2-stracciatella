@@ -66,16 +66,18 @@ build:
 
 test_script:
   - cmd: cmake --build c:\projects\ja2-stracciatella\ci-build --target rust-unit-tests
-  - cmd: cd %configuration%
+  - cmd: cd %BUILD_TYPE%
   - cmd: ja2.exe -unittests
   - cmd: ja2-launcher.exe -help
 
 after_test:
-  - ps: if ("$env:PUBLISH_BINARY" -eq "true") { iex "cmake --build c:\projects\ja2-stracciatella\ci-build --target package" }
+  - ps: if ("$env:PUBLISH_BINARY" -eq "true") { cmake --build c:\projects\ja2-stracciatella\ci-build --target package }
   - ps: >
           if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
-            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*;
-            iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
+            $binary_paths = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*;
+            foreach ($file in $binary_paths) {
+              iex "curl.exe --ftp-create-dirs -T ${file} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
+            }
           }
 
 environment:
