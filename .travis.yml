@@ -8,7 +8,7 @@ sudo: required
 before_install:
   - export PUBLISH_BINARY="false"
   - export BUILD_SWITCHES=""
-  - export BUILD_TYPE="Debug";
+  - export BUILD_TYPE="RelWithDebInfo";
 
   - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
       export PUBLISH_BINARY="true";
@@ -19,6 +19,11 @@ before_install:
       export PUBLISH_BINARY="true";
       export PUBLISH_DIR="nightlies";
       export VERSION_TAG="$NIGHTLY_VERSION";
+    fi
+  - if [[ "$TRAVIS_TAG" != "" ]]; then
+      export PUBLISH_BINARY="true";
+      export PUBLISH_DIR="releases";
+      export VERSION_TAG="";
     fi
 
   - export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVERSION_TAG=$VERSION_TAG"

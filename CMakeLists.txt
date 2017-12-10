@@ -138,13 +138,16 @@ if(BUILD_LAUNCHER)
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_png.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_z.a")
         elseif(MSVC)
-            # TODO Debug versions only
+            set(MSVC_LIB_SUFFIX "")
+            if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+                set(MSVC_LIB_SUFFIX "d")
+            endif()
             set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltkd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_imagesd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_formsd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_pngd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_zd.lib")
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_images${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_forms${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_png${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_z${MSVC_LIB_SUFFIX}.lib")
         endif()
     endif()
 endif()

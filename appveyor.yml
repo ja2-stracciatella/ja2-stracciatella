@@ -4,7 +4,7 @@ platform:
   - Win32
   - x64
 
-configuration: Debug
+configuration: RelWithDebInfo
 
 matrix:
   fast_finish: true
@@ -14,7 +14,7 @@ clone_depth: 1
 
 init:
   - ps: $env:PUBLISH_BINARY = "false";
-  - ps: $env:BUILD_TYPE = "Debug";
+  - ps: $env:BUILD_TYPE = "${env:configuration}";
 
   - ps: >
         if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
@@ -28,6 +28,13 @@ init:
           $env:PUBLISH_BINARY = "true";
           $env:PUBLISH_DIR = "nightlies";
           $env:VERSION_TAG = "${env:NIGHTLY_VERSION}";
+        }
+        true;
+  - ps: >
+        if ("$env:APPVEYOR_REPO_TAG" -eq "true") {
+          $env:PUBLISH_BINARY = "true";
+          $env:PUBLISH_DIR = "releases";
+          $env:VERSION_TAG = "";
         }
         true;
 
