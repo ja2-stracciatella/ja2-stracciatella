@@ -4,8 +4,6 @@ platform:
   - Win32
   - x64
 
-configuration: RelWithDebInfo
-
 matrix:
   fast_finish: true
 
@@ -14,7 +12,7 @@ clone_depth: 1
 
 init:
   - ps: $env:PUBLISH_BINARY = "false";
-  - ps: $env:BUILD_TYPE = "${env:configuration}";
+  - ps: $env:BUILD_TYPE = "Debug";
 
   - ps: >
         if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
@@ -32,6 +30,7 @@ init:
         true;
   - ps: >
         if ("$env:APPVEYOR_REPO_TAG" -eq "true") {
+          $env:BUILD_TYPE = "Release";
           $env:PUBLISH_BINARY = "true";
           $env:PUBLISH_DIR = "releases";
           $env:VERSION_TAG = "";
@@ -68,8 +67,8 @@ before_build:
   - cmd: cd ci-build
   - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake %BUILD_SWITCHES% ..
 
-build:
-  project: ci-build\ja2-stracciatella.sln
+build_script:
+  - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target ALL_BUILD --config ${env:BUILD_TYPE}
 
 test_script:
   - cmd: cmake --build c:\projects\ja2-stracciatella\ci-build --target rust-unit-tests
