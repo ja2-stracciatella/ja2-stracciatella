@@ -46,6 +46,10 @@ before_install:
   - cargo -V
   - rustc -V
 
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      fakeroot -v;
+    fi
+
 script:
   - mkdir ci-build && cd ci-build
   - cmake $BUILD_SWITCHES ..;
@@ -76,6 +80,7 @@ addons:
     - libboost-all-dev
     - fluid
     - libfltk1.3-dev
+    - fakeroot
   coverity_scan:
     project:
       name: "ja2-stracciatella/ja2-stracciatella"
