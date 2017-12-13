@@ -4,8 +4,6 @@ platform:
   - Win32
   - x64
 
-configuration: Debug
-
 matrix:
   fast_finish: true
 
@@ -13,9 +11,9 @@ clone_folder: c:\projects\ja2-stracciatella
 clone_depth: 1
 
 init:
-  - cmd: cmake --version
-  - cmd: msbuild /version
   - ps: $env:PUBLISH_BINARY = "false";
+  - ps: $env:BUILD_TYPE = "Debug";
+
   - ps: >
         if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
           $env:PUBLISH_BINARY = "true";
@@ -30,15 +28,34 @@ init:
           $env:VERSION_TAG = "${env:NIGHTLY_VERSION}";
         }
         true;
-  - cmd: echo %APPVEYOR_PULL_REQUEST_NUMBER%
-  - cmd: echo %NIGHTLY_VERSION%
-  - cmd: echo %PUBLISH_BINARY%
-  - cmd: echo %PUBLISH_DIR%
-  - cmd: echo %VERSION_TAG%
+  - ps: >
+        if ("$env:APPVEYOR_REPO_TAG" -eq "true") {
+          $env:BUILD_TYPE = "Release";
+          $env:PUBLISH_BINARY = "true";
+          $env:PUBLISH_DIR = "releases";
+          $env:VERSION_TAG = "";
+        }
+        true;
+
+  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
+
+  - ps: >
+        if ("$env:platform" -eq "Win32") {
+          $env:RUST_TOOLCHAIN = "stable-i686-pc-windows-msvc";
+          $env:CMAKE_GENERATOR_NAME = "Visual Studio 14 2015";
+        } else {
+          $env:RUST_TOOLCHAIN = "stable-x86_64-pc-windows-msvc";
+          $env:CMAKE_GENERATOR_NAME = "Visual Studio 14 2015 Win64";
+        }
+
+  - cmd: echo "%RUST_TOOLCHAIN%"
+  - cmd: echo "%CMAKE_GENERATOR_NAME%"
+
+  - cmd: echo "%PUBLISH_BINARY%"
+  - cmd: echo "%PUBLISH_DIR%"
+  - cmd: echo "%BUILD_SWITCHES%"
 
 install:
-  - cmd: if "%platform%"=="Win32" set RUST_TOOLCHAIN=stable-i686-pc-windows-msvc
-  - cmd: if "%platform%"=="x64"   set RUST_TOOLCHAIN=stable-x86_64-pc-windows-msvc
   - cmd: curl -sSf -o rustup-init.exe https://win.rustup.rs/
   - cmd: rustup-init.exe -y --default-toolchain %RUST_TOOLCHAIN%
   - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
@@ -48,33 +65,25 @@ install:
 before_build:
   - cmd: mkdir ci-build
   - cmd: cd ci-build
-  - cmd: if "%platform%"=="Win32" set CMAKE_GENERATOR_NAME=Visual Studio 14 2015
-  - cmd: if "%platform%"=="x64"   set CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake -DCMAKE_BUILD_TYPE="%configuration%" -DVERSION_TAG="%VERSION_TAG%" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DCPACK_GENERATOR=ZIP;NSIS ..
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake %BUILD_SWITCHES% ..
 
-on_failure:
-  - cmd: dir c:\build
-  - cmd: dir c:\build\%configuration%
-
-build:
-  project: ci-build\ja2-stracciatella.sln
+build_script:
+  - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target ALL_BUILD --config ${env:BUILD_TYPE}
 
 test_script:
   - cmd: cmake --build c:\projects\ja2-stracciatella\ci-build --target rust-unit-tests
-  - cmd: cd %configuration%
+  - cmd: cd %BUILD_TYPE%
   - cmd: ja2.exe -unittests
   - cmd: ja2-launcher.exe -help
 
 after_test:
-  - ps: if ("$env:PUBLISH_BINARY" -eq "true") { iex "cmake --build c:\projects\ja2-stracciatella\ci-build --target package" }
+  - ps: if ("$env:PUBLISH_BINARY" -eq "true") { cmake --build c:\projects\ja2-stracciatella\ci-build --target package }
   - ps: >
           if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
-            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*.zip;
-            iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
-          }
-          if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
-            $binary_path = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*.exe;
-            iex "curl.exe --ftp-create-dirs -T ${binary_path} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
+            $binary_paths = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*;
+            foreach ($file in $binary_paths) {
+              iex "curl.exe --ftp-create-dirs -T ${file} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
+            }
           }
 
 environment:

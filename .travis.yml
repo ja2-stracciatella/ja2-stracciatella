@@ -7,30 +7,64 @@ sudo: required
 
 before_install:
   - export PUBLISH_BINARY="false"
-  - export EXTRA_BUILD_SWITCHES=""
-  - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then export PUBLISH_BINARY="true"; export PUBLISH_DIR="pull-requests/$TRAVIS_PULL_REQUEST"; export VERSION_TAG="${TRAVIS_PULL_REQUEST}pullrequest"; fi
-  - if [[ "$NIGHTLY_VERSION" != "" ]]; then export PUBLISH_BINARY="true"; export PUBLISH_DIR="nightlies"; export VERSION_TAG="$NIGHTLY_VERSION"; fi
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then export EXTRA_BUILD_SWITCHES="-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON"; fi
+  - export BUILD_SWITCHES=""
+  - export BUILD_TYPE="Debug";
 
-  - curl -sSf https://static.rust-lang.org/rustup.sh | sh
+  - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
+      export PUBLISH_BINARY="true";
+      export PUBLISH_DIR="pull-requests/$TRAVIS_PULL_REQUEST";
+      export VERSION_TAG="${TRAVIS_PULL_REQUEST}pullrequest";
+    fi
+  - if [[ "$NIGHTLY_VERSION" != "" ]]; then
+      export PUBLISH_BINARY="true";
+      export PUBLISH_DIR="nightlies";
+      export VERSION_TAG="$NIGHTLY_VERSION";
+    fi
+  - if [[ "$TRAVIS_TAG" != "" ]]; then
+      export BUILD_TYPE="Release";
+      export PUBLISH_BINARY="true";
+      export PUBLISH_DIR="releases";
+      export VERSION_TAG="";
+    fi
+
+  - export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVERSION_TAG=$VERSION_TAG"
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON";
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle";
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCPACK_GENERATOR=DEB";
+    fi
+
   - echo "$PUBLISH_BINARY"
   - echo "$PUBLISH_DIR"
-  - echo "$VERSION_TAG"
+  - echo "$BUILD_SWITCHES"
+
+  - curl -sSf https://static.rust-lang.org/rustup.sh | sh
   - cargo -V
   - rustc -V
 
 script:
   - mkdir ci-build && cd ci-build
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DCMAKE_BUILD_TYPE=Debug -DVERSION_TAG="$VERSION_TAG" -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle $EXTRA_BUILD_SWITCHES ..; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DCMAKE_BUILD_TYPE=Debug -DVERSION_TAG="$VERSION_TAG" -DCPACK_GENERATOR=DEB $EXTRA_BUILD_SWITCHES ..; fi
+  - cmake $BUILD_SWITCHES ..;
   - make
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      sudo make install;
+    fi
   - make rust-unit-tests
   - ./ja2 -unittests
   - ./ja2-launcher -help
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make uninstall; fi
-  - if [ "$PUBLISH_BINARY" == "true" ]; then make package; fi
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$SFTP_PASSWORD" != "" ]; then curl --ftp-create-dirs -T $(echo ja2-stracciatella_*) --ftp-ssl -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/; fi
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      sudo make uninstall;
+    fi
+  - if [ "$PUBLISH_BINARY" == "true" ]; then
+      make package;
+    fi
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$SFTP_PASSWORD" != "" ]; then
+      curl --ftp-create-dirs -T $(echo ja2-stracciatella_*) --ftp-ssl -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/;
+    fi
 
 addons:
   apt:

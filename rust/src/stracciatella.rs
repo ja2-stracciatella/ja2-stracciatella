@@ -121,6 +121,7 @@ where
     String::serialize(&format!("{}x{}", x, y), serializer)
 }
 
+fn default_window() -> bool { false }
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct EngineOptions {
@@ -141,7 +142,7 @@ pub struct EngineOptions {
     run_editor: bool,
     #[serde(rename = "fullscreen")]
     start_in_fullscreen: bool,
-    #[serde(skip)]
+    #[serde(skip, default = "default_window")]
     start_in_window: bool,
     #[serde(rename = "debug")]
     start_in_debug_mode: bool,
