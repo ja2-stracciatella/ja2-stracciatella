@@ -843,14 +843,9 @@ static INT16 DistanceSmellable(const SOLDIERTYPE* const pSubject)
 {
 	INT16 sDistVisible = STRAIGHT; // as a base
 
-	//if (gTacticalStatus.uiFlags & TURNBASED)
-	//{
-		sDistVisible *= 2;
-	//}
-	//else
-	//{
-	//	sDistVisible += 3;
-	//}
+	sDistVisible *= 2;
+	//In hypothetical non-turnbased mode:
+	//sDistVisible += 3;
 
 	if (pSubject)
 	{
@@ -2002,7 +1997,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 			if (ManLooksForMan(pSoldier,pOpponent,OTHERTEAMSLOOKFORMAN))
 			{
 				// if a new opponent is seen (which must be oppPtr himself)
-				//if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bNewOppCnt)
+				//if ((gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bNewOppCnt)
 				// Calc interrupt points in non-combat because we might get an interrupt or be interrupted
 				// on our first turn
 

@@ -5550,7 +5550,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		}
 	}
 
-	//if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 
 	if ( gTacticalStatus.ubAttackBusyCount == 0 )

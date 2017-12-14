@@ -585,7 +585,7 @@ static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
 
 	// in real time, there IS no AP cost, (only breath cost)
 	/*
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		// ATE: ADJUST FOR RT - MAKE BREATH GO A LITTLE FASTER!
 		sBPCost	*= TB_BREATH_DEDUCT_MODIFIER;

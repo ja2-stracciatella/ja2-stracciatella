@@ -2149,7 +2149,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	}
 
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 		SLOGD(DEBUG_TAG_SOLDIER, "Starting attack, attack count now %d",
@@ -6532,7 +6532,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 	INT32 cnt;
 	UINT8 ubNumToFree;
 
-	//if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		// ATE: Removed...
 		//if (pSoldier->attacker != NULL)
@@ -6678,7 +6678,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	UINT8 ubTDirection;
 
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 		SLOGD(DEBUG_TAG_SOLDIER, "Begin blade attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
@@ -6830,7 +6830,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 
 
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 		SLOGD(DEBUG_TAG_SOLDIER, "Begin HTH attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
@@ -6940,7 +6940,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 	//}
