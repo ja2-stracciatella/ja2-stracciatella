@@ -3077,10 +3077,8 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 			if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 			{
 				SetUIBusy(sel);
-				if (!(gTacticalStatus.uiFlags & INCOMBAT))
-				{
-					BeginDisplayTimedCursor(OKHANDCURSOR_UICURSOR, 300);
-				}
+				// The following line should have been used when not in combat and not in turnbased-mode.
+				//BeginDisplayTimedCursor(OKHANDCURSOR_UICURSOR, 300);
 				SoldierPickupItem(sel, -1, sIntTileGridNo, bZLevel);
 				return -3;
 			}
