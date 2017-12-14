@@ -2877,7 +2877,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	}
 
 	// IAN ADDED THIS SAT JUNE 14th : HAVE TO SHOW VICTIM!
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
+	if ((gTacticalStatus.uiFlags & INCOMBAT) &&
 		pSoldier->bVisible != -1 && pSoldier->bTeam == OUR_TEAM)
 	{
 		LocateSoldier(pSoldier, DONTSETLOCATOR);
@@ -4927,7 +4927,7 @@ static void CalculateSoldierAniSpeed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pStatsS
 
 	// MODIFTY NOW BASED ON REAL-TIME, ETC
 	// Adjust speed, make twice as fast if in turn-based!
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		pSoldier->sAniDelay = pSoldier->sAniDelay / 2;
 	}
@@ -4953,7 +4953,7 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 
 	// ATE: If we are an enemy and are not visible......
 	// Set speed to 0
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT || gTacticalStatus.fAutoBandageMode)
+	if ((gTacticalStatus.uiFlags & INCOMBAT) || gTacticalStatus.fAutoBandageMode)
 	{
 		if ( ( ( pSoldier->bVisible == -1 && pSoldier->bVisible == pSoldier->bLastRenderVisibleValue ) ||
 			gTacticalStatus.fAutoBandageMode ) && pSoldier->usAnimState != MONSTER_UP )
@@ -8112,7 +8112,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 			MakeClosestEnemyChosenOne();
 		}
 
-		if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
+		if ((gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
 		{
 			SLOGD(DEBUG_TAG_AI, "Ending turn for %d because of error from HandleItem", pSoldier->ubID);
 			EndAIGuysTurn(*pSoldier);

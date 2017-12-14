@@ -1342,7 +1342,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'd':
 			// End turn only if in combat and it is the player's turn
-			if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
+			if ((gTacticalStatus.uiFlags & INCOMBAT) &&
 				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 				// Nothing in hand and the Done button for whichever panel we're in must be enabled
 				!gpItemPointer &&
@@ -1357,7 +1357,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 			if (gamepolicy(can_enter_turnbased))
 			{
-				gTacticalStatus.uiFlags |= IN_TB_COMBAT;
+				gTacticalStatus.uiFlags |= INCOMBAT;
 			}
 			break;
 
@@ -1797,7 +1797,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 
 		case 'd':
 			if (CHEATER_CHEAT_LEVEL() &&
-				(gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
+				(gTacticalStatus.uiFlags & INCOMBAT) &&
 				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 				// Nothing in hand and the Done button for whichever panel we're in must be enabled
 				!gpItemPointer &&
@@ -2099,7 +2099,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			}
 		}
 
-		if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+		if (gTacticalStatus.uiFlags & INCOMBAT)
 		{
 			if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM )
 			{
@@ -3077,7 +3077,7 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 			if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 			{
 				SetUIBusy(sel);
-				if (!(gTacticalStatus.uiFlags & IN_TB_COMBAT))
+				if (!(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					BeginDisplayTimedCursor(OKHANDCURSOR_UICURSOR, 300);
 				}

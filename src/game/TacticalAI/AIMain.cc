@@ -628,7 +628,7 @@ void StartNPCAI(SOLDIERTYPE& s)
 	 * HandleSoldierAI() will not be called! */
 
 	// Locate to soldier, if we are not in an interrupt situation.
-	if ((ts.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT && gubOutOfTurnPersons == 0)
+	if ((ts.uiFlags & INCOMBAT) && gubOutOfTurnPersons == 0)
 	{
 		if ((!(s.uiStatusFlags & SOLDIER_VEHICLE) || GetNumberInVehicle(GetVehicle(s.bVehicleID)) != 0) &&
 				((s.bVisible != -1 && s.bLife != 0) || ts.uiFlags & SHOW_ALL_MERCS))
