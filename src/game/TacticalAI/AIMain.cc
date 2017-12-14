@@ -118,7 +118,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 	}
 
 	// determine what sort of AI to use
-	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		gfTurnBasedAI = TRUE;
 	}
@@ -884,7 +884,12 @@ int ThreatPercent[10] = { 20, 40, 60, 80, 25, 100, 90, 75, 60, 45 };
 void NPCDoesAct(SOLDIERTYPE *pSoldier)
 {
 	// if the action is visible and we're in a hidden turnbased mode, go to turnbased
-	if (gTacticalStatus.uiFlags & TURNBASED && !(gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->bAction == AI_ACTION_FIRE_GUN || pSoldier->bAction == AI_ACTION_TOSS_PROJECTILE || pSoldier->bAction == AI_ACTION_KNIFE_MOVE || pSoldier->bAction == AI_ACTION_KNIFE_STAB || pSoldier->bAction == AI_ACTION_THROW_KNIFE) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT) &&
+			(pSoldier->bAction == AI_ACTION_FIRE_GUN ||
+			pSoldier->bAction == AI_ACTION_TOSS_PROJECTILE ||
+			pSoldier->bAction == AI_ACTION_KNIFE_MOVE ||
+			pSoldier->bAction == AI_ACTION_KNIFE_STAB ||
+			pSoldier->bAction == AI_ACTION_THROW_KNIFE))
 	{
 		DisplayHiddenTurnbased( pSoldier );
 	}

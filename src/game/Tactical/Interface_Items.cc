@@ -2659,7 +2659,7 @@ void DeleteItemDescriptionBox( )
 	}
 
 	// check for any AP costs
-	if ( ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		if (gpAttachSoldier)
 		{

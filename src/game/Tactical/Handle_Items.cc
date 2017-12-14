@@ -329,7 +329,6 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 
 		// If it's a player guy, check ChanceToGetThrough to play quote
 		if (fFromUI &&
-			gTacticalStatus.uiFlags & TURNBASED &&
 			gTacticalStatus.uiFlags & INCOMBAT &&
 			!s->fDoSpread &&
 			!HandleCheckForBadChangeToGetThrough(s, tgt, sTargetGridNo, bLevel))
@@ -421,9 +420,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 		}
 
 		// If in turn based - refresh aim to first level
-		if (fFromUI &&
-			gTacticalStatus.uiFlags & TURNBASED &&
-			gTacticalStatus.uiFlags & INCOMBAT)
+		if (fFromUI && (gTacticalStatus.uiFlags & INCOMBAT))
 		{
 			s->bShownAimTime = REFINE_AIM_1;
 

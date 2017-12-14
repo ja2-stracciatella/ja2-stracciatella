@@ -580,7 +580,7 @@ void ExecuteOverhead(void)
 		if (!gfPauseAllAI)
 		{
 			// AI limiting crap
-			if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT))
+			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
 				if (iTimerVal - giRTAILastUpdateTime > RT_DELAY_BETWEEN_AI_HANDLING)
 				{
@@ -1110,13 +1110,13 @@ void ExecuteOverhead(void)
 				}
 
 				if (!gfPauseAllAI && (
-					(gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT)) ||
+					(gTacticalStatus.uiFlags & INCOMBAT) ||
 					(fHandleAI && guiAISlotToHandle == cnt) ||
 					pSoldier->fAIFlags & AI_HANDLE_EVERY_FRAME ||
 					gTacticalStatus.fAutoBandageMode))
 				{
 					HandleSoldierAI(pSoldier);
-					if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT))
+					if (!(gTacticalStatus.uiFlags & INCOMBAT))
 					{
 						if (GetJA2Clock() - iTimerVal > RT_AI_TIMESLICE)
 						{
@@ -5318,7 +5318,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 				// This person is going to change stance
 
 				// This person will be busy while they crouch or go prone
-				if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
+				if (gTacticalStatus.uiFlags & INCOMBAT)
 				{
 					SLOGD(DEBUG_TAG_OVERHEAD, "Starting suppression, on %d", pSoldier->ubID);
 
@@ -5578,7 +5578,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		return( pTarget );
 	}
 
-	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		// Check to see if anyone was suppressed
 		const SOLDIERTYPE* const target = (pSoldier == NULL ? NULL : pSoldier->target);

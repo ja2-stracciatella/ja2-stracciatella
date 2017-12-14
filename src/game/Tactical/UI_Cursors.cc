@@ -659,23 +659,21 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 
 		// Calculate action points
 		bool enough_points = true;
-		if (gTacticalStatus.uiFlags & TURNBASED)
+
+		gsCurrentActionPoints         = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
+		gfUIDisplayActionPoints       = TRUE;
+		gfUIDisplayActionPointsCenter = TRUE;
+
+		// If we don't have any points and we are at the first refine, do nothing but warn!
+		if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
 		{
-			gsCurrentActionPoints         = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
-			gfUIDisplayActionPoints       = TRUE;
-			gfUIDisplayActionPointsCenter = TRUE;
-
-			// If we don't have any points and we are at the first refine, do nothing but warn!
-			if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
-			{
-				gfUIDisplayActionPointsInvalid = TRUE;
-				if (s->bShownAimTime == REFINE_PUNCH_1) return ACTION_PUNCH_RED;
-			}
-
-			INT8  const future_aim = REFINE_PUNCH_2;
-			INT16 const ap_costs   = CalcTotalAPsToAttack(s, map_pos, TRUE, future_aim / 2);
-			if (!EnoughPoints(s, ap_costs, 0, FALSE)) enough_points = false;
+			gfUIDisplayActionPointsInvalid = TRUE;
+			if (s->bShownAimTime == REFINE_PUNCH_1) return ACTION_PUNCH_RED;
 		}
+
+		INT8  const future_aim = REFINE_PUNCH_2;
+		INT16 const ap_costs   = CalcTotalAPsToAttack(s, map_pos, TRUE, future_aim / 2);
+		if (!EnoughPoints(s, ap_costs, 0, FALSE)) enough_points = false;
 
 		if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
 			COUNTERDONE(NONGUNTARGETREFINE))
@@ -916,7 +914,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 
 	// OK, if we are i realtime.. goto directly to shoot
-	if (((gTacticalStatus.uiFlags & TURNBASED) && !(gTacticalStatus.uiFlags & INCOMBAT)) &&
+	if (!(gTacticalStatus.uiFlags & INCOMBAT) &&
 		ubItemCursor != TOSSCURS && ubItemCursor != TRAJECTORYCURS)
 	{
 		// GOTO DIRECTLY TO USING ITEM

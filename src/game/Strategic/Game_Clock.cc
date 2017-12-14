@@ -642,7 +642,7 @@ void UpdateClock()
 		return;
 	}
 
-	if( ( gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT ) )
+	if(gTacticalStatus.uiFlags & INCOMBAT)
 		return; //time is currently stopped!
 
 

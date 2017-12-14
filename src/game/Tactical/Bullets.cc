@@ -176,8 +176,7 @@ void LocateBullet(BULLET* b)
 
 	b->fLocated = TRUE;
 
-	//Only if we are in turnbased and noncombat
-	if (!(gTacticalStatus.uiFlags & TURNBASED)) return;
+	//Only if we are in turnbased (we always are) and noncombat
 	if (!(gTacticalStatus.uiFlags & INCOMBAT)) return;
 
 	LocateGridNo(b->sGridNo);

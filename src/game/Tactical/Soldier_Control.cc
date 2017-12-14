@@ -7123,7 +7123,7 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 	uiAvailAPs = pSoldier->bActionPoints;
 
 	// OK, If we are in real-time, use another value...
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		// Set to a value which looks good based on our tactical turns duration
 		uiAvailAPs = RT_FIRST_AID_GAIN_MODIFIER;
@@ -7914,7 +7914,7 @@ static INT32 CheckBleeding(SOLDIERTYPE* pSoldier)
 				}
 
 				// Are we in a different mode?
-				if ( !(gTacticalStatus.uiFlags & TURNBASED ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+				if (!(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					pSoldier->dNextBleed -= (FLOAT)RT_NEXT_BLEED_MODIFIER;
 				}

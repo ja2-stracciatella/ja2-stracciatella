@@ -258,7 +258,7 @@ BOOLEAN	CanGameBeSaved()
 	if( gGameOptions.ubGameSaveMode == DIF_IRON_MAN )
 	{
 		//if we are in turn based combat
-		if( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+		if(gTacticalStatus.uiFlags & INCOMBAT)
 		{
 			//no save for you
 			return( FALSE );

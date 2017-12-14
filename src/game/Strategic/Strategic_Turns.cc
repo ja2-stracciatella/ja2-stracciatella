@@ -63,7 +63,7 @@ void HandleStrategicTurn(void)
 		uiTime = GetJA2Clock( );
 
 		// Do not handle turns update if in turnbased combat
-		if ( ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+		if (gTacticalStatus.uiFlags & INCOMBAT)
 		{
 			guiLastTacticalRealTime = uiTime;
 		}

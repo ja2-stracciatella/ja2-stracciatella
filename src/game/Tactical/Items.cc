@@ -1587,7 +1587,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	if (pGun->usItem == ROCKET_LAUNCHER) return( FALSE ); // IC_GUN but uses no ammo (LAW)
 
 	INT8 bAPs = 0; // XXX HACK000E
-	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );
 		if ( !EnoughPoints( pSoldier, bAPs, 0,TRUE ) )
@@ -1628,7 +1628,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			{
 				if (fSameAmmoType)
 				{
-					if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+					if (gTacticalStatus.uiFlags & INCOMBAT)
 					{
 						bReloadType = RELOAD_SWAP;
 					}
@@ -3301,7 +3301,7 @@ BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 		// In realtime the player could choose to put down a bomb right before a turn expires, SO
 		// add 1 to the setting in RT
 		pObj->bDelay = bSetting;
-		if ( !(gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT) )
+		if (!(gTacticalStatus.uiFlags & INCOMBAT))
 		{
 			pObj->bDelay++;
 		}

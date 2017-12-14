@@ -1183,7 +1183,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 477:
 
 					// CODE: Locate to target ( if an AI guy.. )
-					if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
+					if (gTacticalStatus.uiFlags & INCOMBAT)
 					{
 						if ( pSoldier->bTeam != OUR_TEAM )
 						{

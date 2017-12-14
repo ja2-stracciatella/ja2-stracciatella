@@ -244,7 +244,7 @@ static void EditModeInit(void)
 	//editor.
 	guiSaveTacticalStatusFlags = gTacticalStatus.uiFlags;
 	gTacticalStatus.uiFlags &= ~REALTIME;
-	gTacticalStatus.uiFlags |= TURNBASED | SHOW_ALL_ITEMS;
+	gTacticalStatus.uiFlags |= SHOW_ALL_ITEMS;
 	gTacticalStatus.uiTimeOfLastInput = GetJA2Clock();
 	gTacticalStatus.uiTimeSinceDemoOn = gTacticalStatus.uiTimeOfLastInput;
 

@@ -1251,7 +1251,7 @@ static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 
 				// OK, We now want to , if in non-combat, set visiblity to 0 if not visible still....
 				// This allows us to walk away from buddy and have them disappear instantly
-				if ( gTacticalStatus.uiFlags & TURNBASED && !( gTacticalStatus.uiFlags & INCOMBAT ) )
+				if (!(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					if ( pOpponent->bVisible == 0)
 					{
@@ -1932,8 +1932,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 			// Change his anim speed
 			SetSoldierAniSpeed(&opponent);
 
-			if (gTacticalStatus.uiFlags & TURNBASED &&
-				(gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fVirginSector) &&
+			if ((gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fVirginSector) &&
 				!opponent.bNeutral &&
 				s.bSide != opponent.bSide)
 			{
@@ -4157,8 +4156,7 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 			// as long as listener meets minimum interrupt conditions
 			if ( gfDelayResolvingBestSightingDueToDoor)
 			{
-				if (bSourceSeen && (!(gTacticalStatus.uiFlags & TURNBASED) ||
-					!(gTacticalStatus.uiFlags & INCOMBAT) ||
+				if (bSourceSeen && (!(gTacticalStatus.uiFlags & INCOMBAT) ||
 					(gubSightFlags & SIGHTINTERRUPT &&
 					StandardInterruptConditionsMet(pSoldier, noise_maker, bOldOpplist))))
 				{
