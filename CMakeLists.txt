@@ -22,8 +22,8 @@ set(CMAKE_CXX_STANDARD 98)
 ## Versioning
 
 set(ja2-stracciatella_VERSION_MAJOR "0")
-set(ja2-stracciatella_VERSION_MINOR "15")
-set(ja2-stracciatella_VERSION_PATCH "x")
+set(ja2-stracciatella_VERSION_MINOR "16")
+set(ja2-stracciatella_VERSION_PATCH "0")
 set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
 
 ## Meta Information
