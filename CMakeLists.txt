@@ -313,10 +313,6 @@ else()
 endif()
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}")
 
-IF(CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
-endif()
-include(InstallRequiredSystemLibraries)
 include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
@@ -346,22 +342,26 @@ else()
     install(FILES changes.md DESTINATION .)
 endif()
 
-if (MINGW)
-    file(GLOB WIN_MINGW_DIST_DLLS "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win-mingw/*.dll")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
-    install(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
-endif()
-
-if (MSVC)
-    install(FILES ${SDL_DLL} DESTINATION .)
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT Libraries)
-endif()
-
 if(MSVC OR MINGW)
+    set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION .)
+    set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
+    include(InstallRequiredSystemLibraries)
+
     file(GLOB WIN_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win/*")
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.4-mingw/README-SDL.txt DESTINATION .)
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.ico DESTINATION .)
+endif()
+
+if (MSVC)
+    install(FILES ${SDL_DLL} DESTINATION .)
+endif()
+
+if (MINGW)
+    file(GLOB WIN_MINGW_DIST_DLLS "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win-mingw/*.dll")
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
+    install(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
 endif()
 
 if(APPLE)
