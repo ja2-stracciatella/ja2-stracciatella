@@ -8,16 +8,26 @@ Contributors (sorted alphabetically)
 ------------------------------------
 
 Agatae (https://bitbucket.org/Agatae)
+David Krawiec
+daviel
+Dmitry Marakasov
 derSteFfi <der_steffi@gmx.de>
+Edwin Buck
+Greg Kennedy
+Gregor Zorc
 Gennady Trafimenkov <gennady.trafimenkov@gmail.com>
 Jaka Kranjc <smgl@lynxlynx.info>
 JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)
+Manuel K
 mgl from The Bear's Pit Forum
+Michał Janiszewski
 Misanthropos <misanthropos@gmx.net>
+Momoko Hanasaki
 Nils Reuße <n.reusse@hxgn.net>
 Nils R <ml@hxgn.net>
 Oliver Jankowski
 Peinthor Rene <peinthor@gmail.com>
+Poncho
 Rebekka Bais (Logo Design)
 RinneT <thomas.rinsch@arcor.de>
 rk <rk@razlaw.name>
