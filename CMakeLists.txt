@@ -17,7 +17,7 @@ endmacro()
 project(ja2-stracciatella)
 set(JA2_BINARY "ja2")
 set(LAUNCHER_BINARY "ja2-launcher")
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 11)
 
 ## Versioning
 

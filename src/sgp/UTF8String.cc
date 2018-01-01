@@ -4,7 +4,7 @@
 // #include <stdio.h>
 
 /** Create object from existing UTF-8 encoded string. */
-UTF8String::UTF8String(const char *utf8Encoded) throw (InvalidEncodingException)
+UTF8String::UTF8String(const char *utf8Encoded)
 	:m_encoded("")
 {
 	std::string value(utf8Encoded);
@@ -20,7 +20,7 @@ UTF8String::UTF8String(const char *utf8Encoded) throw (InvalidEncodingException)
 }
 
 /** Create object from existing UTF-8 encoded string. */
-UTF8String::UTF8String(const uint8_t *utf8Encoded) throw (InvalidEncodingException)
+UTF8String::UTF8String(const uint8_t *utf8Encoded)
 {
 	std::string value((const char*)utf8Encoded);
 	if(utf8::is_valid(value.begin(), value.end()))
@@ -35,14 +35,14 @@ UTF8String::UTF8String(const uint8_t *utf8Encoded) throw (InvalidEncodingExcepti
 }
 
 /** Create object from UTF-16 encoded string. */
-UTF8String::UTF8String(const uint16_t *utf16Encoded) throw (InvalidEncodingException)
+UTF8String::UTF8String(const uint16_t *utf16Encoded)
 {
 	m_encoded = "";
 	append(utf16Encoded);
 }
 
 /** Create object from UTF-32 encoded string. */
-UTF8String::UTF8String(const uint32_t *utf32Encoded) throw (InvalidEncodingException)
+UTF8String::UTF8String(const uint32_t *utf32Encoded)
 {
 	m_encoded = "";
 	append(utf32Encoded);
@@ -129,7 +129,7 @@ size_t UTF8String::getNumBytes() const
 
 
 /** Append UTF16 encoded data to the string. */
-void UTF8String::append(const uint16_t *utf16Encoded) throw (InvalidEncodingException)
+void UTF8String::append(const uint16_t *utf16Encoded)
 {
 	const uint16_t *zeroSearch = utf16Encoded;
 	while(*zeroSearch) zeroSearch++;
@@ -145,7 +145,7 @@ void UTF8String::append(const uint16_t *utf16Encoded) throw (InvalidEncodingExce
 }
 
 /** Append UTF32 encoded data to the string. */
-void UTF8String::append(const uint32_t *utf32Encoded) throw (InvalidEncodingException)
+void UTF8String::append(const uint32_t *utf32Encoded)
 {
 	const uint32_t *zeroSearch = utf32Encoded;
 	while(*zeroSearch) zeroSearch++;

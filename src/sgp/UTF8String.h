@@ -52,16 +52,16 @@ class UTF8String
 {
 public:
 	/** Create object from existing UTF-8 encoded string. */
-	UTF8String(const char *utf8Encoded) throw (InvalidEncodingException);
+	UTF8String(const char *utf8Encoded);
 
 	/** Create object from existing UTF-8 encoded string. */
-	UTF8String(const uint8_t *utf8Encoded) throw (InvalidEncodingException);
+	UTF8String(const uint8_t *utf8Encoded);
 
 	/** Create object from UTF-16 encoded string. */
-	UTF8String(const uint16_t *utf16Encoded) throw (InvalidEncodingException);
+	UTF8String(const uint16_t *utf16Encoded);
 
 	/** Create object from UTF-32 encoded string. */
-	UTF8String(const uint32_t *utf32Encoded) throw (InvalidEncodingException);
+	UTF8String(const uint32_t *utf32Encoded);
 
 #ifdef WCHAR_SUPPORT
 	/** Create string from wchar. */
@@ -106,9 +106,8 @@ protected:
 #endif
 
 	/** Append UTF16 encoded data to the string. */
-	void append(const uint16_t *utf16Encoded) throw (InvalidEncodingException);
+	void append(const uint16_t *utf16Encoded);
 
 	/** Append UTF32 encoded data to the string. */
-	void append(const uint32_t *utf32Encoded) throw (InvalidEncodingException);
+	void append(const uint32_t *utf32Encoded);
 };
-
