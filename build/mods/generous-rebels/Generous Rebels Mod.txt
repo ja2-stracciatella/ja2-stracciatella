@@ -1,0 +1,65 @@
+Generous Rebels mod (GR mod)
+--------------------------------------------------
+
+
+--------------------
+| Version
+--------------------
+GR mod v1.0 - first and probably final release ;)
+
+--------------------
+| About
+--------------------
+This is a mini-mod for Jagged Alliance 2 (JA2). It adds some goodies to the rebel's hideout in Omerta.
+
+--------------------
+| Compatibility
+--------------------
+The GR mod was created for the JA2 Stracciatella ModPack. However, this mod works with just about any version of JA2 including v1.13.
+The GR mod should also work with several mods for JA2, as long, as the weapons and maps aren't changed.
+Using the GR mod with a mod that changes the weapons or maps will probably lead to weird results.
+
+--------------------
+| Installation
+--------------------
+Just copy the data-folder into your JA2 folder. No files will be overwritten.
+
+--------------------
+| Uninstallation:
+--------------------
+Just delete the file \Data\Maps\A10_b1.dat - everything will be as it was before.
+
+--------------------
+| Some information on the GR mod
+--------------------
+This mini-mod is intended for players who have a rough time in the beginning of the game. Now, when the player meets the rebels in their underground hideout, they have some nice stuff for him in stock.
+Inside the hideout, there is now a suspicious locker (see "GR mod.jpg"). It contains a weapon, add-ons, ammo, armor, a 1st aid kit and night vision goggles, which the player may take.
+With these items, the player can take one merc into a tanky sniper.
+
+The gear found here is relatively good, but no "uber"-gear. The merc won't be an invincible super man, but still superior to all early enemy soldiers.
+Needles to say, this mod has a NEGATIVE impact on the balance of the early game. This phase of the game will become significantly easier with this mod.
+
+Of course, if you're a battle-hardened veteran of JA2, the GR mod is ABSOLUTELY NOT for you.
+
+--------------------
+| Known Bugs & Problems
+--------------------
+If the player recruits Ira before taking the goodies, she will immediately escort the squad to the surface. The player can still take the goodies - he just has to climb down again.
+
+--------------------
+| JA2 Stracciatella Links
+--------------------
+Visit the JA2 Stracciatella project's homepage:
+http://ja2-stracciatella.github.io/
+
+And the development homepage on GitHub:
+https://github.com/ja2-stracciatella/ja2-stracciatella
+
+...Aaaand the Mod DB Profile:
+http://www.moddb.com/mods/ja2-stracciatella
+
+--------------------
+| Credits
+--------------------
+The GR mod was created by JAsmine, 05/2016
+Feel free to do whatever you want with this mod :)

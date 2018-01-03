@@ -885,8 +885,19 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 
 	// IMPORTANT! WhoIsThere2 can return a null-pointer for grid calcs
 	const SOLDIERTYPE* const pSubject = WhoIsThere2(sSubjectGridNo, bLevel);
+<<<<<<< HEAD
 	// muzzleflash can only considered if there is actually a soldier on the grid_no
 	BOOLEAN const hasMuzzleFlash = pSubject && pSubject->fMuzzleFlash;
+=======
+  
+       // While the merc is climbing up/down he is shortly on an 
+       // undefined grid_no(NOWHERE) we can't calc anything if this happens so
+       // we check the return of WhoIsThere2 for zero value
+       if (pSubject == 0) 
+       {
+           return( FALSE );
+       }
+>>>>>>> Issue #585: Fix Line of Sight not being displayed
 
 	if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 	{

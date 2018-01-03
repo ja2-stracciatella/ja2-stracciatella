@@ -1,0 +1,6 @@
+{
+    "inventory": ["CANTEEN", "FLAK_JACKET"],
+
+    "if_good_shooter": ["MP5K", "CLIP9_30", "CLIP9_30"],
+    "if_normal_shooter": ["BERETTA_93R", "CLIP9_15", "CLIP9_15", "CLIP9_15"]
+}

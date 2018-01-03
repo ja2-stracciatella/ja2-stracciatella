@@ -1,0 +1,34 @@
+{
+        "FIRSTAIDKIT": 3,
+
+        "LOCKSMITHKIT": 4,
+        "TOOLKIT": 3,
+
+        "CANTEEN": 5,
+
+        "CROWBAR": 3,
+        "WIRECUTTERS": 3,
+
+        "DUCKBILL": 3,
+        "JAR": 12,
+        "BREAK_LIGHT": 12,
+
+        "METALDETECTOR": 1,
+
+        "VIDEO_CAMERA": 1,
+
+        "QUICK_GLUE": 3,
+        "COPPER_WIRE": 5,
+        "BATTERIES": 10,
+
+        "CLIP9_15": 5,
+        "CLIP9_30": 5,
+        "CLIP38_6": 5,
+        "CLIP45_7": 5,
+        "CLIP45_30": 5,
+        "CLIP357_6": 5,
+        "CLIP357_9": 5,
+        "CLIP12G_7": 9,
+        "CLIP12G_7_BUCKSHOT": 9
+}
+

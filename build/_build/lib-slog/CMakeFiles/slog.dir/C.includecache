@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/rinne/Programmierung/ja2-stracciatella/_build/lib-slog/slog/slog.c
+slog.h
+/home/rinne/Programmierung/ja2-stracciatella/_build/lib-slog/slog/slog.h
+stdarg.h
+-
+stdio.h
+-
+time.h
+-
+stdlib.h
+-
+io.h
+-
+unistd.h
+-
+
+/home/rinne/Programmierung/ja2-stracciatella/_build/lib-slog/slog/slog.h
+

@@ -1,0 +1,55 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_8a43d/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_8a43d.dir/build.make CMakeFiles/cmTC_8a43d.dir/build
+gmake[1]: Entering directory '/home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8a43d.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_8a43d.dir/CheckSymbolExists.c.o   -c /home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_8a43d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8a43d.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_8a43d.dir/CheckSymbolExists.c.o  -o cmTC_8a43d -rdynamic 
+CMakeFiles/cmTC_8a43d.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_8a43d.dir/build.make:97: recipe for target 'cmTC_8a43d' failed
+gmake[1]: *** [cmTC_8a43d] Error 1
+gmake[1]: Leaving directory '/home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_8a43d/fast' failed
+gmake: *** [cmTC_8a43d/fast] Error 2
+
+File /home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_25fe1/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_25fe1.dir/build.make CMakeFiles/cmTC_25fe1.dir/build
+gmake[1]: Entering directory '/home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_25fe1.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_25fe1.dir/CheckFunctionExists.c.o   -c /usr/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_25fe1
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_25fe1.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_25fe1.dir/CheckFunctionExists.c.o  -o cmTC_25fe1 -rdynamic -lpthreads 
+/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/../../../../x86_64-pc-linux-gnu/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_25fe1.dir/build.make:97: recipe for target 'cmTC_25fe1' failed
+gmake[1]: *** [cmTC_25fe1] Error 1
+gmake[1]: Leaving directory '/home/rinne/Programmierung/ja2-stracciatella/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_25fe1/fast' failed
+gmake: *** [cmTC_25fe1/fast] Error 2
+
+

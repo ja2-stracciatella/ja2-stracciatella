@@ -1,0 +1,40 @@
+{
+        "STUN_GRENADE": 3,
+        "TEARGAS_GRENADE": 3,
+        "MUSTARD_GRENADE": 2,
+        "MINI_GRENADE": 3,
+        "HAND_GRENADE": 2,
+        "SMOKE_GRENADE": 3,
+
+        "GL_HE_GRENADE": 2,
+        "GL_TEARGAS_GRENADE": 2,
+        "GL_STUN_GRENADE": 2,
+        "GL_SMOKE_GRENADE": 2,
+        "MORTAR_SHELL": 1,
+
+        "CLIPROCKET_AP": 1,
+        "CLIPROCKET_HE": 1,
+        "CLIPROCKET_HEAT": 1,
+
+        "DETONATOR": 10,
+        "REMDETONATOR": 5,
+        "REMOTEBOMBTRIGGER": 5,
+
+        "MINE": 6,
+        "RDX": 5,
+        "TNT": 5,
+        "C1": 4,
+        "HMX": 3,
+        "C4": 2,
+
+        "SHAPED_CHARGE": 5,
+
+        "GLAUNCHER": 1,
+        "UNDER_GLAUNCHER": 1,
+        "ROCKET_LAUNCHER": 1,
+        "MORTAR": 1,
+
+        "METALDETECTOR": 2,
+        "WIRECUTTERS": 1,
+        "DUCT_TAPE": 1
+}

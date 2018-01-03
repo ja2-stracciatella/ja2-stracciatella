@@ -1,0 +1,60 @@
+IMP quiz honest answers mod (IQHA mod)
+--------------------------------------------------
+
+
+--------------------
+| Version
+--------------------
+IQHA mod v1.0 - first and probably final release ;)
+
+--------------------
+| About
+--------------------
+This is a mini-mod for Jagged Alliance 2 (JA2). It shows the effect each answer in the IMP quiz has on the player character.
+
+--------------------
+| Compatibility
+--------------------
+The IQHA mod was created for the JA2 Stracciatella ModPack. However, this mod works with just about any version of JA2 which has the standard IMP quiz enabled.
+The IQHA mod should also work with virtually any mod for JA2, as long as it has the standard IMP quiz enabled.
+The language of your JA2 doesn't matter - however, IQHA mod will turn the whole IMP site into English, no matter what.
+
+--------------------
+| Installation
+--------------------
+Just copy the data-folder into your JA2 folder. No files will be overwritten.
+
+--------------------
+| Uninstallation:
+--------------------
+Just delete the file \Data\Binarydata\IMPTEXT.edt - everything will be as it was before.
+
+--------------------
+| Some information on the IMP quiz
+--------------------
+The quiz basically works like this: The game counts how many times you pick a certain skill, attitude or trait. In the end, the skills and attitude which were picked most often are taken for the character. So, if you pick "attitude asshole" once and "attitude agressive" twice, the latter is taken for the character. You can pick the answers with no effect to your advantage here...
+
+The IMP quiz seems to be a bit bugged and incomplete. Some answers do not have the effect you would expect them to have. Too many answers have no effect at all. Some answers give the character a specific trait (e.g. heat intolerant). However, the IMP character can only have the psycho trait. So in the end, each time you take any trait, it counts towards the psycho trait.
+
+--------------------
+| Known Bugs & Problems
+--------------------
+The text of some answers doesn't fit inside the boxes anymore. The text is still fully displayed, though.
+
+--------------------
+| JA2 Stracciatella Links
+--------------------
+Visit the JA2 Stracciatella project's homepage:
+http://ja2-stracciatella.github.io/
+
+And the development homepage on GitHub:
+https://github.com/ja2-stracciatella/ja2-stracciatella
+
+...Aaaand the Mod DB Profile:
+http://www.moddb.com/mods/ja2-stracciatella
+
+--------------------
+| Credits
+--------------------
+The IQHA mod was created by JAsmine, 05/2016
+Feel free to do whatever you want with this mod :)
