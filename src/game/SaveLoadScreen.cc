@@ -1692,8 +1692,9 @@ void DoDeadIsDeadSave()
 	// - we are in an AI Turn
 	// - we are in a Dialogue
 	// - we are in Meanwhile.....
+	// - we are in a locked ui
 	// - we are currently in a message box - The Messagebox would be gone without selection after loading
-	if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN)
+	if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN && gCurrentUIMode != LOCKUI_MODE)
 	{
 		// Backup old saves
 		BackupSavedGame(gGameSettings.bLastSavedGameSlot);
