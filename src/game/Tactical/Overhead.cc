@@ -408,7 +408,7 @@ void InitOverhead()
 
 	TacticalStatusType& t = gTacticalStatus;
 	memset(&t, 0, sizeof(TacticalStatusType));
-	t.uiFlags                 = TURNBASED;
+	t.uiFlags                 = 0x000000004; // TURNBASED, for save game compatibility
 	t.sSlideTarget            = NOWHERE;
 	t.uiTimeOfLastInput       = GetJA2Clock();
 	t.uiTimeSinceDemoOn       = GetJA2Clock();
