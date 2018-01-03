@@ -2,10 +2,10 @@
 Name=Jagged Alliance 2 - Stracciatella
 GenericName=Strategy/RP Game
 Comment=An enhanced port of Jagged Alliance 2 to SDL
-Exec=ja2
-TryExec=ja2
+Exec=ja2-launcher
+TryExec=ja2-launcher
 Icon=ja2-stracciatella
-Terminal=true
+Terminal=false
 Type=Application
 Categories=Game;StrategyGame;RolePlaying;
 Version=1.0

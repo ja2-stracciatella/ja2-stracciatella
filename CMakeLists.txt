@@ -17,12 +17,12 @@ endmacro()
 project(ja2-stracciatella)
 set(JA2_BINARY "ja2")
 set(LAUNCHER_BINARY "ja2-launcher")
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 11)
 
 ## Versioning
 
 set(ja2-stracciatella_VERSION_MAJOR "0")
-set(ja2-stracciatella_VERSION_MINOR "15")
+set(ja2-stracciatella_VERSION_MINOR "16")
 set(ja2-stracciatella_VERSION_PATCH "x")
 set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
 
@@ -138,13 +138,16 @@ if(BUILD_LAUNCHER)
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_png.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_z.a")
         elseif(MSVC)
-            # TODO Debug versions only
+            set(MSVC_LIB_SUFFIX "")
+            if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+                set(MSVC_LIB_SUFFIX "d")
+            endif()
             set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltkd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_imagesd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_formsd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_pngd.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_zd.lib")
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_images${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_forms${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_png${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_z${MSVC_LIB_SUFFIX}.lib")
         endif()
     endif()
 endif()
@@ -270,10 +273,23 @@ endif()
 set(CPACK_PACKAGE_CONTACT ${CONTACT})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
 set(CPACK_PACKAGE_DESCRIPTION ${DESCRIPTION})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "JA2 Stracciatella")
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "games")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://ja2-stracciatella.github.io/")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libstdc++6, libgcc1, libc6")
+
+set(CPACK_BUNDLE_NAME "JA2 Stracciatella")
+set(CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.icns")
+set(CPACK_BUNDLE_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-mac/BundleInfo.plist")
+set(CPACK_BUNDLE_STARTUP_COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-mac/ja2-startup.sh")
+
+set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortcut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\JA2 Stracciatella.lnk' '$INSTDIR\\\\ja2-launcher.exe' '' '$INSTDIR\\\\logo.ico'")
+set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
+set(CPACK_NSIS_MUI_FINISHPAGE_RUN "ja2-launcher.exe")
+set(CPACK_NSIS_DISPLAY_NAME "JA2 Stracciatella")
+set(CPACK_NSIS_PACKAGE_NAME "JA2 Stracciatella")
+set(CPACK_NSIS_URL_INFO_ABOUT "https://ja2-stracciatella.github.io/")
 
 if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -297,10 +313,6 @@ else()
 endif()
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}")
 
-IF(CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
-endif()
-include(InstallRequiredSystemLibraries)
 include(CPack)
 
 if (UNIX AND NOT MINGW AND NOT APPLE)
@@ -308,17 +320,17 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
     if(BUILD_LAUNCHER)
         install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION bin)
     endif()
-    install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION ${INSTALL_LIB_DIR})
-    install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
-        FILES assets/icons/logo.svg
+        FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.svg
         RENAME ja2-stracciatella.svg
         DESTINATION share/icons/hicolor/scalable/apps)
     if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|DragonFly|OpenBSD")
-        install(FILES ja2_manpage DESTINATION man/man6 RENAME ja2.6)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-linux/ja2_manpage DESTINATION man/man6 RENAME ja2.6)
     else()
-        install(FILES ja2_manpage DESTINATION share/man/man6 RENAME ja2.6)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-linux/ja2_manpage DESTINATION share/man/man6 RENAME ja2.6)
     endif()
 else()
     install(TARGETS ${JA2_BINARY} RUNTIME DESTINATION .)
@@ -326,32 +338,36 @@ else()
         install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION .)
     endif()
     install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
-    install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION .)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/externalized assets/mods assets/unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
 endif()
 
-if (MINGW)
-    file(GLOB WIN_MINGW_DIST_DLLS "assets/distr-files-win-mingw/*.dll")
-    install(FILES dependencies/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
-    install(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
+if(MSVC OR MINGW)
+    set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION .)
+    set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
+    include(InstallRequiredSystemLibraries)
+
+    file(GLOB WIN_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win/*")
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.4-mingw/README-SDL.txt DESTINATION .)
+    install(FILES ${WIN_DIST_FILES} DESTINATION .)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.ico DESTINATION .)
 endif()
 
 if (MSVC)
     install(FILES ${SDL_DLL} DESTINATION .)
-    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION . COMPONENT Libraries)
 endif()
 
-if(MSVC OR MINGW)
-    file(GLOB WIN_DIST_FILES "assets/distr-files-win/*")
-    install(FILES ${WIN_DIST_FILES} DESTINATION .)
-    install(FILES assets/icons/logo.ico DESTINATION .)
+if (MINGW)
+    file(GLOB WIN_MINGW_DIST_DLLS "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win-mingw/*.dll")
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.4-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
+    install(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
 endif()
 
 if(APPLE)
-    file(GLOB APPLE_DIST_FILES "assets/distr-files-mac/*")
+    file(GLOB APPLE_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-mac/*.txt")
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
-    install(DIRECTORY dependencies/lib-SDL2-2.0.4-macos/SDL2.framework DESTINATION .)
-    install(FILES assets/icons/logo.icns DESTINATION .)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.4-macos/SDL2.framework DESTINATION .)
 endif()
 
 add_custom_templated_target("uninstall")

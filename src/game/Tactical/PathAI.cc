@@ -2146,7 +2146,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 		//		break;
 		//	case TWISTOMACH:
 		//	case COLLAPSED:
-				sAnimCost = AP_GET_UP;
+		//		sAnimCost = AP_GET_UP;
 		//		break;
 		//	case TWISTBACK:
 		//	case UNCONSCIOUS:

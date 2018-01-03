@@ -3435,6 +3435,9 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 
 	if (item->getItemClass() == IC_PUNCH)
 	{
+		// can't punch the ground
+		if (!tgt) return false;
+
 		// We test again whether the target is reachable
 		if (CalcTotalAPsToAttack(s, tgt->sGridNo, true, 0) == 0)
 		{

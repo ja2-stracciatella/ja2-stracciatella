@@ -63,7 +63,12 @@ UINT16 MovementMode[LAST_MOVEMENT_ACTION + 1][NUM_URGENCY_STATES] =
 
 	{WALKING,  WALKING,  WALKING},	// AI_ACTION_SCHEDULE_MOVE
 	{WALKING,  WALKING,  WALKING},	// AI_ACTION_WALK
-	{RUNNING,  RUNNING,  RUNNING},	// AI_ACTION_MOVE_TO_CLIMB
+	{RUNNING,  RUNNING,  RUNNING},	// AI_ACTION_RUN
+	{WALKING,  RUNNING,  RUNNING},	// AI_ACTION_MOVE_TO_CLIMB //extrapolated
+
+	{WALKING,  RUNNING,  RUNNING},	// AI_ACTION_CHANGE_FACING //extrapolated
+	{WALKING,  RUNNING,  RUNNING},	// AI_ACTION_CHANGE_STANCE //extrapolated
+
 };
 
 INT8 OKToAttack(const SOLDIERTYPE * pSoldier, int target)
@@ -1573,13 +1578,7 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 
 	// NB light levels are backwards, so a lower light level means the
 	// spot in question is BRIGHTER
-
-	if ( LightTrueLevel( sGridNo, bLevel ) < ubBackgroundLightLevel )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return LightTrueLevel(sGridNo, bLevel) < ubBackgroundLightLevel;
 }
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier)
