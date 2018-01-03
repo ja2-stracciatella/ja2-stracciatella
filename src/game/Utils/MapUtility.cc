@@ -25,7 +25,6 @@
 #include "Video.h"
 #include "Quantize.h"
 #include "UILayout.h"
-#include <boost/foreach.hpp>
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -82,7 +81,7 @@ ScreenID MapUtilScreenHandle()
 		try
 		{
 			std::vector<std::string> files = GCM->getAllMaps();
-			BOOST_FOREACH(const std::string &file, files)
+			for (const std::string &file : files)
 			{
 				FileList = AddToFDlgList(FileList, file.c_str());
 				++sFiles;

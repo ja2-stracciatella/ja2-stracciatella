@@ -52,7 +52,6 @@
 #include "UILayout.h"
 #include "GameState.h"
 #include "GameRes.h"
-#include <boost/foreach.hpp>
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -146,7 +145,7 @@ static void LoadSaveScreenEntry(void)
 	try
 	{
 		std::vector<std::string> files = GCM->getAllMaps();
-		BOOST_FOREACH(const std::string &file, files)
+		for (const std::string &file : files)
 		{
 			FileList = AddToFDlgList(FileList, file.c_str());
 			++iTotalFiles;

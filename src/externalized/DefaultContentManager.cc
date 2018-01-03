@@ -31,8 +31,6 @@
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
 
-#include "boost/foreach.hpp"
-
 #include "slog/slog.h"
 
 #define BASEDATADIR    "data"
@@ -214,7 +212,7 @@ DefaultContentManager::~DefaultContentManager()
 		delete m_libraryDB;
 	}
 
-	BOOST_FOREACH(const ItemModel* item, m_items)
+	for (const ItemModel* item : m_items)
 	{
 		delete item;
 	}
@@ -224,21 +222,21 @@ DefaultContentManager::~DefaultContentManager()
 	m_weaponMap.clear();
 	m_itemMap.clear();
 
-	BOOST_FOREACH(const CalibreModel* calibre, m_calibres)
+	for (const CalibreModel* calibre : m_calibres)
 	{
 		delete calibre;
 	}
 	m_calibres.clear();
 	m_calibreMap.clear();
 
-	BOOST_FOREACH(const AmmoTypeModel* ammoType, m_ammoTypes)
+	for (const AmmoTypeModel* ammoType : m_ammoTypes)
 	{
 		delete ammoType;
 	}
 	m_ammoTypes.clear();
 	m_ammoTypeMap.clear();
 
-	BOOST_FOREACH(const DealerInventory* inv, m_dealersInventory)
+	for(const DealerInventory* inv : m_dealersInventory)
 	{
 		if(inv) delete inv;
 	}
@@ -248,9 +246,18 @@ DefaultContentManager::~DefaultContentManager()
 	delete m_impPolicy;
 	delete m_gamePolicy;
 
-	BOOST_FOREACH(const UTF8String *str, m_newStrings)                    { delete str; }
-	BOOST_FOREACH(const UTF8String *str, m_calibreNames)                  { delete str; }
-	BOOST_FOREACH(const UTF8String *str, m_calibreNamesBobbyRay)          { delete str; }
+	for (const UTF8String *str : m_newStrings)
+	{
+		delete str;
+	}
+	for (const UTF8String *str : m_calibreNames)
+	{
+		delete str;
+	}
+	for (const UTF8String *str : m_calibreNamesBobbyRay)
+	{
+		delete str;
+	}
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -691,7 +698,7 @@ bool DefaultContentManager::loadCalibres()
 		}
 	}
 
-	BOOST_FOREACH(const CalibreModel* calibre, m_calibres)
+	for (const CalibreModel* calibre : m_calibres)
 	{
 		m_calibreMap.insert(std::make_pair(std::string(calibre->internalName), calibre));
 	}
@@ -730,7 +737,7 @@ bool DefaultContentManager::loadAmmoTypes()
 		}
 	}
 
-	BOOST_FOREACH(const AmmoTypeModel* ammoType, m_ammoTypes)
+	for (const AmmoTypeModel* ammoType : m_ammoTypes)
 	{
 		m_ammoTypeMap.insert(std::make_pair(std::string(ammoType->internalName), ammoType));
 	}
@@ -744,7 +751,7 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 
 	std::vector<std::string> utf8_encoded;
 	JsonUtility::parseListStrings(array, utf8_encoded);
-	BOOST_FOREACH(const std::string &str, utf8_encoded)
+	for (const std::string &str : utf8_encoded)
 	{
 		musicModeList->push_back(new UTF8String(str.c_str()));
 		SLOGD(DEBUG_TAG_DEFAULTCM, "Loaded music %s", str.c_str());
@@ -816,7 +823,7 @@ bool DefaultContentManager::readWeaponTable(
 			std::vector<std::string> weaponNames;
 			if(JsonUtility::parseListStrings(a[i], weaponNames))
 			{
-				BOOST_FOREACH(const std::string &weapon, weaponNames)
+				for (const std::string &weapon : weaponNames)
 				{
 					weaponTable[i].push_back(getWeaponByName(weapon));
 				}
@@ -867,7 +874,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const UT
 	boost::shared_ptr<rapidjson::Document> json(readJsonDataFile(fullName.c_str()));
 	std::vector<std::string> utf8_encoded;
 	JsonUtility::parseListStrings(*json, utf8_encoded);
-	BOOST_FOREACH(const std::string &str, utf8_encoded)
+	for (const std::string &str : utf8_encoded)
 	{
 		strings.push_back(new UTF8String(str.c_str()));
 	}
@@ -885,7 +892,7 @@ bool DefaultContentManager::loadGameData()
 		&& loadArmyGunChoice()
 		&& loadMusic();
 
-	BOOST_FOREACH(const ItemModel *item, m_items)
+	for (const ItemModel *item : m_items)
 	{
 		m_itemMap.insert(std::make_pair(item->getInternalName(), item));
 	}

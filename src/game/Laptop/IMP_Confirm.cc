@@ -28,8 +28,6 @@
 #include "Font_Control.h"
 #include "FileMan.h"
 
-#include <boost/foreach.hpp>
-
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
@@ -277,7 +275,7 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
 
-	BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getInventory())
+	for (const ItemModel *item : GCM->getIMPPolicy()->getInventory())
 	{
 		MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
 	}
@@ -289,14 +287,14 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 	if (p.bMarksmanship >= 80)
 	{
-		BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getGoodShooterItems())
+		for (const ItemModel *item : GCM->getIMPPolicy()->getGoodShooterItems())
 		{
 			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
 		}
 	}
 	else
 	{
-		BOOST_FOREACH(const ItemModel *item, GCM->getIMPPolicy()->getNormalShooterItems())
+		for (const ItemModel *item : GCM->getIMPPolicy()->getNormalShooterItems())
 		{
 			MakeProfileInvItemAnySlot(p, item->getItemIndex(), 100, 1);
 		}
