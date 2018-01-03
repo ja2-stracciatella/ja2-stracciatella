@@ -73,7 +73,6 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 // #include "rapidjson/filestream.h"
 // #include "rapidjson/prettywriter.h"
 // #include "stdio.h"
-// #include <boost/foreach.hpp>
 
 // bool writeWeaponsToJson(const char *name/*, const struct WEAPONTYPE *weapon*/, int weaponCount)
 // {
@@ -117,7 +116,7 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 //     rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 //     const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-//     BOOST_FOREACH(const MagazineModel* mag, magazines)
+//     for (const MagazineModel* mag : magazines)
 //     {
 //       JsonObject obj(allocator);
 //       mag->serializeTo(obj);

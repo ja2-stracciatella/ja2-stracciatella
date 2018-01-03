@@ -42,8 +42,6 @@
 #include "MemMan.h"
 #include "Debug.h"
 
-#include <boost/foreach.hpp>
-
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
 #include "ContentManager.h"
@@ -3010,7 +3008,7 @@ UINT16 DefaultMagazine(UINT16 const gun)
 
 	const WeaponModel * w = GCM->getWeapon(gun);
 	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-	BOOST_FOREACH(const MagazineModel* mag, magazines)
+	for (const MagazineModel* mag : magazines)
 	{
 		if (mag->calibre->index == NOAMMO)      break;
 		if (mag->dontUseAsDefaultMagazine) continue;
@@ -3027,7 +3025,7 @@ UINT16 FindReplacementMagazine(const CalibreModel * calibre, UINT8 const mag_siz
 {
 	UINT16 default_mag = NOTHING;
 	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-	BOOST_FOREACH(const MagazineModel* mag, magazines)
+	for (const MagazineModel* mag : magazines)
 	{
 		if (mag->calibre->index == NOAMMO)   break;
 		if (mag->calibre->index != calibre->index)  continue;
@@ -3067,7 +3065,7 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 
 	// find & store all possible mag types that fit this gun
 	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-	BOOST_FOREACH(const MagazineModel* mag, magazines)
+	for (const MagazineModel* mag : magazines)
 	{
 		if (pWeapon->matches(mag))
 		{
