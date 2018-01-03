@@ -236,7 +236,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT1
 	}
 
 	// ATE: Adjust these by realtime movement
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		// ATE: ADJUST FOR RT - MAKE BREATH GO A LITTLE FASTER!
 		iPoints = (INT32)( iPoints * TB_BREATH_DEDUCT_MODIFIER );
@@ -494,7 +494,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 
 
 	// in real time, there IS no AP cost, (only breath cost)
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		sAPCost = 0;
 	}
@@ -585,7 +585,7 @@ static INT16 AdjustBreathPts(SOLDIERTYPE* pSold, INT16 sBPCost)
 
 	// in real time, there IS no AP cost, (only breath cost)
 	/*
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		// ATE: ADJUST FOR RT - MAKE BREATH GO A LITTLE FASTER!
 		sBPCost	*= TB_BREATH_DEDUCT_MODIFIER;
@@ -664,7 +664,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 		return;
 	}
 
-	if ( !( gTacticalStatus.uiFlags & TURNBASED ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		// ALRIGHT, GIVE A FULL AMOUNT BACK, UNLES MODIFIED BY WHAT ACTIONS WE WERE DOING
 		sBreathPerAP = GetBreathPerAP( pSold, pSold->usAnimState );

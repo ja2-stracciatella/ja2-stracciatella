@@ -1311,7 +1311,7 @@ static void DrawMouseText(void)
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
 
-	//if (TacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		if (gfUIDisplayActionPoints)
 		{

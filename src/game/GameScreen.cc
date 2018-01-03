@@ -477,13 +477,10 @@ ScreenID MainGameScreenHandle(void)
 
 
 	// ATE: CHRIS_C LOOK HERE FOR GETTING AI CONSTANTLY GOING
-	//if ( gTacticalStatus.uiFlags & TURNBASED )
-	//{
 	//	if ( !(gTacticalStatus.uiFlags & ENEMYS_TURN) )
 	//	{
 	//		EndTurn( );
 	//	}
-	//}
 
 
 	if (!ARE_IN_FADE_IN())

@@ -670,7 +670,7 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 	}
 
 	// If we've been told that interrupts are possible as a result of sighting
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
+	if ((gTacticalStatus.uiFlags & INCOMBAT) &&
 		sight_flags & SIGHT_INTERRUPT)
 	{
 		ResolveInterruptsVs(&s, SIGHTINTERRUPT);
@@ -843,14 +843,9 @@ static INT16 DistanceSmellable(const SOLDIERTYPE* const pSubject)
 {
 	INT16 sDistVisible = STRAIGHT; // as a base
 
-	//if (gTacticalStatus.uiFlags & TURNBASED)
-	//{
-		sDistVisible *= 2;
-	//}
-	//else
-	//{
-	//	sDistVisible += 3;
-	//}
+	sDistVisible *= 2;
+	//In hypothetical non-turnbased mode:
+	//sDistVisible += 3;
 
 	if (pSubject)
 	{
@@ -1251,7 +1246,7 @@ static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 
 				// OK, We now want to , if in non-combat, set visiblity to 0 if not visible still....
 				// This allows us to walk away from buddy and have them disappear instantly
-				if ( gTacticalStatus.uiFlags & TURNBASED && !( gTacticalStatus.uiFlags & INCOMBAT ) )
+				if (!(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					if ( pOpponent->bVisible == 0)
 					{
@@ -1932,8 +1927,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 			// Change his anim speed
 			SetSoldierAniSpeed(&opponent);
 
-			if (gTacticalStatus.uiFlags & TURNBASED &&
-				(gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fVirginSector) &&
+			if ((gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fVirginSector) &&
 				!opponent.bNeutral &&
 				s.bSide != opponent.bSide)
 			{
@@ -2003,14 +1997,14 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 			if (ManLooksForMan(pSoldier,pOpponent,OTHERTEAMSLOOKFORMAN))
 			{
 				// if a new opponent is seen (which must be oppPtr himself)
-				//if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bNewOppCnt)
+				//if ((gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bNewOppCnt)
 				// Calc interrupt points in non-combat because we might get an interrupt or be interrupted
 				// on our first turn
 
 				// if doing regular in-combat sighting (not on opening doors!)
 				if ( gubBestToMakeSightingSize == BEST_SIGHTING_ARRAY_SIZE_INCOMBAT )
 				{
-					if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT && pSoldier->bNewOppCnt)
+					if ((gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bNewOppCnt)
 					{
 						// as long as viewer meets minimum interrupt conditions
 						if (gubSightFlags & SIGHT_INTERRUPT && StandardInterruptConditionsMet(pSoldier, pOpponent, bOldOppList))
@@ -3460,7 +3454,7 @@ void OurNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, INT8 const bL
 	ProcessNoise(noise_maker, sGridNo, bLevel, ubVolume, ubNoiseType);
 
 	if (noise_maker != NULL &&
-		(gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
+		(gTacticalStatus.uiFlags & INCOMBAT) &&
 		!gfDelayResolvingBestSightingDueToDoor)
 	{
 		// interrupts are possible, resolve them now (we're in control here)
@@ -4157,8 +4151,7 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 			// as long as listener meets minimum interrupt conditions
 			if ( gfDelayResolvingBestSightingDueToDoor)
 			{
-				if (bSourceSeen && (!(gTacticalStatus.uiFlags & TURNBASED) ||
-					!(gTacticalStatus.uiFlags & INCOMBAT) ||
+				if (bSourceSeen && (!(gTacticalStatus.uiFlags & INCOMBAT) ||
 					(gubSightFlags & SIGHTINTERRUPT &&
 					StandardInterruptConditionsMet(pSoldier, noise_maker, bOldOpplist))))
 				{
@@ -4180,7 +4173,7 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 			}
 			else
 			{
-				if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+				if (gTacticalStatus.uiFlags & INCOMBAT)
 				{
 					if (StandardInterruptConditionsMet(pSoldier, noise_maker, bOldOpplist))
 					{
@@ -4269,7 +4262,7 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 		if ( gubBestToMakeSightingSize == BEST_SIGHTING_ARRAY_SIZE_INCOMBAT )
 		{
 			// if the noise heard was the fall of a rock
-			if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT && ubNoiseType == NOISE_ROCK_IMPACT)
+			if ((gTacticalStatus.uiFlags & INCOMBAT) && ubNoiseType == NOISE_ROCK_IMPACT)
 			{
 				// give every ELIGIBLE listener an automatic interrupt, since it's
 				// reasonable to assume the guy throwing wants to wait for their reaction!

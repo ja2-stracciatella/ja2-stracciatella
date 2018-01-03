@@ -356,7 +356,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 		else
 		{
 			// Mark this tile as reserverd ( until we get there! )
-			if ( !( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) ) )
+			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
 				MarkMovementReserved(*pSoldier, sGridNo);
 			}

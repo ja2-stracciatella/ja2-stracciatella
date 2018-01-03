@@ -114,7 +114,7 @@ void HandleTacticalEndTurn()
 	NonCombatDecayPublicOpplist(now);
 
 	// First exit if we are not in realtime combat or realtime noncombat
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT))
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		BeginLoggingForBleedMeToos(TRUE);
 

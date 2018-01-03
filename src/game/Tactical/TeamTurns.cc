@@ -88,60 +88,59 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 
 	InitPlayerUIBar( FALSE );
 
-	if ( gTacticalStatus.uiFlags & TURNBASED )
+
+	// Are we in combat already?
+	if ( gTacticalStatus.uiFlags & INCOMBAT )
 	{
-		// Are we in combat already?
-		if ( gTacticalStatus.uiFlags & INCOMBAT )
-		{
-			PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
-		}
+		PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
+	}
 
-		// Check for victory conditions
+	// Check for victory conditions
 
-		// Are we in combat already?
-		if ( gTacticalStatus.uiFlags & INCOMBAT )
+	// Are we in combat already?
+	if ( gTacticalStatus.uiFlags & INCOMBAT )
+	{
+		SOLDIERTYPE* sel = GetSelectedMan();
+		if (sel != NULL)
 		{
-			SOLDIERTYPE* sel = GetSelectedMan();
+			// Check if this guy is able to be selected....
+			if (sel->bLife < OKLIFE)
+			{
+				SelectNextAvailSoldier(sel);
+				sel = GetSelectedMan();
+			}
+
+			// Slide to selected guy...
 			if (sel != NULL)
 			{
-				// Check if this guy is able to be selected....
-				if (sel->bLife < OKLIFE)
+				SlideTo(sel, SETLOCATOR);
+
+				// Say ATTENTION SOUND...
+				if (fDoBattleSnd) DoMercBattleSound(sel, BATTLE_SOUND_ATTN1);
+
+				if ( gsInterfaceLevel == 1 )
 				{
-					SelectNextAvailSoldier(sel);
-					sel = GetSelectedMan();
-				}
-
-				// Slide to selected guy...
-				if (sel != NULL)
-				{
-					SlideTo(sel, SETLOCATOR);
-
-					// Say ATTENTION SOUND...
-					if (fDoBattleSnd) DoMercBattleSound(sel, BATTLE_SOUND_ATTN1);
-
-					if ( gsInterfaceLevel == 1 )
-					{
-						gTacticalStatus.uiFlags |= SHOW_ALL_ROOFS;
-						InvalidateWorldRedundency( );
-						SetRenderFlags(RENDER_FLAG_FULL);
-						ErasePath();
-					}
+					gTacticalStatus.uiFlags |= SHOW_ALL_ROOFS;
+					InvalidateWorldRedundency( );
+					SetRenderFlags(RENDER_FLAG_FULL);
+					ErasePath();
 				}
 			}
 		}
-
-		// Dirty panel interface!
-		fInterfacePanelDirty = DIRTYLEVEL2;
-
-		// Adjust time now!
-		UpdateClock( );
-
-		if ( !fEnteringCombatMode )
-		{
-			CheckForEndOfCombatMode( TRUE );
-		}
-
 	}
+
+	// Dirty panel interface!
+	fInterfacePanelDirty = DIRTYLEVEL2;
+
+	// Adjust time now!
+	UpdateClock( );
+
+	if ( !fEnteringCombatMode )
+	{
+		CheckForEndOfCombatMode( TRUE );
+	}
+
+
 	// Signal UI done enemy's turn
 	guiPendingOverrideEvent = LU_ENDUILOCK;
 
@@ -318,30 +317,29 @@ void BeginTeamTurn( UINT8 ubTeam )
 			continue;
 		}
 
-		if ( gTacticalStatus.uiFlags & TURNBASED )
+
+		BeginLoggingForBleedMeToos( TRUE );
+
+		// decay team's public opplist
+		DecayPublicOpplist( ubTeam );
+
+		FOR_EACH_IN_TEAM(i, ubTeam)
 		{
-			BeginLoggingForBleedMeToos( TRUE );
-
-			// decay team's public opplist
-			DecayPublicOpplist( ubTeam );
-
-			FOR_EACH_IN_TEAM(i, ubTeam)
-			{
-				SOLDIERTYPE& s = *i;
-				if (s.bLife <= 0) continue;
-				// decay personal opplist, and refresh APs and BPs
-				EVENT_BeginMercTurn(s);
-			}
-
-			if (gTacticalStatus.bBoxingState == LOST_ROUND || gTacticalStatus.bBoxingState == WON_ROUND || gTacticalStatus.bBoxingState == DISQUALIFIED )
-			{
-				// we have no business being in here any more!
-				return;
-			}
-
-			BeginLoggingForBleedMeToos( FALSE );
-
+			SOLDIERTYPE& s = *i;
+			if (s.bLife <= 0) continue;
+			// decay personal opplist, and refresh APs and BPs
+			EVENT_BeginMercTurn(s);
 		}
+
+		if (gTacticalStatus.bBoxingState == LOST_ROUND || gTacticalStatus.bBoxingState == WON_ROUND || gTacticalStatus.bBoxingState == DISQUALIFIED )
+		{
+			// we have no business being in here any more!
+			return;
+		}
+
+		BeginLoggingForBleedMeToos( FALSE );
+
+
 
 		if (ubTeam == OUR_TEAM )
 		{
@@ -900,7 +898,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	UINT8 ubMinPtsNeeded;
 	INT8  bDir;
 
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT && !(gubSightFlags & SIGHT_INTERRUPT))
+	if ((gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT))
 	{
 		return( FALSE );
 	}
@@ -1511,7 +1509,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 	UINT8 ubSlot, ubSmallestSlot;
 	BOOLEAN fIntOccurs;
 
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		ubIntCnt = 0;
 

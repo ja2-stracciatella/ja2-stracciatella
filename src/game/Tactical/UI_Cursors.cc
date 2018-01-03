@@ -182,7 +182,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 
 	bool enough_points       = true;
 	bool max_point_limit_hit = false;
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		gsCurrentActionPoints         = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
 		gfUIDisplayActionPoints       = TRUE;
@@ -383,7 +383,7 @@ static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo co
 		}
 	}
 
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		DetermineCursorBodyLocation(GetSelectedMan(), show_APs, fRecalc);
 
@@ -580,7 +580,7 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 
 		// Calculate action points
 		bool enough_points = true;
-		if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+		if (gTacticalStatus.uiFlags & INCOMBAT)
 		{
 			gsCurrentActionPoints         = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
 			gfUIDisplayActionPoints       = TRUE;
@@ -659,23 +659,21 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 
 		// Calculate action points
 		bool enough_points = true;
-		if (gTacticalStatus.uiFlags & TURNBASED)
+
+		gsCurrentActionPoints         = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
+		gfUIDisplayActionPoints       = TRUE;
+		gfUIDisplayActionPointsCenter = TRUE;
+
+		// If we don't have any points and we are at the first refine, do nothing but warn!
+		if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
 		{
-			gsCurrentActionPoints         = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
-			gfUIDisplayActionPoints       = TRUE;
-			gfUIDisplayActionPointsCenter = TRUE;
-
-			// If we don't have any points and we are at the first refine, do nothing but warn!
-			if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
-			{
-				gfUIDisplayActionPointsInvalid = TRUE;
-				if (s->bShownAimTime == REFINE_PUNCH_1) return ACTION_PUNCH_RED;
-			}
-
-			INT8  const future_aim = REFINE_PUNCH_2;
-			INT16 const ap_costs   = CalcTotalAPsToAttack(s, map_pos, TRUE, future_aim / 2);
-			if (!EnoughPoints(s, ap_costs, 0, FALSE)) enough_points = false;
+			gfUIDisplayActionPointsInvalid = TRUE;
+			if (s->bShownAimTime == REFINE_PUNCH_1) return ACTION_PUNCH_RED;
 		}
+
+		INT8  const future_aim = REFINE_PUNCH_2;
+		INT16 const ap_costs   = CalcTotalAPsToAttack(s, map_pos, TRUE, future_aim / 2);
+		if (!EnoughPoints(s, ap_costs, 0, FALSE)) enough_points = false;
 
 		if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
 			COUNTERDONE(NONGUNTARGETREFINE))
@@ -761,7 +759,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 	}
 
 	// Add APs
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		gsCurrentActionPoints =
 			ubItemCursor == TRAJECTORYCURS ? CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2) :
@@ -873,7 +871,7 @@ static UICursorID HandleTinCanCursor(SOLDIERTYPE* const s, GridNo const map_pos,
 
 static UICursorID HandleRemoteCursor(SOLDIERTYPE* const s, BOOLEAN const activated, MouseMoveState const uiCursorFlags)
 {
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		gsCurrentActionPoints         = GetAPsToUseRemote(s);
 		gfUIDisplayActionPoints       = TRUE;
@@ -894,7 +892,7 @@ static UICursorID HandleBombCursor(SOLDIERTYPE* const s, GridNo const map_pos, B
 {
 	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_BOMB);
 
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		gsCurrentActionPoints         = GetTotalAPsToDropBomb(s, map_pos);
 		gfUIDisplayActionPoints       = TRUE;
@@ -916,7 +914,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 
 	// OK, if we are i realtime.. goto directly to shoot
-	if (((gTacticalStatus.uiFlags & TURNBASED) && !(gTacticalStatus.uiFlags & INCOMBAT)) &&
+	if (!(gTacticalStatus.uiFlags & INCOMBAT) &&
 		ubItemCursor != TOSSCURS && ubItemCursor != TRAJECTORYCURS)
 	{
 		// GOTO DIRECTLY TO USING ITEM

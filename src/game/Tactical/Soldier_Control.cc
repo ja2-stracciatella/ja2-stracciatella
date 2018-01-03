@@ -2149,7 +2149,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	}
 
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 		SLOGD(DEBUG_TAG_SOLDIER, "Starting attack, attack count now %d",
@@ -2877,7 +2877,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	}
 
 	// IAN ADDED THIS SAT JUNE 14th : HAVE TO SHOW VICTIM!
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT &&
+	if ((gTacticalStatus.uiFlags & INCOMBAT) &&
 		pSoldier->bVisible != -1 && pSoldier->bTeam == OUR_TEAM)
 	{
 		LocateSoldier(pSoldier, DONTSETLOCATOR);
@@ -4927,7 +4927,7 @@ static void CalculateSoldierAniSpeed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pStatsS
 
 	// MODIFTY NOW BASED ON REAL-TIME, ETC
 	// Adjust speed, make twice as fast if in turn-based!
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		pSoldier->sAniDelay = pSoldier->sAniDelay / 2;
 	}
@@ -4953,7 +4953,7 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 
 	// ATE: If we are an enemy and are not visible......
 	// Set speed to 0
-	if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT || gTacticalStatus.fAutoBandageMode)
+	if ((gTacticalStatus.uiFlags & INCOMBAT) || gTacticalStatus.fAutoBandageMode)
 	{
 		if ( ( ( pSoldier->bVisible == -1 && pSoldier->bVisible == pSoldier->bLastRenderVisibleValue ) ||
 			gTacticalStatus.fAutoBandageMode ) && pSoldier->usAnimState != MONSTER_UP )
@@ -6532,7 +6532,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 	INT32 cnt;
 	UINT8 ubNumToFree;
 
-	//if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		// ATE: Removed...
 		//if (pSoldier->attacker != NULL)
@@ -6678,7 +6678,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	UINT8 ubTDirection;
 
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 		SLOGD(DEBUG_TAG_SOLDIER, "Begin blade attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
@@ -6830,7 +6830,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 
 
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 		SLOGD(DEBUG_TAG_SOLDIER, "Begin HTH attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
@@ -6940,7 +6940,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
 	// Increment the number of people busy doing stuff because of an attack
-	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
+	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
 	//}
@@ -7123,7 +7123,7 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 	uiAvailAPs = pSoldier->bActionPoints;
 
 	// OK, If we are in real-time, use another value...
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		// Set to a value which looks good based on our tactical turns duration
 		uiAvailAPs = RT_FIRST_AID_GAIN_MODIFIER;
@@ -7914,7 +7914,7 @@ static INT32 CheckBleeding(SOLDIERTYPE* pSoldier)
 				}
 
 				// Are we in a different mode?
-				if ( !(gTacticalStatus.uiFlags & TURNBASED ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+				if (!(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					pSoldier->dNextBleed -= (FLOAT)RT_NEXT_BLEED_MODIFIER;
 				}
@@ -8112,7 +8112,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 			MakeClosestEnemyChosenOne();
 		}
 
-		if ((gTacticalStatus.uiFlags & IN_TB_COMBAT) == IN_TB_COMBAT && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
+		if ((gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
 		{
 			SLOGD(DEBUG_TAG_AI, "Ending turn for %d because of error from HandleItem", pSoldier->ubID);
 			EndAIGuysTurn(*pSoldier);

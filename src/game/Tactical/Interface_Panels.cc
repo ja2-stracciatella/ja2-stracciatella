@@ -1084,8 +1084,6 @@ void ShutdownSMPanel(void)
 
 static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 {
-	if (!(gTacticalStatus.uiFlags & TURNBASED))
-		return;
 	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 		return;
 	if (s->bLife < OKLIFE)
