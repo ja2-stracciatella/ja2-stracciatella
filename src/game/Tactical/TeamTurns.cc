@@ -424,7 +424,7 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 		return;
 	}
 
-	if (gTacticalStatus.uiFlags & REALTIME || gTacticalStatus.uiFlags & INCOMBAT)
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		// pointless call here; do nothing
 		return;

@@ -707,7 +707,6 @@ static void SetFaceShade(FACETYPE const& f, BOOLEAN const fExternBlit)
 	else if (!fExternBlit &&
 		!f.video_overlay &&
 		s->bActionPoints == 0 &&
-		!(gTacticalStatus.uiFlags & REALTIME) &&
 		gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		shade = FLASH_PORTRAIT_LITESHADE;

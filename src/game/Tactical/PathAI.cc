@@ -2362,7 +2362,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 					usTileIndex = GetTileIndexFromTypeSubIndex(FOOTPRINTS, usTileNum);
 
 					// Adjust based on what mode we are in...
-					if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+					if (!(gTacticalStatus.uiFlags & INCOMBAT))
 					{
 						// find out which color we're using
 						usTileIndex += sFootOrder[ 4 ];
@@ -2417,8 +2417,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 					usTileIndex = GetTileIndexFromTypeSubIndex(FOOTPRINTS, usTileNum);
 
 					// Adjust based on what mode we are in...
-					if ((gTacticalStatus.uiFlags & REALTIME) ||
-						!(gTacticalStatus.uiFlags & INCOMBAT))
+					if (!(gTacticalStatus.uiFlags & INCOMBAT))
 					{
 						// find out which color we're using
 						usTileIndex += sFootOrder[ 4 ];

@@ -443,7 +443,7 @@ ScreenID HandleTacticalUI(void)
 
 		// SWITCH ON INPUT GATHERING, DEPENDING ON MODE
 		// IF WE ARE NOT IN COMBAT OR IN REALTIME COMBAT
-		if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
+		if (!(gTacticalStatus.uiFlags & INCOMBAT))
 		{
 			// FROM MOUSE POSITION
 			GetRTMousePositionInput( &uiNewEvent );
@@ -583,7 +583,7 @@ ScreenID HandleTacticalUI(void)
 	}
 
 	// Donot display APs if not in combat
-	if ( !(gTacticalStatus.uiFlags & INCOMBAT ) || (gTacticalStatus.uiFlags & REALTIME ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		gfUIDisplayActionPoints = FALSE;
 	}
@@ -1453,7 +1453,7 @@ static ScreenID UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 	UIHandleOnMerc( FALSE );
 
 	// If we are in realtime, and in a stationary animation, follow!
-	if (gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		if (gAnimControl[sel->usAnimState].uiFlags & ANIM_STATIONARY && !selSoldier->hasPendingAction())
 		{
@@ -1544,7 +1544,7 @@ static ScreenID UIHandleCWait(UI_EVENT*)
 	SetConfirmMovementModeCursor(sel, FALSE);
 
 	// If we are not in combat, draw path here!
-	if (gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		HandleUIMovementCursor(sel, cursor_state, map_pos, MOVEUI_TARGET_NONE);
 	}
@@ -1651,7 +1651,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 		else
 		{
 			// FOR REALTIME - DO MOVEMENT BASED ON STANCE!
-			if (gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
+			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
 				sel->usUIMovementMode = GetMoveStateBasedOnStance(sel, gAnimControl[sel->usAnimState].ubEndHeight);
 			}
@@ -1689,7 +1689,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 
 			SetUIBusy(sel);
 
-			if (gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
+			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
 				// RESET MOVE FAST FLAG
 				SetConfirmMovementModeCursor(sel, TRUE);
@@ -2250,7 +2250,7 @@ static ScreenID UIHandleAEndAction(UI_EVENT* pUIEvent)
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel != NULL)
 	{
-		if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
+		if (!(gTacticalStatus.uiFlags & INCOMBAT))
 		{
 			if ( gUITargetReady )
 			{
@@ -2780,7 +2780,7 @@ void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance)
 	}
 
 	// If realtime- change walking animation!
-	if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 
 		// If we are stationary, do something else!
@@ -2882,8 +2882,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveState const
 	}
 
 	// Check if we're stationary
-	if ((gTacticalStatus.uiFlags & REALTIME) ||
-		!(gTacticalStatus.uiFlags & INCOMBAT) ||
+	if (!(gTacticalStatus.uiFlags & INCOMBAT) ||
 		(gAnimControl[pSoldier->usAnimState].uiFlags & ANIM_STATIONARY) ||
 		pSoldier->fNoAPToFinishMove)
 	{
@@ -2979,8 +2978,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveState const
 			// ONLY IF GFPLOT NEW MOVEMENT IS FALSE!
 			if ( !gfPlotNewMovement )
 			{
-				if ( gsCurrentActionPoints < 0 || ( (gTacticalStatus.uiFlags & REALTIME) ||
-					!(gTacticalStatus.uiFlags & INCOMBAT ) ) )
+				if (gsCurrentActionPoints < 0 || !(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					gfUIDisplayActionPoints = FALSE;
 				}
@@ -3595,7 +3593,7 @@ static void SetMovementModeCursor(const SOLDIERTYPE* pSoldier)
 		}
 	}
 
-	if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		if ( gfUIAllMoveOn )
 		{
@@ -3680,7 +3678,7 @@ static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMov
 		}
 	}
 
-	if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		if ( gfUIAllMoveOn )
 		{
