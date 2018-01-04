@@ -156,7 +156,7 @@ void HandleAutoBandagePending( )
 		// Do any guys have pending actions...?
 		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
-			boost::shared_ptr<const Soldier> soldier = GetSoldier(s);
+			std::shared_ptr<const Soldier> soldier = GetSoldier(s);
 			if (s->sSectorX == gWorldSectorX &&
 				s->sSectorY == gWorldSectorY &&
 				s->bSectorZ == gbWorldSectorZ &&

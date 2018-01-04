@@ -1,5 +1,6 @@
 #include "DefaultContentManager.h"
 
+#include <memory>
 #include <stdexcept>
 
 #include "game/Directories.h"
@@ -871,7 +872,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const UT
 	}
 
 	fullName += ".json";
-	boost::shared_ptr<rapidjson::Document> json(readJsonDataFile(fullName.c_str()));
+	std::shared_ptr<rapidjson::Document> json(readJsonDataFile(fullName.c_str()));
 	std::vector<std::string> utf8_encoded;
 	JsonUtility::parseListStrings(*json, utf8_encoded);
 	for (const std::string &str : utf8_encoded)
@@ -899,10 +900,10 @@ bool DefaultContentManager::loadGameData()
 
 	loadAllDealersInventory();
 
-	boost::shared_ptr<rapidjson::Document> game_json(readJsonDataFile("game.json"));
+	std::shared_ptr<rapidjson::Document> game_json(readJsonDataFile("game.json"));
 	m_gamePolicy = new DefaultGamePolicy(game_json.get());
 
-	boost::shared_ptr<rapidjson::Document> imp_json(readJsonDataFile("imp.json"));
+	std::shared_ptr<rapidjson::Document> imp_json(readJsonDataFile("imp.json"));
 	m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
 
 	loadStringRes("strings/ammo-calibre", m_calibreNames);
@@ -931,7 +932,7 @@ rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileNam
 
 const DealerInventory * DefaultContentManager::loadDealerInventory(const char *fileName)
 {
-	boost::shared_ptr<rapidjson::Document> json(readJsonDataFile(fileName));
+	std::shared_ptr<rapidjson::Document> json(readJsonDataFile(fileName));
 	return new DealerInventory(json.get(), this);
 }
 
