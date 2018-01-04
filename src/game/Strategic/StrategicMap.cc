@@ -2156,7 +2156,7 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 
 
 			// FOR REALTIME - DO MOVEMENT BASED ON STANCE!
-			if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
+			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
 				pSoldier->usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 			}

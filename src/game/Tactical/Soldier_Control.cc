@@ -981,8 +981,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 				else if (gAnimControl[usNewState].ubEndHeight == ANIM_CROUCH &&
 					gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_STAND &&
 					(gAnimControl[pSoldier->usAnimState].uiFlags & ANIM_MOVING) &&
-					((gTacticalStatus.uiFlags & REALTIME) ||
-					!(gTacticalStatus.uiFlags & INCOMBAT)))
+					!(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					pSoldier->ubDesiredHeight = gAnimControl[ usNewState ].ubEndHeight;
 					// Continue with this course of action IE: Do animation
@@ -992,8 +991,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 				else if (gAnimControl[usNewState].ubEndHeight == ANIM_STAND &&
 					gAnimControl[pSoldier->usAnimState].ubEndHeight == ANIM_CROUCH &&
 					(gAnimControl[pSoldier->usAnimState].uiFlags & ANIM_MOVING) &&
-					((gTacticalStatus.uiFlags & REALTIME) ||
-					!(gTacticalStatus.uiFlags & INCOMBAT)) &&
+					!(gTacticalStatus.uiFlags & INCOMBAT) &&
 					pSoldier->usAnimState != HELIDROP)
 				{
 					pSoldier->ubDesiredHeight = gAnimControl[ usNewState ].ubEndHeight;
@@ -2210,8 +2208,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 			else
 			{
 				// IF WE ARE IN REAl-TIME, FIRE IMMEDIATELY!
-				if (((gTacticalStatus.uiFlags & REALTIME) ||
-					!(gTacticalStatus.uiFlags & INCOMBAT)))
+				if (!(gTacticalStatus.uiFlags & INCOMBAT))
 				{
 					//fDoFireRightAway = TRUE;
 				}

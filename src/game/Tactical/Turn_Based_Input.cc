@@ -1133,7 +1133,7 @@ void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 	}
 
 	// Check realtime input!
-	if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		//if (_KeyDown(SDLK_CAPSLOCK)) //&& !fShifted)
 		//{

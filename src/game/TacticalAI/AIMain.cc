@@ -2015,7 +2015,7 @@ void SetNewSituation( SOLDIERTYPE * pSoldier )
 				SLOGD(DEBUG_TAG_AI, "bNewSituation is set for %d when ABC !=0.", pSoldier->ubID);
 			}
 
-			if ( !(gTacticalStatus.uiFlags & INCOMBAT) || (gTacticalStatus.uiFlags & REALTIME) )
+			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
 				// reset delay if necessary!
 				RESETTIMECOUNTER( pSoldier->AICounter, Random( 1000 ) );

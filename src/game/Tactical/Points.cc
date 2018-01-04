@@ -461,7 +461,7 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 	}
 
 	// IN realtime.. only care about BPs
-	if ( ( gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		sAPCost = 0;
 	}
