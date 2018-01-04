@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Types.h"
-
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 struct SOLDIERTYPE;
 
@@ -49,10 +48,10 @@ private:
 	SOLDIERTYPE* mSoldier;
 };
 
-typedef boost::shared_ptr<Soldier> SoldierSP;
+typedef std::shared_ptr<Soldier> SoldierSP;
 
 /** Get soldier object from the structure. */
-boost::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s);
+std::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s);
 
 /** Get soldier object from the structure. */
-boost::shared_ptr<const Soldier> GetSoldier(const struct SOLDIERTYPE* s);
+std::shared_ptr<const Soldier> GetSoldier(const struct SOLDIERTYPE* s);
