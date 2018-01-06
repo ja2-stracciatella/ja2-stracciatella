@@ -75,7 +75,7 @@ void HandleMilitiaPromotions()
 		UINT8 const promotions   = CheckOneMilitiaForPromotion(gWorldSectorX, gWorldSectorY, militia_rank, s.ubMilitiaKills);
 		if (promotions != 0)
 		{
-			if (s.ubSoldierClass == SOLDIER_CLASS_ELITE_MILITIA) {
+			if (militia_rank == ELITE_MILITIA) {
 				// MOD: too good already, increase xp level or other stats?
 				continue;
 			}
@@ -84,11 +84,11 @@ void HandleMilitiaPromotions()
 			{
 				++gbGreenToElitePromotions;
 			}
-			else if (s.ubSoldierClass == SOLDIER_CLASS_GREEN_MILITIA)
+			else if (militia_rank == GREEN_MILITIA)
 			{
 				++gbGreenToRegPromotions;
 			}
-			else if (s.ubSoldierClass == SOLDIER_CLASS_REG_MILITIA)
+			else if (militia_rank == REGULAR_MILITIA)
 			{
 				++gbRegToElitePromotions;
 			}
