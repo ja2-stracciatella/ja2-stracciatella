@@ -362,12 +362,7 @@ int main(int argc, char* argv[])
 	free_rust_string(rustConfigFolderPath);
 	free_rust_string(rustResRootPath);
 
-	std::string extraDataDir = EXTRA_DATA_DIR;
-	if(extraDataDir.empty())
-	{
-		// use location of the exe file
-		extraDataDir = exeFolder;
-	}
+	std::string extraDataDir = PathTools::getExtraDataDir(exeFolder);
 
 	std::string externalizedDataPath = PathTools::joinPaths(extraDataDir, "externalized");
 

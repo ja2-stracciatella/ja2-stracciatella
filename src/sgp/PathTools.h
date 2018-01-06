@@ -23,9 +23,12 @@ public:
 	static bool findObjectCaseInsensitiveFullPath(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundNameFullPath);
 #endif
 
-
 	/** Get parent path (e.g. directory path from the full path). */
 	static std::string getParentPath(const std::string &path, bool absolute);
+
+	/** Get the path of the extra data directory.
+	* @return the path */
+	static std::string getExtraDataDir(const std::string &exeFolder);
 
 private:
 

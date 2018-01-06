@@ -120,4 +120,13 @@ std::string PathTools::getParentPath(const std::string &_path, bool absolute)
 }
 
 
-
+std::string PathTools::getExtraDataDir(const std::string &exeFolder)
+{
+	std::string extraDataDir = EXTRA_DATA_DIR;
+	if(extraDataDir.empty())
+	{
+		// use location of the exe file
+		extraDataDir = exeFolder;
+	}
+	return extraDataDir;
+}
