@@ -665,18 +665,6 @@ std::string FileMan::replaceExtension(const std::string &_path, const char *newE
 	return path.replace_extension(newExtensionWithDot).string();
 }
 
-/** Get parent path (e.g. directory path from the full path). */
-std::string FileMan::getParentPath(const std::string &_path, bool absolute)
-{
-	boost::filesystem::path path(_path);
-	boost::filesystem::path parent = path.parent_path();
-	if(absolute)
-	{
-		parent = boost::filesystem::absolute(parent);
-	}
-	return parent.string();
-}
-
 /** Get filename from the path. */
 std::string FileMan::getFileName(const std::string &_path)
 {

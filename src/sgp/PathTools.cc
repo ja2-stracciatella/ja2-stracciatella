@@ -2,6 +2,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdint.h> // for uint8_t instead of "sgp/Types.h"
+#include <boost/filesystem.hpp>
 
 /** Join two path components. */
 std::string PathTools::joinPaths(const std::string &first, const char *second)
@@ -104,3 +105,19 @@ bool PathTools::findObjectCaseInsensitive(const char *directory, const char *nam
 	return result;
 }
 #endif
+
+
+/** Get parent path (e.g. directory path from the full path). */
+std::string PathTools::getParentPath(const std::string &_path, bool absolute)
+{
+	boost::filesystem::path path(_path);
+	boost::filesystem::path parent = path.parent_path();
+	if(absolute)
+	{
+		parent = boost::filesystem::absolute(parent);
+	}
+	return parent.string();
+}
+
+
+

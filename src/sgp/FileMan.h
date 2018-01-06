@@ -116,9 +116,6 @@ public:
 	/** Replace extension of a file. */
 	static std::string replaceExtension(const std::string &path, const char *newExtensionWithDot);
 
-	/** Get parent path (e.g. directory path from the full path). */
-	static std::string getParentPath(const std::string &path, bool absolute);
-
 	/** Get filename from the path. */
 	static std::string getFileName(const std::string &path);
 

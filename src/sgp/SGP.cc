@@ -265,7 +265,7 @@ ContentManager *GCM = NULL;
 
 int main(int argc, char* argv[])
 {
-	std::string exeFolder = FileMan::getParentPath(argv[0], true);
+	std::string exeFolder = PathTools::getParentPath(argv[0], true);
 
 #if defined BROKEN_SWPRINTF
 	if (setlocale(LC_CTYPE, "UTF-8") == NULL)
