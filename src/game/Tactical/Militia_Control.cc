@@ -71,7 +71,7 @@ void HandleMilitiaPromotions()
 		if (s.bLife <= 0)          continue;
 		if (s.ubMilitiaKills == 0) continue;
 
-		UINT8 const militia_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
+		UINT8 militia_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
 		UINT8 const promotions   = CheckOneMilitiaForPromotion(gWorldSectorX, gWorldSectorY, militia_rank, s.ubMilitiaKills);
 		if (promotions != 0)
 		{
