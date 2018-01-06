@@ -249,7 +249,8 @@ void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UI
 UINT8 CheckOneMilitiaForPromotion(INT16 const x, INT16 const y, UINT8 &current_rank, UINT8 kill_points)
 {
 	// since the awarding is potentially significantly delayed, make sure they
-	// weren't all promoted already by regular training or killed
+	// weren't all promoted already by regular training or killed;
+	// if we can't find them, we try higher ranks and make sure the caller follows up
 	SECTORINFO& si = SectorInfo[SECTOR(x, y)];
 	while (si.ubNumberOfCivsAtLevel[current_rank] == 0) {
 		if (current_rank == ELITE_MILITIA) return 0;
