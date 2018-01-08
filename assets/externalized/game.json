@@ -100,6 +100,9 @@
     "tactical_legs_damage_multiplier": 0.5,
 
     //  IMP attribute point defaults:
+    //  Warning: Setting min attribute points to a value less than 15 allows
+    //           the creation of a character with less than 15 health. This
+    //           is a dying character!
     //  Zero attribute point bonus is what you receive for setting a skill to 0.
     //  Bonus attribute points is your initial pool of points to distribute.
     //  vanilla_setting: 85, 35, 15, 40
