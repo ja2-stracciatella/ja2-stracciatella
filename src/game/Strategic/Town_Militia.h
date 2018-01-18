@@ -30,7 +30,7 @@ INT8 SoldierClassToMilitiaRank(UINT8 soldier_class);
 void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
 
 // Check for promotions and handle them
-UINT8 CheckOneMilitiaForPromotion(INT16 x, INT16 y, UINT8 current_rank, UINT8 kill_points);
+UINT8 CheckOneMilitiaForPromotion(INT16 x, INT16 y, UINT8 &current_rank, UINT8 kill_points);
 
 void BuildMilitiaPromotionsString( wchar_t *str, size_t Length);
 
