@@ -3,58 +3,58 @@
 #include "StracciatellaLauncher.h"
 
 StracciatellaLauncher::StracciatellaLauncher() {
-  { stracciatellaLauncher = new Fl_Double_Window(455, 290, "JA2 Stracciatella Launcher");
+  { stracciatellaLauncher = new Fl_Double_Window(465, 290, "JA2 Stracciatella Launcher");
     stracciatellaLauncher->user_data((void*)(this));
-    { Fl_Group* o = new Fl_Group(-1, 0, 456, 290);
-      { Fl_Group* o = new Fl_Group(5, 10, 440, 65);
+    { Fl_Group* o = new Fl_Group(0, 0, 465, 290);
+      { Fl_Group* o = new Fl_Group(5, 10, 451, 65);
         o->align(Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE));
-        { dataDirectoryInput = new Fl_Input(145, 10, 270, 25, "JA2 Data Directory:");
+        { dataDirectoryInput = new Fl_Input(156, 10, 270, 25, "JA2 Game Directory:");
           dataDirectoryInput->align(Fl_Align(132));
         } // Fl_Input* dataDirectoryInput
-        { gameVersionInput = new Fl_Input_Choice(145, 47, 300, 25, "Game Version:");
+        { gameVersionInput = new Fl_Input_Choice(156, 40, 300, 25, "Game Version:");
         } // Fl_Input_Choice* gameVersionInput
-        { browseJa2DirectoryButton = new Fl_Button(420, 10, 25, 25, "...");
+        { browseJa2DirectoryButton = new Fl_Button(431, 10, 25, 25, "...");
         } // Fl_Button* browseJa2DirectoryButton
         o->end();
       } // Fl_Group* o
-      { Fl_Group* o = new Fl_Group(0, 105, 250, 175);
-        { fullscreenCheckbox = new Fl_Check_Button(20, 241, 100, 20, "Fullscreen");
+      { Fl_Group* o = new Fl_Group(6, 105, 250, 175);
+        { fullscreenCheckbox = new Fl_Check_Button(26, 241, 100, 20, "Fullscreen");
           fullscreenCheckbox->down_box(FL_DOWN_BOX);
         } // Fl_Check_Button* fullscreenCheckbox
-        { Fl_Group* o = new Fl_Group(10, 114, 240, 120, "Resolution");
+        { Fl_Group* o = new Fl_Group(16, 114, 240, 120, "Resolution");
           o->box(FL_THIN_DOWN_FRAME);
-          { predefinedResolutionButton = new Fl_Round_Button(20, 124, 100, 20, "Predefined:");
+          { predefinedResolutionButton = new Fl_Round_Button(26, 124, 100, 20, "Predefined:");
             predefinedResolutionButton->down_box(FL_ROUND_DOWN_BOX);
           } // Fl_Round_Button* predefinedResolutionButton
-          { customResolutionButton = new Fl_Round_Button(20, 174, 80, 20, "Custom:");
+          { customResolutionButton = new Fl_Round_Button(26, 174, 80, 20, "Custom:");
             customResolutionButton->down_box(FL_ROUND_DOWN_BOX);
           } // Fl_Round_Button* customResolutionButton
-          { predefinedResolutionInput = new Fl_Input_Choice(40, 144, 180, 25);
+          { predefinedResolutionInput = new Fl_Input_Choice(46, 144, 180, 25);
           } // Fl_Input_Choice* predefinedResolutionInput
-          { customResolutionXInput = new Fl_Value_Input(40, 194, 80, 25);
+          { customResolutionXInput = new Fl_Value_Input(46, 194, 80, 25);
             customResolutionXInput->minimum(640);
             customResolutionXInput->maximum(0);
             customResolutionXInput->value(640);
           } // Fl_Value_Input* customResolutionXInput
-          { customResolutionYInput = new Fl_Value_Input(140, 194, 80, 25);
+          { customResolutionYInput = new Fl_Value_Input(146, 194, 80, 25);
             customResolutionYInput->minimum(480);
             customResolutionYInput->maximum(0);
             customResolutionYInput->value(480);
           } // Fl_Value_Input* customResolutionYInput
-          { new Fl_Box(120, 194, 20, 25, "x");
+          { new Fl_Box(126, 194, 20, 25, "x");
           } // Fl_Box* o
           o->end();
         } // Fl_Group* o
-        { playSoundsCheckbox = new Fl_Check_Button(20, 261, 130, 19, "Play Sounds");
+        { playSoundsCheckbox = new Fl_Check_Button(26, 261, 130, 19, "Play Sounds");
           playSoundsCheckbox->down_box(FL_DOWN_BOX);
           playSoundsCheckbox->value(1);
         } // Fl_Check_Button* playSoundsCheckbox
         o->end();
       } // Fl_Group* o
-      { Fl_Group* o = new Fl_Group(260, 105, 185, 175);
-        { playButton = new Fl_Button(260, 225, 185, 55, "Play Ja2 Stracciatella");
+      { Fl_Group* o = new Fl_Group(270, 105, 186, 175);
+        { playButton = new Fl_Button(270, 225, 185, 55, "Play Ja2 Stracciatella");
         } // Fl_Button* playButton
-        { editorButton = new Fl_Button(260, 190, 185, 25, "Start Map Editor");
+        { editorButton = new Fl_Button(270, 190, 185, 25, "Start Map Editor");
         } // Fl_Button* editorButton
         o->end();
       } // Fl_Group* o
