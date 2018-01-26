@@ -23,7 +23,7 @@ set(CMAKE_CXX_STANDARD 98)
 
 set(ja2-stracciatella_VERSION_MAJOR "0")
 set(ja2-stracciatella_VERSION_MINOR "16")
-set(ja2-stracciatella_VERSION_PATCH "0")
+set(ja2-stracciatella_VERSION_PATCH "1")
 set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
 
 ## Meta Information
