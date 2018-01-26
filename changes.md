@@ -1,5 +1,10 @@
 # History of changes
 
+## 0.16.1
+- Bugfix: Fix crash during load screen with RUSSIAN data files (#695)
+- Launcher: Change label "JA2 Data Directory" to "JA2 Game Directory" (#693)
+
+
 ## 0.16.0
 
 - Bugfix (vanilla): Do not increase shots fired statistic without a live target (#622)
