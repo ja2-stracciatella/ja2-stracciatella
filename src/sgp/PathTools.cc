@@ -1,6 +1,8 @@
 #include "PathTools.h"
 #include <string.h>
+#if CASE_SENSITIVE_FS
 #include <dirent.h>
+#endif
 #include <stdint.h> // for uint8_t instead of "sgp/Types.h"
 #include <boost/filesystem.hpp>
 
