@@ -177,6 +177,15 @@ static void ProcessAttributes(void);
 static void StatAtZeroBoxCallBack(MessageBoxReturnValue);
 
 
+// Calculate skill value from mouse position inside skill slide bar.
+INT32 MouseXPosToSkillValue(INT32 mouseXPos) {
+	return ((mouseXPos - SKILL_SLIDE_START_X - LAPTOP_SCREEN_UL_X)
+				* (MAX_ATTRIBUTE_POINTS - MIN_ATTRIBUTE_POINTS))
+				/ BASE_SKILL_PIXEL_UNIT_SIZE + MIN_ATTRIBUTE_POINTS;
+}
+
+
+
 void HandleIMPAttributeSelection(void)
 {
 	// review mode, do not allow changes
@@ -185,7 +194,7 @@ void HandleIMPAttributeSelection(void)
 	// set the currently selectd slider bar
 	if (gfLeftButtonState && gpCurrentScrollBox != NULL)
 	{
-		//if theuser is holding down the mouse cursor to left of the start of the slider bars
+		//if the user is holding down the mouse cursor to left of the start of the slider bars
 		if (gusMouseXPos < SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X)
 		{
 			DecrementStat(giCurrentlySelectedStat);
@@ -199,8 +208,7 @@ void HandleIMPAttributeSelection(void)
 		{
 			// get old stat value
 			INT32 iCurrentAttributeValue = GetCurrentAttributeValue(giCurrentlySelectedStat);
-			INT32 sNewX = gusMouseXPos - (SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X);
-			INT32 iNewValue = sNewX * (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS) / BASE_SKILL_PIXEL_UNIT_SIZE + MIN_ATTRIBUTE_POINTS;
+			INT32 iNewValue = MouseXPosToSkillValue(gusMouseXPos);
 
 			// chenged, move mouse region if change large enough
 			if (iCurrentAttributeValue != iNewValue)
@@ -541,7 +549,7 @@ static void DestroySlideRegionMouseRegions()
 
 static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	static INT16 sOldX      = -1;
+	static INT16 sOldX      = -1; // Changed from relative (to skill bar) to absolute position.
 	static INT32 iAttribute = -1;
 
 	//if we already have an anchored slider bar
@@ -580,10 +588,9 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			// get old stat value
 			const INT32 iCurrentAttributeValue = GetCurrentAttributeValue(iAttribute);
-			sNewX -= SKILL_SLIDE_START_X + LAPTOP_SCREEN_UL_X;
-			INT32 iNewValue = (sNewX * (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS)) / BASE_SKILL_PIXEL_UNIT_SIZE + MIN_ATTRIBUTE_POINTS;
+			INT32 iNewValue = MouseXPosToSkillValue(sNewX);
 
-			// chenged, move mouse region if change large enough
+			// changed, move mouse region if change large enough
 			if (iCurrentAttributeValue != iNewValue)
 			{
 				// update screen
@@ -632,7 +639,7 @@ static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// get value of attribute
 		const INT32 iCurrentAttributeValue = GetCurrentAttributeValue(iAttribute);
 		// set the new attribute value based on position of mouse click, include screen resolution
-		INT32 iNewAttributeValue = (sX - (SKILL_SLIDE_START_X + STD_SCREEN_X)) * (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS) / BASE_SKILL_PIXEL_UNIT_SIZE;
+		INT32 iNewAttributeValue = MouseXPosToSkillValue(sX);
 
 		// too high, reset to MAX_ATTRIBUTE_POINTS
 		if (iNewAttributeValue > MAX_ATTRIBUTE_POINTS) iNewAttributeValue = MAX_ATTRIBUTE_POINTS;
