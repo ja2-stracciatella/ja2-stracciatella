@@ -31,6 +31,7 @@ Poncho
 Rebekka Bais (Logo Design)
 RinneT <thomas.rinsch@arcor.de>
 rk <rk@razlaw.name>
+RoddyAtHat
 sam <bg9zzxik@gmail.com>
 Stefan Lau <github@stefanlau.com>
 Stephan Bauroth <der_steffi@gmx.de>
