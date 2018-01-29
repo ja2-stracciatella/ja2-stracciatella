@@ -3013,9 +3013,19 @@ void DrawItemTileCursor( )
 		// OK, if different than default, change....
 		if ( gfItemPointerDifferentThanDefault )
 		{
-			fGiveItem = !fGiveItem;
+			if (fGiveItem)
+			{
+				// We are targeting a talkable NPC and are using the alternative cursor to
+				// throw instead.
+				fGiveItem = FALSE;
+			}
+			else
+			{
+				// We are using the alternative cursor and the target is not a talkable NPC
+				// Only use the give item cursor if the target is a merc.
+				fGiveItem = GetValidTalkableNPCFromMouse(TRUE, TRUE, FALSE) != NULL;
+			}
 		}
-
 
 		// Get recalc and cursor flags
 		MouseMoveState uiCursorFlags;
@@ -3331,7 +3341,18 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	// OK, if different than default, change....
 	if ( gfItemPointerDifferentThanDefault )
 	{
-		fGiveItem = !fGiveItem;
+		if (fGiveItem)
+		{
+			// We are targeting a talkable NPC and are using the alternative cursor to
+			// throw instead.
+			fGiveItem = FALSE;
+		}
+		else
+		{
+			// We are using the alternative cursor and the target is not a talkable NPC
+			// Only give an item if the target is a merc.
+			fGiveItem = tgt != NULL && IsValidTalkableNPC(tgt, TRUE, TRUE, TRUE);
+		}
 	}
 
 
