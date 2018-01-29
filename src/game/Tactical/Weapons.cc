@@ -2163,7 +2163,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		}
 	}
 
-	if ( !(GCM->getItem(usInHand)->isTwoHanded()) )
+	if (GCM->getItem(usInHand)->isWeapon() && !(GCM->getItem(usInHand)->isTwoHanded()))
 	{
 		// SMGs are treated as pistols for these purpose except there is a -5 penalty;
 		if (GCM->getWeapon(usInHand)->ubWeaponClass == SMGCLASS)
