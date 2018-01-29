@@ -6,7 +6,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/TacticalAI")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/TileEngine")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Utils")
 
-file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR} *.h)
+file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/AniViewScreen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Credits.cc

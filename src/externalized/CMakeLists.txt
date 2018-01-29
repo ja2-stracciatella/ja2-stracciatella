@@ -3,7 +3,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/internals")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/policy")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
-file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR} *.h)
+file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/AmmoTypeModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/CalibreModel.cc
