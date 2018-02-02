@@ -79,7 +79,7 @@ cmake. The supported options are:
 
 | Switch        | Description           | Default  |
 | ------------- |-------------| -----|
-| `EXTRA_DATA_DIR` | Directory to read externalized data from. Useful for creating installable packages that have a fixed data path. | `` |
+| `EXTRA_DATA_DIR` | Directory to read externalized data from. Useful for creating installable packages that have a fixed data path. | linux: `CMAKE_INSTALL_FULL_DATADIR/ja2`, other: `` |
 | `LOCAL_SDL_LIB` | Use SDL library from this directory. | `` |
 | `LOCAL_BOOST_LIB` | Build with local boost lib from `_build` directory. No global boost installation required. | `OFF` |
 | `WITH_UNITTESTS` | Build with unittests | `ON` |
