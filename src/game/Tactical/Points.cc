@@ -464,6 +464,8 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		sAPCost = 0;
+		if ( pSoldier->bCollapsed )
+		  return( FALSE );
 	}
 
 	// Get New points
