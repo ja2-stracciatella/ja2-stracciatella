@@ -2037,11 +2037,6 @@ try
 	FLOAT dMajorMapVersion;
 	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
 
-	if(isRussianVersion() && (dMajorMapVersion != 6.00))
-	{
-		throw std::runtime_error("Incompatible major map version");
-	}
-
 	UINT8 ubMinorMapVersion;
 	if (dMajorMapVersion >= 4.00)
 	{
@@ -2281,7 +2276,7 @@ try
 		}
 	}
 
-	if(isRussianVersion())
+	if (dMajorMapVersion == 6.00)
 	{
 		FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
 	}
