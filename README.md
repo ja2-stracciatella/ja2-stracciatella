@@ -9,6 +9,8 @@ The goal of the project was to make Jagged Alliance 2 available on a wide range 
 
 Official Homepage: http://ja2-stracciatella.github.io/
 
+To get in touch with the developers you can use the [#ja2-stracciatella IRC channel on freenode](http://webchat.freenode.net/?channels=ja2-stracciatella).
+
 ## How to start the game
 
 1. Install original Jagged Alliance 2 game on your computer.  Data files from the original game will be used by JA2-Stracciatella
