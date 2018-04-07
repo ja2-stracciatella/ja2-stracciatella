@@ -129,6 +129,11 @@ if (WITH_UNITTESTS)
     add_definitions("-DWITH_UNITTESTS")
 endif()
 
+set(ADDITIONAL_LIBS "")
+if (UNIX AND NOT MINGW)
+    set(ADDITIONAL_LIBS dl)
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY}
@@ -139,15 +144,12 @@ target_link_libraries(${JA2_BINARY}
     ${SMACKER_LIBRARIES}
     ${GTEST_LIBRARIES}
     ${STRACCIATELLA_LIBRARY}
+    ${ADDITIONAL_LIBS}
 )
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
 
-    set(ADDITIONAL_LIBS "")
-    if (UNIX AND NOT MINGW)
-        set(ADDITIONAL_LIBS dl)
-    endif()
     target_link_libraries(${LAUNCHER_BINARY}
         fltk
         fltk_images
