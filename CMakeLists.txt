@@ -73,6 +73,7 @@ set(STRACCIATELLA_CACHE_VARIABLES
 
 ## Build
 
+set(ALL_DEPENDS libstracciatella)
 set(DEPENDENCIES_INSTALL_ROOT "${CMAKE_BINARY_DIR}/dependencies-root")
 add_subdirectory("dependencies")
 
@@ -97,7 +98,7 @@ externalproject_add(ja2
         -DDEPENDENCIES_INSTALL_ROOT=${DEPENDENCIES_INSTALL_ROOT}
         ${STRACCIATELLA_CACHE_VARIABLES}
     BUILD_ALWAYS ON
-    DEPENDS libstracciatella
+    DEPENDS ${ALL_DEPENDS}
 )
 
 
