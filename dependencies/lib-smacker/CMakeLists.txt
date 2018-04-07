@@ -9,3 +9,6 @@ set(source_files
 )
 
 add_library(smacker ${source_files})
+
+install(TARGETS smacker DESTINATION lib)
+install(DIRECTORY libsmacker/ DESTINATION include/libsmacker FILES_MATCHING PATTERN "*.h")
