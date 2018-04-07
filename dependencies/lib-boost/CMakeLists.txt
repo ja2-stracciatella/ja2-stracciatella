@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 project(boost)
 
 include_directories(
-    "${PROJECT_SOURCE_DIR}"
     "${PROJECT_SOURCE_DIR}/boost"
 )
 
@@ -20,3 +19,6 @@ set(source_files
 )
 
 add_library(boost ${source_files})
+
+install(TARGETS boost DESTINATION lib)
+install(DIRECTORY boost/ DESTINATION include/boost FILES_MATCHING PATTERN "*.hpp")

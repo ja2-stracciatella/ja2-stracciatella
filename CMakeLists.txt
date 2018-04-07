@@ -153,6 +153,8 @@ if(BUILD_LAUNCHER)
 endif()
 message(STATUS "Fltk Libraries: ${FLTK_LIBRARIES}")
 
+add_subdirectory("dependencies")
+
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
