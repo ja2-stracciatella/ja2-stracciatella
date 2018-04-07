@@ -37,7 +37,7 @@ if (LOCAL_SDL_LIB)
 	externalproject_add(sdl2-internal
 		URL "https://www.libsdl.org/release/SDL2-2.0.4.tar.gz"
 		CMAKE_ARGS ${DEPENDENCIES_CMAKE_FLAGS}
-			-DVIDEO_WAYLAND=OFF
+			-DVIDEO_WAYLAND=OFF -DSDL_SHARED=ON -DSDL_STATIC=OFF
 	)
 	set(EXTERNAL_DEPENDS ${EXTERNAL_DEPENDS} sdl2-internal)
 endif()
