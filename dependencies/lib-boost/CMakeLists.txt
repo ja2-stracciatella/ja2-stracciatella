@@ -22,4 +22,4 @@ set(source_files
 add_library(boost ${source_files})
 
 install(TARGETS boost DESTINATION lib)
-install(DIRECTORY boost/ DESTINATION include/boost FILES_MATCHING PATTERN "*.hpp")
+install(DIRECTORY boost/ DESTINATION include/boost)
