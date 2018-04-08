@@ -49,15 +49,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 
 ## Dependencies
 
-set(CMAKE_FIND_ROOT_PATH ${DEPENDENCIES_INSTALL_ROOT})
+list( APPEND CMAKE_FIND_ROOT_PATH "${DEPENDENCIES_INSTALL_ROOT}" )
 
 set(ADDITIONAL_LIBS "")
 if (UNIX AND NOT MINGW)
     set(ADDITIONAL_LIBS dl)
 endif()
-
-find_package(SDL2 REQUIRED)
-message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY} SDL2 Includes: ${SDL2_INCLUDE_DIR}")
 
 if (LOCAL_BOOST_LIB)
     find_package(
@@ -89,7 +86,11 @@ endif()
 
 if(BUILD_LAUNCHER)
     if (LOCAL_FLTK_LIB)
-        include(${DEPENDENCIES_INSTALL_ROOT}/share/fltk/FLTKConfig.cmake)
+        if (APPLE)
+            include(${DEPENDENCIES_INSTALL_ROOT}/FLTK/.framework/Resources/CMake/FLTKConfig.cmake)
+        else()
+            include(${DEPENDENCIES_INSTALL_ROOT}/share/fltk/FLTKConfig.cmake)
+        endif()
         set(FLTK_LIBRARIES fltk fltk_images fltk_png)
         message(STATUS "Using local fltk dependency")
     else()
@@ -100,6 +101,9 @@ if(BUILD_LAUNCHER)
         message(STATUS "FLTK Libraries: ${FLTK_LIBRARIES} FLTK Includes: ${FLTK_INCLUDE_DIR}")
     endif()
 endif()
+
+find_package(SDL2 REQUIRED)
+message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY} SDL2 Includes: ${SDL2_INCLUDE_DIR}")
 
 find_package(Stracciatella REQUIRED)
 message(STATUS "Libstracciatella: ${STRACCIATELLA_LIBRARY}")

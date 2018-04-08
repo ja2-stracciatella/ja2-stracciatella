@@ -4,4 +4,5 @@ find_path(
   PATHS ${CMAKE_INSTALL_PREFIX}/dependencies-root/include/utf8cpp
 )
 
+INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(LocalUtf8Cpp REQUIRED_VARS UTF8CPP_INCLUDE_DIRS)

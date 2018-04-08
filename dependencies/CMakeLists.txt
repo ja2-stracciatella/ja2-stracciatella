@@ -29,6 +29,7 @@ if (LOCAL_GTEST_LIB)
 		URL "https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
 		CMAKE_ARGS ${DEPENDENCIES_CMAKE_FLAGS}
 			-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=ON
+			-DGTEST_FORCE_SHARED_CRT=ON
 	)
 	set(EXTERNAL_DEPENDS ${EXTERNAL_DEPENDS} gtest-internal)
 endif()
