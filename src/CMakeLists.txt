@@ -44,6 +44,11 @@ endif()
 
 set(CMAKE_FIND_ROOT_PATH ${DEPENDENCIES_INSTALL_ROOT})
 
+set(ADDITIONAL_LIBS "")
+if (UNIX AND NOT MINGW)
+    set(ADDITIONAL_LIBS dl)
+endif()
+
 find_package(SDL2 REQUIRED)
 message(STATUS "SDL2 Libraries: ${SDL2_LIBRARY} SDL2 Includes: ${SDL2_INCLUDE_DIR}")
 
@@ -78,9 +83,13 @@ endif()
 if(BUILD_LAUNCHER)
     if (LOCAL_FLTK_LIB)
         include(${DEPENDENCIES_INSTALL_ROOT}/share/fltk/FLTKConfig.cmake)
+        set(FLTK_LIBRARIES fltk fltk_images fltk_png)
         message(STATUS "Using local fltk dependency")
     else()
-        find_package(FLTK REQUIRED NO_MODULE)
+        find_package(FLTK REQUIRED)
+        if (UNIX AND NOT MINGW)
+            set(ADDITIONAL_LIBS ${ADDITIONAL_LIBS} pthread)
+        endif()
         message(STATUS "FLTK Libraries: ${FLTK_LIBRARIES} FLTK Includes: ${FLTK_INCLUDE_DIR}")
     endif()
 endif()
@@ -129,11 +138,6 @@ if (WITH_UNITTESTS)
     add_definitions("-DWITH_UNITTESTS")
 endif()
 
-set(ADDITIONAL_LIBS "")
-if (UNIX AND NOT MINGW)
-    set(ADDITIONAL_LIBS dl)
-endif()
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY}
@@ -151,12 +155,11 @@ if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
 
     target_link_libraries(${LAUNCHER_BINARY}
-        fltk
-        fltk_images
-        fltk_png
         slog
         ${STRACCIATELLA_LIBRARY}
-        ${ADDITIONAL_LIBS})
+        ${ADDITIONAL_LIBS}
+        ${FLTK_LIBRARIES}
+    )
 endif()
 
 if (MSVC)
