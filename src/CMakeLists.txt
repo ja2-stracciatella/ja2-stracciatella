@@ -159,23 +159,6 @@ if(BUILD_LAUNCHER)
         ${ADDITIONAL_LIBS})
 endif()
 
-macro(copy_assets_dir_to_ja2_binary_after_build DIR)
-    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/assets/${DIR} "$<TARGET_FILE_DIR:${JA2_BINARY}>/${DIR}")
-endmacro()
-
-copy_assets_dir_to_ja2_binary_after_build("externalized")
-copy_assets_dir_to_ja2_binary_after_build("unittests")
-copy_assets_dir_to_ja2_binary_after_build("mods")
-
-set(STRACCIATELLA_SHARED_LIB "")
-
-if (MSVC OR APPLE)
-    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${STRACCIATELLA_SHARED_LIB} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
-endif()
 if (MSVC)
     string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD

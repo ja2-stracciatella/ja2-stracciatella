@@ -32,10 +32,12 @@ set(CONTACT "JA2 Stracciatella Team <no-email@ja2-stracciatella.github.io>")
 set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime.")
 
 ## Options
+
 # Default CMAKE_BUILD_TYPE to RelWithDebInfo
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug RelWithDebInfo." FORCE)
 endif()
+
 set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
@@ -50,6 +52,7 @@ option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 
+# Install options
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 
 set(STRACCIATELLA_CACHE_VARIABLES
@@ -73,12 +76,11 @@ set(STRACCIATELLA_CACHE_VARIABLES
 
 ## Build
 
-set(ALL_DEPENDS libstracciatella)
+# Setup external projects for internal dependencies
+set(ALL_DEPENDS libstracciatella stracciatella-assets)
 set(DEPENDENCIES_INSTALL_ROOT "${CMAKE_BINARY_DIR}/dependencies-root")
 add_subdirectory("dependencies")
 
-find_package(Cargo 0.9.0 REQUIRED)
-find_package(Rustc 1.15.0 REQUIRED)
 externalproject_add(libstracciatella
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rust"
     CMAKE_ARGS
@@ -86,11 +88,24 @@ externalproject_add(libstracciatella
         ${STRACCIATELLA_CACHE_VARIABLES}
     BUILD_ALWAYS ON
 )
+
+# Target to run Rust unit tests
+find_package(Cargo 0.9.0 REQUIRED)
+find_package(Rustc 1.15.0 REQUIRED)
 add_custom_target(rust-unit-tests
     COMMAND ${CMAKE_COMMAND} -E env ${CARGO_EXECUTABLE} test
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/rust
 )
 
+# External project to build assets
+externalproject_add(stracciatella-assets
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+    BUILD_ALWAYS ON
+)
+
+# External Project for game and launcher binaries
 externalproject_add(ja2
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src"
     CMAKE_ARGS
@@ -100,7 +115,6 @@ externalproject_add(ja2
     BUILD_ALWAYS ON
     DEPENDS ${ALL_DEPENDS}
 )
-
 
 # ## Installing and Packaging
 
