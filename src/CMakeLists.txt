@@ -36,9 +36,16 @@ if (WITH_SOUND_DEBUG)
     add_definitions(-DWITH_SOUND_DEBUG)
 endif()
 
+if (WITH_UNITTESTS)
+    message(STATUS "Compiling with unittests" )
+    add_definitions("-DWITH_UNITTESTS")
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DENABLE_ASSERTS)
 endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 
 ## Dependencies
 
@@ -97,6 +104,8 @@ endif()
 find_package(Stracciatella REQUIRED)
 message(STATUS "Libstracciatella: ${STRACCIATELLA_LIBRARY}")
 
+## Sources
+
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/externalized")
@@ -133,12 +142,8 @@ foreach(FILE ${JA2_SOURCES})
   source_group("${GROUP}" FILES "${FILE}")
 endforeach()
 
-if (WITH_UNITTESTS)
-    message(STATUS "Compiling with unittests" )
-    add_definitions("-DWITH_UNITTESTS")
-endif()
+## Binaries
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY}
     ${SDL2_LIBRARY}

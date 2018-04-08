@@ -28,6 +28,7 @@ set(ja2-stracciatella_VERSION_PATCH "x")
 set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
 
 ## Meta Information
+
 set(CONTACT "JA2 Stracciatella Team <no-email@ja2-stracciatella.github.io>")
 set(DESCRIPTION "An improved, cross-platform, stable Jagged Alliance 2 runtime.")
 
