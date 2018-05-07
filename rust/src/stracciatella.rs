@@ -144,6 +144,8 @@ pub struct EngineOptions {
     start_in_fullscreen: bool,
     #[serde(skip, default = "default_window")]
     start_in_window: bool,
+	#[serde(rename = "integer_scaling")]
+	use_integer_scaling: bool,
     #[serde(rename = "debug")]
     start_in_debug_mode: bool,
     #[serde(rename = "nosound")]
@@ -163,6 +165,7 @@ impl Default for EngineOptions {
             run_editor: false,
             start_in_fullscreen: false,
             start_in_window: true,
+			use_integer_scaling: false,
             start_in_debug_mode: false,
             start_without_sound: false,
         }
@@ -542,6 +545,11 @@ pub fn should_run_editor(ptr: *const EngineOptions) -> bool {
 #[no_mangle]
 pub fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_fullscreen
+}
+
+#[no_mangle]
+pub fn should_use_integer_scaling(ptr: *const EngineOptions) -> bool {
+	unsafe_from_ptr!(ptr).use_integer_scaling
 }
 
 #[no_mangle]

@@ -91,6 +91,7 @@ SDL_Window* g_game_window;
 static SDL_Surface* ScreenBuffer;
 static SDL_Texture* ScreenTexture;
 static Uint32       g_window_flags = 0;
+static BOOLEAN		g_useIntScaling = FALSE;
 
 static void RecreateBackBuffer();
 static void DeletePrimaryVideoSurfaces(void);
@@ -107,6 +108,10 @@ void VideoSetFullScreen(const BOOLEAN enable)
 	}
 }
 
+void VideoSetIntegerScaling(const BOOLEAN enable)
+{
+	g_useIntScaling = enable;
+}
 
 void VideoToggleFullScreen(void)
 {
@@ -128,8 +133,8 @@ void InitializeVideoManager(void)
 {
 	SLOGD(DEBUG_TAG_VIDEO, "Initializing the video manager");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, g_useIntScaling ? "nearest" : "linear");
+	
 	g_window_flags |= SDL_WINDOW_RESIZABLE;
 
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
@@ -140,6 +145,10 @@ void InitializeVideoManager(void)
 
 	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
 	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	if (g_useIntScaling) {
+		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
+	}
+
 
 	SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
 			(void*)gWindowIconData.pixel_data,

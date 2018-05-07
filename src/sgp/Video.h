@@ -11,6 +11,7 @@
 extern SDL_Window* g_game_window;
 
 void         VideoSetFullScreen(BOOLEAN enable);
+void		 VideoSetIntegerScaling(BOOLEAN enable);
 void         InitializeVideoManager(void);
 void         ShutdownVideoManager(void);
 void         SuspendVideoManager(void);

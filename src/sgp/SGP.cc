@@ -292,6 +292,10 @@ int main(int argc, char* argv[])
 		VideoSetFullScreen(FALSE);
 	}
 
+	if (should_use_integer_scaling(params)) {
+		VideoSetIntegerScaling(TRUE);
+	}
+
 	if (should_start_without_sound(params)) {
 		SoundEnableSound(FALSE);
 	}
