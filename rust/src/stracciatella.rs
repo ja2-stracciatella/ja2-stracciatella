@@ -553,6 +553,11 @@ pub fn should_use_integer_scaling(ptr: *const EngineOptions) -> bool {
 }
 
 #[no_mangle]
+pub fn set_use_integer_scaling(ptr: *mut EngineOptions, val: bool) -> () {
+	unsafe_from_ptr_mut!(ptr).use_integer_scaling = val;
+}
+
+#[no_mangle]
 pub fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {
     unsafe_from_ptr_mut!(ptr).start_in_fullscreen = val
 }

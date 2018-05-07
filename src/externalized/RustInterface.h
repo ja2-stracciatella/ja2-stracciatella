@@ -23,6 +23,7 @@ extern "C" {
 	extern bool should_run_editor(const engine_options_t *);
 	extern bool should_start_in_fullscreen(const engine_options_t *);
 	extern bool should_use_integer_scaling(const engine_options_t *);
+	extern void set_use_integer_scaling(const engine_options_t *, bool);
 	extern void set_start_in_fullscreen(const engine_options_t *, bool);
 	extern bool should_start_in_window(const engine_options_t *);
 	extern bool should_start_in_debug_mode(const engine_options_t *);

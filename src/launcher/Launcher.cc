@@ -88,11 +88,13 @@ void Launcher::initializeInputsFromDefaults() {
 	}
 
 	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
+	integerScalingCheckbox->value(should_use_integer_scaling(this->engine_options) ? 1 : 0);
 	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
 }
 
 int Launcher::writeJsonFile() {
 	set_start_in_fullscreen(this->engine_options, fullscreenCheckbox->value());
+	set_use_integer_scaling(this->engine_options, integerScalingCheckbox->value());
 	set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
 
 	set_vanilla_data_dir(this->engine_options, dataDirectoryInput->value());

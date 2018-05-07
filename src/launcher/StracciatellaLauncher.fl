@@ -8,16 +8,16 @@ class StracciatellaLauncher {open
   } {
     Fl_Window stracciatellaLauncher {
       label {JA2 Stracciatella Launcher} open
-      xywh {981 319 465 290} type Double visible
+      xywh {981 319 465 314} type Double visible
     } {
       Fl_Group {} {open
-        xywh {0 0 465 290}
+        xywh {0 0 465 301}
       } {
         Fl_Group {} {open
           xywh {5 10 451 65} align 20
         } {
           Fl_Input dataDirectoryInput {
-            label {JA2 Game Directory:} selected
+            label {JA2 Game Directory:}
             xywh {156 10 270 25} align 132
           }
           Fl_Input_Choice gameVersionInput {
@@ -30,7 +30,7 @@ class StracciatellaLauncher {open
           }
         }
         Fl_Group {} {open
-          xywh {6 105 250 175}
+          xywh {6 105 250 195}
         } {
           Fl_Check_Button fullscreenCheckbox {
             label Fullscreen
@@ -64,19 +64,23 @@ class StracciatellaLauncher {open
           }
           Fl_Check_Button playSoundsCheckbox {
             label {Play Sounds}
-            xywh {26 261 130 19} down_box DOWN_BOX value 1
+            xywh {26 281 130 19} down_box DOWN_BOX value 1
+          }
+          Fl_Check_Button integerScalingCheckbox {
+            label {Use integer scaling} selected
+            xywh {26 258 179 25} down_box DOWN_BOX
           }
         }
         Fl_Group {} {open
-          xywh {270 105 186 175}
+          xywh {270 105 186 196}
         } {
           Fl_Button playButton {
             label {Play Ja2 Stracciatella}
-            xywh {270 225 185 55}
+            xywh {270 246 185 55}
           }
           Fl_Button editorButton {
             label {Start Map Editor}
-            xywh {270 190 185 25}
+            xywh {270 212 185 25}
           }
         }
       }

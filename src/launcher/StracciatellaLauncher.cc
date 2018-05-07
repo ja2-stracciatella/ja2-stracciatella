@@ -3,9 +3,9 @@
 #include "StracciatellaLauncher.h"
 
 StracciatellaLauncher::StracciatellaLauncher() {
-  { stracciatellaLauncher = new Fl_Double_Window(465, 290, "JA2 Stracciatella Launcher");
+  { stracciatellaLauncher = new Fl_Double_Window(465, 314, "JA2 Stracciatella Launcher");
     stracciatellaLauncher->user_data((void*)(this));
-    { Fl_Group* o = new Fl_Group(0, 0, 465, 290);
+    { Fl_Group* o = new Fl_Group(0, 0, 465, 301);
       { Fl_Group* o = new Fl_Group(5, 10, 451, 65);
         o->align(Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE));
         { dataDirectoryInput = new Fl_Input(156, 10, 270, 25, "JA2 Game Directory:");
@@ -17,7 +17,7 @@ StracciatellaLauncher::StracciatellaLauncher() {
         } // Fl_Button* browseJa2DirectoryButton
         o->end();
       } // Fl_Group* o
-      { Fl_Group* o = new Fl_Group(6, 105, 250, 175);
+      { Fl_Group* o = new Fl_Group(6, 105, 250, 195);
         { fullscreenCheckbox = new Fl_Check_Button(26, 241, 100, 20, "Fullscreen");
           fullscreenCheckbox->down_box(FL_DOWN_BOX);
         } // Fl_Check_Button* fullscreenCheckbox
@@ -45,16 +45,19 @@ StracciatellaLauncher::StracciatellaLauncher() {
           } // Fl_Box* o
           o->end();
         } // Fl_Group* o
-        { playSoundsCheckbox = new Fl_Check_Button(26, 261, 130, 19, "Play Sounds");
+        { playSoundsCheckbox = new Fl_Check_Button(26, 281, 130, 19, "Play Sounds");
           playSoundsCheckbox->down_box(FL_DOWN_BOX);
           playSoundsCheckbox->value(1);
         } // Fl_Check_Button* playSoundsCheckbox
+        { integerScalingCheckbox = new Fl_Check_Button(26, 258, 179, 25, "Use integer scaling");
+          integerScalingCheckbox->down_box(FL_DOWN_BOX);
+        } // Fl_Check_Button* integerScalingCheckbox
         o->end();
       } // Fl_Group* o
-      { Fl_Group* o = new Fl_Group(270, 105, 186, 175);
-        { playButton = new Fl_Button(270, 225, 185, 55, "Play Ja2 Stracciatella");
+      { Fl_Group* o = new Fl_Group(270, 105, 186, 196);
+        { playButton = new Fl_Button(270, 246, 185, 55, "Play Ja2 Stracciatella");
         } // Fl_Button* playButton
-        { editorButton = new Fl_Button(270, 190, 185, 25, "Start Map Editor");
+        { editorButton = new Fl_Button(270, 212, 185, 25, "Start Map Editor");
         } // Fl_Button* editorButton
         o->end();
       } // Fl_Group* o

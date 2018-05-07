@@ -27,6 +27,7 @@ public:
   Fl_Value_Input *customResolutionXInput;
   Fl_Value_Input *customResolutionYInput;
   Fl_Check_Button *playSoundsCheckbox;
+  Fl_Check_Button *integerScalingCheckbox;
   Fl_Button *playButton;
   Fl_Button *editorButton;
 };
