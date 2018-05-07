@@ -1058,6 +1058,7 @@ r##"{
   "res": "100x100",
   "resversion": "ENGLISH",
   "fullscreen": false,
+  "integer_scaling": false,
   "debug": false,
   "nosound": false
 }"##);
