@@ -99,24 +99,24 @@ void VideoSetFullScreen(const BOOLEAN enable)
 {
 	if (enable)
 	{
-		g_window_flags |= SDL_WINDOW_FULLSCREEN;
+		g_window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
 	else
 	{
-		g_window_flags &= ~SDL_WINDOW_FULLSCREEN;
+		g_window_flags &= ~SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
 }
 
 
 void VideoToggleFullScreen(void)
 {
-	if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN)
+	if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN_DESKTOP)
 	{
 		SDL_SetWindowFullscreen(g_game_window, 0);
 	}
 	else
 	{
-		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN);
+		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
 }
 
