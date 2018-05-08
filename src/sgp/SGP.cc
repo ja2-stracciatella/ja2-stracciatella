@@ -292,10 +292,6 @@ int main(int argc, char* argv[])
 		VideoSetFullScreen(FALSE);
 	}
 
-	if (should_use_integer_scaling(params)) {
-		VideoSetIntegerScaling(TRUE);
-	}
-
 	if (should_start_without_sound(params)) {
 		SoundEnableSound(FALSE);
 	}
@@ -429,7 +425,7 @@ int main(int argc, char* argv[])
 		GCM = cm;
 
 		SLOGD(DEBUG_TAG_SGP, "Initializing Video Manager");
-		InitializeVideoManager();
+		InitializeVideoManager(VIDEO_SCALE_QUALITY_NEAR_PERFECT);
 
 		SLOGD(DEBUG_TAG_SGP, "Initializing Video Object Manager");
 		InitializeVideoObjectManager();
