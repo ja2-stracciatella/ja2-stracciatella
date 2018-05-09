@@ -97,6 +97,38 @@ impl Display for ResourceVersion {
     }
 }
 
+#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
+#[repr(C)]
+#[allow(non_camel_case_types)]
+pub enum ScalingQuality {
+    LINEAR,
+    NEAR_PERFECT,
+    PERFECT,
+}
+
+impl FromStr for ScalingQuality {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "LINEAR" => Ok(ScalingQuality::LINEAR),
+            "NEAR_PERFECT" => Ok(ScalingQuality::NEAR_PERFECT),
+            "PERFECT" => Ok(ScalingQuality::PERFECT),
+            _ => Err(format!("Scaling quality {} is unknown", s))
+        }
+    }
+}
+
+impl Display for ScalingQuality {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", match self {
+            &ScalingQuality::LINEAR => "LINEAR",
+            &ScalingQuality::NEAR_PERFECT => "NEAR_PERFECT",
+            &ScalingQuality::PERFECT => "PERFECT",
+        })
+    }
+}
+
 fn parse_resolution(resolution_str: &str) -> Result<(u16, u16), String> {
     let mut resolutions = resolution_str.split("x").filter_map(|r_str| r_str.parse::<u16>().ok());
 
@@ -144,8 +176,8 @@ pub struct EngineOptions {
     start_in_fullscreen: bool,
     #[serde(skip, default = "default_window")]
     start_in_window: bool,
-	#[serde(rename = "integer_scaling")]
-	use_integer_scaling: bool,
+	#[serde(rename = "scaling")]
+	scaling_quality: ScalingQuality,
     #[serde(rename = "debug")]
     start_in_debug_mode: bool,
     #[serde(rename = "nosound")]
@@ -165,7 +197,7 @@ impl Default for EngineOptions {
             run_editor: false,
             start_in_fullscreen: false,
             start_in_window: true,
-			use_integer_scaling: false,
+			scaling_quality: ScalingQuality::PERFECT,
             start_in_debug_mode: false,
             start_without_sound: false,
         }
@@ -548,14 +580,20 @@ pub fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
 }
 
 #[no_mangle]
-pub fn should_use_integer_scaling(ptr: *const EngineOptions) -> bool {
-	unsafe_from_ptr!(ptr).use_integer_scaling
+pub fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
+    unsafe_from_ptr!(ptr).scaling_quality
 }
 
 #[no_mangle]
-pub fn set_use_integer_scaling(ptr: *mut EngineOptions, val: bool) -> () {
-	unsafe_from_ptr_mut!(ptr).use_integer_scaling = val;
+pub fn set_scaling_quality(ptr: *mut EngineOptions, res_ptr: *const c_char) -> () {
+    let c_str = unsafe { CStr::from_ptr(res_ptr) };
+    let quality = c_str.to_str().unwrap();
+
+    if let Ok(q) = ScalingQuality::from_str(quality) {
+        unsafe_from_ptr_mut!(ptr).scaling_quality = q
+    }
 }
+
 
 #[no_mangle]
 pub fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {

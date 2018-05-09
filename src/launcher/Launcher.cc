@@ -87,14 +87,24 @@ void Launcher::initializeInputsFromDefaults() {
 		enableCustomResolutions();
 	}
 
+	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
+	switch (quality) {
+		case VIDEO_SCALE_QUALITY_NEAR_PERFECT:
+			scalingModeInput->value("NEAR_PERFECT");
+			break;
+		case VIDEO_SCALE_QUALITY_PERFECT:
+			scalingModeInput->value("PERFECT");
+			break;
+		default:
+			scalingModeInput->value("LINEAR");
+	}
+
 	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
-	integerScalingCheckbox->value(should_use_integer_scaling(this->engine_options) ? 1 : 0);
 	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
 }
 
 int Launcher::writeJsonFile() {
 	set_start_in_fullscreen(this->engine_options, fullscreenCheckbox->value());
-	set_use_integer_scaling(this->engine_options, integerScalingCheckbox->value());
 	set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
 
 	set_vanilla_data_dir(this->engine_options, dataDirectoryInput->value());
@@ -112,6 +122,7 @@ int Launcher::writeJsonFile() {
 	}
 
 	set_resource_version(this->engine_options, gameVersionInput->value());
+	set_scaling_quality(this->engine_options, scalingModeInput->value());
 
 	bool success = write_engine_options(this->engine_options);
 
@@ -132,6 +143,10 @@ void Launcher::populateChoices() {
 		sprintf(resolutionString, "%dx%d", predefinedResolutions[i].first, predefinedResolutions[i].second);
 		predefinedResolutionInput->add(resolutionString);
 	}
+
+	scalingModeInput->add("LINEAR");
+	scalingModeInput->add("NEAR_PERFECT");
+	scalingModeInput->add("PERFECT");
 }
 
 void Launcher::enablePredefinedResolutions() {

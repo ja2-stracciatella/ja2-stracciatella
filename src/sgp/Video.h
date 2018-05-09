@@ -10,11 +10,11 @@
 
 extern SDL_Window* g_game_window;
 
-typedef enum {
+enum VideoScaleQuality {
+	VIDEO_SCALE_QUALITY_LINEAR,
 	VIDEO_SCALE_QUALITY_NEAR_PERFECT,
 	VIDEO_SCALE_QUALITY_PERFECT,
-	VIDEO_SCALE_QUALITY_LINEAR,
-} VideoScaleQuality;
+};
 
 void         VideoSetFullScreen(BOOLEAN enable);
 void         InitializeVideoManager(VideoScaleQuality quality);
