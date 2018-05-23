@@ -170,9 +170,14 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
 	}
 
+
 	if (quality == VIDEO_SCALE_QUALITY_PERFECT) {
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+#if SDL_VERSION_ATLEAST(2,0,5)
 		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
+#else
+		quality = VIDEO_SCALE_QUALITY_NEAR_PERFECT;
+#endif		
 	}
 	else if (quality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
