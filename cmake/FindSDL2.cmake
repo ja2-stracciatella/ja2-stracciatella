@@ -89,16 +89,16 @@ SET(SDL2_SEARCH_PATHS
 FIND_PATH(SDL2_INCLUDE_DIR SDL.h
         HINTS
         $ENV{SDL2DIR}
-        PATH_SUFFIXES include/SDL2 include
         PATHS ${SDL2_SEARCH_PATHS}
+        PATH_SUFFIXES "include/SDL2" "include"
         )
 
 FIND_LIBRARY(SDL2_LIBRARY_TEMP
-        NAMES SDL2
+        NAMES SDL2 SDL2-2.0
         HINTS
         $ENV{SDL2DIR}
-        PATH_SUFFIXES lib64 lib "lib/${SDL_ARCH}"
         PATHS ${SDL2_SEARCH_PATHS}
+        PATH_SUFFIXES bin lib64 lib "lib/${SDL_ARCH}"
         )
 
 IF(NOT SDL2_BUILDING_LIBRARY)
