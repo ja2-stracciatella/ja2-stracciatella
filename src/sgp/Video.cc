@@ -171,15 +171,15 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 	}
 
 
-	if (quality == VIDEO_SCALE_QUALITY_PERFECT) {
+	if (ScaleQuality == VIDEO_SCALE_QUALITY_PERFECT) {
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 #if SDL_VERSION_ATLEAST(2,0,5)
 		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
 #else
-		quality = VIDEO_SCALE_QUALITY_NEAR_PERFECT;
+		ScaleQuality = VIDEO_SCALE_QUALITY_NEAR_PERFECT;
 #endif		
 	}
-	else if (quality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+	else if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	}
 	else {
@@ -195,7 +195,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
 	}
 
-	if (quality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+	if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
 		int scale = 4;
 
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
