@@ -12,6 +12,7 @@
 #include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Choice.H>
 
 class StracciatellaLauncher {
 public:
@@ -26,7 +27,7 @@ public:
   Fl_Input_Choice *predefinedResolutionInput;
   Fl_Value_Input *customResolutionXInput;
   Fl_Value_Input *customResolutionYInput;
-  Fl_Input_Choice *scalingModeInput;
+  Fl_Choice *scalingModeChoice;
   Fl_Check_Button *playSoundsCheckbox;
   Fl_Button *playButton;
   Fl_Button *editorButton;

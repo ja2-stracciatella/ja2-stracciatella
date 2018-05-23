@@ -61,9 +61,9 @@ class StracciatellaLauncher {open
               label x
               xywh {126 194 20 25}
             }
-            Fl_Input_Choice scalingModeInput {
-              label {Scaling Mode} open
-              xywh {47 240 178 27} align 5
+            Fl_Choice scalingModeChoice {
+              label {Scaling Mode} open selected
+              xywh {46 240 179 25} down_box BORDER_BOX align 5
             } {}
           }
           Fl_Check_Button playSoundsCheckbox {
@@ -71,7 +71,7 @@ class StracciatellaLauncher {open
             xywh {26 299 130 19} down_box DOWN_BOX value 1
           }
         }
-        Fl_Group {} {open selected
+        Fl_Group {} {open
           xywh {270 122 186 196}
         } {
           Fl_Button playButton {
