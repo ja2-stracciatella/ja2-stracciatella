@@ -208,17 +208,17 @@ if (WITH_UNITTESTS)
     add_definitions("-DWITH_UNITTESTS")
 endif()
 
+set(ADDITIONAL_LIBS "")
+if (UNIX AND NOT MINGW)
+    set(ADDITIONAL_LIBS dl pthread)
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
-target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella)
+target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella ${ADDITIONAL_LIBS})
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-
-    set(ADDITIONAL_LIBS "")
-    if (UNIX AND NOT MINGW)
-        set(ADDITIONAL_LIBS dl)
-    endif()
     target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} slog rust-stracciatella ${ADDITIONAL_LIBS})
     if (LOCAL_FLTK_LIB)
         add_dependencies(${LAUNCHER_BINARY} fltk-internal)
@@ -235,13 +235,7 @@ copy_assets_dir_to_ja2_binary_after_build("externalized")
 copy_assets_dir_to_ja2_binary_after_build("unittests")
 copy_assets_dir_to_ja2_binary_after_build("mods")
 
-get_property(STRACCIATELLA_SHARED_LIB TARGET rust-stracciatella PROPERTY IMPORTED_LOCATION)
 
-if (MSVC OR APPLE)
-    add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${STRACCIATELLA_SHARED_LIB} "$<TARGET_FILE_DIR:${JA2_BINARY}>")
-endif()
 if (MSVC)
     string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
     add_custom_command(TARGET ${JA2_BINARY} POST_BUILD
@@ -321,7 +315,6 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
         install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION bin)
     endif()
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
-    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION ${INSTALL_LIB_DIR})
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
         FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.svg
@@ -337,7 +330,6 @@ else()
     if(BUILD_LAUNCHER)
         install(TARGETS ${LAUNCHER_BINARY} RUNTIME DESTINATION .)
     endif()
-    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION .)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/externalized assets/mods assets/unittests DESTINATION .)
     install(FILES changes.md DESTINATION .)
 endif()
