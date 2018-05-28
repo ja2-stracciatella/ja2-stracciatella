@@ -211,6 +211,8 @@ endif()
 set(ADDITIONAL_LIBS "")
 if (UNIX AND NOT MINGW)
     set(ADDITIONAL_LIBS dl pthread)
+elseif(MSVC)
+    set(ADDITIONAL_LIBS ws2_32 shell32 advapi32 userenv)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
