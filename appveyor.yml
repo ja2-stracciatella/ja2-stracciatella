@@ -27,6 +27,7 @@ init:
         true;
   - ps: >
         if (Test-Path Env:\NIGHTLY_VERSION) {
+          $env:BUILD_TYPE = "Release";
           $env:PUBLISH_BINARY = "true";
           $env:PUBLISH_DIR = "nightlies";
           $env:VERSION_TAG = "${env:NIGHTLY_VERSION}";
