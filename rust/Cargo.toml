@@ -10,7 +10,7 @@ rpath = true
 debug = true
 
 [lib]
-crate-type = ["dylib"]
+crate-type = ["staticlib"]
 name = "stracciatella"
 path = "src/stracciatella.rs"
 
