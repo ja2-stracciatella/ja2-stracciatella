@@ -331,8 +331,10 @@ int main(int argc, char* argv[])
 #endif
 	}
 
-	GameVersion version = get_resource_version(params);;
+	GameVersion version = get_resource_version(params);
 	setGameVersion(version);
+
+	VideoScaleQuality scalingQuality = get_scaling_quality(params);
 
 	////////////////////////////////////////////////////////////
 
@@ -425,7 +427,7 @@ int main(int argc, char* argv[])
 		GCM = cm;
 
 		SLOGD(DEBUG_TAG_SGP, "Initializing Video Manager");
-		InitializeVideoManager();
+		InitializeVideoManager(scalingQuality);
 
 		SLOGD(DEBUG_TAG_SGP, "Initializing Video Object Manager");
 		InitializeVideoObjectManager();

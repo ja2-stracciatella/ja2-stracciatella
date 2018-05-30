@@ -10,8 +10,14 @@
 
 extern SDL_Window* g_game_window;
 
+enum VideoScaleQuality {
+	VIDEO_SCALE_QUALITY_LINEAR,
+	VIDEO_SCALE_QUALITY_NEAR_PERFECT,
+	VIDEO_SCALE_QUALITY_PERFECT,
+};
+
 void         VideoSetFullScreen(BOOLEAN enable);
-void         InitializeVideoManager(void);
+void         InitializeVideoManager(VideoScaleQuality quality);
 void         ShutdownVideoManager(void);
 void         SuspendVideoManager(void);
 void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);

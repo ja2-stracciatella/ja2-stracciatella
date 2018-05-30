@@ -90,7 +90,9 @@ SDL_Window* g_game_window;
 
 static SDL_Surface* ScreenBuffer;
 static SDL_Texture* ScreenTexture;
+static SDL_Texture* ScaledScreenTexture;
 static Uint32       g_window_flags = 0;
+static VideoScaleQuality ScaleQuality = VIDEO_SCALE_QUALITY_LINEAR;
 
 static void RecreateBackBuffer();
 static void DeletePrimaryVideoSurfaces(void);
@@ -99,24 +101,23 @@ void VideoSetFullScreen(const BOOLEAN enable)
 {
 	if (enable)
 	{
-		g_window_flags |= SDL_WINDOW_FULLSCREEN;
+		g_window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
 	else
 	{
-		g_window_flags &= ~SDL_WINDOW_FULLSCREEN;
+		g_window_flags &= ~SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
 }
 
-
 void VideoToggleFullScreen(void)
 {
-	if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN)
+	if (SDL_GetWindowFlags(g_game_window) & SDL_WINDOW_FULLSCREEN_DESKTOP)
 	{
 		SDL_SetWindowFullscreen(g_game_window, 0);
 	}
 	else
 	{
-		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN);
+		SDL_SetWindowFullscreen(g_game_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
 }
 
@@ -124,12 +125,12 @@ void VideoToggleFullScreen(void)
 static void GetRGBDistribution();
 
 
-void InitializeVideoManager(void)
+void InitializeVideoManager(const VideoScaleQuality quality)
 {
 	SLOGD(DEBUG_TAG_VIDEO, "Initializing the video manager");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
+	
+	ScaleQuality = quality;
 	g_window_flags |= SDL_WINDOW_RESIZABLE;
 
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
@@ -169,6 +170,22 @@ void InitializeVideoManager(void)
 		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
 	}
 
+
+	if (ScaleQuality == VIDEO_SCALE_QUALITY_PERFECT) {
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+#if SDL_VERSION_ATLEAST(2,0,5)
+		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
+#else
+		ScaleQuality = VIDEO_SCALE_QUALITY_NEAR_PERFECT;
+#endif		
+	}
+	else if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+	}
+	else {
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	}
+
 	ScreenTexture = SDL_CreateTexture(GameRenderer,
 					SDL_PIXELFORMAT_RGB565,
 					SDL_TEXTUREACCESS_STREAMING,
@@ -176,6 +193,20 @@ void InitializeVideoManager(void)
 
 	if (ScreenTexture == NULL) {
 		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
+	}
+
+	if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+		int scale = 4;
+
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
+			SDL_PIXELFORMAT_RGB565,
+			SDL_TEXTUREACCESS_TARGET,
+			SCREEN_WIDTH * scale, SCREEN_HEIGHT * scale);
+
+		if (ScaledScreenTexture == NULL) {
+			SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScaledScreenTexture failed: %s\n", SDL_GetError());
+		}
 	}
 
 	FrameBuffer = SDL_CreateRGBSurface(
@@ -653,9 +684,20 @@ void RefreshScreen(void)
 	MouseBackground = dst;
 
 	SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
-
+	
 	SDL_RenderClear(GameRenderer);
-	SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
+	
+	if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+		SDL_SetRenderTarget(GameRenderer, ScaledScreenTexture);
+		SDL_RenderCopy(GameRenderer, ScreenTexture, nullptr, nullptr);
+
+		SDL_SetRenderTarget(GameRenderer, nullptr);
+		SDL_RenderCopy(GameRenderer, ScaledScreenTexture, nullptr, nullptr);
+	}
+	else {
+		SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
+	}
+	
 	SDL_RenderPresent(GameRenderer);
 
 	gfForceFullScreenRefresh = FALSE;

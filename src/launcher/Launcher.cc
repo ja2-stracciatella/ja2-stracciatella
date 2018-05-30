@@ -37,6 +37,11 @@ Launcher::Launcher(const std::string exePath, engine_options_t* engine_options) 
 	this->predefinedResolutions.push_back(std::make_pair(1280, 720));
 	this->predefinedResolutions.push_back(std::make_pair(1600, 900));
 	this->predefinedResolutions.push_back(std::make_pair(1920, 1080));
+
+	this->scalingModes = std::vector< std::pair<const char*, const char*> >();
+	this->scalingModes.push_back(std::make_pair("LINEAR", "Linear Interpolation"));
+	this->scalingModes.push_back(std::make_pair("NEAR_PERFECT", "Near perfect with oversampling"));
+	this->scalingModes.push_back(std::make_pair("PERFECT", "Pixel perfect centered"));
 }
 
 void Launcher::show() {
@@ -86,6 +91,18 @@ void Launcher::initializeInputsFromDefaults() {
 		predefinedResolutionInput->value(defaultResolution);
 		enableCustomResolutions();
 	}
+	
+	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
+	switch (quality) {
+		case VIDEO_SCALE_QUALITY_PERFECT:
+			this->scalingModeChoice->value(2);
+			break;
+		case VIDEO_SCALE_QUALITY_NEAR_PERFECT:
+			this->scalingModeChoice->value(1);
+			break;
+		default:
+			this->scalingModeChoice->value(0);
+	}
 
 	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
 	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
@@ -110,6 +127,9 @@ int Launcher::writeJsonFile() {
 	}
 
 	set_resource_version(this->engine_options, gameVersionInput->value());
+	
+	auto currentScalingMode = (std::pair<const char*, const char*> *)this->scalingModeChoice->mvalue()->user_data();
+	set_scaling_quality(this->engine_options, currentScalingMode->first);
 
 	bool success = write_engine_options(this->engine_options);
 
@@ -129,6 +149,10 @@ void Launcher::populateChoices() {
 		char resolutionString[255];
 		sprintf(resolutionString, "%dx%d", predefinedResolutions[i].first, predefinedResolutions[i].second);
 		predefinedResolutionInput->add(resolutionString);
+	}
+
+	for (int i = 0; i < this->scalingModes.size(); i++) {
+		this->scalingModeChoice->add(this->scalingModes[i].second, 0, 0, (void*)&this->scalingModes[i]);
 	}
 }
 

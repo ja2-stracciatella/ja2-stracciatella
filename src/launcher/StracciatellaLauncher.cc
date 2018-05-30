@@ -3,9 +3,9 @@
 #include "StracciatellaLauncher.h"
 
 StracciatellaLauncher::StracciatellaLauncher() {
-  { stracciatellaLauncher = new Fl_Double_Window(465, 290, "JA2 Stracciatella Launcher");
+  { stracciatellaLauncher = new Fl_Double_Window(465, 329, "JA2 Stracciatella Launcher");
     stracciatellaLauncher->user_data((void*)(this));
-    { Fl_Group* o = new Fl_Group(0, 0, 465, 290);
+    { Fl_Group* o = new Fl_Group(0, 0, 465, 318);
       { Fl_Group* o = new Fl_Group(5, 10, 451, 65);
         o->align(Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE));
         { dataDirectoryInput = new Fl_Input(156, 10, 270, 25, "JA2 Game Directory:");
@@ -17,11 +17,11 @@ StracciatellaLauncher::StracciatellaLauncher() {
         } // Fl_Button* browseJa2DirectoryButton
         o->end();
       } // Fl_Group* o
-      { Fl_Group* o = new Fl_Group(6, 105, 250, 175);
-        { fullscreenCheckbox = new Fl_Check_Button(26, 241, 100, 20, "Fullscreen");
+      { Fl_Group* o = new Fl_Group(6, 105, 250, 213);
+        { fullscreenCheckbox = new Fl_Check_Button(26, 277, 100, 20, "Fullscreen");
           fullscreenCheckbox->down_box(FL_DOWN_BOX);
         } // Fl_Check_Button* fullscreenCheckbox
-        { Fl_Group* o = new Fl_Group(16, 114, 240, 120, "Resolution");
+        { Fl_Group* o = new Fl_Group(16, 114, 240, 158, "Resolution");
           o->box(FL_THIN_DOWN_FRAME);
           { predefinedResolutionButton = new Fl_Round_Button(26, 124, 100, 20, "Predefined:");
             predefinedResolutionButton->down_box(FL_ROUND_DOWN_BOX);
@@ -43,18 +43,22 @@ StracciatellaLauncher::StracciatellaLauncher() {
           } // Fl_Value_Input* customResolutionYInput
           { new Fl_Box(126, 194, 20, 25, "x");
           } // Fl_Box* o
+          { scalingModeChoice = new Fl_Choice(46, 240, 179, 25, "Scaling Mode");
+            scalingModeChoice->down_box(FL_BORDER_BOX);
+            scalingModeChoice->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+          } // Fl_Choice* scalingModeChoice
           o->end();
         } // Fl_Group* o
-        { playSoundsCheckbox = new Fl_Check_Button(26, 261, 130, 19, "Play Sounds");
+        { playSoundsCheckbox = new Fl_Check_Button(26, 299, 130, 19, "Play Sounds");
           playSoundsCheckbox->down_box(FL_DOWN_BOX);
           playSoundsCheckbox->value(1);
         } // Fl_Check_Button* playSoundsCheckbox
         o->end();
       } // Fl_Group* o
-      { Fl_Group* o = new Fl_Group(270, 105, 186, 175);
-        { playButton = new Fl_Button(270, 225, 185, 55, "Play Ja2 Stracciatella");
+      { Fl_Group* o = new Fl_Group(270, 122, 186, 196);
+        { playButton = new Fl_Button(270, 263, 185, 55, "Play Ja2 Stracciatella");
         } // Fl_Button* playButton
-        { editorButton = new Fl_Button(270, 190, 185, 25, "Start Map Editor");
+        { editorButton = new Fl_Button(270, 229, 185, 25, "Start Map Editor");
         } // Fl_Button* editorButton
         o->end();
       } // Fl_Group* o

@@ -1,5 +1,6 @@
 #include "Types.h"
 #include "GameRes.h"
+#include "Video.h"
 
 extern "C" {
 	typedef struct engine_options_S engine_options_t;
@@ -22,6 +23,8 @@ extern "C" {
 	extern bool should_run_unittests(const engine_options_t *);
 	extern bool should_run_editor(const engine_options_t *);
 	extern bool should_start_in_fullscreen(const engine_options_t *);
+	extern VideoScaleQuality get_scaling_quality(const engine_options_t *);
+	extern void set_scaling_quality(const engine_options_t *, const char *);
 	extern void set_start_in_fullscreen(const engine_options_t *, bool);
 	extern bool should_start_in_window(const engine_options_t *);
 	extern bool should_start_in_debug_mode(const engine_options_t *);
