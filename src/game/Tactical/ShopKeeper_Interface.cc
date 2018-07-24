@@ -2585,7 +2585,7 @@ static FLOAT ItemConditionModifier(UINT16 usItemIndex, INT8 bStatus)
 	if( GCM->getItem(usItemIndex)->getItemClass() == IC_AMMO )
 	{
 		// # bullets left / max magazine capacity
-		dConditionModifier = ( bStatus / (FLOAT) GCM->getItem(usItemIndex)->asAmmo()->capacity);
+		dConditionModifier = bStatus / ((FLOAT) GCM->getItem(usItemIndex)->asAmmo()->capacity? (FLOAT) GCM->getItem(usItemIndex)->asAmmo()->capacity: 1);
 	}
 	else	// non-ammo
 	{
