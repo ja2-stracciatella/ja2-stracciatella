@@ -328,7 +328,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 						UINT8 const new_mag_size = replacement->capacity;
 						for (UINT8 i = 0; i != o.ubNumberOfObjects; ++i)
 						{
-							o.bStatus[i] = o.bStatus[i] * new_mag_size / mag_size;
+							o.bStatus[i] = o.bStatus[i] * new_mag_size / (mag_size? mag_size: 1);
 						}
 
 						// then replace item #
