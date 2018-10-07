@@ -121,6 +121,7 @@ strlcpy(char *dst, const char *src, size_t siz)
 
 
 #ifdef _WIN32
+#ifndef __MINGW32__
 
 int WINsnprintf(char* const s, size_t const n, const char* const fmt, ...)
 {
@@ -150,6 +151,7 @@ int WINvswprintf(wchar_t* const s, size_t const n, const wchar_t* const fmt, va_
 	return ret;
 }
 
+#endif
 #endif
 
 void CopyTrimmedString(wchar_t* dst, const size_t maxLength, const wchar_t* src) {
