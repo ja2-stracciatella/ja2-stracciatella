@@ -366,67 +366,9 @@ if(APPLE)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.8-macos/SDL2.framework DESTINATION .)
 endif()
 
+## Uninstall
+
 add_custom_templated_target("uninstall")
-
-## Release building
-
-macro(add_vagrant_build_target NAME BOX TARGET ARGS)
-    add_custom_target(${NAME})
-    add_custom_command(TARGET ${NAME}
-            COMMAND vagrant up && vagrant ssh -c "sh /tmp/ja2-stracciatella/release/common/build.sh '${TARGET}' '${ARGS}'" && vagrant halt
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/release/${BOX})
-endmacro(add_vagrant_build_target)
-
-add_vagrant_build_target(
-        "build-deb-package-on-u1404_amd64"
-        "u1404_amd64"
-        "package"
-        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
-)
-add_vagrant_build_target(
-        "build-deb-package-on-u1404_i386"
-        "u1404_i386"
-        "package"
-        "-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
-)
-add_vagrant_build_target(
-        "build-win-release-on-u1404_amd64"
-        "u1404_amd64"
-        "package"
-        "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=\"ZIP;NSIS\""
-)
-if(APPLE)
-    # This can only be executed on macOS since it is not legally allowed to run the VM on any other OS
-    add_vagrant_build_target(
-            "build-macos-release"
-            "macos"
-            "package"
-            "-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=\"ZIP\""
-    )
-endif()
-add_vagrant_build_target(
-        "check-compilation-on-freebsd10"
-        "freebsd-10.2"
-        "all"
-        ""
-)
-add_vagrant_build_target(
-        "check-compilation-on-openbsd59"
-        "openbsd-5.9"
-        "all"
-        "-DCMAKE_C_COMPILER=egcc -DCMAKE_CXX_COMPILER=eg++"
-)
-
-
-add_custom_target(build-releases)
-add_custom_command(
-    TARGET build-releases
-    COMMAND make build-deb-package-on-u1404_amd64
-    COMMAND make build-deb-package-on-u1404_i386
-    COMMAND make build-win-release-on-u1404_amd64
-    COMMAND make check-compilation-on-freebsd10
-    COMMAND make check-compilation-on-openbsd59
-)
 
 ## Rebuilding contributors.txt
 
