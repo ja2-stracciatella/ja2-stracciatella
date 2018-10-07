@@ -44,7 +44,7 @@ before_install:
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON";
     fi
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" == "true" ]; then
-      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=Zip";
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP";
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle";
@@ -53,7 +53,7 @@ before_install:
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCPACK_GENERATOR=DEB";
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [ "$TRAVIS_MINGW" == "true" ]; then
-      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=Zip";
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP";
     fi
   - echo "$PUBLISH_BINARY"
   - echo "$PUBLISH_DIR"
