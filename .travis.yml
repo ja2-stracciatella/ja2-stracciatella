@@ -75,13 +75,19 @@ script:
   - mkdir ci-build && cd ci-build
   - cmake $BUILD_SWITCHES ..;
   - make
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
       sudo make install;
     fi
-  - make rust-unit-tests
-  - ./ja2 -unittests
-  - ./ja2-launcher -help
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
+  - if [ "$TRAVIS_MINGW" != "true" ]; then
+      make rust-unit-tests;
+    fi
+  - if [ "$TRAVIS_MINGW" != "true" ]; then
+      ./ja2 -unittests;
+    fi
+  - if [ "$TRAVIS_MINGW" != "true" ]; then
+      ./ja2-launcher -help;
+    fi
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
       sudo make uninstall;
     fi
   - if [ "$PUBLISH_BINARY" == "true" ]; then
