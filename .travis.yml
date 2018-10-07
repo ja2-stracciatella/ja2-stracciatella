@@ -1,12 +1,20 @@
 language: cpp
-os:
-  - linux
-  - osx
+
+jobs:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+    - os: linux
+      dist: trusty
+      sudo: required
+      env:
+        TRAVIS_MINGW=true
+    - os: osx
+
 branches:
   only:
-  - master
-dist: trusty
-sudo: required
+    - master
 
 before_install:
   - export PUBLISH_BINARY="false"
@@ -32,21 +40,30 @@ before_install:
     fi
 
   - export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVERSION_TAG=$VERSION_TAG"
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON";
+    fi
+  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" == "true" ]; then
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=Zip;NSIS";
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle";
     fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [ "$TRAVIS_MINGW" != "true" ]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCPACK_GENERATOR=DEB";
     fi
-
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [ "$TRAVIS_MINGW" == "true" ]; then
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=Zip;NSIS";
+    fi
   - echo "$PUBLISH_BINARY"
   - echo "$PUBLISH_DIR"
   - echo "$BUILD_SWITCHES"
 
-  - curl -sSf https://static.rust-lang.org/rustup.sh | sh
+  - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable -y
+  - export PATH=$PATH:$HOME/.cargo/bin
+  - if [[ "$TRAVIS_MINGW" == "true" ]]; then
+      rustup target add x86_64-pc-windows-gnu;
+    fi
   - cargo -V
   - rustc -V
 
@@ -85,6 +102,7 @@ addons:
     - fluid
     - libfltk1.3-dev
     - fakeroot
+    - mingw-w64
   coverity_scan:
     project:
       name: "ja2-stracciatella/ja2-stracciatella"
