@@ -121,19 +121,28 @@ if(BUILD_LAUNCHER)
     else()
         add_subdirectory("dependencies/lib-fltk")
         set(FLTK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-fltk/include")
+        set(FLTK_BASE_DIR "${CMAKE_BINARY_DIR}/lib-fltk")
 
         if (UNIX AND NOT MINGW AND NOT APPLE)
             set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_images.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_forms.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_png.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_z.a"
                 X11)
+        elseif(MINGW)
+            set(FLTK_LIBRARIES
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_images.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_forms.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_png.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_z.a"
+                comctl32)
         elseif(APPLE)
             set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_images.a"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_forms.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_png.a"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_z.a")
@@ -143,8 +152,8 @@ if(BUILD_LAUNCHER)
                 set(MSVC_LIB_SUFFIX "d")
             endif()
             set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk${MSVC_LIB_SUFFIX}.lib"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_images${MSVC_LIB_SUFFIX}.lib"
+                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk${MSVC_LIB_SUFFIX}.lib"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_forms${MSVC_LIB_SUFFIX}.lib"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_png${MSVC_LIB_SUFFIX}.lib"
                 "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_z${MSVC_LIB_SUFFIX}.lib")
