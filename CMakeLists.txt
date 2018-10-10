@@ -121,34 +121,32 @@ if(BUILD_LAUNCHER)
     else()
         add_subdirectory("dependencies/lib-fltk")
         set(FLTK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-fltk/include")
+        set(FLTK_BASE_DIR "${CMAKE_BINARY_DIR}/lib-fltk")
+        set(FLTK_LIB_DIR "lib")
+        set(FLTK_LIB_PREFIX "${CMAKE_STATIC_LIBRARY_PREFIX}")
+        set(FLTK_LIB_SUFFIX "${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        set(FLTK_ADDITIONAL_LIBRARIES "")
 
         if (UNIX AND NOT MINGW AND NOT APPLE)
-            set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_images.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_forms.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_png.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib64/libfltk_z.a"
-                X11)
-        elseif(APPLE)
-            set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_images.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_forms.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_png.a"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/libfltk_z.a")
+            set(FLTK_LIB_DIR "lib64")
+            set(FLTK_ADDITIONAL_LIBRARIES X11)
+        elseif(MINGW)
+            set(FLTK_ADDITIONAL_LIBRARIES comctl32)
         elseif(MSVC)
             set(MSVC_LIB_SUFFIX "")
             if (CMAKE_BUILD_TYPE STREQUAL "Debug")
                 set(MSVC_LIB_SUFFIX "d")
             endif()
-            set(FLTK_LIBRARIES
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk${MSVC_LIB_SUFFIX}.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_images${MSVC_LIB_SUFFIX}.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_forms${MSVC_LIB_SUFFIX}.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_png${MSVC_LIB_SUFFIX}.lib"
-                "${CMAKE_BINARY_DIR}/lib-fltk/lib/fltk_z${MSVC_LIB_SUFFIX}.lib")
+            set(FLTK_LIB_SUFFIX "${MSVC_LIB_SUFFIX}${FLTK_LIB_SUFFIX}")
         endif()
+
+        set(FLTK_LIBRARIES
+            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_images${FLTK_LIB_SUFFIX}"
+            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk${FLTK_LIB_SUFFIX}"
+            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_forms${FLTK_LIB_SUFFIX}"
+            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_png${FLTK_LIB_SUFFIX}"
+            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_z${FLTK_LIB_SUFFIX}"
+            ${FLTK_ADDITIONAL_LIBRARIES})
     endif()
 endif()
 message(STATUS "Fltk Libraries: ${FLTK_LIBRARIES}")
