@@ -79,9 +79,7 @@ script:
       sudo make install;
     fi
   - if [ "$TRAVIS_MINGW" != "true" ]; then
-      make rust-unit-tests;
-      ./ja2 -unittests;
-      ./ja2-launcher -help;
+      make rust-unit-tests && ./ja2 -unittests && ./ja2-launcher -help;
     fi
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
       sudo make uninstall;
