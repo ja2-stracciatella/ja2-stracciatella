@@ -64,9 +64,10 @@ before_install:
   - if [[ "$TRAVIS_MINGW" == "true" ]]; then
       rustup target add x86_64-pc-windows-gnu;
     fi
+
   - cargo -V
   - rustc -V
-
+  - cmake --version
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       fakeroot -v;
     fi
