@@ -7,20 +7,12 @@
 
 #include "Types.h"
 #include "IEncodingCorrector.h"
+#include "stracciatella.h"
 
 #include "StringEncodingTypes.h"
 
 /** List of supported game versions (localizations). */
-enum GameVersion {
-	GV_DUTCH,
-	GV_ENGLISH,
-	GV_FRENCH,
-	GV_GERMAN,
-	GV_ITALIAN,
-	GV_POLISH,
-	GV_RUSSIAN,
-	GV_RUSSIAN_GOLD,
-};
+using GameVersion = ResourceVersion;
 
 enum MultiLanguageGraphic
 {

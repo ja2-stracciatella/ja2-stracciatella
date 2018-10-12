@@ -277,7 +277,7 @@ int main(int argc, char* argv[])
 	SLOG_Init(SLOG_STDERR, "ja2.log");
 	SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
 
-	engine_options_t* params = create_engine_options(argv, argc);
+	EngineOptions* params = create_engine_options(argv, argc);
 	if (params == NULL) {
 		return EXIT_FAILURE;
 	}

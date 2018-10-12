@@ -458,7 +458,7 @@ macro_rules! unsafe_from_ptr_mut {
 }
 
 #[no_mangle]
-pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
+pub extern fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
     let args: Vec<String> = values.iter()
         .map(|&p| unsafe { CStr::from_ptr(p) })  // iterator of &CStr
@@ -483,13 +483,13 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
 }
 
 #[no_mangle]
-pub fn write_engine_options(ptr: *mut EngineOptions) -> bool {
+pub extern fn write_engine_options(ptr: *mut EngineOptions) -> bool {
     let engine_options = unsafe_from_ptr!(ptr);
     write_json_config(engine_options).is_ok()
 }
 
 #[no_mangle]
-pub fn free_engine_options(ptr: *mut EngineOptions) {
+pub extern fn free_engine_options(ptr: *mut EngineOptions) {
     if ptr.is_null() { return }
     unsafe { Box::from_raw(ptr); }
 }
@@ -563,27 +563,27 @@ pub extern fn set_resource_version(ptr: *mut EngineOptions, res: ResourceVersion
 }
 
 #[no_mangle]
-pub fn should_run_unittests(ptr: *const EngineOptions) -> bool {
+pub extern fn should_run_unittests(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).run_unittests
 }
 
 #[no_mangle]
-pub fn should_show_help(ptr: *const EngineOptions) -> bool {
+pub extern fn should_show_help(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).show_help
 }
 
 #[no_mangle]
-pub fn should_run_editor(ptr: *const EngineOptions) -> bool {
+pub extern fn should_run_editor(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).run_editor
 }
 
 #[no_mangle]
-pub fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_fullscreen
 }
 
 #[no_mangle]
-pub fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
+pub extern fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
     unsafe_from_ptr!(ptr).scaling_quality
 }
 
@@ -594,33 +594,33 @@ pub extern fn get_scaling_quality_string(quality: ScalingQuality) -> *mut c_char
 }
 
 #[no_mangle]
-pub fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) -> () {
+pub extern fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) -> () {
         unsafe_from_ptr_mut!(ptr).scaling_quality = scaling_quality
 }
 
 
 #[no_mangle]
-pub fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {
+pub extern fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {
     unsafe_from_ptr_mut!(ptr).start_in_fullscreen = val
 }
 
 #[no_mangle]
-pub fn should_start_in_window(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_in_window(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_window
 }
 
 #[no_mangle]
-pub fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_debug_mode
 }
 
 #[no_mangle]
-pub fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_without_sound
 }
 
 #[no_mangle]
-pub fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () {
+pub extern fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () {
     unsafe_from_ptr_mut!(ptr).start_without_sound = val
 }
 
@@ -631,7 +631,7 @@ pub extern fn get_resource_version_string(version: ResourceVersion) -> *mut c_ch
 }
 
 #[no_mangle]
-pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *const c_char {
+pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
     let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr).to_string_lossy() };
     let is_exe = launcher_path.to_lowercase().ends_with(".exe");
     let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
@@ -645,7 +645,7 @@ pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *const c_
 }
 
 #[no_mangle]
-pub fn free_rust_string(s: *mut c_char) {
+pub extern fn free_rust_string(s: *mut c_char) {
     unsafe {
         if s.is_null() { return }
         CString::from_raw(s)

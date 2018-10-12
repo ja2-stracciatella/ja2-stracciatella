@@ -26,7 +26,7 @@ extern LanguageRes g_LanguageResRussianGold;
 
 
 /** Game version. */
-static GameVersion s_gameVersion = GV_ENGLISH;
+static GameVersion s_gameVersion = GameVersion::ENGLISH;
 
 /** Current language resources. */
 const LanguageRes* g_langRes = &g_LanguageResEnglish;
@@ -37,7 +37,7 @@ unsigned char const *TranslationTable = g_en_TranslationTable->m_table;
 
 wchar_t getZeroGlyphChar()
 {
-	if(s_gameVersion == GV_RUSSIAN)
+	if(s_gameVersion == GameVersion::RUSSIAN)
 	{
 		return L' ';
 	}
@@ -62,18 +62,18 @@ void setGameVersion(GameVersion ver)
 	s_gameVersion = ver;
 	switch(s_gameVersion)
 	{
-		case GV_DUTCH:        setResources(&g_LanguageResDutch,             g_en_TranslationTable     ); break;
-		case GV_ENGLISH:      setResources(&g_LanguageResEnglish,           g_en_TranslationTable     ); break;
-		case GV_FRENCH:       setResources(&g_LanguageResFrench,            g_fr_TranslationTable     ); break;
-		case GV_GERMAN:       setResources(&g_LanguageResGerman,            g_en_TranslationTable     ); break;
-		case GV_ITALIAN:      setResources(&g_LanguageResItalian,           g_en_TranslationTable     ); break;
-		case GV_POLISH:       setResources(&g_LanguageResPolish,            g_en_TranslationTable     ); break;
-		case GV_RUSSIAN:      setResources(&g_LanguageResRussian,           g_rus_TranslationTable    ); break;
-		case GV_RUSSIAN_GOLD: setResources(&g_LanguageResRussianGold,       g_rusGold_TranslationTable); break;
+		case GameVersion::DUTCH:        setResources(&g_LanguageResDutch,             g_en_TranslationTable     ); break;
+		case GameVersion::ENGLISH:      setResources(&g_LanguageResEnglish,           g_en_TranslationTable     ); break;
+		case GameVersion::FRENCH:       setResources(&g_LanguageResFrench,            g_fr_TranslationTable     ); break;
+		case GameVersion::GERMAN:       setResources(&g_LanguageResGerman,            g_en_TranslationTable     ); break;
+		case GameVersion::ITALIAN:      setResources(&g_LanguageResItalian,           g_en_TranslationTable     ); break;
+		case GameVersion::POLISH:       setResources(&g_LanguageResPolish,            g_en_TranslationTable     ); break;
+		case GameVersion::RUSSIAN:      setResources(&g_LanguageResRussian,           g_rus_TranslationTable    ); break;
+		case GameVersion::RUSSIAN_GOLD: setResources(&g_LanguageResRussianGold,       g_rusGold_TranslationTable); break;
 		default:
 		{
 			SLOGW(DEBUG_TAG_RESOURCES, "Unknown version. Using ENGLISH by defaul");
-			s_gameVersion = GV_ENGLISH;
+			s_gameVersion = GameVersion::ENGLISH;
 			setResources(&g_LanguageResEnglish, g_en_TranslationTable);
 		}
 	}
@@ -83,35 +83,35 @@ void setGameVersion(GameVersion ver)
 /** Check if this is English version of the game. */
 bool isEnglishVersion()
 {
-	return s_gameVersion == GV_ENGLISH;
+	return s_gameVersion == GameVersion::ENGLISH;
 }
 
 
 /** Check if this is German version of the game. */
 bool isGermanVersion()
 {
-	return s_gameVersion == GV_GERMAN;
+	return s_gameVersion == GameVersion::GERMAN;
 }
 
 
 /** Check if this is Polish version of the game. */
 bool isPolishVersion()
 {
-	return s_gameVersion == GV_POLISH;
+	return s_gameVersion == GameVersion::POLISH;
 }
 
 
 /** Check if this is Russian version of the game. */
 bool isRussianVersion()
 {
-	return s_gameVersion == GV_RUSSIAN;
+	return s_gameVersion == GameVersion::RUSSIAN;
 }
 
 
 /** Check if this is Russian GOLD version of the game. */
 bool isRussianGoldVersion()
 {
-	return s_gameVersion == GV_RUSSIAN_GOLD;
+	return s_gameVersion == GameVersion::RUSSIAN_GOLD;
 }
 
 
@@ -132,7 +132,7 @@ const IEncodingCorrector* getDataFilesEncodingCorrector()
 FLOAT getMajorMapVersion()
 {
 	// Don't mess with this value, unless you want to force update all maps in the game!
-	return (s_gameVersion == GV_RUSSIAN) ? 6.00 : 5.00;
+	return (s_gameVersion == GameVersion::RUSSIAN) ? 6.00 : 5.00;
 }
 
 /** Get list of resource libraries. */
@@ -155,7 +155,7 @@ std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 
 char const* GetMLGFilename(MultiLanguageGraphic const id)
 {
-	if((s_gameVersion == GV_ENGLISH) || (s_gameVersion == GV_FRENCH) || (s_gameVersion == GV_RUSSIAN_GOLD))
+	if((s_gameVersion == GameVersion::ENGLISH) || (s_gameVersion == GameVersion::FRENCH) || (s_gameVersion == GameVersion::RUSSIAN_GOLD))
 	{
 		switch (id)
 		{
@@ -196,7 +196,7 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 				break;
 		}
 	}
-	else if(s_gameVersion == GV_GERMAN)
+	else if(s_gameVersion == GameVersion::GERMAN)
 	{
 		switch (id)
 		{
@@ -237,7 +237,7 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 				break;
 	}
 	}
-	else if(s_gameVersion == GV_DUTCH)
+	else if(s_gameVersion == GameVersion::DUTCH)
 	{
 		switch (id)
 		{
@@ -278,7 +278,7 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 				break;
 		}
 	}
-	else if(s_gameVersion == GV_ITALIAN)
+	else if(s_gameVersion == GameVersion::ITALIAN)
 	{
 		switch (id)
 		{
@@ -319,7 +319,7 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 				break;
 		}
 	}
-	else if(s_gameVersion == GV_POLISH)
+	else if(s_gameVersion == GameVersion::POLISH)
 	{
 		switch (id)
 		{
@@ -360,7 +360,7 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 				break;
 		}
 	}
-	else if(s_gameVersion == GV_RUSSIAN)
+	else if(s_gameVersion == GameVersion::RUSSIAN)
 	{
 		switch (id)
 		{

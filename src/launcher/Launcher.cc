@@ -16,14 +16,14 @@
 const char* defaultResolution = "640x480";
 
 const std::vector<GameVersion> predefinedVersions = {
-	GameVersion::GV_DUTCH,
-	GameVersion::GV_ENGLISH,
-	GameVersion::GV_FRENCH,
-	GameVersion::GV_GERMAN,
-	GameVersion::GV_ITALIAN,
-	GameVersion::GV_POLISH,
-	GameVersion::GV_RUSSIAN,
-	GameVersion::GV_RUSSIAN_GOLD
+	GameVersion::DUTCH,
+	GameVersion::ENGLISH,
+	GameVersion::FRENCH,
+	GameVersion::GERMAN,
+	GameVersion::ITALIAN,
+	GameVersion::POLISH,
+	GameVersion::RUSSIAN,
+	GameVersion::RUSSIAN_GOLD
 };
 const std::vector< std::pair<int, int> > predefinedResolutions = {
 	std::make_pair(640,  480),
@@ -34,12 +34,12 @@ const std::vector< std::pair<int, int> > predefinedResolutions = {
 	std::make_pair(1920, 1080)
 };
 const std::vector<VideoScaleQuality> scalingModes = {
-	VideoScaleQuality::VIDEO_SCALE_QUALITY_LINEAR,
-	VideoScaleQuality::VIDEO_SCALE_QUALITY_NEAR_PERFECT,
-	VideoScaleQuality::VIDEO_SCALE_QUALITY_PERFECT,
+	VideoScaleQuality::LINEAR,
+	VideoScaleQuality::NEAR_PERFECT,
+	VideoScaleQuality::PERFECT,
 };
 
-Launcher::Launcher(const std::string exePath, engine_options_t* engine_options) : StracciatellaLauncher() {
+Launcher::Launcher(const std::string exePath, EngineOptions* engine_options) : StracciatellaLauncher() {
 	this->exePath = exePath;
 	this->engine_options = engine_options;
 }

@@ -157,11 +157,31 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/game")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/rust")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 
+include(ExternalProject)
+
+externalproject_add(libstracciatella
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rust"
+    INSTALL_DIR "${CMAKE_BINARY_DIR}/lib-stracciatella"
+    BUILD_ALWAYS ON
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-stracciatella
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}
+        -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+        -DCMAKE_RC_COMPILER=${CMAKE_RC_COMPILER}
+        -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM}
+        -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY}
+        -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}
+        -DLIBSTRACCIATELLA_TARGET=${LIBSTRACCIATELLA_TARGET}
+)
+
+set(STRACCIATELLA_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-stracciatella/include")
+set(STRACCIATELLA_LIBRARIES "${CMAKE_BINARY_DIR}/lib-stracciatella/lib/${CMAKE_STATIC_LIBRARY_PREFIX}stracciatella${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
 if(BUILD_LAUNCHER)
-    set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR})
+    set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR} ${STRACCIATELLA_INCLUDE_DIR})
     set(LAUNCHER_SOURCES "")
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
 endif()
@@ -172,6 +192,7 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
+    ${STRACCIATELLA_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-utf8cpp/source
 )
@@ -222,14 +243,16 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
-target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker rust-stracciatella ${ADDITIONAL_LIBS})
+target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker ${STRACCIATELLA_LIBRARIES} ${ADDITIONAL_LIBS})
+add_dependencies(${JA2_BINARY} libstracciatella)
 if (LOCAL_GTEST_LIB)
     add_dependencies(${JA2_BINARY} gtest-internal)
 endif()
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} slog rust-stracciatella ${ADDITIONAL_LIBS})
+    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} slog ${STRACCIATELLA_LIBRARIES} ${ADDITIONAL_LIBS})
+    add_dependencies(${LAUNCHER_BINARY} libstracciatella)
     if (LOCAL_FLTK_LIB)
         add_dependencies(${LAUNCHER_BINARY} fltk-internal)
     endif()
