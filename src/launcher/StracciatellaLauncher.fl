@@ -20,7 +20,7 @@ class StracciatellaLauncher {open
             label {JA2 Game Directory:}
             xywh {156 10 270 25} align 132
           }
-          Fl_Input_Choice gameVersionInput {
+          Fl_Choice gameVersionInput {
             label {Game Version:} open
             xywh {156 40 300 25}
           } {}

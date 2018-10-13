@@ -14,34 +14,34 @@
 
 
 const char* defaultResolution = "640x480";
-const char* predefinedVersions[] = {
-	"DUTCH",
-	"ENGLISH",
-	"FRENCH",
-	"GERMAN",
-	"ITALIAN",
-	"POLISH",
-	"RUSSIAN",
-	"RUSSIAN_GOLD",
-	NULL
+
+const std::vector<GameVersion> predefinedVersions = {
+	GameVersion::GV_DUTCH,
+	GameVersion::GV_ENGLISH,
+	GameVersion::GV_FRENCH,
+	GameVersion::GV_GERMAN,
+	GameVersion::GV_ITALIAN,
+	GameVersion::GV_POLISH,
+	GameVersion::GV_RUSSIAN,
+	GameVersion::GV_RUSSIAN_GOLD
+};
+const std::vector< std::pair<int, int> > predefinedResolutions = {
+	std::make_pair(640,  480),
+	std::make_pair(800,  600),
+	std::make_pair(1024, 768),
+	std::make_pair(1280, 720),
+	std::make_pair(1600, 900),
+	std::make_pair(1920, 1080)
+};
+const std::vector<VideoScaleQuality> scalingModes = {
+	VideoScaleQuality::VIDEO_SCALE_QUALITY_LINEAR,
+	VideoScaleQuality::VIDEO_SCALE_QUALITY_NEAR_PERFECT,
+	VideoScaleQuality::VIDEO_SCALE_QUALITY_PERFECT,
 };
 
 Launcher::Launcher(const std::string exePath, engine_options_t* engine_options) : StracciatellaLauncher() {
 	this->exePath = exePath;
 	this->engine_options = engine_options;
-	this->predefinedResolutions = std::vector< std::pair<int, int> >();
-
-	this->predefinedResolutions.push_back(std::make_pair(640,  480));
-	this->predefinedResolutions.push_back(std::make_pair(800,  600));
-	this->predefinedResolutions.push_back(std::make_pair(1024, 768));
-	this->predefinedResolutions.push_back(std::make_pair(1280, 720));
-	this->predefinedResolutions.push_back(std::make_pair(1600, 900));
-	this->predefinedResolutions.push_back(std::make_pair(1920, 1080));
-
-	this->scalingModes = std::vector< std::pair<const char*, const char*> >();
-	this->scalingModes.push_back(std::make_pair("LINEAR", "Linear Interpolation"));
-	this->scalingModes.push_back(std::make_pair("NEAR_PERFECT", "Near perfect with oversampling"));
-	this->scalingModes.push_back(std::make_pair("PERFECT", "Pixel perfect centered"));
 }
 
 void Launcher::show() {
@@ -64,21 +64,27 @@ void Launcher::initializeInputsFromDefaults() {
 	dataDirectoryInput->value(rustResRootPath);
 	free_rust_string(rustResRootPath);
 
-	char* rustResVersion = get_resource_version_string(get_resource_version(this->engine_options));
-	gameVersionInput->value(rustResVersion);
-	free_rust_string(rustResVersion);
+	auto rustResVersion = get_resource_version(this->engine_options);
+	auto resourceVersionIndex = 0;
+	for (auto version : predefinedVersions) {
+		if (version == rustResVersion) {
+			break;
+		}
+		resourceVersionIndex += 1;
+	}
+	gameVersionInput->value(resourceVersionIndex);
 
 	int x = get_resolution_x(this->engine_options);
 	int y = get_resolution_y(this->engine_options);
-	std::pair<int, int> resolution = std::make_pair(x, y);
+	std::pair<int, int> currentResolution = std::make_pair(x, y);
 
 	char resolutionString[255];
 	sprintf(resolutionString, "%dx%d", x, y);
 
 	std::pair<int, int>* predefinedResolution = NULL;
-	for (int i=0; i < predefinedResolutions.size(); i++) {
-		if (predefinedResolutions[i] == resolution) {
-			predefinedResolution = &predefinedResolutions[i];
+	for (auto res : predefinedResolutions) {
+		if (res == currentResolution) {
+			predefinedResolution = &res;
 		}
 	}
 
@@ -91,18 +97,16 @@ void Launcher::initializeInputsFromDefaults() {
 		predefinedResolutionInput->value(defaultResolution);
 		enableCustomResolutions();
 	}
-	
+
 	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
-	switch (quality) {
-		case VIDEO_SCALE_QUALITY_PERFECT:
-			this->scalingModeChoice->value(2);
+	auto scalingModeIndex = 0;
+	for (auto scalingMode : scalingModes) {
+		if (scalingMode == quality) {
 			break;
-		case VIDEO_SCALE_QUALITY_NEAR_PERFECT:
-			this->scalingModeChoice->value(1);
-			break;
-		default:
-			this->scalingModeChoice->value(0);
+		}
+		scalingModeIndex += 1;
 	}
+	this->scalingModeChoice->value(scalingModeIndex);
 
 	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
 	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
@@ -126,10 +130,12 @@ int Launcher::writeJsonFile() {
 		set_resolution(this->engine_options, x, y);
 	}
 
-	set_resource_version(this->engine_options, gameVersionInput->value());
-	
-	auto currentScalingMode = (std::pair<const char*, const char*> *)this->scalingModeChoice->mvalue()->user_data();
-	set_scaling_quality(this->engine_options, currentScalingMode->first);
+	auto currentResourceVersionIndex = gameVersionInput->value();
+	auto currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
+	set_resource_version(this->engine_options, currentResourceVersion);
+
+	auto currentScalingMode = scalingModes[this->scalingModeChoice->value()];
+	set_scaling_quality(this->engine_options, currentScalingMode);
 
 	bool success = write_engine_options(this->engine_options);
 
@@ -142,17 +148,21 @@ int Launcher::writeJsonFile() {
 }
 
 void Launcher::populateChoices() {
-	for (int i=0; predefinedVersions[i] != NULL; i++) {
-		gameVersionInput->add(predefinedVersions[i]);
-	}
-	for (int i=0; i < predefinedResolutions.size(); i++) {
+	for(GameVersion version : predefinedVersions) {
+		auto resourceVersionString = get_resource_version_string(version);
+		gameVersionInput->add(resourceVersionString);
+		free_rust_string(resourceVersionString);
+    }
+	for (auto res : predefinedResolutions) {
 		char resolutionString[255];
-		sprintf(resolutionString, "%dx%d", predefinedResolutions[i].first, predefinedResolutions[i].second);
+		sprintf(resolutionString, "%dx%d", res.first, res.second);
 		predefinedResolutionInput->add(resolutionString);
 	}
 
-	for (int i = 0; i < this->scalingModes.size(); i++) {
-		this->scalingModeChoice->add(this->scalingModes[i].second, 0, 0, (void*)&this->scalingModes[i]);
+	for (auto scalingMode : scalingModes) {
+		auto scalingModeString = get_scaling_quality_string(scalingMode);
+		this->scalingModeChoice->add(scalingModeString);
+		free_rust_string(scalingModeString);
 	}
 }
 

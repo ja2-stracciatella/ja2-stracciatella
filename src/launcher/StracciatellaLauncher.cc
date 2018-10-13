@@ -3,7 +3,7 @@
 #include "StracciatellaLauncher.h"
 
 StracciatellaLauncher::StracciatellaLauncher() {
-  { stracciatellaLauncher = new Fl_Double_Window(465, 329, "JA2 Stracciatella Launcher");
+  { stracciatellaLauncher = new Fl_Double_Window(465, 325, "JA2 Stracciatella Launcher");
     stracciatellaLauncher->user_data((void*)(this));
     { Fl_Group* o = new Fl_Group(0, 0, 465, 318);
       { Fl_Group* o = new Fl_Group(5, 10, 451, 65);
@@ -11,8 +11,9 @@ StracciatellaLauncher::StracciatellaLauncher() {
         { dataDirectoryInput = new Fl_Input(156, 10, 270, 25, "JA2 Game Directory:");
           dataDirectoryInput->align(Fl_Align(132));
         } // Fl_Input* dataDirectoryInput
-        { gameVersionInput = new Fl_Input_Choice(156, 40, 300, 25, "Game Version:");
-        } // Fl_Input_Choice* gameVersionInput
+        { gameVersionInput = new Fl_Choice(156, 40, 300, 25, "Game Version:");
+          gameVersionInput->down_box(FL_BORDER_BOX);
+        } // Fl_Choice* gameVersionInput
         { browseJa2DirectoryButton = new Fl_Button(431, 10, 25, 25, "...");
         } // Fl_Button* browseJa2DirectoryButton
         o->end();

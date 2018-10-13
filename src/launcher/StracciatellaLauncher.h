@@ -6,20 +6,20 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Input.H>
-#include <FL/Fl_Input_Choice.H>
+#include <FL/Fl_Choice.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Round_Button.H>
+#include <FL/Fl_Input_Choice.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Choice.H>
 
 class StracciatellaLauncher {
 public:
   StracciatellaLauncher();
   Fl_Double_Window *stracciatellaLauncher;
   Fl_Input *dataDirectoryInput;
-  Fl_Input_Choice *gameVersionInput;
+  Fl_Choice *gameVersionInput;
   Fl_Button *browseJa2DirectoryButton;
   Fl_Check_Button *fullscreenCheckbox;
   Fl_Round_Button *predefinedResolutionButton;

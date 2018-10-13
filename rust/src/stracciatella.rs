@@ -85,14 +85,14 @@ impl FromStr for ResourceVersion {
 impl Display for ResourceVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", match self {
-            &ResourceVersion::DUTCH => "DUTCH",
-            &ResourceVersion::ENGLISH => "ENGLISH",
-            &ResourceVersion::FRENCH => "FRENCH",
-            &ResourceVersion::GERMAN => "GERMAN",
-            &ResourceVersion::ITALIAN => "ITALIAN",
-            &ResourceVersion::POLISH => "POLISH",
-            &ResourceVersion::RUSSIAN => "RUSSIAN",
-            &ResourceVersion::RUSSIAN_GOLD => "RUSSIAN_GOLD",
+            &ResourceVersion::DUTCH => "Dutch",
+            &ResourceVersion::ENGLISH => "English",
+            &ResourceVersion::FRENCH => "French",
+            &ResourceVersion::GERMAN => "German",
+            &ResourceVersion::ITALIAN => "Italian",
+            &ResourceVersion::POLISH => "Polish",
+            &ResourceVersion::RUSSIAN => "Russian",
+            &ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
         })
     }
 }
@@ -122,9 +122,9 @@ impl FromStr for ScalingQuality {
 impl Display for ScalingQuality {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", match self {
-            &ScalingQuality::LINEAR => "LINEAR",
-            &ScalingQuality::NEAR_PERFECT => "NEAR_PERFECT",
-            &ScalingQuality::PERFECT => "PERFECT",
+            &ScalingQuality::LINEAR => "Linear Interpolation",
+            &ScalingQuality::NEAR_PERFECT => "Near perfect with oversampling",
+            &ScalingQuality::PERFECT => "Pixel perfect centered",
         })
     }
 }
@@ -550,13 +550,8 @@ pub extern fn get_resource_version(ptr: *const EngineOptions) -> ResourceVersion
 }
 
 #[no_mangle]
-pub extern fn set_resource_version(ptr: *mut EngineOptions, res_ptr: *const c_char) -> () {
-    let c_str = unsafe { CStr::from_ptr(res_ptr) };
-    let version = c_str.to_str().unwrap();
-
-    if let Ok(v) = ResourceVersion::from_str(version) {
-        unsafe_from_ptr_mut!(ptr).resource_version = v
-    }
+pub extern fn set_resource_version(ptr: *mut EngineOptions, res: ResourceVersion) -> () {
+    unsafe_from_ptr_mut!(ptr).resource_version = res;
 }
 
 #[no_mangle]
@@ -585,13 +580,14 @@ pub fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
 }
 
 #[no_mangle]
-pub fn set_scaling_quality(ptr: *mut EngineOptions, res_ptr: *const c_char) -> () {
-    let c_str = unsafe { CStr::from_ptr(res_ptr) };
-    let quality = c_str.to_str().unwrap();
+pub extern fn get_scaling_quality_string(quality: ScalingQuality) -> *mut c_char {
+    let c_str_home = CString::new(quality.to_string()).unwrap();
+    c_str_home.into_raw()
+}
 
-    if let Ok(q) = ScalingQuality::from_str(quality) {
-        unsafe_from_ptr_mut!(ptr).scaling_quality = q
-    }
+#[no_mangle]
+pub fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) -> () {
+        unsafe_from_ptr_mut!(ptr).scaling_quality = scaling_quality
 }
 
 
@@ -1109,14 +1105,14 @@ r##"{
 
     #[test]
     fn get_resource_version_string_should_return_the_correct_resource_version_string() {
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::DUTCH), "DUTCH");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ENGLISH), "ENGLISH");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::FRENCH), "FRENCH");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::GERMAN), "GERMAN");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ITALIAN), "ITALIAN");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::POLISH), "POLISH");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN), "RUSSIAN");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN_GOLD), "RUSSIAN_GOLD");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::DUTCH), "Dutch");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ENGLISH), "English");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::FRENCH), "French");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::GERMAN), "German");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ITALIAN), "Italian");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::POLISH), "Polish");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN), "Russian");
+        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN_GOLD), "Russian (Gold)");
 
     }
 
