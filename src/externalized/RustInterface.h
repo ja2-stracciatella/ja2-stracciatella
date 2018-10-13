@@ -16,7 +16,7 @@ extern "C" {
 	extern UINT16 get_resolution_y(const engine_options_t *);
 	extern void set_resolution(const engine_options_t *, UINT16, UINT16);
 	extern GameVersion get_resource_version(const engine_options_t *);
-	extern void set_resource_version(const engine_options_t *, const char *);
+	extern void set_resource_version(const engine_options_t *, GameVersion);
 	extern char * get_resource_version_string(GameVersion);
 	extern void free_rust_string(char *);
 	extern bool should_show_help(const engine_options_t *);
@@ -24,7 +24,8 @@ extern "C" {
 	extern bool should_run_editor(const engine_options_t *);
 	extern bool should_start_in_fullscreen(const engine_options_t *);
 	extern VideoScaleQuality get_scaling_quality(const engine_options_t *);
-	extern void set_scaling_quality(const engine_options_t *, const char *);
+	extern char * get_scaling_quality_string(VideoScaleQuality);
+	extern void set_scaling_quality(const engine_options_t *, VideoScaleQuality);
 	extern void set_start_in_fullscreen(const engine_options_t *, bool);
 	extern bool should_start_in_window(const engine_options_t *);
 	extern bool should_start_in_debug_mode(const engine_options_t *);
