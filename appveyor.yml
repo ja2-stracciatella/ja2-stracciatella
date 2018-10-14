@@ -1,8 +1,17 @@
 version: "{build}"
 
-platform:
-  - Win32
-  - x64
+environment:
+  SFTP_USER:
+    secure: "uBUgFeI9sHRv0IiMPpA9rg=="
+  SFTP_PASSWORD:
+    secure: "gXqhlT/yjiLd/jTpvg4kcZtBRCZ8RnoOJ3zRTSF5voA="
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      CMAKE_GENERATOR_NAME: Visual Studio 14 2015
+      RUST_TOOLCHAIN: stable-i686-pc-windows-msvc
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR_NAME: Visual Studio 15 2017 Win64
+      RUST_TOOLCHAIN: stable-x86_64-pc-windows-msvc
 
 branches:
   only:
@@ -44,15 +53,6 @@ init:
 
   - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
 
-  - ps: >
-        if ("$env:platform" -eq "Win32") {
-          $env:RUST_TOOLCHAIN = "stable-i686-pc-windows-msvc";
-          $env:CMAKE_GENERATOR_NAME = "Visual Studio 14 2015";
-        } else {
-          $env:RUST_TOOLCHAIN = "stable-x86_64-pc-windows-msvc";
-          $env:CMAKE_GENERATOR_NAME = "Visual Studio 14 2015 Win64";
-        }
-
   - cmd: echo "%RUST_TOOLCHAIN%"
   - cmd: echo "%CMAKE_GENERATOR_NAME%"
 
@@ -64,8 +64,10 @@ install:
   - cmd: curl -sSf -o rustup-init.exe https://win.rustup.rs/
   - cmd: rustup-init.exe -y --default-toolchain %RUST_TOOLCHAIN%
   - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+
   - cmd: rustc -V
   - cmd: cargo -V
+  - cmd: cmake --version
 
 before_build:
   - cmd: mkdir ci-build
@@ -93,9 +95,3 @@ after_test:
 
 artifacts:
   - path: ci-build\ja2-stracciatella_*
-
-environment:
-  SFTP_USER:
-    secure: "uBUgFeI9sHRv0IiMPpA9rg=="
-  SFTP_PASSWORD:
-    secure: "gXqhlT/yjiLd/jTpvg4kcZtBRCZ8RnoOJ3zRTSF5voA="
