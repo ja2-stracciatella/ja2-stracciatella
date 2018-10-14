@@ -49,6 +49,17 @@ option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 
+set(EXTERNAL_PROJECT_CMAKE_ARGS
+    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    -DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}
+    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -DCMAKE_RC_COMPILER=${CMAKE_RC_COMPILER}
+    -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM}
+    -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY}
+    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}
+)
+
 ## Build
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
@@ -120,36 +131,11 @@ if(BUILD_LAUNCHER)
         endif()
     else()
         add_subdirectory("dependencies/lib-fltk")
-        set(FLTK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-fltk/include")
-        set(FLTK_BASE_DIR "${CMAKE_BINARY_DIR}/lib-fltk")
-        set(FLTK_LIB_DIR "lib")
-        set(FLTK_LIB_PREFIX "${CMAKE_STATIC_LIBRARY_PREFIX}")
-        set(FLTK_LIB_SUFFIX "${CMAKE_STATIC_LIBRARY_SUFFIX}")
-        set(FLTK_ADDITIONAL_LIBRARIES "")
-
-        if (UNIX AND NOT MINGW AND NOT APPLE)
-            set(FLTK_LIB_DIR "lib64")
-            set(FLTK_ADDITIONAL_LIBRARIES X11)
-        elseif(MINGW)
-            set(FLTK_ADDITIONAL_LIBRARIES comctl32)
-        elseif(MSVC)
-            set(MSVC_LIB_SUFFIX "")
-            if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-                set(MSVC_LIB_SUFFIX "d")
-            endif()
-            set(FLTK_LIB_SUFFIX "${MSVC_LIB_SUFFIX}${FLTK_LIB_SUFFIX}")
-        endif()
-
-        set(FLTK_LIBRARIES
-            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_images${FLTK_LIB_SUFFIX}"
-            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk${FLTK_LIB_SUFFIX}"
-            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_forms${FLTK_LIB_SUFFIX}"
-            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_png${FLTK_LIB_SUFFIX}"
-            "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_z${FLTK_LIB_SUFFIX}"
-            ${FLTK_ADDITIONAL_LIBRARIES})
     endif()
 endif()
 message(STATUS "Fltk Libraries: ${FLTK_LIBRARIES}")
+
+include(./rust/ExternalProject.cmake)
 
 set(JA2_INCLUDES "")
 set(JA2_SOURCES "")
@@ -158,27 +144,6 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/game")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/slog")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
-
-include(ExternalProject)
-
-externalproject_add(libstracciatella
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rust"
-    INSTALL_DIR "${CMAKE_BINARY_DIR}/lib-stracciatella"
-    BUILD_ALWAYS ON
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-stracciatella
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        -DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}
-        -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-        -DCMAKE_RC_COMPILER=${CMAKE_RC_COMPILER}
-        -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM}
-        -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY}
-        -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}
-        -DLIBSTRACCIATELLA_TARGET=${LIBSTRACCIATELLA_TARGET}
-)
-
-set(STRACCIATELLA_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-stracciatella/include")
-set(STRACCIATELLA_LIBRARIES "${CMAKE_BINARY_DIR}/lib-stracciatella/lib/${CMAKE_STATIC_LIBRARY_PREFIX}stracciatella${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if(BUILD_LAUNCHER)
     set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR} ${STRACCIATELLA_INCLUDE_DIR})
@@ -218,16 +183,9 @@ if (WITH_UNITTESTS)
     else()
         message(STATUS "Compiling with local GTest libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-gtest")
         add_subdirectory("dependencies/lib-gtest")
-        set(GTEST_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/lib-gtest/include")
-
-        set(LIB_SUFFIX "")
-        if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-            set(LIB_SUFFIX "d")
-        endif()
-        set(GTEST_LIBRARIES "${CMAKE_BINARY_DIR}/lib-gtest/lib/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
     endif()
+    message(STATUS "GTest Libraries: ${GTEST_LIBRARIES}")
 
-    set(lib-gtest "${GTEST_LIBRARIES}")
     include_directories(${GTEST_INCLUDE_DIRS})
     add_definitions("-DWITH_UNITTESTS")
 endif()
@@ -243,7 +201,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
-target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${lib-gtest} slog smacker ${STRACCIATELLA_LIBRARIES} ${ADDITIONAL_LIBS})
+target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${GTEST_LIBRARIES} slog smacker ${STRACCIATELLA_LIBRARIES} ${ADDITIONAL_LIBS})
 add_dependencies(${JA2_BINARY} libstracciatella)
 if (LOCAL_GTEST_LIB)
     add_dependencies(${JA2_BINARY} gtest-internal)
