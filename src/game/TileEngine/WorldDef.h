@@ -15,6 +15,9 @@
 #define CELL_X_SIZE		10
 #define CELL_Y_SIZE		10
 
+#define HALF_TILE_WIDTH		((WORLD_TILE_X / CELL_X_SIZE) / 2)	// equals to 2
+#define HALF_TILE_HEIGHT	((WORLD_TILE_Y / CELL_Y_SIZE) / 2)	// equals to 1
+
 #define CENTER_GRIDNO (WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2)
 
 #define WORLD_CLIFF_HEIGHT	80
