@@ -2280,8 +2280,6 @@ void InitRenderParams(UINT8 ubRestrictionID)
 static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY, BOOLEAN fForceAdjust, BOOLEAN fCheckOnly,
 				ScrollType scrollType)
 {
-	// printf("~ %4d, %4d\n", sTempRenderCenterX, sTempRenderCenterY);
-
 	// Make sure it's a multiple of 5
 	sTempRenderCenterX = sTempRenderCenterX / CELL_X_SIZE * CELL_X_SIZE + CELL_X_SIZE / 2;
 	sTempRenderCenterY = sTempRenderCenterY / CELL_X_SIZE * CELL_Y_SIZE + CELL_Y_SIZE / 2;
@@ -2299,32 +2297,23 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	const INT16 sY_S = g_ui.m_tacticalMapCenterY;
 
 	// Get corners in screen coords
-	// TOP LEFT
 	const INT16 sTopLeftWorldX = sScreenCenterX - sX_S;
 	const INT16 sTopLeftWorldY = sScreenCenterY - sY_S;
-
-	const INT16 sTopRightWorldX = sScreenCenterX + sX_S;
-	// const INT16 sTopRightWorldY = sScreenCenterY - sY_S;
-
-	// const INT16 sBottomLeftWorldX = sScreenCenterX - sX_S;
-	const INT16 sBottomLeftWorldY = sScreenCenterY + sY_S;
 
 	const INT16 sBottomRightWorldX = sScreenCenterX + sX_S;
 	const INT16 sBottomRightWorldY = sScreenCenterY + sY_S;
 
-#define TILE_SIZE 10
-
 	// Checking if screen shows areas outside of the map
-	BOOLEAN fOutLeft   = (gsTLX > sTopLeftWorldX);
-	BOOLEAN fOutRight  = (gsTRX < sTopRightWorldX);
-	BOOLEAN fOutTop    = (gsTLY >= sTopLeftWorldY);            /* top of the screen is above top of the map */
-	BOOLEAN fOutBottom = (gsBLY < sBottomLeftWorldY);          /* bottom of the screen is below bottom if the map */
+	const BOOLEAN fOutLeft   = (gsTLX + SCROLL_LEFT_PADDING > sTopLeftWorldX);
+	const BOOLEAN fOutRight  = (gsBRX + SCROLL_RIGHT_PADDING < sBottomRightWorldX);
+	const BOOLEAN fOutTop    = (gsTLY + SCROLL_TOP_PADDING >= sTopLeftWorldY);            /* top of the screen is above top of the map */
+	const BOOLEAN fOutBottom = (gsBRY + SCROLL_BOTTOM_PADDING < sBottomRightWorldY);          /* bottom of the screen is below bottom if the map */
 
-	int mapHeight = gsBLY - gsTLY;
-	int screenHeight = gsVIEWPORT_END_Y - gsVIEWPORT_START_Y;
+	const int mapHeight = (gsBRY + SCROLL_BOTTOM_PADDING) - (gsTLY + SCROLL_TOP_PADDING);
+	const int screenHeight = gsVIEWPORT_END_Y - gsVIEWPORT_START_Y;
 
-	int mapWidth = gsTRX - gsTLX;
-	int screenWidth = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
+	const int mapWidth = (gsBRX + SCROLL_RIGHT_PADDING) - (gsTLX + SCROLL_LEFT_PADDING);
+	const int screenWidth = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
 
 	BOOLEAN fScrollGood = FALSE;
 
@@ -2375,29 +2364,29 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 			if (screenHeight > mapHeight)
 			{
 				// printf("screen height is bigger than map height\n");
-				newScreenCenterY = gsCY;
+				newScreenCenterY = gsCY + (SCROLL_TOP_PADDING + SCROLL_BOTTOM_PADDING) / 2;
 			}
 			else if (fOutTop)
 			{
-				newScreenCenterY = gsTLY + sY_S;
+				newScreenCenterY = gsTLY + SCROLL_TOP_PADDING + sY_S;
 			}
 			else if (fOutBottom)
 			{
-				newScreenCenterY = gsBLY - sY_S - 50;
+				newScreenCenterY = gsBRY + SCROLL_BOTTOM_PADDING - sY_S;
 			}
 
 			if (screenWidth > mapWidth)
 			{
 				// printf("screen width is bigger than map width\n");
-				newScreenCenterX = gsCX;
+				newScreenCenterX = gsCX + (SCROLL_LEFT_PADDING + SCROLL_RIGHT_PADDING) / 2;
 			}
 			else if (fOutLeft)
 			{
-				newScreenCenterX = gsTLX + sX_S;
+				newScreenCenterX = gsTLX + SCROLL_LEFT_PADDING + sX_S;
 			}
 			else if (fOutRight)
 			{
-				newScreenCenterX = gsTRX - sX_S;
+				newScreenCenterX = gsBRX + SCROLL_RIGHT_PADDING - sX_S;
 			}
 
 			INT16 sTempPosX_W;
