@@ -20,6 +20,11 @@ Path to vanilla data
 \fB\-res WxH\fR
 Screen resolution, e.g. 800x600. Default value is 640x480
 .TP
+\fB\-brightness GAMMA\fR
+Screen brightness (gamma multiplier) value to set where 0.0 is completely dark and 1.0 is normal brightness. Default value is 1.0
+.br
+NOTE: some video drivers do not support setting the gamma value and this option may not have any effect in those cases
+.TP
 \fB\-resversion VERSION\fR
 Version of the game resources.
 Possible values are: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD.

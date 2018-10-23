@@ -121,6 +121,11 @@ void VideoToggleFullScreen(void)
 	}
 }
 
+void VideoSetBrightness(float brightness)
+{
+	SDL_SetWindowBrightness(g_game_window, brightness);
+}
+
 
 static void GetRGBDistribution();
 
