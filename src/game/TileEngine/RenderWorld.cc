@@ -2257,8 +2257,8 @@ void InitRenderParams(UINT8 ubRestrictionID)
 
 	// Determine scale factors
 	// First scale world screen coords for VIEWPORT ratio
-	const double dWorldX = gsTRX - gsTLX;
-	const double dWorldY = gsBRY - gsTRY;
+	const double dWorldX = gsBRX - gsTLX;
+	const double dWorldY = gsBRY - gsTLY;
 
 	gdScaleX = (double)RADAR_WINDOW_WIDTH  / dWorldX;
 	gdScaleY = (double)RADAR_WINDOW_HEIGHT / dWorldY;
