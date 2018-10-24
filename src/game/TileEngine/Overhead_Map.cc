@@ -931,13 +931,13 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 
 			*psX1 = 0;
 			*psX2 = sEndXS;
-			*psY1 = ( NORMAL_MAP_SCREEN_HEIGHT - ABS( NORMAL_MAP_SCREEN_BY - gsBLY ) ) / 5;
+			*psY1 = ( NORMAL_MAP_SCREEN_HEIGHT - ABS( NORMAL_MAP_SCREEN_BY - gsBRY ) ) / 5;
 			*psY2 = sEndYS;
 			break;
 
 		case EAST:
 
-			*psX1 = ( NORMAL_MAP_SCREEN_WIDTH - ABS( NORMAL_MAP_SCREEN_X - gsTRX ) ) / 5;
+			*psX1 = ( NORMAL_MAP_SCREEN_WIDTH - ABS( NORMAL_MAP_SCREEN_X - gsBRX ) ) / 5;
 			*psX2 = sEndXS;
 			*psY1 = 0;
 			*psY2 = sEndYS;

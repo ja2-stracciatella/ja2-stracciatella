@@ -138,10 +138,6 @@ INT16 gCenterWorldX;
 INT16 gCenterWorldY;
 INT16 gsTLX;                            /**< Top left corner of the current map in screen coordinates. */
 INT16 gsTLY;                            /**< Top left corner of the current map in screen coordinates. */
-INT16 gsTRX;                            /**< Top right corner of the current map in screen coordinates. */
-INT16 gsTRY;                            /**< Top right corner of the current map in screen coordinates. */
-INT16 gsBLX;                            /**< Bottom left corner of the current map in screen coordinates. */
-INT16 gsBLY;                            /**< Bottom left corner of the current map in screen coordinates. */
 INT16 gsBRX;                            /**< Bottom right corner of the current map in screen coordinates. */
 INT16 gsBRY;                            /**< Bottom right corner of the current map in screen coordinates. */
 INT16 gsCX;                             /**< Center of the map in screen coordinates (seems to be always 0). */
@@ -2244,17 +2240,14 @@ void InitRenderParams(UINT8 ubRestrictionID)
 
 	// Convert Bounding box into screen coords
 	FromCellToScreenCoordinates(gTopLeftWorldLimitX,     gTopLeftWorldLimitY,     &gsTLX, &gsTLY);
-	FromCellToScreenCoordinates(gTopRightWorldLimitX,    gTopRightWorldLimitY,    &gsTRX, &gsTRY);
-	FromCellToScreenCoordinates(gBottomLeftWorldLimitX,  gBottomLeftWorldLimitY,  &gsBLX, &gsBLY);
 	FromCellToScreenCoordinates(gBottomRightWorldLimitX, gBottomRightWorldLimitY, &gsBRX, &gsBRY);
 	FromCellToScreenCoordinates(gCenterWorldX,           gCenterWorldY,           &gsCX,  &gsCY);
 
 	// Adjust for interface height tabbing!
 	gsTLY += ROOF_LEVEL_HEIGHT;
-	gsTRY += ROOF_LEVEL_HEIGHT;
 	gsCY  += ROOF_LEVEL_HEIGHT / 2;
 
-	SLOGD(DEBUG_TAG_RENDERWORLD, "World Screen Width %d Height %d", gsTRX - gsTLX, gsBRY - gsTRY);
+	SLOGD(DEBUG_TAG_RENDERWORLD, "World Screen Width %d Height %d", gsBRX - gsTLX, gsBRY - gsTLY);
 
 	// Determine scale factors
 	// First scale world screen coords for VIEWPORT ratio

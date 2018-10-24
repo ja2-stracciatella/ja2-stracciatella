@@ -695,8 +695,8 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 	INT16 sWorldY;
 	GetAbsoluteScreenXYFromMapPos(sGridNo, &sWorldX, &sWorldY);
 
-	if (sWorldX > 0 && sWorldX < (gsTRX - gsTLX - 20) &&
-		sWorldY > 20 && sWorldY < (gsBLY - gsTLY - 20))
+	if (sWorldX > 0 && sWorldX < (gsBRX - gsTLX - 20) &&
+		sWorldY > 20 && sWorldY < (gsBRY - gsTLY - 20))
 	{
 		return( TRUE );
 	}
