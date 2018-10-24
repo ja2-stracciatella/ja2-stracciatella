@@ -84,10 +84,10 @@ extern INT16 gsBottomRightWorldY;
 // GLOBAL COORDINATES
 extern INT16 gCenterWorldX;
 extern INT16 gCenterWorldY;
-extern INT16 gsTLX;
-extern INT16 gsTLY;
-extern INT16 gsBRX;
-extern INT16 gsBRY;
+extern INT16 gsLeftX;
+extern INT16 gsTopY;
+extern INT16 gsRightX;
+extern INT16 gsBottomY;
 extern INT16 gsCX;
 extern INT16 gsCY;
 extern double gdScaleX;

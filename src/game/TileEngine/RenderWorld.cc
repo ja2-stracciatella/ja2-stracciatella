@@ -136,12 +136,12 @@ BOOLEAN gfIgnoreScrollDueToCenterAdjust = FALSE;
 // GLOBAL SCROLLING PARAMS
 INT16 gCenterWorldX;
 INT16 gCenterWorldY;
-INT16 gsTLX;                            /**< Top left corner of the current map in screen coordinates. */
-INT16 gsTLY;                            /**< Top left corner of the current map in screen coordinates. */
-INT16 gsBRX;                            /**< Bottom right corner of the current map in screen coordinates. */
-INT16 gsBRY;                            /**< Bottom right corner of the current map in screen coordinates. */
-INT16 gsCX;                             /**< Center of the map in screen coordinates (seems to be always 0). */
-INT16 gsCY;                             /**< Center of the map in screen coordinates (seems to be always 1625). */
+INT16 gsLeftX;      // Left edge of the current map in screen coordinates.
+INT16 gsTopY;       // Top edge of the current map in screen coordinates.
+INT16 gsRightX;     // Right edge of the current map in screen coordinates.
+INT16 gsBottomY;    // Bottom edge of the current map in screen coordinates.
+INT16 gsCX;         // Center of the map in screen coordinates (seems to be always 0).
+INT16 gsCY;         // Center of the map in screen coordinates (seems to be always 1625).
 double gdScaleX;
 double gdScaleY;
 
@@ -332,7 +332,7 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	INT16 RDistToCenterX = WorldCellX * CELL_X_SIZE - gCenterWorldX;
 	INT16 RDistToCenterY = WorldCellY * CELL_Y_SIZE - gCenterWorldY;
 	INT16 RScreenCenterY = RDistToCenterX + RDistToCenterY;
-	return RScreenCenterY + gsCY - gsTLY;
+	return RScreenCenterY + gsCY - gsTopY;
 }
 
 
@@ -2239,20 +2239,20 @@ void InitRenderParams(UINT8 ubRestrictionID)
 	gCenterWorldY = CELL_X_SIZE * WORLD_COLS / 2;
 
 	// Convert Bounding box into screen coords
-	FromCellToScreenCoordinates(gTopLeftWorldLimitX,     gTopLeftWorldLimitY,     &gsTLX, &gsTLY);
-	FromCellToScreenCoordinates(gBottomRightWorldLimitX, gBottomRightWorldLimitY, &gsBRX, &gsBRY);
+	FromCellToScreenCoordinates(gTopLeftWorldLimitX,     gTopLeftWorldLimitY,     &gsLeftX, &gsTopY);
+	FromCellToScreenCoordinates(gBottomRightWorldLimitX, gBottomRightWorldLimitY, &gsRightX, &gsBottomY);
 	FromCellToScreenCoordinates(gCenterWorldX,           gCenterWorldY,           &gsCX,  &gsCY);
 
 	// Adjust for interface height tabbing!
-	gsTLY += ROOF_LEVEL_HEIGHT;
+	gsTopY += ROOF_LEVEL_HEIGHT;
 	gsCY  += ROOF_LEVEL_HEIGHT / 2;
 
-	SLOGD(DEBUG_TAG_RENDERWORLD, "World Screen Width %d Height %d", gsBRX - gsTLX, gsBRY - gsTLY);
+	SLOGD(DEBUG_TAG_RENDERWORLD, "World Screen Width %d Height %d", gsRightX - gsLeftX, gsBottomY - gsTopY);
 
 	// Determine scale factors
 	// First scale world screen coords for VIEWPORT ratio
-	const double dWorldX = gsBRX - gsTLX;
-	const double dWorldY = gsBRY - gsTLY;
+	const double dWorldX = gsRightX - gsLeftX;
+	const double dWorldY = gsBottomY - gsTopY;
 
 	gdScaleX = (double)RADAR_WINDOW_WIDTH  / dWorldX;
 	gdScaleY = (double)RADAR_WINDOW_HEIGHT / dWorldY;
@@ -2298,15 +2298,15 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 	const INT16 sBottomRightWorldY = sScreenCenterY + sY_S;
 
 	// Checking if screen shows areas outside of the map
-	const BOOLEAN fOutLeft   = (gsTLX + SCROLL_LEFT_PADDING > sTopLeftWorldX);
-	const BOOLEAN fOutRight  = (gsBRX + SCROLL_RIGHT_PADDING < sBottomRightWorldX);
-	const BOOLEAN fOutTop    = (gsTLY + SCROLL_TOP_PADDING >= sTopLeftWorldY);            /* top of the screen is above top of the map */
-	const BOOLEAN fOutBottom = (gsBRY + SCROLL_BOTTOM_PADDING < sBottomRightWorldY);          /* bottom of the screen is below bottom if the map */
+	const BOOLEAN fOutLeft   = (gsLeftX + SCROLL_LEFT_PADDING > sTopLeftWorldX);
+	const BOOLEAN fOutRight  = (gsRightX + SCROLL_RIGHT_PADDING < sBottomRightWorldX);
+	const BOOLEAN fOutTop    = (gsTopY + SCROLL_TOP_PADDING >= sTopLeftWorldY);            /* top of the screen is above top of the map */
+	const BOOLEAN fOutBottom = (gsBottomY + SCROLL_BOTTOM_PADDING < sBottomRightWorldY);          /* bottom of the screen is below bottom if the map */
 
-	const int mapHeight = (gsBRY + SCROLL_BOTTOM_PADDING) - (gsTLY + SCROLL_TOP_PADDING);
+	const int mapHeight = (gsBottomY + SCROLL_BOTTOM_PADDING) - (gsTopY + SCROLL_TOP_PADDING);
 	const int screenHeight = gsVIEWPORT_END_Y - gsVIEWPORT_START_Y;
 
-	const int mapWidth = (gsBRX + SCROLL_RIGHT_PADDING) - (gsTLX + SCROLL_LEFT_PADDING);
+	const int mapWidth = (gsRightX + SCROLL_RIGHT_PADDING) - (gsLeftX + SCROLL_LEFT_PADDING);
 	const int screenWidth = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
 
 	BOOLEAN fScrollGood = FALSE;
@@ -2362,11 +2362,11 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 			}
 			else if (fOutTop)
 			{
-				newScreenCenterY = gsTLY + SCROLL_TOP_PADDING + sY_S;
+				newScreenCenterY = gsTopY + SCROLL_TOP_PADDING + sY_S;
 			}
 			else if (fOutBottom)
 			{
-				newScreenCenterY = gsBRY + SCROLL_BOTTOM_PADDING - sY_S;
+				newScreenCenterY = gsBottomY + SCROLL_BOTTOM_PADDING - sY_S;
 			}
 
 			if (screenWidth > mapWidth)
@@ -2376,11 +2376,11 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 			}
 			else if (fOutLeft)
 			{
-				newScreenCenterX = gsTLX + SCROLL_LEFT_PADDING + sX_S;
+				newScreenCenterX = gsLeftX + SCROLL_LEFT_PADDING + sX_S;
 			}
 			else if (fOutRight)
 			{
-				newScreenCenterX = gsBRX + SCROLL_RIGHT_PADDING - sX_S;
+				newScreenCenterX = gsRightX + SCROLL_RIGHT_PADDING - sX_S;
 			}
 
 			INT16 sTempPosX_W;
@@ -2405,11 +2405,11 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 		gsRenderCenterX = sTempRenderCenterX / CELL_X_SIZE * CELL_X_SIZE + CELL_X_SIZE / 2;
 		gsRenderCenterY = sTempRenderCenterY / CELL_X_SIZE * CELL_Y_SIZE + CELL_Y_SIZE / 2;
 
-		gsTopLeftWorldX = sTopLeftWorldX - gsTLX;
-		gsTopLeftWorldY = sTopLeftWorldY - gsTLY;
+		gsTopLeftWorldX = sTopLeftWorldX - gsLeftX;
+		gsTopLeftWorldY = sTopLeftWorldY - gsTopY;
 
-		gsBottomRightWorldX = sBottomRightWorldX - gsTLX;
-		gsBottomRightWorldY = sBottomRightWorldY - gsTLY;
+		gsBottomRightWorldX = sBottomRightWorldX - gsLeftX;
+		gsBottomRightWorldY = sBottomRightWorldY - gsTopY;
 
 		SetPositionSndsVolumeAndPanning();
 	}

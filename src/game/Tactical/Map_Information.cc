@@ -72,7 +72,7 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 		return FALSE; //entry point is non-existant
 
 	sTopLimit = 80;
-	sBottomLimit = gsBRY - gsTLY - 40;
+	sBottomLimit = gsBottomY - gsTopY - 40;
 
 	//Get screen coordinates for current gridno
 	GetAbsoluteScreenXYFromMapPos(*sGridNo, &sWorldX, &sWorldY);

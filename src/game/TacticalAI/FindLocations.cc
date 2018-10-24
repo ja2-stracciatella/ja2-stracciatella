@@ -1790,8 +1790,8 @@ INT16 FindNearestEdgePoint( INT16 sGridNo )
 
 	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
-	sMaxScreenX = gsBRX - gsTLX;
-	sMaxScreenY = gsBRY - gsTLY;
+	sMaxScreenX = gsRightX - gsLeftX;
+	sMaxScreenY = gsBottomY - gsTopY;
 
 	sDist[0] = 0x7FFF;
 	sDist[1] = sScreenX;			// west
