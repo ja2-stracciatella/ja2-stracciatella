@@ -3,6 +3,10 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
+#include "VideoScale.h"
+#include "Local.h"
+
+#include "UILayout.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -218,17 +222,31 @@ void ShutdownVideoObjectManager(void)
 	}
 }
 
-SGPVObject* AddVideoObjectFromHImage(SGPImage* const img)
+SGPVObject* AddVideoObjectFromHImage(SGPImage *img)
 {
 	return new SGPVObject(img);
 }
 
-SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
+SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile)
 {
-	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
+	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
 	return AddVideoObjectFromHImage(hImage.get());
 }
 
+SGPVObject* AddScaledOutlineVideoObjectFromFile(const ST::string& ImageFile)
+{
+	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA | IMAGE_REMOVE_PAL254));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
+	return AddVideoObjectFromHImage(hImage.get());
+}
+
+SGPVObject* AddScaledAlphaVideoObjectFromFile(const ST::string& ImageFile)
+{
+	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA | IMAGE_REMOVE_PAL1));
+	AutoSGPImage hImage(ScaleAlphaImage(img.get(), g_ui.m_stdScreenScale));
+	return AddVideoObjectFromHImage(hImage.get());
+}
 
 void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 const usRegionIndex, INT32 const iDestX, INT32 const iDestY)
 {
@@ -286,6 +304,7 @@ void BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const
 
 void BltVideoObjectOnce(SGPVSurface* const dst, char const* const filename, UINT16 const region, INT32 const x, INT32 const y)
 {
-	AutoSGPVObject vo(AddVideoObjectFromFile(filename));
+	Assert(dst->BPP() == 32);
+	AutoSGPVObject vo(AddScaledVideoObjectFromFile(filename));
 	BltVideoObject(dst, vo.get(), region, x, y);
 }

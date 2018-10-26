@@ -20,6 +20,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Text_Utils.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Timer_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/VideoScale.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/WordWrap.cc
     PARENT_SCOPE
 )

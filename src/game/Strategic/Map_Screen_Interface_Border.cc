@@ -74,7 +74,7 @@ void LoadMapBorderGraphics(void)
 {
 	// this procedure will load the graphics needed for the map border
 	guiLEVELMARKER       = AddVideoObjectFromFile(INTERFACEDIR "/greenarr.sti");
-	guiMapBorder         = AddVideoObjectFromFile(MAP_BORDER_FILE);
+	guiMapBorder         = AddScaledVideoObjectFromFile(MAP_BORDER_FILE);
 	guiMapBorderEtaPopUp = AddVideoObjectFromFile(INTERFACEDIR "/eta_pop_up.sti");
 }
 

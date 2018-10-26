@@ -127,6 +127,12 @@ public:
 	UINT16                m_stdScreenOffsetX;             /** Offset of the standard (640x480) window */
 	UINT16                m_stdScreenOffsetY;             /** Offset of the standard (640x480) window */
 
+	DOUBLE                m_stdScreenScale;
+	UINT16                m_scaledInterfaceWidth;
+	UINT16                m_scaledInterfaceHeight;
+
+	DOUBLE                m_tacticalScreenScale;
+
 	/** Constructor.
 	 * @param screenWidth Screen width
 	 * @param screenHeight Screen height */

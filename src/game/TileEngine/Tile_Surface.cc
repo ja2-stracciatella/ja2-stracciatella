@@ -15,6 +15,8 @@
 #include <stdexcept>
 #include <string_theory/format>
 
+#include "VideoScale.h"
+#include "UILayout.h"
 
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
@@ -24,7 +26,8 @@ TILE_IMAGERY* LoadTileSurface(ST::string const& cFilename)
 try
 {
 	// Add tile surface
-	AutoSGPImage   hImage(CreateImage(cFilename, IMAGE_ALLDATA));
+	AutoSGPImage img(CreateImage(cFilename, IMAGE_ALLDATA | IMAGE_HACK254));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
 	AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage.get()));
 
 	// Load structure data, if any.

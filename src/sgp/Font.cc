@@ -73,7 +73,7 @@ void SetFontBackground(UINT32 uBackground)
 /* Loads a font from an ETRLE file */
 SGPFont LoadFontFile(const char *filename)
 {
-	SGPFont const font = AddVideoObjectFromFile(filename);
+	SGPFont const font = AddScaledAlphaVideoObjectFromFile(filename);
 	if (!FontDefault) FontDefault = font;
 	return font;
 }

@@ -9,6 +9,8 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "VideoScale.h"
+#include "UILayout.h"
 
 #include "policy/GamePolicy.h"
 
@@ -112,7 +114,8 @@ static void LoadCursorData(UINT32 uiCursorIndex)
 			// First load as an SGPImage so we can get aux data!
 			Assert(CFData->Filename != NULL);
 
-			AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
+			AutoSGPImage img(CreateImage(CFData->Filename, IMAGE_ALLDATA | IMAGE_REMOVE_PAL254));
+			AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
 
 			CFData->hVObject = AddVideoObjectFromHImage(hImage.get());
 

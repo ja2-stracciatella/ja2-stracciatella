@@ -56,17 +56,24 @@ UINT16 UILayout::get_INV_INTERFACE_START_Y() const { return m_screenHeight - INV
 
 void UILayout::recalculatePositions()
 {
-	m_teamPanelSlotsTotalWidth = getTeamPanelNumSlots() * TEAMPANEL_SLOT_WIDTH;
-	UINT16 tpXOffset = (m_screenWidth - m_teamPanelSlotsTotalWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / 2;
-	UINT16 tpYOffset = m_screenHeight - TEAMPANEL_HEIGHT;
+	m_stdScreenScale = 1.0;
+	m_scaledInterfaceWidth  = m_stdScreenScale * MIN_INTERFACE_WIDTH;
+	m_scaledInterfaceHeight = m_stdScreenScale * MIN_INTERFACE_HEIGHT;
+
+	m_teamPanelSlotsTotalWidth = getTeamPanelNumSlots() * m_stdScreenScale * TEAMPANEL_SLOT_WIDTH;
+	UINT16 tpXOffset = (m_screenWidth - m_teamPanelSlotsTotalWidth - m_stdScreenScale * TEAMPANEL_BUTTONSBOX_WIDTH) / 2;
+	UINT16 tpYOffset = m_screenHeight - m_stdScreenScale * TEAMPANEL_HEIGHT;
 	m_teamPanelPosition.set(tpXOffset, tpYOffset);
-	m_teamPanelWidth = m_teamPanelSlotsTotalWidth + TEAMPANEL_BUTTONSBOX_WIDTH;
+	m_teamPanelWidth = std::max(UINT16(m_teamPanelSlotsTotalWidth + TEAMPANEL_BUTTONSBOX_WIDTH), m_screenWidth);
 
 	UINT16 startInvY = get_INV_INTERFACE_START_Y();
 	UINT16 startX    = INTERFACE_START_X;
 
-	m_stdScreenOffsetX            = (m_screenWidth - MIN_INTERFACE_WIDTH) / 2;
-	m_stdScreenOffsetY            = (m_screenHeight - MIN_INTERFACE_HEIGHT) / 2;
+	// FIXME: maxrd2: it should match m_stdScreenScale for now since resources are scaled for that
+	m_tacticalScreenScale = m_stdScreenScale; //(m_stdScreenScale + 1.) / 2.;
+
+	m_stdScreenOffsetX = (m_screenWidth  - m_stdScreenScale * MIN_INTERFACE_WIDTH)  / 2;
+	m_stdScreenOffsetY = (m_screenHeight - m_stdScreenScale * MIN_INTERFACE_HEIGHT) / 2;
 
 	// tactical screen inventory position
 	m_invSlotPositionTac[HELMETPOS           ].set(startX + 344, startInvY +   6);

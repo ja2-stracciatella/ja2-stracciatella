@@ -5335,16 +5335,16 @@ void SetItemPointer(OBJECTTYPE* const o, SOLDIERTYPE* const s)
 
 void LoadInterfaceItemsGraphics()
 {
-	guiMapInvSecondHandBlockout = AddVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
-	guiSecItemHiddenVO          = AddVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
-	guiSmallInventoryGraphicMissingSmallPocket = AddVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-sp.sti");
-	guiSmallInventoryGraphicMissingBigPocket = AddVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-bp.sti");
+	guiMapInvSecondHandBlockout = AddScaledOutlineVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
+	guiSecItemHiddenVO          = AddScaledOutlineVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
+	guiSmallInventoryGraphicMissingSmallPocket = AddScaledOutlineVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-sp.sti");
+	guiSmallInventoryGraphicMissingBigPocket = AddScaledOutlineVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-bp.sti");
 
 	for (auto const& item : GCM->getAllSmallInventoryGraphicPaths()) {
 		auto path = item.to_lower();
 		if (allInventoryGraphics.find(path) == allInventoryGraphics.end()) {
 			try {
-				auto vObject = AddVideoObjectFromFile(item);
+				auto vObject = AddScaledOutlineVideoObjectFromFile(item);
 				allInventoryGraphics.insert_or_assign(path, vObject);
 			} catch (const std::runtime_error &ex) {
 				SLOGE("Error loading small inventory graphic `{}`: {}", item, ex.what());

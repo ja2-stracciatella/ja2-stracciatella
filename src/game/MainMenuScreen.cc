@@ -203,8 +203,8 @@ void InitMainMenu(void)
 	CreateDestroyMainMenuButtons(TRUE);
 
 #	define GFX_DIR LOADSCREENSDIR
-	guiMainMenuBackGroundImage = AddVideoObjectFromFile(GFX_DIR "/mainmenubackground.sti");
-	guiJa2LogoImage            = AddVideoObjectFromFile(GFX_DIR "/ja2logo.sti");
+	guiMainMenuBackGroundImage = AddScaledVideoObjectFromFile(GFX_DIR "/mainmenubackground.sti");
+	guiJa2LogoImage            = AddScaledVideoObjectFromFile(GFX_DIR "/ja2logo.sti");
 #undef GFX_DIR
 
 	// If there are no saved games, disable the button

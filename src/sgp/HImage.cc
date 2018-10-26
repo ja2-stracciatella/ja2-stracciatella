@@ -35,18 +35,34 @@ SGPImage* CreateImage(const ST::string& filename, const UINT16 fContents)
 		throw std::logic_error(errorMessage.c_str());
 	}
 
-	if (ext.compare_i("STI") == 0) {
-		return  LoadSTCIFileToImage(filename, fContents);
-	}
-	if (ext.compare_i("PCX") == 0) {
-		return LoadPCXFileToImage( filename, fContents);
-	}
-	if (ext.compare_i("TGA") == 0) {
-		return LoadTGAFileToImage( filename, fContents);
+	// TODO: maxrd2: check for override resources here
+
+	SGPImage *img =
+		ext.compare_i("STI") == 0 ? LoadSTCIFileToImage(filename, fContents) :
+		ext.compare_i("PCX") == 0 ? LoadPCXFileToImage(filename, fContents) :
+		ext.compare_i("TGA") == 0 ? LoadTGAFileToImage(filename, fContents) :
+		throw std::logic_error(ST::format("Tried to load image `{}` with unknown extension", filename).c_str());
+
+	if(img->pPalette) {
+		if(fContents & IMAGE_REMOVE_PAL1) {
+			// offical 256 color resource images use color 1 to draw font shadow, since we'll be drawing
+			// the shadow with algorithm we're setting it to transparent
+			img->pPalette[1].r = img->pPalette[1].g = img->pPalette[1].b = img->pPalette[1].a = 0;
+		}
+		if(fContents & IMAGE_REMOVE_PAL254) {
+			// offical 256 color resource images use color 254 to draw item outline, since we'll be drawing
+			// the outline with algorithm we're setting it to transparent
+			img->pPalette[254].r = img->pPalette[254].g = img->pPalette[254].b = img->pPalette[254].a = 0;
+		} else if(fContents & IMAGE_HACK254) {
+			// offical 256 color resource images use color 254 to draw shadow
+			img->pPalette[254].r = 0x02;
+			img->pPalette[254].g = 0x05;
+			img->pPalette[254].b = 0x04;
+			img->pPalette[254].a = 0x7F; // 50% opacity
+		}
 	}
 
-	auto errorMessage = ST::format("Tried to load image `{}` with unknown extension", filename);
-	throw std::logic_error(errorMessage.c_str());
+	return img;
 }
 
 
