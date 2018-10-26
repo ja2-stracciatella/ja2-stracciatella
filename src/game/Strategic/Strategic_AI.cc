@@ -963,15 +963,21 @@ static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerG
 	usOffensePoints = pEnemyGroup->pEnemyGroup->ubNumAdmins * 2 +
 										pEnemyGroup->pEnemyGroup->ubNumTroops * 4 +
 										pEnemyGroup->pEnemyGroup->ubNumElites * 6;
-	if( PlayerForceTooStrong( ubSectorID, usOffensePoints, &usDefencePoints ) )
+
+	const UINT8 playerSector = pPlayerGroup->ubNextX
+			? SECTOR(pPlayerGroup->ubNextX, pPlayerGroup->ubNextY)
+			: SECTOR(pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY);
+
+	if(PlayerForceTooStrong(ubSectorID, usOffensePoints, &usDefencePoints)
+	   || SectorInfo[playerSector].ubGarrisonID != NO_GARRISON)
 	{
-		RequestAttackOnSector( ubSectorID, usDefencePoints );
+		RequestAttackOnSector(ubSectorID, usDefencePoints);
 		return FALSE;
 	}
 	//For now, automatically attack.
 	if( pPlayerGroup->ubNextX )
 	{
-		MoveSAIGroupToSector( &pEnemyGroup, (UINT8)SECTOR( pPlayerGroup->ubNextX, pPlayerGroup->ubNextY ), DIRECT, PURSUIT );
+		MoveSAIGroupToSector( &pEnemyGroup, playerSector, DIRECT, PURSUIT );
 
 		SLOGD(DEBUG_TAG_SAI, "Enemy group at %c%d detected player group at %c%d and is moving to intercept them at %c%d.",
 					pEnemyGroup->ubSectorY + 'A' - 1, pEnemyGroup->ubSectorX,
@@ -980,7 +986,7 @@ static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerG
 	}
 	else
 	{
-		MoveSAIGroupToSector( &pEnemyGroup, (UINT8)SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY ), DIRECT, PURSUIT );
+		MoveSAIGroupToSector( &pEnemyGroup, playerSector, DIRECT, PURSUIT );
 
 		SLOGD(DEBUG_TAG_SAI, "Enemy group at %c%d detected player group at %c%d and is moving to intercept them at %c%d.",
 					pEnemyGroup->ubSectorY + 'A' - 1, pEnemyGroup->ubSectorX,
