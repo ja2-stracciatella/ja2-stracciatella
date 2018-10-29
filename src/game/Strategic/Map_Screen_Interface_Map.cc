@@ -85,14 +85,14 @@
 // #define VERT_SCROLL 10
 
 // the pop up for helicopter stuff
-#define MAP_HELICOPTER_ETA_POPUP_X (STD_SCREEN_X + 400)
-#define MAP_HELICOPTER_ETA_POPUP_Y (STD_SCREEN_Y + 250)
-#define MAP_HELICOPTER_UPPER_ETA_POPUP_Y (STD_SCREEN_Y + 50)
-#define MAP_HELICOPTER_ETA_POPUP_WIDTH 120
-#define MAP_HELICOPTER_ETA_POPUP_HEIGHT 68
+#define MAP_HELICOPTER_ETA_POPUP_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 400)
+#define MAP_HELICOPTER_ETA_POPUP_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 250)
+#define MAP_HELICOPTER_UPPER_ETA_POPUP_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 50)
+#define MAP_HELICOPTER_ETA_POPUP_WIDTH (g_ui.m_stdScreenScale * 120)
+#define MAP_HELICOPTER_ETA_POPUP_HEIGHT (g_ui.m_stdScreenScale * 68)
 
-#define MAP_LEVEL_STRING_X (STD_SCREEN_X + 432)
-#define MAP_LEVEL_STRING_Y (STD_SCREEN_Y + 305)
+#define MAP_LEVEL_STRING_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 432)
+#define MAP_LEVEL_STRING_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 305)
 
 // font
 #define MAP_FONT BLOCKFONT2
@@ -107,19 +107,19 @@
 //Map Location index regions
 
 // x start of hort index
-#define MAP_HORT_INDEX_X (STD_SCREEN_X + 292)
+#define MAP_HORT_INDEX_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 292)
 
 // y position of hort index
-#define MAP_HORT_INDEX_Y  (STD_SCREEN_Y + 10)
+#define MAP_HORT_INDEX_Y  (STD_SCREEN_Y + g_ui.m_stdScreenScale * 10)
 
 // height of hort index
 #define MAP_HORT_HEIGHT  GetFontHeight(MAP_FONT)
 
 // vert index start x
-#define MAP_VERT_INDEX_X (STD_SCREEN_X + 273)
+#define MAP_VERT_INDEX_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 273)
 
 // vert index start y
-#define MAP_VERT_INDEX_Y  (STD_SCREEN_Y + 31)
+#define MAP_VERT_INDEX_Y  (STD_SCREEN_Y + g_ui.m_stdScreenScale * 31)
 
 // vert width
 #define MAP_VERT_WIDTH   GetFontHeight(MAP_FONT)
@@ -140,8 +140,8 @@
 #define MERC_ICONS_PER_LINE 6
 #define ROWS_PER_SECTOR     5
 
-#define MAP_X_ICON_OFFSET   2
-#define MAP_Y_ICON_OFFSET   1
+#define MAP_X_ICON_OFFSET   (g_ui.m_stdScreenScale * 2)
+#define MAP_Y_ICON_OFFSET   (g_ui.m_stdScreenScale * 1)
 
 // Arrow Offsets
 //#define UP_X                13
@@ -209,34 +209,25 @@
 #define CHAR_FONT_COLOR 32*4-9
 
 // Arrow Offsets
-#define EAST_OFFSET_X  11
-#define EAST_OFFSET_Y  0
-#define NORTH_OFFSET_X 9
-#define NORTH_OFFSET_Y -9
-#define SOUTH_OFFSET_X -9
-#define SOUTH_OFFSET_Y 9
-#define WEST_OFFSET_X  -11
-#define WEST_OFFSET_Y  0
-#define WEST_TO_SOUTH_OFFSET_Y  0
-#define EAST_TO_NORTH_OFFSET_Y  0
+#define EAST_OFFSET_X  (g_ui.m_stdScreenScale * 11)
+#define EAST_OFFSET_Y  (g_ui.m_stdScreenScale * 0)
+#define NORTH_OFFSET_X (g_ui.m_stdScreenScale * 9)
+#define NORTH_OFFSET_Y (g_ui.m_stdScreenScale * -9)
+#define SOUTH_OFFSET_X (g_ui.m_stdScreenScale * -9)
+#define SOUTH_OFFSET_Y (g_ui.m_stdScreenScale * 9)
+#define WEST_OFFSET_X  (g_ui.m_stdScreenScale * -11)
+#define WEST_OFFSET_Y  (g_ui.m_stdScreenScale * 0)
+#define WEST_TO_SOUTH_OFFSET_Y  (g_ui.m_stdScreenScale * 0)
+#define EAST_TO_NORTH_OFFSET_Y  (g_ui.m_stdScreenScale * 0)
 #define RED_WEST_OFF_X  -MAP_GRID_X
 #define RED_EAST_OFF_X  MAP_GRID_X
-#define RED_NORTH_OFF_Y -21
-#define RED_SOUTH_OFF_Y 21
+#define RED_NORTH_OFF_Y (g_ui.m_stdScreenScale * -21)
+#define RED_SOUTH_OFF_Y (g_ui.m_stdScreenScale * 21)
 
 // the font use on the mvt icons for mapscreen
 #define MAP_MVT_ICON_FONT SMALLCOMPFONT
 
 
-// map shading colors
-
-enum{
-	MAP_SHADE_BLACK =0,
-	MAP_SHADE_LT_GREEN,
-	MAP_SHADE_DK_GREEN,
-	MAP_SHADE_LT_RED,
-	MAP_SHADE_DK_RED,
-};
 // the big map .pcx
 static SGPVSurface* guiBIGMAP;
 
@@ -248,38 +239,38 @@ static SGPVObject* guiBULLSEYE;
 
 
 // the max allowable towns militia in a sector
-#define MAP_MILITIA_MAP_X 4
-#define MAP_MILITIA_MAP_Y 20
-#define MAP_MILITIA_LOWER_ROW_Y 142
+#define MAP_MILITIA_MAP_X (g_ui.m_stdScreenScale * 4)
+#define MAP_MILITIA_MAP_Y (g_ui.m_stdScreenScale * 20)
+#define MAP_MILITIA_LOWER_ROW_Y (g_ui.m_stdScreenScale * 142)
 #define NUMBER_OF_MILITIA_ICONS_PER_LOWER_ROW 25
 #define MILITIA_BOX_ROWS 3
-#define MILITIA_BOX_BOX_HEIGHT 36
-#define MILITIA_BOX_BOX_WIDTH 42
-#define MAP_MILITIA_BOX_POS_X (STD_SCREEN_X + 400)
-#define MAP_MILITIA_BOX_POS_Y (STD_SCREEN_Y + 125)
+#define MILITIA_BOX_BOX_HEIGHT (g_ui.m_stdScreenScale * 36)
+#define MILITIA_BOX_BOX_WIDTH (g_ui.m_stdScreenScale * 42)
+#define MAP_MILITIA_BOX_POS_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 400)
+#define MAP_MILITIA_BOX_POS_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 125)
 
 #define POPUP_MILITIA_ICONS_PER_ROW 5 // max 6 rows gives the limit of 30 militia
-#define MEDIUM_MILITIA_ICON_SPACING 5
-#define LARGE_MILITIA_ICON_SPACING  6
+#define MEDIUM_MILITIA_ICON_SPACING (g_ui.m_stdScreenScale * 5)
+#define LARGE_MILITIA_ICON_SPACING  (g_ui.m_stdScreenScale * 6)
 
-#define MILITIA_BTN_OFFSET_X 26
-#define MILITIA_BTN_HEIGHT 11
-#define MILITIA_BOX_WIDTH 133
-#define MILITIA_BOX_TEXT_OFFSET_Y 4
-#define MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y 132
-#define MILITIA_BOX_TEXT_TITLE_HEIGHT 13
+#define MILITIA_BTN_OFFSET_X (g_ui.m_stdScreenScale * 26)
+#define MILITIA_BTN_HEIGHT (g_ui.m_stdScreenScale * 11)
+#define MILITIA_BOX_WIDTH (g_ui.m_stdScreenScale * 133)
+#define MILITIA_BOX_TEXT_OFFSET_Y (g_ui.m_stdScreenScale * 4)
+#define MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y (g_ui.m_stdScreenScale * 132)
+#define MILITIA_BOX_TEXT_TITLE_HEIGHT (g_ui.m_stdScreenScale * 13)
 
-#define MAP_MILITIA_BOX_AUTO_BOX_X 4
-#define MAP_MILITIA_BOX_AUTO_BOX_Y 167
-#define MAP_MILITIA_BOX_DONE_BOX_X 67
+#define MAP_MILITIA_BOX_AUTO_BOX_X (g_ui.m_stdScreenScale * 4)
+#define MAP_MILITIA_BOX_AUTO_BOX_Y (g_ui.m_stdScreenScale * 167)
+#define MAP_MILITIA_BOX_DONE_BOX_X (g_ui.m_stdScreenScale * 67)
 
 #define HELI_ICON               0
 #define HELI_SHADOW_ICON        1
 
-#define HELI_ICON_WIDTH         20
-#define HELI_ICON_HEIGHT        10
-#define HELI_SHADOW_ICON_WIDTH  19
-#define HELI_SHADOW_ICON_HEIGHT 11
+#define HELI_ICON_WIDTH         (g_ui.m_stdScreenScale * 20)
+#define HELI_ICON_HEIGHT        (g_ui.m_stdScreenScale * 10)
+#define HELI_SHADOW_ICON_WIDTH  (g_ui.m_stdScreenScale * 19)
+#define HELI_SHADOW_ICON_HEIGHT (g_ui.m_stdScreenScale * 11)
 
 
 // the militia box buttons
@@ -382,8 +373,6 @@ static INT16 sSectorMilitiaMapSectorOutline = -1;
 // have any nodes in the current path list been deleted?
 BOOLEAN fDeletedNode = FALSE;
 
-static UINT32 gusUndergroundNearBlack;
-
 BOOLEAN gfMilitiaPopupCreated = FALSE;
 
 UINT32 guiAnimateRouteBaseTime = 0;
@@ -417,8 +406,9 @@ void InitMapScreenInterfaceMap()
 		pTownPoints.push_back(town->townPoint);
 	}
 
-	MapScreenRect.set((MAP_VIEW_START_X+MAP_GRID_X - 2), ( MAP_VIEW_START_Y+MAP_GRID_Y - 1),
-				MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 + MAP_GRID_X , MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-10+MAP_GRID_Y);
+	MapScreenRect.set(
+		MAP_VIEW_START_X + MAP_GRID_X - 1, MAP_VIEW_START_Y + MAP_GRID_Y - 1,
+		MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 , MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 1);
 }
 
 void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
@@ -484,12 +474,27 @@ static void DrawBullseye(void);
 static void DrawSecretSite(const StrategicMapSecretModel*);
 static void DrawTownMilitiaForcesOnMap();
 static void HandleLowerLevelMapBlit(void);
-static void ShadeMapElem(const SGPSector& sMap, INT32 iColor);
+static void ShadeMapElem(const SGPSector& sMap, UINT32 iColor);
 static void ShowItemsOnMap(void);
 static void ShowSAMSitesOnStrategicMap();
 static void ShowTeamAndVehicles();
 static void ShowTownText(void);
 
+static void DrawMapGrid(UINT32 color)
+{
+	Assert(MAP_WORLD_X == MAP_WORLD_Y);
+
+	SGPVSurface::Lock l(guiSAVEBUFFER);
+	UINT32 *buf = l.Buffer<UINT32>();
+	const int xStart = MAP_VIEW_START_X + MAP_GRID_X;
+	const int yStart = MAP_VIEW_START_Y + MAP_GRID_Y - 1;
+	for(int i = 1; i < MAP_WORLD_X; i++) {
+		const int x = MAP_VIEW_START_X + i * MAP_GRID_X;
+		const int y = MAP_VIEW_START_Y + i * MAP_GRID_Y - 1;
+		LineDraw(FALSE, x, yStart, x, yStart + MAP_VIEW_HEIGHT, color, buf);
+		LineDraw(FALSE, xStart, y, xStart + MAP_VIEW_WIDTH, y, color, buf);
+	}
+}
 
 void DrawMap(void)
 {
@@ -505,24 +510,24 @@ void DrawMap(void)
 			{
 				if (!GetSectorFlagStatus(sSector, SF_ALREADY_VISITED))
 				{
-					INT32 color;
+					UINT32 color;
 					if (fShowAircraftFlag)
 					{
 						if (!StrategicMap[sSector.AsStrategicIndex()].fEnemyAirControlled)
 						{
 							// sector not visited, not air controlled
-							color = MAP_SHADE_DK_GREEN;
+							color = SHADE_STD(0, 127, 0);
 						}
 						else
 						{
 							// sector not visited, controlled and air not
-							color = MAP_SHADE_DK_RED;
+							color = SHADE_STD(127, 0, 0);
 						}
 					}
 					else
 					{
 						// not visited
-						color = MAP_SHADE_BLACK;
+						color = SHADE_MONO(10, 10, 10);
 					}
 					ShadeMapElem(sSector, color);
 				}
@@ -534,12 +539,12 @@ void DrawMap(void)
 						if (!StrategicMap[sSector.AsStrategicIndex()].fEnemyAirControlled)
 						{
 							// sector visited and air controlled
-							color = MAP_SHADE_LT_GREEN;
+							color = SHADE_STD(0, 255, 0);
 						}
 						else
 						{
 							// sector visited but not air controlled
-							color = MAP_SHADE_LT_RED;
+							color = SHADE_STD(255, 0, 0);
 						}
 						ShadeMapElem(sSector, color);
 					}
@@ -561,6 +566,8 @@ void DrawMap(void)
 				DrawSecretSite(s);
 			}
 		}
+
+		DrawMapGrid(RGB(30, 0, 0));
 
 		ShowSAMSitesOnStrategicMap();
 
@@ -586,24 +593,20 @@ void DrawMap(void)
 		if (fShowAircraftFlag && !gfInChangeArrivalSectorMode) DrawBullseye();
 	}
 	else
-	{
 		HandleLowerLevelMapBlit();
-	}
 
 	/* show mine outlines even when viewing underground sublevels - they indicate
 		* where the mine entrances are */
-	if (fShowMineFlag) BlitMineGridMarkers();
+	if (fShowMineFlag)
+		BlitMineGridMarkers();
 
 	if (fShowTeamFlag)
-	{
 		ShowTeamAndVehicles();
-	}
 	else if (fShowMilitia)
-	{
 		HandleShowingOfEnemiesWithMilitiaOn();
-	}
 
-	if (fShowItemsFlag) ShowItemsOnMap();
+	if (fShowItemsFlag)
+		ShowItemsOnMap();
 
 	DisplayLevelString();
 }
@@ -620,7 +623,9 @@ static void ShowTownText(void)
 {
 	SetFont(MAP_FONT);
 	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
-	SetFontDestBuffer(guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom);
+	SetFontDestBuffer(guiSAVEBUFFER,
+			  MapScreenRect.iLeft + 2 * g_ui.m_stdScreenScale, MapScreenRect.iTop,
+			  MapScreenRect.iRight, MapScreenRect.iBottom);
 	ClipBlitsToMapViewRegion();
 
 	for (INT8 town = FIRST_TOWN; town < NUM_TOWNS; ++town)
@@ -628,10 +633,10 @@ static void ShowTownText(void)
 		// skip Orta/Tixa until found
 		if (!IsTownFound(town)) continue;
 
-		UINT16 x = MAP_VIEW_START_X + MAP_GRID_X;
-		UINT16 y = MAP_VIEW_START_Y + MAP_GRID_Y;
-		x += pTownPoints[town].iX * MAP_GRID_X / 10;
-		y += pTownPoints[town].iY * MAP_GRID_Y / 10 + 1;
+		const UINT16 x = MAP_VIEW_START_X + MAP_GRID_X
+			+ pTownPoints[town].iX * MAP_GRID_X / 10;
+		const UINT16 y = MAP_VIEW_START_Y + MAP_GRID_Y
+			+ pTownPoints[town].iY * MAP_GRID_Y / 10 + 1 * g_ui.m_stdScreenScale;
 
 		// if within view region...render, else don't
 		if (x < MAP_VIEW_START_X || MAP_VIEW_START_X + MAP_VIEW_WIDTH  < x) continue;
@@ -652,7 +657,7 @@ static void ShowTownText(void)
 			INT16 loyalty_x = x - StringPixLength(loyalty_str, MAP_FONT) / 2;
 
 			// make sure we don't go past left edge (Grumm)
-			INT16 const min_x = MAP_VIEW_START_X + 23;
+			INT16 const min_x = MAP_VIEW_START_X + 23 * g_ui.m_stdScreenScale;
 			if (loyalty_x < min_x) loyalty_x = min_x;
 
 			GDirtyPrint(loyalty_x, y + GetFontHeight(MAP_FONT), loyalty_str);
@@ -780,47 +785,28 @@ static void ShowTeamAndVehicles()
 }
 
 
-static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
+static void ShadeMapElem(const SGPSector& sMap, const UINT32 iColor)
 {
 	INT16 sScreenX;
 	INT16 sScreenY;
 	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
 
 	// compensate for original BIG_MAP blit being done at MAP_VIEW_START_X + 1
-	sScreenX += 1;
+	sScreenX += g_ui.m_stdScreenScale * 1;
 
 	SGPBox const clip =
 	{
-		(UINT16)(2 * (sScreenX - (MAP_VIEW_START_X + 1))),
-		(UINT16)(2 * (sScreenY - MAP_VIEW_START_Y)),
-		2 * MAP_GRID_X,
-		2 * MAP_GRID_Y
+		UINT16(2 * (sScreenX - (MAP_VIEW_START_X + g_ui.m_stdScreenScale * 1))),
+		UINT16(2 * (sScreenY - MAP_VIEW_START_Y)),
+		UINT16(2 * MAP_GRID_X),
+		UINT16(2 * MAP_GRID_Y)
 	};
-
-	// non-airspace
-	if (iColor == MAP_SHADE_BLACK) sScreenY -= 1;
-
-	UINT32 pal;
-	switch (iColor)
-	{
-	case MAP_SHADE_BLACK:
-		// simply shade darker
-		guiSAVEBUFFER->ShadowRect(sScreenX, sScreenY, sScreenX + MAP_GRID_X - 1, sScreenY + MAP_GRID_Y - 1);
-		return;
-
-	case MAP_SHADE_LT_GREEN: pal = SHADE_STD(0, 0xff, 0); break;
-	case MAP_SHADE_DK_GREEN: pal = SHADE_STD(0, 0x80, 0); break;
-	case MAP_SHADE_LT_RED:   pal = SHADE_STD(0xff, 0, 0); break;
-	case MAP_SHADE_DK_RED:   pal = SHADE_STD(0x80, 0, 0); break;
-
-	default: return;
-	}
 
 	// get original video surface palette
 	SGPVSurface* const map = guiBIGMAP;
 
 	const UINT32 org_pal = map->p16BPPPalette;
-	map->p16BPPPalette = pal;
+	map->p16BPPPalette = iColor;
 	BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
 	map->p16BPPPalette = org_pal;
 }
@@ -1200,32 +1186,31 @@ static void TracePathRoute(PathSt* const pPath)
 			const INT32 iDeltaA = (INT16)node->uiSectorId - (INT16)prev->uiSectorId;
 			const INT32 iDeltaB = (INT16)node->uiSectorId - (INT16)next->uiSectorId;
 			if (iDeltaA == 0) return;
-
 			if (prev->pPrev && next->pNext)
 			{
 				// check to see if out-of sector U-turn
 				// for placement of arrows
 				const INT32 iDeltaB1 = next->uiSectorId - next->pNext->uiSectorId;
 				fUTurnFlag =
-					(iDeltaB1 == -WORLD_MAP_X && iDeltaA == -WORLD_MAP_X && iDeltaB == -1)           ||
-					(iDeltaB1 == -WORLD_MAP_X && iDeltaA == -WORLD_MAP_X && iDeltaB ==  1)           ||
-					(iDeltaB1 ==  WORLD_MAP_X && iDeltaA ==  WORLD_MAP_X && iDeltaB == -1)           ||
-					(iDeltaB1 ==  WORLD_MAP_X && iDeltaA ==  WORLD_MAP_X && iDeltaB ==  1)           ||
-					(iDeltaB1 == -1           && iDeltaA == -1           && iDeltaB == -WORLD_MAP_X) ||
-					(iDeltaB1 == -1           && iDeltaA == -1           && iDeltaB ==  WORLD_MAP_X) ||
-					(iDeltaB1 ==  1           && iDeltaA ==  1           && iDeltaB == -WORLD_MAP_X) ||
-					(iDeltaB1 ==  1           && iDeltaA ==  1           && iDeltaB ==  WORLD_MAP_X);
+					(iDeltaB1 == -MAP_WORLD_X && iDeltaA == -MAP_WORLD_X && iDeltaB == -1)           ||
+					(iDeltaB1 == -MAP_WORLD_X && iDeltaA == -MAP_WORLD_X && iDeltaB ==  1)           ||
+					(iDeltaB1 ==  MAP_WORLD_X && iDeltaA ==  MAP_WORLD_X && iDeltaB == -1)           ||
+					(iDeltaB1 ==  MAP_WORLD_X && iDeltaA ==  MAP_WORLD_X && iDeltaB ==  1)           ||
+					(iDeltaB1 == -1           && iDeltaA == -1           && iDeltaB == -MAP_WORLD_X) ||
+					(iDeltaB1 == -1           && iDeltaA == -1           && iDeltaB ==  MAP_WORLD_X) ||
+					(iDeltaB1 ==  1           && iDeltaA ==  1           && iDeltaB == -MAP_WORLD_X) ||
+					(iDeltaB1 ==  1           && iDeltaA ==  1           && iDeltaB ==  MAP_WORLD_X);
 			}
 
 			if (prev->uiSectorId == next->uiSectorId)
 			{
-				if (prev->uiSectorId + WORLD_MAP_X == node->uiSectorId)
+				if (prev->uiSectorId + MAP_WORLD_X == node->uiSectorId)
 				{
 					iDirection = S_TO_N_LINE;
 					iArrow = NORTH_ARROW;
 					iArrowSector += northOffset;
 				}
-				else if (prev->uiSectorId - WORLD_MAP_X == node->uiSectorId)
+				else if (prev->uiSectorId - MAP_WORLD_X == node->uiSectorId)
 				{
 					iDirection = N_TO_S_LINE;
 					iArrow = SOUTH_ARROW;
@@ -1258,62 +1243,62 @@ static void TracePathRoute(PathSt* const pPath)
 					iArrow = EAST_ARROW;
 					iArrowSector += eastOffset;
 				}
-				else if (iDeltaA == -WORLD_MAP_X && iDeltaB == WORLD_MAP_X)
+				else if (iDeltaA == -MAP_WORLD_X && iDeltaB == MAP_WORLD_X)
 				{
 					iDirection = NORTH_LINE;
 					iArrow = NORTH_ARROW;
 					iArrowSector += northOffset;
 				}
-				else if (iDeltaA == WORLD_MAP_X && iDeltaB == -WORLD_MAP_X)
+				else if (iDeltaA == MAP_WORLD_X && iDeltaB == -MAP_WORLD_X)
 				{
 					iDirection = SOUTH_LINE;
 					iArrow = SOUTH_ARROW;
 					iArrowSector += southOffset;
 				}
-				else if (iDeltaA == -WORLD_MAP_X && iDeltaB == -1)
+				else if (iDeltaA == -MAP_WORLD_X && iDeltaB == -1)
 				{
 					iDirection = N_TO_E_LINE;
 					iArrow = EAST_ARROW;
 					iArrowSector += eastOffset;
 				}
-				else if (iDeltaA == WORLD_MAP_X && iDeltaB == 1)
+				else if (iDeltaA == MAP_WORLD_X && iDeltaB == 1)
 				{
 					iDirection = S_TO_W_LINE;
 					iArrow = WEST_ARROW;
 					iArrowSector += westOffset;
 				}
-				else if (iDeltaA == 1 && iDeltaB == -WORLD_MAP_X)
+				else if (iDeltaA == 1 && iDeltaB == -MAP_WORLD_X)
 				{
 					iDirection = E_TO_S_LINE;
 					iArrow = SOUTH_ARROW;
 					iArrowSector += southOffset;
 				}
-				else if (iDeltaA == -1 && iDeltaB == WORLD_MAP_X)
+				else if (iDeltaA == -1 && iDeltaB == MAP_WORLD_X)
 				{
 					iDirection = W_TO_N_LINE;
 					iArrow = NORTH_ARROW;
 					iArrowSector += northOffset;
 				}
-				else if (iDeltaA == -1 && iDeltaB == -WORLD_MAP_X)
+				else if (iDeltaA == -1 && iDeltaB == -MAP_WORLD_X)
 				{
 					iDirection = W_TO_S_LINE;
 					iArrow = SOUTH_ARROW;
 					iArrowSector += southOffset;
 					iArrowSector.y += WEST_TO_SOUTH_OFFSET_Y;
 				}
-				else if (iDeltaA == -WORLD_MAP_X && iDeltaB == 1)
+				else if (iDeltaA == -MAP_WORLD_X && iDeltaB == 1)
 				{
 					iDirection = N_TO_W_LINE;
 					iArrow = WEST_ARROW;
 					iArrowSector += westOffset;
 				}
-				else if (iDeltaA == WORLD_MAP_X && iDeltaB == -1)
+				else if (iDeltaA == MAP_WORLD_X && iDeltaB == -1)
 				{
 					iDirection  = S_TO_E_LINE;
 					iArrow      = EAST_ARROW;
 					iArrowSector += eastOffset;
 				}
-				else if (iDeltaA == 1 && iDeltaB == WORLD_MAP_X)
+				else if (iDeltaA == 1 && iDeltaB == MAP_WORLD_X)
 				{
 					iDirection  = E_TO_N_LINE;
 					iArrow      = NORTH_ARROW;
@@ -1337,7 +1322,7 @@ static void TracePathRoute(PathSt* const pPath)
 				{
 					iDirection = RED_X_EAST;
 				}
-				else if (iDeltaA == -WORLD_MAP_X)
+				else if (iDeltaA == -MAP_WORLD_X)
 				{
 					iDirection = RED_X_NORTH;
 				}
@@ -1362,7 +1347,7 @@ static void TracePathRoute(PathSt* const pPath)
 					iArrow      = WEST_ARROW;
 					iArrowSector += westOffset;
 				}
-				else if (iDeltaB == WORLD_MAP_X)
+				else if (iDeltaB == MAP_WORLD_X)
 				{
 					iDirection  = GREEN_X_NORTH;
 					iArrow      = NORTH_ARROW;
@@ -1565,35 +1550,35 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 			// check to see if out-of sector U-turn
 			// for placement of arrows
 			iDeltaB1=pNextNode->uiSectorId-pNextNode->pNext->uiSectorId;
-			if ((iDeltaB1==-WORLD_MAP_X)&&(iDeltaA==-WORLD_MAP_X)&&(iDeltaB==-1))
+			if ((iDeltaB1==-MAP_WORLD_X)&&(iDeltaA==-MAP_WORLD_X)&&(iDeltaB==-1))
 			{
 				fUTurnFlag=TRUE;
 			}
-			else if((iDeltaB1==-WORLD_MAP_X)&&(iDeltaA==-WORLD_MAP_X)&&(iDeltaB==1))
+			else if((iDeltaB1==-MAP_WORLD_X)&&(iDeltaA==-MAP_WORLD_X)&&(iDeltaB==1))
 			{
 				fUTurnFlag=TRUE;
 			}
-			else if((iDeltaB1==WORLD_MAP_X)&&(iDeltaA==WORLD_MAP_X)&&(iDeltaB==-1))
+			else if((iDeltaB1==MAP_WORLD_X)&&(iDeltaA==MAP_WORLD_X)&&(iDeltaB==-1))
 			{
 				fUTurnFlag=TRUE;
 			}
-			else if((iDeltaB1==WORLD_MAP_X)&&(iDeltaA==WORLD_MAP_X)&&(iDeltaB==1))
+			else if((iDeltaB1==MAP_WORLD_X)&&(iDeltaA==MAP_WORLD_X)&&(iDeltaB==1))
 			{
 				fUTurnFlag=TRUE;
 			}
-			else if((iDeltaB1==-1)&&(iDeltaA==-1)&&(iDeltaB==-WORLD_MAP_X))
+			else if((iDeltaB1==-1)&&(iDeltaA==-1)&&(iDeltaB==-MAP_WORLD_X))
 			{
 				fUTurnFlag=TRUE;
 			}
-			else if((iDeltaB1==-1)&&(iDeltaA==-1)&&(iDeltaB==WORLD_MAP_X))
+			else if((iDeltaB1==-1)&&(iDeltaA==-1)&&(iDeltaB==MAP_WORLD_X))
 			{
 				fUTurnFlag=TRUE;
 			}
-			else if((iDeltaB1==1)&&(iDeltaA==1)&&(iDeltaB==-WORLD_MAP_X))
+			else if((iDeltaB1==1)&&(iDeltaA==1)&&(iDeltaB==-MAP_WORLD_X))
 			{
 				fUTurnFlag=TRUE;
 			}
-			else if((iDeltaB1==1)&&(iDeltaA==1)&&(iDeltaB==WORLD_MAP_X))
+			else if((iDeltaB1==1)&&(iDeltaA==1)&&(iDeltaB==MAP_WORLD_X))
 			{
 				fUTurnFlag=TRUE;
 			}
@@ -1604,7 +1589,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 
 		if (pPastNode->uiSectorId==pNextNode->uiSectorId)
 		{
-			if (pPastNode->uiSectorId + WORLD_MAP_X == pNode->uiSectorId)
+			if (pPastNode->uiSectorId + MAP_WORLD_X == pNode->uiSectorId)
 			{
 				iDirection = S_TO_N_LINE;
 				if (!ubCounter)
@@ -1614,7 +1599,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 
 				iArrowSector += northOffset;
 			}
-			else if(pPastNode->uiSectorId-WORLD_MAP_X==pNode->uiSectorId)
+			else if(pPastNode->uiSectorId-MAP_WORLD_X==pNode->uiSectorId)
 			{
 				iDirection=N_TO_S_LINE;
 				if(!ubCounter)
@@ -1662,7 +1647,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow = EAST_ARROW;
 				iArrowSector += eastOffset;
 			}
-			else if((iDeltaA==-WORLD_MAP_X)&&(iDeltaB==WORLD_MAP_X))
+			else if((iDeltaA==-MAP_WORLD_X)&&(iDeltaB==MAP_WORLD_X))
 			{
 				iDirection=NORTH_LINE;
 				if(!ubCounter)
@@ -1671,7 +1656,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=NORTH_ARROW;
 				iArrowSector += northOffset;
 			}
-			else if((iDeltaA==WORLD_MAP_X)&&(iDeltaB==-WORLD_MAP_X))
+			else if((iDeltaA==MAP_WORLD_X)&&(iDeltaB==-MAP_WORLD_X))
 			{
 				iDirection=SOUTH_LINE;
 				if(!ubCounter)
@@ -1681,7 +1666,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 
 				iArrowSector += southOffset;
 			}
-			else if((iDeltaA==-WORLD_MAP_X)&&(iDeltaB==-1))
+			else if((iDeltaA==-MAP_WORLD_X)&&(iDeltaB==-1))
 			{
 				iDirection=N_TO_E_LINE;
 				if(!ubCounter)
@@ -1690,7 +1675,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				iArrow=EAST_ARROW;
 				iArrowSector += eastOffset;
 			}
-			else if((iDeltaA==WORLD_MAP_X)&&(iDeltaB==1))
+			else if((iDeltaA==MAP_WORLD_X)&&(iDeltaB==1))
 			{
 				iDirection=S_TO_W_LINE;
 				if(!ubCounter)
@@ -1699,7 +1684,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				iArrow=WEST_ARROW;
 				iArrowSector += westOffset;
 			}
-			else if((iDeltaA==1)&&(iDeltaB==-WORLD_MAP_X))
+			else if((iDeltaA==1)&&(iDeltaB==-MAP_WORLD_X))
 			{
 				iDirection=E_TO_S_LINE;
 				if(!ubCounter)
@@ -1708,7 +1693,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				iArrow=SOUTH_ARROW;
 				iArrowSector += southOffset;
 			}
-			else if ((iDeltaA==-1)&&(iDeltaB==WORLD_MAP_X))
+			else if ((iDeltaA==-1)&&(iDeltaB==MAP_WORLD_X))
 			{
 				iDirection=W_TO_N_LINE;
 				if(!ubCounter)
@@ -1717,7 +1702,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=NORTH_ARROW;
 				iArrowSector += northOffset;
 			}
-			else if ((iDeltaA==-1)&&(iDeltaB==-WORLD_MAP_X))
+			else if ((iDeltaA==-1)&&(iDeltaB==-MAP_WORLD_X))
 			{
 				iDirection=W_TO_S_LINE;
 				if(!ubCounter)
@@ -1727,7 +1712,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				iArrowSector += southOffset;
 				iArrowSector.y += WEST_TO_SOUTH_OFFSET_Y;
 			}
-			else if ((iDeltaA==-WORLD_MAP_X)&&(iDeltaB==1))
+			else if ((iDeltaA==-MAP_WORLD_X)&&(iDeltaB==1))
 			{
 				iDirection=N_TO_W_LINE;
 				if(!ubCounter)
@@ -1736,7 +1721,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=WEST_ARROW;
 				iArrowSector += westOffset;
 			}
-			else if ((iDeltaA==WORLD_MAP_X)&&(iDeltaB==-1))
+			else if ((iDeltaA==MAP_WORLD_X)&&(iDeltaB==-1))
 			{
 				iDirection=S_TO_E_LINE;
 				if(!ubCounter)
@@ -1745,7 +1730,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=EAST_ARROW;
 				iArrowSector += eastOffset;
 			}
-			else if ((iDeltaA==1)&&(iDeltaB==WORLD_MAP_X))
+			else if ((iDeltaA==1)&&(iDeltaB==MAP_WORLD_X))
 			{
 				iDirection=E_TO_N_LINE;
 				if(!ubCounter)
@@ -1775,7 +1760,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				iDirection=RED_X_EAST;
 				//iSector.x+=RED_EAST_OFF_X;
 			}
-			else if(iDeltaA==-WORLD_MAP_X)
+			else if(iDeltaA==-MAP_WORLD_X)
 			{
 				iDirection=RED_X_NORTH;
 				//iSector.y+=RED_NORTH_OFF_Y;
@@ -1810,7 +1795,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				iArrowSector += westOffset;
 				//iSector.x+=RED_WEST_OFF_X;
 			}
-			else if(iDeltaB==WORLD_MAP_X)
+			else if(iDeltaB==MAP_WORLD_X)
 			{
 				iDirection=GREEN_X_NORTH;
 				if(!ubCounter)
@@ -2454,11 +2439,13 @@ static void BlitMineText(UINT8 const mine_idx, const SGPSector& sMap)
 
 	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
 	sScreenX += MAP_GRID_X / 2; // centered around middle of mine square
-	sScreenY += MAP_GRID_Y + 1; // slightly below
+	sScreenY += MAP_GRID_Y + 1 * g_ui.m_stdScreenScale; // slightly below
 
 	// show detailed mine info (name, production rate, daily production)
 
-	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
+	SetFontDestBuffer(guiSAVEBUFFER,
+			  MAP_VIEW_START_X, MAP_VIEW_START_Y,
+			  MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 1);
 	SetFontAttributes(MAP_FONT, FONT_LTGREEN);
 
 	INT32 const x = sScreenX;
@@ -2505,7 +2492,9 @@ static void BlitMineText(UINT8 const mine_idx, const SGPSector& sMap)
 		PrintStringCenteredBoxed(x, y, buf);
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
+	SetFontDestBuffer(FRAME_BUFFER,
+			  MAP_VIEW_START_X, MAP_VIEW_START_Y,
+			  MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 1);
 }
 
 
@@ -2518,43 +2507,31 @@ static void BlitTownGridMarkers(void)
 	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
 	// Go through list of towns and place on screen
-	UINT32 const color = RGB(100, 100, 100);
-	FOR_EACH_TOWN_SECTOR(i)
-	{
+	const UINT32 color = RGB(100, 100, 100);
+	FOR_EACH_TOWN_SECTOR(i) {
 		// skip Orta/Tixa until found
 		if (!IsTownFound(i->town)) continue;
 
 		INT16       x;
 		INT16       y;
-		INT16       w;
-		INT16       h;
+		const INT16 w  = MAP_GRID_X;
+		const INT16 h  = MAP_GRID_Y;
 		// Get location on screen
 		SGPSector sMap(i->sector);
 		GetScreenXYFromMapXY(sMap, &x, &y);
-		w  = MAP_GRID_X - 1;
-		h  = MAP_GRID_Y;
-		x += 2;
 
 		INT32 const loc = sMap.AsStrategicIndex();
 		if (StrategicMap[loc - MAP_WORLD_X].bNameId == BLANK_SECTOR)
-		{
-			LineDraw(TRUE, x - 1, y - 1, x + w - 1, y - 1, color, buf);
-		}
+			LineDraw(TRUE, x, y - 1, x + w, y - 1, color, buf);
 
 		if (StrategicMap[loc + MAP_WORLD_X].bNameId == BLANK_SECTOR)
-		{
-			LineDraw(TRUE, x - 1, y + h - 1, x + w - 1, y + h - 1, color, buf);
-		}
+			LineDraw(TRUE, x, y + h - 1, x + w, y + h - 1, color, buf);
 
 		if (StrategicMap[loc - 1].bNameId == BLANK_SECTOR)
-		{
-			LineDraw(TRUE, x - 2, y - 1, x - 2, y + h - 1, color, buf);
-		}
+			LineDraw(TRUE, x, y - 1, x, y + h - 1, color, buf);
 
 		if (StrategicMap[loc + 1].bNameId == BLANK_SECTOR)
-		{
-			LineDraw(TRUE, x + w - 1, y - 1, x + w - 1, y + h - 1, color, buf);
-		}
+			LineDraw(TRUE, x + w, y - 1, x + w, y + h - 1, color, buf);
 	}
 
 	RestoreClipRegionToFullScreenForRectangle(pitch);
@@ -2564,7 +2541,7 @@ static void BlitTownGridMarkers(void)
 static void BlitMineGridMarkers(void)
 {
 	SGPVSurface::Lock l(guiSAVEBUFFER);
-	UINT32 const pitch = l.Pitch();
+	const UINT32 pitch = l.Pitch();
 
 	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
@@ -2601,7 +2578,9 @@ static void DisplayLevelString(void)
 
 	// otherwise we will have to display the string with the level number
 
-	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
+	SetFontDestBuffer(guiSAVEBUFFER,
+			  MAP_VIEW_START_X, MAP_VIEW_START_Y,
+			  MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 1);
 	SetFontAttributes(MAP_FONT, MAP_INDEX_COLOR);
 	MPrint(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, ST::format("{} {}", sMapLevelString, iCurrentMapSectorZ));
 	SetFontDestBuffer(FRAME_BUFFER);
@@ -2662,7 +2641,63 @@ static void DropAPersonInASector(UINT8 const type, UINT8 const sector)
 
 void LoadMapScreenInterfaceMapGraphics()
 {
-	guiBIGMAP                      = AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx");
+	ScaleCallback *removeLinesTop = [](int i, int w, int h, UINT8 *buf){
+		// remove horizontal map lines - double of MAP_GRID_Y
+		const int w4 = w * 4;
+		for(int y = 34; y < h; y += 36) {
+			const int o = w * y * 4;
+			for(int x = 0; x < w4; x++) {
+				const int i = o + x;
+				buf[i] = (buf[i - w4] + buf[i + w4]) / 2;
+			}
+		}
+		// remove vertical map lines - double of MAP_GRID_X
+		for(int x = 40; x < w; x += 42) {
+			for(int y = 0; y < h; y++) {
+				const int i = (w * y + x) * 4;
+				buf[i] = (buf[i - 4] + buf[i + 4]) / 2;
+				buf[i + 1] = (buf[i + 1 - 4] + buf[i + 1 + 4]) / 2;
+				buf[i + 2] = (buf[i + 2 - 4] + buf[i + 2 + 4]) / 2;
+				buf[i + 3] = (buf[i + 3 - 4] + buf[i + 3 + 4]) / 2;
+			}
+		}
+	};
+	ScaleCallback *removeLinesSub = [](int i, int w, int h, UINT8 *buf){
+		// remove horizontal map lines - MAP_GRID_Y
+		const int w4 = w * 4;
+		for(int x = 0; x < w4; x += 4) {
+			buf[x + 1] = buf[x + 2] = buf[x + 3] = 0;
+			buf[x] = 255;
+		}
+		for(int y = 18; y < h; y += 18) {
+			const int o = w * y * 4;
+			for(int x = 0; x < w4; x++) {
+				const int i = o + x;
+				buf[i] = (buf[i - w4] + buf[i + w4]) / 2;
+			}
+		}
+		// remove vertical map lines - MAP_GRID_X
+		for(int y = 0; y < h; y++) {
+			const int i = w4 * y;
+			buf[i] = 255;
+			buf[i + 1] = buf[i + 2] = buf[i + 3] = 0;
+		}
+		for(int x = 21; x < w; x += 21) {
+			for(int y = 0; y < h; y++) {
+				const int i = w4 * y + 4 * x;
+				buf[i] = (buf[i - 4] + buf[i + 4]) / 2;
+				buf[i + 1] = (buf[i + 1 - 4] + buf[i + 1 + 4]) / 2;
+				buf[i + 2] = (buf[i + 2 - 4] + buf[i + 2 + 4]) / 2;
+				buf[i + 3] = (buf[i + 3 - 4] + buf[i + 3 + 4]) / 2;
+			}
+		}
+	};
+	const double scaleX = double(MAP_VIEW_WIDTH + g_ui.m_stdScreenScale) / double(int(21 * (MAP_WORLD_X - 1)));
+	const double scaleY = double(MAP_VIEW_HEIGHT + g_ui.m_stdScreenScale) / double(int(18 * (MAP_WORLD_Y - 1)));
+	guiBIGMAP                      = AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx", removeLinesTop, scaleX, scaleY);
+	guiSubLevel1                   = AddScaledVideoObjectFromFile(INTERFACEDIR "/mine_1.sti", removeLinesSub, scaleX, scaleY);
+	guiSubLevel2                   = AddScaledVideoObjectFromFile(INTERFACEDIR "/mine_2.sti", removeLinesSub, scaleX, scaleY);
+	guiSubLevel3                   = AddScaledVideoObjectFromFile(INTERFACEDIR "/mine_3.sti", removeLinesSub, scaleX, scaleY);
 	guiBULLSEYE                    = AddVideoObjectFromFile(INTERFACEDIR "/bullseye.sti");
 	guiSAMICON                     = AddVideoObjectFromFile(INTERFACEDIR "/sam.sti");
 	guiCHARBETWEENSECTORICONS      = AddVideoObjectFromFile(INTERFACEDIR "/merc_between_sector_icons.sti");
@@ -2676,9 +2711,6 @@ void LoadMapScreenInterfaceMapGraphics()
 	guiMilitiaMaps                 = AddVideoObjectFromFile(INTERFACEDIR "/militiamaps.sti");
 	guiMilitiaSectorHighLight      = AddVideoObjectFromFile(INTERFACEDIR "/militiamapsectoroutline2.sti");
 	guiMilitiaSectorOutline        = AddVideoObjectFromFile(INTERFACEDIR "/militiamapsectoroutline.sti");
-	guiSubLevel1                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_1.sti");
-	guiSubLevel2                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_2.sti");
-	guiSubLevel3                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_3.sti");
 
 	for (auto s : GCM->getMapSecrets())
 	{
@@ -2860,7 +2892,7 @@ static void RenderIconsPerSectorForSelectedTown(void)
 			INT16 const x  = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
 			INT16 const y  = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + dy * MILITIA_BOX_BOX_HEIGHT;
 			FindFontRightCoordinates(x, y, MILITIA_BOX_BOX_WIDTH, 0, sString, FONT10ARIAL, &sX, &sY);
-			MPrint(sSectorMilitiaMapSector != iCounter ? sX : sX - 15, sY + MILITIA_BOX_BOX_HEIGHT - 5, sString);
+			MPrint(sSectorMilitiaMapSector != iCounter ? sX : sX - g_ui.m_stdScreenScale * 15, sY + MILITIA_BOX_BOX_HEIGHT - g_ui.m_stdScreenScale * 5, sString);
 		}
 
 		// now display
@@ -2872,14 +2904,14 @@ static void RenderIconsPerSectorForSelectedTown(void)
 			UINT16 icon_base;
 			if (sSectorMilitiaMapSector == iCounter)
 			{
-				x         += i % POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING       + 2;
-				y         += i / POPUP_MILITIA_ICONS_PER_ROW * (MEDIUM_MILITIA_ICON_SPACING - 1) + 3;
+				x         += i % POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING     + g_ui.m_stdScreenScale * 2;
+				y         += i / POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING - 1 + g_ui.m_stdScreenScale * 3;
 				icon_base  = 5;
 			}
 			else
 			{
-				x         += i % POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING + 3;
-				y         += i / POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING + 3;
+				x         += i % POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING + g_ui.m_stdScreenScale * 3;
+				y         += i / POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING + g_ui.m_stdScreenScale * 3;
 				icon_base  = 8;
 			}
 
@@ -3435,27 +3467,6 @@ static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons()
 	EnableButton(giMapMilitiaButton[2], n_elite   != 0); // elites button
 }
 
-
-static void HideExistenceOfUndergroundMapSector(const SGPSector& sSector);
-
-
-static void ShadeSubLevelsNotVisited(void)
-{
-	// Obtain the 16-bit version of the same color used in the mine STIs
-	gusUndergroundNearBlack = RGB(2, 2, 0);
-
-	// Run through all (real & possible) underground sectors
-	for (UNDERGROUND_SECTORINFO const* i = gpUndergroundSectorInfoHead; i; i = i->next)
-	{
-		if (i->ubSector.z != (UINT8)iCurrentMapSectorZ) continue;
-		if (i->uiFlags & SF_ALREADY_VISITED)           continue;
-		/* The sector is on the currently displayed sublevel and has never been
-			* visited.  Remove that portion of the "mine" graphics from view. */
-		HideExistenceOfUndergroundMapSector(i->ubSector);
-	}
-}
-
-
 static void HandleLowerLevelMapBlit(void)
 {
 	// blits the sub level maps
@@ -3469,11 +3480,29 @@ static void HandleLowerLevelMapBlit(void)
 		default: abort(); // HACK000E
 	}
 
-	// handle the blt of the sublevel
-	BltVideoObject(guiSAVEBUFFER, vo, 0, MAP_VIEW_START_X + 21, MAP_VIEW_START_Y + 17);
+	const int xStart = MAP_VIEW_START_X + int(MAP_GRID_X) - 1 * g_ui.m_stdScreenScale;
+	const int yStart = MAP_VIEW_START_Y + int(MAP_GRID_Y) - 1 * g_ui.m_stdScreenScale;
 
-	// handle shading of sublevels
-	ShadeSubLevelsNotVisited( );
+	// handle the blt of the sublevel
+	BltVideoObject(guiSAVEBUFFER, vo, 0, xStart, yStart);
+
+	DrawMapGrid(RGB(16, 8, 9));
+
+	INT16 sScreenX, sScreenY;
+	SGPSector sSector(1, 1, iCurrentMapSectorZ);
+	for (sSector.x = 1; sSector.x < MAP_WORLD_X - 1; ++sSector.x)
+	{
+		for (sSector.y = 1; sSector.y < MAP_WORLD_Y - 1; ++sSector.y)
+		{
+			if (!GetSectorFlagStatus(sSector, SF_ALREADY_VISITED)) {
+				GetScreenXYFromMapXY(sSector, &sScreenX, &sScreenY);
+				ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+							  sScreenX + 1, sScreenY,
+							  sScreenX + MAP_GRID_X, sScreenY + MAP_GRID_Y - 1,
+							  RGB(0, 0, 0));
+			}
+		}
+	}
 }
 
 
@@ -3659,8 +3688,8 @@ static void ShowSAMSitesOnStrategicMap()
 			INT16 x;
 			INT16 y;
 			GetScreenXYFromMapXY(sMap, &x, &y);
-			x += 11;
-			y += 19;
+			x += 11 * g_ui.m_stdScreenScale;
+			y += 19 * g_ui.m_stdScreenScale;
 
 			const ST::string& sam_site = GCM->getLandTypeString(SAM_SITE);
 
@@ -3778,8 +3807,8 @@ static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, const SGPSector
 	INT32 const col = icon_pos % MERC_ICONS_PER_LINE;
 	INT32 const row = icon_pos / MERC_ICONS_PER_LINE;
 
-	INT32 const x = MAP_VIEW_START_X + sMap.x * MAP_GRID_X + MAP_X_ICON_OFFSET + 3 * col;
-	INT32 const y = MAP_VIEW_START_Y + sMap.y * MAP_GRID_Y + MAP_Y_ICON_OFFSET + 3 * row;
+	INT32 const x = MAP_VIEW_START_X + sMap.x * MAP_GRID_X + MAP_X_ICON_OFFSET + g_ui.m_stdScreenScale * 3 * col;
+	INT32 const y = MAP_VIEW_START_Y + sMap.y * MAP_GRID_Y + MAP_Y_ICON_OFFSET + g_ui.m_stdScreenScale * 3 * row;
 	BltVideoObject(guiSAVEBUFFER, vo, icon, x, y);
 	InvalidateRegion(x, y, x + DMAP_GRID_X, y + DMAP_GRID_Y);
 }
@@ -3803,19 +3832,6 @@ static void DrawBullseye(void)
 
 	BltVideoObject(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
 }
-
-
-static void HideExistenceOfUndergroundMapSector(const SGPSector& sSector)
-{
-	INT16 sScreenX;
-	INT16 sScreenY;
-
-	GetScreenXYFromMapXY(sSector, &sScreenX, &sScreenY);
-
-	// fill it with near black
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, sScreenX + 1, sScreenY, sScreenX + MAP_GRID_X,	sScreenY + MAP_GRID_Y - 1, gusUndergroundNearBlack );
-}
-
 
 BOOLEAN CanRedistributeMilitiaInSector(INT8 bClickedTownId)
 {

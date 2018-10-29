@@ -54,8 +54,8 @@ static MOUSE_REGION gClockScreenMaskMouseRegion;
 
 #define CLOCK_X      (g_ui.get_CLOCK_X())
 #define CLOCK_Y      (g_ui.get_CLOCK_Y())
-#define CLOCK_HEIGHT  13
-#define CLOCK_WIDTH   66
+#define CLOCK_HEIGHT (g_ui.m_stdScreenScale * 13)
+#define CLOCK_WIDTH  (g_ui.m_stdScreenScale * 66)
 #define CLOCK_FONT   COMPFONT
 
 

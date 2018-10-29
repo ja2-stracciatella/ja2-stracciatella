@@ -2040,7 +2040,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	{
 		// Display the status of the item
 		UINT32 const color = RGB(140, 136, 119);
-		DrawItemUIBarEx(item_o, 0, x + 2, y + 21, 20, color, color, FRAME_BUFFER);
+		DrawItemUIBarEx(item_o, 0, x + 2, y + 21, 2, 20, color, color, FRAME_BUFFER);
 	}
 
 	// Display the item's cost

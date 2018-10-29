@@ -76,168 +76,168 @@
 #include <string_theory/string>
 
 // DEFINES FOR VARIOUS PANELS
-#define SM_ITEMDESC_START_X			214 + INTERFACE_START_X
-#define SM_ITEMDESC_START_Y			1 + INV_INTERFACE_START_Y
+#define SM_ITEMDESC_START_X			(g_ui.m_stdScreenScale * 214) + INTERFACE_START_X
+#define SM_ITEMDESC_START_Y			(g_ui.m_stdScreenScale * 1 + INV_INTERFACE_START_Y)
 #define SM_ITEMDESC_HEIGHT			128
 #define SM_ITEMDESC_WIDTH			314
 
 // SINGLE MERC SCREEN
 
-#define SM_SELMERC_AP_X			67
-#define SM_SELMERC_AP_Y			53
-#define SM_SELMERC_AP_HEIGHT			10
-#define SM_SELMERC_AP_WIDTH			17
+#define SM_SELMERC_AP_X			(g_ui.m_stdScreenScale * 67)
+#define SM_SELMERC_AP_Y			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERC_AP_HEIGHT			(g_ui.m_stdScreenScale * 10)
+#define SM_SELMERC_AP_WIDTH			(g_ui.m_stdScreenScale * 17)
 
-#define SM_SELMERC_HEALTH_X			69
-#define SM_SELMERC_HEALTH_Y			47
+#define SM_SELMERC_HEALTH_X			(g_ui.m_stdScreenScale * 69)
+#define SM_SELMERC_HEALTH_Y			(g_ui.m_stdScreenScale * 47)
 
-#define SM_SELMERCNAME_X			11
-#define SM_SELMERCNAME_Y			53
-#define SM_SELMERCNAME_WIDTH			53
-#define SM_SELMERCNAME_HEIGHT			10
+#define SM_SELMERCNAME_X			(g_ui.m_stdScreenScale * 11)
+#define SM_SELMERCNAME_Y			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERCNAME_WIDTH			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERCNAME_HEIGHT			(g_ui.m_stdScreenScale * 10)
 
-#define SM_SELMERC_FACE_X			13
-#define SM_SELMERC_FACE_Y			6
-#define SM_SELMERC_FACE_HEIGHT			42
-#define SM_SELMERC_FACE_WIDTH			48
+#define SM_SELMERC_FACE_X			(g_ui.m_stdScreenScale * 13)
+#define SM_SELMERC_FACE_Y			(g_ui.m_stdScreenScale * 6)
+#define SM_SELMERC_FACE_HEIGHT			(g_ui.m_stdScreenScale * 42)
+#define SM_SELMERC_FACE_WIDTH			(g_ui.m_stdScreenScale * 48)
 
-#define SM_SELMERC_PLATE_X			4
-#define SM_SELMERC_PLATE_Y			2
-#define SM_SELMERC_PLATE_HEIGHT		65
-#define SM_SELMERC_PLATE_WIDTH			83
+#define SM_SELMERC_PLATE_X			(g_ui.m_stdScreenScale * 4)
+#define SM_SELMERC_PLATE_Y			(g_ui.m_stdScreenScale * 2)
+#define SM_SELMERC_PLATE_HEIGHT		(g_ui.m_stdScreenScale * 65)
+#define SM_SELMERC_PLATE_WIDTH			(g_ui.m_stdScreenScale * 83)
 
 
 #define STATS_TITLE_FONT_COLOR			RGB(173, 148, 115)
 #define STATS_TEXT_FONT_COLOR			RGB(214, 201, 156)
 
 
-#define SM_TALKB_X				155
-#define SM_TALKB_Y				108
-#define SM_MUTEB_X				91
-#define SM_MUTEB_Y				108
-#define SM_STANCEUPB_X				187
-#define SM_STANCEUPB_Y				40
-#define SM_UPDOWNB_X				91
-#define SM_UPDOWNB_Y				73
-#define SM_CLIMBB_X				187
-#define SM_CLIMBB_Y				8
-#define SM_STANCEDOWNB_X			187
-#define SM_STANCEDOWNB_Y			108
-#define SM_HANDCURSORB_X			123
-#define SM_HANDCURSORB_Y			73
-#define SM_PREVMERCB_X				9
-#define SM_PREVMERCB_Y				70
-#define SM_NEXTMERCB_X				51
-#define SM_NEXTMERCB_Y				70
-#define SM_OPTIONSB_X				9
-#define SM_OPTIONSB_Y				105
-#define SM_BURSTMODEB_X			155
-#define SM_BURSTMODEB_Y			73
-#define SM_LOOKB_X				123
-#define SM_LOOKB_Y				108
-#define SM_STEALTHMODE_X			187
-#define SM_STEALTHMODE_Y			73
-#define SM_DONE_X				(g_ui.m_teamPanelSlotsTotalWidth + 45)
-#define SM_DONE_Y				4
-#define SM_MAPSCREEN_X				(g_ui.m_teamPanelSlotsTotalWidth + 91)
-#define SM_MAPSCREEN_Y				4
+#define SM_TALKB_X				(g_ui.m_stdScreenScale * 155)
+#define SM_TALKB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_MUTEB_X				(g_ui.m_stdScreenScale * 91)
+#define SM_MUTEB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_STANCEUPB_X				(g_ui.m_stdScreenScale * 187)
+#define SM_STANCEUPB_Y				(g_ui.m_stdScreenScale * 40)
+#define SM_UPDOWNB_X				(g_ui.m_stdScreenScale * 91)
+#define SM_UPDOWNB_Y				(g_ui.m_stdScreenScale * 73)
+#define SM_CLIMBB_X				(g_ui.m_stdScreenScale * 187)
+#define SM_CLIMBB_Y				(g_ui.m_stdScreenScale * 8)
+#define SM_STANCEDOWNB_X			(g_ui.m_stdScreenScale * 187)
+#define SM_STANCEDOWNB_Y			(g_ui.m_stdScreenScale * 108)
+#define SM_HANDCURSORB_X			(g_ui.m_stdScreenScale * 123)
+#define SM_HANDCURSORB_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_PREVMERCB_X				(g_ui.m_stdScreenScale * 9)
+#define SM_PREVMERCB_Y				(g_ui.m_stdScreenScale * 70)
+#define SM_NEXTMERCB_X				(g_ui.m_stdScreenScale * 51)
+#define SM_NEXTMERCB_Y				(g_ui.m_stdScreenScale * 70)
+#define SM_OPTIONSB_X				(g_ui.m_stdScreenScale * 9)
+#define SM_OPTIONSB_Y				(g_ui.m_stdScreenScale * 105)
+#define SM_BURSTMODEB_X			(g_ui.m_stdScreenScale * 155)
+#define SM_BURSTMODEB_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_LOOKB_X				(g_ui.m_stdScreenScale * 123)
+#define SM_LOOKB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_STEALTHMODE_X			(g_ui.m_stdScreenScale * 187)
+#define SM_STEALTHMODE_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_DONE_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 45))
+#define SM_DONE_Y				(g_ui.m_stdScreenScale * 4)
+#define SM_MAPSCREEN_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 91))
+#define SM_MAPSCREEN_Y				(g_ui.m_stdScreenScale * 4)
 
 
-#define SM_PERCENT_WIDTH			20
-#define SM_PERCENT_HEIGHT			10
-#define SM_ARMOR_X				347
-#define SM_ARMOR_Y				79
-#define SM_ARMOR_LABEL_X			363
-#define SM_ARMOR_LABEL_Y			69
-#define SM_ARMOR_PERCENT_X			368
-#define SM_ARMOR_PERCENT_Y			79
+#define SM_PERCENT_WIDTH			(g_ui.m_stdScreenScale * 20)
+#define SM_PERCENT_HEIGHT			(g_ui.m_stdScreenScale * 10)
+#define SM_ARMOR_X				(g_ui.m_stdScreenScale * 347)
+#define SM_ARMOR_Y				(g_ui.m_stdScreenScale * 79)
+#define SM_ARMOR_LABEL_X			(g_ui.m_stdScreenScale * 363)
+#define SM_ARMOR_LABEL_Y			(g_ui.m_stdScreenScale * 69)
+#define SM_ARMOR_PERCENT_X			(g_ui.m_stdScreenScale * 368)
+#define SM_ARMOR_PERCENT_Y			(g_ui.m_stdScreenScale * 79)
 
-#define SM_WEIGHT_LABEL_X			430
-#define SM_WEIGHT_LABEL_Y			107
-#define SM_WEIGHT_PERCENT_X			449
-#define SM_WEIGHT_PERCENT_Y			106
-#define SM_WEIGHT_X				428
-#define SM_WEIGHT_Y				106
+#define SM_WEIGHT_LABEL_X			(g_ui.m_stdScreenScale * 430)
+#define SM_WEIGHT_LABEL_Y			(g_ui.m_stdScreenScale * 107)
+#define SM_WEIGHT_PERCENT_X			(g_ui.m_stdScreenScale * 449)
+#define SM_WEIGHT_PERCENT_Y			(g_ui.m_stdScreenScale * 106)
+#define SM_WEIGHT_X				(g_ui.m_stdScreenScale * 428)
+#define SM_WEIGHT_Y				(g_ui.m_stdScreenScale * 106)
 
-#define SM_CAMO_LABEL_X			430
-#define SM_CAMO_LABEL_Y			122
-#define SM_CAMO_PERCENT_X			449
-#define SM_CAMO_PERCENT_Y			121
-#define SM_CAMO_X				428
-#define SM_CAMO_Y				121
+#define SM_CAMO_LABEL_X			(g_ui.m_stdScreenScale * 430)
+#define SM_CAMO_LABEL_Y			(g_ui.m_stdScreenScale * 122)
+#define SM_CAMO_PERCENT_X			(g_ui.m_stdScreenScale * 449)
+#define SM_CAMO_PERCENT_Y			(g_ui.m_stdScreenScale * 121)
+#define SM_CAMO_X				(g_ui.m_stdScreenScale * 428)
+#define SM_CAMO_Y				(g_ui.m_stdScreenScale * 121)
 
 
-#define SM_STATS_WIDTH				30
-#define SM_STATS_HEIGHT			8
-#define SM_AGI_X				99
-#define SM_AGI_Y				7
-#define SM_DEX_X				99
-#define SM_DEX_Y				17
-#define SM_STR_X				99
-#define SM_STR_Y				27
-#define SM_CHAR_X				99
-#define SM_CHAR_Y				37
-#define SM_WIS_X				99
-#define SM_WIS_Y				47
-#define SM_EXPLVL_X				148
-#define SM_EXPLVL_Y				7
-#define SM_MRKM_X				148
-#define SM_MRKM_Y				17
-#define SM_EXPL_X				148
-#define SM_EXPL_Y				27
-#define SM_MECH_X				148
-#define SM_MECH_Y				37
-#define SM_MED_X				148
-#define SM_MED_Y				47
+#define SM_STATS_WIDTH				(g_ui.m_stdScreenScale * 30)
+#define SM_STATS_HEIGHT			(g_ui.m_stdScreenScale * 8)
+#define SM_AGI_X				(g_ui.m_stdScreenScale * 99)
+#define SM_AGI_Y				(g_ui.m_stdScreenScale * 7)
+#define SM_DEX_X				(g_ui.m_stdScreenScale * 99)
+#define SM_DEX_Y				(g_ui.m_stdScreenScale * 17)
+#define SM_STR_X				(g_ui.m_stdScreenScale * 99)
+#define SM_STR_Y				(g_ui.m_stdScreenScale * 27)
+#define SM_CHAR_X				(g_ui.m_stdScreenScale * 99)
+#define SM_CHAR_Y				(g_ui.m_stdScreenScale * 37)
+#define SM_WIS_X				(g_ui.m_stdScreenScale * 99)
+#define SM_WIS_Y				(g_ui.m_stdScreenScale * 47)
+#define SM_EXPLVL_X				(g_ui.m_stdScreenScale * 148)
+#define SM_EXPLVL_Y				(g_ui.m_stdScreenScale * 7)
+#define SM_MRKM_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MRKM_Y				(g_ui.m_stdScreenScale * 17)
+#define SM_EXPL_X				(g_ui.m_stdScreenScale * 148)
+#define SM_EXPL_Y				(g_ui.m_stdScreenScale * 27)
+#define SM_MECH_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MECH_Y				(g_ui.m_stdScreenScale * 37)
+#define SM_MED_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MED_Y				(g_ui.m_stdScreenScale * 47)
 
-#define MONEY_X				460
-#define MONEY_Y				105
-#define MONEY_WIDTH				30
-#define MONEY_HEIGHT				22
+#define MONEY_X				(g_ui.m_stdScreenScale * 460)
+#define MONEY_Y				(g_ui.m_stdScreenScale * 105)
+#define MONEY_WIDTH				(g_ui.m_stdScreenScale * 30)
+#define MONEY_HEIGHT				(g_ui.m_stdScreenScale * 22)
 
-#define TM_FACE_X				14
-#define TM_FACE_Y				6
-#define TM_FACE_WIDTH				48
-#define TM_FACE_HEIGHT				43
+#define TM_FACE_X				(g_ui.m_stdScreenScale * 14)
+#define TM_FACE_Y				(g_ui.m_stdScreenScale * 6)
+#define TM_FACE_WIDTH				(g_ui.m_stdScreenScale * 48)
+#define TM_FACE_HEIGHT				(g_ui.m_stdScreenScale * 43)
 
-#define TM_ENDTURN_X				(g_ui.m_teamPanelSlotsTotalWidth + 9)
-#define TM_ENDTURN_Y				9
-#define TM_ROSTERMODE_X			(g_ui.m_teamPanelSlotsTotalWidth + 9)
-#define TM_ROSTERMODE_Y			45
-#define TM_DISK_X				(g_ui.m_teamPanelSlotsTotalWidth + 9)
-#define TM_DISK_Y				81
+#define TM_ENDTURN_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 9))
+#define TM_ENDTURN_Y				(g_ui.m_stdScreenScale * 9)
+#define TM_ROSTERMODE_X			(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 9))
+#define TM_ROSTERMODE_Y			(g_ui.m_stdScreenScale * 45)
+#define TM_DISK_X				(g_ui.m_stdScreenScale * (g_ui.m_teamPanelSlotsTotalWidth + 9))
+#define TM_DISK_Y				(g_ui.m_stdScreenScale * 81)
 
-#define TM_NAME_X				11
-#define TM_NAME_Y				53
-#define TM_NAME_WIDTH				53
-#define TM_NAME_HEIGHT				10
+#define TM_NAME_X				(g_ui.m_stdScreenScale * 11)
+#define TM_NAME_Y				(g_ui.m_stdScreenScale * 53)
+#define TM_NAME_WIDTH				(g_ui.m_stdScreenScale * 53)
+#define TM_NAME_HEIGHT				(g_ui.m_stdScreenScale * 10)
 
-#define TM_AP_X				67
-#define TM_AP_Y				53
-#define TM_AP_WIDTH				18
-#define TM_AP_HEIGHT				10
+#define TM_AP_X				(g_ui.m_stdScreenScale * 67)
+#define TM_AP_Y				(g_ui.m_stdScreenScale * 53)
+#define TM_AP_WIDTH				(g_ui.m_stdScreenScale * 18)
+#define TM_AP_HEIGHT				(g_ui.m_stdScreenScale * 10)
 
-#define TM_LIFEBAR_HEIGHT			42
+#define TM_LIFEBAR_HEIGHT			(g_ui.m_stdScreenScale * 42)
 
-#define TM_FACEHIGHTL_X			4
-#define TM_FACEHIGHTL_Y			2
-#define TM_FACEHIGHTL_WIDTH			84
-#define TM_FACEHIGHTL_HEIGHT			114
+#define TM_FACEHIGHTL_X			(g_ui.m_stdScreenScale * 4)
+#define TM_FACEHIGHTL_Y			(g_ui.m_stdScreenScale * 2)
+#define TM_FACEHIGHTL_WIDTH			(g_ui.m_stdScreenScale * 84)
+#define TM_FACEHIGHTL_HEIGHT			(g_ui.m_stdScreenScale * 114)
 
-#define TM_INV_WIDTH				58
-#define TM_INV_HEIGHT				23
-#define TM_INV_HAND1STARTX			8
-#define TM_INV_HAND1STARTY			67
-#define TM_INV_HAND_SEP			83
-#define TM_INV_HAND_SEPY			24
+#define TM_INV_WIDTH				(g_ui.m_stdScreenScale * 58)
+#define TM_INV_HEIGHT				(g_ui.m_stdScreenScale * 23)
+#define TM_INV_HAND1STARTX			(g_ui.m_stdScreenScale * 8)
+#define TM_INV_HAND1STARTY			(g_ui.m_stdScreenScale * 67)
+#define TM_INV_HAND_SEP			(g_ui.m_stdScreenScale * 83)
+#define TM_INV_HAND_SEPY			(g_ui.m_stdScreenScale * 24)
 
-#define TM_BARS_X				67
-#define TM_BARS_Y				3
-#define TM_BARS_WIDTH				19
-#define TM_BARS_HEIGHT				47
+#define TM_BARS_X				(g_ui.m_stdScreenScale * 67)
+#define TM_BARS_Y				(g_ui.m_stdScreenScale * 3)
+#define TM_BARS_WIDTH				(g_ui.m_stdScreenScale * 19)
+#define TM_BARS_HEIGHT				(g_ui.m_stdScreenScale * 47)
 
-#define INDICATOR_BOX_WIDTH			12
-#define INDICATOR_BOX_HEIGHT			10
+#define INDICATOR_BOX_WIDTH			(g_ui.m_stdScreenScale * 12)
+#define INDICATOR_BOX_HEIGHT			(g_ui.m_stdScreenScale * 10)
 
 
 enum

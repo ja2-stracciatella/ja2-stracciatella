@@ -28,12 +28,13 @@
 #include "VSurface.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "UILayout.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
 
 
-#define BOX_BUTTON_HEIGHT 20
+#define BOX_BUTTON_HEIGHT (g_ui.m_stdScreenScale * 20)
 
 
 // flag to say if we are showing town/mine box at all
@@ -89,7 +90,9 @@ void CreateDestroyTownInfoBox(void)
 	PopUpBox* box = ghTownMineBox;
 	if (box == NO_POPUP_BOX && fShowTownInfo)
 	{
-		box = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 8 + BOX_BUTTON_HEIGHT, 6, 2);
+		box = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX,
+			g_ui.m_stdScreenScale * 6, g_ui.m_stdScreenScale * 6, g_ui.m_stdScreenScale * 8 + g_ui.m_stdScreenScale * BOX_BUTTON_HEIGHT, g_ui.m_stdScreenScale * 6,
+			g_ui.m_stdScreenScale * 2);
 		ghTownMineBox = box;
 
 		// decide what kind of text to add to display
@@ -145,7 +148,7 @@ no_mine:
 		SetBoxLineForeground(box, 0, FONT_LTGREEN);
 
 		MinWidthOfTownMineInfoBox();
-		SpecifyBoxMinWidth(box, sTotalButtonWidth + 30);
+		SpecifyBoxMinWidth(box, sTotalButtonWidth + g_ui.m_stdScreenScale * 30);
 		ResizeBoxToText(box);
 
 		ShowBox(box);

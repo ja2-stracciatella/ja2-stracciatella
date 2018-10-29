@@ -11,15 +11,15 @@
 
 
 // char breath and life position
-#define BAR_INFO_X (STD_SCREEN_X + 66)
-#define BAR_INFO_Y (STD_SCREEN_Y + 61)
+#define BAR_INFO_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 66)
+#define BAR_INFO_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 61)
 
 // merc icon position
-#define CHAR_ICON_CONTRACT_Y (STD_SCREEN_Y + 64)
-#define CHAR_ICON_X (STD_SCREEN_X + 187)
-#define CHAR_ICON_WIDTH 10
-#define CHAR_ICON_HEIGHT 10
-#define CHAR_ICON_SPACING 13
+#define CHAR_ICON_CONTRACT_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 64)
+#define CHAR_ICON_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 187)
+#define CHAR_ICON_WIDTH (g_ui.m_stdScreenScale * 10)
+#define CHAR_ICON_HEIGHT (g_ui.m_stdScreenScale * 10)
+#define CHAR_ICON_SPACING (g_ui.m_stdScreenScale * 13)
 
 // max number of characters
 //Character List Length
@@ -29,9 +29,9 @@
 #define MAP_SCREEN_FONT BLOCKFONT2
 
 // characterlist regions
-#define Y_START               (STD_SCREEN_Y + 146)
-#define MAP_START_KEYRING_Y   (STD_SCREEN_Y + 107)
-#define Y_SIZE                GetFontHeight(MAP_SCREEN_FONT)
+#define Y_START               (STD_SCREEN_Y + g_ui.m_stdScreenScale * 146)
+#define MAP_START_KEYRING_Y   (STD_SCREEN_Y + g_ui.m_stdScreenScale * 107)
+#define Y_SIZE                (GetFontHeight(MAP_SCREEN_FONT))
 
 
 // attribute menu defines (must match NUM_TRAINABLE_STATS defines, and pAttributeMenuStrings )
@@ -143,25 +143,25 @@ enum UpdateBoxReason
 
 
 // dimensions and offset for merc update box
-#define UPDATE_MERC_FACE_X_WIDTH 50
-#define UPDATE_MERC_FACE_X_HEIGHT 50
-#define UPDATE_MERC_FACE_X_OFFSET 2
-#define UPDATE_MERC_FACE_Y_OFFSET 2
-#define WIDTH_OF_UPDATE_PANEL_BLOCKS  50
-#define HEIGHT_OF_UPDATE_PANEL_BLOCKS 50
-#define UPDATE_MERC_Y_OFFSET 4
-#define UPDATE_MERC_X_OFFSET 4
+#define UPDATE_MERC_FACE_X_WIDTH (g_ui.m_stdScreenScale * 50)
+#define UPDATE_MERC_FACE_X_HEIGHT (g_ui.m_stdScreenScale * 50)
+#define UPDATE_MERC_FACE_X_OFFSET (g_ui.m_stdScreenScale * 2)
+#define UPDATE_MERC_FACE_Y_OFFSET (g_ui.m_stdScreenScale * 2)
+#define WIDTH_OF_UPDATE_PANEL_BLOCKS  (g_ui.m_stdScreenScale * 50)
+#define HEIGHT_OF_UPDATE_PANEL_BLOCKS (g_ui.m_stdScreenScale * 50)
+#define UPDATE_MERC_Y_OFFSET (g_ui.m_stdScreenScale * 4)
+#define UPDATE_MERC_X_OFFSET (g_ui.m_stdScreenScale * 4)
 
 
 // dimensions and offset for merc update box
-#define TACT_UPDATE_MERC_FACE_X_WIDTH 70
-#define TACT_UPDATE_MERC_FACE_X_HEIGHT 49
-#define TACT_UPDATE_MERC_FACE_X_OFFSET 8
-#define TACT_UPDATE_MERC_FACE_Y_OFFSET 6
-#define TACT_WIDTH_OF_UPDATE_PANEL_BLOCKS  70
-#define TACT_HEIGHT_OF_UPDATE_PANEL_BLOCKS 49
-#define TACT_UPDATE_MERC_Y_OFFSET 4
-#define TACT_UPDATE_MERC_X_OFFSET 4
+#define TACT_UPDATE_MERC_FACE_X_WIDTH (g_ui.m_stdScreenScale * 70)
+#define TACT_UPDATE_MERC_FACE_X_HEIGHT (g_ui.m_stdScreenScale * 49)
+#define TACT_UPDATE_MERC_FACE_X_OFFSET (g_ui.m_stdScreenScale * 8)
+#define TACT_UPDATE_MERC_FACE_Y_OFFSET (g_ui.m_stdScreenScale * 6)
+#define TACT_WIDTH_OF_UPDATE_PANEL_BLOCKS  (g_ui.m_stdScreenScale * 70)
+#define TACT_HEIGHT_OF_UPDATE_PANEL_BLOCKS (g_ui.m_stdScreenScale * 49)
+#define TACT_UPDATE_MERC_Y_OFFSET (g_ui.m_stdScreenScale * 4)
+#define TACT_UPDATE_MERC_X_OFFSET (g_ui.m_stdScreenScale * 4)
 
 
 // the first vehicle slot int he list

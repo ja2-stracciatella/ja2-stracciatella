@@ -21,24 +21,24 @@
 struct BUTTON_PICS;
 
 #define MAP_BORDER_FILE INTERFACEDIR "/mbs.sti"
-#define BTN_TOWN_X      (STD_SCREEN_X + 299)
-#define BTN_MINE_X      (STD_SCREEN_X + 342)
-#define BTN_TEAMS_X     (STD_SCREEN_X + 385)
-#define BTN_MILITIA_X   (STD_SCREEN_X + 428)
-#define BTN_AIR_X       (STD_SCREEN_X + 471)
-#define BTN_ITEM_X      (STD_SCREEN_X + 514)
+#define BTN_TOWN_X      (STD_SCREEN_X + g_ui.m_stdScreenScale * 299)
+#define BTN_MINE_X      (STD_SCREEN_X + g_ui.m_stdScreenScale * 342)
+#define BTN_TEAMS_X     (STD_SCREEN_X + g_ui.m_stdScreenScale * 385)
+#define BTN_MILITIA_X   (STD_SCREEN_X + g_ui.m_stdScreenScale * 428)
+#define BTN_AIR_X       (STD_SCREEN_X + g_ui.m_stdScreenScale * 471)
+#define BTN_ITEM_X      (STD_SCREEN_X + g_ui.m_stdScreenScale * 514)
 
-#define MAP_LEVEL_MARKER_X    (STD_SCREEN_X + 565)
-#define MAP_LEVEL_MARKER_Y     (STD_SCREEN_Y + 323)
-#define MAP_LEVEL_MARKER_DELTA   8
-#define MAP_LEVEL_MARKER_WIDTH  55
+#define MAP_LEVEL_MARKER_X    (STD_SCREEN_X + g_ui.m_stdScreenScale * 565)
+#define MAP_LEVEL_MARKER_Y     (STD_SCREEN_Y + g_ui.m_stdScreenScale * 323)
+#define MAP_LEVEL_MARKER_DELTA   (g_ui.m_stdScreenScale * 8)
+#define MAP_LEVEL_MARKER_WIDTH  (g_ui.m_stdScreenScale * 55)
 
 
-#define MAP_BORDER_X (STD_SCREEN_X + 261)
-#define MAP_BORDER_Y (STD_SCREEN_Y + 0)
+#define MAP_BORDER_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 261)
+#define MAP_BORDER_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 0)
 
-#define MAP_BORDER_CORNER_X (STD_SCREEN_X + 584)
-#define MAP_BORDER_CORNER_Y (STD_SCREEN_Y + 279)
+#define MAP_BORDER_CORNER_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 584)
+#define MAP_BORDER_CORNER_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 279)
 
 
 // mouse levels
@@ -121,7 +121,8 @@ void RenderMapBorderEtaPopUp( void )
 
 	BltVideoObject(FRAME_BUFFER, guiMapBorderEtaPopUp, 0, MAP_BORDER_X + 215, STD_SCREEN_Y + 291);
 
-	InvalidateRegion( MAP_BORDER_X + 215, (STD_SCREEN_Y + 291), MAP_BORDER_X + 215 + 100 , (STD_SCREEN_Y + 310));
+	InvalidateRegion(MAP_BORDER_X + g_ui.m_stdScreenScale * 215, STD_SCREEN_Y + g_ui.m_stdScreenScale * 291,
+		MAP_BORDER_X + g_ui.m_stdScreenScale * (215 + 100) , STD_SCREEN_Y + g_ui.m_stdScreenScale * 310);
 }
 
 
@@ -129,7 +130,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const ST
 {
 	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/map_border_buttons.sti", gfx, gfx + 9);
 	giMapBorderButtonsImage[idx] = img;
-	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, (STD_SCREEN_Y + 323), MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, (STD_SCREEN_Y + g_ui.m_stdScreenScale * 323), MSYS_PRIORITY_HIGH, click);
 	giMapBorderButtons[idx] = btn;
 	btn->SetFastHelpText(help);
 	btn->SetCursor(MSYS_NO_CURSOR);

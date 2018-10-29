@@ -261,18 +261,18 @@ static void GetFaceRelativeCoordinates(FACETYPE const& f, UINT16* const pusEyesX
 		const RPCSmallFaceModel* face = GCM->getRPCSmallFaceOffsets(pid);
 		if (face)
 		{
-			*pusEyesX = face->bEyesX;
-			*pusEyesY = face->bEyesY;
-			*pusMouthX = face->bMouthX;
-			*pusMouthY = face->bMouthY;
+			*pusEyesX = g_ui.m_stdScreenScale * face->bEyesX;
+			*pusEyesY = g_ui.m_stdScreenScale * face->bEyesY;
+			*pusMouthX = g_ui.m_stdScreenScale * face->bMouthX;
+			*pusMouthY = g_ui.m_stdScreenScale * face->bMouthY;
 			return;
 		}
 	}
 
-	*pusEyesX  = p.usEyesX;
-	*pusEyesY  = p.usEyesY;
-	*pusMouthX = p.usMouthX;
-	*pusMouthY = p.usMouthY;
+	*pusEyesX  = g_ui.m_stdScreenScale * p.usEyesX;
+	*pusEyesY  = g_ui.m_stdScreenScale * p.usEyesY;
+	*pusMouthX = g_ui.m_stdScreenScale * p.usMouthX;
+	*pusMouthY = g_ui.m_stdScreenScale * p.usMouthY;
 }
 
 

@@ -5,8 +5,8 @@
 #include "Types.h"
 
 
-#define     MAP_BORDER_START_X   261
-#define     MAP_BORDER_START_Y    0
+#define     MAP_BORDER_START_X   (g_ui.m_stdScreenScale * 261)
+#define     MAP_BORDER_START_Y   (g_ui.m_stdScreenScale * 0)
 
 
 

@@ -1,9 +1,9 @@
 #ifndef _MAP_SCREEN_INTERFACE_MAP_H
 #define _MAP_SCREEN_INTERFACE_MAP_H
 
+#include "StrategicMap.h"
 #include "JA2Types.h"
 #include "UILayout.h"
-
 
 void InitMapScreenInterfaceMap();
 
@@ -118,19 +118,16 @@ enum {
 
 
 // size of squares on the map
-#define MAP_GRID_X		21
-#define MAP_GRID_Y		18
+#define MAP_GRID_X		(int(g_ui.m_stdScreenScale * 21 + 0.5))
+#define MAP_GRID_Y		(int(g_ui.m_stdScreenScale * 18 + 0.5))
 
 
 // map view region
-#define MAP_VIEW_START_X	(STD_SCREEN_X + 270)
-#define MAP_VIEW_START_Y	(STD_SCREEN_Y + 10)
-#define MAP_VIEW_WIDTH		336
-#define MAP_VIEW_HEIGHT		298
+#define MAP_VIEW_START_X	int(STD_SCREEN_X + g_ui.m_stdScreenScale * 270)
+#define MAP_VIEW_START_Y	int(STD_SCREEN_Y + g_ui.m_stdScreenScale * 10)
+#define MAP_VIEW_WIDTH		int(MAP_GRID_X * (MAP_WORLD_X - 1))
+#define MAP_VIEW_HEIGHT		int(MAP_GRID_Y * (MAP_WORLD_Y - 1))
 
-
-// number of units wide
-#define WORLD_MAP_X		18
 
 // dirty regions for the map
 #define DMAP_GRID_X		( MAP_GRID_X + 1 )

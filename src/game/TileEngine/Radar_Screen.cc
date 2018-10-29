@@ -88,11 +88,9 @@ void LoadRadarScreenBitmap(const ST::string& filename)
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
 	gusRadarImage = radar;
 
-	// FIXME: maxrd2 this can all go
 	// ATE: Add a shade table!
-//	const SGPPaletteEntry* const pal = radar->Palette();
-//	radar->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-//	radar->pShades[1] = Create16BPPPaletteShaded(pal, 100, 100, 100, FALSE);
+	radar->pShades[0] = SHADE_STD(255, 255, 255);
+	radar->pShades[1] = SHADE_STD(100, 100, 100);
 
 	// Dirty interface
 	fInterfacePanelDirty = DIRTYLEVEL1;
@@ -206,14 +204,14 @@ void RenderRadarScreen()
 	if (fInterfacePanelDirty == DIRTYLEVEL2 && gusRadarImage)
 	{
 		// If night time and on surface, darken the radarmap.
-		// FIXME: maxrd2: we don't have shades anymore
-		// size_t const shade =
-		// 	NightTime() &&
-		// 	(
-		// 		(guiCurrentScreen == MAP_SCREEN  && iCurrentMapSectorZ == 0) ||
-		// 		(guiCurrentScreen == GAME_SCREEN && gWorldSector.z     == 0)
-		// 	) ? 1 : 0;
-		// gusRadarImage->CurrentShade(shade);
+		// TESTME: maxrd2: we don't have palette anymore
+		size_t const shade =
+			NightTime() &&
+			(
+				(guiCurrentScreen == MAP_SCREEN  && iCurrentMapSectorZ == 0) ||
+				(guiCurrentScreen == GAME_SCREEN && gWorldSector.z     == 0)
+			) ? 1 : 0;
+		gusRadarImage->CurrentShade(shade);
 		BltVideoObject(guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y);
 	}
 
@@ -434,7 +432,7 @@ static void RenderSquadList(void)
 	SetFont(SQUAD_FONT);
 	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 
-	for (UINT i = 0; i < NUMBER_OF_SQUADS; ++i)
+	for (INT16 i = 0; i < NUMBER_OF_SQUADS; ++i)
 	{
 		const UINT32 color =
 			sSelectedSquadLine == INT16(i)  ? FONT_WHITE   : // highlight line?

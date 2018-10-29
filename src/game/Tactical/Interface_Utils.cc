@@ -36,8 +36,8 @@
 #define BREATH_BAR_SHADOW		RGB(60, 108, 108) // the lt blue current breath
 #define BREATH_BAR			RGB(113, 178, 218)
 #define BREATH_BAR_SHAD_BACK		RGB(1, 1, 1)
-#define FACE_WIDTH			48
-#define FACE_HEIGHT			43
+#define FACE_WIDTH			(g_ui.m_stdScreenScale * 48)
+#define FACE_HEIGHT			(g_ui.m_stdScreenScale * 43)
 
 
 // car portraits
@@ -89,21 +89,22 @@ void UnLoadCarPortraits(void)
 }
 
 
-static void DrawBar(UINT32 const XPos, UINT32 const YPos, UINT32 const Height, UINT32 const Color, UINT32 const ShadowColor, UINT32* const DestBuf)
+static void DrawBar(const UINT32 XPos, const UINT32 YPos, const UINT32 Width, const UINT32 Height, const UINT32 Color, const UINT32 ShadowColor, UINT32 *DestBuf)
 {
 	LineDraw(TRUE, XPos + 0, YPos, XPos + 0, YPos - Height, ShadowColor, DestBuf);
-	LineDraw(TRUE, XPos + 1, YPos, XPos + 1, YPos - Height, Color,       DestBuf);
-	LineDraw(TRUE, XPos + 2, YPos, XPos + 2, YPos - Height, ShadowColor, DestBuf);
+	for(int x = 2; x < Width; x++)
+		LineDraw(TRUE, XPos + x - 1, YPos, XPos + x - 1, YPos - Height, Color, DestBuf);
+	LineDraw(TRUE, XPos + Width - 1, YPos, XPos + Width - 1, YPos - Height, ShadowColor, DestBuf);
 }
 
 
-static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, UINT32 const MaxHeight, UINT32* const pDestBuf)
+static void DrawLifeUIBar(const SOLDIERTYPE &s, const UINT32 XPos, UINT32 YPos, const UINT32 Width, const UINT32 MaxHeight, UINT32 *pDestBuf)
 {
 	UINT32 Height;
 
 	// FIRST DO MAX LIFE
 	Height = MaxHeight * s.bLife / 100;
-	DrawBar(XPos, YPos, Height, LIFE_BAR, LIFE_BAR_SHADOW, pDestBuf);
+	DrawBar(XPos, YPos, Width, Height, LIFE_BAR, LIFE_BAR_SHADOW, pDestBuf);
 
 	// NOW DO BANDAGE
 	// Calculate bandage
@@ -112,7 +113,7 @@ static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, 
 	{
 		YPos   -= Height;
 		Height  = MaxHeight * Bandage / 100;
-		DrawBar(XPos, YPos, Height, BANDAGE_BAR, BANDAGE_BAR_SHADOW, pDestBuf);
+		DrawBar(XPos, YPos, Width, Height, BANDAGE_BAR, BANDAGE_BAR_SHADOW, pDestBuf);
 	}
 
 	// NOW DO BLEEDING
@@ -120,12 +121,12 @@ static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, 
 	{
 		YPos   -= Height;
 		Height  = MaxHeight * s.bBleeding / 100;
-		DrawBar(XPos, YPos, Height, BLEEDING_BAR, BLEEDING_BAR_SHADOW, pDestBuf);
+		DrawBar(XPos, YPos, Width, Height, BLEEDING_BAR, BLEEDING_BAR_SHADOW, pDestBuf);
 	}
 }
 
 
-static void DrawBreathUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 const sYPos, UINT32 const MaxHeight, UINT32* const pDestBuf)
+static void DrawBreathUIBar(const SOLDIERTYPE &s, const UINT32 XPos, UINT32 YPos, const UINT32 Width, const UINT32 MaxHeight, UINT32 *pDestBuf)
 {
 	UINT32 Height;
 
@@ -133,31 +134,31 @@ static void DrawBreathUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 cons
 	{
 		Height = MaxHeight * (s.bBreathMax + 3) / 100;
 		// the old background colors for breath max diff
-		DrawBar(XPos, sYPos, Height, BREATH_BAR_SHAD_BACK, BREATH_BAR_SHAD_BACK, pDestBuf);
+		DrawBar(XPos, YPos, Width, Height, BREATH_BAR_SHAD_BACK, BREATH_BAR_SHAD_BACK, pDestBuf);
 	}
 
 	Height = MaxHeight * s.bBreathMax / 100;
-	DrawBar(XPos, sYPos, Height, CURR_MAX_BREATH, CURR_MAX_BREATH_SHADOW, pDestBuf);
+	DrawBar(XPos, YPos, Width, Height, CURR_MAX_BREATH, CURR_MAX_BREATH_SHADOW, pDestBuf);
 
 	// NOW DO BREATH
 	Height = MaxHeight * s.bBreath / 100;
-	DrawBar(XPos, sYPos, Height, CURR_BREATH_BAR, CURR_BREATH_BAR_SHADOW, pDestBuf);
+	DrawBar(XPos, YPos, Width, Height, CURR_BREATH_BAR, CURR_BREATH_BAR_SHADOW, pDestBuf);
 }
 
 
-static void DrawMoraleUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 const YPos, UINT32 const MaxHeight, UINT32* const pDestBuf)
+static void DrawMoraleUIBar(const SOLDIERTYPE &s, const UINT32 XPos, UINT32 YPos, const UINT32 Width, const UINT32 MaxHeight, UINT32 *pDestBuf)
 {
 	UINT32 const Height = MaxHeight * s.bMorale / 100;
-	DrawBar(XPos, YPos, Height, MORALE_BAR, MORALE_BAR_SHADOW, pDestBuf);
+	DrawBar(XPos, YPos, Width, Height, MORALE_BAR, MORALE_BAR_SHADOW, pDestBuf);
 }
 
 
-void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPos, BOOLEAN const fErase, SGPVSurface* const uiBuffer)
+void DrawSoldierUIBars(const SOLDIERTYPE &s, const INT16 sXPos, const INT16 sYPos, const BOOLEAN fErase, SGPVSurface *uiBuffer)
 {
-	const UINT32 BarWidth  =  3;
-	const UINT32 BarHeight = 42;
-	const UINT32 BreathOff =  6;
-	const UINT32 MoraleOff = 12;
+	const UINT32 BarWidth  = g_ui.m_stdScreenScale * 3;
+	const UINT32 BarHeight = g_ui.m_stdScreenScale * 42;
+	const UINT32 BreathOff = g_ui.m_stdScreenScale * 6;
+	const UINT32 MoraleOff = g_ui.m_stdScreenScale * 12;
 
 	// Erase what was there
 	if (fErase)
@@ -181,19 +182,16 @@ void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPo
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	UINT32* const pDestBuf = l.Buffer<UINT32>();
 
-	DrawLifeUIBar(s, sXPos, sYPos, BarHeight, pDestBuf);
+	DrawLifeUIBar(s, sXPos, sYPos, BarWidth, BarHeight, pDestBuf);
 	if (!(s.uiStatusFlags & SOLDIER_ROBOT))
 	{
-		DrawBreathUIBar(s, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
+		DrawBreathUIBar(s, sXPos + BreathOff, sYPos, BarWidth, BarHeight, pDestBuf);
 		if (!(s.uiStatusFlags & SOLDIER_VEHICLE))
-		{
-			DrawMoraleUIBar(s, sXPos + MoraleOff, sYPos, BarHeight, pDestBuf);
-		}
+			DrawMoraleUIBar(s, sXPos + MoraleOff, sYPos, BarWidth, BarHeight, pDestBuf);
 	}
 }
 
-
-void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, const INT16 y, INT16 max_h, const UINT32 sColor1, const UINT32 sColor2, SGPVSurface* const uiBuffer)
+void DrawItemUIBarEx(const OBJECTTYPE &o, const UINT8 ubStatus, const INT16 x, const INT16 y, const INT16 w, INT16 max_h, const UINT32 sColor1, const UINT32 sColor2, SGPVSurface *uiBuffer)
 {
 	INT16 value;
 	// Adjust for ammo, other things
@@ -228,8 +226,9 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 
 		--max_h; // LineDraw() includes the end point
 		const INT h = max_h * value / 100;
-		LineDraw(TRUE, x,     y, x,     y - h, sColor1, pDestBuf);
-		LineDraw(TRUE, x + 1, y, x + 1, y - h, sColor2, pDestBuf);
+		for(int i = 1; i < w; i++)
+			LineDraw(TRUE, x + i - 1, y, x + i - 1, y - h, sColor1, pDestBuf);
+		LineDraw(TRUE, w - 1, y, w - 1, y - h, sColor2, pDestBuf);
 	}
 
 	if (uiBuffer == guiSAVEBUFFER)

@@ -66,7 +66,7 @@ struct PopUpBox;
 // number of LINKED LISTS for sets of leave items (each slot holds an unlimited # of items)
 #define NUM_LEAVE_LIST_SLOTS 20
 
-#define SELECTED_CHAR_ARROW_X (STD_SCREEN_X + 8)
+#define SELECTED_CHAR_ARROW_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 8)
 
 #define SIZE_OF_UPDATE_BOX 20
 
@@ -86,7 +86,7 @@ struct PopUpBox;
 #define DBL_CLICK_DELAY_FOR_MOVE_MENU 200
 
 
-#define REASON_FOR_SOLDIER_UPDATE_OFFSET_Y				(14)
+#define REASON_FOR_SOLDIER_UPDATE_OFFSET_Y				(g_ui.m_stdScreenScale * 14)
 
 #define MAX_MAPSCREEN_FAST_HELP			100
 
@@ -928,9 +928,10 @@ void HandleDisplayOfSelectedMercArrows()
 	if (fShowInventoryFlag)     return;
 
 	{ // Blit one by the selected merc
-		INT16 y = Y_START + bSelectedInfoChar * (Y_SIZE + 2) - 1;
-		if (bSelectedInfoChar >= FIRST_VEHICLE) y += 6;
-		BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0,SELECTED_CHAR_ARROW_X, y);
+		INT16 y = Y_START + bSelectedInfoChar * (Y_SIZE + /*Y_OFFSET*/g_ui.m_stdScreenScale * 2) - 1;
+		if (bSelectedInfoChar >= FIRST_VEHICLE) y += g_ui.m_stdScreenScale * 6;
+		BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow,
+			g_ui.m_stdScreenScale * 0, SELECTED_CHAR_ARROW_X, y);
 	}
 
 	// now run through the selected list of guys, an arrow for each
@@ -943,9 +944,10 @@ void HandleDisplayOfSelectedMercArrows()
 		// Is he in the selected list or in the same mvt group as this guy?
 		if (!IsEntryInSelectedListSet(i) && (s->ubGroupID == 0 || s->ubGroupID != dest_group)) continue;
 
-		INT16 y = Y_START + i * (Y_SIZE + 2) - 1;
-		if (i >= FIRST_VEHICLE) y += 6;
-		BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, y);
+		INT16 y = Y_START + i * (Y_SIZE + /*Y_OFFSET*/g_ui.m_stdScreenScale * 2) - 1;
+		if (i >= FIRST_VEHICLE) y += g_ui.m_stdScreenScale * 6;
+		BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow,
+			g_ui.m_stdScreenScale * 0, SELECTED_CHAR_ARROW_X, y);
 	}
 }
 
@@ -1227,16 +1229,16 @@ void HandleGroupAboutToArrive( void )
 
 void CreateMapStatusBarsRegion( void )
 {
-
 	// create the status region over the bSelectedCharacter info region, to get quick rundown of merc's status
-	MSYS_DefineRegion( &gMapStatusBarsRegion, BAR_INFO_X - 3, BAR_INFO_Y - 42,(INT16)( BAR_INFO_X + 17), (INT16)(BAR_INFO_Y ), MSYS_PRIORITY_HIGH + 5,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+	MSYS_DefineRegion(&gMapStatusBarsRegion,
+		BAR_INFO_X - g_ui.m_stdScreenScale * 3, BAR_INFO_Y - g_ui.m_stdScreenScale * 42,
+		BAR_INFO_X + g_ui.m_stdScreenScale * 17, BAR_INFO_Y,
+		MSYS_PRIORITY_HIGH + 5, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 }
 
 
 void RemoveMapStatusBarsRegion( void )
 {
-
 	// remove the bSelectedInfoCharacter helath, breath and morale bars info region
 	MSYS_RemoveRegion( &gMapStatusBarsRegion );
 }
@@ -2276,7 +2278,8 @@ static void CreatePopUpBoxForMovementBox(void)
 	SGPPoint const MovePosition = { (UINT16)(STD_SCREEN_X + 450), (UINT16)(STD_SCREEN_Y + 100) };
 
 	// create the pop up box and mouse regions for movement list
-	PopUpBox* const box = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
+	PopUpBox* const box = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX,
+		g_ui.m_stdScreenScale * 6, g_ui.m_stdScreenScale * 6, g_ui.m_stdScreenScale * 4, g_ui.m_stdScreenScale * 4, g_ui.m_stdScreenScale * 2);
 	ghMoveBox = box;
 
 	AddStringsToMoveBox(box);
@@ -3301,33 +3304,38 @@ void DisplaySoldierUpdateBox( )
 
 	iUpdatePanelWidth = iNumberWide * TACT_WIDTH_OF_UPDATE_PANEL_BLOCKS;
 
-	iUpdatePanelHeight = ( iNumberHigh + 1 ) * TACT_HEIGHT_OF_UPDATE_PANEL_BLOCKS;
+	iUpdatePanelHeight = (iNumberHigh + 1) * TACT_HEIGHT_OF_UPDATE_PANEL_BLOCKS;
 
 	// get the x,y offsets on the screen of the panel
-	iX = STD_SCREEN_X + 290 + ( 336 - iUpdatePanelWidth ) / 2;
+	iX = STD_SCREEN_X + g_ui.m_stdScreenScale * 290 + (g_ui.m_stdScreenScale * 336 - iUpdatePanelWidth) / 2;
 
 //	iY = 28 + ( 288 - iUpdatePanelHeight ) / 2;
 
 	// Have the bottom of the box ALWAYS a set distance from the bottom of the map ( so user doesnt have to move mouse far )
-	iY = STD_SCREEN_Y + 280 - iUpdatePanelHeight;
+	iY = STD_SCREEN_Y + g_ui.m_stdScreenScale * 280 - iUpdatePanelHeight;
 
 	const SGPVObject* const hBackGroundHandle = guiUpdatePanelTactical;
 
 	//Display the 2 TOP corner pieces
-	BltVideoObject( guiSAVEBUFFER, hBackGroundHandle, 0, iX-4, iY - 4);
-	BltVideoObject( guiSAVEBUFFER, hBackGroundHandle, 2, iX+iUpdatePanelWidth, iY - 4);
+	BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 0,
+		iX - g_ui.m_stdScreenScale * 4, iY - g_ui.m_stdScreenScale * 4);
+	BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 2,
+		iX + iUpdatePanelWidth, iY - g_ui.m_stdScreenScale * 4);
 
 	if( fFourWideMode )
 	{
 		//Display 2 vertical lines starting at the bottom
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 3, iX - 4, iY + iUpdatePanelHeight - 3 - 70);
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 5, iX + iUpdatePanelWidth, iY + iUpdatePanelHeight - 3 - 70);
+		BltVideoObject(guiSAVEBUFFER , hBackGroundHandle, 3,
+			iX - g_ui.m_stdScreenScale * 4, iY + iUpdatePanelHeight - g_ui.m_stdScreenScale * 3 - g_ui.m_stdScreenScale * 70);
+		BltVideoObject(guiSAVEBUFFER , hBackGroundHandle, 5,
+			iX + iUpdatePanelWidth, iY + iUpdatePanelHeight - g_ui.m_stdScreenScale * 3 - g_ui.m_stdScreenScale * 70);
 
 		//Display the 2 bottom corner pieces
-		BltVideoObject( guiSAVEBUFFER, hBackGroundHandle, 0, iX-4, iY + iUpdatePanelHeight - 3);
-		BltVideoObject( guiSAVEBUFFER, hBackGroundHandle, 2, iX+iUpdatePanelWidth, iY + iUpdatePanelHeight - 3);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 0,
+			iX - g_ui.m_stdScreenScale * 4, iY + iUpdatePanelHeight - g_ui.m_stdScreenScale * 3);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 2,
+			iX + iUpdatePanelWidth, iY + iUpdatePanelHeight - g_ui.m_stdScreenScale * 3);
 	}
-
 
 	SetFontDestBuffer(guiSAVEBUFFER);
 
@@ -3374,47 +3382,63 @@ void DisplaySoldierUpdateBox( )
 	if( fFourWideMode )
 	{
 		//def: 3/1/99 WAS SUBINDEX 6,
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 19, iX - 4 + TACT_UPDATE_MERC_FACE_X_WIDTH,  iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y+3);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 19,
+			iX - g_ui.m_stdScreenScale * 4 + TACT_UPDATE_MERC_FACE_X_WIDTH,
+			iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + g_ui.m_stdScreenScale * 3);
 
 		// ATE: Display string for time compression
-		DisplayWrappedString(iX, iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + 3, iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[STR_LATE_49], FONT_BLACK, CENTER_JUSTIFIED);
+		DisplayWrappedString(iX,
+			iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + g_ui.m_stdScreenScale * 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + g_ui.m_stdScreenScale * 3,
+			iUpdatePanelWidth, 0,
+			MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[STR_LATE_49], FONT_BLACK, CENTER_JUSTIFIED);
 	}
 	else
 	{
 		//def: 3/1/99 WAS SUBINDEX 6,
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 19, iX - 4 , iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y+3);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 19,
+			iX - g_ui.m_stdScreenScale * 4 , iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + g_ui.m_stdScreenScale * 3);
 
 		// ATE: Display string for time compression
-		DisplayWrappedString(iX, iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + 3, iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[STR_LATE_49], FONT_BLACK, CENTER_JUSTIFIED);
+		DisplayWrappedString(iX,
+			iY + iNumberHigh * TACT_UPDATE_MERC_FACE_X_HEIGHT + g_ui.m_stdScreenScale * 5 + REASON_FOR_SOLDIER_UPDATE_OFFSET_Y + g_ui.m_stdScreenScale * 3,
+			iUpdatePanelWidth, 0,
+			MAP_SCREEN_FONT, FONT_WHITE, gzLateLocalizedString[STR_LATE_49], FONT_BLACK, CENTER_JUSTIFIED);
 	}
 
 	// now wrap the border
 	for( iCounter = 0; iCounter < iNumberHigh ; iCounter++ )
 	{
 		// the sides
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 3, iX - 4, iY + ( iCounter ) * TACT_UPDATE_MERC_FACE_X_HEIGHT);
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 5, iX + iUpdatePanelWidth, iY + ( iCounter ) * TACT_UPDATE_MERC_FACE_X_HEIGHT);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 3,
+			iX - g_ui.m_stdScreenScale * 4, iY + iCounter * TACT_UPDATE_MERC_FACE_X_HEIGHT);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 5,
+			iX + iUpdatePanelWidth, iY + iCounter * TACT_UPDATE_MERC_FACE_X_HEIGHT);
 	}
 
 	//big horizontal line
 	for( iCounter = 0; iCounter < iNumberWide; iCounter++ )
 	{
 		// the top bottom
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 1, iX + TACT_UPDATE_MERC_FACE_X_WIDTH * (iCounter ) , iY - 4);
-		BltVideoObject( guiSAVEBUFFER , hBackGroundHandle, 1, iX + TACT_UPDATE_MERC_FACE_X_WIDTH * (iCounter ) , iY + iUpdatePanelHeight - 3);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 1,
+			iX + TACT_UPDATE_MERC_FACE_X_WIDTH * iCounter, iY - g_ui.m_stdScreenScale * 4);
+		BltVideoObject(guiSAVEBUFFER, hBackGroundHandle, 1,
+			iX + TACT_UPDATE_MERC_FACE_X_WIDTH * iCounter, iY + iUpdatePanelHeight - g_ui.m_stdScreenScale * 3);
 	}
 
 	//Display the reason for the update box
-	DisplayWrappedString(iX, iY + (fFourWideMode ? 6 : 3), iUpdatePanelWidth, 0, MAP_SCREEN_FONT, FONT_WHITE, pUpdateMercStrings[iReasonForSoldierUpDate], FONT_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(iX, iY + g_ui.m_stdScreenScale * (fFourWideMode ? 6 : 3),
+		iUpdatePanelWidth, 0,
+		MAP_SCREEN_FONT, FONT_WHITE, pUpdateMercStrings[iReasonForSoldierUpDate], FONT_BLACK, CENTER_JUSTIFIED);
 
 	SetFontDestBuffer(FRAME_BUFFER);
 
 	// restore extern background rect
-	RestoreExternBackgroundRect( ( INT16 )( iX - 5 ), ( INT16 )( iY - 5 ), ( INT16 )(  iUpdatePanelWidth + 10 ), ( INT16 )(iUpdatePanelHeight + 6 ) );
+	RestoreExternBackgroundRect(iX - g_ui.m_stdScreenScale * 5, iY - g_ui.m_stdScreenScale * 5,
+		iUpdatePanelWidth + g_ui.m_stdScreenScale * 10, iUpdatePanelHeight + g_ui.m_stdScreenScale * 6);
 
-	CreateDestroyUpdatePanelButtons( iX, ( iY + iUpdatePanelHeight - 18 ), fFourWideMode );
-	MarkAButtonDirty( guiUpdatePanelButtons[ 0 ] );
-	MarkAButtonDirty( guiUpdatePanelButtons[ 1 ] );
+	CreateDestroyUpdatePanelButtons(iX, iY + iUpdatePanelHeight - g_ui.m_stdScreenScale * 18, fFourWideMode);
+	MarkAButtonDirty(guiUpdatePanelButtons[0]);
+	MarkAButtonDirty(guiUpdatePanelButtons[1]);
 }
 
 
@@ -3525,7 +3549,7 @@ static void RenderSoldierSmallFaceForUpdatePanel(INT32 iIndex, INT32 iX, INT32 i
 	BltVideoObject(guiSAVEBUFFER, giMercPanelImage, 0, iX, iY);
 
 	// grab the face
-	BltVideoObject(guiSAVEBUFFER, giUpdateSoldierFaces[iIndex], 0, iX + 2, iY + 2);
+	BltVideoObject(guiSAVEBUFFER, giUpdateSoldierFaces[iIndex], 0, iX + g_ui.m_stdScreenScale * 2, iY + g_ui.m_stdScreenScale * 2);
 
 	//HEALTH BAR
 	pSoldier = pUpdateSoldierBox[ iIndex ];

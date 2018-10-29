@@ -31,7 +31,7 @@
 
 #define SM_BODYINV_X                    (INTERFACE_START_X + g_ui.m_stdScreenScale * 244)
 #define SM_BODYINV_Y                    (INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 6)
-#define SM_INVINTERFACE_WIDTH           (g_ui.m_stdScreenScale * 532)    // width of the single-merc inventory panel excluding the right-side buttons and minimap
+#define SM_INVINTERFACE_WIDTH           UINT16(g_ui.m_stdScreenScale * 532)    // width of the single-merc inventory panel excluding the right-side buttons and minimap
 
 #define EDITOR_TASKBAR_HEIGHT           (g_ui.m_stdScreenScale * 120)
 #define EDITOR_TASKBAR_POS_Y            (UINT16)(SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT)
