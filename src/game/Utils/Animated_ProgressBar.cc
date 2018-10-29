@@ -49,7 +49,7 @@ static PROGRESSBAR* pBar[MAX_PROGRESSBARS];
 
 void CreateLoadingScreenProgressBar()
 {
-	CreateProgressBar(0, STD_SCREEN_X + 162, STD_SCREEN_Y + 427, 318, 16);
+	CreateProgressBar(0, STD_SCREEN_X + g_ui.m_stdScreenScale * 162, STD_SCREEN_Y + g_ui.m_stdScreenScale * 427, g_ui.m_stdScreenScale * 318, g_ui.m_stdScreenScale * 16);
 	pBar[0]->flags |= PROGRESS_LOAD_BAR;
 }
 

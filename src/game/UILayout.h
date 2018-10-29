@@ -29,15 +29,15 @@
 #define MAP_SCREEN_WIDTH                (g_ui.m_mapScreenWidth)
 #define MAP_SCREEN_HEIGHT               (g_ui.m_mapScreenHeight)
 
-#define SM_BODYINV_X                    (INTERFACE_START_X + 244)
-#define SM_BODYINV_Y                    (INV_INTERFACE_START_Y + 6)
-#define SM_INVINTERFACE_WIDTH           (532)    // width of the single-merc inventory panel excluding the right-side buttons and minimap
+#define SM_BODYINV_X                    (INTERFACE_START_X + g_ui.m_stdScreenScale * 244)
+#define SM_BODYINV_Y                    (INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 6)
+#define SM_INVINTERFACE_WIDTH           (g_ui.m_stdScreenScale * 532)    // width of the single-merc inventory panel excluding the right-side buttons and minimap
 
-#define EDITOR_TASKBAR_HEIGHT           (120)
+#define EDITOR_TASKBAR_HEIGHT           (g_ui.m_stdScreenScale * 120)
 #define EDITOR_TASKBAR_POS_Y            (UINT16)(SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT)
 
-#define DEFAULT_EXTERN_PANEL_X_POS      (STD_SCREEN_X + 320)
-#define DEFAULT_EXTERN_PANEL_Y_POS      (STD_SCREEN_Y + 40)
+#define DEFAULT_EXTERN_PANEL_X_POS      (STD_SCREEN_X + g_ui.m_stdScreenScale * 320)
+#define DEFAULT_EXTERN_PANEL_Y_POS      (STD_SCREEN_Y + g_ui.m_stdScreenScale * 40)
 
 #define TEAMPANEL_SLOT_WIDTH            (83)     // width of one slot in the bottom team panel
 #define TEAMPANEL_BUTTONSBOX_WIDTH      (142)    // width of the container of the buttons on the right of team panel

@@ -20,10 +20,10 @@
 
 #define SLIDER_VERTICAL     0x00000001
 
-#define DEFUALT_SLIDER_SIZE  7
+#define DEFUALT_SLIDER_SIZE  (g_ui.m_stdScreenScale * 7)
 
-#define STEEL_SLIDER_WIDTH  42
-#define STEEL_SLIDER_HEIGHT 25
+#define STEEL_SLIDER_WIDTH  (g_ui.m_stdScreenScale * 42)
+#define STEEL_SLIDER_HEIGHT (g_ui.m_stdScreenScale * 25)
 
 
 struct SLIDER

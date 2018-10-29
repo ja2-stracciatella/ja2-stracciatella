@@ -49,8 +49,8 @@ enum
 #	define MAINMENU_Y         0
 #	define MAINMENU_Y_SPACE  18
 #else
-#	define MAINMENU_Y       277
-#	define MAINMENU_Y_SPACE  37
+#	define MAINMENU_Y       g_ui.m_stdScreenScale * 277
+#	define MAINMENU_Y_SPACE  g_ui.m_stdScreenScale * 37
 #endif
 
 
@@ -346,7 +346,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 static void RenderMainMenu(void)
 {
 	BltVideoObject(FRAME_BUFFER, guiMainMenuBackGroundImage, 0, STD_SCREEN_X,       STD_SCREEN_Y     );
-	BltVideoObject(FRAME_BUFFER, guiJa2LogoImage,            0, STD_SCREEN_X + 188, STD_SCREEN_Y + 15);
+	BltVideoObject(FRAME_BUFFER, guiJa2LogoImage,            0, STD_SCREEN_X + g_ui.m_stdScreenScale * 188, STD_SCREEN_Y + g_ui.m_stdScreenScale * 15);
 	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 }
 

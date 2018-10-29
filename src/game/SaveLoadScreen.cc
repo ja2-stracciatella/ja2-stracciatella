@@ -71,43 +71,43 @@ constexpr int NUM_SAVE_GAMES = 11;
 #define SAVE_LOAD_SELECTED_COLOR			FONT_MCOLOR_BLACK // 2
 #define SAVE_LOAD_SELECTED_SHADOW_COLOR		RGB(201, 197, 143)
 
-#define SLG_SAVELOCATION_WIDTH				575
-#define SLG_SAVELOCATION_HEIGHT			30//46
-#define SLG_FIRST_SAVED_SPOT_X				(STD_SCREEN_X + 17)
-#define SLG_FIRST_SAVED_SPOT_Y				(STD_SCREEN_Y + 49)
-#define SLG_GAP_BETWEEN_LOCATIONS			35//47
+#define SLG_SAVELOCATION_WIDTH				(g_ui.m_stdScreenScale * 575)
+#define SLG_SAVELOCATION_HEIGHT			(g_ui.m_stdScreenScale * 30)//46
+#define SLG_FIRST_SAVED_SPOT_X				(STD_SCREEN_X + g_ui.m_stdScreenScale * 17)
+#define SLG_FIRST_SAVED_SPOT_Y				(STD_SCREEN_Y + g_ui.m_stdScreenScale * 49)
+#define SLG_GAP_BETWEEN_LOCATIONS			(g_ui.m_stdScreenScale * 35)//47
 
 
 
-#define SLG_DATE_OFFSET_X				13
-#define SLG_DATE_OFFSET_Y				11
+#define SLG_DATE_OFFSET_X				(g_ui.m_stdScreenScale * 13)
+#define SLG_DATE_OFFSET_Y				(g_ui.m_stdScreenScale * 11)
 
-#define SLG_SECTOR_OFFSET_X				95//105//114
-#define SLG_SECTOR_WIDTH				98
+#define SLG_SECTOR_OFFSET_X				(g_ui.m_stdScreenScale * 95)//105//114
+#define SLG_SECTOR_WIDTH				(g_ui.m_stdScreenScale * 98)
 
-#define SLG_NUM_MERCS_OFFSET_X				196//190//SLG_DATE_OFFSET_X
+#define SLG_NUM_MERCS_OFFSET_X				(g_ui.m_stdScreenScale * 196)//190//SLG_DATE_OFFSET_X
 
-#define SLG_BALANCE_OFFSET_X				260//SLG_SECTOR_OFFSET_X
+#define SLG_BALANCE_OFFSET_X				(g_ui.m_stdScreenScale * 260)//SLG_SECTOR_OFFSET_X
 
-#define SLG_SAVE_GAME_DESC_X				318//320//204
+#define SLG_SAVE_GAME_DESC_X				(g_ui.m_stdScreenScale * 318)//320//204
 #define SLG_SAVE_GAME_DESC_Y				SLG_DATE_OFFSET_Y//SLG_DATE_OFFSET_Y + 7
-#define SLG_SAVE_GAME_SKULL_X				552
-#define SLG_SAVE_GAME_SKULL_Y				-3
+#define SLG_SAVE_GAME_SKULL_X				(g_ui.m_stdScreenScale * 552)
+#define SLG_SAVE_GAME_SKULL_Y				(g_ui.m_stdScreenScale * -3)
 
 #define SLG_TITLE_POS_X				(STD_SCREEN_X)
 #define SLG_TITLE_POS_Y				(STD_SCREEN_Y)
 
-#define SLG_SAVE_CANCEL_POS_X				(226 + STD_SCREEN_X)
-#define SLG_LOAD_CANCEL_POS_X				(329 + STD_SCREEN_X)
-#define SLG_SAVE_LOAD_BTN_POS_X				(123 + STD_SCREEN_X)
-#define SLG_BTN_POS_Y					(438 + STD_SCREEN_Y)
+#define SLG_SAVE_CANCEL_POS_X				(g_ui.m_stdScreenScale * 226 + STD_SCREEN_X)
+#define SLG_LOAD_CANCEL_POS_X				(g_ui.m_stdScreenScale * 329 + STD_SCREEN_X)
+#define SLG_SAVE_LOAD_BTN_POS_X				(g_ui.m_stdScreenScale * 123 + STD_SCREEN_X)
+#define SLG_BTN_POS_Y					(g_ui.m_stdScreenScale * 438 + STD_SCREEN_Y)
 
-#define SLG_SCROLLBAR_POS_X (SLG_FIRST_SAVED_SPOT_X + 582)
+#define SLG_SCROLLBAR_POS_X (SLG_FIRST_SAVED_SPOT_X + g_ui.m_stdScreenScale * 582)
 #define SLG_SCROLLBAR_POS_Y (SLG_FIRST_SAVED_SPOT_Y)
-#define SLG_SCROLLBAR_HEIGHT 378
-#define SLG_SCROLLBAR_WIDTH 23
-#define SLG_SCROLLBAR_BTN_HEIGHT 23
-#define SLG_SCROLLBAR_INDICATOR_HEIGHT 19
+#define SLG_SCROLLBAR_HEIGHT (g_ui.m_stdScreenScale * 378)
+#define SLG_SCROLLBAR_WIDTH (g_ui.m_stdScreenScale * 23)
+#define SLG_SCROLLBAR_BTN_HEIGHT (g_ui.m_stdScreenScale * 23)
+#define SLG_SCROLLBAR_INDICATOR_HEIGHT (g_ui.m_stdScreenScale * 19)
 #define SLG_SCROLLBAR_INNER_HEIGHT (SLG_SCROLLBAR_HEIGHT - 2 * SLG_SCROLLBAR_BTN_HEIGHT)
 #define SLG_SCROLLBAR_INNER_POS_Y (SLG_SCROLLBAR_POS_Y + SLG_SCROLLBAR_BTN_HEIGHT)
 #define SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y (SLG_SCROLLBAR_POS_Y + SLG_SCROLLBAR_HEIGHT - SLG_SCROLLBAR_BTN_HEIGHT)
@@ -215,7 +215,7 @@ ScreenID SaveLoadScreenHandle()
 		PauseGame();
 
 		//save the new rect
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, g_ui.m_stdScreenScale * 439);
 	}
 
 	RestoreBackgroundRects();
@@ -402,10 +402,14 @@ static void EnterSaveLoadScreen()
 	guiSlgAddonsStracciatella = AddVideoObjectFromFile("sti/interface/save-load-addons.sti");
 	guiSlgScrollbarStracciatella = AddVideoObjectFromFile("sti/interface/scroll-bar.sti");
 
-	guiSlgScrollUpBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti", SLG_SCROLL_UP_GRAPHICS_NUMBER_UP, SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollUpCallback);
+	guiSlgScrollUpBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti",
+						 SLG_SCROLL_UP_GRAPHICS_NUMBER_UP, SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN,
+						 SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollUpCallback);
 	guiSlgScrollUpBtn->SetFastHelpText("Scroll up");
 	guiSlgScrollUpBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-	guiSlgScrollDownBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti", SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP, SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollDownCallback);
+	guiSlgScrollDownBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti",
+						   SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP, SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN,
+						   SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollDownCallback);
 	guiSlgScrollDownBtn->SetFastHelpText("Scroll down");
 	guiSlgScrollDownBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
@@ -583,10 +587,10 @@ static void RenderScrollBar(void) {
 	}
 	SetClippingRect(previousClippingRect);
 
-	auto maxTop = std::max(1, ScrollPositionTopMax());
-	auto currentTop = gCurrentScrollTop;
-	auto maxYPos = SLG_SCROLLBAR_INNER_HEIGHT - SLG_SCROLLBAR_INDICATOR_HEIGHT - 2;
-	auto indicatorPosition = int(round(double_t(maxYPos) * double_t(currentTop) / double_t(maxTop)));
+	int maxTop = std::max(1, ScrollPositionTopMax());
+	int currentTop = gCurrentScrollTop;
+	int maxYPos = SLG_SCROLLBAR_INNER_HEIGHT - SLG_SCROLLBAR_INDICATOR_HEIGHT - 2;
+	int indicatorPosition = int(round(double_t(maxYPos) * double_t(currentTop) / double_t(maxTop)));
 	indicatorPosition = std::clamp(indicatorPosition, 0, maxYPos);
 
 	BltVideoObject(FRAME_BUFFER, guiSlgScrollbarStracciatella, SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X + 2, SLG_SCROLLBAR_INNER_POS_Y + indicatorPosition + 1);
