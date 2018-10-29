@@ -18,6 +18,7 @@ extern "C" {
 #include "externalized/ContentManager.h"
 #include "externalized/GameInstance.h"
 #include "game/Utils/Cinematics.h"
+#include "game/UILayout.h"
 #include "sgp/Debug.h"
 #include "sgp/HImage.h"
 #include "sgp/VObject.h"
@@ -117,8 +118,12 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 	if (sf == nullptr) return nullptr;
 
 	// Set the blitting position on the screen
-	sf->left = left;
-	sf->top  = top;
+	unsigned long video_width;
+	unsigned long video_height;
+	if (smk_info_video(sf->smacker, &video_width, &video_height, nullptr) < 0)
+		return nullptr;
+	sf->left = left + (g_ui.m_scaledInterfaceWidth - video_width) / 2;
+	sf->top  = top + (g_ui.m_scaledInterfaceHeight - video_height) / 2;
 
 	// Get all the audio data
 	unsigned char audio_tracks;
@@ -298,7 +303,7 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
 	// get surface (destination)
 	SGPVSurface::Lock lock(surface);
 	UINT32* dst = lock.Buffer<UINT32>();
-	Assert(lock.Pitch() % 2 == 0);
+	Assert(lock.Pitch() % 4 == 0);
 	Assert(surface->BPP() == 32);
 	UINT32 dst_pitch = lock.Pitch() / 4; // pitch in pixels
 	UINT16 dst_height = surface->Height();
