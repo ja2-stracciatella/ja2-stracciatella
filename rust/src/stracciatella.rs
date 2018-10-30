@@ -164,6 +164,8 @@ pub struct EngineOptions {
     mods: Vec<String>,
     #[serde(rename ="res", serialize_with = "serialize_resolution", deserialize_with = "deserialize_resolution")]
     resolution: (u16, u16),
+    #[serde(default)]
+    brightness: (f32),
     #[serde(rename = "resversion")]
     resource_version: ResourceVersion,
     #[serde(skip)]
@@ -191,6 +193,7 @@ impl Default for EngineOptions {
             vanilla_data_dir: PathBuf::from(""),
             mods: vec!(),
             resolution: (640, 480),
+            brightness: 1.0,
             resource_version: ResourceVersion::ENGLISH,
             show_help: false,
             run_unittests: false,
@@ -226,6 +229,12 @@ pub fn get_command_line_options() -> Options {
         "res",
         "Screen resolution, e.g. 800x600. Default value is 640x480",
         "WIDTHxHEIGHT"
+    );
+    opts.optopt(
+        "",
+        "brightness",
+        "Screen brightness (gamma multiplier) value to set where 0.0 is completely dark and 1.0 is normal brightness. Default value is 1.0",
+        "GAMMA_VALUE"
     );
     opts.optopt(
         "",
@@ -306,6 +315,15 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
                         engine_options.resolution = res;
                     },
                     Err(s) => return Some(s)
+                }
+            }
+            
+            if let Some(s) = m.opt_str("brightness") {
+                match s.parse::<f32>() {
+                    Ok(val) => {
+                        engine_options.brightness = val;
+                    },
+                    Err(_e) => return Some(String::from("Incorrect brightness value."))
                 }
             }
 
@@ -542,6 +560,16 @@ pub extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
 #[no_mangle]
 pub extern fn set_resolution(ptr: *mut EngineOptions, x: u16, y: u16) -> () {
     unsafe_from_ptr_mut!(ptr).resolution = (x, y)
+}
+
+#[no_mangle]
+pub extern fn get_brightness(ptr: *const EngineOptions) -> f32 {
+    unsafe_from_ptr!(ptr).brightness
+}
+
+#[no_mangle]
+pub extern fn set_brightness(ptr: *mut EngineOptions, brightness: f32) -> () {
+    unsafe_from_ptr_mut!(ptr).brightness = brightness
 }
 
 #[no_mangle]
@@ -1095,6 +1123,7 @@ r##"{
   "data_dir": "",
   "mods": [],
   "res": "100x100",
+  "brightness": 1.0,
   "resversion": "ENGLISH",
   "fullscreen": false,
   "scaling": "PERFECT",

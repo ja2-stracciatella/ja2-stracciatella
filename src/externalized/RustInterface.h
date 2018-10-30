@@ -15,6 +15,8 @@ extern "C" {
 	extern UINT16 get_resolution_x(const engine_options_t *);
 	extern UINT16 get_resolution_y(const engine_options_t *);
 	extern void set_resolution(const engine_options_t *, UINT16, UINT16);
+	extern FLOAT get_brightness(const engine_options_t *);
+	extern void set_brightness(const engine_options_t *, FLOAT);
 	extern GameVersion get_resource_version(const engine_options_t *);
 	extern void set_resource_version(const engine_options_t *, GameVersion);
 	extern char * get_resource_version_string(GameVersion);

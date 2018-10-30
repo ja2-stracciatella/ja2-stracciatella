@@ -336,6 +336,8 @@ int main(int argc, char* argv[])
 
 	VideoScaleQuality scalingQuality = get_scaling_quality(params);
 
+	FLOAT brightness = get_brightness(params);
+
 	////////////////////////////////////////////////////////////
 
 	SDL_Init(SDL_INIT_VIDEO);
@@ -412,7 +414,7 @@ int main(int argc, char* argv[])
 		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
 	}
 
-		free_engine_options(params);
+	free_engine_options(params);
 
 	std::vector<std::string> libraries = cm->getListOfGameResources();
 	cm->initGameResouces(configFolderPath, libraries);
@@ -428,6 +430,7 @@ int main(int argc, char* argv[])
 
 		SLOGD(DEBUG_TAG_SGP, "Initializing Video Manager");
 		InitializeVideoManager(scalingQuality);
+		VideoSetBrightness(brightness);
 
 		SLOGD(DEBUG_TAG_SGP, "Initializing Video Object Manager");
 		InitializeVideoObjectManager();

@@ -26,6 +26,8 @@ void         GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBit
 void         EndFrameBufferRender(void);
 void         PrintScreen(void);
 
+void VideoSetBrightness(float brightness);
+
 /* Toggle between fullscreen and window mode after initialising the video
  * manager */
 void VideoToggleFullScreen(void);
