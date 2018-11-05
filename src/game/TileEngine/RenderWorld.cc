@@ -156,8 +156,6 @@ bool g_scroll_inertia = false;
 
 
 // GLOBALS FOR CALCULATING STARTING PARAMETERS
-static INT16 gsStartPointX_W;
-static INT16 gsStartPointY_W;
 static INT16 gsStartPointX_S;
 static INT16 gsStartPointY_S;
 static INT16 gsStartPointX_M;
@@ -168,8 +166,6 @@ static INT16 gsEndYS;
 // NOTE: Larger viewport offset values are used for static world surface rendering. That surface is blitted
 //       during scrolling to speed up rendering and make scrolling smoother.
 // TODO: maxrd2 drop all of these when SDL blitting is done
-static INT16 gsLStartPointX_W;
-static INT16 gsLStartPointY_W;
 static INT16 gsLStartPointX_S;
 static INT16 gsLStartPointY_S;
 static INT16 gsLStartPointX_M;
@@ -4209,8 +4205,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 	FromScreenToCellCoordinates(gsStartPointX_S, gsStartPointY_S, &sTempPosX_W, &sTempPosY_W);
 
 	// c) World start point is Render center minus this distance
-	gsStartPointX_W = sRenderCenterX_W - sTempPosX_W + CELL_X_SIZE;
-	gsStartPointY_W = sRenderCenterY_W - sTempPosY_W;
+	const INT16 sStartPointX_W = sRenderCenterX_W - sTempPosX_W + CELL_X_SIZE;
+	const INT16 sStartPointY_W = sRenderCenterY_W - sTempPosY_W;
 
 	// d) screen start point is screen distances minus screen center
 	gsStartPointX_S = sLeft - VIEWPORT_XOFFSET_S;
@@ -4218,13 +4214,13 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP FOUR - Determine Start block
 	// a) Find start block
-	gsStartPointX_M = floor(DOUBLE(gsStartPointX_W) / DOUBLE(CELL_X_SIZE));
-	gsStartPointY_M = floor(DOUBLE(gsStartPointY_W) / DOUBLE(CELL_Y_SIZE));
+	gsStartPointX_M = floor(DOUBLE(sStartPointX_W) / DOUBLE(CELL_X_SIZE));
+	gsStartPointY_M = floor(DOUBLE(sStartPointY_W) / DOUBLE(CELL_Y_SIZE));
 
 	// STEP 5 - Determine offsets for tile center and convert to screen values
 	// Make sure these coordinates are multiples of scroll steps
-	const INT16 sOffsetX_W = gsStartPointX_W - gsStartPointX_M * CELL_X_SIZE;
-	const INT16 sOffsetY_W = gsStartPointY_W - gsStartPointY_M * CELL_Y_SIZE;
+	const INT16 sOffsetX_W = sStartPointX_W - gsStartPointX_M * CELL_X_SIZE;
+	const INT16 sOffsetY_W = sStartPointY_W - gsStartPointY_M * CELL_Y_SIZE;
 
 	INT16 sOffsetX_S;
 	INT16 sOffsetY_S;
@@ -4247,8 +4243,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 	FromScreenToCellCoordinates(gsLStartPointX_S, gsLStartPointY_S, &sTempPosX_W, &sTempPosY_W);
 
 	// c) World start point is Render center minus this distance
-	gsLStartPointX_W = sRenderCenterX_W - sTempPosX_W + CELL_X_SIZE;
-	gsLStartPointY_W = sRenderCenterY_W - sTempPosY_W;
+	const INT16 sLStartPointX_W = sRenderCenterX_W - sTempPosX_W + CELL_X_SIZE;
+	const INT16 sLStartPointY_W = sRenderCenterY_W - sTempPosY_W;
 
 	// d) screen start point is screen distances minus screen center
 	gsLStartPointX_S = sLeft - LARGER_VIEWPORT_XOFFSET_S;
@@ -4256,8 +4252,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP FOUR - Determine Start block
 	// a) Find start block
-	gsLStartPointX_M = floor(DOUBLE(gsLStartPointX_W) / DOUBLE(CELL_X_SIZE));
-	gsLStartPointY_M = floor(DOUBLE(gsLStartPointY_W) / DOUBLE(CELL_Y_SIZE));
+	gsLStartPointX_M = floor(DOUBLE(sLStartPointX_W) / DOUBLE(CELL_X_SIZE));
+	gsLStartPointY_M = floor(DOUBLE(sLStartPointY_W) / DOUBLE(CELL_Y_SIZE));
 
 	// STEP 5 - Adjust screen coordinates to tile center, so it matches small viewport
 	gsLStartPointX_S -= sOffsetX_S;
