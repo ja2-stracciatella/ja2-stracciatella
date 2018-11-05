@@ -164,8 +164,7 @@ pub struct EngineOptions {
     mods: Vec<String>,
     #[serde(rename ="res", serialize_with = "serialize_resolution", deserialize_with = "deserialize_resolution")]
     resolution: (u16, u16),
-    #[serde(default)]
-    brightness: (f32),
+    brightness: f32,
     #[serde(rename = "resversion")]
     resource_version: ResourceVersion,
     #[serde(skip)]
