@@ -226,6 +226,8 @@ UINT32 SmackWait(Smack* Smk)
 
 void SmackClose(Smack* Smk)
 {
+	if(!Smk)
+		return;
 	if(!SoundStop(Smk->SoundTag))
 		printf("Error in SmackClose SoundStop\n");
 	free(Smk->SmackerInMemory);
