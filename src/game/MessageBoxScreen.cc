@@ -29,14 +29,14 @@
 #include <string_theory/string>
 
 
-#define MSGBOX_DEFAULT_WIDTH      300
+#define MSGBOX_DEFAULT_WIDTH      (g_ui.m_stdScreenScale * 300)
 
-#define MSGBOX_BUTTON_WIDTH        61
-#define MSGBOX_BUTTON_HEIGHT       20
-#define MSGBOX_BUTTON_X_SEP        15
+#define MSGBOX_BUTTON_WIDTH        (g_ui.m_stdScreenScale * 61)
+#define MSGBOX_BUTTON_HEIGHT       (g_ui.m_stdScreenScale * 20)
+#define MSGBOX_BUTTON_X_SEP        (g_ui.m_stdScreenScale * 15)
 
-#define MSGBOX_SMALL_BUTTON_WIDTH  31
-#define MSGBOX_SMALL_BUTTON_X_SEP   8
+#define MSGBOX_SMALL_BUTTON_WIDTH  (g_ui.m_stdScreenScale * 31)
+#define MSGBOX_SMALL_BUTTON_X_SEP   (g_ui.m_stdScreenScale * 8)
 
 // old mouse x and y positions
 static SGPPoint pOldMousePosition;
@@ -94,16 +94,19 @@ struct MessageBoxStyle
 static MessageBoxStyle const g_msg_box_style[] =
 {
 	{ DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, INTERFACEDIR "/popupbuttons.sti",      0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW,    CURSOR_NORMAL        }, // MSG_BOX_BASIC_STYLE
-	{ WHITE_MERC_POPUP_BACKGROUND,  RED_MERC_POPUP_BORDER,    INTERFACEDIR "/msgboxredbuttons.sti",  0, 1, 2,                 NO_SHADOW,         CURSOR_LAPTOP_SCREEN }, // MSG_BOX_RED_ON_WHITE
-	{ GREY_MERC_POPUP_BACKGROUND,   BLUE_MERC_POPUP_BORDER,   INTERFACEDIR "/msgboxgreybuttons.sti", 0, 1, 2,                 FONT_MCOLOR_WHITE, CURSOR_LAPTOP_SCREEN }, // MSG_BOX_BLUE_ON_GREY
+	{ WHITE_MERC_POPUP_BACKGROUND,  RED_MERC_POPUP_BORDER,    INTERFACEDIR "/msgboxredbuttons.sti",  0, 1, FONT_MCOLOR_RED,   NO_SHADOW,         CURSOR_LAPTOP_SCREEN }, // MSG_BOX_RED_ON_WHITE
+	{ GREY_MERC_POPUP_BACKGROUND,   BLUE_MERC_POPUP_BORDER,   INTERFACEDIR "/msgboxgreybuttons.sti", 0, 1, FONT_MCOLOR_RED,   FONT_MCOLOR_WHITE, CURSOR_LAPTOP_SCREEN }, // MSG_BOX_BLUE_ON_GREY
 	{ DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, INTERFACEDIR "/popupbuttons.sti",      2, 3, FONT_MCOLOR_WHITE, DEFAULT_SHADOW,    CURSOR_NORMAL        }, // MSG_BOX_BASIC_SMALL_BUTTONS
-	{ IMP_POPUP_BACKGROUND,         DIALOG_MERC_POPUP_BORDER, INTERFACEDIR "/msgboxgreybuttons.sti", 0, 1, 2,                 FONT_MCOLOR_WHITE, CURSOR_LAPTOP_SCREEN }, // MSG_BOX_IMP_STYLE
+	{ IMP_POPUP_BACKGROUND,         DIALOG_MERC_POPUP_BORDER, INTERFACEDIR "/msgboxgreybuttons.sti", 0, 1, FONT_MCOLOR_RED,   FONT_MCOLOR_WHITE, CURSOR_LAPTOP_SCREEN }, // MSG_BOX_IMP_STYLE
 	{ LAPTOP_POPUP_BACKGROUND,      LAPTOP_POP_BORDER,        INTERFACEDIR "/popupbuttons.sti",      0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW,    CURSOR_LAPTOP_SCREEN }  // MSG_BOX_LAPTOP_DEFAULT
 };
 
 
-static MessageBoxStyle const g_msg_box_style_default = { BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, INTERFACEDIR "/msgboxbuttons.sti", 0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW, CURSOR_NORMAL };
-
+static MessageBoxStyle const g_msg_box_style_default = {
+	BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER,
+	INTERFACEDIR "/msgboxbuttons.sti", 0, 1,
+	FONT_MCOLOR_WHITE, DEFAULT_SHADOW, CURSOR_NORMAL
+};
 
 void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect)
 {
@@ -129,7 +132,9 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 	// Init message box
 	UINT16 usTextBoxWidth;
 	UINT16 usTextBoxHeight;
-	gMsgBox.box = PrepareMercPopupBox(0, style.background, style.border, str, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
+	gMsgBox.box = PrepareMercPopupBox(0, style.background, style.border, str,
+		MSGBOX_DEFAULT_WIDTH, g_ui.m_stdScreenScale * 40, g_ui.m_stdScreenScale * 10, g_ui.m_stdScreenScale * 30,
+		&usTextBoxWidth, &usTextBoxHeight);
 
 	// Save height,width
 	gMsgBox.usWidth  = usTextBoxWidth;
@@ -179,8 +184,8 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 		UINT32 y = gMsgBox.uY + usTextBoxHeight - 4;
 		if (usFlags == MSG_BOX_FLAG_OK)
 		{
-			x += 27;
-			y -=  6;
+			x += g_ui.m_stdScreenScale * 27;
+			y -= g_ui.m_stdScreenScale *  6;
 		}
 		SimulateMouseMovement(x, y);
 	}

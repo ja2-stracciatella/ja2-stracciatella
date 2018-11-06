@@ -58,8 +58,8 @@ static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
 		if (*iter == NULL) continue; else
 
 
-#define BORDER_WIDTH  16
-#define BORDER_HEIGHT  8
+#define BORDER_WIDTH  (g_ui.m_stdScreenScale * 16)
+#define BORDER_HEIGHT (g_ui.m_stdScreenScale * 8)
 #define TOP_LEFT_CORNER     0
 #define TOP_EDGE            4
 #define TOP_RIGHT_CORNER    1
@@ -476,8 +476,8 @@ static void DrawBox(const PopUpBox* const box)
 	Assert(y + h <= SCREEN_HEIGHT);
 
 	// subtract 4 because the 2 2-pixel corners are handled separately
-	const UINT32 uiNumTilesWide = (w - 4) / BORDER_WIDTH;
-	const UINT32 uiNumTilesHigh = (h - 4) / BORDER_HEIGHT;
+	const UINT32 uiNumTilesWide = (w - g_ui.m_stdScreenScale * 4) / BORDER_WIDTH;
+	const UINT32 uiNumTilesHigh = (h - g_ui.m_stdScreenScale * 4) / BORDER_HEIGHT;
 
 	SGPVSurface* const dst = box->uiBuffer;
 
@@ -488,10 +488,10 @@ static void DrawBox(const PopUpBox* const box)
 	const SGPVObject* const border = box->iBorderObjectIndex;
 
 	// blit in 4 corners (they're 2x2 pixels)
-	BltVideoObject(dst, border, TOP_LEFT_CORNER,     x,         y);
-	BltVideoObject(dst, border, TOP_RIGHT_CORNER,    x + w - 2, y);
-	BltVideoObject(dst, border, BOTTOM_RIGHT_CORNER, x + w - 2, y + h - 2);
-	BltVideoObject(dst, border, BOTTOM_LEFT_CORNER,  x,         y + h - 2);
+	BltVideoObject(dst, border, TOP_LEFT_CORNER,     x,                                 y);
+	BltVideoObject(dst, border, TOP_RIGHT_CORNER,    x + w - g_ui.m_stdScreenScale * 2, y);
+	BltVideoObject(dst, border, BOTTOM_RIGHT_CORNER, x + w - g_ui.m_stdScreenScale * 2, y + h - 2);
+	BltVideoObject(dst, border, BOTTOM_LEFT_CORNER,  x,                                 y + h - g_ui.m_stdScreenScale * 2);
 
 	// blit in edges
 	if (uiNumTilesWide > 0)
@@ -499,30 +499,30 @@ static void DrawBox(const PopUpBox* const box)
 		// full pieces
 		for (UINT32 i = 0; i < uiNumTilesWide; ++i)
 		{
-			const INT32 lx = x + 2 + i * BORDER_WIDTH;
+			const INT32 lx = x + g_ui.m_stdScreenScale * 2 + i * BORDER_WIDTH;
 			BltVideoObject(dst, border, TOP_EDGE,    lx, y);
-			BltVideoObject(dst, border, BOTTOM_EDGE, lx, y + h - 2);
+			BltVideoObject(dst, border, BOTTOM_EDGE, lx, y + h - g_ui.m_stdScreenScale * 2);
 		}
 
 		// partial pieces
-		const INT32 lx = x + w - 2 - BORDER_WIDTH;
+		const INT32 lx = x + w - g_ui.m_stdScreenScale * 2 - BORDER_WIDTH;
 		BltVideoObject(dst, border, TOP_EDGE,    lx, y);
-		BltVideoObject(dst, border, BOTTOM_EDGE, lx, y + h - 2);
+		BltVideoObject(dst, border, BOTTOM_EDGE, lx, y + h - g_ui.m_stdScreenScale * 2);
 	}
 	if (uiNumTilesHigh > 0)
 	{
 		// full pieces
 		for (UINT32 i = 0; i < uiNumTilesHigh; ++i)
 		{
-			const INT32 ly = y + 2 + i * BORDER_HEIGHT;
-			BltVideoObject(dst, border, SIDE_EDGE, x,         ly);
-			BltVideoObject(dst, border, SIDE_EDGE, x + w - 2, ly);
+			const INT32 ly = y + g_ui.m_stdScreenScale * 2 + i * BORDER_HEIGHT;
+			BltVideoObject(dst, border, SIDE_EDGE, x,                                 ly);
+			BltVideoObject(dst, border, SIDE_EDGE, x + w - g_ui.m_stdScreenScale * 2, ly);
 		}
 
 		// partial pieces
-		const INT32 ly = y + h - 2 - BORDER_HEIGHT;
-		BltVideoObject(dst, border, SIDE_EDGE, x,         ly);
-		BltVideoObject(dst, border, SIDE_EDGE, x + w - 2, ly);
+		const INT32 ly = y + h - g_ui.m_stdScreenScale * 2 - BORDER_HEIGHT;
+		BltVideoObject(dst, border, SIDE_EDGE, x,                                 ly);
+		BltVideoObject(dst, border, SIDE_EDGE, x + w - g_ui.m_stdScreenScale * 2, ly);
 	}
 
 	InvalidateRegion(x, y, x + w, y + h);

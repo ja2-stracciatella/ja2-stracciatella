@@ -202,7 +202,7 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 	SGPFont        cur_font       = font;
 	UINT16         h              = GetFontHeight(cur_font) + gap;
 	bool           is_bold        = false;
-	UINT8          cur_foreground = foreground;
+	UINT32          cur_foreground = foreground;
 	UINT16         justification  = LEFT_JUSTIFIED;
 	do
 	{
