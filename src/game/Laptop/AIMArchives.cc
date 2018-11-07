@@ -185,11 +185,11 @@ static void RemoveAimAlumniFaceRegion(void);
 
 void ExitAimArchives()
 {
-	DeleteVideoObject(guiAlumniFrame);
-	DeleteVideoObject(guiOldAim);
-	DeleteVideoObject(guiAlumniPopUp);
-	DeleteVideoObject(guiPopUpPic);
-	DeleteVideoObject(guiDoneButton);
+	delete guiAlumniFrame;
+	delete guiOldAim;
+	delete guiAlumniPopUp;
+	delete guiPopUpPic;
+	delete guiDoneButton;
 
 	RemoveAimAlumniFaceRegion();
 

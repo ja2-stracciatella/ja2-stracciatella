@@ -256,7 +256,7 @@ static void AddTileSurface(ST::string const& filename, UINT32 const type)
 		slot = NULL;
 	}
 
-	TILE_IMAGERY* const t = LoadTileSurface(filename);
+	TILE_IMAGERY* const t = LoadTileSurface(filename, type);
 	t->fType = type;
 	SetRaisedObjectFlag(filename, t);
 

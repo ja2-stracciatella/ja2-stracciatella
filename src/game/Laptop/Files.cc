@@ -323,8 +323,8 @@ static void LoadFiles(void)
 static void RemoveFiles(void)
 {
 	// delete files video objects from memory
-	DeleteVideoObject(guiTOP);
-	DeleteVideoObject(guiTITLE);
+	delete guiTOP;
+	delete guiTITLE;
 }
 
 

@@ -136,7 +136,7 @@ INT32 GetCachedTile(ST::string const& filename)
 
 	TILE_CACHE_ELEMENT* const tce = &gpTileCache[idx];
 
-	tce->pImagery = LoadTileSurface(filename);
+	tce->pImagery = LoadTileSurface(filename, -1);
 
 	tce->zName = filename;
 	tce->sHits = 1;

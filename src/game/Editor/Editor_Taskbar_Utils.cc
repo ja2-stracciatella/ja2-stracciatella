@@ -166,8 +166,8 @@ static void LoadEditorImages(void)
 static void DeleteEditorImages(void)
 {
 	//The merc inventory panel
-	DeleteVideoObject(guiMercInventoryPanel);
-	DeleteVideoObject(guiOmertaMap);
+	delete guiMercInventoryPanel;
+	delete guiOmertaMap;
 	//The merc directional buttons
 	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[0] );
 	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[1] );

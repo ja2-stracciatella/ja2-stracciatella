@@ -135,7 +135,7 @@ void ExitAimHistory()
 	RemoveAimDefaults();
 	ExitAimHistoryMenuBar();
 
-	DeleteVideoObject(guiContentButton);
+	delete guiContentButton;
 	giCurrentSubPage = gubCurPageNum;
 
 	ExitTocMenu();

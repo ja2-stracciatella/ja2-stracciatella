@@ -200,11 +200,11 @@ void ExitAimSort()
 	SortMercArray();
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiSortByBox);
-	DeleteVideoObject(guiToAlumni);
-	DeleteVideoObject(guiToMugShots);
-	DeleteVideoObject(guiToStats);
-	DeleteVideoObject(guiSelectLight);
+	delete guiSortByBox;
+	delete guiToAlumni;
+	delete guiToMugShots;
+	delete guiToStats;
+	delete guiSelectLight;
 
 	MSYS_RemoveRegion( &gSelectedToMugShotRegion);
 	MSYS_RemoveRegion( &gSelectedToStatsRegion);

@@ -79,9 +79,9 @@ void ExitAimLinks()
 {
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiBobbyLink);
-	DeleteVideoObject(guiFuneralLink);
-	DeleteVideoObject(guiInsuranceLink);
+	delete guiBobbyLink;
+	delete guiFuneralLink;
+	delete guiInsuranceLink;
 
 	FOR_EACH(MOUSE_REGION, i, gSelectedLinkRegion) MSYS_RemoveRegion(&*i);
 

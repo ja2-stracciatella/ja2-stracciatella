@@ -15,7 +15,7 @@
 #define SCREEN_HEIGHT                   (g_ui.m_screenHeight)
 #define SCREEN_WIDTH                    (g_ui.m_screenWidth)
 #define INV_INTERFACE_START_Y           (g_ui.get_INV_INTERFACE_START_Y())
-#define INV_INTERFACE_HEIGHT            (140)                                 // height of the bottom bar single-merc inventory panel
+#define INV_INTERFACE_HEIGHT            (g_ui.m_stdScreenScale * 140)                                 // height of the bottom bar single-merc inventory panel
 #define INTERFACE_START_X               (g_ui.m_teamPanelPosition.iX)
 #define INTERFACE_START_Y               (g_ui.m_teamPanelPosition.iY)
 #define gsVIEWPORT_START_X              (g_ui.m_VIEWPORT_START_X)
@@ -39,9 +39,9 @@
 #define DEFAULT_EXTERN_PANEL_X_POS      (STD_SCREEN_X + g_ui.m_stdScreenScale * 320)
 #define DEFAULT_EXTERN_PANEL_Y_POS      (STD_SCREEN_Y + g_ui.m_stdScreenScale * 40)
 
-#define TEAMPANEL_SLOT_WIDTH            (83)     // width of one slot in the bottom team panel
-#define TEAMPANEL_BUTTONSBOX_WIDTH      (142)    // width of the container of the buttons on the right of team panel
-#define TEAMPANEL_HEIGHT                (120)    // height of the bottom bar team panel
+#define TEAMPANEL_SLOT_WIDTH            (g_ui.m_stdScreenScale * 83)     // width of one slot in the bottom team panel
+#define TEAMPANEL_BUTTONSBOX_WIDTH      (g_ui.m_stdScreenScale * 142)    // width of the container of the buttons on the right of team panel
+#define TEAMPANEL_HEIGHT                (g_ui.m_stdScreenScale * 120)    // height of the bottom bar team panel
 
 
 /////////////////////////////////////////////////////////////

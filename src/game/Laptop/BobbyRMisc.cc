@@ -34,8 +34,8 @@ void EnterBobbyRMisc()
 
 void ExitBobbyRMisc()
 {
-	DeleteVideoObject(guiMiscBackground);
-	DeleteVideoObject(guiMiscGrid);
+	delete guiMiscBackground;
+	delete guiMiscGrid;
 	DeleteBobbyBrTitle();
 	DeleteMouseRegionForBigImage();
 	DeleteBobbyMenuBar();

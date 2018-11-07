@@ -555,17 +555,17 @@ void ExitAIMMembers()
 
 	DeleteVideoSurface(guiVideoFaceBackground);
 
-	DeleteVideoObject(guiStats);
-	DeleteVideoObject(guiPrice);
-	DeleteVideoObject(guiPortrait);
-	DeleteVideoObject(guiWeaponBox);
-	DeleteVideoObject(guiVideoConfPopup);
-	DeleteVideoObject(guiVideoConfTerminal);
-	DeleteVideoObject(guiBWSnow);
-	DeleteVideoObject(guiFuzzLine);
-	DeleteVideoObject(guiStraightLine);
-	DeleteVideoObject(guiTransSnow);
-	DeleteVideoObject(guiVideoContractCharge);
+	delete guiStats;
+	delete guiPrice;
+	delete guiPortrait;
+	delete guiWeaponBox;
+	delete guiVideoConfPopup;
+	delete guiVideoConfTerminal;
+	delete guiBWSnow;
+	delete guiFuzzLine;
+	delete guiStraightLine;
+	delete guiTransSnow;
+	delete guiVideoContractCharge;
 
 	UnloadButtonImage( guiPreviousContactNextButtonImage );
 	UnloadButtonImage( giXToCloseVideoConfButtonImage );
@@ -1508,7 +1508,7 @@ static BOOLEAN DeleteAimPopUpBox()
 
 	UnloadButtonImage(guiPopUpImage);
 	RemoveButton(guiPopUpOkButton);
-	DeleteVideoObject(guiPopUpBox);
+	delete guiPopUpBox;
 
 	fPopUpBoxActive   = FALSE;
 	gubPopUpBoxAction = AIM_POPUP_NOTHING;

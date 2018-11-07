@@ -289,16 +289,16 @@ void ExitAIM()
 {
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiMemberCard);
-	DeleteVideoObject(guiPolicies);
-	DeleteVideoObject(guiLinks);
-	DeleteVideoObject(guiHistory);
-	DeleteVideoObject(guiWarning);
-	DeleteVideoObject(guiFlowerAdvertisement);
-	DeleteVideoObject(guiAdForAdsImages);
-	DeleteVideoObject(guiInsuranceAdImages);
-	DeleteVideoObject(guiFuneralAdImages);
-	DeleteVideoObject(guiBobbyRAdImages);
+	delete guiMemberCard;
+	delete guiPolicies;
+	delete guiLinks;
+	delete guiHistory;
+	delete guiWarning;
+	delete guiFlowerAdvertisement;
+	delete guiAdForAdsImages;
+	delete guiInsuranceAdImages;
+	delete guiFuneralAdImages;
+	delete guiBobbyRAdImages;
 
 	// Remove Mouse Regions
 	MSYS_RemoveRegion( &gSelectedMemberCardRegion);
@@ -410,8 +410,8 @@ void InitAimDefaults()
 
 void RemoveAimDefaults()
 {
-	DeleteVideoObject(guiRustBackGround);
-	DeleteVideoObject(guiAimSymbol);
+	delete guiRustBackGround;
+	delete guiAimSymbol;
 	MSYS_RemoveRegion( &gSelectedAimLogo);
 }
 

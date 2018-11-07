@@ -60,20 +60,20 @@ void UILayout::recalculatePositions()
 	m_scaledInterfaceWidth  = m_stdScreenScale * MIN_INTERFACE_WIDTH;
 	m_scaledInterfaceHeight = m_stdScreenScale * MIN_INTERFACE_HEIGHT;
 
-	m_teamPanelSlotsTotalWidth = getTeamPanelNumSlots() * m_stdScreenScale * TEAMPANEL_SLOT_WIDTH;
-	UINT16 tpXOffset = (m_screenWidth - m_teamPanelSlotsTotalWidth - m_stdScreenScale * TEAMPANEL_BUTTONSBOX_WIDTH) / 2;
-	UINT16 tpYOffset = m_screenHeight - m_stdScreenScale * TEAMPANEL_HEIGHT;
+	m_teamPanelSlotsTotalWidth = getTeamPanelNumSlots() * TEAMPANEL_SLOT_WIDTH;
+	const UINT16 tpXOffset = (m_screenWidth - m_teamPanelSlotsTotalWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / 2;
+	const UINT16 tpYOffset = m_screenHeight - TEAMPANEL_HEIGHT;
 	m_teamPanelPosition.set(tpXOffset, tpYOffset);
 	m_teamPanelWidth = std::max(UINT16(m_teamPanelSlotsTotalWidth + TEAMPANEL_BUTTONSBOX_WIDTH), m_screenWidth);
-
-	UINT16 startInvY = get_INV_INTERFACE_START_Y();
-	UINT16 startX    = INTERFACE_START_X;
 
 	// FIXME: maxrd2: it should match m_stdScreenScale for now since resources are scaled for that
 	m_tacticalScreenScale = m_stdScreenScale; //(m_stdScreenScale + 1.) / 2.;
 
 	m_stdScreenOffsetX = (m_screenWidth  - m_scaledInterfaceWidth)  / 2;
 	m_stdScreenOffsetY = (m_screenHeight - m_scaledInterfaceHeight) / 2;
+
+	const UINT16 startInvY = get_INV_INTERFACE_START_Y();
+	const UINT16 startX    = INTERFACE_START_X;
 
 	// tactical screen inventory position
 	m_invSlotPositionTac[HELMETPOS           ].set(startX + g_ui.m_stdScreenScale * 344, startInvY + g_ui.m_stdScreenScale *   6);
@@ -178,7 +178,7 @@ UINT16 UILayout::getTeamPanelNumSlots() const
 		throw std::runtime_error("ContentManager is not initialized yet. Unable to determine num of team slots");
 	}
 
-	int numSlots = std::min({(int)gamepolicy(squad_size), (m_screenWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / TEAMPANEL_SLOT_WIDTH, 12});
+	int numSlots = std::min({int(gamepolicy(squad_size)), int(m_screenWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / int(TEAMPANEL_SLOT_WIDTH), 12});
 	numSlots = std::max((int)numSlots, 6);
 	return numSlots;
 }

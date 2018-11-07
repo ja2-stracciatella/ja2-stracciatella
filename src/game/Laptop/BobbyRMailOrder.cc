@@ -441,14 +441,14 @@ void ExitBobbyRMailOrder()
 
 	DestroyBobbyROrderTitle();
 
-	DeleteVideoObject(guiBobbyROrderGrid);
-	DeleteVideoObject(guiBobbyRLocationGraphic);
-	DeleteVideoObject(guiDeliverySpeedGraphic);
-	DeleteVideoObject(guiConfirmGraphic);
-	DeleteVideoObject(guiTotalSaveArea);
-	DeleteVideoObject(guiDropDownBorder);
-	DeleteVideoObject(guiGoldArrowImages);
-	DeleteVideoObject(guiPackageWeightImage);
+	delete guiBobbyROrderGrid;
+	delete guiBobbyRLocationGraphic;
+	delete guiDeliverySpeedGraphic;
+	delete guiConfirmGraphic;
+	delete guiTotalSaveArea;
+	delete guiDropDownBorder;
+	delete guiGoldArrowImages;
+	delete guiPackageWeightImage;
 
 	UnloadButtonImage( guiBobbyRClearOrderImage );
 	RemoveButton( guiBobbyRClearOrder );
@@ -1765,7 +1765,7 @@ void CreateBobbyRayOrderTitle()
 void DestroyBobbyROrderTitle()
 {
 	MSYS_RemoveRegion( &gSelectedTitleLinkRegion);
-	DeleteVideoObject(guiBobbyRayTitle);
+	delete guiBobbyRayTitle;
 }
 
 

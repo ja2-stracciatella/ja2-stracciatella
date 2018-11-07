@@ -413,13 +413,13 @@ void RenderTopmostTacticalInterface()
 		INT16 y = sMercScreenY + s.sDamageY;
 		if (s.ubBodyType == QUEENMONSTER)
 		{
-			x += 25;
-			y += 10;
+			x += g_ui.m_stdScreenScale * 25;
+			y += g_ui.m_stdScreenScale * 10;
 		}
 		else
 		{
-			x += 2 * 30 / 3;
-			y += -5;
+			x += g_ui.m_stdScreenScale * (2 * 30 / 3);
+			y += g_ui.m_stdScreenScale * (-5);
 
 			if (y < gsVIEWPORT_WINDOW_START_Y)
 			{

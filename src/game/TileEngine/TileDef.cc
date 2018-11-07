@@ -66,6 +66,7 @@ void CreateTileDatabase()
 			TileElement = TILE_ELEMENT{};
 			TileElement.usRegionIndex = (UINT16)cnt2;
 			TileElement.hTileSurface	= TileSurf->vo;
+			TileElement.hInterfaceSurface	= TileSurf->voInterface;
 			TileElement.sBuddyNum			= -1;
 
 			// Check for multi-z stuff
@@ -127,6 +128,7 @@ void CreateTileDatabase()
 			TileElement = TILE_ELEMENT{};
 			TileElement.usRegionIndex  = 0;
 			TileElement.hTileSurface   = TileSurf->vo;
+			TileElement.hInterfaceSurface   = TileSurf->voInterface;
 			TileElement.fType          = (UINT16)TileSurf->fType;
 			TileElement.ubFullTile     = 0;
 			TileElement.uiFlags       |= UNDERFLOW_FILLER;

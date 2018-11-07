@@ -236,8 +236,8 @@ void EnterBobbyRGuns()
 
 void ExitBobbyRGuns()
 {
-	DeleteVideoObject(guiGunBackground);
-	DeleteVideoObject(guiGunsGrid);
+	delete guiGunBackground;
+	delete guiGunsGrid;
 	DeleteBobbyBrTitle();
 	DeleteBobbyMenuBar();
 
@@ -302,7 +302,7 @@ void InitBobbyBrTitle()
 
 void DeleteBobbyBrTitle()
 {
-	DeleteVideoObject(guiBrTitle);
+	delete guiBrTitle;
 	MSYS_RemoveRegion(&gSelectedTitleImageLinkRegion);
 	DeleteMouseRegionForBigImage();
 }

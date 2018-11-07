@@ -34,8 +34,8 @@ void EnterBobbyRUsed()
 
 void ExitBobbyRUsed()
 {
-	DeleteVideoObject(guiUsedBackground);
-	DeleteVideoObject(guiUsedGrid);
+	delete guiUsedBackground;
+	delete guiUsedGrid;
 	DeleteBobbyMenuBar();
 	DeleteBobbyBrTitle();
 	DeleteMouseRegionForBigImage();

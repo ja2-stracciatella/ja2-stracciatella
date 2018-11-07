@@ -850,10 +850,14 @@ static void FillEmptySpaceAtBottom()
 {
 	if(g_ui.isBigScreen())
 	{
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER, 0, g_ui.get_INV_INTERFACE_START_Y(),
-						INTERFACE_START_X, g_ui.m_screenHeight, 0);
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER, INTERFACE_START_X + g_ui.m_teamPanelWidth, g_ui.get_INV_INTERFACE_START_Y(),
-						g_ui.m_screenWidth, g_ui.m_screenHeight, 0);
+		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+					  0, g_ui.get_INV_INTERFACE_START_Y(),
+					  INTERFACE_START_X, g_ui.m_screenHeight,
+					  RGB(0, 0, 0));
+		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+					  INTERFACE_START_X + g_ui.m_teamPanelWidth, g_ui.get_INV_INTERFACE_START_Y(),
+					  g_ui.m_screenWidth, g_ui.m_screenHeight,
+					  RGB(0, 0, 0));
 	}
 }
 
@@ -873,22 +877,26 @@ void InitializeSMPanel()
 	// For visual consistency, the SMPanel should fill up the same width as the TEAMPanel, that the buttons and
 	// minimap are in the bottom-right corner.
 	SGPVObject* voSMPanel = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
-	guiSMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, INV_INTERFACE_HEIGHT, PIXEL_DEPTH);
-	if (g_ui.m_teamPanelWidth > 640)
+	guiSMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, std::ceil(INV_INTERFACE_HEIGHT), PIXEL_DEPTH);
+	const UINT16 width640 = g_ui.m_stdScreenScale * 640;
+	const INT16 sFillerWidth = g_ui.m_teamPanelWidth - width640;
+	if (sFillerWidth > 0)
 	{
 		// The team panel is longer than default
 		// need a second blit, and we will start from the right
-		BltVideoObject(guiSMPanel, voSMPanel, 0, g_ui.m_teamPanelWidth - 640, 0);
+		BltVideoObject(guiSMPanel, voSMPanel, 0, sFillerWidth/*g_ui.m_teamPanelWidth - width640*/, 0);
 	}
 	// draw the basic Single-Merc panel
 	BltVideoObject(guiSMPanel, voSMPanel, 0, 0, 0);
-	DeleteVideoObject(voSMPanel);
+	delete voSMPanel;
 
-	INT16 sFillerWidth = g_ui.m_teamPanelWidth - 640;
 	if (sFillerWidth > 0)
 	{
 		// draw a space filler if needed
-		SGPBox const dest = {SM_INVINTERFACE_WIDTH, 2, static_cast<UINT16>(sFillerWidth), INV_INTERFACE_HEIGHT - 6};
+		SGPBox const dest = {
+			UINT16(SM_INVINTERFACE_WIDTH), UINT16(g_ui.m_stdScreenScale * 2),
+			UINT16(sFillerWidth), UINT16(INV_INTERFACE_HEIGHT - g_ui.m_stdScreenScale * 6)
+		};
 		DrawFillerOnSurface(guiSMPanel, dest);
 	}
 
@@ -900,37 +908,45 @@ void InitializeSMPanel()
 	// INit viewport region
 	// Set global mouse regions
 	// Define region for viewport
-	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
+	MSYS_DefineRegion(&gViewportRegion,
+			  0, 0,
+			  gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y,
+			  MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 	// Create buttons
 	CreateSMPanelButtons();
 
-	const INT32 dx = INTERFACE_START_X;
-	const INT32 dy = INV_INTERFACE_START_Y;
-
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gSMPanelRegion, dx, dy, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&gSMPanelRegion,
+			  INTERFACE_START_X, INV_INTERFACE_START_Y,
+			  SCREEN_WIDTH, SCREEN_HEIGHT,
+			  MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	INT32 x;
-	INT32 y;
-
-	x = dx + SM_SELMERC_FACE_X;
-	y = dy + SM_SELMERC_FACE_Y;
+	INT32 x = INTERFACE_START_X + SM_SELMERC_FACE_X;
+	INT32 y = INV_INTERFACE_START_Y + SM_SELMERC_FACE_Y;
 
 	MOUSE_CALLBACK selectedMercButtonCallback = MouseCallbackPrimarySecondary(SelectedMercButtonCallbackPrimary, SelectedMercButtonCallbackSecondary, MSYS_NO_CALLBACK, true);
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCPanelRegion, x, y, x + SM_SELMERC_FACE_WIDTH, y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, selectedMercButtonCallback);
+	MSYS_DefineRegion(&gSM_SELMERCPanelRegion,
+			  x, y,
+			  x + SM_SELMERC_FACE_WIDTH, y + SM_SELMERC_FACE_HEIGHT,
+			  MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR,
+			  SelectedMercButtonMoveCallback, selectedMercButtonCallback);
 
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCEnemyIndicatorRegion, x + 1, y + 1, x + INDICATOR_BOX_WIDTH,
-				y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR,
-				MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback);
+	MSYS_DefineRegion(&gSM_SELMERCEnemyIndicatorRegion,
+			  x + 1, y + 1, x + INDICATOR_BOX_WIDTH,
+			  y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR,
+			  MSYS_NO_CALLBACK, SelectedMercEnemyIndicatorCallback);
 
 	//DEfine region for money button
-	x = dx + MONEY_X;
-	y = dy + MONEY_Y;
-	MSYS_DefineRegion(&gSM_SELMERCMoneyRegion, x, y, x + MONEY_WIDTH, y + MONEY_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback);
+	x = INTERFACE_START_X + MONEY_X;
+	y = INV_INTERFACE_START_Y + MONEY_Y;
+	MSYS_DefineRegion(&gSM_SELMERCMoneyRegion,
+			  x, y,
+			  x + MONEY_WIDTH, y + MONEY_HEIGHT,
+			  MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback);
 	gSM_SELMERCMoneyRegion.SetFastHelpText(TacticalStr[MONEY_BUTTON_HELP_TEXT]);
 
 	// Check if mouse is in region and if so, adjust...
@@ -940,7 +956,10 @@ void InitializeSMPanel()
 	}
 
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, dx + 62, dy + 2, dx + 85, dy + 51, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, selectedMercButtonCallback);
+	MSYS_DefineRegion(&gSM_SELMERCBarsRegion,
+			  INTERFACE_START_X + g_ui.m_stdScreenScale * 62, INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 2,
+			  INTERFACE_START_X + g_ui.m_stdScreenScale * 85, INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 51,
+			  MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, selectedMercButtonCallback);
 
 	MOUSE_CALLBACK smInvClickCallback = MouseCallbackPrimarySecondary(SMInvClickCallbackPrimary, SMInvClickCallbackSecondary, MSYS_NO_CALLBACK, true);
 	InitInvSlotInterface(g_ui.m_invSlotPositionTac, &g_ui.m_invCamoRegion, SMInvMoveCallback, smInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
@@ -1092,8 +1111,8 @@ void ShutdownSMPanel()
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
 	delete guiSMPanel;
-	DeleteVideoObject(guiSMObjects);
-	DeleteVideoObject(guiSMObjects2);
+	delete guiSMObjects;
+	delete guiSMObjects2;
 
 	gSelectSMPanelToMerc = NULL;
 
@@ -1197,7 +1216,8 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 
 	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
-		ProgressBarBackgroundRect(x + 16, y - 2, 15 * progress / 100, 10, RGB(0x51, 0x4A, 0x05), progress);
+		ProgressBarBackgroundRect(x + g_ui.m_stdScreenScale * 16, y - g_ui.m_stdScreenScale * 2,
+			g_ui.m_stdScreenScale * 15 * progress / 100, g_ui.m_stdScreenScale * 10, RGB(0x51, 0x4A, 0x05), progress);
 
 	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
 }
@@ -1274,9 +1294,9 @@ no_plate:
 			SetFontAttributes(BLOCKFONT2, STATS_TITLE_FONT_COLOR);
 			for (UINT32 i = 0; i != 5; ++i)
 			{
-				INT32 const y = dy + 7 + i * 10;
-				MPrint( dx + 92, y, pShortAttributeStrings[i]);
-				MPrint(dx + 137, y, pShortAttributeStrings[i + 5]);
+				INT32 const y = dy + g_ui.m_stdScreenScale * 7 + i * g_ui.m_stdScreenScale * 10;
+				MPrint(dx + g_ui.m_stdScreenScale * 92, y, pShortAttributeStrings[i]);
+				MPrint(dx + g_ui.m_stdScreenScale * 137, y, pShortAttributeStrings[i + 5]);
 			}
 
 			MPrint(dx + SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
@@ -1361,8 +1381,8 @@ no_plate:
 	if (gfSMDisableForItems && *dirty_level != DIRTYLEVEL0)
 	{
 		SGPRect ClipRect;
-		ClipRect.iLeft = dx + 87;
-		ClipRect.iRight = dx + 536;
+		ClipRect.iLeft = dx + g_ui.m_stdScreenScale * 87;
+		ClipRect.iRight = dx + g_ui.m_stdScreenScale * 536;
 		ClipRect.iTop = INV_INTERFACE_START_Y;
 		ClipRect.iBottom = SCREEN_HEIGHT;
 		SGPVSurface::Lock l(FRAME_BUFFER);
@@ -2236,14 +2256,16 @@ void InitializeTEAMPanel()
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, TacticalViewPortMovementCallback, TacticalViewPortTouchCallback);
 
 	// Create the TEAMpanel from graphic objects.
-	guiTEAMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, TEAMPANEL_HEIGHT, PIXEL_DEPTH);
+	guiTEAMPanel = new SGPVSurface(g_ui.m_teamPanelWidth, std::ceil(TEAMPANEL_HEIGHT), PIXEL_DEPTH);
 
 	auto vsTEAMPanel = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/bottom_bar.sti", 0);
 	BltVideoSurface(guiTEAMPanel, vsTEAMPanel.get(), 0, 0, NULL);
 	for (int i = 6; i < NUM_TEAM_SLOTS; i++)
 	{	// extend the panel if needed
-		SGPBox const rect = {5 * TEAMPANEL_SLOT_WIDTH, 0,
-					TEAMPANEL_SLOT_WIDTH + TEAMPANEL_BUTTONSBOX_WIDTH, TEAMPANEL_HEIGHT};
+		SGPBox const rect = {
+			UINT16(5 * TEAMPANEL_SLOT_WIDTH), 0,
+			UINT16(TEAMPANEL_SLOT_WIDTH + TEAMPANEL_BUTTONSBOX_WIDTH), UINT16(TEAMPANEL_HEIGHT)
+		};
 		BltVideoSurface(guiTEAMPanel, vsTEAMPanel.get(), i * TEAMPANEL_SLOT_WIDTH, 0, &rect);
 	}
 
@@ -2300,8 +2322,8 @@ void ShutdownTEAMPanel()
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
 	delete guiTEAMPanel;
-	DeleteVideoObject(guiTEAMObjects);
-	DeleteVideoObject(guiVEHINV);
+	delete guiTEAMObjects;
+	delete guiVEHINV;
 
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);
@@ -3179,8 +3201,11 @@ void RenderTownIDString(void)
 	// Render town, position
 	SetFontAttributes(COMPFONT, RGB(  0, 255,   0));
 	ST::string zTownIDString = GetSectorIDString(gWorldSector, TRUE);
-	zTownIDString = ReduceStringLength(zTownIDString, 80, COMPFONT);
-	FindFontCenterCoordinates(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + 50, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
+	zTownIDString = ReduceStringLength(zTownIDString, g_ui.m_stdScreenScale * 80, COMPFONT);
+	FindFontCenterCoordinates(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + g_ui.m_stdScreenScale * 50,
+		SCREEN_HEIGHT - g_ui.m_stdScreenScale * 55,
+		g_ui.m_stdScreenScale * 80, g_ui.m_stdScreenScale * 16,
+		zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }
 
@@ -3298,8 +3323,8 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		if (pSoldier == NULL) return;
 
 		sStartYPosition = MAP_START_KEYRING_Y;
-		sWidth = 261;
-		sHeight = ( 359 - 107 );
+		sWidth = g_ui.m_stdScreenScale * 261;
+		sHeight = g_ui.m_stdScreenScale * (359 - 107);
 	}
 	else
 	{
@@ -3322,9 +3347,10 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, UINT32 iReason)
 		if( guiCurrentScreen == MAP_SCREEN )
 		{
 			// shade the background
-			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 0, STD_SCREEN_Y + 107,
-							STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
-			InvalidateRegion(STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
+			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 107,
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 261, STD_SCREEN_Y + g_ui.m_stdScreenScale * 359);
+			InvalidateRegion(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 107,
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 261, STD_SCREEN_Y + g_ui.m_stdScreenScale * 359);
 			InitKeyRingPopup(pSoldier, STD_SCREEN_X + 0, sStartYPosition, sWidth, sHeight);
 		}
 		else

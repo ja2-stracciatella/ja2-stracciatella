@@ -813,10 +813,10 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 			}
 			else
 			{
-				INT32 const x = INTERFACE_START_X + 217;
-				INT32 const y = INV_INTERFACE_START_Y + 108;
+				INT32 const x = INTERFACE_START_X + g_ui.m_stdScreenScale * 217;
+				INT32 const y = INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 108;
 				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
-				RestoreExternBackgroundRect(x, y, 72, 28);
+				RestoreExternBackgroundRect(x, y, g_ui.m_stdScreenScale * 72, g_ui.m_stdScreenScale * 28);
 			}
 		}
 
@@ -1780,7 +1780,9 @@ void InternalInitItemDescriptionBox(OBJECTTYPE *o, const INT16 sX, const INT16 s
 	// Build a mouse region here that is over any others.....
 	if (in_map)
 	{
-		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, itemDescCallback);
+		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY,
+				  gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT,
+				  MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, itemDescCallback);
 
 		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1,
 			gsInvDescX + g_ui.m_stdScreenScale * 204, gsInvDescY + g_ui.m_stdScreenScale * 107,
@@ -3946,7 +3948,7 @@ void InitKeyRingPopup(SOLDIERTYPE *pSoldier, const INT16 sInvX, const INT16 sInv
 		// Set some globals
 		gsKeyRingPopupInvX = sInvX + TACTICAL_INVENTORY_KEYRING_GRAPHIC_OFFSET_X;
 		sKeyRingItemsPerLine = KEY_RING_ITEMS_PER_ROW;
-		sOffSetY = 8;
+		sOffSetY = g_ui.m_stdScreenScale * 8;
 	}
 
 	gsKeyRingPopupInvY = sInvY;
@@ -4040,8 +4042,8 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 	}
 	else
 	{
-		offset_x      = 0;
-		offset_y      = 8;
+		offset_x      = g_ui.m_stdScreenScale * 0;
+		offset_y      = g_ui.m_stdScreenScale * 8;
 		key_ring_cols = KEY_RING_ITEMS_PER_ROW;
 	}
 
@@ -4369,27 +4371,27 @@ struct ITEM_PICKUP_MENU_STRUCT
 	BOOLEAN fAllSelected;
 };
 
-#define ITEMPICK_UP_X					55
-#define ITEMPICK_UP_Y					5
-#define ITEMPICK_DOWN_X				111
-#define ITEMPICK_DOWN_Y				5
-#define ITEMPICK_ALL_X					79
-#define ITEMPICK_ALL_Y					6
-#define ITEMPICK_OK_X					16
-#define ITEMPICK_OK_Y					6
-#define ITEMPICK_CANCEL_X				141
-#define ITEMPICK_CANCEL_Y				6
+#define ITEMPICK_UP_X				(g_ui.m_stdScreenScale * 55)
+#define ITEMPICK_UP_Y				(g_ui.m_stdScreenScale * 5)
+#define ITEMPICK_DOWN_X			(g_ui.m_stdScreenScale * 111)
+#define ITEMPICK_DOWN_Y			(g_ui.m_stdScreenScale * 5)
+#define ITEMPICK_ALL_X				(g_ui.m_stdScreenScale * 79)
+#define ITEMPICK_ALL_Y				(g_ui.m_stdScreenScale * 6)
+#define ITEMPICK_OK_X				(g_ui.m_stdScreenScale * 16)
+#define ITEMPICK_OK_Y				(g_ui.m_stdScreenScale * 6)
+#define ITEMPICK_CANCEL_X			(g_ui.m_stdScreenScale * 141)
+#define ITEMPICK_CANCEL_Y			(g_ui.m_stdScreenScale * 6)
 
-#define ITEMPICK_START_X_OFFSET			10
+#define ITEMPICK_START_X_OFFSET			(g_ui.m_stdScreenScale * 10)
 
-#define ITEMPICK_GRAPHIC_X				10
-#define ITEMPICK_GRAPHIC_Y				12
-#define ITEMPICK_GRAPHIC_YSPACE			26
+#define ITEMPICK_GRAPHIC_X				(g_ui.m_stdScreenScale * 10)
+#define ITEMPICK_GRAPHIC_Y				(g_ui.m_stdScreenScale * 12)
+#define ITEMPICK_GRAPHIC_YSPACE			(g_ui.m_stdScreenScale * 26)
 
-#define ITEMPICK_TEXT_X				56
-#define ITEMPICK_TEXT_Y				22
-#define ITEMPICK_TEXT_YSPACE				26
-#define ITEMPICK_TEXT_WIDTH				109
+#define ITEMPICK_TEXT_X				(g_ui.m_stdScreenScale * 56)
+#define ITEMPICK_TEXT_Y				(g_ui.m_stdScreenScale * 22)
+#define ITEMPICK_TEXT_YSPACE				(g_ui.m_stdScreenScale * 26)
+#define ITEMPICK_TEXT_WIDTH				(g_ui.m_stdScreenScale * 109)
 
 
 static ITEM_PICKUP_MENU_STRUCT gItemPickupMenu;
@@ -4501,7 +4503,8 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	menu.iOKButtonImages     = UseLoadedButtonImage(pics, 4,  9);
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&menu.BackRegion, 532, 367, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&menu.BackRegion, g_ui.m_stdScreenScale * 532, g_ui.m_stdScreenScale * 367,
+			  SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion(&menu.BackRegions, sX, sY, menu.sX + menu.sWidth, sY + menu.sHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
@@ -4723,11 +4726,13 @@ void RenderItemPickupMenu()
 			UINT16              const usItemTileIndex = GetTileGraphicForItem(item);
 			TILE_ELEMENT const* const te              = &gTileDatabase[usItemTileIndex];
 
+			Assert(te->hInterfaceSurface != nullptr);
+
 			// ATE: Adjust to basic shade.....
-			te->hTileSurface->CurrentShade(4);
+			te->hInterfaceSurface->CurrentShade(4);
 
 			const UINT32 outline = menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? FONT_MCOLOR_WHITE : SGP_TRANSPARENT;
-			Blt32BPPDataTo32BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
+			Blt32BPPDataTo32BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hInterfaceSurface, sX, sY, te->usRegionIndex, outline);
 
 			if (o.ubNumberOfObjects > 1)
 			{
@@ -4737,7 +4742,9 @@ void RenderItemPickupMenu()
 
 				INT16 sFontX;
 				INT16 sFontY;
-				FindFontRightCoordinates(sX - 4, sY + 14, 42, 1, pStr, ITEM_FONT, &sFontX, &sFontY);
+				FindFontRightCoordinates(sX - 4 * g_ui.m_stdScreenScale, sY + 14 * g_ui.m_stdScreenScale,
+							 42 * g_ui.m_stdScreenScale, 1 * g_ui.m_stdScreenScale,
+							 pStr, ITEM_FONT, &sFontX, &sFontY);
 				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 				SetFont(ITEMDESC_FONT);
 			}
@@ -4749,8 +4756,8 @@ void RenderItemPickupMenu()
 				SetFontShadow(DEFAULT_SHADOW);
 				ST::string AttachMarker = "*";
 				UINT16         const uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
-				INT16          const sNewX          = sX + 43 - uiStringLength - 4;
-				INT16          const sNewY          = sY + 2;
+				INT16          const sNewX          = sX + 43 * g_ui.m_stdScreenScale - uiStringLength - 4 * g_ui.m_stdScreenScale;
+				INT16          const sNewY          = sY + 2 * g_ui.m_stdScreenScale;
 				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
 			}
 

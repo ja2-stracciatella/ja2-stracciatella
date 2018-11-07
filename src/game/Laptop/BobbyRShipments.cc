@@ -138,7 +138,7 @@ void ExitBobbyRShipments()
 	DeleteBobbyRWoodBackground();
 	DestroyBobbyROrderTitle();
 
-	DeleteVideoObject(guiBobbyRShipmentGrid);
+	delete guiBobbyRShipmentGrid;
 
 	UnloadButtonImage( guiBobbyRShipmentBackImage );
 	UnloadButtonImage( giBobbyRShipmentHomeImage );

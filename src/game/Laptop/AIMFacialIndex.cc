@@ -118,9 +118,9 @@ void ExitAimFacialIndex()
 {
 	RemoveAimDefaults();
 
-	DeleteVideoObject(guiMugShotBorder);
+	delete guiMugShotBorder;
 
-	FOR_EACH(SGPVObject*,  i, guiAimFiFace)          DeleteVideoObject(*i);
+	FOR_EACH(SGPVObject*,  i, guiAimFiFace)          delete *i;
 	FOR_EACH(MOUSE_REGION, i, gMercFaceMouseRegions) MSYS_RemoveRegion(&*i);
 	ExitAimMenuBar();
 
