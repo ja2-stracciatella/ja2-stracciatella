@@ -194,7 +194,7 @@ static SGPRect gOldClipRect;
 INT16   gsRenderCenterX;
 INT16   gsRenderCenterY;
 INT16   gsRenderWorldOffsetX = 0;
-INT16   gsRenderWorldOffsetY = 10;
+INT16   gsRenderWorldOffsetY = 10;//CELL_Y_SIZE;
 
 
 struct RenderFXType
@@ -412,7 +412,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 			{
 				iTileMapPos[uiMapPosIndex] = FASTMAPROWCOLTOPOS(iTempPosY_M, iTempPosX_M);
 
-				iTempPosX_S += 40;
+				iTempPosX_S += WORLD_TILE_X; // maxrd2: was 40
 				iTempPosX_M++;
 				iTempPosY_M--;
 
@@ -433,7 +433,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 			INT32 iTempPosY_S = iAnchorPosY_S;
 			UINT32 uiMapPosIndex = 0;
 
-			if (bXOddFlag) iTempPosX_S += 20;
+			if (bXOddFlag) iTempPosX_S += WORLD_TILE_X / 2; // maxrd2: was 20
 
 			do
 			{
@@ -492,7 +492,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 						//Looking up height every time here is alot better than doing it above!
 						INT16 const sTileHeight = me.sHeight;
 
-						INT16 sModifiedTileHeight = (sTileHeight / 80 - 1) * 80;
+						INT16 sModifiedTileHeight = (sTileHeight / WORLD_CLIFF_HEIGHT - 1) * WORLD_CLIFF_HEIGHT; // maxrd2: was 80 instead of WORLD_CLIFF_HEIGHTs
 						if (sModifiedTileHeight < 0) sModifiedTileHeight = 0;
 
 						BOOLEAN fRenderTile = TRUE;
@@ -838,7 +838,7 @@ zlevel_structures:
 										sZOffsetX = -1;
 										sZOffsetY = -1;
 										world_y   = GetMapXYWorldY(iTempPosX_M + sZOffsetX, iTempPosY_M + sZOffsetY);
-										world_y  += 20;
+										world_y  += WORLD_TILE_Y; // maxrd2: was 20
 										sZLevel   = LAND_Z_LEVEL;
 									}
 								}
@@ -867,7 +867,7 @@ zlevel_structures:
 								{
 									if (uiLevelNodeFlags & LEVELNODE_NOZBLITTER)
 									{
-										world_y += 40;
+										world_y += WORLD_TILE_Y * 2; // maxrd2: was 40
 									}
 									else
 									{
@@ -1594,13 +1594,13 @@ next_node:
 						 * taskbar. */
 						if (iTempPosY_S < 360)
 						{
-							ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, std::min(iTempPosY_S + 20, 360), RGB(0, 0, 0));
+							ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + WORLD_TILE_X, std::min(iTempPosY_S + WORLD_TILE_Y, 360), RGB(0, 0, 0)); // maxrd2: was 40 and 20
 						}
 					}
 				}
 
 next_tile:
-				iTempPosX_S += 40;
+				iTempPosX_S += WORLD_TILE_X; // maxrd2: was 40
 				iTempPosX_M++;
 				iTempPosY_M--;
 			} while (iTempPosX_S < iEndXS);
@@ -1616,7 +1616,7 @@ next_tile:
 		}
 
 		bXOddFlag = !bXOddFlag;
-		iAnchorPosY_S += 10;
+		iAnchorPosY_S += WORLD_TILE_Y / 2; // maxrd2: was 10
 	}
 	while (iAnchorPosY_S < iEndYS);
 
@@ -2025,7 +2025,7 @@ static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, IN
 
 static UINT ScrollSpeed(void)
 {
-	UINT speed = 20 << (_KeyDown(SHIFT) ? 2 : gubCurScrollSpeedID);
+	UINT speed = (2 * CELL_X_SIZE) << (_KeyDown(SHIFT) ? 2 : gubCurScrollSpeedID); // maxrd2: was 20
 	if (!gfDoVideoScroll) speed *= 2;
 	return speed;
 }
@@ -2250,7 +2250,7 @@ void InitRenderParams(UINT8 ubRestrictionID)
 	}
 
 	gCenterWorldX = CELL_X_SIZE * WORLD_ROWS / 2;
-	gCenterWorldY = CELL_X_SIZE * WORLD_COLS / 2;
+	gCenterWorldY = CELL_Y_SIZE * WORLD_COLS / 2;
 
 	// Convert Bounding box into screen coords
 	FromCellToScreenCoordinates(gTopLeftWorldLimitX,     gTopLeftWorldLimitY,     &gsLeftX, &gsTopY);
@@ -2299,7 +2299,7 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
 	// Adjust for offset position on screen
 	sScreenCenterX -=  0;
-	sScreenCenterY -= 10;
+	sScreenCenterY -= CELL_Y_SIZE;
 
 	const INT16 sX_S = g_ui.m_tacticalMapCenterX;
 	const INT16 sY_S = g_ui.m_tacticalMapCenterY;
@@ -2462,15 +2462,15 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 		INT16 sTempPosX_S = sAnchorPosX_S;
 		INT16 sTempPosY_S = sAnchorPosY_S;
 
-		if (bXOddFlag) sTempPosX_S += 20;
+		if (bXOddFlag) sTempPosX_S += WORLD_TILE_X / 2; // maxrd2: was 20
 
 		do
 		{
 			const UINT16 usTileIndex = FASTMAPROWCOLTOPOS(sTempPosY_M, sTempPosX_M);
 			if (usTileIndex < GRIDSIZE)
 			{
-				const INT16 sX = sTempPosX_S + WORLD_TILE_X / 2 - 5;
-				INT16       sY = sTempPosY_S + WORLD_TILE_Y / 2 - 5;
+				const INT16 sX = sTempPosX_S + WORLD_TILE_X / 2 - WORLD_TILE_X / 8; // maxrd2: was 5
+				INT16       sY = sTempPosY_S + WORLD_TILE_Y / 2 - WORLD_TILE_Y / 4; // maxrd2: was 5
 
 				// THIS ROOM STUFF IS ONLY DONE IN THE EDITOR...
 				// ADJUST BY SHEIGHT
@@ -2493,7 +2493,7 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 				}
 			}
 
-			sTempPosX_S += 40;
+			sTempPosX_S += WORLD_TILE_X; // maxrd2: was 40
 			sTempPosX_M++;
 			sTempPosY_M--;
 		}
@@ -2509,7 +2509,7 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 		}
 
 		bXOddFlag = !bXOddFlag;
-		sAnchorPosY_S += 10;
+		sAnchorPosY_S += WORLD_TILE_Y / 2; // maxrd2: was 10
 	}
 	while (sAnchorPosY_S < sEndYS);
 }
@@ -2536,7 +2536,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 		INT16 sTempPosX_S = sAnchorPosX_S;
 		INT16 sTempPosY_S = sAnchorPosY_S;
 
-		if (bXOddFlag) sTempPosX_S += 20;
+		if (bXOddFlag) sTempPosX_S += WORLD_TILE_X / 2; // maxrd2: was 20
 
 		do
 		{
@@ -2571,7 +2571,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 				}
 			}
 
-			sTempPosX_S += 40;
+			sTempPosX_S += WORLD_TILE_X; // maxrd2: was 40
 			sTempPosX_M++;
 			sTempPosY_M--;
 		}
@@ -2587,7 +2587,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 		}
 
 		bXOddFlag = !bXOddFlag;
-		sAnchorPosY_S += 10;
+		sAnchorPosY_S += WORLD_TILE_Y / 2; // maxrd2: was 10
 	}
 	while (sAnchorPosY_S < sEndYS);
 }
@@ -2612,7 +2612,7 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 		INT16 sTempPosX_S = sAnchorPosX_S;
 		INT16 sTempPosY_S = sAnchorPosY_S;
 
-		if (bXOddFlag) sTempPosX_S += 20;
+		if (bXOddFlag) sTempPosX_S += WORLD_TILE_X / 2; // maxrd2: was 20
 
 		do
 		{
@@ -2647,7 +2647,7 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 				}
 			}
 
-			sTempPosX_S += 40;
+			sTempPosX_S += WORLD_TILE_X; // maxrd2: was 40
 			sTempPosX_M++;
 			sTempPosY_M--;
 		}
@@ -2663,7 +2663,7 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 		}
 
 		bXOddFlag = !bXOddFlag;
-		sAnchorPosY_S += 10;
+		sAnchorPosY_S += WORLD_TILE_Y / 2; // maxrd2: was 10
 	}
 	while (sAnchorPosY_S < sEndYS);
 }
@@ -2688,7 +2688,7 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 		INT16 sTempPosX_S = sAnchorPosX_S;
 		INT16 sTempPosY_S = sAnchorPosY_S;
 
-		if (bXOddFlag) sTempPosX_S += 20;
+		if (bXOddFlag) sTempPosX_S += WORLD_TILE_X / 2; // maxrd2: was 20
 
 		do
 		{
@@ -2717,7 +2717,7 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 				SetFontDestBuffer(FRAME_BUFFER);
 			}
 
-			sTempPosX_S += 40;
+			sTempPosX_S += WORLD_TILE_X; // maxrd2: was 40
 			sTempPosX_M++;
 			sTempPosY_M--;
 		}
@@ -2733,7 +2733,7 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 		}
 
 		bXOddFlag = !bXOddFlag;
-		sAnchorPosY_S += 10;
+		sAnchorPosY_S += WORLD_TILE_Y / 2; // maxrd2: was 10
 	}
 	while (sAnchorPosY_S < sEndYS);
 }
@@ -2773,7 +2773,7 @@ static void ExamineZBufferForHiddenTiles(INT16 sStartPointX_M, INT16 sStartPoint
 		INT16       sTempPosX_S = sAnchorPosX_S;
 		const INT16 sTempPosY_S = sAnchorPosY_S;
 
-		if (bXOddFlag) sTempPosX_S += 20;
+		if (bXOddFlag) sTempPosX_S += WORLD_TILE_X / 2; // maxrd2: was 20
 
 		do
 		{
@@ -2825,7 +2825,7 @@ static void ExamineZBufferForHiddenTiles(INT16 sStartPointX_M, INT16 sStartPoint
 			}
 
 ENDOFLOOP:
-			sTempPosX_S += 40;
+			sTempPosX_S += WORLD_TILE_X; // maxrd2: was 40
 			sTempPosX_M++;
 			sTempPosY_M--;
 		} while (sTempPosX_S < sEndXS);
@@ -2840,7 +2840,7 @@ ENDOFLOOP:
 		}
 
 		bXOddFlag = !bXOddFlag;
-		sAnchorPosY_S += 10;
+		sAnchorPosY_S += WORLD_TILE_Y / 2; // maxrd2: was 10
 	}
 	while (sAnchorPosY_S < sEndYS);
 }

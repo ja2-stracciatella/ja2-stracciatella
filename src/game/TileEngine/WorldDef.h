@@ -3,26 +3,27 @@
 
 #include "JA2Types.h"
 #include "World_Tileset_Enums.h"
+#include "UILayout.h"
 
 #include <string_theory/string>
 
 
-#define WORLD_TILE_X		40
-#define WORLD_TILE_Y		20
+#define WORLD_TILE_X		INT16(g_ui.m_tacticalScreenScale * 40)
+#define WORLD_TILE_Y		INT16(g_ui.m_tacticalScreenScale * 20)
 #define WORLD_COLS		160
 #define WORLD_ROWS		160
-#define WORLD_MAX		25600
-#define CELL_X_SIZE		10
-#define CELL_Y_SIZE		10
-constexpr INT16 WORLD_COORD_COLS = WORLD_COLS * CELL_X_SIZE;
-constexpr INT16 WORLD_COORD_ROWS = WORLD_ROWS * CELL_Y_SIZE;
+#define CELL_X_SIZE		INT16(g_ui.m_tacticalScreenScale * 10)
+#define CELL_Y_SIZE		INT16(g_ui.m_tacticalScreenScale * 10)
+#define WORLD_COORD_COLS	(WORLD_COLS * CELL_X_SIZE)
+#define WORLD_COORD_ROWS	(WORLD_ROWS * CELL_Y_SIZE)
+#define WORLD_MAX		(WORLD_COLS * WORLD_ROWS)
 
 #define HALF_TILE_WIDTH		((WORLD_TILE_X / CELL_X_SIZE) / 2)	// equals to 2
 #define HALF_TILE_HEIGHT	((WORLD_TILE_Y / CELL_Y_SIZE) / 2)	// equals to 1
 
 #define CENTER_GRIDNO (WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2)
 
-#define WORLD_CLIFF_HEIGHT	80
+#define WORLD_CLIFF_HEIGHT	(g_ui.m_tacticalScreenScale * 80)
 
 
 #define LANDHEAD		0
