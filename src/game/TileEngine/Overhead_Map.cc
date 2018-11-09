@@ -484,7 +484,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 	gfOverheadMapDirty = FALSE;
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32* const pDestBuf         = l.Buffer<UINT32>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 
 		{ // Begin Render Loop
@@ -512,7 +512,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							INT16         const  sX    = sTempPosX_S;
 							INT16         const  sY    = sTempPosY_S - sHeight + gsRenderHeight / 5;
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 					}
 
@@ -580,7 +582,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							sY += gsRenderHeight / 5;
 
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 
 						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pShadowHead; n; n = n->pNext)
@@ -594,7 +598,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							sY += gsRenderHeight / 5;
 
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferShadow(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferShadow(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 
 						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pStructHead; n; n = n->pNext)
@@ -619,7 +623,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							sY += gsRenderHeight / 5;
 
 							pTile.vo->CurrentShade(n->ubShadeLevel);
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 					}
 
@@ -680,7 +686,9 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 							pTile.vo->CurrentShade(n->ubShadeLevel);
 
 							// RENDER!
-							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+							Blt32BPPDataTo32BPPBufferTransparent(
+										reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+										uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 					}
 
@@ -742,7 +750,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 static void RenderOverheadOverlays(void)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32* const pDestBuf         = l.Buffer<UINT32>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	// Soldier overlay
@@ -784,7 +792,9 @@ static void RenderOverheadOverlays(void)
 
 		if (gfEditMode && GameMode::getInstance()->isEditorMode() && gpSelected && gpSelected->pSoldier == &s)
 		{ //editor:  show the selected edited merc as the yellow one.
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 0);
+			Blt32BPPDataTo32BPPBufferTransparent(
+						reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+						uiDestPitchBYTES, marker, sX, sY, 0);
 		}
 		else
 		{
@@ -794,7 +804,9 @@ static void RenderOverheadOverlays(void)
 				&s == gpTacticalPlacementSelectedSoldier                     ? 7       :
 				&s == gpTacticalPlacementHilightedSoldier && s.uiStatusFlags ? 8       :
 				s.bTeam;
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, region);
+			Blt32BPPDataTo32BPPBufferTransparent(
+						reinterpret_cast<UINT32 *>(pDestBuf), // FIXME: maxrd2
+						uiDestPitchBYTES, marker, sX, sY, region);
 			ETRLEObject const& e = marker->SubregionProperties(region);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX + e.sOffsetX, sY + e.sOffsetY, e.usWidth, e.usHeight);
 		}

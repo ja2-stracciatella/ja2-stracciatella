@@ -1174,7 +1174,7 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 
 	// Draw new size
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
+	UINT32* const pDestBuf = l.Buffer<UINT32>();
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
 
 	// get amt bandaged

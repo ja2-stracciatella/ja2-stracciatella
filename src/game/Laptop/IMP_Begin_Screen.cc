@@ -346,7 +346,7 @@ static void DisplayCheckboxFocus(INT32 x)
 	UINT32 currentColor = GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL ? RGB(0, 255, 0) : RGB(0, 0, 0);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT16>());
+	RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT32>());
 	InvalidateRegion(x, MALE_BOX_Y,  x + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
 }
 

@@ -17,14 +17,6 @@
 #define BLACK_SUBSTITUTE	0x0001
 
 
-UINT16 gusRedMask = 0;
-UINT16 gusGreenMask = 0;
-UINT16 gusBlueMask = 0;
-INT16  gusRedShift = 0;
-INT16  gusBlueShift = 0;
-INT16  gusGreenShift = 0;
-
-
 SGPImage* CreateImage(const ST::string& filename, const UINT16 fContents)
 {
 	// depending on extension of filename, use different image readers

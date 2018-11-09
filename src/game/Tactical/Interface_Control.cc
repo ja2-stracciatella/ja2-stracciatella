@@ -330,7 +330,7 @@ static void RenderRubberBanding(void)
 
 	// Draw rectangle.....
 	SGPVSurface::Lock lock(FRAME_BUFFER);
-	UINT16* const pDestBuf = lock.Buffer<UINT16>();
+	UINT32* const pDestBuf = lock.Buffer<UINT32>();
 	SetClippingRegionAndImageWidth(lock.Pitch(), 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 
 	if (l != r)

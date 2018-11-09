@@ -1468,7 +1468,7 @@ static void DrawGoldRectangle(INT8 bCityNum)
 
 	//display the line
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
+	UINT32* const pDestBuf = l.Buffer<UINT32>();
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw the gold highlite line on the top and left

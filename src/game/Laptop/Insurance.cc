@@ -298,7 +298,7 @@ void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 End
 
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
+	UINT32* const pDestBuf = l.Buffer<UINT32>();
 
 	// draw the red line
 	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, RGB(255, 0, 0), pDestBuf);

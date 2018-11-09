@@ -916,7 +916,7 @@ void ShowCurrentDrawingMode( void )
 	UINT32 usFillColor = GetGenericButtonFillColor();
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		RectangleDraw(FALSE, x, y, x + w - 1, y + h, usFillColor, l.Buffer<UINT16>());
+		RectangleDraw(FALSE, x, y, x + w - 1, y + h, usFillColor, l.Buffer<UINT32>());
 	}
 
 	InvalidateRegion(x, y, x + w, y + h);

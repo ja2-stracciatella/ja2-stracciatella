@@ -15,7 +15,7 @@
 // Struct for backgrounds
 struct BACKGROUND_SAVE
 {
-	std::unique_ptr<UINT16 []> pSaveArea;
+	std::unique_ptr<UINT32 []> pSaveArea;
 	std::unique_ptr<UINT16 []> pZSaveArea;
 	BOOLEAN         fAllocated;
 	BOOLEAN         fFilled;
@@ -93,7 +93,7 @@ BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLe
 
 	BACKGROUND_SAVE* const b = GetFreeBackgroundBuffer();
 
-	b->pSaveArea.reset((uiFlags & BGND_FLAG_SAVERECT) ? new UINT16[uiBufSize] : nullptr);
+	b->pSaveArea.reset((uiFlags & BGND_FLAG_SAVERECT) ? new UINT32[uiBufSize] : nullptr);
 	b->pZSaveArea.reset((uiFlags & BGND_FLAG_SAVE_Z) ? new UINT16[uiBufSize] : nullptr);
 	b->fAllocated  = TRUE;
 	b->fFilled     = FALSE;
@@ -123,11 +123,12 @@ void RegisterBackgroundRectSingleFilled(INT16 const x, INT16 const y, INT16 cons
 
 void RestoreBackgroundRects(void)
 {
-	{ SGPVSurface::Lock lsrc(guiSAVEBUFFER);
+	{
+		SGPVSurface::Lock lsrc(guiSAVEBUFFER);
 		SGPVSurface::Lock ldst(FRAME_BUFFER);
-		UINT16* const pSrcBuf          = lsrc.Buffer<UINT16>();
+		UINT32* const pSrcBuf          = lsrc.Buffer<UINT32>();
 		UINT32        uiSrcPitchBYTES  = lsrc.Pitch();
-		UINT16* const pDestBuf         = ldst.Buffer<UINT16>();
+		UINT32* const pDestBuf         = ldst.Buffer<UINT32>();
 		UINT32        uiDestPitchBYTES = ldst.Pitch();
 
 		for (auto & backsave : gBackSaves)
@@ -137,7 +138,7 @@ void RestoreBackgroundRects(void)
 
 			if (b->pSaveArea)
 			{
-				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, b->pSaveArea.get(), b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
+				Blt32BPPTo32BPP(pDestBuf, uiDestPitchBYTES, b->pSaveArea.get(), b->sWidth * 4, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
 				InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 			}
 			else if (b->pZSaveArea)
@@ -146,7 +147,7 @@ void RestoreBackgroundRects(void)
 			}
 			else
 			{
-				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, b->sLeft, b->sTop, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+				Blt32BPPTo32BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, b->sLeft, b->sTop, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 				InvalidateRegionEx(b->sLeft, b->sTop, b->sRight, b->sBottom);
 			}
 		}
@@ -186,7 +187,7 @@ void EmptyBackgroundRects(void)
 void SaveBackgroundRects(void)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pSrcBuf          = l.Buffer<UINT16>();
+	UINT32* const pSrcBuf          = l.Buffer<UINT32>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	for (auto & backsave : gBackSaves)
@@ -196,7 +197,7 @@ void SaveBackgroundRects(void)
 
 		if (b->pSaveArea)
 		{
-			Blt16BPPTo16BPP(b->pSaveArea.get(), b->sWidth * 2, pSrcBuf, uiDestPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+			Blt32BPPTo32BPP(b->pSaveArea.get(), b->sWidth * 4, pSrcBuf, uiDestPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 		}
 		else if (b->pZSaveArea)
 		{
@@ -430,7 +431,7 @@ static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 	UINT32                 const buf_size = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
 	v->fActivelySaving = TRUE;
-	v->pSaveArea.reset(new UINT16[buf_size]{});
+	v->pSaveArea.reset(new UINT32[buf_size]{});
 }
 
 
@@ -446,7 +447,7 @@ void AllocateVideoOverlaysArea(void)
 void SaveVideoOverlaysArea(SGPVSurface* const src)
 {
 	SGPVSurface::Lock l(src);
-	UINT16* const pSrcBuf         = l.Buffer<UINT16>();
+	UINT32* const pSrcBuf         = l.Buffer<UINT32>();
 	UINT32  const uiSrcPitchBYTES = l.Pitch();
 
 	FOR_EACH_VIDEO_OVERLAY(v)
@@ -460,7 +461,7 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 
 		// Save data from frame buffer!
 		const BACKGROUND_SAVE* const b = v->background;
-		Blt16BPPTo16BPP(v->pSaveArea.get(), b->sWidth * 2, pSrcBuf, uiSrcPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+		Blt32BPPTo32BPP(v->pSaveArea.get(), b->sWidth * 4, pSrcBuf, uiSrcPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 	}
 }
 
@@ -484,7 +485,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 	const INT32 ClipY2 = gsVIEWPORT_WINDOW_END_Y - 1;
 
 	SGPVSurface::Lock l(BACKBUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32* const pDestBuf         = l.Buffer<UINT32>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	FOR_EACH_VIDEO_OVERLAY_SAFE(v)
@@ -523,7 +524,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 		usHeight = sBottom - sTop;
 		usWidth  = sRight -  sLeft;
 
-		Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, v->pSaveArea.get(), b->sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
+		Blt32BPPTo32BPP(pDestBuf, uiDestPitchBYTES, v->pSaveArea.get(), b->sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
 
 		// Once done, check for pending deletion
 		if (v->fDeletionPending) RemoveVideoOverlay(v);

@@ -4693,7 +4693,7 @@ void RenderItemPickupMenu()
 
 	{
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32* const pDestBuf         = l.Buffer<UINT32>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 
 		for (INT32 cnt = 0; cnt < menu.bNumSlotsPerPage; ++cnt)
@@ -4712,7 +4712,7 @@ void RenderItemPickupMenu()
 			te->hTileSurface->CurrentShade(4);
 
 			const UINT32 outline = menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? FONT_MCOLOR_WHITE : SGP_TRANSPARENT;
-			Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
+			Blt32BPPDataTo32BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
 
 			if (o.ubNumberOfObjects > 1)
 			{

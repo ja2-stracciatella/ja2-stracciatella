@@ -114,9 +114,6 @@ void VideoSetBrightness(float brightness)
 }
 
 
-static void GetRGBDistribution();
-
-
 void InitializeVideoManager(const VideoScaleQuality quality,
                             const int32_t targetFPS)
 {
@@ -232,9 +229,6 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 
 	// Initialize state variables
 	gfForceFullScreenRefresh = TRUE;
-
-	// This function must be called to setup RGB information
-	GetRGBDistribution();
 
 	TimeBetweenRefreshScreens = std::chrono::microseconds{1'000'000} / targetFPS;
 }
@@ -584,27 +578,6 @@ void RefreshScreen(void)
 	gfForceFullScreenRefresh = FALSE;
 	guiDirtyRegionCount = 0;
 	guiDirtyRegionExCount = 0;
-}
-
-
-static void GetRGBDistribution()
-{
-	SDL_PixelFormat const& f = *ScreenBuffer->format;
-
-	UINT32          const  r = f.Rmask;
-	UINT32          const  g = f.Gmask;
-	UINT32          const  b = f.Bmask;
-
-	/* Mask the highest bit of each component. This is used for alpha blending. */
-	guiTranslucentMask = (r & r >> 1) | (g & g >> 1) | (b & b >> 1);
-
-	gusRedMask   = static_cast<UINT16>(r);
-	gusGreenMask = static_cast<UINT16>(g);
-	gusBlueMask  = static_cast<UINT16>(b);
-
-	gusRedShift   = f.Rshift - f.Rloss;
-	gusGreenShift = f.Gshift - f.Gloss;
-	gusBlueShift  = f.Bshift - f.Bloss;
 }
 
 

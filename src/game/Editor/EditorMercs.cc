@@ -2011,7 +2011,7 @@ static void DrawRect(SGPRect* pRect, UINT32 color)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, pRect->iLeft + MERCPANEL_X, pRect->iTop + MERCPANEL_Y, pRect->iRight + MERCPANEL_X, pRect->iBottom + MERCPANEL_Y, color, l.Buffer<UINT16>());
+	RectangleDraw(TRUE, pRect->iLeft + MERCPANEL_X, pRect->iTop + MERCPANEL_Y, pRect->iRight + MERCPANEL_X, pRect->iBottom + MERCPANEL_Y, color, l.Buffer<UINT32>());
 }
 
 

@@ -315,9 +315,9 @@ static void RenderTacticalPlacementGUI()
 			}
 		}
 		SGPVSurface::Lock l(buf);
-		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32* const pDestBuf         = l.Buffer<UINT32>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
-		Blt16BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_color);
+		Blt32BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_color);
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, STD_SCREEN_X + 0, STD_SCREEN_Y + 0, 640, 480);
 		RectangleDraw(TRUE, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_color, pDestBuf);
 	}

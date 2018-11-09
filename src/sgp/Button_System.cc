@@ -1103,7 +1103,7 @@ static void DrawHatchOnButton(const GUI_BUTTON* b)
 	ClipRect.iTop    = b->Y();
 	ClipRect.iBottom = b->BottomRightY() - 1;
 	SGPVSurface::Lock l(ButtonDestBuffer);
-	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
+	Blt32BPPBufferHatchRect(l.Buffer<UINT32>(), l.Pitch(), &ClipRect);
 }
 
 
@@ -1523,7 +1523,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->X(), b->Y(), b->BottomRightX(), b->BottomRightY(), GenericButtonFillColors);
 
 	SGPVSurface::Lock l(ButtonDestBuffer);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32* const pDestBuf         = l.Buffer<UINT32>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	SGPRect const ClipRect = GetClippingRect();
@@ -1533,27 +1533,27 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	{
 		INT32 const ImgNum = (q == 0 ? 0 : 1);
 		INT32 const x = bx + q * iBorderWidth;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  by, ImgNum,     &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  cy, ImgNum + 5, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  by, ImgNum,     &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  cy, ImgNum + 5, &ClipRect);
 	}
 	// Blit the right side corners
-	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, by, 2, &ClipRect);
-	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, cy, 7, &ClipRect);
+	Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, by, 2, &ClipRect);
+	Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, cy, 7, &ClipRect);
 	// Draw the vertical members of the button's borders
 	NumChunksHigh--;
 
 	if (hremain != 0)
 	{
 		INT32 const y = by + NumChunksHigh * iBorderHeight - iBorderHeight + hremain;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
 	}
 
 	for (INT32 q = 1; q < NumChunksHigh; q++)
 	{
 		INT32 const y = by + q * iBorderHeight;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
+		Blt32BPPDataTo32BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
 	}
 }
 

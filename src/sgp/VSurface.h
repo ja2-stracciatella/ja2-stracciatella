@@ -65,6 +65,9 @@ class SGPVSurface
 
 	private:
 		SurfaceUniquePtr                           surface_;
+
+		friend void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 const DestX, INT32 const DestY, SGPBox const* const src_rect);
+
 		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits

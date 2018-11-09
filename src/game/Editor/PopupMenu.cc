@@ -261,7 +261,7 @@ static void RenderPopupMenu(void)
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, p.usLeft, p.usTop, p.usRight, p.usBottom, RGB(128, 128, 128));
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf = l.Buffer<UINT16>();
+		UINT32* const pDestBuf = l.Buffer<UINT32>();
 		UINT32  const pitch    = l.Pitch();
 		SetClippingRegionAndImageWidth(pitch, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		UINT32 const line_color = RGB(64, 64, 64);

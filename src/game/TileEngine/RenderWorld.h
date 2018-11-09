@@ -118,10 +118,10 @@ void ClearRenderFlags(RenderFlags);
 
 void RenderSetShadows(BOOLEAN fShadows);
 
-extern UINT16* gpZBuffer;
+extern UINT16 *gpZBuffer;
 extern UINT16  gZBufferPitch;
-extern BOOLEAN gfIgnoreScrolling;
 
+extern BOOLEAN gfIgnoreScrolling;
 extern bool    g_scroll_inertia;
 extern BOOLEAN gfScrollPending;
 

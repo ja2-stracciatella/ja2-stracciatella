@@ -248,57 +248,55 @@ SGPVObject* AddScaledAlphaVideoObjectFromFile(const ST::string& ImageFile)
 	return AddVideoObjectFromHImage(hImage.get());
 }
 
-void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 const usRegionIndex, INT32 const iDestX, INT32 const iDestY)
+void BltVideoObject(SGPVSurface *dst, const SGPVObject *src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY)
 {
-	Assert(src->BPP() ==  8);
+	Assert(src->BPP() == 32);
 	Assert(dst->BPP() == 32);
 
 	SGPVSurface::Lock l(dst);
-	UINT16* const pBuffer = l.Buffer<UINT16>();
-	UINT32  const uiPitch = l.Pitch();
+	UINT32 *pBuffer = l.Buffer<UINT32>();
+	const UINT32 uiPitch = l.Pitch();
 
 	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect))
-	{
-		Blt8BPPDataTo16BPPBufferTransparentClip(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex, &ClippingRect);
-	}
+		Blt32BPPDataTo32BPPBufferTransparentClip(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex, &ClippingRect);
 	else
-	{
-		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
-	}
+		Blt32BPPDataTo32BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
 }
 
 
-void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, UINT32 const s16BPPColor)
+void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, const UINT32 colOutline)
 {
+	Assert(hSrcVObject->BPP() == 32);
+	Assert(dst->BPP() == 32);
+
 	SGPVSurface::Lock l(dst);
-	UINT16* const pBuffer = l.Buffer<UINT16>();
-	UINT32  const uiPitch = l.Pitch();
+	UINT32 *pBuffer = l.Buffer<UINT32>();
+	UINT32  uiPitch = l.Pitch();
 
 	if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 	{
-		Blt8BPPDataTo16BPPBufferOutlineClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, &ClippingRect);
+		Blt32BPPDataTo32BPPBufferOutlineClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, colOutline, &ClippingRect);
 	}
 	else
 	{
-		Blt8BPPDataTo16BPPBufferOutline(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor);
+		Blt32BPPDataTo32BPPBufferOutline(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, colOutline);
 	}
 }
 
 
-void BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
+void BltVideoObjectOutlineShadow(SGPVSurface *dst, const SGPVObject *src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
 {
+	Assert(src->BPP() == 32);
+	Assert(dst->BPP() == 32);
+
 	SGPVSurface::Lock l(dst);
-	UINT16* const pBuffer = l.Buffer<UINT16>();
-	UINT32  const uiPitch = l.Pitch();
+	UINT32 *pBuffer = l.Buffer<UINT32>();
+	const  UINT32 uiPitch = l.Pitch();
 
 	if (BltIsClipped(src, iDestX, iDestY, usIndex, &ClippingRect))
-	{
-		Blt8BPPDataTo16BPPBufferOutlineShadowClip(pBuffer, uiPitch, src, iDestX, iDestY, usIndex, &ClippingRect);
-	}
+		Blt32BPPDataTo32BPPBufferShadowClip(pBuffer, uiPitch, src, iDestX, iDestY, usIndex, &ClippingRect);
 	else
-	{
-		Blt8BPPDataTo16BPPBufferOutlineShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
-	}
+		Blt32BPPDataTo32BPPBufferShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
 }
 
 

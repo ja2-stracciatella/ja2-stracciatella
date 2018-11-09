@@ -44,8 +44,8 @@ inline void GPrint(INT32 x, INT32 y, const ST::string& str)
  * specified, using the currently selected font. Uses monochrome font color settings */
 
 UINT32 MPrintChar(INT32 x, INT32 y, char32_t c);
-void MPrintBuffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const ST::utf32_buffer& codepoints);
-inline void MPrintBuffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const ST::string& str)
+void MPrintBuffer(UINT32* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const ST::utf32_buffer& codepoints);
+inline void MPrintBuffer(UINT32* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const ST::string& str)
 {
 	MPrintBuffer(pDestBuf, uiDestPitchBYTES, x, y, str.to_utf32());
 }
@@ -56,7 +56,7 @@ inline void MPrint(INT32 x, INT32 y, const ST::string& str)
 }
 
 /* Sets the destination buffer for printing to and the clipping rectangle. */
-void SetFontDestBuffer(SGPVSurface* dst, INT32 x1, INT32 y1, INT32 x2, INT32 y2);
+void SetFontDestBuffer(SGPVSurface *dst, const INT32 x1, const INT32 y1, const INT32 x2, const INT32 y2);
 
 /* Set the destination buffer for printing while using the whole surface. */
 void SetFontDestBuffer(SGPVSurface* dst);

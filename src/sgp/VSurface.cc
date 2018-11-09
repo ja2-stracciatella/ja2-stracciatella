@@ -21,6 +21,7 @@ SGPVSurface::SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp) :
 	next_(gpVSurfaceHead)
 {
 	Assert(w > 0 && h > 0);
+	Assert(bpp == 32);
 
 	Uint32 pixelFormat;
 	switch (bpp)
@@ -110,7 +111,7 @@ void SGPVSurface::Fill(const UINT32 color)
 	SDL_FillRect(surface_.get(), NULL, color);
 }
 
-static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* const filter_table)
+static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const FLOAT filterPercent)
 {
 	if (X1 < 0) X1 = 0;
 	if (X2 < 0) return;
@@ -134,19 +135,19 @@ static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT
 	area.iRight  = X2;
 
 	SGPVSurface::Lock ldst(dst);
-	Blt16BPPBufferFilterRect(ldst.Buffer<UINT16>(), ldst.Pitch(), filter_table, &area);
+	Blt32BPPBufferFilterRect(ldst.Buffer<UINT32>(), ldst.Pitch(), filterPercent, &area);
 }
 
 
 void SGPVSurface::ShadowRect(INT32 const x1, INT32 const y1, INT32 const x2, INT32 const y2)
 {
-	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, (UINT16*)ShadeTable);
+	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, gShadowShadePercent);
 }
 
 
 void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1, INT32 const x2, INT32 const y2)
 {
-	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, (UINT16*)IntensityTable);
+	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, gIntensityShadePercent);
 }
 
 
@@ -167,7 +168,8 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 		default: throw std::logic_error("Invalid bpp");
 	}
 
-	{ SGPVSurface::Lock l(vs.get());
+	{
+		SGPVSurface::Lock l(vs.get());
 		UINT8*  const dst   = l.Buffer<UINT8>();
 		UINT16  const pitch = l.Pitch() / (dst_bpp / 8); // pitch in pixels
 		SGPBox  const box   = { 0, 0, img->usWidth, img->usHeight };
@@ -185,13 +187,20 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 
 void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 const DestX, INT32 const DestY, SGPBox const* const src_rect)
 {
-	SGPVSurface::Lock lsrc(src);
-	SGPVSurface::Lock ldst(dst);
-	UINT8*  const SrcBuf         = lsrc.Buffer<UINT8>();
-	UINT32  const SrcPitchBYTES  = lsrc.Pitch();
-	UINT16* const DestBuf        = ldst.Buffer<UINT16>();
-	UINT32  const DestPitchBYTES = ldst.Pitch();
-	Blt8BPPDataTo16BPPBufferHalf(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY, src_rect);
+	// maxrd2 - OK - used on strategic screen to display sector map
+	SDL_Rect srcRect;
+	if(src_rect) {
+		srcRect.x = src_rect->x;
+		srcRect.y = src_rect->y;
+		srcRect.w = src_rect->w;
+		srcRect.h = src_rect->h;
+	} else {
+		srcRect.x = srcRect.y = 0;
+		srcRect.w = src->Width();
+		srcRect.h = src->Height();
+	}
+	SDL_Rect dstRect = { DestX, DestY, srcRect.w / 2, srcRect.h / 2 };
+	SDL_BlitScaled(src->surface_.get(), &srcRect, dst->surface_.get(), &dstRect);
 }
 
 
@@ -225,123 +234,28 @@ void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDes
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const iDestX, INT32 const iDestY, SGPBox const* const src_box)
 {
+	// maxrd2 - OK - used on intro screen, main menu, after load game screen
 	Assert(dst);
+	Assert(dst->BPP() == 32);
 	Assert(src);
+	Assert(src->BPP() == 32);
 
-	const UINT8 src_bpp = src->BPP();
-	const UINT8 dst_bpp = dst->BPP();
-	if (src_bpp == dst_bpp)
-	{
-		SDL_Rect* src_rect = 0;
-		SDL_Rect  r;
-		if (src_box)
-		{
-			r.x = src_box->x;
-			r.y = src_box->y;
-			r.w = src_box->w;
-			r.h = src_box->h;
-			src_rect = &r;
-		}
+	SDL_Rect src_rect;
+	if(src_box)
+		src_rect = { src_box->x, src_box->y, src_box->w, src_box->h };
 
-		SDL_Rect dstrect;
-		dstrect.x = iDestX;
-		dstrect.y = iDestY;
-		SDL_BlitSurface(src->surface_.get(), src_rect, dst->surface_.get(), &dstrect);
-	}
-	else if (src_bpp < dst_bpp)
-	{
-		SGPBox const* src_rect = src_box;
-		SGPBox        r;
-		if (!src_rect)
-		{
-			// Check Sizes, SRC size MUST be <= DEST size
-			if (dst->Height() < src->Height())
-			{
-				SLOGD("Incompatible height size given in Video Surface blit");
-				return;
-			}
-			if (dst->Width() < src->Width())
-			{
-				SLOGD("Incompatible height size given in Video Surface blit");
-				return;
-			}
-
-			r.x = 0;
-			r.y = 0;
-			r.w = src->Width();
-			r.h = src->Height();
-			src_rect = &r;
-		}
-
-		SGPVSurface::Lock lsrc(src);
-		SGPVSurface::Lock ldst(dst);
-		UINT8*  const s_buf  = lsrc.Buffer<UINT8>();
-		UINT32  const spitch = lsrc.Pitch();
-		UINT16* const d_buf  = ldst.Buffer<UINT16>();
-		UINT32  const dpitch = ldst.Pitch();
-		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, src_rect);
-	}
-	else
-	{
-		SLOGD("Incompatible BPP values with src and dest Video Surfaces for blitting");
-	}
+	SDL_Rect dst_rect = { iDestX, iDestY, 0, 0 };
+	SDL_BlitSurface(src->surface_.get(), src_box ? &src_rect : nullptr, dst->surface_.get(), &dst_rect);
 }
 
 
 void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src, SGPBox const* const src_rect, SGPBox const* const dst_rect)
 {
-	if (dst->BPP() != 16 || src->BPP() != 16) return;
+	// maxrd2 - OK - used when switching from strategic to tactical screen
+	SDL_Rect srcRect = { src_rect->x, src_rect->y, src_rect->w, src_rect->h };
+	SDL_Rect dstRect = { dst_rect->x, dst_rect->y, dst_rect->w, dst_rect->h };
 
-	SDL_Surface const* const ssurface = src->surface_.get();
-	SDL_Surface*       const dsurface = dst->surface_.get();
-
-	const UINT32  s_pitch = ssurface->pitch >> 1;
-	const UINT32  d_pitch = dsurface->pitch >> 1;
-	UINT16 const* os      = (const UINT16*)ssurface->pixels + s_pitch * src_rect->y + src_rect->x;
-	UINT16*       d       =       (UINT16*)dsurface->pixels + d_pitch * dst_rect->y + dst_rect->x;
-
-	UINT const width  = dst_rect->w;
-	UINT const height = dst_rect->h;
-	UINT const dx     = src_rect->w;
-	UINT const dy     = src_rect->h;
-	UINT py = 0;
-	if (ssurface->flags & SDL_TRUE)
-	{
-//		const UINT16 key = ssurface->format->colorkey;
-		const UINT16 key = 0;
-		for (UINT iy = 0; iy < height; ++iy)
-		{
-			const UINT16* s = os;
-			UINT px = 0;
-			for (UINT ix = 0; ix < width; ++ix)
-			{
-				if (*s != key) *d = *s;
-				++d;
-				px += dx;
-				for (; px >= width; px -= width) ++s;
-			}
-			d += d_pitch - width;
-			py += dy;
-			for (; py >= height; py -= height) os += s_pitch;
-		}
-	}
-	else
-	{
-		for (UINT iy = 0; iy < height; ++iy)
-		{
-			const UINT16* s = os;
-			UINT px = 0;
-			for (UINT ix = 0; ix < width; ++ix)
-			{
-				*d++ = *s;
-				px += dx;
-				for (; px >= width; px -= width) ++s;
-			}
-			d += d_pitch - width;
-			py += dy;
-			for (; py >= height; py -= height) os += s_pitch;
-		}
-	}
+	SDL_BlitScaled(src->surface_.get(), &srcRect, dst->surface_.get(), &dstRect);
 }
 
 

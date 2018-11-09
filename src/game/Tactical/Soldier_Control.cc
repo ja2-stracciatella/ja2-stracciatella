@@ -4642,6 +4642,9 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 
 void CreateSoldierPalettes(SOLDIERTYPE& s)
 {
+	// FIXME: maxrd2 we're not supposed to use palette anymore
+	return;
+
 	// --- TAKE FROM CURRENT ANIMATION HVOBJECT!
 	UINT16 const anim_surface = GetSoldierAnimationSurface(&s);
 	if (anim_surface == INVALID_ANIMATION_SURFACE)

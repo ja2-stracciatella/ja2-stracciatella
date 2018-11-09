@@ -1929,7 +1929,7 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 
 		//display the line
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32* const pDestBuf         = l.Buffer<UINT32>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 

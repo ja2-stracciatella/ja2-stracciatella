@@ -2435,7 +2435,7 @@ void DrawHatchOnInventory(SGPVSurface* const uiSurface, const UINT16 usPosX, con
 	ClipRect.iBottom = usPosY + usHeight - 1;
 
 	SGPVSurface::Lock l(uiSurface);
-	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
+	Blt32BPPBufferHatchRect(l.Buffer<UINT32>(), l.Pitch(), &ClipRect);
 }
 
 

@@ -69,9 +69,6 @@ try
 	// INit shade tables
 	BuildShadeTable( );
 
-	// INit intensity tables
-	BuildIntensityTable( );
-
 	// Initailize World
 	InitializeWorld();
 

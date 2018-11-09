@@ -112,13 +112,11 @@ static inline void DeleteVideoObject(SGPVObject* const vo)
 }
 
 // Blits a video object to another video object
-void BltVideoObject(SGPVSurface* dst, SGPVObject const* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
+void BltVideoObject(SGPVSurface *dst, const SGPVObject *src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY);
+void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, const UINT32 colOutline);
+void BltVideoObjectOutlineShadow(SGPVSurface *dst, const SGPVObject *src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY);
 
-
-void BltVideoObjectOutline(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, UINT32 s16BPPColor);
-void BltVideoObjectOutlineShadow(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
-
-/* Loads a video object, blits it once and frees it */
+// Loads a video object, blits it once and frees it
 void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
 
 typedef std::unique_ptr<SGPVObject> AutoSGPVObject;
